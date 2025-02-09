@@ -1,99 +1,160 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50709243384;
-	Sun,  9 Feb 2025 03:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9326018AE2;
+	Sun,  9 Feb 2025 03:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739072736; cv=none; b=m5OxkstfvyuBtJfKBp1e2caT0Dn3ZN0MRl7cZgOl51f7W1ZdAMMT2OvevcL7s/NIqLAiV4YcKeAIfoNRrOiINqEfkrbss8Co4AMJklnVA6Xcf1ZiyKnMyK2CtR9QOZLn5R01XKPp1X76U3epCb7NZNcwKjTcKVvm39F6G4OXA3A=
+	t=1739072829; cv=none; b=VarxsSJHLMGakDNtPBEyBOqg23kcOSwOQGWEMEZ5zJAV0AUXa5MgeUIokamV8L1yHVjyeaCjYe2AGyfjtXzdaITJLEO6MyoAS7U6F3UnQ1g+YwUDdfNspurAfJQB8/apOl77p2+G2eFBAbF1RdtXLDLd9q/B1j7x8jKRBcdclq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739072736; c=relaxed/simple;
-	bh=338iPXjZDlUhP6o4Fg7qbAjayGvr0eEBDQocUyHmnww=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QjauZTiwWKk2Np6bSnYtZ4u+GgI5nFdWaSc0D1iKXIZxT8rlWdAheKspODwe+vXjlShs0/s2o8mvgqUSWZv1g4+WhsUAhgc15nbnSYtyD/jdDXyw3kVfebShngGvHWSNtA739hACV7OaCezfx8OErRG7zKNIZVPr/ekwUvTZTEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=xy12kheP; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
+	s=arc-20240116; t=1739072829; c=relaxed/simple;
+	bh=pAbTcBcqnkEDr++cvXShfYLcz9ZAMkFCjXF1DdPj4tc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QCXXv91CYbcSmiyVtHM19TVz7CRf4Q1w1X5hCC+fFB1FHqfrxVXM7/ePaSu6OtdnGf2ChUn6bYNk+jdykyq9tE9jPaF2E9ZpY4Fh0P+ulj5HgEgk0R2FVXAA/hzWIpm2eBkOT72/lVC01BqpgZ/8hdSqHOlZABQso5148MmRF20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QSARVwGe; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="xy12kheP"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4YrDBB4k0gz9swN;
-	Sun,  9 Feb 2025 04:45:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1739072722;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=agZpKSsd5fdzyN9OBz2BDTXHlW6w6QtZAvyhXYpYcrU=;
-	b=xy12khePBAai55WERQUGDfslclILql6MXbEtnoXVKCyvjPqujf2x3RhV5bUkk/77kKQY0w
-	EHEKeCYvdbIHcAMDSQkhsn5ZfWO5JPeDvHp69UJq1zEVvvcqcib7UyJfMK73p2ddzTaUh/
-	MldDJBNlpMl3Z6sqAg51L9JGGh4FPdRsytWn3l9Yx28pN9YTIQikfIeflsLRe2CPDN9Zat
-	EONVFUcLfvVTbZ288ysFzDlkRkLkqGDvgkGlyxwfVyRjRq02DvI4sWRamvr/TFEnG/s6Nr
-	nJtadRDXeNHYcvOsuL9AL6zLuPirPBXVq+areDnTQCfzYX/P8C44vKhEb6iBhg==
-Date: Sat, 8 Feb 2025 22:45:20 -0500
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-To: mingo@redhat.com
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>, 
-	"kernel-hardening@lists.openwall.com" <kernel-hardening@lists.openwall.com>, "bsegall@google.com" <bsegall@google.com>, 
-	"peterz@infradead.org" <peterz@infradead.org>
-Subject: Re: [PATCH v2] sched/topology: change kzalloc to kcalloc
-Message-ID: <pqhk3i5byxj3ygnh7jp3irmluykrocwdmfudfb3lm6xm3enygg@cezu6wjo3a2l>
-References: <wayfdq456uccu2kzujdokp5kklbl7evp432rmnxcdh2222wwlp@67idbpxoy32u>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSARVwGe"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38633b5dbcfso3297294f8f.2;
+        Sat, 08 Feb 2025 19:47:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739072826; x=1739677626; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G9QGCEe4s4f07RDG6bDFRWUa5WupjjYHN4Gq0S0QTJU=;
+        b=QSARVwGetdR8idy9Y+0bL6sJtw3uRr/61pQ/n4aPtoNQrQQQpGLuHMdxAoqI9/x9Yu
+         6+r1SP3xoYXLnO/itGL7YZhbRV0hSiCc2X0vlaMybKkalfqh+/hXqfomMHiCPMPOc/9h
+         XbXJUfsr+zXDqjxb3tjSrrCFkazMaWUtS31GSGrgRzdKLR32cTBJ8ADbshZAaAUVD4eM
+         rXIruBmVpYy89gik4B/P+InXX6W8fighzE8Kk5cGUYSbe9dUlXpy1qFd+c0uJ0hJBDQu
+         XTmLfy1Pvck6zxkSmoKhJkEWqBad3znMpz6t4s0qN/96ApqEeVBuqFvAJcOchAhkS6gD
+         MYlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739072826; x=1739677626;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G9QGCEe4s4f07RDG6bDFRWUa5WupjjYHN4Gq0S0QTJU=;
+        b=giVnelTHvOrF1SCZRfUb57Nyqdi96f/GScDklFzGVoIzwBi5zcDjVx8u5mFeBjUDL4
+         ONUb1BC7NzQeXnyjWgcp7S5wSVw1pVxvYPsSUTH9qzmIH6z3ZRzVM4unWQX7XzMqnPSe
+         BHXOMbOlgq7rvJMFOKjuxNIe2RF4iwhEa1o0w9Z/2PLjDZXAyPeGjcza0eqCe5zEqQG3
+         1y8kotUjEcwPCmwSKltM7hVJy1iXYtj5lQvzhWrTZRURAY055RjJR+dAIs5fb16KRbrM
+         P7Sv7zB3GHXkmCtuXwnJiCXFdCjvFlJnT0MLCF2rLZAOAnmtC+QwulgiPiTs65QJUXP/
+         NeHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVoBW+96Lq4wAejMZOuISHMNP3rb27bCp7WEjHn2mypyoAXbjKzn0jOHi/JoJgOEl2lobYCyEw+B9IieQ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiI7KwpPUQcmYldctznlJ1pk3LkP1BElBoEnJlMUA1Gj03M0E7
+	ylrPAfPDF5Zh/di5GLEw1PT1eHCeGGKrvrKKZG65iIUuHm7Sfy8/6lbNbKI6tFbA6mk8tTm9qjx
+	P1W795dnpWzGg7xcG92C43thx2oY=
+X-Gm-Gg: ASbGnctPO92wblzgzJzNeYykTXAjh1jAmMjTVA6brEWHEMQzOUmIA7vPn0y+bKxgDY3
+	ekj4mX7PZ00qQ7ZBCOzDS3EmcUVpqfdN5QO2ADoh5dlN68fKg4ZdOGO0OpAzCxP1IhbBKYL9enw
+	RupsIHfbnbX2vCVMTLEzuIGUROFY4A
+X-Google-Smtp-Source: AGHT+IF8qpP7A+++uJooWGB2HYk2iXUbQzNwWZlU1Ir/ZBmmG/NjHXNgAp0R6jE703cBXGA5ZDTGWW24Bz9vvqWovbY=
+X-Received: by 2002:a05:6000:2c2:b0:385:ee3f:5cbf with SMTP id
+ ffacd0b85a97d-38dc8ddc464mr7061834f8f.20.1739072825622; Sat, 08 Feb 2025
+ 19:47:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <wayfdq456uccu2kzujdokp5kklbl7evp432rmnxcdh2222wwlp@67idbpxoy32u>
-X-Rspamd-Queue-Id: 4YrDBB4k0gz9swN
+References: <cover.1738888641.git.yepeilin@google.com> <d03d8c3305e311c6cb29924119b5eecae8370bbc.1738888641.git.yepeilin@google.com>
+ <CAADnVQ+L0h8qXfYkC3+ORyQkXFJ2MgO8FDHr_Ha0QMAtS_ujag@mail.gmail.com> <Z6gRHDLfA7cjnlSn@google.com>
+In-Reply-To: <Z6gRHDLfA7cjnlSn@google.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Sat, 8 Feb 2025 19:46:54 -0800
+X-Gm-Features: AWEUYZmrws4n9Tklxz5TlDMfaZkKg_EoOGMe8Vohc-FDZY-WZlDb1JfHtCemc_I
+Message-ID: <CAADnVQLkHA9LGv99k2TZOJEGUU=dw=q6nVurJ=aoh0v6cFS6zQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 4/9] bpf: Introduce load-acquire and
+ store-release instructions
+To: Peilin Ye <yepeilin@google.com>
+Cc: bpf <bpf@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, bpf@ietf.org, 
+	Xu Kuohai <xukuohai@huaweicloud.com>, Eduard Zingerman <eddyz87@gmail.com>, 
+	David Vernet <void@manifault.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
+	Ilya Leoshkevich <iii@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Quentin Monnet <qmo@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Ihor Solodrai <ihor.solodrai@linux.dev>, Yingchi Long <longyingchi24s@ict.ac.cn>, 
+	Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>, Neel Natu <neelnatu@google.com>, 
+	Benjamin Segall <bsegall@google.com>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I wanted to check in on this. Anything I need to change?
+On Sat, Feb 8, 2025 at 6:21=E2=80=AFPM Peilin Ye <yepeilin@google.com> wrot=
+e:
+>
+> Hi Alexei,
+>
+> On Sat, Feb 08, 2025 at 01:30:46PM -0800, Alexei Starovoitov wrote:
+> > > Introduce BPF instructions with load-acquire and store-release
+> > > semantics, as discussed in [1].  The following new flags are defined:
+> > >
+> > >   BPF_ATOMIC_LOAD         0x10
+> > >   BPF_ATOMIC_STORE        0x20
+> > >   BPF_ATOMIC_TYPE(imm)    ((imm) & 0xf0)
+> > >
+> > >   BPF_RELAXED        0x0
+> > >   BPF_ACQUIRE        0x1
+> > >   BPF_RELEASE        0x2
+> > >   BPF_ACQ_REL        0x3
+> > >   BPF_SEQ_CST        0x4
+> >
+> > I still don't like this.
+> >
+> > Earlier you said:
+> >
+> > > If yes, I think we either:
+> > >
+> > >  (a) add more flags to imm<4-7>: maybe LOAD_SEQ_CST (0x3) and
+> > >      STORE_SEQ_CST (0x6); need to skip OR (0x4) and AND (0x5) used by
+> > >      RMW atomics
+> > >  (b) specify memorder in imm<0-3>
+> > >
+> > > I chose (b) for fewer "What would be a good numerical value so that R=
+MW
+> > > atomics won't need to use it in imm<4-7>?" questions to answer.
+> > >
+> > > If we're having dedicated fields for memorder, I think it's better to
+> > > define all possible values once and for all, just so that e.g. 0x2 wi=
+ll
+> > > always mean RELEASE in a memorder field.  Initially I defined all six=
+ of
+> > > them [2], then Yonghong suggested dropping CONSUME [3].
+> >
+> > I don't think we should be defining "all possible values",
+> > since these are the values that llvm and C model supports,
+> > but do we have any plans to support anything bug ld_acq/st_rel ?
+> > I haven't heard anything.
+> > What even the meaning of BPF_ATOMIC_LOAD | BPF_ACQ_REL ?
+> >
+> > What does the verifier suppose to do? reject for now? and then what?
+> > Map to what insn?
+> >
+> > These values might imply that bpf infra is supposed to map all the valu=
+es
+> > to cpu instructions, but that's not what we're doing here.
+> > We're only dealing with two specific instructions.
+> > We're not defining a memory model for all future new instructions.
+>
+> Got it!  In v3, I'll change it back to:
+>
+>   #define BPF_LOAD_ACQ   0x10
+>   #define BPF_STORE_REL  0x20
 
-Thanks,
-Ethan
+why not 1 and 2 ?
+All other bits are reserved and the verifier will make sure they're zero,
+so when/if we need to extend it then it wouldn't matter whether
+lower 4 bits are reserved or other bits.
+Say, we decide to support cmpwait_relaxed as a new insn.
+It can take the value 3 and arm64 JIT will map it to ldxr+wfe+...
 
-On 25/01/19 01:23PM, Ethan Carter Edwards wrote:
-> We are replacing any instances of kzalloc(size * count, ...) with
-> kcalloc(count, size, ...) due to risk of overflow [1].
-> 
-> [1] https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
-> Link: https://github.com/KSPP/linux/issues/162
-> 
-> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
-> ---
->  V2: fix email client formatting.
->  kernel/sched/topology.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> index 9748a4c8d668..17eb12819563 100644
-> --- a/kernel/sched/topology.c
-> +++ b/kernel/sched/topology.c
-> @@ -1920,7 +1920,7 @@ void sched_init_numa(int offline_node)
->  	 */
->  	sched_domains_numa_levels = 0;
->  
-> -	masks = kzalloc(sizeof(void *) * nr_levels, GFP_KERNEL);
-> +	masks = kcalloc(nr_levels, sizeof(void *), GFP_KERNEL);
->  	if (!masks)
->  		return;
->  
-> @@ -1929,7 +1929,7 @@ void sched_init_numa(int offline_node)
->  	 * CPUs of nodes that are that many hops away from us.
->  	 */
->  	for (i = 0; i < nr_levels; i++) {
-> -		masks[i] = kzalloc(nr_node_ids * sizeof(void *), GFP_KERNEL);
-> +		masks[i] = kcalloc(nr_node_ids, sizeof(void *), GFP_KERNEL);
->  		if (!masks[i])
->  			return;
->  
-> -- 
-> 2.47.1
-> 
+Then with this new load_acq and cmpwait_relaxed we can efficiently
+implement both smp_cond_load_relaxed and smp_cond_load_acquire.
