@@ -1,194 +1,277 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A361DA3D;
-	Sun,  9 Feb 2025 08:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0074A4C9F
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 08:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739089532; cv=none; b=sH14M3lPyh4NhxRPvuMnz8nuF9zHDYsnm8Z01R+jhYOImfEpAf8jwVcNHRyOpb/I8Fax7LtVCFoYpf1OhsG7RR55fSa072bQiaFB5ygZ8Lmko2pvyFouDzCeOxhMOIlJOZ1gcgnVscqrjKCr53e7bxfc8a3Pf2iUzXH4DhLJoOI=
+	t=1739090122; cv=none; b=iC2O/xlIGz+wpPPfsI/K415lbkm8fbVcAVRbHH+iXfgsoJd0ANe+Ym/XdZh/ZmUHgoFJTkPJ+fQyLx8nvh/Ak/TCR/B213dlwKmGX84LoGmN430b9di7oMJb4zqkgMglzpzS6NC7WukM1vB5gExHT+vrfpVTy2fK+yIAmUjriwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739089532; c=relaxed/simple;
-	bh=USlt6WBdDTcM2aycYNDVxBnuOmsJewaFSksVTJXgdgY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eX8hY3+aO5FcPWTflfdrcmjUVq2UYgPek4qnMf+ghiY39/v9PiZJlt6Q5qDDgZta4y7GqSGwdxJUdgQJmUe/WdGZRYZl+cDtjKPoZ9GPYvMq7ZssTfy4B5CuSumFYIcfgI311rt1eu4wCU/SyDdQYxIfDHup7VwDAVfgrEH6f7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6e44f9db46bso14750276d6.1;
-        Sun, 09 Feb 2025 00:25:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739089530; x=1739694330;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=USlt6WBdDTcM2aycYNDVxBnuOmsJewaFSksVTJXgdgY=;
-        b=kbNg814vKqPqtCZIrzvGMRYgy4aQrZGeGqYc2/cEATkqJWy4pNUYvlSMtMQ3oOmUDA
-         otloUSNH4m9vNnSpXNASjQT4MTDUlTNzWVI3mf6gXMPBGwyltTdhNWsRerC9fmdLVPYL
-         RtaCYYOENNGSWrT3phiUo6Zb+36HAIKzU1yjtf1vZVmu5dBN9yDBf0vp4zhoYgraA6GO
-         x4qoQ3Tx5i7D0Q5w4kVWSgo6gs4LlkO/dNg+Led7itvl0rUUjcrd19R1XhqLLyQ9mzFB
-         bZb6o0UVRJEXdySTQMxQNNx6gyMK+e5zi5f7DdMbXRYZV5kPdhiW0UZvN4k/QGVXz5s6
-         zZzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUr5N3fmDsfP49Oat1lZkOuWNsis0SGo8crSa3CaySZ7jeZvonUmitu9IjBY/m/bbtO/+CafOmPMrzkYBQ=@vger.kernel.org, AJvYcCWpmtqFkfci6Xwfni2VHRuHVot2hpZD4b+1tCb/HckYDeds66wlaT1jpQXTAopSe23Pm0CRk/ZOEDRRCAxzgXA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8fCHs4hWJleP8QjuOsm/ECD9wJS30SAHIV47vVL8l2/AD2gr6
-	mywiNgp3eKSxdxaAzXlA6rWD2Z8okJTHCYd3qVv8rXyzLG7CeGV7
-X-Gm-Gg: ASbGnctHKKSjXU1iHs3GSo1VZ3llPTG/y2sRVUi3pDb2hGvzVXb3x+X8ZdlYeGJu+Qk
-	sMHQD0d1vgSkJG6t0jM+HOFQNEC6V5VldlzjGr8T05QcmxxP3wnoGNz0Dpyzx2ihgVmJs9RiUhQ
-	cpijiYZ2KsS8g7KKa3Wkwu+NnqxRsBJ0b7xs1mitXZ62kJ7d/YVAtVbUxgsnQy59V/3QvWiKjt1
-	exWxgjgU1VsjTyJSsC5vB4x6wL0f/JGQlTpsgMS2jTYtiMrmaxbo8b+g5dvlJKwFQAHM1IDVbJ3
-	eIT4J8QLWfEaHNwOZwufRaZw
-X-Google-Smtp-Source: AGHT+IH0bnSrax4ouGaMRHepnNM7v38bNacxAv9jJN97d/yQxAFzqXYs3yHAdQLLdROltMGZT89cgg==
-X-Received: by 2002:ad4:5f89:0:b0:6d8:8a7b:66a4 with SMTP id 6a1803df08f44-6e4455e8913mr144676746d6.14.1739089530028;
-        Sun, 09 Feb 2025 00:25:30 -0800 (PST)
-Received: from skuld-framework.localnet ([32.221.37.233])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e441251d52sm29565596d6.108.2025.02.09.00.25.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 00:25:29 -0800 (PST)
-From: Neal Gompa <neal@gompa.dev>
-To: Hector Martin <marcan@marcan.st>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: Danilo Krummrich <dakr@kernel.org>, Dave Airlie <airlied@gmail.com>,
- Jason Gunthorpe <jgg@nvidia.com>, Greg KH <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, phasta@kernel.org,
- Christoph Hellwig <hch@lst.de>,
- Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Abdiel Janulgue <abdiel.janulgue@gmail.com>, daniel.almeida@collabora.com,
- aliceryhl@google.com, robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
- Valentin Obst <kernel@valentinobst.de>,
- open list <linux-kernel@vger.kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- David Airlie <airlied@redhat.com>,
- "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
- DRI Development <dri-devel@lists.freedesktop.org>
-Subject:
- Re: On community influencing (was Re: [PATCH v8 2/2] rust: add dma coherent
- allocator abstraction.)
-Date: Sun, 09 Feb 2025 03:25:26 -0500
-Message-ID: <7742420.9J7NaK4W3v@skuld-framework>
-In-Reply-To: <20250207-prehistoric-married-dormouse-3e1aa7@lemur>
-References:
- <2025013148-reversal-pessimism-1515@gregkh>
- <1bbdf8b7-a70b-4994-865e-7fcb8d53ebef@marcan.st>
- <20250207-prehistoric-married-dormouse-3e1aa7@lemur>
+	s=arc-20240116; t=1739090122; c=relaxed/simple;
+	bh=HhN76xzeMQWGQtDWlLY3y0ZR2vVthOitYIh0TkH98L0=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=c/m0q2pVAxYLGeDouAiIc/pahyhAyFHbH8sc0ULtqs98qJj9E+9OtRVhqkCzlwJ40LfhhBggIGj/0ZUAuYR9dJqL23dioH886JRBB4XVc2hoG2NpcY/DjmEkB4yZj2v+/Q04PvD2mhdWekHSB/WIh6016M1vMtUi68R5OJD47bU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GvYCWCkY; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GvYCWCkY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739090120; x=1770626120;
+  h=date:from:to:cc:subject:message-id;
+  bh=HhN76xzeMQWGQtDWlLY3y0ZR2vVthOitYIh0TkH98L0=;
+  b=GvYCWCkYICXABfiWeBt0KV0BpHZWc5COzkrpsFvWBiyLFuMWveO0C+m0
+   lbz2xLNWoZkfViMDkPkMMI5Lvd+YaK1N2RkSEU1CmI30jC85mVqkkOM+o
+   AzV9rFuV6IK5isM81ISzYIX1v59OCqiGNmN3YTsyciooDPOJGdkTzj666
+   +Kj+DXgiKlzHfhMGC7k3P9zDSZa46t6mJ4PjJuZ2mxac5E2HYaVt3WlOp
+   RUL57Nyb0OlprAsu0TNgJ9wHESATmKuwceqxaUzPThWWfwIWhsYQQpEHW
+   LtMYxpFz/PnhL2+R3WCXJ+bK2KdE1tLA6H1yU+CXnu5BlbCbI1jimUVGC
+   A==;
+X-CSE-ConnectionGUID: SiUIe2u+QAWvcFxFJj2PHA==
+X-CSE-MsgGUID: vCBFHR1+TAqpGSFjbJ9ehA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="39947541"
+X-IronPort-AV: E=Sophos;i="6.13,272,1732608000"; 
+   d="scan'208";a="39947541"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 00:35:19 -0800
+X-CSE-ConnectionGUID: cEJ5/0ONRrGJJeTcjUa8sg==
+X-CSE-MsgGUID: q9Lti3hRR6O3QNfK8r3Wsg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,272,1732608000"; 
+   d="scan'208";a="112418159"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 09 Feb 2025 00:35:18 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1th2ma-0011Gd-0r;
+	Sun, 09 Feb 2025 08:35:16 +0000
+Date: Sun, 09 Feb 2025 16:34:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:objtool/urgent] BUILD SUCCESS
+ 7e501637bd5b702a2fa627e903a0025654110e1e
+Message-ID: <202502091619.ONKnXfyR-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
 
-On Friday, February 7, 2025 1:16:11=E2=80=AFPM Eastern Standard Time Konsta=
-ntin=20
-Ryabitsev wrote:
-> On Sat, Feb 08, 2025 at 03:02:11AM +0900, Hector Martin wrote:
-> > The centralization concern is valid, but there are technical solutions
-> > to this, such as forge federation.
->=20
-> Unfortunately, forge federation is really only between Forgejo instances =
-and
-> is still pretty nascent, afaict. The most promising development in
-> decentralized forges that I've seen is Radicle, but I'm yet to try it aga=
-in
-> ever since they got collectively drunk on bitcoin coolaid a few years ago.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool/urgent
+branch HEAD: 7e501637bd5b702a2fa627e903a0025654110e1e  objtool: Move dodgy linker warn to verbose
 
-Strictly speaking, this isn't true. Forgefed federation was tested very ear=
-ly=20
-on with Codeberg's Gitea fork (before it was called Forgejo) and Pagure wit=
-h=20
-its Forgefed extension[1]. The initial design and development was across th=
-ree=20
-forge systems (Vervis, Forgejo, and Pagure).
+elapsed time: 998m
 
-Even before that, Pagure has data portability built into its design in a wa=
-y=20
-no other forge has today: all project metadata is stored as JSON data check=
-ed=20
-into specialized Git repos. That means it's trivial to mirror and archive=20
-projects to have redundant instances or failover instances to support whate=
-ver=20
-reliability and high availability guarantees you'd like.
+configs tested: 200
+configs skipped: 4
 
-And insofar as cross system contributions, Pagure supports making pull=20
-requests that pull from arbitrary Git servers (as long as the Pagure instan=
-ce=20
-can connect to it) with its remote pull request feature. That has been a co=
-re=20
-feature for nearly the entire time it has existed.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-It's not that it wasn't possible, it's just nobody cares. In the 11 years=20
-since Pagure was created, literally no other forge has even intimated that=
-=20
-they want even *some* of the concepts Pagure has. Extensibility and=20
-portability are simply not important concepts to anyone anymore.
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    clang-21
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              allmodconfig    clang-18
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    clang-18
+arc                              allyesconfig    gcc-13.2.0
+arc                      axs103_smp_defconfig    gcc-13.2.0
+arc                                 defconfig    gcc-14.2.0
+arc                     nsimosci_hs_defconfig    gcc-13.2.0
+arc                   randconfig-001-20250209    gcc-13.2.0
+arc                   randconfig-002-20250209    gcc-13.2.0
+arm                              allmodconfig    clang-18
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    gcc-14.2.0
+arm                              allyesconfig    clang-18
+arm                              allyesconfig    gcc-14.2.0
+arm                                 defconfig    gcc-14.2.0
+arm                           imxrt_defconfig    gcc-13.2.0
+arm                   randconfig-001-20250209    gcc-13.2.0
+arm                   randconfig-001-20250209    gcc-14.2.0
+arm                   randconfig-002-20250209    clang-21
+arm                   randconfig-002-20250209    gcc-13.2.0
+arm                   randconfig-003-20250209    clang-21
+arm                   randconfig-003-20250209    gcc-13.2.0
+arm                   randconfig-004-20250209    gcc-13.2.0
+arm                   randconfig-004-20250209    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                               defconfig    gcc-14.2.0
+arm64                 randconfig-001-20250209    clang-18
+arm64                 randconfig-001-20250209    gcc-13.2.0
+arm64                 randconfig-002-20250209    gcc-13.2.0
+arm64                 randconfig-002-20250209    gcc-14.2.0
+arm64                 randconfig-003-20250209    gcc-13.2.0
+arm64                 randconfig-003-20250209    gcc-14.2.0
+arm64                 randconfig-004-20250209    gcc-13.2.0
+arm64                 randconfig-004-20250209    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                                defconfig    gcc-14.2.0
+csky                  randconfig-001-20250209    gcc-14.2.0
+csky                  randconfig-002-20250209    gcc-14.2.0
+hexagon                          allmodconfig    clang-21
+hexagon                           allnoconfig    gcc-14.2.0
+hexagon                          allyesconfig    clang-18
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    gcc-14.2.0
+hexagon               randconfig-001-20250209    clang-21
+hexagon               randconfig-001-20250209    gcc-14.2.0
+hexagon               randconfig-002-20250209    clang-21
+hexagon               randconfig-002-20250209    gcc-14.2.0
+i386                             allmodconfig    clang-19
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    clang-19
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-19
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250209    gcc-12
+i386        buildonly-randconfig-002-20250209    clang-19
+i386        buildonly-randconfig-003-20250209    clang-19
+i386        buildonly-randconfig-004-20250209    gcc-12
+i386        buildonly-randconfig-005-20250209    clang-19
+i386        buildonly-randconfig-006-20250209    clang-19
+i386                                defconfig    clang-19
+i386                  randconfig-001-20250209    clang-19
+i386                  randconfig-002-20250209    clang-19
+i386                  randconfig-003-20250209    clang-19
+i386                  randconfig-004-20250209    clang-19
+i386                  randconfig-005-20250209    clang-19
+i386                  randconfig-006-20250209    clang-19
+i386                  randconfig-007-20250209    clang-19
+i386                  randconfig-011-20250209    clang-19
+i386                  randconfig-012-20250209    clang-19
+i386                  randconfig-013-20250209    clang-19
+i386                  randconfig-014-20250209    clang-19
+i386                  randconfig-015-20250209    clang-19
+i386                  randconfig-016-20250209    clang-19
+i386                  randconfig-017-20250209    clang-19
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch                           defconfig    gcc-14.2.0
+loongarch             randconfig-001-20250209    gcc-14.2.0
+loongarch             randconfig-002-20250209    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                         amcore_defconfig    gcc-14.2.0
+m68k                                defconfig    gcc-14.2.0
+m68k                            q40_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+microblaze                          defconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                          eyeq5_defconfig    gcc-13.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250209    gcc-14.2.0
+nios2                 randconfig-002-20250209    gcc-14.2.0
+openrisc                          allnoconfig    clang-21
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-12
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    clang-21
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-12
+parisc                randconfig-001-20250209    gcc-14.2.0
+parisc                randconfig-002-20250209    gcc-14.2.0
+parisc64                         alldefconfig    gcc-13.2.0
+parisc64                            defconfig    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    clang-21
+powerpc                          allyesconfig    clang-16
+powerpc                   currituck_defconfig    gcc-14.2.0
+powerpc                      katmai_defconfig    gcc-14.2.0
+powerpc                 mpc836x_rdk_defconfig    gcc-13.2.0
+powerpc               randconfig-001-20250209    gcc-14.2.0
+powerpc               randconfig-002-20250209    clang-21
+powerpc               randconfig-002-20250209    gcc-14.2.0
+powerpc               randconfig-003-20250209    gcc-14.2.0
+powerpc                     skiroot_defconfig    gcc-14.2.0
+powerpc                     tqm5200_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250209    gcc-14.2.0
+powerpc64             randconfig-002-20250209    gcc-14.2.0
+powerpc64             randconfig-003-20250209    gcc-14.2.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    clang-21
+riscv                            allyesconfig    clang-21
+riscv                               defconfig    gcc-12
+riscv                 randconfig-001-20250209    clang-18
+riscv                 randconfig-001-20250209    gcc-14.2.0
+riscv                 randconfig-002-20250209    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                             allmodconfig    gcc-14.2.0
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20250209    clang-21
+s390                  randconfig-001-20250209    gcc-14.2.0
+s390                  randconfig-002-20250209    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-12
+sh                    randconfig-001-20250209    gcc-14.2.0
+sh                    randconfig-002-20250209    gcc-14.2.0
+sh                           se7343_defconfig    gcc-14.2.0
+sh                          urquell_defconfig    gcc-13.2.0
+sh                          urquell_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250209    gcc-14.2.0
+sparc                 randconfig-002-20250209    gcc-14.2.0
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20250209    gcc-14.2.0
+sparc64               randconfig-002-20250209    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-21
+um                               allyesconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250209    gcc-11
+um                    randconfig-001-20250209    gcc-14.2.0
+um                    randconfig-002-20250209    gcc-12
+um                    randconfig-002-20250209    gcc-14.2.0
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250209    gcc-12
+x86_64      buildonly-randconfig-002-20250209    gcc-12
+x86_64      buildonly-randconfig-003-20250209    gcc-12
+x86_64      buildonly-randconfig-004-20250209    gcc-12
+x86_64      buildonly-randconfig-005-20250209    gcc-11
+x86_64      buildonly-randconfig-006-20250209    clang-19
+x86_64                              defconfig    clang-19
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-19
+x86_64                randconfig-001-20250209    gcc-12
+x86_64                randconfig-002-20250209    gcc-12
+x86_64                randconfig-003-20250209    gcc-12
+x86_64                randconfig-004-20250209    gcc-12
+x86_64                randconfig-005-20250209    gcc-12
+x86_64                randconfig-006-20250209    gcc-12
+x86_64                randconfig-007-20250209    gcc-12
+x86_64                randconfig-008-20250209    gcc-12
+x86_64                randconfig-071-20250209    gcc-12
+x86_64                randconfig-072-20250209    gcc-12
+x86_64                randconfig-073-20250209    gcc-12
+x86_64                randconfig-074-20250209    gcc-12
+x86_64                randconfig-075-20250209    gcc-12
+x86_64                randconfig-076-20250209    gcc-12
+x86_64                randconfig-077-20250209    gcc-12
+x86_64                randconfig-078-20250209    gcc-12
+x86_64                               rhel-9.4    clang-19
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250209    gcc-14.2.0
+xtensa                randconfig-002-20250209    gcc-14.2.0
 
-If it was, maybe more people would have been excited about Pagure, I'd have=
-=20
-more contributors to that project, and there'd be more deployments out ther=
-e=20
-showing it off.
-
-It is what it is, I guess. =E2=98=B9=EF=B8=8F
-
-[1]: https://pagure.io/pagure-forgefed
-
-> > Meanwhile, for better or worse, much of Linux infra *is* centralized -
-> > for example, the mailing lists themselves, and a lot of the Git hosting.
->=20
-> Yes, but it's at least resilient. If someone knocks out vger.kernel.org,
-> kernel development will still continue because maintainers are still cc'd
-> directly via email, and email is still the only widely adopted federated
-> platform that we have, with nothing else coming anywhere close.
->=20
-
-That's really a self-inflicted choice. Adoption is always a catch-22. If yo=
-u=20
-really wanted federated forge development and have some aspect of=20
-decentralized development, you always can even with forges or other tools.=
-=20
-It's just not something being considered or explored in the Linux kernel=20
-community, despite how much some folks dislike the email-based workflow.
-
-> > At the end of the day, I do not believe a theoretical breakdown of Linux
-> > infra would be a major long-term setback to Linux kernel development.
->=20
-> We know it's the case when kernel.org went off the air for months in 2011.
-> :) Let's keep it that way!
->=20
-> > But I'm afraid you'll find much if not most of the true opposition to
-> > forges is not technical, it is philosophical or preference-based (even
-> > though it may be presented as technical opposition, sometimes to
-> > intentionally mislead). This is, in fact, quite a mirror of the R4L
-> > situation, where technical arguments ("show me you can write a real
-> > driver") quickly lead to non-technical arguments when solutions are
-> > proposed ("it's cancer").
-> >=20
-> > I actually considered moving soc/apple development to a forge personally
-> > in the near future (obviously not my call to make any more), and I was
-> > fully expecting a pile of pushback, "because that's not how we do things
-> > here". Who knows, I might have gotten a "fuck you, either you accept
-> > email patches or I remove you from MAINTAINTERS" from Linus.
->=20
-> It is my goal to be able to give subsystems a way to use forges without it
-> impacting how they interact with upstream or handle tree-wide changes. Th=
-at
-> is, once I'm done moving things from one Benevolent Company to another.
->=20
-
-Honestly, this is probably not possible. If a subsystem moves to a forge=20
-workflow, it pretty much means tree-wide changes need to work partially tha=
-t=20
-way too.
-
-
-=2D-=20
-=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
-=BC=81/ Always, there's only one truth!
-
-
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
