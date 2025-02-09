@@ -1,132 +1,91 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9735EED8;
-	Sun,  9 Feb 2025 03:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04F6CA6F;
+	Sun,  9 Feb 2025 03:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739072558; cv=none; b=TpiUMb3WjfPVLaPyz+xirm2yxOYKFNQPjRkiL05aQ87ePZhu+BFBEGKJXkApgt9M+1B3zwE5ZfLVjJzEicERrwkb0zhzdJsQogCRR7O5j+CXszcJ6tJTp+q75OR1VeHauW9AjIRZYUkA4Cn9mI7mZTNA+dEbeiPfcSJ8ziq85oc=
+	t=1739072699; cv=none; b=AdS3b/DB+Tj+2b+KXR+JxNoZr9z/6Q5rUz4XTmZKXcDrex5zejOnM7YmUO68mKRr4WVI/0OeC2thZAgQeHEJZAXg410Zent8nIReCm92RkdvHji7roThCuNssmTRBDk+sUMNjEOYfTJq9pVwWW6bSNWLjZuELmkEifBiTQQug1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739072558; c=relaxed/simple;
-	bh=9sm3gxMiOwsNPRto3FrFWPnVsGg+EBADVuq1/l3kytk=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=bnMvxTjRRfcVMEEHgCfDhwmYuKByEVQsiM2OCqx+LWYme72700gUwj1iUJ9v6Wfsk/4aUyCk0M6hywIBt9+rQz0Bmr1fc4bOqtrvc5LejVKZAcS/hU1bUVOviX5WkfKUqd0iq6BrqpjwebeXdeuExywCrqcKqjivebuktoPd5SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NkTbDuIK; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739072699; c=relaxed/simple;
+	bh=NgYomdEiHgjsfNh6JTaerLlR4aoaIx5h10Ey5hLdp0Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LtoWiHYVxgWH51lh6NLUvogHE8aEBwL6BG5ttWASPihtKdv2nk/r6JkKwhtEjT4gxiPvYoOQMk8kEHO7M8ruukBspGvapBQcE1skM23iEsJLHXr9MdR/TumH+kvC6F1eI5LYbcJ4O0VjbYBA4KmgOunYVbverqv7xfGsDekomOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=P2yZHj8g; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NkTbDuIK"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2f9ba87f5d4so4691459a91.3;
-        Sat, 08 Feb 2025 19:42:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739072556; x=1739677356; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9sm3gxMiOwsNPRto3FrFWPnVsGg+EBADVuq1/l3kytk=;
-        b=NkTbDuIKhEKhOopAqIaF6eQYUsxRFG35XR2otG3PdKgQrzVR8kwqVlTqX6zy4Vi+T8
-         rWw7yiPT0vLDLYqrvOAPT299hifhcd1zZMlnzlZPj0g09hQTwy9uC4dmMB+xeJ4X1feE
-         e8jwfleCmsYDpiGWo5OYWGzOmNo7uhfJSaXKuIi2P0xa70exi6Ntlj3w6a6qO7nNyh01
-         dNJqLDaR+rB/YiOuhO8jyv1SnQK0L0od6cwn9wd9lN2cvUUl74bhyI52Vz5kVY86l93u
-         6sGIV95vPVGmh/QtwlAOalBXUDZBKPEnxhjZwp5U2L2J+C9OnBcyXJfrbxjiAkmWZGhQ
-         ZRbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739072556; x=1739677356;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9sm3gxMiOwsNPRto3FrFWPnVsGg+EBADVuq1/l3kytk=;
-        b=ObufBjXfRhBU4UmJeKcXOK9ee6wioW+AR6szLjPwuKUayaYuuVNabA7GxSGEumE4+I
-         rvt5WlFD1otxcv20TIFqhWjhjceEg+ZEdRSIQQkFSvy828IQmL3qJQWBcHGglH+izyfS
-         it4ocmlcznzDlzlfledDihVkfcDvzC9Ik3h+lnIwmK2YH8EtbxPF5Rdo9RaNSf4Zopps
-         XoxmjFsh3R9KEHYthWlG47EwXNLO7RVhxiLoq0YpNyYeTtaXBe7m0tlGnzAgZhM+dRW0
-         rqn4AFSlbIcLpNtWF2CqWVUd/7IbMPXR9vrR/zQI12qFpNnyDKDbwf84+gYa0NkOY7yw
-         cO5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWchY6NOH+uvMJcQnju2YTRwe8Uh0JpkF7tROsMzcHYi3n5SaK9++0N+IUTk5tM14hDEIzCCTeQPO523Oosh90=@vger.kernel.org, AJvYcCXCrjZTwaIzMxLEmHUaMIXerniEACio85smFtnLg8q9aZEnP8mlpCunTY4dT+q7nb62hfNkPlt7b5ThauU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXYsdtyQ+O+8VlKiHCq2bY7db54RbfomNEZ30bqOz33/LVP4Zu
-	Ag7aYHS7HRjwpaJw6SHyBkYfnAuiUJMvgsiSrTlsXg3yjXxON4Sx
-X-Gm-Gg: ASbGncvUXlS3tkOA3e25KxDf4Kwm6RHr0eHzX4kvQA3J1eDoWeq4IYav+pTDiLotD5X
-	W9SaJiEFufef3OmRBBKr//NSJHeiWMsSh4cClGSh3kvoZ/TWAV+naT/n3zOGBO6b+cqpIRUFpsa
-	Eu4FIDUx+teRrh0QXht+5nT84XyTjTKFdkaSeIytMpkxPyFd6e6t4mLEiROb6k9tf7YQCiC0TEU
-	kPmmqy7L+e2WrPJg3/rKRlJKmEX5Uxfzz8rr9z7UEMu84I2TNHvQmIH0uiJjTgKaTglQ2zb7YXz
-	hAOVJ4i2QFKjmvzr99fwRwmhDfO86CRUETwcdg==
-X-Google-Smtp-Source: AGHT+IFIGPvbys18Pg2PiTRNkYOvGrVtZH0DY6ZMJMhtbD5njuL33AsHDahXPogl9WTOTBn7c+mybg==
-X-Received: by 2002:a05:6a00:2e27:b0:725:db34:6a7d with SMTP id d2e1a72fcca58-7305d5931cdmr13418207b3a.23.1739072555893;
-        Sat, 08 Feb 2025 19:42:35 -0800 (PST)
-Received: from smtpclient.apple ([2601:645:4300:5ca0:581a:da0b:12d0:f2d4])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048bf1413sm5423354b3a.98.2025.02.08.19.42.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 08 Feb 2025 19:42:35 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="P2yZHj8g"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4YrD9d6h5rz9skP;
+	Sun,  9 Feb 2025 04:44:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
+	s=MBO0001; t=1739072694;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TW1GVy7OXHVjEtLYS6l4yYsrDFNRMzSuR/4sETXaIT8=;
+	b=P2yZHj8g4wGOTYHaiiXbppITdF3KTYKPqs0KJKDKYHXBeZyXusB768Ei67xAj7yPuav/Ky
+	0M3zocDoCY5dcyJAadj8kwNh++GnSiRYjwaKnwg7ms7CLF8css1BmXEvCzM6rTlskuXBUa
+	oEAwYOHnsR7riQOowyaGbri2fV9KSQEe+0jkexIK19rOC19UfEX2iDTNPCaEEnUyRx6B90
+	dNv1eHVo46dAj7G+bgyRPjxyLOmQsTblBRnQFOO87O28s7yWwlEXsYHhWzIKLnUqiE8szV
+	k5CnKvPJKHx/cUG1ZyuGRHW0Iw8l9Ek+Q73f+4lkSxFnhOXMy9Kws7qjTuaq3g==
+Date: Sat, 8 Feb 2025 22:44:51 -0500
+From: Ethan Carter Edwards <ethan@ethancedwards.com>
+To: "rafael@kernel.org" <rafael@kernel.org>
+Cc: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, 
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"kernel-hardening@lists.openwall.com" <kernel-hardening@lists.openwall.com>, 
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v3] thermal/debugfs: change kzalloc to kcalloc
+Message-ID: <5gjmqurpvdyb6sxpeytev7clxxrkpbjncjb623z4dg3vbaqzvm@kavc7th7svwd>
+References: <dmv2euctawmijgffigu7qr4yn7jtby4afuy5fgymq6s35c5elu@inovmydfkaez>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: On community influencing (was Re: [PATCH v8 2/2] rust: add dma
- coherent allocator abstraction.)
-From: comex <comexk@gmail.com>
-In-Reply-To: <20250208204416.GL1130956@mit.edu>
-Date: Sat, 8 Feb 2025 19:42:22 -0800
-Cc: "Dr. Greg" <greg@enjellic.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Hector Martin <marcan@marcan.st>,
- Dave Airlie <airlied@gmail.com>,
- Jason Gunthorpe <jgg@nvidia.com>,
- Greg KH <gregkh@linuxfoundation.org>,
- phasta@kernel.org,
- Christoph Hellwig <hch@lst.de>,
- Danilo Krummrich <dakr@kernel.org>,
- Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Abdiel Janulgue <abdiel.janulgue@gmail.com>,
- daniel.almeida@collabora.com,
- aliceryhl@google.com,
- robin.murphy@arm.com,
- rust-for-linux@vger.kernel.org,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- Bj??rn Roy Baron <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Trevor Gross <tmgross@umich.edu>,
- Valentin Obst <kernel@valentinobst.de>,
- open list <linux-kernel@vger.kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- airlied@redhat.com,
- "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
- DRI Development <dri-devel@lists.freedesktop.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C0508D03-FE8E-4253-A29D-97E7E3768CC4@gmail.com>
-References: <2025013030-gummy-cosmic-7927@gregkh>
- <20250130172437.GN5556@nvidia.com>
- <2025013148-reversal-pessimism-1515@gregkh>
- <20250131135421.GO5556@nvidia.com>
- <2b9b75d1-eb8e-494a-b05f-59f75c92e6ae@marcan.st>
- <Z6OzgBYZNJPr_ZD1@phenom.ffwll.local>
- <CAPM=9tzPR9wd=3Wbjnp-T0W8-dDfGah-H3Ny52G85B+2Ev9ksA@mail.gmail.com>
- <208e1fc3-cfc3-4a26-98c3-a48ab35bb9db@marcan.st>
- <CAHk-=wi=ZmP2=TmHsFSUGq8vUZAOWWSK1vrJarMaOhReDRQRYQ@mail.gmail.com>
- <20250207121638.GA7356@wind.enjellic.com> <20250208204416.GL1130956@mit.edu>
-To: Theodore Ts'o <tytso@mit.edu>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dmv2euctawmijgffigu7qr4yn7jtby4afuy5fgymq6s35c5elu@inovmydfkaez>
+X-Rspamd-Queue-Id: 4YrD9d6h5rz9skP
 
-On Feb 8, 2025, at 12:44=E2=80=AFPM, Theodore Ts'o <tytso@mit.edu> =
-wrote:
->=20
-> including an upstream language
-> community which refuses to make any kind of backwards compatibility
-> guarantees, and which is *actively* hostile to a second Rust compiler
-> implementation (I suspect because it might limit their ability to make
-> arbitrary backwards-incompatble language changes).
+I wanted to check in on this. Anything I need to change?
 
-Rust does, of course, make all sorts of backward compatibility =
-guarantees for stabilized features.
+Thanks,
+Ethan
 
-The list of unstable features used by Rust for Linux is still long, but =
-getting shorter.
-
-https://github.com/Rust-for-Linux/linux/issues/2=
+On 25/01/19 01:35PM, Ethan Carter Edwards wrote:
+> We are replacing any instances of kzalloc(size * count, ...) with
+> kcalloc(count, size, ...) due to risk of overflow [1].
+> 
+> [1] https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+> Link: https://github.com/KSPP/linux/issues/162
+> 
+> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+> ---
+>  v3: fix description and email client formatting
+>  v2: fix typo
+>  drivers/thermal/thermal_debugfs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/thermal/thermal_debugfs.c b/drivers/thermal/thermal_debugfs.c
+> index c800504c3cfe..29dc1431a252 100644
+> --- a/drivers/thermal/thermal_debugfs.c
+> +++ b/drivers/thermal/thermal_debugfs.c
+> @@ -876,7 +876,7 @@ void thermal_debug_tz_add(struct thermal_zone_device *tz)
+>  
+>  	tz_dbg->tz = tz;
+>  
+> -	tz_dbg->trips_crossed = kzalloc(sizeof(int) * tz->num_trips, GFP_KERNEL);
+> +	tz_dbg->trips_crossed = kcalloc(tz->num_trips, sizeof(int), GFP_KERNEL);
+>  	if (!tz_dbg->trips_crossed) {
+>  		thermal_debugfs_remove_id(thermal_dbg);
+>  		return;
+> -- 
+> 2.47.1
+> 
