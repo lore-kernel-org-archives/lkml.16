@@ -1,100 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7313653;
-	Sun,  9 Feb 2025 00:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394C9653
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 00:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739062081; cv=none; b=HD30HB6CB/xEeD86Xz5kc13Z7NjwK0RN8bQuIotnfgcmNERRHYBKwtB0aHWKz6JW3dVysFCvsaRA/4hnLOQu9P7awLpqxR4OgBB3fYdgi71oGNhiE3MiiNIAhOG/dt7fXF8vjDrAUWpP668QlDb38BiizF6bbPr/6Z9hMGTLVzM=
+	t=1739062263; cv=none; b=qvsu3yHo82Clq5u2bdzNSsicGqSkXAX4Nzix4W5K1aYRkQEX9h/jK6CGowy6Kh6Y7ExJj3eBcBRzUlk0CwqApq19Dy4ohCr04LmlwwWkOThtI8puk8YamanoFGoBMCWdWdeVPhszwK9XnHEd2qclKpafok5pAbHTTk+St/QJGyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739062081; c=relaxed/simple;
-	bh=qzrkW/FtYpC4vxsTUm2M/DPtl7GUjdWaJCHRPy+ZSVw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CsX6l9wzoXg1kEqGhHpuDQmS3aSOsjUawp3fEHFENoEYywLQtV3hg3uxnQ1SMTkSI9WW1vGYeiQzUqArzmIwxv6SLXLjcixL9xv2BSAJ+KtW7O7r3uGsHqVOQiKvxxF8diGNoCDrfWEyVxc/sgOA+yMGgs9QGIXIMKOYXMVGJ5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZOekPdPG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZOekPdPG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85CAFC4CED6;
-	Sun,  9 Feb 2025 00:47:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739062080;
-	bh=qzrkW/FtYpC4vxsTUm2M/DPtl7GUjdWaJCHRPy+ZSVw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZOekPdPG9rGXAHwHCR6hmFwTQMVrCn3b0BkMOkL5ga4lVl9Bs1dV7Qj8jWjhegNaN
-	 k6ROCugHcyaC2GsNvAJMCwS3vFBqmdutah+OvU5vCstt6uSky2vq1mC0Ntlm+frb2C
-	 X0xFTOQ9fU5W68iySd8+jcI7HJZVFGPYagaFMyZu0Yv8H8hpMUpy+8+kFA8Jfor1sH
-	 iANNuiZ66aMDXpHLfZVRtVHNNoiCXmArinGre7+QqR9FS9NA4DVvwT/K9Cz7cL1nI2
-	 1YH+2yIZfba9d5ndLHMbRXsv6b4BtAKXU5z1HZB6z9YXcYElecobD3sDIfa+ajQkV3
-	 NzCmF/NhFCXPg==
-Date: Sun, 9 Feb 2025 01:47:52 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: "Dr. Greg" <greg@enjellic.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Hector Martin <marcan@marcan.st>, Dave Airlie <airlied@gmail.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Greg KH <gregkh@linuxfoundation.org>, phasta@kernel.org,
-	Christoph Hellwig <hch@lst.de>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	daniel.almeida@collabora.com, aliceryhl@google.com,
-	robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	Bj??rn Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	open list <linux-kernel@vger.kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
-	DRI Development <dri-devel@lists.freedesktop.org>
-Subject: Re: On community influencing (was Re: [PATCH v8 2/2] rust: add dma
- coherent allocator abstraction.)
-Message-ID: <Z6f7OPgge4k-gYIE@pollux.localdomain>
-References: <20250130172437.GN5556@nvidia.com>
- <2025013148-reversal-pessimism-1515@gregkh>
- <20250131135421.GO5556@nvidia.com>
- <2b9b75d1-eb8e-494a-b05f-59f75c92e6ae@marcan.st>
- <Z6OzgBYZNJPr_ZD1@phenom.ffwll.local>
- <CAPM=9tzPR9wd=3Wbjnp-T0W8-dDfGah-H3Ny52G85B+2Ev9ksA@mail.gmail.com>
- <208e1fc3-cfc3-4a26-98c3-a48ab35bb9db@marcan.st>
- <CAHk-=wi=ZmP2=TmHsFSUGq8vUZAOWWSK1vrJarMaOhReDRQRYQ@mail.gmail.com>
- <20250207121638.GA7356@wind.enjellic.com>
- <20250208204416.GL1130956@mit.edu>
+	s=arc-20240116; t=1739062263; c=relaxed/simple;
+	bh=WK84HB6/OSqYDfgF36wHE35JV26Uiu6yBF8sMhH8yjE=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=rsR0SjDUPWtNVJHhCqpH3YBm+vBBo9w/BwSj/Q3OpY5iRGZdr5jL50Vdf743F98yReUxQXswOIUPgDj6+405MogVT33pRxkAK05in+2uVSfquWe6SytycLIHt71BD9/zMZ5R4D3RWYhJ/u/ClIANfb7Mwlcx3d1igGyT23t2+VQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d058142573so27093545ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 16:51:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739062261; x=1739667061;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LeuJzDrnvf0AYvwTbHytyc5iAEmYIUdS3Zdm4oKb838=;
+        b=VT3clISpeK1IOzw0c3IYncnId8pxSIeoxBxiPhQs03Lu/2Fuo3q0S2VRyzshgznb7k
+         r1+maNYxpWVOKDOh2twm5BujWHDY0bqu9KDn/q4X3+b4GPbUM+FXWhum7q5PGEqYaBv2
+         c23xedsusnXmX7b6GBzl2UiBGMzcBwRPDYhDlkRfmKz+fFEn0xI4GB6VcdJEp/+AOjNc
+         ey6Xxwdg6u/+f3aVruMsCnsta9yTADa/8vWOa82eOaAcHRv200q6oqh8YUWefyxD6R8I
+         /fDUm5qmu1uqgFDIuNcAC6q0LjXnWTischqWJs7Exib2h9lrdzr3WwChqyj5NR72kV8T
+         IBmw==
+X-Forwarded-Encrypted: i=1; AJvYcCU9RY0RU9g2kwabgiJddVvZ9S6Q4aQJxdzV1SkniCIBRUtA++G+5wuhhR7S0f8WofzRHb7lsl2RevShhI4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxdv0tLKkJdbC8VhNQoYquVtyUGtVpYSvdxfBGyyW0hZBj7Q+/l
+	BQevI8NT4HOZ91bKv70G1h2VgdeZJuqooWoOKwIDuxf+aklnwuCzB0yZpLrq7CKuLcLxT/tJ9B1
+	ZmwN0KRVEWkz5mlH9bxgSygAPzsUJ5SbaiqkiItuTrihbxFZsapAhKMs=
+X-Google-Smtp-Source: AGHT+IEfVj9thF++4lSEILBpzcANQeF93P9KNJitGleqZ0h6bQrpFVB72bo02c99LT1VwHu1MqDRh5RTNDdeGBNUZGMSzYJUmiNs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250208204416.GL1130956@mit.edu>
+X-Received: by 2002:a05:6e02:12ce:b0:3cf:c07d:e9a with SMTP id
+ e9e14a558f8ab-3d05a58d185mr94562855ab.4.1739062261269; Sat, 08 Feb 2025
+ 16:51:01 -0800 (PST)
+Date: Sat, 08 Feb 2025 16:51:01 -0800
+In-Reply-To: <20250208234531.2110-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a7fbf5.050a0220.110943.0014.GAE@google.com>
+Subject: Re: [syzbot] [hams?] possible deadlock in nr_remove_neigh (2)
+From: syzbot <syzbot+8863ad36d31449b4dc17@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Ted,
+Hello,
 
-On Sat, Feb 08, 2025 at 03:44:16PM -0500, Theodore Ts'o wrote:
-> This was the trust of my "Beyond Upstream First" presentation which I
-> gave to the Linux Foundation Member Summit last fall[1].
-> 
-> [1] https://docs.google.com/presentation/d/11rMc8PBeyMItV6hv31OHSZ626_6FCZxjX6ZxEAehCpQ/edit#slide=id.p
-> 
-> Now, I'll say that the Rust developers are making strides in the right
-> direction here.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Please let me add that a lot of those Rust kernel developers also have been
-kernel developers before there has been Rust in the kernel and do still
-contribute and even maintain C components, drivers and / or subsystems.
+Reported-by: syzbot+8863ad36d31449b4dc17@syzkaller.appspotmail.com
+Tested-by: syzbot+8863ad36d31449b4dc17@syzkaller.appspotmail.com
 
-I think missing trust should not be a relevent factor in this matter.
+Tested on:
 
-> Miguel has stood for election for the Technical
-> Adviory Board, and has been contributing in various ways beyond just
-> Rust for Linux.
+commit:         9946eaf5 Merge tag 'hardening-v6.14-rc2' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=109902a4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a7ddf49cf33ba213
+dashboard link: https://syzkaller.appspot.com/bug?extid=8863ad36d31449b4dc17
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=12b32b18580000
 
-Thanks for pointing this out.
-
-- Danilo
+Note: testing is done by a robot and is best-effort only.
