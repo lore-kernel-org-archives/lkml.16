@@ -1,111 +1,225 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A471119A;
-	Sun,  9 Feb 2025 19:02:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6971119A
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 19:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739127736; cv=none; b=QaOpRZXI3rXJxhxtVvBnmb4vppgjyKtKHZQmHKIIBqNQ/eebT8LLF2FAApto+XzF4TcOBfy9Yf5sLYHrQ9uUULHswExWuIDOmXAUqfr2VexDcoam8691e1CeU5h9biEi5F8bEE1eJqpg/W1uZghab953f9hTkjA8fVieIsdjD1Y=
+	t=1739127912; cv=none; b=BulkKMpUVhW7ddn1pcW42HxIvAkAQKdaKY77tzxFk4t0qaEhchSY01EmEp3pcSqbf6lZbcGBbElhTKd5Is27ibyAZRTgDZJysnS41om+sxtjWfO0Cfgk8knSvcZulDQiOCy7Yq02W5ttY4qg1dURXC2xPjk0b2o/btBJe4WVl4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739127736; c=relaxed/simple;
-	bh=TW+4+E+7+XZP/g+s7R6oa8NpnYXtrdMq9PE27UIWXjw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gfc6q9dlB6UpXqtet+shpw2pJilJiEVnhpwt22YdOLxdUbTcDygZU6F49DVW/X9B7k+9vHDhdR5bVG0jcBthghfn3CQ27waPKIhZDacJMq3gapVsTa5UuXSQzMP5Qj2Dv31CSMeGu0w7xsGcc4hddyFDPvq43GsjDhTX/hydfsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P8npWeFw; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739127912; c=relaxed/simple;
+	bh=tO443QVXlFWLQZzpp8MDDYbUAEc3gKeOAG0AC46AoWk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=davj6g9THz/NVM0TxMdj5C7fwY/Gk8rFGdAzwT/k50y8vs/gYBNlXvJUXhthh6kMu8mA/ktat7eLGD1r5LUFDhMBoBaXP6rmhQ04VDrxn3WkgIQovcn9sgSlvvvEaNaAV5Yw3C1zl3pS+lzYNgYNxCxlvUf5Qg6YXnENPzP7jj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=GDHLNNt7; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P8npWeFw"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-439350f1a0bso5648115e9.0;
-        Sun, 09 Feb 2025 11:02:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="GDHLNNt7"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38633b5dbcfso3623749f8f.2
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 11:05:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739127733; x=1739732533; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XP+FJqFsJoVUSV9/Q4BgbMERBLwXpp95kX3C9awegos=;
-        b=P8npWeFwyKELq7vD5dpNs993362vXeJa5zKozBUYFHZEO+8vjCIWNjcYBiINjBO8vm
-         zK360+dYTHf+uErocR8sFDJBgje2dZbgTdG/jdQIu9JS/WVXaEemLRqUN2Gc5SAMYheu
-         Kw90pHGvNnaHfiEiweW+Vof/IFwUaXda8/8myphSlLLJK6wVzEw4KHe/6LD9NWBBGIaS
-         L5NLOPKvrWK78X1q0BYG/E2hDzj4NybjfMhF1uflpKgFZn2BAGQb0S9CBplTrU54D7Hs
-         ICDJDjtX7XiVWbbA364Yh29/wbujbWPatbHcNt/B7GGdmjyGkR7wEUw7iYEoTHTzFie+
-         634Q==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739127907; x=1739732707; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DOgrqfsjruWBU8I+dOd1YugI+z334YIgbaObFFiHDqo=;
+        b=GDHLNNt79nLWxuNLsgbUi4WeYHfUm8cYx+7vYqimuTPdT+1Oy10IJaZX6Hdza8CV2/
+         gfEh4kipbho5YH/9CULzQY5tK5/5wUCYeK+YcNi8A3WrIwGtrDKt1rvtMQ2livrtDt93
+         Tawm6+Is2DsGMyL5MzMJrKzWehtFO6o03nARSbhrAZTGjeAhCvVoIrryi8vw59U5RQAK
+         DuV2UDzH76sdY37iEafqC1kov7Talmn+Zy7CXlBuI1zSP9RMneEsA2Q4TOhSeCVaNlXW
+         XAf4i8nasYKQrG2udwAuKmcwyrWXWdL3cHOFG9/H6JN3vhP7asp8j1FiyO4lQSascQ3J
+         AO9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739127733; x=1739732533;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XP+FJqFsJoVUSV9/Q4BgbMERBLwXpp95kX3C9awegos=;
-        b=UfZR2kR1PngVMs2c8vJbmaTka8xGNMOc0F8Uppb+la4Wo7MdPhNLmIOuS/Z/wRqmbD
-         +UDGEPZJv8CCxdpsAp2253/iaR8wXo67gj5mBmkwZKN5yM4IC3vFhk9j3+DdICfRnnSw
-         HXdKdu39V+7o0CeV5grpm8uu5H9FMeF5OFQM2JVe/Cwsp38fFaPT+GR3aubvzi2UnaAE
-         w8ez5Jfg8JyOLUnf+gBLWK6uXBFDc8ObGrVoDX0KAM5A9VCZoblbz7UUCRAY2wcakOmg
-         ZoPuQDljS/AfmN8on2A9Yzs1cO56TbPaNnb1+jy6Rowh5CtYpSrEZYfV0DoP97d1WBan
-         8hMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVaR8Devr26Px2k3iy49Bwq64g0T6GGK6tSyd3jnCHIwRO2P6YdcOc6JIdY0/zUnA2u0r9DkRKn8WLyuKg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyF7njhG7Wm+F4N4OPSPogIb1niuvwiWjANMuFjlYg806ChDFJN
-	sevTpIKER4QLg+Gy0pa6SN7bHtZWoQ+MWFqrsRZRC7F3zEBQQK8s7wrTmg==
-X-Gm-Gg: ASbGncsENsfhPLJvI1Kw3yy4JVjfdVh4f6EKI4NR+zwoTdnYvQFlnwfTf5V+qt6tqBw
-	9zgkvwxcukogne7gFTJWWljAWqu1cdDUMFaLv1Hen0YMCz9yUFlaD48Qqv7xABmHaXStsDX0nos
-	6XoCwzvvHqInafnRw7IkCcq0l2bJW0l+ELh2rgY+tHaDU88ncAisFeH0hEa7GhTs432G1VXH1ua
-	a/8iZeD8S54LZHlhHR7m92EJD8rSXrzUeRFJsLDKsDM8PCMkA7LiIruTcO/teBQNaYRhBf2bClk
-	oG82OzXsxWZ4rSHr9JggJ2wAia/2FvbUvAYTIX6ts3Kl2NHtsmtMUw==
-X-Google-Smtp-Source: AGHT+IFXfne07FMOmsZHlzDGsNHD50KSPwTdX3y2XpB44iLobk3mfvWg1U9XQDm4wLgCh1q8VL9w7A==
-X-Received: by 2002:a05:600c:4f8f:b0:434:fe3c:c662 with SMTP id 5b1f17b1804b1-439255b817cmr67733615e9.12.1739127733205;
-        Sun, 09 Feb 2025 11:02:13 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43943cd4442sm10137305e9.24.2025.02.09.11.02.12
+        d=1e100.net; s=20230601; t=1739127907; x=1739732707;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DOgrqfsjruWBU8I+dOd1YugI+z334YIgbaObFFiHDqo=;
+        b=aTcg4+J11RYiR7LWYP49KQQ3oXtFBXt3+V0rYQTYMrrIjFwp1DpKgABZCdSd7REEZV
+         F7y5RwBAvp2BN+S0rbZH7hy9zCjhuOWC9p4BBh0nXL0Bc4quN7w1Rs9u/0Z/R05K939r
+         6wXArSQH7LiFsuEF41kCzebgmX3oqa8ZTGPQDlvdVnw9qre0YR18NsVu5yZcXR07pnb8
+         NqDF+6zQL88qMF3Efuy4abKXWYh+9FzwZnbrwMzqkNM5aK18vTB8VjCyxD/1qJiI7ZTj
+         EvFwcg6EzLbaOUmJ/gGC2ule4074n7cGDwLoSAsp2quytB8U2cgDCusP/SGn1ZSsZszd
+         iWkA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtiTzpXFNDWyHecL2SX9EWi2IriXTRaod7sj1iJVD7r/tK3TPCkeqbk4/8LBQbJ1JKYXEitNpbJLIdtig=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEKKuB/RVzFxFfmIlvuXAhK824JZjgyk2ONowHl0WZ3VsYfHHm
+	BYUrHBifxJI+aDqnhaULs6+E8lSBEzrpgKKB/MkYQVgEBgEG4Txd+W0/fNCYT2s=
+X-Gm-Gg: ASbGncsyMneaTduDW13OZdETDEFJ98BVN0fqJTD8vGaOfeezMmASjVz4wHRPNvtM5l0
+	jejZ2AXAepa5vNO9OkxWBarS8EMYxddI1e6i2YRiJp7ov34hbY+haVnA/5NeQ7VZFYFq7AaR8wU
+	0B1ZO+94bf/wLH+F0TJVSrFMeo7y8o6cWzPmJPvJtWNakigAAztqi9A4LJBfiFfSoWq1qVCi1W3
+	xL79Fxc/LAUpkQ1QNOPjhQyyGgDHdAIlGoEYs9uro/EcKffh+U+obwi1GMLF3s9IPI9xNX+LT1l
+	+0rttuvBfGTt7w==
+X-Google-Smtp-Source: AGHT+IHIDgs582fYiTnMyFA1Xfn5fJtr1bzDiCb7caNzZEYgyUddfTzyipyRqs3rh8ROJQOCY9Y0qQ==
+X-Received: by 2002:adf:e60f:0:b0:38d:ba8f:1ebd with SMTP id ffacd0b85a97d-38dc9135a06mr7424042f8f.34.1739127907134;
+        Sun, 09 Feb 2025 11:05:07 -0800 (PST)
+Received: from localhost ([2a01:e0a:3c5:5fb1:a1c:15e0:43ce:c34b])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbde0fd0dsm10209234f8f.75.2025.02.09.11.05.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 11:02:12 -0800 (PST)
-Date: Sun, 9 Feb 2025 19:02:11 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Alexander
- Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan
- Kara <jack@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Kees Cook
- <kees@kernel.org>
-Subject: Re: [PATCH 1/2] uaccess: Simplify code pattern for masked user
- copies
-Message-ID: <20250209190211.5a11d6d6@pumpkin>
-In-Reply-To: <CAHk-=wjv5x4ee-nKLfwoYwgJ9OqBkd+wqGn-dgWpHdpA2oZqqw@mail.gmail.com>
-References: <20250209105600.3388-1-david.laight.linux@gmail.com>
-	<20250209105600.3388-2-david.laight.linux@gmail.com>
-	<CAHk-=wgu0B+9ZSmXaL6EyYQyDsWRGZv48jRGKJMphpO4bNiu_A@mail.gmail.com>
-	<20250209183437.340dcee6@pumpkin>
-	<CAHk-=wgkEDmf7V+F5jP6On3=pEewRYGbZyvs1E3K-3n3HYr4=Q@mail.gmail.com>
-	<CAHk-=wjv5x4ee-nKLfwoYwgJ9OqBkd+wqGn-dgWpHdpA2oZqqw@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        Sun, 09 Feb 2025 11:05:06 -0800 (PST)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Luca Weiss <luca@lucaweiss.eu>
+Cc: Liam Girdwood <lgirdwood@gmail.com>,  Mark Brown <broonie@kernel.org>,
+  linux-kernel@vger.kernel.org,  Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 1/3] regulator: core: do not silently ignore provided
+ init_data
+In-Reply-To: <5857103.DvuYhMxLoT@lucaweiss.eu> (Luca Weiss's message of "Sun,
+	09 Feb 2025 15:16:17 +0100")
+References: <20241008-regulator-ignored-data-v2-0-d1251e0ee507@baylibre.com>
+	<20241008-regulator-ignored-data-v2-1-d1251e0ee507@baylibre.com>
+	<5857103.DvuYhMxLoT@lucaweiss.eu>
+User-Agent: mu4e 1.12.8; emacs 29.4
+Date: Sun, 09 Feb 2025 20:05:05 +0100
+Message-ID: <1jwmdz0wim.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On Sun, 9 Feb 2025 10:46:03 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Sun 09 Feb 2025 at 15:16, Luca Weiss <luca@lucaweiss.eu> wrote:
 
-> On Sun, 9 Feb 2025 at 10:40, Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > It's *really* easy to miss the "oh, that changes X" when the only
-> > little tiny sign of it is that "&" character inside the argument list,
-> > and then the *normal* mental model is that arguments are arguments
-> > *to* the function, not returns *from* the function.  
-> 
-> While I'm ranting, this is just another case of "C++ really got this
-> very very wrong".
-> 
-> C++ made pass-by-reference really easy, and removed the need for even
-> that tiny marker in the caller.
-> 
-> So then you really can't even visually see that "oh, that call changes
-> its argument", and have to just know.
+> On dinsdag 8 oktober 2024 18:07:01 Midden-Europese standaardtijd Jerome Brunet wrote:
+>> On DT platforms, if a regulator init_data is provided in config, it is
+>> silently ignored in favor of the DT parsing done by the framework, if
+>> of_match is set.
+>> 
+>> of_match is an indication that init_data is expected to be set based on DT
+>> and the parsing should be done by the regulator framework.
+>> 
+>> If the regulator provider passed init_data it must be because it is useful
+>> somehow, in such case of_match should be clear.
+>> 
+>> If the driver expects the framework to initialize this data on its
+>> own, it should leave init_data clear.
+>> 
+>> Warn if both init_data and of_match are set, then default to the provided
+>> init_data.
+>
+> Hi Jerome,
+>
+> This commit is breaking USB on qcom-msm8974-lge-nexus5-hammerhead for me.
+>
+> I can't easily provide the full log since USB is breaking with this but in
+> effect it looks like in drivers/usb/chipidea/core.c in ci_get_platdata()
+> the call devm_regulator_get_optional(dev, "vbus"); is always returning
+> EPROBE_DEFER, so USB never initializes.
 
-Or make a habit of appending '+ 0' to every argument :-)
+Sorry about that.
 
-> 
->               Linus
+>
+> This vbus regulator is provided by ti,bq24192 so the bq24190_charger.c
+> driver. While the driver does seem to probe correctly, I do also see that
+> warning "Using provided init data - OF match ignored" in dmesg.
 
+Well the driver does this funny thing of passing init_data but also
+setting the of_match.
+
+Looking at it more, your driver provide init_data/constraint here:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/power/supply/bq24190_charger.c?h=v6.12.13#n718
+
+Apparently this constraint is only meant as a backup/default in case
+nothing is matched by the platform, which would explain why your
+platform through the trouble of passing an empty regulator node to
+override it.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/arch/arm/boot/dts/qcom/qcom-msm8974-lge-nexus5-hammerhead.dts#n116
+
+I did not really expect that but it seems intended indeed.
+Revert is probably the sane thing to do but it would be nice to have
+comment about that and maybe a debug print.
+
+Mark, do you want to revert this directly or shall I submit the change
+for you to apply ?
+
+>
+> Reverting this patch on top of v6.13.2 fixes the issue and makes USB work
+> again.
+>
+> Regards
+> Luca
+>
+>> 
+>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> ---
+>>  drivers/regulator/core.c | 57 +++++++++++++++++++++++++++++-------------------
+>>  1 file changed, 34 insertions(+), 23 deletions(-)
+>> 
+>> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+>> index d0b3879f2746..a58a9db3d9c7 100644
+>> --- a/drivers/regulator/core.c
+>> +++ b/drivers/regulator/core.c
+>> @@ -5681,32 +5681,43 @@ regulator_register(struct device *dev,
+>>  		goto clean;
+>>  	}
+>>  
+>> -	init_data = regulator_of_get_init_data(dev, regulator_desc, config,
+>> -					       &rdev->dev.of_node);
+>> -
+>> -	/*
+>> -	 * Sometimes not all resources are probed already so we need to take
+>> -	 * that into account. This happens most the time if the ena_gpiod comes
+>> -	 * from a gpio extender or something else.
+>> -	 */
+>> -	if (PTR_ERR(init_data) == -EPROBE_DEFER) {
+>> -		ret = -EPROBE_DEFER;
+>> -		goto clean;
+>> -	}
+>> +	if (config->init_data) {
+>> +		/*
+>> +		 * Providing of_match means the framework is expected to parse
+>> +		 * DT to get the init_data. This would conflict with provided
+>> +		 * init_data, if set. Warn if it happens.
+>> +		 */
+>> +		if (regulator_desc->of_match)
+>> +			dev_warn(dev, "Using provided init data - OF match ignored\n");
+>>  
+>> -	/*
+>> -	 * We need to keep track of any GPIO descriptor coming from the
+>> -	 * device tree until we have handled it over to the core. If the
+>> -	 * config that was passed in to this function DOES NOT contain
+>> -	 * a descriptor, and the config after this call DOES contain
+>> -	 * a descriptor, we definitely got one from parsing the device
+>> -	 * tree.
+>> -	 */
+>> -	if (!cfg->ena_gpiod && config->ena_gpiod)
+>> -		dangling_of_gpiod = true;
+>> -	if (!init_data) {
+>>  		init_data = config->init_data;
+>>  		rdev->dev.of_node = of_node_get(config->of_node);
+>> +
+>> +	} else {
+>> +		init_data = regulator_of_get_init_data(dev, regulator_desc,
+>> +						       config,
+>> +						       &rdev->dev.of_node);
+>> +
+>> +		/*
+>> +		 * Sometimes not all resources are probed already so we need to
+>> +		 * take that into account. This happens most the time if the
+>> +		 * ena_gpiod comes from a gpio extender or something else.
+>> +		 */
+>> +		if (PTR_ERR(init_data) == -EPROBE_DEFER) {
+>> +			ret = -EPROBE_DEFER;
+>> +			goto clean;
+>> +		}
+>> +
+>> +		/*
+>> +		 * We need to keep track of any GPIO descriptor coming from the
+>> +		 * device tree until we have handled it over to the core. If the
+>> +		 * config that was passed in to this function DOES NOT contain a
+>> +		 * descriptor, and the config after this call DOES contain a
+>> +		 * descriptor, we definitely got one from parsing the device
+>> +		 * tree.
+>> +		 */
+>> +		if (!cfg->ena_gpiod && config->ena_gpiod)
+>> +			dangling_of_gpiod = true;
+>>  	}
+>>  
+>>  	ww_mutex_init(&rdev->mutex, &regulator_ww_class);
+>> 
+>> 
+
+-- 
+Jerome
