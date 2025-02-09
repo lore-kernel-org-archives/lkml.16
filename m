@@ -1,112 +1,100 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94BC1684AC;
-	Sun,  9 Feb 2025 17:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6D8EAC6;
+	Sun,  9 Feb 2025 17:26:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739121711; cv=none; b=SclyY5mdH+WQc5tezqSgS6hFaOyOWNjWNoDkpssbFs7qHSkB3M6GIZivy8xg9+oyzPzNcarbET1+PYNMptBHNYIeP6ybwbNHj4VQEfnqkTs/3hrLe4v3yV/02GJixL6ARnwV/kAar1ueH81O55GDA32vda6SzRNRFE4Rtnsdmho=
+	t=1739121979; cv=none; b=Fjj0Ir+716edv6rgIPnx0eGkbq3lxsysDjoXvsjKmFWCTjyynhqHrrd8DpdvDJGNPVmEXzP6/ngPrULntTJOo/X4oQvi9pEoLFFugZWXYfp/nMOfGZ+L42cPVUytjZZXWvskQoWG2974q1Q249dQjDqEWmNaYQbBPbcVrDpYVrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739121711; c=relaxed/simple;
-	bh=IA/dnIHcn3b6eGSzI2/CTp4TdE2Sy5vSODDaNNUYlBU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bf/PA/pfbPfsT/9ScrRsXQqDGQI3W7jJVaeuNlKhLbHeQOZrBG+EBVLFzRswOVlcOTTrQvmBycBejs5jWJ5kOQFk/qQVuJtKGVvVypEk/Q8VCKlwG85NwkKlDmmSfLEKOJ8y1OGFX0nzQAJoz1lqhM1UdfYTIHr54sItlc5bqDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jdN1nUsB; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739121979; c=relaxed/simple;
+	bh=1+LNXsFOjhvHxlmKQUdFR2fSkH2jqnxwgGL7iflJX1w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hceBHhcMuP+1E5w1KufCajgLPRYvh6oc2jS+4Bt/lGMiBl5a2b57yeOmDoEOK/NA+S+Bk7P3+KH1naO7p/n9uAyE51ias4Xku+rheJ/sxfkAyeI1l3pi5qN4x27dTs34fCbdNWqP5uvp4jp6hjBGuaUmg+55nXdtONJ7UhmdDJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LTg/wK2P; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jdN1nUsB"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21f5ccd9742so3741055ad.1;
-        Sun, 09 Feb 2025 09:21:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739121709; x=1739726509; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IA/dnIHcn3b6eGSzI2/CTp4TdE2Sy5vSODDaNNUYlBU=;
-        b=jdN1nUsBRKJQ7dOYgqioGfXzKxoxzEJPm+xZuucSnhrnAm8FVp4WTYXZtVD6ohYHdI
-         sYV6XCovKrqizrjMI9dAQMomeg0FJzjIKrrINbCeupLsEyza+u+9MrrzbCvyZtunNtHd
-         4tYii9xYLCV9trSgxC9/sekJV7mhdkb5EDueGQHlnatw21CMPtO8zOv3rB239FamIGOk
-         QOI+se8sMg009WuKHwOp3aIQFBSIQBy+/Oe6p4Q48d2+yWauTogk5okm1wRi/PQUSAbq
-         Bwp2bN/Uhwd14rE46hKh7cmKaZwY+k6lT4ZoiP/PGkCjVPEAXDrj9U7D//Glvh88jnJd
-         XeQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739121709; x=1739726509;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IA/dnIHcn3b6eGSzI2/CTp4TdE2Sy5vSODDaNNUYlBU=;
-        b=GAv9X+1SKmi9GfwShVt7JSwuLPyhQ13CrTXAPXJmWrY8iSjdNh1I5Oxg/vVog0ODj8
-         R5wZgDROou+Gb2kaWCBAjjpaU+QnFnnRNYwRbbeLbc1lNFTctSmsW0SvVF5X4kLfIDB1
-         P2ErwBN4ExuLunwSdLr/gMBzjWk5gRL2XiyGv7MqEsKmhD6ey99XpMQi8In9e40sdh0X
-         02867+hQfdLfeCRoWS4Su0tE0AaA+kpZGvYTId+acL2kyk7hXmfI5uA2HJXp8SolZDzt
-         JzWovgxRHNd1/6pT93QBufdcoKhuaQQZDrqhXg2m98QiSaxGTXt7+kMdSJzIcKNof2mq
-         SKuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVD2byYvmkeSxgPTgNz8CyGIrUXTDZVRQwPVmHmOFCkJP0iEeR2vrMKLZQY2IUUVp0qAVR0OkHSwbNxMjk=@vger.kernel.org, AJvYcCW8nYhR2kpi/O1Kne9TD/BBRKfMfU/EKQPJrj+W/P+3asJR1dpPCa92/w9TTx2yVdSUXQMJyg5yDGgjMpqE2nQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBp0qWwp771O4OokjKv0/QuVkwi3ksd4IDyzz57SVMwUKnXtZF
-	a6+XyLhdlJFG0qKntgMpF0lxJOZxrDbPMas7ojxsoSZdTX0x47EuoarY4B7OQ+MS6Ud1G+bcCTm
-	0HtuY61D6RRCF5xi4JwyIVdOs/4g=
-X-Gm-Gg: ASbGncvoxyAMoiCNqPZmOrKCryyaonTqpvdm/pWd3jtTZCES6toNaMR5LQkerfEke/F
-	mNFZWr4OfPRkNSxpmRnkRvG1LdbGgjdNHfPmYkcfrleGumXGqYacEMLwEkhxMWD1rGU7JkRfq
-X-Google-Smtp-Source: AGHT+IEE2k9G48valsmFJmhev5biFYD4XTshkK0mL7FJhaD3BvZf7/ikD3IRE78o3FY5K1npiihFf1w7cueGlw6+zbI=
-X-Received: by 2002:a17:902:b110:b0:21f:207:bd88 with SMTP id
- d9443c01a7336-21f4e6cfeeamr64152885ad.3.1739121708976; Sun, 09 Feb 2025
- 09:21:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LTg/wK2P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739121978; x=1770657978;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1+LNXsFOjhvHxlmKQUdFR2fSkH2jqnxwgGL7iflJX1w=;
+  b=LTg/wK2PdTD/ve3aJ+p80vfrFoF/1dXYy9AU/uSlrBQRTuLIIIac+zSJ
+   lz/rx2TrWiQyAh2yZeqrCI09BoIVOpcN8EWUxKDUwZwNMw3LBxh+bAsvr
+   EhnZCcK2J8A/uuEfWpDWS6/sjRPzMOnPGtYwtqqGUpnA6in5etFUVuLTF
+   u/TWuoRsk7SKOVhsUPFlpHrWpLzamOfVP40PQaDE306EB7Xxny/nyBVyJ
+   Ouc1cSxJEpoGUy00HE37zyDs40+pC9TglyTr4NHGK+SVRxdIIOIG7xy17
+   8//gueS0iZIU6llcXBKNF8LS9Z2RMh/R7Of/3rqvgddcAt5Om26+g4ax3
+   Q==;
+X-CSE-ConnectionGUID: NKvPYSheQ/6qX2nnu7bWcg==
+X-CSE-MsgGUID: nZb5oYoMTi2CJVANTPaH+w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="39572710"
+X-IronPort-AV: E=Sophos;i="6.13,272,1732608000"; 
+   d="scan'208";a="39572710"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 09:26:17 -0800
+X-CSE-ConnectionGUID: CENKPEMsQ3q0DcqTYJb+Gw==
+X-CSE-MsgGUID: bGEHtzYgQUCL+84ElruMjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,272,1732608000"; 
+   d="scan'208";a="142848039"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 09 Feb 2025 09:26:16 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1thB4P-0011jL-1I;
+	Sun, 09 Feb 2025 17:26:13 +0000
+Date: Mon, 10 Feb 2025 01:25:58 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mateusz Guzik <mjguzik@gmail.com>, brauner@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, viro@zeniv.linux.org.uk, jack@suse.cz,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	Mateusz Guzik <mjguzik@gmail.com>
+Subject: Re: [PATCH v3 3/3] vfs: use the new debug macros in
+ inode_set_cached_link()
+Message-ID: <202502100145.hCrPMGW4-lkp@intel.com>
+References: <20250208162611.628145-4-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250209-rust-analyzer-macros-core-dep-v1-1-5ebeb3eb60a9@gmail.com>
- <CANiq72mw83RmLYeFFoJW6mUUygoyiA_f1ievSC2pmBESsQew+w@mail.gmail.com>
- <CAJ-ks9nMjPnyY_J1xH93MEepcekYWQ=Ve+Kq_TaM=MvA4B0Phw@mail.gmail.com>
- <CANiq72n2WTAp28PeNVw1hOsxw5Bo1HMxtpTb7N-f7z_aGMppBg@mail.gmail.com>
- <CAJ-ks9k1+n7GS8mMYg1BzrBwsEJK3P9xPnj6xGO7Prx0qWSs2w@mail.gmail.com>
- <CANiq72=sCeT0xwmszLZ-sOyH5YdOvvbzSgMsz5SgzF_wRJTbxA@mail.gmail.com> <CAJ-ks9kBuw=sEFWDZPMKiPD_hU=NPtseXBLyPeSrR6eEtJE4bQ@mail.gmail.com>
-In-Reply-To: <CAJ-ks9kBuw=sEFWDZPMKiPD_hU=NPtseXBLyPeSrR6eEtJE4bQ@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 9 Feb 2025 18:21:36 +0100
-X-Gm-Features: AWEUYZkSD7EeD8IQT4OJePMwE90A_TiQ8Qb32DQZZwawRGv4TnYoU-kDAikw1So
-Message-ID: <CANiq72n+w9exRE=HHDsiOtf_O-nB1LOxiWnfoVoinmaWgGFQbg@mail.gmail.com>
-Subject: Re: [PATCH] scripts: generate_rust_analyzer.py: add missing macros ->
- core dep
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Boris-Chengbiao Zhou <bobo1239@web.de>, Fiona Behrens <me@kloenk.dev>, Kees Cook <kees@kernel.org>, 
-	Wedson Almeida Filho <wedsonaf@google.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Chayim Refael Friedman <chayimfr@gmail.com>, 
-	Lukas Wirth <lukas.wirth@ferrous-systems.com>, 
-	Daniel Almeida <daniel.almeida@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250208162611.628145-4-mjguzik@gmail.com>
 
-On Sun, Feb 9, 2025 at 6:09=E2=80=AFPM Tamir Duberstein <tamird@gmail.com> =
-wrote:
->
-> The detailed reason why splitting host and target crates requires
-> refactoring is that we currently we use `display_name` as a crate's
-> unique identifier (i.e. both as a way of naming it as another crate's
-> dependency, and as its name in the dependent crate). If we wanted to
-> have separate target and host `core` crates we'd need a slightly more
-> sophisticated way of describing dependencies. I'll work on this in a
-> separate series.
+Hi Mateusz,
 
-Yeah, that is why I was wondering if it would be worth it or not, and
-why I asked Lukas et al. (who leads rust-analyzer) if rust-analyzer is
-OK with that to begin with (or what is the expected way to do this),
-i.e. it may be that rust-analyzer does not "like" several crates with
-the same `display_name`.
+kernel test robot noticed the following build errors:
 
-In any case, I would like to keep the complexity of the script low if
-possible unless it really makes rust-analyzer understand the code
-better etc.
+[auto build test ERROR on linus/master]
+[also build test ERROR on next-20250207]
+[cannot apply to brauner-vfs/vfs.all viro-vfs/for-next akpm-mm/mm-nonmm-unstable v6.14-rc1]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Thanks!
+url:    https://github.com/intel-lab-lkp/linux/commits/Mateusz-Guzik/vfs-add-initial-support-for-CONFIG_VFS_DEBUG/20250209-002857
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250208162611.628145-4-mjguzik%40gmail.com
+patch subject: [PATCH v3 3/3] vfs: use the new debug macros in inode_set_cached_link()
+config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20250210/202502100145.hCrPMGW4-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250210/202502100145.hCrPMGW4-lkp@intel.com/reproduce)
 
-Cheers,
-Miguel
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502100145.hCrPMGW4-lkp@intel.com/
+
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+>> ERROR: modpost: "dump_inode" [fs/ext4/ext4.ko] undefined!
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
