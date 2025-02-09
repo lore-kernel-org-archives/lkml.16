@@ -1,159 +1,100 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97F34315E
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 06:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97344C9F
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 06:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739083468; cv=none; b=Ziy73H+rnp71perfoMh0/3y/NnOl/I1Z3q8Mq+fqHn1XfnCT1moE9n9isy4gRiT8tPzj2lFXTPmsORZGnMzWKW1JZ0hbDxtFucP0AdjFOqN0wVKK61w3mKu5+79rVcNGwrwGDYjNofoxPo8ecZqdni/GRGJlZn06ccI+5Fu5qec=
+	t=1739083476; cv=none; b=FryXa1TN/mascy/7UxlFln5HyBrXrSW4Qb3HZpuBpWIGS+r6P4DR+yr9G3JDS3bHCVTsWdR4FRhlHuWWTLXKj7u+9E49hCnxDPegdn7KB1Ry7T3iMAAc/SuEFlR5lZQ/zUjOiT5PQZVZcNpr0/tqFyqhcNDpdpV4nwGLvHou3Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739083468; c=relaxed/simple;
-	bh=k5z8UYLykpDZztIbyOAipUwnXwi+GKpDaKyRXhJIv8c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CvfKaKoWpzgPaKsiVSTxIjpttVbtiDTFMR5iEVH437PA9vo2LplEtFRUUlk7AnVdwu/LpYuqKujZS2cOuXoWTiKB4lT8DKJLk/g7V0CraZuq0U3HYEE3+ia4TvpV6QWtVxlQGm4AbHYDeXZDjRSNI5ttBIl1+9MvduicnV5EugQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BqFl5W8U; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739083476; c=relaxed/simple;
+	bh=pbXg2Rj6/DMfVQB2ivyUiCf+b7fD+8WHH0nrDRjKTu0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ISAtyQ8GOLCOeJM5Je93fPNNwG/HO5mbVLWX7/g83w0fqiNIfUIGJ0ZP3LDetw8/OMg6vbcDg2gDmlabr4rwWBNnXMQHk5immkHxnBz81cpkzD9qj2UDnfHoaWzPDuBdn6tViXFLR7/mBLej9Imb2QVg7fzCYH1fLVZGrP+f1ME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2oBUlc/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BqFl5W8U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739083465;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k5z8UYLykpDZztIbyOAipUwnXwi+GKpDaKyRXhJIv8c=;
-	b=BqFl5W8UyPsa3cgzafJi3mWnpfSnk8ciPa6Dc4N4TrujWktZyx/aWVe2IFCymV93hD9SDm
-	tg+np9GrQZE1V9UouT0ea4+AanGfM7ShFngsWGi5R9ov4OfiRaOTrLr1QUbsYqT23WP6rC
-	8cGC2grQABhfjhmPnlmHRI6x54py2y4=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-376-biXx6NJQMeihClDzOYkuhw-1; Sun, 09 Feb 2025 01:44:24 -0500
-X-MC-Unique: biXx6NJQMeihClDzOYkuhw-1
-X-Mimecast-MFC-AGG-ID: biXx6NJQMeihClDzOYkuhw
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-21f3aad4e0bso48400315ad.3
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 22:44:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739083463; x=1739688263;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k5z8UYLykpDZztIbyOAipUwnXwi+GKpDaKyRXhJIv8c=;
-        b=k6kjHCHzopqzmgsB5L86kxrdn+3gwjsmgUbXdrQ7q6Eet+VifsRnDnTQkqklWk+z4/
-         801K8e2MU5FseXbmPIcfcqkwQ5Yj3VNHqqSoKn2LcxsDqh/Yy60F9XjjH/2Fc3MMMBTJ
-         t8MJ9cmrnt5Em5Ag5QSwlB+8MfP6o6yrfjmB5dkA58dgQ89iwLKbI8rDLNhXBhgXVKlV
-         wiaKggJOPRoL2DDrLnJfFd7tQ/hZ/Oje3d7BqeGIUBD4nZu9uVAzQH0jZ9TZ5xZFXgB8
-         AUed2oFLeV+0K1VEu20ji+a5Af31MgHS1hJj26wetXTDG8DojNN8ITreVNNoWjer2RWT
-         IvDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUITJntomIHzjXoiJ7SuZvhDqEnt6dhJbiVTQIU1HzZtp3j0/l6A/pB2Mb4CQZWEjFtqtvG6uVCqaBuVHs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKcpX20phOCULdD653qH6mWLhvyoM4hYr6atue5hGcRmFbd7u6
-	jvbok1GuBAqmDLX2WxuakgJXkWBJJ9YkcHM5m6qv9eL/Ba2sWR7ngYL7CMJtTuOfvMq9EJOOJZJ
-	+s+MIl2uPhynwO1L7Wgxbh/WO4gynG2iUFH363JT2sNdgLUmY+jA1aTlF7SyLRqmlOFKWliZddi
-	FdhEjQPX2o0W5tnDpQTHQFgE/2b3gsfGZ/BgmD
-X-Gm-Gg: ASbGncs3DFRXFgYjNSQsxWQQqj1biD0waymtWf5TfoRa/4hr9TPkJU454xXp3GLiOuR
-	yAzfdqTVJii0sBkpwJIs0LhSsp7J1relyT7BWsO1tRQCs22NRU7QYgWi4iTe4
-X-Received: by 2002:a17:903:13c6:b0:21a:8300:b9ce with SMTP id d9443c01a7336-21f4e7772e2mr169599935ad.49.1739083463102;
-        Sat, 08 Feb 2025 22:44:23 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGO6/xttu4T8jZGaWc2hd6Zzb3mRsY1UKxFcJ0RUiPT3DBzdzt7cBP21ECwMvO1eY4S6krwSRPMmgqxuGo22uE=
-X-Received: by 2002:a17:903:13c6:b0:21a:8300:b9ce with SMTP id
- d9443c01a7336-21f4e7772e2mr169599735ad.49.1739083462831; Sat, 08 Feb 2025
- 22:44:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2oBUlc/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DE62C4CEDD;
+	Sun,  9 Feb 2025 06:44:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739083475;
+	bh=pbXg2Rj6/DMfVQB2ivyUiCf+b7fD+8WHH0nrDRjKTu0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b2oBUlc/e4o5Ltlx55+yM8OAzi5PubG38DazH1i04pNS9vF7jUM8gJ+LySC3rLFBc
+	 LCQe8BZN7McTl3Ib3XCPuxsKCJrk1aXtv16js6g2S1gjDWnZ933zjveG0QEN8wVD8w
+	 /VGDHIuvFDvIVFJqewnru1xWcWMA4v86R/xEQAr+i3sHZIkU3SsgxPDaWs1IeQwSd3
+	 w++n5xX6Z009PT4KkPVJkrAGgTQbOXwUOk7IwycGMNvpJH8ml18TM0+E1YXNmOJHLq
+	 TXJcjx/PWrB1+g5K2NJcpBY/FyEcXTRhw86B2FYMZ4Asrgxj2odfT2KtaBwUmdb2re
+	 LuaaaruxiKsNQ==
+Date: Sat, 8 Feb 2025 20:44:34 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Changwoo Min <changwoo@igalia.com>
+Cc: void@manifault.com, arighi@nvidia.com, kernel-dev@igalia.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tools/sched_ext: Compatible testing of
+ SCX_ENQ_CPU_SELECTED
+Message-ID: <Z6hO0toLJPN9PL-w@slm.duckdns.org>
+References: <20250209015353.11172-1-changwoo@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250108122825.136021-1-abdiel.janulgue@gmail.com>
- <20250108122825.136021-3-abdiel.janulgue@gmail.com> <20250108135951.GA18074@lst.de>
- <CANiq72=R2N+QiCiHZQu-6YJ9aYpn_bik3BW3U=nAW3jL7unzLw@mail.gmail.com> <1894f095-e93a-4def-a223-d5c089ecc2df@vt.edu>
-In-Reply-To: <1894f095-e93a-4def-a223-d5c089ecc2df@vt.edu>
-From: David Airlie <airlied@redhat.com>
-Date: Sun, 9 Feb 2025 16:44:10 +1000
-X-Gm-Features: AWEUYZmapeVmf6BlNwM1udDZl6mMgq_iwcj8x5DFYjHWYQsJjAcjx42A4duswn0
-Message-ID: <CAMwc25p1kGHjy7z19Kg+vv7yVc0bF2taA08hBKhk72e4HiK5xA@mail.gmail.com>
-Subject: Re: [PATCH v8 2/2] rust: add dma coherent allocator abstraction.
-To: Carlos Bilbao <bilbao@vt.edu>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Christoph Hellwig <hch@lst.de>, 
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>, daniel.almeida@collabora.com, 
-	aliceryhl@google.com, robin.murphy@arm.com, rust-for-linux@vger.kernel.org, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Valentin Obst <kernel@valentinobst.de>, open list <linux-kernel@vger.kernel.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, 
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>, Greg KH <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250209015353.11172-1-changwoo@igalia.com>
 
-On Sun, Feb 9, 2025 at 9:55=E2=80=AFAM Carlos Bilbao <bilbao@vt.edu> wrote:
->
-> Hello,
->
-> On 1/8/25 09:16, Miguel Ojeda wrote:
-> > On Wed, Jan 8, 2025 at 3:00=E2=80=AFPM Christoph Hellwig <hch@lst.de> w=
-rote:
-> >>
-> >> No rust code in kernel/dma, please.
-> >
-> > What do you suggest?
->
-> This is it. What do people suggest? This thread has received a lot of
-> attention -- maybe it's an opportunity for the community to brainstorm.
-> Here's an idea:
->
-> Some maintainers clearly hate wrappers/bindings to Rust, while others don=
-'t
-> mind as long as the R4L folks commit to the maintenance duties. Depending=
- on
-> the subsystem, it will be a completely different conversation. It seems t=
-o
-> me that right now, every time the R4L folks interact with a new subsystem=
-,
-> they need to understand the maintainer's stance. That looks like an
-> exhausting process.
->
+On Sun, Feb 09, 2025 at 10:53:53AM +0900, Changwoo Min wrote:
+> This provides compatible testing of SCX_ENQ_CPU_SELECTED.
+> More specifically, it handles two cases:
+> 
+>   1. a BPF scheduler is compiled against vmlinux.h where
+>   SCX_ENQ_CPU_SELECTED is defined, but it runs on a kernel that does not
+>   have SCX_ENQ_CPU_SELECTED. In this case, the test result of
+>   'enq_flags & SCX_ENQ_CPU_SELECTED' will always be false. That test result
+>   is semantically incorrect because the kernel before SCX_ENQ_CPU_SELECTED
+>   has never skipped select_task_rq_scx(), so the result should be true.
+> 
+>   2. a BPF scheduler is compiling against vmlinux.h where
+>   SCX_ENQ_CPU_SELECTED is not defined. In this case, directly using
+>   SCX_ENQ_CPU_SELECTED causes compilation errors.
+> 
+> To hide such complexity, introduce __COMPAT_is_enq_cpu_selected(),
+> which checks if SCX_ENQ_CPU_SELECTED exists in runtime using BPF CO-RE.
+> This consists of three parts:
+> 
+>   1. Add enum_defs.autogen.h, which has macros (HAVE_{enum name}) denoting
+>   whether SCX enums are defined in the vmlinux.h or not.
+> 
+>   2. Implement __COMPAT_is_enq_cpu_selected(), which provide the test of
+>   SCX_ENQ_CPU_SELECTED in a compatible way.
+> 
+>   3. Use  __COMPAT_is_enq_cpu_selected() in scx_qmap.
+> 
+> Note that this is a sync of the relevant PR [1] in the scx repo.
+> 
+>   [1] https://github.com/sched-ext/scx/pull/1314
+> 
+> Signed-off-by: Changwoo Min <changwoo@igalia.com>
 
-That is the process we are committed to, everyone has a voice and gets
-to be heard, and we move forward in the appropriate manner with each
-maintainer. Bypassing maintainers is the last resort, not engaging at
-all with maintainers isn't a productive way forward either. Your below
-attempt is trying to create a technical solution to a social problem.
+Applied to sched_ext/for-6.15 with a very minor edit:
 
-> Would it make sense to have a C middleman that Rust calls instead of
-> binding directly to the C funcs? This dispatcher would provide a simpler,
-> stable API with fixed function signatures, even if the C functions change=
-.
-> If a C func is removed/changed, only the C dispatcher would need to be
-> adapted, but until that happens, a new error could be returned to the Rus=
-t
-> side (not ideal, but Rust doesn't just break).
->
-> This would obviously impose some limitations on the Rust side, but it mig=
-ht
-> be less conflictive than direct bindings. Also, in Abdiel's case here (fo=
-r
-> example), he'd explicitly take on the maintenance of the Rust abstraction
-> and its DMA dispatchers, leaving no ambiguity about ownership.
->
+> diff --git a/tools/sched_ext/include/scx/enum_defs.autogen.h b/tools/sched_ext/include/scx/enum_defs.autogen.h
+> new file mode 100644
+> index 000000000000..a32e534a4012
+> --- /dev/null
+> +++ b/tools/sched_ext/include/scx/enum_defs.autogen.h
+...
+> +#endif /* __ENUM_DEFS_AUTOGEN_H__ */
+> +
 
-This just adds overheads for everyone to little advantage for the
-cases where maintainers are fine with all the other approaches.
+The extra newline triggers git warning on commit. I dropped the extra
+newline. Maybe adjust the script too? Also, if we aren't including the
+script in the kernel tree, maybe a good idea for the generated file to point
+to where the script is?
 
-Also the bindings code in rust is usually pretty trivial to change,
-it's not like you can really abstract things that far, changing APIs
-is hard no matter what, understanding the nuances in every C driver
-can takes months of work adding rust bindings to your changes is
-rarely going to be the limiting factor. We have learned over the years
-to not make API changes that are subtle or hidden, and can leave out
-of tree or in development users broken in subtle ways and as long as
-we keep making API changes like that, updating the rust code is the
-least of anyone's worries. This isn't like having to learn Mandarin vs
-English, it's code written with a different syntax, it's not even
-perl.
+Thanks.
 
-Dave.
-
+-- 
+tejun
