@@ -1,103 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D7713B7A3;
-	Sun,  9 Feb 2025 19:05:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D361119A;
+	Sun,  9 Feb 2025 19:09:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739127928; cv=none; b=XRbPCIfAogwYxvjKAKOxnZMjh+FxYLa/GOw0sPHVOcDH0U3UKUKcsDs6hRzSz+C/mVA6bcaYBuwkdHV7jYJGJ9JA+Zxyz9p2Vt4W0RhtcfqrNaENNWiyPdL+VPvnKFl7tUQXpZOgzUXtqUFRggo4tEsRPXCaeQXBn1WVWwIy8I4=
+	t=1739128150; cv=none; b=HH6EP2AUQ5drQach1kXwjsGy/06mLgGVltA99kbWfUqSbytunrm3zUrfNelTyG6xfDd6xMiK1NYC58i5ZSPJ/0dis6W1bR+Izgz/ZsIBRfpTMfNUeLNRv4jM4ukj84rBY8agz1RUT8RF2qYWEnfzOQUQSxanfIAqLMdff1i8x7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739127928; c=relaxed/simple;
-	bh=natJcidB7q3O8woW65n2ijBytWe0W+0jkr1HKsigs5s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rKY0+sTGVzcgQZ7XwNUMxyD6zd4UUNke+ajkkAU8vDh1XmTqwFLKgazVQ68BhHJ8aOnAKiR/81UIPFm+VaF5DHYrEpEsEzrR822Onio96YRdtCHxBfOLzDO/JXN8P8/nVF9AG1AojeqA7+uwhDXK51XQLyuUCtpetYWvFjzRdro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uJVgBgpK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739128150; c=relaxed/simple;
+	bh=PWEE8IxKpyf5LctwB/n3hWfJ0QdD269xmnChSMLzjVY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q6AZPxZ/a6Q+ybOfPaSRzNOBe7YUUNgD+yJo7WLd6JmInYvUB/qqAnuK7RF/yHLKQfvs6pMRUbynYTCBNArx93CNjdDzmHFuaqMoxJSzxqJGl/l6/nqJWP5kvJ5+97R1HSeC3mZll/agdKBiiHD0iFNHap2ABaaSbltpKh7iyNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tcEYFp3e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uJVgBgpK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 082BAC4CEDD;
-	Sun,  9 Feb 2025 19:05:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tcEYFp3e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1920FC4CEDD;
+	Sun,  9 Feb 2025 19:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739127927;
-	bh=natJcidB7q3O8woW65n2ijBytWe0W+0jkr1HKsigs5s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uJVgBgpK/Wrib4Ot1ITnWyLr/M9lHiSwNDfQztynIRSmG/2QoUlAq3TuVHHLSNpMH
-	 17YzI74Zrp+QZm8F1qw2mzEb92pCmSPzdsegZA6Wpd2HvFm67PWAVvxSFnyKy6/++l
-	 j76BA8Y+63msoJJYEIJulprPti90jnbJ7DUhQ5q/hZR2mwSVLT9pWV8+dwMgVzcD+Y
-	 RqxYHsM207TqKSYdVd8Y/16alDEznDG2zTt8/dBFnLifjEVfvV/pKfgiSydudMC9NV
-	 qyjDtrA8NPfijmkQokMfbM7+s8GXffc4PlSVcEs3HyNnMVawIuh6EArXN5kU9BS7Xs
-	 4HBcqh+rilkJg==
-Date: Sun, 9 Feb 2025 11:05:25 -0800
-From: Eric Biggers <ebiggers@kernel.org>
-To: David Howells <dhowells@redhat.com>
-Cc: netdev@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Cabiddu, Giovanni" <giovanni.cabiddu@intel.com>,
-	qat-linux <qat-linux@intel.com>, linux-crypto@vger.kernel.org,
-	linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 03/24] crypto: Add 'krb5enc' hash and cipher AEAD
- algorithm
-Message-ID: <20250209190525.GA6017@sol.localdomain>
-References: <20250207200419.GA2819332@google.com>
- <20250203142343.248839-1-dhowells@redhat.com>
- <20250203142343.248839-4-dhowells@redhat.com>
- <1934772.1739126247@warthog.procyon.org.uk>
+	s=k20201202; t=1739128149;
+	bh=PWEE8IxKpyf5LctwB/n3hWfJ0QdD269xmnChSMLzjVY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tcEYFp3eCOu7WWnjxLbBWLwdP5wxjWhVEeLIQGk32X76+BjKRA8FGj5ihM9ZodVMq
+	 w2wW3vEmKsdPWzIun1PH/Q0hZPBWQeP3A47UA6ZbcPFts4Q8qOSHJvtxcv5n6hINnT
+	 vYDkK+NfTl//a/ns5NdnaSa58sCs8bPvdvcwFpvZ38Ze3H9M803I85FQHK9QhYWveH
+	 318Dn7SxhgJEfESRj2MJXwbVufGVkiVk3rHs3R50IZOQW+I/h8jE9MgwbYVxzMegY1
+	 ElC72Ct0JJE5lU24SDENLC27K8L4XLUJGorwcrNIsKRMFAdm9aUO0gXGId3T9LZ0dj
+	 6gAi1how4HJZw==
+Message-ID: <5973f4b7-568a-4ff4-9893-29a150efdd54@kernel.org>
+Date: Sun, 9 Feb 2025 20:09:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1934772.1739126247@warthog.procyon.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: dt-bindings: media: i2c: align IMX219 filename
+ format with others
+To: David Heidelberg <david@ixit.cz>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250209180718.126462-1-david@ixit.cz>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250209180718.126462-1-david@ixit.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Feb 09, 2025 at 06:37:27PM +0000, David Howells wrote:
-> One of the issues I have with doing it on the CPU is that you have to do two
-> operations and, currently, they're done synchronously and serially.
+On 09/02/2025 19:07, David Heidelberg wrote:
+> Append missing vendor and align with other sony definitions.
 > 
-> Can you implement "auth5enc(hmac(sha256),cts(cbc(aes)))" in assembly and
-> actually make the assembly do both the AES and SHA at the same time?  It looks
-> like it *might* be possible - but that you might be an XMM register short of
-> being able to do it:-/
+> Signed-off-by: David Heidelberg <david@ixit.cz>
+> ---
+>  .../bindings/media/i2c/{imx219.yaml => sony,imx219.yaml}        | 2 +-
 
-Yes, that would be the proper way to optimize that algorithm.  Someone just
-needs to do it.  (And presumably you want this one and not Camellia which you
-are also pushing for some reason?)
 
-> > I don't see why off-CPU hardware offload support should deserve much
-> > attention here, given the extremely high speed of on-CPU crypto these days
-> > and the great difficulty of integrating off-CPU acceleration efficiently.
-> > In particular it seems weird to consider Intel QAT a reasonable thing to use
-> > over VAES.
-> 
-> Because some modern CPUs come with on-die crypto offload - and that can do
-> hash+encrypt or encrypt+hash in parallel.  Now, there are a couple of issues
-> with using the QAT here:
-> 
->  (1) It doesn't support CTS.  This means we'd have to impose the CTS from
->      above - and that may well make it unusable in doing hash + encrypt
->      simultaneously.
-> 
->  (2) It really needs batching to make it cheap enough to use.  This might
->      actually be less of a problem - at least for rxgk.  The data is split up
->      into fixed-size packets, but for a large amount of data we can end up
->      filling packets faster than we can transmit them.  This offers the
->      opportunity to batch them - up to ~8192 packets in a single batch.
-> 
-> For NFS, things are a bit different.  Because that mostly uses a streaming
-> transport these days, it wants to prepare a single huge message in one go -
-> and being able to parallellise the encrypt and the hash could be a benefit.
+Something like this was already sent some time ago. Do it for entire
+subsystem - so all cameras there, not file by file.
 
-Right, the batching is always a huge issue for those types of accelerators.  A
-much more promising approach is to just fully take advantage of the CPU
-instructions that already accelerate the same algorithms very well.
-
-- Eric
+Best regards,
+Krzysztof
