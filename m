@@ -1,367 +1,101 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1E017BB6;
-	Sun,  9 Feb 2025 02:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7E321348
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 02:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739069089; cv=none; b=truGGV/fzMvhL9qtO+AY3Exd+loOn9OmNHmNgivoajHfQ32eTZu+XTBtoqWauHjai8Mb9RI39E9EaZ3idpxkD8XaTS4DDLoYr2Z0ql5yNrInBUt/DMaFTklSXK5Zb6eF4ubq+WTaiO543a8yEjQdqh8pz9QR+EZ0A4swcH3wxJo=
+	t=1739069109; cv=none; b=nYMKFdWWb9UVPpNQNne4T1aiGygyPgmuZxXez4rRdm0ti5D36GM258xFyLFHfp3RLs0oqjD3ItdnM5joFFlTgrG9YBXmStUu50pJS/Yxk8OwMpFeO2iYHiKfIeHql9+bhOJjWChpGgVFe8rutrEqvtEKPWYEp6mZ1rfJvm9bsd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739069089; c=relaxed/simple;
-	bh=R+Ej3p0JX7u2Jyj9Iq3B0x+4Sof3GFGdiI9iDTVWr70=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lRSKgwwgF7eVQKsQXD/6l8xNCkDLsa0Uy9LVS0pj6gUlNXYbP5AJLNmunrFzvWBFfbDLWriXkMMJzHaOvL1AIbyywbbAuld3Ws7FmpU2g9RhCPJ7wudo0pOLbY8YE/jPcYGUV+o1kUcuqPf4JLvAyDASvLK3NMowwuzNO8hv5J4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IaebeXnI; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739069109; c=relaxed/simple;
+	bh=m2VHEf92lKIN+NgNSFlwUaygKiKuK+4NGXJsFAASV0s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a2r9yOxhgAx+hyZMKhAz4FoLFDzEt0nwr5aRQM1OC6qeVXI6mcqS68/nghQLuFtPMUfm/pclvkFqQSE+GwA/9OFzhTCXaSpaPIJg3WbN+Zh+MCqRExfLYiTYzJ+ELfUeZRTydMVjYsWT3xRWTv/C1M+vhGm8lRIyqvoygLE3evs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hViThGQf; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IaebeXnI"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6e4565be0e0so7291966d6.3;
-        Sat, 08 Feb 2025 18:44:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hViThGQf"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5439e331cceso3807373e87.1
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 18:45:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739069086; x=1739673886; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MT2QWKpVJu84Rajm4slK6aTceDcWlXFvsi9MYcPxaz8=;
-        b=IaebeXnIalf9epCRs5C/EWR9MNwTkQLWnjblt6ppJmp8I/gp5XUF7b73c+UDd+7Qwt
-         NMketi/h5h7y2QPsmfO5ffbDyWJYiarg2sY9b73DwXav4fMORELLx1xqazMS7qEtM/vj
-         XhyGkkZ/nAuQ1SYSH/Nto0qd0xmU4bEYckAxujvvDNzaoW75hY748Qug3Eni9/U3HFc9
-         B+qus5squJMBv5xu/TcedNCFeVkBGOm8Wf+oPYvtVeIDBRExOh30Ka5pVZH+BrJD4VlA
-         ke287qKY+C62ggXzf2aZPtjKRwO5diPK5KCo0VMysSlaGdQhJ6/x01ydf/ZL1YzuhN6p
-         Bzgw==
+        d=linaro.org; s=google; t=1739069106; x=1739673906; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5E4Czvi+4b6NoImst1oTpYf2yNfwaBvKvGHOmPo0O/I=;
+        b=hViThGQfBLPRrWWzTf7HyI2AFJ3Izp5JeRs4NZ8/ROZIMUqkJYmqe3pna8BfA7VxFR
+         FlKTrcS9GZiu6SzBr3Fg5gDqK1tRsLAHCzAkTDM6LzHRf9EOQoVLWubybI8SO6VlBaGM
+         kPz55jwAx9+VQjLtvWpI7ADqMFb3AfKwpzyvEt73vYFL5NeuI/1SrgNHHoYsaBBUDW7B
+         Oew1clGwUecN+m00cb5nFwvuGGsNGruXb5vpna0R7YVFgT6qubBvosWKoO7/rfGfZeDL
+         zhIsp5RqecBjxCj6RBFCVCNWEFjwjy/J6ApPUxh55dhLg38uiOd5srphF0/aq7PUyhkX
+         h4tQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739069086; x=1739673886;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MT2QWKpVJu84Rajm4slK6aTceDcWlXFvsi9MYcPxaz8=;
-        b=wFdkS49NQfwvmVG4VtwV3xE9TRxUTyM7FvfLn83LOG6wjcTuGXd393vzADjVowidV7
-         +LNUPSn1B4P7oqW5ue+75uUDur0fMGmFzXPW3pu330RN30iy5XeFd1c2nubjrbVl3dqS
-         3Q+FHbWzFyl3LW26Yw2874693nmcV5sIaQfRRV+9Z8EOtDRLJIwuhqHXC8tzs6nsN9PL
-         v+6Ujvny0waC+rUkQroAXMzaOZASyzhpn7WNlPWzzH/4VHKxFOuMPGT2dDONp01kw44X
-         RyUCYrOoONxof+8H3d0+LAJk+fRnRM+oUMEjfWVzzQbHzJWhYpQCBCyZaeohJW9BqKxA
-         EDfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX6lGuT5EJmRJAqOZHvdIm10Oi/Uz5452NPoqpPOYH906Zx1YBy4DPAkq9qcgZYJh/IHQRVgGv3t6R5iMeaqxE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+mlDKi7a6IgzEWTIS3fbIbEWyD2Lt2TSqIyVv4b2OQqs7TiEt
-	yM7Z3gJHjwMp/zOUi7LBnBAaUX7bMSzZTayNtVMSAQVZUsDzdBT3
-X-Gm-Gg: ASbGncuyyBDMbjY3s/G/oCjWdaiCMFn07sn7POTjWCUsBZ+smgZqWHJONWmPOmz0MYI
-	Z9EI/T57aTSaTu3RJu+reA4FVh55jOwCEBvADiZmwNHsfGkxdQ8zYGFDPmCX3sXVSKKItjuQ+wp
-	gH06Rvx1hUpc2yXJCm03rQUGYQ1r+AMX0yyGoTAi2M5a02jytbKS+Ao9ZolU9fSKK13+VBg8e7a
-	Y/7wIaisyQGHMTs5LmOwHjoRoOd4UCnilOnuAG2P/r7OO/vGKBAe1kH06JXmoScQaluKf88FKnf
-	qcBBxnqHtKmjFZyBF+mXqu70WgPoWFHMMcwcBO9IgFWEuv6quRhy6OJSSu8Y8XKsxYIWMk/+CVa
-	vpgsonfvdKm+ejcYyInpdgcWnsdWIaoE1iFirRQ==
-X-Google-Smtp-Source: AGHT+IGlTuYy+vTQkFaC3sxhxmhQ1SJFNcgzMnlTb+R4Cj6Uv6WbfOud36acPhdC0Evc8ctDMl7S+Q==
-X-Received: by 2002:ad4:5caf:0:b0:6d8:b229:7b3d with SMTP id 6a1803df08f44-6e445416b69mr141379406d6.0.1739069086448;
-        Sat, 08 Feb 2025 18:44:46 -0800 (PST)
-Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2600:4041:5be7:7c00:15f6:96e9:3308:934a])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e451a83cbcsm11572356d6.102.2025.02.08.18.44.44
+        d=1e100.net; s=20230601; t=1739069106; x=1739673906;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5E4Czvi+4b6NoImst1oTpYf2yNfwaBvKvGHOmPo0O/I=;
+        b=OS9nL1oNaUPOMXaTlcFsTtsOAJ+6NCf/UGshe36YBSjbXA2SYZAg/0PLWwvdkU0N46
+         K5dxIlrRGN/FPEbjtuO3k0P4esuxdl5x/BPeoBSonRP2EvpKmFXAEpF1IiRGjYr5IPZn
+         +hT5WLxu/87Nw5SJ399nj18tmS7pJrFRG3qPBcpqoTTeRwqZw2IwJtgLNLMmRnI7DFos
+         qEWeNameWuKsHv5+yXXrpdtzjefT6i9KcLNgq5+DHpczGuN+8p0P38iNOd7EatEzX+7e
+         xrmpFHalibY5x7Jiyk/kgm17O177luNqRRNS0JouJj3WIRD0JX1jsERIYZirDf+UCXxZ
+         okZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX+yWqNtHz1FAdRjt6AbB+qo4cd2o79D9xvPv4tRK+xnN+1J1QW0hmreJYBEJuoEG7nRfvQ/nAP1XPLyAM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCePyPHTAeE7S1nLqTjd9wgDTvo9c1N5nntmGZFWqHJtfLwNfy
+	p1iaXdI0isyvh0OXF5Pa4tgaKsbVHNypYZE0/zZaKBtearEEoxeKUmvQm4hvp6E=
+X-Gm-Gg: ASbGncvgFlrlGYZkCXZQYxKc1oZc01SucBzOSBS8FWJY1Ay5MIUZ4T/Qk65zAttX0gd
+	O6fkYVInhYR/fjRw3W19ZtQkZ0Am2XxjNSkWT2xww2OQJD4hL7rMVH2Ycz4E/xSnsS5q6dVOLl8
+	pTCV2lEi6U2KzOfmO2yNLMwDNnNLSpahU6Hl1vFthXeNSx+COod77OJXOGZMK/glNRZX5u5x31L
+	gAOHCmCrVVjJrSs8cULQvoUftGaMIJRWxaJLvhSBK5kyhVznW+KClWZEebchy39Pg5A5sjuswBy
+	WQrCBdBLNwAq4O9bKEvwtQavoedEXKuOAP47PxYiTiZxaAZAtrsGNOQS5syy938z+ikD3E0=
+X-Google-Smtp-Source: AGHT+IHKVEnB/heAWEX5K5PYOtO1674PmCFwQZHj2jVxqeg1oJK7o9e3PbDB8ap5M6kBjp7L17/uSw==
+X-Received: by 2002:ac2:4a75:0:b0:545:9e:bed5 with SMTP id 2adb3069b0e04-545009ebf32mr1663142e87.47.1739069105957;
+        Sat, 08 Feb 2025 18:45:05 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54505438d10sm309219e87.147.2025.02.08.18.45.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 18:44:45 -0800 (PST)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sat, 08 Feb 2025 21:44:39 -0500
-Subject: [PATCH v5 2/2] lib/prime_numbers: convert self-test to KUnit
+        Sat, 08 Feb 2025 18:45:04 -0800 (PST)
+Date: Sun, 9 Feb 2025 04:45:02 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 12/35] drm/bridge: Change parameter name of
+ drm_atomic_bridge_chain_disable()
+Message-ID: <6vlxq3hwlq6dnslg5c2mzorvoiz2r5hq3abzytflv5rbj2lima@vx6mrw3ggd4h>
+References: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
+ <20250204-bridge-connector-v2-12-35dd6c834e08@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250208-prime_numbers-kunit-convert-v5-2-b0cb82ae7c7d@gmail.com>
-References: <20250208-prime_numbers-kunit-convert-v5-0-b0cb82ae7c7d@gmail.com>
-In-Reply-To: <20250208-prime_numbers-kunit-convert-v5-0-b0cb82ae7c7d@gmail.com>
-To: David Gow <davidgow@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
- Luis Felipe Hernandez <luis.hernandez093@gmail.com>, 
- Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250204-bridge-connector-v2-12-35dd6c834e08@kernel.org>
 
-Extract a private header and convert the prime_numbers self-test to a
-KUnit test. I considered parameterizing the test using
-`KUNIT_CASE_PARAM` but didn't see how it was possible since the test
-logic is entangled with the test parameter generation logic.
+On Tue, Feb 04, 2025 at 03:57:40PM +0100, Maxime Ripard wrote:
+> drm_atomic_bridge_chain_disable() disables all bridges affected by a new
+> commit. It takes the drm_atomic_state being committed as a parameter.
+> 
+> However, that parameter name is called (and documented) as old_state,
+> which is pretty confusing. Let's rename that variable as state.
+> 
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> ---
+>  drivers/gpu/drm/drm_bridge.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
 
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- lib/Kconfig.debug                            | 14 +++++
- lib/math/prime_numbers.c                     | 87 +++++-----------------------
- lib/math/prime_numbers_private.h             | 17 ++++++
- lib/math/tests/Makefile                      |  1 +
- lib/math/tests/prime_numbers_kunit.c         | 59 +++++++++++++++++++
- tools/testing/selftests/lib/config           |  1 -
- tools/testing/selftests/lib/prime_numbers.sh |  4 --
- 7 files changed, 106 insertions(+), 77 deletions(-)
-
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 0ccfab3ecd21..7570caaacddb 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -3210,6 +3210,20 @@ config GCD_KUNIT_TEST
- 
- 	  If unsure, say N
- 
-+config PRIME_NUMBERS_KUNIT_TEST
-+	tristate "Prime number generator test" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	select PRIME_NUMBERS
-+	default KUNIT_ALL_TESTS
-+	help
-+	  This option enables the KUnit test suite for the {is,next}_prime_number
-+	  functions.
-+
-+	  Enabling this option will include tests that compare the prime number
-+	  generator functions against a brute force implementation.
-+
-+	  If unsure, say N
-+
- endif # RUNTIME_TESTING_MENU
- 
- config ARCH_USE_MEMTEST
-diff --git a/lib/math/prime_numbers.c b/lib/math/prime_numbers.c
-index 9a17ee9af93a..f88d6e64dbdc 100644
---- a/lib/math/prime_numbers.c
-+++ b/lib/math/prime_numbers.c
-@@ -1,16 +1,11 @@
- // SPDX-License-Identifier: GPL-2.0-only
--#define pr_fmt(fmt) "prime numbers: " fmt
- 
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/prime_numbers.h>
- #include <linux/slab.h>
- 
--struct primes {
--	struct rcu_head rcu;
--	unsigned long last, sz;
--	unsigned long primes[];
--};
-+#include "prime_numbers_private.h"
- 
- #if BITS_PER_LONG == 64
- static const struct primes small_primes = {
-@@ -62,9 +57,21 @@ static const struct primes small_primes = {
- static DEFINE_MUTEX(lock);
- static const struct primes __rcu *primes = RCU_INITIALIZER(&small_primes);
- 
--static unsigned long selftest_max;
-+#if IS_ENABLED(CONFIG_PRIME_NUMBERS_KUNIT_TEST)
-+void with_primes(void *ctx, primes_fn fn)
-+{
-+	rcu_read_lock();
-+	fn(ctx, rcu_dereference(primes));
-+	rcu_read_unlock();
-+}
-+EXPORT_SYMBOL(with_primes);
-+
-+EXPORT_SYMBOL(slow_is_prime_number);
- 
--static bool slow_is_prime_number(unsigned long x)
-+#else
-+static
-+#endif
-+bool slow_is_prime_number(unsigned long x)
- {
- 	unsigned long y = int_sqrt(x);
- 
-@@ -239,77 +246,13 @@ bool is_prime_number(unsigned long x)
- }
- EXPORT_SYMBOL(is_prime_number);
- 
--static void dump_primes(void)
--{
--	const struct primes *p;
--	char *buf;
--
--	buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
--
--	rcu_read_lock();
--	p = rcu_dereference(primes);
--
--	if (buf)
--		bitmap_print_to_pagebuf(true, buf, p->primes, p->sz);
--	pr_info("primes.{last=%lu, .sz=%lu, .primes[]=...x%lx} = %s\n",
--		p->last, p->sz, p->primes[BITS_TO_LONGS(p->sz) - 1], buf);
--
--	rcu_read_unlock();
--
--	kfree(buf);
--}
--
--static int selftest(unsigned long max)
--{
--	unsigned long x, last;
--
--	if (!max)
--		return 0;
--
--	for (last = 0, x = 2; x < max; x++) {
--		bool slow = slow_is_prime_number(x);
--		bool fast = is_prime_number(x);
--
--		if (slow != fast) {
--			pr_err("inconsistent result for is-prime(%lu): slow=%s, fast=%s!\n",
--			       x, slow ? "yes" : "no", fast ? "yes" : "no");
--			goto err;
--		}
--
--		if (!slow)
--			continue;
--
--		if (next_prime_number(last) != x) {
--			pr_err("incorrect result for next-prime(%lu): expected %lu, got %lu\n",
--			       last, x, next_prime_number(last));
--			goto err;
--		}
--		last = x;
--	}
--
--	pr_info("%s(%lu) passed, last prime was %lu\n", __func__, x, last);
--	return 0;
--
--err:
--	dump_primes();
--	return -EINVAL;
--}
--
--static int __init primes_init(void)
--{
--	return selftest(selftest_max);
--}
--
- static void __exit primes_exit(void)
- {
- 	free_primes();
- }
- 
--module_init(primes_init);
- module_exit(primes_exit);
- 
--module_param_named(selftest, selftest_max, ulong, 0400);
--
- MODULE_AUTHOR("Intel Corporation");
- MODULE_DESCRIPTION("Prime number library");
- MODULE_LICENSE("GPL");
-diff --git a/lib/math/prime_numbers_private.h b/lib/math/prime_numbers_private.h
-new file mode 100644
-index 000000000000..a4cab3c8c727
---- /dev/null
-+++ b/lib/math/prime_numbers_private.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#include <linux/types.h>
-+
-+struct primes {
-+	struct rcu_head rcu;
-+	unsigned long last, sz;
-+	unsigned long primes[];
-+};
-+
-+#if IS_ENABLED(CONFIG_PRIME_NUMBERS_KUNIT_TEST)
-+bool slow_is_prime_number(unsigned long x);
-+typedef void (*primes_fn)(void *, const struct primes *);
-+
-+// Calls the callback under RCU lock. The callback must not retain the primes pointer.
-+void with_primes(void *ctx, primes_fn fn);
-+#endif
-diff --git a/lib/math/tests/Makefile b/lib/math/tests/Makefile
-index 6a04b4eb22b6..40ad9de29acc 100644
---- a/lib/math/tests/Makefile
-+++ b/lib/math/tests/Makefile
-@@ -3,3 +3,4 @@
- obj-$(CONFIG_INT_POW_TEST) += int_pow_kunit.o
- obj-$(CONFIG_INT_SQRT_KUNIT_TEST) += int_sqrt_kunit.o
- obj-$(CONFIG_GCD_KUNIT_TEST) += gcd_kunit.o
-+obj-$(CONFIG_PRIME_NUMBERS_KUNIT_TEST) += prime_numbers_kunit.o
-diff --git a/lib/math/tests/prime_numbers_kunit.c b/lib/math/tests/prime_numbers_kunit.c
-new file mode 100644
-index 000000000000..2f1643208c66
---- /dev/null
-+++ b/lib/math/tests/prime_numbers_kunit.c
-@@ -0,0 +1,59 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <kunit/test.h>
-+#include <linux/module.h>
-+#include <linux/prime_numbers.h>
-+
-+#include "../prime_numbers_private.h"
-+
-+static void dump_primes(void *ctx, const struct primes *p)
-+{
-+	static char buf[PAGE_SIZE];
-+	struct kunit_suite *suite = ctx;
-+
-+	bitmap_print_to_pagebuf(true, buf, p->primes, p->sz);
-+	kunit_info(suite, "primes.{last=%lu, .sz=%lu, .primes[]=...x%lx} = %s",
-+		   p->last, p->sz, p->primes[BITS_TO_LONGS(p->sz) - 1], buf);
-+}
-+
-+static void prime_numbers_test(struct kunit *test)
-+{
-+	const unsigned long max = 65536;
-+	unsigned long x, last, next;
-+
-+	for (last = 0, x = 2; x < max; x++) {
-+		const bool slow = slow_is_prime_number(x);
-+		const bool fast = is_prime_number(x);
-+
-+		KUNIT_ASSERT_EQ_MSG(test, slow, fast, "is-prime(%lu)", x);
-+
-+		if (!slow)
-+			continue;
-+
-+		next = next_prime_number(last);
-+		KUNIT_ASSERT_EQ_MSG(test, next, x, "next-prime(%lu)", last);
-+		last = next;
-+	}
-+}
-+
-+static void kunit_suite_exit(struct kunit_suite *suite)
-+{
-+	with_primes(suite, dump_primes);
-+}
-+
-+static struct kunit_case prime_numbers_cases[] = {
-+	KUNIT_CASE(prime_numbers_test),
-+	{},
-+};
-+
-+static struct kunit_suite prime_numbers_suite = {
-+	.name = "math-prime_numbers",
-+	.suite_exit = kunit_suite_exit,
-+	.test_cases = prime_numbers_cases,
-+};
-+
-+kunit_test_suite(prime_numbers_suite);
-+
-+MODULE_AUTHOR("Intel Corporation");
-+MODULE_DESCRIPTION("Prime number library");
-+MODULE_LICENSE("GPL");
-diff --git a/tools/testing/selftests/lib/config b/tools/testing/selftests/lib/config
-index dc15aba8d0a3..306a3d4dca98 100644
---- a/tools/testing/selftests/lib/config
-+++ b/tools/testing/selftests/lib/config
-@@ -1,5 +1,4 @@
- CONFIG_TEST_PRINTF=m
- CONFIG_TEST_SCANF=m
- CONFIG_TEST_BITMAP=m
--CONFIG_PRIME_NUMBERS=m
- CONFIG_TEST_BITOPS=m
-diff --git a/tools/testing/selftests/lib/prime_numbers.sh b/tools/testing/selftests/lib/prime_numbers.sh
-deleted file mode 100755
-index 370b79a9cb2e..000000000000
---- a/tools/testing/selftests/lib/prime_numbers.sh
-+++ /dev/null
-@@ -1,4 +0,0 @@
--#!/bin/sh
--# SPDX-License-Identifier: GPL-2.0
--# Checks fast/slow prime_number generation for inconsistencies
--$(dirname $0)/../kselftest/module.sh "prime numbers" prime_numbers selftest=65536
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
 -- 
-2.48.1
-
+With best wishes
+Dmitry
