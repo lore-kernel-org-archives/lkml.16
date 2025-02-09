@@ -1,112 +1,108 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163491DFD87
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 15:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02901632DF
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 15:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739115950; cv=none; b=A47hsS0BEltF7qh587sPBAT0niK17CXoYYXyWUWmuJsMK+h14Z9QoF+aiI7uh1oYWDo2Ha0dxK1Qqw8aYXf4mKmFlhgfQb/IFg+ZBA88t/UBMVnEk9YjBhcY7otf2cJatqdZSofVPtXooavY9TLAEjdSIEHzJmf8m7pnIYVQ21U=
+	t=1739116190; cv=none; b=V4EJ2gIILPPXyxoZzB1cpH3CzaaM8seI3gb6fLYvsZcXP9x1mjD2YSya9jjc+GOZftaTrw4+KSXBurKexPGrlzfXzCHypfOcg0GC2L08xZWB2+4dh3f+ZBsLhI+7yrXh4eugj/M8biNmu4py3CaH/2prTQWmIQEki8K5IC1PHHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739115950; c=relaxed/simple;
-	bh=+qSUzoEzpB71iJSfpsLPnSpsEck/vsbtGG9WuxxwCRM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OvVDo3l6WDmUeWI9McYzhMFoh7W3tW2zz6sIxEuRrFRDPr9keham6CRgdqmfQmkxz7JGfIiZDVn17nwbZV6M6aCGxIm6XxNvCzuoT2br6kPqWUwVcNePkz9hSZLcsFCTRVrzT7xDvsO0x5Ym+T/fUNnbr7QYk4jk6g1R+y0+eLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M0/yGPf1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739116190; c=relaxed/simple;
+	bh=PssKll4JEoMlKe6UK2jH07Ppq8XsuPzXadX333xk3Wo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cenXoIpQexIr+bejs+fsiK8r3ED+yJ4fVCDQaDt2pt6lJ3R+nWyR8KzwiLzQraCnaMztDZAhG2kxQQ+kjkZVXSbTODizp/uUu6n5ZCaBCQFEZ8VbME6p9NKG9tjnZgC0/GzHk6hknrJr7wGAclrG89DH5NL2ONB9qxPwYlH8Sog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EyLswG9E; arc=none smtp.client-ip=209.85.160.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M0/yGPf1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739115947;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=THLgAH/YOe+Ks6Iu7IGbTNXjNtkhoFKRpRvq3b4R/0s=;
-	b=M0/yGPf1f0ifaT1qujGHZ0c8oqRCDXQltOUQde1jAnKwpRTOEyNbEObjHL0BprctZ9eZtv
-	4YdFGUDgNuzl4EYn7TUw9kWyIlS73ge9yvyhkrVN5rsOgKq2GN62kc4xhi22Iq/oaF7bRv
-	ZsFS8CxQBO7K1DnVrsFrvjDosaV04+s=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-248-TVoSvsflNYCBhZbUOzA0fg-1; Sun,
- 09 Feb 2025 10:45:44 -0500
-X-MC-Unique: TVoSvsflNYCBhZbUOzA0fg-1
-X-Mimecast-MFC-AGG-ID: TVoSvsflNYCBhZbUOzA0fg
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 10F2518004A7;
-	Sun,  9 Feb 2025 15:45:43 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.8])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 6DE2719560A3;
-	Sun,  9 Feb 2025 15:45:39 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun,  9 Feb 2025 16:45:16 +0100 (CET)
-Date: Sun, 9 Feb 2025 16:45:12 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mitchell.augustin@canonical.com,
-	ilpo.jarvinen@linux.intel.com
-Subject: Re: [PATCH v2] PCI: Batch BAR sizing operations
-Message-ID: <20250209154512.GA18688@redhat.com>
-References: <20250120182202.1878581-1-alex.williamson@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EyLswG9E"
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2adc2b6837eso1159050fac.1
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 07:49:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739116187; x=1739720987; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PssKll4JEoMlKe6UK2jH07Ppq8XsuPzXadX333xk3Wo=;
+        b=EyLswG9ECPSybcFpP5kUZAT1OkFxu2o5T0Fu5MxLo2Sy+9xt/x9THrta5stRmbD1ku
+         2ywmF4ufU3IK/GvddaZJYE9K4cimFUH9dDw1/mu+/WFnkhZap6PlL6X8F34JkmqDFeJi
+         5dRXBWxlSNrmvJol7a7hQtM5scnltTvZqp3HJGn1CKY97tUBV6b3xUt4vhMOgwgLxOtC
+         naEoYKNXl0gPbUOi5aFWUrqqs7QIi+hiPFmv2P007o4neGKlyE0VnctKUyCNtHj7YPXP
+         1KCZUzmYpdsztiD3EUPuA06UZ6d4YwGsAcc/I/h6CW7jM2YL9NY2PUXC5/cc0YbqvSJH
+         OHsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739116187; x=1739720987;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PssKll4JEoMlKe6UK2jH07Ppq8XsuPzXadX333xk3Wo=;
+        b=xJXt6LhG89rG/BtxkzvELAA2u+iAzaB55uvB18H8fpC7iAFm5DnUePIJ/Ws/ToL2N3
+         +Oa8l8q86bYorzRHy7VVM3Z1qgalBXxwZAT8zJTdsY/DaZ+oW5x35c4qwa3m6UZ7FXRa
+         T6V1j0RA1eTCSuZ2385+jhlIK6sSLG4Nm/9KmgpSBmjlPn8ZrO4IZITagwMWpUoNVAPI
+         azUu7BRxdfK3K+H2fGtlPtmt9U6mnt+st8dxAxipby1lyUPjKCT70tT4hN8bbnlGIQRx
+         4GW0fL0fuzJ0Ez2DGd8LG8cuB1vhm6UieiI8j316uvpteDhWajogryWNkXqPBFgktqn2
+         Vr7A==
+X-Forwarded-Encrypted: i=1; AJvYcCWZggk0s7Bpj/shm5i5C5S1UYSNUTpVdx2g5uKbOpvTilCzVO2fCJAy/U5p5xCh2KLBJNvU2cpmSKJMT8c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAL2DwhZ39XMn/b3qALjcWAQe5aB1vTS7/YtqYGCscyLhfkfzi
+	MMixATyLJnBAeFM209RtpBZ5JzYH+mPaqiYu+vRFBVZ0w+MjtLnXJ6jg9R2+Dn+UoDx2hSdi/yg
+	XHL6Pbke8M1j2R3vSyi5Ue/Gm6c4nYATdSespsA==
+X-Gm-Gg: ASbGncupPA4/0SA/MGcxoXHpd11THa5zQUamFUtAiBaQXYYLdWlWwBzTWL7q0ow/iDs
+	4L/pGsyUEdmR0cfTehQmk/6VT3ZD+x2z3+wZKnRS3tc5WcjLhIh0oCeqbsM9u8TrpYzTnQ0ey
+X-Google-Smtp-Source: AGHT+IEJx4GAJCZ1ff4k2hzF9hSjRKWNrgbRsTFnQrR3DUT9d8D8jCv4lfl/PeBdwYbUEL9kQpD9Eg5C5R06EpPRzxc=
+X-Received: by 2002:a05:6870:c0b:b0:29e:3132:5897 with SMTP id
+ 586e51a60fabf-2b83eba9bf7mr6061588fac.5.1739116186662; Sun, 09 Feb 2025
+ 07:49:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250120182202.1878581-1-alex.williamson@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+References: <20250206-gs101-renppt-dts-v1-0-cdfe993fb3c5@linaro.org> <20250206-gs101-renppt-dts-v1-3-cdfe993fb3c5@linaro.org>
+In-Reply-To: <20250206-gs101-renppt-dts-v1-3-cdfe993fb3c5@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Sun, 9 Feb 2025 15:49:35 +0000
+X-Gm-Features: AWEUYZlsv4LiCm_NFbOvnGh5QJf88D0c8PjjEovMiCg0gV1Nlhp4jo0ANNrcy54
+Message-ID: <CADrjBPrO4o0X45roprKvRsdQ3wRKvRMsk_Ry8z9j6FmzPatG=A@mail.gmail.com>
+Subject: Re: [PATCH 3/3] arm64: dts: exynos: gs101: add reboot-mode support (SYSIP_DAT0)
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Will McVicker <willmcvicker@google.com>, 
+	kernel-team@android.com, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 01/20, Alex Williamson wrote:
+On Thu, 6 Feb 2025 at 13:08, Andr=C3=A9 Draszik <andre.draszik@linaro.org> =
+wrote:
 >
->  static void pci_read_bases(struct pci_dev *dev, unsigned int howmany, int rom)
->  {
-> +	u32 rombar, stdbars[PCI_STD_NUM_BARS];
->  	unsigned int pos, reg;
-> +	u16 orig_cmd;
-> +
-> +	BUILD_BUG_ON(howmany > PCI_STD_NUM_BARS);
+> syscon-reboot-mode can be used to indicate the reboot mode for the
+> bootloader.
+>
+> While not sufficient for all boot modes, the boot loader does use
+> SYSIP_DAT0 (PMU + 0x0810) to determine some of the actions it should
+> take. This change helps it deciding what to do in those cases.
+>
+> For complete support, we'll also have to write the boot mode to an
+> NVMEM storage location, but we have no upstream driver for that yet.
+> Nevertheless, this patch is a step towards full support for the boot
+> mode.
+>
+> Note1: Android also uses 'shutdown,thermal' and
+> shutdown,thermal,battery', but that can not be described in DT as ','
+> is used to denote vendor prefixes. I've left them out from here for
+> that reason.
+>
+> Note2: downstream / bootloader recognizes one more mode: 'dm-verity
+> device corrupted' with value 0x50, but we can not describe that in DT
+> using a property name due to the space, so it's been left out from here
+> as well. This string appears to come from drivers/md/dm-verity-target.c
+> and should probably be changed there in a follow-up patch, so that it
+> can be used in reboot-mode nodes like this one here.
+>
+> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> ---
 
-FYI, I can't build the kernel after this patch:
-
-	$ make drivers/pci/probe.o
-	  UPD     include/config/kernel.release
-	  UPD     include/generated/utsrelease.h
-	  CALL    scripts/checksyscalls.sh
-	  DESCEND objtool
-	  INSTALL libsubcmd_headers
-	  CC      drivers/pci/probe.o
-	In file included from <command-line>:0:0:
-	drivers/pci/probe.c: In function ‘pci_read_bases’:
-	././include/linux/compiler_types.h:542:38: error: call to ‘__compiletime_assert_338’ declared with attribute error: BUILD_BUG_ON failed: howmany > PCI_STD_NUM_BARS
-	  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-					      ^
-	././include/linux/compiler_types.h:523:4: note: in definition of macro ‘__compiletime_assert’
-	    prefix ## suffix();    \
-	    ^
-	././include/linux/compiler_types.h:542:2: note: in expansion of macro ‘_compiletime_assert’
-	  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-	  ^
-	./include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
-	 #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-					     ^
-	./include/linux/build_bug.h:50:2: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
-	  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-	  ^
-	drivers/pci/probe.c:348:2: note: in expansion of macro ‘BUILD_BUG_ON’
-	  BUILD_BUG_ON(howmany > PCI_STD_NUM_BARS);
-
-Yes, my gcc version 5.3.1 is very old, but according to Documentation/process/changes.rst
-it should still be supported, the minimal version is 5.1.
-
-Oleg.
-
+Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
