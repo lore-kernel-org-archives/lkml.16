@@ -1,39 +1,66 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048D6F9FE;
-	Sun,  9 Feb 2025 15:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD3E1CAA96;
+	Sun,  9 Feb 2025 15:19:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739113862; cv=none; b=H90strh/nGW9WtH9Vjnbo0ajq/RhjQhGt28mc7abuS88ontFocrZmxhyIxQrOFsXjiyU8kIowiA6Gq25KLUCXerZNRUgilZhY/0mX3VJd8vA1m5QO0Jm1Zm9rUQsC4lnZ+hSHlptKV4KFYVz66eHWURH9VvcEO4RNFGrc4jhpvo=
+	t=1739114379; cv=none; b=CVNSev4+ses+92leWLdvtl0CrPABc8Dss9I2zd0QQCn7xQGW2Fe2WQkYApsiDliqxXmGHNpSCRedtet0K0OfYMdsnWj0Qe7TVULLa5gjv0pds+hR4oYIQB21djVfzk6IQyZdY0P4R0bJRz77nel8YKcK0uYyLovqgTu0aH6wnFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739113862; c=relaxed/simple;
-	bh=Pw4A9EPtu6M+CznVZfsow6MTIebmDOlA4bH9NLWTaKc=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=j+YGYHXVz31afHvkbYT9JAmCpmrIyYf3ZUjGXsvKDc7uua+nhTUpjPG9yNhTgPFfbZYVXkd9Lf3T7/QxwdtY8OTDUZq05QD/AMgbv+Q9nvHiAoFeQhXxq9+T7djhGff1oSdtV+FVuscIbJVjg+jR2cOl/nZ50YDefqqzlpQKxGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=umvhQtFk; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1739114379; c=relaxed/simple;
+	bh=d6Yc9vG06MVzaqFIsQcnOkwaNftqHxdlr+Byi/9WRkk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RrJAGRq7I6J3uR+XdpHC7zjRb76KdgR4tj8Qc8iqMC729dEmu21VTTzlkYB4cNd4yXZeEB18+DEHAtlynsDtwaTNk3LqKRtjBEHg6M7/65KdrYpOmdpKg4aRlNgej7jC1+DmFkKDhMCM3HUne7bGF7DjXDz4l7ROrCwF6aWF5oM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LrYMe44G; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="umvhQtFk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1739113849; x=1739718649; i=markus.elfring@web.de;
-	bh=g+85RQ49D14pcg2rQ7TtGa2VAdHK1hPQ3J5/ITKF/WA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:From:Subject:
-	 Cc:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=umvhQtFkJKgEp7S9+0oDsmUmnjV+vi2ERNdv2wvGbItwxEeKfvUdPEwVKwoxd6sL
-	 01oEc35CzzQk/C2ZayrMW/d01J1Q/6Jumi53MO/gX5yLSIcfXZtvEISoRyKsnRR19
-	 Hav0HtDDG26Xrxh+zwiIemCxyUlDwN41sXkOy2ypAvbBkVzi2aN9znJcvtW48XHQq
-	 /HQzHkhc9Zo0NJLK+nVrcRVZ9kApA6WsXPzsXCZ5xo63UzCLJgaruqa2FTmBhEyY1
-	 tinTKK+zvmSBeqbnhiuNI6xqo2aAcxolUKtp9N27Nx098PtxZMcWp+BaY07XHXJhh
-	 yeTWntG8AR3Yj/GMoQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.5]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MkElP-1sx7su09tp-00cJ6d; Sun, 09
- Feb 2025 16:10:49 +0100
-Message-ID: <7692fda2-f9a5-4381-b1a8-f949543c0a89@web.de>
-Date: Sun, 9 Feb 2025 16:10:48 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LrYMe44G"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2fa286ea7e8so3100750a91.2;
+        Sun, 09 Feb 2025 07:19:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739114377; x=1739719177; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=H0kFB/AM6nrvBijHVHA2RNVeDvzzsMFygDBwgZ89k28=;
+        b=LrYMe44GVAjXoBLdTLDTrwlH1LxuI3f7eL0kyIYjpCkzcHF6nn4EbiSvz9rQ1gZ99N
+         GKtpqL1l1DofosHusU0ZN7MhHA7R5PcfnWHQDQUIqrOtCO5S3fPwmVScoEicqdAUc/0l
+         vsIPiLvlK63rDP1DQw/qlc2dRGMWA80G3QCyhATOTggi1ETCTt9knzd87/wqnN2u/Rb9
+         wbPhkAAgy2BI4EDIdoDy5qaesre5F0IezNIcXb+CNp/AuKw7n3Kjqxn6uW6bYDK/V72n
+         qf4M3u4qAHMVJ5iI5QCd43l6yrlHAexX9xN+qiAg7Fo+D27HstwG9QRzDOaEnPE6dC94
+         LtCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739114377; x=1739719177;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H0kFB/AM6nrvBijHVHA2RNVeDvzzsMFygDBwgZ89k28=;
+        b=JWwxIrgmGOoLneS2/BpEiIQoHmyWRFB+Dx8yYz0q8TwLojBduvaIss2TzdfK9CaVKd
+         Jciw0bNF9GDYhQT6Z8z6Rg6iEN5Un8LIoVxQnT/APiV1DeYue6mahU96AphXG+X5mrQ5
+         OBcDArqAD8bGHQDqK+FiaEGaLaFZvnQ63H5831Bpy9ayT4kn9gdRZaaI7fmH/yJXJVNG
+         ZQfV1JJoQieK2H46Zp7rPMPbkKI3uYyYIrt9m8XC3zVHI+2TymI7+iwZoWN1t4ChiXWB
+         NU3TzmVIZf9fACOfdThjRx1l7LrjymfAzWrlkq138iRaszmF9+3yW9MF1V93/jaNaXzk
+         2Ejg==
+X-Forwarded-Encrypted: i=1; AJvYcCUNHfytd9iQq/BYRVW5I7If7/jhw33o8WrFtP5TC+5xUlYgC5qQErt8mHcTAHKTx5cbKd1HhwgCErs1uuM=@vger.kernel.org, AJvYcCVDZKZd6hhT/fTtdEeIsea87BXsqXTjZshHgAj8tLIMbFc06YPdzGHfMJviVqPXSUvVxImpqm4z@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWJM/O8bTUtjn3O6KkxI9pRPJsDFGh8o4mwVOJBAxksZYdp77D
+	O6uaFHjawMMVv0X8yW1CFycgtowxa9TiMlOF0SRvdclJxj4g45pH
+X-Gm-Gg: ASbGnculJ7FRLxxaKyQRP4Tj69swNoQdeMFHi5Wek2B9wRrKKmq3CsGWscPtyrq5bWy
+	TPjMRsKNYx5xcWIV6WxG2A/rVMRyfSUffn7W1XlO/1r2TgBzuexV1KkHAJwhF9upgpecdhwWAFG
+	RmTb2H/3EyYd8MUAd2n9aEQibGfDKehRBql/NpePxgTjItvBKVdaeHF1dHuQXaDFez8fqUQc/g1
+	cq2f/E5lgGPLABdeRsdJYaufQJ2G3GPcNMh9R0STZq2I27e5zT9LhvkerR8Kd/YymkuJWPxipuo
+	zzBlOjxWmu028Kf90hfLxzlmyH75K3FmNmU93lrLWrz7Ueu8c8+TpQcWF0HRs/EJ
+X-Google-Smtp-Source: AGHT+IE3rcJTBfe0mDzdErfEWiAbrAvsjk7fjG417Oc03icXEeES8DkN3PHOs5uoCckxKo7L3TRKww==
+X-Received: by 2002:a17:90a:d40d:b0:2ee:e158:125b with SMTP id 98e67ed59e1d1-2fa242d93f4mr12975106a91.26.1739114376595;
+        Sun, 09 Feb 2025 07:19:36 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f368797c8sm61314945ad.159.2025.02.09.07.19.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Feb 2025 07:19:35 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <cd10a924-ae65-4b02-aea2-e629947ca7a3@roeck-us.net>
+Date: Sun, 9 Feb 2025 07:19:33 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,53 +68,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: linux-rdma@vger.kernel.org, Cheng Xu <chengyou@linux.alibaba.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Kai Shen <kaishen@linux.alibaba.com>,
- Leon Romanovsky <leon@kernel.org>, Yang Li <yang.lee@linux.alibaba.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [RFC] RDMA/erdma: Avoid use-after-free in erdma_accept_newconn()
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH 6.6 000/389] 6.6.76-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org, shuah@kernel.org,
+ patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+ jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+ srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+ hargar@microsoft.com, broonie@kernel.org
+References: <20250206155234.095034647@linuxfoundation.org>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20250206155234.095034647@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:NA+UC7Qcrq9UtmA+RHMOp869eZiVVcuDInHKov2+UH89LDoaMyY
- u2e64DgcxrjjlYXhEOCevq4c6JvFdeOOv93jypj2l23DXZkK9ZYZ7xvWTXt+suR6wYPc2PN
- F46Sh9TaV6iO0pdDU6gwSm2W/ySNbho6AfgPjBnSf8E1roCvYLuNld8n5/puDK9LnZuurMP
- Ia9EaKnOFcp3FwjldGOdQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:18ZA4r85Zbo=;EwgIFKo/HgaCN4a56LVXXBTrez0
- ft7w01R5PC69J4Ey20IchS8+53f+3cCI2nj6sgfHogpdVsFSXtNv/hneDyra3j7KAz5GrLnOx
- W0anZV2/GtAAH/vYvaRkdzdzPK8PuofgedjsatB2po2yXV3TtzRrAcGR2cb9Tt68Vq3lN6myH
- cT5WMycl+q2ldPp8thcM+WW4ria2TE7p94fRzbZ5Zvxsv39QqBeKqCQij+gpfIHnD8+08bA87
- iC7mM1R5noTvsFsWYpt+kIoRkyPNwcBNPJVhChex+Z77RpYo0cqlcKtkNnMj6WIuhXa0qEbWe
- 4UmGppfBpzMst3it8E4cS9qKZ3AIXg4MGKfMSxgp/RnPo0waqUnkWK0mVjrRDgb2slTiZ/yz3
- UM6X8+Nt9PEyqOTUJ6HqKmhPSHyNCMe8WU67u6mtvT1SDaH/gsdaM9cG1fpV/dXvz0LyOMbsy
- gGT5hSKIULP9uUu7AHMAIvUoBaDtUZKgC5AZdxbCnC+P2I3Ndqh+lgzI8m9ntquk6043KL4Hy
- ul9YDY/GSxS3WezFKA+OVaigXK776OeS+sQ9IJEueYtV+aUgX7IDn0hp2ym4GB/U83YM8b7Wn
- BtFlkpBw+U1Ei7/gqWrUc1rRTWSdOlOFf38Gp4YvcRosLNi536cdoqSmXPJSHjAgzo31DOCFt
- Vw5l5mb4oiRvV4gGNwVsxK+VIDYSG9R34A0N6seXXA5l6gXHzwwonUNOE1JDzcjNJCaJ3nMbg
- FiYh+Fz3+y1T4HJQ8T3sC5vmOgwsuowTLpfgndAgiMOoGJTxLDYX5BVlE4a1TPn6KJHqKsS20
- dDCm9nm9CP+P620xeDk4wJqjnXK/ga9YFGaNwgpf/gNxWbglO0mLAgz/p1oI0X6Hog2PIduHP
- MFvhFWWqgHXmTDNVk9OL3Ej5713OjcrCBEChyo004QHNPxhT7JN7fad8sw5dJG/sUEEGGEIh+
- gTggLn6zoZz1GarO9a3sxDOLGEDX1izDOk76bZvU/mRlLibYK8Oh//DFmhxIUu/E/JC6YxAqy
- dfV6SBWIL+Y40aoT2nlERT61XREJLCtPCGtfDCK97X8Lg05bOZ6FvakZvaunb51b7MjxWHAHJ
- gqCc7ZnoN3hpJcz53OrjnNR+7IeUXiNn9Pf9VDli5sVR4WMP5pRVaxtAqEOaqAflxoJIrGR6M
- CXyx95XxwOsOQYQ7QyGJhKNUDEoKfYOLngt1YHo/enYOxQNYykJac/JSET7XnCSDhn7S60JIi
- hqPrS1UUVeWMceQ7up9DBHyVoiYBT/Gi4XMxPAaFN3PmfGAHohSnApz6JrTIIZxZAhLDDIyhY
- exC2G1RPdVIHnIJRaHAXTfWqzBA1oOQzXbTS/aW+znmllGLaKaRw1PUyO4l13577ec/utI/Zf
- ixNgRGgh4u0fTag/nFwlo1tby8w6t7494ypWXVGrVii8b7Mp6RqgvWJHsza5FOjth8gcUVG38
- /FPCR5N4WymtRnf+5IR4REQe6D54=
 
-Cheng Xu pointed out that the following statement combination would be undesirable.
-https://lkml.org/lkml/2023/3/19/191
-https://lore.kernel.org/linux-rdma/167179d0-e1ea-39a8-4143-949ad57294c2@linux.alibaba.com/
-https://elixir.bootlin.com/linux/v6.13.1/source/drivers/infiniband/hw/erdma/erdma_cm.c#L707-L708
-		erdma_cep_put(new_cep);
-		new_cep->sock = NULL;
+On 2/6/25 08:06, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.76 release.
+> There are 389 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 08 Feb 2025 15:51:12 +0000.
+> Anything received after that time might be too late.
+> 
+[ ... ]
 
-Are there contributors who would like to fix the commit 920d93eac8b97778fef48f34f10e58ddf870fc2a
-("RDMA/erdma: Add connection management (CM) support") from 2022-07-27 accordingly?
+> Hongbo Li <lihongbo22@huawei.com>
+>      hostfs: fix the host directory parse when mounting.
 
-Regards,
-Markus
+This patch results in:
+
+Building um:defconfig ... failed
+--------------
+Error log:
+fs/hostfs/hostfs_kern.c:972:9: error: implicit declaration of function 'fsparam_string_empty'; did you mean 'fsparam_string'? [-Werror=implicit-function-declaration]
+   972 |         fsparam_string_empty("hostfs",          Opt_hostfs),
+
+because fsparam_string_empty() is not declared globally in v6.6.y.
+
+The patch declaring it is 7b30851a70645 ("fs_parser: move fsparam_string_empty()
+helper into header"). Applying that patch on top of 6.6.76 fixes the problem.
+
+The problem only affects "um" builds since hostfs (CONFIG_HOSTFS) is only available
+and used there. Oddly enough, the patch breaks the build of this file instead of
+fixing the problem it claims to fix, and it looks like no one noticed.
+On top of that, "hostfs: convert hostfs to use the new mount API" was obviously
+not tested. It looks like a substantial change which would definitely warrant
+testing when backported.
+
+That makes me wonder: Should I stop build testing "um" images in older kernels ?
+
+Thanks,
+Guenter
 
