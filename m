@@ -1,108 +1,346 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BCC779CF;
-	Sun,  9 Feb 2025 21:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A621474B8
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 21:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739137938; cv=none; b=OjrDGwNeo3KovEHl25TklT4ijqBp7fclGLq3O2nYFarNjaJWJdJyBYd4OUIitMFX8XtaJx8I7v3XZHp28LAKarMgI5p4tdi9qrsMblupyyKBhmeu6SiUtZRd3bpvnohI6/mA4mVwrOMsmtHn/Jj8hXVhl75BPhkMaTKnXEYXupM=
+	t=1739138058; cv=none; b=aTdt4FGYTgHpQNhnmlJ3lOaur/jmTU/bD1Mx9PHyup1MYUgvBwfNhVSbu491DJgoUe7WnOutD2Ie84wHjvL2yY+ku8X5J3uyvbxej+kfxf7YAW8+nWjiBNyg6iBRzjYCjMELBUR22iQSgALVe+w+8woOypuNRGXWWlBkX+qpTTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739137938; c=relaxed/simple;
-	bh=iSJ5jtMLBZnq74EPv4uYBA24MtpHvrIdYdyloL79HmQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=u71sYrrFWQknAU/R0NHhM+VLtLmd8zwZHcBJ6rEjrDt0Z/yP49BtDdx/y9LMxcEdgEzc0bBx4zt2gNskEZo6JbZiMzldubXclrABqpTXv1c2H2xxO0sA2a9Klt6uVXJ04CXmKyIccaZbBgVR5mcDj9awqzMdpJEBxSnYJKcohbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G9kWHUXo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739138058; c=relaxed/simple;
+	bh=yHjXrbdCzedtH694RdVCZkS6a/Ng+e43EMPiO02cesE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pySL/3e06SLqLrbdy7BZscHkHYnNsElpNGo7o1+RhdsyJNcB8O10bcvUP79edESj6IxlvLx+maHWW7c7l82+l/6Qrhh+gHAa+meCt4gCBtYCIhFRo02gEb+4XscU4eLmbHt02oqnKl6pUdBxy6OO5/sPpkl/47kghgtGD9i3Y+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wdbN/nRl; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G9kWHUXo"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 10978C4CEE8;
-	Sun,  9 Feb 2025 21:52:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739137938;
-	bh=iSJ5jtMLBZnq74EPv4uYBA24MtpHvrIdYdyloL79HmQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=G9kWHUXoYQjCFzivzfaWKClkbHpfpWhtKxAkxvfg2N6smufoztLbC2yKlEuC1y7bc
-	 SdF2RqPLQIRPteh0pdj3m3N9iPpjC98wqfwK3FaKEad8Uu/MfDTcjpm3bpr5C2KK4R
-	 TsGnv91SmFZT5fV5E774UPUuTJgJNhbmiZYGoAGJWZU+dTbwsQWMzLA4JqbeDRG75a
-	 D3SKwr1m+wjMUDGsO9MYlhCtnI6Ip2rnAsxUDs0GlXwJnhCsQ+LuSYmaNW+rRD+Zne
-	 zoQIkeIZZQRiTQ5XQ20qQ5fJMHChos5dSyZ8u2DoagDpoi63U3a9bzWbasU9M720SS
-	 ttzJEtwb325XA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9DCC021A2;
-	Sun,  9 Feb 2025 21:52:17 +0000 (UTC)
-From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
-Date: Sun, 09 Feb 2025 22:51:58 +0100
-Subject: [PATCH v3 2/2] media: i2c: dw9719: Add of_match table
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wdbN/nRl"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739138053;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=1NA8X2a7NRR3nbGmozxcSWQin1UfPp6UPrEUzw+UV3I=;
+	b=wdbN/nRlUFZ5J1aPMHyAd76sO9VvP5vMFD/VWtJoR2kwz+1poKLWOXMmG7l78DVVZOpBx5
+	4XNhVdAgmxRsLVUtpIV7U8NQoljSh9fMm1lXTicciWE3LkW4+Lx9zohwQLPPZeLTx5SUUU
+	wJJfgKudwHUBvpMRZbBHhCwrgaNaKD4=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Yazen Ghannam <yazen.ghannam@amd.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Tony Luck <tony.luck@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>,
+	Khuong Dinh <khuong@os.amperecomputing.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] EDAC: Use string choice helper functions
+Date: Sun,  9 Feb 2025 22:52:21 +0100
+Message-ID: <20250209215222.52260-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250209-dw9761dts-v3-2-14d3f00f0585@apitzsch.eu>
-References: <20250209-dw9761dts-v3-0-14d3f00f0585@apitzsch.eu>
-In-Reply-To: <20250209-dw9761dts-v3-0-14d3f00f0585@apitzsch.eu>
-To: Daniel Scally <djrscally@gmail.com>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739137936; l=1275;
- i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
- bh=mGgvurDestv373N8gVyPxAuJTKfXOnE3tkcTk8bJG1E=;
- b=XzW00rKO2isZu4IP2pkHVJ3PcZy+noiay7NCF3yEykQ/JGT+96Fxt4+ep/3N5XW4x+9Ld5y4j
- MnH//KJxEvJD02Wk69bbm3tEn8zaqJJ2w4fRRLw4q9qkbewDCKSktzS
-X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
- pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
-X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
- auth_id=142
-X-Original-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-Reply-To: git@apitzsch.eu
+X-Migadu-Flow: FLOW_OUT
 
-From: André Apitzsch <git@apitzsch.eu>
+Remove hard-coded strings by using the str_enabled_disabled(),
+str_yes_no(), str_write_read(), and str_plural() helper functions.
 
-Add of_match table for "dongwoon,dw9719" and "dongwoon,dw9761"
-compatible string. This fixes automatic driver loading when using a
-device-tree, and if built as a module like major linux distributions do.
+Add a space in "All DIMMs support ECC: yes/no" to improve readability.
 
-Signed-off-by: André Apitzsch <git@apitzsch.eu>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
- drivers/media/i2c/dw9719.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/edac/amd64_edac.c | 47 +++++++++++++++++++--------------------
+ drivers/edac/debugfs.c    |  5 ++++-
+ drivers/edac/i5400_edac.c |  3 ++-
+ drivers/edac/i7300_edac.c |  7 +++---
+ drivers/edac/xgene_edac.c | 17 +++++++-------
+ 5 files changed, 42 insertions(+), 37 deletions(-)
 
-diff --git a/drivers/media/i2c/dw9719.c b/drivers/media/i2c/dw9719.c
-index 032fbcb981f20f4e93202415e62f67379897a048..6c76212d4c698462a9128d26ef95f0eccb243c7c 100644
---- a/drivers/media/i2c/dw9719.c
-+++ b/drivers/media/i2c/dw9719.c
-@@ -360,6 +360,13 @@ static const struct i2c_device_id dw9719_id_table[] = {
- };
- MODULE_DEVICE_TABLE(i2c, dw9719_id_table);
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index 8414ceb43e4a..d133a5be5890 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/ras.h>
++#include <linux/string_choices.h>
+ #include "amd64_edac.h"
+ #include <asm/amd_nb.h>
+ #include <asm/amd_node.h>
+@@ -1171,22 +1172,21 @@ static void debug_dump_dramcfg_low(struct amd64_pvt *pvt, u32 dclr, int chan)
+ 		edac_dbg(1, " LRDIMM %dx rank multiply\n", (dcsm & 0x3));
+ 	}
  
-+static const struct of_device_id dw9719_of_table[] = {
-+	{ .compatible = "dongwoon,dw9719" },
-+	{ .compatible = "dongwoon,dw9761" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, dw9719_of_table);
+-	edac_dbg(1, "All DIMMs support ECC:%s\n",
+-		    (dclr & BIT(19)) ? "yes" : "no");
++	edac_dbg(1, "All DIMMs support ECC: %s\n", str_yes_no(dclr & BIT(19)));
+ 
+ 
+ 	edac_dbg(1, "  PAR/ERR parity: %s\n",
+-		 (dclr & BIT(8)) ?  "enabled" : "disabled");
++		 str_enabled_disabled(dclr & BIT(8)));
+ 
+ 	if (pvt->fam == 0x10)
+ 		edac_dbg(1, "  DCT 128bit mode width: %s\n",
+ 			 (dclr & BIT(11)) ?  "128b" : "64b");
+ 
+ 	edac_dbg(1, "  x4 logical DIMMs present: L0: %s L1: %s L2: %s L3: %s\n",
+-		 (dclr & BIT(12)) ?  "yes" : "no",
+-		 (dclr & BIT(13)) ?  "yes" : "no",
+-		 (dclr & BIT(14)) ?  "yes" : "no",
+-		 (dclr & BIT(15)) ?  "yes" : "no");
++		 str_yes_no(dclr & BIT(12)),
++		 str_yes_no(dclr & BIT(13)),
++		 str_yes_no(dclr & BIT(14)),
++		 str_yes_no(dclr & BIT(15)));
+ }
+ 
+ #define CS_EVEN_PRIMARY		BIT(0)
+@@ -1353,14 +1353,14 @@ static void umc_dump_misc_regs(struct amd64_pvt *pvt)
+ 		edac_dbg(1, "UMC%d UMC cap high: 0x%x\n", i, umc->umc_cap_hi);
+ 
+ 		edac_dbg(1, "UMC%d ECC capable: %s, ChipKill ECC capable: %s\n",
+-				i, (umc->umc_cap_hi & BIT(30)) ? "yes" : "no",
+-				    (umc->umc_cap_hi & BIT(31)) ? "yes" : "no");
++				i, str_yes_no(umc->umc_cap_hi & BIT(30)),
++				    str_yes_no(umc->umc_cap_hi & BIT(31)));
+ 		edac_dbg(1, "UMC%d All DIMMs support ECC: %s\n",
+-				i, (umc->umc_cfg & BIT(12)) ? "yes" : "no");
++				i, str_yes_no(umc->umc_cfg & BIT(12)));
+ 		edac_dbg(1, "UMC%d x4 DIMMs present: %s\n",
+-				i, (umc->dimm_cfg & BIT(6)) ? "yes" : "no");
++				i, str_yes_no(umc->dimm_cfg & BIT(6)));
+ 		edac_dbg(1, "UMC%d x16 DIMMs present: %s\n",
+-				i, (umc->dimm_cfg & BIT(7)) ? "yes" : "no");
++				i, str_yes_no(umc->dimm_cfg & BIT(7)));
+ 
+ 		umc_debug_display_dimm_sizes(pvt, i);
+ 	}
+@@ -1371,11 +1371,11 @@ static void dct_dump_misc_regs(struct amd64_pvt *pvt)
+ 	edac_dbg(1, "F3xE8 (NB Cap): 0x%08x\n", pvt->nbcap);
+ 
+ 	edac_dbg(1, "  NB two channel DRAM capable: %s\n",
+-		 (pvt->nbcap & NBCAP_DCT_DUAL) ? "yes" : "no");
++		 str_yes_no(pvt->nbcap & NBCAP_DCT_DUAL));
+ 
+ 	edac_dbg(1, "  ECC capable: %s, ChipKill ECC capable: %s\n",
+-		 (pvt->nbcap & NBCAP_SECDED) ? "yes" : "no",
+-		 (pvt->nbcap & NBCAP_CHIPKILL) ? "yes" : "no");
++		 str_yes_no(pvt->nbcap & NBCAP_SECDED),
++		 str_yes_no(pvt->nbcap & NBCAP_CHIPKILL));
+ 
+ 	debug_dump_dramcfg_low(pvt, pvt->dclr0, 0);
+ 
+@@ -1398,7 +1398,7 @@ static void dct_dump_misc_regs(struct amd64_pvt *pvt)
+ 	if (!dct_ganging_enabled(pvt))
+ 		debug_dump_dramcfg_low(pvt, pvt->dclr1, 1);
+ 
+-	edac_dbg(1, "  DramHoleValid: %s\n", dhar_valid(pvt) ? "yes" : "no");
++	edac_dbg(1, "  DramHoleValid: %s\n", str_yes_no(dhar_valid(pvt)));
+ 
+ 	amd64_info("using x%u syndromes.\n", pvt->ecc_sym_sz);
+ }
+@@ -2027,15 +2027,15 @@ static void read_dram_ctl_register(struct amd64_pvt *pvt)
+ 
+ 		if (!dct_ganging_enabled(pvt))
+ 			edac_dbg(0, "  Address range split per DCT: %s\n",
+-				 (dct_high_range_enabled(pvt) ? "yes" : "no"));
++				 str_yes_no(dct_high_range_enabled(pvt)));
+ 
+ 		edac_dbg(0, "  data interleave for ECC: %s, DRAM cleared since last warm reset: %s\n",
+-			 (dct_data_intlv_enabled(pvt) ? "enabled" : "disabled"),
+-			 (dct_memory_cleared(pvt) ? "yes" : "no"));
++			 str_enabled_disabled(dct_data_intlv_enabled(pvt)),
++			 str_yes_no(dct_memory_cleared(pvt)));
+ 
+ 		edac_dbg(0, "  channel interleave: %s, "
+ 			 "interleave bits selector: 0x%x\n",
+-			 (dct_interleave_enabled(pvt) ? "enabled" : "disabled"),
++			 str_enabled_disabled(dct_interleave_enabled(pvt)),
+ 			 dct_sel_interleave_addr(pvt));
+ 	}
+ 
+@@ -3208,8 +3208,7 @@ static bool nb_mce_bank_enabled_on_node(u16 nid)
+ 		nbe = reg->l & MSR_MCGCTL_NBE;
+ 
+ 		edac_dbg(0, "core: %u, MCG_CTL: 0x%llx, NB MSR is %s\n",
+-			 cpu, reg->q,
+-			 (nbe ? "enabled" : "disabled"));
++			 cpu, reg->q, str_enabled_disabled(nbe));
+ 
+ 		if (!nbe)
+ 			goto out;
+@@ -3353,7 +3352,7 @@ static bool dct_ecc_enabled(struct amd64_pvt *pvt)
+ 		edac_dbg(0, "NB MCE bank disabled, set MSR 0x%08x[4] on node %d to enable.\n",
+ 			 MSR_IA32_MCG_CTL, nid);
+ 
+-	edac_dbg(3, "Node %d: DRAM ECC %s.\n", nid, (ecc_en ? "enabled" : "disabled"));
++	edac_dbg(3, "Node %d: DRAM ECC %s.\n", nid, str_enabled_disabled(ecc_en));
+ 
+ 	if (!ecc_en || !nb_mce_en)
+ 		return false;
+@@ -3378,7 +3377,7 @@ static bool umc_ecc_enabled(struct amd64_pvt *pvt)
+ 		}
+ 	}
+ 
+-	edac_dbg(3, "Node %d: DRAM ECC %s.\n", pvt->mc_node_id, (ecc_en ? "enabled" : "disabled"));
++	edac_dbg(3, "Node %d: DRAM ECC %s.\n", pvt->mc_node_id, str_enabled_disabled(ecc_en));
+ 
+ 	return ecc_en;
+ }
+diff --git a/drivers/edac/debugfs.c b/drivers/edac/debugfs.c
+index 4804332d9946..8195fc9c9354 100644
+--- a/drivers/edac/debugfs.c
++++ b/drivers/edac/debugfs.c
+@@ -1,4 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
 +
- static DEFINE_RUNTIME_DEV_PM_OPS(dw9719_pm_ops, dw9719_suspend, dw9719_resume,
- 				 NULL);
++#include <linux/string_choices.h>
++
+ #include "edac_module.h"
  
-@@ -367,6 +374,7 @@ static struct i2c_driver dw9719_i2c_driver = {
- 	.driver = {
- 		.name = "dw9719",
- 		.pm = pm_sleep_ptr(&dw9719_pm_ops),
-+		.of_match_table = of_match_ptr(dw9719_of_table),
- 	},
- 	.probe = dw9719_probe,
- 	.remove = dw9719_remove,
-
+ static struct dentry *edac_debugfs;
+@@ -22,7 +25,7 @@ static ssize_t edac_fake_inject_write(struct file *file,
+ 	       "Generating %d %s fake error%s to %d.%d.%d to test core handling. NOTE: this won't test the driver-specific decoding logic.\n",
+ 		errcount,
+ 		(type == HW_EVENT_ERR_UNCORRECTED) ? "UE" : "CE",
+-		errcount > 1 ? "s" : "",
++		str_plural(errcount),
+ 		mci->fake_inject_layer[0],
+ 		mci->fake_inject_layer[1],
+ 		mci->fake_inject_layer[2]
+diff --git a/drivers/edac/i5400_edac.c b/drivers/edac/i5400_edac.c
+index 49b4499269fb..b5cf25905b05 100644
+--- a/drivers/edac/i5400_edac.c
++++ b/drivers/edac/i5400_edac.c
+@@ -31,6 +31,7 @@
+ #include <linux/slab.h>
+ #include <linux/edac.h>
+ #include <linux/mmzone.h>
++#include <linux/string_choices.h>
+ 
+ #include "edac_module.h"
+ 
+@@ -899,7 +900,7 @@ static void decode_mtr(int slot_row, u16 mtr)
+ 	edac_dbg(2, "\t\tWIDTH: x%d\n", MTR_DRAM_WIDTH(mtr));
+ 
+ 	edac_dbg(2, "\t\tELECTRICAL THROTTLING is %s\n",
+-		 MTR_DIMMS_ETHROTTLE(mtr) ? "enabled" : "disabled");
++		 str_enabled_disabled(MTR_DIMMS_ETHROTTLE(mtr)));
+ 
+ 	edac_dbg(2, "\t\tNUMBANK: %d bank(s)\n", MTR_DRAM_BANKS(mtr));
+ 	edac_dbg(2, "\t\tNUMRANK: %s\n",
+diff --git a/drivers/edac/i7300_edac.c b/drivers/edac/i7300_edac.c
+index 61adaa872ba7..69068f8d0cad 100644
+--- a/drivers/edac/i7300_edac.c
++++ b/drivers/edac/i7300_edac.c
+@@ -23,6 +23,7 @@
+ #include <linux/slab.h>
+ #include <linux/edac.h>
+ #include <linux/mmzone.h>
++#include <linux/string_choices.h>
+ 
+ #include "edac_module.h"
+ 
+@@ -620,7 +621,7 @@ static int decode_mtr(struct i7300_pvt *pvt,
+ 	edac_dbg(2, "\t\tWIDTH: x%d\n", MTR_DRAM_WIDTH(mtr));
+ 
+ 	edac_dbg(2, "\t\tELECTRICAL THROTTLING is %s\n",
+-		 MTR_DIMMS_ETHROTTLE(mtr) ? "enabled" : "disabled");
++		 str_enabled_disabled(MTR_DIMMS_ETHROTTLE(mtr)));
+ 
+ 	edac_dbg(2, "\t\tNUMBANK: %d bank(s)\n", MTR_DRAM_BANKS(mtr));
+ 	edac_dbg(2, "\t\tNUMRANK: %s\n",
+@@ -871,9 +872,9 @@ static int i7300_get_mc_regs(struct mem_ctl_info *mci)
+ 			 IS_MIRRORED(pvt->mc_settings) ? "" : "non-");
+ 
+ 	edac_dbg(0, "Error detection is %s\n",
+-		 IS_ECC_ENABLED(pvt->mc_settings) ? "enabled" : "disabled");
++		 str_enabled_disabled(IS_ECC_ENABLED(pvt->mc_settings)));
+ 	edac_dbg(0, "Retry is %s\n",
+-		 IS_RETRY_ENABLED(pvt->mc_settings) ? "enabled" : "disabled");
++		 str_enabled_disabled(IS_RETRY_ENABLED(pvt->mc_settings)));
+ 
+ 	/* Get Memory Interleave Range registers */
+ 	pci_read_config_word(pvt->pci_dev_16_1_fsb_addr_map, MIR0,
+diff --git a/drivers/edac/xgene_edac.c b/drivers/edac/xgene_edac.c
+index 699c7d29d80c..9955396c9a52 100644
+--- a/drivers/edac/xgene_edac.c
++++ b/drivers/edac/xgene_edac.c
+@@ -15,6 +15,7 @@
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/regmap.h>
++#include <linux/string_choices.h>
+ 
+ #include "edac_module.h"
+ 
+@@ -1407,7 +1408,7 @@ static void xgene_edac_iob_gic_report(struct edac_device_ctl_info *edac_dev)
+ 		dev_err(edac_dev->dev, "Multiple XGIC write size error\n");
+ 	info = readl(ctx->dev_csr + XGICTRANSERRREQINFO);
+ 	dev_err(edac_dev->dev, "XGIC %s access @ 0x%08X (0x%08X)\n",
+-		info & REQTYPE_MASK ? "read" : "write", ERRADDR_RD(info),
++		str_read_write(info & REQTYPE_MASK), ERRADDR_RD(info),
+ 		info);
+ 	writel(reg, ctx->dev_csr + XGICTRANSERRINTSTS);
+ 
+@@ -1489,19 +1490,19 @@ static void xgene_edac_rb_report(struct edac_device_ctl_info *edac_dev)
+ 		if (reg & AGENT_OFFLINE_ERR_MASK)
+ 			dev_err(edac_dev->dev,
+ 				"IOB bus %s access to offline agent error\n",
+-				write ? "write" : "read");
++				str_write_read(write));
+ 		if (reg & UNIMPL_RBPAGE_ERR_MASK)
+ 			dev_err(edac_dev->dev,
+ 				"IOB bus %s access to unimplemented page error\n",
+-				write ? "write" : "read");
++				str_write_read(write));
+ 		if (reg & WORD_ALIGNED_ERR_MASK)
+ 			dev_err(edac_dev->dev,
+ 				"IOB bus %s word aligned access error\n",
+-				write ? "write" : "read");
++				str_write_read(write));
+ 		if (reg & PAGE_ACCESS_ERR_MASK)
+ 			dev_err(edac_dev->dev,
+ 				"IOB bus %s to page out of range access error\n",
+-				write ? "write" : "read");
++				str_write_read(write));
+ 		if (regmap_write(ctx->edac->rb_map, RBEIR, 0))
+ 			return;
+ 		if (regmap_write(ctx->edac->rb_map, RBCSR, 0))
+@@ -1560,7 +1561,7 @@ static void xgene_edac_rb_report(struct edac_device_ctl_info *edac_dev)
+ 	err_addr_lo = readl(ctx->dev_csr + IOBBATRANSERRREQINFOL);
+ 	err_addr_hi = readl(ctx->dev_csr + IOBBATRANSERRREQINFOH);
+ 	dev_err(edac_dev->dev, "IOB BA %s access at 0x%02X.%08X (0x%08X)\n",
+-		REQTYPE_F2_RD(err_addr_hi) ? "read" : "write",
++		str_read_write(REQTYPE_F2_RD(err_addr_hi)),
+ 		ERRADDRH_F2_RD(err_addr_hi), err_addr_lo, err_addr_hi);
+ 	if (reg & WRERR_RESP_MASK)
+ 		dev_err(edac_dev->dev, "IOB BA requestor ID 0x%08X\n",
+@@ -1611,7 +1612,7 @@ static void xgene_edac_pa_report(struct edac_device_ctl_info *edac_dev)
+ 	dev_err(edac_dev->dev,
+ 		"%sAXI slave 0 illegal %s access @ 0x%02X.%08X (0x%08X)\n",
+ 		reg & IOBAXIS0_M_ILLEGAL_ACCESS_MASK ? "Multiple " : "",
+-		REQTYPE_RD(err_addr_hi) ? "read" : "write",
++		str_read_write(REQTYPE_RD(err_addr_hi)),
+ 		ERRADDRH_RD(err_addr_hi), err_addr_lo, err_addr_hi);
+ 	writel(reg, ctx->dev_csr + IOBAXIS0TRANSERRINTSTS);
+ 
+@@ -1625,7 +1626,7 @@ static void xgene_edac_pa_report(struct edac_device_ctl_info *edac_dev)
+ 	dev_err(edac_dev->dev,
+ 		"%sAXI slave 1 illegal %s access @ 0x%02X.%08X (0x%08X)\n",
+ 		reg & IOBAXIS0_M_ILLEGAL_ACCESS_MASK ? "Multiple " : "",
+-		REQTYPE_RD(err_addr_hi) ? "read" : "write",
++		str_read_write(REQTYPE_RD(err_addr_hi)),
+ 		ERRADDRH_RD(err_addr_hi), err_addr_lo, err_addr_hi);
+ 	writel(reg, ctx->dev_csr + IOBAXIS1TRANSERRINTSTS);
+ }
 -- 
 2.48.1
-
 
