@@ -1,150 +1,155 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151BA82488
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 22:34:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0575C82488;
+	Sun,  9 Feb 2025 22:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739140477; cv=none; b=OEYO33Z1vc7krfX6KZM2/bvdD3HRgrtDw6rTPX1Rz/b5UYUm8zdyS9Fd6lnTMCErWGoppCj8T4bsrRb6U2t6tNe/jVqf3B9qX22/1n96DaoWaMjOjrGTfYtmaZaG+YxPL3EaiKoGOzhcRDzf3aZP9pRHmGGKE8h3Kl9YwtnTKvE=
+	t=1739140783; cv=none; b=lNIcSyYrpPVAzhHNFhAXLAfCjMwyQGbhf/C2KUUqz8VzFy3HGKuC9cGjlXj6Nrwc0A2fR7PdxQjH2/7X/M7La8f1au+TD/4/onm7dO5mljFGzR20GbVgY4JCORH8cTipwLnFb6TiCXceIOXo7ltzkRtZzxnZm9AuWvoJdAo5D9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739140477; c=relaxed/simple;
-	bh=OZ6XhT05wj0HtVAfQr2aHu+yKa9kgIqUxOt58CUHgbI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=msPHK+KwPRPpaSS3DPyVYbKNa8iv4ibRa++VyJ/1ukiyb890t91v24BmDtuaT0y2s4uYEpi5BA7/iv1C9Xi7gZWxe2MFXrAU8SN+P8E51n7L5nZa9SgfCUAf0Zr6aOsF66bjbbm6F1rIP5bMGLaNroO5YKYjJjNvkniLb5Yuh2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=usu+PO98; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+	s=arc-20240116; t=1739140783; c=relaxed/simple;
+	bh=CR8awdPeVLEdGlEoVqZF90F8Cx6eoLGNFON6XRSiB4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=NBKlxVaEHs3WWjV5sjHApc22o5YIFF62rVtc4uq2dPGKMRiotDL9vAcK3vM7l5aMqwrCkwPj9af0Sf1qmf4DLKWqpsBkzEWFbP8lP+kVUTlO7og68ZAlUvxZnt9BtXckVnNRo518C4IQ1+Rt5nsrsz7ha2YjQMPVcKH7wEJc7fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=myVq9YZd; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="usu+PO98"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-388cae9eb9fso1866861f8f.3
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 14:34:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1739140474; x=1739745274; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6VqhA8OJ2B/T8LcGnvokM/21lxU4fJgLMXRUipbc15E=;
-        b=usu+PO98CemKvbMYzf1+9Ygr30JjL/GOX3hnICp0L2tpbu8TqrKGsBSzsIKPHfmZJd
-         Lw8IR8l4q5S33z5FHbiJQVDhAPIJKLIaVfQD99WjgOX2fpT4gjMff0DrIgCJaO6toG/n
-         TBCbDUw/dSZ3ze4J9BziSwaZHbnz0LYmuU3MYr699DBcyOCOLGJ8jxA1+la1+rztRk5z
-         rANeD5AKTkFKLXmQmPfG1cQOvx8ASYnP1hkNX8vCg/RqqjdhACylbnEMDQq+AOyPf9a0
-         rphrCekKOlh21EgGDD6ZhKz9tbNhqG/AA+r/9TW+1R4pR72O4DNx/e7awVincwz0n7c9
-         DQNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739140474; x=1739745274;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6VqhA8OJ2B/T8LcGnvokM/21lxU4fJgLMXRUipbc15E=;
-        b=azqhHkJhzik9EKkuzRqRVK5/q3PleDvCzIyGxRE63GlmD/17H2dmN76VkZshmRtrNJ
-         1EaaSCjh12nsLl5ICG/Y1RC+5AmWiNpjPvXX/45xERgM2Wji5zi2suIokqGk64UcXkYa
-         2xQbgLid/CYDHS2M4B4+2Qma005wRWFDHeVHGp5D0NKy1NJPTpNKinoNhl+R2xawef6g
-         f2iScyMhfKhjEc98dgPVeScsenORlKDXFPL/r8IOfcvLUiAsdagnmbSLQ4suVl+A+mtn
-         XVB6tBhX76vfLF+nVp50ybzAsAR12CUKHZ7u4Mtlt5c8ay2G3lzAePnd0R8ny8xZ+Mnx
-         dsSw==
-X-Forwarded-Encrypted: i=1; AJvYcCVYiaxPuyw0FdmcWQc3XRFeBvGmTeOAl46VCymqLUSJjZcPIDRT8bRLTFGhRvYKyUSZkrs5BqxmHVm23fE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyU10tSn7LqId+X8ZHHi6vxS/3TTaYH1x5tZbM80ns+Cq2+5EIA
-	2fE5jyzvugI94Q5831gLTqrFdQoFkOSuH940XjLruGezbk2bqzVygzHJICThtw8=
-X-Gm-Gg: ASbGncsEEYkNxI6qcRmaBNnwg5R3rOpv1cOSxlxo8z3hJKP1XEBToli7G3P1chxSVSF
-	k4ki5a5F723P+XzIYR6nCF8EGDxUU64G1rWmaeB5hbBfU217TNqHwbY+uO6g3idmFYl35dCdTxn
-	nzUwuVVTSsx1eAJplewYTre4DTA/QFsVOnrc2dQB2nh8tbpKWijqY4OylMgQU6cIhkPgjMGmp6R
-	AolbjbAv4+IZYxBFRvslPRsbSQt/VZAzE46KDpReEHj/FznvqHZAko1i5kfYlJhwqJPZBvWk2Ut
-	jYC1fQjmWE3aVxyqlYSLk2J6JVBhszUffSa1cL9P+rRJrTtCDW2ihvl8fDmPjn7mKtjp
-X-Google-Smtp-Source: AGHT+IHYmQpg+MN1qA0nug7LeoGLzcXDskmffzXoPho8X3ciY2KFjA6cPoU5YmUL849kQYDu9L1IYg==
-X-Received: by 2002:a5d:6d0b:0:b0:38b:ed88:f045 with SMTP id ffacd0b85a97d-38dc90f0daemr8186759f8f.33.1739140474424;
-        Sun, 09 Feb 2025 14:34:34 -0800 (PST)
-Received: from airbuntu (host109-154-33-115.range109-154.btcentralplus.com. [109.154.33.115])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dce18d6f9sm7071108f8f.29.2025.02.09.14.34.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 14:34:34 -0800 (PST)
-Date: Sun, 9 Feb 2025 22:34:33 +0000
-From: Qais Yousef <qyousef@layalina.io>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Christian Loehle <christian.loehle@arm.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Hongyan Xia <hongyan.xia2@arm.com>,
-	John Stultz <jstultz@google.com>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7] sched: Consolidate cpufreq updates
-Message-ID: <20250209223433.symtjwbkcbwvhlc7@airbuntu>
-References: <20240728184551.42133-1-qyousef@layalina.io>
- <6e4a4605-f6c5-4948-ac38-c4ddf4990754@arm.com>
- <CAJZ5v0ieB4hppC8fHnjhNNpfFZzEL4Y96irSTmCmavXCid2xtA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="myVq9YZd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1739140775;
+	bh=ee4CvhgOw0QWfBCiNfu4SmGWiVD+M08IcesX1yfz5ws=;
+	h=Date:From:To:Cc:Subject:From;
+	b=myVq9YZd6J7jc1dUnogAvYSQLj/yS/q/4tcq9B2a+B+sbDxpL7kxrGcbWqVoMX0m4
+	 VW1Y38T3Ajx2ctbaORtgMBD/uHofwVoXKeczMAZEfeF0IE+JFecB23IfpVVc14fEWy
+	 Z4j1LBkUQasu9xEj46arlyxT0r0/fvfJ9UmjLaiJE4MLFkz0teqp3xt1sgWmW/OPEa
+	 PeX9S/Ux58MXR8vCLVA2gcFNBKXIzUnPEdLSKa5iIAjbuBtpXGNTzOdt5yOTlTMQPB
+	 puPivBHZt70252iwEdB5zGwcecYrTm27bbzMUdcX/p6kfv2MrLBbbz159A9sNgG2JS
+	 ADaJ+usUwHQuA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YrjLv4q63z4wbn;
+	Mon, 10 Feb 2025 09:39:35 +1100 (AEDT)
+Date: Mon, 10 Feb 2025 09:39:34 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Kees Cook <kees@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Uros Bizjak <ubizjak@gmail.com>
+Subject: linux-next: manual merge of the mm tree with Linus' tree
+Message-ID: <20250210093934.07a303c9@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0ieB4hppC8fHnjhNNpfFZzEL4Y96irSTmCmavXCid2xtA@mail.gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/DaWv.a_l70pmoXlkHOMIVrb";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 09/12/24 13:33, Rafael J. Wysocki wrote:
-> On Wed, Sep 11, 2024 at 10:34 PM Christian Loehle
-> <christian.loehle@arm.com> wrote:
-> >
-> > On 7/28/24 19:45, Qais Yousef wrote:
-> > > Improve the interaction with cpufreq governors by making the
-> > > cpufreq_update_util() calls more intentional.
-> > >
-> > > At the moment we send them when load is updated for CFS, bandwidth for
-> > > DL and at enqueue/dequeue for RT. But this can lead to too many updates
-> > > sent in a short period of time and potentially be ignored at a critical
-> > > moment due to the rate_limit_us in schedutil.
-> > >
-> > > For example, simultaneous task enqueue on the CPU where 2nd task is
-> > > bigger and requires higher freq. The trigger to cpufreq_update_util() by
-> > > the first task will lead to dropping the 2nd request until tick. Or
-> > > another CPU in the same policy triggers a freq update shortly after.
-> > >
-> > > Updates at enqueue for RT are not strictly required. Though they do help
-> > > to reduce the delay for switching the frequency and the potential
-> > > observation of lower frequency during this delay. But current logic
-> > > doesn't intentionally (at least to my understanding) try to speed up the
-> > > request.
-> > >
-> > > To help reduce the amount of cpufreq updates and make them more
-> > > purposeful, consolidate them into these locations:
-> > >
-> > > 1. context_switch()
-> > > 2. task_tick_fair()
-> > > 3. sched_balance_update_blocked_averages()
-> > > 4. on sched_setscheduler() syscall that changes policy or uclamp values
-> > > 5. on check_preempt_wakeup_fair() if wakeup preemption failed
-> > > 6. on __add_running_bw() to guarantee DL bandwidth requirements.
-> > >
-> >
-> > Actually now reading that code again reminded me, there is another
-> > iowait boost change for intel_pstate.
-> > intel_pstate has either intel_pstate_update_util() or
-> > intel_pstate_update_util_hwp().
-> > Both have
-> >         if (smp_processor_id() != cpu->cpu)
-> >                 return;
-> > Now since we move that update from enqueue to context_switch() that will
-> > always be false.
-> > I don't think that was deliberate but rather to simplify intel_pstate
-> > synchronization, although !mcq device IO won't be boosted which you
-> > could argue is good.
-> > Just wanted to mention that, doesn't have to be a bad, but surely some
-> > behavior change.
-> 
-> This particular change shouldn't be problematic.
+--Sig_/DaWv.a_l70pmoXlkHOMIVrb
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for checking and sorry for delayed response. Life got in the way and
-couldn't get back to this sooner.
+Hi all,
 
-Cheers
+Today's linux-next merge of the mm tree got a conflict in:
 
---
-Qais Yousef
+  include/linux/compiler.h
+
+between commits:
+
+  cb7380de9e4c ("compiler.h: Move C string helpers into C-only kernel secti=
+on")
+  20e5cc26e56d ("compiler.h: Introduce __must_be_byte_array()")
+
+from Linus' tree and commit:
+
+  a7d395568dd3 ("compiler.h: introduce TYPEOF_UNQUAL() macro")
+
+from the mm-unstable branch of the mm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/linux/compiler.h
+index 200fd3c5bc70,a892c89ac28a..000000000000
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@@ -191,25 -191,26 +191,45 @@@ void ftrace_likely_update(struct ftrace
+  	__v;								\
+  })
+ =20
+ +#ifdef __CHECKER__
+ +#define __BUILD_BUG_ON_ZERO_MSG(e, msg) (0)
+ +#else /* __CHECKER__ */
+ +#define __BUILD_BUG_ON_ZERO_MSG(e, msg) ((int)sizeof(struct {_Static_asse=
+rt(!(e), msg);}))
+ +#endif /* __CHECKER__ */
+ +
+ +/* &a[0] degrades to a pointer: a different type from an array */
+ +#define __is_array(a)		(!__same_type((a), &(a)[0]))
+ +#define __must_be_array(a)	__BUILD_BUG_ON_ZERO_MSG(!__is_array(a), \
+ +							"must be array")
+ +
+ +#define __is_byte_array(a)	(__is_array(a) && sizeof((a)[0]) =3D=3D 1)
+ +#define __must_be_byte_array(a)	__BUILD_BUG_ON_ZERO_MSG(!__is_byte_array(=
+a), \
+ +							"must be byte array")
+ +
+ +/* Require C Strings (i.e. NUL-terminated) lack the "nonstring" attribute=
+. */
+ +#define __must_be_cstr(p) \
+ +	__BUILD_BUG_ON_ZERO_MSG(__annotated(p, nonstring), "must be cstr (NUL-te=
+rminated)")
+ +
++ /*
++  * Use __typeof_unqual__() when available.
++  *
++  * XXX: Remove test for __CHECKER__ once
++  * sparse learns about __typeof_unqual__().
++  */
++ #if CC_HAS_TYPEOF_UNQUAL && !defined(__CHECKER__)
++ # define USE_TYPEOF_UNQUAL 1
++ #endif
++=20
++ /*
++  * Define TYPEOF_UNQUAL() to use __typeof_unqual__() as typeof
++  * operator when available, to return an unqualified type of the exp.
++  */
++ #if defined(USE_TYPEOF_UNQUAL)
++ # define TYPEOF_UNQUAL(exp) __typeof_unqual__(exp)
++ #else
++ # define TYPEOF_UNQUAL(exp) __typeof__(exp)
++ #endif
++=20
+  #endif /* __KERNEL__ */
+ =20
+  /**
+
+--Sig_/DaWv.a_l70pmoXlkHOMIVrb
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmepLqYACgkQAVBC80lX
+0GyeHQf/TekNR7qBGz5v8NWPMTsP2c2DvPeyxrlLLEeqDP/1cWZxY7cSDbZMhGpT
+eP22KeTj1nSQPkG3YNPXArEEYlF3O6Km5/LUyA83EXd1hfuMTEyiU1oMz+e6P/nc
+ys5umKvKj9ScQtbcFuyyGbJOtya3MuJJvDXZfHKSIZU4KhGrpHyaj7UUm9ehDA06
+aI6IDWPFiONC7bgEnwQfkYsRkelBDr4NBBNcJlgH/OLu6x32uFThjnFe7cqfXVUQ
+pWGKsMyUYwWyDNFquTP9VjRh3NIH/KWxdPgefRIX8/Laeu4qPY0w1eNlSyRGznxE
+1tfTXsbHQIOqS3xZ1Ux9IXrWoMHitA==
+=dPwE
+-----END PGP SIGNATURE-----
+
+--Sig_/DaWv.a_l70pmoXlkHOMIVrb--
