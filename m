@@ -1,127 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28138248C
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 21:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203F21DFE29;
+	Sun,  9 Feb 2025 22:02:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739138343; cv=none; b=mEBFXgR7O4sCcbGH6rfr9Bpr6DkizdfQD4O/VbV0DGFzkxzwZsWunJKSAVUMvPDa2aVP1Uqa7pqjekTk3NYRf28QjF7u274ul6L6wkg3r+ucraElEFiPk+jya2pd/Xgkue+OLiqqRaPMRv827U3zb6v4i14wSiygNfYCl4KA/UA=
+	t=1739138548; cv=none; b=drnFwSHMgIrcaeV+M+WsJCGsOjfuBnBMvIHpF3G0TeacJPfTe3yuuvXKs3CuuGHQRidXoZYvgPTAhCQd93Dtgz32AeAwKgzFOZKt2IUoIMJjq7B2WMRgDbgqA8bxVwyCDxLLQjDjLl56twG4pi3fqSNjmGXiTyclcTvppbwbr3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739138343; c=relaxed/simple;
-	bh=rZZRsjlSpeAfRhzHyE/VdMTRY0VDQU8RR2sZYVcrZ+g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=HXPkYkV5CX9GKLF7GaXGSR9zgnXhdKyWU8/niu37jSAlfVuurp9IqH46ZTq57gPflRelIUYgWGM2TMCzb+wlvcn5C3H2G1MJ0K8opnMBLZVJhFui9EysZ1KTKptX7mU+Gkdc41d+jIybgpT/uWnFxS/0bY/78VxtzhnK/kOLwDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sn0t8fvD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739138548; c=relaxed/simple;
+	bh=n19fHMY0fBzL+SD4x4buAM62MKKVSOyuM/FO69KBres=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CSBSrE6wsnUE/Jj56kyfC4npnU1H2JchoV85SJpu7Mmisg5sdlMO9BKUkrcYUd9qBZAsm+b3APnr0ZDMdzWGMMrCsSpjeo7lKHNSaulI6Yn5xbRKb4CS6Lb3chfiWuxY+eknQ5odPIHAzoIwI5gxxPalOHVjroiuoakk+7WDjVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IlUULZz7; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sn0t8fvD"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 252DAC4CEDD;
-	Sun,  9 Feb 2025 21:59:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739138343;
-	bh=rZZRsjlSpeAfRhzHyE/VdMTRY0VDQU8RR2sZYVcrZ+g=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=sn0t8fvDgnnM0G8WgbMBwfqaYq+4K+RbZ58zF6wzg7w7+HOYix29zo+HOt62dXp3P
-	 MpGUmzYl4Y0DrwoZp4TM0zi0GMAt5QgqH6N0WFZB0lbo59gVmwxuShQaQsjonxvMFh
-	 DMCld16GaUBJgrU1xa0+rHN4WlgBftewKmNjJuy3HdJh7ys10l/XPvZGKhS/gWET+2
-	 1SANKWNxcFMZrmbg6Mt4XsITmfWH0I81xuaa6zNtiuP/93joENFG68Q39MlbeVwj+c
-	 DnvlKzpCHQWHxfEMZP1vISxB4+jQM4XRC9khsO3sulxmLCgMsn8km/pH0l4bBEPL3n
-	 BQ4MJQ0LOlw4w==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09650C0219B;
-	Sun,  9 Feb 2025 21:59:03 +0000 (UTC)
-From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Date: Sun, 09 Feb 2025 22:58:50 +0100
-Subject: [PATCH] powerpc/fsl_lbc: Explicitly populate bus
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IlUULZz7"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-38dc9eba8a1so1986614f8f.1;
+        Sun, 09 Feb 2025 14:02:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739138545; x=1739743345; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZrCBrsBGQ+tCvXOABWtiT76sFUcDv+I/VrUzIQbDTzU=;
+        b=IlUULZz7/mEyEXkkGWrFT54MeasS2ZNxzroeKAy1xnMSJLI9PJ18hh6y0Mj8kAriOh
+         dtf6KlZe8rnVZGAvOEXygvjXGaC8m2rmR91+JPERrIbvkRiybFXxY09Gc4CWP5U2+0zb
+         k4/BRdzLzTJ+eVJm1NQFZ+I+0u7Aqs2XvMz5s7Phd0pL5Kc/txuqy6yA5Hyt6f6rSjNH
+         l6I3wUJFKuINaEZKzhJi058udCe7aQTQhfIWPQbe4CatpGzbsc8dl5qo5yNgKocsWfmS
+         ZGrlBt1n5kLEhmtnSvhqoPtUGVofoHYB0E8fNa8ZHlt96CX69siPbhM+fiE3lgQR04j0
+         FftQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739138545; x=1739743345;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZrCBrsBGQ+tCvXOABWtiT76sFUcDv+I/VrUzIQbDTzU=;
+        b=FzELA7shXKb/UdGH5fSa7Bey4sPxulHZNX8+XHsvFrrolB3s2OWFMG7GFmOyutiVNf
+         v6xjqPKl7AzBqoQI9wLmONHH8gNSqmnv6eCpdhe9MqWlHDeO3it50qye+TuJZ+h/uP35
+         us8BXrJvs+tSQvf49kyifRQvwCqPPfiiPWqghOBIwDp62l2s0CQuAfuAj2boW3ycrIkh
+         6Ht5a4uphmSOFwCOTgWoRMWEmtWvFlyYqcvHOxO9IvPAAESGVyBFMSHvOJvQPMst4dR4
+         1Zjfq+tCVC9f4jER7YRtgFLJABQVrOSfsysJdNDbTqv5pP7+kGPEVjoRnsYtgoPtADAC
+         giHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU7PFAlWB88x+xAi4mZSZVhh0sSFFCxYFLoyi5sUy+VOTccZASpaKebDmFkxvH0lYYYOyLpxhpJu3dSFiVg@vger.kernel.org, AJvYcCWSZtGkL/fc0+ZRp+bF89+WQyO3Q9KhpB8tw97CTNFfIeMezH9gHECoEE2IjZF2wXjsp/lfm9mpUaI5@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZAI/nhuuoxS8ieJgeU8L4Xbo5nCJYa7YgNV4rQw0zsgAnh9p/
+	Hdx8PKN7hzmAQbfiyq5+V3zdCdE903ahJ0A82QIj/Pq7zuLU2sVm
+X-Gm-Gg: ASbGncvhwy6BhMd3o2L4iqZ2d2PUIukuGJA/rqSaxXlDnzUl4a6FZ0O2YTiQaJGGjrM
+	g+YwnUvr/+hACSoUsgOhvkutunupjN9zcWuFCBWzRkWw+MhjBWQDcyqF65b3ww+kpfb7sdtplvF
+	7a1MwFHA/ncrQufIiztT5rafoesRgshytyUG+0kefBPxew92ffFd6Eh6uGqBEwJn+Bwjm7xzGi8
+	sfNa5uNBh8SwvW648RJ0r3WZCzgL1F3xOUuldH8jwmZoLYwPl3AW7Brz1SxK0c7ux6Bef1XMOdJ
+	+oqJFrp9GmpVvW1c4jsU3MRbG1Nkdlji4qxumo26wu3wBH3t7CSBQtA1usOFwwWwJALLXg3N
+X-Google-Smtp-Source: AGHT+IGLh9i/kI8Ha8+Op3DoUswKsdryEtT21pr/+6nTQeWXoWEW/G6p3UUlYi/NxO5jEdod/Gguuw==
+X-Received: by 2002:a05:6000:2ad:b0:38d:e02d:5f4c with SMTP id ffacd0b85a97d-38de02d60b1mr208725f8f.10.1739138545239;
+        Sun, 09 Feb 2025 14:02:25 -0800 (PST)
+Received: from snowdrop.snailnet.com (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd9a6153dsm2919003f8f.60.2025.02.09.14.02.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2025 14:02:24 -0800 (PST)
+From: David Laight <david.laight.linux@gmail.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: David Laight <david.laight.linux@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@redhat.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-arch@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>,
+	kernel-hardening@lists.openwall.com
+Subject: [PATCH v2 1/1] x86: In x86-64 barrier_nospec can always be lfence
+Date: Sun,  9 Feb 2025 22:02:22 +0000
+Message-Id: <20250209220222.212835-1-david.laight.linux@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250209-localbus-v1-1-efcd780153a0@posteo.net>
-X-B4-Tracking: v=1; b=H4sIABklqWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDIwNL3Zz85MScpNJiXUuTRLPUpCQDk2RDIyWg8oKi1LTMCrBR0bG1tQD
- KGYEMWgAAAA==
-X-Change-ID: 20250209-localbus-94a6ebb04c12
-To: Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Naveen N Rao <naveen@kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739138342; l=2166;
- i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=B9wRS8xBkWgNM3MVMQKFspl9gtSoxY/bCMh2+zmQDxk=;
- b=tFftKrynp3tkKOIsn1G7hLG/50HmSiZgFICzklnzo02+5OzJ4z2O3yOXtbYkOd2tIUzTztvUP
- 3jBRUyGXE5fDRuAWF65KNIo8wVffEwkkRvHkDHvXqMss2mBlUNCGA2P
-X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
- pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
-X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
- auth_id=156
-X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-Reply-To: j.ne@posteo.net
 
-From: "J. Neuschäfer" <j.ne@posteo.net>
+When barrier_nospec() was added the defintion was copied from the
+one used to synchronise rdtsc.
 
-Historically, devicetree nodes representing the Freescale Enhanced
-Local Bus Controller (eLBC) have compatible strings such as:
+On very old cpu rdtsc was a synchronising instruction.
+When this change X86_FEATURE_LFENCE_RDTSC (and a MFENCE copy) were
+(probably) added so lfence/mfence could be added to synchronise rdtsc.
+For old cpu (I think the code checks XMM2) no barrier was added.
 
-    compatible = "fsl,mpc8313-elbc", "fsl,elbc", "simple-bus";
+I'm not sure why that code was used for barrier_nospec().
+Or why rdtsc ended up being synchronised by barrier_nospec().
+lfence is the right instruction (well as good as you get).
 
-The "simple-bus" string causes the bus to be populated, and the memory
-devices contained within it to be discovered. The eLBC bus (as
-represented in device trees) differs from a simple-bus in a few ways,
-though:
+In any case all x86-64 cpu support XMM2 and lfence so there is
+to point using alternative().
+Separate the 32bit and 64bit definitions but leave the barrier
+missing on old 32bit cpu.
 
- - Addresses are not simple/linear: The first cell of an address is a
-   chip select, the second is an linear address within the space thus
-   selected. Representing 1,0 as 100000000, for example, would decrease
-   readability[1].
- - It is expected that the devices on a simple-bus "can be accessed
-   directly without additional configuration required"[2], but the eLBC
-   needs some configuration.
+Signed-off-by: David Laight <david.laight.linux@gmail.com>
 
-To accommodate devicetrees that declare an eLBC without "simple-bus",
-explicitly populate the bus in the eLBC driver.
-
-[1]: dtc makes such a suggestion opon encountering an eLBC
-[2]: Quoting the Devicetree Specification Release v0.3
-
-Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+v2: use a explicit lfence rather than __rmb().
+    Update commit message text w.r.t rdtsc.
+Signed-off-by: David Laight <david.laight.linux@gmail.com>
 ---
- arch/powerpc/sysdev/fsl_lbc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/barrier.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/sysdev/fsl_lbc.c b/arch/powerpc/sysdev/fsl_lbc.c
-index 217cea150987df1e1b5c6dbf9e9a1607dd5ce49b..2007ced997fcf0c7059e5b780893b530764dc8b2 100644
---- a/arch/powerpc/sysdev/fsl_lbc.c
-+++ b/arch/powerpc/sysdev/fsl_lbc.c
-@@ -20,6 +20,7 @@
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
-+#include <linux/of_platform.h>
- #include <linux/slab.h>
- #include <linux/sched.h>
- #include <linux/platform_device.h>
-@@ -336,7 +337,7 @@ static int fsl_lbc_ctrl_probe(struct platform_device *dev)
- 	/* Enable interrupts for any detected events */
- 	out_be32(&fsl_lbc_ctrl_dev->regs->lteir, LTEIR_ENABLE);
+diff --git a/arch/x86/include/asm/barrier.h b/arch/x86/include/asm/barrier.h
+index 7b44b3c4cce1..b9af75624cf5 100644
+--- a/arch/x86/include/asm/barrier.h
++++ b/arch/x86/include/asm/barrier.h
+@@ -45,7 +45,11 @@
+ 	__mask; })
  
--	return 0;
-+	return devm_of_platform_populate(&dev->dev);
+ /* Prevent speculative execution past this barrier. */
+-#define barrier_nospec() alternative("", "lfence", X86_FEATURE_LFENCE_RDTSC)
++#ifdef CONFIG_X86_32
++#define barrier_nospec() alternative("", "lfence", X86_FEATURE_XMM2)
++#else
++#define barrier_nospec() asm volatile("lfence":::"memory")
++#endif
  
- err1:
- 	free_irq(fsl_lbc_ctrl_dev->irq[0], fsl_lbc_ctrl_dev);
-
----
-base-commit: 7ccde445dddcca030cd6ed66974bb80915ad9dd5
-change-id: 20250209-localbus-94a6ebb04c12
-
-Best regards,
+ #define __dma_rmb()	barrier()
+ #define __dma_wmb()	barrier()
 -- 
-J. Neuschäfer <j.ne@posteo.net>
-
+2.39.5
 
