@@ -1,118 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366EB14F70;
-	Sun,  9 Feb 2025 16:36:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D68614F70;
+	Sun,  9 Feb 2025 16:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739119003; cv=none; b=E2XgHGSRvaRomy1YTtFFP3xk3GF2lfeP5DlMefzj1UxUEhNCAEpf37AiSXSS/BXgFb1lpzwXDDL0/NNR7yO1IFljqYC1QbX+Mq69sxVYXWSoYZD0Z8q2vk42HsOJiOc5pa0REVWWKw/OLDEfZ1tqxNW8ogT+0sNbWpHQ677d+/4=
+	t=1739119185; cv=none; b=LnW6uZ/Lr7+s20TSjxpagzP4rB6SAna8sEOYkjsktwywRQpR7PNnEi3SqiSETb7QcwGNO0WuCHLe+NhjqxHfedjvV5iKfaPS6/ykDoH4r8fF9femCqVa66r7k66JWFPxUKMHvoaRVKULOCfGDzmdL22q5s4ZS5mv7snbFMxIUrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739119003; c=relaxed/simple;
-	bh=Gv5/MAhQgxmKzh87wmDhi/R3U7Y4UX0eiD8WhiIom1w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sqnAArtIHNunhP1lA/0jXMPdf36oiwuROCYHkb3hcHK8kXA3lkGpCCrAyuJJ2Kl8phZ/n+EyN4hHbrqg79M8mALqjzOPM5VXy9Y76Py4+PA3MzOA3Wal7e3xsTNiLOQwKKjwSinw3VV5lazGjK5mFVcd3sXiASuyAm+Uqyor/p8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f4HY6lm2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739119185; c=relaxed/simple;
+	bh=2rckUhFY6qefPBowZAUi1IfVckCqF/NMT+aGa+Wn1cY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YEzaFLNFjHSGtPOM/wrylWOHf+n1uQDeoIHIJAux4bu8Qbbf2aAbrBWlNjlmqo9wvSszZ9Zjs6JnFC7BaIpI+wvB4yMcqsMRSvWBBhAQquXvlkpBG66JYTREX678i5D1IVkxPQ79GBV4MzuJtWGeLoKTuGbPO+pFZGrC578ukJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OOHouJO5; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f4HY6lm2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FF66C4CEDD;
-	Sun,  9 Feb 2025 16:36:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739119003;
-	bh=Gv5/MAhQgxmKzh87wmDhi/R3U7Y4UX0eiD8WhiIom1w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=f4HY6lm2a9Ms18puCpIl0QgUPTGImqF96xu1hGye5e1NNJEg4iALgebCeDBIQwkJn
-	 yjw98ai8Cmkvh5bTiCAbubOaPSzjZTTNtgJzLpwMp+6ZAxDKdPubyuMDhFvBL0GUXH
-	 5fUt+lAy6LSpkp56dy59aJl0fFQhsQcnZyMQqwRossMAsWSxcQ4d6668Z1B71E/1ea
-	 0+pNVtHJ9DBqYb2nvvbD7VeGXoME6gZPssuCXctgGqx+G6X/TZ1Ltl0MkcWQ9vEMpA
-	 Q8QvAmBYfLEd7AR9hzz2mKQaqEQxpPfjDsml+EiOIUP09vzJVvpvcB9W0/3mZIwKNx
-	 LHNlQbUgv/RBA==
-Message-ID: <bc413dad-e167-4f4c-9ab2-b2ae77954839@kernel.org>
-Date: Sun, 9 Feb 2025 17:36:35 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OOHouJO5"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30795988ebeso35271171fa.3;
+        Sun, 09 Feb 2025 08:39:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739119181; x=1739723981; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2rckUhFY6qefPBowZAUi1IfVckCqF/NMT+aGa+Wn1cY=;
+        b=OOHouJO51tFSaV9uVaJ932tacyabfsrcSUeYc5My0bzZYDngpJtwXAw0bdDk0KEctj
+         SGmAwQEYroTt/4f4ByKIHGZ/Bck3d68slx6f8laVS7zxYPbOnke0hD0b7a4fGwOUzRFn
+         Qcax8WUNC+hl5X5PAXNKzGtM99N3NhdH6BoB/ycyb1l+BOFUlwv/gAD+jthuGOWX28F2
+         UUd/o79C+9cdZJaDiBUtV93kjBzqEXSea+9lAUsY/wd9nf2gNIPQqsLD0vrHsNGkAdNW
+         zZmFpLJFhp1onnI+y5Z8Y/7DEfx8JY80k4eUfC4X56A44Yqeq8nQD5bFvaFFhp5pO19m
+         0Pag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739119181; x=1739723981;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2rckUhFY6qefPBowZAUi1IfVckCqF/NMT+aGa+Wn1cY=;
+        b=SoFdgqccojtDXoX90D9hDijl57lsC6V7hbh/FjzLcm6fOCnt4Ih2jwoxmW1399QPVs
+         GBMeloRKDr7qfb4EZqj7y6XfKpxyazxWJ5pnCQ/zRGYhEWCpyKrpRDB4QNy49/ZM5K2F
+         QSbiC8vjsfDGLO38xds3B60d8KKpDpsrjX1uXuQbGMFjkXRshayoCbzCb+H8Fjd5nnIo
+         rroWfAgTOO6apwjsezVKM1B6OjurSFpIwz400R5Xr166N7G76AaEIXGJUWEebN3bdanR
+         nUsr18Pp9yinmuhILA9zOdrUQUqRKhBap81mHmiv44/wjVqvF1wpXZLyjozZxXDJwSqk
+         UCiw==
+X-Forwarded-Encrypted: i=1; AJvYcCUBEFHeya45WUHxgAWf2TqRjALomAKo4YhHmcwsCNoEbtVl1neKsp6InEPhDP7RXzbD3P8ymqDDfU5knAI=@vger.kernel.org, AJvYcCWfRBf+fRRolULKm57NRKuYSfKKtzTl5qxVL5PmxH8VG0Vgo8Osi9M9TnYZY+NPlbb6xJAVwN5JXLky0JUd/GQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW1Niwtdv8JEQSVZm8dbubNOP/6LoffdfZzc8z+ma4J3Cmkgz1
+	Bf3iHFA6YCME/2r+Aic1kmXNkI/ZBQgfGERqAn7x5HthjeEWWfJ4i94Ae+b1pW2SWfQABeV10lQ
+	hj93kVURGM5apAi9rc0y063m9YvI=
+X-Gm-Gg: ASbGncsmdvsdHigK7rfq+gTutq7RKVmZnojku28MeaU39VgRjoulB8pQblkOMWS0BCd
+	TJj4BkelgxbBvMzREbDH6785xmVLJOe3GGDKK2NtJDONmwqUYKM/YRdVpIlTpjJNsSD5FgnpB0d
+	uDEW1w2Q4aubY/xdVFn+DGaWAwJcC3oic=
+X-Google-Smtp-Source: AGHT+IExUx4NIGmguKU4D4Qk0WfWgOlo9Eyn75GmuZHvovvXrmbeq4jlsv1Iqx2uZzsKPzb1BdRfhBxizke0HIGy1jw=
+X-Received: by 2002:a2e:98c7:0:b0:308:e8d3:756c with SMTP id
+ 38308e7fff4ca-308e8d3780fmr8530581fa.18.1739119181071; Sun, 09 Feb 2025
+ 08:39:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/3] arm: dts: stm32: Add Plymovent AQM devicetree
-To: Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Woojung Huh <woojung.huh@microchip.com>, Andrew Lunn <andrew+netdev@lunn.ch>
-Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com
-References: <20250207143226.2026099-1-o.rempel@pengutronix.de>
- <20250207143226.2026099-4-o.rempel@pengutronix.de>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250207143226.2026099-4-o.rempel@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250209-rust-analyzer-macros-core-dep-v1-1-5ebeb3eb60a9@gmail.com>
+ <CANiq72mw83RmLYeFFoJW6mUUygoyiA_f1ievSC2pmBESsQew+w@mail.gmail.com>
+In-Reply-To: <CANiq72mw83RmLYeFFoJW6mUUygoyiA_f1ievSC2pmBESsQew+w@mail.gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Sun, 9 Feb 2025 11:39:04 -0500
+X-Gm-Features: AWEUYZmSrwi9GQ67Jh5WxyuJAHR9A17JLxFoYAOOe-eTwEhgFoB2sXqtigiBQSs
+Message-ID: <CAJ-ks9nMjPnyY_J1xH93MEepcekYWQ=Ve+Kq_TaM=MvA4B0Phw@mail.gmail.com>
+Subject: Re: [PATCH] scripts: generate_rust_analyzer.py: add missing macros ->
+ core dep
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Boris-Chengbiao Zhou <bobo1239@web.de>, Fiona Behrens <me@kloenk.dev>, Kees Cook <kees@kernel.org>, 
+	Wedson Almeida Filho <wedsonaf@google.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Chayim Refael Friedman <chayimfr@gmail.com>, 
+	Lukas Wirth <lukas.wirth@ferrous-systems.com>, 
+	Daniel Almeida <daniel.almeida@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 07/02/2025 15:32, Oleksij Rempel wrote:
-> +
-> +&spi2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&spi2_aqm_pins_a>;
-> +	status = "disabled";
-> +
-> +	spidev@0 {
-> +		compatible = "dh,dhcom-board"; /* Needed for spidev in userspace */
+Hi Miguel, thanks for the quick look!
 
+On Sun, Feb 9, 2025 at 11:29=E2=80=AFAM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> Hi Tamir,
+>
+> Thanks for looking into rust-analyzer, it is great to get improvements
+> in this area.
+>
+> On Sun, Feb 9, 2025 at 4:29=E2=80=AFPM Tamir Duberstein <tamird@gmail.com=
+> wrote:
+> >
+> > The macros crate has depended on core since its introduction in commit
+>
+> To be clear, `macros` does not depend on the (kernel) `core`.
 
-But that's not a dhcom-board.
+You're right to point out the difference between `kernel::core`
+(module) and `core` (crate). This confusion is solved below (because
+it doesn't actually depend on the `core` crate).
 
-NAK, you are abusing DT for instantiating user-space modules. Either you
-have here one, fixed, real device or not. If not, you must drop it. If
-yes, describe this one, fixed, real device.
+> But it
+> depends on host crates: not just `core`, but `proc_macro`, `std` etc.,
+> which is why we can use things like e.g. `std::fmt::Write`, right? I
+> don't know if the distinction matters for rust-analyzer, though, but
+> things like their `cfg`s may differ.
+>
+> I also wonder if we should also be passing `std` etc. given it seems
+> we need to pass `core`. Does it handle correctly that `Write`, for
+> instance?
 
-Best regards,
-Krzysztof
+Yep, it matters! I realized the same in
+https://lore.kernel.org/all/CAJ-ks9nkY7za5zQLv7YkvCeJ1BQ70ZnTTP3Q4VNAmMaG3s=
+Gu+Q@mail.gmail.com/.
+With core replaced by std and proc_macro, `std::fmt::Write` and all
+the `proc_macro` paths start working as well.
+
+> Perhaps rust-analyzer allows to pass different sets of
+> crates for this, even if they share the same display name -- then we
+> could pass the right `cfg`s and so on.
+
+I'm not exactly sure what you mean by different sets of crates here.
+What `cfg`s would you want to pass?
+
+> Cc'ing Lukas and Danilo who have been looking into rust-analyzer
+> support recently (Fiona is already there).
+>
+> One more quick comment: since this would apply to all proc macros,
+> should we do it for all proc macros? i.e. instead of hardcoding it
+> here, using instead the `is_proc_macro` tag we already have.
+
+We could, but then it's redundant with the deps section. I'll leave it
+explicit for now, since it is just one line.
