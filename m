@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B998E3FD4;
-	Sun,  9 Feb 2025 10:48:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD09613DBA0;
+	Sun,  9 Feb 2025 10:50:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739098138; cv=none; b=j5oZSOvjlRgUxC7QRY1H2NSuLYJUJVjFA3ZA8Nhek1TVWlM/UjeEgw31NjK6z26PPdhB9/XmQSMyilAYLvHU4huMVdLD6HEf3+1IcFT/4BzmfA9F/LDyyPSfQTxRX/4mnp/Uh+R4Xc7u5N7mBQbLrT9bivG9k+6+EFZIKyMJ1jg=
+	t=1739098218; cv=none; b=LXPTKjUe3nWE2Ga9Tsj/ozo4NUGkzGxKgQkr35VrwtNxoDK5SR0QMfpe8Z8EoW03+mx+FKau0wq78HeGZ6PlaosFRpd6P45xiTqZYuUIpWf14pOhXw5bklc7JMtDmRwUTCbkNwue2XKCs5y6rwMsH/HlJwkQvso3sEKOm+sDWCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739098138; c=relaxed/simple;
-	bh=uqL5zVdRPB1QjFkWwpyO7GjIZbFeu2/+LfR1RcHkL/w=;
+	s=arc-20240116; t=1739098218; c=relaxed/simple;
+	bh=W3bQLpvNqVz6lXaL/MfC5KsGcVMYBUOMdocc+DMoGO8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZAgAk5yY4Z/Ivf0h7DJZmkp2ozqX+pqJ+XkjtvW0Chpvsjsu9CJwN6k6BpcXsydTIRLv/LjN3rBrJGJUnz51shSYlyQsN1r3OIOerBXefZrMgGhDf6xMLPa0Y8qtJAlUwEVptFZj42JVKoTNKDjfcBAk8geBzkTNBbZWhJ4nhI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BUaDJwkI; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ZQ1I0qPWR/8wcfZRhPiieiYXC36LuBVZwa55HlpvL/HaWtqLlBSbr5CzCn3iqSdMBxExJ7wav/NFrzRO/gcXPjUUugPPG+s52My56qtqnfE4ZGYT3i47wBx+C1rr3PImogjMYV3WRy3vWG1P6YL44RQmNfYs7d1DXrEYe0Pk0sE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EOmkmJFE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BUaDJwkI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 064F0C4CEDD;
-	Sun,  9 Feb 2025 10:48:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EOmkmJFE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 919E6C4CEE6;
+	Sun,  9 Feb 2025 10:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739098138;
-	bh=uqL5zVdRPB1QjFkWwpyO7GjIZbFeu2/+LfR1RcHkL/w=;
+	s=k20201202; t=1739098218;
+	bh=W3bQLpvNqVz6lXaL/MfC5KsGcVMYBUOMdocc+DMoGO8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BUaDJwkIRNhNcp3Rgmz/KSZHu6Dv0AYDyGw7lYoUaewIYd+TnfZy5aLok9QcjqGEn
-	 j6l93dUoujBso53rV4n0IC5YcUoJbY6i8yY2zn6nh7XD6s12q2IJhdTbL1n3FooEYE
-	 gdBfHWGKTzGJROcQI2RAPF8Gb5yX/jVeZXQlOquKW/cVCRobJ3HrkuNQOMgq9NdaPk
-	 XQxol1Ny6V1FAA9KLhWYPR/Y1zi1GOuFLjKwKX4r64AzecztzU8yaTp9FJR05xuVVV
-	 rLt/cXjDtgV6TDpOWRJ6AB4IUrwAdbQ+Pp0svOE7L4ldUovXfPGM0KIS00PXE+p3Fn
-	 m+mjJP7NY0esg==
-Message-ID: <bdae5678-ff79-4c04-8d77-c6bdfe613c68@kernel.org>
-Date: Sun, 9 Feb 2025 11:48:50 +0100
+	b=EOmkmJFEqo/eraNmgNsDtZB6gXNrBo0bHCtNZ2MBl4pMgQKCaIFj67If8dtTZQZtN
+	 WPvxDWtBh6uZTTTXtS2ceWkJjsW54UP7yRHPBDh4RQtB5YmHJt/MCrDuGa3Bq4BjQC
+	 Yam+te0i61d3eAosRREz+FZMlj+j/ad69ibiEowFQeMmN4tVqEnvGxOrowGOd6scDE
+	 8o+DZvJwd7fwZjYY1o48ODPOGrXwGFbCi1PYwB2gvmmd1B36n7gZJuk4vgrEDsH/NR
+	 iRLhXiEZaY++f6aI95bc7mhV98rKgwHbe/WhYc2EJuKUrekWT2fw2fuAKnQWwSlEV/
+	 ycxOrkJxMB60w==
+Message-ID: <eac3c588-0c9a-4bd6-8ef2-e05eec6c377a@kernel.org>
+Date: Sun, 9 Feb 2025 11:50:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,17 +35,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [v2,2/2] dt-bindings: memory-controllers: Add MediaTek DRAM
- controller interface
+Subject: Re: [v2,1/2] memory/mediatek: Add an interface to get current DDR
+ data rate
 To: Crystal Guo <crystal.guo@mediatek.com>, Rob Herring <robh@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
  <matthias.bgg@gmail.com>,
  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- Project_Global_Chrome_Upstream_Group@mediatek.com
-References: <20250206121629.12186-1-crystal.guo@mediatek.com>
- <20250206121629.12186-3-crystal.guo@mediatek.com>
+ Project_Global_Chrome_Upstream_Group@mediatek.com,
+ kernel test robot <lkp@intel.com>
+References: <20250207014437.17920-1-crystal.guo@mediatek.com>
+ <20250207014437.17920-2-crystal.guo@mediatek.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -91,32 +92,37 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250206121629.12186-3-crystal.guo@mediatek.com>
+In-Reply-To: <20250207014437.17920-2-crystal.guo@mediatek.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 06/02/2025 13:16, Crystal Guo wrote:
-> A MediaTek DRAM controller interface to provide the current DDR data rate.
-
-Please wrap commit message according to Linux coding style / submission
-process (neither too early nor over the limit):
-https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
-
-
+On 07/02/2025 02:42, Crystal Guo wrote:
+> Add MediaTek DRAMC driver to provide an interface that can
+> obtain current DDR data rate.
 > 
+> Reported-by: kernel test robot <lkp@intel.com>
+
+Kbuild did not report here anything.
+
+> Closes: https://lore.kernel.org/oe-kbuild-all/202412210955.FvO0Pee3-lkp@intel.
+> com/
 > Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
 > ---
->  .../mediatek,common-dramc.yaml                | 129 ------------------
+>  drivers/memory/Kconfig              |   1 +
+>  drivers/memory/Makefile             |   1 +
+>  drivers/memory/mediatek/Kconfig     |  21 +++
+>  drivers/memory/mediatek/Makefile    |   2 +
+>  drivers/memory/mediatek/mtk-dramc.c | 196 ++++++++++++++++++++++++++++
+>  5 files changed, 221 insertions(+)
+>  create mode 100644 drivers/memory/mediatek/Kconfig
+>  create mode 100644 drivers/memory/mediatek/Makefile
+>  create mode 100644 drivers/memory/mediatek/mtk-dramc.c
 
-Why is there removal here if you add? Commit msg explains nothing here.
 
-Why this patch was sent twice?
+You sent same patchsets multiple times.
 
-Please use standard email subjects, so with the PATCH keyword in the
-title. `git format-patch -vX` helps here to create proper versioned
-patches. Another useful tool is b4. Skipping the PATCH keyword makes
-filtering of emails more difficult thus making the review process less
-convenient.
+Before next posting, please really carefully go through the guides and
+process.
 
 Best regards,
 Krzysztof
