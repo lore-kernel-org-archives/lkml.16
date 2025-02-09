@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC52243370;
-	Sun,  9 Feb 2025 10:33:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FBFA243370;
+	Sun,  9 Feb 2025 10:38:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739097239; cv=none; b=GMitnjkmQJdnK03SgY4vCyzCIzuWy5XaTRwKCW1sB7cWSvut3K88CTNw3bm7x3ZIxkXSl6JpeATcK92cIJ+BQwIYqZs6zYs75Iw4+7/i9VD1iatFxI+XKeKQb+ZnO5WRMrN49RnfR5w6viRjbbeMf4Y6oOgxHYwVWZk7XRuIwY8=
+	t=1739097538; cv=none; b=A5ZDB7QXVtb2tYs26YTvAuLhVFrOUelT5Xp0+9Qf+6uPvUSNGe4Fz3CQkbDTSfiOSZ2puXch3KwXnZbyyKo+z37EU6ictk6ImA0DZHwwf9/rBs7LkXLIWbhYr8ab0Y9cRLcirC6Cxml4SPT5zHsx6lZShgQm0v8op4SPpMZtHbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739097239; c=relaxed/simple;
-	bh=We0XZHoLdXOxG23rAGcxkdrurkckLFtDgf9bPyAFWYU=;
+	s=arc-20240116; t=1739097538; c=relaxed/simple;
+	bh=9nFwagNxCfn0j52uHcSSNAhPNFRHroONyYXsrNVJahI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DakDzMl+mrQjM5AOM7sGXTHcrgjjL6fXaE002HMyfCs5FGcdJByX1M9sQTNy75Pmn0qdRp9t2zdgekktzwuYzsh0oi2nw4ZL6XqRk4p9N3rzMkfkNDrOnVVgJbGRxS58tDxyBZvXj+vOt4PSJ0idqKPW7GglWjb2TBFkRfVAEbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pLHtO5NG; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=umnwQrEBxQ+Y9vquSH2F7TJtDzYWGyxgbwqUwbhdHkU8Cw1SBgZP2G2n2OvmK1JtXp6aQZoZ8M/42cV82Erdr4i2ni+EnI2WGtngCS2BuqzTcqvqnRs4M3+IrCIcgdwgbaJ023fu5IindLDJDqfAHXzt2SSXcooLWEEXdYxmKMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e0l8jxZw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pLHtO5NG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6717C4CEDD;
-	Sun,  9 Feb 2025 10:33:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e0l8jxZw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7973BC4CEDD;
+	Sun,  9 Feb 2025 10:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739097239;
-	bh=We0XZHoLdXOxG23rAGcxkdrurkckLFtDgf9bPyAFWYU=;
+	s=k20201202; t=1739097535;
+	bh=9nFwagNxCfn0j52uHcSSNAhPNFRHroONyYXsrNVJahI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pLHtO5NGgVmIhbPh2MFnEBtEoLWZLcqTeuEgsU93kD4gnbxS88D9/LpPjnwuXRvbg
-	 OUUcHJyJWqm7S+AH/EDDOKICNZdtq4YjYjYDeNlYXWbrxPmhwt0SrucEwRwn3Mnvu8
-	 kuBsxK+lZVI1MjDEeQVq4dV7g+fUYgKlPYaevO09WA3ZpszbMIx1DPCIbkhpoUC58R
-	 XMXfKMnTEZSHGLLnPpnL+apOMsuPvH73aDxq4TVMxGV9U+FiMHvqf2dWfaq6C+pEC6
-	 AkSzq2O9YZFBqsZawjMpbYGRztUNpX1KHXrxsasmmQ5A6vKNgHmaBdUVHGvUuwWZYp
-	 rO2JvpZLvL4SQ==
-Message-ID: <41a505db-225f-4c9c-afbc-74c13ee4d44a@kernel.org>
-Date: Sun, 9 Feb 2025 11:33:45 +0100
+	b=e0l8jxZwRnj6FN5X+Zi4CNSdeS98Z610zj9MbxG1WkmXcbrodAatfXuGDO7pc8iMO
+	 JUKsC+JTn43AnT1hvYhXKteip7hBHI1rN+4yBOsNfPIkHxr9QIJw80IMRxWQ44whUB
+	 z5POpknvfD+L0LtegF9LPOlegv3wXvO6zCwCQbkLllpNBxTgiv4RC9CJv2VR4y90gE
+	 CA95KwA84hGYr+0Q2inTeFdFHyDUrgp/bdQMLGwsDmGkS8poP8NflN8hQ0l7dNSmwC
+	 7ppSZF04BbR5YbcCj6qZvwMx2dd2pJmlrKdrD1pJWVDwGVkdDenZsLychX7S0jzG7I
+	 tSG8bP1yfetvQ==
+Message-ID: <b1e59928-b2f4-47d4-87b8-424234c52f8d@kernel.org>
+Date: Sun, 9 Feb 2025 11:38:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
-To: Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
- Andy Lutomirski <luto@kernel.org>, Anthony Yznaga
- <anthony.yznaga@oracle.com>, Arnd Bergmann <arnd@arndb.de>,
- Ashish Kalra <ashish.kalra@amd.com>,
+Subject: Re: [PATCH v4 10/14] arm64: Add KHO support
+To: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Alexander Graf <graf@amazon.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski
+ <luto@kernel.org>, Anthony Yznaga <anthony.yznaga@oracle.com>,
+ Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
  Benjamin Herrenschmidt <benh@kernel.crashing.org>,
  Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>,
  Dave Hansen <dave.hansen@linux.intel.com>,
@@ -60,7 +60,7 @@ Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
  linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
  linux-mm@kvack.org, x86@kernel.org
 References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206162939.a1f86fb835f1eeb7ed73ff1c@linux-foundation.org>
+ <20250206132754.2596694-11-rppt@kernel.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -106,38 +106,61 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250206162939.a1f86fb835f1eeb7ed73ff1c@linux-foundation.org>
+In-Reply-To: <20250206132754.2596694-11-rppt@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 07/02/2025 01:29, Andrew Morton wrote:
-> On Thu,  6 Feb 2025 15:27:40 +0200 Mike Rapoport <rppt@kernel.org> wrote:
+On 06/02/2025 14:27, Mike Rapoport wrote:
+> From: Alexander Graf <graf@amazon.com>
 > 
->> This a next version of Alex's "kexec: Allow preservation of ftrace buffers"
->> series (https://lore.kernel.org/all/20240117144704.602-1-graf@amazon.com),
->> just to make things simpler instead of ftrace we decided to preserve
->> "reserve_mem" regions.
->>
->> The patches are also available in git:
->> https://git.kernel.org/rppt/h/kho/v4
->>
->>
->> Kexec today considers itself purely a boot loader: When we enter the new
->> kernel, any state the previous kernel left behind is irrelevant and the
->> new kernel reinitializes the system.
-> 
-> I tossed this into mm.git for some testing and exposure.
-> 
-> What merge path are you anticipating?
-> 
-> Review activity seems pretty thin thus far?
+> We now have all bits in place to support KHO kexecs. This patch adds
 
 
-At least for DT ABI because:
-1. For some reason this escaped Patchwork. Maybe was blocked by spam
-filters, maybe Cc list is too big. No clue.
-2. In the same time fallback to Patchwork was avoided by:
-Cc-ing wrong address and not using expected (see git log) subject prefixes.
+Please do not use "This commit/patch/change", but imperative mood. See
+longer explanation here:
+https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
 
+> awareness of KHO in the kexec file as well as boot path for arm64 and
+> adds the respective kconfig option to the architecture so that it can
+> use KHO successfully.
+> 
+> Signed-off-by: Alexander Graf <graf@amazon.com>
+> Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+
+
+...
+
+> +#ifdef CONFIG_KEXEC_HANDOVER
+> +	dt = image->kho.dt.buffer;
+> +	dt_mem = image->kho.dt.mem;
+> +	dt_len = image->kho.dt.bufsz;
+> +
+> +	scratch_mem = image->kho.scratch.mem;
+> +	scratch_len = image->kho.scratch.bufsz;
+> +#endif
+> +
+> +	if (!dt)
+> +		goto out;
+> +
+> +	pr_debug("Adding kho metadata to DT");
+> +
+> +	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-dt",
+
+Where is the ABI documentation for this?
+
+> +				       dt_mem, dt_len);
+> +	if (ret)
+> +		goto out;
+> +
+> +	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-scratch",
+
+Same question.
+
+> +				       scratch_mem, scratch_len);
+> +	if (ret)
+> +		goto out;
+> +
 Best regards,
 Krzysztof
