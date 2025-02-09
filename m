@@ -1,100 +1,82 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A003FD4;
-	Sun,  9 Feb 2025 09:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA7742AA1;
+	Sun,  9 Feb 2025 09:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739092096; cv=none; b=DcB98+pxCu6Ge9yDYLTI7iO6NYidpQVuI3cHdUQP+4/TkEX5H1uADkiHkGveAyqaA/JguMKRjZB0NlrD09dRCaASAwZcSu85LMepEyp3uoX9461gomb9zVifZQaNC84nZQTnG1cJGTiuE6jcwjfpAPyULur+qXXG7L2l4ISg0nU=
+	t=1739092381; cv=none; b=Jn2s72stYoEx4Y04QwpSXH1anzAmPG5tFigBlqTWLshpWyhFM6FTwzuKHKFBDaVtIKtmM/5LHSxuXQyyJrc/pReUYai8pmcyt/9trCjpmYdtFjZucPCX3DA1GqvMwdjQ068aiFVVPDQp/UFLmCXkzjlAxEUD4Yu4syA6Q2POntw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739092096; c=relaxed/simple;
-	bh=u5j8QcfxyKzcU8BsJtEeghuI/Py78/NxxL+MwBij7N0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FSO/VR0L03QiqF7QobGwMpttPFZ12/vGMTLEr5lHhvGWfvaP5G63jk3VyYKmjJgMok/vC6sdKRQn58KVq67g9OOy7/A7aHtv8+ew0S5VaJSihGUJxWudtJp27AUh/934ElBxkBF5SNv8TtABm4//W4PjZrSCiFZ4rwnoSRMTy+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FkH3L8eg; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739092381; c=relaxed/simple;
+	bh=Zo26W+AxME1VyFaWRMAwG1ZblAxqB3gp560tf9irJRw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GsU/+OT0CYnEFpQyRPL/eVz1dE65y55R/kKCjcvMDTZs0aJ5LRdoJwQ62Rrey2jEvYKDzVzD8GbOnibB2IIvAHd1npcVRW1J0NpoCYmDINv31XVxrtZU0fT7gebnhVSn7yN/mLgriuV8fuNcI90MQJ1+S/WX9vtQq8BiBej5lqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gFLGf6wG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FkH3L8eg"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5de56ff9851so2791444a12.2;
-        Sun, 09 Feb 2025 01:08:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739092093; x=1739696893; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:reply-to:from:subject:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u5j8QcfxyKzcU8BsJtEeghuI/Py78/NxxL+MwBij7N0=;
-        b=FkH3L8eg4LvgneekwXrjFvQ5xvXW6CkcALZUkYid6g3zYyWbSSaLk0kNpEObsHukpT
-         wkE7WZnetNA7wDmc8+x3ph3w61qr7Q5cKYEAtvF0UA8xOkNM+/xjc9OcZNQPQWTvMjEB
-         NWRP9YNrRZ7jPphUGNmnbyF2ZTweqsJ38HP7V1lQbwQiyTm8Holhw88Iv4I6BRnAurVQ
-         b1aYjfFMCMKv3GRSj1MGbYVZHje7iYZmD5e2KMoNqs7wgdZT71NIcWp2xikvcYdzgptF
-         6VLXzzYpjkeNjwgnDQqhC5hY45H0h/00QOK8miooq0PN4Bt5kY+iXjpiE9sAn/38fNZa
-         lvJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739092093; x=1739696893;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:reply-to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u5j8QcfxyKzcU8BsJtEeghuI/Py78/NxxL+MwBij7N0=;
-        b=cjv6H05U3veGGP55OIpzhGb5ZUYfRyuL8fMEXPXls4DFmILZmGr1E7ZAE43QPClOs9
-         VgT2nwjrJTLRazkcvYU61SaOOZ8V9JMU2IyEDDwYSWVcyopyX9I14KzfZ1A1I4fQiLjZ
-         uNEFLhOmbsXP8Qy3awDDQkVNQyD7XzEAvlMZ5kAJYqoUfM1fskRxaYy2sNR9fIFUdzne
-         fYBt6ejGL+Feuq7XE8s43cfXjLrPUZeFTl/L8L0qTP4p8IU/a8X++KGanHpnER1g99dR
-         rFjvtZ5LwC+IxQEDYY4ho1iP+o1mnwRbeC6jhStBoRQ3HsHGXqCOJj/MCmbb/jTllc96
-         7hYg==
-X-Forwarded-Encrypted: i=1; AJvYcCU+txa1kofnZmKvLBsavwLEhf3YylPHoJqMzTfFuEKhYkEzpUimOaxoQKFFwjST1SplK+skOj7CSN4=@vger.kernel.org, AJvYcCUHo7XLJOHETKww+yKejj5aLZAG/iOEBV4Sz+leyBLmKcZ/0wwW8A1S8sAawMwrLsC3YZagtexyQ7SeKo7t@vger.kernel.org, AJvYcCWaczNqjEmN6VICmhuYGW2wCF4uf5TWQRdtUVrZRn09ciYsHz4Gigfamq4B0ASumDEwVw6Jb3AEzcc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqlWH+cILhCsO+ckKEkXnAyTep2rMprHQ2qqsgMNgZe0EXMTOZ
-	iIrvQBb1m8Tl1YE+8tXsuU+bek2JH24D6C28aWlbHK2JBpoOwGxK
-X-Gm-Gg: ASbGncvBj7OE2Nt+hbxvdkyAe+VwXtrdhexMony6IFqfua/8vX3UVk+dcqSDlpsHMkd
-	IzZ9kywqEuYFhZwPmlVHuU9FmwNJ9FDalLkKowbOBsQdvCs5w2jDEZ8gUuggUfwjEd7Cz+t3NDf
-	YB/le+faL0YP0wv3J+ySeXHSIL+G4M9Wt0by5bS5OnHncTmePpqBfu7aCYSIJJ2rBkxQaWdigDu
-	YqkmxkNbISQPdrCI6xv69kbQO01ibI8HLDSYQ9916viw29ewb2UJ4xqEWT2s+Nmubpze61NlVBS
-	UlLQXYJe2MN45N8RGPzQanrhdY4Mq40kw3Zlq6b7kELSXQ==
-X-Google-Smtp-Source: AGHT+IHFySFmIybAcA7DUUGmF3MTWuZOtCcDX0Whx4UzudEVO+Sxbtco1tCKOWIoDiJPzt7hj6H3JA==
-X-Received: by 2002:a05:6402:2106:b0:5dc:80d5:ff28 with SMTP id 4fb4d7f45d1cf-5de45018846mr9972757a12.14.1739092093049;
-        Sun, 09 Feb 2025 01:08:13 -0800 (PST)
-Received: from abityuts-desk1.ger.corp.intel.com ([134.191.196.181])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de525f35b7sm3518585a12.53.2025.02.09.01.08.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 01:08:11 -0800 (PST)
-Message-ID: <bd8d6350c1539130e54b3a087502a083204e6723.camel@gmail.com>
-Subject: Re: [PATCH v2] intel_idle: introduce 'no_native' module parameter
-From: Artem Bityutskiy <dedekind1@gmail.com>
-Reply-To: dedekind1@gmail.com
-To: David Arcari <darcari@redhat.com>, linux-pm@vger.kernel.org
-Cc: Jonathan Corbet <corbet@lwn.net>, Jacob Pan
- <jacob.jun.pan@linux.intel.com>,  Len Brown <lenb@kernel.org>, Prarit
- Bhargava <prarit@redhat.com>, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Date: Sun, 09 Feb 2025 11:08:08 +0200
-In-Reply-To: <720944c4-48b2-4d1c-8a02-d81416ed7484@redhat.com>
-References: <20250128141139.2033088-1-darcari@redhat.com>
-	 <20250206164009.816232-1-darcari@redhat.com>
-	 <6c258775cdf2f8f3c370c0cb81daf22dacf6aeed.camel@gmail.com>
-	 <9241eff1-0c2d-4c82-a77d-cb8b67cab6f9@redhat.com>
-	 <c25d3b9abced9263da463b3ef4f31fff73878189.camel@gmail.com>
-	 <720944c4-48b2-4d1c-8a02-d81416ed7484@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gFLGf6wG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5E3EC4CEDD;
+	Sun,  9 Feb 2025 09:12:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739092380;
+	bh=Zo26W+AxME1VyFaWRMAwG1ZblAxqB3gp560tf9irJRw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gFLGf6wG10UHnnoVElM/XdZEcwWLn0DZx+2bhIS0F+pZ8dZWVlEaGivbGCZJf9uJk
+	 j6khniYuArfGfA9JZe2+rtCBu7awnp5ZIACy8FeviU1SGB04mVHYfizm5XFZHtSUZm
+	 zuYKnzr1Gx/YL6WNips5A01fJGluefXTOXouf+ArDFZ6L/nE2/5m6IQA/T5Wvb9G9F
+	 8vLQmlgO+kehK4ceGX7mgwAWTbEWIugU3Ti8V5jmTzjyL7sRTpykuJpN+IVvqxbv//
+	 Xl28TCmnLdfk5oWtElt5i9Kkz14ZhZDadU1gG1PCcGh3ZbHjonNBX+tIXt3CxmIrYt
+	 u+FignkpNJaZw==
+Date: Sun, 9 Feb 2025 11:12:55 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Mustafa Ismail <mustafa.ismail@intel.com>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] RDMA/irdma: switch to using the crc32c library
+Message-ID: <20250209091255.GA17863@unreal>
+References: <20250207033643.59904-1-ebiggers@kernel.org>
+ <20250207035750.GA43210@sol.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207035750.GA43210@sol.localdomain>
 
-On Sat, 2025-02-08 at 14:56 -0500, David Arcari wrote:
-> I actually took that from what was already there.
->=20
-> So I can add "In the case that ACPI is not configured these flags have=
-=20
-> no impact on functionality."
->=20
-> Does that work?
+On Thu, Feb 06, 2025 at 07:57:50PM -0800, Eric Biggers wrote:
+> On Thu, Feb 06, 2025 at 07:36:43PM -0800, Eric Biggers wrote:
+> > +int irdma_ieq_check_mpacrc(const void *addr, u32 len, u32 val)
+> >  {
+> > -	u32 crc = 0;
+> > -
+> > -	crypto_shash_digest(desc, addr, len, (u8 *)&crc);
+> > -	if (crc != val)
+> > +	if (~crc32c(~0, addr, len) != val)
+> >  		return -EINVAL;
+> >  
+> >  	return 0;
+> >  }
+> 
+> Sorry, I just realized this isn't actually equivalent on big endian CPUs, since
+> the byte array produced by crypto_shash_digest() used little endian byte order,
+> whereas crc32c() just returns a CPU endian value.
+> 
+> And of course this broken subsystem uses u32 for the little endian values
+> instead of __le32 like the result of the kernel.
+> 
+> Not sure it's worth my time to continue to try to fix this subsystem properly.
 
-Works for me!
+There is no need to be such dramatic. You are not fixing anything by
+switch to new APIs, there is nothing broken with old API and you are
+changing specific driver and not subsystem.
 
-Thanks,
-Artem.
+So there are at least three mistakes in sentence "... fix broken subsystem ...".
 
+Thanks
+
+> 
+> - Eric
