@@ -1,114 +1,197 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3254C9F
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 06:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF414C9F;
+	Sun,  9 Feb 2025 06:57:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739083813; cv=none; b=Lnysy/rmnlPHJJxeGo2ksR77e++DQZ8GtMYE19w4eS+lbI5qJN/fXUaZ0vq8Eo3lifE4sfLyB61mOfGdJSvcx+roGo4dNC2e8ZzFdOYTYfdrTvENSZVpO22cH3S0+pkf3GvnWPa6gmXIDXWsJtM1r0//M/UrIH2EsT6dJI6ZUYg=
+	t=1739084224; cv=none; b=lGeS25Zk4y2h+BqeF5TEIH6zWR0JsnPe14Y8ITVOJIYeqWsc0qZhuNsRkSFGzFoZjT1/njO0Va5uDOUBI3iv8VCjfx87m0HvNTvPXbUwe2yABFvKGJAD2FIZrYIeFffP/fcHSy/o6tRKEZdOLwF1brpd4tjG1e+SVJiNf7Wqb2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739083813; c=relaxed/simple;
-	bh=Xep+RJukubvWR9VBCpzfAsN7h8x4Fl+f+RAvyLx3ORk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=fZDNTh4oqUuwxmxoJidIrJbPx0PyAc/VFgp4dlSkHDC0eUiVGDDu4eTHzX/tuoR52ZWoN2PAhzxybuo+xn5gMirfbO0Es7do0RlC7jM635uSS7hjAvB69986jvYUVX14L5M/R/jLHNWurXNqFq8GeslqCsxp6GgImIDspLTPJC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QDm3wP4e; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739084224; c=relaxed/simple;
+	bh=6anvUkPCt9HB8KIVY17EvBLeWZESbfJt/eW2fImR5hs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XVW/D7369OpBRc/yJlGY5nzaDiz1679Rm/ghO66fgk/LmSW/Oh1/WgXPquQ+E4KEIRcYhb9VvZdjvvHGvUTSQfVVgjy0Kf5/qSibrYon8aPAPwbFR3AbIcIFuoobG+E4UydTlNyXpbZYgJ5ALKbrzQ/uzyURMAQEjLe492OoUaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e8ODhktu; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QDm3wP4e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739083810; x=1770619810;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Xep+RJukubvWR9VBCpzfAsN7h8x4Fl+f+RAvyLx3ORk=;
-  b=QDm3wP4eWRPsrX+HcUMZlPFiNKk7owEOXcgJwVHvkuMuqozfbw+T/grV
-   k+88GfDoaB9ykgmLaYahmroSUrsx3dPjN/Ns3mlSyVkD4Sv3Ff6Yxt5p6
-   ux5supBFsdQgNdYxV1YVo78NIVhGNS+H0VNSXFramkUELTq6uy3SvhzsL
-   WXwChxp+1hO69j1QuSjgqlCVv99LsBVgjssxdtVScs9eViGVzx3H/rFcZ
-   gUBGmHO8rcSdyTsbVbKzlxjQUAoAvwSOzH+ZkhX9ZUqj4JsV2bkZvEYP1
-   jyTU9jGbzFBnlOBKDT7bxZM8SIx41ez0PTwULjL6cxbA0jCBPKFvoVsVj
-   Q==;
-X-CSE-ConnectionGUID: PM2sd/e5SP6fvZnvpPZDEg==
-X-CSE-MsgGUID: UF6Cm4HNT3uPBunmJVcDew==
-X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="27289134"
-X-IronPort-AV: E=Sophos;i="6.13,271,1732608000"; 
-   d="scan'208";a="27289134"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 22:50:09 -0800
-X-CSE-ConnectionGUID: gSYT+ZhYSwWT+3HeJYiEJg==
-X-CSE-MsgGUID: T/2wPogDRlyG4yFqbPnaqA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117098880"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 08 Feb 2025 22:50:08 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1th18n-0011Ar-2n;
-	Sun, 09 Feb 2025 06:50:05 +0000
-Date: Sun, 9 Feb 2025 14:49:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jose Abreu <Jose.Abreu@synopsys.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c:841:52:
- warning: '%s' directive output may be truncated writing up to 431 bytes into
- a region of size 28
-Message-ID: <202502091410.x7gbq8Wl-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e8ODhktu"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2f9f5caa37cso6082198a91.0;
+        Sat, 08 Feb 2025 22:57:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739084222; x=1739689022; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RaEFyV6jsKy6DHNIAt1vfm05AFFfBayBvXZDZquYLJU=;
+        b=e8ODhktunLXXnjB65Li6HCF86TiXm0Jqg3r+Udy28p/GPZujoSvn2j4gpm3ovy3CiW
+         yi0JvFw8pA937aKfJJXPJXygAl1I8amOROgUjD9qVc5VznK48d0F7NuVR4sK9ipIPydv
+         UeEcaCEqY0ULDobINiUpSkk1BE4ep43aL7U6KsI9MRwAV6kLpZsCDcE0sk5T8QZJ2yhX
+         OLjE0/f4cX0j0Z2ZAp+VnNaULGQfs9xhdCZdD90a8wfj3D1yy7HU3VeVUqpb1DKqZzIM
+         KHLjkVY1ZRCwWpAHM0HUrGRGoQNxXB0A6uxLJgVkHuWDBnwNAjABYkq89R4MDc/ZT57q
+         pu5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739084222; x=1739689022;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=RaEFyV6jsKy6DHNIAt1vfm05AFFfBayBvXZDZquYLJU=;
+        b=at58UBTYe6jYKNm2HnMuhAUlKrTomzZkmw6AlGsFdFzzmI41CKfevKJI45ToTq+Ixt
+         BM5LhS7+j8XHfEWn6KI2e57yNltmouZC+L+2Etm9jboHBPhGRhqUUCxh6KbQJI3Qy7GZ
+         NjqpeU15F7Oc88mN/pTwkhzGgJtj/5+Y9c0XNVnxdFjAG2v7pin1zrBWiublsQShlz7O
+         1eO4Zvxzb5H9kNTV/BFuB93XxcsFctHFvxmoerKrR5kVhyy4BPPQxzhxLlI1k+HnQD8V
+         hbSUV/Iw6sRdPAOMxUhToCbhaLtYNM9TzWMv+8yH/PxpPraNlwIcbPVQJbatPLQN5402
+         4VWg==
+X-Forwarded-Encrypted: i=1; AJvYcCXrYLPyeFqUhL7PsmdKVWNk8yx8njxisBsfe4Mkd5tcntUhYLmVkdHKHIeN+tNiQ48HYm0WONt5+ywmNws=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyic0XhOB9PQMdkWXyUwJ2tvEWKrqb+L623kyrUfjFc7H5ZKQBK
+	D+xU7+jNj2FIdAy0E1J4Lo06QxDv59FitWbzAgNiyQaV5L0LhvCl
+X-Gm-Gg: ASbGncscMQ5kLrZlOrqzHMwx3o6infGYrcxk6WIvX1sgN6IwmAy2NjZvMH90A2J2Lfk
+	TeSVOM966RINHYLKybktbGT1dom3E7C0IMBJgBMrpD3THmfeQOl8IS6m7hdZQ8WKyAvn3tYkGiF
+	6c8Avr2dYkW0tDfyEF6kXUYqBlnGIebp0RlbccI05dqh/u3YryM1U0k3ZdlwVGokB1kHFX7sCi6
+	sBUQURLCq+W4EaJwjD9sqoSHglTFufoXtaR2T+WPYSkBFOxOXCMGXLAh49BNredUjt4P7le9Had
+	Rv6LdYdUP4Kv
+X-Google-Smtp-Source: AGHT+IEMUq4+ARTOuwu9CwO9JHr7t1SXU81aoeasd0P7K8XV60JUUzxr4T/Haxy8f3zvmtLeJ0I7kw==
+X-Received: by 2002:a05:6a00:22cd:b0:725:41c4:dbc7 with SMTP id d2e1a72fcca58-7305e3e0aefmr14175560b3a.4.1739084222215;
+        Sat, 08 Feb 2025 22:57:02 -0800 (PST)
+Received: from [0.0.0.0] ([5.34.218.166])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048c16841sm5497230b3a.146.2025.02.08.22.56.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Feb 2025 22:57:01 -0800 (PST)
+Message-ID: <f410202f-803c-45b1-b573-a8e6453cd0dc@gmail.com>
+Date: Sun, 9 Feb 2025 14:56:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v4 3/4] libbpf: Add libbpf_probe_bpf_kfunc API
+To: Eduard Zingerman <eddyz87@gmail.com>, ast@kernel.org,
+ daniel@iogearbox.net, andrii@kernel.org, haoluo@google.com,
+ jolsa@kernel.org, qmo@kernel.org
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250206051557.27913-1-chen.dylane@gmail.com>
+ <20250206051557.27913-4-chen.dylane@gmail.com>
+ <7d667c037e7396fb88cf243162c5aa8a537858bb.camel@gmail.com>
+From: Tao Chen <chen.dylane@gmail.com>
+In-Reply-To: <7d667c037e7396fb88cf243162c5aa8a537858bb.camel@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Jose,
+在 2025/2/8 06:35, Eduard Zingerman 写道:
+> On Thu, 2025-02-06 at 13:15 +0800, Tao Chen wrote:
+> 
+> [...]
+> 
+>>   LIBBPF_API int libbpf_probe_bpf_helper(enum bpf_prog_type prog_type,
+>>   				       enum bpf_func_id helper_id, const void *opts);
+>> -
+>> +/**
+>> + * @brief **libbpf_probe_bpf_kfunc()** detects if host kernel supports the
+>> + * use of a given BPF kfunc from specified BPF program type.
+>> + * @param prog_type BPF program type used to check the support of BPF kfunc
+>> + * @param kfunc_id The btf ID of BPF kfunc to check support for
+>> + * @param btf_fd The module BTF FD, if kfunc is defined in kernel module,
+>> + * btf_fd is used to point to module's BTF, 0 means kfunc defined in vmlinux.
+> 
+> Regarding '0' as special value:
+> in general FD is considered invalid only if it's negative, 0 is a valid FD.
+> Andrii, I remember there was a lengthy discussion about FD==0 and BPF,
+> but I don't remember the conclusion.
+> 
 
-FYI, the error/warning still remains.
+Hi Eduard,
+As you said, so what about "-1 means kfunc defined in vmlinux", -1 just 
+used to distinguish whether it is vmlinux，then processing in 
+libbpf_probe_bpf_kfunc like:
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   9946eaf552b194bb352c2945b54ff98c8193b3f1
-commit: 091810dbded96c2af81f645e386e4262553e3493 net: stmmac: Introduce selftests support
-date:   6 years ago
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20250209/202502091410.x7gbq8Wl-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250209/202502091410.x7gbq8Wl-lkp@intel.com/reproduce)
+offset = 0;
+// vmlinux btf offset default is 0
+insn.off = offset;
+if (btf_fd >= 0) {
+	offset = 1;
+	insn.off = offset;
+	fd_array[offset] = btf_fd;
+}
+What do you think?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502091410.x7gbq8Wl-lkp@intel.com/
+>> + * @param opts reserved for future extensibility, should be NULL
+>> + * @return 1, if given combination of program type and kfunc is supported; 0,
+>> + * if the combination is not supported; negative error code if feature
+>> + * detection for provided input arguments failed or can't be performed
+>> + *
+>> + * Make sure the process has required set of CAP_* permissions (or runs as
+>> + * root) when performing feature checking.
+>> + */
+>> +LIBBPF_API int libbpf_probe_bpf_kfunc(enum bpf_prog_type prog_type,
+>> +				      int kfunc_id, int btf_fd, const void *opts);
+>>   /**
+>>    * @brief **libbpf_num_possible_cpus()** is a helper function to get the
+>>    * number of possible CPUs that the host kernel supports and expects.
+>> diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
+>> index a8b2936a1646..e93fae101efd 100644
+>> --- a/tools/lib/bpf/libbpf.map
+>> +++ b/tools/lib/bpf/libbpf.map
+>> @@ -436,4 +436,5 @@ LIBBPF_1.6.0 {
+>>   		bpf_linker__add_buf;
+>>   		bpf_linker__add_fd;
+>>   		bpf_linker__new_fd;
+>> +		libbpf_probe_bpf_kfunc;
+> 
+> This is now in conflict with bpf-next.
+> 
+>>   } LIBBPF_1.5.0;
+>> diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
+>> index e142130cb83c..c7f2b2dfbcf1 100644
+>> --- a/tools/lib/bpf/libbpf_probes.c
+>> +++ b/tools/lib/bpf/libbpf_probes.c
+>> @@ -433,6 +433,61 @@ static bool can_probe_prog_type(enum bpf_prog_type prog_type)
+>>   	return true;
+>>   }
+>>   
+>> +int libbpf_probe_bpf_kfunc(enum bpf_prog_type prog_type, int kfunc_id, int btf_fd,
+>> +			   const void *opts)
+>> +{
+>> +	struct bpf_insn insns[] = {
+>> +		BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, BPF_PSEUDO_KFUNC_CALL, btf_fd, kfunc_id),
+>> +		BPF_EXIT_INSN(),
+>> +	};
+>> +	const size_t insn_cnt = ARRAY_SIZE(insns);
+>> +	char buf[4096];
+>> +	int *fd_array = NULL;
+>> +	size_t fd_array_cnt = 0, fd_array_cap = fd_array_cnt;
+>> +	int ret;
+>> +
+>> +	if (opts)
+>> +		return libbpf_err(-EINVAL);
+>> +
+>> +	if (!can_probe_prog_type(prog_type))
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	if (btf_fd) {
+>> +		ret = libbpf_ensure_mem((void **)&fd_array, &fd_array_cap,
+>> +					sizeof(int), fd_array_cnt + btf_fd);
+> 
+> Please take a look at the tools/testing/selftests/bpf/prog_tests/fd_array.c,
+> e.g. test case check_fd_array_cnt__fd_array_ok(). The offset field of the
+> call instruction does not have to be an fd (as it only has 16 bits),
+> instead it's an offset inside the fd_array.
+> Here it would be sufficient to allocate a small array on stack.
+> 
+>> +		if (ret)
+>> +			return ret;
+>> +
+>> +		/* In kernel, obtain the btf fd by means of the offset of
+>> +		 * the fd_array, and the offset is the btf fd.
+>> +		 */
+>> +		fd_array[btf_fd] = btf_fd;
+>> +	}
+> 
+> [...]
+> 
 
-All warnings (new ones prefixed by >>):
-
-   drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c: In function 'stmmac_selftest_get_strings':
->> drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c:841:52: warning: '%s' directive output may be truncated writing up to 431 bytes into a region of size 28 [-Wformat-truncation=]
-     841 |                 snprintf(p, ETH_GSTRING_LEN, "%2d. %s", i + 1,
-         |                                                    ^~
-   drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c:841:17: note: 'snprintf' output between 5 and 436 bytes into a destination of size 32
-     841 |                 snprintf(p, ETH_GSTRING_LEN, "%2d. %s", i + 1,
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     842 |                          stmmac_selftests[i].name);
-         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +841 drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-
-   834	
-   835	void stmmac_selftest_get_strings(struct stmmac_priv *priv, u8 *data)
-   836	{
-   837		u8 *p = data;
-   838		int i;
-   839	
-   840		for (i = 0; i < stmmac_selftest_get_count(priv); i++) {
- > 841			snprintf(p, ETH_GSTRING_LEN, "%2d. %s", i + 1,
-   842				 stmmac_selftests[i].name);
-   843			p += ETH_GSTRING_LEN;
-   844		}
-   845	}
-   846	
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best Regards
+Dylane Chen
