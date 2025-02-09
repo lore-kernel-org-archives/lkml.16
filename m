@@ -1,62 +1,62 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EF91E4928
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 23:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4496C1E4928
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 23:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739142727; cv=none; b=rkhVVCrOyRAXicIdY86Ysv6+d5Pu2cvR81+9e+3ySwJx7XJ7rAq8VbyHAHO97FooiWaKfjxIs5AjyHMKgbME0wxZfVyAPDKGcgQC3CO4LkveuWTjP6ysWaiRrW1Ew9q9o6rtN1OHy8m52QgAih9LZeHmSOgdqud/3iu40VNd/sY=
+	t=1739142832; cv=none; b=OanCgW/1KZUtsdOZTGOR19mwT3ILNROmKDCzoSdtwhdzKznkiaZDuR9iF2WUaFeKPGJNaV4oIIjE204VnlNzkYLcr2rMfCb0WoaDJ2bzCElLikdokcnJW7BeQjmj54I/qUw3rVGiq8/+NI/2NzIteHJZf+HxZvyPTcAk6qR2tEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739142727; c=relaxed/simple;
-	bh=GkQTtG9hVz8ToxKu6fUNzw7ncBXdXnpvtOjdVioIQEM=;
+	s=arc-20240116; t=1739142832; c=relaxed/simple;
+	bh=AI3CKIS5whLgIN6LJr7n1hpFAqsbhbjEggjy77O9BwA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k1JCfm0QhY3knedJA1QBoM3jMvQYOfrUOeLd8XQi7GYcS5QWZbmw0Bfq6C9NSOgdLihkNQHq9737y9AYRDH2phK4KaHw4X3co2VOOhgQD1CaqoEL1o+gmSXY0cdQYLKoZk2Tudzl/urhkQmYN1Ei+2Kpsaaf6I1wRr+siyHGRVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xXv14nIm; arc=none smtp.client-ip=209.85.167.54
+	 Content-Type:Content-Disposition:In-Reply-To; b=A8hc+qHPbjvDOsA51AFgj2T/mJDpBHwtZQCs75IhMrv8WJ9GdsZH9jpCIV/2crcA8V15FG+pnvrdWVrCP4DUdpdT6g88CDC9NBQdY1tQXhd3PnsbS3AKM3PcgOgzyEClf9XGS4dIZHrZGVrHJaXzXECFNsyhr75Nqzr+lQDxCVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WbSNG8BC; arc=none smtp.client-ip=209.85.167.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xXv14nIm"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5450b91dbc8so457623e87.3
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 15:12:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WbSNG8BC"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54504bf07cdso1599561e87.2
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 15:13:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739142723; x=1739747523; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1739142827; x=1739747627; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+vFPwFXM4bR9tYX9V6EFmxAhSw4debbGpPDSv0t249A=;
-        b=xXv14nImjQeeCFBzKyfB4yxi3S1BeUz1A1P8CLctwReP4fwpYgGLpEJMFrQJN6w9gX
-         513rkpVigJJsfZCUqciHGu2rr7pHXuk37zfRdwVk+9XxJqcYIU0qAfOyaXfR0Ek/R/DT
-         N97KHHBUfyccdZtp9+ssDBxwVUpq4KNrs1YzhEKsoRq3sFbHSrz++Gh7i9z+fpEmFOKG
-         02UynE46OnjKKEKI+BJ5+r8Spr2348ow6lZoqlONjdd3/bCsEzFv2ympYotXhp0P20Im
-         KBxSgtkfvFdTnoHD21ywEHRiK3TxSA2+tpgsEVbJ63wfvMJ6SZQWif5tNk6vLuclZ/e1
-         VOfw==
+        bh=MoxKvhqaqOUsSE3IycBsIlrhzz+TLrVA2orrTjTeuoQ=;
+        b=WbSNG8BCLz7gRZrXLk83qg4DSHTnx9913SmDZLrGxCfnlqAM1EWprQRpklAaohWEPs
+         lhbwsISe5NSinZQ7U+C2qLX2X6xOowUEYiVEQ9yKQ5y1uAFPE1ZYEjmA4xkjSQHP27hU
+         bxdZfzHN3RjfvBqx3qg2ph5uXK391DymtrXwhA0kmVucH5tEUSGXVAXlcKJz2FnsJ/it
+         4MzVgY5IuZFxpbuertPjA3G6aCD0OufVUtyOn/eDk0b/Gh6nB7kDniOpdyh9SU5+QBxy
+         22GyqiiLHiKMlsfTef3rAj3Q0kiB/rXBtegteyIyqsU0GCPnhTjjAyV1nwV+z17fS5nB
+         subQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739142723; x=1739747523;
+        d=1e100.net; s=20230601; t=1739142827; x=1739747627;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+vFPwFXM4bR9tYX9V6EFmxAhSw4debbGpPDSv0t249A=;
-        b=bP634KKf9QelC5+u4pQMGkW7rzKlw+ew1XdDkNSUnlwBcEoYh7TK/XnGA8XynIv3TL
-         4rOxXtcrruDe+hn+4tc1mvTLmjTsv3+GvlUiSD5OWg4AT+4SMlDJacypbbU1DPJLofKf
-         sWqT62S7LCajnUS4e1SBqVJBdVc17f2zQ9nQCPFxzLF8fHV4KxN+sLrTG4EIpvMn4ZHA
-         tIv2bXJ8RzFrh9E6M8SZD0Z/oxb6uWwcPEMHbxnEy88aGkEy3uk5bn412bkrqWGfeFWl
-         s5XcEDW+0O4UTlpxozDuBraYdEteJOUfmjpAExV+vJBqaz7CRYOP6LGaBOfQWEEtKsSC
-         FtEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWG6DzJK5i0dyQp27HkgY9JtcjDp0jF4dcMeVYOftGmIy0obt/GjnCbpPQRdx0ug+4e9ug10RmTnR9IOQM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4kBFsIX2nwHYIvseSv9WOtKud8Ot5gCwg/L91CxgwkMPnfGqS
-	upOa6ep15UKJZ3dbFlssH3dvjd3TksSjvYoQq1abCZvhQ4zOhb5YkpEaRTygXwU=
-X-Gm-Gg: ASbGncszR2Zmy7/9BSOtXvlIthukAGCOjlMf/lyrGuQtGyxMji14Zns/WzkECvzKt/2
-	zRjTx776qxjbkTwZKwol5IkRKArbmCaXlDDsktIIuFnvk4q2zFe2RWSB7ewz7D5TNcLo25i7Z3C
-	FOclHiS7UzcGiUt2VZe3XZhs2JZSSpM705R0NY44UJTD98adv97ISYovqXzxvxaTb0/q8myRaHc
-	5zvQSXwnrk20jtiAwYqhADAIh/I7Fa9Dp7Sr9Z8jIHuF4sOK4BpPtPcG86M0+EDaWHVBYr7r3uU
-	4Km8JvWVEQB3iay6e32NUo+q/yNmD7RJpzLRU2Zw6cGtmcIiS326x5FGgHqbuVmkP/AzTBc=
-X-Google-Smtp-Source: AGHT+IF00rLDAE/Zu8DuAgn3EOiGHavqn93g+Q4K+br4ppdg5/rNEYRwOpkH1xQrqhqfhAl/+SpNmA==
-X-Received: by 2002:a05:6512:6c5:b0:545:a89:4dc7 with SMTP id 2adb3069b0e04-5450a894ef0mr906708e87.52.1739142722973;
-        Sun, 09 Feb 2025 15:12:02 -0800 (PST)
+        bh=MoxKvhqaqOUsSE3IycBsIlrhzz+TLrVA2orrTjTeuoQ=;
+        b=BNrjFoytSt6OtZNbYaddhFEhLK31NSptmmBCu764Bdaf+dwZ+xGT5gp/jZM1/ZJrZP
+         dD2DZ6a2iidiaw4nU0IyHTca5OQXwNMFW4MtEPWpZb3evX/c8bDB2Q8J8nweqMowIweq
+         /LCQJGo/gzBsPAWNkWA6BzM6jJ9aX855m+fOlRaIDVEzdTmhrYebja7bj9Rke7WomAEe
+         d41RirCr+u0zEXA1BBSBRitFvqaJwBI9STPxqI5goDG/CyBVXTjVA6pDXJ7yeBZ2YInm
+         83MDgvYqznWQ97KCMibaZk3nkaaCKwWIen7mmuNVgQuLDZ1D2yFnVZmb/V7wiBQgC6cA
+         GJ0w==
+X-Forwarded-Encrypted: i=1; AJvYcCX4Z2YTTvsiAv9Ds4fULnYSmOu36N2CMnGjso/jLxHHAlXUXcqBuV96SBe7VPUSMFiHaoEp4b98pQ7nVTk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5WjEfOIcuwft02nMRFZDY24TMZdM5BAcZ4QIDy13g2Mzi3/FM
+	7I39AujdtEd6KbSr+wqZlBa+F4FH3FGmSJp5E80IyT6+RxL6VcWJR1Zgjg/i3lI=
+X-Gm-Gg: ASbGnctzCJ97rNUJOiL9AvGK0eyGdqahBCqvEVPjfsXNarHi5Nys/zdYQS2UHiCL5FH
+	C+/CMekPrNiOD4mnD17UT4i0bSG0oblrClNhakrnwlsKKbFQLMsWpN5+wuwuR2yID8Vxyd0PHHR
+	9QZmim5G1zxM7Nwg6VP3+kTpgiAfpGt5+ZPDks746kpSRTCpCavGBZcnKHkHQCwILJu+LfUFJ33
+	q9aGqCU5ZgIa+Lr9bn0Rv+qnqL1Ah5qGKHe4+dN1J58c5XgmWNIqbJidPBokxaPgCjK0NbrnyVs
+	TwY+kyOsVopoZVxK8cJ5hCLXMr5/1kogq4ZfiR5hdQQqsxlDvFgI4aKWB3/IygCtKAEyL70=
+X-Google-Smtp-Source: AGHT+IG6pHxWcPGhnjwnxMZahzJXmycpngbz65UUqKb/X5omPdkl2r/lGWWjV9vy7q55qIJ9j0uJ6A==
+X-Received: by 2002:ac2:5f66:0:b0:545:b9a:b4b4 with SMTP id 2adb3069b0e04-5450b9ab564mr600700e87.52.1739142827370;
+        Sun, 09 Feb 2025 15:13:47 -0800 (PST)
 Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5450bb646a5sm208604e87.146.2025.02.09.15.12.00
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5450e3e4e72sm25386e87.199.2025.02.09.15.13.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 15:12:01 -0800 (PST)
-Date: Mon, 10 Feb 2025 01:11:59 +0200
+        Sun, 09 Feb 2025 15:13:46 -0800 (PST)
+Date: Mon, 10 Feb 2025 01:13:43 +0200
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 To: Marijn Suijten <marijn.suijten@somainline.org>
 Cc: Rob Clark <robdclark@gmail.com>, 
@@ -66,11 +66,11 @@ Cc: Rob Clark <robdclark@gmail.com>,
 	Jordan Crouse <jordan@cosmicpenguin.net>, ~postmarketos/upstreaming@lists.sr.ht, 
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Martin Botka <martin.botka@somainline.org>, 
 	Jami Kettunen <jami.kettunen@somainline.org>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v2 2/3] drm/msm/dsi: Set PHY usescase (and mode) before
- registering DSI host
-Message-ID: <nzm3tokbvho3hxz3e5vblp5ndagfcv5ah3j7gtkqjmt7ynr6f3@v36juvu73i5v>
+Subject: Re: [PATCH v2 3/3] drm/msm/dpu: Remove arbitrary limit of 1
+ interface in DSC topology
+Message-ID: <agibhaftgy26tvlxgvhqmiortwaycblsxs42bebj3n54trozj7@46bqaqlrfn6n>
 References: <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-0-9a60184fdc36@somainline.org>
- <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-2-9a60184fdc36@somainline.org>
+ <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-3-9a60184fdc36@somainline.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,99 +79,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-2-9a60184fdc36@somainline.org>
+In-Reply-To: <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-3-9a60184fdc36@somainline.org>
 
-On Sun, Feb 09, 2025 at 10:42:53PM +0100, Marijn Suijten wrote:
-> Ordering issues here cause an uninitialized (default STANDALONE)
-> usecase to be programmed (which appears to be a MUX) in some cases
-> when msm_dsi_host_register() is called, leading to the slave PLL in
-> bonded-DSI mode to source from a clock parent (dsi1vco) that is off.
+On Sun, Feb 09, 2025 at 10:42:54PM +0100, Marijn Suijten wrote:
+> When DSC is enabled the number of interfaces is forced to be 1, and
+> documented that it is a "power-optimal" layout to use two DSC encoders
+> together with two Layer Mixers.  However, the same layout (two DSC
+> hard-slice encoders with two LMs) is also used when the display is
+> fed with data over two instead of one interface (common on 4k@120Hz
+> smartphone panels with Dual-DSI).  Solve this by simply removing the
+> num_intf = 1 assignment as the count is already calculated by computing
+> the number of physical encoders within the virtual encoder.
 > 
-> This should seemingly not be a problem as the actual dispcc clocks from
-> DSI1 that are muxed in the clock tree of DSI0 are way further down, this
-> bit still seems to have an effect on them somehow and causes the right
-> side of the panel controlled by DSI1 to not function.
-> 
-> In an ideal world this code is refactored to no longer have such
-> error-prone calls "across subsystems", and instead model the "PLL src"
-> register field as a regular mux so that changing the clock parents
-> programmatically or in DTS via `assigned-clock-parents` has the
-> desired effect.
-> But for the avid reader, the clocks that we *are* muxing into DSI0's
-> tree are way further down, so if this bit turns out to be a simple mux
-> between dsiXvco and out_div, that shouldn't have any effect as this
-> whole tree is off anyway.
-> 
+> Fixes: 7e9cc175b159 ("drm/msm/disp/dpu1: Add support for DSC in topology")
 > Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
 > ---
->  drivers/gpu/drm/msm/dsi/dsi_manager.c | 30 +++++++++++++++++++-----------
->  1 file changed, 19 insertions(+), 11 deletions(-)
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
 
-
-Fixes: 57bf43389337 ("drm/msm/dsi: Pass down use case to PHY")
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-
-> 
-> diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-> index a210b7c9e5ca281a46fbdb226e25832719a684ea..b93205c034e4acc73d536deeddce6ebd694b4a80 100644
-> --- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
-> +++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-> @@ -74,17 +74,33 @@ static int dsi_mgr_setup_components(int id)
->  	int ret;
->  
->  	if (!IS_BONDED_DSI()) {
-> +		/* Set the usecase before calling msm_dsi_host_register(), which would
-> +		 * already program the PLL source mux based on a default usecase.
-> +		 */
-> +		msm_dsi_phy_set_usecase(msm_dsi->phy, MSM_DSI_PHY_STANDALONE);
-> +		msm_dsi_host_set_phy_mode(msm_dsi->host, msm_dsi->phy);
-> +
->  		ret = msm_dsi_host_register(msm_dsi->host);
->  		if (ret)
->  			return ret;
-> -
-> -		msm_dsi_phy_set_usecase(msm_dsi->phy, MSM_DSI_PHY_STANDALONE);
-> -		msm_dsi_host_set_phy_mode(msm_dsi->host, msm_dsi->phy);
->  	} else if (other_dsi) {
->  		struct msm_dsi *master_link_dsi = IS_MASTER_DSI_LINK(id) ?
->  							msm_dsi : other_dsi;
->  		struct msm_dsi *slave_link_dsi = IS_MASTER_DSI_LINK(id) ?
->  							other_dsi : msm_dsi;
-> +
-> +		/* PLL0 is to drive both DSI link clocks in bonded DSI mode.
-> +		 *
-> +		/* Set the usecase before calling msm_dsi_host_register(), which would
-> +		 * already program the PLL source mux based on a default usecase.
-> +		 */
-> +		msm_dsi_phy_set_usecase(clk_master_dsi->phy,
-> +					MSM_DSI_PHY_MASTER);
-> +		msm_dsi_phy_set_usecase(clk_slave_dsi->phy,
-> +					MSM_DSI_PHY_SLAVE);
-> +		msm_dsi_host_set_phy_mode(msm_dsi->host, msm_dsi->phy);
-> +		msm_dsi_host_set_phy_mode(other_dsi->host, other_dsi->phy);
-> +
->  		/* Register slave host first, so that slave DSI device
->  		 * has a chance to probe, and do not block the master
->  		 * DSI device's probe.
-> @@ -98,14 +114,6 @@ static int dsi_mgr_setup_components(int id)
->  		ret = msm_dsi_host_register(master_link_dsi->host);
->  		if (ret)
->  			return ret;
-> -
-> -		/* PLL0 is to drive both 2 DSI link clocks in bonded DSI mode. */
-> -		msm_dsi_phy_set_usecase(clk_master_dsi->phy,
-> -					MSM_DSI_PHY_MASTER);
-> -		msm_dsi_phy_set_usecase(clk_slave_dsi->phy,
-> -					MSM_DSI_PHY_SLAVE);
-> -		msm_dsi_host_set_phy_mode(msm_dsi->host, msm_dsi->phy);
-> -		msm_dsi_host_set_phy_mode(other_dsi->host, other_dsi->phy);
->  	}
->  
->  	return 0;
-> 
-> -- 
-> 2.48.1
-> 
 
 -- 
 With best wishes
