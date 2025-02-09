@@ -1,212 +1,134 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2085.outbound.protection.outlook.com [40.107.93.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F50C14B092;
-	Sun,  9 Feb 2025 23:39:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739144368; cv=fail; b=R5H2vfLwWIeumM4LFhAQAnAEBa3Lwc6iXpqB3BSeVDNDOHfaQFPWu3bqmyazHf0/GzkezIqiVuZ106giAzhpTAvwAAqgqj8/kUlClIc428Sl6HbyyINgavExxMr49zRXY6W4+YOQdgXMFbt1M3cRo8MIciltu+CLzGJxMAa5N0Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739144368; c=relaxed/simple;
-	bh=j6ezEyOwXB1UnanxcURp3KDCeKF6/KoU9on9Saxu6VA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=KWm/dpPV/mzMU05dbxU6mLXjBl/4jZiv1gxwY7chJ37NHqKuVplq6pg/kM9XGSHPMbC+niIjzlceX5DIpV3LcvMBILMoIeEYdgrbV6e0M5Chy9kiQDNUCRQaqQ5HEhCmZvac6uYb27FYqf9YzeSTTWIRIeLN5U2HWRw/AmLlFlg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ThdWecdi; arc=fail smtp.client-ip=40.107.93.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82396241C89
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 23:42:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739144524; cv=none; b=APCcj7Xy4Sm0RUXGnJkkDAPu36zHBbEMGn164Xi43XYgADrL8dE2Vbh/F+yoAUmtSvyP7HWKle88Y0P9v0vK/ueXRjyZWokN2hkZSBLgJvohyKjCIl0RQipsCME/2wpsyjCBV6ZSIRVXxZsV5wg9dheb6RSksbK5hS7nHiPuoZM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739144524; c=relaxed/simple;
+	bh=rQPvUG/o2rTnO0CHjoBObshc5YBL9GZpqX7CFdJ8An0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZH/xFJCY9gr4xhfp9E9Y7WvYivRPvynT4AtKpbTXyVW0mFvs0Ytisv4//HfITv0Fayf766MUsopimOLpLvFcRn/wjPSG7Pcvn/OgH9+6eOQLurB2Jy3ddhMta2ixv+jPl7x161YVxXyU1qmQKYec6LnjLKCI/L4N4/7KZKL69vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zIEG+E8b; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ThdWecdi"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dfhdWp39dEF7zvUbVriLJLeGzj4ojZMvHl9G2QVWKcttaHiQV59sktBd6r4d+FRlJvIcG7nVTAXKz/YnwxArk/TIwLl1Z8m6aJ+ci97ioWUAqH5VNUiMJ4HoFeWBkQsIeSxaT5cPB7u34AkMabZ0/q0NhKGEp4jfr5tRmiB7djDfM0Mv+7a7YAHFgmXuVmSzfF9KJsmv86N5C7VxcP4qMkNOn7SpBcyfR2iyXV4EBmKomDuLB8l/AeqQCD2e2VkqD/7lXysDqwZl+K9LuCeQt+Wh2Go98ybHKzQxa5q+O2yF/Z41k0AkRv7eu437r+6YKM2MB4ROD6ZMonlun/AhBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qg6hsje8gdg3byEfHq+pUr1m8xjzwqYZg2IKUbvp0/k=;
- b=kEjp54LhMvtjRZfy50Sq9erk4Ze2TCOZILn8CtEnJZJhHoDqGMp8V65iRd73ceqUl9NbgcqQ5aTyzksCRoG1nxieHO/gwHxRlBrueOgIMOdbxd+nrPry2NiU/GJY6jBsy9Nmj+GMbI6wtt6uiZ4uuPynz+JlDto4eT02EFIITJyKJTdbozXB77JYQJUq/QNxNw3R8ljFH3xKYbhvgTxH5VASf9kimWP2H5H/vkEgMraeSGURmGsfh3TsnilqEF6JipClI2A3K9IeZSQWYmJ94gH9sHnvpZaEeQEwwthFq6XV0hAa3Xt4h31XAIesBMmkAgmy0c2nwb/NW8sm+qkB/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qg6hsje8gdg3byEfHq+pUr1m8xjzwqYZg2IKUbvp0/k=;
- b=ThdWecdivAjR9YIk3gweb55N0pwu8kc5uAHw711HZoIc2PcgZlwC8EDB5oHOw+y9m2BXzgKBxnLv0sFON+pKKHPteHGRSFmq88aIjFziPmrlZdZABzqpyiVGYc5+ZMXD3rRyUsoqpfjPymhecNFqjmezdZD4V2S0CoYElpUQNq8=
-Received: from DM6PR11CA0037.namprd11.prod.outlook.com (2603:10b6:5:14c::14)
- by PH7PR12MB8793.namprd12.prod.outlook.com (2603:10b6:510:27a::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Sun, 9 Feb
- 2025 23:39:20 +0000
-Received: from DS1PEPF00017097.namprd05.prod.outlook.com
- (2603:10b6:5:14c:cafe::98) by DM6PR11CA0037.outlook.office365.com
- (2603:10b6:5:14c::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.31 via Frontend Transport; Sun,
- 9 Feb 2025 23:39:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS1PEPF00017097.mail.protection.outlook.com (10.167.18.101) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8445.10 via Frontend Transport; Sun, 9 Feb 2025 23:39:20 +0000
-Received: from [172.31.188.187] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sun, 9 Feb
- 2025 17:39:15 -0600
-Message-ID: <b050f92e-4117-4e93-8ec6-ec595fd8570a@amd.com>
-Date: Mon, 10 Feb 2025 05:09:12 +0530
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zIEG+E8b"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f72fac367so98715ad.0
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 15:42:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739144523; x=1739749323; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8r8GqE7AcCzw/ZhoiEBDX6FoohFVz6Qw8VfxhrWWFOM=;
+        b=zIEG+E8bEF+bBarWVfDVOeq/DEHOmfg5+zUKXlafarCXGV4Asg4F2jOykJBZ/Emajf
+         myWRkMTWdf6jb1+LOO4rfXuuU4SR8hxMBSYICJnftsRASqd1z1ZkuEBd9JpqLt7zXk7Y
+         jd1yxfdo6BPT/bYM/zpu4GCyoYUpjoLZlSYqnTHOh8d40rutX1WTZytI10PLAANU+FEx
+         zjA1+3V8I9yPcf85pUSdVBEE7ZJjZQobSPckSL7/02XMfOtU3kt86Sy3Ev0EpB4Kviys
+         D6so5t6HVGZPL6KmoZypjozGXNo99fhLb/jInvwbe6pbD93C/Q74Lg5Jj0U8o+Qm+mR3
+         uUgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739144523; x=1739749323;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8r8GqE7AcCzw/ZhoiEBDX6FoohFVz6Qw8VfxhrWWFOM=;
+        b=rC/us/iuHJrVddO7yYnbjBkVRa7YZShCOGx2oHdEoejXUm2DMR0x2KBL2oruSEOKOX
+         yfnNtHd6hiEyBYqUHOiAZh4dtm1GGTr53S+Iwb1goEw95FlMN9EHNUoAePxWYiQ1Ze9Q
+         VFN2/Weq8NGwAmQTfbeFCofyz/eWYhXA4VTiv4qI5kdGMx0kYQDE/jAfcK5MFqSPkv86
+         ngeC5OhGloY98Sy/tUtPuL6ik4GkB7oUpWRs6e3z/v/9IaNTvie6W/izo31TmnTc53/Z
+         4srbZZioI5+5YHyHrDTxQNnvc1AoiDg1YS0Io6Poy0amnDlvWSWaVjC33F2hC0HlQBnr
+         Uevw==
+X-Forwarded-Encrypted: i=1; AJvYcCV62B2zi7stW0quPWuNkcAX5Aso+lWMAPiFExFtlyXfzxiiqynxe9Zw3n8DWVXgeXLVO/rznysluVXpzpA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/w6THLjuOPe7R0UFlY1EiBL8pbswR8kJtFTsMyfZ49zDGp/Q6
+	w1x7xwMzgRsa7OWGhUBUzy79sJ3GrJ+OFKU7f1xhD5juzXKhiog/6cQOIgtVwQ==
+X-Gm-Gg: ASbGnctNKmtxjL2G+3zYS5dXGcSO9v4ZR10fZqS5yML2tjeO5uzvlgCP8/QXU0wTkIY
+	hYezBMR8QzPICFCZDFf1JhT4su6gNxOFgwXoY7/ggsZeXWUYojZ25TRPNUYjSq9rWt10g2kBIc2
+	afVFRAgMrDHVuQIO7lw0DRVuj59j/XZMUvf934ad7t6PzWMW3KqnKhhPIA7CRYa96vcN+tTpDOO
+	J+bzrSoAXSHwHdiEnmDHc9WNb1dma0XKSJXlAWr3XruWaVDuZxQX8rnpMLF2OSvv4kfysR18iM7
+	0CX9W2ki12WNHsVqnptpDalAln8j9V4oeVz/JYAKenRNQbgS3oS73A==
+X-Google-Smtp-Source: AGHT+IGWHtUanwi++EymoxyoPMciInVawa1/VM+FGRotgFZ32k+cNoaAFIfQ4hVKBEquC6xHERYLiQ==
+X-Received: by 2002:a17:903:2406:b0:21f:2ded:bfc5 with SMTP id d9443c01a7336-21f69e53a84mr2650125ad.28.1739144522571;
+        Sun, 09 Feb 2025 15:42:02 -0800 (PST)
+Received: from google.com (147.141.16.34.bc.googleusercontent.com. [34.16.141.147])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad51af64c1dsm6573311a12.52.2025.02.09.15.42.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2025 15:42:02 -0800 (PST)
+Date: Sun, 9 Feb 2025 23:41:56 +0000
+From: Peilin Ye <yepeilin@google.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: bpf <bpf@vger.kernel.org>,
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+	bpf@ietf.org, Xu Kuohai <xukuohai@huaweicloud.com>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	David Vernet <void@manifault.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Ilya Leoshkevich <iii@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Quentin Monnet <qmo@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Yingchi Long <longyingchi24s@ict.ac.cn>,
+	Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>,
+	Neel Natu <neelnatu@google.com>,
+	Benjamin Segall <bsegall@google.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH bpf-next v2 4/9] bpf: Introduce load-acquire and
+ store-release instructions
+Message-ID: <Z6k9RELOQxp67rIn@google.com>
+References: <cover.1738888641.git.yepeilin@google.com>
+ <d03d8c3305e311c6cb29924119b5eecae8370bbc.1738888641.git.yepeilin@google.com>
+ <CAADnVQ+L0h8qXfYkC3+ORyQkXFJ2MgO8FDHr_Ha0QMAtS_ujag@mail.gmail.com>
+ <Z6gRHDLfA7cjnlSn@google.com>
+ <CAADnVQLkHA9LGv99k2TZOJEGUU=dw=q6nVurJ=aoh0v6cFS6zQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] pipe: change pipe_write() to never add a zero-sized
- buffer
-To: Oleg Nesterov <oleg@redhat.com>
-CC: Christian Brauner <brauner@kernel.org>, Jeff Layton <jlayton@kernel.org>,
-	David Howells <dhowells@redhat.com>, "Gautham R. Shenoy"
-	<gautham.shenoy@amd.com>, Mateusz Guzik <mjguzik@gmail.com>, Neeraj Upadhyay
-	<Neeraj.Upadhyay@amd.com>, Oliver Sang <oliver.sang@intel.com>, "Swapnil
- Sapkal" <swapnil.sapkal@amd.com>, WangYuli <wangyuli@uniontech.com>,
-	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Linus
- Torvalds" <torvalds@linux-foundation.org>
-References: <20250209150718.GA17013@redhat.com>
- <20250209150749.GA16999@redhat.com>
- <CAHk-=wgYC-iAp4dw_wN3DBWUB=NzkjT42Dpr46efpKBuF4Nxkg@mail.gmail.com>
- <20250209180214.GA23386@redhat.com>
- <CAHk-=whirZek1fZQ_gYGHZU71+UKDMa_MYWB5RzhP_owcjAopw@mail.gmail.com>
- <20250209184427.GA27435@redhat.com>
- <CAHk-=wihBAcJLiC9dxj1M8AKHpdvrRneNk3=s-Rt-Hv5ikqo4g@mail.gmail.com>
- <20250209191510.GB27435@redhat.com>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <20250209191510.GB27435@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF00017097:EE_|PH7PR12MB8793:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7d3bfcfc-782a-4514-1acb-08dd4962f9bc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|82310400026|36860700013|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MVU3azhpSzZIWGJzMzJpRVUvVEo1dlVQWjJoNTcyWkxMRExlT0kwdEpCbTF1?=
- =?utf-8?B?aTR2dGtTN0dvOEpEcEJBamVRZ3VNVjltR2ZNZ2hHMlVsMjdUT2N1d1QvZncy?=
- =?utf-8?B?UTh2R3hvZWRYR1d4ZkQwZDJWVGtrZmxENFc3MS9KQloybHMvVlBOU2dwZzQx?=
- =?utf-8?B?Zm9RNVg2MlRrTFNjbnFiOW80aVJLeTl4OEVna3lsLzlmREw4TTZzZGl1akNM?=
- =?utf-8?B?bWtKRDY0cVgwaUJqL2doQ2FxWEk1S2FHU3RUUWhKTlM2cWpqTEt4MWhpZExH?=
- =?utf-8?B?RThWWVVOeGtiVngvdHk0a2phWHlUcUFFdnBOMTJPT1RXNHppd3VVMXV3emla?=
- =?utf-8?B?S3FJRjk4QTk1WFZjSWFaWC9rbngwRW5WNmt3M1NoWDVvSUFaNEFOdGtQdDlr?=
- =?utf-8?B?UUlyS0N1VkQ3WFo5bUZ1ZnA1UGgrN2c3eTNzNTRTclljSjExYlJPWTRCZE9l?=
- =?utf-8?B?VUFMQmdVOUcwTlpIQXQvSENKTzRuMXNrTDN4aDVOYU1XVXpSWFFwaDBWdnZa?=
- =?utf-8?B?b3BmaE1kbG1lK29SNGV5b1dUcm52Y2IvV0txc3RmaTNVS2pyQm1TMWp4L1d5?=
- =?utf-8?B?REpTRHB1OXdMVlFCL3ozaFpqQUtTTnlQM21Cc1NhTWNabG1CWE1KVWt6S29n?=
- =?utf-8?B?NjZlRnZuZ2QxVHQzT25CamxNQUZxTDFlenhMVjR4VEJjZm9CSUo5ME8wcm1h?=
- =?utf-8?B?KzJtZ2JKdFRWWkVYdmNYOFN1NkJna0FMdG5Oc3pGOXdRTmxReUVZbWprdXJ1?=
- =?utf-8?B?YU9YeDRTMm9ZWjFadlI0b2V0SkNoTXJKUnZOU1k1ckxoOHF2RzBzaHZicmtN?=
- =?utf-8?B?cHFzT2RmNUtBcS9uN1FOdVlqT1UwUHBnL2JrTnNLVk1JWFJPSHh1ZENES0pX?=
- =?utf-8?B?OUtHMDA0dUV2THVkWDU3Nnd3NVFOazA2a1pVZkRKNTZpcTF6bk1OcE1JcTB6?=
- =?utf-8?B?WE0vbWFRblMxWXJQcVU1a2tGckFjcmFVL2Y2RFVySFZDZHJ0TzZTMWRsRU95?=
- =?utf-8?B?eHJ5SzJ0czlibmh6bStMM0dWbzRzNTVTQ09HWTdkWnNjWkljTFRZSGtCeHp5?=
- =?utf-8?B?Z1krNFFrRE5aakxRa0VlOHNMWVFOKzFLQ09WL3BkTU9TMEZzaEdFRGxWUk81?=
- =?utf-8?B?RFZtS1B1SUNhOUdYU2RDL2xESFI3RVhkd1VJOW9BRVQ4U3NvcHE5eThVWVJh?=
- =?utf-8?B?NXY1cm5TR2ZWTCtsUGNKSktLQ2FQR3Y5NElwM0VsV0ZlOUowa0J3bStTaGxk?=
- =?utf-8?B?dU9sZk5JZDdpbHdHSVJQQW9ZSWpJY2NhZ2RVdE8zMVVVRG1rd2ZITHgrWG5E?=
- =?utf-8?B?d0FHRnBmTUdybnByNjMvaitLN01kQU02ZzFhRi9Telo3Q2pKVlpzTFlJOUtI?=
- =?utf-8?B?ZjVUN05md0xFT3NTdHl3OFJzdWVzNm9FN1FidGJBaGF4NDZOait0NlJ0RDFB?=
- =?utf-8?B?Ni9ybVQ0aUMrdXU5S0tjeTIxaDQzQmk1M2dsRFlWUnk0a3pkMk9uSll1c0lM?=
- =?utf-8?B?c0ZZdWdMaGFBcTBEdmRFN3FPVkZVazJzUDZJQUNzUGpEdUVxeHZ1a0hTL0d5?=
- =?utf-8?B?aDU2SFJKRVc3bHN6L2ZCaVlaZjdUZmtkT2hoT0tpTmNKZkR4djhvYXdCci9P?=
- =?utf-8?B?aE5aNWdTeW1zeEJLa3pEMk04TXBvV2ViK0pRVk1lNlNFL0I5Nkl6eC8xc3lK?=
- =?utf-8?B?SC9hZmdzcE1VQmNXOHlzbFp0bmNFUmNyQitTMU9nL09wODhtUzNDbU4vVnNO?=
- =?utf-8?B?aDFTZ25XaTlDYUpFWXcwUFpmNUFDWWM4a3JkZ09GVmRXMTVvdTdXR2YxMEJF?=
- =?utf-8?B?MGFWQmpzOUJkRGwzYnZOY29PbmpYUXlCbXlwQVY0NWhuelBmK1FmNmI2aUJx?=
- =?utf-8?B?Y213QlVhUHYyZHR6SzNsQVVvQjhxdmRTZzdqY2R5c2lHTms2ZWc5cmY4c2RE?=
- =?utf-8?B?WHJxOUxpdEFqN0VnNVBQMWhDalJnNjAwdnBnNkFWR2Ntc0tLMzlqakhNNi8w?=
- =?utf-8?Q?bEFnB21H0aYGPWY0Z0Uff/UrEYgEiE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(82310400026)(36860700013)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2025 23:39:20.0861
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d3bfcfc-782a-4514-1acb-08dd4962f9bc
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF00017097.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8793
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAADnVQLkHA9LGv99k2TZOJEGUU=dw=q6nVurJ=aoh0v6cFS6zQ@mail.gmail.com>
 
-Hello Oleg,
+On Sat, Feb 08, 2025 at 07:46:54PM -0800, Alexei Starovoitov wrote:
+> > > These values might imply that bpf infra is supposed to map all the values
+> > > to cpu instructions, but that's not what we're doing here.
+> > > We're only dealing with two specific instructions.
+> > > We're not defining a memory model for all future new instructions.
+> >
+> > Got it!  In v3, I'll change it back to:
+> >
+> >   #define BPF_LOAD_ACQ   0x10
+> >   #define BPF_STORE_REL  0x20
+> 
+> why not 1 and 2 ?
+> All other bits are reserved and the verifier will make sure they're zero,
+> so when/if we need to extend it then it wouldn't matter whether
+> lower 4 bits are reserved or other bits.
+> Say, we decide to support cmpwait_relaxed as a new insn.
+> It can take the value 3 and arm64 JIT will map it to ldxr+wfe+...
+> 
+> Then with this new load_acq and cmpwait_relaxed we can efficiently
+> implement both smp_cond_load_relaxed and smp_cond_load_acquire.
 
-On 2/10/2025 12:45 AM, Oleg Nesterov wrote:
-> On 02/09, Linus Torvalds wrote:
->>
->> On Sun, 9 Feb 2025 at 10:45, Oleg Nesterov <oleg@redhat.com> wrote:
->>>
->>> Again, lets look eat_empty_buffer().
->>>
->>> The comment says "maybe it's empty" but how/why can this happen ?
->>
->> WHY DO YOU CARE?
-> 
-> Because it looks unclear/confusing, and I think it can confuse other
-> readers of this code. Especially after 1/2.
-> 
->> So here's the deal: either you
-> ...
->>   (b) you DON'T convince yourself that that is true, and you leave
->> eat_empty_buffer() alone.
-> 
-> Yes, I failed to convince myself that fs/splice.c can never add an
-> empty bufer. Although it seems to me it should not.
-> 
->> In contrast, the "eat_empty_buffer()" case just saying "if it's an
->> empty buffer, it doesn't satisfy my needs, so I'll just release the
->> empty buffer and go on".
-> 
-> ... without wakeup_pipe_writers().
-> 
-> OK, nevermind, I see your point even if I do not 100% agree.
-> 
-> I'll send v2 without WARN_ON() and without 2/2.
+Ah, I see.  When you suggested "LOAD_ACQ=1 and STORE_REL=2" earlier, I
+didn't realize you meant 1 and 2 in imm<0-3>.
 
-Went ahead and tested that version on top of mainline with your
-previous change to skip updating {a,c,m}time, here are the results:
-
-==================================================================
-Test          : sched-messaging
-Units         : Normalized time in seconds
-Interpretation: Lower is better
-Statistic     : AMean
-==================================================================
-Case:       mainline + no-acm_time[pct imp](CV)   patched[pct imp](CV)
-  1-groups     1.00 [ -0.00]( 7.19)                0.95 [  4.90](12.39)
-  2-groups     1.00 [ -0.00]( 3.54)                1.02 [ -1.92]( 6.55)
-  4-groups     1.00 [ -0.00]( 2.78)                1.01 [ -0.85]( 2.18)
-  8-groups     1.00 [ -0.00]( 1.04)                0.99 [  0.63]( 0.77)
-16-groups     1.00 [ -0.00]( 1.02)                1.00 [ -0.26]( 0.98)
-
-I don't see any regression / improvements from a performance standpoint
-on my 3rd Generation EPYC system (2 x 64C/128T. boost on, C2 disabled)
-Feel free to include:
-
-Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
-
-> 
-> Oleg.
-> 
-
--- 
-Thanks and Regards,
-Prateek
+Thanks,
+Peilin Ye
 
