@@ -1,32 +1,32 @@
-Received: from out-185.mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498EE1DF960
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 15:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467A51DF967
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 16:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739116798; cv=none; b=OL7ZJ6aplofJkFQdGB86xzj7OwyC9H7P6yDSLAm+Ab2mG77+lLU5cNJ4P6koj9zxKVWKqQJHrpQBEw7h3VD45zJgOqA/quks6DZM7/QxuhaLTGj6kGY2wuK3PIDojXhefdwKbQzpiuNLj3cfnOXp+xeNYBBIf5KqtvU0ZF1bx90=
+	t=1739116809; cv=none; b=SSbzncp5XiWHXgYfEBle4UfCx9WUn068ZASRCMeTHb+IgzhXT3ts3LVehZhC5arM2xPDsJp3s7fFs5SWoaQjMqS2xSqh3lQqWLHHXM4vS9RB3RL+EhcQZyP+cFarMkZMk4ue/j3nZkXi7hRru7hHLMczKYz0FLwGy/CRF3+K+LA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739116798; c=relaxed/simple;
-	bh=/3jPuGA7RdR76pPj01WKfZd8NrowcftvpO2zikJz8HM=;
+	s=arc-20240116; t=1739116809; c=relaxed/simple;
+	bh=NNgJ24uoHbg38byL385xCjee8sVFTOFfnx8XEp96pkU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=W2YmVH9Vv9Bs8HQiv8Q62mUOrjbA85PnknNVb4IYWfHtTVQ3cbIc3YlOe4MTctSahOhV3bUL6nIH25iCWEJWMX9Iw6z+px79Q1liyAFPfPFLhEfRDIe6O8lTqGZyH4pG/tcrxwE3vnlR7CqugLvRWZS/UU0UOW7q4XP0jtWSnAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bi9vmoYR; arc=none smtp.client-ip=95.215.58.185
+	 MIME-Version; b=JwaTXC8pls788QiAZ72FtFspU3G3zu369+3eclmqfeJ+ztuq6s50qBcWu97rdc76DtwLzmjqv628un3f/INc/5otnvi3UxUc7r3tZLCiAyjAYyIurs2UFYoyDq1FLSrKWtR+Soljio9MdvWuFcZqTmQslHN9GhMOlICxBzZif7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=v28pio5z; arc=none smtp.client-ip=95.215.58.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bi9vmoYR"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="v28pio5z"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739116794;
+	t=1739116804;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=z4wha4ZKGWvo2tXOl25CgTv+1PAxRxNqQziVf5W8hTA=;
-	b=bi9vmoYRqXyf9gJdY9GGFT5y9OS6IN2UBMxPzw5Nf4PXNWyIdRVdEew+5d7OrBLOs1MOhD
-	lYwKDj+7zX3D0CJ6Yg3ijk3+2R6nk/hscMvhd2UINHLmKxrZ8hkTRGWGMuHgBxF4gnaAU2
-	cVupejRdhMqyUW8P4l36gu1Kx1VNL3I=
+	bh=K7OinkOZF/f7EoTMzksKY7Lf0HZK7M3o3Djrf3Zs1d8=;
+	b=v28pio5zi/cKH6WpK6XSQaPvdu9lh8zpZvmTwrsNOGQH7V918wuakfKDnvJ+p97YyzAvyQ
+	v/z1Gb2p+nMUWGLJSCauquseZEPZnkyWKd+91TFZ2xzANZfk3RPQ6Bpqdsy7KdaCV55Dgf
+	nLLPCJK5CYMGTxjGocs/D/LNUPw9rig=
 From: Wen Yang <wen.yang@linux.dev>
 To: Joel Granados <j.granados@samsung.com>,
 	Luis Chamberlain <mcgrof@kernel.org>,
@@ -37,9 +37,9 @@ Cc: "Eric W . Biederman" <ebiederm@xmission.com>,
 	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
 	linux-kernel@vger.kernel.org,
 	Wen Yang <wen.yang@linux.dev>
-Subject: [PATCH v5 3/5] sysctl: support encoding values directly in the table entry
-Date: Sun,  9 Feb 2025 23:58:11 +0800
-Message-Id: <8acb6aee7aedb1c816012ebe48d1605e4ec5a3ab.1739115369.git.wen.yang@linux.dev>
+Subject: [PATCH v5 4/5] sysctl: add kunit test code to check the min/max encoding of sysctl table entries
+Date: Sun,  9 Feb 2025 23:58:12 +0800
+Message-Id: <9b0ef52afdb154d43cb93a8c5ab71125270f50bf.1739115369.git.wen.yang@linux.dev>
 In-Reply-To: <cover.1739115369.git.wen.yang@linux.dev>
 References: <cover.1739115369.git.wen.yang@linux.dev>
 Precedence: bulk
@@ -51,24 +51,10 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Eric points out: "by turning .extra1 and .extra2 into longs instead of
-keeping them as pointers and needing constants to be pointed at somewhere
-.. The only people I can see who find a significant benefit by
-consolidating all of the constants into one place are people who know how
-to stomp kernel memory."
-
-This patch supports encoding values directly in table entries through the
-following work:
-- extra1/extra2 and min/max are placed in one union to ensure compatibility
-  with previous code without increasing memory space, and then we could
-  gradually remove these unnecessary extra1/extra2.
-- two bits were used to represent the information of the above union:
-  SYSCTL_FLAG_MIN: 0 - using extra1, 1 - using min.
-  SYSCTL_FLAG_MAX: 0 - using extra2, 2 - using max.
-- since the proc file's mode field only uses 9 bits(777), we could use the
-  additional two bits(S_ISUID and S_ISGID) to temporarily represent
-  SYSCTL_FLAG_MIN and SYSCTL_FLAG_MAX.
-- added some helper macros.
+Add kunit test code to check the impact of encoding the min/max values
+directly in table entries on functions such as proc_rointvec,
+proc_rou8vectminmax, proc_rouintvectminmax, and proc_roulongvectminmax,
+including basic parsing testing and min/max overflow testing.
 
 Signed-off-by: Wen Yang <wen.yang@linux.dev>
 Cc: Luis Chamberlain <mcgrof@kernel.org>
@@ -79,101 +65,608 @@ Cc: Christian Brauner <brauner@kernel.org>
 Cc: Dave Young <dyoung@redhat.com>
 Cc: linux-kernel@vger.kernel.org
 ---
- fs/proc/proc_sysctl.c  | 14 ++++++++++++--
- include/linux/sysctl.h | 24 ++++++++++++++++++++----
- 2 files changed, 32 insertions(+), 6 deletions(-)
+ kernel/sysctl-test.c | 581 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 581 insertions(+)
 
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index 6649d1db5f8f..08b9cfb11165 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -848,9 +848,18 @@ static int proc_sys_getattr(struct mnt_idmap *idmap,
- 		return PTR_ERR(head);
- 
- 	generic_fillattr(&nop_mnt_idmap, request_mask, inode, stat);
--	if (table)
-+	if (table) {
- 		stat->mode = (stat->mode & S_IFMT) | table->mode;
- 
-+		/*
-+		 * S_ISUID and S_ISGID are to temporarily represent
-+		 * the internal SYSCTL_FLAG_MIN and SYSCTL_FLAG_MAX,
-+		 * and are not visible to users
-+		 */
-+		stat->mode &= ~SYSCTL_FLAG_MIN;
-+		stat->mode &= ~SYSCTL_FLAG_MAX;
-+	}
-+
- 	sysctl_head_finish(head);
- 	return 0;
+diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
+index 3ac98bb7fb82..47064ab8b7f3 100644
+--- a/kernel/sysctl-test.c
++++ b/kernel/sysctl-test.c
+@@ -415,6 +415,575 @@ static void sysctl_test_register_sysctl_sz_invalid_extra_value(
+ 	KUNIT_EXPECT_NOT_NULL(test, register_sysctl("foo", table_qux));
  }
-@@ -1163,7 +1172,8 @@ static int sysctl_check_table(const char *path, struct ctl_table_header *header)
- 		if (!entry->proc_handler)
- 			err |= sysctl_err(path, entry, "No proc_handler");
  
--		if ((entry->mode & (S_IRUGO|S_IWUGO)) != entry->mode)
-+		if ((entry->mode & (S_IRUGO|S_IWUGO|SYSCTL_FLAG_MIN|SYSCTL_FLAG_MAX))
-+		    != entry->mode)
- 			err |= sysctl_err(path, entry, "bogus .mode 0%o",
- 				entry->mode);
- 	}
-diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-index eee8480dc069..f07a3f0fb3b1 100644
---- a/include/linux/sysctl.h
-+++ b/include/linux/sysctl.h
-@@ -28,6 +28,7 @@
- #include <linux/rbtree.h>
- #include <linux/uidgid.h>
- #include <uapi/linux/sysctl.h>
-+#include <uapi/linux/stat.h>
- 
- /* For the /proc/sys support */
- struct completion;
-@@ -129,6 +130,9 @@ static inline void *proc_sys_poll_event(struct ctl_table_poll *poll)
- #define DEFINE_CTL_TABLE_POLL(name)					\
- 	struct ctl_table_poll name = __CTL_TABLE_POLL_INITIALIZER(name)
- 
-+#define  SYSCTL_FLAG_MIN	S_ISUID
-+#define  SYSCTL_FLAG_MAX	S_ISGID
-+
- /* A sysctl table is an array of struct ctl_table: */
- struct ctl_table {
- 	const char *procname;		/* Text ID for /proc/sys */
-@@ -137,8 +141,16 @@ struct ctl_table {
- 	umode_t mode;
- 	proc_handler *proc_handler;	/* Callback for text formatting */
- 	struct ctl_table_poll *poll;
--	void *extra1;
--	void *extra2;
-+	union {
-+		struct {
-+			void *extra1;
-+			void *extra2;
-+		};
-+		struct {
-+			unsigned long min;
-+			unsigned long max;
-+		};
++static void sysctl_test_api_dointvec_write_with_minmax(
++		struct kunit *test)
++{
++	int data = 0;
++	const struct ctl_table table = {
++		.procname = "foo",
++		.data		= &data,
++		.maxlen		= sizeof(int),
++		.mode		= 0644 | SYSCTL_FLAG_MIN | SYSCTL_FLAG_MAX,
++		.proc_handler	= proc_dointvec_minmax,
++		.min		= -1,
++		.max		= 100,
 +	};
- } __randomize_layout;
++	size_t max_len = 32, len = max_len;
++	loff_t pos = 0;
++	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
++	char __user *user_buffer = (char __user *)buffer;
++	char input1[] = "10";
++	char input2[] = "-5";
++	char input3[] = "200";
++
++	// test for input1
++	len = sizeof(input1) - 1;
++	memcpy(buffer, input1, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_dointvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input1) - 1, len);
++	KUNIT_EXPECT_EQ(test, 10, *((int *)table.data));
++
++	// test for input2
++	len = sizeof(input2) - 1;
++	pos = 0;
++	memcpy(buffer, input2, len);
++	KUNIT_EXPECT_EQ(test, -EINVAL, proc_dointvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, pos);
++	KUNIT_EXPECT_EQ(test, 10, *((int *)table.data));
++
++	// test for input3
++	len = sizeof(input3) - 1;
++	pos = 0;
++	memcpy(buffer, input3, len);
++	KUNIT_EXPECT_EQ(test, -EINVAL, proc_dointvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, pos);
++	KUNIT_EXPECT_EQ(test, 10, *((int *)table.data));
++}
++
++static void sysctl_test_api_dointvec_write_with_min(
++		struct kunit *test)
++{
++	int data = 0;
++	const struct ctl_table table = {
++		.procname = "foo",
++		.data		= &data,
++		.maxlen		= sizeof(int),
++		.mode		= 0644 | SYSCTL_FLAG_MIN,
++		.proc_handler	= proc_dointvec_minmax,
++		.min		= -1,
++	};
++	size_t max_len = 32, len = max_len;
++	loff_t pos = 0;
++	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
++	char __user *user_buffer = (char __user *)buffer;
++	char input1[] = "10";
++	char input2[] = "-5";
++	char input3[] = "2147483647";
++
++	// test for input1
++	len = sizeof(input1) - 1;
++	memcpy(buffer, input1, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_dointvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input1) - 1, len);
++	KUNIT_EXPECT_EQ(test, 10, *((int *)table.data));
++
++	// test for input2
++	len = sizeof(input2) - 1;
++	pos = 0;
++	memcpy(buffer, input2, len);
++	KUNIT_EXPECT_EQ(test, -EINVAL, proc_dointvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, pos);
++	KUNIT_EXPECT_EQ(test, 10, *((int *)table.data));
++
++	// test for input3
++	len = sizeof(input3) - 1;
++	pos = 0;
++	memcpy(buffer, input3, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_dointvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input3) - 1, len);
++	KUNIT_EXPECT_EQ(test, 2147483647, *((int *)table.data));
++}
++
++static void sysctl_test_api_dointvec_write_with_max(
++		struct kunit *test)
++{
++	int data = 0;
++	const struct ctl_table table = {
++		.procname = "foo",
++		.data		= &data,
++		.maxlen		= sizeof(int),
++		.mode		= 0644 | SYSCTL_FLAG_MAX,
++		.proc_handler	= proc_dointvec_minmax,
++		.max		= 100,
++	};
++	size_t max_len = 32, len = max_len;
++	loff_t pos = 0;
++	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
++	char __user *user_buffer = (char __user *)buffer;
++	char input1[] = "10";
++	char input2[] = "2147483647";
++	char input3[] = "-2147483648";
++
++	// test for input1
++	len = sizeof(input1) - 1;
++	memcpy(buffer, input1, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_dointvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input1) - 1, len);
++	KUNIT_EXPECT_EQ(test, 10, *((int *)table.data));
++
++	// test for input2
++	len = sizeof(input2) - 1;
++	pos = 0;
++	memcpy(buffer, input2, len);
++	KUNIT_EXPECT_EQ(test, -EINVAL, proc_dointvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, pos);
++	KUNIT_EXPECT_EQ(test, 10, *((int *)table.data));
++
++	// test for input3
++	len = sizeof(input3) - 1;
++	pos = 0;
++	memcpy(buffer, input3, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_dointvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input3) - 1, len);
++	KUNIT_EXPECT_EQ(test, -2147483648, *((int *)table.data));
++}
++
++static void sysctl_test_api_douintvec_write_with_minmax(
++		struct kunit *test)
++{
++	unsigned int data = 0;
++	const struct ctl_table table = {
++		.procname = "foo",
++		.data		= &data,
++		.maxlen		= sizeof(int),
++		.mode		= 0644 | SYSCTL_FLAG_MIN | SYSCTL_FLAG_MAX,
++		.proc_handler	= proc_douintvec_minmax,
++		.min		= 4,
++		.max		= 200,
++	};
++	size_t max_len = 32, len = max_len;
++	loff_t pos = 0;
++	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
++	char __user *user_buffer = (char __user *)buffer;
++	char input1[] = "100";
++	char input2[] = "3";
++	char input3[] = "1000";
++
++	// test for input1
++	len = sizeof(input1) - 1;
++	memcpy(buffer, input1, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_douintvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input1) - 1, len);
++	KUNIT_EXPECT_EQ(test, 100, *((unsigned int *)table.data));
++
++	// test for input2
++	len = sizeof(input2) - 1;
++	pos = 0;
++	memcpy(buffer, input2, len);
++	KUNIT_EXPECT_EQ(test, -EINVAL, proc_douintvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, pos);
++	KUNIT_EXPECT_EQ(test, 100, *((unsigned int *)table.data));
++
++	// test for input3
++	len = sizeof(input3) - 1;
++	pos = 0;
++	memcpy(buffer, input3, len);
++	KUNIT_EXPECT_EQ(test, -EINVAL, proc_douintvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, pos);
++	KUNIT_EXPECT_EQ(test, 100, *((unsigned int *)table.data));
++}
++
++static void sysctl_test_api_douintvec_write_with_min(
++		struct kunit *test)
++{
++	unsigned int data = 0;
++	const struct ctl_table table = {
++		.procname = "foo",
++		.data		= &data,
++		.maxlen		= sizeof(int),
++		.mode		= 0644 | SYSCTL_FLAG_MIN,
++		.proc_handler	= proc_douintvec_minmax,
++		.min		= 4,
++	};
++	size_t max_len = 32, len = max_len;
++	loff_t pos = 0;
++	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
++	char __user *user_buffer = (char __user *)buffer;
++	char input1[] = "100";
++	char input2[] = "3";
++	char input3[] = "4294967295";
++
++	// test for input1
++	len = sizeof(input1) - 1;
++	memcpy(buffer, input1, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_douintvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input1) - 1, len);
++	KUNIT_EXPECT_EQ(test, 100, *((unsigned int *)table.data));
++
++	// test for input2
++	len = sizeof(input2) - 1;
++	pos = 0;
++	memcpy(buffer, input2, len);
++	KUNIT_EXPECT_EQ(test, -EINVAL, proc_douintvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, pos);
++	KUNIT_EXPECT_EQ(test, 100, *((unsigned int *)table.data));
++
++	// test for input3
++	len = sizeof(input3) - 1;
++	pos = 0;
++	memcpy(buffer, input3, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_douintvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input3) - 1, len);
++	KUNIT_EXPECT_EQ(test, 4294967295, *((unsigned int *)table.data));
++}
++
++static void sysctl_test_api_douintvec_write_with_max(
++		struct kunit *test)
++{
++	unsigned int data = 0;
++	const struct ctl_table table = {
++		.procname = "foo",
++		.data		= &data,
++		.maxlen		= sizeof(int),
++		.mode		= 0644 | SYSCTL_FLAG_MAX,
++		.proc_handler	= proc_douintvec_minmax,
++		.max		= 1000,
++	};
++	size_t max_len = 32, len = max_len;
++	loff_t pos = 0;
++	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
++	char __user *user_buffer = (char __user *)buffer;
++	char input1[] = "900";
++	char input2[] = "10000";
++	char input3[] = "0";
++
++	// test for input1
++	len = sizeof(input1) - 1;
++	memcpy(buffer, input1, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_douintvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input1) - 1, len);
++	KUNIT_EXPECT_EQ(test, 900, *((unsigned int *)table.data));
++
++	// test for input2
++	len = sizeof(input2) - 1;
++	pos = 0;
++	memcpy(buffer, input2, len);
++	KUNIT_EXPECT_EQ(test, -EINVAL, proc_douintvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, pos);
++	KUNIT_EXPECT_EQ(test, 900, *((unsigned int *)table.data));
++
++	// test for input3
++	len = sizeof(input3) - 1;
++	pos = 0;
++	memcpy(buffer, input3, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_douintvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input3) - 1, len);
++	KUNIT_EXPECT_EQ(test, 0, *((unsigned int *)table.data));
++}
++
++static void sysctl_test_api_dou8vec_write_with_minmax(
++		struct kunit *test)
++{
++	unsigned char data = 0;
++	const struct ctl_table table = {
++		.procname = "foo",
++		.data		= &data,
++		.maxlen		= sizeof(unsigned char),
++		.mode		= 0644 | SYSCTL_FLAG_MIN | SYSCTL_FLAG_MAX,
++		.proc_handler	= proc_dou8vec_minmax,
++		.min		= 3,
++		.max		= 100,
++	};
++	size_t max_len = 8, len = max_len;
++	loff_t pos = 0;
++	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
++	char __user *user_buffer = (char __user *)buffer;
++	char input1[] = "32";
++	char input2[] = "1";
++	char input3[] = "200";
++
++	// test for input1
++	len = sizeof(input1) - 1;
++	memcpy(buffer, input1, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_dou8vec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input1) - 1, len);
++	KUNIT_EXPECT_EQ(test, 32, *((unsigned char *)table.data));
++
++	// test for input2
++	len = sizeof(input2) - 1;
++	pos = 0;
++	memcpy(buffer, input2, len);
++	KUNIT_EXPECT_EQ(test, -EINVAL, proc_dou8vec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, pos);
++	KUNIT_EXPECT_EQ(test, 32, *((unsigned char *)table.data));
++
++	// test for input3
++	len = sizeof(input3) - 1;
++	pos = 0;
++	memcpy(buffer, input3, len);
++	KUNIT_EXPECT_EQ(test, -EINVAL, proc_dou8vec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, pos);
++	KUNIT_EXPECT_EQ(test, 32, *((unsigned char *)table.data));
++}
++
++static void sysctl_test_api_dou8vec_write_with_min(
++		struct kunit *test)
++{
++	unsigned char data = 0;
++	const struct ctl_table table = {
++		.procname = "foo",
++		.data		= &data,
++		.maxlen		= sizeof(unsigned char),
++		.mode		= 0644 | SYSCTL_FLAG_MIN,
++		.proc_handler	= proc_dou8vec_minmax,
++		.min		= 3,
++	};
++	size_t max_len = 8, len = max_len;
++	loff_t pos = 0;
++	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
++	char __user *user_buffer = (char __user *)buffer;
++	char input1[] = "32";
++	char input2[] = "1";
++	char input3[] = "255";
++
++	// test for input1
++	len = sizeof(input1) - 1;
++	memcpy(buffer, input1, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_dou8vec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input1) - 1, len);
++	KUNIT_EXPECT_EQ(test, 32, *((unsigned char *)table.data));
++
++	// test for input2
++	len = sizeof(input2) - 1;
++	pos = 0;
++	memcpy(buffer, input2, len);
++	KUNIT_EXPECT_EQ(test, -EINVAL, proc_dou8vec_minmax(&table, KUNIT_PROC_WRITE,
++			user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, pos);
++	KUNIT_EXPECT_EQ(test, 32, *((unsigned char *)table.data));
++
++	// test for input3
++	len = sizeof(input3) - 1;
++	pos = 0;
++	memcpy(buffer, input3, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_dou8vec_minmax(&table, KUNIT_PROC_WRITE,
++			user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input3) - 1, len);
++	KUNIT_EXPECT_EQ(test, 255, *((unsigned char *)table.data));
++}
++
++static void sysctl_test_api_dou8vec_write_with_max(
++		struct kunit *test)
++{
++	unsigned char data = 0;
++	const struct ctl_table table = {
++		.procname = "foo",
++		.data		= &data,
++		.maxlen		= sizeof(unsigned char),
++		.mode		= 0644 | SYSCTL_FLAG_MAX,
++		.proc_handler	= proc_dou8vec_minmax,
++		.max		= 200,
++	};
++	size_t max_len = 8, len = max_len;
++	loff_t pos = 0;
++	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
++	char __user *user_buffer = (char __user *)buffer;
++	char input1[] = "32";
++	char input2[] = "0";
++	char input3[] = "255";
++
++	// test for input1
++	len = sizeof(input1) - 1;
++	memcpy(buffer, input1, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_dou8vec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input1) - 1, len);
++	KUNIT_EXPECT_EQ(test, 32, *((unsigned char *)table.data));
++
++	// test for input2
++	len = sizeof(input2) - 1;
++	pos = 0;
++	memcpy(buffer, input2, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_dou8vec_minmax(&table, KUNIT_PROC_WRITE,
++			user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input2) - 1, len);
++	KUNIT_EXPECT_EQ(test, 0, *((unsigned char *)table.data));
++
++	// test for input3
++	len = sizeof(input3) - 1;
++	pos = 0;
++	memcpy(buffer, input3, len);
++	KUNIT_EXPECT_EQ(test, -EINVAL, proc_dou8vec_minmax(&table, KUNIT_PROC_WRITE,
++			user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, pos);
++	KUNIT_EXPECT_EQ(test, 0, *((unsigned char *)table.data));
++}
++
++static void sysctl_test_api_doulongvec_write_with_minmax(
++		struct kunit *test)
++{
++	unsigned long data = 0;
++	const struct ctl_table table = {
++		.procname = "foo",
++		.data		= &data,
++		.maxlen		= sizeof(unsigned long),
++		.mode		= 0644 | SYSCTL_FLAG_MIN | SYSCTL_FLAG_MAX,
++		.proc_handler	= proc_doulongvec_minmax,
++		.min		= 1000,
++		.max		= 3000,
++	};
++	size_t max_len = 64, len = max_len;
++	loff_t pos = 0;
++	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
++	char __user *user_buffer = (char __user *)buffer;
++	char input1[] = "1024";
++	char input2[] = "100";
++	char input3[] = "4096";
++
++	// test for input1
++	len = sizeof(input1) - 1;
++	memcpy(buffer, input1, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_doulongvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input1) - 1, len);
++	KUNIT_EXPECT_EQ(test, 1024, *((unsigned long *)table.data));
++
++	// test for input2
++	len = sizeof(input2) - 1;
++	pos = 0;
++	memcpy(buffer, input2, len);
++	KUNIT_EXPECT_EQ(test, -EINVAL, proc_doulongvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, pos);
++	KUNIT_EXPECT_EQ(test, 1024, *((unsigned long *)table.data));
++
++	// test for input3
++	len = sizeof(input3) - 1;
++	pos = 0;
++	memcpy(buffer, input3, len);
++	KUNIT_EXPECT_EQ(test, -EINVAL, proc_doulongvec_minmax(&table, KUNIT_PROC_WRITE,
++				user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, pos);
++	KUNIT_EXPECT_EQ(test, 1024, *((unsigned long *)table.data));
++}
++
++static void sysctl_test_api_doulongvec_write_with_min(
++		struct kunit *test)
++{
++	unsigned long data = 0;
++	const struct ctl_table table = {
++		.procname = "foo",
++		.data		= &data,
++		.maxlen		= sizeof(unsigned long),
++		.mode		= 0644 | SYSCTL_FLAG_MIN,
++		.proc_handler	= proc_doulongvec_minmax,
++		.min		= 1000,
++	};
++	size_t max_len = 64, len = max_len;
++	loff_t pos = 0;
++	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
++	char __user *user_buffer = (char __user *)buffer;
++	char input1[] = "1000";
++	char input2[] = "10";
++	char input3[64] = {0};
++
++	// test for input1
++	len = sizeof(input1) - 1;
++	memcpy(buffer, input1, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_doulongvec_minmax(&table, KUNIT_PROC_WRITE,
++			user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input1) - 1, len);
++	KUNIT_EXPECT_EQ(test, 1000, *((unsigned long *)table.data));
++
++	// test for input2
++	len = sizeof(input2) - 1;
++	pos = 0;
++	memcpy(buffer, input2, len);
++	KUNIT_EXPECT_EQ(test, -EINVAL, proc_doulongvec_minmax(&table, KUNIT_PROC_WRITE,
++			user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, pos);
++	KUNIT_EXPECT_EQ(test, 1000, *((unsigned long *)table.data));
++
++	// test for input3
++	snprintf(input3, sizeof(input3), "%lu", ULONG_MAX);
++	len = strlen(input3);
++	pos = 0;
++	memcpy(buffer, input3, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_doulongvec_minmax(&table, KUNIT_PROC_WRITE,
++			user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, strlen(input3), len);
++	KUNIT_EXPECT_EQ(test, ULONG_MAX, *((unsigned long *)table.data));
++}
++
++static void sysctl_test_api_doulongvec_write_with_max(
++		struct kunit *test)
++{
++	unsigned long data = 0;
++	const struct ctl_table table = {
++		.procname = "foo",
++		.data		= &data,
++		.maxlen		= sizeof(unsigned long),
++		.mode		= 0644 | SYSCTL_FLAG_MAX,
++		.proc_handler	= proc_doulongvec_minmax,
++		.max		= 3000,
++	};
++	size_t max_len = 64, len = max_len;
++	loff_t pos = 0;
++	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
++	char __user *user_buffer = (char __user *)buffer;
++	char input1[] = "1024";
++	char input2[] = "4096";
++	char input3[] = "0";
++
++	// test for input1
++	len = sizeof(input1) - 1;
++	memcpy(buffer, input1, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_doulongvec_minmax(&table, KUNIT_PROC_WRITE,
++			user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input1) - 1, len);
++	KUNIT_EXPECT_EQ(test, 1024, *((unsigned long *)table.data));
++
++	// test for input2
++	len = sizeof(input2) - 1;
++	pos = 0;
++	memcpy(buffer, input2, len);
++	KUNIT_EXPECT_EQ(test, -EINVAL, proc_doulongvec_minmax(&table, KUNIT_PROC_WRITE,
++			user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, pos);
++	KUNIT_EXPECT_EQ(test, 1024, *((unsigned long *)table.data));
++
++	// test for input3
++	len = sizeof(input3) - 1;
++	pos = 0;
++	memcpy(buffer, input3, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_doulongvec_minmax(&table, KUNIT_PROC_WRITE,
++			user_buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input3) - 1, len);
++	KUNIT_EXPECT_EQ(test, 0, *((unsigned long *)table.data));
++}
++
+ static struct kunit_case sysctl_test_cases[] = {
+ 	KUNIT_CASE(sysctl_test_api_dointvec_null_tbl_data),
+ 	KUNIT_CASE(sysctl_test_api_dointvec_table_maxlen_unset),
+@@ -427,6 +996,18 @@ static struct kunit_case sysctl_test_cases[] = {
+ 	KUNIT_CASE(sysctl_test_api_dointvec_write_single_less_int_min),
+ 	KUNIT_CASE(sysctl_test_api_dointvec_write_single_greater_int_max),
+ 	KUNIT_CASE(sysctl_test_register_sysctl_sz_invalid_extra_value),
++	KUNIT_CASE(sysctl_test_api_dointvec_write_with_minmax),
++	KUNIT_CASE(sysctl_test_api_dointvec_write_with_min),
++	KUNIT_CASE(sysctl_test_api_dointvec_write_with_max),
++	KUNIT_CASE(sysctl_test_api_douintvec_write_with_minmax),
++	KUNIT_CASE(sysctl_test_api_douintvec_write_with_min),
++	KUNIT_CASE(sysctl_test_api_douintvec_write_with_max),
++	KUNIT_CASE(sysctl_test_api_dou8vec_write_with_minmax),
++	KUNIT_CASE(sysctl_test_api_dou8vec_write_with_min),
++	KUNIT_CASE(sysctl_test_api_dou8vec_write_with_max),
++	KUNIT_CASE(sysctl_test_api_doulongvec_write_with_minmax),
++	KUNIT_CASE(sysctl_test_api_doulongvec_write_with_min),
++	KUNIT_CASE(sysctl_test_api_doulongvec_write_with_max),
+ 	{}
+ };
  
- struct ctl_node {
-@@ -210,9 +222,13 @@ struct ctl_table_root {
- #define register_sysctl(path, table)	\
- 	register_sysctl_sz(path, table, ARRAY_SIZE(table))
- 
--#define __SYSCTL_RANGE_MIN(_a, _b, _c) (((_a)->extra1) ? *(_b((_a)->extra1)) : (_c))
-+#define __SYSCTL_RANGE_EXTRA1(_a, _b, _c) (((_a)->extra1) ? *(_b((_a)->extra1)) : (_c))
-+#define __SYSCTL_RANGE_MIN(_a, _b, _c)    ((((_a)->mode) & SYSCTL_FLAG_MIN) ? \
-+					   ((_a)->min) : __SYSCTL_RANGE_EXTRA1(_a, _b, _c))
- 
--#define __SYSCTL_RANGE_MAX(_a, _b, _c) (((_a)->extra2) ? *(_b((_a)->extra2)) : (_c))
-+#define __SYSCTL_RANGE_EXTRA2(_a, _b, _c) (((_a)->extra2) ? *(_b((_a)->extra2)) : (_c))
-+#define __SYSCTL_RANGE_MAX(_a, _b, _c)    ((((_a)->mode) & SYSCTL_FLAG_MAX) ? \
-+					   ((_a)->max) : __SYSCTL_RANGE_EXTRA2(_a, _b, _c))
- 
- static inline unsigned int sysctl_range_min_u8(const struct ctl_table *table)
- {
 -- 
 2.25.1
 
