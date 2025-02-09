@@ -1,101 +1,171 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E54B15B543;
-	Sun,  9 Feb 2025 23:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D843015B543;
+	Sun,  9 Feb 2025 23:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739142385; cv=none; b=QWxLPK2TdPaz07eUw82p7xmxPViy6ACmHuvKxKFRRhg5iHqrDPmWRo4DqCp0oLPQrK4whrIuiYi0u/jryyiX1ugd/pn6S1x+HIwpwdGNNa7YCKQ9qqt4T/LbA9I5uaxCDYJMc7eckBe8rTS4hi4VigYVO9s4nlSTGYQmufSzzRA=
+	t=1739142556; cv=none; b=A3hHTbAsr0+6ON18fb+D6nBCX1hmPLZ02ydldwc+PhzH+hOEfIGPlSBLi5mt9o+3IX5t34EX37k9j/w0PUxTBlNXyyLOGHadkIGEeaYtLJBC1Z8WupfXlZbyNuYaiS5jjXcypIAX7yF85CvxhOJ5UZc88+uYP0iFI8ganSWRC2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739142385; c=relaxed/simple;
-	bh=qOxutKJ1aPy/nIpf4MsBtVCTGieg2u7+ov8x2k9artY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=orwv2vh1ePLlU6hiTXHp1pAv5wVZNrEGCkc1NPYp2N222hNPg+UOgDyDZfzAmc4DmJXENdQagmxYuyRbZUWkHxFHH+0iz1sWDx6yU4n9bUco13YIdHkb2I6RXM9TwbzTQdyxo+l1QtmlbhZykdGJKT3TPz9z4h8UFGHdfzypXLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=AbP2fLM1; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1739142556; c=relaxed/simple;
+	bh=KMwcijjYIkqknr1RJA0AEYym4KFYUsa5FAimz5DwX2A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=d6+3LEG1n1t4t9MLjnhZyLm9b8xjV7kZVAufi45a2dTp/yGg7fadzaIt8nHCwIQH0FjXWb6oAmWAuxVE65HMsRVr4C3lCxnDN4qF/t9d9p2ZkSLD1D+hTnFemD72t1+yOTwOcYJXgyTxVkwoKRg9HrWTFr1BMWAsxGYtOvq2EwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JCY/vAUx; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AbP2fLM1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1739142379;
-	bh=7JXEZY2Tg7lHxdIz3FICAtrNW/SEaMyHeEwI9gH8ghU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=AbP2fLM1qUp32NQVtK8MGaRCyQBonAtRtk0KpMAAXmiMv8gcv9BdW7skcKTpKAonE
-	 VHL7SUIniRnvyEvEFXw35oBsYaRcF+N4Nhaq0hF6UC6xbDWVO5lJI6w5cJ40k+YOCc
-	 xusTT1TkIcDGwJ6a/paVkSmHtwf7RkOVSqOJYY1vibeo5uziw6EUq06pUySU8Ykwvy
-	 mv/QIQLez5s5VJ5UL3bBtG9ToQjYKqNGUCEiUTR+Y2hi3FfSPDHC6wFEpPO7ofWWgC
-	 yrM31odL2bMklU+vAwhi1Xf1AhzQ+3lt2FObF5AOCUWdf9WOW4je62jB3epPqyi3J2
-	 pRCM39MArbg5A==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Yrjxl43k7z4wcw;
-	Mon, 10 Feb 2025 10:06:19 +1100 (AEDT)
-Date: Mon, 10 Feb 2025 10:06:18 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Graf <graf@amazon.com>, "Mike Rapoport (Microsoft)"
- <rppt@kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build warnings after merge of the mm tree
-Message-ID: <20250210100618.032bdf9c@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JCY/vAUx"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21f710c17baso17003655ad.1;
+        Sun, 09 Feb 2025 15:09:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739142554; x=1739747354; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8IXi/hHsMcCmdLo1eIMLKnn5dPNL6MrIhk9hMN8gFzQ=;
+        b=JCY/vAUx7mCXbr35f3zhcuMrXWuVn6zA+D0PazkmqGjFUGhKrVKFAbe9zRdpaiyo27
+         WOcytDUmE6mqPBTp1fz9HgRR6qbrCcNKXetj70Y8pWoxEYbU7N1VLcRAVTIPZUuY3rG1
+         lHyvLfAS347rC3/bApb9dXzfjtsxf2Tg1jce7JgeyUi7vYd/hnql8L3QwONWl9S8wQP/
+         HyujD+YuungvBpGxv5Mbnu4alx8vQSmGRpQV7M0cViMj1PKeWf2GHhz9e7+y/aNQful2
+         Fc3zqW5jzAGorRnxPzVLTuub6SsdXDKNU05DZIyJK/FpKmpsSQOHhFVOXkousQBBqj1J
+         uwsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739142554; x=1739747354;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8IXi/hHsMcCmdLo1eIMLKnn5dPNL6MrIhk9hMN8gFzQ=;
+        b=Fk+YfbcxF7azfeXXN59xp2oEM5T3tUXxzJ2ebCUkech6EjoJ1HahcwKB4FQcAaweFa
+         UpBbDnkapXYt/mBdTe7836LQGqpKPWB570wiMp+2h+92JWJ/m7UBQ6o69OuzLHXD82RH
+         02gkL8vFEBhPma0yDtUlcaEvEye0iXCESBoEQnJ+pzr42hgN0juirTR5UlWBy4M97pWY
+         Q3P/ZDOouZIU+S+zUHhbf6ExivXSSwwCT/CFjx6VMzUgC1lA4foR+IZXw2JyGqPuZ5nQ
+         M47UoUQtSOUtjBaQnY/L8LR21/r7w7RPdst6QFVvB5nWqoVFFoa3L/YUcxxY4bf9gQby
+         8mgg==
+X-Forwarded-Encrypted: i=1; AJvYcCUrXvgTHIPxp8zgVT3tQ7lsRBc1+V/IaS/F4zf4IIh1cS2AqqfJWCZREaq6Urc/pb+GTB6yGF5JKwPg@vger.kernel.org, AJvYcCWwjgujQDeKxnyW94ahxHNqkLZ8beZMaehsXVS5CkVEYKc8h+FJn1Mehob6p7bv12H0TmWEy1C92YwPvTuN@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFah24JAyOe6+dB0TGK7YzpjNieNawrXA2TLAprPrGNqjWYuXH
+	fhsOXiF5DXzs0rnsFWneJUO4jid2DElr5I3yAu67eqmB99z2KWuqs24XCUqsDzM=
+X-Gm-Gg: ASbGncsbVTyTldosy6WEz5hvKOmJqeVos4drdACpcdaccbi0VaTeufJ3oH5/WOYIc+d
+	q2/G/wO5pFGPGL4QQ9GaFF95NQjFZ8bbClkjW7NTatk8G02YJIu+W8t4Bo8YBXfjTZpCOclO3PT
+	+c82ceLL36AcpWcd8g8ZAycIWirrmchDoVhVcgXEEKT4unxC1I68DrOSY9pULEIN+3ar9N+6NF/
+	76wt6HE1u3fSjdTiqobQ9cfNK005qxnzESirpQzyH2gEwwbuklN++4KUYNy51ME7wxeG47XDIbj
+	dep89PrVCMc+XG6v
+X-Google-Smtp-Source: AGHT+IG8CZzMIDmmfTQmrntPKFgrkV3pAYVih+6B/kUePdRSYaxfp4Xv1f/QqdB/6Wme9vMTYrozhQ==
+X-Received: by 2002:a17:903:2309:b0:21a:8382:fcbb with SMTP id d9443c01a7336-21f4e700f9bmr190696555ad.25.1739142553719;
+        Sun, 09 Feb 2025 15:09:13 -0800 (PST)
+Received: from [127.0.1.1] ([2601:644:8501:1640:bbd6:1924:5148:8562])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa09b3f803sm7276350a91.32.2025.02.09.15.09.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2025 15:09:13 -0800 (PST)
+From: Rudraksha Gupta <guptarud@gmail.com>
+Date: Sun, 09 Feb 2025 15:09:12 -0800
+Subject: [PATCH v2] ARM: dts: qcom: msm8960: Add BAM
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/m/1xXQa3tDeq1dsEnAB/INS";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250209-expressatt-bam-v2-1-e6c01c5d8292@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAJc1qWcC/3WMyw6CMBBFf4XM2poyPCyu/A/DopYRJhFqOk2DI
+ fy7lb3Lc2/O2UAoMAlciw0CJRb2SwY8FeAmu4ykeMgMqLHRqI2i9R1IxMaoHnZWg6ahM21lW2w
+ hS/l88noE733miSX68Dn6qfytf1OpVKUyl64mZ5qqrvE2zpZfZ+dn6Pd9/wL5Lgw2rAAAAA==
+X-Change-ID: 20250208-expressatt-bam-d0ed9863a626
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Sam Day <me@samcday.com>, 
+ Rudraksha Gupta <guptarud@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739142552; l=2712;
+ i=guptarud@gmail.com; s=20250208; h=from:subject:message-id;
+ bh=KMwcijjYIkqknr1RJA0AEYym4KFYUsa5FAimz5DwX2A=;
+ b=9VEVuyzfKKohphvy1jz3yYwfVgCgvJPj7hN674TgkUMval7Oz8eBffBF53blCFYHLAOXc8D4b
+ CjLLrNcbAUuClTWo+u7YP2qnAJWOBtHGMrGjDryM5Tv4or23v0CCAUw
+X-Developer-Key: i=guptarud@gmail.com; a=ed25519;
+ pk=5lJNaiR/Bu7edToWFLriO5zXOrVqSQWrBKbAKwuEw04=
 
---Sig_/m/1xXQa3tDeq1dsEnAB/INS
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Copy bam nodes from qcom-ipq8064.dtsi and change
+the reg values to match msm8960.
 
-Hi all,
+Co-developed-by: Sam Day <me@samcday.com>
+Signed-off-by: Sam Day <me@samcday.com>
+Signed-off-by: Rudraksha Gupta <guptarud@gmail.com>
+---
+Changes in v2:
+- Reorganize sdcc{3,1}bam to be after sdcc{3,1} respectively
+- Link to v1: https://lore.kernel.org/r/20250208-expressatt-bam-v1-1-8794ec853442@gmail.com
+---
+ arch/arm/boot/dts/qcom/qcom-msm8960.dtsi | 28 ++++++++++++++++++++++++++--
+ 1 file changed, 26 insertions(+), 2 deletions(-)
 
-After merging the mm tree, today's linux-next build (x86_64 allmodconfig)
-produced these warnings:
+diff --git a/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi
+index 865fe7cc39511d7cb9ec5c4b12100404f77e2989..a5ef9269b78b25b404e1ab11e6eff2639f16b446 100644
+--- a/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi
+@@ -279,7 +279,7 @@ sdcc3: mmc@12180000 {
+ 			compatible = "arm,pl18x", "arm,primecell";
+ 			arm,primecell-periphid = <0x00051180>;
+ 			status = "disabled";
+-			reg = <0x12180000 0x8000>;
++			reg = <0x12180000 0x2000>;
+ 			interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc SDC3_CLK>, <&gcc SDC3_H_CLK>;
+ 			clock-names = "mclk", "apb_pclk";
+@@ -289,13 +289,25 @@ sdcc3: mmc@12180000 {
+ 			max-frequency = <192000000>;
+ 			no-1-8-v;
+ 			vmmc-supply = <&vsdcc_fixed>;
++			dmas = <&sdcc3bam 2>, <&sdcc3bam 1>;
++			dma-names = "tx", "rx";
++		};
++
++		sdcc3bam: dma-controller@12182000 {
++			compatible = "qcom,bam-v1.3.0";
++			reg = <0x12182000 0x2000>;
++			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc SDC3_H_CLK>;
++			clock-names = "bam_clk";
++			#dma-cells = <1>;
++			qcom,ee = <0>;
+ 		};
+ 
+ 		sdcc1: mmc@12400000 {
+ 			status = "disabled";
+ 			compatible = "arm,pl18x", "arm,primecell";
+ 			arm,primecell-periphid = <0x00051180>;
+-			reg = <0x12400000 0x8000>;
++			reg = <0x12400000 0x2000>;
+ 			interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc SDC1_CLK>, <&gcc SDC1_H_CLK>;
+ 			clock-names = "mclk", "apb_pclk";
+@@ -305,6 +317,18 @@ sdcc1: mmc@12400000 {
+ 			cap-sd-highspeed;
+ 			cap-mmc-highspeed;
+ 			vmmc-supply = <&vsdcc_fixed>;
++			dmas = <&sdcc1bam 2>, <&sdcc1bam 1>;
++			dma-names = "tx", "rx";
++		};
++
++		sdcc1bam: dma-controller@12402000 {
++			compatible = "qcom,bam-v1.3.0";
++			reg = <0x12402000 0x2000>;
++			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc SDC1_H_CLK>;
++			clock-names = "bam_clk";
++			#dma-cells = <1>;
++			qcom,ee = <0>;
+ 		};
+ 
+ 		tcsr: syscon@1a400000 {
 
-WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scrat=
-ch+0xa9 (section: .text.unlikely) -> memblock_alloc_try_nid (section: .init=
-.text)
-WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scrat=
-ch+0xd5 (section: .text.unlikely) -> scratch_size (section: .init.text)
-WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scrat=
-ch+0xe9 (section: .text.unlikely) -> memblock_phys_alloc_range (section: .i=
-nit.text)
-WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scrat=
-ch+0x1b4 (section: .text.unlikely) -> scratch_size (section: .init.text)
-WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scrat=
-ch+0x1d1 (section: .text.unlikely) -> memblock_alloc_range_nid (section: .i=
-nit.text)
+---
+base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+change-id: 20250208-expressatt-bam-d0ed9863a626
 
-Introduced by commit
+Best regards,
+-- 
+Rudraksha Gupta <guptarud@gmail.com>
 
-  5a86a3085351 ("kexec: add Kexec HandOver (KHO) generation helpers")
-
-from the mm-unstable branch of the mm tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/m/1xXQa3tDeq1dsEnAB/INS
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmepNOoACgkQAVBC80lX
-0Gy3Ywf+IflcbqT/532jVQv8eoCLEbXJwXW6jAAJcIFg0oHWkFY+5+0OVhl4TU8U
-d83haNn7vgPKVhLsR5sVIcps6E45DYY5v7RGtbXC58ZArU1pVDqqNwvQYGaLkyTH
-V87GNUk7YfxAJ9H+w6E9rXfZP/+wdof9j5FnVGLhyWD2SB1J8QR5CcNPqNfGIox4
-eRZ7tkJHsS+Et8ReIs4/yM24XZh3ejJ6oARM404as/pOrmo38oqocpyiTFLADfgR
-FgCRRv/dxcEBhP76Am58szp3/Fd/Nt/U/CMAfH9XECSgLX7iEodXEcgdHvGFdNLB
-8wlZsqEnnkKZJvu3QGtjtWqHk0MMxg==
-=B5RF
------END PGP SIGNATURE-----
-
---Sig_/m/1xXQa3tDeq1dsEnAB/INS--
