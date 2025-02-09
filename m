@@ -1,156 +1,116 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E006BA47
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 00:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2BC8A47;
+	Sun,  9 Feb 2025 00:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739060645; cv=none; b=TmfGCXf1pfljkON33B/jqK+ASMylAGtO2rGwhUHn7Uh8o7G1vepN7B3+ENeFff9jOG2QaPIL79HDmPeo5N7y2ntJAyKMdSY4kXAHfQWqR5gvd2FqYp0ypUsl2ivSc3s+Vi3nVxSuU/qT8TFETnUSQJMLP0VuEwhM+ss8lV9MuXU=
+	t=1739060745; cv=none; b=Og01HiYEcwPYKYCKX3Qp1KrK0rRLVQFnBQYCePNP0+tGtcwLzgLQWvhh/fWIY9jOO3VCdlWwhBC6X/FIMzxxAUhdk6I60JjmxUNpE4+kqtj65R6nXoTu0NuipUijOtHDtNzQQ+d4NtNJAKtrZMHuy9esd3TF/rvzjsmYoezCkOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739060645; c=relaxed/simple;
-	bh=8rgYzZv3rSSdAvQylMlRpXn+zz10aBE5mdUoPt384Xs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tF0TmU9OSZIWtHL/Rpl0fdeS5nQ/fm6FbplGtTMTxrvjhlnCNGNMRKoPUOR2VhmzeDA8GJgDJS5Hct+jcvwLKoVneXOpGsKJqyAIULmAv9IbMnDUX4h7pNrNH+HKsWVXyheTFIEzJIAMKSV2hnPd8ziakn/Yy1ba9be/f8EAB4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=Xgb7XH/7; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1739060745; c=relaxed/simple;
+	bh=oCX6aimqBVaa4AiH8rlobOBOhEQmULUfTIA6sHLtiyM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=tuT/tp3Y+xVhR6n3g2L/qxK2gjTD22Wl2mdLxVw3Cic3UkuZ+t5vZByiTl5+BGQByFlWRzwUVW4KgU4SElmIvKXNzKN2x91T3149gghsPA+DUoQHcvfR0kBfXjZQM+5wmd6bHnGD2IjK+SfWNx7OPzAHNIghi0uPC8HoXuhMhgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=X04DkEVm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="Xgb7XH/7"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-467a37a2a53so37950421cf.2
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 16:24:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1739060643; x=1739665443; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4gjXaQBLaw4NUMDsntEFs7TEopqGWrY+9/yjxC8/Zts=;
-        b=Xgb7XH/7tYqM+PvmRQHe0Fpuxjvt115x9N0pjfi4kdZVhGng4SDnD7m4Y8lhWGUI4Y
-         duWWozNFbruqsRMVmGf71NDi3YQNB88KeYjxBXr6HETwlE1A195xVd9tMMNxK0ReC94z
-         dQJnXrXXuvSFjToyKdzcOP0AXFMZbq7FxghqowR0a5+rvRfUsVosqCndmvOvoDZAz81C
-         PyNcQcG41zzMdiVFAkb2mgLTnbgYABWYK7vvWfCFdsuFA66b/R/102Z7jPkgZ39DGIwN
-         9F0ffcLugeF6c9nP7lDfvggRbXb8ZRmoWDZSjisGBuY0yi2KN11kHv77BUYwJ16+tdro
-         uqtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739060643; x=1739665443;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4gjXaQBLaw4NUMDsntEFs7TEopqGWrY+9/yjxC8/Zts=;
-        b=FBM7vwrDp5KARuI7yQtxiH+riT33Gp8MW16crmircdMkbERaHfAd89vvj/dIeMcI6a
-         lrq/HMSCUTqA4MyTlW3LHaTwVLTl/XkCJtr0monla1adgwXdL+++THCBULIKI32mpIoJ
-         GEEVbbmfHD5eHI/JJinx0x5BnqPkUO8IExBhiOPufJFTL7ovO2/ARVEa962uXB25dpjF
-         CUanzzlPO97bC8XJI+sqjzQQIALlrlAZHVSssUDKZhbbZC0n9cZODKTfuYbX5WwD6L4T
-         dWoFlEWR3b9MOGkn1jUFTjm7qLhcmqZslf2pfWnQ74xgqnLFZ/5W8yAHVs/jUJQ4i4U/
-         GzTg==
-X-Forwarded-Encrypted: i=1; AJvYcCWVSzsehtdCfZRjI5I1u7FaPXnwdlSl97hbJM4zf2ZT71NXEOJxe6uVmeBHygfBxdTvvBV63xtNRpz1W+8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfOcfLDT22UvUtYuDvDdwwGykdnICuDCH0qUgi4tCLD43eD7Wa
-	OiYY+GznTaPHGjs6cGfUEx70iQ6cJENQcYh44yFk0kdRLWT5L9E6dvyk3BBar+x8S9la8OOQSgJ
-	2hKZ41IXpPu4SddyL8BpxxOK7mPGlZRbtHPpfXA==
-X-Gm-Gg: ASbGnctgpApItOaG3xun0VNOGzCRZObloMdiJjv2JG4HOnAV1zU4E4sWoEMxdFmc7av
-	Tx2AoTxqpXlPvJirYbXch9KHkd+R6t7NqultMQMXRa0Rmk9b99zvKm6QRwm6BG3hUwGCwLA==
-X-Google-Smtp-Source: AGHT+IEWLXbbE35/NH7CqFs9Aene/KOrNSHj6kBiOSxP6T7AhYHyVwGrjMz5VAE9dQe0u6W8V5wpkpW0r78/dGV9jWk=
-X-Received: by 2002:a05:622a:1195:b0:460:8e3b:6790 with SMTP id
- d75a77b69052e-47167c10096mr111860501cf.48.1739060642643; Sat, 08 Feb 2025
- 16:24:02 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="X04DkEVm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D429AC4CED6;
+	Sun,  9 Feb 2025 00:25:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1739060743;
+	bh=oCX6aimqBVaa4AiH8rlobOBOhEQmULUfTIA6sHLtiyM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=X04DkEVmZaNF/+hr64F7L/jKlUnynFPn/aVc8Lgf11ZY2ldv1jvsYMQejlebRm0Qn
+	 BsenL7hpRfCNjegU4GSGsChn/P8iHb01DbnvSu5+XhFcfoawqM/0156eCWmV6AAVNq
+	 331sx/ym4e92SPSYzd5n1k6TPZ2f3aqp+n5iYfdw=
+Date: Sat, 8 Feb 2025 16:25:42 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: David Gow <davidgow@google.com>, Shuah Khan <skhan@linuxfoundation.org>,
+ Luis Felipe Hernandez <luis.hernandez093@gmail.com>, Shuah Khan
+ <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Yu-Chun Lin <eleanor15x@gmail.com>
+Subject: Re: [PATCH v3 0/2] lib/prime_numbers: convert self-test to KUnit
+Message-Id: <20250208162542.fba2bdb0051eeab5344d3f82@linux-foundation.org>
+In-Reply-To: <20250208-prime_numbers-kunit-convert-v3-0-8ffd5816d8dc@gmail.com>
+References: <20250208-prime_numbers-kunit-convert-v3-0-8ffd5816d8dc@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250206132754.2596694-1-rppt@kernel.org> <20250206162939.a1f86fb835f1eeb7ed73ff1c@linux-foundation.org>
- <CA+CK2bD6204AKWGOgzLMiMsnVZ=tk+DGc+VWgi3RVt2byaLJJA@mail.gmail.com> <Z6a1kxR2GlQoepgI@MiWiFi-R3L-srv>
-In-Reply-To: <Z6a1kxR2GlQoepgI@MiWiFi-R3L-srv>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Sat, 8 Feb 2025 19:23:25 -0500
-X-Gm-Features: AWEUYZm4sw7r0YqYCsAlTqJTyIoFI_gwgSC8Xqrde5SyZs_ybRNGci9xB-WlypE
-Message-ID: <CA+CK2bDgP2DfsfVAhQhFhBiNJFUS1n17oX9KgC1JFXAk76j01Q@mail.gmail.com>
-Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
-To: Baoquan He <bhe@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, 
-	linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>, 
-	Andy Lutomirski <luto@kernel.org>, Anthony Yznaga <anthony.yznaga@oracle.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>, 
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>, Borislav Petkov <bp@alien8.de>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	David Woodhouse <dwmw2@infradead.org>, Eric Biederman <ebiederm@xmission.com>, 
-	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Pratyush Yadav <ptyadav@amazon.de>, 
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, 
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Usama Arif <usama.arif@bytedance.com>, Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org, 
-	changyuanl@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 7, 2025 at 8:38=E2=80=AFPM Baoquan He <bhe@redhat.com> wrote:
->
-> On 02/06/25 at 08:28pm, Pasha Tatashin wrote:
-> > On Thu, Feb 6, 2025 at 7:29=E2=80=AFPM Andrew Morton <akpm@linux-founda=
-tion.org> wrote:
-> > >
-> > > On Thu,  6 Feb 2025 15:27:40 +0200 Mike Rapoport <rppt@kernel.org> wr=
-ote:
-> > >
-> > > > This a next version of Alex's "kexec: Allow preservation of ftrace =
-buffers"
-> > > > series (https://lore.kernel.org/all/20240117144704.602-1-graf@amazo=
-n.com),
-> > > > just to make things simpler instead of ftrace we decided to preserv=
-e
-> > > > "reserve_mem" regions.
-> > > >
-> > > > The patches are also available in git:
-> > > > https://git.kernel.org/rppt/h/kho/v4
-> > > >
-> > > >
-> > > > Kexec today considers itself purely a boot loader: When we enter th=
-e new
-> > > > kernel, any state the previous kernel left behind is irrelevant and=
- the
-> > > > new kernel reinitializes the system.
-> > >
-> > > I tossed this into mm.git for some testing and exposure.
-> > >
-> > > What merge path are you anticipating?
-> > >
-> > > Review activity seems pretty thin thus far?
-> >
-> > KHO is going to be discussed at the upcoming lsfmm, we are also
-> > planning to send v5 of this patch series (discussed with Mike
-> > Rapoport) in a couple of weeks. It will include enhancements needed
-> > for the hypervisor live update scenario:
->
-> So is this V4 still a RFC if v5 will be sent by plan? Should we hold the
-> reviewing until v5? Or this series is a infrustructure building, v5 will
-> add more details as you listed as below. I am a little confused.
+On Sat, 08 Feb 2025 17:52:28 -0500 Tamir Duberstein <tamird@gmail.com> wrote:
 
-We will modify the existing patches and send as v5 because some
-interfaces are going to be changed*.
+> This is a clear example of a unit test.
+> 
+> I tested this using:
+> 
+> $ tools/testing/kunit/kunit.py run --arch arm64 --make_options LLVM=1 math-prime_numbers
+> 
+> On success:
+> ; [08:51:41] ============== math-prime_numbers (1 subtest) ==============
+> ; [08:51:41] [PASSED] prime_numbers_test
+> ; [08:51:41] =============== [PASSED] math-prime_numbers ================
+> ; [08:51:41] ============================================================
+> ; [08:51:41] Testing complete. Ran 1 tests: passed: 1
+> 
+> On failure:
+> ; [08:50:19] ============== math-prime_numbers (1 subtest) ==============
+> ; [08:50:19]     # prime_numbers_test: ASSERTION FAILED at lib/math/tests/prime_numbers_kunit.c:28
+> ; [08:50:19]     Expected slow == fast, but
+> ; [08:50:19]         slow == 0 (0x0)
+> ; [08:50:19]         fast == 1 (0x1)
+> ; [08:50:19] is-prime(2)
+> ; [08:50:19] [FAILED] prime_numbers_test
+> ; [08:50:19] # module: prime_numbers_kunit
+> ; [08:50:19] # math-prime_numbers: primes.{last=61, .sz=64, .primes[]=...x28208a20a08a28ac} = 2-3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61
+> ; [08:50:19] =============== [FAILED] math-prime_numbers ================
+> ; [08:50:19] ============================================================
+> ; [08:50:19] Testing complete. Ran 1 tests: failed: 1
+> 
 
-Otherwise, v5 will make KHO a lot more flexible as it will allow to
-use the tree all the time while the system is running instead of only
-once during the activation phase.
+I resolved this against "lib/math: add Kunit test suite for gcd()"
+(https://lkml.kernel.org/r/20250203075400.3431330-1-eleanor15x@gmail.com)
+in the obvious fashion then added this fixup:
 
-* Changing interfaces  is optional, but decision whether to change
-will be discussed at Hypervisor Live Update on Feb 10th:
-https://lore.kernel.org/all/26a4b7ca-93a6-30e2-923b-f551ced03d62@google.com=
-/
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: lib-math-hook-up-tests-makefile-fix
+Date: Sat Feb  8 03:33:59 PM PST 2025
 
->
-> >
-> > 1. Allow nodes to be added to the KHO tree at any time
-> > 2. Remove "activate" (I will also send a live update framework that
-> > provides the activate functionality).
-> > 3. Allow serialization during shutdown.
-> > 4. Decouple KHO from kexec_file_load(), as kexec_file_load() should
-> > not be used during live update blackout time.
-> > 5. Enable multithreaded serialization by using hash-table as an
-> > intermediate step before conversion to FDT.
->
+don't link gcd_kunit.o twice
+
+Cc: David Gow <davidgow@google.com>
+Cc: Tamir Duberstein <tamird@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+
+ lib/math/Makefile |    1 -
+ 1 file changed, 1 deletion(-)
+
+--- a/lib/math/Makefile~lib-math-hook-up-tests-makefile-fix
++++ a/lib/math/Makefile
+@@ -8,5 +8,4 @@ obj-$(CONFIG_RATIONAL)		+= rational.o
+ obj-$(CONFIG_TEST_DIV64)	+= test_div64.o
+ obj-$(CONFIG_TEST_MULDIV64)	+= test_mul_u64_u64_div_u64.o
+ obj-$(CONFIG_RATIONAL_KUNIT_TEST) += rational-test.o
+-obj-$(CONFIG_GCD_KUNIT_TEST) += tests/gcd_kunit.o
+ obj-y += tests/
+_
+
+and the x86_64 allmodconfig build failed thusly:
+
+lib/math/tests/prime_numbers_kunit.c: In function 'prime_numbers_test':
+lib/math/tests/prime_numbers_kunit.c:25:35: error: implicit declaration of function 'slow_is_prime_number'; did you mean 'is_prime_number'? [-Werror=implicit-function-declaration]
+   25 |                 const bool slow = slow_is_prime_number(x);
+      |                                   ^~~~~~~~~~~~~~~~~~~~
+      |                                   is_prime_number
+
+
+So, please redo against mm.git's mm-everything branch or its
+mm-nonmm-unstable branch and retest carefully.
+
