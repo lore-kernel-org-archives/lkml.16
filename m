@@ -1,62 +1,62 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5A92F30
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 02:03:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C1714F70
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 02:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739066599; cv=none; b=IaPyAX0PoeRaPra4P8PrSjnEXTSVYSl695gezFOZs35VzdKINXAFmEti46l06WtMoykClsv3AreKja6Gfxu6iMAJhFCiD6kNCwAb5JWCPgNxQB+1PJcRKpfqV2i99ldvkfjPbbJyXnhQcvGLyfU9QoljBc8Mpor7QF35jnxVB4A=
+	t=1739066615; cv=none; b=gO5OYFAv/v/NoxGqVip10y63KlvNYbF1H/P3mB2s7yPx4Ts0YxQMLm1Js8SeIbSnnBvsaKXVmNRDgIRJjPDtaFYcQhcT0kle1VKbdxbOxKw65Vihh5+pM8sA2qfmNmof7GGBmyqFoXHkYOsNCy5vS/OvHq+lV153l1khMfHmKT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739066599; c=relaxed/simple;
-	bh=d1EJ75Pc9Bdw/RDQVXEClZmre12GMlFmoxKXL2tLefg=;
+	s=arc-20240116; t=1739066615; c=relaxed/simple;
+	bh=hGZzmUVj67BngaC5ekQYqssPrhdbZ+utmRfNjGkC/Ks=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P2pVfR4vjqJ6cobxSKXtBqLtTnEvQSev3dWbG7xdqoHY7bp7EewUeOREjSGm8nl3+phubuTR5xbVddcYy1CbcThWKC9TtXkJvee7hqgwg1WVnVzVvP4EJAdVRCb0UXJ9GngQ7dr0232siuP71Gziahv7lS0zw4Rl9uG6wuJPCFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=onMe/n11; arc=none smtp.client-ip=209.85.208.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=IOU9UJi0MwzXrzyu6Y8Mp9RvcxdAToP5UuitI3cUE5JBq9RzMzK9z+M4n8yNMJo2Yh8kd1kJrtJbX09dYpUsQKWmvNsiw9PIGOfnX9cC5QieqhVpiyqchmfmaavDKtwrZxbaVlNY088o+BKv0Fq5xU451IDsfWixpSDdWAAg4gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mAXsqRrx; arc=none smtp.client-ip=209.85.167.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="onMe/n11"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-3086edccb4cso17046891fa.2
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 18:03:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mAXsqRrx"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54504bf07cdso1010095e87.2
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 18:03:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739066595; x=1739671395; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1739066612; x=1739671412; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EeeZzWVf5/vhmXv9AEOt/1s5u145QYyGEt7ZWKzhLQM=;
-        b=onMe/n11G+tt560mWYgGtqvKHrERd8dPt08zt2dKvmNn3gCz+QtuzJoa//O3EQTVzq
-         IYjCfbJV1NEjOingImauBRVgSt0RGzxXITdwijnH1Ru5ZNnj1mkjt+4BlhjTLXpNHy4y
-         4UDusmKDK1T+Cy2vHXbI+CpayIoQZmEi+PnYzpVfwE+fHebrDDJjWIG0qdZzIMKbMoXf
-         BSWq03kjWYzpuhqjOiV84cbwaPkv+uLDSUQH4nF3yzdj4nMAXPYbdXykA3YLRvsQHe0v
-         Vdq/nJMxyi0l6GWsgSmAMY8S5fN/Kg1bF3nUgHmduZv91LN4Rw7FVWBjPv53PRwmnfWD
-         Y3aQ==
+        bh=s3AEv+HSIyGMm7v6esZWCBtFdqZLjSMRFXdAwcjD+tU=;
+        b=mAXsqRrxN57+IdcsJsUP3FhVoUdm/nI++y6MgWWfdvpXVUFEwG3w7PDUnv787Runda
+         FN3sDKm8WMcaTPxh9oUJLZltb3pVpD96QU4sd7Fb8+XSPO6w160ZSZQdeeYjpBJRmE96
+         uUh/e/5cMc9LgtA7NXTlvAI3ntmFmWjfXCPPfpaQbKAAH4Srrww5yQqa8asQxk2+HIPK
+         cOUpIzqTvf8OtpvaJ5aEdq3kinFb6M76k2ggnfQ7hFYTL+tZGT1zlwZ1U73smEiaO1EO
+         Mq8XCRk3NBGizcOmvxQGSNr0n1LakX5bDUzlRZv+wHk8xrqU17WDnJ/EzL3DITsYRxp0
+         NM2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739066595; x=1739671395;
+        d=1e100.net; s=20230601; t=1739066612; x=1739671412;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EeeZzWVf5/vhmXv9AEOt/1s5u145QYyGEt7ZWKzhLQM=;
-        b=WJZwYfFASFSAoi8hBQGo2v8ufyunKgconV9i6kKl0W/uvGYDe6ITRdFrI8PId7aiod
-         z/oDTOc3HBRVlmjGEbNlCKkL5kbgsBtgHBDzHb5hMT2pQhAkFDSCrvSivJffQg1SOP+s
-         totr7Vr8TLMyREG6IV2U92a1poVQP7SuQUjVr6RHsT+PSkx6iLoyKiAagKeE/vlXEVtG
-         0CiS4AhtBKjhGpbXxUX+93dRamm5CeNSzKVUH4M+GQQ1vA7MkFxue+V/YgKkKTPgxIuT
-         Xgtq7M1k/i9Cxpk6l/c1Bocqw5QcU1PNG1y6e7vBNBE6wQpsRPigbdb0r/NhwFl8Ogm8
-         IwGA==
-X-Forwarded-Encrypted: i=1; AJvYcCV9wr87sOUod3Yfhj0Adnk9KahNS0ZTWRBsRvDB4YkJV79GCs3mocb2X2VjuBBwBsR9k84ElDQBgTs7DfE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzV9hXpaKpubdQGBI8pJ5OtudX24BjbisdGfvwvdmoggCf0RxWu
-	Ex+qbnDcB+Ac/frShX70MU8pip/MVPtEBhD6q6cmmOp4rH3P8+g3DdNuCh3Nouo=
-X-Gm-Gg: ASbGncuPvgptAoP/plgDUW1PZrTzUpy/8ooZq+v5Tt9+LHOtvJW99OAYXGIjKf4A1vI
-	m9Ejb3VRkEah/MkneU28316wzL1GNsV7vugvDVgBgIdH99hRSKiEGBBFd3gw+Qf9i0SrpcuSMk3
-	fJhjHNJ//Pb+nKGBUweaZpQyf3m4a2Jhv6Sb38u0H1Fz5EF01cAgkDODnQflMrUsTASw41jUvMA
-	lgF7opKt0+G9LmbJk7ZZfAMJ7qQSfQPCTLO+ULF6mm6bRnlO28vDKv53yNwPDR4Tfnxk5LqP3ij
-	nH3axHYfxfnALhY2Nqlxd8mGUATIMO2/rNN03ceUXwfBcUuNMpzcoaOxzzDh9YpBIUvYeIw=
-X-Google-Smtp-Source: AGHT+IHY5xrwx7bXOZb5Z6RthMsSdn9sw/6mONLcYjPXUl5AfcW7b5fwlydWpYhPXPuU1dPWf8dH0Q==
-X-Received: by 2002:a05:651c:1603:b0:302:210d:3b44 with SMTP id 38308e7fff4ca-307e5a8de19mr26127411fa.35.1739066595390;
-        Sat, 08 Feb 2025 18:03:15 -0800 (PST)
+        bh=s3AEv+HSIyGMm7v6esZWCBtFdqZLjSMRFXdAwcjD+tU=;
+        b=dD+RYc0L1kKgtewWQG/NsUaLZ7f41I+gZ14Q4yPpzD00WNkfHFUzmjODxOiUh3uo5S
+         G845mS4qzR9D5KLVFszRwHJD9bDFFmwSeO+2RV1xSZsTmqrtDY2LzWIQZ/w4yJ15jKJw
+         H5THjEdwk/sgFeMGSr1XzJQ1362/i6MoaB636+LaDa65oD5zH/P7uPAMYUlNAEEo6J7T
+         RhTz0teL5Wssvx3gcIwr6/msPSg1+6HoLgb3AKnzmqCBKAJVdQ9lfTYeFwgaAY+CVo2z
+         fjfri1jIlX9Gdl67LrMQVJvpnriDGJz1zX1ZqWwP/Z6sSG0vCER69HQSGjfhFa5I1+xB
+         n9fg==
+X-Forwarded-Encrypted: i=1; AJvYcCUcDUTEeoPOkKwOJJqkhPpmtjAOt4/rVte3Ow2T1H/A6JAD8Vn4zV3rvkQJ2s3vmXWgvgiP+S8mqncLics=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3tfV8Wuc4KIZ2qoGiuhrUb82ag+j6/glw95PgZQhWSD6K8mfD
+	iAVkv9iLb4YqnNIfNAizk4O524hwMrEVUE/fvwyyjuoCy6MsQ5a8NFDuB1NMB9U=
+X-Gm-Gg: ASbGnctcWagifDIQk2kSOAhbh/YpqhHiMjzFGW3UTl3ukzMpwUqbAj8sWS/baeuWeT8
+	jkzHmgdA9fBxVHJy37kpZeQX5kP310FTPJJ80agEIXLKW3Lo7sPiZP3+0ecxl6QEDLCQxrXzi9l
+	Tp4akOiIxzuUFl94FelIi/mZTc0YsjL44r2ALY/R6ALVMF8zIej1sEmjDzD+Q4qnRJ/jyH0wf3G
+	8AZ1v7bBzae0m587yGFFcL+cQcrsf+L7WznVXm5sG4DJpXmfMF3rFRq2bSNy9IxglkH1SVAwaSa
+	o2mkjQIuunFQWe3vh6s3/0mHhLONXXMj5x2MK7nfUlBesdWj+JAECYvVYvRF04S1oclVthk=
+X-Google-Smtp-Source: AGHT+IFuNgUYuYuxDQfQ7GcGQX+uKB3srf0MZr5mCBeZD06wF/230+YnQJjKbWZ9J4J0XTQuOQozLQ==
+X-Received: by 2002:a05:6512:1395:b0:544:13cd:bf2 with SMTP id 2adb3069b0e04-54414a964f2mr2851649e87.5.1739066611243;
+        Sat, 08 Feb 2025 18:03:31 -0800 (PST)
 Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de2f8193sm8451191fa.111.2025.02.08.18.03.13
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-544105f2ef1sm854191e87.188.2025.02.08.18.03.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 18:03:14 -0800 (PST)
-Date: Sun, 9 Feb 2025 04:03:11 +0200
+        Sat, 08 Feb 2025 18:03:29 -0800 (PST)
+Date: Sun, 9 Feb 2025 04:03:27 +0200
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 To: Maxime Ripard <mripard@kernel.org>
 Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -66,11 +66,11 @@ Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
 	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
 	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 08/35] drm/atomic-helper: Change parameter name of
- drm_atomic_helper_commit_tail()
-Message-ID: <jmakx5twoivqyx2c5mkcwazgiuwi4csefsozmomussn7ppi2lu@pux4uen74old>
+Subject: Re: [PATCH v2 09/35] drm/atomic-helper: Change parameter name of
+ drm_atomic_helper_commit_tail_rpm()
+Message-ID: <acnyys2ddbxhdtigqeorltfxhobptx337kxn3tcsgslb3ehvht@ycz6nwi2kkb3>
 References: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
- <20250204-bridge-connector-v2-8-35dd6c834e08@kernel.org>
+ <20250204-bridge-connector-v2-9-35dd6c834e08@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,14 +79,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250204-bridge-connector-v2-8-35dd6c834e08@kernel.org>
+In-Reply-To: <20250204-bridge-connector-v2-9-35dd6c834e08@kernel.org>
 
-On Tue, Feb 04, 2025 at 03:57:36PM +0100, Maxime Ripard wrote:
-> drm_atomic_helper_commit_tail() is the final part of an atomic commit,
-> and is given a parameter with the drm_atomic_state being committed.
+On Tue, Feb 04, 2025 at 03:57:37PM +0100, Maxime Ripard wrote:
+> drm_atomic_helper_commit_tail_rpm() is the final part of an atomic
+> commit, and is given the state being committed as a parameter.
 > 
-> However, that parameter name is called (and documented) as old_state,
-> which is pretty confusing. Let's rename that variable as state.
+> However, that parameter is named old_state, but documented as the "new
+> modeset state" which is all super confusing.
+> 
+> Let's rename that parameter to state.
 > 
 > Signed-off-by: Maxime Ripard <mripard@kernel.org>
 > ---
