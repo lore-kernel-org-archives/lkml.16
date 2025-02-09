@@ -1,38 +1,47 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5914315E
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 06:40:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739083230; cv=none; b=dEplIoNk+pxYOuuXzJGkGDSwDDWkm06vvJk7CrG778VEpKC9A+Z/UHdb9/v1T36FwmnrqUvd/eVdYXcnVcAKcwqGP/rBLf5wOvO/XY3hqkAH8uETJIewRY+VpvLJ7CWu0MQSsBeT2gQjLEa1POhqTZ0xAwBhPbRnWhSLS5JNQIo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739083230; c=relaxed/simple;
-	bh=Vnju5PnlfIADtWZq5s3oxWaMPmwG11fixNnfiMBFv1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Aex4s7NmexdGgTqkgTux9w+YQlzD47mXEd3len0AMpSgQec2X+/PBoynd7TFHDi9HFxCWpSmdHyWEwZxihidD8vQB2R2l3tCW/9FdAmas2uXfsfx+jxD4cNSbIFx3AeKZ2RuRYpsPA2cCJzJlBUS0kS0/kQj64XnD1v+EPXuab4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2pxX2oc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2pxX2oc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1117BC4CEDF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11AD4C9F;
 	Sun,  9 Feb 2025 06:40:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739083230;
-	bh=Vnju5PnlfIADtWZq5s3oxWaMPmwG11fixNnfiMBFv1k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N2pxX2ocLN/vziq/+N+g3mKZmUEyYMeLbKR/QSGroY+3cRQ2j5yp0pYmwFDw6zxhe
-	 gQIbhWQFWbnaFbeeuWSal59ZfqfqWmVBJal7l435awL8nMCwa+QwbCB59XrXAndh5f
-	 YuvdW3+VpKKl+eMkIvlshL6l/ZU8M/d9ZWzCFsfH5GgfKt2Gtir/IAGLyh1+Ngqa6q
-	 Z4A3OlT3X9Nkri/wOejAvNC5FfxipzeDbrlsxEcgMjDkjaQWJWuGx6/mDfC/AXZeTc
-	 YdFyMzoAlSpiQ6CEh5YKLkqvYlbuR82xpFw/rdA0bl4st81ZJcoIgY4x3ytpce0+Id
-	 G0nxoD/GSjHuQ==
-Date: Sat, 8 Feb 2025 20:40:29 -1000
-From: Tejun Heo <tj@kernel.org>
-To: void@manifault.com, arighi@nvidia.com, multics69@gmail.com
-Cc: linux-kernel@vger.kernel.org, sched-ext@meta.com
-Subject: Re: [PATCHSET sched_ext/for-6.15] sched_ext: Event counter updates
-Message-ID: <Z6hN3bmSMTQVB9gI@slm.duckdns.org>
-References: <20250208084229.1274399-1-tj@kernel.org>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739083232; cv=none; b=mOdBVsKhUk8CQq4LF3Sfxokr+1aQcuFm9HoaX+qVRynarQEalaQjqs52GEPy5JrFiNUMl9dXHegfYqjlM9832swhn6C+Zk7YP0Sdr60axgI4fpJm1oHllI4BzevUzikDufi0yQlbtrEuKt79aL8aG/GQKYu/N7bFzaKJUsRpIEc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739083232; c=relaxed/simple;
+	bh=I+n6YL4BVvpvdCEXFuSfEXS7J45BosY6sb8Q2vj8/V8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JMfv7qwT24cSbl75pMvv+qtuJ60FQcgXBY0Fo/ZPHfBfyGPpsR6ffoa/2hOfmn6EpCRO7tYlxNxy/zX5MfAR1xGKrTnFAEkZqrYBRKzqu1HiEpOFdHd2pG7e9pYDIVnOmkkSs+p61k3xuUDeWiweKWyKLMGGLu+z9xQ83VrS2fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=SoOGjmoT; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="SoOGjmoT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=9oFpwbEwOTCngZ/mwbnn+Iorxg6hPP7eCgH77WuWom4=; b=SoOGjmoTduqo6ZxdSo1Tr+LvGe
+	rtQbnZjMosxqY6xfNh3tXrvllkPb51vCqX+jQE/6gKCnjFBM4CbKG1bXkcygZFY6KWHcb9xjTvMi5
+	9CF9+FePuAJVxvVj137XhgQQvq9zOixFOreiPk1HzAaqsLV2X+A89NnFMzuDMCmgfGYgrJF/CkvHT
+	woMEtGJTVrE9uAPBszJyFBzxUm1OZBsd8zT7IH0ejDJILUgnsHow0/C02EzgYCqzIIhRmlbajC+Ms
+	CNkhmT2KVfNwmEwd9648B/azK2XK13p9+wRA8NCvuE+MFaawBtNYJbCJdAd6gp94fN7HEf58Dc4lQ
+	62GXDvCQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1th0zT-00000008Dpp-0COW;
+	Sun, 09 Feb 2025 06:40:27 +0000
+Date: Sun, 9 Feb 2025 06:40:27 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/19] VFS: Add ability to exclusively lock a dentry and
+ use for create/remove  operations.
+Message-ID: <20250209064027.GV1977892@ZenIV>
+References: <20250206054504.2950516-1-neilb@suse.de>
+ <20250206054504.2950516-12-neilb@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,20 +50,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250208084229.1274399-1-tj@kernel.org>
+In-Reply-To: <20250206054504.2950516-12-neilb@suse.de>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Fri, Feb 07, 2025 at 10:42:14PM -1000, Tejun Heo wrote:
-> Hello,
-> 
-> This patchset contains the following three event counter updates:
-> 
->  0001-tool-sched_ext-Event-counter-dumping-updates.patch
->  0002-sched_ext-Count-SCX_EV_DISPATCH_LOCAL_DSQ_OFFLINE-in.patch
->  0003-sched_ext-Add-SCX_EV_ENQ_SKIP_MIGRATION_DISABLED.patch
+On Thu, Feb 06, 2025 at 04:42:48PM +1100, NeilBrown wrote:
 
-Applied to sched_ext/for-6.15.
+> +bool d_update_lock(struct dentry *dentry,
+> +		   struct dentry *base, const struct qstr *last,
+> +		   unsigned int subclass)
+> +{
+> +	lock_acquire_exclusive(&dentry->d_update_map, subclass, 0, NULL, _THIS_IP_);
+> +again:
+> +	spin_lock(&dentry->d_lock);
+> +	wait_var_event_spinlock(&dentry->d_flags,
+> +				!check_dentry_locked(dentry),
+> +				&dentry->d_lock);
+> +	if (d_is_positive(dentry)) {
+> +		rcu_read_lock(); /* needed for d_same_name() */
 
-Thanks.
+It isn't.  You are holding ->d_lock there.
 
--- 
-tejun
+> +		if (
+> +			/* Was unlinked while we waited ?*/
+> +			d_unhashed(dentry) ||
+> +			/* Or was dentry renamed ?? */
+> +			dentry->d_parent != base ||
+> +			dentry->d_name.hash != last->hash ||
+> +			!d_same_name(dentry, base, last)
+
+Negatives can't be moved, but they bloody well can be unhashed.  So skipping
+the d_unhashed() part for negatives is wrong.
+
+> +		) {
+> +			rcu_read_unlock();
+> +			spin_unlock(&dentry->d_lock);
+> +			lock_map_release(&dentry->d_update_map);
+> +			return false;
+> +		}
+> +		rcu_read_unlock();
+> +	}
+> +	/* Must ensure DCACHE_PAR_UPDATE in child is visible before reading
+> +	 * from parent
+> +	 */
+> +	smp_store_mb(dentry->d_flags, dentry->d_flags | DCACHE_PAR_UPDATE);
+
+... paired with?
+
+> +	if (base->d_flags & DCACHE_PAR_UPDATE) {
+> +		/* We cannot grant DCACHE_PAR_UPDATE on a dentry while
+> +		 * it is held on the parent
+> +		 */
+> +		dentry->d_flags &= ~DCACHE_PAR_UPDATE;
+> +		spin_unlock(&dentry->d_lock);
+> +		spin_lock(&base->d_lock);
+> +		wait_var_event_spinlock(&base->d_flags,
+> +					!check_dentry_locked(base),
+> +					&base->d_lock);
+
+Oh?  So you might also be waiting on the parent?  That's a deadlock fodder right
+there - caller might be holding ->i_rwsem on the same parent, so you have waiting
+on _->d_flags nested both outside and inside _->d_inode->i_rwsem.
+
+Just in case anyone goes "->i_rwsem will only be held shared" - that wouldn't help.
+Throw fchmod() into the mix and enjoy your deadlock -
+	A: holds ->i_rwsem shared, waits for C to clear DCACHE_PAR_UPDATE.
+	B: blocked trying to grab ->i_rwsem exclusive
+	C: has DCACHE_PAR_UPDATE set, is blocked trying to grab ->i_rwsem shared
+and there you go...
+
+> +		spin_unlock(&base->d_lock);
+> +		goto again;
+> +	}
+> +	spin_unlock(&dentry->d_lock);
+> +	return true;
+> +}
+
+The entire thing is refcount-neutral for both dentry and base.  Which makes this
+
+> @@ -1759,8 +1863,9 @@ static struct dentry *lookup_and_lock_nested(const struct qstr *last,
+>  
+>  	if (!(lookup_flags & LOOKUP_PARENT_LOCKED))
+>  		inode_lock_nested(base->d_inode, subclass);
+> -
+> -	dentry = lookup_one_qstr(last, base, lookup_flags);
+> +	do {
+> +		dentry = lookup_one_qstr(last, base, lookup_flags);
+> +	} while (!IS_ERR(dentry) && !d_update_lock(dentry, base, last, subclass));
+
+... a refcount leak waiting to happen.
