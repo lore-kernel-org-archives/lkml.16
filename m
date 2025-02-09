@@ -1,134 +1,141 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1531392
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 05:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94F08831
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 06:12:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739080103; cv=none; b=bj0tpZERABE+Iop35/LVH3KXA/FQ2w7YDMM+KlpR9xtVBoQ8wAR1jujbBCjB2nkdqEf9Cxsh2K3pHM4QTQ2rXnZVEzXvNVVu+/ElpncEJouluvuXrFHbx9e/kAOCRAmTTCplMqBmucg9H0ugM5TGpRPq1oaR+HQ+Ub6ecFd6Rfs=
+	t=1739081578; cv=none; b=pbylxstuXoUSZTdNOtl5rBxgHbq8oTtam1gOgHQlG5PutzZg+xIk3I52nCx4/gk6OJluWrorlzDJycPUrC1FIXqVyakQx4FwQtheechnEmQy8CPqixdbofSY6aXrXY4MSpJygw4GSeoxr4GCmzvXTjC1f0ZdxGNhKgAq2GUblSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739080103; c=relaxed/simple;
-	bh=z4tA6hMPFEUrw4W8If8IRwdzbP+7LHbbAeSr7eOfrqo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=SVR6zEgWH+BaW6COCqy/44FRwH5/fBaIVwQmpBsE+64fJo3kJleeaN11khO3JL3V0ACZcEoVebqF2rdWWk2NuKdEUtzBpNJISRCJywyWy4e1TXTd+kavNKyWxhzJ2bgtJ8s2zhXXLj9lja1Ni+q6+m8YpvsKGS0IKuLFozQgf8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d057805941so23820125ab.0
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 21:48:22 -0800 (PST)
+	s=arc-20240116; t=1739081578; c=relaxed/simple;
+	bh=jPuVcK9BYPHBx7oFFG1INuxE1BeDwHKdKfZWF/JbVsc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kOlhze11Hw8qBvpEPvRa4athq+yvdAxC0SX6iEa+2eRbA7Cv+KL8hCMkxvuZJMw2lxF2K4wGhXoGDppJWWY5VoujJIMWXOlfTxnYXX8B8h9+UVho/NzzmPj281b1+1YjeUDAf0AHX0B6CoV4atRFWCOxk/lsTzwQRLdDmJ+9zrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S6bepTLf; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S6bepTLf"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-307d9a13782so28919621fa.2
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 22:12:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739081575; x=1739686375; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4Fe0VF3HeXgNvgWt109zmaR5H6W57xLfEvBY6YhhqTM=;
+        b=S6bepTLfvUDYKAI8Z8S1UXLNdGgRn6m6HdC2XXaZNER5uz0DCOn5cB0N4WTIVCIfIJ
+         p5FtC4ATbHc7UsGZsvD5DHWhZMniPSRNFDcyEz2bx7NkHeSotVOFAg6kClVc1lNU2Xq+
+         M2d3axbQVT+ghBLmTx9VBumOJFV6qBTtHpeGkPIf1m7WG+Zw89G6SE/ZsH+CcJbmv3rQ
+         O2Tb2o+jx5zjbM2kG/90nESZlbbHuRGsQK93u0xEjUgwqEW+Q3cragjtteZ4UnCLJZRC
+         dMR6m6LWlIB/nTxb07kM9BiP6WGiUthNTw/tyjAkK8TdIZxi9jcPa2/zOKcV4PcS0YJQ
+         bT4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739080101; x=1739684901;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JllO9RRFJnC6OlotxyZV0275rRnlEQ+hFYSIKClP0zo=;
-        b=M7U+bhmhNaZRiJygOtyy/+DnS5GQZdCSqRyHzVteOR/0J9zdM7ka8avyJcUAvU8qkc
-         L9OL24tiixskfxwgXNmoSBko8nl+Sm/U7asirSOwcXvUYqfaMADByJH0cKCJsmIeJBoo
-         5Il8dbv2u7q0rDxDQJxH/0aEqQHfesSkKfT+GYuzUagFG69diz3JwlNbp0Rfo+2CysR6
-         OKv0andtGTMkx0h8tm5lQ6NlE3+9jVR0KI/mBOGeRozt0aNh6H/OS1sOOyYlykJEuOgG
-         Wca0yjbn52MGw9TlNBFOyDYQbiZi5p+WZi8YBGAvi75pyNSWHx412Rfuhlb5y3vf5iWF
-         c8WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJIPvvFc5reZgNOYSTMT0f/AHqehemAQ6K6mZoNhJ0iQ9gqxBok1JiQo3+AxsAHBsESrMhWKm7qS5L+l0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwC03J3NgPZzOpm6y/a/EuIcwaKdN4fZm0vXtdGqxjNvoShu35o
-	y7QrthjN0zb2ZJugCWq/qAq9DdqM40x8Eqn0pOj5IdMl16AdUeRQaL0IUvLlA3p2Isfqm7vb+yZ
-	UxX3m1Y0k4dOnOkqLqqjQYR/yycsSIIN5GhFtwo1g8DzoV6JNWg5rLhs=
-X-Google-Smtp-Source: AGHT+IEVlqPGn5xXlDn15cyBvhgT74wjTffnI3VeukLWL4MB4bOujt2MzbXZKZbjwvr6nkObbO3W9eamNmsdrG7983+II/w0cP8q
+        d=1e100.net; s=20230601; t=1739081575; x=1739686375;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4Fe0VF3HeXgNvgWt109zmaR5H6W57xLfEvBY6YhhqTM=;
+        b=GCiaossdLOr9c+m5MhwAuVZYYb9Cqi5+ibA78rmDhPTDUW5jng/GsUzwo0SkT4q6MW
+         zwdJ0w65SgGdwbuWTIlurq8mUxGAixfz46s7qkjcHrGJ0wF9FNZmvrzb8ZM3MOYe7oOY
+         xWOosxYBhlxNpMM+LgyfQAjuUY0aZRPAnLmvXCziRY64xGXFp4YnfoiE1x3XNsv4dY7r
+         X86KI2mxKrhHVpjPSkUR5xquBQoQHiLJ7pDwbjJab80WUf2u38TVtzUro1n9dRH3sp3b
+         nQa+y3GBN8HQZHalKB7Q9SPlYYCrXoq62ycNARBOwT7OkufrvlzUecOHemjdLRqI6CKn
+         TCtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUg0nG07eP6HhdaAt6jsSbIXar4HJt3mzHmYXh8bpTm00HTiN5ABeIvl/jVr/eMlWQ9LesXfQvMbMIrkeE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycOJvo/lT3RNjgv+E8thM/2o6CSThSO7dJh3YVXkFI0DQgqFpo
+	WQr8kHr5PB6awFwczp8CKnMBZHylRKVDPxPhlCBIiY4GPoPkf2ijPTP2d3QxaBY=
+X-Gm-Gg: ASbGncssnn19MibcW7vdJYJiQzTJHe6kWXNU04QuhQJhSFzeYXTdDJpSxG9P9eB3a1A
+	t9N5MFWvtj6Wmgdu9wgOZYXfE+MP36HezbhEF0VAnWvWjSOao95/FwIFHIHxZf8Q339W1s/dza/
+	kPQCk62nuMeJoy6UyPUZrFWOAQiQSHT1shrYkUJa93WJmO/dK/1E+DfU2qIot6P5cEMb2EFtFmf
+	hq/sYiUi1dGPEjpp9FOaFHV8LyPc4ViyAqul8AEFYG+aKJNkgEZllD3hDgE6xfNzuUWiTcIG3Xk
+	4W2qN82SOnzBi4cKgTlhlonQRbKAjOgKhAVMiESUtg6swaN8RH7WWZ2UxmjuWNxr3vU+V5M=
+X-Google-Smtp-Source: AGHT+IG0zA2FKGk15ye6q/mCoGATdsQEyiqMtLOacPVHzVEYQoHiMNvdIJk/YGglXVnIXqv4CG72qA==
+X-Received: by 2002:a2e:9a84:0:b0:308:e54d:618a with SMTP id 38308e7fff4ca-308e54d637cmr6866631fa.29.1739081574778;
+        Sat, 08 Feb 2025 22:12:54 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-308e80067fdsm1789901fa.25.2025.02.08.22.12.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 22:12:53 -0800 (PST)
+Date: Sun, 9 Feb 2025 08:12:51 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 28/35] drm/bridge: Provide a helper to retrieve
+ current bridge state
+Message-ID: <ogbqg2nchpyctndxvsox7zfnvmarlztxvjtxf74xftvaswz73y@54smvncbpkbe>
+References: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
+ <20250204-bridge-connector-v2-28-35dd6c834e08@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:20ee:b0:3cd:e9a0:3c3d with SMTP id
- e9e14a558f8ab-3d13e159583mr68052515ab.2.1739080101450; Sat, 08 Feb 2025
- 21:48:21 -0800 (PST)
-Date: Sat, 08 Feb 2025 21:48:21 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a841a5.050a0220.110943.0017.GAE@google.com>
-Subject: [syzbot] [isofs?] KMSAN: uninit-value in isofs_readdir
-From: syzbot <syzbot+812641c6c3d7586a1613@syzkaller.appspotmail.com>
-To: jack@suse.cz, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250204-bridge-connector-v2-28-35dd6c834e08@kernel.org>
 
-Hello,
+On Tue, Feb 04, 2025 at 03:57:56PM +0100, Maxime Ripard wrote:
+> The current bridge state is accessible from the drm_bridge structure,
+> but since it's fairly indirect it's not easy to figure out.
+> 
+> Provide a helper to retrieve it.
+> 
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> ---
+>  include/drm/drm_bridge.h | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+> index cf7ab89e652a982510ae9df1f5972b9c6eb13cf2..7a3664770c3ab8634a69e953b37a30ac467139b3 100644
+> --- a/include/drm/drm_bridge.h
+> +++ b/include/drm/drm_bridge.h
+> @@ -955,10 +955,31 @@ static inline struct drm_bridge *of_drm_find_bridge(struct device_node *np)
+>  {
+>  	return NULL;
+>  }
+>  #endif
+>  
+> +/**
+> + * @drm_bridge_get_current_state() - Get the current bridge state
+> + * @bridge: bridge object
+> + *
+> + * This function must be called with the modeset lock held.
+> + *
+> + * RETURNS:
+> + *
+> + * The current bridge state, or NULL if there is none.
+> + */
+> +static inline struct drm_bridge_state *
+> +drm_bridge_get_current_state(struct drm_bridge *bridge)
+> +{
+> +	lockdep_assert_held(&bridge->base.lock.mutex.base);
 
-syzbot found the following issue on:
+Please use drm_modeset_lock_assert_held() instead.
 
-HEAD commit:    5c8c229261f1 Merge tag 'kthreads-fixes-2025-02-04' of git:..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=13a8beb0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f20bce78db15972a
-dashboard link: https://syzkaller.appspot.com/bug?extid=812641c6c3d7586a1613
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12042df8580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ff93df980000
+> +
+> +	if (!bridge)
+> +		return NULL;
+> +
+> +	return drm_priv_to_bridge_state(bridge->base.state);
+> +}
+> +
+>  /**
+>   * drm_bridge_get_next_bridge() - Get the next bridge in the chain
+>   * @bridge: bridge object
+>   *
+>   * RETURNS:
+> 
+> -- 
+> 2.48.0
+> 
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/63aa4d99d73d/disk-5c8c2292.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/104150a76e91/vmlinux-5c8c2292.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/c4622f8c58f4/bzImage-5c8c2292.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/24fb8c942e20/mount_0.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+812641c6c3d7586a1613@syzkaller.appspotmail.com
-
-loop0: detected capacity change from 1764 to 1763
-=====================================================
-BUG: KMSAN: uninit-value in do_isofs_readdir fs/isofs/dir.c:150 [inline]
-BUG: KMSAN: uninit-value in isofs_readdir+0xa33/0x2610 fs/isofs/dir.c:262
- do_isofs_readdir fs/isofs/dir.c:150 [inline]
- isofs_readdir+0xa33/0x2610 fs/isofs/dir.c:262
- iterate_dir+0x740/0x930 fs/readdir.c:108
- __do_sys_getdents64 fs/readdir.c:403 [inline]
- __se_sys_getdents64+0x170/0x540 fs/readdir.c:389
- __x64_sys_getdents64+0x96/0xe0 fs/readdir.c:389
- x64_sys_call+0x3b0f/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:218
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Uninit was created at:
- __alloc_frozen_pages_noprof+0x9a7/0xe00 mm/page_alloc.c:4762
- alloc_pages_mpol+0x4cd/0x890 mm/mempolicy.c:2270
- alloc_frozen_pages_noprof mm/mempolicy.c:2341 [inline]
- alloc_pages_noprof+0x1b5/0x250 mm/mempolicy.c:2361
- get_free_pages_noprof+0x34/0xc0 mm/page_alloc.c:4798
- isofs_readdir+0x74/0x2610 fs/isofs/dir.c:256
- iterate_dir+0x740/0x930 fs/readdir.c:108
- __do_sys_getdents64 fs/readdir.c:403 [inline]
- __se_sys_getdents64+0x170/0x540 fs/readdir.c:389
- __x64_sys_getdents64+0x96/0xe0 fs/readdir.c:389
- x64_sys_call+0x3b0f/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:218
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-CPU: 0 UID: 0 PID: 5784 Comm: syz-executor207 Not tainted 6.14.0-rc1-syzkaller-00028-g5c8c229261f1 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-=====================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+With best wishes
+Dmitry
