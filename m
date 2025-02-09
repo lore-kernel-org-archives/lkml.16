@@ -1,62 +1,62 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF7D17597
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 04:17:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA6B17597
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 04:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739074644; cv=none; b=n5ZtUVli22TYfVxSpzPzgdDkiS3912Z3SNoIomAEkQs+i52mH8GfOvbYoUzzvX8UOYqZY6Tsws/NObUR7XY4VPMwpDBgbYQ1mclw0zVmGEz5TUKPZ0mcF2rM6Zs4BvY5StflONujl40Gg8r+B/Z3KMRZSSPQTRJPoU19H1I4t7Y=
+	t=1739074653; cv=none; b=a1OrPnsQDIaJgWLhAhHcGPzHZ5kDSR55ECP3Qz1dw2UzNCGOLSRdGDZp80dElipINDGIt5BUSaymPkek6jqPY8HHDxs1YghyIFRbVKBK6v2jPdz82oNVW1zcPVVd1ja/92aJbv0+Ew0sXYfCjSJ5hYre9Tv9d8IfAK4zQKFi5rA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739074644; c=relaxed/simple;
-	bh=gGGEYK7VGgFWWdh/qLZbuuJY+xZwb2aTgVHnwmrr23c=;
+	s=arc-20240116; t=1739074653; c=relaxed/simple;
+	bh=GQ6h6qnifBeRvwI5lbrzx5DePz9FG/7AwYjLLcTRLyo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MX/kmdxdY2P9idjfQOnpCfIvqWoR/MGr3oSBsT2iGpjQw3T42iC53fmOA8I0NdZauhsOKqNXXcw2jWi588byxmPizycK9ZDp7o9OwNqnpXj7y9ixaybpYYGRsX2e96kQvy0Nmy09iU229Vg8WtaFGpkJo1nSO55ZfmWw2jQu1Rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=AzPoVJD+; arc=none smtp.client-ip=209.85.216.45
+	 MIME-Version; b=oDYln+R6ij5XL5CKj7MDJtqSHE0+bjJDLeK3iNIYH3aj5b96D0pyBfKsVq03gK8WSZDdxBjQimvesYSgzMP6HFpblMzcSXj0hVNT0ZIof5f5o9kT0SvtLVPmEumG5+B9YTh5KWk51VrOtiTZkGVSEHTl69oGs7EObn2JZ++s2xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=cNYua6yx; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="AzPoVJD+"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2fa51743d80so819121a91.2
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 20:17:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="cNYua6yx"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2fa48404207so1577797a91.1
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 20:17:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1739074642; x=1739679442; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1739074651; x=1739679451; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DvFsqgBHoepkWBjGC1yP+KOn/8qryanxa+3zb4U83Ao=;
-        b=AzPoVJD+RGzbpA/i/EAv1blZwA0kZ9x/yV6QUjS/UhlN4P8ydtwSfIXKUdedValTT5
-         e0rpRIKvs9qwp8Ihug5j9oZuyGaqBOH/Rd3FVpUc1EkVcgY4KQcXvrn3InXD24P9gBHO
-         X/yr1X1Sv/o06IQRB0Kop/KgBazDRxnJDu2p6Y1JF7maPboeU+bifeM/nTq03SnQeIpv
-         qKMnLc8I8VdIRHd+RcgpIEvDWVXr2d5NIluAVliuyHJEBArvIwFuJDtMZTLZi0+qh8D6
-         TWX0MLZXiJz+7OEYmvA24luIol8cnTn46RiV3CKHVUHiiQZBQstIjaTOQslMExZvYJgY
-         HS0Q==
+        bh=dDa5uVtGTmKoF+EGxYZ14lQBrXBy+Zgm46G016g9yok=;
+        b=cNYua6yx1cNF4qlqTD2M0aoJhVNrKcnt8T1PTqTZW5Kzmg5SyMLj/p0l2y5Jaog8tR
+         qx6NXITYm5Ro9Fv2OmQBcCLwq9IGsG+g7oKN1jikqNqrNMzpNyUMJ1iTnd3Ys2YaaQb5
+         lSdKfRwsHwRqvypmOC/AlV3+kkEwYDSTvLIAPz9Jm4DrJbDvgd7yZ3M4QwY3qk4XqyNw
+         padXsj4lkByZjG9c0E3r9BDDGTNTy9rOBK0diOABB6bRRvPaOYwH2ZiKlUmUeCvcr8wx
+         cIfSKY3vBvtPZdBPCLAVCMrXHzlRqUh63WrwzlLCH2WG1s75kGte854wVsNzQsfvxWBe
+         ZheA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739074642; x=1739679442;
+        d=1e100.net; s=20230601; t=1739074651; x=1739679451;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DvFsqgBHoepkWBjGC1yP+KOn/8qryanxa+3zb4U83Ao=;
-        b=Z4htPsxSN88HMY4W2A6qBJJ4dipDFRG9HKkYZyP4t9FFPhEcHzCydSLrGq8WMnR3OX
-         /m6YhVEWUBTCSWs3JZooq0JWmENVnhOgDf6wdbHVkcRNMlgfdozyylUZkBSgwgqPfma6
-         SmwNbb0TdTQ7+I5N92ELbTsFyDisrbfKMxNr4mmInTrJ+pPtd1hZ2znjnxuSthoDuZAy
-         S4yd/64CxS8ghurxYG6/E3qb954WLXeVbup6gux41AMaNUkZ9mtQT8EVScfuYcSGD7tV
-         ofr4OUxL75nlLZ7iwkDDo7Yqq3TlZm7fQeOYPssXPOnqAakSYjUWLRU5UDVDXPBvutVn
-         rdUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXwHQq9v9hsTDU75k41w4EGSaSafOqpMjFqCciPJ5+x8RIxtulAuQCkYOXXZ8DEdV9COfkJAjMDEDx1f2Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9qiyXeu9YQpmz1WIKFDYJmecYBECbNJLDRTcbnlVKq8SLGl/z
-	RRvHM10wV2awvXT0S5a6PyBvNyNmobW3O187b9LpbcZfKAtfX0ggw4g+TLIxz74=
-X-Gm-Gg: ASbGncvaSOWQTzgmgijHe05qZDgMocay+hiurOkn/u4BhdbqHeg5ZnD9xEP02t+SXbL
-	hehSj0SmBkqzCf3yjhSEVkUIiH952coT6XQZWDXG85hVnEiBXK72indppiuq8m3/9pXJrAr7ovL
-	V6VCZPp5PRLPTXB+wsWAMikimvToQNQ9EkJUc8gL0Z9zL0o1NcoI8cY19SGshq1oBERVfgpJZvO
-	ub+Kc7Z7iHtUTBtlu+SwqOOoPJdwkNmtQakPukBrSR73U2RbQO9PnGjbUSjaQPkDmo6D4llAiyu
-	8aYKY74v+N5+TQEecfNZDOcM9PUhkB2cPbgGmaLZmnfIYIXtrlmfS5E=
-X-Google-Smtp-Source: AGHT+IHRXdIPs1mvVVeCpBykzAl+ifFcG5qlvMFYrTkFKgREylWnQV7fAuN/+eShJoWgxmV452gK/Q==
-X-Received: by 2002:a05:6a00:b41:b0:730:8a0a:9f06 with SMTP id d2e1a72fcca58-7308a0aad32mr287596b3a.16.1739074642169;
-        Sat, 08 Feb 2025 20:17:22 -0800 (PST)
+        bh=dDa5uVtGTmKoF+EGxYZ14lQBrXBy+Zgm46G016g9yok=;
+        b=wL3Gy3pZwCY0eRbDwnNCu3Y3jPROOP3LPlAnbjnsc7hr3rMyUXWRWDFEhXRTshs8i3
+         Lr2lNpe6pO0UjkSC+brPlFxBf8npjCSpoFYcm1FBM8cr7xa1tXPeeg7quDELrMB56jqQ
+         88S/+rsLGAPuAV4EKgqK6jgaFxr3bStSRr5Yd4nSqcAEIMiBf50XVVKEk6W1fqMyc+6a
+         xPxB8H5Jes8Np1tLlbbl4VdepXxx26kC/prFqTMw4Ook6hCTWe3Gfl6CSgATYxufSEkI
+         FyQgI6LEZ7JbGoXchv6kqImXQEMB7yjYTZ2VwzU0kyO2/wDA0mpqI7tjXPBOV96dnwiW
+         Zn7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVA7pR7gxGFkz8ecT25JejpR1CRlIcFTISoe6dNhxoH3cTz+5wxp0lcSU89qTtdR/CNncnL2GFHEWHNHJg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzipu7J1FAwXKmH2LhHWnc0hlpoMizjErdqH06YgRy5Hk54Zlj4
+	6kdnVjBNMObgnydoVQjM+oB8YT2gQTy6bwTcsLhgkdBgNgbCbABarnibfKPsVA8=
+X-Gm-Gg: ASbGnctlrmZ1g/9ql6zvR55bU+6U3PhHKm4ex8hCsZ5VNMy6J2mz2gyEjxnc0HIBvL9
+	ruRsTc9WT741rfomlElDlcH/upgESFuzh8CwAluK5bZXlDp+tcWAudjvG8YNIeQMHOSF7PlfUXq
+	mfR/uyLddzfq5CEDEh3HNxPZsFNsygjWOqrB0unNBFHuhdsgisQ6yx5qfc7ssejQ8FTY+x35grg
+	KJrx0oJBrQJvbrI1m4d87e/I+I9yog7ECUqceMc2ArSs8CreYfdrhWALCkgA4o2/rlbr9HyEIMX
+	/EAeBBjRRiG65jaNvKgEyQ/cH+Kextp90MPIlIIWKTVPPAwhZZmW9sw=
+X-Google-Smtp-Source: AGHT+IG1pX64iVcHBvRjhghD+pT2OaoFkAmw6b8bnet5SDDEvBV2yIiEcMLZqESX2yxzwT//jElybA==
+X-Received: by 2002:a05:6a00:cd1:b0:725:e444:2505 with SMTP id d2e1a72fcca58-7305d431970mr12792467b3a.4.1739074650717;
+        Sat, 08 Feb 2025 20:17:30 -0800 (PST)
 Received: from anup-ubuntu-vm.localdomain ([103.97.166.196])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73073eba116sm1898410b3a.124.2025.02.08.20.17.14
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73073eba116sm1898410b3a.124.2025.02.08.20.17.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 20:17:21 -0800 (PST)
+        Sat, 08 Feb 2025 20:17:30 -0800 (PST)
 From: Anup Patel <apatel@ventanamicro.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -82,9 +82,9 @@ Cc: hpa@zytor.com,
 	linux-kernel@vger.kernel.org,
 	imx@lists.linux.dev,
 	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH v5 01/11] irqchip/riscv-imsic: Set irq_set_affinity for IMSIC base
-Date: Sun,  9 Feb 2025 09:46:45 +0530
-Message-ID: <20250209041655.331470-2-apatel@ventanamicro.com>
+Subject: [PATCH v5 02/11] irqchip/irq-msi-lib: Optionally set default irq_eoi/irq_ack
+Date: Sun,  9 Feb 2025 09:46:46 +0530
+Message-ID: <20250209041655.331470-3-apatel@ventanamicro.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250209041655.331470-1-apatel@ventanamicro.com>
 References: <20250209041655.331470-1-apatel@ventanamicro.com>
@@ -96,70 +96,155 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Andrew Jones <ajones@ventanamicro.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Instead of using imsic_irq_set_affinity() for leaf MSI domains,
-use imsic_irq_set_affinity() for the non-leaf IMSIC base domain
-and use irq_chip_set_affinity_parent() for leaf MSI domains.
+Introduce chip_flags in struct msi_parent_ops. This allows
+msi_lib_init_dev_msi_info() set default irq_eoi/irq_ack
+callbacks only when the corresponding flags are set in
+the chip_flags.
 
-Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Anup Patel <apatel@ventanamicro.com>
 ---
- drivers/irqchip/irq-riscv-imsic-platform.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/irqchip/irq-gic-v2m.c    |  1 +
+ drivers/irqchip/irq-imx-mu-msi.c |  1 +
+ drivers/irqchip/irq-msi-lib.c    | 11 ++++++-----
+ drivers/irqchip/irq-mvebu-gicp.c |  1 +
+ drivers/irqchip/irq-mvebu-odmi.c |  1 +
+ drivers/irqchip/irq-mvebu-sei.c  |  1 +
+ include/linux/msi.h              | 11 +++++++++++
+ 7 files changed, 22 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/irqchip/irq-riscv-imsic-platform.c b/drivers/irqchip/irq-riscv-imsic-platform.c
-index c708780e8760..5d7c30ad8855 100644
---- a/drivers/irqchip/irq-riscv-imsic-platform.c
-+++ b/drivers/irqchip/irq-riscv-imsic-platform.c
-@@ -96,9 +96,8 @@ static int imsic_irq_set_affinity(struct irq_data *d, const struct cpumask *mask
- 				  bool force)
+diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
+index be35c5349986..1e3476c335ca 100644
+--- a/drivers/irqchip/irq-gic-v2m.c
++++ b/drivers/irqchip/irq-gic-v2m.c
+@@ -255,6 +255,7 @@ static void __init gicv2m_teardown(void)
+ static struct msi_parent_ops gicv2m_msi_parent_ops = {
+ 	.supported_flags	= GICV2M_MSI_FLAGS_SUPPORTED,
+ 	.required_flags		= GICV2M_MSI_FLAGS_REQUIRED,
++	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
+ 	.bus_select_token	= DOMAIN_BUS_NEXUS,
+ 	.bus_select_mask	= MATCH_PCI_MSI | MATCH_PLATFORM_MSI,
+ 	.prefix			= "GICv2m-",
+diff --git a/drivers/irqchip/irq-imx-mu-msi.c b/drivers/irqchip/irq-imx-mu-msi.c
+index 4342a21de1eb..69aacdfc8bef 100644
+--- a/drivers/irqchip/irq-imx-mu-msi.c
++++ b/drivers/irqchip/irq-imx-mu-msi.c
+@@ -214,6 +214,7 @@ static void imx_mu_msi_irq_handler(struct irq_desc *desc)
+ static const struct msi_parent_ops imx_mu_msi_parent_ops = {
+ 	.supported_flags	= IMX_MU_MSI_FLAGS_SUPPORTED,
+ 	.required_flags		= IMX_MU_MSI_FLAGS_REQUIRED,
++	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
+ 	.bus_select_token       = DOMAIN_BUS_NEXUS,
+ 	.bus_select_mask	= MATCH_PLATFORM_MSI,
+ 	.prefix			= "MU-MSI-",
+diff --git a/drivers/irqchip/irq-msi-lib.c b/drivers/irqchip/irq-msi-lib.c
+index d8e29fc0d406..51464c6257f3 100644
+--- a/drivers/irqchip/irq-msi-lib.c
++++ b/drivers/irqchip/irq-msi-lib.c
+@@ -28,6 +28,7 @@ bool msi_lib_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
+ 			       struct msi_domain_info *info)
  {
- 	struct imsic_vector *old_vec, *new_vec;
--	struct irq_data *pd = d->parent_data;
+ 	const struct msi_parent_ops *pops = real_parent->msi_parent_ops;
++	struct irq_chip *chip = info->chip;
+ 	u32 required_flags;
  
--	old_vec = irq_data_get_irq_chip_data(pd);
-+	old_vec = irq_data_get_irq_chip_data(d);
- 	if (WARN_ON(!old_vec))
- 		return -ENOENT;
+ 	/* Parent ops available? */
+@@ -92,10 +93,10 @@ bool msi_lib_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
+ 	info->flags			|= required_flags;
  
-@@ -116,13 +115,13 @@ static int imsic_irq_set_affinity(struct irq_data *d, const struct cpumask *mask
- 		return -ENOSPC;
+ 	/* Chip updates for all child bus types */
+-	if (!info->chip->irq_eoi)
+-		info->chip->irq_eoi	= irq_chip_eoi_parent;
+-	if (!info->chip->irq_ack)
+-		info->chip->irq_ack	= irq_chip_ack_parent;
++	if (!chip->irq_eoi && (pops->chip_flags & MSI_CHIP_FLAG_SET_EOI))
++		chip->irq_eoi = irq_chip_eoi_parent;
++	if (!chip->irq_ack && (pops->chip_flags & MSI_CHIP_FLAG_SET_ACK))
++		chip->irq_ack = irq_chip_ack_parent;
  
- 	/* Point device to the new vector */
--	imsic_msi_update_msg(d, new_vec);
-+	imsic_msi_update_msg(irq_get_irq_data(d->irq), new_vec);
+ 	/*
+ 	 * The device MSI domain can never have a set affinity callback. It
+@@ -105,7 +106,7 @@ bool msi_lib_init_dev_msi_info(struct device *dev, struct irq_domain *domain,
+ 	 * device MSI domain aside of mask/unmask which is provided e.g. by
+ 	 * PCI/MSI device domains.
+ 	 */
+-	info->chip->irq_set_affinity	= msi_domain_set_affinity;
++	chip->irq_set_affinity = msi_domain_set_affinity;
+ 	return true;
+ }
+ EXPORT_SYMBOL_GPL(msi_lib_init_dev_msi_info);
+diff --git a/drivers/irqchip/irq-mvebu-gicp.c b/drivers/irqchip/irq-mvebu-gicp.c
+index 2b6183919ea4..d67f93f6d750 100644
+--- a/drivers/irqchip/irq-mvebu-gicp.c
++++ b/drivers/irqchip/irq-mvebu-gicp.c
+@@ -161,6 +161,7 @@ static const struct irq_domain_ops gicp_domain_ops = {
+ static const struct msi_parent_ops gicp_msi_parent_ops = {
+ 	.supported_flags	= GICP_MSI_FLAGS_SUPPORTED,
+ 	.required_flags		= GICP_MSI_FLAGS_REQUIRED,
++	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
+ 	.bus_select_token       = DOMAIN_BUS_GENERIC_MSI,
+ 	.bus_select_mask	= MATCH_PLATFORM_MSI,
+ 	.prefix			= "GICP-",
+diff --git a/drivers/irqchip/irq-mvebu-odmi.c b/drivers/irqchip/irq-mvebu-odmi.c
+index ff19bfd258dc..28f7e81df94f 100644
+--- a/drivers/irqchip/irq-mvebu-odmi.c
++++ b/drivers/irqchip/irq-mvebu-odmi.c
+@@ -157,6 +157,7 @@ static const struct irq_domain_ops odmi_domain_ops = {
+ static const struct msi_parent_ops odmi_msi_parent_ops = {
+ 	.supported_flags	= ODMI_MSI_FLAGS_SUPPORTED,
+ 	.required_flags		= ODMI_MSI_FLAGS_REQUIRED,
++	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
+ 	.bus_select_token	= DOMAIN_BUS_GENERIC_MSI,
+ 	.bus_select_mask	= MATCH_PLATFORM_MSI,
+ 	.prefix			= "ODMI-",
+diff --git a/drivers/irqchip/irq-mvebu-sei.c b/drivers/irqchip/irq-mvebu-sei.c
+index 065166ab5dbc..ebd4a9014e8d 100644
+--- a/drivers/irqchip/irq-mvebu-sei.c
++++ b/drivers/irqchip/irq-mvebu-sei.c
+@@ -356,6 +356,7 @@ static void mvebu_sei_reset(struct mvebu_sei *sei)
+ static const struct msi_parent_ops sei_msi_parent_ops = {
+ 	.supported_flags	= SEI_MSI_FLAGS_SUPPORTED,
+ 	.required_flags		= SEI_MSI_FLAGS_REQUIRED,
++	.chip_flags		= MSI_CHIP_FLAG_SET_EOI | MSI_CHIP_FLAG_SET_ACK,
+ 	.bus_select_mask	= MATCH_PLATFORM_MSI,
+ 	.bus_select_token	= DOMAIN_BUS_GENERIC_MSI,
+ 	.prefix			= "SEI-",
+diff --git a/include/linux/msi.h b/include/linux/msi.h
+index b10093c4d00e..9abef442c146 100644
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -558,11 +558,21 @@ enum {
+ 	MSI_FLAG_NO_AFFINITY		= (1 << 21),
+ };
  
- 	/* Update irq descriptors with the new vector */
--	pd->chip_data = new_vec;
-+	d->chip_data = new_vec;
- 
--	/* Update effective affinity of parent irq data */
--	irq_data_update_effective_affinity(pd, cpumask_of(new_vec->cpu));
-+	/* Update effective affinity */
-+	irq_data_update_effective_affinity(d, cpumask_of(new_vec->cpu));
- 
- 	/* Move state of the old vector to the new vector */
- 	imsic_vector_move(old_vec, new_vec);
-@@ -135,6 +134,9 @@ static struct irq_chip imsic_irq_base_chip = {
- 	.name			= "IMSIC",
- 	.irq_mask		= imsic_irq_mask,
- 	.irq_unmask		= imsic_irq_unmask,
-+#ifdef CONFIG_SMP
-+	.irq_set_affinity	= imsic_irq_set_affinity,
-+#endif
- 	.irq_retrigger		= imsic_irq_retrigger,
- 	.irq_compose_msi_msg	= imsic_irq_compose_msg,
- 	.flags			= IRQCHIP_SKIP_SET_WAKE |
-@@ -245,7 +247,7 @@ static bool imsic_init_dev_msi_info(struct device *dev,
- 		if (WARN_ON_ONCE(domain != real_parent))
- 			return false;
- #ifdef CONFIG_SMP
--		info->chip->irq_set_affinity = imsic_irq_set_affinity;
-+		info->chip->irq_set_affinity = irq_chip_set_affinity_parent;
- #endif
- 		break;
- 	default:
++/*
++ * Flags for msi_parent_ops::chip_flags
++ */
++enum {
++	MSI_CHIP_FLAG_SET_EOI		= (1 << 0),
++	MSI_CHIP_FLAG_SET_ACK		= (1 << 1),
++};
++
+ /**
+  * struct msi_parent_ops - MSI parent domain callbacks and configuration info
+  *
+  * @supported_flags:	Required: The supported MSI flags of the parent domain
+  * @required_flags:	Optional: The required MSI flags of the parent MSI domain
++ * @chip_flags:		Optional: Select MSI chip callbacks to update with defaults
++ *			in msi_lib_init_dev_msi_info().
+  * @bus_select_token:	Optional: The bus token of the real parent domain for
+  *			irq_domain::select()
+  * @bus_select_mask:	Optional: A mask of supported BUS_DOMAINs for
+@@ -575,6 +585,7 @@ enum {
+ struct msi_parent_ops {
+ 	u32		supported_flags;
+ 	u32		required_flags;
++	u32		chip_flags;
+ 	u32		bus_select_token;
+ 	u32		bus_select_mask;
+ 	const char	*prefix;
 -- 
 2.43.0
 
