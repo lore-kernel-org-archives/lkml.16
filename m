@@ -1,127 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from server-598995.kolorio.com (server-598995.kolorio.com [162.241.152.247])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423AC143723
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 13:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB76143723
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 13:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.241.152.247
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739109246; cv=none; b=PtX/V6udoyo8l3eepYTO3kp6kgEID5yXN7Ae5oEbujVXnGM074BXFVGn2aKDg7YNRk0/L+gP+lnsPcVOKekPuMHB8TBRUtSoufBkpFPzKN8X15VNJgSwN3jLFv36QMCxfZDPtgiAEQy72wChi+bih3rOd4l4/1DG+XshdyJoGIk=
+	t=1739109318; cv=none; b=XtjXR6PjBBUsueoFFrsWEswLdRlnSOEaFaeNGMp3/vcN/ZMpLmCyEz1zCQHbRaMyB+CUXjFXPp6M6yShfN7XeE2bhk2pDxKL9BOYA0Gma47rYpMzDZPxIuPVMXvbbk/HAKjMuCaGkBNJroXk84f7+ARcX8g1bSJKu7HlsgKYnMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739109246; c=relaxed/simple;
-	bh=teKGPj586TuQGXQSHU7KVCjMSBPyuJFyC/BbjoOcrXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AqbN9j+597mGMKgfdKxQYRphFukV1uHKRTb1B3w7GMMluCCLln6BeE3YsKsWSSCxNUPqDtfzMO/ciUW5DmS/nfZeOoAs51Ddhtp/qILYBH52c4VlKg4II9Ht+zR+HLE8KDDzGg+JVMCL3EuewdE5rIcNx0qj83/0tlFG5aj4y8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VyDw41iR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739109318; c=relaxed/simple;
+	bh=gl4+7vNxgV9+JzZtw7EthQ6aGDgi0WVn3wQV/lnKiyo=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=b4KQVdpcLyKq69y29keWQ6LkRFxaf8D2m/nuqrAZ+NIzE9WL9xCp474RZ3AQuDO6bEkjb0chef0N9l2Cag/q2SWjnVbJ9z3siYhfQK5tRrFRviuY22HRh96gk7ke/kbJxUqaZSxULwigD6wiiiLFHuftovqrTTYguMQmJAo/+nI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=truemaisha.co.tz; spf=pass smtp.mailfrom=truemaisha.co.tz; dkim=pass (2048-bit key) header.d=truemaisha.co.tz header.i=@truemaisha.co.tz header.b=rK/lZntR; arc=none smtp.client-ip=162.241.152.247
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=truemaisha.co.tz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=truemaisha.co.tz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VyDw41iR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC288C4CEDD;
-	Sun,  9 Feb 2025 13:54:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739109245;
-	bh=teKGPj586TuQGXQSHU7KVCjMSBPyuJFyC/BbjoOcrXk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VyDw41iRPZAsEm1WHz1XCBtbskTEUkwv9gdoq/3byK/OJ4eRCpkzDRoE4zSqZvUEx
-	 0J2RUx8xBVDLd2N/Jvn9LUfFkHNXubExpix+nyeaGx3IIqGYWbj6VcZ1gyopPDUD6v
-	 ABUmj3tmFVBF4qBPz9yVC3s1NHxX3QvkkdEiYVN3yip7AsPBFRIOPj8vPfDyIlAqV7
-	 o5mj2AB8zmcfRUUny2BQAxW/dOTYNQpOBMvFZPoa3gB6YMN8cWvGZx0OZXDlamJl76
-	 b5qNXpTbb8z506ALw47wMiwu4AfpBmK59WXNIVWOx/nNsCCJ64gSqx8aIxz6KyIr2o
-	 OUDUxeQTWySrg==
-Date: Sun, 9 Feb 2025 15:53:54 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Stephen Eta Zhou <stephen.eta.zhou@outlook.com>
-Cc: "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: =?utf-8?B?5Zue5aSNOiBbUEFUQ0g=?= =?utf-8?Q?=5D?= mm: optimize
- memblock_add_range() for improved performance
-Message-ID: <Z6izcu5M3LRM3GzC@kernel.org>
-References: <BYAPR12MB32059CFEB36A5FC7D859B69FD5F72@BYAPR12MB3205.namprd12.prod.outlook.com>
- <Z6YfqcOx5FACtvae@kernel.org>
- <BYAPR12MB32056738A6225C6B5D61A01AD5F12@BYAPR12MB3205.namprd12.prod.outlook.com>
- <BYAPR12MB3205B550D78130A3858535C0D5F12@BYAPR12MB3205.namprd12.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=truemaisha.co.tz header.i=@truemaisha.co.tz header.b="rK/lZntR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=truemaisha.co.tz; s=default; h=Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Sender:Cc:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=gl4+7vNxgV9+JzZtw7EthQ6aGDgi0WVn3wQV/lnKiyo=; b=rK/lZntRe8wqOEJLazlfLy+faR
+	m9cScj7svYUTEyvd1sKo4VgBp3GAkwoV6WhFWkdMojA6tvo+A5XwsBn1L/5VWt1vKJrXcHkPoVpqQ
+	OwIGwSzI8PFWYVAgnbRVrtzLw26j7pQiIcG1Ua4gdfhu4ugJNz0jn2tJ0gEHy2ZnEa/QGrghf4ocg
+	f83pekPPAjhvsWkG/LN8W1HuLJPiKNk+wFoLaZJdqo7VhXxaBcds1Pu4VyjKSum/0rzCKhVQ2nt1I
+	R/q9lI/mKIQJlJEDwVbiMKCuPS2BDLmgQg9BISVOsSSdW3sKI7g8YhGbGqbS4sMVId7E8doqDau6j
+	cMjlSS+w==;
+Received: from [74.208.124.33] (port=53238 helo=truemaisha.co.tz)
+	by server-598995.kolorio.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <chrispinerick@truemaisha.co.tz>)
+	id 1th7mE-00074V-1f
+	for linux-kernel@vger.kernel.org;
+	Sun, 09 Feb 2025 07:55:14 -0600
+Reply-To: dsong@aa4financialservice.com
+From: David Song <chrispinerick@truemaisha.co.tz>
+To: linux-kernel@vger.kernel.org
+Subject: Re: The business loan- 
+Date: 09 Feb 2025 13:55:15 +0000
+Message-ID: <20250209095302.E971904D56FC78F0@truemaisha.co.tz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BYAPR12MB3205B550D78130A3858535C0D5F12@BYAPR12MB3205.namprd12.prod.outlook.com>
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server-598995.kolorio.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - truemaisha.co.tz
+X-Get-Message-Sender-Via: server-598995.kolorio.com: authenticated_id: chrispinerick@truemaisha.co.tz
+X-Authenticated-Sender: server-598995.kolorio.com: chrispinerick@truemaisha.co.tz
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-Hi Stephen,
+Hello,
 
-Please don't top post on Linux kernel mailing list.
+My name is David Song, at AA4 FS, we are a consultancy and
+brokerage Firm specializing in Growth Financial Loan and joint
+partnership venture. We specialize in investments in all Private
+and public sectors in a broad range of areas within our Financial
+Investment Services.
 
-On Fri, Feb 07, 2025 at 04:03:31PM +0000, Stephen Eta Zhou wrote:
-> Hi Mike,
-> 
-> Given the concerns raised, I would greatly appreciate your guidance on
-> whether you think it's worthwhile for me to continue with this approach.
-> Should I proceed with further refinements and testing, or would you
-> recommend a different direction for optimization? Your input will be
-> invaluable in ensuring this patch meets both performance and stability
-> goals.
+ We are experts in financial and operational management, due
+diligence and capital planning in all markets and industries. Our
+Investors wish to invest in any viable Project presented by your
+Management after reviews on your Business Project Presentation
+Plan.
 
-I doubt any optimization for memblock_add_range() will really improve boot
-time and even produce a measurable speed up.
+ We look forward to your Swift response. We also offer commission
+to consultants and brokers for any partnership referrals.
 
-With all the fragility and potential of breakage, I don't think it's
-worthwhile to attempt optimizations there.
- 
-> Best regards,  
-> Stephen
-> ________________________________________
-> 发件人: Mike Rapoport <rppt@kernel.org>
-> 发送时间: 2025年2月7日 22:58
-> 收件人: Stephen Eta Zhou <stephen.eta.zhou@outlook.com>
-> 抄送: akpm@linux-foundation.org <akpm@linux-foundation.org>; linux-mm@kvack.org <linux-mm@kvack.org>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>
-> 主题: Re: [PATCH] mm: optimize memblock_add_range() for improved performance
->  
-> Hi Stephen,
-> 
-> On Wed, Feb 05, 2025 at 05:55:50AM +0000, Stephen Eta Zhou wrote:
-> > Hi Mike Rapoport、Andrew Morton
-> 
-> > I have recently been researching the mm subsystem of the Linux kernel,
-> > and I came across the memblock_add_range function, which piqued my
-> > interest. I found the implementation approach quite interesting, so I
-> > analyzed it and identified some areas for optimization. Starting with
-> > this part of the code:
-> >
-> > if (type->cnt * 2 + 1 <= type->max)
-> >       insert = true;
-> > The idea here is good, but it has a certain flaw. The condition is rather
-> > restrictive, and it cannot be executed initially. Moreover, it is only
-> > valid when the remaining space is (2/1) + 1. If there is enough memory,
-> > but it does not satisfy (2/1) + 1, the insertion operation still needs to
-> > be performed twice.
-> 
-> The code in memblock_add_range() is very fragile, and many attempts to
-> remove the second pass that looked correct at the first glance failed for
-> some corner case.
-> 
-> Unfortunately, it's impossible to capture all possible memory
-> configurations and reservations in the memblock test suite, so even it it
-> passes, there is a chance the kernel will fail to boot on an actual HW.
->  
-> > - Before the patch:
-> >   - Average: 1.22%
-> >   - Max: 1.63%, Min: 0.93%
-> >
-> > - After the patch:
-> >   - Average: 0.69%
-> >   - Max: 0.94%, Min: 0.50%
-> >
-> 
-> These numbers do not represent what's actually interesting: the boot time
-> speedup.
-> 
-> --
-> Sincerely yours,
-> Mike.
+ Regards,
+David Song
+Senior Broker
 
--- 
-Sincerely yours,
-Mike.
+AA4 Financial Services
+13 Wonersh Way, Cheam,
+Sutton, Surrey, SM2 7LX
+Email: dsong@aa4financialservice.com
+
