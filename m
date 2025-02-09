@@ -1,160 +1,184 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9326018AE2;
-	Sun,  9 Feb 2025 03:47:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A3A3987D;
+	Sun,  9 Feb 2025 03:47:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739072829; cv=none; b=VarxsSJHLMGakDNtPBEyBOqg23kcOSwOQGWEMEZ5zJAV0AUXa5MgeUIokamV8L1yHVjyeaCjYe2AGyfjtXzdaITJLEO6MyoAS7U6F3UnQ1g+YwUDdfNspurAfJQB8/apOl77p2+G2eFBAbF1RdtXLDLd9q/B1j7x8jKRBcdclq4=
+	t=1739072838; cv=none; b=DQrsuy23wS+WaBQ0O1UCdJHEwUEScfCV9qnpbGDvjg8REOkdcpXhn+HXov/cUprrviPW04Rwp/uu2FyKX8WIeR6ls91dQs8/oh+rDKFq/kYcWTAWHV1UWj10TnxkppFKWLEm0glzlzQGVPNqKdKjG0K+qSahrFrPbp2cbAbj+4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739072829; c=relaxed/simple;
-	bh=pAbTcBcqnkEDr++cvXShfYLcz9ZAMkFCjXF1DdPj4tc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QCXXv91CYbcSmiyVtHM19TVz7CRf4Q1w1X5hCC+fFB1FHqfrxVXM7/ePaSu6OtdnGf2ChUn6bYNk+jdykyq9tE9jPaF2E9ZpY4Fh0P+ulj5HgEgk0R2FVXAA/hzWIpm2eBkOT72/lVC01BqpgZ/8hdSqHOlZABQso5148MmRF20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QSARVwGe; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739072838; c=relaxed/simple;
+	bh=tgaDk8PqLer5ydmlgbBoZrJMnvy8wo81erw8rlYQ7Hk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BoN3q/xqTYB1jeFF80RMA3A9mHoXnaXkB317B3myni+VbW5lKFZrBffgHJ5uZf6ZVGRDXb6sqnLoS/Y6gRgDbrl/RSJ0w8VJgWyNB6UM9nv1yL1ZjiosGr0OyK+IARpNN/o6Wo4dzMF6qcg2di3WM3MLglqJ7gNPfJ149274Ph4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=dgRAAmx5; arc=none smtp.client-ip=166.84.1.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSARVwGe"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38633b5dbcfso3297294f8f.2;
-        Sat, 08 Feb 2025 19:47:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739072826; x=1739677626; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G9QGCEe4s4f07RDG6bDFRWUa5WupjjYHN4Gq0S0QTJU=;
-        b=QSARVwGetdR8idy9Y+0bL6sJtw3uRr/61pQ/n4aPtoNQrQQQpGLuHMdxAoqI9/x9Yu
-         6+r1SP3xoYXLnO/itGL7YZhbRV0hSiCc2X0vlaMybKkalfqh+/hXqfomMHiCPMPOc/9h
-         XbXJUfsr+zXDqjxb3tjSrrCFkazMaWUtS31GSGrgRzdKLR32cTBJ8ADbshZAaAUVD4eM
-         rXIruBmVpYy89gik4B/P+InXX6W8fighzE8Kk5cGUYSbe9dUlXpy1qFd+c0uJ0hJBDQu
-         XTmLfy1Pvck6zxkSmoKhJkEWqBad3znMpz6t4s0qN/96ApqEeVBuqFvAJcOchAhkS6gD
-         MYlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739072826; x=1739677626;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G9QGCEe4s4f07RDG6bDFRWUa5WupjjYHN4Gq0S0QTJU=;
-        b=giVnelTHvOrF1SCZRfUb57Nyqdi96f/GScDklFzGVoIzwBi5zcDjVx8u5mFeBjUDL4
-         ONUb1BC7NzQeXnyjWgcp7S5wSVw1pVxvYPsSUTH9qzmIH6z3ZRzVM4unWQX7XzMqnPSe
-         BHXOMbOlgq7rvJMFOKjuxNIe2RF4iwhEa1o0w9Z/2PLjDZXAyPeGjcza0eqCe5zEqQG3
-         1y8kotUjEcwPCmwSKltM7hVJy1iXYtj5lQvzhWrTZRURAY055RjJR+dAIs5fb16KRbrM
-         P7Sv7zB3GHXkmCtuXwnJiCXFdCjvFlJnT0MLCF2rLZAOAnmtC+QwulgiPiTs65QJUXP/
-         NeHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVoBW+96Lq4wAejMZOuISHMNP3rb27bCp7WEjHn2mypyoAXbjKzn0jOHi/JoJgOEl2lobYCyEw+B9IieQ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiI7KwpPUQcmYldctznlJ1pk3LkP1BElBoEnJlMUA1Gj03M0E7
-	ylrPAfPDF5Zh/di5GLEw1PT1eHCeGGKrvrKKZG65iIUuHm7Sfy8/6lbNbKI6tFbA6mk8tTm9qjx
-	P1W795dnpWzGg7xcG92C43thx2oY=
-X-Gm-Gg: ASbGnctPO92wblzgzJzNeYykTXAjh1jAmMjTVA6brEWHEMQzOUmIA7vPn0y+bKxgDY3
-	ekj4mX7PZ00qQ7ZBCOzDS3EmcUVpqfdN5QO2ADoh5dlN68fKg4ZdOGO0OpAzCxP1IhbBKYL9enw
-	RupsIHfbnbX2vCVMTLEzuIGUROFY4A
-X-Google-Smtp-Source: AGHT+IF8qpP7A+++uJooWGB2HYk2iXUbQzNwWZlU1Ir/ZBmmG/NjHXNgAp0R6jE703cBXGA5ZDTGWW24Bz9vvqWovbY=
-X-Received: by 2002:a05:6000:2c2:b0:385:ee3f:5cbf with SMTP id
- ffacd0b85a97d-38dc8ddc464mr7061834f8f.20.1739072825622; Sat, 08 Feb 2025
- 19:47:05 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="dgRAAmx5"
+Received: from [192.168.126.189] (ip72-219-82-239.oc.oc.cox.net [72.219.82.239])
+	by mailbackend.panix.com (Postfix) with ESMTPSA id 4YrDDH4LKXz4bLN;
+	Sat,  8 Feb 2025 22:47:11 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
+	t=1739072833; bh=tgaDk8PqLer5ydmlgbBoZrJMnvy8wo81erw8rlYQ7Hk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=dgRAAmx59CdG6YYnCmDUPPNmLxORUTXoEBWWW48uO5K2tAAjscEuILn+hBxb3nhtp
+	 yc7rsLjwV5eEl63dBJ8HXX+zzGYuXs2U1/cBKIgAUN/XO4cfAdqrr9+/fseejH46vN
+	 28/Cm8oyCr7xq4/Sku/CXaBbQvLeTsrgEuYJUgTc=
+Message-ID: <b2abd254-d11f-4ef7-8664-b9e5a1409abc@panix.com>
+Date: Sat, 8 Feb 2025 19:47:10 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1738888641.git.yepeilin@google.com> <d03d8c3305e311c6cb29924119b5eecae8370bbc.1738888641.git.yepeilin@google.com>
- <CAADnVQ+L0h8qXfYkC3+ORyQkXFJ2MgO8FDHr_Ha0QMAtS_ujag@mail.gmail.com> <Z6gRHDLfA7cjnlSn@google.com>
-In-Reply-To: <Z6gRHDLfA7cjnlSn@google.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Sat, 8 Feb 2025 19:46:54 -0800
-X-Gm-Features: AWEUYZmrws4n9Tklxz5TlDMfaZkKg_EoOGMe8Vohc-FDZY-WZlDb1JfHtCemc_I
-Message-ID: <CAADnVQLkHA9LGv99k2TZOJEGUU=dw=q6nVurJ=aoh0v6cFS6zQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 4/9] bpf: Introduce load-acquire and
- store-release instructions
-To: Peilin Ye <yepeilin@google.com>
-Cc: bpf <bpf@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, bpf@ietf.org, 
-	Xu Kuohai <xukuohai@huaweicloud.com>, Eduard Zingerman <eddyz87@gmail.com>, 
-	David Vernet <void@manifault.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
-	Ilya Leoshkevich <iii@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Quentin Monnet <qmo@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Ihor Solodrai <ihor.solodrai@linux.dev>, Yingchi Long <longyingchi24s@ict.ac.cn>, 
-	Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>, Neel Natu <neelnatu@google.com>, 
-	Benjamin Segall <bsegall@google.com>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac)
+To: ilpo.jarvinen@linux.intel.com
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jian-Hong Pan <jhp@endlessos.org>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ =?UTF-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>
+References: <04091f53-3c94-4533-ab48-e9296e6e2841@panix.com>
+Content-Language: en-US
+From: Kenneth Crudup <kenny@panix.com>
+In-Reply-To: <04091f53-3c94-4533-ab48-e9296e6e2841@panix.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Feb 8, 2025 at 6:21=E2=80=AFPM Peilin Ye <yepeilin@google.com> wrot=
-e:
->
-> Hi Alexei,
->
-> On Sat, Feb 08, 2025 at 01:30:46PM -0800, Alexei Starovoitov wrote:
-> > > Introduce BPF instructions with load-acquire and store-release
-> > > semantics, as discussed in [1].  The following new flags are defined:
-> > >
-> > >   BPF_ATOMIC_LOAD         0x10
-> > >   BPF_ATOMIC_STORE        0x20
-> > >   BPF_ATOMIC_TYPE(imm)    ((imm) & 0xf0)
-> > >
-> > >   BPF_RELAXED        0x0
-> > >   BPF_ACQUIRE        0x1
-> > >   BPF_RELEASE        0x2
-> > >   BPF_ACQ_REL        0x3
-> > >   BPF_SEQ_CST        0x4
-> >
-> > I still don't like this.
-> >
-> > Earlier you said:
-> >
-> > > If yes, I think we either:
-> > >
-> > >  (a) add more flags to imm<4-7>: maybe LOAD_SEQ_CST (0x3) and
-> > >      STORE_SEQ_CST (0x6); need to skip OR (0x4) and AND (0x5) used by
-> > >      RMW atomics
-> > >  (b) specify memorder in imm<0-3>
-> > >
-> > > I chose (b) for fewer "What would be a good numerical value so that R=
-MW
-> > > atomics won't need to use it in imm<4-7>?" questions to answer.
-> > >
-> > > If we're having dedicated fields for memorder, I think it's better to
-> > > define all possible values once and for all, just so that e.g. 0x2 wi=
-ll
-> > > always mean RELEASE in a memorder field.  Initially I defined all six=
- of
-> > > them [2], then Yonghong suggested dropping CONSUME [3].
-> >
-> > I don't think we should be defining "all possible values",
-> > since these are the values that llvm and C model supports,
-> > but do we have any plans to support anything bug ld_acq/st_rel ?
-> > I haven't heard anything.
-> > What even the meaning of BPF_ATOMIC_LOAD | BPF_ACQ_REL ?
-> >
-> > What does the verifier suppose to do? reject for now? and then what?
-> > Map to what insn?
-> >
-> > These values might imply that bpf infra is supposed to map all the valu=
-es
-> > to cpu instructions, but that's not what we're doing here.
-> > We're only dealing with two specific instructions.
-> > We're not defining a memory model for all future new instructions.
->
-> Got it!  In v3, I'll change it back to:
->
->   #define BPF_LOAD_ACQ   0x10
->   #define BPF_STORE_REL  0x20
+Eh, NVM.
 
-why not 1 and 2 ?
-All other bits are reserved and the verifier will make sure they're zero,
-so when/if we need to extend it then it wouldn't matter whether
-lower 4 bits are reserved or other bits.
-Say, we decide to support cmpwait_relaxed as a new insn.
-It can take the value 3 and arm64 JIT will map it to ldxr+wfe+...
+Just had another resume crash with it reverted:
 
-Then with this new load_acq and cmpwait_relaxed we can efficiently
-implement both smp_cond_load_relaxed and smp_cond_load_acquire.
+----
+<6>[69848.656985][T25549] CPU19 is up
+<6>[69848.666220][T25549] ACPI: PM: Waking up from system sleep state S4
+<6>[69848.693976][T25549] ACPI: EC: interrupt unblocked
+<4>[69848.704735][T25549] thunderbolt 0000:00:0d.2: 0:5: path does not 
+end on a DP adapter, cleaning up
+<1>[69848.706322][T25549] BUG: kernel NULL pointer dereference, address: 
+0000000000000384
+<1>[69848.706324][T25549] #PF: supervisor read access in kernel mode
+<1>[69848.706325][T25549] #PF: error_code(0x0000) - not-present page
+<6>[69848.706326][T25549] PGD 0 P4D 0
+<4>[69848.706327][T25549] Oops: Oops: 0000 [#1] PREEMPT SMP
+<4>[69848.706330][T25549] CPU: 1 UID: 0 PID: 25549 Comm: systemd-sleep 
+Tainted: G S   U     O       6.14.0-rc1-kenny+ #4
+<4>[69848.706332][T25549] Tainted: [S]=CPU_OUT_OF_SPEC, [U]=USER, 
+[O]=OOT_MODULE
+<4>[69848.706332][T25549] Hardware name: Dell Inc. XPS 9320/0KNXGD, BIOS 
+2.18.1 12/24/2024
+<4>[69848.706333][T25549] RIP: 0010:__tb_path_deactivate_hop+0x25/0x220
+<4>[69848.706337][T25549] Code: 5d 5d c3 c3 90 55 48 89 e5 41 57 41 56 
+41 55 41 54 53 48 83 ec 18 89 55 c4 65 48 8b 04 25 28 00 00 00 48 89 45 
+d0 48 8b 47 20 <80> b8 84 03 00 00 00 0f 85 64 01 00 00 8b 90 04 03 00 
+00 44 8d 2c
+<4>[69848.706338][T25549] RSP: 0000:ffffa2d40a9fb7f8 EFLAGS: 00010292
+<4>[69848.706339][T25549] RAX: 0000000000000000 RBX: 0000000000000001 
+RCX: 0000000000000002
+<4>[69848.706340][T25549] RDX: 000000000000000e RSI: 00000000a863e150 
+RDI: ffffa2d400803b00
+<4>[69848.706340][T25549] RBP: ffffa2d40a9fb838 R08: 0000000000000000 
+R09: ffffffffa9a55760
+<4>[69848.706341][T25549] R10: 0000000000000000 R11: 0000000000000000 
+R12: ffff8d1fc6bce7c0
+<4>[69848.706341][T25549] R13: 0000000000000028 R14: ffff8d1fc1861000 
+R15: ffff8d1fc18513e8
+<4>[69848.706342][T25549] FS:  00007fb5b3631940(0000) 
+GS:ffff8d272f440000(0000) knlGS:0000000000000000
+<4>[69848.706343][T25549] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[69848.706343][T25549] CR2: 0000000000000384 CR3: 00000003cea00003 
+CR4: 0000000000770ef0
+<4>[69848.706344][T25549] PKRU: 55555554
+<4>[69848.706344][T25549] Call Trace:
+<4>[69848.706345][T25549]  <TASK>
+<4>[69848.706348][T25549]  ? show_regs.part.0+0x1d/0x20
+<4>[69848.706351][T25549]  ? __die+0x52/0x91
+<4>[69848.706352][T25549]  ? page_fault_oops+0x9a/0x220
+<4>[69848.706354][T25549]  ? exc_page_fault+0x2fc/0x5c0
+<4>[69848.706357][T25549]  ? asm_exc_page_fault+0x27/0x30
+<4>[69848.706359][T25549]  ? __tb_path_deactivate_hop+0x25/0x220
+<4>[69848.706360][T25549]  __tb_path_deactivate_hops+0x37/0x60
+<4>[69848.706361][T25549]  tb_path_deactivate+0x1e/0x110
+<4>[69848.706362][T25549]  tb_tunnel_deactivate+0x65/0x120
+<4>[69848.706363][T25549]  tb_tunnel_discover_dp+0x373/0x670
+<4>[69848.706364][T25549]  tb_switch_discover_tunnels+0x71/0x1e0
+<4>[69848.706366][T25549]  tb_resume_noirq+0x91/0x2a0
+<4>[69848.706368][T25549]  tb_domain_resume_noirq+0x3f/0x60
+<4>[69848.706369][T25549]  nhi_resume_noirq+0x34/0x90
+<4>[69848.706370][T25549]  pci_pm_restore_noirq+0x71/0xc0
+<4>[69848.706372][T25549]  ? new_id_store+0x1b0/0x1b0
+<4>[69848.706373][T25549]  dpm_run_callback+0x40/0xb0
+<4>[69848.706375][T25549]  device_resume_noirq+0xc4/0x2a0
+<4>[69848.706376][T25549]  dpm_noirq_resume_devices+0x11b/0x150
+<4>[69848.706376][T25549]  dpm_resume_start+0xc/0x30
+<4>[69848.706377][T25549]  hibernation_snapshot+0x26d/0x430
+<4>[69848.706379][T25549]  hibernate.cold+0x9c/0x333
+<4>[69848.706380][T25549]  state_store+0xbe/0xc0
+<4>[69848.706381][T25549]  kobj_attr_store+0xf/0x20
+<4>[69848.706383][T25549]  sysfs_kf_write+0x34/0x40
+<4>[69848.706385][T25549]  kernfs_fop_write_iter+0x134/0x1e0
+<4>[69848.706386][T25549]  vfs_write+0x244/0x410
+<4>[69848.706388][T25549]  ksys_write+0x63/0xd0
+<4>[69848.706389][T25549]  __x64_sys_write+0x14/0x20
+<4>[69848.706390][T25549]  x64_sys_call+0x9eb/0xa00
+<4>[69848.706392][T25549]  do_syscall_64+0x63/0xf0
+<4>[69848.706394][T25549]  ? do_filp_open+0xbe/0x170
+<4>[69848.706395][T25549]  ? do_wp_page+0x7f3/0xe80
+<4>[69848.706398][T25549]  ? ___pte_offset_map+0x17/0xe0
+<4>[69848.706399][T25549]  ? __handle_mm_fault+0xb13/0x1160
+<4>[69848.706400][T25549]  ? do_syscall_64+0x6f/0xf0
+<4>[69848.706401][T25549]  ? strncpy_from_user+0x25/0xf0
+<4>[69848.706402][T25549]  ? __count_memcg_events+0x49/0xe0
+<4>[69848.706403][T25549]  ? handle_mm_fault+0x181/0x2a0
+<4>[69848.706404][T25549]  ? irqentry_exit+0x4a/0x60
+<4>[69848.706405][T25549]  ? exc_page_fault+0x196/0x5c0
+<4>[69848.706406][T25549]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
+<4>[69848.706407][T25549] RIP: 0033:0x7fb5b3526274
+<4>[69848.706411][T25549] Code: Unable to access opcode bytes at 
+0x7fb5b352624a.
+<4>[69848.706411][T25549] RSP: 002b:00007ffe667063f8 EFLAGS: 00000202 
+ORIG_RAX: 0000000000000001
+<4>[69848.706412][T25549] RAX: ffffffffffffffda RBX: 0000000000000005 
+RCX: 00007fb5b3526274
+<4>[69848.706413][T25549] RDX: 0000000000000005 RSI: 000055ae2380a030 
+RDI: 0000000000000007
+<4>[69848.706413][T25549] RBP: 00007ffe66706420 R08: 0000000000000000 
+R09: 0000000000000001
+<4>[69848.706414][T25549] R10: 0000000000000003 R11: 0000000000000202 
+R12: 0000000000000005
+<4>[69848.706414][T25549] R13: 000055ae2380a030 R14: 000055ae237f62a0 
+R15: 00007fb5b360fea0
+<4>[69848.706415][T25549]  </TASK>
+<4>[69848.706415][T25549] Modules linked in: vmw_vmci snd_soc_sof_sdw 
+snd_soc_sdw_utils snd_sof_probes iwlmvm mei_hdcp mei_pxp mac80211 
+snd_sof_pci_intel_tgl snd_sof_pci_intel_cnl snd_sof_intel_hda_generic 
+snd_sof_pci soundwire_intel soundwire_generic_allocation 
+soundwire_cadence snd_sof_intel_hda_common snd_soc_hdac_hda iwlwifi 
+btusb snd_sof_intel_hda_mlink btintel snd_sof_intel_hda cfg80211 mei_me 
+ov01a10 xe drm_ttm_helper gpu_sched drm_suballoc_helper drm_gpuvm 
+drm_exec i915 drm_buddy intel_gtt drm_display_helper cec ttm
+<4>[69848.706433][T25549] CR2: 0000000000000384
+<4>[69848.706435][T25549] ---[ end trace 0000000000000000 ]
+----
+
+On 2/8/25 12:56, Kenneth Crudup wrote:
+> 
+> Guys, I don't think this commit is right; I've had 2 out of three resume 
+> failures since this change went into Linus' master. I've attached a 
+> pstore dump of the latest crash, and while it appears to be coming from 
+> the Intel XE driver, 95% of my (s0ix) resumes worked previously[1] 
+> before this change.
+> 
+> LMK if you need more information.
+> 
+> -Kenny
+> 
+> [1] - unless I forget to detach my NVMe USB4 external drive before 
+> suspending, which is a breakage that appears to have gone in sometime 
+> around the 6.10 series, but I haven't been able to bisect it
+
+-- 
+Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
+County CA
+
