@@ -1,120 +1,193 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5918214A619
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 10:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.9])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AD6814A619;
+	Sun,  9 Feb 2025 10:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739098248; cv=none; b=PUYFgfsTQ0XFF9PM4IVEMLivgtFYmpzIgEHkw6LGwgcfS1doithKlfepMtRuhsdkI560neflKD6lGir7gQgEF8yyVD9ik1frZrwL9S+2jMLbAHirOd30NAX5KLyPfwoNJl/QXuL9RLtPth4FyPuLM1TTMz+SlxWfa6d9K2cD/xs=
+	t=1739098293; cv=none; b=Yz9zSaLeQ3CBich/8DPmIrvffmqnq+AT41o2eVTFggHyHKG+wJBbxXnEGo6ds/YprhMWCI+NdohrkW2XArkTJFba08dLowpzxkvV/GRS/bEHxWKEu6m6v5t9VIunyCxjp+Gp7bFRe4/uDO1JW5SUwRr44K0hjFsgT+C+p0kh8DA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739098248; c=relaxed/simple;
-	bh=r2fNX8jXTrmClDffUPWS9Nyrk9owTWmYmVsTLUmM6cY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r8pWRCnxzOfR8KFZPFMSbW6m7sZDzEmg57p/KFYYQNj49SVCEeg/lrWD34mPjtYTGbe2qQgYla2wLkF1BtmBXN3uf1Bt2YXbqt/AlgwUa9EuAVV8INooGWncyAyqfpptNDHqh2sJ+yEgMnsV4ncJY7NEBpOE5WAg69ZcL01xwvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ab7a342ef4eso201558366b.0
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 02:50:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739098243; x=1739703043;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MH62dPG8Qx2NOdEQyz+qopTma+UfkmuG4FC6VlOsB4M=;
-        b=jc8yh5udsBGPxXgQguZ/5PJjB9DEJKlJdhxqr+aCEumAigoWEyk2ycjv2wBUg+3M6O
-         4IpmsIRgxZGX9wEIIzKyNoGaa6kPXOL4p6FxPPK8Jujq1drfueJd5kZfxnJir7wGmL5R
-         GNE93yaW0dHd6XQKKRctsshRWsIL6DRJ7xwKrdFbS9yodImySHrOdiizgsL1VhVjslVe
-         o9Q/3B936qmCXKJwiZoalCyjk3FNcxk6oQbNa1EEm8AshUfkuYx2ECf6JmCAxDes/ulI
-         zHvj873MPGsTocfhc6f/huhKSatGdjwXiIN7Mc42HLpkRgYAQkF8eC85CqKtWK4ZI7lh
-         kimg==
-X-Forwarded-Encrypted: i=1; AJvYcCXboRJ3N/812O44TjxPTQuR8IMmDrYHakh+SQYG3tWoYciD1GEhYXLCIpGrGO54s8gpeEhK5sEkygOTuiE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+bA3akhE2iSzhe4HvrcfV4w9RrCFttl7Vo9IvMSVcwh275IMy
-	dcRrn49FbhA1iTY55fdb3q18kz490T07ch89ROrw0TDfh512mguiJYzf9wo3vK8=
-X-Gm-Gg: ASbGncv/W/nUVO/cAM/jeSlV2EXZeFoqQUp8vaSIpjmQ577Z3hVxGHPR29xNdsWG5j/
-	Rq14cUuFY5+AaJUAd9e0wNw0+tMvaD1CBk+/K2m/hsB26e0+ByvZsUkvZyPNQNc9JlWjGKrXzUV
-	6fR8LRv367cE4USahdl/YUWFrREeDkaHQefuHmg6RRVRuZzBPAt0aPKETQD8On2QVa66DSGdaJF
-	zzD7YfT7OvgqrKRCHUummnX1A/KhM4S7ngSVmmPJxPq2Qwe72gc/9I63SkqBDCjVlD3gJ3Q55ul
-	YoJE/0ftIky2ClxxNoPX7BQT1bky70bHoW3KXOZ4Pr7shA==
-X-Google-Smtp-Source: AGHT+IFupH2pW4piin54V2Toxvk3OaS4pTh707rNG6p1KxhZe2o6KCYMhORyxHL00rdvV6pJniYfzg==
-X-Received: by 2002:a17:907:948a:b0:aac:29a:2817 with SMTP id a640c23a62f3a-ab789b22c1dmr905985666b.26.1739098243133;
-        Sun, 09 Feb 2025 02:50:43 -0800 (PST)
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7b4aba036sm110116866b.45.2025.02.09.02.50.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Feb 2025 02:50:42 -0800 (PST)
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5de51a735acso3456468a12.0
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 02:50:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW4jR+lzKgGsX/DWEMLvJftpAs6FwxSoFx0gz2wvUZA5bmidKKIFcbQyXgq2D1lIAR2flek/oV4i63UPLQ=@vger.kernel.org
-X-Received: by 2002:a05:6402:a01c:b0:5dc:72e1:63ee with SMTP id
- 4fb4d7f45d1cf-5de44feb981mr12484432a12.6.1739098242289; Sun, 09 Feb 2025
- 02:50:42 -0800 (PST)
+	s=arc-20240116; t=1739098293; c=relaxed/simple;
+	bh=sHaB9f2fr1jzeJrGdv574DKDrbs9J4UBBMJBCFOdRGY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fAxqdb5tCYjqfe8M4vjiUn2A5mY21dhmRnUMSu6l5uXeWi++mGWaUkdGF/zSlXiAZzOgzOjMYr/wVPAjtnqAmbqmOhKQUIBwpIQOyvgcfw01vkJ911KyrMQUZlXFAzSzpPItcEyPqTNsNWt2KpAP1LcQxE725zyj/I3RD6L0NKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=FYQ6biCv; arc=none smtp.client-ip=117.135.210.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="FYQ6biCv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=akvxBzNGg7jDeoykg2ST3OpylLpsQxNNSX0ReAXujes=;
+	b=FYQ6biCvxdySKjzXgIZwyQsBaY28b+vOe5YL3TVg7Ow11vsPtg3ZmlcMV3lk5c
+	ta8JHicIVelQzwbDMHBRl+VA30KSUxEM6atk9FqIT6TLKxO+P+pI+DBtODh5tyWP
+	q6ufXdqNDP7pPaMUDErKQfBJbE5ZxJuM2ON/PCfSjezuU=
+Received: from [172.19.20.199] (unknown [])
+	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wDH_3griKhnXq5iAw--.62977S2;
+	Sun, 09 Feb 2025 18:49:16 +0800 (CST)
+Message-ID: <20a21d17-77d8-4120-8643-c575304c39f2@126.com>
+Date: Sun, 9 Feb 2025 18:49:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250208-maint-soc-apple-v1-1-a7f7337baec0@jannau.net>
-In-Reply-To: <20250208-maint-soc-apple-v1-1-a7f7337baec0@jannau.net>
-From: Neal Gompa <neal@gompa.dev>
-Date: Sun, 9 Feb 2025 05:50:05 -0500
-X-Gmail-Original-Message-ID: <CAEg-Je9jsvunbpVm9GsQ_wpFUgKyH247AZDmV+p6_=1ZkGvFLQ@mail.gmail.com>
-X-Gm-Features: AWEUYZkzBEpN98q4APsDMBtXemAu5dO3ythzUVqUMjRkDuNKl2rdcSvtKwaJNsM
-Message-ID: <CAEg-Je9jsvunbpVm9GsQ_wpFUgKyH247AZDmV+p6_=1ZkGvFLQ@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: arm: apple: Add myself as maintainer
-To: Janne Grunau <j@jannau.net>
-Cc: Arnd Bergmann <arnd@arndb.de>, Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
-	soc@lists.linux.dev, asahi@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Feb 8, 2025 at 4:22=E2=80=AFAM Janne Grunau <j@jannau.net> wrote:
->
-> Sven and I have agreed to share the maintainership for the ARM/APPLE
-> platform after Marcan's step down. I'm handling the downstream Asahi
-> Linux tree since April 2024 and worked on or wrote several drivers for
-> the platform.
->
-> Signed-off-by: Janne Grunau <j@jannau.net>
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f2594c2300f9b054a6d57ce069120df0bb451d88..9987cbc4d14b2d2be43f25968=
-8c7791ecfd10423 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2210,6 +2210,7 @@ F:        sound/soc/codecs/ssm3515.c
->
->  ARM/APPLE MACHINE SUPPORT
->  M:     Sven Peter <sven@svenpeter.dev>
-> +M:     Janne Grunau <j@jannau.net>
->  R:     Alyssa Rosenzweig <alyssa@rosenzweig.io>
->  L:     asahi@lists.linux.dev
->  L:     linux-arm-kernel@lists.infradead.org (moderated for non-subscribe=
-rs)
->
-> ---
-> base-commit: 7635a78a95dc3bff39e9c49b34108f81a9bb62db
-> change-id: 20250208-maint-soc-apple-8d2498e75509
->
-> Best regards,
-> --
-> Janne Grunau <j@jannau.net>
->
->
-
-I've been engaging with Janne regularly for the past year and a half
-as part of the Fedora Asahi Remix kernel work with good success, so
-I'm happy to see this for the upstream mainline tree.
-
-Acked-by: Neal Gompa <neal@gompa.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/cma: add an API to enable/disable concurrent memory
+ allocation for the CMA
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, david@redhat.com,
+ baolin.wang@linux.alibaba.com, aisheng.dong@nxp.com, liuzixing@hygon.cn
+References: <1737717687-16744-1-git-send-email-yangge1116@126.com>
+ <CAGsJ_4y2zjCzRUgxkx2GpspFBD9Yon=R3SLaGezk9drQz+ikrQ@mail.gmail.com>
+ <28edc5df-eed5-45b8-ab6d-76e63ef635a9@126.com>
+ <CAGsJ_4yC=950MCeLDc-8inT52zH6GSEGBBfk+A0dwWEDE5_CMg@mail.gmail.com>
+From: Ge Yang <yangge1116@126.com>
+In-Reply-To: <CAGsJ_4yC=950MCeLDc-8inT52zH6GSEGBBfk+A0dwWEDE5_CMg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDH_3griKhnXq5iAw--.62977S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3GFyftF4kJw1rJrykWrW5Awb_yoW7Gw4xpa
+	y8G3WYk3yrJrnrA3s2qw4093ZIq397GF4UWry7K3s7Zr98tFnFgr1UKw15urykArWkWF1I
+	vr4jq3ya9F15Z37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jbHUDUUUUU=
+X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiOh7uG2eoaOjRcAAAs-
 
 
---=20
-=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
-=BC=81/ Always, there's only one truth!
+
+在 2025/2/9 5:34, Barry Song 写道:
+> On Sat, Feb 8, 2025 at 9:50 PM Ge Yang <yangge1116@126.com> wrote:
+>>
+>>
+>>
+>> 在 2025/1/28 17:58, Barry Song 写道:
+>>> On Sat, Jan 25, 2025 at 12:21 AM <yangge1116@126.com> wrote:
+>>>>
+>>>> From: yangge <yangge1116@126.com>
+>>>>
+>>>> Commit 60a60e32cf91 ("Revert "mm/cma.c: remove redundant cma_mutex lock"")
+>>>> simply reverts to the original method of using the cma_mutex to ensure
+>>>> that alloc_contig_range() runs sequentially. This change was made to avoid
+>>>> concurrency allocation failures. However, it can negatively impact
+>>>> performance when concurrent allocation of CMA memory is required.
+>>>
+>>> Do we have some data?
+>> Yes, I will add it in the next version, thanks.
+>>>
+>>>>
+>>>> To address this issue, we could introduce an API for concurrency settings,
+>>>> allowing users to decide whether their CMA can perform concurrent memory
+>>>> allocations or not.
+>>>
+>>> Who is the intended user of cma_set_concurrency?
+>> We have some drivers that use cma_set_concurrency(), but they have not
+>> yet been merged into the mainline. The cma_alloc_mem() function in the
+>> mainline also supports concurrent allocation of CMA memory. By applying
+>> this patch, we can also achieve significant performance improvements in
+>> certain scenarios. I will provide performance data in the next version.
+>> I also feel it is somewhat
+>>> unsafe since cma->concurr_alloc is not protected by any locks.
+>> Ok, thanks.
+>>>
+>>> Will a user setting cma->concurr_alloc = 1 encounter the original issue that
+>>> commit 60a60e32cf91 was attempting to fix?
+>>>
+>> Yes, if a user encounters the issue described in commit 60a60e32cf91,
+>> they will not be able to set cma->concurr_alloc to 1.
+> 
+> A user who hasn't encountered a problem yet doesn't mean they won't
+> encounter it; it most likely just means the testing time hasn't been long
+> enough.
+> 
+> Is it possible to implement a per-CMA lock or range lock that simultaneously
+> improves performance and prevents the original issue that commit
+> 60a60e32cf91 aimed to fix?
+> 
+Using per-CMA locks can improve performance and prevent the original 
+issue. I am currently preparing the patch. Thanks.
+> I strongly believe that cma->concurr_alloc is not the right approach. Let's
+> not waste our time on this kind of hack or workaround.  Instead, we should
+> find a proper fix that remains transparent to users.
+> 
+>>>>
+>>>> Fixes: 60a60e32cf91 ("Revert "mm/cma.c: remove redundant cma_mutex lock"")
+>>>> Signed-off-by: yangge <yangge1116@126.com>
+>>>> Cc: <stable@vger.kernel.org>
+>>>> ---
+>>>>    include/linux/cma.h |  2 ++
+>>>>    mm/cma.c            | 22 ++++++++++++++++++++--
+>>>>    mm/cma.h            |  1 +
+>>>>    3 files changed, 23 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/include/linux/cma.h b/include/linux/cma.h
+>>>> index d15b64f..2384624 100644
+>>>> --- a/include/linux/cma.h
+>>>> +++ b/include/linux/cma.h
+>>>> @@ -53,6 +53,8 @@ extern int cma_for_each_area(int (*it)(struct cma *cma, void *data), void *data)
+>>>>
+>>>>    extern void cma_reserve_pages_on_error(struct cma *cma);
+>>>>
+>>>> +extern bool cma_set_concurrency(struct cma *cma, bool concurrency);
+>>>> +
+>>>>    #ifdef CONFIG_CMA
+>>>>    struct folio *cma_alloc_folio(struct cma *cma, int order, gfp_t gfp);
+>>>>    bool cma_free_folio(struct cma *cma, const struct folio *folio);
+>>>> diff --git a/mm/cma.c b/mm/cma.c
+>>>> index de5bc0c..49a7186 100644
+>>>> --- a/mm/cma.c
+>>>> +++ b/mm/cma.c
+>>>> @@ -460,9 +460,17 @@ static struct page *__cma_alloc(struct cma *cma, unsigned long count,
+>>>>                   spin_unlock_irq(&cma->lock);
+>>>>
+>>>>                   pfn = cma->base_pfn + (bitmap_no << cma->order_per_bit);
+>>>> -               mutex_lock(&cma_mutex);
+>>>> +
+>>>> +               /*
+>>>> +                * If the user sets the concurr_alloc of CMA to true, concurrent
+>>>> +                * memory allocation is allowed. If the user sets it to false or
+>>>> +                * does not set it, concurrent memory allocation is not allowed.
+>>>> +                */
+>>>> +               if (!cma->concurr_alloc)
+>>>> +                       mutex_lock(&cma_mutex);
+>>>>                   ret = alloc_contig_range(pfn, pfn + count, MIGRATE_CMA, gfp);
+>>>> -               mutex_unlock(&cma_mutex);
+>>>> +               if (!cma->concurr_alloc)
+>>>> +                       mutex_unlock(&cma_mutex);
+>>>>                   if (ret == 0) {
+>>>>                           page = pfn_to_page(pfn);
+>>>>                           break;
+>>>> @@ -610,3 +618,13 @@ int cma_for_each_area(int (*it)(struct cma *cma, void *data), void *data)
+>>>>
+>>>>           return 0;
+>>>>    }
+>>>> +
+>>>> +bool cma_set_concurrency(struct cma *cma, bool concurrency)
+>>>> +{
+>>>> +       if (!cma)
+>>>> +               return false;
+>>>> +
+>>>> +       cma->concurr_alloc = concurrency;
+>>>> +
+>>>> +       return true;
+>>>> +}
+>>>> diff --git a/mm/cma.h b/mm/cma.h
+>>>> index 8485ef8..30f489d 100644
+>>>> --- a/mm/cma.h
+>>>> +++ b/mm/cma.h
+>>>> @@ -16,6 +16,7 @@ struct cma {
+>>>>           unsigned long   *bitmap;
+>>>>           unsigned int order_per_bit; /* Order of pages represented by one bit */
+>>>>           spinlock_t      lock;
+>>>> +       bool concurr_alloc;
+>>>>    #ifdef CONFIG_CMA_DEBUGFS
+>>>>           struct hlist_head mem_head;
+>>>>           spinlock_t mem_head_lock;
+>>>> --
+>>>> 2.7.4
+>>>>
+>>>>
+>>>
+> 
+> Thanks
+> Barry
+
