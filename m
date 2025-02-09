@@ -1,31 +1,65 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F93C1D61B5;
-	Sun,  9 Feb 2025 13:25:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78DE71494A6
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 13:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739107556; cv=none; b=mNkDVd/ZjAjxeOgPHmX74PH/NsGCSkkRx+ZidSCNlYdbPPE1XJphdUQFfhniqWLletxPKG0mLarH7+UM6AqJY5ja+A6zexFFLHNcGpFxLIqrTJNaak7reORe/1vx3ds7Pbz8ClRkdaNuGrl1Y2g6xHXbm0bBQuECPmI0DBvrj9s=
+	t=1739108485; cv=none; b=Y0mSOsg9EEhGy5SHKYuO1LLrsIXzHcDptXyQDltJ0sef8SMNpbM9Xdx7fS/8+9YpGIrUAHCFKw+UOJ5b5EFQ4fBLFov8tN2zNdj9jWDwIM9vvO/ASfnSiiXCPRC8oKneCZdHoZDTSG4gN8SWZsf5CdzEkv8T8v+tGWTlBnQUyNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739107556; c=relaxed/simple;
-	bh=WjVyDvzXit8LE7L5BGe98GWQH/dYHunZsipbsQ1lOuM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aK17H5MesScM5wUmGaPDIm0T+wMN1b95dD9qsNBPvvaB/t/L2pjEIbV6NbobUp13pnufK+hvuvU9b+SrxebVrQOPrf5ycdLKw8vAw8Gj0Q/iB+MkoNp++qZybsmyUd3dK3ZGF3du2xnmyMzEifZ30f6skCuE4eQ3lgxjsC9MCQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=NJd6W27S; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1739108485; c=relaxed/simple;
+	bh=rOoxO5KZEBh1SRJVTsZqOwcfE8PhI0LZsuKul2ItRP4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=WslFW4BaQptZZAZX1qQqpp5uO8R89FCo6xdvoVJqF/1k7sGtHShxTMudP2hfrf+/vKZsEbTIer6h1e3m1Db5F4htAw2p70ZOHCORBwQq4WN0NV/O44TeY0JaqFK8K6UwMiARmsSGo4ijOupaS6h1b3FTF4E0o9lEAa4nWvdC1Sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qu1YRNJ1; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="NJd6W27S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1739107550;
-	bh=WjVyDvzXit8LE7L5BGe98GWQH/dYHunZsipbsQ1lOuM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=NJd6W27SZfOGiEfK1IU3D0yY3jqfk/QinC1iSAu/m7NJ3C5M+9LLa1KuLlfn6XOI9
-	 ttFPdvjrEhPzxO1JBwCiAdrxsqx5K0TWwJmVxdIF1fgaiox44Jlu/LM72/OfzPccxr
-	 LnMqpaw6tzu3NuMJImKjQqKLcOKY7t5V5EpPc3Dc=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Sun, 09 Feb 2025 14:25:46 +0100
-Subject: [PATCH v2 2/2] tools/nolibc: add support for directory access
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qu1YRNJ1"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5450cf3ebc2so27334e87.2
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 05:41:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739108481; x=1739713281; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=v0XUkknmm1Y+FD1G5vgfo0h0J5VjnUXt6d2f0Pk6IL8=;
+        b=qu1YRNJ1xaqESJxjR+cC0P2/7lCKTCBf9Pw+rQCPJvsJY0t8HPEzUnec/k/TfkpPdE
+         6yqO0T77agqUez5cK4VTnJhqvkZjCw14tXIddjZYe0xcfatGMgd/M0gfXq4BE6D4j+i9
+         tlbpiUlN7tfWvcz4DQ0ZUOAQH1lFK5hhTHjsxAnIsajH+9l7kBnWoOf3n6k92IU7STC1
+         7agwcTfKwIraLnHysFacefoEcqfT2AlbLNohFP7zzHxkMA5UrzqcbRt2Pk8XxL+jfAdu
+         7WSDvcoH0oYhjAUnjmegt2ndOduB94YDPtMTwSZNCkHD3P+cjNTEBoqpvQaD/wjzjNXf
+         KXfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739108481; x=1739713281;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=v0XUkknmm1Y+FD1G5vgfo0h0J5VjnUXt6d2f0Pk6IL8=;
+        b=cXF5HqMIax4xml7qTR3rt1cMHQqlAAL2LEyh0oAqf3w6gxLZUxvl2TVOTgcjtM+B9M
+         ApI8F8sGep+eZkIR5sPgV59sY2PiXKz4kvuI6FdsjJXVig0nqbGouBv3ro2amQ33+zZM
+         dDMT1OW4gGqbijLOZYXSyC5ZMt0xhxCYCSxajBLuXl0/iOQOmKMXUjAp5lkEOyxwbHOJ
+         R1MIso8Qv5p1XQ6MHPX3+pv26fPRTiOGhF/cWW0PAX8kklJxdjmcSAozzODfbafWgTJs
+         HoZsuf9deux6/WfgCb0s4ELheDlMnGhsOMA2uguGH01RtKlFroyzykR5y/13QypaZfuJ
+         kSmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXZ40gmlm/u4SObr8dDVrjhsXWONU+2fkgwvDAxkVOmrOb5oFMcXWUVWGQTsNZdckyyqha6PEhOgv3bX7s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1GBhAhhUhCiPJBHhDkVpSZZYFVYjC5bO2PbmpZyeJeVZ+KqHG
+	7YsjRsedWJw9gUXy0LgfK2iz24MTEJrfkwpAmbc+dSgrZpICq7AV96pIVNHDpG8=
+X-Gm-Gg: ASbGnct4yzmN4il7yYhqLKZ/H5Oy9lLhho6zxd+Kzrge1mZVmFRYwrqSrouVp6/BwZL
+	CCcmUESrSaqPtcBviYT6inNG636Jc5JszJd5tFNr0byh0hjiwANpa3wy1VskGIwbVxbGBinRsS9
+	YxRVyhSs1YQ388ykWtVrvJwM6iyPkG2EO+QwMsRXABs+1Rbl5OCfnREvHWpZU8e3r2lQd9aoEGH
+	ZVB+BRWBRugvLle9MlXKCDapjN8EImj4H2Rpw3D56xGu/HQTC12io8xbnkDCa0OedvHifnMcb3s
+	RXSDa3NIe1FhgGk753G3RkY=
+X-Google-Smtp-Source: AGHT+IEVGIkfomEE/NNz3tc+YjlybN5PbVbSdbBT1FpoSLCs5jMkjRbEzg9IC54Jdc75JDpb8g6Hpw==
+X-Received: by 2002:a05:6512:3b23:b0:545:646:7519 with SMTP id 2adb3069b0e04-5450646766emr1266904e87.0.1739108481449;
+        Sun, 09 Feb 2025 05:41:21 -0800 (PST)
+Received: from umbar.lan ([192.130.178.90])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-545069b3f77sm362914e87.63.2025.02.09.05.41.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2025 05:41:20 -0800 (PST)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: [PATCH v2 0/3] drm/bridge: reuse DRM HDMI Audio helpers for
+ DisplayPort bridges
+Date: Sun, 09 Feb 2025 15:41:17 +0200
+Message-Id: <20250209-dp-hdmi-audio-v2-0-16db6ebf22ff@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,228 +67,80 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250209-nolibc-dir-v2-2-57cc1da8558b@weissschuh.net>
-References: <20250209-nolibc-dir-v2-0-57cc1da8558b@weissschuh.net>
-In-Reply-To: <20250209-nolibc-dir-v2-0-57cc1da8558b@weissschuh.net>
-To: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAH2wqGcC/3XMQQ7CIBCF4as0s3YMkNa0rrxH0wXtQJlEoQElm
+ oa7i927/F/yvh2SiWwSXJsdosmcOPga6tTA4rRfDTLVBiVUJ5S4IG3o6MGoX8QBZUeDpdnM82C
+ hfrZoLL8Pb5xqO07PED8Hn+Vv/SdliQJ7rWWr+0VQS7c7ex3DOcQVplLKF78hd2irAAAA
+X-Change-ID: 20250206-dp-hdmi-audio-15d9fdbebb9f
+To: Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
+ Hermes Wu <Hermes.wu@ite.com.tw>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739107550; l=5637;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=uiJbgPei12+itcfIBRJ+oWT2TJzWv5EOINTxxNj/iwE=;
- b=3oUv9eUqBx9pN91b9HwCN5S/LXPwd36UpQ9Pp+bpVkccJJH5v8yPvLV1qO8Cfy4iMLMqg75t9
- 41GO7O8GEhqAvR0rUlEibULcV5jFShrZone5DtOlVofqCrwGYOfkY2o
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2010;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=rOoxO5KZEBh1SRJVTsZqOwcfE8PhI0LZsuKul2ItRP4=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBnqLB/Kt4zd8O2+QTjDa5bUCPgmEutz9364E0Ly
+ WzQxeo6ysCJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ6iwfwAKCRCLPIo+Aiko
+ 1dCfCACuprmMTFqony4w+ZrdzpHn6UsWG0/tGoIdKoQ7BaFcluPCYnvcvPE11sGQpbbRiYreyVg
+ fDDSoJO/H6YKQFP6+99WnhyF7ogwWTyuqpYLcpLIXEYhLhd2tOcGEKmi0EjvjZlqZkD/0QIBHFA
+ wATBq7cuMfgsNGav50RzggUDmzfzyncXy0FGKQv4g/jC7mxDvwC4NrHPD+zjaC48gNZEDeM9YmV
+ jcKk8YRbrQtVSDyAtoPUWl7vNlE3mno+fHsKas8/4GZDPgCJ7JIix9/6hzZ0LxkW/TEZwgTVSs0
+ FK5VrYd6XB17yBEO5+3IpYFWb2OQmhaVk23YHCFpvcoAl99V
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-From: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+A lot of DisplayPort bridges use HDMI Codec in order to provide audio
+support. Present DRM HDMI Audio support has been written with the HDMI
+and in particular DRM HDMI Connector framework support, however those
+audio helpers can be easily reused for DisplayPort drivers too.
 
-Add an implementation for directory access operations.
-To keep nolibc itself allocation-free, a "DIR *" does not point to any
-data, but directly encodes a filedescriptor number, equivalent to "FILE *".
-Without any per-directory storage it is not possible to implement
-readdir() POSIX confirming. Instead only readdir_r() is provided.
-While readdir_r() is deprecated in glibc, the reasons for that are
-not applicable to nolibc.
+Patches by Hermes Wu that targeted implementing HDMI Audio support in
+the iTE IT6506 driver pointed out the necessity of allowing one to use
+generic audio helpers for DisplayPort drivers, as otherwise each driver
+has to manually (and correctly) implement the get_eld() and plugged_cb
+support.
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Implement necessary integration in drm_bridge_connector and provide an
+example implementation in the msm/dp driver.
+
+The plan is to land core parts via the drm-misc-next tree and msm patch
+via the msm-next tree.
+
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- tools/include/nolibc/Makefile                |  1 +
- tools/include/nolibc/dirent.h                | 98 ++++++++++++++++++++++++++++
- tools/include/nolibc/nolibc.h                |  1 +
- tools/testing/selftests/nolibc/nolibc-test.c | 39 +++++++++++
- 4 files changed, 139 insertions(+)
+Changes in v2:
+- Added drm_connector_attach_dp_subconnector_property() patches
+- Link to v1: https://lore.kernel.org/r/20250206-dp-hdmi-audio-v1-0-8aa14a8c0d4d@linaro.org
 
-diff --git a/tools/include/nolibc/Makefile b/tools/include/nolibc/Makefile
-index a1f55fb24bb38c1f49c653af5825e8bcc569a56d..dceec0e1a135119108d6f4dcb3d2ec57c002ffd3 100644
---- a/tools/include/nolibc/Makefile
-+++ b/tools/include/nolibc/Makefile
-@@ -29,6 +29,7 @@ all_files := \
- 		compiler.h \
- 		crt.h \
- 		ctype.h \
-+		dirent.h \
- 		errno.h \
- 		nolibc.h \
- 		signal.h \
-diff --git a/tools/include/nolibc/dirent.h b/tools/include/nolibc/dirent.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..c5c30d0dd6806b1bec2fa8120a3df29aaa201393
---- /dev/null
-+++ b/tools/include/nolibc/dirent.h
-@@ -0,0 +1,98 @@
-+/* SPDX-License-Identifier: LGPL-2.1 OR MIT */
-+/*
-+ * Directory access for NOLIBC
-+ * Copyright (C) 2025 Thomas Weißschuh <linux@weissschuh.net>
-+ */
-+
-+#ifndef _NOLIBC_DIRENT_H
-+#define _NOLIBC_DIRENT_H
-+
-+#include "stdint.h"
-+#include "types.h"
-+
-+#include <linux/limits.h>
-+
-+struct dirent {
-+	ino_t	d_ino;
-+	char	d_name[NAME_MAX + 1];
-+};
-+
-+/* See comment of FILE in stdio.h */
-+typedef struct {
-+	char dummy[1];
-+} DIR;
-+
-+static __attribute__((unused))
-+DIR *fdopendir(int fd)
-+{
-+	if (fd < 0) {
-+		SET_ERRNO(EBADF);
-+		return NULL;
-+	}
-+	return (DIR *)(intptr_t)~fd;
-+}
-+
-+static __attribute__((unused))
-+DIR *opendir(const char *name)
-+{
-+	int fd;
-+
-+	fd = open(name, O_RDONLY);
-+	if (fd == -1)
-+		return NULL;
-+	return fdopendir(fd);
-+}
-+
-+static __attribute__((unused))
-+int closedir(DIR *dirp)
-+{
-+	intptr_t i = (intptr_t)dirp;
-+
-+	if (i >= 0) {
-+		SET_ERRNO(EBADF);
-+		return -1;
-+	}
-+	return close(~i);
-+}
-+
-+static __attribute__((unused))
-+int readdir_r(DIR *dirp, struct dirent *entry, struct dirent **result)
-+{
-+	char buf[sizeof(struct linux_dirent64) + NAME_MAX + 1];
-+	struct linux_dirent64 *ldir = (void *)buf;
-+	intptr_t i = (intptr_t)dirp;
-+	int fd, ret;
-+
-+	if (i >= 0)
-+		return EBADF;
-+
-+	fd = ~i;
-+
-+	ret = sys_getdents64(fd, ldir, sizeof(buf));
-+	if (ret < 0)
-+		return -ret;
-+	if (ret == 0) {
-+		*result = NULL;
-+		return 0;
-+	}
-+
-+	/*
-+	 * getdents64() returns as many entries as fit the buffer.
-+	 * readdir() can only return one entry at a time.
-+	 * Make sure the non-returned ones are not skipped.
-+	 */
-+	ret = lseek(fd, ldir->d_off, SEEK_SET);
-+	if (ret == -1)
-+		return errno;
-+
-+	entry->d_ino = ldir->d_ino;
-+	/* the destination should always be big enough */
-+	strlcpy(entry->d_name, ldir->d_name, sizeof(entry->d_name));
-+	*result = entry;
-+	return 0;
-+}
-+
-+/* make sure to include all global symbols */
-+#include "nolibc.h"
-+
-+#endif /* _NOLIBC_DIRENT_H */
-diff --git a/tools/include/nolibc/nolibc.h b/tools/include/nolibc/nolibc.h
-index 92436b1e44413e659b3cca592930aad8b458cb74..05d92afedb7258f0e3c311bf6f12be68b25d6e9a 100644
---- a/tools/include/nolibc/nolibc.h
-+++ b/tools/include/nolibc/nolibc.h
-@@ -105,6 +105,7 @@
- #include "string.h"
- #include "time.h"
- #include "stackprotector.h"
-+#include "dirent.h"
- 
- /* Used by programs to avoid std includes */
- #define NOLIBC
-diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
-index f162793b162f9b1ec687098b9094a6d247a53e99..798fbdcd3ff8c36b514feb3fa1c7b8d7701cccd7 100644
---- a/tools/testing/selftests/nolibc/nolibc-test.c
-+++ b/tools/testing/selftests/nolibc/nolibc-test.c
-@@ -769,6 +769,44 @@ int test_getdents64(const char *dir)
- 	return ret;
- }
- 
-+static int test_dirent(void)
-+{
-+	int comm = 0, cmdline = 0;
-+	struct dirent dirent, *result;
-+	DIR *dir;
-+	int ret;
-+
-+	dir = opendir("/proc/self");
-+	if (!dir)
-+		return 1;
-+
-+	while (1) {
-+		errno = 0;
-+		ret = readdir_r(dir, &dirent, &result);
-+		if (ret != 0)
-+			return 1;
-+		if (!result)
-+			break;
-+
-+		if (strcmp(dirent.d_name, "comm") == 0)
-+			comm++;
-+		else if (strcmp(dirent.d_name, "cmdline") == 0)
-+			cmdline++;
-+	}
-+
-+	if (errno)
-+		return 1;
-+
-+	ret = closedir(dir);
-+	if (ret)
-+		return 1;
-+
-+	if (comm != 1 || cmdline != 1)
-+		return 1;
-+
-+	return 0;
-+}
-+
- int test_getpagesize(void)
- {
- 	int x = getpagesize();
-@@ -1061,6 +1099,7 @@ int run_syscall(int min, int max)
- 		CASE_TEST(fork);              EXPECT_SYSZR(1, test_fork()); break;
- 		CASE_TEST(getdents64_root);   EXPECT_SYSNE(1, test_getdents64("/"), -1); break;
- 		CASE_TEST(getdents64_null);   EXPECT_SYSER(1, test_getdents64("/dev/null"), -1, ENOTDIR); break;
-+		CASE_TEST(directories);       EXPECT_SYSZR(proc, test_dirent()); break;
- 		CASE_TEST(gettimeofday_tv);   EXPECT_SYSZR(1, gettimeofday(&tv, NULL)); break;
- 		CASE_TEST(gettimeofday_tv_tz);EXPECT_SYSZR(1, gettimeofday(&tv, &tz)); break;
- 		CASE_TEST(getpagesize);       EXPECT_SYSZR(1, test_getpagesize()); break;
+---
+Dmitry Baryshkov (3):
+      drm/display: bridge-connector: add DisplayPort bridges
+      drm/display: bridge_connector: add DisplayPort subconnector property
+      drm/msm/dp: reuse generic HDMI codec implementation
 
+ drivers/gpu/drm/display/drm_bridge_connector.c |  68 ++++++++++---
+ drivers/gpu/drm/msm/Kconfig                    |   1 +
+ drivers/gpu/drm/msm/dp/dp_audio.c              | 131 +++----------------------
+ drivers/gpu/drm/msm/dp/dp_audio.h              |  27 ++---
+ drivers/gpu/drm/msm/dp/dp_display.c            |  31 ++----
+ drivers/gpu/drm/msm/dp/dp_display.h            |   6 --
+ drivers/gpu/drm/msm/dp/dp_drm.c                |  11 ++-
+ include/drm/drm_bridge.h                       |  14 ++-
+ 8 files changed, 101 insertions(+), 188 deletions(-)
+---
+base-commit: ed58d103e6da15a442ff87567898768dc3a66987
+change-id: 20250206-dp-hdmi-audio-15d9fdbebb9f
+
+Best regards,
 -- 
-2.48.1
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
