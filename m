@@ -1,122 +1,96 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CAB243398;
-	Sun,  9 Feb 2025 23:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04821243398;
+	Sun,  9 Feb 2025 23:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739145186; cv=none; b=b5ZxnKlVcLk6KdtOXwgToRxEIl7D1+GxPYBd5KTiXPLT5aoww92UxHYaF7Qb54p+JVemyJoG2VUXYCI4wBSRX15BpuqI2FHGL89eaw7Q/yMe5fhAa+xRXbcIfesvcrNrhjTi6g0Vxq9Ihh0iWYgZ7rcBMYfozPOxKp5lGghuxno=
+	t=1739145316; cv=none; b=ORQW009kXf5uYGCuaSaPmaYkvnjOXEtjVphGGfcVK3xzKJ0aX7FqX1rseQF69bMj++yV/y7FIrOIsOrMUxIODFuyphFhcU+l68jwRu4AuvejfbFW+p4lruseAdtndWSKIrMQcuWcJnDJX2PYO7OPRtWJCmpV6srrkNw0ZWUlFcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739145186; c=relaxed/simple;
-	bh=n1ZhMzB9WqBdOr79nn2ngDyHin+0zLTEs1PHbhdl5oI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TFY3wiowQysOMkR1pou50Raf5+TaQJLjoVifVHixDaGo57781SzZ5Zwv9SBDzINBiU55GHCj9zlyrBX8M8bwmlehgvct4Bc+jFf3htSlJCC/Djw3zRMEGeR7v8vBuGw9WFkSVQkDmyFN6h+7Lkp2XwdjbkKq3UndOrPHCLCo5/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cCfHRKz2; arc=none smtp.client-ip=209.85.214.182
+	s=arc-20240116; t=1739145316; c=relaxed/simple;
+	bh=Vpgeiu3yPvEnpgOikzPLi0BpfjaIFxbh7rRt/NIbeJo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L+x+L28fl6anfhgDzViGUfc1DPOq4MRgrvus+TYIUfpbftOJGUSI5gpHTYoG0os49xNVh+Fq5VPX+aR15JOuCK25NNrZS723GEfi72klFWEWt9Jrjp0yWATs7AmmfRJwX8QiSCKXASnpRTSE57JgcKoygKmhKfEpZb9B26N+ymU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lb32Wsi+; arc=none smtp.client-ip=209.85.219.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cCfHRKz2"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21f78b1fb7dso12609545ad.3;
-        Sun, 09 Feb 2025 15:53:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lb32Wsi+"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6e440e64249so41858686d6.3;
+        Sun, 09 Feb 2025 15:55:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739145184; x=1739749984; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dWCnWPYL68r0Z2Bnk7TaHU9Wrb4IP7n7TPpDNfmxihM=;
-        b=cCfHRKz2b4tDA+Gz8pcJx1a9SjqhcAW80OGl8JW5L0Re0tkUiqv+Mh9pQPgVvugP1o
-         PqmuYp8jKYyFLj3G/yjmHvieI8bU19OBGpzDqJ/PK10yXMr23f5urD65J47qc+6xawhN
-         MgxMOTaUOPghfSNSFYF3ajuhAEl7R1p6vN8eAcfO6o7YA91t9VQYoxGYYnD9O0FdzB9v
-         P1TxPletFE1OqPM+D5l5qap/ovw1PXsKIAVaO9b1NiyeJ3bIuU7ePZLi2RKznRBK+ZxQ
-         I9pcg6VfuaEsEAZ8Sw09LserKRMJ8bRohWW9txzkFWnuhf13uaf4s6u8GDPY/15DhW/S
-         2Sbw==
+        d=gmail.com; s=20230601; t=1739145314; x=1739750114; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5nOQRwLkPOzthZnSVbvgZOMtj7EqiDSr+E+m0fXEUDI=;
+        b=lb32Wsi+41fEzA0XXmX9WBpPCmpf9v1p4rLjcfG8kaYr9cwZOBOnYPr2wCLT4NF/Un
+         DAr9ErUsPKuQtx+YlgkB9J74lNrPVqz8mnZ6owWNc13q1a5lQwV1mVBw7sN7J7S67ZD7
+         DMr3kQJQQ08z/oUrFdfrgZWSlH6COrGy5vYlIvG32AI+n+lQHRTsPT2OSUUAm+VMkvZ5
+         K9XIwaqp6XoOJqMffZSGvVeBDX/bIB05PQo4zNKKupHBjvwquqycc9pS5OPQ2VJ4dfYr
+         id137KuOfgrZ6sKfl4iLN2FtMvnbw7llyCehwhGvdWxXEWLAut5VrNUjXdeCvY+en+CZ
+         ezMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739145184; x=1739749984;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dWCnWPYL68r0Z2Bnk7TaHU9Wrb4IP7n7TPpDNfmxihM=;
-        b=fUe30SBIFtFMp1lID9DTpnsJ4KtoYfV2wob5L5IAJQmpvCbXgmab0VkpFHfz4CUKW2
-         CX02Om9DwPMCpLbmYg8yHKV29PHcCIwtxqkkwcMhVqAfBOZIdL+6CU1F49TciJ/0y64l
-         ut/CIGYSIliAiDkyk3pF5KP8gRJ6lh0nk+OFMgO1npkrWi0mMs2/Oah/vOSnW0QqGV2+
-         1Oy2wSnJnrMKcHXlb/tRL693Dib/n38Zngtw5YIAUdEX20WAAersIrSeJ9M7spEAi20V
-         NykqYCD5QOlWAf5UxXw6kLCMHbYy6R1G/8COfRYL83SgG5DrR9+7OWNIU2Sqt3JrpDja
-         OWoA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkHUQB22zksgWY7MaBf5np6AOwJ/2KS3MIDjz3p9SteBQ+tQcE2qzCxc2xs/CfM6GZZ3rtEOYvlkJhXK1U@vger.kernel.org, AJvYcCVcTT0zXnrM25ns+0QUik8nF30dKSRKRjAflAPBAu2CBXt1xvFyBjJZB542yV0mNdUU++xJBooHDHq4m8Wy@vger.kernel.org, AJvYcCXhGxmjeXb7Pgays9YYHIPleOkoQP0AYqD84BPqf8SmOAl0Ug/83uncpP9k9XOWWAOhvREUH8P8xgmUMg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyfK9EuH66s1gyroff+J6DHpA6Ymsg07UEUVIeh6oq4lcmnIhJ
-	Y2mC0OSZ1P3NrydXcM4INvI/AKyJd+UTLv1YknwrUZOuudHNTdNtqLVylg==
-X-Gm-Gg: ASbGncs5gfazwUL2tQrG7pS+WZd2R24jjksl8IostdaAXfEQ6a9DlQog4VXpz9W+Vq3
-	41dOi/1DiJA9n+RHGIaEV64YQjNr7uBgVC2eaqbtX5ClMKw+Za+XfvOuAFeqekF7kgWA1g/lvY2
-	O1/6AU7sler7TZZcFh/M+iJk88y5mvgMZK3m61BmWjQFrazwj37i9zCq6DKbLBsDSdBXQdRKxPL
-	/zlWV2mr+tOqEviisjpz5/P0vbQbKg0vgszN2eWRNd8XA10zEBO4XtyLtnagn0f7OZhc3+1mRo1
-	6PPRPtcgJNtHFI3U2/Q+sAUS15b2S1eywvGADQIrLsGkIhrKffTAzg33Vx/DqRMo/8Ishw==
-X-Google-Smtp-Source: AGHT+IE4FJPyNy5xGYQRplvww+BnPsgZJRqLjMHqBPSL43m6jWzmeKRSRadCcA59GdXx5pLc7fGXtA==
-X-Received: by 2002:a17:903:3d05:b0:21f:3e2d:7d58 with SMTP id d9443c01a7336-21f4e6ba733mr154138565ad.13.1739145184345;
-        Sun, 09 Feb 2025 15:53:04 -0800 (PST)
-Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3650e6aasm65021435ad.12.2025.02.09.15.53.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 15:53:04 -0800 (PST)
-From: mhkelley58@gmail.com
-X-Google-Original-From: mhklinux@outlook.com
-To: haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	deller@gmx.de,
-	weh@microsoft.com
-Cc: dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org
-Subject: [PATCH 1/1] fbdev: hyperv_fb: iounmap() the correct memory when removing a device
-Date: Sun,  9 Feb 2025 15:52:52 -0800
-Message-Id: <20250209235252.2987-1-mhklinux@outlook.com>
-X-Mailer: git-send-email 2.25.1
-Reply-To: mhklinux@outlook.com
+        d=1e100.net; s=20230601; t=1739145314; x=1739750114;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5nOQRwLkPOzthZnSVbvgZOMtj7EqiDSr+E+m0fXEUDI=;
+        b=lH9GRQiWO+s5WJ6Q6AFWloNyR94NVg19jRDSGJb6xkAP8jKPQRg0TNaIguo5itwqQv
+         nfJ9bbb2w0I5ZM21KrtMaVhZyYfZ1+LCZPAllTtMZJABNju+pjTaO/lWSoHRErxDPDaJ
+         +q97lPCeptkGyqmdjrPLuPiQ78V8E46nDk1hLEtYEXGTaKMfaa3pLAvsZAGf9YZMHAuA
+         cWwOEXlG2DWCCxYn+uKePabkiY2UkmLmgI33wO1VLBw/4jO8NcI9wPJPqEJjOQIS5D5Z
+         e0fYlX3pQRUtffMtIFGrPWn/MMOGoCChgM/WEAt0iR60+s3yWOeyZR//v22Wt8zu+t/0
+         Rw5A==
+X-Forwarded-Encrypted: i=1; AJvYcCUHF9U/Se/9OGosGSibQql7n7uj01zn+zL1jqWrldEsdqqpyeqVyjXYKog+yRD0+dgl4MgTBxCoq7GFxzdX@vger.kernel.org, AJvYcCVE8zYgHsIKNDd9ZmL+Ea8AQojWJ83ZOoj+zg8nbP0uBDJTNZPu1Z0yesJha3ECcNUWktsHv4kJm5R3aR2Aow==@vger.kernel.org, AJvYcCVJvpv64A581U2QREsUcqOfEk3VXUIwdGj6VBujerbTi879xq9KbuOeCChPXaQSmWtyTfxr1cBCAzcv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1mQNTPqIUIG60oX0P7SCE8KJCkjBXX/mBNg3PvnnYhkE+KRsr
+	t74CiAoqOOcIkJd2zqhjp7NjU8TsGCq3bEOehLRvkkqrdDeJ499f/2a+ycdX4ClBXx+JkbdA6zW
+	hPuTgiVs6y9ljobJv0kkKblp8e9/CuYjdTyEdCg==
+X-Gm-Gg: ASbGnctgmTM4DypdzpjBkX0IU0Hag7/hYq0TM2CN8+DdiYnchEbUTut4C6izV1JG6pW
+	/BEwLMXTKgr6m6saVZR/LA1grQd661dmmmx7bRssdzzzJ6iNy2rN9Uh0D94FezGBi02bZJ5QZr1
+	LFOWbZBfNJpyr95/ma9/wYEiE+2dsJxA==
+X-Google-Smtp-Source: AGHT+IEG7ZZLTlsEAxtj8MSR9G0aKXoGrU8hXoe7VtxDZdV8GZUVZQqv8KFoC7NCPdeiBpqi+XVLJJbBKEDxtLCg3p4=
+X-Received: by 2002:a05:6214:411c:b0:6e2:481c:3713 with SMTP id
+ 6a1803df08f44-6e445705b4emr150345066d6.37.1739145313923; Sun, 09 Feb 2025
+ 15:55:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250208-expressatt-bam-v1-1-8794ec853442@gmail.com> <3nz6k4oqwpcmu4miohcgv2wlhz3x5hluuytvkhe6txzg2njatx@icgiiyolzt5w>
+In-Reply-To: <3nz6k4oqwpcmu4miohcgv2wlhz3x5hluuytvkhe6txzg2njatx@icgiiyolzt5w>
+From: Rudraksha Gupta <guptarud@gmail.com>
+Date: Sun, 9 Feb 2025 15:54:37 -0800
+X-Gm-Features: AWEUYZm0n2GkopWIuHV_Pr69PyYfyWa0KwL0PO68lcp_IHICdfI57MUqOXBeUiI
+Message-ID: <CABhZbsXkpbx_DxJsdPNgJuK1vcdEfxu-bQqz4NuGdfeVX+o=fw@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: qcom: msm8960: Add BAM
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Sam Day <me@samcday.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Michael Kelley <mhklinux@outlook.com>
+> > +             sdcc3bam: dma-controller@12182000 {
+> > +                     compatible = "qcom,bam-v1.3.0";
+> > +                     reg = <0x12182000 0x2000>;
+>
+> APQ8064 has 0x8000 here, but I think 0x2000 should be enough.
 
-When a Hyper-V framebuffer device is removed, or the driver is unbound
-from a device, any allocated and/or mapped memory must be released. In
-particular, MMIO address space that was mapped to the framebuffer must
-be unmapped. Current code unmaps the wrong address, resulting in an
-error like:
+Downstream seems to use 0x2000:
+https://codeberg.org/LogicalErzor/Android_Kernel_Samsung_D2/src/branch/cm-14.1/arch/arm/mach-msm/devices-8960.c#L1217
 
-[ 4093.980597] iounmap: bad address 00000000c936c05c
+>
+> > +                     interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+> > +                     clocks = <&gcc SDC3_H_CLK>;
+> > +                     clock-names = "bam_clk";
+> > +                     #dma-cells = <1>;
+> > +                     qcom,ee = <0>;
+> > +             };
+>
+> Please keep DT nodes sorted on the @reg part. So sdcc3bam goes after
+> sdcc3 node, sdcc1bam goes after sdcc1.
 
-followed by a stack dump.
 
-Commit d21987d709e8 ("video: hyperv: hyperv_fb: Support deferred IO for
-Hyper-V frame buffer driver") changed the kind of address stored in
-info->screen_base, and the iounmap() call in hvfb_putmem() was not
-updated accordingly.
-
-Fix this by updating hvfb_putmem() to unmap the correct address.
-
-Fixes: d21987d709e8 ("video: hyperv: hyperv_fb: Support deferred IO for Hyper-V frame buffer driver")
-Signed-off-by: Michael Kelley <mhklinux@outlook.com>
----
- drivers/video/fbdev/hyperv_fb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
-index 7fdb5edd7e2e..363e4ccfcdb7 100644
---- a/drivers/video/fbdev/hyperv_fb.c
-+++ b/drivers/video/fbdev/hyperv_fb.c
-@@ -1080,7 +1080,7 @@ static void hvfb_putmem(struct hv_device *hdev, struct fb_info *info)
- 
- 	if (par->need_docopy) {
- 		vfree(par->dio_vp);
--		iounmap(info->screen_base);
-+		iounmap(par->mmio_vp);
- 		vmbus_free_mmio(par->mem->start, screen_fb_size);
- 	} else {
- 		hvfb_release_phymem(hdev, info->fix.smem_start,
--- 
-2.25.1
-
+Thanks! I've sent in v2.
