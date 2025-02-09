@@ -1,206 +1,311 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFF3243399;
-	Sun,  9 Feb 2025 11:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41AD243399;
+	Sun,  9 Feb 2025 11:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739102191; cv=none; b=h8Z6uh5MxlDJi7oMW+csYV/ltxs42xYza2TsNksirwiuhVR713DCjeavT7UUFb1NaTLW5pfYmD1zleptZYlAw2ZpUibdbOukU2MjjqMg9C+BiCmR4a8wsGyuICE7jTA/PQ/PXQz0Wb8/5bIHZWH25BOeSZoGEIDjwd0sZadXl0g=
+	t=1739102268; cv=none; b=AFweSVYTNgCV86imJaWEJYvD39Il2t9aQ1eucCEOxjTrUVP2pkoV34Itjb7pZfgF5++DO5F4MvWfxG2awtyioCCH5amKp0nJew0Ua+ydtBCR1OZGhEOitBcE+i2cUNM4ccDnAHBD2E2dmMbE8DOu1LxssyxyTabe8y1aTXHdE7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739102191; c=relaxed/simple;
-	bh=Lz2w10qZ/7qf0GBvDV0ucsndxbEDejIrSm5OdLohrlc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D/RQc84DWNA6Eo9Q5k0p/g9cupXwNMVDzfbqijwvQ9nnZrkqiB7syLPZI6Bp5/sr5jm8sYJRFEEqaVypNTM8Av6zcBSktnI22TKq2Z5ng7O4MUmnpdUD5Wt8mp+ENF/qF/woHiChJt4h4IL3NbmtgjOzDibMwJdL0fareND0ZdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FDUUplSm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739102268; c=relaxed/simple;
+	bh=IFPrwgWX/SeQu6djTRtCOLTF5LOOkTem+odoOFUh3Pw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=lnlzjBCJNvS7bEegI2zkWUSJol7Knu05HNMme3wbqzxzKZbXfCD4WHDs3Hf3rd6pBTsQ9k2VhHCeEqQFnIIQ9sTDVSU0fSDWzeqNlRLMf2WyjOEGs1uK8g3okbeAcNfId1ib4q0MgOdbyBrYZAip0MAwg7oBavGGVoT8GY6pdao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev; spf=pass smtp.mailfrom=oltmanns.dev; dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b=XA68FjMs; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oltmanns.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FDUUplSm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BBB8C4CEDD;
-	Sun,  9 Feb 2025 11:56:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739102191;
-	bh=Lz2w10qZ/7qf0GBvDV0ucsndxbEDejIrSm5OdLohrlc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FDUUplSm71iSeiNoCP8kgKWfH/FV7hnL/Pb6Ql0ehJB7KzeA4JJiYvqfe+AbgZyRO
-	 p1NSbOUnNhOyiI81Qel+HotJUgFLt99w4fXpRJv+Fr4PO1AKn5ZdwfXVGWg5IIh/eS
-	 jVUXvVzqiQdO1T/qSpllafTpUzMny3do/xNGzlFwlBsDOthdimAXo6YI8f48wODIdL
-	 UgGufOquMx/cMto6ke6VChFxg1TQhJXUsdGPoW+iyxblOcl3HoGZkw2Cao6YYpE5/A
-	 0oppnFn6xYT4HbhZ3HVjkmb1wqK3zBtlAzcbSBrxVVb8DHKghT7nXEaBVm/5kC829x
-	 fVAfOPTKwQVgw==
-Message-ID: <922691a1-10d0-4ff1-a174-a456235e6487@kernel.org>
-Date: Sun, 9 Feb 2025 12:56:19 +0100
+	dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b="XA68FjMs"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4YrR664fMtz9t6M;
+	Sun,  9 Feb 2025 12:57:34 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oltmanns.dev;
+	s=MBO0001; t=1739102254;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SUts8dcXXQeAlZTyL5V8OhXHvjjPlRSnn/MhZvJ1N1M=;
+	b=XA68FjMsblS72OcIEJ7vDmM3vuAesgs4X9CxtqB3JX6fVlzaHbtAMzOV1pdM03eTG8wR8y
+	jazO81rAQgfbiG2Ox89/IwnIXnmskdQB4h/UQVdOW+TRJgMT5myXQYOt/zZyqZYB0UYgdR
+	p5MbvEWujgGZumg21oHrUnExxd4AQ5GILmh9WzVZshMHbxj5/BBlc4506CW5Sn1VEurMOA
+	/+M1Wo56NwXOsH3bzY4SL0oyd1PIwOM0fo75+9ksKH/NMNoW87IMsNTdosHZVAf51mopG+
+	JlmHUFyuooVyeH8sgYySg7FIkrdkfm/T2FWsavuyWIk6iQLNqMwdSMgaGBo5sQ==
+From: Frank Oltmanns <frank@oltmanns.dev>
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konradybcio@kernel.org>,  Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>,  Chris Lew <quic_clew@quicinc.com>,
+  linux-arm-msm@vger.kernel.org,  linux-kernel@vger.kernel.org,  Stephan
+ Gerhold <stephan.gerhold@linaro.org>,  Johan Hovold
+ <johan+linaro@kernel.org>,  Caleb Connolly <caleb.connolly@linaro.org>,
+  Joel Selvaraj <joelselvaraj.oss@gmail.com>,  Alexey Minnekhanov
+ <alexeymin@postmarketos.org>,  stable@vger.kernel.org
+Subject: Re: [PATCH] soc: qcom: pd-mapper: defer probing on sdm845
+In-Reply-To: <87msez1sim.fsf@oltmanns.dev> (Frank Oltmanns's message of "Thu,
+	06 Feb 2025 07:44:49 +0100")
+References: <20250205-qcom_pdm_defer-v1-1-a2e9a39ea9b9@oltmanns.dev>
+	<2vfwtuiorefq64ood4k7y7ukt34ubdomyezfebkeu2wu5omvkb@c5h2sbqs47ya>
+	<87y0yj1up1.fsf@oltmanns.dev> <87msez1sim.fsf@oltmanns.dev>
+Date: Sun, 09 Feb 2025 12:57:21 +0100
+Message-ID: <87seon9vq6.fsf@oltmanns.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 3/5] dt-bindings: gpu: Add protected heap name to Mali
- Valhall CSF binding
-To: Nicolas Dufresne <nicolas@ndufresne.ca>,
- Florent Tomasin <florent.tomasin@arm.com>, Vinod Koul <vkoul@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>,
- Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
- "T . J . Mercier" <tjmercier@google.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Yong Wu <yong.wu@mediatek.com>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- nd@arm.com, Akash Goel <akash.goel@arm.com>
-References: <cover.1738228114.git.florent.tomasin@arm.com>
- <36b57dcf20860398ba83985e1c5b6f6958d08ba7.1738228114.git.florent.tomasin@arm.com>
- <7234f25c-a2aa-4834-931b-aeeb7a49dfa7@kernel.org>
- <4b9deab1-e330-4c93-8260-75276c2bc9ff@arm.com>
- <c0aad911-ecc4-4b04-a453-6da226f76ed2@kernel.org>
- <5e0e2fbb22c2ffb0c5281727cd95d70f5f5ba696.camel@ndufresne.ca>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <5e0e2fbb22c2ffb0c5281727cd95d70f5f5ba696.camel@ndufresne.ca>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 06/02/2025 22:21, Nicolas Dufresne wrote:
-> Le mercredi 05 février 2025 à 10:13 +0100, Krzysztof Kozlowski a écrit :
->> On 03/02/2025 16:31, Florent Tomasin wrote:
->>> Hi Krzysztof
->>>
->>> On 30/01/2025 13:25, Krzysztof Kozlowski wrote:
->>>> On 30/01/2025 14:08, Florent Tomasin wrote:
->>>>> Allow mali-valhall-csf driver to retrieve a protected
->>>>> heap at probe time by passing the name of the heap
->>>>> as attribute to the device tree GPU node.
+On 2025-02-06 at 07:44:49 +0100, Frank Oltmanns <frank@oltmanns.dev> wrote:
+Hi Bjorn,
+
+> Hi again,
+>
+> On 2025-02-06 at 06:57:46 +0100, Frank Oltmanns <frank@oltmanns.dev> wrot=
+e:
+>> On 2025-02-05 at 20:54:53 -0600, Bjorn Andersson <andersson@kernel.org> =
+wrote:
+>>> On Wed, Feb 05, 2025 at 10:57:11PM +0100, Frank Oltmanns wrote:
+>>>> On xiaomi-beryllium and oneplus-enchilada audio does not work reliably
+>>>> with the in-kernel pd-mapper. Deferring the probe solves these issues.
+>>>> Specifically, audio only works reliably with the in-kernel pd-mapper, =
+if
+>>>> the probe succeeds when remoteproc3 triggers the first successful prob=
+e.
+>>>> I.e., probes from remoteproc0, 1, and 2 need to be deferred until
+>>>> remoteproc3 has been probed.
 >>>>
->>>> Please wrap commit message according to Linux coding style / submission
->>>> process (neither too early nor over the limit):
->>>> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
->>> Apologies, I think I made quite few other mistakes in the style of the
->>> patches I sent. I will work on improving this aspect, appreciated
->>>
->>>> Why this cannot be passed by phandle, just like all reserved regions?
+>>>> Introduce a device specific quirk that lists the first auxdev for which
+>>>> the probe must be executed. Until then, defer probes from other auxdev=
+s.
 >>>>
->>>> From where do you take these protected heaps? Firmware? This would
->>>> explain why no relation is here (no probe ordering, no device links,
->>>> nothing connecting separate devices).
+>>>> Fixes: 1ebcde047c54 ("soc: qcom: add pd-mapper implementation")
+>>>> Cc: stable@vger.kernel.org
+>>>> Signed-off-by: Frank Oltmanns <frank@oltmanns.dev>
+>>>> ---
+>>>> The in-kernel pd-mapper has been causing audio issues on sdm845
+>>>> devices (specifically, xiaomi-beryllium and oneplus-enchilada). I
+>>>> observed that Stephan=E2=80=99s approach [1] - which defers module pro=
+bing by
+>>>> blocklisting the module and triggering a later probe - works reliably.
+>>>>
+>>>> Inspired by this, I experimented with delaying the probe within the
+>>>> module itself by returning -EPROBE_DEFER in qcom_pdm_probe() until a
+>>>> certain time (13.9 seconds after boot, based on ktime_get()) had
+>>>> elapsed. This method also restored audio functionality.
+>>>>
+>>>> Further logging of auxdev->id in qcom_pdm_probe() led to an interesting
+>>>> discovery: audio only works reliably with the in-kernel pd-mapper when
+>>>> the first successful probe is triggered by remoteproc3. In other words,
+>>>> probes from remoteproc0, 1, and 2 must be deferred until remoteproc3 h=
+as
+>>>> been probed.
+>>>>
 >>>
->>> The protected heap is generaly obtained from a firmware (TEE) and could
->>> sometimes be a carved-out memory with restricted access.
+>>> The remoteproc numbering is assigned at the time of registering each
+>>> remoteproc driver, and does not necessarily relate to the order in which
+>>> they are launched. That said, it sounds like what you're saying is that
+>>> is that audio only works if we launch the pd-mapper after the
+>>> remoteprocs has started?
 >>
->> Which is a reserved memory, isn't it?
+>> Almost, but not quite. You are right, that remoteproc3 in my setup is
+>> always the last one that probes the pd-mapper.
 >>
->>>
->>> The Panthor CSF kernel driver does not own or manage the protected heap
->>> and is instead a consumer of it (assuming the heap is made available by
->>> the system integrator).
->>>
->>> I initially used a phandle, but then I realised it would introduce a new
->>> API to share the heap across kernel driver. In addition I found this
->>> patch series:
->>> -
->>> https://lore.kernel.org/lkml/20230911023038.30649-1-yong.wu@mediatek.com/#t
->>>
->>> which introduces a DMA Heap API to the rest of the kernel to find a
->>> heap by name:
->>> - dma_heap_find()
->>>
->>> I then decided to follow that approach to help isolate the heap
->>> management from the GPU driver code. In the Panthor driver, if the
->>> heap is not found at probe time, the driver will defer the probe until
->>> the exporter made it available.
+>> However, when experimenting with different timings I saw that the
+>> pd-mapper really do has to respond to the probe from remoteproc3 (I'm
+>> not sure I'm using the right terminology here, but I hope my intent
+>> comes across). If the pd-mapper responds to remoteproc3's probe with
+>> -EPROBE_DEFER there will again be subsequent probes from the other
+>> remoteprocs. If we act on those probes, there is a chance that audio
+>> (mic in my case) does not work. So, my conclusion was that remoteproc3's
+>> probe has to be answered first before responding to the other probes.
 >>
+>> Further note that in my experiments remoteproc1 was always the first to
+>> do the probing, followed by either remoteproc0 or remoteproc2.
+>> remoteproc3 was always the last.
 >>
->> I don't talk here really about the driver but even above mediatek
->> patchset uses reserved memory bindings.
+>>> Can you please confirm which remoteproc is which in your numbering? (In
+>>> particular, which remoteproc instance is the audio DSP?)
 >>
->> You explained some things about driver yet you did not answer the
->> question. This looks like reserved memory. If it does not, bring
->> arguments why this binding cannot be a reserved memory, why hardware is
->> not a carve out memory.
-> 
-> I think the point is that from the Mali GPU view, the memory does not need to be
-> within the range the Linux Kernel actually see, even though current integration
+>> remoteproc0: adsp
+>> remoteproc1: cdsp
+>> remoteproc2: slpi
+>> remoteproc3: 4080000.remoteproc
+>
+> I'm sorry but there's one additional thing that I really should have
+> mentioned earlier: My issue is specifically with *call* audio.
+>
+> Call audio is only available using out-of-tree patches. The ones I'm
+> currently using are here:
+> https://gitlab.com/sdm845-mainline/linux/-/commits/sdm845-6.13-rc2-r2?ref=
+_type=3Dtags
 
+Just wanted to let you know that I've tested Mukesh Ojha's and Saranya
+R's patch [1]. Thanks, Bjorn for cc'ing me in your response.
 
-Do I get it right:
-Memory can be outside of kernel address range but you put it to the
-bindings as reserved memory? If yes, then I still do not understand why
-DT should keep that information. Basically, you can choose whatever
-memory is there, because it anyway won't interfere with Linux, right?
-Linux does not have any reasonable way to access it.
-
-It might interfere with firmware or other processors, but then it's the
-job of firmware which has discoverable interfaces for this.
-
-The binding says it is about protected heap name, but it explains
-nothing what is that protected heap. You pass it to some firmware as
-string? Does not look like, rather looks like Linux thingy, but this
-again is neither explained in commit msg nor actually correct: Linux
-thingies do not belong to DT.
-
-> have that. From Mali GPU driver stand point (or codec drivers and what's not),
-> the memory range is not useful to allocate protected/restricted memory. On top
-> of which, its not reserved specifically for the Mali GPU.
-> 
-> What's your practical suggestion here ? Introduce dma_heap_find_by_region() ?
-
-I did not comment about driver and I do not judge how you access
-whatever you need to access. This is discussion purely about binding
-thus about hardware.
-
+Unfortunately, it seems to fix a different issue than the one I'm
+experiencing. The phone's mic still doesn't work. As I wrote elsewhere
+[2], I don't see the PDR error messages on xiaomi-beryllium, so, as
+Johan expected, the issue I'm experiencing is indeed a different one.
 
 Best regards,
-Krzysztof
+  Frank
+
+[1]: https://lore.kernel.org/linux-arm-msm/20250129155544.1864854-1-mukesh.=
+ojha@oss.qualcomm.com/
+[2]: https://lore.kernel.org/linux-arm-msm/87wmf18m8g.fsf@oltmanns.dev/
+
+>
+> Best regards,
+>   Frank
+>
+>>
+>> (I took them from the kernel messages "remoteproc remoteproc<X>: <xyz>
+>> is available".)
+>>
+>>>> To address this, I propose introducing a quirk table (which currently
+>>>> only contains sdm845) to defer probing until the correct auxiliary
+>>>> device (remoteproc3) initiates the probe.
+>>>>
+>>>> I look forward to your feedback.
+>>>>
+>>>
+>>> I don't think the proposed workaround is our path forward, but I very
+>>> much appreciate your initiative and the insights it provides!
+>>
+>> Thank you! I was hoping that somebody with more experience in the QCOM
+>> universe can draw further conclusions from this.
+>>
+>>> Seems to
+>>> me that we have a race-condition in the pdr helper.
+>>
+>> If you need further experimenting or can give me rough guidance on where
+>> to look next, I'll be glad to help.
+>>
+>> Thanks again,
+>>   Frank
+>>
+>>>
+>>> Regards,
+>>> Bjorn
+>>>
+>>>> Thanks,
+>>>>   Frank
+>>>>
+>>>> [1]: https://lore.kernel.org/linux-arm-msm/Zwj3jDhc9fRoCCn6@linaro.org/
+>>>> ---
+>>>>  drivers/soc/qcom/qcom_pd_mapper.c | 43 ++++++++++++++++++++++++++++++=
++++++++++
+>>>>  1 file changed, 43 insertions(+)
+>>>>
+>>>> diff --git a/drivers/soc/qcom/qcom_pd_mapper.c b/drivers/soc/qcom/qcom=
+_pd_mapper.c
+>>>> index 154ca5beb47160cc404a46a27840818fe3187420..34b26df665a888ac4872f5=
+6e948e73b561ae3b6b 100644
+>>>> --- a/drivers/soc/qcom/qcom_pd_mapper.c
+>>>> +++ b/drivers/soc/qcom/qcom_pd_mapper.c
+>>>> @@ -46,6 +46,11 @@ struct qcom_pdm_data {
+>>>>  	struct list_head services;
+>>>>  };
+>>>>
+>>>> +struct qcom_pdm_probe_first_dev_quirk {
+>>>> +	const char *name;
+>>>> +	u32 id;
+>>>> +};
+>>>> +
+>>>>  static DEFINE_MUTEX(qcom_pdm_mutex); /* protects __qcom_pdm_data */
+>>>>  static struct qcom_pdm_data *__qcom_pdm_data;
+>>>>
+>>>> @@ -526,6 +531,11 @@ static const struct qcom_pdm_domain_data *x1e8010=
+0_domains[] =3D {
+>>>>  	NULL,
+>>>>  };
+>>>>
+>>>> +static const struct qcom_pdm_probe_first_dev_quirk first_dev_remotepr=
+oc3 =3D {
+>>>> +	.id =3D 3,
+>>>> +	.name =3D "pd-mapper"
+>>>> +};
+>>>> +
+>>>>  static const struct of_device_id qcom_pdm_domains[] __maybe_unused =
+=3D {
+>>>>  	{ .compatible =3D "qcom,apq8016", .data =3D NULL, },
+>>>>  	{ .compatible =3D "qcom,apq8064", .data =3D NULL, },
+>>>> @@ -566,6 +576,10 @@ static const struct of_device_id qcom_pdm_domains=
+[] __maybe_unused =3D {
+>>>>  	{},
+>>>>  };
+>>>>
+>>>> +static const struct of_device_id qcom_pdm_defer[] __maybe_unused =3D {
+>>>> +	{ .compatible =3D "qcom,sdm845", .data =3D &first_dev_remoteproc3, },
+>>>> +	{},
+>>>> +};
+>>>>  static void qcom_pdm_stop(struct qcom_pdm_data *data)
+>>>>  {
+>>>>  	qcom_pdm_free_domains(data);
+>>>> @@ -637,6 +651,25 @@ static struct qcom_pdm_data *qcom_pdm_start(void)
+>>>>  	return ERR_PTR(ret);
+>>>>  }
+>>>>
+>>>> +static bool qcom_pdm_ready(struct auxiliary_device *auxdev)
+>>>> +{
+>>>> +	const struct of_device_id *match;
+>>>> +	struct device_node *root;
+>>>> +	struct qcom_pdm_probe_first_dev_quirk *first_dev;
+>>>> +
+>>>> +	root =3D of_find_node_by_path("/");
+>>>> +	if (!root)
+>>>> +		return true;
+>>>> +
+>>>> +	match =3D of_match_node(qcom_pdm_defer, root);
+>>>> +	of_node_put(root);
+>>>> +	if (!match)
+>>>> +		return true;
+>>>> +
+>>>> +	first_dev =3D (struct qcom_pdm_probe_first_dev_quirk *) match->data;
+>>>> +	return (auxdev->id =3D=3D first_dev->id) && !strcmp(auxdev->name, fi=
+rst_dev->name);
+>>>> +}
+>>>> +
+>>>>  static int qcom_pdm_probe(struct auxiliary_device *auxdev,
+>>>>  			  const struct auxiliary_device_id *id)
+>>>>
+>>>> @@ -647,6 +680,15 @@ static int qcom_pdm_probe(struct auxiliary_device=
+ *auxdev,
+>>>>  	mutex_lock(&qcom_pdm_mutex);
+>>>>
+>>>>  	if (!__qcom_pdm_data) {
+>>>> +		if (!qcom_pdm_ready(auxdev)) {
+>>>> +			pr_debug("%s: Deferring probe for device %s (id: %u)\n",
+>>>> +				__func__, auxdev->name, auxdev->id);
+>>>> +			ret =3D -EPROBE_DEFER;
+>>>> +			goto probe_stop;
+>>>> +		}
+>>>> +		pr_debug("%s: Probing for device %s (id: %u), starting pdm\n",
+>>>> +			__func__, auxdev->name, auxdev->id);
+>>>> +
+>>>>  		data =3D qcom_pdm_start();
+>>>>
+>>>>  		if (IS_ERR(data))
+>>>> @@ -659,6 +701,7 @@ static int qcom_pdm_probe(struct auxiliary_device =
+*auxdev,
+>>>>
+>>>>  	auxiliary_set_drvdata(auxdev, __qcom_pdm_data);
+>>>>
+>>>> +probe_stop:
+>>>>  	mutex_unlock(&qcom_pdm_mutex);
+>>>>
+>>>>  	return ret;
+>>>>
+>>>> ---
+>>>> base-commit: 7f048b202333b967782a98aa21bb3354dc379bbf
+>>>> change-id: 20250205-qcom_pdm_defer-3dc1271d74d9
+>>>>
+>>>> Best regards,
+>>>> --
+>>>> Frank Oltmanns <frank@oltmanns.dev>
+>>>>
