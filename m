@@ -1,108 +1,100 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C631DF246
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 17:26:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810FE1E008B
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 17:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739122020; cv=none; b=U6Ah2k4mRpsCWjHsTcY5118R6Ld9uA/XwZYBaQeWVOCpXIvsHIO789RgMvliUuuBYSRGX2XDbrTdZVPdRfQS1PICCG+KxOwLHxb1m8Oo1kMc6MStEwIQoiaSKZT4dhZeYcJYZ4i1sbvYRiMAN7NoKiB1UpevoOjM50JQJv79+Ic=
+	t=1739122104; cv=none; b=uzOi5Qzxqn/dyKo1ooILUfFSy5mtbpWuebhNqMTEG61YqYVDKbLZiOvBVpZShyX4+3pX2mTjqSTJx5o2CfhKbEXGoTHWLzUKwbdjFZ0ZaHSF8qFQ7tCFI3uEqfU6gSZBoJ7t/vP0Q1uG9fRm8E4LCNdztEHsx74xpOswxSeT7mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739122020; c=relaxed/simple;
-	bh=3KG+Y83CXLaEOM15Q6WqOTQa9qBNTdeztebI0QCGVQk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YmzzMl+5quP+vhEcBrqHSg6v2cf28ONBz7cjCADkdMpqrPSKzLG24F+UQRLFbq7kUv+sLct1lK+iobm7Poyxl20USD7pSACDgudK6n/99S7A/rgxi+cX6bZl1L6EOF1ozidu3BKcGHqDwr4SWY+H09A74PUOuDwjJJhcMcv/P/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=D/3trxRp; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1739122104; c=relaxed/simple;
+	bh=3qpw2bQ12DB6YGamFBnTxyKWuhTs/kDLk94p3S330Xg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MCIlfIYTkcc9xKQ2GOzMvt7NSp60L1XSvyQcdg+7leNapnxdrLr83AqpWDCB63LI2GdQV5NDoL2SqGvh9KmjcCmyqhlMhj214V9zUCs/Cq44rEVUQsTbPotDWeFRPU4SnTnUOWamnMDUVZoPFEV+poVsm98dJksZSJ2F3PAn80w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=DEFQtUiK; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="D/3trxRp"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab7b7250256so81469566b.0
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 09:26:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1739122017; x=1739726817; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=T7rWMyHpSr2s52jssq674Fk9xNbqQpwV6kSeNvyIkbA=;
-        b=D/3trxRpVeZFZG/wfrIgj9tIJH3kCxbld7jP6JutWzWlg3dDD3rSNDaj+8M6/Zd71b
-         QY+fICXdRoGLF98VNeIz8OZw1hgCdbLfqijVATvfxDhvew0AAmIA398z2YwUN1pnTvsE
-         c3ooq/0Ga6uZhx/O2DYnUo/L1dwWSd80xubOA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739122017; x=1739726817;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=T7rWMyHpSr2s52jssq674Fk9xNbqQpwV6kSeNvyIkbA=;
-        b=q+o+jOWBFaiLEdg1t845XZW8zSD/AOdVrxsfgv2fcWc4BCexdU70DgOIPnt4xmcajE
-         cUmJhokG9lHI/VhFHUs2X94uViismM3MuDTH+JQp9Tntn+a3tpXJ5eHiZNOF+HBoLwKy
-         onEyPccHGtdir7Sju/QZ+BXHKIj3IrkcPQt3M+eCHsjygprE5X4DvGQs+WCFQlI23qJn
-         /IsHmSc0XXdDs4I5WXDjV1qOijl7TZRwZbmNjhV2ZCuXMcPEneD6F21JFemRlCo/gMjO
-         MRa0tfQOhG47V5HyxP1X9Mpde4nCIL1pc7NHhltiE2Yr8z/7Oppt97WQ/6Zn0e/TEm1R
-         kwHw==
-X-Forwarded-Encrypted: i=1; AJvYcCV4WSa8JIeYjz8mR8q683zkI/B60eIc56sv7yy6loH9Fd9kkcSqFuYZvXx+ULUNl+2GGenalqPyY9A+vCE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yza0O+JLOmeshC+m0T4hrLqFTZbCVvYwzuSJWCoc7WMmvkzxHSS
-	fljmoLKpZGoJcJRA6n1rqjECs6NlirRjT8/U8UjzIHKEFo2dSXmlTyOtRJo/sqUEdg6HfLTIRuC
-	4rSI=
-X-Gm-Gg: ASbGnctgsn8598KFHYQ+LBV/mIZWYMA+PH8UUMlga8ZrOSgztcz3NN8yXAgeaptmCGk
-	xbk6dYymSHgICHkJBZI0N0PzXfZcefpagHKpxIlCT6j56Xb8DOtp0EI/eo4l4SoswIfQXVJd0ps
-	NyUKsrElqKeR31Nrxk0YyIDJ774DihTsGqzT5YlfKauqiMHDxsvh80R8s+/w8V1zHymEDJU0QM7
-	Q02sQcz0KVSe5G3MlaK+MK3HZ9ukfPm2Kc2GnXLL9pXPvPoD47B0iArM2dRhLAWczm5s117VrcI
-	SettC3mtote1YbqVgp6suHCQvaamOiPt5PKyNMk/ONXLfbKd0xryvEFo+Uhg0mKTXA==
-X-Google-Smtp-Source: AGHT+IFXOIEEVUxZh5U0fSOyk2t30eYQ4HBsO5v2Gjc6p/sJ6S/chlRIZjbMa1f7zY7a0Heha3MeOA==
-X-Received: by 2002:a17:907:3da7:b0:ab7:63fa:e4ab with SMTP id a640c23a62f3a-ab7897b252amr1163516166b.0.1739122015594;
-        Sun, 09 Feb 2025 09:26:55 -0800 (PST)
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7ba97704dsm115950066b.107.2025.02.09.09.26.54
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Feb 2025 09:26:54 -0800 (PST)
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5de6e26d4e4so1258183a12.1
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 09:26:54 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV3EIBqDR0ua2TetR1EzHGod7X+DzWt3Q59+rlOjeEiEGp1IrQOL9pGj0EM4iTRNRducaSDv/gk1Onx1Ss=@vger.kernel.org
-X-Received: by 2002:a05:6402:3510:b0:5de:5947:ea35 with SMTP id
- 4fb4d7f45d1cf-5de5947eab6mr8104437a12.25.1739122013840; Sun, 09 Feb 2025
- 09:26:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="DEFQtUiK"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 98F94240107
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 18:28:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1739122100; bh=3qpw2bQ12DB6YGamFBnTxyKWuhTs/kDLk94p3S330Xg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=DEFQtUiKJm5vlOa1GTPCXPF27DnFWHBlk7j6BJxmhPr+BHctH1I+zcCB7eBQiWVu6
+	 87lwMuWwycUq4ixaM34aO1Ucm5K4K1+ziP7f0pISDsbiRVUy0gC/xdaJOOE2o9Q0Yb
+	 X595KTyRc/yE5sIh61qT6RvDUOyUTvbUHUE3y32N5/ZW9UYjCThSgRoyzDYVVkmU78
+	 d9esqsr3mDlHVgaE0tGNS43EdnpnxkCNC3RfqI1ZG45V/S2Kvb76R7ftTK4QQWc+O6
+	 rJdICsqhEXcMaPKbt2gO0tnHVNVTAMILCcI2iozqeUxqIHG/Sp/3NKGjbwuz1vqG3I
+	 9qjpjuKymt1VQ==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4YrZRd3h87z9rxG;
+	Sun,  9 Feb 2025 18:28:13 +0100 (CET)
+Date: Sun,  9 Feb 2025 17:28:13 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
+	Mark Brown <broonie@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-ide@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	linux-crypto@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+	dmaengine@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+	linuxppc-dev@lists.ozlabs.org, linux-spi@vger.kernel.org,
+	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>, imx@lists.linux.dev,
+	Niklas Cassel <cassel@kernel.org>, Scott Wood <oss@buserror.net>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Richard Weinberger <richard@nod.at>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Lee Jones <lee@kernel.org>, linux-watchdog@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-mtd@lists.infradead.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	linux-kernel@vger.kernel.org,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 09/12] dt-bindings: memory-controllers: Convert
+ fsl,elbc to YAML
+Message-ID: <Z6jlrU7EPeATjK8s@probook>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <20250207-ppcyaml-v2-9-8137b0c42526@posteo.net>
+ <173897189669.2630636.11579554304003668196.robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250209150718.GA17013@redhat.com> <20250209150749.GA16999@redhat.com>
-In-Reply-To: <20250209150749.GA16999@redhat.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 9 Feb 2025 09:26:37 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgYC-iAp4dw_wN3DBWUB=NzkjT42Dpr46efpKBuF4Nxkg@mail.gmail.com>
-X-Gm-Features: AWEUYZkyMQnBA56VTx9VYyWlnOLvTM7NZ8JOwLDkeKyPyeGtE_WZK30npEYLfzM
-Message-ID: <CAHk-=wgYC-iAp4dw_wN3DBWUB=NzkjT42Dpr46efpKBuF4Nxkg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pipe: change pipe_write() to never add a zero-sized buffer
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Christian Brauner <brauner@kernel.org>, Jeff Layton <jlayton@kernel.org>, 
-	David Howells <dhowells@redhat.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Mateusz Guzik <mjguzik@gmail.com>, 
-	Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>, Oliver Sang <oliver.sang@intel.com>, 
-	Swapnil Sapkal <swapnil.sapkal@amd.com>, WangYuli <wangyuli@uniontech.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <173897189669.2630636.11579554304003668196.robh@kernel.org>
 
-On Sun, 9 Feb 2025 at 07:08, Oleg Nesterov <oleg@redhat.com> wrote:
->
-> This is no longer necessary after c73be61cede5 ("pipe: Add general notification
-> queue support"), pipe_write() checks pipe_has_watch_queue() and returns -EXDEV
-> at the start. And can't help in any case, pipe_write() no longer takes this
-> rd_wait.lock spinlock.
+On Fri, Feb 07, 2025 at 05:44:59PM -0600, Rob Herring (Arm) wrote:
+> On Fri, 07 Feb 2025 22:30:26 +0100, J. Neuschäfer wrote:
+[...]
+> >  .../bindings/memory-controllers/fsl,elbc.yaml      | 146 +++++++++++++++++++++
+> >  .../devicetree/bindings/powerpc/fsl/lbc.txt        |  43 ------
+> >  2 files changed, 146 insertions(+), 43 deletions(-)
+[...]
+> dtschema/dtc warnings/errors:
+> Documentation/devicetree/bindings/memory-controllers/fsl,elbc.example.dtb: /example-0/localbus@f0010100/simple-periph@2,0: failed to match any schema with compatible: ['fsl,elbc-gpcm-uio']
+> Documentation/devicetree/bindings/memory-controllers/fsl,elbc.example.dtb: /example-1/localbus@e0005000/nand@1,0: failed to match any schema with compatible: ['fsl,mpc8315-fcm-nand', 'fsl,elbc-fcm-nand']
+> Documentation/devicetree/bindings/memory-controllers/fsl,elbc.example.dtb: /example-1/localbus@e0005000/nand@1,0: failed to match any schema with compatible: ['fsl,mpc8315-fcm-nand', 'fsl,elbc-fcm-nand']
 
-Ack. This code all goes back to the two-level locking thing with
-notifications using just the spinlock side.
-
-The locking was removed from this code in commit dfaabf916b1c
-("fs/pipe: remove unnecessary spinlock from pipe_write()"), but the
-"pre-allocate" logic remained.
-
-This patch seems to be the right thing to do and removes the vestiges
-of the old model.
-
-But I don't think you need that pipe_buf_assert_len() thing.  And if
-you do, please don't make it a pointless inline helper that only hides
-what it does.
-
-             Linus
+I think this is due to how the patches are ordered in the series.
+This patch uses fsl,elbc-gpcm-uio and fsl,elbc-fcm-nand in examples, but
+comes before the patches that define the corresponding bindings.
