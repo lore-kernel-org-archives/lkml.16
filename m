@@ -1,135 +1,142 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517A91A2399
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 23:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957CF196
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 00:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739058923; cv=none; b=Smx1vS9gXdVcyRVZCH6zfnBPzV6eE6q8GkyIDeXKeSguDimF0KBBl9qD9pb9LoIaXUdbFyUIFdyTS4qaQwnzh2QBcXA/rQn1rQrp5SeuzQ5dRpAlyZHOmlyjD82eH85k8viGJmC4ySxj6jhN6ia9tgCsH2wqZaTQfreao47/J04=
+	t=1739059632; cv=none; b=h4tDDuttdVMiIpRg3pQzmfEVg3wcYpVfFls3Y9KiO9qRcBNmDA+CHXgeJaRoqQlYhXB5VDB0CKPNCZ4C9cnYarFO9aEFiT0jw2jkWulG9nB/+voOfFA9oXLTv8Qk+vB5vfQYG0rlWQhKwGCgQdoMZjYTUwvxmSNG+zGDZkNj00w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739058923; c=relaxed/simple;
-	bh=JRYaldM9lNmyv0V3AluADdJ9dlvrHbXlkp5UU3XH9Rg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cYOF+f6ArPFaxFjALianelOQI+PgpHRk838gZUTtpL9pzDyp2lhu2nGSNw7EFmvJofOQA0M7zOMOMLDtuV9fE2XMd95uPwUg/gnioFGJudyCH1+8Mlm2sVANI8F7K2goq7j8+jTaxdSX26qYxpdrhvUE87Apqhlq3vtcOZOQMhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=vt.edu; spf=pass smtp.mailfrom=vt.edu; dkim=pass (2048-bit key) header.d=vt-edu.20230601.gappssmtp.com header.i=@vt-edu.20230601.gappssmtp.com header.b=V/GdBK9U; arc=none smtp.client-ip=209.85.210.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=vt.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vt.edu
+	s=arc-20240116; t=1739059632; c=relaxed/simple;
+	bh=Rnod+Cv9JGN27bc74JTeUwsZwKe+/eQ5wUgORPxiuzc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ivZzwR1M7K9vCa5rZJwCMcVwS61jmvZ/5FfBZhwpKOEnEhhYZ3evb28wmtcdRkCe9LIrDMSxYBdwej2bETGv0XVwwgd5Vuru6FxCVsegs6Cfbzg8sZpiQCwjBlt6xJCM3oGlccz/NqajAuSnrZI9c3f3PIygzJh5iomm+I5uBEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=SR2TmtIo; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vt-edu.20230601.gappssmtp.com header.i=@vt-edu.20230601.gappssmtp.com header.b="V/GdBK9U"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-726cdcec232so205951a34.1
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 15:55:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vt-edu.20230601.gappssmtp.com; s=20230601; t=1739058920; x=1739663720; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mPicVwQS5wbJAwKsL40Ymzq5q/Ob6IjbFcIhIGSOedI=;
-        b=V/GdBK9UEzWMQ14583BhtSuIbTUKMhwLIrtAHFBPCs+yIqupRn5ykVRB/TCNqSOiJB
-         rsaqHlYpxej/dfd74EuJuGXQ9/My16iz5tDiMYZeqNys4gQnTYkkhLf1aWD9hDJvsPaH
-         r+WeeNpfPmrPGLtGgbC4WbbrnDh5oOXsKX1bw+u8KO+QPPrNCaOuRTpOnogQjNaaddOc
-         0wqhzhTXQjhbz2wqrIomBn9wP0lsnPsQ5H0v7nPpR2dl1ijYKZ7jUpqwiw6r9IVtSbxA
-         fhE0Hd3U+wvEfkduXvUQqkreZrUKVv/SYr63utjnyLmNbPv/xEoRHYooy6ERuXtRdWZj
-         q7mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739058920; x=1739663720;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mPicVwQS5wbJAwKsL40Ymzq5q/Ob6IjbFcIhIGSOedI=;
-        b=RkmhbVjq/UkQ+nCUlHu9xSZ0IO29y3nAEE5riPxR4NFNypDL5E/sGZWsHIlbgeloyX
-         /vLUuhiVbNssUqOYVvfTBWsmay/WCN5dSU0tY2lDMvRraV5WAgpYaMhqkvxP/ehrXdmG
-         MLYa8mVX32NLg69ViaaQ5FwBEIDawx1dFUSKIHvhCY+eIS545ilMiD+YBk0NOBgqcouo
-         a0TpajDNSxC7SKaiNsvKQTS4Gnpk7EvihhVCzE3hJCFdyrLmLEkfVoDGoK9JDvmRDAUG
-         kY7DbSMhA5VCvJn2Dd+kY6FSPS5F5Jh8JGP7MJGUg3DFDdJ85lZONrhjSnTmcoDvUdVX
-         xGnw==
-X-Forwarded-Encrypted: i=1; AJvYcCVsHAjJPu0rrcNJLbmiu+NEvkFQLsRfppGvoaF12f1brDPpH8zjYFO16/UZ+1G15deZNUpz2V1JGLoP1M0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywz08nISASnjtCMC2hMVql6mrOnKl92Y6NphhvaMP5W65WzF27O
-	5dgWoKym+1khoYpUANE8sMJmO2MQ8Uw2u7z6vQuagHX6sRIa4Bhg7QdXWnqmBIU=
-X-Gm-Gg: ASbGnctGh1Zdi1lilqcwJUEJGCUTLXk0TIgGYIjwWAMz7/YMrDSICM0urNqqXDmhDv5
-	f9XMSql7hGcAEyPfbA8qjqd0B8CyUS4r9DU3l1k9ITP2TqzedXj+O56/nz7pqDRZjYSdl02jMon
-	n/o93FTapSdWoZMiy7b2WuAgwuoHwfiBHgXC8EpywGBFQQ8NLM7os54f63b8TyEmbReDYmcBHO3
-	bDaHnlMZ2IqY4jGIM+JVtpbkvANgrveadlYV/8JFw7ASKOvXFNFyogKe1T3DcJ1X5OjE1rc9Pdl
-	dg8MUNbsx+oiebTnurQ815TK9NHpVbRCPqdz1j6aUUy5ehOzTz6QHBKIHg==
-X-Google-Smtp-Source: AGHT+IHWk4r4HVyiqLL19e9cELrxNlFZUIzBX3h21rZtA7zL/FAkU7jPy3L3H4qYyNZyOB/xY8XDPw==
-X-Received: by 2002:a05:6870:5154:b0:2b7:fa6f:9672 with SMTP id 586e51a60fabf-2b83ee95b12mr5471087fac.38.1739058920357;
-        Sat, 08 Feb 2025 15:55:20 -0800 (PST)
-Received: from ?IPV6:2603:8080:7400:36da:dff5:4180:2562:4c1e? ([2603:8080:7400:36da:dff5:4180:2562:4c1e])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b826262333sm1734780fac.37.2025.02.08.15.55.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 08 Feb 2025 15:55:19 -0800 (PST)
-Message-ID: <1894f095-e93a-4def-a223-d5c089ecc2df@vt.edu>
-Date: Sat, 8 Feb 2025 17:55:16 -0600
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="SR2TmtIo"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 05E27240104
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 01:07:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1739059628; bh=Rnod+Cv9JGN27bc74JTeUwsZwKe+/eQ5wUgORPxiuzc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=SR2TmtIo67z05s4kxF0Ofa2/igGTbKkcbZPByXWXy8i6zm9KWjhNMQ/3Vaqi5EU6A
+	 JkqODKQmGafdbjTgaw6zvXIjbwCea1icwXx7XJkKGwDvjrw6cOwzih3KjdBWDEkmeQ
+	 TAV2d8GBB+HcI8v0XRjQ89eked08X5Fnl4rHWmiAxvOraVLYfkyXf4raGqN9z9w9Gy
+	 VmloYIu+RyuefxPplg8tyDFctF4eRcBdw1kFlC36JnybCRp/IEQgKYg+M3g7QvpWUG
+	 ohkM9bj5pnzu735rDicaTmq0dj+A2G8d9R/pUbzadWaJ8mfgVociMnpq9oukqQgHOv
+	 /dTErrwHPl7Ag==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4Yr7LD23pfz6v0D;
+	Sun,  9 Feb 2025 01:06:59 +0100 (CET)
+Date: Sun,  9 Feb 2025 00:06:59 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: j.ne@posteo.net
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 06/12] dt-bindings: pci: Convert fsl,mpc83xx-pcie to
+ YAML
+Message-ID: <Z6fxo4j5a6ro0f1w@probook>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <20250207-ppcyaml-v2-6-8137b0c42526@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/2] rust: add dma coherent allocator abstraction.
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Christoph Hellwig <hch@lst.de>
-Cc: Abdiel Janulgue <abdiel.janulgue@gmail.com>,
- daniel.almeida@collabora.com, aliceryhl@google.com, robin.murphy@arm.com,
- rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>, Valentin Obst <kernel@valentinobst.de>,
- open list <linux-kernel@vger.kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
- "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
- Greg KH <gregkh@linuxfoundation.org>
-References: <20250108122825.136021-1-abdiel.janulgue@gmail.com>
- <20250108122825.136021-3-abdiel.janulgue@gmail.com>
- <20250108135951.GA18074@lst.de>
- <CANiq72=R2N+QiCiHZQu-6YJ9aYpn_bik3BW3U=nAW3jL7unzLw@mail.gmail.com>
-Content-Language: en-US
-From: Carlos Bilbao <bilbao@vt.edu>
-In-Reply-To: <CANiq72=R2N+QiCiHZQu-6YJ9aYpn_bik3BW3U=nAW3jL7unzLw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250207-ppcyaml-v2-6-8137b0c42526@posteo.net>
 
-Hello,
-
-On 1/8/25 09:16, Miguel Ojeda wrote:
-> On Wed, Jan 8, 2025 at 3:00 PM Christoph Hellwig <hch@lst.de> wrote:
->>
->> No rust code in kernel/dma, please.
+On Fri, Feb 07, 2025 at 10:30:23PM +0100, J. Neuschäfer via B4 Relay wrote:
+> From: "J. Neuschäfer" <j.ne@posteo.net>
 > 
-> What do you suggest?
-
-This is it. What do people suggest? This thread has received a lot of
-attention -- maybe it's an opportunity for the community to brainstorm.
-Here's an idea:
-
-Some maintainers clearly hate wrappers/bindings to Rust, while others don't
-mind as long as the R4L folks commit to the maintenance duties. Depending on
-the subsystem, it will be a completely different conversation. It seems to
-me that right now, every time the R4L folks interact with a new subsystem,
-they need to understand the maintainer's stance. That looks like an
-exhausting process.
-
-Would it make sense to have a C middleman that Rust calls instead of
-binding directly to the C funcs? This dispatcher would provide a simpler,
-stable API with fixed function signatures, even if the C functions change.
-If a C func is removed/changed, only the C dispatcher would need to be
-adapted, but until that happens, a new error could be returned to the Rust
-side (not ideal, but Rust doesn't just break). 
-
-This would obviously impose some limitations on the Rust side, but it might
-be less conflictive than direct bindings. Also, in Abdiel's case here (for
-example), he'd explicitly take on the maintenance of the Rust abstraction
-and its DMA dispatchers, leaving no ambiguity about ownership.
-
+> Formalise the binding for the PCI controllers in the Freescale MPC8xxx
+> chip family. Information about PCI-X-specific properties was taken from
+> fsl,pci.txt. The examples were taken from mpc8315erdb.dts and
+> xpedite5200_xmon.dts.
 > 
-> Thanks!
+> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> ---
 > 
-> Cheers,
-> Miguel
+> V2:
+> - merge fsl,pci.txt into fsl,mpc8xxx-pci.yaml
+> - regroup compatible strings, list single-item values in one enum
+> - trim subject line (remove "binding")
+> - fix property order to comply with dts coding style
+> ---
+>  .../devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml   | 115 +++++++++++++++++++++
+>  Documentation/devicetree/bindings/pci/fsl,pci.txt  |  27 -----
+>  2 files changed, 115 insertions(+), 27 deletions(-)
 > 
-> 
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml b/Documentation/devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..57c5503cec47e6e90ed2b09835bfad10309db927
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml
+> @@ -0,0 +1,115 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +
+> +$id: http://devicetree.org/schemas/pci/fsl,mpc8xxx-pci.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale MPC83xx PCI/PCI-X/PCIe controllers
+> +
+> +description: |
+> +  Binding for the PCI/PCI-X/PCIe host bridges on MPC8xxx SoCs.
+> +  See also: Documentation/devicetree/bindings/pci/fsl,pci.txt
 
-Thanks,
-Carlos
+This is obviously a bit wrong; I ended up putting the information from
+fsl,pci.txt entirely under the fsl,pci-agent-force-enum property, but
+forgot to remove the reference to the old txt file.
+
+> +properties:
+[...]
+> +  fsl,pci-agent-force-enum:
+> +    type: boolean
+> +    description:
+> +      Typically any Freescale PCI-X bridge hardware strapped into Agent mode is
+> +      prevented from enumerating the bus. The PrPMC form-factor requires all
+> +      mezzanines to be PCI-X Agents, but one per system may still enumerate the
+> +      bus.
+> +
+> +      This property allows a PCI-X bridge to be used for bus enumeration
+> +      despite being strapped into Agent mode.
+> +
+> +required:
+> +  - reg
+> +  - compatible
