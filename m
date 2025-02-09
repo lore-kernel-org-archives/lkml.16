@@ -1,66 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1B615533F;
-	Sun,  9 Feb 2025 09:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157A9339A8
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 10:01:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739095123; cv=none; b=Ns3XDCphNk6FV8qcSvesaxbv8tJ8RQMGJM9Yh+cA8cvH3YhvKQ2ZuACyDLOCRKrEUstl2mvXETSp/IKOGQHARf4Awbx0/TTH88JntcfroPhBpIIFqDCanESqAEU28U0JJ+x48VifHsP/QnTjeaMQuHKfqY8Vw1MRm9hr+h0HTzU=
+	t=1739095284; cv=none; b=mA5+VcOQmJIAo/rGykFTBXuedExJs36ufAMtC9Ol8ZC6hptzix49N5Szqp5r0jk1II+Zl8UPFhLayZNzePzxQRKzIXK0VQlfYZNnd5iIUXX8F1BvEkzUMLYdyFG2iRPzVs7cnPqs8xwSD/blGia6yJEdFsgh0tBrOj8HvDveET0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739095123; c=relaxed/simple;
-	bh=L7FwTv+nbIdJL8d3SJiYiMCmiT7OHJiIT96Vv4Q+Qbk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=jyhr7sbYxRfQ5vA7TIjpX55aG9e+KQ9Rk/3KZ9517Wf1hEEA9Dr/lQ4cbG4mzsc7kQCHAjURHeyvmTn00fVMPwJuEd+gwSVI7MCx3Y6+60sD5Qm+gxe0iRljy+WJuKxYtSMTzl+BhVHC7eDnIvMCjKML7UCV0YNPrVQirba7ByY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OFlpJcqX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739095284; c=relaxed/simple;
+	bh=9cSbhneX97WdYtqTFiUpL4Xz+wowhgsJfRXIyo0XD/Q=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=tXES2sduKrvplSze/4zcn/9lbx9V3dwhOPHYNho8W+AS+Ht3/GIKvZLjKAQPfs0/rWff9j1LHKXbwdvXy+Ag3k5cr8taygD0/ECfGAN4J3etqqQ7MQpS4HAleffC13LPIG/LFBqwKQ67Wge+jbt7Sqa/1HEfdB91Ck2XZV2G9ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sE9os2oC; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OFlpJcqX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31F6EC4CEDD;
-	Sun,  9 Feb 2025 09:58:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739095122;
-	bh=L7FwTv+nbIdJL8d3SJiYiMCmiT7OHJiIT96Vv4Q+Qbk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=OFlpJcqX3RrY/Jat/cKRanXNUPbakjiEsQtRpzjOaPbA4BWOYyc+wO2VzHdlu1/qK
-	 Q4YFyk5KtpHEtRQKsjLLKCsv2t+23IYtbEfg7ZO7P1AiHkU29Y1BZTYvi/cCwB3Ewn
-	 1Ctf8IxBjsNolZRU93IvbFKaWxuLH+L8UOVos3WBWipytuuTJ47BLSQ+UEEapM48Lm
-	 dnVRF2oPuL+pLL5KuicKsjm1ftPgFrRHYjgeJAgupnf+QfumdpTzvA67eyetrGLSfg
-	 Oh0VE+gZu8VyPMcG4PvYPFx8vZdE6kiiIkyyc+6svOj28thvu/bw1eKZ8HrGuYNGOh
-	 rIM10UIo1mf+w==
-From: Leon Romanovsky <leon@kernel.org>
-To: Selvin Xavier <selvin.xavier@broadcom.com>, 
- Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Kalesh AP <kalesh-anakkur.purayil@broadcom.com>, 
- Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org, 
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-In-Reply-To: <a6b081ab-55fe-4d0c-8f69-c5e5a59e9141@stanley.mountain>
-References: <a6b081ab-55fe-4d0c-8f69-c5e5a59e9141@stanley.mountain>
-Subject: Re: [PATCH next] RDMA/bnxt_re: Fix buffer overflow in debugfs code
-Message-Id: <173909511967.39679.271467641210884194.b4-ty@kernel.org>
-Date: Sun, 09 Feb 2025 04:58:39 -0500
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sE9os2oC"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739095279;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9cSbhneX97WdYtqTFiUpL4Xz+wowhgsJfRXIyo0XD/Q=;
+	b=sE9os2oCjn5wm8jnTVvYcVtsREUjUYFxqpeprhiDim4rUG/+AqdL+oucY7wOl6roCTG3KQ
+	vbQFdqiU1SgzVUSSV8hHxiKNbVnT0cEfKjMaB7UXMbQLmd/KSeTBzTVeUBBBTzk03hWMlY
+	puW18AQ0rIHwYhVZpFVgDNNdVqPd0qI=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-37811
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.1\))
+Subject: Re: [RESEND PATCH] fadump: Use str_yes_no() helper in
+ fadump_show_config()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <505dcbf1-c185-4bc3-9615-041dfd6344e5@csgroup.eu>
+Date: Sun, 9 Feb 2025 11:01:06 +0100
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>,
+ Nicholas Piggin <npiggin@gmail.com>,
+ Naveen N Rao <naveen@kernel.org>,
+ Hari Bathini <hbathini@linux.ibm.com>,
+ Sourabh Jain <sourabhjain@linux.ibm.com>,
+ "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+ "Aneesh Kumar K.V (IBM)" <aneesh.kumar@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Baoquan He <bhe@redhat.com>,
+ linuxppc-dev@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B65D3E24-E34B-47DA-902F-8DD338CCFE09@linux.dev>
+References: <20250209081704.2758-2-thorsten.blum@linux.dev>
+ <505dcbf1-c185-4bc3-9615-041dfd6344e5@csgroup.eu>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+X-Migadu-Flow: FLOW_OUT
 
+On 9. Feb 2025, at 10:16, Christophe Leroy wrote:
+> Le 09/02/2025 =C3=A0 09:17, Thorsten Blum a =C3=A9crit :
+>> Remove hard-coded strings by using the str_yes_no() helper function.
+>> Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>> Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+>> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+>=20
+> Any reason for resending ? Your patch is not lost, see =
+https://patchwork.ozlabs.org/project/linuxppc-dev/list/?submitter=3D89400
 
-On Fri, 07 Feb 2025 12:16:19 +0300, Dan Carpenter wrote:
-> Add some bounds checking to prevent memory corruption in
-> bnxt_re_cc_config_set().  This is debugfs code so the bug can only be
-> triggered by root.
-> 
-> 
+Ah sorry, I missed this. It's sometimes hard to know the status of a
+patch when it's not in next yet.
 
-Applied, thanks!
-
-[1/1] RDMA/bnxt_re: Fix buffer overflow in debugfs code
-      https://git.kernel.org/rdma/rdma/c/dbc641ecf1cbd4
-
-Best regards,
--- 
-Leon Romanovsky <leon@kernel.org>
-
+Thanks,
+Thorsten=
