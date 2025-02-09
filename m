@@ -1,126 +1,178 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC6F1E130F
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 23:11:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EF91E4928
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 23:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739142669; cv=none; b=ItR8xErGRo68mSHJI+hfy/c0Nu3qN9ODwo/qBcb5m7TxuEQ0Lp4iwVmGFwqo3ZYhpcYlaTUp+cg5htjXqyse95V/oehdVZr7SdfvHPAw4p8ysfI0ZCloAKEQwXReXN2LK823oIswJZ8Dc509KgTnl+RaA/NV1KIl0M51GSzz+aU=
+	t=1739142727; cv=none; b=rkhVVCrOyRAXicIdY86Ysv6+d5Pu2cvR81+9e+3ySwJx7XJ7rAq8VbyHAHO97FooiWaKfjxIs5AjyHMKgbME0wxZfVyAPDKGcgQC3CO4LkveuWTjP6ysWaiRrW1Ew9q9o6rtN1OHy8m52QgAih9LZeHmSOgdqud/3iu40VNd/sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739142669; c=relaxed/simple;
-	bh=LIsEOvGJI+uoC3MkU9OIroq6AT4zBmXTw6Rco3onVSY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TByEeIcgP+E6bnf+y1t8hzjMNPVAcFTbyqHjD6BWfsD/BkvfKM6HfFR69yDpmjiStPfYmZUaM20aLcxodc1FixGLgs5+Otvjzruh3UPhKFqXlbPKQRDJsq4YC3YoyyEMiGJDB8dk+S5kd95m9sJ7TnFDNtjCHJhmNy5lut6+q60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=MUdmDveM; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1739142727; c=relaxed/simple;
+	bh=GkQTtG9hVz8ToxKu6fUNzw7ncBXdXnpvtOjdVioIQEM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k1JCfm0QhY3knedJA1QBoM3jMvQYOfrUOeLd8XQi7GYcS5QWZbmw0Bfq6C9NSOgdLihkNQHq9737y9AYRDH2phK4KaHw4X3co2VOOhgQD1CaqoEL1o+gmSXY0cdQYLKoZk2Tudzl/urhkQmYN1Ei+2Kpsaaf6I1wRr+siyHGRVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xXv14nIm; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="MUdmDveM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1739142657; x=1739747457; i=spasswolf@web.de;
-	bh=DOgsJLDk0dTZZvVhtM6zKQYuU5P+hgiAsngavCjdeAo=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=MUdmDveMfh+jy9F6c52L/p0gU0QqpP9U96HrFC4ULpnujQZvlCNXFheiZe9qHLe2
-	 mddRRFWtMGrH+oGIlOAgmonT58Y9dSVjBcfp7ndooOlK82qypfdDdh0zIIdc4+VCP
-	 g28A5vXOOZD94cFASBUFixvXZcbxxG0qmN8gEvkrwMCmq8FpLH4XK+Bj7PKU9lyI0
-	 kf1tBmFavgi3tL2K2ttJg5UwUTPs21XDcq9/FLpwug7UTTsMnKIh8HXOCtF/IIDP9
-	 sF8L811H4s5yGQNwcckBkCbzJXV/C0bPL91375oI34kUPWpKPdEwJsFK0nRfeG3oI
-	 XYe8ZdUj6AFqgEz5Lw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from localhost.localdomain ([84.119.92.193]) by smtp.web.de
- (mrweb106 [213.165.67.124]) with ESMTPSA (Nemesis) id
- 1MdwNg-1t9qdz1IYA-00m1e2; Mon, 10 Feb 2025 00:10:57 +0100
-From: Bert Karwatzki <spasswolf@web.de>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Bert Karwatzki <spasswolf@web.de>,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Luca Weiss <luca@z3ntu.xyz>
-Subject: wcd9335 efuse sensing fails on fairphone-fp3
-Date: Mon, 10 Feb 2025 00:10:52 +0100
-Message-ID: <20250209231054.390922-1-spasswolf@web.de>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xXv14nIm"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5450b91dbc8so457623e87.3
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 15:12:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739142723; x=1739747523; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+vFPwFXM4bR9tYX9V6EFmxAhSw4debbGpPDSv0t249A=;
+        b=xXv14nImjQeeCFBzKyfB4yxi3S1BeUz1A1P8CLctwReP4fwpYgGLpEJMFrQJN6w9gX
+         513rkpVigJJsfZCUqciHGu2rr7pHXuk37zfRdwVk+9XxJqcYIU0qAfOyaXfR0Ek/R/DT
+         N97KHHBUfyccdZtp9+ssDBxwVUpq4KNrs1YzhEKsoRq3sFbHSrz++Gh7i9z+fpEmFOKG
+         02UynE46OnjKKEKI+BJ5+r8Spr2348ow6lZoqlONjdd3/bCsEzFv2ympYotXhp0P20Im
+         KBxSgtkfvFdTnoHD21ywEHRiK3TxSA2+tpgsEVbJ63wfvMJ6SZQWif5tNk6vLuclZ/e1
+         VOfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739142723; x=1739747523;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+vFPwFXM4bR9tYX9V6EFmxAhSw4debbGpPDSv0t249A=;
+        b=bP634KKf9QelC5+u4pQMGkW7rzKlw+ew1XdDkNSUnlwBcEoYh7TK/XnGA8XynIv3TL
+         4rOxXtcrruDe+hn+4tc1mvTLmjTsv3+GvlUiSD5OWg4AT+4SMlDJacypbbU1DPJLofKf
+         sWqT62S7LCajnUS4e1SBqVJBdVc17f2zQ9nQCPFxzLF8fHV4KxN+sLrTG4EIpvMn4ZHA
+         tIv2bXJ8RzFrh9E6M8SZD0Z/oxb6uWwcPEMHbxnEy88aGkEy3uk5bn412bkrqWGfeFWl
+         s5XcEDW+0O4UTlpxozDuBraYdEteJOUfmjpAExV+vJBqaz7CRYOP6LGaBOfQWEEtKsSC
+         FtEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWG6DzJK5i0dyQp27HkgY9JtcjDp0jF4dcMeVYOftGmIy0obt/GjnCbpPQRdx0ug+4e9ug10RmTnR9IOQM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4kBFsIX2nwHYIvseSv9WOtKud8Ot5gCwg/L91CxgwkMPnfGqS
+	upOa6ep15UKJZ3dbFlssH3dvjd3TksSjvYoQq1abCZvhQ4zOhb5YkpEaRTygXwU=
+X-Gm-Gg: ASbGncszR2Zmy7/9BSOtXvlIthukAGCOjlMf/lyrGuQtGyxMji14Zns/WzkECvzKt/2
+	zRjTx776qxjbkTwZKwol5IkRKArbmCaXlDDsktIIuFnvk4q2zFe2RWSB7ewz7D5TNcLo25i7Z3C
+	FOclHiS7UzcGiUt2VZe3XZhs2JZSSpM705R0NY44UJTD98adv97ISYovqXzxvxaTb0/q8myRaHc
+	5zvQSXwnrk20jtiAwYqhADAIh/I7Fa9Dp7Sr9Z8jIHuF4sOK4BpPtPcG86M0+EDaWHVBYr7r3uU
+	4Km8JvWVEQB3iay6e32NUo+q/yNmD7RJpzLRU2Zw6cGtmcIiS326x5FGgHqbuVmkP/AzTBc=
+X-Google-Smtp-Source: AGHT+IF00rLDAE/Zu8DuAgn3EOiGHavqn93g+Q4K+br4ppdg5/rNEYRwOpkH1xQrqhqfhAl/+SpNmA==
+X-Received: by 2002:a05:6512:6c5:b0:545:a89:4dc7 with SMTP id 2adb3069b0e04-5450a894ef0mr906708e87.52.1739142722973;
+        Sun, 09 Feb 2025 15:12:02 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5450bb646a5sm208604e87.146.2025.02.09.15.12.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2025 15:12:01 -0800 (PST)
+Date: Mon, 10 Feb 2025 01:11:59 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Marijn Suijten <marijn.suijten@somainline.org>
+Cc: Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>, 
+	Vinod Koul <vkoul@kernel.org>, Simona Vetter <simona@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	Jordan Crouse <jordan@cosmicpenguin.net>, ~postmarketos/upstreaming@lists.sr.ht, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Martin Botka <martin.botka@somainline.org>, 
+	Jami Kettunen <jami.kettunen@somainline.org>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v2 2/3] drm/msm/dsi: Set PHY usescase (and mode) before
+ registering DSI host
+Message-ID: <nzm3tokbvho3hxz3e5vblp5ndagfcv5ah3j7gtkqjmt7ynr6f3@v36juvu73i5v>
+References: <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-0-9a60184fdc36@somainline.org>
+ <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-2-9a60184fdc36@somainline.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:m8ETLs2F3KcEu04F3XF2xqrHgTc7PmoSHLgdGKsj0NJNiyrD9GR
- hsIazgFRIb+crs5/z5U3KCsjueDmGC6pQseVeoIj/fbQ4Wh/K9lvtlcjlwhYgQzoIu9QQyY
- v7OJikmvP39/xz2tQllvUq7ohQx4wqHC8UAbL1+0D7GktAkEnrRZnBxtF3RTAH9N3vxgTLN
- uM6wyiSX0FpDSDA9/5E9g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:OQmZKYURTGs=;w8BakEYocS1QqLGlBho2A8z1t1b
- fAXtHnPX9GGHRU2OtQeXOKmztKwgo1LutSrdnNTxzGDP/xHg55vAvvZOUI5i98ugvyVOVj64u
- 7OPjUL2V6co5C9RO6hHDTmsqk2i2bAplvwMWmUosHnPc6st/Ulruo/WqQ6v0yNu9p9Hwq3B+j
- TfNV/NFTV+MOCKOjeIzH+yKYfTp+ee/YX5yDFRVRWo8m2V72cWrlTyPEQ9ac3l3JE9l/ogkFC
- qm4zwyAs1tWwI8X7g9pPTDasSvT5wqcBQvOkyrtHLPblRDrtDYFMGYn9tGndR6GxlFD+bWvEY
- b1BeYsybbRxVxrte84kaoDCR8M3dmTjl/RDWX3nMJM+3dnSNCxDMaDXwQXx6SP3n4F76xcEZ1
- oQJaGUSx37NjDz7eT4KkmBYhGO+clWYfZGiCZvdbc2li1ncetJEoyaZckOvro9rJhXem4GIBQ
- U7j0M7CPnp+I7Eq+uMpw5y0F+QjOqKQMc//yVlw2C4Ucuv1pKXgxWzAnin+SfKnRhFIiJIJdv
- X6Aaxo7arABa6b02d5ba+0hCHWNPew4foOHQgnhPPT++ocC9aWGiIi9s9XNz/LTx4E2Zk10st
- BpC8DQk3SvaFqrxyaBGnUUMkMwrnAER09EgyGaxKTom23GyorOFRQzy0Lfo01ElCls5WGA/7E
- JgkVUl+5QFy+u69BCMzeoCJv2zhKzgTrekqcc2bQ7XkZwcvq/6DwGSAfHC57Oqx6KEMbrAZKr
- 7DQAhd303qN9f+ZiYtvaZsc4fosIYJvdmUyiTf37iM1S9pIifKz1bO7TQ+7WIvpDVnFzWiVw3
- MZxzCkaDtc0/IAqrvt8lPf47FNr31uOb9m3nmtukVsqWcqPuCVRtLkeb0iUwK/cnBddfSMhzc
- vW1FTfJt32hmzKXAPlRmzh9eaRSvecbcIh1HDp8CYdqx2bDj0wl9Uq8MGcmRH7VvGhCABfV19
- qzwTHwA3gMCP9gm3kX9JwrDHYO7UGngwLpoOwC6V3ImXndr/GjOf5dpFuKvWlGsckYt0zlErW
- xJwd8SYedyTEc5NxG2mhg9D6pc+Bl2afU+0nHPzUSp4RWnkj3KIiHOqBQm0Y/8tJQByK45NY7
- ipFTyzNd20WAs5jbizKPBrRBcRRA/ltt6yKrztXk6DLnK4Z7D2QuUdZRVyerZy+zyEzgQ5Ayt
- 887wrJbmMF1k3u4WU/yzDAZ37NMV0VyNYh3MWk0lG3FRoN8WN/1ERiG+Y4GMb+yGrtbK2ktMR
- 2l4NEe6SxBsviXoqV8N2ESRqCxvz9Xxtgal7V8W+Evkb7PfF5klB/c51gALbRZCRI+S5bIbbu
- xb0/Xhb9t/IEqR/dDLOrpl+8kc+utP3UN8nk6YCbVSeWCN+/MZu0wc9Ky5wyHp0Je5Q3BXdBP
- eS/M+QmDEWDPMKVc2QmgE1uTurGxrVCLo7Y6rKnNaR4HdDn2VbiqXXPfM2IdnIJZU8HyJgi6F
- 8nUFW8hjuJLPOKrTpakWSNEy8IY0=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-2-9a60184fdc36@somainline.org>
 
-I recently tried to use the wcd9335 codec driver on the fairphone-fp3
-with a close to mainline kernel from here
-https://github.com/msm8953-mainline/linux/
+On Sun, Feb 09, 2025 at 10:42:53PM +0100, Marijn Suijten wrote:
+> Ordering issues here cause an uninitialized (default STANDALONE)
+> usecase to be programmed (which appears to be a MUX) in some cases
+> when msm_dsi_host_register() is called, leading to the slave PLL in
+> bonded-DSI mode to source from a clock parent (dsi1vco) that is off.
+> 
+> This should seemingly not be a problem as the actual dispcc clocks from
+> DSI1 that are muxed in the clock tree of DSI0 are way further down, this
+> bit still seems to have an effect on them somehow and causes the right
+> side of the panel controlled by DSI1 to not function.
+> 
+> In an ideal world this code is refactored to no longer have such
+> error-prone calls "across subsystems", and instead model the "PLL src"
+> register field as a regular mux so that changing the clock parents
+> programmatically or in DTS via `assigned-clock-parents` has the
+> desired effect.
+> But for the avid reader, the clocks that we *are* muxing into DSI0's
+> tree are way further down, so if this bit turns out to be a simple mux
+> between dsiXvco and out_div, that shouldn't have any effect as this
+> whole tree is off anyway.
+> 
+> Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
+> ---
+>  drivers/gpu/drm/msm/dsi/dsi_manager.c | 30 +++++++++++++++++++-----------
+>  1 file changed, 19 insertions(+), 11 deletions(-)
 
-After I get a logical address for the wcd9335 slim device the setup
-seems to work until it reaches wcd9335_enable_efuse_sensing(),
-where I get the warning message from
 
-if (!(snd_soc_component_read(comp,
-				WCD9335_CHIP_TIER_CTRL_EFUSE_STATUS) &
-				WCD9335_CHIP_TIER_CTRL_EFUSE_EN_MASK))
-	WARN(1, "%s: Efuse sense is not complete\n", __func__);
+Fixes: 57bf43389337 ("drm/msm/dsi: Pass down use case to PHY")
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-After this I get  a lot of slim interrupt errors (it seems every slim writ=
-e fails):
+> 
+> diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+> index a210b7c9e5ca281a46fbdb226e25832719a684ea..b93205c034e4acc73d536deeddce6ebd694b4a80 100644
+> --- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
+> +++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+> @@ -74,17 +74,33 @@ static int dsi_mgr_setup_components(int id)
+>  	int ret;
+>  
+>  	if (!IS_BONDED_DSI()) {
+> +		/* Set the usecase before calling msm_dsi_host_register(), which would
+> +		 * already program the PLL source mux based on a default usecase.
+> +		 */
+> +		msm_dsi_phy_set_usecase(msm_dsi->phy, MSM_DSI_PHY_STANDALONE);
+> +		msm_dsi_host_set_phy_mode(msm_dsi->host, msm_dsi->phy);
+> +
+>  		ret = msm_dsi_host_register(msm_dsi->host);
+>  		if (ret)
+>  			return ret;
+> -
+> -		msm_dsi_phy_set_usecase(msm_dsi->phy, MSM_DSI_PHY_STANDALONE);
+> -		msm_dsi_host_set_phy_mode(msm_dsi->host, msm_dsi->phy);
+>  	} else if (other_dsi) {
+>  		struct msm_dsi *master_link_dsi = IS_MASTER_DSI_LINK(id) ?
+>  							msm_dsi : other_dsi;
+>  		struct msm_dsi *slave_link_dsi = IS_MASTER_DSI_LINK(id) ?
+>  							other_dsi : msm_dsi;
+> +
+> +		/* PLL0 is to drive both DSI link clocks in bonded DSI mode.
+> +		 *
+> +		/* Set the usecase before calling msm_dsi_host_register(), which would
+> +		 * already program the PLL source mux based on a default usecase.
+> +		 */
+> +		msm_dsi_phy_set_usecase(clk_master_dsi->phy,
+> +					MSM_DSI_PHY_MASTER);
+> +		msm_dsi_phy_set_usecase(clk_slave_dsi->phy,
+> +					MSM_DSI_PHY_SLAVE);
+> +		msm_dsi_host_set_phy_mode(msm_dsi->host, msm_dsi->phy);
+> +		msm_dsi_host_set_phy_mode(other_dsi->host, other_dsi->phy);
+> +
+>  		/* Register slave host first, so that slave DSI device
+>  		 * has a chance to probe, and do not block the master
+>  		 * DSI device's probe.
+> @@ -98,14 +114,6 @@ static int dsi_mgr_setup_components(int id)
+>  		ret = msm_dsi_host_register(master_link_dsi->host);
+>  		if (ret)
+>  			return ret;
+> -
+> -		/* PLL0 is to drive both 2 DSI link clocks in bonded DSI mode. */
+> -		msm_dsi_phy_set_usecase(clk_master_dsi->phy,
+> -					MSM_DSI_PHY_MASTER);
+> -		msm_dsi_phy_set_usecase(clk_slave_dsi->phy,
+> -					MSM_DSI_PHY_SLAVE);
+> -		msm_dsi_host_set_phy_mode(msm_dsi->host, msm_dsi->phy);
+> -		msm_dsi_host_set_phy_mode(other_dsi->host, other_dsi->phy);
+>  	}
+>  
+>  	return 0;
+> 
+> -- 
+> 2.48.1
+> 
 
-[    8.779992] qcom,slim-ngd-ctrl c140000.slim: Error Interrupt received 0=
-x82000000
-[...]
-
-I tested the effect of not enabling efuse sensing on kernel 4.9.218 (the f=
-airphone-fp3
-downstream kernel with ubuntu touch) and also got lots of the same slim in=
-terrupt errors:
-
-[   42.863981] NGD interrupt error:0x82000000, err:-5
-[   42.863996] err desc[0]:0x8c86806
-[   42.863997] err desc[1]:0x680
-[   42.863999] err desc[2]:0x0
-[   42.864000] err desc[3]:0x0
-[   42.864001] err desc[4]:0x0
-[   42.864003] err desc[5]:0x0
-[   42.864004] err desc[6]:0x0
-[   42.864005] err desc[7]:0x0
-[   42.864007] err desc[8]:0x0
-[   42.864024] err desc[9]:0x0
-[   42.864024] TX failed :MC:0x68,mt:0x0, ret:-5, ver:261
-[   42.864035] conf:0x7,stat:0x684840e,rxmsgq:0x10000
-[   42.864039] int_stat:0x0,int_en:0xbe000000,int_cll:0x0
-[...]
-
-So I now believe that not enabling efuse sensing for wcd9335 causes the
-slim interrupt errors. Does anybody have an idea what could have caused
-the efuse sensing failure?
-
-Bert Karwatzki
-
+-- 
+With best wishes
+Dmitry
