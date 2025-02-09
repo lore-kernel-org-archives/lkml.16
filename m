@@ -1,85 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E17842065
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 06:33:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779F64C9F;
+	Sun,  9 Feb 2025 06:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739082830; cv=none; b=GXoZy3TfPkFN+aU1KaYjGKHRvfYgqO0w6MocrW/EwQCtka2ihw/V1OvzH6YKFQzgqOMB9LOIu6uOCnjhvbVeEDFFPJI3Hoi9fblP7kUxZYPfuk44TOssV4j/3R/hpBYiatmV2qpq5R72BPqxwetPEp93mcMb7/HiwwkIEzocwyI=
+	t=1739082892; cv=none; b=SQEYHJRFcqIR5MFUbQhT21v8r9pX09gBjkhynu3angq6LGmaxSR2gQC/8KrlKHN3CI261rpKo16plubiBorgeY9+ap2mgTWdn1z38QH9bu8kIwqx9p+1hPpFE5fTtfPA268DDviEJ+DGox9JUDIdykGo7TmO4tUAe3jBwj4ERGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739082830; c=relaxed/simple;
-	bh=VMFuAC0HS759OsXlxvxdVDytMlkPwBHgF7qlvYiusNg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dDJpyYYEapzdQLsaOl4ILhqqab/4HYY5Ds5cwBXK2F7ks8qbQCpP8BGz8URF5ZRmRBusjnyZNoWZs6wmX4E3HwtgMUZbc/jf0qc4FLmFUNkw8WyklVp2H9Hj4DIZMtseEP+kyaatbKlJKSP4DR99UZaYVLK0BdmtL2epmrfoooA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XsOx8eMy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739082892; c=relaxed/simple;
+	bh=Vfk6qdeg6zLye0mSfQ2hA4kzjMGlU7OMABMdCdWA7N8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ceMVKjs4KTaQs7PDJyWQdwwkQWZ6FdyzBSRGXL8RsL+uSgWynFzI8btDM988hjvefY/45kyRAlA0zc7ThUsszQ5E1H9NfFc7c7JCTtrN+SvWD6w0rliS3+YTpsH8l9ywhgFrEylvQLxLVCvOUgKSF5BI+Jx2j3eNS/IFQTaMXxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=EJhdgoYp; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XsOx8eMy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF9CAC4CEDD;
-	Sun,  9 Feb 2025 06:33:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739082829;
-	bh=VMFuAC0HS759OsXlxvxdVDytMlkPwBHgF7qlvYiusNg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XsOx8eMyq25GLCRkOCZNkxPHNQopFFFDM5vLHxpkIOQ3GGklZhpdiXyBNYcnrQuK/
-	 WVoKvrNWtxyPGlNGZg2FdfTj+wyJOzSHmxv4N0qEL0wwRwkWloz8n03Ik5OhNp4+hO
-	 YoFacqcnnYGk5hpCsi77YwaVePa4TSUCVVPJPXGAYuZam0eBCsUQJok4HgQ9OFH0o+
-	 NeHOzKLV2IfNZF1k+FzImzX90qmEkx3D1pqjQjzmYVUVxbfPMtZzCfTVWmVf7S1QK3
-	 /KNS3AOdDDGmcRcBsTpsxbgclhNvSbZxuVu0WONE2fo31pvuNLzvqDfxVgSWylHcOn
-	 TiOQSEyyty8aw==
-Date: Sat, 8 Feb 2025 20:33:48 -1000
-From: Tejun Heo <tj@kernel.org>
-To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>
-Cc: linux-kernel@vger.kernel.org, sched-ext@meta.com
-Subject: Re: [PATCH sched_ext/for-6.14-fixes 2/2] sched_ext: Fix migration
- disabled handling in targeted dispatches
-Message-ID: <Z6hMTDhikIpxTSzY@slm.duckdns.org>
-References: <Z6Zz79AUub1YuHwD@slm.duckdns.org>
- <Z6Z0GgXetBRy1-X1@slm.duckdns.org>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EJhdgoYp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1739082887;
+	bh=6VNiOMq/TgkSTKWTAHEpQnLqpvZiW6bD0F9a5usyJHM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=EJhdgoYpJxutkUEo+VTyH6Q7JDRxe00//ea7GZ32tRv55bumD1UBGDhRQETeqY5d2
+	 oZxs52heBKdmGxRBZ/bkvGf3Q7Bh7/T7cSnwpKQB9X0hlyfUHZc34OCgSGXMy6Ifje
+	 d46ycSrf/cghZjgDd/llVbaFmwUXhn83dE7SXTU6hOqSWoL9jjy9nvl6Cp5/iyraMx
+	 5QZiTAIfA3T62eF7SdoXFETwJMJzFE1PUrcOGuVSi2HUU02K8Y7ZfrvKD6G6ch+ICO
+	 4EKFZLGeokodXj1+LezK8fZPEYKBz8E8rwBy+UdILKkIoBFOLttBCfixtXSEIpRhCL
+	 CfKgO91fEdzaQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YrHxg43pXz4wcT;
+	Sun,  9 Feb 2025 17:34:47 +1100 (AEDT)
+Date: Sun, 9 Feb 2025 17:34:46 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: Antoni Pokusinski <apokusinski01@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the iio tree
+Message-ID: <20250209173446.19590956@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6Z0GgXetBRy1-X1@slm.duckdns.org>
+Content-Type: multipart/signed; boundary="Sig_/cx6kQz1YJIji9dl5WvCs8sI";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Fri, Feb 07, 2025 at 10:59:06AM -1000, Tejun Heo wrote:
-> A dispatch operation that can target a specific local DSQ -
-> scx_bpf_dsq_move_to_local() or scx_bpf_dsq_move() - checks whether the task
-> can be migrated to the target CPU using task_can_run_on_remote_rq(). If the
-> task can't be migrated to the targeted CPU, it is bounced through a global
-> DSQ.
-> 
-> task_can_run_on_remote_rq() assumes that the task is on a CPU that's
-> different from the targeted CPU but the callers doesn't uphold the
-> assumption and may call the function when the task is already on the target
-> CPU. When such task has migration disabled, task_can_run_on_remote_rq() ends
-> up returning %false incorrectly unnecessarily bouncing the task to a global
-> DSQ.
-> 
-> Fix it by updating the callers to only call task_can_run_on_remote_rq() when
-> the task is on a different CPU than the target CPU. As this is a bit subtle,
-> for clarity and documentation:
-> 
-> - Make task_can_run_on_remote_rq() trigger SCHED_WARN_ON() if the task is on
->   the same CPU as the target CPU.
-> 
-> - is_migration_disabled() test in task_can_run_on_remote_rq() cannot trigger
->   if the task is on a different CPU than the target CPU as the preceding
->   task_allowed_on_cpu() test should fail beforehand. Convert the test into
->   SCHED_WARN_ON().
-> 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Fixes: 4c30f5ce4f7a ("sched_ext: Implement scx_bpf_dispatch[_vtime]_from_dsq()")
-> Fixes: 0366017e0973 ("sched_ext: Use task_can_run_on_remote_rq() test in dispatch_to_local_dsq()")
-> Cc: stable@vger.kernel.org # v6.12+
+--Sig_/cx6kQz1YJIji9dl5WvCs8sI
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied 1-2 to sched_ext/for-6.14-fixes.
+Hi all,
 
-Thanks.
+In commit
 
--- 
-tejun
+  3e2a7cb538ec ("iio: magnetometer: si7210: fix magnetic field measurement =
+scale")
+
+Fixes tag
+
+  Fixes: cb29542a178f ("iio: magnetometer: si7210: add driver for Si7210")
+
+has these problem(s):
+
+  - Target SHA1 does not exist
+
+Maybe you meant
+
+Fixes: e0f5349ba881 ("iio: magnetometer: si7210: add driver for Si7210")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/cx6kQz1YJIji9dl5WvCs8sI
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmeoTIYACgkQAVBC80lX
+0GzmWwf/fbsmrm5Wra441SFxmp0r27DbDwfbOnAZLm4G2+NbqmVgtxq5u8da9Icm
+VLjR62yMHq1IUpbMhQQB0ogABite1xMLw1iqed4kBuk4kuAD5dC4Hn+tVWkyiO4o
+U7DoVT4B4cA30SV/S1oCEMdpf6sfwHycSZSh6C3TzseM9jfrUl2ot4Q11QIWliBm
+I472tQ9IArhWkFStiKlw0s5wI2/99FPileNKuoTbU2XOF/H/sDmtizQR7fASCjys
+WO+qbGNxQEBWrFOttbrugokQdYSWHLTHV/24uiyl4Npipz9cJrm6/VJA3KLnMdmk
+v80CMJ5uRdO9DioYUMeu9/QsdNXYtw==
+=HYfz
+-----END PGP SIGNATURE-----
+
+--Sig_/cx6kQz1YJIji9dl5WvCs8sI--
