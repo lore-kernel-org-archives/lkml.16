@@ -1,167 +1,128 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCEC14F70;
-	Sun,  9 Feb 2025 03:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666941392;
+	Sun,  9 Feb 2025 04:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739073425; cv=none; b=tyJnwPtVFjShuYaqagyCDOaW3Wi2CeMG3ciN07UiDsb43/gParU9onJ6cMOONVBI9CPlL0LA7iB3xNiQdqCCRVS+GM+zg6O4IUrFjwXAg34X6imBra8evlBlfgGb26lF3GI7pWpvz0a2fUBWhNHw/VMXnQVrRIF8NgKYFuopRMI=
+	t=1739073991; cv=none; b=b6ciT4O4KPSafN15vgZJCsQlZa2A2eSc2pVJpELv6uEbjqxr5OpC0l1wPCeZKWDVgUMP6YLBYRQITew3D2WaZEo3P4yVUUmGLsuUtE8Pr7/nV5sIO3g7Z1CrlOw2ZDdmmz1GsyG6isQeh8ciwC3RqUVwUQLJSWdNTfvN9Hd0sQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739073425; c=relaxed/simple;
-	bh=abo4VuyuuChxbEXDy2RGRYYYHBxzQJgpTOdZ1NYxoSQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sbOXcOmDOle3J8hmyrPN5Fh3RwqP5mU6cnJix8apEXIAid3BsU7h88671dBILF2iDXfiJR8mYG6BUHUeE2QamPovcaMkpweH5SvIUkC6QP8W1s2zLobFthCHoE1ki/bFGwBOq+CIKEf62JyMA5DkE0734c1giQ+Mh6Yc/WePRYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CtmT0bJj; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739073991; c=relaxed/simple;
+	bh=7zheC5r9UEDKuncLWSf9PYOyDSnuiBxjk4GVoEOc1hI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=LO2Gqtl/8+Sduu6NYN7h6DVg6ITGcgNmzoqM8fX8WDwhHbzfV5ZMqXYC/IZtrqFjcLZAPagkSs83XaBPxJsrL3g4701cxMSU89LEM0ZG3396twkUQibLNTlaTIIhvyRZxPCYbJQvmGZDH3TEhAn8JKPIK61J0Jsj7apejIMsh30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=PSuJR+CM; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CtmT0bJj"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38dd0dc2226so1164343f8f.2;
-        Sat, 08 Feb 2025 19:57:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739073422; x=1739678222; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tEfu0T4M+EpepKDscRwBKRkl9O4AhIe/Wi41/MnZPsc=;
-        b=CtmT0bJjcAw72pVLILbNZsD69fVeZaPGWSmofUeU2pnVtRGnqfSDZLafNITbyTMhbq
-         URO1SOd8m9KyG9Kpkge7xvradmlYSvmm7Q0E5MlmIRq5eFezD7OPMSGAr24hxmy0tfjv
-         FjIdFPHJx1Vl9YnVg8cKrDxp6xH/NvhbvctfMGSJ78pEhTM2/RCf3LNa5acamqUen/T5
-         0O+1W9O9t60yuCt5pNQB1/1xYus6iugb3YNP2JIDCImQhFbLpfR8ZRSX14SabiLuWipf
-         cW2bIhn4U2vY6AXQQSa5OWESNi+v73X/hlRC5x509DSP6doFVZ9t4uAFRoiBavIBST5H
-         K8Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739073422; x=1739678222;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tEfu0T4M+EpepKDscRwBKRkl9O4AhIe/Wi41/MnZPsc=;
-        b=r2XVKLD7+f8koRPC1dC/JB1Vytth0+Wm681d8REO+yab7ELhIID09Fc42VFqCkZBvK
-         +m/Ldj3GvY64uea/bgcwBmhpgs5MKcv33r6tZkdH3wCBeuL2l4OqG4Z7o9PYk9CsQ6kP
-         tf3/ncykMxYcRwTbC7WxHOdD/YN1fNNa0J14vUfRX4G/RKLKAxtwFMNu+hioDRTRsPJd
-         +hGTkk2PJwJyGkXDYMgE/1g4u+pVoM2jEXs3iIZnUMoHALDqv9WP0IubS5JDAMl3BMOZ
-         VwKVWnCX8CrwinhU+ZtyPToT4+7DFr7ynkJE0AZrFcbMzxPW3mxWwwKosTZQHybSAbrG
-         kF0A==
-X-Forwarded-Encrypted: i=1; AJvYcCXdD61RBO+X06XwOy1GsszITac2ueMtfmd56SDH7sk9aDUBml6A8zstLYgHV18pOOdrDVc=@vger.kernel.org, AJvYcCXgC6l/PGUYiEThDmreX3VLJQH9u5diBi0x6uHEzXU82CQ0mnRSDMxQBPVpPxPfbEPKX1xzDS9R5zJyj1Sq@vger.kernel.org, AJvYcCXlem2zJMWKjKH1rWq7KHgvHupeb8JRx3PyUcASMN9TQP2NK40W2E6aT6LsIwhLidDaioPaAW6MMHOqQsOF7A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNsL+GCh0seIZIsygcSzKaOmFQEV4xmPozM7CmtYfrmDg4eVZv
-	LEpBMVzCfbyN0uBc4jf3SR1dAzHxFhbnbNrqF9Cj/xcQdqs6H/nmJD0HJIXgvoRaRdy4cQFpZwV
-	VbLbE6/5ts+YaRpCxIiJS/e9E/Ek=
-X-Gm-Gg: ASbGncuOrWcsItdhAuiLURSji9t01qknY26hXUw03/nY/iXoxIA6YGA5AFmhek8/4XL
-	ypmOXRlr9L71tYYZPAhcwsSmxahcoQTCgE5jZ7TMTYd5Cq/edr5qMdgjW2koBxmbgMjMQ13JFqb
-	eQ27T/azjiFtI3jwdfHJxi8vdP8ZPd
-X-Google-Smtp-Source: AGHT+IFVdKm/TbRZBCUYcxfboKUecCnZzAtotdQ9hdNs8NDSOP5z+PAwZ9Es9sIm9jwZJAHaojI3AdLsMmi+L7AZFNc=
-X-Received: by 2002:a05:6000:1a85:b0:38d:d906:dbb0 with SMTP id
- ffacd0b85a97d-38dd906dcbcmr832823f8f.7.1739073422435; Sat, 08 Feb 2025
- 19:57:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="PSuJR+CM"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4YrDfS3YsSz9skQ;
+	Sun,  9 Feb 2025 05:06:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
+	s=MBO0001; t=1739073984;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=ltjFoxTAxyndszAucu/FRvuWcGA6M5KNw2ipIWnLj0A=;
+	b=PSuJR+CM26cpujHSJeXkJIfkU3Tvq67PL2aXfCj2drNPGQB7FampRgON82ZCdLyzwu2t1Q
+	EtCdY2toTlu6+4U3UyP+/IPc/cy0nYUW5WtFOzuy72LkpEBCshokE4t9fjPXLHJY010TSo
+	9B8ynHCqfFY6VQgB0cCfS2+06PsIgzuCaYl/vo0Lm6c1UfimIGMgu5oZH9i+myBURe4MEY
+	yUZ7Dn6yNVyFSd0Kani0c1psdHj9ZCq4lL1DoPFPNMEYYPcPGIj5R1E06mMQQeI0KwYR1r
+	+n4fVRiWRhNNAzljKs5E4XoeEUkKqqiAgECB0RM+lF2cNkW3F5fHvxIfH0z3JA==
+Date: Sat, 8 Feb 2025 23:06:21 -0500
+From: Ethan Carter Edwards <ethan@ethancedwards.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-hams@vger.kernel.org, pabeni@redhat.com, linux-hardening@vger.kernel.org, 
+	kernel-hardening@lists.openwall.com
+Subject: [PATCH v3] hamradio: baycom: replace strcpy() with strscpy()
+Message-ID: <3qo3fbrak7undfgocsi2s74v4uyjbylpdqhie4dohfoh4welfn@joq7up65ug6v>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CALOAHbBZc6ORGzXwBRwe+rD2=YGf1jub5TEr989_GpK54P2o1A@mail.gmail.com>
- <alpine.LSU.2.21.2501311414281.10231@pobox.suse.cz> <CALOAHbDwsZqo9inSLNV1FQV3NYx2=eztd556rCZqbRvEu+DDFQ@mail.gmail.com>
- <CAPhsuW4gYKHsmtHsBDUkx7a=apr_tSP_4aFWmmFNfqOJ+3GDGQ@mail.gmail.com>
- <CALOAHbDYFAntFbwMwGgnXkHh1audSoUwG1wFu_4e8P=c=hwZ0w@mail.gmail.com>
- <CAPhsuW4HsTab+w2r23bM52kcM1RBFBKP5ujVdDvxLE9OiqgMdA@mail.gmail.com>
- <CALOAHbAJBwSYju3-XEQwy0O1DNPawuEgmhrV5ECTrL9J388yDw@mail.gmail.com>
- <CAPhsuW51E4epDCrdNcQCG+SzHiyGhE+AocjmXoD-G0JExs9N1A@mail.gmail.com>
- <CALOAHbAaCbvr=F6PBJ+gnQa1WNidELzZW-P2_HmBsZ1tJd6FFg@mail.gmail.com>
- <CAADnVQJZCE-Rh4xghLrruY8DW00cRUq9-ct6d=qfKk8Yc+8=pQ@mail.gmail.com> <20250208193237.w3zjcyovgurrin55@jpoimboe>
-In-Reply-To: <20250208193237.w3zjcyovgurrin55@jpoimboe>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Sat, 8 Feb 2025 19:56:51 -0800
-X-Gm-Features: AWEUYZniDJypeymOyz7fFdjC93KTr-2QZvKTC8wuH--pd8yPgT5EFAzAHC-HqLc
-Message-ID: <CAADnVQKXgPTQsjUDB3tjZ46aPWvoEcxBCnDXro8WPtNhkGNFyg@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/2] livepatch: Add support for hybrid mode
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Yafang Shao <laoar.shao@gmail.com>, Song Liu <song@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>, Jiri Kosina <jikos@kernel.org>, 
-	Joe Lawrence <joe.lawrence@redhat.com>, live-patching@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Rspamd-Queue-Id: 4YrDfS3YsSz9skQ
 
-On Sat, Feb 8, 2025 at 11:32=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.org=
-> wrote:
->
-> On Sat, Feb 08, 2025 at 07:47:12AM -0800, Alexei Starovoitov wrote:
-> > On Fri, Feb 7, 2025 at 10:42=E2=80=AFPM Yafang Shao <laoar.shao@gmail.c=
-om> wrote:
-> > >
-> > > On Fri, Feb 7, 2025 at 2:01=E2=80=AFAM Song Liu <song@kernel.org> wro=
-te:
-> > > >
-> > > > On Wed, Feb 5, 2025 at 6:55=E2=80=AFPM Yafang Shao <laoar.shao@gmai=
-l.com> wrote:
-> > > > [...]
-> > > > > > I think we should first understand why the trampoline is not
-> > > > > > freed.
-> > > > >
-> > > > > IIUC, the fexit works as follows,
-> > > > >
-> > > > >   bpf_trampoline
-> > > > >     + __bpf_tramp_enter
-> > > > >        + percpu_ref_get(&tr->pcref);
-> > > > >
-> > > > >     + call do_exit()
-> > > > >
-> > > > >     + __bpf_tramp_exit
-> > > > >        + percpu_ref_put(&tr->pcref);
-> > > > >
-> > > > > Since do_exit() never returns, the refcnt of the trampoline image=
- is
-> > > > > never decremented, preventing it from being freed.
-> > > >
-> > > > Thanks for the explanation. In this case, I think it makes sense to
-> > > > disallow attaching fexit programs on __noreturn functions. I am not
-> > > > sure what is the best solution for it though.
-> > >
-> > > There is a tools/objtool/noreturns.h. Perhaps we could create a
-> > > similar noreturns.h under kernel/bpf and add all relevant functions t=
-o
-> > > the fexit deny list.
-> >
-> > Pls avoid copy paste if possible.
-> > Something like:
-> >
-> > BTF_SET_START(fexit_deny)
-> > #define NORETURN(fn) BTF_ID(func, fn)
-> > #include "../../tools/objtool/noreturns.h"
-> >
-> > Should work?
-> >
-> > Josh,
-> > maybe we should move noreturns.h to some common location?
->
-> The tools code is meant to be independent from the kernel, but it could
-> be synced by copying it to both include/linux and tools/include/linux,
-> and then make sure it stays in sync with tools/objtool/sync-check.sh.
->
-> However, noreturns.h is manually edited, and only for some arches.  And
-> even for those arches it's likely not exhaustive: we only add to it when
-> we notice an objtool warning, and not all calls to noreturns will
-> necessarily trigger a warning.  So I'd be careful about relying on that.
->
-> Also that file is intended to be temporary, there have been proposals to
-> add compiler support for annotating noreturns.  That hasn't been
-> implemented yet, help wanted!
->
-> I think the noreturn info is available in DWARF, can that be converted
-> to BTF?
+The strcpy() function has been deprecated and replaced with strscpy().
+There is an effort to make this change treewide:
+https://github.com/KSPP/linux/issues/88.
 
-There are 30k+ noreturn funcs in dwarf. So pahole would need to have
-some heuristic to filter out the noise.
-It's doable, but we need to stop the bleeding the simplest way
-and the fix would need to be backported too.
-We can copy paste noreturns.h or #include it from the current location
-for now and think of better ways for -next.
+Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ v3: resend after merge window ends
+ Link to v2: https://lore.kernel.org/lkml/62yrwnnvqtwv4etjeaatms5xwiixirkbm6f7urmijwp7kk7bio@r2ric7eqhsvf/T/#u
+ v2: reduce verbosity
+ Link to v1: https://lore.kernel.org/lkml/bqKL4XKDGLWNih2jsEzZYpBSHG6Ux5mLZfDBIgHckEUxDq4l4pPgQPEXEqKRE7pUwMrXZBVeko9aYr1w_E5h5r_R_YFA46G8dGhV1id7zy4=@ethancedwards.com/
+ drivers/net/hamradio/baycom_par.c     | 4 ++--
+ drivers/net/hamradio/baycom_ser_fdx.c | 2 +-
+ drivers/net/hamradio/baycom_ser_hdx.c | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-> Or is there some way to release outstanding trampolines in do_exit()?
+diff --git a/drivers/net/hamradio/baycom_par.c b/drivers/net/hamradio/baycom_par.c
+index 00ebc25d0b22..47bc74d3ad8c 100644
+--- a/drivers/net/hamradio/baycom_par.c
++++ b/drivers/net/hamradio/baycom_par.c
+@@ -427,7 +427,7 @@ static int baycom_ioctl(struct net_device *dev, void __user *data,
+ 		break;
+ 
+ 	case HDLCDRVCTL_GETMODE:
+-		strcpy(hi->data.modename, bc->options ? "par96" : "picpar");
++		strscpy(hi->data.modename, bc->options ? "par96" : "picpar");
+ 		if (copy_to_user(data, hi, sizeof(struct hdlcdrv_ioctl)))
+ 			return -EFAULT;
+ 		return 0;
+@@ -439,7 +439,7 @@ static int baycom_ioctl(struct net_device *dev, void __user *data,
+ 		return baycom_setmode(bc, hi->data.modename);
+ 
+ 	case HDLCDRVCTL_MODELIST:
+-		strcpy(hi->data.modename, "par96,picpar");
++		strscpy(hi->data.modename, "par96,picpar");
+ 		if (copy_to_user(data, hi, sizeof(struct hdlcdrv_ioctl)))
+ 			return -EFAULT;
+ 		return 0;
+diff --git a/drivers/net/hamradio/baycom_ser_fdx.c b/drivers/net/hamradio/baycom_ser_fdx.c
+index 799f8ece7824..3dda6b215fe3 100644
+--- a/drivers/net/hamradio/baycom_ser_fdx.c
++++ b/drivers/net/hamradio/baycom_ser_fdx.c
+@@ -531,7 +531,7 @@ static int baycom_ioctl(struct net_device *dev, void __user *data,
+ 		return baycom_setmode(bc, hi->data.modename);
+ 
+ 	case HDLCDRVCTL_MODELIST:
+-		strcpy(hi->data.modename, "ser12,ser3,ser24");
++		strscpy(hi->data.modename, "ser12,ser3,ser24");
+ 		if (copy_to_user(data, hi, sizeof(struct hdlcdrv_ioctl)))
+ 			return -EFAULT;
+ 		return 0;
+diff --git a/drivers/net/hamradio/baycom_ser_hdx.c b/drivers/net/hamradio/baycom_ser_hdx.c
+index 5d1ab4840753..4f058f61659e 100644
+--- a/drivers/net/hamradio/baycom_ser_hdx.c
++++ b/drivers/net/hamradio/baycom_ser_hdx.c
+@@ -570,7 +570,7 @@ static int baycom_ioctl(struct net_device *dev, void __user *data,
+ 		break;
+ 
+ 	case HDLCDRVCTL_GETMODE:
+-		strcpy(hi->data.modename, "ser12");
++		strscpy(hi->data.modename, "ser12");
+ 		if (bc->opt_dcd <= 0)
+ 			strcat(hi->data.modename, (!bc->opt_dcd) ? "*" : (bc->opt_dcd == -2) ? "@" : "+");
+ 		if (copy_to_user(data, hi, sizeof(struct hdlcdrv_ioctl)))
+@@ -584,7 +584,7 @@ static int baycom_ioctl(struct net_device *dev, void __user *data,
+ 		return baycom_setmode(bc, hi->data.modename);
+ 
+ 	case HDLCDRVCTL_MODELIST:
+-		strcpy(hi->data.modename, "ser12");
++		strscpy(hi->data.modename, "ser12");
+ 		if (copy_to_user(data, hi, sizeof(struct hdlcdrv_ioctl)))
+ 			return -EFAULT;
+ 		return 0;
+-- 
+2.47.1
 
-we can walk all trampolines in do_exit,
-but we'd still need to:
-if (trampoline->func.addr =3D=3D do_exit || ...addr =3D=3D __x64_sys_exit |=
-|
-before dropping the refcnt.
-which is the same thing, but worse.
