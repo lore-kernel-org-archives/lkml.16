@@ -1,286 +1,148 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73BA745BEC
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 06:14:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5402563
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 06:18:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739081643; cv=none; b=PI+qwy67i1d6ppjub/oJlXKPSYL0e4hvy9y9b9hMYXMop4FY3YpJbvOjf4Vr4+jh+Htl+ozo4aySStSDJRqLXTOSFSAC1ThEE2V2Wv//MYa+MjRKGBw4k03QDreDgPM6UAnHbwybGkIMUt+WaNS7aBpLVVlsdcDDSxs5oYIAmWI=
+	t=1739081899; cv=none; b=iNjewJ3QszR0TVlEItnMju+XXJl6zZXKtLKNu+BnsiGqPIyjklvV/0TEbNVHu4YfR+nX+SXmfr6MQWi1km7mLVwQRT3LFN+DdBXh2n/DSm7vG8Zz6Y0Nj4ZWeFuQGlK4FkmhrUhHguswQnb3IS+WTk7UuqUpIFu5mn3dsuHCtUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739081643; c=relaxed/simple;
-	bh=bkK0CH511DnkVfmrMeGvewdUCLteCTKCIflo07f3QTQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=STkB4iO9AdCPSvoUDIoAINF7i2BZj3unwXro0fjdZvSk37iQD5qFy+2gxhJpQJskxE2Fi/DWBGAloSldHatjkpiIAXKAMWjzwGeVqn/Y5A+BIiJIkr7VEQT9hwHqVD5L4GSXZUN6ThiRYdOy+vn6BhR64Xb+e49nTZIy/4IDjF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=B42QOgje; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1739081899; c=relaxed/simple;
+	bh=xk+5+3R2Pdrc1TYUUTglCKHCKWOPyiYNwuVcXnRrIxY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NtrXalgaNHaQ72BJIZGnOFpUYTU4kbS3ZzhLaVzcaTcw1l0UIyUHqW979z069FK12IjsbC7DJ3WphCyjyu8qx6JuxemfBwMWfJoYKmwnZQyyZAxOyGTAIzf3/k6iq5VESymA1Mlpk8OsVphLYsn1XtMb7QkZjVheSqE4W0kyRBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=prO7ZQX0; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="B42QOgje"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2f2f5e91393so885172a91.0
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 22:14:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="prO7ZQX0"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-3072f8dc069so35533321fa.3
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 22:18:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1739081641; x=1739686441; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BOjIKAHCQDSMAXA0ImMg5Ea5nk/p2DbggDGTVuT7g2A=;
-        b=B42QOgjePMHmyQ5YbvEPt2FYglBTm9YZUucWK5Yh/YW7jFn7NwQzC3+fF06eoTh8xi
-         TqPz+ZLmJYkM9/AtQwc/i6uO7twy99+Adt+ltN6eWonssK5pkq+qcs3V78a44UbFD15l
-         qFCSfUd1j0qw6w3OjOeDAN6D8alimxojN30ltmn992PZdAJ0INsPOZbbRcWC0tQfkhMm
-         nm9g1FCicyNlUnio8cz+oSU7PIUtpDQt2ZHv7vneeUCdAFLTe9UELfDdWrb1v+7ooqy2
-         WHwrBwHurbGRuAb17Uj832CIpEVzmw0fjjLkBElpbjtLoiL8gEfg3jNaf4FXBiax+ZCs
-         s0Cw==
+        d=linaro.org; s=google; t=1739081894; x=1739686694; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lE2oPH+NznWU+A7rTznQcQge7zD1TQE7PnYcq5zX9eI=;
+        b=prO7ZQX0bl825EHFI7T+6pKggS8LWHrMNSfjQjLhl2GEsHIEoOdEZk7daDJbtJjbAs
+         w0VYFLHZZxv2kaAE8gSj4lHvljumGP5rXFXNWqRLkvYHQX/MNUMHwQlLI+PjuIVDV4cH
+         WlzR7qzPwShCMdJxtx4Kv45jYRwB6/DxfbH9/aEutSAQSb1Bmm3PH2+axVoTRmiCfh9g
+         7ok5KqjxkzYK7oPkj9PLx05wSbBtziEdlXD36aa7XEi1nCM6PP0S7F02p+Oo2pkRlnv9
+         kB23Yd/P4nERRj6d4QhiKzyMOHCTfX8BxJ4m7Fspbx9JYJGzg9GLlpfZahqsjHKk1368
+         gCRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739081641; x=1739686441;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BOjIKAHCQDSMAXA0ImMg5Ea5nk/p2DbggDGTVuT7g2A=;
-        b=FfrvwUBj8G6VbMW4s5D4sDSONxVzTzhvdQvjcs5l4T3aOaMZMuEmJyqQRrU/v/0BI/
-         XHaO/ARVKsDxXALHVfc9684oAOZU3QTCnfCaY2S/APpUjkugbbDBY8ogkPAjMN7HWL3n
-         HUNc2lccrnG8M1TA7PRFNcfUNPGFzhUwO1RwHOu3DlcQkpwejL6QT4U8jcI5n+WP8zlD
-         Tw2ux3qNbSdaWeLuYKr9S5ViQto5r8I9KOcGrgOCZnANfX9tYZOxoJEwqrf7ti0GAazr
-         3eAZCUFiwFVjbL7YdHv9XwlyQZVqW67SnLIjfRkC2Vmpbc4mRjA0v46Fks9bS8Wzxu1v
-         KImA==
-X-Forwarded-Encrypted: i=1; AJvYcCXV/K7mc1ezSDjYjp/+lSX6gO388jj5t4qbdCM6V16EBXrL5EKd1ZPZLxNBvC/vCAG47WNVnEmXDWJHnsE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGEjHDFJXOM008Y5+7FpXAOuyCwI+wX/JzbaHvRisP6deHTHGY
-	B14s70SLSmbF50GG6Z0GpKJri6VdRoGq3f6toITpQQkQcQqrUpm03vbGpmzDdr0=
-X-Gm-Gg: ASbGncsWAGYff7TusqgqgIkLLG8PfdKR9i1FATC9ET0Je7ASFM5eurUQWHwoFGo6mEO
-	Tdft/R2pvRX8Fht9KRjoVZVoCT7NSF7S552/qTxzNHqRyHgfy2B5M3GI0Wzv3Tkgj6gTH3xOQ6y
-	f+Eo4hdrAZODGKQTr2hJKjbRodR2WJ5XIAHXX1K10ZLJJpwjBxTpgtgDXmMNAcYSVuaPuUfOgEn
-	34Kw6frj3Sf2CWAIoMhoiz1RuoFoKcgOzAjAV2EfZh1Y/jb1nZATHnUz6EaLe6OLw2xDZsASKT1
-	k/Hiti8i3e++oQ6HxxIumUSwDtohjfKQk+BuwgBuBDiXMjBmAIzxmg==
-X-Google-Smtp-Source: AGHT+IFCkTpbKKfaRvMohnnB70rMnRi0gOsnSx4WPZ7U4X4EyrXnKy0KBUsp7VDUscCluFBftaYktA==
-X-Received: by 2002:a05:6a00:1884:b0:730:271e:3c17 with SMTP id d2e1a72fcca58-7305d5a315emr5776709b3a.7.1739081640689;
-        Sat, 08 Feb 2025 22:14:00 -0800 (PST)
-Received: from C02DV8HUMD6R.bytedance.net ([139.177.225.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048ad26b9sm5550700b3a.50.2025.02.08.22.13.54
+        d=1e100.net; s=20230601; t=1739081894; x=1739686694;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lE2oPH+NznWU+A7rTznQcQge7zD1TQE7PnYcq5zX9eI=;
+        b=ps0ZbUBmsaZfgn6tQ0XrIhwrBY9fZp2qnlffeRCmcjqqq7r0BlOki0xEc2zv5Pg+CM
+         CQqA/x24ayv0vo0tLcBVReTjNf59CBnWvKEu6q/eNsubBbVTAUQ4Q2f+YazfYRelWTXi
+         JNVfuZsBhgh1q9CKLznc/zViQAcN7x2U0xv8vg5S4UCyouBqpjzxloq6QdK8zW6kIViw
+         Z676h+CLqNe7OZexNWDUXSrUm1MyXGIOgyOs8Y2e6nWFW4+hH8eRsKd/IS/FkBvZ5HLG
+         kn1lhA64XlnwGtKmHZgYTliIJkavZ1Cj6stNvCZIhZlBUpkjvLHU6reknKzkPkh6O0B5
+         YVzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXPiXZahaSL6fb7PmQ/MGZoBZq1XF7RFstgfZrMs4agS386eCYoootygFMGO/OMyGDz4bLFHPFMmvWBYCo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzurzFtJgiXtNb2sSP2EPai0nwnvyttjLT0nFALrMB6p0LELeWb
+	CmjMk6TjuY6nV6r3cYCFWpnSosdgVQ5uvAGRqN3kcc23CiytBKPKF7lVkeIu7UY=
+X-Gm-Gg: ASbGnctz5UmP13KyJ2sU38HdZNxPrkF/+wPdKSBroFtd4JmzKsqFKy8CAOHMxJHrxar
+	n7zsdqw/ZiJVP2U+0zKoG2wh14rZ0NL+7cUdWzT5nlajMpGyo43PoV4OgpFtqIa9OQQ64yMov6U
+	R8gXUVKftUaFztveOqVvCnLsxsioKFYOYXrX34rfYPivggi+Sx3IWKzVchxVc23ckBbJfFZqNxB
+	E+gCIi9tADBU8bO7QGo8Qa9jPZDzVRLPFpbNooxZAxoFjVTH21EcmoHsNN5QmCjb0dLScZBVf06
+	9DCuqCSiTHu+4PVQW+9y4I7TKz1SLipdzBJC1mmo0j6M0+St6iywTC8KpaDGsPt1yjF3na0=
+X-Google-Smtp-Source: AGHT+IHgotXqPVdJ6aQX/zwyOsyj2WFgiPHoaaDkjyauV80cVRyVG+Oohw1MRE4f5iPbev+BKf+rdg==
+X-Received: by 2002:a05:651c:555:b0:307:9555:dc5e with SMTP id 38308e7fff4ca-307e57cb001mr26580311fa.3.1739081894132;
+        Sat, 08 Feb 2025 22:18:14 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de2f511esm8864481fa.104.2025.02.08.22.18.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 22:14:00 -0800 (PST)
-From: Abel Wu <wuyun.abel@bytedance.com>
-To: Johannes Weiner <hannes@cmpxchg.org>,
-	Tejun Heo <tj@kernel.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Bitao Hu <yaoma@linux.alibaba.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Yury Norov <yury.norov@gmail.com>,
-	Abel Wu <wuyun.abel@bytedance.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Chen Ridong <chenridong@huawei.com>
-Cc: cgroups@vger.kernel.org (open list:CONTROL GROUP (CGROUP)),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4 2/2] cgroup/rstat: Add run_delay accounting for cgroups
-Date: Sun,  9 Feb 2025 14:13:12 +0800
-Message-Id: <20250209061322.15260-3-wuyun.abel@bytedance.com>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20250209061322.15260-1-wuyun.abel@bytedance.com>
-References: <20250209061322.15260-1-wuyun.abel@bytedance.com>
+        Sat, 08 Feb 2025 22:18:12 -0800 (PST)
+Date: Sun, 9 Feb 2025 08:18:10 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 29/35] drm/bridge: Assume that a bridge is atomic if
+ it has atomic_reset
+Message-ID: <stisurekwcm2jmh7qb5rm3nvh4us2oy2c26mhdvqf2nivoa4en@xs5m6rygbxkp>
+References: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
+ <20250204-bridge-connector-v2-29-35dd6c834e08@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250204-bridge-connector-v2-29-35dd6c834e08@kernel.org>
 
-The "some" field of cpu.pressure indicator may lose the insight into
-how severely one cgroup is stalled on certain cpu, because PSI tracks
-stall time for each cpu through:
+On Tue, Feb 04, 2025 at 03:57:57PM +0100, Maxime Ripard wrote:
+> A bridge is considered atomic-enabled if it has an atomic_check
 
-	tSOME[cpu] = time(nr_delayed_tasks[cpu] != 0)
+I think this part of the explanation is a bit misleading. This code just
+checks if there is a need to atomic_check() it.
 
-which turns nr_delayed_tasks[cpu] into boolean value. So together with
-this cgroup level run_delay accounting, the scheduling info of cgroups
-will be better illustrated.
+> implementation. However, atomic_check is optional and thus a driver
+> might very well not provide an implementation, and yet still be atomic.
 
-Currently the task and cpu level accounting have already been tracked
-through the following two holders respectively:
+I think the change is correct, but I'd rather suggest implementing
+separate drm_bridge_has_atomic_state() helper and using it here and in
+two other cases.
 
-	struct task_struct::sched_info if SCHED_INFO
-	struct rq::rq_sched_info if SCHEDSTATS
+> 
+> Switch to atomic_reset, which allocates the initial bridge state and is
+> thus a better candidate.
+> 
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> ---
+>  drivers/gpu/drm/drm_bridge.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+> index d7c17a26e86fd9a3e5a39f335edff4ffce30dd79..ad91a0ac375a9c8cf82834354ec7f654a59a7292 100644
+> --- a/drivers/gpu/drm/drm_bridge.c
+> +++ b/drivers/gpu/drm/drm_bridge.c
+> @@ -794,23 +794,25 @@ EXPORT_SYMBOL(drm_atomic_bridge_chain_enable);
+>  
+>  static int drm_atomic_bridge_check(struct drm_bridge *bridge,
+>  				   struct drm_crtc_state *crtc_state,
+>  				   struct drm_connector_state *conn_state)
+>  {
+> -	if (bridge->funcs->atomic_check) {
+> +	if (bridge->funcs->atomic_reset) {
+>  		struct drm_bridge_state *bridge_state;
+>  		int ret;
+>  
+>  		bridge_state = drm_atomic_get_new_bridge_state(crtc_state->state,
+>  							       bridge);
+>  		if (WARN_ON(!bridge_state))
+>  			return -EINVAL;
+>  
+> -		ret = bridge->funcs->atomic_check(bridge, bridge_state,
+> -						  crtc_state, conn_state);
+> -		if (ret)
+> -			return ret;
+> +		if (bridge->funcs->atomic_check) {
+> +			ret = bridge->funcs->atomic_check(bridge, bridge_state,
+> +							  crtc_state, conn_state);
+> +			if (ret)
+> +				return ret;
+> +		}
+>  	} else if (bridge->funcs->mode_fixup) {
+>  		if (!bridge->funcs->mode_fixup(bridge, &crtc_state->mode,
+>  					       &crtc_state->adjusted_mode))
+>  			return -EINVAL;
+>  	}
+> 
+> -- 
+> 2.48.0
+> 
 
-When extending this to cgroups, the minimal requirement would be:
-
-	root: relies on rq::rq_sched_info, hence SCHEDSTATS
-	non-root: relies on task's, hence SCHED_INFO
-
-It might be too demanding to require both, while collecting data for
-root cgroup from different holders according to different configs would
-also be confusing and error-prone. In order to keep things simple, let
-us rely on the cputime infrastructure to do the accounting as the other
-cputimes do.
-
-Only cgroup v2 is supported and CONFIG_SCHED_INFO is required.
-
-Signed-off-by: Abel Wu <wuyun.abel@bytedance.com>
----
- include/linux/cgroup-defs.h |  3 +++
- include/linux/kernel_stat.h |  7 +++++++
- kernel/cgroup/rstat.c       | 25 +++++++++++++++++++++++++
- kernel/sched/cputime.c      | 10 ++++++++++
- kernel/sched/stats.h        |  3 +++
- 5 files changed, 48 insertions(+)
-
-diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
-index 1b20d2d8ef7c..287366e60414 100644
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -328,6 +328,9 @@ struct cgroup_base_stat {
- 	u64 forceidle_sum;
- #endif
- 	u64 ntime;
-+#ifdef CONFIG_SCHED_INFO
-+	u64 run_delay;
-+#endif
- };
- 
- /*
-diff --git a/include/linux/kernel_stat.h b/include/linux/kernel_stat.h
-index b97ce2df376f..ddd59fea10ad 100644
---- a/include/linux/kernel_stat.h
-+++ b/include/linux/kernel_stat.h
-@@ -29,6 +29,9 @@ enum cpu_usage_stat {
- 	CPUTIME_GUEST_NICE,
- #ifdef CONFIG_SCHED_CORE
- 	CPUTIME_FORCEIDLE,
-+#endif
-+#ifdef CONFIG_SCHED_INFO
-+	CPUTIME_RUN_DELAY,
- #endif
- 	NR_STATS,
- };
-@@ -141,4 +144,8 @@ extern void account_idle_ticks(unsigned long ticks);
- extern void __account_forceidle_time(struct task_struct *tsk, u64 delta);
- #endif
- 
-+#ifdef CONFIG_SCHED_INFO
-+extern void account_run_delay_time(struct task_struct *tsk, u64 delta);
-+#endif
-+
- #endif /* _LINUX_KERNEL_STAT_H */
-diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-index c2784c317cdd..53984cdf7f9b 100644
---- a/kernel/cgroup/rstat.c
-+++ b/kernel/cgroup/rstat.c
-@@ -445,6 +445,9 @@ static void cgroup_base_stat_add(struct cgroup_base_stat *dst_bstat,
- 	dst_bstat->forceidle_sum += src_bstat->forceidle_sum;
- #endif
- 	dst_bstat->ntime += src_bstat->ntime;
-+#ifdef CONFIG_SCHED_INFO
-+	dst_bstat->run_delay += src_bstat->run_delay;
-+#endif
- }
- 
- static void cgroup_base_stat_sub(struct cgroup_base_stat *dst_bstat,
-@@ -457,6 +460,9 @@ static void cgroup_base_stat_sub(struct cgroup_base_stat *dst_bstat,
- 	dst_bstat->forceidle_sum -= src_bstat->forceidle_sum;
- #endif
- 	dst_bstat->ntime -= src_bstat->ntime;
-+#ifdef CONFIG_SCHED_INFO
-+	dst_bstat->run_delay -= src_bstat->run_delay;
-+#endif
- }
- 
- static void cgroup_base_stat_flush(struct cgroup *cgrp, int cpu)
-@@ -551,6 +557,11 @@ void __cgroup_account_cputime_field(struct cgroup *cgrp,
- 	case CPUTIME_FORCEIDLE:
- 		rstatc->bstat.forceidle_sum += delta_exec;
- 		break;
-+#endif
-+#ifdef CONFIG_SCHED_INFO
-+	case CPUTIME_RUN_DELAY:
-+		rstatc->bstat.run_delay += delta_exec;
-+		break;
- #endif
- 	default:
- 		break;
-@@ -596,6 +607,9 @@ static void root_cgroup_cputime(struct cgroup_base_stat *bstat)
- 		bstat->forceidle_sum += cpustat[CPUTIME_FORCEIDLE];
- #endif
- 		bstat->ntime += cpustat[CPUTIME_NICE];
-+#ifdef CONFIG_SCHED_INFO
-+		bstat->run_delay += cpustat[CPUTIME_RUN_DELAY];
-+#endif
- 	}
- }
- 
-@@ -610,6 +624,16 @@ static void cgroup_force_idle_show(struct seq_file *seq, struct cgroup_base_stat
- #endif
- }
- 
-+static void cgroup_run_delay_show(struct seq_file *seq, struct cgroup_base_stat *bstat)
-+{
-+#ifdef CONFIG_SCHED_INFO
-+	u64 run_delay = bstat->run_delay;
-+
-+	do_div(run_delay, NSEC_PER_USEC);
-+	seq_printf(seq, "run_delay_usec %llu\n", run_delay);
-+#endif
-+}
-+
- void cgroup_base_stat_cputime_show(struct seq_file *seq)
- {
- 	struct cgroup *cgrp = seq_css(seq)->cgroup;
-@@ -640,6 +664,7 @@ void cgroup_base_stat_cputime_show(struct seq_file *seq)
- 			bstat.ntime);
- 
- 	cgroup_force_idle_show(seq, &bstat);
-+	cgroup_run_delay_show(seq, &bstat);
- }
- 
- /* Add bpf kfuncs for cgroup_rstat_updated() and cgroup_rstat_flush() */
-diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-index 5d9143dd0879..42af602c10a6 100644
---- a/kernel/sched/cputime.c
-+++ b/kernel/sched/cputime.c
-@@ -243,6 +243,16 @@ void __account_forceidle_time(struct task_struct *p, u64 delta)
- }
- #endif
- 
-+#ifdef CONFIG_SCHED_INFO
-+/*
-+ * Account for run_delay time spent waiting in rq.
-+ */
-+void account_run_delay_time(struct task_struct *p, u64 delta)
-+{
-+	task_group_account_field(p, CPUTIME_RUN_DELAY, delta);
-+}
-+#endif
-+
- /*
-  * When a guest is interrupted for a longer amount of time, missed clock
-  * ticks are not redelivered later. Due to that, this function may on
-diff --git a/kernel/sched/stats.h b/kernel/sched/stats.h
-index 19cdbe96f93d..fdfd04a89b05 100644
---- a/kernel/sched/stats.h
-+++ b/kernel/sched/stats.h
-@@ -252,7 +252,9 @@ static inline void sched_info_dequeue(struct rq *rq, struct task_struct *t)
- 		t->sched_info.max_run_delay = delta;
- 	if (delta && (!t->sched_info.min_run_delay || delta < t->sched_info.min_run_delay))
- 		t->sched_info.min_run_delay = delta;
-+
- 	rq_sched_info_dequeue(rq, delta);
-+	account_run_delay_time(t, delta);
- }
- 
- /*
-@@ -279,6 +281,7 @@ static void sched_info_arrive(struct rq *rq, struct task_struct *t)
- 		t->sched_info.min_run_delay = delta;
- 
- 	rq_sched_info_arrive(rq, delta);
-+	account_run_delay_time(t, delta);
- }
- 
- /*
 -- 
-2.37.3
-
+With best wishes
+Dmitry
