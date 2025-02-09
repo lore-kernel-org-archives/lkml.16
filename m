@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FBFA243370;
-	Sun,  9 Feb 2025 10:38:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B998E3FD4;
+	Sun,  9 Feb 2025 10:48:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739097538; cv=none; b=A5ZDB7QXVtb2tYs26YTvAuLhVFrOUelT5Xp0+9Qf+6uPvUSNGe4Fz3CQkbDTSfiOSZ2puXch3KwXnZbyyKo+z37EU6ictk6ImA0DZHwwf9/rBs7LkXLIWbhYr8ab0Y9cRLcirC6Cxml4SPT5zHsx6lZShgQm0v8op4SPpMZtHbo=
+	t=1739098138; cv=none; b=j5oZSOvjlRgUxC7QRY1H2NSuLYJUJVjFA3ZA8Nhek1TVWlM/UjeEgw31NjK6z26PPdhB9/XmQSMyilAYLvHU4huMVdLD6HEf3+1IcFT/4BzmfA9F/LDyyPSfQTxRX/4mnp/Uh+R4Xc7u5N7mBQbLrT9bivG9k+6+EFZIKyMJ1jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739097538; c=relaxed/simple;
-	bh=9nFwagNxCfn0j52uHcSSNAhPNFRHroONyYXsrNVJahI=;
+	s=arc-20240116; t=1739098138; c=relaxed/simple;
+	bh=uqL5zVdRPB1QjFkWwpyO7GjIZbFeu2/+LfR1RcHkL/w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=umnwQrEBxQ+Y9vquSH2F7TJtDzYWGyxgbwqUwbhdHkU8Cw1SBgZP2G2n2OvmK1JtXp6aQZoZ8M/42cV82Erdr4i2ni+EnI2WGtngCS2BuqzTcqvqnRs4M3+IrCIcgdwgbaJ023fu5IindLDJDqfAHXzt2SSXcooLWEEXdYxmKMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e0l8jxZw; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ZAgAk5yY4Z/Ivf0h7DJZmkp2ozqX+pqJ+XkjtvW0Chpvsjsu9CJwN6k6BpcXsydTIRLv/LjN3rBrJGJUnz51shSYlyQsN1r3OIOerBXefZrMgGhDf6xMLPa0Y8qtJAlUwEVptFZj42JVKoTNKDjfcBAk8geBzkTNBbZWhJ4nhI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BUaDJwkI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e0l8jxZw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7973BC4CEDD;
-	Sun,  9 Feb 2025 10:38:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BUaDJwkI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 064F0C4CEDD;
+	Sun,  9 Feb 2025 10:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739097535;
-	bh=9nFwagNxCfn0j52uHcSSNAhPNFRHroONyYXsrNVJahI=;
+	s=k20201202; t=1739098138;
+	bh=uqL5zVdRPB1QjFkWwpyO7GjIZbFeu2/+LfR1RcHkL/w=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=e0l8jxZwRnj6FN5X+Zi4CNSdeS98Z610zj9MbxG1WkmXcbrodAatfXuGDO7pc8iMO
-	 JUKsC+JTn43AnT1hvYhXKteip7hBHI1rN+4yBOsNfPIkHxr9QIJw80IMRxWQ44whUB
-	 z5POpknvfD+L0LtegF9LPOlegv3wXvO6zCwCQbkLllpNBxTgiv4RC9CJv2VR4y90gE
-	 CA95KwA84hGYr+0Q2inTeFdFHyDUrgp/bdQMLGwsDmGkS8poP8NflN8hQ0l7dNSmwC
-	 7ppSZF04BbR5YbcCj6qZvwMx2dd2pJmlrKdrD1pJWVDwGVkdDenZsLychX7S0jzG7I
-	 tSG8bP1yfetvQ==
-Message-ID: <b1e59928-b2f4-47d4-87b8-424234c52f8d@kernel.org>
-Date: Sun, 9 Feb 2025 11:38:37 +0100
+	b=BUaDJwkIRNhNcp3Rgmz/KSZHu6Dv0AYDyGw7lYoUaewIYd+TnfZy5aLok9QcjqGEn
+	 j6l93dUoujBso53rV4n0IC5YcUoJbY6i8yY2zn6nh7XD6s12q2IJhdTbL1n3FooEYE
+	 gdBfHWGKTzGJROcQI2RAPF8Gb5yX/jVeZXQlOquKW/cVCRobJ3HrkuNQOMgq9NdaPk
+	 XQxol1Ny6V1FAA9KLhWYPR/Y1zi1GOuFLjKwKX4r64AzecztzU8yaTp9FJR05xuVVV
+	 rLt/cXjDtgV6TDpOWRJ6AB4IUrwAdbQ+Pp0svOE7L4ldUovXfPGM0KIS00PXE+p3Fn
+	 m+mjJP7NY0esg==
+Message-ID: <bdae5678-ff79-4c04-8d77-c6bdfe613c68@kernel.org>
+Date: Sun, 9 Feb 2025 11:48:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,32 +35,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 10/14] arm64: Add KHO support
-To: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org
-Cc: Alexander Graf <graf@amazon.com>,
- Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski
- <luto@kernel.org>, Anthony Yznaga <anthony.yznaga@oracle.com>,
- Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
- Benjamin Herrenschmidt <benh@kernel.crashing.org>,
- Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- David Woodhouse <dwmw2@infradead.org>, Eric Biederman
- <ebiederm@xmission.com>, Ingo Molnar <mingo@redhat.com>,
- James Gowans <jgowans@amazon.com>, Jonathan Corbet <corbet@lwn.net>,
- Mark Rutland <mark.rutland@arm.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, "H. Peter Anvin"
- <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Pratyush Yadav <ptyadav@amazon.de>, Rob Herring <robh+dt@kernel.org>,
- Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
- Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
- Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>,
- Tom Lendacky <thomas.lendacky@amd.com>, Usama Arif
- <usama.arif@bytedance.com>, Will Deacon <will@kernel.org>,
- devicetree@vger.kernel.org, kexec@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-mm@kvack.org, x86@kernel.org
-References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206132754.2596694-11-rppt@kernel.org>
+Subject: Re: [v2,2/2] dt-bindings: memory-controllers: Add MediaTek DRAM
+ controller interface
+To: Crystal Guo <crystal.guo@mediatek.com>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com
+References: <20250206121629.12186-1-crystal.guo@mediatek.com>
+ <20250206121629.12186-3-crystal.guo@mediatek.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -106,61 +91,32 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250206132754.2596694-11-rppt@kernel.org>
+In-Reply-To: <20250206121629.12186-3-crystal.guo@mediatek.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 06/02/2025 14:27, Mike Rapoport wrote:
-> From: Alexander Graf <graf@amazon.com>
+On 06/02/2025 13:16, Crystal Guo wrote:
+> A MediaTek DRAM controller interface to provide the current DDR data rate.
+
+Please wrap commit message according to Linux coding style / submission
+process (neither too early nor over the limit):
+https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
+
+
 > 
-> We now have all bits in place to support KHO kexecs. This patch adds
-
-
-Please do not use "This commit/patch/change", but imperative mood. See
-longer explanation here:
-https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
-
-> awareness of KHO in the kexec file as well as boot path for arm64 and
-> adds the respective kconfig option to the architecture so that it can
-> use KHO successfully.
-> 
-> Signed-off-by: Alexander Graf <graf@amazon.com>
-> Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
 > ---
+>  .../mediatek,common-dramc.yaml                | 129 ------------------
 
+Why is there removal here if you add? Commit msg explains nothing here.
 
-...
+Why this patch was sent twice?
 
-> +#ifdef CONFIG_KEXEC_HANDOVER
-> +	dt = image->kho.dt.buffer;
-> +	dt_mem = image->kho.dt.mem;
-> +	dt_len = image->kho.dt.bufsz;
-> +
-> +	scratch_mem = image->kho.scratch.mem;
-> +	scratch_len = image->kho.scratch.bufsz;
-> +#endif
-> +
-> +	if (!dt)
-> +		goto out;
-> +
-> +	pr_debug("Adding kho metadata to DT");
-> +
-> +	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-dt",
+Please use standard email subjects, so with the PATCH keyword in the
+title. `git format-patch -vX` helps here to create proper versioned
+patches. Another useful tool is b4. Skipping the PATCH keyword makes
+filtering of emails more difficult thus making the review process less
+convenient.
 
-Where is the ABI documentation for this?
-
-> +				       dt_mem, dt_len);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-scratch",
-
-Same question.
-
-> +				       scratch_mem, scratch_len);
-> +	if (ret)
-> +		goto out;
-> +
 Best regards,
 Krzysztof
