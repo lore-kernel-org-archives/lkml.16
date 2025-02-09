@@ -1,50 +1,50 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35061DE4C7;
-	Sun,  9 Feb 2025 14:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2FAE56F;
+	Sun,  9 Feb 2025 14:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739111433; cv=none; b=XZGEq8PfHtpN+DFgUnUMSSoB0F/DEUamhUFDDJtjWTpkNDCRVwiI8Msp/vrPgSSC2LQY5MYfqEwKIS6H6KPXSALhBjxHdeul03LYFRzPf1tmiePlTzpPaKiN7p/Utf/sBmUV+Dq3O4XIUgdVkryWaolufPV0xAcguhaosh1Zc1U=
+	t=1739111432; cv=none; b=oBHx5laXEG4VZIAU8Bm9TSADWI2qrC5FQY2XrOL4Obxtn8IpsHEI+mLq50dxrYERCbkY/gmkABlrl1fFVqOJT4lhxugvZvQPpT7WoHPpl9Rc9y6F90Tb/pv1WqMbhxTj6RfCU4v9UcpsnSDjcUXqWQHSbEAIJ/2Ngxr/AIV2UCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739111433; c=relaxed/simple;
-	bh=NW8YrOjm3ufGiO/XWC3WjfxzSmTah3mqD8eXlUgoHZo=;
+	s=arc-20240116; t=1739111432; c=relaxed/simple;
+	bh=0XrgztS2108myfypPQeLtIp1PT6ZdaN8vDf3md1xU3k=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=DRaF9dqrndVSgyDpUd1jgD7XCqoBSr6m9JS8YJ/9ENIxsVMKFOesV0Yup6cj7nHF4N3+ZcV1cScASjTbZBzfgdJdPW4sdEUz2HQzWWIvQ0aB3A3aSyh9M8SRpFhsUr9o4KzPm/DY5Oair77IdIjgHx7c3pMYbFQca/f563QT188=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KpMJTwEv; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:CC; b=S0zK3Uc8gmJvILgpNBWB5PesYHZN1/kXutWc/Zb5f+3xzLcs2bK10Mhhu5AUTU4uXqJo2QIWFF8lGUeTl/gQ4J4VZ9b/wJ2XKw0vC58wrm30PjctrickT6+hw609UF/fU8Di+ujFb7iUNI63dXiF8+COdrEHTvE0QYrldsW67oM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Cl+rFGHG; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KpMJTwEv"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 519CuAvh015554;
-	Sun, 9 Feb 2025 14:30:17 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Cl+rFGHG"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 519DmUxE006135;
+	Sun, 9 Feb 2025 14:30:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	d5AZ6DyNi/E6Xk4/Je0WW91xCbySyFZYV1ssIoTZvfA=; b=KpMJTwEvfnT/JqrE
-	zAPgBaVeGCGTGbmP6V6ZI9uBO7gmiRzBNcwU+R216pK6h6fZbziB52uDpqYl/lg/
-	fE8ebWsR/zS0YwVguLUCQ6y+7dgTMY2Jh5103KQfgxP7RkNjpTzasxNqHZL8iM3C
-	U1Vl4u4bMycaUdN0T6nmJ7AdIuxpVFkG7SHZ0XgqVnMhGYtdYCe4wwZYvlZnLvu/
-	MhOCz40nc02W9s1K/a5o7FpdX3BZKt5P8zFlc/W/CZMXzfXTDbKefHz9froZS3dj
-	Ot+6gnZajzDnmGPNIl/HTMeMNqNXFSCDmU7dK2rqsEMx7QElSIw34Z29QmVzG9+C
-	15F3XQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0esa3k1-1
+	qoks8AbRHk1IHI95zXn4a7Hcm5F30cBaTJyE5sPhZYg=; b=Cl+rFGHG+zbcThPc
+	dlk2xp4g1reBtvDuhuWWpvPT5jc6CsFm7DdrRo7lR4oE0Ja/oLt9uM/UKHrGcMF9
+	+adWrHbwkrsS3b7Y8pOwK+wmAo7voGY9daVbaq6xCmKXZP2krW/VtZzAqb34SqIO
+	zjrxwK4PxgYXCFP/Xbj4nmbZr0tkExeCfOt4xQBx4o32USHr9zBOPxee8tRHZDff
+	ocghwJ+JG1VS0Hn1xpVAyn0Z0oi+46TxY00mZ6RVucPLdENCYYfaLL8wiSWdnidu
+	+6dgFLKbDbfUi1W1hzLBnQqWxg3KzLzYzbhgRIKTX4Ym0UVG48Ra8fMW8TOxn+8t
+	JtAePQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0dyj27f-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 09 Feb 2025 14:30:17 +0000 (GMT)
+	Sun, 09 Feb 2025 14:30:15 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 519EUBBv014405
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 519EU0CV021675
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 9 Feb 2025 14:30:11 GMT
+	Sun, 9 Feb 2025 14:30:00 GMT
 Received: from nsssdc-sh01-lnx.ap.qualcomm.com (10.80.80.8) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Sun, 9 Feb 2025 06:30:05 -0800
+ 15.2.1544.9; Sun, 9 Feb 2025 06:29:54 -0800
 From: Luo Jie <quic_luoj@quicinc.com>
-Date: Sun, 9 Feb 2025 22:29:37 +0800
-Subject: [PATCH net-next v3 03/14] net: ethernet: qualcomm: Add PPE driver
- for IPQ9574 SoC
+Date: Sun, 9 Feb 2025 22:29:35 +0800
+Subject: [PATCH net-next v3 01/14] dt-bindings: net: Add PPE for Qualcomm
+ IPQ9574 SoC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250209-qcom_ipq_ppe-v3-3-453ea18d3271@quicinc.com>
+Message-ID: <20250209-qcom_ipq_ppe-v3-1-453ea18d3271@quicinc.com>
 References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
 In-Reply-To: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
 To: Andrew Lunn <andrew+netdev@lunn.ch>,
@@ -83,372 +83,457 @@ CC: <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
         <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>,
         <john@phrozen.org>, Luo Jie <quic_luoj@quicinc.com>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739111388; l=10782;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739111388; l=17301;
  i=quic_luoj@quicinc.com; s=20250209; h=from:subject:message-id;
- bh=NW8YrOjm3ufGiO/XWC3WjfxzSmTah3mqD8eXlUgoHZo=;
- b=u0/x09mD6ftH3rt16ByCbmE0xsrBxO1rVI2oz8Pk4bzvjBGH74PAAF+Iacxl5kFeuoVe0QgvD
- 1jy7ytQWq2PANXZRhM1ifqddMm6UXQ9MvJ0epFvzZ9XoH64xmmepwf0
+ bh=0XrgztS2108myfypPQeLtIp1PT6ZdaN8vDf3md1xU3k=;
+ b=IVhJBOV72KfyYVtkGASjiH7CB8BKH3B0y9B5LC1PSt271UDlBbdzroqQIHNYkscmzCyRkHDyD
+ cbtnKvMUcMhDmDr4fGnpExsFt9euBLlAZR8HNP3srXqKAjZ6je+98+m
 X-Developer-Key: i=quic_luoj@quicinc.com; a=ed25519;
  pk=pzwy8bU5tJZ5UKGTv28n+QOuktaWuriznGmriA9Qkfc=
 X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: YoQqfjAkF5NMC49719BJiccKWimSSHGs
-X-Proofpoint-ORIG-GUID: YoQqfjAkF5NMC49719BJiccKWimSSHGs
+X-Proofpoint-ORIG-GUID: otPgi0IcI_c8O4JLB376_A88ZWRnMEXn
+X-Proofpoint-GUID: otPgi0IcI_c8O4JLB376_A88ZWRnMEXn
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-09_06,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
- suspectscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ clxscore=1015 lowpriorityscore=0 impostorscore=0 mlxlogscore=999
+ mlxscore=0 priorityscore=1501 spamscore=0 adultscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2501170000 definitions=main-2502090129
 
-The PPE (Packet Process Engine) hardware block is available
-on Qualcomm IPQ SoC that support PPE architecture, such as
-IPQ9574.
+The PPE (packet process engine) hardware block is available in Qualcomm
+IPQ chipsets that support PPE architecture, such as IPQ9574. The PPE in
+the IPQ9574 SoC includes six ethernet ports (6 GMAC and 6 XGMAC), which
+are used to connect with external PHY devices by PCS. It includes an L2
+switch function for bridging packets among the 6 ethernet ports and the
+CPU port. The CPU port enables packet transfer between the ethernet
+ports and the ARM cores in the SoC, using the ethernet DMA.
 
-The PPE in IPQ9574 includes six integrated ethernet MAC
-(for 6 PPE ports), buffer management, queue management and
-scheduler functions. The MACs can connect with the external
-PHY or switch devices using the UNIPHY PCS block available
-in the SoC.
-
-The PPE also includes various packet processing offload
-capabilities such as L3 routing and L2 bridging, VLAN and
-tunnel processing offload. It also includes Ethernet DMA
-function for transferring packets between ARM cores and
-PPE ethernet ports.
-
-This patch adds the base source files and Makefiles for
-the PPE driver such as platform driver registration,
-clock initialization, and PPE reset routines.
+The PPE also includes packet processing offload capabilities for various
+networking functions such as route and bridge flows, VLANs, different
+tunnel protocols and VPN.
 
 Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
 ---
- drivers/net/ethernet/qualcomm/Kconfig      |  15 ++
- drivers/net/ethernet/qualcomm/Makefile     |   1 +
- drivers/net/ethernet/qualcomm/ppe/Makefile |   7 +
- drivers/net/ethernet/qualcomm/ppe/ppe.c    | 218 +++++++++++++++++++++++++++++
- drivers/net/ethernet/qualcomm/ppe/ppe.h    |  36 +++++
- 5 files changed, 277 insertions(+)
+ .../devicetree/bindings/net/qcom,ipq9574-ppe.yaml  | 406 +++++++++++++++++++++
+ 1 file changed, 406 insertions(+)
 
-diff --git a/drivers/net/ethernet/qualcomm/Kconfig b/drivers/net/ethernet/qualcomm/Kconfig
-index 9210ff360fdc..59931c4edbeb 100644
---- a/drivers/net/ethernet/qualcomm/Kconfig
-+++ b/drivers/net/ethernet/qualcomm/Kconfig
-@@ -61,6 +61,21 @@ config QCOM_EMAC
- 	  low power, Receive-Side Scaling (RSS), and IEEE 1588-2008
- 	  Precision Clock Synchronization Protocol.
- 
-+config QCOM_PPE
-+	tristate "Qualcomm Technologies, Inc. PPE Ethernet support"
-+	depends on HAS_IOMEM && OF
-+	depends on COMMON_CLK
-+	select REGMAP_MMIO
-+	help
-+	  This driver supports the Qualcomm Technologies, Inc. packet
-+	  process engine (PPE) available with IPQ SoC. The PPE includes
-+	  the ethernet MACs, Ethernet DMA (EDMA) and switch core that
-+	  supports L3 flow offload, L2 switch function, RSS and tunnel
-+	  offload.
-+
-+	  To compile this driver as a module, choose M here. The module
-+	  will be called qcom-ppe.
-+
- source "drivers/net/ethernet/qualcomm/rmnet/Kconfig"
- 
- endif # NET_VENDOR_QUALCOMM
-diff --git a/drivers/net/ethernet/qualcomm/Makefile b/drivers/net/ethernet/qualcomm/Makefile
-index 9250976dd884..166a59aea363 100644
---- a/drivers/net/ethernet/qualcomm/Makefile
-+++ b/drivers/net/ethernet/qualcomm/Makefile
-@@ -11,4 +11,5 @@ qcauart-objs := qca_uart.o
- 
- obj-y += emac/
- 
-+obj-$(CONFIG_QCOM_PPE) += ppe/
- obj-$(CONFIG_RMNET) += rmnet/
-diff --git a/drivers/net/ethernet/qualcomm/ppe/Makefile b/drivers/net/ethernet/qualcomm/ppe/Makefile
+diff --git a/Documentation/devicetree/bindings/net/qcom,ipq9574-ppe.yaml b/Documentation/devicetree/bindings/net/qcom,ipq9574-ppe.yaml
 new file mode 100644
-index 000000000000..63d50d3b4f2e
+index 000000000000..be6f9311eebb
 --- /dev/null
-+++ b/drivers/net/ethernet/qualcomm/ppe/Makefile
-@@ -0,0 +1,7 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Makefile for the device driver of PPE (Packet Process Engine) in IPQ SoC
-+#
++++ b/Documentation/devicetree/bindings/net/qcom,ipq9574-ppe.yaml
+@@ -0,0 +1,406 @@
++# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/qcom,ipq9574-ppe.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+obj-$(CONFIG_QCOM_PPE) += qcom-ppe.o
-+qcom-ppe-objs := ppe.o
-diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe.c b/drivers/net/ethernet/qualcomm/ppe/ppe.c
-new file mode 100644
-index 000000000000..40da7d240594
---- /dev/null
-+++ b/drivers/net/ethernet/qualcomm/ppe/ppe.c
-@@ -0,0 +1,218 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
++title: Qualcomm IPQ packet process engine (PPE)
 +
-+/* PPE platform device probe, DTSI parser and PPE clock initializations. */
++maintainers:
++  - Luo Jie <quic_luoj@quicinc.com>
++  - Lei Wei <quic_leiwei@quicinc.com>
++  - Suruchi Agarwal <quic_suruchia@quicinc.com>
++  - Pavithra R <quic_pavir@quicinc.com>>
 +
-+#include <linux/clk.h>
-+#include <linux/interconnect.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
++description:
++  The Ethernet functionality in the PPE (Packet Process Engine) is comprised
++  of three components, the switch core, port wrapper and Ethernet DMA.
 +
-+#include "ppe.h"
++  The Switch core in the IPQ9574 PPE has maximum of 6 front panel ports and
++  two FIFO interfaces. One of the two FIFO interfaces is used for Ethernet
++  port to host CPU communication using Ethernet DMA. The other is used
++  communicating to the EIP engine which is used for IPsec offload. On the
++  IPQ9574, the PPE includes 6 GMAC/XGMACs that can be connected with external
++  Ethernet PHY. Switch core also includes BM (Buffer Management), QM (Queue
++  Management) and SCH (Scheduler) modules for supporting the packet processing.
 +
-+#define PPE_PORT_MAX		8
-+#define PPE_CLK_RATE		353000000
++  The port wrapper provides connections from the 6 GMAC/XGMACS to UNIPHY (PCS)
++  supporting various modes such as SGMII/QSGMII/PSGMII/USXGMII/10G-BASER. There
++  are 3 UNIPHY (PCS) instances supported on the IPQ9574.
 +
-+/* ICC clocks for enabling PPE device. The avg_bw and peak_bw with value 0
-+ * will be updated by the clock rate of PPE.
-+ */
-+static const struct icc_bulk_data ppe_icc_data[] = {
-+	{
-+		.name = "ppe",
-+		.avg_bw = 0,
-+		.peak_bw = 0,
-+	},
-+	{
-+		.name = "ppe_cfg",
-+		.avg_bw = 0,
-+		.peak_bw = 0,
-+	},
-+	{
-+		.name = "qos_gen",
-+		.avg_bw = 6000,
-+		.peak_bw = 6000,
-+	},
-+	{
-+		.name = "timeout_ref",
-+		.avg_bw = 6000,
-+		.peak_bw = 6000,
-+	},
-+	{
-+		.name = "nssnoc_memnoc",
-+		.avg_bw = 533333,
-+		.peak_bw = 533333,
-+	},
-+	{
-+		.name = "memnoc_nssnoc",
-+		.avg_bw = 533333,
-+		.peak_bw = 533333,
-+	},
-+	{
-+		.name = "memnoc_nssnoc_1",
-+		.avg_bw = 533333,
-+		.peak_bw = 533333,
-+	},
-+};
++  Ethernet DMA is used to transmit and receive packets between the six Ethernet
++  ports and ARM host CPU.
 +
-+static const struct regmap_range ppe_readable_ranges[] = {
-+	regmap_reg_range(0x0, 0x1ff),		/* Global */
-+	regmap_reg_range(0x400, 0x5ff),		/* LPI CSR */
-+	regmap_reg_range(0x1000, 0x11ff),	/* GMAC0 */
-+	regmap_reg_range(0x1200, 0x13ff),	/* GMAC1 */
-+	regmap_reg_range(0x1400, 0x15ff),	/* GMAC2 */
-+	regmap_reg_range(0x1600, 0x17ff),	/* GMAC3 */
-+	regmap_reg_range(0x1800, 0x19ff),	/* GMAC4 */
-+	regmap_reg_range(0x1a00, 0x1bff),	/* GMAC5 */
-+	regmap_reg_range(0xb000, 0xefff),	/* PRX CSR */
-+	regmap_reg_range(0xf000, 0x1efff),	/* IPE */
-+	regmap_reg_range(0x20000, 0x5ffff),	/* PTX CSR */
-+	regmap_reg_range(0x60000, 0x9ffff),	/* IPE L2 CSR */
-+	regmap_reg_range(0xb0000, 0xeffff),	/* IPO CSR */
-+	regmap_reg_range(0x100000, 0x17ffff),	/* IPE PC */
-+	regmap_reg_range(0x180000, 0x1bffff),	/* PRE IPO CSR */
-+	regmap_reg_range(0x1d0000, 0x1dffff),	/* Tunnel parser */
-+	regmap_reg_range(0x1e0000, 0x1effff),	/* Ingress parse */
-+	regmap_reg_range(0x200000, 0x2fffff),	/* IPE L3 */
-+	regmap_reg_range(0x300000, 0x3fffff),	/* IPE tunnel */
-+	regmap_reg_range(0x400000, 0x4fffff),	/* Scheduler */
-+	regmap_reg_range(0x500000, 0x503fff),	/* XGMAC0 */
-+	regmap_reg_range(0x504000, 0x507fff),	/* XGMAC1 */
-+	regmap_reg_range(0x508000, 0x50bfff),	/* XGMAC2 */
-+	regmap_reg_range(0x50c000, 0x50ffff),	/* XGMAC3 */
-+	regmap_reg_range(0x510000, 0x513fff),	/* XGMAC4 */
-+	regmap_reg_range(0x514000, 0x517fff),	/* XGMAC5 */
-+	regmap_reg_range(0x600000, 0x6fffff),	/* BM */
-+	regmap_reg_range(0x800000, 0x9fffff),	/* QM */
-+	regmap_reg_range(0xb00000, 0xbef800),	/* EDMA */
-+};
++  The follow diagram shows the PPE hardware block along with its connectivity
++  to the external hardware blocks such clock hardware blocks (CMNPLL, GCC,
++  NSS clock controller) and ethernet PCS/PHY blocks. For depicting the PHY
++  connectivity, one 4x1 Gbps PHY (QCA8075) and two 10 GBps PHYs are used as an
++  example.
++  - |
++         +---------+
++         |  48 MHZ |
++         +----+----+
++              |(clock)
++              v
++         +----+----+
++  +------| CMN PLL |
++  |      +----+----+
++  |           |(clock)
++  |           v
++  |      +----+----+           +----+----+  (clock) +----+----+
++  |  +---|  NSSCC  |           |   GCC   |--------->|   MDIO  |
++  |  |   +----+----+           +----+----+          +----+----+
++  |  |        |(clock & reset)      |(clock)
++  |  |        v                     v
++  |  |   +-----------------------------+----------+----------+---------+
++  |  |   |       +-----+               |EDMA FIFO |          | EIP FIFO|
++  |  |   |       | SCH |               +----------+          +---------+
++  |  |   |       +-----+                        |              |       |
++  |  |   |  +------+   +------+               +-------------------+    |
++  |  |   |  |  BM  |   |  QM  |  IPQ9574-PPE  |    L2/L3 Process  |    |
++  |  |   |  +------+   +------+               +-------------------+    |
++  |  |   |                                             |               |
++  |  |   | +-------+ +-------+ +-------+ +-------+ +-------+ +-------+ |
++  |  |   | |  MAC0 | |  MAC1 | |  MAC2 | |  MAC3 | | XGMAC4| |XGMAC5 | |
++  |  |   | +---+---+ +---+---+ +---+---+ +---+---+ +---+---+ +---+---+ |
++  |  |   |     |         |         |         |         |         |     |
++  |  |   +-----+---------+---------+---------+---------+---------+-----+
++  |  |         |         |         |         |         |         |
++  |  |     +---+---------+---------+---------+---+ +---+---+ +---+---+
++  +--+---->|                PCS0                 | |  PCS1 | | PCS2  |
++  |(clock) +---+---------+---------+---------+---+ +---+---+ +---+---+
++  |            |         |         |         |         |         |
++  |        +---+---------+---------+---------+---+ +---+---+ +---+---+
++  +------->|             QCA8075 PHY             | | PHY4  | | PHY5  |
++   (clock) +-------------------------------------+ +-------+ +-------+
 +
-+static const struct regmap_access_table ppe_reg_table = {
-+	.yes_ranges = ppe_readable_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(ppe_readable_ranges),
-+};
++properties:
++  compatible:
++    enum:
++      - qcom,ipq9574-ppe
 +
-+static const struct regmap_config regmap_config_ipq9574 = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+	.rd_table = &ppe_reg_table,
-+	.wr_table = &ppe_reg_table,
-+	.max_register = 0xbef800,
-+	.fast_io = true,
-+};
++  reg:
++    maxItems: 1
 +
-+static int ppe_clock_init_and_reset(struct ppe_device *ppe_dev)
-+{
-+	unsigned long ppe_rate = ppe_dev->clk_rate;
-+	struct device *dev = ppe_dev->dev;
-+	struct reset_control *rstc;
-+	struct clk_bulk_data *clks;
-+	struct clk *clk;
-+	int ret, i;
++  clocks:
++    items:
++      - description: PPE core clock from NSS clock controller
++      - description: PPE APB (Advanced Peripheral Bus) clock from NSS clock controller
++      - description: PPE ingress process engine clock from NSS clock controller
++      - description: PPE BM, QM and scheduler clock from NSS clock controller
 +
-+	for (i = 0; i < ppe_dev->num_icc_paths; i++) {
-+		ppe_dev->icc_paths[i].name = ppe_icc_data[i].name;
-+		ppe_dev->icc_paths[i].avg_bw = ppe_icc_data[i].avg_bw ? :
-+					       Bps_to_icc(ppe_rate);
-+		ppe_dev->icc_paths[i].peak_bw = ppe_icc_data[i].peak_bw ? :
-+						Bps_to_icc(ppe_rate);
-+	}
++  clock-names:
++    items:
++      - const: ppe
++      - const: apb
++      - const: ipe
++      - const: btq
 +
-+	ret = devm_of_icc_bulk_get(dev, ppe_dev->num_icc_paths,
-+				   ppe_dev->icc_paths);
-+	if (ret)
-+		return ret;
++  resets:
++    maxItems: 1
++    description: PPE reset, which is necessary before configuring PPE hardware
 +
-+	ret = icc_bulk_set_bw(ppe_dev->num_icc_paths, ppe_dev->icc_paths);
-+	if (ret)
-+		return ret;
++  interconnects:
++    items:
++      - description: Clock path leading to PPE switch core function
++      - description: Clock path leading to PPE register access
++      - description: Clock path leading to QoS generation
++      - description: Clock path leading to timeout reference
++      - description: Clock path leading to NSS NOC from memory NOC
++      - description: Clock path leading to memory NOC from NSS NOC
++      - description: Clock path leading to enhanced memory NOC from NSS NOC
 +
-+	/* The PPE clocks have a common parent clock. Setting the clock
-+	 * rate of "ppe" ensures the clock rate of all PPE clocks is
-+	 * configured to the same rate.
-+	 */
-+	clk = devm_clk_get(dev, "ppe");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
++  interconnect-names:
++    items:
++      - const: ppe
++      - const: ppe_cfg
++      - const: qos_gen
++      - const: timeout_ref
++      - const: nssnoc_memnoc
++      - const: memnoc_nssnoc
++      - const: memnoc_nssnoc_1
 +
-+	ret = clk_set_rate(clk, ppe_rate);
-+	if (ret)
-+		return ret;
++  ethernet-dma:
++    type: object
++    additionalProperties: false
++    description:
++      EDMA (Ethernet DMA) is used to transmit packets between PPE and ARM
++      host CPU. There are 32 TX descriptor rings, 32 TX completion rings,
++      24 RX descriptor rings and 8 RX fill rings supported.
 +
-+	ret = devm_clk_bulk_get_all_enabled(dev, &clks);
-+	if (ret < 0)
-+		return ret;
++    properties:
++      clocks:
++        items:
++          - description: EDMA system clock from NSS Clock Controller
++          - description: EDMA APB (Advanced Peripheral Bus) clock from
++              NSS Clock Controller
 +
-+	/* Reset the PPE. */
-+	rstc = devm_reset_control_get_exclusive(dev, NULL);
-+	if (IS_ERR(rstc))
-+		return PTR_ERR(rstc);
++      clock-names:
++        items:
++          - const: sys
++          - const: apb
 +
-+	ret = reset_control_assert(rstc);
-+	if (ret)
-+		return ret;
++      resets:
++        maxItems: 1
++        description: EDMA reset from NSS clock controller
 +
-+	/* The delay 10 ms of assert is necessary for resetting PPE. */
-+	usleep_range(10000, 11000);
++      interrupts:
++        minItems: 29
++        maxItems: 57
 +
-+	return reset_control_deassert(rstc);
-+}
++      interrupt-names:
++        minItems: 29
++        maxItems: 57
++        items:
++          pattern: '^(txcmpl_([0-9]|[1-2][0-9]|3[0-1])|rxdesc_([0-9]|1[0-9]|2[0-3])|misc)$'
++        description:
++          Interrupts "txcmpl_[0-31]" are the Ethernet DMA Tx completion ring interrupts.
++          Interrupts "rxdesc_[0-23]" are the Ethernet DMA Rx Descriptor ring interrupts.
++          Interrupt "misc" is the Ethernet DMA miscellaneous error interrupt.
 +
-+static int qcom_ppe_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct ppe_device *ppe_dev;
-+	void __iomem *base;
-+	int ret, num_icc;
++    required:
++      - clocks
++      - clock-names
++      - resets
++      - interrupts
++      - interrupt-names
 +
-+	num_icc = ARRAY_SIZE(ppe_icc_data);
-+	ppe_dev = devm_kzalloc(dev, struct_size(ppe_dev, icc_paths, num_icc),
-+			       GFP_KERNEL);
-+	if (!ppe_dev)
-+		return -ENOMEM;
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - resets
++  - interconnects
++  - interconnect-names
++  - ethernet-dma
 +
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return dev_err_probe(dev, PTR_ERR(base), "PPE ioremap failed\n");
++allOf:
++  - $ref: ethernet-switch.yaml
 +
-+	ppe_dev->regmap = devm_regmap_init_mmio(dev, base, &regmap_config_ipq9574);
-+	if (IS_ERR(ppe_dev->regmap))
-+		return dev_err_probe(dev, PTR_ERR(ppe_dev->regmap),
-+				     "PPE initialize regmap failed\n");
-+	ppe_dev->dev = dev;
-+	ppe_dev->clk_rate = PPE_CLK_RATE;
-+	ppe_dev->num_ports = PPE_PORT_MAX;
-+	ppe_dev->num_icc_paths = num_icc;
++unevaluatedProperties: false
 +
-+	ret = ppe_clock_init_and_reset(ppe_dev);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "PPE clock config failed\n");
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,ipq9574-gcc.h>
++    #include <dt-bindings/interconnect/qcom,ipq9574.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
 +
-+	platform_set_drvdata(pdev, ppe_dev);
++    ethernet-switch@3a000000 {
++        compatible = "qcom,ipq9574-ppe";
++        reg = <0x3a000000 0xbef800>;
++        clocks = <&nsscc 80>,
++                 <&nsscc 79>,
++                 <&nsscc 81>,
++                 <&nsscc 78>;
++        clock-names = "ppe",
++                      "apb",
++                      "ipe",
++                      "btq";
++        resets = <&nsscc 108>;
++        interconnects = <&nsscc MASTER_NSSNOC_PPE &nsscc SLAVE_NSSNOC_PPE>,
++                        <&nsscc MASTER_NSSNOC_PPE_CFG &nsscc SLAVE_NSSNOC_PPE_CFG>,
++                        <&gcc MASTER_NSSNOC_QOSGEN_REF &gcc SLAVE_NSSNOC_QOSGEN_REF>,
++                        <&gcc MASTER_NSSNOC_TIMEOUT_REF &gcc SLAVE_NSSNOC_TIMEOUT_REF>,
++                        <&gcc MASTER_MEM_NOC_NSSNOC &gcc SLAVE_MEM_NOC_NSSNOC>,
++                        <&gcc MASTER_NSSNOC_MEMNOC &gcc SLAVE_NSSNOC_MEMNOC>,
++                        <&gcc MASTER_NSSNOC_MEM_NOC_1 &gcc SLAVE_NSSNOC_MEM_NOC_1>;
++        interconnect-names = "ppe",
++                             "ppe_cfg",
++                             "qos_gen",
++                             "timeout_ref",
++                             "nssnoc_memnoc",
++                             "memnoc_nssnoc",
++                             "memnoc_nssnoc_1";
 +
-+	return 0;
-+}
++        ethernet-dma {
++            clocks = <&nsscc 77>,
++                     <&nsscc 76>;
++            clock-names = "sys",
++                          "apb";
++            resets = <&nsscc 0>;
++            interrupts = <GIC_SPI 371 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 372 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 373 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 376 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 377 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 378 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 379 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 380 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 381 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 382 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 383 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 384 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 505 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 504 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 503 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 502 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 501 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 500 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 351 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 352 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 499 IRQ_TYPE_LEVEL_HIGH>;
++            interrupt-names = "txcmpl_8",
++                              "txcmpl_9",
++                              "txcmpl_10",
++                              "txcmpl_11",
++                              "txcmpl_12",
++                              "txcmpl_13",
++                              "txcmpl_14",
++                              "txcmpl_15",
++                              "txcmpl_16",
++                              "txcmpl_17",
++                              "txcmpl_18",
++                              "txcmpl_19",
++                              "txcmpl_20",
++                              "txcmpl_21",
++                              "txcmpl_22",
++                              "txcmpl_23",
++                              "txcmpl_24",
++                              "txcmpl_25",
++                              "txcmpl_26",
++                              "txcmpl_27",
++                              "txcmpl_28",
++                              "txcmpl_29",
++                              "txcmpl_30",
++                              "txcmpl_31",
++                              "rxdesc_20",
++                              "rxdesc_21",
++                              "rxdesc_22",
++                              "rxdesc_23",
++                              "misc";
++        };
 +
-+static const struct of_device_id qcom_ppe_of_match[] = {
-+	{ .compatible = "qcom,ipq9574-ppe" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, qcom_ppe_of_match);
++        ethernet-ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
 +
-+static struct platform_driver qcom_ppe_driver = {
-+	.driver = {
-+		.name = "qcom_ppe",
-+		.of_match_table = qcom_ppe_of_match,
-+	},
-+	.probe	= qcom_ppe_probe,
-+};
-+module_platform_driver(qcom_ppe_driver);
++            port@1 {
++                reg = <1>;
++                phy-mode = "qsgmii";
++                managed = "in-band-status";
++                phy-handle = <&phy0>;
++                pcs-handle = <&pcs0_mii0>;
++                clocks = <&nsscc 33>,
++                         <&nsscc 34>,
++                         <&nsscc 37>;
++                clock-names = "mac",
++                              "rx",
++                              "tx";
++                resets = <&nsscc 29>,
++                         <&nsscc 96>,
++                         <&nsscc 97>;
++                reset-names = "mac",
++                              "rx",
++                              "tx";
++            };
 +
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("Qualcomm Technologies, Inc. IPQ PPE driver");
-diff --git a/drivers/net/ethernet/qualcomm/ppe/ppe.h b/drivers/net/ethernet/qualcomm/ppe/ppe.h
-new file mode 100644
-index 000000000000..cc6767b7c2b8
---- /dev/null
-+++ b/drivers/net/ethernet/qualcomm/ppe/ppe.h
-@@ -0,0 +1,36 @@
-+/* SPDX-License-Identifier: GPL-2.0-only
-+ *
-+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
++            port@2 {
++                reg = <2>;
++                phy-mode = "qsgmii";
++                managed = "in-band-status";
++                phy-handle = <&phy1>;
++                pcs-handle = <&pcs0_mii1>;
++                clocks = <&nsscc 40>,
++                         <&nsscc 41>,
++                         <&nsscc 44>;
++                clock-names = "mac",
++                              "rx",
++                              "tx";
++                resets = <&nsscc 30>,
++                         <&nsscc 98>,
++                         <&nsscc 99>;
++                reset-names = "mac",
++                              "rx",
++                              "tx";
++            };
 +
-+#ifndef __PPE_H__
-+#define __PPE_H__
++            port@3 {
++                reg = <3>;
++                phy-mode = "qsgmii";
++                managed = "in-band-status";
++                phy-handle = <&phy2>;
++                pcs-handle = <&pcs0_mii2>;
++                clocks = <&nsscc 47>,
++                         <&nsscc 48>,
++                         <&nsscc 51>;
++                clock-names = "mac",
++                              "rx",
++                              "tx";
++                resets = <&nsscc 31>,
++                         <&nsscc 100>,
++                         <&nsscc 101>;
++                reset-names = "mac",
++                              "rx",
++                              "tx";
++            };
 +
-+#include <linux/compiler.h>
-+#include <linux/interconnect.h>
++            port@4 {
++                reg = <4>;
++                phy-mode = "qsgmii";
++                managed = "in-band-status";
++                phy-handle = <&phy3>;
++                pcs-handle = <&pcs0_mii3>;
++                clocks = <&nsscc 54>,
++                         <&nsscc 55>,
++                         <&nsscc 58>;
++                clock-names = "mac",
++                              "rx",
++                              "tx";
++                resets = <&nsscc 32>,
++                         <&nsscc 102>,
++                         <&nsscc 103>;
++                reset-names = "mac",
++                              "rx",
++                              "tx";
++            };
 +
-+struct device;
-+struct regmap;
++            port@5 {
++                reg = <5>;
++                phy-mode = "usxgmii";
++                managed = "in-band-status";
++                phy-handle = <&phy4>;
++                pcs-handle = <&pcs1_mii0>;
++                clocks = <&nsscc 61>,
++                         <&nsscc 62>,
++                         <&nsscc 65>;
++                clock-names = "mac",
++                              "rx",
++                              "tx";
++                resets = <&nsscc 33>,
++                         <&nsscc 104>,
++                         <&nsscc 105>;
++                reset-names = "mac",
++                              "rx",
++                              "tx";
++            };
 +
-+/**
-+ * struct ppe_device - PPE device private data.
-+ * @dev: PPE device structure.
-+ * @regmap: PPE register map.
-+ * @clk_rate: PPE clock rate.
-+ * @num_ports: Number of PPE ports.
-+ * @num_icc_paths: Number of interconnect paths.
-+ * @icc_paths: Interconnect path array.
-+ *
-+ * PPE device is the instance of PPE hardware, which is used to
-+ * configure PPE packet process modules such as BM (buffer management),
-+ * QM (queue management), and scheduler.
-+ */
-+struct ppe_device {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	unsigned long clk_rate;
-+	unsigned int num_ports;
-+	unsigned int num_icc_paths;
-+	struct icc_bulk_data icc_paths[] __counted_by(num_icc_paths);
-+};
-+#endif
++            port@6 {
++                reg = <6>;
++                phy-mode = "usxgmii";
++                managed = "in-band-status";
++                phy-handle = <&phy5>;
++                pcs-handle = <&pcs2_mii0>;
++                clocks = <&nsscc 68>,
++                         <&nsscc 69>,
++                         <&nsscc 72>;
++                clock-names = "mac",
++                              "rx",
++                              "tx";
++                resets = <&nsscc 34>,
++                         <&nsscc 106>,
++                         <&nsscc 107>;
++                reset-names = "mac",
++                              "rx",
++                              "tx";
++            };
++        };
++    };
 
 -- 
 2.34.1
