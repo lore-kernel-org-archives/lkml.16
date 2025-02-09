@@ -1,128 +1,162 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E6117B50A
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 11:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9E315CD52;
+	Sun,  9 Feb 2025 11:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739100103; cv=none; b=VS3/YJmLxNpkpjegqWxcu0mhcTU4sv7Syfy5DsGxHybl+JFgYiGgHwU9pwOgu7AcbDnlZTcLf0vChejA96rtgiuWMMNb52GtpmZhtlXjkM6hqjeUB6azwdnNU4YfnGJTDUTDxkjZ+LZoTCs/QlVi78eUv3zmktWTIxCXUzj07kc=
+	t=1739100169; cv=none; b=oEIqix8vgM3/wgWva9LsBduA7BCym5X5BXFD3VrZ1gv1NJpNbinYT0zXlGR6Is9fAfa4PgvgLJAZiflKX5121mhkjDPn8v+smW+jws8hwTkigiR75u7X6Go8hBrqe2HwDSav3odGBOeHUilIW5y3w2n7IKDS9Za+kutGr4qNtfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739100103; c=relaxed/simple;
-	bh=LDW/XQ0GacDudIuOZ8nlB7TScUMIBgMD138iC1H+YXA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ea1NecSURcaxm/IMXrA7sUCLAfJvv+Fu75ALzWiRwkh2ZohEghPNqXw+MqVlfkhI2pxya7kGeitU1cNSM3oOqBItSsWU9Lp72+hEggIGL2Fq8AHTFvsW4P9lnStFQsLcuU7acEPhJWpGX3VD89rFZbfqvkM8wm3QhT33mTMYE24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VYluhulC; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VYluhulC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739100099; x=1770636099;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=LDW/XQ0GacDudIuOZ8nlB7TScUMIBgMD138iC1H+YXA=;
-  b=VYluhulCO2nTrwDATpvB7IdL0WAc+LhcfXcfs1qGRFXo/OLIlEQW/vvn
-   jG6tVq/pB3HxK0cYC70w1X+0W1fca/JmB+j8tmKOqB/EP0ahEEo2n6zzF
-   X1zKzKPq/yThVRCEatTw2NrGNZ1ljAiQRMVstOyaF3GhRIUb8kwNZ3j81
-   KIQGji0INIIABEsI5evElMeefwez1FQ4FWrLvBXq2/H6Uhvzu+cUnqAHC
-   SUcVDQAxQAMGw8v8s7W5RlmdenfkIbZ+LJXbga5JLjtxGmzqu1GKMSJmP
-   MRIC9TQOTNNAKTbLdtlcTWdANpo8AfJ8ezB9N0bZ4obzRWBPX3QraYRGA
-   w==;
-X-CSE-ConnectionGUID: 7JNlCBZ+TfW2BZHym8UqoA==
-X-CSE-MsgGUID: +i5uP0wTQZyXnehRzp+4GQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="39582238"
-X-IronPort-AV: E=Sophos;i="6.13,272,1732608000"; 
-   d="scan'208";a="39582238"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 03:21:38 -0800
-X-CSE-ConnectionGUID: TarO1t02T+yE376Tb+qF2w==
-X-CSE-MsgGUID: v6j4bjgpRaKZG3BxUz8Egw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117145085"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 09 Feb 2025 03:21:36 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1th5NV-0011Ox-1r;
-	Sun, 09 Feb 2025 11:21:33 +0000
-Date: Sun, 9 Feb 2025 19:20:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: arch/s390/include/asm/bitops.h:60:17: error: impossible constraint
- in 'asm'
-Message-ID: <202502091912.xL2xTCGw-lkp@intel.com>
+	s=arc-20240116; t=1739100169; c=relaxed/simple;
+	bh=fSpAlkuvzafpBDecQQKDZzLy+MX6Hjz7TRvpdMGaUmQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=csWELi4k7kAtjVDQOTPy8L0f0141O3GcFS3ffKT9ozTyKrhOUqWTUk5h1zLn04DQz5RwuKuhxx89yWMUKoPU5CGUIAuNVveUGpnBfmCafke7ikk3BLTw9+5QdpJk3MDE39DJ6B/saJfkudW80AZf04xKEXlXB4SCw060Q1dxye4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ab7863f9be4so346404366b.0;
+        Sun, 09 Feb 2025 03:22:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739100165; x=1739704965;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=czsr8ut4E1IjeGJZsPHODj7dteAs5/QBRXMGMfAcAZA=;
+        b=I2SXLqbOzyC5aMhr6I7rBYcKaNyxcubopTza3dXAq8Rsm+GHGjlIZ5lGI81mc7ygxQ
+         AGUCIUeEoc1gOr5hRGKx3R2YTT0hnb3oj7J8vc4QwF6yWkZmHCgUuJRbxr+bt8OIGHhI
+         VTWzWgsc9fuX4uI7ja6/A6HQk4ZN/gjhI6/7JiwGPttAzcTCG38ouo3tRPX6QH9mPsFY
+         9BQXMOVLPVpLEtvN+0tlYo7/pW5e8bimTjNHxMAosfUF6Ix9zID0kp6uxPOEz8j+eDH6
+         qE2BtK0PSwJqh+qKED15SlYJ34DVVvZiNVphrX60Q+WXQXihYLGtXzMS93/O7K0YuX8u
+         MMpw==
+X-Forwarded-Encrypted: i=1; AJvYcCVcrKont0uPw9Coet6QdtkvlXXeBRVfcWSEoLHYacRRpoC2G+IuS7bdcr0XmXTv0xeKsMxYTb8oXO9/cQ==@vger.kernel.org, AJvYcCVvXBrstJyLktRjZ27jQEHR9/kS3XuNPx1rYt4uNCHJPIiri8Wcz05a3zIngUbtZAJieRnGByyIV3jZ/bA=@vger.kernel.org, AJvYcCWf/5f8A5Ok5vdDxcttnjj3fuSYEISu1N60QXGKKSVrc+3nR8dvQT98gOPvpUvmCCRl/bBZb4iEiBl+@vger.kernel.org, AJvYcCXsspjJ5/5pPstiH7dnorAky/mmT8zhAYnr5EjU1s9cIzSX5qaKYIz7LBwrmxyrRt64H43wEpao8z9jJTp6@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKRp8s7KYq05bsieZtkfkMOLs8Nbkeg0muOaAs/1MtZHb7g51r
+	WUXn3o+yOwi0iwFS+xSdX3k34L8Jg2Y4JzaTzoPsPKHIlGrrZS00pyXJ0CVA4cw=
+X-Gm-Gg: ASbGncs+ElrwNITOaL/npWaV0lINiw73uGUrxFATJO7Z43yFQ9tTUZNmKCdsT/5skcj
+	bLbkLyMDbzvvOCXSUKK7Q59G7FsU6/fOQv7aIJn6G6JkGpdo/34WIggWzfG2QX790SgpFdirdqU
+	Krm38Qwtb3cBujpDcGzJuBbedLmLWfIY5MK6Nqvhbw4gwqOb80e1mcQ7a9OHDmA+zlxHju2UY9+
+	lB2tOq6OMKLBPgeLSUmkwzdGCz2gEWVyYXeiPZKlzeaKqSZLmZXcnrEN0WkJFh3/Ex06LtkIxmx
+	/DTcLE1dfcDK89MGB00AxLLdrsRBs8RHYQuBMPF6f/VsrQ==
+X-Google-Smtp-Source: AGHT+IEdB9R3spqx2SEWAobW9gJu4+fmb8vmoxtEhl6cFp/SdUHzvuAKiRTyBIEas4/dGdeZr2DQSQ==
+X-Received: by 2002:a17:907:c285:b0:ab6:32d2:16d4 with SMTP id a640c23a62f3a-ab789c35448mr1039216266b.56.1739100165260;
+        Sun, 09 Feb 2025 03:22:45 -0800 (PST)
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7bf5b8e6asm17110166b.16.2025.02.09.03.22.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Feb 2025 03:22:44 -0800 (PST)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dcea56d6e2so6297700a12.1;
+        Sun, 09 Feb 2025 03:22:44 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU+BLfvHk74Jrx3i9CQ98+QUiZqPwnFgA/Dnzd+q41L/CxIRWoF+9pvqD8H/2kyWmN5wdFBZjHmRg2b9oHb@vger.kernel.org, AJvYcCUluvYc+q7qkuRndVXSZhJftfRh6lsurrjda7VVTVeki7WoI38riilHoIUn6fqiBkCfT+aDsUaTzbJWjA==@vger.kernel.org, AJvYcCXS42RSVTeYbFdwFyiAxrRNtqKjKdUgF+S6r3YC9mqDiYBhLADKO3SW6Fr+JCdy7UZapRgLGGiOkf2iF70=@vger.kernel.org, AJvYcCXeFiIqhWXMAQf8dLvVIVQKEo7cDfbnCgyd0ik0+LaFckzC1xgcBDlVSBH5ewHVUyiQuBO20TQkcNmF@vger.kernel.org
+X-Received: by 2002:a05:6402:5252:b0:5db:f423:19b9 with SMTP id
+ 4fb4d7f45d1cf-5de450236admr7763979a12.16.1739100164505; Sun, 09 Feb 2025
+ 03:22:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250203115156.28174-1-towinchenmi@gmail.com>
+In-Reply-To: <20250203115156.28174-1-towinchenmi@gmail.com>
+From: Neal Gompa <neal@gompa.dev>
+Date: Sun, 9 Feb 2025 06:22:08 -0500
+X-Gmail-Original-Message-ID: <CAEg-Je8cB==_+fNi0hc-mPqkEd-w82tWay_2Wu76hV10LV4X2g@mail.gmail.com>
+X-Gm-Features: AWEUYZks2Pe6z_gT4XPe5iRvZlGve_lJKCtY1woYJMW8gNu9Xz8tZDlJPRfovXQ
+Message-ID: <CAEg-Je8cB==_+fNi0hc-mPqkEd-w82tWay_2Wu76hV10LV4X2g@mail.gmail.com>
+Subject: Re: [PATCH v5 RESEND 0/3] Apple DWI backlight driver
+To: Nick Chan <towinchenmi@gmail.com>
+Cc: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Lee Jones <lee@kernel.org>, 
+	Daniel Thompson <danielt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Pavel Machek <pavel@ucw.cz>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Helge Deller <deller@gmx.de>, asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-fbdev@vger.kernel.org, Janne Grunau <j@jannau.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   9946eaf552b194bb352c2945b54ff98c8193b3f1
-commit: b2bc1b1a77c0ffc2f51e90b1112d7f5530e4d15c s390/bitops: Provide optimized arch_test_bit()
-date:   4 weeks ago
-config: s390-randconfig-r052-20250209 (https://download.01.org/0day-ci/archive/20250209/202502091912.xL2xTCGw-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250209/202502091912.xL2xTCGw-lkp@intel.com/reproduce)
+On Mon, Feb 3, 2025 at 6:52=E2=80=AFAM Nick Chan <towinchenmi@gmail.com> wr=
+ote:
+>
+> Apple SoCs come with a 2-wire interface named DWI. On some iPhones, iPads
+> and iPod touches the backlight controller is connected via this interface=
+.
+> This series adds a backlight driver for backlight controllers connected
+> this way.
+>
+> Changes since v4:
+> - Change type to BACKLIGHT_PLATFORM since the driver does not directly
+> interface with the backlight controller. The actual backlight controller
+> can be directly controlled via i2c and is not the same on all hardware
+> that supports the dwi interface.
+> - Rename file to apple_dwi_bl.c to better match config option.
+> - Rename driver to apple-dwi-bl to better match config option
+> - Indicate that the backlight scales linearly
+>
+> v4: https://lore.kernel.org/asahi/20241211113512.19009-1-towinchenmi@gmai=
+l.com/T
+>
+> Changes since v3:
+> - $ref to common.yaml in bindings
+> - (and then additionalProperties is changed to unevaluatedProperties)
+> - Use hex everywhere in bindings example
+> - Use sizeof(*dwi_bl) instead of the type of the struct when doing
+> devm_kzalloc()
+> - Use devm_platform_get_and_ioremap_resource() in driver
+> - Fix sorting in drivers/video/backlight/Makefile
+> - In drivers/video/backlight/Kconfig, move config to right after
+> BACKLIGHT_APPLE
+> - Explain this driver being completely different from apple_bl
+>
+> v3: https://lore.kernel.org/asahi/20241209075908.140014-1-towinchenmi@gma=
+il.com/T
+>
+> Changes since v2:
+> - Add missing includes in driver
+> - Fix file path in MAINTAINERS
+>
+> v2: https://lore.kernel.org/asahi/20241207130433.30351-1-towinchenmi@gmai=
+l.com/T
+>
+> Changes since v1:
+> - Fixed dt-bindings $id.
+> - Make power-domains an optional property in dt-bindings.
+> - Added missing error checking after devm_ioremap_resource() in
+> dwi_bl_probe().
+>
+> v1: https://lore.kernel.org/asahi/20241206172735.4310-1-towinchenmi@gmail=
+.com/T
+>
+> Nick Chan
+>
+> ---
+> Nick Chan (3):
+>   dt-bindings: leds: backlight: apple,dwi-bl: Add Apple DWI backlight
+>   backlight: apple_dwi_bl: Add Apple DWI backlight driver
+>   MAINTAINERS: Add entries for Apple DWI backlight controller
+>
+>  .../bindings/leds/backlight/apple,dwi-bl.yaml |  57 ++++++++
+>  MAINTAINERS                                   |   2 +
+>  drivers/video/backlight/Kconfig               |  12 ++
+>  drivers/video/backlight/Makefile              |   1 +
+>  drivers/video/backlight/apple_dwi_bl.c        | 123 ++++++++++++++++++
+>  5 files changed, 195 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/appl=
+e,dwi-bl.yaml
+>  create mode 100644 drivers/video/backlight/apple_dwi_bl.c
+>
+>
+> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+> --
+> 2.48.1
+>
+>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502091912.xL2xTCGw-lkp@intel.com/
+This series looks good to me.
 
-All error/warnings (new ones prefixed by >>):
-
-   In file included from include/linux/bitops.h:68,
-                    from include/linux/thread_info.h:27,
-                    from arch/s390/include/asm/preempt.h:6,
-                    from include/linux/preempt.h:79,
-                    from include/linux/alloc_tag.h:11,
-                    from include/linux/vmalloc.h:5,
-                    from mm/vmalloc.c:11:
-   In function 'arch_test_bit',
-       inlined from 'node_state' at include/linux/nodemask.h:423:9,
-       inlined from 'warn_if_node_offline' at include/linux/gfp.h:252:2,
-       inlined from '__alloc_pages_node_noprof' at include/linux/gfp.h:267:2,
-       inlined from 'alloc_pages_node_noprof' at include/linux/gfp.h:296:9,
-       inlined from 'vm_area_alloc_pages.constprop' at mm/vmalloc.c:3591:11:
->> arch/s390/include/asm/bitops.h:60:17: warning: 'asm' operand 2 probably does not match constraints
-      60 |                 asm volatile(
-         |                 ^~~
->> arch/s390/include/asm/bitops.h:60:17: error: impossible constraint in 'asm'
+Reviewed-by: Neal Gompa <neal@gompa.dev>
 
 
-vim +/asm +60 arch/s390/include/asm/bitops.h
-
-    48	
-    49	static __always_inline bool arch_test_bit(unsigned long nr, const volatile unsigned long *ptr)
-    50	{
-    51	#ifdef __HAVE_ASM_FLAG_OUTPUTS__
-    52		const volatile unsigned char *addr;
-    53		unsigned long mask;
-    54		int cc;
-    55	
-    56		if (__builtin_constant_p(nr)) {
-    57			addr = (const volatile unsigned char *)ptr;
-    58			addr += (nr ^ (BITS_PER_LONG - BITS_PER_BYTE)) / BITS_PER_BYTE;
-    59			mask = 1UL << (nr & (BITS_PER_BYTE - 1));
-  > 60			asm volatile(
-    61				"	tm	%[addr],%[mask]\n"
-    62				: "=@cc" (cc)
-    63				: [addr] "R" (*addr), [mask] "I" (mask)
-    64				);
-    65			return cc == 3;
-    66		}
-    67	#endif
-    68		return generic_test_bit(nr, ptr);
-    69	}
-    70	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--=20
+=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
+=BC=81/ Always, there's only one truth!
