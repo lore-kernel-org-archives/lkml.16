@@ -1,48 +1,54 @@
-Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B0413213E
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 22:05:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05311DFE29;
+	Sun,  9 Feb 2025 22:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739138714; cv=none; b=l+bqvnZJNvXUzlESpOw6xSPkqIGgFURdJqKQUh7HkyaaT0vMF1CfByCVGye7w7mB0wxhArPeO3YUMf5T8cAI7BqY5I3M9OqQCNJgwlKcXlpu9aDu2uq5SbAisi9KyvGy/qbDOLsACNTsyrq2EWDOrdrIjEDBTy8YMkZIQLqDO3M=
+	t=1739138722; cv=none; b=MzHO4GPIK0SsEkAxf/RgeIFtr9SThMEOIovbdDMLsFaDrJLDgmZj4mXrTpn09NVb4yQYLBaECPaUmfS831q1JsrukXY5+xuYFmKSd8vGIZdp7GahZ6AKypqTuAeNG/DdmUW49XA5mwr/OPKI6AdcvS5rBPNUJPe9Hk8U6AuEtgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739138714; c=relaxed/simple;
-	bh=RUhEa3Q2GEDJMqC2kd5kkN1YkKGRWYlDQW1Os4Tat+s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=POfZ8ja2LDmUrwyHMEwdeyu0n56ufvcKuEAmYL0Ow3lIRvR6TKH2S4NR5vKLoQE0EhRFwklCek0gwBjqBR//tX0ddi/NK8u1XBlxqIF5l5wz7cwylnuDUfVidkC5kErHy51WGG4Bv29FS5xlwthClf6ZO1ZLFRRrxpL4CfSmupQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DCGsPujF; arc=none smtp.client-ip=95.215.58.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739138722; c=relaxed/simple;
+	bh=zbruKfVxkpPFukeUIwoXti6I5aN9agltekSwmA2xsSc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e3DhJu5X7geW6kz6bQhJDL7stI8GWvTMsXOMHRsyqSvHjKL7GDhFWU6qk8yigLUfZDRpkUoFC0YKWT+ZfMPhxcXkHhytUW71lC3lHB2RhGy4EVZvVCWuETxiGBa4u2Y5J9T1f2qO9oVLVxPnJZm0gIeIPU0Yh1bBuJC1mC3ErOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oHK27Lw9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DCGsPujF"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739138707;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=+43qqLyyGsm6JXFPFr567gVG3Q32Z3aoVErLYEfhwOw=;
-	b=DCGsPujF+Nxju+C7R6yOP8bic+MtAynFt3bIRJ5mojlqZCvop0bO5oKmvIw+qrpKFzO6xp
-	TCCzO8cB/TzMhiqD3bYe/fcZXz93n7qwC1XzE7duX9b6ppwq5xXP7o8ARw9eSBDN4SOjLp
-	6cK3nv6sAh6I7mJTBYZGgMepPL4tLog=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Robert Richter <rrichter@amd.com>,
-	Bruno Faccini <bfaccini@nvidia.com>,
-	Haibo Xu <haibo1.xu@intel.com>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ACPI: NUMA: Use str_enabled_disabled() helper function
-Date: Sun,  9 Feb 2025 23:04:32 +0100
-Message-ID: <20250209220435.76178-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oHK27Lw9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C31B5C4CEDD;
+	Sun,  9 Feb 2025 22:05:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739138722;
+	bh=zbruKfVxkpPFukeUIwoXti6I5aN9agltekSwmA2xsSc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=oHK27Lw9zlYvKr1w6qwJGgyLCaQhaU7cckjDRv0sqKfcb1GVT3ZONdV5DIiNr1E0Q
+	 HTBbCbuyh65ISkXNrfIQr+M1iMmFtvNOHTHi3ocuT2p2Ekan8+qYC81MiOB1e1K13+
+	 TY/UdRpHugPfiT2P4KMTBlDZWaQ0hB2IfJRfk2FhQ1IBpArRXBxUpqM/E9cDJutOdR
+	 L6cj5maCuSZcOotv99TQnZUADaoPo+Mi0QKQQtJaX4figKna9vRoctgqI9B4U8yLrs
+	 S19F5jVoA24ROqrntsEWL4hpDczi4AAtErJgRva5jsMwQOtSERFji9MQY9Ngla821A
+	 tM35F+Egkb+4g==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Eyal Birger <eyal.birger@gmail.com>,
+	stable@vger.kernel.org,
+	Jann Horn <jannh@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	x86@kernel.org,
+	bpf@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Deepak Gupta <debug@rivosinc.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH bpf-next] uprobes: Harden uretprobe syscall trampoline check
+Date: Sun,  9 Feb 2025 23:05:15 +0100
+Message-ID: <20250209220515.2554058-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,98 +56,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Remove hard-coded strings by using the str_enabled_disabled() helper
-function.
+Jann reported [1] possible issue when trampoline_check_ip returns
+address near the bottom of the address space that is allowed to
+call into the syscall if uretprobes are not set up.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Though the mmap minimum address restrictions will typically prevent
+creating mappings there, let's make sure uretprobe syscall checks
+for that.
+
+[1] https://lore.kernel.org/bpf/202502081235.5A6F352985@keescook/T/#m9d416df341b8fbc11737dacbcd29f0054413cbbf
+Cc: Kees Cook <kees@kernel.org>
+Cc: Eyal Birger <eyal.birger@gmail.com>
+Cc: stable@vger.kernel.org
+Reported-by: Jann Horn <jannh@google.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- drivers/acpi/numa/srat.c | 22 ++++++++--------------
- 1 file changed, 8 insertions(+), 14 deletions(-)
+ arch/x86/kernel/uprobes.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-index 00ac0d7bb8c9..ac7045f3b85b 100644
---- a/drivers/acpi/numa/srat.c
-+++ b/drivers/acpi/numa/srat.c
-@@ -18,6 +18,7 @@
- #include <linux/nodemask.h>
- #include <linux/topology.h>
- #include <linux/numa_memblks.h>
-+#include <linux/string_choices.h>
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 5a952c5ea66b..109d6641a1b3 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -357,19 +357,23 @@ void *arch_uprobe_trampoline(unsigned long *psize)
+ 	return &insn;
+ }
  
- static nodemask_t nodes_found_map = NODE_MASK_NONE;
+-static unsigned long trampoline_check_ip(void)
++static unsigned long trampoline_check_ip(unsigned long tramp)
+ {
+-	unsigned long tramp = uprobe_get_trampoline_vaddr();
+-
+ 	return tramp + (uretprobe_syscall_check - uretprobe_trampoline_entry);
+ }
  
-@@ -187,8 +188,7 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
- 			pr_debug("SRAT Processor (id[0x%02x] eid[0x%02x]) in proximity domain %d %s\n",
- 				 p->apic_id, p->local_sapic_eid,
- 				 p->proximity_domain_lo,
--				 (p->flags & ACPI_SRAT_CPU_ENABLED) ?
--				 "enabled" : "disabled");
-+				 str_enabled_disabled(p->flags & ACPI_SRAT_CPU_ENABLED));
- 		}
- 		break;
+ SYSCALL_DEFINE0(uretprobe)
+ {
+ 	struct pt_regs *regs = task_pt_regs(current);
+-	unsigned long err, ip, sp, r11_cx_ax[3];
++	unsigned long err, ip, sp, r11_cx_ax[3], tramp;
++
++	/* If there's no trampoline, we are called from wrong place. */
++	tramp = uprobe_get_trampoline_vaddr();
++	if (tramp == -1)
++		goto sigill;
  
-@@ -200,8 +200,7 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
- 				 (unsigned long long)p->base_address,
- 				 (unsigned long long)p->length,
- 				 p->proximity_domain,
--				 (p->flags & ACPI_SRAT_MEM_ENABLED) ?
--				 "enabled" : "disabled",
-+				 str_enabled_disabled(p->flags & ACPI_SRAT_MEM_ENABLED),
- 				 (p->flags & ACPI_SRAT_MEM_HOT_PLUGGABLE) ?
- 				 " hot-pluggable" : "",
- 				 (p->flags & ACPI_SRAT_MEM_NON_VOLATILE) ?
-@@ -216,8 +215,7 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
- 			pr_debug("SRAT Processor (x2apicid[0x%08x]) in proximity domain %d %s\n",
- 				 p->apic_id,
- 				 p->proximity_domain,
--				 (p->flags & ACPI_SRAT_CPU_ENABLED) ?
--				 "enabled" : "disabled");
-+				 str_enabled_disabled(p->flags & ACPI_SRAT_CPU_ENABLED));
- 		}
- 		break;
+-	if (regs->ip != trampoline_check_ip())
++	/* Make sure the ip matches the only allowed sys_uretprobe caller. */
++	if (regs->ip != trampoline_check_ip(tramp))
+ 		goto sigill;
  
-@@ -228,8 +226,7 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
- 			pr_debug("SRAT Processor (acpi id[0x%04x]) in proximity domain %d %s\n",
- 				 p->acpi_processor_uid,
- 				 p->proximity_domain,
--				 (p->flags & ACPI_SRAT_GICC_ENABLED) ?
--				 "enabled" : "disabled");
-+				 str_enabled_disabled(p->flags & ACPI_SRAT_GICC_ENABLED));
- 		}
- 		break;
- 
-@@ -247,8 +244,7 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
- 				 *(u16 *)(&p->device_handle[0]),
- 				 *(u16 *)(&p->device_handle[2]),
- 				 p->proximity_domain,
--				 (p->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED) ?
--				"enabled" : "disabled");
-+				 str_enabled_disabled(p->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED));
- 		} else {
- 			/*
- 			 * In this case we can rely on the device having a
-@@ -258,8 +254,7 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
- 				(char *)(&p->device_handle[0]),
- 				(char *)(&p->device_handle[8]),
- 				p->proximity_domain,
--				(p->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED) ?
--				"enabled" : "disabled");
-+				str_enabled_disabled(p->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED));
- 		}
- 	}
- 	break;
-@@ -271,8 +266,7 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
- 			pr_debug("SRAT Processor (acpi id[0x%04x]) in proximity domain %d %s\n",
- 				 p->acpi_processor_uid,
- 				 p->proximity_domain,
--				 (p->flags & ACPI_SRAT_RINTC_ENABLED) ?
--				 "enabled" : "disabled");
-+				 str_enabled_disabled(p->flags & ACPI_SRAT_RINTC_ENABLED));
- 		}
- 		break;
- 
+ 	err = copy_from_user(r11_cx_ax, (void __user *)regs->sp, sizeof(r11_cx_ax));
 -- 
 2.48.1
 
