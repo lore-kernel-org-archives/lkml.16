@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97344C9F
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 06:44:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F254C9F;
+	Sun,  9 Feb 2025 06:49:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739083476; cv=none; b=FryXa1TN/mascy/7UxlFln5HyBrXrSW4Qb3HZpuBpWIGS+r6P4DR+yr9G3JDS3bHCVTsWdR4FRhlHuWWTLXKj7u+9E49hCnxDPegdn7KB1Ry7T3iMAAc/SuEFlR5lZQ/zUjOiT5PQZVZcNpr0/tqFyqhcNDpdpV4nwGLvHou3Og=
+	t=1739083798; cv=none; b=RLrzko0Sbo0simagWz6Zo3Khf8/84/n6czNIWyHozn3XQWsKpxq/ImFm7AcXlrzktFponFSevE2f6/f0YU3MBOQqxGQfAlssrNskRqakoTIFYbd4A86XXpfIb5NpUDPxxhkT6XOYcvjB4nlh4V1T64UWZ5jq+r5UDbT+sDLknj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739083476; c=relaxed/simple;
-	bh=pbXg2Rj6/DMfVQB2ivyUiCf+b7fD+8WHH0nrDRjKTu0=;
+	s=arc-20240116; t=1739083798; c=relaxed/simple;
+	bh=6WhwOi1PO8XaTLt/+uAUYLG4dac1oyS3ReLFZ3wljtk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ISAtyQ8GOLCOeJM5Je93fPNNwG/HO5mbVLWX7/g83w0fqiNIfUIGJ0ZP3LDetw8/OMg6vbcDg2gDmlabr4rwWBNnXMQHk5immkHxnBz81cpkzD9qj2UDnfHoaWzPDuBdn6tViXFLR7/mBLej9Imb2QVg7fzCYH1fLVZGrP+f1ME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2oBUlc/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nSAwQbDtFBFCLpXC91Th8WNPQs6QRnHBusrKZTogKzd+fVxKNhrVp+t/GuXbWR5nZ9WnWkJzoDHBnAQ9pq750m67s7g8UZBTd2vhM+s6C+TK5j0AcS3Uy40mGGjdCsNAkjgnLziz1l7rEXxqGaemPkLf7nK0ZelhKFrnxP2/ypA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kX8v6eGX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2oBUlc/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DE62C4CEDD;
-	Sun,  9 Feb 2025 06:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739083475;
-	bh=pbXg2Rj6/DMfVQB2ivyUiCf+b7fD+8WHH0nrDRjKTu0=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kX8v6eGX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68352C4CEDD;
+	Sun,  9 Feb 2025 06:49:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739083798;
+	bh=6WhwOi1PO8XaTLt/+uAUYLG4dac1oyS3ReLFZ3wljtk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b2oBUlc/e4o5Ltlx55+yM8OAzi5PubG38DazH1i04pNS9vF7jUM8gJ+LySC3rLFBc
-	 LCQe8BZN7McTl3Ib3XCPuxsKCJrk1aXtv16js6g2S1gjDWnZ933zjveG0QEN8wVD8w
-	 /VGDHIuvFDvIVFJqewnru1xWcWMA4v86R/xEQAr+i3sHZIkU3SsgxPDaWs1IeQwSd3
-	 w++n5xX6Z009PT4KkPVJkrAGgTQbOXwUOk7IwycGMNvpJH8ml18TM0+E1YXNmOJHLq
-	 TXJcjx/PWrB1+g5K2NJcpBY/FyEcXTRhw86B2FYMZ4Asrgxj2odfT2KtaBwUmdb2re
-	 LuaaaruxiKsNQ==
-Date: Sat, 8 Feb 2025 20:44:34 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Changwoo Min <changwoo@igalia.com>
-Cc: void@manifault.com, arighi@nvidia.com, kernel-dev@igalia.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tools/sched_ext: Compatible testing of
- SCX_ENQ_CPU_SELECTED
-Message-ID: <Z6hO0toLJPN9PL-w@slm.duckdns.org>
-References: <20250209015353.11172-1-changwoo@igalia.com>
+	b=kX8v6eGXEVj0C76VGZFm66rlS47CF9w30+mjGHAQnZMIwbgRVy3mP/VaYJFS8dSun
+	 4vtx+8rORGyFZ/eXDsLdFTiayzNK77mFso4cmQU7cGGojwmY1vrVxVUdXzU6vOfHt2
+	 OTHEAKq94yVxrwGZJuyjbdl03rntNM3XsB1DW67A=
+Date: Sun, 9 Feb 2025 07:49:54 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jared Finder <jared@finder.org>
+Cc: kees@kernel.org, gnoack@google.com, hanno@hboeck.de, jannh@google.com,
+	jirislaby@kernel.org, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] tty: Permit some TIOCL_SETSEL modes without
+ CAP_SYS_ADMIN
+Message-ID: <2025020909-reshape-dynasty-0587@gregkh>
+References: <202501100850.5E4D0A5@keescook>
+ <cd83bd96b0b536dd96965329e282122c@finder.org>
+ <2025020812-refusing-selection-a717@gregkh>
+ <fceb96ee879249d18be0261e57388542@finder.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,58 +45,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250209015353.11172-1-changwoo@igalia.com>
+In-Reply-To: <fceb96ee879249d18be0261e57388542@finder.org>
 
-On Sun, Feb 09, 2025 at 10:53:53AM +0900, Changwoo Min wrote:
-> This provides compatible testing of SCX_ENQ_CPU_SELECTED.
-> More specifically, it handles two cases:
+On Sat, Feb 08, 2025 at 08:03:27AM -0800, Jared Finder wrote:
+> On 2025-02-08 07:28, Greg KH wrote:
+> > On Sat, Feb 08, 2025 at 07:18:22AM -0800, Jared Finder wrote:
+> > > Hi, I'm the original reporter of this regression (noticed because it
+> > > impacted GNU Emacs) and I'm wondering if there's any traction on
+> > > creating an
+> > > updated patch? This thread appears to have stalled out. I haven't
+> > > seen any
+> > > reply for three weeks.
+> > 
+> > It's already in 6.14-rc1 as commit 2f83e38a095f ("tty: Permit some
+> > TIOCL_SETSEL modes without CAP_SYS_ADMIN").
 > 
->   1. a BPF scheduler is compiled against vmlinux.h where
->   SCX_ENQ_CPU_SELECTED is defined, but it runs on a kernel that does not
->   have SCX_ENQ_CPU_SELECTED. In this case, the test result of
->   'enq_flags & SCX_ENQ_CPU_SELECTED' will always be false. That test result
->   is semantically incorrect because the kernel before SCX_ENQ_CPU_SELECTED
->   has never skipped select_task_rq_scx(), so the result should be true.
-> 
->   2. a BPF scheduler is compiling against vmlinux.h where
->   SCX_ENQ_CPU_SELECTED is not defined. In this case, directly using
->   SCX_ENQ_CPU_SELECTED causes compilation errors.
-> 
-> To hide such complexity, introduce __COMPAT_is_enq_cpu_selected(),
-> which checks if SCX_ENQ_CPU_SELECTED exists in runtime using BPF CO-RE.
-> This consists of three parts:
-> 
->   1. Add enum_defs.autogen.h, which has macros (HAVE_{enum name}) denoting
->   whether SCX enums are defined in the vmlinux.h or not.
-> 
->   2. Implement __COMPAT_is_enq_cpu_selected(), which provide the test of
->   SCX_ENQ_CPU_SELECTED in a compatible way.
-> 
->   3. Use  __COMPAT_is_enq_cpu_selected() in scx_qmap.
-> 
-> Note that this is a sync of the relevant PR [1] in the scx repo.
-> 
->   [1] https://github.com/sched-ext/scx/pull/1314
-> 
-> Signed-off-by: Changwoo Min <changwoo@igalia.com>
+> Great! Is this expected to get backported to 6.7 through 6.13? I would like
+> to note the expected resolution correctly in Emacs' bug tracker.
 
-Applied to sched_ext/for-6.15 with a very minor edit:
+Yes, it should show up in the next round of stable kernel updates later
+this week.
 
-> diff --git a/tools/sched_ext/include/scx/enum_defs.autogen.h b/tools/sched_ext/include/scx/enum_defs.autogen.h
-> new file mode 100644
-> index 000000000000..a32e534a4012
-> --- /dev/null
-> +++ b/tools/sched_ext/include/scx/enum_defs.autogen.h
-...
-> +#endif /* __ENUM_DEFS_AUTOGEN_H__ */
-> +
+But note, it will only show up in the 6.12.y and 6.13.y kernels, as all
+others in your range are end-of-life and shouldn't be used by anyone at
+this point in time.
 
-The extra newline triggers git warning on commit. I dropped the extra
-newline. Maybe adjust the script too? Also, if we aren't including the
-script in the kernel tree, maybe a good idea for the generated file to point
-to where the script is?
+thanks,
 
-Thanks.
-
--- 
-tejun
+greg k-h
