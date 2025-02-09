@@ -1,179 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76DEF9FE;
-	Sun,  9 Feb 2025 15:10:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048D6F9FE;
+	Sun,  9 Feb 2025 15:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739113849; cv=none; b=aphbc4aDw8j35MLvfryUT4e3cHCVlm4EbEIWYLDm69J3GYY4JKX9C743faxl2AmLRluw5pSc/Ph/PBWb7+dN3n70+gyDVNzudii5udcRNh1njfqaD6pAqFA8dwQ09dkxhxreXzzIqo9Hr3avT3wG0hgfdKtO0USf0HPjRcib6D4=
+	t=1739113862; cv=none; b=H90strh/nGW9WtH9Vjnbo0ajq/RhjQhGt28mc7abuS88ontFocrZmxhyIxQrOFsXjiyU8kIowiA6Gq25KLUCXerZNRUgilZhY/0mX3VJd8vA1m5QO0Jm1Zm9rUQsC4lnZ+hSHlptKV4KFYVz66eHWURH9VvcEO4RNFGrc4jhpvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739113849; c=relaxed/simple;
-	bh=J7RPEEvR3YN2Zw3FJPrsXlkP5CHQ4ry6huE55PuC5gQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GfGVWUu0yBaxpMFGvvyAAjaKdsertJwUnl9eyUoZ+d6cH7PZmea7GqIwAXcvlOETbGEjp9JEAGXYAfpXKoEKyQPneBT5R4sHAUSjT6BuyuriGOJhiIfZSDom7mMvLiIL2m/aEfc6YQ2Y5Ytxy0X6TZA1q2HSIyhHe13yk4VPfBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vRjbl4gP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739113862; c=relaxed/simple;
+	bh=Pw4A9EPtu6M+CznVZfsow6MTIebmDOlA4bH9NLWTaKc=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=j+YGYHXVz31afHvkbYT9JAmCpmrIyYf3ZUjGXsvKDc7uua+nhTUpjPG9yNhTgPFfbZYVXkd9Lf3T7/QxwdtY8OTDUZq05QD/AMgbv+Q9nvHiAoFeQhXxq9+T7djhGff1oSdtV+FVuscIbJVjg+jR2cOl/nZ50YDefqqzlpQKxGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=umvhQtFk; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vRjbl4gP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5A64C4CEE2;
-	Sun,  9 Feb 2025 15:10:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739113849;
-	bh=J7RPEEvR3YN2Zw3FJPrsXlkP5CHQ4ry6huE55PuC5gQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vRjbl4gPV6wrAL1Op6b4UG/ZsW9dGApg6AGSIrvaNSkhp6cSEu2/MeZlFcqZZwjMp
-	 VGmvNeICYY50N390bDunkJ9Pxo8RsJ0xTNfcJ1laLEVHM/S3P4HVCK7Ylo35ky9VjV
-	 O3IQhIQFVExy2+rPS31ctiOp4I+goc35/Loe/O/4jtbq+ywEvbpBhgIMSbwVd3fu8Q
-	 0f37CHSCjlpBrAGCyeVigrg+mNP3UavBOj7iXkp6DeeSFvXuwwlhF4XECVIDSp98q8
-	 /uFv9cqyP3oCkixs4eyYjxu9KhtbCiIeLV+7GxHChQk+OC0ltm6uGrYLdetui3ZO6D
-	 h8fHOZbzeBvEw==
-Date: Sun, 9 Feb 2025 17:10:28 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pratyush Yadav <ptyadav@amazon.de>,
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v4 14/14] Documentation: KHO: Add memblock bindings
-Message-ID: <Z6jFZII5b-j7hzkj@kernel.org>
-References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206132754.2596694-15-rppt@kernel.org>
- <45df0d7a-622a-4268-9683-c5c6067483c3@kernel.org>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="umvhQtFk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1739113849; x=1739718649; i=markus.elfring@web.de;
+	bh=g+85RQ49D14pcg2rQ7TtGa2VAdHK1hPQ3J5/ITKF/WA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:From:Subject:
+	 Cc:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=umvhQtFkJKgEp7S9+0oDsmUmnjV+vi2ERNdv2wvGbItwxEeKfvUdPEwVKwoxd6sL
+	 01oEc35CzzQk/C2ZayrMW/d01J1Q/6Jumi53MO/gX5yLSIcfXZtvEISoRyKsnRR19
+	 Hav0HtDDG26Xrxh+zwiIemCxyUlDwN41sXkOy2ypAvbBkVzi2aN9znJcvtW48XHQq
+	 /HQzHkhc9Zo0NJLK+nVrcRVZ9kApA6WsXPzsXCZ5xo63UzCLJgaruqa2FTmBhEyY1
+	 tinTKK+zvmSBeqbnhiuNI6xqo2aAcxolUKtp9N27Nx098PtxZMcWp+BaY07XHXJhh
+	 yeTWntG8AR3Yj/GMoQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.5]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MkElP-1sx7su09tp-00cJ6d; Sun, 09
+ Feb 2025 16:10:49 +0100
+Message-ID: <7692fda2-f9a5-4381-b1a8-f949543c0a89@web.de>
+Date: Sun, 9 Feb 2025 16:10:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <45df0d7a-622a-4268-9683-c5c6067483c3@kernel.org>
+User-Agent: Mozilla Thunderbird
+To: linux-rdma@vger.kernel.org, Cheng Xu <chengyou@linux.alibaba.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Kai Shen <kaishen@linux.alibaba.com>,
+ Leon Romanovsky <leon@kernel.org>, Yang Li <yang.lee@linux.alibaba.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [RFC] RDMA/erdma: Avoid use-after-free in erdma_accept_newconn()
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:NA+UC7Qcrq9UtmA+RHMOp869eZiVVcuDInHKov2+UH89LDoaMyY
+ u2e64DgcxrjjlYXhEOCevq4c6JvFdeOOv93jypj2l23DXZkK9ZYZ7xvWTXt+suR6wYPc2PN
+ F46Sh9TaV6iO0pdDU6gwSm2W/ySNbho6AfgPjBnSf8E1roCvYLuNld8n5/puDK9LnZuurMP
+ Ia9EaKnOFcp3FwjldGOdQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:18ZA4r85Zbo=;EwgIFKo/HgaCN4a56LVXXBTrez0
+ ft7w01R5PC69J4Ey20IchS8+53f+3cCI2nj6sgfHogpdVsFSXtNv/hneDyra3j7KAz5GrLnOx
+ W0anZV2/GtAAH/vYvaRkdzdzPK8PuofgedjsatB2po2yXV3TtzRrAcGR2cb9Tt68Vq3lN6myH
+ cT5WMycl+q2ldPp8thcM+WW4ria2TE7p94fRzbZ5Zvxsv39QqBeKqCQij+gpfIHnD8+08bA87
+ iC7mM1R5noTvsFsWYpt+kIoRkyPNwcBNPJVhChex+Z77RpYo0cqlcKtkNnMj6WIuhXa0qEbWe
+ 4UmGppfBpzMst3it8E4cS9qKZ3AIXg4MGKfMSxgp/RnPo0waqUnkWK0mVjrRDgb2slTiZ/yz3
+ UM6X8+Nt9PEyqOTUJ6HqKmhPSHyNCMe8WU67u6mtvT1SDaH/gsdaM9cG1fpV/dXvz0LyOMbsy
+ gGT5hSKIULP9uUu7AHMAIvUoBaDtUZKgC5AZdxbCnC+P2I3Ndqh+lgzI8m9ntquk6043KL4Hy
+ ul9YDY/GSxS3WezFKA+OVaigXK776OeS+sQ9IJEueYtV+aUgX7IDn0hp2ym4GB/U83YM8b7Wn
+ BtFlkpBw+U1Ei7/gqWrUc1rRTWSdOlOFf38Gp4YvcRosLNi536cdoqSmXPJSHjAgzo31DOCFt
+ Vw5l5mb4oiRvV4gGNwVsxK+VIDYSG9R34A0N6seXXA5l6gXHzwwonUNOE1JDzcjNJCaJ3nMbg
+ FiYh+Fz3+y1T4HJQ8T3sC5vmOgwsuowTLpfgndAgiMOoGJTxLDYX5BVlE4a1TPn6KJHqKsS20
+ dDCm9nm9CP+P620xeDk4wJqjnXK/ga9YFGaNwgpf/gNxWbglO0mLAgz/p1oI0X6Hog2PIduHP
+ MFvhFWWqgHXmTDNVk9OL3Ej5713OjcrCBEChyo004QHNPxhT7JN7fad8sw5dJG/sUEEGGEIh+
+ gTggLn6zoZz1GarO9a3sxDOLGEDX1izDOk76bZvU/mRlLibYK8Oh//DFmhxIUu/E/JC6YxAqy
+ dfV6SBWIL+Y40aoT2nlERT61XREJLCtPCGtfDCK97X8Lg05bOZ6FvakZvaunb51b7MjxWHAHJ
+ gqCc7ZnoN3hpJcz53OrjnNR+7IeUXiNn9Pf9VDli5sVR4WMP5pRVaxtAqEOaqAflxoJIrGR6M
+ CXyx95XxwOsOQYQ7QyGJhKNUDEoKfYOLngt1YHo/enYOxQNYykJac/JSET7XnCSDhn7S60JIi
+ hqPrS1UUVeWMceQ7up9DBHyVoiYBT/Gi4XMxPAaFN3PmfGAHohSnApz6JrTIIZxZAhLDDIyhY
+ exC2G1RPdVIHnIJRaHAXTfWqzBA1oOQzXbTS/aW+znmllGLaKaRw1PUyO4l13577ec/utI/Zf
+ ixNgRGgh4u0fTag/nFwlo1tby8w6t7494ypWXVGrVii8b7Mp6RqgvWJHsza5FOjth8gcUVG38
+ /FPCR5N4WymtRnf+5IR4REQe6D54=
 
-On Sun, Feb 09, 2025 at 11:29:41AM +0100, Krzysztof Kozlowski wrote:
-> On 06/02/2025 14:27, Mike Rapoport wrote:
-> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> > 
-> > We introduced KHO into Linux: A framework that allows Linux to pass
-> > metadata and memory across kexec from Linux to Linux. KHO reuses fdt
-> > as file format and shares a lot of the same properties of firmware-to-
-> > Linux boot formats: It needs a stable, documented ABI that allows for
-> > forward and backward compatibility as well as versioning.
-> 
-> Please use subject prefixes matching the subsystem. You can get them for
-> example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
-> your patch is touching. For bindings, the preferred subjects are
-> explained here:
-> https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
- 
-These are not devicetree binding for communicating data from firmware to
-the kernel. These bindings are specific to KHO which is perfectly
-reflected by the subject.
+Cheng Xu pointed out that the following statement combination would be undesirable.
+https://lkml.org/lkml/2023/3/19/191
+https://lore.kernel.org/linux-rdma/167179d0-e1ea-39a8-4143-949ad57294c2@linux.alibaba.com/
+https://elixir.bootlin.com/linux/v6.13.1/source/drivers/infiniband/hw/erdma/erdma_cm.c#L707-L708
+		erdma_cep_put(new_cep);
+		new_cep->sock = NULL;
 
-Just a brief reminder from v2 discussion:
-(https://lore.kernel.org/linux-mm/20231222193607.15474-1-graf@amazon.com/)
+Are there contributors who would like to fix the commit 920d93eac8b97778fef48f34f10e58ddf870fc2a
+("RDMA/erdma: Add connection management (CM) support") from 2022-07-27 accordingly?
 
-"For quick reference: KHO is a new mechanism this patch set introduces 
-which allows Linux to pass arbitrary memory and metadata between kernels 
-on kexec. I'm reusing FDTs to implement the hand over protocol, as 
-Linux-to-Linux boot communication holds very similar properties to 
-firmware-to-Linux boot communication. So this binding is not about 
-hardware; it's about preserving Linux subsystem state across kexec.
+Regards,
+Markus
 
-For more details, please refer to the KHO documentation which is part of 
-patch 7 of this patch set: 
-https://lore.kernel.org/lkml/20231222195144.24532-2-graf@amazon.com/"
-
-and
-
-"This is our own data structure for KHO that just happens to again 
-contain a DT structure. The reason is simple: I want a unified, 
-versioned, introspectable data format that is cross platform so you 
-don't need to touch every architecture specific boot passing logic every 
-time you want to add a tiny piece of data."
- 
-> > As first user of KHO, we introduced memblock which can now preserve
-> > memory ranges reserved with reserve_mem command line options contents
-> > across kexec, so you can use the post-kexec kernel to read traces from
-> > the pre-kexec kernel.
-> > 
-> > This patch adds memblock schemas similar to "device" device tree ones to
-> > a new kho bindings directory. This allows us to force contributors to
-> > document the data that moves across KHO kexecs and catch breaking change
-> > during review.
-> > 
-> > Co-developed-by: Alexander Graf <graf@amazon.com>
-> > Signed-off-by: Alexander Graf <graf@amazon.com>
-> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > ---
-> >  .../kho/bindings/memblock/reserve_mem.yaml    | 41 ++++++++++++++++++
-> >  .../bindings/memblock/reserve_mem_map.yaml    | 42 +++++++++++++++++++
-> >  2 files changed, 83 insertions(+)
-> >  create mode 100644 Documentation/kho/bindings/memblock/reserve_mem.yaml
-> >  create mode 100644 Documentation/kho/bindings/memblock/reserve_mem_map.yaml
-> > 
-> > diff --git a/Documentation/kho/bindings/memblock/reserve_mem.yaml b/Documentation/kho/bindings/memblock/reserve_mem.yaml
-> > new file mode 100644
-> > index 000000000000..7b01791b10b3
-> > --- /dev/null
-> > +++ b/Documentation/kho/bindings/memblock/reserve_mem.yaml
-> > @@ -0,0 +1,41 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/memblock/reserve_mem.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Memblock reserved memory
-> > +
-> > +maintainers:
-> > +  - Mike Rapoport <rppt@kernel.org>
-> > +
-> > +description: |
-> > +  Memblock can serialize its current memory reservations created with
-> > +  reserve_mem command line option across kexec through KHO.
-> > +  The post-KHO kernel can then consume these reservations and they are
-> > +  guaranteed to have the same physical address.
-> > +
-> > +examples:
-> > +  - |
-> > +    reserve_mem {
-> 
-> Again, do not introduce own coding style.
-> 
-> I don't understand why do you need this in the first place. There is
-> already reserved-memory block.
-
-Because these regions are not "... designed for the special usage by
-various device drivers" and should not be exclude by the operating system
-from normal usage. 
- 
-> Best regards,
-> Krzysztof
-
--- 
-Sincerely yours,
-Mike.
