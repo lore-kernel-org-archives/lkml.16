@@ -1,106 +1,118 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F64814A85;
-	Sun,  9 Feb 2025 11:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129E7190692;
+	Sun,  9 Feb 2025 11:14:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739099508; cv=none; b=iiELFdzU8kmzT1LC8nsnGGsrU9NM34LcTk/tocQHFjeOxD0L0N21RVuSopafDy0q2wqPxl9cQSuQ8yC25JmW31ruooKpBXUCgKgWzux98UKrc51MNglRLKUhM/mNSnYD4C3wltbFxAvLkZDvCprq9ACJ/pw4QFoIu/NMBfKbjwg=
+	t=1739099676; cv=none; b=mSlLNf/OoXMDA3O0WPmzE+gA12uJ+3VNO3VQ4GpXtg2yDYhGSy3DIqrsErnbU4JYT23y48p9v9UJiNRMHVFOWqIhlWhH8JKKkUzmoqIfjblZ/Jssyyv7zjUPzhoESmJeoi7BG9D7Lj/snu45+9Czs64q+n0SDUi0safZ+xWz0xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739099508; c=relaxed/simple;
-	bh=RNac7Fh81ms8UskPwYdwaMOFfpm1KA+23XQae9XCnY8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rHVzFvTPY/od3TyUZckdFpVyi30lrjgmBh+200n3PSUDNEqy9KTQLR0/SIDTas9PdclJgIDOfbciAMBncNXydWMQRNx95fHH7d6awtvgCudvoANvVIZ0bPdZBqHcjmZLdkt8wklSY8+yNwmqQcrR4u6ewaTTWUrH8uH87iDcz3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bpQ0tz6o; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739099676; c=relaxed/simple;
+	bh=ocv0UjbmcfD9SuKMb0cD8T7cTc8xs0ptkGTn6SyS3eM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DEe0xxXVeH5aIRv43LBweB/HXBdjwv9334lbQISkXD34zoip9REa6DMDLIZ/JcJCdCegCTigsHy16zFWxbtH2l52fcyezGUHaUX5hB+gRDw1CuDIDTXFhDClP0T+xI6cBOv9foQb8RfjUXv40Sdj4qVEWMyGQtwKUDYBqApUc7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UYkTCqtI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bpQ0tz6o"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2fa1c3ac70cso701922a91.0;
-        Sun, 09 Feb 2025 03:11:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739099506; x=1739704306; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RNac7Fh81ms8UskPwYdwaMOFfpm1KA+23XQae9XCnY8=;
-        b=bpQ0tz6oiwCGGoKMZC/iwQnHirkdyX4zVuK5JViO5cSUlwRkmNy6I28GyY2otoWvrz
-         YvMNyzqmxvJ5KDXcCT/H/l4yWqWx9LwRU1AmTnDJixFXCrsLK3EdXlHPTEACgdtrlqnv
-         7BC+Uxr6fz7g7/lOek+uWEfYkXcV5ai7QC3sqavs9OI6PTs9FvhGolOYcwD52wYYdHga
-         4BsDdfYzUM+BNYUuhlRwxfd8hPUFmNecdEewovT4KJJZmALXRAXMhha92IyyO0FKTT27
-         gCSRwPJq7ZjTy0ltdFu9rCpT8FgUrJTp2aiNz8+NedMpM0htq9gUCiQ6yTnvbhkZEB7A
-         K5Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739099506; x=1739704306;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RNac7Fh81ms8UskPwYdwaMOFfpm1KA+23XQae9XCnY8=;
-        b=SG+DTOQHP/GZgEwE7CCKwZUl7EdJk2E4IKa/spBQZzY0++RcY16NECwQhoYX+TWuEX
-         i+VpvlzvQryVXEmj5I4DBbt53l0iSjrOKSp40tFPfsMsqrtlFFmBy/Ezx/5hPXzq484p
-         3bkAAQ538DfqbvBvv6Kzs4U78YIckDqc6NlxNI5ye74RssB38tkeh401t3Sv63Y4uV09
-         rCrZFiX8S0eecQuT4iyKDR4lEKq2/iH3lx/fuj+Y2GXLR4OMCql1MVKqJ4QKjaF36rLX
-         +7OG9NXD8O2WvXhPm7y5wqlbzaSmxI3hKvwCgTjcKehGefjNx+gHf7f8Lf3iFFPHIg/s
-         DnEA==
-X-Forwarded-Encrypted: i=1; AJvYcCXHnUmZiWpdsmALzy0T3PVVsrf7z63568CqFaraF9oJ2t3aPMXxmuogRbYc+PsvE6EGd+PkSFzoGEY3Pyg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUIIYXpuTTqnijzsRx56MdT1W6a7DaA6RpWn0dCV+4lq4C10n8
-	FSA1HvbIXjXSDqom76pAMoChP3fm0LtL2WdjvKla8hSrFK0c3vcmB/QpK9up37ZScBTKE/M3PJF
-	qLJnetN4yho4zsQrBxE+9+saMHcM=
-X-Gm-Gg: ASbGnctzAZA/zkxAOsrcxmVhfM+dSV79a2zFCk8i7cGnz4akZZea/cH+juwfAJMJkO3
-	3FoXVLi9KX7eB3QXyCxLzX+VeoyQrAb3PQ6jIBFDME+bsUn344gyakNRmuDiudjy583uQvRsL
-X-Google-Smtp-Source: AGHT+IGTPyX5yA5I9gMREGJAdE/IccSiHCLwmOmK393k7g2asDNIajBU65w4cUuPE26J1WC8yAMm10SzH1Cfw0u/95Q=
-X-Received: by 2002:a17:903:32c7:b0:21f:444:b2c9 with SMTP id
- d9443c01a7336-21f4e10e17dmr56606545ad.0.1739099506351; Sun, 09 Feb 2025
- 03:11:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UYkTCqtI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21817C4CEDD;
+	Sun,  9 Feb 2025 11:14:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739099675;
+	bh=ocv0UjbmcfD9SuKMb0cD8T7cTc8xs0ptkGTn6SyS3eM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UYkTCqtI4zAMdmBBDCGI10ZaJXtmFgy2Vbfnl439v8k8LlndsIjvO+M+c/PBCIf6i
+	 p2s1WH1nKKBeKqqSIua5vLA+UeSRLvCUjKm3kKXd2CRIbEe0aCrZdSx5KMBSU6fuEf
+	 2ajgpEYtDP2souDD3ijIt1kbhfiIftNTLAWzt923UdHot84WCC6IneiReIpzh9WDlU
+	 TTdIpQpW/CBf1amDP23+V4l7ZFs3Tm+fzwnR+4GmHE9oxtIDAe0ESmrHUoi6BL0Ok3
+	 B+o6q98Gt7LjkuXVvLxtBICU0X4mgEn0B0dLLuOgSUNatGsuyhTP01X5yKQPG729aA
+	 WrZeXJuW4fY8A==
+Message-ID: <9142e874-cefb-404b-8932-3e712b2d8bf0@kernel.org>
+Date: Sun, 9 Feb 2025 12:14:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207004049.178049-1-lyude@redhat.com> <CANiq72=bspqRga-hTTb3Vh9kD0ctyTehM9dvJdR=8biTE+iCQw@mail.gmail.com>
- <772a3e7cc31acc532cc29207ad7eb46dd7ce2bcb.camel@redhat.com>
-In-Reply-To: <772a3e7cc31acc532cc29207ad7eb46dd7ce2bcb.camel@redhat.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 9 Feb 2025 12:11:34 +0100
-X-Gm-Features: AWEUYZkI6wncZpK9H0wyOHra6tI3FA7OTO78XMNJB0y6iT4-BL4TRTEzlZZg4RU
-Message-ID: <CANiq72mdrDE5f+X8hPJ2SjLCxYNM3thrQ3b0wijMg7TLaEpT3g@mail.gmail.com>
-Subject: Re: [PATCH v2] rust/kernel: Add faux device bindings
-To: Lyude Paul <lyude@redhat.com>
-Cc: rust-for-linux@vger.kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mairacanal@riseup.net>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Xiangfei Ding <dingxiangfei2009@gmail.com>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: timer: exynos4210-mct: Add
+ samsung,exynos990-mct compatible
+To: Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Igor Belwon <igor.belwon@mentallysanemainliners.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+References: <20250104-cmu-nodes-v1-0-ae8af253bc25@mentallysanemainliners.org>
+ <20250104-cmu-nodes-v1-1-ae8af253bc25@mentallysanemainliners.org>
+ <076daca7-55e0-40d4-8ea5-93254ecd19b8@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <076daca7-55e0-40d4-8ea5-93254ecd19b8@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 7, 2025 at 11:29=E2=80=AFPM Lyude Paul <lyude@redhat.com> wrote=
-:
->
-> I'm curious, does using markdown actually make a difference here? To be
-> totally honest most of the time I've put markdown in safety comments it's=
- been
-> out of habit rather than expecting it to do something!
+On 08/01/2025 17:40, Daniel Lezcano wrote:
+> On 04/01/2025 21:54, Igor Belwon wrote:
+>> Add a dedicated compatible for the MCT of the Exynos 990 SoC.
+>> The design for the timer is reused from previous SoCs.
+>>
+>> Signed-off-by: Igor Belwon <igor.belwon@mentallysanemainliners.org>
+>> ---
+> 
+> Applied patch 1/2
+> 
 
-No, currently it doesn't. However, we do it to make the style
-("rules") easier to remember and to keep it consistent with the rest
-of the comments -- so exactly what you say is the goal, i.e. that we
-do it "out of habit" since it is the same everywhere.
+Hi Daniel,
 
-I could imagine, eventually, some editor or doc renderer taking
-advantage of it (some people use ligatures or non-fixed-width fonts
-too, so it wouldn't surprise me if some people could like that).
+Did this really happen? You replied month ago, but linux-next still does
+not have this patch and now we got new warnings on next:
 
-So, yeah, it is not a huge deal, and I don't expect that we will be
-able to keep it consistent everywhere as Rust grows in the kernel, but
-I hope at least most of it is kept consistent. Clippy (or I guess
-AIs...) could help to spot this kind of thing in the future.
+https://lore.kernel.org/all/202502070055.P29PYKEE-lkp@intel.com/
 
-Cheers,
-Miguel
+Best regards,
+Krzysztof
