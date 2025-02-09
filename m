@@ -1,162 +1,254 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F181392
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 03:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF460243365
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 03:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739070498; cv=none; b=sAlhe2rV3iPEdDQ7V/Juw18eGBA4rn+6+p28NS9G/PRsO9RI4k82Rf1VtGXyik869fT1mV55i426ttU1O7xDfxzHFkuKKXlEaSGClTtBhFeFfR6TkN/Y49yexV8QXlJ8cvQFDWCVQ/F08fdMmFDFB4PWALH8f4a2W54GIVbdBA4=
+	t=1739071629; cv=none; b=sYqWbsXw0XBKKuNeQAIzG/d3yHqzYVZyMEckAhZGNI51TfcW12GBkfxipWIGbvJ/aeR75/krKvuvDAOv3v9MuhOI1ysIbGtmp+r3nHp8/IJJR7KFy/cnlN25N32n71C4/mavjP45+CbmLwbEvD8kW1CUZU6b7XziQ9RQuGTe7qk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739070498; c=relaxed/simple;
-	bh=RkMp4uO6m0ygwDbBIBNp9CIWLeDzbb31N8KH0fOsshk=;
+	s=arc-20240116; t=1739071629; c=relaxed/simple;
+	bh=LLv8tmmK/SZlK/XrujaJirdK0p7aZvSs3QKOmy6ZwkM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VAC5Dyy0cVKeK/5UKOoJ+eqlFYKaHn+z6z6CEGEh0eIV94ufd/fHAbMO011ffhIQMU5xqUfUbTdgerhFIEEPqX3bLJLMkXWv0XqsWlpDOV9m3bc23Uxh+I8OkRloBMbmVKSp0J74r3HMytLexVyUvYyMXRmqrvhvXSBCY/YXlb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AYv6noQO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pho/OJmxOUD90vP/beyIImwAyeLLDAVja/MPmH4m+1xXsozzZYceVBCtiQ4znnr+HVHmo2PfcHBEGkQRtPXIf4a2Amgb0/DRaveiNzzos+qCDsSc3LYPDgEGdPRLgl0CWyer7zdcvNRIpKJufiiV37GUyj4IL0zZ1/NrtV3EifE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LlFEmNnF; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AYv6noQO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739070494;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j31g1VoN7O4XuCmDiX3R+x/Ync3MiakZ5YN14frwoaw=;
-	b=AYv6noQO8jAZ4JAxcYIjX9TbwGDzUHg4SLFhgZx1wCzjktDLoxe+GIFRQ1K4n0Ql39o4fd
-	TMWy+C9+ssZPanATfaM4XoawgeGV/3++l1ybaZ1DN11pHhnSKKEdkx7xWw7hrD4ro63o/b
-	F/jOFWt1iwYMhuX4dxVYJiUEmnidv3M=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-527--0UWXAPWP4aY9sz5uQfGng-1; Sat,
- 08 Feb 2025 22:08:10 -0500
-X-MC-Unique: -0UWXAPWP4aY9sz5uQfGng-1
-X-Mimecast-MFC-AGG-ID: -0UWXAPWP4aY9sz5uQfGng
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CC58C1800360;
-	Sun,  9 Feb 2025 03:08:03 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.28])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 48D321800265;
-	Sun,  9 Feb 2025 03:08:00 +0000 (UTC)
-Date: Sun, 9 Feb 2025 11:07:53 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
-	Alexander Graf <graf@amazon.com>, Andy Lutomirski <luto@kernel.org>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pratyush Yadav <ptyadav@amazon.de>,
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-	changyuanl@google.com
-Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
-Message-ID: <Z6gcCTBTceixz7yq@MiWiFi-R3L-srv>
-References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206162939.a1f86fb835f1eeb7ed73ff1c@linux-foundation.org>
- <CA+CK2bD6204AKWGOgzLMiMsnVZ=tk+DGc+VWgi3RVt2byaLJJA@mail.gmail.com>
- <Z6a1kxR2GlQoepgI@MiWiFi-R3L-srv>
- <CA+CK2bDgP2DfsfVAhQhFhBiNJFUS1n17oX9KgC1JFXAk76j01Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LlFEmNnF"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30797730cbdso32046061fa.3
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 19:27:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739071625; x=1739676425; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MEMGOzMHg8q4HMuP8Kzf4ro/M59TspTkcMQCU5stT2k=;
+        b=LlFEmNnFZ0qhpDU6JaLRN18IxUN6RDAsUl6dA4W44erNoI08F9opujCIQhJzJc8LEI
+         htughqFsckS9OW1Eyz+g0cdjxREoGqqtn7+o4x7EK76j5P0JN0hZhcL9KnmGuzo1WRAN
+         qUAEkvg/niStmUJbkDRmq9xoLdgerVn6873zviClHUpmqAr94acnMc/dAIuKCJqCHMLU
+         BiRopaDJfFASsCvxu5ocuK8b6vD7q1ib2HjXR5jX6GqYEZv3T3FmuyhHUzlTUUn5LUPa
+         oV+5gXL+AzuYJDmERgCtCPpWYdoFEUF+jLf5QaVNlXuk4A+vUIlyzwkm1qcIp0J1PIGs
+         lstQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739071625; x=1739676425;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MEMGOzMHg8q4HMuP8Kzf4ro/M59TspTkcMQCU5stT2k=;
+        b=F6eIGsgkDMdGN37EHYk7FIsL/VWNZ08oMMRFB7nRHtaWUKeFi8Pu5mydyN0GdGDBXD
+         6aea9jlq1WubEzF/bsIFC2NyU7ImIoCqNUL1CMafFn797HmgmN+rvRS4Jofb9Ar+iJJG
+         SWEUHMixFi/RLT9fkAUyn2opPpcDaLQi/JteS32VmsB1HhY/dxESD41gT3BRRYrVCAPT
+         f5+lnfMPA6V8IIXpkc1zZ9bIjtrrpvUK/7CBdB0+plDL2CQtj65eCcbgArcocQHxJ4Dh
+         MVlfMDH8FVt4+cBb6NJGWE0lPBt3fqczje2dgv8GG7E7auVf3LNtxuBpyONTBX24YU+0
+         K3aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWnCwc8CKL0NFaXlOdpeuQyzndOttqNeat1ZqaT9foj8pA1OF+BaiWDO1WTzunc0A6ojVZu0v5l540KcL0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6tU5oZ6z1YKuqnCLxXoEIRXoZ3dNd5oaEo9zydvoWQ0zDszm6
+	s8uKn3ImJ2gvi+fGXyh8m/6fdbyxodWj+sJ7QatOh+qTiB8KEdQMvgy+B2UqMU4=
+X-Gm-Gg: ASbGncteYajVVkqLpt2WBEkLQXn8U8ueyV9rfMpszOFD9XrF5WJSw7IsdAhQYi1NLxa
+	5gLsYKdbGLlptETduOxVvQXyu/lVlXj4qODaHOcnM+at11mY3w9Peqc77/3hgTkNj55s5x+AZUH
+	QerAySb6hBi/rzHilhc9ZWyxtNezAdjV1uBRfej0NS+nhqFWi1v+AUORIDQoBqcUCEL61nma3Mn
+	1rOxGv+fM0uOUuH9G8/Yju6/2lYCSEhRb8FgKMtPBWuyrkvZpj5EdkATM55YDyc/vSEu9/KbRIz
+	w7QwijPAuXtKJ2i4W1kMXEpiaG0TLONd31Eo/qaSWSZIulq9xvK5XNH/ry1m5HCUWJNp+/U=
+X-Google-Smtp-Source: AGHT+IHWOaxReu1PjXNDThgwzOdk0tYkcKOZfUsXWgA+tH1ap47fTYHkaH6FCI/c9iY9x2qd2M3TgA==
+X-Received: by 2002:a05:651c:b29:b0:302:3ad8:34 with SMTP id 38308e7fff4ca-307e57ca839mr25888001fa.12.1739071624853;
+        Sat, 08 Feb 2025 19:27:04 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de2bad67sm9037651fa.77.2025.02.08.19.27.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 19:27:03 -0800 (PST)
+Date: Sun, 9 Feb 2025 05:27:01 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	Simona Vetter <simona.vetter@ffwll.ch>
+Subject: Re: [PATCH v2 00/35] drm/bridge: Various quality of life improvements
+Message-ID: <yudkovtipwtnofr3o2qwqrmriwxlczrwploieh5i4ke3sx5zhk@5ktlrew7o6k2>
+References: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+CK2bDgP2DfsfVAhQhFhBiNJFUS1n17oX9KgC1JFXAk76j01Q@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+In-Reply-To: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
 
-On 02/08/25 at 07:23pm, Pasha Tatashin wrote:
-> On Fri, Feb 7, 2025 at 8:38 PM Baoquan He <bhe@redhat.com> wrote:
-> >
-> > On 02/06/25 at 08:28pm, Pasha Tatashin wrote:
-> > > On Thu, Feb 6, 2025 at 7:29 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> > > >
-> > > > On Thu,  6 Feb 2025 15:27:40 +0200 Mike Rapoport <rppt@kernel.org> wrote:
-> > > >
-> > > > > This a next version of Alex's "kexec: Allow preservation of ftrace buffers"
-> > > > > series (https://lore.kernel.org/all/20240117144704.602-1-graf@amazon.com),
-> > > > > just to make things simpler instead of ftrace we decided to preserve
-> > > > > "reserve_mem" regions.
-> > > > >
-> > > > > The patches are also available in git:
-> > > > > https://git.kernel.org/rppt/h/kho/v4
-> > > > >
-> > > > >
-> > > > > Kexec today considers itself purely a boot loader: When we enter the new
-> > > > > kernel, any state the previous kernel left behind is irrelevant and the
-> > > > > new kernel reinitializes the system.
-> > > >
-> > > > I tossed this into mm.git for some testing and exposure.
-> > > >
-> > > > What merge path are you anticipating?
-> > > >
-> > > > Review activity seems pretty thin thus far?
-> > >
-> > > KHO is going to be discussed at the upcoming lsfmm, we are also
-> > > planning to send v5 of this patch series (discussed with Mike
-> > > Rapoport) in a couple of weeks. It will include enhancements needed
-> > > for the hypervisor live update scenario:
-> >
-> > So is this V4 still a RFC if v5 will be sent by plan? Should we hold the
-> > reviewing until v5? Or this series is a infrustructure building, v5 will
-> > add more details as you listed as below. I am a little confused.
+On Tue, Feb 04, 2025 at 03:57:28PM +0100, Maxime Ripard wrote:
+> Hi,
 > 
-> We will modify the existing patches and send as v5 because some
-> interfaces are going to be changed*.
+> Here's a series of changes after to the KMS helpers and bridge API
+> following a bunch of reviews I did.
 > 
-> Otherwise, v5 will make KHO a lot more flexible as it will allow to
-> use the tree all the time while the system is running instead of only
-> once during the activation phase.
+> It's mostly centered across providing an easier time to deal with bridge
+> states, and a somewhat consistent with the other entities API.
 > 
-> * Changing interfaces  is optional, but decision whether to change
-> will be discussed at Hypervisor Live Update on Feb 10th:
-> https://lore.kernel.org/all/26a4b7ca-93a6-30e2-923b-f551ced03d62@google.com/
+> It's build tested only, with arm64 allmodconfig.
+> 
+> Maxime
+> 
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> ---
+> Changes in v2:
+> - Pass the full atomic state to bridge atomic hooks
+> - Make attach take the encoder as a parameter
+> - Mark bridge->encoder as deprecated
+> - Rework the logic to detect if a bridge uses a state or not at
+>   atomic_check time
+> - Add lockdep assertion to drm_bridge_get_current_state()
+> - Link to v1: https://lore.kernel.org/r/20250115-bridge-connector-v1-0-9a2fecd886a6@kernel.org
+> 
+> ---
+> Maxime Ripard (35):
+>       drm/atomic: Document history of drm_atomic_state
+>       drm/bridge: Pass full state to atomic_pre_enable
+>       drm/bridge: Pass full state to atomic_enable
+>       drm/bridge: Pass full state to atomic_disable
+>       drm/bridge: Pass full state to atomic_post_disable
+>       drm/atomic-helper: Fix commit_tail state variable name
+>       drm/atomic-helper: Change parameter name of drm_atomic_helper_wait_for_dependencies()
+>       drm/atomic-helper: Change parameter name of drm_atomic_helper_commit_tail()
+>       drm/atomic-helper: Change parameter name of drm_atomic_helper_commit_tail_rpm()
+>       drm/atomic-helper: Change parameter name of drm_atomic_helper_modeset_disables()
+>       drm/atomic-helper: Change parameter name of disable_outputs()
+>       drm/bridge: Change parameter name of drm_atomic_bridge_chain_disable()
+>       drm/bridge: Change parameter name of drm_atomic_bridge_chain_post_disable()
+>       drm/atomic-helper: Change parameter name of drm_atomic_helper_update_legacy_modeset_state()
+>       drm/atomic-helper: Change parameter name of crtc_set_mode()
+>       drm/atomic-helper: Change parameter name of drm_atomic_helper_commit_planes()
+>       drm/atomic-helper: Change parameter name of drm_atomic_helper_commit_modeset_enables()
+>       drm/bridge: Change parameter name of drm_atomic_bridge_chain_pre_enable()
+>       drm/bridge: Change parameter name of drm_atomic_bridge_chain_enable()
+>       drm/atomic-helper: Change parameter name of drm_atomic_helper_commit_writebacks()
+>       drm/atomic-helper: Change parameter name of drm_atomic_helper_fake_vblank()
+>       drm/atomic-helper: Change parameter name of drm_atomic_helper_commit_hw_done()
+>       drm/atomic-helper: Change parameter name of drm_atomic_helper_wait_for_vblanks()
+>       drm/atomic-helper: Change parameter name of drm_atomic_helper_cleanup_planes()
+>       drm/atomic-helper: Change parameter name of drm_atomic_helper_commit_cleanup_done()
+>       drm/atomic-helper: Change parameter name of drm_atomic_helper_wait_for_flip_done()
 
+I agree that use of the old_state can be confusing (and it has been
+confusing to me for some time). The main question is, do we loose useful
+memo 'this is the state after swap'. Most likely it is useless now, just
+wanted to give it a second thought.
 
-Ah, this is what I would like to know about the difference between v4
-and v5. Thanks for the information, and looking forward to seeing the v5
-update.
-
+>       drm/bridge: Add encoder parameter to drm_bridge_funcs.attach
+>       drm/bridge: Provide a helper to retrieve current bridge state
+>       drm/bridge: Assume that a bridge is atomic if it has atomic_reset
+>       drm/bridge: Provide pointers to the connector and crtc in bridge state
+>       drm/bridge: Make encoder pointer deprecated
+>       drm/bridge: cdns-csi: Switch to atomic helpers
+>       drm/bridge: tc358775: Switch to atomic commit
+>       drm/bridge: tc358768: Convert to atomic helpers
+>       drm/bridge: ti-sn65dsi86: Use bridge_state crtc pointer
 > 
-> >
-> > >
-> > > 1. Allow nodes to be added to the KHO tree at any time
-> > > 2. Remove "activate" (I will also send a live update framework that
-> > > provides the activate functionality).
-> > > 3. Allow serialization during shutdown.
-> > > 4. Decouple KHO from kexec_file_load(), as kexec_file_load() should
-> > > not be used during live update blackout time.
-> > > 5. Enable multithreaded serialization by using hash-table as an
-> > > intermediate step before conversion to FDT.
-> >
+>  drivers/gpu/drm/bridge/adv7511/adv7511_drv.c       |   3 +-
+>  drivers/gpu/drm/bridge/analogix/analogix-anx6345.c |   3 +-
+>  drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c |   3 +-
+>  drivers/gpu/drm/bridge/analogix/analogix_dp_core.c |  26 +--
+>  drivers/gpu/drm/bridge/analogix/anx7625.c          |  11 +-
+>  drivers/gpu/drm/bridge/aux-bridge.c                |   3 +-
+>  drivers/gpu/drm/bridge/aux-hpd-bridge.c            |   1 +
+>  drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c     |  30 ++-
+>  .../gpu/drm/bridge/cadence/cdns-mhdp8546-core.c    |   6 +-
+>  drivers/gpu/drm/bridge/chipone-icn6211.c           |  13 +-
+>  drivers/gpu/drm/bridge/chrontel-ch7033.c           |   5 +-
+>  drivers/gpu/drm/bridge/display-connector.c         |   1 +
+>  drivers/gpu/drm/bridge/fsl-ldb.c                   |   8 +-
+>  drivers/gpu/drm/bridge/imx/imx-ldb-helper.c        |   7 +-
+>  drivers/gpu/drm/bridge/imx/imx-ldb-helper.h        |   2 +-
+>  drivers/gpu/drm/bridge/imx/imx-legacy-bridge.c     |   3 +-
+>  drivers/gpu/drm/bridge/imx/imx8mp-hdmi-pvi.c       |  10 +-
+>  drivers/gpu/drm/bridge/imx/imx8qm-ldb.c            |  10 +-
+>  drivers/gpu/drm/bridge/imx/imx8qxp-ldb.c           |  21 +-
+>  .../gpu/drm/bridge/imx/imx8qxp-pixel-combiner.c    |   8 +-
+>  drivers/gpu/drm/bridge/imx/imx8qxp-pixel-link.c    |  13 +-
+>  drivers/gpu/drm/bridge/imx/imx8qxp-pxl2dpi.c       |  11 +-
+>  drivers/gpu/drm/bridge/ite-it6263.c                |  18 +-
+>  drivers/gpu/drm/bridge/ite-it6505.c                |  10 +-
+>  drivers/gpu/drm/bridge/ite-it66121.c               |   8 +-
+>  drivers/gpu/drm/bridge/lontium-lt8912b.c           |   3 +-
+>  drivers/gpu/drm/bridge/lontium-lt9211.c            |   8 +-
+>  drivers/gpu/drm/bridge/lontium-lt9611.c            |  21 +-
+>  drivers/gpu/drm/bridge/lontium-lt9611uxc.c         |   3 +-
+>  drivers/gpu/drm/bridge/lvds-codec.c                |   3 +-
+>  .../drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c   |   1 +
+>  drivers/gpu/drm/bridge/microchip-lvds.c            |   3 +-
+>  drivers/gpu/drm/bridge/nwl-dsi.c                   |  13 +-
+>  drivers/gpu/drm/bridge/nxp-ptn3460.c               |   5 +-
+>  drivers/gpu/drm/bridge/panel.c                     |  15 +-
+>  drivers/gpu/drm/bridge/parade-ps8622.c             |   1 +
+>  drivers/gpu/drm/bridge/parade-ps8640.c             |   7 +-
+>  drivers/gpu/drm/bridge/samsung-dsim.c              |  11 +-
+>  drivers/gpu/drm/bridge/sii902x.c                   |   9 +-
+>  drivers/gpu/drm/bridge/sil-sii8620.c               |   1 +
+>  drivers/gpu/drm/bridge/simple-bridge.c             |   5 +-
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c       |   5 +-
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c          |   8 +-
+>  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c      |  11 +-
+>  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi2.c     |  11 +-
+>  drivers/gpu/drm/bridge/tc358762.c                  |  12 +-
+>  drivers/gpu/drm/bridge/tc358764.c                  |   3 +-
+>  drivers/gpu/drm/bridge/tc358767.c                  |  22 +-
+>  drivers/gpu/drm/bridge/tc358768.c                  |  33 ++-
+>  drivers/gpu/drm/bridge/tc358775.c                  |  39 ++--
+>  drivers/gpu/drm/bridge/thc63lvd1024.c              |   3 +-
+>  drivers/gpu/drm/bridge/ti-dlpc3433.c               |  10 +-
+>  drivers/gpu/drm/bridge/ti-sn65dsi83.c              |  10 +-
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c              |  63 ++++--
+>  drivers/gpu/drm/bridge/ti-tdp158.c                 |  12 +-
+>  drivers/gpu/drm/bridge/ti-tfp410.c                 |   5 +-
+>  drivers/gpu/drm/bridge/ti-tpd12s015.c              |   3 +-
+>  drivers/gpu/drm/drm_atomic_helper.c                | 242 ++++++++++-----------
+>  drivers/gpu/drm/drm_atomic_state_helper.c          |   5 +
+>  drivers/gpu/drm/drm_bridge.c                       |  98 +++------
+>  drivers/gpu/drm/i2c/tda998x_drv.c                  |   1 +
+>  drivers/gpu/drm/imx/ipuv3/parallel-display.c       |   3 +-
+>  drivers/gpu/drm/ingenic/ingenic-drm-drv.c          |   9 +-
+>  drivers/gpu/drm/mcde/mcde_dsi.c                    |   3 +-
+>  drivers/gpu/drm/mediatek/mtk_dp.c                  |   9 +-
+>  drivers/gpu/drm/mediatek/mtk_dpi.c                 |   3 +-
+>  drivers/gpu/drm/mediatek/mtk_dsi.c                 |  11 +-
+>  drivers/gpu/drm/mediatek/mtk_hdmi.c                |  12 +-
+>  drivers/gpu/drm/meson/meson_encoder_cvbs.c         |   8 +-
+>  drivers/gpu/drm/meson/meson_encoder_dsi.c          |   8 +-
+>  drivers/gpu/drm/meson/meson_encoder_hdmi.c         |   8 +-
+>  drivers/gpu/drm/msm/dp/dp_display.c                |  28 +--
+>  drivers/gpu/drm/msm/dp/dp_drm.c                    |  19 +-
+>  drivers/gpu/drm/msm/dp/dp_drm.h                    |   6 +-
+>  drivers/gpu/drm/msm/dsi/dsi_manager.c              |   3 +-
+>  drivers/gpu/drm/omapdrm/dss/dpi.c                  |   3 +-
+>  drivers/gpu/drm/omapdrm/dss/dsi.c                  |   3 +-
+>  drivers/gpu/drm/omapdrm/dss/hdmi4.c                |   8 +-
+>  drivers/gpu/drm/omapdrm/dss/hdmi5.c                |   8 +-
+>  drivers/gpu/drm/omapdrm/dss/sdi.c                  |   3 +-
+>  drivers/gpu/drm/omapdrm/dss/venc.c                 |   3 +-
+>  drivers/gpu/drm/renesas/rcar-du/rcar_lvds.c        |   8 +-
+>  drivers/gpu/drm/renesas/rcar-du/rcar_mipi_dsi.c    |   7 +-
+>  drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c     |   8 +-
+>  drivers/gpu/drm/stm/lvds.c                         |  16 +-
+>  drivers/gpu/drm/tidss/tidss_encoder.c              |   3 +-
+>  drivers/gpu/drm/vc4/vc4_dsi.c                      |  12 +-
+>  drivers/gpu/drm/xlnx/zynqmp_dp.c                   |  17 +-
+>  drivers/platform/arm64/acer-aspire1-ec.c           |   3 +-
+>  include/drm/drm_atomic.h                           |  45 ++++
+>  include/drm/drm_bridge.h                           |  39 +++-
+>  91 files changed, 681 insertions(+), 574 deletions(-)
+> ---
+> base-commit: 50d0a57d3a4193862a53fae0de7ed7749908cd8f
+> change-id: 20250115-bridge-connector-f93194e267ff
+> 
+> Best regards,
+> -- 
+> Maxime Ripard <mripard@kernel.org>
 > 
 
+-- 
+With best wishes
+Dmitry
