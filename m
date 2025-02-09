@@ -1,125 +1,492 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A422B1F95E
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 17:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F8B2F22
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 17:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739123241; cv=none; b=K5PP6rlRC7G1KDMeH6BVCmzoQLYUcVp7MA6NOnthc8HgdX2XtXPJRIX+yf7u7lJRAHyKYxbScKcftjJnQ2yS8D23yO9o1xcS0tIfw4jL8LgeAOS5/fMBDpH3wODLEud8/cZgzhnZ0OHYKvSxz6JhuQmR+E8IemN3euH3I28XZdg=
+	t=1739123296; cv=none; b=d1mjC0SRiazkpVy7x8HrW58DW5c1S+HGBxGbPBZgxCHbbSVn1cjihb/2Br2xDtlEoWDcRRQ6fWFjjKuMFkQ2E9293hfmeKAhPrbINMDK8STDh8hKXNU4b/n/J0LljErEVaFgG6IGjO6aYFKb69x7V9uBQvq67SOXJ4Prq/vP45k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739123241; c=relaxed/simple;
-	bh=dYJfMJUhomziUknI7Jl1/Y82RwuNylLa0U5z6lah1qo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZIZq+YHq4Vu0aeqiVawaSGktnceHPQWG9uggDd2pHBsdEF5Er3+vHjSRZY5ewEaLIDqyYA1v7BtjSwI4aCqNR2auQA7+WWE0jXwyD5JS8Sf0c7JEng/CNDBUaAyw7+n1/GavyUUBKsznfn3puOwfUYcoB52CMlF/Gsi6jEIOVDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XRKAzeHI; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739123296; c=relaxed/simple;
+	bh=35sYHjGZkGEIHAOErWRPG25fb7/NHGn1hX/SCIOGr4s=;
+	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=C+Yqd9O2p54VAtiqycu1TifEpmz2UzzAhc6mS41IL3x6z5CD7FILB5QZ940gcDMkgPvNi6CPKofV8SO07itamD9MMjvt2HoVOt3uxtmJ5Dafn3oRPHYbfikSclQ1/99FKWyWv9nLwsc03SA7vat3oQ75SnbhUc8Pcxv1EnUR4yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TXn+2GNh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XRKAzeHI"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43622267b2eso36664225e9.0
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 09:47:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739123238; x=1739728038; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=635XUpQWwMBC20im34ayRqdTDYXD0oCaCf2wtTpcf80=;
-        b=XRKAzeHI1i47TjRICWo/fFeu+ONKQL6rxHyPpZql8TBATR1/R0N8k74J2syTqyy2EK
-         BkjAMOe0Zl1MGyxSS8iDyR/x9zSc0dEswTC1qFLd8ZXUSZDejgvi02Dc/skhdGCGa5b2
-         aBMfbtcK294rPQ056fUCmtvrmfRx3tNIYQJl1thr4jjpKgPcQg01sWMMoZdfAYaX9MQp
-         dtNHyVFVQhJUpCEtWcnNasz3jq7U7oXTvrhV/8lQ07YjZpwS4w8Z1/kvUS70W24sv9kV
-         kdSGjL8z50XFZh6f3jAk4CkGVkuL8lGt6duJnVlLUOCMecnP+DQrbO+MAWA6VIS4cUQP
-         5tBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739123238; x=1739728038;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=635XUpQWwMBC20im34ayRqdTDYXD0oCaCf2wtTpcf80=;
-        b=M2Rzi5nTzSrj3FA5DDQUWb49OSKTgWkLEgHkZNt4m4WwwWmI0Ac/m28fc8AbOjJKd6
-         2MCFzm7nG8e9D/unUj1sxRC4PvrbeklKk+xvBsZlnm+OyoT8VsfJRb8DmxlhGXTRb4SO
-         Xy85JMe48hKPnwtRdlJ1Q/0U3Z00J2W1Ob2QvHEBFOnCVKEb+07MzCbTg+t3TJ2Mfopw
-         oJxqsvKqjuByu+3uVU3Md5Atk6TgucnvIBwOwQXse4e8vVXBGQwqtDGbDdMZwPLgaw+p
-         NQTmNOXepDFfApJpdnIkOFo5JMra1Hfa7F5YP5hDqO0H+tyur4OyMvRWkJ26OluBIAu0
-         9DcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUfRH49HpXDjqZJ/6CCFmxrSjracU16nDFPBftRLLM2OxCSKtW2bJuUZFqvH9KDvncJGezmzKOWhgqgQnk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBFRi6RtVzpCQJpCVIm26eMu83Kn56Ch8UhGQt7/amcKrGxUnT
-	bXgubdUikDLfeSoWFKrAm3p69GcJXcoZH+ooj17cEAtR0QmllQifJTbwvQ==
-X-Gm-Gg: ASbGncs2vWIFyEcFEcprqYQ0wMVqwSj1g2IhleBQE9XTgaZyrHzJ3DK/YKrKkA1ftSs
-	cmi3T15JwAvaTUaiN9v0A5wiCHjXoyde4AMsZdMzZkzXCgE2WDprGxUYm/de8DLICNoWUVIaNln
-	nVRqlhTqsnf1CdjJa0dlf8sgr/QMgW8J2Ulm0VVMecVwYUauNsft21ylPf5Wdha/yoWhLpjLiGk
-	Ejuhqug00i0QWVPYKrB+zm2jMaMZY/WFMnAuFX48I6IylXzz7e3DW5zxOo665j24pT4XD6RGvKA
-	YMAQqt6lf3pEDkZORJIjo5jaVKbDiJsLva80kgDrN7pOMHs86WObe+7DqL6emX35Rxhtjvc4
-X-Google-Smtp-Source: AGHT+IHd6jyAT0N+xUPxKXqCz5caIm7IcctiIoA6zP+xhMqvsp7Axyioz+nIgSfEUq+zbPIJs2TQYg==
-X-Received: by 2002:a05:600c:1f85:b0:436:30e4:459b with SMTP id 5b1f17b1804b1-4392499962dmr93492725e9.18.1739123237542;
-        Sun, 09 Feb 2025 09:47:17 -0800 (PST)
-Received: from snowdrop.snailnet.com (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4393b66f3e3sm33686985e9.19.2025.02.09.09.47.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 09:47:17 -0800 (PST)
-From: David Laight <david.laight.linux@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Cc: David Laight <david.laight.linux@gmail.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Jan Kara <jack@suse.cz>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Peter Xu <peterx@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>
-Subject: [PATCH 1/1] mm: Remove the access_ok() call from gup_fast_fallback().
-Date: Sun,  9 Feb 2025 17:47:11 +0000
-Message-Id: <20250209174711.60889-1-david.laight.linux@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TXn+2GNh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739123293;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ImQqa477j5vMR3aG9NyxGa4y/0s1ZTW1pMpQcumnUqw=;
+	b=TXn+2GNhCHxKDJuSDoSTWlkYnVmM49HORx7OduJv49afusjTjEIb68pO0aTW/y3QSqAJfF
+	E0wlh9F2Wwn3XOU5S8ym7E6DXGwYjZCEfvdB3qlcukW1kYYMxmOhzJRoxSyU9qwzlfV/6Z
+	jx6kkCAml2FSPhKk2D8hYvx5uReUwSk=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-29-ky_tXTbTMvqIPTJJJFq30g-1; Sun,
+ 09 Feb 2025 12:48:09 -0500
+X-MC-Unique: ky_tXTbTMvqIPTJJJFq30g-1
+X-Mimecast-MFC-AGG-ID: ky_tXTbTMvqIPTJJJFq30g
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A08B51956088;
+	Sun,  9 Feb 2025 17:48:07 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.92])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B5F5118004A7;
+	Sun,  9 Feb 2025 17:48:03 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+To: netdev@vger.kernel.org
+cc: dhowells@redhat.com, Marc Dionne <marc.dionne@auristor.com>,
+    Jakub Kicinski <kuba@kernel.org>,
+    "David S. Miller" <davem@davemloft.net>,
+    Chuck Lever <chuck.lever@oracle.com>,
+    Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+    Simon Horman <horms@kernel.org>, linux-afs@lists.infradead.org,
+    linux-kernel@vger.kernel.org
+Subject: [PATCH net] rxrpc: Fix alteration of headers whilst zerocopy pending
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1933695.1739123282.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 09 Feb 2025 17:48:02 +0000
+Message-ID: <1933696.1739123282@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Historiaclly the code relied on access_ok() to validate the address range.
-Commit 26f4c328079d7 added an explicit wrap check before access_ok().
-Commit c28b1fc70390d then changed the wrap test to use check_add_overflow().
-Commit 6014bc27561f2 relaxed the checks in x86-64's access_ok() and added
-  an explicit check for TASK_SIZE here to make up for it.
-That left a pointless access_ok() call with its associated 'lfence' that
-  can never actually fail.
-So just delete the test.
+AF_RXRPC now uses MSG_SPLICE_PAGES to do zerocopy of the DATA packets when
+it transmits them, but to reduce the number of descriptors required in the
+DMA ring, it allocates a space for the protocol header in the memory
+immediately before the data content so that it can include both in a singl=
+e
+descriptor.  This is used for either the main RX header or the smaller
+jumbo subpacket header as appropriate:
 
-Signed-off-by: David Laight <david.laight.linux@gmail.com>
+  +----+------+
+  | RX |      |
+  +-+--+DATA  |
+    |JH|      |
+    +--+------+
+
+Now, when it stitches a large jumbo packet together from a number of
+individual DATA packets (each of which is 1412 bytes of data), it uses the
+full RX header from the first and then the jumbo subpacket header for the
+rest of the components:
+
+  +---+--+------+--+------+--+------+--+------+--+------+--+------+
+  |UDP|RX|DATA  |JH|DATA  |JH|DATA  |JH|DATA  |JH|DATA  |JH|DATA  |
+  +---+--+------+--+------+--+------+--+------+--+------+--+------+
+
+As mentioned, the main RX header and the jumbo header overlay one another
+in memory and the formats don't match, so switching from one to the other
+means rearranging the fields and adjusting the flags.
+
+However, now that TLP has been included, it wants to retransmit the last
+subpacket as a new data packet on its own, which means switching between
+the header formats... and if the transmission is still pending, because of
+the MSG_SPLICE_PAGES, we end up corrupting the jumbo subheader.
+
+This has a variety of effects, with the RX service number overwriting the
+jumbo checksum/key number field and the RX checksum overwriting the jumbo
+flags - resulting in, at the very least, a confused connection-level abort
+from the peer.
+
+Fix this by leaving the jumbo header in the allocation with the data, but
+allocating the RX header from the page frag allocator and concocting it on
+the fly at the point of transmission as is done for ACK packets.
+
+Fixes: commit 7c482665931b ("rxrpc: Implement RACK/TLP to deal with transm=
+ission stalls [RFC8985]")
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: Jakub Kicinski <kuba@kernel.org>
+cc: "David S. Miller" <davem@davemloft.net>
+cc: Chuck Lever <chuck.lever@oracle.com>
+cc: Eric Dumazet <edumazet@google.com>
+cc: Paolo Abeni <pabeni@redhat.com>
+cc: Simon Horman <horms@kernel.org>
+cc: linux-afs@lists.infradead.org
+cc: netdev@vger.kernel.org
 ---
- mm/gup.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ net/rxrpc/ar-internal.h |    7 ++----
+ net/rxrpc/output.c      |   50 +++++++++++++++++++++++++++++++++---------=
+------
+ net/rxrpc/rxkad.c       |   13 ++++--------
+ net/rxrpc/sendmsg.c     |    4 ---
+ net/rxrpc/txbuf.c       |   35 +++++++++------------------------
+ 5 files changed, 54 insertions(+), 55 deletions(-)
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 3883b307780e..79a3d2228bf9 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2757,7 +2757,7 @@ EXPORT_SYMBOL(get_user_pages_unlocked);
-  *
-  *  *) ptes can be read atomically by the architecture.
-  *
-- *  *) access_ok is sufficient to validate userspace address ranges.
-+ *  *) valid user addesses are below TASK_MAX_SIZE
-  *
-  * The last two assumptions can be relaxed by the addition of helper functions.
-  *
-@@ -3411,8 +3411,6 @@ static int gup_fast_fallback(unsigned long start, unsigned long nr_pages,
- 		return -EOVERFLOW;
- 	if (end > TASK_SIZE_MAX)
- 		return -EFAULT;
--	if (unlikely(!access_ok((void __user *)start, len)))
--		return -EFAULT;
- 
- 	nr_pinned = gup_fast(start, end, gup_flags, pages);
- 	if (nr_pinned == nr_pages || gup_flags & FOLL_FAST_ONLY)
--- 
-2.39.5
+diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
+index f251845fe532..5e740c486203 100644
+--- a/net/rxrpc/ar-internal.h
++++ b/net/rxrpc/ar-internal.h
+@@ -327,8 +327,8 @@ struct rxrpc_local {
+ 	 * packet with a maximum set of jumbo subpackets or a PING ACK padded
+ 	 * out to 64K with zeropages for PMTUD.
+ 	 */
+-	struct kvec		kvec[RXRPC_MAX_NR_JUMBO > 3 + 16 ?
+-				     RXRPC_MAX_NR_JUMBO : 3 + 16];
++	struct kvec		kvec[1 + RXRPC_MAX_NR_JUMBO > 3 + 16 ?
++				     1 + RXRPC_MAX_NR_JUMBO : 3 + 16];
+ };
+ =
+
+ /*
+@@ -874,8 +874,7 @@ struct rxrpc_txbuf {
+ #define RXRPC_TXBUF_RESENT	0x100		/* Set if has been resent */
+ 	__be16			cksum;		/* Checksum to go in header */
+ 	bool			jumboable;	/* Can be non-terminal jumbo subpacket */
+-	u8			nr_kvec;	/* Amount of kvec[] used */
+-	struct kvec		kvec[1];
++	void			*data;		/* Data with preceding jumbo header */
+ };
+ =
+
+ static inline bool rxrpc_sending_to_server(const struct rxrpc_txbuf *txb)
+diff --git a/net/rxrpc/output.c b/net/rxrpc/output.c
+index 6f7a125d6e90..95905b85a8d7 100644
+--- a/net/rxrpc/output.c
++++ b/net/rxrpc/output.c
+@@ -428,13 +428,13 @@ int rxrpc_send_abort_packet(struct rxrpc_call *call)
+ static size_t rxrpc_prepare_data_subpacket(struct rxrpc_call *call,
+ 					   struct rxrpc_send_data_req *req,
+ 					   struct rxrpc_txbuf *txb,
++					   struct rxrpc_wire_header *whdr,
+ 					   rxrpc_serial_t serial, int subpkt)
+ {
+-	struct rxrpc_wire_header *whdr =3D txb->kvec[0].iov_base;
+-	struct rxrpc_jumbo_header *jumbo =3D (void *)(whdr + 1) - sizeof(*jumbo)=
+;
++	struct rxrpc_jumbo_header *jumbo =3D txb->data - sizeof(*jumbo);
+ 	enum rxrpc_req_ack_trace why;
+ 	struct rxrpc_connection *conn =3D call->conn;
+-	struct kvec *kv =3D &call->local->kvec[subpkt];
++	struct kvec *kv =3D &call->local->kvec[1 + subpkt];
+ 	size_t len =3D txb->pkt_len;
+ 	bool last;
+ 	u8 flags;
+@@ -491,18 +491,15 @@ static size_t rxrpc_prepare_data_subpacket(struct rx=
+rpc_call *call,
+ 	}
+ dont_set_request_ack:
+ =
+
+-	/* The jumbo header overlays the wire header in the txbuf. */
++	/* There's a jumbo header prepended to the data if we need it. */
+ 	if (subpkt < req->n - 1)
+ 		flags |=3D RXRPC_JUMBO_PACKET;
+ 	else
+ 		flags &=3D ~RXRPC_JUMBO_PACKET;
+ 	if (subpkt =3D=3D 0) {
+ 		whdr->flags	=3D flags;
+-		whdr->serial	=3D htonl(txb->serial);
+ 		whdr->cksum	=3D txb->cksum;
+-		whdr->serviceId	=3D htons(conn->service_id);
+-		kv->iov_base	=3D whdr;
+-		len +=3D sizeof(*whdr);
++		kv->iov_base	=3D txb->data;
+ 	} else {
+ 		jumbo->flags	=3D flags;
+ 		jumbo->pad	=3D 0;
+@@ -535,7 +532,9 @@ static unsigned int rxrpc_prepare_txqueue(struct rxrpc=
+_txqueue *tq,
+ /*
+  * Prepare a (jumbo) packet for transmission.
+  */
+-static size_t rxrpc_prepare_data_packet(struct rxrpc_call *call, struct r=
+xrpc_send_data_req *req)
++static size_t rxrpc_prepare_data_packet(struct rxrpc_call *call,
++					struct rxrpc_send_data_req *req,
++					struct rxrpc_wire_header *whdr)
+ {
+ 	struct rxrpc_txqueue *tq =3D req->tq;
+ 	rxrpc_serial_t serial;
+@@ -549,6 +548,18 @@ static size_t rxrpc_prepare_data_packet(struct rxrpc_=
+call *call, struct rxrpc_se
+ 	/* Each transmission of a Tx packet needs a new serial number */
+ 	serial =3D rxrpc_get_next_serials(call->conn, req->n);
+ =
+
++	whdr->epoch		=3D htonl(call->conn->proto.epoch);
++	whdr->cid		=3D htonl(call->cid);
++	whdr->callNumber	=3D htonl(call->call_id);
++	whdr->seq		=3D htonl(seq);
++	whdr->serial		=3D htonl(serial);
++	whdr->type		=3D RXRPC_PACKET_TYPE_DATA;
++	whdr->flags		=3D 0;
++	whdr->userStatus	=3D 0;
++	whdr->securityIndex	=3D call->security_ix;
++	whdr->_rsvd		=3D 0;
++	whdr->serviceId		=3D htons(call->conn->service_id);
++
+ 	call->tx_last_serial =3D serial + req->n - 1;
+ 	call->tx_last_sent =3D req->now;
+ 	xmit_ts =3D rxrpc_prepare_txqueue(tq, req);
+@@ -576,7 +587,7 @@ static size_t rxrpc_prepare_data_packet(struct rxrpc_c=
+all *call, struct rxrpc_se
+ 		if (i + 1 =3D=3D req->n)
+ 			/* Only sample the last subpacket in a jumbo. */
+ 			__set_bit(ix, &tq->rtt_samples);
+-		len +=3D rxrpc_prepare_data_subpacket(call, req, txb, serial, i);
++		len +=3D rxrpc_prepare_data_subpacket(call, req, txb, whdr, serial, i);
+ 		serial++;
+ 		seq++;
+ 		i++;
+@@ -618,6 +629,7 @@ static size_t rxrpc_prepare_data_packet(struct rxrpc_c=
+all *call, struct rxrpc_se
+ 	}
+ =
+
+ 	rxrpc_set_keepalive(call, req->now);
++	page_frag_free(whdr);
+ 	return len;
+ }
+ =
+
+@@ -626,25 +638,33 @@ static size_t rxrpc_prepare_data_packet(struct rxrpc=
+_call *call, struct rxrpc_se
+  */
+ void rxrpc_send_data_packet(struct rxrpc_call *call, struct rxrpc_send_da=
+ta_req *req)
+ {
++	struct rxrpc_wire_header *whdr;
+ 	struct rxrpc_connection *conn =3D call->conn;
+ 	enum rxrpc_tx_point frag;
+ 	struct rxrpc_txqueue *tq =3D req->tq;
+ 	struct rxrpc_txbuf *txb;
+ 	struct msghdr msg;
+ 	rxrpc_seq_t seq =3D req->seq;
+-	size_t len;
++	size_t len =3D sizeof(*whdr);
+ 	bool new_call =3D test_bit(RXRPC_CALL_BEGAN_RX_TIMER, &call->flags);
+ 	int ret, stat_ix;
+ =
+
+ 	_enter("%x,%x-%x", tq->qbase, seq, seq + req->n - 1);
+ =
+
++	whdr =3D page_frag_alloc(&call->local->tx_alloc, sizeof(*whdr), GFP_NOFS=
+);
++	if (!whdr)
++		return; /* Drop the packet if no memory. */
++
++	call->local->kvec[0].iov_base =3D whdr;
++	call->local->kvec[0].iov_len =3D sizeof(*whdr);
++
+ 	stat_ix =3D umin(req->n, ARRAY_SIZE(call->rxnet->stat_tx_jumbo)) - 1;
+ 	atomic_inc(&call->rxnet->stat_tx_jumbo[stat_ix]);
+ =
+
+-	len =3D rxrpc_prepare_data_packet(call, req);
++	len +=3D rxrpc_prepare_data_packet(call, req, whdr);
+ 	txb =3D tq->bufs[seq & RXRPC_TXQ_MASK];
+ =
+
+-	iov_iter_kvec(&msg.msg_iter, WRITE, call->local->kvec, req->n, len);
++	iov_iter_kvec(&msg.msg_iter, WRITE, call->local->kvec, 1 + req->n, len);
+ =
+
+ 	msg.msg_name	=3D &call->peer->srx.transport;
+ 	msg.msg_namelen	=3D call->peer->srx.transport_len;
+@@ -695,13 +715,13 @@ void rxrpc_send_data_packet(struct rxrpc_call *call,=
+ struct rxrpc_send_data_req
+ =
+
+ 	if (ret =3D=3D -EMSGSIZE) {
+ 		rxrpc_inc_stat(call->rxnet, stat_tx_data_send_msgsize);
+-		trace_rxrpc_tx_packet(call->debug_id, call->local->kvec[0].iov_base, fr=
+ag);
++		trace_rxrpc_tx_packet(call->debug_id, whdr, frag);
+ 		ret =3D 0;
+ 	} else if (ret < 0) {
+ 		rxrpc_inc_stat(call->rxnet, stat_tx_data_send_fail);
+ 		trace_rxrpc_tx_fail(call->debug_id, txb->serial, ret, frag);
+ 	} else {
+-		trace_rxrpc_tx_packet(call->debug_id, call->local->kvec[0].iov_base, fr=
+ag);
++		trace_rxrpc_tx_packet(call->debug_id, whdr, frag);
+ 	}
+ =
+
+ 	rxrpc_tx_backoff(call, ret);
+diff --git a/net/rxrpc/rxkad.c b/net/rxrpc/rxkad.c
+index 62b09d23ec08..6cb37b0eb77f 100644
+--- a/net/rxrpc/rxkad.c
++++ b/net/rxrpc/rxkad.c
+@@ -257,8 +257,7 @@ static int rxkad_secure_packet_auth(const struct rxrpc=
+_call *call,
+ 				    struct rxrpc_txbuf *txb,
+ 				    struct skcipher_request *req)
+ {
+-	struct rxrpc_wire_header *whdr =3D txb->kvec[0].iov_base;
+-	struct rxkad_level1_hdr *hdr =3D (void *)(whdr + 1);
++	struct rxkad_level1_hdr *hdr =3D txb->data;
+ 	struct rxrpc_crypt iv;
+ 	struct scatterlist sg;
+ 	size_t pad;
+@@ -274,7 +273,7 @@ static int rxkad_secure_packet_auth(const struct rxrpc=
+_call *call,
+ 	pad =3D RXKAD_ALIGN - pad;
+ 	pad &=3D RXKAD_ALIGN - 1;
+ 	if (pad) {
+-		memset(txb->kvec[0].iov_base + txb->offset, 0, pad);
++		memset(txb->data + txb->offset, 0, pad);
+ 		txb->pkt_len +=3D pad;
+ 	}
+ =
+
+@@ -300,8 +299,7 @@ static int rxkad_secure_packet_encrypt(const struct rx=
+rpc_call *call,
+ 				       struct skcipher_request *req)
+ {
+ 	const struct rxrpc_key_token *token;
+-	struct rxrpc_wire_header *whdr =3D txb->kvec[0].iov_base;
+-	struct rxkad_level2_hdr *rxkhdr =3D (void *)(whdr + 1);
++	struct rxkad_level2_hdr *rxkhdr =3D txb->data;
+ 	struct rxrpc_crypt iv;
+ 	struct scatterlist sg;
+ 	size_t content, pad;
+@@ -319,7 +317,7 @@ static int rxkad_secure_packet_encrypt(const struct rx=
+rpc_call *call,
+ 	txb->pkt_len =3D round_up(content, RXKAD_ALIGN);
+ 	pad =3D txb->pkt_len - content;
+ 	if (pad)
+-		memset(txb->kvec[0].iov_base + txb->offset, 0, pad);
++		memset(txb->data + txb->offset, 0, pad);
+ =
+
+ 	/* encrypt from the session key */
+ 	token =3D call->conn->key->payload.data[0];
+@@ -407,9 +405,8 @@ static int rxkad_secure_packet(struct rxrpc_call *call=
+, struct rxrpc_txbuf *txb)
+ =
+
+ 	/* Clear excess space in the packet */
+ 	if (txb->pkt_len < txb->alloc_size) {
+-		struct rxrpc_wire_header *whdr =3D txb->kvec[0].iov_base;
+ 		size_t gap =3D txb->alloc_size - txb->pkt_len;
+-		void *p =3D whdr + 1;
++		void *p =3D txb->data;
+ =
+
+ 		memset(p + txb->pkt_len, 0, gap);
+ 	}
+diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
+index 584397aba4a0..84dc6c94f23b 100644
+--- a/net/rxrpc/sendmsg.c
++++ b/net/rxrpc/sendmsg.c
+@@ -419,7 +419,7 @@ static int rxrpc_send_data(struct rxrpc_sock *rx,
+ 			size_t copy =3D umin(txb->space, msg_data_left(msg));
+ =
+
+ 			_debug("add %zu", copy);
+-			if (!copy_from_iter_full(txb->kvec[0].iov_base + txb->offset,
++			if (!copy_from_iter_full(txb->data + txb->offset,
+ 						 copy, &msg->msg_iter))
+ 				goto efault;
+ 			_debug("added");
+@@ -445,8 +445,6 @@ static int rxrpc_send_data(struct rxrpc_sock *rx,
+ 			ret =3D call->security->secure_packet(call, txb);
+ 			if (ret < 0)
+ 				goto out;
+-
+-			txb->kvec[0].iov_len +=3D txb->len;
+ 			rxrpc_queue_packet(rx, call, txb, notify_end_tx);
+ 			txb =3D NULL;
+ 		}
+diff --git a/net/rxrpc/txbuf.c b/net/rxrpc/txbuf.c
+index 131d9e55c8e9..2bc455705632 100644
+--- a/net/rxrpc/txbuf.c
++++ b/net/rxrpc/txbuf.c
+@@ -19,17 +19,19 @@ atomic_t rxrpc_nr_txbuf;
+ struct rxrpc_txbuf *rxrpc_alloc_data_txbuf(struct rxrpc_call *call, size_=
+t data_size,
+ 					   size_t data_align, gfp_t gfp)
+ {
+-	struct rxrpc_wire_header *whdr;
+ 	struct rxrpc_txbuf *txb;
+-	size_t total, hoff;
++	size_t total, doff, jsize =3D sizeof(struct rxrpc_jumbo_header);
+ 	void *buf;
+ =
+
+ 	txb =3D kzalloc(sizeof(*txb), gfp);
+ 	if (!txb)
+ 		return NULL;
+ =
+
+-	hoff =3D round_up(sizeof(*whdr), data_align) - sizeof(*whdr);
+-	total =3D hoff + sizeof(*whdr) + data_size;
++	/* We put a jumbo header in the buffer, but not a full wire header to
++	 * avoid delayed-corruption problems with zerocopy.
++	 */
++	doff =3D round_up(jsize, data_align);
++	total =3D doff + data_size;
+ =
+
+ 	data_align =3D umax(data_align, L1_CACHE_BYTES);
+ 	mutex_lock(&call->conn->tx_data_alloc_lock);
+@@ -41,30 +43,15 @@ struct rxrpc_txbuf *rxrpc_alloc_data_txbuf(struct rxrp=
+c_call *call, size_t data_
+ 		return NULL;
+ 	}
+ =
+
+-	whdr =3D buf + hoff;
+-
+ 	refcount_set(&txb->ref, 1);
+ 	txb->call_debug_id	=3D call->debug_id;
+ 	txb->debug_id		=3D atomic_inc_return(&rxrpc_txbuf_debug_ids);
+ 	txb->alloc_size		=3D data_size;
+ 	txb->space		=3D data_size;
+-	txb->offset		=3D sizeof(*whdr);
++	txb->offset		=3D 0;
+ 	txb->flags		=3D call->conn->out_clientflag;
+ 	txb->seq		=3D call->send_top + 1;
+-	txb->nr_kvec		=3D 1;
+-	txb->kvec[0].iov_base	=3D whdr;
+-	txb->kvec[0].iov_len	=3D sizeof(*whdr);
+-
+-	whdr->epoch		=3D htonl(call->conn->proto.epoch);
+-	whdr->cid		=3D htonl(call->cid);
+-	whdr->callNumber	=3D htonl(call->call_id);
+-	whdr->seq		=3D htonl(txb->seq);
+-	whdr->type		=3D RXRPC_PACKET_TYPE_DATA;
+-	whdr->flags		=3D 0;
+-	whdr->userStatus	=3D 0;
+-	whdr->securityIndex	=3D call->security_ix;
+-	whdr->_rsvd		=3D 0;
+-	whdr->serviceId		=3D htons(call->dest_srx.srx_service);
++	txb->data		=3D buf + doff;
+ =
+
+ 	trace_rxrpc_txbuf(txb->debug_id, txb->call_debug_id, txb->seq, 1,
+ 			  rxrpc_txbuf_alloc_data);
+@@ -94,10 +81,8 @@ static void rxrpc_free_txbuf(struct rxrpc_txbuf *txb)
+ =
+
+ 	trace_rxrpc_txbuf(txb->debug_id, txb->call_debug_id, txb->seq, 0,
+ 			  rxrpc_txbuf_free);
+-	for (i =3D 0; i < txb->nr_kvec; i++)
+-		if (txb->kvec[i].iov_base &&
+-		    !is_zero_pfn(page_to_pfn(virt_to_page(txb->kvec[i].iov_base))))
+-			page_frag_free(txb->kvec[i].iov_base);
++	if (txb->data)
++		page_frag_free(txb->data);
+ 	kfree(txb);
+ 	atomic_dec(&rxrpc_nr_txbuf);
+ }
 
