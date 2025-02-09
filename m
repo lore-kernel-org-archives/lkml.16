@@ -1,155 +1,126 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0575C82488;
-	Sun,  9 Feb 2025 22:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7129C155C88
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 22:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739140783; cv=none; b=lNIcSyYrpPVAzhHNFhAXLAfCjMwyQGbhf/C2KUUqz8VzFy3HGKuC9cGjlXj6Nrwc0A2fR7PdxQjH2/7X/M7La8f1au+TD/4/onm7dO5mljFGzR20GbVgY4JCORH8cTipwLnFb6TiCXceIOXo7ltzkRtZzxnZm9AuWvoJdAo5D9E=
+	t=1739140868; cv=none; b=LlJFkpaS0Lsolaa58k7xVv0JXODUKoiCeflGSA9haH3dESJJ7AJA4redasfIzJpA0KqhWi5+vhxUPjwjIk2W6iJEXmEcwQoqB2bOOAMdtHJ79gNU/XNZ1M5yuDw4VaBDeZg5FrOahHAVuuXsDUVeNc5zMBs8PA8703uStG9lyGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739140783; c=relaxed/simple;
-	bh=CR8awdPeVLEdGlEoVqZF90F8Cx6eoLGNFON6XRSiB4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=NBKlxVaEHs3WWjV5sjHApc22o5YIFF62rVtc4uq2dPGKMRiotDL9vAcK3vM7l5aMqwrCkwPj9af0Sf1qmf4DLKWqpsBkzEWFbP8lP+kVUTlO7og68ZAlUvxZnt9BtXckVnNRo518C4IQ1+Rt5nsrsz7ha2YjQMPVcKH7wEJc7fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=myVq9YZd; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1739140868; c=relaxed/simple;
+	bh=6ruZVA3bxLlRzF+OzQLdiUrPqM2Yw5EMFTbnIZGUw0s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SCXRHdwtYERrXHWFEF/EB0XovuFydxqwj5sjXRjxAOM96ZhcvwKeV215iI09WtKddQGZ5OJ736vy6/MpO1I6S4gS06Z02svoC7wOiLw22MO2ZPJkEz1DNqucnqraGr7eSPAXotmPmL1bNFDCOuAJLHwaUwwJokvpzyDgeqt1jNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=Gj0JdPaP; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="myVq9YZd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1739140775;
-	bh=ee4CvhgOw0QWfBCiNfu4SmGWiVD+M08IcesX1yfz5ws=;
-	h=Date:From:To:Cc:Subject:From;
-	b=myVq9YZd6J7jc1dUnogAvYSQLj/yS/q/4tcq9B2a+B+sbDxpL7kxrGcbWqVoMX0m4
-	 VW1Y38T3Ajx2ctbaORtgMBD/uHofwVoXKeczMAZEfeF0IE+JFecB23IfpVVc14fEWy
-	 Z4j1LBkUQasu9xEj46arlyxT0r0/fvfJ9UmjLaiJE4MLFkz0teqp3xt1sgWmW/OPEa
-	 PeX9S/Ux58MXR8vCLVA2gcFNBKXIzUnPEdLSKa5iIAjbuBtpXGNTzOdt5yOTlTMQPB
-	 puPivBHZt70252iwEdB5zGwcecYrTm27bbzMUdcX/p6kfv2MrLBbbz159A9sNgG2JS
-	 ADaJ+usUwHQuA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YrjLv4q63z4wbn;
-	Mon, 10 Feb 2025 09:39:35 +1100 (AEDT)
-Date: Mon, 10 Feb 2025 09:39:34 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Kees Cook <kees@kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Uros Bizjak <ubizjak@gmail.com>
-Subject: linux-next: manual merge of the mm tree with Linus' tree
-Message-ID: <20250210093934.07a303c9@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="Gj0JdPaP"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4361f65ca01so37029745e9.1
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 14:41:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1739140865; x=1739745665; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dHasac0wYJLewPwy6Z51oDe8X/xHbyu9X4ByX5A4/JA=;
+        b=Gj0JdPaPboLpqFXB/W2ypVXlsu4RNcNiAXZZbU4yOz0aajwI3/HkhxaptjSAw/YKph
+         iBVS6SAMJrr0Efc3sCbOT1HbU7PVrOZnd8wBqYGClGeYDEMFLU6fc6VzXQ/tHlXsxMKi
+         7J+qv2Jyj3AKEHHe3PuBK7i6Z4IGgOc0HCCWLjo6UUTHXVDG4RV4OroFHw4xgz5akTlQ
+         DOyDu5wuBdmnaNO71+A/fBo+IHfrmV728sybRUvr9esFA+DR2Xcot5hFoxF4gvfj+Jbo
+         Dt/I6ReHWq3SDM7EV0FOXJyr3gXgiRJ5pJSl5L6x7O3Aj241SJzu076nj7btO2nG8c/H
+         C5fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739140865; x=1739745665;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dHasac0wYJLewPwy6Z51oDe8X/xHbyu9X4ByX5A4/JA=;
+        b=d58FzoLzO+pHLYvF79RoZ5bbWIXohQAP8+hORz5f4BvV8y5nC7s3QJe6xcR1Qs5Dcm
+         q1tHNR624XxBvWVVuwxHkJ1oItwWrVzlYa0IacE/0VRYdAWSSLTuPMeccnhqly2Ewguj
+         OgHyOQ7iuef4wZiLdYIzUukmezro9SapSVqWrGQAAFBWA04CUSgDILiUyFRl3DwLYjaH
+         ZlFKIUlNz5wUsitb21D2nVUJTwTrCjvFPvbKr8M2tAnsgrrmbCMn0irSyIJpEgcMCdjG
+         K37DpUdNvzF+KZzkZCoYfi5GeEMmjuWUdcJFDpe+Q6mIfLdIE2Cp37MdkdOsbtuZDsUK
+         OH2g==
+X-Forwarded-Encrypted: i=1; AJvYcCUcsMCLw+PJCepRdegh5OCGGviuQbovv1A+Bjdlx9+8ZEZBN3y1hSwrrAEU0gaLtJudv1LUGQoPhwMX/D4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxC2LqeDC0L1RyiHZoGj8lKIzTy2AXOhyTOQ4k89ZEP+TFzJhJ6
+	1p/SkG1J/2XrVD4yCbmctFfAeFAmkrXV/iGN94Wv8Iy/DdWwXJcTrHhptUt/s80=
+X-Gm-Gg: ASbGncvmK3Sdeq7qz7/1rOrJBkfwmUE45Pxg/oIbZaEpdkacgiU5jWLgKM0mQhecQbo
+	Vz6ySPyaE35n1PjpUv+zExj0CeeGe5SkXlzsqjceSbRE205cXmEUaVu6JI7pVYN7Sj+fu0prUuX
+	1uyYK5ZFovw6NbLiLGwRP1rz0pGZBmMJwfcbTTYXu8r9c8EDL7lGAODbqlxOvdHzDGP5sR43Z+l
+	vLunJrFkctlNj8cgRO9X44u0t+onSAeHCBffVqPtwZFl9rb7H5MWiwzC6P8NcJ10rdTqWL6PGBY
+	GSbvfE3Wk4RbkYP80DMRYUjXqZrljRCOTMqkn/piOzQq1urGAesah+CmhUQNl1EBTQG0
+X-Google-Smtp-Source: AGHT+IGXZt3Ti6ujWiCdM42O58wvb3IFYJsSvKFFb2omeKnKDpprFfF4GuoED6fO3Lq/cfXFY5hZzw==
+X-Received: by 2002:a05:600c:511f:b0:435:d22:9c9e with SMTP id 5b1f17b1804b1-439249a8402mr83411675e9.19.1739140864613;
+        Sun, 09 Feb 2025 14:41:04 -0800 (PST)
+Received: from airbuntu (host109-154-33-115.range109-154.btcentralplus.com. [109.154.33.115])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390daf451fsm164902735e9.28.2025.02.09.14.41.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2025 14:41:04 -0800 (PST)
+Date: Sun, 9 Feb 2025 22:41:03 +0000
+From: Qais Yousef <qyousef@layalina.io>
+To: Christian Loehle <christian.loehle@arm.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Hongyan Xia <hongyan.xia2@arm.com>,
+	John Stultz <jstultz@google.com>, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7] sched: Consolidate cpufreq updates
+Message-ID: <20250209224103.gcvli5zbdx67d4ad@airbuntu>
+References: <20240728184551.42133-1-qyousef@layalina.io>
+ <100c682c-57e0-4dad-86ca-e430f28eb7f3@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/DaWv.a_l70pmoXlkHOMIVrb";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <100c682c-57e0-4dad-86ca-e430f28eb7f3@arm.com>
 
---Sig_/DaWv.a_l70pmoXlkHOMIVrb
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 10/11/24 10:34, Christian Loehle wrote:
 
-Hi all,
+> > @@ -796,7 +802,8 @@ int __sched_setscheduler(struct task_struct *p,
+> >  		__setscheduler_params(p, attr);
+> >  		__setscheduler_prio(p, newprio);
+> >  	}
+> > -	__setscheduler_uclamp(p, attr);
+> > +
+> > +	update_cpufreq = __setscheduler_uclamp(p, attr);
+> >  
+> >  	if (queued) {
+> >  		/*
+> > @@ -811,7 +818,18 @@ int __sched_setscheduler(struct task_struct *p,
+> >  	if (running)
+> >  		set_next_task(rq, p);
+> >  
+> > -	check_class_changed(rq, p, prev_class, oldprio);
+> > +	update_cpufreq |= check_class_changed(rq, p, prev_class, oldprio);
+> > +
+> > +	/*
+> > +	 * Changing class or uclamp value implies requiring to send cpufreq
+> > +	 * update.
+> > +	 */
+> > +	if (update_cpufreq) {
+> > +		if (running)
+> > +			update_cpufreq_current(rq);
+> > +		else if (queued)
+> > +			cpufreq_update_util(rq, SCHED_CPUFREQ_TASK_ENQUEUED);
+> > +	}
+> 
+> cpufreq_update_util() -> sugov_should_update_freq() -> cpufreq_this_cpu_can_update()
+> relies on smp_processor_id(), should this move this below the
+> preempt_disable() to avoid sending an update from an illegal CPU?
 
-Today's linux-next merge of the mm tree got a conflict in:
+We are holding the task_rq_lock() with interrupts disabled, we should be okay
+no?
 
-  include/linux/compiler.h
-
-between commits:
-
-  cb7380de9e4c ("compiler.h: Move C string helpers into C-only kernel secti=
-on")
-  20e5cc26e56d ("compiler.h: Introduce __must_be_byte_array()")
-
-from Linus' tree and commit:
-
-  a7d395568dd3 ("compiler.h: introduce TYPEOF_UNQUAL() macro")
-
-from the mm-unstable branch of the mm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/linux/compiler.h
-index 200fd3c5bc70,a892c89ac28a..000000000000
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@@ -191,25 -191,26 +191,45 @@@ void ftrace_likely_update(struct ftrace
-  	__v;								\
-  })
- =20
- +#ifdef __CHECKER__
- +#define __BUILD_BUG_ON_ZERO_MSG(e, msg) (0)
- +#else /* __CHECKER__ */
- +#define __BUILD_BUG_ON_ZERO_MSG(e, msg) ((int)sizeof(struct {_Static_asse=
-rt(!(e), msg);}))
- +#endif /* __CHECKER__ */
- +
- +/* &a[0] degrades to a pointer: a different type from an array */
- +#define __is_array(a)		(!__same_type((a), &(a)[0]))
- +#define __must_be_array(a)	__BUILD_BUG_ON_ZERO_MSG(!__is_array(a), \
- +							"must be array")
- +
- +#define __is_byte_array(a)	(__is_array(a) && sizeof((a)[0]) =3D=3D 1)
- +#define __must_be_byte_array(a)	__BUILD_BUG_ON_ZERO_MSG(!__is_byte_array(=
-a), \
- +							"must be byte array")
- +
- +/* Require C Strings (i.e. NUL-terminated) lack the "nonstring" attribute=
-. */
- +#define __must_be_cstr(p) \
- +	__BUILD_BUG_ON_ZERO_MSG(__annotated(p, nonstring), "must be cstr (NUL-te=
-rminated)")
- +
-+ /*
-+  * Use __typeof_unqual__() when available.
-+  *
-+  * XXX: Remove test for __CHECKER__ once
-+  * sparse learns about __typeof_unqual__().
-+  */
-+ #if CC_HAS_TYPEOF_UNQUAL && !defined(__CHECKER__)
-+ # define USE_TYPEOF_UNQUAL 1
-+ #endif
-+=20
-+ /*
-+  * Define TYPEOF_UNQUAL() to use __typeof_unqual__() as typeof
-+  * operator when available, to return an unqualified type of the exp.
-+  */
-+ #if defined(USE_TYPEOF_UNQUAL)
-+ # define TYPEOF_UNQUAL(exp) __typeof_unqual__(exp)
-+ #else
-+ # define TYPEOF_UNQUAL(exp) __typeof__(exp)
-+ #endif
-+=20
-  #endif /* __KERNEL__ */
- =20
-  /**
-
---Sig_/DaWv.a_l70pmoXlkHOMIVrb
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmepLqYACgkQAVBC80lX
-0GyeHQf/TekNR7qBGz5v8NWPMTsP2c2DvPeyxrlLLEeqDP/1cWZxY7cSDbZMhGpT
-eP22KeTj1nSQPkG3YNPXArEEYlF3O6Km5/LUyA83EXd1hfuMTEyiU1oMz+e6P/nc
-ys5umKvKj9ScQtbcFuyyGbJOtya3MuJJvDXZfHKSIZU4KhGrpHyaj7UUm9ehDA06
-aI6IDWPFiONC7bgEnwQfkYsRkelBDr4NBBNcJlgH/OLu6x32uFThjnFe7cqfXVUQ
-pWGKsMyUYwWyDNFquTP9VjRh3NIH/KWxdPgefRIX8/Laeu4qPY0w1eNlSyRGznxE
-1tfTXsbHQIOqS3xZ1Ux9IXrWoMHitA==
-=dPwE
------END PGP SIGNATURE-----
-
---Sig_/DaWv.a_l70pmoXlkHOMIVrb--
+Did you see an actual warning from LOCKDEP?
