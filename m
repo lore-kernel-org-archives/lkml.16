@@ -1,137 +1,147 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F821DF980
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 19:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307121E0080
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 19:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739129575; cv=none; b=E/fLPJ9hquL+kkB5763sIdYv80QsoG7X4EEaJGmgjukiN6IFnxwzBzUe0yUED4F5g6dhJE25enMRhr/4Zl3aO3zt97f51Q3kSg3fPysIKpKYTdfLT1M6PpTQ6VZiDWLo3dH8E90XSBSV6R5fgQFP/Zr6hAoyPf0Jr59pIePCZu0=
+	t=1739129890; cv=none; b=UEeV1XrhyFsZnaPLW3pIkjE/3Ur58dOHGTrfxu+8Pji5wCYBN+v+YhFSSXHyvB+9IsuUtDHvuR3LRyQfVPZ0Q95NezQclxz/ntBzl3GCsPzln9B48N7wr50JTBqWGsODeWMTKvjb1Oei0PxW/i3+35/IwQIKwelSWVRApZWwq9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739129575; c=relaxed/simple;
-	bh=Hw5Jj54lHlKsvWdyOciOtY61GHLLyD922U2Ybh/FkBA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SEG1a3KsXiPtOOd7Cohu5ZCtJx8GiAHDRHKVU5JaBmkjs9yMICHNvm2l7WOdAljU0CzIaucCm/d4hANnqNxkOVK2EDMJ0YDMccTuLccwSh+jeZaaRTA592DN5XD1/VaSUlTBkSzDnbDIIWUIDOmDT7jcVd1rvnzgr2CR8A3O/Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=CCKEhFQ/; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1739129890; c=relaxed/simple;
+	bh=bakGvPthngL3gTQwUPSt/EUmVwDuJ8/w4DuyMlVWo/M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AvX3h/xTCjG10vk4up/VGSWSvRg2na8LNx+FD+V2pwNFzDtMssAB9cRINcz5XZDhmfFB/x5t5xy7Bgfqvu5yoBsGTgdJ6rEcF/j/wkfyEjfFGBIksZCitBcyjgdxPHiJGcVwm2w2n3y3YQuvDXSKqyRPXp/XZc1dMNzIT3mWwp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W8+vf2tB; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="CCKEhFQ/"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ab2b29dfc65so587311966b.1
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 11:32:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W8+vf2tB"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5dbf5fb2c39so887149a12.2
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 11:38:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1739129571; x=1739734371; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3OYZn6iFxER/JL2avDuYDbzyExRqovS2QnLbQ0tqh0Y=;
-        b=CCKEhFQ/ka9jHoF+rCN80edG+lKN7KiqmDTefhqlo3tE/y9AloLgmyLAS4TS5Sc2sJ
-         15Td6En7r1d8yOQIUxZh9iMYyS3fxXq083bIyEltlzz0ZUHr+Hg/nuUmOwMRPeuLEvrW
-         4py7UZcQ2ooqDUYsVDPGR0B9NlKq9BWF9yc2g=
+        d=linaro.org; s=google; t=1739129887; x=1739734687; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=l9Ero5vcDcOepXZ2yFnMrKTNvfLViDvWS1bPisX99zU=;
+        b=W8+vf2tBlCSDaBnp12F8FyMij7XzS/h6ZRDfEEkRAHKIXIC9NnIACIVTW3RnKhkP6g
+         u0JdU3IZ1QhLvFF2DVpz9moJS0LGFynUoYNjqyfYIltTU3r+7PQvO83segdIj0sbdj9j
+         JyasB6v8zUGL14Yas1hp5ZzQRdhjJg4C/JwOO9eEYceCT9Kc4ix+gHs0kIr4a2/XpXnL
+         a7BiZnoj8flHvN2S459RyMUTJJGuW0HlqZxBcg2Y83AM7yjB7kurKnHQkKREcXz15oSN
+         NEA2MHN3ZhGniFCF6HwfipRkh9J7sLyjLHN/MZgbyclAQoXYbB4n5nO3+6TKh1cuGB3L
+         qx9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739129571; x=1739734371;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1739129887; x=1739734687;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3OYZn6iFxER/JL2avDuYDbzyExRqovS2QnLbQ0tqh0Y=;
-        b=LK+wUNBtDje8F4C58JFxXD2kA4gaXSm+POjx9HkQPYIove8NMG1elrmt3+AhvbWRRC
-         9CTebEdy5QcTG3W3ntIplBoycLedkFvG/3UZpM0LJJ4Hv2dhrrP5R3ARFQzFay3f4qi1
-         3eDQicMhARoB2qkfYEtr/NX55NeogIAgTa/rsU7WZJH3xrHzNMi/OCWw3Eql362V1k3A
-         SW7R89L/YaipD7WyatWDunEmz5K/uQeYf0BVVJxBpCf9nnzXXvp5o7I9m0qLM8qSFUOV
-         gPukSKje7KWyxl3wb1GIq9Zya2of3oJBPJtylVqDDlnTk6tS0hFXDzVPfkv7ieZwW7u1
-         bI+w==
-X-Forwarded-Encrypted: i=1; AJvYcCXWuTGg+mOSO/ugXepQS7itwq6V4U1YKkUGmMJB5yjPr2oBZJdTJ2xc3b4xPtv5WE49i8c8ub9vSB+Rh18=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyuj5EFj91VyTgPhA6ZALHufteokEFaOk8hb0isFt+FZt6rWaiJ
-	C5fj9/MTq+LrZzG2w2ZL4YoZ0+DYJ453o83obd2Xv/MKlCJOmDuwqIJg4YxaSaSO0i4UVku5NW7
-	SYFQ=
-X-Gm-Gg: ASbGncsu6Q5o+CKgBZPWtPpwS8ou2Mr/ocJVxW1AEaHrDOXWuHensiV3nCK1WrlSEAd
-	Y6VLOsego4uSdoVf99DzhFJiD5QY6S3O5fjr8ZyQB9m36Gedcq6fuHqnt8NfpsJxfUydd5mkKc7
-	PFZyyBJnk2eZ0yaGlK4+ZNIRWcMi8EykmGbS+P40WYh0OQ+iWM2ygyEFG7tKZGo6NvBVSJTGjbs
-	oR0Jhx60agWPDZy3uG7oHz2r/sOEsvGNua7pJO12eFTc0H3TSmaDHpvX3Cy/k0tAVJ4w3DgjMc4
-	CQLF6BdufqZ7FHPAKgYRcU4XEOUzaAbgRBwvC3JiY4nAXV1aknRIG4BlZ15LZICi0w==
-X-Google-Smtp-Source: AGHT+IFkBTayQV33Rs165Xjyn+0dEl7f953zfUtR1kFs+f22AvcJthKHU8Yw4ZXCzEjlnOgu24YhLQ==
-X-Received: by 2002:a17:907:3f27:b0:ab6:58bc:715b with SMTP id a640c23a62f3a-ab789ca29b4mr1055665266b.55.1739129571189;
-        Sun, 09 Feb 2025 11:32:51 -0800 (PST)
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com. [209.85.218.52])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7aab8d8fasm295795066b.58.2025.02.09.11.32.49
-        for <linux-kernel@vger.kernel.org>
+        bh=l9Ero5vcDcOepXZ2yFnMrKTNvfLViDvWS1bPisX99zU=;
+        b=VCqb7X9hyrxmfjuRGsmobCEHhr+XZoyvQio4OywY7umqiBOcFlTnZ3oh2508236LdF
+         z20BOhzGQpZYnaEaYuOaDEQ8KdUh7Y0O42PNoVTzYA4EV9EoRMVGXad0ZQ6reLooOfAv
+         Rv9d+buaaOnmX6hni/E4A+WbQdRJO9hSD6orQqKm07SVS1vrJmI5suGT5aJDhHuFhRxl
+         O9cQLyByos5TgLTBDAe3vj0cU9w2P3Hp6nBddmgS2nT+YeujhlxejpYiZRAYqIjIrxzK
+         AZNcEyLQxZecAioBoQnMIHogVAEFGvKSkcnuITrh4guxUM6YJ5PUvVElkB2Sd8f0jcaj
+         N/mg==
+X-Forwarded-Encrypted: i=1; AJvYcCX6e+2BvLcqwT9tDAAlkLePYqBRwMsy2HSWZO4G+nynlC0LcpUcNvX8pwUAzg29dHX9u5AjhWDnBE1otXY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCGWx2h4QlgTZSF/O3tQKaiUvU+OAquUmnD7PdKNIYGXMFwpNr
+	MB6BDFcR9eAY2a+LfHsRSJqdi98zd5nFiPlOTyKcDw/u5v+rPsXwmMA/a00887M=
+X-Gm-Gg: ASbGncsvCRzskFdZsHT2iQ260fFaEScc4gP+DHQ0dsusqgbnkKJIHapbGyHwOxdOhJb
+	2QKde6GETTT0vj9N5reYJVDu1vGX5Wj7s1b2LvBXqVqPYyk5pkSvQoJ3mX6Nt0hXEXLH7KhHCfM
+	T9gB1WAs/JzaYX/YeQdPqYHhq2ANvhA3S2hTOwJcOxwykiNKyaGJ3uHaqrRLEH4FcQjlMBnuqxS
+	kz6j7W+xwMTjgF8flKahgXkB3aQG+y8meILkrHyRlRcsd3qhfE3SFCxD0huZ36XBzxYlw+qa9fE
+	bXfm7obAL/1SMrNhtR8BLdf8RPyBkqqBbe0=
+X-Google-Smtp-Source: AGHT+IEJL5E8qZHI2wQRhsWzOfx3kHSAmyv/sAKbVBbstYeeqOih+ViYs1THV7h2OAlqRYYee6hngQ==
+X-Received: by 2002:a05:6402:5290:b0:5dc:7fbe:72f1 with SMTP id 4fb4d7f45d1cf-5de4503fea6mr4713950a12.2.1739129887485;
+        Sun, 09 Feb 2025 11:38:07 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.218.144])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab784d4aadbsm617189566b.113.2025.02.09.11.38.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Feb 2025 11:32:49 -0800 (PST)
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ab2b29dfc65so587309366b.1
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 11:32:49 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU9mAD8dJQ2xigwU7jPp4Ww2Ht5TF/IW0UhrD8nQcYCXm8oK0mffSE/7bO9cCYTPSEYZ04Eesq1PF+CzfQ=@vger.kernel.org
-X-Received: by 2002:a17:907:7e92:b0:aaf:c259:7f6 with SMTP id
- a640c23a62f3a-ab789c627e1mr1220851466b.45.1739129569271; Sun, 09 Feb 2025
- 11:32:49 -0800 (PST)
+        Sun, 09 Feb 2025 11:38:06 -0800 (PST)
+Message-ID: <e67c0375-1024-483b-aabf-6a11339ab9af@linaro.org>
+Date: Sun, 9 Feb 2025 20:38:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250209191008.142153-1-david.laight.linux@gmail.com>
-In-Reply-To: <20250209191008.142153-1-david.laight.linux@gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 9 Feb 2025 11:32:32 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiQQQ9yo84KCk=Y_61siPsrH=dF9t5LPva0Sbh_RZ0-3Q@mail.gmail.com>
-X-Gm-Features: AWEUYZkIEyygdjdtgqEM9UjeSXpn0CystKuNI2lg08YFjtDgCkT1DG_hRzS76Rc
-Message-ID: <CAHk-=wiQQQ9yo84KCk=Y_61siPsrH=dF9t5LPva0Sbh_RZ0-3Q@mail.gmail.com>
-Subject: Re: [PATCH 1/1] x86: In x86-64 barrier_nospec can always be lfence
-To: David Laight <david.laight.linux@gmail.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@redhat.com>, 
-	Andi Kleen <ak@linux.intel.com>, Dan Williams <dan.j.williams@intel.com>, 
-	linux-arch@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
-	kernel-hardening@lists.openwall.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Patchset status - 'Add support for Maxim Integrated MAX77705
+ PMIC'
+To: Dzmitry Sankouski <dsankouski@gmail.com>,
+ Sebastian Reichel <sre@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>,
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>,
+ Hans de Goede <hdegoede@redhat.com>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Sebastian Krzyszkowiak <sebastian.krzyszkowiak@puri.sm>,
+ Purism Kernel Team <kernel@puri.sm>, Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: linux-pm@vger.kernel.org, open list <linux-kernel@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, linux-input@vger.kernel.org,
+ linux-leds@vger.kernel.org
+References: <CABTCjFBx-QpCKFWs5MPCgLAjJWT6ygrvS_A0nJk2BBxmWAxF+Q@mail.gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <CABTCjFBx-QpCKFWs5MPCgLAjJWT6ygrvS_A0nJk2BBxmWAxF+Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, 9 Feb 2025 at 11:10, David Laight <david.laight.linux@gmail.com> wrote:
->
-> +#define barrier_nospec() __rmb()
+On 09/02/2025 15:13, Dzmitry Sankouski wrote:
+> For the patchset I sent 2 weeks ago, [patchwork][1] shows status
+> 'Handled Elsewhere, archived'. Is anything blocking it?
+> 
+> [1]: https://patchwork.kernel.org/project/linux-pm/list/?series=927848&archive=both&state=*
 
-This is one of those "it happens to work, but it's wrong" things.
+That's PM patchwork, not necessarily power supply. But anyway, what does
+the cover letter say? Who do you expect to merge it? Above link does not
+provide cover letter, unfortunately.
 
-Just make it explicit that it's "lfence" in the current implementation.
-
-Is __rmb() also an lfence? Yes. And that's actually very confusing too
-too. Because on x86, a regular read barrier is a no-op, and the "main"
-rmb definition is actually this:
-
-  #define __dma_rmb()     barrier()
-  #define __smp_rmb()     dma_rmb()
-
-so that it's only a compiler barrier.
-
-And yes, __rmb() exists as the architecture-specific helper for "I
-need to synchronize with unordered IO accesses" and is purely about
-driver IO.
-
-We should have called it "relaxed_rmb()" or "io_rmb()" or something
-like that, but the IO memory ordering issues actually came up before
-the modern SMP ordering issues, so due to that historical thing,
-"rmb()" ends up being about the IO ordering.
-
-It's confusing, I know. And historical. And too painful to change
-because it all works and lots of people know the rules (except looking
-around, it seems possibly the sunrpc code is confused, and uses
-"rmb()" for SMP synchronization)
-
-But basically a barrier_nospec() is not a IO read barrier, and an IO
-read barrier is not a barrier_nospec().
-
-They just happen to be implemented using the same instruction because
-an existing instruction - that nobody uses in normal situations -
-ended up effectively doing what that nospec barrier needed to do.
-
-And some day in the future, maybe even that implementation equivalence
-ends up going away again, and we end up with new barrier instructions
-that depend on new CPU capabilities (or fake software capabilities:
-kernel bootup flags that say "don't bother with the nospec
-barriers").,
-
-So please keep the __rmb() and the barrier_nospec() separate, don't
-tie them together. They just have *soo* many differences, both
-conceptual and practical.
-
-             Linus
+Best regards,
+Krzysztof
