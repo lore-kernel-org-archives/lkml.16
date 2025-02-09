@@ -1,132 +1,152 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A203D1DF25E
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 21:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92DD31DF25E;
+	Sun,  9 Feb 2025 21:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739137121; cv=none; b=MQUesdUxJOTn1FPdek79/3RtUPTMbV450QCu5P/QpMZW6SyXia8KSivslxtcT6XhygMLf7q4obuqAbyEr3YYNSXNDXu0rZzhDuUsBtp02lUSxj84RLPn63Mwag3ITg2JcXoBYo4OCJHwBa5eCyqPliZg4TPhyeAjgciBJNYo9ug=
+	t=1739137253; cv=none; b=ngw6kcWZaeIB2P2+iDgq6HfGepN9EbDeDeulKMyY+PZKUkDMk6LLcdkswpymybxzajLPwwAoaV4qKZEUAS2v50y/NBwCOZZI4aj3CAkiMcA7zR3diTEq5YC1VcZRz0HvBmOs4yBE8l37iVA1d0U7lkTYOk1CAdKDYKEuo0vCtCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739137121; c=relaxed/simple;
-	bh=6S1lUOrlLJQJSB6iy6z/54XwDRpdbSSEfGlk7fXrxlQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gNyKRbraQcV0QeAnB4gruwi1m0a7iMfBvT4wSLXGBu/SaKwQF1turExmjiwE9jjpMj9qSul3y1F5hoRKXNPTJPpJcY8C1ObCDP5MXhQ8JBnd8XkWaBtLoYY0ZeipZ1Hy23SIlo1XQHS8oHAyy8/NtXe7GdtnYuO0A4xWOvIuw+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=IF3I8ERT; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1739137253; c=relaxed/simple;
+	bh=Ziv+M3+50z5eMM14eZX0Oixu3FyWuNm2XqHRVSZ5PAY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NmYH3eTo6QyKOmqFQuFt7CNKdQqfV0RwgBIh4d4PQ7lVg3BFIu6713XZjbGXuI0CzBkGxk963xCCKPGXNFvcce1e/HJGDw6/UAi8LMBDJCv3EqOtV6BSj5bTP/eveznD5CBELb17Nz04CEtJVcQbmoHJ1JNH58A7xzEcvdbXlrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c7x9TxFY; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="IF3I8ERT"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ab795ebaa02so353970666b.1
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 13:38:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7x9TxFY"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4394036c0efso2714785e9.2;
+        Sun, 09 Feb 2025 13:40:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1739137118; x=1739741918; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=apWyvTC5cYpMp+QgVKPxMdVerUEMamXyfh1oLcq+CqU=;
-        b=IF3I8ERTxE5F6yczKnGxjN6i+68og5CRu7lsb+Wt48+7fX7msjqNa6wU3do3O86H0q
-         tGVfg2KeFjAmwRXFNy1K1I1+V+OmxtdjZXrDyaDunBYbB5yt9wUmvL9DvOSPHAszIDF7
-         6LqWF9NObxOBUoj+qp8X8lQTUPAprQ51qAUrE=
+        d=gmail.com; s=20230601; t=1739137250; x=1739742050; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4vHmVTfsnRz1JF9lpJrmG696etUTSYNASGKo7x++LBE=;
+        b=c7x9TxFY/YtdPTUK6K7gXgSxyh46EgD/eL63m0S/9rFiR2oDKKYLlRPs3lmXHe0wEU
+         rwLAKosIw8YLIRXZiUGWiydg+ueW8WnFaLk0f9PvOq8olNc/CrmmCCeAgG2YoMWH2X4I
+         adcpxU3EXAl6JTV/57/K6QjWanl3Ly6J7D5dfISaQ6dMyrMqv2d8YKtEKmCNfdJceQEM
+         J+sT0dZwVeL5nSxqpKE9QqB71ZY/Hws5njlx0YPk4iytSe649g2pfZ6l+IxW0sr45ors
+         3dOPg3OQpx6ySqha3dpxNN3T/5e/HgFq44Uc1sfQ9tT51RNwrKdBbEgN7uYGJKbNOwen
+         eEHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739137118; x=1739741918;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=apWyvTC5cYpMp+QgVKPxMdVerUEMamXyfh1oLcq+CqU=;
-        b=vjeZ48e5c1aekEm1JXJkKJRt3+m7H0Y6UV9q8oh6jUlSW2oKJ0wGhY0uxPxGrPp8Fe
-         FKS2+06SMPZJsZmI8KYtKLxK5ozMPforIjD4JNK8yaPPJxn9IS0kBgu/SYi8DKNk1t5V
-         jTvKraEnqvbXdBTyI44CFdOkrJdiuUwQMVD4FGY+74xm22JDkmfIHNYjX2Mipf5RGfI0
-         wl8EqxOHezoSKj1vs+JZOx5tfWk3E2Z3R5IL3BlqonYqjRfmw6PzXQS6rdSkx2oCPeDt
-         XbcsBdc+hkA9GVMFrTx19hAicRFI0Kv0bzOLKAs4Xn5Z0uqmqbnU/qiDE5SfzoKGi7h7
-         mhCw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWiQrtLOA0/oX29e/i6ggkE5hC8DO8Rf0veiSFCETJ0qQoGXOGM5QKUzteX0qLW1/1v4W1mMjprXgKExU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcZk1sp1Dk5qgvysYCqXF9cBtTFdN0p2pxHbJk8CWpwNRzuoeJ
-	VCw5asNacwVr+UbeirapOMz8dtLZGW0ryftYwb68ipHk3pqT5IjF5LReXuy0sN6lG4ajbGW9A29
-	43b4=
-X-Gm-Gg: ASbGncslyRGxNu4xQKaaECxCUDk/APZebFXXmtHTS/BFAkCv71XPwFs/dX7dWDTQZ1S
-	RIYU402vdiHrwNs2xkukN349jxRpOfuVL2Euhw3gE+90s97pdYtWQGcb6WXYbC4vsRgixYoR7N2
-	Npv2f6z2LHLrHorJE/vPr/ZNtTxHKc370BotQ4w1vyorW4p0hPdwG7HgfCjL3YSD2E4v9q3OU5d
-	QVDZ3wh9tQ5WabEYTIsEstJ2hZE8sG7aDdUdCC3Yc78Ya4Fv6djWCpS+dVVRhc2DhQA0x2zCFs8
-	e+vQwclefIh3ZcNo/BTCxXn99y89FC2CGmyirm2k/8X6+9nXw/hoP4eKeTees3Cnlw==
-X-Google-Smtp-Source: AGHT+IG3C5lJrB6pPZgcDNl9C8tVwm++xgdYxcSK0B1C2bHcpofZgNzM6sfXab1BTzB191fHPAVByA==
-X-Received: by 2002:a17:907:3e11:b0:aaf:117c:e929 with SMTP id a640c23a62f3a-ab789c7f273mr1105806866b.57.1739137117694;
-        Sun, 09 Feb 2025 13:38:37 -0800 (PST)
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com. [209.85.208.45])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772f893e9sm748670466b.65.2025.02.09.13.38.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Feb 2025 13:38:37 -0800 (PST)
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5de64873d18so1850320a12.2
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 13:38:36 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCViAjY1epcbfmGIWpkfmGBfxDW7r5w4B2fd5UVyrdZ0QbGJd7AVOSkFxLCQBKTHfgjlksI8DCi3ZELxrOc=@vger.kernel.org
-X-Received: by 2002:a05:6402:2084:b0:5dc:7fbe:730a with SMTP id
- 4fb4d7f45d1cf-5de44e5fdb7mr12452558a12.0.1739137116607; Sun, 09 Feb 2025
- 13:38:36 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739137250; x=1739742050;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4vHmVTfsnRz1JF9lpJrmG696etUTSYNASGKo7x++LBE=;
+        b=FOa3p67V+mgadTb+GRYq9fHv0IiLUTD+BbPdhn3UVVg/23wZX//uEoBYtCwP1AxFoj
+         Xtt6tFcT+uzmNTBFDUGqZ71647u03Mo1586WHe5jJQg9/3fkDgywBzwyVGM7bRPfryu0
+         lmIe1kG5DPGsON0faMVyKnzklPQSWhYb+HyZIL5IGiXksEizM8TExHhG1tcLMjeQT2Ba
+         JIyevy32gmD3dXOVWE8HrU8ffV8OG9Erm8jWdjLM5ZEl9/OPcJBLSo8mzlAPQzen1T1G
+         AY5zFBJYg5LfCVqvQMHVGgjw/m9LArr79UdDk6PAWUx0ZLVk0Q+LGq94Bh16OLa7FRBo
+         Rlhw==
+X-Forwarded-Encrypted: i=1; AJvYcCVRs7OiNhmxrAOTblEGVIHzLZENqXctoux0+XJHkRV6WH24jv2DiPiJDASqnuSMN7ynr+225365TDlJ@vger.kernel.org, AJvYcCW+lKuonkcRBVjIJaHw58Jb9efWw0BgiUhwzM9NfSF7tTCZ28v11wGFV/3h2mh69FGzStzw4sEQS0XaUUtp@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPS683saBjufxHsjQ7X/jDlXoE9i/LuGgYgZnxr9KmuUeU22kK
+	ZRYNX26hua6hby0qHz/ZluAL0Nx52SbAamoezRou7v8TsKTeQG+2
+X-Gm-Gg: ASbGncvqz7pIFuK57CxqxRsU1wljY5UaOC8I8qe81kZv87LSEuZQ7xIWM8DOjQcFGlr
+	1mLRLFqk2I2v9YfZ6ET/B5eCeUZvOjngImzNbRg7S2K1Xhm4IcuZ1qXdfAXvfghhitJW+yrYE7k
+	NXVEnCNxKSuuW4cRFCq3WLez4gMkJUL+elGAOkqwnbx4+3xPwW88Fj15d7ZmZqjJrB//5eI6p5D
+	YAOABUC/uUpHCpPFJRyl8nyNfvViUU6JA6AvoAy3/8qDiFTlMl9dV91/hg/1DlURizDZdcBBbXS
+	Vau69hhTKjNp0V+W/IXpLhIgnctRZXD+Jr+0rxE4bzLMNnP2L1ZNbg==
+X-Google-Smtp-Source: AGHT+IFSxBwa9KnAS8L9/EAz8cLmuKb/l0d8yDFFaz3zOamCgdFD5cNHDH4gBGKhfk0z5d3IqpoPdw==
+X-Received: by 2002:a05:600c:34c2:b0:439:3ba0:d564 with SMTP id 5b1f17b1804b1-4393ba0d6f4mr32217185e9.6.1739137249560;
+        Sun, 09 Feb 2025 13:40:49 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390db10b2fsm158834885e9.33.2025.02.09.13.40.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2025 13:40:48 -0800 (PST)
+Date: Sun, 9 Feb 2025 21:40:47 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin"
+ <hpa@zytor.com>, Catalin Marinas <catalin.marinas@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf
+ <jpoimboe@redhat.com>, Andi Kleen <ak@linux.intel.com>, Dan Williams
+ <dan.j.williams@intel.com>, linux-arch@vger.kernel.org, Kees Cook
+ <keescook@chromium.org>, kernel-hardening@lists.openwall.com
+Subject: Re: [PATCH 1/1] x86: In x86-64 barrier_nospec can always be lfence
+Message-ID: <20250209214047.4552e806@pumpkin>
+In-Reply-To: <CAHk-=wiQQQ9yo84KCk=Y_61siPsrH=dF9t5LPva0Sbh_RZ0-3Q@mail.gmail.com>
+References: <20250209191008.142153-1-david.laight.linux@gmail.com>
+	<CAHk-=wiQQQ9yo84KCk=Y_61siPsrH=dF9t5LPva0Sbh_RZ0-3Q@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250209105600.3388-1-david.laight.linux@gmail.com>
- <20250209105600.3388-2-david.laight.linux@gmail.com> <CAHk-=wgu0B+9ZSmXaL6EyYQyDsWRGZv48jRGKJMphpO4bNiu_A@mail.gmail.com>
- <20250209194756.4cd45e12@pumpkin> <CAHk-=wisZo7+-xmC_o8GQJ-G0qFp4u29t_FkjgPvgq7FXaTyDg@mail.gmail.com>
- <20250209211805.5fc2e9e4@pumpkin>
-In-Reply-To: <20250209211805.5fc2e9e4@pumpkin>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 9 Feb 2025 13:38:20 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjGYtJOrgrjXF6zceePOp5G_F7VTfikjdGOsJ3eqsyfJg@mail.gmail.com>
-X-Gm-Features: AWEUYZnNAzSZJAGV2yu2h4_mOX5H8DgW7QZAQnW2C_BR_FTN8wyLPiijB4-v5YI
-Message-ID: <CAHk-=wjGYtJOrgrjXF6zceePOp5G_F7VTfikjdGOsJ3eqsyfJg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] uaccess: Simplify code pattern for masked user copies
-To: David Laight <david.laight.linux@gmail.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Arnd Bergmann <arnd@arndb.de>, Kees Cook <kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, 9 Feb 2025 at 13:18, David Laight <david.laight.linux@gmail.com> wrote:
->
-> Except for the ppc? case which needs the size to open a bounded window.
+On Sun, 9 Feb 2025 11:32:32 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-It passes the size down, but I didn't actually see it *use* the size
-anywhere outside of the actual range check.
+> On Sun, 9 Feb 2025 at 11:10, David Laight <david.laight.linux@gmail.com> wrote:
+> >
+> > +#define barrier_nospec() __rmb()  
+> 
+> This is one of those "it happens to work, but it's wrong" things.
+> 
+> Just make it explicit that it's "lfence" in the current implementation.
 
-So it has code like
+Easily done.
 
-  static __always_inline void allow_user_access(void __user *to, const
-void __user *from,
-                                              u32 size, unsigned long dir)
-  {
-        BUILD_BUG_ON(!__builtin_constant_p(dir));
+Any idea what the one used to synchronise rdtsc should be?
+'lfence' is the right instruction (give or take), but it isn't
+a speculation issue.
+It really is 'wait for all memory accesses to finish' to give
+a sensible(ish) answer for cycle timing.
+And on old cpu you want nothing - not a locked memory access.
 
-        if (!(dir & KUAP_WRITE))
-                return;
+> 
+> Is __rmb() also an lfence? Yes. And that's actually very confusing too
+> too. Because on x86, a regular read barrier is a no-op, and the "main"
+> rmb definition is actually this:
+> 
+>   #define __dma_rmb()     barrier()
+>   #define __smp_rmb()     dma_rmb()
+> 
+> so that it's only a compiler barrier.
 
-        current->thread.kuap = (__force u32)to;
-        uaccess_begin_32s((__force u32)to);
-  }
+I couldn't work out why __smp_mb() is so much stronger than the rmb()
+and wmb() forms - I presume the is history there I wasn't looking for.
 
-but notice how the size is basically not an issue. Same for the 8xx case:
+> And yes, __rmb() exists as the architecture-specific helper for "I
+> need to synchronize with unordered IO accesses" and is purely about
+> driver IO.
 
-  static __always_inline void allow_user_access(void __user *to, const
-void __user *from,
-                                              unsigned long size,
-unsigned long dir)
-  {
-        uaccess_begin_8xx(MD_APG_INIT);
-  }
+I'd missed the history of it being IO related.
 
-or the booke case:
+...
+> And some day in the future, maybe even that implementation equivalence
+> ends up going away again, and we end up with new barrier instructions
+> that depend on new CPU capabilities (or fake software capabilities:
+> kernel bootup flags that say "don't bother with the nospec
+> barriers").
 
-  static __always_inline void allow_user_access(void __user *to, const
-void __user *from,
-                                              unsigned long size,
-unsigned long dir)
-  {
-        uaccess_begin_booke(current->thread.pid);
-  }
+Actually there is already the cpu flag to treat addresses with the top
+bit set as 'supervisor' in the initial address decode - rather that
+checking the page table in parallel with the d-cache accesses.
+When that hits real silicon then patching out the barrier_nospec()
+lfence would make sense.
+There is also your kernel build machine where you don't care.
+So compiling them out or boot patching them out is a real option.
 
-but admittedly this is all a maze of small helper functions calling
-each other, so I might have missed some path.
+This does make it more clear that the rdtsc code has the wrong barrier.
 
-             Linus
+> So please keep the __rmb() and the barrier_nospec() separate, don't
+> tie them together. They just have *soo* many differences, both
+> conceptual and practical.
+
+A simple V2 :-)
+
+	David
+
+> 
+>              Linus
+
