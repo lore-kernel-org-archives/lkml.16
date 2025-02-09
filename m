@@ -1,112 +1,278 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F281119A;
-	Sun,  9 Feb 2025 17:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8348D1119A;
+	Sun,  9 Feb 2025 17:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739122793; cv=none; b=PSB6rjvGGYfnrkoEoz2MD6lVpyWXpV7idJkAcxb2ARkEPY7SsrgO5Da9tSMev9tjzC5SARNToNmflHtL/4QPHDz4ZiXLaQgtVW/6kXHmVS5SWnU5Yd8mLo9jTmfk6H80YiuOUwdbDjnO4XgxnJoFNZlgm9PnwLwtPrVEEL4as9o=
+	t=1739122821; cv=none; b=glmy4VfsdAIXfJ6rOOBJrt5osbaCV+mLjTXishA1XQ9fqedt6serkTm+4UptUy/WetBI7G0TuwXfTsYKlX9xdxYF+nmfV4/76ShKyReW/AAJ3fgxcwr6fUyfBR6INLhwB73hnDBzLL+XZyzJSZVdyrya4pUt3lUSEe2O8kTiwx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739122793; c=relaxed/simple;
-	bh=Mr0mW+XyvyDAiCtQmwOqFdRzpUPsd8QoVankQ7tsCkQ=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=UqCX7VYq5pQ97AoTOUR7YjsYvAaWLt1JwSM6F4YaQOO9HWwL2w+RzYp7k0CUQU1C7XdofnWtWmx+GowSXhk+XGsiSg9hLZvyfiBcLi75CEMo4+KK2lvXaAXRmrYqO8b2wUJ9fH21HqPqQdyeZjZvPvMwuPOIoXxqeLzDzB60fLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rRqIYaNF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739122821; c=relaxed/simple;
+	bh=hvB7B1qMj2qMUiArzNvjE1o89SrgcMdd3T6esy4XvAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rsYLfOzl0WOy12xTrLEbjUTi60uAEqG47aq8lIoz7d2Zku+Z5cMuji6MvzLiov/s6b6FIZFzS0ADoCn0SPoi+pCbxuRqVIVU0Q3RCMxJVLVItpfvG5uJNFU35uQohh0MK3tdyFZLdJAJofdslOc73WMoZBrUC+L8pVp//AKaXDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FDSe9kyi; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rRqIYaNF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0723BC4CEDD;
-	Sun,  9 Feb 2025 17:39:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739122793;
-	bh=Mr0mW+XyvyDAiCtQmwOqFdRzpUPsd8QoVankQ7tsCkQ=;
-	h=From:Date:Subject:To:Cc:From;
-	b=rRqIYaNF4tCyqk9QU+Evm0/Fj88CDSiM23qLHUVUyfwmLqV4ekxkSbs3reIOySDcB
-	 rcJGwYNAuDQ74UGvezAT5jqrNPSG4FCea51jgXJuo10I5rDmLMfpFimuFPY6pbDLk7
-	 7TroCe9hznzXR2fV/NbWymezzO41CMt9z55kBZNwzTV4eFTKVaIDuY1aC2Vgecl+t8
-	 qXLOfdvpX+/b9c4NhmXyv7lIkiHaxG1wPFkSreSN906m8v+06m0oi2rcAeR0FTeo/2
-	 xJM+gEXh6F1SGQ/XkyqxLfuxoZMQYMYSc4Ozmk1CxnlpTj9Red910nNGsOoSz2PAs9
-	 g2Gq6z2r+Gr+g==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54504a6955aso1170603e87.2;
-        Sun, 09 Feb 2025 09:39:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWjlFddP0yzkdTCKRPaTo4qYnS2oYteB3P9MkhL7GqjuLmuWbvbhUboMccWoARsRokFRB79jTYNjYh1g2M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUnbxFxFuUO5TDJ6Rs+PrPv7g4fQkzuZwfzYWlBEeg80kg77U/
-	sM4nLmXr1Nb6dF+ZuiyAnxFWkIyryVmPRBbzpjZvWAVoRNWqlba6fFNISx5IdYiuB8+yXzWnkDe
-	N/sESEdMCAtgBeZtA0oxQwC8rrwo=
-X-Google-Smtp-Source: AGHT+IFXV60GBS2RKhI69wQbrVhDxTXAM9gREpXtJWAbOnlJJhOfQ900pPcc/xBswE1kqCBi6yACKzZBn28BkY11SuI=
-X-Received: by 2002:a05:6512:3a84:b0:545:76e:31a with SMTP id
- 2adb3069b0e04-545076e0d5emr1192387e87.11.1739122791672; Sun, 09 Feb 2025
- 09:39:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FDSe9kyi"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e4930eca0d4so2506336276.3;
+        Sun, 09 Feb 2025 09:40:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739122818; x=1739727618; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FHhjcKTe2BCKEZBZLZukeAJ0EgnYqJNr/A2buIFd+Fk=;
+        b=FDSe9kyii2quZaozKLo6b2Lv+LeFo6/620t9Idp6IkaJAHXhB7+OYfG3jdPr/msOr0
+         2UjsbEkVJKoOtqZcjt5s9JFlIJh0SJrGGbyJYqNFqB0q8visyvCsFuQVWHYfwljbP7+h
+         SM2Ana09dQg4qTkj3gRlZH693BT75s9UMJh5csaTQudhmhxbby5f5MTh5noWtOOJ2ocf
+         nOeib42BtNx+rdozqdSPb+0IEkMfJPdWUuPEUYvYL8SUZksZsm31ffnf7tVRWzBZfYq0
+         alaG04M/7gQowaJoPYw47E41uK1+hHcNL2sBaGBELW0ydv9h+ep+z5WEiSlM/JhAOm7f
+         0YaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739122818; x=1739727618;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FHhjcKTe2BCKEZBZLZukeAJ0EgnYqJNr/A2buIFd+Fk=;
+        b=AJBXjiM3nZKmz804LM+uNFTA04MuWasC9A7fMx7UebJNyYgor3CyiaLUOHIDU3UnHY
+         gV1jCwq3LkqtSnJayQtCEBMl/Hb2srlZLIyfKMq+8r4Pje/hxSpRej98qYRs+uK/13oU
+         JbvhH3NY3a8XUvrc1aBJMBvBDnQ+rj743iHOKwj9FB0jM6z8AisE1I/OUEBOIRaaS9TR
+         crvoLKUh8w3F7lL7QOvK+3M5ZGtBr4BA5LTmSqcYOSgMfqazJ25VdIgQHv4cX92WPYXC
+         DN2qrVo/f5Ub2dva/iprXws+3fSmElEybut/4uJQ7QpoIv0XvtASq9nKyBxuWtR1A9ma
+         4F1A==
+X-Forwarded-Encrypted: i=1; AJvYcCWaj9XkQf7nkD7kvd5FNcyP35mjpoERZ9BNsspyqTJKM1XcFva7W0YKu1vBwhWXd6k77UQ=@vger.kernel.org, AJvYcCXFHTG/lGhKP1EL2N81nXMUPuFZAIS899D3glpyy4yMuBMGfULB00UbS34g3zBtAABb5fad2Ne/4FWwbRcR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4uAGjVxmOAV+SpIWsp8/NjA/98ZaIq28bqCV5dXNAu4e+8//v
+	3r0WznBXCW9hMmX8R3JSIZtXHPD7TD+F3uy3Z2HgplIwGTinbjqP
+X-Gm-Gg: ASbGnctTzISOdubkiLPi/AyWrNsHVBMV7EqbRJc2ASRh2WEPyOeon1heMu7W5m85OF0
+	wZOUzRJMWT8evEcNG9/3WYW627qzSfq24V/DSqe9bHIZ7iI8PFk3e38jW11z5Fia0dN/LPyqAvh
+	ryD3cpO63pcJ8TwXqY25eNV5+ZD7BvMysu7XiDuH/nQ2x0xRTzQjR/olCgGRqjbXqrBoKObYj6w
+	0cbytMR2SQQnqLZEpgIJNy1wbXiWQ3EreyZPF3c3pQSgLxvYcwZLkaaRBAni956rX7UhS9jmiSB
+	U/0VaAZbdXdTzCOWwg7G5LGWb/cAIPnMOB2+jAZV9WctH4KWVWE=
+X-Google-Smtp-Source: AGHT+IGHUEpHAWKbx9hs6majl9Wze52NnwmJsz3HoQFx6o58E7mYKSAmWhXHluoW4H8hAzJPDwIpcg==
+X-Received: by 2002:a05:690c:6112:b0:6ef:8122:282f with SMTP id 00721157ae682-6f9b29d8b50mr88060807b3.24.1739122818266;
+        Sun, 09 Feb 2025 09:40:18 -0800 (PST)
+Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99fd3c323sm12810307b3.49.2025.02.09.09.40.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2025 09:40:16 -0800 (PST)
+Date: Sun, 9 Feb 2025 12:40:15 -0500
+From: Yury Norov <yury.norov@gmail.com>
+To: Andrea Righi <arighi@nvidia.com>
+Cc: Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
+	Changwoo Min <changwoo@igalia.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>, Ian May <ianm@nvidia.com>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] mm/numa: Introduce numa_nearest_nodemask()
+Message-ID: <Z6joYmcjyT8eY32H@thinkpad>
+References: <20250207211104.30009-1-arighi@nvidia.com>
+ <20250207211104.30009-2-arighi@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 10 Feb 2025 02:39:14 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR3rgsNCN2hUs_s3H9wZeBPaLPwZgMH3ShLuLUKMjjihQ@mail.gmail.com>
-X-Gm-Features: AWEUYZkbxRW_10sInvoI3pO2-9PROQ4LV_tPltlsXEuB6gGSo9ESnBP6SBnMAM8
-Message-ID: <CAK7LNAR3rgsNCN2hUs_s3H9wZeBPaLPwZgMH3ShLuLUKMjjihQ@mail.gmail.com>
-Subject: [GIT PULL] Kbuild fixes for v6.14-rc2
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207211104.30009-2-arighi@nvidia.com>
 
-Hello Linus,
+On Fri, Feb 07, 2025 at 09:40:48PM +0100, Andrea Righi wrote:
+> Introduce the new helper numa_nearest_nodemask() to find the closest
+> node, in a specified nodemask and state, from a given starting node.
+> 
+> Returns MAX_NUMNODES if no node is found.
+> 
+> Cc: Yury Norov <yury.norov@gmail.com>
+> Signed-off-by: Andrea Righi <arighi@nvidia.com>
+> ---
+>  include/linux/nodemask_types.h |  6 +++++-
+>  include/linux/numa.h           |  8 +++++++
+>  mm/mempolicy.c                 | 38 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 51 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/nodemask_types.h b/include/linux/nodemask_types.h
+> index 6b28d97ea6ed0..8d0b7a66c3a49 100644
+> --- a/include/linux/nodemask_types.h
+> +++ b/include/linux/nodemask_types.h
+> @@ -5,6 +5,10 @@
+>  #include <linux/bitops.h>
+>  #include <linux/numa.h>
+>  
+> -typedef struct { DECLARE_BITMAP(bits, MAX_NUMNODES); } nodemask_t;
+> +struct nodemask {
+> +	DECLARE_BITMAP(bits, MAX_NUMNODES);
+> +};
+> +
+> +typedef struct nodemask nodemask_t;
+>  
+>  #endif /* __LINUX_NODEMASK_TYPES_H */
+> diff --git a/include/linux/numa.h b/include/linux/numa.h
+> index 3567e40329ebc..a549b87d1fca5 100644
+> --- a/include/linux/numa.h
+> +++ b/include/linux/numa.h
+> @@ -27,6 +27,8 @@ static inline bool numa_valid_node(int nid)
+>  #define __initdata_or_meminfo __initdata
+>  #endif
+>  
+> +struct nodemask;
 
-Please pull Kbuild fixes.
-Thanks
+Numa should include this via linux/nodemask_types.h, or maybe
+nodemask.h.
+
+> +
+>  #ifdef CONFIG_NUMA
+>  #include <asm/sparsemem.h>
+>  
+> @@ -38,6 +40,7 @@ void __init alloc_offline_node_data(int nid);
+>  
+>  /* Generic implementation available */
+>  int numa_nearest_node(int node, unsigned int state);
+> +int numa_nearest_nodemask(int node, unsigned int state, struct nodemask *mask);
+>  
+>  #ifndef memory_add_physaddr_to_nid
+>  int memory_add_physaddr_to_nid(u64 start);
+> @@ -55,6 +58,11 @@ static inline int numa_nearest_node(int node, unsigned int state)
+>  	return NUMA_NO_NODE;
+>  }
+>  
+> +static inline int numa_nearest_nodemask(int node, unsigned int state, struct nodemask *mask)
+> +{
+> +	return NUMA_NO_NODE;
+> +}
+> +
+>  static inline int memory_add_physaddr_to_nid(u64 start)
+>  {
+>  	return 0;
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index 162407fbf2bc7..1cfee509c7229 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -196,6 +196,44 @@ int numa_nearest_node(int node, unsigned int state)
+>  }
+>  EXPORT_SYMBOL_GPL(numa_nearest_node);
+>  
+> +/**
+> + * numa_nearest_nodemask - Find the node in @mask at the nearest distance
+> + *			   from @node.
+> + *
+
+So, I have a feeling about this whole naming scheme. At first, this
+function (and the existing numa_nearest_node()) searches for something,
+but doesn't begin with find_, search_ or similar. Second, the naming
+of existing numa_nearest_node() doesn't reflect that it searches
+against the state. Should we always include some state for search? If
+so, we can skip mentioning the state, otherwise it should be in the
+name, I guess...
+
+The problem is that I have no idea for better naming, and I have no
+understanding about the future of this functions family. If it's just
+numa_nearest_node() and numa_nearest_nodemask(), I'm OK to go this
+way. If we'll add more flavors similarly to find_bit() family, we
+could probably discuss a naming scheme.
+
+Also, mm/mempolicy.c is a historical place for them, but maybe we need
+to move it somewhere else?
+
+Any thoughts appreciated.
+
+> + * @node: the node to start the search from.
+> + * @state: the node state to filter nodes by.
+> + * @mask: a pointer to a nodemask representing the allowed nodes.
+> + *
+> + * This function iterates over all nodes in the given state and calculates
+> + * the distance to the starting node.
+> + *
+> + * Returns the node ID in @mask that is the closest in terms of distance
+> + * from @node, or MAX_NUMNODES if no node is found.
+> + */
+> +int numa_nearest_nodemask(int node, unsigned int state, nodemask_t *mask)
+
+Your only user calls the function with N_POSSIBLE:
+
+  s32 scx_pick_idle_cpu(const struct cpumask *cpus_allowed, int node, u64 flags)
+  {
+        nodemask_t unvisited = NODE_MASK_ALL;
+
+        if (!static_branch_maybe(CONFIG_NUMA, &scx_builtin_idle_per_node))
+               return pick_idle_cpu_from_node(cpus_allowed, NUMA_NO_NODE, flags);
 
 
-The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
+        for_each_numa_node(node, unvisited, N_POSSIBLE)
+                do_something();
+  }
 
-  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+Which means you don't need the state at all. Even more, you don't
+need to initialize the unvisited mask before checking the static
+branch:
 
-are available in the Git repository at:
+  s32 scx_pick_idle_cpu(const struct cpumask *cpus_allowed, int node, u64 flags)
+  {
+        nodemask_t unvisited;
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-tags/kbuild-fixes-v6.14
+        if (!static_branch_maybe(CONFIG_NUMA, &scx_builtin_idle_per_node))
+               return pick_idle_cpu_from_node(cpus_allowed, NUMA_NO_NODE, flags);
 
-for you to fetch changes up to f354fc88a72ae83dacd68370f6fa040e5733bcfe:
+        nodes_clear(unvisited);
 
-  kbuild: install-extmod-build: add missing quotation marks for CC
-variable (2025-02-08 03:37:57 +0900)
-
-----------------------------------------------------------------
-Kbuild fixes for v6.14
-
- - Suppress false-positive -Wformat-{overflow,truncation}-non-kprintf
-   warnings regardless of the W= option
-
- - Avoid CONFIG_TRIM_UNUSED_KSYMS dropping symbols passed to symbol_get()
-
- - Fix a build regression of the Debian linux-headers package
-
-----------------------------------------------------------------
-Masahiro Yamada (1):
-      kbuild: keep symbols for symbol_get() even with CONFIG_TRIM_UNUSED_KSYMS
-
-Nathan Chancellor (1):
-      scripts/Makefile.extrawarn: Do not show clang's non-kprintf
-warnings at W=1
-
-Oleh Zadorozhnyi (1):
-      kbuild: fix misspelling in scripts/Makefile.lib
-
-WangYuli (1):
-      kbuild: install-extmod-build: add missing quotation marks for CC variable
-
- include/asm-generic/vmlinux.lds.h    |  1 +
- include/linux/module.h               |  5 ++++-
- scripts/Makefile.extrawarn           | 10 +++++-----
- scripts/Makefile.lib                 |  2 +-
- scripts/mod/modpost.c                | 35 +++++++++++++++++++++++++++++++++++
- scripts/mod/modpost.h                |  6 ++++++
- scripts/module.lds.S                 |  1 +
- scripts/package/install-extmod-build |  2 +-
- 8 files changed, 54 insertions(+), 8 deletions(-)
+        for_each_numa_node(node, unvisited)
+                do_something();
+  }
 
 
--- 
-Best Regards
-Masahiro Yamada
+If you need some state other than N_POSSIBLE, you can do it similarly:
+        
+        nodemask_complement(unvisited, N_CPU);
+
+        /* Only N_CPU nodes iterated */
+        for_each_numa_node(node, unvisited)
+                do_something();
+
+
+> +{
+> +	int dist, n, min_dist = INT_MAX, min_node = MAX_NUMNODES;
+> +
+> +	if (node == NUMA_NO_NODE)
+> +		return MAX_NUMNODES;
+> +
+> +	if (node_state(node, state) && node_isset(node, *mask))
+> +		return node;
+
+This is correct, but why do we need this special case? If distance to
+local node is always 0, and distance to remote node is always greater
+than 0, the normal search will return local node, right? Is that a
+performance trick? If so, can you put a comment please? Otherwise,
+maybe just drop it? 
+
+> +
+> +	for_each_node_state(n, state) {
+> +		if (!node_isset(n, *mask))
+> +			continue;
+
+for_each_node_state_and_mask(n, state, mask)
+
+Or if you take the above consideration, just
+        for_each_node_mask(n, mask)       
+
+> +		dist = node_distance(node, n);
+> +		if (dist < min_dist) {
+> +			min_dist = dist;
+> +			min_node = n;
+> +		}
+> +	}
+> +
+> +	return min_node;
+> +}
+> +EXPORT_SYMBOL_GPL(numa_nearest_nodemask);
+> +
+>  struct mempolicy *get_task_policy(struct task_struct *p)
+>  {
+>  	struct mempolicy *pol = p->mempolicy;
+> -- 
+> 2.48.1
