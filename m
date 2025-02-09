@@ -1,121 +1,167 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E32C14F70;
-	Sun,  9 Feb 2025 03:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCEC14F70;
+	Sun,  9 Feb 2025 03:57:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739072995; cv=none; b=s9yUKTK7tI1bdCWkOeEPtOP5murJDsXcyuNhX/9O+BGjQ77bY+iX6eVpAScRTKmsuNzUGXiBJzzwp6UQ9m8jkhJiOuqL4pc9klri8z+mREaH7e1Pb8McuHvRjy6lanE3qC2TUhQ3QkZ30DK5wb22ASNWbzOLoaIGhuGJF1IdxjQ=
+	t=1739073425; cv=none; b=tyJnwPtVFjShuYaqagyCDOaW3Wi2CeMG3ciN07UiDsb43/gParU9onJ6cMOONVBI9CPlL0LA7iB3xNiQdqCCRVS+GM+zg6O4IUrFjwXAg34X6imBra8evlBlfgGb26lF3GI7pWpvz0a2fUBWhNHw/VMXnQVrRIF8NgKYFuopRMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739072995; c=relaxed/simple;
-	bh=BAXyD4hipZe1snTLV2EoYm+2i5FjEq48uxfWB/w0w1A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nopKMmEiBruEotZ4H3KHBWgeZtrpAsD+DNR208mDteUwRpiGulLXoKLm4C4cuYtsejBvXmB7Q4kF+3iwGjChKGXH/EFky2E2CIbZ8XFo+gpls56ueMCXXfJFynFG7R7HoEcre2ahS/jCFEYqS1AGj/nDRCxF1jYBHmtRyHWiYA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=qbbnBV9A; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
+	s=arc-20240116; t=1739073425; c=relaxed/simple;
+	bh=abo4VuyuuChxbEXDy2RGRYYYHBxzQJgpTOdZ1NYxoSQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sbOXcOmDOle3J8hmyrPN5Fh3RwqP5mU6cnJix8apEXIAid3BsU7h88671dBILF2iDXfiJR8mYG6BUHUeE2QamPovcaMkpweH5SvIUkC6QP8W1s2zLobFthCHoE1ki/bFGwBOq+CIKEf62JyMA5DkE0734c1giQ+Mh6Yc/WePRYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CtmT0bJj; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="qbbnBV9A"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4YrD6k6SH3z9sQ5;
-	Sun,  9 Feb 2025 04:42:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1739072543;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=m04RA4OznHMeMccQGW/Q5QOIqkOO+cTX8fddgkQ9Jf4=;
-	b=qbbnBV9AK/t4kMPwwQvS48iOul9vL0A9Cuu8wYCRApdFVWKohOYMOKUYBfQvlEZ81DtfQI
-	24Uqo2HleZNIBC3JFOF5/vQBQklUITXNlZCBRyAypNn/w1AE5GfpZXa/p58p/Z+rNk01Rl
-	68WWabLx9+KHJFOXNicSevoRpopYoT8pgg8Brs1fr4C0xdFPrY2nLFNj1ZfCJNFr0Gw7ZR
-	WXAgwILb1cpvTarnWsCxAEASveXq/V9GI5sDIBZkF916e61wcvWZE2dZ0fCMYhJpmb7V+1
-	KxpeGAJS02VruyTn0AQNeKToKzQGHtr4ktXIuifmdHW3H5JZJPwC86L3eEt3TA==
-Date: Sat, 8 Feb 2025 22:42:19 -0500
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>, 
-	"kernel-hardening@lists.openwall.com" <kernel-hardening@lists.openwall.com>
-Subject: Re: [PATCH] NFSv4: harden nfs4_get_uniquifier() function
-Message-ID: <dupajamhv63sqan3ybqi3sode4qt3ehtmvqa3qnbdxb6uvntsf@6oshvrg2j2f2>
-References: <k7n2k4zqqnf6yisotj6ofgne7lvmwgy3yghygvwixfmkyrcwgl@4z26pbujl3gq>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CtmT0bJj"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38dd0dc2226so1164343f8f.2;
+        Sat, 08 Feb 2025 19:57:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739073422; x=1739678222; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tEfu0T4M+EpepKDscRwBKRkl9O4AhIe/Wi41/MnZPsc=;
+        b=CtmT0bJjcAw72pVLILbNZsD69fVeZaPGWSmofUeU2pnVtRGnqfSDZLafNITbyTMhbq
+         URO1SOd8m9KyG9Kpkge7xvradmlYSvmm7Q0E5MlmIRq5eFezD7OPMSGAr24hxmy0tfjv
+         FjIdFPHJx1Vl9YnVg8cKrDxp6xH/NvhbvctfMGSJ78pEhTM2/RCf3LNa5acamqUen/T5
+         0O+1W9O9t60yuCt5pNQB1/1xYus6iugb3YNP2JIDCImQhFbLpfR8ZRSX14SabiLuWipf
+         cW2bIhn4U2vY6AXQQSa5OWESNi+v73X/hlRC5x509DSP6doFVZ9t4uAFRoiBavIBST5H
+         K8Yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739073422; x=1739678222;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tEfu0T4M+EpepKDscRwBKRkl9O4AhIe/Wi41/MnZPsc=;
+        b=r2XVKLD7+f8koRPC1dC/JB1Vytth0+Wm681d8REO+yab7ELhIID09Fc42VFqCkZBvK
+         +m/Ldj3GvY64uea/bgcwBmhpgs5MKcv33r6tZkdH3wCBeuL2l4OqG4Z7o9PYk9CsQ6kP
+         tf3/ncykMxYcRwTbC7WxHOdD/YN1fNNa0J14vUfRX4G/RKLKAxtwFMNu+hioDRTRsPJd
+         +hGTkk2PJwJyGkXDYMgE/1g4u+pVoM2jEXs3iIZnUMoHALDqv9WP0IubS5JDAMl3BMOZ
+         VwKVWnCX8CrwinhU+ZtyPToT4+7DFr7ynkJE0AZrFcbMzxPW3mxWwwKosTZQHybSAbrG
+         kF0A==
+X-Forwarded-Encrypted: i=1; AJvYcCXdD61RBO+X06XwOy1GsszITac2ueMtfmd56SDH7sk9aDUBml6A8zstLYgHV18pOOdrDVc=@vger.kernel.org, AJvYcCXgC6l/PGUYiEThDmreX3VLJQH9u5diBi0x6uHEzXU82CQ0mnRSDMxQBPVpPxPfbEPKX1xzDS9R5zJyj1Sq@vger.kernel.org, AJvYcCXlem2zJMWKjKH1rWq7KHgvHupeb8JRx3PyUcASMN9TQP2NK40W2E6aT6LsIwhLidDaioPaAW6MMHOqQsOF7A==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNsL+GCh0seIZIsygcSzKaOmFQEV4xmPozM7CmtYfrmDg4eVZv
+	LEpBMVzCfbyN0uBc4jf3SR1dAzHxFhbnbNrqF9Cj/xcQdqs6H/nmJD0HJIXgvoRaRdy4cQFpZwV
+	VbLbE6/5ts+YaRpCxIiJS/e9E/Ek=
+X-Gm-Gg: ASbGncuOrWcsItdhAuiLURSji9t01qknY26hXUw03/nY/iXoxIA6YGA5AFmhek8/4XL
+	ypmOXRlr9L71tYYZPAhcwsSmxahcoQTCgE5jZ7TMTYd5Cq/edr5qMdgjW2koBxmbgMjMQ13JFqb
+	eQ27T/azjiFtI3jwdfHJxi8vdP8ZPd
+X-Google-Smtp-Source: AGHT+IFVdKm/TbRZBCUYcxfboKUecCnZzAtotdQ9hdNs8NDSOP5z+PAwZ9Es9sIm9jwZJAHaojI3AdLsMmi+L7AZFNc=
+X-Received: by 2002:a05:6000:1a85:b0:38d:d906:dbb0 with SMTP id
+ ffacd0b85a97d-38dd906dcbcmr832823f8f.7.1739073422435; Sat, 08 Feb 2025
+ 19:57:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <k7n2k4zqqnf6yisotj6ofgne7lvmwgy3yghygvwixfmkyrcwgl@4z26pbujl3gq>
-X-Rspamd-Queue-Id: 4YrD6k6SH3z9sQ5
+References: <CALOAHbBZc6ORGzXwBRwe+rD2=YGf1jub5TEr989_GpK54P2o1A@mail.gmail.com>
+ <alpine.LSU.2.21.2501311414281.10231@pobox.suse.cz> <CALOAHbDwsZqo9inSLNV1FQV3NYx2=eztd556rCZqbRvEu+DDFQ@mail.gmail.com>
+ <CAPhsuW4gYKHsmtHsBDUkx7a=apr_tSP_4aFWmmFNfqOJ+3GDGQ@mail.gmail.com>
+ <CALOAHbDYFAntFbwMwGgnXkHh1audSoUwG1wFu_4e8P=c=hwZ0w@mail.gmail.com>
+ <CAPhsuW4HsTab+w2r23bM52kcM1RBFBKP5ujVdDvxLE9OiqgMdA@mail.gmail.com>
+ <CALOAHbAJBwSYju3-XEQwy0O1DNPawuEgmhrV5ECTrL9J388yDw@mail.gmail.com>
+ <CAPhsuW51E4epDCrdNcQCG+SzHiyGhE+AocjmXoD-G0JExs9N1A@mail.gmail.com>
+ <CALOAHbAaCbvr=F6PBJ+gnQa1WNidELzZW-P2_HmBsZ1tJd6FFg@mail.gmail.com>
+ <CAADnVQJZCE-Rh4xghLrruY8DW00cRUq9-ct6d=qfKk8Yc+8=pQ@mail.gmail.com> <20250208193237.w3zjcyovgurrin55@jpoimboe>
+In-Reply-To: <20250208193237.w3zjcyovgurrin55@jpoimboe>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Sat, 8 Feb 2025 19:56:51 -0800
+X-Gm-Features: AWEUYZniDJypeymOyz7fFdjC93KTr-2QZvKTC8wuH--pd8yPgT5EFAzAHC-HqLc
+Message-ID: <CAADnVQKXgPTQsjUDB3tjZ46aPWvoEcxBCnDXro8WPtNhkGNFyg@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] livepatch: Add support for hybrid mode
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Yafang Shao <laoar.shao@gmail.com>, Song Liu <song@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>, Jiri Kosina <jikos@kernel.org>, 
+	Joe Lawrence <joe.lawrence@redhat.com>, live-patching@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I wanted to check in on this. Anything I should change?
+On Sat, Feb 8, 2025 at 11:32=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.org=
+> wrote:
+>
+> On Sat, Feb 08, 2025 at 07:47:12AM -0800, Alexei Starovoitov wrote:
+> > On Fri, Feb 7, 2025 at 10:42=E2=80=AFPM Yafang Shao <laoar.shao@gmail.c=
+om> wrote:
+> > >
+> > > On Fri, Feb 7, 2025 at 2:01=E2=80=AFAM Song Liu <song@kernel.org> wro=
+te:
+> > > >
+> > > > On Wed, Feb 5, 2025 at 6:55=E2=80=AFPM Yafang Shao <laoar.shao@gmai=
+l.com> wrote:
+> > > > [...]
+> > > > > > I think we should first understand why the trampoline is not
+> > > > > > freed.
+> > > > >
+> > > > > IIUC, the fexit works as follows,
+> > > > >
+> > > > >   bpf_trampoline
+> > > > >     + __bpf_tramp_enter
+> > > > >        + percpu_ref_get(&tr->pcref);
+> > > > >
+> > > > >     + call do_exit()
+> > > > >
+> > > > >     + __bpf_tramp_exit
+> > > > >        + percpu_ref_put(&tr->pcref);
+> > > > >
+> > > > > Since do_exit() never returns, the refcnt of the trampoline image=
+ is
+> > > > > never decremented, preventing it from being freed.
+> > > >
+> > > > Thanks for the explanation. In this case, I think it makes sense to
+> > > > disallow attaching fexit programs on __noreturn functions. I am not
+> > > > sure what is the best solution for it though.
+> > >
+> > > There is a tools/objtool/noreturns.h. Perhaps we could create a
+> > > similar noreturns.h under kernel/bpf and add all relevant functions t=
+o
+> > > the fexit deny list.
+> >
+> > Pls avoid copy paste if possible.
+> > Something like:
+> >
+> > BTF_SET_START(fexit_deny)
+> > #define NORETURN(fn) BTF_ID(func, fn)
+> > #include "../../tools/objtool/noreturns.h"
+> >
+> > Should work?
+> >
+> > Josh,
+> > maybe we should move noreturns.h to some common location?
+>
+> The tools code is meant to be independent from the kernel, but it could
+> be synced by copying it to both include/linux and tools/include/linux,
+> and then make sure it stays in sync with tools/objtool/sync-check.sh.
+>
+> However, noreturns.h is manually edited, and only for some arches.  And
+> even for those arches it's likely not exhaustive: we only add to it when
+> we notice an objtool warning, and not all calls to noreturns will
+> necessarily trigger a warning.  So I'd be careful about relying on that.
+>
+> Also that file is intended to be temporary, there have been proposals to
+> add compiler support for annotating noreturns.  That hasn't been
+> implemented yet, help wanted!
+>
+> I think the noreturn info is available in DWARF, can that be converted
+> to BTF?
 
-Thanks,
-Ethan
+There are 30k+ noreturn funcs in dwarf. So pahole would need to have
+some heuristic to filter out the noise.
+It's doable, but we need to stop the bleeding the simplest way
+and the fix would need to be backported too.
+We can copy paste noreturns.h or #include it from the current location
+for now and think of better ways for -next.
 
-On 25/01/19 11:55PM, Ethan Carter Edwards wrote:
-> If the incorrect buffer size were passed into nfs4_get_uniquifier
-> function then a memory access error could occur. This change prevents us
-> from accidentally passing an unrelated variable into the buffer copy
-> function.
-> 
-> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
-> ---
->  fs/nfs/nfs4proc.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 405f17e6e0b4..18311bf5338d 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -6408,7 +6408,7 @@ static void nfs4_init_boot_verifier(const struct nfs_client *clp,
->  }
->  
->  static size_t
-> -nfs4_get_uniquifier(struct nfs_client *clp, char *buf, size_t buflen)
-> +nfs4_get_uniquifier(struct nfs_client *clp, char *buf)
->  {
->  	struct nfs_net *nn = net_generic(clp->cl_net, nfs_net_id);
->  	struct nfs_netns_client *nn_clp = nn->nfs_client;
-> @@ -6420,12 +6420,12 @@ nfs4_get_uniquifier(struct nfs_client *clp, char *buf, size_t buflen)
->  		rcu_read_lock();
->  		id = rcu_dereference(nn_clp->identifier);
->  		if (id)
-> -			strscpy(buf, id, buflen);
-> +			strscpy(buf, id, sizeof(buf));
->  		rcu_read_unlock();
->  	}
->  
->  	if (nfs4_client_id_uniquifier[0] != '\0' && buf[0] == '\0')
-> -		strscpy(buf, nfs4_client_id_uniquifier, buflen);
-> +		strscpy(buf, nfs4_client_id_uniquifier, sizeof(buf));
->  
->  	return strlen(buf);
->  }
-> @@ -6449,7 +6449,7 @@ nfs4_init_nonuniform_client_string(struct nfs_client *clp)
->  		1;
->  	rcu_read_unlock();
->  
-> -	buflen = nfs4_get_uniquifier(clp, buf, sizeof(buf));
-> +	buflen = nfs4_get_uniquifier(clp, buf);
->  	if (buflen)
->  		len += buflen + 1;
->  
-> @@ -6496,7 +6496,7 @@ nfs4_init_uniform_client_string(struct nfs_client *clp)
->  	len = 10 + 10 + 1 + 10 + 1 +
->  		strlen(clp->cl_rpcclient->cl_nodename) + 1;
->  
-> -	buflen = nfs4_get_uniquifier(clp, buf, sizeof(buf));
-> +	buflen = nfs4_get_uniquifier(clp, buf);
->  	if (buflen)
->  		len += buflen + 1;
->  
-> -- 
-> 2.48.0
-> 
+> Or is there some way to release outstanding trampolines in do_exit()?
+
+we can walk all trampolines in do_exit,
+but we'd still need to:
+if (trampoline->func.addr =3D=3D do_exit || ...addr =3D=3D __x64_sys_exit |=
+|
+before dropping the refcnt.
+which is the same thing, but worse.
