@@ -1,30 +1,33 @@
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AD6814A619;
-	Sun,  9 Feb 2025 10:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.9
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75C8175D53;
+	Sun,  9 Feb 2025 10:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739098293; cv=none; b=Yz9zSaLeQ3CBich/8DPmIrvffmqnq+AT41o2eVTFggHyHKG+wJBbxXnEGo6ds/YprhMWCI+NdohrkW2XArkTJFba08dLowpzxkvV/GRS/bEHxWKEu6m6v5t9VIunyCxjp+Gp7bFRe4/uDO1JW5SUwRr44K0hjFsgT+C+p0kh8DA=
+	t=1739098295; cv=none; b=Q7fR9qcdWaz9RXE3ulfDCNz8jOu/DA0C/tLmrMJB1PORN/fxgJmbdQ5AwD2+D0bv/m0ex7y4n9uWQkDo0fSx7fnckgI6Ev4e4422IADOioYCen41aXQ7tD0D2ehrJOAt1Lq8brkzbRmgxJ8xgoFPtfJgP/DrmTNppNdcTey6P54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739098293; c=relaxed/simple;
-	bh=sHaB9f2fr1jzeJrGdv574DKDrbs9J4UBBMJBCFOdRGY=;
+	s=arc-20240116; t=1739098295; c=relaxed/simple;
+	bh=gymlXchE1X2Mi5HturvFxODMkGlE+6Fknw2D00ypeLw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fAxqdb5tCYjqfe8M4vjiUn2A5mY21dhmRnUMSu6l5uXeWi++mGWaUkdGF/zSlXiAZzOgzOjMYr/wVPAjtnqAmbqmOhKQUIBwpIQOyvgcfw01vkJ911KyrMQUZlXFAzSzpPItcEyPqTNsNWt2KpAP1LcQxE725zyj/I3RD6L0NKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=FYQ6biCv; arc=none smtp.client-ip=117.135.210.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	 In-Reply-To:Content-Type; b=g9QJCwRfW0KiVajRrma2MmtofIucmwlNX+oGfPZxGVAnDJ3QRwb5DbQ6jyGoQTsZGCHXlBUVwQwpc+sfwRRGrMVyCfDzPSPDjfcbhaTzI4DdfIm/E+CqFAGr46U+Nbe5gQjuj832dQci0ZtS++oId35MEKvAbVRZAQpdqt7VpFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cljLsJTM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="FYQ6biCv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=akvxBzNGg7jDeoykg2ST3OpylLpsQxNNSX0ReAXujes=;
-	b=FYQ6biCvxdySKjzXgIZwyQsBaY28b+vOe5YL3TVg7Ow11vsPtg3ZmlcMV3lk5c
-	ta8JHicIVelQzwbDMHBRl+VA30KSUxEM6atk9FqIT6TLKxO+P+pI+DBtODh5tyWP
-	q6ufXdqNDP7pPaMUDErKQfBJbE5ZxJuM2ON/PCfSjezuU=
-Received: from [172.19.20.199] (unknown [])
-	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wDH_3griKhnXq5iAw--.62977S2;
-	Sun, 09 Feb 2025 18:49:16 +0800 (CST)
-Message-ID: <20a21d17-77d8-4120-8643-c575304c39f2@126.com>
-Date: Sun, 9 Feb 2025 18:49:15 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cljLsJTM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FB5EC4CEDD;
+	Sun,  9 Feb 2025 10:51:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739098293;
+	bh=gymlXchE1X2Mi5HturvFxODMkGlE+6Fknw2D00ypeLw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cljLsJTMFJ70nnAYdWOlI2nx0RjdQ3pzCPH+wuHrs3WRAVMaGAUasVRUloiaTyhIb
+	 BXxsQKARNs5eTvvnDxXD6bLDQt202LyauVWHOnXjhxoaXO89cH5PECKgcarAT7fYX+
+	 wcOE2AwauN0t4E9sWZVRiL39vIKCI7vwLOLyTJvM8YtiADS4k/jVtkZz2pYnF73dp5
+	 RLzK032K01GR6oAPsk42TOw/rHs4l6PhmWXWVFGlFkzefWkfgy+qfvuUbqRxsv7afU
+	 mnPBCMzXHpdq+MAQxkXTyzp4rWn4Qsu14ItFtdbTRdQAQSHTbd7p8+l37gp+ZRzG6C
+	 G79QpJg/VZjvw==
+Message-ID: <2942fbc2-55c5-4789-89d4-e4bf3158a34b@kernel.org>
+Date: Sun, 9 Feb 2025 11:51:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,162 +35,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/cma: add an API to enable/disable concurrent memory
- allocation for the CMA
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, david@redhat.com,
- baolin.wang@linux.alibaba.com, aisheng.dong@nxp.com, liuzixing@hygon.cn
-References: <1737717687-16744-1-git-send-email-yangge1116@126.com>
- <CAGsJ_4y2zjCzRUgxkx2GpspFBD9Yon=R3SLaGezk9drQz+ikrQ@mail.gmail.com>
- <28edc5df-eed5-45b8-ab6d-76e63ef635a9@126.com>
- <CAGsJ_4yC=950MCeLDc-8inT52zH6GSEGBBfk+A0dwWEDE5_CMg@mail.gmail.com>
-From: Ge Yang <yangge1116@126.com>
-In-Reply-To: <CAGsJ_4yC=950MCeLDc-8inT52zH6GSEGBBfk+A0dwWEDE5_CMg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDH_3griKhnXq5iAw--.62977S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3GFyftF4kJw1rJrykWrW5Awb_yoW7Gw4xpa
-	y8G3WYk3yrJrnrA3s2qw4093ZIq397GF4UWry7K3s7Zr98tFnFgr1UKw15urykArWkWF1I
-	vr4jq3ya9F15Z37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jbHUDUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiOh7uG2eoaOjRcAAAs-
+Subject: Re: [v2,2/2] dt-bindings: memory-controllers: Add MediaTek DRAM
+ controller interface
+To: Crystal Guo <crystal.guo@mediatek.com>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com
+References: <20250207014437.17920-1-crystal.guo@mediatek.com>
+ <20250207014437.17920-3-crystal.guo@mediatek.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250207014437.17920-3-crystal.guo@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 07/02/2025 02:42, Crystal Guo wrote:
+> A MediaTek DRAM controller interface to provide the current DDR data rate.
+> 
+Duplicated patch.
 
+You also ignored several comments so that's a NAK.
 
-在 2025/2/9 5:34, Barry Song 写道:
-> On Sat, Feb 8, 2025 at 9:50 PM Ge Yang <yangge1116@126.com> wrote:
->>
->>
->>
->> 在 2025/1/28 17:58, Barry Song 写道:
->>> On Sat, Jan 25, 2025 at 12:21 AM <yangge1116@126.com> wrote:
->>>>
->>>> From: yangge <yangge1116@126.com>
->>>>
->>>> Commit 60a60e32cf91 ("Revert "mm/cma.c: remove redundant cma_mutex lock"")
->>>> simply reverts to the original method of using the cma_mutex to ensure
->>>> that alloc_contig_range() runs sequentially. This change was made to avoid
->>>> concurrency allocation failures. However, it can negatively impact
->>>> performance when concurrent allocation of CMA memory is required.
->>>
->>> Do we have some data?
->> Yes, I will add it in the next version, thanks.
->>>
->>>>
->>>> To address this issue, we could introduce an API for concurrency settings,
->>>> allowing users to decide whether their CMA can perform concurrent memory
->>>> allocations or not.
->>>
->>> Who is the intended user of cma_set_concurrency?
->> We have some drivers that use cma_set_concurrency(), but they have not
->> yet been merged into the mainline. The cma_alloc_mem() function in the
->> mainline also supports concurrent allocation of CMA memory. By applying
->> this patch, we can also achieve significant performance improvements in
->> certain scenarios. I will provide performance data in the next version.
->> I also feel it is somewhat
->>> unsafe since cma->concurr_alloc is not protected by any locks.
->> Ok, thanks.
->>>
->>> Will a user setting cma->concurr_alloc = 1 encounter the original issue that
->>> commit 60a60e32cf91 was attempting to fix?
->>>
->> Yes, if a user encounters the issue described in commit 60a60e32cf91,
->> they will not be able to set cma->concurr_alloc to 1.
-> 
-> A user who hasn't encountered a problem yet doesn't mean they won't
-> encounter it; it most likely just means the testing time hasn't been long
-> enough.
-> 
-> Is it possible to implement a per-CMA lock or range lock that simultaneously
-> improves performance and prevents the original issue that commit
-> 60a60e32cf91 aimed to fix?
-> 
-Using per-CMA locks can improve performance and prevent the original 
-issue. I am currently preparing the patch. Thanks.
-> I strongly believe that cma->concurr_alloc is not the right approach. Let's
-> not waste our time on this kind of hack or workaround.  Instead, we should
-> find a proper fix that remains transparent to users.
-> 
->>>>
->>>> Fixes: 60a60e32cf91 ("Revert "mm/cma.c: remove redundant cma_mutex lock"")
->>>> Signed-off-by: yangge <yangge1116@126.com>
->>>> Cc: <stable@vger.kernel.org>
->>>> ---
->>>>    include/linux/cma.h |  2 ++
->>>>    mm/cma.c            | 22 ++++++++++++++++++++--
->>>>    mm/cma.h            |  1 +
->>>>    3 files changed, 23 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/include/linux/cma.h b/include/linux/cma.h
->>>> index d15b64f..2384624 100644
->>>> --- a/include/linux/cma.h
->>>> +++ b/include/linux/cma.h
->>>> @@ -53,6 +53,8 @@ extern int cma_for_each_area(int (*it)(struct cma *cma, void *data), void *data)
->>>>
->>>>    extern void cma_reserve_pages_on_error(struct cma *cma);
->>>>
->>>> +extern bool cma_set_concurrency(struct cma *cma, bool concurrency);
->>>> +
->>>>    #ifdef CONFIG_CMA
->>>>    struct folio *cma_alloc_folio(struct cma *cma, int order, gfp_t gfp);
->>>>    bool cma_free_folio(struct cma *cma, const struct folio *folio);
->>>> diff --git a/mm/cma.c b/mm/cma.c
->>>> index de5bc0c..49a7186 100644
->>>> --- a/mm/cma.c
->>>> +++ b/mm/cma.c
->>>> @@ -460,9 +460,17 @@ static struct page *__cma_alloc(struct cma *cma, unsigned long count,
->>>>                   spin_unlock_irq(&cma->lock);
->>>>
->>>>                   pfn = cma->base_pfn + (bitmap_no << cma->order_per_bit);
->>>> -               mutex_lock(&cma_mutex);
->>>> +
->>>> +               /*
->>>> +                * If the user sets the concurr_alloc of CMA to true, concurrent
->>>> +                * memory allocation is allowed. If the user sets it to false or
->>>> +                * does not set it, concurrent memory allocation is not allowed.
->>>> +                */
->>>> +               if (!cma->concurr_alloc)
->>>> +                       mutex_lock(&cma_mutex);
->>>>                   ret = alloc_contig_range(pfn, pfn + count, MIGRATE_CMA, gfp);
->>>> -               mutex_unlock(&cma_mutex);
->>>> +               if (!cma->concurr_alloc)
->>>> +                       mutex_unlock(&cma_mutex);
->>>>                   if (ret == 0) {
->>>>                           page = pfn_to_page(pfn);
->>>>                           break;
->>>> @@ -610,3 +618,13 @@ int cma_for_each_area(int (*it)(struct cma *cma, void *data), void *data)
->>>>
->>>>           return 0;
->>>>    }
->>>> +
->>>> +bool cma_set_concurrency(struct cma *cma, bool concurrency)
->>>> +{
->>>> +       if (!cma)
->>>> +               return false;
->>>> +
->>>> +       cma->concurr_alloc = concurrency;
->>>> +
->>>> +       return true;
->>>> +}
->>>> diff --git a/mm/cma.h b/mm/cma.h
->>>> index 8485ef8..30f489d 100644
->>>> --- a/mm/cma.h
->>>> +++ b/mm/cma.h
->>>> @@ -16,6 +16,7 @@ struct cma {
->>>>           unsigned long   *bitmap;
->>>>           unsigned int order_per_bit; /* Order of pages represented by one bit */
->>>>           spinlock_t      lock;
->>>> +       bool concurr_alloc;
->>>>    #ifdef CONFIG_CMA_DEBUGFS
->>>>           struct hlist_head mem_head;
->>>>           spinlock_t mem_head_lock;
->>>> --
->>>> 2.7.4
->>>>
->>>>
->>>
-> 
-> Thanks
-> Barry
+<form letter>
+This is a friendly reminder during the review process.
 
+It seems my or other reviewer's previous comments were not fully
+addressed. Maybe the feedback got lost between the quotes, maybe you
+just forgot to apply it. Please go back to the previous discussion and
+either implement all requested changes or keep discussing them.
+
+Thank you.
+</form letter>
+
+Best regards,
+Krzysztof
