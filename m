@@ -1,89 +1,127 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA9C148304;
-	Sun,  9 Feb 2025 13:47:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423AC143723
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 13:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739108826; cv=none; b=p1pmIXYGzO0GlY7696BLSuNnxxvIdpjcj3LqoFSvu1rX8JPn8r7dLH1Lma2iLqibBMR4nwJkBYcTxBQ+8du2YtBJzqVXPBEyhWVCqguSvfzgusTHfQ5q5rfF63MDqC6byxZQSdoT7+IWSzzSxft/jVTLH5aeCebjsf6x4ZuY0yY=
+	t=1739109246; cv=none; b=PtX/V6udoyo8l3eepYTO3kp6kgEID5yXN7Ae5oEbujVXnGM074BXFVGn2aKDg7YNRk0/L+gP+lnsPcVOKekPuMHB8TBRUtSoufBkpFPzKN8X15VNJgSwN3jLFv36QMCxfZDPtgiAEQy72wChi+bih3rOd4l4/1DG+XshdyJoGIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739108826; c=relaxed/simple;
-	bh=YAOg0EYBmWCl31FnuIYnGx7DNoEiibyFD2rcUuGt5Xg=;
+	s=arc-20240116; t=1739109246; c=relaxed/simple;
+	bh=teKGPj586TuQGXQSHU7KVCjMSBPyuJFyC/BbjoOcrXk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d7DfRSTj5tYqUtqb7X7xNzO+BNJFoZndTdxz2pGvktGE0QV9GAeqr18Xw4VBD/shOt6XYpil1roW6ppRmXc9K3Dl/bSooeuPxvwA2A/cRksef1C4uPB5XWc1CQPw+66Md8fFx0AaFLhqOVJJiJ1HIgU8tVlXYLnJ8S0j6pNjp+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [180.172.76.141])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id BC6BA3430A3;
-	Sun, 09 Feb 2025 13:47:03 +0000 (UTC)
-Date: Sun, 9 Feb 2025 13:46:52 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Inochi Amaoto <inochiama@gmail.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
-	Jisheng Zhang <jszhang@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH 2/4] reset: simple: add support for Sophgo CV1800B
-Message-ID: <20250209134652-GYA11750@gentoo>
-References: <20250209122936.2338821-1-inochiama@gmail.com>
- <20250209122936.2338821-3-inochiama@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=AqbN9j+597mGMKgfdKxQYRphFukV1uHKRTb1B3w7GMMluCCLln6BeE3YsKsWSSCxNUPqDtfzMO/ciUW5DmS/nfZeOoAs51Ddhtp/qILYBH52c4VlKg4II9Ht+zR+HLE8KDDzGg+JVMCL3EuewdE5rIcNx0qj83/0tlFG5aj4y8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VyDw41iR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VyDw41iR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC288C4CEDD;
+	Sun,  9 Feb 2025 13:54:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739109245;
+	bh=teKGPj586TuQGXQSHU7KVCjMSBPyuJFyC/BbjoOcrXk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VyDw41iRPZAsEm1WHz1XCBtbskTEUkwv9gdoq/3byK/OJ4eRCpkzDRoE4zSqZvUEx
+	 0J2RUx8xBVDLd2N/Jvn9LUfFkHNXubExpix+nyeaGx3IIqGYWbj6VcZ1gyopPDUD6v
+	 ABUmj3tmFVBF4qBPz9yVC3s1NHxX3QvkkdEiYVN3yip7AsPBFRIOPj8vPfDyIlAqV7
+	 o5mj2AB8zmcfRUUny2BQAxW/dOTYNQpOBMvFZPoa3gB6YMN8cWvGZx0OZXDlamJl76
+	 b5qNXpTbb8z506ALw47wMiwu4AfpBmK59WXNIVWOx/nNsCCJ64gSqx8aIxz6KyIr2o
+	 OUDUxeQTWySrg==
+Date: Sun, 9 Feb 2025 15:53:54 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Stephen Eta Zhou <stephen.eta.zhou@outlook.com>
+Cc: "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: =?utf-8?B?5Zue5aSNOiBbUEFUQ0g=?= =?utf-8?Q?=5D?= mm: optimize
+ memblock_add_range() for improved performance
+Message-ID: <Z6izcu5M3LRM3GzC@kernel.org>
+References: <BYAPR12MB32059CFEB36A5FC7D859B69FD5F72@BYAPR12MB3205.namprd12.prod.outlook.com>
+ <Z6YfqcOx5FACtvae@kernel.org>
+ <BYAPR12MB32056738A6225C6B5D61A01AD5F12@BYAPR12MB3205.namprd12.prod.outlook.com>
+ <BYAPR12MB3205B550D78130A3858535C0D5F12@BYAPR12MB3205.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250209122936.2338821-3-inochiama@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <BYAPR12MB3205B550D78130A3858535C0D5F12@BYAPR12MB3205.namprd12.prod.outlook.com>
 
-Hi
+Hi Stephen,
 
-On 20:29 Sun 09 Feb     , Inochi Amaoto wrote:
-> Reuse reset-simple driver for the Sophgo CV1800B reset generator.
+Please don't top post on Linux kernel mailing list.
+
+On Fri, Feb 07, 2025 at 04:03:31PM +0000, Stephen Eta Zhou wrote:
+> Hi Mike,
 > 
-> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> ---
->  drivers/reset/reset-simple.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
-> index 276067839830..79e94ecfe4f5 100644
-> --- a/drivers/reset/reset-simple.c
-> +++ b/drivers/reset/reset-simple.c
-> @@ -151,6 +151,8 @@ static const struct of_device_id reset_simple_dt_ids[] = {
->  	{ .compatible = "snps,dw-high-reset" },
->  	{ .compatible = "snps,dw-low-reset",
->  		.data = &reset_simple_active_low },
-> +	{ .compatible = "sophgo,cv1800b-reset",
-> +		.data = &reset_simple_active_low },
-I think this isn't really a problem, but..
+> Given the concerns raised, I would greatly appreciate your guidance on
+> whether you think it's worthwhile for me to continue with this approach.
+> Should I proceed with further refinements and testing, or would you
+> recommend a different direction for optimization? Your input will be
+> invaluable in ensuring this patch meets both performance and stability
+> goals.
 
-quite a lot SoCs use the "simple active low" IP,
-can we introduce a generic compatible? so can set as fallback..
-intead of growing this compatible data each time for new SoC
+I doubt any optimization for memblock_add_range() will really improve boot
+time and even produce a measurable speed up.
 
->  	{ .compatible = "sophgo,sg2042-reset",
->  		.data = &reset_simple_active_low },
->  	{ /* sentinel */ },
-> -- 
-> 2.48.1
+With all the fragility and potential of breakage, I don't think it's
+worthwhile to attempt optimizations there.
+ 
+> Best regards,  
+> Stephen
+> ________________________________________
+> 发件人: Mike Rapoport <rppt@kernel.org>
+> 发送时间: 2025年2月7日 22:58
+> 收件人: Stephen Eta Zhou <stephen.eta.zhou@outlook.com>
+> 抄送: akpm@linux-foundation.org <akpm@linux-foundation.org>; linux-mm@kvack.org <linux-mm@kvack.org>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>
+> 主题: Re: [PATCH] mm: optimize memblock_add_range() for improved performance
+>  
+> Hi Stephen,
 > 
+> On Wed, Feb 05, 2025 at 05:55:50AM +0000, Stephen Eta Zhou wrote:
+> > Hi Mike Rapoport、Andrew Morton
+> 
+> > I have recently been researching the mm subsystem of the Linux kernel,
+> > and I came across the memblock_add_range function, which piqued my
+> > interest. I found the implementation approach quite interesting, so I
+> > analyzed it and identified some areas for optimization. Starting with
+> > this part of the code:
+> >
+> > if (type->cnt * 2 + 1 <= type->max)
+> >       insert = true;
+> > The idea here is good, but it has a certain flaw. The condition is rather
+> > restrictive, and it cannot be executed initially. Moreover, it is only
+> > valid when the remaining space is (2/1) + 1. If there is enough memory,
+> > but it does not satisfy (2/1) + 1, the insertion operation still needs to
+> > be performed twice.
+> 
+> The code in memblock_add_range() is very fragile, and many attempts to
+> remove the second pass that looked correct at the first glance failed for
+> some corner case.
+> 
+> Unfortunately, it's impossible to capture all possible memory
+> configurations and reservations in the memblock test suite, so even it it
+> passes, there is a chance the kernel will fail to boot on an actual HW.
+>  
+> > - Before the patch:
+> >   - Average: 1.22%
+> >   - Max: 1.63%, Min: 0.93%
+> >
+> > - After the patch:
+> >   - Average: 0.69%
+> >   - Max: 0.94%, Min: 0.50%
+> >
+> 
+> These numbers do not represent what's actually interesting: the boot time
+> speedup.
+> 
+> --
+> Sincerely yours,
+> Mike.
 
 -- 
-Yixun Lan (dlan)
-Gentoo Linux Developer
-GPG Key ID AABEFD55
+Sincerely yours,
+Mike.
