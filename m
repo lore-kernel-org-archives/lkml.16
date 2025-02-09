@@ -1,82 +1,48 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203F21DFE29;
-	Sun,  9 Feb 2025 22:02:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B0413213E
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 22:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739138548; cv=none; b=drnFwSHMgIrcaeV+M+WsJCGsOjfuBnBMvIHpF3G0TeacJPfTe3yuuvXKs3CuuGHQRidXoZYvgPTAhCQd93Dtgz32AeAwKgzFOZKt2IUoIMJjq7B2WMRgDbgqA8bxVwyCDxLLQjDjLl56twG4pi3fqSNjmGXiTyclcTvppbwbr3I=
+	t=1739138714; cv=none; b=l+bqvnZJNvXUzlESpOw6xSPkqIGgFURdJqKQUh7HkyaaT0vMF1CfByCVGye7w7mB0wxhArPeO3YUMf5T8cAI7BqY5I3M9OqQCNJgwlKcXlpu9aDu2uq5SbAisi9KyvGy/qbDOLsACNTsyrq2EWDOrdrIjEDBTy8YMkZIQLqDO3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739138548; c=relaxed/simple;
-	bh=n19fHMY0fBzL+SD4x4buAM62MKKVSOyuM/FO69KBres=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CSBSrE6wsnUE/Jj56kyfC4npnU1H2JchoV85SJpu7Mmisg5sdlMO9BKUkrcYUd9qBZAsm+b3APnr0ZDMdzWGMMrCsSpjeo7lKHNSaulI6Yn5xbRKb4CS6Lb3chfiWuxY+eknQ5odPIHAzoIwI5gxxPalOHVjroiuoakk+7WDjVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IlUULZz7; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739138714; c=relaxed/simple;
+	bh=RUhEa3Q2GEDJMqC2kd5kkN1YkKGRWYlDQW1Os4Tat+s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=POfZ8ja2LDmUrwyHMEwdeyu0n56ufvcKuEAmYL0Ow3lIRvR6TKH2S4NR5vKLoQE0EhRFwklCek0gwBjqBR//tX0ddi/NK8u1XBlxqIF5l5wz7cwylnuDUfVidkC5kErHy51WGG4Bv29FS5xlwthClf6ZO1ZLFRRrxpL4CfSmupQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DCGsPujF; arc=none smtp.client-ip=95.215.58.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IlUULZz7"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-38dc9eba8a1so1986614f8f.1;
-        Sun, 09 Feb 2025 14:02:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739138545; x=1739743345; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZrCBrsBGQ+tCvXOABWtiT76sFUcDv+I/VrUzIQbDTzU=;
-        b=IlUULZz7/mEyEXkkGWrFT54MeasS2ZNxzroeKAy1xnMSJLI9PJ18hh6y0Mj8kAriOh
-         dtf6KlZe8rnVZGAvOEXygvjXGaC8m2rmR91+JPERrIbvkRiybFXxY09Gc4CWP5U2+0zb
-         k4/BRdzLzTJ+eVJm1NQFZ+I+0u7Aqs2XvMz5s7Phd0pL5Kc/txuqy6yA5Hyt6f6rSjNH
-         l6I3wUJFKuINaEZKzhJi058udCe7aQTQhfIWPQbe4CatpGzbsc8dl5qo5yNgKocsWfmS
-         ZGrlBt1n5kLEhmtnSvhqoPtUGVofoHYB0E8fNa8ZHlt96CX69siPbhM+fiE3lgQR04j0
-         FftQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739138545; x=1739743345;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZrCBrsBGQ+tCvXOABWtiT76sFUcDv+I/VrUzIQbDTzU=;
-        b=FzELA7shXKb/UdGH5fSa7Bey4sPxulHZNX8+XHsvFrrolB3s2OWFMG7GFmOyutiVNf
-         v6xjqPKl7AzBqoQI9wLmONHH8gNSqmnv6eCpdhe9MqWlHDeO3it50qye+TuJZ+h/uP35
-         us8BXrJvs+tSQvf49kyifRQvwCqPPfiiPWqghOBIwDp62l2s0CQuAfuAj2boW3ycrIkh
-         6Ht5a4uphmSOFwCOTgWoRMWEmtWvFlyYqcvHOxO9IvPAAESGVyBFMSHvOJvQPMst4dR4
-         1Zjfq+tCVC9f4jER7YRtgFLJABQVrOSfsysJdNDbTqv5pP7+kGPEVjoRnsYtgoPtADAC
-         giHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU7PFAlWB88x+xAi4mZSZVhh0sSFFCxYFLoyi5sUy+VOTccZASpaKebDmFkxvH0lYYYOyLpxhpJu3dSFiVg@vger.kernel.org, AJvYcCWSZtGkL/fc0+ZRp+bF89+WQyO3Q9KhpB8tw97CTNFfIeMezH9gHECoEE2IjZF2wXjsp/lfm9mpUaI5@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZAI/nhuuoxS8ieJgeU8L4Xbo5nCJYa7YgNV4rQw0zsgAnh9p/
-	Hdx8PKN7hzmAQbfiyq5+V3zdCdE903ahJ0A82QIj/Pq7zuLU2sVm
-X-Gm-Gg: ASbGncvhwy6BhMd3o2L4iqZ2d2PUIukuGJA/rqSaxXlDnzUl4a6FZ0O2YTiQaJGGjrM
-	g+YwnUvr/+hACSoUsgOhvkutunupjN9zcWuFCBWzRkWw+MhjBWQDcyqF65b3ww+kpfb7sdtplvF
-	7a1MwFHA/ncrQufIiztT5rafoesRgshytyUG+0kefBPxew92ffFd6Eh6uGqBEwJn+Bwjm7xzGi8
-	sfNa5uNBh8SwvW648RJ0r3WZCzgL1F3xOUuldH8jwmZoLYwPl3AW7Brz1SxK0c7ux6Bef1XMOdJ
-	+oqJFrp9GmpVvW1c4jsU3MRbG1Nkdlji4qxumo26wu3wBH3t7CSBQtA1usOFwwWwJALLXg3N
-X-Google-Smtp-Source: AGHT+IGLh9i/kI8Ha8+Op3DoUswKsdryEtT21pr/+6nTQeWXoWEW/G6p3UUlYi/NxO5jEdod/Gguuw==
-X-Received: by 2002:a05:6000:2ad:b0:38d:e02d:5f4c with SMTP id ffacd0b85a97d-38de02d60b1mr208725f8f.10.1739138545239;
-        Sun, 09 Feb 2025 14:02:25 -0800 (PST)
-Received: from snowdrop.snailnet.com (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd9a6153dsm2919003f8f.60.2025.02.09.14.02.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 14:02:24 -0800 (PST)
-From: David Laight <david.laight.linux@gmail.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Cc: David Laight <david.laight.linux@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@redhat.com>,
-	Andi Kleen <ak@linux.intel.com>,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DCGsPujF"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739138707;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+43qqLyyGsm6JXFPFr567gVG3Q32Z3aoVErLYEfhwOw=;
+	b=DCGsPujF+Nxju+C7R6yOP8bic+MtAynFt3bIRJ5mojlqZCvop0bO5oKmvIw+qrpKFzO6xp
+	TCCzO8cB/TzMhiqD3bYe/fcZXz93n7qwC1XzE7duX9b6ppwq5xXP7o8ARw9eSBDN4SOjLp
+	6cK3nv6sAh6I7mJTBYZGgMepPL4tLog=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
 	Dan Williams <dan.j.williams@intel.com>,
-	linux-arch@vger.kernel.org,
-	Kees Cook <keescook@chromium.org>,
-	kernel-hardening@lists.openwall.com
-Subject: [PATCH v2 1/1] x86: In x86-64 barrier_nospec can always be lfence
-Date: Sun,  9 Feb 2025 22:02:22 +0000
-Message-Id: <20250209220222.212835-1-david.laight.linux@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Robert Richter <rrichter@amd.com>,
+	Bruno Faccini <bfaccini@nvidia.com>,
+	Haibo Xu <haibo1.xu@intel.com>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ACPI: NUMA: Use str_enabled_disabled() helper function
+Date: Sun,  9 Feb 2025 23:04:32 +0100
+Message-ID: <20250209220435.76178-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,50 +50,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-When barrier_nospec() was added the defintion was copied from the
-one used to synchronise rdtsc.
+Remove hard-coded strings by using the str_enabled_disabled() helper
+function.
 
-On very old cpu rdtsc was a synchronising instruction.
-When this change X86_FEATURE_LFENCE_RDTSC (and a MFENCE copy) were
-(probably) added so lfence/mfence could be added to synchronise rdtsc.
-For old cpu (I think the code checks XMM2) no barrier was added.
-
-I'm not sure why that code was used for barrier_nospec().
-Or why rdtsc ended up being synchronised by barrier_nospec().
-lfence is the right instruction (well as good as you get).
-
-In any case all x86-64 cpu support XMM2 and lfence so there is
-to point using alternative().
-Separate the 32bit and 64bit definitions but leave the barrier
-missing on old 32bit cpu.
-
-Signed-off-by: David Laight <david.laight.linux@gmail.com>
-
-v2: use a explicit lfence rather than __rmb().
-    Update commit message text w.r.t rdtsc.
-Signed-off-by: David Laight <david.laight.linux@gmail.com>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
- arch/x86/include/asm/barrier.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/acpi/numa/srat.c | 22 ++++++++--------------
+ 1 file changed, 8 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/include/asm/barrier.h b/arch/x86/include/asm/barrier.h
-index 7b44b3c4cce1..b9af75624cf5 100644
---- a/arch/x86/include/asm/barrier.h
-+++ b/arch/x86/include/asm/barrier.h
-@@ -45,7 +45,11 @@
- 	__mask; })
+diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+index 00ac0d7bb8c9..ac7045f3b85b 100644
+--- a/drivers/acpi/numa/srat.c
++++ b/drivers/acpi/numa/srat.c
+@@ -18,6 +18,7 @@
+ #include <linux/nodemask.h>
+ #include <linux/topology.h>
+ #include <linux/numa_memblks.h>
++#include <linux/string_choices.h>
  
- /* Prevent speculative execution past this barrier. */
--#define barrier_nospec() alternative("", "lfence", X86_FEATURE_LFENCE_RDTSC)
-+#ifdef CONFIG_X86_32
-+#define barrier_nospec() alternative("", "lfence", X86_FEATURE_XMM2)
-+#else
-+#define barrier_nospec() asm volatile("lfence":::"memory")
-+#endif
+ static nodemask_t nodes_found_map = NODE_MASK_NONE;
  
- #define __dma_rmb()	barrier()
- #define __dma_wmb()	barrier()
+@@ -187,8 +188,7 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
+ 			pr_debug("SRAT Processor (id[0x%02x] eid[0x%02x]) in proximity domain %d %s\n",
+ 				 p->apic_id, p->local_sapic_eid,
+ 				 p->proximity_domain_lo,
+-				 (p->flags & ACPI_SRAT_CPU_ENABLED) ?
+-				 "enabled" : "disabled");
++				 str_enabled_disabled(p->flags & ACPI_SRAT_CPU_ENABLED));
+ 		}
+ 		break;
+ 
+@@ -200,8 +200,7 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
+ 				 (unsigned long long)p->base_address,
+ 				 (unsigned long long)p->length,
+ 				 p->proximity_domain,
+-				 (p->flags & ACPI_SRAT_MEM_ENABLED) ?
+-				 "enabled" : "disabled",
++				 str_enabled_disabled(p->flags & ACPI_SRAT_MEM_ENABLED),
+ 				 (p->flags & ACPI_SRAT_MEM_HOT_PLUGGABLE) ?
+ 				 " hot-pluggable" : "",
+ 				 (p->flags & ACPI_SRAT_MEM_NON_VOLATILE) ?
+@@ -216,8 +215,7 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
+ 			pr_debug("SRAT Processor (x2apicid[0x%08x]) in proximity domain %d %s\n",
+ 				 p->apic_id,
+ 				 p->proximity_domain,
+-				 (p->flags & ACPI_SRAT_CPU_ENABLED) ?
+-				 "enabled" : "disabled");
++				 str_enabled_disabled(p->flags & ACPI_SRAT_CPU_ENABLED));
+ 		}
+ 		break;
+ 
+@@ -228,8 +226,7 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
+ 			pr_debug("SRAT Processor (acpi id[0x%04x]) in proximity domain %d %s\n",
+ 				 p->acpi_processor_uid,
+ 				 p->proximity_domain,
+-				 (p->flags & ACPI_SRAT_GICC_ENABLED) ?
+-				 "enabled" : "disabled");
++				 str_enabled_disabled(p->flags & ACPI_SRAT_GICC_ENABLED));
+ 		}
+ 		break;
+ 
+@@ -247,8 +244,7 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
+ 				 *(u16 *)(&p->device_handle[0]),
+ 				 *(u16 *)(&p->device_handle[2]),
+ 				 p->proximity_domain,
+-				 (p->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED) ?
+-				"enabled" : "disabled");
++				 str_enabled_disabled(p->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED));
+ 		} else {
+ 			/*
+ 			 * In this case we can rely on the device having a
+@@ -258,8 +254,7 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
+ 				(char *)(&p->device_handle[0]),
+ 				(char *)(&p->device_handle[8]),
+ 				p->proximity_domain,
+-				(p->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED) ?
+-				"enabled" : "disabled");
++				str_enabled_disabled(p->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED));
+ 		}
+ 	}
+ 	break;
+@@ -271,8 +266,7 @@ acpi_table_print_srat_entry(struct acpi_subtable_header *header)
+ 			pr_debug("SRAT Processor (acpi id[0x%04x]) in proximity domain %d %s\n",
+ 				 p->acpi_processor_uid,
+ 				 p->proximity_domain,
+-				 (p->flags & ACPI_SRAT_RINTC_ENABLED) ?
+-				 "enabled" : "disabled");
++				 str_enabled_disabled(p->flags & ACPI_SRAT_RINTC_ENABLED));
+ 		}
+ 		break;
+ 
 -- 
-2.39.5
+2.48.1
 
