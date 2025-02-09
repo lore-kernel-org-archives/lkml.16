@@ -1,93 +1,79 @@
-Received: from www637.your-server.de (www637.your-server.de [168.119.26.117])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D5E230D2A;
-	Sun,  9 Feb 2025 21:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.26.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF342236E0
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 21:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739134902; cv=none; b=h0tJMeNmA7HwpFfKwgnve16cP4dMUVLrJjf2wxqw6avzL1gI184SQJ3UVSXOO8BBULMFSzy1Vj9qqKYF7XDip0w9y0JW6XM06k1S+GQTOzarAmTK58mHVQr6UvgY+vdV6FrMt6/zszdefk3aBzLHNrj1SzBtemMfA116RkIOltY=
+	t=1739135077; cv=none; b=WTcg7+eKU+PvOzRoR5ljPxyXaJZ+Ru83gi2Rya9uS1dHqzOv5Gh5LgQ7FQaEzpeQW884iKJxTDfENU3eUVrX0engR9NYMyRc3Yw5IV10UiUxx64TZmYmnnDBPCgrdxhvfVtcxOSXdyBkQqN6oGhcWHYiwwi3vC0jThUE9H3S1Xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739134902; c=relaxed/simple;
-	bh=YW8BrEcFZGZunDWeCJaDA2yHjRVW0c0c5+iUiSNODZk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hK2NLsZflJfOncYtW8ldsbrIn1Z2jhpJFrZIGNhJOMr5iFX4oigWc0g1N87kCRa3tlwnOjMx3JAw/Nxwd4h9bylTmMOa3agQfzNHKNB6fekYcmzcvXEwECB2+DQVJ9irblNMuAgSsUYiQlp/PV0MIjQv1DPj9YpGVjFMYhXSS8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu; spf=pass smtp.mailfrom=apitzsch.eu; dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b=sRgHRuqD; arc=none smtp.client-ip=168.119.26.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apitzsch.eu
+	s=arc-20240116; t=1739135077; c=relaxed/simple;
+	bh=xtn9X8L9b8Xb18z4TysEAIfQI+RE3To0yIZLw3xlGWE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HJbaziMe8YgTNjcnoE8HQcQw/qdzQQqjdqjQYRujQdCv6FWvqwNCP2ZW6o4WAQXNOhj0I43dwLIio3RNJ5Fs9g/DmOfRzthbkvDiVrRClM5jbO/XV81DPInEnXGzDsjxjw5BtQh2FZhh129obREbnUERRCs5Avv/B9y5ovmndCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jtvGaH3j; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b="sRgHRuqD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=apitzsch.eu
-	; s=default2410; h=MIME-Version:Content-Transfer-Encoding:Content-Type:
-	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=YW8BrEcFZGZunDWeCJaDA2yHjRVW0c0c5+iUiSNODZk=; b=sRgHRuqDLv6ldG+iTvBwJRFpSc
-	nRtD6OKenKdbbsgRTGzCt5hDWmJAfawUpnm+ldNj03zpFe93ylrNLqiXiQI0S4yeGoLeqF5nd2us2
-	/qqikdcqOBcjw6/FJTLlQCJGS/a8yvCYlKTp3GvEESPMPl1LJMAnz40BjzYufOZ7y6ohxEerQiO4g
-	LcHRLwtil4ijRaWtIluQc7ddSOei2xbV5qcWaS5LW0KS4LT5cTgS3O83sDS2WhUaO1SpG1TOj0r2Y
-	iN1+X2taWovxIJfJRE9BS9Al3Fcs632fTvPMI0TgApirYXfXPdcYotNZd4gpreENlfif2yE20fTa5
-	x6TcEmdA==;
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-	by www637.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <git@apitzsch.eu>)
-	id 1thEQj-000PpG-13;
-	Sun, 09 Feb 2025 22:01:29 +0100
-Received: from [92.206.120.88] (helo=framework.lan)
-	by sslproxy05.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <git@apitzsch.eu>)
-	id 1thEQj-000MLj-09;
-	Sun, 09 Feb 2025 22:01:29 +0100
-Message-ID: <3746957a5fd44c125152bc25033dee7d4f189663.camel@apitzsch.eu>
-Subject: Re: [PATCH v2] media: dw9719: Add of_match table
-From: =?ISO-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Daniel Scally <djrscally@gmail.com>, Sakari Ailus	
- <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
- 	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Sun, 09 Feb 2025 22:01:27 +0100
-In-Reply-To: <Z6i5puujYD5sJ64n@valkosipuli.retiisi.eu>
-References: <20250208-dw9761dts-v2-1-c038f8a2fb94@apitzsch.eu>
-	 <Z6i5puujYD5sJ64n@valkosipuli.retiisi.eu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jtvGaH3j"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739135072;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=iB21UBxBOf2HmOoZFVaLygQOGx5XhPpZsQkqJBOlnkg=;
+	b=jtvGaH3j0GLir1ybiLxDQl6qINnr7M/fsKYJw2E0yqsrj4/fKn3E8+pFQIeTyJpxkCvFmE
+	rPF97HGL3A8m8IjvSY5mL0FvLGoUpXMEz3YwKxDaK9HaWbS4A1HONLJdH2NUKjO1CpcW9a
+	eFAxoNGYZ+65DOftah/+ziRbK4a204I=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH] x86/apic: Use str_disabled_enabled() helper in print_ipi_mode()
+Date: Sun,  9 Feb 2025 22:03:32 +0100
+Message-ID: <20250209210333.5666-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Authenticated-Sender: andre@apitzsch.eu
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27544/Sun Feb  9 10:31:33 2025)
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi,
+Remove hard-coded strings by using the str_disabled_enabled() helper.
 
-Am Sonntag, dem 09.02.2025 um 14:20 +0000 schrieb Sakari Ailus:
-> Hi Andr=C3=A9,
->=20
-> On Sat, Feb 08, 2025 at 12:13:49PM +0100, Andr=C3=A9 Apitzsch via B4 Rela=
-y
-> wrote:
-> > From: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
-> >=20
-> > Add of_match table for "dongwoon,dw9719" and "dongwoon,dw9761"
-> > compatible string. This fixes automatic driver loading when using a
-> > device-tree, and if built as a module like major linux
-> > distributions do.
-> >=20
-> > Signed-off-by: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
->=20
-> How about the DT bindings?
->=20
-> The configuration should be documented, too. See e.g. for an example
-> Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml .
->=20
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ arch/x86/kernel/apic/ipi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-I was hoping, I could add it, when using the binding in a device tree.
-I'll prepare a new version that also has a DT bindings patch.
+diff --git a/arch/x86/kernel/apic/ipi.c b/arch/x86/kernel/apic/ipi.c
+index 5da693d633b7..942168da7195 100644
+--- a/arch/x86/kernel/apic/ipi.c
++++ b/arch/x86/kernel/apic/ipi.c
+@@ -3,6 +3,7 @@
+ #include <linux/cpumask.h>
+ #include <linux/delay.h>
+ #include <linux/smp.h>
++#include <linux/string_choices.h>
+ 
+ #include <asm/io_apic.h>
+ 
+@@ -23,7 +24,7 @@ __setup("no_ipi_broadcast=", apic_ipi_shorthand);
+ static int __init print_ipi_mode(void)
+ {
+ 	pr_info("IPI shorthand broadcast: %s\n",
+-		apic_ipi_shorthand_off ? "disabled" : "enabled");
++		str_disabled_enabled(apic_ipi_shorthand_off));
+ 	return 0;
+ }
+ late_initcall(print_ipi_mode);
+-- 
+2.48.1
 
-Regards,
-Andr=C3=A9
