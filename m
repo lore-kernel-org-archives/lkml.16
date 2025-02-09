@@ -1,122 +1,223 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from baldur.buserror.net (baldur.buserror.net [165.227.176.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6678D49659;
-	Sun,  9 Feb 2025 21:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB81A1DFE16;
+	Sun,  9 Feb 2025 21:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=165.227.176.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739135892; cv=none; b=ts126i7pJMYfoUojvcfU9Bt9d5efnErBCa6Rk9u8MCCdWNyKFxQfv2Z3BmUCSoUhIzbXSE0TZM3nsg64wpUubSm0t+IiGJut2X5IK2ul9YcwAHcy4sE/zYotUMHHa+QINyX/hwVcChYnUoMmMMc//CbDuQ3I2V9WzWkbNYmZRkM=
+	t=1739135911; cv=none; b=MNwEr+nn9+4g2L8bz7nAjFGVL4iE6HwuIVR9WpzukCjwi6cbGV/3iT35XX5B0uS0cUzQAeBKbSBbmgFFJj+MwhQ8hsMpK2/iWRlfKz6eYqoyVBiSM4d4bP5E62whuB2A6FG2RzF/fItzo/GZQ6NJgEuoJ/7te4eTAfFEDTDFl5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739135892; c=relaxed/simple;
-	bh=bNKBfWNRKebQScua+Jos/7YyeDSQyrV7+cSkWBGdgwI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iWIFDfVg5gGO3QTO5PJKCz0RXgbxg0vMq/EjkLCdDlaNnK8qrTYTuTT8WEH/yORts6rLYzWP/t7DfVsTnPkivagrPYDH60shg4JakDKS8mtkw/51HFZ/OhlYAic006NixCFcE8A79V+9D2QSrIQriPlZcxyENzXEoJD5HwwSNLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KcY7fDX7; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739135911; c=relaxed/simple;
+	bh=Kg6oaiN5VgUed118o3orQZEWOHSb84YE2ygFB+H2ORo=;
+	h=Date:From:To:Cc:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:Subject; b=dU7dlYWvVjs2yHmPCYz9K7BAbCKotz8kkMlb5ky3IEdRrGHKMWyFrcYC34CfyFIVchSjoMQpv/9SWRnNwdnEc0VzsOi6b+Y4eadHUZZlGOkAGP5BvMSa20l/j1F0YYdU++oinV5IewEXtrT85cACLK8fqPKaBEvOIc4awoS/0+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=buserror.net; spf=pass smtp.mailfrom=buserror.net; dkim=pass (2048-bit key) header.d=buserror.net header.i=@buserror.net header.b=0UnPtkDc; arc=none smtp.client-ip=165.227.176.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=buserror.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buserror.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KcY7fDX7"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-38dc660b56cso2654233f8f.0;
-        Sun, 09 Feb 2025 13:18:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739135888; x=1739740688; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=saaUSOCD8VtQU0yd34D1cSRrbq4D1M8lc/5MSCCFPes=;
-        b=KcY7fDX71RjN3fQNZog/FmHvYuKt8Rqz8xMYueMbuw83uJg53nYiw54v18BtiTSbAC
-         x31gdTCJpCoXUs6f8xCelFJusuiPzWymGnexV4VNwm5SWht+C6yxRmQu5HX9e7Glhc7l
-         eMwyKvnYEovAaznTZdCAvgbBptfyr+P0c1WdmfhB2zZxe7eZKsu6urjVhDkiKErZB9Ci
-         Q0SIOzM5e1oTwMkJeJiJ9kPYO2g3GqPQkb57ZWblFHGId6k4BKqdB/x7ZVd+c6oLrp8Y
-         NNZCHQ4LXd4vT5F0fU2KT3zQm56MD/co1dNMcfX5lj/rKz3Q8G2FNXYouRhIIn5LSRcP
-         fHcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739135888; x=1739740688;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=saaUSOCD8VtQU0yd34D1cSRrbq4D1M8lc/5MSCCFPes=;
-        b=RV5CrRHlyY/JA1FFhv2BrxPZDw76Boeqr5P0+XTEeDAHYpTeGz8iqZpDlrBgMX3Dzo
-         hc0J1xlLo1wAg/nNQ8/6qvZOl276OrSQ7jpNAOB66gIW4Ew+7+Qiw3N9XiFh/eTUHX8J
-         TuS0EJS+TdGZWTkVzBF0BDPNkZ7ldqgjiwUqVX1jm3ON4txUU7za3GZa63b6UJqWx2Da
-         r+YkcRfiR+qocntkt17WxyCOcBJiJcJh7HmwW1SMADIpdq5T0hYRZ6x7r4+i2n0L3KAB
-         EkHJlACPaR/obKqvH1SysoYmb3NPJ+GEsakc9mlvVZ8Jd6rmmw5Oa62HNUuJ5obQgTJA
-         6KDg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZabC6xZXm9DHnjXCyquXx5l5BGSBOqAWNPIb6hxHxfQDo+va/rYLbORjkSekCjxzgMGcM5ojpr6jIVlE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyw8S4whRk60QDOkQiCo89Wd4B+Qyyg48Gnlna3J7sLjR9tXW8G
-	GCK8z3fwIEak2Km05WK/0NfAxTwhhaBYEPOLt9W2oreEV8Sm3RStUitS0w==
-X-Gm-Gg: ASbGncvrXtWR1fSZBwbONrjUscaU1iUC5Hh83E9MxT+Dh2m8RTAR7YdGyKX6tYvGC1q
-	n4YBwcpCw6PRbPFuo4/+Ft5iQTzY5XBHQCndfNskxOV0mQk6SjCCe0yCY6cyF3sIfeTf4YDoPCQ
-	Q6oWySd9A3Ysj0lzvfO/uzF8k9KmS47onO987ZkoFQAgR/GPfiq7Wnz0EPyZarLXTlGvOd+Vhal
-	mAYgYE3Yk1/ID7P9mCsKXbJVwBTuD0lthvNllLaQSPQZZ94xrP/ba4xDhmGMfoAoDooBy7JLuRl
-	exJhJaov+gpzkMKfzfy4DCnaupQVTPYd1lePAWIU/Og8if5l9xP4HQ==
-X-Google-Smtp-Source: AGHT+IFueWBoevUvxZNF+yIvoEj1Zp72nS6QGi9WB0jNAxF2Fm+OCUS3HsJE7nBo4Bp4i/L1TAZzrQ==
-X-Received: by 2002:a05:6000:1448:b0:38b:ec34:2d62 with SMTP id ffacd0b85a97d-38dc8dddd1fmr8853062f8f.24.1739135888359;
-        Sun, 09 Feb 2025 13:18:08 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc6b89ef5sm8692402f8f.31.2025.02.09.13.18.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 13:18:07 -0800 (PST)
-Date: Sun, 9 Feb 2025 21:18:05 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Alexander
- Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan
- Kara <jack@suse.cz>, Arnd Bergmann <arnd@arndb.de>, Kees Cook
- <kees@kernel.org>
-Subject: Re: [PATCH 1/2] uaccess: Simplify code pattern for masked user
- copies
-Message-ID: <20250209211805.5fc2e9e4@pumpkin>
-In-Reply-To: <CAHk-=wisZo7+-xmC_o8GQJ-G0qFp4u29t_FkjgPvgq7FXaTyDg@mail.gmail.com>
-References: <20250209105600.3388-1-david.laight.linux@gmail.com>
-	<20250209105600.3388-2-david.laight.linux@gmail.com>
-	<CAHk-=wgu0B+9ZSmXaL6EyYQyDsWRGZv48jRGKJMphpO4bNiu_A@mail.gmail.com>
-	<20250209194756.4cd45e12@pumpkin>
-	<CAHk-=wisZo7+-xmC_o8GQJ-G0qFp4u29t_FkjgPvgq7FXaTyDg@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=buserror.net header.i=@buserror.net header.b="0UnPtkDc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=buserror.net; s=rsa_sel; h=Subject:In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Cc:To:From:Date:Sender:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=EpToGD3dUgsdAKwVgr42gOxVA1d/S1QPZ4reqp0Dgs8=; b=0UnPtkDcmzDcjvHDUHyLT2CjRU
+	Wu31RLzuZn8p0dV1DURWjhl+4+u/yXCjfpbN//Fv+gzr7dFxyWAIY13siJk1+2c2h7flpXKEbo5GK
+	Nzb0MrDhlkKl23df30ZGunrnNmUcpvB/tY7q0jPyZACh4u0zgcDKAURgcZgDdJCfSub1blBNmf6Ye
+	2sc/RnS11ATYBdxLh4TOGHrIUM868ob5a1q6cLyIoCxxUqwRzg3HVOyqHUfIDBNgC955YJewdlyOP
+	VUcjGVLAyzhCUnLHWphUkyZmWKmwZrAiNhydfaGiX5Yiakntm82WcDWO+upyCLZ9SU2k3ajGLNyec
+	oI4TO6mg==;
+Received: from oss by baldur.buserror.net with local (Exim 4.96)
+	(envelope-from <oss@buserror.net>)
+	id 1thDxm-00C5Xt-1r;
+	Sun, 09 Feb 2025 14:31:35 -0600
+Date: Sun, 9 Feb 2025 14:31:34 -0600
+From: Crystal Wood <oss@buserror.net>
+To: j.ne@posteo.net
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org, Li Yang <leoyang.li@nxp.com>,
+	John Ogness <john.ogness@linutronix.de>
+Message-ID: <Z6kQpuQf5m-bXTyt@buserror.net>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <20250207-ppcyaml-v2-9-8137b0c42526@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250207-ppcyaml-v2-9-8137b0c42526@posteo.net>
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: j.ne@posteo.net, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, krzk@kernel.org, imx@lists.linux.dev, maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu, naveen@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, dlemoal@kernel.org, cassel@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net, lee@kernel.org, vkoul@kernel.org, lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, bhelgaas@google.com, j.neuschaefer@gmx.net, wim@linux-watchdog.org, linux@roeck-us.net, broonie@kernel.org, miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, linux-pci@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, leoyang.li@nxp.com, john.ogness@linutronix.de
+X-SA-Exim-Mail-From: oss@buserror.net
+X-Spam-Level: 
+X-Spam-Report: 
+	*  -15 BAYES_00 BODY: Bayes spam probability is 0 to 1%
+	*      [score: 0.0000]
+	* -0.0 NO_RELAYS Informational: message was not relayed via SMTP
+Subject: Re: [PATCH v2 09/12] dt-bindings: memory-controllers: Convert
+ fsl,elbc to YAML
+X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 
-On Sun, 9 Feb 2025 12:40:32 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Fri, Feb 07, 2025 at 10:30:26PM +0100, J. Neuschäfer via B4 Relay wrote:
+> From: "J. Neuschäfer" <j.ne@posteo.net>
+> 
+> Convert the Freescale localbus controller bindings from text form to
+> YAML. The updated list of compatible strings reflects current usage
+> in arch/powerpc/boot/dts/, except that many existing device trees
+> erroneously specify "simple-bus" in addition to fsl,*elbc.
+> 
+> Changes compared to the txt version:
+>  - removed the board-control (fsl,mpc8272ads-bcsr) node because it only
+>    appears in this example and nowhere else
+>  - added a new example with NAND flash
+>  - updated list of compatible strings
+> 
+> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> ---
+> 
+> V2:
+> - fix order of properties in examples, according to dts coding style
+> - move to Documentation/devicetree/bindings/memory-controllers
+> - clarify the commit message a tiny bit
+> - remove unnecessary multiline markers (|)
+> - define address format in patternProperties
+> - trim subject line (remove "binding")
+> - remove use of "simple-bus", because it's technically incorrect
 
-> On Sun, 9 Feb 2025 at 11:48, David Laight <david.laight.linux@gmail.com> wrote:
-> >
-> > You almost need it to be 'void masked_user_access_begin(&uaddr)'.  
-> 
-> Maybe we just need to make it a two-stage thing, with
-> 
->         if (!user_access_ok(uaddr, size))
->                 return -EFAULT;
->         user_read_access_begin(&uaddr);
->         unsafe_get_user(val1, &uaddr->one, Efault);
->         unsafe_get_user(val2, &uaddr->two, Efault);
->         user_read_access_end();
->         ... all done ..
-> 
-> Efault:
->         user_read_access_end();
->         return -EFAULT;
-> 
-> and that would actually simplify some things: right now we have
-> separate versions of the user address checking (for
-> read/write/either): user_read_access_begin() and friends.
-> 
-> We still need those three versions, but now we'd only need them for
-> the simpler non-conditional case that doesn't have to bother about the
-> size.
+While I admit I haven't been following recent developments in this area,
+as someone who was involved when "simple-bus" was created (and was on the
+ePAPR committee that standardized it) I'm surprised to hear simple-bus
+being called "erroneous" or "technically incorrect" here.
 
-Except for the ppc? case which needs the size to open a bounded window.
-(I'm not sure how that handler r/w access.)
-So you either have to pass the size twice or come back to:
-	if (!user_read_access_begin(&uaddr, size))
-		return -EFAULT;
-	unsafe_get_user(...);
+For non-NAND devices this bus generally meets the definition of "an
+internal I/O bus that cannot be probed for devices" where "devices on the
+bus can be accessed directly without additional configuration
+required".  NAND flash is an exception, but those devices have
+compatibles that are specific to the bus controller.
 
-   David
+The fact that the address encoding is non-linear is irrelevant; the
+addresses can still be translated using the standard "ranges" mechanism. 
+This seems to be a disconnect between the schema verification and the way
+the compatible has previously been defined and used.
+
+And as a practical matter, unless I'm missing something (which I might be
+since I haven't been in devicetree-land for nearly a decade), Linux is
+relying on simple-bus to probe these devices.  There is a driver that
+binds to the bus itself but that is just for error interrupts and NAND.
+
+You'd probably need something like commit 3e25f800afb82bd9e5f8 ("memory:
+fsl_ifc: populate child devices without relying on simple-bus") and the 
+subsequent fix in dd8adc713b1656 ("memory: fsl_ifc: populate child
+nodes of buses and mfd devices")...
+
+I'm curious what the reasoning was for removing simple-bus from IFC.  It
+seems that the schema verification also played a role in that:
+https://www.spinics.net/lists/devicetree/msg220418.html
+
+...but there's also the comment in 985ede63a045eabf3f9d ("dt-bindings:
+memory: fsl: convert ifc binding to yaml schema") that "this will help to
+enforce the correct probe order between parent device and child devices",
+but was that really not already guaranteed by the parent/child
+relationship (and again, it should only really matter for NAND except for
+the possibility of missing error reports during early boot)?
+
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - fsl,mpc8313-elbc
+> +              - fsl,mpc8315-elbc
+> +              - fsl,mpc8377-elbc
+> +              - fsl,mpc8378-elbc
+> +              - fsl,mpc8379-elbc
+> +              - fsl,mpc8536-elbc
+> +              - fsl,mpc8569-elbc
+> +              - fsl,mpc8572-elbc
+> +              - fsl,p1020-elbc
+> +              - fsl,p1021-elbc
+> +              - fsl,p1023-elbc
+> +              - fsl,p2020-elbc
+> +              - fsl,p2041-elbc
+> +              - fsl,p3041-elbc
+> +              - fsl,p4080-elbc
+> +              - fsl,p5020-elbc
+> +              - fsl,p5040-elbc
+> +          - const: fsl,elbc
+
+Is it really necessary to list every single chip?
+
+And then it would need to be updated when new ones came out?  I know this
+particular line of chips is not going to see any new members at this
+point, but as far as the general approach goes...
+
+Does the schema validation complain if it sees an extra compatible it
+doesn't recognize?  If so that's obnoxious.
+
+> +examples:
+> +  - |
+> +    localbus@f0010100 {
+> +        compatible = "fsl,mpc8272-localbus",
+> +                     "fsl,pq2-localbus";
+> +        reg = <0xf0010100 0x40>;
+> +        ranges = <0x0 0x0 0xfe000000 0x02000000
+> +                  0x1 0x0 0xf4500000 0x00008000
+> +                  0x2 0x0 0xfd810000 0x00010000>;
+> +        #address-cells = <2>;
+> +        #size-cells = <1>;
+> +
+> +        flash@0,0 {
+> +            compatible = "jedec-flash";
+> +            reg = <0x0 0x0 0x2000000>;
+> +            bank-width = <4>;
+> +            device-width = <1>;
+> +        };
+> +
+> +        simple-periph@2,0 {
+> +            compatible = "fsl,elbc-gpcm-uio";
+> +            reg = <0x2 0x0 0x10000>;
+> +            elbc-gpcm-br = <0xfd810800>;
+> +            elbc-gpcm-or = <0xffff09f7>;
+> +        };
+
+I know this isn't new, but... since we're using this as an example,
+where is the documentation for this fsl,elbc-gpcm-uio and
+elbc-gpcm-br/or?  What exactly is a simple-periph?
+
+There are no in-tree device trees that use this either.  The bcsr
+node was actually a much more normal example, despite that particular
+platform having been removed.  There are other bcsr nodes that still
+exist that could be used instead.
+
+-Crystal
