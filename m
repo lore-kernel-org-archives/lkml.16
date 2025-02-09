@@ -1,261 +1,172 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from ixit.cz (ip-89-177-23-149.bb.vodafone.cz [89.177.23.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7B91E283C;
-	Sun,  9 Feb 2025 20:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B431324337A;
+	Sun,  9 Feb 2025 20:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.177.23.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739132849; cv=none; b=WTSKbdWacmfx/fXm0li/9fsvUAwt6ZpeYFpTZ4CIvgI1UrD9KDJ3IOCc5X+qqGE/H5k4y0LGO6nu7mXs4xRPSTdEul0mkTG+YGJwFuVLe8wqEJs7vlQU/dpyV+jF6BbmZIyjGkerWa9bQH25DL7wxOXoLaJadDFvdkMT5XWe/do=
+	t=1739133588; cv=none; b=NYpMvJAD9lAq+/+6bi28WKbaGbge8dvKYOEciQcCTlqkzyRlf4RYzCV31G8ULay/rJHbjshEReVzP9Ke8vTuP9qXrN5V7a3avDRCTSoLXuJdzzHkPD7kCX9CjiP2GDyZ04uxPvWMHu0eOo1XsEuXiKLgfWEEOHF9lAJoItFN/P8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739132849; c=relaxed/simple;
-	bh=+QUeG+bKiljNl7Cap2FGBbyuKBrPpyf/B7O4/k1S14s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=D3zasbUw+0b4K4Z0AMNz6E17IK49LtBFZGfr65XhJcuqZxURwzSr2oSozBGlUG4DgpFReDo/8FOyHhirE9b3gc3mi7eIdI1WFK70+eupBAg3ww6xNosuXzejQAwtRI/AfRrhbzQt77GrtSyxktBEGjwLw59avV7r1jTL9Ksn8IU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=WpjMvFAy; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1739133588; c=relaxed/simple;
+	bh=tq1e8PopaNEjjgXy0Qh15OLxlcBfu2RTELXL/38ygrQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oF8Uo3lEq3aqD3BLuWxIeEI0qBWOFqby520UAv8JgpCTO/35FwVgF+cjPXlCBoZ4R/vMmGQCQslONfuriIvlGEQi8j1WUlV34EQdSEGU5rjdvkmz+1x9pXJgR8JycUQ29S3n5bnJwZ6W2Pn22gtU+bT5QyHKHLeVjC294MzBJTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=khVHM7kV; arc=none smtp.client-ip=89.177.23.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="WpjMvFAy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1739132837;
-	bh=+QUeG+bKiljNl7Cap2FGBbyuKBrPpyf/B7O4/k1S14s=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=WpjMvFAy1zmNWCtPzAaFDAWBqiDiuLUcRVKWMgk4Bw7UU/UAg93sl3fzD0CjhhaDe
-	 z+bZLSJbq+vtlB5plRFs9r/3FAVuwEz2YCQDv3dc+rOvus416yiWsxWBp0uDJyJpHf
-	 J7J+B4sKcT4BEO5KuggZrX+RG3wIIefFaYq+m3w4=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Sun, 09 Feb 2025 21:27:12 +0100
-Subject: [PATCH v2 1/2] tools/nolibc: add support for [v]sscanf()
+	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="khVHM7kV"
+Received: from newone.lan (unknown [10.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ixit.cz (Postfix) with ESMTPSA id A1C7D160ADE;
+	Sun,  9 Feb 2025 21:39:42 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
+	t=1739133582;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=DR0bRoLbBuWtCS0pGfeShO32SsYDtmwyxrzyYbVJIK0=;
+	b=khVHM7kV/c60bMBDuMCzflpt54W/n6H9/JgGmjg5hJnbVMgI4elPO5G/TzyAFk7rqy9kUE
+	7ZLrsKBWWOewcbsk05M6RReNJYOXue/CZL5VKSVdlXLcqTdCQFxV+ak4eet4aysqE94WDi
+	VSwv4pE8XTAVK+7TjO9j0vB+P1j/Za4=
+From: David Heidelberg <david@ixit.cz>
+To: Pavel Machek <pavel@ucw.cz>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	David Heidelberg <david@ixit.cz>
+Cc: linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] media: dt-bindings: Convert Analog Devices ad5820 to DT schema
+Date: Sun,  9 Feb 2025 21:39:25 +0100
+Message-ID: <20250209203940.159088-1-david@ixit.cz>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250209-nolibc-scanf-v2-1-c29dea32f1cd@weissschuh.net>
-References: <20250209-nolibc-scanf-v2-0-c29dea32f1cd@weissschuh.net>
-In-Reply-To: <20250209-nolibc-scanf-v2-0-c29dea32f1cd@weissschuh.net>
-To: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739132836; l=5306;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=+QUeG+bKiljNl7Cap2FGBbyuKBrPpyf/B7O4/k1S14s=;
- b=/qNf9OS9H7TXvjGCJSGtCMUcZET0S3+z3KO3ntyfjNvcgzhuXZmlXnfpoT6EnobRfBJM4QU5h
- Lcgyc/eOtuQDuDBJeFvarmtryL7WfLFBTVptBNYBKJ1PfRuvDtjlAsr
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-These functions are used often, also in selftests.
-sscanf() itself is also used by kselftest.h itself.
+Convert the Analog Devices ad5820 to DT schema format.
 
-The implementation is limited and only supports numeric arguments.
-
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Signed-off-by: David Heidelberg <david@ixit.cz>
 ---
- tools/include/nolibc/stdio.h                 | 98 ++++++++++++++++++++++++++++
- tools/testing/selftests/nolibc/nolibc-test.c | 68 +++++++++++++++++++
- 2 files changed, 166 insertions(+)
+Needs: media: dt-bindings: media: i2c: align filenames format with standard
 
-diff --git a/tools/include/nolibc/stdio.h b/tools/include/nolibc/stdio.h
-index 3892034198dd566d21a5cc0a9f67cf097d428393..a403351dbf6098ac8292b9589ed8a054b4c5669f 100644
---- a/tools/include/nolibc/stdio.h
-+++ b/tools/include/nolibc/stdio.h
-@@ -349,6 +349,104 @@ int printf(const char *fmt, ...)
- 	return ret;
- }
- 
-+static __attribute__((unused))
-+int vsscanf(const char *str, const char *format, va_list args)
-+{
-+	uintmax_t uval;
-+	intmax_t ival;
-+	int base;
-+	char *endptr;
-+	int matches;
-+	int lpref;
-+
-+	matches = 0;
-+
-+	while (1) {
-+		if (*format == '%') {
-+			/* start of pattern */
-+			lpref = 0;
-+			format++;
-+
-+			if (*format == 'l') {
-+				/* same as in printf() */
-+				lpref = 1;
-+				format++;
-+				if (*format == 'l') {
-+					lpref = 2;
-+					format++;
-+				}
-+			}
-+
-+			if (*format == '%') {
-+				/* literal % */
-+				if ('%' != *str)
-+					goto done;
-+				str++;
-+				format++;
-+				continue;
-+			} else if (*format == 'd') {
-+				ival = strtoll(str, &endptr, 10);
-+				if (lpref == 0)
-+					*va_arg(args, int *) = ival;
-+				else if (lpref == 1)
-+					*va_arg(args, long *) = ival;
-+				else if (lpref == 2)
-+					*va_arg(args, long long *) = ival;
-+			} else if (*format == 'u' || *format == 'x' || *format == 'X') {
-+				base = *format == 'u' ? 10 : 16;
-+				uval = strtoull(str, &endptr, base);
-+				if (lpref == 0)
-+					*va_arg(args, unsigned int *) = uval;
-+				else if (lpref == 1)
-+					*va_arg(args, unsigned long *) = uval;
-+				else if (lpref == 2)
-+					*va_arg(args, unsigned long long *) = uval;
-+			} else if (*format == 'p') {
-+				*va_arg(args, void **) = (void *)strtoul(str, &endptr, 16);
-+			} else {
-+				SET_ERRNO(EILSEQ);
-+				goto done;
-+			}
-+
-+			format++;
-+			str = endptr;
-+			matches++;
-+
-+		} else if (*format == '\0') {
-+			goto done;
-+		} else if (isspace(*format)) {
-+			/* skip spaces in format and str */
-+			while (isspace(*format))
-+				format++;
-+			while (isspace(*str))
-+				str++;
-+		} else if (*format == *str) {
-+			/* literal match */
-+			format++;
-+			str++;
-+		} else {
-+			if (!matches)
-+				matches = EOF;
-+			goto done;
-+		}
-+	}
-+
-+done:
-+	return matches;
-+}
-+
-+static __attribute__((unused, format(scanf, 2, 3)))
-+int sscanf(const char *str, const char *format, ...)
-+{
-+	va_list args;
-+	int ret;
-+
-+	va_start(args, format);
-+	ret = vsscanf(str, format, args);
-+	va_end(args);
-+	return ret;
-+}
-+
- static __attribute__((unused))
- void perror(const char *msg)
- {
-diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
-index 798fbdcd3ff8c36b514feb3fa1c7b8d7701cccd7..81e942c7d1684a7dd59af0b05c8330378532ecc1 100644
---- a/tools/testing/selftests/nolibc/nolibc-test.c
-+++ b/tools/testing/selftests/nolibc/nolibc-test.c
-@@ -1325,6 +1325,73 @@ static int expect_vfprintf(int llen, int c, const char *expected, const char *fm
- 	return ret;
- }
- 
-+static int test_scanf(void)
-+{
-+	unsigned long long ull;
-+	unsigned long ul;
-+	unsigned int u;
-+	long long ll;
-+	long l;
-+	void *p;
-+	int i;
-+
-+	/* return __LINE__ to point to the specific failure */
-+
-+	/* test EOF */
-+	if (sscanf("", "foo") != EOF)
-+		return __LINE__;
-+
-+	/* test simple literal without placeholder */
-+	if (sscanf("foo", "foo") != 0)
-+		return __LINE__;
-+
-+	/* test single placeholder */
-+	if (sscanf("123", "%d", &i) != 1)
-+		return __LINE__;
-+
-+	if (i != 123)
-+		return __LINE__;
-+
-+	/* test multiple place holders and separators */
-+	if (sscanf("a123b456c0x90", "a%db%uc%p", &i, &u, &p) != 3)
-+		return __LINE__;
-+
-+	if (i != 123)
-+		return __LINE__;
-+
-+	if (u != 456)
-+		return __LINE__;
-+
-+	if (p != (void *)0x90)
-+		return __LINE__;
-+
-+	/* test space handling */
-+	if (sscanf("a    b1", "a b%d", &i) != 1)
-+		return __LINE__;
-+
-+	if (i != 1)
-+		return __LINE__;
-+
-+	/* test literal percent */
-+	if (sscanf("a%1", "a%%%d", &i) != 1)
-+		return __LINE__;
-+
-+	if (i != 1)
-+		return __LINE__;
-+
-+	/* test stdint.h types */
-+	if (sscanf("1|2|3|4|5|6",
-+		   "%d|%ld|%lld|%u|%lu|%llu",
-+		   &i, &l, &ll, &u, &ul, &ull) != 6)
-+		return __LINE__;
-+
-+	if (i != 1 || l != 2 || ll != 3 ||
-+	    u != 4 || ul != 5 || ull != 6)
-+		return __LINE__;
-+
-+	return 0;
-+}
-+
- static int run_vfprintf(int min, int max)
- {
- 	int test;
-@@ -1346,6 +1413,7 @@ static int run_vfprintf(int min, int max)
- 		CASE_TEST(char);         EXPECT_VFPRINTF(1, "c", "%c", 'c'); break;
- 		CASE_TEST(hex);          EXPECT_VFPRINTF(1, "f", "%x", 0xf); break;
- 		CASE_TEST(pointer);      EXPECT_VFPRINTF(3, "0x1", "%p", (void *) 0x1); break;
-+		CASE_TEST(scanf);        EXPECT_ZR(1, test_scanf()); break;
- 		case __LINE__:
- 			return ret; /* must be last */
- 		/* note: do not set any defaults so as to permit holes above */
+ .../bindings/media/i2c/adi,ad5820.txt         | 28 ---------
+ .../bindings/media/i2c/adi,ad5820.yaml        | 62 +++++++++++++++++++
+ 2 files changed, 62 insertions(+), 28 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/i2c/adi,ad5820.txt
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml
 
+diff --git a/Documentation/devicetree/bindings/media/i2c/adi,ad5820.txt b/Documentation/devicetree/bindings/media/i2c/adi,ad5820.txt
+deleted file mode 100644
+index 5764cbedf9b73..0000000000000
+--- a/Documentation/devicetree/bindings/media/i2c/adi,ad5820.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-* Analog Devices AD5820 autofocus coil
+-
+-Required Properties:
+-
+-  - compatible: Must contain one of:
+-		- "adi,ad5820"
+-		- "adi,ad5821"
+-		- "adi,ad5823"
+-
+-  - reg: I2C slave address
+-
+-  - VANA-supply: supply of voltage for VANA pin
+-
+-Optional properties:
+-
+-   - enable-gpios : GPIO spec for the XSHUTDOWN pin. The XSHUTDOWN signal is
+-active low, a high level on the pin enables the device.
+-
+-Example:
+-
+-       ad5820: coil@c {
+-               compatible = "adi,ad5820";
+-               reg = <0x0c>;
+-
+-               VANA-supply = <&vaux4>;
+-               enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
+-       };
+-
+diff --git a/Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml b/Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml
+new file mode 100644
+index 0000000000000..5a403cbc07317
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/i2c/adi,ad5820.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices AD5820 autofocus coil
++
++maintainers:
++  - Pavel Machek <pavel@ucw.cz>
++
++description:
++  The AD5820 is a current sink driver designed for precise control of
++  voice coil motors (VCMs) in camera autofocus systems.
++
++properties:
++  compatible:
++    enum:
++      - adi,ad5820
++      - adi,ad5821
++      - adi,ad5823
++
++  reg:
++    maxItems: 1
++
++  enable-gpios:
++    maxItems: 1
++    description:
++      GPIO spec for the XSHUTDOWN pin. The XSHUTDOWN signal is active low,
++      a high level on the pin enables the device.
++
++  VANA-supply:
++    description: supply of voltage for VANA pin
++
++  "#io-channel-cells":
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - VANA-supply
++  - '#io-channel-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    i2c {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            coil@c {
++                    compatible = "adi,ad5820";
++                    reg = <0x0c>;
++
++                    enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
++                    VANA-supply = <&vaux4>;
++
++                    #io-channel-cells = <0>;
++           };
++    };
 -- 
-2.48.1
+2.47.2
 
