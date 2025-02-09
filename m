@@ -1,36 +1,37 @@
 Received: from pv50p00im-ztdg10021101.me.com (pv50p00im-ztdg10021101.me.com [17.58.6.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3040E14C5AF
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 12:59:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD501BC065
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 12:59:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739105979; cv=none; b=TelOmA+RIkMJy2/xA0zQ5ny5gSvX4aJxG8kDbcD5UXwolgOb+LxYztHanlO3uF2WgwcqowwwiVdEGrGPz0/Ri0w95vJRRa+ZthCUUNFdrLzaxwRchnl6+7zg90BnfHqx0BSYHl+S/KzWx8DaH4uDFigCIKT6+GVOzXSB9ftBe1Y=
+	t=1739105985; cv=none; b=RrytUk2GavwBmd0l9LKNMjSMlP934/p3l9taIEsY/axqu7SBDkqgaP0IQ2i8LH/UsOe/jiJJ4c3NZL0hjW+8KkQCdSgDfPidCqZJAxkKBTFcFhNI3SuuKJ8BpGCM/yrJ2sA2c3SJxKMAwhrf+cmAne8ljTC1VhH9/J4SvtxIb2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739105979; c=relaxed/simple;
-	bh=1kU1sZzMuDN39khBY4wKUpOqoUCkMd9f0VR12DN/t50=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ys3C9F55qECYfCMkWqhCla0SnSHgmfEaTkR7wpbYrFcsDDgZxAPIjhkYX62opqH4sefW5lUh1GHf2nF6PW+vkzrSIMWMJwmppkO3FvefBTWJ2If6Nq/yZSAc8t266zYUvc9SO8WtsQzI9y4iZMr5EJ2nPtiAPU518SNGw+Mplr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=0slb4y67; arc=none smtp.client-ip=17.58.6.44
+	s=arc-20240116; t=1739105985; c=relaxed/simple;
+	bh=yUrZq/119igB2w0eCWpSZBjHfbejt2CC8kiwWpNdHZY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=okIDQmIVWfSoOnJOeJpyAGoUrjpYQVztQlBYbZxEPMarQB7DND7qyNxK6bMQCYIPBXOEkHCFQfeURDK0fQMLaVHNVoEptdB8SvYUN367GNlvcd4paHfjiP0JM1xNAE+lnWmRwrZREs8mMpCVh0kYiHbzuohX4dDyjXxv+zEefGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=V1ZaqkA2; arc=none smtp.client-ip=17.58.6.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="0slb4y67"
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="V1ZaqkA2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=d6R3PbtXcDjXb9eXv/swOZnYsRfsUPoESYdbJuDQhNU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:x-icloud-hme;
-	b=0slb4y67irtc54K//ntuUDDG++sTlURlxACv9KYRhjP6BSYHBZtJD0d9Ei6oLpUvA
-	 xarvObsBfHAKoV/unuFJIwqbsfzo2dm0WGbIReZWtTmMEvfTp9kxa8/7Mltcuve2Ir
-	 LK5z+rKqCU2TTdjfPbLXRUQocE+pXtFnPen2E70edJb+xQjFyGmDAkdobqmGisFCXP
-	 9XIxKm7Y0/Pfe5vSn8NvVlBKQ4R6IxP0BLU6gQgnK16UuCsAYEQQuCXITclLQ2K+pf
-	 3umGOHMDM/CwyyFVieXmiVqi6ccOy3s5ovTaa8u65EzX8YW2ZTswfwVXuzq452ZGPj
-	 DLMxIfd2HPntw==
+	s=1a1hai; bh=PmKeKoMvm+sqd7jiaFBivxOuYoCBp3qBT9MZwpC/Mpw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
+	b=V1ZaqkA2CFbhSgA05reFbjnzKcQgWRyjC1lHxFVg/pp4fzIyBnfUhaenfH0UcxgM4
+	 +l03rtjeJF1wCNo9qk+BCrhAYUqDKI7VtOH1LCXV2z7BfsALVpGB8HfRkHp6Qauh+M
+	 oAepFDdTJ8X5IpmaUG/iWCjrc3VfzZTLVxSTWk3gWyT/cj6qkaIk6O4nCljE/MoGpF
+	 DsPssJPo+tEYdRWPkvbX0wAR/i+1lJTWQJp7Ou2YxlUHOvrn8zhH+/gsE8J9iqjXlP
+	 aWmWJXWw6CoZaDevLHMLjUXSiRqDpDzDpsMevaKS5LDH1eV2ClH1pucZw77uq5lzPJ
+	 p10NS5Pvrd7Mg==
 Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10021101.me.com (Postfix) with ESMTPSA id 1E15ED00162;
-	Sun,  9 Feb 2025 12:59:31 +0000 (UTC)
+	by pv50p00im-ztdg10021101.me.com (Postfix) with ESMTPSA id 4E365D00261;
+	Sun,  9 Feb 2025 12:59:37 +0000 (UTC)
 From: Zijun Hu <zijun_hu@icloud.com>
-Subject: [PATCH v2 0/9] of: fix bugs about refcount
-Date: Sun, 09 Feb 2025 20:58:53 +0800
-Message-Id: <20250209-of_irq_fix-v2-0-93e3a2659aa7@quicinc.com>
+Date: Sun, 09 Feb 2025 20:58:54 +0800
+Subject: [PATCH v2 1/9] of: unittest: Add a case to test if API
+ of_irq_parse_one() leaks refcount
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,10 +40,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAI2mqGcC/03MQQ7CIBCF4as0sxbDIFVw5T1M0yCCnYWlBSWah
- ruLTUxc/i953wLJRXIJjs0C0WVKFMYaYtOAHcx4c4yutUFwIVFwxYLvKc69pxfbt7pFebHamB3
- UwxRdnVfs3NUeKD1CfK92xu/6Y/Q/k5FxdlDCo0RtlcHT/CRLo93acIeulPIBwGGJhKYAAAA=
-X-Change-ID: 20241208-of_irq_fix-659514bc9aa3
+Message-Id: <20250209-of_irq_fix-v2-1-93e3a2659aa7@quicinc.com>
+References: <20250209-of_irq_fix-v2-0-93e3a2659aa7@quicinc.com>
+In-Reply-To: <20250209-of_irq_fix-v2-0-93e3a2659aa7@quicinc.com>
 To: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
  Lorenzo Pieralisi <lpieralisi@kernel.org>, 
  Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <maz@kernel.org>, 
@@ -51,51 +51,99 @@ To: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
  Benjamin Herrenschmidt <benh@kernel.crashing.org>, 
  Julia Lawall <Julia.Lawall@lip6.fr>
 Cc: Zijun Hu <zijun_hu@icloud.com>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>, 
- stable@vger.kernel.org
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
 X-Mailer: b4 0.14.2
-X-Proofpoint-GUID: oJ0BqXZey4KOze1f5_K0mSqOiwcUsW-S
-X-Proofpoint-ORIG-GUID: oJ0BqXZey4KOze1f5_K0mSqOiwcUsW-S
+X-Proofpoint-GUID: bOCVLMMmO9CeyS7QWX5R2_XFkh9aqqtk
+X-Proofpoint-ORIG-GUID: bOCVLMMmO9CeyS7QWX5R2_XFkh9aqqtk
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-09_05,2025-02-07_03,2024-11-22_01
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- mlxlogscore=690 phishscore=0 mlxscore=0 clxscore=1015 suspectscore=0
+ mlxlogscore=999 phishscore=0 mlxscore=0 clxscore=1015 suspectscore=0
  bulkscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2308100000 definitions=main-2502090115
 X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
-This patch series is to fix of bugs about refcount.
+From: Zijun Hu <quic_zijuhu@quicinc.com>
+
+To test if of_irq_parse_one(@int_gen_dev, i, ...) will leak refcount of
+@i_th_phandle.
+
+int_gen_dev {
+	...
+	interrupts-extended = ..., <&i_th_phandle ...>, ...;
+	...
+};
 
 Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
 ---
-Changes in v2:
-- Add 2 unittest patches + 1 refcount bug fix + 1 refcount comments patch
-- Correct titles and commit messages
-- Link to v1: https://lore.kernel.org/r/20241209-of_irq_fix-v1-0-782f1419c8a1@quicinc.com
+ drivers/of/unittest.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
----
-Zijun Hu (9):
-      of: unittest: Add a case to test if API of_irq_parse_one() leaks refcount
-      of/irq: Fix device node refcount leakage in API of_irq_parse_one()
-      of: unittest: Add a case to test if API of_irq_parse_raw() leaks refcount
-      of/irq: Fix device node refcount leakage in API of_irq_parse_raw()
-      of/irq: Fix device node refcount leakages in of_irq_count()
-      of/irq: Fix device node refcount leakage in API irq_of_parse_and_map()
-      of/irq: Fix device node refcount leakages in of_irq_init()
-      of/irq: Add comments about refcount for API of_irq_find_parent()
-      of: resolver: Fix device node refcount leakage in of_resolve_phandles()
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index f88ddb1cf5d7f75ac90eeff1f944d563df56f2d3..48aec4695fff647226697fefcae696adaa307480 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -1654,6 +1654,50 @@ static void __init of_unittest_parse_interrupts_extended(void)
+ 	of_node_put(np);
+ }
+ 
++#if IS_ENABLED(CONFIG_OF_DYNAMIC)
++static void __init of_unittest_irq_refcount(void)
++{
++	struct of_phandle_args args;
++	struct device_node *intc0, *int_ext0;
++	unsigned int ref_c0, ref_c1, ref_c2;
++	int rc;
++	bool passed;
++
++	if (of_irq_workarounds & OF_IMAP_OLDWORLD_MAC)
++		return;
++
++	intc0 = of_find_node_by_path("/testcase-data/interrupts/intc0");
++	int_ext0 = of_find_node_by_path("/testcase-data/interrupts/interrupts-extended0");
++	if (!intc0 || !int_ext0) {
++		pr_err("missing testcase data\n");
++		goto out;
++	}
++
++	/* Test refcount for API of_irq_parse_one() */
++	passed = true;
++	ref_c0 = OF_KREF_READ(intc0);
++	ref_c1 = ref_c0 + 1;
++	memset(&args, 0, sizeof(args));
++	rc = of_irq_parse_one(int_ext0, 0, &args);
++	ref_c2 = OF_KREF_READ(intc0);
++	of_node_put(args.np);
++
++	passed &= !rc;
++	passed &= (args.np == intc0);
++	passed &= (args.args_count == 1);
++	passed &= (args.args[0] == 1);
++	passed &= (ref_c1 == ref_c2);
++	unittest(passed, "IRQ refcount case #1 failed, original(%u) expected(%u) got(%u)\n",
++		 ref_c0, ref_c1, ref_c2);
++
++out:
++	of_node_put(int_ext0);
++	of_node_put(intc0);
++}
++#else
++static inline void __init of_unittest_irq_refcount(void) { }
++#endif
++
+ static const struct of_device_id match_node_table[] = {
+ 	{ .data = "A", .name = "name0", }, /* Name alone is lowest priority */
+ 	{ .data = "B", .type = "type1", }, /* followed by type alone */
+@@ -4324,6 +4368,7 @@ static int __init of_unittest(void)
+ 	of_unittest_changeset_prop();
+ 	of_unittest_parse_interrupts();
+ 	of_unittest_parse_interrupts_extended();
++	of_unittest_irq_refcount();
+ 	of_unittest_dma_get_max_cpu_address();
+ 	of_unittest_parse_dma_ranges();
+ 	of_unittest_pci_dma_ranges();
 
- drivers/of/irq.c                               | 34 ++++++++++---
- drivers/of/resolver.c                          |  2 +
- drivers/of/unittest-data/tests-interrupts.dtsi | 13 +++++
- drivers/of/unittest.c                          | 67 ++++++++++++++++++++++++++
- 4 files changed, 110 insertions(+), 6 deletions(-)
----
-base-commit: 40fc0083a9dbcf2e81b1506274cb541f84d022ed
-change-id: 20241208-of_irq_fix-659514bc9aa3
-
-Best regards,
 -- 
-Zijun Hu <quic_zijuhu@quicinc.com>
+2.34.1
 
