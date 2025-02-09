@@ -1,259 +1,239 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2074.outbound.protection.outlook.com [40.107.244.74])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA8716ABC6;
-	Sun,  9 Feb 2025 15:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739114582; cv=fail; b=TyxzKJLYIo4aHdwBkO8hYj+eqGxok80LdO0xcN/t2ozRIuN03U68nTnvnAEoeBrFWQ8A6TlYrOr0HVV1fO0PtjwMdb8DFyho4FqeU/cer8QnFzai6eKGxTh9Amxaj2mZGRMmSrfs0XfhA+NMEAimq+JSEbaCWwpB4SyNTAG7jEw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739114582; c=relaxed/simple;
-	bh=hGTSTRaKOIqz97G2rsSupcEFk/lE74yZRUKHJx29m28=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=RrLb0VBy4jhAvCS86tbpjB40XReMEfMWwHDEAfKHuqfwmCkaOHnKt4X3f1K/ol56Uhp0wih+dq1kKbYTX5PIhhKhw/UhDFDjd7BK+hofST2xwokqeickeXSou0XWbFEDj/QsxDPIO1PuCxk/eGel6KYKbVpayZTNfyEioytImDY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NaqaQsbO; arc=fail smtp.client-ip=40.107.244.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE68F1DF72E;
+	Sun,  9 Feb 2025 15:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739114603; cv=none; b=LsVB5FtHMXKhANFN8dFTGPAce+BakiOgiRmzx7aKc3s0PsDcpYqIgNGPDca0sddq+eUlntDqMOcb4PsCPRdKAxCvzxffY52eyjgJqaHcNWXy8RrXvcDk/T/X1bX/P85Gen5S63LxL/2GJPLkOS1AOSsSP7EcCniMrgRC/fD/Hq4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739114603; c=relaxed/simple;
+	bh=kacGDs7MBPtZmFatZ3M62dLvd6DWL9z0LSNCKjsijIg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UYWRHzSRP5obfof/JXk8zRLt7JdBEqx7ud33AIrM3EDvPLK4C2xJeC2MkyA5ZVoKsryo9yMewkCoGYHo4x1xJe/uLZKzx789jUk3462puou8IAf6Ku+d4rm/mT9ILkBhEpoteplWt7IfQ/7ySfML21B73+39i044Vs1qF7kL/v4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MdXD/P/C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NaqaQsbO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GIU5MhhA3HMTdDfmvy1zBWjyGRKka6yUNRG39Btd6xZwfkmjXGfjLy3mIhhpjKxIZv/uJiuuhBgbnvMsTrwqEtW3UkctT45XVesTglqaopNlQU3H4XpKeD8Zkl1Rxn8ahksG2p1EhRvJjzTv+4isJ3s4zEHkF6zYIjija660BgkX/P2qki6rNayWllKslYowXlE11I4B6Rc/7CZ/ILJUG+LtM6O0pSlm9OULoCYbKYlxCVoGwTMVORuJrO6JmARRMN50mErSIg3QUSb7xGYo2MesDAT30+2ql29husY2dFv7SO4o5KXNkCAKOUjzPKhVqjdAhvo2BZH4Sa1oFxaxeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+mMMZZhvmFja/Oh9yNt7YcADmHd/ITk4Pfi/tvrEamE=;
- b=Nn+vHi3gchq9il0xxvE3yfM8jHuaX147KITPLfayvRYcx0hQF8y9ReeDSrDhv7VkHZK7gGsYTKU5xl8NuKzzWCaN0NfPbTkGBKcpBBBq+vax6QlrZn4iltibKXn2HZhfKM+4SJ3GPa6y3wUpk4EN2OrtNB+7zdlCXAKBPH1r+dBF07w+/0bXdaLg9YExjJo2afMaHR7eIffqT0WlJJh90wxxKWl8y0E0vN21tHScZJDl3T257F/kFc1sRj0kBLJkYz1+VJMYesRGbb2PQaG4ZkI534SyAyIk6HzTkkMWdqn/boCg0HNkQcmhqbNCOXxcOITZ76jmfsrcneueE5ajcA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+mMMZZhvmFja/Oh9yNt7YcADmHd/ITk4Pfi/tvrEamE=;
- b=NaqaQsbOp7tKEbQuF5WbIzWMUlcT6bKuTz4lQwozqMeWAZK8k/j5rrnrY/FEdfc022cGxNUaWtpsxyw+v2PKkUNQQBmtqt+uGdpdRyPWrDlOuGrkL+M5vn7pVOAZw1AGapkgcqv5p3DX7RPeaOtYYnJ7Gy+Vvf6sX+guHf5x4gmZqNYpTJgaMmH4Uvo74St44iTUoOHcwLNhYQ1BddPxGLUAcD3E+DhEN1DOzxePhxMBO/DitIo63A5cCUTiDeBK89iutG6lXWSXUOP5rSYn96Hka+nlfOoPHIg7cRLCT+EIBKLduUNNb0xqUcK2iP3yZEVDuDHkLuknzbGNE4QLAQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM4PR12MB6424.namprd12.prod.outlook.com (2603:10b6:8:be::16) by
- IA1PR12MB6305.namprd12.prod.outlook.com (2603:10b6:208:3e7::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Sun, 9 Feb
- 2025 15:22:56 +0000
-Received: from DM4PR12MB6424.namprd12.prod.outlook.com
- ([fe80::8133:5fd9:ff45:d793]) by DM4PR12MB6424.namprd12.prod.outlook.com
- ([fe80::8133:5fd9:ff45:d793%6]) with mapi id 15.20.8422.011; Sun, 9 Feb 2025
- 15:22:56 +0000
-Date: Sun, 9 Feb 2025 16:22:51 +0100
-From: Andrea Righi <arighi@nvidia.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Juntong Deng <juntong.deng@outlook.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
-	changwoo@igalia.com, bpf <bpf@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH bpf-next 6/8] sched_ext: Add filter for
- scx_kfunc_ids_unlocked
-Message-ID: <Z6jIS91qpNYtvRXr@gpd3>
-References: <AM6PR03MB5080261D024B49D26F3FFF0099F72@AM6PR03MB5080.eurprd03.prod.outlook.com>
- <AM6PR03MB5080EDA5E2E2FDB96C98F72F99F72@AM6PR03MB5080.eurprd03.prod.outlook.com>
- <CAADnVQJZnNj3KGcy-MKz_F2KEiKWGpXchxVx1zuGA-5g3SO=HQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAADnVQJZnNj3KGcy-MKz_F2KEiKWGpXchxVx1zuGA-5g3SO=HQ@mail.gmail.com>
-X-ClientProxiedBy: FR2P281CA0022.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:14::9) To DM4PR12MB6424.namprd12.prod.outlook.com
- (2603:10b6:8:be::16)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MdXD/P/C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C3E8C4CEDD;
+	Sun,  9 Feb 2025 15:23:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739114603;
+	bh=kacGDs7MBPtZmFatZ3M62dLvd6DWL9z0LSNCKjsijIg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MdXD/P/CnlmfXsxWeOqF++pCLy9wQpTyzPkCYMiw1SPSD8LTGVF/iMMpa9PdegKxf
+	 rZYLz6jpsACahDzkZOOxH823dKypv9YmqxGqsUCzWztjy96HZFYAFF8ew1zSSYo9EW
+	 K0lLOU3DY+30+5JZntsmxSRrFp068hofgO3ypNLzrSEIYlkvFYr7QdaA+kDxw1g72P
+	 He6oHFAxejPohB0bR2UsjAmPv7SLPUJ18lf4C7FBZowrMinl821s+aKw/9m3oonLHq
+	 JvxwfSvl8SOM5xh+ToHK79SAqKOqW1dTEOB1oYWjzIqdxaMxK6dqlcUKsrlVymvitU
+	 dvTSw+mIxp75A==
+Message-ID: <a3cca0ed-64ca-4921-bb4c-27c0e06b78c6@kernel.org>
+Date: Sun, 9 Feb 2025 16:23:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6424:EE_|IA1PR12MB6305:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4e8fdcf6-a7b1-4e66-7595-08dd491da133
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QVA2dnNhVjJ4NFVkRTcxSnM0MGRHQnE5RE9jbWxBclVqQ3hUYkRiV2VHa01F?=
- =?utf-8?B?Y0Izc0E2RkVLczhRVWVQSDhiQ3UycHQrNjdrdFlUVjRERkNHTW9uRWkzVmF4?=
- =?utf-8?B?NTU2QkZLUjJLd2oza29hZ1pZS3NzeDY2d25WVUl2UDJKMldBNThRelBBeG9N?=
- =?utf-8?B?NFBmVXhJdE9EU29PakZ6clBYSmVDREtFOXNiSXhTY1RzSXIwWlNwQ3VCWDN0?=
- =?utf-8?B?cnFObVdjbHM1N25WTVJDUDBNbFR4VzVRVm1tNnowZC81QnpabWdNY2VnQjd3?=
- =?utf-8?B?blRUL3prWlJQZytVa0VEZm5MVTZYSTZ1dVJDMkR5VTVDaHNDTys0d3hCVHFP?=
- =?utf-8?B?N2tMSmtnM0NhNW5rcW5waDVjVTJTaGhwZGxwNEcyYVUydFBUYk1Bc3YrQ0Zw?=
- =?utf-8?B?dlJGOEpGRjlIT2ZyZFBXVjZ2RGZwMHdzUkVNbXlnZGdveXczOGF0YW9zcWta?=
- =?utf-8?B?VnJraTZDbVZLcWs1QzV4OURhOHI4M0ZYdHRMQ3hMNndZaWlER2U1MkwvdDhI?=
- =?utf-8?B?d2RuYlFMUXFheVRlcG9KU1F0TEpOeUtNVTVxNkxMaG5Ibnl3L1FRVjY4T3hq?=
- =?utf-8?B?U0tncmZUVEliNXg2UDN1MVE2OTdIbGdrSlR3blJwUEcrZ0R3dlFMK2p6aWIz?=
- =?utf-8?B?U2Q2UTZxYit4ZmJMTEhab05pQ1UwbEJKcG15WW4vOGhiNXVjNjkrVW84Skx1?=
- =?utf-8?B?TWlTalJCZGF1bnIvOG5vL2dxbmR3LzlZc0I5OTFURHg1bHlqdzdDZHowRWlI?=
- =?utf-8?B?K1JsbWlkcWU0S2VpL3J5bjZxeElPL2FnS0M3UHhEczJGVURrczk3d3dZYWll?=
- =?utf-8?B?M2R0NHNuQ2UzNFJoTzE3YnlrZFBpTllURS9QRDBRR2VCOTNSNDNsY0h6SHh3?=
- =?utf-8?B?YVJuVXhxcGpYRVpuSjFSMjFQOVV4NTJlbXR3TUR6UEsrdVpoT0haeXZDRnlr?=
- =?utf-8?B?RmFZaCtiTmN0RkpkNTBVTHJyQXlTNlNpTXh5WTZoK29KdkNZd0xHcjJWbnd3?=
- =?utf-8?B?b21ncmxnb29lYkdhaDQwOFhTT3pNOC9YaytvNUhONHE5SjZ5SkdXaUZYOVN3?=
- =?utf-8?B?UlVFQmRoSGNaclBRdGtQek1WRGtHRnF1dUQrY01ieEJUNitvdThYNW5rNmh6?=
- =?utf-8?B?OUxBaHJzODVjTVN2M0k3aS8wS1R0b2FqQnZ0YVlLSk9oMHBzTDdGMGJVQmlU?=
- =?utf-8?B?OCtzZkZLWjFTaHlPVTBNek1tR1FzZFMvbWdmWDBnbmwyZDRMd1FJak9hQi9J?=
- =?utf-8?B?YUZKYVY2S0JLd25TRTBINm5ZSkFYZlRlRyt0TENOZ2p6blFMQndkUmlPZHor?=
- =?utf-8?B?QlViTmFGMW91T3BHRXo2VFRqeVFVSWhqT3JGbDNPK21QMzlNcStzSklIdjR6?=
- =?utf-8?B?aEpXZE85L0NOYnowZzZJbHNLK094TDhzQmFhSTA2a2wwQkRQNTFOSkRnOU02?=
- =?utf-8?B?cjkveEVna3hPTk9hS3JsYi9HM3ByM0s0bUZPNC9FQ2tGTlI4TDFEOC92TE1F?=
- =?utf-8?B?M3pwK3cra253SDV6VXhLdEpqanNnWU9tdTBPbXl5eHlFSFVGWDZTUGlmOVEw?=
- =?utf-8?B?bmlndkVjbVF4OUlucHNFWkZSSGFCZXJtU2hERHp1NmhkUnhJZE5UL0JaMk5N?=
- =?utf-8?B?d3VERWNOYy9rL1ZIZkkxQlF6UjNQZlFqYUZBcGVlOTJNakJyOTdBTEhTOVhq?=
- =?utf-8?B?ZWVLd0lyU0hndnFPa1JYNFdxS0VsbDVsZlJkT0JPbFVxa3Z5RDNEd0R2LzFq?=
- =?utf-8?B?OGw4UlYzM2QwTTRTSnk0WTBQMWkzMFlvRzVpdXQ5b0V6YTJmcG9HWmliSnZo?=
- =?utf-8?B?L0ZHenhaSmE2aWZ0YnZwMkY1c0hybGhabHgzYnZPd3RycVNjM0VnYkJNZVBF?=
- =?utf-8?Q?fK8p3J5TZnCfQ?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6424.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bmlvY1NVNkV1a0k4bmh5RDJUZm01WEVER0VQVXVnMFdsUHJwV3BZK21vV3Y2?=
- =?utf-8?B?V0Vzb2QyUkM4MGhvZTQzbERVMkdPSzM2a2NwL0ttYU9YK2d4RWZPQXpaZGd1?=
- =?utf-8?B?Qzl0RmVVaFFxanBUOFY2TVczY00xeitJYTZWaGN2T2tGVW1HbndVUkk4SHZO?=
- =?utf-8?B?ZmxaUFBLTVFhQzNuRlptN3hPUXROQlpEYnNwVzl3RmVBRTV1TWFmcUFnVDNP?=
- =?utf-8?B?R1Zhbkc1TW05aThUUXI5RnVObVdKR2RrNzlHUnE1NXoxSGtBZ0hGSmVGdlBr?=
- =?utf-8?B?NzI5ZmRtSEY1VzJnb0k1WFN5OHZ0MXhiNTVQWWNneWhieEJIUFBYRitGWVVF?=
- =?utf-8?B?cnR3ZWk5V1Zsb2Qxd1c4bUlXSyttRHVDbWk2MzQzdERBVEd2V05KQ1V5Nzlk?=
- =?utf-8?B?Mi94NjN6a3lPcVhtci9ZWGt2ZVc4QlBZdjg3VVNrVFNoYzczSk5ERGZnUXNO?=
- =?utf-8?B?VlRVVXZ4Q2xpeFlqUlo5T2VFMVdyTmNDbk9DN3NIL3NZMUt1UTdTVHc2N2hG?=
- =?utf-8?B?K0pndEE3LzNaYW8reEdtQlZhRTVtbU1TbGJLdk5SeXdsM002bUF4WW05VUJK?=
- =?utf-8?B?R01rem5NU0dFSGkrN3JFNkFBSWdPaHNSVStZWkZ6TUVtQmVnOERxVDVFOXd0?=
- =?utf-8?B?bFdSS00rOXU0YUx3djArZnNnNlRuTTYwTy9qN3JBU1VSSUxKU1QxeElKREMx?=
- =?utf-8?B?ZlJrZEROSVZ3RG5aMndGQmtWMzRUTDFRczJ3Uis4RnRpUy9VSjlhcjFHU0hr?=
- =?utf-8?B?ekxEaU1NYW9MZ044NlNWQjF1cHZObmhjZHRCM1FpbnJvZHhDQkR0VFpDMWhV?=
- =?utf-8?B?NDJJb0xDY1pObTBxMFZ0WEEyQ2h5QnlPR29HQllrRnlUZGk2SEhIWExzeTE1?=
- =?utf-8?B?Zml0VHl2VDQ3SXVjemRGT0F3ZkRBdm9wMFZ2cWE4QlFaZUg3SS9qWDNJT1JS?=
- =?utf-8?B?bExRR1FqNkFscFpQb1BCNlpmZWIwcWtBeHVML283ZWZDZi9KckVXdjFVNTlp?=
- =?utf-8?B?MUV1U1dYMmZlenFKYnoyaWgwQlozSGpPKzZaSmNodEprVE1zdGlzdTRlL1dl?=
- =?utf-8?B?QU55RXJEUG9zWkFlRG1iK2ZHT3FSck55djhWeWJIdmsyVXVBOFl3czN4ZXpS?=
- =?utf-8?B?NHM2cGJ6UURaRjY5TURMUGJ3bjZueU1GVnRGbnJUbFR1SVhzTFVqbHY1U1ZP?=
- =?utf-8?B?TGQzZ2k5b0RVTENwOHlqZExZSGtYRTNHREg5LzI3OTJPTGlkelNkTGZUdjFJ?=
- =?utf-8?B?Zk5aTnVISGxWTDFUV1ozbzRjVXNnbDNjOEpnaDhhcERGZ2dCVzUyNXR4VzZR?=
- =?utf-8?B?OTQ5OUtIU3czZll5dEUyandSekZjS2hGVzI3S1duY1BYSUhXWlJnQ1Q4WkNS?=
- =?utf-8?B?WGVYSlI4WkFLY0FkMkRjSmpaT29vTFkreUw0M1hqbGVYWVBJaUh1alVZTXNP?=
- =?utf-8?B?UE5Kc0VzUmxXWFMvVmdJSmxuenY2Vkw2T1FpczIwWmtTeG8rY1VKWnJndDlo?=
- =?utf-8?B?aFR4ZlprOXp1dDAvTW1TN1JZaCtGRVhBdVhpUHl3dXM1UnRqVjJxWmV2VXR4?=
- =?utf-8?B?WGloWnJwbSs3WDd3cGVwVDZxbHI5em03Z0VwdkNCY0dWTUVUY0RScng0STBj?=
- =?utf-8?B?Mzc2VXlHVU5vd1JKUnhsSWxjNFhnYWVTL0ZzMWh5RUdCaC9GS2I3Vy9ScG9k?=
- =?utf-8?B?enM5OHpEWXBMeU1aeWE5TkN6YktYNTlWM0RuNjN4ZDBOdE5kM3NZMnRKaHND?=
- =?utf-8?B?QXp0Mm5odnNkb0x1Ump5SW11TnRTaUJ3TTVSUTZ4ZXZkNW5GVFJVQ3NlTkc4?=
- =?utf-8?B?c2VTR3BOUkc1NE0vYXZ2RHVPeEMzZFlWWDM0YXcxOWZaUUkyWnQvV3hHUDBz?=
- =?utf-8?B?SnZObk02UmgvcTVnNHlOVjlqOStVQ0xXb3ozU0Nsc2VpajNLejBaVVVKS0Uy?=
- =?utf-8?B?M2tTMklmaSt2Sks2Um9Za3ZUUy83ZUQydEd6Q2p3VFhiSXVZb3dsS0duaTEx?=
- =?utf-8?B?ekxMTlB6Y093YXcxRGx0Y1I2a0p5ZC9RRUNYbWttMzVteW90anMxQlhKY0F1?=
- =?utf-8?B?eFVCNmhZQ3lwMzBLcktRMnVrT0UzTXJrSzhTUk4yWjNUNjVJNUNnenRNdytw?=
- =?utf-8?Q?ZcsvimItjtwPFpw9j8wfiz1SS?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e8fdcf6-a7b1-4e66-7595-08dd491da133
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6424.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2025 15:22:56.5590
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eUXhxTbt93R8j/DtwjeJlIp1vtm3++dGZzNl8BaY2DdGVkrVi9eT9IK0iyI6FIrX7hKAZ3E2vKSXavxkX203cA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6305
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 14/14] Documentation: KHO: Add memblock bindings
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski
+ <luto@kernel.org>, Anthony Yznaga <anthony.yznaga@oracle.com>,
+ Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
+ Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+ Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ David Woodhouse <dwmw2@infradead.org>, Eric Biederman
+ <ebiederm@xmission.com>, Ingo Molnar <mingo@redhat.com>,
+ James Gowans <jgowans@amazon.com>, Jonathan Corbet <corbet@lwn.net>,
+ Mark Rutland <mark.rutland@arm.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, "H. Peter Anvin"
+ <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Pratyush Yadav <ptyadav@amazon.de>, Rob Herring <robh+dt@kernel.org>,
+ Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+ Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Tom Lendacky <thomas.lendacky@amd.com>, Usama Arif
+ <usama.arif@bytedance.com>, Will Deacon <will@kernel.org>,
+ devicetree@vger.kernel.org, kexec@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-mm@kvack.org, x86@kernel.org
+References: <20250206132754.2596694-1-rppt@kernel.org>
+ <20250206132754.2596694-15-rppt@kernel.org>
+ <45df0d7a-622a-4268-9683-c5c6067483c3@kernel.org>
+ <Z6jFZII5b-j7hzkj@kernel.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <Z6jFZII5b-j7hzkj@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 07, 2025 at 07:37:51PM -0800, Alexei Starovoitov wrote:
-> On Wed, Feb 5, 2025 at 11:35 AM Juntong Deng <juntong.deng@outlook.com> wrote:
-> >
-> > This patch adds filter for scx_kfunc_ids_unlocked.
-> >
-> > The kfuncs in the scx_kfunc_ids_unlocked set can be used in init, exit,
-> > cpu_online, cpu_offline, init_task, dump, cgroup_init, cgroup_exit,
-> > cgroup_prep_move, cgroup_cancel_move, cgroup_move, cgroup_set_weight
-> > operations.
-> >
-> > Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
-> > ---
-> >  kernel/sched/ext.c | 30 ++++++++++++++++++++++++++++++
-> >  1 file changed, 30 insertions(+)
-> >
-> > diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-> > index 7f039a32f137..955fb0f5fc5e 100644
-> > --- a/kernel/sched/ext.c
-> > +++ b/kernel/sched/ext.c
-> > @@ -7079,9 +7079,39 @@ BTF_ID_FLAGS(func, scx_bpf_dispatch_from_dsq, KF_RCU)
-> >  BTF_ID_FLAGS(func, scx_bpf_dispatch_vtime_from_dsq, KF_RCU)
-> >  BTF_KFUNCS_END(scx_kfunc_ids_unlocked)
-> >
-> > +static int scx_kfunc_ids_unlocked_filter(const struct bpf_prog *prog, u32 kfunc_id)
-> > +{
-> > +       u32 moff;
-> > +
-> > +       if (!btf_id_set8_contains(&scx_kfunc_ids_unlocked, kfunc_id) ||
-> > +           prog->aux->st_ops != &bpf_sched_ext_ops)
-> > +               return 0;
-> > +
-> > +       moff = prog->aux->attach_st_ops_member_off;
-> > +       if (moff == offsetof(struct sched_ext_ops, init) ||
-> > +           moff == offsetof(struct sched_ext_ops, exit) ||
-> > +           moff == offsetof(struct sched_ext_ops, cpu_online) ||
-> > +           moff == offsetof(struct sched_ext_ops, cpu_offline) ||
-> > +           moff == offsetof(struct sched_ext_ops, init_task) ||
-> > +           moff == offsetof(struct sched_ext_ops, dump))
-> > +               return 0;
-> > +
-> > +#ifdef CONFIG_EXT_GROUP_SCHED
-> > +       if (moff == offsetof(struct sched_ext_ops, cgroup_init) ||
-> > +           moff == offsetof(struct sched_ext_ops, cgroup_exit) ||
-> > +           moff == offsetof(struct sched_ext_ops, cgroup_prep_move) ||
-> > +           moff == offsetof(struct sched_ext_ops, cgroup_cancel_move) ||
-> > +           moff == offsetof(struct sched_ext_ops, cgroup_move) ||
-> > +           moff == offsetof(struct sched_ext_ops, cgroup_set_weight))
-> > +               return 0;
-> > +#endif
-> > +       return -EACCES;
-> > +}
-> > +
-> >  static const struct btf_kfunc_id_set scx_kfunc_set_unlocked = {
-> >         .owner                  = THIS_MODULE,
-> >         .set                    = &scx_kfunc_ids_unlocked,
-> > +       .filter                 = scx_kfunc_ids_unlocked_filter,
-> >  };
-> 
-> why does sched-ext use so many id_set-s ?
-> 
->         if ((ret = register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
->                                              &scx_kfunc_set_select_cpu)) ||
->             (ret = register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
-> 
-> &scx_kfunc_set_enqueue_dispatch)) ||
->             (ret = register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
->                                              &scx_kfunc_set_dispatch)) ||
->             (ret = register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
->                                              &scx_kfunc_set_cpu_release)) ||
->             (ret = register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
->                                              &scx_kfunc_set_unlocked)) ||
-> 
-> Can they all be rolled into one id_set then
-> the patches 2-6 will be collapsed into one patch and
-> one filter callback that will describe allowed hook/kfunc combinations?
+On 09/02/2025 16:10, Mike Rapoport wrote:
+> On Sun, Feb 09, 2025 at 11:29:41AM +0100, Krzysztof Kozlowski wrote:
+>> On 06/02/2025 14:27, Mike Rapoport wrote:
+>>> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>>>
+>>> We introduced KHO into Linux: A framework that allows Linux to pass
+>>> metadata and memory across kexec from Linux to Linux. KHO reuses fdt
+>>> as file format and shares a lot of the same properties of firmware-to-
+>>> Linux boot formats: It needs a stable, documented ABI that allows for
+>>> forward and backward compatibility as well as versioning.
+>>
+>> Please use subject prefixes matching the subsystem. You can get them for
+>> example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+>> your patch is touching. For bindings, the preferred subjects are
+>> explained here:
+>> https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+>  
+> These are not devicetree binding for communicating data from firmware to
+> the kernel. These bindings are specific to KHO which is perfectly
+> reflected by the subject.
 
-I think the idea was to group them in different sets based on their context
-usage, like scx_kfunc_set_select_cpu kfuncs can be used only from
-ops.select_cpu(), scx_kfunc_set_dispatch kfuncs can be used only from
-ops.dispatch(), etc.
+No, it is not. None of the bindings use above subject prefix.
 
-However, since the actual context enforcement is done by scx_kf_allowed(),
-it seems that we could have just 3 sets to classify the kfuncs based by
-their prog type:
- 1) BPF_PROG_TYPE_STRUCT_OPS
- 2) BPF_PROG_TYPE_STRUCT_OPS + BPF_PROG_TYPE_SYSCALL
- 3) BPF_PROG_TYPE_STRUCT_OPS + BPF_PROG_TYPE_SYSCALL + BPF_PROG_TYPE_TRACING
+> 
+> Just a brief reminder from v2 discussion:
+> (https://lore.kernel.org/linux-mm/20231222193607.15474-1-graf@amazon.com/)
+> 
+> "For quick reference: KHO is a new mechanism this patch set introduces 
+> which allows Linux to pass arbitrary memory and metadata between kernels 
+> on kexec. I'm reusing FDTs to implement the hand over protocol, as 
+> Linux-to-Linux boot communication holds very similar properties to 
+> firmware-to-Linux boot communication. So this binding is not about 
+> hardware; it's about preserving Linux subsystem state across kexec.
 
--Andrea
+does not matter. You added file to ABI documentation so you must follow
+that ABI documentation rules. One rule is proper subject prefix.
+
+> 
+> For more details, please refer to the KHO documentation which is part of 
+> patch 7 of this patch set: 
+> https://lore.kernel.org/lkml/20231222195144.24532-2-graf@amazon.com/"
+
+I fail to see how this is related to the incorrect subject prefix as I
+pointed.
+
+> 
+> and
+> 
+> "This is our own data structure for KHO that just happens to again 
+> contain a DT structure. The reason is simple: I want a unified, 
+> versioned, introspectable data format that is cross platform so you 
+> don't need to touch every architecture specific boot passing logic every 
+> time you want to add a tiny piece of data."
+>  
+>>> As first user of KHO, we introduced memblock which can now preserve
+>>> memory ranges reserved with reserve_mem command line options contents
+>>> across kexec, so you can use the post-kexec kernel to read traces from
+>>> the pre-kexec kernel.
+>>>
+>>> This patch adds memblock schemas similar to "device" device tree ones to
+>>> a new kho bindings directory. This allows us to force contributors to
+>>> document the data that moves across KHO kexecs and catch breaking change
+>>> during review.
+>>>
+>>> Co-developed-by: Alexander Graf <graf@amazon.com>
+>>> Signed-off-by: Alexander Graf <graf@amazon.com>
+>>> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+>>> ---
+>>>  .../kho/bindings/memblock/reserve_mem.yaml    | 41 ++++++++++++++++++
+>>>  .../bindings/memblock/reserve_mem_map.yaml    | 42 +++++++++++++++++++
+>>>  2 files changed, 83 insertions(+)
+>>>  create mode 100644 Documentation/kho/bindings/memblock/reserve_mem.yaml
+>>>  create mode 100644 Documentation/kho/bindings/memblock/reserve_mem_map.yaml
+>>>
+>>> diff --git a/Documentation/kho/bindings/memblock/reserve_mem.yaml b/Documentation/kho/bindings/memblock/reserve_mem.yaml
+>>> new file mode 100644
+>>> index 000000000000..7b01791b10b3
+>>> --- /dev/null
+>>> +++ b/Documentation/kho/bindings/memblock/reserve_mem.yaml
+>>> @@ -0,0 +1,41 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/memblock/reserve_mem.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Memblock reserved memory
+>>> +
+>>> +maintainers:
+>>> +  - Mike Rapoport <rppt@kernel.org>
+>>> +
+>>> +description: |
+>>> +  Memblock can serialize its current memory reservations created with
+>>> +  reserve_mem command line option across kexec through KHO.
+>>> +  The post-KHO kernel can then consume these reservations and they are
+>>> +  guaranteed to have the same physical address.
+>>> +
+>>> +examples:
+>>> +  - |
+>>> +    reserve_mem {
+>>
+>> Again, do not introduce own coding style.
+>>
+>> I don't understand why do you need this in the first place. There is
+>> already reserved-memory block.
+> 
+> Because these regions are not "... designed for the special usage by
+> various device drivers"
+
+So you use now very similar name, but different with few letters just to
+note that you do not fit into existing formats. If this does not fit
+existing usage, then use different name.
+
+>  and should not be exclude by the operating system
+> from normal usage. 
+
+Then it does not look like a reserved memory
+>  
+>> Best regards,
+>> Krzysztof
+> 
+
+
+Best regards,
+Krzysztof
