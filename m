@@ -1,302 +1,126 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794421E517
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 12:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28551DFFC;
+	Sun,  9 Feb 2025 12:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739104280; cv=none; b=GdpudkD/oNW2LqX0naZuL8OV8qKcLDZV3vNhPaVlvkP4bnI7ZpSxTJfMTzV8tbecMiAnQPoukaniO68uxKyug/hTuUqDADfJyT5a/1rOhLfYINUZUGQ1iSu8xcyvGm056eaR6Bs3/ByhR8j4KPoc95/NVOXUweQ/KHy0xa6u+GI=
+	t=1739104293; cv=none; b=XXwzlIk/oH+lEPZ1nkayNqUhwCxxo+m1xg/2KYvANJBKz4FVLQC3Hk8YkuIRgnm9e4C/qoVj9xVWi0aP4gvuvHXm1jRAI92RlOkcOY7xLv034vT8MLfpkg0XuZOuI/5SBwFDAVKnDF38JiSGeS1SyDBVSw/kvSc7J8K0L6A4Rq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739104280; c=relaxed/simple;
-	bh=WoH7o/mAYHXfg2fmhF7DaSP0LqSUOu9E/vgivi/1LA8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jSoTa6wLfvO5AKNrEr7qM71+N6K/0u54ITIyC2RK/GcqyZ4Hy15jJoNbJaLdvBLjcFDbe0+GQeaZr581l1XTh2NdLb8t/3NqDVGmPJGL+7yTcCXgaAy4RHpsNgQKrKjBZ8CAWmIm7ih88WdfdLu9foiYp3suW1bcc9zeGVeP3W8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WBW56qIS; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739104293; c=relaxed/simple;
+	bh=xgyMYunAKrmLnsZ2HxhpB/hj1jNPZs7g3kNXrwB1ZHs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=lLyw0DrFMLlrjAUXcgpKq4IOLh0szQyO+ysRarQRkwztzgdC7wgSmwWBFMeoE1sQLPSR2puLealGpEfRUw36UqDtG/T8zLn0e+lkM64957B4VfDDJ1HESMeiII7zNLG3ciYzoiF0KGTM07So9DnXl02zIRfwrTAOpa/HZJHPXl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bm6/JGEi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WBW56qIS"
-Message-ID: <0f5908be-5dca-4590-b931-2a9fc8963f93@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739104271;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hj8yRacrhH1r703EyX/0lu752h/2MTjSzcrNHk6uG3I=;
-	b=WBW56qISRHqj/5ye+T4ZUFJdGG+T/6+7fBm1V1Vxet8SsSfjxWKNRCLkHhPVOFwZWfEAlC
-	hfJ5e/eNWOV3KiUVTPq9pC8QSvQ+qb7YnW7cAORnFPoebLJzGWUWrbFdyUqwpHMNvqybJf
-	QoCljZ2+G9V8TszbntszIudVOmaD2uc=
-Date: Sun, 9 Feb 2025 18:00:19 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bm6/JGEi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72341C4CEDD;
+	Sun,  9 Feb 2025 12:31:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739104293;
+	bh=xgyMYunAKrmLnsZ2HxhpB/hj1jNPZs7g3kNXrwB1ZHs=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Bm6/JGEiHWYbxOyqCAmgmj/tK0yuEJ28OU+dRqWNIBE1L6xGCSVBiCHM8c10fzNFZ
+	 LNXOb5ttpCsXQ3Hiayby9gh8BWf/9qpsn0M0+WUhWIJXBgQ8Cy9WDDBSzPemfWy+Hc
+	 9yeBPbHf2BowbBH3f3fhZ5PE9Rk+LB5HiT0mtp6bFLQlLZiqGjK5yxo5ftDS6xU4bW
+	 mwb+l3vNzil8XiAsTY9CM2h78j4MQWLUBwb03YIjZnDJmPsEWPWfgufrwR76Egx7uO
+	 ie7oabgLIXRo/vXciAFd6CovL3j7mGoPrHAFqzUlekrzB7pdR3oCmKEnRwbmOq/NlY
+	 ZZQWcuSZr4aWA==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v6 0/7] nfsd: CB_SEQUENCE error handling fixes and cleanups
+Date: Sun, 09 Feb 2025 07:31:21 -0500
+Message-Id: <20250209-nfsd-6-14-v6-0-396dd1bed647@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v8 11/13] drm/atomic-helper: Separate out bridge
- pre_enable/post_disable from enable/disable
-To: Jayesh Choudhary <j-choudhary@ti.com>,
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
- Devarsh Thakkar <devarsht@ti.com>, Praneeth Bajjuri <praneeth@ti.com>,
- Udit Kumar <u-kumar1@ti.com>,
- DRI Development List <dri-devel@lists.freedesktop.org>,
- Linux Kernel List <linux-kernel@vger.kernel.org>
-References: <20250126191551.741957-1-aradhya.bhatia@linux.dev>
- <20250126191551.741957-12-aradhya.bhatia@linux.dev>
- <1b9aae38-1097-4036-abe6-2490f5dc6a62@ti.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-In-Reply-To: <1b9aae38-1097-4036-abe6-2490f5dc6a62@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABmgqGcC/3XQQW7DIBCF4atErEs1DAPUWeUeVRcYDwlqZUdQW
+ a0i372TbOrIyfKN+P4FF9W4Fm5qv7uoynNpZRpl+JedSqc4HlmXQbZCQAcGrR5zG7TXhnQPoQt
+ s39yQQMn7c+Vcfm6t9w/Zp9K+p/p7S8/men1UmY0GnYyxIVKOGPnwyXXkr9epHtU1M+OadmuKQ
+ jEApA6zZaINtU+pFerAczBsO/b9htI/RQhrSkJNjISJIKB3G+qeUic0295R7j3It93RZVn+APC
+ UrZ6PAQAA
+X-Change-ID: 20250123-nfsd-6-14-b0797e385dc0
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, "J. Bruce Fields" <bfields@fieldses.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2467; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=xgyMYunAKrmLnsZ2HxhpB/hj1jNPZs7g3kNXrwB1ZHs=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnqKAepepsTgc6o+inHrzoiGEhDhg0xLGSqqT/5
+ m2HrLubsm+JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ6igHgAKCRAADmhBGVaC
+ FYnvD/9knj251AkFXgyGebpO9EfZS1FWsWRxM1qZi7zGQgt1j9YYaq1G4v4xTwwNCgAvkm7V6C6
+ rHngopv0kSyaZQ/NJxmj1gdWzJeeEItVzqnIUhsUkdTdvNlTZj763KVSA3tvvO7chOkdC5oTjdm
+ xV3n6HfwfPeUO1vB5lZbI+idzq+DL+5GQeaMZXPZUL/LOiRVeLRuSSSDzIesjVxQKCvsSsAEsis
+ LhSnwGJVZftPXIqF4nWuOV8T2u854GQhZfOZ/ap3cV94mGSmMdB7iKuGYQFvcMeGbJtwGDbbAvG
+ O13A4ESaAcKlsLFnefd70EPtnZ7CC5xyJfFXbLNtujsQom2zAQsisMYlSje/XJzLvGVPisCuqKj
+ mhZkoBFK0Id4eranP1pYc+CvTLczHVnLB0EzWWQ8LKxZ2ImqsleQV1wh/4ARlSVY8TBaUI55U8s
+ m0Ilv4Ffa+Dy6ybE/lAu4zFg5+UHD6DvRg4xTQhRniQiWU1jbNVZSj7qqBxMzS42K3E680FcWAc
+ nS4cjz7Skp5KWklzT/ZzmmGt/liE7qe7VqQqbLVpwIQWflvZLEhOeFS/e6hZZETLy/dVS6spiUz
+ 7xzgXKdudi6EvODOLS/ANUsvnReN9jN4Ad145ngl+41HXssyGq0TCVpoiMCqxK3tEzW7q9sr2UE
+ 0ukAl04g3krfiuQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Hi Jayesh,
+This patch is mostly the same as the v5 series. Just small cleanups
+and dropping of special NFS4ERR_SEQ_MISORDERED handling.
 
-Thank you for testing this out, and reporting the error I had
-overlooked.
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v6:
+- Reorder patch to move v4.0 handling to earlier in series
+- Drop special handling of NFS4ERR_SEQ_MISORDERED. Always treat it like NFS4ERR_BADSLOT.
+- rename requeue_callback() to nfsd4_queue_cb()
+- Comment and changelog cleanups
+- Link to v5: https://lore.kernel.org/r/20250207-nfsd-6-14-v5-0-f3b54fb60dc0@kernel.org
 
-On 04/02/25 17:59, Jayesh Choudhary wrote:
-> Hello Aradhya,
-> 
-> On 27/01/25 00:45, Aradhya Bhatia wrote:
->> The encoder-bridge ops occur by looping over the new connector states of
->> the display pipelines. The enable sequence runs as follows -
->>
->>     - pre_enable(bridge),
->>     - enable(encoder),
->>     - enable(bridge),
->>
->> while the disable sequnce runs as follows -
->>
->>     - disable(bridge),
->>     - disable(encoder),
->>     - post_disable(bridge).
->>
->> Separate out the pre_enable(bridge), and the post_disable(bridge)
->> operations into separate functions each.
->>
->> This patch keeps the sequence same for any singular disaplay pipe, but
->> changes the sequence across multiple display pipelines.
->>
->> This patch is meant to be an interim patch, to cleanly pave the way for
->> the sequence re-ordering patch, and maintain bisectability in the
->> process.
->>
->> Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
->> ---
->>   drivers/gpu/drm/drm_atomic_helper.c | 92 +++++++++++++++++++++++++++--
->>   1 file changed, 88 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/
->> drm_atomic_helper.c
->> index e805fd0a54c5..f5532e3646e1 100644
->> --- a/drivers/gpu/drm/drm_atomic_helper.c
->> +++ b/drivers/gpu/drm/drm_atomic_helper.c
->> @@ -1185,8 +1185,6 @@ encoder_bridge_disable(struct drm_device *dev,
->> struct drm_atomic_state *old_stat
->>               else if (funcs->dpms)
->>                   funcs->dpms(encoder, DRM_MODE_DPMS_OFF);
->>           }
->> -
->> -        drm_atomic_bridge_chain_post_disable(bridge, old_state);
->>       }
->>   }
->>   @@ -1243,11 +1241,65 @@ crtc_disable(struct drm_device *dev, struct
->> drm_atomic_state *old_state)
->>       }
->>   }
->>   +static void
->> +encoder_bridge_post_disable(struct drm_device *dev, struct
->> drm_atomic_state *old_state)
->> +{
->> +    struct drm_connector *connector;
->> +    struct drm_connector_state *old_conn_state, *new_conn_state;
->> +    struct drm_crtc_state *old_crtc_state, *new_crtc_state;
->> +    int i;
->> +
->> +    for_each_oldnew_connector_in_state(old_state, connector,
->> old_conn_state, new_conn_state, i) {
->> +        struct drm_encoder *encoder;
->> +        struct drm_bridge *bridge;
->> +
->> +        /*
->> +         * Shut down everything that's in the changeset and currently
->> +         * still on. So need to check the old, saved state.
->> +         */
->> +        if (!old_conn_state->crtc)
->> +            continue;
->> +
->> +        old_crtc_state = drm_atomic_get_old_crtc_state(old_state,
->> old_conn_state->crtc);
->> +
->> +        if (new_conn_state->crtc)
->> +            new_crtc_state = drm_atomic_get_new_crtc_state(
->> +                        old_state,
->> +                        new_conn_state->crtc);
->> +        else
->> +            new_crtc_state = NULL;
->> +
->> +        if (!crtc_needs_disable(old_crtc_state, new_crtc_state) ||
->> +            !drm_atomic_crtc_needs_modeset(old_conn_state->crtc->state))
->> +            continue;
->> +
->> +        encoder = old_conn_state->best_encoder;
->> +
->> +        /* We shouldn't get this far if we didn't previously have
->> +         * an encoder.. but WARN_ON() rather than explode.
->> +         */
->> +        if (WARN_ON(!encoder))
->> +            continue;
->> +
->> +        drm_dbg_atomic(dev, "post-disabling bridges [ENCODER:%d:%s]\n",
->> +                   encoder->base.id, encoder->name);
->> +
->> +        /*
->> +         * Each encoder has at most one connector (since we always steal
->> +         * it away), so we won't call disable hooks twice.
->> +         */
->> +        bridge = drm_bridge_chain_get_first_bridge(encoder);
->> +        drm_atomic_bridge_chain_post_disable(bridge, old_state);
->> +    }
->> +}
->> +
->>   static void
->>   disable_outputs(struct drm_device *dev, struct drm_atomic_state
->> *old_state)
->>   {
->>       encoder_bridge_disable(dev, old_state);
->>   +    encoder_bridge_post_disable(dev, old_state);
->> +
->>       crtc_disable(dev, old_state);
->>   }
->>   @@ -1460,6 +1512,38 @@ static void
->> drm_atomic_helper_commit_writebacks(struct drm_device *dev,
->>       }
->>   }
->>   +static void
->> +encoder_bridge_pre_enable(struct drm_device *dev, struct
->> drm_atomic_state *old_state)
->> +{
->> +    struct drm_connector *connector;
->> +    struct drm_connector_state *new_conn_state;
->> +    int i;
->> +
->> +    for_each_new_connector_in_state(old_state, connector,
->> new_conn_state, i) {
->> +        struct drm_encoder *encoder;
->> +        struct drm_bridge *bridge;
->> +
->> +        if (!new_conn_state->best_encoder)
->> +            continue;
->> +
->> +        if (!new_conn_state->crtc->state->active ||
->> +            !drm_atomic_crtc_needs_modeset(new_conn_state->crtc->state))
->> +            continue;
->> +
->> +        encoder = new_conn_state->best_encoder;
->> +
->> +        drm_dbg_atomic(dev, "pre-enabling bridges [ENCODER:%d:%s]\n",
->> +                   encoder->base.id, encoder->name);
->> +
->> +        /*
->> +         * Each encoder has at most one connector (since we always steal
->> +         * it away), so we won't call enable hooks twice.
->> +         */
->> +        bridge = drm_bridge_chain_get_first_bridge(encoder);
->> +        drm_atomic_bridge_chain_pre_enable(bridge, old_state);
->> +    }
->> +}
->> +
->>   static void
->>   crtc_enable(struct drm_device *dev, struct drm_atomic_state *old_state)
->>   {
->> @@ -1531,8 +1615,6 @@ encoder_bridge_enable(struct drm_device *dev,
->> struct drm_atomic_state *old_state
->>               else if (funcs->commit)
->>                   funcs->commit(encoder);
->>           }
->> -
->> -        drm_atomic_bridge_chain_enable(bridge, old_state);
->>       }
->>   }
->>   @@ -1555,6 +1637,8 @@ void
->> drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
->>   {
->>       crtc_enable(dev, old_state);
->>   +    encoder_bridge_pre_enable(dev, old_state);
->> +
->>       encoder_bridge_enable(dev, old_state);
->>   
-> 
-> After separating enable and pre_enable, bridge_chain_enable hook is not
-> called. This breaks display.
+Changes in v5:
+- don't ignore return of rpc_restart_call() and rpc_restart_call_prepare()
+- Break up the nfsd4_cb_sequence_done() error handling changes into multiple patches
+- Link to v4: https://lore.kernel.org/r/20250207-nfsd-6-14-v4-0-1aa42c407265@kernel.org
 
-That is true.
+Changes in v4:
+- Hold back on session refcounting changes for now and just send CB_SEQUENCE
+  error handling rework.
+- Link to v3: https://lore.kernel.org/r/20250129-nfsd-6-14-v3-0-506e71e39e6b@kernel.org
 
-> 
-> In encoder_bridge_enable call, you need to call
-> bridge_chain_enable call instead of bridge_chain_pre_enable.
+Changes in v3:
+- rename cb_session_changed to nfsd4_cb_session_changed
+- rename restart_callback to requeue_callback, and rename need_restart:
+  label to requeue:
+- don't increment seq_nr on -ESERVERFAULT
+- comment cleanups
+- drop client-side rpc patch (will send separately)
+- Link to v2: https://lore.kernel.org/r/20250129-nfsd-6-14-v2-0-2700c92f3e44@kernel.org
 
-Yes, the encoder_bridge_enable() is supposed to call
-bridge_chain_enable() instead of bridge_chain_pre_enable().
+Changes in v2:
+- make nfsd4_session be RCU-freed
+- change code to keep reference to session over callback RPCs
+- rework error handling in nfsd4_cb_sequence_done()
+- move NFSv4.0 handling out of nfsd4_cb_sequence_done()
+- Link to v1: https://lore.kernel.org/r/20250123-nfsd-6-14-v1-0-c1137a4fa2ae@kernel.org
 
+---
+Jeff Layton (7):
+      nfsd: prepare nfsd4_cb_sequence_done() for error handling rework
+      nfsd: lift NFSv4.0 handling out of nfsd4_cb_sequence_done()
+      nfsd: always release slot when requeueing callback
+      nfsd: only check RPC_SIGNALLED() when restarting rpc_task
+      nfsd: when CB_SEQUENCE gets ESERVERFAULT don't increment seq_nr
+      nfsd: handle NFS4ERR_BADSLOT on CB_SEQUENCE better
+      nfsd: eliminate special handling of NFS4ERR_SEQ_MISORDERED
 
-> 
-> 
-> 
-> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/
-> drm_atomic_helper.c
-> index d2f19df9f418..1b580dc068bf 100644
-> --- a/drivers/gpu/drm/drm_atomic_helper.c
-> +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> @@ -1605,7 +1605,7 @@ encoder_bridge_enable(struct drm_device *dev,
-> struct drm_atomic_state *old_state
->                  * it away), so we won't call enable hooks twice.
->                  */
->                 bridge = drm_bridge_chain_get_first_bridge(encoder);
-> -               drm_atomic_bridge_chain_pre_enable(bridge, old_state);
-> +               drm_atomic_bridge_chain_enable(bridge, old_state);
+ fs/nfsd/nfs4callback.c | 100 +++++++++++++++++++++++++++----------------------
+ 1 file changed, 56 insertions(+), 44 deletions(-)
+---
+base-commit: 50934b1a613cabba2b917879c3e722882b72f628
+change-id: 20250123-nfsd-6-14-b0797e385dc0
 
-While your report is right, I couldn't take this diff as is. The
-bridge_chain_enable has to still happen _after_ all the encoders are
-enabled inside this function (unlike the bridge_chain_pre_enable that
-would happen before the encoder_enable).
-
-> 
->                 if (funcs) {
->                         if (funcs->atomic_enable)
-> 
-> I have tested display on J784S4-EVM for MHDP and DSI with this diff on
-> top of your series.
-> 
-> With the above change addressed,
-> 
-> Reviewed-by: Jayesh Choudhary <j-choudhary@ti.com>
-
-Thank you!
-
-I have posted the patch[0], and I have taken the liberty to accept the
-tag despite the change in the way I have fixed the error. If that is
-unacceptable, please do let me know and I will remove it in a newer
-revision.
-
-
+Best regards,
 -- 
-Regards
-Aradhya
+Jeff Layton <jlayton@kernel.org>
 
-[0]: [PATCH v9 11/13] drm/atomic-helper: Separate out bridge pre_enable/
-post_disable from enable/disable
-https://lore.kernel.org/all/20250209121621.34677-4-aradhya.bhatia@linux.dev/
