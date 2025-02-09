@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9B42F22;
-	Sun,  9 Feb 2025 16:30:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366EB14F70;
+	Sun,  9 Feb 2025 16:36:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739118660; cv=none; b=YMrdoetWA5eki+1fW0jbGjm3FoPBTrZEPaytjYbeBNk39PPo/lut2JDYa1rNY5SvjC7xm/Sm7lOVSpBQ3LqckP0D78IAvgYNX90YCXtoBEytOlur032TgqFAy32NAR8Q+t/s/3j8/8D+8yryryciq+7vExIJCBX9H0bDzfuvxWA=
+	t=1739119003; cv=none; b=E2XgHGSRvaRomy1YTtFFP3xk3GF2lfeP5DlMefzj1UxUEhNCAEpf37AiSXSS/BXgFb1lpzwXDDL0/NNR7yO1IFljqYC1QbX+Mq69sxVYXWSoYZD0Z8q2vk42HsOJiOc5pa0REVWWKw/OLDEfZ1tqxNW8ogT+0sNbWpHQ677d+/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739118660; c=relaxed/simple;
-	bh=YC2rqriZkGtxsnGNrpo+w727E3fLutw8c/kxR9sE+wQ=;
+	s=arc-20240116; t=1739119003; c=relaxed/simple;
+	bh=Gv5/MAhQgxmKzh87wmDhi/R3U7Y4UX0eiD8WhiIom1w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=srUvoMoHPwYjrJrJZOJxVpuW+CaWRyCnY4Xl86yE1O3C6VICzylYaSP5wHXG+zEAZgNcGDse/650z64xVktSWzLV8Di8DT6FvILoukoq5Qm3uTRKz0z0kNWMaK8OP3TJv6LT5EfuKBMfhsL1OqUcGOM23e+hYI9sTlj8FvCkaP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X5moKQai; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=sqnAArtIHNunhP1lA/0jXMPdf36oiwuROCYHkb3hcHK8kXA3lkGpCCrAyuJJ2Kl8phZ/n+EyN4hHbrqg79M8mALqjzOPM5VXy9Y76Py4+PA3MzOA3Wal7e3xsTNiLOQwKKjwSinw3VV5lazGjK5mFVcd3sXiASuyAm+Uqyor/p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f4HY6lm2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X5moKQai"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31867C4CEDD;
-	Sun,  9 Feb 2025 16:30:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f4HY6lm2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FF66C4CEDD;
+	Sun,  9 Feb 2025 16:36:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739118659;
-	bh=YC2rqriZkGtxsnGNrpo+w727E3fLutw8c/kxR9sE+wQ=;
+	s=k20201202; t=1739119003;
+	bh=Gv5/MAhQgxmKzh87wmDhi/R3U7Y4UX0eiD8WhiIom1w=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=X5moKQaiRuetTiE4ErahlW7gUbWdnZPi+/o8JdW/xW702jdtnTTCXoqRx49VYBycP
-	 j51yMJc6SUgq2tzClDIAGk1pKH/ptmylVNwNvPN392bEcCwUBemSbJ6fdChMkzIo1a
-	 IHoGsCF6LXs3369iZsAZDLLMXjsXpaCniu+3APo/1JCJO2O1o69m9DwOIyuOmky9HA
-	 p/jBHOxO8EocD7bzmVyuKnws+rx1ydv2Bo6klxwY6wwxsVlDk/ATrczKE1ntXYaYZA
-	 x5D20FtUtYvXqli0uBetUC7oZItt0B/wRtTDFm3NcsV1GdMnSb02bXZqrqHOf7FpgC
-	 HQgGUj3eVtAZA==
-Message-ID: <12c1fb05-6cf5-4fb3-9db8-730bc7f6cfc7@kernel.org>
-Date: Sun, 9 Feb 2025 17:30:52 +0100
+	b=f4HY6lm2a9Ms18puCpIl0QgUPTGImqF96xu1hGye5e1NNJEg4iALgebCeDBIQwkJn
+	 yjw98ai8Cmkvh5bTiCAbubOaPSzjZTTNtgJzLpwMp+6ZAxDKdPubyuMDhFvBL0GUXH
+	 5fUt+lAy6LSpkp56dy59aJl0fFQhsQcnZyMQqwRossMAsWSxcQ4d6668Z1B71E/1ea
+	 0+pNVtHJ9DBqYb2nvvbD7VeGXoME6gZPssuCXctgGqx+G6X/TZ1Ltl0MkcWQ9vEMpA
+	 Q8QvAmBYfLEd7AR9hzz2mKQaqEQxpPfjDsml+EiOIUP09vzJVvpvcB9W0/3mZIwKNx
+	 LHNlQbUgv/RBA==
+Message-ID: <bc413dad-e167-4f4c-9ab2-b2ae77954839@kernel.org>
+Date: Sun, 9 Feb 2025 17:36:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,16 +35,19 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 2/3] dt-bindings: mmc: brcm,sdhci-brcmstb: Add sdio
- sharing support
-To: Kamal Dasu <kamal.dasu@broadcom.com>, ulf.hansson@linaro.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- adrian.hunter@intel.com, linux-mmc@vger.kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, wsa+renesas@sang-engineering.com
-Cc: f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
- Kamal Dasu <kdasu@broadcom.com>
-References: <20250206220940.10553-1-kamal.dasu@broadcom.com>
- <20250206220940.10553-3-kamal.dasu@broadcom.com>
+Subject: Re: [PATCH v1 3/3] arm: dts: stm32: Add Plymovent AQM devicetree
+To: Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Woojung Huh <woojung.huh@microchip.com>, Andrew Lunn <andrew+netdev@lunn.ch>
+Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com
+References: <20250207143226.2026099-1-o.rempel@pengutronix.de>
+ <20250207143226.2026099-4-o.rempel@pengutronix.de>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -90,63 +93,26 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250206220940.10553-3-kamal.dasu@broadcom.com>
+In-Reply-To: <20250207143226.2026099-4-o.rempel@pengutronix.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 06/02/2025 23:09, Kamal Dasu wrote:
-> From: Kamal Dasu <kdasu@broadcom.com>
-> 
-> Introduce emmc flash sharing support using hardware semaphore
-> and SDIO share register to synchronize between TZOS and linux.
-> 
-> Signed-off-by: Kamal Dasu <kdasu@broadcom.com>
-
-It's RFC, so I assume you do not expect review and then you can skip
-this and obviously it is also NAK for the patch (so maintainers won't
-take it).
-
-However if you actually expect review, then:
+On 07/02/2025 15:32, Oleksij Rempel wrote:
+> +
+> +&spi2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&spi2_aqm_pins_a>;
+> +	status = "disabled";
+> +
+> +	spidev@0 {
+> +		compatible = "dh,dhcom-board"; /* Needed for spidev in userspace */
 
 
-> ---
->  .../bindings/mmc/brcm,sdhci-brcmstb.yaml         | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
-> index eee6be7a7867..b0ee39aeccb1 100644
-> --- a/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
-> +++ b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
-> @@ -27,15 +27,23 @@ properties:
->            - const: brcm,sdhci-brcmstb
->  
->    reg:
-> -    maxItems: 2
-> +    minItems: 2
+But that's not a dhcom-board.
 
-1. Missing constraint
-2. Please follow DTS coding style
-3. and finally this needs to be tested, so:
-
-<form letter>
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC. It might happen, that command when run on an older
-kernel, gives you outdated entries. Therefore please be sure you base
-your patches on recent Linux kernel.
-
-Tools like b4 or scripts/get_maintainer.pl provide you proper list of
-people, so fix your workflow. Tools might also fail if you work on some
-ancient tree (don't, instead use mainline) or work on fork of kernel
-(don't, instead use mainline). Just use b4 and everything should be
-fine, although remember about `b4 prep --auto-to-cc` if you added new
-patches to the patchset.
-
-You missed at least devicetree list (maybe more), so this won't be
-tested by automated tooling. Performing review on untested code might be
-a waste of time.
-
-Please kindly resend and include all necessary To/Cc entries.
-</form letter>
+NAK, you are abusing DT for instantiating user-space modules. Either you
+have here one, fixed, real device or not. If not, you must drop it. If
+yes, describe this one, fixed, real device.
 
 Best regards,
 Krzysztof
