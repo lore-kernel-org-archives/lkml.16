@@ -1,122 +1,110 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943CA1E0E0D
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 17:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500942F22
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 17:45:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739122826; cv=none; b=h+KNzTLMeIR6LR8SQjXddBx/Q9gZfLwWofyWObwvo+V/vSROIuC8gXStI7dZc2AD165pcN66YReHzXOfJqKNz779Bp+f7nAbofVbz02wv06Dx+7cYtjfT0nQKiaa+AzrXnVVDqXHt2NVAlCcaA8rXlCy3lEUPb6ZOasddyQjthQ=
+	t=1739123139; cv=none; b=SPp9u0lFXkJk9dvxWHTfug1ZDaEopdEKFkNYzIQpOOfM+SY3JQuFOsb8dYRW/su2ubVYzu7n2t/4BuOpVtd9pyZAFgYmUc6MPaB2E5NbmqmD3S1CYpi6vPWsgWJyYM0J9d9UYKltB1163UZ1tU9cKK4YbNJxcg6UA070kCIEua4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739122826; c=relaxed/simple;
-	bh=awNkYa3Md5bUo8i8zsV7pVKF5MYaBSWMYBPHO3M15Qc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iWmjdMA5Ehqpe7O70pFfxqpNtdT+qL4MO048p2wX1JIqKn0mHcwLvwsLqRdjjZH6po5qGRllXJp+9r63M2KmNcJXUIlUJah8vxUtKimiRiUbh6gtFBDH0WYstVGJaoRRRIS9SAJ1B5vo85AbT2eFOzD70TNsgVvpGzcO8ODkhks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=QLgE5oaJ; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1739123139; c=relaxed/simple;
+	bh=wwaN1MEN5EN7ialSuuoReLLWAW4uA92LExoXB3rQqdE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ezI9QIS2mhJ/R0ApYDciZQNCw8zdHM/w1xypnZtoCmUOxRRBdKPfhbQ7kNWDH9ejbnaNnXOiJ+QxELLyK5EoHTyiA+LPdn95bwCZF99hxeiDdwX2nNiN5T3FrFOr1OZWhPbH2/bRfKNNOWUVEyQoc9KOoPMneXrk/CUL15HMJNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=pFQz+Mcg; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="QLgE5oaJ"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ab7c6fc35b3so675466b.2
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 09:40:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1739122822; x=1739727622; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8f+USY5i1jojbJGeDtJw0r2JSIdnbcI05exT8JPCLJM=;
-        b=QLgE5oaJzyNQdDyTgdQ2U4IKIxedsy5o/EGCYMF2/zGGpWOvolWiwiSz4UrXku0zBF
-         tcrWLmHfj0PaGXAaPDu00DFniPG1ZA+tQFGQwG9SeQCT+iwS2OkDI2SLEl7A/JzJ7YqT
-         U1A+0SgSO6RSewqi8lbqK86D3l6mJnlE5oukw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739122822; x=1739727622;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8f+USY5i1jojbJGeDtJw0r2JSIdnbcI05exT8JPCLJM=;
-        b=YAkxgi9QPrCeU0qoY0RlusqUPCAr2LK5kKqsCK9NIS4P4Qk4JAXbNCPTEySdd7LubV
-         k/zud2KDc4sSKyfyTlWroiYn+K+3+F9ASkhYoFiJ2jHW02VQbgXnGCAWqZuOID0O0q35
-         pVC53XSsDhjKLbIG/X2QYec/SAEhtl9/k3Bz9GwxT577eJppxhRsPxXbBlNovHuJPSxM
-         pSEcTJ/iIl3tWlJyQ1lcTbIi9hxNqPE9eO9l46x8fKpR62vDWOmdxxt/fJogABY+B+yo
-         vhIyL/zzztodKBxSWubTWEZhFUr80gxs3cSEV60vJkPSrG7G1utu46lpffxPRkgEBEbD
-         l2sA==
-X-Forwarded-Encrypted: i=1; AJvYcCVfnfCGLed6PEaVSd9xOUXkIop3jFL7DBQra8812ypduQw1n8BXcEJiZIMk6cWlFq0Kvix7rOB9jrH4Uk4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhHDG/zr8Pm3Q304PEtThac6JlmPclO0JXLZ7k0vYf3nMJYDzT
-	jO9Mr3LznX7UYJRR2XfTg6ikZG8LHxeh9lLrO9qrr0dlMLjR5992sAyZ6QYWGRLPeWdFTNa8Uq7
-	5y40=
-X-Gm-Gg: ASbGnctGYk7wKRyGM6uoyBiYonbiiDrVLVu5dGOqnEWou4vh8w01jwkhukwi6jdTAyf
-	1PHh7xp8GJAMd6gWmTCNXfs6nlO0rilQ4atYXWqpD65T6CZMMymA/RhxnrQ8HHTO9YYEjzm1zrd
-	+3A6mJwXIq5WULqkeDqhEfe2Q8zflCA0EO2+OgvTED2PYvRF1ScSGO2NCUAZV4Zc8kA8YZdEY67
-	YHxz9zP9txxdT6RDD+xcme/YShNAcIoADR6Bjpo2w2OFPQI+4dAYIA/dc6To/CVvbgmHfNdjlNc
-	dHH16XleX3sON+JlD2FaTwMbipPp0/GKm6GN3gPX+Zb5ENwCxeKGSg26pJH9AM4qMQ==
-X-Google-Smtp-Source: AGHT+IFg7Km7kBL9tH9vcEh41bVtlUZ78ftQ0V/qO2uoInqYGQexoEV8lvGyd/gT9bodp+1FtOcNwQ==
-X-Received: by 2002:a17:907:c48c:b0:ab7:b424:dd11 with SMTP id a640c23a62f3a-ab7b424e60emr323426066b.16.1739122822537;
-        Sun, 09 Feb 2025 09:40:22 -0800 (PST)
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com. [209.85.208.49])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7bb9cc86fsm108486666b.140.2025.02.09.09.40.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Feb 2025 09:40:21 -0800 (PST)
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5de63846e56so1790944a12.1
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 09:40:21 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUg2k3KwD+vEuWwjVxpXAfkpc6FC3It+g7iq+etTWH4xpPZdH2harfQeVOCSg/tObtleai1OBZ8UTYb3UE=@vger.kernel.org
-X-Received: by 2002:a05:6402:13c8:b0:5d0:ed71:3ce4 with SMTP id
- 4fb4d7f45d1cf-5de44feaa0bmr13224043a12.6.1739122821546; Sun, 09 Feb 2025
- 09:40:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="pFQz+Mcg"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 532BE24002E
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 18:45:32 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1739123132; bh=wwaN1MEN5EN7ialSuuoReLLWAW4uA92LExoXB3rQqdE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=pFQz+McgXOD4SJpqS3t88fYmh0f5343D1MX9fCQZ5W5ZdV5d90NJnQIiHn4PjdCht
+	 jpzs5EMtNx/SAOBHAvluntIEwLOprerzu70UzAecNitIGH8k0ZnZrhUFsPPYt30bPa
+	 5W++llA90llvNmYGZGg6pjdtnttlirT0AnVYIO3h/V52Nxuo2QcmZfdHQ5yO7Q21SW
+	 jvIRtzOr5XZUGt9zXBs5HlCATqYCjE2JIiSc7GPY4SJyuH2VUSeO6sOP/akjsfoNL7
+	 NQWpd+m9PlYAgJGrD6+VmVwjqa+7KOvmx5tud7mokjtobj+GT1nLVBwQhE74lhhlhe
+	 V93cWZaX8J0/A==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4YrZqX2D0Mz9rxK;
+	Sun,  9 Feb 2025 18:45:28 +0100 (CET)
+Date: Sun,  9 Feb 2025 17:45:27 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
+	"Rob Herring (Arm)" <robh@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-ide@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	linux-crypto@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+	dmaengine@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+	linuxppc-dev@lists.ozlabs.org, linux-spi@vger.kernel.org,
+	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>, imx@lists.linux.dev,
+	Niklas Cassel <cassel@kernel.org>, Scott Wood <oss@buserror.net>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Richard Weinberger <richard@nod.at>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Lee Jones <lee@kernel.org>, linux-watchdog@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-mtd@lists.infradead.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	linux-kernel@vger.kernel.org,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 09/12] dt-bindings: memory-controllers: Convert
+ fsl,elbc to YAML
+Message-ID: <Z6jptzP7KLxmIJeL@probook>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <20250207-ppcyaml-v2-9-8137b0c42526@posteo.net>
+ <173897189669.2630636.11579554304003668196.robh@kernel.org>
+ <Z6jlrU7EPeATjK8s@probook>
+ <4c41a8e2-b097-4b95-ba0a-115dbbfc4e1a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250209105600.3388-1-david.laight.linux@gmail.com> <20250209105600.3388-2-david.laight.linux@gmail.com>
-In-Reply-To: <20250209105600.3388-2-david.laight.linux@gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 9 Feb 2025 09:40:05 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgu0B+9ZSmXaL6EyYQyDsWRGZv48jRGKJMphpO4bNiu_A@mail.gmail.com>
-X-Gm-Features: AWEUYZnVB4u0CE8_NqktnRI7jAQu96wYzkqcCCQdZkJ0CHx-FvrH7mTME3sNsc4
-Message-ID: <CAHk-=wgu0B+9ZSmXaL6EyYQyDsWRGZv48jRGKJMphpO4bNiu_A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] uaccess: Simplify code pattern for masked user copies
-To: David Laight <david.laight.linux@gmail.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Arnd Bergmann <arnd@arndb.de>, Kees Cook <kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4c41a8e2-b097-4b95-ba0a-115dbbfc4e1a@kernel.org>
 
-On Sun, 9 Feb 2025 at 02:56, David Laight <david.laight.linux@gmail.com> wrote:
->
-> Code can then be changed:
-> -               if (!user_read_access_begin(from, sizeof(*from)))
-> +               if (!masked_user_read_access_begin(&from, sizeof(*from)))
->                         return -EFAULT;
+On Sun, Feb 09, 2025 at 06:30:44PM +0100, Krzysztof Kozlowski wrote:
+> On 09/02/2025 18:28, J. Neuschäfer wrote:
+> > On Fri, Feb 07, 2025 at 05:44:59PM -0600, Rob Herring (Arm) wrote:
+> >> On Fri, 07 Feb 2025 22:30:26 +0100, J. Neuschäfer wrote:
+> > [...]
+> >>>  .../bindings/memory-controllers/fsl,elbc.yaml      | 146 +++++++++++++++++++++
+> >>>  .../devicetree/bindings/powerpc/fsl/lbc.txt        |  43 ------
+> >>>  2 files changed, 146 insertions(+), 43 deletions(-)
+> > [...]
+> >> dtschema/dtc warnings/errors:
+> >> Documentation/devicetree/bindings/memory-controllers/fsl,elbc.example.dtb: /example-0/localbus@f0010100/simple-periph@2,0: failed to match any schema with compatible: ['fsl,elbc-gpcm-uio']
+> >> Documentation/devicetree/bindings/memory-controllers/fsl,elbc.example.dtb: /example-1/localbus@e0005000/nand@1,0: failed to match any schema with compatible: ['fsl,mpc8315-fcm-nand', 'fsl,elbc-fcm-nand']
+> >> Documentation/devicetree/bindings/memory-controllers/fsl,elbc.example.dtb: /example-1/localbus@e0005000/nand@1,0: failed to match any schema with compatible: ['fsl,mpc8315-fcm-nand', 'fsl,elbc-fcm-nand']
+> > 
+> > I think this is due to how the patches are ordered in the series.
+> 
+> If that's possible, this should be fixed, e.g.  by re-ordering the patches.
 
-I really dislike the use of "pass pointer to simple variable you are
-going to change" interfaces which is why I didn't do it this way.
+Yes, I'll do that for the next iteration
 
-It's actually one of my least favorite parts of C - and one of the
-things that Rust got right - because the whole "error separate from
-return value" is such an important thing for graceful error handling.
 
-And it's also why we use error pointers in the kernel: because I
-really *hated* all the cases where people were returning separate
-errors and results. The kernel error pointer thing may seem obvious
-and natural to people now, but it was a fairly big change at the time.
-
-I'd actually much prefer the "goto efault" model that
-"unsafe_get/put_user()" uses than passing in the other return value
-with a pointer.
-
-I wish we had a good error handling model.
-
-Not the async crap that is exceptions with try/catch (or
-setjmp/longjmp - the horror). Just nice synchronous error handling
-that doesn't require the whole "hide return value as a in-out
-argument".
-
-I know people think 'goto' and labels are bad. But I seriously think
-they are better and more legible constructs than the 'return value in
-arguments'.
-
-Yes, you can make spaghetti code with goto and labels. But 'return
-value in arguments' is worse, because it makes the *data flow* harder
-to see.
-
-          Linus
+Best regards,
+J. Neuschäfer
