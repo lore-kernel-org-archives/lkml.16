@@ -1,114 +1,76 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6175B1DE890
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 19:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366D31E22E9
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 19:27:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739128556; cv=none; b=bvQQAD6MMNmyiH/RGEgWfxwHpcTBTRaWZgRyPJYP/fkdL8hHeauDDDcDR4syzFwL9CxAh3QFdtk25olzYHdVZVGnfdfImbbJi28Tls+HHee6JPjjzk3PHkjW9pZqCg+lpCEAPl3Q9cPMx7gVwWNvXQBZPM9w+p9uCPXN4xPILvA=
+	t=1739129223; cv=none; b=gbKrCtt5un9qDIY7NU/dAyWge9T45sBRIixdIzxCVqWw4xVsN6LZmxgLSlJTf+GLXZdl0s03xyPOWK/nd32khVhUEmj1/OLxgNRyZbf4uLuJtiutasnFfWMjSJ733XrMgd+wn9N0JK5bTxdcnpgb6XhXgAyIJlRsk3uhspPMHQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739128556; c=relaxed/simple;
-	bh=sNIqBwASHZS6f8Tct2wIuBKd1+bQdUMIFK+Uqg8rsxE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FR237Bcl+U2LHIYrjT4I26XRIV5FaRi4eNRg1pNLnNQqquZ1FApKObQ3t2MWh5zZ0uvoUJG8osxWyMiBIy4EHxW9vRLY18pz0hJQSnZsax0mGPnIq8Svf3t/RqbdLBapDoBxdj7nx9+qEv96/gTNbA2iaSHByUAtMLbBbtucv+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YY0nWKat; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YY0nWKat"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739128553;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bzx0E/Qg3IYe3K4apwPHQsXCz/GYdO9gQu3c3MuxtD0=;
-	b=YY0nWKatJ574/naidUmztXDrjSbyMGsoxpQWmZkIyK9dAGLU5CYOmpQPr6pdx+G3KA2Xgq
-	RpQV0GhxqOT0Dd7LaQiQcaljiCSCP4AbjlJ1voeI+x6iqHh0tB4gxxGMC9NSppKEJ3ta97
-	lkgDOpxM8csa7GjtTTAyw7IZ4GSGxy4=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-205-VDxynddGMVecglnoLUczKQ-1; Sun,
- 09 Feb 2025 14:15:49 -0500
-X-MC-Unique: VDxynddGMVecglnoLUczKQ-1
-X-Mimecast-MFC-AGG-ID: VDxynddGMVecglnoLUczKQ
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A79261800872;
-	Sun,  9 Feb 2025 19:15:44 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.8])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 8D17A19560A3;
-	Sun,  9 Feb 2025 19:15:39 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun,  9 Feb 2025 20:15:17 +0100 (CET)
-Date: Sun, 9 Feb 2025 20:15:11 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>,
-	Oliver Sang <oliver.sang@intel.com>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] pipe: change pipe_write() to never add a zero-sized
- buffer
-Message-ID: <20250209191510.GB27435@redhat.com>
-References: <20250209150718.GA17013@redhat.com>
- <20250209150749.GA16999@redhat.com>
- <CAHk-=wgYC-iAp4dw_wN3DBWUB=NzkjT42Dpr46efpKBuF4Nxkg@mail.gmail.com>
- <20250209180214.GA23386@redhat.com>
- <CAHk-=whirZek1fZQ_gYGHZU71+UKDMa_MYWB5RzhP_owcjAopw@mail.gmail.com>
- <20250209184427.GA27435@redhat.com>
- <CAHk-=wihBAcJLiC9dxj1M8AKHpdvrRneNk3=s-Rt-Hv5ikqo4g@mail.gmail.com>
+	s=arc-20240116; t=1739129223; c=relaxed/simple;
+	bh=Vyd0UobHk6QyUMIqma6yCedoS8r/66Qmz3flmHKGW98=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=BHIxjUNbN4ZI/qiM43/IkeocONuELn8dE6MG2FuDleFwaes/jzkZSAxonTnUuURqt+4uqVFpyyAddkQzj1ZXArTu+VxrJ3r/vpwoO+GkK9oeSBr53daGZfqLWf+0bXQEiqyxRHOnSvf5zX6wdP/+t8kXDhX3Ch3+1F+btMueWjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d143f1353bso16292305ab.0
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 11:27:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739129221; x=1739734021;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lm3T2WLDaPlgZdqyMgzRB/LNX82XeoMBy/H3NA3BdvA=;
+        b=qWQ7qcS0lmebG/ifX51ZGq1St0yCpVlKTbQn3hrIXe34xSWqQbGqy15NmceyNqInvU
+         pEd4nrv2jr3l8Qc9IkgAnJMIcekcpFGY4393zPdRcx/98tFrdanEU0Jsbk2Mwwk2auzA
+         lc0KpcVCOn/WhzVKiXYEOixDwjQo1zk4+ZCXpnfbW6MWvgdva6lhqYbm00RlQFAYDkyn
+         jEa9nDWzn74JSy8gvI8E1/73anAyhjQRfnAoPhc/j87jRbGA0/qrbpjzpF9CQnVfQ5Wy
+         Q8ria4DreFwtZ5jXQjQtucKhI4/ryKop2Wv0kaWgNt/r1ADtQDBY1HrusrUyaNpn/m0Y
+         1pPg==
+X-Forwarded-Encrypted: i=1; AJvYcCXiRxn/tQpaAA/dKGzigM81f7XSBtAFc3k2o3yTbbsEueCmFHoS9R5KxhZyGAiXJzlQtivnyds+EkiRKMk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz35F+Kb3HqGcjD/FxysKSi8A3K5zfL1QZ/hllJMy2Cwg3vl3vk
+	GaIqq1BcR0YwHCa+PKkaBjaawMpkuB6baJE8QYZpA8LDmHKU0klgz/UazbAlEiRHcDiGXqfA1GN
+	QpLJUsEUfN6OCsfpNXzN9j1si9QCtb7sXObU3NIYjACiCg031EAd1irk=
+X-Google-Smtp-Source: AGHT+IGkxGZKejY1F3ygYzzaUi1hUqpXmA/5+5Xn8TKUNvFSY0sOPF6pRt3WrIZfaS1l833h6uU3OAju00rg4KLYoZHT8rVj7Ppf
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wihBAcJLiC9dxj1M8AKHpdvrRneNk3=s-Rt-Hv5ikqo4g@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-Received: by 2002:a05:6e02:b4d:b0:3cf:ae67:4115 with SMTP id
+ e9e14a558f8ab-3d13dd2547dmr43310225ab.8.1739129221395; Sun, 09 Feb 2025
+ 11:27:01 -0800 (PST)
+Date: Sun, 09 Feb 2025 11:27:01 -0800
+In-Reply-To: <66f01abe.050a0220.3195df.009d.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a90185.050a0220.3d72c.0040.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] WARNING in bch2_fs_release
+From: syzbot <syzbot+08d08d52c3a09bfc70f7@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 02/09, Linus Torvalds wrote:
->
-> On Sun, 9 Feb 2025 at 10:45, Oleg Nesterov <oleg@redhat.com> wrote:
-> >
-> > Again, lets look eat_empty_buffer().
-> >
-> > The comment says "maybe it's empty" but how/why can this happen ?
->
-> WHY DO YOU CARE?
+syzbot has bisected this issue to:
 
-Because it looks unclear/confusing, and I think it can confuse other
-readers of this code. Especially after 1/2.
+commit 8b22abb4c84058e9533d71a4814e54316ba2621f
+Author: Kent Overstreet <kent.overstreet@linux.dev>
+Date:   Sat Oct 12 02:53:09 2024 +0000
 
-> So here's the deal: either you
-...
->  (b) you DON'T convince yourself that that is true, and you leave
-> eat_empty_buffer() alone.
+    bcachefs: -o norecovery now bails out of recovery earlier
 
-Yes, I failed to convince myself that fs/splice.c can never add an
-empty bufer. Although it seems to me it should not.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=121ddb18580000
+start commit:   8f6629c004b1 kbuild: Move -Wenum-enum-conversion to W=2
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=111ddb18580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=161ddb18580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=147b7d49d83b8036
+dashboard link: https://syzkaller.appspot.com/bug?extid=08d08d52c3a09bfc70f7
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1312cbdf980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=129411b0580000
 
-> In contrast, the "eat_empty_buffer()" case just saying "if it's an
-> empty buffer, it doesn't satisfy my needs, so I'll just release the
-> empty buffer and go on".
+Reported-by: syzbot+08d08d52c3a09bfc70f7@syzkaller.appspotmail.com
+Fixes: 8b22abb4c840 ("bcachefs: -o norecovery now bails out of recovery earlier")
 
-... without wakeup_pipe_writers().
-
-OK, nevermind, I see your point even if I do not 100% agree.
-
-I'll send v2 without WARN_ON() and without 2/2.
-
-Oleg.
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
