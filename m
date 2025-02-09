@@ -1,106 +1,69 @@
-Received: from pv50p00im-ztdg10021101.me.com (pv50p00im-ztdg10021101.me.com [17.58.6.44])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4001D9595
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 13:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20A41DFE1;
+	Sun,  9 Feb 2025 13:13:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739106056; cv=none; b=Srgraj7RKj7MjaOKXQ7XEhqIeZlh4Qjbaj5TlEt6kG9X2TKEC/NBTuZt7xJoacn+tbMBt1GY1D6iYgJXJPE1sNyo3bkBq//dySexSoackrcdnXo0ZVS7Wl2oMt96PUu5CiNlm6PSEtTaUJcC4HQLh2MLyq9+L5OVUqWBOn7alVE=
+	t=1739106803; cv=none; b=hm8035iGncnvuiBjKoRNtsdW2E06AWXNiwdOIuJ+qQ0s2LGya4U9/5ZmmSIVKd73P0FNzapKDh5SjIL+CvfQ3MuyQmXTfrVuTXYt5DuvDvl0ufkWg4MTx7ryX1N84sbeXAV+OqVgyG8o7VPl0iWWDrXJ4GtyRZgnWFH6zzfuKxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739106056; c=relaxed/simple;
-	bh=Xyffhkw9qVjtiT+ifySYWkBDJuug+7f9ej1i8+nxm94=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=u0FGkoyAFmUDWF0ycfy/puXzq8deKydiajEYBK4N1SsZt7BPwnQDYEsLFNiyAji3VhtT2K2mlGhDUlUyIErA6BkS4wNIANTsjcEEKGNsM70C9UAiSYcK9cWFghv7HfQG2nK4+iqM26xWjEqB+YjnK4fvi/6Ohqdxcz7Vyc45IKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=ni2PId0k; arc=none smtp.client-ip=17.58.6.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1739106803; c=relaxed/simple;
+	bh=KY+2MWjuH2v4j9LnacdOFMSvtYVkE7RsvZRwGr/i98g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=go/ArCr+e5wDz/+9sqdJ4p+P7JQ4ZCcydNDL/G4h+Zt2NE6oLd8l7mvoxrMI2kncQpWwGVc9/fiSKemM/mXrBOoHtWh1xGS96973sTC9lRdKfOBbDrpHf/EdtIAOkXX4WNqCWQnLZpBjOohZO0n5horWollFsRMqUcIv+whuPmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MOlLo7jX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="ni2PId0k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=ofZsMAmyfjKnHJmM1L8pFW96kyh2iTU8Cuekoza3vnU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=ni2PId0kD2I+JGoKi+GflL6oUUGbcUK4hRZo1utpqhbELS5X4D9/+3/h4yiQPKfUB
-	 9QoAB675ZX7cfzbbVYhDp0Uus51WOBX6zb9JUG4dod/xvP2MI9dNuDNlvD6quRSifY
-	 +HKuSvOp56N4ndRJ35InLV/DHxJ5HgjGIc3o+CAcr7LIUHkKjxorKEYgESWWpD/KLl
-	 0y7O7RsEAH6Jro1mGM6JM0wsSnA8yPUY9jX0fZUG10E8I4dgNQrRYlm9Z4FGRmc4lC
-	 Q5/N3sNS7leXC9W9e371mYTjfViGF3K2epKJV93IfsnFskWAFjl3RaK3baj0DjatdU
-	 Cvsc06thtFing==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10021101.me.com (Postfix) with ESMTPSA id 12580D002C3;
-	Sun,  9 Feb 2025 13:00:29 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Sun, 09 Feb 2025 20:59:02 +0800
-Subject: [PATCH v2 9/9] of: resolver: Fix device node refcount leakage in
- of_resolve_phandles()
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MOlLo7jX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 494DFC4CEDD;
+	Sun,  9 Feb 2025 13:13:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739106803;
+	bh=KY+2MWjuH2v4j9LnacdOFMSvtYVkE7RsvZRwGr/i98g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MOlLo7jXi17egTi/YFh3PzU/Y0IT7NuVIK46wyh5TtJcTaAdJt++PENlhszLbFWqA
+	 5+muXfxpjfoZ1vrxH3al/9MMzmR65pGefhWVLYSpuGqEqG24g9aH8kVy9XqabJkmmo
+	 ik0oj+RDrYCGqc4DxBT/lHG9PwlcIVOrlbFnw/m2dPwpMBav6YGzjHGgN34idR3k6d
+	 0j2Vrw9DiPzI/AHrH1KSyuAwzXKgKiYC0/eNp33R2imoMHJx3wXKG+Pwe2XhrqAwq6
+	 R8cNBcqnnMZ0oByklOFdNN/dkgPOmJ/i9hv6VGDxqarQuEaeGalDh4+DtFztYra/Te
+	 IqKBvQxSdnyug==
+Date: Sun, 9 Feb 2025 14:13:19 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>, Conor Dooley <conor@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Sergey Lisov <sleirsgoevy@gmail.com>, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: serial: samsung: add exynos7870-uart
+ compatible
+Message-ID: <20250209-roaring-wasp-of-variation-58dc8e@krzk-bin>
+References: <20250204-exynos7870-uart-v1-0-06be6aa96284@disroot.org>
+ <20250204-exynos7870-uart-v1-1-06be6aa96284@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250209-of_irq_fix-v2-9-93e3a2659aa7@quicinc.com>
-References: <20250209-of_irq_fix-v2-0-93e3a2659aa7@quicinc.com>
-In-Reply-To: <20250209-of_irq_fix-v2-0-93e3a2659aa7@quicinc.com>
-To: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <maz@kernel.org>, 
- Stefan Wiehler <stefan.wiehler@nokia.com>, Tony Lindgren <tony@atomide.com>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Benjamin Herrenschmidt <benh@kernel.crashing.org>, 
- Julia Lawall <Julia.Lawall@lip6.fr>
-Cc: Zijun Hu <zijun_hu@icloud.com>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>, 
- stable@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Proofpoint-GUID: 44BrMHfmuQSbv_XCfJBl-CKTW9nR2hTC
-X-Proofpoint-ORIG-GUID: 44BrMHfmuQSbv_XCfJBl-CKTW9nR2hTC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-09_05,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- mlxlogscore=809 phishscore=0 mlxscore=0 clxscore=1015 suspectscore=0
- bulkscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2502090116
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250204-exynos7870-uart-v1-1-06be6aa96284@disroot.org>
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+On Tue, Feb 04, 2025 at 02:08:45AM +0530, Kaustabh Chakraborty wrote:
+> Document the compatible string for Exynos7870's UART driver. The devicetree
+> property samsung,uart-fifosize must be mandatory, as the driver enquires about
+> the FIFO sizes.
 
-In of_resolve_phandles(), refcount of device node @local_fixups will be
-increased if the for_each_child_of_node() exits early, but nowhere to
-decrease the refcount, so cause refcount leakage for the node.
+Please run scripts/checkpatch.pl and fix reported warnings. After that,
+run also 'scripts/checkpatch.pl --strict' and (probably) fix more
+warnings. Some warnings can be ignored, especially from --strict run,
+but the code here looks like it needs a fix. Feel free to get in touch
+if the warning is not clear.
 
-Fix by adding of_node_put(@local_fixups) before return.
+Please wrap commit message according to Linux coding style / submission
+process (neither too early nor over the limit):
+https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
 
-Fixes: da56d04c806a ("of/resolver: Switch to new local fixups format.")
-Cc: stable@vger.kernel.org
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
- drivers/of/resolver.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-index 779db058c42f5b8198ee3417dfaab80c81b43e4c..b589e59667fd3ea2c2bd5240414803cb17707ec9 100644
---- a/drivers/of/resolver.c
-+++ b/drivers/of/resolver.c
-@@ -256,6 +256,7 @@ int of_resolve_phandles(struct device_node *overlay)
- 	phandle phandle, phandle_delta;
- 	int err;
- 
-+	local_fixups = NULL;
- 	tree_symbols = NULL;
- 
- 	if (!overlay) {
-@@ -332,6 +333,7 @@ int of_resolve_phandles(struct device_node *overlay)
- 	if (err)
- 		pr_err("overlay phandle fixup failed: %d\n", err);
- 	of_node_put(tree_symbols);
-+	of_node_put(local_fixups);
- 
- 	return err;
- }
-
--- 
-2.34.1
+Best regards,
+Krzysztof
 
