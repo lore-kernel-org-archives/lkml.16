@@ -1,136 +1,99 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7EF1684B4;
-	Sun,  9 Feb 2025 10:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB02313BC0C;
+	Sun,  9 Feb 2025 11:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739098575; cv=none; b=rlKhosSqRH9brfgfPJlupqeooRm54TVXwK82qblXm9F/vgJOmDf/0+DoxtLW5i+i+HgMaXrtUqZCeqVnddocHj3jjl9eGgzC2+peyvz7deSdkt8xD6mW+iD0aFlLsGJcnBewAXj5nMrRWtsrr6ukK2ulr95OtxrPyhaOr3JPjSY=
+	t=1739098821; cv=none; b=vCct09hsjC6qAeZhyvHnw/HI1eExZQ7wBNd6880pllrm1qOEeKPu2hERerXX5tNlyDNZC76Rz14kMZhlxlvAiXi8j2fhI3V334TiAX3kY/81yXOcnEWt+bajXMh4j5fDWQpCmPT9N7+9Psd5KPovlhkABYKGIlHRULr7nH+G50A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739098575; c=relaxed/simple;
-	bh=LNRBaLU6n3SSswnYQMTXgXBJNyg5anDMPmBQtlZCdYs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pnoZo5yCgA80BmBqGSHMw5BibOExXQtO4cG25JN25G5e6Li5j5xFqtKhJl8WHh/mWwMOpbR61Vfr1qF1ZsPPzEh7xE7n7ovg8iqBaGBLs9eMwnW4vI5bt2++CDpS0uAgNXSk6AWRyw79O5iVqq+0SEY8tMuwfuIovp7S5hWaOc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XoismmyF; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739098821; c=relaxed/simple;
+	bh=uchKxHe/6t1Gucz4FmMs/tY7jNQzjVFaIGS0K7VXSjU=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=NmehvnZGd06zQpiIaZSmPIkaDYJNDcG0ZU4tVhK8CajO6IScVzDW7iHyj2PHbSfmTk0VN4CSEfewBmETjscfs2iIb3jtanlyNkeaPpPbVm1um9v9FN+5nbCIXJ7Rs/BKtDWGLcxEyfguw0G+TQkn559DPaOBefR97Pfo+vMYso8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=JkUbwCqH; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XoismmyF"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-38dc5764fc0so2264903f8f.3;
-        Sun, 09 Feb 2025 02:56:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739098572; x=1739703372; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iuqNM4OrcH8qX6ei9TmPLzMmYDM1c1NblMlEWwW3XBc=;
-        b=XoismmyFKKSKa7E1YzfQuhpiPD92kCgiZNPfrsQ0tViJfokpU7UtIc7og0PklWLpv8
-         lR22xTWea/qpM37AfmhyMGFDsRcVMO1QpXb97rlnrR5Z53in/GdpS1xF7TwImEVooPHi
-         DZe5fzQJh3k5TtyoAsq6MT8Juw+/ZBzeSH3ClYm8f1sc0eoOeJGaAuIQdUgV0GQ3vCu1
-         i+emfb+zvrF0SJVfuTYjO3ArYDtb/YHksqw+CCXCXJoOrpUNNJItRdq6Z7Bf46iHerka
-         O/Yxg58nL6VsNwGgafVW+c8nR4/d0Bujdl0QG8Qv04s8qfSx+QJqWuck1eEbjOHMbgix
-         bAzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739098572; x=1739703372;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iuqNM4OrcH8qX6ei9TmPLzMmYDM1c1NblMlEWwW3XBc=;
-        b=jvxOk+yaVOvEmR4teGrkWNUd3yIclnVxzfe+PMANI659THI+CtLcFJOlu37z7aBtMa
-         kExeXPw4TZA2nXkzRhkXhMqJ46Ywoeu/6OeqKDwEmvq3Uc997suz7mAsOkyAFRteeR/H
-         Wmnx0zPEAckp3p/Ltr4pXFRTY9O/3Y4ZzErDTVcPWwiNxsLuRoI38RI/65I6YZuTzvmn
-         +GGZYoRnSHkd60esngjIvQjPxPD0MOeNg170bQkI1iIhhzwiDAd3lgsBjEhbNo6ssOG1
-         bDjVp6HnU8dyKbBQ1vJw3T0NXe+nBhJ0nsY5OBaq3oYZXM8Qppw/kagxYVxN7NvdSyra
-         eZQw==
-X-Forwarded-Encrypted: i=1; AJvYcCUW5xvIkkI5HdHjovlOgGq3BcfPe/jLrHkow91tFm8YpP1pucpaEzPUOryJUfFC3wghcPTlpzsU78eV/N4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWaiXgvPWkPN/gwufyw2WQTEnAIorjrqByna1n0b89ZZcc4Q14
-	CbQN4ctruKzXXQNIB0XGIzLfuQmvzTzBzyEZQ+uNkZyfXR565gBKXsZf9Q==
-X-Gm-Gg: ASbGncvmU4lzfMGsZW6p/rev9CWK/6EBG6YXwuMTlxb4ZmAMr5NSGqzOdYlJflnIL+p
-	iRnCHBhEPn0mLu0Ntg4i/4aPSxoznbPN/lOT1iB92ccZhZeC6Op/ycdBZF2Cc1ZiDwgUr8ft2kF
-	wVOvfJhdfUJN2aFFbv5jLC0MOHOGl02UNsgzduusKUphPPmhF9FtIjBaDLRAo07ux/uENDvAwbS
-	ZTC2XrxMfodwqHhhp4/qdvBFaj8ZMPxLHjlYcvARNDMvaPF23/Dk2KoBWT2X6tCZh2V+uJqTxSa
-	ulfagsD7T+liTbSwuWsq+AM/YpbiC2uYrLZkxBVbME0arjEBzi6BvcDXEmOts+n6mSKzO2QS
-X-Google-Smtp-Source: AGHT+IG5+0w3d+vA8DrljBFuEDJlBTRXom8zYj1WGrZaU1rYNUcVtb+uklcUd37Ibmt6WpDnmBRu/w==
-X-Received: by 2002:a05:6000:1549:b0:38d:d0ca:fbad with SMTP id ffacd0b85a97d-38dd0cb7163mr4534918f8f.14.1739098572307;
-        Sun, 09 Feb 2025 02:56:12 -0800 (PST)
-Received: from snowdrop.snailnet.com (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcb781bdcsm6325791f8f.23.2025.02.09.02.56.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 02:56:11 -0800 (PST)
-From: David Laight <david.laight.linux@gmail.com>
-To: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Cc: David Laight <david.laight.linux@gmail.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Kees Cook <kees@kernel.org>
-Subject: [PATCH 2/2] fs: Use masked_user_read_access_begin()
-Date: Sun,  9 Feb 2025 10:56:00 +0000
-Message-Id: <20250209105600.3388-3-david.laight.linux@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250209105600.3388-1-david.laight.linux@gmail.com>
-References: <20250209105600.3388-1-david.laight.linux@gmail.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="JkUbwCqH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1739098812; x=1739703612; i=markus.elfring@web.de;
+	bh=zTTFXhhuzuAGcnouAfDibr4bNX81x1TGXC62o0Kjysk=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=JkUbwCqHQaAXl52/EVdi1ljGmh9spZiC/zg49giAScmn8Lmbgj5UzIriGtVfn+0A
+	 3AKLn5pRNeBX51sfSYVsyoKFfBj9CeJRo8f9ewaLC4OfxRjeTKXzPlxMRojt2emgq
+	 69chWMz6JBmfsxlbYLqnTjUn3T2XSsc84XwdRFw2GCVnYawwR7C6WwLUEvijdtIZs
+	 g3vnXyP+WNBn+Lk8YObabbgbU/16Pgu7hJEmDG0wKDwJD/feoPFEjv31evWBcBBon
+	 VYbppIuN9cUyr5zJksMJLXUOFDvrIJk6aS5/LExbor9DOVayPKQYURkVwZNtrOsLx
+	 wqkx6maeta8BBPa9CQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.5]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MyNwk-1tSj0y2xKe-017uN8; Sun, 09
+ Feb 2025 12:00:12 +0100
+Message-ID: <df74c693-45fb-4c02-bc75-32f70633706a@web.de>
+Date: Sun, 9 Feb 2025 12:00:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: Ethan Carter Edwards <ethan@ethancedwards.com>,
+ kernel-hardening@lists.openwall.com, linux-hardening@vger.kernel.org,
+ Ingo Molnar <mingo@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+ Ben Segall <bsegall@google.com>, Peter Zijlstra <peterz@infradead.org>
+References: <wayfdq456uccu2kzujdokp5kklbl7evp432rmnxcdh2222wwlp@67idbpxoy32u>
+Subject: Re: [PATCH v2] sched/topology: change kzalloc to kcalloc
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <wayfdq456uccu2kzujdokp5kklbl7evp432rmnxcdh2222wwlp@67idbpxoy32u>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:6VLn2NDmUxJaetn9zKEBY3t2zlEqmfbtGelOKPrXuClPkOEyi+X
+ gGMkbre9CTAauYoztqdq8j0ciqgbRHSb2VMz/dzBGjxM9KuAiJ+D6PGUXsTAspq6XmxWC0z
+ ILl5jdCg4zfYUBMgFTPCMUuYYXm2QFSvV68ii9VKJfkhqv4DGIxeHCZWo7vOcM2y4cHDVyY
+ RqXPUyXtxL9ANVHzJbhug==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:8oCHxsTpdIs=;dwECqzLvlQ2np28+V4Z733uGZsX
+ 3jqs8Nme6dbgp/a94OcBg2dAA9cF2PE7/3e63RwGDWL7JbsjWOjvglE3HRBmyGx9Ym4HQLife
+ HDK7wjKQ8/NpT1uf8iAmVHnwZ4k+ppsF4JMkRMLyKRxU7c1v1Z6Kw1wUFdj/BL3bZ2kaYiuov
+ 0fxuhFdsxoBUfslAWm0zWhaeZrJAg4V9DhJcF29Qs5fV1YPJ6rD+yyKyDyczJOt9E8TFdtmXy
+ qF8CTrXAQW6BpMUivtx7WOjb1MNddSuhBII+bqNYaoKnbbjEaS0yohw51PjGu79BGQgCSMH8y
+ DzuaIhE3KlU16manOVrCi+0CdcYZIBzVL1fEXnoFXNYgzrPQPWjcu79nCmvuEV45019FXHZYa
+ TFe6XrB6EO37yp6nav75vxluw4AONOBg4kSLEEiFS1LJGpRehXme8RqFscOia+rvDcJvFCnvC
+ a25hRIf01l+R3k+m8zQAb5/t6AWbv03THfbmVG+Ddc5KlnWg7Lr7xpaIJFCi0J4yeXvx9uCc2
+ NKUYOmjr0iA942zInzddqXxHJiCazjQ0pCQCPEEoNe8mi0dlN3jY/4jXeb5Z56h4kVaWgvrVY
+ pzqHOGwdZbCE+JzNlfq3Pn5ZRq3jDfHzV39m/W92TT3MNBEgLAfBtpPhsjS+8knTrNl99ZXR0
+ abVtV12V1SfIHidBBvc/yvsld/dqTXu7+aey+7FXlyBG2TxjEiACjkfTee7e6VuaNfeu9kqAD
+ Yv/zK2eWuDCQYKRPAH12nda7rn7bEHr3NDypkIqVMfL4HBir5Mo4iPnasiusWQbqu3JvwM902
+ NCU9AQZ1FvyKbXDg4gBnFVpujUYF3MiYzJcnctIYo2Mn/304CCgCp7czrsGJ2Djw8wEF5w+CJ
+ 3Pu+w0RJfYBK1gs8z3EkTD/h6eF0SE2a7y1DxegNLglWrDAgLGHHrvMN9lEaVRCH6J5XRxDLU
+ o1/Qcjz5hf1RD6A5+1WoAArxwQSMVS6xmi8Qc3mX0VHJa3+vgjf1N5YbdXliSV5QLpZCRBomh
+ s4Gef0CEOxZKEN/Z+vCedFLFCFoSt5tlhknGcS8IUAxXCKECmY6Z6vVV2/ns4l/4U2AkAxbJB
+ kzJGhaoxU28PXB8EvuBHY/chblWxDj6mQ9UWVDSJKSMTjLdQpA3NdghHj7erkILT1VHRDkaak
+ 4HJ5Y/RX5KIai6jt7tPFsrGUhVYrcEulGsJtTGUy6mfaXkrhkArZkl0W38Zc8cOQrDXIpp5qA
+ 1jy1xFUzwSW9nSqSrvw6332k83VSOfyqB/WFC4UHSonT/ZqQQOHzlFfbk7JmEaoxyDIXNNCXb
+ eUd971cZBygRXO3hCVja7trd+/KjqsoaZT1DqZrvP9MN9Pkbf038QKRIPFwCp0lRuHhKch2Pi
+ Sa0HixxWxwzZGo+C4q9c5Z4isp9hihrwpoeKOWr++54Zfw4Pkm6g0j8SVTYuHVdAdpBKfa8Xn
+ ZqEz9yDNTvnY2IaxU8vJ/olgmO0E=
 
-Commit 2865baf54077a changed get_sigset_argpack() to use
-masked_user_access_begin() and avoid a slow synchronisation instruction.
+> We are replacing any instances of kzalloc(size * count, ...) with
+> kcalloc(count, size, ...) due to risk of overflow [1].
 
-Replace the rather unwieldy code pattern with
-masked_user_read_access_begin().
-Make the same change to get_compat_sigset_argpack().
+* See also:
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
+Documentation/process/submitting-patches.rst?h=3Dv6.13#n94
 
-Use masked_user_write_access_begin() in do_sys_poll() to avoid
-the size calculation and conditional branch for access_ok().
+* How do you think about to use a summary phrase like =E2=80=9CReplace two=
+ kzalloc() calls
+  by kcalloc() in sched_init_numa()=E2=80=9D?
 
-Code generated for get_sigset_argpack() is identical.
+* Would you be looking for any coccicheck extensions accordingly?
 
-Signed-off-by: David Laight <david.laight.linux@gmail.com>
----
- fs/select.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/fs/select.c b/fs/select.c
-index 7da531b1cf6b..abe2c1a57274 100644
---- a/fs/select.c
-+++ b/fs/select.c
-@@ -776,9 +776,7 @@ static inline int get_sigset_argpack(struct sigset_argpack *to,
- {
- 	// the path is hot enough for overhead of copy_from_user() to matter
- 	if (from) {
--		if (can_do_masked_user_access())
--			from = masked_user_access_begin(from);
--		else if (!user_read_access_begin(from, sizeof(*from)))
-+		if (!masked_user_read_access_begin(&from, sizeof(*from)))
- 			return -EFAULT;
- 		unsafe_get_user(to->p, &from->p, Efault);
- 		unsafe_get_user(to->size, &from->size, Efault);
-@@ -1009,7 +1007,7 @@ static int do_sys_poll(struct pollfd __user *ufds, unsigned int nfds,
- 	fdcount = do_poll(head, &table, end_time);
- 	poll_freewait(&table);
- 
--	if (!user_write_access_begin(ufds, nfds * sizeof(*ufds)))
-+	if (!masked_user_write_access_begin(&ufds, nfds * sizeof(*ufds)))
- 		goto out_fds;
- 
- 	for (walk = head; walk; walk = walk->next) {
-@@ -1347,7 +1345,7 @@ static inline int get_compat_sigset_argpack(struct compat_sigset_argpack *to,
- 					    struct compat_sigset_argpack __user *from)
- {
- 	if (from) {
--		if (!user_read_access_begin(from, sizeof(*from)))
-+		if (!masked_user_read_access_begin(&from, sizeof(*from)))
- 			return -EFAULT;
- 		unsafe_get_user(to->p, &from->p, Efault);
- 		unsafe_get_user(to->size, &from->size, Efault);
--- 
-2.39.5
-
+Regards,
+Markus
