@@ -1,277 +1,231 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0074A4C9F
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 08:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E08E57D;
+	Sun,  9 Feb 2025 08:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739090122; cv=none; b=iC2O/xlIGz+wpPPfsI/K415lbkm8fbVcAVRbHH+iXfgsoJd0ANe+Ym/XdZh/ZmUHgoFJTkPJ+fQyLx8nvh/Ak/TCR/B213dlwKmGX84LoGmN430b9di7oMJb4zqkgMglzpzS6NC7WukM1vB5gExHT+vrfpVTy2fK+yIAmUjriwQ=
+	t=1739090234; cv=none; b=ibLUXVpDhuCB7rSWcCzniogNnTQz0nQa9FOtAO5kFzC3YfhfZgmoe8qqWKGbIo7UWiVIU3Wd1et3+Xmf+R2/hy6VuR1UPqCakCLNUii0EDFBJIGmKiyocM9b6LqEy7mE1rnBiyODNoTa8Uf917ExlAY25eBDKu3fU3NtDC0ACy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739090122; c=relaxed/simple;
-	bh=HhN76xzeMQWGQtDWlLY3y0ZR2vVthOitYIh0TkH98L0=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=c/m0q2pVAxYLGeDouAiIc/pahyhAyFHbH8sc0ULtqs98qJj9E+9OtRVhqkCzlwJ40LfhhBggIGj/0ZUAuYR9dJqL23dioH886JRBB4XVc2hoG2NpcY/DjmEkB4yZj2v+/Q04PvD2mhdWekHSB/WIh6016M1vMtUi68R5OJD47bU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GvYCWCkY; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739090234; c=relaxed/simple;
+	bh=PR6ksHgpbyrT0ZsFiZTNIUU6+rlzpFCfFx+9GafRar4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=fl1BqVGJXhpo61bqFgo2HHLYaQP364Z9rQPD5mz5IlAduAfC9Im4kNmxXyyqXbp9XN907cMvKfOmBwgAuK4s1d/o/DNbW/e5tAUqPddHbIXVMF4YYO9PCjF2voiQqioCwnI/1JOPc2Z51t0a0E2kFRkbtCgsKmTYoaIpQoeQNhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=IK4fvz9s; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GvYCWCkY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739090120; x=1770626120;
-  h=date:from:to:cc:subject:message-id;
-  bh=HhN76xzeMQWGQtDWlLY3y0ZR2vVthOitYIh0TkH98L0=;
-  b=GvYCWCkYICXABfiWeBt0KV0BpHZWc5COzkrpsFvWBiyLFuMWveO0C+m0
-   lbz2xLNWoZkfViMDkPkMMI5Lvd+YaK1N2RkSEU1CmI30jC85mVqkkOM+o
-   AzV9rFuV6IK5isM81ISzYIX1v59OCqiGNmN3YTsyciooDPOJGdkTzj666
-   +Kj+DXgiKlzHfhMGC7k3P9zDSZa46t6mJ4PjJuZ2mxac5E2HYaVt3WlOp
-   RUL57Nyb0OlprAsu0TNgJ9wHESATmKuwceqxaUzPThWWfwIWhsYQQpEHW
-   LtMYxpFz/PnhL2+R3WCXJ+bK2KdE1tLA6H1yU+CXnu5BlbCbI1jimUVGC
-   A==;
-X-CSE-ConnectionGUID: SiUIe2u+QAWvcFxFJj2PHA==
-X-CSE-MsgGUID: vCBFHR1+TAqpGSFjbJ9ehA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="39947541"
-X-IronPort-AV: E=Sophos;i="6.13,272,1732608000"; 
-   d="scan'208";a="39947541"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 00:35:19 -0800
-X-CSE-ConnectionGUID: cEJ5/0ONRrGJJeTcjUa8sg==
-X-CSE-MsgGUID: q9Lti3hRR6O3QNfK8r3Wsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,272,1732608000"; 
-   d="scan'208";a="112418159"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 09 Feb 2025 00:35:18 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1th2ma-0011Gd-0r;
-	Sun, 09 Feb 2025 08:35:16 +0000
-Date: Sun, 09 Feb 2025 16:34:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:objtool/urgent] BUILD SUCCESS
- 7e501637bd5b702a2fa627e903a0025654110e1e
-Message-ID: <202502091619.ONKnXfyR-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IK4fvz9s"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5198akxq3213675
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 9 Feb 2025 02:36:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1739090206;
+	bh=Mn4lMnvvmy1BglkQz0uTKuPE+nzuikcohuPbAhGDdcw=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=IK4fvz9sfhV+pee1ke+c5o4VMqMxQjaTGUcwKUQr5oOh3hl1B1SvIbF8aYWnHcTi2
+	 6rhalYOmPe+1JqY+EDOySVmArJtx6urJJSMat/OZm/bPsEBNHSliZxAlVUwPV93s5Z
+	 hlfCEb11F96Gj6Ukpex4MAA+pOUSHcX9IOzh+70w=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5198akLn092987
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sun, 9 Feb 2025 02:36:46 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 9
+ Feb 2025 02:36:46 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sun, 9 Feb 2025 02:36:46 -0600
+Received: from [10.249.135.49] ([10.249.135.49])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5198afGR112742;
+	Sun, 9 Feb 2025 02:36:42 -0600
+Message-ID: <09880b14-cef1-44cd-9fa4-8840fb673c0a@ti.com>
+Date: Sun, 9 Feb 2025 14:06:40 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/2] irqchip: ti-tsir: Add support for Timesync
+ Interrupt Router
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Reeder <jreeder@ti.com>,
+        <vigneshr@ti.com>, <nm@ti.com>, Paolo Abeni <pabeni@redhat.com>,
+        "Jakub
+ Kicinski" <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S.
+ Miller" <davem@davemloft.net>,
+        Andrew Lunn <andrew+netdev@lunn.ch>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>, <danishanwar@ti.com>, <m-malladi@ti.com>
+References: <20250205160119.136639-1-c-vankar@ti.com>
+ <20250205160119.136639-2-c-vankar@ti.com> <87lduin4o5.ffs@tglx>
+Content-Language: en-US
+From: "Vankar, Chintan" <c-vankar@ti.com>
+In-Reply-To: <87lduin4o5.ffs@tglx>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool/urgent
-branch HEAD: 7e501637bd5b702a2fa627e903a0025654110e1e  objtool: Move dodgy linker warn to verbose
+Hello Thomas,
 
-elapsed time: 998m
+Thank you for the reply, I will address your comments to modify license
+identifier, comments, helper function for offset calculation. I have
+prioritized explaining Timesync interrupt router's functionality below.
 
-configs tested: 200
-configs skipped: 4
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+On 2/7/2025 2:58 AM, Thomas Gleixner wrote:
+> On Wed, Feb 05 2025 at 21:31, Chintan Vankar wrote:
+>> +++ b/drivers/irqchip/ti-timesync-intr.c
+>> @@ -0,0 +1,109 @@
+>> +// SPDX-License-Identifier: GPL
+> 
+> That's not a valid license identifier
+> 
+>> +static struct irq_chip ts_intr_irq_chip = {
+>> +	.name			= "TIMESYNC_INTRTR",
+>> +};
+> 
+> How is this interrupt chip supposed to work? All it implements is a
+> name.
+> 
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    clang-21
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    clang-18
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    clang-18
-arc                              allyesconfig    gcc-13.2.0
-arc                      axs103_smp_defconfig    gcc-13.2.0
-arc                                 defconfig    gcc-14.2.0
-arc                     nsimosci_hs_defconfig    gcc-13.2.0
-arc                   randconfig-001-20250209    gcc-13.2.0
-arc                   randconfig-002-20250209    gcc-13.2.0
-arm                              allmodconfig    clang-18
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    gcc-14.2.0
-arm                              allyesconfig    clang-18
-arm                              allyesconfig    gcc-14.2.0
-arm                                 defconfig    gcc-14.2.0
-arm                           imxrt_defconfig    gcc-13.2.0
-arm                   randconfig-001-20250209    gcc-13.2.0
-arm                   randconfig-001-20250209    gcc-14.2.0
-arm                   randconfig-002-20250209    clang-21
-arm                   randconfig-002-20250209    gcc-13.2.0
-arm                   randconfig-003-20250209    clang-21
-arm                   randconfig-003-20250209    gcc-13.2.0
-arm                   randconfig-004-20250209    gcc-13.2.0
-arm                   randconfig-004-20250209    gcc-14.2.0
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250209    clang-18
-arm64                 randconfig-001-20250209    gcc-13.2.0
-arm64                 randconfig-002-20250209    gcc-13.2.0
-arm64                 randconfig-002-20250209    gcc-14.2.0
-arm64                 randconfig-003-20250209    gcc-13.2.0
-arm64                 randconfig-003-20250209    gcc-14.2.0
-arm64                 randconfig-004-20250209    gcc-13.2.0
-arm64                 randconfig-004-20250209    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250209    gcc-14.2.0
-csky                  randconfig-002-20250209    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    gcc-14.2.0
-hexagon                          allyesconfig    clang-18
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    gcc-14.2.0
-hexagon               randconfig-001-20250209    clang-21
-hexagon               randconfig-001-20250209    gcc-14.2.0
-hexagon               randconfig-002-20250209    clang-21
-hexagon               randconfig-002-20250209    gcc-14.2.0
-i386                             allmodconfig    clang-19
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    clang-19
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    clang-19
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250209    gcc-12
-i386        buildonly-randconfig-002-20250209    clang-19
-i386        buildonly-randconfig-003-20250209    clang-19
-i386        buildonly-randconfig-004-20250209    gcc-12
-i386        buildonly-randconfig-005-20250209    clang-19
-i386        buildonly-randconfig-006-20250209    clang-19
-i386                                defconfig    clang-19
-i386                  randconfig-001-20250209    clang-19
-i386                  randconfig-002-20250209    clang-19
-i386                  randconfig-003-20250209    clang-19
-i386                  randconfig-004-20250209    clang-19
-i386                  randconfig-005-20250209    clang-19
-i386                  randconfig-006-20250209    clang-19
-i386                  randconfig-007-20250209    clang-19
-i386                  randconfig-011-20250209    clang-19
-i386                  randconfig-012-20250209    clang-19
-i386                  randconfig-013-20250209    clang-19
-i386                  randconfig-014-20250209    clang-19
-i386                  randconfig-015-20250209    clang-19
-i386                  randconfig-016-20250209    clang-19
-i386                  randconfig-017-20250209    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-loongarch             randconfig-001-20250209    gcc-14.2.0
-loongarch             randconfig-002-20250209    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                         amcore_defconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-m68k                            q40_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                          eyeq5_defconfig    gcc-13.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250209    gcc-14.2.0
-nios2                 randconfig-002-20250209    gcc-14.2.0
-openrisc                          allnoconfig    clang-21
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-12
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    clang-21
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-12
-parisc                randconfig-001-20250209    gcc-14.2.0
-parisc                randconfig-002-20250209    gcc-14.2.0
-parisc64                         alldefconfig    gcc-13.2.0
-parisc64                            defconfig    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    clang-21
-powerpc                          allyesconfig    clang-16
-powerpc                   currituck_defconfig    gcc-14.2.0
-powerpc                      katmai_defconfig    gcc-14.2.0
-powerpc                 mpc836x_rdk_defconfig    gcc-13.2.0
-powerpc               randconfig-001-20250209    gcc-14.2.0
-powerpc               randconfig-002-20250209    clang-21
-powerpc               randconfig-002-20250209    gcc-14.2.0
-powerpc               randconfig-003-20250209    gcc-14.2.0
-powerpc                     skiroot_defconfig    gcc-14.2.0
-powerpc                     tqm5200_defconfig    gcc-14.2.0
-powerpc64             randconfig-001-20250209    gcc-14.2.0
-powerpc64             randconfig-002-20250209    gcc-14.2.0
-powerpc64             randconfig-003-20250209    gcc-14.2.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    clang-21
-riscv                            allyesconfig    clang-21
-riscv                               defconfig    gcc-12
-riscv                 randconfig-001-20250209    clang-18
-riscv                 randconfig-001-20250209    gcc-14.2.0
-riscv                 randconfig-002-20250209    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                             allmodconfig    gcc-14.2.0
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20250209    clang-21
-s390                  randconfig-001-20250209    gcc-14.2.0
-s390                  randconfig-002-20250209    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-12
-sh                    randconfig-001-20250209    gcc-14.2.0
-sh                    randconfig-002-20250209    gcc-14.2.0
-sh                           se7343_defconfig    gcc-14.2.0
-sh                          urquell_defconfig    gcc-13.2.0
-sh                          urquell_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250209    gcc-14.2.0
-sparc                 randconfig-002-20250209    gcc-14.2.0
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20250209    gcc-14.2.0
-sparc64               randconfig-002-20250209    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-21
-um                               allyesconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250209    gcc-11
-um                    randconfig-001-20250209    gcc-14.2.0
-um                    randconfig-002-20250209    gcc-12
-um                    randconfig-002-20250209    gcc-14.2.0
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250209    gcc-12
-x86_64      buildonly-randconfig-002-20250209    gcc-12
-x86_64      buildonly-randconfig-003-20250209    gcc-12
-x86_64      buildonly-randconfig-004-20250209    gcc-12
-x86_64      buildonly-randconfig-005-20250209    gcc-11
-x86_64      buildonly-randconfig-006-20250209    clang-19
-x86_64                              defconfig    clang-19
-x86_64                              defconfig    gcc-11
-x86_64                                  kexec    clang-19
-x86_64                randconfig-001-20250209    gcc-12
-x86_64                randconfig-002-20250209    gcc-12
-x86_64                randconfig-003-20250209    gcc-12
-x86_64                randconfig-004-20250209    gcc-12
-x86_64                randconfig-005-20250209    gcc-12
-x86_64                randconfig-006-20250209    gcc-12
-x86_64                randconfig-007-20250209    gcc-12
-x86_64                randconfig-008-20250209    gcc-12
-x86_64                randconfig-071-20250209    gcc-12
-x86_64                randconfig-072-20250209    gcc-12
-x86_64                randconfig-073-20250209    gcc-12
-x86_64                randconfig-074-20250209    gcc-12
-x86_64                randconfig-075-20250209    gcc-12
-x86_64                randconfig-076-20250209    gcc-12
-x86_64                randconfig-077-20250209    gcc-12
-x86_64                randconfig-078-20250209    gcc-12
-x86_64                               rhel-9.4    clang-19
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250209    gcc-14.2.0
-xtensa                randconfig-002-20250209    gcc-14.2.0
+Timesync INTR can be used to map input sources with the corresponding
+output, so that we can configure specific functionality for the device
+that is using this output sources either as an interrupt source or to
+synchronize the time.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+To implement above Timesync INTR's functionality, I have implemented
+ts_intr_irq_domain_alloc() and ts_intr_irq_domain_free() ops which are
+sufficient. Let me know if they are fine.
+
+>> +static int ts_intr_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>> +				    unsigned int nr_irqs, void *arg)
+>> +{
+>> +	unsigned int output_line, input_line, output_line_offset;
+>> +	struct irq_fwspec *fwspec = (struct irq_fwspec *)arg;
+>> +	int ret;
+>> +
+>> +	irq_domain_set_hwirq_and_chip(domain, virq, output_line,
+>> +				      &ts_intr_irq_chip,
+>> +				      NULL);
+> 
+> You set the interrupt chip and data before validating that the input
+> argument is valid. That does not make any sense.
+> 
+>> +	/* Check for two input parameters: output line and corresponding input line */
+>> +	if (fwspec->param_count != 2)
+>> +		return -EINVAL;
+>> +
+>> +	output_line = fwspec->param[0];
+>> +
+>> +	/* Timesync Interrupt Router's mux-controller register starts at offset 4 from base
+>> +	 * address and each output line are at offset in multiple of 4s in Timesync INTR's
+>> +	 * register space, calculate the register offset from provided output line.
+>> +	 */
+> 
+> Please use proper kernel comment style as documented:
+> 
+>    https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#comment-style
+> 
+> This is not networking code.
+> 
+>> +	output_line_offset = 4 * output_line + 0x4;
+> 
+> Magic hardcoded numbers '4' and '0x4' without any explanation of the logic.
+> 
+>> +	output_line_to_virq[output_line] = virq;
+>> +	input_line = fwspec->param[1] & TIMESYNC_INTRTR_ENABLE;
+>> +
+>> +	/* Map output line corresponding to input line */
+>> +	writel(input_line, tsr_data.tsr_base + output_line_offset);
+>> +
+>> +	/* When interrupt enable bit is set for Timesync Interrupt Router it maps the output
+>> +	 * line with the existing input line, hence enable interrupt line after we set bits for
+>> +	 * output line.
+> 
+> I have no idea what this comment is trying to tell me.
+> 
+>> +	 */
+>> +	input_line |= TIMESYNC_INTRTR_INT_ENABLE;
+>> +	writel(input_line, tsr_data.tsr_base + output_line_offset);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void ts_intr_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+>> +				    unsigned int nr_irqs)
+>> +{
+>> +	struct output_line_to_virq *node, *n;
+>> +	unsigned int output_line_offset;
+>> +	int i;
+>> +
+>> +	for (i = 0; i < TIMESYNC_INTRTR_MAX_OUTPUT_LINES; i++) {
+>> +		if (output_line_to_virq[i] == virq) {
+>> +			/* Calculate the register offset value from provided output line */
+> 
+> Can you please implement a properly commented helper function which
+> explains how this offset calculation is supposed to work?
+> 
+>> +			output_line_offset = 4 * i + 0x4;
+>> +			writel(~TIMESYNC_INTRTR_INT_ENABLE, tsr_data.tsr_base + output_line_offset);
+>> +		}
+>> +	}
+>> +}
+>> +
+>> +static const struct irq_domain_ops ts_intr_irq_domain_ops = {
+>> +	.alloc		= ts_intr_irq_domain_alloc,
+>> +	.free		= ts_intr_irq_domain_free,
+>> +};
+>> +
+>> +static int tsr_init(struct device_node *node)
+>> +{
+>> +	tsr_data.tsr_base = of_iomap(node, 0);
+>> +	if (IS_ERR(tsr_data.tsr_base)) {
+>> +		pr_err("Unable to get reg\n");
+>> +		return PTR_ERR(tsr_data.tsr_base);
+>> +	}
+>> +
+>> +	tsr_data.domain = irq_domain_create_tree(&node->fwnode, &ts_intr_irq_domain_ops, &tsr_data);
+> 
+> So this instantiates a interrupt domain which is completely disconnected
+> from the rest of the world.
+>  > How is the output side of this supposed to handle an interrupt which is
+> routed to it?
+> 
+
+                         ________________________
+                        |    Timesync INTR       +---->dma_local_events
+                        |                        |
+Device sync events----->                        +---->pcie_cpts_hw_push
+                        |                        |
+          cpts_genf----->                        +---->cpts_hw_push
+                        |________________________|
+
+
+No it is connected, it is being used to configure the output for
+Timesync INTR as mentioned above.
+
+As seen in the diagram, Timesync INTR has multiple output interfaces and
+we can configure those to map them with the corresponding input as
+required by peripherals which receives the signal. In context of this
+series, CPTS module is utilizing the output signal of cpts_genf as
+Hardware timestamp push event to generate timestamps at 1 seconds.
+
+Let me know if you need more details regarding any of the above points
+that I have mentioned.
+
+
+Regards,
+Chintan.
+
+> Thanks,
+> 
+>          tglx
+> 
+> 
