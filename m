@@ -1,126 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6330B1DFE3A
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 19:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A441119A;
+	Sun,  9 Feb 2025 19:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739128170; cv=none; b=ZXkUhTTrDec3OYCVohZHWs/Uy6BGmVt9OMZSxLFUnsoAGSuJxNctxsGkfwk2JFSoBpy73Rm7gbG8e6JEbJIn+oAUdF+BFVlVyLefj4Cvp371T4NILAprBdLt0bL4Lta5UUvBm0DfQ6cj4T8Lari53VROitDkqU/kH4lPfH2tI4A=
+	t=1739128249; cv=none; b=FQ8Kf5sBhMl1ZAJ0FeKIhSSRW/BBn8Vq6SLQhu6T307gtmeIUWDILG3GQDksWXomzePyrGEgCYFTHl/jp2YDaJZSRA9g8gaPngWFB9ejeLN3UuQ4E0YhKoxIDJk3e5HdyMoGBpfgqvSrvZaL7v8E9e3i4cO5P/h12tc2fkNi08o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739128170; c=relaxed/simple;
-	bh=bNV9eSBmv1NATXayXW10Wo9JnQ9IhK9w8zfW+zKVdII=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dSep6n+8qgVrcDSQZ5UiO6FeOcmHCSrgg4CGpO7NCoHo3jWBi/8PhUC0Er+yURG8Tq0+I7y0J+1lIlzWPgITzI0rK3IgNDvpL1vKNusX4bSul8Pu+OhaqIAB3xSDS4AEQVQrYu7c/sQn24cHKLd+NhCc7OBC236k2FFdnLbckqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hY9VRYae; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739128249; c=relaxed/simple;
+	bh=cmFX9cBUsQmhCvU2ldft3X0AVo62ZY1+VRM5pS+6LDM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XHwsaAzakVdMLD+Kc8fqlCVSNFOGQoorvzYyGpEWeFCHrKL/dZBgOnTd9f3dN/3/15np+WuEMx0wv7nrJ7wkQBwg6/h85h+ORSjzcTyZV1fvKjD5kokME5Fj0Wca++nhSJnUrJwLt1jCcg39m2yyt/LsX9MevbojIhiVxwSZRLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m4omaFgg; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hY9VRYae"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739128169; x=1770664169;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bNV9eSBmv1NATXayXW10Wo9JnQ9IhK9w8zfW+zKVdII=;
-  b=hY9VRYaeG7Q6WGLAwC5rMXwloQvYrbm/3MvY/XaLNVSfUUseU7bPxD9F
-   gTmB3FXDmunbSrZdVrgPQvbIwKe+C18r/ovlUIHiJKEbhfRe+PyvH/NmZ
-   Sevwc41DtFC91b57eVbxdh1QeCzouCP2Y4axAHOMMy32wT9JUlaESymB1
-   vyJHYFElTbyxDaYd8asDzJ01MB2S30+sfNuvHdz6SuGWvLIpaOQLzIUtI
-   w6xlr4vOQX1TMBwllw3rwarmYEv1oG59owvFwlosXSFcVfWMZZNiJlyQi
-   rbhN6vfZs0j7Vij5v/XCfKSjxedR7GQbg/XQvjgFej2qDRj+Mp0moI+7j
-   A==;
-X-CSE-ConnectionGUID: 7LlMTT7/T92hQfd6AJxtlA==
-X-CSE-MsgGUID: uHPh44F9Rk6P6qjDy859tg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="39618500"
-X-IronPort-AV: E=Sophos;i="6.13,272,1732608000"; 
-   d="scan'208";a="39618500"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 11:09:28 -0800
-X-CSE-ConnectionGUID: nu/O7I36RmSiu3jXzKGSAw==
-X-CSE-MsgGUID: KPgzawIeSKK6hVy2MVv/yg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,272,1732608000"; 
-   d="scan'208";a="111928564"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 09 Feb 2025 11:09:25 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1thCgF-0011oN-02;
-	Sun, 09 Feb 2025 19:09:23 +0000
-Date: Mon, 10 Feb 2025 03:08:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Marco Crivellari <marco.crivellari@suse.com>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Jinyang He <hejinyang@loongson.cn>,
-	Marco Crivellari <marco.crivellari@suse.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Bibo Mao <maobibo@loongson.cn>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [PATCH v2 1/1] [PATCH] loongson: Fix idle VS timer enqueue
-Message-ID: <202502100258.jJThV6DP-lkp@intel.com>
-References: <20250208101924.20743-2-marco.crivellari@suse.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m4omaFgg"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-439307d83f0so6831935e9.3;
+        Sun, 09 Feb 2025 11:10:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739128245; x=1739733045; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+PIfDrYoTT3Z0KtMYk3b2jja3w+ILiNOJ+8sCw8lZMI=;
+        b=m4omaFgg6lnENbEbIYyZEiJDhDx+0e2dcQVo2WnKP/573XZwrpIUIoYFUA2mSdpy8m
+         qR+M8AemDId2/pcTPbad8wOGQD1jI/y13Knw3sNFZiN6bG1PpsQj17E53is8diPWk/zO
+         TW1Ui5uGbO5MC+CZyoPA62ZrhMBdyagQSdWZd1/4NxYcP7yI3KCQh54Wq+6CRrjfm+03
+         iBRc/rjXmqmCftN2dz9IIgVJYizdtOQdE0ULKVPL33PqNwQwhKQkpuwKjhiCIw20/YBm
+         wrGJDNnS+zB7EysyddgLCXidfKJA030JX8/eEJgAaSWoS9V7BVHYQX8oEMJowETyUDfC
+         Luog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739128245; x=1739733045;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+PIfDrYoTT3Z0KtMYk3b2jja3w+ILiNOJ+8sCw8lZMI=;
+        b=C+qkc1k5tbLpaDcTtXc74/AvIu1ynteufr/gFtTgKrSeE10QzDVg3FgxV1rzgy8K+g
+         bjEwfpkBtvE0ex6MAw5j2mL6xRE5AcbTk2MJL9rguMQHgbKL0Iex142Jj+hUyxDABADx
+         N2rMoM2iJPvlOH9JTGJ+fZcVYayklbRSxzgPs1gW+yoalmt3pg8klJYasPhpnAhFDCtY
+         lIpw0r5MDGQmEQyKeB710SyvcYqk6fSsnGkUx6BU+WZHDQlnIS5SXyVkezE5aKoOWLLy
+         anS0CLc8MOzViBL2kBfoUx04TdtSshq3xSRFDYnZCZKUa3UDyTNaxg7PorhYlvXuJ93i
+         0NRw==
+X-Forwarded-Encrypted: i=1; AJvYcCVniHsMrRi+8bEYVJv25lb7o0wkSJEGi1qv00hmOKs7RdUqLAjIikEZDfcq/d3tsdhwd9lAoxCs7F+Cnhh4@vger.kernel.org, AJvYcCXEkyZ9TG/pgnaOcS/hs5B0Kn+2FOUzIClr3/FNwWBmUNVOsF+h/HfGxygcXZBYs10rVu4w9MG+Y3zw@vger.kernel.org
+X-Gm-Message-State: AOJu0YycxNFwE4rYAuaGsR3XrDVcGq2u8vB4QsCVDGrMyzpmy++NCyCN
+	6YUg58Dhkp96JLiF3LOFsVlZnWtFRcxZ830mMnKRenCTsUlF2mM1
+X-Gm-Gg: ASbGncstda7bbC84Ld0p6TE8mSPTKxCEnykWt0UWzcoHT2oWnQEHcFfa/uJlnJg53xo
+	s4elOuuqOHJaHrkvMjUbA8FZY4Zwg8aReY/DUb+kS6h+51VL4rIc/ooXPYbyZGDlg6t02sMjHNj
+	LGnBtuGMUDBXxPn/WDd0/CHbtyuLjMtBWZ+1z3WxdV65oUXrwMX5Lb5cHUyuLK8mkkRHPUHJudI
+	lSvXDsP1Mys/VEqp5/uK2ZjVqMAQ1T8tP9O18Fq4sNqneWAIzAXvzdPap39STrw5TZ9BLHoqvYw
+	Oykt8syLyZAwjjhbANKfzgp77piqG+cqhCUEwk6ZL4Wfey0TPFkXFJdQwnXaCS/6DvB4HgV8
+X-Google-Smtp-Source: AGHT+IEqBrgVZ4srRjI2KDjmFb2+XeA2Lt+fPqJ9+a+4DCSdHTgh8qGul9BTPBUwumfDKQtVWy4saA==
+X-Received: by 2002:a5d:5885:0:b0:38d:b926:958e with SMTP id ffacd0b85a97d-38dc9101a71mr7868032f8f.16.1739128245412;
+        Sun, 09 Feb 2025 11:10:45 -0800 (PST)
+Received: from snowdrop.snailnet.com (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcd0fac67sm7216740f8f.54.2025.02.09.11.10.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2025 11:10:45 -0800 (PST)
+From: David Laight <david.laight.linux@gmail.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: David Laight <david.laight.linux@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@redhat.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-arch@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>,
+	kernel-hardening@lists.openwall.com
+Subject: [PATCH 1/1] x86: In x86-64 barrier_nospec can always be lfence
+Date: Sun,  9 Feb 2025 19:10:08 +0000
+Message-Id: <20250209191008.142153-1-david.laight.linux@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250208101924.20743-2-marco.crivellari@suse.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Marco,
+When barrier_nospec() was added the defintion was copied from the
+one used to synchronise rdtsc.
 
-kernel test robot noticed the following build warnings:
+On very old cpu rdtsc was a synchronising instruction.
+When this change X86_FEATURE_LFENCE_RDTSC (and a MFENCE copy) were
+(probably) added so lflence/mfence could be added to synchronise rdtsc.
+For old cpu (I think the code checks XMM2) no barrier was added.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.14-rc1 next-20250207]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I'm not sure why that code was used for barrier_nospec().
+I'm sure it should actually be rmb() with the fallback to a
+locked memory access on old cpu.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Marco-Crivellari/loongson-Fix-idle-VS-timer-enqueue/20250208-182213
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250208101924.20743-2-marco.crivellari%40suse.com
-patch subject: [PATCH v2 1/1] [PATCH] loongson: Fix idle VS timer enqueue
-config: loongarch-randconfig-r054-20250209 (https://download.01.org/0day-ci/archive/20250210/202502100258.jJThV6DP-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
+In any case all x86-64 cpu support XMM2 and lfence so there is
+to point using alternative().
+Separate the 32bit and 64bit definitions but leave the barrier
+missing on old 32bit cpu.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502100258.jJThV6DP-lkp@intel.com/
+Signed-off-by: David Laight <david.laight.linux@gmail.com>
+---
+ arch/x86/include/asm/barrier.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-cocci warnings: (new ones prefixed by >>)
->> arch/loongarch/kernel/reset.c:37:2-3: Unneeded semicolon
-   arch/loongarch/kernel/reset.c:57:2-3: Unneeded semicolon
-   arch/loongarch/kernel/reset.c:78:2-3: Unneeded semicolon
-
-vim +37 arch/loongarch/kernel/reset.c
-
-    22	
-    23	void machine_halt(void)
-    24	{
-    25	#ifdef CONFIG_SMP
-    26		preempt_disable();
-    27		smp_send_stop();
-    28	#endif
-    29		local_irq_disable();
-    30		clear_csr_ecfg(ECFG0_IM);
-    31	
-    32		pr_notice("\n\n** You can safely turn off the power now **\n\n");
-    33		console_flush_on_panic(CONSOLE_FLUSH_PENDING);
-    34	
-    35		while (1) {
-    36			asm volatile("idle 0" : : : "memory");
-  > 37		};
-    38	}
-    39	
-
+diff --git a/arch/x86/include/asm/barrier.h b/arch/x86/include/asm/barrier.h
+index 7b44b3c4cce1..7eecce9bf4fe 100644
+--- a/arch/x86/include/asm/barrier.h
++++ b/arch/x86/include/asm/barrier.h
+@@ -45,7 +45,11 @@
+ 	__mask; })
+ 
+ /* Prevent speculative execution past this barrier. */
+-#define barrier_nospec() alternative("", "lfence", X86_FEATURE_LFENCE_RDTSC)
++#ifdef CONFIG_X86_32
++#define barrier_nospec() alternative("", "lfence", X86_FEATURE_XMM2)
++#else
++#define barrier_nospec() __rmb()
++#endif
+ 
+ #define __dma_rmb()	barrier()
+ #define __dma_wmb()	barrier()
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.5
+
