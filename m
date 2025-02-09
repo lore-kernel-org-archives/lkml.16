@@ -1,172 +1,130 @@
-Received: from ixit.cz (ip-89-177-23-149.bb.vodafone.cz [89.177.23.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B431324337A;
-	Sun,  9 Feb 2025 20:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.177.23.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BAAE24337A
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 20:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739133588; cv=none; b=NYpMvJAD9lAq+/+6bi28WKbaGbge8dvKYOEciQcCTlqkzyRlf4RYzCV31G8ULay/rJHbjshEReVzP9Ke8vTuP9qXrN5V7a3avDRCTSoLXuJdzzHkPD7kCX9CjiP2GDyZ04uxPvWMHu0eOo1XsEuXiKLgfWEEOHF9lAJoItFN/P8=
+	t=1739133653; cv=none; b=aHceEc7wZ6HnkTPsceSo3Kynqm0yNy35PlVf9FhF0i3Q5FcWKCglSnJ7I+mDgnb+cfn38rXkB37Z/1L/TuzCXvv7PbFH/HTXNNcMLg5/pUDWLqARcjwce2YXMLcFpHWXBfHF9P9pbFoimeMuEOSXFImxxDRMfSlh7rrf5MALg6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739133588; c=relaxed/simple;
-	bh=tq1e8PopaNEjjgXy0Qh15OLxlcBfu2RTELXL/38ygrQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oF8Uo3lEq3aqD3BLuWxIeEI0qBWOFqby520UAv8JgpCTO/35FwVgF+cjPXlCBoZ4R/vMmGQCQslONfuriIvlGEQi8j1WUlV34EQdSEGU5rjdvkmz+1x9pXJgR8JycUQ29S3n5bnJwZ6W2Pn22gtU+bT5QyHKHLeVjC294MzBJTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=khVHM7kV; arc=none smtp.client-ip=89.177.23.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
+	s=arc-20240116; t=1739133653; c=relaxed/simple;
+	bh=2gU2/QcKUSQ/wiYWG3ZtCdYIXBDzhN+gWWqdMsOanrQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Sp7PloPQeHPtm3maKJ/uPetI9OrEgPfu/fjfXaYXSA3+EyTEStaRv34In/ZtYcfT8Ik3UM6VLAgl26GxVR9iUaxIgjH8qAXD7Z6Y0viMZ4Z3m3uoapp3sicDgOjV5YptLKwZaQ3V2pDLMMjbBBdHTdoO0G8A5v8HrvcAwLgEhao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=EdfSr1DO; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="khVHM7kV"
-Received: from newone.lan (unknown [10.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ixit.cz (Postfix) with ESMTPSA id A1C7D160ADE;
-	Sun,  9 Feb 2025 21:39:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
-	t=1739133582;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=DR0bRoLbBuWtCS0pGfeShO32SsYDtmwyxrzyYbVJIK0=;
-	b=khVHM7kV/c60bMBDuMCzflpt54W/n6H9/JgGmjg5hJnbVMgI4elPO5G/TzyAFk7rqy9kUE
-	7ZLrsKBWWOewcbsk05M6RReNJYOXue/CZL5VKSVdlXLcqTdCQFxV+ak4eet4aysqE94WDi
-	VSwv4pE8XTAVK+7TjO9j0vB+P1j/Za4=
-From: David Heidelberg <david@ixit.cz>
-To: Pavel Machek <pavel@ucw.cz>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	David Heidelberg <david@ixit.cz>
-Cc: linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] media: dt-bindings: Convert Analog Devices ad5820 to DT schema
-Date: Sun,  9 Feb 2025 21:39:25 +0100
-Message-ID: <20250209203940.159088-1-david@ixit.cz>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="EdfSr1DO"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab7430e27b2so728808866b.3
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 12:40:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1739133649; x=1739738449; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vq74F1wFcESZ51amFrl8eHD6/YdZmXUP7VjXbw0WJkc=;
+        b=EdfSr1DOLAsk2V8hwyJdzIzQ32TFWWOghYxxnrWT1oG2gzfVGMLOYiKbnnHP7H3C0j
+         h2kFs5BLBVi2LVT5Rm0z4Rv2YiTEXM4RS9Bvfc2BtNGjpUHngY3CUmQqQ65fPpG/e5QE
+         5tQvEqk1qzTDTB3gzD4L8Z89SFk4Eeqceale8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739133649; x=1739738449;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Vq74F1wFcESZ51amFrl8eHD6/YdZmXUP7VjXbw0WJkc=;
+        b=ROWRpSBRuuh4ArrnjHrQwOeQRZxyLrfyraj+qT+peh0rJ7FDlWlK1i8KcyHHVw3QsQ
+         Rpihy1cvos6VKaDBuBGSSKKHFp/rw3YcZXIXGaSrhy4wHi910WHOwA0mAGUn2Ii3hlqF
+         ok/jpsijx9ME2wYPecXCcXq6hF4DyqjSnxci9vo2gvYenKIA+2YWbUjLRLf0/r3EGd21
+         U9i/bOXfN9bqgEeyLwX/AatYKDkvwZSY35B9bFl6m7yEUOWxqPRcsM3En5S9hBxI05vk
+         wlvrt0dysfi6rNJBRf4iwh64KFCwnJaaTq/H9Pun51l1fWxy5fDLHU1rRBvxNl1mpStQ
+         GUVw==
+X-Forwarded-Encrypted: i=1; AJvYcCVMmQmfkjDUdb8PSwmPsrJ8VuN4hs3NF04gQlqkJEg5LBQ9DAV4cQr+g8s7jSEj1V1yfPb/jAcgpxxUGS0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlfwSogGC6xkqNju2qdHJegYJsKXYo0VxAJzKMMUuWB1dnFRHQ
+	r1TH0uUTmsJOVgKpG44JLca9hT+g1XWYi9w9Hi3/8ncf01d31oc39kWQ8+KoKJW57aMjnmgh/J0
+	XWXs=
+X-Gm-Gg: ASbGnct4xb4SsQynU6+iJYagztEnw0gZ3RNlROyi8XsLy2N+oUj5A5/eyXOuRUemuuk
+	bw+MiqMtu+F47GaTETFupq4yrBVtC4x+FywVdeEGs20cy4lHS0JpnBqq3+dEzbi7RelrjDMnWTR
+	VPDePDTjQioUeX+FilKKvzAA8vhj4NG+nDv+XE9rkQZ5OqTxuuFkR3oCpL+/Dy7qVJP9WcwNTXa
+	/n/dTT3LwBbTLY0/jnq3gru6jU9G7yq3Aw4VZGGkycC9iOchtixL2xEZdmT1U5JTEcmsbd+KNBt
+	40X8LQMD0+YOJLnnPSgRBVX+AIGNO+LOqLbF8qNfmnOmwLlwElNWx+uchxZEf4G35A==
+X-Google-Smtp-Source: AGHT+IG3fhcsMJt2LLJ2GPaItMrKIQHbk40jvhKPzOHd0rduNPYf1ekHt+zmrlMK8nGlqxCStlO3Rg==
+X-Received: by 2002:a17:907:6d1d:b0:ab7:83c2:bdb7 with SMTP id a640c23a62f3a-ab789c65fb7mr1182918866b.49.1739133649578;
+        Sun, 09 Feb 2025 12:40:49 -0800 (PST)
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab77cb8e440sm689890566b.101.2025.02.09.12.40.48
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Feb 2025 12:40:48 -0800 (PST)
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5dccc90a52eso6391198a12.0
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 12:40:48 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX12rShBLdpBWjIScRtEc6g9tG09ADYqgdde5e6SnwV0xGiMD60zoYd7q+nQ7GaXJOvFSOTm0qmxU6tHE4=@vger.kernel.org
+X-Received: by 2002:a05:6402:3589:b0:5de:5d4a:9f56 with SMTP id
+ 4fb4d7f45d1cf-5de5d4aa093mr7276032a12.31.1739133648266; Sun, 09 Feb 2025
+ 12:40:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250209105600.3388-1-david.laight.linux@gmail.com>
+ <20250209105600.3388-2-david.laight.linux@gmail.com> <CAHk-=wgu0B+9ZSmXaL6EyYQyDsWRGZv48jRGKJMphpO4bNiu_A@mail.gmail.com>
+ <20250209194756.4cd45e12@pumpkin>
+In-Reply-To: <20250209194756.4cd45e12@pumpkin>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 9 Feb 2025 12:40:32 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wisZo7+-xmC_o8GQJ-G0qFp4u29t_FkjgPvgq7FXaTyDg@mail.gmail.com>
+X-Gm-Features: AWEUYZnm-byqLtVgoG1xZKmNlSCIlTB0Vzbhmfc7swHQWKbOulXf3f_pjqQ0pEk
+Message-ID: <CAHk-=wisZo7+-xmC_o8GQJ-G0qFp4u29t_FkjgPvgq7FXaTyDg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] uaccess: Simplify code pattern for masked user copies
+To: David Laight <david.laight.linux@gmail.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Arnd Bergmann <arnd@arndb.de>, Kees Cook <kees@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Convert the Analog Devices ad5820 to DT schema format.
+On Sun, 9 Feb 2025 at 11:48, David Laight <david.laight.linux@gmail.com> wrote:
+>
+> You almost need it to be 'void masked_user_access_begin(&uaddr)'.
 
-Signed-off-by: David Heidelberg <david@ixit.cz>
----
-Needs: media: dt-bindings: media: i2c: align filenames format with standard
+Maybe we just need to make it a two-stage thing, with
 
- .../bindings/media/i2c/adi,ad5820.txt         | 28 ---------
- .../bindings/media/i2c/adi,ad5820.yaml        | 62 +++++++++++++++++++
- 2 files changed, 62 insertions(+), 28 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/i2c/adi,ad5820.txt
- create mode 100644 Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml
+        if (!user_access_ok(uaddr, size))
+                return -EFAULT;
+        user_read_access_begin(&uaddr);
+        unsafe_get_user(val1, &uaddr->one, Efault);
+        unsafe_get_user(val2, &uaddr->two, Efault);
+        user_read_access_end();
+        ... all done ..
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/adi,ad5820.txt b/Documentation/devicetree/bindings/media/i2c/adi,ad5820.txt
-deleted file mode 100644
-index 5764cbedf9b73..0000000000000
---- a/Documentation/devicetree/bindings/media/i2c/adi,ad5820.txt
-+++ /dev/null
-@@ -1,28 +0,0 @@
--* Analog Devices AD5820 autofocus coil
--
--Required Properties:
--
--  - compatible: Must contain one of:
--		- "adi,ad5820"
--		- "adi,ad5821"
--		- "adi,ad5823"
--
--  - reg: I2C slave address
--
--  - VANA-supply: supply of voltage for VANA pin
--
--Optional properties:
--
--   - enable-gpios : GPIO spec for the XSHUTDOWN pin. The XSHUTDOWN signal is
--active low, a high level on the pin enables the device.
--
--Example:
--
--       ad5820: coil@c {
--               compatible = "adi,ad5820";
--               reg = <0x0c>;
--
--               VANA-supply = <&vaux4>;
--               enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
--       };
--
-diff --git a/Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml b/Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml
-new file mode 100644
-index 0000000000000..5a403cbc07317
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/i2c/adi,ad5820.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices AD5820 autofocus coil
-+
-+maintainers:
-+  - Pavel Machek <pavel@ucw.cz>
-+
-+description:
-+  The AD5820 is a current sink driver designed for precise control of
-+  voice coil motors (VCMs) in camera autofocus systems.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,ad5820
-+      - adi,ad5821
-+      - adi,ad5823
-+
-+  reg:
-+    maxItems: 1
-+
-+  enable-gpios:
-+    maxItems: 1
-+    description:
-+      GPIO spec for the XSHUTDOWN pin. The XSHUTDOWN signal is active low,
-+      a high level on the pin enables the device.
-+
-+  VANA-supply:
-+    description: supply of voltage for VANA pin
-+
-+  "#io-channel-cells":
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - VANA-supply
-+  - '#io-channel-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    i2c {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            coil@c {
-+                    compatible = "adi,ad5820";
-+                    reg = <0x0c>;
-+
-+                    enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
-+                    VANA-supply = <&vaux4>;
-+
-+                    #io-channel-cells = <0>;
-+           };
-+    };
--- 
-2.47.2
+Efault:
+        user_read_access_end();
+        return -EFAULT;
 
+and that would actually simplify some things: right now we have
+separate versions of the user address checking (for
+read/write/either): user_read_access_begin() and friends.
+
+We still need those three versions, but now we'd only need them for
+the simpler non-conditional case that doesn't have to bother about the
+size.
+
+And then if you have user address masking, user_access_ok() just
+unconditionally returns true and is a no-op, while
+user_read_access_begin() does the masking and actually enables user
+accesses.
+
+And if you *don't* have user address masking, user_read_access_begin()
+still enables user accesses and has the required speculation
+synchronization, but doesn't do any address checking, because
+user_access_ok() did that (and nothing else).
+
+That seems like it might be a reasonable compromise and fairly hard to
+get wrong (*)?
+
+            Linus
+
+(*) Obviously anybody can get anything wrong, but if you forget the
+user_access_ok() entirely you're being wilful about it, and if you
+forget the user_read_access_begin() the code won't work, so it seems
+about as safe as it can be.
