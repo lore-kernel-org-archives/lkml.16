@@ -1,47 +1,46 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7341E04B5;
-	Sun,  9 Feb 2025 23:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DDE1119A;
+	Sun,  9 Feb 2025 23:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739144012; cv=none; b=GHBma2vwoDZhIf/i8bS3yoZHHc+fscuxXEIX33VcLJaJ5R2JxLSiYa9q4fhCjBDIaB/pSqzx1GITFL7hG12Xwr1t05k45I1h/MWRBYUE6PwbMlAcdPreyPNfzBgYknfYSCTUpCRf3Ac7rbyDyYXUEY/DrHT5G5ylddQsVOBqH34=
+	t=1739144031; cv=none; b=fJoe0rFxNzVC3myTBxNl8BrNSk2XgHmkXExWV1QMDrAI4i+ZisjNm9axLoF+cV1QimpKc1Ddr5q3plvUd2LEclY0bnJSBMDI47T1hZei3Z5mudhroE0WaBligQV0w6qZqxOn9lwS54cbRNXnpz3C7jL/KqrSoJYIy4gYW1V6U6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739144012; c=relaxed/simple;
-	bh=mzjCf111KOEU50w+Xi7gNyvxax+8EWxZ0+XHz1jAM94=;
+	s=arc-20240116; t=1739144031; c=relaxed/simple;
+	bh=uJoZ8UA1/IE7V+tg/lvWJYZc90fncoV7XgnqRsA54Ik=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LRlrqVChZcK3YQIzDAyKkr77LpsHXIpABuOTaqnVX0dsyJNnb/zo1VL/wWPoHuUcYdsWt5kQXcFNoCzmprbHOI3WE4egA12o2KthwQy9C4Udk1x8HKa0/Q+Y77Y2F73oSuftqk95LD9sZc3BkwwEMhy6UjO1Gprp6YZWo98cwic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=X1pdPiu2; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=gfQeUJDiExMXul31y7I5Qy3Zw9je7V/ruUDnHw8Mh1SyQKkEvZHqLNE4JcxjGo6yPfU/xbVjYSWYBcf21zHnYMSuGpxCCYCgz+aNVfnGVkQmITwcZvNBrW4KDAso7sMgU+is35c3hCQCs5WxVdSXxedm8+zisC2aavbt7cgou1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=oTNjs8lI; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="X1pdPiu2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=aBt4WhTEfMb2t+mK3gXY4zMR0Yzsnr4lWWL9x6tMiaA=; b=X1pdPiu2LKY6R/RmeXbXsFzMYq
-	VNfwYaC+OsN3t0zLqhbCRIoldKlN/272AN4ZYOF41aBp1mcmQJaa4xrKX5vhxsre7f+KOqxFFMvRa
-	25zBOABddUIZd6y9sruABTEYTIb/AhuLd3SIYppBLZw0V8PP4VnoibvQcEHYvF1S8J20=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1thGnj-00CXUA-32; Mon, 10 Feb 2025 00:33:23 +0100
-Date: Mon, 10 Feb 2025 00:33:23 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH net-next v3 1/2] net: phy: Add support for
- driver-specific next update time
-Message-ID: <1d7b8949-5b37-49c8-9407-298cc4997dff@lunn.ch>
-References: <20250206093902.3331832-1-o.rempel@pengutronix.de>
- <20250206093902.3331832-2-o.rempel@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="oTNjs8lI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=7UZyeCVg3IGpepmIgEmJqrZNVaxK6J0XdMcnDXEOrCI=; b=oTNjs8lIjH/cftwlndAvKxzwbo
+	2MbUwd0PcTakaKTiSYIb75O9iwwnPBIQD26ZcyOH+eLJrXH8l89nEzKHQ6AtxgBbRsDzh8ykVRvUX
+	TPGiaOSoJJTTBcTyOFUbG2R+tOn1hXV6AHoc7j8otT+nx8GorLE/xaJQVBZUQgx/AbHBp2g7JeKOB
+	LGru9cjfTPrlBJ+VsgUZVYSuWuRLMHF1i16B7zECpw8Ke18kgwPY1iwKRDK+T3CoIR/HfvsW3vJxr
+	USe1rm0kSjWLEYvy7KuAKDTqTKH2U4fND4mxiKzmv9D9Sz54eZDBvdJXV9iYcoUKTrzh4Txo42jeP
+	/bDcH57Q==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1thGo1-00000008ofT-3wh4;
+	Sun, 09 Feb 2025 23:33:41 +0000
+Date: Sun, 9 Feb 2025 23:33:41 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/19 v7?] RFC: Allow concurrent and async changes in a
+ directory
+Message-ID: <20250209233341.GX1977892@ZenIV>
+References: <20250206054504.2950516-1-neilb@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,18 +49,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250206093902.3331832-2-o.rempel@pengutronix.de>
+In-Reply-To: <20250206054504.2950516-1-neilb@suse.de>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-> +++ b/include/linux/phy.h
-> @@ -1273,6 +1273,19 @@ struct phy_driver {
->  	 */
->  	int (*led_polarity_set)(struct phy_device *dev, int index,
->  				unsigned long modes);
-> +
-> +	/**
-> +	 * @get_next_update_time: Get the time until the next update event
-> +	 * @dev: PHY device which has the LED
+On Thu, Feb 06, 2025 at 04:42:37PM +1100, NeilBrown wrote:
 
-LED ?
+> The idea behind the async support is to eventually connect this to
+> io_uring so that one process can launch several concurrent directory
+> operations.  I have not looked deeply into io_uring and cannot be
+> certain that the interface I've provided will be able to be used.  I
+> would welcome any advice on that matter, though I hope to find time to
+> explore myself.  For now if any _async op returns -EINPROGRESS we simply
+> wait for the callback to indicate completion.
 
-	Andrew
+OK, after looking through that and playing around with the locking
+scheme of yours:
+
+Separating directory rwsem for reads/modifications from locking of
+individual dentries may be feasible, but it needs to be a lot more
+careful about the states it sleeps in.  Your current variant is rife
+with deadlocks; for the "wait on dentry itself" it's probably possible
+to avoid, with some care; for "wait on parent" it's really not an option.
+
+Quite a bit of headache comes from the fact that NFS et.al. are playing
+silly buggers with "OK, we see that lookup is for <operation>; skip it,
+the call of actual method will do the right thing".  The trouble is,
+d_lookup_done() of not-really-looked-up is fine under exclusive lock on
+parent, but only because there won't be d_alloc_parallel() on the same
+name until we drop that exclusive lock.
+
+Your scheme, OTOH, has hard dependency upon those suckers staying visible
+to d_alloc_parallel() until the actual operation is done.  Which means
+that this code, including the methods, is exposed to in-lookup dentries.
+
+What's more, similar dependency is there for dentries getting unhashed
+between the lookup and the end of operation - something which NFS
+cheerfully violates.  If method's argument gets hit with d_drop() and
+d_rehash(), there's a window where it won't be found in dcache, leaving
+no indication that it's being operated upon.  Currently we are fine -
+exclusive lock on parent means that on dcache miss we try to grab
+the parent shared and repeat dcache lookup when we get that.
+
+Your variant does not have such exclusion - parent is held shared and
+child dentry involved is not there to be found during d_drop()/d_rehash()
+window.
+
+IOW, your in-update state might make sense, but not in the way it's done
+at the moment - it's too brittle.
+
+And the part about async tree topology modifications are bloody insane,
+IMO.  I won't believe that to be feasible until I see the algorithm and
+proof of correctness; preferably _before_ the actual code.
