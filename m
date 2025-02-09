@@ -1,155 +1,99 @@
-Received: from relay02.th.seeweb.it (relay02.th.seeweb.it [5.144.164.163])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413B01E7C2E
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 21:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396D579CF;
+	Sun,  9 Feb 2025 21:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739137385; cv=none; b=I0J+VOrPNu1xSewWOPrIRT2ok1VsBxdg98gWcRVC1DqyfFCH2KQ9yluzZKrZlilOs41TCQC/AUokNOEtPL1tpslWeY0H+BoePZLY45DvkbJ2OckBcOd7GhWhL6XQQ0WfuywZiOESDSsLHPPmXgs+Su2Bewu3R+yKY2dZc5EsbmI=
+	t=1739137532; cv=none; b=bl2iuvsushIMSH4CDbyzMvnxNaRmXbQ8hO3A2NXNLu95tactoRtxIPMBP6mA0yEz9TliuXUXklYzFyPuetW4Zpp/0+BifolFo540v0ctCVHbqv/qHy+pWnSPDGZ/wofCCb3iHI0L0Jfk+VWBhyApCyoNvdN99Jd8XsI0VpGKqbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739137385; c=relaxed/simple;
-	bh=Tfsl+1a40BScE8ikvZaM3H+qVdmMOmXUCGzcdcW2ync=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CKgwHQ+ur7oUBcgM1f+k9UxZ9NEeC/Y5MC6d4PBezKvPwXIQIey0rKGCUyXeV2slsxZTTi9/3dH4Vtrlgk7RHGiu/cvQUDalObJvAvgDLzMkby56JE9PHY9U38ciPf+MCNt16f4QlScJD3xmoNyyKLb3jAizApeVzplPK7792Rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
-Received: from Marijn-Arch-PC.localdomain (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
+	s=arc-20240116; t=1739137532; c=relaxed/simple;
+	bh=rgwema1bULlKD4YDLf8mqmtN6DArGahRMX1EcqxSIZ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=RhnxO+Wp6UoOKxHwQO//dCHc6I9COGAgptE48VWnnnMHLwPKOHn2+imM6qgRLKupqBAvk4H+xZKx77Zxrm1PB2AclZIFMjEywUbz+N3+SPI48wbSIneQjS0i1t8m0xMU5paJ+hrcJaRkBk9SBVE1XNkDBnnA3dzAvse1k70r488=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=tjTn8HP6; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tjTn8HP6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1739137523;
+	bh=9DACVpbfbt92p0tLS+2tccC0bCKORCEoNenkvZqePuE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=tjTn8HP6g2dhC3FT4rEDNH+5PstJyUNtKj5y08yYXcONhoZGpKOZSuhV2d4v68Jz9
+	 bTaLvnFxNsO0CfXkq5FMH2jBlOfD92q+zwTZvEKH5Emvx67L/lL1HJ2D031qE59gAh
+	 ZOaSkgEn+C4gQQ9A0OnvsQVjFlQovaacsNQ12GlwYSGXsqS2kxYC+kvZ5JvNYK/++t
+	 iHT/DkXKEWaR15u1sU9I3CdN2JYa9SID3RlIyKQTPPrAIiCV0l8zwWXHDFs1Ku7Mhe
+	 gb1bSZSfNkxXYcEjFp6bHOs67vkLfmsKDAJACBSw3Hz9CJDIyY1hFeVlgn1vlfCSEX
+	 AAxx4W6LJBvcg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 89E572018C;
-	Sun,  9 Feb 2025 22:43:00 +0100 (CET)
-From: Marijn Suijten <marijn.suijten@somainline.org>
-Date: Sun, 09 Feb 2025 22:42:53 +0100
-Subject: [PATCH v2 2/3] drm/msm/dsi: Set PHY usescase (and mode) before
- registering DSI host
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Yrh8M1bXfz4wbn;
+	Mon, 10 Feb 2025 08:45:23 +1100 (AEDT)
+Date: Mon, 10 Feb 2025 08:45:22 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: David Sterba <dsterba@suse.cz>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patches in the btrfs tree
+Message-ID: <20250210084522.411fa330@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-2-9a60184fdc36@somainline.org>
-References: <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-0-9a60184fdc36@somainline.org>
-In-Reply-To: <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-0-9a60184fdc36@somainline.org>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
- David Airlie <airlied@gmail.com>, Vinod Koul <vkoul@kernel.org>, 
- Simona Vetter <simona@ffwll.ch>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Jordan Crouse <jordan@cosmicpenguin.net>, 
- ~postmarketos/upstreaming@lists.sr.ht, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Martin Botka <martin.botka@somainline.org>, 
- Jami Kettunen <jami.kettunen@somainline.org>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Marijn Suijten <marijn.suijten@somainline.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3553;
- i=marijn.suijten@somainline.org; h=from:subject:message-id;
- bh=Tfsl+1a40BScE8ikvZaM3H+qVdmMOmXUCGzcdcW2ync=;
- b=owEBbQKS/ZANAwAIAfFi0jHH5IZ2AcsmYgBnqSFiT34CP+ZJaA+rzArxEFLoN1LWvZjH/Bies
- mr2e4ZztEmJAjMEAAEIAB0WIQROiwG5pb6la1/WZxbxYtIxx+SGdgUCZ6khYgAKCRDxYtIxx+SG
- dvTGEACxAnMNqxkekAmzf0r7lozEJOigflfa9+ZcLs+RUG7X/3DZ3zzzlLauHO0tzU/HWB+OWEm
- 3JJ1xU8ckjnH8J0J6shnG2dL3xS4VlHq5Ix55Z3ZkyJIF6pxnBuBqthHZGF3imuXex9fnHHVNp3
- h8lTfYj42YJRUGDlEYDyWUHFSo5tD76Y8guTlcvyQ12vLXlPKudvCoVz8yqmK5JFlwdzywazPhf
- KlgFyWlyzBbHHG+XLel5Z0kqbTMI/b1PizeFvyPUuADCQ1zBwIur2M88v3scfDbA5TxUyQuUAnM
- 2+KlC2LVjgrG/h6VCK21Bg8ndojIowYAiDdsWMu/2HmAyH/X8L3/BBIudDLoo7Ya+xCeI7mBPvk
- oHzGMC60CVTp9Z4Xgd9Cq9xzO//SekabwP/RTMlkVk59eujBHGRDRs5i1p7IaawUVnF0QkON3EO
- 5eBNrhsvYFURfpiodTLrfg1gn9sNQkfhslulY/dr0nNtx8F82FIUBGu8qsJS40ZCWYeDfi+/Uof
- JWPwVLWsEtXBTys3nDGhMmG5jCb+mr1zhtHzbpOUQBS0qHAfxdVORnIZ5TYVzYrc/pnreo7J2mi
- SYMOmVIz8ZwP+dlyeAFY3WUHeRUFhmaYbvZvh2/k+ffO6lkSR8y4GTbEAMQBrR0NbwE+/k/kTQo
- 71QhOLH1+c0sUgA==
-X-Developer-Key: i=marijn.suijten@somainline.org; a=openpgp;
- fpr=4E8B01B9A5BEA56B5FD66716F162D231C7E48676
+Content-Type: multipart/signed; boundary="Sig_/OoZdqI+v71HE8f7MS3nBRWv";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Ordering issues here cause an uninitialized (default STANDALONE)
-usecase to be programmed (which appears to be a MUX) in some cases
-when msm_dsi_host_register() is called, leading to the slave PLL in
-bonded-DSI mode to source from a clock parent (dsi1vco) that is off.
+--Sig_/OoZdqI+v71HE8f7MS3nBRWv
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This should seemingly not be a problem as the actual dispcc clocks from
-DSI1 that are muxed in the clock tree of DSI0 are way further down, this
-bit still seems to have an effect on them somehow and causes the right
-side of the panel controlled by DSI1 to not function.
+Hi all,
 
-In an ideal world this code is refactored to no longer have such
-error-prone calls "across subsystems", and instead model the "PLL src"
-register field as a regular mux so that changing the clock parents
-programmatically or in DTS via `assigned-clock-parents` has the
-desired effect.
-But for the avid reader, the clocks that we *are* muxing into DSI0's
-tree are way further down, so if this bit turns out to be a simple mux
-between dsiXvco and out_div, that shouldn't have any effect as this
-whole tree is off anyway.
+The following commits are also in the btrfs-fixes tree as different
+commits (but the same patches):
 
-Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
----
- drivers/gpu/drm/msm/dsi/dsi_manager.c | 30 +++++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
+  d49c7ee7b7f4 ("btrfs: fix hole expansion when writing at an offset beyond=
+ EOF")
+  63430933e307 ("btrfs: fix stale page cache after race between readahead a=
+nd direct IO write")
+  92a6e5b7138d ("btrfs: always fallback to buffered write if the inode requ=
+ires checksum")
+  fc33c65b2253 ("btrfs: fix two misuses of folio_shift()")
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-index a210b7c9e5ca281a46fbdb226e25832719a684ea..b93205c034e4acc73d536deeddce6ebd694b4a80 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-@@ -74,17 +74,33 @@ static int dsi_mgr_setup_components(int id)
- 	int ret;
- 
- 	if (!IS_BONDED_DSI()) {
-+		/* Set the usecase before calling msm_dsi_host_register(), which would
-+		 * already program the PLL source mux based on a default usecase.
-+		 */
-+		msm_dsi_phy_set_usecase(msm_dsi->phy, MSM_DSI_PHY_STANDALONE);
-+		msm_dsi_host_set_phy_mode(msm_dsi->host, msm_dsi->phy);
-+
- 		ret = msm_dsi_host_register(msm_dsi->host);
- 		if (ret)
- 			return ret;
--
--		msm_dsi_phy_set_usecase(msm_dsi->phy, MSM_DSI_PHY_STANDALONE);
--		msm_dsi_host_set_phy_mode(msm_dsi->host, msm_dsi->phy);
- 	} else if (other_dsi) {
- 		struct msm_dsi *master_link_dsi = IS_MASTER_DSI_LINK(id) ?
- 							msm_dsi : other_dsi;
- 		struct msm_dsi *slave_link_dsi = IS_MASTER_DSI_LINK(id) ?
- 							other_dsi : msm_dsi;
-+
-+		/* PLL0 is to drive both DSI link clocks in bonded DSI mode.
-+		 *
-+		/* Set the usecase before calling msm_dsi_host_register(), which would
-+		 * already program the PLL source mux based on a default usecase.
-+		 */
-+		msm_dsi_phy_set_usecase(clk_master_dsi->phy,
-+					MSM_DSI_PHY_MASTER);
-+		msm_dsi_phy_set_usecase(clk_slave_dsi->phy,
-+					MSM_DSI_PHY_SLAVE);
-+		msm_dsi_host_set_phy_mode(msm_dsi->host, msm_dsi->phy);
-+		msm_dsi_host_set_phy_mode(other_dsi->host, other_dsi->phy);
-+
- 		/* Register slave host first, so that slave DSI device
- 		 * has a chance to probe, and do not block the master
- 		 * DSI device's probe.
-@@ -98,14 +114,6 @@ static int dsi_mgr_setup_components(int id)
- 		ret = msm_dsi_host_register(master_link_dsi->host);
- 		if (ret)
- 			return ret;
--
--		/* PLL0 is to drive both 2 DSI link clocks in bonded DSI mode. */
--		msm_dsi_phy_set_usecase(clk_master_dsi->phy,
--					MSM_DSI_PHY_MASTER);
--		msm_dsi_phy_set_usecase(clk_slave_dsi->phy,
--					MSM_DSI_PHY_SLAVE);
--		msm_dsi_host_set_phy_mode(msm_dsi->host, msm_dsi->phy);
--		msm_dsi_host_set_phy_mode(other_dsi->host, other_dsi->phy);
- 	}
- 
- 	return 0;
+These ar commits
 
--- 
-2.48.1
+  194b36e10b77 ("btrfs: fix hole expansion when writing at an offset beyond=
+ EOF")
+  3b0a08f28d27 ("btrfs: fix stale page cache after race between readahead a=
+nd direct IO write")
+  509b100f0d37 ("btrfs: always fallback to buffered write if the inode requ=
+ires checksum")
+  01af106a0763 ("btrfs: fix two misuses of folio_shift()")
 
+in the btrfs-fixes tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/OoZdqI+v71HE8f7MS3nBRWv
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmepIfIACgkQAVBC80lX
+0Gx+BwgAnnL3UXB4FDfFOdR3j3+LcvzPOW1Pl7LE/HxE11T4UCQYEp3OzT7H6kMU
+4LtHW99rpVeEZ8K3MuDz8ezIeGifGk1mSLhtlbhwHUW3as0KenLJrF4kvsDQ/79h
+bKfZxX+vF3izbbTA9AzMxvJ+50n4Ep6+v8qH0qkXkZSr/IRcpKRuRN3BRqX4Go8/
+XR3XNWxZZJBwUKnYrMS1T7wWTzcYG7M+npN2Mbchykw5fbOe+WcX6njHR94O1gYa
+MXugepAsAEp56ymKqeWBPA4eI8NH1jLCPlIisEYXKAHvsTphaHk4SbZPVLBom4tj
+xmARWLFxIrfOZhK4Ozqho6OEavBb4g==
+=LZP1
+-----END PGP SIGNATURE-----
+
+--Sig_/OoZdqI+v71HE8f7MS3nBRWv--
