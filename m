@@ -1,114 +1,193 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DFF317BB6;
-	Sun,  9 Feb 2025 10:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5FA414B086;
+	Sun,  9 Feb 2025 10:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739096182; cv=none; b=IqaGcjuNx+8fvkbr7y/OiQmcTZF8zhUKBOC07Q4f869am7S7XRTl/498RXCVVCVOGRnNeKGaIBjTc+c+u79UjFzS467RMZwesgjd8zecf4jmZo1UkFsG8ZVMjXpwl51RW3Il2T/6Zlld+w6CECNMgGAfuPUTuzn03qlfyaJXQFA=
+	t=1739096256; cv=none; b=cbl59kUu8vdl5Gu2VkMvwzqQ1jRwS65E6DKqDDYvMWCUSw4q3vGhq0RyVYd6Bgdl8t6nSLXpUqjLfrLJ3tQTk/UZEdrFBELOV0IWFoTDk+w0lq/1rVqDpNnjEZPBn/JQ6RXpK6BuaVStInV4sZHvfPirZv2ZZkgWE+Wour1z1fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739096182; c=relaxed/simple;
-	bh=DsS2geAXtMSqBWDK9YbfnJpbliuNKiJlxEBaQTMgqwA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=diOoH7FfWB0DU3L703mSmVd9D8odD+wEuPS4gcDV//Smp8D8XEICRfeIkth4+9GrqVwINaVIAGInZ3YPmebhq0Qy8rKDSAFyOX5O2MAu28uZl1szuzwPMW2uflYtd4tnmMVVTzOtZXbxMYSAVL8agyCkl7Ao3Ni58yCN8/14rUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=e8KWJk7K; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1739096256; c=relaxed/simple;
+	bh=Ec5owhxuVyqV6l/NuwWt6tySFHCPrsPZ2HH6kFOtAcQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uX06ghuvPb6IQe9qlJ08WHz6aqPuaL4+j3Qk5bt36BP0IGGbBticPQFotCr+mRtzG4v/TPeK2IwR4u7/9JuuPpE3ONQ7m/OfTLGoa5rFliOvL7+N3UHyIW74DLkvZwGq+TdRI4fePOvrHxLretkkKmnFvyE2s95Y/oX2YGINQ+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ds5LFIYF; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="e8KWJk7K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1739096168; x=1739700968; i=markus.elfring@web.de;
-	bh=F3bDdKl8eATlDg8WYVq5TTuNjlsg7scF7CmaxNIlem4=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=e8KWJk7KnQ+x/X/TSMhk/eufCcaY5Dw8k2LN0Acynm5KxjdmIHZuxQFlQnOHSkhF
-	 0M+vyHWXRKV3SDHtoQcZpuGaENaiCNnUaHeXktQjNP3IyjvPSFvOnufNDxxuO27fL
-	 d7hNznti5Pyljzu1GDCER/JQDLwyFiErAGMPKQWK+wLupNBcg4N6Y8wslhdS5r8yB
-	 dkhToCQwTBjXVesvsm5nO+pArfDj81n3fx6/U4uWwPIKKJ81V54560XQFtsMrz2GY
-	 OqHV9wAMm8njp1ki85/Rxh6ANtddENq/XR5k2X6MYSCp3dduc1fa+wkHhHLX6zthL
-	 pIaO9nfvz2C9Jh6LLQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.5]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MidDR-1tE5Gh0OXv-00qiTY; Sun, 09
- Feb 2025 11:16:08 +0100
-Message-ID: <797c061c-7324-42e2-b4bd-fd93cf4ff0d0@web.de>
-Date: Sun, 9 Feb 2025 11:15:59 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ds5LFIYF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739096253; x=1770632253;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ec5owhxuVyqV6l/NuwWt6tySFHCPrsPZ2HH6kFOtAcQ=;
+  b=Ds5LFIYFNa2x8j81YAyh4jCFficUq2EFpFSArcYJ5o3Sur4N/CsqlOOk
+   /pG/PEti8+lTdKPzMGoTfhKA9O1nTGR5ArkWATQsMAtOrG7ZqWHx4qlDw
+   W6zRL/iBF3xmZphgzeTuAVps/P9FX65/wS52I/sTw/TU4w5pfKGPe6m15
+   9+iS7/WOMfdp/51LEPLMCYvCFYPtoUXm8NvJOqodhdVNfxvT5Ey1NmZsY
+   QofOA37DKh/bcLdzvCSinjFLkDgiFMqoGWIzgNtNsTsHvxRu7WBghqMGB
+   QuR8/hz8lWculCpaKJoJzkrq8WUlpmkzqYJ2/FZASSUu1e2OwN4I1AJMq
+   A==;
+X-CSE-ConnectionGUID: 5Jgm3M3kR02K1TPOgaZrQw==
+X-CSE-MsgGUID: MIbmD4+2RNiKO7mpWD7Qkg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="42531859"
+X-IronPort-AV: E=Sophos;i="6.13,272,1732608000"; 
+   d="scan'208";a="42531859"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 02:17:33 -0800
+X-CSE-ConnectionGUID: tAlE1hgASmaH/sPwSXJjeA==
+X-CSE-MsgGUID: kZk4YyznQK2YAC5F+sIwUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,272,1732608000"; 
+   d="scan'208";a="112557968"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 09 Feb 2025 02:17:29 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1th4NS-0011KR-2i;
+	Sun, 09 Feb 2025 10:17:26 +0000
+Date: Sun, 9 Feb 2025 18:17:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Joe Damato <jdamato@fastly.com>, netdev@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, horms@kernel.org,
+	kuba@kernel.org, Joe Damato <jdamato@fastly.com>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Mina Almasry <almasrymina@google.com>,
+	Martin Karsten <mkarsten@uwaterloo.ca>,
+	Sridhar Samudrala <sridhar.samudrala@intel.com>,
+	David Wei <dw@davidwei.uk>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 2/3] netdev-genl: Add an XSK attribute to
+ queues
+Message-ID: <202502091844.PyraqTPE-lkp@intel.com>
+References: <20250208041248.111118-3-jdamato@fastly.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Ethan Carter Edwards <ethan@ethancedwards.com>,
- kernel-hardening@lists.openwall.com, linux-hardening@vger.kernel.org,
- linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>
-References: <s6duijftssuzy34ilogc5ggfyukfqxmbflhllyzjlu4ki3xoo4@ci57esahvmxn>
-Subject: Re: [PATCH] ASoC: q6dsp: q6apm: change kzalloc to kcalloc
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <s6duijftssuzy34ilogc5ggfyukfqxmbflhllyzjlu4ki3xoo4@ci57esahvmxn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:9qLT0/6znlrr/UX2FzpFVqVWgiJtm9nEXtNZITfFV7q0fA3urLi
- ocRmNq9WCEz2HCQzKkoSyn47v8HjzCebI+Oj/qtjnE1FRMWmyCFf5dfO26MJbnfgAdHHFln
- 2zjuGAn5UCfMW4tm07CItXxbmqYohhCD4zdFou4/hoh/3/D+Aho/Ns3Il7nnGOa3yYMxaIw
- 3PcJMFAN2O6SUFKgFFUPQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:sSj4urlGScs=;aYQ2CVZDDz1kQzwhW3MloEE1199
- 3bTjnrHI7d3xVZuOLLFf1VDWX062zj02hYmpGEh8PFSaH4NZSPV0L6O37cq5eA5FrpRnY6hUM
- Ses7fbc00O6fLHuruFIMZwAPXEaNOkMLntvEF/bPkzpHu17d9QVNfdQb5zWHtTLurnJcBUsQ+
- Ug2KU3fYOEdDiwkPZfXfZ5PTiaq7GiZV2FEuqUBE88JuFw2rhJdPxs/si8yqUoL6VW3BC6BV5
- /qHUsvSbyzjvWsTkk6HqiIQNV43xLtC4uFLHoCxZvQqEFp9NhfumITFGqSEIwB5mi+Fn6g91o
- G5vyAwyezRK/ED9Xa53W0JnI3ak8kxxOIaxCfDT8L375f4tsfZGJ2wTO36xQ5QRN0aY0zxqo2
- dd4hHSZk34h6Az+pZbds8+TvN/DM1YiqU61ySMGM83wlJGHijYcTk1UnBLpCCFoaM+wR7M+vI
- YwY9e1PYoQkBcU9fuhB3e2qdmAjIYKxUV9Zv9BHPcZByWQmpWmI6Fk5xsXQMI+Z8xDrAOmxaT
- wPLL6YJpmIBfyXebgUmB+SJctSZw0sdKawZPNmVh4Q8UAQ3l0tF3l8HGSmDlvo4FQky9DDHqY
- +dpPE1RRjxwkXvAiWUnw+uKWYSJi4APeLlVJzeGX0a5ZU9aF6FfgVzUCAM7my2TCtGFVWsiFd
- ap2nLz3jTA0+vIPW0Q6j6bvgg/ruXVq14NQlIwe4S0UXXlH8R18I2VIwZ1VbMoqU2qau2vAHk
- +y43sExq+zW3g2K4OXXXYmqo4y+AYuXROJhLW72Vjpun7hJUIGYtW1Kxbwz7WOT0NJ5uM8P3S
- 3v0xmak90lMqOom4zR+V3PJD5rkBRnBA9Czp9b35VJ+nHqozR2uNxdlwiaNWZlwHUMfKZV1IM
- 9Uy1hWtpkGoMADutt6LhzW4iUW/9ASkyZ2Ra12u3USd5u1YwiayZ6EOdkQ5Kbbf5yEIZQGdKI
- kvOzCS6yLogdSoo7b9a4K/RuPPxOsESr3lPzwbrkMY+eu87/CgeGdGUls838JJ6mlu/YSAMl0
- xF2KNIYyqHcdY0bi+BkH7du5ufBnUZ3+N9+OY02OWrwaw1pAkgAkOMDtqLRBe1kcaL7zWIYSA
- m/au2iaUvmcQdRv0O+Uc9G+1ISV85zD6eebAt6JLiIpOt7/V0lf+c2XFc6lr8qeEHKHZI7HIO
- o7YlJaegmMXffKFlK4fIW9cgdKydK/s24g38UlWDW2Nk7wq2NwgUwnsxXbLnBHMLaag/cRS+p
- p3bQNbh+onsXAtr2xyej2FeBbW1UXQtiaB6mR80NKfwT+1p32mIBSsvXjBsnCqmXl4x7UJTBO
- tp+3UUBRPCLWazFoMssAqKOFtzvpJlc4i8aTcN1pr6NPVExOWDXU06W+fuCaRDxmcvpwU6bXp
- D45YEcGOmQ3aPNw3r/OW3noIPaLCuRgukot7yICaD44BJSI0K6LSGbdOYkQ8CS0lEGMpTdBHj
- 3U7JovgvjF0/MIpPWUdKJvM8Avig=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250208041248.111118-3-jdamato@fastly.com>
 
-> We are replacing any instances of kzalloc(size * count, ...) with
-> kcalloc(count, size, ...) due to risk of overflow [1].
+Hi Joe,
 
-See also:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.13#n94
+kernel test robot noticed the following build errors:
 
+[auto build test ERROR on 233a2b1480a0bdf6b40d4debf58a07084e9921ff]
 
-=E2=80=A6
-> +++ b/sound/soc/qcom/qdsp6/q6apm.c
-> @@ -230,7 +230,7 @@ int q6apm_map_memory_regions(struct q6apm_graph *gra=
-ph, unsigned int dir, phys_a
->  		return 0;
->  	}
->
-> -	buf =3D kzalloc(((sizeof(struct audio_buffer)) * periods), GFP_KERNEL)=
-;
-> +	buf =3D kcalloc(periods, sizeof(struct audio_buffer), GFP_KERNEL);
-=E2=80=A6
+url:    https://github.com/intel-lab-lkp/linux/commits/Joe-Damato/netlink-Add-nla_put_empty_nest-helper/20250208-121856
+base:   233a2b1480a0bdf6b40d4debf58a07084e9921ff
+patch link:    https://lore.kernel.org/r/20250208041248.111118-3-jdamato%40fastly.com
+patch subject: [PATCH net-next v5 2/3] netdev-genl: Add an XSK attribute to queues
+config: x86_64-kexec (https://download.01.org/0day-ci/archive/20250209/202502091844.PyraqTPE-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250209/202502091844.PyraqTPE-lkp@intel.com/reproduce)
 
-See also:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/coding-style.rst?h=3Dv6.13#n941
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502091844.PyraqTPE-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from net/core/netdev-genl.c:3:
+   In file included from include/linux/netdevice.h:38:
+   In file included from include/net/net_namespace.h:43:
+   In file included from include/linux/skbuff.h:17:
+   In file included from include/linux/bvec.h:10:
+   In file included from include/linux/highmem.h:8:
+   In file included from include/linux/cacheflush.h:5:
+   In file included from arch/x86/include/asm/cacheflush.h:5:
+   In file included from include/linux/mm.h:2224:
+   include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     504 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     505 |                            item];
+         |                            ~~~~
+   include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     511 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     512 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:524:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     524 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     525 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+>> net/core/netdev-genl.c:404:12: error: no member named 'pool' in 'struct netdev_rx_queue'
+     404 |                 if (rxq->pool)
+         |                     ~~~  ^
+>> net/core/netdev-genl.c:414:12: error: no member named 'pool' in 'struct netdev_queue'
+     414 |                 if (txq->pool)
+         |                     ~~~  ^
+   3 warnings and 2 errors generated.
 
 
-How do you think about to increase the application of scope-based resource=
- management?
+vim +404 net/core/netdev-genl.c
 
-Regards,
-Markus
+   374	
+   375	static int
+   376	netdev_nl_queue_fill_one(struct sk_buff *rsp, struct net_device *netdev,
+   377				 u32 q_idx, u32 q_type, const struct genl_info *info)
+   378	{
+   379		struct pp_memory_provider_params *params;
+   380		struct netdev_rx_queue *rxq;
+   381		struct netdev_queue *txq;
+   382		void *hdr;
+   383	
+   384		hdr = genlmsg_iput(rsp, info);
+   385		if (!hdr)
+   386			return -EMSGSIZE;
+   387	
+   388		if (nla_put_u32(rsp, NETDEV_A_QUEUE_ID, q_idx) ||
+   389		    nla_put_u32(rsp, NETDEV_A_QUEUE_TYPE, q_type) ||
+   390		    nla_put_u32(rsp, NETDEV_A_QUEUE_IFINDEX, netdev->ifindex))
+   391			goto nla_put_failure;
+   392	
+   393		switch (q_type) {
+   394		case NETDEV_QUEUE_TYPE_RX:
+   395			rxq = __netif_get_rx_queue(netdev, q_idx);
+   396			if (nla_put_napi_id(rsp, rxq->napi))
+   397				goto nla_put_failure;
+   398	
+   399			params = &rxq->mp_params;
+   400			if (params->mp_ops &&
+   401			    params->mp_ops->nl_fill(params->mp_priv, rsp, rxq))
+   402				goto nla_put_failure;
+   403	
+ > 404			if (rxq->pool)
+   405				if (nla_put_empty_nest(rsp, NETDEV_A_QUEUE_XSK))
+   406					goto nla_put_failure;
+   407	
+   408			break;
+   409		case NETDEV_QUEUE_TYPE_TX:
+   410			txq = netdev_get_tx_queue(netdev, q_idx);
+   411			if (nla_put_napi_id(rsp, txq->napi))
+   412				goto nla_put_failure;
+   413	
+ > 414			if (txq->pool)
+   415				if (nla_put_empty_nest(rsp, NETDEV_A_QUEUE_XSK))
+   416					goto nla_put_failure;
+   417	
+   418			break;
+   419		}
+   420	
+   421		genlmsg_end(rsp, hdr);
+   422	
+   423		return 0;
+   424	
+   425	nla_put_failure:
+   426		genlmsg_cancel(rsp, hdr);
+   427		return -EMSGSIZE;
+   428	}
+   429	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
