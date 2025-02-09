@@ -1,141 +1,117 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94F08831
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 06:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46F911CA0
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 06:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739081578; cv=none; b=pbylxstuXoUSZTdNOtl5rBxgHbq8oTtam1gOgHQlG5PutzZg+xIk3I52nCx4/gk6OJluWrorlzDJycPUrC1FIXqVyakQx4FwQtheechnEmQy8CPqixdbofSY6aXrXY4MSpJygw4GSeoxr4GCmzvXTjC1f0ZdxGNhKgAq2GUblSQ=
+	t=1739081617; cv=none; b=Db32BRPgQgHnKLHKlnzKsFCw/bxebFC9nYJLXarwxvf4aZMZsZHkqr13IslBql5IhbabR4SMhNdus+J3EL7CnWoUHWDKNBpBQZ1ogSCrEvyQ6Hj7eyp/RIS3rdAa9E76KE/e6YXesYaXm3/6VI/PVpbsg4CYt3tCDBWe8e/TIN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739081578; c=relaxed/simple;
-	bh=jPuVcK9BYPHBx7oFFG1INuxE1BeDwHKdKfZWF/JbVsc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kOlhze11Hw8qBvpEPvRa4athq+yvdAxC0SX6iEa+2eRbA7Cv+KL8hCMkxvuZJMw2lxF2K4wGhXoGDppJWWY5VoujJIMWXOlfTxnYXX8B8h9+UVho/NzzmPj281b1+1YjeUDAf0AHX0B6CoV4atRFWCOxk/lsTzwQRLdDmJ+9zrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S6bepTLf; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739081617; c=relaxed/simple;
+	bh=r9l3X0h/k4HjyI4SfuRJtcppk/M3dsbr96keZORi72M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CnFBzy/+u5ry1ZwdWGJCkAMbuDPwx2XTtA9FIdHj6ARqibEphj12dTGAKEm7FETHw6Dkvs9YAYi4Efid7rKME3ig9qKU+0HbGE2B/2kZWv6uoPIWm3/ASxfelG1mymEE/PR2mKZUK5nu5pOnIEFiKbnrNeQrfDbkqc+Zv0n5+/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=HhFD3WR+; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S6bepTLf"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-307d9a13782so28919621fa.2
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 22:12:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="HhFD3WR+"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2f7d35de32dso842540a91.3
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 22:13:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739081575; x=1739686375; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Fe0VF3HeXgNvgWt109zmaR5H6W57xLfEvBY6YhhqTM=;
-        b=S6bepTLfvUDYKAI8Z8S1UXLNdGgRn6m6HdC2XXaZNER5uz0DCOn5cB0N4WTIVCIfIJ
-         p5FtC4ATbHc7UsGZsvD5DHWhZMniPSRNFDcyEz2bx7NkHeSotVOFAg6kClVc1lNU2Xq+
-         M2d3axbQVT+ghBLmTx9VBumOJFV6qBTtHpeGkPIf1m7WG+Zw89G6SE/ZsH+CcJbmv3rQ
-         O2Tb2o+jx5zjbM2kG/90nESZlbbHuRGsQK93u0xEjUgwqEW+Q3cragjtteZ4UnCLJZRC
-         dMR6m6LWlIB/nTxb07kM9BiP6WGiUthNTw/tyjAkK8TdIZxi9jcPa2/zOKcV4PcS0YJQ
-         bT4g==
+        d=bytedance.com; s=google; t=1739081615; x=1739686415; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YU7wRncnO8wIwaOm5iP7dvoTbcr3ycvs8QfzeTKT60Q=;
+        b=HhFD3WR+QC3YLSTLKh7E0C/fm/+/FUP+rKaAu/Sy8WkICLsixX1pcA7P07nyvn1874
+         6MT1ktZq2SCnyW0JtS/RMVWkxk7Krz8aodWrT9Dk6b7HTqSQ+OMmJGEwvXrIGLMVx1oL
+         q5MFA7AqUyFsiOvcTOtTa2cyVezzGq9LsMwrc6Ptr3G9W715D9EXP/mwtQMEW2lm9Aq6
+         62KtW88N/OWtpQ/vg09iojj2N9kXQJ3UqFcAo17JIyop1qqeQE4CHd3PGncR5s6Fyk+l
+         yLuXAQbhqDgOci3rgLDggcI+FKm51RX9g0E6EhEuLkWIGwdYOnRUm8uGD8oWSK3nzNhg
+         Pb3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739081575; x=1739686375;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4Fe0VF3HeXgNvgWt109zmaR5H6W57xLfEvBY6YhhqTM=;
-        b=GCiaossdLOr9c+m5MhwAuVZYYb9Cqi5+ibA78rmDhPTDUW5jng/GsUzwo0SkT4q6MW
-         zwdJ0w65SgGdwbuWTIlurq8mUxGAixfz46s7qkjcHrGJ0wF9FNZmvrzb8ZM3MOYe7oOY
-         xWOosxYBhlxNpMM+LgyfQAjuUY0aZRPAnLmvXCziRY64xGXFp4YnfoiE1x3XNsv4dY7r
-         X86KI2mxKrhHVpjPSkUR5xquBQoQHiLJ7pDwbjJab80WUf2u38TVtzUro1n9dRH3sp3b
-         nQa+y3GBN8HQZHalKB7Q9SPlYYCrXoq62ycNARBOwT7OkufrvlzUecOHemjdLRqI6CKn
-         TCtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUg0nG07eP6HhdaAt6jsSbIXar4HJt3mzHmYXh8bpTm00HTiN5ABeIvl/jVr/eMlWQ9LesXfQvMbMIrkeE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycOJvo/lT3RNjgv+E8thM/2o6CSThSO7dJh3YVXkFI0DQgqFpo
-	WQr8kHr5PB6awFwczp8CKnMBZHylRKVDPxPhlCBIiY4GPoPkf2ijPTP2d3QxaBY=
-X-Gm-Gg: ASbGncssnn19MibcW7vdJYJiQzTJHe6kWXNU04QuhQJhSFzeYXTdDJpSxG9P9eB3a1A
-	t9N5MFWvtj6Wmgdu9wgOZYXfE+MP36HezbhEF0VAnWvWjSOao95/FwIFHIHxZf8Q339W1s/dza/
-	kPQCk62nuMeJoy6UyPUZrFWOAQiQSHT1shrYkUJa93WJmO/dK/1E+DfU2qIot6P5cEMb2EFtFmf
-	hq/sYiUi1dGPEjpp9FOaFHV8LyPc4ViyAqul8AEFYG+aKJNkgEZllD3hDgE6xfNzuUWiTcIG3Xk
-	4W2qN82SOnzBi4cKgTlhlonQRbKAjOgKhAVMiESUtg6swaN8RH7WWZ2UxmjuWNxr3vU+V5M=
-X-Google-Smtp-Source: AGHT+IG0zA2FKGk15ye6q/mCoGATdsQEyiqMtLOacPVHzVEYQoHiMNvdIJk/YGglXVnIXqv4CG72qA==
-X-Received: by 2002:a2e:9a84:0:b0:308:e54d:618a with SMTP id 38308e7fff4ca-308e54d637cmr6866631fa.29.1739081574778;
-        Sat, 08 Feb 2025 22:12:54 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-308e80067fdsm1789901fa.25.2025.02.08.22.12.52
+        d=1e100.net; s=20230601; t=1739081615; x=1739686415;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YU7wRncnO8wIwaOm5iP7dvoTbcr3ycvs8QfzeTKT60Q=;
+        b=e7pDthZyn3Vh/0PLyOCLwJtN/MGRO933DXbXttMSrw5pYinV9rZl3gfpDhTHN9WH8a
+         RGvvBkJmulU2kwlRPZ5B0OuEdUusUmP/vDpeN3crs1rLNe+QqwS5f9+o+Iixm4obdefW
+         /MdwvQNa0Mp8zEf2QtwFJloyujAUJETHXRrrH9fAZs4QVeqvhJEIXGoENZX4xsMjgb5p
+         vn+qX8JX0NmGR2FBK5/6/AfPAjC85yxuF/ku5rSdONqtaByJ4nIcWxVcl7i79q7VvUWI
+         OASCCF4OXXuaYAeGLuger3ESymwBJPY7sATz2G6T9eqJ8+xPCJxsJ1F5kbxCMFuG9jXK
+         Fc4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWqkOyITj8FLpqUUUNwUPB8HF+nvEGR5Du474Vj1Wq9bXb0rDp1QYIxAx7Oeu9bdxo1OMPmjL6dtjB1xiI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykY1HQoQ29zlTfav4+XUMbb2FFzo8vvkipAZWn3DlZ2sS8yVSg
+	Hlsq2vbPmJWLTDZH1kz8tT4BDCoqrFTHcG7r29huojlfYM6fxlmHtXFhy32tLUc=
+X-Gm-Gg: ASbGncu193VJ1nn5oD4zV50AEMl9tVemutQhRugbkaZ8zfz9bGBsnS9uPb/OGtxHMcA
+	+BfipH88892ny6o1CXqHi5VGBzGQ4sK6sQDu6IqjR65y2o9IMbuxBe59AkDkse8sohw6z5WF1XE
+	YakkMrgvhq8qU1Td87nVe+1ALENv7gcu5VIO5qikXqn9ygBNepnyJ8zqNpyXrfZfDOv01MSOxXh
+	UKCiBeajE0UqHt9+cEu11j+FpCm7DmIJxq5x4/FEUojxoQ0T7pvFrNV9JyGDSp09rfiOIZMMR6A
+	QCEFCzC/ZFmmwPCMkJSIaiq/TsyqpzbdGFFa+jB2ZPnK4Wt4qy5ohA==
+X-Google-Smtp-Source: AGHT+IG4/B+BVSKFZSg0eLyPkjsStbggwOl3ypIeb+J8t72J6SPFnXFAvt85+GGZSh1vuPiPJlSHfA==
+X-Received: by 2002:a05:6a00:1a8a:b0:725:eb85:f7fe with SMTP id d2e1a72fcca58-7305d2b2903mr5406607b3a.0.1739081614939;
+        Sat, 08 Feb 2025 22:13:34 -0800 (PST)
+Received: from C02DV8HUMD6R.bytedance.net ([139.177.225.244])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048ad26b9sm5550700b3a.50.2025.02.08.22.13.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 22:12:53 -0800 (PST)
-Date: Sun, 9 Feb 2025 08:12:51 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 28/35] drm/bridge: Provide a helper to retrieve
- current bridge state
-Message-ID: <ogbqg2nchpyctndxvsox7zfnvmarlztxvjtxf74xftvaswz73y@54smvncbpkbe>
-References: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
- <20250204-bridge-connector-v2-28-35dd6c834e08@kernel.org>
+        Sat, 08 Feb 2025 22:13:34 -0800 (PST)
+From: Abel Wu <wuyun.abel@bytedance.com>
+To: Johannes Weiner <hannes@cmpxchg.org>,
+	Tejun Heo <tj@kernel.org>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bitao Hu <yaoma@linux.alibaba.com>,
+	Abel Wu <wuyun.abel@bytedance.com>,
+	Chen Ridong <chenridong@huawei.com>
+Cc: cgroups@vger.kernel.org (open list:CONTROL GROUP (CGROUP)),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v4 0/2] Fix and extend cpu.stat
+Date: Sun,  9 Feb 2025 14:13:10 +0800
+Message-Id: <20250209061322.15260-1-wuyun.abel@bytedance.com>
+X-Mailer: git-send-email 2.37.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250204-bridge-connector-v2-28-35dd6c834e08@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 04, 2025 at 03:57:56PM +0100, Maxime Ripard wrote:
-> The current bridge state is accessible from the drm_bridge structure,
-> but since it's fairly indirect it's not easy to figure out.
-> 
-> Provide a helper to retrieve it.
-> 
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> ---
->  include/drm/drm_bridge.h | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-> index cf7ab89e652a982510ae9df1f5972b9c6eb13cf2..7a3664770c3ab8634a69e953b37a30ac467139b3 100644
-> --- a/include/drm/drm_bridge.h
-> +++ b/include/drm/drm_bridge.h
-> @@ -955,10 +955,31 @@ static inline struct drm_bridge *of_drm_find_bridge(struct device_node *np)
->  {
->  	return NULL;
->  }
->  #endif
->  
-> +/**
-> + * @drm_bridge_get_current_state() - Get the current bridge state
-> + * @bridge: bridge object
-> + *
-> + * This function must be called with the modeset lock held.
-> + *
-> + * RETURNS:
-> + *
-> + * The current bridge state, or NULL if there is none.
-> + */
-> +static inline struct drm_bridge_state *
-> +drm_bridge_get_current_state(struct drm_bridge *bridge)
-> +{
-> +	lockdep_assert_held(&bridge->base.lock.mutex.base);
+Patch 1: fixes an issue that forceidle time can be inconsistant with
+other cputimes.
+Patch 2: extend run_delay accounting to cgroup to show how severely
+a cgroup is stalled.
 
-Please use drm_modeset_lock_assert_held() instead.
+v4:
+ - Fixed a Kconfig dependency issue. (0day robot)
+v3:
+ - Dropped the cleanup patch. (Tejun)
+ - Modified 2nd patch's commit log.
+v2:
+ - Fixed internal function naming. (Michal Koutny)
 
-> +
-> +	if (!bridge)
-> +		return NULL;
-> +
-> +	return drm_priv_to_bridge_state(bridge->base.state);
-> +}
-> +
->  /**
->   * drm_bridge_get_next_bridge() - Get the next bridge in the chain
->   * @bridge: bridge object
->   *
->   * RETURNS:
-> 
-> -- 
-> 2.48.0
-> 
+Abel Wu (2):
+  cgroup/rstat: Fix forceidle time in cpu.stat
+  cgroup/rstat: Add run_delay accounting for cgroups
+
+ include/linux/cgroup-defs.h |  3 +++
+ include/linux/kernel_stat.h |  7 +++++
+ kernel/cgroup/rstat.c       | 54 ++++++++++++++++++++++++++-----------
+ kernel/sched/cputime.c      | 10 +++++++
+ kernel/sched/stats.h        |  3 +++
+ 5 files changed, 61 insertions(+), 16 deletions(-)
 
 -- 
-With best wishes
-Dmitry
+2.37.3
+
