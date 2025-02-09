@@ -1,29 +1,29 @@
-Received: from relay04.th.seeweb.it (relay04.th.seeweb.it [5.144.164.165])
+Received: from relay02.th.seeweb.it (relay02.th.seeweb.it [5.144.164.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3421E5701
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 21:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE54B1E9B3C;
+	Sun,  9 Feb 2025 21:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739137385; cv=none; b=V0hdGqhgl3v/lhW4x5V9kgmBhc8H5AvZO1pinW/XNk9rZ+GPPUkyU4W1jm/hbddPCK5RgCot5RBQUYBCuOXZkuDfbim9MgDP0ceP5cygyb2I1w8Q0WtPyC7XUhZNij20M2eBuq1H1sX9sG5WaY945nKNKrACzPwwaxnyUiKY9Hs=
+	t=1739137385; cv=none; b=gX0T8gPDxgFYjVhSMwvehAUHf7CHdgDwLvxEV8sHTUtJOOXob+N+ET6NZEnvs4ef45o8xhFGCr3lrHnsvTd7s7oeg6MUP3SURJhovPXCndVKXe3Wgo/XuTnQimsLnbWg1EpFlNvf0d5661I0b7q2jPx5OKC3wbrQaoemMKBcylo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739137385; c=relaxed/simple;
-	bh=VTdlerQNNpTUPZqatGVO2EiSPGoOtfou395t+Amfm6I=;
+	bh=MISpjNQDduNCQaMv+FDe9UPH/b1M9QDcUgD33v4LDzE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ePmkuOyn6ibqil5nO33bHL1OzifgvdI32q/L3Jm2G+bTjcDRH5l51oT7/Ui0RENjZ2YLM0URl8bO6YwnmdYWUmW6hB6bwjT1nptR+E1GVPhIOHK2TlSsIeF4LbZsHNGdDLD3JPqLVUZsjNGLMvuc8C3swvbY65PInM7YSF/Bu18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.165
+	 In-Reply-To:To:Cc; b=Oc63uBwoVZ2g3C4cVve624CiuMvb7P7Yth8pnLzlzy826nOLQsiOi/UM4GpnEQJt2cmFOm596iIywY0O0eB38UaFVpA6P04k2MKoHbKPatHOkyK9dsu5eItXHfXalTPlAuL1tLE9d0MhvBDjQrirQ3jZ3ULcokHbJFs/5kth6kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
 Received: from Marijn-Arch-PC.localdomain (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id B31F22018B;
-	Sun,  9 Feb 2025 22:42:59 +0100 (CET)
+	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 62CA0201A0;
+	Sun,  9 Feb 2025 22:43:01 +0100 (CET)
 From: Marijn Suijten <marijn.suijten@somainline.org>
-Date: Sun, 09 Feb 2025 22:42:52 +0100
-Subject: [PATCH v2 1/3] drm/msm/dsi: Use existing per-interface slice count
- in DSC timing
+Date: Sun, 09 Feb 2025 22:42:54 +0100
+Subject: [PATCH v2 3/3] drm/msm/dpu: Remove arbitrary limit of 1 interface
+ in DSC topology
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,7 +32,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-1-9a60184fdc36@somainline.org>
+Message-Id: <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-3-9a60184fdc36@somainline.org>
 References: <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-0-9a60184fdc36@somainline.org>
 In-Reply-To: <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-0-9a60184fdc36@somainline.org>
 To: Rob Clark <robdclark@gmail.com>, 
@@ -50,113 +50,68 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
  Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
  Marijn Suijten <marijn.suijten@somainline.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4089;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1941;
  i=marijn.suijten@somainline.org; h=from:subject:message-id;
- bh=VTdlerQNNpTUPZqatGVO2EiSPGoOtfou395t+Amfm6I=;
- b=owEBbQKS/ZANAwAIAfFi0jHH5IZ2AcsmYgBnqSFirjkmyMVkeLXZR2FsC8zxQlShfIeyj03b5
- gwOfvsoSNeJAjMEAAEIAB0WIQROiwG5pb6la1/WZxbxYtIxx+SGdgUCZ6khYgAKCRDxYtIxx+SG
- dkLHEAC0RQTGeY7iXQI1Y4Fw1YYmWHrM/TlO2OrUyRh5Zk7f6ruxTjkg2dxk159lHTjf30J+Eqq
- KYNGnQPX+ScWSs1vYOrY1NGAD1TuahxyiOsvhZtAPmCx7onHnpT16QYK8OqJv/cPs4Ksu8aqGYt
- 8ravYv8r2rW2dYwIrNZt7r81oKNyc4VMb3jNGcR0ops6v17pxL1WXE1VV962noTltS9uCCQOUMj
- 0ts8+1DshNDFrET5ZKNdnRS6+sza0hzM3H94Kgv/+/709QM2RtDNJ3EotGSCtB3w3tF1wFzU0n5
- k2dR5TA6Bz4xFnsYt7jVEKHKAwO7weZ8Bs4pAoWuOA7TfXPJTfrYR4q+OcwV3NG6R0s2vOIw5OO
- 1XF0+fzq5UrQngQfMoAn9zPFfVW3odGlr5H5CHBMo8/UpV8v9nEUptseuyzKo/MUNKiwAZulw5p
- YodKAyFpmNt86zmqdwPqOtPDI51LqY5kexm0bOero0M6P03OTK90awksWiaK/tI0tw/P4oubyWr
- 9Hn0zIdaLNRvUM9H5tGVoVSppMtH3DuFM0vqoCIUCc9S8rIE9TOhIcMqn+0Jx5wEkOefPndz2ei
- hDRk9r4bTgqngLhYQAg8HW3TUkr6pwV5+qcD+o37+2n7EWV8U6DAQrx78TOvCTSeo0X2eDFnMmz
- m0NV0TiBiY0Nw8w==
+ bh=MISpjNQDduNCQaMv+FDe9UPH/b1M9QDcUgD33v4LDzE=;
+ b=owEBbQKS/ZANAwAIAfFi0jHH5IZ2AcsmYgBnqSFiMrpbQ6WiYf+MMArHU1I7Px3DbgZzKq8lk
+ 3W9qK7uUI2JAjMEAAEIAB0WIQROiwG5pb6la1/WZxbxYtIxx+SGdgUCZ6khYgAKCRDxYtIxx+SG
+ diK6D/9E7oN6A/G/3pmaZELoM0OFBnd+tUkLTENa+EUGxCiRrM9Jl9UZdpdDgI4Ea0n7WysXog3
+ Lw61q1clOL7e13anQXZwr9dhyKqnKrkFAU9mbYuS3Nb0SUhlDPOSTjhw79fR3eOe/iep5/8g17y
+ hnQrAhRafDc2WOYxqNgqtVYtMeIDR+fzfkjyxG7VaHWmUTJWHXZEUfDC0G2pAy07yJlmNr+H8ym
+ 9ektnEPZWOHZg4fVhAsa+NoXvOIFeEVINX8Bv7ggNID6fiCCjQFbFRgCowxbz5K16lEBWeHKkoa
+ G6JygUN4ckbRVLpkCpfkxBQWul7F+HM0ulQr+/tiWNsozzYwiCOESiK9kQhxboJe0hqiqJVYYey
+ r52TeK9RrlQEspoheHJ2jU1HJwZNLRz9E+8qX+lhBNZZDmnhftfCf9WZq9C3tkIqvgwwLReyZq4
+ KuHY48uvJ5IPKz0lxrp+bXrQIv5XqHjLJGn5PSjUiuWkYS3R/Ypt6o3kdHGAh01WsMKTIShJt4R
+ /UPrPdo70PPc443pwR7v6UPt3Ws2Zl/SjpCM01YG0p6hwW/ZkssdK7K7OsF9NnoeK4w/wopBe8R
+ S2jWDYD60LANft8bu6rvF6m8rk+3Fu+g0ElU9vvzrup6KKj2d+j1DZgqC9AAXvWwzA1p+8CyKaV
+ iC4T4SNPjMj9shA==
 X-Developer-Key: i=marijn.suijten@somainline.org; a=openpgp;
  fpr=4E8B01B9A5BEA56B5FD66716F162D231C7E48676
 
-When configuring the timing of DSI hosts (interfaces) in
-dsi_timing_setup() all values written to registers are taking
-bonded-mode into account by dividing the original mode width by 2
-(half the data is sent over each of the two DSI hosts), but the full
-width instead of the interface width is passed as hdisplay parameter to
-dsi_update_dsc_timing().
+When DSC is enabled the number of interfaces is forced to be 1, and
+documented that it is a "power-optimal" layout to use two DSC encoders
+together with two Layer Mixers.  However, the same layout (two DSC
+hard-slice encoders with two LMs) is also used when the display is
+fed with data over two instead of one interface (common on 4k@120Hz
+smartphone panels with Dual-DSI).  Solve this by simply removing the
+num_intf = 1 assignment as the count is already calculated by computing
+the number of physical encoders within the virtual encoder.
 
-Currently only msm_dsc_get_slices_per_intf() is called within
-dsi_update_dsc_timing() with the `hdisplay` argument which clearly
-documents that it wants the width of a single interface (which, again,
-in bonded DSI mode is half the total width of the mode) resulting in all
-subsequent values to be completely off.
-
-However, as soon as we start to pass the halved hdisplay
-into dsi_update_dsc_timing() we might as well discard
-msm_dsc_get_slices_per_intf() since the value it calculates is already
-available in dsc->slice_count which is per-interface by the current
-design of MSM DPU/DSI implementations and their use of the DRM DSC
-helpers.
-
-Fixes: 08802f515c3c ("drm/msm/dsi: Add support for DSC configuration")
+Fixes: 7e9cc175b159 ("drm/msm/disp/dpu1: Add support for DSC in topology")
 Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
 ---
- drivers/gpu/drm/msm/dsi/dsi_host.c   |  8 ++++----
- drivers/gpu/drm/msm/msm_dsc_helper.h | 11 -----------
- 2 files changed, 4 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-index 007311c21fdaa0462b05d53cd8a2aad0269b1727..42e100a8adca09d7b55afce0e2553e76d898744f 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-@@ -846,7 +846,7 @@ static void dsi_ctrl_enable(struct msm_dsi_host *msm_host,
- 		dsi_write(msm_host, REG_DSI_CPHY_MODE_CTRL, BIT(0));
- }
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index b585cd17462345f94bcc2ddd57902cc7c312ae63..b0870318471bd7cceda70fd15ea7bcc8658af604 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -686,20 +686,21 @@ static struct msm_display_topology dpu_encoder_get_topology(
  
--static void dsi_update_dsc_timing(struct msm_dsi_host *msm_host, bool is_cmd_mode, u32 hdisplay)
-+static void dsi_update_dsc_timing(struct msm_dsi_host *msm_host, bool is_cmd_mode)
- {
- 	struct drm_dsc_config *dsc = msm_host->dsc;
- 	u32 reg, reg_ctrl, reg_ctrl2;
-@@ -858,7 +858,7 @@ static void dsi_update_dsc_timing(struct msm_dsi_host *msm_host, bool is_cmd_mod
- 	/* first calculate dsc parameters and then program
- 	 * compress mode registers
- 	 */
--	slice_per_intf = msm_dsc_get_slices_per_intf(dsc, hdisplay);
-+	slice_per_intf = dsc->slice_count;
+ 	if (dsc) {
+ 		/*
+-		 * Use 2 DSC encoders and 2 layer mixers per single interface
++		 * Use 2 DSC encoders, 2 layer mixers and 1 or 2 interfaces
+ 		 * when Display Stream Compression (DSC) is enabled,
+ 		 * and when enough DSC blocks are available.
+ 		 * This is power-optimal and can drive up to (including) 4k
+ 		 * screens.
+ 		 */
+-		if (dpu_kms->catalog->dsc_count >= 2) {
++		WARN(topology.num_intf > 2,
++		     "DSC topology cannot support more than 2 interfaces\n");
++		if (intf_count >= 2 || dpu_kms->catalog->dsc_count >= 2) {
+ 			topology.num_dsc = 2;
+ 			topology.num_lm = 2;
+ 		} else {
+ 			topology.num_dsc = 1;
+ 			topology.num_lm = 1;
+ 		}
+-		topology.num_intf = 1;
+ 	}
  
- 	total_bytes_per_intf = dsc->slice_chunk_size * slice_per_intf;
- 	bytes_per_pkt = dsc->slice_chunk_size; /* * slice_per_pkt; */
-@@ -991,7 +991,7 @@ static void dsi_timing_setup(struct msm_dsi_host *msm_host, bool is_bonded_dsi)
- 
- 	if (msm_host->mode_flags & MIPI_DSI_MODE_VIDEO) {
- 		if (msm_host->dsc)
--			dsi_update_dsc_timing(msm_host, false, mode->hdisplay);
-+			dsi_update_dsc_timing(msm_host, false);
- 
- 		dsi_write(msm_host, REG_DSI_ACTIVE_H,
- 			DSI_ACTIVE_H_START(ha_start) |
-@@ -1012,7 +1012,7 @@ static void dsi_timing_setup(struct msm_dsi_host *msm_host, bool is_bonded_dsi)
- 			DSI_ACTIVE_VSYNC_VPOS_END(vs_end));
- 	} else {		/* command mode */
- 		if (msm_host->dsc)
--			dsi_update_dsc_timing(msm_host, true, mode->hdisplay);
-+			dsi_update_dsc_timing(msm_host, true);
- 
- 		/* image data and 1 byte write_memory_start cmd */
- 		if (!msm_host->dsc)
-diff --git a/drivers/gpu/drm/msm/msm_dsc_helper.h b/drivers/gpu/drm/msm/msm_dsc_helper.h
-index b9049fe1e2790703a6f42dd7e6cd3fa5eea29389..63f95523b2cbb48f822210ac47cdd3526f231a89 100644
---- a/drivers/gpu/drm/msm/msm_dsc_helper.h
-+++ b/drivers/gpu/drm/msm/msm_dsc_helper.h
-@@ -12,17 +12,6 @@
- #include <linux/math.h>
- #include <drm/display/drm_dsc_helper.h>
- 
--/**
-- * msm_dsc_get_slices_per_intf() - calculate number of slices per interface
-- * @dsc: Pointer to drm dsc config struct
-- * @intf_width: interface width in pixels
-- * Returns: Integer representing the number of slices for the given interface
-- */
--static inline u32 msm_dsc_get_slices_per_intf(const struct drm_dsc_config *dsc, u32 intf_width)
--{
--	return DIV_ROUND_UP(intf_width, dsc->slice_width);
--}
--
- /**
-  * msm_dsc_get_bytes_per_line() - calculate bytes per line
-  * @dsc: Pointer to drm dsc config struct
+ 	return topology;
 
 -- 
 2.48.1
