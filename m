@@ -1,492 +1,194 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F8B2F22
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 17:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6EC2F22;
+	Sun,  9 Feb 2025 17:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739123296; cv=none; b=d1mjC0SRiazkpVy7x8HrW58DW5c1S+HGBxGbPBZgxCHbbSVn1cjihb/2Br2xDtlEoWDcRRQ6fWFjjKuMFkQ2E9293hfmeKAhPrbINMDK8STDh8hKXNU4b/n/J0LljErEVaFgG6IGjO6aYFKb69x7V9uBQvq67SOXJ4Prq/vP45k=
+	t=1739123429; cv=none; b=WYLijPYVCrX6/qfycOqLpmbNmTWda/1X3oCYf8ie29L/CiYIjfjXx3ZNNeHk6gsY9+T4XD2Ng+81l0WbaP6IAv77JufEwHS8c0d0lh4hpJGuUETFQNCBgOodW37dxtJmZ6nvLDz6MP8rTiQptIi3X1eMpG95QEWY1muHODlyqgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739123296; c=relaxed/simple;
-	bh=35sYHjGZkGEIHAOErWRPG25fb7/NHGn1hX/SCIOGr4s=;
-	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=C+Yqd9O2p54VAtiqycu1TifEpmz2UzzAhc6mS41IL3x6z5CD7FILB5QZ940gcDMkgPvNi6CPKofV8SO07itamD9MMjvt2HoVOt3uxtmJ5Dafn3oRPHYbfikSclQ1/99FKWyWv9nLwsc03SA7vat3oQ75SnbhUc8Pcxv1EnUR4yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TXn+2GNh; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739123429; c=relaxed/simple;
+	bh=Cz++CWnMw5CI/SNuKx7rQu2pEJh3WRGr2rYqI/LMQDs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PSaJUoUP9kp5Qf/UfmtQMmN6+WiNtRc1RH5Dil1MhK6lbMHtAVqQ6JHwmGCCOyFz6R2oflKmGfkDwMkNgOF+JmNHqRBnhqvEcrJckVAouuiIlmbBqojUU4FdV5BxP/8ANvIuTzX1A7BI1IMxkSa0AuSHWE/Y0o57PCQkswtkA0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OkEW0mDS; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TXn+2GNh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739123293;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ImQqa477j5vMR3aG9NyxGa4y/0s1ZTW1pMpQcumnUqw=;
-	b=TXn+2GNhCHxKDJuSDoSTWlkYnVmM49HORx7OduJv49afusjTjEIb68pO0aTW/y3QSqAJfF
-	E0wlh9F2Wwn3XOU5S8ym7E6DXGwYjZCEfvdB3qlcukW1kYYMxmOhzJRoxSyU9qwzlfV/6Z
-	jx6kkCAml2FSPhKk2D8hYvx5uReUwSk=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-29-ky_tXTbTMvqIPTJJJFq30g-1; Sun,
- 09 Feb 2025 12:48:09 -0500
-X-MC-Unique: ky_tXTbTMvqIPTJJJFq30g-1
-X-Mimecast-MFC-AGG-ID: ky_tXTbTMvqIPTJJJFq30g
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A08B51956088;
-	Sun,  9 Feb 2025 17:48:07 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.92])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B5F5118004A7;
-	Sun,  9 Feb 2025 17:48:03 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-To: netdev@vger.kernel.org
-cc: dhowells@redhat.com, Marc Dionne <marc.dionne@auristor.com>,
-    Jakub Kicinski <kuba@kernel.org>,
-    "David S. Miller" <davem@davemloft.net>,
-    Chuck Lever <chuck.lever@oracle.com>,
-    Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-    Simon Horman <horms@kernel.org>, linux-afs@lists.infradead.org,
-    linux-kernel@vger.kernel.org
-Subject: [PATCH net] rxrpc: Fix alteration of headers whilst zerocopy pending
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OkEW0mDS"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6ef9b8b4f13so31668317b3.2;
+        Sun, 09 Feb 2025 09:50:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739123427; x=1739728227; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/0omVsmN3zO6xDrd4HBglrhIiHiSgl3Gp/JjxQkVS8Q=;
+        b=OkEW0mDSB8fG3lYDPkI5vQv6K0rnQD5p7ZYlxaFVB/354z+yNwxMWP12nIlaviKopU
+         9r5pbjIXSnWsVF+ugrvyWbrFZ27Y4cvNuAHXTuJ/gpUfAmUcgHUaxmX877kmDh/JH04+
+         xy6Hpr3PrKE6FARTIfX5kg4b9qP/0CtIapL8GXMHBaFF/81bJge+UGbj4JiBI/DewLs2
+         Iuh8l8prlh5bTRQIOpn+n23tXZ6+7eOFiho6m+udyvk0gKLojKXYFekDHbE9xVIqkhTa
+         viKYVVFmoln6DLrew78qR4LlPz0qLUVll1UviGkXvVOitDcV0chBtupL6NKKMSqGRcdf
+         KodA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739123427; x=1739728227;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/0omVsmN3zO6xDrd4HBglrhIiHiSgl3Gp/JjxQkVS8Q=;
+        b=qeBiyDB0FZVRFUbastwtW220kl2mhE0oylHPWOSmIkzxJz9JBsgzp80QXdA7/yixtf
+         TbDJbD2a8ZJS5ASnax3VJQYtyz1LfS9mYS2+Ak8dOW6X6JVG7cTgd4yaNzwI4ERGMNTL
+         FmLxKJjuamO9F54TrYDFa3fqqw0H+a/RaXdu16cdske51msP5FJQiossnivCoEBcPRRA
+         ETYeYHFBvq4K8wHKwtt52NW18kd/VaYOaMImrglVBEeBg+GaEnhQ8Jl6x5vON0/a5TUU
+         7xKYzqpW9z3S/OkNEvJ8CUiu6wCzquSIs/Ta+ZJ/NQTVfYYt5yCOvB3uyRqT9UmCmMYe
+         2Liw==
+X-Forwarded-Encrypted: i=1; AJvYcCUGCwHrQwceWxaUIK3StBkgdPQvqbAL6q1PxCHyAOvwJgFDCClhUpgUt4R7bY/9KRTzCTA=@vger.kernel.org, AJvYcCX/T8w2nnhOSzwrzyFegi6jwzFgMCxsnrj6w60fVGMKFsfMvm6L0IQo2IJtVZrDZhivKbI2lXigl9z98153@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/5GSsYpAEEzI3BOrqgL77Xx0IXCtM0TxofrqyFPOcMUHkfX+p
+	qUXqUW06t0by5Q7eGpMFcAEn51+q5j/jVRB9kxVwlgJ6PBkC0NQN
+X-Gm-Gg: ASbGnctDnsQxtU+yF0ISVS2DS0S2g4jE0yk5sdFfWGq090694FoZsjghnYH9mOJgm/A
+	Be8/8bk+tHcei+J7gWO3KBPAksU39vL30d7iVbmFyE/rYz+GC6cYfZw1sIxoz1EaJYaZo/4W541
+	DruzkdbnW/XYY8v2Cy9Xc0hOkss5cMr2Stcxd04yrmaEA58QHSTd9uvAM4vxMOQwhB9UjFeigyP
+	QPAAD9XjLtKiKhzmTvN8qGJBOFVDnraNqPKhDiUqqdFBILGY6ivl4zzrgpykTtbNQv8VHWJiSy8
+	TyHc4tkMsl/21h0+KKF9Vm8x+wjSRRZKPHewNFeFOmzz5H56/LA=
+X-Google-Smtp-Source: AGHT+IG6lVo30sIag7LkXlb/FtGB6wrPBCg40lsJadb2e3pC4IvgbseJ7xu1VMCbY5sGUkFCowGT7g==
+X-Received: by 2002:a05:690c:6f8c:b0:6f9:8468:127c with SMTP id 00721157ae682-6f9b287b8ddmr88973477b3.19.1739123427125;
+        Sun, 09 Feb 2025 09:50:27 -0800 (PST)
+Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99fcefe5bsm12905037b3.21.2025.02.09.09.50.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2025 09:50:26 -0800 (PST)
+Date: Sun, 9 Feb 2025 12:50:25 -0500
+From: Yury Norov <yury.norov@gmail.com>
+To: Andrea Righi <arighi@nvidia.com>
+Cc: Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
+	Changwoo Min <changwoo@igalia.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>, Ian May <ianm@nvidia.com>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/6] sched/topology: Introduce for_each_numa_node()
+ iterator
+Message-ID: <Z6jq4RTT7ynoM2vO@thinkpad>
+References: <20250207211104.30009-1-arighi@nvidia.com>
+ <20250207211104.30009-3-arighi@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1933695.1739123282.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 09 Feb 2025 17:48:02 +0000
-Message-ID: <1933696.1739123282@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207211104.30009-3-arighi@nvidia.com>
 
-AF_RXRPC now uses MSG_SPLICE_PAGES to do zerocopy of the DATA packets when
-it transmits them, but to reduce the number of descriptors required in the
-DMA ring, it allocates a space for the protocol header in the memory
-immediately before the data content so that it can include both in a singl=
-e
-descriptor.  This is used for either the main RX header or the smaller
-jumbo subpacket header as appropriate:
+On Fri, Feb 07, 2025 at 09:40:49PM +0100, Andrea Righi wrote:
+> Introduce the new helper for_each_numa_node() to iterate over node IDs
+> in order of increasing NUMA distance from a given starting node.
+> 
+> This iterator is similar to for_each_numa_hop_mask(), but instead of
+> providing a cpumask at each iteration, it provides a node ID.
+> 
+> Example usage:
+> 
+>   nodemask_t unvisited = NODE_MASK_ALL;
+>   int node, start = cpu_to_node(smp_processor_id());
+> 
+>   node = start;
+>   for_each_numa_node(node, unvisited, N_ONLINE)
+>   	pr_info("node (%d, %d) -> %d\n",
+>   		 start, node, node_distance(start, node));
+> 
+> On a system with equidistant nodes:
+> 
+>  $ numactl -H
+>  ...
+>  node distances:
+>  node     0    1    2    3
+>     0:   10   20   20   20
+>     1:   20   10   20   20
+>     2:   20   20   10   20
+>     3:   20   20   20   10
+> 
+> Output of the example above (on node 0):
+> 
+> [    7.367022] node (0, 0) -> 10
+> [    7.367151] node (0, 1) -> 20
+> [    7.367186] node (0, 2) -> 20
+> [    7.367247] node (0, 3) -> 20
+> 
+> On a system with non-equidistant nodes (simulated using virtme-ng):
 
-  +----+------+
-  | RX |      |
-  +-+--+DATA  |
-    |JH|      |
-    +--+------+
+Great to see virtme-ng maturing!
+ 
+>  $ numactl -H
+>  ...
+>  node distances:
+>  node     0    1    2    3
+>     0:   10   51   31   41
+>     1:   51   10   21   61
+>     2:   31   21   10   11
+>     3:   41   61   11   10
+> 
+> Output of the example above (on node 0):
+> 
+>  [    8.953644] node (0, 0) -> 10
+>  [    8.953712] node (0, 2) -> 31
+>  [    8.953764] node (0, 3) -> 41
+>  [    8.953817] node (0, 1) -> 51
+> 
+> Cc: Yury Norov <yury.norov@gmail.com>
+> Signed-off-by: Andrea Righi <arighi@nvidia.com>
+> ---
+>  include/linux/topology.h | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/include/linux/topology.h b/include/linux/topology.h
+> index 52f5850730b3e..09c18ee8be0eb 100644
+> --- a/include/linux/topology.h
+> +++ b/include/linux/topology.h
+> @@ -261,6 +261,34 @@ sched_numa_hop_mask(unsigned int node, unsigned int hops)
+>  }
+>  #endif	/* CONFIG_NUMA */
+>  
+> +/**
+> + * for_each_numa_node - iterate over nodes at increasing distances from a
+> + *			given starting node.
 
-Now, when it stitches a large jumbo packet together from a number of
-individual DATA packets (each of which is 1412 bytes of data), it uses the
-full RX header from the first and then the jumbo subpacket header for the
-rest of the components:
+Nit: in increasing distance order, starting from a given node
 
-  +---+--+------+--+------+--+------+--+------+--+------+--+------+
-  |UDP|RX|DATA  |JH|DATA  |JH|DATA  |JH|DATA  |JH|DATA  |JH|DATA  |
-  +---+--+------+--+------+--+------+--+------+--+------+--+------+
+> + * @node: the iteration variable and the starting node.
+> + * @unvisited: a nodemask to keep track of the unvisited nodes.
+> + * @state: state of NUMA nodes to iterate.
+> + *
+> + * This macro iterates over NUMA node IDs in increasing distance from the
+> + * starting @node and yields MAX_NUMNODES when all the nodes have been
+> + * visited.
 
-As mentioned, the main RX header and the jumbo header overlay one another
-in memory and the formats don't match, so switching from one to the other
-means rearranging the fields and adjusting the flags.
+Please also mention that the unvisited nodemask will be empty when it finish.
 
-However, now that TLP has been included, it wants to retransmit the last
-subpacket as a new data packet on its own, which means switching between
-the header formats... and if the transmission is still pending, because of
-the MSG_SPLICE_PAGES, we end up corrupting the jumbo subheader.
-
-This has a variety of effects, with the RX service number overwriting the
-jumbo checksum/key number field and the RX checksum overwriting the jumbo
-flags - resulting in, at the very least, a confused connection-level abort
-from the peer.
-
-Fix this by leaving the jumbo header in the allocation with the data, but
-allocating the RX header from the page frag allocator and concocting it on
-the fly at the point of transmission as is done for ACK packets.
-
-Fixes: commit 7c482665931b ("rxrpc: Implement RACK/TLP to deal with transm=
-ission stalls [RFC8985]")
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: Jakub Kicinski <kuba@kernel.org>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Chuck Lever <chuck.lever@oracle.com>
-cc: Eric Dumazet <edumazet@google.com>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: Simon Horman <horms@kernel.org>
-cc: linux-afs@lists.infradead.org
-cc: netdev@vger.kernel.org
----
- net/rxrpc/ar-internal.h |    7 ++----
- net/rxrpc/output.c      |   50 +++++++++++++++++++++++++++++++++---------=
-------
- net/rxrpc/rxkad.c       |   13 ++++--------
- net/rxrpc/sendmsg.c     |    4 ---
- net/rxrpc/txbuf.c       |   35 +++++++++------------------------
- 5 files changed, 54 insertions(+), 55 deletions(-)
-
-diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
-index f251845fe532..5e740c486203 100644
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -327,8 +327,8 @@ struct rxrpc_local {
- 	 * packet with a maximum set of jumbo subpackets or a PING ACK padded
- 	 * out to 64K with zeropages for PMTUD.
- 	 */
--	struct kvec		kvec[RXRPC_MAX_NR_JUMBO > 3 + 16 ?
--				     RXRPC_MAX_NR_JUMBO : 3 + 16];
-+	struct kvec		kvec[1 + RXRPC_MAX_NR_JUMBO > 3 + 16 ?
-+				     1 + RXRPC_MAX_NR_JUMBO : 3 + 16];
- };
- =
-
- /*
-@@ -874,8 +874,7 @@ struct rxrpc_txbuf {
- #define RXRPC_TXBUF_RESENT	0x100		/* Set if has been resent */
- 	__be16			cksum;		/* Checksum to go in header */
- 	bool			jumboable;	/* Can be non-terminal jumbo subpacket */
--	u8			nr_kvec;	/* Amount of kvec[] used */
--	struct kvec		kvec[1];
-+	void			*data;		/* Data with preceding jumbo header */
- };
- =
-
- static inline bool rxrpc_sending_to_server(const struct rxrpc_txbuf *txb)
-diff --git a/net/rxrpc/output.c b/net/rxrpc/output.c
-index 6f7a125d6e90..95905b85a8d7 100644
---- a/net/rxrpc/output.c
-+++ b/net/rxrpc/output.c
-@@ -428,13 +428,13 @@ int rxrpc_send_abort_packet(struct rxrpc_call *call)
- static size_t rxrpc_prepare_data_subpacket(struct rxrpc_call *call,
- 					   struct rxrpc_send_data_req *req,
- 					   struct rxrpc_txbuf *txb,
-+					   struct rxrpc_wire_header *whdr,
- 					   rxrpc_serial_t serial, int subpkt)
- {
--	struct rxrpc_wire_header *whdr =3D txb->kvec[0].iov_base;
--	struct rxrpc_jumbo_header *jumbo =3D (void *)(whdr + 1) - sizeof(*jumbo)=
-;
-+	struct rxrpc_jumbo_header *jumbo =3D txb->data - sizeof(*jumbo);
- 	enum rxrpc_req_ack_trace why;
- 	struct rxrpc_connection *conn =3D call->conn;
--	struct kvec *kv =3D &call->local->kvec[subpkt];
-+	struct kvec *kv =3D &call->local->kvec[1 + subpkt];
- 	size_t len =3D txb->pkt_len;
- 	bool last;
- 	u8 flags;
-@@ -491,18 +491,15 @@ static size_t rxrpc_prepare_data_subpacket(struct rx=
-rpc_call *call,
- 	}
- dont_set_request_ack:
- =
-
--	/* The jumbo header overlays the wire header in the txbuf. */
-+	/* There's a jumbo header prepended to the data if we need it. */
- 	if (subpkt < req->n - 1)
- 		flags |=3D RXRPC_JUMBO_PACKET;
- 	else
- 		flags &=3D ~RXRPC_JUMBO_PACKET;
- 	if (subpkt =3D=3D 0) {
- 		whdr->flags	=3D flags;
--		whdr->serial	=3D htonl(txb->serial);
- 		whdr->cksum	=3D txb->cksum;
--		whdr->serviceId	=3D htons(conn->service_id);
--		kv->iov_base	=3D whdr;
--		len +=3D sizeof(*whdr);
-+		kv->iov_base	=3D txb->data;
- 	} else {
- 		jumbo->flags	=3D flags;
- 		jumbo->pad	=3D 0;
-@@ -535,7 +532,9 @@ static unsigned int rxrpc_prepare_txqueue(struct rxrpc=
-_txqueue *tq,
- /*
-  * Prepare a (jumbo) packet for transmission.
-  */
--static size_t rxrpc_prepare_data_packet(struct rxrpc_call *call, struct r=
-xrpc_send_data_req *req)
-+static size_t rxrpc_prepare_data_packet(struct rxrpc_call *call,
-+					struct rxrpc_send_data_req *req,
-+					struct rxrpc_wire_header *whdr)
- {
- 	struct rxrpc_txqueue *tq =3D req->tq;
- 	rxrpc_serial_t serial;
-@@ -549,6 +548,18 @@ static size_t rxrpc_prepare_data_packet(struct rxrpc_=
-call *call, struct rxrpc_se
- 	/* Each transmission of a Tx packet needs a new serial number */
- 	serial =3D rxrpc_get_next_serials(call->conn, req->n);
- =
-
-+	whdr->epoch		=3D htonl(call->conn->proto.epoch);
-+	whdr->cid		=3D htonl(call->cid);
-+	whdr->callNumber	=3D htonl(call->call_id);
-+	whdr->seq		=3D htonl(seq);
-+	whdr->serial		=3D htonl(serial);
-+	whdr->type		=3D RXRPC_PACKET_TYPE_DATA;
-+	whdr->flags		=3D 0;
-+	whdr->userStatus	=3D 0;
-+	whdr->securityIndex	=3D call->security_ix;
-+	whdr->_rsvd		=3D 0;
-+	whdr->serviceId		=3D htons(call->conn->service_id);
-+
- 	call->tx_last_serial =3D serial + req->n - 1;
- 	call->tx_last_sent =3D req->now;
- 	xmit_ts =3D rxrpc_prepare_txqueue(tq, req);
-@@ -576,7 +587,7 @@ static size_t rxrpc_prepare_data_packet(struct rxrpc_c=
-all *call, struct rxrpc_se
- 		if (i + 1 =3D=3D req->n)
- 			/* Only sample the last subpacket in a jumbo. */
- 			__set_bit(ix, &tq->rtt_samples);
--		len +=3D rxrpc_prepare_data_subpacket(call, req, txb, serial, i);
-+		len +=3D rxrpc_prepare_data_subpacket(call, req, txb, whdr, serial, i);
- 		serial++;
- 		seq++;
- 		i++;
-@@ -618,6 +629,7 @@ static size_t rxrpc_prepare_data_packet(struct rxrpc_c=
-all *call, struct rxrpc_se
- 	}
- =
-
- 	rxrpc_set_keepalive(call, req->now);
-+	page_frag_free(whdr);
- 	return len;
- }
- =
-
-@@ -626,25 +638,33 @@ static size_t rxrpc_prepare_data_packet(struct rxrpc=
-_call *call, struct rxrpc_se
-  */
- void rxrpc_send_data_packet(struct rxrpc_call *call, struct rxrpc_send_da=
-ta_req *req)
- {
-+	struct rxrpc_wire_header *whdr;
- 	struct rxrpc_connection *conn =3D call->conn;
- 	enum rxrpc_tx_point frag;
- 	struct rxrpc_txqueue *tq =3D req->tq;
- 	struct rxrpc_txbuf *txb;
- 	struct msghdr msg;
- 	rxrpc_seq_t seq =3D req->seq;
--	size_t len;
-+	size_t len =3D sizeof(*whdr);
- 	bool new_call =3D test_bit(RXRPC_CALL_BEGAN_RX_TIMER, &call->flags);
- 	int ret, stat_ix;
- =
-
- 	_enter("%x,%x-%x", tq->qbase, seq, seq + req->n - 1);
- =
-
-+	whdr =3D page_frag_alloc(&call->local->tx_alloc, sizeof(*whdr), GFP_NOFS=
-);
-+	if (!whdr)
-+		return; /* Drop the packet if no memory. */
-+
-+	call->local->kvec[0].iov_base =3D whdr;
-+	call->local->kvec[0].iov_len =3D sizeof(*whdr);
-+
- 	stat_ix =3D umin(req->n, ARRAY_SIZE(call->rxnet->stat_tx_jumbo)) - 1;
- 	atomic_inc(&call->rxnet->stat_tx_jumbo[stat_ix]);
- =
-
--	len =3D rxrpc_prepare_data_packet(call, req);
-+	len +=3D rxrpc_prepare_data_packet(call, req, whdr);
- 	txb =3D tq->bufs[seq & RXRPC_TXQ_MASK];
- =
-
--	iov_iter_kvec(&msg.msg_iter, WRITE, call->local->kvec, req->n, len);
-+	iov_iter_kvec(&msg.msg_iter, WRITE, call->local->kvec, 1 + req->n, len);
- =
-
- 	msg.msg_name	=3D &call->peer->srx.transport;
- 	msg.msg_namelen	=3D call->peer->srx.transport_len;
-@@ -695,13 +715,13 @@ void rxrpc_send_data_packet(struct rxrpc_call *call,=
- struct rxrpc_send_data_req
- =
-
- 	if (ret =3D=3D -EMSGSIZE) {
- 		rxrpc_inc_stat(call->rxnet, stat_tx_data_send_msgsize);
--		trace_rxrpc_tx_packet(call->debug_id, call->local->kvec[0].iov_base, fr=
-ag);
-+		trace_rxrpc_tx_packet(call->debug_id, whdr, frag);
- 		ret =3D 0;
- 	} else if (ret < 0) {
- 		rxrpc_inc_stat(call->rxnet, stat_tx_data_send_fail);
- 		trace_rxrpc_tx_fail(call->debug_id, txb->serial, ret, frag);
- 	} else {
--		trace_rxrpc_tx_packet(call->debug_id, call->local->kvec[0].iov_base, fr=
-ag);
-+		trace_rxrpc_tx_packet(call->debug_id, whdr, frag);
- 	}
- =
-
- 	rxrpc_tx_backoff(call, ret);
-diff --git a/net/rxrpc/rxkad.c b/net/rxrpc/rxkad.c
-index 62b09d23ec08..6cb37b0eb77f 100644
---- a/net/rxrpc/rxkad.c
-+++ b/net/rxrpc/rxkad.c
-@@ -257,8 +257,7 @@ static int rxkad_secure_packet_auth(const struct rxrpc=
-_call *call,
- 				    struct rxrpc_txbuf *txb,
- 				    struct skcipher_request *req)
- {
--	struct rxrpc_wire_header *whdr =3D txb->kvec[0].iov_base;
--	struct rxkad_level1_hdr *hdr =3D (void *)(whdr + 1);
-+	struct rxkad_level1_hdr *hdr =3D txb->data;
- 	struct rxrpc_crypt iv;
- 	struct scatterlist sg;
- 	size_t pad;
-@@ -274,7 +273,7 @@ static int rxkad_secure_packet_auth(const struct rxrpc=
-_call *call,
- 	pad =3D RXKAD_ALIGN - pad;
- 	pad &=3D RXKAD_ALIGN - 1;
- 	if (pad) {
--		memset(txb->kvec[0].iov_base + txb->offset, 0, pad);
-+		memset(txb->data + txb->offset, 0, pad);
- 		txb->pkt_len +=3D pad;
- 	}
- =
-
-@@ -300,8 +299,7 @@ static int rxkad_secure_packet_encrypt(const struct rx=
-rpc_call *call,
- 				       struct skcipher_request *req)
- {
- 	const struct rxrpc_key_token *token;
--	struct rxrpc_wire_header *whdr =3D txb->kvec[0].iov_base;
--	struct rxkad_level2_hdr *rxkhdr =3D (void *)(whdr + 1);
-+	struct rxkad_level2_hdr *rxkhdr =3D txb->data;
- 	struct rxrpc_crypt iv;
- 	struct scatterlist sg;
- 	size_t content, pad;
-@@ -319,7 +317,7 @@ static int rxkad_secure_packet_encrypt(const struct rx=
-rpc_call *call,
- 	txb->pkt_len =3D round_up(content, RXKAD_ALIGN);
- 	pad =3D txb->pkt_len - content;
- 	if (pad)
--		memset(txb->kvec[0].iov_base + txb->offset, 0, pad);
-+		memset(txb->data + txb->offset, 0, pad);
- =
-
- 	/* encrypt from the session key */
- 	token =3D call->conn->key->payload.data[0];
-@@ -407,9 +405,8 @@ static int rxkad_secure_packet(struct rxrpc_call *call=
-, struct rxrpc_txbuf *txb)
- =
-
- 	/* Clear excess space in the packet */
- 	if (txb->pkt_len < txb->alloc_size) {
--		struct rxrpc_wire_header *whdr =3D txb->kvec[0].iov_base;
- 		size_t gap =3D txb->alloc_size - txb->pkt_len;
--		void *p =3D whdr + 1;
-+		void *p =3D txb->data;
- =
-
- 		memset(p + txb->pkt_len, 0, gap);
- 	}
-diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
-index 584397aba4a0..84dc6c94f23b 100644
---- a/net/rxrpc/sendmsg.c
-+++ b/net/rxrpc/sendmsg.c
-@@ -419,7 +419,7 @@ static int rxrpc_send_data(struct rxrpc_sock *rx,
- 			size_t copy =3D umin(txb->space, msg_data_left(msg));
- =
-
- 			_debug("add %zu", copy);
--			if (!copy_from_iter_full(txb->kvec[0].iov_base + txb->offset,
-+			if (!copy_from_iter_full(txb->data + txb->offset,
- 						 copy, &msg->msg_iter))
- 				goto efault;
- 			_debug("added");
-@@ -445,8 +445,6 @@ static int rxrpc_send_data(struct rxrpc_sock *rx,
- 			ret =3D call->security->secure_packet(call, txb);
- 			if (ret < 0)
- 				goto out;
--
--			txb->kvec[0].iov_len +=3D txb->len;
- 			rxrpc_queue_packet(rx, call, txb, notify_end_tx);
- 			txb =3D NULL;
- 		}
-diff --git a/net/rxrpc/txbuf.c b/net/rxrpc/txbuf.c
-index 131d9e55c8e9..2bc455705632 100644
---- a/net/rxrpc/txbuf.c
-+++ b/net/rxrpc/txbuf.c
-@@ -19,17 +19,19 @@ atomic_t rxrpc_nr_txbuf;
- struct rxrpc_txbuf *rxrpc_alloc_data_txbuf(struct rxrpc_call *call, size_=
-t data_size,
- 					   size_t data_align, gfp_t gfp)
- {
--	struct rxrpc_wire_header *whdr;
- 	struct rxrpc_txbuf *txb;
--	size_t total, hoff;
-+	size_t total, doff, jsize =3D sizeof(struct rxrpc_jumbo_header);
- 	void *buf;
- =
-
- 	txb =3D kzalloc(sizeof(*txb), gfp);
- 	if (!txb)
- 		return NULL;
- =
-
--	hoff =3D round_up(sizeof(*whdr), data_align) - sizeof(*whdr);
--	total =3D hoff + sizeof(*whdr) + data_size;
-+	/* We put a jumbo header in the buffer, but not a full wire header to
-+	 * avoid delayed-corruption problems with zerocopy.
-+	 */
-+	doff =3D round_up(jsize, data_align);
-+	total =3D doff + data_size;
- =
-
- 	data_align =3D umax(data_align, L1_CACHE_BYTES);
- 	mutex_lock(&call->conn->tx_data_alloc_lock);
-@@ -41,30 +43,15 @@ struct rxrpc_txbuf *rxrpc_alloc_data_txbuf(struct rxrp=
-c_call *call, size_t data_
- 		return NULL;
- 	}
- =
-
--	whdr =3D buf + hoff;
--
- 	refcount_set(&txb->ref, 1);
- 	txb->call_debug_id	=3D call->debug_id;
- 	txb->debug_id		=3D atomic_inc_return(&rxrpc_txbuf_debug_ids);
- 	txb->alloc_size		=3D data_size;
- 	txb->space		=3D data_size;
--	txb->offset		=3D sizeof(*whdr);
-+	txb->offset		=3D 0;
- 	txb->flags		=3D call->conn->out_clientflag;
- 	txb->seq		=3D call->send_top + 1;
--	txb->nr_kvec		=3D 1;
--	txb->kvec[0].iov_base	=3D whdr;
--	txb->kvec[0].iov_len	=3D sizeof(*whdr);
--
--	whdr->epoch		=3D htonl(call->conn->proto.epoch);
--	whdr->cid		=3D htonl(call->cid);
--	whdr->callNumber	=3D htonl(call->call_id);
--	whdr->seq		=3D htonl(txb->seq);
--	whdr->type		=3D RXRPC_PACKET_TYPE_DATA;
--	whdr->flags		=3D 0;
--	whdr->userStatus	=3D 0;
--	whdr->securityIndex	=3D call->security_ix;
--	whdr->_rsvd		=3D 0;
--	whdr->serviceId		=3D htons(call->dest_srx.srx_service);
-+	txb->data		=3D buf + doff;
- =
-
- 	trace_rxrpc_txbuf(txb->debug_id, txb->call_debug_id, txb->seq, 1,
- 			  rxrpc_txbuf_alloc_data);
-@@ -94,10 +81,8 @@ static void rxrpc_free_txbuf(struct rxrpc_txbuf *txb)
- =
-
- 	trace_rxrpc_txbuf(txb->debug_id, txb->call_debug_id, txb->seq, 0,
- 			  rxrpc_txbuf_free);
--	for (i =3D 0; i < txb->nr_kvec; i++)
--		if (txb->kvec[i].iov_base &&
--		    !is_zero_pfn(page_to_pfn(virt_to_page(txb->kvec[i].iov_base))))
--			page_frag_free(txb->kvec[i].iov_base);
-+	if (txb->data)
-+		page_frag_free(txb->data);
- 	kfree(txb);
- 	atomic_dec(&rxrpc_nr_txbuf);
- }
-
+> + *
+> + * The difference between for_each_node() and for_each_numa_node() is that
+> + * the former allows to iterate over nodes in numerical order, whereas the
+> + * latter iterates over nodes in increasing order of distance.
+> + *
+> + * This complexity of this iterator is O(N^2), where N represents the
+> + * number of nodes, as each iteration involves scanning all nodes to
+> + * find the one with the shortest distance.
+> + *
+> + * Requires rcu_lock to be held.
+> + */
+> +#define for_each_numa_node(node, unvisited, state)				\
+> +	for (int start = (node),						\
+> +	     node = numa_nearest_nodemask((start), (state), &(unvisited));	\
+> +	     node < MAX_NUMNODES;						\
+> +	     node_clear(node, (unvisited)),					\
+> +	     node = numa_nearest_nodemask((start), (state), &(unvisited)))
+> +
+>  /**
+>   * for_each_numa_hop_mask - iterate over cpumasks of increasing NUMA distance
+>   *                          from a given node.
+> -- 
+> 2.48.1
