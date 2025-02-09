@@ -1,247 +1,626 @@
-Received: from mail2.nsa.green (mail2.nsa.green [78.141.220.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E5A22332D
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 20:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.141.220.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE20222F38D
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 21:00:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739134620; cv=none; b=A5qWetqwyLsRRU8c02cAH490JMf5O97HXQKw9cm0ZFjeEB3MyhkUjH7Vv5+xYaivjItofjKaMh5Zt0dPOjoY4Vdl8wXySwPBlp5wEsSD3Cm2Nd8IB8g0c0EPmcIOC1gXdlxVB8ZnKmCzcn/KHiQXQylSaRIehrJMYwZpqbwQeII=
+	t=1739134850; cv=none; b=A3NIE8uZQIRwLWUxsc5YzutW2jpjMGGbRngqMZkfxhXzNU7/wCguD/PajS6YJg7xrRdM968o6BroEQ7DLTa4/Q32I520RANgHksJiOr74xXNMEOL5lzgf96Kb/0SqSifp2PZk5RG4C0xwoCZxgrjGO+0HdYZBRrAkxYt4kZztdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739134620; c=relaxed/simple;
-	bh=Qub9pTSkjN90E0Vgkp/ILXgH8PEkI1FUwUyybDdlcos=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R81eoCA0se88xl8i8Vc4TrRQXZWTGFj6mc3om79L+PDjxAmOi0DA+ewC4wmZTee80zCJbFgM1MRs48zgHMdQ4cVc1FZAlSpaHVcYpO5kCVtkIHjGDd6fhKdGwQn+dsrL8m6QdRoe3I7/E0Omr48+wGcvEx4EnKOhYC5CO5x9+vI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nsa.green; spf=pass smtp.mailfrom=nsa.green; dkim=pass (2048-bit key) header.d=nsa.green header.i=@nsa.green header.b=ekkOEBO/; arc=none smtp.client-ip=78.141.220.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nsa.green
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nsa.green
+	s=arc-20240116; t=1739134850; c=relaxed/simple;
+	bh=XuPmAmPATaj7l+3TlrHivscWdmhFwgxZ3rKElGWQUgU=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=I/M3KbEXMzfascqRdy3aL4k8mQNov3oZse+B3gYC0ssDVpcWiOvms802ZhtVw67/1A0PlYemNjesiXXQGrQBcEMip5z3afZM4jMMSL50tn7a4jfDfOgzRI7tRKbaOyHI8Ln2zBMPu+UVWt5XvFRzvg9YIWxt5Tyw0YAkRLJ+Vb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=JSpBgjqG; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nsa.green header.i=@nsa.green header.b="ekkOEBO/"
-Authentication-Results: mail.nsa.green;
-	dkim=pass (2048-bit key; unprotected) header.d=nsa.green header.i=@nsa.green header.a=rsa-sha256 header.s=dkim header.b=ekkOEBO/;
-	dkim-atps=neutral
-Received: from mailserver.lev (localhost [127.0.0.1])
-	by mail.nsa.green (Postfix) with ESMTP id 4Yrfvy4RznzFrKC
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 22:49:34 +0200 (EET)
-Authentication-Results: mailserver.lev (amavis); dkim=pass (2048-bit key)
- reason="pass (just generated, assumed good)" header.d=nsa.green
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nsa.green; h=
-	content-transfer-encoding:content-type:in-reply-to:organization
-	:from:content-language:references:to:subject:user-agent
-	:mime-version:date:message-id; s=dkim; t=1739134173; x=
-	1739998174; bh=Qub9pTSkjN90E0Vgkp/ILXgH8PEkI1FUwUyybDdlcos=; b=e
-	kkOEBO/10Y/1ZvnwielKTgY2YjN0p/I3cnC5ypw53aFXxEA2CWo6Tqfp8MctPxL5
-	EuJzPX5JPAZ9vuc5FRDRRJMcc+Aj/xbViUyQz3vRZRr7Og9TPsVkwFBPJUt5Q3gm
-	PwMQecTj6cE1ANwhEDSUz/OgP/YZ9FAgeLmRhijrAZ8QDBgSpgewGYwmiZCcNzAX
-	SNhojW4FmzND8DZIFzV096QISyfAI2ZKaHr6yD+2SCevAv11f3NY8EHmbLscB14d
-	q1VZTkFeiSYC/sXCkStbWGxWnrk+xDTzXj9t7lre4cUngJkc//nwbRtwQtZx7cwx
-	9tdMg+axtXHEr3STM7JnA==
-X-Virus-Scanned: Debian amavis at mailserver.lev
-Received: from mail.nsa.green ([127.0.0.1])
- by mailserver.lev (mailserver.lev [127.0.0.1]) (amavis, port 10026)
- with ESMTP id ViPsH_WWZT3F for <linux-kernel@vger.kernel.org>;
- Sun,  9 Feb 2025 22:49:33 +0200 (EET)
-Message-ID: <ad2dda77-5322-4182-a9ee-ee9f173a6e36@nsa.green>
-Date: Sun, 9 Feb 2025 22:49:29 +0200
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="JSpBgjqG"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5dcdb56c9d3so5991757a12.0
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 13:00:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1739134846; x=1739739646; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=gz6eYuZ+xXQv7K+9UWrPYa97qhuI1dM3a0ygyjnwFQA=;
+        b=JSpBgjqGl5JGvADmGk4H5Y858gj2mZbFzEJ9P8JK44R3MUkXFpX4+bp2zh6mKN4Hl9
+         mZTEdKkVBMOBqoiDYbdGxmFoKOfwkd3MTV0EJmjqsLw3BE8yCK8ETEfHvhoDD+JHLbgH
+         lyNbbv7vFfvPnvygJKZc1cA2qqL4GkP9+bMDs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739134846; x=1739739646;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gz6eYuZ+xXQv7K+9UWrPYa97qhuI1dM3a0ygyjnwFQA=;
+        b=dd6tZMJYXzTe05yhCu+mvI6ZJ3qBsUXeBY3HKbaGZKdIspNYTbsh6nlW8WVeMT8de9
+         7km4hMSHkCRTCpDC877qIlSvPofzFOaUCdWrf31ijTREDvo7rD47RYGibvjSFG8/f1p4
+         UP8l8/UN+EnTNV4fh+qQqzLgw7A7XH9LTuyRMArp9Z3KeqQKwKaDZKDc+7mPrusATioe
+         uZDCrEGfdX9r7MgCCLS7wfQm1aPgzMfR2y+jT8smo2RBtxBbRw3j1cpaQReOsCwLk43E
+         8kUQqlI5ngc75Yj7jSDSgb/aVpTxV1TYwvnRDBBfU0JTAFdj0xt1OwRlnGO9sKABeE/c
+         OT1w==
+X-Gm-Message-State: AOJu0YzNvCDwvsvAZuG6fhOHISIRUL0ifGQuh8TKHfLf1gvC81cG2C3V
+	1ni9kh6rnwemZp9iXXULNhWtP7RYM9ldgS/PbwLQ8YlJDJiRqXdumK1r2K1ks/gJIKVoKOyAh6a
+	K9wQ=
+X-Gm-Gg: ASbGnctcmcxasWn9V0ao+yG+hORZvxpo2ZNwpkBzRBSKst5hjqtIo7RQwd52w5LO1d4
+	Tq0jFiNqM/E5Ls8bcSaEYDcyUTR8y88mIuCRGmxkY4BKB1XwNKnpL3Ec9EGbX+szs1gOL7BPhQw
+	AYv3jgc3o2phP0Jmh8IoXkXIpk5l/882OBs1P1h2M6CSZKUHzx4ebBu53g4g9bOYCKsl+GZf65/
+	oJbT2S+fcIZ54ySy9EZ0+meBcr0IL7zzUfowdlR7rT2RDPNaikDc9YtT8BiAKoKbTNh/t4/MxoM
+	gzC33+KSYIP92u1n4rF+OBH5k/tQAFVCVv76zBwJn22350ElmEjCqmRlSrgms63iBg==
+X-Google-Smtp-Source: AGHT+IHrmj63/NUCH1IjC61FIBORjsLjOpcTvrqo4Wfjw81TxAOziI8DpprEga3mMs/TosJ85y5mJg==
+X-Received: by 2002:a05:6402:5290:b0:5dc:6e27:e6e8 with SMTP id 4fb4d7f45d1cf-5de450706fcmr29534040a12.24.1739134845715;
+        Sun, 09 Feb 2025 13:00:45 -0800 (PST)
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com. [209.85.218.50])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de59f893ebsm3972205a12.45.2025.02.09.13.00.44
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Feb 2025 13:00:45 -0800 (PST)
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ab78e6edb48so330269866b.2
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 13:00:44 -0800 (PST)
+X-Received: by 2002:a05:6402:2392:b0:5de:4a8b:4c9c with SMTP id
+ 4fb4d7f45d1cf-5de4a8b4fc4mr19918402a12.32.1739134843703; Sun, 09 Feb 2025
+ 13:00:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: CVE-2024-57939: riscv: Fix sleeping in invalid context in die()
-To: cve@kernel.org, linux-kernel@vger.kernel.org,
- linux-cve-announce@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <2025012127-CVE-2024-57939-fb7b@gregkh>
-Content-Language: en-US
-From: Igor Sakulin <is@nsa.green>
-Autocrypt: addr=is@nsa.green; keydata=
- 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
- nmB8G6keVA9HR8o8bWwJmVh2XfbJHmkXnt6qog==
-Organization: =?UTF-8?B?U0lBICJOxIFrb3RuZXMgU2F1bGUi?=
-In-Reply-To: <2025012127-CVE-2024-57939-fb7b@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 9 Feb 2025 13:00:27 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiGR6aB2oE7VsDkpnSbHaUnxVqtMvcEB0JzdvS-YmT_Lg@mail.gmail.com>
+X-Gm-Features: AWEUYZnPi2cFj6xZZtJZ8c9SGJt9XffilQgY0lLlLomHKB50skOT6kwiqnar7Lk
+Message-ID: <CAHk-=wiGR6aB2oE7VsDkpnSbHaUnxVqtMvcEB0JzdvS-YmT_Lg@mail.gmail.com>
+Subject: Linux 6.14-rc2
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On 1/21/25 14:18, Greg Kroah-Hartman wrote:
-> Description
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> In the Linux kernel, the following vulnerability has been resolved:
->
-> riscv: Fix sleeping in invalid context in die()
->
-> die() can be called in exception handler, and therefore cannot sleep.
-> However, die() takes spinlock_t which can sleep with PREEMPT_RT enabled=
-.
-> That causes the following warning:
->
-> BUG: sleeping function called from invalid context at kernel/locking/sp=
-inlock_rt.c:48
-> in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 285, name: mutex
-> preempt_count: 110001, expected: 0
-> RCU nest depth: 0, expected: 0
-> CPU: 0 UID: 0 PID: 285 Comm: mutex Not tainted 6.12.0-rc7-00022-ge19049=
-cf7d56-dirty #234
-> Hardware name: riscv-virtio,qemu (DT)
-> Call Trace:
->      dump_backtrace+0x1c/0x24
->      show_stack+0x2c/0x38
->      dump_stack_lvl+0x5a/0x72
->      dump_stack+0x14/0x1c
->      __might_resched+0x130/0x13a
->      rt_spin_lock+0x2a/0x5c
->      die+0x24/0x112
->      do_trap_insn_illegal+0xa0/0xea
->      _new_vmalloc_restore_context_a0+0xcc/0xd8
-> Oops - illegal instruction [#1]
+It's Sunday afternoon, and I'm releasing the usual regularly scheduled
+release candidate while the rest of the US is getting ready for the
+biggest day in TV commercials interrupted by some kind of lawn bowling
+tournament.
 
-Seems related:
+With 6.14 being a fairly small release, rc2 follows suit. It's not the
+smallest rc2 we've had in the 6.x series, but it's definitely on the
+smaller side.
 
-[=C2=A0 +1.057529] BUG: sleeping function called from invalid context at=20
-kernel/locking/spinlock_rt.c:48
-[=C2=A0 +0.000016] in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid:=
-=20
-25709, name: java
-[=C2=A0 +0.000006] preempt_count: 0, expected: 0
-[=C2=A0 +0.000004] RCU nest depth: 0, expected: 0
-[=C2=A0 +0.000009] CPU: 2 UID: 1001 PID: 25709 Comm: java Tainted: G=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=20
-W=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 T=C2=A0 6.12.13-gentoo-riscv64 #12
-[=C2=A0 +0.000010] Tainted: [W]=3DWARN, [T]=3DRANDSTRUCT
-[=C2=A0 +0.000004] Hardware name: milkv Milk-V Mars CM/Milk-V Mars CM, BI=
-OS=20
-2025.01-00001-gced64a332cea 01/01/2025
-[=C2=A0 +0.000005] Call Trace:
-[=C2=A0 +0.000004] [<ffffffff80006136>] dump_backtrace+0x26/0x3c
-[=C2=A0 +0.000017] [<ffffffff8087409e>] show_stack+0x2c/0x3e
-[=C2=A0 +0.000009] [<ffffffff808823f2>] dump_stack_lvl+0x52/0x7a
-[=C2=A0 +0.000010] [<ffffffff8088242e>] dump_stack+0x14/0x1e
-[=C2=A0 +0.000008] [<ffffffff8004e6c2>] __might_resched+0x14a/0x154
-[=C2=A0 +0.000010] [<ffffffff8088c31a>] rt_spin_lock+0x2c/0x66
-[=C2=A0 +0.000009] [<ffffffff80032c28>] force_sig_info_to_task+0x2c/0x140
-[=C2=A0 +0.000008] [<ffffffff80033388>] force_sig_fault+0x60/0x8e
-[=C2=A0 +0.000007] [<ffffffff80005d0a>] do_trap+0x28/0xbe
-[=C2=A0 +0.000007] [<ffffffff80882864>] do_trap_insn_illegal+0xde/0x100
-[=C2=A0 +0.000008] [<ffffffff8088e934>] handle_exception+0x150/0x15c
+Nothing particularly odd stands out. The diffstat is a bit unusual
+just because one of the bigger areas of change was some s390 kvm
+cleanups. So the fact that s390 accounts for about a third of the
+overall patch is certainly not very common, but it's just a result of
+some code movement and the fact that most of the rest of rc2 really is
+just very small fixes.
 
-6.12.13 kernel with PREEMPT_RT.
+We have a similar pattern (on a much smaller scale) wrt selftests: the
+tests show up in the diffstat, but it's due to trivial small fixes
+that then triggered a whole new self test to be written.
 
-Happens only with Java code on OpenJDK.
+Anyway, it all looks fine, please give it a try,
 
-Maybe related, GCC flags on this host's portage:
+                  Linus
 
-CFLAGS=3D"-O3 -mabi=3Dlp64d -march=3Drv64imafdc_zicsr_zba_zbb -mcpu=3Dsif=
-ive-u74=20
--mtune=3Dsifive-7-series --param l1-cache-size=3D32 --param=20
-l2-cache-size=3D2048 -frecord-gcc-switches -flimit-function-alignment=20
--feliminate-unused-debug-types -ftree-vectorize -ftree-loop-vectorize=20
--ftree-loop-distribution -ftree-loop-distribute-patterns=20
--fasynchronous-unwind-tables -fstack-protector-strong=20
--fstack-clash-protection -fexceptions --param=3Dssp-buffer-size=3D32 -flt=
-o=3D2=20
--fuse-linker-plugin -fgraphite-identity -floop-nest-optimize -fipa-pta=20
--fno-semantic-interposition -fno-common -fdevirtualize-at-ltrans -pipe"
+---
 
->
-> Switch to use raw_spinlock_t, which does not sleep even with PREEMPT_RT
-> enabled.
->
-> The Linux kernel CVE team has assigned CVE-2024-57939 to this issue.
->
-> Affected and fixed versions
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
->
-> 	Issue introduced in 4.15 with commit 76d2a0493a17d4c8ecc781366850c3c4f=
-8e1a446 and fixed in 6.1.125 with commit c21df31fc2a4afc02a6e56511364e9e7=
-93ea92ec
-> 	Issue introduced in 4.15 with commit 76d2a0493a17d4c8ecc781366850c3c4f=
-8e1a446 and fixed in 6.6.72 with commit f48f060a4b36b5e96628f6c3fb1540f1e=
-8dedb69
-> 	Issue introduced in 4.15 with commit 76d2a0493a17d4c8ecc781366850c3c4f=
-8e1a446 and fixed in 6.12.10 with commit 76ab0afcdbe8c9685b589016ee1c0e25=
-fe596707
-> 	Issue introduced in 4.15 with commit 76d2a0493a17d4c8ecc781366850c3c4f=
-8e1a446 and fixed in 6.13 with commit 6a97f4118ac07cfdc316433f385dbdc12af=
-5025e
->
-> Please see https://www.kernel.org for a full list of currently supporte=
-d
-> kernel versions by the kernel community.
->
-> Unaffected versions might change over time as fixes are backported to
-> older supported kernel versions.  The official CVE entry at
-> 	https://cve.org/CVERecord/?id=3DCVE-2024-57939
-> will be updated if fixes are backported, please check that for the most
-> up to date information about this issue.
->
->
-> Affected files
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> The file(s) affected by this issue are:
-> 	arch/riscv/kernel/traps.c
->
->
-> Mitigation
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> The Linux kernel CVE team recommends that you update to the latest
-> stable kernel version for this, and many other bugfixes.  Individual
-> changes are never tested alone, but rather are part of a larger kernel
-> release.  Cherry-picking individual commits is not recommended or
-> supported by the Linux kernel community at all.  If however, updating t=
-o
-> the latest release is impossible, the individual changes to resolve thi=
+Aboorva Devarajan (1):
+      cpufreq: prevent NULL dereference in cpufreq_online()
+
+Al Viro (1):
+      fix braino in "9p: fix ->rename_sem exclusion"
+
+Alex Hung (1):
+      drm/amd/display: Fix out-of-bound accesses
+
+Alice Ryhl (1):
+      x86: rust: set rustc-abi=3Dx86-softfloat on rustc>=3D1.86.0
+
+Amir Goldstein (3):
+      fsnotify: use accessor to set FMODE_NONOTIFY_*
+      fsnotify: disable notification by default for all pseudo files
+      fsnotify: disable pre-content and permission events by default
+
+Andreas Gruenbacher (3):
+      gfs2: use lockref_init for gl_lockref
+      gfs2: switch to lockref_init(..., 1)
+      lockref: remove count argument of lockref_init
+
+Andr=C3=A9 Draszik (1):
+      scsi: ufs: core: Fix use-after free in init error and remove paths
+
+Andy Shevchenko (2):
+      hrtimers: Mark is_migration_base() with __always_inline
+      ACPI: property: Fix return value for nval =3D=3D 0 in acpi_data_prop_=
+read()
+
+Ankit Nautiyal (2):
+      drm/i915/dp: fix the Adaptive sync Operation mode for SDP
+      drm/i915/dp: Return min bpc supported by source instead of 0
+
+Arnd Bergmann (1):
+      cpufreq: airoha: modify CONFIG_OF dependency
+
+Ashutosh Dixit (2):
+      drm/xe/oa: Preserve oa_ctrl unused bits
+      drm/xe/oa: Set stream->pollin in xe_oa_buffer_check_unlocked
+
+Aubrey Li (1):
+      ACPI: PRM: Remove unnecessary strict handler address checks
+
+Avri Altman (3):
+      scsi: ufs: core: Simplify temperature exception event handling
+      scsi: ufs: core: Ensure clk_gating.lock is used only after initializa=
+tion
+      scsi: ufs: Fix toggling of clk_gating.state when clock gating is
+not allowed
+
+Bao D. Nguyen (1):
+      scsi: ufs: core: Fix the HIGH/LOW_TEMP Bit Definitions
+
+Bart Van Assche (1):
+      md: Fix linear_set_limits()
+
+Bartosz Golaszewski (1):
+      gpio: sim: lock hog configfs items if present
+
+Brahmajit Das (1):
+      vboxsf: fix building with GCC 15
+
+Brian Geffon (1):
+      drm/i915: Fix page cleanup on DMA remap failure
+
+Chengen Du (1):
+      iscsi_ibft: Fix UBSAN shift-out-of-bounds warning in ibft_attr_show_n=
+ic()
+
+Christian Brauner (1):
+      pidfs: improve ioctl handling
+
+Christian Loehle (1):
+      sched/debug: Provide slice length for fair tasks
+
+Christoph Hellwig (5):
+      xfs: remove an out of data comment in _xfs_buf_alloc
+      xfs: don't call remap_verify_area with sb write protection held
+      xfs: remove xfs_buf_cache.bc_lock
+      nvmet: the result field in nvmet_alloc_ctrl_args is little endian
+      nvmet: add a missing endianess conversion in nvmet_execute_admin_conn=
+ect
+
+Christoph Schlameuss (1):
+      KVM: s390: selftests: Streamline uc_skey test to issue iske after ssk=
+e
+
+Claudio Imbrenda (14):
+      KVM: s390: wrapper for KVM_BUG
+      KVM: s390: fake memslot for ucontrol VMs
+      KVM: s390: selftests: fix ucontrol memory region test
+      KVM: s390: move pv gmap functions into kvm
+      KVM: s390: use __kvm_faultin_pfn()
+      KVM: s390: get rid of gmap_fault()
+      KVM: s390: get rid of gmap_translate()
+      KVM: s390: move some gmap shadowing functions away from mm/gmap.c
+      KVM: s390: stop using page->index for non-shadow gmaps
+      KVM: s390: stop using lists to keep track of used dat tables
+      KVM: s390: move gmap_shadow_pgt_lookup() into kvm
+      KVM: s390: remove useless page->index usage
+      KVM: s390: move PGSTE softbits
+      KVM: s390: remove the last user of page->index
+
+Colin Ian King (1):
+      KVM: selftests: Fix spelling mistake "initally" -> "initially"
+
+Cong Wang (2):
+      netem: Update sch->q.qlen before qdisc_tree_reduce_backlog()
+      selftests/tc-testing: Add a test case for qdisc_tree_reduce_backlog()
+
+Daniel Wagner (4):
+      nvme-fc: go straight to connecting state when initializing
+      nvme: handle connectivity loss in nvme_set_queue_count
+      nvme-fc: do not ignore connectivity loss during connecting
+      nvme-fc: use ctrl state getter
+
+Daniele Ceraolo Spurio (1):
+      drm/i915/guc: Debug print LRC state entries only if the context is pi=
+nned
+
+David Hildenbrand (4):
+      KVM: s390: vsie: fix some corner-cases when grabbing vsie pages
+      KVM: s390: vsie: stop using page->index
+      KVM: s390: vsie: stop messing with page refcount
+      KVM: s390: vsie: stop using "struct page" for vsie page
+
+David Howells (3):
+      rxrpc: Fix the rxrpc_connection attend queue handling
+      rxrpc: Fix call state set to not include the SERVER_SECURING state
+      rxrpc: Fix race in call state changing vs recvmsg()
+
+Dhananjay Ugwekar (3):
+      cpufreq/amd-pstate: Remove the goto label in amd_pstate_update_limits
+      cpufreq/amd-pstate: Fix max_perf updation with schedutil
+      cpufreq/amd-pstate: Fix cpufreq_policy ref counting
+
+Dmitry Kandybka (1):
+      platform/x86/intel: pmc: fix ltr decode in pmc_core_ltr_show()
+
+Easwar Hariharan (1):
+      jiffies: Cast to unsigned long in secs_to_jiffies() conversion
+
+Eric Dumazet (1):
+      net: rose: lock the socket in rose_bind()
+
+Eric W. Biederman (1):
+      alpha/elf: Fix misc/setarch test of util-linux by removing 32bit supp=
+ort
+
+Eyal Birger (2):
+      seccomp: passthrough uretprobe systemcall without filtering
+      selftests/seccomp: validate uretprobe syscall passes through seccomp
+
+Fedor Pchelkin (1):
+      platform/x86: ideapad-laptop: pass a correct pointer to the driver da=
+ta
+
+Filipe Manana (4):
+      btrfs: fix lockdep splat while merging a relocation root
+      btrfs: fix assertion failure when splitting ordered extent after
+transaction abort
+      btrfs: fix use-after-free when attempting to join an aborted transact=
+ion
+      btrfs: avoid starting new transaction when cleaning qgroup
+during subvolume drop
+
+Florian Fainelli (1):
+      net: bcmgenet: Correct overlaying of PHY and MAC Wake-on-LAN
+
+Francis Pravin (1):
+      nvme-pci: remove redundant dma frees in hmb
+
+Frederic Weisbecker (2):
+      hrtimers: Force migrate away hrtimers queued after CPUHP_AP_HRTIMERS_=
+DYING
+      timers/migration: Fix off-by-one root mis-connection
+
+Gannon Kolding (1):
+      ACPI: resource: IRQ override for Eluktronics MECH-17
+
+Geert Uytterhoeven (5):
+      dt-bindings: interrupt-controller: microchip,lan966x-oic:
+Clarify endpoint use
+      irqchip/lan966x-oic: Make CONFIG_LAN966X_OIC depend on
+CONFIG_MCHP_LAN966X_PCI
+      gpio: GPIO_GRGPIO should depend on OF
+      stackinit: Fix comment for test_small_end
+      genirq: Remove leading space from irq_chip::irq_print_chip() callback=
 s
-> issue can be found at these commits:
-> 	https://git.kernel.org/stable/c/c21df31fc2a4afc02a6e56511364e9e793ea92=
-ec
-> 	https://git.kernel.org/stable/c/f48f060a4b36b5e96628f6c3fb1540f1e8dedb=
-69
-> 	https://git.kernel.org/stable/c/76ab0afcdbe8c9685b589016ee1c0e25fe5967=
-07
-> 	https://git.kernel.org/stable/c/6a97f4118ac07cfdc316433f385dbdc12af502=
-5e
+
+Georg Gottleuber (2):
+      nvme-pci: Add TUXEDO InfinityFlex to Samsung sleep quirk
+      nvme-pci: Add TUXEDO IBP Gen9 to Samsung sleep quirk
+
+Guenter Roeck (1):
+      drm/i915/backlight: Return immediately when scale() finds
+invalid parameters
+
+Guixin Liu (1):
+      scsi: target: core: Add line break to status show
+
+Gustavo Sousa (1):
+      drm/print: Include drm_device.h
+
+Hans Verkuil (1):
+      gpu: drm_dp_cec: fix broken CEC adapter properties check
+
+Haoxiang Li (1):
+      drm/komeda: Add check for komeda_get_layer_fourcc_list()
+
+Hector Martin (1):
+      MAINTAINERS: Remove myself
+
+Ido Schimmel (1):
+      net: sched: Fix truncation of offloaded action statistics
+
+Igor Pylypiv (1):
+      scsi: core: Do not retry I/Os during depopulation
+
+Ilpo J=C3=A4rvinen (1):
+      PCI/ASPM: Fix L1SS saving
+
+Jacek Lawrynowicz (3):
+      accel/ivpu: Fix error handling in ivpu_boot()
+      accel/ivpu: Clear runtime_error after pm_runtime_resume_and_get() fai=
+ls
+      accel/ivpu: Fix error handling in recovery/reset
+
+Jacob Moroni (1):
+      net: atlantic: fix warning during hot unplug
+
+Jakub Kicinski (12):
+      net: ipv6: fix dst refleaks in rpl, seg6 and ioam6 lwtunnels
+      net: ipv6: fix dst ref loops in rpl, seg6 and ioam6 lwtunnels
+      MAINTAINERS: list openvswitch docs under its entry
+      MAINTAINERS: add Kuniyuki Iwashima to TCP reviewers
+      MAINTAINERS: add a general entry for BSD sockets
+      MAINTAINERS: add entry for UNIX sockets
+      ethtool: rss: fix hiding unsupported fields in dumps
+      ethtool: ntuple: fix rss + ring_cookie check
+      selftests: drv-net: rss_ctx: add missing cleanup in queue reconfigure
+      selftests: drv-net: rss_ctx: don't fail reconfigure test if
+queue offset not supported
+      MAINTAINERS: add entry for ethtool
+      MAINTAINERS: add a sample ethtool section entry
+
+Jani Nikula (2):
+      drm/i915/dp: Iterate DSC BPP from high to low on all platforms
+      drm/i915/dp: Fix potential infinite loop in 128b/132b SST
+
+Jens Axboe (1):
+      futex: Pass in task to futex_queue()
+
+Jeongjun Park (2):
+      bcachefs: fix incorrect pointer check in __bch2_subvolume_delete()
+      bcachefs: fix deadlock in journal_entry_open()
+
+Jiasheng Jiang (1):
+      ice: Add check for devm_kzalloc()
+
+Jinliang Zheng (1):
+      xfs: fix the entry condition of exact EOF block allocation optimizati=
+on
+
+Jithu Joseph (1):
+      platform/x86/intel/ifs: Update documentation with image download path
+
+Joe Hattori (1):
+      powercap: call put_device() on an error path in
+powercap_register_control_type()
+
+Juergen Gross (3):
+      x86/xen: fix xen_hypercall_hvm() to not clobber %rbx
+      x86/xen: add FRAME_END to xen_hypercall_hvm()
+      x86/xen: remove unneeded dummy push from xen_hypercall_hvm()
+
+Justin M. Forbes (1):
+      rust: kbuild: add -fzero-init-padding-bits to bindgen_skip_cflags
+
+K Prateek Nayak (1):
+      sched/fair: Fix inaccurate h_nr_runnable accounting with delayed dequ=
+eue
+
+Kees Cook (4):
+      stackinit: Keep selftest union size small on m68k
+      compiler.h: Move C string helpers into C-only kernel section
+      compiler.h: Introduce __must_be_byte_array()
+      string.h: Use ARRAY_SIZE() for memtostr*()/strtomem*()
+
+Keith Busch (2):
+      nvmet: fix rw control endian access
+      nvme: make nvme_tls_attrs_group static
+
+Kent Overstreet (4):
+      bcachefs docs: SubmittingPatches.rst
+      bcachefs: Fix discard path journal flushing
+      bcachefs: Fix rcu imbalance in bch2_fs_btree_key_cache_exit()
+      bcachefs: bch2_bkey_sectors_need_rebalance() now only depends on
+bch_extent_rebalance
+
+Lenny Szubowicz (1):
+      tg3: Disable tg3 PCIe AER on system reboot
+
+Lifeng Zheng (1):
+      cpufreq/amd-pstate: Fix per-policy boost flag incorrect when fail
+
+Linus Torvalds (1):
+      Linux 6.14-rc2
+
+Lo-an Chen (1):
+      drm/amd/display: Fix seamless boot sequence
+
+Lokesh Vutla (1):
+      KVM: arm64: Flush hyp bss section after initialization of variables i=
+n bss
+
+Long Li (1):
+      scsi: storvsc: Set correct data length for sending SCSI command
+without payload
+
+Lucas De Marchi (2):
+      drm/xe/devcoredump: Move exec queue snapshot to Contexts section
+      drm/xe: Fix and re-enable xe_print_blob_ascii85()
+
+Maciej Fijalkowski (3):
+      ice: put Rx buffers after being done with current frame
+      ice: gather page_count()'s of each frag right before XDP prog call
+      ice: stop storing XDP verdict within ice_rx_buf
+
+Madhavan Srinivasan (1):
+      selftests: livepatch: handle PRINTK_CALLER in check_result()
+
+Magnus Lindholm (1):
+      scsi: qla1280: Fix kernel oops when debug level > 2
+
+Marc Zyngier (4):
+      KVM: arm64: Fix nested S2 MMU structures reallocation
+      KVM: arm64: timer: Always evaluate the need for a soft timer
+      KVM: arm64: timer: Correctly handle EL1 timer emulation when !FEAT_EC=
+V
+      KVM: arm64: timer: Don't adjust the EL2 virtual timer offset
+
+Marek Ol=C5=A1=C3=A1k (1):
+      drm/amdgpu: add a BO metadata flag to disable write compression for V=
+ulkan
+
+Mario Limonciello (1):
+      accel/amdxdna: Add MODULE_FIRMWARE() declarations
+
+Mark Tomlinson (1):
+      gpio: pca953x: Improve interrupt support
+
+Masahiro Yamada (1):
+      kbuild: keep symbols for symbol_get() even with CONFIG_TRIM_UNUSED_KS=
+YMS
+
+Mateusz Guzik (1):
+      vfs: sanity check the length passed to inode_set_cached_link()
+
+Matthew Maurer (1):
+      rust: kbuild: do not export generated KASAN ODR symbols
+
+Matthieu Baerts (NGI0) (1):
+      selftests: mptcp: connect: -f: no reconnect
+
+Meetakshi Setiya (1):
+      smb: client: change lease epoch type from unsigned int to __u16
+
+Michal Wajdeczko (1):
+      drm/xe/pf: Fix migration initialization
+
+Miguel Ojeda (1):
+      rust: init: use explicit ABI to clean warning in future compilers
+
+Mika Westerberg (1):
+      MAINTAINERS: Use my kernel.org address for ACPI GPIO work
+
+Mike Christie (1):
+      scsi: core: Add passthrough tests for success and no failure definiti=
+ons
+
+Miklos Szeredi (3):
+      statmount: let unset strings be empty
+      fs: fix adding security options to statmount.mnt_opt
+      selftests: always check mask returned by statmount(2)
+
+Nathan Chancellor (4):
+      x86/boot: Use '-std=3Dgnu11' to fix build with GCC 15
+      drm/amd/display: Respect user's CONFIG_FRAME_WARN more for dml files
+      scripts/Makefile.extrawarn: Do not show clang's non-kprintf
+warnings at W=3D1
+      kbuild: Move -Wenum-enum-conversion to W=3D2
+
+Nick Chan (1):
+      irqchip/apple-aic: Only handle PMC interrupt as FIQ when configured s=
+o
+
+Oleh Zadorozhnyi (1):
+      kbuild: fix misspelling in scripts/Makefile.lib
+
+Oliver Upton (2):
+      KVM: arm64: Flush/sync debug state in protected mode
+      KVM: arm64: Fail protected mode init if no vgic hardware is present
+
+Paolo Abeni (1):
+      net: harmonize tstats and dstats
+
+Paolo Bonzini (2):
+      kvm: x86: SRSO_USER_KERNEL_NO is not synthesized
+      KVM: remove kvm_arch_post_init_vm
+
+Paulo Alcantara (3):
+      smb: client: don't trust DFSREF_STORAGE_SERVER bit
+      smb: client: fix noisy when tree connecting to DFS interlink targets
+      smb: client: get rid of kstrdup() in get_ses_refpath()
+
+Pavel Machek (1):
+      MAINTAINERS: Move Pavel to kernel.org address
+
+Prasad Pandit (1):
+      firmware: iscsi_ibft: fix ISCSI_IBFT Kconfig entry
+
+Qu Wenruo (1):
+      btrfs: do not output error message if a qgroup has been already clean=
+ed up
+
+Quang Le (2):
+      pfifo_tail_enqueue: Drop new packet when sch->limit =3D=3D 0
+      selftests/tc-testing: Add a test case for pfifo_head_drop qdisc
+when limit=3D=3D0
+
+Rafael J. Wysocki (1):
+      PM: sleep: core: Restrict power.set_active propagation
+
+Rik van Riel (1):
+      scsi: core: Use GFP_NOIO to avoid circular locking dependency
+
+Robin Murphy (1):
+      PCI/TPH: Restore TPH Requester Enable correctly
+
+Russell King (Oracle) (1):
+      Revert "net: stmmac: Specify hardware capability value when FIFO
+size isn't specified"
+
+Sagi Grimberg (1):
+      nvmet: fix a memory leak in controller identify
+
+Sankararaman Jayaraman (1):
+      vmxnet3: Fix tx queue race condition with XDP
+
+Sean Christopherson (2):
+      KVM: Do not restrict the size of KVM-internal memory regions
+      KVM: x86/mmu: Ensure NX huge page recovery thread is alive before wak=
+ing
+
+Seunghui Lee (1):
+      scsi: ufs: core: Fix error return with query response
+
+Stefan Eichenberger (1):
+      irqchip/irq-mvebu-icu: Fix access to msi_data from irq_domain::host_d=
+ata
+
+Stephen Rothwell (1):
+      drivers/block/sunvdc.c: update the correct AIP call
+
+Steven Rostedt (1):
+      fgraph: Fix set_graph_notrace with setting TRACE_GRAPH_NOTRACE_BIT
+
+Su Hui (1):
+      fs/stat.c: avoid harmless garbage value problem in vfs_statx_path()
+
+Suraj Kandpal (2):
+      drm/i915/hdcp: Fix Repeater authentication during topology change
+      drm/i915/hdcp: Use correct function to check if encoder is HDMI
+
+Tamir Duberstein (1):
+      rust: kbuild: use host dylib naming in rusttestlib-kernel
+
+Thomas Zimmermann (1):
+      drm/ast: astdp: Fix timeout for enabling video signal
+
+Tom Chung (1):
+      Revert "drm/amd/display: Use HW lock mgr for PSR1"
+
+Umesh Nerlige Ramappa (1):
+      drm/i915/pmu: Fix zero delta busyness issue
+
+Ville Syrj=C3=A4l=C3=A4 (1):
+      drm/i915: Drop 64bpp YUV formats from ICL+ SDR planes
+
+Waiman Long (2):
+      clocksource: Use pr_info() for "Checking clocksource
+synchronization" message
+      clocksource: Use migrate_disable() to avoid calling
+get_random_u32() in atomic context
+
+WangYuli (1):
+      kbuild: install-extmod-build: add missing quotation marks for CC vari=
+able
+
+Wentao Liang (2):
+      xfs: Propagate errors from xfs_reflink_cancel_cow_range in
+xfs_dax_write_iomap_end
+      xfs: Add error handling for xfs_reflink_cancel_cow_range
+
+Willem de Bruijn (1):
+      tun: revert fix group permission check
+
+Wolfram Sang (2):
+      Revert "i2c: Replace list-based mechanism for handling
+userspace-created clients"
+      Revert "i2c: Replace list-based mechanism for handling
+auto-detected clients"
+
+Xu Lu (1):
+      irqchip/riscv: Ensure ordering of memory writes and IPI writes
+
+Yan Zhai (1):
+      udp: gso: do not drop small packets when PMTU reduces
+
+Yu-Chun Lin (1):
+      kthread: Fix return value on kzalloc() failure in
+kthread_affine_preferred()
