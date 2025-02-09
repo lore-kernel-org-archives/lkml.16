@@ -1,157 +1,125 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885771B87E8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5F81BBBC0;
 	Sun,  9 Feb 2025 11:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739099458; cv=none; b=cOeoqe7mE/jNWA6kRR9Vupgw2ZCqk9qEkx+8d2Wa5r9I4J8Oq3oslOVxD2dY7NJ/ZLVGLOioMDQHHxmauTxyi9RnTY2y5HEIJCqFQ5lIBcnQpOqgKKOl0wEnw+xsnze+sQnZ5Ibcom1N1ZeoFCgqcpR+vooZNQVoeGDE+deMUgU=
+	t=1739099458; cv=none; b=Ac7hJnMXKIobVYcFoiedg7NqKdL4h4W4253mTppOIKqsIO7db/cbbeEekTHHmm1pwVnXjWBKSQzPZK+skwUnJE/Hmk/0is2XWwasBSLij8rcB6xclb6SaatZHysyV6FA0w20EC8pkHaV5DiPFHnn2hcAQy7+/9xwfdLc8rCcXLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739099458; c=relaxed/simple;
-	bh=p1IsKiAxwq12F2MM7ABxyO6mLj6RlYFe8Yg33MCLfXU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s2Ldh9JpzRaz0rzfTt3GgrnA4K2elyvU9Xpm4dySUc9UyPmwKwLT6UMWJg299gVjKNO3ZhKtX9f5mT3U7JdWgLwi2GafFZX1hTjtwBpcNy92g5aYUNFkDdxC4ICbOuYcDTLKnw+B9MPxhlyqtHyb3Xved0ejU3Mp52VGFz9eGYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LPWJ5sPY; arc=none smtp.client-ip=209.85.218.44
+	bh=sAUWDNd4UVR0TtxUxTWX41EzwA9qLihbaqkGNklYOg0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sq89KFUIQvpi0dMfgrC8bPwrAxgj9mpLwYs4mHMp6IgWW+TNt+cNGLXZ5yqfrFcjExng4PypZy39yr+EwsTOTfZr+AoWvajBsvZ3OcgXgQlOTHKV+sE0k0bb3LIGRmc6iicQymsJoDDI03H3GLDOKrMqOwvPxwtaiZ0lfUWaiig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A9uAS2Ec; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LPWJ5sPY"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ab795eba976so272539066b.0;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9uAS2Ec"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2f9dcc3f944so838046a91.2;
         Sun, 09 Feb 2025 03:10:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739099455; x=1739704255; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1739099456; x=1739704256; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MAJ1+kbz8lZ4YwPg+OV3VOfAm0Jd01XhEIX1QeYwh3U=;
-        b=LPWJ5sPYeTE81tJtU0twoWqbA9tUcDLHeNd+JAIeaSt/FHzrKKFXj0Gi3YmMYlWhkq
-         AliTo3QySQh37SlYhTKAOf9/2gKRlF1PsCXKl0UTlkL8qezyzQc6afRiTqidaF2UCYRQ
-         XJzjqwHOnWzMQTpVqttugnv08b1n78paoUE6AeuSglcF8vfTITM5iUXCe7nQHHieYYkv
-         mDDBxhme2mTeWmXRmYGRvDJqxfN3jqPmaJMJv83taM1xMtJxe2zXpjMiedxJU5rv1Pz/
-         pRuCUybn+Ufii3JOATfmqnXamQh0A4bbd+RFWtqTfuDJmkxn15rk2XgmLVaPI6c1VIv/
-         zeQA==
+        bh=sAUWDNd4UVR0TtxUxTWX41EzwA9qLihbaqkGNklYOg0=;
+        b=A9uAS2EcJj2hQIVteJfis+HoJQDkng+w6jT1TUDPeILb0/wxjkN9GTiX9MwizyFVhC
+         3+rXD7exL4flhVmtdfrIpP2hL5pyVKduUvddhIGlbpe8+PlQp+26H9yQqG0NiVqRzMpB
+         WmFnd4bS4217wospcrbT9g/MAFYeWTOlR8MTMrXo9MAoVg3EIvWBwuD8iXFQTP1ogujr
+         Xp0DmxBP3lJzsatEby9dITTewlkdVpPQH+mBJm6OWuxOzIXaKKbGOzAeqroU13YcCidc
+         Nuc3wpuUV5BGrzSnzDPMoBvR/sfFG2y9jX8Hv1/k4bJ/Wu+s+HYztWVLG2vR06qB/lWU
+         gbgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739099455; x=1739704255;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739099456; x=1739704256;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MAJ1+kbz8lZ4YwPg+OV3VOfAm0Jd01XhEIX1QeYwh3U=;
-        b=VQxhLv7Lk0TUm+fflT1Adny6IQbK7hejPY6MrscBXVQsBdamSo5ff+PWAfppzl0yAD
-         SDNKjVW0gTmHB2brVdVbwarXvrnAB/DkhaLES64cabY0fEWOLSQcYOrl+C4osSWdKQN0
-         GAyJWDRMgc7OgvV9NM38mH+A1PVX9LW2LkJLmoO75LvwgP8f8xxlDoDFBmhHdNfoNk26
-         uKwi4uYPFOg1BPca+r+op0M/3p++2n+igKMVBp8Mrm4wZdGHc/BAonytz4X219oPYk5h
-         EjAu+RpfN1t33HGwClIlkbwljZ+4PmHOhUCJGlyPpfbfjrpSmzSChh9Lrgv/WcYpSc4t
-         NNCA==
-X-Forwarded-Encrypted: i=1; AJvYcCV6Gabm0yaG5MPYgZBZwUegMg7M4pqy7JQxoqIZZLSqEE4PwGAYx3b+a+vlZyHuqWXSkNblw/0t1waZhvc=@vger.kernel.org, AJvYcCWFRSciFVX0aTI2Yi08HDzok0/CMn7JceIWN0Ku8g5U5SoApvB2mwhfICNPxv5Fem1wxTfF5MBpsVx1hmp4BEbO@vger.kernel.org
-X-Gm-Message-State: AOJu0YxS2FW1dI4xg1CZl5i8v/hcgFVH0hR52XGsZbmUx+UR1Qz1ACwX
-	nTJwnI3KT1DLRSkcHAbf3ee3veCqUqcubZmY+moopF7bJCo92HUsOlxzY/SA
-X-Gm-Gg: ASbGnctMeF1sZOuBlvP8rL76f2DXrWvp90QUiviKubw+hRedK1L1BUfTuYTg+1uaMmM
-	5pQ7EDKjFcECnn2066WMNSuT4Hc7e5JbZHkcpBbNzU0QxwnGtjtvSWL1YfDNRD2frWmV1V7YQIe
-	gpGwF709yc8uFoNy3wEICAz3uEKBVtYkwbaUH2H2WALRxV+EIuDd4r63S6X5NoVP+6WHr55SRD+
-	LIlQnD3zQEafqW133oxko3R7vXGGmlZ9/waLR9QTdhLgu/SYJea0UhkDGpe/sXIp7T3neRi2Azo
-	P4Agi794T1bOciYo2IhexXacc1IaPnnKzfhXJzgytr6Mw0IxR+rXPUFVMXQh5XbjZlF7JabC73O
-	wxUtHaFrYXldogzEDPAHugc0WfycTqUTO
-X-Google-Smtp-Source: AGHT+IETHQR7T52RBo2+4AcJP5+zLkS5jFUxhqgYRmiNsDGC4K0ZODmmfPCzwNhYWr95O8KmQOhA2A==
-X-Received: by 2002:a17:907:ca0a:b0:ab7:a318:611e with SMTP id a640c23a62f3a-ab7a3186356mr452158166b.18.1739099454708;
-        Sun, 09 Feb 2025 03:10:54 -0800 (PST)
-Received: from corebook.localdomain (2001-1c00-020d-1300-1b1c-4449-176a-89ea.cable.dynamic.v6.ziggo.nl. [2001:1c00:20d:1300:1b1c:4449:176a:89ea])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab79afc7452sm357516366b.163.2025.02.09.03.10.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 03:10:53 -0800 (PST)
-From: Eric Woudstra <ericwouds@gmail.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Ivan Vecera <ivecera@redhat.com>,
-	Roopa Prabhu <roopa@nvidia.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Joe Damato <jdamato@fastly.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"Frank Wunderlich" <frank-w@public-files.de>,
-	Daniel Golle <daniel@makrotopia.org>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org,
-	bridge@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Eric Woudstra <ericwouds@gmail.com>
-Subject: [PATCH v6 net-next 07/14] netfilter :nf_flow_table_offload: Add nf_flow_rule_bridge()
-Date: Sun,  9 Feb 2025 12:10:27 +0100
-Message-ID: <20250209111034.241571-8-ericwouds@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250209111034.241571-1-ericwouds@gmail.com>
-References: <20250209111034.241571-1-ericwouds@gmail.com>
+        bh=sAUWDNd4UVR0TtxUxTWX41EzwA9qLihbaqkGNklYOg0=;
+        b=VEs71CanIg0Wg3HACh7x/kYXJmDqEKxeYvWdgA3XEmOi2S48fGTDex057ZMakW7zan
+         mA7yg8RlQ/KbNfm3rhoV7x4SGRFCd3vjbqR50fyFpONGY7+KVXucMbqcO4rYPF58YcAz
+         V0AcOtNYk5LLIGbiqHDN0fj/1L7P20RqxmD/uH8Lfobxp0BPv9pOic9+T6AJDW26rEnM
+         ouLj9FyyRCuOOV9FPlsJOsyb8ZgkWICAammZbntXDJVhQif9mO9mLx5q+RwMa2UTJOjq
+         VoYV/QL575u9vUtIUuwceV56HItRI4RabK7nPK25hNGWdqFmkfbRNT4OvEzuveiBEnUn
+         yqzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUMdKYVJT6OkSRnLRz1guOs6FOVtKcJUTQJJOjaxzipyp4YNvsPkHEuk+6QsteJIgxvRddHVlGr2iOetjFTQl4=@vger.kernel.org, AJvYcCXkWggLXRHi2ZMgR4/oAYW0pHprIIsMx4yz3miegu/ceTHm3fv2ouvP9gUh/9N8ZDScrnZh0wsl6MWSP3E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSzKlmG+Thsa8xonUQd7e3BBdvrQnCo3sAYjMUUosg3rO98ipU
+	ei+8SPexvbxp3EGnbvng81bVWLyWwyCf7rHMXvKz1qX1h5fMZEe/3hC5olDiIyd+6q98d3D9Ylt
+	5l+Bu3MimOCQnyNbMnLbcihUgXgY=
+X-Gm-Gg: ASbGncuex3hZLkz5AFnoQWhN2icEMa9JNzPDQSdmccp5e7YlPXoj3nv42+gXbIfDW4l
+	MolmaRp3+Qe/srudBwvhK9TZrz/hKegQ16j0GzyhunlFkj7Rr7Ig/QOWWcOaozXPLfa7/mdp6
+X-Google-Smtp-Source: AGHT+IHBbyCHbpkYdlHKP7Zgz134DG8QfDlMRDxS+CKLmHCcyVzaGizjy4LK80ZbJWlLanTmRafM56xb6Yjx98+5GBM=
+X-Received: by 2002:a17:903:32c2:b0:216:1d5a:f348 with SMTP id
+ d9443c01a7336-21f4e758a83mr56641995ad.11.1739099456319; Sun, 09 Feb 2025
+ 03:10:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250207004049.178049-1-lyude@redhat.com> <CANiq72=bspqRga-hTTb3Vh9kD0ctyTehM9dvJdR=8biTE+iCQw@mail.gmail.com>
+ <2025020715-subsonic-silenced-36c5@gregkh> <2ac39b766dbf5f9606107d3ead216ba384cfdd2b.camel@redhat.com>
+In-Reply-To: <2ac39b766dbf5f9606107d3ead216ba384cfdd2b.camel@redhat.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 9 Feb 2025 12:10:44 +0100
+X-Gm-Features: AWEUYZnDKLh3EIex9NQOXmi6qm1UFhlq0vORv6A8ksfhqUePHfYjkBmurxUF0co
+Message-ID: <CANiq72ndFNw2uDLjOsd1nFjQMFXMHCxAZgUztaq_AR4HA5E-PQ@mail.gmail.com>
+Subject: Re: [PATCH v2] rust/kernel: Add faux device bindings
+To: Lyude Paul <lyude@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, rust-for-linux@vger.kernel.org, 
+	=?UTF-8?B?TWHDrXJhIENhbmFs?= <mairacanal@riseup.net>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Xiangfei Ding <dingxiangfei2009@gmail.com>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add nf_flow_rule_bridge().
+On Fri, Feb 7, 2025 at 11:10=E2=80=AFPM Lyude Paul <lyude@redhat.com> wrote=
+:
+>
+> This is a very good question :), especially because it turns out I actual=
+ly
+> think this function is not thread-safe! Though I don't think that's actua=
+lly
+> much of a problem for Send/Sync here:
+>
+> So - my original assumption was that since faux_device_destroy() just wra=
+ps
+> around device_del() and put_device() we'd get thread safety. put_device()=
+ is
+> thread-safe, but on closer inspection I don't see that device_del() is. I=
+t
+> _can_ be called from any thread, but only so long as there is a guarantee=
+ it's
+> called exactly once. I think that's fine both for C and rust, but it
+> definitely warrants a more descriptive SAFETY comment from me.
+>
+> So for the C side of things I might actually add documentation to device_=
+del()
+> for this that would look something like this:
 
-It only calls the common rule and adds the redirect.
+Thanks for taking a look -- I am glad I asked (asking is easy... :)
 
-Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
-Signed-off-by: Eric Woudstra <ericwouds@gmail.com>
----
- include/net/netfilter/nf_flow_table.h |  3 +++
- net/netfilter/nf_flow_table_offload.c | 13 +++++++++++++
- 2 files changed, 16 insertions(+)
+> And then I suppose we could refer back to device_del() in faux_device_des=
+troy()'s
+> documentation if we want.
 
-diff --git a/include/net/netfilter/nf_flow_table.h b/include/net/netfilter/nf_flow_table.h
-index 4ab32fb61865..a7f5d6166088 100644
---- a/include/net/netfilter/nf_flow_table.h
-+++ b/include/net/netfilter/nf_flow_table.h
-@@ -340,6 +340,9 @@ void nf_flow_table_offload_flush_cleanup(struct nf_flowtable *flowtable);
- int nf_flow_table_offload_setup(struct nf_flowtable *flowtable,
- 				struct net_device *dev,
- 				enum flow_block_command cmd);
-+int nf_flow_rule_bridge(struct net *net, struct flow_offload *flow,
-+			enum flow_offload_tuple_dir dir,
-+			struct nf_flow_rule *flow_rule);
- int nf_flow_rule_route_ipv4(struct net *net, struct flow_offload *flow,
- 			    enum flow_offload_tuple_dir dir,
- 			    struct nf_flow_rule *flow_rule);
-diff --git a/net/netfilter/nf_flow_table_offload.c b/net/netfilter/nf_flow_table_offload.c
-index d8f7bfd60ac6..3cc30ebfa6ff 100644
---- a/net/netfilter/nf_flow_table_offload.c
-+++ b/net/netfilter/nf_flow_table_offload.c
-@@ -679,6 +679,19 @@ nf_flow_rule_route_common(struct net *net, const struct flow_offload *flow,
- 	return 0;
- }
- 
-+int nf_flow_rule_bridge(struct net *net, struct flow_offload *flow,
-+			enum flow_offload_tuple_dir dir,
-+			struct nf_flow_rule *flow_rule)
-+{
-+	if (nf_flow_rule_route_common(net, flow, dir, flow_rule) < 0)
-+		return -1;
-+
-+	flow_offload_redirect(net, flow, dir, flow_rule);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(nf_flow_rule_bridge);
-+
- int nf_flow_rule_route_ipv4(struct net *net, struct flow_offload *flow,
- 			    enum flow_offload_tuple_dir dir,
- 			    struct nf_flow_rule *flow_rule)
--- 
-2.47.1
+Yeah, the idea was that, since Greg welcomes tweaks on the C side,
+then whatever guarantees we use from the C side, if they can be
+documented, even better, and it makes it easy to just refer to that
+fact.
 
+It should hopefully also make it slightly less likely to drop the
+guarantee by mistake on the C side.
+
+On the Rust side, we can even be explicit and say e.g. "..., as
+guaranteed/documented by the C API".
+
+Cheers,
+Miguel
