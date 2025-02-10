@@ -1,64 +1,33 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF8525E467;
-	Mon, 10 Feb 2025 19:33:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FA525E463;
+	Mon, 10 Feb 2025 19:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739215992; cv=none; b=SbxOoEZFjZi+lR+6e8aN3dkgpYFOFD2IOmSfNLr5ulFsrv+WMcY1Vh13B6Mw7998tTLBEb+MrHfP83/tkXQf3Ztkzcllv67UM6j4NGlqpTnXjD9T6gUv+pyYblQdUJmw5ix5nX3Z2kNpLTErTKfgpaIG9OoQq0T7Lfai+oRJVQo=
+	t=1739216059; cv=none; b=aJc8ydfzvEz/XdUGy1jPIYaCpaVmgH/CSA4IQwiQuSbHNGGh4ovDP5PkqWV7NV5u0WF8+qYUn95E2OX6jQXOzGfP7b0Ygdlvug5MMHP+T7QGu7CwKdian5gWcnKikhvXwizY2b+gFOjgtZCXcxAEStvhTgLYwk/f9KW+pbIT9Rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739215992; c=relaxed/simple;
-	bh=8km8XhwMDvK2M6l4lIB5qPBKONKci+e9cpBm6M/E+Fs=;
+	s=arc-20240116; t=1739216059; c=relaxed/simple;
+	bh=DGKg1X4OBw7UmzHZ+oD21hyHpjuIKVFlI9h03HTb+co=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b9aYcJBLToSkPsARoAoa2RKMgoeqQeaIy/8cToYc37/jI0naOw7JoYa+NNaG8Jtan84yCIr30ibD6CUc2qv09oFYy82bYMG9DMdZE2ydynjJjNxYAJS9sAbai4jE37OI4BGpceemtGPXWK5OMBKPppj5csZoC91ELC+BtqVxrCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fyK11Soo; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=H/Fnd/zubHVFo/aWdTAh+Z41HMAcJ7G7XqNA2AEgIqy90/HIYXwSImgWu95XJCiNACEUM6FwL/cq7thnVdimuEuOajD2KOAm1SCsnFXRtao4NJy0hwdEYIlvCvCOKvDI5PXz9ahByVAq3kden8wXYdrbFTOFtD0krc/RofTWDw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QLZF7F5L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyK11Soo"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21f6a47d617so38607735ad.2;
-        Mon, 10 Feb 2025 11:33:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739215990; x=1739820790; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OkHCUgGiFi9BQPHsbuMPBzfuVrdJEVB05botzvdyISM=;
-        b=fyK11SoornncpNMrIvxb1J/0r3sxbPA/9kOZA12yfLQixvo+1/oDezTdSOndbwDjQF
-         1ViHWsFBobcBYCUpEKwTxvsudKwaNwLNPfulGvSv3LW6ClZ1b8dfb88KYf0NnknKm0lY
-         BqgixtmCKxIgqsMovBLsL40qcFAkTXgBxNi0YEGXq+tifAsqVFv137uBsK4M7zz8HuzD
-         nvqC2T8ptQLQRWM96Uii7PO7bLfxDAkFpNX1RfHdnF1SrYBo0mdtVS7HgIzOYgIxI0V1
-         WHMij8gnPe6Pi2wuu745V+xSWg0hCBJhmBZiPpubmL6P6bJ2QZeD8X+j6IaKYo9mfv5t
-         kMjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739215990; x=1739820790;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OkHCUgGiFi9BQPHsbuMPBzfuVrdJEVB05botzvdyISM=;
-        b=h8JKuzpI8s99ZNGyfs4G3oZ0gENWa/FR3GelGP1qyD+oOTUsOlKpys5X1wsPY8P0z6
-         Eid7pTgeGKsg76CKcmd48NHgK8/YXhO16ISj35Z8C6eSkw/ySqF8jVOELkl8Wc/27Hgo
-         WlTEp6JN0z3nbwdFXCsi6mZfRHkPfVMwNfdSDEDiMqfmz4zU0RfYtJ4uGA0H/0cpdMVx
-         Fw7ihjIxER+9Eia7dwN6916ELqwfw27mIXZcFADsJ7/FseU1K6mC+HCjojhdrN+vmAp1
-         h7dYyXkf+6LuhIsZvQwxmIcaw+y5xkpvbZwqXG0D7lF8kNXshT2cHLriQo7y8Iik8OJW
-         q8iA==
-X-Forwarded-Encrypted: i=1; AJvYcCVr+GivE7nQSAUiQ0ExZQkvE0SeHtpg996tpXSHddiOJ4uxuM1T/DCkL2h8coyHxmo1kJfolb6uX1WOTdE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGgKkgEOq4SPLdksaoR4/cCSovw5xf+S3HSSXUqScCK2I7XV4J
-	pzdKAAUVaJ36MKhI++FIDohFkQiObObcfqkSQyfUNs858Qlm4rNe
-X-Gm-Gg: ASbGncuFte8jXM+fLzwtf5826W+Zppgtlr02hjxKI7AWG9dBVks/CGONPwUrcSvNmU1
-	r6muuMyXV2o5kNBnvgpfzSCQNTO1JFZ0dmoYHJDs7b6dWatHXIlhTrBzOn21d3GIqGsKS9YSt42
-	HH7DyOhLQES1lwEP64mLH01hftQOc/wsSfTv/AUgDXXn+TopMAWAw/RDFZH5bJTfkAVUc1wlU7G
-	5M/G1x5vmo+tt3DueMX+xIdL++kPi8Xfhb3En91mMA21dtCpTktJhoMasYjzARIBSdEuSs0mZ7S
-	emAuvbNjUuVlp5thAedQsp6uuYMH/jtwxCHYjmshqH6Nj5/6HCsT83qjquOopkjR
-X-Google-Smtp-Source: AGHT+IFIKYUzs2a8ienM1BT2Xqr7USxdvD4IXfwibhCdw8R2QgSABCw5r/76iCZntjzuQQ586KNTQw==
-X-Received: by 2002:a05:6a00:1953:b0:728:e2cc:bfd6 with SMTP id d2e1a72fcca58-7305d4ec7d8mr24256622b3a.18.1739215990096;
-        Mon, 10 Feb 2025 11:33:10 -0800 (PST)
-Received: from ?IPV6:2a03:83e0:1156:1:18d4:f3a7:5d10:1620? ([2620:10d:c090:500::5:417b])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7307c5b3a99sm4115117b3a.54.2025.02.10.11.33.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 11:33:09 -0800 (PST)
-Message-ID: <2b65778e-7d26-4168-9346-6c1e01de350b@gmail.com>
-Date: Mon, 10 Feb 2025 11:33:07 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QLZF7F5L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 146E0C4CED1;
+	Mon, 10 Feb 2025 19:34:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739216058;
+	bh=DGKg1X4OBw7UmzHZ+oD21hyHpjuIKVFlI9h03HTb+co=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QLZF7F5LOEE9zD2lE057t0XpQ2gsnpBPIAp+d3/VyZPdxK0F+w7W0sKnxpOGNImSz
+	 fG/ab/Ntw2Q8+VN67AXIDTFFthshZY0UhZZ7iwF+22OCP193PxuZOmEQekr6/jtz0J
+	 7NTgEW1VGuDEsJOESfe3/Y/SSnUGs7V6zoysW9/sRitci5yIPYUYLCVwJYterOn4qa
+	 2p5gF+4qOd/Qk0j56N7ownYG8Ptc9ufMg1oKV2ueBO3XYRqa0Pw88hKGYjZOkGWOKC
+	 H1OItSRXdgiigz8TwQdMpq37dGInZNUWxFDDI4D1zon5d8GQpLrAzVmbu5HISaMv5/
+	 Cdvz3O66PZeRQ==
+Message-ID: <373c2d57-a513-4c2a-ae38-1aa01262c197@kernel.org>
+Date: Mon, 10 Feb 2025 20:34:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,175 +35,79 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3] fuse: add new function to invalidate cache for all
- inodes
-To: Luis Henriques <luis@igalia.com>, Miklos Szeredi <miklos@szeredi.hu>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- Matt Harvey <mharvey@jumptrading.com>, Bernd Schubert <bschubert@ddn.com>
-References: <20250210143351.31119-1-luis@igalia.com>
+Subject: Re: [PATCH v5] HID: corsair-void: Add Corsair Void headset family
+ driver
+To: Stuart <stuart.a.hayhurst@gmail.com>
+Cc: linux-input@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>,
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ linux-kernel@vger.kernel.org
+References: <20241008233030.395126-3-stuart.a.hayhurst@gmail.com>
+ <5cf187db-1eae-41a8-a33e-ef68a4f66db6@kernel.org>
+ <afb96547-7ff3-4070-b960-33f4af7e3edc@kernel.org>
+ <CALTg27kaxGOzq2k-dAqbXZ0ez5e-WZRU47Z2eP5297VVHF81kA@mail.gmail.com>
+ <0bc098bf-6c02-4d62-bcb1-939e1f0b9f95@kernel.org>
+ <CALTg27meqwVyR_+doDzT6v-frx9hfy=fqkz-S2fTJpk8SMmThw@mail.gmail.com>
 Content-Language: en-US
-From: Joanne Koong <joannelkoong@gmail.com>
-In-Reply-To: <20250210143351.31119-1-luis@igalia.com>
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <CALTg27meqwVyR_+doDzT6v-frx9hfy=fqkz-S2fTJpk8SMmThw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2/10/25 6:33 AM, Luis Henriques wrote:
-> Currently userspace is able to notify the kernel to invalidate the cache
-> for an inode.  This means that, if all the inodes in a filesystem need to
-> be invalidated, then userspace needs to iterate through all of them and do
-> this kernel notification separately.
+On 10. 02. 25, 19:31, Stuart wrote:
+>> Not that easy, as AFAIR power unregister cannot sleep.
 > 
-> This patch adds a new option that allows userspace to invalidate all the
-> inodes with a single notification operation.  In addition to invalidate all
-> the inodes, it also shrinks the sb dcache.
-> 
-> Signed-off-by: Luis Henriques <luis@igalia.com>
-> ---
-> * Changes since v2
-> Use the new helper from fuse_reverse_inval_inode(), as suggested by Bernd.
-> 
-> Also updated patch description as per checkpatch.pl suggestion.
-> 
-> * Changes since v1
-> As suggested by Bernd, this patch v2 simply adds an helper function that
-> will make it easier to replace most of it's code by a call to function
-> super_iter_inodes() when Dave Chinner's patch[1] eventually gets merged.
-> 
-> [1] https://lore.kernel.org/r/20241002014017.3801899-3-david@fromorbit.com
-> 
->   fs/fuse/inode.c           | 67 +++++++++++++++++++++++++++++++++++----
->   include/uapi/linux/fuse.h |  3 ++
->   2 files changed, 63 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-> index e9db2cb8c150..45b9fbb54d42 100644
-> --- a/fs/fuse/inode.c
-> +++ b/fs/fuse/inode.c
-> @@ -547,25 +547,78 @@ struct inode *fuse_ilookup(struct fuse_conn *fc, u64 nodeid,
->   	return NULL;
->   }
->   
-> +static void inval_single_inode(struct inode *inode, struct fuse_conn *fc)
-> +{
-> +	struct fuse_inode *fi;
-> +
-> +	fi = get_fuse_inode(inode);
-> +	spin_lock(&fi->lock);
-> +	fi->attr_version = atomic64_inc_return(&fc->attr_version);
-> +	spin_unlock(&fi->lock);
-> +	fuse_invalidate_attr(inode);
-> +	forget_all_cached_acls(inode);
-> +}
-> +
-> +static int fuse_reverse_inval_all(struct fuse_conn *fc)
-> +{
-> +	struct fuse_mount *fm;
-> +	struct super_block *sb;
-> +	struct inode *inode, *old_inode = NULL;
-> +
-> +	inode = fuse_ilookup(fc, FUSE_ROOT_ID, NULL);
-> +	if (!inode)
-> +		return -ENOENT;
-> +
-> +	fm = get_fuse_mount(inode);
+> Sorry, I'm not sure I follow, why would power_supply_unregister sleep?
+> I thought the issue was about locking mutexes in an interrupt context,
+> why wouldn't using spinlock_irqsave work instead?
 
-I think if you pass in &fm as the 3rd arg to fuse_ilookup(), it'll pass 
-back the fuse mount and we won't need get_fuse_mount().
+There sure, but you want to protect the ->battery, right? So you'd need 
+to spin lock *also* power unregister.
 
-> +	iput(inode);
-> +	if (!fm)
-> +		return -ENOENT;
-> +	sb = fm->sb;
-> +
-> +	spin_lock(&sb->s_inode_list_lock);
-> +	list_for_each_entry(inode, &sb->s_inodes, i_sb_list) {
-> +		spin_lock(&inode->i_lock);
-> +		if ((inode->i_state & (I_FREEING|I_WILL_FREE|I_NEW)) ||
-> +		    !atomic_read(&inode->i_count)) {
+Anyway, maybe I misunderstand, please send a patch and we will see ;).
 
-Will inode->i_count ever be 0? AFAIU, inode->i_count tracks the inode 
-refcount, so if this is 0, doesn't this mean it wouldn't be on the 
-sb->s_inodes list?
-
-> +			spin_unlock(&inode->i_lock);
-> +			continue;
-> +		}
-> +
-> +		__iget(inode);
-> +		spin_unlock(&inode->i_lock);
-> +		spin_unlock(&sb->s_inode_list_lock);
-
-Maybe worth adding a comment here since there can be inodes added after 
-the s_inode_list_lock is dropped and before it's acquired again that 
-when inodes get added to the head of sb->s_inodes, it's always for I_NEW 
-inodes.
-
-> +		iput(old_inode);
-
-Maybe a dumb question but why is old_inode needed? Why can't iput()just 
-be called right after inval_single_inode()?
-
-> +
-> +		inval_single_inode(inode, fc);
-> +
-> +		old_inode = inode;
-> +		cond_resched();
-
-Could you explain why a cond_resched() is needed here?
-
-> +		spin_lock(&sb->s_inode_list_lock);
-> +	}
-> +	spin_unlock(&sb->s_inode_list_lock);
-> +	iput(old_inode);
-> +
-> +	shrink_dcache_sb(sb);
-> +
-> +	return 0;
-> +}
-> +
-
-Thanks,
-Joanne
-
->   int fuse_reverse_inval_inode(struct fuse_conn *fc, u64 nodeid,
->   			     loff_t offset, loff_t len)
->   {
-> -	struct fuse_inode *fi;
->   	struct inode *inode;
->   	pgoff_t pg_start;
->   	pgoff_t pg_end;
->   
-> +	if (nodeid == FUSE_INVAL_ALL_INODES)
-> +		return fuse_reverse_inval_all(fc);
-> +
->   	inode = fuse_ilookup(fc, nodeid, NULL);
->   	if (!inode)
->   		return -ENOENT;
->   
-> -	fi = get_fuse_inode(inode);
-> -	spin_lock(&fi->lock);
-> -	fi->attr_version = atomic64_inc_return(&fc->attr_version);
-> -	spin_unlock(&fi->lock);
-> +	inval_single_inode(inode, fc);
->   
-> -	fuse_invalidate_attr(inode);
-> -	forget_all_cached_acls(inode);
->   	if (offset >= 0) {
->   		pg_start = offset >> PAGE_SHIFT;
->   		if (len <= 0)
-> diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-> index 5e0eb41d967e..e5852b63f99f 100644
-> --- a/include/uapi/linux/fuse.h
-> +++ b/include/uapi/linux/fuse.h
-> @@ -669,6 +669,9 @@ enum fuse_notify_code {
->   	FUSE_NOTIFY_CODE_MAX,
->   };
->   
-> +/* The nodeid to request to invalidate all inodes */
-> +#define FUSE_INVAL_ALL_INODES 0
-> +
->   /* The read buffer is required to be at least 8k, but may be much larger */
->   #define FUSE_MIN_READ_BUFFER 8192
->   
-> 
-
+-- 
+js
+suse labs
