@@ -1,175 +1,128 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay07.th.seeweb.it (relay07.th.seeweb.it [5.144.164.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE2D260A26
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7ED1BBBD7
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739229554; cv=none; b=joCI0t8Z5jCwpuG8TVNBPCZ9AoSo690Qj2XQZ4v2C8UuHqqCShEfj0ORtxjYMgbYRhhFqx1C9KM7ll9KUbq37rQzrORzUWKmQ0anfpXazJLXRS9wHQPtAAiAXxV67/p5JEYNdYXixPJsY+qJs/vyg8wfGH83mEiTHek5YM7nzhE=
+	t=1739229582; cv=none; b=R1aTmoaL9HW9JjsbcFp5fKJTs8ppMIAqwQfuKA2/v63LPXX+rlwkvkHfbHQsbKGi6ET8OzOhrcRLIo6zYtHPgTN1PqO9k394ITzP/9sg8b6LUzLyiICoJCEo+O3XxLwgrTQM9nxq2wQvKFfiAdxUD+/nnKCqkIeJOYyu2+1Z5uQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739229554; c=relaxed/simple;
-	bh=WtfLk+YtNZL/W7iw8DNGwzsp9tN0JOYfou8cMl9XKtI=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=T22S3mqHRBsauKlnqqwuEOT8rjXi4vkmuu5JWk0MMdIEqdxgru6xaHjAi8LfNO6bcOSA683FCQk2/uZNmcLa7cvO+20Hh2C4Bxmn5oJ+VNbaemXRRG+5kJnOiA7LMdT1McJJYlOPf5PZHyaVtmHkrFaCTi9NfPueUkiC0Nd0txM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WBuPp/ru; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WBuPp/ru"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739229551;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BCFGrlEtzNntYujJOFVmJbBSaFSsuqUeDjxzqx00PbU=;
-	b=WBuPp/ru2GLTpBqXCRXXJX9hcJR3QN68DKiihXfCbcJ5FobO4lk+fFYqcZySlCSkzjCeV/
-	3a0cl/96xB9jlIpDIc7g2A9OCSKPtN4U3y+lX/qM0WQI7gXtu7Gu/jaAJgaepdRAV4rvvm
-	1g1W/5aFkI09oRtfVo4F2ZgwiI/p2Zk=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-497-qujH-pw7NCGUxgAQih54Bg-1; Mon,
- 10 Feb 2025 18:19:06 -0500
-X-MC-Unique: qujH-pw7NCGUxgAQih54Bg-1
-X-Mimecast-MFC-AGG-ID: qujH-pw7NCGUxgAQih54Bg
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	s=arc-20240116; t=1739229582; c=relaxed/simple;
+	bh=2Vff43PmakmA60WnMtnTOd4EPxaSc0FyYuoDAegnans=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=iTuNsfe6+UFIPlEPRmDnwtsssG2Cc8nz0xp+PHI9tR4/tJk9km/SIZsEzKxZxUe0yreq+Y8/usOrTt7jHV/ksJ9gwhj32dSDdfbpHLZyxxUhEXKHF8iGmw/wboaT9wh3v1fXA6MOqGbr6mfrY6FCwscFnLYyeetgLHE8gdMejHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
+Received: from Marijn-Arch-PC.localdomain (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A565B1800374;
-	Mon, 10 Feb 2025 23:19:03 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.92])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C27CE3001D12;
-	Mon, 10 Feb 2025 23:18:58 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <8d8a5d5b00688ea553b106db690e8a01f15b1410@linux.dev>
-References: <8d8a5d5b00688ea553b106db690e8a01f15b1410@linux.dev> <335ad811ae2cf5ebdfc494c185b9f02e9ca40c3e@linux.dev> <3173328.1738024385@warthog.procyon.org.uk> <3187377.1738056789@warthog.procyon.org.uk> <2986469.1739185956@warthog.procyon.org.uk>
-To: "Ihor Solodrai" <ihor.solodrai@linux.dev>
-Cc: dhowells@redhat.com, "Marc Dionne" <marc.dionne@auristor.com>,
-    "Steve
- French" <stfrench@microsoft.com>,
-    "Eric Van Hensbergen" <ericvh@kernel.org>,
-    "Latchesar  Ionkov" <lucho@ionkov.net>,
-    "Dominique Martinet" <asmadeus@codewreck.org>,
-    "Christian Schoenebeck" <linux_oss@crudebyte.com>,
-    "Paulo Alcantara" <pc@manguebit.com>,
-    "Jeff Layton" <jlayton@kernel.org>,
-    "Christian Brauner" <brauner@kernel.org>, v9fs@lists.linux.dev,
-    linux-cifs@vger.kernel.org, netfs@lists.linux.dev,
-    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-    ast@kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] netfs: Add retry stat counters
+	by m-r2.th.seeweb.it (Postfix) with ESMTPSA id DBBC43EC07;
+	Tue, 11 Feb 2025 00:19:35 +0100 (CET)
+From: Marijn Suijten <marijn.suijten@somainline.org>
+Date: Tue, 11 Feb 2025 00:19:32 +0100
+Subject: [PATCH] drm/msm/dpu: Don't leak bits_per_component into random
+ DSC_ENC fields
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3210863.1739229537.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 10 Feb 2025 23:18:57 +0000
-Message-ID: <3210864.1739229537@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250211-dsc-10-bit-v1-1-1c85a9430d9a@somainline.org>
+X-B4-Tracking: v=1; b=H4sIAIOJqmcC/x3MMQqAMAxA0auUzAbaiCheRRxsGzVLlUZEkN7d4
+ viG/19QzsIKo3kh8y0qR6pwjYGwL2ljlFgNZKmz5BxGDegsermQiAYfqfXR9lCDM/Mqzz+b5lI
+ +Ueq1NVwAAAA=
+X-Change-ID: 20250211-dsc-10-bit-2228bd23bd07
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Vinod Koul <vkoul@kernel.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Martin Botka <martin.botka@somainline.org>, 
+ Jami Kettunen <jami.kettunen@somainline.org>, linux-arm-msm@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org, 
+ Marijn Suijten <marijn.suijten@somainline.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2510;
+ i=marijn.suijten@somainline.org; h=from:subject:message-id;
+ bh=2Vff43PmakmA60WnMtnTOd4EPxaSc0FyYuoDAegnans=;
+ b=owEBbQKS/ZANAwAIAfFi0jHH5IZ2AcsmYgBnqomHEJ0yt3FN3odGPxSVaDdqU42RwEjzbllvz
+ 0WBNVm5D/2JAjMEAAEIAB0WIQROiwG5pb6la1/WZxbxYtIxx+SGdgUCZ6qJhwAKCRDxYtIxx+SG
+ diopD/oD5I500NzBmoLFFSxEF01WQYRQ8Gq7XDaigBvQKt6+I0eotsCcpCtYb/GSgHbdDGWTmLH
+ HN3fF/eqbRgi4ixWdzArCRsrXtpE6GU3+2+EUYLOQYedsplWtb6WrrA0ahCcDc7NNc9SpFYNJKw
+ JHzrzqbpVOtystGN/WQLADgMPZW/7U4fqyowy7gxtRkF8CcNByjifSXuKz5tJ2sUX/ch3DkCcij
+ YwkowENun/OHZeWA6ptQ6A2H9bJWsiJBH3K1VB9czdkdBIp73HhJ3FMz7IFGrX/Be83zi9V1ui1
+ Lr5NdwVTfLv4xtEsJorIVgw49K/L5UTs64QNFFaneu6S7UiL7oUxjbHTXbCXeuEUZeQxc0y67Y4
+ T46Pjn+csennhTIb6YxNwOKDpEWeqcMnNMvjS97jaWARoJ9Em2xdoveL7/bsmwYrwaha/7/yMxZ
+ QeqAGcUZ+juN8HZZOf02IZDReIUGRK8TLNyTNxxj4ci5QlwNa0BAWBP3sCafpYAvDrFLKKaNd2Q
+ 7j+i5HSeOvr+vsDDzi2+Gi/Ajpk6ObbeJcSOZ94ArY/eaG7+olkhSXtrZ7ecG6Kl5Xe36nZgXo6
+ oKM5C7gZ6zKYDE7w6ZKF+EPeLHlzJJej0zlF1sQ1ROLKVS53+wqIVV1K9CmuU4C1SKpU/07sf8n
+ bp6fjw/RTSfN7Gw==
+X-Developer-Key: i=marijn.suijten@somainline.org; a=openpgp;
+ fpr=4E8B01B9A5BEA56B5FD66716F162D231C7E48676
 
-Ihor Solodrai <ihor.solodrai@linux.dev> wrote:
+What used to be the input_10_bits boolean - feeding into the lowest
+bit of DSC_ENC - on MSM downstream turned into an accidental OR with
+the full bits_per_component number when it was ported to the upstream
+kernel.
 
-> Done. I pushed the logs to the previously mentioned github branch:
-> https://github.com/kernel-patches/bpf/commit/699a3bb95e2291d877737438fb6=
-41628702fd18f
+On typical bpc=8 setups we don't notice this because line_buf_depth is
+always an odd value (it contains bpc+1) and will also set the 4th bit
+after left-shifting by 3 (hence this |= bits_per_component is a no-op).
 
-Perfect, thanks.
+Now that guards are being removed to allow more bits_per_component
+values besides 8 (possible since commit 49fd30a7153b ("drm/msm/dsi: use
+DRM DSC helpers for DSC setup")), a bpc of 10 will instead clash with
+the 5th bit which is convert_rgb.  This is "fortunately" also always set
+to true by MSM's dsi_populate_dsc_params() already, but once a bpc of 12
+starts being used it'll write into simple_422 which is normally false.
 
-Looking at the last record of /proc/fs/netfs/requests, I see:
+To solve all these overlaps, simply replicate downstream code and only
+set this lowest bit if bits_per_component is equal to 10.  It is unclear
+why DSC requires this only for bpc=10 but not bpc=12, and also notice
+that this lowest bit wasn't set previously despite having a panel and
+patch on the list using it without any mentioned issues.
 
-	REQUEST  OR REF FL ERR  OPS COVERAGE
-	=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D =3D=3D=3D =3D=3D =3D=3D=3D=3D =3D=3D=3D =3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
-	00000a98 RA   1 2001    0   0 @0000 2000/2000
+Fixes: c110cfd1753e ("drm/msm/disp/dpu1: Add support for DSC")
+Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-So the request of interest is R=3D00000a98 in the trace.  Grepping for tha=
-t, I
-see (with a few columns cut out):
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.c
+index 657200401f57635481a22f018ff00076dfd2ba34..cec6d4e8baec4d00282465cfd2885d365f835976 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.c
+@@ -52,6 +52,7 @@ static void dpu_hw_dsc_config(struct dpu_hw_dsc *hw_dsc,
+ 	u32 slice_last_group_size;
+ 	u32 det_thresh_flatness;
+ 	bool is_cmd_mode = !(mode & DSC_MODE_VIDEO);
++	bool input_10_bits = dsc->bits_per_component == 10;
+ 
+ 	DPU_REG_WRITE(c, DSC_COMMON_MODE, mode);
+ 
+@@ -68,7 +69,7 @@ static void dpu_hw_dsc_config(struct dpu_hw_dsc *hw_dsc,
+ 	data |= (dsc->line_buf_depth << 3);
+ 	data |= (dsc->simple_422 << 2);
+ 	data |= (dsc->convert_rgb << 1);
+-	data |= dsc->bits_per_component;
++	data |= input_10_bits;
+ 
+ 	DPU_REG_WRITE(c, DSC_ENC, data);
+ 
 
- test_progs-no_a-97: netfs_rreq_ref: R=3D00000a98 NEW         r=3D1
- test_progs-no_a-97: netfs_read: R=3D00000a98 READAHEAD c=3D00000000 ni=3D=
-2ec02f16 s=3D0 l=3D2000 sz=3D17a8
- test_progs-no_a-97: netfs_rreq_ref: R=3D00000a98 GET SUBREQ  r=3D2
- test_progs-no_a-97: netfs_sreq: R=3D00000a98[1] DOWN TERM  f=3D192 s=3D0 =
-17a8/17a8 s=3D1 e=3D0
- test_progs-no_a-97: netfs_rreq_ref: R=3D00000a98 GET WORK    r=3D3
- test_progs-no_a-97: netfs_sreq_ref: R=3D00000a98[1] PUT TERM    r=3D1
- test_progs-no_a-97: netfs_rreq_ref: R=3D00000a98 GET SUBREQ  r=3D4
- test_progs-no_a-97: netfs_sreq: R=3D00000a98[2] ZERO SUBMT f=3D00 s=3D17a=
-8 0/858 s=3D0 e=3D0
-    kworker/u8:2-36: netfs_rreq_ref: R=3D00000a98 SEE WORK    r=3D4
-    kworker/u8:2-36: netfs_rreq: R=3D00000a98 RA COLLECT f=3D2021
-    kworker/u8:2-36: netfs_sreq: R=3D00000a98[1] DOWN DSCRD f=3D92 s=3D0 1=
-7a8/17a8 s=3D1 e=3D0
-    kworker/u8:2-36: netfs_sreq_ref: R=3D00000a98[1] PUT DONE    r=3D0
-    kworker/u8:2-36: netfs_sreq: R=3D00000a98[1] DOWN FREE  f=3D92 s=3D0 1=
-7a8/17a8 s=3D1 e=3D0
-    kworker/u8:2-36: netfs_rreq_ref: R=3D00000a98 PUT SUBREQ  r=3D3
-    kworker/u8:2-36: netfs_rreq: R=3D00000a98 RA COMPLET f=3D2021
-    kworker/u8:2-36: netfs_rreq: R=3D00000a98 RA WAKE-IP f=3D2021
-    kworker/u8:2-36: netfs_rreq: R=3D00000a98 RA DONE    f=3D2001
-    kworker/u8:2-36: netfs_rreq_ref: R=3D00000a98 PUT WORK    r=3D2
- test_progs-no_a-97: netfs_sreq: R=3D00000a98[2] ZERO TERM  f=3D102 s=3D17=
-a8 858/858 s=3D1 e=3D0
- test_progs-no_a-97: netfs_rreq_ref: R=3D00000a98 GET WORK    r=3D3
- test_progs-no_a-97: netfs_sreq_ref: R=3D00000a98[2] PUT TERM    r=3D1
- test_progs-no_a-97: netfs_rreq_ref: R=3D00000a98 PUT RETURN  r=3D2
-    kworker/u8:2-36: netfs_rreq_ref: R=3D00000a98 SEE WORK    r=3D2
-    kworker/u8:2-36: netfs_rreq_ref: R=3D00000a98 PUT WORK    r=3D1
+---
+base-commit: 77969bdf11bca51038df66410338d088b327fc49
+change-id: 20250211-dsc-10-bit-2228bd23bd07
 
-You can see subrequest 1 completes fine, the subrequest is freed and the r=
-ef
-it had on the request is put:
-
-	netfs_sreq: R=3D00000a98[1] DOWN FREE  f=3D92 s=3D0 17a8/17a8 s=3D1 e=3D0
-	netfs_rreq_ref: R=3D00000a98 PUT SUBREQ  r=3D3
-
-Subrequest 2, however isn't collected:
-
-	netfs_sreq: R=3D00000a98[2] ZERO SUBMT f=3D00 s=3D17a8 0/858 s=3D0 e=3D0
-	netfs_sreq: R=3D00000a98[2] ZERO TERM  f=3D102 s=3D17a8 858/858 s=3D1 e=3D=
-0
-	netfs_sreq_ref: R=3D00000a98[2] PUT TERM    r=3D1
-
-and the work happens again in kworker/u8:2-36 right at the end:
-
-	netfs_rreq_ref: R=3D00000a98 SEE WORK    r=3D2
-	netfs_rreq_ref: R=3D00000a98 PUT WORK    r=3D1
-
-but this doesn't do anything.
-
-The excess buffer clearance happened in the app thread (test_progs-no_a-97=
-):
-
-	netfs_sreq: R=3D00000a98[2] ZERO TERM  f=3D102 s=3D17a8 858/858 s=3D1 e=3D=
-0
-
-> Let me know if I can help with anything else.
-
-Can you add some more tracepoints?
-
-echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_collect/enable
-echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_collect_sreq/enable
-echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_collect_state/enable
-
-However, I think I may have spotted the issue: I'm mixing
-clear_and_wake_up_bit() for NETFS_RREQ_IN_PROGRESS (which will use a commo=
-n
-system waitqueue) with waiting on an rreq-specific waitqueue in such as
-netfs_wait_for_read().
-
-I'll work up a fix patch for that tomorrow.
-
-Thanks,
-David
+Best regards,
+-- 
+Marijn Suijten <marijn.suijten@somainline.org>
 
