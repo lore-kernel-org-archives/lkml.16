@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F5C256C99
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:35:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940C0256C99
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:35:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739208919; cv=none; b=C22+huFMRyxPVfLJW55cJJ0ZIESAnKNCN3o/bE+kTqHKeuIhB7mnlP47IcM+ZZmTTcBrhPtLQNCAEPAMamt4zroq85EG2xtdTq16D1oRFZzWHESYq6PODiSqD1+RGnf0ZsAueK2WfGtJl919Qw7xbBUBfjFdEkPit/REynZ3Ubk=
+	t=1739208933; cv=none; b=IScx+ohkjLSF7vG1kMrVXTX+OxniztuSiCoAG4nTvwUqK7dvZJOeJD6VS9Zv25SVhdTtS6YTAKtJo5v1JA6mxbpfPW5HroZzenV/CEa0hv6Rp1G3HTdce2xAeO5i3mbAyh6TToeh34s6KIp4v8L0qJI1DnZXWmboxmGbtUZ6Q+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739208919; c=relaxed/simple;
-	bh=tiwgmuEOBTLnzLhAw83WSYqm3hoiV2j/vuNY+JTkK4c=;
+	s=arc-20240116; t=1739208933; c=relaxed/simple;
+	bh=0Da5ifXfaIU0u23xjWu+CINEb8DfI/EM85x2cAaw9TU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Ci8/krmI0aCoRNoB74JodaEOTptdzXnsON9YZ2oYPAaCd1lnLgwhreh4ca1/DGPEJUWkElbY5q5ddDfQ3mGq020b7Zkqa5u9SRXaqYQvT5HYNYWXky0lo5AZBmih2TFo8Ytn9rolZDD7f8NynFEep45zSodHMWeontnZgl8W1Jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ny4MTV/p; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=cqGxrMa1ZUHoRMAs8I3sX7DPYKzBLTzPzYWDdJPy0ZsDlaZbQo72U9hYs7h1cMZrvV/3tZsyEuH5nglCRPqt2T54m8uCr5n0faNd6sSoT3klZh4alJ5oC/ho1/vn/Qjn446HLxHHZ7OwPCzNYNqUHKlffmiCM+sIfZE/+FBgx1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fXae7kjy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ny4MTV/p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FBF5C4CED1;
-	Mon, 10 Feb 2025 17:35:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fXae7kjy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17778C4CED1;
+	Mon, 10 Feb 2025 17:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739208919;
-	bh=tiwgmuEOBTLnzLhAw83WSYqm3hoiV2j/vuNY+JTkK4c=;
+	s=k20201202; t=1739208933;
+	bh=0Da5ifXfaIU0u23xjWu+CINEb8DfI/EM85x2cAaw9TU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=ny4MTV/prCT5kFV17Z/0OyPEhKvEL/y6TFeIr9PrNiAehglj6RobGA8s8eIFZ1gLh
-	 twdBUReeyGJVDFZuAEGKctVadb7yycPL6H097qeauWbFUMoYmBtJrMZmBJRw3IkwoF
-	 NXaDFRLLOsOns2zUUTP3zOMYlHB6K/UVO8z6RzF36iO0rAEBfWT6CBVjXbs5JalmtW
-	 nSWrJhPV/E7NTyfXRZbmH0HkyoGBEqUaNGqUmOQ/eF6S33DV3faw6k2BmCLuh/Wx2D
-	 0r37hQKvKRgc6N856OrngG6weKAyWk9XGbk2j1EMhUGLc95X49nVZjNl+vB5kUuVHe
-	 MlqZnPLtXriJg==
+	b=fXae7kjyWihtPCK8bsvGOIneyzctXVvgzd/dwnFmlLsQkTAGZ9o+VNGif9A+WJxpM
+	 3DzBc61/K65hMppCE2k0bZZoXKMWoxEZQuH+tTAn206MJ6S6dWfaLIQd+BIbYKXixB
+	 hh+qQ1BHoXSSPzuOkZeXLufmFV6yL5hZwEqvmfXCrLx1e1Atpx6q+pby3TWu2w2jYm
+	 zyXTEuv/OKvXo3WhiWrm6dVH0zcRb9LO2YJB4HPt7ymVjBOvMXg7Qg/uB9Gy4+JwNk
+	 9ViAgBFlHEayOA0gff+fYhkX8/SW7i1EXiysIfWk2ryj6LJSV4C1iUX7SphYWVX3MK
+	 Hot/BvunchtDQ==
 From: Lee Jones <lee@kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org, 
+To: Hans de Goede <hdegoede@redhat.com>, Lee Jones <lee@kernel.org>, 
+ linux-kernel@vger.kernel.org, 
  Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Andy Shevchenko <andy@kernel.org>, Lee Jones <lee@kernel.org>
-In-Reply-To: <20250129152823.1802273-1-andriy.shevchenko@linux.intel.com>
-References: <20250129152823.1802273-1-andriy.shevchenko@linux.intel.com>
-Subject: Re: (subset) [PATCH v1 1/1] mfd: intel_soc_pmic_chtdc_ti: Drop
- unneeded assignment for cache_type
-Message-Id: <173920891813.1935666.9884718105009512198.b4-ty@kernel.org>
-Date: Mon, 10 Feb 2025 17:35:18 +0000
+Cc: Andy Shevchenko <andy@kernel.org>
+In-Reply-To: <20250129152828.1802315-1-andriy.shevchenko@linux.intel.com>
+References: <20250129152828.1802315-1-andriy.shevchenko@linux.intel.com>
+Subject: Re: (subset) [PATCH v1 1/1] mfd: intel_soc_pmic_crc: Drop unneeded
+ assignment for cache_type
+Message-Id: <173920893184.1936133.2915361139033821166.b4-ty@kernel.org>
+Date: Mon, 10 Feb 2025 17:35:31 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,7 +47,7 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.13.0
 
-On Wed, 29 Jan 2025 17:28:22 +0200, Andy Shevchenko wrote:
+On Wed, 29 Jan 2025 17:28:28 +0200, Andy Shevchenko wrote:
 > REGCACHE_NONE is the default type of the cache when not provided.
 > Drop unneeded explicit assignment to it.
 > 
@@ -58,8 +59,8 @@ On Wed, 29 Jan 2025 17:28:22 +0200, Andy Shevchenko wrote:
 
 Applied, thanks!
 
-[1/1] mfd: intel_soc_pmic_chtdc_ti: Drop unneeded assignment for cache_type
-      commit: db8d38dab1c313a4fb870d143bebe57166af84ab
+[1/1] mfd: intel_soc_pmic_crc: Drop unneeded assignment for cache_type
+      commit: 0b1cfd51841c69c024facfe59ea7bbe6b589a7de
 
 --
 Lee Jones [李琼斯]
