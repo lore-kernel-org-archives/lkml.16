@@ -1,143 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA552566F3
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:27:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7940B2566CB;
+	Mon, 10 Feb 2025 19:27:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739215631; cv=none; b=H4dD/OrODfyYKWg0tlofcFm+UqvYULGajbQbGt65OcSpYK6K6DCd0lbCy2SY4RqI+gTwaBJXVIkPWdu1oAwdfcbHC+4nYsRHLO2Dj7YF8CK/QlKiHj7HlpIqROW/a2e2SQglghTScc7tE86EeiM/8HHizwxleT1AQeg0GrUwvk8=
+	t=1739215669; cv=none; b=OMMpPTPasbOi5/ZDC7FP3EdBtSug29erAO7d3DIkmjkDJcG2KdnziYLiIJIRH75kUveLNgSxEkSQZl/omUT22UPogxK1ao4oIbK6SnhpavpRe/7+Z8YY27QhTfVCwgbKtwyfzB780IX1Etwf0IGNB8CuidFnd6t6B1NWOYCTfrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739215631; c=relaxed/simple;
-	bh=qWXsTZWtCG87Tpj3zeHcU5Gv7oaxQmZwiPgwvU6NQk0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=K9ISYwVGhW/pS1E2D7K6PD88zE6FjewjXJj2PNnzSRf1qRyjybprnQM63qDyageFcpBdwtvelFT45rlKaahdoUW7/ymqv0e7b2dju06ZKc44sSYl79afTdKHjQbxERwFL79s6C67ARiNm9qRZPmm9L2huPmPESg21YsfJorEZKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XLI5aCga; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739215669; c=relaxed/simple;
+	bh=I1srf/if4T44Admu2U0Lb/obhkkyKynLmn43hK8odaA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fM9WXupB4oWgCVfExxFtHQks3VeLAhd4JP/tON8FkIc2fEMc3RJ3rPUEwpxiWPdhsRIZLbKASjzNDh5RD5M8tsc+zlB6JTsm4CsNvQ/fY4woaXlXxNeGs1gXSOlKRFesHQEoSk0OnIyRdtZ6ibTcgv23XgMQiO1SQKE9DhhYBwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XC1jqVmk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XLI5aCga"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3B51C4CED1;
-	Mon, 10 Feb 2025 19:27:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XC1jqVmk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0932FC4CED1;
+	Mon, 10 Feb 2025 19:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739215631;
-	bh=qWXsTZWtCG87Tpj3zeHcU5Gv7oaxQmZwiPgwvU6NQk0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=XLI5aCgahZ5bhgiXWVHOuQUvt3pNF34vuQKjeG5vLPaDsw7r+BEuStMoPbj2CoJUA
-	 z6AH5iahY6NAU9MTGPW0TOWbQ3cOipPOBWp6x69B5xjAXnjuRLAe+SbMoQq/hndRF4
-	 A+TDuPFDSqsQbXqIcsSgf3+I0DMRhw85sORXv1MqVpip6jA0sBhlgoBTp557iiFPa0
-	 X8IKw0I1VvrXx+bTIF0FE7GPTbwPZpjQUHjgfNRfyA72TdwWgNVwd9kXIV5YS+Zs24
-	 UQq7g8qgAF84BkgntZ+S1mgOMbdYQV1TQ0muYtE7FzoqBfARoBwZ7PeeZ394HgAroW
-	 CS4QD7ngUZiFA==
-Date: Mon, 10 Feb 2025 09:27:09 -1000
-From: Tejun Heo <tj@kernel.org>
-To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>
-Cc: linux-kernel@vger.kernel.org, sched-ext@meta.com,
-	Jake Hillion <jakehillion@meta.com>
-Subject: [PATCH sched_ext/for-6.14-fixes] sched_ext: Fix incorrect assumption
- about migration disabled tasks in task_can_run_on_remote_rq()
-Message-ID: <Z6pTDc_TfujiHW5v@slm.duckdns.org>
+	s=k20201202; t=1739215669;
+	bh=I1srf/if4T44Admu2U0Lb/obhkkyKynLmn43hK8odaA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XC1jqVmkTGXmdNARhxDcMByE1sgwEe68PAo4peSTft+yvG7h4Kco6Q9zSctHzO9J8
+	 100+RSXWikuUDVSfPzKdubwp1QYXRxshu/dBN5whVXUebi2LEQkwQaiCwRp5sgtfOn
+	 jc3jK2BmDk7t+loX1C3f6iWdC1qYyqdSlzpH42+cfmy6oUBcC6VtB8rbEkXtnAZod1
+	 99xAqdSE9oODQ4gDYnZ6n+TyHOD7Y14ovzd0nSDD2co+AnQcOy4gxvgaK9sYO9p/nZ
+	 qjan9tk6vFmDrlZOwAtrurbpKmvEVNw2PT/eFWEeuBGN77dDjk4KI/Tgp6DoWOHIfJ
+	 w+O6GKmac9E+g==
+Message-ID: <2fe7a404-be2c-4ac8-8980-2b3d07a74bca@kernel.org>
+Date: Mon, 10 Feb 2025 20:27:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 14/14] Documentation: KHO: Add memblock bindings
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+ Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Andy Lutomirski <luto@kernel.org>, Anthony Yznaga
+ <anthony.yznaga@oracle.com>, Arnd Bergmann <arnd@arndb.de>,
+ Ashish Kalra <ashish.kalra@amd.com>,
+ Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+ Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ David Woodhouse <dwmw2@infradead.org>, Eric Biederman
+ <ebiederm@xmission.com>, Ingo Molnar <mingo@redhat.com>,
+ James Gowans <jgowans@amazon.com>, Jonathan Corbet <corbet@lwn.net>,
+ Mark Rutland <mark.rutland@arm.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, "H. Peter Anvin"
+ <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Pratyush Yadav <ptyadav@amazon.de>, Rob Herring <robh+dt@kernel.org>,
+ Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+ Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Tom Lendacky <thomas.lendacky@amd.com>, Usama Arif
+ <usama.arif@bytedance.com>, Will Deacon <will@kernel.org>,
+ devicetree@vger.kernel.org, kexec@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-mm@kvack.org, x86@kernel.org
+References: <20250206132754.2596694-1-rppt@kernel.org>
+ <20250206132754.2596694-15-rppt@kernel.org>
+ <45df0d7a-622a-4268-9683-c5c6067483c3@kernel.org>
+ <Z6jFZII5b-j7hzkj@kernel.org>
+ <a3cca0ed-64ca-4921-bb4c-27c0e06b78c6@kernel.org>
+ <Z6kTCvex3DGhB-3C@kernel.org>
+ <18529b1f-dc79-4c85-a485-a0a2cdd48670@kernel.org>
+ <aa4ec16a-b35f-41b0-92f7-40b3eb64124a@kernel.org>
+ <20250210191539.GA3765641@nvidia.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250210191539.GA3765641@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-While fixing migration disabled task handling, 32966821574c ("sched_ext: Fix
-migration disabled handling in targeted dispatches") assumed that a
-migration disabled task's ->cpus_ptr would only have the pinned CPU. While
-this is eventually true for migration disabled tasks that are switched out,
-->cpus_ptr update is performed by migrate_disable_switch() which is called
-right before context_switch() in __scheduler(). However, the task is
-enqueued earlier during pick_next_task() via put_prev_task_scx(), so there
-is a race window where another CPU can see the task on a DSQ.
+On 10/02/2025 20:15, Jason Gunthorpe wrote:
+> On Sun, Feb 09, 2025 at 09:50:37PM +0100, Krzysztof Kozlowski wrote:
+>>> Ah, neat, that would almost solve the problem but you wrote:
+>>>
+>>> +$id: http://devicetree.org/schemas/memblock/reserve_mem.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>
+>>> so no, this does not work like that. You use devicetree here namespace
+>>> and ignore its rules.
+>>
+>> ... and that obviously is barely parseable, so maybe one more try:
+>> "You use here devicetree namespace but ignore its rules."
+> 
+> It makes sense to me, there should be zero cross-over of the two
+> specs, KHO should be completely self defined and stand alone.
+> 
+> There is some documentation missing, I think. This yaml describes one
+> node type, but the entire overall structure of the fdt does not seem
+> to have documentation?
 
-If the CPU tries to dispatch the migration disabled task while in that
-window, task_allowed_on_cpu() will succeed and task_can_run_on_remote_rq()
-will subsequently trigger SCHED_WARN(is_migration_disabled()).
+A lot of ABI is missing there and undocumented like: node name (which
+for every standard DT would be a NAK), few properties. This binding
+describes only subset while skipping all the rest and effectively
+introducing implied/undocumented ABI.
 
-  WARNING: CPU: 8 PID: 1837 at kernel/sched/ext.c:2466 task_can_run_on_remote_rq+0x12e/0x140
-  Sched_ext: layered (enabled+all), task: runnable_at=-10ms
-  RIP: 0010:task_can_run_on_remote_rq+0x12e/0x140
-  ...
-   <TASK>
-   consume_dispatch_q+0xab/0x220
-   scx_bpf_dsq_move_to_local+0x58/0xd0
-   bpf_prog_84dd17b0654b6cf0_layered_dispatch+0x290/0x1cfa
-   bpf__sched_ext_ops_dispatch+0x4b/0xab
-   balance_one+0x1fe/0x3b0
-   balance_scx+0x61/0x1d0
-   prev_balance+0x46/0xc0
-   __pick_next_task+0x73/0x1c0
-   __schedule+0x206/0x1730
-   schedule+0x3a/0x160
-   __do_sys_sched_yield+0xe/0x20
-   do_syscall_64+0xbb/0x1e0
-   entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Fix it by converting the SCHED_WARN() back to a regular failure path. Also,
-perform the migration disabled test before task_allowed_on_cpu() test so
-that BPF schedulers which fail to handle migration disabled tasks can be
-noticed easily.
-
-While at it, adjust scx_ops_error() message for !task_allowed_on_cpu() case
-for brevity and consistency.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Fixes: 32966821574c ("sched_ext: Fix migration disabled handling in targeted dispatches")
-Reported-by: Jake Hillion <jakehillion@meta.com>
----
- kernel/sched/ext.c |   29 +++++++++++++++++++++--------
- 1 file changed, 21 insertions(+), 8 deletions(-)
-
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index e01144340d67..54edd0e2132a 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -2343,6 +2343,25 @@ static bool task_can_run_on_remote_rq(struct task_struct *p, struct rq *rq,
- 
- 	SCHED_WARN_ON(task_cpu(p) == cpu);
- 
-+	/*
-+	 * If @p has migration disabled, @p->cpus_ptr is updated to contain only
-+	 * the pinned CPU in migrate_disable_switch() while @p is being switched
-+	 * out. However, put_prev_task_scx() is called before @p->cpus_ptr is
-+	 * updated and thus another CPU may see @p on a DSQ inbetween leading to
-+	 * @p passing the below task_allowed_on_cpu() check while migration is
-+	 * disabled.
-+	 *
-+	 * Test the migration disabled state first as the race window is narrow
-+	 * and the BPF scheduler failing to check migration disabled state can
-+	 * easily be masked if task_allowed_on_cpu() is done first.
-+	 */
-+	if (unlikely(is_migration_disabled(p))) {
-+		if (trigger_error)
-+			scx_ops_error("SCX_DSQ_LOCAL[_ON] cannot move migration disabled %s[%d] from CPU %d to %d",
-+				      p->comm, p->pid, task_cpu(p), cpu);
-+		return false;
-+	}
-+
- 	/*
- 	 * We don't require the BPF scheduler to avoid dispatching to offline
- 	 * CPUs mostly for convenience but also because CPUs can go offline
-@@ -2351,17 +2370,11 @@ static bool task_can_run_on_remote_rq(struct task_struct *p, struct rq *rq,
- 	 */
- 	if (!task_allowed_on_cpu(p, cpu)) {
- 		if (trigger_error)
--			scx_ops_error("SCX_DSQ_LOCAL[_ON] verdict target cpu %d not allowed for %s[%d]",
--				      cpu_of(rq), p->comm, p->pid);
-+			scx_ops_error("SCX_DSQ_LOCAL[_ON] target CPU %d not allowed for %s[%d]",
-+				      cpu, p->comm, p->pid);
- 		return false;
- 	}
- 
--	/*
--	 * If @p has migration disabled, @p->cpus_ptr only contains its current
--	 * CPU and the above task_allowed_on_cpu() test should have failed.
--	 */
--	SCHED_WARN_ON(is_migration_disabled(p));
--
- 	if (!scx_rq_online(rq))
- 		return false;
- 
+Best regards,
+Krzysztof
