@@ -1,123 +1,113 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD8643151;
-	Mon, 10 Feb 2025 08:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55B21B425A
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739177867; cv=none; b=dVafx01Qmt4DFEdRHrtPEEZYJHz13E3jX9s7GfZxOEhl8+2ZfwrCkQIyDAhSFsjqlDuyy5E+bKQZxnGmKLg9NSdB0FnMP9Nk+y8eWxE61OBqF9pFqsrR0YaHgXdryKjXRzmA5GkFFHl05UjEIBQ3Nfmt7P0lFhvIUmqtbGUe+88=
+	t=1739177950; cv=none; b=qoZlwYv6iYAWF8DfzYSKFunO4ARTjN9r2DfGPVj5XPY0qjuxF2PHwBD8SEYY0qulQHC2u0eSmelL0XJ9YLTK2Vd+qRr60AAN19apQukDQyZJuLROIVb9u0YQRA1GpjdLCt16l+7EuGZ0RWxbr1Br+Lw2UJx4Dl5Bk4fRNTno7/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739177867; c=relaxed/simple;
-	bh=M0sH78tZwMI80Y0F1mZRq2/tKtoaQo1cIuD3CYUKUiQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OiTWzfADtrTWIHGdFfFNquaBkzoLa5E91DP6VdbMLnUBW3E7TK8pVqK6tQka4pGUMZrPN+xsrIJgx4XPRkxOWaQW0fVcQ6wn9jggi+r/ha5cEWClpQWieoRLaIaoIZ2V3TC+VGdVLM9FMBTGu2knMQCtjKqX2S1Aamw9yB6R/Xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XE59dC24; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739177950; c=relaxed/simple;
+	bh=r9kfscMu2nQ0HRBU8e9l53pIAaPhrUF5mA9gkyOUvGs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dpgH6ZmpLra9zuvvEYJwpF9wWB6tuYecGUlsfuyVetMgogBPUYgsUtzfCrjTqN52zkLhFxRTFEiPcq7lWwfVmIvO37DT4hiWhLm7f9c7dRNn5BsgCnj7sSSwrNTcH/I5J/0Ujim+FlAPUnVOJWDKMd1PTASzOmA7y0BheuClmMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QKQz9lJh; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XE59dC24"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso663318766b.1;
-        Mon, 10 Feb 2025 00:57:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QKQz9lJh"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38dcb97e8a3so2201642f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 00:59:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739177862; x=1739782662; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M0sH78tZwMI80Y0F1mZRq2/tKtoaQo1cIuD3CYUKUiQ=;
-        b=XE59dC24JNH7KPCCivlNp3OQCvylEWcvsC0vXWkSyIjMVxwpQfht2Hh+07R+ZlfPQe
-         HUPR38YpuKxJyVGySHgpLlBeI2d3OT7G6EvPV6jSzbTugqjTFkxOwqvHxlNaSwF/Q1Wo
-         Lk2/aNh2Sr9PVrWIiGFNpjrvR1CGHmneiqU1FsZZpKQ7CMNahQx5LWqjylThvuIe+8wA
-         RTmzbyAb/NYAifPq+4WfYb1xVyQkymjTVQ6aStDD5JHI9aV1yTdrhlR6kI6+k/A4Zfji
-         DRXeyU6ypbPJioT4bogZPCSS9E/XA8qZuxgT4q58EssuSKR5UcieLVOAsmQF6LVWWW9g
-         13Lw==
+        d=linaro.org; s=google; t=1739177947; x=1739782747; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hgguTSFnjwWEUxBDa2C5Pf4WCfOFI/5UFo5VErVUJi0=;
+        b=QKQz9lJh4MU4d7M+yyZEL3U+fQY/fZe7sKfb1tWuatdbn/tbxwx31c8q8S4Cvc/IdJ
+         4H2RgNasN2geJh+pWXv3I6FXwTffx9T2SpweypnvLKQ7nQUarr2sZrNZ8FQLhv7jzfde
+         hev4NIWOf1iprkZbItLcR0ynUBiCPMLPoNGUocwu3I+GEekr7420rdfP9y5saow3ekuc
+         FHGvQ/hOo3fyDEzfpjhWvulSguero1dQiYg57qQ/DwvWKgXnDWUyeSnJIgIQ926mozve
+         F9Ms0+kQCfn6KsWqfIndBEveIe1Ovb6Tc4dtR6HaLd5+SlGL9A3TdsKRcWMXvu22zND1
+         vhOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739177862; x=1739782662;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M0sH78tZwMI80Y0F1mZRq2/tKtoaQo1cIuD3CYUKUiQ=;
-        b=rGPbozI6q9Y+vT3F+n3uRsLsIu22bAwj4VE09UwUNNLU6lfKtpf1rfV2xFOccRhDNX
-         W7m1Q2hQoR0b5z3m78rxuWAjcpxx5izVIhzErXGM2wzkCza3ihJ2XDshw9QPbwb1xnXh
-         6wd7QUfv04ZrC9iAIIyofsdSr4N7zEmOLMg67WadOILaXe9fp20ucDvZVjexwIK/E91b
-         3sJXWzH74cBVd+PBqEC7ScuRXf1lz9+In0wA1qVIm1tyIK5P+Lk/eJNpd//K5wvoMN2Q
-         MsQKlMYRZLHWDVg3IpXiNnhY/y5fKMRC81NmI7LBemzl1FMFOy6+2v0Ktw7DbDZGltNp
-         /SCg==
-X-Forwarded-Encrypted: i=1; AJvYcCUN8b3XdB18tOT/4Mol/mxMn120H4H1rjsp4oI0rpr9zJLSUBo/6AMA6DSfmfwKta+GbI0pDb+EtD9S@vger.kernel.org, AJvYcCUZ6nVc9hiHKINS9Hqaiqd7D5BxVervLtetc1QF6uPlDQ2tbKS3EzQPzn+8FhDUi1HJFcmvyR7/LHNYX/E=@vger.kernel.org, AJvYcCVHKA/BdKgGgMRyR7PgLxZ+ijVpn56svM2CxjmQBPPANScbAPWIv4V4LBKz2/kcRrHqp7u7CltR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz01VbTS6GNWKp06akjlK8o/yGdXK2z/RtS4OhEKasyKUjkdrX8
-	7yttm8+CM4MBhEM+IAkwWRmQsd0axkZqBU1Kd6bGXB9KdsWT5XR4
-X-Gm-Gg: ASbGncuUvf2e9sHsQtrTMfls/HygooeBgoADRREKVF0j+uETXlLelAQWXXP61IfG6o1
-	c2N/eZWf3u4YOEF/nIMEU5PG7wIY4XpYPWtiXJYjQprXRPtwYud7dp0KgdOMJRX7x4fkH1XcaOP
-	rKfkiA6Px7H15w5ftzn/nQqJ1H0ARGQ63diCZWE/P4+34sOYHYG68XLa0rC4HNk8tJ2XdCgGQCS
-	sII3l/Qa0rIy5A08wKWEAjVAo/wWomQ4Xjp0frXqyzkEyD5kOMdVngvDl29/LKACRV68QAdDiNP
-	EEMRc4VDvUTOOJ41DpqTINykzvUft0ty
-X-Google-Smtp-Source: AGHT+IHWy2HCAxr64K+YU8mksNKshPp5ilP6jGfEAyGv9Owc1pqgtN5klIXTjKwViM4z7rE2O0gVJQ==
-X-Received: by 2002:a17:907:2d27:b0:aa6:89b9:e9c6 with SMTP id a640c23a62f3a-ab789ac0dcdmr1193362666b.21.1739177861549;
-        Mon, 10 Feb 2025 00:57:41 -0800 (PST)
-Received: from foxbook (adtq181.neoplus.adsl.tpnet.pl. [79.185.228.181])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7860da0e7sm710625566b.110.2025.02.10.00.57.40
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Mon, 10 Feb 2025 00:57:41 -0800 (PST)
-Date: Mon, 10 Feb 2025 09:57:36 +0100
-From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: gregkh@linuxfoundation.org, ki.chiang65@gmail.com,
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
- mathias.nyman@intel.com, stable@vger.kernel.org
-Subject: Re: [PATCH v4 1/1] xhci: Correctly handle last TRB of isoc TD on
- Etron xHCI host
-Message-ID: <20250210095736.6607f098@foxbook>
-In-Reply-To: <b19218ab-5248-47ba-8111-157818415247@linux.intel.com>
-References: <20250205234205.73ca4ff8@foxbook>
-	<b19218ab-5248-47ba-8111-157818415247@linux.intel.com>
+        d=1e100.net; s=20230601; t=1739177947; x=1739782747;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hgguTSFnjwWEUxBDa2C5Pf4WCfOFI/5UFo5VErVUJi0=;
+        b=Fj+/if5PDtHAKP0Y5vl2otfbxf4g8BA44g9taqONu32rnzP5my3m8wY0gQ8xw8B3wi
+         hP5o/okWHysJZOIBioXceXMRKkSYWxnm9sGlrEVYWnVDOQhRfx5OqEDWy7U2cVyeI6zJ
+         w8Yg3j/ug5PSp3AK8q8RDnYtTH9uSp12bXCzFJJFASjbzLZtZ8v5FetrhOaf4Mivcw9T
+         Rvh2mWt+XK7B4izsWx7nOsO9wJsnJoIJED4b3eAojrDGuTOR8bswHLKwQ3Y7mVC9/vS1
+         WB3Vsw4JBH23Tb3Fab2BcSxfiMknME8r2d551iLr3DFSxGzCeZdUENjMLTCFu8Yy3FsH
+         RsiA==
+X-Gm-Message-State: AOJu0Yy+QYdGlwhTS7DIcX29f6Q3swgeXsGfmNsjw+RmmCeviOq4jOCK
+	oa8VdaLlQsJYkQM6XAODxxGX166eSpRhCpSTtLh9EC7xlkpFzJkKbjPS07A00Cw=
+X-Gm-Gg: ASbGncvKjUfSiENAx1uRsL3CfJWyp8dTmPLE6zThlqhGqNncgdRKQ0eYvWwaIDfAC3k
+	j0ZrgEl9DGrtt2pnu1r4T806O/QEKrdNZ57j2XiyQrJgwvFlaotK9yvc7H4O/Pzfy+NxRLOrmu0
+	MXw3ZIks06k+CCixeUyUxqtM/59GYjLrzRok15M6xnNFSyjuqYIx1Bf37ZaFUq9vhvikJNnhqbs
+	7Wn07qLe2owj3rMAN+NGTUkyM1di6fwW7DBw6sQrC93060khfOjfI23abkfsz2A0JcQG0ZKwAA/
+	a82IqHMkxGybKWStYcFgyE4Y
+X-Google-Smtp-Source: AGHT+IHW35O2w+OVAfjf6xNzfb+RSzDit7DIG4eCcKdu75kyP3tGrbONMFt1iHptvel8q6LbiT3P3Q==
+X-Received: by 2002:a5d:6d8d:0:b0:38d:dac3:482f with SMTP id ffacd0b85a97d-38ddac34a13mr3776794f8f.20.1739177946954;
+        Mon, 10 Feb 2025 00:59:06 -0800 (PST)
+Received: from [192.168.0.14] ([79.115.63.124])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd4d826c6sm6159674f8f.69.2025.02.10.00.59.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 00:59:06 -0800 (PST)
+Message-ID: <503b7ec9-e0b1-4351-aa34-3089b2055eb9@linaro.org>
+Date: Mon, 10 Feb 2025 08:59:04 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 2/3] firmware: add Exynos ACPM protocol driver
+To: Markus Elfring <Markus.Elfring@web.de>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ Alim Akhtar <alim.akhtar@samsung.com>, Conor Dooley <conor+dt@kernel.org>,
+ Jassi Brar <jassisinghbrar@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-team@android.com,
+ =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Peter Griffin <peter.griffin@linaro.org>, Rob Herring <robh@kernel.org>,
+ Ulf Hansson <ulf.hansson@linaro.org>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Will McVicker <willmcvicker@google.com>
+References: <20250207-gs101-acpm-v7-2-ffd7b2fb15ae@linaro.org>
+ <e1fffd3b-d3dd-4f46-b7b6-1f03f934dd30@web.de>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <e1fffd3b-d3dd-4f46-b7b6-1f03f934dd30@web.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, 7 Feb 2025 14:06:54 +0200, Mathias Nyman wrote:
-> On 6.2.2025 0.42, Micha=C5=82 Pecio wrote:
-> > error_mid_td can cope with hosts which don't produce the extra
-> > success event, it was done this way to deal with buggy NECs. The
-> > cost is one more ESIT of latency on TDs with error. =20
->=20
-> It makes giving back the TD depend on a future event we can't
-> guarantee.
 
-For the record, this is not the same disaster as failing to give back
-an unlinked URB. Situation here is no different from usual 'error mid
-TD' case on buggy HCs (known so far: NEC uPD720200 and most if not all
-of ASMedia, including at least 1st gen AMD Promontory).
 
-We are owed an event in the next ESIT, worst case it will be something
-weird like Missed Service or Ring Underrun. I've sent you some patches
-for that, they also apply to the existing NEC/ASMedia problem.
+On 2/8/25 3:31 PM, Markus Elfring wrote:
+> …
+>> +++ b/drivers/firmware/samsung/exynos-acpm.c
+>> @@ -0,0 +1,771 @@
+> …
+>> +static int acpm_dequeue_by_polling(struct acpm_chan *achan,
+>> +				   const struct acpm_xfer *xfer)
+>> +{
+> …
+>> +	do {
+>> +		mutex_lock(&achan->rx_lock);
+>> +		ret = acpm_get_rx(achan, xfer);
+>> +		mutex_unlock(&achan->rx_lock);
+> …
+> 
+> Under which circumstances would you become interested to apply a statement
+> like “guard(mutex)(&achan->rx_lock);”?
+> https://elixir.bootlin.com/linux/v6.13.1/source/include/linux/mutex.h#L201
 
-> I still think it better fits the spurious success case.
-> It's not an error mid TD, it's a spurious success event sent by host
-> after a completion (error) event for the last TRB in the TD.
+I'll replace the open-coded mutex handling with cleanup.h guard(mutex)
+and scoped_guard(mutex, ...), thanks.
 
-Legally you are right of course, but materially we know what happens:
-the damn thing still holds an internal reference to the last TRB for
-some unknown reason. We would need to know that it doesn't actually
-use it for anything and will not mind the TRB being overwritten.
-
-This may well be true, but I guess I prefer known evils over unknown
-ones so I immediately suggested using 'erorr mid TD' instead.
-=20
-> Making this change to error_mid_td code also makes that code more
-> confusing and harder to follow.
-
-I will see if I can come up with something clean.
-
-I will also try the patch you sent, it looks like it would work.
-
-One thing I don't like is that it fails to distinguish the known
-spurious events from other invalid events due to hardware or kernel
-bugs. In the past last_td_was_short caused me similar problems.
-
-Regards,
-Michal
+Cheers,
+ta
