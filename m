@@ -1,57 +1,70 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C64C1C5F10;
-	Mon, 10 Feb 2025 10:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74441C5F0C
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739182657; cv=none; b=LyreaE6au40nrPv43+l2VNElWkZ00YGN0egnXN6zdCWXzjIVczM7QWn6wjAWQXgQF/11ezOsUz7kJT4lAl708ABP31U3T0+tki3sQTN3omxQXbnDlRP3/72YvdEynNChj1dchAe7BGjCQv79lJLJgxnp8bU65r70E8zi2ogE7Zk=
+	t=1739182668; cv=none; b=JjWVPBLBWAlADuAv6ADNTo4hRV/Au0FdzTI03Gfc+vZ+6TjjuCR3O4nU+r6hu/FcH3O5Rme0K1JHG7awjjH9kJg4zM9HZS+8MW3sXphrgwkTC56PDDSCz5cZpZH33Bt7ajSowrYYCe16aU+7vvvDUBKR0V0J4vRpD7wFoOYljnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739182657; c=relaxed/simple;
-	bh=chcLcB8hz8GUsz1gFUvwiKFZFNUYY3DArotzQhXQtmg=;
+	s=arc-20240116; t=1739182668; c=relaxed/simple;
+	bh=ZSL/qGmugR1ce7doF3eXwejZY+twQt/eF8UuLMVs69g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q0wbQiMdFfL0A0/zeaa4TB11CpJi5y5nKutXbZ/lUKJfjzCc8x73MbfPq3upnaN6pvgjSzeFifwG+HFchjQBH2RmpVJvL7NU8U1M1bItvcYtXm3lwOYALTp4fT3FBXBkCm17SwPkrL3zoMBlIprI4so5fTIIRUHogzHPA8QczyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uIlOErQU; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=mo3xG22AJ/srOXF2G1nEAqBrwnw0teHf+JAQv584fVUPfbFlRHxHdJ89sO0Qy+7sONfAmXiu2nlt/BXt3mF1I3WfTq/iT/5vr9RhjGtMbSb0JZY1CjgHqvMtUVG3pTZuCJ+SbW+YNXcdEgJpib9hkd6s9SR/exdXsV5squ9CWwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GqnTQWaG; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uIlOErQU"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hhiCR0AgFIOeF4HS1CGKAOPDrkDo1F+m8u6AqUimqbQ=; b=uIlOErQUY2LA378P/b/PjPuCU6
-	eBtpaJwVQemWIrRTzDEZa2HvMYuGsObheoeeoV/VTHEvLinm9P8vrqY2kdzlYKZ0QLuL0fMaknLTp
-	YsIUtz50FTonOihHSFcLSSrrS7emKN9ATUu1G1g6mJMk3OEY/268GHKDwqxru2cgTt2blqIQdSbHE
-	2sJL9+f7qXT9jEQr1tIeN95XMKhBEapQiUAdVo/HU5tqwrFNGhwlsrNMnZPSm+ksf1wakZ69nV96j
-	1iRIFZmmC52W5dW8stnEHgMXq4Bw2uR9iKPilcWVLryWA6gb+shYWcQSYxb6HC8zHHaFaCJJyB81G
-	lWHTLsKg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1thQr5-0000000FWDr-05HJ;
-	Mon, 10 Feb 2025 10:17:31 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 9079E300318; Mon, 10 Feb 2025 11:17:30 +0100 (CET)
-Date: Mon, 10 Feb 2025 11:17:30 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Barret Rhoden <brho@google.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Will Deacon <will@kernel.org>, Waiman Long <llong@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Josh Don <joshdon@google.com>, Dohyun Kim <dohyunkim@google.com>,
-	linux-arm-kernel@lists.infradead.org, kernel-team@meta.com
-Subject: Re: [PATCH bpf-next v2 09/26] rqspinlock: Protect waiters in queue
- from stalls
-Message-ID: <20250210101730.GI10324@noisy.programming.kicks-ass.net>
-References: <20250206105435.2159977-1-memxor@gmail.com>
- <20250206105435.2159977-10-memxor@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GqnTQWaG"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21c2f1b610dso102260675ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 02:17:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739182666; x=1739787466; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9i0AGLd99zO9PPisviE6AdnYOR4wb3NHpW6/eGahu5k=;
+        b=GqnTQWaGhtt+GHvSTFH7ON2QjZeiiRTGSCFdZrklAqD6pq1z7vPNkCkoWHTjXrINeF
+         +NYR4haXF0YQXjyRr7MOrWg+iJiHYuMyZJq8n9IlZUjgkM/uv9QWrOcwYtP/Rrj5f8je
+         SfporwACFPgrTUqaZdUJarF0qzzSZtrJFPo7qJdD26eAcwUqeBVYp32pOzyI3Ykse5k2
+         CrvSYjjNGp8rw5CToh7TlkDU8+AHlCass+G7Tc3qrvYnxB5a6iECbCqy73bXSk+zY8Lx
+         Fg1pvaeINBWmNt8NmMY5PEms/OFDN48vbkcpZXj6I0kOQTDZycjguI/yc2weQYNsliUg
+         lItQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739182666; x=1739787466;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9i0AGLd99zO9PPisviE6AdnYOR4wb3NHpW6/eGahu5k=;
+        b=U9AnN9kKLXMAGWd0CN+89q4FKZQsuCYBQN4XjkpWKqaMPRV9G20pdjzFe0jG6djSXr
+         dPN2XZESraLjZT+/avb3/IA4NbEMHyFnRHjsnCdH9w0yjX2Yp3epNvDoCOwJmii2a8uu
+         3ud6t0B9COv6ldxI6sj8k6uWIPSgcSwceK9hCAB0uh18upTgZ0NKejxGLgxE1yDb7VTX
+         7idKBX8GqaVNynJy8GlO9MdPOYyD4xBeTxxweVGwakk4mh2Tj3qATnF9we44/Q2jiAQI
+         xXGx/cZWMpV8bMYFFrVDi+zmaMZr+iZo9QoVNxsMS+Z42d324dgm51e4tFR/3jtl976F
+         eh6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVe5hEq6gKVsUbbaSbE4wEd6IPxcxQiAof5n2RMZ1PiXNCsW21jWCCy8Uxolma8yvNcIkgTW+9sgfkf82g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2DcIUlAzzbgqFitv5N6cvzWoILCWUgbShoAccEaDdr07hBEAm
+	E+2MSVj4qXvOEn85BP/Nc/dqqmxSvlfvWcnI3wV11u8F14SkNVEqIHD17PcWX/M=
+X-Gm-Gg: ASbGnctX21LuuIXZ4Q/JhRu9MyG/fLUJXzNoQCaQpwz3zorqZb/deaqux89ASwP7wev
+	E7wBJpGlD/Y4DPpyC7dE+mAhXx7MIJmGgp7lt3UQq1dtUpigdHnGLEFb3Tl0SPcjBQDm4ofVpXV
+	mceHQBwhfypChCQ1hWmaerOXtI50KUk93hv68WZBtLoIhyAqKHIZSCFl2NCFGmcogeJaLglfCTo
+	38inHDyUzXTInbgOPAt1Z54xBtiyj3MOx4j453c9HDsScgaLkoEvOR4emwRwq4GP0WTZHAkmoAq
+	hfTmrxUy9SlwAE/IUQ==
+X-Google-Smtp-Source: AGHT+IGNZ1LdwSLrAygAeyU2l4PUTGtgEddlFC4BdeZIasrbNWW51em0a2J4IYoXDABwR1ybMH65yA==
+X-Received: by 2002:a05:6a21:9985:b0:1eb:7da4:305e with SMTP id adf61e73a8af0-1ee03b70cbcmr19829114637.39.1739182665838;
+        Mon, 10 Feb 2025 02:17:45 -0800 (PST)
+Received: from localhost ([122.172.84.139])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7308540cb30sm2399099b3a.115.2025.02.10.02.17.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 02:17:45 -0800 (PST)
+Date: Mon, 10 Feb 2025 15:47:43 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 17/18] firmware: arm_ffa: Add support for handling
+ framework notifications
+Message-ID: <20250210101743.aqbhqqkdbvka2i46@vireshk-i7>
+References: <20250131-ffa_updates-v2-0-544ba4e35387@arm.com>
+ <20250131-ffa_updates-v2-17-544ba4e35387@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,23 +73,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250206105435.2159977-10-memxor@gmail.com>
+In-Reply-To: <20250131-ffa_updates-v2-17-544ba4e35387@arm.com>
 
-On Thu, Feb 06, 2025 at 02:54:17AM -0800, Kumar Kartikeya Dwivedi wrote:
-> Implement the wait queue cleanup algorithm for rqspinlock. There are
-> three forms of waiters in the original queued spin lock algorithm. The
-> first is the waiter which acquires the pending bit and spins on the lock
-> word without forming a wait queue. The second is the head waiter that is
-> the first waiter heading the wait queue. The third form is of all the
-> non-head waiters queued behind the head, waiting to be signalled through
-> their MCS node to overtake the responsibility of the head.
-> 
-> In this commit, we are concerned with the second and third kind. First,
-> we augment the waiting loop of the head of the wait queue with a
-> timeout. When this timeout happens, all waiters part of the wait queue
-> will abort their lock acquisition attempts. 
+On 31-01-25, 11:24, Sudeep Holla wrote:
+> +static void handle_fwk_notif_callbacks(u32 bitmap)
+> +{
+> +	void *buf;
+> +	uuid_t uuid;
+> +	int notify_id = 0, target;
+> +	struct ffa_indirect_msg_hdr *msg;
+> +	struct notifier_cb_info *cb_info = NULL;
+> +
+> +	/* Only one framework notification defined and supported for now */
+> +	if (!(bitmap & FRAMEWORK_NOTIFY_RX_BUFFER_FULL))
+> +		return;
+> +
+> +	mutex_lock(&drv_info->rx_lock);
+> +
+> +	msg = drv_info->rx_buffer;
+> +	buf = kmalloc(msg->size, GFP_KERNEL);
+> +	if (!buf) {
+> +		mutex_unlock(&drv_info->rx_lock);
+> +		return;
+> +	}
+> +	memcpy(buf, (void *)msg + msg->offset, msg->size);
 
-Why? Why terminate the whole wait-queue?
+Can use kmemdup() here instead.
 
-I *think* I understand, but it would be good to spell out. Also, in the
-comment.
+-- 
+viresh
