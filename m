@@ -1,43 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25162580D5;
-	Mon, 10 Feb 2025 16:29:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30B41F460A;
+	Mon, 10 Feb 2025 16:30:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739204999; cv=none; b=hnG9foizWb4uMYMHlVil1zKtV/eZphPpK7GrHso7egudpTH2Sb91Gp88gEO8yYsvoZuC49FUZNS9Szyzhbd50TPhIzuscFph63RQX0Olmmp5sb3H9wP4wCCNE9lVxYdpM/4obSDaiKouuaGUe54FsXFjOc0mSt3bFqkobkUtcTg=
+	t=1739205001; cv=none; b=uO4EoLjTbakH8pr+IWmBUnU+44uw/bj2AgKC3l6UvOEKAs1ojVrsfgukpK5f01q7CHfL3ekk/w+B2t1WElX/OUFcWBDqBNloWPLXqYDb9TZAbyvzKdXgTFmZWEfmqiQI4sp+gAEKt97MbQMYwHpf5VTfRtSFq9y9WzMtVwGrL1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739204999; c=relaxed/simple;
-	bh=aJQ3wPuA97X/MqiECnTmoH6E+G59Gv0FFvSfYA7GYUU=;
+	s=arc-20240116; t=1739205001; c=relaxed/simple;
+	bh=SnAIGyFpSth2g3LxsKnoq7TeR8aC9lOiVHFRi1o/ejI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=HS0oZg2dLJfHGoa4ObGPakpCUp8WVh9G+wSVzeFAiYvwuZkIt2ed5z1gQvqDew4rhiyD3ywrZRxSEcgKZ/e/5Uof2riikaTCtjyygdFbwFZGHhskWT4k9paylcVNS0sfdWwDghNh61CBpB9cp5LsWrZitH5YAZzxO/UKAHKnYQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=epJTwner; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=DPokGAsiLpFQNjM1qDtFj/Bw9S/eIKhH4gKGriBuhh8MZkh2+S3/Tn9ZloKi8AK0nhOsgjSCBdD/Mtr6qwgUdOs5wlFmelbtk54Uy1RrIdwKAdE2snDrz8IvDYgWAj20d2qpS6WmWv7tvONl7rc9Px44QVQE6O2b3Q0pEBtRb3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TepEXDMR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="epJTwner"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C565C4CEE5;
-	Mon, 10 Feb 2025 16:29:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TepEXDMR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5B27C4CEDF;
+	Mon, 10 Feb 2025 16:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739204999;
-	bh=aJQ3wPuA97X/MqiECnTmoH6E+G59Gv0FFvSfYA7GYUU=;
+	s=k20201202; t=1739205001;
+	bh=SnAIGyFpSth2g3LxsKnoq7TeR8aC9lOiVHFRi1o/ejI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=epJTwnerpEUsWPGtCbgfAIs2JSjt+ev5r7YF3KffuZvxOKzrElMELgu8JLUW7eKWU
-	 GH7U3qG3lnWBDO5CB57RO1EDbbsU79K1GrxswEnHLomwGIjBj6m6mnNi1Yc2DYMRpg
-	 IeSOgj5SE9rQrY+YK8RD3Df92skDVEdWs7iRtZmGKh1IM/vzyCp7GZqp2swrtDscbw
-	 kNipadcXyeuKW2OrRbVSI9jyRWh1KDbCTvCpzJyYDfhKZjeTHX2Py6aUWRcSjTICoP
-	 vC45tvoasfT9K77B8S6ttPpxbhn8v4wPUlV8gQD0qkdRzLNzqEvrXfx/5FVafhHXch
-	 z7JKbQ0goyuHA==
+	b=TepEXDMRy98Rxzh7LyWtp/ADJbv7kE5Slqz4AqPOIcohrImCJGmTiKyywyr963lGT
+	 TsbpKFKmT55L7HddOWm0W/pGXe6jshRAaqC2dgrcM0dGBeutaS17WQQK1qOLgADDL0
+	 VxAZmZjQ/zKHmjWgT/OSj4YC4UoFQm3v2q4icnpYfox2DErvQ2OrX6TLD15CsPU9i6
+	 NmdHHiQhVcr6L0+bM11R4rZJu5XjeRSgTQZ3X/kdeYNnGCQRn10g8ml8CYInkfUyc/
+	 uR1SoFhseT9mLWPWYh0qtYePXNSNi7Me96t4ONpqiE9auAh2TCD0Rwv4zrvm6+w316
+	 ssuhkcNSWJ29A==
 From: Mark Brown <broonie@kernel.org>
-To: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-Cc: alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz, 
- tiwai@suse.com, Basavaraj.Hiregoudar@amd.com, Sunil-kumar.Dommati@amd.com, 
- venkataprasad.potturu@amd.com, Mario.Limonciello@amd.com, 
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250120100130.3710412-1-Vijendar.Mukunda@amd.com>
-References: <20250120100130.3710412-1-Vijendar.Mukunda@amd.com>
-Subject: Re: [PATCH V2 00/23] ASoC: amd: acp70: add soundwire and acp pdm
- support
-Message-Id: <173920499691.65690.5029473211250633476.b4-ty@kernel.org>
-Date: Mon, 10 Feb 2025 16:29:56 +0000
+To: Bard Liao <yung-chuan.liao@linux.intel.com>, 
+ Daniel Baluta <daniel.baluta@nxp.com>, 
+ Iuliana Prodan <iuliana.prodan@nxp.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, 
+ Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, 
+ imx@lists.linux.dev
+In-Reply-To: <20250203171808.4108-1-laurentiumihalcea111@gmail.com>
+References: <20250203171808.4108-1-laurentiumihalcea111@gmail.com>
+Subject: Re: [PATCH 0/9] Refactor imx drivers and introduce support for
+ imx95
+Message-Id: <173920499941.65690.12050706337593664456.b4-ty@kernel.org>
+Date: Mon, 10 Feb 2025 16:29:59 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,15 +50,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-1b0d6
 
-On Mon, 20 Jan 2025 15:31:07 +0530, Vijendar Mukunda wrote:
-> This patch series includes below changes
-> 	- Add Audio IO support for ACP7.0 and ACP7.1 platforms for
-> 	SoundWire IO and ACP PDM controller combination.
-> 	- Add common driver modules for ACP7.0 and ACP7.1 platforms
-> 	(acp pci driver, Soundwire dma driver, pdm platform driver).
-> 	- Add SoundWire generic machine driver changes for legacy stack
-> 	(No DSP enabled) for ACP7.0 & ACP7.1 platforms.
-> 	- Add SoundWire machines for ACP7.0 & ACP7.1 platforms.
+On Mon, 03 Feb 2025 12:17:59 -0500, Laurentiu Mihalcea wrote:
+> A rather aggressive but arguably much needed refactorization of the SOF
+> imx drivers. The refactorization is meant to address the code duplication
+> in the imx drivers and decrease the coding effort required for introducing
+> a new imx platform.
+> 
+> After refactorization and imx95 introduction, only two drivers remain:
+> imx8 (meant for the imx8 series: imx8 (imx8qm), imx8x (imx8x), imx8m, and
+> imx8ulp) and imx9 (meant for the imx9 series: imx95 (for now)).
 > 
 > [...]
 
@@ -66,52 +68,24 @@ Applied to
 
 Thanks!
 
-[01/23] ASoC: amd: add register header file for ACP7.0 platform
-        (no commit info)
-[02/23] ASoC: amd: acp70: add acp pci driver for ACP7.0 and ACP7.1 platforms
-        (no commit info)
-[03/23] ASoC: amd: acp70: add acp init and de-init functions
-        (no commit info)
-[04/23] ASoC: amd: acp70: add logic for scanning acp child devices
-        (no commit info)
-[05/23] ASoC: amd: acp70: create platform devices for acp child nodes
-        (no commit info)
-[06/23] ASoC: amd: acp70: enable driver build for ACP7.0 platform
-        (no commit info)
-[07/23] ASoC: amd: acp70: add acp pdm platform driver
-        (no commit info)
-[08/23] ASoC: amd: acp70: add acp pdm driver dma ops and dai ops
-        (no commit info)
-[09/23] ASoC: amd: acp70: add acp soundwire dma driver
-        (no commit info)
-[10/23] ASoC: amd: update ACP7.0 KConfig option description
-        (no commit info)
-[11/23] ASoC: amd: acp70: add soundwire dma driver dma ops
-        (no commit info)
-[12/23] ASoC: amd: acp70: add acp ip interrupt handler
-        (no commit info)
-[13/23] ASoC: amd: acp70: add acp pdm driver pm ops
-        (no commit info)
-[14/23] ASoC: amd: acp70: add pm ops support for soundwire dma driver
-        (no commit info)
-[15/23] ASoC: amd: acp70: add acp driver pm ops support
-        (no commit info)
-[16/23] ASoC: amd: acp70: enable wake capability for acp pci driver
-        (no commit info)
-[17/23] ASoC: amd: acp70: add soundwire wake interrupt handling
-        (no commit info)
-[18/23] ASoC: amd: acp70: enable soundwire host wake irq mask
-        (no commit info)
-[19/23] ASoC: amd: acp70: enable acp pme enable during acp init sequence
-        (no commit info)
-[20/23] ASoC: amd: acp70: create a device node for soundwire machine driver
-        (no commit info)
-[21/23] ASoC: amd: acp: add machine driver changes for ACP7.0 and ACP7.1 platforms
-        commit: 638ad2bdb2f994c8bd99cc40e0c4796a8617ccf3
-[22/23] ASoC: amd: acp: add RT711, RT714 & RT1316 support for ACP7.0 platform
-        commit: 187150671d83324f1ca56f7ab5e00f16a3b9f2a9
-[23/23] ASoC: amd: acp: amd-acp70-acpi-match: Add rt722 support
-        commit: d0252b0b945ec67fd09fc764dcadf445fb7757ee
+[1/9] ASoC: SOF: imx: introduce more common structures and functions
+      commit: 651e0ed391b148f83afba0bfbd8a56e38e58c34d
+[2/9] ASoC: SOF: imx8: use common imx chip interface
+      commit: 645753d01356ff1a756812f1c69c53eb5c9081cd
+[3/9] ASoC: SOF: imx8: use IMX_SOF_* macros
+      commit: 563e40153a56cbfae8721f9591022df5d930f939
+[4/9] ASoC: SOF: imx8: shuffle structure and function definitions
+      (no commit info)
+[5/9] ASoC: SOF: imx8: drop unneeded/unused macros/header includes
+      commit: 45e02edd8422b6c4a511f38403dbd805cd139733
+[6/9] ASoC: SOF: imx8: make imx8_ops_init() an util function
+      (no commit info)
+[7/9] ASoC: SOF: imx: merge imx8 and imx8m drivers
+      commit: 896530b7b0c08ee8b3296d5f012bfe1b0a979b86
+[8/9] ASoC: SOF: imx: merge imx8 and imx8ulp drivers
+      commit: 07e3e514dd385300bd08da4a8df09240d272821e
+[9/9] ASoC: SOF: imx: add driver for the imx95 chip
+      commit: 6cf5df1040ba0694aea6a5edc6f31811a442ea36
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
