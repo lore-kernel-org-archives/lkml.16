@@ -1,51 +1,51 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55C192475EB;
-	Mon, 10 Feb 2025 15:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA3723E252;
+	Mon, 10 Feb 2025 15:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739201099; cv=none; b=ByDbzPd+/L1v4NBJm2mkBLzXiWpIxi8jbc7YwWichn/yn0crkFtTMVjT9BLOkx91mKaaQg3sqbUjxtvnjJBuRpZvJbxmD50III9ALP2IPoKhPhcGJEWgXaiZItUakhhCTLB6Il8YBcb3qfsB+wwia95rTdmbbaO/ihKuTWqo4pA=
+	t=1739201119; cv=none; b=J6/FG1a1NkubQa66OuNTZFb1y+NHBgqs9bRfQN+bn8/P7UxOuj63eyo1rgVEN97iNtAYymnP05PKhzRHV0bp6COSIV7uAohq/1I6+OYCnAutgvv9XLr/DuUQepWVvRf1A0mf7VHp/oMnqCqx7lsMqsvGy1NJFoisaqbn4cGwdKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739201099; c=relaxed/simple;
-	bh=Y8Fddz74Qds+fjmPCNU/6YIHI4lmnkqs9FrVanVKddk=;
+	s=arc-20240116; t=1739201119; c=relaxed/simple;
+	bh=Q6CvkVjjHzVacxeIqy75tcalhzv6w8xiJcEiyHM0WlM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=P3VtfHuyEMBaU+1rnPm2QAJbuiHChI6ikn8pu5z/5hCL9ilLgxUpFdAJ/k5xKSvwWJgO/YpLFlwC22aMKhYDE1jx1qEVcvMKr3vonn0AqhbI20SCqupi5/yveLQOyP+kBOBfBDTZaALMPPetbmrqtDH+3aPnJNUzYC/fuGJv0Cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=EBMaY+TZ; arc=none smtp.client-ip=185.132.182.106
+	 In-Reply-To:To:CC; b=Gd3nNxplHRo8Zq58r8R6WWtAgih4BfujJirp4fODE0KgC6bgxCr061BVqYueSdmp5A/8DsHFbXAk+dpDf5ZpsKuGSenZA1gyp3QAlrAYT6Xso0hcWSiUFFZVTydvO3sdQu9kzBxHf0KCCqH1m7m8saENH7iRYvpKUA3P1rNOK3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=n57dDZoY; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="EBMaY+TZ"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AF0lYD002305;
-	Mon, 10 Feb 2025 16:24:47 +0100
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="n57dDZoY"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AF0ovo004875;
+	Mon, 10 Feb 2025 16:25:06 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	1msyrEjLzU5sVYoDtxlhOd4TOZqVOCbRm9j4ZgloS3s=; b=EBMaY+TZFMuHaIez
-	wU4ZNZt+7gqs2nBfUmsNfA9hBzYvMIV9LaQwxWhtBGRzwEK4xxixOPMa8VdWhyIw
-	wWyxGpKNY9keMlOoGgupO71b16vf2moKXTUeo5AfmofIJk+sMG1mz2swZj4SNZjg
-	ZFGvMc7zYxgDLbdCF/wq756LGoRBnm/wxX+c2mzkXNvntSpvqdQFbQOX4IvLtVJK
-	unKuQPkCx+GGFVQl+K0/Kdzc4QY2tbdogRmOSgDSXHcXIfnNRBixHiSFTuS+tqma
-	xeeGrvt9jZKz54r/vyk4vvz9aP5857AAwMAjdIkFWEtcO2p+kuWvmSPpAZJ7jTen
-	SnJnBA==
+	sAVFmGuzKMIVO4kP/TyOTUlo13poToQcbmat3haYAjg=; b=n57dDZoYOnNChQdS
+	jd7aQsrCfPCd/AavL5uKSz/xXiqwrAApJshhKeXD9fYqy9cZyb7SaOhOYtpzfM/8
+	5mgakO8TCfQ0uxWEGIvIValHrwqOeAJAzG166HGRpt1UaiSEYtViqEUdGOv0nI+Z
+	pQsPomB/ps1dGD0Af1s064iz7PLAQUXiibW/WwdATCs54zT5xECXKbd7jdPQ2sCT
+	24eg6u1pkXH4aiEGahzkT7wAe05rGzSMfzl04Vnm22fUur81/RaveesJc3J6fHVc
+	KJW+f6Wdo3LL8CyG6yN7DJHMM8Esq1wXX/6ZuQP3SRrGDWxcCcmwmv5wsEwapQCo
+	EeS18Q==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44p0pyq6kd-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44p0qry063-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 16:24:46 +0100 (CET)
+	Mon, 10 Feb 2025 16:25:06 +0100 (CET)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8BDE640061;
-	Mon, 10 Feb 2025 16:23:25 +0100 (CET)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0A30A40050;
+	Mon, 10 Feb 2025 16:23:21 +0100 (CET)
 Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 942512957B3;
-	Mon, 10 Feb 2025 16:21:42 +0100 (CET)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6FC7F29522A;
+	Mon, 10 Feb 2025 16:21:40 +0100 (CET)
 Received: from localhost (10.48.87.120) by SHFDAG1NODE3.st.com (10.75.129.71)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 10 Feb
- 2025 16:21:42 +0100
+ 2025 16:21:40 +0100
 From: Amelie Delaunay <amelie.delaunay@foss.st.com>
-Date: Mon, 10 Feb 2025 16:21:02 +0100
-Subject: [PATCH 08/10] arm64: dts: st: introduce stm32mp21 SoCs family
+Date: Mon, 10 Feb 2025 16:20:59 +0100
+Subject: [PATCH 05/10] dt-bindings: stm32: document stm32mp235f-dk board
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,7 +54,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250210-b4-stm32mp2_new_dts-v1-8-e8ef1e666c5e@foss.st.com>
+Message-ID: <20250210-b4-stm32mp2_new_dts-v1-5-e8ef1e666c5e@foss.st.com>
 References: <20250210-b4-stm32mp2_new_dts-v1-0-e8ef1e666c5e@foss.st.com>
 In-Reply-To: <20250210-b4-stm32mp2_new_dts-v1-0-e8ef1e666c5e@foss.st.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -76,228 +76,30 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-10_08,2025-02-10_01,2024-11-22_01
 
-From: Alexandre Torgue <alexandre.torgue@foss.st.com>
+Add new entry for stm32mp235-dk board.
 
-STM32MP21 family is composed of 3 SoCs defined as following:
-
--STM32MP211: common part composed of 1*Cortex-A35, common peripherals
-like SDMMC, UART, SPI, I2C, parallel display, 1*ETH ...
-
--STM32MP213: STM32MP211 + a second ETH, CAN-FD.
-
--STM32MP215: STM32MP213 + Display and CSI2.
-
-A second diversity layer exists for security features/ A35 frequency:
--STM32MP21xY, "Y" gives information:
- -Y = A means A35@1.2GHz + no cryp IP and no secure boot.
- -Y = C means A35@1.2GHz + cryp IP and secure boot.
- -Y = D means A35@1.5GHz + no cryp IP and no secure boot.
- -Y = F means A35@1.5GHz + cryp IP and secure boot.
-
-Signed-off-by: Alexandre Torgue <alexandre.torgue@foss.st.com>
 Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
 ---
- arch/arm64/boot/dts/st/stm32mp211.dtsi  | 130 ++++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/st/stm32mp213.dtsi  |   9 +++
- arch/arm64/boot/dts/st/stm32mp215.dtsi  |   9 +++
- arch/arm64/boot/dts/st/stm32mp21xc.dtsi |   8 ++
- arch/arm64/boot/dts/st/stm32mp21xf.dtsi |   8 ++
- 5 files changed, 164 insertions(+)
+ Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp211.dtsi b/arch/arm64/boot/dts/st/stm32mp211.dtsi
-new file mode 100644
-index 0000000000000000000000000000000000000000..d384359e0ea16e2593795ff48d4a699324c8ca75
---- /dev/null
-+++ b/arch/arm64/boot/dts/st/stm32mp211.dtsi
-@@ -0,0 +1,130 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
-+/*
-+ * Copyright (C) STMicroelectronics 2025 - All Rights Reserved
-+ * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
-+ */
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
+diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+index 7cf9c6be0388365e6bce5e34a00ccf0a0eaa89cf..9ffcba51c9207b5a1386c025f850bc594c915c8c 100644
+--- a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
++++ b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+@@ -184,6 +184,12 @@ properties:
+               - st,stm32mp257f-ev1
+           - const: st,stm32mp257
+ 
++      - description: ST STM32MP235 based Boards
++        items:
++          - enum:
++              - st,stm32mp235f-dk
++          - const: st,stm32mp235
 +
-+/ {
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			compatible = "arm,cortex-a35";
-+			device_type = "cpu";
-+			reg = <0>;
-+			enable-method = "psci";
-+		};
-+	};
-+
-+	arm-pmu {
-+		compatible = "arm,cortex-a35-pmu";
-+		interrupts = <GIC_SPI 368 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>;
-+		interrupt-parent = <&intc>;
-+	};
-+
-+	arm_wdt: watchdog {
-+		compatible = "arm,smc-wdt";
-+		arm,smc-id = <0xbc000000>;
-+		status = "disabled";
-+	};
-+
-+	clocks {
-+		ck_flexgen_08: ck-flexgen-08 {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <64000000>;
-+		};
-+
-+		ck_flexgen_51: ck-flexgen-51 {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <200000000>;
-+		};
-+	};
-+
-+	firmware {
-+		optee {
-+			compatible = "linaro,optee-tz";
-+			method = "smc";
-+		};
-+
-+		scmi: scmi {
-+			compatible = "linaro,scmi-optee";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			linaro,optee-channel-id = <0>;
-+
-+			scmi_clk: protocol@14 {
-+				reg = <0x14>;
-+				#clock-cells = <1>;
-+			};
-+
-+			scmi_reset: protocol@16 {
-+				reg = <0x16>;
-+				#reset-cells = <1>;
-+			};
-+		};
-+	};
-+
-+	intc: interrupt-controller@4ac00000 {
-+		compatible = "arm,cortex-a7-gic";
-+		#interrupt-cells = <3>;
-+		interrupt-controller;
-+		reg = <0x0 0x4ac10000 0x0 0x1000>,
-+		      <0x0 0x4ac20000 0x0 0x2000>,
-+		      <0x0 0x4ac40000 0x0 0x2000>,
-+		      <0x0 0x4ac60000 0x0 0x2000>;
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-1.0";
-+		method = "smc";
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupt-parent = <&intc>;
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>;
-+		arm,no-tick-in-suspend;
-+	};
-+
-+	soc@0 {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <2>;
-+		interrupt-parent = <&intc>;
-+		ranges = <0x0 0x0 0x0 0x0 0x80000000>;
-+		dma-ranges = <0x0 0x0 0x80000000 0x1 0x0>;
-+
-+		rifsc: bus@42080000 {
-+			compatible = "simple-bus";
-+			reg = <0x42080000 0x0 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <2>;
-+			ranges;
-+			dma-ranges;
-+
-+			usart2: serial@400e0000 {
-+				compatible = "st,stm32h7-uart";
-+				reg = <0x400e0000 0x0 0x400>;
-+				interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&ck_flexgen_08>;
-+				status = "disabled";
-+			};
-+		};
-+
-+		syscfg: syscon@44230000 {
-+			compatible = "st,stm32mp25-syscfg", "syscon";
-+			reg = <0x44230000 0x0 0x10000>;
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/st/stm32mp213.dtsi b/arch/arm64/boot/dts/st/stm32mp213.dtsi
-new file mode 100644
-index 0000000000000000000000000000000000000000..22cdedd9abbf4efac2334d497618daa6cc76727b
---- /dev/null
-+++ b/arch/arm64/boot/dts/st/stm32mp213.dtsi
-@@ -0,0 +1,9 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
-+/*
-+ * Copyright (C) STMicroelectronics 2024 - All Rights Reserved
-+ * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
-+ */
-+#include "stm32mp211.dtsi"
-+
-+/ {
-+};
-diff --git a/arch/arm64/boot/dts/st/stm32mp215.dtsi b/arch/arm64/boot/dts/st/stm32mp215.dtsi
-new file mode 100644
-index 0000000000000000000000000000000000000000..d2c63e92b3cc15ec64898374fd2e745a9c71eb6d
---- /dev/null
-+++ b/arch/arm64/boot/dts/st/stm32mp215.dtsi
-@@ -0,0 +1,9 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
-+/*
-+ * Copyright (C) STMicroelectronics 2024 - All Rights Reserved
-+ * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
-+ */
-+#include "stm32mp213.dtsi"
-+
-+/ {
-+};
-diff --git a/arch/arm64/boot/dts/st/stm32mp21xc.dtsi b/arch/arm64/boot/dts/st/stm32mp21xc.dtsi
-new file mode 100644
-index 0000000000000000000000000000000000000000..39507a7564c8488647a3276eb227eb5f446359e6
---- /dev/null
-+++ b/arch/arm64/boot/dts/st/stm32mp21xc.dtsi
-@@ -0,0 +1,8 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
-+/*
-+ * Copyright (C) STMicroelectronics 2024 - All Rights Reserved
-+ * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
-+ */
-+
-+/ {
-+};
-diff --git a/arch/arm64/boot/dts/st/stm32mp21xf.dtsi b/arch/arm64/boot/dts/st/stm32mp21xf.dtsi
-new file mode 100644
-index 0000000000000000000000000000000000000000..39507a7564c8488647a3276eb227eb5f446359e6
---- /dev/null
-+++ b/arch/arm64/boot/dts/st/stm32mp21xf.dtsi
-@@ -0,0 +1,8 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
-+/*
-+ * Copyright (C) STMicroelectronics 2024 - All Rights Reserved
-+ * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
-+ */
-+
-+/ {
-+};
+ additionalProperties: true
+ 
+ ...
 
 -- 
 2.25.1
