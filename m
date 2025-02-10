@@ -1,75 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CA1256C98;
-	Mon, 10 Feb 2025 17:03:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9F724FC16
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:03:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739207023; cv=none; b=p882Dqpk1yUdEIzd8B6VOjIJhf0UARfS7DQUaUMCN28clS2OIhxfQk9dBkodvh9I4RhnbgfpFSxTs3Hzmu7BYgQTk3kw9QrsLik/44ej13XDZiFA8BAYKxbFBKK88SqkC8tZ7zEZUVnEl/Gy9nGQN8MpKgU9oG7p+nfgIKGeHV8=
+	t=1739207028; cv=none; b=SFtRUyD6Ge64lFCxoAqQZK84aq9qgiy8z4UVwJFwkpEjrP2KV73ufxs2gXZyxWsNPOVeDDLhpHGoJk0oKyZoZ2n61UyL3ykFnwnTqE7uGS6NMPOAMI1Oo6IbyHauEECz1n4wqVw9et9o4NNTZs64oYIIq0T9jvx2e2TD7g7REpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739207023; c=relaxed/simple;
-	bh=iVvbp5R9zaKcBDnKZNg70lQ2ednSs8Akic8k6kRGPko=;
+	s=arc-20240116; t=1739207028; c=relaxed/simple;
+	bh=NLafNxPgiaYEtucz8uetAV+wNWyIORR01xAbmdZjB2I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KK7OLD4WJ/3zNjgEGeSANf29C21NGfEqdQRgTu9O65IH/HlWzUvK+DmSL05LEtUZG8+NAKKKEJ65uzL5sECAO82mvf+8g/DVXf1LVTZ9WhFjfZMGKR+xuO9aW50eLTNWNPbRXpQ4cqs730una/IRwMzkrH2Kw/Xm9g87hY9BIcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OqyjN72n; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=q9x4MtdEOM9sP//+FCfPOUBpKZAnjE4rXmhbBNQEq8JgNCsN21TNiU0x2FsZzZGJisjugqMPmRf1KPDnDGGxKUopAaC1bYkGJpEGiPVtXPGoD7o8N/+pPyuKkLBZoPprJbbpCPddotWSZeXBzAqxHsWVA/s2tlrMIcL9yoblLWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=XbKdGlGW; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OqyjN72n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AFA5C4CED1;
-	Mon, 10 Feb 2025 17:03:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739207023;
-	bh=iVvbp5R9zaKcBDnKZNg70lQ2ednSs8Akic8k6kRGPko=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OqyjN72nrcnYbi9ScixNUWAuATL97nCR6anUGjoB7SeNwMlK3OPEWRggnQO29jQlM
-	 FfNI4vNfm4j7lZ9yhmREylOI8+VhfklD6abGsAUu1OqlXJ4DA5oPynXwjTHfdoqRKD
-	 U2FM4HcBafptDidoV9hTszuogYxibtbwUxN38PaS4zu/UKnrs/312g00/+y1buNVbH
-	 xx6/Nm/5s1r+/P8wurec+2DKgF5PKu+vtfSDiYIgWPOrbTg7VudGE4IeZODX0n/tLJ
-	 9q7RMDplTZNNL3zB8V5OooqgnGe5i46oMXXeKjF9pwZlyDYCSQsnpSJMWXnWw5uLV9
-	 a8GDpOp17ledA==
-Date: Mon, 10 Feb 2025 17:03:37 +0000
-From: Lee Jones <lee@kernel.org>
-To: Dzmitry Sankouski <dsankouski@gmail.com>
-Cc: Sebastian Reichel <sre@kernel.org>,
-	Chanwoo Choi <cw00.choi@samsung.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Pavel Machek <pavel@ucw.cz>, Hans de Goede <hdegoede@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Sebastian Krzyszkowiak <sebastian.krzyszkowiak@puri.sm>,
-	Purism Kernel Team <kernel@puri.sm>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v17 3/7] power: supply: max77705: Add charger driver for
- Maxim 77705
-Message-ID: <20250210170337.GE1868108@google.com>
-References: <20250123-starqltechn_integration_upstream-v17-0-8b06685b6612@gmail.com>
- <20250123-starqltechn_integration_upstream-v17-3-8b06685b6612@gmail.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="XbKdGlGW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=+wsOhJNavEVEuHUNn8/mtc0ydZ43wJ+QIoNT3mULk4c=; b=XbKdGlGWuizr2h7RV/h79Av8MM
+	aR4qmyE1fVtaYDu3Bj8krer6Rd/NSQ6Qxp1vHqtgtl3tQMVmT1HrLhpChYVg3y06xd5h0+dqSAV09
+	TQsGsGt2GiLTnVZFY0zGdBVVJJJT7v+jSGkXmShySJOLtYDFonVQcat/Mw0woyvOYw9qmxnXSbF3L
+	Wth9UukiCC/6b35SraYEhitr2oWwLyKRcoiOwbtCwxMpOvUybau89/GWfDHEtP4Cnzz8kXdEEt01l
+	KjY6ZB5mcGf/SbolVWl7unte/pptLl/xUde8eifncaUtAz4FvegzywhAB1K1g61mrFKs72HVKRtyV
+	ZZy5BWIw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45040)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1thXBn-0007bE-0v;
+	Mon, 10 Feb 2025 17:03:19 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1thXBh-0007ej-0r;
+	Mon, 10 Feb 2025 17:03:13 +0000
+Date: Mon, 10 Feb 2025 17:03:13 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Ezra Buehler <ezra@easyb.ch>
+Cc: linux-mm@kvack.org, Qi Zheng <zhengqi.arch@bytedance.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+	Hugh Dickins <hughd@google.com>,
+	Matthew Wilcox <willy@infradead.org>, Peter Xu <peterx@redhat.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	open list <linux-kernel@vger.kernel.org>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [REGRESSION] NULL pointer dereference on ARM (AT91SAM9G25)
+ during compaction
+Message-ID: <Z6oxUdrVBPd5ZTEu@shell.armlinux.org.uk>
+References: <CAM1KZSmZ2T_riHvay+7cKEFxoPgeVpHkVFTzVVEQ1BO0cLkHEQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250123-starqltechn_integration_upstream-v17-3-8b06685b6612@gmail.com>
+In-Reply-To: <CAM1KZSmZ2T_riHvay+7cKEFxoPgeVpHkVFTzVVEQ1BO0cLkHEQ@mail.gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Thu, 23 Jan 2025, Dzmitry Sankouski wrote:
+On Mon, Feb 10, 2025 at 05:49:38PM +0100, Ezra Buehler wrote:
+> When running vanilla Linux 6.13 or newer (6.14-rc2) on the
+> AT91SAM9G25-based GARDENA smart Gateway, we are seeing a NULL pointer
+> dereference resulting in a kernel panic. The culprit seems to be commit
+> fc9c45b71f43 ("arm: adjust_pte() usepte_offset_map_rw_nolock()").
+> Reverting the commit apparently fixes the issue.
 
-> Add driver for Maxim 77705 switch-mode charger.
-> It providing power supply class information to userspace.
-> 
-> The driver is configured through DTS (battery and system related
-> settings).
-> 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
+The blamed commit is buggy:
 
-Still needs an Ack from Sebastian.
+arch/arm/include/asm/tlbflush.h:
+#define update_mmu_cache(vma, addr, ptep) \
+        update_mmu_cache_range(NULL, vma, addr, ptep, 1)
+
+So vmf can be NULL. This didn't used to matter before this commit,
+because vmf was not used by ARM's update_mmu_cache_range(). However,
+the commit introduced a dereference of it, which now causes a NULL
+point dereference.
+
+Not sure what the correct solution is, but at a guess, both:
+
+	if (ptl != vmf->ptl)
+
+need to become:
+
+	if (!vmf || ptl != vmf->ptl)
+
+but I haven't checked wha tthe locking context actually is here
+(I've been out of MM stuff too long to know this off the top of my
+head.)
 
 -- 
-Lee Jones [李琼斯]
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
