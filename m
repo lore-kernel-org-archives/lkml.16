@@ -1,83 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12AA26462C;
-	Mon, 10 Feb 2025 21:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922941BEF7E
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 21:21:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739222399; cv=none; b=Euh5iSn6G+qU6cwBIir1CK34+vee91fPm8AXx1Sf+D0uOb2IIAl+cTL5bFL+gH0WfqERgaosfc4V5Q9sXvkmjFIpmyLsecMJIRlF7ZT1lMAoacGw86CNuIPRPq64EnVS5tGz+GC0V4uwZmMaj4uR9VeXHMgaLdu3GA94AlWcZ/g=
+	t=1739222490; cv=none; b=pDJTxXrI2MCEk83SMKHafK1gqJIm85QKdbXGqx68Pfmqo5R0gX0Zi276TJIV5l/qggix3vANHwgOj8xnIAVvO0PnC00mY0G94c6IIHTokV5+muQGbclNBILeCyg6w0NvvURcCHUuO5tHfjZRIqT1qw8ftN8xfgRyDzZlIkOGlwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739222399; c=relaxed/simple;
-	bh=ehNFSX8mn6MN/slaTYKEJU4tV0v3zFtf6nQm4BF3jYA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LYV8qK+jK3cB7NjTve2aewbg0+i3G1ai5wMsfUt2EaqUU7v4LTCgbiCzXv9rVlGNU6X2DScD3WlejmYzrf7VqUrESoTxc77kF9WbkP6Bih+5XqaOHa52kQYho0GmC/mlaKpHq8WTwUn3RKqLfuuVfOSwX+NeKBCNOXU+530FaHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MRtewqEL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739222490; c=relaxed/simple;
+	bh=1U69GIN6qnAoPSfvFkd/r7IF5OHmunVBW3inc4Y3Rc4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iSNxwgkqCYzHrOfPVcPjkhrHZa5u1WX+4VlH0+NlsyzreODLuFKRUtQXV13CTCDOnjnTZODCDQ8n34W54oUhxCrjYm2Quti6GlpIfICGR916XTh1wo6uI1M82jlyzFwJk5tM3mGwFWWGLoOWAIgH1QKqqQrOKZOQ6n2Mgboa7M0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=geqD8E5B; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MRtewqEL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48B12C4CED1;
-	Mon, 10 Feb 2025 21:19:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739222399;
-	bh=ehNFSX8mn6MN/slaTYKEJU4tV0v3zFtf6nQm4BF3jYA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MRtewqELhLtyiF4+WLJhc16NbS/9H6LxWosQxVN4yDaXw/Qapsk1mKTc3V8950af8
-	 MzlOzTyQ/qzYS76nE6rMbIiAEsyuzssEogO5cHtbrgG5wMwbQRvZtWzlgz2dZdb8uX
-	 OI3g+gdPmDupG45Y7il/SnOtetGMjy8av3HUl/9w4hzs7uxm9EuXrlLFM+sW21X6hf
-	 +mpQAjkwCJWMbKmWhE9TBApgHW0a16MliU8csuwbvRhnuxCGYfDgBvVAT9hrLNkGCi
-	 +H4XOHujm3SSGskS/49yPIuqQVV6qLSollmSX8YweCyS3RCKxOyygwBDXmrb4riXt8
-	 TKFGq8NqlueLA==
-Date: Mon, 10 Feb 2025 21:19:54 +0000
-From: Conor Dooley <conor@kernel.org>
-To: j.ne@posteo.net
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: serial: Allow fsl,ns16550 with broken FIFOs
-Message-ID: <20250210-impish-payable-857c6337fc98@spud>
-References: <20250209-uartfifo-v1-1-501a510a5f07@posteo.net>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="geqD8E5B"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5dc89df7eccso9469155a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:21:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1739222487; x=1739827287; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+ur8Y2RDidgzv399ZYRl0rKwDdGp/KVHGpz7jgUvSQY=;
+        b=geqD8E5BW6Urd7H5Ym+cZ7AnWygkVmleAPUUCLf5VZ+MB8KdSY+Uyhm/Ykw3Lf44LF
+         mKz5JeEZwJmAiCcOl0XsA75EvsbHYRZ8sgHsKR62GmYcFxYuFvwf0zjJxP0lMYH3+1WA
+         S2jdwwKDSfEAzkwR5rrDkYC5D4SlTJlJH6h8w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739222487; x=1739827287;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+ur8Y2RDidgzv399ZYRl0rKwDdGp/KVHGpz7jgUvSQY=;
+        b=Z6bZZOVRqfDYhlFKWJVAUKlruwjG7gCg3BlNSxJbSB0MQQQReeTbL8UhWAT5Ew+ifh
+         e0HpJSKjvQ95N1j09iriQk2V69Ipf1VycSYAULLvqm8WqKSjUqDU48BjJ3t6KM3e9lMH
+         +JceykkwAIo4PjczuA2FX9H6+WEMjSOyZ7DtJwBn+O1BI611FhrImPHl/RupXqlQ/79n
+         +jgxlhLycI45rHoBAmvmIYij3Zx700uNelrZhTVxiw9zzjMQxbr1JeObYIogzcLarc17
+         C3wm/frpUjPcBvieHNjGL3Sl1wIiEXUiX1OQI90XBgvQaOaw1VaEKuF7JVjAEVNhU02T
+         yO5A==
+X-Forwarded-Encrypted: i=1; AJvYcCXmG+2OYbIdWFnZE97ok9Q5pT6N5toUmVPWuUwMstiVuXHxn8tOSO8Y+KIMVCH/Hxtnapqqeocq2m/HBEY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywOvwNyOoOb68QfKl8urykkJ97dSfQCUaNVejg0g75GK9VgqZW
+	+BTSASWOErLfPjNONlsZ+8Jwt3NXcpBmfbMjsoY/eJNOzlVcNr59Kj9Kdj5Wiz1KftW/ZfhSaax
+	/128=
+X-Gm-Gg: ASbGnctajtTH0kq0PAPBMEmCIL9x12C00M2QvCT2328hC+nXVwHWpepimWZrMUqeleu
+	J5p9uBY+xMsSj4FPTLtB0IBtxdD8hKuu/yHd78KAe9XuVyP0cga0bU50/XfkJ6UvcjY20lTa26W
+	RVabV+ayHj62GhCJxKldeQM7oYZ3o26yw83ZUo55fqwLnnBsHQx4LmkKqPmwSV+eYmuA3aixE/z
+	OxIHcQY7/OizVjKoAGHWV16PjHu4rs7Bpr/vscNiLw5EMOaFPEXxxIO5TOWP3tuxp9BFj8+g9W0
+	fbqu0O4kGSehYeEzK0lQOVyRZuzmw1NaOkRGBlc1IOJMX8pl4zhDgppclR5Gs7G4Rw==
+X-Google-Smtp-Source: AGHT+IHqZITm5By85HDleJYFz/u62u+Au3U33SpfhqwMcU/Oqdhqfh6eoGLXY5G5bYkgXN4E77Bhbg==
+X-Received: by 2002:a17:907:868e:b0:ab7:9d30:3fea with SMTP id a640c23a62f3a-ab79d304cbdmr1270188166b.29.1739222486641;
+        Mon, 10 Feb 2025 13:21:26 -0800 (PST)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab78da1f953sm771152866b.59.2025.02.10.13.21.25
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 13:21:26 -0800 (PST)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ab7a6758b7fso416243666b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:21:25 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV8NhxFBdavLduw+j7tiidDYAkH4P9a574O3rZVchhxekyng3dw1xINBscS9ouPG3ZBwGAB3LzaxdaRkvs=@vger.kernel.org
+X-Received: by 2002:a17:907:7f08:b0:aae:fd36:f511 with SMTP id
+ a640c23a62f3a-ab789d3431bmr1642178866b.47.1739222485565; Mon, 10 Feb 2025
+ 13:21:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="TXn/W+h467QUJd1p"
-Content-Disposition: inline
-In-Reply-To: <20250209-uartfifo-v1-1-501a510a5f07@posteo.net>
+References: <20250210185905.116290-1-cel@kernel.org>
+In-Reply-To: <20250210185905.116290-1-cel@kernel.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 10 Feb 2025 13:21:09 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wimOy=E0bKyH99cL6H0+C-k4q_iZB45t56eSdQ+UM2umA@mail.gmail.com>
+X-Gm-Features: AWEUYZnk7bMSa0BmCnMJslUX6eX3rst_B5BqTSQJA2g7L8qK79o-q0e4-ikc0H0
+Message-ID: <CAHk-=wimOy=E0bKyH99cL6H0+C-k4q_iZB45t56eSdQ+UM2umA@mail.gmail.com>
+Subject: Re: [GIT PULL] NFSD fixes for v6.14
+To: cel@kernel.org
+Cc: Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Mon, 10 Feb 2025 at 10:59, <cel@kernel.org> wrote:
+>
+> Note that my GPG key expired a few days ago. I renewed it with no
+> expiry and pushed it to pgp.mit.edu earlier today.
 
---TXn/W+h467QUJd1p
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the note. Can you send the update to kernel.org too, so
+that the key repo there gets updated too? That tends to be my primary
+way to get key updates, because the pgp keyservers are inevitably
+flaky and unreliable as all heck, ie
 
-On Sun, Feb 09, 2025 at 11:13:40PM +0100, J. Neusch=E4fer via B4 Relay wrot=
-e:
-> From: "J. Neusch=E4fer" <j.ne@posteo.net>
->=20
-> While testing on a Freescale MPC8314E board, I noticed that changing
-> the UART compatible string from ns16550 to ns16550a breaks the output,
-> suggesting that the FIFOs don't work correctly. To accommodate this
-> fact, move the definition of fsl,ns16550 to the section of 8250.yaml
-> that allows broken FIFOs.
->=20
-> Signed-off-by: J. Neusch=E4fer <j.ne@posteo.net>
+  gpg: refreshing 1 key from hkp://pgp.mit.edu
+  gpg: keyserver refresh failed: No keyserver available
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+and the pgp.mit.edu web interface seems to be broken too.
 
---TXn/W+h467QUJd1p
-Content-Type: application/pgp-signature; name="signature.asc"
+Anyway, I've done the pull, but this is just one reason I hate people
+putting expiration dates on their keys: the key server infrastructure
+has been so broken for years that it's just a pain.
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6ptegAKCRB4tDGHoIJi
-0lZ/AP9PZ+WvqClKs0XIgnC8O9bm7dV1DQ4xEYVLsnqVwZhDAgD/SFZ1+hMnkBKX
-N7MUBOcomYb3LaB6MmiUulTOijWWkQU=
-=FgM+
------END PGP SIGNATURE-----
-
---TXn/W+h467QUJd1p--
+              Linus
