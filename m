@@ -1,84 +1,131 @@
-Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252E01B4149;
-	Mon, 10 Feb 2025 07:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0346130E58;
+	Mon, 10 Feb 2025 07:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739171211; cv=none; b=lHHjNkaHJU50Z7Wru1v4n3YtHTb7e38axWz86PtPygmbiTPUPTkmzby/vZcGzjUZ213xriuEgPTyG54dclUrPSombjhocL+k2iWLFHGPh/eop/P9kJrNn23u977OXXzIXVFYtVa0scqJ5Q7RbdiqkQSQdxYZvJqeHUEpgAGaT1I=
+	t=1739171303; cv=none; b=eN71tJTVfXwCIBwhGtBw0dYws0SnrcGMQL4hAr6zVB31gmw96R9TnOBTY3Cx35W3PusF0JhxcqVLP8Wq3gy/FfsvBuJlappAwnxcQ8EsRZliYa+mPkr7jK+LisB0+O1XVtttTbDzFlLeP7cibfm8tZdX/ZLgO5Eo858454GZHo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739171211; c=relaxed/simple;
-	bh=xJywoSB3ZphGXm9Arwqc+Z7YKhKh1ayvTAfnmDuMcvM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LxAH762OKNa1BHe7MhJvvRkUGUMyDSOvURbPe1LeqG5m4GTQBV3XN+BNS8PzesX0QT5Q/wl7zf/j2Kk/VNkfgTGyaPGSedXva7i1sPZl4vY8HWy67rovGm5LEixrhohEvMh/6E1ROWv9LA9ENhDGECGibFvLHFi6bZ6pXihOO54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from amadeus-Vostro-3710.lan (unknown [119.122.213.246])
-	by smtp.qiye.163.com (Hmail) with ESMTP id a99674fd;
-	Mon, 10 Feb 2025 15:01:32 +0800 (GMT+08:00)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Konrad Dybcio <konradybcio@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Chukun Pan <amadeus@jmu.edu.cn>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>
-Subject: [PATCH v6 2/5] arm64: dts: qcom: ipq6018: add 1.5GHz CPU Frequency
-Date: Mon, 10 Feb 2025 15:01:19 +0800
-Message-Id: <20250210070122.208842-3-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250210070122.208842-1-amadeus@jmu.edu.cn>
-References: <20250210070122.208842-1-amadeus@jmu.edu.cn>
+	s=arc-20240116; t=1739171303; c=relaxed/simple;
+	bh=xmvJW278o88o2TSb1VIZDRp8UkUFXbbIsI0ctYa0fXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XIMztqqosWBXowi6HY+QB7xpPvDUFY/0GGQ+zcZoE/L6FiZxSp0vCsVA7qWZrd2UYm3xvJatrnzhcu7ywEau5qaWNyhMclcQPj5rURwXIN1xQIQMNJ3JZtdikozxPNnDaWsubLWzNhDkN7FnniIUzIc21CvHCAOq7+WecbjkYp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=D3VUYUh9; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="D3VUYUh9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B65D5C4CED1;
+	Mon, 10 Feb 2025 07:08:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739171302;
+	bh=xmvJW278o88o2TSb1VIZDRp8UkUFXbbIsI0ctYa0fXU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D3VUYUh9EiNiJ2K1v7tS6sdU+5IbgfD25scRhwksR7+Xl5kHL4zSXFfy2KODsdfxq
+	 W3b6dqmqs1braLlD67nbV5M72WHW6weahVWBDUnB1OvZyjKxN29RNG9VMOH84q6Inx
+	 Vh6Jh3CqU9xj4Nf6jiefOZKnyFQ8TZYOCzc8sacA=
+Date: Mon, 10 Feb 2025 08:08:19 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: David Reaver <me@davidreaver.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	linux-fsdevel@vger.kernel.org, cocci@inria.fr,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/6] debugfs: Replace dentry with an opaque handle in
+ debugfs API
+Message-ID: <2025021048-thieving-failing-7831@gregkh>
+References: <20250210052039.144513-1-me@davidreaver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaQklNVkNIHUJISkJNSxlMTFYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlKSkJVSklJVUlKSFVJT01ZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTE5VSktLVU
-	pCS0tZBg++
-X-HM-Tid: 0a94eea9ca2d03a2kunma99674fd
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Phg6Nzo*DTITNEsUAjgWQkw4
-	MEwaCxBVSlVKTEhCSkxLQ0JISktKVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUpK
-	QlVKSUlVSUpIVUlPTVlXWQgBWUFCTks3Bg++
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210052039.144513-1-me@davidreaver.com>
 
-The early version of IPQ6000 (SoC id: IPQ6018, SBL version:
-BOOT.XF.0.3-00077-IPQ60xxLZB-2) and IPQ6005 SoCs can reach
-a max frequency of 1.5GHz, so add this CPU frequency.
+On Sun, Feb 09, 2025 at 09:20:20PM -0800, David Reaver wrote:
+> Overview
+> ========
+> 
+> This patch series replaces raw dentry pointers in the debugfs API with
+> an opaque wrapper struct:
+> 
+> 	struct debugfs_node {
+> 		struct dentry dentry;
+> 	};
+> 
+> Intermediate commits rely on "#define debugfs_node dentry" to migrate
+> debugfs users without breaking the build. The final commit introduces
+> the struct and updates debugfs internals accordingly.
+> 
+> Why an RFC?
+> ===========
+> 
+> This is a large change, and I expect a few iterations -- unless this
+> entire approach is NACKed of course :) Any advice is appreciated, and
+> I'm particularly looking for feedback on the following:
+> 
+> 1. This change touches over 1100 files. Is that okay? I've been told it
+>    is because the patch series does "one thing", but it is a lot of
+>    files to touch across many systems.
+> 
+> 2. The trickiest part of this migration is ensuring a declaration for
+>    struct debugfs_node is in scope so we don't get errors that it is
+>    being implicitly defined, especially as different kernel
+>    configurations change which headers are transitively included. See
+>    "#includes and #defines" below. I'm open to any other migration
+>    strategies.
+> 
+> 3. This change is mostly automated with Coccinelle, but I'm really
+>    contorting Coccinelle to replace dentry with debugfs_node in
+>    different kinds of declarations. Any Coccinelle advice would be
+>    appreciated.
+> 
+> Purpose/Background
+> ==================
+> 
+> debugfs currently relies on dentry to represent its filesystem
+> hierarchy, and its API directly exposes dentry pointers to users. This
+> tight coupling makes it difficult to modify debugfs internals. A dentry
+> and inode should exist only when needed, rather than being persistently
+> tied to debugfs. Some kernel developers have proposed using an opaque
+> handle for debugfs nodes instead of dentry pointers [1][2][3].
+> 
+> Replacing dentry with debugfs_node simplifies future migrations away
+> from dentry. Additionally, a declaration with debugfs_node is more
+> self-explanatory -- its purpose is immediately clear, unlike dentry,
+> which requires further context to understand its role as a debugfs
+> dentry.
 
-Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
----
- arch/arm64/boot/dts/qcom/ipq6018.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+First off, many thanks for attempting this, I didn't think it was ready
+to even be attempted, so it's very nice to see this.
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-index 57ad6f0e6e34..7514919132b6 100644
---- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-@@ -140,6 +140,13 @@ opp-1440000000 {
- 			clock-latency-ns = <200000>;
- 		};
- 
-+		opp-1512000000 {
-+			opp-hz = /bits/ 64 <1512000000>;
-+			opp-microvolt = <937500>;
-+			opp-supported-hw = <0x2>;
-+			clock-latency-ns = <200000>;
-+		};
-+
- 		opp-1608000000 {
- 			opp-hz = /bits/ 64 <1608000000>;
- 			opp-microvolt = <987500>;
--- 
-2.25.1
+That being said, I agree with Al, we can't embed a dentry in a structure
+like that as the lifecycles are going to get messy fast.
 
+Also, your replacement of many of the dentry functions with wrappers
+seems at bit odd, ideally you would just return a dentry from a call
+like "debugfs_node_to_dentry()" and then let the caller do with it what
+it wants to, that way you don't need to wrap everything.
+
+And finally, I think that many of the places where you did have to
+convert the code to save off a debugfs node instead of a dentry can be
+removed entirely as a "lookup this file" can be used instead.  I was
+waiting for more conversions of that logic, removing the need to store
+anything in a driver/subsystem first, before attempting to get rid of
+the returned dentry pointer.
+
+As an example of this, why not look at removing almost all of those
+pointers in the relay code?  Why is all of that being stored at all?
+
+Oh, also, all of those forward declarations look really odd, something
+feels wrong with needing that type of patch if we are doing things
+right.  Are you sure it was needed?
+
+thanks,
+
+greg k-h
