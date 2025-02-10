@@ -1,122 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8E2179A7;
-	Mon, 10 Feb 2025 18:59:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4897325E446;
+	Mon, 10 Feb 2025 19:01:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739213992; cv=none; b=cOcRNqdkY8cuxlWBBe2lG48USHDubjJXeHiYz+UhwF+fY+UHuC74EWZsrfIi6IxPqAiyuO43X/6RMDE4oYHNZ27s2cCsIN8srMq5IYlT7w2Gn7WGKcnWG8n9NEsA4nW32EY08bKZUlNOE3gdEvyIpawO2DDQuBb3pu+w4DSWms8=
+	t=1739214090; cv=none; b=a2PhrqlmcNFMYx93CFCN9u1P+ajieFRFG1OqBf0Z4sfLS+byP6XqyHGfBwzq4wA6tBO9qXSisuZCx75n70HEeSu241GrxORt0d8Ee6CmbaABlDHzM5ZE7dkV/Lmd492NFWL1xPbpVjlcLEyx0SiF2wl6j91KQg/cDKNhUqVFxyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739213992; c=relaxed/simple;
-	bh=0kby5yzJ82YbE3sKuDLWqLhBQL7R07TemAKHUgP/q9c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SQuDxXUGG1JEmCButs8w+jf8e2NNQ9G3TQQs8XUE3L6OAuC9P8gsuoDjwh6cVhdWDHHObxLDNyH0Be26Z8kN+jKbj2l0EeJVD4p4RflvWLswIkpd+V3bQlsH1p5TjN5Zf/+D+m66ZOsZcU67k1gUOUrG9BRd4siLJ9IPrCn9Gas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJ8Ren6E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739214090; c=relaxed/simple;
+	bh=23KDcD/j65oGW6866Bcw3xXNXwhUPxAoV5GMn7mD+Lo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qoctxOEg26LvgzMx9R/WcLluX2RJF/+sA1gR77W8aEtLvZ/OvWLZ/rmqSBzeN4I0LNklJ+gciSMp3Gl5EynH/9h3DsJqEuP2G1kWkf5Xc5UgYcKWpt7aNFy5mhsQAXxoZerFtGybHpIDLvUE8CwDp39xWoPyaqbQddH70wfs54A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mZy0IsbL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJ8Ren6E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5793EC4CED1;
-	Mon, 10 Feb 2025 18:59:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mZy0IsbL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D728C4CED1;
+	Mon, 10 Feb 2025 19:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739213992;
-	bh=0kby5yzJ82YbE3sKuDLWqLhBQL7R07TemAKHUgP/q9c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kJ8Ren6Eb0rHZRUGgGe/ygbmSbsKib6UTxgaPeoLeQzDz+BCg2sSCFfrZoRik11gi
-	 CPWDrzTLAeohqWo8BX8xgiCqDiXdMlG4c0bsDxyHpeY9Gycwn8vomG1eLpjbUm2OqQ
-	 m63eYY1uA1E26Di7hXjDNe8Zyoch/sOWBDxy0TyVaZtvOOWZx2DLIRBZOw84Y6dIuO
-	 ofSW2r6aIqyQZ8nwdGlevx/8UtEAa79cHbSCJYcpY/9xp9ivEqgjRLFbTqaqa90Di/
-	 dgXMsGfr26Jq0O5yfkC8//nduDnhZX3lHKK8AABKM4CJjuFmj9bJBb5pTCL8wsKstG
-	 eWxlICOHaWvgA==
-Date: Mon, 10 Feb 2025 18:59:40 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Uwe
- =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, David
- Jander <david@protonic.nl>, Martin Sperl <kernel@martin.sperl.org>,
- linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, Axel Haslam <ahaslam@baylibre.com>
-Subject: Re: [PATCH v8 00/17] spi: axi-spi-engine: add offload support
-Message-ID: <20250210185940.441a0b8f@jic23-huawei>
-In-Reply-To: <544c0100-54a9-40e6-b9b7-b79555056237@sirena.org.uk>
-References: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
-	<544c0100-54a9-40e6-b9b7-b79555056237@sirena.org.uk>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1739214089;
+	bh=23KDcD/j65oGW6866Bcw3xXNXwhUPxAoV5GMn7mD+Lo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mZy0IsbLOkV6NzapTbhUN5/hH4zrpbKZKs9GHER1Rnl03HauXaru5+sCjkghd0wMJ
+	 nisdNuznkuonBfuOF1kGrMXWXOVf3B2h408VTpwbFS67u8A/Sy4rbFUkTAEqTUIAj5
+	 3kiRYEdG0xTLFRdJutjzMU2uxJiea7jxXaMwLSydaFwEC23dmdhgwHvQYrgV7Xhbjt
+	 fbSQhW08E7QnQKPKzhhvZqYCjgw9t/7Za1T1rej3ZNOcRrKZPJEyI8LhJAsMB0RsVK
+	 326tWbIwSqPX1jfWWMKLZYMSk5hWLaLI6iWFMkSw2tx/34YQqZJZDBAs/yVfTeUj2q
+	 DcBo625c+YT2Q==
+Date: Mon, 10 Feb 2025 19:01:27 +0000
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 0/2 v6] add ioctl/sysfs to donate file-backed pages
+Message-ID: <Z6pNBxgMKHTiHAnv@google.com>
+References: <20250117164350.2419840-1-jaegeuk@kernel.org>
+ <Z4qb9Pv-mEQZrrXc@casper.infradead.org>
+ <Z4qmF2n2pzuHqad_@google.com>
+ <Z4qpurL9YeCHk5v2@casper.infradead.org>
+ <Z4q_cd5qNRjqSG8i@google.com>
+ <Z6JAcsAOCCWp-y66@google.com>
+ <Z6owv7koMsTWH1uM@google.com>
+ <Z6o1TcS7mQ2POrc9@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6o1TcS7mQ2POrc9@casper.infradead.org>
 
-On Mon, 10 Feb 2025 14:36:24 +0000
-Mark Brown <broonie@kernel.org> wrote:
-
-> On Fri, Feb 07, 2025 at 02:08:57PM -0600, David Lechner wrote:
-> > Only very minor fixes in this revision.
+On 02/10, Matthew Wilcox wrote:
+> On Mon, Feb 10, 2025 at 05:00:47PM +0000, Jaegeuk Kim wrote:
+> > On 02/04, Jaegeuk Kim wrote:
+> > > On 01/17, Jaegeuk Kim wrote:
+> > > > On 01/17, Matthew Wilcox wrote:
+> > > > > On Fri, Jan 17, 2025 at 06:48:55PM +0000, Jaegeuk Kim wrote:
+> > > > > > > I don't understand how this is different from MADV_COLD.  Please
+> > > > > > > explain.
+> > > > > > 
+> > > > > > MADV_COLD is a vma range, while this is a file range. So, it's more close to
+> > > > > > fadvise(POSIX_FADV_DONTNEED) which tries to reclaim the file-backed pages
+> > > > > > at the time when it's called. The idea is to keep the hints only, and try to
+> > > > > > reclaim all later when admin expects system memory pressure soon.
+> > > > > 
+> > > > > So you're saying you want POSIX_FADV_COLD?
+> > > > 
+> > > > Yeah, the intention looks similar like marking it cold and paging out later.
+> > > 
+> > > Kindly ping, for the feedback on the direction. If there's demand for something
+> > > generalized api, I'm happy to explore.
 > > 
-> > Also, now that trees are rebased on v6.14-rc1 we no longer have
-> > dependencies for the IIO patches. So Mark can pick up all of the
-> > patches if we want to go that way. In any case though, Jonathan will
-> > need an immutable branch since we have other IIO patches in-flight
-> > building on top of this series.  
+> > If there's no objection, let me push the change in f2fs and keep an eye on
+> > who more will need this in general.
 > 
-> The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
-> 
->   Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
-> 
-> are available in the Git repository at:
-> 
->   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-offload
+> I don't know why you're asking for direction.  I gave my direction: use
+> fadvise().
 
-Thanks. Merged into IIO and patches 8-17 applied on top with a few tweaks
-to the patch as mentioned in reply.
-
-Pushed out for now as testing to see if 0-day spots anything new
-
-Thanks,
-
-Jonathan
+Funny, that single question didn't mean like this at all. Will take a look
+how the patch looks like.
 
 > 
-> for you to fetch changes up to 700a281905f2a4ccf6f3b2d3cd6985e034b4b021:
-> 
->   spi: add offload TX/RX streaming APIs (2025-02-07 20:17:11 +0000)
-> 
-> ----------------------------------------------------------------
-> spi: Add offload APIs
-> 
-> This series adds support for offloading complete SPI transactions,
-> including the initiation, to the hardware.
-> 
-> ----------------------------------------------------------------
-> David Lechner (5):
->       spi: add basic support for SPI offloading
->       spi: offload: add support for hardware triggers
->       dt-bindings: trigger-source: add generic PWM trigger source
->       spi: offload-trigger: add PWM trigger driver
->       spi: add offload TX/RX streaming APIs
-> 
->  .../bindings/trigger-source/pwm-trigger.yaml       |  37 ++
->  MAINTAINERS                                        |  12 +
->  drivers/spi/Kconfig                                |  15 +
->  drivers/spi/Makefile                               |   4 +
->  drivers/spi/spi-offload-trigger-pwm.c              | 162 +++++++
->  drivers/spi/spi-offload.c                          | 465 +++++++++++++++++++++
->  drivers/spi/spi.c                                  |  10 +
->  include/linux/spi/offload/consumer.h               |  39 ++
->  include/linux/spi/offload/provider.h               |  47 +++
->  include/linux/spi/offload/types.h                  |  99 +++++
->  include/linux/spi/spi.h                            |  20 +
->  11 files changed, 910 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/trigger-source/pwm-trigger.yaml
->  create mode 100644 drivers/spi/spi-offload-trigger-pwm.c
->  create mode 100644 drivers/spi/spi-offload.c
->  create mode 100644 include/linux/spi/offload/consumer.h
->  create mode 100644 include/linux/spi/offload/provider.h
->  create mode 100644 include/linux/spi/offload/types.h
-
+> Putting this directly in f2fs is a horrible idea.  NAK.
