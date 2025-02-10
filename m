@@ -1,389 +1,124 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195F8219E0;
-	Mon, 10 Feb 2025 08:42:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739176936; cv=pass; b=FWCqv6ux4hr4s2Jt7dbbKjTDomqm7vObgzeAVnHkKG3QHxCwDZAKzJUv3YTlD5hq73c2cSYgw6j1j9QbgZBtCKo1pJKvD2GSpjKFKsjUQcmFp9MFJgV3YUXR3egTAXDouU99MaVXMq+/uj7XGUa7Ad3x8xfhvrXOZrRoyviSh9M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739176936; c=relaxed/simple;
-	bh=zXc6Cqbdx3V0opl+9NToRRey6LkIgdMcNCEsZBKohkw=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=tYB/VvhdagVgEt6/m/EVwOuK4l/lzkJOUw6xXJCBEr/JnGGp6CtgLwKrRRaMWDk9uDk2FyUm6/l1h6U3gvcvFlhigL2qlXHEbu+Kon7dvj9QKQPMi5vyzL1XC339cM1HNDog6Y+l0s8VghXEZDsgr7Vx5fJGaT+wynkIcNz1Zjs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=WapmED43; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82BCF1C07C4
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739176940; cv=none; b=AyeTXfwcjPaZ2wy9NPG/2yciN04D5PTp9vnvMTLubeyw1ErXOQwZ7Hjo5J71INywrdh5HdsBhyYB3pYvCWMhwMfoAD3VOFGb3uKTwiX6YY6jj2sGvWo2epLojd50IzsaCdIYr6aeh8SAynG+NlAEP/C5JL4E1FpIifvTKZDp8Fc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739176940; c=relaxed/simple;
+	bh=s3EzbJ2aw9HPaJowakCsCi0YPKQtWiBGwEN0PEj6whk=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=EIU6AqhfUxvvpxhaKjcwN+C984E6bbIXEOylB5h6mBjE9wfJL46s3rTmGTQVFT4mJGi6Cwb2Lqu/40a9gAp/I+pC3meC1BIatW2fVOHyEsweMQgw7FSCt+Z925JXXwFp2oM6XS8xm6yBMZ4ej+BIbKNI98GC0nkcZRZmno4eHWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ZHKdIddK; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="WapmED43"
-ARC-Seal: i=1; a=rsa-sha256; t=1739176916; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=br0AfVPgKKDhdKzR5i7En7dGpZ741dDCVqKJkS8LZzuvEzUZ0p6bbGgvnwyr60y/GMsyxDuegHex+AL59AkaEo2owokRXBc/AQ2tHU2HZN/gNat0nPtZequYYWu5vclwQ+eIdToB0phd9OplcqCaXdFIfDgs/O4MbOD19d3OKxI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739176916; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=rEe92CgA55XF46u17KQx3HppvtWwr8GugZUuq0ab+gw=; 
-	b=a09BuS6I8Mt1DCFat2SrzxzD2828DtyXzsLEbGJbsFPZlfik/NjtSN43kmTZpaaEd8ROeREJ0hkps842k1B83NiB83VXaBeI4rsjnBcsw7UhnaLi9B8eQ+tisZlUU8FgDNw/at12nxk7goioUxb5Vv1HWEYjLAfLoL6jJx68RgA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739176916;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=rEe92CgA55XF46u17KQx3HppvtWwr8GugZUuq0ab+gw=;
-	b=WapmED43D1VP+nJMCUaBmIfOcvffpb35wjHHwF/kIoGFlevw0rDVcq2sSYXVx+TK
-	PQDYzXQIQ2oIC6Y01mCSNVfr9KWqigaI9drsgJotLo8uht8ywIh0ug6dROSuhdKKlfB
-	J+ANE03FWsFLdc23/Eh2EYHJ9iu8ZsygWivSm6fo=
-Received: by mx.zohomail.com with SMTPS id 1739176891514783.969343323908;
-	Mon, 10 Feb 2025 00:41:31 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ZHKdIddK"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21f44e7eae4so61206095ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 00:42:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1739176938; x=1739781738; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=k5AVryFW7jIKC9PMx3aJa7fd2zlXZtgnjt/bCXgEFJA=;
+        b=ZHKdIddKNnM281O7FGlQ9kSKSx6mJClOw7nbRsJLNBtKzkEGkvbxDuNHWSmj3ukSsv
+         9qSfW8pPcp+FdZPZXv3XWXmFRTBS+GgHp3FPlXdfqJz+NzQi8P41A9z3XzjxffB8TGy+
+         DdPOEWuKcY3h0sqI/xgxxHnQzFViTju8Qc61i78WAd6z5DuWQN4qT9TztFuxqjVDr7oD
+         B0thH10tOw6veDq7UtbNkvZbTY+AqXaqkKckNXLRcTktuQ+iEWQe0gtYOCz7Tr+HDqun
+         9VtSzxixvzuj7Thyz3ZRAMgtvV8Uwj3mUCLTNKgMfMJ+addtYNL9oDan7aal8zuoM2SB
+         t4ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739176938; x=1739781738;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=k5AVryFW7jIKC9PMx3aJa7fd2zlXZtgnjt/bCXgEFJA=;
+        b=aTx16sJyI6EJASP3XUnoGB0jpwv9xscYfb+VmOpcwk0vSv8GXFBflHv+9cpZu41vI0
+         sFxwy80dy3i3vKfn8hlpKiDxmEtTSKya+uEEBqAKFdsZHOC2d9S1wOPCQxQZ83bY717f
+         Q4RqIWHvsKdxVK34TruZnBFQ/0XUZ5k4j8u/+6k2MMPIz3g0nOh0Lej5PRFDamY+MRDq
+         mE8eIVie+aaihm8DWnyloJNOVDKWrDueiETKjtP4/ohjrzLZPDFBmcOuM6PK2eG+91KB
+         geKOodKaeCmE1arBJR6WDXKd47c6ikHGvDMJ7IJBZb/E8ppgqq0Msz8Q9cVyd7HEx62E
+         eRUA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6rVeII7yvQQuv3ghcO7rQ2QMP2BMGwte2Kq+ulOplZsLwMGnWiYEi8SFhdkzIAXVeY2s+UQ5oMT4MoKo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAiReN91YCQEU0lPhQLwE8mRi//Yg0rjjt/8OX2oop8xaB8004
+	TtUesCfjgPY7Um70Q7NzYO3K3m/PQmTjb7JEnoXWAJvHErMd82vd7ZT4nrNwazO3ifZYiplKviM
+	X
+X-Gm-Gg: ASbGnctlh/JkPChIZUE5kmafymwLl8OfU0iHH6OTShDDeyDqvEjwdPvtIcl6Y2pEHAB
+	W95sHCiS2519tO5UQruA7jMnF0mPY9BU5XXSd1Bn7zx57Fj9NBUZ+kAVLdFCH/M15svBFuz2wlN
+	3Xz+xDiBZ+Mll4leSbbBB/p0yRzqZ68iRhNwespd3gH/ZfKGIKvHuxLUR4EpzuG3fg9dFcCxSat
+	+o8xFxvjteEiNNSZettev+q3ojJC04Gg/C7IXm70P0bXu67v2qwpd4buXZuFAWRCICrmOJBOH4v
+	YTqZLxuLo0eq6Yza09DNQ4Bf+lZxRsCnwnQGMIm83A==
+X-Google-Smtp-Source: AGHT+IFrJ9iyF+ehnd+p5RcTFw9uzH3Jjv3cVTTZFS7lEPb+BTW4LASNKEREzJVE7UzugL6gSYLHqQ==
+X-Received: by 2002:a17:903:2311:b0:215:acb3:3786 with SMTP id d9443c01a7336-21f4e6e649dmr224221095ad.19.1739176937709;
+        Mon, 10 Feb 2025 00:42:17 -0800 (PST)
+Received: from [10.84.150.121] ([203.208.167.150])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f368b6024sm73039775ad.231.2025.02.10.00.42.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 00:42:17 -0800 (PST)
+Message-ID: <4524511c-d685-4af6-9de9-4f15f7dcfe05@bytedance.com>
+Date: Mon, 10 Feb 2025 16:42:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
-Subject: Re: [PATCH v2] rust: irq: add support for request_irq()
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20250122163932.46697-1-daniel.almeida@collabora.com>
-Date: Mon, 10 Feb 2025 05:41:17 -0300
-Cc: rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Alice Ryhl <aliceryhl@google.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D058ABBE-A0E8-4D95-AA4F-31EAA4092A73@collabora.com>
-References: <20250122163932.46697-1-daniel.almeida@collabora.com>
-To: ojeda@kernel.org,
- alex.gaynor@gmail.com,
- boqun.feng@gmail.com,
- gary@garyguo.net,
- bjorn3_gh@protonmail.com,
- benno.lossin@proton.me,
- a.hindborg@kernel.org,
- tmgross@umich.edu
-X-Mailer: Apple Mail (2.3826.300.87.4.3)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: pgtable: Ensure pml spinlock gets unlock
+Content-Language: en-US
+From: Qi Zheng <zhengqi.arch@bytedance.com>
+To: I Hsin Cheng <richard120310@gmail.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250208184928.219960-1-richard120310@gmail.com>
+ <b70f663f-5b72-41dd-bae4-14808a87f262@bytedance.com>
+ <Z6m21Rzv6H16oG-U@vaxr-BM6660-BM6360>
+ <e5d5bafc-7809-42c2-ba8d-554b9667d00c@bytedance.com>
+In-Reply-To: <e5d5bafc-7809-42c2-ba8d-554b9667d00c@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
 
-> On 22 Jan 2025, at 13:39, Daniel Almeida =
-<daniel.almeida@collabora.com> wrote:
->=20
-> Add support for registering IRQ handlers in Rust.
->=20
-> IRQ handlers are extensively used in drivers when some peripheral =
-wants to
-> obtain the CPU attention. Registering a handler will make the system =
-invoke the
-> passed-in function whenever the chosen IRQ line is triggered.
->=20
-> Both regular and threaded IRQ handlers are supported through a Handler =
-(or
-> ThreadedHandler) trait that is meant to be implemented by a type that:
->=20
-> a) provides a function to be run by the system when the IRQ fires and,
->=20
-> b) holds the shared data (i.e.: `T`) between process and IRQ contexts.
->=20
-> The requirement that T is Sync derives from the fact that handlers =
-might run
-> concurrently with other processes executing the same driver, creating =
-the
-> potential for data races.
->=20
-> Ideally, some interior mutability must be in place if T is to be =
-mutated. This
-> should usually be done through the in-flight SpinLockIrq type.
->=20
-> Co-developed-by: Alice Ryhl <aliceryhl@google.com>
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
-> ---
->=20
-> Changes from v1:
->=20
-> - Added Co-developed-by tag to account for the work that Alice did in =
-order to
-> figure out how to do this without Opaque<T> (Thanks!)
-> - Removed Opaque<T> in favor of plain T
-> - Fixed the examples
-> - Made sure that the invariants sections are the last entry in the =
-docs
-> - Switched to slot.cast() where applicable,
-> - Mentioned in the safety comments that we require that T: Sync,
-> - Removed ThreadedFnReturn in favor of IrqReturn,
-> - Improved the commit message
->=20
-> Link to v1: =
-https://lore.kernel.org/rust-for-linux/20241024-topic-panthor-rs-request_i=
-rq-v1-1-7cbc51c182ca@collabora.com/
->=20
->=20
-> ---
-> rust/bindings/bindings_helper.h |   1 +
-> rust/helpers/helpers.c          |   1 +
-> rust/helpers/irq.c              |   9 +
-> rust/kernel/irq.rs              |   6 +
-> rust/kernel/irq/request.rs      | 517 ++++++++++++++++++++++++++++++++
-> rust/kernel/lib.rs              |   1 +
-> 6 files changed, 535 insertions(+)
-> create mode 100644 rust/helpers/irq.c
-> create mode 100644 rust/kernel/irq.rs
-> create mode 100644 rust/kernel/irq/request.rs
->=20
-> diff --git a/rust/bindings/bindings_helper.h =
-b/rust/bindings/bindings_helper.h
-> index 5c4dfe22f41a..0331c6273def 100644
-> --- a/rust/bindings/bindings_helper.h
-> +++ b/rust/bindings/bindings_helper.h
-> @@ -15,6 +15,7 @@
-> #include <linux/ethtool.h>
-> #include <linux/file.h>
-> #include <linux/firmware.h>
-> +#include <linux/interrupt.h>
-> #include <linux/fs.h>
-> #include <linux/jiffies.h>
-> #include <linux/jump_label.h>
-> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-> index dcf827a61b52..bfc499d7f4c1 100644
-> --- a/rust/helpers/helpers.c
-> +++ b/rust/helpers/helpers.c
-> @@ -13,6 +13,7 @@
-> #include "build_bug.c"
-> #include "cred.c"
-> #include "err.c"
-> +#include "irq.c"
-> #include "fs.c"
-> #include "jump_label.c"
-> #include "kunit.c"
-> diff --git a/rust/helpers/irq.c b/rust/helpers/irq.c
-> new file mode 100644
-> index 000000000000..1faca428e2c0
-> --- /dev/null
-> +++ b/rust/helpers/irq.c
-> @@ -0,0 +1,9 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/interrupt.h>
-> +
-> +int rust_helper_request_irq(unsigned int irq, irq_handler_t handler,
-> +    unsigned long flags, const char *name, void *dev)
-> +{
-> + return request_irq(irq, handler, flags, name, dev);
-> +}
-> diff --git a/rust/kernel/irq.rs b/rust/kernel/irq.rs
-> new file mode 100644
-> index 000000000000..3ab83c5bdb83
-> --- /dev/null
-> +++ b/rust/kernel/irq.rs
-> @@ -0,0 +1,6 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! IRQ abstractions
-> +
-> +/// IRQ allocation and handling
-> +pub mod request;
-> diff --git a/rust/kernel/irq/request.rs b/rust/kernel/irq/request.rs
-> new file mode 100644
-> index 000000000000..61e7d4a8f555
-> --- /dev/null
-> +++ b/rust/kernel/irq/request.rs
-> @@ -0,0 +1,517 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// SPDX-FileCopyrightText: Copyright 2025 Collabora ltd.
-> +
-> +//! IRQ allocation and handling
-> +
-> +use core::marker::PhantomPinned;
-> +use core::ptr::addr_of_mut;
-> +
-> +use init::pin_init_from_closure;
-> +
-> +use crate::error::to_result;
-> +use crate::prelude::*;
-> +use crate::str::CStr;
-> +
-> +/// Flags to be used when registering IRQ handlers.
-> +///
-> +/// They can be combined with the operators `|`, `&`, and `!`.
-> +///
-> +/// Values can be used from the [`flags`] module.
-> +#[derive(Clone, Copy)]
-> +pub struct Flags(u64);
-> +
-> +impl core::ops::BitOr for Flags {
-> +    type Output =3D Self;
-> +    fn bitor(self, rhs: Self) -> Self::Output {
-> +        Self(self.0 | rhs.0)
-> +    }
-> +}
-> +
-> +impl core::ops::BitAnd for Flags {
-> +    type Output =3D Self;
-> +    fn bitand(self, rhs: Self) -> Self::Output {
-> +        Self(self.0 & rhs.0)
-> +    }
-> +}
-> +
-> +impl core::ops::Not for Flags {
-> +    type Output =3D Self;
-> +    fn not(self) -> Self::Output {
-> +        Self(!self.0)
-> +    }
-> +}
-> +
-> +/// The flags that can be used when registering an IRQ handler.
-> +pub mod flags {
-> +    use super::Flags;
-> +
-> +    use crate::bindings;
-> +
-> +    /// Use the interrupt line as already configured.
-> +    pub const TRIGGER_NONE: Flags =3D =
-Flags(bindings::IRQF_TRIGGER_NONE as _);
-> +
-> +    /// The interrupt is triggered when the signal goes from low to =
-high.
-> +    pub const TRIGGER_RISING: Flags =3D =
-Flags(bindings::IRQF_TRIGGER_RISING as _);
-> +
-> +    /// The interrupt is triggered when the signal goes from high to =
-low.
-> +    pub const TRIGGER_FALLING: Flags =3D =
-Flags(bindings::IRQF_TRIGGER_FALLING as _);
-> +
-> +    /// The interrupt is triggered while the signal is held high.
-> +    pub const TRIGGER_HIGH: Flags =3D =
-Flags(bindings::IRQF_TRIGGER_HIGH as _);
-> +
-> +    /// The interrupt is triggered while the signal is held low.
-> +    pub const TRIGGER_LOW: Flags =3D Flags(bindings::IRQF_TRIGGER_LOW =
-as _);
-> +
-> +    /// Allow sharing the irq among several devices.
-> +    pub const SHARED: Flags =3D Flags(bindings::IRQF_SHARED as _);
-> +
-> +    /// Set by callers when they expect sharing mismatches to occur.
-> +    pub const PROBE_SHARED: Flags =3D =
-Flags(bindings::IRQF_PROBE_SHARED as _);
-> +
-> +    /// Flag to mark this interrupt as timer interrupt.
-> +    pub const TIMER: Flags =3D Flags(bindings::IRQF_TIMER as _);
-> +
-> +    /// Interrupt is per cpu.
-> +    pub const PERCPU: Flags =3D Flags(bindings::IRQF_PERCPU as _);
-> +
-> +    /// Flag to exclude this interrupt from irq balancing.
-> +    pub const NOBALANCING: Flags =3D Flags(bindings::IRQF_NOBALANCING =
-as _);
-> +
-> +    /// Interrupt is used for polling (only the interrupt that is =
-registered
-> +    /// first in a shared interrupt is considered for performance =
-reasons).
-> +    pub const IRQPOLL: Flags =3D Flags(bindings::IRQF_IRQPOLL as _);
-> +
-> +    /// Interrupt is not reenabled after the hardirq handler =
-finished. Used by
-> +    /// threaded interrupts which need to keep the irq line disabled =
-until the
-> +    /// threaded handler has been run.
-> +    pub const ONESHOT: Flags =3D Flags(bindings::IRQF_ONESHOT as _);
-> +
-> +    /// Do not disable this IRQ during suspend. Does not guarantee =
-that this
-> +    /// interrupt will wake the system from a suspended state.
-> +    pub const NO_SUSPEND: Flags =3D Flags(bindings::IRQF_NO_SUSPEND =
-as _);
-> +
-> +    /// Force enable it on resume even if [`NO_SUSPEND`] is set.
-> +    pub const FORCE_RESUME: Flags =3D =
-Flags(bindings::IRQF_FORCE_RESUME as _);
-> +
-> +    /// Interrupt cannot be threaded.
-> +    pub const NO_THREAD: Flags =3D Flags(bindings::IRQF_NO_THREAD as =
-_);
-> +
-> +    /// Resume IRQ early during syscore instead of at device resume =
-time.
-> +    pub const EARLY_RESUME: Flags =3D =
-Flags(bindings::IRQF_EARLY_RESUME as _);
-> +
-> +    /// If the IRQ is shared with a NO_SUSPEND user, execute this =
-interrupt
-> +    /// handler after suspending interrupts. For system wakeup =
-devices users
-> +    /// need to implement wakeup detection in their interrupt =
-handlers.
-> +    pub const COND_SUSPEND: Flags =3D =
-Flags(bindings::IRQF_COND_SUSPEND as _);
-> +
-> +    /// Don't enable IRQ or NMI automatically when users request it. =
-Users will
-> +    /// enable it explicitly by `enable_irq` or `enable_nmi` later.
-> +    pub const NO_AUTOEN: Flags =3D Flags(bindings::IRQF_NO_AUTOEN as =
-_);
-> +
-> +    /// Exclude from runnaway detection for IPI and similar handlers, =
-depends on
-> +    /// `PERCPU`.
-> +    pub const NO_DEBUG: Flags =3D Flags(bindings::IRQF_NO_DEBUG as =
-_);
-> +}
-> +
-> +/// The value that can be returned from an IrqHandler or a =
-ThreadedIrqHandler.
-> +pub enum IrqReturn {
-> +    /// The interrupt was not from this device or was not handled.
-> +    None =3D bindings::irqreturn_IRQ_NONE as _,
-> +
-> +    /// The interrupt was handled by this device.
-> +    Handled =3D bindings::irqreturn_IRQ_HANDLED as _,
-> +}
-> +
-> +/// Callbacks for an IRQ handler.
-> +pub trait Handler: Sync {
-> +    /// The actual handler function. As usual, sleeps are not allowed =
-in IRQ
-> +    /// context.
-> +    fn handle_irq(&self) -> IrqReturn;
-> +}
-> +
-> +/// A registration of an IRQ handler for a given IRQ line.
-> +///
-> +/// # Examples
-> +///
-> +/// The following is an example of using `Registration`:
-> +///
-> +/// ```
-> +/// use kernel::prelude::*;
-> +/// use kernel::irq::request::flags;
-> +/// use kernel::irq::request::Registration;
+On 2025/2/10 16:31, Qi Zheng wrote:
+> 
 
-By the way, I wonder if a re-export would be beneficial? I find it a bit =
-tedious to specify this path.
+[...]
 
-It also clashes with kernel::driver::Registration and =
-kernel::driver::drm::Registration, so I find myself
-continuously writing an alias for it, i.e.:
+>>>>
+>>>> diff --git a/mm/pt_reclaim.c b/mm/pt_reclaim.c
+>>>> index 7e9455a18aae..163e38f1728d 100644
+>>>> --- a/mm/pt_reclaim.c
+>>>> +++ b/mm/pt_reclaim.c
+>>>> @@ -43,7 +43,7 @@ void try_to_free_pte(struct mm_struct *mm, pmd_t 
+>>>> *pmd, unsigned long addr,
+>>>>        pml = pmd_lock(mm, pmd);
+>>>>        start_pte = pte_offset_map_rw_nolock(mm, pmd, addr, &pmdval, 
+>>>> &ptl);
+>>>>        if (!start_pte)
 
-```
-Use kernel::irq::request::Registration as IrqRegistration;
-Use kernel::irq::request::Handler as IrqHandler;
-```
+Maybe we can return directly here:
 
-Looking at mq.rs <http://mq.rs/>, I see Andreas did something similar:
+             if (!start_pte) {
+		spin_unlock(pml);
+                 return;
+             }
 
-```
-pub use operations::Operations;
-pub use request::Request;
-pub use tag_set::TagSet;
-```
-
-Asking for opinions here since this is a bit cosmetic in nature. IMHO, =
-at least the =E2=80=98request=E2=80=99 part of the path has to go.
-
-=E2=80=94 Daniel
-
-
+>>>> -        goto out_ptl;
+>>>> +        goto out_pte;
+>>>>        if (ptl != pml)
+>>>>            spin_lock_nested(ptl, SINGLE_DEPTH_NESTING);
+>>>> @@ -68,4 +68,8 @@ void try_to_free_pte(struct mm_struct *mm, pmd_t 
+>>>> *pmd, unsigned long addr,
+>>>>            pte_unmap_unlock(start_pte, ptl);
+>>>>        if (ptl != pml)
+>>>>            spin_unlock(pml);
+>>>> +    return;
+>>>> +
+>>>> +out_pte:
+>>>> +    spin_unlock(pml);
+>>>>    }
+>>
