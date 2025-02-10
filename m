@@ -1,251 +1,101 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68EB01C5D77
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 12:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE35243374;
+	Mon, 10 Feb 2025 12:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739189619; cv=none; b=nVUV/Ai1Z3yq/pa0EKzCONb+LK+ySx2lnjWimpj9AgEdKNc14WdqboBTruv4Fp8Vlw89fwGnSMHMAUiXEawx1pAlQ2LXmTBSxoN6JWs+iQq1qt+pPq0WMtAqp2lL+shx/9jsx7nzJdorxWiSrx3R0SBzzHRqlfdaIRrXnzTiP4o=
+	t=1739189764; cv=none; b=G8rMV9d1aLgixOyNfvmUZHILAoJRmjPSSi9liT26KMMK9MGW2DZz6ErOTCDGspb8WmzWt2uHwghsM/la/4F/rbvuH0ozpGbhliumUnuQL/gfXgVm+U7OjS5PyhHz0xnD8JlhfpyDRawa2cBGN57/9S4tCFW3GTPE58Lz+yCsEIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739189619; c=relaxed/simple;
-	bh=U6lNUJZfY6M2RmjNFRJPDIko8DCyY03KL80HyfAzovs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bnsjROM2qfuWBJFJWs0IA9bHNnPtJ+NxlBos4piiWnrWt8ZxQ4GC6N5JNfnLIUJZxWnoKxREvbfPTz9mt1O1yLmcJyShVa9ePd1JYPcNDnH7p5yimSdz2GfRBV1Vw5HDPV/lD03gQeznjvO8Yteq9UHzmGt8g4XHTreJfni2Yro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3A07012FC;
-	Mon, 10 Feb 2025 04:13:58 -0800 (PST)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 430773F5A1;
-	Mon, 10 Feb 2025 04:13:35 -0800 (PST)
-Date: Mon, 10 Feb 2025 12:13:32 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Paul Benoit <paul@os.amperecomputing.com>
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3] firmware: smccc: Support optional Arm SMC SOC_ID name
-Message-ID: <Z6ntbLvjjtcW92_Z@bogus>
-References: <20241114030452.10149-1-paul@os.amperecomputing.com>
- <20241218001338.6247-1-paul@os.amperecomputing.com>
+	s=arc-20240116; t=1739189764; c=relaxed/simple;
+	bh=F/7W3Ji5wIGnVHt8kCsM4GPtFrsjZvbfdVUG9QY1Gfg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R/H9XX86tCMEMel5D1m/zsoEsOPE/qVPxDHfbjBAT3wEsEFPWEzmM8Qghm3tG0K6JxuLP7sHle3MvepwqMe6MnseQBXmcX29XyWJCJvrhEImSLRwtEt3KFiKC4ZVHCxuRoEMfipy1gyFDE8b0EmAhg4z46aSqKFVvHs6NW3CbAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dRKUtugI; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dRKUtugI"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43934d6b155so9794745e9.1;
+        Mon, 10 Feb 2025 04:16:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739189761; x=1739794561; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GAXwPLt1kFbd7E0TfRGbt8eT4WvsRFZwEWl1hPo7ppA=;
+        b=dRKUtugIJbfhJieeNY9m64FoYBSz7OyTq97ZwF6/xoryyyfkH/KsD5/nxFv59yFu/L
+         bHQ3gSygFu2gLaxKo2wBDXXNH38YwR/Kw2Vhif1BhzM+JtMY5aCyZCrv/KMG5uECNyC6
+         ceccF6JvRJ0fF3fDPcbSCXWYx+yaLzyDPT0CDtY/SjWYYegkklGRNYAKxFYjwAle1qoc
+         GbR7nqbJMZQloTqc1fPzts+5g5uKLA1n0ECQfstJ/wmikpafi659J2vOeJZKoL1LcgRq
+         l3Pk/5oVKFlVidcIzHwOJZpjDd3/Hl3YCsyGQkjJaxNGkB3szYaVj3ER9Ad4mK+9Z30B
+         OiDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739189761; x=1739794561;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GAXwPLt1kFbd7E0TfRGbt8eT4WvsRFZwEWl1hPo7ppA=;
+        b=Z0FEgzNVSrvW4CSON9VC71FgesgZ6Bsr2kQ98T4jhnyBMPKysbenW0Kxq+A+8V5U4k
+         VXtkv2XI2PFcuHZoVsDbCf0D3SxOXvLV1QTzYDZYJU3AH2H3tKDxDWbUihYqeNz/LPQR
+         6l7mK/bL+THxfKTiNlQIKRdtj0+BDnA/0ud8d5wd6/ghU54R1c/NAXQwRglCjdWLj7WH
+         vZYwuyjf7GEcsmNBFao6b7B4h+AMVS6tVjGRukFMhiZukgX3MnZNi0UtJApPPnWP7hRU
+         h012o7tXX+I+rVxlBpGh7Z9mA51k6XeAZqzbrfBBX4cHvH9uy/MdOubeuDe9kd5wv3v9
+         SeVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVEMuGWEI6Bzv53m72WjspTi2IBI4m5I5EGrdzNFbCmsyc63753ugnaUwY8bRAoLrZTsO35IEoVjaAX92g7A9s=@vger.kernel.org, AJvYcCVVFy02nZ+96vPlk7J09oCEElWPYvVJzxha/Wl5foikR1dbtEWgeJMt2pkMCZpCdsgmy8HkxEps962R/IvT@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/IEiXK4K7IVYktiQecSiLNnx77n29iMSY+PmT8p+iFFDdHVtp
+	FsP2OZrLqlxLY2h5zpyEv+nnbMOVr3MIKEy1GgEPyBpe4aMLXqMJ
+X-Gm-Gg: ASbGnct7wJetJ0KP3C0dt+woy+P3qjMos2ulps6jaz0tT/ESJlhQKBiJe7dGNqvMwtp
+	GleEq32uLB3mi7AJ0oWlt4C19cOftrE2ysj/7K35/fC7q9kU89N6k6S9NyM7O16iaAK7RIdKZoO
+	KG1Mc6DadB1LSQqcyHN6Sa+lznX1UXjuMY4L7gLJKSHxeE74BORS4BglSTaoHGpUrHWP5GCMyWz
+	Y51u4XVfup4Q+hD9IkaGHRS181EJDnCE+l0p21XjUiMFgKT4P5E2slREpxf+gdDt8tsDpKBpXKL
+	AZfm2zpSPqbl
+X-Google-Smtp-Source: AGHT+IFFqjKPOWeR4uzaI/d56rTMNFQwNADYI+92fGS4ndChhBWmVDyZmS3pP6P5O2p8dpiIIPHwVA==
+X-Received: by 2002:a05:600c:5351:b0:439:3159:c33d with SMTP id 5b1f17b1804b1-4393159c5abmr65837825e9.13.1739189760962;
+        Mon, 10 Feb 2025 04:16:00 -0800 (PST)
+Received: from void.void ([141.226.169.178])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439377ba9c6sm68599335e9.36.2025.02.10.04.16.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 04:16:00 -0800 (PST)
+From: Andrew Kreimer <algonell@gmail.com>
+To: Dave Penkler <dpenkler@gmail.com>
+Cc: linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Andrew Kreimer <algonell@gmail.com>
+Subject: [PATCH] staging: gpib: Fix typo in TTY_LOG message
+Date: Mon, 10 Feb 2025 14:15:33 +0200
+Message-ID: <20250210121552.33455-1-algonell@gmail.com>
+X-Mailer: git-send-email 2.48.1.268.g9520f7d998
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241218001338.6247-1-paul@os.amperecomputing.com>
 
-Mostly minor coding style comments from me, otherwise LGTM.
+There is a typo in TTY_LOG message:
+ - sucesfully -> successfully
 
-On Tue, Dec 17, 2024 at 04:13:38PM -0800, Paul Benoit wrote:
+Fix it via codespell.
 
-Split the commit into multiple paragraphs, it looks too crowded 😄.
+Signed-off-by: Andrew Kreimer <algonell@gmail.com>
+---
+ drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Issue Number 1.6 of the Arm SMC Calling Convention introduces an
-> optional SOC_ID name string.
-
-> If available, point the 'machine' field of
-
-      ^^^^ I prefer implemented instead of available.
-
-> the SoC Device Attributes at this string so that it will appear under
-> /sys/bus/soc/devices/soc0/machine.
-
-Break into new paragraph here.
-
-> On Arm SMC compliant SoCs, this will
-> allow things like 'lscpu' to eventually get a SoC provider model name
-> from there rather than each tool/utility needing to get a possibly
-> inconsistent, obsolete, or incorrect model/machine name from its own
-> hardcoded model/machine name table.
->
-> Signed-off-by: Paul Benoit <paul@os.amperecomputing.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> ---
-> 
-> v2->v3: Add conditionalization to exclude SOC_ID Name from 32-bit builds.
-> v1->v2: Address code review identified issues.
-> 
->  drivers/firmware/smccc/soc_id.c | 79 +++++++++++++++++++++++++++++++++
->  include/linux/arm-smccc.h       | 37 +++++++++++++++
->  2 files changed, 116 insertions(+)
-> 
-> diff --git a/drivers/firmware/smccc/soc_id.c b/drivers/firmware/smccc/soc_id.c
-> index 1990263fbba0..3b50ff5d2cbd 100644
-> --- a/drivers/firmware/smccc/soc_id.c
-> +++ b/drivers/firmware/smccc/soc_id.c
-> @@ -32,6 +32,12 @@
->  static struct soc_device *soc_dev;
->  static struct soc_device_attribute *soc_dev_attr;
->  
-> +static char __init *smccc_soc_name_init(void);
-> +
-
-Not really needed if you move you code before smccc_soc_init()
-
-> +#ifdef CONFIG_ARM64
-> +static char __ro_after_init smccc_soc_id_name[136] = "";
-
-Move all in one block under #ifdef, details below.
-
-> +#endif
-> +
->  static int __init smccc_soc_init(void)
->  {
->  	int soc_id_rev, soc_id_version;
-> @@ -72,6 +78,7 @@ static int __init smccc_soc_init(void)
->  	soc_dev_attr->soc_id = soc_id_str;
->  	soc_dev_attr->revision = soc_id_rev_str;
->  	soc_dev_attr->family = soc_id_jep106_id_str;
-> +	soc_dev_attr->machine = smccc_soc_name_init();
->  
->  	soc_dev = soc_device_register(soc_dev_attr);
->  	if (IS_ERR(soc_dev)) {
-> @@ -93,3 +100,75 @@ static void __exit smccc_soc_exit(void)
->  	kfree(soc_dev_attr);
->  }
->  module_exit(smccc_soc_exit);
-
-Generally it good to have module_{init,exit} at the end of the file.
-Move you additions above these.
-
-> +
-> +
-> +#ifdef CONFIG_ARM64
-> +static inline void str_fragment_from_reg(char *dst, unsigned long reg)
-> +{
-> +	dst[0] = (reg >> 0)  & 0xff;
-> +	dst[1] = (reg >> 8)  & 0xff;
-> +	dst[2] = (reg >> 16) & 0xff;
-> +	dst[3] = (reg >> 24) & 0xff;
-> +	dst[4] = (reg >> 32) & 0xff;
-> +	dst[5] = (reg >> 40) & 0xff;
-> +	dst[6] = (reg >> 48) & 0xff;
-> +	dst[7] = (reg >> 56) & 0xff;
-> +}
-> +#endif
-> +
-> +static char __init *smccc_soc_name_init(void)
-> +{
-> +#ifdef CONFIG_ARM64
-> +	struct arm_smccc_1_2_regs args;
-> +	struct arm_smccc_1_2_regs res;
-> +	size_t len;
-> +
-> +	/*
-> +	 * Issue Number 1.6 of the Arm SMC Calling Convention
-> +	 * specification introduces an optional "name" string
-> +	 * to the ARM_SMCCC_ARCH_SOC_ID function.  Fetch it if
-> +	 * available.
-> +	 */
-> +	args.a0 = ARM_SMCCC_ARCH_SOC_ID;
-> +	args.a1 = 2;    /* SOC_ID name */
-> +	arm_smccc_1_2_invoke(&args, &res);
-> +	if ((u32)res.a0 == 0) {
-> +		const unsigned int regsize = sizeof(res.a1);
-> +
-> +		/*
-> +		 * Copy res.a1..res.a17 to the smccc_soc_id_name string
-> +		 * 8 bytes at a time.  As per Issue 1.6 of the Arm SMC
-> +		 * Calling Convention, the string will be NUL terminated
-> +		 * and padded, from the end of the string to the end of the
-> +		 * 136 byte buffer, with NULs.
-> +		 */
-> +		str_fragment_from_reg(smccc_soc_id_name + 0*regsize, res.a1);
-> +		str_fragment_from_reg(smccc_soc_id_name + 1*regsize, res.a2);
-> +		str_fragment_from_reg(smccc_soc_id_name + 2*regsize, res.a3);
-> +		str_fragment_from_reg(smccc_soc_id_name + 3*regsize, res.a4);
-> +		str_fragment_from_reg(smccc_soc_id_name + 4*regsize, res.a5);
-> +		str_fragment_from_reg(smccc_soc_id_name + 5*regsize, res.a6);
-> +		str_fragment_from_reg(smccc_soc_id_name + 6*regsize, res.a7);
-> +		str_fragment_from_reg(smccc_soc_id_name + 7*regsize, res.a8);
-> +		str_fragment_from_reg(smccc_soc_id_name + 8*regsize, res.a9);
-> +		str_fragment_from_reg(smccc_soc_id_name + 9*regsize, res.a10);
-> +		str_fragment_from_reg(smccc_soc_id_name + 10*regsize, res.a11);
-> +		str_fragment_from_reg(smccc_soc_id_name + 11*regsize, res.a12);
-> +		str_fragment_from_reg(smccc_soc_id_name + 12*regsize, res.a13);
-> +		str_fragment_from_reg(smccc_soc_id_name + 13*regsize, res.a14);
-> +		str_fragment_from_reg(smccc_soc_id_name + 14*regsize, res.a15);
-> +		str_fragment_from_reg(smccc_soc_id_name + 15*regsize, res.a16);
-> +		str_fragment_from_reg(smccc_soc_id_name + 16*regsize, res.a17);
-> +
-> +		len = strnlen(smccc_soc_id_name, sizeof(smccc_soc_id_name));
-> +		if (len) {
-> +			if (len == sizeof(smccc_soc_id_name))
-> +				pr_warn(FW_BUG "Ignoring improperly formatted Name\n");
-> +			else
-> +				return smccc_soc_id_name;
-> +		}
-> +	}
-> +#endif
-> +
-> +	return NULL;
-> +}
-
-Can we improve readability with
-
-#ifdef CONFIG_ARM64
-
-static char __ro_after_init smccc_soc_id_name[136] = "";
-
-<both str_fragment_from_reg and smccc_soc_name_init here>
-
-#else
-static char __init *smccc_soc_name_init(void)
-{
-	return NULL;
-}
-
-#endif
-
-> diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-> index 67f6fdf2e7cd..9d444e5862fe 100644
-> --- a/include/linux/arm-smccc.h
-> +++ b/include/linux/arm-smccc.h
-> @@ -607,6 +607,12 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
->  			___res->a0 = SMCCC_RET_NOT_SUPPORTED;		\
->  	} while (0)
->  
-> +#define __fail_smccc_1_2(___res)					\
-> +	do {								\
-> +		if (___res)						\
-> +			___res->a0 = SMCCC_RET_NOT_SUPPORTED;		\
-> +	} while (0)
-> +
->  /*
->   * arm_smccc_1_1_invoke() - make an SMCCC v1.1 compliant call
->   *
-> @@ -639,5 +645,36 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
->  		method;							\
->  	})
->  
-> +/*
-> + * arm_smccc_1_2_invoke() - make an SMCCC v1.2 compliant call
-> + *
-> + * @args: SMC args are in the a0..a17 fields of the arm_smcc_1_2_regs structure
-> + * @res: result values from registers 0 to 17
-> + *
-> + * This macro will make either an HVC call or an SMC call depending on the
-> + * current SMCCC conduit. If no valid conduit is available then -1
-> + * (SMCCC_RET_NOT_SUPPORTED) is returned in @res.a0 (if supplied).
-> + *
-> + * The return value also provides the conduit that was used.
-> + */
-> +#define arm_smccc_1_2_invoke(args, res) ({				\
-> +		struct arm_smccc_1_2_regs *__args = args;		\
-
-I think we can move this macro and the above under CONFIG_ARM64 as
-arm_smccc_1_2_regs is defined only for ARM64 for now. Otherwise one
-could use this macro and get undefined compiler errors for the structure.
-
+diff --git a/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c b/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
+index 85322af62c23..1c3e5dfcc9ec 100644
+--- a/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
++++ b/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
+@@ -542,7 +542,7 @@ static int usb_gpib_attach(gpib_board_t *board, const gpib_board_config_t *confi
+ 		return -EIO;
+ 
+ 	SHOW_STATUS(board);
+-	TTY_LOG("Module '%s' has been sucesfully configured\n", NAME);
++	TTY_LOG("Module '%s' has been successfully configured\n", NAME);
+ 	return 0;
+ }
+ 
 -- 
-Regards,
-Sudeep
+2.48.1.268.g9520f7d998
+
