@@ -1,69 +1,70 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6110222E406;
-	Mon, 10 Feb 2025 13:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CDD5226556;
+	Mon, 10 Feb 2025 13:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739193998; cv=none; b=J6S8S/qLXDONVlocipE5Abz/0tWMCqdN3XeKuoJ+LnHXhbkDe9efDHYjgv20FZlYgKvSATNJBExtIk4pAHOheuRxqjXU+lhtIqx7M4SLAS8caXDR0niopaqf8mDcR19M2O5hBGBuYVWu0WKGQUCeUC1Ki+Z9Vk7e5KpWnr5qHDs=
+	t=1739194079; cv=none; b=Vw1Bh2wq/4lUJUGQRzBPBuLFs/icJHSllPdRIH6euxUWXuEvp5zYcgqDo7k3LwUkxRTBIQagDvpRCTF2Dw+z7oSfLvVoFC2WLbJpgyLZYQOnWsmkBYy9EnLK+Hk6pROdc6ezYF5owfIRiZdmg1CWrzpHKhUrYIoK0IMu4CBYhnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739193998; c=relaxed/simple;
-	bh=jM3W9+l1JlbJaMmvjyIKBXE04AFzUte2T6qkluf7REY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q9ut7KU8fl7H35f+Rfox6FP7AYg1FZ9WYVfzsh/amS7CTxjzfMpqBzlKcQPbkUIG1cv45lkmAMwzMstb25X5Hyee5iiDkDALbRB2aw5VP4ALukRH+LlQrcbPTdhkKNpvEYgXu5ooiBdbEN4YVI0cL2Ic6fe+eHJ/5HdXSY+V4V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MOrinqxv; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1739194079; c=relaxed/simple;
+	bh=CiR+HgbiS0K621jeSeHl/IyevROTAvae66fUMHGnnhA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ILDS19nuvE4aukzKIrzvh/PGkR3OdjPabdHxkB3yyAw/fTlt2JPsFqP71y2Dk/aJBrO3SK0k2k9wJE1UMS82gzof6sA24esAUJ0v1gKOOLuYR2PqwmW39KuUqnIpGohTByJhAnmFSudyeZma8U65hk4RbTu+bLCala0SqnOYNmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iW/b1BF/; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MOrinqxv"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 35FD420454;
-	Mon, 10 Feb 2025 13:26:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739193989;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=llutv1RdggJm734H0s9buclloGdDrf18DWhCjYzzD7s=;
-	b=MOrinqxv8sSRMZ+44D4fU9tw4PNKguCukVZFlfwssQzPYkP0inQEPDkLiU/XRXuA9U15Ud
-	dXP0Rv2sZV9w7Ziy0jKDJenxHU0TCTcClYRcrKCe8yn97n7veUMhnFALBuY9UxKGM2ZGTw
-	e40PtoLHVtL9L2T4sxbz7Un+FJx514zdT1P2UVxi8PWMmFXaZqMwZSuZGlvzy00TJXXJjc
-	xeRUlUOC4KqP6Rjc9+NGfWtYdG3zWDn96R+tUmn3cS+yavVYpKujJ9rZD85FxgODins434
-	9MoMXNTxqz/qJtHkhA0/Lx1f85OU3Lvodbq9ReykdW3hW0ci9IV/4WWp69DLyQ==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mcanal@igalia.com>,
-	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
-	Marek Vasut <marex@denx.de>
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iW/b1BF/"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21f7f03d7c0so28728435ad.3;
+        Mon, 10 Feb 2025 05:27:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739194075; x=1739798875; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ubRSzCk6q5c2M0vwji2U808p06F7c3BS9spIJHc3OK8=;
+        b=iW/b1BF/GcA/IZ8tHTsp63GTwplqLBH/EyGdrY6EjxWjvL3DzpS/e6l82sGtr8ah1K
+         OnLr82SV/lZdRCbok6mFEjv0AeUvRuTx3qIkA4k8Qa4qbY+BvC9+WpYEycr88TOVcBa5
+         cNfemqn+1wcuVbMilCF+IHQ18e6wRDdfo6epGobCofs10s9B4EJRKS1jlGpLCUB0Al2E
+         qfvAB8AFGwANKHm3/Z0B4oQSj8+Z6P8u/xjjC0qPcGX4a4yFSygw4rGTaLYXstyfGLZg
+         mk0Xik9gwbmaV/O4myzpVcxW23EWdwskLjlOtQQe5w9em2vjwjIWPu6By9Dirq9MWwri
+         RzBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739194075; x=1739798875;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ubRSzCk6q5c2M0vwji2U808p06F7c3BS9spIJHc3OK8=;
+        b=V4UuhW8sTekZ6qxTf70lfcIZNikNhJlVUr1TLJM/cwyCa+Xu1K/HvA816OD7EvvQBt
+         b4TXIPv+1b8R5sALl9NjmorkhxBvH47jbKND8aclY1IZi0zhtuD6ZfVuLQ26FXTvVD+Z
+         qeeNVZxPzmL+113CHZsQM1rqiqsdo8zvpT8EdiHUzqqNw6BV82oj+2O7Xr9yJjw9TlU0
+         2rmbrH106FJKNTNGR+XyLWay16TdRvyxlNL88oNn7E5PFl+FPsjGbgV4AHBf0tH8EK7C
+         5qlZXFVF49Uh/sGtN6iw7XjsTiprzt+a/0KfB3oTrbD38vRPTZoUodBAcbdjXCrZ9/Oe
+         RVKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUnuT3r3Bdahuo8+tt65uwjRc30oiGgCaapGnCWiYPR5JrwMe9YciyBWGG0KNndsmudBWpxs5aLHEbSvJA=@vger.kernel.org, AJvYcCWdIB8qPShi0egPQ1jnjU2ljJAyOCmLNRWmvYcjLqukPrNgMUZChfFPdJp7ra8kBamSa37XsxaUNwZ+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+b76tuyqs/Qdl6sU1x06whBi4ytsP6TyRdETwsJigb14wuoOX
+	gY6/gzD6TSysmgkiGlqNbEJTtvkVvpIqTB/5C0zUAUDgjFCtw64t
+X-Gm-Gg: ASbGncvzcxfRkQppjhrX7p8YKzmXwh/JIw3yGCbd9roFv27NH5mFtZnDxMcXuaDYqKa
+	MSNwWBLxMlSrtKQmuBER5lKAQBP+qZMTHC2LHtdjBbBjdCb9ttThUV+7lKAX6o8BuWvFZh7rGTF
+	5FkArLJLm6SYZxs/pwRjtHihw3ViDbdLPCCSloNaVPbmD4YpVWz/bvixi2RKhaGvLZgUUpLg6o2
+	A8Fafftu+HqaKD5BlyR/Kjd5j43sLVf+v8N1mUTgxOluxcAYFRSQDpsg1Pb8NDVebh1CyL+Lj+W
+	yLl+bfi4gH7TXrjVHwQ7ePVDM3xkw7Hl5V0LBiN75Ib9Ck2jHA==
+X-Google-Smtp-Source: AGHT+IF1ysCGiVZVUpmixEaoArsHTpIbBaQycUT/Gl5GL01im2JavjfdGsazKjD0vFa1im/Htum5zw==
+X-Received: by 2002:a17:902:f787:b0:216:644f:bc0e with SMTP id d9443c01a7336-21f4e6c899dmr261317015ad.24.1739194074584;
+        Mon, 10 Feb 2025 05:27:54 -0800 (PST)
+Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([2409:40c0:101c:99b7:922e:40e8:90eb:e462])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3683d718sm77534305ad.154.2025.02.10.05.27.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 05:27:54 -0800 (PST)
+From: Purva Yeshi <purvayeshi550@gmail.com>
+To: bhelgaas@google.com
+Cc: skhan@linuxfoundation.org,
+	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Louis Chauvet <louis.chauvet@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: [PATCH v6 3/4] drm/vc4: hdmi: Use drm_atomic_helper_reset_crtc()
-Date: Mon, 10 Feb 2025 14:26:18 +0100
-Message-ID: <20250210132620.42263-4-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250210132620.42263-1-herve.codina@bootlin.com>
-References: <20250210132620.42263-1-herve.codina@bootlin.com>
+	Purva Yeshi <purvayeshi550@gmail.com>
+Subject: [PATCH] drivers: pci: Fix flexible array usage
+Date: Mon, 10 Feb 2025 18:57:40 +0530
+Message-Id: <20250210132740.20068-1-purvayeshi550@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,76 +72,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefkedukecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehffeigfejueelueeuffelueefgfelhfejhfehieegudekteeiledttdfhffekffenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdrlhhotggrlhguohhmrghinhdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdejpdhrtghpthhtoheprghlvgigrghnuggvrhdrshhtvghinhesvgifrdhtqhdqghhrohhuphdrtghomhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopefnrghurhgvnhhtr
- dhpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepjhhonhgrsheskhifihgsohhordhsvgdprhgtphhtthhopehjvghrnhgvjhdrshhkrhgrsggvtgesghhmrghilhdrtghomhdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhm
-X-GND-Sasl: herve.codina@bootlin.com
 
-The current code uses a the reset_pipe() local function to reset the
-CRTC outputs.
+Fix warning detected by smatch tool:
+Array of flexible structure occurs in 'pci_saved_state' struct
 
-drm_atomic_helper_reset_crtc() has been introduced recently and it
-performs exact same operations.
+The warning occurs because struct pci_saved_state contains struct
+pci_cap_saved_data cap[], where cap[] has a flexible array member (data[]).
+Arrays of structures with flexible members are not allowed, leading to this
+warning.
 
-In order to avoid code duplication, use the new helper instead of the
-local function.
+Replaced cap[] with a pointer (*cap), allowing dynamic memory allocation
+instead of embedding an invalid array of flexible structures.
 
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
 ---
- drivers/gpu/drm/vc4/vc4_hdmi.c | 30 +-----------------------------
- 1 file changed, 1 insertion(+), 29 deletions(-)
+ drivers/pci/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index 47d9ada98430..e878eddc9c3f 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -270,34 +270,6 @@ static void vc4_hdmi_cec_update_clk_div(struct vc4_hdmi *vc4_hdmi)
- static void vc4_hdmi_cec_update_clk_div(struct vc4_hdmi *vc4_hdmi) {}
- #endif
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 869d204a7..648a080ef 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1929,7 +1929,7 @@ EXPORT_SYMBOL(pci_restore_state);
  
--static int reset_pipe(struct drm_crtc *crtc,
--			struct drm_modeset_acquire_ctx *ctx)
--{
--	struct drm_atomic_state *state;
--	struct drm_crtc_state *crtc_state;
--	int ret;
--
--	state = drm_atomic_state_alloc(crtc->dev);
--	if (!state)
--		return -ENOMEM;
--
--	state->acquire_ctx = ctx;
--
--	crtc_state = drm_atomic_get_crtc_state(state, crtc);
--	if (IS_ERR(crtc_state)) {
--		ret = PTR_ERR(crtc_state);
--		goto out;
--	}
--
--	crtc_state->connectors_changed = true;
--
--	ret = drm_atomic_commit(state);
--out:
--	drm_atomic_state_put(state);
--
--	return ret;
--}
--
- static int vc4_hdmi_reset_link(struct drm_connector *connector,
- 			       struct drm_modeset_acquire_ctx *ctx)
- {
-@@ -376,7 +348,7 @@ static int vc4_hdmi_reset_link(struct drm_connector *connector,
- 	 * would be perfectly happy if were to just reconfigure
- 	 * the SCDC settings on the fly.
- 	 */
--	return reset_pipe(crtc, ctx);
-+	return drm_atomic_helper_reset_crtc(crtc, ctx);
- }
+ struct pci_saved_state {
+ 	u32 config_space[16];
+-	struct pci_cap_saved_data cap[];
++	struct pci_cap_saved_data *cap;
+ };
  
- static void vc4_hdmi_handle_hotplug(struct vc4_hdmi *vc4_hdmi,
+ /**
 -- 
-2.48.1
+2.34.1
 
