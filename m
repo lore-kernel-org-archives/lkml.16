@@ -1,118 +1,182 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D3B211C
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 02:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934DB20B22
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 03:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739156398; cv=none; b=Wj56ub48LDubbRYaGAl34zZ3xCULMMIGKfjyWcO2Z233JbD9ppnoOvyuI6fN9H3xGJ9ckHoQIhL2PUe0P1a4m0XHH1zYtEwnoTrCC7JwvgM4AYu6qHegxLdyVT9NPQMhPc6VfyIggk1gMRRA9TQ5OT2CaHBWVCnqcENT7TGx5io=
+	t=1739156604; cv=none; b=D0y2od/qw7JkB0aB1HsWhUacP1OtOPRX/6w9c1xBD58JYZTjyedQAHmM9/nBxUM0whzgQtQ9AocFR50bI+rNqfdGkK7jfS7t9HBWBJAsuA+Atv+LGc/Z+dAjy1H5ukod/m5P0gslb+g3wmH8ko6nMO9RF1J0Hkuycf806weR12g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739156398; c=relaxed/simple;
-	bh=TpUzEJWyJ0chtO3AcQ58/6761HOIAjf5a2N5Rt/mVrA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=oH3b1Yhr2i/LvPWjNflWF5/aqN1w8uQnDEzKUNWI7SxSiwuFYNhYS5OjOhpoqwXBk/hPJTwB4GFBAR/1Inxd4+E0VTjp8HxWqxrBiL0o9B39UpoGvIh6StJomWKiUSVhZGnL/Vlj2v3iGOhENRY0gQL6JqqkKZdLnseSnk199kw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=icbU7WUS; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="icbU7WUS"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1739156385; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
-	bh=oBnfMYylPc9oTiD86UN82wcoKRob6MYiNVBrP5/R5zo=;
-	b=icbU7WUSXfEPaWUwcW0LWZu6TL3cgLgeMmN6MlsPTKhlzuj09Fg58PE/0+0tQj0gHsM8vQbeBsG0uV9YmtQ4qRQF0apPBVNQMLDfsvjEeiXLfccR6iedvG2xnCn75fgRGIx/krRy5/iVI623DCmhLZGGbQRnlDVZSfdcXKNp35Y=
-Received: from 30.41.15.245(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WP4ia0y_1739156379 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 10 Feb 2025 10:59:44 +0800
-Message-ID: <5c55806f-56b2-4e00-8b88-ac97e5733b57@linux.alibaba.com>
-Date: Mon, 10 Feb 2025 10:59:37 +0800
+	s=arc-20240116; t=1739156604; c=relaxed/simple;
+	bh=XmMAPUUl6UrrOhu4gf9m3BrrIGTrCUtCKZN6E/Uwhf4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=ajRyfuST9na1SwGy+iaEW3pk4uXIyfdqf0rW0id67Y9GhM+JV/ZsQwUR9uubeTE93WbrmNoOrZYy1C8QpaG6ULm+Lu/W1K2fK7T9lzV/M5haQxbh65m9mrK+uLu8HHNJfn0WVVrkMZCuHYoxHbQU7VHwmaZ14XwIlMvx2uQYqtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d143a428bcso49561935ab.1
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 19:03:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739156601; x=1739761401;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0e7ulM3071NpQz74IyAtk9x9tmxHHxE+ERRDrOeCGQQ=;
+        b=mz43/rVurSOUyAZsau+Gn+uMjJRxUQz1nnKJVtAF3+0ZX8RCDh4sQuhv7RtsbI7cWg
+         xW3yp8xsGRyReNop5whah+0HtoBxsWwFaUJANXpJmDE+0WeUd0QXw+9iPS14cXF2BYZP
+         RUkgN4v2EXFP+2sVBemcJAjI3zGASjUvM9tLt57xt6vQQma+6MiJYcTqn5IGtYWlz53P
+         KiACBhk7+Bn9fr3591dEVFcC26FxXKFL5gPrijOleEhp6wnGraq/5kNeRtfZwGjEToei
+         Ea31jPfWdrocHN897ebRF3SA5pu8yBnhfHjJ22ldx5Ho6ZGRBLQEkUEeUiHlnhrGoBwY
+         3pNA==
+X-Forwarded-Encrypted: i=1; AJvYcCU2MP4xTKbB+pIij0mmJMsxXJGtmpnOi9RDbYcyoLbyx/4T6/2Ci+0k2IDbRue0lw7YHR08rYcpLuE8+jE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhpVT8Ef0scQjAru/34jSW91WNejdi8FJoyCrDyXrnLd+2+yiT
+	fcNDngKtAtvjtSudvGl/vjZSHzS8f/Q5E08QSYD7J9WT/BPnVb1qm43m+8UzhEjnAsoZvs58iT+
+	INPiRxC2G9TCjvoSZAAk6neNpHHaIlWT4s9DX0lSaQabiSSjnPbIidIU=
+X-Google-Smtp-Source: AGHT+IGgG4qIkK9N0cdGQ1hIkgyZVLzZee3wmVcIGY49GhQWoVAZpNxkUi3EwDNnb2LdbzQh+70z8NtE0s+vJj8e30m4bcNvDH5S
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] erofs: use Z_EROFS_LCLUSTER_TYPE_MAX to simplify
- switches
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Hongzhen Luo <hongzhen@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250207085056.2502010-1-hongzhen@linux.alibaba.com>
- <29c5e464-4a11-42f4-b303-279c4b642471@linux.alibaba.com>
-In-Reply-To: <29c5e464-4a11-42f4-b303-279c4b642471@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:cd8d:0:b0:3d0:4b3d:75ce with SMTP id
+ e9e14a558f8ab-3d13df0fdeamr82045025ab.17.1739156601757; Sun, 09 Feb 2025
+ 19:03:21 -0800 (PST)
+Date: Sun, 09 Feb 2025 19:03:21 -0800
+In-Reply-To: <67535904.050a0220.2477f.0008.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a96c79.050a0220.110943.0025.GAE@google.com>
+Subject: Re: [syzbot] [input?] [usb?] KASAN: slab-out-of-bounds Read in mcp2221_raw_event
+From: syzbot <syzbot+52c1a7d3e5b361ccd346@syzkaller.appspotmail.com>
+To: bentiss@kernel.org, jikos@kernel.org, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+syzbot has found a reproducer for the following issue on:
+
+HEAD commit:    9682c35ff6ec usb: typec: thunderbolt: Remove IS_ERR check ..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=10b0c2a4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ed7570f7f6046a71
+dashboard link: https://syzkaller.appspot.com/bug?extid=52c1a7d3e5b361ccd346
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13c93b18580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=124a6bdf980000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/3c194e311f90/disk-9682c35f.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/daad45c8e7c8/vmlinux-9682c35f.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/8a4e74467d7e/bzImage-9682c35f.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+52c1a7d3e5b361ccd346@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: null-ptr-deref in mcp2221_raw_event+0xc1f/0x1030 drivers/hid/hid-mcp2221.c:818
+Write of size 141 at addr 0000000000000000 by task swapper/1/0
+
+CPU: 1 UID: 0 PID: 0 Comm: swapper/1 Not tainted 6.14.0-rc1-syzkaller-g9682c35ff6ec #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ kasan_report+0xd9/0x110 mm/kasan/report.c:602
+ check_region_inline mm/kasan/generic.c:183 [inline]
+ kasan_check_range+0xef/0x1a0 mm/kasan/generic.c:189
+ __asan_memcpy+0x3c/0x60 mm/kasan/shadow.c:106
+ mcp2221_raw_event+0xc1f/0x1030 drivers/hid/hid-mcp2221.c:818
+ __hid_input_report.constprop.0+0x312/0x440 drivers/hid/hid-core.c:2113
+ hid_irq_in+0x35e/0x870 drivers/hid/usbhid/hid-core.c:285
+ __usb_hcd_giveback_urb+0x389/0x6e0 drivers/usb/core/hcd.c:1650
+ usb_hcd_giveback_urb+0x396/0x450 drivers/usb/core/hcd.c:1734
+ dummy_timer+0x17f7/0x3960 drivers/usb/gadget/udc/dummy_hcd.c:1994
+ __run_hrtimer kernel/time/hrtimer.c:1738 [inline]
+ __hrtimer_run_queues+0x20a/0xae0 kernel/time/hrtimer.c:1802
+ hrtimer_run_softirq+0x17d/0x350 kernel/time/hrtimer.c:1819
+ handle_softirqs+0x206/0x8d0 kernel/softirq.c:561
+ __do_softirq kernel/softirq.c:595 [inline]
+ invoke_softirq kernel/softirq.c:435 [inline]
+ __irq_exit_rcu+0xfa/0x160 kernel/softirq.c:662
+ irq_exit_rcu+0x9/0x30 kernel/softirq.c:678
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
+ sysvec_apic_timer_interrupt+0x90/0xb0 arch/x86/kernel/apic/apic.c:1049
+ </IRQ>
+ <TASK>
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+RIP: 0010:native_irq_disable arch/x86/include/asm/irqflags.h:37 [inline]
+RIP: 0010:arch_local_irq_disable arch/x86/include/asm/irqflags.h:92 [inline]
+RIP: 0010:acpi_safe_halt+0x1a/0x20 drivers/acpi/processor_idle.c:112
+Code: 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 65 48 8b 05 78 dd ec 78 48 8b 00 a8 08 75 0c 66 90 0f 00 2d 48 9d 39 00 fb f4 <fa> c3 cc cc cc cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc9000014fd58 EFLAGS: 00000246
+RAX: 0000000000004000 RBX: 0000000000000001 RCX: ffffffff8716c579
+RDX: 0000000000000001 RSI: ffff888106a98800 RDI: ffff888106a98864
+RBP: ffff888106a98864 R08: 0000000000000001 R09: ffffed103eb26f35
+R10: ffff8881f59379ab R11: 0000000000000000 R12: ffff8881013d8000
+R13: ffffffff8934ea40 R14: 0000000000000001 R15: 0000000000000000
+ acpi_idle_enter+0xc5/0x160 drivers/acpi/processor_idle.c:699
+ cpuidle_enter_state+0xaa/0x4f0 drivers/cpuidle/cpuidle.c:268
+ cpuidle_enter+0x4e/0xa0 drivers/cpuidle/cpuidle.c:389
+ cpuidle_idle_call kernel/sched/idle.c:230 [inline]
+ do_idle+0x310/0x3f0 kernel/sched/idle.c:325
+ cpu_startup_entry+0x4f/0x60 kernel/sched/idle.c:423
+ start_secondary+0x222/0x2b0 arch/x86/kernel/smpboot.c:315
+ common_startup_64+0x12c/0x138
+ </TASK>
+==================================================================
+----------------
+Code disassembly (best guess):
+   0:	90                   	nop
+   1:	90                   	nop
+   2:	90                   	nop
+   3:	90                   	nop
+   4:	90                   	nop
+   5:	90                   	nop
+   6:	90                   	nop
+   7:	90                   	nop
+   8:	90                   	nop
+   9:	90                   	nop
+   a:	90                   	nop
+   b:	90                   	nop
+   c:	90                   	nop
+   d:	90                   	nop
+   e:	90                   	nop
+   f:	90                   	nop
+  10:	65 48 8b 05 78 dd ec 	mov    %gs:0x78ecdd78(%rip),%rax        # 0x78ecdd90
+  17:	78
+  18:	48 8b 00             	mov    (%rax),%rax
+  1b:	a8 08                	test   $0x8,%al
+  1d:	75 0c                	jne    0x2b
+  1f:	66 90                	xchg   %ax,%ax
+  21:	0f 00 2d 48 9d 39 00 	verw   0x399d48(%rip)        # 0x399d70
+  28:	fb                   	sti
+  29:	f4                   	hlt
+* 2a:	fa                   	cli <-- trapping instruction
+  2b:	c3                   	ret
+  2c:	cc                   	int3
+  2d:	cc                   	int3
+  2e:	cc                   	int3
+  2f:	cc                   	int3
+  30:	90                   	nop
+  31:	90                   	nop
+  32:	90                   	nop
+  33:	90                   	nop
+  34:	90                   	nop
+  35:	90                   	nop
+  36:	90                   	nop
+  37:	90                   	nop
+  38:	90                   	nop
+  39:	90                   	nop
+  3a:	90                   	nop
+  3b:	90                   	nop
+  3c:	90                   	nop
+  3d:	90                   	nop
+  3e:	90                   	nop
+  3f:	90                   	nop
 
 
-
-On 2025/2/7 17:14, Gao Xiang wrote:
-> 
-> 
-> On 2025/2/7 16:50, Hongzhen Luo wrote:
->> There's no need to enumerate each type.  No logic changes.
->>
->> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
->> ---> v3: Code cleanup, remove logically inequivalent changes.
->> v2: https://lore.kernel.org/all/20250207080829.2405528-1-hongzhen@linux.alibaba.com/
->> v1: https://lore.kernel.org/all/20250207064135.2249529-1-hongzhen@linux.alibaba.com/
->> ---
->>   fs/erofs/zmap.c | 60 +++++++++++++++++++------------------------------
->>   1 file changed, 23 insertions(+), 37 deletions(-)
->>
->> diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
->> index 689437e99a5a..7dba1573498b 100644
->> --- a/fs/erofs/zmap.c
->> +++ b/fs/erofs/zmap.c
->> @@ -265,23 +265,20 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
->>           if (err)
->>               return err;
->> -        switch (m->type) {
->> -        case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
->> +        if (m->type >= Z_EROFS_LCLUSTER_TYPE_MAX) {
->> +            erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
->> +                  m->type, lcn, vi->nid);
->> +            DBG_BUGON(1);
->> +            return -EOPNOTSUPP;
->> +        } else if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
->>               lookback_distance = m->delta[0];
->>               if (!lookback_distance)
->>                   goto err_bogus;'
-> 
-> Maybe just kill `goto err_bogus;` too, like:
->                          if (!lookback_distance) {
->                                  erofs_err(sb, "bogus lookback distance %u @ lcn %lu of nid %llu",
->                                            lookback_distance, m->lcn, vi->nid);
->                                  DBG_BUGON(1);
->                                  return -EFSCORRUPTED;
->                          }
-> 
-> Otherwise it looks good to me.
-
-Sorry, I was wrong.  I was missing the part of the end of
-function, how about the following diff?
-
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 7dba1573498b..d278ebd60281 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -273,7 +273,7 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
-                 } else if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
-                         lookback_distance = m->delta[0];
-                         if (!lookback_distance)
--                               goto err_bogus;
-+                               break;
-                         continue;
-                 } else {
-                         m->headtype = m->type;
-@@ -281,7 +281,6 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
-                         return 0;
-                 }
-         }
--err_bogus:
-         erofs_err(sb, "bogus lookback distance %u @ lcn %lu of nid %llu",
-                   lookback_distance, m->lcn, vi->nid);
-         DBG_BUGON(1);
-
-Thanks,
-Gao Xiang
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
