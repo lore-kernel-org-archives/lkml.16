@@ -1,167 +1,198 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B357244195;
-	Mon, 10 Feb 2025 16:10:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739203823; cv=none; b=gYtv5hmZsM4+2bJt2UHGatvufJCFA+Ibii/Pk0LJ90JJYcDG14ZlXzkbG1WbrtF4vfoqEb+ySw3qJ4+m4KygerziH2RlWcdusd1U1YoR987xv3XXLYulKi09Eg5UOsLWzW3zSgnNwnXw72OiirZqwDXEvluOfRq2gUYLDGlHLmo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739203823; c=relaxed/simple;
-	bh=kQSx4IU/m6R9MPvDY5/22wbi1KGghWKBeHhjKPuP/Sw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YYPoY6RwIV/d+f64OVBS9a/sovC3OPkZpiDeDTN3I6b2xYm2G7n++drLQDDAbp83TINwsidx/TBIsG7sHMG6EahLLOMxXSP0b0sZdNC9UGXyyCOjiqawWMyp1uJimw//mPprMmbYku/CC0hIM6ZVY5Zy7yCrzWKFeoUfv0eSgfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V3JYh9j1; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276F224F588
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:10:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739203845; cv=pass; b=XXa4hfT4q+qGSxhoKHuoErFT4uYZLYEgB99asDcgdcKT6mKlnHvSmLnjDdg3GETJ0FPD9sctVWBhws+w3tNGHA4wDk01rsw7bID/WRMjcrf+0UDH6yz5GtHcksAI26fOX86nqaOAO3O2E2uxou/BEahzmVggg71xwl5lTusr/cA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739203845; c=relaxed/simple;
+	bh=eS90uzrC1VmoWa/UH3TscbPfyy9fPLv9EMAixNakVcY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QAzROFrECqhq5AvnyqslesurT5Rt4B6pUkmLu28qOPweNhRmceeEttAXZt9JcVb9l8tJ24pBJOTk/WHfY0OTDYy8q6oJK8WxdOM2h660KTLE55NUQrCxuNGlZY+eUvTwsogQR1AXg3B5YAmVNWuC1TCQc5MCVWnSPO7LLMtF9T4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=SW1X40h6; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3JYh9j1"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21f7f1e1194so42457005ad.2;
-        Mon, 10 Feb 2025 08:10:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739203821; x=1739808621; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=+TJgYMmTYcZw8reK5LOjccSW5UTYnPTpO1MNsbf/OOI=;
-        b=V3JYh9j1FT7usZimTDMOjw9MkWGFyyh1VEQDiRbsFusiHPwsosgo/663GvbnXbewI8
-         d5GqDSpD4wg+N6rWt37PqV1t3+JdlHp36rZ5skYmCvdxWX/CQV3YC9O3gdL+1nyurZuh
-         UJ6pGbX/VTGgUWbL/xow3hVCrTfW9M8ogGlvmsqtjPt4PCvzxX11BZu+iDQpmImaXWW/
-         N3aF0CbPcC5iZ/MlmYZ4p5Z3lyJFc5pRt8fZMrbnH48tTW9OfIs0iVyknyvlEBozzi3U
-         FIwvJ1YGoQBCc0hokkY5+Dg87+6xjAeqi/oooA0TGx+Jl8BAq55+2YP5UwG5/qASlt8T
-         44NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739203821; x=1739808621;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+TJgYMmTYcZw8reK5LOjccSW5UTYnPTpO1MNsbf/OOI=;
-        b=aDVWZKXjtU/WvA6d0bFx2LNXA5kIrhHLDyLl2k/c5fcWwwB6aaSpDcwoi80nc490hO
-         ysAaITgN07Io9emQEGTLctqlZcKdVikTks5CIpxybtLyCoZobbpbGZw+xgxs+b0e0ZGo
-         ThcsRdndW283D91hFLezQdtQ9ERw6l57aHD4/s4k955DlQ+OOsSxN3hwfQG2We/cj+9/
-         ptO7YwWpkpQ1J4FJCsrFeiQ2yC9kc3dmG336BYXcDPCKvXSWNZUsNgY8j7SrEEdXrDPt
-         914xKXLQAGuS4qgFxV9Ts2R7Usae3tgdbTW36TxGPAx1A6GLOouJrhhKlenixW07+uY/
-         ZNjw==
-X-Forwarded-Encrypted: i=1; AJvYcCWHaC0hzMpHpTHc8K6kBl3XTZN+8Fd5ydn6kXQ56uiFmP0VOFpu67mg12+sfXgv6BlL9UP0blW+U9CjllpD@vger.kernel.org, AJvYcCWVg7DakAnuEubJS/wE/Z+Bogd4l7U3uf4oGc4BIP744/M3tHWiyvNCS1EJqiUpt/8/3BIEvvj0rs/v/g==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbO3cJjQ44ganDS7nsnk7Y6fA3v2bN3SGD/NSmr6o7AwE72kqZ
-	Q3jC/upI0w0l8Dq5H0LcpLo7TjTKSUtwr0b90LaXAv0l4CaFuz6L
-X-Gm-Gg: ASbGnctx2JSM72Ogi8qx4SNZQWAzy1os9KzM8UALYgIm+SmJHb1yNvhxPtxozKqdNfA
-	kfp7vtrbuMAw6rALQyEjSLy25dWM3VTn54xy9tB9A8P1J80SI6a/vs/h1TMRqmxpS5mQBpB6Foi
-	zmTsqTdTpLNhNvIn6kl23G2jpRJauV19WczD4d5xSa53QYLDLW7dgpXDQz6khVwxQe89Yket+sV
-	nCwJEEtj05GbZYfNvvAOfgSBxJTEUmuzlkPGbpBnK70Fzzsaw5nz2b98KmqfoExbUKKNRhCEuRX
-	lJNVRluRpp/xGMzSci0/ApjNfqaMpmyl/1G68o2pN56ejHeU3LlYvvUrE6e4xlOu
-X-Google-Smtp-Source: AGHT+IHcwFTzmEqZWtoeh7mWEArFs4yJg+WNPnZYC2w6JCoYCAfFh+25IR89qFyLWfT2M7UzYZ+kfw==
-X-Received: by 2002:a17:902:e802:b0:21f:35fd:1b6c with SMTP id d9443c01a7336-21f4e76372cmr225654315ad.45.1739203821295;
-        Mon, 10 Feb 2025 08:10:21 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3653c997sm79890705ad.78.2025.02.10.08.10.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 08:10:20 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <637e2e72-2799-4914-aa96-9987edc1bfa4@roeck-us.net>
-Date: Mon, 10 Feb 2025 08:10:01 -0800
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="SW1X40h6"
+ARC-Seal: i=1; a=rsa-sha256; t=1739203827; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Hf/RLdlUNYREiBQJ8fiX4v8SdnSWhAVgMGa8VKGwfHf6C2aWOE5A/OrmoXnD4OWveukgUGKnG9Mv066D8XED3yh3ckXW13Pe1jUKUxggRkXNVx8ca7FDtbn5k1sOLTPnPRmncnl9u8uVf9pzfuVpaAtGhYxCaMoO5sIOUw48qk4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1739203827; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=zEeMspH9+O8rSxQqjspXXQMp9KLZr6bhowachpeWPeM=; 
+	b=kw0Kxs/LJ3pcBpak1SIWuFt6r4BA/Xu8IESaaGPjlsO88h5licXtgPL3/ursh+yGF2kBI0BJ8M4lpDaMTyDK0Y2LZrvwRDqmvSYOhPJ+xP0IdxdvawD7uEkZSFo/GaIJeAb7rin56rR1vMdDV9J0ZR4Smpg9VzS1y40J9Fzq3hg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
+	dmarc=pass header.from=<adrian.larumbe@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739203827;
+	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:Message-Id:Reply-To;
+	bh=zEeMspH9+O8rSxQqjspXXQMp9KLZr6bhowachpeWPeM=;
+	b=SW1X40h63+2I5ZjQ1v5SqWSre31q7EfZzfoKU+UmNtMdJY32Cw+RG7yuLaw8r/6T
+	/b7UrnjqTOg0tDoCB8XJfWuNUB6lE11GxtTHAP+sB+Ts5Sjp5Bju4M/tWOr+O+xyUSg
+	tJBZ7i7Z0/IFDHFv65AQA0fomAXuaNTLw71Du5As=
+Received: by mx.zohomail.com with SMTPS id 1739203825785373.87392798918313;
+	Mon, 10 Feb 2025 08:10:25 -0800 (PST)
+Date: Mon, 10 Feb 2025 16:10:23 +0000
+From: =?utf-8?Q?Adri=C3=A1n?= Larumbe <adrian.larumbe@collabora.com>
+To: Tvrtko Ursulin <tursulin@ursulin.net>
+Cc: Boris Brezillon <boris.brezillon@collabora.com>, 
+	Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, kernel@collabora.com, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] drm/panthor: Replace sleep locks with spinlocks in
+ fdinfo path
+Message-ID: <aryumfhxzg2hqszlgwfjtnvf5lgu6a6rvfbhv6jmvabonghxpm@iowcjhketo2q>
+References: <20250210124203.124191-1-adrian.larumbe@collabora.com>
+ <2ec2a848-90f4-49bc-aaaf-8eb256f271db@ursulin.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] hwmon: emc2305: Update cooling device registration to
- include device node
-To: florin.leotescu@oss.nxp.com, Jean Delvare <jdelvare@suse.com>,
- linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
- viorel.suman@nxp.com
-Cc: Florin Leotescu <florin.leotescu@nxp.com>
-References: <20250210073158.336522-1-florin.leotescu@oss.nxp.com>
- <20250210073158.336522-2-florin.leotescu@oss.nxp.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20250210073158.336522-2-florin.leotescu@oss.nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2ec2a848-90f4-49bc-aaaf-8eb256f271db@ursulin.net>
 
-On 2/9/25 23:31, florin.leotescu@oss.nxp.com wrote:
-> From: Florin Leotescu <florin.leotescu@nxp.com>
+This is the debug log for the second patch in the series:
+
+[18325.029172] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:562
+[18325.029947] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 203483, name: cat
+[18325.030646] preempt_count: 1, expected: 0
+[18325.031012] RCU nest depth: 0, expected: 0
+[18325.031387] INFO: lockdep is turned off.
+[18325.031754] CPU: 4 UID: 0 PID: 203483 Comm: cat Tainted: G        W          6.14.0-rc1-panthor-next-rk3588-fdinfo+ #1
+[18325.031763] Tainted: [W]=WARN
+[18325.031767] Hardware name: Radxa ROCK 5B (DT)
+[18325.031772] Call trace:
+[18325.031777]  show_stack+0x24/0x38 (C)
+[18325.031813]  dump_stack_lvl+0x3c/0x98
+[18325.031827]  dump_stack+0x18/0x24
+[18325.031833]  __might_resched+0x298/0x2b0
+[18325.031844]  __might_sleep+0x6c/0xb0
+[18325.031850]  __mutex_lock_common+0x7c/0x1950
+[18325.031875]  mutex_lock_nested+0x38/0x50
+[18325.031889]  panthor_vm_heaps_sizes+0xa8/0x158 [panthor]
+[18325.031973]  panthor_show_fdinfo+0x1a0/0x228 [panthor]
+[18325.032040]  drm_show_fdinfo+0x1a4/0x1e0 [drm]
+[18325.032328]  seq_show+0x274/0x358
+[18325.032343]  seq_read_iter+0x1d4/0x630
+[18325.032358]  seq_read+0x148/0x1a0
+[18325.032364]  vfs_read+0x114/0x3e0
+[18325.032377]  ksys_read+0x90/0x110
+[18325.032383]  __arm64_sys_read+0x50/0x70
+[18325.032389]  invoke_syscall+0x60/0x178
+[18325.032400]  el0_svc_common+0x104/0x148
+[18325.032406]  do_el0_svc+0x3c/0x58
+[18325.032413]  el0_svc+0x50/0xa8
+[18325.032422]  el0t_64_sync_handler+0x78/0x108
+[18325.032427]  el0t_64_sync+0x198/0x1a0
+
+On 10.02.2025 15:52, Tvrtko Ursulin wrote:
 > 
-> This patch updates the EMC2305 hwmon driver to register the thermal
-> cooling device with Device Tree (DTS) node. This change allows
-> cooling device to be configured based on the properties defined
-> in the Device Tree.
+> On 10/02/2025 12:41, Adrián Larumbe wrote:
+> > Panthor's fdinfo handler is routed through the /proc file system, which
+> > executes in an atomic context. That means we cannot use mutexes because
+> > they might sleep.
 > 
-> Signed-off-by: Florin Leotescu <florin.leotescu@nxp.com>
-> ---
->   drivers/hwmon/emc2305.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
+> Have the debug splat at hand? I am thinking it is not because of fdinfo reads,
+> which are allowed to sleep, but has to be something else.
 > 
-> diff --git a/drivers/hwmon/emc2305.c b/drivers/hwmon/emc2305.c
-> index 4d39fbd83769..18e765902d32 100644
-> --- a/drivers/hwmon/emc2305.c
-> +++ b/drivers/hwmon/emc2305.c
-> @@ -293,8 +293,9 @@ static int emc2305_set_single_tz(struct device *dev, int idx)
->   	pwm = data->pwm_min[cdev_idx];
->   
->   	data->cdev_data[cdev_idx].cdev =
-> -		thermal_cooling_device_register(emc2305_fan_name[idx], data,
-> -						&emc2305_cooling_ops);
-> +		devm_thermal_of_cooling_device_register(dev, dev->of_node,
-> +							emc2305_fan_name[idx], data,
-> +							&emc2305_cooling_ops);
-
-
-The use of a devm_ function means that
-
-         for (i = 0; i < EMC2305_PWM_MAX; i++)
-                 if (data->cdev_data[i].cdev)
-                         thermal_cooling_device_unregister(data->cdev_data[i].cdev);
-
-and thus each call to emc2305_unset_tz() will be fatal after this change.
-I don't mind the change itself, but emc2305_unset_tz() and all calls to it
-will have to be removed as well.
-
-Guenter
-
+> Regards,
+> 
+> Tvrtko
+> 
+> > This bug was uncovered by enabling some of the kernel's mutex-debugging
+> > features:
+> > 
+> > CONFIG_DEBUG_RT_MUTEXES=y
+> > CONFIG_DEBUG_MUTEXES=y
+> > 
+> > Replace Panthor's group fdinfo data mutex with a guarded spinlock.
+> > 
+> > Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+> > Fixes: e16635d88fa0 ("drm/panthor: add DRM fdinfo support")
+> > ---
+> >   drivers/gpu/drm/panthor/panthor_sched.c | 26 ++++++++++++-------------
+> >   1 file changed, 12 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
+> > index 0b93bf83a9b2..7a267d1efeb6 100644
+> > --- a/drivers/gpu/drm/panthor/panthor_sched.c
+> > +++ b/drivers/gpu/drm/panthor/panthor_sched.c
+> > @@ -9,6 +9,7 @@
+> >   #include <drm/panthor_drm.h>
+> >   #include <linux/build_bug.h>
+> > +#include <linux/cleanup.h>
+> >   #include <linux/clk.h>
+> >   #include <linux/delay.h>
+> >   #include <linux/dma-mapping.h>
+> > @@ -631,10 +632,10 @@ struct panthor_group {
+> >   		struct panthor_gpu_usage data;
+> >   		/**
+> > -		 * @lock: Mutex to govern concurrent access from drm file's fdinfo callback
+> > -		 * and job post-completion processing function
+> > +		 * @fdinfo.lock: Spinlock to govern concurrent access from drm file's fdinfo
+> > +		 * callback and job post-completion processing function
+> >   		 */
+> > -		struct mutex lock;
+> > +		spinlock_t lock;
+> >   		/** @fdinfo.kbo_sizes: Aggregate size of private kernel BO's held by the group. */
+> >   		size_t kbo_sizes;
+> > @@ -910,8 +911,6 @@ static void group_release_work(struct work_struct *work)
+> >   						   release_work);
+> >   	u32 i;
+> > -	mutex_destroy(&group->fdinfo.lock);
+> > -
+> >   	for (i = 0; i < group->queue_count; i++)
+> >   		group_free_queue(group, group->queues[i]);
+> > @@ -2861,12 +2860,12 @@ static void update_fdinfo_stats(struct panthor_job *job)
+> >   	struct panthor_job_profiling_data *slots = queue->profiling.slots->kmap;
+> >   	struct panthor_job_profiling_data *data = &slots[job->profiling.slot];
+> > -	mutex_lock(&group->fdinfo.lock);
+> > -	if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_CYCLES)
+> > -		fdinfo->cycles += data->cycles.after - data->cycles.before;
+> > -	if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_TIMESTAMP)
+> > -		fdinfo->time += data->time.after - data->time.before;
+> > -	mutex_unlock(&group->fdinfo.lock);
+> > +	scoped_guard(spinlock, &group->fdinfo.lock) {
+> > +		if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_CYCLES)
+> > +			fdinfo->cycles += data->cycles.after - data->cycles.before;
+> > +		if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_TIMESTAMP)
+> > +			fdinfo->time += data->time.after - data->time.before;
+> > +	}
+> >   }
+> >   void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
+> > @@ -2880,12 +2879,11 @@ void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
+> >   	xa_lock(&gpool->xa);
+> >   	xa_for_each(&gpool->xa, i, group) {
+> > -		mutex_lock(&group->fdinfo.lock);
+> > +		guard(spinlock)(&group->fdinfo.lock);
+> >   		pfile->stats.cycles += group->fdinfo.data.cycles;
+> >   		pfile->stats.time += group->fdinfo.data.time;
+> >   		group->fdinfo.data.cycles = 0;
+> >   		group->fdinfo.data.time = 0;
+> > -		mutex_unlock(&group->fdinfo.lock);
+> >   	}
+> >   	xa_unlock(&gpool->xa);
+> >   }
+> > @@ -3531,7 +3529,7 @@ int panthor_group_create(struct panthor_file *pfile,
+> >   	mutex_unlock(&sched->reset.lock);
+> >   	add_group_kbo_sizes(group->ptdev, group);
+> > -	mutex_init(&group->fdinfo.lock);
+> > +	spin_lock_init(&group->fdinfo.lock);
+> >   	return gid;
+> > 
+> > base-commit: 2eca617f12586abff62038db1c14cb3aa60a15aa
+> > prerequisite-patch-id: 7e787ce5973b5fc7e9f69f26aa4d7e5ec03d5caa
+> > prerequisite-patch-id: 03a619b8c741444b28435850e23d9ec463171c13
+> > prerequisite-patch-id: 290e1053f8bf4a8b80fb037a87cae7e096b5aa96
+> > prerequisite-patch-id: bc49bb8c29905650fb4788acc528bb44013c0240
+> > prerequisite-patch-id: 46cab4c980824c03e5164afc43085fec23e1cba5
