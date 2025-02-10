@@ -1,76 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1263C24BD0E;
-	Mon, 10 Feb 2025 15:43:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DC213DBB1;
+	Mon, 10 Feb 2025 15:43:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739202216; cv=none; b=h44zDtdRi+3RdqCKNR2KVXWidmZw99N2lzsZSjuX4+HYxMIvMkJfjnq+yxIUPZlhow94AjwY16RzkJxu1AlwKAT+RFu+G0HbUFJxvCG3iRJCoYyXCHpntL2trICmJxU6srwmS6cST/aS0+HkdEEi4YPGX1Cu+75AFUpNqjIJYTA=
+	t=1739202232; cv=none; b=nS3CqNFfj6vdWAT5osUNVN2ijbSrnIBu2x464bLKwbdU+N0DP3R4CwGTfCWofnJpkVW+xWyVQ4XeOuVgrWIdxawagbadfuNBUsOcbwjL8iLXiuyH9dfHccP+ho4KyjPFSoJ3TDUyY17bSnA5dYK0rH3Kjady1a/Q9nTksgThbfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739202216; c=relaxed/simple;
-	bh=WZS3sU0sd86m5bHMF0peMXVJ5xWj23Gx8p6IR1Vj8QM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mB6XNa7SPCOLg0ud6BIefpIiYtnNed7WnxXTlZGEP5HP/yLoBPraAKleZROWPkdy4BOdrzVHkK6KaOXRDKOF9Ms+YID4tKEe3yfBAxGHqxAGM8aVF9LcffEIQJk9zE2I32D6ewG5pLObRoBN+0wuxekIlxhfT43ULqvCnXdkTAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0YETIzB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739202232; c=relaxed/simple;
+	bh=xjgCzg14LZVEzK+2FT5mM7D/kwUkrNSzvBKVRM9rv1s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pCWlVLQIGsvpm2sh+4OArx2E0H0yD/OwBBNzUkFSqax+mo50/PYFQmtkA7BkL/yjN1lCHPVN6+gWwKeRpODNaNwqztbB/f1mTNmcKd46vCOMvuXEb98m1PjUB8HON/XpwEeomaSgKAUeqLbN2jUUph+yTXtDPKOynuhpA1KKZY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ags9qx85; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0YETIzB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94D83C4CEDF;
-	Mon, 10 Feb 2025 15:43:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ags9qx85"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C03DBC4CED1;
+	Mon, 10 Feb 2025 15:43:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739202215;
-	bh=WZS3sU0sd86m5bHMF0peMXVJ5xWj23Gx8p6IR1Vj8QM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L0YETIzBl11DiMk52ESkHHlfdY1zRHLPCMB2BIZWKn3NgekVPVRx96vKjr4BYpWye
-	 mheMWPsGKlo4G+s8SoLFNWEQoiWSEWj/sSvC1dlhS+RDzEssnVnvbPKj/bv7VKw7et
-	 KRZ5stzP5kxqnbB7GjzucUt2j5KfZVpAkZL3abjoCDgsTKGqmAZr4MbIB5lmNpenVa
-	 0jbGclfi2rBfaOrgEAzdh56SZDoGb3m2y7ug1npjMznkMNsPZ53+sEcYXDOXDj+djQ
-	 n7KdebyCtqAj4MHZxr2q5N/vqmuXBwKBWzfTQVapAtCrnXAQEccbONuwtvJs3PBW5z
-	 3z1MxcfZg24gA==
-Date: Mon, 10 Feb 2025 07:43:34 -0800
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Ole Schuerks <ole0811sch@gmail.com>, linux-kbuild@vger.kernel.org,
-	jude.gyimah@rub.de, thorsten.berger@rub.de, deltaone@debian.org,
-	jan.sollmann@rub.de, linux-kernel@vger.kernel.org,
-	nathan@kernel.org, nicolas@fjasle.eu
-Subject: Re: [PATCH v7 00/11] kconfig: Add support for conflict resolution
-Message-ID: <Z6oeplCypN825pyR@bombadil.infradead.org>
-References: <20250208163959.3973163-1-ole0811sch@gmail.com>
- <CAK7LNAQBBKfSwQ=z3yBchg--gcrAykWz6xvpAYWKse9R9g8KVQ@mail.gmail.com>
+	s=k20201202; t=1739202231;
+	bh=xjgCzg14LZVEzK+2FT5mM7D/kwUkrNSzvBKVRM9rv1s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Ags9qx85VeP6lj16+NnJKJ8Ip+V40x3X8mfotUkuAPcEuQKYSqJYLVNiergps3arl
+	 0C5CG3FgfvcGI59qIejAA1UgfIfs7MPxsAzgBD7QK41MXgBVwPvMho3VR/2efqLmDo
+	 8ik3fviZououtDGjilZCYS/vYP0dRQ0f02STCP5atmlIKkgdtUab4XoJ731kQuQFBe
+	 zFgN5gkjBhQo5qYHfUbggRHxI91QH7VH81XLPrrQDbj7l6kt5Yr1SbXuPTVuYcqlQH
+	 zvHAv5UBqKbGG35yDVhUAb/A8Hmu460LeW1U5h65h8c55SoGi6AAeyQ5rR+5XS3N3u
+	 aiLSVKYV1pAtQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: [RFC PATCH v2 0/3] tracing: Improve persistent ring buffer
+Date: Tue, 11 Feb 2025 00:43:47 +0900
+Message-ID: <173920222697.826592.3726270716809214055.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAQBBKfSwQ=z3yBchg--gcrAykWz6xvpAYWKse9R9g8KVQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 10, 2025 at 02:00:52PM +0900, Masahiro Yamada wrote:
-> Thanks for this, but I have no plans to merge the SAT solver.
-> 
-> The reason is that my future plan is to move toolchain selection
-> to the Kconfig stage instead of specifying it statically from the command line.
+Hi,
 
-That makes sense.
+Here is the 2nd version of the patch and additional improvement for ring
+buffer on reseved memory. This depends on the series of "ring-buffer/tracing:
+Save module information in persistent memory" here;
 
-> This approach was suggested by Linus [1], and to achieve that,
-> the shell evaluation must be dynamically re-evaluated [2].
+https://lore.kernel.org/all/20250205225031.799739376@goodmis.org/
 
-Sure.
+In v2, I removed my first 2 patches, and fixes the 3rd patch. It also add
+module LRU override feature which replaces the oldest removed module if
+the module table is full.
 
-> The SAT solver would likely conflict with this plan. At least due to the
-> significant amount of additional code, which would be an obstacle.
+I also added 2 patches to release the memory of persistent ring buffer
+if user does not need it anymore. Currently persistent ring buffer has
+to be enabled by kernel cmdline, user can not remove it without
+changing the cmdline and rebooting. This feature allows user to remove
+persistent ring buffer and release the memory without rebooting. Thus
+user can set it up by default and remove it if it is not used anymore.
 
-I can't see how the toolchain selection, if set on Kconfig can't be
-leveraged later to enable / disable the SAT solver, however I can
-see the amount of code shuffling incurred to be an extra hurdle to
-address and a preference to leave that for later.
+Thank you,
+---
 
-In other words, I susepct it is still possible to evaluate to
-add support for the SAT solver post toolchain kconfig integration.
+Masami Hiramatsu (Google) (3):
+      tracing: Show last module text symbols in the stacktrace
+      mm/memblock: Add reserved memory release function
+      tracing: Freeable reserved ring buffer
 
-Thoughts?
 
- Luis
+ include/linux/mm.h          |    1 
+ kernel/trace/trace.c        |  190 ++++++++++++++++++++++++++++++++++++++++---
+ kernel/trace/trace.h        |    5 +
+ kernel/trace/trace_output.c |    3 -
+ mm/memblock.c               |   72 ++++++++++++++--
+ 5 files changed, 244 insertions(+), 27 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
