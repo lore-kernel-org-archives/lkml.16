@@ -1,78 +1,67 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F32E24C67D
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E6424C67D;
+	Mon, 10 Feb 2025 19:52:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739217176; cv=none; b=jLLl1ejR3+OgjscsQoVhlgRflHkNi9FE5KIyEI15HJik30uJbcn6sXY6GwDlVHqrEmHH85G63+WsiO1N+g7CXLD2RvAOqne20RhYuPsLnsXqqd5sbDrttWhPmIlgMLeNN3s8CYnLHLPm72HDEH8Q4vJ02c9qnyDviPQow5LWz3I=
+	t=1739217180; cv=none; b=CUVyvJwUYLA2KwXmnaeioB0Q/K+AUZTUEsKS474+ZOPz9uvffRrBiuwhM3O+goGRthF1Aye3tw/otr7njaV0WrLGX9XSc70B99NeAWgFcJtocxVsP39n+GoUiJEf9nD+ACPntFRRbCHJGdMfMnRThMFXJGw3+d/vFU1Isxy2C1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739217176; c=relaxed/simple;
-	bh=NGEj4sT+ZFiE7KJ3birqqGN69PaGP6e4B843Ge8LRdI=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=RQ5CSPlId7xOQHwbOW5ajHHkFVBMDkbUq1jbzQH7pqQr8W9fe+zNZyyY7NScGskgK1oWVwgL/K7VjU0CluzDghgHy1WEPDYCc7SZh/AcrT+CAnw6tgOtUbyKSqG+7JULFgZ0BMPLmou2v2Qf0W5PK305vykdodOnLAjw48yiE1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=q5+YN6k7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SViL+dzs; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1739217180; c=relaxed/simple;
+	bh=u3go52+PIMtG/gTRInrarD+s26tZyiao9L8Re2LEBms=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tu113AJt9qw4JhXhWmDXcbj6VnR7S73X0RKIydlvnN7igU0AG5vTFn1scI1kNMKl7AJIvYXtWPvlChDgwmqWpLk1vIxRDYsQhLU7BaRTEy3YQ9JTB3XPvLQHWGspWIB5NbWQ8CtLrPiZIfNBBr8xIQefbD6WcFbuZbxX2aB+3p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mpzgbsCt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q5+YN6k7";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SViL+dzs"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739217171;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yNBNohQlvDYU1rylWLfk3BumUzUQF+tRBpWGImScioI=;
-	b=q5+YN6k7cXvy3E2cYd6XOt9/ovhHusva2j0y9eHAP15e6iHF/Uxf7XO0kagbVYWDGxImXT
-	P8TAWPM0EmXI9SWdUzSGRAGsODa6BOInituWpikDoqWwGTV3ccc8P+zQbePEfmhJwfvxF8
-	3AmFPTxvjPPTUXGT5xA2fFA0F2c93Zzg2xUYZvooC0fozGKlkLPGWW0IgK7fNe9rstXdJQ
-	DDoB5y7K5YOgVcpRJB28Jg0mht2pTFHzjyATUSizHKqU8f1EoFC4IHXCWETyWV48+/Vg2A
-	qkEbfE/so0T0trp67DW0yXCrK77E/26Df/HHqL+6rBovmwG55JsBJPj+7S3+qw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739217171;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yNBNohQlvDYU1rylWLfk3BumUzUQF+tRBpWGImScioI=;
-	b=SViL+dzszwerqC31niQxQ5YKDUZ8W2zb7fg4pyF/oS23we5TkGxRuLG/eZTOnVhke3gCCD
-	eezX4vu5BBdajYAw==
-To: Jens Axboe <axboe@kernel.dk>, Nam Cao <namcao@linutronix.de>, Anna-Maria
- Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
- <frederic@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hrtimers: Make hrtimer_update_function() less expensive
-In-Reply-To: <b6f4b197-becb-4150-8986-2c568f7e738c@kernel.dk>
-References: <cover.1738746927.git.namcao@linutronix.de>
- <9b33f490fb1d207d3918ef5e116dc3412ae35c1e.1738746927.git.namcao@linutronix.de>
- <35d4b9be-3d08-4eaa-8750-7b34ec6e6064@kernel.dk> <87y0yjm4hi.ffs@tglx>
- <4f317ca3-0ffd-4ee0-9da6-8b80a6366d0f@kernel.dk> <87h656n3r6.ffs@tglx>
- <ad55978e-4356-494e-8cda-9e6487344768@kernel.dk> <87ikpllali.ffs@tglx>
- <b6f4b197-becb-4150-8986-2c568f7e738c@kernel.dk>
-Date: Mon, 10 Feb 2025 20:52:51 +0100
-Message-ID: <87frkllgq4.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mpzgbsCt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF588C4CEE4;
+	Mon, 10 Feb 2025 19:52:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739217179;
+	bh=u3go52+PIMtG/gTRInrarD+s26tZyiao9L8Re2LEBms=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mpzgbsCtMxNvC9NoLinpwqESnHcD4q5TuZAn5hDLZF6hUm3E1H54lt/ZTGAWOhmyw
+	 Zvw4UMY9JjVsh4M5pHWaWZ9K1NWgSIAKZ9+H6OdAon17Y6mqLiz0ZpKVIYnxxGTP6H
+	 rMq1IDzEXVZuO0GrK0nvQpU3bJM8gFMYLSTsRCQWWPBKYxEcdRptiaTyQ9yPs2jw3J
+	 LcihPtKLa/Bgf1jDiRao1/Y/B+vXXhry9eEV2B4cjCvWCRbqg1Lf7JiDHEjN8ORImC
+	 sGf06Soq324gfSYVK5xOSLF//CP+aDcsC59dS1PvFQp1sb4yvpeoQ17cyIxT4k6Gbg
+	 WZgPWaPnMn2cw==
+Date: Mon, 10 Feb 2025 19:52:55 +0000
+From: Simon Horman <horms@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 15/15] mptcp: pm: add local parameter for
+ set_flags
+Message-ID: <20250210195255.GC554665@kernel.org>
+References: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-0-71753ed957de@kernel.org>
+ <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-15-71753ed957de@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-15-71753ed957de@kernel.org>
 
-On Sat, Feb 08 2025 at 08:18, Jens Axboe wrote:
+On Fri, Feb 07, 2025 at 02:59:33PM +0100, Matthieu Baerts (NGI0) wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> This patch updates the interfaces set_flags to reduce repetitive
+> code, adds a new parameter 'local' for them.
+> 
+> The local address is parsed in public helper mptcp_pm_nl_set_flags_doit(),
+> then pass it to mptcp_pm_nl_set_flags() and mptcp_userspace_pm_set_flags().
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-> On 2/7/25 2:16 PM, Thomas Gleixner wrote:
->> The sanity checks in hrtimer_update_function() are expensive for high
->> frequency usage like in the io/uring code due to locking.
->> 
->> Hide the sanity checks behind CONFIG_PROVE_LOCKING, which has a decent
->> chance to be enabled on a regular basis for testing.
->
-> Looks good to me, thanks Thomas. On my side, I always have a debug run
-> done with PROVE_LOCKING and KASAN, fwiw.
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-I assume that with that your objections against the conversion of ioring
-to hrtimer_update_function() is gone too.
-
-Thanks,
-
-        tglx
