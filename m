@@ -1,152 +1,123 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F222580F1
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85552580D6;
+	Mon, 10 Feb 2025 16:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739204827; cv=none; b=BVf1SA7w2Bg8c0pORxrMGAd4lpFDTINHj9WizS5jpN6XNFCB43V8B3gFRGMc2CJ9juEqPxFzZtOG4gOf6KaYETrZgMu/0aMF1VDGzazKxcnACLYvDEEoLm4DR1et55luXpKIiVG2QrhWfVSpO5Of61twlJwlUlxYSMGkBkwc0XQ=
+	t=1739204842; cv=none; b=gA5fV+fOmpADKz/INsbYv9jw477c++rbeMSYbCkye4lidaarJJlxS89nZONO6PCVISsw5cnCErAA5xhV+akafTYQpBqaQly8Zu9I3hpdfmNmJ1T3afCQPVBPngwCgJB74IdaK1Ovr2E3iIqFwD52iizF/QdqJriJZMYg1iOixd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739204827; c=relaxed/simple;
-	bh=OrGnLEaPA40Ypy50xxSGb6NuXyxZCay7HGv5220MxuU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h44SaFYtTxFCsdtQwUKjcl1hgkOp/Ji/L57jjkSX1L+1SmU8xK/MDwK3Kkblsj5/Qna43GyXowWbTqH+76XxXuHYV4xDHskPjRLOnN3OM4dC+sX8NbT899tY7fD++INdRvir6iz/JEL6MPFYclHMJE5LAEo1ZPJwjn8KD7KM3CY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=KHpd0st0; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="KHpd0st0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=qDMJjCqZ/aFVApe15tYIJ4bIehn01MV7+TcmlbZlq+Q=; b=KHpd0st00sXgIk5WQxaRD3PvIq
-	NmQRNFN4gKRGhvM2ZswwRvR8EY4O3sKMmdFbIyDhLR3obsXQsWt2annXPCSZ8A3EXoqarpy5JWCh3
-	ZKY5bPInmuAQCN7ptDBsyytcla8pl1uShiwSGAAm9c9jMmrCUVWUxwGL49m3c5OEcRyXqc+TGrGpX
-	gmr05OQBjHBsOatVqA91435FyrPtj3GP6+dbd1GM53QNYesVqHq6lIQDnJ3gEJ5PF4gt/La5IzGjU
-	uJC30xUG3Ws07gXKNPbFMACQDPFhGIfHPvQRwSCx64KFNiNkh7VOtHufm33v206AU0Tmzbl3tqlJt
-	iX6GaSXQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:53332)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1thWcd-0007UO-2b;
-	Mon, 10 Feb 2025 16:26:59 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1thWca-0007dV-0y;
-	Mon, 10 Feb 2025 16:26:56 +0000
-Date: Mon, 10 Feb 2025 16:26:56 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	Ben Segall <bsegall@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/9] arm: Rely on generic printing of preemption model.
-Message-ID: <Z6oo0MExaEy5J55_@shell.armlinux.org.uk>
-References: <20250203141632.440554-1-bigeasy@linutronix.de>
- <20250203141632.440554-4-bigeasy@linutronix.de>
- <20250210120429.iFfBClW1@linutronix.de>
- <Z6oYO5uKlEJ8C8Ne@shell.armlinux.org.uk>
- <20250210153902.06VTSS6d@linutronix.de>
+	s=arc-20240116; t=1739204842; c=relaxed/simple;
+	bh=KuMe3+MDTwc+Rnc7r/9bMIaCdM012Bs1ibmPwlai+F4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ehXtWJ+qWbeTrI7tKV7+Zu53r6bDhJ7gg0EfAVRTsA3563C3zm164q2tiFkch0NWw/NSscm+nrIIjKOTS7c1Edk7BBccZ+4fkudNwHP/ExgMNuJqv9AxvS5Bu1OnU+RFkKnuh1bnNEl13O4gG3hBVeSIXYzSxgHKpOIAPV4IeDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4affbb7ef2dso3457804137.0;
+        Mon, 10 Feb 2025 08:27:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739204839; x=1739809639;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zqbX4psAGJ/PrujVLmSoQSl1kgnOHwvpt/Be/t6GDZw=;
+        b=h7CLDpsXt9pf4Qghv7YTCxRO194MSIQoChurMwRKEGveNuFVxCIJm49Uzais8rZYbs
+         FewJBC4TwAUy70rsHhPKAEZ5hh2JsB8DlZm+Ix6e8eLJ5IUhAcKBhfqzk9IJ2oAV/bIu
+         +tk/Q5aCUhZ3d5xRatMpAHHXr0K3RyhnsU51FCamU3iu6Wy2PXHIif/cKEF70rLtSAJ9
+         LidpyT5zv3kLlagDCEIybj+MU66gLmXFVbV1u6DoTYAj+vr7oT+GLZYTu9t+CKSh0dIo
+         ZhEoKQRUG8zW2etjHG0sHxpgrsZeM7S7roboGbW76xEH47FNQH4PogAkdEtSsWZJvpP9
+         4CQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWtClXNNiJufwfuHwoS299grJUjPvMiSVwHpE3Le7rghspkcroNeT0jth4ouB5iUJA02R2kpViVUqaqGtr1Jtus@vger.kernel.org, AJvYcCXuNj9kgdNvX9v5NPBgp0XOFVBxhbfSOMH0FRLwpCP9t06y3ZOl8GXTQywQhrx9RQ2ZwErgoEaiscNTt8A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpCyVg9H2WGLPU/i86pp2+8sL9apJq9cdnjKVk01rrOVQUQ8r2
+	co0gOYkUJpVct47tVUl4YhClVOZFawOTVtt27byZoo3CEGO0ZHdxFqHbI8jm
+X-Gm-Gg: ASbGncufayU6qfO3Ys7lqsC6FJBOotlkAYF2Z7PSwG+sgg7G8Iot4atjV+Qzn2LFbof
+	TLiZZWFeTmc5w610mO132f1ckLN4Lg+14lODuj3zRuCNgN+fjudhutDYXKk7zQ8GjFKiotMdBfR
+	q9ZVUmcKlE+SFqymYP+GvVMkNSQ6Td8HojhT33p8tbhxrrwuYfFqPXkZNucb9kC2ztsM3JspPTV
+	9G66TkNHyMudSVWeYCY6WTl+fTFxJwelTfgKscR0edplutUy1t14W7vaVjrvXSZ+tTCW+BYAdtQ
+	dD0L3jMbRB9Rpix7UkWDZA+UaA70cL/QCZFYn78RjIkslIDOwOZXIw==
+X-Google-Smtp-Source: AGHT+IGuxsDi8qW8F7BWVNEO/Pbjh0THpoKjO09AnXLhgrUUbLqtfnM0/M/Do5G/oTI8lLpt5ahBmw==
+X-Received: by 2002:a05:6102:3046:b0:4b6:fdc6:dd04 with SMTP id ada2fe7eead31-4ba85ec477dmr10168353137.18.1739204839107;
+        Mon, 10 Feb 2025 08:27:19 -0800 (PST)
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4bbbebc1fa0sm676139137.15.2025.02.10.08.27.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 08:27:17 -0800 (PST)
+Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-4affbb7ef2dso3457755137.0;
+        Mon, 10 Feb 2025 08:27:17 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUTxFqqk5qIhAiytInVz0JBy8P6fbWie48hOEd/q2/aGhmwOri/XaY9t9IN9bcXNsbBxhrGVKKhsGA/EZo=@vger.kernel.org, AJvYcCV2kMun0fPB6vS6d76FzQqjFYQ5+9sSOvuCjIca5U68ay9gEmfuAT8co3+lDTUnphW+pBqEb3/WNa9h1GtvH71m@vger.kernel.org
+X-Received: by 2002:a05:6102:f0f:b0:4b2:ad82:133a with SMTP id
+ ada2fe7eead31-4ba85f407a9mr9701403137.25.1739204837046; Mon, 10 Feb 2025
+ 08:27:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210153902.06VTSS6d@linutronix.de>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+References: <20250210-scanf-kunit-convert-v5-0-8e64f3a7de99@gmail.com> <20250210-scanf-kunit-convert-v5-2-8e64f3a7de99@gmail.com>
+In-Reply-To: <20250210-scanf-kunit-convert-v5-2-8e64f3a7de99@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 10 Feb 2025 17:27:04 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVnqqffKUQ7+usXruWce8B0KdRxxO41zNY8bTfh-r5oHQ@mail.gmail.com>
+X-Gm-Features: AWEUYZm2EYJA8ZA_5wFNdPwcX5XuV0_TVa-Ox5vT8RiMF4s-d-aO03s5oFok9fE
+Message-ID: <CAMuHMdVnqqffKUQ7+usXruWce8B0KdRxxO41zNY8bTfh-r5oHQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] scanf: break kunit into test cases
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Feb 10, 2025 at 04:39:02PM +0100, Sebastian Andrzej Siewior wrote:
-> On 2025-02-10 15:16:11 [+0000], Russell King (Oracle) wrote:
-> > On Mon, Feb 10, 2025 at 01:04:29PM +0100, Sebastian Andrzej Siewior wrote:
-> > > On 2025-02-03 15:16:26 [+0100], To linux-kernel@vger.kernel.org wrote:
-> > > > __die() invokes later __show_regs() -> show_regs_print_info() which
-> > > > prints the current preemption model.
-> > > > Remove it from the initial line.
-> > > > 
-> > > > Cc: Russell King <linux@armlinux.org.uk>
-> > > > Cc: linux-arm-kernel@lists.infradead.org
-> > > > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > > 
-> > > Is it okay, to route this via the sched tree?
-> > 
-> > Sorry, its not obvious where show_regs_print_info() prints this.
-> > dump_stack_print_info() itself doesn't directly. print_worker_info()
-> > doesn't. print_stop_info() doesn't. Not sure whether print_scx_info()
-> > does.
-> > 
-> > Maybe showing example output would help?
-> 
-> Patch 2/9 adds this. [ https://lore.kernel.org/all/20250203141632.440554-3-bigeasy@linutronix.de/ ]
+Hi Tamir,
 
-That explains it - patch 2 is only sent to a very restricted subset
-and not even to mailing lists that would be relevant in the absence
-of a direct Cc. Ditto patch 1. All I received were patches 3 and 4.
+On Mon, 10 Feb 2025 at 16:00, Tamir Duberstein <tamird@gmail.com> wrote:
+> Use `suite_init` and move some tests into `scanf_test_cases`. This
+> gives us nicer output in the event of a failure.
+>
+> Reviewed-by: David Gow <davidgow@google.com>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-In patch 1:
+Thanks for your patch!
 
-+	static char buf[128];
-...
-+		seq_buf_init(&s, buf, 128);
+> --- a/lib/scanf_kunit.c
+> +++ b/lib/scanf_kunit.c
+> @@ -4,19 +4,14 @@
+>   */
+>
+>  #include <kunit/test.h>
+> -#include <linux/bitops.h>
+> -#include <linux/kernel.h>
+>  #include <linux/module.h>
+> -#include <linux/overflow.h>
+> -#include <linux/printk.h>
+>  #include <linux/prandom.h>
+> -#include <linux/slab.h>
+> -#include <linux/string.h>
+> +#include <linux/sprintf.h>
+>
+>  #define BUF_SIZE 1024
+>
+> -static char *test_buffer;
+> -static char *fmt_buffer;
+> +static char test_buffer[BUF_SIZE];
+> +static char fmt_buffer[BUF_SIZE];
 
-Why not sizeof(buf) ?
+Why? This wastes 2 KiB of memory when the test is not running.
 
-For patch 2:
+>  static struct rnd_state rnd_state;
+>
+>  typedef void (*check_fn)(struct kunit *test, const void *check_data, const char *string,
 
-"Use
-pr_warn() instead of printk() to pass a loglevel. This makes it part of
-generic WARN/ BUG traces.
-"
+Gr{oetje,eeting}s,
 
-How about cases which use dump_stack_lvl() to dump the output at a more
-severe level than warning? Should the message be printed at a less
-severe level than the other messages?
-
-> This this applied, die("test") on ARM ends as:
-> 
-> [    1.595106] Kernel panic - not syncing: test
-> [    1.596044] CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W 6.14.0-rc2-00009-gb80a798df08c-dirty #13 PREEMPT
-> [    1.596768] Tainted: [W]=WARN
-> [    1.596946] Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 02/02/2022
-
-Hmm. I've no idea what you're testing, what you've quoted makes zero
-sense to me.
-
-First...
-
-void die(const char *str, struct pt_regs *regs, int err)
-
-is the die function prototype, so it takes a bit more than what you've
-indicated.
-
-Second, "Kernel panic" suggests that panic() has been called. However,
-this only happens when die() is called (or more specifically
-oops_end()) from either interrupt context (in which case we get
-"Kernel panic - Fatal exception in interrupt") or if panic_on_oops
-is set ("Kernel panic - Fatal exception").
-
-I don't see a path which would result in
-"Kernel panic - not syncing: test" to be printed from this path.
-
-Since __die() does not call dump_stack(), we're not going to call
-dump_stack_print_info() from __die(), so I don't think it's appropriate
-to remove this information.
+                        Geert
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
