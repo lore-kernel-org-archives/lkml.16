@@ -1,105 +1,119 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A808E1CB337;
-	Mon, 10 Feb 2025 11:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E339A16D9C2
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739186013; cv=none; b=C0f6S+iIRxQdgWuqmuvdvV3i0O3KOEwRnnmN+zUPDitwJLNFifDskRvPZprIa5Ats2hy57q7nW0dc7815HZHLU8XuCITosMUQycT0sFr6F3OydztIK8egkICGDRihftox5JVZvAg0qipHc5VOvPhQQllTdTWKSCeRcksU+ynKOo=
+	t=1739186081; cv=none; b=JO0XOAGgAorZvJZYArQb7jTYe33unlasmGqbMk3Kg+Jg7mP/o+vNPmbeAvMXQ44aYkcKKYCejIthaClva/rhjt1GrRPjp6Lga2XdBe4TR3VLU1EXaMh5XNEwM0Zn5KqwLP1TIVHBzeTPAh9ujQbVsFjxACQrkBVVPGJSOeFW4K0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739186013; c=relaxed/simple;
-	bh=2zJ77jcUVTjeAXAGAxzJaL/gPkHMt5mWPCza1IUne8s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sVeRotJ/5jGSisF1VIlziKk7T07WpRXgPzZyVLwk/4cyA77SCToOYVBgMJou0FiQGX8z20Vwzrz954ugD148RavT0rm6xBbHbq2LY/sK3JNE6CckIldIY0HYZnkEfYxuVtkSZ7TeSup0yzTR6/6twZ3pSxqmJwRGYz1HcllCPZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eUFDZAT3; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739186081; c=relaxed/simple;
+	bh=etnoAPtfodu3j6OnVm6MbzL6CeTvVzZhtPqNGUr80Rc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r96r5tV8Zfjpyvy5KTMa5tsZmrcWC7Zg3ciaAGQ2MzeoLu2DY9209XSEnfN5DGIGx06IpzZk7aSuiIBLLKm7tSceWpasoI596QoSFjup4J6xSJXCy3tiRWe6UQ3Mf/2XYE+j1bzKLMIQVWoWqDi0NoCeyCDOBsw/uFj84Qm2Wvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U+fF5Mrc; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eUFDZAT3"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4361f664af5so47312795e9.1;
-        Mon, 10 Feb 2025 03:13:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739186010; x=1739790810; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LSdJQgcp2y7iHjwit0HOOl9HKbnE8QQbbuMwDImG398=;
-        b=eUFDZAT3xzlqz88/IIBLKL/zc5StcsBcgmiNm5D305ZPjdyfOUXDOT9a1WMyqTsOEc
-         UQusRf8VKMu0DU7cwcP1KeEMpam0saD0mvZJtqhK4vmMilZv+kAbM5KnV0UE2c0EgGGn
-         FgmW52AzcFKrYEfGpkbXKzRxxSiBxmMIBm3xW7tx0aWr9niQlxqc83hlwoxukh6a12kZ
-         RdKynkX5Jsl/ZA760Lh6l59eCn4tI0Wm/fz4J7TO/OCwP0vaGlQWaFpO61+Qa/l2iOVU
-         JxTm9DAXRagSdBx4CzEY7SWmAR4jIy6rw5JeyCmkGzMKrVjzAPjSRIbzEi5bDCYXInqL
-         ROOA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U+fF5Mrc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739186078;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G/KMdZICnl582Io+/HgvG4CL9bgg3ycPLDrs0NWni5g=;
+	b=U+fF5MrcD9/057KOFhdSRTZnIGHDSIY0VWTXMLYgKAruD4qnU2GBJMpAGVK8qm62GKA6IK
+	pYIKoj4FuiPV76CyOB7LO3n+b1mHuWvF/qoElWRPjSXkH18TTKS1mS/QSTVZ7ZxrLTK3TW
+	Pvp0JaoMSYQkictpT8j1oLoXKNfq6/w=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-148-bXaqxOftMMKH0XZ4g0Lt-w-1; Mon, 10 Feb 2025 06:14:37 -0500
+X-MC-Unique: bXaqxOftMMKH0XZ4g0Lt-w-1
+X-Mimecast-MFC-AGG-ID: bXaqxOftMMKH0XZ4g0Lt-w
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-38dcd8ddc5eso1839239f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 03:14:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739186010; x=1739790810;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LSdJQgcp2y7iHjwit0HOOl9HKbnE8QQbbuMwDImG398=;
-        b=m5hMzFGWT/pxAF00wR4HwrkDxqvhYQZ7alpPcE72/Go2tEUX1jSKt3typYK5xiLYTr
-         vRTB+I01/cxo0jubIoPbym9N4H34rhX+BUYxUJ0R/05w/K3Nyb47AF4ERIKicdnPMg2m
-         YbCht2lefPECNfIaflHQjPaG21Y2yMcAP/RdK2fy632y7yVrYeNCUt1cxonAGfhRYMXg
-         /kdSDkg+HcOfxVt7X4GC1E9TtZJfilzSz0WivHD4BFrpX8FeyV2yQad/HC4avUeLJx8Q
-         5GuAGRjpMH+U8G/p+BhkosmRha43k1rhaI8b0ruhNo6gzTcs1hw0MLaqJeogATzHIWZR
-         JbTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVNd91y97fw7bhrLVjnzsgvoZ4jsuP/r9NG4/HiXyoodQfgElgYdKePfb2E9O/CCp7da1K9dUClUNC29SpV@vger.kernel.org, AJvYcCWFVGT4kupeiWLrO0YBo9hBGOfYvTeu+I4tLHMTQJ7bB8+w2kHxI0Am0LTTIRcXQjkBKGYAvAzet90vCj/Xm7g=@vger.kernel.org, AJvYcCXFbagOX6WqnlUcqawqZPrLueRwLOWE0RaEtzwrNWdSrs+9CYMOFqKfVc1+LMDx3JGtrs8mDP2Hl523ExE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIP9O4s/7E6qsBCndUiulZZswF5jlwZvXyjrYRpU6SPe7gLFjZ
-	gajQ4CyAjBAw9BfP9UqKoUpPsIqALMJe/UHIek6SF+5O4Zb8xmg7
-X-Gm-Gg: ASbGnctU2K9PHw8UC0mEkmRorkzcciSU8nygCXyl5swbfLsUmdl8WRLIBG4W59oYHNA
-	Hg+LjaTsBZVRvTmjr83ED5SOqcqXRI842Yxh/ApeuZ28WBZVtKShoBptt++H6hzGDsYmi5CDnfh
-	sBJs8jmP8ecwvHwVJZNSQqe666i0t7Xn9HRxSRUeve4LOUSUBmod+qC5ideL4SoChG3XixzCpGO
-	lbFzxeAieDaWJaI/ABRJcxm5jfyFFlgMUFMqCyJhECPysw14cjwgC+nqVabzssZh2WNKcp0qGH4
-	TURZB1YuTW1u
-X-Google-Smtp-Source: AGHT+IFaU2YoCTpHdtd/tojrjTH8ALsB9SNLM2ym1wrDznm+SKutFiqojoOwPae3ZpHcm6k0gVP0mA==
-X-Received: by 2002:a05:600c:468c:b0:435:23c:e23e with SMTP id 5b1f17b1804b1-4392498a1eemr107768405e9.12.1739186009633;
-        Mon, 10 Feb 2025 03:13:29 -0800 (PST)
-Received: from void.void ([141.226.169.178])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc672b55bsm10260635f8f.79.2025.02.10.03.13.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 03:13:29 -0800 (PST)
-From: Andrew Kreimer <algonell@gmail.com>
-To: Philipp Reisner <philipp.reisner@linbit.com>,
-	Lars Ellenberg <lars.ellenberg@linbit.com>,
-	=?UTF-8?q?Christoph=20B=C3=B6hmwalder?= <christoph.boehmwalder@linbit.com>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: drbd-dev@lists.linbit.com,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Andrew Kreimer <algonell@gmail.com>
-Subject: [PATCH] drbd: Fix typo in error directive
-Date: Mon, 10 Feb 2025 13:13:05 +0200
-Message-ID: <20250210111324.29407-1-algonell@gmail.com>
-X-Mailer: git-send-email 2.48.1.268.g9520f7d998
+        d=1e100.net; s=20230601; t=1739186076; x=1739790876;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G/KMdZICnl582Io+/HgvG4CL9bgg3ycPLDrs0NWni5g=;
+        b=Jk37m2ox5wANHrCKUPrKR+UYkPZDeNlB47rl9hG2plBwsTyToXiYirwO6KJaZYPRiN
+         Z2BxEH3Pw/dt178BctB5VVbaTbbYYSKT1Gkx9chHpxKO3/f3b5Ye/oz59lk7rxIq8pfs
+         bmhQ0dk+DaMuc6m2cZoBeA1jK6OVuUhUZbGcd39zJ/kfQiEjy5SAQC83zyB9DLqNtE9B
+         TRtX6jOkoEwvCXpRE8uS8fEibg1WdeicxLzsInn8x2eFr5j503qsxKkYzlJfDojCe1Oa
+         5EiaodereB9z5at+EQJJtEG4bAVMfieTsrsXZTHc4l4jOlkA7VdjDuxmb1waeDhpXJEU
+         /ejw==
+X-Forwarded-Encrypted: i=1; AJvYcCXIuvcriLQGa0YNL8WmgR3TbX46/eX9bRZuYiaKfIaG7gVfx+lB6jfxnuKOfzqZ0/S31D5brmwIxfy1/E4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzk96HN9522H+OTfkF3wDAj4xnSj+2FLlgFhrgkqoSXVJrzIcUq
+	ZUJJuuolQ+W6nhzCqA6n6Vn1rTFDJadi941xHracsDPVJ/hT+3t1BMcZXORY7zh/ZjlUl5Sy6oh
+	LKg27IaltGQ5LmawbhpA/VMYk02ECK48wXuzzBAk8McEmv3ZT2C4cRiw2WlI7OQ==
+X-Gm-Gg: ASbGncvc2JXF7YGAG0yfbYsaO8L04cy20jueflP5qFP+wX/8Gn6pifeMts8tH/6f8qT
+	bvAyXIpQK+Sa0WVok+Vo3clh5NsB+ERgrC2ng3YaPLHJBZFcdZGeceMkTgPWGMYt+LcWib+j2Mb
+	JDfdqAmfr+sqBjwUdNv0QPykYSD1GI0lv/xA4aj9K0knKRGI175YMNuuSbQ2lId2IKqrn4vRBdk
+	Hl0sh6rY5CO6QcA43IqGgb5awIuVa4igEk2XnnL7AN2iPgIQZ9ZqN6Bx/rzr7cLo8WxZc3DzEaV
+	zR6l5MEzi3QJB8AXHmxUABtxYyY2qYGxcE/uGUNnPLwc
+X-Received: by 2002:a05:6000:1448:b0:38d:af2e:d5c3 with SMTP id ffacd0b85a97d-38dc8dd1864mr9217935f8f.17.1739186076214;
+        Mon, 10 Feb 2025 03:14:36 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGo6CfURy22Wovwne0UJ4k3nKGVnkr/wgeTUUI2em35sZPS2GM9P0+LoW8IoS7CA0xajZHCog==
+X-Received: by 2002:a05:6000:1448:b0:38d:af2e:d5c3 with SMTP id ffacd0b85a97d-38dc8dd1864mr9217915f8f.17.1739186075845;
+        Mon, 10 Feb 2025 03:14:35 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:c:37e0:ced3:55bd:f454:e722? ([2a01:e0a:c:37e0:ced3:55bd:f454:e722])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43935c4f4aasm70175115e9.22.2025.02.10.03.14.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 03:14:35 -0800 (PST)
+Message-ID: <3c0e06d4-b5b7-45cf-bc42-8f12b293b7da@redhat.com>
+Date: Mon, 10 Feb 2025 12:14:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7] drm/virtio: Add drm_panic support
+To: Dmitry Osipenko <dmitry.osipenko@collabora.com>,
+ Ryosuke Yasuoka <ryasuoka@redhat.com>, airlied@redhat.com,
+ kraxel@redhat.com, gurchetansingh@chromium.org, olvaffe@gmail.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ daniel@ffwll.ch
+Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <20250206104300.416014-1-ryasuoka@redhat.com>
+ <d8a453e9-c8ce-4a7d-8fb9-08a13c44d7f3@collabora.com>
+Content-Language: en-US, fr
+From: Jocelyn Falempe <jfalempe@redhat.com>
+In-Reply-To: <d8a453e9-c8ce-4a7d-8fb9-08a13c44d7f3@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-There is a typo in error directive:
- - endianess -> endianness
+On 09/02/2025 18:45, Dmitry Osipenko wrote:
+> On 2/6/25 13:42, Ryosuke Yasuoka wrote:
+>> Virtio gpu supports the drm_panic module, which displays a message to
+>> the screen when a kernel panic occurs. It is supported where it has
+>> vmapped shmem BO.
+>>
+>> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+>> Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
+>> ---
+> 
+> Applied to misc-next, thanks!
+> 
+> I've tested v7 with a different capsets, works well. For a non-VT FB the
+> vmap indeed will be needed. Looking forward to the atomic vmap support.
+> The rough idea of the atomic vmap helper is to make vmap code paths fail
+> whenever hitting path that needs to sleep. Likely will be easy to implement.
+> 
 
-Fix it via codespell.
+Thanks for your support.
 
-Signed-off-by: Andrew Kreimer <algonell@gmail.com>
----
- drivers/block/drbd/drbd_state.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I will see if we can do something for atomic vmap support for shmem.
 
-diff --git a/drivers/block/drbd/drbd_state.h b/drivers/block/drbd/drbd_state.h
-index cbaeb8018dbf..89d7c828eb59 100644
---- a/drivers/block/drbd/drbd_state.h
-+++ b/drivers/block/drbd/drbd_state.h
-@@ -106,7 +106,7 @@ union drbd_dev_state {
- 		unsigned peer:2 ;   /* 3/4	 primary/secondary/unknown */
- 		unsigned role:2 ;   /* 3/4	 primary/secondary/unknown */
- #else
--# error "this endianess is not supported"
-+# error "this endianness is not supported"
- #endif
- 	};
- 	unsigned int i;
+Best regards,
+
 -- 
-2.48.1.268.g9520f7d998
+
+Jocelyn
 
