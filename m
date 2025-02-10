@@ -1,104 +1,103 @@
-Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFA52586C2
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:50:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D4E2586DA
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739206231; cv=none; b=HH0KVCZF6RSTvjdCwN4hc/3AEDasw7lNsLaprlgCiRGagn2OqhOERzm2Hv+v43CXAH/NgMyQ/+ckYO/NslXAOiuT9mBI1IDPP7fRv9v0GYBqPOzaRMdOERX1It9IVZdT07U4/gUGT2tYwPdMJJX9hGeyLb97rs8mIYxuozKeOZ4=
+	t=1739206245; cv=none; b=MhQkKoUz4rF/YgCNaNdAOpuRn7BRgkeOeehApRt+xB6xe3ZIanvAfUsa0wXHh0xqnA9tCsGhoABxTgQG1LHXwgoTezQUg6LOBABuFga7WSKhFlCnmV7ZG5jGSkUfoOXBT8vnyxsZzq1wS/TgLYPEdH442IryZWPHdFJT9Yo4uZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739206231; c=relaxed/simple;
-	bh=TP90k1x1cBy8D1aJkhJH0QPsRcBZnpgfJFvvkQzTQOM=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jPHvYBDIFNsPKCIYSVS6qr7nIP2QsDvPoq8OcwFPkZOpmUJ44n4wIP/BegQdgFJeH/9t6gQ+gGFJXbWMTl9SmbTGQJQXM10z9gwzTBj3xDRpTxkge3WiXchJgPcA8kzPqhL9NLtfzSwjc8fi3NMsQFYhABfTEwK4yeksUQK97O4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=qG97o88Q; arc=none smtp.client-ip=162.62.58.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="qG97o88Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1739206224; bh=8d9K5lPvc7L+i4b6UhUlBCI6/XxdJFkbw66rtYM4WZE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=qG97o88Qpmn/ay3cRtgba/MmB9stTbund7kbb/yIaXcZcnAMgy8S/OQI5Na0TqrK+
-	 cwXzyMXTq6ZfLZDdRwcspSRkiIrF6jG7tDQdV7eSMRB9qDw3eM6JoRp9SQGub94w4G
-	 Tor3lL53wfTwY4OijNbtPMrff7izlKHZWJU8f9Gc=
-Received: from jckeep-Lenovo-XiaoXinAir-14IIL-2020.. ([2408:8459:d0f0:fd1e:ebd2:62cc:a175:168d])
-	by newxmesmtplogicsvrszgpua8-1.qq.com (NewEsmtp) with SMTP
-	id A7BBA0F5; Tue, 11 Feb 2025 00:41:59 +0800
-X-QQ-mid: xmsmtpt1739205719tkgqfxfnm
-Message-ID: <tencent_EFD0399A6FA413B4B3597F93965D966BE40A@qq.com>
-X-QQ-XMAILINFO: NDgMZBR9sMmabCzCDGtcEQkxaRp9S+8DBHe2yJxUYT3KxtPaHmTe00vGR/6+c3
-	 HA8sqKCngJDNWyIgDg/SxnsOh/n/tUpYDTuTQkbxFOtrRiLaT/e6yA7DIRz9mhPnB7gQHd+Qp1Gy
-	 aM81YuJ5mWZNgwKnOiHxyMQkcSsxJnvST7PtqLwHxSi+yggYRr3JJh4G/zRGo97ILhzrUmaaTon0
-	 gl5A47EUzDFeie/NVODSu5lFdyaZkjFaSa3ueILQ4hKMiVsC37Yx3RyKlHZUPc4qiCn1NzpTybNP
-	 7T8Vjf75TzEjMYyjczzCbH6aaFtgKq/6Y6UntWK1EzVizQDJOBWwAcsqXH6juMYXjcmVFUJ4IC8V
-	 qpN3kchyz917m03OGU4wlo8xQAe3EZnp0nh/pEEmY17QG73dHPifA3Qouzpdhi8+8c7gg4TeeS8N
-	 y/PcwtMqKLcdhX5rjw0h3RiE2K2t9Wm2qv2zU4cMDg99sUmpxYsY8xHeGxNzyVJtDR8egje1Qamw
-	 ivKqEgBemN4VJ4ZTFpsnXPErRfxC9uPwNiNo7jtV0nyx5V9/5SOaiYZQKkLiKFTpcfsqXVAM/9um
-	 Nsh/6os9/lSXdW9voSrHvfsS7tazrR73uQYag1i38Pdsc9dGxBk9/3X+us4E5qt8ycVKFTAOaU09
-	 CX5T6vT1ZmhsXZo0LngAG/IR/AuDWIp9A9ye4AKW0N2Z34hsjRx+vs7oJf2BLwFFLpr2WP1O82A+
-	 oG4dOh3N1ujwxIJDia4yZBPOcJFRZJooDBpIpcp5tgNmka9eNr6ggJbRMGkUuumdCzi1FEBFhhQJ
-	 EuHDL6IjLpjbKdWgqG6NaQuCF+xMipuyqfQKVhlCgtagVpR3P9ZPhJRq2zwAHUynmz2aDKPgfNXW
-	 QjD1fF4RarG/jcbUbsW3pEIwpJ2YmSm+jtOFSFrlEoOT8w4394xKdSHc3H7zDQ9sKSQeMgGR3c6D
-	 d07KdMXcaorKsv+g4qVtac0Ncye6gr
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-From: Guangbo Cui <2407018371@qq.com>
-To: daniel.almeida@collabora.com
-Cc: a.hindborg@kernel.org,
-	alex.gaynor@gmail.com,
-	aliceryhl@google.com,
-	benno.lossin@proton.me,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	linux-kernel@vger.kernel.org,
-	ojeda@kernel.org,
-	rust-for-linux@vger.kernel.org,
-	tmgross@umich.edu,
-	dakr@kernel.org
-Subject: Re: [PATCH v2] rust: irq: add support for request_irq()
-Date: Tue, 11 Feb 2025 00:41:59 +0800
-X-OQ-MSGID: <20250210164159.370273-1-2407018371@qq.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <D058ABBE-A0E8-4D95-AA4F-31EAA4092A73@collabora.com>
-References: <D058ABBE-A0E8-4D95-AA4F-31EAA4092A73@collabora.com>
+	s=arc-20240116; t=1739206245; c=relaxed/simple;
+	bh=v3wCsTZBan6FYeYTRiQ1xd9iCKIIXkCk2Zxb+qKk/UQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=LZnMfozekswKR5BdW19yyg7QhkahxcnV1N+yXCVD5HUZoCeihypI2IcyNnzP82UwkJcJxCxPgr7kTV3hFer7Lz6+cCY4fejCrA6n2hgfJ+EqUErJHbrnZkNsOgphy3R5XZDilzD0GHBlnU0JWh/wRRg8KxyVjtNNGpnB8ICrDrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1thWxD-000000006Ob-32ZX;
+	Mon, 10 Feb 2025 11:48:15 -0500
+Message-ID: <281d6fd629a1965ee0065f99ac5d693bace9758b.camel@surriel.com>
+Subject: Re: [PATCH v9 04/12] x86/mm: get INVLPGB count max from CPUID
+From: Rik van Riel <riel@surriel.com>
+To: Vern Hao <haoxing990@gmail.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de, 
+	peterz@infradead.org, dave.hansen@linux.intel.com,
+ zhengqi.arch@bytedance.com, 	nadav.amit@gmail.com, thomas.lendacky@amd.com,
+ kernel-team@meta.com, 	linux-mm@kvack.org, akpm@linux-foundation.org,
+ jannh@google.com, 	mhklinux@outlook.com, andrew.cooper3@citrix.com, Manali
+ Shukla	 <Manali.Shukla@amd.com>
+Date: Mon, 10 Feb 2025 11:48:15 -0500
+In-Reply-To: <CAPguPOhWYV4dKZBm7-bFknDa2Ct5L1Bxc5K+Acox0FM1aAgiww@mail.gmail.com>
+References: <20250206044346.3810242-1-riel@surriel.com>
+	 <20250206044346.3810242-5-riel@surriel.com>
+	 <CAPguPOhWYV4dKZBm7-bFknDa2Ct5L1Bxc5K+Acox0FM1aAgiww@mail.gmail.com>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.1 (3.54.1-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Sender: riel@surriel.com
 
-> By the way, I wonder if a re-export would be beneficial? I find it a bit tedious to specify this path.
-> 
-> It also clashes with kernel::driver::Registration and kernel::driver::drm::Registration, so I find myself
-> continuously writing an alias for it, i.e.:
-> 
-> ```
-> Use kernel::irq::request::Registration as IrqRegistration;
-> Use kernel::irq::request::Handler as IrqHandler;
-> ```
-> 
-> Looking at mq.rs <http://mq.rs/>, I see Andreas did something similar:
-> 
-> ```
-> pub use operations::Operations;
-> pub use request::Request;
-> pub use tag_set::TagSet;
-> ```
-> 
-> Asking for opinions here since this is a bit cosmetic in nature. IMHO, at least the ‘request’ part of the path has to go.
+On Mon, 2025-02-10 at 15:30 +0800, Vern Hao wrote:
+> I do some test=C2=A0on my=C2=A0=C2=A0Machine with=C2=A0AMD EPYC 7K83,=C2=
+=A0 these patches=C2=A0work
+> on my host,=C2=A0 but failed on my guest=C2=A0with qemu.
+>=20
+> in host, use lscpu cmd, you can see=C2=A0=C2=A0invlpgb=C2=A0in flags,=C2=
+=A0 but in guest
+> no.
+>=20
+> So are you plan=C2=A0to support it in guest?
 
-Maybe the Rust subsystem should have a unified convention for this？
-Re-export is both beneficial and necessary. The naming retains `Registration`
-and `Handler` to be consistent with other modules. And accessing it with the
-module prefix, such as `irq::Registration`. Just like @dakr did in `rust_driver_pci.rs` 
-and `rust_driver_platform.rs`: `pci::Driver` & `platform::Driver`; `pci::Device` & `platform::Device`.
+How exactly did it fail in the guest?
 
-Hope this help, if not, ignore it.
+Did the guest simply not use INVLPGB because that
+CPUID flag was not presented in the CPUID that
+qemu shows to the guest, or did things crash somehow?
 
-Best regards,
-Guangbo Cui
+My understanding is that while INVLPGB can work
+in guests, actually implementing that is a whole
+other can of worms, and definitely not something
+we should try to tackle at the same time as bare
+metal support.
 
+A TLB flush hypercall, with IRQ-less flushing on
+the hypervisor side will probably get us 90% of
+the way there, potentially with less overall
+complexity than actually supporting INVLPGB in
+the guest.
+
+--=20
+All Rights Reversed.
