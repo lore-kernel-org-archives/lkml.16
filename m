@@ -1,133 +1,127 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F0E19CC33
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C871C5D7C;
+	Mon, 10 Feb 2025 11:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739186350; cv=none; b=fC88Vtu8B+fKTa+cOlUH9LfJdL+33ao5RwQnZ7mO1LLNBO12tw/KnRAkigEmowVJ06u5iXnITNMXKfNk9/OVswcfR+JgtJLzmln55ObNy6EIbSEgJBx6ig/oplGegmjPRR8kBH7C4EJT1iM6tOYfWhCjF1M2GySSaRJw5Ktl08c=
+	t=1739186436; cv=none; b=nBVOyWFRByfBpBGUB4dtVUFZIouuSjuqNEhFTZKOvCSDHOeYO7sginn0o6YvI4AGePEHtejDTEAxdh6cPSKk6er6Yep0eEf/igpJXt16XDnuF5OQWbI42c36ZXtMdSh2K3Pv2JjB/YT2OzMBvTbz5lQadH1apXRUGsaxQwUrT6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739186350; c=relaxed/simple;
-	bh=juUILDNuz+vzUiT9bEhkA2Uw+36itTZA8IbPx+mDCpw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G7j45QjL6AhdOpsuaLPfXT6dcFRYumUrmFu/HAZJUTQ+G3v9kMSaPbeSKBgUbdRAHwBRUe6h7dxyo56URG6kNEUbfjVp/Hw9HWXSU4o21KNIOXQWIhMdEGinKsL+bDr1BRSYgOFfNdO6G8JS3k5aKqEq54LlWBYA9XNhi5DFwCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TftEeVf+; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1739186436; c=relaxed/simple;
+	bh=UmhTdp0yOp0xOBa0fKhmJv6Yjngb6GLcstrvhe0JLRc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GAC36KRFPzk22ZIkidABlIwoIATKb77hHy8WWJ8jNRovHxvEqIb2oNFPxipyr8YrQ06PkxwmJYM6DyGzviFBbm79zVGnmpBC13eqbJ5d37hYK74YRrW/c7e8Cw4TDA8xB92NUHe20acfzrWG6JX+pFnh8Ma525HnwGiYl98xxro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JoaDYg4q; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TftEeVf+"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso687124566b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 03:19:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JoaDYg4q"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43944181e68so8225205e9.0;
+        Mon, 10 Feb 2025 03:20:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1739186346; x=1739791146; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AOZLct+qV3pNzK/kYdO49CmGouhIq9bQC2J2rxm7uS0=;
-        b=TftEeVf+MzPkZT9BSbO6dclgJsYiBrhInGf7/QrL7Q6LeWFItrr/KgiBtP88NFVxTv
-         ezlg4XOuBJCZ1nWZM8Zm/R3s3YMAJ3gSP3Caz/Gf/ynUfxjEt7KZbBvs7zYRfg4U1ZuW
-         5zfvdfmpgOx8/eNDFrtywt9537U/gyWs+yVgrrpO5MRYLxu+wfhAUPJEUdctMM74wyJ2
-         fqFj5aa61nOg8qFU0f2DHxjqP6TxUWUgYv4GvpNIH6h3z5VwwFCPjfmS+meEr6rQxpPU
-         eiBxnRR7buuMaCIGH/cDqj1kH83DpU26D6PWULC+OCe1c/p0uqwo8aT3VZ2JekQU/Wgn
-         mLWw==
+        d=gmail.com; s=20230601; t=1739186433; x=1739791233; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nWk1tmUv6R6ofIovz55Q8Qebo6k6REo/VNEY88i+dbU=;
+        b=JoaDYg4qxgz800Lg+yvzpTkVY0vr0J875cw7/mRmzoCcyjuEWN29hEEUwVFV7LpSmL
+         oNh3WffRe3IthUItPBNaJFBPNNgltHNfMeKi+diaogw/aN/jnvr13Rk4biB6Z1VBABeC
+         C0zvTT34SGu+cRJ+bLxqnCHxViI3RWGHyHp4Sh+3zdwg0GrzVl8u8V7XtZ8XDMp98J65
+         kk/ClnMrnbBOrn+ftWBdcs7tFuYQ8tPLqOTFPc5mc1msJJ2h5sX+eSULUnS9snxWrthf
+         JBXWFn+5uD0m1zwwia8bkA0MXw64DIglQmgrF7jbPrzntGKcjASrcVa8rHAyZ3RHrX0t
+         fSxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739186346; x=1739791146;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AOZLct+qV3pNzK/kYdO49CmGouhIq9bQC2J2rxm7uS0=;
-        b=gWBihiobEh0QiBBUyiVPGRlPOX03dx8hj6r2iVtVDuGEvHe8P/mw9wSayPDequvgsb
-         te4MLhV6r6hm9HkSNa2Cx7yrEWjNGXkx9SFlZ1kN6QQ96ld/pwSloo4J84O+9ozrDGPm
-         z2/ZX1FPDu0SU7/OlMUwLnltrV+T84nXTEXUqcwzbcEveSWQGWrMGdi4xJlmujNWhyCs
-         eX2Hy4fDhk2+Gh+DqjeJpX2Np34inEllBW+zPg00YWcuBeWKbmCH6RnNFmCqubgxZXm+
-         y8HspJ1lNge5MDzkJoPBXMIpL+YWUuMWt6+upVX6eN3ouAAheHFSw16hzusu9tOSptLF
-         eVxg==
-X-Forwarded-Encrypted: i=1; AJvYcCXhxTi3DwILekgv+zKBp7Qbg8pz2lmxCGi1VH3ETiRZxabeS698LGzxZMaR7LvN9nM4Kde7eknXsBXL6rQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGQ9pUFHFXMLWe1cND1OdNKSUTE9EzFZOnlXQdQCFPg1pcbVpb
-	oKsKG1mgdMuoJjb0NYN4xGopZ0tmCaxy74o+1p9nYl6iXXPMl7+6LFuQzHn50lpAps6zQQ9iJW8
-	W
-X-Gm-Gg: ASbGncsm/CPBq3r/1vqZQyn90Gg4kM2qUKa7B2wjrF30MvvBJ/ZgxE1vmUsuKR+vbQz
-	13pLDsI6OF3fViZC2ZJZaxHTjt/Jt/vwKhjIpo6QrXHjtjfKsEUFNAkyKsnDKa92w1KTSMWP2XL
-	pC9fbHrCqhFPCYBJHi5F5fkB1mgP48sEdK4s+A3JwXTVqvBWpy6eLYtQiIhyBaSupEmkaCa915s
-	FZzrHwi5BZ+8XBafhsIWJkIcZE/SAoX1SOhognz/gz2A4vMkJtjy5wVtFUrLpSsJGqIBsDiglc4
-	kvbFbBXlhyhEz5b9YBkdni3wm80M
-X-Google-Smtp-Source: AGHT+IFAz153X5vcICG8zzXj6wcDOOnjP9Zg1pwaZ/blrVka419ZdJB++ySz04hKJ+rtzkgtRskeAA==
-X-Received: by 2002:a17:907:3e17:b0:ab6:f4e7:52f9 with SMTP id a640c23a62f3a-ab789aed845mr1525011766b.25.1739186346349;
-        Mon, 10 Feb 2025 03:19:06 -0800 (PST)
-Received: from localhost (109-81-84-135.rct.o2.cz. [109.81.84.135])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ab773331db7sm844842566b.127.2025.02.10.03.19.05
+        d=1e100.net; s=20230601; t=1739186433; x=1739791233;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nWk1tmUv6R6ofIovz55Q8Qebo6k6REo/VNEY88i+dbU=;
+        b=AziOAg88xpc1O5vPBBUc1piKIKAtZzlxluAet7in2/Ja20SeIMMBmz8M1NpBlzMBVg
+         JxZwKOoCZX8Uun3NwAPpWCZJzgjMftMPWyuUdm6kPCeD+kniP1ATGoJl1NbRLtFW2crw
+         8ZgzJV1GMs6U5EUFXIx/1t9FmnVZ99H/4ZAWzKaHU/TsHY7SnuJewt7kZPvfosNlG+PI
+         npYICKK6mFRavvG8xXMI715nopw4K+D2JKJPngU/XKbJ02vapbt/vpBjUZWcqSiRXwgG
+         CJazXVZ1BemvtOxs6XxzhB3MWvOMsKaBDq5xhRGnRrOA0GeUuyrtZSYCH2L+KMFnyxTR
+         JULw==
+X-Forwarded-Encrypted: i=1; AJvYcCVAoeityrKuStlY3fTcweoROJ9pa86/kytrT3aSd7aotUfyO4rPbOkaPuf0E27i//tXs/qWN4GArsjKKs4L@vger.kernel.org, AJvYcCVgFSwqZGFQ13/V+9sVw2gvIu4FKHJCvqEz5eZMMcK3ywuZ1tK+gsbcHad9MV+xx4ZwwQuzae05p7Hcmv++kGg=@vger.kernel.org, AJvYcCVhjlDITYQ5LDmljVKAQBwQ3FevAesdi1rHf5UhqK/G6GhVt1Ew1YCPSTGnrMUPrG2J5NtfZw/YcaFHqgVTNHTnqEk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5xqmvm8KOegHlwZ2aN7/D5NB8HkVwdYPKNeXoLTTfei5mmgk2
+	f3+nj+NNjS2kMGnXJvJbvwY40P7eSfmCQ3Oyn86n1cuCf8vosGj6UO8ygWbw
+X-Gm-Gg: ASbGncui5adyDuwhhxCIuqTaI7zBS5o9s6xg+W+CFdRlnO/tUiHPandK5Kg4bYEXnCE
+	mQAl86brM9jOeBw7GzjIIPurR1/+kgkGIFjYd6Ps9eG5bHEpwRam9pNLycAV/1qUJg3i5OL9T6U
+	KepNqCw4Tf2ytXxeCjuPP2p7FFWMv938KeuTqgHTX+LWTxVJ/tcVK8qsShyoSujPwA85AqXi9xQ
+	X3cffolan7Ig+1ulU/JDaJ9PoTmkEsPYLNjK9bAOH1R3Wax4e0bJuoNJqTbp3B2chP2VtYNAXik
+	NX/xC/YT/B5Z
+X-Google-Smtp-Source: AGHT+IGbRwLLu9tR/y2eBa/u7toSv7se05o3znHII8V/vw85Z3xbe+EWFjbGzJGpwzoJnEMDsZOF7A==
+X-Received: by 2002:a05:600c:3503:b0:434:f817:4492 with SMTP id 5b1f17b1804b1-439249cddf9mr124532365e9.31.1739186432404;
+        Mon, 10 Feb 2025 03:20:32 -0800 (PST)
+Received: from void.void ([141.226.169.178])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbdd1af07sm12174656f8f.15.2025.02.10.03.20.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 03:19:06 -0800 (PST)
-Date: Mon, 10 Feb 2025 12:19:05 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Hillf Danton <hdanton@sina.com>
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 6/6 v2] mm: Drain LRUs upon resume to userspace on
- nohz_full CPUs
-Message-ID: <Z6ngqT7eLUW6Eeb_@tiehlicka>
-References: <20250209223005.11519-1-frederic@kernel.org>
- <20250210105028.2134-1-hdanton@sina.com>
+        Mon, 10 Feb 2025 03:20:32 -0800 (PST)
+From: Andrew Kreimer <algonell@gmail.com>
+To: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>
+Cc: iommu@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Andrew Kreimer <algonell@gmail.com>
+Subject: [PATCH] iommu/exynos: Fix typos
+Date: Mon, 10 Feb 2025 13:20:04 +0200
+Message-ID: <20250210112027.29791-1-algonell@gmail.com>
+X-Mailer: git-send-email 2.48.1.268.g9520f7d998
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210105028.2134-1-hdanton@sina.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon 10-02-25 18:50:26, Hillf Danton wrote:
-> On Sun,  9 Feb 2025 23:30:04 +0100 Frederic Weisbecker <frederic@kernel.org>
-> > @@ -769,6 +772,9 @@ static bool cpu_needs_drain(unsigned int cpu)
-> >  {
-> >  	struct cpu_fbatches *fbatches = &per_cpu(cpu_fbatches, cpu);
-> >  
-> > +	if (!housekeeping_cpu(cpu, HK_TYPE_KERNEL_NOISE))
-> > +		return false;
-> > +
-> >  	/* Check these in order of likelihood that they're not zero */
-> >  	return folio_batch_count(&fbatches->lru_add) ||
-> >  		folio_batch_count(&fbatches->lru_move_tail) ||
-> > -- 
-> > 2.46.0
-> 
-> Nit, I'd like to add a debug line to test your assumption that
-> isolated tasks are pinned to a single nohz_full CPU.
+There are some typos in comments/messages:
+ - modyfying -> modifying
+ - Unabled -> Unable
 
-Why? And why would you like to add a trivial VM_BUG_ON vector to the
-kernel?
+Fix them via codespell.
 
-> --- x/mm/swap.c
-> +++ y/mm/swap.c
-> @@ -767,9 +767,10 @@ static void lru_add_drain_per_cpu(struct
->  static bool cpu_needs_drain(unsigned int cpu)
->  {
->  	struct cpu_fbatches *fbatches = &per_cpu(cpu_fbatches, cpu);
-> +	bool yes;
->  
->  	/* Check these in order of likelihood that they're not zero */
-> -	return folio_batch_count(&fbatches->lru_add) ||
-> +	yes = folio_batch_count(&fbatches->lru_add) ||
->  		folio_batch_count(&fbatches->lru_move_tail) ||
->  		folio_batch_count(&fbatches->lru_deactivate_file) ||
->  		folio_batch_count(&fbatches->lru_deactivate) ||
-> @@ -777,6 +778,12 @@ static bool cpu_needs_drain(unsigned int
->  		folio_batch_count(&fbatches->lru_activate) ||
->  		need_mlock_drain(cpu) ||
->  		has_bh_in_lru(cpu, NULL);
-> +
-> +	if (!housekeeping_cpu(cpu, HK_TYPE_KERNEL_NOISE)) {
-> +		VM_BUG_ON(yes);
-> +		return false;
-> +	}
-> +	return yes;
->  }
->  
->  /*
+Signed-off-by: Andrew Kreimer <algonell@gmail.com>
+---
+ drivers/iommu/exynos-iommu.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
+index c666ecab955d..69e23e017d9e 100644
+--- a/drivers/iommu/exynos-iommu.c
++++ b/drivers/iommu/exynos-iommu.c
+@@ -249,7 +249,7 @@ struct exynos_iommu_domain {
+ 	struct list_head clients; /* list of sysmmu_drvdata.domain_node */
+ 	sysmmu_pte_t *pgtable;	/* lv1 page table, 16KB */
+ 	short *lv2entcnt;	/* free lv2 entry counter for each section */
+-	spinlock_t lock;	/* lock for modyfying list of clients */
++	spinlock_t lock;	/* lock for modifying list of clients */
+ 	spinlock_t pgtablelock;	/* lock for modifying page table @ pgtable */
+ 	struct iommu_domain domain; /* generic domain data structure */
+ };
+@@ -292,7 +292,7 @@ struct sysmmu_drvdata {
+ 	struct clk *aclk;		/* SYSMMU's aclk clock */
+ 	struct clk *pclk;		/* SYSMMU's pclk clock */
+ 	struct clk *clk_master;		/* master's device clock */
+-	spinlock_t lock;		/* lock for modyfying state */
++	spinlock_t lock;		/* lock for modifying state */
+ 	bool active;			/* current status */
+ 	struct exynos_iommu_domain *domain; /* domain we belong to */
+ 	struct list_head domain_node;	/* node for domain clients list */
+@@ -746,7 +746,7 @@ static int exynos_sysmmu_probe(struct platform_device *pdev)
+ 	ret = devm_request_irq(dev, irq, exynos_sysmmu_irq, 0,
+ 				dev_name(dev), data);
+ 	if (ret) {
+-		dev_err(dev, "Unabled to register handler of irq %d\n", irq);
++		dev_err(dev, "Unable to register handler of irq %d\n", irq);
+ 		return ret;
+ 	}
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.48.1.268.g9520f7d998
+
