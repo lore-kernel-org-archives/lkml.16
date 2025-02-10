@@ -1,87 +1,99 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD50264603;
-	Mon, 10 Feb 2025 20:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EDF264602
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739220062; cv=none; b=l0zTdajnNIeosBBdf6Q4eCcZPZ7DJUo0lqmdJKztbk8rmFcalcFtG/jZnCgBd0gWJNpNUF8lSV7UAWe6208qWkrKtAroIjbRE4RJt1py0xUN2WoYBNbENtZHOQqYDf717TIkiH/52XVXl11VnE3hdu5tlLJd71ZBV37eJgoGTLI=
+	t=1739220105; cv=none; b=NmEjRye+KsfcxfMkxTOLqFMO4vhA8r8pDVu/JO/0cb3v0Np7p56hr9sL9mdux6vu1CgW1V82KEVeMXj5dbo8o2ZkTMfrOy4ZOmmFfk/5Zhwlx/hqcf8PAX8Au/BLhGWNSJyDo1SMk/cPRqcI30GFgD9Yo4Qv1FfSQnFN6NVI9GI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739220062; c=relaxed/simple;
-	bh=yPdHdObYJs7N4Nlg9KX0zJlMQlUolWycQynndsFpYPs=;
+	s=arc-20240116; t=1739220105; c=relaxed/simple;
+	bh=PUckf2U3CHMxTk6tMfGiAGmUTY4Vf40pOMBHyCATOU8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sBaaNt8+dIc+rLc6gPeoeLkaiNKp1MwxmpeR+YWWRS+t+1M50Wn8s3/zsV+XMq1jdRxjewG+I8eMvbTGtYWkfsa29Q7TOWrWh5T4OVlFc/dB9gXUcwMfacwzKg0jjEaF/PJ5Ff2wGq2cX0/lvfIgwGcYt5r4HL94eaAZUQRTB0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=azvVQWX1; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qg3RCVHZqb9mle9HwyNa3CRh9QNNTPNGPbT5RHHEl4Hdq72GgZdzwupJbnuLUD7pllJ5Zl/dvjBR9ChVoPuUE6ZugEKShxWuBu0LgRTBevna+ArrTPp9DR/H0Zk2+wrVgM/KMh9QBMESckVi5r2gdCnySfIxjY8Cj6HjyNAadoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/Zy3YAV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="azvVQWX1"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 604B240E0177;
-	Mon, 10 Feb 2025 20:40:53 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id TS2OdWt8lwlR; Mon, 10 Feb 2025 20:40:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1739220049; bh=SSfTdyjRwC6La0TaEkrgbjDaAq72qiIrANDEpo1CPAY=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/Zy3YAV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D64E1C4CED1;
+	Mon, 10 Feb 2025 20:41:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739220105;
+	bh=PUckf2U3CHMxTk6tMfGiAGmUTY4Vf40pOMBHyCATOU8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=azvVQWX1ofvYjZI0GftI0JZggJ2c+ockYm5kgrxnX+dX5adZguekHmFd+ci9CSpGp
-	 8gQ2orMhD7BMSStQ5W7XXmVYeqpoEHlgcROsyoRaQC9d4Te+JTrA6LpbEehg+3MROP
-	 neWEnkpaoP9uEPPyx9S/Kn5sANlVRmxypXoMMPsDr8ftoIB6JYg47ulDDoBlNAhcys
-	 aoC7f2F2MDzrh6qEc5zDqwmQvV0n33vgzCe3F2GJcAFjpyQ9mN8VGsZhyazb7qAIGc
-	 5kKTyxWCL/3QFVMkFsSbYZlvw6zuZd7FeFs+yQ7K+Pjk1ep1XlIgCk406DRymXnpKH
-	 1Yos9zMRslwMGy4B61+8Hm/1nNoOUf+FnxGzbG/jdjLG+E6W4StNuz6UP+M8i/LOm/
-	 k897CgGj0AXOCxloPiBW15OWRlLanpW/LNbT3xxsU6WCNFX0ipHJiwCTqDroSwmoz5
-	 DZ2qRScR0vC0ijm5e63djvG/I+w6s5B5P7VvuzBo/jZtpzFgmJDHXW7ryUZXc2rcw8
-	 QbnCrcqFInWSp4VNrKVn3F9EhZdHbRcCN6wtSzL8Aymy7TbJodlojiIECW7QbWlq7z
-	 490r49QJLHb8RgH5c8U3CQnPuf6z9WST42E4htcNjPTOT2b6Gta7/kI9T3aoS7ysYm
-	 Ywc4z10aKLRdwIbLx725zt+k=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CAF8240E016E;
-	Mon, 10 Feb 2025 20:40:38 +0000 (UTC)
-Date: Mon, 10 Feb 2025 21:40:30 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	x86@kernel.org, linux-block@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>, Keith Busch <kbusch@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH v4 1/6] x86: move ZMM exclusion list into CPU feature flag
-Message-ID: <20250210204030.GBZ6pkPumjGQMaHWLb@fat_crate.local>
-References: <20250210174540.161705-1-ebiggers@kernel.org>
- <20250210174540.161705-2-ebiggers@kernel.org>
+	b=m/Zy3YAVW/RaENM63F9vqDKSVN/2O5LpQZqBj5iNCeVvd8gWxaVqZR9d6xXgdAuae
+	 Xcwrm5THNfVv+ZT0LyYW4iRJYiqq6OkXP1bZ60LdrJqHSFIe9jNyX5li5BqRAmOldZ
+	 yi3tJQ65O3bGiik98yZRMXn5ih0jPTiUWIAB0bnjp6z5N93M9n27xtfQFrdLM6yF6e
+	 +PKFyaLfuBBwII7jVnbyfgm1wGcvl2a6wbhDpJ9+gMpR8EiJrYM9UKke7wy2pZADxM
+	 GqSFNzaFbqCSIZ8B+mcSUQxYPqT1lUBfx4ZJYs4bS8lDUE3S1dmPZuJCft0nihuMdg
+	 w0K9hWoW0FacQ==
+Date: Mon, 10 Feb 2025 10:41:43 -1000
+From: Tejun Heo <tj@kernel.org>
+To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>
+Cc: linux-kernel@vger.kernel.org, sched-ext@meta.com,
+	Jake Hillion <jakehillion@meta.com>
+Subject: Re: [PATCH sched_ext/for-6.14-fixes] sched_ext: Fix incorrect
+ assumption about migration disabled tasks in task_can_run_on_remote_rq()
+Message-ID: <Z6pkh-OC_gnBHyfn@slm.duckdns.org>
+References: <Z6pTDc_TfujiHW5v@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250210174540.161705-2-ebiggers@kernel.org>
+In-Reply-To: <Z6pTDc_TfujiHW5v@slm.duckdns.org>
 
-On Mon, Feb 10, 2025 at 09:45:35AM -0800, Eric Biggers wrote:
-> @@ -1598,11 +1578,11 @@ static int __init register_avx_algs(void)
->  					 ARRAY_SIZE(aes_gcm_algs_vaes_avx10_256),
->  					 aes_gcm_simdalgs_vaes_avx10_256);
->  	if (err)
->  		return err;
->  
-> -	if (x86_match_cpu(zmm_exclusion_list)) {
-> +	if (boot_cpu_has(X86_FEATURE_PREFER_YMM)) {
+On Mon, Feb 10, 2025 at 09:27:09AM -1000, Tejun Heo wrote:
+> While fixing migration disabled task handling, 32966821574c ("sched_ext: Fix
+> migration disabled handling in targeted dispatches") assumed that a
+> migration disabled task's ->cpus_ptr would only have the pinned CPU. While
+> this is eventually true for migration disabled tasks that are switched out,
+> ->cpus_ptr update is performed by migrate_disable_switch() which is called
+> right before context_switch() in __scheduler(). However, the task is
+> enqueued earlier during pick_next_task() via put_prev_task_scx(), so there
+> is a race window where another CPU can see the task on a DSQ.
+> 
+> If the CPU tries to dispatch the migration disabled task while in that
+> window, task_allowed_on_cpu() will succeed and task_can_run_on_remote_rq()
+> will subsequently trigger SCHED_WARN(is_migration_disabled()).
+> 
+>   WARNING: CPU: 8 PID: 1837 at kernel/sched/ext.c:2466 task_can_run_on_remote_rq+0x12e/0x140
+>   Sched_ext: layered (enabled+all), task: runnable_at=-10ms
+>   RIP: 0010:task_can_run_on_remote_rq+0x12e/0x140
+>   ...
+>    <TASK>
+>    consume_dispatch_q+0xab/0x220
+>    scx_bpf_dsq_move_to_local+0x58/0xd0
+>    bpf_prog_84dd17b0654b6cf0_layered_dispatch+0x290/0x1cfa
+>    bpf__sched_ext_ops_dispatch+0x4b/0xab
+>    balance_one+0x1fe/0x3b0
+>    balance_scx+0x61/0x1d0
+>    prev_balance+0x46/0xc0
+>    __pick_next_task+0x73/0x1c0
+>    __schedule+0x206/0x1730
+>    schedule+0x3a/0x160
+>    __do_sys_sched_yield+0xe/0x20
+>    do_syscall_64+0xbb/0x1e0
+>    entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> Fix it by converting the SCHED_WARN() back to a regular failure path. Also,
+> perform the migration disabled test before task_allowed_on_cpu() test so
+> that BPF schedulers which fail to handle migration disabled tasks can be
+> noticed easily.
+> 
+> While at it, adjust scx_ops_error() message for !task_allowed_on_cpu() case
+> for brevity and consistency.
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Fixes: 32966821574c ("sched_ext: Fix migration disabled handling in targeted dispatches")
+> Reported-by: Jake Hillion <jakehillion@meta.com>
 
-s/boot_cpu_has/cpu_feature_enabled/
+Applied to sched_ext/for-6.14-fixes.
+
+Thanks.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+tejun
