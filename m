@@ -1,166 +1,95 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF732528E1;
-	Mon, 10 Feb 2025 15:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3704A2528E1
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739200763; cv=none; b=vEUbLfSif3c6tctzFo806MiZ96cBj007QYJSVIYg094PpMSA9aWDFFUUhqktJnDOCUHjIXZbS8keDOKcZ2BWEM2opti0lpfKZ1ARC0psgQuzNvsZXqUn7GSG8OTFU5pfwlnnCGbfBKw8F+IvuDEXGZ6fIyuo0Z92FYy814EGPzo=
+	t=1739200866; cv=none; b=sWF0KcnOSb92AagNKj/KWX15+Zts9/fqHjioqwvJhNk1LgCR9gw9jRtr6Mzwx6YefR/+fb+0QXRV4ifr7RIcnmrYf/fMSyz6X8w6jVUw0zCfMgRkhtYw9Zoq7UxPC428/XwlfVNormcDou3LlVuhAr3B3+vsT2wRwDJyWZA+5QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739200763; c=relaxed/simple;
-	bh=tlpzLO1OaFJr0EbryVPAKN5AO5zM0QtHGFJNz2HgE/U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jjQdKW+5zO95blP5lPFbEbngnqI4w0O967WhwCFc/xmsrA71osE7B/hUgzLquMuiDc0mF4DUrchWyoxOWDGlV+OLNyvuyRiMs6A/KoIQNc81kTWCxtJP2j081AqM0NV4wPU16XwjuYhJc2DhpH2pIl6vp2j1IwWwlk44Z8cmW48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N5ACWGFh; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739200866; c=relaxed/simple;
+	bh=0Xqr41ZZrJh4bjEnx7vr7pghbDcp783elzwI1NPzerA=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=rEEHXQtxsO5euVdAdizUm6FbNcnVqbPci6p8Nzpjm4PDPyfEgnjrTplC6Kk0dW5EMJYKeD9tVPFaaneomISqYyPsqKVVtYJDeEE7ZapOOtUffTvgNS3uIPa5QJaQ9ky/0be7yA+OrH7L+1tTyAN0IJswkQOpNmNCyUlU+MMlb4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eVwbAlqW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N5ACWGFh"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2f9b91dff71so6929241a91.2;
-        Mon, 10 Feb 2025 07:19:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739200761; x=1739805561; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3xqRKY+q8PyHYDf3BVGRcr2KWDeTP/NWjkUy2+uT95c=;
-        b=N5ACWGFhuVdkKcn6f+UahD3gO8GIUxl7a7jgEvaafss8iupuUaZJcVMYEURBsflmcY
-         flkRIQGMICmbmU2DHMUNlBZALkaRTLbjdlbMnVA1BW2vNET+TnyXD/rtlZYU7FPdFIaH
-         a4cX5nHG8IFAHCgSGrFY1WwwSXBdWB4HY4fTArlXAUp0B7Qy2n1NDmp4ltOTo+hav4SK
-         dEd97baU1CU8ozj4QA2jy/d3714fx8fnmP9rUkzI0a4TI//zDlBapcGiMICz41+KZrEF
-         K/KQVTvIA90SiG+IkrgHuZ8hMzBWlbaH0E2PBNuMyHQ1OnKTJSWokdJzF+NSKNbw0EmL
-         SOqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739200761; x=1739805561;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3xqRKY+q8PyHYDf3BVGRcr2KWDeTP/NWjkUy2+uT95c=;
-        b=blDdcdRIhGgUieM9LAG25EsCjsWkZaKBhT4uN5QgY3KJMnaMGYmXXOh3X6T4QD3Eg+
-         s+9DohqAGe4yIqbNy+cCM1icf5MmamJMw5IOJOlv1jI4YSiY9EzAPKejhuXXuPNX3VQu
-         RaVqOwL+5801Eye2tCfj+cMgvHTHMyvyrDDEcDgkpiaDvhR1p7+sGuGlGGhp9gIJ+5Nu
-         LaGopHgwn5Mb98KGldhP8SP0vrmaQ+xT0/Q1C1Bzxf2vb0Mjz8d1ukwH4zAgY2zDoTPv
-         Bqvaxx0zxcWAPNixvgaanG7jToUkHmKLNfyR4vh8Ac3yqMI2i1kMrsZVSuzXu+bWeijK
-         cC7w==
-X-Forwarded-Encrypted: i=1; AJvYcCWRuA+N14zFj0r18EVFfa+4M7ZqdvvLAjSgmveFLVYkjED/lrmT7722Iox4KyOmLLFjWrJp9Tkb/0YxQD0w@vger.kernel.org, AJvYcCWpnenUxi+fV9HRkPyRLUoWEoaQXtQPkO6la+FasrQW2BKXEu0Cc/sqXpM88w+wQx6hkCM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzo62OcquZ05CtEIK25IMeCeQpfiXzVcND7PZOe+rN1w/+fVe+t
-	4Pws8y0R8Hc3tGUv1wxq651yUw77VssA8ji2jNcjuIbjD84VkhNw
-X-Gm-Gg: ASbGncsw5KtoNAsVtGO/J6vhnIf7W4Kyvi1riDyIU3WAZpj1i4u/kp8kp0y688D6nPN
-	pmbPWw2J2hb/sbJCPR8BW27I7iLpo0qZJI1FSPIW0/MLWRN94BS0ZUO2MxcWm7PJDJ744d/RjsN
-	I/1veUFYL2R1SYP4HjKvnsLYbZfTMduf87CMpFY1spMxAWvZnKq8xm0+rC3y4mz7NIa6X4WGFdA
-	gg0knjkyg2yx2VjesSewHiIEfDe2RodjIvZ/tXV0yDv4fGUNqy/x0EpI0z6HT8RGql43XyLXHfT
-	A5EC6a2Kg9/N
-X-Google-Smtp-Source: AGHT+IEtRndOAtN+hCziPX8YsAWGO9SxbjnZAcVJlej6cGL8luGVUZLenMphyNprKabdaxhTxc895A==
-X-Received: by 2002:a17:90b:1989:b0:2fa:200e:acd6 with SMTP id 98e67ed59e1d1-2fa242e5cb7mr20506233a91.28.1739200760081;
-        Mon, 10 Feb 2025 07:19:20 -0800 (PST)
-Received: from [0.0.0.0] ([5.34.218.148])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa099f4d6asm8882617a91.6.2025.02.10.07.19.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 07:19:19 -0800 (PST)
-Message-ID: <4914fa43-650c-403e-b2a5-b5ec66d02101@gmail.com>
-Date: Mon, 10 Feb 2025 23:19:13 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eVwbAlqW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739200864;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mAstyOUmLoPinPyGE4XOBnF1VKWvwKwEIte6lZZxCB0=;
+	b=eVwbAlqW/lXNfjCV8+CLW7ZgwdcsUUOOoh9P/p++Ha1gzEcGG/hnqwzddEAo6qCBcR1u/E
+	qXX62Q6jzDcRv1YcGVu048ibPta3jxIjmMd7Gjkh7U6VXS/C/fd2rRqCyuYsyn+32dZWI+
+	XL+pNo/D6Z8sPZKX48NNnJlp4HjYL9s=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-612-RovH38c7NdyDoa5jgB-uhQ-1; Mon,
+ 10 Feb 2025 10:21:00 -0500
+X-MC-Unique: RovH38c7NdyDoa5jgB-uhQ-1
+X-Mimecast-MFC-AGG-ID: RovH38c7NdyDoa5jgB-uhQ
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 865F219560AF;
+	Mon, 10 Feb 2025 15:20:59 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.92])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3A69530001AB;
+	Mon, 10 Feb 2025 15:20:58 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20250122090306.1524098-1-brahmajit.xyz@gmail.com>
+References: <20250122090306.1524098-1-brahmajit.xyz@gmail.com> <20250121091530.1316673-1-brahmajit.xyz@gmail.com>
+To: Brahmajit Das <brahmajit.xyz@gmail.com>
+Cc: dhowells@redhat.com, david.laight.linux@gmail.com,
+    linux-kernel@vger.kernel.org, netfs@lists.linux.dev
+Subject: Re: [PATCH v2 1/1] cachefiles: fix build with GCC 15
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v5 3/4] libbpf: Add libbpf_probe_bpf_kfunc API
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- eddyz87@gmail.com, haoluo@google.com, qmo@kernel.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, Tao Chen <dylane.chen@didiglobal.com>
-References: <20250210055945.27192-1-chen.dylane@gmail.com>
- <20250210055945.27192-4-chen.dylane@gmail.com> <Z6oDdiKkBy7McK-2@krava>
-From: Tao Chen <chen.dylane@gmail.com>
-In-Reply-To: <Z6oDdiKkBy7McK-2@krava>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 10 Feb 2025 15:20:57 +0000
+Message-ID: <3055183.1739200857@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-在 2025/2/10 21:47, Jiri Olsa 写道:
-> On Mon, Feb 10, 2025 at 01:59:44PM +0800, Tao Chen wrote:
-> 
-> SNIP
-> 
->> diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
->> index e142130cb83c..53f1196394bf 100644
->> --- a/tools/lib/bpf/libbpf_probes.c
->> +++ b/tools/lib/bpf/libbpf_probes.c
->> @@ -433,6 +433,54 @@ static bool can_probe_prog_type(enum bpf_prog_type prog_type)
->>   	return true;
->>   }
->>   
->> +int libbpf_probe_bpf_kfunc(enum bpf_prog_type prog_type, int kfunc_id, int btf_fd,
->> +			   const void *opts)
->> +{
->> +	struct bpf_insn insns[] = {
->> +		BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, BPF_PSEUDO_KFUNC_CALL, 1, kfunc_id),
->> +		BPF_EXIT_INSN(),
->> +	};
->> +	const size_t insn_cnt = ARRAY_SIZE(insns);
->> +	char buf[4096];
->> +	int fd_array[2] = {-1};
->> +	int ret;
->> +
->> +	if (opts)
->> +		return libbpf_err(-EINVAL);
->> +
->> +	if (!can_probe_prog_type(prog_type))
->> +		return -EOPNOTSUPP;
->> +
->> +	if (btf_fd >= 0) {
->> +		fd_array[1] = btf_fd;
->> +	} else if (btf_fd == -1) {
->> +		/* insn.off = 0, means vmlinux btf */
->> +		insns[0].off = 0;
->> +	} else {
->> +		return libbpf_err(-EINVAL);
->> +	}
->> +
->> +	buf[0] = '\0';
->> +	ret = probe_prog_load(prog_type, insns, insn_cnt, btf_fd >= 0 ? fd_array : NULL,
->> +			      0, buf, sizeof(buf));
-> 
-> hum, you pass fd_array_cnt as 0, which IIUC will work properly
-> 
-> but I guess then we don't need to have fd_array_cnt argument in
-> probe_prog_load if all callers pass 0 ?
-> 
-> jirka
-> 
+Brahmajit Das <brahmajit.xyz@gmail.com> wrote:
 
-Hi, jiri
-In fact, 0 is indeed used everywhere here. I was just thinking about 
-whether we might need it in the future. Anyway, it seems better to 
-remove it. I'll make the modifications in the next version.
+> Building with GCC 15 results in the following error
+>=20
+> fs/cachefiles/key.c:12:9: error: initializer-string for array of =E2=80=
+=98char=E2=80=99 is too long [-Werror=3Dunterminated-string-initialization]
+>    12 |         "0123456789"                    /* 0 - 9 */
+>       |         ^~~~~~~~~~~~
+> cc1: all warnings being treated as errors
+>=20
+> This due to GCC 15 having enabled -Wunterminated-string-initialization
+> by default[0]. Here we're increasing the size of cachefiles_charmap from
+> 64 to 65 to ensure space for NUL. Unfortunately using
+> __attribute__((nonstring)) or converting to unsigned char [] didn't help
+> in this case (thanks to David Laight <david.laight.linux@gmail.com>).
+>=20
+> Please also refer:
+> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D117178, and
+> https://gcc.gnu.org/pipermail/gcc-patches/2024-December/671714.html
+>=20
+> [0]:
+> https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wno-untermi=
+nated-string-initialization
+>=20
+> Signed-off-by: Brahmajit Das <brahmajit.xyz@gmail.com>
 
->> +	if (ret < 0)
->> +		return libbpf_err(ret);
->> +
->> +	/* If BPF verifier recognizes BPF kfunc but it's not supported for
->> +	 * given BPF program type, it will emit "calling kernel function
->> +	 * bpf_cpumask_create is not allowed", if the kfunc id is invalid,
->> +	 * it will emit "kernel btf_id 4294967295 is not a function". If btf fd
->> +	 * invalid in module btf, it will emit "invalid module BTF fd specified" or
->> +	 * "negative offset disallowed for kernel module function call"
->> +	 */
->> +	if (ret == 0 && (strstr(buf, "not allowed") || strstr(buf, "not a function") ||
->> +			(strstr(buf, "invalid module BTF fd")) ||
->> +			(strstr(buf, "negative offset disallowed"))))
->> +		return 0;
->> +
->> +	return 1; /* assume supported */
->> +}
->> +
->>   int libbpf_probe_bpf_helper(enum bpf_prog_type prog_type, enum bpf_func_id helper_id,
->>   			    const void *opts)
->>   {
->> -- 
->> 2.43.0
->>
+Acked-by: David Howells <dhowells@redhat.com>
 
-
--- 
-Best Regards
-Dylane Chen
