@@ -1,101 +1,100 @@
-Received: from mo-csw-fb.securemx.jp (mo-csw-fb1120.securemx.jp [210.130.202.128])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68F62F2E;
-	Mon, 10 Feb 2025 08:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C37185B62;
+	Mon, 10 Feb 2025 08:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739175392; cv=none; b=sf1dN4mNSH3YCVamo5L3oHf65MjI1gnItiAMZD9+dGuEyKaNzZ1vck++uuhl1yQJNN9fxSKR7k6Gm5xzpK0K4g0DfU10Zlz1LGAmY6hVie23T86pJkPxBS7R1Oz/aszGXSzTiYV0k1lxzlLtyHHyRroooEflgrzr/fYx4XuyXYU=
+	t=1739175417; cv=none; b=aaImDCPM5T4NXnp+/b+OHg2g3sG2L24KhcU1T3gBvQyltSER5FDMbBf5aP05UXqSm1PDMEzSfpk88jLnZv0BjHKzCbRs9gjm+LslVbVIC77Zb1dIAGMcdC0ry6q9i+raOE9/5Cy7qh289SD2GGzePe+fZxXAv1755tIx1XRfzo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739175392; c=relaxed/simple;
-	bh=oeSTV1dI+T8GrwEAkCPvGHesDTdealGcRC8KdexYD5I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=as6Y5LJx1BpBaG6JHYe6yS2oGXsafSY1b9BqobQMtw5fYMagKT2+7B20n5xe97eaYHr8EDxmNvRYipd6/i+XGAUw5+1WT5eem1xEP3MrXrIDvZfRR1o0zpZ3vWPY25zc0ltD+zRjtBNP+FQV+AGU7LMnyAZPJhBfK/qkFwhIllA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp; spf=pass smtp.mailfrom=toshiba.co.jp; dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=kazuhiro3.hayashi@toshiba.co.jp header.b=AnC3Hm5Y; arc=none smtp.client-ip=210.130.202.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toshiba.co.jp
+	s=arc-20240116; t=1739175417; c=relaxed/simple;
+	bh=RUtPk1rDw/fT5TrMDeTltRRfah+6wBW+dWQgNzcvTiM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DW4Um2M/mudT4j7vDt9zKTQNZaEE5ACRA9rBMIxKSAh3ZJDl6OycotcAl3EgFAsmE8TSJ2bt46+SGME021FhljKY/WY4PW8yf4ZEfhAhfAgbKalGLdFqxzX4/ffUm+4bUHeCRLCEQebO9ZbSxf9NPk93Tjo0mRK9MYEbqU8cr7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wd6+Jbfw; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=kazuhiro3.hayashi@toshiba.co.jp header.b="AnC3Hm5Y"
-Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1120) id 51A6uotC216575; Mon, 10 Feb 2025 15:56:50 +0900
-DKIM-Signature: v=1;a=rsa-sha256;c=relaxed/simple;d=toshiba.co.jp;h=From:To:Cc
-	:Subject:Date:Message-Id:In-Reply-To:References;i=
-	kazuhiro3.hayashi@toshiba.co.jp;s=key2.smx;t=1739170575;x=1740380175;bh=oeSTV
-	1dI+T8GrwEAkCPvGHesDTdealGcRC8KdexYD5I=;b=AnC3Hm5Y9xk8JXuJN1dIXHrxvS428YIDA5X
-	HWM0a1+I4rouWYEJpr/xRVuiBjunane+Ja9ZOy+ytmw7+TxD4zJkVN/Z50cTkjbRJPDaBd29ysmyn
-	CRRZLzuO1drzVvDKlRsM5AhX/RS/3S22xaF+wL90RfFL0IqCe9JQ4xPpvxB5coy/XFgOQmacv1qeg
-	zVL2WA4GCXdc2h2n8aBT1/w0K9mOXhJK6BL1lTShMAzJAznbf+3y8/+psQaN7+icFG1x7KAD54RST
-	DGrmdPrK0oyqKPp8/Y28QrtnJURMyRQPCYOQkfeCDfqJs3lQanb+Jx7qh0rjRtStkXCdS1wQm7bA=
-	=;
-Received: by mo-csw.securemx.jp (mx-mo-csw1121) id 51A6uFb13832482; Mon, 10 Feb 2025 15:56:15 +0900
-X-Iguazu-Qid: 2rWhSHZE3yt6r0xIbx
-X-Iguazu-QSIG: v=2; s=0; t=1739170569; q=2rWhSHZE3yt6r0xIbx; m=Y0hJNGDdcj4uKOoeojwG12+1jPvQ2I44K5L5a9Bg+kc=
-Received: from imx12-a.toshiba.co.jp ([38.106.60.135])
-	by relay.securemx.jp (mx-mr1122) id 51A6u6tX182804
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 15:56:07 +0900
-From: Kazuhiro Hayashi <kazuhiro3.hayashi@toshiba.co.jp>
-To: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-        cip-dev@lists.cip-project.org
-Cc: bigeasy@linutronix.de, tglx@linutronix.de, rostedt@goodmis.org,
-        linux-rt-users@vger.kernel.org, pavel@denx.de
-Subject: [PATCH 4.4 v1 03/17] arm64: Adjust system_state check
-Date: Mon, 10 Feb 2025 15:55:31 +0900
-X-TSB-HOP2: ON
-Message-Id: <1739170545-25011-4-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1739170545-25011-1-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
-References: <1739170545-25011-1-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wd6+Jbfw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739175416; x=1770711416;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=RUtPk1rDw/fT5TrMDeTltRRfah+6wBW+dWQgNzcvTiM=;
+  b=Wd6+JbfwMhGtbQ/WfWnCuSBFWIecAQzP2RNdPtLBfTnKDfO0rrPEgBva
+   NoaKTBEs8JUEwepyXctilWNh+U/XhzCuAq2jF6lgcwW7JIqviHzHJ3GZe
+   JrChlw8Q9yiF0m0T8kIoyAcl6jA5W78m+5HO8jN8fTzXUZngi2bQAbxBL
+   LyRYKwunxDcJKgrPANS0BHO0UwCbkjisgwtQFe4t4VRSYo/Xe2sMp25xW
+   qCn6CY8JlpZ+0z7mC3Zxe65fSanBAv/4ljd9a5xjiXL85qhdc84t5Oii7
+   cKgju5fFS71gRF8PEJFCj7AM18rmpz4y1Y6SSDQJT7FS+mqhd8Tn+XRuT
+   w==;
+X-CSE-ConnectionGUID: 2bq2DPmNTkSamZ4mpAxY/w==
+X-CSE-MsgGUID: fcDKp/xOR3mZmWlix6Ja7w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="39629758"
+X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
+   d="scan'208";a="39629758"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 00:16:53 -0800
+X-CSE-ConnectionGUID: qG1G8AYhTsWuqCyvEDaLbA==
+X-CSE-MsgGUID: hhlq+FQqR4Gb4FmfxZxaDw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
+   d="scan'208";a="112638684"
+Received: from slindbla-desk.ger.corp.intel.com (HELO pujfalus-desk.intel.com) ([10.245.246.224])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 00:16:49 -0800
+From: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	tiwai@suse.com
+Cc: linux-sound@vger.kernel.org,
+	kai.vehmanen@linux.intel.com,
+	ranjani.sridharan@linux.intel.com,
+	yung-chuan.liao@linux.intel.com,
+	pierre-louis.bossart@linux.dev,
+	bhelgaas@google.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/4] ASoC/SOF/PCI/Intel: add PantherLake H support
+Date: Mon, 10 Feb 2025 10:17:26 +0200
+Message-ID: <20250210081730.22916-1-peter.ujfalusi@linux.intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-From: Thomas Gleixner <tglx@linutronix.de>
+Hi,
 
-commit ef284f5ca5f102bf855e599305c0c16d6e844635 upstream.
+Changes since v1:
+- Updated the commit messages
+- added the Acked-by from Bjorn and Mark
 
-To enable smp_processor_id() and might_sleep() debug checks earlier, it's
-required to add system states between SYSTEM_BOOTING and SYSTEM_RUNNING.
+The audio IP in PTL-H is identical to the already supported PTL but the
+PCI-ID has been changes due to the differences in the product's
+configuration outside of audio.
 
-Adjust the system_state check in smp_send_stop() to handle the extra states.
+To support PTL-H we really just need to wire up the new ID.
 
-Conflicts: arch/arm64/kernel/smp.c
-82611c14 moves per-CPU stop message from ipi_cpu_stop() to smp_send_stop(),
-but no change in checking system_state condition.
-Apply the change to ipi_cpu_stop() instead.
+Regards,
+Peter
+--- 
+Peter Ujfalusi (1):
+  ASoC: SOF: Intel: pci-ptl: Add support for PTL-H
 
-Tested-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Link: http://lkml.kernel.org/r/20170516184735.112589728@linutronix.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Kazuhiro Hayashi <kazuhiro3.hayashi@toshiba.co.jp>
----
- arch/arm64/kernel/smp.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Pierre-Louis Bossart (3):
+  PCI: pci_ids: add INTEL_HDA_PTL_H
+  ALSA: hda: intel-dsp-config: Add PTL-H support
+  ALSA: hda: hda-intel: add Panther Lake-H support
 
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 36182dafd63c..9b21b6ccc3f1 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -685,8 +685,7 @@ static DEFINE_RAW_SPINLOCK(stop_lock);
-  */
- static void ipi_cpu_stop(unsigned int cpu)
- {
--	if (system_state == SYSTEM_BOOTING ||
--	    system_state == SYSTEM_RUNNING) {
-+	if (system_state <= SYSTEM_RUNNING) {
- 		raw_spin_lock(&stop_lock);
- 		pr_crit("CPU%u: stopping\n", cpu);
- 		dump_stack();
+ include/linux/pci_ids.h       | 1 +
+ sound/hda/intel-dsp-config.c  | 5 +++++
+ sound/pci/hda/hda_intel.c     | 2 ++
+ sound/soc/sof/intel/pci-ptl.c | 1 +
+ 4 files changed, 9 insertions(+)
+
 -- 
-2.30.2
-
+2.48.1
 
