@@ -1,159 +1,101 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A48E224AEB
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:04:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5857D1C3C00
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739192688; cv=none; b=fZ9SIIWQR3tQFQa9AkBAsV22n9+sm8spJK7tvJndCAddX7HIP64FFnrqRbmJe93IN4d0aLjXs/O4ESe/cMBaufPyBLTdcd1FyjGmDH0hKVwgWrsGRG+s6FL+oY/Vw5Sp1C5+MDgOQN8Aai+qAjjpn8ElxYEnVM3erhS0BiPGX0k=
+	t=1739192722; cv=none; b=BvIczqdcN6Ep8w5n7y/0/uCOTqWxKAfSKzFjve0sb5C/F/0VkuCWbunovzeObFPC5l+0MoRJ8bYvOw1qs+ZFg+1PFXgZPLKDGWqpGs7/hAUswtEHIwPDjmjlbcOgfnl02ryl6dLVFO1vsW2IHpeFh9fG6z0Eze73JCIZfmUeoxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739192688; c=relaxed/simple;
-	bh=yKTOzHvjtUJZ30ThdYOqib27UhbmSihpmMZ6uLIRUrM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AdPo0EO5gvCYMs5NKE75wJO2m8awubKU9iZN54CzmVCTTrlj9RPzP+A+R6D1zGgCKpkThFgOJQbJCYAPCvXWN2zQCkuWloFoSXlB1Mq2vp8M8W8hF/TzBO4eRN7QqcV+DRnxfHcUnkNCf+hNPmkL8ksFrQWLSAxb2/YLy0fUWn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=V5yO5awP; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1739192722; c=relaxed/simple;
+	bh=mOuLjG4HvOr7s2/eJN9eNQJDWNjOV+ufUPdVlMdB3LY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bZBYQoJKpKyuwHFNj70VnP0bbph730mrG/501jlKBEQdBBm41YLjL6tTeWdY2Dq2qop+7SFQpkXWfLF4PmHt8SmIfdsBn7vwFsNLP7zesHUfMaYtXHwoRU1nXcHvCxSoD3qkSNYhYlueVM7n8MVW+aFNqwYnPMRPLTy4wXnvJFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=On2PjgH5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V5yO5awP"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ab7d3bcf1ceso47060266b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 05:04:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1739192683; x=1739797483; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HaW26J7mtZirTrALfRYZJBUEjaYSL5x2uLwPDfHyOao=;
-        b=V5yO5awP3dU/0arWToQPeBKAqfhuYVMg7zJyI0jc7FFlSitYFUCfQhUGPoiraqVPUg
-         Cmfw73t+BiR+9dut8G7BqJhrsxaZYgIkXbUiAgGi9GBUGswD0hjEGG+JABcQzt6lBeBO
-         y9Wc+S/l2T8nJHuKi0n773zs3ZrxgVmyPmO+I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739192683; x=1739797483;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HaW26J7mtZirTrALfRYZJBUEjaYSL5x2uLwPDfHyOao=;
-        b=NYEHw1AJXFRHpMePCL/luimRzZA4lGY6WAJYZLx3jswV+/LY3Zn0lmN4h+Xb7HA9Sa
-         Lov0WK3PTuQx6ZPBfb6LDywZwyAho7udKD9xqrQHG7My7Dtuy4366R3TlpiUQpt07Q/a
-         oh58vWJtVZ5RgKgH+xc1s4rOT9NUHRm/lrqHxrEaO52h0921j1WfXChToFjHinEvRs35
-         Ef6Onu6mFUcya9/L+VNF2t1/OxyErGt3I67xpihwJICrb5kVgV872xLEpjV6Qs0tq6Zg
-         3DK8lrPMvssw0IQZwYj6G7l9TdFxBkvpzQJAS4EpViUTWZ+Utqhw2u70iIx21gnrqX0K
-         QNVA==
-X-Gm-Message-State: AOJu0Yz1LCWy1QwSsxo/3YyjOJGGiggV8h9pXuG0HVsW/eGi2ITXMueb
-	IlnQg4HTVGfqHHsN8BA2g6IbFyEMEDkZ1NlUmvySM7EvCsDUnzQYqiYjzPYlPw==
-X-Gm-Gg: ASbGncsbLouCZIqdCmPjUlsd8ljRD4+ET6hdYgX6AblRWAVvbQnHYsgI8XUzCCAHyTw
-	2KF3YPDJ/t00tf2F8gbei1qIjAESuQjgXuIOf8CYumeFOO756tgLumql4JLaIvCvdFqM2Y4cQQA
-	6CwLALu6sohBRDzpVFoortxsidd8NR2sFYe/L3z7b8RSxzlg/ry3zE8MSy9JWvMBw3ZXRUPuBG9
-	UQlzKY+7931I8IwuKvg2XJcCcET5H5F2llgqlgTCEOzXN4hjIUJS33Q27OEn0ll1QcHwA9TjGnN
-	VR783Dzi+U+tO9I92jv4dUCPrhAvA3rHgWMeaVSvhDGqcBVcrrLyN4Yju1PeapLMP9Sm5aT8i6k
-	4qNT1uQ==
-X-Google-Smtp-Source: AGHT+IHuDeWepv9LWawTITsPd16QmZhryU1yphj02BJkEjCvATWc0zUlF0EQCYEgyNLLZg8vP5nGcA==
-X-Received: by 2002:a17:906:ef0d:b0:ab7:a4b1:99f with SMTP id a640c23a62f3a-ab7a4b10a32mr741267866b.30.1739192683289;
-        Mon, 10 Feb 2025 05:04:43 -0800 (PST)
-Received: from akuchynski.c.googlers.com.com (140.20.91.34.bc.googleusercontent.com. [34.91.20.140])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7732e71f1sm870928466b.92.2025.02.10.05.04.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 05:04:42 -0800 (PST)
-From: Andrei Kuchynski <akuchynski@chromium.org>
-To: Prashant Malani <pmalani@chromium.org>,
-	Benson Leung <bleung@chromium.org>,
-	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-	chrome-platform@lists.linux.dev,
-	Jameson Thies <jthies@google.com>,
-	=?UTF-8?q?=C5=81ukasz=20Bartosik?= <ukaszb@chromium.org>
-Cc: linux-kernel@vger.kernel.org,
-	Andrei Kuchynski <akuchynski@chromium.org>
-Subject: [PATCH] platform/chrome: cros_ec_typec: Add support for setting USB mode via sysfs
-Date: Mon, 10 Feb 2025 13:04:19 +0000
-Message-ID: <20250210130419.4110130-1-akuchynski@chromium.org>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="On2PjgH5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28E07C4AF09
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:05:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739192722;
+	bh=mOuLjG4HvOr7s2/eJN9eNQJDWNjOV+ufUPdVlMdB3LY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=On2PjgH5huB/3tUtxfoCEwwkmDKR6BMfkU8zFauStUcTeNUDRa4ouxtj1fPusvlLV
+	 Qg1YNOSz6IWcBTDVlWe3Ty53B5K9vAjKsedI3P91WBMctv7bMjeFbu8QTP00fDaBC1
+	 tttRWXeCSXR2YP4afiwZ7zesR22/eNgzRJhufSrthdmjjt2255PJ103o5kyl3EN7vF
+	 N8HW2W/kpgPfbtMUt3GVBnS0N9quvjaUeYHJ2B21m6KnlNsCE3bLfwOguUe1S5q/cR
+	 lEwL17VU7qMJSTLxRiKVkhIL4yP92fhEshVS8b/Xbt4kjCIqn38YqlcyLA04Li2qoJ
+	 DttOdDd9eFI0g==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5de77a5d2a2so2012178a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 05:05:22 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXHk5rUECovGRAJ0OF07OZvDrO7SsEtPt51FPqW9juvgyZq7LMeRfdlv0wa8zj43qXGzr/3MIqbflWPOlM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyA8qtrpSKdaM2imROWowLHCbrCVxhtbn2h6I71UPHhY9XREWYa
+	ot2W16FzX1ild9bTptEvoCcVqKDjmXsmDpV5AdxDOdhoPa9cEhmLd34b1BwaIuDBraoMlJAHCAz
+	0cEzxDnMujCwS2pmLBvBoSnV0QRk=
+X-Google-Smtp-Source: AGHT+IEkfRt7YjPb0KMkBFoPeu30Y37MTdWx6pXWpmrd7dcLDVULaIoVKrW6CFBvxfzLJUlJ4KrCMqsrFtc2mU2K9ek=
+X-Received: by 2002:a05:6402:348c:b0:5d3:e45d:ba91 with SMTP id
+ 4fb4d7f45d1cf-5de4509996bmr15458378a12.32.1739192720709; Mon, 10 Feb 2025
+ 05:05:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <9C6990139B46AE19+20250209050258.2090416-1-wangyuli@uniontech.com>
+In-Reply-To: <9C6990139B46AE19+20250209050258.2090416-1-wangyuli@uniontech.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 10 Feb 2025 21:05:06 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4aap22B_jaRVxJQDGThg-6HQQ3oC4ZeaT=v_4+5R5zqw@mail.gmail.com>
+X-Gm-Features: AWEUYZkFIAYsZd1aQYEMoOqwA_MhJT8_fqFQ4Oj3A5WL4uSTnDaoQnsVfynOqdM
+Message-ID: <CAAhV-H4aap22B_jaRVxJQDGThg-6HQQ3oC4ZeaT=v_4+5R5zqw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] LoongArch: Remove the deprecated notifier hook mechanism
+To: WangYuli <wangyuli@uniontech.com>
+Cc: kernel@xen0n.name, guanwentao@uniontech.com, jiaxun.yang@flygoat.com, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	chenlinxuan@uniontech.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This patch implements USB mode setting via a sysfs interface in
-cros_ec_typec driver. User-space applications can now change the current
-USB mode by writing to "usb_mode" sysfs entry, replacing the previous
-ioctl-based method.
-The embedded controller (EC) currently supports only entering USB4 mode
-and exiting all modes (including altmodes). Both of these operations
-trigger Data Reset Message, even if no USB Mode is active.
-Additionally, the patch exposes the USB modes supported by the port via
-"usb_capability" sysfs attribute.
+Series applied, thanks.
 
-Signed-off-by: Andrei Kuchynski <akuchynski@chromium.org>
----
- drivers/platform/chrome/cros_ec_typec.c | 28 +++++++++++++++++++++++++
- drivers/platform/chrome/cros_ec_typec.h |  1 +
- 2 files changed, 29 insertions(+)
+Huacai
 
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index 6ee182101bc9..d2228720991f 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -42,6 +42,24 @@ static void cros_typec_role_switch_quirk(struct fwnode_handle *fwnode)
- #endif
- }
- 
-+static int cros_typec_enter_usb_mode(struct typec_port *tc_port, enum usb_mode mode)
-+{
-+	struct cros_typec_port *port = typec_get_drvdata(tc_port);
-+	struct ec_params_typec_control req = {
-+		.port = port->port_num,
-+		.command = (mode == USB_MODE_USB4) ?
-+			TYPEC_CONTROL_COMMAND_ENTER_MODE : TYPEC_CONTROL_COMMAND_EXIT_MODES,
-+		.mode_to_enter = CROS_EC_ALTMODE_USB4
-+	};
-+
-+	return cros_ec_cmd(port->typec_data->ec, 0, EC_CMD_TYPEC_CONTROL,
-+			  &req, sizeof(req), NULL, 0);
-+}
-+
-+static const struct typec_operations cros_typec_usb_mode_ops = {
-+	.enter_usb_mode = cros_typec_enter_usb_mode
-+};
-+
- static int cros_typec_parse_port_props(struct typec_capability *cap,
- 				       struct fwnode_handle *fwnode,
- 				       struct device *dev)
-@@ -84,6 +102,13 @@ static int cros_typec_parse_port_props(struct typec_capability *cap,
- 		cap->prefer_role = ret;
- 	}
- 
-+	if (fwnode_property_present(fwnode, "usb2-port"))
-+		cap->usb_capability |= USB_CAPABILITY_USB2;
-+	if (fwnode_property_present(fwnode, "usb3-port"))
-+		cap->usb_capability |= USB_CAPABILITY_USB3;
-+	if (fwnode_property_present(fwnode, "usb4-port"))
-+		cap->usb_capability |= USB_CAPABILITY_USB4;
-+
- 	cros_typec_role_switch_quirk(fwnode);
- 
- 	cap->fwnode = fwnode;
-@@ -379,6 +404,9 @@ static int cros_typec_init_ports(struct cros_typec_data *typec)
- 		if (ret < 0)
- 			goto unregister_ports;
- 
-+		cap->driver_data = cros_port;
-+		cap->ops = &cros_typec_usb_mode_ops;
-+
- 		cros_port->port = typec_register_port(dev, cap);
- 		if (IS_ERR(cros_port->port)) {
- 			ret = PTR_ERR(cros_port->port);
-diff --git a/drivers/platform/chrome/cros_ec_typec.h b/drivers/platform/chrome/cros_ec_typec.h
-index 9fd5342bb0ad..f9c31f04c102 100644
---- a/drivers/platform/chrome/cros_ec_typec.h
-+++ b/drivers/platform/chrome/cros_ec_typec.h
-@@ -18,6 +18,7 @@
- enum {
- 	CROS_EC_ALTMODE_DP = 0,
- 	CROS_EC_ALTMODE_TBT,
-+	CROS_EC_ALTMODE_USB4,
- 	CROS_EC_ALTMODE_MAX,
- };
- 
--- 
-2.48.1.502.g6dc24dfdaf-goog
-
+On Sun, Feb 9, 2025 at 1:03=E2=80=AFPM WangYuli <wangyuli@uniontech.com> wr=
+ote:
+>
+> The notifier hook mechanism in proc and cpuinfo is actually unnecessary
+> for LoongArch because it's not used anywhere.
+>
+> It was originally added to the MIPS code in commit d6d3c9afaab4 ("MIPS:
+> MT: proc: Add support for printing VPE and TC ids"), and LoongArch
+> then inherited it.
+>
+> But as the kernel code stands now, this notifier hook mechanism doesn't
+> really make sense for either LoongArch or MIPS.
+>
+> In the process, we identified one instance where a hardcoded print messag=
+e
+> could be changed to utilize the str_yes_no() helper function.
+>
+> Furthermore, the declaration of seq_file in cpuinfo.h should also be
+> removed along with the deprecated notifier hook mechanism.
+>
+> However, it needs to be added back in a different location to ensure
+> the code compiles and functions correctly.
+>
+> WangYuli (2):
+>   LoongArch: kernel: proc: Use str_yes_no() helper function
+>   LoongArch: Remove the deprecated notifier hook mechanism
+>
+>  arch/loongarch/include/asm/cpu-info.h | 21 -------------------
+>  arch/loongarch/include/asm/smp.h      |  1 +
+>  arch/loongarch/kernel/proc.c          | 29 +++------------------------
+>  3 files changed, 4 insertions(+), 47 deletions(-)
+> ---
+> Changelog:
+>  *v1->v2: Combine the patch2 and patch3 from v1.
+>
+> --
+> 2.47.2
+>
