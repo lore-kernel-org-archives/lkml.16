@@ -1,71 +1,119 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D5938B
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 00:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2BF186A;
+	Mon, 10 Feb 2025 00:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.21.196.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739146806; cv=none; b=JEaTU+YdrXcXtNGBgW5f6YeQ/oSqepPXA2/HOWBAPrUOvFjXSvaa9Jo4A2c+Btt3WyE1xZUnczt1JoImPZS8gwI/+9NXeXLpMCUFhHijz0iT9sxyI6hH4k37aIROztF96DLUTCllk5u5gouzxjSJjJmtV5A4aeEhPFbo5XW78Gs=
+	t=1739147211; cv=none; b=YLLf8/3C8h2S1QmYpeOsu2i2nv3DgcPRii+Vq8CaAj42y3XRe+YWBUqOAt2UW/x9Aw0RKcYko041ux0yQzCo2hnoyGVZCelPuyUE2/w1keLh7QmBG2Ng/2DUjlRhGqgZ4OikdtWWsxjPn/iFlAPYfAyeOQGLg6tEtxt5CPtBnPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739146806; c=relaxed/simple;
-	bh=Zc8iyrguv/vddRtaIi7VyNlwTkxcac3ZMD4W5EvaMGg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=q3ckXUvd76BIn0i1VyQ9LwOu7c8flrbqRDBmQuB0W47bjo+9khNmDWgBFW2Kfiu7tzaCq/Wtq07mbS40Y36kmQ5Pjwolxet06I+G9TDlp8uQ5Duhjto6vNe9qTpHzBIuDgK0NTCBn2Zw9oX+M+1RMWSkxdzROWRS0kW73KRNT7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ce81a40f5cso78699015ab.1
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 16:20:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739146804; x=1739751604;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aacYWXOwd4JWlNPVUCsyr/zAyiQoAKtPEE28jjNELmo=;
-        b=EhrS5PIWsnA+0A+kCr0HvLweXfLNnEyAjauhPBVVwTC3qCiDjkP0wUEZVYxduz21o7
-         qGG6sV/eAw6Qb5/CkLks/EdtttlmLC8TjydCfoVqyM2dXjxGTjgfIVFDaJRXwyh0Zcc1
-         9sovYwZMxzmmNaGykjUhYU1BGf8kAL+4Xf/HGdLkqznykJ4Hurgi4wvSEWv7OzLOX5ui
-         WLeWMk/RsR29Qlpem4F2hVVpG5eiBUN7tSIpv+3YfidtfyMQTWo9r6phaXdLSOBL8cfY
-         6CTHXxgio/XyKtzmIzPEAXV2KQCc2+f4N54Tg+QLJXi2kn5D5IkWZrF+GULko01pZ4b7
-         OJaQ==
-X-Gm-Message-State: AOJu0YwyZPW/jxVGlL0JClx0RLd626UlwQkc9Zxoc1bDwn/T9HWo0e6P
-	9FZj3tjzBSLNoVwSpHlCOmIQGW6q4HAK0Gy3oRM2x/CJ8x/Am/93Zwzq97ce54VJtjtP/qVz8bX
-	yAbcUiaHOutblXwDZk+wC128aEuY6vcHOSyc/YrmykEsM1jURkSdjLMc=
-X-Google-Smtp-Source: AGHT+IGGfB6MO76VaO/eyq+GXmfPqSJ9bdGxAlFPI8rqJg8nQlVTi4OPDypsycZ2WH2PkTvIzcyFuYGwohrOfMj+Wq6gfLxDUQXa
+	s=arc-20240116; t=1739147211; c=relaxed/simple;
+	bh=4ixP4rHXERZI+Nh/y2rKjcZvz0aVswCEPpsFqH5/RyA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=apXBTqQjG6e3/h/xee7LLpwuwgK4/++OcMaMnlHEsGGGzidvC7wQGUG5/xP/IZiS7kQirUh4t3LFlYq54oE/lpey0jLJ8MKkRFkBcIpJgITVAehiWVqzIbiAwM2xIpaNVfZZz+oNnRpacqNugaS+5kOpdwEh2zsxn3DF5WMBXiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=VSqyogIy; arc=none smtp.client-ip=72.21.196.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VSqyogIy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1739147210; x=1770683210;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=iD3tjeGDoU7JwTHL1VsQbg5J8FMVxUEkRHvXxPnkyjA=;
+  b=VSqyogIyNS8fXN+PrU7VhZT3dixka+sEaz6QJhDwIIO4so0DxgG2kRGG
+   6BeTUViagIg5Iz0E6DqjaiN+xggqfPm/t4L4SfIEsOIkf7tFs5LrktuuS
+   PgroMq/tKplZ1MWMn+3MRSVZk07kudELkPRfCl3A9RDk1nzlTGWV0LO3N
+   8=;
+X-IronPort-AV: E=Sophos;i="6.13,273,1732579200"; 
+   d="scan'208";a="465431182"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 00:26:47 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.7.35:39422]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.5.183:2525] with esmtp (Farcaster)
+ id d5f2f18c-39a2-4e94-8a13-f9a474d88df0; Mon, 10 Feb 2025 00:26:45 +0000 (UTC)
+X-Farcaster-Flow-ID: d5f2f18c-39a2-4e94-8a13-f9a474d88df0
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
+ Mon, 10 Feb 2025 00:26:45 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.37.244.8) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 10 Feb 2025 00:26:41 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <purvayeshi550@gmail.com>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <horms@kernel.org>,
+	<kuba@kernel.org>, <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>, <skhan@linuxfoundation.org>
+Subject: Re: [PATCH] net: unix: Fix undefined 'other' error
+Date: Mon, 10 Feb 2025 09:26:32 +0900
+Message-ID: <20250210002632.48499-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20250209184355.16257-1-purvayeshi550@gmail.com>
+References: <20250209184355.16257-1-purvayeshi550@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3112:b0:3cf:bb6e:3065 with SMTP id
- e9e14a558f8ab-3d13da217ddmr106494325ab.0.1739146804385; Sun, 09 Feb 2025
- 16:20:04 -0800 (PST)
-Date: Sun, 09 Feb 2025 16:20:04 -0800
-In-Reply-To: <Z6k9YjC7dJmazME-@qasdev.system>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a94634.050a0220.110943.0020.GAE@google.com>
-Subject: Re: [syzbot] [isofs?] KMSAN: uninit-value in isofs_readdir
-From: syzbot <syzbot+812641c6c3d7586a1613@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, qasdev00@gmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D044UWA001.ant.amazon.com (10.13.139.100) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-Hello,
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+> [PATCH] net: unix: Fix undefined 'other' error
 
-Reported-by: syzbot+812641c6c3d7586a1613@syzkaller.appspotmail.com
-Tested-by: syzbot+812641c6c3d7586a1613@syzkaller.appspotmail.com
+Please add net-next after PATCH and start with af_unix: as with
+other commits when you post v2.
 
-Tested on:
+[PATCH net-next v2]: af_unix: ...
 
-commit:         a64dcfb4 Linux 6.14-rc2
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=160d7df8580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b6a9ed1e05c7ed4f
-dashboard link: https://syzkaller.appspot.com/bug?extid=812641c6c3d7586a1613
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=10cc3b18580000
 
-Note: testing is done by a robot and is best-effort only.
+From: Purva Yeshi <purvayeshi550@gmail.com>
+Date: Mon, 10 Feb 2025 00:13:55 +0530
+> Fix issue detected by smatch tool:
+> An "undefined 'other'" error occur in __releases() annotation.
+> 
+> The issue occurs because __releases(&unix_sk(other)->lock) is placed
+> at the function signature level, where other is not yet in scope.
+> 
+> Fix this by replacing it with __releases(&u->lock), using u, a local
+> variable, which is properly defined inside the function.
+
+Tweaking an annotation with a comment for a static analyzer to fix
+a warning for yet another static analyzer is too much.
+
+Please remove sparse annotation instead.
+
+Here's the only place where sparse is used in AF_UNIX code, and we
+don't use sparse even for /proc/net/unix.
+
+
+> 
+> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> ---
+>  net/unix/af_unix.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+> index 34945de1f..37b01605a 100644
+> --- a/net/unix/af_unix.c
+> +++ b/net/unix/af_unix.c
+> @@ -1508,7 +1508,10 @@ static int unix_dgram_connect(struct socket *sock, struct sockaddr *addr,
+>  }
+>  
+>  static long unix_wait_for_peer(struct sock *other, long timeo)
+> -	__releases(&unix_sk(other)->lock)
+> +	/*
+> +	 * Use local variable instead of function parameter
+> +	 */
+> +	__releases(&u->lock)
+>  {
+>  	struct unix_sock *u = unix_sk(other);
+>  	int sched;
+> -- 
+> 2.34.1
