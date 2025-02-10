@@ -1,79 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B9B243374
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 12:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52A5528E7
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 12:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739190166; cv=none; b=RiKCTOwo/44PPj91ei1m7Ti1hUcqsAYIRjb2xMdiG8lMMkQsNZPeR/pRuBQ0eVKdfM8TtwD2A710fPneuLp1uVUouI9FvRkoTWvknnO1QTLx2SuUiPXXhKWOmgFDQayyjbhOjWvO16O/lsQQBw+sRDj7DtWrwKHB8Wj55cas/D4=
+	t=1739190277; cv=none; b=HnbBQmtQrIG2vrqLngMLquIJuBbraiEIJ+AZ1K8dBrdUB9wn0snmxi7oDaamjvjEA8xZH7irI3urupQrFsC9pKPu2KWwQW294TK/0SqUgW0HDBWE291kPOnWtZBqmjeM0OyNZ2SczexAtI/5AOqX9BGIx57Eo2bLwEZWum/F9J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739190166; c=relaxed/simple;
-	bh=D5szCVESMN9ourmiO6CU01qZfUnW6l4QuLPfuu1uUuc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=sMzOJunYaPpjYLQU5vxqJd/gB091hSLl7A8JHVmAkd47hEhQMaZPZxWtNoR5mbqlhHSCFO0+NOh6RnF62kXOJWWIPbwkCOGaXaatO+bi8P9e+v77YjK6cM0OelIOFALs7zctlL50iBmzKAmIsvDsvtnllGY5z3IDqrwh04bkfWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KxX0wiXI; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KxX0wiXI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739190165; x=1770726165;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=D5szCVESMN9ourmiO6CU01qZfUnW6l4QuLPfuu1uUuc=;
-  b=KxX0wiXIcCBaKdfQyyi4cmEovmwFCtO95sMvebOBsJ69KYLFg80ZuMf+
-   AMeEtmrDtR0T6P7kKVuNI4IKFJWklfIjDdZlpyBHRXCUfwebWA71NY/Jd
-   tq+fzYJJX/hYDUF/ZR5dzu8+z/nhyExflG7qm3svX1SwofmFwZ5jdDpI1
-   d1vFKWOqxKQQyEbgtc9trAp5bKyD25B3T+du/UloTxGQjK6UG0us3Bgw9
-   DE00YiqN8fN+IIu4g58QPAPayzrkQuXFWlFo9p3vW8ugAC7c0Ap3a5Zbl
-   LwgiJTcP+BOseBlitQSQFf3at65zXJwqKkoPh3jXqFrqONC/cgiqV4dFu
-   A==;
-X-CSE-ConnectionGUID: AvsAE7b/RmWPHfudXg8C8A==
-X-CSE-MsgGUID: WNyROy5BR3OKNhWqFqui/A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="50752328"
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="50752328"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 04:22:44 -0800
-X-CSE-ConnectionGUID: pliT4yuvRAG2cNeKqxyD/g==
-X-CSE-MsgGUID: VpMN6canQqaD3B0ni3pGCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="112616824"
-Received: from iklimasz-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.244])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 04:22:41 -0800
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Alex Lanzano <lanzano.alex@gmail.com>, airlied@gmail.com,
- simona@ffwll.ch, tzimmermann@suse.de, noralf@tronnes.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: lanzano.alex@gmail.com
-Subject: Re: Maintaining Repaper and MI0283QT
-In-Reply-To: <mubhrsqwsixflh5iagrtwsbup7nrnxkhwhn3nmqvmfhibwxauo@g3jvqxpo2fb7>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <mubhrsqwsixflh5iagrtwsbup7nrnxkhwhn3nmqvmfhibwxauo@g3jvqxpo2fb7>
-Date: Mon, 10 Feb 2025 14:22:37 +0200
-Message-ID: <87bjva3s6q.fsf@intel.com>
+	s=arc-20240116; t=1739190277; c=relaxed/simple;
+	bh=Kqrhr0Wgy/5YQg27ZGajKoNYJmIjcLnr92DzfXT8l8Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ebFoNML/KBWKsB7K1cXsHDGJNG6TmHzEbWkMfDzO9EvxGg5e2wxKI4590xtSzuxL9YXDjf+1s0AALDDpH5wO8Nu6i3jjbYSFcxm61XoquoM3NcSIszyDeJIPii7VaXQMGI7PdKTSWFLqdQy0Z+d2EwFgnwsBNnX0LJs+xFqks1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 458241BA8;
+	Mon, 10 Feb 2025 04:24:55 -0800 (PST)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C70A93F5A1;
+	Mon, 10 Feb 2025 04:24:26 -0800 (PST)
+Date: Mon, 10 Feb 2025 12:24:21 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oleg@redhat.com,
+	sstabellini@kernel.org, tglx@linutronix.de, peterz@infradead.org,
+	luto@kernel.org, mingo@redhat.com, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	vschneid@redhat.com, kees@kernel.org, wad@chromium.org,
+	akpm@linux-foundation.org, samitolvanen@google.com,
+	masahiroy@kernel.org, hca@linux.ibm.com, aliceryhl@google.com,
+	rppt@kernel.org, xur@google.com, paulmck@kernel.org, arnd@arndb.de,
+	mbenes@suse.cz, puranjay@kernel.org, pcc@google.com,
+	ardb@kernel.org, sudeep.holla@arm.com, guohanjun@huawei.com,
+	rafael@kernel.org, liuwei09@cestc.cn, dwmw@amazon.co.uk,
+	Jonathan.Cameron@huawei.com, liaochang1@huawei.com,
+	kristina.martsenko@arm.com, ptosi@google.com, broonie@kernel.org,
+	thiago.bauermann@linaro.org, kevin.brodsky@arm.com,
+	joey.gouly@arm.com, liuyuntao12@huawei.com, leobras@redhat.com,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	xen-devel@lists.xenproject.org
+Subject: Re: [PATCH -next v5 11/22] arm64: entry: Switch to generic IRQ entry
+Message-ID: <Z6nv9SLi0za8tE69@J2N7QTR9R3>
+References: <20241206101744.4161990-1-ruanjinjie@huawei.com>
+ <20241206101744.4161990-12-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241206101744.4161990-12-ruanjinjie@huawei.com>
 
-On Fri, 07 Feb 2025, Alex Lanzano <lanzano.alex@gmail.com> wrote:
-> I saw that Noralf has to unfortunately step down from maintaining the
-> repaper and mi0283qt drivers. I would be more than happy to maintain
-> these two if need be. The repaper device is very similar to the
-> sharp-memory display I currently maintain and I've worked with mi0283qt
-> displays before.
+On Fri, Dec 06, 2024 at 06:17:33PM +0800, Jinjie Ruan wrote:
+> Currently, x86, Riscv, Loongarch use the generic entry. Convert arm64
+> to use the generic entry infrastructure from kernel/entry/*.
+> The generic entry makes maintainers' work easier and codes
+> more elegant.
+> 
+> Switch arm64 to generic IRQ entry first, which removed duplicate 100+
+> LOC, and it will switch to generic entry completely later. Switch to
+> generic entry in two steps according to Mark's suggestion will make
+> it easier to review.
+> 
+> The changes are below:
+>  - Remove *enter_from/exit_to_kernel_mode(), and wrap with generic
+>    irqentry_enter/exit(). Also remove *enter_from/exit_to_user_mode(),
+>    and wrap with generic enter_from/exit_to_user_mode() because they
+>    are exactly the same so far.
+> 
+>  - Remove arm64_enter/exit_nmi() and use generic irqentry_nmi_enter/exit()
+>    because they're exactly the same, so the temporary arm64 version
+>    irqentry_state can also be removed.
+> 
+>  - Remove PREEMPT_DYNAMIC code, as generic entry do the same thing
+>    if arm64 implement arch_irqentry_exit_need_resched().
+> 
+> Suggested-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>  arch/arm64/Kconfig                    |   1 +
+>  arch/arm64/include/asm/entry-common.h |  64 ++++++
+>  arch/arm64/include/asm/preempt.h      |   6 -
+>  arch/arm64/kernel/entry-common.c      | 307 ++++++--------------------
+>  arch/arm64/kernel/signal.c            |   3 +-
+>  5 files changed, 129 insertions(+), 252 deletions(-)
+>  create mode 100644 arch/arm64/include/asm/entry-common.h
 
-I think please just send a MAINTAINERS patch!
+Superficially this looks nice, but to be clear I have *not* looked at
+this in great detail; minor comments below.
 
-BR,
-Jani.
+[...]
 
+> +static inline void arch_exit_to_user_mode_prepare(struct pt_regs *regs,
+> +						  unsigned long ti_work)
+> +{
+> +	local_daif_mask();
+> +}
+> +
+> +#define arch_exit_to_user_mode_prepare arch_exit_to_user_mode_prepare
 
--- 
-Jani Nikula, Intel
+I'm a little worried that this may be fragile having been hidden in the
+common code, as it's not clear exactly when this will occur during the
+return sequence, and the ordering requirements could easily be broken by
+refactoring there.
+
+I suspect we'll want to pull this later in the arm64 exit sequence so
+that we can have it explicit in entry-common.c.
+
+[...]
+
+> index 14ac6fdb872b..84b6628647c7 100644
+> --- a/arch/arm64/kernel/signal.c
+> +++ b/arch/arm64/kernel/signal.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/cache.h>
+>  #include <linux/compat.h>
+>  #include <linux/errno.h>
+> +#include <linux/irq-entry-common.h>
+>  #include <linux/kernel.h>
+>  #include <linux/signal.h>
+>  #include <linux/freezer.h>
+> @@ -1603,7 +1604,7 @@ static void handle_signal(struct ksignal *ksig, struct pt_regs *regs)
+>   * the kernel can handle, and then we build all the user-level signal handling
+>   * stack-frames in one go after that.
+>   */
+> -void do_signal(struct pt_regs *regs)
+> +void arch_do_signal_or_restart(struct pt_regs *regs)
+>  {
+>  	unsigned long continue_addr = 0, restart_addr = 0;
+>  	int retval = 0;
+
+Is the expected semantic the same here, or is those more than just a
+name change?
+
+Mark.
