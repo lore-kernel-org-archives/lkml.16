@@ -1,161 +1,119 @@
-Received: from pv50p00im-ztdg10012101.me.com (pv50p00im-ztdg10012101.me.com [17.58.6.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B210C1EF082
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 12:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.49
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B17B222575;
+	Mon, 10 Feb 2025 12:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739191223; cv=none; b=uhiLFl4tj8CL3w2gMPzEUVWQf4hUoGTorfDyuABlY4+CfrPHx5DfaxIHTvNmb2b0kHwluDgc8y0BOKYRuyifl0Qb3uoEYiyob0zXqwW171pijy84Xs+XNNR60UNTsIl0RGvrLFxo7xMX5jqr52kqD862GnT51GEtwC97lp2lvP0=
+	t=1739191246; cv=none; b=u0k+r2dJdzNTgrRWKlQTTUwrfjJxH9dCujU6egx6jxA03OovWau42uONzdkDiq0IPbhzDc0bNiZyDy1uCQlYtgthgysLKslPWn4fPAjIcjkCtqUcETm6dHnvM+tAg4cPcvB96JyZ0gisczuWRdNVZcIuDLIgNC0HoLxrW2xdUKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739191223; c=relaxed/simple;
-	bh=Yaj8fqOglkS3iOOnKEAW1Jb4zD/d4qG3IVFyO3VCHb8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=eO/SR74uPHe5nPXA+hvcRnLc3dxKvTXJ21PexSuhcdhGIRmySO4cXZeb6USAdzeArteW/F3Xs72IyYN2JozJFvTbmQ+EFuLIvWEEAVQtpHVAV5ACYIAK/hsjjGFTdRb+T2iKFW+Dct0XbtRmUFKDVc5QeO8hiDyQ5U5eOfsU7YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=N52TpGkr; arc=none smtp.client-ip=17.58.6.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1739191246; c=relaxed/simple;
+	bh=m1dC3wAs/C8yO9cEPD+VrhTtWYrPjXjGjtcl08nIDb8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rg4g4xqcgtKLRtYFAC5nE4Nax486n50p4CtXgQD0HvmDbGBFJUsr3HdmMNtFzYPdvzlB6pDONQxWWPgjk3aBYrFv+JIg0xZzvbZJ9Z0CtGuY92OzJZ1q+tWcO5A8qmW5TsqUVRkDQufXNY36ACoLsXSd6B6rWJUvOUdlDdVLooo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OxRUHTXd; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="N52TpGkr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=l9pahT3RXJ+ISB76Fj4wpfGgtAA5bRerlsHnpTButD0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=N52TpGkryogkIDj/CIPXYMnX9SvA/Qj9H0r91yVnRtHrcW4IaUnYl8VaAlB8i0N8G
-	 jJj6aU7svOG7EZJkjEZvvDAH7cRgfuO1HjNgagZrV5A0GfyzHMdM0ECTRE8KefnNOp
-	 Jfb4Q1xwWXdxvhccjKE8QBkWJ6nxomeeYhd1PRa6IfGkoMp2IlXtPuRsAY+8SQ5YJ+
-	 D48kChRUrAIufxUAjPVwM9qDcOnyTwwWuK70cjSXHTs9XDhrVQ6J6ucNEIwheXbnAK
-	 WbIYemyrxfhgFenx/heIBsIe0KCIR/wXXQHXkDA3y+uXItAAbrs8VyoPYkQqu33N0b
-	 ZlcEKbNAD2XCQ==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10012101.me.com (Postfix) with ESMTPSA id D8DD7740190;
-	Mon, 10 Feb 2025 12:40:14 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Mon, 10 Feb 2025 20:39:53 +0800
-Subject: [PATCH] PCI: endpoint: Remove API devm_pci_epc_destroy()
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OxRUHTXd"
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 0152B2107A86; Mon, 10 Feb 2025 04:40:43 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0152B2107A86
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1739191244;
+	bh=hLZx6MVYBXXvnjTCLMRlelDAcLfnwQnhJR4gDFyvKdI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OxRUHTXdo4hKBQsXPqPNf/06aYINajw8CyomamMP2+qSvkuTZ1axpoHZejUQpqp0Y
+	 wOgyP8rvQFOPLNo6A/bbElQSh99T4nxkzV3xkdt7lxTp+/v/+Lxld35Qj8p937mb9z
+	 sqwAkGnnLb3VTphK6DGC1rWuespF43GI8DRJQEuU=
+Date: Mon, 10 Feb 2025 04:40:43 -0800
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: mhklinux@outlook.com
+Cc: haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	deller@gmx.de, weh@microsoft.com, dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 1/1] fbdev: hyperv_fb: iounmap() the correct memory when
+ removing a device
+Message-ID: <20250210124043.GA17819@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20250209235252.2987-1-mhklinux@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250210-remove_api-v1-1-8ae6b36e3a5c@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAJjzqWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDI0MD3aLU3Pyy1PjEgkxdy+Q0w9RES1NLA8NUJaCGgqLUtMwKsGHRsbW
- 1AFC0Q8JcAAAA
-X-Change-ID: 20250210-remove_api-9cf1ea95901e
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-pci@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-GUID: jrihuWMNevOcXl3v441CMgRu87qWnNPT
-X-Proofpoint-ORIG-GUID: jrihuWMNevOcXl3v441CMgRu87qWnNPT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_07,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
- clxscore=1015 malwarescore=0 adultscore=0 phishscore=0 mlxlogscore=791
- spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2502100106
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250209235252.2987-1-mhklinux@outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+On Sun, Feb 09, 2025 at 03:52:52PM -0800, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
+> 
+> When a Hyper-V framebuffer device is removed, or the driver is unbound
+> from a device, any allocated and/or mapped memory must be released. In
+> particular, MMIO address space that was mapped to the framebuffer must
+> be unmapped. Current code unmaps the wrong address, resulting in an
+> error like:
+> 
+> [ 4093.980597] iounmap: bad address 00000000c936c05c
+> 
+> followed by a stack dump.
+> 
+> Commit d21987d709e8 ("video: hyperv: hyperv_fb: Support deferred IO for
+> Hyper-V frame buffer driver") changed the kind of address stored in
+> info->screen_base, and the iounmap() call in hvfb_putmem() was not
+> updated accordingly.
+> 
+> Fix this by updating hvfb_putmem() to unmap the correct address.
+> 
+> Fixes: d21987d709e8 ("video: hyperv: hyperv_fb: Support deferred IO for Hyper-V frame buffer driver")
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> ---
+>  drivers/video/fbdev/hyperv_fb.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
+> index 7fdb5edd7e2e..363e4ccfcdb7 100644
+> --- a/drivers/video/fbdev/hyperv_fb.c
+> +++ b/drivers/video/fbdev/hyperv_fb.c
+> @@ -1080,7 +1080,7 @@ static void hvfb_putmem(struct hv_device *hdev, struct fb_info *info)
+>  
+>  	if (par->need_docopy) {
+>  		vfree(par->dio_vp);
+> -		iounmap(info->screen_base);
+> +		iounmap(par->mmio_vp);
+>  		vmbus_free_mmio(par->mem->start, screen_fb_size);
+>  	} else {
+>  		hvfb_release_phymem(hdev, info->fix.smem_start,
+> -- 
+> 2.25.1
+> 
 
-Static devm_pci_epc_match() is only invoked by API devm_usb_put_phy(), and
-the API has not had callers since 2017-04-10 when it was introduced.
+Thanks for fixing this:
+Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
 
-Remove both the API and the static function.
 
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
- Documentation/PCI/endpoint/pci-endpoint.rst |  7 +++----
- drivers/pci/endpoint/pci-epc-core.c         | 25 -------------------------
- include/linux/pci-epc.h                     |  1 -
- 3 files changed, 3 insertions(+), 30 deletions(-)
+While we are at it, I want to mention that I also observed below WARN
+while removing the hyperv_fb, but that needs a separate fix.
 
-diff --git a/Documentation/PCI/endpoint/pci-endpoint.rst b/Documentation/PCI/endpoint/pci-endpoint.rst
-index 35f82f2d45f5ef155b657e337e1eef51b85e68ac..599763aa01ca9d017b59c2c669be92a850e171c4 100644
---- a/Documentation/PCI/endpoint/pci-endpoint.rst
-+++ b/Documentation/PCI/endpoint/pci-endpoint.rst
-@@ -57,11 +57,10 @@ by the PCI controller driver.
-    The PCI controller driver can then create a new EPC device by invoking
-    devm_pci_epc_create()/pci_epc_create().
- 
--* devm_pci_epc_destroy()/pci_epc_destroy()
-+* pci_epc_destroy()
- 
--   The PCI controller driver can destroy the EPC device created by either
--   devm_pci_epc_create() or pci_epc_create() using devm_pci_epc_destroy() or
--   pci_epc_destroy().
-+   The PCI controller driver can destroy the EPC device created by
-+   pci_epc_create() using pci_epc_destroy().
- 
- * pci_epc_linkup()
- 
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index 9e9ca5f8e8f860a57d49ce62597b0f71ef6009ba..cf2e19b80551a2e02136a4411fc61b13e1556d7a 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -25,13 +25,6 @@ static void devm_pci_epc_release(struct device *dev, void *res)
- 	pci_epc_destroy(epc);
- }
- 
--static int devm_pci_epc_match(struct device *dev, void *res, void *match_data)
--{
--	struct pci_epc **epc = res;
--
--	return *epc == match_data;
--}
--
- /**
-  * pci_epc_put() - release the PCI endpoint controller
-  * @epc: epc returned by pci_epc_get()
-@@ -931,24 +924,6 @@ void pci_epc_destroy(struct pci_epc *epc)
- }
- EXPORT_SYMBOL_GPL(pci_epc_destroy);
- 
--/**
-- * devm_pci_epc_destroy() - destroy the EPC device
-- * @dev: device that wants to destroy the EPC
-- * @epc: the EPC device that has to be destroyed
-- *
-- * Invoke to destroy the devres associated with this
-- * pci_epc and destroy the EPC device.
-- */
--void devm_pci_epc_destroy(struct device *dev, struct pci_epc *epc)
--{
--	int r;
--
--	r = devres_release(dev, devm_pci_epc_release, devm_pci_epc_match,
--			   epc);
--	dev_WARN_ONCE(dev, r, "couldn't find PCI EPC resource\n");
--}
--EXPORT_SYMBOL_GPL(devm_pci_epc_destroy);
--
- static void pci_epc_release(struct device *dev)
- {
- 	kfree(to_pci_epc(dev));
-diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index e818e3fdcded95ca053db074eb75484a2876ea6b..82a26945d038d3e45e2bbbfe3c60b7ef647f247a 100644
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -257,7 +257,6 @@ __devm_pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
- struct pci_epc *
- __pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
- 		 struct module *owner);
--void devm_pci_epc_destroy(struct device *dev, struct pci_epc *epc);
- void pci_epc_destroy(struct pci_epc *epc);
- int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
- 		    enum pci_epc_interface_type type);
 
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250210-remove_api-9cf1ea95901e
+[   44.111220] WARNING: CPU: 35 PID: 1882 at drivers/video/fbdev/core/fb_info.c:70 framebuffer_release+0x2c/0x40
+< snip >
+[   44.111289] Call Trace:
+[   44.111290]  <TASK>
+[   44.111291]  ? show_regs+0x6c/0x80
+[   44.111295]  ? __warn+0x8d/0x150
+[   44.111298]  ? framebuffer_release+0x2c/0x40
+[   44.111300]  ? report_bug+0x182/0x1b0
+[   44.111303]  ? handle_bug+0x6e/0xb0
+[   44.111306]  ? exc_invalid_op+0x18/0x80
+[   44.111308]  ? asm_exc_invalid_op+0x1b/0x20
+[   44.111311]  ? framebuffer_release+0x2c/0x40
+[   44.111313]  ? hvfb_remove+0x86/0xa0 [hyperv_fb]
+[   44.111315]  vmbus_remove+0x24/0x40 [hv_vmbus]
+[   44.111323]  device_remove+0x40/0x80
+[   44.111325]  device_release_driver_internal+0x20b/0x270
+[   44.111327]  ? bus_find_device+0xb3/0xf0
 
-Best regards,
--- 
-Zijun Hu <quic_zijuhu@quicinc.com>
+- Saurabh
 
