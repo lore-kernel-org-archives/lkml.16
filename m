@@ -1,210 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7841AF0AF
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2978D1BD00C;
+	Mon, 10 Feb 2025 08:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739175128; cv=none; b=uHqMsoO5jWBibFzWKGO6aIB9nB/DwK51XtkJvArMbz8dLkSPy1blA8FE/hEaxSu87G6Z1bWHDWiPGPQnmYtQdIY3QH2APBCYLnmAo0iOfzlQvUM4awwA1KJOHDbKGBPnqmNXHAwvlUyABWzSLYUhviiWUoyIvHzMkKhmiO41pEg=
+	t=1739175130; cv=none; b=S66b4QUMuqVVZ+/2kR5/mjV0sUJ60HtTSQtpBscDr67G65cEFFWMrJ93H+z9OvEoaeSKfSa1nDW6S6lL2G5o8/iOjRd5kfvNAdqCFLvwXPYs3sVhm8LZ1IgEoQM+HbQ009Y6hO1ycGIEkWBdORCvi2zHBO5f/OyJrxVz9JgIqLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739175128; c=relaxed/simple;
-	bh=awbNpMF2sf1eDClsvAQkVkA+VM1bZntm1nwVVbMfvvU=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=eWag6BagNzl2Dr1r3ZaepinwtlnPPch7DDJ38jPUqgmcep6Y727Ksi+OkpOEySEGXDvsxIAl7iQm0uL/KEY+wiNOBs+Q/AGO0fTjF/F4E5OzOUucXMY04Noy7exIErD6Gx5wLRG6CIvNFJKg094pcR1BFoCuYZz4AqVmeFxH/YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tnj75o4S; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739175130; c=relaxed/simple;
+	bh=s/wEQHp9D4HLcuK43KrByU9JTfmtEf3h3muu17wBL+c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oX2MkmyWCXWtBQc1ird/4SJouVgVkOwp/BpZhIU86BIUjZv1HcirBLc8bxGGOEju+KTWHlYuvMO34BQBxEuA0Hu40mWWIZG9eANmOiliyFXT2SOvq7zXwU7gLR6ul8HunD54ZZVRFTg+m4XZ6T0OX86XiYh+Qpkd+P2BEvShTWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fx287jsE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tnj75o4S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739175127; x=1770711127;
-  h=date:from:to:cc:subject:message-id;
-  bh=awbNpMF2sf1eDClsvAQkVkA+VM1bZntm1nwVVbMfvvU=;
-  b=Tnj75o4S4Aq71rqIVUx93LBurBe+OXQ/+unmwUEFbB7AonZSZIo+gGYF
-   SvsXkCS7xxDiKQH5tzm0d/rC+rL3Qjf9wgfx6PjZcutprP6xWr35xpfWY
-   XJUSpVfCVgm3Sbbth0AWJQngsAkhKroS4m2XYapcjVSdxq7mGCktobmA/
-   F4pKlPU0dq6/mi6+EdJk5fLKAZvVjK/So8RmFxxoKzLVSwuCEFmTktZSS
-   cytslWv+aUxjFQrrQr14PFq7KrJibyR7zfTx7k7ytl8n7LukaWtb+9Kyq
-   SmuYVXBtAUpkNtELGX6tG4wlNdY9+zVNS2f+RZ8JOA2dkZUt24Qv/wOQr
-   g==;
-X-CSE-ConnectionGUID: mbCj0DzjQ8qvveTtFc5PyA==
-X-CSE-MsgGUID: LTcaHIa7TP6qgT/xsw4Xwg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="43401987"
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="43401987"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 00:11:44 -0800
-X-CSE-ConnectionGUID: w+Kh6/pLRlinDQvIW/LzYA==
-X-CSE-MsgGUID: srPi5xfbQ5ioLBOVr5+How==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="117057498"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 10 Feb 2025 00:11:44 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1thOtI-0012R1-2v;
-	Mon, 10 Feb 2025 08:11:40 +0000
-Date: Mon, 10 Feb 2025 16:11:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- fe59c3cc690a26e3d597cc43b15d604ec7d9aee5
-Message-ID: <202502101657.prR0JhIe-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fx287jsE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30DA8C4CED1;
+	Mon, 10 Feb 2025 08:12:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739175129;
+	bh=s/wEQHp9D4HLcuK43KrByU9JTfmtEf3h3muu17wBL+c=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fx287jsEyQasQIyD4qa+rI97L+iVffHU9GlRG9zDZciMWXk2FiKEweFtBbFb7RrUe
+	 O5o4Zz9RPrKVFIRmtbkk3QXvTy9HkhKX8x20IfQRfw0xBoCuGg/BVSSRMa0aGzhk0m
+	 DGc1paLZ4xUh4N1ZSQayQ6wxWIHN+dW0RFgub6xPLl9V2rnxCuyUTHGoZnO1ShW4mE
+	 SqMHjT3oFwULCgZAHnQyOEv3aArnEqhaxv5C4C7ZS5pBmTuSoO/2P6cAJonjMh/OgD
+	 hpTMto5BG3SKKCIj/prGxIcSiH8COi8hohTcTWvVwBqBS7ihFMuQa1xB8gZLpsulI3
+	 NVqzN6Xn+B0Xg==
+Message-ID: <3e69dc53-cf05-479b-9707-eabc2eae9291@kernel.org>
+Date: Mon, 10 Feb 2025 09:12:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Patchset status - 'Add support for Maxim Integrated MAX77705
+ PMIC'
+To: Dzmitry Sankouski <dsankouski@gmail.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>,
+ Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>,
+ Hans de Goede <hdegoede@redhat.com>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Sebastian Krzyszkowiak <sebastian.krzyszkowiak@puri.sm>,
+ Purism Kernel Team <kernel@puri.sm>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, linux-pm@vger.kernel.org,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, linux-input@vger.kernel.org,
+ linux-leds@vger.kernel.org
+References: <CABTCjFBx-QpCKFWs5MPCgLAjJWT6ygrvS_A0nJk2BBxmWAxF+Q@mail.gmail.com>
+ <e67c0375-1024-483b-aabf-6a11339ab9af@linaro.org>
+ <CABTCjFBvYkEG0WYhCt6tP_cO8Ct82t0=UhwBefZEJrUiFc7vAw@mail.gmail.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <CABTCjFBvYkEG0WYhCt6tP_cO8Ct82t0=UhwBefZEJrUiFc7vAw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
-branch HEAD: fe59c3cc690a26e3d597cc43b15d604ec7d9aee5  Merge branch into tip/master: 'x86/mm'
+On 10/02/2025 08:11, Dzmitry Sankouski wrote:
+> вс, 9 февр. 2025 г. в 22:38, Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org>:
+>>
+>> On 09/02/2025 15:13, Dzmitry Sankouski wrote:
+>>> For the patchset I sent 2 weeks ago, [patchwork][1] shows status
+>>> 'Handled Elsewhere, archived'. Is anything blocking it?
+>>>
+>>> [1]: https://patchwork.kernel.org/project/linux-pm/list/?series=927848&archive=both&state=*
+>>
+>> That's PM patchwork, not necessarily power supply. But anyway, what does
+>> the cover letter say? Who do you expect to merge it? Above link does not
+>> provide cover letter, unfortunately.
+>>
+> 
+> I didn't found anything related to power supply in the list of mail lists at
+> https://subspace.kernel.org/vger.kernel.org.html.
+> 
+> However I found my series in linux-input with New status.
+> 
+> Here is my cover letter:
+> https://lore.kernel.org/all/20250123-starqltechn_integration_upstream-v17-0-8b06685b6612@gmail.com/
 
-elapsed time: 723m
 
-configs tested: 133
-configs skipped: 5
+Nothing in cover letter gives any expectations or directions of merging,
+so maybe that was a factor here?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                                 defconfig    gcc-13.2.0
-arc                 nsimosci_hs_smp_defconfig    gcc-13.2.0
-arc                   randconfig-001-20250210    gcc-13.2.0
-arc                   randconfig-002-20250210    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                                 defconfig    clang-21
-arm                   milbeaut_m10v_defconfig    clang-21
-arm                         nhk8815_defconfig    clang-21
-arm                   randconfig-001-20250210    clang-16
-arm                   randconfig-002-20250210    gcc-14.2.0
-arm                   randconfig-003-20250210    clang-16
-arm                   randconfig-004-20250210    gcc-14.2.0
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250210    gcc-14.2.0
-arm64                 randconfig-002-20250210    clang-21
-arm64                 randconfig-003-20250210    clang-21
-arm64                 randconfig-004-20250210    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250210    gcc-14.2.0
-csky                  randconfig-002-20250210    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon                             defconfig    clang-21
-hexagon               randconfig-001-20250210    clang-21
-hexagon               randconfig-002-20250210    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250210    gcc-12
-i386        buildonly-randconfig-002-20250210    gcc-12
-i386        buildonly-randconfig-003-20250210    clang-19
-i386        buildonly-randconfig-004-20250210    gcc-12
-i386        buildonly-randconfig-005-20250210    gcc-12
-i386        buildonly-randconfig-006-20250210    gcc-12
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-loongarch             randconfig-001-20250210    gcc-14.2.0
-loongarch             randconfig-002-20250210    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                          amiga_defconfig    gcc-14.2.0
-m68k                       m5249evb_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                           ip27_defconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250210    gcc-14.2.0
-nios2                 randconfig-002-20250210    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250210    gcc-14.2.0
-parisc                randconfig-002-20250210    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc                      ppc6xx_defconfig    gcc-14.2.0
-powerpc               randconfig-001-20250210    clang-21
-powerpc               randconfig-002-20250210    clang-21
-powerpc               randconfig-003-20250210    gcc-14.2.0
-powerpc64             randconfig-001-20250210    gcc-14.2.0
-powerpc64             randconfig-002-20250210    gcc-14.2.0
-powerpc64             randconfig-003-20250210    gcc-14.2.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-21
-riscv                               defconfig    clang-19
-riscv                 randconfig-001-20250210    clang-21
-riscv                 randconfig-002-20250210    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-15
-s390                  randconfig-001-20250210    gcc-14.2.0
-s390                  randconfig-002-20250210    clang-19
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                    randconfig-001-20250210    gcc-14.2.0
-sh                    randconfig-002-20250210    gcc-14.2.0
-sh                           sh2007_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250210    gcc-14.2.0
-sparc                 randconfig-002-20250210    gcc-14.2.0
-sparc64                          alldefconfig    gcc-14.2.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250210    gcc-14.2.0
-sparc64               randconfig-002-20250210    gcc-14.2.0
-um                               alldefconfig    clang-19
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250210    clang-18
-um                    randconfig-002-20250210    clang-16
-um                           x86_64_defconfig    clang-15
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250210    clang-19
-x86_64      buildonly-randconfig-002-20250210    gcc-12
-x86_64      buildonly-randconfig-003-20250210    clang-19
-x86_64      buildonly-randconfig-004-20250210    clang-19
-x86_64      buildonly-randconfig-005-20250210    clang-19
-x86_64      buildonly-randconfig-006-20250210    clang-19
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250210    gcc-14.2.0
-xtensa                randconfig-002-20250210    gcc-14.2.0
+> 
+> I guess I would expect a person from the MAINTAINERS list to merge it?  In that
+> case it would be Chanwoo Choi <cw00.choi@samsung.com> and
+> Krzysztof Kozlowski <krzk@kernel.org> from
+> MAXIM PMIC AND MUIC DRIVERS FOR EXYNOS BASED BOARDS entry.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Haha, nice! :) There is no such subsystem. This cannot be taken by these
+maintainers because there is nowhere they could put it and no one would
+take it from them even if they did find the place.
+
+
+Best regards,
+Krzysztof
