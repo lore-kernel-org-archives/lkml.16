@@ -1,130 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D4D25A2AB
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D96925A2B4;
+	Mon, 10 Feb 2025 22:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739228273; cv=none; b=kfTONw+pWWSv3CpBwWmL9vNOzKDSKIgho9/nXXaAdIRZiGtenBq8jeho+vHjf4yhg2k0xgCsa2qAUM+VjOov3ZAIKmESTWLOCwmrgoShTkaQhN8P22qdNxKJUMjA+eS4dledrDd07d2Jcmiybbx9LBJFQ60/sG/dvZnddsG5/KE=
+	t=1739228301; cv=none; b=qRISfzdo92pIDWM2Dl4uewOOP9YmAVYs+f7EozV9yFgHBaSKslb9BkPqMab+UyBCVay4zBJvu0WKPFegiKCMGqgHNnNFO+bRcYPiMH3Qlq5rdS7liNlNyRFFFcO51G290pn+8YDhHPbK1Jcl3jVyYhSPn4DuxtDpxNJkBfqZgjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739228273; c=relaxed/simple;
-	bh=2QNMnCgbJTOG6udpsBCV7I/eJutKDD1y5fsyUE6g5mI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D2fz+1uyk3OpDWAZ+VEeuX3dvDzxeitf8WwoqVOGZniGvE0GQXbm5XjKKf6rEYEzAZHNRF4oTo7HFVyHSqTwMjeUfOGFn5Qt8DPANa2ws9opcUlD6frvBkXoKWokZ/PYDFg18Q0LGFU7yvsZ9ZpwUuY0NXGc0mnYzqk17IkIRfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZIiuWjNY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739228301; c=relaxed/simple;
+	bh=4mDxBW4tbSArbCjXFtS3AD9nqascJCusxOPUpqNhScI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Hf1d2sUC5ieOifJsozt6nXoS7IfmL9uEBX9XaqO9ycm/bDx0Z7XCx7W/qF5FiUAylFRjilrdTH3i5pBKUEKdURRgdxuX55gHLE8Uogq0XCnpHvTQPfXwnPQnVI7+FwiHAmCumVhfhIB82PoeUKIdd8TQGaiC8QFgPepRjjVgjZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=UmfCxSXw; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZIiuWjNY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BA19C4CED1;
-	Mon, 10 Feb 2025 22:57:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739228273;
-	bh=2QNMnCgbJTOG6udpsBCV7I/eJutKDD1y5fsyUE6g5mI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZIiuWjNYC2bWmCsYLngfobtRbVJfWTxCzcv+e21g1H9qF83SO/ErRJYDoISPguOom
-	 hfWRQxDjPLEgVNVqZHUafR/SBf2Mv+ohHLJXIJ+B3ulQtgERFWLWgd/UTtg7j90U9c
-	 h3eYfb4jmb/GNKx3udAR9tMxpBjkks4m3W9YuwEa7JW6L01qZKTDc1NFj8Mym/HaOf
-	 omQJlNhgCkUSvl2klcYph6WpbYwY7GPXP2lciLXd2/YAr1LUHaTnv/tcP6tzhuBG96
-	 cjsO/EmhT9FTZYagGAZeByTqmHw3vPlX1H+Pdq54cCJBDwraYFE2ZmKTZ7WCBfk8bt
-	 os/cdYmnQB6PQ==
-Date: Mon, 10 Feb 2025 14:57:52 -0800
-From: Kees Cook <kees@kernel.org>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: luto@amacapital.net, wad@chromium.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] seccomp: avoid the lock trip in seccomp_filter_release
- in common case
-Message-ID: <202502101454.DE164D34@keescook>
-References: <20250210210541.867037-1-mjguzik@gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UmfCxSXw"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51AMwCS43493064
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Feb 2025 16:58:12 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1739228292;
+	bh=RpGPcEwJ7e4btxAxN07g/ujU15tZnAj81Bx+IRnSaec=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=UmfCxSXw/e/e6j5bchSimmE512AKUwX9gTCURqWoNot8clEfECo0rW0F+nTysBp4B
+	 i7c2dg/y6ZjUY9qEVY6nbxEsmsVK+FFSfiaFdiDONo+KPQTIYSpTmxbnIkV3wg09T1
+	 +qEdyWhIvubeULn8m476xC6MMo8VviJyBy/XnNmY=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51AMwCJD008306
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 10 Feb 2025 16:58:12 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 10
+ Feb 2025 16:58:12 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 10 Feb 2025 16:58:12 -0600
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51AMwC8k028996;
+	Mon, 10 Feb 2025 16:58:12 -0600
+Message-ID: <9f512b04-6cc2-4c1e-b45b-b46da29a9e98@ti.com>
+Date: Mon, 10 Feb 2025 16:58:11 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210210541.867037-1-mjguzik@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 01/10] arm64: dts: ti: k3-am62-wakeup: Add wakeup R5F
+ node
+To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Hari Nagalla
+	<hnagalla@ti.com>
+References: <20250210221530.1234009-1-jm@ti.com>
+ <20250210221530.1234009-2-jm@ti.com>
+Content-Language: en-US
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <20250210221530.1234009-2-jm@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon, Feb 10, 2025 at 10:05:41PM +0100, Mateusz Guzik wrote:
-> Vast majority of threads don't have any seccomp filters, all while the
-> lock taken here is shared between all threads in given process and
-> frequently used.
+On 2/10/25 4:15 PM, Judith Mendez wrote:
+> From: Hari Nagalla <hnagalla@ti.com>
 > 
-> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+> AM62 SoC devices have a single core R5F processor in wakeup domain.
+> The R5F processor in wakeup domain is used as a device manager
+> for the SoC.
+> 
+> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+> Signed-off-by: Judith Mendez <jm@ti.com>
 > ---
-> 
-> Here is a splat from parallel thread creation/destruction within onep
-> rocess:
-> 
-> bpftrace -e 'kprobe:__pv_queued_spin_lock_slowpath { @[kstack()] = count(); }'
-> 
-> [snip]
-> @[
->     __pv_queued_spin_lock_slowpath+5
->     _raw_spin_lock_irq+42
->     seccomp_filter_release+32
->     do_exit+286
->     __x64_sys_exit+27
->     x64_sys_call+4703
->     do_syscall_64+82
->     entry_SYSCALL_64_after_hwframe+118
-> ]: 475601
-> @[
->     __pv_queued_spin_lock_slowpath+5
->     _raw_spin_lock_irq+42
->     acct_collect+77
->     do_exit+1380
->     __x64_sys_exit+27
->     x64_sys_call+4703
->     do_syscall_64+82
->     entry_SYSCALL_64_after_hwframe+118
-> ]: 478335
-> @[
->     __pv_queued_spin_lock_slowpath+5
->     _raw_spin_lock_irq+42
->     sigprocmask+106
->     __x64_sys_rt_sigprocmask+121
->     do_syscall_64+82
->     entry_SYSCALL_64_after_hwframe+118
-> ]: 1825572
-> 
-> There are more spots which take the same lock, with seccomp being top 3.
-> 
-> I could not be bothered to bench before/after, but I can do it if you
-> insist. The fact that this codepath is a factor can be seen above.
-> 
-> This is a minor patch, I'm not going to insist on it.
-> 
-> To my reading seccomp only ever gets populated for current, so this
-> should be perfectly safe to test on exit without any synchronisation.
 
-Unfortunately, this is not true. SECCOMP_FILTER_FLAG_TSYNC may operate
-on non-current. See the paired smp_store_release() and smp_rmb() uses.
+Acked-by: Andrew Davis <afd@ti.com>
 
-> This may need a data_race annotation if some tooling decides to protest.
+> Changes since v4:
+> - No change
+> ---
+>   arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi | 25 ++++++++++++++++++++++
+>   1 file changed, 25 insertions(+)
 > 
->  kernel/seccomp.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> index 7bbb408431eb..c839674966e2 100644
-> --- a/kernel/seccomp.c
-> +++ b/kernel/seccomp.c
-> @@ -576,6 +576,9 @@ void seccomp_filter_release(struct task_struct *tsk)
->  	if (WARN_ON((tsk->flags & PF_EXITING) == 0))
->  		return;
->  
-> +	if (tsk->seccomp.filter == NULL)
-> +		return;
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
+> index 9b8a1f85aa15c..061819a64300f 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
+> @@ -106,6 +106,31 @@ wkup_rti0: watchdog@2b000000 {
+>   		status = "reserved";
+>   	};
+>   
+> +	wkup_r5fss0: r5fss@78000000 {
+> +		compatible = "ti,am62-r5fss";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0x78000000 0x00 0x78000000 0x8000>,
+> +			 <0x78100000 0x00 0x78100000 0x8000>;
+> +		power-domains = <&k3_pds 119 TI_SCI_PD_EXCLUSIVE>;
+> +		status = "disabled";
 > +
->  	spin_lock_irq(&tsk->sighand->siglock);
->  	orig = tsk->seccomp.filter;
->  	/* Detach task from its filter tree. */
-
-If this can be made provably race-safe, I'd be fine with the idea, but
-at present, all seccomp.filter manipulation happens under
-sighand->siglock...
-
--Kees
-
--- 
-Kees Cook
+> +		wkup_r5fss0_core0: r5f@78000000 {
+> +			compatible = "ti,am62-r5f";
+> +			reg = <0x78000000 0x00008000>,
+> +			      <0x78100000 0x00008000>;
+> +			reg-names = "atcm", "btcm";
+> +			ti,sci = <&dmsc>;
+> +			ti,sci-dev-id = <121>;
+> +			ti,sci-proc-ids = <0x01 0xff>;
+> +			resets = <&k3_reset 121 1>;
+> +			firmware-name = "am62-wkup-r5f0_0-fw";
+> +			ti,atcm-enable = <1>;
+> +			ti,btcm-enable = <1>;
+> +			ti,loczrama = <1>;
+> +		};
+> +	};
+> +
+>   	wkup_vtm0: temperature-sensor@b00000 {
+>   		compatible = "ti,j7200-vtm";
+>   		reg = <0x00 0xb00000 0x00 0x400>,
