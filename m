@@ -1,112 +1,138 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96DDD1CD208
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:22:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D691C5D7C;
+	Mon, 10 Feb 2025 11:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739186579; cv=none; b=mvobOUT1i2DEwocIAO4cNI8O3YqiYeZ5pr9zBhWpdF1PhmrP57Np6CWTMWPx4ub57o8QIGV58ABnPY7OO+m3StUbCeRzbk2oEZcBisjHwZXn1ppFKyNqVJ0TC81+Sfejf+klrRYd+B9SyVqcNOKMZ3suLUqox+dEw8Ve7TuwCX4=
+	t=1739186589; cv=none; b=Xv/ZWkLB6had8c0aCtnxmQVbJUPmO87VHtpnEhqBUVGcnFn2I1ECkHqsMhXkC9WDf//pnDv8p56gtH4V13qhRR86QW8OB9xTJLun4nzvCzqZDB4fEiX3TbbZxYOf7r4WJaWJbLpHbQU9eaYz+VOIpY3Bx7G2tktoOV51JohzrSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739186579; c=relaxed/simple;
-	bh=G52iyUCkmPX0OY5YfqE5KfMGVk5WbJ1yp1DfcVWbI1Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ROmL3HZ/exYJom/AYQbUjxQydkDx/ez+mncgL3/j19dGty2RfwdGyxJf08CElHpzzbBAwoz4k5bQmE7djvzaNTR1r8FIotMS2sNHmd95SAqxxpBG6PHxPek6Cx0I2jmymKf0UxOru6x8azialHKkSrGzrhBBmM3RdWxULZeSJW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T4W2ehsp; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739186589; c=relaxed/simple;
+	bh=2TfBb8YkHBjUcd2qbTj06jtJqA74ipyI1dLzWmzyRp4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CMBQVT+2GteCogxiM2tUQRZVt40T1WVPTeO67Vt9s99WRWxe+UWulBWC0SNR+ClbPiAMVK1mXBUjpOtggU+/BjL5eAYcFGbeh613Th6co0ci5mNcS3z6Eu01wnhbWK6YTcSj7ZRRCCu43Z5qVJr8KzAOo+VqC0DG7UhrKRWpD78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=eQ4nxJES; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T4W2ehsp"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4718aea0718so253841cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 03:22:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739186576; x=1739791376; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=G52iyUCkmPX0OY5YfqE5KfMGVk5WbJ1yp1DfcVWbI1Y=;
-        b=T4W2ehspPHXN9IlmaU1zwsoL2GNjnj3a4J5Q+UjMqvEMk5IGBNjPqfaPmxpB9ZeDzb
-         Wx/LhJJyuys+AOCDA0vkWhRjtRLRCLrzspd1n3weDp7t5OQSXZA+q04LbebpCQnDcERF
-         f0SLC6dRObmlqV0QEaQh4EtmYHG/Z6IPtCMhU/pydkA1sq2xJ789rt4IkPO1F7QOGIBP
-         +JftcTDrWjnPV8ujNuQhAxlMStqNnKgTtuC7vv6KBLrsnnFTELkvzWJQxgk3oA/F0Z9u
-         RJHpRhB8+fmMmI7VJoIQ0WLdRY/jIxiuXENkiwwGCJf6e68AkBXx1Awy//z/5eLrB1Bd
-         XFVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739186576; x=1739791376;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=G52iyUCkmPX0OY5YfqE5KfMGVk5WbJ1yp1DfcVWbI1Y=;
-        b=AiVgw6iYeCqLEMZjDodzBJB8O3jEfBvs4ZAn3ZPpuqO4sQtevWFC+wMdCRcca2ESQk
-         vJ5nFdTQEMnGZ63vS8N1QD6l2PE3yH7FwNLRNQweVmhqsdNr4npEi954B4NLQe3U6600
-         /ob8CLnMW63CklJUWbKU5Q0B7eV7ytoKwNG8KZEcqGQLvf+8AFR3rCKC2I2wRGc0gfTa
-         AzjLEMfuR3eLP8y5PY3rwHCRDdntriu6MujEAVIOyMzsJSkRNQzPmgVQUTTI/V31tTzI
-         nfgsdv6wU8HPXGsz28c7GgApDSqMEf2FNFoTRFvQKomQ4WjtV04tUYoZvK3Bh6ekwTHX
-         eg4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVr8EZTqUjU21KXRRyCoUr4jVx+I+dGTIbhn644APJjeA9mDaTvP2tVKF4bP7GivNSNBc0emyi4nMG0BNE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydTUGFnQVOSX4Q0rnVGrnxu9MCdFlyGuYn3ChRywm8QWVCBuKG
-	so30qHoVTu5XZbe6ZmFVQy2+Xpyy6D3+tQsIX+mwGyrk9sbJpfjfYtP0MgelJr/L703oBmoEt++
-	doQ5onwqT225YTXs4Lv+HXXV8Wf6oLWU1UQea
-X-Gm-Gg: ASbGncsoC9iDkeDiWfWy7T5WbmWq83OS5Ae12Jkm7ry9+Cu77/wlH8pzJ8xIqgIUq6o
-	W3Jsc3gqiyFIU1uMgzcWd572DJxAj446Qr9h/UJG6zfMaI+UwmfXdXiDS1NKTqPh77I978A/drD
-	CzmIFwvttyyFwNzNu+MVGnyoh6YHA=
-X-Google-Smtp-Source: AGHT+IGWIAJthDtwMQZ0gqKG7+CsLapbpyAi5mCvCQQqlukiOFctO943B34380/mAaJdgNWF1tQiIbKbwmznCJfBSVA=
-X-Received: by 2002:a05:622a:5c12:b0:46e:1ded:e31f with SMTP id
- d75a77b69052e-471759fcbbdmr5507451cf.4.1739186576139; Mon, 10 Feb 2025
- 03:22:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="eQ4nxJES"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739186586;
+	bh=2TfBb8YkHBjUcd2qbTj06jtJqA74ipyI1dLzWmzyRp4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=eQ4nxJESKZB4J0JFkg5Nk8KYNqeTOzP+Sf8VljtKSgz/vbFYNKynyDTvsGRDBIe/K
+	 NH0EcNQ8rHXCiiHdMgXvClbJABoqnKs+kaTOg2raVeJI/NbsXC7V/OHMk4LMWpTjdr
+	 /IqGJgFtoXI5JyzztBVldciULs31BkopnpoJR0vT6klju0S1HxyasgIYuLIAusPwvm
+	 tBIfg0GkaJQwf453X/lQxlHqGu2gqV4Y+ohZ6Ec23Vig626spJpLuLFLG6QyRrTnI6
+	 o5BQJCZr/Jky0L5WT8E1vc5U0aRGGIPVGpZT9ZOhGQTLUiIP4IFUNOQ0C+CcwbOn1d
+	 ZNfkne9lGJwnQ==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id BF3F417E09F6;
+	Mon, 10 Feb 2025 12:23:04 +0100 (CET)
+Message-ID: <2fd97b1e-6546-4f43-bc60-15a812e66467@collabora.com>
+Date: Mon, 10 Feb 2025 12:23:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206044346.3810242-1-riel@surriel.com> <20250206044346.3810242-7-riel@surriel.com>
- <CA+i-1C3LDJTf26WdBo7MvCdTs-dybqsUp3Ze7NowcOUHPWMXrg@mail.gmail.com> <84be5ed882141c8b407a78590f6ecbc7080c98b0.camel@surriel.com>
-In-Reply-To: <84be5ed882141c8b407a78590f6ecbc7080c98b0.camel@surriel.com>
-From: Brendan Jackman <jackmanb@google.com>
-Date: Mon, 10 Feb 2025 12:22:45 +0100
-X-Gm-Features: AWEUYZlZKITTQi7m9mmN5ZyB75aVg0AxeLDBiB_aquYnmDsgFsE-Cf9HIreRXA4
-Message-ID: <CA+i-1C1rYcf-qU+chzeAdFHZKrtSVvVPenQVipjSAEnbQPyJrQ@mail.gmail.com>
-Subject: Re: [PATCH v9 06/12] x86/mm: use INVLPGB for kernel TLB flushes
-To: Rik van Riel <riel@surriel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de, 
-	peterz@infradead.org, dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com, 
-	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com, 
-	linux-mm@kvack.org, akpm@linux-foundation.org, jannh@google.com, 
-	mhklinux@outlook.com, andrew.cooper3@citrix.com, 
-	Manali Shukla <Manali.Shukla@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 27/34] drm/mediatek: mtk_hdmi: Cleanup function
+ mtk_hdmi_resume()
+To: =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
+ "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>
+Cc: "robh@kernel.org" <robh@kernel.org>,
+ "jie.qiu@mediatek.com" <jie.qiu@mediatek.com>,
+ "tzimmermann@suse.de" <tzimmermann@suse.de>,
+ "simona@ffwll.ch" <simona@ffwll.ch>, "mripard@kernel.org"
+ <mripard@kernel.org>, =?UTF-8?B?Sml0YW8gU2hpICjnn7PorrDmtpsp?=
+ <jitao.shi@mediatek.com>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "kernel@collabora.com" <kernel@collabora.com>,
+ "dmitry.baryshkov@linaro.org" <dmitry.baryshkov@linaro.org>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ =?UTF-8?B?TGV3aXMgTGlhbyAo5buW5p+P6YieKQ==?= <Lewis.Liao@mediatek.com>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ =?UTF-8?B?VG9tbXlZTCBDaGVuICjpmbPlvaXoia8p?= <TommyYL.Chen@mediatek.com>,
+ =?UTF-8?B?SXZlcyBDaGVuamggKOmZs+S/iuW8mCk=?= <Ives.Chenjh@mediatek.com>,
+ "airlied@gmail.com" <airlied@gmail.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ =?UTF-8?B?SmFzb24tSkggTGluICjmnpfnnb/npaUp?= <Jason-JH.Lin@mediatek.com>,
+ "junzhi.zhao@mediatek.com" <junzhi.zhao@mediatek.com>
+References: <20250113145232.227674-1-angelogioacchino.delregno@collabora.com>
+ <20250113145232.227674-28-angelogioacchino.delregno@collabora.com>
+ <f25eaced46e18a54896f20ae1c42ed6894da5e18.camel@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <f25eaced46e18a54896f20ae1c42ed6894da5e18.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, 7 Feb 2025 at 21:51, Rik van Riel <riel@surriel.com> wrote:
->
-> On Fri, 2025-02-07 at 17:03 +0100, Brendan Jackman wrote:
-> > O
-> > With !CPU_SUP_AMD and the above, broadcast_kernel_range_flush
-> > disappears from tlb.o. (Caveat - I didn't actually read the disasm I
-> > just made it noinline and checked the call disappeared).
-> >
-> > It's actually more lines of code but now they're off in a boilerplate
-> > header and it's consistent with the other flags that do this.
-> >
-> What compiler did you use?
->
-> While I like the cleanup in principle, I
-> don't want to saddle people with older
-> compilers with extra code they don't need.
+Il 07/02/25 07:04, CK Hu (胡俊光) ha scritto:
+> Hi, Angelo:
+> 
+> On Mon, 2025-01-13 at 15:52 +0100, AngeloGioacchino Del Regno wrote:
+>> External email : Please do not click links or open attachments until you have verified the sender or the content.
+>>
+>>
+>> Remove the error print in case of mtk_hdmi_clk_enable_audio()
+>> failures: since the APIs will already print on their own, having
+>> one in there is redundant.
+>>
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> ---
+>>   drivers/gpu/drm/mediatek/mtk_hdmi.c | 9 +--------
+>>   1 file changed, 1 insertion(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+>> index 40eea5c125d2..c5431f160fe4 100644
+>> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
+>> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+>> @@ -1703,15 +1703,8 @@ static __maybe_unused int mtk_hdmi_suspend(struct device *dev)
+>>   static __maybe_unused int mtk_hdmi_resume(struct device *dev)
+>>   {
+>>          struct mtk_hdmi *hdmi = dev_get_drvdata(dev);
+>> -       int ret = 0;
+>>
+>> -       ret = mtk_hdmi_clk_enable_audio(hdmi);
+> 
+> I do not find where to print the error message, could you provide where would print the error message?
+> 
 
-I used a pretty fresh Clang but I'd be very surprised if it needs a
-fancy compiler. Compared to
+It's handled in drivers/base/power/main.c - upon failure, a pm_dev_err() will be
+executed, printing an error message stating that this (or any other) driver has
+failed resuming.
 
-if (IS_ENABLED(CONFIG_FOO))
+Cheers,
+Angelo
 
-I think all we have with the disabled-features.h magic is
+> Regards,
+> CK
+> 
+>> -       if (ret) {
+>> -               dev_err(dev, "hdmi resume failed!\n");
+>> -               return ret;
+>> -       }
+>> -
+>> -       return 0;
+>> +       return mtk_hdmi_clk_enable_audio(hdmi);
+>>   }
+>>
+>>   static SIMPLE_DEV_PM_OPS(mtk_hdmi_pm_ops, mtk_hdmi_suspend, mtk_hdmi_resume);
+>> --
+>> 2.47.0
+>>
+> 
 
-- An extra __builtin_constant_p - I did a quick search and I can find
-GCC release notes referring to this at least back to 4.7 (2012) [0].
-Note also this doesn't create any code.
-
-- An extra bit of constant folding to turn the (x & y) into
-true/false. This seems like something compilers have been good at for
-a long time. And if someone's happy with a compiler so old that it
-can't do this, I dunno but they probably don't mind a few extra
-instructions.
-
-[1] https://gcc.gnu.org/gcc-4.7/changes.html
