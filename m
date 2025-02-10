@@ -1,175 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A9A156C6A;
-	Mon, 10 Feb 2025 16:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA84F2580CF;
+	Mon, 10 Feb 2025 16:45:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739205918; cv=none; b=LtZughdLW1fkY+VJ+0g2HY7bMjtcyizjmGu3LJUX7btg5CrvrbVjLmXbzju/6rRa7rPj/No76rUbj++Zlk4RdkFXKp0nA7Fk7+QHGUt6hJobWcwUPnuT0dsYCJV9y+Cw379S6qcsWXBzMMcdL8dDbPU4eYNEkTicUEFpN/0fUjE=
+	t=1739205926; cv=none; b=i7J05KKKGnU/tXpTn6rs9peF4eKhLb6KrwRGDlb+8CxfcOqV7o6TDu4sLYXtlb0pIzgQTVhfbddCHbtDOVn3wphin6b9V3rFkdv33kyMeQKYpKfhtkNqmhpSSxYMDlRihEoY1AkmRNfyrf3IeX44JVcvwR3KUnEGnKLSwMjuWHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739205918; c=relaxed/simple;
-	bh=uWyvUsNMkIe7l8IREjf+iJ3w3iqoYDrAc20cPTNGVnQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AT/hInj5wVWYblrgE+zek0BcsLiGFvjBR5EXAdYfsLEK65mJziI8klNzQYMlINRy5s7c+Idjg8bLqr7N0EFAx6f8gHWNjr8LNavkYXxKjAsy6qzS34Z9LLN2XqG7aSfkNCvucId1KRUj8BNAAGSSHi9XfCJZ1/chndA1hihaCCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PeBETZeE; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739205926; c=relaxed/simple;
+	bh=7vmbpwcC7SzCJRr1X7tfbhNjspmj83V3O3MfyXlaVGs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uPxxeXiXKTYpenJTlbrzHzCq1N3SL9ZR+Z5D0qxKWnn6wiF5jUw08Ht47+U+86mVCoPjCNdEiCFVd37jgGrTXh+t7foO1s5cwaLXz3r69gGNeXQowHLj7U6BdXeR6llNxtKJj4wwJwEEeA3MzFqdEXP2RYjBGTb8xbT12rPuWBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=QDFswwxh; arc=none smtp.client-ip=217.92.40.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PeBETZeE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739205917; x=1770741917;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uWyvUsNMkIe7l8IREjf+iJ3w3iqoYDrAc20cPTNGVnQ=;
-  b=PeBETZeESoHelGvy+cX5Bt9hnrhCgMX1b3H/osflfY62rTtg5GmALOIT
-   R4Uzov6olRQkMkIKH+yx12YFr/pJQ4XdBjKTIchlbyTZd7xPowFT4TP5J
-   /cyZovlUn1xMg4KHPlhglraSWjuJOpAW9xAK6ud+U9qYr7Ai7kFYZOTpq
-   qptsPoDYKnJRlXG3IFxwmrMUMlD03S0cJG63fWXH5+00QCBrazhNgnrdQ
-   pVw7b/M3of7kGdYaCp/8AdDbiFgishy5iipZhxkAhrDPHFc0WaArkSvYs
-   N4u+WsfiABR9CXBiUa8HN1pWl8teSLhR1SjhPoP9zv5mWvkngCjn1Lf5H
-   Q==;
-X-CSE-ConnectionGUID: GNn+zzo+SO6E5RR7yGvs0A==
-X-CSE-MsgGUID: uFSNj7NLQ++zpRQm1P9nmQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="43557632"
-X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
-   d="scan'208";a="43557632"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 08:45:16 -0800
-X-CSE-ConnectionGUID: cKWTUrckQNaRtUM1fN4juQ==
-X-CSE-MsgGUID: KVe2obcwSierHj2UNINipQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="112088897"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa010.jf.intel.com with ESMTP; 10 Feb 2025 08:45:12 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 9563F2F2; Mon, 10 Feb 2025 18:45:10 +0200 (EET)
-Date: Mon, 10 Feb 2025 18:45:10 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	David Jander <david@protonic.nl>,
-	Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v8 01/17] spi: add basic support for SPI offloading
-Message-ID: <Z6otFlsmEikIbI__@black.fi.intel.com>
-References: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
- <20250207-dlech-mainline-spi-engine-offload-2-v8-1-e48a489be48c@baylibre.com>
+	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="QDFswwxh"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4FBEB148026A;
+	Mon, 10 Feb 2025 17:45:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
+	t=1739205914;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=6DNkDzYRsREfj0sp5nnwVNuG1cgUjook0PsY/o2nTvA=;
+	b=QDFswwxh5yq/Q2nfGYfaK501Bz0ERwVgeUuuFwMvuAaafD/kufwnfQS1M1waMGWLfEsY7A
+	sFJaOQbB+axlAp2u/9cA3KB6Vq7nhqk+f6VibzjS7T2pFh0dhS3MUmg8Bdm8fvDE6eKgfs
+	xEBaL2rd9jha90gVWGof01FEMJtA/EtEvx/nxLnLjRyVLqpeVJb6EO2c5EPCnLwX143msc
+	BroLSCG1RjjUAJ3WQxENrIn8Vu77RN8B53afl/PMkzjwl+MNWfbeVS2ooQp8UqRhsc1PIp
+	lFJJDSK/StYMm25dNmqcQ2AO3vvOPtgUM53rbVbZECl4LwrsuGZ5uo5IGXp0Bg==
+From: Alexander Dahl <ada@thorsis.com>
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Ryan Wanner <ryan.wanner@microchip.com>,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/16] Microchip OTPC driver on SAM9X60 exposing UIDxR as additional nvmem device
+Date: Mon, 10 Feb 2025 17:44:50 +0100
+Message-Id: <20250210164506.495747-1-ada@thorsis.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207-dlech-mainline-spi-engine-offload-2-v8-1-e48a489be48c@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Fri, Feb 07, 2025 at 02:08:58PM -0600, David Lechner wrote:
-> Add the basic infrastructure to support SPI offload providers and
-> consumers.
-> 
-> SPI offloading is a feature that allows the SPI controller to perform
-> transfers without any CPU intervention. This is useful, e.g. for
-> high-speed data acquisition.
-> 
-> SPI controllers with offload support need to implement the get_offload
-> and put_offload callbacks and can use the devm_spi_offload_alloc() to
-> allocate offload instances.
-> 
-> SPI peripheral drivers will call devm_spi_offload_get() to get a
-> reference to the matching offload instance. This offload instance can
-> then be attached to a SPI message to request offloading that message.
-> 
-> It is expected that SPI controllers with offload support will check for
-> the offload instance in the SPI message in the ctlr->optimize_message()
-> callback and handle it accordingly.
-> 
-> CONFIG_SPI_OFFLOAD is intended to be a select-only option. Both
-> consumer and provider drivers should `select SPI_OFFLOAD` in their
-> Kconfig to ensure that the SPI core is built with offload support.
+Hei hei,
 
-(I know that this is now in SPI tree, but still we have time to address something)
+on a custom sam9x60 based board we want to access a unique ID of the
+SoC.  Microchip sam-ba has a command 'readuniqueid' which returns the
+content of the OTPC Product UID x Register in that case.
 
-> +++ b/include/linux/spi/offload/consumer.h
+(On different boards with a SAMA5D2 sam-ba and we use the Serial Number
+x Register for that purpose.  In the linux kernel those are exposed
+through the atmel soc driver.  Those registers are not present in the
+SAM9X60 series, but only for SAMA5D2/SAMA5D4 AFAIK.)
 
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2024 Analog Devices Inc.
-> + * Copyright (C) 2024 BayLibre, SAS
-> + */
-> +
-> +#ifndef __LINUX_SPI_OFFLOAD_CONSUMER_H
-> +#define __LINUX_SPI_OFFLOAD_CONSUMER_H
-> +
-> +#include <linux/module.h>
-> +#include <linux/spi/offload/types.h>
-> +#include <linux/types.h>
+There is a driver for the OTPC of the SAMA7G5 and after comparing
+register layouts it seems that one is almost identical to the one used
+by SAM9X60.  Currently that driver has no support for the UIDx
+registers, but I suppose it would be the right place to implement it,
+because the registers are within the OTPC register address offsets.
 
-> +MODULE_IMPORT_NS("SPI_OFFLOAD");
+When developing and testing it became clear the OTPC needs explicit
+enabling of certain clocks in the otpc driver.  So the patch series
+starts with some rework of clock bindings and clock drivers, along with
+referencing that in SoC dtsi files.
 
-This diminishes the point of the namespaces. Anybody who includes a (dangling)
-header gets namespace imported, which is not good. Same for other globally
-visible headers.
+After two patches with some unrelated fixups for the otpc driver, there
+are more patches dealing with sam9x60 support for the driver and the
+necessary clock enablement.
 
-(This is the main concern of this patch).
+The last patch adds an additional nvmem device for the UIDx registers,
+fullfilling the initial goal of mine.
 
-...
+I tested the series only on SAM9X60, not on SAMA7G5 or the other SoCs
+affected, because I only have sam9x60 hardware for testing.  If someone
+could test on SAM9X7, SAMA7G5, and SAMA7D65, that would be highly
+appreciated.
 
-> +#ifndef __LINUX_SPI_OFFLOAD_TYPES_H
-> +#define __LINUX_SPI_OFFLOAD_TYPES_H
+Last question: Should the UID be added to the device entropy pool with
+add_device_randomness() as done in the SAMA5D2 sfr driver?
+
+For detailed patch changelog see each patch, general changelog below.
+
+Greets
+Alex
+
+(series based on v6.14-rc2)
+
+v2:
+- Removed patch adding bad OPTC conditions warnings on probe
+- Removed patch adding more register definitions (the one register
+  definition required was moved to the last patch adding the nvmem for
+  UID registers)
+- Added multiple new patches handling the dt-bindings issues
+- Extend the possibility to enable the main rc oscillator to all at91
+  SoCs with an OTPC
+- Added patches to reference and enable the OTPC peripheral clock on all
+  capable SoCs
+- Reordered patches
+- Reworded commit messages
+- Squashed patches with dts changes for sam9x60
+- Fixed bot warnings
+
+v1:
+- Link: https://lore.kernel.org/all/20240821105943.230281-1-ada@thorsis.com/T/#u
+
+(I sent an RFC patch on this topic earlier this year, you'll find the
+link below as a reference to the discussion.  The patch itself was
+trivial and not meant for applying as is anyways, so I decided to not
+write a full changelog from RFC to v1.)
+
+RFC:
+- Link: https://lore.kernel.org/all/20240412140802.1571935-1-ada@thorsis.com/T/#u
+
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-clk@vger.kernel.org
+
+Alexander Dahl (16):
+  dt-bindings: clock: at91: Split up per SoC partially
+  ARM: dts: microchip: Use new PMC bindings
+  clk: at91: Use new PMC bindings
+  dt-bindings: clock: at91: Allow referencing main rc oscillator in DT
+  clk: at91: Allow enabling main_rc_osc through DT
+  clk: at91: Add peripheral id for OTPC
+  dt-bindings: nvmem: microchip-otpc: Add compatible for SAM9X60
+  dt-bindings: nvmem: microchip-otpc: Add required clocks
+  nvmem: microchip-otpc: Avoid reading a write-only register
+  nvmem: microchip-otpc: Fix swapped 'sleep' and 'timeout' parameters
+  nvmem: microchip-otpc: Add SAM9X60 support
+  ARM: dts: microchip: sama7g5: Add OTPC clocks
+  ARM: dts: microchip: sam9x60: Add OTPC node
+  ARM: dts: microchip: sam9x60_curiosity: Enable OTP Controller
+  nvmem: microchip-otpc: Enable necessary clocks
+  nvmem: microchip-otpc: Expose UID registers as 2nd nvmem device
+
+ .../nvmem/microchip,sama7g5-otpc.yaml         | 32 ++++++++++-
+ .../dts/microchip/at91-sam9x60_curiosity.dts  |  4 ++
+ arch/arm/boot/dts/microchip/sam9x60.dtsi      | 25 ++++++---
+ arch/arm/boot/dts/microchip/sam9x7.dtsi       | 11 ++--
+ arch/arm/boot/dts/microchip/sama7d65.dtsi     |  5 +-
+ arch/arm/boot/dts/microchip/sama7g5.dtsi      | 25 +++++----
+ drivers/clk/at91/sam9x60.c                    | 16 +++---
+ drivers/clk/at91/sam9x7.c                     | 24 +++++----
+ drivers/clk/at91/sama7d65.c                   | 44 +++++++--------
+ drivers/clk/at91/sama7g5.c                    | 30 ++++++-----
+ drivers/nvmem/microchip-otpc.c                | 54 ++++++++++++++++---
+ .../dt-bindings/clock/microchip,sam9x60-pmc.h | 22 ++++++++
+ .../dt-bindings/clock/microchip,sam9x7-pmc.h  | 28 ++++++++++
+ .../clock/microchip,sama7d65-pmc.h            | 35 ++++++++++++
+ .../dt-bindings/clock/microchip,sama7g5-pmc.h | 27 ++++++++++
+ 15 files changed, 296 insertions(+), 86 deletions(-)
+ create mode 100644 include/dt-bindings/clock/microchip,sam9x60-pmc.h
+ create mode 100644 include/dt-bindings/clock/microchip,sam9x7-pmc.h
+ create mode 100644 include/dt-bindings/clock/microchip,sama7d65-pmc.h
+ create mode 100644 include/dt-bindings/clock/microchip,sama7g5-pmc.h
 
 
-+ linux/bits.h
-
-> +#include <linux/types.h>
-> +
-> +struct device;
-> +
-> +/* Offload can be triggered by external hardware event. */
-> +#define SPI_OFFLOAD_CAP_TRIGGER			BIT(0)
-> +/* Offload can record and then play back TX data when triggered. */
-> +#define SPI_OFFLOAD_CAP_TX_STATIC_DATA		BIT(1)
-> +/* Offload can get TX data from an external stream source. */
-> +#define SPI_OFFLOAD_CAP_TX_STREAM_DMA		BIT(2)
-> +/* Offload can send RX data to an external stream sink. */
-> +#define SPI_OFFLOAD_CAP_RX_STREAM_DMA		BIT(3)
-
-> +/**
-> + * struct spi_offload_config - offload configuration
-> + *
-> + * This is used to request an offload with specific configuration.
-> + */
-> +struct spi_offload_config {
-> +	/** @capability_flags: required capabilities. See %SPI_OFFLOAD_CAP_* */
-> +	u32 capability_flags;
-> +};
-> +
-> +/**
-> + * struct spi_offload - offload instance
-> + */
-> +struct spi_offload {
-> +	/** @provider_dev: for get/put reference counting */
-> +	struct device *provider_dev;
-> +	/** @priv: provider driver private data */
-> +	void *priv;
-> +};
-> +
-> +#endif /* __LINUX_SPI_OFFLOAD_TYPES_H */
-
+base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.5
 
