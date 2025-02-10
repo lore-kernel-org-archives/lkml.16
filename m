@@ -1,109 +1,125 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059C5188596;
-	Mon, 10 Feb 2025 05:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3BE4199FBA;
+	Mon, 10 Feb 2025 06:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739167178; cv=none; b=I76W+cqDofl/MdqIxnRAY7lcNp4xt88ZhUEEN8XNpdeTYv4bXlHKJzB+qt/VngjY7tXa0Gr/2WwtJt72/YT+DkbglFPJEpzqNgHxmLtAbRxReNV7bIHAUQo/NVw1Glcq4+n/8kSsgFqWY+GyFQ7kc6bfp1GyJbcGvfv3xUta45Q=
+	t=1739167206; cv=none; b=ZSfDJ1N5DBYVGfOozXwiOHLOtoWaochaM10bkej0IkYqmZqkH05uaKRm+r5aSavI5T06PhmDi5c4LOQuInZVSMDP2IMOqQgBLrE970aa7VjIYdFMP2M58suEZ0/etlG86dN19pad1G9zLVk8jPFnUcFr0DGF6Sf0keTOr7TL2ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739167178; c=relaxed/simple;
-	bh=lDXRb/Tz5n+mdCPvdJI7TgU/tycGAjSob+lVDychdiE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cfqalpo0g4HQyYa+d2z65gbJxZpiz8aqAfvC+2Lz2SgOcZrUFV423HU07nP5iJwPmxGHePsalJ1U+QFAzPvtirMmr+jcUyq3zITQqPWP81vEO+25wOsCNIe+1bFBY83U3jRD4iN7tfoZdVP59RQCm0rE4FjYXVhjXPNsc9keKKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Yrv285trDz2FdHN;
-	Mon, 10 Feb 2025 13:55:44 +0800 (CST)
-Received: from dggemv703-chm.china.huawei.com (unknown [10.3.19.46])
-	by mail.maildlp.com (Postfix) with ESMTPS id E26A818001B;
-	Mon, 10 Feb 2025 13:59:27 +0800 (CST)
-Received: from kwepemn100009.china.huawei.com (7.202.194.112) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 10 Feb 2025 13:59:27 +0800
-Received: from localhost.localdomain (10.28.79.22) by
- kwepemn100009.china.huawei.com (7.202.194.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 10 Feb 2025 13:59:26 +0800
-From: Huisong Li <lihuisong@huawei.com>
-To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<oss-drivers@corigine.com>
-CC: <irusskikh@marvell.com>, <andrew+netdev@lunn.ch>, <davem@davemloft.net>,
-	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<louis.peens@corigine.com>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
-	<kabel@kernel.org>, <zhanjie9@hisilicon.com>, <zhenglifeng1@huawei.com>,
-	<liuyonglong@huawei.com>, <lihuisong@huawei.com>
-Subject: [PATCH v2 5/5] net: phy: aquantia: Use HWMON_CHANNEL_INFO macro to simplify code
-Date: Mon, 10 Feb 2025 13:47:10 +0800
-Message-ID: <20250210054710.12855-6-lihuisong@huawei.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20250210054710.12855-1-lihuisong@huawei.com>
-References: <20250210054710.12855-1-lihuisong@huawei.com>
+	s=arc-20240116; t=1739167206; c=relaxed/simple;
+	bh=JTGPCLc+TlheKyWQPI9FBCXUAAOWLK0jpbNJkDD0Y+g=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=n5W4iolmUAg6mWU+3BqC0WufZ1Yl+cPYAjFABYvFyiQm5IR2QrLhoyYcnn1Mg6SCyehCYGDYTbqDODezb1PRhZR4bSHQcDa9zPWD4zAi6jwMJzCAybXrIp3Q7zVeC9qmyCRI0ZQ5eaLknsTSBJrgfEG9hYTdl325SVmobDwuR7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B9SD7OGn; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B9SD7OGn"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f62cc4088so32200585ad.3;
+        Sun, 09 Feb 2025 22:00:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739167204; x=1739772004; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xXA76by7k9KEcBmeahyuiTnqNISZNAapJLV8/EFhixs=;
+        b=B9SD7OGncHt7RXqf7vQKEt6cwXNddlvKB/NyLAcBiT5l4m/Fvq7DHlP9DuSAm1JGh+
+         8EtIdCJmWRCI4H+i9tx8O2egw6LzQJuvZkrGCuKV+LANDABcR1AcmYFu8UuJebHtK3N4
+         MDHHeb3fEE0k6n9WJQ6zwpVeNLicrqSSe4gDCfmOlx0DNyGf70C5TW8Fq2Bqwt13/JKf
+         VNsbh9DBkTBoH8Sq2KcLgxwgRQNVYHkqaklY68GV0091stXXYKteo7o361YeXFat3yRl
+         +oinZlaPKwtn3XuJbpLGWkls7JHkQZ2CHgapHObYZVagf+LXpYNV6yl+lufBz1Q1Dd+x
+         nOhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739167204; x=1739772004;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xXA76by7k9KEcBmeahyuiTnqNISZNAapJLV8/EFhixs=;
+        b=VmroeoRnxWrwJl8EkmwclEpXpwyjSkoakLVoQk50WxomwpD9DoFzcbvMbpMgw43Oip
+         6vBBmRU/YnPtYDPSoiNN7WbPiED58v0d08H2X3zZJ9H6Nmvb3axaHJf27yQfuFnYCNZt
+         W6N4s/Fclw1F7C/EJVQfeMJ37CGXWg8V9T9aM/ZUtgwtdHn936qqHtYoCCBlvEEa9x8K
+         mDcPeOfHywUBy9JQadqWpqIMATkWHpO+uwLF7hG5LChhozR353Tp9Z0mO7zC/amJ+1Dj
+         8DY3bKmG8RazXYW+4Ak0ZECkKdgheZdQ8CfbsbCCuBxs7kAxOQGOqfETzWdMnsEl4cje
+         AEpg==
+X-Forwarded-Encrypted: i=1; AJvYcCWWa8rOGHxw0ie8snQkHCKYTtok4GkxEI9Y4uY7snwuCFzARc/NImErm+nX624hOJoWFQ4FYAE8FrXgIPI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwB+1XxcQ2AyQd+cu8pcaFqtnXoEuN2acRpmC8Cc4ZIx7kkCWDA
+	5qE7RFI71kBytV+Jt+XsDP8Uqi1pWR0boxdNTCAcaT1DyISPHGV4
+X-Gm-Gg: ASbGnctP9OwFztPyFaDjGBkYKPYQaWy1ZH6GR69MILgXEquxmuK3vo33iIv2XBXF4CE
+	gHRR8OUKGQQv7f5HMzMUL8Ya3zklamTRFLKEwNZv04XfoJ7i9G07Mn1h+Oz0k+vsC/YENGeEKXb
+	NZFNd5uc1L3Sy6Sv5rEi0CrasCvQur1ecKoaXfAqlAqyIttpTOy0oWcL5C4MQJURGFX5HBLRQmk
+	XU6CUzVl46DyPWh183MPwmoFw8nZq3iujNd/XcpB3hUfpi5jhj3GtMh3F5p+P7RTVWEtr4LYfqF
+	Thn3mArKQlMKM+C/
+X-Google-Smtp-Source: AGHT+IEQIxw5kFBpp6lSdPoJPNjjTuWEHJ2U3CC/OCa5A1s3D6jBs5T/Yl9Ytg2o8i/m2tyaffvFMw==
+X-Received: by 2002:a17:902:e802:b0:21f:4c8b:c514 with SMTP id d9443c01a7336-21f4e76391amr187472835ad.45.1739167202976;
+        Sun, 09 Feb 2025 22:00:02 -0800 (PST)
+Received: from localhost ([111.229.209.227])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f9e1e239eesm9958278a91.30.2025.02.09.22.00.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 09 Feb 2025 22:00:02 -0800 (PST)
+From: Tao Chen <chen.dylane@gmail.com>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	qmo@kernel.org
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	chen.dylane@gmail.com
+Subject: [PATCH bpf-next v5 0/4] Add prog_kfunc feature probe
+Date: Mon, 10 Feb 2025 13:59:41 +0800
+Message-Id: <20250210055945.27192-1-chen.dylane@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemn100009.china.huawei.com (7.202.194.112)
 
-Use HWMON_CHANNEL_INFO macro to simplify code.
+More and more kfunc functions are being added to the kernel.
+Different prog types have different restrictions when using kfunc.
+Therefore, prog_kfunc probe is added to check whether it is supported,
+and the use of this api will be added to bpftool later.
 
-Signed-off-by: Huisong Li <lihuisong@huawei.com>
----
- drivers/net/phy/aquantia/aquantia_hwmon.c | 32 +++++------------------
- 1 file changed, 6 insertions(+), 26 deletions(-)
+Change list:
+- v4 -> v5:
+  - use fd_array on stack
+  - declare the scope of use of btf_fd
+- v4
+  https://lore.kernel.org/bpf/20250206051557.27913-1-chen.dylane@gmail.com/
+  
+- v3 -> v4:
+  - add fd_array init for kfunc in mod btf
+  - add test case for kfunc in mod btf
+  - refactor common part as prog load type check for
+    libbpf_probe_bpf_{helper,kfunc}
+- v3
+  https://lore.kernel.org/bpf/20250124144411.13468-1-chen.dylane@gmail.com
 
-diff --git a/drivers/net/phy/aquantia/aquantia_hwmon.c b/drivers/net/phy/aquantia/aquantia_hwmon.c
-index 7b3c49c3bf49..1a714b56b765 100644
---- a/drivers/net/phy/aquantia/aquantia_hwmon.c
-+++ b/drivers/net/phy/aquantia/aquantia_hwmon.c
-@@ -172,33 +172,13 @@ static const struct hwmon_ops aqr_hwmon_ops = {
- 	.write = aqr_hwmon_write,
- };
- 
--static u32 aqr_hwmon_chip_config[] = {
--	HWMON_C_REGISTER_TZ,
--	0,
--};
--
--static const struct hwmon_channel_info aqr_hwmon_chip = {
--	.type = hwmon_chip,
--	.config = aqr_hwmon_chip_config,
--};
--
--static u32 aqr_hwmon_temp_config[] = {
--	HWMON_T_INPUT |
--	HWMON_T_MAX | HWMON_T_MIN |
--	HWMON_T_MAX_ALARM | HWMON_T_MIN_ALARM |
--	HWMON_T_CRIT | HWMON_T_LCRIT |
--	HWMON_T_CRIT_ALARM | HWMON_T_LCRIT_ALARM,
--	0,
--};
--
--static const struct hwmon_channel_info aqr_hwmon_temp = {
--	.type = hwmon_temp,
--	.config = aqr_hwmon_temp_config,
--};
--
- static const struct hwmon_channel_info * const aqr_hwmon_info[] = {
--	&aqr_hwmon_chip,
--	&aqr_hwmon_temp,
-+	HWMON_CHANNEL_INFO(chip, HWMON_C_REGISTER_TZ),
-+	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT |
-+			   HWMON_T_MAX | HWMON_T_MIN |
-+			   HWMON_T_MAX_ALARM | HWMON_T_MIN_ALARM |
-+			   HWMON_T_CRIT | HWMON_T_LCRIT |
-+			   HWMON_T_CRIT_ALARM | HWMON_T_LCRIT_ALARM),
- 	NULL,
- };
- 
+- v2 -> v3:
+  - rename parameter off with btf_fd
+  - extract the common part for libbpf_probe_bpf_{helper,kfunc}
+- v2
+  https://lore.kernel.org/bpf/20250123170555.291896-1-chen.dylane@gmail.com
+
+- v1 -> v2:
+  - check unsupported prog type like probe_bpf_helper
+  - add off parameter for module btf
+  - check verifier info when kfunc id invalid
+- v1
+  https://lore.kernel.org/bpf/20250122171359.232791-1-chen.dylane@gmail.com
+
+Tao Chen (4):
+  libbpf: Extract prog load type check from libbpf_probe_bpf_helper
+  libbpf: Init fd_array when prog probe load
+  libbpf: Add libbpf_probe_bpf_kfunc API
+  selftests/bpf: Add libbpf_probe_bpf_kfunc API selftests
+
+ tools/lib/bpf/libbpf.h                        |  19 ++-
+ tools/lib/bpf/libbpf.map                      |   1 +
+ tools/lib/bpf/libbpf_probes.c                 |  84 +++++++++++--
+ .../selftests/bpf/prog_tests/libbpf_probes.c  | 118 ++++++++++++++++++
+ 4 files changed, 208 insertions(+), 14 deletions(-)
+
 -- 
-2.22.0
+2.43.0
 
