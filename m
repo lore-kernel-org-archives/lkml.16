@@ -1,115 +1,97 @@
-Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mo-csw.securemx.jp (mo-csw1802.securemx.jp [210.130.202.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A9A1A8F74;
-	Mon, 10 Feb 2025 06:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585C3199FBA;
+	Mon, 10 Feb 2025 06:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739170312; cv=none; b=JCvTC84X/TRKPg7/USKvIS2tP0v8m4yFNeTlcwNpAnHXuT7NN3+my9Zw/CtOR28IgZVM0NTGd5kYlPHw6Bx7kTxGE1W/c9CIdmmBZgvVk3X24xGroqoYm3a7CHHq9bkN2dIoxUDYRa9/0jdSr5pQsxy9YE3xkcGfAHiSHY1gyvY=
+	t=1739170610; cv=none; b=oWT83BAd+bXd4sydJtrfsN2WC7srtLt+b4D3g3Rg1Ez+clQbJ0kGtRvbXobhfwZA8gUD+yWYhNqZaXmYz1yRrjre31jtVWB+eLqEhTWn2S9eyxncSRkJB8XgB4fRuOrBVAy+8Jzx3p2XLj6C5HhbP9QFdPyBcAf6KEGsm9VADwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739170312; c=relaxed/simple;
-	bh=/yiNYw2w1QP43if0EbApxxlUXZtJpdnCU0y+oXqKeS8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J3LKLiktXMvj4I1GzuEtvtL1lqikOPpkzJBVsHXwwBxri8TbBeCItb2XTgkhQSEbaBYEFR269duEen2F5Sp3egAGh8rYSSDGzQni93QD1/mGJWp0CcrwK8geAdPAXW9t5tfdsCcjbPeIZDdOpYJ4wc4OlkTGbmq/HD9Ib1GPxdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=idosch.org; spf=none smtp.mailfrom=idosch.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bafjmJG+; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=idosch.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=idosch.org
+	s=arc-20240116; t=1739170610; c=relaxed/simple;
+	bh=r2bGSQuW3OUidgcECmo0HgSV1D5FG/L2Ld2WCzZKiPg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=cei6V2HFAzMH+8dxTaWqqKEq+sBK21Yr9+SDp3wy6hcQhUcYu1nFHmmT7jwOFM04oxywU2pHjitdT1qpRA4Tlz7OLnVMQ1+Y5S8+jX4FnKBRSIoB3DB51G2BN3dc2drzQufMAg2O4FWb8W5zdf8i9kXF2yfVcrP5PpVk2P/uf+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp; spf=pass smtp.mailfrom=toshiba.co.jp; dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=kazuhiro3.hayashi@toshiba.co.jp header.b=knnD/rSR; arc=none smtp.client-ip=210.130.202.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=toshiba.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toshiba.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bafjmJG+"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 8F66F1140113;
-	Mon, 10 Feb 2025 01:51:49 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-09.internal (MEProxy); Mon, 10 Feb 2025 01:51:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1739170309; x=1739256709; bh=Xa+u6TSXdvpnsdktnh6Ldx8knq/jErF9o1m
-	KCq6c5Eo=; b=bafjmJG+wuzoGYnXZs3OWuN0rYfKlg+z2CCIwrfj/QfDpdFjR/y
-	2cOacgCL54YyWCBNjoZjaFeXcEV8V7Vo3hGDBXfeBAwgBDj7XG8lbNfhpvqcM8Lq
-	MD7c6SkqSX0+jdD6DxGDhrPToD93coyrVvPRy+JS80LK5TLdD/tJ9mex2c9TXBV2
-	RDi4k71i5JRRXQXGmFRFwv5x5icJjaWE4KnCK2t9wVzlmvzzp37kdp+eOYbgzEF8
-	JO8yt50GMwHe0B24pDZCPQRzA3eKNhglAP28MRwvf/dteVtwIGq7wpK2m4JDES9R
-	eLhGfH3PxL1+oxB1V0XXxUmbsv/nfiqzaqg==
-X-ME-Sender: <xms:BKKpZyEkbPGdJbINekmZfUB-gH5gCVVDb3gdjKHA72CSOPSz_7kAkA>
-    <xme:BKKpZzUk4ydXVK9ZjUS9wqvx2FVO73_J9By-pDgU08zri40YosGqHiMTatzrZnw00
-    ZLfe2v0vI2btqY>
-X-ME-Received: <xmr:BKKpZ8JgelyjxShIgIdKuTBZRJX7HdCtE23GhFzNUZ-5_xaMQxJoWT1i9rff>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefjeefkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpefkughoucfutghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrd
-    horhhgqeenucggtffrrghtthgvrhhnpeehhfdtjedviefffeduuddvffegteeiieeguefg
-    udffvdfftdefheeijedthfejkeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuve
-    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepihguohhstghh
-    sehiughoshgthhdrohhrghdpnhgspghrtghpthhtohepudehpdhmohguvgepshhmthhpoh
-    huthdprhgtphhtthhopedtgiduvddtjeesghhmrghilhdrtghomhdprhgtphhtthhopehn
-    vghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqd
-    hsthhmfedvsehsthdqmhguqdhmrghilhhmrghnrdhsthhorhhmrhgvphhlhidrtghomhdp
-    rhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrg
-    guvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnh
-    drtghhpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphht
-    thhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrse
-    hkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:BKKpZ8HqxAaKpTyiU7gG7xc6MjskSyqqHjmp5EoTbdhh23xWP8oc8A>
-    <xmx:BKKpZ4Ue8dCAHoq82cA_LJFEULIs1ZFVQkIxheG1OC16r3dv9aIuzQ>
-    <xmx:BKKpZ_MYmJG1HtVP8iAw3V0SX2rTdKIuOKCtCPrfT69AS_SZX5GifQ>
-    <xmx:BKKpZ_2CztCc2frUAkqVwVttjA0EA46oQmThzHKTpt6tyFT0gsB3Gw>
-    <xmx:BaKpZ5vNx_rkiYc-31LJg39M5YTGKhVW8TNvfHujyxmwpu4E297FVaNz>
-Feedback-ID: i494840e7:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 10 Feb 2025 01:51:48 -0500 (EST)
-Date: Mon, 10 Feb 2025 08:51:45 +0200
-From: Ido Schimmel <idosch@idosch.org>
-To: Furong Xu <0x1207@gmail.com>
-Cc: netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, xfr@outlook.com,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Brad Griffis <bgriffis@nvidia.com>
-Subject: Re: [PATCH net v1] net: stmmac: Apply new page pool parameters when
- SPH is enabled
-Message-ID: <Z6miASgDGKfGH9qO@shredder>
-References: <20250207085639.13580-1-0x1207@gmail.com>
+	dkim=pass (2048-bit key) header.d=toshiba.co.jp header.i=kazuhiro3.hayashi@toshiba.co.jp header.b="knnD/rSR"
+DKIM-Signature: v=1;a=rsa-sha256;c=relaxed/simple;d=toshiba.co.jp;h=From:To:Cc
+	:Subject:Date:Message-Id:In-Reply-To:References;i=
+	kazuhiro3.hayashi@toshiba.co.jp;s=key2.smx;t=1739170573;x=1740380173;bh=r2bGS
+	QuW3OUidgcECmo0HgSV1D5FG/L2Ld2WCzZKiPg=;b=knnD/rSRtEjokv4nwpdZLTt24aAMsPdzs30
+	OcZ6S48JJdY/JH8RrWYc+VapW96fUUfmO9pwBuSwy6Z81o9Bo7JuS7ovppPkUG+gTH/mlRg3+dBnl
+	GDZM03E3lWJDfnU/rBAG6SmfvNQbrJIfDkF8+PUgC6r4RdQVl1fkmoe2OyAaAxohC1jU+GVinBcTU
+	ilZt8iMKavIFJkjofP0PrO92gSlN0bILFlVMnOcMIt1XqmDAJCruup0n5Y3Sm5OTi74UG+73/mZcg
+	uHlD7VTjpywQ0fFNnvcyGH4yr6wleFw74zKQGqQEMjUoxK/qaiXOSkwJ/5TP1Rhk7Ocg4HNahWww=
+	=;
+Received: by mo-csw.securemx.jp (mx-mo-csw1802) id 51A6uDGN3387803; Mon, 10 Feb 2025 15:56:13 +0900
+X-Iguazu-Qid: 2yAbAvUQLMDymhsI13
+X-Iguazu-QSIG: v=2; s=0; t=1739170568; q=2yAbAvUQLMDymhsI13; m=cJHL28zEPBgbgE/lC5o0LDRLsvlwWkSeNef5Mf90hzM=
+Received: from imx2-a.toshiba.co.jp (imx2-a.toshiba.co.jp [106.186.93.35])
+	by relay.securemx.jp (mx-mr1803) id 51A6u8Qw4036156
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 15:56:08 +0900
+From: Kazuhiro Hayashi <kazuhiro3.hayashi@toshiba.co.jp>
+To: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+        cip-dev@lists.cip-project.org
+Cc: bigeasy@linutronix.de, tglx@linutronix.de, rostedt@goodmis.org,
+        linux-rt-users@vger.kernel.org, pavel@denx.de
+Subject: [PATCH 4.4 v1 13/17] printk: Adjust system_state checks
+Date: Mon, 10 Feb 2025 15:55:41 +0900
+X-TSB-HOP2: ON
+Message-Id: <1739170545-25011-14-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1739170545-25011-1-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
+References: <1739170545-25011-1-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207085639.13580-1-0x1207@gmail.com>
 
-On Fri, Feb 07, 2025 at 04:56:39PM +0800, Furong Xu wrote:
-> Commit df542f669307 ("net: stmmac: Switch to zero-copy in
-> non-XDP RX path") makes DMA write received frame into buffer at offset
-> of NET_SKB_PAD and sets page pool parameters to sync from offset of
-> NET_SKB_PAD. But when Header Payload Split is enabled, the header is
-> written at offset of NET_SKB_PAD, while the payload is written at
-> offset of zero. Uncorrect offset parameter for the payload breaks dma
-> coherence [1] since both CPU and DMA touch the page buffer from offset
-> of zero which is not handled by the page pool sync parameter.
-> 
-> And in case the DMA cannot split the received frame, for example,
-> a large L2 frame, pp_params.max_len should grow to match the tail
-> of entire frame.
-> 
-> [1] https://lore.kernel.org/netdev/d465f277-bac7-439f-be1d-9a47dfe2d951@nvidia.com/
-> 
-> Reported-by: Jon Hunter <jonathanh@nvidia.com>
-> Reported-by: Brad Griffis <bgriffis@nvidia.com>
-> Suggested-by: Ido Schimmel <idosch@idosch.org>
-> Fixes: df542f669307 ("net: stmmac: Switch to zero-copy in non-XDP RX path")
-> Signed-off-by: Furong Xu <0x1207@gmail.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Reviewed-by: Ido Schimmel <idosch@nvidia.com>
+commit ff48cd26fc4889b9deb5f9333d3c61746e450b7f upstream.
+
+To enable smp_processor_id() and might_sleep() debug checks earlier, it's
+required to add system states between SYSTEM_BOOTING and SYSTEM_RUNNING.
+
+Adjust the system_state check in boot_delay_msec() to handle the extra
+states.
+
+Conflicts: kernel/printk/printk.c
+cf775444 replace the third condition that boot_delay_msec() returns
+immediately with suppress_message_printing(). This does not affect
+system_state check.
+
+Tested-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20170516184736.027534895@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Kazuhiro Hayashi <kazuhiro3.hayashi@toshiba.co.jp>
+---
+ kernel/printk/printk.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index d8e0790f56cb..8d1e081bf9fc 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -1077,7 +1077,7 @@ static void boot_delay_msec(int level)
+ 	unsigned long long k;
+ 	unsigned long timeout;
+ 
+-	if ((boot_delay == 0 || system_state != SYSTEM_BOOTING)
++	if ((boot_delay == 0 || system_state >= SYSTEM_RUNNING)
+ 		|| (level >= console_loglevel && !ignore_loglevel)) {
+ 		return;
+ 	}
+-- 
+2.30.2
+
+
