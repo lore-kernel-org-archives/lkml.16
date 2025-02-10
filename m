@@ -1,110 +1,111 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA5923E25C
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06761369BB
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739201949; cv=none; b=t4g8IutfmHiof6fqPtjM8LX3VImRWKCpWrjkh8pWDVUNdutieGnJSYpWuw1OzelZBr57PynvIRt8gKBJCpsdTWLXv6JnqkEWKBE0CuArHqGAIco9AYJDXP8I0K6mLWiKeK/SDm1pZxKURLXCUEYmrxK7POGtXsaXkeUyEYagP2o=
+	t=1739202026; cv=none; b=c1fiUgw1VeS7WNHiWWf4pd3GUuYvwpP3h/zk++IpKpHLBU8weh9JPm9OO20GAKO2dmzX9lSu00V6YhGuLeOgUh0O8uGwzZWzIaNvm+8BGTFqRu9hMsuUEmVbJb7mXkCk2hSP1/JQhe2aPo4Q+0p02vJhKWE6rAbzNyfLX7K45vE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739201949; c=relaxed/simple;
-	bh=bhIHagS9meSabUPfTGuF7xlaMWOXvPmjoZ4/jfSEJsI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GTW46702Y3t+rOEOOILPN0cIAa/arqlj4Wz+5ripMF/9bxplkY+oC6FLWFZFaDNZzwFtIW2Bm+KFh7283NGvnhdDwiWyN2wB63L8f72RbasttXGUA10Hms3mWOCa+smk/r8aJfVGvGilRpee+eknCvYVWJxyBDQEghlbswv00B0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qPV+niyt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JC0Ek3bS; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1739202026; c=relaxed/simple;
+	bh=yU8x0uMQkwOyuIKMuCjX2VjkJdt8anEcfyjZSVUfDQA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kgR57ClnW66LXvXybaCMzUVx/vRwpa1eCjv3CGAcXlxi+x8QQEELu0nkvkkqmpS8IgmdmsI68wTrKumT2W0AW0d8q7+r14WHl7RbNXdOPXQb5QAOJrewnE3vzxiGypm9lHcT4rRjc9KUjvwz0MKRQY2Y/Rz3J0EnRvH8dbTDAb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ThSPmOaC; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qPV+niyt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JC0Ek3bS"
-Date: Mon, 10 Feb 2025 16:39:02 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739201945;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FVUBiaoeWeksMfqaUXNGg5STI1bae+8Yqz5cnicePdE=;
-	b=qPV+niytIhYOhSM7bRzAb3GXPXTNY9jj6pj718SCdZX+U5XVSAcgRr1JLZodYs/9TFUSQt
-	jTYU6SV2RiLnrzyV2jZDlWgwA+0bquQFo03QwdnTXBDhwoYoe980wGtHj4QxOr06RT4DSt
-	8ddXsI2fpEn0ubX+eaF5UTWuqud2TYsdIroRau2Wndbgs7his95TPoNyABloBlr/7Xw/8B
-	bDKfEPenzMJSWoeKq9+icGVHgTD7Rkxg33pUjFZJJ/YkgFjPMFLrW73YmrnhMNCOtBBhkp
-	QAgElWCt1siSQL7Evu4w9YM3as5CrBCeEYAFvv9c01I61W2gqIxxSA/IPmg7IQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739201945;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FVUBiaoeWeksMfqaUXNGg5STI1bae+8Yqz5cnicePdE=;
-	b=JC0Ek3bSh7t7IktBNjUPgmVDll0jqwdgwkJ2nqdgT6WYgw2HTZbpzp2lOtqAK28AbE3d/0
-	9HFPIP14YS4FHwAQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	Ben Segall <bsegall@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/9] arm: Rely on generic printing of preemption model.
-Message-ID: <20250210153902.06VTSS6d@linutronix.de>
-References: <20250203141632.440554-1-bigeasy@linutronix.de>
- <20250203141632.440554-4-bigeasy@linutronix.de>
- <20250210120429.iFfBClW1@linutronix.de>
- <Z6oYO5uKlEJ8C8Ne@shell.armlinux.org.uk>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ThSPmOaC"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-545064389d3so2057397e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:40:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1739202020; x=1739806820; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xZz7wBdHRx1Y/NJmXMgTjFcJ/vA2swa3TSGqQIhUusI=;
+        b=ThSPmOaCMmNIjUIzLDQwO+58MLTgvao+C2aq3bt7L1+ZR8XEiMc3rAF4e6M+CFV2hw
+         wxjsImr1sHdw1L+jV4v7s3FMsPyls/5mCp/a64iP/Rl7ctdcmn+LwJfqPg5BqRTw0/Si
+         fIHDWu7C4Nk/hpCpOT0R5cpS2v+gZSaMX8p/c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739202020; x=1739806820;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xZz7wBdHRx1Y/NJmXMgTjFcJ/vA2swa3TSGqQIhUusI=;
+        b=VuhqWbj3xT6L+/mMOB8h1D+eQDDtkbdGAPJ0WqdXX0jONgvIfFxYH6HdoqEcZ6phBP
+         ZXHeAhxgpeWMLeXYBOQg1r3RWMtPYDe2ilfwaZ73KHfq754NOfzQhXDGLFIDSuzzAPgr
+         /Eeq4leXAatVw/OXeTu3lNw8Jslu3qMgffxLbWdjmksoOxbm2q+e6jpFEJRscIWcpYrp
+         wvCSq1LqN4+s4WIRGUyO/R3EHo4gBQrcdPP9v9JcTKw452kQqui8ebZ+4WCGbvsASWXS
+         bc1HxG9DMJP8kiKLGkQI4v0QlzaQ+OIf1UEepb1h6txONqY2vCkB2Lc21RUr96tuAeiS
+         8ZTw==
+X-Forwarded-Encrypted: i=1; AJvYcCX8yW0DIptV68WkN51GxiCBS0dqBp0X6JdoPomdvbuZQdNJwRyWioqcSYCdbZ5MeyH8ACEinSwkohCMv9s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8FbF/AH7U8L53OIT9Ir482ou7n3T0vuUbLEfmxuIxFTVuN6KG
+	gx3YvgU0+GPGowzcDVO/rHJovwTilZOcOGX8YdgyFCS+4h0iea6EMqLqYaonlRgncs/IjtJzGWz
+	eHQ==
+X-Gm-Gg: ASbGncsjYaStOlpFTfvo0znCXbPda1tffBgD3ekEosTzPnQFZ4vTiAYhq3MIrqviuu4
+	qd99vMUFr+RP8Fs4Ng/qS7m3V70dXo9uvNwQ8F25Bltp0UVseKr1nCj4FinxZq+92OFgft9SdfK
+	XxY3/FO072wbz21pFKJlujQdCPMlx3/MFzi6XMi7jI0nUkxWa1usCMBhXp3aDGtu4eOYpaWwTEu
+	Lqx7LlMiduEe8K/U2j8mSzktpOLf60vDmIe6E+Kac15A+LMyB4h2MzQNFcGN6mFSSCpFkYgNQMk
+	41XPi+1or6m8ctf/gjH7GcqsuwPu9aJNxt1jBwWc+Em89VD3/uH2MSeDIRk=
+X-Google-Smtp-Source: AGHT+IHsv4ZZDFokaPJCXspdMIZX2ZuyTEAOc9IJsC8kO00sOznYseRoU5E+yZ5R0Xyo7DdsDZaCcA==
+X-Received: by 2002:a05:6512:220e:b0:545:5f0:9533 with SMTP id 2adb3069b0e04-54505f095f1mr2959505e87.49.1739202019888;
+        Mon, 10 Feb 2025 07:40:19 -0800 (PST)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5450e00d032sm236881e87.12.2025.02.10.07.40.17
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 07:40:18 -0800 (PST)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30762598511so44682951fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:40:17 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWYKalPoPFDcyqOR5FbJ9PYFYsvvseXrbkS167IOl5FOt7J178u/RFgV/s1iS34Ad8JPTp7ZqJVof9zXIE=@vger.kernel.org
+X-Received: by 2002:a05:651c:198a:b0:308:f580:72a4 with SMTP id
+ 38308e7fff4ca-308f580765amr6925791fa.1.1739202017277; Mon, 10 Feb 2025
+ 07:40:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z6oYO5uKlEJ8C8Ne@shell.armlinux.org.uk>
+References: <20250208105326.3850358-1-yelangyan@huaqin.corp-partner.google.com>
+ <20250208105326.3850358-2-yelangyan@huaqin.corp-partner.google.com> <20250210-rampant-uncovered-buzzard-c96e31@krzk-bin>
+In-Reply-To: <20250210-rampant-uncovered-buzzard-c96e31@krzk-bin>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 10 Feb 2025 07:40:05 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=VPW=0eA-0VqNb+=75Q9dB2TCaJstcAhKEevk7Bhx7J9g@mail.gmail.com>
+X-Gm-Features: AWEUYZmeIn_U_nhTSVtFx4mkzD6jTp93vru0sCx3dywqhcvaZxLtwogVx1qWx-8
+Message-ID: <CAD=FV=VPW=0eA-0VqNb+=75Q9dB2TCaJstcAhKEevk7Bhx7J9g@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] dt-bindings: display: panel: Add a new compatible
+ for the panels KD110N11-51IE and 2082109QFH040022-50E
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>, neil.armstrong@linaro.org, 
+	quic_jesszhan@quicinc.com, maarten.lankhorst@linux.intel.com, 
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	thierry.reding@gmail.com, sam@ravnborg.org, dri-devel@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-02-10 15:16:11 [+0000], Russell King (Oracle) wrote:
-> On Mon, Feb 10, 2025 at 01:04:29PM +0100, Sebastian Andrzej Siewior wrote:
-> > On 2025-02-03 15:16:26 [+0100], To linux-kernel@vger.kernel.org wrote:
-> > > __die() invokes later __show_regs() -> show_regs_print_info() which
-> > > prints the current preemption model.
-> > > Remove it from the initial line.
-> > > 
-> > > Cc: Russell King <linux@armlinux.org.uk>
-> > > Cc: linux-arm-kernel@lists.infradead.org
-> > > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > 
-> > Is it okay, to route this via the sched tree?
-> 
-> Sorry, its not obvious where show_regs_print_info() prints this.
-> dump_stack_print_info() itself doesn't directly. print_worker_info()
-> doesn't. print_stop_info() doesn't. Not sure whether print_scx_info()
-> does.
-> 
-> Maybe showing example output would help?
+Hi,
 
-Patch 2/9 adds this. [ https://lore.kernel.org/all/20250203141632.440554-3-bigeasy@linutronix.de/ ]
+On Mon, Feb 10, 2025 at 2:16=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+>
+> On Sat, Feb 08, 2025 at 06:53:24PM +0800, Langyan Ye wrote:
+> > Add a new compatible for the panels KINGDISPLAY KD110N11-51IE and
+> > STARRY 2082109QFH040022-50E. Both panels use the HX83102 IC, so
+> > add the compatible to the hx83102 bindings file.
+>
+> Your subject does not fit at all at any reasonable limit. Keep it
+> simple:
+> Add KD110N11-51IE and 2082109QFH040022-50E
+>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-This this applied, die("test") on ARM ends as:
+Adjusted the subject line and pushed to drm-misc-next:
 
-[    1.595106] Kernel panic - not syncing: test
-[    1.596044] CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W          6.14.0-rc2-00009-gb80a798df08c-dirty #13 PREEMPT 
-[    1.596768] Tainted: [W]=WARN
-[    1.596946] Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 02/02/2022
-[    1.597407] Call trace: 
-[    1.598183]  unwind_backtrace from show_stack+0x10/0x14
-[    1.599231]  show_stack from dump_stack_lvl+0x50/0x64
-[    1.599492]  dump_stack_lvl from panic+0x114/0x358
-[    1.599824]  panic from kernel_init+0x64/0x74
-[    1.600048]  kernel_init from ret_from_fork+0x14/0x38
-[    1.600349] Exception stack(0xdf829fb0 to 0xdf829ff8)
-[    1.600730] 9fa0:                                     00000000 00000000 00000000 00000000
-[    1.601102] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    1.601447] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[    1.603163] ---[ end Kernel panic - not syncing: test ]---
-
-Sebastian
+[1/3] dt-bindings: display: panel: Add KD110N11-51IE and 2082109QFH040022-5=
+0E
+     commit: a8505237066d054cd6ad63b52e7219ce41731753
