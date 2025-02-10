@@ -1,173 +1,90 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BAF2F2E;
-	Mon, 10 Feb 2025 04:58:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3E92F2E;
+	Mon, 10 Feb 2025 04:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739163491; cv=none; b=gzXs+waOw1XvUhyfDnSBzWwtt5HjLQY+YpU90gcp8uGqqr609EwaM562L6FzN9A6AhzVsII4MpMjBNld/cYRiLTny8HaByYHPL6AegYXOXO4rG8ouyuurhxqPvtVJX6M0o5TCVccBjjqlivRfFiWc9LHxbVFosV0bCwWjCra2Kc=
+	t=1739163558; cv=none; b=JMyVZKR9cCdxFK7n97rVgCpKIYSpJbpt2N1J4OqHHqVvOnEAb2nS7wJcq0LK/+OU3DPo1bcjL7M28HJ5fMRtBZyH+/H3ImeTEymy4l2tQ4NITvoxbILXT2jtpEWdT1A9/JTF4vWwgalH8uR+Ca0gjiiqtOU4N8Rq0KQJdvDN7kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739163491; c=relaxed/simple;
-	bh=TnRrt+hQEk2SZeUr/akpqwUhJzbied5BUdTybKmiRL8=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=SR8cQKY9grJ+QGVs2NzsUfK1Hiw/J7GTUvk+X9UhWq/JbOpxV2W9X8VqKAbDr1kMtdqbbuJZgEJE8gQaWKIx/y8TvXY1l4CI52UWrFb/DHC7H0J/N/c6/0WXyqHpRfmiS5FB+cuTE9hAGETj/Fm7QS3+yF/q1VP9IFiworFOJyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gYJ2J9vb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/T9LWViJ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gYJ2J9vb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/T9LWViJ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1739163558; c=relaxed/simple;
+	bh=6pT7+dXsklLh1NRZnGillSRXOyCQqbrayjVnpgsbliM=;
+	h=Message-ID:Date:MIME-Version:To:CC:References:Subject:From:
+	 In-Reply-To:Content-Type; b=bEnRv9BmA1u/9TcsZ7oWou3ke6nClIVaTgyOAYFPAHBzGpgU1CeLnaq08IAt7ARBPryawd12hvE9prIfyBguhHl7skkwIEXIol63dwZPnFQHoAygsK7yGoXd/rBzj2EexOcGc7YmYAR81x2YCeAaKLpZDvbszls9qZMvbVkT+Ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eSpH/wKC; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gYJ2J9vb";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/T9LWViJ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gYJ2J9vb";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/T9LWViJ"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4208121137;
-	Mon, 10 Feb 2025 04:58:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739163488; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DCk4jcQLudkeoeTgh4xyRKMcUfnyM1cRiI/u8rggCzE=;
-	b=gYJ2J9vbnOuchXvJJauaVg4GIKYFH+a6jlKE3D0fA2LwLnq1hIkmSpbrdlDntBrvr3w5kD
-	zUrBribfqbqEg3oc9plfTWjbK6Y/ajVSoKDnzl1rsnvsHxDIGn93C1pSBto7K/d7b4B4GN
-	jEVCt2XWvbx/L9dq14bPWw9hHYQf6FI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739163488;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DCk4jcQLudkeoeTgh4xyRKMcUfnyM1cRiI/u8rggCzE=;
-	b=/T9LWViJyznEdqKEAZGaoQYWiHMPzWHpp4bGcm74/WjgqBDhUmS0oMC/+T9OXBFcL+sUfm
-	HIXf3adsXnnqu8Bg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739163488; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DCk4jcQLudkeoeTgh4xyRKMcUfnyM1cRiI/u8rggCzE=;
-	b=gYJ2J9vbnOuchXvJJauaVg4GIKYFH+a6jlKE3D0fA2LwLnq1hIkmSpbrdlDntBrvr3w5kD
-	zUrBribfqbqEg3oc9plfTWjbK6Y/ajVSoKDnzl1rsnvsHxDIGn93C1pSBto7K/d7b4B4GN
-	jEVCt2XWvbx/L9dq14bPWw9hHYQf6FI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739163488;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DCk4jcQLudkeoeTgh4xyRKMcUfnyM1cRiI/u8rggCzE=;
-	b=/T9LWViJyznEdqKEAZGaoQYWiHMPzWHpp4bGcm74/WjgqBDhUmS0oMC/+T9OXBFcL+sUfm
-	HIXf3adsXnnqu8Bg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8317C13707;
-	Mon, 10 Feb 2025 04:58:05 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id fbyaDV2HqWeAaAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 10 Feb 2025 04:58:05 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eSpH/wKC"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 519MUw9E014239;
+	Mon, 10 Feb 2025 04:59:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	yVOD3v3Y0g5LF/Im4pbOfEYj3LcSGcmxUrJET2J/F/4=; b=eSpH/wKC2FyLBjfE
+	NsK0qLxuUccCudgQouHqdY8GhessNlA8Zb0EwGA08k9GMRnpOqZzMpvyXBluAuaC
+	XK1u4aaL5Gx+H8ey3o4y+O6X1P0et5/fq/c+44w7BnMkEDIVIp5B96+C0MGG9Tq+
+	+76XM1segOVGDxC+cAlBzsNwRVuef4zO6IT0GtyEW1tQfz/3ZvNaA6Bj+FjBWUYz
+	zgzmvsbc7BgCAUIveNEeW3WMkl/X9sZl+J69JswZh72UInj1a+SdIEXKLO+FWEeP
+	q/BK69d/mpu1JIi0eBvnoF7XRRjm6k49/fv11qZz4ylcLIPCVbmZJ64wS4NOIfzA
+	/4kylw==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0g8u3kp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 04:59:05 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51A4x5t6010009
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 04:59:05 GMT
+Received: from [10.219.57.57] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 9 Feb 2025
+ 20:59:01 -0800
+Message-ID: <ed3cc71a-426e-4044-86dd-945751e282d5@quicinc.com>
+Date: Mon, 10 Feb 2025 10:28:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Al Viro" <viro@zeniv.linux.org.uk>
-Cc: "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Jeff Layton" <jlayton@kernel.org>, "Dave Chinner" <david@fromorbit.com>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH 02/19] VFS: use global wait-queue table for d_alloc_parallel()
-In-reply-to: <20250207193215.GD1977892@ZenIV>
-References: <>, <20250207193215.GD1977892@ZenIV>
-Date: Mon, 10 Feb 2025 15:58:02 +1100
-Message-id: <173916348251.22054.1170999043107860979@noble.neil.brown.name>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_DN_SOME(0.00)[]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+To: <quic_pbrahma@quicinc.com>
+CC: <andersson@kernel.org>, <conor+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <iommu@lists.linux.dev>,
+        <joro@8bytes.org>, <konradybcio@kernel.org>, <krzk+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <robh@kernel.org>, <robin.murphy@arm.com>, <will@kernel.org>
+References: <20250203-b4-branch-gfx-smmu-v4-2-eaa7aa762f48@quicinc.com>
+Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: qcs8300: Add device node for
+ gfx_smmu
+Content-Language: en-US
+From: Pratyush Brahma <quic_pbrahma@quicinc.com>
+In-Reply-To: <20250203-b4-branch-gfx-smmu-v4-2-eaa7aa762f48@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 5gzjTQFf_GJj_MveMIDpprdBFE0l1iGm
+X-Proofpoint-ORIG-GUID: 5gzjTQFf_GJj_MveMIDpprdBFE0l1iGm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_02,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ adultscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 suspectscore=0
+ bulkscore=0 priorityscore=1501 spamscore=0 impostorscore=0 mlxlogscore=727
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502100039
 
-On Sat, 08 Feb 2025, Al Viro wrote:
-> 1) what's wrong with using middle bits of dentry as index?  What the hell
-> is that thing about pid for?
+Hi
 
-That does "hell" have to do with it?
+Can someone kindly review this patch?
 
-All we need here is a random number.  Preferably a cheap random number.
-pid is cheap and quite random.
-The dentry pointer would be even cheaper (no mem access) providing it
-doesn't cost much to get the randomness out.  I considered hash_ptr()
-but thought that was more code that it was worth.
-
-Do you have a formula for selecting the "middle" bits in a way that is
-expected to still give good randomness?
-
-> 
-> 2) part in d_add_ci() might be worth a comment re d_lookup_done() coming
-> for the original dentry, no matter what.
-
-I think the previous code deserved explanation more than the new, but
-maybe I missed something.
-In each case, d_wait_lookup() will wait for the given dentry to no
-longer be d_in_lookup() which means waiting for DCACHE_PAR_LOOKUP to be
-cleared.  The only place which clears DCACHE_PAR_LOOKUP is
-__d_lookup_unhash_wake(). which always wakes the target.
-In the previous code it would wake both the non-case-exact dentry and
-the case-exact dentry waiters but they would go back to sleep if their
-DCACHE_PAR_LOOKUP hadn't been cleared, so no interesting behaviour.
-Reusing the wq from one to the other is a sensible simplification, but
-not something we need any reminder of once it is no longer needed.
-
-Would sort of comment would you add?
-
-> 
-> 3) the dance with conditional __wake_up() is worth a helper, IMO.
-> 
-
-I tried to explain that in the commit message bug I agree it deserves to
-be in the code too.
-I have added:
-
-	/* ->d_wait is only set if some thread is actually waiting.
-	 * If we find it is NULL - the common case - then there was no
-	 * contention and there are no waiters to be woken.
-	 */
-
-and 
-	/* Don't set a wait_queue until someone is actually waiting */
-before
-	new->d_wait = NULL;
-in d_alloc_parallel().
-
-Thanks,
-NeilBrown
-
+-- 
+Thanks and Regards
+Pratyush Brahma
 
