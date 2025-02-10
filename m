@@ -1,104 +1,148 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E2925B66C
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E37F25B673
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739209838; cv=none; b=RFP6Lg9CHFur+Pt8OeqSCc7C+lEtnXLsLBwXBaMS1Xkvc0AwwwUEy9RPQ5rHXkXGUbRKi7TFNgT1LpYEfI1TW8TxUSNgYC0j6kyFGCDyp/RQNLMk+QmDrusgOmnLTpQYeAGVsrA7ONeIC1UcsOXlgHa+QhxuMtl2uhKt40KE7kY=
+	t=1739209859; cv=none; b=nQaOfvE4T0C/JICQxuqHlkgsQixiH/EVawcaKkYO74N/zLP4Z0dHADCERRYAfRMhUw1CGACkTFkB56y7IQkztjhmhQ74DZpPM+rzG1M+3VyazoJuZeDpCbsOkypmavcuVYilVeadr+4n4A7U+OYI9ZO9NJzqlk2gGJA0u6flHkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739209838; c=relaxed/simple;
-	bh=5itngRyI3QLkc3iUAXbbXE3l84sxybC0VJY8BsapT6Y=;
+	s=arc-20240116; t=1739209859; c=relaxed/simple;
+	bh=qjygX3ix/T7jMxCMAduPGBq3DaxTTWNMZZOiGqy0xGg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lPVPayfm7VmMNi/AfC3tHpWmJmGEoNkV8XI0xQ7laezrMyvWzsA7y/LgjpQgK5wiPOi3aXh8hhOH4UDfbW/ck0jdOoVdVIa7BuJVhvO1sw0/vGa9MaxUNsyccM32Wu+B9CM/msHPjceoWxdwCSHjUyZYl57Bz+X8HdW3sBkN3hQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=Y/JIWh+N; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=AgSMZSOxJR77Op+hxSswSkbLwLlwiK7ougVctTAlDBdtEF9Nbkze0DLeL/HoQYN60tXGrUolOAL5vK/T65w79an0s44EpuNpZOswaZefaAk1JsoppFYDDGBPshMZbG5C7kB84gYkAB9R4/7Dz77TwkSbN4zpXtocSidjWzLCQTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pJiuqtYM; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="Y/JIWh+N"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21f5660c2fdso59599005ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:50:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pJiuqtYM"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21f48ebaadfso76529715ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:50:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1739209836; x=1739814636; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OCO3aIRcq5bPxRXLWL+/UKDcQnItmXbvQb/S10a8uSI=;
-        b=Y/JIWh+NTFsGFS8sJ0F23YHaZC+GWW5HJj3+TEOHzKo/XyBEUqur76CkwGKb7CAHKz
-         Nw2S/XsPt36cjhZJfAOBnm/W3rtepRc67H4yH95yNl6BVVy60Yrr05Dv0xv7yoUsATXf
-         XkkvnqQT+rogwFP6lAXwXGWmCA+eNirQQcYVA=
+        d=linaro.org; s=google; t=1739209857; x=1739814657; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xWPFKrbvd3HnH42jQjsMh+P9N25O78u7B+hTOvkNtnY=;
+        b=pJiuqtYM2XCuY7kFLjlCDTG9bTyoxYH9obNTg7Ow715RLLUScEk3nv2fbGENNcRfNp
+         hJaqIrSaKjlP435IvPmSal3MTGw2wV6jTK3qSyweCtnFbrAT7wL5HBDcZkab4X8YGZ3+
+         f1g8vSpS1vXyE81Pcw8kvS33CwJdT9GCFfNNeuqmmnxuWQfy8KSKB+c/PRNNNW91m2a3
+         vFJMO42/82NWamyKvEq2SoF5TUEaPFKA70s4unyPXCGieea/T0mCCjPE27oMlpW0qgee
+         6rVWrdtSl8phcR4Of9C8Msm7RPw92Pr3jX2gwQlfZN00i+PHyw3OvvkcplGiy4ZI6CTt
+         kjIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739209836; x=1739814636;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1739209857; x=1739814657;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OCO3aIRcq5bPxRXLWL+/UKDcQnItmXbvQb/S10a8uSI=;
-        b=PwkP3g7IG5uwIjU4gAc/3+4DKt/3/1VziZacV+nS0pB87BdKOpHF4QnQPxXpIiqLX1
-         qMs6JVticBX40+k/w1x43UElAmuIFTaY9Qt/rXEzYMQn/tP+PXD04Rx0pTZUsRtZT46j
-         zO26n1L05f4xWFT5X2fDBoElXdN3p6++PgC7lPCdYe346LtSSzZK+ulfFZEextHWzNkd
-         JSsvLJ/JTB0NczUdo97EZ6x/Ib4wWSY2RlJR5qDTjKaGlQze5BGkZBtQeYyYxIcGGX0v
-         TgiKH0w8VHtr9u+Z7O5oWk36TQVJY3SJ+HYvHZXhQ2Jo7xjSYrMreIC7KdW3zQPC2UcD
-         hezg==
-X-Forwarded-Encrypted: i=1; AJvYcCWB6FqqwvHkB4xiboeW6lEVs2V3U+cBpaqduBaLtOFgnenfS8DdxqYizzblUUDdNymg4c9zty24z0fl0EY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1sKstLbhJXMS0dZ5wC83bTc5PezQVfiGSJlyeoswgSXlf1Y9b
-	tUg9c09b73pEsuTGSrG8Td0510lK3Z/iBftvIl7r5I9kicow1UdxoBSMJcwuefg=
-X-Gm-Gg: ASbGnctvF2r0ISPf70+9PylOFx3pcSpwCBpNMlR+ZlN4ZoCADbHvrosMz0X3h506aq/
-	C0+yeF8Ub/OGt0TH0Y4xvrUVj65SnS0o28e9jPXlebprYyOyuL5k9UZ3K+L9T0EBrnYytGQJfeD
-	q1ItWOUC82sCC0RRdd/nGQOZphtud2k2Iif/7HX60mpectVlVvSE7/wvbp3b2U5HpyjROmjJKpI
-	Mko0VIC+8p+pnnZQZtwI3m+KELy3cQyuJRffDB2Bipl98MNel7FIwKUA8qNSuJSIHcVocdIsKDH
-	lrVoJR6rLSJtub//0Gs5d12QuUNeSWjqTXh+1ucoSEYpr237BveyH5l4sw==
-X-Google-Smtp-Source: AGHT+IESIWs0nDg5kAqiOuNPxZ9VJShu5naJndD6KAbqxfopHAr2qsG48oAN4aHnkGyTLNqhk6vhKg==
-X-Received: by 2002:a17:902:f78d:b0:21f:68ae:56e3 with SMTP id d9443c01a7336-21f68ae57dcmr162636775ad.39.1739209836373;
-        Mon, 10 Feb 2025 09:50:36 -0800 (PST)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f36897faesm81159455ad.213.2025.02.10.09.50.35
+        bh=xWPFKrbvd3HnH42jQjsMh+P9N25O78u7B+hTOvkNtnY=;
+        b=b4DnIqVJCUCA+RRhgG+3VU8TWvNEO8KbSVYa5RDSESAczQuFu3oylKgjFOzsay1947
+         vF7+OA+H0nO85OBsa7W2AVqVr1odVVaGDohrND4afeUghKhHlM3pAeZiOGmjR8nO3MyG
+         0S9gD+h9Ttf0ep8/RZI82EMWVdxNvP7r6MSt2U9lRX9MfjFsMKwbJupRoO9lqm8cdrWy
+         tD1FFjUoPJBRMlh9H3QkCcSe83q3WN4Mh0LZeaD8JP4X9mtwGeF9v0QTKd6l6LxL6096
+         r3SvKOistNJL9Gbi1cuhupcLM8Jwixm2BekiBWwO7sb1kAkMvszYmtyoZb5+75sjEmNj
+         Sh9A==
+X-Forwarded-Encrypted: i=1; AJvYcCVbbaPHKZL2mRawucG98Ss+SfiD+pmFyLv7veR8EB1zc+C4ivd4YUTv4QG0QJ6uu9+csjSk0T7xwUjoruw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4XggfvBGAsk4FGIulqaT6mlmBRtLDmnweA1dELTncxmPp7pT7
+	suoTheBNvcDhVa0RZ8UGd+pyA9cPo7C+WDzuUa8/4FlvoK6TSi2OggfRrchVdw==
+X-Gm-Gg: ASbGncuuZhAqSGIwL+uazGGK38xeE+2b7w9Zma0kSEJJFqaa/OEr4TuyxxQVZTOTxjF
+	ehBCDhKZVRkQQghERrMIw8Q9A58rzF+x/GzR6DfMfSmq0nUa4rCL9w4ciZMO8hwe/3EeT6sIVTc
+	kMDLR08tyrEJ/qiJjod0UycVEJfOXCq6ubrtgyafsKlEXrK/h1vE5b4DE64mmSRNqCdDecsuKgx
+	xABjkS4BK4jEHSbk8rzv6vDoDtDUsSg8vdFxioe6fBoX+QnhQBIfHYSRAmdNxG2K5Lya0wLCMTQ
+	bq2h8DpBWrxia5ukrsL73s9+DK/r
+X-Google-Smtp-Source: AGHT+IGtbZw/NgP42jW1Z7xgQG1GHDjEFsx1JKxCoQJn6ENkeGLdeqR4hHKH09zZWNuwtrtvr+1Ecg==
+X-Received: by 2002:a05:6a00:4883:b0:730:75b1:721b with SMTP id d2e1a72fcca58-73075b17628mr11426977b3a.18.1739209857442;
+        Mon, 10 Feb 2025 09:50:57 -0800 (PST)
+Received: from thinkpad ([220.158.156.173])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-730796baa42sm4348694b3a.107.2025.02.10.09.50.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 09:50:35 -0800 (PST)
-Date: Mon, 10 Feb 2025 09:50:33 -0800
-From: Joe Damato <jdamato@fastly.com>
-To: Purva Yeshi <purvayeshi550@gmail.com>
-Cc: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	skhan@linuxfoundation.org, Simon Horman <horms@kernel.org>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2] af_unix: Fix undefined 'other' error
-Message-ID: <Z6o8aeG_GqxtwXV9@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Purva Yeshi <purvayeshi550@gmail.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	skhan@linuxfoundation.org, Simon Horman <horms@kernel.org>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250210075006.9126-1-purvayeshi550@gmail.com>
+        Mon, 10 Feb 2025 09:50:57 -0800 (PST)
+Date: Mon, 10 Feb 2025 23:20:50 +0530
+From: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: Niklas Cassel <cassel@kernel.org>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"quic_schintav@quicinc.com" <quic_schintav@quicinc.com>,
+	"johan+linaro@kernel.org" <johan+linaro@kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Thierry Reding <treding@nvidia.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Krishna Thota <kthota@nvidia.com>,
+	Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+	"sagar.tv@gmail.com" <sagar.tv@gmail.com>
+Subject: Re: [PATCH V1] PCI: tegra194: Add support for PCIe RC & EP in
+ Tegra234 Platforms
+Message-ID: <20250210175050.5htfgtgkyrfcjtre@thinkpad>
+References: <20250128044244.2766334-1-vidyas@nvidia.com>
+ <Z5jH0G3V7fPXk0BG@ryzen>
+ <BN9PR12MB5323E59E530FA1F87DE3C7FCB8F22@BN9PR12MB5323.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250210075006.9126-1-purvayeshi550@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <BN9PR12MB5323E59E530FA1F87DE3C7FCB8F22@BN9PR12MB5323.namprd12.prod.outlook.com>
 
-On Mon, Feb 10, 2025 at 01:20:06PM +0530, Purva Yeshi wrote:
-> Fix issue detected by smatch tool:
-> An "undefined 'other'" error occur in __releases() annotation.
-> 
-> Fix an undefined 'other' error in unix_wait_for_peer() caused by  
-> __releases(&unix_sk(other)->lock) being placed before 'other' is in  
-> scope. Since AF_UNIX does not use Sparse annotations, remove it to fix  
-> the issue.  
-> 
-> Eliminate the error without affecting functionality.  
-> 
-> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
-> ---
-> V1 - https://lore.kernel.org/lkml/20250209184355.16257-1-purvayeshi550@gmail.com/
-> V2 - Remove __releases() annotation as AF_UNIX does not use Sparse annotations.
->  net/unix/af_unix.c | 1 -
->  1 file changed, 1 deletion(-)
+On Mon, Feb 10, 2025 at 02:25:43PM +0000, Vidya Sagar wrote:
+> Thanks Niklas for the review.
+> I'll rewrite the commit message add the following line
+> Fixes: a54e19073718 ("PCI: tegra194: Add Tegra234 PCIe support")
 > 
 
-Reviewed-by: Joe Damato <jdamato@fastly.com>
+No, please. Try to use the generic ARCH symbol dependency as suggested.
+
+- Mani
+
+> Thanks
+> Vidya Sagar
+> 
+> ________________________________
+> From: Niklas Cassel <cassel@kernel.org>
+> Sent: Tuesday, January 28, 2025 17:34
+> To: Vidya Sagar <vidyas@nvidia.com>
+> Cc: lpieralisi@kernel.org <lpieralisi@kernel.org>; kw@linux.com <kw@linux.com>; manivannan.sadhasivam@linaro.org <manivannan.sadhasivam@linaro.org>; robh@kernel.org <robh@kernel.org>; bhelgaas@google.com <bhelgaas@google.com>; quic_schintav@quicinc.com <quic_schintav@quicinc.com>; johan+linaro@kernel.org <johan+linaro@kernel.org>; linux-pci@vger.kernel.org <linux-pci@vger.kernel.org>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>; Thierry Reding <treding@nvidia.com>; Jon Hunter <jonathanh@nvidia.com>; Krishna Thota <kthota@nvidia.com>; Manikanta Maddireddy <mmaddireddy@nvidia.com>; sagar.tv@gmail.com <sagar.tv@gmail.com>
+> Subject: Re: [PATCH V1] PCI: tegra194: Add support for PCIe RC & EP in Tegra234 Platforms
+> 
+> External email: Use caution opening links or attachments
+> 
+> 
+> Hello Vidya,
+> 
+> On Tue, Jan 28, 2025 at 10:12:44AM +0530, Vidya Sagar wrote:
+> > Add PCIe RC & EP support for Tegra234 Platforms.
+> 
+> The commit log does leave quite a few questions unanswered.
+> 
+> Since you are just updating the Kconfig and nothing else:
+> Does the DT binding already have support for the Tegra234 SoC?
+> Does the driver already have support for the Tegra234 SoC?
+> 
+> Looking at the DT binding and driver, the answer to both questions
+> is yes. (This should have been in the commit message IMO.)
+> 
+> 
+> But that leads me to the question, since there is support for Tegra234
+> SoC in the driver, does this means that this fixes a regression, e.g.
+> the Kconfig ARCH_TEGRA_234_SOC was added after the driver support in
+> this driver was added. In this case, you should have a Fixes: tag that
+> points to the commit that added ARCH_TEGRA_234_SOC.
+> 
+> Or has the the driver support for Tegra234 been "dead-code" since it
+> was originally added? (Because without this patch, no one can have
+> tested it, at least not without COMPILE_TEST.)
+> In this case, you should add:
+> Fixes: a54e19073718 ("PCI: tegra194: Add Tegra234 PCIe support")
+> 
+> 
+> Kind regards,
+> Niklas
+
+-- 
+மணிவண்ணன் சதாசிவம்
