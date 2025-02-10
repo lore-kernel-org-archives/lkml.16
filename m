@@ -1,35 +1,35 @@
 Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2533222575;
-	Mon, 10 Feb 2025 16:45:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD3F24BD0F;
+	Mon, 10 Feb 2025 16:45:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739205949; cv=none; b=sthyqoo5+qAIaxZhITFJ9foJQehuo4K+6+EDJlUFiUG5h0QrJzL82jLkbO/S3ItD6dl7GjtbvWINWpFWSj94ADQSBJk74ySWd48n3Xzl88KFygh7jw78btJp3l9WQldwiVRb5krEcODxpAL0nDCouODCUKDFO1J45TOpkbv9x14=
+	t=1739205950; cv=none; b=ifIykvuE3E0etLuAJ2/x/Ga9Un68X6mAVrfF7eednBbYN1FaFHzjlDyUYM3GDq/ij7+aCpMDByUsbm9tBFH8E5sXgh7zUZQt8B+wem6rEZqBj/QXmq+mJHk5APwYN062PjpUGVnojisO1EOWFOoR9lETA3kql3W9DPvl9+nv4cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739205949; c=relaxed/simple;
-	bh=8DxD0g1D7UvJQhlM+gdbyNAf5AQkwySPboNWSreF2Sg=;
+	s=arc-20240116; t=1739205950; c=relaxed/simple;
+	bh=b4lYTDnpkr0KJoUnCnG4HZU0UkFb/yot10aEK6Eco8M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Npo01xTfR+YNzlQwL7dGshqKfwhlnLUJ9FyiwvKSI/JonuYtQF8cbOMAM8j5FrbbAIl5/A/1Fj3Ail1f/vRutww7fQabbjXRzLhaSQGpEr+JuASfJWP6m7sUPoNAoJ2xhx4s4osn9PmOgaKxLHHNQlSOLEuJCqGfIaI3VfhQWqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=gqxwCj6n; arc=none smtp.client-ip=217.92.40.78
+	 MIME-Version; b=mAlaxUixTRM/rBnd10GOmwrfSvZTJwhqSgc1UMergJGOvz4KPfK4yNKbidv340tRfS8nP8zlAM1wOPYqYqYt+/4R3MoCv6tMemqzRlnNpJuaARYbgvNQPLtaAoGvXU7QFSNU07daWVmBoH6jfCCous6yx+ytpDiugbC0rWVh5L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=ZwlPk/EE; arc=none smtp.client-ip=217.92.40.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="gqxwCj6n"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7D6221480316;
-	Mon, 10 Feb 2025 17:45:45 +0100 (CET)
+	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="ZwlPk/EE"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 160D2148026A;
+	Mon, 10 Feb 2025 17:45:46 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
-	t=1739205945;
+	t=1739205946;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vZsDtBbNTPdOOIKQhPF/5tyxBSQNXhxrVIA8sfG14DQ=;
-	b=gqxwCj6nzhhpK4oe02YY1gXNTd42nHtNyKQpHuYFPMMnyy2Yqc6rV1jDvv7fm0ErmFVX3q
-	S5rSotWYs/EqlMH8uSLQ5qDg02DpveFtZAXhYxTQIZgBjIhJnjHPoWc1myo4saecEEadx0
-	uKbqzsuaz07v+s6b6lR4A1g/goZSryZ6KEJuHJDT1gDnv+pZ1aBpT+wHBlg4V2aYN6CZnX
-	9Q1erZ4LKVLhGdrtir+8ofoIkhefoAo3TwXvXL2gmgj40VsqfleZ/+JMzRACcJKnAimdVa
-	pa8bs45er6dItkBl9Jrdr/b3w6bGu82noMwjzozgNofPqyriBTmR2xx1GuVo2w==
+	bh=b7LZo2mymbyoxBQ+HVYCFE4IwziNlomr+D3mfbsPVcQ=;
+	b=ZwlPk/EEHCFUY+znTldtIjO5fYWORis2QIZRHWBwqye73x6TlDNAIqmxTV02KONZ7hIlNL
+	BbTXgOxSYjYl6FkT4ruIcukZk6T9rMXUK7joxvXKDc4XqlsxYFd7HFhdeL94l+yFMUyWDo
+	XqMh1DnERQMtiX+h6T51jhwHgyt/0iNMjkn9Hl1wboli+b8RY/IQ+5GWV316kukApfpK60
+	mIhpfwESXhoSI2Pq2A51zbxVbdrLD374bkMtPXPmzsbFmE5fVYj0VSWscfRNKQmy+ffnWP
+	v7XI85fOimcPRYzaZxmN+SgKvcLMV88zniERCYZwAH3zHdHErjPk24gUf1n0MA==
 From: Alexander Dahl <ada@thorsis.com>
 To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
 Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
@@ -38,14 +38,13 @@ Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
 	devicetree@vger.kernel.org,
 	linux-clk@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Varshini Rajendran <varshini.rajendran@microchip.com>,
-	Ryan Wanner <Ryan.Wanner@microchip.com>
-Subject: [PATCH v2 06/16] clk: at91: Add peripheral id for OTPC
-Date: Mon, 10 Feb 2025 17:44:56 +0100
-Message-Id: <20250210164506.495747-7-ada@thorsis.com>
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Subject: [PATCH v2 07/16] dt-bindings: nvmem: microchip-otpc: Add compatible for SAM9X60
+Date: Mon, 10 Feb 2025 17:44:57 +0100
+Message-Id: <20250210164506.495747-8-ada@thorsis.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250210164506.495747-1-ada@thorsis.com>
 References: <20250210164506.495747-1-ada@thorsis.com>
@@ -58,70 +57,34 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-That peripheral clock is required for proper OTPC function.
+The SAM9X60 SoC family has a similar, but slightly different OTPC to the
+SAMA7G5 family.
 
-Link: https://lore.kernel.org/linux-clk/ec34efc2-2051-4b8a-b5d8-6e2fd5e08c28@microchip.com/T/#u
 Signed-off-by: Alexander Dahl <ada@thorsis.com>
 ---
 
 Notes:
     v2:
-    - new patch in series, was not present in v1
+    - Fix dt_binding_check warnings
 
- drivers/clk/at91/sam9x60.c  | 1 +
- drivers/clk/at91/sam9x7.c   | 1 +
- drivers/clk/at91/sama7d65.c | 1 +
- drivers/clk/at91/sama7g5.c  | 1 +
- 4 files changed, 4 insertions(+)
+ .../devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml     | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
-index 58a5b6c4473da..ce0f73125e87c 100644
---- a/drivers/clk/at91/sam9x60.c
-+++ b/drivers/clk/at91/sam9x60.c
-@@ -144,6 +144,7 @@ static const struct {
- 	{ .n = "isi_clk",    .id = 43, },
- 	{ .n = "pioD_clk",   .id = 44, },
- 	{ .n = "tcb1_clk",   .id = 45, },
-+	{ .n = "otpc_clk",   .id = 46, },
- 	{ .n = "dbgu_clk",   .id = 47, },
- 	/*
- 	 * mpddr_clk feeds DDR controller and is enabled by bootloader thus we
-diff --git a/drivers/clk/at91/sam9x7.c b/drivers/clk/at91/sam9x7.c
-index 8a2955d1f67c6..7278b9d15d0cf 100644
---- a/drivers/clk/at91/sam9x7.c
-+++ b/drivers/clk/at91/sam9x7.c
-@@ -402,6 +402,7 @@ static const struct {
- 	{ .n = "isi_clk",	.id = 43, },
- 	{ .n = "pioD_clk",	.id = 44, },
- 	{ .n = "tcb1_clk",	.id = 45, },
-+	{ .n = "otpc_clk",	.id = 46, },
- 	{ .n = "dbgu_clk",	.id = 47, },
- 	/*
- 	 * mpddr_clk feeds DDR controller and is enabled by bootloader thus we
-diff --git a/drivers/clk/at91/sama7d65.c b/drivers/clk/at91/sama7d65.c
-index eaddb154c4381..19613e587d5b9 100644
---- a/drivers/clk/at91/sama7d65.c
-+++ b/drivers/clk/at91/sama7d65.c
-@@ -637,6 +637,7 @@ static struct {
- 	{ .n = "mcan2_clk",	.p = PCK_PARENT_HW_MCK5, .id = 60, .r = { .max = 200000000, }, },
- 	{ .n = "mcan3_clk",	.p = PCK_PARENT_HW_MCK5, .id = 61, .r = { .max = 200000000, }, },
- 	{ .n = "mcan4_clk",	.p = PCK_PARENT_HW_MCK5, .id = 62, .r = { .max = 200000000, }, },
-+	{ .n = "otpc_clk",	.p = PCK_PARENT_HW_MCK0, .id = 63, },
- 	{ .n = "pdmc0_clk",	.p = PCK_PARENT_HW_MCK9, .id = 64, .r = { .max = 200000000, }, },
- 	{ .n = "pdmc1_clk",	.p = PCK_PARENT_HW_MCK9, .id = 65, .r = { .max = 200000000, }, },
- 	{ .n = "pit64b0_clk",	.p = PCK_PARENT_HW_MCK7, .id = 66, },
-diff --git a/drivers/clk/at91/sama7g5.c b/drivers/clk/at91/sama7g5.c
-index e6d5739371a76..5147d8f34a3be 100644
---- a/drivers/clk/at91/sama7g5.c
-+++ b/drivers/clk/at91/sama7g5.c
-@@ -502,6 +502,7 @@ static struct {
- 	{ .n = "mcan3_clk",	.p = PCK_PARENT_HW_MCK1, .id = 64, .r = { .max = 200000000, }, },
- 	{ .n = "mcan4_clk",	.p = PCK_PARENT_HW_MCK1, .id = 65, .r = { .max = 200000000, }, },
- 	{ .n = "mcan5_clk",	.p = PCK_PARENT_HW_MCK1, .id = 66, .r = { .max = 200000000, }, },
-+	{ .n = "otpc_clk",	.p = PCK_PARENT_HW_MCK0, .id = 67, },
- 	{ .n = "pdmc0_clk",	.p = PCK_PARENT_HW_MCK1, .id = 68, .r = { .max = 200000000, }, },
- 	{ .n = "pdmc1_clk",	.p = PCK_PARENT_HW_MCK1, .id = 69, .r = { .max = 200000000, }, },
- 	{ .n = "pit64b0_clk",	.p = PCK_PARENT_HW_MCK1, .id = 70, },
+diff --git a/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml b/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml
+index cc25f2927682e..9a7aaf64eef32 100644
+--- a/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml
++++ b/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml
+@@ -21,7 +21,9 @@ allOf:
+ properties:
+   compatible:
+     items:
+-      - const: microchip,sama7g5-otpc
++      - enum:
++          - microchip,sam9x60-otpc
++          - microchip,sama7g5-otpc
+       - const: syscon
+ 
+   reg:
 -- 
 2.39.5
 
