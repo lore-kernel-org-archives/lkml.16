@@ -1,128 +1,112 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9FD25B672
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C623925B66E
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739210900; cv=none; b=KTejPJXS3ySj7VqZfBkA60jImTi30oCVem1wslVzU5X7IhHKgr2qrQDZazYhmnCJ6PVw5hJ7ETXJZM0Jkc6e0xYKpqNg2kuevY0TBXqtYuwUiyWLI0uyH+Y8Ga0Wg+IHaVikGuh2P226KNVMRCYR2waInRodxEy2hY22oHJUHt8=
+	t=1739210911; cv=none; b=bm6SKVt1FOAnrjv8kePD9wz5IU3wzVPAt8ETW9kZI8/w3+0/dYMQiEhNpytMeW5bbUMfuecQ+OxNa81Zpiad1QdaskWYlDXDBlmuJJ5ktgItJNGQs0z5I88XBzn3itV5A3kwhMbrem69PN/aXxufh0dTMqdQEWcrA5IDsBucWZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739210900; c=relaxed/simple;
-	bh=2TtPvP50kSHzT7tkM6+GtK/X7cM/bySGkYO5MxVxTao=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ESVHPq0QNMiglSUQPoS/75vjiehJVLuPbHo7lgZQRdINBDXW3wkY+0QKYQi97bJOj2JA4xE2ZOXmDXM7T3hW8Frmqn/cjX8Qahqx6jGrMyoeSbQthBAzBZCSKRmuSJ9Ej2Dw/JzY1zA/aKUdT/3oniyX6JVP9h07Kbd26mW8Eak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2D4oJlIt; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739210911; c=relaxed/simple;
+	bh=OizxFAd8Ml7FWVe9/a0dRnpl/BRHIHyYnN/mYC7JJRg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BQG/BJ4GmR49ZUeudZ38hPXkNDbvfDV14+6ZTZwySNBneKDa1LVMPd2aOecaUuuoghe4yGUJ3T5/9Tt0WPF/pCJa77sNNZvI8nEI7jmwCALIyugyvYgoHbUed/e+gosSeJlUd29FA9xblZ+d6N+Npaynism5JLW2VecKBDmk7jU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Rq7q2rZT; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2D4oJlIt"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-544043a21eeso129e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:08:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739210897; x=1739815697; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dY81El80qf9jAQEoVg2pi4Od5P6ae28aqttIokpPNQA=;
-        b=2D4oJlIt9JRMcFbY44sU4IwUsLMrCTgOrRlYs0diSktmU6+1LB6jluSBvapUvgnwsx
-         8opV0GJK5Nn/LZaQOwZXYNz1HQ0N9Tlj6ZOTgry7NNYl7QxBwTxTwoE4dNC8sY5frFqn
-         +6NyVnvZ0drUfIDGJhr2GCHasSeCuVm9Uqajhq+j7cfGEXNbbdfWnZYe6ZJAppALetV1
-         gaTbhL6Y5hYsvT0KddD4C0pimU38uD+RXQj3W5wIye7GWRuEFskgsob9DQlQJy5H7Eij
-         sKQairq1i3sWj9Gf9GTnyinNVzYMNdomOVUwdmaQGJw8J6p9d4odIq8OmcOW3doJGg/a
-         hfZQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Rq7q2rZT"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AHsPCB006184
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:08:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	aVEc4MQ6CdO3X005rNysHQSMC6MxwNXf4vRrEItGde0=; b=Rq7q2rZT7t7BdYko
+	JuUD8+Sw+Aqyry2pdzAPeAWj5QkByFsGln77OP1g7dXHuBO43xUKzZnoj+yNEXC2
+	XMoKO9sJDjclozaeZVqP0qdPIWljYQF5WGTGa3NvnxvV/brigMJFaoOITFSNaZx7
+	K/0J7037cxceIyWtphGFNVe83nQcYgOhlXgBplA9rqYsq9RooCYXrxW1e5mCIpIl
+	EdS0jRD0pWhOjO8rbcZ/AXJ4jooTUHLJ1TBV3jN7ZewekY7DSVzBXu58ioyMmI7B
+	MlSO0UGzhDhIbY4xnhCmXCwK3q5bWN6nrdOU+kIETM1zxM/lCgoeYeFrhbUqb5Xl
+	oWOG8Q==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qe5msj48-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:08:27 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4718adef552so2588451cf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:08:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739210897; x=1739815697;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dY81El80qf9jAQEoVg2pi4Od5P6ae28aqttIokpPNQA=;
-        b=QPcehukI0NNt5ao5RyMhMLt7y5zRXwdH2+AGjCCwgQmP9SIzDhq69OpurQ5HliwBrR
-         PClQCg+aFTE4dq+iHIbrhxE95Uo0c5dU62V96oFBZGFqx6mi+IXM/rHXkcBQ3sjGofbp
-         J+aI4SbPkBz5XDRRm3gj6NBuBy33PHp0wgX3xzzcbY0xbR+CuwgV2JKnR0OJtnhv37kR
-         XB+gxfCL3lbhGJbMOJXzeh4J7fHNCANf76OTAIo94p7jPPHLnzmHw0Ve7bRvuv3klKaC
-         dnrGxRrckWRTB2gxKwmhI9TBdaHdJbiVtz3530N9MnPTarA/2OaJHz5LzJPaZ2eEd2I5
-         UW5g==
-X-Forwarded-Encrypted: i=1; AJvYcCUAMz7Ela0iGi5goIAN+wYH+h5s+WBB13Upc3ubjQcPePIlvAmoTyD1adSMXG1DSqh8LQUpErMRnfiD6eE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxecY6qvLAnPTA+Yi/7ww22hrtjyuDKdIkxDcBRyHxKBrJ93kxn
-	myaAdADzlZzfTRf9oKXxmlN5DudtN5gINeV9Ml/h/RmCT/vCs6Jfo4lxOkuZooH9u6EHWnQacbI
-	PY/QkVNIPd90uXwiZfh1Ol9aF4YnFjCB5x3lV
-X-Gm-Gg: ASbGncswGYn/N//T5xJQNahI7HZY53gu1TD7P1PcOrO04f8/BPhd7CQTSC2MHrFzwYl
-	LAgMviSd8T25LAY4rVRtLePcVaO7jVYeA/tcfshacPorQzoUyJ7XeTkCw+Vg/tFrxapGzoz6Gvq
-	pGq+dCdMSC3WNOj8AuySnA2KawTEAJ/Q==
-X-Google-Smtp-Source: AGHT+IEQ0ef+m0AldXUWYxdphrWb1Y+cg1qk04ttfFfh49scXV0ClP0LU7xJYgLk7R8kmb1GlW+DJtnurcrGSpm+cjQ=
-X-Received: by 2002:a05:6512:b9b:b0:543:e496:81d2 with SMTP id
- 2adb3069b0e04-545045437f8mr414613e87.4.1739210896652; Mon, 10 Feb 2025
- 10:08:16 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739210907; x=1739815707;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aVEc4MQ6CdO3X005rNysHQSMC6MxwNXf4vRrEItGde0=;
+        b=J4gYebhwK41SoLFlWn0Ca9KwzXpJFKntumwnDhVgr+lkE7A3qKZq6DtU1f1izw+80s
+         4eFdiqNIZ34t/ZfnFIeAyXDre3S+eRgxxlvI8h6s41MjnoZZfBYlgUe+Fq+E8o1PP6sk
+         rDaGZbninlQZgD1GSSKWlpRz1BG3nCysEG4VvErJiuK9WKzpGZpOUcXadpWzXs2xGPzK
+         wZrNPMHy/yYDxS0tlnM5Lcg9BzYvZ8CKGbsrCYJOMmXPGizRHEBKiLa3SUnLu0Cv3Sqo
+         B8V78tguAqbjelk4QYCzZdUAyxdv/qn9MImakfLR+uY36wdmU/dtiuPt1hcFMqmu0gR+
+         ea/w==
+X-Forwarded-Encrypted: i=1; AJvYcCV5YiesFAuvsL1vxsVDR+sF7THotMpY1epivQvPGCIHEN/jdEwUnhyqTYhlmOwRZNYL5LqHZUAXPT22bmA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJ6Ys8gKs+qlR4kzrnqPOWBW+KENbPNn0TvgBt+pB4uo+1PByH
+	UQw8TgzrY+h5TvOfgJQKTcAb4LiwZU2CSy+gmzgWXJSfLoiNbtiOscw9tSkrO1VHBUdQgXYsor0
+	TFDJRnnxIyTHRepvmysw7radDXxNK819GXO+SJSZmgcaMRUxRnnThvnZkJoMHgdU=
+X-Gm-Gg: ASbGncsPwXcXJ0iXXmkvCvoW5VaZZaaIdBVLTCyViyRqF3olu2ijIvphr8Hn6A0Ebzm
+	w7iKCRKgQYYCmRzd/4Em9d5GXdH+pHWi3EwBME+niUBy8vVjrT6cVjQ2HXn6pVAS4RsCUskJtb2
+	B2YCfrrhveVG9s41WyyABrDGdksgQfyE66Q09k0F6hcRrcnmfIwjWzka/MSeciDNCiv5144+7vy
+	zfKlJsSZgxf4g7T6bqbStoa4RKeJSlDWv1JQLA6HDGA0aC5WG7uYKaTwacz6yn1aTc4rm5yXYzQ
+	xZmVZKTj0+e5V2V/AULb77372kTTa/NEcnpON2sjkUgreJfUYTShNAIKMY4=
+X-Received: by 2002:a05:622a:149:b0:462:fb51:7801 with SMTP id d75a77b69052e-47167a27b02mr81244401cf.8.1739210906692;
+        Mon, 10 Feb 2025 10:08:26 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEdrknB8s0TEZ6l6OxgfCx+ee/ErwU07AWVUGCwldaYl2UrQYfRoVCq+VbLfV+XOerh80eF2Q==
+X-Received: by 2002:a05:622a:149:b0:462:fb51:7801 with SMTP id d75a77b69052e-47167a27b02mr81244181cf.8.1739210906224;
+        Mon, 10 Feb 2025 10:08:26 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7b43ee08asm374138066b.88.2025.02.10.10.08.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 10:08:25 -0800 (PST)
+Message-ID: <a37ae05a-5c9b-4c48-a321-08c26ee3205d@oss.qualcomm.com>
+Date: Mon, 10 Feb 2025 19:08:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206222714.1079059-1-vannapurve@google.com>
- <20250206222714.1079059-2-vannapurve@google.com> <Z6YlTG3QV_Pv6nRo@google.com>
-In-Reply-To: <Z6YlTG3QV_Pv6nRo@google.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Mon, 10 Feb 2025 10:08:03 -0800
-X-Gm-Features: AWEUYZlh8FYiLO34fdk4pxnYTBPzAVvxgBUi3fK_ZQnbfSispqIxfJvp5sRmnEU
-Message-ID: <CAGtprH8A8zLLPVUdRjy179Rn=MtwzSUk8UDbR+XPws2+J4h-hw@mail.gmail.com>
-Subject: Re: [PATCH V3 2/2] x86/tdx: Emit warning if IRQs are enabled during
- HLT #VE handling
-To: Sean Christopherson <seanjc@google.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, 
-	erdemaktas@google.com, ackerleytng@google.com, jxgao@google.com, 
-	sagis@google.com, oupton@google.com, pgonda@google.com, kirill@shutemov.name, 
-	dave.hansen@linux.intel.com, linux-coco@lists.linux.dev, 
-	chao.p.peng@linux.intel.com, isaku.yamahata@gmail.com, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 5/5] arm64: dts: qcom: ipq6018: add LDOA2 regulator
+To: Chukun Pan <amadeus@jmu.edu.cn>, Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konradybcio@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Robert Marko <robimarko@gmail.com>
+References: <20250210070122.208842-1-amadeus@jmu.edu.cn>
+ <20250210070122.208842-6-amadeus@jmu.edu.cn>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250210070122.208842-6-amadeus@jmu.edu.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: 6T07x7mqEozrjSYmKYmSgDnC9zocFMQ1
+X-Proofpoint-ORIG-GUID: 6T07x7mqEozrjSYmKYmSgDnC9zocFMQ1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_09,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 clxscore=1015 suspectscore=0 mlxscore=0
+ lowpriorityscore=0 phishscore=0 impostorscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=818 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2502100147
 
-On Fri, Feb 7, 2025 at 7:22=E2=80=AFAM Sean Christopherson <seanjc@google.c=
-om> wrote:
->
-> On Thu, Feb 06, 2025, Vishal Annapurve wrote:
-> ...
-> > ---
-> >  arch/x86/coco/tdx/tdx.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-> > index 5e68758666a4..ed6738ea225c 100644
-> > --- a/arch/x86/coco/tdx/tdx.c
-> > +++ b/arch/x86/coco/tdx/tdx.c
-> > @@ -393,6 +393,11 @@ static int handle_halt(struct ve_info *ve)
-> >  {
-> >       const bool irq_disabled =3D irqs_disabled();
-> >
-> > +     if (!irq_disabled) {
->
-> Wrap the check with WARN_ONCE(), doing so adds an unlikely to the <drum r=
-oll>
-> unlikely scenario.
->
-> > +             WARN_ONCE(1, "HLT instruction emulation unsafe with irqs =
-enabled\n");
->
-> Newline is redundant, the WARN does that for you.  IMO, it's also worth a=
-dding
-> a comment, because this is like the fifth time "safe halt" has come up in=
- the
-> context of TDX.
->
-> E.g.
->
->         /*
->          * HLT with IRQs enabled is unsafe, as an IRQ that is intended to=
- be a
->          * wake event may be consumed before requesting HLT emulation, le=
-aving
->          * the vCPU blocking indefinitely.
->          */
->         if (WARN_ONCE(!irq_disabled, "HLT emulation with IRQs enabled"))
->                 return -EIO;
+On 10.02.2025 8:01 AM, Chukun Pan wrote:
+> Add LDOA2 regulator from MP5496 to support SDCC voltage scaling.
+> 
+> Suggested-by: Robert Marko <robimarko@gmail.com>
+> Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+> ---
 
-Ack, will integrate this feedback in v4.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Thanks,
-Vishal
+Konrad
