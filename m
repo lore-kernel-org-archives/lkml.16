@@ -1,48 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BED625757;
-	Mon, 10 Feb 2025 17:01:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300A5256C8E
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:02:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739206901; cv=none; b=OUu82R86EBY1qs+uuPALTvQyFOv2iFS+eoJfRUk89q8HPOhA8vsQHlDJa3hhlg0rXXtdgTCea0QyMfjT1ZEuOT4HdCe/7HcQar2B49Rox/Re46njYoSh5Fsa9pfvsawyiC+hO46sy4EASWPwEaawaLrBWwsoZ1kuNGDdZ4ADDFo=
+	t=1739206952; cv=none; b=ebWeWvGPZ1ch7kCtJWaBUd+pqk9CPpZ25UhjIXXMj3kQX17CZNPgBqPIFVssEI5z58C4W+PVdzd5d/RdU1t9g7ticM6dU6oHvfoWSTbAbERrEPE4Wlv/3j8AsutEEAkpJARP+IakMGY+9jv5MgM/PH/MNX5+pv8UtW7vTyJhc1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739206901; c=relaxed/simple;
-	bh=KbtE9EGAZOZs06gDPHy5xxqRxQd3wXKf75qbqvSeJg8=;
+	s=arc-20240116; t=1739206952; c=relaxed/simple;
+	bh=RJsu+NzGjgza63pPkNq07k5cj7iV4iMEha5DW1EYrd8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PYByYfRiMVwcyFA0XX8CRwwim/qnX2091huLaW6aLgx0OpV69ikC2F+Hj8CXVtIJ7+8EQrgg1HdE4WSD1w/46jiRvc8MKId3MmYx3vHRaE/GCifkoBKl2hRqxc1GZj8aw8KbCivBjfBggogjDAtAQY8aJP9ROwXhQRsXYtRYqwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h6mdeN44; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lhya+0uE1QHSYysQDu6KwKyvzEBnhuHmTTBB0nZJLrtm9uYKJvavMEbwRgAh53ZV01eb00dXMyHPuG9fB1zmd3eB+y+IFRNPR5opYyeeTVsPKfi2EjXr8ZiS7XlDh5nqB06nLJHVFw82ZiZtUIR1lqv0Qdh9/oE+pyYR7Wo9sd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jem1+QmO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h6mdeN44"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2CE1C4CED1;
-	Mon, 10 Feb 2025 17:01:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jem1+QmO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29DD3C4CED1;
+	Mon, 10 Feb 2025 17:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739206900;
-	bh=KbtE9EGAZOZs06gDPHy5xxqRxQd3wXKf75qbqvSeJg8=;
+	s=k20201202; t=1739206951;
+	bh=RJsu+NzGjgza63pPkNq07k5cj7iV4iMEha5DW1EYrd8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h6mdeN44UWUPZmfVwusQDTyxuxC1AMXDReHetVO2TX3CJ7BjXJOMX69OltnXDCv9q
-	 rVjQ8z9jJaiBDmXkgNYzRGE4at5DouFoGSxriYu/t0Wo12DlCSBCbgWsyTq1f8jyJ2
-	 1j5stCtbPxgUec1p8InSTEkJhW3ItmgqOUYZ9nL9mOGQPWdGeSYYF4oFGTnTXdbRTC
-	 +uiwAVS8ylniZNSTpog/9LrVzSmXu0tB0+AjxKOtAHWnS/nfMkQOSKi2iSEOgH2XAF
-	 m9Pg3pzWbh47XAJUDTBluZ+gYdbLLUoF44ppJKmAg93p1ILCjswQbxcOZmaiKZ58R0
-	 L9mjsDEWtaJZw==
-Date: Mon, 10 Feb 2025 17:01:36 +0000
-From: Lee Jones <lee@kernel.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>
-Subject: Re: (subset) [PATCH v11 3/3] leds: Add LED1202 I2C driver
-Message-ID: <20250210170136.GD1868108@google.com>
-References: <20241218183401.41687-1-vicentiu.galanopulo@remote-tech.co.uk>
- <20241218183401.41687-4-vicentiu.galanopulo@remote-tech.co.uk>
- <173641864745.2570436.6359371577917683428.b4-ty@kernel.org>
- <CAMuHMdXNOEXuEADeSGGHw88Tse+QjSkknKYGH-kk02jSpiuNiQ@mail.gmail.com>
- <20250210165923.GC1868108@google.com>
+	b=jem1+QmOrCBuHUGzj5Vq/DIi1PNfI7Ei3b/HRJbwzUj+eXnOKCKxX0JedNDDgazW3
+	 uCdbTSFulhRoPPaIgRrnCg5jDp70Irgja9jDdHrBrNAGTBPAvaD8j9xEAyHU3vcICM
+	 kAqI4Kgp+nC3JMTVKdNYknpSpFBQysbkqHx7Cpb3SWh7mh+UP4NntbXVH2oKtm3V96
+	 svLMm1sF4oUGTXGM8s9DTm/yzyKqeLbULQlRQLQ5tX5lINTn0qyJX6E+t9qM+gUnRS
+	 yWkAhxfhLK1q3YBvdvK6TQd/cL+9yKeaoSK3WNz6/2eyHr8Px5KU/x9sfuCSvs8RvV
+	 WgkuisRYHAkzg==
+Date: Mon, 10 Feb 2025 22:32:28 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Pei Xiao <xiaopei01@kylinos.cn>
+Cc: xiaopeitux@foxmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V5] phy: freescale: fsl-samsung-hdmi: fix build error in
+ fsl_samsung_hdmi_phy_configure_pll_lock_det
+Message-ID: <Z6oxJEvABw780+DZ@vaman>
+References: <tencent_195F1119DC8F547C905D5ED127D173EFAE08@qq.com>
+ <CAHCN7xL7eMV2f04nURp3jCCmNZ0GSTY=uaOwoiht38AC4Oz0EQ@mail.gmail.com>
+ <476dace4-92fb-4d92-a342-cffd6f77b8f1@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,54 +45,47 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250210165923.GC1868108@google.com>
+In-Reply-To: <476dace4-92fb-4d92-a342-cffd6f77b8f1@kylinos.cn>
 
-On Mon, 10 Feb 2025, Lee Jones wrote:
-
-> On Tue, 21 Jan 2025, Geert Uytterhoeven wrote:
+On 17-01-25, 10:15, Pei Xiao wrote:
 > 
-> > Hi Lee,
-> > 
-> > On Thu, Jan 9, 2025 at 11:31 AM Lee Jones <lee@kernel.org> wrote:
-> > > On Wed, 18 Dec 2024 18:33:59 +0000, Vicentiu Galanopulo wrote:
-> > > > The output current can be adjusted separately for each channel by 8-bit
-> > > > analog (current sink input) and 12-bit digital (PWM) dimming control. The
-> > > > LED1202 implements 12 low-side current generators with independent dimming
-> > > > control.
-> > > > Internal volatile memory allows the user to store up to 8 different patterns,
-> > > > each pattern is a particular output configuration in terms of PWM
-> > > > duty-cycle (on 4096 steps). Analog dimming (on 256 steps) is per channel but
-> > > > common to all patterns. Each device tree LED node will have a corresponding
-> > > > entry in /sys/class/leds with the label name. The brightness property
-> > > > corresponds to the per channel analog dimming, while the patterns[1-8] to the
-> > > > PWM dimming control.
-> > > >
-> > > > [...]
-> > >
-> > > Applied, thanks!
-> > >
-> > > [3/3] leds: Add LED1202 I2C driver
-> > >       commit: 939757aafeb9c266dda37657ee5f7a73ffd35ae2
-> > 
-> > You also have commit 259230378c65ebb6 ("leds: Add LED1202 I2C driver")
-> > in mfd/for-mfd-next, which dropped the change to drivers/leds/Makefile,
-> > and changed the Link:-tag to point to the older version v10?
-> 
-> Interesting.  Not sure I noticed and if I did, I must have fixed it.
-> 
-> This is the commit that made it in:
-> 
->   939757aafeb9 ("leds: Add LED1202 I2C driver")
+> 在 2025/1/17 09:59, Adam Ford 写道:
+> > On Mon, Jan 13, 2025 at 2:41 AM <xiaopeitux@foxmail.com> wrote:
+> >> From: Pei Xiao <xiaopei01@kylinos.cn>
+> >>
+> >> FIELD_PREP() checks that a value fits into the available bitfield,
+> >> but the index div equals to 4,is out of range.
+> >>
+> >> which gcc complains about:
+> >> In function ‘fsl_samsung_hdmi_phy_configure_pll_lock_det’,
+> >> inlined from ‘fsl_samsung_hdmi_phy_configure’ at
+> >> drivers/phy/freescale/phy-fsl-samsung-hdmi.c :470:2:
+> >> ././include/linux/compiler_types.h:542:38: error: call to ‘__compiletime_assert_538’
+> >> declared with attribute error: FIELD_PREP: value too large for the field
+> >>   542 |  _compiletime_assert(condition, msg, __compiletime_assert_,
+> >> __COUNTER__)
+> >>       |                                      ^
+> >> ././include/linux/compiler_types.h:523:4: note: in definition of
+> >> macro ‘__compiletime_assert’ 523 |    prefix ## suffix();
+> >>       |    ^~~~~~
+> >> ././include/linux/compiler_types.h:542:2: note: in expansion of macro
+> >> ‘_compiletime_assert’
+> >>   542 |  _compiletime_assert(condition, msg, __compiletime_assert_,
+> >>  __COUNTER__)
+> >>
+> >> REG12_CK_DIV_MASK only two bit, limit div to range 0~3,
+> >> so build error will fix.
+> >>
+> > LGTM.
+> >
+> > Reviewed-by:  Adam Ford <aford173@gmail.com>
+> loop Vkoul for email address was written incorrectly.
 
-Scratch that - looks like:
+Thanks for looping in!
 
-  259230378c65 ("leds: Add LED1202 I2C driver")
-
-... also made it in.  However the Makefile line survived:
-
-  drivers/leds/Makefile:obj-$(CONFIG_LEDS_ST1202)         += leds-st1202.o
-
-Did anything break or is all as expected?
+Change looks good to me. Can you please revise the patch title. A patch
+title should describe the change we are making. Fix build error is not
+an apt title
 
 -- 
-Lee Jones [李琼斯]
+~Vinod
