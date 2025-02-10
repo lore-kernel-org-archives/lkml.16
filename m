@@ -1,248 +1,274 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA201DFE8;
-	Mon, 10 Feb 2025 12:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739190636; cv=fail; b=Gfm6VRxDwgTMe9mligos+pVznR6nYQbNN2jwbOA1e+U8XlKjd64tc3a9kCx8qzW2GViu+s+iMfG7VVKZ0ESsPp1lVgEYrlgvwjqieLejEZkDxc8MhYfN9Cqd3GdrI2FBvKRj48VKL1JN+UQruPc1aGl17RVK01z4Rx+9h/sltBw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739190636; c=relaxed/simple;
-	bh=vay4I4r5sBzS88A25CGpkVEPbMjW8JPsNgSR0s0Qw1A=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=n4CqWwarT2UAKMDi0X9n6SDK3inhEX1rK3upAB3n9T9w24T7poBS2ir6kgKeo+yzp8mNaPx4XvLpYXoNje9LFYA2bgg9xxEWAGnsCo4aBRVIkSAhK6fqIyU2To1CFvZf7aY/u7s1Xy3yb486unY1n32IEzweIQbv10o9by23zYA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gh9VmOPB; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021CB1EF084;
+	Mon, 10 Feb 2025 12:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739190647; cv=none; b=WoJijKaESoUBw50DRZPycalfuHb8tFB2wTjzVJTkVV26JVIIjbl98XwnaoieflBx9Yj/DltOAKOS77wk32lYIN15UrOx/ZTcMrWHDG/bz0Rqg2R69oO3rJCZuIff82z3oiS7NM2C6nD+C1ofO7kz6FZZATs5CtmOJGRD6wYJ9OE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739190647; c=relaxed/simple;
+	bh=TbyqhjqLFSMkkL2OvZYpbagA5+Vaa48gsL5qnhq+CrQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Bi5INGAg8szIk+ws3B9JvEMMrCkuvBjCuK+1yd2dCn45NIWJEjri9IxJxk/d55N3xI4JDkyZsTyDFFEL8htO1VYiUy8/SYrAxBxoZTwQtUp9VWWtUPqyTZ6ChSOunjrOWJ7QXVgLb+yl2n24kmDPt9nTrdvlZ3OGpouRExkVz8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hXOluAc2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gh9VmOPB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739190635; x=1770726635;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=vay4I4r5sBzS88A25CGpkVEPbMjW8JPsNgSR0s0Qw1A=;
-  b=gh9VmOPBnsmoUGtGDa2m+T1OIiqOf4N/5/p31X6b/MnptzHHmPPy9Ad6
-   vPoYkc0x8w8EWPXyMcFHRX7mmnK1vGmjFe5cvGNoFt6+1TDDYTXqiCKl+
-   oZw44Fnpx4jzpqipXwOZLQ8vrco8hEtVZ5sGGeXQ7s77nBKYKCwzEzIj6
-   0mnm84oAijKFnoNtrFrf6dEJTfwY3wt23dH7lujof6dEpWqAp+u6eUpd5
-   x6J8p8+VQv+CfbsRbxRROawyRAcHvQSRXobhSGwY/wB/T5G1MKw8X11wz
-   V4t6GYbf4w6Cn2gcvXh/F3a7hyu2l7IGGU7fYIHoDeh2fZ3vbP9eaLL3f
-   g==;
-X-CSE-ConnectionGUID: h7naKOiyRIOcuIUlzV07aQ==
-X-CSE-MsgGUID: MnvNDtTYRUOpguCl1U1qJQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="50396345"
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="50396345"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 04:30:33 -0800
-X-CSE-ConnectionGUID: /VqLSAGXTYu+MeOk8i4LQw==
-X-CSE-MsgGUID: G205MvreRimfymfl2UCblQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="112704792"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Feb 2025 04:30:32 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 10 Feb 2025 04:30:32 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Mon, 10 Feb 2025 04:30:32 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.170)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 10 Feb 2025 04:30:31 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=s+cAicYSy978MSnpCGKFhrG1L07xrJn8xZgSdQNZgy7bS/fYgD65s/wgNlNJIokZs7y2WXJ3EgL9n4vBgmWzai7xivNrL/idsSbCAtSvE+Ea/7soO1yMW9bEbfGGuRUTTYyjN8eF4AfSIBVI18YuY1TrH9W6fyzqOQn2x9BXYzjmR+PP8FszbVz6LY3UBlFc9cAdRFRsVDLcOqV3fegQJAdgA7NryxWurRrI7mYsYHzg5MaPN4+ND/bEOf1xR4j0HbIvNcEGFWXTC3hJgLsf274uhbNHTOHwtOeHYB/9SU96JtPq0rGTsun/J/2H15Z76W2htSz/WsYIJKGAl4uIrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vCe+Ihq+g3sGiuHtRCdtCVLnpEFipWWbDguNgIwg0h8=;
- b=l7276yRlFzNfI4Yvl+j636zKJ+TZW62AL7e1WfkovleohGi36zZzEWVq99tF5ltjQdm4LZWQGsRWLVTP14AZ/Jgupx2Iug4axiFAx2A/m77qFGlh/KO7UG2AMlGExcA7JTyAlwVuzzb2yU2v0xg9jA5yxeAL7mRFH68J7IDBmauYFM2ElPt2bRtiwodpaQBlndFJ2bcYmwYYbZtxiXO08VyI2NACAikAHsVbKdPUeeIxIBK08Ah2+80lPD24eCtFwezhgd5J6/yp1jXoSvwiBuVbFVryL8ngFhhBhD1kZk71VNKzQ2Xf4ljG5t3cV4W0RpQK1luWKzf2S+83YKFuow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB6117.namprd11.prod.outlook.com (2603:10b6:8:b3::19) by
- DS0PR11MB6351.namprd11.prod.outlook.com (2603:10b6:8:cc::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8422.14; Mon, 10 Feb 2025 12:30:16 +0000
-Received: from DM4PR11MB6117.namprd11.prod.outlook.com
- ([fe80::d19:56fe:5841:77ca]) by DM4PR11MB6117.namprd11.prod.outlook.com
- ([fe80::d19:56fe:5841:77ca%3]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
- 12:30:16 +0000
-Date: Mon, 10 Feb 2025 13:30:08 +0100
-From: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-CC: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov
-	<ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
-	<john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, "Jose E.
- Marchesi" <jose.marchesi@oracle.com>, Toke
- =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>, Magnus Karlsson
-	<magnus.karlsson@intel.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Jason Baron <jbaron@akamai.com>, Casey Schaufler <casey@schaufler-ca.com>,
-	Nathan Chancellor <nathan@kernel.org>, <bpf@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 2/4] i40e: use generic unrolled_count() macro
-Message-ID: <Z6nxUIK/xApn8B8N@boxer>
-References: <20250206182630.3914318-1-aleksander.lobakin@intel.com>
- <20250206182630.3914318-3-aleksander.lobakin@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250206182630.3914318-3-aleksander.lobakin@intel.com>
-X-ClientProxiedBy: MI1P293CA0006.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:2::16) To DM4PR11MB6117.namprd11.prod.outlook.com
- (2603:10b6:8:b3::19)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hXOluAc2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82EFCC4CED1;
+	Mon, 10 Feb 2025 12:30:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739190646;
+	bh=TbyqhjqLFSMkkL2OvZYpbagA5+Vaa48gsL5qnhq+CrQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hXOluAc2VAteNfZgnnrinqwFQmlcYTcHBqMDHU/FTs+lBHy3uaxofjU83O7L1118d
+	 p0+gMA5AOO4a/A8ag+vgo7lGvQc+EwczdyT18mPnkkV+h/v0EQtpzpLYYUmnUTf1K6
+	 GYbZU1j9t8giI4B4CNrYyUisPg4RUEzgVxBRRhJU=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: linux-kernel@vger.kernel.org,
+	Lyude Paul <lyude@redhat.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Mark Brown <broonie@kernel.org>,
+	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mairacanal@riseup.net>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	linux-usb@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v4 2/9] rust/kernel: Add faux device bindings
+Date: Mon, 10 Feb 2025 13:30:26 +0100
+Message-ID: <2025021026-exert-accent-b4c6@gregkh>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <2025021023-sandstorm-precise-9f5d@gregkh>
+References: <2025021023-sandstorm-precise-9f5d@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB6117:EE_|DS0PR11MB6351:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5068d2dc-9235-459d-b3d2-08dd49ceac65
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?/TPs/8Uv1PGR9NnV5lWiY3WiqCg1yGjXlBt6TmYV9Y3ZyXNEUMOnCjOGkhPA?=
- =?us-ascii?Q?tdBMLDsKZoXIv7PiSYuLyT7w2+MpTGx/5LemRWYB4PT/KYiNg4xLBvWblpYe?=
- =?us-ascii?Q?7oKAnkJ1zShGM0rViP6TnvvnsBgwhY0Rlk/FUXFE+xWxc6CSihFP9/Sg2TbB?=
- =?us-ascii?Q?euFulAl30yzUw+uVTCTHl2W5ihdftTXcPZOAN+3VAZuUrpvjc90IWKefhz9H?=
- =?us-ascii?Q?49lTt3VyoAfnKaAjF5zzvxcYWrHEioPsGu2vp0AC96AbnW4jbPQVSdcskTLg?=
- =?us-ascii?Q?glzs/waBiwrfw2PjlzA3j6e9wBI7GthGMcgVgdOAVj++5xqaabtd5Pr+zglA?=
- =?us-ascii?Q?oXw+AM8y7YgvmVbgSgQJ4dzNk3JHpsCntjwdKHst1K8GF4+v00dtgZadeHOK?=
- =?us-ascii?Q?hafqrFw36ru+nkSa2XXUY+RHrJd2dmcoW2U4woBkExd43Dwem7EhlWfY+bDA?=
- =?us-ascii?Q?jT9iW6JdcU2A+qKFxKkN/rKaYx6LvvAZDWiPRuwwdCPrDy/vRSzIFoudUgfh?=
- =?us-ascii?Q?xTNWtRXI41FEMdoaZXMBUAb4dt889gNiTHNp/HPS1MMJC7UlY5ltMxkeVREI?=
- =?us-ascii?Q?wSKcjggpiFpCFPWILx+xcjyqvOAi6sLEQaoIKaHAEGuCaV6NdbcVEWjBPZcc?=
- =?us-ascii?Q?MMS0spTlLlKW6Pbr6/KG6b4orc8HQAHtsMcpzJ9RXDy0ljVuMhyvrluFAlVz?=
- =?us-ascii?Q?uRM0XSlrcRiXPMYn8CrQJjzb3TAT5SYRFizt68QxoiVGB4SN1npU8PqzALle?=
- =?us-ascii?Q?BIw/YlJ3gTiVSNlEXAYID9WJQsepe+EIYEe8SNjp7nSZ9vCbUqG8ZPUOZz3H?=
- =?us-ascii?Q?VtK681yg4Nb6HdMYZRFE6hlz275RIBKZWWbasXqaaBWBucLHG8N7ZodZ2o/I?=
- =?us-ascii?Q?E559qDlgofeCddfFkino5ichAlaylW3LpqjmFCU7r9lcDlqpSDlDzoTmsorp?=
- =?us-ascii?Q?8/GFX45FRdYlSyk0mXHjFlpKYGjCTO+zcqLOeTzjCKv5B7yoh8pZkMOWDu2a?=
- =?us-ascii?Q?N4/A2t8YmIYV6fMYaUCU2vo93xOi73cOPUAGVDfbFuC1dKqy9T5Jd3y/sHJJ?=
- =?us-ascii?Q?YBT4JJA2UazrPQp9Ar5MoSxxA+MDOLDGivEJn3MpTMNkyMsyTQb+nvc7ewcA?=
- =?us-ascii?Q?3OSa9SBg6sACEHo+A05ZjHzz0jSaPtnLdOMyK/CQNvryRwGE4aWcgyOw396V?=
- =?us-ascii?Q?C9tGSVCefL5EKGWNyRd7Fb9ivtXUvcjVNHLuBKR0vO2HgXIs4LuEzx/zHufe?=
- =?us-ascii?Q?xr6DvYfWuMQAnbZpqHVPWcLsm6kpf0OiezXm1O9iwRuBnmyiq3QAzlhoJMtq?=
- =?us-ascii?Q?z9WVYjlr2zx9ZdUasmcC5GFzHObTbi7me9kAXPLLqX8D1jZd/NEEfJOh0HOi?=
- =?us-ascii?Q?3D//Ik95ELByFripK0KBgTD+5Mi7?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6117.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?zrhcxR1Ow2I15XxT57e9VttnrD5EOzrVlOJicWrZjV0lcZn2nYCDytKmI62t?=
- =?us-ascii?Q?S62A2JyU8Q5RXctovZeaCYg5CkvrRoB0cHVMdUf9P6lXg2aZBemJJoJgiNmt?=
- =?us-ascii?Q?U88OgUvwBCOEqTZrwqn0thJNn1JTs3cyFXzLgUeuJMp5ugAWi0BtWUkn87F/?=
- =?us-ascii?Q?3SHzTTRQMUocQL/vEAwX01lJ4FIogt5hv33Q/jdpR6mttWF9gmIG/RtbppXD?=
- =?us-ascii?Q?Wuhuwk4Cv6sK/qG6EIdIAnWGowOXqqTERxKeLBbdVU7NNSIi1Q+CmLxdm1T5?=
- =?us-ascii?Q?ix9PdrxhGpI6+UXfPmAWEHejqD3T48hCTQO1HOM3NESn1KtiBxL9IlzDeP29?=
- =?us-ascii?Q?5P/fXZMrTsbNox67arsIfenOLrPRFI+3Vw14MInNRPCcMlE8L4GhW4/Qk7iC?=
- =?us-ascii?Q?eXUTmd6YvnCK2rkjhyXcQwtJSYj23REsk17x7cWCSPRIsOuL4cyqZQfpiive?=
- =?us-ascii?Q?bcnwRkdihE93DeCRk1jSMc3rZXLJIC76OO4ng20LYcwdS5mjEEuGebuCld1X?=
- =?us-ascii?Q?+apkEEDKwQQOZk1C8IqGjUJLdKNsQkOp9ppTyvaYVYk6okFiyQ8JdqTMm3cS?=
- =?us-ascii?Q?246nbuvnu2o/e83zrKWtzKEj8m6HZ+bpba9QBkB9ZCc8mZ3nHFAYmY1GWGaQ?=
- =?us-ascii?Q?2pI6gM8yMpWfuyjzODJfESJQybomY7SU790OqKCqlSZroobPx0ESu+jTH+bT?=
- =?us-ascii?Q?8He0cnx3ARL6ePIzf50iPMNgITX88I8GOZM9gosKysRQ/kgE7GDf566pRVbe?=
- =?us-ascii?Q?E3zcX9PszFQ3PykqpkkhgcQXFTN2NHmltLuc5qGZcngLQ/MUrw2KMEQci+t0?=
- =?us-ascii?Q?/fq2Vc2RYC200lDprlplI2wT5T4D+BJEOBGmXAJQal6/UBgSIK8Ywnkp4W1i?=
- =?us-ascii?Q?poqYBkNlNG+VVYgLQ06RJr8qddsgKVfluNT6BnhGg0tTyJoEa0G5+q/0SWkL?=
- =?us-ascii?Q?SSzA9oxOmT4wgZvYpen/v+VORH2NuSbR2XSMRM3ZKuKmmF0Q+FSYr5/6MAqJ?=
- =?us-ascii?Q?JAB9S19v3vnclpk7hID07M2got98tLSDd/pwAgQJ9jV2UqbatsEDwPep+vs7?=
- =?us-ascii?Q?B7V56X+f0h5CUh+FWJpqW8hWGit0UbYMiRJ9JiN13zTwKvwedfKyQUO7LazJ?=
- =?us-ascii?Q?pvJhtECVBAvACzZsEx7Mn2z6aML5d89ism2+1GM2A4dr1tMIQcNKe0xzk88P?=
- =?us-ascii?Q?ijmUalUl4H+8+ZAdCbtwDknKqS5QSlIZvry+2QQeRH6B2L84ocOE9W7CwOSI?=
- =?us-ascii?Q?JrELfGDnG03j93K5qHY4FnWQXgz7/HfXF1xrC4at9oggZFgRTGUBx9LxwPe8?=
- =?us-ascii?Q?tiFu1bJ11FkgoYFLKuKXc4nUssct2utUflB6LNaYjA/Ca3nhd8iYcrwYi/qj?=
- =?us-ascii?Q?MHJt1O49kpDUedENZEpsuI9xIke1JchazJ3Zh/OnoevWRhpXHrrFhMeX9BIC?=
- =?us-ascii?Q?UKhmO5YLPTJCXCcRbctDV4wGuNT/GVBLy1q61JCcc/tzy4+5F2b0vpS2RIsk?=
- =?us-ascii?Q?JRwlG/TSkkpiTfxLdCUXIzYdRcWnezAtKyc+BCP7WJt4MH7C0StxV/KnRLKz?=
- =?us-ascii?Q?L+M0pKSK9Rkm2jPmJWqABYm69A6wjpoVY1Jre+Ru1vwMj0eIyVU7p0d5o3Bl?=
- =?us-ascii?Q?Vg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5068d2dc-9235-459d-b3d2-08dd49ceac65
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6117.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 12:30:16.1932
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +vyafkLDPayLdgFr4+Fntekc8xMc2sOUX8RRhi4n8dSY11V2RbN3/zVPZHf9YlEP62Tug6IPqKCmED+8m4wFTSrhE9x0C3CnwKS9OCLSRCQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6351
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7374; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=IHnp0Ph4eRqCEOwqPBSB6DS+nWbvVwV3QnDR4rv7WoA=; b=owGbwMvMwCRo6H6F97bub03G02pJDOkrPyZ9K0y7+cv2F18+o7TJDavSRXtPC25Okjj+3M3nY KM4R5VERywLgyATg6yYIsuXbTxH91ccUvQytD0NM4eVCWQIAxenAExkmh3DHI6kyiNnWLj3qh7d rbPwyj2lrMj+yQwLzgX5Ppp+1TP31t62BWI+69v55U5tAAA=
+X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 06, 2025 at 07:26:27PM +0100, Alexander Lobakin wrote:
-> i40e, as well as ice, has a custom loop unrolling macro for unrolling
-> Tx descriptors filling on XSk xmit.
-> Replace i40e defs with generic unrolled_count(), which is also more
-> convenient as it allows passing defines as its argument, not hardcoded
-> values, while the loop declaration will still be a usual for-loop.
-> 
-> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+From: Lyude Paul <lyude@redhat.com>
 
-Acked-by: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+This introduces a module for working with faux devices in rust, along with
+adding sample code to show how the API is used. Unlike other types of
+devices, we don't provide any hooks for device probe/removal - since these
+are optional for the faux API and are unnecessary in rust.
 
-> ---
->  drivers/net/ethernet/intel/i40e/i40e_xsk.h | 10 +---------
->  drivers/net/ethernet/intel/i40e/i40e_xsk.c |  4 +++-
->  2 files changed, 4 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/i40e/i40e_xsk.h b/drivers/net/ethernet/intel/i40e/i40e_xsk.h
-> index ef156fad52f2..dd16351a7af8 100644
-> --- a/drivers/net/ethernet/intel/i40e/i40e_xsk.h
-> +++ b/drivers/net/ethernet/intel/i40e/i40e_xsk.h
-> @@ -6,7 +6,7 @@
->  
->  #include <linux/types.h>
->  
-> -/* This value should match the pragma in the loop_unrolled_for
-> +/* This value should match the pragma in the unrolled_count()
->   * macro. Why 4? It is strictly empirical. It seems to be a good
->   * compromise between the advantage of having simultaneous outstanding
->   * reads to the DMA array that can hide each others latency and the
-> @@ -14,14 +14,6 @@
->   */
->  #define PKTS_PER_BATCH 4
->  
-> -#ifdef __clang__
-> -#define loop_unrolled_for _Pragma("clang loop unroll_count(4)") for
-> -#elif __GNUC__ >= 8
-> -#define loop_unrolled_for _Pragma("GCC unroll 4") for
-> -#else
-> -#define loop_unrolled_for for
-> -#endif
-> -
->  struct i40e_ring;
->  struct i40e_vsi;
->  struct net_device;
-> diff --git a/drivers/net/ethernet/intel/i40e/i40e_xsk.c b/drivers/net/ethernet/intel/i40e/i40e_xsk.c
-> index e28f1905a4a0..9f47388eaba5 100644
-> --- a/drivers/net/ethernet/intel/i40e/i40e_xsk.c
-> +++ b/drivers/net/ethernet/intel/i40e/i40e_xsk.c
-> @@ -2,6 +2,7 @@
->  /* Copyright(c) 2018 Intel Corporation. */
->  
->  #include <linux/bpf_trace.h>
-> +#include <linux/unroll.h>
->  #include <net/xdp_sock_drv.h>
->  #include "i40e_txrx_common.h"
->  #include "i40e_xsk.h"
-> @@ -529,7 +530,8 @@ static void i40e_xmit_pkt_batch(struct i40e_ring *xdp_ring, struct xdp_desc *des
->  	dma_addr_t dma;
->  	u32 i;
->  
-> -	loop_unrolled_for(i = 0; i < PKTS_PER_BATCH; i++) {
-> +	unrolled_count(PKTS_PER_BATCH)
-> +	for (i = 0; i < PKTS_PER_BATCH; i++) {
->  		u32 cmd = I40E_TX_DESC_CMD_ICRC | xsk_is_eop_desc(&desc[i]);
->  
->  		dma = xsk_buff_raw_get_dma(xdp_ring->xsk_pool, desc[i].addr);
-> -- 
-> 2.48.1
-> 
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Cc: Maíra Canal <mairacanal@riseup.net>
+Cc: Danilo Krummrich <dakr@kernel.org>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+v4: - new patch added to this series
+    - api tweaked due to parent pointer added to faux_device create
+      function.
+v3: - no change
+v2: - renamed vdev variable to fdev thanks to Mark
+ MAINTAINERS                      |  2 +
+ rust/bindings/bindings_helper.h  |  1 +
+ rust/kernel/faux.rs              | 67 ++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs               |  1 +
+ samples/rust/Kconfig             | 10 +++++
+ samples/rust/Makefile            |  1 +
+ samples/rust/rust_driver_faux.rs | 29 ++++++++++++++
+ 7 files changed, 111 insertions(+)
+ create mode 100644 rust/kernel/faux.rs
+ create mode 100644 samples/rust/rust_driver_faux.rs
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 25c86f47353d..19ea159b2309 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7116,8 +7116,10 @@ F:	rust/kernel/device.rs
+ F:	rust/kernel/device_id.rs
+ F:	rust/kernel/devres.rs
+ F:	rust/kernel/driver.rs
++F:	rust/kernel/faux.rs
+ F:	rust/kernel/platform.rs
+ F:	samples/rust/rust_driver_platform.rs
++F:	samples/rust/rust_driver_faux.rs
+ 
+ DRIVERS FOR OMAP ADAPTIVE VOLTAGE SCALING (AVS)
+ M:	Nishanth Menon <nm@ti.com>
+diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+index 55354e4dec14..f46cf3bb7069 100644
+--- a/rust/bindings/bindings_helper.h
++++ b/rust/bindings/bindings_helper.h
+@@ -11,6 +11,7 @@
+ #include <linux/blk_types.h>
+ #include <linux/blkdev.h>
+ #include <linux/cred.h>
++#include <linux/device/faux.h>
+ #include <linux/errname.h>
+ #include <linux/ethtool.h>
+ #include <linux/file.h>
+diff --git a/rust/kernel/faux.rs b/rust/kernel/faux.rs
+new file mode 100644
+index 000000000000..5acc0c02d451
+--- /dev/null
++++ b/rust/kernel/faux.rs
+@@ -0,0 +1,67 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++//! Abstractions for the faux bus.
++//!
++//! This module provides bindings for working with faux devices in kernel modules.
++//!
++//! C header: [`include/linux/device/faux.h`]
++
++use crate::{bindings, device, error::code::*, prelude::*};
++use core::ptr::{addr_of_mut, null, null_mut, NonNull};
++
++/// The registration of a faux device.
++///
++/// This type represents the registration of a [`struct faux_device`]. When an instance of this type
++/// is dropped, its respective faux device will be unregistered from the system.
++///
++/// # Invariants
++///
++/// `self.0` always holds a valid pointer to an initialized and registered [`struct faux_device`].
++///
++/// [`struct faux_device`]: srctree/include/linux/device/faux.h
++#[repr(transparent)]
++pub struct Registration(NonNull<bindings::faux_device>);
++
++impl Registration {
++    /// Create and register a new faux device with the given name.
++    pub fn new(name: &CStr) -> Result<Self> {
++        // SAFETY:
++        // - `name` is copied by this function into its own storage
++        // - `faux_ops` is safe to leave NULL according to the C API
++        let dev = unsafe { bindings::faux_device_create(name.as_char_ptr(), null_mut(), null()) };
++
++        // The above function will return either a valid device, or NULL on failure
++        // INVARIANT: The device will remain registered until faux_device_destroy() is called, which
++        // happens in our Drop implementation.
++        Ok(Self(NonNull::new(dev).ok_or(ENODEV)?))
++    }
++
++    fn as_raw(&self) -> *mut bindings::faux_device {
++        self.0.as_ptr()
++    }
++}
++
++impl AsRef<device::Device> for Registration {
++    fn as_ref(&self) -> &device::Device {
++        // SAFETY: The underlying `device` in `faux_device` is guaranteed by the C API to be
++        // a valid initialized `device`.
++        unsafe { device::Device::as_ref(addr_of_mut!((*self.as_raw()).dev)) }
++    }
++}
++
++impl Drop for Registration {
++    fn drop(&mut self) {
++        // SAFETY: `self.0` is a valid registered faux_device via our type invariants.
++        unsafe { bindings::faux_device_destroy(self.as_raw()) }
++    }
++}
++
++// SAFETY: The faux device API is thread-safe as guaranteed by the device core, as long as
++// faux_device_destroy() is guaranteed to only be called once - which is guaranteed by our type not
++// having Copy/Clone.
++unsafe impl Send for Registration {}
++
++// SAFETY: The faux device API is thread-safe as guaranteed by the device core, as long as
++// faux_device_destroy() is guaranteed to only be called once - which is guaranteed by our type not
++// having Copy/Clone.
++unsafe impl Sync for Registration {}
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index 496ed32b0911..398242f92a96 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -46,6 +46,7 @@
+ pub mod devres;
+ pub mod driver;
+ pub mod error;
++pub mod faux;
+ #[cfg(CONFIG_RUST_FW_LOADER_ABSTRACTIONS)]
+ pub mod firmware;
+ pub mod fs;
+diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
+index 918dbead2c0b..3b6eae84b297 100644
+--- a/samples/rust/Kconfig
++++ b/samples/rust/Kconfig
+@@ -61,6 +61,16 @@ config SAMPLE_RUST_DRIVER_PLATFORM
+ 
+ 	  If unsure, say N.
+ 
++config SAMPLE_RUST_DRIVER_FAUX
++	tristate "Faux Driver"
++	help
++	  This option builds the Rust Faux driver sample.
++
++	  To compile this as a module, choose M here:
++	  the module will be called rust_driver_faux.
++
++	  If unsure, say N.
++
+ config SAMPLE_RUST_HOSTPROGS
+ 	bool "Host programs"
+ 	help
+diff --git a/samples/rust/Makefile b/samples/rust/Makefile
+index 5a8ab0df0567..0dbc6d90f1ef 100644
+--- a/samples/rust/Makefile
++++ b/samples/rust/Makefile
+@@ -6,6 +6,7 @@ obj-$(CONFIG_SAMPLE_RUST_MISC_DEVICE)		+= rust_misc_device.o
+ obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
+ obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+= rust_driver_pci.o
+ obj-$(CONFIG_SAMPLE_RUST_DRIVER_PLATFORM)	+= rust_driver_platform.o
++obj-$(CONFIG_SAMPLE_RUST_DRIVER_FAUX)		+= rust_driver_faux.o
+ 
+ rust_print-y := rust_print_main.o rust_print_events.o
+ 
+diff --git a/samples/rust/rust_driver_faux.rs b/samples/rust/rust_driver_faux.rs
+new file mode 100644
+index 000000000000..048c6cb98b29
+--- /dev/null
++++ b/samples/rust/rust_driver_faux.rs
+@@ -0,0 +1,29 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++//! Rust faux device sample.
++
++use kernel::{c_str, faux, prelude::*, Module};
++
++module! {
++    type: SampleModule,
++    name: "rust_faux_driver",
++    author: "Lyude Paul",
++    description: "Rust faux device sample",
++    license: "GPL",
++}
++
++struct SampleModule {
++    _reg: faux::Registration,
++}
++
++impl Module for SampleModule {
++    fn init(_module: &'static ThisModule) -> Result<Self> {
++        pr_info!("Initialising Rust Faux Device Sample\n");
++
++        let reg = faux::Registration::new(c_str!("rust-faux-sample-device"))?;
++
++        dev_info!(reg.as_ref(), "Hello from faux device!\n");
++
++        Ok(Self { _reg: reg })
++    }
++}
+-- 
+2.48.1
+
