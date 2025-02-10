@@ -1,91 +1,97 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E673F230D05;
-	Mon, 10 Feb 2025 14:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739196004; cv=none; b=RXtYKF3qx8KOoqZaiB0ohYJxlS+9CHOYDFnq5DnCyBTrYQGtAThuvax4gFHRJAx0zrmL1y7/N6+pqbqYWUdLoCNdWXQSDqVLpUPKdPnDgE/HfZGYJ0LVqejOZ+4pN5IysoSzH907NVcAok8BOQmPpVYRX9mEOeZ5ms8HRPnd4zI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739196004; c=relaxed/simple;
-	bh=Uxwy4hKp1bY3GwUnF6oPfX3suQJvksR4VgdwJabFpV4=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EC0156F53;
+	Mon, 10 Feb 2025 14:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739196037; cv=pass; b=SRhyzX5m9dM8rwmVZSpk+cZmdXdFMvt5o0DpwzxaEgTYt2OKqX8z8/CpzWGB+yAyLYaWNLgXGJi6LnHKWUBh6q8VLcVC3B6Cv9xYfkzG7cbXztCBAQa4ujrG51/S5Bm8zurCqvgnd0LCWFskCpofjnCELxvIhG1tW9XLLZvJejE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739196037; c=relaxed/simple;
+	bh=UBdQFvlpLHtwOucQADqpJpV39YDCQhywTCC06cdU/NQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PJo7SdqDf8di90Xl54A6hqWLKG6LBA5TYUlefuLA27I2y3AMpXTS0N0pvRHQP7LQVUc9ln4bms+qOqD+TWQuKbJhBI1k1i9UPA0f1BfbDZr4tavT9W9emAy/FZC4zKdgKWUYjwoErWjXCD3PHYebZEJ8BksdwdhUVx2zF9nN2Co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VN6x//Ao; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=oQmQTA/v3abRV8veCi+CjE1rkLdOSbDM7pWiugmWP0CeAuy8tanVfmz9TImIXR+c2b11CvH+PoIpSyVpOHtBCUFM1SFk9HKNA8DxwuTDX4jYAc824WlqDx6DgtHKa6cMAsMkmf4sMdQk9rx0Sdmc8S2fC8BcsxD834ykXTb8OEE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b=KYQPe4yX; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VN6x//Ao"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ab7b7250256so208053766b.0;
-        Mon, 10 Feb 2025 06:00:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739196001; x=1739800801; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uxwy4hKp1bY3GwUnF6oPfX3suQJvksR4VgdwJabFpV4=;
-        b=VN6x//AoccAAGrI7ETqxEMxOFy4hERtpGZkqLL7cM2pRM0gA++XA10Ze3ZQv9q7zor
-         OtxtQC0Ah1uA+ROCcPL04fCqYiuLCY64vTzYskFxthKqjQm7f78PkyZZwo4N5oq6290x
-         ATlzmMHotajo3964f9tjPSlO3yuNbafBuISF3facLhefJzSqMTIGL/62zKCkalEpmZCZ
-         27X0Pttlq1ESXdDb79MaZiaT/CURbAj7B5urDob6viTZFyFl9Jgi2OE29RlyZ/l8bPg4
-         LRcJRXCjcPIBcss4G8fz7WZZ98qIjlJBbwOCgCJNY1vdyH1U1foYybrf77EEbf1mwV52
-         5qoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739196001; x=1739800801;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Uxwy4hKp1bY3GwUnF6oPfX3suQJvksR4VgdwJabFpV4=;
-        b=swnTjjiffjUCbUwZTW2kC9JAYIjWMqdRZFifcqBgjy+FKInOsdJHFu+Pq9Fnz5z1V8
-         9g6zU9fpXHNmjJCjcq17Pq4OMLYdkXwWtApIFZpllHhPo0rxCWTUnkuKOoclIfDvowR5
-         SAp4mgGhsHjJ/xG6/LNyHfyqUnivPwzv5rRgoq3cB9wHOOQs8Ccxe1A43cpYHX46jyD3
-         Ku3K3Gl9GRHulv8h72PafVCbfpDhbm5A0ceLsPT5o2WvOq1z6cxwS4Rlsv4hdWQlCWyl
-         lEnJYmGwJDudmd+5r/rcE0jthIgC4y5hps8Dkqty/DCPcYm6kbwnrytD00SMqpOUXCt7
-         5XhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWABmkKOXMA0JzzBl24gDq2HeLnqJmq59OFpjRNO9NKEbZEAnP9+UfRPyk/PHuzyOAxJhYeP+joDkz6NS39@vger.kernel.org, AJvYcCWNQQjOnd623IUNQ5RJIpmirqy28ZzaGL3kz4705O6Rr9gR5qCPf4Lm5fyYoJrLIT8e+XZnqq6gfFeLu2VI@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFiOI9wvlnbe1ke+NQHj5WIFvP6Rs06a67ElCGKAInDVlcIO1z
-	VmaYWwdbGkCah4yrJ30RHGYpAxwuW2XvToIs+VlRN/k9P51ohvFh
-X-Gm-Gg: ASbGnctdEW+5Tznr9n2B8iBlwbts8Ygr0XFhw2OSVzRz0r8NgqOapDrlAYBbk0ZLbxF
-	/4PcgdNVMje7DvtChfQPRU071JNfVn5l80N9z04C0NNjoMVsuKIB2RXA6zjBg1rJUmCf1GcXGk3
-	JzrAItIXuLXjJdPNJfC6L33YMV9z7+OaW5SDbD5De2TFJeECGARXk1WHY0VmU1AMA0gS0MPAAbb
-	5+KPIQ4XAmkzY4C67+uxnrhqMF3x9NGSVF500Vty5eboC+yOkIRjfQyM0DzBr74RwpXevW8k/u2
-	tmz4+TWMVA73Db6WMTPLqiy8t0x/+hk=
-X-Google-Smtp-Source: AGHT+IHx+qhU6Idq8jRm0WRWXe7TwvHeKMTg7snP+Bx40IzlGFDOH18fAqC/rTYvXM6eVCNUT6vjuw==
-X-Received: by 2002:a17:907:36cc:b0:ab7:9a7a:d37a with SMTP id a640c23a62f3a-ab79a7ad49amr1081195466b.43.1739196001199;
-        Mon, 10 Feb 2025 06:00:01 -0800 (PST)
-Received: from f (cst-prg-84-201.cust.vodafone.cz. [46.135.84.201])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7832a02fcsm786876266b.94.2025.02.10.05.59.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 06:00:00 -0800 (PST)
-Date: Mon, 10 Feb 2025 14:59:52 +0100
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH next 1/1] fs: Mark get_sigset_argpack() __always_inline
-Message-ID: <oo4w7ennuubxt4h4c3p226op77xm74g7rzelpna7ejlfmikjoh@pn2iymeg6flf>
-References: <20250208151347.89708-1-david.laight.linux@gmail.com>
- <CAHk-=wicUO4WaEE6b010icQPpq+Gk_ZK5V2hF2iBQe-FqmBc3Q@mail.gmail.com>
- <20250208190600.18075c88@pumpkin>
- <CAHk-=whvmGhOzJJr1LeZ7vdSNt_CE+VJCUJ9FcLe0-Nv8UqgoA@mail.gmail.com>
- <20250208230500.05ad57a5@pumpkin>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b="KYQPe4yX"
+ARC-Seal: i=1; a=rsa-sha256; t=1739196014; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=n94BGAh9My2h/aIZWWxJTF7Xf8ZAygB0BAhnATh5n/eiYCUlnUDVfueAT8aiHTfiUBhOCK/6EENwBQg6xkow0doOMQ5A3lzU3pKDNfYyyIosv2mrQpVPi+xHT+8AREo4UDL19/fKM66UDx7f0WpwgKgeDEFm+inR/KwR5Ed+Qug=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1739196014; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=8bMwBf8DI2ybdmv+zq4GM7AQDZt1piNTaqNHdDDz1ME=; 
+	b=hW8bsrmGxTwraNzvJNWIAYYddF7FyCL8cGsCf+xdSvB+muN8KkTOUvPKLrMG/DViAnrqCHEz84ztxVam1YCNwPiORCng3puwZsVgJ7zUVSFDyXI1PQ7PLfBuEo2ii4v9CBRJIS0vn8Dv2HRcT6NJWDKmv76JtkRLvN/ASPzFu+M=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.fricke@collabora.com;
+	dmarc=pass header.from=<sebastian.fricke@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739196014;
+	s=zohomail; d=collabora.com; i=sebastian.fricke@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=8bMwBf8DI2ybdmv+zq4GM7AQDZt1piNTaqNHdDDz1ME=;
+	b=KYQPe4yXqLt1VWy5tKYKQ/dqp8k84LFPN5v6PYewWKV7qLEGIHlZ/dMoTW6YMTfc
+	dQ+zrqyouDNPiqBlOGh68qgMFJkKi20pwP5dLOPYoIuYVCLNE1jgUyXQSWQx9bldi5b
+	y/LpU+ssyLEOWHymUjwT6YS1jE6/slPJ1Ej9v48A=
+Received: by mx.zohomail.com with SMTPS id 1739196012032335.813176114179;
+	Mon, 10 Feb 2025 06:00:12 -0800 (PST)
+Date: Mon, 10 Feb 2025 15:00:02 +0100
+From: Sebastian Fricke <sebastian.fricke@collabora.com>
+To: Nas Chung <nas.chung@chipsnmedia.com>
+Cc: mchehab@kernel.org, hverkuil@xs4all.nl, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org,
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+	linux-arm-kernel@lists.infradead.org, jackson.lee@chipsnmedia.com,
+	lafley.kim@chipsnmedia.com
+Subject: Re: [PATCH 2/8] media: v4l2-common: Add YUV24 format info
+Message-ID: <20250210140002.rhhxn3z4l3dbyege@basti-TUXEDO-Book-XA1510>
+References: <20250210090725.4580-1-nas.chung@chipsnmedia.com>
+ <20250210090725.4580-3-nas.chung@chipsnmedia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20250208230500.05ad57a5@pumpkin>
+In-Reply-To: <20250210090725.4580-3-nas.chung@chipsnmedia.com>
+X-ZohoMailClient: External
 
-On Sat, Feb 08, 2025 at 11:05:00PM +0000, David Laight wrote:
-> Defaulting to SMAP just requires a bit of bravery!
-> After all (as you said) it ought to get patched out before userspace exists.
-> It is still fairly new (Broadwell ix-5xxx).
-> I'm sure a lot of people are still running Linux on Sandy bridge cpu.
+Hey Nas,
 
-The Intel folk posting over at https://lore.kernel.org/oe-lkp/ have a
-bunch of old yellers they test on (and probably more they can dig up if
-needed) and will likely be happy to boot test a patch of the sort, just
-explicitly state you want a pre-SMAP CPU.
+On 10.02.2025 18:07, Nas Chung wrote:
+>The YUV24 format is missing an entry in the v4l2_format_info().
+>The YUV24 format is the packed YUV 4:4:4 formats with 8 bits
+>per component.
+>
+
+That means that 0376a51fbe5e1 was incomplete, I think you should add a
+fixes tag to this commit, to highlight that you basically complete the
+previous commit.
+
+Regards,
+Sebastian
+
+>Signed-off-by: Nas Chung <nas.chung@chipsnmedia.com>
+>---
+> drivers/media/v4l2-core/v4l2-common.c | 1 +
+> 1 file changed, 1 insertion(+)
+>
+>diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
+>index 0a2f4f0d0a07..de3636f1cdf1 100644
+>--- a/drivers/media/v4l2-core/v4l2-common.c
+>+++ b/drivers/media/v4l2-core/v4l2-common.c
+>@@ -269,6 +269,7 @@ const struct v4l2_format_info *v4l2_format_info(u32 format)
+> 		{ .format = V4L2_PIX_FMT_Y212,    .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .bpp_div = { 1, 1, 1, 1 }, .hdiv = 2, .vdiv = 1 },
+> 		{ .format = V4L2_PIX_FMT_Y216,    .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .bpp_div = { 1, 1, 1, 1 }, .hdiv = 2, .vdiv = 1 },
+> 		{ .format = V4L2_PIX_FMT_YUV48_12, .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 1, .comp_planes = 1, .bpp = { 6, 0, 0, 0 }, .bpp_div = { 1, 1, 1, 1 }, .hdiv = 1, .vdiv = 1 },
+>+		{ .format = V4L2_PIX_FMT_YUV24,   .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 1, .comp_planes = 1, .bpp = { 3, 0, 0, 0 }, .bpp_div = { 1, 1, 1, 1 }, .hdiv = 1, .vdiv = 1 },
+> 		{ .format = V4L2_PIX_FMT_MT2110T, .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 2, .comp_planes = 2, .bpp = { 5, 10, 0, 0 }, .bpp_div = { 4, 4, 1, 1 }, .hdiv = 2, .vdiv = 2,
+> 		  .block_w = { 16, 8, 0, 0 }, .block_h = { 32, 16, 0, 0 }},
+> 		{ .format = V4L2_PIX_FMT_MT2110R, .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 2, .comp_planes = 2, .bpp = { 5, 10, 0, 0 }, .bpp_div = { 4, 4, 1, 1 }, .hdiv = 2, .vdiv = 2,
+>-- 
+>2.31.1
+>
