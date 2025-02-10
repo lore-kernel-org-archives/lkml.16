@@ -1,192 +1,194 @@
-Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F3125EF99
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D9925334D
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739228894; cv=none; b=rDr+AD+9YBx1OiAvez12l7IcjRNG4uZPFVvNFyy53w6aKbCLebmlBhXQpTC18g/BmdfvimOVndjK9hBjGrj1ovK7zp+kI5YK6F2rDU9+aqUj6UfhiT5y/AbFJaHXZGQYjkMi1Q2VlT8iL1+3eCSEDVm/nzE4zH8I/qpmxy5x3c4=
+	t=1739228937; cv=none; b=FkWUzgQ2dkwc4bVWF2oCur7dm83gU04LFKW0pAvYa7jKXs4QbRgxVwCsEgSD7cZ1PS3o20evaHZ6cfyEtd3bXKGph3N++7H+/7T1maquT63DEstI1ylsLDaRFDZ4HVAO0iHBRDNLetJTpYGfjd+MApgPZjPECOwqEjz7FqBkeK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739228894; c=relaxed/simple;
-	bh=s/ssfNn4b7bCXjP2GKwiQQgiKWJx78QfbpNKZtSS6Q4=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=nYcKPMmut0EZm8A3n3jMwpXWj3LaUd89g/kkXHq0TYcJHpA7Y37KcnTVqDXkHvS/YGij2WQorFFvyGynIyiEhFDhfp2u5+IK5Rse2yLKy/fviJHAoy6Nnp20BhVJRlkbNb1oTmtAB5PRPr3nq5pLa1hEdRgTBLqFz2NkkKfmfME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ao33QvaD; arc=none smtp.client-ip=209.85.166.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1739228937; c=relaxed/simple;
+	bh=fINcPpwYH1eooxLnlCXYV9UBGR9hVoXZdDMYpFYul4w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=djSfSwPaDdtJ3A/JXeqEYKDFaclkLksiPzBooUV7p2YHKfFO3phHIzsTPdOu0vJxhas7V7purx4guGLaBQyHEDS1B5thhS06ckR13ug/KRU7Pq+BJ03vgYBXgOaftuv3I1euyAPSg+IBcIJj8wlOTUSlF9PQ+xRX9eJkcCC57os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h29t15vo; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ao33QvaD"
-Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3d1466cbaddso24471905ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:08:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h29t15vo"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5de6c708315so3423094a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:08:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739228892; x=1739833692; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=CXinvutFgPziM7RxPNDr3Edga1bpxeAp0Ov8Puttle0=;
-        b=Ao33QvaDqLBfzcYuOSvLYfq+o96q/+BbX+Pbb21EuoerhsSxeODMPQTRIsKNEH34EG
-         wHMMd1dZcEuclV++vpCezIT1xj8Hp1lTYfI62i1WTxMlTcfx3Q8o2lSpLyBtvdG26cL2
-         2LY6+K4dJxlp67e7/iAlurx7F7pvyvWGfFGe0pR6Ut3CymKI2V6p0KEy1uBMllKnmsbR
-         wp90AScnRgqcaFTW9htr2U9hNC7NRfD1Eio6WVOa7iCl4ZeSl9cAuWcJCi0Dr+IxoaaY
-         BZ34DCyvu+Hz2HtzoB9okY7a9q5AHbixBW4ffRCuY9P8OkwKd70hCtxZr+ef8qLJ80W3
-         uVqg==
+        d=gmail.com; s=20230601; t=1739228933; x=1739833733; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bM7OppAJHJA54+hF0HuhHJkeWAYVArWtZB3N6/aZ9k0=;
+        b=h29t15vohDOYzvn3w22yM1AZmfzrIO431kElJV3A6qOjO0atqf024USjhDt4LRg9/V
+         qhUL7BO7B4ipyVYpeMQhiisFLAhMNtx9IHyYcKUhxc1jRkc6wJDLMpjtyOkR1mRZcHjU
+         /wqHA70grYcUl5TlvK8IkqCevRaffLddpKxUQCMa/9EyQVVBR9bFUBChmuxSY1nAl8oL
+         K+LEJpsYIU3/nF9qZpJeaV6kzkr0fk/az6FfXQxK5GWGYY46cbzDv74oG4JOWIwaRNtK
+         uyPX2/o3nZ0JAS0SjDw8hzaPx732IwLnfPIcSR+qSCMT0/WALY/587uPe5I+UqOg+6nT
+         ivww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739228892; x=1739833692;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CXinvutFgPziM7RxPNDr3Edga1bpxeAp0Ov8Puttle0=;
-        b=Awm86V7qlnB/cpYFM7TTtuwFmXZsdSgLAlBiznzB2O5BObAzuhqyO3bd68hjoNZ4fI
-         R90hQsae+S7yb0U/dfcWUKsGC9UvavvyP4dqpof37IQubd6lITmgqrnlugyX1tBlH0Ah
-         PjrfCSK0FBc+jl3T9X1KR55ZcBYwpgJSRnywNvMRShZAJXP3pTIG4OHdaW2XprF29zgz
-         3QvK7JkuO6OHkVrDNrRDQfzzQBW2T0xkzgA4UX9+5V85XTe3P24y5djsOyeMoR0ByQBD
-         r5husLVnwk596knbBPI20XhLRyPAJu/I6piRdi17vjdPJjFOW5JjjRrmI6ZyBU13dJKV
-         KiZg==
-X-Forwarded-Encrypted: i=1; AJvYcCWb5AYIKcMpNrnDT5GG/Gl8ivgkf8hTuX1c0CVRg5PkG26fuS5cvU4qCMjtLKJfjDk7Zx72zOzflubqFdo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyPCrCAMNpDsEIuASZ/PnLRMFGitI96mnm3tH3CMtwpEqtrV/U
-	DXsL9P9KkdHRUQYuV0ZUgoe+XX2YB3zPQBAnPcKNvDvzBCKxckgBUIH5T/FGHem9fvRZOFz8L/z
-	uuIcurO/jwLLgMVDTlzKm+w==
-X-Google-Smtp-Source: AGHT+IFUZhu2OwBm9Xl4P9gAhtgSkcN1rVy5kcIM68xBXK4rcWyV4/0jaNvjvAieMThFeK6tg2McyqvG5JOCTsu70Q==
-X-Received: from ilbec1.prod.google.com ([2002:a05:6e02:4701:b0:3d1:3d59:434b])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6e02:1c01:b0:3d0:f2ca:65aa with SMTP id e9e14a558f8ab-3d16f40b648mr9951285ab.4.1739228891849;
- Mon, 10 Feb 2025 15:08:11 -0800 (PST)
-Date: Mon, 10 Feb 2025 23:08:11 +0000
-In-Reply-To: <Z6msyUG0HWM2EImQ@linux.dev> (message from Oliver Upton on Sun, 9
- Feb 2025 23:37:45 -0800)
+        d=1e100.net; s=20230601; t=1739228933; x=1739833733;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bM7OppAJHJA54+hF0HuhHJkeWAYVArWtZB3N6/aZ9k0=;
+        b=uYM1l8yaiq6+VC8BR5/w5vNSZpauhmoK8nKOCNrMe9UqJ6KV3Va7IUtYs6mhvaKWdw
+         Sy/f1EUmrs75VrGBpARvLVhYuVNF6SIP6QGtihM4MbAFJwu1K00+grpSvMTm+g+VYoMc
+         uiodppIPCq1PHfv+E09EdYDE1QK/0xnkp98dgQit0YVES79OkJFOnewtoKElNTyT4J5Q
+         OW6TyGSrvcWVad/Ys06yEbKX6iY7ZdvtK8aOJ1Bl8CV4jslTMV9R1tZXxt6b4bx9PhO+
+         RerdGGw6h2zetKSFKjFv07mselBx50A4ziGBZEPzoKHgPRxvlmE6fjRJtwocfHmAl/U+
+         0PGw==
+X-Forwarded-Encrypted: i=1; AJvYcCV6U/fwupe/us4NEjF2KHQvG0TRatAh2dDRdYnvrpMi38YNYcBnlrt9azNvdhDVK+7g2y3IQZ06H+5BfWg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7oq0qsSd5yz580IR40DGV/GnXDQr//lERX0tKup2diCCUwzG5
+	5SkBdYTBxhcFOkyRarwO2QcMJwKEgVfpATN2XQyvvLmqJau9s5HYh1gVx9s3Sra6r88Qn73IC2S
+	LsmcHLnJOBTctXGHc0JPkYyeg/A0WNYGs
+X-Gm-Gg: ASbGncsJFhj0qNl4qluGC8MoCE/n3PcDJEfVRACfyUu1cLFSC0UMb4ga3pu/lDlTngr
+	nL5ifFQkGbu32YxJH3NGGx5GW0XiY5syk/fZf7pXWhA0SADMPn6Ymbz/ewLfyxVH7cW/nbKNk
+X-Google-Smtp-Source: AGHT+IGlSrhvu1VCfPZpz5yJ7tLEYktjlbuRE+EfLAP/DE0dy9fWNFKJAT6/L6gPlZ+UNFGup260rlI2mcml6ClPXHE=
+X-Received: by 2002:a05:6402:5252:b0:5dc:767d:f032 with SMTP id
+ 4fb4d7f45d1cf-5de4507349emr15750094a12.24.1739228933141; Mon, 10 Feb 2025
+ 15:08:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <gsnted051jqc.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [RFC PATCH v2 4/4] KVM: arm64: Make guests see only counters they
- can access
-From: Colton Lewis <coltonlewis@google.com>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: kvm@vger.kernel.org, linux@armlinux.org.uk, catalin.marinas@arm.com, 
-	will@kernel.org, maz@kernel.org, joey.gouly@arm.com, suzuki.poulose@arm.com, 
-	yuzenghui@huawei.com, mark.rutland@arm.com, pbonzini@redhat.com, 
-	shuah@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev, 
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+MIME-Version: 1.0
+References: <20250210210541.867037-1-mjguzik@gmail.com> <202502101454.DE164D34@keescook>
+In-Reply-To: <202502101454.DE164D34@keescook>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Tue, 11 Feb 2025 00:08:41 +0100
+X-Gm-Features: AWEUYZnoAmtbG2Y2v7r1qD5x6XXWK7KXbILoU2j-KL6tsZrF6nV_g-Ft9GMPghY
+Message-ID: <CAGudoHFiTYi8SeFmRDYH-n=yCxr1-78JMrbVaiGNcfnnHVBRrw@mail.gmail.com>
+Subject: Re: [PATCH] seccomp: avoid the lock trip in seccomp_filter_release in
+ common case
+To: Kees Cook <kees@kernel.org>
+Cc: luto@amacapital.net, wad@chromium.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Oliver, thanks for the review.
+On Mon, Feb 10, 2025 at 11:57=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> On Mon, Feb 10, 2025 at 10:05:41PM +0100, Mateusz Guzik wrote:
+> > Vast majority of threads don't have any seccomp filters, all while the
+> > lock taken here is shared between all threads in given process and
+> > frequently used.
+> >
+> > Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+> > ---
+> >
+> > Here is a splat from parallel thread creation/destruction within onep
+> > rocess:
+> >
+> > bpftrace -e 'kprobe:__pv_queued_spin_lock_slowpath { @[kstack()] =3D co=
+unt(); }'
+> >
+> > [snip]
+> > @[
+> >     __pv_queued_spin_lock_slowpath+5
+> >     _raw_spin_lock_irq+42
+> >     seccomp_filter_release+32
+> >     do_exit+286
+> >     __x64_sys_exit+27
+> >     x64_sys_call+4703
+> >     do_syscall_64+82
+> >     entry_SYSCALL_64_after_hwframe+118
+> > ]: 475601
+> > @[
+> >     __pv_queued_spin_lock_slowpath+5
+> >     _raw_spin_lock_irq+42
+> >     acct_collect+77
+> >     do_exit+1380
+> >     __x64_sys_exit+27
+> >     x64_sys_call+4703
+> >     do_syscall_64+82
+> >     entry_SYSCALL_64_after_hwframe+118
+> > ]: 478335
+> > @[
+> >     __pv_queued_spin_lock_slowpath+5
+> >     _raw_spin_lock_irq+42
+> >     sigprocmask+106
+> >     __x64_sys_rt_sigprocmask+121
+> >     do_syscall_64+82
+> >     entry_SYSCALL_64_after_hwframe+118
+> > ]: 1825572
+> >
+> > There are more spots which take the same lock, with seccomp being top 3=
+.
+> >
+> > I could not be bothered to bench before/after, but I can do it if you
+> > insist. The fact that this codepath is a factor can be seen above.
+> >
+> > This is a minor patch, I'm not going to insist on it.
+> >
+> > To my reading seccomp only ever gets populated for current, so this
+> > should be perfectly safe to test on exit without any synchronisation.
+>
+> Unfortunately, this is not true. SECCOMP_FILTER_FLAG_TSYNC may operate
+> on non-current. See the paired smp_store_release() and smp_rmb() uses.
+>
 
-Oliver Upton <oliver.upton@linux.dev> writes:
+Ok I see:
 
-> On Sat, Feb 08, 2025 at 02:01:11AM +0000, Colton Lewis wrote:
->> The ARM architecture specifies that when MDCR_EL2.HPMN is set, EL1 and
->> EL0, which includes KVM guests, should read that value for PMCR.N.
+  630
+   631                 /* Make our new filter tree visible. */
+   632                 smp_store_release(&thread->seccomp.filter,
+   633                                   caller->seccomp.filter);
+   634                 atomic_set(&thread->seccomp.filter_count,
+   635                 =E2=94=82          atomic_read(&caller->seccomp.filt=
+er_count));
 
->> Signed-off-by: Colton Lewis <coltonlewis@google.com>
->> ---
->>   arch/arm64/kvm/debug.c                                  | 3 +--
->>   arch/arm64/kvm/pmu-emul.c                               | 8 +++++++-
->>   tools/testing/selftests/kvm/arm64/vpmu_counter_access.c | 2 +-
->>   3 files changed, 9 insertions(+), 4 deletions(-)
+My grep was too naive :)
 
->> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
->> index 0e4c805e7e89..7c04db00bf6c 100644
->> --- a/arch/arm64/kvm/debug.c
->> +++ b/arch/arm64/kvm/debug.c
->> @@ -36,8 +36,7 @@ static void kvm_arm_setup_mdcr_el2(struct kvm_vcpu  
->> *vcpu)
->>   	 * This also clears MDCR_EL2_E2PB_MASK and MDCR_EL2_E2TB_MASK
->>   	 * to disable guest access to the profiling and trace buffers
->>   	 */
->> -	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN,
->> -					 *host_data_ptr(nr_event_counters));
->> +	vcpu->arch.mdcr_el2 = FIELD_PREP(MDCR_EL2_HPMN, read_mdcr());
+> > This may need a data_race annotation if some tooling decides to protest=
+.
+> >
+> >  kernel/seccomp.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+> > index 7bbb408431eb..c839674966e2 100644
+> > --- a/kernel/seccomp.c
+> > +++ b/kernel/seccomp.c
+> > @@ -576,6 +576,9 @@ void seccomp_filter_release(struct task_struct *tsk=
+)
+> >       if (WARN_ON((tsk->flags & PF_EXITING) =3D=3D 0))
+> >               return;
+> >
+> > +     if (tsk->seccomp.filter =3D=3D NULL)
+> > +             return;
+> > +
+> >       spin_lock_irq(&tsk->sighand->siglock);
+> >       orig =3D tsk->seccomp.filter;
+> >       /* Detach task from its filter tree. */
+>
+> If this can be made provably race-safe, I'd be fine with the idea, but
+> at present, all seccomp.filter manipulation happens under
+> sighand->siglock...
+>
 
-> Please avoid unnecessary accesses to MDCR_EL2 at all costs. This is a
-> guaranteed trap to EL2 with nested virt.
+The loop in seccomp_sync_threads actively skips every thread with the
+PF_EXITING flag set, while it is an invariant that any thread passed
+to seccomp_filter_release has the flag. So one only needs to ensure
+visibility.
 
-I thought it was necessary when I wrote this, but I see it's not after
-thinking about it for a while.
+The flag gets set in exit_signals().
 
-The intended value is accessible from vcpu->kvm->arch.arm_pmu.hpmn as
-written, but could be somewhere else after addressing your suggestion to
-lift all MDCR handling into KVM.
+If the target thread is the only remaining there is no sighand lock
+taken, but there is also nobody to execute seccomp_sync_threads.
 
->>   	vcpu->arch.mdcr_el2 |= (MDCR_EL2_TPM |
->>   				MDCR_EL2_TPMS |
->>   				MDCR_EL2_TTRF |
->> diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
->> index 6c5950b9ceac..052ce8c721fe 100644
->> --- a/arch/arm64/kvm/pmu-emul.c
->> +++ b/arch/arm64/kvm/pmu-emul.c
->> @@ -993,12 +993,18 @@ static bool pmu_irq_is_valid(struct kvm *kvm, int  
->> irq)
->>   u8 kvm_arm_pmu_get_max_counters(struct kvm *kvm)
->>   {
->>   	struct arm_pmu *arm_pmu = kvm->arch.arm_pmu;
->> +	u8 limit;
->> +
->> +	if (arm_pmu->partitioned)
->> +		limit = arm_pmu->hpmn - 1;
->> +	else
->> +		limit = ARMV8_PMU_MAX_GENERAL_COUNTERS;
+If there are more threads, the flag gets set under the sighand lock.
+Meaning by the time it gets unlocked, any other thread executing
+seccomp_sync_threads is going to spot it and refrain from messing with
+the exiting thread.
 
->>   	/*
->>   	 * The arm_pmu->cntr_mask considers the fixed counter(s) as well.
->>   	 * Ignore those and return only the general-purpose counters.
->>   	 */
->> -	return bitmap_weight(arm_pmu->cntr_mask,  
->> ARMV8_PMU_MAX_GENERAL_COUNTERS);
->> +	return bitmap_weight(arm_pmu->cntr_mask, limit);
->>   }
+I'm going to need to sleep on it, maybe I'm missing something, but I
+think this *does* work as is despite my failed initial assertion of
+only current messing with it.
 
-> This isn't necessary and is likely to regress the existing behavior.
-
-> When the architecture says the lower ELs should see PMCR_EL0.N have the
-> same value as MDCR_EL2.HPMN, what it really means is direct reads from
-> hardware will return the value.
-
-> So my expectation would be that a VM using the partitioned PMU
-> implementation would never reach any of the *emulated* PMU handlers, as
-> we would've disabled the associated traps.
-
-Understood. The change was here to see be able to read PMCR_EL0.N from
-inside a VM since I haven't disabled the associated traps yet.
-
-It shouldn't be in this patch.
-
-> The partitioned PMU will not replace the emulated vPMU implementation in
-> KVM, so it'd be good to refactor what we have today to make room for
-> your work. I think that'd be along the lines of:
-
->   - Shared code for event filter enforcement and handling of the vPMU
->     overflow IRQ.
-
->   - Emulated PMU implementation that provides trap handlers for all PMUv3
->     registers and backs into host perf
-
->   - Partitioned PMU implementation that doesn't rely on traps and instead
->     saves / restores a portion of the PMU that contains the guest
->     context.
-
-> These should be done in separate files, i.e. I do not want to see a
-> bunch of inline handling to cope with emulated v. partitioned PMUs.
-
-Agreed.
-
->>   static void kvm_arm_set_pmu(struct kvm *kvm, struct arm_pmu *arm_pmu)
->> diff --git a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c  
->> b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
->> index f16b3b27e32e..b5bc18b7528d 100644
->> --- a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
->> +++ b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
->> @@ -609,7 +609,7 @@ static void run_pmregs_validity_test(uint64_t pmcr_n)
->>    */
->>   static void run_error_test(uint64_t pmcr_n)
->>   {
->> -	pr_debug("Error test with pmcr_n %lu (larger than the host)\n",  
->> pmcr_n);
->> +	pr_debug("Error test with pmcr_n %lu (larger than the host allows)\n",  
->> pmcr_n);
-
-> NBD for an RFC, but in the future please do selftests changes in a
-> separate patch.
-
-Ok, I'll do that in the future.
+--=20
+Mateusz Guzik <mjguzik gmail.com>
