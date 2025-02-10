@@ -1,65 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA35D189902;
-	Mon, 10 Feb 2025 10:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68E91C548C
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739182579; cv=none; b=Am3PEN517lEu2JFoptUg6ex1rdhi8LMBsMjaH4zMf621mfaG9158Cewbj9DWaROLJH/9GuFkA/sQwE/U3yvJGrr32JLBzdCkjZlEq3eafZg/ghG7/1pqns3HXin7x2dKKWkiQ+IjmKMtfnwwsCgHyflOHjXw4sal+EmTf7T0pQg=
+	t=1739182621; cv=none; b=RX74hJcKPPn7I6TrbuugkP1PVvz9qPTVs6DX9ZcW0rqs7yEuRa+ypnE+CU9Ojre8Z7D9qCpdB38USF8pJOV+OKpv601AQ7kw84Iil+h48WcIaj0cC35TF+NHCVGz1oMpur8VZOnA/8E4iRnCmZnS9kfWN8f8q15DIDNW0FSzwL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739182579; c=relaxed/simple;
-	bh=khZXx91+JHrmsBYXqnk7JQrqQDlRf4NzWNK9wU6n4+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fKm6ZXZmLUv/b1hUqimxC+w7Rwtffz3HQ4T1qdrPpV6vLyU7ikL/LCRm4svUwHUENFnjmFfE/2gAgQulOa9VfT0shbfzVvNfkWfuOl1IPboDRAE5Gse892Ss8/c3E3dddsTGzLuhFj7uYMGYyKcLFY/jJoIYj+ihy/Rug2+YFrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fWMzrev0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739182621; c=relaxed/simple;
+	bh=gFMz+9VKuJuGZcGbXnQ6WKPgF0I7Qo9bwYmFLPQ8IUs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=euOlUX8pSAiOOkOSaCuVQyb8SJ17F3CHe9SRmrcOLvQiFpTTOtm8LDFAQJecRpdemItSCOgkME95DT0IQq//GUFHCjXYJPsV53f/dT1Xn/0Ge1OFmIk7RYKxFWDxh6Adc8L7Xx/IgaOOI2MrOnXCXfcccZ1wg6oDXRhtyREagek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=0dLNERUb; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fWMzrev0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D65FC4CED1;
-	Mon, 10 Feb 2025 10:16:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739182577;
-	bh=khZXx91+JHrmsBYXqnk7JQrqQDlRf4NzWNK9wU6n4+0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fWMzrev0ggNe8eoKxQm+U1lbahltBJjAXKVSz/smDpUzkkhIZu2twI3+LjaIm5Wpx
-	 0HnIZn0mk9dvUBzzuL5HHSE5oKNNB3GxpvK3+6G6H0RrhK3bQ+rzl9oZA98TA7xNdX
-	 r5/q4zsjLxeY8RvBn9fYDFymdlylfGoL0mM6B0Yzai09jXYu2G01ZchIUHTGjhS3c5
-	 zMNNEjBZHE5DBUrVNdlsc9ib//rQ+ttRF7BfgH33Lxloas7VtSW+372K80bQoI/6lb
-	 WUV9z4ndnF1tUbfBIbk+7vFG5I9xkKPvO5Uliho2y0h6425omirpy2OUaOHraCnVXY
-	 1e5I32uXrLYSw==
-Date: Mon, 10 Feb 2025 11:16:14 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
-Cc: neil.armstrong@linaro.org, quic_jesszhan@quicinc.com, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, 
-	simona@ffwll.ch, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	thierry.reding@gmail.com, sam@ravnborg.org, dianders@chromium.org, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/3] dt-bindings: display: panel: Add a new compatible
- for the panels KD110N11-51IE and 2082109QFH040022-50E
-Message-ID: <20250210-rampant-uncovered-buzzard-c96e31@krzk-bin>
-References: <20250208105326.3850358-1-yelangyan@huaqin.corp-partner.google.com>
- <20250208105326.3850358-2-yelangyan@huaqin.corp-partner.google.com>
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="0dLNERUb"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3cfc79a8a95so14136965ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 02:16:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1739182619; x=1739787419; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gFMz+9VKuJuGZcGbXnQ6WKPgF0I7Qo9bwYmFLPQ8IUs=;
+        b=0dLNERUbr7gzCQVSNZFL0caIfbLHx5DZXEO6A8XA/Vjh6Ql78tb9h9iWKS2ai9S0z3
+         jPSgvp7RHc1FQ73waQ2bVY9owjrnvp4EozYa1FElxtCPvsS1ceIRL4KCrfl9Dl4k1n2D
+         eD9NiDVXj/xPj1y8S737XKKND8HJqxqOza6y0mRlS8ZAlrZy2Wnhm6PEmqmfp24oEXkG
+         RlmYTBvDcJwYg6Wj+WMlp0+C+wN8UnMoTT5HnFKnPdjh1kAOoByk1xPhjkNfjN3Dq3X8
+         98AqT94BwKh1POQLJkB5R4y58ToGcwVKtBo7eixw18frzN5ZcDOpsPFMGHV8DCfKIwNx
+         lQYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739182619; x=1739787419;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gFMz+9VKuJuGZcGbXnQ6WKPgF0I7Qo9bwYmFLPQ8IUs=;
+        b=SeewaGHYp0RZJWJmCGmmuJUm5veQpSFQcTMipdqifSYddM8AXWlARRUWvVljkPLmW1
+         3WpJrCmDhduQJ9ecf2MiTN+N/z6dxrN5pRxkPIymf5fIoCA+Q8G2PVO8K4UO/LFtePs5
+         gFeEIz+Jl9qnk0HcgK7Bo0fT5eJGKNd3Tjig+L6jD4tCMU6LYgjsGFnUK9lTWSW5awS3
+         qYDUhLNL2UjYcIV6n94dQUwq8a3dPzFBRCeKEPKTtJ1pgQfKyCN5r8mTuXeO0ZXg0b/s
+         QLtL82/GhSmoZw0fYza5HKqvyhPmNY75JjTDS2MCOWJWtHENvSzSiFJmCy1cPOam0T24
+         U46A==
+X-Forwarded-Encrypted: i=1; AJvYcCXJmMOMLWc2l+Zsg9Eo7FpeChrxsfzmt5tBPQouL66QoF+VZIAYzJJ1UP1VaeoyK+raC725Y3yfI1uAYXQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXUabsBd6wulZaTnMQ0rSSMA+jjDk8aWy/Km0y27dsOUIPDQiR
+	mB3aNnbcNSQrSSE4plTh4ynbYl7vK0zUCKVoCvbcFWxe67LKpN/h1rFEzqTDkwUO56Ajje+Ft91
+	mpsgKkqUQjoXwMTIEwjXRNuVxMK+T0G9CYiUwLQ==
+X-Gm-Gg: ASbGncs4pvmCFxR43x/nyshmSa1waW1tw8Zlg32omaIVpztjvuHjXr0rcGFW7hA/UV0
+	HwAArGLpfygfOOHb9YlgqebM2k/FG0ZUMW0yIi+e3oPCh+o8J7EEqTGZp5VZSt5tA9CV0nHME7A
+	==
+X-Google-Smtp-Source: AGHT+IFxYxBGv2hc6E/05sAPGOPtP7XZJl8fJ+FlUzG2ytj0GYtSGPTcL+8sNxd5gXx2/ibqUfGkmDqHQCJxB762kY0=
+X-Received: by 2002:a05:6e02:20c8:b0:3d0:21aa:a752 with SMTP id
+ e9e14a558f8ab-3d13dd2c035mr97333115ab.2.1739182618823; Mon, 10 Feb 2025
+ 02:16:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250208105326.3850358-2-yelangyan@huaqin.corp-partner.google.com>
+References: <20250207161939.46139-11-ajones@ventanamicro.com>
+ <20250207161939.46139-18-ajones@ventanamicro.com> <Z6ax7B45OsGerjfA@ghost>
+In-Reply-To: <Z6ax7B45OsGerjfA@ghost>
+From: Anup Patel <anup@brainfault.org>
+Date: Mon, 10 Feb 2025 15:46:46 +0530
+X-Gm-Features: AWEUYZmcXbHoRjnlS1mRz_OY6nbz0LaCvsVhqJHN8CjPX3-8IfaSya5IaXEP0zU
+Message-ID: <CAAhSdy2tjOE5aajzydFs8A_drHdBSbWrYTX3CX4e7B6Rm107Bw@mail.gmail.com>
+Subject: Re: [PATCH 7/9] riscv: Prepare for unaligned access type table lookups
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Andrew Jones <ajones@ventanamicro.com>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	jesse@rivosinc.com, Anup Patel <apatel@ventanamicro.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 08, 2025 at 06:53:24PM +0800, Langyan Ye wrote:
-> Add a new compatible for the panels KINGDISPLAY KD110N11-51IE and
-> STARRY 2082109QFH040022-50E. Both panels use the HX83102 IC, so
-> add the compatible to the hx83102 bindings file.
+On Sat, Feb 8, 2025 at 6:53=E2=80=AFAM Charlie Jenkins <charlie@rivosinc.co=
+m> wrote:
+>
+> On Fri, Feb 07, 2025 at 05:19:47PM +0100, Andrew Jones wrote:
+> > Probing unaligned accesses on boot is time consuming. Provide a
+> > function which will be used to look up the access type in a table
+> > by id registers. Vendors which provide table entries can then skip
+> > the probing.
+>
+> The access checker in my experience is only time consuming on slow
+> hardware. Hardware that supports fast unaligned accesses isn't really
+> impacted by this? Avoiding a list of hardware that has slow/fast
+> unaligned accesses in the kernel was the main reason for dynamically
+> checking. We did introduce the config option to compile the kernel with
+> assumed slow/fast accesses, which of course has the downside of
+> recompiling the kernel and I assume that you already considered that.
 
-Your subject does not fit at all at any reasonable limit. Keep it
-simple:
-Add KD110N11-51IE and 2082109QFH040022-50E
+The kconfig option does not align with the vision of running the same
+kernel image across platforms.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>
+> Instead of having a table in the kernel, something that would be more
+> platform agnostic would be to have an extension that signals this
+> information. That seems like it would accomplish the same goal and
+> leverage the existing infrastructure in the kernel, albeit with the need
+> to make a new extension.
+>
 
-Best regards,
-Krzysztof
+IMO, expecting an ISA extension to be defined for all possible
+microarchitectural choices is not going to scale so it is better
+to have infrastructure in kernel itself to infer microarchitectural
+choices based on RISC-V implementation ID.
 
+Regards,
+Anup
