@@ -1,296 +1,364 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2057.outbound.protection.outlook.com [40.107.20.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A09253F38
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739216372; cv=none; b=njqLquCnpLJTSdQXICgdKkSvbg/fcrGNEisYKq4czjLVyU41yClkjUpk5gv1j2PI0WIjNV4SMEgpXbTOEzYT7sGQ6xJaE3WFc7UWV76gdSX9k5JaSdZrXB0tews+/ql83Yi0Zb5b3g33wgrjl02QhjsYVTkNGsacqEC9mDv1lbE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC1D257AD7;
+	Mon, 10 Feb 2025 19:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739216372; cv=fail; b=W0jZi3Afz4S2/CvEtjLaaargKVhFvI0QH8+6ED14S3CNDjs5PKLCRSr1NckcRz+H1q6hUSlOnIqrX/79sDNYLdchYp7Fr7B3dJMyOxNSgxId9UFtAH5jdGwVo9Rxba09/bh28HS6YgjZOofRNPOaJKHEzn3ncrIKEPWP8eF+POo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739216372; c=relaxed/simple;
-	bh=3mBwGhUXad/Og45qgnZ3mwVZY3Bby4HklOkRxgDb1rI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EiIEqdQtCe7f65hQlODnfdvjZfHpaX9WOcvPrMi4Liyv6VLiPfYDV5HtM9LCeBUtOy9q8vfPzcdw//Dgxubay7g5evvdd9DNBdloPRLcXVUsNQkZ+KMQubCV4OSjkON5bcqmKrkOprUa9Kpaa3Jwd7E1kCtPBncMKKXkL2BBbgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=Bp4TZFMu; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	bh=O5UQJ6m0QegWod86GYvv4WRCexXGiOFdyfSV//pq8xQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=FKLfbnATbmjoVfoXabAKH6EUFdpgGbzab0GV7QYVpVn/LXdDe55632ybYH4s7zM0H2hnameOAbnNa3DjGRM0L3tYn9eUv9kBQK+lYSSUzHzBkUey9cOuZeAMa19yN8LbrnRhfJGtXw8x0uk0jQPfUG3m28qhLMKqGBBcZCIV4d8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=fail (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=cVWl0KC+ reason="signature verification failed"; arc=fail smtp.client-ip=40.107.20.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="Bp4TZFMu"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21f2339dcfdso75763045ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:39:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1739216369; x=1739821169; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wZKELRK5JWUFBo3xuePgkQDjdMPTcJYc8DxkgWPd8dQ=;
-        b=Bp4TZFMu+F1I7/AkOJsrxomBd7SZXygZl9F5zNVUJHx6ZYM5KwLEnj4qf9q7Jl+tia
-         Zkz5qcscS+b8tXo+bRib1xaHaMPPmLmmOVdohYdKBi30xYYPxOpJvkMHqil5Rvz0olSt
-         jAMKqGB0yxnCKjENCXVm7ZTpKJdt1xhEOSuaI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739216369; x=1739821169;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wZKELRK5JWUFBo3xuePgkQDjdMPTcJYc8DxkgWPd8dQ=;
-        b=No1KbN8maj2shZALTJqVEopOrY7d/1cJe40vg+JAAkhyiQa8nSjWgJf0TRHLCmL6cT
-         z3QefXvQswGpKsjK2+lbYhZZjiO+kF8W0k+nF538PZejs5f46HJSuj1E0LLON39shL0m
-         cLNQhI+MLarMgZCcjWG7HBOfPwHAsJ5FAHxKCffr7A53XP9rvWeE/R3N7oMu7cdls8rR
-         RpSlD6AVjEB/qU4WA6MShsbTqG1ZMI1Xz+aiRQ2CQnCflzotAS4lrC1KX4wot0aqhfG7
-         HWAab1jYLzCUQu9v1Gl/rtJrE9SVNHfaReYMazvn9iNci57+Vs2y5tOz/AvPEdvImmWa
-         97hw==
-X-Forwarded-Encrypted: i=1; AJvYcCVJj0sjct33/9f1oscY7ejBWX1bUOQc2jFjk4GijMOOnPA+MuA2cPZCIHFjqODKHtzcujO0NKw0hTnbWZc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmvShqVoj+G7Y8Y/JPa/IdX9q8steOO7q72bNeu/7hfV1Rk95R
-	hCP/IOW6hN4QHycXnV9KiQUId2pwIQp/AEdEu/thTZihzTCcSd1sRcQaK0tdvUU=
-X-Gm-Gg: ASbGncvlKLuRiHFtLs36ZMoU62xVE7y0ebsi4RFUpZFx5+a/8Dfj+jmlKJ7w73tiyy7
-	0GDx9U+DUAPqpia7uQYNK7vxBbbi3vWzWCK0z3oQYEUnIgdlG2yA8E1Bx09xYESbxl3AVWaPAcF
-	M2z/AVuFJJK+CRYYOFqmSXx2R6TJGYEFRN42QBRJSHVMKlMjahfNdK3yP+EO0Gxj7Pj+DhNrreS
-	9hxshfnvnxfGbCnGYyCr214nqvyzoVekRw7cabeRpcb7bpBxhwvmsZvoBrSJmA5dgnoKdZDo7MD
-	+pnK7LAy1LzLFE3yVsKxoXs=
-X-Google-Smtp-Source: AGHT+IG8wq/vdTSg8bdSPhMPihEXr5MAR2KwYiJand/az1LPniZrMM/fXJ+yCKMr4B1oJlU0SOae9w==
-X-Received: by 2002:a17:90b:288e:b0:2fa:1e56:5d82 with SMTP id 98e67ed59e1d1-2faa097a332mr866016a91.17.1739216368904;
-        Mon, 10 Feb 2025 11:39:28 -0800 (PST)
-Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa2ecbca6dsm4226510a91.0.2025.02.10.11.39.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 11:39:28 -0800 (PST)
-From: Joe Damato <jdamato@fastly.com>
-To: netdev@vger.kernel.org
-Cc: stfomichev@gmail.com,
-	horms@kernel.org,
-	kuba@kernel.org,
-	Joe Damato <jdamato@fastly.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK),
-	bpf@vger.kernel.org (open list:XDP (eXpress Data Path):Keyword:(?:\b|_)xdp(?:\b|_))
-Subject: [PATCH net-next v6 3/3] selftests: drv-net: Test queue xsk attribute
-Date: Mon, 10 Feb 2025 19:38:41 +0000
-Message-ID: <20250210193903.16235-4-jdamato@fastly.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250210193903.16235-1-jdamato@fastly.com>
-References: <20250210193903.16235-1-jdamato@fastly.com>
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="cVWl0KC+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iAJpQ+2GjJJj0n1zqNUXSkOkUennzMxS6gF5iOgSLELEo2dDA+GqCsWyKBUBbvmjA+FosGF/mWshuMWARIIMpy+suK4MD6ZrB0+uABMy3ivSRVqZQ+3H+HVxS4GtrkleUel7puJ6/sIG7rOZYw4zqAuEWcrTp9zludI54JPuYMkeS5l9XSZy1dSK6ohqokcl9jvlV62A/7scoRkuGeEyGQgzzeF0PDcBXM0rHJWPZheG3sA0fsF9i1HFFy6GwfobHV4jUnqj4R7/Thc5Z95vAHXYUxOWJR5ytnzIFJZVkwS7awZMii1LeDNV6m6cXomKSnVEb6nv4WikPJ801rJHrA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UAmwXK8s2ViFQmlIUMzFtDUrgM6KezMlhSGOuLiVbQE=;
+ b=pBKWSGke4Rez57EuVexYl14f/335/OO3qBheGPirbDVRC0zjI/eZvSUCjdeVJtNnIcLKbdXPMra8hNyWenWbp2Hl/fs0c5Gatnf+ucbt+cth7Y8D4Gq86w5pWlZ2jDCuAA2XeuH/8BIGc3l8TwRY17naw6kKq3JZK3R+c2CVHs23rsTRss4K3pAynutIytBz8C+GgKdez2LMAtko+GORTwBo2ol8NW55q6aQCxM6DhxmGr4PMOc+pkYrmY6YoVLg1yyJ//hGe3ySUTZZBQAWkhXnuN+rSyPYcmh2irG3trfcnQk1JuT2Qt1czCEFHFhmNjq2mb20j8NG2T8wI1AUnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UAmwXK8s2ViFQmlIUMzFtDUrgM6KezMlhSGOuLiVbQE=;
+ b=cVWl0KC+MxY1/HfspmyAtzgqj+yRGWu+dLLmZl3v/glIHoov1ulS8hjgD1UEA7APf2jxMuIbTcCKY42m5/Z5Wji72y3TwSWhvsg700iyqKKoH6VgtwFdZETvYAtelhNjds2wSu2yyCXnY3PL1JBQUcX2W6qm3F1SMBPXLTWDHxk5tsXMy02eCYXGcfm60ZfNgig5QrMUpMTaodQyuHY5uAIc8LUGtiZpA55aERFKVszIZQ49XvPlAe6CI5XPuYSMvAbbevXOG0/IQg6y6EN2D5k5i4Yjq4mFdI1WW52p/2yutSW8o7S3WkzKwAgwq4jrEHqORHMOOVgRrQBgMo9FnA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DB9PR04MB8122.eurprd04.prod.outlook.com (2603:10a6:10:25d::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Mon, 10 Feb
+ 2025 19:39:27 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8422.012; Mon, 10 Feb 2025
+ 19:39:27 +0000
+Date: Mon, 10 Feb 2025 14:39:13 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: j.ne@posteo.net
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 05/12] dt-bindings: dma: Convert fsl,elo*-dma to YAML
+Message-ID: <Z6pV4eauZj75+911@lizhi-Precision-Tower-5810>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <20250207-ppcyaml-v2-5-8137b0c42526@posteo.net>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250207-ppcyaml-v2-5-8137b0c42526@posteo.net>
+X-ClientProxiedBy: BY3PR05CA0048.namprd05.prod.outlook.com
+ (2603:10b6:a03:39b::23) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB9PR04MB8122:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8a9a187b-6804-4a4d-74cc-08dd4a0aa174
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|52116014|1800799024|376014|7053199007|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?iso-8859-1?Q?Z13eRVXqqrGBb+B2ovc8EN0jGjelZdXbNvTd3IgA2CMlD8AYbXJByqwOVJ?=
+ =?iso-8859-1?Q?RamfIeWgVCZTUreTLloUYwEECqlnZ9Y6Ww6uRNJEf2FgjVZw6NCaKjYPcO?=
+ =?iso-8859-1?Q?HUf7yPNdSaGhsb2OxYA6UIFw8mF5c5RX5cAMEatUkICzpiKvW1OgXvW8T8?=
+ =?iso-8859-1?Q?aM2wEvFJkBQiVHZHanzD0T/IDhX8A0P86HFhT/a7Vlj/kHTPqN1lEgBeYs?=
+ =?iso-8859-1?Q?4rRasMFATgO8DedovYkDW8HoMhdTH6Zb2kJu/W/TCr5wGWpqJbIofLBcwy?=
+ =?iso-8859-1?Q?UHqrJ1TE72zbyGJoIvv+y278a+Chc5hqtOhVL158haHGLXNXMffghimhZF?=
+ =?iso-8859-1?Q?0q/Oo65O4ymQ78lFMnsxlNjwj+p2Q8GNJBdNpDJGOPfE4UaZzU/T4sV3DO?=
+ =?iso-8859-1?Q?LGwna3THjdu+Zw62Im2tjio6xED0jZaTJ5jfnr6hJmpsP2I3Bv2sYQy1uB?=
+ =?iso-8859-1?Q?VofFUYMhAJlPnnRAXLJO20ZxyjNyBBIjwQ7echfaURVCtqwONL38VyRijD?=
+ =?iso-8859-1?Q?xUS13lGa1veA13mmj35d1FVw77Itk/thrlZGx4udG2qIYeTy52xOg0FGfi?=
+ =?iso-8859-1?Q?ZCJblRTMJe086NrjF0mkHXdE2hVRe4CM0Nn179jxz9QUYfzwebIaqZaJXu?=
+ =?iso-8859-1?Q?5C2LI4gSbXX5tzQFOOyKzjgKw7HfSurLZr6YpauH1J121UiFxdDuGmK7ka?=
+ =?iso-8859-1?Q?FRjg4sSokGJ8AQKFroLWIKRkOJt6iYgDCdkmeLuIP2zeLY6QRAh2XJuvbC?=
+ =?iso-8859-1?Q?uXv/1nGwyp4DInmmourPFyutcOZOEO8UoTvA+0PbZNt3zK2+Q6lkCLztpi?=
+ =?iso-8859-1?Q?8o9wRlpm9giH5u/TvJlN+6+StBhZJIk7unTC4w45QP+Qfn/UUhCvLo9H4U?=
+ =?iso-8859-1?Q?1x2q3FyzdoQfqug2QGMEinX5veHDHkSImBV92reNAh/p8HqzNkePSS/Oeo?=
+ =?iso-8859-1?Q?o2bmJronNk8d+dbEO3kDTewa8wMJ0CugtNgWkigwTD/2BgnKgyMpyESmM5?=
+ =?iso-8859-1?Q?W/bodeuy+R1Lq++Yf8S33CQetkdDTgDbKn26DXXmDJRocTmOty166MXV2f?=
+ =?iso-8859-1?Q?4f/Tk26kp6Dd5xS1et0qZUN963y7Zd+OqbHzb1bdjd0OUe7Lr+uDJzuuhI?=
+ =?iso-8859-1?Q?cR6hcXEBX2jUPR2uU/XE8L0A/Q/DeIbqDEZZP6bHs1sIeiWcKUVeWmk4vJ?=
+ =?iso-8859-1?Q?Lhri6VM7OKfw4LJJcp5JTu7jxMyiAFdTKnu0d0EFJ3vBYtNWyGWBtV630V?=
+ =?iso-8859-1?Q?RYH18Z2P/iM45dWu63R7mBGZlg9OgTd95Icrrr5p2IUJs0kEER/oJcu86L?=
+ =?iso-8859-1?Q?eVvRxiaYqOVLShXTHjPE74Hz69Z2PXkovRyhMKYGGeUgmPVxEgW1qQ4Pli?=
+ =?iso-8859-1?Q?aA3wBmKczUwgnUIY6xim2PKEd9JnAu/GJpxgJVE697ZzTYMnEsuJIN7u4N?=
+ =?iso-8859-1?Q?WlnPX39oKeWynIRs?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(52116014)(1800799024)(376014)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?iso-8859-1?Q?TiK1F3ZA+N7z3JvoR1KuSdRVEXOvU/UJMDIy/TP0gzVJ6g/1uKKNXQpk3r?=
+ =?iso-8859-1?Q?AV8fM12AO/cmTdNl3DXf6CAhoGaNvx+RrQQAdN12CTKo/rwkJTO9m34aPR?=
+ =?iso-8859-1?Q?AUCbYD/NVo+Bc8ftDkBuRKyPMANUtpH3FkQK1VMiycvAwRt1H0vMl13Rt8?=
+ =?iso-8859-1?Q?bNWGmOKbJJSXIKY0Twj3fL5P7/u8IECvZSy6ixafcDLDoW31ka3hkfRdfV?=
+ =?iso-8859-1?Q?qGvFYcWFeOQvlh2i8kcQrcY5KkFRpmNTc8Jfa3G7si34fbJIU7nfpSm8Xt?=
+ =?iso-8859-1?Q?GplVeavAw5ws3Fyvt39hVj8cirbX46E6vnI1I4ZW5SVC3QLubkCEPn4jQh?=
+ =?iso-8859-1?Q?v9IS0sFqGjv+23gtVn70YaRj9vN0h2jqN3UhwuDUASAxtwKIzGZsnzkmbw?=
+ =?iso-8859-1?Q?gkws5rSe4dTluUggq39NoY8LNrgx3nonV0pwnox10Ce1vf2hRA/spEqgAD?=
+ =?iso-8859-1?Q?w+Qh5UYkSCi1MHds4nub10JucRyHGXXsHRErgg0oKaDtevmW/NxZQ7PzxT?=
+ =?iso-8859-1?Q?sFGJuIHbnx+OvvlbaliuIAelrvtJ2PaUV9EqXzfeZGnCTCJDy/iZHHTmsT?=
+ =?iso-8859-1?Q?jSin9VHqqUgJZPBcaj0EQ5ACcwbKfzIemb0av8UphJIbNgLE6rNKRoid7I?=
+ =?iso-8859-1?Q?0xVl6U0QA3BSttFG0yPF+FVl6Z+XZLArVxnlVdF3srMNfn6gvmwG+lwQHs?=
+ =?iso-8859-1?Q?1CUynWnGTasB87TPvV39dj2bjWlsTzICgVvwwDpo06ekgxshcpF2fIdLKs?=
+ =?iso-8859-1?Q?mVg2m1f4AAZPpxGwtO7aJZ/GaCgmb6bxxd/BjNjwHr0dzZZQcu2UUgjuPX?=
+ =?iso-8859-1?Q?EsPNlT0OzRV8kCGcIAww1PGiVV17F+PvjlWTuJZqNDW2tDb1GXcXwYhAL+?=
+ =?iso-8859-1?Q?Dk6o3jBWv8WqdCbCV3o5DgZ/6pL+8GldB+Q7qs6lgWeMmSK4kWjroKQ05E?=
+ =?iso-8859-1?Q?/hPh/vGvceaXbodHPCucwR9bKwCNCcYqzRAhy6RdKP7rfZV0ICv1xX6ghq?=
+ =?iso-8859-1?Q?/4Z14WXW3y3meRQ2wTw/5JtlQamzCpSNpNPOXbH7wsd3fTlxlZrRd7Bp+u?=
+ =?iso-8859-1?Q?mvgV3+5R5vQle0oNGyFSF12I8AgfLsn8f/Zy041ITEgbNQgtRNCuGHgztr?=
+ =?iso-8859-1?Q?xUnFTMls7ZU2T/o/ZaNixaabcSGiZR5U5l4cO/po9mM/TEWa6U5iKiOKEg?=
+ =?iso-8859-1?Q?53xBgIOaN9IZ0ZT8ff1xKD41EQ7J0iByMzo4FRTCt7H3sGO6MZPfACrRHl?=
+ =?iso-8859-1?Q?/aHdz4a2pIhQgveEOdfp7D+kNfwOJKw4Bg+bO6hjV5jq1bCuhcdOXo27H7?=
+ =?iso-8859-1?Q?EEoQ6eWX3iF57L/k7BgniYVIotRgDeV3bpkdwZHVxX81h8bEs7hnhGnWIj?=
+ =?iso-8859-1?Q?sL+PeKpUjYSDiAWHMWFTnBvqtqWOGLiREW4sIyh84uJsMntgnimzTuDkCg?=
+ =?iso-8859-1?Q?6HUGNBqhdP8GREq/gRYt62fhjJHA5aAejaVv3c/e95fSPb89nM882I+yrG?=
+ =?iso-8859-1?Q?FJYwajMLWHPPVlZMYC5MhD9ttoxA4vk+fiIzIH8fqmaeMsxEshSZ9g7CFP?=
+ =?iso-8859-1?Q?gWa+N9NkvYkMJJNXqneRfat/m2hd8YSdBpp9gv+u08QqaNerLiOv7tdCQ2?=
+ =?iso-8859-1?Q?rIQCGAYInqqUVKQTUfTXd3ryrWgpZDOqYZ?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a9a187b-6804-4a4d-74cc-08dd4a0aa174
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 19:39:27.6968
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xDbOgUH1H2xht5eGoiMgguOU8McRyV34gRLpnvirib3HBnmLpZiZdB0dythALSMWC8oYrbMuh8ZsBgeCGfR04w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8122
 
-Test that queues which are used for AF_XDP have the xsk nest attribute.
-The attribute is currently empty, but its existence means the AF_XDP is
-being used for the queue.
+On Fri, Feb 07, 2025 at 10:30:22PM +0100, J. Neuschäfer via B4 Relay wrote:
+> From: "J. Neuschäfer" <j.ne@posteo.net>
+>
+> The devicetree bindings for Freescale DMA engines have so far existed as
+> a text file. This patch converts them to YAML, and specifies all the
+> compatible strings currently in use in arch/powerpc/boot/dts.
+>
+> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> ---
+>
+> V2:
+> - remove unnecessary multiline markers
+> - fix additionalProperties to always be false
+> - add description/maxItems to interrupts
+> - add missing #address-cells/#size-cells properties
+> - convert "Note on DMA channel compatible properties" to YAML by listing
+>   fsl,ssi-dma-channel as a valid compatible value
+> - fix property ordering in examples: compatible and reg come first
+> - add missing newlines in examples
+> - trim subject line (remove "bindings")
+> ---
+>  .../devicetree/bindings/dma/fsl,elo-dma.yaml       | 140 ++++++++++++++
+>  .../devicetree/bindings/dma/fsl,elo3-dma.yaml      | 123 +++++++++++++
+>  .../devicetree/bindings/dma/fsl,eloplus-dma.yaml   | 134 ++++++++++++++
+>  .../devicetree/bindings/powerpc/fsl/dma.txt        | 204 ---------------------
+>  4 files changed, 397 insertions(+), 204 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml b/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..3d8be9973fb98891a73cb701c1f983a63f444837
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml
+> @@ -0,0 +1,140 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/fsl,elo-dma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale Elo DMA Controller
+> +
+> +maintainers:
+> +  - J. Neuschäfer <j.ne@posteo.net>
+> +
+> +description:
+> +  This is a little-endian 4-channel DMA controller, used in Freescale mpc83xx
+> +  series chips such as mpc8315, mpc8349, mpc8379 etc.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - fsl,mpc8313-dma
+> +          - fsl,mpc8315-dma
+> +          - fsl,mpc8323-dma
+> +          - fsl,mpc8347-dma
+> +          - fsl,mpc8349-dma
+> +          - fsl,mpc8360-dma
+> +          - fsl,mpc8377-dma
+> +          - fsl,mpc8378-dma
+> +          - fsl,mpc8379-dma
+> +      - const: fsl,elo-dma
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description:
+> +      DMA General Status Register, i.e. DGSR which contains status for
+> +      all the 4 DMA channels.
 
-Signed-off-by: Joe Damato <jdamato@fastly.com>
-Suggested-by: Jakub Kicinski <kuba@kernel.org>
----
- v3:
-   - Change comment style of helper C program to avoid kdoc warnings as
-     suggested by Jakub. No other changes.
+needn't maxItems
+items:
+  - description: DMA ...
 
- v2:
-   - Updated the Python test after changes to patch 1 which expose an
-     empty nest
-   - Updated Python test with general Python coding feedback
+> +
+> +  cell-index:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Controller index. 0 for controller @ 0x8100.
+> +
+> +  ranges: true
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: Controller interrupt.
 
- .../testing/selftests/drivers/net/.gitignore  |  2 +
- tools/testing/selftests/drivers/net/Makefile  |  3 +
- tools/testing/selftests/drivers/net/queues.py | 35 +++++++-
- .../selftests/drivers/net/xdp_helper.c        | 89 +++++++++++++++++++
- 4 files changed, 127 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/selftests/drivers/net/.gitignore
- create mode 100644 tools/testing/selftests/drivers/net/xdp_helper.c
+Needn't description because no any additional informaiton.
 
-diff --git a/tools/testing/selftests/drivers/net/.gitignore b/tools/testing/selftests/drivers/net/.gitignore
-new file mode 100644
-index 000000000000..ec746f374e85
---- /dev/null
-+++ b/tools/testing/selftests/drivers/net/.gitignore
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+xdp_helper
-diff --git a/tools/testing/selftests/drivers/net/Makefile b/tools/testing/selftests/drivers/net/Makefile
-index 28b6d47f812d..68127c449c24 100644
---- a/tools/testing/selftests/drivers/net/Makefile
-+++ b/tools/testing/selftests/drivers/net/Makefile
-@@ -1,10 +1,13 @@
- # SPDX-License-Identifier: GPL-2.0
-+CFLAGS += $(KHDR_INCLUDES)
- 
- TEST_INCLUDES := $(wildcard lib/py/*.py) \
- 		 $(wildcard lib/sh/*.sh) \
- 		 ../../net/net_helper.sh \
- 		 ../../net/lib.sh \
- 
-+TEST_GEN_PROGS := xdp_helper
-+
- TEST_PROGS := \
- 	netcons_basic.sh \
- 	netcons_fragmented_msg.sh \
-diff --git a/tools/testing/selftests/drivers/net/queues.py b/tools/testing/selftests/drivers/net/queues.py
-index 38303da957ee..55c2b296ad3c 100755
---- a/tools/testing/selftests/drivers/net/queues.py
-+++ b/tools/testing/selftests/drivers/net/queues.py
-@@ -8,7 +8,10 @@ from lib.py import NetDrvEnv
- from lib.py import cmd, defer, ip
- import errno
- import glob
--
-+import os
-+import socket
-+import struct
-+import subprocess
- 
- def sys_get_queues(ifname, qtype='rx') -> int:
-     folders = glob.glob(f'/sys/class/net/{ifname}/queues/{qtype}-*')
-@@ -21,6 +24,34 @@ def nl_get_queues(cfg, nl, qtype='rx'):
-         return len([q for q in queues if q['type'] == qtype])
-     return None
- 
-+def check_xdp(cfg, nl, xdp_queue_id=0) -> None:
-+    test_dir = os.path.dirname(os.path.realpath(__file__))
-+    xdp = subprocess.Popen([f"{test_dir}/xdp_helper", f"{cfg.ifindex}", f"{xdp_queue_id}"],
-+                           stdin=subprocess.PIPE, stdout=subprocess.PIPE, bufsize=1,
-+                           text=True)
-+    defer(xdp.kill)
-+
-+    stdout, stderr = xdp.communicate(timeout=10)
-+    rx = tx = False
-+
-+    queues = nl.queue_get({'ifindex': cfg.ifindex}, dump=True)
-+    if not queues:
-+        raise KsftSkipEx("Netlink reports no queues")
-+
-+    for q in queues:
-+        if q['id'] == 0:
-+            if q['type'] == 'rx':
-+                rx = True
-+            if q['type'] == 'tx':
-+                tx = True
-+
-+            ksft_eq(q['xsk'], {})
-+        else:
-+            if 'xsk' in q:
-+                _fail("Check failed: xsk attribute set.")
-+
-+    ksft_eq(rx, True)
-+    ksft_eq(tx, True)
- 
- def get_queues(cfg, nl) -> None:
-     snl = NetdevFamily(recv_size=4096)
-@@ -81,7 +112,7 @@ def check_down(cfg, nl) -> None:
- 
- def main() -> None:
-     with NetDrvEnv(__file__, queue_count=100) as cfg:
--        ksft_run([get_queues, addremove_queues, check_down], args=(cfg, NetdevFamily()))
-+        ksft_run([get_queues, addremove_queues, check_down, check_xdp], args=(cfg, NetdevFamily()))
-     ksft_exit()
- 
- 
-diff --git a/tools/testing/selftests/drivers/net/xdp_helper.c b/tools/testing/selftests/drivers/net/xdp_helper.c
-new file mode 100644
-index 000000000000..b04d4e0ea30a
---- /dev/null
-+++ b/tools/testing/selftests/drivers/net/xdp_helper.c
-@@ -0,0 +1,89 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <sys/mman.h>
-+#include <sys/socket.h>
-+#include <linux/if_xdp.h>
-+#include <linux/if_link.h>
-+#include <net/if.h>
-+#include <inttypes.h>
-+
-+#define UMEM_SZ (1U << 16)
-+#define NUM_DESC (UMEM_SZ / 2048)
-+
-+/* this is a simple helper program that creates an XDP socket and does the
-+ * minimum necessary to get bind() to succeed.
-+ *
-+ * this test program is not intended to actually process packets, but could be
-+ * extended in the future if that is actually needed.
-+ *
-+ * it is used by queues.py to ensure the xsk netlinux attribute is set
-+ * correctly.
-+ */
-+int main(int argc, char **argv)
-+{
-+	struct xdp_umem_reg umem_reg = { 0 };
-+	struct sockaddr_xdp sxdp = { 0 };
-+	int num_desc = NUM_DESC;
-+	void *umem_area;
-+	int ifindex;
-+	int sock_fd;
-+	int queue;
-+	char byte;
-+
-+	if (argc != 3) {
-+		fprintf(stderr, "Usage: %s ifindex queue_id", argv[0]);
-+		return 1;
-+	}
-+
-+	sock_fd = socket(AF_XDP, SOCK_RAW, 0);
-+	if (sock_fd < 0) {
-+		perror("socket creation failed");
-+		return 1;
-+	}
-+
-+	ifindex = atoi(argv[1]);
-+	queue = atoi(argv[2]);
-+
-+	umem_area = mmap(NULL, UMEM_SZ, PROT_READ | PROT_WRITE, MAP_PRIVATE |
-+			MAP_ANONYMOUS, -1, 0);
-+	if (umem_area == MAP_FAILED)
-+		return -1;
-+
-+	umem_reg.addr = (uintptr_t)umem_area;
-+	umem_reg.len = UMEM_SZ;
-+	umem_reg.chunk_size = 2048;
-+	umem_reg.headroom = 0;
-+
-+	setsockopt(sock_fd, SOL_XDP, XDP_UMEM_REG, &umem_reg,
-+		   sizeof(umem_reg));
-+	setsockopt(sock_fd, SOL_XDP, XDP_UMEM_FILL_RING, &num_desc,
-+		   sizeof(num_desc));
-+	setsockopt(sock_fd, SOL_XDP, XDP_UMEM_COMPLETION_RING, &num_desc,
-+		   sizeof(num_desc));
-+	setsockopt(sock_fd, SOL_XDP, XDP_RX_RING, &num_desc, sizeof(num_desc));
-+
-+	sxdp.sxdp_family = AF_XDP;
-+	sxdp.sxdp_ifindex = ifindex;
-+	sxdp.sxdp_queue_id = queue;
-+	sxdp.sxdp_flags = 0;
-+
-+	if (bind(sock_fd, (struct sockaddr *)&sxdp, sizeof(sxdp)) != 0) {
-+		perror("bind failed");
-+		close(sock_fd);
-+		return 1;
-+	}
-+
-+	/* give the parent program some data when the socket is ready*/
-+	fprintf(stdout, "%d\n", sock_fd);
-+
-+	/* parent program will write a byte to stdin when its ready for this
-+	 * helper to exit
-+	 */
-+	read(STDIN_FILENO, &byte, 1);
-+
-+	close(sock_fd);
-+	return 0;
-+}
--- 
-2.43.0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +patternProperties:
+> +  "^dma-channel@.*$":
+> +    type: object
+> +    additionalProperties: false
+> +
+> +    properties:
+> +      compatible:
+> +        oneOf:
+> +          # native DMA channel
+> +          - items:
+> +              - enum:
+> +                  - fsl,mpc8315-dma-channel
+> +                  - fsl,mpc8323-dma-channel
+> +                  - fsl,mpc8347-dma-channel
+> +                  - fsl,mpc8349-dma-channel
+> +                  - fsl,mpc8360-dma-channel
+> +                  - fsl,mpc8377-dma-channel
+> +                  - fsl,mpc8378-dma-channel
+> +                  - fsl,mpc8379-dma-channel
+> +              - const: fsl,elo-dma-channel
+> +
+> +          # audio DMA channel, see fsl,ssi.yaml
+> +          - const: fsl,ssi-dma-channel
+> +
+> +      reg:
+> +        maxItems: 1
+> +
+> +      cell-index:
+> +        description: DMA channel index starts at 0.
+> +
+> +      interrupts:
+> +        maxItems: 1
+> +        description:
+> +          Per-channel interrupt. Only necessary if no controller interrupt has
+> +          been provided.
+> +
+> +additionalProperties: false
 
+Need ref to dma-common.yaml?
+
+> +
+> +examples:
+> +  - |
+> +    dma@82a8 {
+> +        compatible = "fsl,mpc8349-dma", "fsl,elo-dma";
+> +        reg = <0x82a8 4>;
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        ranges = <0 0x8100 0x1a4>;
+> +        interrupt-parent = <&ipic>;
+> +        interrupts = <71 8>;
+> +        cell-index = <0>;
+> +
+> +        dma-channel@0 {
+> +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
+> +            reg = <0 0x80>;
+> +            cell-index = <0>;
+> +            interrupt-parent = <&ipic>;
+> +            interrupts = <71 8>;
+
+'8',  use predefine MACRO for irq type.
+
+Frank
+
+> +        };
+> +
+> +        dma-channel@80 {
+> +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
+> +            reg = <0x80 0x80>;
+> +            cell-index = <1>;
+> +            interrupt-parent = <&ipic>;
+> +            interrupts = <71 8>;
+> +        };
+> +
+> +        dma-channel@100 {
+> +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
+> +            reg = <0x100 0x80>;
+> +            cell-index = <2>;
+> +            interrupt-parent = <&ipic>;
+> +            interrupts = <71 8>;
+> +        };
+> +
+> +        dma-channel@180 {
+> +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
+> +            reg = <0x180 0x80>;
+> +            cell-index = <3>;
+> +            interrupt-parent = <&ipic>;
+> +            interrupts = <71 8>;
+> +        };
+> +    };
+> +
+
+...
+
+> --
+> 2.48.0.rc1.219.gb6b6757d772
+>
+>
