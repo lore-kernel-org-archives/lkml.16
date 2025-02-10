@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224D7157487
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 04:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9F715D5B6
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 04:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739161609; cv=none; b=LJHLFzQHLR5P+71Ts8IS78uYZUudTgL7Dh3FGZ9TpA3rlpqLuJpsoZlegcyxzuW7pr3W7u984/PQGMblgmCB7Mklywfe+7PUchfapKc3KVzGuFUSESAK3gnaVaDkP2RHWkoGmiHXGcs98IgwWhwscTc/Aq5LZgoOBiFkGSf6mbM=
+	t=1739161611; cv=none; b=ieYXWwr5aMEx+uSq7+RQkiJD2Qbwpr5nLcSz0BRFplo7sh2Zigk025g2ze1mXpxWVMn+BHIuANc900hVbnN6myURg5X8AvK6pI4CQYIx3XUK57jz0UkXHkTltuOjIeDdo+QrTCi39W8OJthUSHdXRB0yyh8fzQSHK5JuSCg+cf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739161609; c=relaxed/simple;
-	bh=EUVQgYDdQvDpbP5AdqIWHackolUC0UTmiQ6+5AfhcxM=;
+	s=arc-20240116; t=1739161611; c=relaxed/simple;
+	bh=64SwIOUfhHNX5qFmIQcTO1Key725txFAZSwTacgBNio=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kuHVwG7w0D+vsUFPQ6pAooUGCrE//fQWWo4Ytwv3qyREpDd2GKqOKSGATAiunTmfnUy0vqDf+uyv3oEs8yCzY/OGAY/fytNcrEeqUA0vRFiNTeW1uVz8EBGrrwfAT2e70ABPJI5clivKs6faOPv4IHM4TopmVAYK2xGreuY+pxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pe1fZe+x; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=jHNrkpGXx/lfGChYuhkei7keOhbmfpg2R/WEmyPIY+c1L9Nsz51j+05zkIFgVASBz2zYI3RnSTlZrfN7SPP1nubBNJ0botv7ahO+o3zHgouOQoIx8yiYaXgjpb/cm6FRc4TbSSnYUAx8VOoFR8xJSDfWVaRbzhoC0cgpMLXv2f4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fL8kaCN8; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pe1fZe+x"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fL8kaCN8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739161606;
+	s=mimecast20190719; t=1739161608;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jCz7+XdNeTmg0ywryfA79K8sDfbhrWMKHNAgiZbFNpE=;
-	b=Pe1fZe+xFxMb7+BGLL2zWEQ1rBf4N6PfQS3CMuKzPVz8vcYq/a7byh4Js7AL2pnwNuaxUq
-	w6BebJE8+BXMaK6rqb/H1cgPYAQwvSZPGueWynHhop6qKLl+8wgQy7j7MDD3iF4rtjAkJd
-	SXCHEXtPx2/SO9Xs4rk/YSeQQFGBJwg=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=+faH9+dGwaJJ+PTE1AmmpbTMJITJh0N7zCRnRyMEaRs=;
+	b=fL8kaCN8+EIHTF04SWIaOdQd4yLa1eKB/yS+Tc8A7+kiMpFwK5jiGhysIqMIWBssy+v1VM
+	gqd50ApeJ2jyz30ST60GAvaGTuYaChbJ/ue7FIDWntVR9wKc1QxzbZ2NQgBaaNFqxH2TSc
+	QshGuCvcYhimRsGy/Ze4oPbr9B22c5Y=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-572-8JHCXfg3MX6Mjy0KrOmx7Q-1; Sun,
- 09 Feb 2025 23:26:43 -0500
-X-MC-Unique: 8JHCXfg3MX6Mjy0KrOmx7Q-1
-X-Mimecast-MFC-AGG-ID: 8JHCXfg3MX6Mjy0KrOmx7Q
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-623-MWproh7-OkuBSaRoWBFOwA-1; Sun,
+ 09 Feb 2025 23:26:44 -0500
+X-MC-Unique: MWproh7-OkuBSaRoWBFOwA-1
+X-Mimecast-MFC-AGG-ID: MWproh7-OkuBSaRoWBFOwA
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 56F271800875;
-	Mon, 10 Feb 2025 04:26:41 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 322181956089;
+	Mon, 10 Feb 2025 04:26:43 +0000 (UTC)
 Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.88.34])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 06CEF19560A3;
-	Mon, 10 Feb 2025 04:26:39 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BFE9119560AD;
+	Mon, 10 Feb 2025 04:26:41 +0000 (UTC)
 From: Waiman Long <longman@redhat.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -49,9 +49,9 @@ To: Peter Zijlstra <peterz@infradead.org>,
 	Boqun Feng <boqun.feng@gmail.com>
 Cc: linux-kernel@vger.kernel.org,
 	Waiman Long <longman@redhat.com>
-Subject: [PATCH v3 2/3] locking/lock_events: Add locking events for lockdep
-Date: Sun,  9 Feb 2025 23:26:11 -0500
-Message-ID: <20250210042612.978247-3-longman@redhat.com>
+Subject: [PATCH v3 3/3] locking/lockdep: Disable KASAN instrumentation of lockdep.c
+Date: Sun,  9 Feb 2025 23:26:12 -0500
+Message-ID: <20250210042612.978247-4-longman@redhat.com>
 In-Reply-To: <20250210042612.978247-1-longman@redhat.com>
 References: <20250210042612.978247-1-longman@redhat.com>
 Precedence: bulk
@@ -63,63 +63,125 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Add some lock events to the lockdep for profiling its behavior.
+Both KASAN and LOCKDEP are commonly enabled in building a debug kernel.
+Each of them can significantly slow down the speed of a debug kernel.
+Enabling KASAN instrumentation of the LOCKDEP code will further slow
+thing down.
+
+Since LOCKDEP is a high overhead debugging tool, it will never get
+enabled in a production kernel. The LOCKDEP code is also pretty mature
+and is unlikely to get major changes. There is also a possibility of
+recursion similar to KCSAN.
+
+To evaluate the performance impact of disabling KASAN instrumentation
+of lockdep.c, the time to do a parallel build of the Linux defconfig
+kernel was used as the benchmark. Two x86-64 systems (Skylake & Zen 2)
+and an arm64 system were used as test beds. Two sets of non-RT and RT
+kernels with similar configurations except mainly CONFIG_PREEMPT_RT
+were used for evaulation.
+
+For the Skylake system:
+
+  Kernel			Run time	    Sys time
+  ------			--------	    --------
+  Non-debug kernel (baseline)	0m47.642s	      4m19.811s
+  Debug kernel			2m11.108s (x2.8)     38m20.467s (x8.9)
+  Debug kernel (patched)	1m49.602s (x2.3)     31m28.501s (x7.3)
+  Debug kernel
+  (patched + mitigations=off) 	1m30.988s (x1.9)     26m41.993s (x6.2)
+
+  RT kernel (baseline)		0m54.871s	      7m15.340s
+  RT debug kernel		6m07.151s (x6.7)    135m47.428s (x18.7)
+  RT debug kernel (patched)	3m42.434s (x4.1)     74m51.636s (x10.3)
+  RT debug kernel
+  (patched + mitigations=off) 	2m40.383s (x2.9)     57m54.369s (x8.0)
+
+For the Zen 2 system:
+
+  Kernel			Run time	    Sys time
+  ------			--------	    --------
+  Non-debug kernel (baseline)	1m42.806s	     39m48.714s
+  Debug kernel			4m04.524s (x2.4)    125m35.904s (x3.2)
+  Debug kernel (patched)	3m56.241s (x2.3)    127m22.378s (x3.2)
+  Debug kernel
+  (patched + mitigations=off) 	2m38.157s (x1.5)     92m35.680s (x2.3)
+
+  RT kernel (baseline)		 1m51.500s	     14m56.322s
+  RT debug kernel		16m04.962s (x8.7)   244m36.463s (x16.4)
+  RT debug kernel (patched)	 9m09.073s (x4.9)   129m28.439s (x8.7)
+  RT debug kernel
+  (patched + mitigations=off) 	 3m31.662s (x1.9)    51m01.391s (x3.4)
+
+For the arm64 system:
+
+  Kernel			Run time	    Sys time
+  ------			--------	    --------
+  Non-debug kernel (baseline)	1m56.844s	      8m47.150s
+  Debug kernel			3m54.774s (x2.0)     92m30.098s (x10.5)
+  Debug kernel (patched)	3m32.429s (x1.8)     77m40.779s (x8.8)
+
+  RT kernel (baseline)		 4m01.641s	     18m16.777s
+  RT debug kernel		19m32.977s (x4.9)   304m23.965s (x16.7)
+  RT debug kernel (patched)	16m28.354s (x4.1)   234m18.149s (x12.8)
+
+Turning the mitigations off doesn't seems to have any noticeable impact
+on the performance of the arm64 system. So the mitigation=off entries
+aren't included.
+
+For the x86 CPUs, cpu mitigations has a much bigger impact on
+performance, especially the RT debug kernel. The SRSO mitigation in
+Zen 2 has an especially big impact on the debug kernel. It is also the
+majority of the slowdown with mitigations on. It is because the patched
+ret instruction slows down function returns. A lot of helper functions
+that are normally compiled out or inlined may become real function
+calls in the debug kernel. The KASAN instrumentation inserts a lot
+of __asan_loadX*() and __kasan_check_read() function calls to memory
+access portion of the code. The lockdep's __lock_acquire() function,
+for instance, has 66 __asan_loadX*() and 6 __kasan_check_read() calls
+added with KASAN instrumentation. Of course, the actual numbers may vary
+depending on the compiler used and the exact version of the lockdep code.
+
+With the newly added rtmutex and lockdep lock events, the relevant
+event counts for the test runs with the Skylake system were:
+
+  Event type		Debug kernel	RT debug kernel
+  ----------		------------	---------------
+  lockdep_acquire	1,968,663,277	5,425,313,953
+  rtlock_slowlock	     -		  401,701,156
+  rtmutex_slowlock	     -		      139,672
+
+The __lock_acquire() calls in the RT debug kernel are x2.8 times of the
+non-RT debug kernel with the same workload. Since the __lock_acquire()
+function is a big hitter in term of performance slowdown, this makes
+the RT debug kernel much slower than the non-RT one. The average lock
+nesting depth is likely to be higher in the RT debug kernel too leading
+to longer execution time in the __lock_acquire() function.
+
+As the small advantage of enabling KASAN instrumentation to catch
+potential memory access error in the lockdep debugging tool is probably
+not worth the drawback of further slowing down a debug kernel, disable
+KASAN instrumentation in the lockdep code to allow the debug kernels
+to regain some performance back, especially for the RT debug kernels.
 
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- kernel/locking/lock_events_list.h | 7 +++++++
- kernel/locking/lockdep.c          | 8 +++++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ kernel/locking/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/locking/lock_events_list.h b/kernel/locking/lock_events_list.h
-index 80b11f194c9f..9ef9850aeebe 100644
---- a/kernel/locking/lock_events_list.h
-+++ b/kernel/locking/lock_events_list.h
-@@ -88,3 +88,10 @@ LOCK_EVENT(rtmutex_slow_acq3)	/* # of locks acquired in *block()	*/
- LOCK_EVENT(rtmutex_slow_sleep)	/* # of sleeps				*/
- LOCK_EVENT(rtmutex_slow_wake)	/* # of wakeup's			*/
- LOCK_EVENT(rtmutex_deadlock)	/* # of rt_mutex_handle_deadlock()'s	*/
-+
-+/*
-+ * Locking events for lockdep
-+ */
-+LOCK_EVENT(lockdep_acquire)
-+LOCK_EVENT(lockdep_lock)
-+LOCK_EVENT(lockdep_nocheck)
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 4470680f0226..8436f017c74d 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -61,6 +61,7 @@
- #include <asm/sections.h>
+diff --git a/kernel/locking/Makefile b/kernel/locking/Makefile
+index 0db4093d17b8..a114949eeed5 100644
+--- a/kernel/locking/Makefile
++++ b/kernel/locking/Makefile
+@@ -5,7 +5,8 @@ KCOV_INSTRUMENT		:= n
  
- #include "lockdep_internals.h"
-+#include "lock_events.h"
+ obj-y += mutex.o semaphore.o rwsem.o percpu-rwsem.o
  
- #include <trace/events/lock.h>
+-# Avoid recursion lockdep -> sanitizer -> ... -> lockdep.
++# Avoid recursion lockdep -> sanitizer -> ... -> lockdep & improve performance.
++KASAN_SANITIZE_lockdep.o := n
+ KCSAN_SANITIZE_lockdep.o := n
  
-@@ -170,6 +171,7 @@ static struct task_struct *lockdep_selftest_task_struct;
- static int graph_lock(void)
- {
- 	lockdep_lock();
-+	lockevent_inc(lockdep_lock);
- 	/*
- 	 * Make sure that if another CPU detected a bug while
- 	 * walking the graph we dont change it (while the other
-@@ -5091,8 +5093,12 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
- 	if (unlikely(lock->key == &__lockdep_no_track__))
- 		return 0;
- 
--	if (!prove_locking || lock->key == &__lockdep_no_validate__)
-+	lockevent_inc(lockdep_acquire);
-+
-+	if (!prove_locking || lock->key == &__lockdep_no_validate__) {
- 		check = 0;
-+		lockevent_inc(lockdep_nocheck);
-+	}
- 
- 	if (subclass < NR_LOCKDEP_CACHING_CLASSES)
- 		class = lock->class_cache[subclass];
+ ifdef CONFIG_FUNCTION_TRACER
 -- 
 2.48.1
 
