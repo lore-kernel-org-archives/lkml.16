@@ -1,189 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2901225A35F
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:29:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B357E26461F
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:32:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739230193; cv=none; b=GpmhetkTL+GRveQRYom9fg6TrNVhCCwre3KeGXUtpne+mhcUV135nRD3qXoAahbgFnKfbscdBMbwFR0u9H4mJmp0uVZZefaUkiTSme/HVUsEgJaRNlWYdKN7OYwoOjtEuQu5Sa2Lktg/Tr6AMZjrpr6Rmy7z2VL1XApBCBC5JFc=
+	t=1739230374; cv=none; b=BsyIz/mBs0kFb02K7DmGa16DED7SaSrNCY/QUvOHUiBFOxfb/sdos0SQIac7rxjcuVTQLUp0BW8feJJ2sT3oBn/68YJ4HBlBIm7eiQsbQIVGRVaKSGFmRd8NU8zKYEkmS+LXTZlT+Cy9gUS6n0aL/HJZbFfw2Ji1gitcLzgjU/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739230193; c=relaxed/simple;
-	bh=gMFSn39Bo/fj/THCfDmaYQBOUDonIKZUGIznXtBUMII=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SvFaM2mGY/Os6laxHSyU49ArrTnd3hp09jpptt7SzfwyZManF4M2v6tnbrCIvska1yLZ73kHlkf8nPPw39bd/6NmUHw6fqN0qmbn8RHTwJKsBQ9JCgh1ylTGo6Jw0HkHjLt9fSQpk0ms5c0g9tOBmvV5VHsPR4CFT9rEtGroSEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f25yr+Lp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739230374; c=relaxed/simple;
+	bh=22w+j6lhQP8ezfPjcTRSkUjR+nPqYS1QRolgr+MkP2c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ehOR5FwZGpQbCjke5rB6HeZVcktwcW+qnlG9AjaP1FbVfD4woTW+VrU0hY/8mfXLwhFyL+YvJEu+fXFvaGzmFikVTDOxv1loIi6PpPWPuEbiQlu0Fr5yQ/zYgnlGYfHMIWnHtmsVfhs3LtoS4BoJVneA5dM5iiaEfwxR+s7XIbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AVavRFgD; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f25yr+Lp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CCF0C4CED1;
-	Mon, 10 Feb 2025 23:29:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739230193;
-	bh=gMFSn39Bo/fj/THCfDmaYQBOUDonIKZUGIznXtBUMII=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f25yr+LpBbFRGtC7EvlvThEQD/vMSec3Cr49aCobG3t9juQ6ZljCRImjWGSNXmtY6
-	 NmI8wBhEb19CKd4wPvhEe2OYtC/nelGSUrbsq5itjWFkeazl85lZ5+bHVEBlvZpwRQ
-	 p5WHrqr/NLrNDfkeP1pRtKbV4ZGkaj3KEstAgKvnEjBsY52uvSixznAY0F5uMrszdn
-	 ik7Ec6APQJ4zlETzCAGWq9nHC57xFuNCOeCCd0ezp34EFndglKN0hptJfFyzWSHIvH
-	 zryyfDpMkXM7jggZW3VmVKw0iQbwu+7lF8ponx2y2VzIAil7B2eaRd6rFmTGA9fKHX
-	 zaKJQUKzJJiWA==
-Date: Mon, 10 Feb 2025 15:29:51 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: David Kaplan <david.kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 06/35] x86/bugs: Restructure mmio mitigation
-Message-ID: <20250210232951.x4mbmpjy57jpunb5@jpoimboe>
-References: <20250108202515.385902-1-david.kaplan@amd.com>
- <20250108202515.385902-7-david.kaplan@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AVavRFgD"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c05bb6dab7so170405485a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:32:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739230371; x=1739835171; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hs5o7sIfj/0izaV2OsPt7FJm28HaB4LTbbVNLtta+7o=;
+        b=AVavRFgDfndLAsMQHpOG4uYTg6SyU04BdlHyOzuEEPGGN4LVHXENTsfYyfy6A6MEEy
+         36eATVw5dXJXsYN4fXb3C6TiodItttH21m3soOV6eeBkglN05p/ijHy8COK9xD+Y9X9Q
+         M4YB1lpG1fFwzx0AuustMwWzrHRtlYQVX8yj0Bot54eE1QtIf0s4yvNu0X0O+JWBHit6
+         /aFsPwSVLM1LimCFkiV9dXIZRnbP7ucD4w+kvqxM/iLbQCDwa0f6ygC1/Bh5FDKbrET4
+         3P6sgN4VOMKklotzjoT5luHPYhF8o44qSEe9r/AqR0JzY1prvdrqs/+JIaWKFMgiC2ub
+         em+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739230371; x=1739835171;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Hs5o7sIfj/0izaV2OsPt7FJm28HaB4LTbbVNLtta+7o=;
+        b=b+BY1uBZctwK2hS52+44ms2qMyU+afdBtom5WWUwG4uMqonPSrLOBn5isMHAw9Ob3l
+         X5sxmcx796l7HmczYdBz8WND6WkyRDIA2SK3+qFMlNSzq5aVXSJkEHDlVbESakjiEET+
+         0+kDmh5BVg/fckAvGmjLJu6Qf22+zD+3xOoQEo/ClVCUN83FS+ju6iPM7JAveU4/SS+t
+         KU1BBJOkbZDzAU0nBMNuWB9+MKdG8qaUATe9mF+zg1FCFlDqBSFC3OrDY5WGyYIYkpEf
+         f/IiPzjkHjsM2qICjgtzCpjkoUKprJPr9JZ28+JkGF74EmEVaarmR3W89uacd5AjN36k
+         X2SA==
+X-Forwarded-Encrypted: i=1; AJvYcCV6OyE4YvNvNdIP1J9MO733RHK7QtCCepdOpfMW+pHXM5hbv1+kYjT45OdcQHUsNFiARUtfEyDLUh080i4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyDTcga2EptO5YD6ai+fsJt5tqrJspv7fUOP+PS+FO2v6BunPx
+	eUYk4h4blSIZUJyoYU1ETK32w6DutG6Oy9PIXIU1BW7cRDjUlDA1
+X-Gm-Gg: ASbGnctmgCcRZqiW9M3PjHbWETydH/Dd+QkK32Dxc/mdsW1N/Ej67n1NfurVl3edRUY
+	+HysPWyglJG86TiNyhGK2hQh9hMvr+3671pwQG7zgUmi5VJVpIRVr0WULebvXf5RwB2fY1usNBj
+	uWqEKSxXTug4Sh+5PyHnE0hpoFdoJaZvivcAmy+50Si3+gjKSKHwnr8MkNa0bBrETGqpI8dNPO0
+	ncLiAVvGDaj85Yy1cj7jSR7SQzglO7FGoplKeFZQANUWZgMd7Ngdtm65Vm/UcamTJyX/fjWYUvt
+	KHbB43zty8cimTMBCsUzoKVOL+PIlkg09t0S0UMI+fT020WrW9aEkyGWKCrfgCNuEV58iBc=
+X-Google-Smtp-Source: AGHT+IGgFrE/m2Y9JZDQZ/mWcc25YvWcS1fKTDlDp8O/AKd0D1m5Ap8GO/3iwAKb4YEL7StINcBjVQ==
+X-Received: by 2002:a05:620a:1708:b0:7a8:554:c368 with SMTP id af79cd13be357-7c068f8a167mr221812685a.6.1739230371528;
+        Mon, 10 Feb 2025 15:32:51 -0800 (PST)
+Received: from localhost.localdomain (ool-1826d901.dyn.optonline.net. [24.38.217.1])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43babb9e4sm52467166d6.99.2025.02.10.15.32.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 15:32:50 -0800 (PST)
+From: Alex Lanzano <lanzano.alex@gmail.com>
+To: airlied@gmail.com,
+	simona@ffwll.ch,
+	tzimmermann@suse.de,
+	noralf@tronnes.org
+Cc: lanzano.alex@gmail.com,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: Update maintainer of repaper and mi0283qt
+Date: Mon, 10 Feb 2025 18:32:31 -0500
+Message-ID: <20250210233232.3995143-1-lanzano.alex@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250108202515.385902-7-david.kaplan@amd.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 08, 2025 at 02:24:46PM -0600, David Kaplan wrote:
-> Restructure mmio mitigation to use select/update/apply functions to
-> create consistent vulnerability handling.
-> 
-> Signed-off-by: David Kaplan <david.kaplan@amd.com>
-> ---
->  arch/x86/kernel/cpu/bugs.c | 60 ++++++++++++++++++++++++++++----------
->  1 file changed, 44 insertions(+), 16 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-> index 7beb2d6c43bb..a8da097ab2d5 100644
-> --- a/arch/x86/kernel/cpu/bugs.c
-> +++ b/arch/x86/kernel/cpu/bugs.c
-> @@ -68,6 +68,8 @@ static void __init taa_select_mitigation(void);
->  static void __init taa_update_mitigation(void);
->  static void __init taa_apply_mitigation(void);
->  static void __init mmio_select_mitigation(void);
-> +static void __init mmio_update_mitigation(void);
-> +static void __init mmio_apply_mitigation(void);
->  static void __init srbds_select_mitigation(void);
->  static void __init l1d_flush_select_mitigation(void);
->  static void __init srso_select_mitigation(void);
-> @@ -190,6 +192,7 @@ void __init cpu_select_mitigations(void)
->  	l1tf_select_mitigation();
->  	mds_select_mitigation();
->  	taa_select_mitigation();
-> +	mmio_select_mitigation();
->  	md_clear_select_mitigation();
->  	srbds_select_mitigation();
->  	l1d_flush_select_mitigation();
-> @@ -207,9 +210,11 @@ void __init cpu_select_mitigations(void)
->  	 */
->  	mds_update_mitigation();
->  	taa_update_mitigation();
-> +	mmio_update_mitigation();
->  
->  	mds_apply_mitigation();
->  	taa_apply_mitigation();
-> +	mmio_apply_mitigation();
->  }
->  
->  /*
-> @@ -510,6 +515,45 @@ static void __init mmio_select_mitigation(void)
->  		return;
->  	}
->  
-> +	if (mmio_mitigation == MMIO_MITIGATION_OFF)
-> +		return;
+Add myself as the maintainer of the recently orphaned repaper and
+mi0283qt drivers.
 
-Another seemingly pointless return, the only thing after this is the
-MMIO_MITIGATION_AUTO check.
+Signed-off-by: Alex Lanzano <lanzano.alex@gmail.com>
+---
+ MAINTAINERS | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> +	/* Microcode will be checked in mmio_update_mitigation(). */
-> +	if (mmio_mitigation == MMIO_MITIGATION_AUTO)
-> +		mmio_mitigation = MMIO_MITIGATION_VERW;
-> +
-> +}
-
-Extra whitespace.
-
-> +
-> +static void __init mmio_update_mitigation(void)
-> +{
-> +	if (!boot_cpu_has_bug(X86_BUG_MMIO_STALE_DATA) || cpu_mitigations_off())
-> +		return;
-> +
-> +	if (verw_mitigation_enabled())
-> +		mmio_mitigation = MMIO_MITIGATION_VERW;
-> +
-> +	if (mmio_mitigation == MMIO_MITIGATION_VERW) {
-> +		/*
-> +		 * Check if the system has the right microcode.
-> +		 *
-> +		 * CPU Fill buffer clear mitigation is enumerated by either an explicit
-> +		 * FB_CLEAR or by the presence of both MD_CLEAR and L1D_FLUSH on MDS
-> +		 * affected systems.
-> +		 */
-> +		if (!((x86_arch_cap_msr & ARCH_CAP_FB_CLEAR) ||
-> +		      (boot_cpu_has(X86_FEATURE_MD_CLEAR) &&
-> +		       boot_cpu_has(X86_FEATURE_FLUSH_L1D) &&
-> +		     !(x86_arch_cap_msr & ARCH_CAP_MDS_NO))))
-> +			mmio_mitigation = MMIO_MITIGATION_UCODE_NEEDED;
-> +	}
-> +
-> +	pr_info("%s\n", mmio_strings[mmio_mitigation]);
-> +	if (boot_cpu_has_bug(X86_BUG_MMIO_UNKNOWN))
-> +		pr_info("Unknown: No mitigations\n");
-
-Seems weird to print two messages for the X86_BUG_MMIO_UNKNOWN case?
-
-And note that if it gets enabled by verw_mitigation_enabled() it prints:
-
-  MMIO Stale Data: Mitigation: Clear CPU buffers
-  MMIO Stale Data: Unknown: No mitigations
-
-which is confusing at best :-)
-
-It should probably just print either one or the other, like it did
-before (and like mmio_stale_data_show_state() does).
-
-> @@ -538,21 +582,6 @@ static void __init mmio_select_mitigation(void)
->  	if (!(x86_arch_cap_msr & ARCH_CAP_FBSDP_NO))
->  		static_branch_enable(&mds_idle_clear);
-
-Right here it does the following:
-
-	/*
-	 * Enable CPU buffer clear mitigation for host and VMM, if also affected
-	 * by MDS or TAA. Otherwise, enable mitigation for VMM only.
-	 */
-	if (boot_cpu_has_bug(X86_BUG_MDS) || (boot_cpu_has_bug(X86_BUG_TAA) &&
-					      boot_cpu_has(X86_FEATURE_RTM)))
-		setup_force_cpu_cap(X86_FEATURE_CLEAR_CPU_BUF);
-
-Isn't that a cross-mitigation dependency?  i.e. if
-X86_FEATURE_CLEAR_CPU_BUF gets enabled here then the other mitigations
-would need to update their mitigation reporting?
-
-Maybe that check can be done in mmio_select_mitigation()?
-
-
-Then, after that there's:
-
-	/*
-	 * X86_FEATURE_CLEAR_CPU_BUF could be enabled by other VERW based
-	 * mitigations, disable KVM-only mitigation in that case.
-	 */
-	if (boot_cpu_has(X86_FEATURE_CLEAR_CPU_BUF))
-		static_branch_disable(&mmio_stale_data_clear);
-	else
-		static_branch_enable(&mmio_stale_data_clear);
-
-which assumes this is called after the other VERW-enabling
-*_apply_mitigation() functions.   It feels like this decision should be
-made in mmio_update_mitigation().
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1c5b22f00434..b5e46f23d1ba 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7352,7 +7352,8 @@ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+ F:	drivers/gpu/drm/mgag200/
+ 
+ DRM DRIVER FOR MI0283QT
+-S:	Orphan
++M:	Alex Lanzano <lanzano.alex@gmail.com>
++S:	Maintained
+ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+ F:	Documentation/devicetree/bindings/display/multi-inno,mi0283qt.txt
+ F:	drivers/gpu/drm/tiny/mi0283qt.c
+@@ -7455,7 +7456,8 @@ F:	Documentation/devicetree/bindings/display/bridge/ps8640.yaml
+ F:	drivers/gpu/drm/bridge/parade-ps8640.c
+ 
+ DRM DRIVER FOR PERVASIVE DISPLAYS REPAPER PANELS
+-S:	Orphan
++M:	Alex Lanzano <lanzano.alex@gmail.com>
++S:	Maintained
+ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+ F:	Documentation/devicetree/bindings/display/repaper.txt
+ F:	drivers/gpu/drm/tiny/repaper.c
 -- 
-Josh
+2.48.1
+
