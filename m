@@ -1,67 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9139B2E628
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:59:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9BC2E628
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739181572; cv=none; b=L60VHBQfi7LUYDHq/EICACip0PvPmKxk39xJqdwIEIID/wOlCL8dSo/JG6rOgLs4fpWB2ZOLL76B+fpKQKGKqEfj4ckdCVmlmsognV6U6BIEKfyGoB4iVNcqNDmCuDtqXFX19Na96LKLl7OS5MhGI9ooUQ/shIykb/cRBhXq1K4=
+	t=1739181594; cv=none; b=DLbBDlpNCiAjBvtdv4fkqvxaUDgeMHyQdKgkswANIkqsLjIrPeoYJU2Xuy3vIsTjER9lEer//kW2twsUcRtgStrfPQODvVpJWLHYBrIOCowWQLn+WhJKfz4VLMXrtkycJyq4SsuC2UghHIC98fDPYLRp8mdqMtVzqN4Zv8vnqek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739181572; c=relaxed/simple;
-	bh=aTtvb1f4dMtTpn5Laz2mDNmKptpgk8JKwnk9yB+3Mqs=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=J5aLoFUy66BTSAnFXUukK7Ho8sXkJs5I47RunvD1GE/QwvrlXdrV5UPiFO3deoA/JJwfUDjCSPRf0icRbDInl2Z3PuiG1P5UVDKT1Dm4OAT0xwghJJdGphbrPcK+w7ejgaqTgQJNmvr60qv6C+uNlMImrxYoKaHrNXtIuqwRryA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HApETyr2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739181594; c=relaxed/simple;
+	bh=E+6G9ivPSVsgFELSOBAAWHbWTTLXkPSljJe47y9F14w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fVkQF4SX6eGvzDj0yi6mgqf1X2mUrEqsr4XDlGT/3FrQVOOBm7LpTcDvqOQxqTRFN0QQMiuNXiZhSFBny6GWsn3XUfE73/r2AG8uFGJ5hDg6UxQaA877VhAchiZkuON8JN6R88QP4kpgBRQAwzjcqijDGNWGI1o8i8vcY6aoru8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eQrJP15Q; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HApETyr2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C304C4CED1;
-	Mon, 10 Feb 2025 09:59:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739181572;
-	bh=aTtvb1f4dMtTpn5Laz2mDNmKptpgk8JKwnk9yB+3Mqs=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=HApETyr27GOJHy51a/6b+lne7KRLt2svbWkGcav0KLhq5MNGmbLRllEjaYuspNYNT
-	 h2JAHSNFBOpMDrYEFQgiWLSVuo9P7/fTlPGlEhFWEPW0mNLom5us9EJJ7COtvVvA0M
-	 xefqD5rvHCbhlGAnlAGsslQD+0YH0gT/Oy3KDlnmaSdWgHlgky3v85b5oe6tUQo6wa
-	 h5qZnSS4xZfTW1wb6rOcjaW7ayJOufzEzCuPJOO+ubFFINStO0WxvXS2ifRFrLqXNa
-	 nQNdbH4wg/rZwWugf08QeGUlumaYZpSvwK+w1v+0tXiAGoBWya6zCdvXFFvYGlp4d8
-	 UGjsSp6yFGZ8w==
-Message-ID: <61e5cacc-907d-4b86-a26a-63a31cdadd61@kernel.org>
-Date: Mon, 10 Feb 2025 17:59:28 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eQrJP15Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739181594; x=1770717594;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=E+6G9ivPSVsgFELSOBAAWHbWTTLXkPSljJe47y9F14w=;
+  b=eQrJP15Q29GeQ4vRyKtux3UJbNMAfSaJ35ldeNQ5p8kE846h3DGSxyVp
+   Qf0HO4/P9zJqg0EPe8YCuR3cYYbWs3YK/LHGPU9GBqCv/gw06xVxsqXwr
+   2Kv4ZYXkBn91/fP69bPvQEc8BzyBBNZDx32WetQx+2yCtAGHuYTRRGcMa
+   4LFILxCdXzvuuUZCfgAShDTnuVPvgF25xniUBY5e24I5rQ1QKo5RnykX4
+   lqHfFzqKnq6ljbORcd3U+DTiNxQQAFdXR9dsoMBLPmyahaUL+tP/0gRLh
+   A5QLdi7IQLAU069oQDTMdd4T3QItUCxgpkCpPiUydl3T0SOp8UCPZQ75E
+   w==;
+X-CSE-ConnectionGUID: BdXPOrBZSsGe6ppHEoJ4Ag==
+X-CSE-MsgGUID: KV4S6BCJQvK/rM5NIVGb8Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="39666638"
+X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
+   d="scan'208";a="39666638"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 01:59:53 -0800
+X-CSE-ConnectionGUID: Lz+XmfaiRZuvKqZNFCS1sg==
+X-CSE-MsgGUID: T5+4AuQ0R7Sqoz3Biyq8rw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="112584355"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa007.jf.intel.com with ESMTP; 10 Feb 2025 01:59:51 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 7F6392F2; Mon, 10 Feb 2025 11:59:49 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Amit Shah <amit@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] virtio_console: Get rid of unneeded temporary variable
+Date: Mon, 10 Feb 2025 11:59:45 +0200
+Message-ID: <20250210095946.4122771-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org
-Subject: Re: [f2fs-dev] [PATCH 2/2 v2] f2fs: add a sysfs entry to request
- donate file-backed pages
-To: Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net
-References: <20250131222914.1634961-1-jaegeuk@kernel.org>
- <20250131222914.1634961-3-jaegeuk@kernel.org> <Z6Y0w1iALudX9GA7@google.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <Z6Y0w1iALudX9GA7@google.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/8/25 00:28, Jaegeuk Kim via Linux-f2fs-devel wrote:
-> 1. ioctl(fd1, F2FS_IOC_DONATE_RANGE, {0,3});
-> 2. ioctl(fd2, F2FS_IOC_DONATE_RANGE, {1,2});
-> 3. ioctl(fd3, F2FS_IOC_DONATE_RANGE, {3,1});
-> 4. echo 1024 > /sys/fs/f2fs/tuning/reclaim_caches_kb
-> 
-> This gives a way to reclaim file-backed pages by iterating all f2fs mounts until
-> reclaiming 1MB page cache ranges, registered by #1, #2, and #3.
-> 
-> 5. cat /sys/fs/f2fs/tuning/reclaim_caches_kb
-> -> gives total number of registered file ranges.
-> 
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+When compiling a kernel with GCC using `make W=1` with CONFIG_WERROR=y
+(which is default nowadays), the build fails:
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+drivers/char/virtio_console.c:1427:9: note: ‘snprintf’ output between 9 and 27 bytes into a destination of size 16
 
-Thanks,
+Indeed, GCC can't see the limits of the variables that are in use.
+Fix this by using dev_name() of the newly created device that is
+luckily the same as the string used for the DebugFS node name.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/char/virtio_console.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
+index 24442485e73e..707464d2227c 100644
+--- a/drivers/char/virtio_console.c
++++ b/drivers/char/virtio_console.c
+@@ -1321,7 +1321,6 @@ static void send_sigio_to_port(struct port *port)
+ 
+ static int add_port(struct ports_device *portdev, u32 id)
+ {
+-	char debugfs_name[16];
+ 	struct port *port;
+ 	dev_t devt;
+ 	int err;
+@@ -1424,9 +1423,7 @@ static int add_port(struct ports_device *portdev, u32 id)
+ 	 * Finally, create the debugfs file that we can use to
+ 	 * inspect a port's state at any time
+ 	 */
+-	snprintf(debugfs_name, sizeof(debugfs_name), "vport%up%u",
+-		 port->portdev->vdev->index, id);
+-	port->debugfs_file = debugfs_create_file(debugfs_name, 0444,
++	port->debugfs_file = debugfs_create_file(dev_name(port->dev), 0444,
+ 						 pdrvdata.debugfs_dir,
+ 						 port, &port_debugfs_fops);
+ 	return 0;
+-- 
+2.45.1.3035.g276e886db78b
+
