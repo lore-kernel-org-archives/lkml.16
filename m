@@ -1,86 +1,123 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE7125C711;
-	Mon, 10 Feb 2025 20:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E0A25C703;
+	Mon, 10 Feb 2025 20:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739217688; cv=none; b=byxu1UDhfRmfZdCQejG2FK7nl84qzv/9/9LuZ24RG5mlxamHuAhs472FAY/xxXSQOxkl4xUomlSV1DJx2Hn41kuInEdVltCX9IWRwUwT+gbkZX9I40CBNoomeC9FOFOs8G3ELMJYA0p2WRw14k1PgxsTZFBo3tBqX9ZxaODl9NQ=
+	t=1739217799; cv=none; b=cYThYtU2Nc8khrWY5kPfIPzS0F9DQaDDKcigGu68SjGjSoDvK9JdlATxJpfXFFY3wpiKaot/GX2CYTteVyzh9gMbrQYGsi0Waj32wqgoyfXgT+4ZZjDmWvG6aXdgVPnhCsUkkFLMBZupyNaq1r+j1QRLg0GZj6eg+jpm72hFAns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739217688; c=relaxed/simple;
-	bh=+jrpp41z+YtDR/dn1tbp4CQyYs0XILLfyycd7ZxUoB8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Igj6MDL9UeIZfWct+Ahl7yfb2O1lLWDh/3+eEZXqrStdrAerMUbwI5sNohf2IN6AWxtuYMKpI4a/rKTP8iPkbi0HBg1bbq2MYBfPzdFw5673jLh43C8fe99q9Mim1MP0mbufv0Y05c3POk+Sz7w5wsJbaKuFy+EM9Dp+lSS3QHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dFjzBAYR; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739217799; c=relaxed/simple;
+	bh=mFFHb+Q7fRlwtTG8raIJa2CEidV+ZaC7Nq7GpjuMQko=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=SqWF6YwIqRUyNYwKewo0e7MAuKbgmYpnIBfCz/3ASiPdVMF9DrcQ6p5mLloGCIsLu13dcefUHTd3LBOAjMFCGgLr+ROXz9myPkcqJXKREltTyu+RbVTZkoMKo1IIYgW6Q0POoyeYhcJPNZT7wkvYkj5/dwH9Oi3b/B8l/iEKfe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UltgyHSW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YHIU88/9; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dFjzBAYR"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-438a39e659cso33020885e9.2;
-        Mon, 10 Feb 2025 12:01:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739217685; x=1739822485; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YZ9Q82Rn5xAeR5ILneKt8HT+/+8kNs7Yx9TglAX5fLw=;
-        b=dFjzBAYRxip46xLSeP41ersQbcIxSG9x9ll8v92+PQl/k8pLHsMuM9g1aeIJ3mkVop
-         FS9MH/QF7xtqKDIseJBocNehOsAi0tsFAoWV39xFrkYiKFkGe5DrgstdcWuR5uX6dwLv
-         SYkRe1eir1ofuyoo6vQwCiBJytQj3waM3MUZu3uY1fNtX60OcCM8dyZacwjVYY+jr7z4
-         lUIFaxuWwv/suvOFdC2+8KlyAB0fv1rLzt1C2zBscruJ1bpDcu+Rz19JqkiMl9FD54RC
-         LxirnmxmKri1nNgELS/4jCvVvB2SYBx77yvqlBrINIs3QElLo50ebDAxqWt2l2tKQOTb
-         2wQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739217685; x=1739822485;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YZ9Q82Rn5xAeR5ILneKt8HT+/+8kNs7Yx9TglAX5fLw=;
-        b=V0cLRcOjxetlPlCQOIe4U2xOdElXMTVgSKliRZl0Oqdr8u05fwKy+kZvCuZveLivof
-         tAwoUY1ivWFtnywV8P4S82HbKF1X+UfxqXyg+4xE06yBoiaEF+1Z9kkae8Hu5bReaoUs
-         Tg0GH4ZsTy/csdYNPCHvFmgThgolVMF4RQcORvFu3FHsPIJRZJpYc3fI9+xpTU1202sJ
-         gxLAeXlLbL0hIuLzxv1V6+jsOlonJqONZxJhZ2KSQuxU1F9FzGQerkaRC7MYGRpiokt9
-         mQ2Yrmlht0au1Y56Boa9FY6R/rFiF1i7XDGfHsqinkvcWOShgSbSSe3kA69guvwBQiXb
-         DSJw==
-X-Forwarded-Encrypted: i=1; AJvYcCVA7WBxYOYnZoh6odt1Wxrk8muiMw5JoQPHVWZoLVFaraVc6whD7ZljEdJryo3VOjHvppWrzjEqlXAZ2UO9o7Y=@vger.kernel.org, AJvYcCWDO4V9ddYCpVzWOI9fwyK5nDo9OG3uFYQBQL3pCjDgMLA/IeT/78fuPmj9DAlCa8goDyMr0wKuOANSEzY+@vger.kernel.org, AJvYcCWKsjcrdbqpjUgNMtSz4m2C4pVxV37WnoaJ52G+I5A2u59alMxdQwuyKOpaASyeIFXufWr7fXelpAIAiK+TILA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzvO7xhPytRc3xjqK8H09HAtPtVncTAfckNIfCLAjHz07I+F5l
-	MP1xOxM2EgydI1uB+yLPKF2F1qHz0qeoWYJ8Zwx4dqfsxkDt56dh
-X-Gm-Gg: ASbGnctIdmmWwYjmLSgDT8Vvao3aE4kxa6tgMlXmswim7Uo2c57jxqyh6qSsA1Xsgsb
-	MKLvTyIT2wa7IDBKP7Dbo6UOQyJu/UxuRM32s1Zq6xg+P5qEE8CWbmyywS9P527IXJ62fM0Dr2/
-	RkkP5CoTYRC4Oe2V5kyH+DWfN2sLCkRccP/3KMlQuLepkb7VFccoQzi8+DdOzisUbV9VcIXOR8I
-	zQJFmx9kl05XDZ3Z+cfRphv4EYYHNPUxxxRSuRUtWS1APSoreAsU4+p4tWGROl1GJIVxSY3BYGx
-	UzVJCgJypw==
-X-Google-Smtp-Source: AGHT+IG+Gds7nLUN3pX8Qvyrwd0mTiclY92fHM9qKjkBliJDsIAfgsimAGqz5HMkoO5BEYxclKKy0Q==
-X-Received: by 2002:a5d:588d:0:b0:38d:da11:df22 with SMTP id ffacd0b85a97d-38dda11e141mr6124430f8f.37.1739217684961;
-        Mon, 10 Feb 2025 12:01:24 -0800 (PST)
-Received: from void.void ([141.226.13.80])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbde1dfaesm13244759f8f.90.2025.02.10.12.01.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 12:01:24 -0800 (PST)
-Date: Mon, 10 Feb 2025 22:01:21 +0200
-From: Andrew Kreimer <algonell@gmail.com>
-To: Ping-Ke Shih <pkshih@realtek.com>
-Cc: Kalle Valo <kvalo@kernel.org>,
-	Bitterblue Smith <rtl8821cerfe2@gmail.com>,
-	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH net-next] wifi: rtlwifi: rtl8192de: Fix typos
-Message-ID: <Z6pbEUQoJxtKmaG_@void.void>
-References: <20250206082457.9148-1-algonell@gmail.com>
- <d525ed7b3b564238b25b0f3653f20067@realtek.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UltgyHSW";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YHIU88/9"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739217795;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4xbmPr3piXj7ADDrvZKLAtAYel1F1qRBX96wVs4gBXU=;
+	b=UltgyHSWfuC0zAmpvof5FBVAasvcM+fH3C1Vfrf8UEuntcbh7lTHt4BH9cIx8Z2nzXPfPo
+	JPupmxaO4Tr9ruHrN8MCqTvryA/YRds4jgyASYXrjNmUr1LROFvcjvVHMPEUKLckRWBaAM
+	+VdsyI4rHMT3fgXUYvkoYIUyCNq5AcMf6+dM06RdOehtzLXJbR1Mu6L8DFmjEUaer4Ueld
+	xooOBP0hdSFDmxRPVonyMrbHjQoHlHs7PQrkwHwInoPTNJp2U7fg1wISpMs1v+KALhl1Rc
+	7svsW25NKZi0qBSh/sEU0iRYGFESeEoZ1T3jXcocNiTQgnezBxXeeKvIDSh94w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739217795;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4xbmPr3piXj7ADDrvZKLAtAYel1F1qRBX96wVs4gBXU=;
+	b=YHIU88/96u//UWM02Wvx1uBaZvGgspl2FGg/IaJu9YnZ2SGAEDVbi6I2hThV4F7Gn358hi
+	5Lk77YN/lSA346AA==
+To: "Vankar, Chintan" <c-vankar@ti.com>, Jason Reeder <jreeder@ti.com>,
+ vigneshr@ti.com, nm@ti.com, Paolo Abeni <pabeni@redhat.com>, Jakub
+ Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, "David S.
+ Miller" <davem@davemloft.net>, Andrew Lunn <andrew+netdev@lunn.ch>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, srk@ti.com,
+ s-vadapalli@ti.com, danishanwar@ti.com, m-malladi@ti.com
+Subject: Re: [RFC PATCH 1/2] irqchip: ti-tsir: Add support for Timesync
+ Interrupt Router
+In-Reply-To: <09880b14-cef1-44cd-9fa4-8840fb673c0a@ti.com>
+References: <20250205160119.136639-1-c-vankar@ti.com>
+ <20250205160119.136639-2-c-vankar@ti.com> <87lduin4o5.ffs@tglx>
+ <09880b14-cef1-44cd-9fa4-8840fb673c0a@ti.com>
+Date: Mon, 10 Feb 2025 21:03:15 +0100
+Message-ID: <87cyfplg8s.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d525ed7b3b564238b25b0f3653f20067@realtek.com>
+Content-Type: text/plain
 
-> To be unique subject, I will change it to 
-> " wifi: rtlwifi: rtl8192de: Fix debug message typos of phy setting"
-> 
-> By the way, patch goes to wireless-next instead. 
+Chintan!
 
-Noted, thank you.
+On Sun, Feb 09 2025 at 14:06, Vankar, Chintan wrote:
+> On 2/7/2025 2:58 AM, Thomas Gleixner wrote:
+>> On Wed, Feb 05 2025 at 21:31, Chintan Vankar wrote:
+>>> +static struct irq_chip ts_intr_irq_chip = {
+>>> +	.name			= "TIMESYNC_INTRTR",
+>>> +};
+>> 
+>> How is this interrupt chip supposed to work? All it implements is a
+>> name.
+>> 
+>
+> Timesync INTR can be used to map input sources with the corresponding
+> output, so that we can configure specific functionality for the device
+> that is using this output sources either as an interrupt source or to
+> synchronize the time.
+>
+> To implement above Timesync INTR's functionality, I have implemented
+> ts_intr_irq_domain_alloc() and ts_intr_irq_domain_free() ops which are
+> sufficient. Let me know if they are fine.
+>>> +
+>>> +	tsr_data.domain = irq_domain_create_tree(&node->fwnode, &ts_intr_irq_domain_ops, &tsr_data);
+>> 
+>> So this instantiates a interrupt domain which is completely disconnected
+>> from the rest of the world.
+>>  > How is the output side of this supposed to handle an interrupt which is
+>> routed to it?
+>> 
+>
+>                          ________________________
+>                         |    Timesync INTR       +---->dma_local_events
+>                         |                        |
+> Device sync events----->                        +---->pcie_cpts_hw_push
+>                         |                        |
+>           cpts_genf----->                        +---->cpts_hw_push
+>                         |________________________|
+>
+>
+> No it is connected, it is being used to configure the output for
+> Timesync INTR as mentioned above.
+>
+> As seen in the diagram, Timesync INTR has multiple output interfaces and
+> we can configure those to map them with the corresponding input as
+> required by peripherals which receives the signal. In context of this
+> series, CPTS module is utilizing the output signal of cpts_genf as
+> Hardware timestamp push event to generate timestamps at 1 seconds
+
+If I understand this correctly, then the interrupt number you need to
+allocate for this is never going to be requested. If it would be
+requested it just would do nothing and the handler would never be
+invoked, right?
+
+The allocation just establishes the routing of a signal between two
+arbitrary IP blocks in the SoC.
+
+So the question is what has this to do with interrupts in the first
+place?
+
+Thanks,
+
+        tglx
