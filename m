@@ -1,47 +1,58 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919D11C2DA2
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36192264622;
+	Mon, 10 Feb 2025 22:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739227381; cv=none; b=E9bpfZC7Psuux1vme43u5aweMom1a3UeUGLjX1TvzCjx3+jqvbkPiRW3aTTJLCrW/NJ1+loH5cUtTUe6HRcNDz3snLARoscLGK9M1DEGr/kDQHkDcsNT4pcyhmbM/dUKlVPi/PHgRO4KuZE6Jio+944Q16Cg7+guXjXF6T7Xa2U=
+	t=1739227527; cv=none; b=kJLHwlst0o2C6fLNCz8duOTQYET+ZK36cXC1TRHggnMuf+jFzb4EiaWyWitppIL8HclWwi6CIbUruCWH6qIn0oZ2//OJBbGgXQAWWM1QsZythd+BKlSsTSO9y6Yvtvlgh4JUJURE6d+vhu5x5IrOxDDcx/t+Krn2IeETCsNPCmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739227381; c=relaxed/simple;
-	bh=pJ3AFthbhn2IjEmAwvy7YS/7fiOfR0wUHuutA87vzQk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R0cbbnjwpEOJltbccdyB9laB17iLO5O2Eq5fvtY0FsDPpnYxHQw8KH6zQoO+6VYvWf31W8im9SejUD5KuGs5f0cympgJhphayJwD3W27xasDUT5wJcAO8xScbwjg2wyyFkXYlmsfPLE2xAgzmXLnzYA+3Py3CIWnretZ8VoK9gU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nXxFgAA0; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739227527; c=relaxed/simple;
+	bh=Fk1CFlse0fOzf7hyLwkoZOv8fJZ86dz0i7DYgJbGnDo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LuzpiGT/fCP63DmwoaiZgrFxJmum5UN7YnRYua8ZnUEvr3Yg5zeY5CZ6Q1SHAFddBRO7UZ0BwcqcdyWcqfgSGF23/0V7/na+VetFQfx4IIJSkpBtKdJULYzlcaPKc3pPHfqFgs9XjCb6kXPEoSPvO7ORq+Ck2EYH9+l/QFHc6T8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=OGU+K4gX; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nXxFgAA0"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739227377;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=YZhQ2JMipPfK0C7SvJ4X1y2p34Ne5eOf0xju/PAVEgM=;
-	b=nXxFgAA0saOIfIGqqMlqUuO0hqMX8oWX+vVvSMN286mIl1tb52GqSsZ1FTC2eV6AqWmiDj
-	TA7yuvuzQC2bZ2EVToHRyY7aGc8W2zxgEwz0oZmJ+4Y6pkYmXfPcM6jY/XVNcFTXMh83c5
-	MXFdazgQqH9rDpiIPHMya/Fkjob+CHI=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Shivaprasad G Bhat <sbhat@linux.ibm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Gaurav Batra <gbatra@linux.ibm.com>,
-	Brian King <brking@linux.vnet.ibm.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] powerpc/iommu: Use str_disabled_enabled() helper
-Date: Mon, 10 Feb 2025 23:42:44 +0100
-Message-ID: <20250210224246.363318-1-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="OGU+K4gX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=gScTzSF5SmDK0ItX+9bERNg9WxTsYpnT5wGwYZDdZ9I=; b=OGU+K4gXc4OYnHKaCeOf6ysMgf
+	Q87X0X2NqmHUBWPIFyTVk7vRZ0/bvMO9BvnRqUku4PeXIKWB9R5w/GotaxosFd1ALBlHvXPUdLt3K
+	yhfYkUokK311vI0MWiS9f2TMnOE5KRrjgJTP0ez2np1cxuzQqruU1Ufvd1WGubRT4qQX3iqv4chTo
+	x//pfL+BrW41oQLCLtNU9sXTybqAeGSrutZlikkfKgAGVMQdHGGC10Bjtjf86x6FSI4F7Y+c7AfyU
+	x1qaDdMErFccNXBcxzQxEhtehsPXTY+O5VPrKN8SQqwrHqMIOGplHEr5wQmNZSG9q4V8sz17ePWwg
+	0PYVYFiw==;
+Received: from i53875bc0.versanet.de ([83.135.91.192] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1thcWp-0008Re-TU; Mon, 10 Feb 2025 23:45:23 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: srinivas.kandagatla@linaro.org
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	heiko@sntech.de,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	detlev.casanova@collabora.com,
+	sebastian.reichel@collabora.com,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH RESEND v2 3/6] dt-bindings: nvmem: rockchip,otp: add missing limits for clock-names
+Date: Mon, 10 Feb 2025 23:45:07 +0100
+Message-ID: <20250210224510.1194963-4-heiko@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250210224510.1194963-1-heiko@sntech.de>
+References: <20250210224510.1194963-1-heiko@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,38 +60,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Remove hard-coded strings by using the str_disabled_enabled() helper.
+The clocks property correctly declares minItems and maxItems for its
+variants, but clock-names does not. Both properties are always used
+together, so should declare the same limits.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Suggested-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 ---
- arch/powerpc/kernel/iommu.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
-index 0ebae6e4c19d..244eb4857e7f 100644
---- a/arch/powerpc/kernel/iommu.c
-+++ b/arch/powerpc/kernel/iommu.c
-@@ -16,6 +16,7 @@
- #include <linux/mm.h>
- #include <linux/spinlock.h>
- #include <linux/string.h>
-+#include <linux/string_choices.h>
- #include <linux/dma-mapping.h>
- #include <linux/bitmap.h>
- #include <linux/iommu-helper.h>
-@@ -769,8 +770,8 @@ struct iommu_table *iommu_init_table(struct iommu_table *tbl, int nid,
- 	iommu_table_clear(tbl);
- 
- 	if (!welcomed) {
--		printk(KERN_INFO "IOMMU table initialized, virtual merging %s\n",
--		       novmerge ? "disabled" : "enabled");
-+		pr_info("IOMMU table initialized, virtual merging %s\n",
-+			str_disabled_enabled(novmerge));
- 		welcomed = 1;
- 	}
- 
+diff --git a/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml b/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml
+index a44d44b32809..3201ff8f9334 100644
+--- a/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml
++++ b/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml
+@@ -62,6 +62,8 @@ allOf:
+       properties:
+         clocks:
+           maxItems: 3
++        clock-names:
++          maxItems: 3
+         resets:
+           maxItems: 1
+         reset-names:
+@@ -78,6 +80,8 @@ allOf:
+       properties:
+         clocks:
+           minItems: 4
++        clock-names:
++          minItems: 4
+         resets:
+           minItems: 3
+         reset-names:
 -- 
-2.48.0
+2.47.2
 
