@@ -1,126 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A242253AB;
-	Mon, 10 Feb 2025 13:26:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1796226556;
+	Mon, 10 Feb 2025 13:26:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739193978; cv=none; b=V8I8BUmFNwgGoyqta2mDm5WC44l39U66Zxnrf1Ujg18/kkl2JEprZHqNv2useoTfJE0GgqeB5QhSDk60UPTqQFrFs472OxFfcjNR7srZxgU8DRlGnX1KH0a1xMzm/VnKnMDvj4WAiZeqQcpvRKxNDlU8xCfAUYVqCY37VxB8J6A=
+	t=1739193995; cv=none; b=KYAVCg67esKBHjv/pfyBAOBe1U8gtBc/xyXQbtfV13iXT7pDXoltDzwCfTZSnSgO2PfbUkqb4lra9Jz23H159aCrdPAbzdtBpkp+1wxhQk1Vy/zOFcyJQfj2IFM8UPOuq4PbiTuLBdS+foRHNDmsvZZpWEO05OxJRclh2cZo9kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739193978; c=relaxed/simple;
-	bh=v+ySslqC6hQ61c9afr9eOiYKr5W7FK5IzbCp+h+Y07M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lTfpMR3cqQF6v3XwMNZ3DQ76m/hKI/Q4EFiALWRca06x1IsVLnYKBAbK5whXv71GDv07rNxFRUUvGBisNABIa+GNlp3eWqO67XOeZWmHExdLrW9cvpEoA4S9xho04mIJPIEwlIBDqd2GxHwxcX1knkXrTDgWE1q+mHK7l631/Pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uWhfLUd6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739193995; c=relaxed/simple;
+	bh=uvzTU0gCUZGvLGoxe/pbkbCa6ndjF8cGqyZD5XTc8Co=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=vAJBt1uV+muQJ96Gag7uHkUoHhTyOc8NPyq3G9e63Kgnxthm/0tYmwwmnBVYyx1UqwRQOnAQcrZZ0pMRTU8JwP0udddk69O2doKQ5K+51wnF3jQVFpmJZXttxMuzVxeBBcUagPJYnM/sfaoLBSQ52CRXI06ThD/WxaHCAcQdBO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DgviesNE; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uWhfLUd6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53282C4CEE5;
-	Mon, 10 Feb 2025 13:26:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739193975;
-	bh=v+ySslqC6hQ61c9afr9eOiYKr5W7FK5IzbCp+h+Y07M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uWhfLUd6/ItEZmUcrqaRpnWCjLZh6/Yig7rPYsitUMOqaFqJlaZUabXspfTzIo4lN
-	 mNnQI2Hdhlq1wWLYoUNXQWPV1jWeTkkYxoMhV7TQnoIRv+5Z50Nrt6D84dnzK9FKRL
-	 Sl1fp8rs6CMiCd/ljFEJR4HhjcBoWJ1UEwfjAO2l0UHQUvaSVYvqOy7vnKK0qpLhWI
-	 /1rcBDRW4N3GtgyjhKQOrDUgLnnHfZfuzqyKsm8HUQNH9AHOZ7gltTd59x8Vw09eGo
-	 PLy3lVrM0h+tUD83Na8gNjeAKSq4B8pGDLHL0PlMph3HmrUGikKI5jo6ZJmKC+fTwM
-	 FeQnJbZu4SWgQ==
-Date: Mon, 10 Feb 2025 14:26:13 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: =?utf-8?Q?Micha=C5=82?= Pecio <michal.pecio@gmail.com>,
-	anna-maria@linutronix.de, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	mingo@kernel.org, tglx@linutronix.de
-Subject: Re: NOHZ tick-stop error: local softirq work is pending, handler
- #08!!! on Dell XPS 13 9360
-Message-ID: <Z6n-dWDSxNCjROYV@localhost.localdomain>
-References: <20250210124551.3687ae51@foxbook>
- <b0d55f4c-a078-42a0-a0fe-5823700f2837@molgen.mpg.de>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DgviesNE"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 3EA70204A9;
+	Mon, 10 Feb 2025 13:26:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739193986;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EmOjEFqZNFgj7Tz43VxOvoOEGlpRi04WUvLHYwakdf8=;
+	b=DgviesNEGv630QmgEen04tZ0DDiAOYjBIt+DGI9ff2BcROweUTk9HaYJLkht5yDVcVLEgR
+	b6Kd0d5fDH9ZubGAHgzr0s1lZ/G22PVloeAXdh/g6XduCuXRNkorsRIoeHMa97fGy3aIp2
+	xaKBodgFhGyADDvzMOgNBXPmoauUHoNNM4NNJ5fW1KYnJ49UO3yDo2WOfnysTvDCKe6xjZ
+	Q1znpxBofTd3GHm/YSEUwryj23oWI6Bl+xDQyJ7rwDxNaHjv1JpSYGT7WXgqNSRnAC6z3R
+	jlFLWf3r6obn7Bc6MkQB1JRSyNpo7YVuqq2aBsTIY9RQYY9w8lgHFW1IKk9IbA==
+From: Herve Codina <herve.codina@bootlin.com>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mcanal@igalia.com>,
+	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
+	Marek Vasut <marex@denx.de>
+Cc: dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Louis Chauvet <louis.chauvet@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v6 1/4] dt-bindings: display: bridge: sn65dsi83: Add interrupt
+Date: Mon, 10 Feb 2025 14:26:16 +0100
+Message-ID: <20250210132620.42263-2-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250210132620.42263-1-herve.codina@bootlin.com>
+References: <20250210132620.42263-1-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b0d55f4c-a078-42a0-a0fe-5823700f2837@molgen.mpg.de>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefkedukecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehffeigfejueelueeuffelueefgfelhfejhfehieegudekteeiledttdfhffekffenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdrlhhotggrlhguohhmrghinhdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdekpdhrtghpthhtoheprghlvgigrghnuggvrhdrshhtvghinhesvgifrdhtqhdqghhrohhuphdrtghomhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopefnrghurhgvnhhtr
+ dhpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepjhhonhgrsheskhifihgsohhordhsvgdprhgtphhtthhopehjvghrnhgvjhdrshhkrhgrsggvtgesghhmrghilhdrtghomhdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhm
+X-GND-Sasl: herve.codina@bootlin.com
 
-Le Mon, Feb 10, 2025 at 12:59:42PM +0100, Paul Menzel a écrit :
-> Dear Michał,
-> 
-> 
-> Thank you for your reply.
-> 
-> Am 10.02.25 um 12:45 schrieb Michał Pecio:
-> 
-> > > > > > > > > On Dell XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022, with Linux
-> > > > > > > > > 6.9-rc2+
-> > 
-> > > Just for the record, I am still seeing this with 6.14.0-rc1
-> > 
-> > Is this a regression? If so, which versions were not affected?
-> 
-> Unfortunately, I do not know. Right now, my logs go back until September
-> 2024.
-> 
->     Sep 22 13:08:04 abreu kernel: Linux version 6.11.0-07273-g1e7530883cd2
-> (build@bohemianrhapsody.molgen.mpg.de) (gcc (Debian 14.2.0-5) 14.2.0, GNU ld
-> (GNU Binutils for Debian) 2.43.1) #12 SMP PREEMPT_DYNAMIC Sun Sep 22
-> 09:57:36 CEST 2024
-> 
-> > How hard to reproduce? Wasn't it during resume from hibernation?
-> 
-> It’s not easy to reproduce, and I believe it’s not related with resuming
-> from hibernation (which I do not use) or ACPI S3 suspend. I think, I can
-> force it more, when having the USB-C adapter with only the network cable
-> plugged into it, and then running `sudo powertop --auto-tune`. But sometimes
-> it seems unrelated.
-> 
-> > IRQ isuses may be a red herring, this code here is a busy wait under
-> > spinlock. There are a few of those, they cause various problems.
-> > 
-> >                  if (xhci_handshake(&xhci->op_regs->status,
-> >                                STS_RESTORE, 0, 100 * 1000)) {
-> >                          xhci_warn(xhci, "WARN: xHC restore state timeout\n");
-> > 			spin_unlock_irq(&xhci->lock);
-> >                          return -ETIMEDOUT;
-> >                  }
-> > 
-> > This thing timing out may be close to the root cause of everything.
-> 
-> Interesting. Hopefully the USB folks have an idea.
+Both the TI SN65DSI83 and SN65DSI84 bridges have an IRQ pin to signal
+errors using interrupt.
 
-Handler #08 is NET_RX. So something raised the NET_RX on some non-appropriate
-place, perhaps...
+This interrupt is not documented in the binding.
 
-Can I ask you one more trace dump?
+Add the missing interrupts property.
 
-I need:
+Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ .../devicetree/bindings/display/bridge/ti,sn65dsi83.yaml       | 3 +++
+ 1 file changed, 3 insertions(+)
 
-echo 1 > /sys/kernel/tracing/events/irq/softirq_raise/enable
-echo 1 > /sys/kernel/tracing/options/stacktrace
-
-Unfortunately this will also involve a small patch:
-
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index fa058510af9c..accd2eb8c927 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -1159,6 +1159,9 @@ static bool report_idle_softirq(void)
- 	if (local_bh_blocked())
- 		return false;
+diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi83.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi83.yaml
+index bad6f5c81b06..9b5f3f3eab19 100644
+--- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi83.yaml
++++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi83.yaml
+@@ -35,6 +35,9 @@ properties:
+   vcc-supply:
+     description: A 1.8V power supply (see regulator/regulator.yaml).
  
-+	trace_printk("STOP\n");
-+	trace_dump_stack(0);
-+	tracing_off();
- 	pr_warn("NOHZ tick-stop error: local softirq work is pending, handler #%02x!!!\n",
- 		pending);
- 	ratelimit++;
++  interrupts:
++    maxItems: 1
++
+   ports:
+     $ref: /schemas/graph.yaml#/properties/ports
+ 
+-- 
+2.48.1
 
-
-
-Thanks.
