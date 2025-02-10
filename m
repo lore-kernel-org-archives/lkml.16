@@ -1,224 +1,196 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348A51B808
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 04:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B541417591;
+	Mon, 10 Feb 2025 04:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739162087; cv=none; b=WiN80cIrsgq9zFdoStvfq8O4Jtw87Zf/b5aXny78LVCn29wSXXInIYs0AIoObq3C/8Ecoa6tUnYDYycgxBhjnqVC9vjcqMv0f+W3xK9PX/6NWJmIpX7mKt9Bk/Q6sNoIdkFnne3nEHa0PuL2KPg18wtSN6QdA3iGD/jxWXtzkp0=
+	t=1739162178; cv=none; b=BiQ8KDEj8X0KMKEmKjCppdOxCT3P7UXJRX4wEpcG9ytAhyZVyBJy+sH5kEp8FkjP61RBAy1bchzcmYgU7pJYY6VbxmKLuYAg1VSyAnnZXapFeXoWDHV2SLMza/rTQ5h4aDLpPo2AhE8fxbuJXIfIsoBtq7bLsFw/nFgYVgBFJNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739162087; c=relaxed/simple;
-	bh=St7Ggd/dCDqTm8fwqQUAaNUNEcVbHgoTJTYS77ZI31o=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=J+QjE1NJql0UXg+PIO+vlSX9eXQFiGIn4hkhkQbgJCyaluTTi6YlzZeaw0lnAMekmgtWPN5tJt9UeebqgXsyRtomsiQLFtSN6RXculk+msGl7hioz18g6q+UTF4IuzBdjbTKLZJMvCyxQ6AwUCymIFf1vum3pwCagFnw3jhiBg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mz+ErOXe; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1739162178; c=relaxed/simple;
+	bh=Jal0V51wS/3IV3CeOYIwPOr3EmD9bLixle3Xa5+XlZk=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=Y4iI2/YsocNDRxna0Oov5xZZJ3Wyg/FFlankOEpdmsn8FXZLoUhFWCi9iyDYgAMuL6i5qTJz1GvX4zbv4DWkrYhFCo+ydzz8HozQvoJ+EMQVH/6KlawS89qsKEQyx3PA0cOfpmf5NGg0cpvCLRPxWT5pHd9uqhNm+ebA45LE118=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iKhucb7o; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DK59YW8Y; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iKhucb7o; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DK59YW8Y; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mz+ErOXe"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51A39I7m030033;
-	Mon, 10 Feb 2025 04:34:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=fOvPbUbMnTIgUdqmziqc+FQX9Yeh
-	x4Z55MHuSNKVBU0=; b=mz+ErOXesXyWQEp4udBMmheDXFaL8vLD2MB03/p8N1qZ
-	7wfYzGDypnQhxAGPTeujEUPzgylFUWTJRKoYN6o2gx3dNhTuLOLPRQ+QGane/GOM
-	Ffv6S6ElNzQ6gsJkJUKB/qO8k7XtCFmzqZwaLvKZTpNPUyb0gkRuyLFpR0sc70BL
-	obCnIC08Df0yZs1JMijuPVuhM26f2l0CKf3NKv+51zWa+hxndHFNB0sX+0OUlRGU
-	4+GWPi9RXY1eq4VqanNveEZG3aUrTa33Vylk18EaFN1HpntoGb1ujocpMNPvdHSC
-	3SgzzYbUjHUQUdUCR7ESCrunlzizSlBlD/S0MxO+CQ==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44pr2nuagj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 04:34:33 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51A3tNsd016743;
-	Mon, 10 Feb 2025 04:34:32 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44pk3jvg9n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 04:34:32 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51A4YWrx16187970
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Feb 2025 04:34:32 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3A4BC58055;
-	Mon, 10 Feb 2025 04:34:32 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1C5E958059;
-	Mon, 10 Feb 2025 04:34:31 +0000 (GMT)
-Received: from [9.61.251.80] (unknown [9.61.251.80])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 10 Feb 2025 04:34:30 +0000 (GMT)
-Message-ID: <8d1ebe64-f5df-43d4-8e4d-20f934daff45@linux.vnet.ibm.com>
-Date: Mon, 10 Feb 2025 10:04:29 +0530
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iKhucb7o";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DK59YW8Y";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iKhucb7o";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DK59YW8Y"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id AA8331F391;
+	Mon, 10 Feb 2025 04:36:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739162174; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=USljhevswOz9MNxT6YoXfwehy10AWLKUPepXgviuPZ8=;
+	b=iKhucb7okltIKMRJpss0jB/ekdgLf9ib4e5eQT9uL51Yu4p+4sX8jWbWCrrPwZhJ5afGU1
+	DksZ1AN7qVnmFCL76FiSV/izO9gRhNcMQzD0Y4/4+lw7iDYHY/YsIXTHDwXC9q03smnTKT
+	QeeFgLB34OEzemn8oFYKaiGUn+igPQo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739162174;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=USljhevswOz9MNxT6YoXfwehy10AWLKUPepXgviuPZ8=;
+	b=DK59YW8YKWijk6ctr60fOrjhJTEg77tvJfyMK4cXrN45nJZBuV/UVtGcShtvOusWvqblDv
+	od4fu2o13ILlY5AQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739162174; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=USljhevswOz9MNxT6YoXfwehy10AWLKUPepXgviuPZ8=;
+	b=iKhucb7okltIKMRJpss0jB/ekdgLf9ib4e5eQT9uL51Yu4p+4sX8jWbWCrrPwZhJ5afGU1
+	DksZ1AN7qVnmFCL76FiSV/izO9gRhNcMQzD0Y4/4+lw7iDYHY/YsIXTHDwXC9q03smnTKT
+	QeeFgLB34OEzemn8oFYKaiGUn+igPQo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739162174;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=USljhevswOz9MNxT6YoXfwehy10AWLKUPepXgviuPZ8=;
+	b=DK59YW8YKWijk6ctr60fOrjhJTEg77tvJfyMK4cXrN45nJZBuV/UVtGcShtvOusWvqblDv
+	od4fu2o13ILlY5AQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ED80F13707;
+	Mon, 10 Feb 2025 04:36:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id VEWWJzuCqWdaYwAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 10 Feb 2025 04:36:11 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-GB
-To: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-From: Venkat Rao Bagalkote <venkat88@linux.vnet.ibm.com>
-Subject: [linux-next][next-20250207]Observing Kernel Softlock up's while
- running kselftest
-Cc: sfr@canb.auug.org.au
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: cES3qbbo26zhOCiA0BH6NgjaQKsmIJ6h
-X-Proofpoint-ORIG-GUID: cES3qbbo26zhOCiA0BH6NgjaQKsmIJ6h
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_02,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=758
- spamscore=0 suspectscore=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 impostorscore=0 phishscore=0 clxscore=1011
- malwarescore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502100035
+From: "NeilBrown" <neilb@suse.de>
+To: "Al Viro" <viro@zeniv.linux.org.uk>
+Cc: "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "Jeff Layton" <jlayton@kernel.org>, "Dave Chinner" <david@fromorbit.com>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/19] VFS: introduce vfs_mkdir_return()
+In-reply-to: <20250207194538.GE1977892@ZenIV>
+References: <>, <20250207194538.GE1977892@ZenIV>
+Date: Mon, 10 Feb 2025 15:36:04 +1100
+Message-id: <173916216443.22054.1710124383016579976@noble.neil.brown.name>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Greetings!!!
+On Sat, 08 Feb 2025, Al Viro wrote:
+> On Thu, Feb 06, 2025 at 04:42:38PM +1100, NeilBrown wrote:
+> > vfs_mkdir() does not guarantee to make the child dentry positive on
+> > success.  It may leave it negative and then the caller needs to perform a
+> > lookup to find the target dentry.
+> >=20
+> > This patch introduced vfs_mkdir_return() which performs the lookup if
+> > needed so that this code is centralised.
+> >=20
+> > This prepares for a new inode operation which will perform mkdir and
+> > returns the correct dentry.
+>=20
+> * Calling conventions stink; make it _consume_ dentry reference and
+> return dentry reference or ERR_PTR().  Callers will be happier that way
+> (check it).
 
-I am observing kernel soft lock up's while running kselftest on IBM 
-Power Servers.
+With later patches it will need to consume the lock on the dentry as
+well, and either transfer it to the new one or (for error) unlock it.
+We need to have the result dentry still locked for fsnotify_mkdir().
 
-Though, I colud not reporduce this consistently, but CI has detected 
-this error twice now. Hence reporting.
+Transferring the dentry lock would have to be done in d_splice_alias().=20
+The __d_unalias() branch should be ok because I already trylock in there
+and fail if I can't get the lock.  For the IS_ROOT branch ....  I think
+it is safe to fail if a trylock doesn't succeed.
 
-This error was reported firat time, while running signal component tests 
-and second time while running EEH component.
+So I can probably make that work - thanks.
 
-linux-next/tools/testing/selftests/powerpc/signal
+Hmm... kernfs reportedly can leave the mkdir dentry negative and fill in
+the inode later.  How does that work?  I assume it will still be hashed
+so mkdir won't try the lookup.
 
-linux-next/tools/testing/selftests/powerpc/eeh
+done_path_create() will need to accept an IS_ERR() dentry.
 
+>=20
+> * Calling conventions should be documented in commit message *and* in
+> D/f/porting
 
-
-Traces:
-
-[11480.019928] watchdog: BUG: soft lockup - CPU#0 stuck for 26s! 
-[swapper/0:0]
-[11480.019935] Modules linked in: nvram(E) rpadlpar_io(E) rpaphp(E) 
-dm_mod(E) bonding(E) tls(E) nft_fib_inet(E) nft_fib_ipv4(E) 
-nft_fib_ipv6(E) nft_fib(E) nft_reject_inet(E) nf_reject_ipv4(E) 
-nf_reject_ipv6(E) nft_reject(E) nft_ct(E) nft_chain_nat(E) nf_nat(E) 
-nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) rfkill(E) ip_set(E) 
-nf_tables(E) nfnetlink(E) hvcs(E) pseries_rng(E) hvcserver(E) 
-vmx_crypto(E) drm(E) drm_panel_orientation_quirks(E) xfs(E) lpfc(E) 
-sr_mod(E) sd_mod(E) cdrom(E) sg(E) nvmet_fc(E) ibmvscsi(E) nvmet(E) 
-ibmveth(E) scsi_transport_srp(E) nvme_fc(E) nvme_fabrics(E) bnx2x(E) 
-nvme_core(E) be2net(E) mdio(E) scsi_transport_fc(E) fuse(E) [last 
-unloaded: test_cpuidle_latency(OE)]
-[11480.019990] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Kdump: loaded 
-Tainted: G           OE      6.14.0-rc1-next-20250207 #1
-[11480.019995] Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
-[11480.019996] Hardware name: IBM,8375-42A POWER9 (architected) 0x4e0202 
-0xf000005 of:IBM,FW950.80 (VL950_131) hv:phyp pSeries
-[11480.019997] NIP:  c00000000003a2d0 LR: c00000000003a644 CTR: 
-c0000000002a912c
-[11480.020000] REGS: c0000003bffffb28 TRAP: 0900   Tainted: G           
-OE       (6.14.0-rc1-next-20250207)
-[11480.020002] MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 
-22042442  XER: 20040000
-[11480.020009] CFAR: 0000000000000000 IRQMASK: 0
-[11480.020009] GPR00: c00000000003a644 c0000003bffffb00 c000000001667500 
-c0000003bffffaf8
-[11480.020009] GPR04: c000000004062940 c0000003bffffd20 0000000000000001 
-c000000002277ca0
-[11480.020009] GPR08: 0000000000000003 0000000000000049 0000000000000000 
-0000000000002000
-[11480.020009] GPR12: c0000000002a912c c000000003000000 0000000000000000 
-0000000000000000
-[11480.020009] GPR16: 0000000000000001 0000000000000082 0000000000000001 
-0000000000000100
-[11480.020009] GPR20: 0000000004200002 0000000000000000 0000000000000000 
-0000000100110511
-[11480.020009] GPR24: 7fffffffffffffff 0000000000000001 00000003bd5a0000 
-0000000000000000
-[11480.020009] GPR28: 0000000000000002 0000000000000003 fcffffffffffffff 
-fcffffffffffffff
-[11480.020036] NIP [c00000000003a2d0] __replay_soft_interrupts+0x5c/0x22c
-[11480.020048] LR [c00000000003a644] arch_local_irq_restore+0x1a4/0x280
-[11480.020053] Call Trace:
-[11480.020054] [c0000003bffffb00] [c00000000003a358] 
-__replay_soft_interrupts+0xe4/0x22c (unreliable)
-[11480.020060] [c0000003bffffcb0] [c00000000003a644] 
-arch_local_irq_restore+0x1a4/0x280
-[11480.020064] [c0000003bffffcf0] [c0000000002a9d60] 
-tmigr_handle_remote_cpu+0x24c/0x318
-[11480.020071] [c0000003bffffda0] [c0000000002aa034] 
-tmigr_handle_remote_up+0x208/0x2d0
-[11480.020075] [c0000003bffffe10] [c0000000002a7d34] 
-__walk_groups.isra.0+0x6c/0x100
-[11480.020079] [c0000003bffffe50] [c0000000002aa2d0] 
-tmigr_handle_remote+0xf0/0x170
-[11480.020083] [c0000003bffffed0] [c0000000002876a4] 
-run_timer_softirq+0x54/0x68
-[11480.020089] [c0000003bffffef0] [c000000000179128] 
-handle_softirqs+0x148/0x3b4
-[11480.020094] [c0000003bfffffe0] [c000000000017f30] 
-do_softirq_own_stack+0x3c/0x50
-[11480.020100] [c000000002c87900] [c000000000178688] 
-__irq_exit_rcu+0x18c/0x1b4
-[11480.020102] [c000000002c87930] [c000000000179758] irq_exit+0x20/0x38
-[11480.020105] [c000000002c87950] [c00000000002b004] 
-timer_interrupt+0x128/0x300
-[11480.020108] [c000000002c879b0] [c000000000009ffc] 
-decrementer_common_virt+0x28c/0x290
-[11480.020113] --- interrupt: 900 at plpar_hcall_norets_notrace+0x18/0x2c
-[11480.020119] NIP:  c0000000000fb9d4 LR: c0000000010c2348 CTR: 
-0000000000000000
-[11480.020120] REGS: c000000002c879e0 TRAP: 0900   Tainted: G           
-OE       (6.14.0-rc1-next-20250207)
-[11480.020122] MSR:  800000000280b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  
-CR: 22000248  XER: 20040000
-[11480.020129] CFAR: 0000000000000000 IRQMASK: 0
-[11480.020129] GPR00: 0000000000000000 c000000002c87c80 c000000001667500 
-0000000000000000
-[11480.020129] GPR04: 000000000000ffff 0000000000000000 0000000000000000 
-0000000000000000
-[11480.020129] GPR08: 0000000000000000 0000000000000000 80000000c7a3fc00 
-ffffffffffffffff
-[11480.020129] GPR12: 0000000000000000 c000000003000000 0000000000000000 
-0000000000000000
-[11480.020129] GPR16: 0000000000000000 0000000000000000 0000000000000000 
-0000000000000000
-[11480.020129] GPR20: 0000000000c00000 0000000000000008 0000000000000000 
-0000000000000000
-[11480.020129] GPR24: 0000000000000000 0000000000000000 00000a6adcf558a4 
-0000000000000000
-[11480.020129] GPR28: 0000000000000000 0000000000000001 c0000000022618e0 
-c0000000022618e8
-[11480.020155] NIP [c0000000000fb9d4] plpar_hcall_norets_notrace+0x18/0x2c
-[11480.020158] LR [c0000000010c2348] check_and_cede_processor+0x48/0x5c
-[11480.020162] --- interrupt: 900
-[11480.020163] [c000000002c87c80] [c00000000028a8b0] 
-__hrtimer_start_range_ns+0x160/0x2ec (unreliable)
-[11480.020168] [c000000002c87ce0] [c0000000010c2790] 
-dedicated_cede_loop+0x94/0x1a0
-[11480.020171] [c000000002c87d30] [c0000000010c1d80] 
-cpuidle_enter_state+0x3b4/0x5b4
-[11480.020174] [c000000002c87dd0] [c000000000cac55c] cpuidle_enter+0x4c/0x68
-[11480.020178] [c000000002c87e10] [c0000000001eb5b4] call_cpuidle+0x4c/0x94
-[11480.020184] [c000000002c87e30] [c0000000001f3798] 
-cpuidle_idle_call+0x164/0x240
-[11480.020188] [c000000002c87e90] [c0000000001f3974] do_idle+0x100/0x1ac
-[11480.020192] [c000000002c87ee0] [c0000000001f3ca4] 
-cpu_startup_entry+0x48/0x50
-[11480.020196] [c000000002c87f10] [c000000000011280] rest_init+0xf0/0xf4
-[11480.020199] [c000000002c87f40] [c000000002006604] 
-start_kernel+0x50c/0x5e0
-[11480.020204] [c000000002c87fe0] [c00000000000ea9c] 
-start_here_common+0x1c/0x20
-[11480.020207] Code: 71298000 408201ec 892d0933 7d2a48f8 554a07fe 
-0b0a0000 792ad7e2 0b0a0000 61290040 38610028 992d0933 480421c9 
-<60000000> 39200000 e9410130 f9210160
+What is the scope of "porting" ?  IT seems to be mostly about
+_operations interfaces, but I do see other things in there.  I'll try to
+remember that - thanks.
 
 
-Regards,
+>=20
+> * devpts, nfs4recover and xfs might as well convert (not going to hit
+> the "need a lookup" case anyway)
 
-Venkat.
+good point - avoiding the lookup when not requested is a pointless
+optimisation because it is hardly every needed and should always be
+cheap - we expect it to be in the dcache.
 
+>=20
+> * that=20
+> +                       /* Need a "const" pointer.  We know d_name is const
+> +                        * because we hold an exclusive lock on i_rwsem
+> +                        * in d_parent.
+> +                        */
+> +                       const struct qstr *d_name =3D (void*)&dentry->d_nam=
+e;
+> +                       d =3D lookup_dcache(d_name, dentry->d_parent, 0);
+> +                       if (!d)
+> +                               d =3D __lookup_slow(d_name, dentry->d_paren=
+t, 0);
+> doesn't need a cast.  C is perfectly fine with
+> 	T *x =3D foo();
+> 	const T *y =3D x;
+>=20
+> You are not allowed to _strip_ qualifiers; adding them is fine.
+> Same reason why you are allowed to pass char * to strlen() without
+> any casts whatsoever.
+
+hmm..  I thought I had tried that.  Maybe I didn't try hard enough.
+Thanks for the guidance.
+>=20
+> Comment re stability is fine; the cast is pure WTF material.
+>=20
+
+
+Thanks,
+NeilBrown
