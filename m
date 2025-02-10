@@ -1,260 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81DC1C1F21;
-	Mon, 10 Feb 2025 08:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111DD1BEF76
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739176172; cv=none; b=lFiIIKcxrwhNp7XEGj6n0frJC82BxdGMebw4qmRFjnjN4STiT4p63XQcODO9vnAcF8c/PgbhrBbt24mQOP5lc+TxuYIueOqcmSbRFNLXVXx5zoDW9TzNhTmCWY1vDC0tQahG7ZpctlIPobDb1PQqiwQOYzrFbKiaQswiVoRhq7A=
+	t=1739176221; cv=none; b=mS7d8nt7xvSj3hwsBLkjd2gJL6DpWWgsqnFSIj3H18BYBnfDp+g7P0y+HNyz3w0sSX3Bqp+V3XdlOtYc++gQyb183OoTcElR7k+HG+CzDEOwHRAqjXSo6/KUU4UEBJpzLx1pzD/F58jST1lCf/EaN1WcLi1fybNSbGIDyzFL0QM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739176172; c=relaxed/simple;
-	bh=/Fp+B0JWQF2ROKHaiimvWG3bYLsZclFhzmKfyv5OYkw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P0DSajsIgWakqb51VjxDlFrpbxVjuKsTfn9jWVoKWiKefJuQpfjpL61AOEzCUG7DYB+82WpfnmQt/X8cCiKvVjSXmGWKJuB7qu2GxCkWUb0TLVmjF9JISwLw/xZjSiCQk0rWyoMn+w6kQRXcUtiBd4nRwXZreuXZ//wQHiSn7d4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bVBA3wW+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739176221; c=relaxed/simple;
+	bh=PPmmV6mrjHp+lAp5KhBgmJc4ilN/3JaEJWAOyFrLPSw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=GKcM3tfqCvCDnAvKD9kCcmGCHMkWoCaUBB5cbw1UG7KYH0S+WOgmFcPMHyjMoyD4jBdPLGcGbUl0/IuI6+AEvSUMRy2dY11W1zGE4CJiOb2K/z/c21Fc+0Xv778HMlhU/9yzq7u3P+5JVM4SXg8Q6BFgQtQw+J3q//Q4S6Tw3yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--wnliu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HBdFdtZ6; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--wnliu.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bVBA3wW+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D81DBC4CEE6;
-	Mon, 10 Feb 2025 08:29:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739176171;
-	bh=/Fp+B0JWQF2ROKHaiimvWG3bYLsZclFhzmKfyv5OYkw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bVBA3wW++dNGMP58Z9cllv1LGzIMObFRMWyxLw1axpn1j/g0uTxIFfszhARWqtzv1
-	 7who+w45hCHXtnChuBY3H9W8/VOoUIoPEaTPVnau/7gaunbfArjk98RmCkqzyw6/d3
-	 jH8zZKL9ryzDrXaDNnhLkK8kQf6zWY5qbY3k0M3UwSa9Yk9xizk7bGC/cvqnItBXQZ
-	 rvaxJiE484VrMw4LVDI4kmckMQA7EnJ2z7e1Db8RS+m5sAgl0yyobHF1BA0tMNgO1q
-	 deb9Bj1zMmLP+El5rJE+a5lKgPfCFVk1IIPbG72jT2ZEczCy4/PjBuzAD0TJ+JszNc
-	 Pl1K+9YbQdXXg==
-Message-ID: <c2ff273a-bac5-4fa3-8339-ab722c9e63bf@kernel.org>
-Date: Mon, 10 Feb 2025 09:29:25 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HBdFdtZ6"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fa32e4044bso5124725a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 00:30:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739176219; x=1739781019; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PPmmV6mrjHp+lAp5KhBgmJc4ilN/3JaEJWAOyFrLPSw=;
+        b=HBdFdtZ6JSHjJJd3i3oiGM5RcWOB/3gKKGkpOXMp9hhM4TSpwwSuXJ0x16fU0X7Sw1
+         k3IFOEiaOnlbaWcIh0qzts39EMozAwzlsCFs9ci9VVFIerlbmki9s5rU2DALc75ooGrm
+         ORZQqARub0fhNvZpO8sAC1IXXzoDkxW9Lh9dQ0PGSc7BPGHukWSoHmLM9Qm2dy+RTzQ+
+         mh7R9RCjeOSmwqNaNE0x6RAPnn0XS1Gp3S/daMZdGYbLh1QMzAnsr5HJktAVHM174LrL
+         h4hPXDlxwfC4svcCWJ54qZQBh9WZf3MufmeFmTGfTnMOydT1FvfTBb4wwJ5/1MLQhv9u
+         mM5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739176219; x=1739781019;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PPmmV6mrjHp+lAp5KhBgmJc4ilN/3JaEJWAOyFrLPSw=;
+        b=cIAZyOUgz2J8E1NXaR4OspqdvZGBctZE6fbWfs0x06iXwC3B+uX4ErPuimTW+ibego
+         Edmn+KUoTjIfTfzFX+2U1G531g3S7BUbi5f5GcJBmMQVY8xii9iR6/RWd360RvIRytvl
+         kWzIPogQ/XT9CYoC+kiqWQtqSbbtCPxwx0v855ciMja8FYX7JErql13Tve08eqDrHEnG
+         G1+uAFzeuJX1RfZOveHMLHHKQt1FsN9PiaigciQ2tynoJtYJSaWzhU3qI9ybIv2Ww3LN
+         pohSjGorX0ryP2s7yDz9dFxBnMPkZWRY6qW3ofVoyJkinENxki6xgXcY8R9SHNaGXCkq
+         4saQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXGyN7/+HON/QMtP4FhSFckDLrGAl5WNnZGzRxrvjwQrfTnwvuINAUW3hf87npuyNt2gVY0jRvdxkHMiOg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzj3hIAQEI/cMi/g1vf63ZYCd3Y0c9CUjrV5IVFfREJfK0ejPft
+	yVT6SiIuwAKqDafrD3jMR6YKiUrhtY9Nlgoj33ovZGdaAoixuiq4kZtW7fnO/8D1yUe/JSoWmA=
+	=
+X-Google-Smtp-Source: AGHT+IEXo1lV682Dvui+xqTqQ9vsTUnOVO23WNyemCNciJ06wQPtgH2MGkCCmvZ/liuvldm8njt7IMjgAA==
+X-Received: from pfbbi7.prod.google.com ([2002:a05:6a00:3107:b0:730:9499:1f46])
+ (user=wnliu job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:850:b0:730:949d:2d3f
+ with SMTP id d2e1a72fcca58-730949d3086mr2135669b3a.7.1739176219304; Mon, 10
+ Feb 2025 00:30:19 -0800 (PST)
+Date: Mon, 10 Feb 2025 08:30:15 +0000
+In-Reply-To: <mb61pikpm3q76.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] media: dt-bindings: i2c: add DW9719/DW9718S VCM
- binding
-To: Val Packett <val@packett.cool>
-Cc: Daniel Scally <djrscally@gmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>,
- linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250210082035.8670-1-val@packett.cool>
- <20250210082035.8670-2-val@packett.cool>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250210082035.8670-2-val@packett.cool>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <mb61pikpm3q76.fsf@kernel.org>
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+Message-ID: <20250210083017.280937-1-wnliu@google.com>
+Subject: Re: [PATCH 0/8] unwind, arm64: add sframe unwinder for kernel
+From: Weinan Liu <wnliu@google.com>
+To: puranjay@kernel.org
+Cc: indu.bhagat@oracle.com, irogers@google.com, joe.lawrence@redhat.com, 
+	jpoimboe@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-toolchains@vger.kernel.org, 
+	live-patching@vger.kernel.org, mark.rutland@arm.com, peterz@infradead.org, 
+	roman.gushchin@linux.dev, rostedt@goodmis.org, will@kernel.org, 
+	wnliu@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/02/2025 09:19, Val Packett wrote:
-> Add DT bindings for the dw9719 voice coil motor driver, which is getting
-> devicetree compatibles added along with DW9718S support.
-> 
-> Also mention the binding file in the corresponding MAINTAINERS entry.
-> 
-> Signed-off-by: Val Packett <val@packett.cool>
-> ---
->  .../bindings/media/i2c/dongwoon,dw9719.yaml   | 110 ++++++++++++++++++
->  MAINTAINERS                                   |   1 +
->  2 files changed, 111 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9719.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9719.yaml b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9719.yaml
-> new file mode 100644
-> index 000000000000..88161038223f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9719.yaml
-> @@ -0,0 +1,110 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/dongwoon,dw9719.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Dongwoon Anatech DW9719 Voice Coil Motor (VCM) DAC
-> +
-> +maintainers:
-> +  - Daniel Scally <djrscally@gmail.com>
-> +
-> +description: |-
-> +  The Dongwoon DW9719/DW9718S is a single 10-bit digital-to-analog converter
-> +  with 100 mA output current sink capability, designed for linear control of
-> +  voice coil motors (VCM) in camera lenses. This chip provides a Smart Actuator
-> +  Control (SAC) mode intended for driving voice coil lenses in camera modules.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - dongwoon,dw9719
-> +      - dongwoon,dw9718s
+On Fri, Feb 7, 2025 at 4:16=E2=80=AFAM Puranjay Mohan <puranjay@kernel.org>=
+ wrote:
+>
+> Yes, I think we should, but others people could add more to this.
+>=20
+> I have been testing this series with Kpatch and created a PR that works
+> with this unwinder: https://github.com/dynup/kpatch/pull/1439
+>=20
+> For the modules, I think we need per module sframe tables that are
+> initialised when the module is loaded. And the unwinder should use the
+> module specific table if the IP is in a module's code.
+>=20
+> Have you already started working on it? if not I would like to help and
+> work on that.
+>=20
+> Thanks,
+> Puranjay
 
-Keep alphabetical order.
+Thanks for updating the arm64 kpatch PR so quickly.
+So we can use kpatch to test this proposal.
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vdd-supply:
-> +    description: VDD power supply
-> +
-> +  dongwoon,sac-mode:
-> +    description: |
-> +      Slew Rate Control mode to use: direct, LSC (Linear Slope Control) or
-> +      SAC1-SAC6 (Smart Actuator Control).
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    enum:
-> +      - 0    # Direct mode
-> +      - 1    # LSC mode
-> +      - 2    # SAC1 mode (operation time# 0.32 x Tvib)
-> +      - 3    # SAC2 mode (operation time# 0.48 x Tvib)
-> +      - 4    # SAC3 mode (operation time# 0.72 x Tvib)
-> +      - 5    # SAC4 mode (operation time# 1.20 x Tvib)
-> +      - 6    # SAC5 mode (operation time# 1.64 x Tvib)
-> +      - 7    # SAC6 mode (operation time# 1.88 x Tvib)
-> +    default: 4
-> +
-> +  dongwoon,vcm-freq:
-> +    description:
-> +      The switching frequency for the voice coil motor.
+I already have a WIP patch to add sframe support to the kernel module.
+However, it is not yet working. I had trouble unwinding frames for the=20
+kernel module using the current algorithm.
 
-Frequency is in Hertz, so use proper property unit suffix. BTW, you
-cannot add incorrect properties post-factum based on already accepted
-ACPI driver. This would be nice bypass of review, right?
+Indu has likely identified the issue and will be addressing it from the
+toolchain side.
 
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-Drop.
-
-minimum/maximum constraints
-
-> +
-
-No reset/powerdown gpios in the hardware?
-
-Missing required block.
-
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: dongwoon,dw9718s
-> +    then:
-> +      properties:
-> +        dongwoon,vcm-freq:
-> +          default: 0
-> +          enum:
-> +            - 0    # 5.00 MHz
-> +            - 1    # 3.33 MHz
-> +            - 2    # 2.50 MHz
-> +            - 3    # 2.00 MHz
-> +            - 4    # 1.67 MHz
-> +            - 5    # 1.43 MHz
-> +            - 6    # 1.25 MHz
-> +            - 7    # 1.11 MHz
-> +            - 8    # 1.00 MHz
-> +            - 9    # 0.91 MHz
-> +            - 10   # 0.83 MHz
-> +            - 11   # 0.77 MHz
-> +            - 12   # 0.71 MHz
-> +            - 13   # 0.67 MHz
-> +            - 14   # 0.63 MHz
-> +            - 15   # 0.59 MHz
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: dongwoon,dw9719
-> +    then:
-> +      properties:
-> +        dongwoon,vcm-freq:
-> +          default: 0x60
-
-Why no constraints? Why suddenly hex?
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - vdd-supply
-
-required always follows properties.
-
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +
-
-Drop stray blank line
-
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        vcm_rear: camera-lens@c {
-> +            compatible = "dongwoon,dw9718s";
-> +            reg = <0x0c>;
-> +
-> +            vdd-supply = <&pm8937_l17>;
-
-Missing properties, make the example complete.
-
-> +        };
-> +    };
-> +
-> +...
-
-
-
-Best regards,
-Krzysztof
+https://sourceware.org/bugzilla/show_bug.cgi?id=3D32666
