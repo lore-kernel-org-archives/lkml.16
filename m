@@ -1,184 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E677C192B7D
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656B8288DB;
+	Mon, 10 Feb 2025 18:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739213119; cv=none; b=nVkkFFXt94+wq4FOTpkQvy81p70QPSTWC7hZoAVH/2MU5T4QqCIc1u27Z+VUJJ1Fif1IKFgiMQuhOR4NSh83nrRt8bagqwHAdSKRJuu7JU5BwsNqAdw2cBatPHCHFlO+W6uiWex1R7tUOclRQGB2+v4BmHsGVc3+RexCKxLcNWA=
+	t=1739213370; cv=none; b=j/YCEf8IDKQ7tSLnFf7YRL/3pN0G4/T352DtGgOSKFLZiY8NmNIn7JkdQlK4fr/cFtKPSGzbH/g11SVlNYBqrwUgMVGb3D1Dsm4PhwOrer8KFthmawoZXIFC/hJgVPH4+9GyFpf1DW4JsQjIUJG+gw8bAT17sEf25rxbSaOuz7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739213119; c=relaxed/simple;
-	bh=zaU4bsQzGEUFJkkRyBDEFO5HRaR53OVXhrJKky23YWM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UpdLnE+NejB9nUChFShLxy8jZWqfpECWJ1xbeG7fxWNmzgZRTWN5o2WK2ISXGFF4IZQfwlO8PYMZccxDBb79tNMbFxiPC2PJH44Zd1lgN0xiN0NgYcH2j27jtWTGqWQZfvi2qrZi+N4JLswLAZfVnmyqtKWocSU4kdyIHhoKthU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V8XDfv85; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739213370; c=relaxed/simple;
+	bh=s/03vz3+zcS0GzCnONNZFFovZBJSY2YPl3k0UdN49gU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qdvo/07akOEKFYbL1d6Wjp19jXdF+7nds1FeGoFKPZqOmN7utuN4uDqeaeeFtXrhfJfLH2weDzbBmnMB5pUKmx4q8owLWe+GKgmnzOZBh0SFGCIzwT0TGnC5IcNElyk9L1uY0Oo+qlqGj5LliqvXWS/w2A5mMusDRb0emPY0gOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PPm95gnQ; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V8XDfv85"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739213116;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=KSceIq+QW6QfAQSxFrhFP3CSjeVr/8tSdt+enYDxg60=;
-	b=V8XDfv85WfGcRnZJmJR+K7U5dpijHYeboxW45m3fVewRcKikdq4WJZatHlS9KqjzJwSHys
-	N9rHJzyDjyQwPAxuaIUJN80bZ0/+bEPlEZwd4OFgtZ82Cn7+Q6ieMY0KMaPxLzg0uoD3Kq
-	0L3O2J9akUc1zxuzJ8RrdB+Kudh8luw=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-526-hyYCJ6dlMY6ybZg8mm9c8Q-1; Mon, 10 Feb 2025 13:45:14 -0500
-X-MC-Unique: hyYCJ6dlMY6ybZg8mm9c8Q-1
-X-Mimecast-MFC-AGG-ID: hyYCJ6dlMY6ybZg8mm9c8Q
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43935e09897so15349125e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:45:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PPm95gnQ"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38dcb97e8a3so2768816f8f.3;
+        Mon, 10 Feb 2025 10:49:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739213366; x=1739818166; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+AGEFkz36wQgS5zJ0YJZL/2/iDepMDeR3aqGvq13mbk=;
+        b=PPm95gnQWPDU3OUGMbEeRqnhk3DJvjgbP8eem/0Wn+tshUuO/dhWoRfGLTAeNb78BX
+         J73tyBUNDzWHJUHokMbAknUBiyMIk2CqzEAznRSYe9RqZyLSEibI9DK3Xf2BEn8RmGfy
+         8AZO+pf0O5fLVv53cVecmn/XFD3d12HepDnDccku6kS2RXM4QnSeKwcgLlad4WlPqlVt
+         Rvv3aFIYw3obMhBBi7CPOxCsBLcmsiOk2DmCYbw7DGyTiQvqrdbIoxXk+zxXUsyKmyJd
+         j8RUmB5/Bxl0qYWXrmSAnCJn7dBk6KtwD3H2a2FqhKt8hZQHMJKJBzk4iBwFuPH+9I/S
+         rptw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739213113; x=1739817913;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KSceIq+QW6QfAQSxFrhFP3CSjeVr/8tSdt+enYDxg60=;
-        b=eex0dh/ZImihsnnMYWBNVRnhW8VF5Te9IsqI1NlEakw0gfU0gMy4yUovVxdb1Td4yC
-         5/rnFf9+BjCCNu5+TDiZakOZ3mpXMJu3105OMhl6vMTycx/rCfXI5llQldcgsgnPLSWT
-         CWLzorfRn9owRJbZAzyAS90KV/QgcyMH5btCf8gqM4B92CsOsn1DANsUTx09pvKk52O9
-         cdtSguI+wcgN+ifMISFiJRL++eHsDvFm2F+StLVcbY0sDn7N3zuY/TxFvXKc+e9944ES
-         hKig5mEeklAOMS5itr9CZU7PHJWMHgCBCtCVJC4BAh5MobJGbuh3DOf+5W9YfU0L2JhX
-         qCXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMME30QXDC5xfGmCsw7I5daIbLkv320ygrxG6qepTkU1sN6lT4INmtI1ejkJI8+TJnvfG8Z9jm/XaXGAs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxh3OhoPP8nd1A7Q3qH7S3cPWiZeC0V/MvOOvqW1neZyYg9YMt5
-	wVpWmrX5b++wrl9xni+zKSyOrhhqIr8OSRHVG+pmVuT3xRgL++rNV2sFQbBKNxbGebtgUZRQtJl
-	wq51ZCWw4y/hariuyhdsPp2epKeZw8YJcEsQuxQhrxZh5WyMhkhz1PrUfagMNbg==
-X-Gm-Gg: ASbGncupIeutTLGUYTqKJeva1je876A1HU4YFgmYB0VyCsEr+kFRz2KNGxx58HB7C88
-	kN5CT5C2dpo7zUBDx2xWkKDFU9A3jiy21a8swCl2PV6/sktjxYQbkgT4M5ExlLtr8v/u3OUlY64
-	wKsygixzBSTFYg+3d4xk5ny8zeQDiEsQ10yTgE93U6Sd0DMxd25JURw7c45yXqHSvyNYWVIkkL4
-	hiuWB1h8JJeAzM1pxGfpprcp0jWlOSeGovbLNAn0wbBy0bOCLp5SKYXDtXnp1n4/4Nu/GcS3VHO
-	iyrgha0EEUotxR8u6wvSFwTTeWabYi7EZv361hyRkde923b/hRiG9M6p7Ojd/2aw0341w+jmZ9t
-	ZQxjeo4jL4QKRqVXF3Be/+JdmKxRLraaq
-X-Received: by 2002:a05:600c:4f89:b0:439:4b9e:45fc with SMTP id 5b1f17b1804b1-4394b9e4883mr19868635e9.4.1739213113280;
-        Mon, 10 Feb 2025 10:45:13 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG1DW8uYaNIQGndHHpAaZ/R379l1WaaDggkqsZF2ysLByrh9c9rDZgcYBCPGohQqt0EwrYjTg==
-X-Received: by 2002:a05:600c:4f89:b0:439:4b9e:45fc with SMTP id 5b1f17b1804b1-4394b9e4883mr19868135e9.4.1739213112852;
-        Mon, 10 Feb 2025 10:45:12 -0800 (PST)
-Received: from ?IPV6:2003:cb:c734:b800:12c4:65cd:348a:aee6? (p200300cbc734b80012c465cd348aaee6.dip0.t-ipconnect.de. [2003:cb:c734:b800:12c4:65cd:348a:aee6])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dc9ffd8sm151856745e9.10.2025.02.10.10.45.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 10:45:11 -0800 (PST)
-Message-ID: <afff4368-9401-4943-b802-1b15bdcf5aaa@redhat.com>
-Date: Mon, 10 Feb 2025 19:45:09 +0100
+        d=1e100.net; s=20230601; t=1739213366; x=1739818166;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+AGEFkz36wQgS5zJ0YJZL/2/iDepMDeR3aqGvq13mbk=;
+        b=CahPWamWgdBU0TKPEWCBlRajP283wVU/Du/1ShgyeeutnUGb/wRdJHgHBMhruIdKk9
+         iyUM9NalNqFaul1bKm9Lw8QcfRmUVtazOLI2rFRldrqgn7KbkJ3VQAjwsElOl67DOTa8
+         nDXSNrpaOMRLO+G8G9Cd9TXTleIbDRmHBLfwOoCtfPYdLVs4hUAhSuiX5tgmTNT7pXiQ
+         Cn0bEKoTur4iA6DgPl5D/1fY/bdX08AO5/O196/RUqg68RQxmw4/asuMby2KgNKgDQ9O
+         EH+TPkyoNHkoNPzmC0CAziirQaN0pjnN0jbX5TUvHXpePuOrYIjDTuY017yUkhzhTqwW
+         lx/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUp/P80PWYiPNib1dzmeRwXSy0R3Os2XDqB5FXlI554dlKxLzTYpih3Np5xHFoOLFIBq2No2d/taakS@vger.kernel.org, AJvYcCV8qZG2rLQ+yQFJKOlNZ87/m+s1HUPGZ2LHOPB4WSZaHdiYws+OkqmkxuxE+lZ3LXfzBqPEn6LjNqpV8e0vrc4=@vger.kernel.org, AJvYcCVCzLiQByXsMZ37jStwbyR18M3yS0lgniAhovDm94JEcV2eMX9wC9I6flSwopWSdsffigwODk3Zph71@vger.kernel.org, AJvYcCWeiEWLGw1sFntfBNOY2RZVrjXgpmrq2PfpuxLSgiQ8LvUWY+K3zddhYv1udt8kfqpUcfB9fZTrZe4kHrBZ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/hKCA4naOlZOIp3vi83rBvpjn9UJPzcrUHQw6qAfu+G73D67L
+	2jygJ2nT/njRFIir62G7i+Z+KE9rxjkcAlbvHjPYcadKe+meseos/YmT8opz
+X-Gm-Gg: ASbGncsS8rezG4Ovepy9d//K0PWH5nFcbewhwhXOjJUhA4n7y77FbRSZ5XLfPjJs0Uo
+	mbCibL3gD5es1tKqmPQlJkdLT/EPNGC1LWGcrD86i6fX925gZD+5LzDBvAiMp5vQ//P8RBu0His
+	I3nzhZaa3emnb2NhM+7S5RbgfTxaR1SRNZGkhkNSqxNjXf3nIPZbKjOtpp1E4za+c1zxqwhwSzr
+	yh8EVXXuKu+xDc8da3JIzwz/M7J6ZqK2bLkf3q+T3bjmZWCZRC0wKa/VLDqRL96v14jr5VLOTMH
+	pZDFjLF3Qu1HlqN6bSzMssmhzUYTatCRxkxB/k7w1Tw1
+X-Google-Smtp-Source: AGHT+IHWE+qEKJlce2UoT4pFR81zlYOstYhwToVKp7zANrcb4fO1+h9jdyIykT0jVgd15OhkBML3mQ==
+X-Received: by 2002:a5d:47ae:0:b0:38d:e384:5559 with SMTP id ffacd0b85a97d-38de3845713mr1834322f8f.23.1739213366284;
+        Mon, 10 Feb 2025 10:49:26 -0800 (PST)
+Received: from prasmi.Home ([2a06:5906:61b:2d00:b833:1deb:a929:b461])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439452533ecsm22911525e9.0.2025.02.10.10.49.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 10:49:25 -0800 (PST)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-watchdog@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v4 0/9] Add support to configure CPG block for watchdog on RZ/V2H(P) and RZ/G3E SoCs
+Date: Mon, 10 Feb 2025 18:49:01 +0000
+Message-ID: <20250210184910.161780-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 16/20] huge_memory: Add vmf_insert_folio_pmd()
-To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
- dan.j.williams@intel.com, linux-mm@kvack.org
-Cc: Alison Schofield <alison.schofield@intel.com>, lina@asahilina.net,
- zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
- vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
- bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
- will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
- dave.hansen@linux.intel.com, ira.weiny@intel.com, willy@infradead.org,
- djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, peterx@redhat.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
- david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
- loongarch@lists.linux.dev
-References: <cover.472dfc700f28c65ecad7591096a1dc7878ff6172.1738709036.git-series.apopple@nvidia.com>
- <9f10e88441f3cb26eff6be0c9ef5997844c8c24e.1738709036.git-series.apopple@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <9f10e88441f3cb26eff6be0c9ef5997844c8c24e.1738709036.git-series.apopple@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 04.02.25 23:48, Alistair Popple wrote:
-> Currently DAX folio/page reference counts are managed differently to normal
-> pages. To allow these to be managed the same as normal pages introduce
-> vmf_insert_folio_pmd. This will map the entire PMD-sized folio and take
-> references as it would for a normally mapped page.
-> 
-> This is distinct from the current mechanism, vmf_insert_pfn_pmd, which
-> simply inserts a special devmap PMD entry into the page table without
-> holding a reference to the page for the mapping.
-> 
-> It is not currently useful to implement a more generic vmf_insert_folio()
-> which selects the correct behaviour based on folio_order(). This is because
-> PTE faults require only a subpage of the folio to be PTE mapped rather than
-> the entire folio. It would be possible to add this context somewhere but
-> callers already need to handle PTE faults and PMD faults separately so a
-> more generic function is not useful.
-> 
-> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Nit: patch subject ;)
+Hi All,
 
-> 
-> ---
-> 
-> Changes for v7:
-> 
->   - Fix bad pgtable handling for PPC64 (Thanks Dan and Dave)
+This patch series adds SYSCON support to configure and retrieve boot
+status information from the CPG block for the RZ/V2H(P) and RZ/G3E SoCs.
+Summary of Changes,
 
-Is it? ;) insert_pfn_pmd() still doesn't consume a "pgtable_t *"
+    Clock:
+        Add syscon compatible support to the CPG block in bindings and
+        device trees.
 
-But maybe I am missing something ...
+    Watchdog:
+        Document the renesas,r9a09g057-syscon-wdt-errorrst property.
+        Update the watchdog driver to fetch and report boot status via
+        Error Reset Registers (CPG_ERROR_RSTm) and configure the
+        CPG_ERRORRST_SEL2 register.
+
+    Device Tree:
+        -Add the syscon property to CPG nodes in R9A09G057 and R9A09G047
+         SoC DTSI.
+        -Add the renesas,syscon-cpg-error-rst property to WDT nodes in
+         R9A09G057 and R9A09G047 SoC DTSI.
+
+v3->v4
+- Added support to configure CPG_ERRORRST_SEL2 register
+- Updated commit messages
+
+v2->v3
+- Updated comment section to mention there aren't any ABI breakages with
+  this patch series.
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (9):
+  dt-bindings: clock: rzv2h-cpg: Add syscon compatible for CPG
+  clk: renesas: Kconfig: Select MFD_SYSCON for RZ/V2H(P) family driver
+  arm64: dts: renesas: r9a09g047: Add `syscon` compatible for CPG node
+  arm64: dts: renesas: r9a09g057: Add `syscon` compatible for CPG node
+  dt-bindings: watchdog: renesas: Document
+    `renesas,syscon-cpg-error-rst` property
+  watchdog: rzv2h_wdt: Add support to retrieve the bootstatus
+    information
+  watchdog: rzv2h_wdt: Configure CPG_ERRORRST_SEL2 register
+  arm64: dts: renesas: r9a09g057: Add `renesas,syscon-cpg-error-rst`
+    property to WDT node
+  arm64: dts: renesas: r9a09g047: Add `renesas,syscon-cpg-error-rst`
+    property to WDT node
+
+ .../bindings/clock/renesas,rzv2h-cpg.yaml     | 10 ++--
+ .../bindings/watchdog/renesas,wdt.yaml        | 17 ++++++
+ arch/arm64/boot/dts/renesas/r9a09g047.dtsi    |  5 +-
+ arch/arm64/boot/dts/renesas/r9a09g057.dtsi    |  6 ++-
+ drivers/clk/renesas/Kconfig                   |  1 +
+ drivers/watchdog/rzv2h_wdt.c                  | 54 +++++++++++++++++++
+ 6 files changed, 87 insertions(+), 6 deletions(-)
 
 -- 
-Cheers,
-
-David / dhildenb
+2.43.0
 
