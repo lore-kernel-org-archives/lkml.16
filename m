@@ -1,293 +1,216 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BC025E462
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBB2255E53
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739214757; cv=none; b=D6ZHj/M7ctOLlnvLFXAJYkohYi04b252qEUsZHIkH/du4MF8ELTe5Pi2xocowejbLNtqb2PDKVtNE0WZwb98zkpzsXxj28KZQdzHBLobNG8Gb/FSQYX68uCEw4WB+bQDe12fvyXrs00isMiwbuZ2q8POPmHSnr1YR9xbtQaOdxc=
+	t=1739214760; cv=none; b=DAQrIC7eUb/OMZi1LqAt1/9puu5f4RraDMq6BxT2kf17HuewjVxHSdzXb3bcGrgpJihU1DlpYCIIGimC+HHPRwVHrrFujPyXh3TjwDMAjLEpR+eGUX7nRiblbPrkJwadosmtjmnyzolqws1QLjAdTJf0E04Oqtmqoh7EvGSk4FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739214757; c=relaxed/simple;
-	bh=c4VvBbH7uMZOC2uY2zHXPsbHjoTOuRrPLVazsSCZ0zU=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Cc:Content-Type; b=Yq3Gi++Cie3Mr0oPRy4Fag+rgB4dWyP8eKo8bMjEheRcmUhOpqdoJiAdcG4p7DT7D2qqeVIFQuWtOHqW6nnxPELtgrnyFpiL0mBhZ4C5pqWGAZ8YwcBC4bUmbvtPjXgQcp1RHu8BSMpAve/BI+k31KUm+n8Fk/FGJ+lTRCZo4co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WtMEFT/3; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1739214760; c=relaxed/simple;
+	bh=H4ylnKaNKrMj+l3283XhcHafdeHLnyAmQwYf6NcglIM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q7MlSu1FchzgXInKfZmpg7VcJLdKDz0hzJ3l6WosIg6JJv6/c2Q2EATSay4VUXNw2RfDbTPxWTMrR7dU8szyTHwWa5oqZtkXa8btsVUAdYHyKPi0EC9W59qxX60aJ9X2intxrKTom5H4fiCvpSTjyJIf+1iKl/lzpUEDH4o8OdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=ewHdKpQU; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WtMEFT/3"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6f3ff1ff117so59959317b3.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:12:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="ewHdKpQU"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6ef9b8b4f13so42239837b3.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:12:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739214754; x=1739819554; darn=vger.kernel.org;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OR8P25OJ4vGDOaMebWgow/0A+NvhiOK6b9XUs76+pr4=;
-        b=WtMEFT/394V7MaYCKEgMR77pw4O+uKq9F3nMh06Wh+qrP7griXXukLYqJIiuwBGgkl
-         e/OzMWb/HL3McCwBKYRTCE0ddcRAlNFfzpJhRTOHBIYrC86ruZpkWrwdUnTuWKznJjmT
-         MBjhbaM86KydgD00TFUVnhJ78wMBWXW/8Vr0wS5So4JJe+oi0nmwnV0yyMU8C2j56rG4
-         mEYA9nQvCC2WrgQImY7MCwaoxvoliqruKDYkw855ZKdt/8pTGGggwzVig61Oq8d8gYmW
-         oUypsQgsKr3ybUYaiIXY2U+4OurJmcusTIKVR1Waoax6lPwi2TFv9oAjgX0Ar+fMsEdK
-         Lo9w==
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1739214757; x=1739819557; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7X6uNuQlMRodZ9pzqm1wHqWFoOKmQViZcOnpPZv5eDA=;
+        b=ewHdKpQUa+cpyjjOvs8UwD32HI8c+LT6wGq/yzcUTh3/mVNG5Rscq7z3eczfHifHIE
+         SB4MK9FaRVBzWo3T/k5sFJJU/v4+841iHMsIKTn1jerTF5cJrlWE57AfAsIdgv/oI1tu
+         r3GVOTERry7JW0iCP6Gd21kWHIA40vO6fIm/W8+Yk7lcCx4RG3nX6iNIL4fex5NcK6c9
+         z6GGa1e1cv+AV+2XpPvahwneXqCr/9ru5J5s0mUac+zoiwxD67T6+TAD7QowrAru7PxU
+         krbvB767LMqK/qXwZVTPoQnhJaYkZ5iT+gbgbeMBV3OYQf6cQi6Kxl8MKnsjK0Nma+r0
+         KlHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739214754; x=1739819554;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OR8P25OJ4vGDOaMebWgow/0A+NvhiOK6b9XUs76+pr4=;
-        b=nR/zJh4m4/BU84N2i/fxAkxvtQCgtZA80YYe1bWAn/tgEKBajN7q3mxXKiVYfoCuTt
-         pMV3xWxrsmrP2/y7jsApTDElCAB8wdGopTWmA3fV4ffTbDaLw919IxCySD3iWc9zFC2K
-         kQB/nRcKPIcy10ZE6bWVvwSgn1E2ANDA/G1/iiMN3JEcmOBWrEGy+CoRxBI3d7/OELWO
-         cE5C4UNh01Acf2JvVtz+SF3LKv8C/o4a43MIrEhljK+2yHUi+UpJEbcr05Rn1xhH9KMf
-         /B0wLGWyyKTEcXxpvL1t4ptXK0No8RIkhhHmNVdH9oQqb7Kyv7WKUWqRe2RJoBRzCQZE
-         uZ7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUqTudkk81+0k1HbO5F0XG3JTKlhUZ+5xT358dk7/6jRCE0EKgiyqdK6eGo9LMNJF5Pu+vi/QjM94u+g5Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoZrn4Ktb4AgdrZlM+61rhUeP99rXWdMsno4IDwbY3YC7iX23R
-	BQnwiOzd0C/YP/6VpYrdAp2KDwsiBXK9rO6oN55PdFRUmnCuseeUyjGtGeh8HI+UVfgrZ1r3maj
-	K/Yn5wA==
-X-Google-Smtp-Source: AGHT+IEFGNvZNrTvurg9Q9s3VyBmuy8tCX2cZ77ByEDGWHebDA0fRRpZBRRIZa6H7Ph07kANZ45IznFo9U02
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:c64e:af58:30d4:168d])
- (user=irogers job=sendgmr) by 2002:a05:690c:3306:b0:6fb:be:e331 with SMTP id
- 00721157ae682-6fb00bee3cfmr263747b3.6.1739214754488; Mon, 10 Feb 2025
- 11:12:34 -0800 (PST)
-Date: Mon, 10 Feb 2025 11:12:31 -0800
-Message-Id: <20250210191231.156294-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1739214757; x=1739819557;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7X6uNuQlMRodZ9pzqm1wHqWFoOKmQViZcOnpPZv5eDA=;
+        b=uZ5JlMtrdGRjQJd+AMQVTVl5TAQcwbnBLv8EqOKi1TcIw6tHJulYPgHPfEU851WIh7
+         cGipTbftvM56y1ZjwL9t7o7zjBvSM6tRFKk9Cb4TNV8c1nMebQuEVOWYUotaVacpJO56
+         4ZcZV5guNAymYA0aDveIgJNbbCTnd2CNzt5wX23L/qWj6bjSV9Zg5uJzWBwYiPYbaqvy
+         AHQiQvBsojSfpVoHEGbdrbgwpHB/TfwCsAQNPyVsvQVyjgWJgKbQwkezxCOqzGJVVRj4
+         Ku5t02JZM2xo+7TSOSpzEOUoolq3hH3AUykQrLIei7QDx34t7dXR68lXw2TzPWVBgkSm
+         co5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXyAk1NhdS7LREWlwf/nLJJk3yQzrKciLsic0pn+tnZ7z2xga6LWCxiXKK9nATfWs/d5/+2ghLkS1T7YHY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyo8hESZGBciCsEyKNRHEWyjQVED9KzFhtjf6ywHpA97BcaQmAm
+	fYANQZw/hno+Bem24rfj+5knSVTENpxRAX2uHpRGzb65TYxmrGBIgrIQddK1udM=
+X-Gm-Gg: ASbGncvDo01hzmJALVlZeY2AGnsUW953tWcLwPf30zYEfkU4denmbhalXqo8JPyaqPa
+	E2HF4RTb1U1HNI8v0S40H8GOtuHlxlQzQZTvtwSeVovwglorEnvYX35jWi+O5QsEgu5OdfamHAo
+	MJ90Z/WMywgTkVVaoce0qaGtTO7b5e5sJfaoAmisisVJeSw5gjzelkifBOI55HwuMrE6w2pUIqP
+	d6TwpjsOZ/LalyNeQnocygzYwm+vRHvH1dVE9KGD9vd34lkp6LZe/UL+0RyIflTQhJjSGTS9T7A
+	oRHDPC/DVfyy/zCpQdBFTHxT80h98f8QxRH3TknAjx/oY3RjoZLE
+X-Google-Smtp-Source: AGHT+IEyRIKhmgO/4HoHaCjVUun69PAKcV1oSQIHgk5rqDLOXak/j3xysFVCh8NWH5SOGRmd1WM8qQ==
+X-Received: by 2002:a05:690c:7301:b0:6f9:7b99:8a29 with SMTP id 00721157ae682-6f9b2a07011mr124242147b3.34.1739214756954;
+        Mon, 10 Feb 2025 11:12:36 -0800 (PST)
+Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99ff6a8e3sm17839597b3.90.2025.02.10.11.12.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 11:12:36 -0800 (PST)
+Date: Mon, 10 Feb 2025 14:12:35 -0500
+From: Josef Bacik <josef@toxicpanda.com>
+To: Joanne Koong <joannelkoong@gmail.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Matthew Wilcox <willy@infradead.org>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Christian Heusel <christian@heusel.eu>,
+	Miklos Szeredi <mszeredi@redhat.com>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm <linux-mm@kvack.org>,
+	Mantas =?utf-8?Q?Mikul=C4=97nas?= <grawity@gmail.com>
+Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for
+ FUSE/Flatpak related applications since v6.13
+Message-ID: <20250210191235.GA2256827@perftesting>
+References: <2f681f48-00f5-4e09-8431-2b3dbfaa881e@heusel.eu>
+ <CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
+ <9cd88643-daa8-4379-be0a-bd31de277658@suse.cz>
+ <20250207172917.GA2072771@perftesting>
+ <8f7333f2-1ba9-4df4-bc54-44fd768b3d5b@suse.cz>
+ <CAJnrk1aNVMCfTjL0vo-Qki68-5t1W+6-bJHg+x67kHEo_-q0Eg@mail.gmail.com>
+ <Z6ct4bEdeZwmksxS@casper.infradead.org>
+ <CAJnrk1aY0ZFcS4JvmJL=icigencsCD8g4qmZiTuoPWj2S2Y_LQ@mail.gmail.com>
+ <81298bd1-e630-4940-ae5b-7882576b6bf4@suse.cz>
+ <CAJnrk1aBc5uvL78s3kdpXojH-B11wtOPSDUJ0XnCzmHH+eO2Nw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Subject: [PATCH v3] perf cpumap: Reduce cpu size from int to int16_t
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Tim Chen <tim.c.chen@linux.intel.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Kyle Meyer <kyle.meyer@hpe.com>
-Cc: Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJnrk1aBc5uvL78s3kdpXojH-B11wtOPSDUJ0XnCzmHH+eO2Nw@mail.gmail.com>
 
-Fewer than 32k logical CPUs are currently supported by perf. A cpumap
-is indexed by an integer (see perf_cpu_map__cpu) yielding a perf_cpu
-that wraps a 4-byte int for the logical CPU - the wrapping is done
-deliberately to avoid confusing a logical CPU with an index into a
-cpumap. Using a 4-byte int within the perf_cpu is larger than required
-so this patch reduces it to the 2-byte int16_t. For a cpumap
-containing 16 entries this will reduce the array size from 64 to 32
-bytes. For very large servers with lots of logical CPUs the size
-savings will be greater.
+On Mon, Feb 10, 2025 at 10:13:51AM -0800, Joanne Koong wrote:
+> On Mon, Feb 10, 2025 at 12:27 AM Vlastimil Babka <vbabka@suse.cz> wrote:
+> >
+> > On 2/8/25 16:46, Joanne Koong wrote:
+> > > On Sat, Feb 8, 2025 at 2:11 AM Matthew Wilcox <willy@infradead.org> wrote:
+> > >>
+> > >> On Fri, Feb 07, 2025 at 04:22:56PM -0800, Joanne Koong wrote:
+> > >> > > Thanks, Josef. I guess we can at least try to confirm we're on the right track.
+> > >> > > Can anyone affected see if this (only compile tested) patch fixes the issue?
+> > >> > > Created on top of 6.13.1.
+> > >> >
+> > >> > This fixes the crash for me on 6.14.0-rc1. I ran the repro using
+> > >> > Mantas's instructions for Obfuscate. I was able to trigger the crash
+> > >> > on a clean build and then with this patch, I'm not seeing the crash
+> > >> > anymore.
+> > >>
+> > >> Since this patch fixes the bug, we're looking for one call to folio_put()
+> > >> too many.  Is it possibly in fuse_try_move_page()?  In particular, this
+> > >> one:
+> > >>
+> > >>         /* Drop ref for ap->pages[] array */
+> > >>         folio_put(oldfolio);
+> > >>
+> > >> I don't know fuse very well.  Maybe this isn't it.
+> > >
+> > > Yeah, this looks it to me. We don't grab a folio reference for the
+> > > ap->pages[] array for readahead and it tracks with Mantas's
+> > > fuse_dev_splice_write() dmesg. this patch fixed the crash for me when
+> > > I tested it yesterday:
+> > >
+> > > diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> > > index 7d92a5479998..172cab8e2caf 100644
+> > > --- a/fs/fuse/file.c
+> > > +++ b/fs/fuse/file.c
+> > > @@ -955,8 +955,10 @@ static void fuse_readpages_end(struct fuse_mount
+> > > *fm, struct fuse_args *args,
+> > >                 fuse_invalidate_atime(inode);
+> > >         }
+> > >
+> > > -       for (i = 0; i < ap->num_folios; i++)
+> > > +       for (i = 0; i < ap->num_folios; i++) {
+> > >                 folio_end_read(ap->folios[i], !err);
+> > > +               folio_put(ap->folios[i]);
+> > > +       }
+> > >         if (ia->ff)
+> > >                 fuse_file_put(ia->ff, false);
+> > >
+> > > @@ -1049,6 +1051,7 @@ static void fuse_readahead(struct readahead_control *rac)
+> > >
+> > >                 while (ap->num_folios < cur_pages) {
+> > >                         folio = readahead_folio(rac);
+> > > +                       folio_get(folio);
+> >
+> > This is almost the same as my patch, but balances the folio_put() in
+> > readahead_folio() with another folio_get(), while mine uses
+> > __readahead_folio() that does not do folio_put() in the first place.
+> >
+> > But I think neither patch proves the extraneous folio_put() comes from
+> > fuse_try_move_page().
+> >
+> > >                         ap->folios[ap->num_folios] = folio;
+> > >                         ap->descs[ap->num_folios].length = folio_size(folio);
+> > >                         ap->num_folios++;
+> > >
+> > >
+> > > I reran it just now with a printk by that ref drop in
+> > > fuse_try_move_page() and I'm indeed seeing that path get hit.
+> >
+> > It might get hit, but is it hit in the readahead paths? One way to test
+> > would be to instead of yours above or mine change, to stop doing the
+> > foio_put() in fuse_try_move_page(). But maybe it's called also from other
+> > contexts that do expect it, and will leak memory otherwise.
+> 
+> When I tested it a few days ago, I printk-ed the address of the folio
+> and it matched in fuse_readahead() and try_move_page(). I think that
+> proves that the extra folio_put() came from fuse_try_move_page()
+> through the readahead path.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+This patch should fix the problem, let me know if it's stil happening
+
+From 964c798ee9e8f2e8e2c37cfd060c76a772cc45b7 Mon Sep 17 00:00:00 2001
+Message-ID: <964c798ee9e8f2e8e2c37cfd060c76a772cc45b7.1739214698.git.josef@toxicpanda.com>
+From: Josef Bacik <josef@toxicpanda.com>
+Date: Mon, 10 Feb 2025 14:06:40 -0500
+Subject: [PATCH] fuse: drop extra put of folio when using pipe splice
+
+In 3eab9d7bc2f4 ("fuse: convert readahead to use folios"), I converted
+us to using the new folio readahead code, which drops the reference on
+the folio once it is locked, using an inferred reference on the folio.
+Previously we held a reference on the folio for the entire duration of
+the readpages call.
+
+This is fine, however I failed to catch the case for splice pipe
+responses where we will remove the old folio and splice in the new
+folio.  Here we assumed that there is a reference held on the folio for
+ap->folios, which is no longer the case.
+
+To fix this, simply drop the extra put to keep us consistent with the
+non-splice variation.  This will fix the UAF bug that was reported.
+
+Link: https://lore.kernel.org/linux-fsdevel/2f681f48-00f5-4e09-8431-2b3dbfaa881e@heusel.eu/
+Fixes: 3eab9d7bc2f4 ("fuse: convert readahead to use folios")
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 ---
-v3. Add bounds checks as suggested by Leo Yan <leo.yan@arm.com>.
-v2. Rebase and tweak commit message add Reviewed-by: Tim Chen
-    <tim.c.chen@linux.intel.com>.
----
- tools/lib/perf/cpumap.c              |  8 ++--
- tools/lib/perf/include/perf/cpumap.h |  3 +-
- tools/perf/util/cpumap.c             | 68 +++++++++++++++++++---------
- tools/perf/util/env.c                |  2 +-
- 4 files changed, 54 insertions(+), 27 deletions(-)
+ fs/fuse/dev.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-index fcc47214062a..4454a5987570 100644
---- a/tools/lib/perf/cpumap.c
-+++ b/tools/lib/perf/cpumap.c
-@@ -185,7 +185,7 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
- 	while (isdigit(*cpu_list)) {
- 		p = NULL;
- 		start_cpu = strtoul(cpu_list, &p, 0);
--		if (start_cpu >= INT_MAX
-+		if (start_cpu >= INT16_MAX
- 		    || (*p != '\0' && *p != ',' && *p != '-' && *p != '\n'))
- 			goto invalid;
- 
-@@ -194,7 +194,7 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
- 			p = NULL;
- 			end_cpu = strtoul(cpu_list, &p, 0);
- 
--			if (end_cpu >= INT_MAX || (*p != '\0' && *p != ',' && *p != '\n'))
-+			if (end_cpu >= INT16_MAX || (*p != '\0' && *p != ',' && *p != '\n'))
- 				goto invalid;
- 
- 			if (end_cpu < start_cpu)
-@@ -209,7 +209,7 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
- 		for (; start_cpu <= end_cpu; start_cpu++) {
- 			/* check for duplicates */
- 			for (i = 0; i < nr_cpus; i++)
--				if (tmp_cpus[i].cpu == (int)start_cpu)
-+				if (tmp_cpus[i].cpu == (int16_t)start_cpu)
- 					goto invalid;
- 
- 			if (nr_cpus == max_entries) {
-@@ -219,7 +219,7 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
- 					goto invalid;
- 				tmp_cpus = tmp;
- 			}
--			tmp_cpus[nr_cpus++].cpu = (int)start_cpu;
-+			tmp_cpus[nr_cpus++].cpu = (int16_t)start_cpu;
- 		}
- 		if (*p)
- 			++p;
-diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
-index 188a667babc6..8c1ab0f9194e 100644
---- a/tools/lib/perf/include/perf/cpumap.h
-+++ b/tools/lib/perf/include/perf/cpumap.h
-@@ -4,10 +4,11 @@
- 
- #include <perf/core.h>
- #include <stdbool.h>
-+#include <stdint.h>
- 
- /** A wrapper around a CPU to avoid confusion with the perf_cpu_map's map's indices. */
- struct perf_cpu {
--	int cpu;
-+	int16_t cpu;
- };
- 
- struct perf_cache {
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 5c329ad614e9..9bc5e0370234 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -67,19 +67,23 @@ static struct perf_cpu_map *cpu_map__from_entries(const struct perf_record_cpu_m
- 	struct perf_cpu_map *map;
- 
- 	map = perf_cpu_map__empty_new(data->cpus_data.nr);
--	if (map) {
--		unsigned i;
--
--		for (i = 0; i < data->cpus_data.nr; i++) {
--			/*
--			 * Special treatment for -1, which is not real cpu number,
--			 * and we need to use (int) -1 to initialize map[i],
--			 * otherwise it would become 65535.
--			 */
--			if (data->cpus_data.cpu[i] == (u16) -1)
--				RC_CHK_ACCESS(map)->map[i].cpu = -1;
--			else
--				RC_CHK_ACCESS(map)->map[i].cpu = (int) data->cpus_data.cpu[i];
-+	if (!map)
-+		return NULL;
-+
-+	for (unsigned int i = 0; i < data->cpus_data.nr; i++) {
-+		/*
-+		 * Special treatment for -1, which is not real cpu number,
-+		 * and we need to use (int) -1 to initialize map[i],
-+		 * otherwise it would become 65535.
-+		 */
-+		if (data->cpus_data.cpu[i] == (u16) -1) {
-+			RC_CHK_ACCESS(map)->map[i].cpu = -1;
-+		} else if (data->cpus_data.cpu[i] < INT16_MAX) {
-+			RC_CHK_ACCESS(map)->map[i].cpu = (int16_t) data->cpus_data.cpu[i];
-+		} else {
-+			pr_err("Invalid cpumap entry %u\n", data->cpus_data.cpu[i]);
-+			perf_cpu_map__put(map);
-+			return NULL;
- 		}
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index 5b5f789b37eb..5bd6e2e184c0 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -918,8 +918,6 @@ static int fuse_try_move_page(struct fuse_copy_state *cs, struct page **pagep)
  	}
  
-@@ -106,8 +110,15 @@ static struct perf_cpu_map *cpu_map__from_mask(const struct perf_record_cpu_map_
- 		int cpu;
+ 	folio_unlock(oldfolio);
+-	/* Drop ref for ap->pages[] array */
+-	folio_put(oldfolio);
+ 	cs->len = 0;
  
- 		perf_record_cpu_map_data__read_one_mask(data, i, local_copy);
--		for_each_set_bit(cpu, local_copy, 64)
--			RC_CHK_ACCESS(map)->map[j++].cpu = cpu + cpus_per_i;
-+		for_each_set_bit(cpu, local_copy, 64) {
-+			if (cpu + cpus_per_i < INT16_MAX) {
-+				RC_CHK_ACCESS(map)->map[j++].cpu = cpu + cpus_per_i;
-+			} else {
-+				pr_err("Invalid cpumap entry %d\n", cpu + cpus_per_i);
-+				perf_cpu_map__put(map);
-+				return NULL;
-+			}
-+		}
- 	}
- 	return map;
- 
-@@ -127,8 +138,15 @@ static struct perf_cpu_map *cpu_map__from_range(const struct perf_record_cpu_map
- 		RC_CHK_ACCESS(map)->map[i++].cpu = -1;
- 
- 	for (int cpu = data->range_cpu_data.start_cpu; cpu <= data->range_cpu_data.end_cpu;
--	     i++, cpu++)
--		RC_CHK_ACCESS(map)->map[i].cpu = cpu;
-+	     i++, cpu++) {
-+		if (cpu < INT16_MAX) {
-+			RC_CHK_ACCESS(map)->map[i].cpu = cpu;
-+		} else {
-+			pr_err("Invalid cpumap entry %d\n", cpu);
-+			perf_cpu_map__put(map);
-+			return NULL;
-+		}
-+	}
- 
- 	return map;
- }
-@@ -427,7 +445,7 @@ static void set_max_cpu_num(void)
- {
- 	const char *mnt;
- 	char path[PATH_MAX];
--	int ret = -1;
-+	int max, ret = -1;
- 
- 	/* set up default */
- 	max_cpu_num.cpu = 4096;
-@@ -444,10 +462,12 @@ static void set_max_cpu_num(void)
- 		goto out;
- 	}
- 
--	ret = get_max_num(path, &max_cpu_num.cpu);
-+	ret = get_max_num(path, &max);
- 	if (ret)
- 		goto out;
- 
-+	max_cpu_num.cpu = max;
-+
- 	/* get the highest present cpu number for a sparse allocation */
- 	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/present", mnt);
- 	if (ret >= PATH_MAX) {
-@@ -455,8 +475,14 @@ static void set_max_cpu_num(void)
- 		goto out;
- 	}
- 
--	ret = get_max_num(path, &max_present_cpu_num.cpu);
-+	ret = get_max_num(path, &max);
- 
-+	if (!ret && max > INT16_MAX) {
-+		pr_err("Read out of bounds max cpus of %d\n", max);
-+		ret = -1;
-+	}
-+	if (!ret)
-+		max_present_cpu_num.cpu = (int16_t)max;
- out:
- 	if (ret)
- 		pr_err("Failed to read max cpus, using default of %d\n", max_cpu_num.cpu);
-@@ -606,7 +632,7 @@ size_t cpu_map__snprint(struct perf_cpu_map *map, char *buf, size_t size)
- #define COMMA first ? "" : ","
- 
- 	for (i = 0; i < perf_cpu_map__nr(map) + 1; i++) {
--		struct perf_cpu cpu = { .cpu = INT_MAX };
-+		struct perf_cpu cpu = { .cpu = INT16_MAX };
- 		bool last = i == perf_cpu_map__nr(map);
- 
- 		if (!last)
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index cae4f6d63318..36411749e007 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -543,7 +543,7 @@ int perf_env__numa_node(struct perf_env *env, struct perf_cpu cpu)
- 
- 		for (i = 0; i < env->nr_numa_nodes; i++) {
- 			nn = &env->numa_nodes[i];
--			nr = max(nr, perf_cpu_map__max(nn->map).cpu);
-+			nr = max(nr, (int)perf_cpu_map__max(nn->map).cpu);
- 		}
- 
- 		nr++;
+ 	err = 0;
 -- 
-2.48.1.502.g6dc24dfdaf-goog
+2.43.0
 
