@@ -1,123 +1,155 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7043314F70
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A0F1C5D74
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:01:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739185289; cv=none; b=EFUY4WV0j3fPVbJop5grLsP3h90jKJP+QAdQPUJFIVidRDJPbpR56gcBXnndsNOY+lBEVyaTCURP1YAm87ZncCHV5tlpg7m0bw3SrEMpnxZEnditmrkJmqIR8TlBDi6FvDSWTqUe1CNzUs5bRAv1Us0gq9w7yBN097oKZAKQla8=
+	t=1739185293; cv=none; b=PjhjafHKAcJybove+2hsBGhXsb/hdoDe6obnNsJ3SzRLSLi74Hmw22afAumWIqWxPqsoU/3Lkqa4dHbXLGFddAtMVHOThZ88G/aRBXvfy9+WubyOzsfhrkB5J9D/NgfbmfIr7yqT1CzEX2i/2OMotJL48pMnx0NuLj9msND/rnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739185289; c=relaxed/simple;
-	bh=A/nHGsRTz5ge9+o5KGIPNXxGsBYgTigtacaF0AB2zNk=;
+	s=arc-20240116; t=1739185293; c=relaxed/simple;
+	bh=WgW6ZEWyu81z7BrqyHmBRuGMtk2zuQXDhJEjREDVx6c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sEtss/osqOIqHURa/jLXamBms3Of9UdG8wn2AJfnM6UwK38pNt3WpkEd0vY3wwoSHHCOdmmNkJTOSJe11JUyT9azDWeUDnav0qN+kvGrunc9zTzx0zh6xmCYs8GteO+ddrUgeQo2SlpSQvUWAnHRBPCdAAuBBhum2aPS0AJ5MhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=RbUNLXng; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=eA+hyo+7k7PadJo5oy0iGNUE5zfytQc1XHJFKpVMuCCTm19Q//14q8wQmAxSUFnPjp19bwqG43Mo0xajfK9Cig/HLfqeqvBVC5M7EbcLAh24sFsEttbubgi11nweo8xA3aBz9nHG9EBGcdBkTmBmn4gpQeI8jggXkY6ELdjo17E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YGqm8akA; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="RbUNLXng"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43634b570c1so27566205e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 03:01:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YGqm8akA"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-545097ff67cso1121951e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 03:01:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1739185286; x=1739790086; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=OSaTCwW/i1a/+xT9ljUvRvwwj+Pxye0xzps/mnFBmXc=;
-        b=RbUNLXngexpg0TNRFTTUi2QDkhqsP9DZDYrWcuwbkhLHlFi6CJmiaSSXduw0NF/VKr
-         6f9NcgWJGkdRY73qRbpip9xzSqFEJAtP+bKywdTiByH0NJJ0QJejR4vnVmjRnZR4+fPH
-         MW38wkWEXA51rgozc3y7+xVHkCZ0gfDLGXxj7MCSLpMjYMOmcnsfkrEhBmffbEIKV6E5
-         MYxN3e6R2DRXzAEhZq11G2hx04SwIfZl96KPQkQmZiq3vFIV9/MnK3GqMHqTFtjUG078
-         VjmTwAUJfzlN7gKy/GVtm8keirrvCvvlUd0LdVEd8AOh727fHicRUIqbbWKvdSw17Ij1
-         AldA==
+        d=linaro.org; s=google; t=1739185289; x=1739790089; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GtTBVwp4J9apExhc56rvDYwcShHHaMo1N7lDCxauzzY=;
+        b=YGqm8akAE8gSZd1S7vpanZvGYy1GVJ+v6hmPJkO+E2m72RZYbt7eZZwHva2orJ5w58
+         4EovFDkM1tJwKmTA95tLhs5Ua+hVJUv3jazgqT9mecFlUI7TEhhcIBTd6YzIqQyTdIXf
+         t5H9wZFSIMi0l8wN98n3/F4ZNU8TtXMEG2pAjzhL0QK1oxiY+cegCvEdRrHOhSOEAL0H
+         yQTGXF6WUPtszeZFs9wqbJzoZSXqXav/im/Y9U83Hcrmn3af0p/j9Zz0nPDBbzVKGnhB
+         07zG+9YyVNtm8t5AVYm3+XqsfWjTPhAdyzrsJXgQYREiG4W6MVzmqHgZZrIOO53zcCqh
+         7jvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739185286; x=1739790086;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OSaTCwW/i1a/+xT9ljUvRvwwj+Pxye0xzps/mnFBmXc=;
-        b=t2zJVkWr4dR9vhq4sSliPf3n4jFVxRAL0TyZGGTW9LMNKiHgxJNYGTHnRWQ+/23NwD
-         48VXsUjg2/NirjqyU92M17R3doNpwzA9jqMsaT/u8bHj1mOPy37T4WYTjj957SCpDwkI
-         b0elHNMgXM3DrU1BgyKms/KooOp4w6vyiwfAUdvAh36m5Zcpc3NhW0Wvz+eBKPXkJ6bA
-         kjR5nZoADi2MBdxUl/JOOPOCgCZTmV0bPfoyCrPlduSQolKqWq/QJQSqLQV86O0fmgxD
-         njEE8VmVIcUZV9wrncXIx8yUddYPc5Pz7NNn/VRTkUNx9VJbeDkJjdJiDv6TNOKfxt1U
-         n5ow==
-X-Forwarded-Encrypted: i=1; AJvYcCWDHvLFIIagkUEVfrhDlWa9+h1457LNuyIpsF96S/qyN123q6cLgeCP4Rl4Iw8pMPqsNjMQxTnmNH+5HEk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3yYWeaNZLG3qiP/mzpKOZ12Ie5Wzte9EZw/6goP9OU8udwQY3
-	UX6nB1N/Nbny8HV78akFowxXS7i5aqmTSpU7lWRePRR4M5ZkVk2TTmhagCw/Uzb+HpV/tXyalNH
-	h
-X-Gm-Gg: ASbGncvKWp2mMuspqNtfvGqUau81EKS5MIlPAAIs44BoidHcKjoDVUD3fzT9JX3zG7q
-	4vT10/4hKq6E0YtLoZl/2nwr2BiowsbjHisy7Z+fOWynuY6KxxOU2NGV5gzShNLfCqei0tERc2b
-	h/56Raf2old1S12k2RaufnThJs35DQgMsZCId01ZswXiEG+wlL7TsWOoIbFtwsFrr3e72P+jd0g
-	lefJy9FZhBB2Cfm1skfIITjmrhwvwzlZ6xwY9nYYHLWPonPuDB6YKtVqOIAEP8/qIb1PCbG6H15
-	WBE=
-X-Google-Smtp-Source: AGHT+IFXnQ0KMzWEP0v9mEPLjum+FYzLvCxDqUvIcocuOOZXnHi/RAG0ADvMPBvpRtDBnATrbHxu0g==
-X-Received: by 2002:a05:6000:2aa:b0:38d:daf3:be6a with SMTP id ffacd0b85a97d-38ddaf3c061mr5632423f8f.40.1739185285592;
-        Mon, 10 Feb 2025 03:01:25 -0800 (PST)
-Received: from localhost ([2a02:8308:a00c:e200::766e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4394779a96dsm16109565e9.4.2025.02.10.03.01.24
+        d=1e100.net; s=20230601; t=1739185289; x=1739790089;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GtTBVwp4J9apExhc56rvDYwcShHHaMo1N7lDCxauzzY=;
+        b=Cv1jbIXVJf+ube78DPdn2f8XhQuQ5njFh0bH34bm/qNNstTqerkP1Wgjkw8+W67NbS
+         U/fzk8GWx+ErEbtgAKbhokLGPl/EhWvAUHuOd6q9T5ZQSqJv6/x1Sqnh+f1i8hLN6eIH
+         zIUeQExQ6JG2ZFMIrQay+ggF6LqxxJ9Ozo4CaGbY6/Cut6OD5buOg4XVqX325hF5RT2o
+         6Y3nya6GR918iyc6Gk8z25/Zd0hZ22AGrfQoJD4nUGdNcGR9QRFm13ry88g3CshOJyd6
+         FMWniRARb8jQaiRq972qbVR99nCcQZ9k+GhOx1+CsezMagwggSDMjUO1JbGdlmCydg1V
+         ZiVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVKs29vHIt9ESp/WeEfcsW0PeC/vTczjOMISejrJDcNXEy5fsNDVm4YwVq/q39rl+eEbLotys+qv3HlsgQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgWfrDtLQlw+uVrf1PjJ/SYAe5suQW6Cfksc6BnNNUlaCZ4goE
+	+J0jaACDJFGHlhWzGMlXFIaf/8H6TNRjN7Z6y8j8uvgIv5MXzU6UveglmyPVnWs=
+X-Gm-Gg: ASbGncu5R/EDX+hkjrl3PTvBrzTI2xE9/YfT2JfB8LG6XCHgIQ9J4nMyZjiI49fslIc
+	HNWL0VEATPlOsvry9uMvpwzDGeZLVKUwS+ehXqVl/F+DMQNE8WacNMk1GfaVxXSHkYFuKlWsenL
+	LssSE2i8kKH5mV/eq3qY2FEWEa4tmk1vQxNTpKDGGUSHM7P67qsS6kg0ZlzJ8ewf1MhmprcTbmo
+	aRVkZ7pM2e86lAmyO16Pscs2cNqVrPJwpSNkqVoEeEttnnBrWa6i9IyqwhWopnWDYRczQfoNS0z
+	3KxefRcWrpbQKNnFvM5T+XTGNGBHcpLje0OH0Q7hrnwLAX1uWu3f5HHlV2HpMm7a1WJ5V5o=
+X-Google-Smtp-Source: AGHT+IESGWlTJg2cuv8Kgo6v/dDQZjg10SE7StQf8S4vcvj1tAiGKln4CJ/xT6Y54Ae/tQTmSnk31g==
+X-Received: by 2002:a05:6512:4022:b0:545:ae6:d740 with SMTP id 2adb3069b0e04-5450ae6d79amr1090753e87.41.1739185289056;
+        Mon, 10 Feb 2025 03:01:29 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5450c0823acsm321386e87.118.2025.02.10.03.01.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 03:01:24 -0800 (PST)
-Date: Mon, 10 Feb 2025 12:01:23 +0100
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, charlie@rivosinc.com, jesse@rivosinc.com
-Subject: Re: [PATCH 0/9] riscv: Unaligned access speed probing fixes and
- skipping
-Message-ID: <20250210-c79541eaea0d2d922f019384@orel>
-References: <20250207161939.46139-11-ajones@ventanamicro.com>
- <CAK9=C2XmFtLHAxuWJVdvkUHFQTM+mE-D8E4sLvKxxUj_CqcbAQ@mail.gmail.com>
- <20250210-d575562e04d84ca570e26f5d@orel>
- <CAK9=C2X5Hu_LQHmXUea7Xhq5cHaJqtcncgwUeb2+2uMvbTiW3w@mail.gmail.com>
+        Mon, 10 Feb 2025 03:01:28 -0800 (PST)
+Date: Mon, 10 Feb 2025 13:01:27 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Pratyush Brahma <quic_pbrahma@quicinc.com>
+Cc: Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Joerg Roedel <joro@8bytes.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: qcs8300: Add device node for
+ gfx_smmu
+Message-ID: <464vbzwgv44fn4iw5vj5yzpstzhcsb7rzuedf4fwl23hmdhews@d4q33ro6hxq3>
+References: <20250203-b4-branch-gfx-smmu-v4-0-eaa7aa762f48@quicinc.com>
+ <20250203-b4-branch-gfx-smmu-v4-2-eaa7aa762f48@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK9=C2X5Hu_LQHmXUea7Xhq5cHaJqtcncgwUeb2+2uMvbTiW3w@mail.gmail.com>
+In-Reply-To: <20250203-b4-branch-gfx-smmu-v4-2-eaa7aa762f48@quicinc.com>
 
-On Mon, Feb 10, 2025 at 03:28:13PM +0530, Anup Patel wrote:
-> On Mon, Feb 10, 2025 at 2:56 PM Andrew Jones <ajones@ventanamicro.com> wrote:
-> >
-> > On Sat, Feb 08, 2025 at 01:29:42PM +0530, Anup Patel wrote:
-> > > On Fri, Feb 7, 2025 at 9:49 PM Andrew Jones <ajones@ventanamicro.com> wrote:
-> > > >
-> > > > The first six patches of this series are fixes and cleanups of the
-> > > > unaligned access speed probing code. The next two patches introduce
-> > > > support to skip probing by matching vendor/arch/imp ids and checking a
-> > > > table for the access speed type. The last patch applies the new skip
-> > > > support to Ventana harts.
-> > >
-> > > Alternatively, we can also skip probing misaligned access when Zicclsm
-> > > extension is present in the ISA string. The Zicclsm extension is defined
-> > > as part of the ratified RVA23 profile.
-> >
-> > The definition of Zicclsm doesn't explicitly state that misaligned word
-> > accesses will be faster than byte accesses to the same addresses. There's
-> > also this spec issue[1] which appears to state that Zicclsm cannot be used
-> > to infer fast misaligned accesses.
-> >
-> > But, like Charlie suggests, maybe we should advocate the creation of an
-> > extension (or "named feature") which allows specifically advertising that
-> > misaligned accesses are fast.
-> >
-> > [1] https://github.com/riscv/riscv-isa-manual/issues/1611
+On Mon, Feb 03, 2025 at 11:17:02AM +0530, Pratyush Brahma wrote:
+> Add the device node for gfx smmu that is required for gpu
+> specific address translations.
 > 
-> I am not sure when such an extension would show up so for now
-> skipping unaligned tests based on implementation ID seems
-> reasonable.
+> Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs8300.dtsi | 39 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
 > 
-> Also, it seems this series is totally skipping the existing boot-time
-> print for fast unaligned access. Please try to keep the boot-time
-> print in some form.
+> diff --git a/arch/arm64/boot/dts/qcom/qcs8300.dtsi b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
+> index 4a057f7c0d9fae0ebd1b3cf3468746b382bc886b..7a8211bec139375b5aab939f123d88fca7aceff2 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs8300.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
+> @@ -2674,6 +2674,45 @@ gpucc: clock-controller@3d90000 {
+>  			#power-domain-cells = <1>;
+>  		};
+>  
+> +		adreno_smmu: iommu@3da0000 {
+> +			compatible = "qcom,qcs8300-smmu-500", "qcom,adreno-smmu",
+> +				     "qcom,smmu-500", "arm,mmu-500";
+> +			reg = <0x0 0x3da0000 0x0 0x20000>;
+> +			#iommu-cells = <2>;
+> +			#global-interrupts = <2>;
+> +
+> +			interrupts = <GIC_SPI 672 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 673 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 678 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 679 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 680 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 681 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 682 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 683 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 684 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 685 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 686 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 687 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +			clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
+> +				 <&gpucc GPU_CC_HUB_CX_INT_CLK>,
+> +				 <&gpucc GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK>,
+> +				 <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
+> +				 <&gcc GCC_GPU_SNOC_DVM_GFX_CLK>,
+> +				 <&gpucc GPU_CC_AHB_CLK>,
+> +				 <&gpucc GPU_CC_HUB_AON_CLK>;
+> +
+> +			 clock-names = "gcc_gpu_memnoc_gfx_clk",
 
-Sure. We have hwprobe, but now that people are likely used to seeing it
-in dmesg, then we should probably keep something there.
+Stray whitespace after the Tab symbol
 
-Thanks,
-drew
+> +				       "gcc_gpu_snoc_dvm_gfx_clk",
+> +				       "gpu_cc_ahb_clk",
+> +				       "gpu_cc_hlos1_vote_gpu_smmu_clk",
+> +				       "gpu_cc_cx_gmu_clk",
+> +				       "gpu_cc_hub_cx_int_clk",
+> +				       "gpu_cc_hub_aon_clk";
+
+clocks and clock-names do not match.
+
+> +			power-domains = <&gpucc GPU_CC_CX_GDSC>;
+> +			dma-coherent;
+> +		};
+> +
+>  		pmu@9091000 {
+>  			compatible = "qcom,qcs8300-llcc-bwmon", "qcom,sc7280-llcc-bwmon";
+>  			reg = <0x0 0x9091000 0x0 0x1000>;
+> 
+> -- 
+> 2.34.1
+> 
+
+-- 
+With best wishes
+Dmitry
