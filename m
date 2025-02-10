@@ -1,169 +1,85 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66CF7252910
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A080A2528F6;
+	Mon, 10 Feb 2025 14:40:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739198345; cv=none; b=p1L1loYRjj8ithrlYVDp8HZbt3GcTKtK+eLlaiYboX3VjxHyyZVRroSqo/+0LT9c6saUPZ4120xVLLrD98aturK8Y++lA54mq+xeWcxaG98mjXvI2UUeQZ+MSuTEf5sA4ccIhhPy4FU37PNKUYueBUC5j1LvWQo9w+jbU+DhCgo=
+	t=1739198411; cv=none; b=M24+ghF0Spj8pmMelOx/jSL5Fgp+ApSQc4ZSMKfXtcPGOHw5iSshMHlzgy5qcJqgw0fL5eYiqCw48xLRC2oKUtlZ0Ix8Yd6uZp6Yv90oMYSlgtXugarBXBfZ9lIV1aqhG9UWUy5WtQAWadlXBo+Oe9lDY5DCcz7YJbb/yfJ8ZlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739198345; c=relaxed/simple;
-	bh=LLZv8spMczu++PFSJ3yUBhOJ9eSME+MogTlX8kOq+/I=;
-	h=Message-ID:Date:MIME-Version:Subject:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HL5eS3fvHtvlkCLVbngh5rXwaGAwdjv0ieeBmabn8rReZuq3iMPUHT+NRiDnLb0huSpJkhkRwffp+BGYhQ2ix61N58G4ZBOv2ZOECNyBQU8xrLhh1CKKRDr3F6h2SkEEGQP3EvYSvn5xh90wZYbgbYeEJKUQSfEdScyvkgaS5M4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=q9SBBPWm; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1739198411; c=relaxed/simple;
+	bh=Sj5eW9kyqvbKG1tZic0BsHM7+quD6yMZl2YhX8AXDkE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=etzu2v8qJPVZXklzCCaY4kbrzlhT1CEjQbs0fxSVfE8pB6kPm+SLe3CS0eJQQ2QAZw9m+clQ6wYYQHrqKgOYMNcYmUb3sXx+BbeJSfPv/91pJrbLmjkvdaO0ZHRx6gmU1sX7miDRnUr1gieNTZ0tDy494mpN08t5VoBPB3e0tlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=sXJCTr0L; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="q9SBBPWm"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4394345e4d5so8039665e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 06:39:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739198341; x=1739803141; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Zo0VN4ey+NCxOpRRNUPLhuYri5JxBmbs9To1sFVTXQI=;
-        b=q9SBBPWmLmywLTglIF0FlOH9SU6aUbhslPY3lnGCOkHVIkbYbekI84lz1MsKVcNt9G
-         fenSxMkTOwov+JfqDIyBdyo5QJJdidEFMk6q7n1JJree8eV4PLvYfAFRFlJC+7QkvW4R
-         ffr/1a/rYXw8jLf5QSwSmXayjIAFqBjfQrW6qOgQ3ElIO6frZS9QgkSLg1wiaYx5B+kR
-         9p7xNzuhBBE5JxSq38QKanS6Jk2NoJ/xtjb9kyTJ0K28HHsyEG0feiaFw0CyAuIDUNBW
-         BeGh0A1QaDGKa7Y7ESKvR+TVQuWY87tLyXLJrFLf9Pt6E3llb0Z+DC/JeoVKG9L6l4iY
-         JI+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739198341; x=1739803141;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zo0VN4ey+NCxOpRRNUPLhuYri5JxBmbs9To1sFVTXQI=;
-        b=nTwI7kKmJjIV813QlwxIS682b514B8nfdCOsUC7DfSWwo9fxPx2SQYXi8wj9Kahilz
-         ALvn0bat65a6Qz03vz3MUFucGF+ByxUFGAAClz8j3wB3kl3mTOUjMiUZeFCHWJVTl6La
-         BNC6qiJnh9VBnPcu210yHfrdpQo/6TJKC5RZROpM9nNShQqSLiB56nub3y/EJnVEXomD
-         30BN2DPdG/v7fbaj2KjppMrRzELf2ACCgWxDf8+ZUxTfTcMMXW2RJsJ0hYL663xUJg5d
-         e/loRJAEmoLZDeD9J0FfamYFF3IfTTU07hnc6SgDvyUgczz+4p4soN2N1OwnCiXYWWSY
-         TJNg==
-X-Forwarded-Encrypted: i=1; AJvYcCVrJa9LaeplRLDUF+yEuoB7e/PHO1jrwng7e57Vtmj+9SmoELchq2CWJEurjLaMerFEc5tz26ftpzu2Gl4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9HDntCDhoRlLPv7xl/xkfpTYSW9puAdhNQyEIe2kwOOWDEIrS
-	tuH8/jZ5LnVCRrQQRDjo+L4Sx629G8Eh/MyyzuzCypoZHZauG3VcPYzd0OaTv+s=
-X-Gm-Gg: ASbGncvqOslov/hyICs1yq7By5/W/AL8/suI7L2Jij+n35gSqUjg6DrIrW+vQD5KM1o
-	bPVIhtr12IZ++mk7pO3UourrA7bK9WwekOrL9eE7ajIE9mCshPO5uuB+1TZCbZVTQ9XAUWaHHtp
-	rb1R39dJgHIUeQyP8HKXaZxMK8O+Cwj+WFm8nbI0/bSRUpz++VUJ1VCoa6G/n026uqvMcMRA6Na
-	KmOrjBJCBDB1xwwPCg4kFjP7g4Gd2mm8WkSNwxGWkThoz72Tu0zzJo+s52jER2sxUixDC7vc/lK
-	8SpG+MST51Cf7M2ffLydO9qbOlmZQ4RpwzPeDqCLeqOfbikrX4qfcAyXY/PZ
-X-Google-Smtp-Source: AGHT+IGm5AlxQcuKzP0PEYl2wRs1l7PkvTwrGGHXffc7rJgV/RWXIbNwUCK7tjW///sMOC1+p0rrnA==
-X-Received: by 2002:a05:600c:56d0:b0:434:9c1b:b36a with SMTP id 5b1f17b1804b1-4392dfbd5d8mr83693895e9.13.1739198340511;
-        Mon, 10 Feb 2025 06:39:00 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4394127afcbsm45103195e9.23.2025.02.10.06.38.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 06:39:00 -0800 (PST)
-Message-ID: <374d3b07-e16c-4468-828a-a2a542cd88ac@rivosinc.com>
-Date: Mon, 10 Feb 2025 15:38:58 +0100
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="sXJCTr0L"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 6DEC148EB4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1739198403; bh=J0LDPXJ6Fp7OnZfUagLzuEZvxrfo5+dhEZvqyspU/b0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=sXJCTr0Lwe/fVwRGXlZgaAd+8X4YcPL3vLhzmSDeHxFUDpjm9yk6yTdfZ0m4YUw4r
+	 Q7+QAqLkKiHVR4s0btbXp9/VxfRY/RjawZzgap8NgKYz2yHsp6yedXtYNkliIg10Le
+	 nA/I06O5wpBnD67CYF5RlyzyKwwXTeQb2K4nx+25CsH2z9q+Zr9UGPe7mUq7EocQ9m
+	 rtg2bhnNIR6IVy604sOxn8t1ZkGat3pqC9pYhn1QvHWd14+77CAX2BZKYxUpEFF+eU
+	 5gy1PZzJDB7jVy18Egh9Z5Qb+FS3Q6YX6iV5UFHthrf9KfPQH9gIIVP1Z7SoX+zvbI
+	 ErycYTzPi/aHQ==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 6DEC148EB4;
+	Mon, 10 Feb 2025 14:40:03 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC v2 18/38] docs: sphinx/kernel_abi: use AbiParser directly
+In-Reply-To: <20250210082748.05ba85ae@foz.lan>
+References: <cover.1738020236.git.mchehab+huawei@kernel.org>
+ <fb800900352d90a0e501e5d6732e1bea277478f2.1738020236.git.mchehab+huawei@kernel.org>
+ <87lduu7efu.fsf@trenco.lwn.net> <20250129014324.60a8dfce@foz.lan>
+ <20250202155652.1652e420@foz.lan> <878qqlfxc9.fsf@trenco.lwn.net>
+ <20250210082748.05ba85ae@foz.lan>
+Date: Mon, 10 Feb 2025 07:40:02 -0700
+Message-ID: <87cyfp3ltp.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] riscv: add ISA extension parsing for bfloat16 ISA
- extension
-Cc: linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>,
- Jesse Taube <jesse@rivosinc.com>, Yong-Xuan Wang <yongxuan.wang@sifive.com>,
- Samuel Holland <samuel.holland@sifive.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Evan Green <evan@rivosinc.com>,
- Andrew Jones <ajones@ventanamicro.com>,
- Alexandre Ghiti <alexghiti@rivosinc.com>, Andy Chiu <andybnac@gmail.com>,
- Charlie Jenkins <charlie@rivosinc.com>, Conor Dooley <conor+dt@kernel.org>,
- Rob Herring <robh@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>,
- Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Jonathan Corbet <corbet@lwn.net>,
- Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>
-References: <20241206055829.1059293-1-inochiama@gmail.com>
- <20241206055829.1059293-3-inochiama@gmail.com>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <20241206055829.1059293-3-inochiama@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
+> I took a look on Markus work: it was licensed under GPL 3.0 and it was
+> written in 2016. There were several changes on kerneldoc since them,
+> including the addition of a regex that it is not compatible with
+> Python re[1]:
+>
+>         $members =~ s/\bSTRUCT_GROUP(\(((?:(?>[^)(]+)|(?1))*)\))[^;]*;/$2/gos;
+>
+> This one use:
+>
+> 	- recursive patterns: ?1
+> 	- atomic grouping (?>...)
+>
+> Also, it is hard to map what he does with the existing script. I'm
+> opting to write a new script from scratch.
 
-On 06/12/2024 06:58, Inochi Amaoto wrote:
-> Add parsing for Zfbmin, Zvfbfmin, Zvfbfwma ISA extension which
-> were ratified in 4dc23d62 ("Added Chapter title to BF16") of
-> the riscv-isa-manual.
-> 
-> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> ---
->  arch/riscv/include/asm/hwcap.h | 3 +++
->  arch/riscv/kernel/cpufeature.c | 3 +++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
-> index 869da082252a..14cc29f2a723 100644
-> --- a/arch/riscv/include/asm/hwcap.h
-> +++ b/arch/riscv/include/asm/hwcap.h
-> @@ -100,6 +100,9 @@
->  #define RISCV_ISA_EXT_ZICCRSE		91
->  #define RISCV_ISA_EXT_SVADE		92
->  #define RISCV_ISA_EXT_SVADU		93
-> +#define RISCV_ISA_EXT_ZFBFMIN		94
-> +#define RISCV_ISA_EXT_ZVFBFMIN		95
-> +#define RISCV_ISA_EXT_ZVFBFWMA		96
->  
->  #define RISCV_ISA_EXT_XLINUXENVCFG	127
->  
-> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-> index c0916ed318c2..5cfcab139568 100644
-> --- a/arch/riscv/kernel/cpufeature.c
-> +++ b/arch/riscv/kernel/cpufeature.c
-> @@ -341,6 +341,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
->  	__RISCV_ISA_EXT_DATA(zacas, RISCV_ISA_EXT_ZACAS),
->  	__RISCV_ISA_EXT_DATA(zawrs, RISCV_ISA_EXT_ZAWRS),
->  	__RISCV_ISA_EXT_DATA(zfa, RISCV_ISA_EXT_ZFA),
-> +	__RISCV_ISA_EXT_DATA(zfbfmin, RISCV_ISA_EXT_ZFBFMIN),
+That's fine, I just wanted to be sure you'd had a chance to look at
+it... 
 
-Hi Inochi,
+>     Another option would be to re-implement such regexes without using
+>     such advanced patterns.
 
-You could add a validation callback to that extension:
-
-static int riscv_ext_f_depends(const struct riscv_isa_ext_data *data,
-			       const unsigned long *isa_bitmap)
-{
-	if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_f))
-		return 0;
-
-	return -EPROBE_DEFER;
-}
-
-  ...
-  __RISCV_ISA_EXT_DATA_VALIDATE(zfbfmin, RISCV_ISA_EXT_ZFBFMIN,
-riscv_ext_f_depends),
-
-
-But I'm ok with the current state of that patch since I have the same
-thing coming for other extensions as well. So with or without my
-previous comment fixed:
-
-Reviewed-by: Clément Léger <cleger@rivosinc.com>
+Seems like a preferred option if that can be done.  Banging one's head
+against all those regexes is often the hardest part of dealing with that
+script; anything that makes it simpler is welcome.
 
 Thanks,
 
-Clément
-
->  	__RISCV_ISA_EXT_DATA(zfh, RISCV_ISA_EXT_ZFH),
->  	__RISCV_ISA_EXT_DATA(zfhmin, RISCV_ISA_EXT_ZFHMIN),
->  	__RISCV_ISA_EXT_DATA(zca, RISCV_ISA_EXT_ZCA),
-> @@ -373,6 +374,8 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
->  	__RISCV_ISA_EXT_SUPERSET(zve64d, RISCV_ISA_EXT_ZVE64D, riscv_zve64d_exts),
->  	__RISCV_ISA_EXT_SUPERSET(zve64f, RISCV_ISA_EXT_ZVE64F, riscv_zve64f_exts),
->  	__RISCV_ISA_EXT_SUPERSET(zve64x, RISCV_ISA_EXT_ZVE64X, riscv_zve64x_exts),
-> +	__RISCV_ISA_EXT_DATA(zvfbfmin, RISCV_ISA_EXT_ZVFBFMIN),
-> +	__RISCV_ISA_EXT_DATA(zvfbfwma, RISCV_ISA_EXT_ZVFBFWMA),
->  	__RISCV_ISA_EXT_DATA(zvfh, RISCV_ISA_EXT_ZVFH),
->  	__RISCV_ISA_EXT_DATA(zvfhmin, RISCV_ISA_EXT_ZVFHMIN),
->  	__RISCV_ISA_EXT_DATA(zvkb, RISCV_ISA_EXT_ZVKB),
-
+jon
