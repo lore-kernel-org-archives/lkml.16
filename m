@@ -1,337 +1,600 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2088.outbound.protection.outlook.com [40.107.237.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226061957FF;
-	Mon, 10 Feb 2025 11:34:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739187289; cv=fail; b=sU2iFZ2FhCUXQj53KdDdvrNxPWcsyriaZYAcuPQQ41vZz4l9Ot9eD3b71iayjFGc3bLzAQ3Dwb/dy29TvOsECStoMXVFzepjRG3aLYaL5nA6hJ/JNiZ8yvBA/pXkBjNTLcS9cFa5nVAF2CVPj8mnDgKDnesY3eQexzIAO2aOsow=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739187289; c=relaxed/simple;
-	bh=QCdILBPcKhqNW/5HhexLmfNEHHE4LNLWu/KgI8xLHUg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=nCQfV9OgngXs/HY+WB3f7FDv0S8+RcUeEHR6BP4Fx+HFSVHz3AEhPlgabQ1iVv9MxxJoR74g6W9/MgjFmT6idrqcewRINX8eZmLn3EB92xuZtSOFNLUFsVAIllMCWi5b3iJZmYG0FLbhKyVGFV6UgzMtpz14+FTu4TqzClKvwIY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=cP2yb1BC; arc=fail smtp.client-ip=40.107.237.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="cP2yb1BC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vknKnJbmB6eVmNq2rvvmNm1MfIxG9+1H4HRda46caaNhyQgajLg19srhBZ7DBZ7Tbhh8rjhd2AgIM/OhoUzF6icwdYFGyGB4KfEfk0wIcv3uQEvOZX3rDceP/daYwu4oCos8Pdb+xxCErAZaUAgqYTFESFwxyE5XzLPnIbuP9LqNBoeL6/K9+iCJEZZrxQ/KkZuZuhW7YGqg32G96Zhb09jJqfI4zZjkzKNQcnhz39UsepQGNwRlLGt4bfJRW9dzHhTOz0LoYt1RYja5GLuFHdF/inJJWTxm+/U/xrWQYjW4K/bXc6PY8rgL1/otvJUKwlb/Z4oEWmsjjw88Ou8lkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3SctFNPkpmMmdCh6G+YK8LV5MjGoRv9Pnvl64Q3VnO8=;
- b=b49ihCWdGlH6ZSg8OuNfB9dI4EhwvWq8f218RrPB6zT2L+Q82iN96piU1UMIctJjQnx7tEqW7IK1Wib2LyahI89+70a47R4u9Swvv0qVjiEHpuGav4KVfBciJL7XnOjNJmObsUyCxqi0T/tl2B7yKH5jO1qADzDYLMtSRzAjiJsVnyip9OEAqAqPdV2WBmeatMsZxFBrVRGuo7+dJzGjS9nudkI713knV9uxwjJtwrG8tMwiAhUKma2jevYK9o1TliBTo5bTi9JU8oLfYV5CkRpuU4iQjilSMDnDjepn2O52wlEPj37gm4usJfZJwT3Pnj82zlot7dYuJj5984uwyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3SctFNPkpmMmdCh6G+YK8LV5MjGoRv9Pnvl64Q3VnO8=;
- b=cP2yb1BCDA7h6LvTGNklWg5Ml9YP35r+L539k2MVmyZfeNIljRQ6YW9sZB222TU72zdyevKE35EwDrrlAyad3xLIFxBqkqkprX7R2BSGUPKau1foyxbj5/s23VdGu0Wv+0juY5UOelyVeJbV3TlE/DYPS1ovGAeqfGrh7Pr3QlwHNgiUmAx4PDUa9fXvpOeiWqBxV4cMeQzfRh7aPmNSGYuYPwDOFF8z/eXKQayV9AkO3sIGHHX+0beVLqfjfqoP7/jHXtUEgP2D/mg91WPupEgInXAGSJ7+j6Ul2PxqDDcwFLLJ6ON6Keswexbs7++RQyxR7JslJx/D0IN1u5oxrg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY5PR12MB6369.namprd12.prod.outlook.com (2603:10b6:930:21::10)
- by CH2PR12MB4246.namprd12.prod.outlook.com (2603:10b6:610:a9::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.15; Mon, 10 Feb
- 2025 11:34:45 +0000
-Received: from CY5PR12MB6369.namprd12.prod.outlook.com
- ([fe80::d4c1:1fcc:3bff:eea6]) by CY5PR12MB6369.namprd12.prod.outlook.com
- ([fe80::d4c1:1fcc:3bff:eea6%6]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
- 11:34:45 +0000
-Message-ID: <95d1a1ad-95f9-4fb0-973b-7a256528d4d5@nvidia.com>
-Date: Mon, 10 Feb 2025 13:34:38 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: nvme-tcp: fix a possible UAF when failing to send request
-To: "zhang.guanghui@cestc.cn" <zhang.guanghui@cestc.cn>,
- Maurizio Lombardi <mlombard@bsdbackstore.eu>, sagi <sagi@grimberg.me>,
- kbusch <kbusch@kernel.org>, sashal <sashal@kernel.org>,
- "chunguang.xu" <chunguang.xu@shopee.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>,
- linux-nvme <linux-nvme@lists.infradead.org>,
- linux-block <linux-block@vger.kernel.org>
-References: <2025021015413817916143@cestc.cn>
- <D7OOGIOAJRUH.9LOJ3X4IUKQV@bsdbackstore.eu>
- <3f1f7ec3-cb49-4d66-b2b0-57276a6c62f0@nvidia.com>
- <2025021019163296203221@cestc.cn>
-Content-Language: en-US
-From: Max Gurtovoy <mgurtovoy@nvidia.com>
-In-Reply-To: <2025021019163296203221@cestc.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR4P281CA0088.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:cd::19) To CY5PR12MB6369.namprd12.prod.outlook.com
- (2603:10b6:930:21::10)
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF66B1957FF;
+	Mon, 10 Feb 2025 11:34:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739187299; cv=none; b=UOk8Bl9RIlH0K+635ZbY0CT4BXMvjpa2YWq7TKchkLYdinPrzwjOB2Dwbuog1EpkdCs34nsEUy5iBZ93vyftgyIxdecun4PN6dM6abOgzV8u5reMoTY4WznX3EBccht9ZcXwWe5i5lYINYN9jn4JkSM2dxVqg19CYntQMKJxfyA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739187299; c=relaxed/simple;
+	bh=QRaduIUIM52RHqyDM8wCjYjEc1M+FMPbGR1/RU3dLDw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=gmLS2c9Y7sIj9bevUOncLhJX7a3+amT9/DQ9T+ddNOB5HvqKI0JfP4NfncpRZJTXifRxsI78SSR2siUvXJ1VeiOP0bvLjNQ08H10LfJ9Xvl6RGEPi56K5zgn3i2QbMe60TstT0O5/a2HA89lGa5HOH1LMcVqAr9XvGEuE2qnFbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id 0D7B772C90B;
+	Mon, 10 Feb 2025 14:34:56 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+	id E3E307CCB3A; Mon, 10 Feb 2025 13:34:55 +0200 (IST)
+Date: Mon, 10 Feb 2025 13:34:55 +0200
+From: "Dmitry V. Levin" <ldv@strace.io>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Alexey Gladkov <legion@kernel.org>,
+	Eugene Syromyatnikov <evgsyr@gmail.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Helge Deller <deller@gmx.de>, Mike Frysinger <vapier@gentoo.org>,
+	Renzo Davoli <renzo@cs.unibo.it>,
+	Davide Berardi <berardi.dav@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>, Will Deacon <will@kernel.org>,
+	Guo Ren <guoren@kernel.org>, Brian Cain <bcain@quicinc.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+	Stafford Horne <shorne@gmail.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+	Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+	strace-devel@lists.strace.io, linux-snps-arc@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-arch@vger.kernel.org
+Subject: [PATCH v5 3/7] syscall.h: add syscall_set_arguments()
+Message-ID: <20250210113454.GD887@strace.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6369:EE_|CH2PR12MB4246:EE_
-X-MS-Office365-Filtering-Correlation-Id: a1a715e9-e228-4c97-1079-08dd49c6eabd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Q0wvWXFHaFozNHBFV0E1Y3FpZUJROGZuYjk4MFJ0RHhSMWZOcG9WL3UwS3FN?=
- =?utf-8?B?cjcyVVFPa1VHemp4RUhPU25lQ3duNE5qNFZ0UVJiQ2NCNEhSNS8zZ01wNGRK?=
- =?utf-8?B?S0hnM25zckFKYVBnS09zODc4TlBrZnJENFArY2tqNlZvbEJ5aHphdFhiNnpa?=
- =?utf-8?B?ZnVOZ0lrL0dvT1BCZkJrMmtrdU5CK2dFM1hRNWZucXR0akFJdUxGenNXZXFi?=
- =?utf-8?B?aXhtM1puUXYrUkd3cG5TTzBlUmNNU2JwU1BlWUROMkRQUy8rVjRnU1ZpVjNs?=
- =?utf-8?B?OVZrVTQrZlFITVlaK1g5TFNHbnhNZ051L1ovZzZjaStaM1Zpb0gwY0tqeWxJ?=
- =?utf-8?B?akhNTStnSjA0SCt0a0dDTFpwYUZZYUd1REs4UENBQzZxdWx6Qng3Wjc5UE51?=
- =?utf-8?B?MmtrOVQ5UjAwbGpSUU1CaG1CSzJzaFlEUmpacEp4Q1kvbTlNV05jOUpLTkUw?=
- =?utf-8?B?WTVlN0g2ME4yQWZQNUNRcFV4UUxkc2taUG10NFFUQjBLQzR5ZFpXOW1NRFYy?=
- =?utf-8?B?MUxNSU94amRsa1hPM0VRRHdSek5lQlorRXlJZXpSQmdKYzA1RDU5VEVWaEo0?=
- =?utf-8?B?UkFZa00wSS9abTRVaWhkL0prZ29Ec0RMc25jVDNsc2MzZy93VFBFRmlBRXFy?=
- =?utf-8?B?eDFIN29CZm5SN1l5b1JHOCs0MEk5UVJoRldZdDdCZUZ1T1VTaXFSK0pLazZz?=
- =?utf-8?B?NnJUZ3hqYmIrQnRINHhTMzNnN3BvWVpwQ1U5TlpxVEpNZ3l3UE4rV214L1FE?=
- =?utf-8?B?eVJha1NHRERCVEoyY1JaZXFVZTVKK0pHSVNEU1UvQU93bU8xRU1ORzJPWnY2?=
- =?utf-8?B?eHc3YWtSSzI3NFhBM0hrK2FMbTJkRTlaa05tdUlqQkpwRlJoUm5JNWdUTFNo?=
- =?utf-8?B?blpjbk9xcks4MnIxNVZ4elZMN3F2UWVHbDNVcUJYaWFkTDlQOC9UUEVNSjQx?=
- =?utf-8?B?Ti8zaWdjNlI4cTQxelVnelh1cGp2bFZ5dm1kRjgrR0pUa2RXNjhzZmg1eDQ5?=
- =?utf-8?B?Y2xxSEFvdUpZTXEyRFBUTndWOU04WmRIRStYQjNmTVNFZ1U3M3JpcHlMdEU2?=
- =?utf-8?B?TG1XaXQwelZQaUxaTXpFdHFxYXRHQUFuSGh1Q3BlYis4ODM5Nm1BRlM5cVhz?=
- =?utf-8?B?QkIyWkxrNkw5UmNzdlpUeTQwUHB3OFVLcVJUSUpzU1M2dGZndm14eG0vc0VJ?=
- =?utf-8?B?NHpVRnkzUm4zMVUrZi9OR2pXazNCUXhUdUlMa2w1STJ0dEE3Ny9TazJUUUR0?=
- =?utf-8?B?S05rZ0J1Ung4cC9YOWRmNjdZK1I1dW5sZWZzSnlQMXFjcFd5THJUdHZEbHl1?=
- =?utf-8?B?YytKaGFjNFlXV2RhS01xdkEwZVA5RzJ3eWVkaXJ0S0FGenp5Q0dra1dwdXVo?=
- =?utf-8?B?WFpuVlNleVNTMjZaS21ZVVlLQkU5TmlKQXlDQmtObElvbXdiTWR3Ky9FcWQw?=
- =?utf-8?B?Rjkreng3eWdPYU1HMUVkd0MxV2RtNlVIaHNEcGhCL0s4bDU3emtBRWNPT0JS?=
- =?utf-8?B?ZGRWdlVKZ1g0LzJqSzdySWZVMUtiWGUzOTRJWWdsa3M2dGFPOGZIek9rbUxi?=
- =?utf-8?B?RG1sOS9PZ05VTlNaS08zVWVhTHlaQW1yb2JrWlBwVlJrL3RpWUxKUlBWaDZv?=
- =?utf-8?B?UTZYVmtXdHd1Q0I0QW0wUzNtQ1AzLyt3ZlhEMFFPeXQxTlN3aFFobGd5dkFT?=
- =?utf-8?B?blBFNi9VMnN3ajBMRE9uRVVMaUtNcGU0TlBsaU5Qc2lHdWh0WUg4YmQ4Lzdq?=
- =?utf-8?B?cW5KYlVmUmtlMEZqb3pnZ1JqeUZidmVMQUFiR1I2OXdUdDc1RGxMT0JmSFZz?=
- =?utf-8?B?ckNRckd5d3hvS2FFUmw2NG12SUZyWXpoS01ZS3NPOXU5dmovMHA5bXYwb2Ex?=
- =?utf-8?Q?BpalQxVqfjNVN?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6369.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?THg5ekt4RzY5UUJZMDZWaWIxSzJkNW1mRzZHTmRrTWdWU1lQYnNGcDZLNk0x?=
- =?utf-8?B?aCtHLzZVTEwrV01qeUw4TEdNVUF5MUZQdTM4RktYajZqcWdCL3p3SDhTeElE?=
- =?utf-8?B?ZWpLSVowZWdrdjhyVHo4NVdXK1VHSUUyaUcwYVkrTHJDb2RkOU1FYlVNNm1U?=
- =?utf-8?B?L3hOcnNUMld5Vmp2Z0prZFRZZE45anVZVE5GTFJsRWZydm5xSU0xcVRXUjFn?=
- =?utf-8?B?cHRuOHBITVlxcndidDlJbW93cVhvYXJuYTFqZ0ZqOXpXd0J0emZvbC9hUnBJ?=
- =?utf-8?B?V2Zldks5aFhKWGhCRW15bmZ3UGcrZmRXMlVtWFVWWWVoVEk4UERIYm95TENP?=
- =?utf-8?B?eHYva0ZRcng1b2ZZVXpuVHd5Z3A3cnlPanVyR2YrY21ncGZjbGhDbmVtb2Ry?=
- =?utf-8?B?MTc5ZGJwTmdXYXNmclQrVXRsS2l2WW9pcWdYTTJnaVQvNkswcUhiWDhldC8w?=
- =?utf-8?B?eDhxUlFwblA0UVY3MDlUaGIzU0dxZDNPY2J6by8zbUJZdlc4VXRnalQvT2dw?=
- =?utf-8?B?Ujg3VkxQdkxRcnZwT0VWSm4vSEZqdGE0UjV4WGtxdUxKKzYwdkdsenBTM2I4?=
- =?utf-8?B?M3pPUzZ3YzdhUWhwVlkwL0pCWDdGeDNsTDZSTWJSK3g3NVN0LzlKb090TkZB?=
- =?utf-8?B?cFpRQnlBYmUvUysrK3VsWDQ5ZlNyVENUV09tMFM2WHZ3YmttTmczd0w4ZmhK?=
- =?utf-8?B?cGUzNmhJTklJdXZDaDh2ZWE3UXJwSUFPY0ZYbGZkTnJ6U294VEIvNTBjUGFa?=
- =?utf-8?B?Z1plajNVa3YwWVZIQUpSZGFoNmNlaVRHZms5R3plb3Z5RkxwRCsvVGRWTWlQ?=
- =?utf-8?B?QzZkWEJXZTh4enkvRnZiTEpHRHZKd3NtWlhEaGtkMHc5TUNKaWZXc21kNDAw?=
- =?utf-8?B?bDk4TFh0c2c3azdOYTdFVWcwSVlmREFMSnlzcEF0UmhMcm1IcTNUUUVVWWdR?=
- =?utf-8?B?a3JwY0hXWGFZbjBqWmU2S0NUTFl2K0JpdU1uS0dzMTc5OWUxaW5kbUYzWnlF?=
- =?utf-8?B?dnlQbWVEMTNYMWRMMW1FOWRKQU5SbGRBM3RFem92WmxUVjN0c08ybDVFbDBD?=
- =?utf-8?B?MnZlSTNXVXBrYzhqVDYvVWo5dHkwOCtBVDc1d0tGM3ZkWTdkMXJWZVppeS9u?=
- =?utf-8?B?RjZrYTFmcDI3TlFONnhQREcxVVowVHVzQjhmYjVBcEFsS3Z4bzFaVnp0RHZs?=
- =?utf-8?B?M1NybmFTeDhvNXRrQnpyN1BhbGNSREpiNTBKOG9iQXBVRGNpUzdHaFpIMDJ6?=
- =?utf-8?B?ZklmR3U2ZnR4Vk5SbDFmTDVoczc2bVBobFlvWVIxbjRZWEhydyswZUFSUUNx?=
- =?utf-8?B?Q0N2ZitjS2d2aUtsMmNERXF1Q1dwNU9leUdKZldnaWFkdTE3OWVpejEzbm1v?=
- =?utf-8?B?UHpyTk43SDVYN0x0ZldkOE5qN3plRXVTUWcxdmlSck1QY0Vya0twTCtVOHNo?=
- =?utf-8?B?TlNPeHZwTmV4TnpkNVZQak8wcFlTREVSZzhDcjhyMEQrR0JQYnN3d0Qwd0Vt?=
- =?utf-8?B?aFg4ajBGL1M5VHlOY3U3ekt1YWJ4bHFKMm1PVnlZMlVrL2lHem01VHIybTBm?=
- =?utf-8?B?bWZNMWJ0T1AvUlJrVFpJbEdGNThydnpXa2FPZTlqQ2NSamF3SHZGbGllRnUz?=
- =?utf-8?B?S3RMUFZnV0NqdE5MSkRLbWhDc0RwdW9wdE5Yb2ZCTFFKemduakJUeWpVZUNj?=
- =?utf-8?B?dGRTYzJhSG1lRmgrWEcyV1pqZEtYZkNyZGFuOXdDRXlNL2d0ZTAzaGMvM1po?=
- =?utf-8?B?Rm5VNk9nUVM5eGRrRGVNdEY3TWR0aFFveFh1VVVGOHp0OU15UFhnZlE4SmJh?=
- =?utf-8?B?dzFKUFMvWjlHQ2s0RGFzcjBSWEMrVllieENOOVRBQVdTNVMxM3hCdHBLZ2Zo?=
- =?utf-8?B?aGh4ZUJXWFYwSUk0WHRoajlic2Fpb2hwNk91cmlsVEpTN0NSSmluRjZSVUdS?=
- =?utf-8?B?Y082Y0NxaUl0ZU15WXBoVFViMDJHdkEwTlMvSzhpYUZPOU8yRmV1dnJLNCtT?=
- =?utf-8?B?bzl2bWwrMGNTQWN5a3pPQithUWJrWlh1R2JxRHhJUS85TmgzRVZPTVZ5blkw?=
- =?utf-8?B?cGZRckJ0M0k5dzVrY1JIVmVGaDcraHl5VUx1M0FFVWkwQzJMTVlCam1BeExX?=
- =?utf-8?B?WHlUaTBFbm9iR2xwVEp1Wm9iZ2xTaGRkRTVkT2owempHUkczN0NMelo1MzBQ?=
- =?utf-8?B?NWc9PQ==?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1a715e9-e228-4c97-1079-08dd49c6eabd
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6369.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 11:34:44.9594
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BaovCGNEWmX8zv3+H/aof3/8dJtACNP8HnPBLQBj2EI8fB8HyqAzQxs/fEDKb9I28kXVlphxRz9qQKWpXvVQ3A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4246
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210113336.GA887@strace.io>
 
-hi
+This function is going to be needed on all HAVE_ARCH_TRACEHOOK
+architectures to implement PTRACE_SET_SYSCALL_INFO API.
 
-On 10/02/2025 13:16, zhang.guanghui@cestc.cn wrote:
-> Hi，
->
->
->
->       Thank you for your reply.
->
->
->       In nvme-rdma we use nvme_host_path_error(rq) ,   the prerequisites are -EIO,  ignore this condition?
->   in nvme-tcp this judgment condition is different,  use the function nvme_host_path_error ,
-> it should be possible to go to nvme_complete_rq ->  nvme_retry_req -- request->mq_hctx have been freed, is NULL.
+This partially reverts commit 7962c2eddbfe ("arch: remove unused
+function syscall_set_arguments()") by reusing some of old
+syscall_set_arguments() implementations.
 
-did you try the proposal or are you assuming it will be NULL ?
+Signed-off-by: Dmitry V. Levin <ldv@strace.io>
+Tested-by: Charlie Jenkins <charlie@rivosinc.com>
+Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+Acked-by: Helge Deller <deller@gmx.de> # parisc
+---
+ arch/arc/include/asm/syscall.h        | 14 +++++++++++
+ arch/arm/include/asm/syscall.h        | 13 ++++++++++
+ arch/arm64/include/asm/syscall.h      | 13 ++++++++++
+ arch/csky/include/asm/syscall.h       | 13 ++++++++++
+ arch/hexagon/include/asm/syscall.h    |  7 ++++++
+ arch/loongarch/include/asm/syscall.h  |  8 ++++++
+ arch/mips/include/asm/syscall.h       | 32 ++++++++++++++++++++++++
+ arch/nios2/include/asm/syscall.h      | 11 ++++++++
+ arch/openrisc/include/asm/syscall.h   |  7 ++++++
+ arch/parisc/include/asm/syscall.h     | 12 +++++++++
+ arch/powerpc/include/asm/syscall.h    | 10 ++++++++
+ arch/riscv/include/asm/syscall.h      |  9 +++++++
+ arch/s390/include/asm/syscall.h       |  9 +++++++
+ arch/sh/include/asm/syscall_32.h      | 12 +++++++++
+ arch/sparc/include/asm/syscall.h      | 10 ++++++++
+ arch/um/include/asm/syscall-generic.h | 14 +++++++++++
+ arch/x86/include/asm/syscall.h        | 36 +++++++++++++++++++++++++++
+ arch/xtensa/include/asm/syscall.h     | 11 ++++++++
+ include/asm-generic/syscall.h         | 16 ++++++++++++
+ 19 files changed, 257 insertions(+)
 
-
->
->
->
->
-> zhang.guanghui@cestc.cn
->
->
->
->   
->
->
->
-> From: Max Gurtovoy
->
->
->
-> Date: 2025-02-10 18:24
->
->
->
-> To: Maurizio Lombardi; zhang.guanghui@cestc.cn; sagi; kbusch; sashal; chunguang.xu
->
->
->
-> CC: linux-kernel; linux-nvme; linux-block
->
->
->
-> Subject: Re: nvme-tcp: fix a possible UAF when failing to send request
->
->
->
->   
->
->
->
-> On 10/02/2025 12:01, Maurizio Lombardi wrote:
->
->
->
->> On Mon Feb 10, 2025 at 8:41 AM CET, zhang.guanghui@cestc.cn wrote:
->
->
->>> Hello
->
->
->
->
->
->
->> I guess you have to fix your mail client.
->
->
->
->
->>>        When using the nvme-tcp driver in a storage cluster, the driver may trigger a null pointer causing the host to crash several times.
->
->
->>> By analyzing the vmcore, we know the direct cause is that  the request->mq_hctx was used after free.
->
->
->
->
->
->
->>> CPU1                                                                   CPU2
->
->
->
->
->>> nvme_tcp_poll                                                          nvme_tcp_try_send  --failed to send reqrest 13
->
->
->> This simply looks like a race condition between nvme_tcp_poll() and nvme_tcp_try_send()
->
->
->> Personally, I would try to fix it inside the nvme-tcp driver without
->
->
->> touching the core functions.
->
->
->
->
->> Maybe nvme_tcp_poll should just ensure that io_work completes before
->
->
->> calling nvme_tcp_try_recv(), the POLLING flag should then prevent io_work
->
->
->> from getting rescheduled by the nvme_tcp_data_ready() callback.
->
->
->
->
->
->
->> Maurizio
->
->
->   
->
->
->
-> It seems to me that the HOST_PATH_ERROR handling can be improved in
->
->
->
-> nvme-tcp.
->
->
->
->   
->
->
->
-> In nvme-rdma we use nvme_host_path_error(rq) and nvme_cleanup_cmd(rq) in
->
->
->
-> case we fail to submit a command..
->
->
->
->   
->
->
->
-> can you try to replacing nvme_tcp_end_request(blk_mq_rq_from_pdu(req),
->
->
->
-> NVME_SC_HOST_PATH_ERROR); call with the similar logic we use in
->
->
->
-> nvme-rdma for host path error handling ?
->
->
->
->   
->
->
->
->   
->
->
->
->   
->
->
->
->   
->
->
+diff --git a/arch/arc/include/asm/syscall.h b/arch/arc/include/asm/syscall.h
+index 9709256e31c8..89c1e1736356 100644
+--- a/arch/arc/include/asm/syscall.h
++++ b/arch/arc/include/asm/syscall.h
+@@ -67,6 +67,20 @@ syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
+ 	}
+ }
+ 
++static inline void
++syscall_set_arguments(struct task_struct *task, struct pt_regs *regs,
++		      unsigned long *args)
++{
++	unsigned long *inside_ptregs = &regs->r0;
++	unsigned int n = 6;
++	unsigned int i = 0;
++
++	while (n--) {
++		*inside_ptregs = args[i++];
++		inside_ptregs--;
++	}
++}
++
+ static inline int
+ syscall_get_arch(struct task_struct *task)
+ {
+diff --git a/arch/arm/include/asm/syscall.h b/arch/arm/include/asm/syscall.h
+index fe4326d938c1..21927fa0ae2b 100644
+--- a/arch/arm/include/asm/syscall.h
++++ b/arch/arm/include/asm/syscall.h
+@@ -80,6 +80,19 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	memcpy(args, &regs->ARM_r0 + 1, 5 * sizeof(args[0]));
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	memcpy(&regs->ARM_r0, args, 6 * sizeof(args[0]));
++	/*
++	 * Also copy the first argument into ARM_ORIG_r0
++	 * so that syscall_get_arguments() would return it
++	 * instead of the previous value.
++	 */
++	regs->ARM_ORIG_r0 = regs->ARM_r0;
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ 	/* ARM tasks don't change audit architectures on the fly. */
+diff --git a/arch/arm64/include/asm/syscall.h b/arch/arm64/include/asm/syscall.h
+index ab8e14b96f68..76020b66286b 100644
+--- a/arch/arm64/include/asm/syscall.h
++++ b/arch/arm64/include/asm/syscall.h
+@@ -73,6 +73,19 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	memcpy(args, &regs->regs[1], 5 * sizeof(args[0]));
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	memcpy(&regs->regs[0], args, 6 * sizeof(args[0]));
++	/*
++	 * Also copy the first argument into orig_x0
++	 * so that syscall_get_arguments() would return it
++	 * instead of the previous value.
++	 */
++	regs->orig_x0 = regs->regs[0];
++}
++
+ /*
+  * We don't care about endianness (__AUDIT_ARCH_LE bit) here because
+  * AArch64 has the same system calls both on little- and big- endian.
+diff --git a/arch/csky/include/asm/syscall.h b/arch/csky/include/asm/syscall.h
+index 0de5734950bf..30403f7a0487 100644
+--- a/arch/csky/include/asm/syscall.h
++++ b/arch/csky/include/asm/syscall.h
+@@ -59,6 +59,19 @@ syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
+ 	memcpy(args, &regs->a1, 5 * sizeof(args[0]));
+ }
+ 
++static inline void
++syscall_set_arguments(struct task_struct *task, struct pt_regs *regs,
++		      const unsigned long *args)
++{
++	memcpy(&regs->a0, args, 6 * sizeof(regs->a0));
++	/*
++	 * Also copy the first argument into orig_x0
++	 * so that syscall_get_arguments() would return it
++	 * instead of the previous value.
++	 */
++	regs->orig_a0 = regs->a0;
++}
++
+ static inline int
+ syscall_get_arch(struct task_struct *task)
+ {
+diff --git a/arch/hexagon/include/asm/syscall.h b/arch/hexagon/include/asm/syscall.h
+index 951ca0ed8376..1024a6548d78 100644
+--- a/arch/hexagon/include/asm/syscall.h
++++ b/arch/hexagon/include/asm/syscall.h
+@@ -33,6 +33,13 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	memcpy(args, &(&regs->r00)[0], 6 * sizeof(args[0]));
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 unsigned long *args)
++{
++	memcpy(&(&regs->r00)[0], args, 6 * sizeof(args[0]));
++}
++
+ static inline long syscall_get_error(struct task_struct *task,
+ 				     struct pt_regs *regs)
+ {
+diff --git a/arch/loongarch/include/asm/syscall.h b/arch/loongarch/include/asm/syscall.h
+index e286dc58476e..ff415b3c0a8e 100644
+--- a/arch/loongarch/include/asm/syscall.h
++++ b/arch/loongarch/include/asm/syscall.h
+@@ -61,6 +61,14 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	memcpy(&args[1], &regs->regs[5], 5 * sizeof(long));
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 unsigned long *args)
++{
++	regs->orig_a0 = args[0];
++	memcpy(&regs->regs[5], &args[1], 5 * sizeof(long));
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ 	return AUDIT_ARCH_LOONGARCH64;
+diff --git a/arch/mips/include/asm/syscall.h b/arch/mips/include/asm/syscall.h
+index b3f00ede8bb3..2dcc1d01b405 100644
+--- a/arch/mips/include/asm/syscall.h
++++ b/arch/mips/include/asm/syscall.h
+@@ -74,6 +74,23 @@ static inline void mips_get_syscall_arg(unsigned long *arg,
+ #endif
+ }
+ 
++static inline void mips_set_syscall_arg(unsigned long *arg,
++	struct task_struct *task, struct pt_regs *regs, unsigned int n)
++{
++#ifdef CONFIG_32BIT
++	switch (n) {
++	case 0: case 1: case 2: case 3:
++		regs->regs[4 + n] = *arg;
++		return;
++	case 4: case 5: case 6: case 7:
++		*arg = regs->pad0[n] = *arg;
++		return;
++	}
++#else
++	regs->regs[4 + n] = *arg;
++#endif
++}
++
+ static inline long syscall_get_error(struct task_struct *task,
+ 				     struct pt_regs *regs)
+ {
+@@ -120,6 +137,21 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 		mips_get_syscall_arg(args++, task, regs, i++);
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 unsigned long *args)
++{
++	unsigned int i = 0;
++	unsigned int n = 6;
++
++	/* O32 ABI syscall() */
++	if (mips_syscall_is_indirect(task, regs))
++		i++;
++
++	while (n--)
++		mips_set_syscall_arg(args++, task, regs, i++);
++}
++
+ extern const unsigned long sys_call_table[];
+ extern const unsigned long sys32_call_table[];
+ extern const unsigned long sysn32_call_table[];
+diff --git a/arch/nios2/include/asm/syscall.h b/arch/nios2/include/asm/syscall.h
+index fff52205fb65..526449edd768 100644
+--- a/arch/nios2/include/asm/syscall.h
++++ b/arch/nios2/include/asm/syscall.h
+@@ -58,6 +58,17 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	*args   = regs->r9;
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++	struct pt_regs *regs, const unsigned long *args)
++{
++	regs->r4 = *args++;
++	regs->r5 = *args++;
++	regs->r6 = *args++;
++	regs->r7 = *args++;
++	regs->r8 = *args++;
++	regs->r9 = *args;
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ 	return AUDIT_ARCH_NIOS2;
+diff --git a/arch/openrisc/include/asm/syscall.h b/arch/openrisc/include/asm/syscall.h
+index 903ed882bdec..e6383be2a195 100644
+--- a/arch/openrisc/include/asm/syscall.h
++++ b/arch/openrisc/include/asm/syscall.h
+@@ -57,6 +57,13 @@ syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
+ 	memcpy(args, &regs->gpr[3], 6 * sizeof(args[0]));
+ }
+ 
++static inline void
++syscall_set_arguments(struct task_struct *task, struct pt_regs *regs,
++		      const unsigned long *args)
++{
++	memcpy(&regs->gpr[3], args, 6 * sizeof(args[0]));
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ 	return AUDIT_ARCH_OPENRISC;
+diff --git a/arch/parisc/include/asm/syscall.h b/arch/parisc/include/asm/syscall.h
+index 00b127a5e09b..b146d0ae4c77 100644
+--- a/arch/parisc/include/asm/syscall.h
++++ b/arch/parisc/include/asm/syscall.h
+@@ -29,6 +29,18 @@ static inline void syscall_get_arguments(struct task_struct *tsk,
+ 	args[0] = regs->gr[26];
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *tsk,
++					 struct pt_regs *regs,
++					 unsigned long *args)
++{
++	regs->gr[21] = args[5];
++	regs->gr[22] = args[4];
++	regs->gr[23] = args[3];
++	regs->gr[24] = args[2];
++	regs->gr[25] = args[1];
++	regs->gr[26] = args[0];
++}
++
+ static inline long syscall_get_error(struct task_struct *task,
+ 				     struct pt_regs *regs)
+ {
+diff --git a/arch/powerpc/include/asm/syscall.h b/arch/powerpc/include/asm/syscall.h
+index 422d7735ace6..521f279e6b33 100644
+--- a/arch/powerpc/include/asm/syscall.h
++++ b/arch/powerpc/include/asm/syscall.h
+@@ -114,6 +114,16 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	}
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	memcpy(&regs->gpr[3], args, 6 * sizeof(args[0]));
++
++	/* Also copy the first argument into orig_gpr3 */
++	regs->orig_gpr3 = args[0];
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ 	if (is_tsk_32bit_task(task))
+diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
+index 121fff429dce..8d389ba995c8 100644
+--- a/arch/riscv/include/asm/syscall.h
++++ b/arch/riscv/include/asm/syscall.h
+@@ -66,6 +66,15 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	memcpy(args, &regs->a1, 5 * sizeof(args[0]));
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	regs->orig_a0 = args[0];
++	args++;
++	memcpy(&regs->a1, args, 5 * sizeof(regs->a1));
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ #ifdef CONFIG_64BIT
+diff --git a/arch/s390/include/asm/syscall.h b/arch/s390/include/asm/syscall.h
+index 27e3d804b311..0e3296a32e6a 100644
+--- a/arch/s390/include/asm/syscall.h
++++ b/arch/s390/include/asm/syscall.h
+@@ -78,6 +78,15 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	args[0] = regs->orig_gpr2 & mask;
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	regs->orig_gpr2 = args[0];
++	for (int n = 1; n < 6; n++)
++		regs->gprs[2 + n] = args[n];
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ #ifdef CONFIG_COMPAT
+diff --git a/arch/sh/include/asm/syscall_32.h b/arch/sh/include/asm/syscall_32.h
+index d87738eebe30..cb51a7528384 100644
+--- a/arch/sh/include/asm/syscall_32.h
++++ b/arch/sh/include/asm/syscall_32.h
+@@ -57,6 +57,18 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	args[0] = regs->regs[4];
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	regs->regs[1] = args[5];
++	regs->regs[0] = args[4];
++	regs->regs[7] = args[3];
++	regs->regs[6] = args[2];
++	regs->regs[5] = args[1];
++	regs->regs[4] = args[0];
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ 	int arch = AUDIT_ARCH_SH;
+diff --git a/arch/sparc/include/asm/syscall.h b/arch/sparc/include/asm/syscall.h
+index 20c109ac8cc9..62a5a78804c4 100644
+--- a/arch/sparc/include/asm/syscall.h
++++ b/arch/sparc/include/asm/syscall.h
+@@ -117,6 +117,16 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	}
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	unsigned int i;
++
++	for (i = 0; i < 6; i++)
++		regs->u_regs[UREG_I0 + i] = args[i];
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ #if defined(CONFIG_SPARC64) && defined(CONFIG_COMPAT)
+diff --git a/arch/um/include/asm/syscall-generic.h b/arch/um/include/asm/syscall-generic.h
+index 172b74143c4b..2984feb9d576 100644
+--- a/arch/um/include/asm/syscall-generic.h
++++ b/arch/um/include/asm/syscall-generic.h
+@@ -62,6 +62,20 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	*args   = UPT_SYSCALL_ARG6(r);
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	struct uml_pt_regs *r = &regs->regs;
++
++	UPT_SYSCALL_ARG1(r) = *args++;
++	UPT_SYSCALL_ARG2(r) = *args++;
++	UPT_SYSCALL_ARG3(r) = *args++;
++	UPT_SYSCALL_ARG4(r) = *args++;
++	UPT_SYSCALL_ARG5(r) = *args++;
++	UPT_SYSCALL_ARG6(r) = *args;
++}
++
+ /* See arch/x86/um/asm/syscall.h for syscall_get_arch() definition. */
+ 
+ #endif	/* __UM_SYSCALL_GENERIC_H */
+diff --git a/arch/x86/include/asm/syscall.h b/arch/x86/include/asm/syscall.h
+index 7c488ff0c764..b9c249dd9e3d 100644
+--- a/arch/x86/include/asm/syscall.h
++++ b/arch/x86/include/asm/syscall.h
+@@ -90,6 +90,18 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	args[5] = regs->bp;
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	regs->bx = args[0];
++	regs->cx = args[1];
++	regs->dx = args[2];
++	regs->si = args[3];
++	regs->di = args[4];
++	regs->bp = args[5];
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ 	return AUDIT_ARCH_I386;
+@@ -121,6 +133,30 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 	}
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++# ifdef CONFIG_IA32_EMULATION
++	if (task->thread_info.status & TS_COMPAT) {
++		regs->bx = *args++;
++		regs->cx = *args++;
++		regs->dx = *args++;
++		regs->si = *args++;
++		regs->di = *args++;
++		regs->bp = *args;
++	} else
++# endif
++	{
++		regs->di = *args++;
++		regs->si = *args++;
++		regs->dx = *args++;
++		regs->r10 = *args++;
++		regs->r8 = *args++;
++		regs->r9 = *args;
++	}
++}
++
+ static inline int syscall_get_arch(struct task_struct *task)
+ {
+ 	/* x32 tasks should be considered AUDIT_ARCH_X86_64. */
+diff --git a/arch/xtensa/include/asm/syscall.h b/arch/xtensa/include/asm/syscall.h
+index 5ee974bf8330..f9a671cbf933 100644
+--- a/arch/xtensa/include/asm/syscall.h
++++ b/arch/xtensa/include/asm/syscall.h
+@@ -68,6 +68,17 @@ static inline void syscall_get_arguments(struct task_struct *task,
+ 		args[i] = regs->areg[reg[i]];
+ }
+ 
++static inline void syscall_set_arguments(struct task_struct *task,
++					 struct pt_regs *regs,
++					 const unsigned long *args)
++{
++	static const unsigned int reg[] = XTENSA_SYSCALL_ARGUMENT_REGS;
++	unsigned int i;
++
++	for (i = 0; i < 6; ++i)
++		regs->areg[reg[i]] = args[i];
++}
++
+ asmlinkage long xtensa_rt_sigreturn(void);
+ asmlinkage long xtensa_shmat(int, char __user *, int);
+ asmlinkage long xtensa_fadvise64_64(int, int,
+diff --git a/include/asm-generic/syscall.h b/include/asm-generic/syscall.h
+index 182b039ce5fa..292b412f4e9a 100644
+--- a/include/asm-generic/syscall.h
++++ b/include/asm-generic/syscall.h
+@@ -117,6 +117,22 @@ void syscall_set_return_value(struct task_struct *task, struct pt_regs *regs,
+ void syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
+ 			   unsigned long *args);
+ 
++/**
++ * syscall_set_arguments - change system call parameter value
++ * @task:	task of interest, must be in system call entry tracing
++ * @regs:	task_pt_regs() of @task
++ * @args:	array of argument values to store
++ *
++ * Changes 6 arguments to the system call.
++ * The first argument gets value @args[0], and so on.
++ *
++ * It's only valid to call this when @task is stopped for tracing on
++ * entry to a system call, due to %SYSCALL_WORK_SYSCALL_TRACE or
++ * %SYSCALL_WORK_SYSCALL_AUDIT.
++ */
++void syscall_set_arguments(struct task_struct *task, struct pt_regs *regs,
++			   const unsigned long *args);
++
+ /**
+  * syscall_get_arch - return the AUDIT_ARCH for the current system call
+  * @task:	task of interest, must be blocked
+-- 
+ldv
