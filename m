@@ -1,94 +1,237 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E796D1DCB24;
-	Mon, 10 Feb 2025 11:26:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79D9919342F
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:26:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739186784; cv=none; b=l5803dAu5sI8VPd4VgJEM7syE+8s5TXVfcBGkC5+nD/DJsscpgGqT4y+88uxiQeNHzIgtambp4nx9HOi2GjjXOZGBTHwvE3AOSMqWJKbba40lyBCFfe60vyovqdEV0EezlZIPmNM/wlC+1EyQK9lJqyC/y9CrBXInGgviWdMvjY=
+	t=1739186820; cv=none; b=ccPg0iHYol8ShFs4XRKAziNTRma7gLt54X8Dx6J+NYsGzbZwmoji7Juo5GN8j5+nFADtBJPHM7B9FKLeoZhgOxYQtSRGmH81l9oHlMMzKLISJRCWNfgu2oKHyisuA+HYoHqm0kU/+aQBBLD9l+DdlKsY6tmXLo8shgboVCAtOHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739186784; c=relaxed/simple;
-	bh=4A+9AS7XUuPFQBrIrVMzc8DAD6y7ciR+xgYvNRW55w4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DQlFpF+cUsPgkl8X1WBFCRRBdyaZ3Q6OiCex++laNKfRan8kmObpshQGG2j595UjVE3dDWHmDlBJWTkRUpQ2BBETMT/DTRbK9H6Zq/XOyPAl0hLQeQ1nIvMFgbzI6ArhZlV0dN/Mvod3oX5dzO0cYvX96UmZlKJ5KZVqw+HZpo0=
+	s=arc-20240116; t=1739186820; c=relaxed/simple;
+	bh=Hvmn/3CDvqGDbYrWg0oi4LWMw99rEVCWD3q6ez63EFo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iKcM7OWeGx7ERZa5FNGYwRiUhHA6Lq7NPXL1s+WvyRDyvm0I9YFIwcW6UkPzScA3i2rkTCbjWF9yhcGicgivDzoDgu2iRsMUjUDsE3gup7l/KeFKUoNVZzNJnT5+A4GO4c8z0Fcwiz1YlUJxFnynYkAAEnRP7uwvLANPHdd2Hz0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CE741007;
-	Mon, 10 Feb 2025 03:26:44 -0800 (PST)
-Received: from [10.57.77.229] (unknown [10.57.77.229])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4057F3F5A1;
-	Mon, 10 Feb 2025 03:26:21 -0800 (PST)
-Message-ID: <8d075300-1faf-4bdf-9b55-eee35528eba5@arm.com>
-Date: Mon, 10 Feb 2025 11:26:19 +0000
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 815791007;
+	Mon, 10 Feb 2025 03:27:19 -0800 (PST)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03A833F5A1;
+	Mon, 10 Feb 2025 03:26:50 -0800 (PST)
+Date: Mon, 10 Feb 2025 11:26:48 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Jinjie Ruan <ruanjinjie@huawei.com>, tglx@linutronix.de
+Cc: catalin.marinas@arm.com, will@kernel.org, oleg@redhat.com,
+	sstabellini@kernel.org, peterz@infradead.org, luto@kernel.org,
+	mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, vschneid@redhat.com, kees@kernel.org,
+	wad@chromium.org, akpm@linux-foundation.org,
+	samitolvanen@google.com, masahiroy@kernel.org, hca@linux.ibm.com,
+	aliceryhl@google.com, rppt@kernel.org, xur@google.com,
+	paulmck@kernel.org, arnd@arndb.de, mbenes@suse.cz,
+	puranjay@kernel.org, pcc@google.com, ardb@kernel.org,
+	sudeep.holla@arm.com, guohanjun@huawei.com, rafael@kernel.org,
+	liuwei09@cestc.cn, dwmw@amazon.co.uk, Jonathan.Cameron@huawei.com,
+	liaochang1@huawei.com, kristina.martsenko@arm.com, ptosi@google.com,
+	broonie@kernel.org, thiago.bauermann@linaro.org,
+	kevin.brodsky@arm.com, joey.gouly@arm.com, liuyuntao12@huawei.com,
+	leobras@redhat.com, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	xen-devel@lists.xenproject.org
+Subject: Re: [PATCH -next v5 03/22] arm64: entry: Move
+ arm64_preempt_schedule_irq() into __exit_to_kernel_mode()
+Message-ID: <Z6nieJ2M6Ro7CeO_@J2N7QTR9R3>
+References: <20241206101744.4161990-1-ruanjinjie@huawei.com>
+ <20241206101744.4161990-4-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] PM: EM: Slightly reduce em_check_capacity_update()
- overhead
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-References: <6137833.lOV4Wx5bFT@rjwysocki.net>
- <1925950.tdWV9SEqCh@rjwysocki.net>
-Content-Language: en-US
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <1925950.tdWV9SEqCh@rjwysocki.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241206101744.4161990-4-ruanjinjie@huawei.com>
 
+On Fri, Dec 06, 2024 at 06:17:25PM +0800, Jinjie Ruan wrote:
+> The generic entry code try to reschedule every time when the kernel
+> mode non-NMI exception return. At the moment, arm64 only reschedule every
+> time when EL1 irq exception return;
 
+I think this is a bit unclear, and should say something like:
+  
+| The arm64 entry code only preempts a kernel context upon a return from
+| a regular IRQ exception. The generic entry code may preempt a kernel
+| context for any exception return where irqentry_exit() is used, and so
+| may preempt other exceptions such as faults.
 
-On 1/27/25 13:38, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Thomas, can you confirm that's the *intent* of the generic entry code?
+
+> In preparation for moving arm64 over to the generic entry code, move
+> arm64_preempt_schedule_irq() into exit_to_kernel_mode(), so not
+> only EL1 irq but also all EL1 non-NMI exception return, there is a chance
+> to reschedule. And only if irqs are enabled when the exception trapped,
+> there may be a chance to reschedule after the exceptions have been handled,
+> so move arm64_preempt_schedule_irq() into regs_irqs_disabled()
+> check false block, but it will try to reschedule only when TINY_RCU is
+> enabled or current is not an idle task.
+
+I think the detail is confusing here, and it would be better to say:
+
+| In preparation for moving arm64 over to the generic entry code, align
+| arm64 with the generic behaviour by calling
+| arm64_preempt_schedule_irq() from exit_to_kernel_mode(). To make this
+| possible, arm64_preempt_schedule_irq() and need_irq_preemption() are
+| moved earlier in the file, with no changes.
+
+Mark.
+
+> As Mark pointed out, this change will have the following 2 key impact:
 > 
-> Every iteration of the loop over all possible CPUs in
-> em_check_capacity_update() causes get_cpu_device() to be called twice
-> for the same CPU, once indirectly via em_cpu_get() and once directly.
+> - " We'll preempt even without taking a "real" interrupt. That
+>     shouldn't result in preemption that wasn't possible before,
+>     but it does change the probability of preempting at certain points,
+>     and might have a performance impact, so probably warrants a
+>     benchmark."
 > 
-> Get rid of the indirect get_cpu_device() call by moving the direct
-> invocation of it earlier and using em_pd_get() instead of em_cpu_get()
-> to get a pd pointer for the dev one returned by it.
+> - " We will not preempt when taking interrupts from a region of kernel
+>     code where IRQs are enabled but RCU is not watching, matching the
+>     behaviour of the generic entry code.
 > 
-> This also exposes the fact that dev is needed to get a pd, so the code
-> becomes somewhat easier to follow after it.
+>     This has the potential to introduce livelock if we can ever have a
+>     screaming interrupt in such a region, so we'll need to go figure out
+>     whether that's actually a problem.
 > 
-> No functional impact.
+>     Having this as a separate patch will make it easier to test/bisect
+>     for that specifically."
 > 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Suggested-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 > ---
->   kernel/power/energy_model.c |    4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+>  arch/arm64/kernel/entry-common.c | 88 ++++++++++++++++----------------
+>  1 file changed, 44 insertions(+), 44 deletions(-)
 > 
-> --- a/kernel/power/energy_model.c
-> +++ b/kernel/power/energy_model.c
-> @@ -774,7 +774,8 @@
->   		}
->   		cpufreq_cpu_put(policy);
->   
-> -		pd = em_cpu_get(cpu);
-> +		dev = get_cpu_device(cpu);
-> +		pd = em_pd_get(dev);
->   		if (!pd || em_is_artificial(pd))
->   			continue;
->   
-> @@ -798,7 +799,6 @@
->   		pr_debug("updating cpu%d cpu_cap=%lu old capacity=%lu\n",
->   			 cpu, cpu_capacity, em_max_perf);
->   
-> -		dev = get_cpu_device(cpu);
->   		em_adjust_new_capacity(dev, pd);
->   	}
->   
+> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
+> index 1687627b2ecf..7a588515ee07 100644
+> --- a/arch/arm64/kernel/entry-common.c
+> +++ b/arch/arm64/kernel/entry-common.c
+> @@ -75,6 +75,48 @@ static noinstr irqentry_state_t enter_from_kernel_mode(struct pt_regs *regs)
+>  	return state;
+>  }
+>  
+> +#ifdef CONFIG_PREEMPT_DYNAMIC
+> +DEFINE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
+> +#define need_irq_preemption() \
+> +	(static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
+> +#else
+> +#define need_irq_preemption()	(IS_ENABLED(CONFIG_PREEMPTION))
+> +#endif
+> +
+> +static void __sched arm64_preempt_schedule_irq(void)
+> +{
+> +	if (!need_irq_preemption())
+> +		return;
+> +
+> +	/*
+> +	 * Note: thread_info::preempt_count includes both thread_info::count
+> +	 * and thread_info::need_resched, and is not equivalent to
+> +	 * preempt_count().
+> +	 */
+> +	if (READ_ONCE(current_thread_info()->preempt_count) != 0)
+> +		return;
+> +
+> +	/*
+> +	 * DAIF.DA are cleared at the start of IRQ/FIQ handling, and when GIC
+> +	 * priority masking is used the GIC irqchip driver will clear DAIF.IF
+> +	 * using gic_arch_enable_irqs() for normal IRQs. If anything is set in
+> +	 * DAIF we must have handled an NMI, so skip preemption.
+> +	 */
+> +	if (system_uses_irq_prio_masking() && read_sysreg(daif))
+> +		return;
+> +
+> +	/*
+> +	 * Preempting a task from an IRQ means we leave copies of PSTATE
+> +	 * on the stack. cpufeature's enable calls may modify PSTATE, but
+> +	 * resuming one of these preempted tasks would undo those changes.
+> +	 *
+> +	 * Only allow a task to be preempted once cpufeatures have been
+> +	 * enabled.
+> +	 */
+> +	if (system_capabilities_finalized())
+> +		preempt_schedule_irq();
+> +}
+> +
+>  /*
+>   * Handle IRQ/context state management when exiting to kernel mode.
+>   * After this function returns it is not safe to call regular kernel code,
+> @@ -97,6 +139,8 @@ static __always_inline void __exit_to_kernel_mode(struct pt_regs *regs,
+>  			return;
+>  		}
+>  
+> +		arm64_preempt_schedule_irq();
+> +
+>  		trace_hardirqs_on();
+>  	} else {
+>  		if (state.exit_rcu)
+> @@ -281,48 +325,6 @@ static void noinstr arm64_exit_el1_dbg(struct pt_regs *regs,
+>  		lockdep_hardirqs_on(CALLER_ADDR0);
+>  }
+>  
+> -#ifdef CONFIG_PREEMPT_DYNAMIC
+> -DEFINE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
+> -#define need_irq_preemption() \
+> -	(static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
+> -#else
+> -#define need_irq_preemption()	(IS_ENABLED(CONFIG_PREEMPTION))
+> -#endif
+> -
+> -static void __sched arm64_preempt_schedule_irq(void)
+> -{
+> -	if (!need_irq_preemption())
+> -		return;
+> -
+> -	/*
+> -	 * Note: thread_info::preempt_count includes both thread_info::count
+> -	 * and thread_info::need_resched, and is not equivalent to
+> -	 * preempt_count().
+> -	 */
+> -	if (READ_ONCE(current_thread_info()->preempt_count) != 0)
+> -		return;
+> -
+> -	/*
+> -	 * DAIF.DA are cleared at the start of IRQ/FIQ handling, and when GIC
+> -	 * priority masking is used the GIC irqchip driver will clear DAIF.IF
+> -	 * using gic_arch_enable_irqs() for normal IRQs. If anything is set in
+> -	 * DAIF we must have handled an NMI, so skip preemption.
+> -	 */
+> -	if (system_uses_irq_prio_masking() && read_sysreg(daif))
+> -		return;
+> -
+> -	/*
+> -	 * Preempting a task from an IRQ means we leave copies of PSTATE
+> -	 * on the stack. cpufeature's enable calls may modify PSTATE, but
+> -	 * resuming one of these preempted tasks would undo those changes.
+> -	 *
+> -	 * Only allow a task to be preempted once cpufeatures have been
+> -	 * enabled.
+> -	 */
+> -	if (system_capabilities_finalized())
+> -		preempt_schedule_irq();
+> -}
+> -
+>  static void do_interrupt_handler(struct pt_regs *regs,
+>  				 void (*handler)(struct pt_regs *))
+>  {
+> @@ -591,8 +593,6 @@ static __always_inline void __el1_irq(struct pt_regs *regs,
+>  	do_interrupt_handler(regs, handler);
+>  	irq_exit_rcu();
+>  
+> -	arm64_preempt_schedule_irq();
+> -
+>  	exit_to_kernel_mode(regs, state);
+>  }
+>  static void noinstr el1_interrupt(struct pt_regs *regs,
+> -- 
+> 2.34.1
 > 
-> 
-> 
-
-
-LGTM
-
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
