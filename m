@@ -1,173 +1,107 @@
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC53230D07;
-	Mon, 10 Feb 2025 15:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75C52397A0
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739201445; cv=none; b=e4sBi/BCM/wiv4R5VBDdf3H5rjm4xFPXeXM3map/DfYie5bJ3EKsed0OKyJfuKu4opbQ1nNasFV/4fsEzHHzF2pwZf6itr2SsfscO38xfsNRPjQWwNn1uQOKp7IlIw2Sbv+jFKGBUlThqkeqm5/tAQeI3pmRWdjwggFPi/NNSx0=
+	t=1739201497; cv=none; b=ZXJR9t2oJbm0yG/XteMWQD7Jj5zAOTW5P+7eebj6h127v2i7SOrfhj39V73u4Ne0frC2Ra97KP0uiUt9uaYVS/QnapKyxlvtLz9++6kygz9LaL1I5odsSUViUTwn4YlWvq1AbWD2/XGXxyh0VlO6DvxNC5Rr4ywcV8Fn6bqrDLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739201445; c=relaxed/simple;
-	bh=qNm4CHzPjwDB5eWSB53GtIOEq3by+g5myRHe3AOL4cU=;
+	s=arc-20240116; t=1739201497; c=relaxed/simple;
+	bh=5xis8As8jO2Rt3mwgcf/kMRAOKhitW+ScGDLCUM47is=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hvzi6aREGIIawPPWT9d/EvlaKqPrM+badv1i/+3XCJ7QcdScA+NckXhB6nJKtUNP3YX63bXGiOpM4EnMMhkw0jSBW2Vj8Xfedc69FdOqax3x+Gk6cj6tLOj+M1qGjPS+ybn57Hj9p+MvG9DG0jvZJZxSmreqFr31nWc8XtJa4DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-4ba88eaff7cso627040137.2;
-        Mon, 10 Feb 2025 07:30:41 -0800 (PST)
+	 To:Cc:Content-Type; b=KH+3mkbu0I1vFLN9s4y8lQcL7QxkvDDkbBfdPpO3kkNruALoKB819xIfnyCPjz//1k2avGIWbr2upwYBO0idh9oxo7oJKyIaq9VqHYwfqsHaa+V1a7fidDKa7nYcsGXxFg5EyAS7LlvjpiQkntmtxRiC0iBf8bzcOJcK+rZrExk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aZSpO/DT; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aZSpO/DT"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5de47cf9329so5323105a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:31:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739201494; x=1739806294; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5xis8As8jO2Rt3mwgcf/kMRAOKhitW+ScGDLCUM47is=;
+        b=aZSpO/DTLrPp5XzyAzg2zy0ia+GSED0iUcYxC+QiPQR4GRRHR1PVY29eOwoxBu1j1x
+         FEgiJTkg5DCxqXlWPUaYeeWS7fti/jrXtN24h6VSN2MhvHDGix/+QywKoEAqJ8pJV+CY
+         avasHE4ZV5kw9nY2Frfgc2WUNa6N7py0Z8bTzWvAKW20kD7b21oPELyBKz4kltdl3BOn
+         fDjZViCtRnWpWBysy08VKLduuPt+pl7W3EcZ1I3Qcb1qERF5n10ZgUuvkUVtbqQJACm9
+         8QsoJ4v4q7mJJdTCKtY21vtyNMARa1nifZ0d9VtKEPNKOcnzcv4Y1NayU5ffQlkRFAyu
+         C0Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739201440; x=1739806240;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5xuumStvJ4XzJICP2XWv3Fwsgtfc9wkYm0UoJ1gEMC8=;
-        b=Du6kz9Mzx8hAEMdyDLxSMbPbtIZTgNGXh0VtU/3lxRaydLrLV/w+c48L7bKLev0dA7
-         DB36UsiHWpGiwra4ZE00N6jwBERmCmsitrmWnOYKAvR83V23btgNRl6pgli9V7MeKOrS
-         YlgZ8MYB5dHOP+psYL3D/YqvjEEhPbMVrV7q4gopq2+FIbMGCkR8uj7vLKolz9UX/hfI
-         20DqPh8u57OdrAjwP7d37WzbMW1WU2d+3iV4F/J5rY9gKuo9aPKkLthMJKBvbzBj+hs/
-         WCB5YPzVtMttXbsTSi4wsQatQlmKyfQQmAOqxmH3QpfZ83qB8rynQ3QRINIgS1eFzNde
-         aA2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUs28ew3PDzvsQ2kUJl7P6vxJZUv3G0LaNa0ymTwdHARfnVneW4gXNeQEQmyMau2bRcvG7TzD8rKhyDBWk=@vger.kernel.org, AJvYcCVYJN7rYA+uYXvJfWbztL6l+wPB3CGD7RXIIRT/pkuftlz/Ap24w+xPPTuCs+YylA3BYq6f9s+WmnCrt2ez@vger.kernel.org, AJvYcCXN3tkDKFUBvYUOH0Wf9f7p1XJbLU1X43A6gewKWUbc6A8FHJX2FXd8KJGXhZ0iapNXW4fVp4fqj8dUDb7FWB3nWoM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnQk7cCrjdjz4PQCAftPuukTnDn6VrTOMg4/HZQ5SXIeO7yt5I
-	QWVCDmxkog9hYoV4Vtq88vRRqmd5MTfjmwaWbOZ2hum7Nu4D6VY8AZavMqmx
-X-Gm-Gg: ASbGncud00zAvHmYY+a58k1Q0r27zEQNt3zM9Q/w2LYHeLoENL6idwJ0LWMSEEyuqLC
-	AYI04Yb1pHJUpb4XD1+f3u0eamPNQAlue/5ckGA0MWXtQpORo4PaFY/1IxWFzNCNItNKyTREtSJ
-	HC6V8sKu99xiLlFzKTF5EodmS6dIYlwpd4r0Ib/EfWZq2K9DNDoOtcGZjpEP2lBKH3Tw/32MNnf
-	G88sX83raYV0s9lD2LQt1sC2dnoHzWeol5AQoK2zSDiW24Kzpi/68I1o0C8mw9y6VJaXTVeyPhM
-	AZ1D8yiKjzSrDZKKg8b1XTfgy+KSNsxIDzwe6Np/8vWJsVH3cQqMoA==
-X-Google-Smtp-Source: AGHT+IHGoz7pACpArraGdBcDAU/HeSRLEMiDlzNc+rS/oGQSSVEPZvyHEHEVGjcRNZdv8z+GvTwOTg==
-X-Received: by 2002:a05:6102:4b13:b0:4af:c519:4e86 with SMTP id ada2fe7eead31-4ba85da77a8mr9392194137.1.1739201439678;
-        Mon, 10 Feb 2025 07:30:39 -0800 (PST)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4bbb7547263sm807332137.4.2025.02.10.07.30.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 07:30:39 -0800 (PST)
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-866de72bb82so1300243241.1;
-        Mon, 10 Feb 2025 07:30:39 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVGksSd50TxLX9l+wEVngJ18Lk3uDgKl52v8RXx0eNHec1ylO72B9J6H4VN9SJcv2kKk0xTY1NR82dCcb8=@vger.kernel.org, AJvYcCWAJOeBhtcGuMYmnzimdCnwJZpemGfyPbZhGKDgMQRxUhkGV4+sk7ht2DI9+bLmmbdZo7nv180mD/FW/XI4@vger.kernel.org, AJvYcCXe+aoKIKiPWn8TjlO7Vp4acHSGn/7/7V+8+pazsUNaCEwVpBMaYeNRZlXpxL0NLTi9UJ40hV9oXR+8TIWpFn9mKhM=@vger.kernel.org
-X-Received: by 2002:a05:6102:1481:b0:4b9:ba60:ec85 with SMTP id
- ada2fe7eead31-4ba85eb6452mr10266211137.15.1739201439257; Mon, 10 Feb 2025
- 07:30:39 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739201494; x=1739806294;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5xis8As8jO2Rt3mwgcf/kMRAOKhitW+ScGDLCUM47is=;
+        b=wnVD6ew7rqtzfh9aeso1mdxRkMIgc94TNreQUhV88Iyjl9RPosSdJR7jJ3R+04DrYx
+         A8OHnA9a+P7K/WtNXrKQL4AxGdEEzxfr5P5cFJaRjuDMAsL7hv+M7jHDBsChFSBzrBDo
+         ytFT8desBjMenkONurIkYf5OVgHNTCcBKEzhKa60vrYlBbZy6S0anWnC7q4NS5uHhmeB
+         CqoRtLifL9fna32NsTXrF0H8ouZWRyMqgcTEcFz8B4NDj8ifwP4cFAS8nxZviYLEhr7M
+         LCW1+x91x3b+C+A7cZlafbDcrX3MLEyrGDMSQ0n1SnuFcb0kg1I4JNC8f5fc2mONZXS3
+         w8LA==
+X-Forwarded-Encrypted: i=1; AJvYcCXwaG779kRquZaHNC1KpUr6e3iX0IYRphkRghI/px3HTQjWW9Z5nRRDTGzURVQfU3egHOk21bguhiqpzsI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4UisCFNPUhXjwPJPAvLjeG0YdJlrBMQNNjmjWgOOFADHdgpqR
+	7qRtMlrTeXTVK0T8Pz3R70g0cHd8WIjPZvCn+gTU824iM4uTakHCGWhb+g6N3VUbZd0ArCuzaZ0
+	cf0UzqWbUv0qvOY/ZJMDJj7wFzLlztftA1ynF
+X-Gm-Gg: ASbGncugq3CZnvzeP0ml8WjYqhYfuHGMckF4oa1vAssl2DD2bK1g7zZHyEzGD22N4Jk
+	GRZdudhabLH1iX2vSsQviejJxIbcHta7S3p4iBFrJD0PED2qeeIHnMSxSQBIPJ9uSZOJCTtAz
+X-Google-Smtp-Source: AGHT+IGYIDEKbs6dmHrwg0RTMVkj/Q1gAgz9hIfVyXJeXBAoeGn345KmetsEUL3Ngq0krWxUFJbHxMyoe+5b2fWRQs8=
+X-Received: by 2002:a05:6402:5214:b0:5dc:71f6:9723 with SMTP id
+ 4fb4d7f45d1cf-5de9a4645eemr88173a12.21.1739201493753; Mon, 10 Feb 2025
+ 07:31:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com> <20250129165122.2980-12-thierry.bultel.yh@bp.renesas.com>
-In-Reply-To: <20250129165122.2980-12-thierry.bultel.yh@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 10 Feb 2025 16:30:27 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXrocuwBBQpq4XxZXVAF1=cpYQggwBviivQ53TJ2uz-ag@mail.gmail.com>
-X-Gm-Features: AWEUYZn9XCeqkAASv1mhRHy1-YU5QCzjiDp1zusBjLxkk_Uez7Lc1630Z8Y3aJg
-Message-ID: <CAMuHMdXrocuwBBQpq4XxZXVAF1=cpYQggwBviivQ53TJ2uz-ag@mail.gmail.com>
-Subject: Re: [PATCH 11/14] serial: sh-sci: Add support for RZ/T2H SCI
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+References: <20250205163609.3208829-1-aleksander.lobakin@intel.com> <79d05c4b-bcfb-4dd3-84d9-b44e64eb4e66@intel.com>
+In-Reply-To: <79d05c4b-bcfb-4dd3-84d9-b44e64eb4e66@intel.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 10 Feb 2025 16:31:22 +0100
+X-Gm-Features: AWEUYZlWeDdRtwGn76PnjMKTNXzuvPG4UPRC8NQ_4EEIUAmtn9Mnehmfqoc219k
+Message-ID: <CANn89iLpDW5GK5WJcKezFY17hENaC2EeUW7BkkbJZuzJc5r5bw@mail.gmail.com>
+Subject: Re: [PATCH net-next v4 0/8] bpf: cpumap: enable GRO for XDP_PASS frames
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, Daniel Xu <dxu@dxuuu.xyz>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	John Fastabend <john.fastabend@gmail.com>, =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@kernel.org>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, netdev@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Thierry,
-
-On Wed, 29 Jan 2025 at 17:52, Thierry Bultel
-<thierry.bultel.yh@bp.renesas.com> wrote:
-> Define a new RZSCI port type, and the RSCI 32 bits registers set.
-> The RZ/T2H SCI has a a fifo, and a quite different set of registers
-> from the orginal SH SCI ones.
-> DMA is not supported yet.
+On Mon, Feb 10, 2025 at 3:10=E2=80=AFPM Alexander Lobakin
+<aleksander.lobakin@intel.com> wrote:
 >
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> From: Alexander Lobakin <aleksander.lobakin@intel.com>
+> Date: Wed, 5 Feb 2025 17:36:01 +0100
+>
+> > Several months ago, I had been looking through my old XDP hints tree[0]
+> > to check whether some patches not directly related to hints can be sent
+> > standalone. Roughly at the same time, Daniel appeared and asked[1] abou=
+t
+> > GRO for cpumap from that tree.
+>
+> I see "Changes requested" on Patchwork. Which ones?
+>
+> 1/8 regarding gro_node? Nobody proposed a solution which would be as
+> efficient, but avoid using struct_group(), I don't see such as well.
+> I explain in the commitmsgs and cover letter everything. Jakub gave me
+> Acked-by on struct_group() in the v3 thread.
 
-Thanks for your patch!
+One of the points of your nice series is to dissociate GRO from NAPI,
+so defining gro_node inside napi_struct is not appealing.
 
-> --- /dev/null
-> +++ b/drivers/tty/serial/rzsci.c
-> @@ -0,0 +1,484 @@
+I suggested not putting napi_id in the new structure.
 
-> +/* RDR (Receive Data Register) */
-> +#define RDR_FER                        BIT(28) /* Framing Error */
-> +#define RDR_PER                        BIT(27) /* Parity Error */
-> +#define RDR_ORER               BIT(24) /* Overrun Error */
-> +#define RDR_FFER               BIT(12) /* FIFO Framing Error */
-> +#define RDR_FPER               BIT(11) /* FIFO Parity Error */
-> +#define RDR_DR                 BIT(10) /* Incoming Data Ready */
-> +#define RDR_MPB                        BIT(9)  /* Multiprocessor Bit */
+If you need to cache a copy in it for "performance/whatever reason",
+you can cache napi_id, because napi->napi_id is only set once
+in __napi_hash_add_with_id()
 
-None of the above are used...
-
-> +#define        RDR_RDAT_MSK            GENMASK(8, 0)
-
-...
-
-> +static void rzsci_receive_chars(struct uart_port *port)
-> +{
-> +       struct tty_port *tport = &port->state->port;
-> +       int i, count, copied = 0;
-> +       u32 status, frsr_status = 0;
-> +       unsigned char flag;
-> +
-> +       status = rzsci_serial_in(port, CSR);
-> +       frsr_status = rzsci_serial_in(port, FRSR);
-> +
-> +       if (!(status & CSR_RDRF) && !(frsr_status & FRSR_DR))
-> +               return;
-> +
-> +       while (1) {
-> +               /* Don't copy more bytes than there is room for in the buffer */
-> +               count = tty_buffer_request_room(tport, rzsci_rxfill(port));
-> +
-> +               /* If for any reason we can't copy more data, we're done! */
-> +               if (count == 0)
-> +                       break;
-> +
-> +               for (i = 0; i < count; i++) {
-> +                       char c;
-> +
-> +                       status = rzsci_serial_in(port, CSR);
-
-Isn't the point of the RDR_* status bits in the top part of the RDR
-register that you don't need to read the CSR register anymore?
-
-> +                       c = rzsci_serial_in(port, RDR) & RDR_RDAT_MSK;
-
-Note that this drops bit 8.
-
-> +
-> +                       if (uart_handle_sysrq_char(port, c)) {
-> +                               count--;
-> +                               i--;
-> +                               continue;
-> +                       }
-> +
-> +                       /* Store data and status */
-> +                       if (status & CSR_FER) {
-> +                               flag = TTY_FRAME;
-> +                               port->icount.frame++;
-> +                       } else if (status & CSR_PER) {
-> +                               flag = TTY_PARITY;
-> +                               port->icount.parity++;
-> +                       } else
-> +                               flag = TTY_NORMAL;
-> +
-> +                       tty_insert_flip_char(tport, c, flag);
-> +               }
-> +
-> +               rzsci_serial_in(port, CSR); /* dummy read */
-> +               rzsci_clear_DRxC(port);
-> +
-> +               copied += count;
-> +               port->icount.rx += count;
-> +       }
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+gro->napi_id_cache =3D napi->napi_id;
