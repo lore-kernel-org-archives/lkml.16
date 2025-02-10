@@ -1,103 +1,97 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24941CD1FD;
-	Mon, 10 Feb 2025 10:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8693C15624D;
+	Mon, 10 Feb 2025 10:41:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739184008; cv=none; b=lgKd+ReyqFBNHDr2Esjj/WgOlpMxVcPaRxXHL6xfG+84X3VWZjPPOLFQL6nvuMBqGil/s6lJ3DkCq7G2jlhebVz84erpuSBG3LFgfOnSOUAnFRXZC7uxCdF0K0yZWPRV1RQ4kya3a3EHIiHbI60eKqeSj4TAIx9jL6IDOvwXsFU=
+	t=1739184062; cv=none; b=hmJXoSYVghUppzptI2W6efz7ufiISKxS0UCcrPd9Saec+rt9o0FhbyCvP2dm0UQrEiTKwWRDvjbfdW4wtzuQqgGFQr/Kc5CfLPmrTBqhCdZDeePqT6tObYfpswRxoTcj8s+f5IfN74yB2dFjDEqGGxngOCUNCYD0h4rfWJeYZ0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739184008; c=relaxed/simple;
-	bh=LGV8UANXcdj/j/zfoDz6O1P4t2FVGCOz9mpb60orzOg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ds3R1NbSLIfE8XYXx9qyOdU8I8cXdcHFzqc0kJwDO4tq8SVuP1g8ckbb6lTaiiwrN9fNkEvSYauwUBvCM0e7SA3hylEELZ3E0psrjP51z9FRN+Tt+S+T5XBAgihQZaQAOL3Kb3UfyDjHsffTkqGPkJwXRdwswpI/foklJn2Azw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=jck3ldfN; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1739184062; c=relaxed/simple;
+	bh=46Hwj6oLN+R1cwvlaCePhHYl4MUD2RaTfTlAeH28PD0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LXekxyj3ZyoReLNNz5K4uJN6O4yxVVw/MASxmERKE8KVYC1AtN0fOeldMrtkGiyJRhzW8C+TJE9tVua0t1U8+/eXp3l/TvokSnhRbBnUCWJHqym4+qGuxq8wRAVoDt2HqauHW8Q41uKpOChQIvElpWx0wjsFojXyfjbt3VOqvog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KRCe1inX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="jck3ldfN"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=4rCkVHh/Iwk/+3hJuNqrNMRtzjPUC7H5J66dt2WuGJM=; b=jck3ldfNHMAgjETkttyJMYsUMu
-	E92vnw4Nx9pcPnO+WowumsHz237a35FAZMEiVak6550rssebJjnqeCuuZDOV/Uyn6s1cVbSgKUgp7
-	ybgzfla0elZWKa+7Glsv9X+ZzbYRWytLjot1Ix4UWV8POEqNZdonZPWY/qBwFYsL05nrp/auDTB3u
-	6ZrN1i4CEQfjO7MeNy5V3zNMvwaCU5cLjqSvsO+at5fqr6RCmh/VfTzNwI+uh/RezmMN1wIsW9vEj
-	aVKYGrOwPu1YeH0Mnvdb6VWFWE9+SXRwMz1carNAMuhLkk0yoQf7O0bPcUPO++TKQKKmEIRnc7mvY
-	g60nfHBg==;
-Received: from i53875bc0.versanet.de ([83.135.91.192] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1thRCb-0000xs-VF; Mon, 10 Feb 2025 11:39:46 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Junhao Xie <bigfoot@classfun.cn>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Chukun Pan <amadeus@jmu.edu.cn>,
-	FUKAUMI Naoki <naoki@radxa.com>,
-	Dragan Simic <dsimic@manjaro.org>,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 0/3] Add support for Ariaboard Photonicat RK3568
-Date: Mon, 10 Feb 2025 11:39:33 +0100
-Message-ID: <173918381711.1055685.16665650203421102883.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250114001411.1848529-1-bigfoot@classfun.cn>
-References: <20250114001411.1848529-1-bigfoot@classfun.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KRCe1inX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A280C4CEE5;
+	Mon, 10 Feb 2025 10:41:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739184062;
+	bh=46Hwj6oLN+R1cwvlaCePhHYl4MUD2RaTfTlAeH28PD0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KRCe1inXBHwlqKS3Hh9AwTu1SrsC48JkSvKv5sbuqf3ya3dfsgMn2XX8M+3DmSx0u
+	 vb1o18WYjf+pNY9TyJ/GC+qMVq6Ui0ji/dMPCd0gqOC4OnR6LDSCxcWdLO57thijW9
+	 mIHYjbhAIgcsrJn7xLC+vg+oCMIZVzhfp7m/DbM0bKS9p1tSiKSXc63+iTDLmRJrkp
+	 Y0z6B3D/ScC6b2AeUav29rIgDIBa2gMq5arEzBpDia13FwgxkTSNcKZG+ocVo0PaXQ
+	 tk6RNes1X/dCaEe+O5WVyv87wzj4RD4r51OFOhaoSEnOVtH0371uM6nrKeSCRcCDF3
+	 z/an5nfH1RKwA==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5450475df18so1955525e87.2;
+        Mon, 10 Feb 2025 02:41:01 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCULVSZGkdsPddgW789YLsa4lFXIT3akEJoCcgGSSoZv8qVsMFVvTWHbgBW6897F3y54/30zQdIUW7ZX@vger.kernel.org, AJvYcCWvWZMXiHfA+QBG8RyNQIqDbOPA0PS7FIYipMVJ8plLeszP4T6zjlCyLu0zcLTOdCoH32rgbhaM8HwdPC8E@vger.kernel.org, AJvYcCXB+v/ZuG51yvRxqS00GlHIvFP5Bri2aehpqbZzc3hnR+E43QlrcxzfPqgbZsYQdF1ne4HhqeZSIPg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3RdnDl3ekQTFB3AtiJiBzuY5WFoYh1JbAAptlWlEqsZJGUEmK
+	nhRFiD8ixC+uRZtBbZ+xSydnm4F2eGmWNH10uM3WD7Zy6nfe29nYnUdrPMSVYa0kgxOCWLtvIzh
+	LpXs3XxD0y7rPIkk0wT1c9PdpmEk=
+X-Google-Smtp-Source: AGHT+IHmiCv54Xo/cZjV5WAg7h9ZUmfSozvF5UDhkh0PZYTf3WaMDplUz0RbzsrnJh8sZt+Ej2zn4srkEC9cpNCmkhM=
+X-Received: by 2002:a05:6512:3d23:b0:545:bb6:8e32 with SMTP id
+ 2adb3069b0e04-5450bb68e9cmr1031982e87.12.1739184060357; Mon, 10 Feb 2025
+ 02:41:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20241228202212.89069-1-lleyton@fyralabs.com> <4564637B-36D5-408D-B0CA-816D9F3466E4@live.com>
+In-Reply-To: <4564637B-36D5-408D-B0CA-816D9F3466E4@live.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 10 Feb 2025 11:40:47 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXFdm-3+zFejU+=78R5P80e9SiB9Tr-8W-zLjub5njL3sg@mail.gmail.com>
+X-Gm-Features: AWEUYZnjz-PqgrefGcpuY2s6Ug1CVIXkiXnCGrBIrHsAhDDG3EJZjJjtCSU2XTA
+Message-ID: <CAMj1kXFdm-3+zFejU+=78R5P80e9SiB9Tr-8W-zLjub5njL3sg@mail.gmail.com>
+Subject: Re: [PATCH] x86/efistub: Add options for forcing Apple set_os protocol
+To: Aditya Garg <gargaditya08@live.com>
+Cc: Lleyton Gray <lleyton@fyralabs.com>, Jonathan Corbet <corbet@lwn.net>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Thomas Huth <thuth@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Xiongwei Song <xiongwei.song@windriver.com>, Jeremy Linton <jeremy.linton@arm.com>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+	Jonathan Marek <jonathan@marek.ca>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+	Kees Cook <kees@kernel.org>, "Borislav Petkov (AMD)" <bp@alien8.de>, 
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Aditya,
 
-On Tue, 14 Jan 2025 08:14:08 +0800, Junhao Xie wrote:
-> Add dts for Ariaboard Photonicat RK3568.
-> 
-> This series bring support for:
-> * Debug UART
-> * SDIO QCA9377 WiFi and Bluetooth
-> * M.2 E-Key PCIe WiFi and Bluetooth
-> * M.2 B-Key USB Modem WWAN
-> * Ethernet WAN Port
-> * MicroSD Card slot
-> * eMMC
-> * HDMI Output
-> * Mali GPU
-> * USB Type-A
-> 
-> [...]
+On Sun, 9 Feb 2025 at 17:13, Aditya Garg <gargaditya08@live.com> wrote:
+>
+> Hi all
+>
 
-Applied, thanks!
+Please don't top post.
 
-[1/3] dt-bindings: vendor-prefixes: Add prefix for Ariaboard
-      commit: 8d9863487e58434d22dbacb10ad2f9dde326a25c
-[2/3] dt-bindings: arm: rockchip: Add Ariaboard Photonicat RK3568
-      commit: a81c10aee108d805259dac50c0ac509681c559e8
-[3/3] arm64: dts: rockchip: add dts for Ariaboard Photonicat RK3568
-      commit: 3834e1009c108a8a834a7e4625dfa805fcb1f71d
+> I managed to get feedbacks regarding eGPUs on older non T2 MacBooks, and can confirm that apple-set-os is needed there as well.
+>
 
-As seen by the reply from Rob's bot, there were some minor issues, that
-I fixed myself:
+This is rather vague. Where did you get this feedback, and what
+systems does it cover?
 
-- dropped clock-names from bluetooth node
-- dropped reset-gpios from rfkill node
-- dropped phy-supply from pcie-phy
-  with vcc3v3_pcie marked as being supplied by vcc3v3_pi6c, all supplies
-  should still be enabled nevertheless
+Also, this is not about being able to switch to the integrated GPU to
+drive the built-in panel, but for driving an external GPU connected to
+a different screen altogether. AIUI, this has never worked on these
+systems, right? So why is this important now, for 10 year old
+Macbooks?
 
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+> I was wondering if we can reach a conclusion for this case here.
+>
+
+I'd prefer to address this in a different way: instead of fixing this
+in the Linux kernel for the handful of systems that need this (and
+that will upgrade to v6.15 or later to get this fix), why not use a
+separate boot-time EFI app to call the protocol. That way, it works
+with existing kernels too, and no changes are needed to Linux.
+
+https://paste.debian.net/1349311/
