@@ -1,157 +1,127 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD69256C8D
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:58:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095FD256C8D
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:58:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739206691; cv=none; b=bHO70aVmt8RnUcfroazvyywyEovLCehpGtKZfg800s4+vrhgxoyrfy+v6dva4eO+7PNbS6VYcIMdsdZ+UEOOiSWJCUt1WVp0nS0olGajv6e3f+ZAglpN10ETe1F5r0C689i2mbQlF+AiRJsdLEpjgqtTmyYS/ntnBJnKbJLWP28=
+	t=1739206715; cv=none; b=m0I4SFYbWUfj6X6dP9K2MoaBBqRg4/FMhHahhAqVep+EHyxU1/Ugy5LRQ5tN7/v+b+mNfgz4bUySvgYof7SOux+VBlr5K13lA9iKSe8jOZiUQiEb21jmwEAOx2gy5BXiS3AQPQoNVe6AhFy0ZS6umdZ/5tkho+pn0KyeIEzXn0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739206691; c=relaxed/simple;
-	bh=xDIm/RSePeqjNNKN693t7yZjDUS4PKwecZGP9knv6V8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rPPDA+OdjP+cR6OzIMsj9WwwVYv4Zb76TYS/QsiSA9uNio0Amfx4KJqwn4ZEwqy7eR3z/N1ouKi8cb1lxCoa5e5igslypReiDxQRdWx2pNqM6wY9ru1wmUaBWeE0iV7FD0una6LrAOR6CP2/Bgf3lH3MmQhSFF8lxOdfPA0NJNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eabQkDZL; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739206715; c=relaxed/simple;
+	bh=+EYxoO/4eaTKKnUK7wm1jcos/P6WRb0f5cS36rove7U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZJ7czAoK7dv3PdWm9b+f1KAdqXXRktNIGlCzh/JGEAr1Qp33au1OHUcFsTVCwSczQ8tyfiSRyJ8QVRGf0GjNez921Sr736Wg2RR8WZV6cuiwZ4tXX4tTyLZQgjXAGvXJTbQ+zd7ZPeAiF2uvJuGW++DGmT7D6u3u6NiB9BxOW+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bDzyzdby; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eabQkDZL"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21f6f18b474so30327425ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:58:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bDzyzdby"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5dbfc122b82so14248a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:58:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739206689; x=1739811489; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HXK570SN0hPAje/qFbZ+ZB29I/53fXVG5T36GPnTKYo=;
-        b=eabQkDZLJfyvGb+qqDzjR5XknBo09Kxii5C2nJnJi0Zmdsux5A+9ivZMlMZnFkhX6f
-         xnFBxSUKf5swEewHz3NOQJUSWDZsE3w6XpEuUIfnL4eseVs3TxFVqG+/Jnx3b3BK1lhC
-         CunOZfQZUzrUQ1Wpcuyd80j7KNsjE5WARHP5o6ams3uJfDxclfqcfD/nB4XMHNsllQWo
-         lQ7UIslpNRNyAxEj+Ju3XlDkBIF+d2JvIwoDqm7ddDswQywe73/rbDO29Wn8AUjoDH/q
-         DLYfmn+nRM5Jw15+FIvCuj4mn+sdO50futhCUJOCkWJk8GRLnOMLoguoS9T2dQAobCzN
-         dmzg==
+        d=google.com; s=20230601; t=1739206712; x=1739811512; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cm57wNvbQ2vdjEciVDp1te7Id5gFdsUL8knVkzn6Sqk=;
+        b=bDzyzdbyLoZak/jvy+BCX89O+5+eN8rT93N2fG1TR0Wl3V0bfe+VMr2MmYF/OPo5lb
+         wt5ATiuuyjHa1T/Ox6dbkNrYqWZ96r65IJwW8tS4b5qBZfBMFV/Q/AV1KPAFk6aTG4Yq
+         HY0BayNEDSj8UhPVOVGTCvGFgj/g94w7XTUODX90w7Eh6IMuHXlchQW0RS//TZnit5X1
+         ARTOz5dqmRRUypawQJxv3TRi3UYHksEl11PSbvXZBWDLQAuOmmxiCu0UN/vrWpGhljtO
+         +9lv5r8DTidY7Bz3m/O4IMXn4rnVbcIuWoXxtTlglNdwVFvqpnif+bYj9A8jfGhSk2XP
+         NK5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739206689; x=1739811489;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HXK570SN0hPAje/qFbZ+ZB29I/53fXVG5T36GPnTKYo=;
-        b=d9zUTqXEBqj+5k5AiONOFcg1cPgLHfJ0E2q5wnpI6CM8KXp5WShpba1DMg/vTsn5dO
-         azMMoCHKWrWfkWWVtta06Fc6gTABMCC48fF6Y9amrulPGnY5Dt2/tjMq/RE1vp/bZTbv
-         rjkksMDjFv5vrObYWPSaYXVC2oC5sLjddNd2mWxxeoWbOHH/C/fEqR3eaNImVd2y6TVG
-         yZuw4dQxhyWSOjUD93pusK+X5wSvxfHlIP8Oi3DkIS26e61tjKEc1d3KIOVOLzTkjXov
-         1YTrwMiWbad4ixpnt3gJFc7X1W/RPLomJzTNHktdotUuk2JH13/DlOEp7QNoYkB0wAQS
-         B9Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCXIxy8bWAcJQqs0idBTR9SD/F2KkULHT1szN62HXfqpSlWavOidoz55BZwBAQo41LrpUGkmiSN6ylBX6sE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcpSdILZWr5m12XHkYmQKuWErhRpI3V5pT+nY/wuhqfhKtIwNk
-	pQXH9BAbxvmtPRDbFC9Y55b3e9wpjhiIoiwwzKNz/SN43VVxT/19s8t6uWzxHw==
-X-Gm-Gg: ASbGncv+sLsEw0opiBrI5FER1VtBEZjn5CKSQ3CvMLZgH2izfHd/SPHWRGd5kKPafJQ
-	bDxbCqRd1GRlphrXfo7aQK7P9f73ohHY1lMr4QwBtLIh3M9rdWgYW8LgDR+COSe9I036GK2B6Cn
-	lq4iqdQqTbliiv3EqpZXVxMCMHRMqU523U+9HxyRCXexKrR6MXxPYm2PMmfEXvwdXUw8vobI36g
-	O9NpDkhmG1GN23A6zaTR/OOD6uRwf+zk7M/FaZYz1Es8hamADIUhJYTbspk8UVXVEzJtVI0Y6Oq
-	EPw4Pi/LEw1GnUnNIeyqsdY3pfcV
-X-Google-Smtp-Source: AGHT+IFXG/X92qZwFcXPEHDQKQJuXIqlaQptvHF4J7uFXPKvpdVbnwkYnUW89gE+sgY0hfXiSW0EGg==
-X-Received: by 2002:a17:902:fc85:b0:21e:fe8e:b571 with SMTP id d9443c01a7336-21f4e760a43mr223092645ad.36.1739206688645;
-        Mon, 10 Feb 2025 08:58:08 -0800 (PST)
-Received: from thinkpad ([220.158.156.173])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3683d55esm80562995ad.152.2025.02.10.08.58.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 08:58:08 -0800 (PST)
-Date: Mon, 10 Feb 2025 22:28:02 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: krzk+dt@kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, conor+dt@kernel.org,
-	andersson@kernel.org, konradybcio@kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: sa8775p: Add 'global' IRQ for PCIe
- controllers
-Message-ID: <20250210165802.tbvzx4qjygzdsk2f@thinkpad>
-References: <20250209153940.3489-1-manivannan.sadhasivam@linaro.org>
- <173920411963.477096.6458317590653327676.robh@kernel.org>
+        d=1e100.net; s=20230601; t=1739206712; x=1739811512;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cm57wNvbQ2vdjEciVDp1te7Id5gFdsUL8knVkzn6Sqk=;
+        b=M25jRF6NHdqOhU1KYlPkenHK6EFwVoP7eCIxJxkUYokX153CVBcunBKD/CLr6NSbjN
+         A5CkPbkOM03atcTtZnrAIVgdwKKZMPLIGZ17uzqmPWxmUcY6qQuJR2YoQaLWC7gWXX3I
+         90kCbW8jr1tGFEYvR78Bl7FmajrZ1TEsWv0KdbSUUEiQcJUefVUxl2UrkPTAFgTNMvnW
+         91ObvJuzAFq1snAk1ft4v/Q4zR5fNpzWm6bc49t3tW7aTwkVpmTVg0eM8MHEHLICTG3n
+         j4CsGFFq2DTfo4eOTfq26cXk3L8k2u6w5mcXU5joc7wp51Nk1qtUmbBXAPS4peJ+dFMA
+         G2gQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVnhTHIWxWeq5sZ+w/p1t3QykJgkdBlIhkqSgyp4BMwOIBzcSB8K+I+DZe+AEMRLjxMVKg0mvQ6irOGBio=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywsy7j9RG1ruUMR239MUZo0wZYkpaMJ7Ia+AFGukdkpnPhd2Z5n
+	iTrHu4DRz9y08RFSEEt/vYeSvkf6pD/ViokaHCnzo+xafMMoz9jNEFSd0mJJFee5P+kpwr6lRg5
+	opQjTApRb43p1Yl5RJ8BdSRuGXwsL/daHEZHwKlZzkK1mQQPk0Ltm
+X-Gm-Gg: ASbGncuaY7dgphS8baT983gZUviVAYKFv++QaLYILmb1CNeCHg8cJF7Q0FTaEoVTcNp
+	ogB2AGg7ulntK+MLEvume0uwmtXrQrCnONiSKj2O/7eAiyzia0+3UYiLpD97NuC2vwGDmwQ==
+X-Google-Smtp-Source: AGHT+IFnw841MFqZMe6UVhOR0RXEyOzas0we/b8udxrzoxTVjI3QHNpgdB6s5ClL8XfbUoDdeSPb0JGGXaFyvlKzHfw=
+X-Received: by 2002:a05:6402:2054:b0:5dc:e09f:d069 with SMTP id
+ 4fb4d7f45d1cf-5de5bf43e67mr177841a12.6.1739206712123; Mon, 10 Feb 2025
+ 08:58:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <173920411963.477096.6458317590653327676.robh@kernel.org>
+References: <629167c1-9be0-6128-8605-eb02391e821d@redhat.com>
+In-Reply-To: <629167c1-9be0-6128-8605-eb02391e821d@redhat.com>
+From: Sami Tolvanen <samitolvanen@google.com>
+Date: Mon, 10 Feb 2025 08:57:55 -0800
+X-Gm-Features: AWEUYZmZq810A2nkZIkAKPj4stps_q_lRKH-4FpQTq4FT9GxN7r_QaAqRE1hH8U
+Message-ID: <CABCJKucmOTVF1jY3vM7VKHuLkDeUxK1EU7YK=C+vgfWvgZFWPQ@mail.gmail.com>
+Subject: Re: [PATCH] dm-verity: do forward error correction on metadata I/O errors
+To: Mikulas Patocka <mpatocka@redhat.com>
+Cc: Akilesh Kailash <akailash@google.com>, kernel-team@android.com, 
+	Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, Milan Broz <gmazyland@gmail.com>, 
+	dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 10, 2025 at 10:22:43AM -0600, Rob Herring (Arm) wrote:
-> 
-> On Sun, 09 Feb 2025 21:09:40 +0530, Manivannan Sadhasivam wrote:
-> > 'global' IRQ is used to receive vendor specific events from the PCIe
-> > controller.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/sa8775p.dtsi | 10 ++++++----
-> >  1 file changed, 6 insertions(+), 4 deletions(-)
-> > 
-> 
-> 
-> My bot found new DTB warnings on the .dts files added or changed in this
-> series.
-> 
+Hi Mikulas,
 
-Ah. I didn't run dtbs check. Please ignore this one, I'll post along with
-bindings change.
+On Mon, Feb 10, 2025 at 7:04=E2=80=AFAM Mikulas Patocka <mpatocka@redhat.co=
+m> wrote:
+>
+> Do forward error correction if metadata I/O fails.
+>
+> Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+>
+> ---
+>  drivers/md/dm-verity-target.c |   19 +++++++++++++++++--
+>  1 file changed, 17 insertions(+), 2 deletions(-)
+>
+> Index: linux-2.6/drivers/md/dm-verity-target.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux-2.6.orig/drivers/md/dm-verity-target.c        2025-02-04 13:52:=
+45.000000000 +0100
+> +++ linux-2.6/drivers/md/dm-verity-target.c     2025-02-10 15:55:42.00000=
+0000 +0100
+> @@ -324,8 +324,22 @@ static int verity_verify_level(struct dm
+>                                                 &buf, bio->bi_ioprio);
+>         }
+>
+> -       if (IS_ERR(data))
+> -               return PTR_ERR(data);
+> +       if (IS_ERR(data)) {
+> +               r =3D PTR_ERR(data);
+> +               data =3D dm_bufio_new(v->bufio, hash_block, &buf);
+> +               if (IS_ERR(data))
+> +                       return r;
+> +               if (verity_fec_decode(v, io, DM_VERITY_BLOCK_TYPE_METADAT=
+A,
+> +                                     hash_block, data) =3D=3D 0) {
+> +                       aux =3D dm_bufio_get_aux_data(buf);
+> +                       aux->hash_verified =3D 1;
+> +                       goto release_ok;
+> +               } else {
+> +                       dm_bufio_release(buf);
+> +                       dm_bufio_forget(v->bufio, hash_block);
+> +                       return r;
+> +               }
+> +       }
 
-- Mani
+Don't we still have to check for io->in_bh before trying to correct the err=
+or?
 
-> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-> are fixed by another series. Ultimately, it is up to the platform
-> maintainer whether these warnings are acceptable or not. No need to reply
-> unless the platform maintainer has comments.
-> 
-> If you already ran DT checks and didn't see these error(s), then
-> make sure dt-schema is up to date:
-> 
->   pip3 install dtschema --upgrade
-> 
-> 
-> New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250209153940.3489-1-manivannan.sadhasivam@linaro.org:
-> 
-> arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: pcie@1c00000: interrupts: [[0, 307, 4], [0, 308, 4], [0, 309, 4], [0, 312, 4], [0, 313, 4], [0, 314, 4], [0, 374, 4], [0, 375, 4], [0, 306, 4]] is too long
-> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-> arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: pcie@1c00000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
-> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-> arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: pcie@1c10000: interrupts: [[0, 519, 4], [0, 140, 4], [0, 141, 4], [0, 142, 4], [0, 143, 4], [0, 144, 4], [0, 145, 4], [0, 146, 4], [0, 518, 4]] is too long
-> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-> arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: pcie@1c10000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
-> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-> arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: pcie@1c00000: interrupts: [[0, 307, 4], [0, 308, 4], [0, 309, 4], [0, 312, 4], [0, 313, 4], [0, 314, 4], [0, 374, 4], [0, 375, 4], [0, 306, 4]] is too long
-> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-> arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: pcie@1c00000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
-> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-> arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: pcie@1c10000: interrupts: [[0, 519, 4], [0, 140, 4], [0, 141, 4], [0, 142, 4], [0, 143, 4], [0, 144, 4], [0, 145, 4], [0, 146, 4], [0, 518, 4]] is too long
-> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-> arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: pcie@1c10000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
-> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-> arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: pcie@1c00000: interrupts: [[0, 307, 4], [0, 308, 4], [0, 309, 4], [0, 312, 4], [0, 313, 4], [0, 314, 4], [0, 374, 4], [0, 375, 4], [0, 306, 4]] is too long
-> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-> arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: pcie@1c00000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
-> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-> arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: pcie@1c10000: interrupts: [[0, 519, 4], [0, 140, 4], [0, 141, 4], [0, 142, 4], [0, 143, 4], [0, 144, 4], [0, 145, 4], [0, 146, 4], [0, 518, 4]] is too long
-> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-> arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: pcie@1c10000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
-> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-> arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: pcie@1c00000: interrupts: [[0, 307, 4], [0, 308, 4], [0, 309, 4], [0, 312, 4], [0, 313, 4], [0, 314, 4], [0, 374, 4], [0, 375, 4], [0, 306, 4]] is too long
-> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-> arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: pcie@1c00000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
-> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-> arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: pcie@1c10000: interrupts: [[0, 519, 4], [0, 140, 4], [0, 141, 4], [0, 142, 4], [0, 143, 4], [0, 144, 4], [0, 145, 4], [0, 146, 4], [0, 518, 4]] is too long
-> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-> arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: pcie@1c10000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
-> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-> 
-> 
-> 
-> 
-> 
+Overall, it would be nice not to duplicate code here. Should the
+metadata error correction / handling be moved to a separate function
+similar to verity_handle_data_hash_mismatch?
 
--- 
-மணிவண்ணன் சதாசிவம்
+Sami
