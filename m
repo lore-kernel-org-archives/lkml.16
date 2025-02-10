@@ -1,98 +1,214 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E871F259498;
-	Mon, 10 Feb 2025 22:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B2725A2A0;
+	Mon, 10 Feb 2025 22:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739228345; cv=none; b=i9ZyrBx0zLRLfOkDImwyZEsKQGDosS8kfmf/mGM6EzbQz8WNUWYDK58R7J6nFFAseaxHGd+g3F6nQBgtzD6P0e3zM15CRYeMiA5vwfqUU2zQP5yRlgkqaLMNao56Lp6BJCByZMOPevGAQ+RDfNioTcnKHwGwpzcPSLQYOEkKruc=
+	t=1739228363; cv=none; b=db7rp3uurhRUNZl4AuRPPwfCsf0H7umtgK9F9aZ5mN/RGciO3e3QixxJhLdg4rzMIdvcHujyUS0WWZAA6Cttnwk+7Vq4lfet/DVnc4tVXhUHQjrZmz3TZovRjkRWkfjWgUpAYaiRMj9Z30KM4mcrn4Ue8MFmq4Mi94EgNsuHsZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739228345; c=relaxed/simple;
-	bh=Fk1azYuFQHAswP5Ho7T+xUf6Gp56bO005ZzH+4Da4QM=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=ehdtrUbpdupEhIBFOWIi8LejDgq7S2Ei4ctpLmPUw2bPOBJZjHLwoKLnDr7yLSwsMZjEY+QR7E+C0r67r44l3HTc11KXQ82odc68hIODHMusUEc2cO2o03Enyr5wkpElR4vI6BxOtsE1NwMZJ9SeV0grXaAwEAaXOO9S8bvizc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=17+NwEOm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iWp8JE66; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1739228363; c=relaxed/simple;
+	bh=4BmVgtFfIJgP4OjSwUDhetxgVThq3OFA95bzZfO6Z/E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Zt8MMMezLfrGX52vCgthg3rJNZd4xfkhXERPEkqJieSKimrBEmZGgRG9sAFR2aMg8X7G6CMCTtp2kZnp5Rq2wyyyt2RgRZmJzumo744BNTKFlqHh1E45UT77JjdzNiEU4TS/9VqdCxP68Z5WYbiA3fmV7XpUOYULv42R/RKAw2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Hu5BmcL6; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="17+NwEOm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iWp8JE66"
-Date: Mon, 10 Feb 2025 22:58:58 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739228341;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=9vFG05ZBCSIl92GevUiwsuMRZtjcIfxZJzJtSVWIBGw=;
-	b=17+NwEOm9Wub+LpA15oz8nnHaadZnORqW+C3yv3bsCdpHVCjiCnlsB8s8RLnV+ljn7ybN5
-	elsEmK8+hsceYcDtqrS4Yr0CjSKgpK/g545ryQW62YXl615t39gqWH3q1/FJOF9YTeGN/Y
-	zmVIzYWPJNycSmxQ/iU3PFH2cMEdDgvyj7Ca331QiPI7Y6k4yZCfSrRg+8FYSK/SVLg8Bc
-	ZhxnC4dGkg5KgyWFR53BSE/wG4h//o5Tnt13rvKQWuJ5W/fBuge1EEM4LbT0OFimreKrXX
-	UVvFlxihaLXzQZiUUQHpxNZC7oX/LNiCjlo8tCbU98Uh/Y+72Abs7PVFF39O+A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739228341;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=9vFG05ZBCSIl92GevUiwsuMRZtjcIfxZJzJtSVWIBGw=;
-	b=iWp8JE66kAaqE0gwEua0081BogyTDOUK0XqeYLXXkQTQLFmIwpvsKSSocrXsVa+rIdwiLl
-	2OvI4iHCSgppCrDg==
-From: "tip-bot2 for Eric Biggers" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/fpu] x86/fpu: Fully optimize out WARN_ON_FPU()
-Cc: Sean Christopherson <seanjc@google.com>,
- Eric Biggers <ebiggers@google.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Hu5BmcL6"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51AMxEhs3582864
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Feb 2025 16:59:14 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1739228354;
+	bh=JEXUShHNRenNyRTEL2PwMfqNH0qq/WGIeVNVkj/epB8=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=Hu5BmcL6uVX6yTdS8dbLvJBtXt+QODW9pTyD4ZE7+Cx+1m3iERba9xwjMLES2+dcg
+	 Us/nEzHo1/QYkn4Kx/DXwh4wuxVQ2mRSoSM2l0UtMeiabYePAqSDqYgD/jLy+NUb0H
+	 1mSJhRT7FW1vnVzRjiH4s9Nw3wGz/8c1BFuVVS2s=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51AMxExg030370
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 10 Feb 2025 16:59:14 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 10
+ Feb 2025 16:59:13 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 10 Feb 2025 16:59:13 -0600
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51AMxDBO029713;
+	Mon, 10 Feb 2025 16:59:13 -0600
+Message-ID: <aacaa1fa-1be3-4b84-8764-bcfb63d4c8d8@ti.com>
+Date: Mon, 10 Feb 2025 16:59:13 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173922833909.10177.3477028255611601484.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 05/10] arm64: dts: ti: k3-am62a7-sk: Enable IPC with
+ remote processors
+To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Hari Nagalla
+	<hnagalla@ti.com>
+References: <20250210221530.1234009-1-jm@ti.com>
+ <20250210221530.1234009-6-jm@ti.com>
+Content-Language: en-US
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <20250210221530.1234009-6-jm@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-The following commit has been merged into the x86/fpu branch of tip:
+On 2/10/25 4:15 PM, Judith Mendez wrote:
+> From: Devarsh Thakkar <devarsht@ti.com>
+> 
+> For each remote proc, reserve memory for IPC and bind the mailbox
+> assignments. Two memory regions are reserved for each remote processor.
+> The first region of 1MB of memory is used for Vring shared buffers
+> and the second region is used as external memory to the remote processor
+> for the resource table and for tracebuffer allocations.
+> 
+> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+> Signed-off-by: Judith Mendez <jm@ti.com>
+> ---
 
-Commit-ID:     ccb7735a1ea22621f21c3133e4f5f3da5fe5f5b7
-Gitweb:        https://git.kernel.org/tip/ccb7735a1ea22621f21c3133e4f5f3da5fe5f5b7
-Author:        Eric Biggers <ebiggers@google.com>
-AuthorDate:    Mon, 27 Jan 2025 14:45:23 -08:00
-Committer:     Dave Hansen <dave.hansen@linux.intel.com>
-CommitterDate: Mon, 10 Feb 2025 14:45:59 -08:00
+Acked-by: Andrew Davis <afd@ti.com>
 
-x86/fpu: Fully optimize out WARN_ON_FPU()
-
-Currently WARN_ON_FPU evaluates its argument even if
-CONFIG_X86_DEBUG_FPU is disabled, which adds unnecessary instructions to
-several functions, for example kernel_fpu_begin().  Fix this by using
-BUILD_BUG_ON_INVALID(x) in the no-debug case rather than (void)(x).
-
-Fixes: 83242c515881 ("x86/fpu: Make WARN_ON_FPU() more robust in the !CONFIG_X86_DEBUG_FPU case")
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lore.kernel.org/all/20250127224523.94300-1-ebiggers%40kernel.org
----
- arch/x86/kernel/fpu/internal.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/fpu/internal.h b/arch/x86/kernel/fpu/internal.h
-index dbdb31f..975de07 100644
---- a/arch/x86/kernel/fpu/internal.h
-+++ b/arch/x86/kernel/fpu/internal.h
-@@ -18,7 +18,7 @@ static __always_inline __pure bool use_fxsr(void)
- #ifdef CONFIG_X86_DEBUG_FPU
- # define WARN_ON_FPU(x) WARN_ON_ONCE(x)
- #else
--# define WARN_ON_FPU(x) ({ (void)(x); 0; })
-+# define WARN_ON_FPU(x) ({ BUILD_BUG_ON_INVALID(x); 0; })
- #endif
- 
- /* Used in init.c */
+> Changes since v4:
+> - Add "status = okay" for mailbox nodes at the board level, disabling of
+>    mailbox nodes in voltage domain .dtsi files will come in a separate
+>    series
+> ---
+>   arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 96 +++++++++++++++++++++++--
+>   1 file changed, 90 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+> index a6f0d87a50d8a..ac67c51caa211 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+> @@ -49,6 +49,42 @@ linux,cma {
+>   			linux,cma-default;
+>   		};
+>   
+> +		c7x_0_dma_memory_region: c7x-dma-memory@99800000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0x99800000 0x00 0x100000>;
+> +			no-map;
+> +		};
+> +
+> +		c7x_0_memory_region: c7x-memory@99900000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0x99900000 0x00 0xf00000>;
+> +			no-map;
+> +		};
+> +
+> +		mcu_r5fss0_core0_dma_memory_region: r5f-dma-memory@9b800000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0x9b800000 0x00 0x100000>;
+> +			no-map;
+> +		};
+> +
+> +		mcu_r5fss0_core0_memory_region: r5f-dma-memory@9b900000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0x9b900000 0x00 0xf00000>;
+> +			no-map;
+> +		};
+> +
+> +		wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9c800000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0x9c800000 0x00 0x100000>;
+> +			no-map;
+> +		};
+> +
+> +		wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0x9c900000 0x00 0x1e00000>;
+> +			no-map;
+> +		};
+> +
+>   		secure_tfa_ddr: tfa@9e780000 {
+>   			reg = <0x00 0x9e780000 0x00 0x80000>;
+>   			alignment = <0x1000>;
+> @@ -60,12 +96,6 @@ secure_ddr: optee@9e800000 {
+>   			alignment = <0x1000>;
+>   			no-map;
+>   		};
+> -
+> -		wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
+> -			compatible = "shared-dma-pool";
+> -			reg = <0x00 0x9c900000 0x00 0x01e00000>;
+> -			no-map;
+> -		};
+>   	};
+>   
+>   	opp-table {
+> @@ -737,3 +767,57 @@ dpi1_out: endpoint {
+>   		};
+>   	};
+>   };
+> +
+> +&mailbox0_cluster0 {
+> +	status = "okay";
+> +
+> +	mbox_r5_0: mbox-r5-0 {
+> +		ti,mbox-rx = <0 0 0>;
+> +		ti,mbox-tx = <1 0 0>;
+> +	};
+> +};
+> +
+> +&mailbox0_cluster1 {
+> +	status = "okay";
+> +
+> +	mbox_c7x_0: mbox-c7x-0 {
+> +		ti,mbox-rx = <0 0 0>;
+> +		ti,mbox-tx = <1 0 0>;
+> +	};
+> +};
+> +
+> +&mailbox0_cluster2 {
+> +	status = "okay";
+> +
+> +	mbox_mcu_r5_0: mbox-mcu-r5-0 {
+> +		ti,mbox-rx = <0 0 0>;
+> +		ti,mbox-tx = <1 0 0>;
+> +	};
+> +};
+> +
+> +&wkup_r5fss0 {
+> +	status = "okay";
+> +};
+> +
+> +&wkup_r5fss0_core0 {
+> +	mboxes = <&mailbox0_cluster0>, <&mbox_r5_0>;
+> +	memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
+> +			<&wkup_r5fss0_core0_memory_region>;
+> +};
+> +
+> +&mcu_r5fss0 {
+> +	status = "okay";
+> +};
+> +
+> +&mcu_r5fss0_core0 {
+> +	mboxes = <&mailbox0_cluster2>, <&mbox_mcu_r5_0>;
+> +	memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
+> +			<&mcu_r5fss0_core0_memory_region>;
+> +};
+> +
+> +&c7x_0 {
+> +	mboxes = <&mailbox0_cluster1>, <&mbox_c7x_0>;
+> +	memory-region = <&c7x_0_dma_memory_region>,
+> +			<&c7x_0_memory_region>;
+> +	status = "okay";
+> +};
