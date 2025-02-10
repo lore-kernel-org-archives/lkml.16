@@ -1,198 +1,262 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from YQZPR01CU011.outbound.protection.outlook.com (mail-canadaeastazon11020110.outbound.protection.outlook.com [52.101.191.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7EB248163
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25E3244195
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:09:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.191.110
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739203734; cv=pass; b=dSPxmskndiqcRYxD3qsDoJaBXPEgP6viIwat2hUqlUs14oFyDi6LM/6bjfNYvWcHoprPV8wNvc/hZadi8l3x+NHLB8njByoek1dtaqQsNBwGwjxqH/Qmwi0qcl6fX99Ks1YpzYKd7eC/gjLc2fyg2DqPNH5OxzHedg6Rxp6KKr8=
+	t=1739203770; cv=fail; b=q0TRslUT7ocKeD9521IvFxwSTy5W7CoK5hzV9NVhCfxeWUWidA/2pD/vhGu2aBg4GeBdssmfEo4AzAC/VubFS+1j0eF5MCRjaLIf1KkLGJodESCILvcjE7kiC0NNxaUxcmrOHODQu1a2iZxhCf3Oiguq62jqoMGH0ygiY/RegzU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739203734; c=relaxed/simple;
-	bh=nByfKDtFTqYeFinOh5Q68jw79qqfpsdMdSbncLh+gT4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dXsSZaEGhIgZe+3SI1QufdEk+fduWoNtnbln94yRdC1rUZ5tTmzZBtM0LAaLv77Yd1x2dxwl9GdBN5M8gLKndKE+2H+86eRYtD7hDg8yWXGT91ZiRnpkpl7Sf4YKHy8JkD3v4ENuroVshSijIbxEVhiTfQsNCG3MDbUyemvoyYk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=fuUahoBE; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1739203770; c=relaxed/simple;
+	bh=i4BfPEhK6pUfjQa2A3ogzFnwC5O0zoNDPYoPyVclcek=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=dB0ZOoqd/W6ZyBr6m0GTUFEAToISIdBeyYTxVk8yP42GOxFLBIhwQVTKvfE+WB4V9LdOYJk7q2+LeuAOPkxC17tn8/Q1TreQ9Wkc0lAmZbPZuYDyspuA4zTkbS7oVnnD71mXBJQdG7Ths9a2SuiwT07ydbMR3DBL2p09BwV3uLg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=shKt6kX3; arc=fail smtp.client-ip=52.101.191.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="fuUahoBE"
-ARC-Seal: i=1; a=rsa-sha256; t=1739203712; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=P2gY5tl3uLkatbuI6+rEwk1wrEoYl/sH+zxT21GTnwJ7oR8ojQd8Z7boyp7hxELkoPpzKy8XE7UO25t9sykei4rIVzkvr/moylmsCHX3fd6ZEHMq5plMB7UIQMporz4kxKIw8BchQblBOq7RgD+uKXJn2K2GxkaHxFupWCHkdso=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739203712; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=+ob1WuK6xNBwD3y6k/heRw1f5sBx51V2zEStLR7x4Vc=; 
-	b=n9ofU8b98Fzc7tL19FwICapAJAP0AbC54wsuBUi4/6tFAqLLp298j02PBSrkj5mSkvQxt7XBVc27VHcJShAHvWbVnjjEZp6jdYFpiUe4EO+W7lu34zVQymcV/33OmprHAsl9/9bvOx7R3N/UWRQ0aaBQKCCVw/tMHX7Ag0olKK8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
-	dmarc=pass header.from=<adrian.larumbe@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739203712;
-	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:Message-Id:Reply-To;
-	bh=+ob1WuK6xNBwD3y6k/heRw1f5sBx51V2zEStLR7x4Vc=;
-	b=fuUahoBEzWnJqq+Vl0QTwhYm74g89FW4u6CX4mcsO3e6lGYo2sRetOR9/AVSl003
-	79Qt+kDMZcTxaCg9K4X5rGz43UVIyfi0UDilR9ybvbnPolCHPnPTpNuslyMr9aLZhA8
-	1CUkazzQtknrHRglQOWkHASho+kxNFvn21FB0crU=
-Received: by mx.zohomail.com with SMTPS id 1739203709782958.0465672894181;
-	Mon, 10 Feb 2025 08:08:29 -0800 (PST)
-Date: Mon, 10 Feb 2025 16:08:26 +0000
-From: =?utf-8?Q?Adri=C3=A1n?= Larumbe <adrian.larumbe@collabora.com>
-To: Tvrtko Ursulin <tursulin@ursulin.net>
-Cc: Boris Brezillon <boris.brezillon@collabora.com>, 
-	Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, kernel@collabora.com, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] drm/panthor: Replace sleep locks with spinlocks in
- fdinfo path
-Message-ID: <ddnsckbpr2fcxby4i2o5xyrt3pdhornzbrvlbivuvzlyhgg66q@ejhkiz33sewn>
-References: <20250210124203.124191-1-adrian.larumbe@collabora.com>
- <2ec2a848-90f4-49bc-aaaf-8eb256f271db@ursulin.net>
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="shKt6kX3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mcWxnsmmwlI5ojXuqbF/olQTmE+Z4GIOXZpDDRvKhAWmtI53AHCAapg6T+xvPBZBEfK3isAks9noMvo1m4LGkvCvSmLpUO+BK5Id6OshWwd3CzuAofG3xB/YVE0fJd3Rkegz5/iGrN0bgU1Nj1sfmKYRvmj+OJ+ElFpmv7I5AJ++nP1Wcpm+Y0Fvo7MXArQzm9AfbiKShdDkpERcrjnj6J7aHVahdDuFYIj0OBy7qiGWxQPf67Dltd5FLAEkfH6HtCTEggTJieSbVQObjqX4StMfx0kLtcXqU+Iu44Rw+0YvygG/DxNiRRb2cQ1Br9xr1+gkRzOod2Cw847nitkThg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rAH7jm/eaUTFDWADmMRO+tWAQwTO5e2EdyV9v51qJF0=;
+ b=F+H3ecxbhB8FofYC39k8d5TOnZ4tMas4hctHWjOTuBzW/9htWE6DXIzd9L/PiA8oJ2AFEpCk1S/KQX1VCgsQgmTTaSEKtXIc5TmbAtKY6Wuk4EkmsLsEc0dTt2y+sm0pZCxtK7qXWRJ6dsylmu+TWl2pARZuYdmtN8wegw0+QgJBh7XFo6DOQk4gM1wrBLJWoqt0sDLv+8v3riKTSGzMs/S6hn/s891TFwCuB9itfXndwnRLRwGCbckd+PkOPkVYTJ/ohkR1uz5zMNkdmrYKwpEpwllg+S/nGHik3noGQa34OGYe3HbiwhoCvM27+tazcPxvVN2p6U9fLbT7HJJDLA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
+ dkim=pass header.d=efficios.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rAH7jm/eaUTFDWADmMRO+tWAQwTO5e2EdyV9v51qJF0=;
+ b=shKt6kX3yPyWbHyE2h5R3qZd6X1XPCf/xM6v5Cga7vFPMznrXQz+sSmEtSp8YtG82iSqIza1rYfZwIH6iR8dcXrrq4ah52p1Y4cIlrXyZ3QooJ+atmIg0AoiwwOAJmPjbRRLWaO8iwE0U5Aw+Qx7x7g30RmBHEAaHIvxkiXdCSm9ciA9yIn0KDBiQ80O+VaOW3OFyGQhaR4FWJl2OTtIj4fm99O8F9STy16jbpmyp5nB3ohrIK7o0t63fwEIL49Ias4t5M2ccMk26fZPMWBDbwycZ9A5aaNJMuHWGQlZKuz8XlPCWb1wqTUSClDQs6JUNwOww35qFeTOFVOAbV0nOA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=efficios.com;
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
+ by YT4PR01MB10421.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:e7::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Mon, 10 Feb
+ 2025 16:09:25 +0000
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::50f1:2e3f:a5dd:5b4]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::50f1:2e3f:a5dd:5b4%4]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
+ 16:09:25 +0000
+Message-ID: <efa8561c-b417-4b75-b93a-f149c35335b3@efficios.com>
+Date: Mon, 10 Feb 2025 17:09:19 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 0/3] sched: Restructure task_mm_cid_work for
+ predictability
+To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>, Shuah Khan <shuah@kernel.org>
+References: <20250210153253.460471-1-gmonaco@redhat.com>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Language: en-US
+In-Reply-To: <20250210153253.460471-1-gmonaco@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YQBP288CA0011.CANP288.PROD.OUTLOOK.COM
+ (2603:10b6:c01:6a::22) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:be::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2ec2a848-90f4-49bc-aaaf-8eb256f271db@ursulin.net>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT4PR01MB10421:EE_
+X-MS-Office365-Filtering-Correlation-Id: e8a8b8b3-9df0-4a6a-54ac-08dd49ed49ff
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UkhXSkhCZHY5eU51TUdJbVVpdjNORC81em9YbEFvWlVCZzRHZWE4dHQ2OGY2?=
+ =?utf-8?B?V1lIVDdZQ3BmSDhzaXdINEZ4VmxmVEFuajd1Z1lMM0crc3pRTVM0YlJJMGlK?=
+ =?utf-8?B?QVF6bWcwVXZSNXZibVZ1SWpWdGtWMmtGeFRETGpVODQ3NVhSTWlwYUFuQXJl?=
+ =?utf-8?B?UGlwYU1NSHNUQlJNU2UzY2hyVFVqMUVSOGZWVWdiVXZSNWZpOGpMeGh3WUsr?=
+ =?utf-8?B?UDluanpMZ3c5dXAwTk15YlJHNHJUdE9pVEpCeERBdHpPMVRIMmY1a2gvdGRm?=
+ =?utf-8?B?N3hDaVduKzRBK2Voc3ZiUHpCT2hTYVJTVWNOaU5KWlQ0RGVBeVRwMXNsYS9J?=
+ =?utf-8?B?dU04Z2RNTUJ4amc0dzN0bUVFa1JHR3dCZXpoTUNyUXo0VGpJRVpLTVI0c01k?=
+ =?utf-8?B?ajZrNXJDemd2NDlKc0RSRk5Wd1gyZkdTMkZZUWRDSllyZGY0b0lVY2w3QUxE?=
+ =?utf-8?B?ZVJaS0lEYVNNS0pLR0pEY2IrTVNOejR1dTNjNVJ4ZXVHS01hOUR5R01ydU5z?=
+ =?utf-8?B?RXNoSUdDcUl4SVpndGdlZ2dwSWhqL2VCbk02WEkzRjZoWlJtczlFcUt0Z2tO?=
+ =?utf-8?B?bkdmUUhzRkNCajhFZkVkQkNMZ3UyKyt0dzRYclNQVnJaL1dKZUFIZDRIcW1D?=
+ =?utf-8?B?NHZDRFdPUllBanRvSFYzczlZbkVsUEZRRTA0dFJxN2lyU0hMMlBKWFNhTDM5?=
+ =?utf-8?B?YVlVRGdkT0Y5OGtzaXh2anptaEx6VEZGYkpTOEJGaFhmSlFxWTYrQUU5SUFa?=
+ =?utf-8?B?RjRrNi93b01Gcm5yMkJTcWFMTkJhem1FRFIvVWprZTY1N245SVpad2dlbW5S?=
+ =?utf-8?B?YU04bFlPeFpoVXk3djZiN2x6ZFBkWHNxMXZNM2hJNHo3Qkx0MzBIQWlkQmx2?=
+ =?utf-8?B?YVgzSGg3S3JkOWlxMVBJMU82OHBDcW11MDRETVZPQm9FancxTE4ybVdONity?=
+ =?utf-8?B?VFFNVkE5bHdBZTNYQlIrSXRjWXZEcjFuc3JPeTBqelhYZGZERUJKMVFBNmhz?=
+ =?utf-8?B?V2tyOFNGUkE3RUIrekcwUkxwZ3hRVjRCQTZIVmNGOVA3bW1Gdm01bnVzcVBj?=
+ =?utf-8?B?TCsybTloNzdMRXVTS1ZzSnJLcWFkQnlyTDh6aXVaUjRLWnNNV1g2clpIb21p?=
+ =?utf-8?B?QjFReC9ROWNFWUlwSmtsTTFxZWM5NDNSTEQxUkVOMUZvc3hqa3pvM0tuaHpL?=
+ =?utf-8?B?amltSm9mWk9tTDNUVDZBekU4WWRCeEhrMTU5cmUxaWF5bmlZelpuMXF6YTlL?=
+ =?utf-8?B?MXgxS2JoWUUxSkdDZzEzZEJZbmhpU3Z2Q0JZNWNlelpXTk83aGhxN0dPa2Ir?=
+ =?utf-8?B?UlZsNWN2VGFTMlBQQ0pvZ0xYRUJIS3Z5dENzY0kwUDdncjR5YmhySnNkUkxz?=
+ =?utf-8?B?WTI4NmVkaVk0OGViVEVGa2NraTZtS0pRSkd5YjRwdHNsSUE3anBZNVZsMjV5?=
+ =?utf-8?B?UitjcFh3QXFqNjdwNWczOVJOckwzT2dHdzVxMVl4THZ3M1dlQTJueGQ0VW9k?=
+ =?utf-8?B?ZTlHY2xuOTR2RStKZWkxR255UVNZVzhTNE1VRGM5VzRKUmhyQzZGcmRrUjhy?=
+ =?utf-8?B?S0RCbERVS3cxWktKTlRsMGlkQlZEcW41bHI2UHFuTytRUU91dlpVVmt4d0sx?=
+ =?utf-8?B?LzUvUUpaSS9BL0NYaVZ3S0cxTUl3MjgzaTBWMTZEM1U4ZFZ4NldVNk9iRW9D?=
+ =?utf-8?B?c0orNWp6amxtQXZhcHlaVFMrR0Q3WEdsWnZpemQ0ZG13UGgvYVNhc3hQOUdo?=
+ =?utf-8?Q?TWmnXPkmDjvsdhgsZN/JkTKxcVD4V5O8upVlwsy?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cE1reExWY0pPSWs4VTFucE9oQ2pJaktsN3g0VlVONXZRaWxVbnNXb1d0ZnZR?=
+ =?utf-8?B?SGh0Y25pSDJGTWV6ZGxKb0VBUXV6NTBlRHlhK2lZcitzU2R3NG9ndW9SNkpo?=
+ =?utf-8?B?T3pjc2Jra2RWcWhoRW5SeWRuOXFDUEg0ei9VR2E2S040YS92SjB3QXNBTGRR?=
+ =?utf-8?B?QjVxcGhHTXRENVhTbjVhYlJVOUl0NFJVVEN0N0NTWERMQ2ZWbW9KaFZRZnJ5?=
+ =?utf-8?B?WnU2L1YvTW11TEk0WVFyZ1ZDeXhySm1GYUQ4b0JzSGxMVWxrME4zdlBtWGRR?=
+ =?utf-8?B?eWZzNEhEUS94UDNacm4wSjFER1dZdEZSZDdzTmdKNTRZL0FYTmNDMkVQYVFx?=
+ =?utf-8?B?eUNPajNCaHp0TERDR1prYWxIRjJFbHAvdnRUYkF1VUV3Vk1UdUdXU2lpUlN0?=
+ =?utf-8?B?VnhPUTlUT0Q4SDk4bklhL1JNRzZwSFc1TmJKZCt1TGgvd2tOYkN0NTQ0Vy9B?=
+ =?utf-8?B?MkUyMnJLTUk2VjVXZUFUek1pSVBTdE9EVzhxRURwcVFmMHdnbzFhT1A1ZUtj?=
+ =?utf-8?B?RWFHNlJyY1NBaUpIcTVITTczM0FRNVM2SVM0eFplcmhWSjB0bWM3UGxOR294?=
+ =?utf-8?B?cHVZc3lBbXVDYmw1K2psbWxFUGp1UjhZVzQrK0p3Y2FZUUt6Z3N4MER3aGUz?=
+ =?utf-8?B?TUl4MW5KMlcrOGdScjJSc0R5Qmt4N0ZmSnd5SWJ3ZWxSaisySUpidzJOWFlx?=
+ =?utf-8?B?M1JNdnVhTlFDTW9HaWFiRzd5UWlNZzlGWmFPTXhiY3U0bGFxV29BZHk4MXpp?=
+ =?utf-8?B?cXZCWG4rUjZ4WXl3QXBieDdRVGNNNnlRbUtzVVFORHZPS1FWVHRHTE9sV29l?=
+ =?utf-8?B?TURzd0t3MmNHUmhKTENIMjVuRDhlWDlHQy9Za2pYQTlLY0d0aTZuYXRmOGFQ?=
+ =?utf-8?B?TnppTDhUQkhsZDdpL3MwUTV6QkdBbSsrOWtKQ3FPVVlWUUhFTVlGdGhoMmpR?=
+ =?utf-8?B?Q1ZNYjVaZTFTRjk5Z2VzNlZLVHhZNFJ5NmF5MUMxQkhpRlF4dkEzRlByRTEr?=
+ =?utf-8?B?bTFYdFZMbU5FbDBYbUlPMXVnc3RzR1VaenlUeVI3Y2lzVjczYjZudmZPS29u?=
+ =?utf-8?B?M0RGR2xuajN5MytyNEMwQVBsaUhNdUlZejhUODZyNXUrdk13RFJFbmFmY2la?=
+ =?utf-8?B?enIvQmp5ZUNBenRCb0VyTzMxTUkyWkp3b2g2aUs4UTA5TWhPUUNsNTY1b3Ay?=
+ =?utf-8?B?Njd1ZnorUzM3WDg1MER4SFFsTXI1QVRveGNqSjlROFdjNndXZDJFMnA0YjNk?=
+ =?utf-8?B?OGVwa0U3TGFXcEU0VTZ4RWk0NU1wNFNnVEVTSjV0Um1OY3QrczlxSURTVEl6?=
+ =?utf-8?B?NE5ORVhiTmVDWDRkSTZqRllFbEs1NUJCZ3VRQ3kzVGtXMWZ3WmFkY1JobmxQ?=
+ =?utf-8?B?MlZ5WjZwZjhUcTN4TWVIdE9XVm9qK3R0NnVIcHZ5VzZvQ0pZVlVvNHZtSG54?=
+ =?utf-8?B?REJMcTM5RHNzSTYrbXphdUg2MHZ1cFRGa21oaWdsMDBmN3NnSlh1SVE3NkZ0?=
+ =?utf-8?B?aHBUeTBub1c3VTdlb0pWcUY3UEd5OWZhUEI3T2VLUDBaYkpqNmFqdlovV2FE?=
+ =?utf-8?B?TmMxVVVIZVJubWZ0VXEyL29RRDAxRU1lZER2UFdFZkxrdyttMDdLV3Q1Znc1?=
+ =?utf-8?B?TWFtdXYrZEFqaWpiWjRYVHJjcWdUYVRwR3QreXBBS0F1dWJ3YmRINTRQbDAr?=
+ =?utf-8?B?clkzNWtTcStOMnFtT082UFRHdlU4K2svb0l1eFY4WDYybG43Q1cvUmJHT2xF?=
+ =?utf-8?B?T0l0dnR3UzlOWWt6OEJuRHZvdU9IY2hzR0tPOXV2K1dmdlNqcXo0ZUdOSzlT?=
+ =?utf-8?B?SS9YR09sVU9FSE5FVW1CRjJyNVl2dDJzNGE3RDRIUysxUURiVDFtcDQydGdn?=
+ =?utf-8?B?ajBzcWNOVm8xNGJSNHBLSmM0Vng0MHhvRCtYb2I2SEFqeTBSVGZvZTM2ZnFw?=
+ =?utf-8?B?ZGtRUWFGM2s4WGZzczI2L0YwanZXNFBhYXJuYlFEb2d1TDZJVjA1SXo1Tk5q?=
+ =?utf-8?B?aXBXaWlDTnQ5VG8vL29oc0ZFZTM4bFJIN0VLcFhBRWhlUUROOXN1WTZ1ZkFR?=
+ =?utf-8?B?WWFrdGE4ZGRDSStlUllBb0lIUVp5UUlmV0xhUUdsVE5vQnNtVXZFS2x3SHJP?=
+ =?utf-8?B?dysrZVhsQ041dzBJUkZURVBKUnFUZ25XblRQWnp4OG51SHpnS2NKbHNjbDJB?=
+ =?utf-8?Q?m+yece0NfBDiuibPz+wTicg=3D?=
+X-OriginatorOrg: efficios.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8a8b8b3-9df0-4a6a-54ac-08dd49ed49ff
+X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 16:09:25.5437
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iJl5ABdmcIQLfTulzUb0i5Bbdod37VJ+znWRJ10HOY8BRaOnctlpQprh6dNVNWl3iQFlW7QBL7Don4KQlpJemqhFmA3QYWcyUdHTtxQxlPY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT4PR01MB10421
 
-Hi Tvrtko,
+On 2025-02-10 16:32, Gabriele Monaco wrote:
+> This patchset moves the task_mm_cid_work to a preemptible and migratable
+> context. This reduces the impact of this task to the scheduling latency
+> of real time tasks.
+> The change makes the recurrence of the task a bit more predictable.
+> We also add optimisation and fixes to make sure the task_mm_cid_work
+> works as intended.
 
-[18153.770244] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:562
-[18153.771059] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 203412, name: cat
-[18153.771757] preempt_count: 1, expected: 0
-[18153.772164] RCU nest depth: 0, expected: 0
-[18153.772538] INFO: lockdep is turned off.
-[18153.772898] CPU: 4 UID: 0 PID: 203412 Comm: cat Tainted: G        W          6.14.0-rc1-panthor-next-rk3588-fdinfo+ #1
-[18153.772906] Tainted: [W]=WARN
-[18153.772908] Hardware name: Radxa ROCK 5B (DT)
-[18153.772911] Call trace:
-[18153.772913]  show_stack+0x24/0x38 (C)
-[18153.772927]  dump_stack_lvl+0x3c/0x98
-[18153.772935]  dump_stack+0x18/0x24
-[18153.772941]  __might_resched+0x298/0x2b0
-[18153.772948]  __might_sleep+0x6c/0xb0
-[18153.772953]  __mutex_lock_common+0x7c/0x1950
-[18153.772962]  mutex_lock_nested+0x38/0x50
-[18153.772969]  panthor_fdinfo_gather_group_samples+0x80/0x138 [panthor]
-[18153.773042]  panthor_show_fdinfo+0x80/0x228 [panthor]
-[18153.773109]  drm_show_fdinfo+0x1a4/0x1e0 [drm]
-[18153.773397]  seq_show+0x274/0x358
-[18153.773404]  seq_read_iter+0x1d4/0x630
-[18153.773411]  seq_read+0x148/0x1a0
-[18153.773416]  vfs_read+0x114/0x3e0
-[18153.773423]  ksys_read+0x90/0x110
-[18153.773429]  __arm64_sys_read+0x50/0x70
-[18153.773435]  invoke_syscall+0x60/0x178
-[18153.773442]  el0_svc_common+0x104/0x148
-[18153.773447]  do_el0_svc+0x3c/0x58
-[18153.773453]  el0_svc+0x50/0xa8
-[18153.773459]  el0t_64_sync_handler+0x78/0x108
-[18153.773465]  el0t_64_sync+0x198/0x1a0
+Ingo, Peter, this series is ready to be pulled into tip.
+
+Thanks!
+
+Mathieu
 
 
-On 10.02.2025 15:52, Tvrtko Ursulin wrote:
-> On 10/02/2025 12:41, Adrián Larumbe wrote:
-> > Panthor's fdinfo handler is routed through the /proc file system, which
-> > executes in an atomic context. That means we cannot use mutexes because
-> > they might sleep.
 > 
-> Have the debug splat at hand? I am thinking it is not because of fdinfo reads,
-> which are allowed to sleep, but has to be something else.
+> The behaviour causing latency was introduced in commit 223baf9d17f2
+> ("sched: Fix performance regression introduced by mm_cid") which
+> introduced a task work tied to the scheduler tick.
+> That approach presents two possible issues:
+> * the task work runs before returning to user and causes, in fact, a
+>    scheduling latency (with order of magnitude significant in PREEMPT_RT)
+> * periodic tasks with short runtime are less likely to run during the
+>    tick, hence they might not run the task work at all
 > 
-> Regards,
+> Patch 1 allows the mm_cids to be actually compacted when a process
+> reduces its number of threads, which was not the case since the same
+> mm_cids were reused to improve cache locality, more details in [4].
 > 
-> Tvrtko
+> Patch 2 contains the main changes, removing the task_work on the
+> scheduler tick and using a delayed_work instead.
+> Additionally, we terminate the call immediately if we see that no mm_cid
+> is actually active, which could happen on processes sleeping for long
+> time or which exited but whose mm has not been freed yet.
 > 
-> > This bug was uncovered by enabling some of the kernel's mutex-debugging
-> > features:
-> > 
-> > CONFIG_DEBUG_RT_MUTEXES=y
-> > CONFIG_DEBUG_MUTEXES=y
-> > 
-> > Replace Panthor's group fdinfo data mutex with a guarded spinlock.
-> > 
-> > Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
-> > Fixes: e16635d88fa0 ("drm/panthor: add DRM fdinfo support")
-> > ---
-> >   drivers/gpu/drm/panthor/panthor_sched.c | 26 ++++++++++++-------------
-> >   1 file changed, 12 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
-> > index 0b93bf83a9b2..7a267d1efeb6 100644
-> > --- a/drivers/gpu/drm/panthor/panthor_sched.c
-> > +++ b/drivers/gpu/drm/panthor/panthor_sched.c
-> > @@ -9,6 +9,7 @@
-> >   #include <drm/panthor_drm.h>
-> >   #include <linux/build_bug.h>
-> > +#include <linux/cleanup.h>
-> >   #include <linux/clk.h>
-> >   #include <linux/delay.h>
-> >   #include <linux/dma-mapping.h>
-> > @@ -631,10 +632,10 @@ struct panthor_group {
-> >   		struct panthor_gpu_usage data;
-> >   		/**
-> > -		 * @lock: Mutex to govern concurrent access from drm file's fdinfo callback
-> > -		 * and job post-completion processing function
-> > +		 * @fdinfo.lock: Spinlock to govern concurrent access from drm file's fdinfo
-> > +		 * callback and job post-completion processing function
-> >   		 */
-> > -		struct mutex lock;
-> > +		spinlock_t lock;
-> >   		/** @fdinfo.kbo_sizes: Aggregate size of private kernel BO's held by the group. */
-> >   		size_t kbo_sizes;
-> > @@ -910,8 +911,6 @@ static void group_release_work(struct work_struct *work)
-> >   						   release_work);
-> >   	u32 i;
-> > -	mutex_destroy(&group->fdinfo.lock);
-> > -
-> >   	for (i = 0; i < group->queue_count; i++)
-> >   		group_free_queue(group, group->queues[i]);
-> > @@ -2861,12 +2860,12 @@ static void update_fdinfo_stats(struct panthor_job *job)
-> >   	struct panthor_job_profiling_data *slots = queue->profiling.slots->kmap;
-> >   	struct panthor_job_profiling_data *data = &slots[job->profiling.slot];
-> > -	mutex_lock(&group->fdinfo.lock);
-> > -	if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_CYCLES)
-> > -		fdinfo->cycles += data->cycles.after - data->cycles.before;
-> > -	if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_TIMESTAMP)
-> > -		fdinfo->time += data->time.after - data->time.before;
-> > -	mutex_unlock(&group->fdinfo.lock);
-> > +	scoped_guard(spinlock, &group->fdinfo.lock) {
-> > +		if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_CYCLES)
-> > +			fdinfo->cycles += data->cycles.after - data->cycles.before;
-> > +		if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_TIMESTAMP)
-> > +			fdinfo->time += data->time.after - data->time.before;
-> > +	}
-> >   }
-> >   void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
-> > @@ -2880,12 +2879,11 @@ void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
-> >   	xa_lock(&gpool->xa);
-> >   	xa_for_each(&gpool->xa, i, group) {
-> > -		mutex_lock(&group->fdinfo.lock);
-> > +		guard(spinlock)(&group->fdinfo.lock);
-> >   		pfile->stats.cycles += group->fdinfo.data.cycles;
-> >   		pfile->stats.time += group->fdinfo.data.time;
-> >   		group->fdinfo.data.cycles = 0;
-> >   		group->fdinfo.data.time = 0;
-> > -		mutex_unlock(&group->fdinfo.lock);
-> >   	}
-> >   	xa_unlock(&gpool->xa);
-> >   }
-> > @@ -3531,7 +3529,7 @@ int panthor_group_create(struct panthor_file *pfile,
-> >   	mutex_unlock(&sched->reset.lock);
-> >   	add_group_kbo_sizes(group->ptdev, group);
-> > -	mutex_init(&group->fdinfo.lock);
-> > +	spin_lock_init(&group->fdinfo.lock);
-> >   	return gid;
-> > 
-> > base-commit: 2eca617f12586abff62038db1c14cb3aa60a15aa
-> > prerequisite-patch-id: 7e787ce5973b5fc7e9f69f26aa4d7e5ec03d5caa
-> > prerequisite-patch-id: 03a619b8c741444b28435850e23d9ec463171c13
-> > prerequisite-patch-id: 290e1053f8bf4a8b80fb037a87cae7e096b5aa96
-> > prerequisite-patch-id: bc49bb8c29905650fb4788acc528bb44013c0240
-> > prerequisite-patch-id: 46cab4c980824c03e5164afc43085fec23e1cba5
+> Patch 3 adds a selftest to validate the functionality of the
+> task_mm_cid_work (i.e. to compact the mm_cids). The test fails if patch
+> 1 is not applied and is flaky without patch 2. We expect it to always
+> pass with the entire patchset applied.
+> 
+> Changes since V5:
+> * Punctuation
+> 
+> Changes since V4 [1]:
+> * Fixes on the selftest
+>      * Polished memory allocation and cleanup
+>      * Handle the test failure in main
+> 
+> Changes since V3 [2]:
+> * Fixes on the selftest
+>      * Minor style issues in comments and indentation
+>      * Use of perror where possible
+>      * Add a barrier to align threads execution
+>      * Improve test failure and error handling
+> 
+> Changes since V2 [3]:
+> * Change the order of the patches
+> * Merge patches changing the main delayed_work logic
+> * Improved self-test to spawn 1 less thread and use the main one instead
+> 
+> Changes since V1 [4]:
+> * Re-arm the delayed_work at each invocation
+> * Cancel the work synchronously at mmdrop
+> * Remove next scan fields and completely rely on the delayed_work
+> * Shrink mm_cid allocation with nr thread/affinity (Mathieu Desnoyers)
+> * Add self test
+> 
+> Overhead comparison in [4]
+> 
+> [1] - https://lore.kernel.org/lkml/20250113074231.61638-4-gmonaco@redhat.com
+> [2] - https://lore.kernel.org/lkml/20241216130909.240042-1-gmonaco@redhat.com
+> [3] - https://lore.kernel.org/lkml/20241213095407.271357-1-gmonaco@redhat.com
+> [4] - https://lore.kernel.org/lkml/20241205083110.180134-2-gmonaco@redhat.com
+> 
+> To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> To: Peter Zijlstra <peterz@infradead.org>
+> To: Ingo Molnar <mingo@kernel.org>
+> To: Paul E. McKenney <paulmck@kernel.org>
+> To: Shuah Khan <shuah@kernel.org>
+> 
+> Gabriele Monaco (2):
+>    sched: Move task_mm_cid_work to mm delayed work
+>    rseq/selftests: Add test for mm_cid compaction
+> 
+> Mathieu Desnoyers (1):
+>    sched: Compact RSEQ concurrency IDs with reduced threads and affinity
+> 
+>   include/linux/mm_types.h                      |  23 +-
+>   include/linux/sched.h                         |   1 -
+>   kernel/sched/core.c                           |  66 +-----
+>   kernel/sched/sched.h                          |  32 ++-
+>   tools/testing/selftests/rseq/.gitignore       |   1 +
+>   tools/testing/selftests/rseq/Makefile         |   2 +-
+>   .../selftests/rseq/mm_cid_compaction_test.c   | 200 ++++++++++++++++++
+>   7 files changed, 246 insertions(+), 79 deletions(-)
+>   create mode 100644 tools/testing/selftests/rseq/mm_cid_compaction_test.c
+> 
+> 
+> base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
