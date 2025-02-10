@@ -1,44 +1,42 @@
 Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E015F1E25F4
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:36:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950DA1E3DDB
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:36:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739187374; cv=none; b=TrobaYI6SY6iTltb20j1FVpT9ZyFrVik8jHZlwPkgkLy2sweQZK042jQ702gZFcNGmlHzSE8b4TOTUrUrnoTTDnSrx2Cdzbkx4B80xjUuwAWd5IcDfgzzLtYQrdGba76AzgBl4JYDDKLxedoQbXApqEUK2sw3VIRZQQ2k86CHCs=
+	t=1739187392; cv=none; b=FkiT7t5ma7QN3qa3v8lKPaW9ZAIXrJvdjni27ZTiRnrsJP4q7wgDqewrrbfCzP5H9tSH6xcGprLIRRrMnyrNIgEGGW6TWJXr6yqigPyBoSm1z871kuYctr+y8bH9xu0pLknAclfnOVXjE+dm4ICpnQvcJuE2w6kbIGVcZaIqkUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739187374; c=relaxed/simple;
-	bh=AkuWlSFPTEfCDOeWGTtY0e+GfoFL2ylntt+Uiwmqoac=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mBh6ae/Bu3jd1C9rKn39Ajqrk4ZuwylMNmxUNPVKRW/SfQB3Zhm1VpkUHbJ8Wo9o+npbdqBN90syhXD+LU5cxFt9D5eIkJRrjqasT66gM041ln1HUvZHYlTBaaIeYtPHkB5MYdETS/PGHKyBCVz2WNImZohOcQdTJ9lnGc8Yr9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=iADAqORq; arc=none smtp.client-ip=194.117.254.33
+	s=arc-20240116; t=1739187392; c=relaxed/simple;
+	bh=odmp1oDLZulB0D8tTpCIL0DR4oKUvAKvMur9OJWqB0U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FzooIx6EZFLyt8QI13mzFlY3Jm3U06O63PMRyLRKNH38fGyhPMBwnC/KjFAZ+1sa+IpwGwMgJd5thPjqjbfzJ2+lPizLKTwG05smtj7097cITn1xudqY5sH3WkP0Se2NcPbAoVpvTWNEJvByo1D4i/S/Zu7Z8Uq4uChZ2Wiagic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=MsxdavJF; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="iADAqORq"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="MsxdavJF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
-	:mime-version:content-transfer-encoding; s=k1; bh=Zbw3qEV4YQbmjY
-	nbEvEFBno12yv/IXeyr0StDSXCTOc=; b=iADAqORqUOhuU5SFjsnerf7YJ0qLif
-	53XaD8c9N8K5LmQgX3vgMC9nOwMi2/BviweyiZydS/gXfphCerYOFDmlTPD0X3dV
-	jgJ+pVy6+jUPafxh3TYQe3EJUJVGn86QkMV7sVUfA/aDvEcLal6jey2QBxgyTIPp
-	r3z9o/TldbMxgADSp5V7rq9KFR/sD+gAmFsgBNIumzFHj3NKo64jX8kvASuCRIyu
-	NxI10RokADqJsMiqCH12XH8dOIW/6/epM05+rVib9rgZ4J5m2CfX5DS1ENkSOoj3
-	5mh9RjTBhmGdPW4bpsJht0qnYY8ePZyrCmIPcOX3W0TrS5snII5w5OGw==
-Received: (qmail 802017 invoked from network); 10 Feb 2025 12:35:58 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 10 Feb 2025 12:35:58 +0100
-X-UD-Smtp-Session: l3s3148p1@J/uvHMgtiNZehh99
+	:mime-version:content-transfer-encoding; s=k1; bh=hqpXnqINHQcDKB
+	KXI9V709vZ+X4vx/JtQ1HvqWf/c78=; b=MsxdavJFXS5TYvEa4PuXyYA66LX+xW
+	Nu1U2guzEnkhI11X+pkwOt6Ut6U0ujVx7A1utzUyAxU3tTD5AE6YEQpjThrvuvM6
+	hTVxtE31+j2cdKHrC/Kym8O2BuiL2QbELgOSzpfGBrY9/guu8ilASORjv2rjfhmz
+	NibLG6C+HRN2mK8AqyBErPiYQAYdETNqEM9cJohMHzX12BS+zDN/sLeowKFmlb23
+	+pWZcZqSFxao26E9RCahO7+eQhiFCZLbuRKoOjNnLaBVbhATBdiE21OX409QtglB
+	4EmDENQl8W0sXDTW4f7Zq9W2AGh+rm/GQGwcwV7AgOpaotCq5vUdwzdA==
+Received: (qmail 802212 invoked from network); 10 Feb 2025 12:36:27 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 10 Feb 2025 12:36:27 +0100
+X-UD-Smtp-Session: l3s3148p1@U6pqHsgt3Ntehh99
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-kernel@vger.kernel.org
 Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH RESEND] x86/platform/olpc-xo1-sci: don't include '<linux/pm_wakeup.h>' directly
-Date: Mon, 10 Feb 2025 12:34:54 +0100
-Message-ID: <20250210113453.51825-2-wsa+renesas@sang-engineering.com>
+	Jiri Kosina <jkosina@suse.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	linux-input@vger.kernel.org
+Subject: [PATCH RESEND] HID: google: don't include '<linux/pm_wakeup.h>' directly
+Date: Mon, 10 Feb 2025 12:36:13 +0100
+Message-ID: <20250210113612.51883-2-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -53,22 +51,23 @@ only via '<linux/(platform_)?device.h>'. Which is already present, so
 delete the superfluous include.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Acked-by: Jiri Kosina <jkosina@suse.com>
 ---
- arch/x86/platform/olpc/olpc-xo1-sci.c | 1 -
+ drivers/hid/hid-google-hammer.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/arch/x86/platform/olpc/olpc-xo1-sci.c b/arch/x86/platform/olpc/olpc-xo1-sci.c
-index ccb23c73cbe8..63066e7c8517 100644
---- a/arch/x86/platform/olpc/olpc-xo1-sci.c
-+++ b/arch/x86/platform/olpc/olpc-xo1-sci.c
-@@ -14,7 +14,6 @@
- #include <linux/interrupt.h>
+diff --git a/drivers/hid/hid-google-hammer.c b/drivers/hid/hid-google-hammer.c
+index 0f292b5d3e26..adb4f48804e5 100644
+--- a/drivers/hid/hid-google-hammer.c
++++ b/drivers/hid/hid-google-hammer.c
+@@ -22,7 +22,6 @@
+ #include <linux/platform_data/cros_ec_commands.h>
+ #include <linux/platform_data/cros_ec_proto.h>
  #include <linux/platform_device.h>
- #include <linux/pm.h>
 -#include <linux/pm_wakeup.h>
- #include <linux/power_supply.h>
- #include <linux/suspend.h>
- #include <linux/workqueue.h>
+ #include <linux/unaligned.h>
+ 
+ #include "hid-ids.h"
 -- 
 2.45.2
 
