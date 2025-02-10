@@ -1,144 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B932F85B;
-	Mon, 10 Feb 2025 06:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71215225D7
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 06:07:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739167507; cv=none; b=prM6T+e2QP/E4VJZUh1an7MS0mqK1MqVM4VvKE/iDNP/VFtOxNn0uStERfnVEq7fZNXt/2jDQAl2jy9qErO4ms7zZSr4hDdxhsjUsGh0vDs+sgBBWmLJq61bZW/fcl3hJ7Ob5KTf0KvVsbOmTRcvKGl5sPcHL6RGrewc0N0Yg/A=
+	t=1739167672; cv=none; b=R9OXyu5+OXivNRQ2cbKDm1JJOfNu6RsDj6ttfAcFygIXWddqJKBCAw6JeyVNRpT9JgMcBmnizUjzcoOMHg5xmttBxZYDPHtvFH4wCds8xpx/iu191AA4CV/Dsn4z4YhJu3SJlDah6P+s+ORM1kJgPY9Ut7E6a1vw4qk9/UMiptE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739167507; c=relaxed/simple;
-	bh=rRYJteOQgsHZbcvoZwYX3N714vayvL0FCI84xdksnrY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XoM3O9/hyKt6rsgSgkcxbvEqZCqtEYpF5EsdigGze9jcnGfnTgepKUJJGsdsSF+lPVPvhcDI0YDf4iduQ1vGZYlUW14Mpjc8ernFKLEah3j44On4hA7tXcJdSo+WAad9p7apIokpe+qfRqg0wozoPQ65q6biNEDC+D8oLK3VDRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UUxznfMj; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UUxznfMj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739167506; x=1770703506;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rRYJteOQgsHZbcvoZwYX3N714vayvL0FCI84xdksnrY=;
-  b=UUxznfMj/TLniGMapgtZPKua9IZEdeZXG+FnDbhkERk4spJMTkYP8T1c
-   T6MMu5YjY0/+pxo5TX0sJnY+uZzpF4nUFBwr/TPsnheVUyqjkugcSGnjx
-   E0yMmHWQABJt+pX8s1IFJmh7B36K3pt7+jgWnwS7dDqeBshU+LdaN74lu
-   vH0oeIMSxl/DTVgq2YQI1+QPR+hFFgNsqv62oe2pUMvu+ZmxkXOcN/LwN
-   YhNslJOSRvAqNHJtJh2CzzGC9ebaHo2afradsivVRofD2l1Q6yrvcoH2+
-   j6BL4m1i8TaHxFWL1JF4NSMLfXZagIgyZu+jpRlLieQPXvM3oIFkgbpp0
-   w==;
-X-CSE-ConnectionGUID: heXIHRHuRVW6g4QRjl0fMg==
-X-CSE-MsgGUID: isVcMtsqRZettLawMEu/TQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="65089297"
-X-IronPort-AV: E=Sophos;i="6.13,273,1732608000"; 
-   d="scan'208";a="65089297"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 22:05:05 -0800
-X-CSE-ConnectionGUID: ukIvttzbRHSU1vhKl0BCeQ==
-X-CSE-MsgGUID: 7YuVGQOLTeGjdM/8qQ6T5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,273,1732608000"; 
-   d="scan'208";a="111926110"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 22:05:02 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1thMuh-0000000A23u-1NV2;
-	Mon, 10 Feb 2025 08:04:59 +0200
-Date: Mon, 10 Feb 2025 08:04:59 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: subramanian.mohan@intel.com
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	gregkh@linuxfoundation.org, giometti@enneenne.com,
-	tglx@linutronix.de, corbet@lwn.net, eddie.dong@intel.com,
-	christopher.s.hall@intel.com, pandith.n@intel.com,
-	thejesh.reddy.t.r@intel.com, david.zage@intel.com,
-	srinivasan.chinnadurai@intel.com
-Subject: Re: [PATCH v13 1/4] drivers pps/generators: replace copy of pps-gen
- info struct with const pointer
-Message-ID: <Z6mXC7loE3qRYpUQ@smile.fi.intel.com>
-References: <20250210050421.29256-1-subramanian.mohan@intel.com>
- <20250210050421.29256-2-subramanian.mohan@intel.com>
+	s=arc-20240116; t=1739167672; c=relaxed/simple;
+	bh=2ckOBtZ0SayfkUiAGTScq7nP6Ree1sZ/P3eqOOPh5i4=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=U5INA2jwAsnoTZPHMNO1NJjpIIn+EUomml23CGYtdfNSmwUxvsTHKCcx92mI93kmoVrntoePfkeIg7g01ddtZUQg/mZOvBHt3gu+/FJZ5ue9zxKReIPd3MbZPRyQ5x7in1DQ+0biQXAVVkvvfoncktI4SRm0Zo8oJW79bKR5FeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxC+Kxl6ln3flwAA--.22073S3;
+	Mon, 10 Feb 2025 14:07:45 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMCxPsevl6lnzsAJAA--.38660S3;
+	Mon, 10 Feb 2025 14:07:44 +0800 (CST)
+Subject: Re: [PATCH v6 0/9] Add jump table support for objtool on LoongArch
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+References: <20241217010905.13054-1-yangtiezhu@loongson.cn>
+ <ef1e3e7c-0117-175c-5a85-091382696748@loongson.cn>
+ <20250115013444.anzoct6gvs56m225@jpoimboe>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, loongarch@lists.linux.dev,
+ amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <4612bfd8-442e-fecb-240f-46e735b48540@loongson.cn>
+Date: Mon, 10 Feb 2025 14:07:43 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210050421.29256-2-subramanian.mohan@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250115013444.anzoct6gvs56m225@jpoimboe>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowMCxPsevl6lnzsAJAA--.38660S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ur4Uur45Zw4ktrW5uF4rZwc_yoW8GrykpF
+	W5GFW29F4kJrWUX3WkKw1agFySqw4ftr1xXr45WrW5Aa1qq3W5tr4fZw4YgFWqgr4YvFyI
+	ya1fJa4q9F4DArXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jepB-UUUUU=
 
-On Mon, Feb 10, 2025 at 10:34:18AM +0530, subramanian.mohan@intel.com wrote:
-> From: Subramanian Mohan <subramanian.mohan@intel.com>
-> 
-> Some PPS generator drivers may need to retrieve a pointer to their
-> internal data while executing the PPS generator enable() method.
-> 
-> During the driver registration the pps_gen_device pointer is returned
-> from the framework, and for that reason, there is difficulty in
-> getting generator driver data back in the enable function. We won't be
-> able to use container_of macro as it results in static assert, and we
-> might end up in using static pointer.
-> 
-> To solve the issue and to get back the generator driver data back, we
-> should not copy the struct pps_gen_source_info within the struct
-> pps_gen_device during the registration stage, but simply save the
-> pointer of the driver one. In this manner, driver may get a pointer
-> to their internal data as shown below:
-> 
-> struct pps_gen_foo_data_s {
->         ...
-> 	struct pps_gen_source_info gen_info;
-> 	struct pps_gen_device *pps_gen;
-> 	...
-> };
-> 
-> static int __init pps_gen_foo_init(void)
-> {
->         struct pps_gen_foo_data_s *foo;
-> 	...
-> 
->         foo->pps_gen = pps_gen_register_source(&foo->gen_info);
-> 	...
-> }
-> 
-> Then, in the enable() method, we can retrieve the pointer to the main
-> struct by using the code below:
-> 
-> static int pps_gen_foo_enable(struct pps_gen_device *pps_gen, bool enable)
-> {
->         struct pps_gen_foo_data_s *foo = container_of(pps_gen->info,
+On 01/15/2025 09:34 AM, Josh Poimboeuf wrote:
+> On Sat, Jan 11, 2025 at 02:57:42PM +0800, Tiezhu Yang wrote:
+>> Hi Josh and Peter,
+>>
+>> On 12/17/2024 09:08 AM, Tiezhu Yang wrote:
+>>> This version is based on tip/tip.git objtool/core branch [1], add some weak
+>>> and arch-specific functions to make the generic code more readable, tested
+>>> with the latest upstream mainline Binutils, GCC and Clang.
+>>
+>> ...
+>>
+>>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=objtool/core
+>>>
+>>> Tiezhu Yang (9):
+>>>   objtool: Handle various symbol types of rodata
+>>>   objtool: Handle different entry size of rodata
+>>>   objtool: Handle PC relative relocation type
+>>>   objtool: Handle unreachable entry of rodata
+>>>   objtool/LoongArch: Add support for switch table
+>>>   objtool/LoongArch: Add support for goto table
+>>>   LoongArch: Enable jump table for objtool
+>>>   LoongArch: Convert unreachable() to BUG()
+>>>   drm/amd/display: Mark dc_fixpt_from_fraction() noinline
+>>
+>> Are you OK with the first 8 patches?
+>> What's the merge plan for this series?
+>
+> Sorry, my inbox is still reeling from the holidays.  I will review this
+> soon.
 
-> 	       			      struct pps_gen_foo_data_s, gen_info);
+What are the status of the first 8 patches?
+What is the next step? Is there anything else to be done here?
+I would really appreciate any advice on how to get this merged.
 
-TABs/spaces mix.
-
->         ...
-> }
-
-> Signed-off-by: Rodolfo Giometti <giometti@enneenne.com>
-
-Hmm... Is Rodolfo indeed a correct to be mentioned here?
-I think you wanted Suggested-by with somebody else.
-
-...
-
-> -struct pps_gen_device *pps_gen_register_source(struct pps_gen_source_info *info)
-> +struct pps_gen_device *pps_gen_register_source(
-> +					const struct pps_gen_source_info *info)
-
-Still leave it a single line.
-
-...
-
-Otherwise looks good to me, thanks for taking this approach!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Thanks,
+Tiezhu
 
