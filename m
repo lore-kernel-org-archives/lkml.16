@@ -1,140 +1,100 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D4225EFB6
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7574B26460C
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:16:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739229275; cv=none; b=USZq0E/ZdUG8AcblTWJ8hkmNSVkdJ4Pj9wd5UkPwn2x6mD1m3P8NbPsL+WEkd16H618X1Xs/+aVnrF1NuXggwA1ygcUuvt7fO6/ob0aIao4K1yz4PBlz2rzifc27e29pW0la7gvExdF5NkAqudfqN1YM5H5aklOg6XYuqaq5ibM=
+	t=1739229382; cv=none; b=B59APT6pRgvrx7ASup5M/w3xDzvz4Iktrh47koKdFUz/PMHxcQCjclB1EUERmmRQ8aqA5D7a5v8z63Bx1DdCwZsQrE+oN+ZWOJ4LFzCS/Au7mzpLOy8R/emiTJK4Hlv8mui0qf4ooV3broxT880mSE8xoO1j8dPXxeOY0xJ957s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739229275; c=relaxed/simple;
-	bh=8i9JszH04TiBwcb05AP+zS29cixB68Cf6w5CTdI0D+8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bMtvMHsVp8NqaThx7gM0xNJFr7MWHLB1he/CwA0BSXVio8lEngmhfelcbgM5KjTsZYI7tIHOSZDOAJj6szA5mLtRafbdmr2CeFym79SJuX5wDBIdXP8x8McVuQ7ibKm0DH2RjLTIOZOyyuiBqGTHuHZLsjytjveFFMrkE5fay08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RujU9PpP; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739229382; c=relaxed/simple;
+	bh=NUApKyScjyNwhZt7QISmRvCwSkmNuMrMeDDGrzDTJE0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=pKsR3i2Nu0bnwsbb8djy4KqhBM82+bHjCFrKKikkMw8T1/020B8S1xMcV7YEl680DetHMw4HcCeO1kk16PScUIy6gutmn9X9YbBlqHKTWJRNmTcrArdmB9YQ2+kB1biGcGOJKPy+NCna8CLh85XVYeu4L/PYv74Tb83uGRj42Kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=TI8M4e5V; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RujU9PpP"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-307bc125e2eso46602581fa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:14:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="TI8M4e5V"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5fa2a2bdde9so1330117eaf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:16:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739229271; x=1739834071; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/9kko6nvgrCtMDMk3GCD451xeU3goOMEnvnQebWZMb0=;
-        b=RujU9PpPOHxQBi3Y3um7wqiPaj7HY9Gjg6zE8fVTsjcELNz7f6dQN78koh5mbTiEk+
-         wCAwUa+Olw7qiCLUIB1HdojxyDgeBqS5w5rJiDfm9WrU0b5Omt5JX6ukEO+Me1ZJVqm2
-         r2i9winT5hyq/YmNaGPGA7QUnaGcNvI1tQLd/1lYPkezniew6j0PwlMivH0IGsP+pZGw
-         59YZvS6SasF5pnK/R+QfhZgDd37XsBMofgt6VDeL84AftM6tQpIRs8TrrQTPKRPq1GiQ
-         lvvYQC79pABXfUhp+vnboOOqEmTCFctA2Jzl+abh3xQ8StU9L4HJEJqCG3OGA9dFO68d
-         6oGg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739229378; x=1739834178; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zOTiC9N25oxSFn8PJurmN+X05adw39aPm32FGiYhCiI=;
+        b=TI8M4e5VjtidvaV7h9z0OgQwBgGfq01PiIMPInWVy2sexE5/772Y+xAJsgvqPQ9YWB
+         B691eb9ytdvzwAms1p4bG2bD4kT91+Q7ANvdMy4N5VXEeeP8Rc854kWi+V+qUwAkWCyq
+         +3zghMOn8cU4gbMxCuGOJEf2JQKKKitjqC5ThpTZOE5UX/C4uQ7U4earKKhJXJYpwnJn
+         y7rv2TBZAbb61I4zbD1jWGqOIyhW3s32sTq4HWh59ZO5Q+4J9KSj/Q8A7PZlygXahDN4
+         hZogLhb2HZitohrSEHKVJsAQRKLVXrIk96L9I45+c/IkO62MLoR4J43NwxyMVooZOvlL
+         1PEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739229271; x=1739834071;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/9kko6nvgrCtMDMk3GCD451xeU3goOMEnvnQebWZMb0=;
-        b=cjFcG7uvs9TGoYt6g2/mgccsOB1Tkj6Sn21jqBuxI2glqMRP7sPhLrYVINYK0lrUqv
-         lWydk5kRov9AgXjBxjLEDrx0mvB5/3v8ixn1k4ck/fVb4aplY30rl1why6a2ZCkuS9KB
-         MqYzRkBAc1Dn4DRj1yh/Tj8Q6ucoSEglpCoTJBJliN6mb3+lfN/j4dRkji7AX9gdsfR/
-         RgOtv25HFwGC2d1+X+tDrlNb6VLBci2rAkgo8PtXNF6dei+LQyyjJqm65ogInWu1PmOs
-         CEl268dSSLE+Vgnl503f/ru1WN2cj6VLRrQW2KYqXAWbsTwHFAcaL0jeWD2mQhTl1I1r
-         RENg==
-X-Forwarded-Encrypted: i=1; AJvYcCXkPEVtmJdv4/qdyhzYFxZFhPUVfcJ81t2GnfiI5xZacLzvceJlcfYrriWyvYAnq/WOwOtCJHOhStDTqC0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGIckPGePCeOMUwjFMGzxfGylC0gzz+XEMWyXBhd1pc+VT9IDx
-	4crhPvDj3BUi5CzSk9huyyhTw9snylBXYMWoQ/MHjtqfisvfOId7WWC9Kp4v1Ew=
-X-Gm-Gg: ASbGnct6z9IQIoUFOaDle3pd0YUxLYkbq0kfvENw1CWSOh+PD1bqpZF0vySx1SHr5nw
-	kwLS1DAXMjqqLEExTd8NccK9j3r1gs4gcSST2zG7c8CgcAMy0tgj5PRM2BWlotBfKQpKW0t/vhs
-	4jwbimioqiwf9gdvo3LzxiDyTmaKomBJYk23XW43mtbM+OkLILd1hicQsv8dXqZ804Iv+FTUkqt
-	oWc2ksxp/4TSmOCEN96ba4iKf7wn5vZPFPS40F1/70hZ6g4LHQ0mxCzsRIkxJHYdyKRpv3diM/o
-	TqqJbMzqNDgkDSjG6HO6YviuMDi358WGD74oaGk+3o3L1Np5WLsyR2Wj59aIH30ctJPe8nI=
-X-Google-Smtp-Source: AGHT+IEiYA4ZdHNW0MIRhlYTkHA5cjZMO3XRsBNobQiwPDauCXQyDb35RHo4o7SlxDmsaMRxsdJWGw==
-X-Received: by 2002:a2e:b8c2:0:b0:2ff:d2e4:8dd9 with SMTP id 38308e7fff4ca-307e5a779a5mr54736081fa.32.1739229271515;
-        Mon, 10 Feb 2025 15:14:31 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de2baaf7sm13653451fa.81.2025.02.10.15.14.29
+        d=1e100.net; s=20230601; t=1739229378; x=1739834178;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zOTiC9N25oxSFn8PJurmN+X05adw39aPm32FGiYhCiI=;
+        b=W5CMKdiMo2E1677IyDqWBVY/0efut3bcqDo8BKC/6ixAHQJei4h2/qDtPlFK5hSmNt
+         Ua2eTn6kK7z+/87NS9TPhAV4g70SgLP25HWjTAwkFU8N2W27l6nRskrpJdlh9pE8mtxG
+         0er2kcAeZ8hmBJ1T3POKQOhLynJRg0vUoV24IJ5wykOFumuABImFnECexAgIOLJUTU+/
+         Ars/JDnOsoxcAkhDNuBRkTezsSXkIMwe8BteU906OvE6UJ4Mnhhe2iMl64+Hmr4ispT3
+         ZkOrgq7EVntGglqqRrrRxnMAcvv12Vjj0fmqCU5UuOJTGyQHOwwvzGOR8hqDboQvUlGy
+         DbOA==
+X-Forwarded-Encrypted: i=1; AJvYcCXogRe9zJtwyAnjU0OyPcBr+wxUrHrteSMnAbekes7Sr7ielbgsDiTViV5ZDT3dEk/NVVaDI3AklM5i6F8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbpjgAo90sv86fFDbA9dv0a+hDL4cPdA5rPfzmrdhrL5OKP59p
+	xaNOzTslaUaUWUYAwN7pEy0mdzYlYDmmBQ5VxnaWrcxRt3ipowIFR2pTBs1WeXRowAT+s1ZaTye
+	c
+X-Gm-Gg: ASbGncv5fiYFaQKsWhctCNxGDrr6h3T27U3KzLZ0SPfiKDOHWhAoOYI/Tax9pCvBzYZ
+	saOjWqELSH6VnGyJu4KrHQAgCeM3RnbR4DGrupcBxqlUQt1BHOydVN0Z4A0USXo7SzC5cPOBenQ
+	VDAkPTXN+PliONzK/YuRbbXHtvIwJFxfdRqJTXpL/AHbyTYi0sNWP1lX1kSihbX2Ba7kWSAVcCV
+	zPoxBvC9xrz1NUEJ4smEFYyrNsX4Rd3oHb2oO5lGO/JeH4ufS6Hl1xoHJ+dXzLb2eDlqtUGvUZQ
+	1zQ9wC/8OabugaVJcwx97jdUOZ4h+hBzxSRJskeYb/vFOqE=
+X-Google-Smtp-Source: AGHT+IH5xNEjbl5fvc3vvYa7TyhbGhLexFzpDFKP8guUzeJDkdNhhSooVjDClNMHdacLxvGBKWPMkQ==
+X-Received: by 2002:a05:6820:1787:b0:5fc:9430:d747 with SMTP id 006d021491bc7-5fc9430de7emr1578893eaf.1.1739229378396;
+        Mon, 10 Feb 2025 15:16:18 -0800 (PST)
+Received: from [127.0.1.1] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc545bc40esm2758043eaf.29.2025.02.10.15.16.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 15:14:30 -0800 (PST)
-Date: Tue, 11 Feb 2025 01:14:28 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Maxime Ripard <mripard@kernel.org>, Simona Vetter <simona@ffwll.ch>, 
-	Inki Dae <inki.dae@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Paul Kocialkowski <contact@paulk.fr>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, =?utf-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH v6 14/26] drm/bridge: add support for refcounted DRM
- bridges
-Message-ID: <qnuskv4mln32nqgbgvwi2qcdwfma6tqfbq7e6sqb3za6pmms2j@ir7pt5634dsh>
-References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
- <20250206-hotplug-drm-bridge-v6-14-9d6f2c9c3058@bootlin.com>
- <20250207-ingenious-daffodil-dugong-51be57@houat>
- <ucttjaf3trkgtpvhnsj7xfsybhnoi4qqow5ucwghlggivbagy7@gngjhbtu73lb>
- <20250210181244.0e3e9189@booty>
+        Mon, 10 Feb 2025 15:16:17 -0800 (PST)
+From: David Lechner <dlechner@baylibre.com>
+Subject: [PATCH 0/2] spi: offload: extra headers
+Date: Mon, 10 Feb 2025 17:16:13 -0600
+Message-Id: <20250210-spi-offload-extra-headers-v1-0-0f3356362254@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210181244.0e3e9189@booty>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAL2IqmcC/x3MQQqDMBBG4avIrDuQRCzVq5QuovlTB8TITBFBv
+ Luhy2/x3kkGFRgNzUmKXUzKWuEfDU1zXL9gSdUUXOhc8I5tEy45LyUmxvHTyDNighq/niNC3/s
+ 2o6Pab4osx//9/lzXDSk7Kn1rAAAA
+X-Change-ID: 20250210-spi-offload-extra-headers-86be29913fe5
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ David Lechner <dlechner@baylibre.com>, 
+ Andy Shevchenko <andriy.shevchenko@intel.com>
+X-Mailer: b4 0.14.2
 
-On Mon, Feb 10, 2025 at 06:12:44PM +0100, Luca Ceresoli wrote:
-> Hi Maxime, Dmitry
-> 
-> On Fri, 7 Feb 2025 21:54:06 +0200
-> Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
-> 
-> > > > +/* Internal function (for refcounted bridges) */
-> > > > +void __drm_bridge_free(struct kref *kref)
-> > > > +{
-> > > > +	struct drm_bridge *bridge = container_of(kref, struct drm_bridge, refcount);
-> > > > +	void *container = ((void *)bridge) - bridge->container_offset;
-> > > > +
-> > > > +	DRM_DEBUG("bridge=%p, container=%p FREE\n", bridge, container);  
-> > > 
-> > > Pointers are not really useful to track here, since they are obfuscated
-> > > most of the time. Using the bridge device name would probably be better
-> > > (or removing the SHOUTING DEBUG entirely :))  
-> > 
-> > bridge device name or bridge funcs (I opted for the latter for the
-> > debugfs file)
-> 
-> These DRM_DEBUG()s proved extremely useful exactly because of the
-> pointer. This is because when using hotplug one normally has the same
-> device added and removed multiple times, and so the device name or
-> bridge funcs is always the same, preventing from understanding which
-> instance is leaking, or being freed, get, put, etc.
-> 
-> Do you think this is a sufficient motivation to keep it?
+Following up from some late feedback, a couple patches adding extra
+headers to a few SPI offload files.
 
-Then it should be something like %px. I found that %p is mangled.
-What about having both device name _and_ a pointer?
+Signed-off-by: David Lechner <dlechner@baylibre.com>
+---
+David Lechner (2):
+      spi: offload: types: include linux/bits.h
+      spi: spi-offload-trigger-pwm: add extra headers
 
-> 
-> Luca
-> 
-> -- 
-> Luca Ceresoli, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+ drivers/spi/spi-offload-trigger-pwm.c | 9 ++++++++-
+ include/linux/spi/offload/types.h     | 1 +
+ 2 files changed, 9 insertions(+), 1 deletion(-)
+---
+base-commit: d15cc2db846f73920688c045be6b4c782b68d058
+change-id: 20250210-spi-offload-extra-headers-86be29913fe5
 
+Best regards,
 -- 
-With best wishes
-Dmitry
+David Lechner <dlechner@baylibre.com>
+
