@@ -1,71 +1,58 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA8E2512F2
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC45B2512ED;
+	Mon, 10 Feb 2025 22:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739226712; cv=none; b=ZRcLJYxKu3WdjqSQuvtJBqyh49eFJb/UHTNdwudnaduj/8nM88eBi6QQYoBXNkBsWF9Z/Uskk8n+FM0W9GYPMPd3NFHzZ5hvOBQSV5tIPwgvGKSA5HeeGHgOyLNoyFQpGAWCAD3UxA5v3WA3puOZWN6zBafB4PNSdXDr5tR7N1Y=
+	t=1739226767; cv=none; b=Xt0PEKp9sW+f5qIQbBZ2R3NhyA0x7XTBruX2oytXYblqlosQZAdtvReUzPdIuuhQckDrHW1YKsjPcKSy0asndzEs/9CH3DSXV/02vuGuRHIdUUI366uwz5O1QJdSV0red2O5Fv7yu1y92lGeWy7Rwfl3mHbWKtfMhVTMK2rNI+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739226712; c=relaxed/simple;
-	bh=pTRZmgPDUm60FMsGqnRNJP4E0Tz9Yq6UC2rtO3tHUvQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bVxK0T/b7bhFqYsR/Gfpsb11bOM/uMFNoLDX7GiVpZ1UI9Fa+AUD2XgRUT3uEOfDl+W9CobECEbiOju6HfzGJlV4RslGJzxFZwO30cuVSAs4hQTnznr1NbtOe7C1pM0ORXcWS29Ttv8qTNmTJ3iJbwoWUz6lEVmEWc8+tEAe/6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=VJ+1P+w1; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1739226767; c=relaxed/simple;
+	bh=Fk1CFlse0fOzf7hyLwkoZOv8fJZ86dz0i7DYgJbGnDo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Mlemr7q+cEvftu4TJVHZeY2CL+S6RaPauNVg6+qKQTr8oSlD2USbqBKpNO6QIJCGlCs7OCcnQtcIsRLPT2O/eP23+stco+CibhdTi8P2CRQ0AE2QibW25WLQcG2/agIC6t+a7SVTGe/6Lvaug+WfdVX4MjG8Hq8KOfeww2HhGEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=jVJznroL; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="VJ+1P+w1"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab7483b9bf7so724335166b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:31:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1739226708; x=1739831508; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xU+5Hff3ByaZYFLomcfM/RhqG5OmVBr1nASPzJa0E9g=;
-        b=VJ+1P+w1WObErqQLbmRP6Y57OzKKEh819eK2cTvjj7Yxnb5JGowPzWDy+1r6nNWX8o
-         Bs+/UXfmRvs9DyffaeGWWlWavuOO1HuE01kXshAtJPgCheAr25JdxcXKsSeUyImvZoTc
-         LkhV5qwRWwdoURCXDZF2SMVBhhdZbY5e4HlFhnTfG2p2QKM1xkxTCTaTzjdSoQA+h42K
-         EaOEBWGvJPnmPI4kTVwCh8I3TfBCMZ+3MpHftpcpSv/bevfYWG2GGMII56r3sT43Soxq
-         nT+aj78SJwsYLQaDkpubPKzYlEaNu+mZG/bFxRrAY+edHN2OQl2DGKH/lKNDRcJIsXWM
-         bePw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739226708; x=1739831508;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xU+5Hff3ByaZYFLomcfM/RhqG5OmVBr1nASPzJa0E9g=;
-        b=j1XLXm5e9n3kfMYH4pYzbJXfx3DsUHy3umAk6r9yw8O7BL8zHXjsxREtQ+Y2nSGPDR
-         M8oFXuJqiFok6RNWW0ogc+QuG6pqrgn2aVfhqMEWtmr8rI+Y4n4E8vBj3F+LlVW52m9B
-         yfO/Lh3BCmAomCmlS6t/ythkkVTsw7Mwf+iaun8m5oiVhAa35TFgQ6E1nEY1QawuzfBP
-         1pnrOSzfRpoSYVvKX2Y+b86DRVSd40eyDbMiSUtrySOay/p3tSS3YD+jqMxE4aNf/xgj
-         SK0a75zVIE88PMXOXxh6CFcOi0YAjI8dXHCeiHEq44ywj3YdYFoWQ7yu72exa+OzpqMy
-         ZRgg==
-X-Forwarded-Encrypted: i=1; AJvYcCVI8fTx2R+o3IEYYBjjvtLe11yzJ6myvU+oFmyrPGmVXx7qov13pGNgEiz10ZKqljep1t7t6wzLJqKQ1qY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQ+3U+yJ32z/IIPSNG6SfV14LEronWCZghA7CXz6U6orgtzXF8
-	sBem3sEy5LgE0k88j7wBeBr3y9FBQCACT3DNfun3fk1Qbd4mkvhDz6eR/YwqMd4=
-X-Gm-Gg: ASbGncvWssY82DoYntZCSfDPnKQRvFDP8PCmVpFSzvn3EkN5BUz2J8o8LxI3LhcNgPP
-	QpAaqNyXg9+w+aZ1SxdlBJmoeA1jNMLgIoxe+hc2RbIayGwso5ACOH20WZ2q5pw71C/I/HmHvki
-	+gPiBKPgJdDj7i/MyvmYuPJdCJBQK2M/jq9xsJAtxYyC9RiismD50ZiE8Gr5PXcN1457RD1fzd/
-	FjPhsu2PvJT+6Ga7iPBadaiU5ppCWKcUMdbmvk41wvtWFha/+6Fp9USA58eX9Bl0wy69aOuwOsB
-	WAPtVXYZSmBSBXeQwYeANdnrJTybb7uJEiNfmdkcLVwZ0BVqTSEy6qBANl1WDVY6a0OsDVFuSXE
-	OOlpkVBr+cRhCpv4=
-X-Google-Smtp-Source: AGHT+IHjtW2LQcoXICJ4bXGo/wQbq7YrAWuKqCJ6/w7CIf+NkajZc7njbeyBgfXRV7CZ7jt2R27Isw==
-X-Received: by 2002:a17:906:4796:b0:ab7:59a0:dd16 with SMTP id a640c23a62f3a-ab789a6b646mr1696451266b.2.1739226707788;
-        Mon, 10 Feb 2025 14:31:47 -0800 (PST)
-Received: from raven.intern.cm-ag (p200300dc6f19d800023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f19:d800:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7afbcdbbesm454870666b.24.2025.02.10.14.31.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 14:31:47 -0800 (PST)
-From: Max Kellermann <max.kellermann@ionos.com>
-To: dhowells@redhat.com,
-	netfs@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Max Kellermann <max.kellermann@ionos.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v6.13] fs/netfs/read_pgpriv2: skip folio queues without `marks3`
-Date: Mon, 10 Feb 2025 23:31:44 +0100
-Message-ID: <20250210223144.3481766-1-max.kellermann@ionos.com>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="jVJznroL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=gScTzSF5SmDK0ItX+9bERNg9WxTsYpnT5wGwYZDdZ9I=; b=jVJznroLLXwS8UOrupccZJB2qf
+	I/0LaWZxs6cLc7Kq98/Tjiwa7wOp3fA83fF5CaEUrPu0JfMgT9MnqGnGy9ELf7W0T1bJLwFT947dQ
+	afkAXNPRg0XFX7fd723sV5o45i9UiUwA0UFtOTEpi/VrcRemR/tFsoCSVxgpoutYFw+WAhpgqmw7a
+	v70K7hWD9b8vR0cGGxlKq3ms/Mx6Vx+USZyPH7fT3u4Su8924fO43e8Jg4MpAQZftVSFq66acwcL3
+	Dac+q5Nr/fg0YEVB0EMRbio4L1WPlbvyBmYqLD9J3DOTZ39PEFUOTbtvPKiLTEDb03EiQyUO9HzgK
+	d19LYBVA==;
+Received: from i53875bc0.versanet.de ([83.135.91.192] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1thcKZ-0008Cw-CH; Mon, 10 Feb 2025 23:32:43 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: srinivas.kandagatla@linaro.org
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	heiko@sntech.de,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	detlev.casanova@collabora.com,
+	sebastian.reichel@collabora.com,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v2 3/6] dt-bindings: nvmem: rockchip,otp: add missing limits for clock-names
+Date: Mon, 10 Feb 2025 23:32:09 +0100
+Message-ID: <20250210223219.1193346-4-heiko@sntech.de>
 X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250210223219.1193346-1-heiko@sntech.de>
+References: <20250210223219.1193346-1-heiko@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,90 +61,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-At the beginning of the function, folio queues with marks3==0 are
-skipped, but after that, the `marks3` field is ignored.  If one such
-queue is found, `slot` is set to 64 (because `__ffs(0)==64`), leading
-to a buffer overflow in the folioq_folio() call.  The resulting crash
-may look like this:
+The clocks property correctly declares minItems and maxItems for its
+variants, but clock-names does not. Both properties are always used
+together, so should declare the same limits.
 
- BUG: kernel NULL pointer dereference, address: 0000000000000000
- #PF: supervisor read access in kernel mode
- #PF: error_code(0x0000) - not-present page
- PGD 0 P4D 0
- Oops: Oops: 0000 [#1] SMP PTI
- CPU: 11 UID: 0 PID: 2909 Comm: kworker/u262:1 Not tainted 6.13.1-cm4all2-vm #415
- Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.14.0-2 04/01/2014
- Workqueue: events_unbound netfs_read_termination_worker
- RIP: 0010:netfs_pgpriv2_write_to_the_cache+0x15a/0x3f0
- Code: 48 85 c0 48 89 44 24 08 0f 84 24 01 00 00 48 8b 80 40 01 00 00 48 8b 7c 24 08 f3 48 0f bc c0 89 44 24 18 89 c0 48 8b 74 c7 08 <48> 8b 06 48 c7 04 24 00 10 00 00 a8 40 74 10 0f b6 4e 40 b8 00 10
- RSP: 0018:ffffbbc440effe18 EFLAGS: 00010203
- RAX: 0000000000000040 RBX: ffff96f8fc034000 RCX: 0000000000000000
- RDX: 0000000000000040 RSI: 0000000000000000 RDI: ffff96f8fc036400
- RBP: 0000000000001000 R08: ffff96f9132bb400 R09: 0000000000001000
- R10: ffff96f8c1263c80 R11: 0000000000000003 R12: 0000000000001000
- R13: ffff96f8fb75ade8 R14: fffffaaf5ca90000 R15: ffff96f8fb75ad00
- FS:  0000000000000000(0000) GS:ffff9703cf0c0000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 0000000000000000 CR3: 000000010c9ca003 CR4: 00000000001706b0
- DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
- DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
- Call Trace:
-  <TASK>
-  ? __die+0x1f/0x60
-  ? page_fault_oops+0x158/0x450
-  ? search_extable+0x22/0x30
-  ? netfs_pgpriv2_write_to_the_cache+0x15a/0x3f0
-  ? search_module_extables+0xe/0x40
-  ? exc_page_fault+0x62/0x120
-  ? asm_exc_page_fault+0x22/0x30
-  ? netfs_pgpriv2_write_to_the_cache+0x15a/0x3f0
-  ? netfs_pgpriv2_write_to_the_cache+0xf6/0x3f0
-  netfs_read_termination_worker+0x1f/0x60
-  process_one_work+0x138/0x2d0
-  worker_thread+0x2a5/0x3b0
-  ? __pfx_worker_thread+0x10/0x10
-  kthread+0xba/0xe0
-  ? __pfx_kthread+0x10/0x10
-  ret_from_fork+0x30/0x50
-  ? __pfx_kthread+0x10/0x10
-  ret_from_fork_asm+0x1a/0x30
-  </TASK>
-
-Fixes: ee4cdf7ba857 ("netfs: Speed up buffered reading")
-Cc: stable@vger.kernel.org
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+Suggested-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 ---
-Note this patch doesn't apply to v6.14 as it was obsoleted by commit
-e2d46f2ec332 ("netfs: Change the read result collector to only use one
-work item").
----
- fs/netfs/read_pgpriv2.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/netfs/read_pgpriv2.c b/fs/netfs/read_pgpriv2.c
-index 54d5004fec18..e72f5e674834 100644
---- a/fs/netfs/read_pgpriv2.c
-+++ b/fs/netfs/read_pgpriv2.c
-@@ -181,16 +181,17 @@ void netfs_pgpriv2_write_to_the_cache(struct netfs_io_request *rreq)
- 			break;
- 
- 		folioq_unmark3(folioq, slot);
--		if (!folioq->marks3) {
-+		while (!folioq->marks3) {
- 			folioq = folioq->next;
- 			if (!folioq)
--				break;
-+				goto end_of_queue;
- 		}
- 
- 		slot = __ffs(folioq->marks3);
- 		folio = folioq_folio(folioq, slot);
- 	}
- 
-+end_of_queue:
- 	netfs_issue_write(wreq, &wreq->io_streams[1]);
- 	smp_wmb(); /* Write lists before ALL_QUEUED. */
- 	set_bit(NETFS_RREQ_ALL_QUEUED, &wreq->flags);
+diff --git a/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml b/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml
+index a44d44b32809..3201ff8f9334 100644
+--- a/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml
++++ b/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml
+@@ -62,6 +62,8 @@ allOf:
+       properties:
+         clocks:
+           maxItems: 3
++        clock-names:
++          maxItems: 3
+         resets:
+           maxItems: 1
+         reset-names:
+@@ -78,6 +80,8 @@ allOf:
+       properties:
+         clocks:
+           minItems: 4
++        clock-names:
++          minItems: 4
+         resets:
+           minItems: 3
+         reset-names:
 -- 
 2.47.2
 
