@@ -1,99 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB73C25B66E;
-	Mon, 10 Feb 2025 17:54:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4CA25B66B;
+	Mon, 10 Feb 2025 17:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739210062; cv=none; b=aWZlFqVYXinm3UhfTJqQmemmpj03ZzrfIvfF11XxCo+sezIPPXYfZkwAstjjtDiiVfzFz9IeK1Uc8wOmDLWbHmruku0RosuYlRSDJ/cBwvCoB4hBs1dL2n2kfV9cUl3PMCKR0Mqklog8a9h0v3WdI0T3p3qcrttVm8YQUYUN/Dc=
+	t=1739210110; cv=none; b=VnBl/d0yGD4pj4YSmJNKvrW2GN3qjjPaa7TelC8tNVpz0xYtEACN6xXL+25WBh/xQgwECjrQHkqTscOa3elgsQxe+hbsz7k/1NBk7lN6NgdmiykMZ083QyAD9eQ6rleJrwCZyTaJBPpSyfYyAU7/VENtGLpfmVd3RigpJa3mdKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739210062; c=relaxed/simple;
-	bh=6ZRr2MjnfSqMr4uiBxnh7NlNHUxN69N+x0PHOj6xK/0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M901oi0Wuj/Iq0LjP7CpYo5j+Y/Yl1DR7XX8kYHe4xK9lP43pQgQt4uCPSIS6uOjLouF22S6NXwxWIcqrif73C3akyZG7x8Ndi0tJlbK6ntnQWj4+qlLKf+YYMq2jOI5lwQs+edVVCHoVCFiSqs2G0qECYvAyLqXfbp1LXLn/Zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NS/GqyIc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739210110; c=relaxed/simple;
+	bh=Ft93EquVMB68txAY9N3rvoy093S40GPOtRTZQhi5Is0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ZusQtmAL+E2mGd5cUvlZW+5zljgiBKWQcfprGJ5nRw4SIXHCbbe5yavgy1/mSwjHzCWYJQeCQJH6RklwsHW0z6NTVeiFeAEWkJH1g+sB6NgeGvRwwJi6UaNkT6+DmTgVDlpSaoK0S6betcZhKZpX2WCHaLZ4LQULvh07MVd5BTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=I9JvbYmA; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NS/GqyIc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AA88C4CED1;
-	Mon, 10 Feb 2025 17:54:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739210061;
-	bh=6ZRr2MjnfSqMr4uiBxnh7NlNHUxN69N+x0PHOj6xK/0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NS/GqyIc5ImpcezegSX6vO6BjnL5FAgiqKX/FXkmjMga/liwNZ0Is+PbJ4hKbi10r
-	 w/RqE5VrDelIQawOOO7J9moHLVKPCylB98DgTIPGEnHQxfkVVCC5braZq8XJkol0ih
-	 f57DYV0rjyvbCxfd3Ke2pfRMy9zxKtIlGrQcW0f9W5aflQW+qv3OnD0ZYWEnVMEzKn
-	 XcsQGuKqV+6bd0ybT3iYn9u1jmaFb02s/7MG/7aDhUNhDusJis7SKwamceTLOQ/fSn
-	 hajRpcVsncofqaHdysEyET9qmsu9epr7AAdwx9+xVNZgqKgznfXbZTJZqYhgcf2+me
-	 rUi9k2Q3a3P5Q==
-Date: Mon, 10 Feb 2025 17:54:15 +0000
-From: Simon Horman <horms@kernel.org>
-To: Suman Ghosh <sumang@marvell.com>
-Cc: sgoutham@marvell.com, gakula@marvell.com, sbhatta@marvell.com,
-	hkelam@marvell.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lcherian@marvell.com,
-	jerinj@marvell.com, john.fastabend@gmail.com, bbhushan2@marvell.com,
-	hawk@kernel.org, andrew+netdev@lunn.ch, ast@kernel.org,
-	daniel@iogearbox.net, bpf@vger.kernel.org, larysa.zaremba@intel.com
-Subject: Re: [net-next PATCH v5 1/6] octeontx2-pf: use xdp_return_frame() to
- free xdp buffers
-Message-ID: <20250210175415.GI554665@kernel.org>
-References: <20250206085034.1978172-1-sumang@marvell.com>
- <20250206085034.1978172-2-sumang@marvell.com>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="I9JvbYmA"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 11B9F411A1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1739210108; bh=5pQFFPXR2QDI9TXSDTjpQCYuhX/4f8q0mdRA4cKArH8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=I9JvbYmAyoZIU8FpW3JD20coUV425VNwnTQI3yxjc7xYVOBhhB74iCPmBJPG064Wv
+	 5ruoi2xygOuPjL0lDhmcdp4H3Bx4/AotzmKjZdaSNE9RWqo92wYqhZY4prAkPmnjSA
+	 9Km7tml2wtCW6JRbQUut3bFNl3AABKcc6d7fOPDCZad6hUsakF2Wk4YZWEt01SqWNs
+	 P9DSKwSwMzJdfWlEcpXqzJd50zbLvBqaedbL+R6LkyQcX3sdgVaQ8G9wztylsUYKR/
+	 4uV7SQ7PJ/LNpjPrxd7emAsw2oamsV5QRX47TM75d80aFYt7p4oH00EIMd53oaB5FD
+	 hrJEPnMdG0vQw==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 11B9F411A1;
+	Mon, 10 Feb 2025 17:55:08 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Charles Han <hanchunchao@inspur.com>, mkl@pengutronix.de,
+ manivannan.sadhasivam@linaro.org, thomas.kopp@microchip.com,
+ mailhol.vincent@wanadoo.fr, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, cem@kernel.org, djwong@kernel.org
+Cc: linux-can@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+ linux-doc@vger.kernel.org, Charles Han <hanchunchao@inspur.com>
+Subject: Re: [v2] Documentation: Remove repeated word in docs
+In-Reply-To: <20250207073433.23604-1-hanchunchao@inspur.com>
+References: <20250207073433.23604-1-hanchunchao@inspur.com>
+Date: Mon, 10 Feb 2025 10:55:07 -0700
+Message-ID: <877c5x1y84.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206085034.1978172-2-sumang@marvell.com>
+Content-Type: text/plain
 
-On Thu, Feb 06, 2025 at 02:20:29PM +0530, Suman Ghosh wrote:
-> xdp_return_frames() will help to free the xdp frames and their
-> associated pages back to page pool.
-> 
-> Signed-off-by: Geetha sowjanya <gakula@marvell.com>
-> Signed-off-by: Suman Ghosh <sumang@marvell.com>
+Charles Han <hanchunchao@inspur.com> writes:
 
-...
+> Remove the repeated word "to" docs.
+>
+> Signed-off-by: Charles Han <hanchunchao@inspur.com>
+> ---
+>  .../devicetree/bindings/net/can/microchip,mcp251xfd.yaml      | 2 +-
+>  Documentation/filesystems/xfs/xfs-online-fsck-design.rst      | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 
-> diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
+Applied, thanks.
 
-...
-
-> @@ -1465,10 +1476,14 @@ static bool otx2_xdp_rcv_pkt_handler(struct otx2_nic *pfvf,
->  		trace_xdp_exception(pfvf->netdev, prog, act);
->  		break;
->  	case XDP_DROP:
-> +		cq->pool_ptrs++;
-> +		if (page->pp) {
-> +			page_pool_recycle_direct(pool->page_pool, page);
-> +			return true;
-> +		}
->  		otx2_dma_unmap_page(pfvf, iova, pfvf->rbsize,
->  				    DMA_FROM_DEVICE);
->  		put_page(page);
-> -		cq->pool_ptrs++;
->  		return true;
-
-The above seems to get shuffled around in the next patch anyway, so
-maybe it's best to do this here (completely untested):
-
-	case XDP_DROP:
-		cq->pool_ptrs++;
-		if (page->pp) {
-			page_pool_recycle_direct(pool->page_pool, page);
-		} else {
-			otx2_dma_unmap_page(pfvf, iova, pfvf->rbsize,
-					    DMA_FROM_DEVICE);
-			put_page(page);
-		}
-		return true;
-
->  	}
->  	return false;
-
-...
+jon
