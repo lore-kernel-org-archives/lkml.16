@@ -1,247 +1,135 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373861AA1C0
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7551C3C0B;
+	Mon, 10 Feb 2025 09:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739179368; cv=none; b=Z2SQ88kdZTv2VCtSBTof6zg84E7JpaQaJ9tP9dojC4ZqvPEkbh4TBdooip2i0cOZRMOS9/BmYb4RMNdNWJhJ9m3FszTGBj41iW2VwdR/HHPLo8Acr0q/9wSscIz5YB7rds2iM0KdreeB0oefGs6J7S4/H6JyoKMPJWsnDmxgyxI=
+	t=1739179393; cv=none; b=jOQQRhcxibCoD5l8hj7af4OYAucKmKlcw/T1mZANr/NkSwyZz8rVkpTDgToIQYoBeHN8VZymfpcmaSd8eRXUtFbQtB77UP4kwL4RCJ4oWdWM5IXHNIDmitxptRnZk2oNZ0ZM6/es+shLBrisOhkVPX1ncFlmRmA42lN4ZsWcxE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739179368; c=relaxed/simple;
-	bh=4tRycz5VKwEgrws21mbq8l4wDIz8sBCr+bxjUjkUgmE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aGXEMyowyfd/SudDs0RY5Ok1qI5cygXegY+TsBP/RWO7zck+iJHodjWV4CGJpxywSpawyvYBujsVi1j55UdeIRn1FnoJd1vS0RhLwF3Y753WTcv50oRBcN5lsDYl3WWP8D0q8P1EoIxajBUHFkvUcyTjqXirp7Mpn/KklUIszKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=biqwqdkC; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739179393; c=relaxed/simple;
+	bh=PnAHgzbOEcHmyOSqFq0WyWOa76JzbO1d4Wym5YXtycw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AZmythXK2O533Nz2SBwL2YK9t/d1PrwJ9oiXeyI/IXZbFkBIHWHRJ6rIb/PV05zERSlfi4995aU7vY8Ar+nRSNGAWiHi7voqTzXEzoj9jcYDvJncfKrqgDHfrEAvTKOJHRiHplDeoQOXhmHCMDuIjVX+VYUhpj1qIfwPxUQ7nz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ItZmqfIG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="biqwqdkC"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2fa3fe04dd2so2761133a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 01:22:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739179366; x=1739784166; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+yAsubzuE3VYIy85zaI0aVGOu0CSnQBbpeAwKx7wr0Y=;
-        b=biqwqdkC1AYPjsrmed3efiJ2temGargXj+bEfFM9HAhE29/7S5Zj4xc7ACiGu8oYYG
-         qPozrT24a/8v/8HNPg4sLqpL+hZh+vfuYo0IVt90jENl2edG+v7H9qMHZ5pnVXrbyUJD
-         wxmM63GGzI11G+vaUHQj+ZdqaVuU9zHyrZ2/m0jh2wADCiR6mIy/4QO4a4NmY/lN59FH
-         aNBwk3i1HZ0svR7J6kbic3E/9bqMbrhoW43w/sQvZVeycbRwXeVL2WYUb9S5+mCOzioX
-         kLeX1/9bs2ni3GNiolsN6Zyo1mTN6YWMLbsGOvOtSxTNO4F58hkWIbFJtnv5fYoSJPY7
-         Y/vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739179366; x=1739784166;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+yAsubzuE3VYIy85zaI0aVGOu0CSnQBbpeAwKx7wr0Y=;
-        b=MduYGyNJm2Dnid9cd7QCTAIJ0+oIdT14zRO8mtuWztI6RfnEVcuOdNa4ajLuI4baqG
-         4s1olQoz16wUeLfks9DNX2Lf9xyZhaPh2inYPRmEHaMXR2vHdxgKne+EAR6hDfKWrWOk
-         Y09Eg6qwlh8+h9A457Xs+SJP+xgV5U2r1ercSwA998w4GFBaAeYol+9ESW8K1JvlqtuL
-         h6si2dhk231F7kRm3ZmnM/qYG0yLqmXocNA/yD35wuQoNUHSkMlRCSTPsyRZ7+JiIVxg
-         wsUpiffSLebJ1LpeclXZhoHAR5OqHq97vL8RMml69D/ZlBTwbTuaeAxK++QxwnrofRXB
-         tOEA==
-X-Forwarded-Encrypted: i=1; AJvYcCWCLQfvVhgmbCnSO39ebu1a5bS5VIFrhz2yh/lEsonWYZ4gn8KwtUXIjJPs2+wf2oPCn1OTm26yVURfrjc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLOIBPCjyUJHHxIWDmle+Cdpi6jOdzPbPKkDqx/JCs76Pwkrtm
-	egzweU8Ke4/WYOliGo4SzUhL7GanDylpwmhGelVCO2j4QIKqZKjF9S/GMs8FPA==
-X-Gm-Gg: ASbGncvM0Lg2kz+hMdL3XeoTdXz/uvMDCvjbKEG/tsyncakjEzYFuIL+dxt8cLjMtLD
-	tOwASdlNfqN/IWPSzZiwLZlozySf4sMC51XzMenRUl/vBFRFgHhuUnuKl5OOKvpHMt/n9EH4Yx0
-	F0Qjlx0RB4+Je8WkXpZH7IWiTMnnhs8t9pUSAQyzuEZc9DHxq2gM6SW0ivsi37Yu40pLElZ4CQa
-	DBCK3msejihCfpZNHzVLxK6Y9LAE8p7ojPpMgL3AXcEvgO3Cm+hikn/D6OpbbPo0fzHCICCJ/Bu
-	bqcmesIUdRAmYtfGojIeUd//+NFw
-X-Google-Smtp-Source: AGHT+IE0BAw+9nj+tSLVi2QqR6KlNRrGPiPZEdgft+nGLlrAGIA4ZVkBtDsEo29BVS87ByUimOq8NQ==
-X-Received: by 2002:a17:90b:2b48:b0:2f2:3efd:96da with SMTP id 98e67ed59e1d1-2fa242e5ca3mr19561370a91.24.1739179366410;
-        Mon, 10 Feb 2025 01:22:46 -0800 (PST)
-Received: from thinkpad ([220.158.156.173])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f368d2dc7sm74032885ad.251.2025.02.10.01.22.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 01:22:46 -0800 (PST)
-Date: Mon, 10 Feb 2025 14:52:40 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: cros-qcom-dts-watchers@chromium.org,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com,
-	quic_mrana@quicinc.com, quic_vpernami@quicinc.com,
-	mmareddy@quicinc.com
-Subject: Re: [PATCH v4 4/4] PCI: qcom: Enable ECAM feature
-Message-ID: <20250210092240.5b67fsdervb2tvxp@thinkpad>
-References: <20250207-ecam_v4-v4-0-94b5d5ec5017@oss.qualcomm.com>
- <20250207-ecam_v4-v4-4-94b5d5ec5017@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ItZmqfIG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EED49C4CED1;
+	Mon, 10 Feb 2025 09:23:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739179393;
+	bh=PnAHgzbOEcHmyOSqFq0WyWOa76JzbO1d4Wym5YXtycw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ItZmqfIGzU5zY3zNeah0bGAY+Li36UfqCN1XDiesjc2Jy2Y3VVG3ik8BwByFBlYVs
+	 EHLZRaay/0tdFL0RvLb9PBPUu4O1pUbLVOf45DhTaOI5v0NcxtKd50IIHuawum9Q6v
+	 F2Dz00UZ7ZXx0n2UZ6FEn0JnQrMO6RjlFEW1k1Fk8/QWN9nuOY2QN9INK3qNtim1Om
+	 Icu5FhTBLWVlHqefD1lcwXfAjDP30qA3RuWAPBXw1kPd2vaCr2yAidP+Fbpm6kW6sz
+	 7Imigvjczw1yUX1rnc4XrfDCneJtkAtsDCJjfN2H0Z8oT6e3mjrBZvcfi4lnP3XS9F
+	 PSyYTdyYtRX0g==
+Message-ID: <60c7ed79-c344-4f6a-aefc-d6d45a4d9004@kernel.org>
+Date: Mon, 10 Feb 2025 10:23:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 2/3] firmware: add Exynos ACPM protocol driver
+To: Tudor Ambarus <tudor.ambarus@linaro.org>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ Alim Akhtar <alim.akhtar@samsung.com>, Conor Dooley <conor+dt@kernel.org>,
+ Jassi Brar <jassisinghbrar@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-team@android.com,
+ =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Peter Griffin <peter.griffin@linaro.org>, Rob Herring <robh@kernel.org>,
+ Ulf Hansson <ulf.hansson@linaro.org>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Will McVicker <willmcvicker@google.com>
+References: <20250207-gs101-acpm-v7-2-ffd7b2fb15ae@linaro.org>
+ <e1fffd3b-d3dd-4f46-b7b6-1f03f934dd30@web.de>
+ <503b7ec9-e0b1-4351-aa34-3089b2055eb9@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <503b7ec9-e0b1-4351-aa34-3089b2055eb9@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250207-ecam_v4-v4-4-94b5d5ec5017@oss.qualcomm.com>
 
-On Fri, Feb 07, 2025 at 04:58:59AM +0530, Krishna Chaitanya Chundru wrote:
-> The ELBI registers falls after the DBI space, PARF_SLV_DBI_ELBI register
-> gives us the offset from which ELBI starts. so use this offset and cfg
-> win to map these regions instead of doing the ioremap again.
+On 10/02/2025 09:59, Tudor Ambarus wrote:
 > 
-> On root bus, we have only the root port. Any access other than that
-> should not go out of the link and should return all F's. Since the iATU
-> is configured for the buses which starts after root bus, block the
-> transactions starting from function 1 of the root bus to the end of
-> the root bus (i.e from dbi_base + 4kb to dbi_base + 1MB) from going
-> outside the link through ECAM blocker through PARF registers.
 > 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 77 ++++++++++++++++++++++++++++++++--
->  1 file changed, 73 insertions(+), 4 deletions(-)
+> On 2/8/25 3:31 PM, Markus Elfring wrote:
+>> …
+>>> +++ b/drivers/firmware/samsung/exynos-acpm.c
+>>> @@ -0,0 +1,771 @@
+>> …
+>>> +static int acpm_dequeue_by_polling(struct acpm_chan *achan,
+>>> +				   const struct acpm_xfer *xfer)
+>>> +{
+>> …
+>>> +	do {
+>>> +		mutex_lock(&achan->rx_lock);
+>>> +		ret = acpm_get_rx(achan, xfer);
+>>> +		mutex_unlock(&achan->rx_lock);
+>> …
+>>
+>> Under which circumstances would you become interested to apply a statement
+>> like “guard(mutex)(&achan->rx_lock);”?
+>> https://elixir.bootlin.com/linux/v6.13.1/source/include/linux/mutex.h#L201
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index e4d3366ead1f..84297b308e7e 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -52,6 +52,7 @@
->  #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
->  #define PARF_Q2A_FLUSH				0x1ac
->  #define PARF_LTSSM				0x1b0
-> +#define PARF_SLV_DBI_ELBI			0x1b4
->  #define PARF_INT_ALL_STATUS			0x224
->  #define PARF_INT_ALL_CLEAR			0x228
->  #define PARF_INT_ALL_MASK			0x22c
-> @@ -61,6 +62,17 @@
->  #define PARF_DBI_BASE_ADDR_V2_HI		0x354
->  #define PARF_SLV_ADDR_SPACE_SIZE_V2		0x358
->  #define PARF_SLV_ADDR_SPACE_SIZE_V2_HI		0x35c
-> +#define PARF_BLOCK_SLV_AXI_WR_BASE		0x360
-> +#define PARF_BLOCK_SLV_AXI_WR_BASE_HI		0x364
-> +#define PARF_BLOCK_SLV_AXI_WR_LIMIT		0x368
-> +#define PARF_BLOCK_SLV_AXI_WR_LIMIT_HI		0x36c
-> +#define PARF_BLOCK_SLV_AXI_RD_BASE		0x370
-> +#define PARF_BLOCK_SLV_AXI_RD_BASE_HI		0x374
-> +#define PARF_BLOCK_SLV_AXI_RD_LIMIT		0x378
-> +#define PARF_BLOCK_SLV_AXI_RD_LIMIT_HI		0x37c
-> +#define PARF_ECAM_BASE				0x380
-> +#define PARF_ECAM_BASE_HI			0x384
-> +
->  #define PARF_NO_SNOOP_OVERIDE			0x3d4
->  #define PARF_ATU_BASE_ADDR			0x634
->  #define PARF_ATU_BASE_ADDR_HI			0x638
-> @@ -84,6 +96,7 @@
->  
->  /* PARF_SYS_CTRL register fields */
->  #define MAC_PHY_POWERDOWN_IN_P2_D_MUX_EN	BIT(29)
-> +#define PCIE_ECAM_BLOCKER_EN			BIT(26)
->  #define MST_WAKEUP_EN				BIT(13)
->  #define SLV_WAKEUP_EN				BIT(12)
->  #define MSTR_ACLK_CGC_DIS			BIT(10)
-> @@ -294,6 +307,44 @@ static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
->  	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
->  }
->  
-> +static void qcom_pci_config_ecam(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-> +	u64 addr, addr_end;
-> +	u32 val;
-> +
-> +	/* Set the ECAM base */
-> +	writel_relaxed(lower_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE);
-> +	writel_relaxed(upper_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE_HI);
-> +
-> +	/*
-> +	 * The only device on root bus is the Root Port. Any access other than that
-> +	 * should not go out of the link and should return all F's. Since the iATU
-> +	 * is configured for the buses which starts after root bus, block the transactions
-> +	 * starting from function 1 of the root bus to the end of the root bus (i.e from
-> +	 * dbi_base + 4kb to dbi_base + 1MB) from going outside the link.
-> +	 */
-> +	addr = pci->dbi_phys_addr + SZ_4K;
-> +	writel_relaxed(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE);
-> +	writel_relaxed(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE_HI);
-> +
-> +	writel_relaxed(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE);
-> +	writel_relaxed(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE_HI);
-> +
-> +	addr_end = pci->dbi_phys_addr + SZ_1M - 1;
-> +
-> +	writel_relaxed(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT);
-> +	writel_relaxed(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT_HI);
-> +
-> +	writel_relaxed(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT);
-> +	writel_relaxed(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT_HI);
-> +
-> +	val = readl_relaxed(pcie->parf + PARF_SYS_CTRL);
-> +	val |= PCIE_ECAM_BLOCKER_EN;
-> +	writel_relaxed(val, pcie->parf + PARF_SYS_CTRL);
-> +}
-> +
->  static int qcom_pcie_start_link(struct dw_pcie *pci)
->  {
->  	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-> @@ -303,6 +354,9 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
->  		qcom_pcie_common_set_16gt_lane_margining(pci);
->  	}
->  
-> +	if (pci->pp.ecam_mode)
-> +		qcom_pci_config_ecam(&pci->pp);
-> +
->  	/* Enable Link Training state machine */
->  	if (pcie->cfg->ops->ltssm_enable)
->  		pcie->cfg->ops->ltssm_enable(pcie);
-> @@ -1233,6 +1287,7 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->  	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-> +	u16 offset;
->  	int ret;
->  
->  	qcom_ep_reset_assert(pcie);
-> @@ -1241,6 +1296,11 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
->  	if (ret)
->  		return ret;
->  
-> +	if (pp->ecam_mode) {
-> +		offset = readl(pcie->parf + PARF_SLV_DBI_ELBI);
-> +		pcie->elbi = pci->dbi_base + offset;
-> +	}
+> I'll replace the open-coded mutex handling with cleanup.h guard(mutex)
+> and scoped_guard(mutex, ...), thanks.
+FYI, Markus is PLONKed so I won't ever see what he writes.
 
-If you use the existing 'elbi' register offset defined in DT, you can just rely
-on the DWC core to call dw_pcie_ecam_supported() as I mentioned in my comment in
-patch 3.
+<form letter>
+Feel free to ignore all comments from Markus, regardless whether the
+suggestion is reasonable or not. Several maintainers ignore Markus'
+feedback, because it is just a waste of time.
+</form letter>
 
-> +
->  	ret = phy_set_mode_ext(pcie->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_RC);
->  	if (ret)
->  		goto err_deinit;
-> @@ -1615,6 +1675,13 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  	pci->ops = &dw_pcie_ops;
->  	pp = &pci->pp;
->  
-> +	pp->bridge = devm_pci_alloc_host_bridge(dev, 0);
-> +	if (!pp->bridge) {
-> +		ret = -ENOMEM;
-> +		goto err_pm_runtime_put;
-> +	}
-> +
-
-This will also go away.
-
-> +	pci->pp.ecam_mode = dw_pcie_ecam_supported(pp);
-
-This too.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Best regards,
+Krzysztof
