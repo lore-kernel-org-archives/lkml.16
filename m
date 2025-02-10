@@ -1,173 +1,188 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665732F2A;
-	Mon, 10 Feb 2025 07:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059992F2A
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739174151; cv=none; b=r/0Up28ejqXqrw9jeHWmazOsh+683Dk2DhCpT+vlggtLidHn962dvRJpqDJ59aM2qGxpwWwYowQEK9vJKIlcqcRuDo4vPA2mEiwUzbyKP/hARV7qzAPij6ZxIhGRSyHvebC6L1I/nwivmRjkgur4s7FZoI8RfF5+n3/oyVL3UwE=
+	t=1739174244; cv=none; b=CPINmC2UCeu/TvvDcZyhakbgvpROJYdp5yRs/HQaJim4KRx/LyYQIxSdiQJv/fsxqYdE5DpdIojw9xHN7c9mzFaALoF5KM76ru35fINIcgu3Oxy+gS7xqOl6279lLQPhonD0v3y7UTwvvWkLk/CLeaNh7dp3u6uSsAxRLqwAZzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739174151; c=relaxed/simple;
-	bh=dLifF2bTaaX2VVSLrgjXHMuMu/WbQ5g7c0KnzmB7Zqg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=geIkr0eid7UknKd4ryNKgbBraGzFaFpdQNzEMYxFbqVZvjebf7l1rfsCYO2xicf99YgI+mT9mlUVBomix9bGYGZZNXVCTa9md4/Yl47aMM3aHTxB3tOFCxLNEKXLgaYE6wXpyY389WJa9ez6a9ksbAFsOHR243YjaGzCuawD8CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af68c.dynamic.kabel-deutschland.de [95.90.246.140])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	s=arc-20240116; t=1739174244; c=relaxed/simple;
+	bh=hXKMFjUxmniwLPmXl/zrhJcXY2dfco4gVE9XyWgbOhs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VAsFRptzk3AANjf3ddkhl7Tqi0eBZRHzCRK45GSn5zBpX4vGC3KYhpUO8ifSbHHQcNzLoEwbP0ZPzR3+W0oKcr/qlUZxA9eJLtqKAZrJjpJPaqfpRww9dVO1q3OBWa9QPV0QMC9zvEEDpJ0N4QxAPimmnDkoPCJeeU6/+gYhQ7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cI8H2gcO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cI8H2gcO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739174241;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5B84Awu6JUpstdhEM0yzA51Ej2LPUV/BX8OiM6ds56M=;
+	b=cI8H2gcOF/enGAj4bGF92ahx7YK7V1Bhv8yUsPjQyEDtRKS58qYp65D6znXPrNpEBYgjlD
+	cTIKmSdpxB/shKqPaSFkcDdQzBvcMToXt/WG87Uz61sudszUeIXE/mIMSk1V0d16ggaMSJ
+	MFGLyrsn9Xb/9rA/wGW7hOI7rLvaVPs=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-657-YoSmS7_WMR-TI_Kzta_21Q-1; Mon,
+ 10 Feb 2025 02:57:16 -0500
+X-MC-Unique: YoSmS7_WMR-TI_Kzta_21Q-1
+X-Mimecast-MFC-AGG-ID: YoSmS7_WMR-TI_Kzta_21Q
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 931F761E6477D;
-	Mon, 10 Feb 2025 08:55:15 +0100 (CET)
-Message-ID: <9d056e62-4e58-40d5-9401-40d3c20c2389@molgen.mpg.de>
-Date: Mon, 10 Feb 2025 08:55:14 +0100
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 40BF01956095;
+	Mon, 10 Feb 2025 07:57:14 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.32.69])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 861531800358;
+	Mon, 10 Feb 2025 07:57:10 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: Marco Elver <elver@google.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: [PATCH v5 1/3] sched: Compact RSEQ concurrency IDs with reduced threads and affinity
+Date: Mon, 10 Feb 2025 08:57:00 +0100
+Message-ID: <20250210075703.79125-2-gmonaco@redhat.com>
+In-Reply-To: <20250210075703.79125-1-gmonaco@redhat.com>
+References: <20250210075703.79125-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: NOHZ tick-stop error: local softirq work is pending, handler
- #08!!! on Dell XPS 13 9360
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar
- <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- LKML <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <354a2690-9bbf-4ccb-8769-fa94707a9340@molgen.mpg.de>
- <87o7ak411y.fsf@somnus> <256fdb2e-9b83-4837-bd31-0c34e4267c31@molgen.mpg.de>
- <87sezv7ytw.fsf@somnus> <1cf78f6f-af21-48bc-a9d8-755dd7bf8503@molgen.mpg.de>
- <9de8ebd1-53fc-48d7-af11-b5c1ed828b3d@molgen.mpg.de>
- <598d4118-3f63-44dd-b0da-e19efbb73933@molgen.mpg.de>
-Content-Language: en-US
-In-Reply-To: <598d4118-3f63-44dd-b0da-e19efbb73933@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Dear Anna-Maria,
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
+When a process reduces its number of threads or clears bits in its CPU
+affinity mask, the mm_cid allocation should eventually converge towards
+smaller values.
 
-Am 24.10.24 um 14:48 schrieb Paul Menzel:
+However, the change introduced by:
 
-> Am 21.08.24 um 23:01 schrieb Paul Menzel:
->> [Added URLs for files.]
->>
->> Am 21.08.24 um 10:20 schrieb Paul Menzel:
+commit 7e019dcc470f ("sched: Improve cache locality of RSEQ concurrency
+IDs for intermittent workloads")
 
->>> Thank you very much for the support. I was finally able to collect 
->>> the data you asked for.
->>>
->>> Am 09.04.24 um 09:57 schrieb Anna-Maria Behnsen:
->>>> Paul Menzel writes:
->>>
->>> […]
->>>
->>>>> Am 08.04.24 um 12:10 schrieb Anna-Maria Behnsen:
->>>>>
->>>>>> Paul Menzel writes:
->>>>>
->>>>>>> On Dell XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022, with Linux 6.9- rc2+
->>>>>>> built from commit b1e6ec0a0fd0 (Merge tag 'docs-6.9-fixes' of
->>>>>>> git://git.lwn.net/linux) the external USB-C adapter Dell DA300 stopped
->>>>>>> working (only the Ethernet port was used). Linux logged:
->>>>>>
->>>>>> thanks for the report. Can you please provide a trace beside the dmesg
->>>>>> output? The following trace events should be enabled (via kernel 
->>>>>> command line):
->>>>>>
->>>>>> trace_event=timer:*,timer_migration:*,sched:sched_switch,sched:sched_wakeup,sched:sched_process_hang,irq:softirq_entry,irq:softirq_raise,irq:softirq_exit
->>>>> Unfortunately I haven’t been able to reproduce it until now. Should it
->>>>> happen again, I am going to try your suggestion.
->>>>
->>>> Thanks for letting me know.
->>>
->>> I wanted to configure that in the running system, but wasn’t able to 
->>> set all of these at once with `set_event`:
->>>
->>>      echo 'timer:*,timer_migration:*,sched:sched_switch,sched:sched_wakeup,sched:sched_process_hang,irq:softirq_entry,irq:softirq_raise,irq:softirq_exit' | sudo tee /sys/kernel/tracing/set_event
->>>
->>> For some reason setting them individually also did *not* work:
->>>
->>>      for e in timer:* timer_migration:* sched:sched_switch sched:sched_wakeup sched:sched_process_hang irq:softirq_entry irq:softirq_raise irq:softirq_exit'; do echo "$e" | sudo tee -a /sys/kernel/tracing/set_event; done
->>>
->>> I then used
->>>
->>>      echo 1 | sudo tee /sys/kernel/tracing/events/timer/enable
->>>      echo 1 | sudo tee /sys/kernel/tracing/events/timer_migration/enable
->>>      echo 1 | sudo tee /sys/kernel/tracing/events/sched/sched_switch/enable
->>>      echo 1 | sudo tee /sys/kernel/tracing/events/sched/sched_wakeup/enable
->>>      echo 1 | sudo tee /sys/kernel/tracing/events/sched/sched_process_hang/enable
->>>      echo 1 | sudo tee /sys/kernel/tracing/events/irq/softirq_entry/enable
->>>      echo 1 | sudo tee /sys/kernel/tracing/events/irq/softirq_raise/enable
->>>      echo 1 | sudo tee /sys/kernel/tracing/events/irq/softirq_exit/enable
->>>
->>> and also had to increase the buffer to bridge the gap between the 
->>> event and me noticing it:
->>>
->>>      echo 96000 | sudo tee /sys/kernel/tracing/buffer_size_kb
->>>
->>> Then, with Linux v6.11-rc4-11-g521b1e7f4cf0b, I was able to get the 
->>> trace for the event below:
->>>
->>>      [ 7542.706299] NOHZ tick-stop error: local softirq work is pending, handler #08!!!
->>>
->>> $ sudo cat /sys/kernel/tracing/trace
->>> […]
->>>   MediaPD~der #28-14000   [000] d..1.  7542.703768: hrtimer_cancel: hrtimer=000000008d2c9f3f
->>>   MediaPD~der #28-14000   [000] .....  7542.703810: hrtimer_init: hrtimer=00000000c6f259e7 clockid=CLOCK_MONOTONIC mode=ABS
->>>   MediaPD~der #28-14000   [000] d..1.  7542.703812: hrtimer_start:hrtimer=00000000c6f259e7 function=hrtimer_wakeup expires=7602581538204 softexpires=7602581488204 mode=ABS
->>>   MediaPD~der #28-14000   [000] d..2.  7542.703821: sched_switch: prev_comm=MediaPD~der #28 prev_pid=14000 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
->>>            <idle>-0       [000] dN.2.  7542.703931: sched_wakeup: comm=ImageBridgeChld pid=6041 prio=120 target_cpu=000
->>>            <idle>-0       [000] d..2.  7542.703937: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=ImageBridgeChld next_pid=6041 next_prio=120
->>>   ImageBridgeChld-6041    [000] d..2.  7542.704041: sched_switch: prev_comm=ImageBridgeChld prev_pid=6041 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
->>>            <idle>-0       [000] dN.2.  7542.704174: sched_wakeup: comm=Renderer pid=4113 prio=120 target_cpu=000
->>>            <idle>-0       [000] d..2.  7542.704179: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=Renderer next_pid=4113 next_prio=120
->>>          Renderer-4113    [000] d..2.  7542.704245: sched_switch: prev_comm=Renderer prev_pid=4113 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
->>>            <idle>-0       [000] dNh2.  7542.704260: sched_wakeup: comm=IPC I/O Child pid=6029 prio=120 target_cpu=000
->>>            <idle>-0       [000] d..2.  7542.704267: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==>  next_comm=IPC I/O Child next_pid=6029 next_prio=120
->>>     IPC I/O Child-6029    [000] d..2.  7542.704340: sched_switch: prev_comm=IPC I/O Child prev_pid=6029 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
->>>            <idle>-0       [000] dN.2.  7542.704786: sched_wakeup: comm=Compositor pid=4123 prio=120 target_cpu=000
->>>            <idle>-0       [000] d..2.  7542.704791: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=Compositor next_pid=4123 next_prio=120
->>>        Compositor-4123    [000] d..2.  7542.704944: sched_switch: prev_comm=Compositor prev_pid=4123 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
->>>            <idle>-0       [000] dN.2.  7542.705943: sched_wakeup: comm=Compositor pid=4123 prio=120 target_cpu=000
->>>            <idle>-0       [000] d..2.  7542.705950: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=Compositor next_pid=4123 next_prio=120
->>>        Compositor-4123    [000] d..2.  7542.706105: sched_switch: prev_comm=Compositor prev_pid=4123 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
->>>            <idle>-0       [000] d.h2.  7542.706328: hrtimer_cancel: hrtimer=000000009bbda66a
->>>            <idle>-0       [000] d.h1.  7542.706329: hrtimer_expire_entry: hrtimer=000000009bbda66a 
->>> function=tick_nohz_handler now=7542584007490
->>>            <idle>-0       [000] d.h1.  7542.706333: softirq_raise: vec=9 [action=RCU]
->>>            <idle>-0       [000] d.h1.  7542.706338: softirq_raise: vec=7 [action=SCHED]
->>>            <idle>-0       [000] d.h1.  7542.706339: hrtimer_expire_exit: hrtimer=000000009bbda66a
->>>            <idle>-0       [000] d.h2.  7542.706340: hrtimer_start: hrtimer=000000009bbda66a function=tick_nohz_handler expires=7542588000000 softexpires=7542588000000 mode=ABS
->>>            <idle>-0       [000] ..s1.  7542.706345: softirq_entry: vec=7 [action=SCHED]
->>>            <idle>-0       [000] ..s1.  7542.706359: softirq_exit: vec=7 [action=SCHED]
->>>            <idle>-0       [000] ..s1.  7542.706360: softirq_entry: vec=9 [action=RCU]
->>>            <idle>-0       [000] ..s1.  7542.706362: softirq_exit: vec=9 [action=RCU]
->>>            <idle>-0       [000] dNh4.  7542.707672: sched_wakeup: comm=irq/51-DLL075B: pid=194 prio=49 target_cpu=000
->>>            <idle>-0       [000] d..2.  7542.707685: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=irq/51-DLL075B: next_pid=194 next_prio=49
->>>   irq/51-DLL075B:-194     [000] .....  7542.707708: timer_init: timer=00000000630ae178
->>>   irq/51-DLL075B:-194     [000] d..1.  7542.707710: timer_start: timer=00000000630ae178 function=process_timeout expires=4296778179 [timeout=250] bucket_expiry=4296778184 cpu=0 idx=121 flags=
->>>   irq/51-DLL075B:-194     [000] d..2.  7542.707718: sched_switch: prev_comm=irq/51-DLL075B: prev_pid=194 prev_prio=49 prev_state=D ==> next_comm=swapper/0 next_pid=0 next_prio=120
->>>            <idle>-0       [000] dN.2.  7542.709072: sched_wakeup: comm=AudioIP~ent RPC pid=6671 prio=120 target_cpu=000
->>> […]
->>>
->>> The trace file is 320 MB big. If you need the full trace and log, 
->>> please tell me, and I’ll upload it somewhere.
->>
->> https://owww.molgen.mpg.de/~pmenzel/20240821--linux-6.10-rc4+.txt
->> https://owww.molgen.mpg.de/~pmenzel/20240821--soft-irq--trace.7z
-> 
-> Just for the record, I am still seeing this with 6.12.0-rc4-00047- 
-> gc2ee9f594da8 (KVM: selftests: Fix build on on non-x86 architectures).
+adds a per-mm/CPU recent_cid which is never unset unless a thread
+migrates.
 
-Just for the record, I am still seeing this with 
-6.14.0-rc1-00187-g8f6629c004b1 (kbuild: Move -Wenum-enum-conversion to W=2).
+This is a tradeoff between:
 
+A) Preserving cache locality after a transition from many threads to few
+   threads, or after reducing the hamming weight of the allowed CPU mask.
 
-Kind regards,
+B) Making the mm_cid upper bounds wrt nr threads and allowed CPU mask
+   easy to document and understand.
 
-Paul
+C) Allowing applications to eventually react to mm_cid compaction after
+   reduction of the nr threads or allowed CPU mask, making the tracking
+   of mm_cid compaction easier by shrinking it back towards 0 or not.
+
+D) Making sure applications that periodically reduce and then increase
+   again the nr threads or allowed CPU mask still benefit from good
+   cache locality with mm_cid.
+
+Introduce the following changes:
+
+* After shrinking the number of threads or reducing the number of
+  allowed CPUs, reduce the value of max_nr_cid so expansion of CID
+  allocation will preserve cache locality if the number of threads or
+  allowed CPUs increase again.
+
+* Only re-use a recent_cid if it is within the max_nr_cid upper bound,
+  else find the first available CID.
+
+Fixes: 7e019dcc470f ("sched: Improve cache locality of RSEQ concurrency IDs for intermittent workloads")
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Marco Elver <elver@google.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Tested-by: Gabriele Monaco <gmonaco@redhat.com>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
+ include/linux/mm_types.h |  7 ++++---
+ kernel/sched/sched.h     | 25 ++++++++++++++++++++++---
+ 2 files changed, 26 insertions(+), 6 deletions(-)
+
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 6b27db7f94963..0234f14f2aa6b 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -875,10 +875,11 @@ struct mm_struct {
+ 		 */
+ 		unsigned int nr_cpus_allowed;
+ 		/**
+-		 * @max_nr_cid: Maximum number of concurrency IDs allocated.
++		 * @max_nr_cid: Maximum number of allowed concurrency
++		 *              IDs allocated.
+ 		 *
+-		 * Track the highest number of concurrency IDs allocated for the
+-		 * mm.
++		 * Track the highest number of allowed concurrency IDs
++		 * allocated for the mm.
+ 		 */
+ 		atomic_t max_nr_cid;
+ 		/**
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 38e0e323dda26..606c96b74ebfa 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -3698,10 +3698,28 @@ static inline int __mm_cid_try_get(struct task_struct *t, struct mm_struct *mm)
+ {
+ 	struct cpumask *cidmask = mm_cidmask(mm);
+ 	struct mm_cid __percpu *pcpu_cid = mm->pcpu_cid;
+-	int cid = __this_cpu_read(pcpu_cid->recent_cid);
++	int cid, max_nr_cid, allowed_max_nr_cid;
+ 
++	/*
++	 * After shrinking the number of threads or reducing the number
++	 * of allowed cpus, reduce the value of max_nr_cid so expansion
++	 * of cid allocation will preserve cache locality if the number
++	 * of threads or allowed cpus increase again.
++	 */
++	max_nr_cid = atomic_read(&mm->max_nr_cid);
++	while ((allowed_max_nr_cid = min_t(int, READ_ONCE(mm->nr_cpus_allowed),
++					   atomic_read(&mm->mm_users))),
++	       max_nr_cid > allowed_max_nr_cid) {
++		/* atomic_try_cmpxchg loads previous mm->max_nr_cid into max_nr_cid. */
++		if (atomic_try_cmpxchg(&mm->max_nr_cid, &max_nr_cid, allowed_max_nr_cid)) {
++			max_nr_cid = allowed_max_nr_cid;
++			break;
++		}
++	}
+ 	/* Try to re-use recent cid. This improves cache locality. */
+-	if (!mm_cid_is_unset(cid) && !cpumask_test_and_set_cpu(cid, cidmask))
++	cid = __this_cpu_read(pcpu_cid->recent_cid);
++	if (!mm_cid_is_unset(cid) && cid < max_nr_cid &&
++	    !cpumask_test_and_set_cpu(cid, cidmask))
+ 		return cid;
+ 	/*
+ 	 * Expand cid allocation if the maximum number of concurrency
+@@ -3709,8 +3727,9 @@ static inline int __mm_cid_try_get(struct task_struct *t, struct mm_struct *mm)
+ 	 * and number of threads. Expanding cid allocation as much as
+ 	 * possible improves cache locality.
+ 	 */
+-	cid = atomic_read(&mm->max_nr_cid);
++	cid = max_nr_cid;
+ 	while (cid < READ_ONCE(mm->nr_cpus_allowed) && cid < atomic_read(&mm->mm_users)) {
++		/* atomic_try_cmpxchg loads previous mm->max_nr_cid into cid. */
+ 		if (!atomic_try_cmpxchg(&mm->max_nr_cid, &cid, cid + 1))
+ 			continue;
+ 		if (!cpumask_test_and_set_cpu(cid, cidmask))
+-- 
+2.48.1
+
