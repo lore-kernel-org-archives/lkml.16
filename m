@@ -1,113 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5A1180A80;
-	Mon, 10 Feb 2025 05:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D69D2F2A;
+	Mon, 10 Feb 2025 05:07:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739163884; cv=none; b=OEbMzvtJcnD7tbcZrag6y5iXeMFUhRyU3XIGbJs2JbiMDnjVthrDINLsXThLMIbAqAZPP98fnSJj2yXdE+7igeDevHE9s43bKvoe2Alwp5a1c/yf8JNv+mYnMen5Z0fJijfsV5fW49+qcNKSg2KgaVN0yu6+fAcV16alMum/C7I=
+	t=1739164076; cv=none; b=FJT2MoagWjIthzCwND+RtVIwpk1VHs9057+N0KEGUzCuDmscHF5EnAUYYRSfpget3l/vv5msAo5vgPS544LS7M3MvNyqsNtJPxzYfKHUkmcJxydd0gPIpho0ZJraQ7aVL8SfVvw0fZRofqA8V6x2xhqpy1IRkxkcsNYsCPFwhbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739163884; c=relaxed/simple;
-	bh=BUMwJBFmmCgIajK9QzBHIVRRQQs+ucHortjyYy4kOlA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RP5P/Z0RDwZH54SBnS0ZciZ8LODGYiGzhV5BT+IEfcykdCd6bETPcZG8b14sbjuGN+HprgIF9TpLbN5r+SwVgxp+AaNbAR0woHLiRrXnC97LVv1oIH1fwARoCr4VevFFy61w+XDBC5AhAA2Yiw15rru+AcuIQ/G/KRVOFE08P5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C2VemQki; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739164076; c=relaxed/simple;
+	bh=ANO9oMWAe9WVlezDq1z5oOTTNnIfIcxIryQuVjmqVX8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gUTramfmB/gJxu+FdnP5eY2UIYsCxO8n7p1Xrff+KR9jvGiA3jYgXvN0Z/qWeff99kNaUqEfeuIn0MOO7EcrINHZ7EEpKW9IkY8bknDkNc2eChADomlkp+yHugsUbX8GN68xk+097YHWQhLJ2BB+EgrC1s2ioNMWctBjY8iwGXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=hPpKWy+e; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C2VemQki"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739163883; x=1770699883;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=BUMwJBFmmCgIajK9QzBHIVRRQQs+ucHortjyYy4kOlA=;
-  b=C2VemQkibTgA3fi7a8o7k3E9cA/q+eRjIVHjWsIkRbrA3dShG/KsoW+O
-   q8JjP5MI+RTcOqAJQCvLaFJtedNyoH51ZZRHlcm1DlseA+W3QZg6Vd56B
-   9k0oAseRkzdc75MP8IOMr8r3iaO87JTghXfAy/5hDLOkdJrSlriw32HHK
-   NmVNvlKUdhQzJcfeDfWcrMN37g650Rj7auAyYyFJ1Fr/M4VzCABU/t5r6
-   +cKJrx6iuwOWsek5lhzxFoqqGFg3jw6gNcavFXvk47YvdqDIj+2ZdEm3i
-   alBA9gxmtDVUhVdqpFK/1X2oabmnTmtOPj1O9eQDIq8u3IaDi5z8WXetY
-   g==;
-X-CSE-ConnectionGUID: 76nmsuPRRgCOmSi0H6Pyvg==
-X-CSE-MsgGUID: aOFW4lS7QZed9u9JYmM+lQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="50369457"
-X-IronPort-AV: E=Sophos;i="6.13,273,1732608000"; 
-   d="scan'208";a="50369457"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 21:04:43 -0800
-X-CSE-ConnectionGUID: ruyGcTgATKOtt1Gx6Rsclg==
-X-CSE-MsgGUID: sTGhxIZbRKmUc6N5AXB/5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,273,1732608000"; 
-   d="scan'208";a="112312217"
-Received: from inlubt0246.iind.intel.com ([10.191.24.87])
-  by fmviesa008.fm.intel.com with ESMTP; 09 Feb 2025 21:04:39 -0800
-From: subramanian.mohan@intel.com
-To: linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	andriy.shevchenko@linux.intel.com,
-	giometti@enneenne.com,
-	tglx@linutronix.de,
-	corbet@lwn.net
-Cc: eddie.dong@intel.com,
-	christopher.s.hall@intel.com,
-	pandith.n@intel.com,
-	thejesh.reddy.t.r@intel.com,
-	david.zage@intel.com,
-	srinivasan.chinnadurai@intel.com,
-	subramanian.mohan@intel.com
-Subject: [PATCH v13 4/4] ABI: pps: Add ABI documentation for Intel TIO
-Date: Mon, 10 Feb 2025 10:34:21 +0530
-Message-Id: <20250210050421.29256-5-subramanian.mohan@intel.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20250210050421.29256-1-subramanian.mohan@intel.com>
-References: <20250210050421.29256-1-subramanian.mohan@intel.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hPpKWy+e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1739164068;
+	bh=0DU1lW0OzqBKiYkfpzAiSmzVXvZR8o2Im4Sez63qh3g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hPpKWy+eYnHl1rehrAqFpQqwScYXLmjJ041HUn2dU9SUZ20gL4PJwIDPXlj9OtszF
+	 CyZ6DckAwybcvqA2FdGBURVgQH3GTY3mJgHhF80WKUyU2LjS0mSq0zrgErBKyQgKx8
+	 yZecBA/UWg+OWcKUerL+8rF8XY0z171jKjEd2soE9uCKFLxMzhvaW3LbbXm2YsOLLR
+	 b65yYih7qNY9+St/gGPoWVLBWmKmk3GXMWGGgfRUV1ZsMtF7/5troNqdR5T2N38z41
+	 +yL9H7rsvXPsTFKSC7lZzk2IhjAVQMZLZbz8j04Qur0aaaSermgfwLHArLLbqTlHZK
+	 JPGLfHkKW+D7w==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Yrsyr1fByz4wbR;
+	Mon, 10 Feb 2025 16:07:48 +1100 (AEDT)
+Date: Mon, 10 Feb 2025 16:07:47 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Tree for Feb 10
+Message-ID: <20250210160747.4db5c984@canb.auug.org.au>
+In-Reply-To: <20250210152940.1bff8e43@canb.auug.org.au>
+References: <20250210152940.1bff8e43@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/=M7vtFD.FdynQRZMxf.zzzM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-From: Subramanian Mohan <subramanian.mohan@intel.com>
+--Sig_/=M7vtFD.FdynQRZMxf.zzzM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Document sysfs interface for Intel Timed I/O PPS driver.
+Hi all,
 
-Signed-off-by: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
-Signed-off-by: Subramanian Mohan <subramanian.mohan@intel.com>
----
- Documentation/ABI/testing/sysfs-pps-gen-tio | 6 ++++++
- MAINTAINERS                                 | 1 +
- 2 files changed, 7 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-pps-gen-tio
+There will be no linux-next release tomorrow.  Sorry for the short notice.
+--=20
+Cheers,
+Stephen Rothwell
 
-diff --git a/Documentation/ABI/testing/sysfs-pps-gen-tio b/Documentation/ABI/testing/sysfs-pps-gen-tio
-new file mode 100644
-index 000000000000..3c34ff17a335
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-pps-gen-tio
-@@ -0,0 +1,6 @@
-+What:		/sys/class/pps-gen/pps-genx/enable
-+Date:		April 2025
-+KernelVersion:	6.15
-+Contact:	Subramanian Mohan<subramanian.mohan@intel.com>
-+Description:
-+		Enable or disable PPS TIO generator output.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 25c86f47353d..d4280facbe51 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18916,6 +18916,7 @@ S:	Maintained
- W:	http://wiki.enneenne.com/index.php/LinuxPPS_support
- F:	Documentation/ABI/testing/sysfs-pps
- F:	Documentation/ABI/testing/sysfs-pps-gen
-+F:	Documentation/ABI/testing/sysfs-pps-gen-tio
- F:	Documentation/devicetree/bindings/pps/pps-gpio.yaml
- F:	Documentation/driver-api/pps.rst
- F:	drivers/pps/
--- 
-2.35.3
+--Sig_/=M7vtFD.FdynQRZMxf.zzzM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmepiaMACgkQAVBC80lX
+0Gxw/ggAlHmC5Vz3DjHbPmqBR05MSm2ApE584JYAVqHKy4KFlW5SwLnvfjP3zRMc
+oWl3/4ePpFTWAI1jjH05lZAWo7+iH5i/VEK1R2dbwsMQsX5/soSVg3D/oIjFt0eO
+UTaq9sEibed/WzsRVGEEuyaXlbNBIZh4B/W7iyW3rcvJiiDh1KA15gP3zFAtLDfT
+tp2gfEakXinNLSf+d8im1W5ytkmDsq84f1/H96ufNFH2BSSiD4uapjHoW5DUuoes
+cVLwnfGWl3wUvjM3pInO+AzMiKDTDdzp7G/sl2KMd5LajY8SCuicpRw79UmfSWEj
+qg2RDYhdRd6o/i+SNGKvzD7RZLBwWw==
+=FMVI
+-----END PGP SIGNATURE-----
+
+--Sig_/=M7vtFD.FdynQRZMxf.zzzM--
