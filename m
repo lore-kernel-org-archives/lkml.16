@@ -1,231 +1,214 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E841C07ED
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:47:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739198839; cv=fail; b=jOWwudA7tbmyaI/zOdBb1gurr22NwX6UJJYZxFYp/YJbYS9NdmnqOOGa5ORN8Dwn5RHMtpx3e3wopJ4+EOjdn1LVqr/GbACOaUzC5V+YLvzwL6w90ppe40oX0LIwhTQZuRcS7oT6ZEIY7HtxxMzMRlHumlA+abC4HBkvKvPjjLM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739198839; c=relaxed/simple;
-	bh=OWk7Ug/YlHLA2JAqh/zowJ9A8FRkvsV875EqBxVXHt4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=AkAfyKlkwKBeBTA8NP6EjKNB1/zybJY7KR0AMK1HmLyQJ9C5BnYE0V8oNW4TvsUrWo98dKpXj4jSeXEbGdgEOzc2hOueKBM2lDjlglksTZl8iOOBEsJ/VeNjeq33Kv4jDIM/FOfLPGCMrF7vCym7SzkinWq8eld7JOorVyKlDIU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q0Wl0kg5; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B301F8BA4
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739198871; cv=none; b=ao9I36R3NivhNp/LKetgvJX6bHrPNXAxVFy/wJOzlmmsXmtN4vhHGEoa6+rqEoqhS846pZ/IYKSbeTSZBjCODW5Upal91bh3lJeH/JLQUBuK4xbp3Eb6WmOZiq+goVrY3zhcw1KbrudPQ6Ip6YV/DJoIyQW3ZSRr0hPV9v1HNK8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739198871; c=relaxed/simple;
+	bh=FSpTQe3b8o6+Jav6J98B+jgoo4xBuSUgUI/RFXjz5AE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c3fpMZUl57+c5B5XRE/PQHv+Ua0kgRzmi1kG58nvhIRA+03tFz2Gv0LcIC9tMn5VNbUmI6K3BeYdBlGcegUYJzPDqy37i1huWMltwX6IjvoU7qAW4kFqAWfmp1AxKljqfO2HgrE46SHfssSEJL3QO11urfdVWnzh7s0w7z//2bE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gCsrhQL8; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q0Wl0kg5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739198838; x=1770734838;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=OWk7Ug/YlHLA2JAqh/zowJ9A8FRkvsV875EqBxVXHt4=;
-  b=Q0Wl0kg5Ed+fe6Pelawf0O08QcjErYZTdFOpuLUxggLR4PAoyfELoSh8
-   yYce2mh0Yyam1ZTc0rcV46uHXvCrhj7jjBtBKc7g8yCc2cWkE31I3RzoG
-   6gqubEYR8EDXjz3sxa4WB7sa2uXSbIXDXYPZ43mCFpu50VGRbVNRejRpc
-   uKjFAuIkJsKp2n/OdyULMiT4+/dW6HGAtlYOM2lVPTlkB0+JmGAGN/aX+
-   euASLchAVc5z7XlhVdfaTNhayy+ICP7WSXonob7B6+U2j/SoDyvftpOq6
-   mVsRhT/VbNOuUUf5jKmOLfiWLiDn7+ngRFSDPc0kndSTqpK6brnzkofOa
-   w==;
-X-CSE-ConnectionGUID: a+3FCT7IQlyM+OQgRsIh8Q==
-X-CSE-MsgGUID: U7l1JZn7SNq20+Bsk9WQtg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="39468987"
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="39468987"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 06:47:17 -0800
-X-CSE-ConnectionGUID: xidyEOSiSL2zCUMSf/D61A==
-X-CSE-MsgGUID: dtCQN4ARQgGKszne4iaaag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117426577"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Feb 2025 06:47:17 -0800
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 10 Feb 2025 06:47:16 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Mon, 10 Feb 2025 06:47:16 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.48) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 10 Feb 2025 06:47:14 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mipUO4yAA1HYvAwaB0tCUDFmR6HKaHEKCB/roASv37K8n2XGNZko36aMqqlRs/QuYJZ3hEcfAOi+BnlvYjHkDpgDYNA0THdsANt0KthnJB9wH85Gb3jRA/gA5ytZD/x+EQr8PngS0dnFppSOhvJ+KFZ5NlaKAyNltBnbsZ/vtT1FeUSoR7Q7SMEoqbBdoU8jg+xuUtTMJD1PdGhCMAbtdSPmucshLkhDt/6QAd0PesgKvgdNf9UM79Ecdg7XAGINgwRU+SI3GjcCAgc6thj4q54mt1XxmPHx+qWHwokVbnJnM5VZYr8tDhj1CzVqVL42Byg2ahPdIl1sx53j7o0Rbg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PfGkhRwEUlUSiqPEQXEcTTpPciL6StfYM0hlOgdBFq0=;
- b=XfEl5esyX0jXl+XfcG2IcduMAjpFg/YLXu213roahu1wBFvjEP2Eh8SwkCmIBcjTdym9Z3rM0EntzbEuNZ75ydqgSc49YHyYNuCoVSvTsiaNjgEAdb6u0Ow5dHoR1d+oNHjAAFntVl+0kN4pTYNgBJLyJ/Ttkb2uvcKjFKRaMehRZiTb1Dh0PHwF9E3q43xjjF2VHi9tBeaQmGJe88x23Xzoy1DaOWuRCLKLllXjvQ7l1Ihk4/EgLsVsHY3VqHXtVeCaQV7bQhwww3qyB0U5h/aj/KvzgeiD/1syV2WPvrulFzWw8ZeTYYAcJOxWeSthvoduJI4lEGq63lqu5+zEDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB5423.namprd11.prod.outlook.com (2603:10b6:5:39b::20)
- by PH8PR11MB6732.namprd11.prod.outlook.com (2603:10b6:510:1c8::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Mon, 10 Feb
- 2025 14:47:12 +0000
-Received: from DM4PR11MB5423.namprd11.prod.outlook.com
- ([fe80::dffa:e0c8:dbf1:c82e]) by DM4PR11MB5423.namprd11.prod.outlook.com
- ([fe80::dffa:e0c8:dbf1:c82e%6]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
- 14:47:12 +0000
-Date: Mon, 10 Feb 2025 22:47:05 +0800
-From: Philip Li <philip.li@intel.com>
-To: Waiman Long <llong@redhat.com>
-CC: kernel test robot <lkp@intel.com>, <oe-kbuild-all@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: net/8021q/vlan.c:241:46: warning: '%.4i' directive output may be
- truncated writing between 4 and 5 bytes into a region of size between 0 and
- 15
-Message-ID: <Z6oRaZBeKpIg+4nv@rli9-mobl>
-References: <202502101253.TDZbCYh6-lkp@intel.com>
- <3008ca8d-e599-437b-8f1e-0dbe86202f38@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <3008ca8d-e599-437b-8f1e-0dbe86202f38@redhat.com>
-X-ClientProxiedBy: SG2PR04CA0172.apcprd04.prod.outlook.com (2603:1096:4::34)
- To DM4PR11MB5423.namprd11.prod.outlook.com (2603:10b6:5:39b::20)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gCsrhQL8"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38dcb97e8a3so2550873f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 06:47:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739198866; x=1739803666; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SbiQm+cpPA7ar4TiCqD5Kv0ylLMwSCONMu3++tRjFfo=;
+        b=gCsrhQL8UiEczk7ztYqPbWnZf4r2vxuMxCNh137H2d7YMrDCF7aFT0Gwy8It2fKrOl
+         UOM/kjTexKpbTFYtp+q4pv0XmrHCTLJoc082mkCVPfzTAQiR2JGpeqBKQUoHoH8zIFMI
+         YPZBROrhGR29OLbwCNX7lnxBL/Vn6r0Aw9GJqTp0Dl6rLldp1le5G/nnsuDk0W1Dd5iM
+         x4HKjntJHS6IuBkDhm8OGcKmP7uho5RQrXNBg7Gj0Es5mf3x50Evf1ZQuwnZdda8gas2
+         yEcsdz44Xr7yELJ0tkvjksWrGtf0sUDA3EKlGuiHB9w65m2voyzvOcXj7Jj4V0G7q+SB
+         TKtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739198866; x=1739803666;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SbiQm+cpPA7ar4TiCqD5Kv0ylLMwSCONMu3++tRjFfo=;
+        b=Uo5c7CkCV4IkbzZtpvDVhjcKCVy/q+eadog2iiWL7/B5CWxnvIsC07PIlu7Lk8TSGf
+         hAs9a4b+Sz8Hhi2BZoKxBjawhw1HoueF8Tqoya9mE7Qi+QZ07YJverS9bapN+mj11/Rp
+         C1ZQlMkf3RrSBNdAdYFAKs9WyX7PblQM0QHqEmj7sQ+IyhX5OjJs3u8J3oUp2dUT69XC
+         yVtkn9/dAgFeaKIuRN1o/tSu9JAd2urjFFzA1fgzuD/gHjnuTIb1CNTPshSmRx0kXt6g
+         1C0iTOhMRdzd3fnI6Kablo0qoMpdQ7HgO6wbuHyonDyDI/hlWZB1moa1dmBCoEFItWPW
+         cV7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWQ5klsp/AcyztQp/De96ViPX6rU9FPNYyDqXJPKtH8y04BZLI+Yni/x1e9Br2PnVsSNbrrLnm+i92aV6w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyS+Uz4U3M5m+noOPXTinR1Zf0+Yl90h5HGfyhPRCEsfXEzPoGC
+	pUv7gVzmqbqy1vfcH/+5EdFTpRuG+52UAZ7y8OaNJ5ORniVTOuAcUx8UJV5JAVf9IoJC22EYUOM
+	gFmyBRAiaOYrHzv0zo60PRah/hGLUN3NGzYJP
+X-Gm-Gg: ASbGncs7ONdwpl8XQVUfXTCvMhMuoeQ6wSTb+6b1jpJ5A7+7KR9R99LXQk/ciMhoCDm
+	onTlWr16xxntYK+LqydiwsM5lV2kui++e6ZfF8m/OKzwtkij0mlVrpZiyr1kCPwRpc43chOjt6u
+	rJ3azqBAQ4qykycSpLn21vHO/i5A==
+X-Google-Smtp-Source: AGHT+IG7ldY5/6LO+N9pj46753edUT2gqJvmRR+tJ8Khu38aqx9VLAlDJZDdXzi4iznKekfdWT52gtXGVIC+vKwwsMM=
+X-Received: by 2002:a05:6000:1448:b0:38d:af2e:d5c3 with SMTP id
+ ffacd0b85a97d-38dc8dd1864mr9957958f8f.17.1739198866457; Mon, 10 Feb 2025
+ 06:47:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB5423:EE_|PH8PR11MB6732:EE_
-X-MS-Office365-Filtering-Correlation-Id: f6b2dcee-3bc4-4183-9189-08dd49e1cda6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?L/fe7XX8DNbIbY6NDonUfegCyTPXBb5XLlYKX9fFHF5S/h87StxsQaqPIZus?=
- =?us-ascii?Q?sU0SgAQ+tMCZf7iCJdTxj2HWxPnxfaL3Nyt+ZZjcp3TDBqEOHEvFcIUNqPQy?=
- =?us-ascii?Q?ZUXnywUV0JKbA3hAVSMMMWwK4BwmW9oUZPLUq88mkwnJV2PHkJnPM0x+TGPf?=
- =?us-ascii?Q?ZYWz2Pjvz+syA5WgYhxPQlt7cLtLPvCxltGOdN2r3ylkWAjQrFT15MPuOSqZ?=
- =?us-ascii?Q?gY27+baWKeIg3Dcdt47bO6VH3ptCeThX2k8nJJYzvy/HxNDr2NqskoLE2emn?=
- =?us-ascii?Q?YBq4nWKgSruCGfWLmL7xuP1Chggmk+bfqw2szuOuxArHOA45Ote1GXfgJc35?=
- =?us-ascii?Q?MvXFjO6YeR0tREkRk1ujDIG+N/pwIvA+lyzGY46chplUHVgNezqNHdAqYHQT?=
- =?us-ascii?Q?xSWFda1mBjtBQ+qfho9VQu5yxk3AajdaAqFvz+kZVPa5IgsmRW/5FSpCIWS9?=
- =?us-ascii?Q?/+TNhaLqmn5N2rCa+d6SE8mU4yPjYojcQ6PuIJ6OKjmCbOnn+60pMAwqjyGk?=
- =?us-ascii?Q?nLBaOQFXIcv/KLoR8pa6ImOHhFeF6Hkyc5HnubuZRthGP8o5melY8y+1f3/a?=
- =?us-ascii?Q?pFE5SdExCBQsEAcQMWXsxT8YgJguYchu6PEkto0nItnJNRPjGtoyf2yjGYBp?=
- =?us-ascii?Q?7FEv7UUPTCpVSJbAytwcTDntj8tzPz6eIL2ogY6uTG4MMCmoIha0IFEL34Eo?=
- =?us-ascii?Q?6y4b3kT9ug/d4D2VL675qeP4XS6FBA2yvRK4nDuqaXHgDLTdukrK/yFc4Qak?=
- =?us-ascii?Q?xnkwDJN3XGlSiIgoaXyF8caMW23VV2SEwHQxRVoKfZ2x3izuyTm1OFNzDpDR?=
- =?us-ascii?Q?3VylKxtz51Cj4OFNuMZONHN9PBzjyPUbMGq5W4ND2mF1CDEM2Q1kT7V61RQ+?=
- =?us-ascii?Q?UapXkkTAqphpdRWrO2UhrizAmPGpXE9VDJDFuLdO1OqsoR8GeeF5Seqfj3pY?=
- =?us-ascii?Q?OpTxtI/iS26WANHShe7OerivOucf6aj3aMpRVZ7023oSBur3YgKgETYQZVTF?=
- =?us-ascii?Q?gxl/BSVzNmoKJUl9BX51P0xXqV2Vn35iJ1nz6TfjvpZsPlJFqOo+6LNM+ghw?=
- =?us-ascii?Q?RsQON4FogLjD6CW1U8WwwVGrQ4EKOBHMbewkOnDc6k1XelFFk5EIQ9ztW85I?=
- =?us-ascii?Q?bFC/rmNdrZ/XwIHjJ1H/wXq2fShH6AIQyOPRqWEaH9xzImyQk5FArsvm/WJ8?=
- =?us-ascii?Q?c+oT5maevTSCPxa/VD0hG4klGDkML0W7uLdKHT+ynnT8kCOgvF+87JbjRIri?=
- =?us-ascii?Q?3prjI1FFNI+kLfR6rz2YmrD65sa0HTqnLfH9mLI39BHFks5kdljjKcJ1qywC?=
- =?us-ascii?Q?56JR8XLF0TuxJADzsWMRh2qRd/JRZ1rJUROgGCzVj3mxEQ=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5423.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?RSRlIZ9tVCtYxElmOTRO+Cp7oVL/ddGlNkp3jWoTOxWZIsJiBSqGleFclYA0?=
- =?us-ascii?Q?C2eyjJWlQPqRKqHG2Qyf+td3eSt/BPSTu8L+wYs0fRnU1Ff8G++ySGsD9hvN?=
- =?us-ascii?Q?CHmhJU14n4Ppfw/FZtF/tV9nc5+9Ms5qKG8mRmpTEwrym9lFRb16zbZv1Knt?=
- =?us-ascii?Q?47TNQ8VjjSOUxgQm+fhGNINkdGbNjrUv1IuJlSOxLAU+vRC6+dFM9+z3UePf?=
- =?us-ascii?Q?IDY3eVKHdg6SurH2d0tTGaI7vYShC17g1RlzE4v7l8B70svUKv6AEJAEoR7K?=
- =?us-ascii?Q?L5rUsmMaA95np6x1Vu/tZit4MXQ4CXNKBpwxBeBFyTcMulbRPK46cbdxiHhU?=
- =?us-ascii?Q?T7RzkvDdhIVTYnfj1fNZShVW7+/AS5qWknaRJp3G+LOexGdqiGbN43PNzdDy?=
- =?us-ascii?Q?6bjXPq84o9sLDPnxzGfvKd3oikesLLPZ0TDnFoBEKc/QirrtNcONkB8xa1jx?=
- =?us-ascii?Q?zejfzBlBQrudcu2S73nZmrjfmDCAzJiiLAe902qDuVsqb3EJHfskTo69R7iK?=
- =?us-ascii?Q?qn9PWeaATWtY3FXFDDWU0PRTfsA2ojCCesP5ipsEiMujUU05W3ruFXrCNX6h?=
- =?us-ascii?Q?pLRcdUw29XhXVJB1+35nfLVTvxTSLjVv7eLUjIYopXGvyqMw7rTuMfLroEun?=
- =?us-ascii?Q?B9U6FsBng1nX22bJqurc6xPSwlgSR/crtI0wZeoXJt6QBTPyhRWM30IoZ9Cq?=
- =?us-ascii?Q?nvsma37BOQo+F716AQh6oJ8rpDntdS6QPDk0cwpcNQLpT4r8TzzO/UyAjQ+H?=
- =?us-ascii?Q?iAAXdulbLQSXrrWoyilpSoii/SIiinjtWmD53zTWAX1IjlXmkdzwuqbD1mXB?=
- =?us-ascii?Q?O9Uqy54vsdUuNc26e0MT0HvC/axWWZFM2Rm7NGFi5RGqnB2jcfWjYPdxBQ5X?=
- =?us-ascii?Q?NW699wMDPwnsv8/nGrg7SyC3g9nzGHy02Z2/8elapB2+OC1YdkbuMf3V0BFx?=
- =?us-ascii?Q?0I5egGem+2SymKopC3yq7e3Ad+19qkkoZf4vLqgOrQVEuii4EB1hDlnHU3ms?=
- =?us-ascii?Q?MhQHa19gYsob9UmqHEjaNguCizdYzErEZmw+qGLv9VX7+Z25eCMe6FrI7c+v?=
- =?us-ascii?Q?FkCTY2apnt9GeS36ExPW1BDtnvPK9JAaq0Wa1krdBz/2naP7/JQRYhTT139R?=
- =?us-ascii?Q?zx1Lem2ZFvn973WSBhkCvoVha8vu2uL2JYmPeEZkxfm0/ZogyQb/2NNLeyho?=
- =?us-ascii?Q?sCFyVuydYPPx3wv9VhZv5JtglRnm1OBzQHrh2MJwqq1ptB/6e/hsYzCd+Bcu?=
- =?us-ascii?Q?sGCvBi1SMezP24M6JknsGPwdEqRDnV6KMVNc8bhjbuucBftoTF09utaTl3kq?=
- =?us-ascii?Q?DB3fdqD4dgJb8tE6MynnKgnZHafF3Vz4PK1CMYeH4bqBMNGEZKacqRgujK1p?=
- =?us-ascii?Q?arkC6FcDwwp9ihMFPuumkSed7p0bPQJzrBtUCwuz2aAcgNhZelX2TrdMTFxF?=
- =?us-ascii?Q?DnXM4bTPgQ4CeWNJvue1HlI+HBqLzCXucnjtP2k7mOQUJr1oirSMeme4+kDi?=
- =?us-ascii?Q?DNoaKUHIXO1v90VAvz7SIc17GcKIlFLiMAqiW02eK3xPcHOyR2ON2e1o3oDJ?=
- =?us-ascii?Q?anlVd24Lp+oVE/MroOa9ZKZw681FX2EQuulPQOXN?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6b2dcee-3bc4-4183-9189-08dd49e1cda6
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5423.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 14:47:12.6372
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LF72FCBSGGaXkcc5blrvyBcPU2u9MgiElgDDSa6HPMeaV1O4fftDV1Absfr7p0vJaqeudCkzbVL+WDFzzYBjdg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6732
-X-OriginatorOrg: intel.com
+References: <cover.1739171594.git.yan@cloudflare.com> <85618439eea75930630685c467ccefeac0942e2b.1739171594.git.yan@cloudflare.com>
+ <Z6nEsGSbWqCSaVp3@krava>
+In-Reply-To: <Z6nEsGSbWqCSaVp3@krava>
+From: Brian Vazquez <brianvv@google.com>
+Date: Mon, 10 Feb 2025 09:47:31 -0500
+X-Gm-Features: AWEUYZldNIPj7qeSesCp6JrxJzjY8eMHw9cqOTJjk2DHFgRetrTVHr8pLaFcEP4
+Message-ID: <CAMzD94QZQjpwOA8Os3khG32d2zgH8i=Sy1VoudRCGqZudyHkag@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf 1/2] bpf: skip non exist keys in generic_map_lookup_batch
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Yan Zhai <yan@cloudflare.com>, bpf@vger.kernel.org, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Mykola Lysenko <mykolal@fb.com>, 
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kernel-team@cloudflare.com, 
+	Hou Tao <houtao@huaweicloud.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 10, 2025 at 09:24:58AM -0500, Waiman Long wrote:
-> On 2/9/25 11:44 PM, kernel test robot wrote:
-> > Hi Waiman,
-> > 
-> > FYI, the error/warning still remains.
-> > 
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > head:   a64dcfb451e254085a7daee5fe51bf22959d52d3
-> > commit: 925da92ba5cb0c82d07cdd5049a07e40f54e9c44 rcu: Avoid unneeded function call in rcu_read_unlock()
-> > date:   3 years, 5 months ago
-> > config: sparc-randconfig-r122-20240116 (https://download.01.org/0day-ci/archive/20250210/202502101253.TDZbCYh6-lkp@intel.com/config)
-> > compiler: sparc-linux-gcc (GCC) 12.4.0
-> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250210/202502101253.TDZbCYh6-lkp@intel.com/reproduce)
-> > 
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202502101253.TDZbCYh6-lkp@intel.com/
-> > 
-> > All warnings (new ones prefixed by >>):
-> > 
-> >     net/8021q/vlan.c: In function 'vlan_ioctl_handler':
-> >     net/8021q/vlan.c:253:46: warning: '%i' directive output may be truncated writing between 1 and 5 bytes into a region of size between 0 and 15 [-Wformat-truncation=]
-> >       253 |                 snprintf(name, IFNAMSIZ, "%s.%i", real_dev->name, vlan_id);
-> >           |                                              ^~
-> >     In function 'register_vlan_device',
-> >         inlined from 'vlan_ioctl_handler' at net/8021q/vlan.c:628:9:
-> >     net/8021q/vlan.c:253:42: note: directive argument in the range [0, 65535]
-> >       253 |                 snprintf(name, IFNAMSIZ, "%s.%i", real_dev->name, vlan_id);
-> >           |                                          ^~~~~~~
-> >     net/8021q/vlan.c:253:17: note: 'snprintf' output between 3 and 22 bytes into a destination of size 16
-> >       253 |                 snprintf(name, IFNAMSIZ, "%s.%i", real_dev->name, vlan_id);
-> >           |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >     net/8021q/vlan.c: In function 'vlan_ioctl_handler':
-> > > > net/8021q/vlan.c:241:46: warning: '%.4i' directive output may be truncated writing between 4 and 5 bytes into a region of size between 0 and 15 [-Wformat-truncation=]
-> >       241 |                 snprintf(name, IFNAMSIZ, "%s.%.4i", real_dev->name, vlan_id);
-> >           |                                              ^~~~
-> >     In function 'register_vlan_device',
-> >         inlined from 'vlan_ioctl_handler' at net/8021q/vlan.c:628:9:
-> >     net/8021q/vlan.c:241:42: note: directive argument in the range [0, 65535]
-> >       241 |                 snprintf(name, IFNAMSIZ, "%s.%.4i", real_dev->name, vlan_id);
-> >           |                                          ^~~~~~~~~
-> >     net/8021q/vlan.c:241:17: note: 'snprintf' output between 6 and 22 bytes into a destination of size 16
-> >       241 |                 snprintf(name, IFNAMSIZ, "%s.%.4i", real_dev->name, vlan_id);
-> >           |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > 
-> > 
-> > vim +241 net/8021q/vlan.c
-> 
-> Why me? I have never touched net/8021q/vlan.c and I don't believe commit
-> 925da92ba5cb ("rcu: Avoid unneeded function call in rcu_read_unlock()") has
-> anything to do with the snprintf format warnings.
+On Mon, Feb 10, 2025 at 4:19=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
+e:
+>
+> On Sun, Feb 09, 2025 at 11:22:35PM -0800, Yan Zhai wrote:
+> > The generic_map_lookup_batch currently returns EINTR if it fails with
+> > ENOENT and retries several times on bpf_map_copy_value. The next batch
+> > would start from the same location, presuming it's a transient issue.
+> > This is incorrect if a map can actually have "holes", i.e.
+> > "get_next_key" can return a key that does not point to a valid value. A=
+t
+> > least the array of maps type may contain such holes legitly. Right now
+> > these holes show up, generic batch lookup cannot proceed any more. It
+> > will always fail with EINTR errors.
+> >
+> > Rather, do not retry in generic_map_lookup_batch. If it finds a non
+> > existing element, skip to the next key. This simple solution comes with
+> > a price that transient errors may not be recovered, and the iteration
+> > might cycle back to the first key under parallel deletion. For example,
+>
+> probably stupid question, but why not keep the retry logic and when
+> it fails then instead of returning EINTR just jump to the next key
+>
+> jirka
 
-Sorry about this, this is a wrong report and we will fix the
-bug in the bot side asap. Sorry for any inconvenience.
++1, keeping the retry logic but moving to the next key on error sounds
+like a sensible approach.
 
-> 
-> Regards,
-> Longman
-> 
-> 
+
+>
+>
+> > Hou Tao <houtao@huaweicloud.com> pointed out a following scenario:
+> >
+> > For LPM trie map:
+> > (1) ->map_get_next_key(map, prev_key, key) returns a valid key
+> >
+> > (2) bpf_map_copy_value() return -ENOMENT
+> > It means the key must be deleted concurrently.
+> >
+> > (3) goto next_key
+> > It swaps the prev_key and key
+> >
+> > (4) ->map_get_next_key(map, prev_key, key) again
+> > prev_key points to a non-existing key, for LPM trie it will treat just
+> > like prev_key=3DNULL case, the returned key will be duplicated.
+> >
+> > With the retry logic, the iteration can continue to the key next to the
+> > deleted one. But if we directly skip to the next key, the iteration loo=
+p
+> > would restart from the first key for the lpm_trie type.
+> >
+> > However, not all races may be recovered. For example, if current key is
+> > deleted after instead of before bpf_map_copy_value, or if the prev_key
+> > also gets deleted, then the loop will still restart from the first key
+> > for lpm_tire anyway. For generic lookup it might be better to stay
+> > simple, i.e. just skip to the next key. To guarantee that the output
+> > keys are not duplicated, it is better to implement map type specific
+> > batch operations, which can properly lock the trie and synchronize with
+> > concurrent mutators.
+> >
+> > Fixes: cb4d03ab499d ("bpf: Add generic support for lookup batch op")
+> > Closes: https://lore.kernel.org/bpf/Z6JXtA1M5jAZx8xD@debian.debian/
+> > Signed-off-by: Yan Zhai <yan@cloudflare.com>
+> > Acked-by: Hou Tao <houtao1@huawei.com>
+> > ---
+> > v2->v3: deleted a used macro
+> > v1->v2: incorporate more useful information inside commit message.
+> > ---
+> >  kernel/bpf/syscall.c | 18 +++++-------------
+> >  1 file changed, 5 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> > index c420edbfb7c8..e5f1c7fd0ba7 100644
+> > --- a/kernel/bpf/syscall.c
+> > +++ b/kernel/bpf/syscall.c
+> > @@ -1968,8 +1968,6 @@ int generic_map_update_batch(struct bpf_map *map,=
+ struct file *map_file,
+> >       return err;
+> >  }
+> >
+> > -#define MAP_LOOKUP_RETRIES 3
+> > -
+> >  int generic_map_lookup_batch(struct bpf_map *map,
+> >                                   const union bpf_attr *attr,
+> >                                   union bpf_attr __user *uattr)
+> > @@ -1979,8 +1977,8 @@ int generic_map_lookup_batch(struct bpf_map *map,
+> >       void __user *values =3D u64_to_user_ptr(attr->batch.values);
+> >       void __user *keys =3D u64_to_user_ptr(attr->batch.keys);
+> >       void *buf, *buf_prevkey, *prev_key, *key, *value;
+> > -     int err, retry =3D MAP_LOOKUP_RETRIES;
+> >       u32 value_size, cp, max_count;
+> > +     int err;
+> >
+> >       if (attr->batch.elem_flags & ~BPF_F_LOCK)
+> >               return -EINVAL;
+> > @@ -2026,14 +2024,8 @@ int generic_map_lookup_batch(struct bpf_map *map=
+,
+> >               err =3D bpf_map_copy_value(map, key, value,
+> >                                        attr->batch.elem_flags);
+> >
+> > -             if (err =3D=3D -ENOENT) {
+> > -                     if (retry) {
+> > -                             retry--;
+> > -                             continue;
+> > -                     }
+> > -                     err =3D -EINTR;
+> > -                     break;
+> > -             }
+> > +             if (err =3D=3D -ENOENT)
+> > +                     goto next_key;
+> >
+> >               if (err)
+> >                       goto free_buf;
+> > @@ -2048,12 +2040,12 @@ int generic_map_lookup_batch(struct bpf_map *ma=
+p,
+> >                       goto free_buf;
+> >               }
+> >
+> > +             cp++;
+> > +next_key:
+> >               if (!prev_key)
+> >                       prev_key =3D buf_prevkey;
+> >
+> >               swap(prev_key, key);
+> > -             retry =3D MAP_LOOKUP_RETRIES;
+> > -             cp++;
+> >               cond_resched();
+> >       }
+> >
+> > --
+> > 2.39.5
+> >
+> >
