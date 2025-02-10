@@ -1,95 +1,174 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C54A2586D0;
-	Mon, 10 Feb 2025 16:52:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C04592586D7;
+	Mon, 10 Feb 2025 16:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739206326; cv=none; b=s868+WptyHmcIFiJYDQMo8uyC9WDnWhUcnA4ypyRa5pyXdTY3RD/VHeCh49S7EpgbZjAHzQwvf5mywbHibHoibLxPSSuDTLyGF4QY15+xzrWdyXITByeCRenomM8w8zFnbLgJI+ctVqprUZmh7GPgheensKp4E1SHZEz8Lm9By0=
+	t=1739206343; cv=none; b=Ae6ZXmBR2mBP8cOF1X1c3nW4KA8pjDA5zccJvTqnej+w9+VN3Lbzx2Xz9CVIwBwT4p3LCGueIEc7WFqstklyNd9s+G0a3H6RhidnPznqjmwtiVEHAiLGRuGLnKsnJrL0m5kTxWemaBfx7Gpgudkf9GYSXInXPNaill4TnTLfhwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739206326; c=relaxed/simple;
-	bh=7ECKvYjnKAOWsTCz/UAestf8pnTvGhA+2SxD4HYkWaU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h6x4PTGYLySDkMWVUx864JY+0LsmMTLYY/liMcHUwBH1cCyEg8QtWnpy/8llg3d9YZHayQ0D3R0a6PjQuzgqoQTkckMW7o/KbRYLfomhwHgQ/64xIkj4wpVfbG9KGL3UjaSNc12VMWVscuaoXT6wxjTsb8PUILbfhomuFtAtvmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AhT1iTo6; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739206343; c=relaxed/simple;
+	bh=RiMDqK8v5ymB6cNFg5jJfkHKtoa/w75xCLgD+8KIK4c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rC2fXSLEo7DJ/AUv4arGo5tAlNttvnxCDsbWRytA8XTR3uJPeQVKYLqP510/gsSFo5b8VSqHqo174xETCSq61Ct7MT6DP7JefHTJ4gxp/qUx9Yzm/dLsXx6ttGC7FWgXrz+BjCAlPmJ8tjtV4XIYlQilfJHE6DI77nxClxwc0cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hCtlyfve; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AhT1iTo6"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-308f71d5efcso4649761fa.3;
-        Mon, 10 Feb 2025 08:52:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739206322; x=1739811122; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7ECKvYjnKAOWsTCz/UAestf8pnTvGhA+2SxD4HYkWaU=;
-        b=AhT1iTo6Cvfj6G3gzLehTm3+zDgs8uJs1KakFGSnnuFSWM8EbZdPF+yuoJE8pDLv+S
-         TMimoNy//BBcV+T5zM2zVRy2jXVghxbmqCRs/PyTufhvibd0n62eSYAgRADTlMy/C2E2
-         wsTLZoDfx2T4pm8YgsgolQwSKTscDRWuaEuPPNQjl1DuTrytciuxxr/sh3FR/bgnBpa0
-         mSA7Wd4nEkYWnMPs7hJAtY/LSioohUQfuqy/xNtbyfFjM11VHC9BfxdBcjzHPBYclSzO
-         whJ59lWvJ0967HcEQhS4nNAh18Tzob9eTy8Q/2q1cYC0Pp6uxDmRzl8nqOg1hjy1Do8y
-         la+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739206322; x=1739811122;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7ECKvYjnKAOWsTCz/UAestf8pnTvGhA+2SxD4HYkWaU=;
-        b=l1S4pWvNjWox+L7JR5TST82fdyDEgU7bwStQ1D+ciWqyjcITYKcEcR2PreI8+JJGRc
-         xQcUK34ApahDpu12t3ISbCn8dwxoZv2AxyP1WuZyO3v7306DZ4ccpgS5vEQOBg6WFN/X
-         q9nJaqhIe8ozr/LvxV6oNVpgHGtJE/MmRAZklbUq9yzOYNvGYC1APK24QkvO1344pR7/
-         dQGdUn/xQnU4ep0SCerK54S2yE4EuJ+l1Q4Ji2sRtvkw/8yzExevtG4l1W6VB7+w517+
-         3MFC5CHaKznLDnS77h8zQvQoB1q2cFSn4FguC2wcu7LqdwvK7YCfN4QluOYTM+GmGLSP
-         RZ3A==
-X-Forwarded-Encrypted: i=1; AJvYcCU0LTEPiWkH6mqP9z8RPqdvhdIcEIXN+lqw1ykDPQ+sTPHXChXIungiblXj8jHSSISiI+vO001Q/vVA5rqv5Sk=@vger.kernel.org, AJvYcCXttYyAmU4Bf/6GIH2TDOSKjbx3bz8KfkxmS/7Z5Z/DvxJvg3vhNIF3RR+i/X73EDzzrNBWLDNYbetyRd8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwN91bnjctvBJD1DivWg5jphJe5k+G8S4gWdPqMklWuknPeFcek
-	2FVOUzjKw9NTjWjsIxGVdj5/yuEfzURva4CO5nFw/EwDZma+ctgRdktEGLH8TrIEr0lAaPEkLek
-	Tuc2ikSXnEuFgYYT3dYa2fuPdq/Q=
-X-Gm-Gg: ASbGncsh5clicc6tgnZekuQX9ZV16cCasFN+r2IhxDoLNFMFwe3Mwv8hw4obU8LpGM2
-	c03HDU9bRXmHL06YTAk405h5CBerl98WLnSmqRurJTrHh1sEGTv7vWz4Sgg6TZNOJtgVniI+wUr
-	9gqj5d8Am9qonN
-X-Google-Smtp-Source: AGHT+IE5InQBAspnhmUOUgK4eO4HVcDUiJWnN0PsAPvX6dx818veoTWgNP3LaYoSDxBZ4XuzCZrKJkeGp7wWpvY4pXU=
-X-Received: by 2002:a2e:a98e:0:b0:302:2620:ec89 with SMTP id
- 38308e7fff4ca-307e581a2e9mr44795951fa.19.1739206322179; Mon, 10 Feb 2025
- 08:52:02 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hCtlyfve"
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 484732107A8B; Mon, 10 Feb 2025 08:52:21 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 484732107A8B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1739206341;
+	bh=xg4lP2wNJKixLEmiZc3el6EzPCqZEJ2Rl4qEXXluYG8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hCtlyfveG7fVZ9XOkmRYI97qzjX4INqUxUNN8oNsnAOyHi8jNKTsn0HPnl7ANt8dU
+	 k4tX/cpcxj/x/JijFIwVbrJkqLj34pVAGgm3ZTZ1aCq2iiZVHouo9SKojUa75Gqc1b
+	 uvT4DF+gH36zOgGxFdUCNDfJx/WxPGbWi/tK1Qzg=
+Date: Mon, 10 Feb 2025 08:52:21 -0800
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"deller@gmx.de" <deller@gmx.de>,
+	"weh@microsoft.com" <weh@microsoft.com>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: Re: [PATCH 1/1] fbdev: hyperv_fb: iounmap() the correct memory when
+ removing a device
+Message-ID: <20250210165221.GA3465@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20250209235252.2987-1-mhklinux@outlook.com>
+ <20250210124043.GA17819@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <SN6PR02MB4157B0F36D7B99A5BF01471CD4F22@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20250210145825.GA12377@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250209-rust-analyzer-macros-core-dep-v2-1-897338344d16@gmail.com>
- <87a5atbw1j.fsf@kloenk.dev>
-In-Reply-To: <87a5atbw1j.fsf@kloenk.dev>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 10 Feb 2025 11:51:26 -0500
-X-Gm-Features: AWEUYZlrNNC1uhcEPWMffnDCzT7CJLvQXBkUysGirQKVu84IK3j87iCPzAmOjBI
-Message-ID: <CAJ-ks9m3SV4ezHda0cu00_TRLwY8mNg+GxJrji+FQMs=mfuL2w@mail.gmail.com>
-Subject: Re: [PATCH v2] scripts: generate_rust_analyzer.py: add missing macros deps
-To: Fiona Behrens <me@kloenk.dev>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Boris-Chengbiao Zhou <bobo1239@web.de>, Kees Cook <kees@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Chayim Refael Friedman <chayimfr@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210145825.GA12377@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Mon, Feb 10, 2025 at 11:32=E2=80=AFAM Fiona Behrens <me@kloenk.dev> wrot=
-e:
->
-> Competing with https://lore.kernel.org/rust-for-linux/20241205115438.2342=
-21-1-me@kloenk.dev/
-> but I do like your aproach more.
+On Mon, Feb 10, 2025 at 06:58:25AM -0800, Saurabh Singh Sengar wrote:
+> On Mon, Feb 10, 2025 at 02:28:35PM +0000, Michael Kelley wrote:
+> > From: Saurabh Singh Sengar <ssengar@linux.microsoft.com> Sent: Monday, February 10, 2025 4:41 AM
+> > > 
+> > > On Sun, Feb 09, 2025 at 03:52:52PM -0800, mhkelley58@gmail.com wrote:
+> > > > From: Michael Kelley <mhklinux@outlook.com>
+> > > >
+> > > > When a Hyper-V framebuffer device is removed, or the driver is unbound
+> > > > from a device, any allocated and/or mapped memory must be released. In
+> > > > particular, MMIO address space that was mapped to the framebuffer must
+> > > > be unmapped. Current code unmaps the wrong address, resulting in an
+> > > > error like:
+> > > >
+> > > > [ 4093.980597] iounmap: bad address 00000000c936c05c
+> > > >
+> > > > followed by a stack dump.
+> > > >
+> > > > Commit d21987d709e8 ("video: hyperv: hyperv_fb: Support deferred IO for
+> > > > Hyper-V frame buffer driver") changed the kind of address stored in
+> > > > info->screen_base, and the iounmap() call in hvfb_putmem() was not
+> > > > updated accordingly.
+> > > >
+> > > > Fix this by updating hvfb_putmem() to unmap the correct address.
+> > > >
+> > > > Fixes: d21987d709e8 ("video: hyperv: hyperv_fb: Support deferred IO for Hyper-V frame buffer driver")
+> > > > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> > > > ---
+> > > >  drivers/video/fbdev/hyperv_fb.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
+> > > > index 7fdb5edd7e2e..363e4ccfcdb7 100644
+> > > > --- a/drivers/video/fbdev/hyperv_fb.c
+> > > > +++ b/drivers/video/fbdev/hyperv_fb.c
+> > > > @@ -1080,7 +1080,7 @@ static void hvfb_putmem(struct hv_device *hdev, struct fb_info *info)
+> > > >
+> > > >  	if (par->need_docopy) {
+> > > >  		vfree(par->dio_vp);
+> > > > -		iounmap(info->screen_base);
+> > > > +		iounmap(par->mmio_vp);
+> > > >  		vmbus_free_mmio(par->mem->start, screen_fb_size);
+> > > >  	} else {
+> > > >  		hvfb_release_phymem(hdev, info->fix.smem_start,
+> > > > --
+> > > > 2.25.1
+> > > >
+> > > 
+> > > Thanks for fixing this:
+> > > Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > > 
+> > > 
+> > > While we are at it, I want to mention that I also observed below WARN
+> > > while removing the hyperv_fb, but that needs a separate fix.
+> > > 
+> > > 
+> > > [   44.111220] WARNING: CPU: 35 PID: 1882 at drivers/video/fbdev/core/fb_info.c:70 framebuffer_release+0x2c/0x40
+> > > < snip >
+> > > [   44.111289] Call Trace:
+> > > [   44.111290]  <TASK>
+> > > [   44.111291]  ? show_regs+0x6c/0x80
+> > > [   44.111295]  ? __warn+0x8d/0x150
+> > > [   44.111298]  ? framebuffer_release+0x2c/0x40
+> > > [   44.111300]  ? report_bug+0x182/0x1b0
+> > > [   44.111303]  ? handle_bug+0x6e/0xb0
+> > > [   44.111306]  ? exc_invalid_op+0x18/0x80
+> > > [   44.111308]  ? asm_exc_invalid_op+0x1b/0x20
+> > > [   44.111311]  ? framebuffer_release+0x2c/0x40
+> > > [   44.111313]  ? hvfb_remove+0x86/0xa0 [hyperv_fb]
+> > > [   44.111315]  vmbus_remove+0x24/0x40 [hv_vmbus]
+> > > [   44.111323]  device_remove+0x40/0x80
+> > > [   44.111325]  device_release_driver_internal+0x20b/0x270
+> > > [   44.111327]  ? bus_find_device+0xb3/0xf0
+> > > 
+> > 
+> > Thanks for pointing this out. Interestingly, I'm not seeing this WARN
+> > in my experiments. What base kernel are you testing with? Are you
+> > testing on a local VM or in Azure? What exactly are you doing
+> > to create the problem? I've been doing unbind of the driver,
+> > but maybe you are doing something different.
+> > 
+> > FWIW, there is yet another issue where after doing two unbind/bind
+> > cycles of the hyperv_fb driver, there's an error about freeing a
+> > non-existent resource. I know what that problem is, and it's in
+> > vmbus_drv.c. I'll be submitting a patch for that as soon as I figure out
+> > a clean fix.
+> > 
+> > Michael
+> 
+> This is on local Hyper-V. Kernel: 6.14.0-rc1-next-20250205+
+> I run below command to reproduce the above error:
+> echo "5620e0c7-8062-4dce-aeb7-520c7ef76171" > /sys/bus/vmbus/devices/5620e0c7-8062-4dce-aeb7-520c7ef76171/driver/unbind
+> 
+> When hvfb_remove is called I can see the refcount for framebuffer is 2 when ,
+> I expect it to be 1. After unregistering this framebuffer there is still 1 refcount
+> remains, which is the reason for this WARN at the time of framebuffer_release.
+> 
+> I wonder who is registering/using this extra framebuffer. Its not hyperv_drm or
+> hyperv_fb IIUC.
+> 
+> - Saurabh
 
-Missed this one go by. Sorry!
+Here are more details about this WARN:  
 
-> Reviewed-by: Fiona Behrens <me@kloenk.dev>
+Xorg opens `/dev/fb0`, which increases the framebuffer's reference
+count, as mentioned above.  As a result, when unbinding the driver,
+this WARN is expected, indicating that the framebuffer is still in use.  
 
-Thanks for reviewing! I'm going to respin v3 that looks a little bit
-more like https://lore.kernel.org/all/20250209-rust-analyzer-host-v1-3-a228=
-6a2a2fa3@gmail.com/
-which is the proper fix. If you're OK with it, I'll keep your tag.
+I am open to suggestion what could be the correct behavior in this case.
+There acan be two possible options:
+
+ 1. Check the framebuffer reference count and prevent the driver from
+    unbinding/removal.
+OR
+
+ 2. Allow the driver to unbind while issuing this WARN. (Current scenario)
+
+- Saurabh
+
