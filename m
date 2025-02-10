@@ -1,60 +1,44 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB6E25C6EE
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:08:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C94B24C67A;
+	Mon, 10 Feb 2025 20:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739218137; cv=none; b=GXCznI8lPXLNUKjDtAnJLbpSwSBrnQq70/Z25BT6cUWisc0S91i/QqzKaj7KmoFf9A2uiOZoPEdMJnZOgifkDA090JZ39/Svjh/PCE794c5bVX4yp5KjnZm5wzSBfyqFKThCyX5ZEwNgg1c6aLtKRkitoWtAdQkWoC29cpL9D2g=
+	t=1739218158; cv=none; b=UazanUX0yWoJj2i387KDbbVjUrcUfCx6NOVGAPvpNHH010zn1MZQOs1Pk3BJ2HVDk5DfiVPoY4OHuQvw8F/sNtnty3gaNei80M5sQjpcrmDjLamsBcEkkvasLz9VKIaFDjwsAjprfFUGAVQe574z0LKFfFtsgwfI+1c1g7WmCCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739218137; c=relaxed/simple;
-	bh=yBbYMBadCXT0kaevdazzwYvBDUOb8j9NDpwULSbXHAs=;
+	s=arc-20240116; t=1739218158; c=relaxed/simple;
+	bh=Xak6uh1OA7Y0BzIO5iFJWeHBlh+xolgPuU4qT7XePH0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VgEEPrcQNJPWK8hIYG70jm+hxxYzn56SddghlgZ0tjAkvGtUnmPDJCBibwj/2UyyE7EfLBmJEpWZAPpmCOMT5gyPFRce7mbCom/M4eub3OA0v8Rl8CQ3xqqYcxvtKYU8JnESbWAl4ulFpQIVD8UP5yEfOUFRPVSd+WvzSjQTOaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A9XaiGCH; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A9XaiGCH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739218134;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=33qRbDaL39Ei5gBDRIf8L9n5D2Vc2pGydYaJ7tW4WTc=;
-	b=A9XaiGCHfL2hqye1VVLFN2rRTpFD6/zRR0os330B548Q0adC+MRTYG4m/qXm6bMssRAHd/
-	/UaWELnXlrK/OtGnBIopKZ4q3t5UB+kNxtXikDCPBdOogiMejOhOpu7Y58nMGprHGs2ao6
-	fZqaB0oBXMqJ7Vg0LysYekFEbHDzn7Q=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-663-eO4fuNYsO_Orgdd-QdYTEA-1; Mon,
- 10 Feb 2025 15:08:51 -0500
-X-MC-Unique: eO4fuNYsO_Orgdd-QdYTEA-1
-X-Mimecast-MFC-AGG-ID: eO4fuNYsO_Orgdd-QdYTEA
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	 Content-Type:Content-Disposition:In-Reply-To; b=eQK29AaySJEdkGdxQfIJpIlKdkKDi8zgLSARU4qz2wQGrQ/nbFbFp7xoqEgiPIKJsniNzE/Ffl0/VXHMV8ro6oV/KZuKbEvOz7tQZkdZPD5Irm1EPiJw2fQnZ8S5fv1JaFpC9VmxvOAKxvFwX3ckhefhTJFYoigW6G4b5WFJpDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3ADF718004A7;
-	Mon, 10 Feb 2025 20:08:50 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.113])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id A6FC630001AB;
-	Mon, 10 Feb 2025 20:08:47 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 10 Feb 2025 21:08:23 +0100 (CET)
-Date: Mon, 10 Feb 2025 21:08:19 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mitchell.augustin@canonical.com,
-	ilpo.jarvinen@linux.intel.com
-Subject: Re: [PATCH v2] PCI: Batch BAR sizing operations
-Message-ID: <20250210200819.GL32480@redhat.com>
-References: <20250120182202.1878581-1-alex.williamson@redhat.com>
- <20250209154512.GA18688@redhat.com>
- <20250210093641.0be242ae.alex.williamson@redhat.com>
- <20250210195658.GK32480@redhat.com>
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 71A75100E5F5A;
+	Mon, 10 Feb 2025 21:09:09 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 57B6D2C0470; Mon, 10 Feb 2025 21:09:09 +0100 (CET)
+Date: Mon, 10 Feb 2025 21:09:09 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Aditya Garg <gargaditya08@live.com>
+Cc: Lleyton Gray <lleyton@fyralabs.com>, Ard Biesheuvel <ardb@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>
+Subject: Re: [PATCH] x86/efistub: Add options for forcing Apple set_os
+ protocol
+Message-ID: <Z6pc5SYaMhOfXeDz@wunner.de>
+References: <20241228202212.89069-1-lleyton@fyralabs.com>
+ <Z3EdkuCBzTGzTHK3@wunner.de>
+ <CAMj1kXHWoD78QdFnEY_=Mtz02zN3rhN5+Skgv=fHG91TD8Mmvw@mail.gmail.com>
+ <Z3EmoNWbkbYZ7NZO@wunner.de>
+ <CAMj1kXEb9NPSwEr2brHYJtFQhnW55hoPycjcAgoPAfjU5ZFqZw@mail.gmail.com>
+ <abe2274b-4341-4212-85a8-113273ce1b18@fyralabs.com>
+ <PN3PR01MB7728B4C94846673A5FFACE29B80B2@PN3PR01MB7728.INDPRD01.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,34 +47,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250210195658.GK32480@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+In-Reply-To: <PN3PR01MB7728B4C94846673A5FFACE29B80B2@PN3PR01MB7728.INDPRD01.PROD.OUTLOOK.COM>
 
-On 02/10, Oleg Nesterov wrote:
->
-> On 02/10, Alex Williamson wrote:
-> >
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -345,7 +345,8 @@ static void pci_read_bases(struct pci_dev *dev, unsigned int howmany, int rom)
-> >  	unsigned int pos, reg;
-> >  	u16 orig_cmd;
-> >
-> > -	BUILD_BUG_ON(howmany > PCI_STD_NUM_BARS);
-> > +	if (__builtin_constant_p(howmany))
-> > +		BUILD_BUG_ON(howmany > PCI_STD_NUM_BARS);
->
-> Or just
->
-> 	BUILD_BUG_ON(__builtin_constant_p(howmany) && howmany > PCI_STD_NUM_BARS);
->
-> I dunno... Works for me in any case.
->
-> I don't know if this is "right" solution though,
+On Wed, Jan 01, 2025 at 11:39:13AM +0000, Aditya Garg wrote:
+> We have had issues with other people unable to use their eGPU if their
+> Mac doesn't have the apple set os quirk. We probably could do dual VGA
+> checks suggested by Lukas, but will it work with GPU hotplug?
 
-I mean, atm I simply don't know if with the newer compiler
-__builtin_constant_p(howmany) will be true in this case.
+About hotplug:  There is a tiny time window when the EFI stub runs
+during which an eGPU may be hotplugged and incorrectly not be
+detected.  I.e. the quirk is not applied.  I don't think this can
+be fixed.
 
-Oleg.
+If an eGPU is hotplugged while EFI boot services are still running,
+Apple's EFI Thunderbolt driver will set up a tunnel to the device
+and it will then be visible to the kernel's efi stub.  E.g. if you
+hold down the Option key during boot and attach an eGPU, then
+select the operating system to boot, the eGPU should correctly be
+seen by the efi stub and the quirk is applied.
 
+However hotplugging an eGPU at exactly the moment when the efi stub
+runs results in a race between the efi stub doing all the initialization
+and exiting boot services on the one hand, and the EFI Thunderbolt
+driver bringing up the eGPU on the other hand.
+
+But IMO this is "good enough".
+
+Thanks,
+
+Lukas
