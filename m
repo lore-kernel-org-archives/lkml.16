@@ -1,258 +1,399 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2049.outbound.protection.outlook.com [40.107.237.49])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E265D25E46C;
-	Mon, 10 Feb 2025 19:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739215594; cv=fail; b=QEE2zXJTURW8XZGRknr+Um1zzyX6gUno5E5shshj8ElhMXrDO4+m4WvUciduua8OQA9RVjsGpAKilgewximAh1D3QlPiog23qHIYWyF8jS1cynZsHDnKp5HyV3Rom819eHhuBAWQqNe8iP2gPwvhjCOamRf8Kh8VDnzq4Um5tNg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739215594; c=relaxed/simple;
-	bh=E5zyk/+oevfLWjFHIL9ltUnrVzSUVZX66oil0lHOzXo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=EuOhxSr8DjGMXPxHG+5zPDFmNWD7/3Og7lV/vOVo7R9sRZgVkA8+s1jaf/GJXp674PrsuOagiKI3Uh80U9r6y9hf0XAsSpcZ5Jpvjx9jlOMwB+q9tLsIE60wGNVFDx0bHsA6i1+/awctspf63mlSBUKZfbkdRRCntmeUsaWe6N0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=BNM/LAcm; arc=fail smtp.client-ip=40.107.237.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="BNM/LAcm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=o/CDq7ncaocvQ6jgZhTAMaf2tAJ+ebkfIoWSAksfe8Q7x4ob9X0zMO8ssH21kkRbvYft61bpGJkt8jv62ucFeYCfpGJGrosDRMs1IdpzOZOfKYvS7eTJAQZ4N1jul+vHbWrtthXeieWUz1/3AxOcw8inagEusgTn+60M77evBLX51dWieRDktYp3Mht/llvMxrkk/rtACJJ3CTPTVR9wN72SRm0RDyWyagfyFlmCgscPL1XOUwg/AVWc4tnZlcWmsjOsuIsdaXWDYRiE4NQvO/VmMSGLlrCsxGykxNkb3LYo25WHvTp5yVL7le+hODn4RMaI4jD9JXQLKi7rZMZPKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7DA1nm2RSi+K3443lyk8ckKn53u3KeA04sfmMWAGwjg=;
- b=gewPBVDJrdURuAB/J8iEK6tZl26ucAJqqWl2LWeE6CIIQsFqm7G+vbxiAz/8u1UIKr7F6ItU5XAzWH2refqLmCD2Zk1bjviq02255JfjtoaU+lXbaU5lXRtQlwdcXOm98ytNzdPVGatiMdvwDH2LjsrRd0J2g+xtFOcj32ppAY6KEtJnlTK+DaW71lXtPsvNNmmowGVPdqRRSRffkT36QBhtHWZGi3AaLahk3+87U2wFCpVP6CTF0dxLvHWTz2tsgaOX0TXm/Vvo2szUtU7JDo840WGS/YJ+UNNHSkumUayTakXzfbC3Eo1cNhUas8ORH5JF21dLNXgFf0YyWbHBaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7DA1nm2RSi+K3443lyk8ckKn53u3KeA04sfmMWAGwjg=;
- b=BNM/LAcmGonFGdh+fV75ledvrhqFcj0nVH0+Xc0TF6wLIyiTWWkw2v9EKUwqtT1cFVYN3qrtr/B0y+qFLWFWwxsn2fIkitenk7nKhbjgahIYdXbQfZdyGG/tqkEeyL3adcWZp0FRaYeDX0jE76ofF0KZmh96Wr484xJc0HRVG9SypMLo19WAmc/nh93PVaDWiv1AFc34U6L9bEYxyvJ651ZV9kz1QthhCT49oXeSXVRk2i4qnfULxCyTlevRqZYhslJghjL22lSspjLAe8Whf9j74kQflW61E+JsX7o4mUkcdnbOK2Kb98GoVd/V4U+aXyd4oQj3rP+yKzFSWoJBGA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by SN7PR12MB7956.namprd12.prod.outlook.com (2603:10b6:806:328::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.16; Mon, 10 Feb
- 2025 19:26:27 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
- 19:26:27 +0000
-Date: Mon, 10 Feb 2025 15:26:26 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pratyush Yadav <ptyadav@amazon.de>,
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v4 09/14] kexec: Add documentation for KHO
-Message-ID: <20250210192626.GB3765641@nvidia.com>
-References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206132754.2596694-10-rppt@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206132754.2596694-10-rppt@kernel.org>
-X-ClientProxiedBy: MN2PR22CA0017.namprd22.prod.outlook.com
- (2603:10b6:208:238::22) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637B725E46C;
+	Mon, 10 Feb 2025 19:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739215606; cv=none; b=oyeLpZB5iaqGy6cLcOQch0Jn239Fh6DjKJHB8yjoLiKHl3W8mmKtr6TdSQx0OS4oLalSlOrV+zCWb7ieKQmfhI8IstH5GXqmFdnaFU4knr3NmY1y5M2EA5m5ETPVl/S0Prkq4qT3OPQhPXzt3ol5NlA2pNDO4smU2F49IsFHsUM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739215606; c=relaxed/simple;
+	bh=yJL6JAF/Hjh/c9myb5opuCMmiur+tgSE24VYYiPvxaM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=pZ5UHOvxGATLZNq/9XAJGoNRFgN4iUkhQSzb2lrlcU5682U5Hp+noEk3kD2K4KuCHefsitGooJDxSFy++sPL7IKO4yFMh4K9F+otnMiCscmtLRuNMOtCYJexK47t+Uv0BnaC+2FgN4U1OBu2us58TatStfcv75uUFTq5mK1jqLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3E1CC4CEE4;
+	Mon, 10 Feb 2025 19:26:44 +0000 (UTC)
+Date: Mon, 10 Feb 2025 14:26:47 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Heiko Carstens
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org
+Subject: [PATCH] arm64: scripts/sorttable: Implement sorting mcount_loc at
+ boot for arm64
+Message-ID: <20250210142647.083ff456@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SN7PR12MB7956:EE_
-X-MS-Office365-Filtering-Correlation-Id: 709255b4-f9f3-41c5-4da5-08dd4a08d084
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?DsGDbbfxyq77Scy24L5yPF0ZotPFw3uWZGqNQGaB+wX+5ATm4MzseRaaTzCr?=
- =?us-ascii?Q?QFwXcg6kzvcdhUTHMcKQtKm3QihY1e4SFULD4W31wmnKctmlK7tVTqE7ny5w?=
- =?us-ascii?Q?lZgpTTspMNfi5vrIyzjpQc2q/GcThhYu6fOOEM7RoToJP7mZQLgstl9ONTP4?=
- =?us-ascii?Q?Pru43vfxI2AeRYGw9GZ8mMoVcfYLAPcQyrLxP7XYLFBWx1ateJt3RQxdUNYh?=
- =?us-ascii?Q?BDCULegUrsiQRraLQ9YEa8/vRofh9/WeBg5TwDPaF7mCs3NWqkKf79wTK/Sm?=
- =?us-ascii?Q?guGZ9YF7W0qQPGldh00sppB9XEHeJmtW5Jg7fKW6nNqYETE9b/HY+WEK+3Y/?=
- =?us-ascii?Q?z8iuLmngbuWlhTQE8lni66z0O3pL1KBlGxYpG4W1vmCXEe8vAyfM9WLWn6H4?=
- =?us-ascii?Q?bOw0wO24okHejw6WzRuWXJqKmfl9HmAD7o8PQO8HSLZIM7vfKCXbjMZtnOSd?=
- =?us-ascii?Q?UWJfLZTtWP4NyqCNg4PUZ+julGeAh0EnYHea09UL86L2ybVGGkPisolEqZqn?=
- =?us-ascii?Q?PL9beVJONdlH8AkQGf5LcTL2eH0G1Ya6rAh56Wn+LCMgeLdsdkGQTfRty0ts?=
- =?us-ascii?Q?4K4d1ospOCowovkM7valtgex8CUTBOoOfrCW18B5NwJHb0OHKkfbpL3pc9An?=
- =?us-ascii?Q?/Orq0aNVMontxyfuNrF0sMikZgLb5bHDELRA+b/fGZjvI9hfaUIku493MnWt?=
- =?us-ascii?Q?TGY+dYNZNrKkGOI9p59SfWhY8p25TjyOALzShbDg3y6uddhDoTdSpQ2AlSXo?=
- =?us-ascii?Q?H56dwqxrIySHJ61N7fkU1wc6ylrvREgNHFjmVRKiHqddQLxRba1nsdlita+6?=
- =?us-ascii?Q?HOavYd1koijtGWKs+uIg5fIvnE9X+v5GOA3bdjaxOjsWVLbC+elKIW3u6KA1?=
- =?us-ascii?Q?5XF+mdHwFSomHNzcZRX2EH7EcC57lWuo65qb/sGtHKHh3CO/TqfxQN6p1Q0i?=
- =?us-ascii?Q?Q0oJ5TGGYNXfAEW8PZvJ9f0n+t8tXzbTZaEu/lcSr8RwRq2t8NGRq0SK2Eyf?=
- =?us-ascii?Q?K6JLyBjG/3yrzrpeltJmN4OkSIujNObE4EbMBy2V2VVOgBcYREf3m3ZuJWkf?=
- =?us-ascii?Q?YQWVjhzqn4CLU5Ad6/szD5m6eyRcxP4JR9hYMgbNdsBYgm73R5RDZKf6tf4l?=
- =?us-ascii?Q?wCnm+CPXFUg+4s2hNxZnr/4IGaB82/LFp4p46gIjcZ6dT9EmeSM4nKawiCvk?=
- =?us-ascii?Q?X74z3+mzfdGAQQ/6wwUb0RNMkYs6XYayuLH5rghVPSU8w2lkfA9kq2wUEy4p?=
- =?us-ascii?Q?ZLJowXMMwSqaxJR8Xsrh4bzy5Uy0p0GtQ1yWnZMBaCWhCzo6wJFsmj8l1yy+?=
- =?us-ascii?Q?cT8hj8GgigRRCTQZuflFfnfzEzcuW9mEQM7Iptda1++zGWQZwqRyrQWbmGt8?=
- =?us-ascii?Q?eikPx2WntKz3J+w4YMY57MF2VYfc?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?oPtwZ6wrc4jVb3V9n8bx/0kBfTQp87xPxr0jJZePg4694CdfKqtQ/WM8FZdx?=
- =?us-ascii?Q?6qM543zxoJAUjx1pdqwpcOj8uRvmzzZ4cbLekMUMENe6nY1BkzXveIHQomF7?=
- =?us-ascii?Q?kq0D2A7axJeOEKC+4moLzv3ttB3M+e3lpsqT0TTZkJExbCqy9gMu/fqvdnif?=
- =?us-ascii?Q?FDhEF7vhtX1nfeVKCv1VETmfj5wUg/l8cXpICa115137giRLxtvJjNMqXR+G?=
- =?us-ascii?Q?A2IPw2NShjqju79ThK/L8xJE8+zLqp8CBEJ9BH64MaKeko5PhU2ccBigEEJ5?=
- =?us-ascii?Q?ZMK/ydmMwcGRHHJ/C2A6aRAIICptHVr8WvbzsDfULvb0LwmGarqK1wDKBPCB?=
- =?us-ascii?Q?sh1Brr6Ev+2tYHI+SpEz5DBz9XY+qMB/WHehPo4Ws7MyQfuljdkOhYjQOnmj?=
- =?us-ascii?Q?WOXyrZK0Me3oH74W5ijRyFlwPP0nvNDHRYVHQD8Nk+Pl+wi4u4B6n5s0eyp4?=
- =?us-ascii?Q?5C1Y8nit3rHbnZP9orL46NhhYYPP3rLjFL8vUcbDzvhiQ07K0I84n1FBoLOb?=
- =?us-ascii?Q?1L1Yr+wgkaiHysIpn9UuIUDCnx0xnhe+5T/BWdBzg7XjUvY10rW0NKCXMSSh?=
- =?us-ascii?Q?IYBfDCwjXnFHjb7O3shO19rzAILExjMNC6tPuvqT/6ZPIYx7WIvLFBJWCRie?=
- =?us-ascii?Q?yeUedA3lZSq94CMMrsT7+ud95kMuGa52cFyLmOJGjEDQnzkSRCXhjNR36cIO?=
- =?us-ascii?Q?TVsBbQMNrI5eeriC4+mvD3kUJi9KSC7317V4sFL85KXrwMcRgS06JKQKHlJJ?=
- =?us-ascii?Q?1ht1X6KNjZUO00d9AmQTkoiuqJhaqq33jxCtyPUSK2BbcJGoYUGZa/rnexr9?=
- =?us-ascii?Q?k1G9gVHAYchGfyT8dIbNsZvmKgYgZDDlCRRVSzvQlz8kjYBaP8J8IQGqh3pu?=
- =?us-ascii?Q?ktthefzPfNMRX40CNWxcJGLnCayQysWCRtAIdNruEUv1TWgeimABNBTZLOzi?=
- =?us-ascii?Q?M8dvUi6GW6WZ86PM/v3lST3YbQaPkqXY9/ZVv0H7IgNuFmFboBetZUGXk54E?=
- =?us-ascii?Q?+c4I83EUqBE5PILxcsR8ar6ZXEeUbA/DBsdhVDQcHDHuVot35jp90/I/IieD?=
- =?us-ascii?Q?F/d3Q7Fr5rSaTOulk4kBonF3cxO0ds0urhJS20omQlknoz2Vuq9GqBAiHb3m?=
- =?us-ascii?Q?PF7uUCQyZIGA3UAm9ZkrNJUULH3nMQ7hYtfDiHi06kNVRuXck8XDB44MWDxW?=
- =?us-ascii?Q?06tNd3baWUi0FGjdMh4QvoaZn7dHGBAeGe28c4gIySTAXZdZOgJCDYjO2cxm?=
- =?us-ascii?Q?spKUwGRp8cdqKURDlJowZxIezSOivPHB62yV4Oxp9WhDwStKVqESxO2AN0su?=
- =?us-ascii?Q?bS2hkBDCiw8vdGk8EULCVr3PgVBoamta624ixtzsn9mZUzKyPgWoknncj6hS?=
- =?us-ascii?Q?uvZbHp4vRcEf7UCpV9TORziOiIkzxxK2HXwtgm4KGbgjjvP5whaBsVbfUEzp?=
- =?us-ascii?Q?MnvWPr65vMxT2KI53yeebh8u7hprDCmIclpEa3RxDKv3DXVeeH1xusVT6LA/?=
- =?us-ascii?Q?qFa5niaHRlXvd+Z2jHJQBfLwF84wk2+B6dcCrUPu1yIWKqmiFapzjJ9HbDA1?=
- =?us-ascii?Q?a/MnjCxUrcCw+Qop9cZZ0zipdqryu69/rxWnTBJ3?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 709255b4-f9f3-41c5-4da5-08dd4a08d084
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 19:26:27.7480
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SgI2pveGfdgkowg/9qUPzIh5/ZENlH0d6OrtNuw3SabP31WqdlIX46FePHmQRVyQ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7956
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 06, 2025 at 03:27:49PM +0200, Mike Rapoport wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> +KHO introduces a new concept to its device tree: ``mem`` properties. A
-> +``mem`` property can be inside any subnode in the device tree. 
+The mcount_loc section holds the addresses of the functions that get
+patched by ftrace when enabling function callbacks. It can contain tens of
+thousands of entries. These addresses must be sorted. If they are not
+sorted at compile time, they are sorted at boot. Sorting at boot does take
+some time and does have a small impact on boot performance.
 
-I do not think this is a good idea.
+x86 and arm32 have the addresses in the mcount_loc section of the ELF
+file. But for arm64, the section just contains zeros. The .rela.dyn
+Elf_Rela section holds the addresses and they get patched at boot during
+the relocation phase.
 
-It should be core infrastructure, totally unrelated to any per-device
-fdt nodes, to carry the memory map.
+In order to sort these addresses, the Elf_Rela needs to be updated instead
+of the location in the binary that holds the mcount_loc section. Have the
+sorttable code, allocate an array to hold the functions, load the
+addresses from the Elf_Rela entries, sort them, then put them back in
+order into the Elf_rela entries so that they will be sorted at boot up
+without having to sort them during boot up.
 
-IOW a full DT that looks something more like:
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
 
-/dts-v1/;
+Can I get a "Tested-by" and a Reviewed-by or Acked-by from one of the ARM64
+maintainers? I have some code that I want to add on top of this that will
+remove the weak functions from the mcount_loc section.
 
-/ {
-  compatible = "linux-kho,v1";
-  allocated-memory {
-        <>
-  };
+For the s390 folks. I cross compiled a s390 and looked at the mcount_loc
+section, and I have no idea how to implement this for that. I wrote a elf
+parser to dump sections based symbols:
 
-  ftracebuffer {
-  	       compatible = "linux-kho,ftracem,v1";
-	       ftrace-buffer-phys = <..>;
-	       ftrace-buffer-len = <..>;
-	       ..etc..
-  };
-};
+  https://rostedt.org/code/dump_elf_sym.c
 
-Where allocated_memory will remove all memory from the buddy allocator
-very early on in an efficient way. that process should not be walking
-the fdt to find mem nodes.
+And ran it on the s390 vmlinux:
 
-> +After boot, drivers can call the kho subsystem to transfer ownership of memory
-> +that was reserved via a ``mem`` property to themselves to continue using memory
-> +from the previous execution.
+ $ ./dump_elf_sym vmlinux __start_mcount_loc __stop_mcount_loc
+ 1801620: .. .. .. .. .. .. .. ..   00 00 00 00 00 11 70 20  ......... .....p 
+ 1801630: 00 00 00 00 00 11 70 90   00 00 00 00 00 11 70 a0  ......p.. .....p.
+ 1801640: 00 00 00 00 00 11 71 10   00 00 00 00 00 11 71 20  ......q.. .....q 
+ 1801650: 00 00 00 00 00 11 71 90   00 00 00 00 01 7c 70 00  ......q.. ....|p.
+ 1801660: 00 00 00 00 01 7c 70 20   00 00 00 00 01 7c 70 40  .....|p . ....|p@
+ 1801670: 00 00 00 00 01 7c 70 60   00 00 00 00 01 7c 70 70  .....|p`. ....|pp
+ 1801680: 00 00 00 00 01 7c 70 98   00 00 00 00 01 7c 70 c0  .....|p.. ....|p.
+ 1801690: 00 00 00 00 01 7c 70 d0   00 00 00 00 01 7c 71 68  .....|p.. ....|qh
+[..]
 
-And this transfer should be done by phys that the node itself
-describes.
+It looks like addresses in that section where ARM64 only has zeros. I
+couldn't find a .rel or .rela section either.
 
-Ie if ftrace has a single high order folio to store it's ftrace buffer
-then I would expect code like:
+I guess there's some other table that these addresses are dependent upon?
 
-allocate ftrace:
-  buffer = folio_alloc(..);
 
-activate callback:
-   kho_preserve_folio(buffer)
-   fdt...("ftrace-buffer-phys", virt_to_phys(buffer))
+ arch/arm64/Kconfig  |   1 +
+ scripts/sorttable.c | 181 +++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 179 insertions(+), 3 deletions(-)
 
-restore callback:
-   buffer_phys = fdt..("ftrace-buffer-phys")
-   buffer = kho_restore_folio(buffer_phys)
-   [..]
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index fcdd0ed3eca8..3c6c9dcd96aa 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -217,6 +217,7 @@ config ARM64
+ 		if DYNAMIC_FTRACE_WITH_ARGS
+ 	select HAVE_SAMPLE_FTRACE_DIRECT
+ 	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
++	select HAVE_BUILDTIME_MCOUNT_SORT
+ 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+ 	select HAVE_GUP_FAST
+ 	select HAVE_FTRACE_GRAPH_FUNC
+diff --git a/scripts/sorttable.c b/scripts/sorttable.c
+index 9f41575afd7a..f75be83916a8 100644
+--- a/scripts/sorttable.c
++++ b/scripts/sorttable.c
+@@ -28,6 +28,7 @@
+ #include <fcntl.h>
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <stdbool.h>
+ #include <string.h>
+ #include <unistd.h>
+ #include <errno.h>
+@@ -79,10 +80,16 @@ typedef union {
+ 	Elf64_Sym	e64;
+ } Elf_Sym;
+ 
++typedef union {
++	Elf32_Rela	e32;
++	Elf64_Rela	e64;
++} Elf_Rela;
++
+ static uint32_t (*r)(const uint32_t *);
+ static uint16_t (*r2)(const uint16_t *);
+ static uint64_t (*r8)(const uint64_t *);
+ static void (*w)(uint32_t, uint32_t *);
++static void (*w8)(uint64_t, uint64_t *);
+ typedef void (*table_sort_t)(char *, int);
+ 
+ static struct elf_funcs {
+@@ -102,6 +109,10 @@ static struct elf_funcs {
+ 	uint32_t (*sym_name)(Elf_Sym *sym);
+ 	uint64_t (*sym_value)(Elf_Sym *sym);
+ 	uint16_t (*sym_shndx)(Elf_Sym *sym);
++	uint64_t (*rela_offset)(Elf_Rela *rela);
++	uint64_t (*rela_info)(Elf_Rela *rela);
++	uint64_t (*rela_addend)(Elf_Rela *rela);
++	void (*rela_write_addend)(Elf_Rela *rela, uint64_t val);
+ } e;
+ 
+ static uint64_t ehdr64_shoff(Elf_Ehdr *ehdr)
+@@ -262,6 +273,41 @@ SYM_ADDR(value)
+ SYM_WORD(name)
+ SYM_HALF(shndx)
+ 
++#define RELA_ADDR(fn_name)				\
++static uint64_t rela64_##fn_name(Elf_Rela *rela)	\
++{							\
++	return r8((uint64_t *)&rela->e64.r_##fn_name);	\
++}							\
++							\
++static uint64_t rela32_##fn_name(Elf_Rela *rela)	\
++{							\
++	return r((uint32_t *)&rela->e32.r_##fn_name);	\
++}							\
++							\
++static uint64_t rela_##fn_name(Elf_Rela *rela)		\
++{							\
++	return e.rela_##fn_name(rela);			\
++}
++
++RELA_ADDR(offset)
++RELA_ADDR(info)
++RELA_ADDR(addend)
++
++static void rela64_write_addend(Elf_Rela *rela, uint64_t val)
++{
++	w8(val, (uint64_t *)&rela->e64.r_addend);
++}
++
++static void rela32_write_addend(Elf_Rela *rela, uint64_t val)
++{
++	w(val, (uint32_t *)&rela->e32.r_addend);
++}
++
++static void rela_write_addend(Elf_Rela *rela, uint64_t val)
++{
++	e.rela_write_addend(rela, val);
++}
++
+ /*
+  * Get the whole file as a programming convenience in order to avoid
+  * malloc+lseek+read+free of many pieces.  If successful, then mmap
+@@ -341,6 +387,16 @@ static void wle(uint32_t val, uint32_t *x)
+ 	put_unaligned_le32(val, x);
+ }
+ 
++static void w8be(uint64_t val, uint64_t *x)
++{
++	put_unaligned_be64(val, x);
++}
++
++static void w8le(uint64_t val, uint64_t *x)
++{
++	put_unaligned_le64(val, x);
++}
++
+ /*
+  * Move reserved section indices SHN_LORESERVE..SHN_HIRESERVE out of
+  * the way to -256..-1, to avoid conflicting with real section
+@@ -398,13 +454,12 @@ static inline void *get_index(void *start, int entsize, int index)
+ static int extable_ent_size;
+ static int long_size;
+ 
++#define ERRSTR_MAXSZ	256
+ 
+ #ifdef UNWINDER_ORC_ENABLED
+ /* ORC unwinder only support X86_64 */
+ #include <asm/orc_types.h>
+ 
+-#define ERRSTR_MAXSZ	256
+-
+ static char g_err[ERRSTR_MAXSZ];
+ static int *g_orc_ip_table;
+ static struct orc_entry *g_orc_table;
+@@ -500,6 +555,11 @@ static void *sort_orctable(void *arg)
+ 
+ #ifdef MCOUNT_SORT_ENABLED
+ static pthread_t mcount_sort_thread;
++static bool sort_reloc;
++
++static long rela_type;
++
++static char m_err[ERRSTR_MAXSZ];
+ 
+ struct elf_mcount_loc {
+ 	Elf_Ehdr *ehdr;
+@@ -508,6 +568,103 @@ struct elf_mcount_loc {
+ 	uint64_t stop_mcount_loc;
+ };
+ 
++/* Sort the relocations not the address itself */
++static void *sort_relocs(Elf_Ehdr *ehdr, uint64_t start_loc, uint64_t size)
++{
++	Elf_Shdr *shdr_start;
++	Elf_Rela *rel;
++	unsigned int shnum;
++	unsigned int count;
++	int shentsize;
++	void *vals;
++	void *ptr;
++
++	shdr_start = (Elf_Shdr *)((char *)ehdr + ehdr_shoff(ehdr));
++	shentsize = ehdr_shentsize(ehdr);
++
++	vals = malloc(long_size * size);
++	if (!vals) {
++		snprintf(m_err, ERRSTR_MAXSZ, "Failed to allocate sort array");
++		pthread_exit(m_err);
++		return NULL;
++	}
++
++	ptr = vals;
++
++	shnum = ehdr_shnum(ehdr);
++	if (shnum == SHN_UNDEF)
++		shnum = shdr_size(shdr_start);
++
++	for (int i = 0; i < shnum; i++) {
++		Elf_Shdr *shdr = get_index(shdr_start, shentsize, i);
++		void *end;
++
++		if (shdr_type(shdr) != SHT_RELA)
++			continue;
++
++		rel = (void *)ehdr + shdr_offset(shdr);
++		end = (void *)rel + shdr_size(shdr);
++
++		for (; (void *)rel < end; rel = (void *)rel + shdr_entsize(shdr)) {
++			uint64_t offset = rela_offset(rel);
++
++			if (offset >= start_loc && offset < start_loc + size) {
++				if (ptr + long_size > vals + size) {
++					free(vals);
++					snprintf(m_err, ERRSTR_MAXSZ,
++						 "Too many relocations");
++					pthread_exit(m_err);
++					return NULL;
++				}
++
++				/* Make sure this has the correct type */
++				if (rela_info(rel) != rela_type) {
++					free(vals);
++					snprintf(m_err, ERRSTR_MAXSZ,
++						"rela has type %lx but expected %lx\n",
++						(long)rela_info(rel), rela_type);
++					pthread_exit(m_err);
++					return NULL;
++				}
++
++				if (long_size == 4)
++					*(uint32_t *)ptr = rela_addend(rel);
++				else
++					*(uint64_t *)ptr = rela_addend(rel);
++				ptr += long_size;
++			}
++		}
++	}
++	count = ptr - vals;
++	qsort(vals, count / long_size, long_size, compare_extable);
++
++	ptr = vals;
++	for (int i = 0; i < shnum; i++) {
++		Elf_Shdr *shdr = get_index(shdr_start, shentsize, i);
++		void *end;
++
++		if (shdr_type(shdr) != SHT_RELA)
++			continue;
++
++		rel = (void *)ehdr + shdr_offset(shdr);
++		end = (void *)rel + shdr_size(shdr);
++
++		for (; (void *)rel < end; rel = (void *)rel + shdr_entsize(shdr)) {
++			uint64_t offset = rela_offset(rel);
++
++			if (offset >= start_loc && offset < start_loc + size) {
++				if (long_size == 4)
++					rela_write_addend(rel, *(uint32_t *)ptr);
++				else
++					rela_write_addend(rel, *(uint64_t *)ptr);
++				ptr += long_size;
++			}
++		}
++	}
++	free(vals);
++	return NULL;
++}
++
+ /* Sort the addresses stored between __start_mcount_loc to __stop_mcount_loc in vmlinux */
+ static void *sort_mcount_loc(void *arg)
+ {
+@@ -517,6 +674,9 @@ static void *sort_mcount_loc(void *arg)
+ 	uint64_t count = emloc->stop_mcount_loc - emloc->start_mcount_loc;
+ 	unsigned char *start_loc = (void *)emloc->ehdr + offset;
+ 
++	if (sort_reloc)
++		return sort_relocs(emloc->ehdr, emloc->start_mcount_loc, count);
++
+ 	qsort(start_loc, count/long_size, long_size, compare_extable);
+ 	return NULL;
+ }
+@@ -866,12 +1026,14 @@ static int do_file(char const *const fname, void *addr)
+ 		r2	= r2le;
+ 		r8	= r8le;
+ 		w	= wle;
++		w8	= w8le;
+ 		break;
+ 	case ELFDATA2MSB:
+ 		r	= rbe;
+ 		r2	= r2be;
+ 		r8	= r8be;
+ 		w	= wbe;
++		w8	= w8be;
+ 		break;
+ 	default:
+ 		fprintf(stderr, "unrecognized ELF data encoding %d: %s\n",
+@@ -887,8 +1049,13 @@ static int do_file(char const *const fname, void *addr)
+ 	}
+ 
+ 	switch (r2(&ehdr->e32.e_machine)) {
+-	case EM_386:
+ 	case EM_AARCH64:
++#ifdef MCOUNT_SORT_ENABLED
++		sort_reloc = true;
++		rela_type = 0x403;
++#endif
++		/* fallthrough */
++	case EM_386:
+ 	case EM_LOONGARCH:
+ 	case EM_RISCV:
+ 	case EM_S390:
+@@ -932,6 +1099,10 @@ static int do_file(char const *const fname, void *addr)
+ 			.sym_name		= sym32_name,
+ 			.sym_value		= sym32_value,
+ 			.sym_shndx		= sym32_shndx,
++			.rela_offset		= rela32_offset,
++			.rela_info		= rela32_info,
++			.rela_addend		= rela32_addend,
++			.rela_write_addend	= rela32_write_addend,
+ 		};
+ 
+ 		e = efuncs;
+@@ -965,6 +1136,10 @@ static int do_file(char const *const fname, void *addr)
+ 			.sym_name		= sym64_name,
+ 			.sym_value		= sym64_value,
+ 			.sym_shndx		= sym64_shndx,
++			.rela_offset		= rela64_offset,
++			.rela_info		= rela64_info,
++			.rela_addend		= rela64_addend,
++			.rela_write_addend	= rela64_write_addend,
+ 		};
+ 
+ 		e = efuncs;
+-- 
+2.47.2
 
-destroy ftrace:
-   folio_put(buffer);
-
-And kho will take care to restore the struct folio, put back the
-order, etc, etc.
-
-Similar for slab.
-
-I think this sort of memory-based operation should be the very basic
-core building primitive here.
-
-So the allocated-memory node should preserve information about KHO'd
-folios, their order and so on.
-
-It doesn't matter what part of the FDT owns those folios, all the core
-kernel should do is keep track of them and at some point check that
-all preserved folios have been claimed.
-
-> +We guarantee that we always have such regions through the scratch regions: On
-> +first boot KHO allocates several physically contiguous memory regions. Since
-> +after kexec these regions will be used by early memory allocations, there is a
-> +scratch region per NUMA node plus a scratch region to satisfy allocations
-> +requests that do not require particilar NUMA node assignment.
-
-This plan sounds great, way better than the pmem approaches/etc.
-
-> +To enable user space based kexec file loader, the kernel needs to be able to
-> +provide the device tree that describes the previous kernel's state before
-> +performing the actual kexec. The process of generating that device tree is
-> +called serialization. When the device tree is generated, some properties
-> +of the system may become immutable because they are already written down
-> +in the device tree. That state is called the KHO active phase.
-
-This should have a whole state diagram as we've talked a few
-times. There is alot more to worry about here than just 'activate'.
-
-Jason
