@@ -1,107 +1,205 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D4B191F94;
-	Mon, 10 Feb 2025 05:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662FB189F3B;
+	Mon, 10 Feb 2025 05:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739165987; cv=none; b=KiL65YVvJycn1H1Ww47M6Yd/SzLLhbSsRlKnUXekUyRSVBye7FYO8qpj4nSUPjBw06/wniTcUaQCreQU7PNHpyJJZNRARyY/uFM/yJp9WFOxIr3nlPkDD54URw9JiuUo6ko+r7Y+RTknygbuK1BKw9DLxtJfBI9yzWLrbR+sXos=
+	t=1739166009; cv=none; b=r+oey9xqT5D2ndDY6uLx8Cm9vjCZlrvoYoiQDUvwSV6ESAkue7/SXwbd8AdTwqMO5vPpHTX4xOuIaFUW6ENC8dZe/NYKUpRklixVHEQSaj391ZHXZooHDMpHX6zWabBR1Fx/PkFUWPszPW1tl1W9gx/mEOZ9ST6qgtobPqdd+PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739165987; c=relaxed/simple;
-	bh=buG6voVc5zfk4HiKSZp19+HKiFIsBIA6Ww+wD6EEDD0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JWXeR+d/dcyu33GPwOQpeFd9ek2RQ+wvTBq0K4yirlWQ+rqn3TRPMMJtaOpDDNiec8kOJ7Jckg5C86O+tKznie+g/UhU1CjnqKIIYEYxzd4/zSxcXB2NNKaojfBq3zt47veKl69HdglsXGAr81PsF11+AXEBwGwrRCziL1SlKV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q0r3cLW+; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739166009; c=relaxed/simple;
+	bh=2lAaPI1IUBxCfge9zgJ95bA8IrUEHJ97mNlCsavgSpc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VGrlZfY+3tZnBtUl1GZCPJ3pkPqsBCDmIz6/x7NNyln29rBtVWz2l09ri60/Q8hDG10KcYuOp5jZ2QC0vVX3e4aOCprIxZ7nFjw6UlVYPjAK+yHAKxp8yOOxhRqCbifO35Q3azjbdOY145urT3Vd9c9YcdT8cYR+0PajLXhx/Ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F1ljIAwX; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q0r3cLW+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739165985; x=1770701985;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=buG6voVc5zfk4HiKSZp19+HKiFIsBIA6Ww+wD6EEDD0=;
-  b=Q0r3cLW+0VpqEdkEZmfacVDpZMYOryGQDrcVznLaIWWcsyQFPRH4tmZV
-   SHzBc0Fkgd3HQcf6tttSCTrzU+KZZZ2NE+/NBwrDJraprEHcP3mQ1D8ct
-   zRDI+0CFXLx+8Xj7lv+28LhLhzpP18hHMq4dVhSR5O1jMnR+4yBhdCh0U
-   DEcFzSesAXNlHmbEerPdWdbHQJOvSkVhie7qWyAJB4YRro7GN6jQc6ka6
-   zZShhj06GVcJULmL3w9ZVn6t4sCRap4aWtivQYYVZYFuaXevtp9w1XPXW
-   Rs0mLZd2rFFO3ghYP01cIR3chzEBjse7fAbgl/OKBtHxgMj1IuW4Axx/s
-   Q==;
-X-CSE-ConnectionGUID: wzTWrSs6QzWcTjzLnI7oNg==
-X-CSE-MsgGUID: FkEm4cjnTK2Z26U3viJOUg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="43657951"
-X-IronPort-AV: E=Sophos;i="6.13,273,1732608000"; 
-   d="scan'208";a="43657951"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 21:39:45 -0800
-X-CSE-ConnectionGUID: ApGwRRFvRWS+8W6N15XrDA==
-X-CSE-MsgGUID: gbY2Fzp2SgSxQBdk4A1XfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,273,1732608000"; 
-   d="scan'208";a="112318428"
-Received: from pg15swiplab1181.png.altera.com ([10.244.232.167])
-  by fmviesa008.fm.intel.com with ESMTP; 09 Feb 2025 21:39:42 -0800
-From: niravkumar.l.rabara@intel.com
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Niravkumar L Rabara <niravkumar.l.rabara@intel.com>,
-	linux@treblig.org,
-	Shen Lichuan <shenlichuan@vivo.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	u.kleine-koenig@baylibre.com,
-	nirav.rabara@altera.com,
-	linux-mtd@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F1ljIAwX"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c0590fdae5so187139785a.0;
+        Sun, 09 Feb 2025 21:40:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739166006; x=1739770806; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GKWtO/dYz247KZCvymvLm+jAp0Xkk0UErm7CY6FZ0VQ=;
+        b=F1ljIAwXo2e4+aaHzfP3J5kSHAzOA7tQ+ymcZNLjCh+jtihhbgeCscYbY0mQRu7QIQ
+         RDcP2TNeXlovPIg5O6PpOp6zE5wwMaSQKQA1DnC73CXU83tZU9u30smdqdYAE/upr6rv
+         TXMRbbK1lgxExYQydrexBhaVp+U1EaM4XP9/VSVe7Fzb37Sa6ysHiVtGrukYhjYSz4SW
+         qMi52XRLjKoFZsvVJ+WbOOMgUYtXPbflJWBrUKuJN2Dj7Zk03J4LGVB4BI8k9SDoT9dA
+         BMaPEExvyVkcU4F4kj9492ovOMYgi2J+pYIoV+eUFqimkCHVlu4h/MxinJKkzFCTpzxR
+         ngjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739166006; x=1739770806;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GKWtO/dYz247KZCvymvLm+jAp0Xkk0UErm7CY6FZ0VQ=;
+        b=TyW0v+oWOlNPeOkR+YtG/kFpTv7/LQwpaNdahvMRKqUjijXwmSpPkVsS+fbg5k2ctl
+         IsK3Jyrm0GDiSx+QU7KaX1gj4NSEXh4sUNcin/6+1LTywKZFcFntS0YTrEL8/JOqdsdg
+         B55/t++O6/FSvUS/ryTkTeJVTvnPg2Re7wTPJsD5/X+6hHYOx0MtmMmQk3b9WmsikD+H
+         nILhsJ5ESDO+E43VINVTF4KMEgdkAnNTfuzLa+HXSkaTySS7UcFsoH2+X8sGc7mcwmav
+         5A20pUB4xrbU5ehICuY94A1xuT4qi9TCKmWDUHl/nVsmP00HtrhjtF81SUHKoPDCcgA2
+         IHwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUH2V54ACHY0DCDQiJ661gsDyuyaKAh8NNkqDNBrq/XtJPlr4Frv/xqfup1R2CPNBto9TzQjQW2KbY4bpo=@vger.kernel.org, AJvYcCXJ9ylIrPYGflp+UtWx3WVR//fRuhSMSaeZlBCtfighfrtZ+/nA/yOdDzlNtrC7Ch72/ai1lnh4jVZcXFfyRMY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyB4uYfIxuyq8QKm1DZOfFa7Vm3DFNaAgGSp/0+reiWbmZb2ZBy
+	mzwaPCKgFmKpUHUeeZNxWBTObeCQn4zYlI3D1WVYeYecvj/s3Uol
+X-Gm-Gg: ASbGncvc+2IZYE38ILWb9cYQvsBDWaFrhJ0otU3XML0nwk21qPvmNkJGWU1FGPi1ApO
+	6oJB0aVy1/qMSYqahgOZEd1L/35p2BkOQoyv4pJ9ZCGnxE9Nm4W5BjM91J6O9pIGcRMJmfp0nj2
+	aSH1EKViGCdxINPxbjLjiZQodqG7txlJR4iZzFb4ZfhjnJC1C9L/RRymPhdgBQ2dN9Pn/M3bPVo
+	Ar4owD085EGOcQNKdYqHbSUkX5KDUcAPzEuABd4EYhU44SoUTJmbR/rYyQAykixTOCTY9/MS6h2
+	qrgGAYJ9ZHutHiW4NrDGZOPJtRB5skYO44XiuL1tAvHkCXE1n+B6CzAZEXHoItsFmO+2aA5RJJC
+	y0OtRnw==
+X-Google-Smtp-Source: AGHT+IFJLgeEeYnBCyFFJZm+NItmjYkiLubZ8ohfulP3Wy6At0JD5XA8nQ/b5uR3yYaPHCMEMTm58g==
+X-Received: by 2002:a05:620a:2614:b0:7b6:ce6e:229c with SMTP id af79cd13be357-7c047c4e7afmr1949295685a.55.1739166006229;
+        Sun, 09 Feb 2025 21:40:06 -0800 (PST)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c0615b0725sm38665685a.41.2025.02.09.21.40.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2025 21:40:05 -0800 (PST)
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 980441200043;
+	Mon, 10 Feb 2025 00:40:04 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Mon, 10 Feb 2025 00:40:04 -0500
+X-ME-Sender: <xms:NJGpZ_oj1hFN4h0lsDU_9qc9OYJ-tUMYP5SnvshUNI9-_IdkKDCWXw>
+    <xme:NJGpZ5oJ7jofrBCYzQ_ftg7X1by2N8wLQ9XJ7ZkBKFbW0ND1A1TFKawRsFqfFyy2Q
+    NRaAARrFFsd7qcLHg>
+X-ME-Received: <xmr:NJGpZ8PKUlH4ACY1b6GSqou9shroqFgA5vGVR1yoZfjzs7GJyX0baw4IyQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefjedvgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
+    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
+    drtghomheqnecuggftrfgrthhtvghrnhepffdtiefhieegtddvueeuffeiteevtdegjeeu
+    hffhgfdugfefgefgfedtieeghedvnecuffhomhgrihhnpehgihhthhhusgdrtghomhenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhn
+    odhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejje
+    ekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhn
+    rghmvgdpnhgspghrtghpthhtohepudelpdhmohguvgepshhmthhpohhuthdprhgtphhtth
+    hopegsvghnnhhordhlohhsshhinhesphhrohhtohhnrdhmvgdprhgtphhtthhopehlvghv
+    hihmihhttghhvghllhdtsehgmhgrihhlrdgtohhmpdhrtghpthhtohepohhjvggurgeskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdr
+    tghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhope
+    gsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdprhgtphhtthhopegrrdhh
+    ihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlihgtvghrhihhlh
+    esghhoohhglhgvrdgtohhmpdhrtghpthhtohepthhmghhrohhsshesuhhmihgthhdrvggu
+    uh
+X-ME-Proxy: <xmx:NJGpZy7zEk0CUtcmqS5jx33Rs7S0fZCIRMnWbIf01s2BJMf9uf5JGQ>
+    <xmx:NJGpZ-6iOCZ5d2pEWYJiMkHo985eC954iM9VijwIf5AD1ukSQTAMcw>
+    <xmx:NJGpZ6jPzUBAo_mtS8qZ2Gd2Qa4lvxraXs38ZyBvQLdcal9mxw_rSw>
+    <xmx:NJGpZw7srxF6DGCpjC3KCe-YhRKq8Qapm2jDgaT-7oHrIqrpmr9iUg>
+    <xmx:NJGpZ9LilF98Hlih_MI5OwMLaM8FzQ7PNprI2N3vFds7Bh06GNjCKKUo>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 10 Feb 2025 00:40:03 -0500 (EST)
+Date: Sun, 9 Feb 2025 21:40:03 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Mitchell Levy <levymitchell0@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Wedson Almeida Filho <walmeida@microsoft.com>,
+	Martin Rodriguez Reboredo <yakoyoku@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>, rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Subject: [PATCH v3 3/3] mtd: rawnand: cadence: fix incorrect device in dma_unmap_single
-Date: Mon, 10 Feb 2025 13:35:51 +0800
-Message-Id: <20250210053551.2399716-4-niravkumar.l.rabara@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250210053551.2399716-1-niravkumar.l.rabara@intel.com>
-References: <20250210053551.2399716-1-niravkumar.l.rabara@intel.com>
+Subject: Re: [PATCH v4 2/2] rust: lockdep: Use Pin for all LockClassKey usages
+Message-ID: <Z6mRMzzr045Rk7gl@Mac.home>
+References: <20250207-rust-lockdep-v4-0-7a50a7e88656@gmail.com>
+ <20250207-rust-lockdep-v4-2-7a50a7e88656@gmail.com>
+ <fd129e8e-cd2c-4ff9-b3b4-9bdb28582e52@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fd129e8e-cd2c-4ff9-b3b4-9bdb28582e52@proton.me>
 
-From: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
+On Sun, Feb 09, 2025 at 09:57:00AM +0000, Benno Lossin wrote:
+> On 08.02.25 01:39, Mitchell Levy wrote:
+> > Reintroduce dynamically-allocated LockClassKeys such that they are
+> > automatically (de)registered. Require that all usages of LockClassKeys
+> > ensure that they are Pin'd.
+> > 
+> > Currently, only `'static` LockClassKeys are supported, so Pin is
+> > redundant. However, it is intended that dynamically-allocated
+> > LockClassKeys will eventually be supported, so using Pin from the outset
+> > will make that change simpler.
+> > 
+> > Closes: https://github.com/Rust-for-Linux/linux/issues/1102
+> > Suggested-by: Benno Lossin <benno.lossin@proton.me>
+> > Suggested-by: Boqun Feng <boqun.feng@gmail.com>
+> > Signed-off-by: Mitchell Levy <levymitchell0@gmail.com>
+> 
+> One nit below, but it's fine.
+> 
+> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> 
 
-dma_map_single is using physical/bus device (DMA) but dma_unmap_single
-is using framework device(NAND controller), which is incorrect.
-Fixed dma_unmap_single to use correct physical/bus device.
+Thank you both!
 
-Fixes: ec4ba01e894d ("mtd: rawnand: Add new Cadence NAND driver to MTD subsystem")
-Cc: stable@vger.kernel.org
-Signed-off-by: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
----
- drivers/mtd/nand/raw/cadence-nand-controller.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> > ---
+> >  rust/helpers/helpers.c          |  1 +
+> >  rust/helpers/sync.c             | 13 ++++++++++
+> >  rust/kernel/sync.rs             | 57 ++++++++++++++++++++++++++++++++++++++---
+> >  rust/kernel/sync/condvar.rs     |  5 ++--
+> >  rust/kernel/sync/lock.rs        |  9 +++----
+> >  rust/kernel/sync/lock/global.rs |  5 ++--
+> >  rust/kernel/sync/poll.rs        |  2 +-
+> >  rust/kernel/workqueue.rs        |  2 +-
+> >  8 files changed, 78 insertions(+), 16 deletions(-)
+> 
+> [...]
+> 
+> > diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
+> > index eb80048e0110..6dafe338bbc7 100644
+> > --- a/rust/kernel/sync/lock.rs
+> > +++ b/rust/kernel/sync/lock.rs
+> > @@ -7,12 +7,9 @@
+> > 
+> >  use super::LockClassKey;
+> >  use crate::{
+> > -    init::PinInit,
+> > -    pin_init,
+> > -    str::CStr,
+> > -    types::{NotThreadSafe, Opaque, ScopeGuard},
+> > +    init::PinInit, pin_init, str::CStr, types::NotThreadSafe, types::Opaque, types::ScopeGuard,
+> 
+> Why does this change exist? I prefer imports to be merged.
+> 
 
-diff --git a/drivers/mtd/nand/raw/cadence-nand-controller.c b/drivers/mtd/nand/raw/cadence-nand-controller.c
-index 47950a0ac6d2..0b2db4173e72 100644
---- a/drivers/mtd/nand/raw/cadence-nand-controller.c
-+++ b/drivers/mtd/nand/raw/cadence-nand-controller.c
-@@ -1863,12 +1863,12 @@ static int cadence_nand_slave_dma_transfer(struct cdns_nand_ctrl *cdns_ctrl,
- 	dma_async_issue_pending(cdns_ctrl->dmac);
- 	wait_for_completion(&finished);
- 
--	dma_unmap_single(cdns_ctrl->dev, buf_dma, len, dir);
-+	dma_unmap_single(dma_dev->dev, buf_dma, len, dir);
- 
- 	return 0;
- 
- err_unmap:
--	dma_unmap_single(cdns_ctrl->dev, buf_dma, len, dir);
-+	dma_unmap_single(dma_dev->dev, buf_dma, len, dir);
- 
- err:
- 	dev_dbg(cdns_ctrl->dev, "Fall back to CPU I/O\n");
--- 
-2.25.1
+Agreed. Queued with this change reverted.
 
+Regards,
+Boqun
+
+> ---
+> Cheers,
+> Benno
+> 
+> >  };
+> > -use core::{cell::UnsafeCell, marker::PhantomPinned};
+> > +use core::{cell::UnsafeCell, marker::PhantomPinned, pin::Pin};
+> >  use macros::pin_data;
+> > 
+> >  pub mod mutex;
+> > @@ -129,7 +126,7 @@ unsafe impl<T: ?Sized + Send, B: Backend> Sync for Lock<T, B> {}
+> > 
+> >  impl<T, B: Backend> Lock<T, B> {
+> >      /// Constructs a new lock initialiser.
+> > -    pub fn new(t: T, name: &'static CStr, key: &'static LockClassKey) -> impl PinInit<Self> {
+> > +    pub fn new(t: T, name: &'static CStr, key: Pin<&'static LockClassKey>) -> impl PinInit<Self> {
+> >          pin_init!(Self {
+> >              data: UnsafeCell::new(t),
+> >              _pin: PhantomPinned,
+> 
