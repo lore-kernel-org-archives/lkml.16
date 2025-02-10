@@ -1,186 +1,140 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4907E25B696
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D4225EFB6
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739229066; cv=none; b=SlyqoI0/6kVwJFYdkYKv0SEQC0Pdj4n9TFMajFO59xKElehxgPB1dTki8LHSAf4Ax1f9MDY8/4C/qXvrHOeV/sF//CRHBgKWZxMWhgkrHahlvCuaGKYSHMBG823PX96Yf9t2xALuCzc3DMuDP/nLDA1q7O7aWH7cHz1Ga9L9Bzw=
+	t=1739229275; cv=none; b=USZq0E/ZdUG8AcblTWJ8hkmNSVkdJ4Pj9wd5UkPwn2x6mD1m3P8NbPsL+WEkd16H618X1Xs/+aVnrF1NuXggwA1ygcUuvt7fO6/ob0aIao4K1yz4PBlz2rzifc27e29pW0la7gvExdF5NkAqudfqN1YM5H5aklOg6XYuqaq5ibM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739229066; c=relaxed/simple;
-	bh=I85yiPeGxjB3pHp4BZM6Tvv0YClNTRfIZsY3+9214ek=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bfb+xUlC1qNWYpieyZAt5uS8p8szsDcUAdJ/k0n3RbvgyiI6oEZgbgMAFn+qwoLFXbnox2Fbje3D4Ugj1UeapLjLMKQPHpk8AV/ddSpKegJzNRcD1ZWFsigmJHZmSxia1ERtwlGmA44UT0RzDtYI/c5w1Ya0boYnZ4e40He+ZsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iP2gNYK6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739229275; c=relaxed/simple;
+	bh=8i9JszH04TiBwcb05AP+zS29cixB68Cf6w5CTdI0D+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bMtvMHsVp8NqaThx7gM0xNJFr7MWHLB1he/CwA0BSXVio8lEngmhfelcbgM5KjTsZYI7tIHOSZDOAJj6szA5mLtRafbdmr2CeFym79SJuX5wDBIdXP8x8McVuQ7ibKm0DH2RjLTIOZOyyuiBqGTHuHZLsjytjveFFMrkE5fay08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RujU9PpP; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iP2gNYK6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739229063;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=x6ZHTPoBjg/uWcJFr6X1NHVKDtKY1RU4PIMNX3aAG8g=;
-	b=iP2gNYK6yWtRhqEbehe3UzJpIKKMFSzoQU3UG5btejGqwguD+EHlcM6tr4km9TNm1PPlOe
-	jqg/DYqXWvpiY3aY78y2Q4REaPK0DzluzvSRmoOEWDMH6x8S83qqv5fs3rL0EchX0TFEEB
-	0AiIWxJfJXBsZeWr2pmLcIqN9Y1Qg6A=
-Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
- [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-207-yYmCX20FP1yyG3D4pWN8Lg-1; Mon, 10 Feb 2025 18:10:59 -0500
-X-MC-Unique: yYmCX20FP1yyG3D4pWN8Lg-1
-X-Mimecast-MFC-AGG-ID: yYmCX20FP1yyG3D4pWN8Lg
-Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-6f2b386136aso73383497b3.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:10:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RujU9PpP"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-307bc125e2eso46602581fa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:14:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739229271; x=1739834071; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/9kko6nvgrCtMDMk3GCD451xeU3goOMEnvnQebWZMb0=;
+        b=RujU9PpPOHxQBi3Y3um7wqiPaj7HY9Gjg6zE8fVTsjcELNz7f6dQN78koh5mbTiEk+
+         wCAwUa+Olw7qiCLUIB1HdojxyDgeBqS5w5rJiDfm9WrU0b5Omt5JX6ukEO+Me1ZJVqm2
+         r2i9winT5hyq/YmNaGPGA7QUnaGcNvI1tQLd/1lYPkezniew6j0PwlMivH0IGsP+pZGw
+         59YZvS6SasF5pnK/R+QfhZgDd37XsBMofgt6VDeL84AftM6tQpIRs8TrrQTPKRPq1GiQ
+         lvvYQC79pABXfUhp+vnboOOqEmTCFctA2Jzl+abh3xQ8StU9L4HJEJqCG3OGA9dFO68d
+         6oGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739229059; x=1739833859;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x6ZHTPoBjg/uWcJFr6X1NHVKDtKY1RU4PIMNX3aAG8g=;
-        b=p+7gg5LXjb2qVwiWXq1jn7KCGyd5XNmetuFFgb0lwlU/vgOHYg8NkS6PmK2UKcRobp
-         WGidrsQWP83bAZUQJopMAnsO7a2cS39miMnKQDKMLjXqxEYnXl1mqK6IKl4U2M5oVJjZ
-         b6C207s3t256GRH2rar6tuLcV5J5grNDVZZjYvSQhy2qZfbvJOIE4z9qieclBTUozUBB
-         4pgkXisYGuSj6xj65mbyhgGMbP1UK5Q2VWfgXqTYlcKTIhRmO9xGreEnjYdmV3P4uXlb
-         0wai0YsKNQlYKjH0sXK3P62c9RApa6rZWa3L25jaQH69aMEWeLnii6/pK0AVmX9CB/EJ
-         BoLw==
-X-Forwarded-Encrypted: i=1; AJvYcCUdU3l/57HWtiEj7b/A5kZas7SjySpY4RnAU99Gmf5HshpSuZ6D0A4RSsBf9pJKf8+pgs6tr6M33rvQ0Nw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxE95TcCqCdcxgJr2TWXRO/IiT5VZMqxmC/xBd6Bo4gzrkWALTP
-	4t+pE7hJAU7oLam8zbO40005JHqYoZMm65MPuSph1NkO7cN4cP3AtXIS1fXox9MK6oFfJwf7gPl
-	X6Df6TSaVKEAeA6eXQtkgFSFi/4MqxQweqrT20zu3RTj/TcMkGNOSsR7O0zC2tzKoK0ZRYoUrMl
-	vQmL2sjY50Na0CpF2HrKA354LmK4Q8wbNJmOgB
-X-Gm-Gg: ASbGncuWnFwUQok0ohkJzXn7Srj7ObkLd3QxsQm9ndLUdmLP35ZMIskb8wPsgjGz242
-	E0ea/AyGkCE/NqqUWRQFLMgsOmnaHkL5dGhTVUDepnUX7A4R9Z9Np7gEv9l9+4wiAgxClBpv0bM
-	Y=
-X-Received: by 2002:a05:6902:1707:b0:e5b:21e4:d887 with SMTP id 3f1490d57ef6-e5b4619f375mr13712175276.19.1739229059276;
-        Mon, 10 Feb 2025 15:10:59 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG+uFDoQgt7ClLP9YRwsvG8gLINyPnKkvfjeiO8adNvnnks4vYT/H56Z3CUg+P5cCKTbi1EKyjELPBxs6+aa0U=
-X-Received: by 2002:a05:6902:1707:b0:e5b:21e4:d887 with SMTP id
- 3f1490d57ef6-e5b4619f375mr13712146276.19.1739229058920; Mon, 10 Feb 2025
- 15:10:58 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739229271; x=1739834071;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/9kko6nvgrCtMDMk3GCD451xeU3goOMEnvnQebWZMb0=;
+        b=cjFcG7uvs9TGoYt6g2/mgccsOB1Tkj6Sn21jqBuxI2glqMRP7sPhLrYVINYK0lrUqv
+         lWydk5kRov9AgXjBxjLEDrx0mvB5/3v8ixn1k4ck/fVb4aplY30rl1why6a2ZCkuS9KB
+         MqYzRkBAc1Dn4DRj1yh/Tj8Q6ucoSEglpCoTJBJliN6mb3+lfN/j4dRkji7AX9gdsfR/
+         RgOtv25HFwGC2d1+X+tDrlNb6VLBci2rAkgo8PtXNF6dei+LQyyjJqm65ogInWu1PmOs
+         CEl268dSSLE+Vgnl503f/ru1WN2cj6VLRrQW2KYqXAWbsTwHFAcaL0jeWD2mQhTl1I1r
+         RENg==
+X-Forwarded-Encrypted: i=1; AJvYcCXkPEVtmJdv4/qdyhzYFxZFhPUVfcJ81t2GnfiI5xZacLzvceJlcfYrriWyvYAnq/WOwOtCJHOhStDTqC0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGIckPGePCeOMUwjFMGzxfGylC0gzz+XEMWyXBhd1pc+VT9IDx
+	4crhPvDj3BUi5CzSk9huyyhTw9snylBXYMWoQ/MHjtqfisvfOId7WWC9Kp4v1Ew=
+X-Gm-Gg: ASbGnct6z9IQIoUFOaDle3pd0YUxLYkbq0kfvENw1CWSOh+PD1bqpZF0vySx1SHr5nw
+	kwLS1DAXMjqqLEExTd8NccK9j3r1gs4gcSST2zG7c8CgcAMy0tgj5PRM2BWlotBfKQpKW0t/vhs
+	4jwbimioqiwf9gdvo3LzxiDyTmaKomBJYk23XW43mtbM+OkLILd1hicQsv8dXqZ804Iv+FTUkqt
+	oWc2ksxp/4TSmOCEN96ba4iKf7wn5vZPFPS40F1/70hZ6g4LHQ0mxCzsRIkxJHYdyKRpv3diM/o
+	TqqJbMzqNDgkDSjG6HO6YviuMDi358WGD74oaGk+3o3L1Np5WLsyR2Wj59aIH30ctJPe8nI=
+X-Google-Smtp-Source: AGHT+IEiYA4ZdHNW0MIRhlYTkHA5cjZMO3XRsBNobQiwPDauCXQyDb35RHo4o7SlxDmsaMRxsdJWGw==
+X-Received: by 2002:a2e:b8c2:0:b0:2ff:d2e4:8dd9 with SMTP id 38308e7fff4ca-307e5a779a5mr54736081fa.32.1739229271515;
+        Mon, 10 Feb 2025 15:14:31 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de2baaf7sm13653451fa.81.2025.02.10.15.14.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 15:14:30 -0800 (PST)
+Date: Tue, 11 Feb 2025 01:14:28 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Maxime Ripard <mripard@kernel.org>, Simona Vetter <simona@ffwll.ch>, 
+	Inki Dae <inki.dae@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Paul Kocialkowski <contact@paulk.fr>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, =?utf-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH v6 14/26] drm/bridge: add support for refcounted DRM
+ bridges
+Message-ID: <qnuskv4mln32nqgbgvwi2qcdwfma6tqfbq7e6sqb3za6pmms2j@ir7pt5634dsh>
+References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
+ <20250206-hotplug-drm-bridge-v6-14-9d6f2c9c3058@bootlin.com>
+ <20250207-ingenious-daffodil-dugong-51be57@houat>
+ <ucttjaf3trkgtpvhnsj7xfsybhnoi4qqow5ucwghlggivbagy7@gngjhbtu73lb>
+ <20250210181244.0e3e9189@booty>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207-bitmap-kunit-convert-v1-0-c520675343b6@gmail.com>
- <Z6eaDuXnT_rjVSNS@thinkpad> <CAMuHMdUsq_39kgBa8oanXeTzv44HuhS1e5MK7K2jxkVXQ7uWdw@mail.gmail.com>
- <bd71c705-5f57-4067-b200-fd80b98ddbc9@nvidia.com> <8b4bb4f0-37fc-4215-a3a9-3771394f065f@redhat.com>
-In-Reply-To: <8b4bb4f0-37fc-4215-a3a9-3771394f065f@redhat.com>
-From: Nico Pache <npache@redhat.com>
-Date: Mon, 10 Feb 2025 16:10:33 -0700
-X-Gm-Features: AWEUYZnj374O6r-fMAMQWzYmUj3jVBsErlGEBDI0ezwDzb8h1N0CVNAmtj-2QQw
-Message-ID: <CAA1CXcDXs7VRp=sfyDNTr6fR7MQ+pvb+w-o+gp-N6yTgdpMBRw@mail.gmail.com>
-Subject: Re: distro support for CONFIG_KUNIT: [PATCH 0/3] bitmap: convert
- self-test to KUnit
-To: David Hildenbrand <david@redhat.com>, John Hubbard <jhubbard@nvidia.com>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Yury Norov <yury.norov@gmail.com>
-Cc: Tamir Duberstein <tamird@gmail.com>, David Gow <davidgow@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Shuah Khan <shuah@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Muhammad Usama Anjum <usama.anjum@collabora.com>, linux-kernel@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-kselftest@vger.kernel.org, Brad Figg <bfigg@nvidia.com>, 
-	Michal Hocko <mhocko@suse.com>, Jason Gunthorpe <jgg@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210181244.0e3e9189@booty>
 
-On Mon, Feb 10, 2025 at 12:46=E2=80=AFPM David Hildenbrand <david@redhat.co=
-m> wrote:
->
-> On 10.02.25 20:35, John Hubbard wrote:
-> > On 2/9/25 11:54 PM, Geert Uytterhoeven wrote:
-> >> On Sat, 8 Feb 2025 at 18:53, Yury Norov <yury.norov@gmail.com> wrote:
-> >>> On Fri, Feb 07, 2025 at 03:14:01PM -0500, Tamir Duberstein wrote:
-> >>>> On 7/27/24 12:35 AM, Shuah Khan wrote:
-> > ...
-> >>>> The crux of the argument seems to be that the config help text is ta=
-ken
-> >>>> to describe the author's intent with the fragment "at boot". I think
-> >>
-> >> IMO, "at boot" is a misnomer, as most tests can be either builtin
-> >> or modular.
-> >
-> > Right.
-> >
-> >>
-> >>> KUNIT is disabled in defconfig, at least on x86_64. It is also disabl=
-ed
-> >>> on my Ubuntu 24.04 machine. If I take your patches, I'll be unable to
-> >
-> > OK so I just bought a shiny new test machine, and installed one of the
-> > big name distros on it, hoping they've moved ahead and bought into the =
-kunit
-> > story...
-> >
-> > $ grep KUNIT /boot/config-6.8.0-52-generic
-> > # CONFIG_KUNIT is not set
-> >
-> > ...gagghh! No such luck. One more data point, in support of Yuri's comp=
-laint. :)
-> >
-> >>
-> >> I think distros should start setting CONFIG_KUNIT=3Dm.
-> >
-> > Yes they should! kunit really does have important advantages for many u=
-se
-> > cases, including bitmaps here, and "CONFIG_KUNIT is not set" is the mai=
-n
-> > obstacle.
->  > > Let me add a few people to Cc who might be able to influence some
-> distros.
-> >
-> > thanks,
->
->
-> Fedora has it.
->
-> CS-10 has it (-> RHEL-10):
-> redhat/configs/common/generic/CONFIG_KUNIT:CONFIG_KUNIT=3Dm
->
-> https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-10/-/blo=
-b/main/redhat/configs/common/generic/CONFIG_KUNIT?ref_type=3Dheads
->
-> CS-9 has it (-> RHEL-9):
-> redhat/configs/common/generic/CONFIG_KUNIT:CONFIG_KUNIT=3Dm
->
-> https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-9/-/blob=
-/main/redhat/configs/common/generic/CONFIG_KUNIT?ref_type=3Dheads
->
-> So I think from the RH side everything is properly set?
->
-> Let me CC Nico, he did some KUNIT work in the past.
+On Mon, Feb 10, 2025 at 06:12:44PM +0100, Luca Ceresoli wrote:
+> Hi Maxime, Dmitry
+> 
+> On Fri, 7 Feb 2025 21:54:06 +0200
+> Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
+> 
+> > > > +/* Internal function (for refcounted bridges) */
+> > > > +void __drm_bridge_free(struct kref *kref)
+> > > > +{
+> > > > +	struct drm_bridge *bridge = container_of(kref, struct drm_bridge, refcount);
+> > > > +	void *container = ((void *)bridge) - bridge->container_offset;
+> > > > +
+> > > > +	DRM_DEBUG("bridge=%p, container=%p FREE\n", bridge, container);  
+> > > 
+> > > Pointers are not really useful to track here, since they are obfuscated
+> > > most of the time. Using the bridge device name would probably be better
+> > > (or removing the SHOUTING DEBUG entirely :))  
+> > 
+> > bridge device name or bridge funcs (I opted for the latter for the
+> > debugfs file)
+> 
+> These DRM_DEBUG()s proved extremely useful exactly because of the
+> pointer. This is because when using hotplug one normally has the same
+> device added and removed multiple times, and so the device name or
+> bridge funcs is always the same, preventing from understanding which
+> instance is leaking, or being freed, get, put, etc.
+> 
+> Do you think this is a sufficient motivation to keep it?
 
-Yeah that is correct! I enabled KUNIT in our environments a few years
-ago. We enable it as a module and use our own wrapper to exercise the
-code. For RHEL and Centos these kunit modules are only shipped
-internally for testing; However fedora-rawhide makes these modules
-available in the kernel-modules-internal package.
+Then it should be something like %px. I found that %p is mangled.
+What about having both device name _and_ a pointer?
 
-To test this you can follow this to install rawhide-vm:
-https://developer.fedoraproject.org/tools/virt-builder/about.html
-then inside the vm:
-    yum install kernel-modules-internal
-    add the kunit.enable=3D1 to the cmdline
-    reboot vm
-    modprobe kunit
-    modprobe <test_name>
+> 
+> Luca
+> 
+> -- 
+> Luca Ceresoli, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
-Hopefully that helps!
--- Nico
-
-
-
->
->
-> --
-> Cheers,
->
-> David / dhildenb
->
-
+-- 
+With best wishes
+Dmitry
