@@ -1,374 +1,158 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay07.th.seeweb.it (relay07.th.seeweb.it [5.144.164.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B4E1BD01F
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:01:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0764E81741
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739192465; cv=none; b=ONNmRUIjlhsKY/QYmH06jXPR24nEf77ZYs1HwxoV3fCUq4WLCF25TXFs/4CNnfoI6juEdN81akOZvmKIQE4981GbOoTLDS/WMQsNdNp6jfRnHocjUhQESwTOCj4FwWoYTh2aF+6S/wXRMYKA2+RGUAehNg4XcZDl1Kz/cQDOEOk=
+	t=1739192668; cv=none; b=p0OlqTBZKjA2IhuDzECrCKtkGlTSAwReFo+3ujC79a6bHOTtpKhLPBc68fVC4elXg4TeZI9119ps+El9VhjQVnl2SPy7R3G7W7OCkiudY/fDUOuHaJcFP/H/59vVlb5cvh7ubVqK0TlQFKHQ5CsgoFMiu2Xac215XkTRz8LB8tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739192465; c=relaxed/simple;
-	bh=S25E6BDj8TREV05Kv+UpERQAgNuSuZzsZx17eB9iICs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=EQbXQ7K1vxbCoYBxYIqDfVy/pIZ59zNT40Uo9WFTGKz8HIv0na7+3GgwsikBogsee2Hi3o4NYwrpxhXvsisHKfBD71W3GJhL1+TixRxj9dExQkTrPBQsj3COuAfZX0H/9qehABoRLZM4uN9HyT4IfluVseXETUjwG1gj5+Xzml0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk; spf=pass smtp.mailfrom=rasmusvillemoes.dk; dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b=d5w3e8H1; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rasmusvillemoes.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="d5w3e8H1"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30761be8fa7so39501241fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 05:01:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google; t=1739192461; x=1739797261; darn=vger.kernel.org;
-        h=mime-version:user-agent:message-id:date:references:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VK71TzxGVkRX9qG7tdueNdkbW6Dq9pUcgTDdLuMd3C0=;
-        b=d5w3e8H1J2BP7hQ+CFTXMnSb3KcC9F4N8/oSa6sE8uiUV3GHwltZgOz/GKIy5hAzIA
-         VfXWd0veBjGm6xObUVGUvPOEgT7lhc8Lj5f3Cxz1JUTVO3f+bNjYSaHzLL/nzFx0INau
-         a6MouZ7at9d5cRiS/OFQEJn83VM+DwJNIOoME=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739192461; x=1739797261;
-        h=mime-version:user-agent:message-id:date:references:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VK71TzxGVkRX9qG7tdueNdkbW6Dq9pUcgTDdLuMd3C0=;
-        b=pALdK4eZTuEaKZj1zHRlybu1OH8CJkJIT2Y5Ss3dQhqVa0BGyf0TSt9E5xkKx9ex+y
-         2UUzg/ZqU+dKbv0GHQAzZPc+wmHxxaHe7O3eyqofztPgJTbdOlg0iBk8Wog6Bzy3Z6Sw
-         RC6YBPXHBLafT0aJ5XRfSWeTGwhU0ixcXI48Si9IB+HQd28j/ukIt4yWmU+K6Ftnp7ow
-         CE1HVtv6j9wA89nDEDuW1qhGcYVuGzuktk087Md1KuByjCESHYMbj0pFQsmljUvhKrhy
-         snxvG/vke+LFPh3QIbtiWUAjC4208tEs5U7i21SHLrc/apquPY5UoaRdGQMLNiO5NBcc
-         /92Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWcI3zMxpbDDP0oAYulWEqUNijB9XMvm906mh7k+ja/0rmiw9ekqg9zDG8ZLzeqsF+gWs4J+wfDOOq7tcA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2Fq2oVZAcp+vAGOgXwKbrYEXXcGnVhgaS99M2kXrj2INaZI7A
-	k9Qj3OdCdjtlFhxWsxEckzD2tZYhuob6Eq3qQl3Q5fbV36AZCkeSaswQ/Ud/57M=
-X-Gm-Gg: ASbGncuyq0wrPRqHIxGsPrA2fstU22fMKRQw5apCMZXAfx+Rt4jQbIln1XrHqN23AZx
-	d4JNEwEyIXLJfukfq9aQkwG6HwqMJlbUvoJdtucrfESEBm0reeb6i1EIfIHPtkiXVJ0z1TdXvYB
-	gQcRNDdfJhC5ixxypSFrAMeZRj5XCLIp0JojTDuwoZAWVnHOAx3DXiBWmA+bRBRbAOGExrfSiEr
-	tdg8amkhfsxdL6e/EtF3sIoZ9rCTXJCjLRMqUR7a8NHf0ztM9IpITwJ1qs92vpWrJNIb7AqZRQh
-	t1GztV9j2fkoDWlL
-X-Google-Smtp-Source: AGHT+IE+6ti0DA/zJ9/ga8L5P6j0t+vrknzNNNRUKvkPhUp3k/QIkKG4YhcWlFi8r0n1dYpC5L5cSQ==
-X-Received: by 2002:ac2:5eca:0:b0:545:40f:575c with SMTP id 2adb3069b0e04-545040f58bcmr2462046e87.0.1739192460953;
-        Mon, 10 Feb 2025 05:01:00 -0800 (PST)
-Received: from localhost ([81.216.59.226])
-        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-54506b8771csm628323e87.190.2025.02.10.05.01.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 05:01:00 -0800 (PST)
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Arpitha Raghunandan <98.arpi@gmail.com>,  David Gow
- <davidgow@google.com>,  Petr Mladek <pmladek@suse.com>,  Steven Rostedt
- <rostedt@goodmis.org>,  Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>,  Sergey Senozhatsky
- <senozhatsky@chromium.org>,  Andrew Morton <akpm@linux-foundation.org>,
-  Shuah Khan <shuah@kernel.org>,  Brendan Higgins
- <brendan.higgins@linux.dev>,  linux-kernel@vger.kernel.org,
-  linux-kselftest@vger.kernel.org,  Geert Uytterhoeven
- <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 1/2] printf: convert self-test to KUnit
-In-Reply-To: <20250207-printf-kunit-convert-v2-1-057b23860823@gmail.com>
-	(Tamir Duberstein's message of "Fri, 07 Feb 2025 06:30:44 -0500")
-References: <20250207-printf-kunit-convert-v2-0-057b23860823@gmail.com>
-	<20250207-printf-kunit-convert-v2-1-057b23860823@gmail.com>
-Date: Mon, 10 Feb 2025 14:00:59 +0100
-Message-ID: <87tt92q7hw.fsf@prevas.dk>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1739192668; c=relaxed/simple;
+	bh=3TrPeTpYLv/dU4AHk72M1wqH0pYDS+Ib0xu+uGJ+RRI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z+JGLz8MNA17X2orJ8dl8+aC0qhZiatPL3Hie3HfAQXVA2/Ge/YZBNYrwV5z7sBSs70Vcpk/70MSa8teQ90n7gCGF78KZNvEcienvhfAerKqv+6pX93G2I9GOJLWPXWxVSGYEcu3qvy9C+Bm2y4iEWgeNTsdkbSNAAO+YTKd3wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
+Received: from SoMainline.org (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by m-r2.th.seeweb.it (Postfix) with ESMTPSA id 64F123F68F;
+	Mon, 10 Feb 2025 13:54:31 +0100 (CET)
+Date: Mon, 10 Feb 2025 13:54:29 +0100
+From: Marijn Suijten <marijn.suijten@somainline.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>, 
+	Vinod Koul <vkoul@kernel.org>, Simona Vetter <simona@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	Jordan Crouse <jordan@cosmicpenguin.net>, ~postmarketos/upstreaming@lists.sr.ht, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Martin Botka <martin.botka@somainline.org>, 
+	Jami Kettunen <jami.kettunen@somainline.org>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v2 2/3] drm/msm/dsi: Set PHY usescase (and mode) before
+ registering DSI host
+Message-ID: <vsxfi43d7rxh5xxc7ctivjslf6w4yy5iprqpqid3u3diylrtwd@wayafjlgzz7v>
+References: <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-0-9a60184fdc36@somainline.org>
+ <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-2-9a60184fdc36@somainline.org>
+ <nzm3tokbvho3hxz3e5vblp5ndagfcv5ah3j7gtkqjmt7ynr6f3@v36juvu73i5v>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <nzm3tokbvho3hxz3e5vblp5ndagfcv5ah3j7gtkqjmt7ynr6f3@v36juvu73i5v>
 
-On Fri, Feb 07 2025, Tamir Duberstein <tamird@gmail.com> wrote:
+On 2025-02-10 01:11:59, Dmitry Baryshkov wrote:
+> On Sun, Feb 09, 2025 at 10:42:53PM +0100, Marijn Suijten wrote:
+> > Ordering issues here cause an uninitialized (default STANDALONE)
+> > usecase to be programmed (which appears to be a MUX) in some cases
+> > when msm_dsi_host_register() is called, leading to the slave PLL in
+> > bonded-DSI mode to source from a clock parent (dsi1vco) that is off.
+> > 
+> > This should seemingly not be a problem as the actual dispcc clocks from
+> > DSI1 that are muxed in the clock tree of DSI0 are way further down, this
+> > bit still seems to have an effect on them somehow and causes the right
+> > side of the panel controlled by DSI1 to not function.
+> > 
+> > In an ideal world this code is refactored to no longer have such
+> > error-prone calls "across subsystems", and instead model the "PLL src"
+> > register field as a regular mux so that changing the clock parents
+> > programmatically or in DTS via `assigned-clock-parents` has the
+> > desired effect.
+> > But for the avid reader, the clocks that we *are* muxing into DSI0's
+> > tree are way further down, so if this bit turns out to be a simple mux
+> > between dsiXvco and out_div, that shouldn't have any effect as this
+> > whole tree is off anyway.
+> > 
+> > Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
+> > ---
+> >  drivers/gpu/drm/msm/dsi/dsi_manager.c | 30 +++++++++++++++++++-----------
+> >  1 file changed, 19 insertions(+), 11 deletions(-)
+> 
+> 
+> Fixes: 57bf43389337 ("drm/msm/dsi: Pass down use case to PHY")
 
-> Convert the printf() self-test to a KUnit test.
->
-> In the interest of keeping the patch reasonably-sized this doesn't
-> refactor the tests into proper parameterized tests - it's all one big
-> test case.
->
-> Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
->  Documentation/core-api/printk-formats.rst |   2 +-
->  MAINTAINERS                               |   2 +-
->  arch/m68k/configs/amiga_defconfig         |   1 -
->  arch/m68k/configs/apollo_defconfig        |   1 -
->  arch/m68k/configs/atari_defconfig         |   1 -
->  arch/m68k/configs/bvme6000_defconfig      |   1 -
->  arch/m68k/configs/hp300_defconfig         |   1 -
->  arch/m68k/configs/mac_defconfig           |   1 -
->  arch/m68k/configs/multi_defconfig         |   1 -
->  arch/m68k/configs/mvme147_defconfig       |   1 -
->  arch/m68k/configs/mvme16x_defconfig       |   1 -
->  arch/m68k/configs/q40_defconfig           |   1 -
->  arch/m68k/configs/sun3_defconfig          |   1 -
->  arch/m68k/configs/sun3x_defconfig         |   1 -
->  arch/powerpc/configs/ppc64_defconfig      |   1 -
->  lib/Kconfig.debug                         |  20 +++-
->  lib/Makefile                              |   2 +-
->  lib/{test_printf.c => printf_kunit.c}     | 164 +++++++++++++++---------------
->  tools/testing/selftests/lib/config        |   1 -
->  tools/testing/selftests/lib/printf.sh     |   4 -
->  20 files changed, 104 insertions(+), 104 deletions(-)
->
-> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-> index ecccc0473da9..0d9461bd6964 100644
-> --- a/Documentation/core-api/printk-formats.rst
-> +++ b/Documentation/core-api/printk-formats.rst
-> @@ -661,7 +661,7 @@ Do *not* use it from C.
->  Thanks
->  ======
->  
-> -If you add other %p extensions, please extend <lib/test_printf.c> with
-> +If you add other %p extensions, please extend <lib/printf_kunit.c> with
->  one or more test cases, if at all feasible.
->  
->  Thank you for your cooperation and attention.
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 896a307fa065..57e366d356bd 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -25368,7 +25368,7 @@ R:	Sergey Senozhatsky <senozhatsky@chromium.org>
->  S:	Maintained
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git
->  F:	Documentation/core-api/printk-formats.rst
-> -F:	lib/test_printf.c
-> +F:	lib/printf_kunit.c
->  F:	lib/test_scanf.c
->  F:	lib/vsprintf.c
->  
-> diff --git a/arch/m68k/configs/amiga_defconfig b/arch/m68k/configs/amiga_defconfig
-> index dbf2ea561c85..e8c5e08fb6ec 100644
-> --- a/arch/m68k/configs/amiga_defconfig
-> +++ b/arch/m68k/configs/amiga_defconfig
-> @@ -622,7 +622,6 @@ CONFIG_ATOMIC64_SELFTEST=m
->  CONFIG_ASYNC_RAID6_TEST=m
->  CONFIG_TEST_HEXDUMP=m
->  CONFIG_TEST_KSTRTOX=m
-> -CONFIG_TEST_PRINTF=m
->  CONFIG_TEST_SCANF=m
->  CONFIG_TEST_BITMAP=m
->  CONFIG_TEST_UUID=m
+I'm not exactly confident about that.  Abhinav pointed out in
+https://gitlab.freedesktop.org/drm/msm/-/issues/41#note_2375646 that
+msm_dsi_host_register() was not supposed to be enabling the PHY, which I
+provided a counter-stacktrace for to show that is indeed the case.
 
-If/when you do re-roll a v3, can you split the defconfig changes off to
-a separate patch? It's a little annoying to scroll through all those
-mechanical one-liner diffs to get to the actual changes.
+Either this was always a problem that's only become visible now (and it's an
+issue with that patch), or a different change causes msm_dsi_host_register()
+to enable the PHY and program the usecase too early?
 
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 1af972a92d06..4834cac1eb8f 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -2427,6 +2427,23 @@ config ASYNC_RAID6_TEST
->  config TEST_HEXDUMP
->  	tristate "Test functions located in the hexdump module at runtime"
->  
-> +config PRINTF_KUNIT_TEST
-> +	tristate "KUnit test printf() family of functions at runtime" if !KUNIT_ALL_TESTS
-> +	depends on KUNIT
-> +	default KUNIT_ALL_TESTS
-> +	help
-> +	  Enable this option to test the printf functions at boot.
-> +
+What do you think?
 
-Well, not necessarily at boot unless built-in? 
+- Marijn
 
-> +	  KUnit tests run during boot and output the results to the debug log
-> +	  in TAP format (http://testanything.org/). Only useful for kernel devs
-> +	  running the KUnit test harness, and not intended for inclusion into a
-> +	  production build.
-> +
-> +	  For more information on KUnit and unit tests in general please refer
-> +	  to the KUnit documentation in Documentation/dev-tools/kunit/.
-> +
-> +	  If unsure, say N.
-> +
-
-I see that this is copy-pasted from other kunit config items, but not
-all of them have all this boilerplate, and I don't think it's useful
-(and, the mentions of "at boot" and "during boot" are actively
-misleading). Other kunit config items are shorter and more to the point,
-e.g.
-
-          Enable this to turn on 'list_sort()' function test. This test is
-          executed only once during system boot (so affects only boot time),
-          or at module load time.
-
-          If unsure, say N.
-
->  
->  obj-$(CONFIG_TEST_BITMAP) += test_bitmap.o
-> diff --git a/lib/test_printf.c b/lib/printf_kunit.c
-> similarity index 89%
-> rename from lib/test_printf.c
-> rename to lib/printf_kunit.c
-> index 59dbe4f9a4cb..fe6f4df92dd5 100644
-> --- a/lib/test_printf.c
-> +++ b/lib/printf_kunit.c
-> @@ -5,7 +5,7 @@
->  
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
-> -#include <linux/init.h>
-> +#include <kunit/test.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/printk.h>
-> @@ -25,8 +25,6 @@
->  
->  #include <linux/property.h>
->  
-> -#include "../tools/testing/selftests/kselftest_module.h"
-> -
->  #define BUF_SIZE 256
->  #define PAD_SIZE 16
->  #define FILL_CHAR '$'
-> @@ -37,72 +35,71 @@
->  	block \
->  	__diag_pop();
->  
-> -KSTM_MODULE_GLOBALS();
-> +static char *test_buffer;
-> +static char *alloced_buffer;
-> +
-> +static struct kunit *kunittest;
->  
-> -static char *test_buffer __initdata;
-> -static char *alloced_buffer __initdata;
-> +#define tc_fail(fmt, ...) \
-> +	KUNIT_FAIL(kunittest, fmt, ##__VA_ARGS__)
->  
-> -static int __printf(4, 0) __init
-> +static void __printf(4, 0)
->  do_test(int bufsize, const char *expect, int elen,
->  	const char *fmt, va_list ap)
->  {
->  	va_list aq;
->  	int ret, written;
->  
-> -	total_tests++;
-> -
->  	memset(alloced_buffer, FILL_CHAR, BUF_SIZE + 2*PAD_SIZE);
->  	va_copy(aq, ap);
->  	ret = vsnprintf(test_buffer, bufsize, fmt, aq);
->  	va_end(aq);
->  
->  	if (ret != elen) {
-> -		pr_warn("vsnprintf(buf, %d, \"%s\", ...) returned %d, expected %d\n",
-> +		tc_fail("vsnprintf(buf, %d, \"%s\", ...) returned %d, expected %d\n",
->  			bufsize, fmt, ret, elen);
-> -		return 1;
-> +		return;
->  	}
->  
->  	if (memchr_inv(alloced_buffer, FILL_CHAR, PAD_SIZE)) {
-> -		pr_warn("vsnprintf(buf, %d, \"%s\", ...) wrote before buffer\n", bufsize, fmt);
-> -		return 1;
-> +		tc_fail("vsnprintf(buf, %d, \"%s\", ...) wrote before buffer\n", bufsize, fmt);
-> +		return;
->  	}
->  
->  	if (!bufsize) {
->  		if (memchr_inv(test_buffer, FILL_CHAR, BUF_SIZE + PAD_SIZE)) {
-> -			pr_warn("vsnprintf(buf, 0, \"%s\", ...) wrote to buffer\n",
-> +			tc_fail("vsnprintf(buf, 0, \"%s\", ...) wrote to buffer\n",
->  				fmt);
-> -			return 1;
->  		}
-> -		return 0;
-> +		return;
->  	}
->  
->  	written = min(bufsize-1, elen);
->  	if (test_buffer[written]) {
-> -		pr_warn("vsnprintf(buf, %d, \"%s\", ...) did not nul-terminate buffer\n",
-> +		tc_fail("vsnprintf(buf, %d, \"%s\", ...) did not nul-terminate buffer\n",
->  			bufsize, fmt);
-> -		return 1;
-> +		return;
->  	}
->  
->  	if (memchr_inv(test_buffer + written + 1, FILL_CHAR, bufsize - (written + 1))) {
-> -		pr_warn("vsnprintf(buf, %d, \"%s\", ...) wrote beyond the nul-terminator\n",
-> +		tc_fail("vsnprintf(buf, %d, \"%s\", ...) wrote beyond the nul-terminator\n",
->  			bufsize, fmt);
-> -		return 1;
-> +		return;
->  	}
->  
->  	if (memchr_inv(test_buffer + bufsize, FILL_CHAR, BUF_SIZE + PAD_SIZE - bufsize)) {
-> -		pr_warn("vsnprintf(buf, %d, \"%s\", ...) wrote beyond buffer\n", bufsize, fmt);
-> -		return 1;
-> +		tc_fail("vsnprintf(buf, %d, \"%s\", ...) wrote beyond buffer\n", bufsize, fmt);
-> +		return;
->  	}
->  
->  	if (memcmp(test_buffer, expect, written)) {
-> -		pr_warn("vsnprintf(buf, %d, \"%s\", ...) wrote '%s', expected '%.*s'\n",
-> +		tc_fail("vsnprintf(buf, %d, \"%s\", ...) wrote '%s', expected '%.*s'\n",
->  			bufsize, fmt, test_buffer, written, expect);
-> -		return 1;
-> +		return;
->  	}
-> -	return 0;
->  }
->  
-> -static void __printf(3, 4) __init
-> +static void __printf(3, 4)
->  __test(const char *expect, int elen, const char *fmt, ...)
->  {
->  	va_list ap;
-> @@ -110,9 +107,8 @@ __test(const char *expect, int elen, const char *fmt, ...)
->  	char *p;
->  
->  	if (elen >= BUF_SIZE) {
-> -		pr_err("error in test suite: expected output length %d too long. Format was '%s'.\n",
-> -		       elen, fmt);
-> -		failed_tests++;
-> +		tc_fail("error in test suite: expected output length %d too long. Format was '%s'.\n",
-> +			elen, fmt);
->  		return;
->  	}
->  
-> @@ -124,19 +120,17 @@ __test(const char *expect, int elen, const char *fmt, ...)
->  	 * enough and 0), and then we also test that kvasprintf would
->  	 * be able to print it as expected.
->  	 */
-> -	failed_tests += do_test(BUF_SIZE, expect, elen, fmt, ap);
-> +	do_test(BUF_SIZE, expect, elen, fmt, ap);
->  	rand = get_random_u32_inclusive(1, elen + 1);
->  	/* Since elen < BUF_SIZE, we have 1 <= rand <= BUF_SIZE. */
-> -	failed_tests += do_test(rand, expect, elen, fmt, ap);
-> -	failed_tests += do_test(0, expect, elen, fmt, ap);
-> +	do_test(rand, expect, elen, fmt, ap);
-> +	do_test(0, expect, elen, fmt, ap);
->  
->  	p = kvasprintf(GFP_KERNEL, fmt, ap);
->  	if (p) {
-> -		total_tests++;
->  		if (memcmp(p, expect, elen+1)) {
-> -			pr_warn("kvasprintf(..., \"%s\", ...) returned '%s', expected '%s'\n",
-> +			tc_fail("kvasprintf(..., \"%s\", ...) returned '%s', expected '%s'\n",
->  				fmt, p, expect);
-> -			failed_tests++;
->  		}
->  		kfree(p);
->  	}
-
-So reading through this, is there really any reason to drop those
-existing total_tests and failed_tests tallies? Since you do need to keep
-the control flow the same, leaving the return types and "return
-1"/"return 0" and their uses in updating failed_tests would also reduce
-the patch size quite significantly.
-
-So they no longer come from some KSTM_MODULE_GLOBALS(), and thus need to
-be explicitly declared in this module, but that's exactly how it was
-originally until someone decided to lift that from the the printf suite
-to kstm.
-
-Yes, they'd need to be explicitly initialized to 0 during kunit_init
-since they are no longer use-once __initdata variable, and some
-kunit_exit logic would need to "manually" report them.
-
-Rasmus
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> 
+> > 
+> > diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+> > index a210b7c9e5ca281a46fbdb226e25832719a684ea..b93205c034e4acc73d536deeddce6ebd694b4a80 100644
+> > --- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
+> > +++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+> > @@ -74,17 +74,33 @@ static int dsi_mgr_setup_components(int id)
+> >  	int ret;
+> >  
+> >  	if (!IS_BONDED_DSI()) {
+> > +		/* Set the usecase before calling msm_dsi_host_register(), which would
+> > +		 * already program the PLL source mux based on a default usecase.
+> > +		 */
+> > +		msm_dsi_phy_set_usecase(msm_dsi->phy, MSM_DSI_PHY_STANDALONE);
+> > +		msm_dsi_host_set_phy_mode(msm_dsi->host, msm_dsi->phy);
+> > +
+> >  		ret = msm_dsi_host_register(msm_dsi->host);
+> >  		if (ret)
+> >  			return ret;
+> > -
+> > -		msm_dsi_phy_set_usecase(msm_dsi->phy, MSM_DSI_PHY_STANDALONE);
+> > -		msm_dsi_host_set_phy_mode(msm_dsi->host, msm_dsi->phy);
+> >  	} else if (other_dsi) {
+> >  		struct msm_dsi *master_link_dsi = IS_MASTER_DSI_LINK(id) ?
+> >  							msm_dsi : other_dsi;
+> >  		struct msm_dsi *slave_link_dsi = IS_MASTER_DSI_LINK(id) ?
+> >  							other_dsi : msm_dsi;
+> > +
+> > +		/* PLL0 is to drive both DSI link clocks in bonded DSI mode.
+> > +		 *
+> > +		/* Set the usecase before calling msm_dsi_host_register(), which would
+> > +		 * already program the PLL source mux based on a default usecase.
+> > +		 */
+> > +		msm_dsi_phy_set_usecase(clk_master_dsi->phy,
+> > +					MSM_DSI_PHY_MASTER);
+> > +		msm_dsi_phy_set_usecase(clk_slave_dsi->phy,
+> > +					MSM_DSI_PHY_SLAVE);
+> > +		msm_dsi_host_set_phy_mode(msm_dsi->host, msm_dsi->phy);
+> > +		msm_dsi_host_set_phy_mode(other_dsi->host, other_dsi->phy);
+> > +
+> >  		/* Register slave host first, so that slave DSI device
+> >  		 * has a chance to probe, and do not block the master
+> >  		 * DSI device's probe.
+> > @@ -98,14 +114,6 @@ static int dsi_mgr_setup_components(int id)
+> >  		ret = msm_dsi_host_register(master_link_dsi->host);
+> >  		if (ret)
+> >  			return ret;
+> > -
+> > -		/* PLL0 is to drive both 2 DSI link clocks in bonded DSI mode. */
+> > -		msm_dsi_phy_set_usecase(clk_master_dsi->phy,
+> > -					MSM_DSI_PHY_MASTER);
+> > -		msm_dsi_phy_set_usecase(clk_slave_dsi->phy,
+> > -					MSM_DSI_PHY_SLAVE);
+> > -		msm_dsi_host_set_phy_mode(msm_dsi->host, msm_dsi->phy);
+> > -		msm_dsi_host_set_phy_mode(other_dsi->host, other_dsi->phy);
+> >  	}
+> >  
+> >  	return 0;
+> > 
+> > -- 
+> > 2.48.1
+> > 
+> 
+> -- 
+> With best wishes
+> Dmitry
