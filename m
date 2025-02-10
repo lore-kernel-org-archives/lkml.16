@@ -1,123 +1,171 @@
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85552580D6;
-	Mon, 10 Feb 2025 16:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39BD2580ED
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739204842; cv=none; b=gA5fV+fOmpADKz/INsbYv9jw477c++rbeMSYbCkye4lidaarJJlxS89nZONO6PCVISsw5cnCErAA5xhV+akafTYQpBqaQly8Zu9I3hpdfmNmJ1T3afCQPVBPngwCgJB74IdaK1Ovr2E3iIqFwD52iizF/QdqJriJZMYg1iOixd8=
+	t=1739204865; cv=none; b=fgcUz0vbK1f+DpuFUP+HJxrS7WNrWMB60uvb+f6yndbJ9s3IGukbksBn/nv1Xwl+CjmIg1BPy+SVUjWm2DhBuhyM7LJEX7bbAH+wTvoPphHesj1R/CPIggQQSAIpDOvrssEWSOh1l35cAF4PB0i5FXBHO5E8I2RgQcLPASLZ5YQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739204842; c=relaxed/simple;
-	bh=KuMe3+MDTwc+Rnc7r/9bMIaCdM012Bs1ibmPwlai+F4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ehXtWJ+qWbeTrI7tKV7+Zu53r6bDhJ7gg0EfAVRTsA3563C3zm164q2tiFkch0NWw/NSscm+nrIIjKOTS7c1Edk7BBccZ+4fkudNwHP/ExgMNuJqv9AxvS5Bu1OnU+RFkKnuh1bnNEl13O4gG3hBVeSIXYzSxgHKpOIAPV4IeDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4affbb7ef2dso3457804137.0;
-        Mon, 10 Feb 2025 08:27:20 -0800 (PST)
+	s=arc-20240116; t=1739204865; c=relaxed/simple;
+	bh=bgbA4/tbI+RaH9q0GW0mJYweN8Hc0YBvKk53/gEE68U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HHjPx/B4DqJY+ERa8LqBvsAYGvOZjfaZfYo58pQviy9ybM4Ww7Hy5IfRYXUtrV+RKd/O6fzBim3dpu++U4bksIXAQc2GEGGtH9nCHuJ3eIbsBy/Y0+oAH7Oxiw426aFQAP+hnLAzxSE61OmRLObHEXSN5514OsYIIcAL/mwMNRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RXVoBLs9; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RXVoBLs9"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AANcAf013667
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:27:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	SNyUZ1/cNkqbwICCq8WDQ2UI+lFq00bVJqx6GxRceGQ=; b=RXVoBLs9wL3m7Nr5
+	my6FztBXcqPi0B7pVjAy8qUreH8ZnsBb/RDuaaM8E2rMZKiE0nydT6RQUIHVDGb9
+	jVWfsZNOpmtBQ9CQIZGe/bKfL2dABlF5dHSnognTH+yoDTUBkme0XllVg20KhZaW
+	tl1hc8e+trnDBwxocXr+smdIlhJAISnqbRNpAbqoQR0XynzLJYoDizSvPPhXonwe
+	nLds1VAWWFW41UBxsGue4VTggzxNVW0jy60uVmKAk0XbxVQY6HeVed6cJR+tZB4h
+	MgWN/j5WU1XTTKjuJrEDIlwsE8F3Lfri6pDfkLwIKEDucSirJ2GkowHN53yRvkR1
+	8M7FuA==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0dymvsh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:27:42 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4719173db00so2287591cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:27:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739204839; x=1739809639;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zqbX4psAGJ/PrujVLmSoQSl1kgnOHwvpt/Be/t6GDZw=;
-        b=h7CLDpsXt9pf4Qghv7YTCxRO194MSIQoChurMwRKEGveNuFVxCIJm49Uzais8rZYbs
-         FewJBC4TwAUy70rsHhPKAEZ5hh2JsB8DlZm+Ix6e8eLJ5IUhAcKBhfqzk9IJ2oAV/bIu
-         +tk/Q5aCUhZ3d5xRatMpAHHXr0K3RyhnsU51FCamU3iu6Wy2PXHIif/cKEF70rLtSAJ9
-         LidpyT5zv3kLlagDCEIybj+MU66gLmXFVbV1u6DoTYAj+vr7oT+GLZYTu9t+CKSh0dIo
-         ZhEoKQRUG8zW2etjHG0sHxpgrsZeM7S7roboGbW76xEH47FNQH4PogAkdEtSsWZJvpP9
-         4CQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWtClXNNiJufwfuHwoS299grJUjPvMiSVwHpE3Le7rghspkcroNeT0jth4ouB5iUJA02R2kpViVUqaqGtr1Jtus@vger.kernel.org, AJvYcCXuNj9kgdNvX9v5NPBgp0XOFVBxhbfSOMH0FRLwpCP9t06y3ZOl8GXTQywQhrx9RQ2ZwErgoEaiscNTt8A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpCyVg9H2WGLPU/i86pp2+8sL9apJq9cdnjKVk01rrOVQUQ8r2
-	co0gOYkUJpVct47tVUl4YhClVOZFawOTVtt27byZoo3CEGO0ZHdxFqHbI8jm
-X-Gm-Gg: ASbGncufayU6qfO3Ys7lqsC6FJBOotlkAYF2Z7PSwG+sgg7G8Iot4atjV+Qzn2LFbof
-	TLiZZWFeTmc5w610mO132f1ckLN4Lg+14lODuj3zRuCNgN+fjudhutDYXKk7zQ8GjFKiotMdBfR
-	q9ZVUmcKlE+SFqymYP+GvVMkNSQ6Td8HojhT33p8tbhxrrwuYfFqPXkZNucb9kC2ztsM3JspPTV
-	9G66TkNHyMudSVWeYCY6WTl+fTFxJwelTfgKscR0edplutUy1t14W7vaVjrvXSZ+tTCW+BYAdtQ
-	dD0L3jMbRB9Rpix7UkWDZA+UaA70cL/QCZFYn78RjIkslIDOwOZXIw==
-X-Google-Smtp-Source: AGHT+IGuxsDi8qW8F7BWVNEO/Pbjh0THpoKjO09AnXLhgrUUbLqtfnM0/M/Do5G/oTI8lLpt5ahBmw==
-X-Received: by 2002:a05:6102:3046:b0:4b6:fdc6:dd04 with SMTP id ada2fe7eead31-4ba85ec477dmr10168353137.18.1739204839107;
-        Mon, 10 Feb 2025 08:27:19 -0800 (PST)
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4bbbebc1fa0sm676139137.15.2025.02.10.08.27.17
+        d=1e100.net; s=20230601; t=1739204861; x=1739809661;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SNyUZ1/cNkqbwICCq8WDQ2UI+lFq00bVJqx6GxRceGQ=;
+        b=lndzacqlHlUE1z0GX359nE8dr81KprY4dE8s+p93l5sowBWpXuboDA2LrWloGKnam0
+         AWkW1q/RDBSf/DvH126RJV5zQO3Nh0U4k1dx/TCGeGFV4gc1UGcKtEaucUU5Tf0KW+AZ
+         j0BMIhahK/LGVMLyWwJoxDRuKHgXTYrabqp2SJNBanT4b5YS6jT3AmSnMjSEVwLY4iHY
+         A65mGvOVgcbw5Ft8ijZbM4gnXfD2NVatijOL3Fu5Q1IXSEeN6EGV3/HGDmPa9lpzHbPs
+         uI/X/Sj/imoPgieAsdkz9ehNFbC+AB8hiVJ5xcIa+97ED0wXl+F77MPVbmCRXu2mkwgS
+         WVWw==
+X-Forwarded-Encrypted: i=1; AJvYcCUYYQINlm2XRgAYK32AFVzemUYFTsG8uvGXCYqvrNRlyBnaACptUuVydkKTCw6uxI3vJ4q6EW1OB1nzjXk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjUQumFaqaa3SR9/hewlds++I5QSOvgUlvc4KxglxBMTkETF6f
+	F+gDIxoxmu2XKnxeu19z0g1/hCqx/6z3EQg0PhxAiybo1+RekFQYtX5Da6SCtw1cTFYpKv55e7y
+	UFCLOObqmM9fGzoAZLgEBpXG/zsyhTmg3lkuIFJ8bPmUNstgzJUwAR3Cj7AOUfPU=
+X-Gm-Gg: ASbGncv2+/NTQmvd7uC4D5vPaw4SWZfVxgXAAREBpiZuQ+oJB6T9GgxWdEdZaip7xTN
+	6y+Csnz4av/E7sGS9J2Ldb4M2GvHSULgxnh9L4CtSiFoeUvweprpEQFn8oJ3NNAIwPW/c0KolHD
+	LU2y5C3Sp8tU88ueGDO/RuH0kbMESvMEZ/JhjiYxeojnRXCg1UpPRprZkzAWQeMxlTk+3fChTRs
+	3UTYgLhLF1hOF1gyNhU9Q/hEDHlA+mPhV39VPYFRk+2bnnN6Ap82j1qgX+4PhvM83bsceO5ZPlw
+	s50QgU9Ce2aH8/XbLKPamV78xmITRxbnQxjYOps9Vb9471HWHxquZWKmz0w=
+X-Received: by 2002:a05:622a:24e:b0:469:c8e8:d50d with SMTP id d75a77b69052e-47167b09376mr88247651cf.15.1739204861554;
+        Mon, 10 Feb 2025 08:27:41 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IExesRcNEXyjhOLlWdz1NfG7qiFCxNd6PtuwSzVqZ6Bizzd0VTM0MIEo1/jGvfoq82tMnVoJw==
+X-Received: by 2002:a05:622a:24e:b0:469:c8e8:d50d with SMTP id d75a77b69052e-47167b09376mr88247451cf.15.1739204861075;
+        Mon, 10 Feb 2025 08:27:41 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de541fb84bsm5922998a12.54.2025.02.10.08.27.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 08:27:17 -0800 (PST)
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-4affbb7ef2dso3457755137.0;
-        Mon, 10 Feb 2025 08:27:17 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUTxFqqk5qIhAiytInVz0JBy8P6fbWie48hOEd/q2/aGhmwOri/XaY9t9IN9bcXNsbBxhrGVKKhsGA/EZo=@vger.kernel.org, AJvYcCV2kMun0fPB6vS6d76FzQqjFYQ5+9sSOvuCjIca5U68ay9gEmfuAT8co3+lDTUnphW+pBqEb3/WNa9h1GtvH71m@vger.kernel.org
-X-Received: by 2002:a05:6102:f0f:b0:4b2:ad82:133a with SMTP id
- ada2fe7eead31-4ba85f407a9mr9701403137.25.1739204837046; Mon, 10 Feb 2025
- 08:27:17 -0800 (PST)
+        Mon, 10 Feb 2025 08:27:40 -0800 (PST)
+Message-ID: <437d8b8f-540e-42f6-8656-859a9ad9af12@oss.qualcomm.com>
+Date: Mon, 10 Feb 2025 17:27:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210-scanf-kunit-convert-v5-0-8e64f3a7de99@gmail.com> <20250210-scanf-kunit-convert-v5-2-8e64f3a7de99@gmail.com>
-In-Reply-To: <20250210-scanf-kunit-convert-v5-2-8e64f3a7de99@gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 10 Feb 2025 17:27:04 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVnqqffKUQ7+usXruWce8B0KdRxxO41zNY8bTfh-r5oHQ@mail.gmail.com>
-X-Gm-Features: AWEUYZm2EYJA8ZA_5wFNdPwcX5XuV0_TVa-Ox5vT8RiMF4s-d-aO03s5oFok9fE
-Message-ID: <CAMuHMdVnqqffKUQ7+usXruWce8B0KdRxxO41zNY8bTfh-r5oHQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] scanf: break kunit into test cases
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] arm64: dts: qcom: qcs615: Add clock nodes for
+ multimedia clock
+To: Taniya Das <quic_tdas@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik <quic_imrashai@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250119-qcs615-mm-v2-dt-nodes-v2-0-c46ab4080989@quicinc.com>
+ <20250119-qcs615-mm-v2-dt-nodes-v2-1-c46ab4080989@quicinc.com>
+ <19a83d67-7e1a-495b-8dff-e1d2ba05b878@oss.qualcomm.com>
+ <da980161-087b-4fd7-a1a9-56576b6dfff9@quicinc.com>
+ <ff574ebe-041b-44f0-8335-6bfa332d8077@oss.qualcomm.com>
+ <4787c96d-0397-437d-acb4-da2857d32abe@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <4787c96d-0397-437d-acb4-da2857d32abe@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: RcER04cwZuO2FgEMYBikFXAg1JB5GAlf
+X-Proofpoint-GUID: RcER04cwZuO2FgEMYBikFXAg1JB5GAlf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_09,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ clxscore=1015 lowpriorityscore=0 impostorscore=0 mlxlogscore=999
+ mlxscore=0 priorityscore=1501 spamscore=0 adultscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502100135
 
-Hi Tamir,
+On 10.02.2025 10:33 AM, Taniya Das wrote:
+> 
+> 
+> On 2/6/2025 5:12 PM, Konrad Dybcio wrote:
+>> On 4.02.2025 6:33 PM, Taniya Das wrote:
+>>>
+>>>
+>>> On 2/3/2025 7:44 PM, Konrad Dybcio wrote:
+>>>> On 19.01.2025 1:00 PM, Taniya Das wrote:
+>>>>> Add support for video, camera, display and gpu clock controller nodes
+>>>>> for QCS615 platform.
+>>>>>
+>>>>> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
+>>>>> ---
+>>>>>    arch/arm64/boot/dts/qcom/qcs615.dtsi | 51 ++++++++++++++++++++++++++++++++++++
+>>>>>    1 file changed, 51 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+>>>>> index f4abfad474ea62dea13d05eb874530947e1e8d3e..9d537019437c5202c4d398eecd0ce2a991083175 100644
+>>>>> --- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
+>>>>> +++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+>>>>> @@ -3,7 +3,11 @@
+>>>>>     * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
+>>>>>     */
+>>>>>    +#include <dt-bindings/clock/qcom,qcs615-camcc.h>
+>>>>> +#include <dt-bindings/clock/qcom,qcs615-dispcc.h>
+>>>>>    #include <dt-bindings/clock/qcom,qcs615-gcc.h>
+>>>>> +#include <dt-bindings/clock/qcom,qcs615-gpucc.h>
+>>>>> +#include <dt-bindings/clock/qcom,qcs615-videocc.h>
+>>>>>    #include <dt-bindings/clock/qcom,rpmh.h>
+>>>>>    #include <dt-bindings/dma/qcom-gpi.h>
+>>>>>    #include <dt-bindings/interconnect/qcom,icc.h>
+>>>>> @@ -1418,6 +1422,18 @@ data-pins {
+>>>>>                };
+>>>>>            };
+>>>>>    +        gpucc: clock-controller@5090000 {
+>>>>> +            compatible = "qcom,qcs615-gpucc";
+>>>>> +            reg = <0 0x05090000 0 0x9000>;
+>>>>> +
+>>>>> +            clocks = <&rpmhcc RPMH_CXO_CLK>,
+>>>>> +                 <&gcc GPLL0>;
+>>>>
+>>>> This would normally be GCC_GPU_GPLL0_(DIV_)CLK_SRC, is this intentional?
+>>>>
+>>>
+>>> Yes, Konard, but on QCS615 GPLL0 is connected and not the GCC_GPU_GPLL0 sources.
+>>
+>> It looks like you're right.. if I'm looking in the right place, the _GPU_ ones
+>> are not connected anywhere..
+>>
+>> It also seems like the reset state of the _GPU_ ones is OFF (as expected),
+>> should we remove them from the GCC driver to reduce confusion?
+>>
+> 
+> Yeah I understand it might confuse, but I would like to keep them as the code will match the clocks present in the hardware.
 
-On Mon, 10 Feb 2025 at 16:00, Tamir Duberstein <tamird@gmail.com> wrote:
-> Use `suite_init` and move some tests into `scanf_test_cases`. This
-> gives us nicer output in the event of a failure.
->
-> Reviewed-by: David Gow <davidgow@google.com>
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+Alright, let's just keep that as is
 
-Thanks for your patch!
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-> --- a/lib/scanf_kunit.c
-> +++ b/lib/scanf_kunit.c
-> @@ -4,19 +4,14 @@
->   */
->
->  #include <kunit/test.h>
-> -#include <linux/bitops.h>
-> -#include <linux/kernel.h>
->  #include <linux/module.h>
-> -#include <linux/overflow.h>
-> -#include <linux/printk.h>
->  #include <linux/prandom.h>
-> -#include <linux/slab.h>
-> -#include <linux/string.h>
-> +#include <linux/sprintf.h>
->
->  #define BUF_SIZE 1024
->
-> -static char *test_buffer;
-> -static char *fmt_buffer;
-> +static char test_buffer[BUF_SIZE];
-> +static char fmt_buffer[BUF_SIZE];
-
-Why? This wastes 2 KiB of memory when the test is not running.
-
->  static struct rnd_state rnd_state;
->
->  typedef void (*check_fn)(struct kunit *test, const void *check_data, const char *string,
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Konrad
