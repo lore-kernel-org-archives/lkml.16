@@ -1,97 +1,88 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79BE231CA1
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:08:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA53231C93;
+	Mon, 10 Feb 2025 14:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739196486; cv=none; b=KECTc6EYoHAsPAcAEe7iwC3Ek/g6LR8kobz6zUQ9HWv0NPKg0qWzTofCU4QpoCCsEV3x/3Z5bqB+CHOH2KUFCHBNV11mmIvTXsAR1r65qfmOQuhVORi3OltYOo/fAD4+XJarvax7mnwygA1ctj29a2OM6VLtVW9YTObfhq6/mCI=
+	t=1739196488; cv=none; b=KnuISCdwMY8baIXGF5IeU1w1Vn2M+g/8CcLyim7b2Ki6U1cr39aIBnQUcV6u2lOGRK2VVIMUeXgWMAtZ2dr8dSZ6EnAlSLbq9y2IADiOW9kp3qqHKzMmjT5vXOWEgichNdcASBbSf7J16lJBkSW/XeuOrNDtsjyuzDGjXtayKcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739196486; c=relaxed/simple;
-	bh=Qnyg4AhO7AlWzaAjgnfboS2ahykzojmyYz/dy7vhqn4=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=HcsaWTnD2e/kLsB3g79czqjS8v0cW/ArfPbXMNeznf1ueISdNniFkC31CzOf8utjBSuvHnBW9RzUG041r3mry+gF3xx1TshX+8v7NAzTo2nlx9rRBwk08JyWr6z4okpzJBCUzquyShsCIj2k5ihsSQMt6dHnLm6EPiWjlfwnlkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WilqNpZB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739196488; c=relaxed/simple;
+	bh=5qakHaALKLsOB+vcC6ycI0FYINkz1vC62D8Nb9BJAF0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A+WALU89ewdl7BQW1BJ2EpE3xeXZNKOzmNoaT0HiTMAXGgcmhcxWzFFf5j+WU53dHZG1w9NzpOg9SYtN+OofjRq7l3Hof3C+alxFaPYBp5go68H/aLQKFBU0vq3l8t3cp3okA3rO4iW7gg0rvmx+aseAfie0x6ytdz/w9lyn1Q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ja26NgX0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/93SeBLK; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WilqNpZB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739196483;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ja26NgX0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/93SeBLK"
+Date: Mon, 10 Feb 2025 15:08:03 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739196484;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sNF2zPwPgiY6vDrjo37ivtvlQa7hoNvAO5mHqkBo7W0=;
-	b=WilqNpZBhpOk7PfJN7MXipmbSuNdozBt/np4rXUkcts44+ox4FSOl10ZuORHstpSLMDYaI
-	IoN8QjGZaQGL0hlTHfNgAEUrtzstXCzJUyU3qsE5fiTySfP6gRW1Ohbiid0cXbvwhi3FVD
-	U+SCW+hyZZLDazXSlBkJd5ZeDd+H8ck=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-198-SyPxNyfjPEedBtdoOq5Ryw-1; Mon,
- 10 Feb 2025 09:07:58 -0500
-X-MC-Unique: SyPxNyfjPEedBtdoOq5Ryw-1
-X-Mimecast-MFC-AGG-ID: SyPxNyfjPEedBtdoOq5Ryw
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9FC581955D8E;
-	Mon, 10 Feb 2025 14:07:49 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.92])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 38B7B3001D19;
-	Mon, 10 Feb 2025 14:07:48 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <CAKPOu+_4mUwYgQtRTbXCmi+-k3PGvLysnPadkmHOyB7Gz0iSMA@mail.gmail.com>
-References: <CAKPOu+_4mUwYgQtRTbXCmi+-k3PGvLysnPadkmHOyB7Gz0iSMA@mail.gmail.com>
-To: Max Kellermann <max.kellermann@ionos.com>
-Cc: dhowells@redhat.com, netfs@lists.linux.dev,
-    LKML <linux-kernel@vger.kernel.org>, linux-nfs@vger.kernel.org
-Subject: Re: "netfs: Can't donate prior to front"
+	bh=zOssjLjrkY6BJ3wqKjlN1VufX0Of1JYjkgwNs2mmKAE=;
+	b=Ja26NgX09VkPaOE+vhW6eQr/hdpGw/DuDK3AHunYmgnMLNu8U6tHQidt+jNptSbVLmTYrH
+	4SRYEF/1l/hdl45NxgipBp8rV0f3sbO4y+IAroEryYggPl+pmciwdPf0YK4G0CF9iTQul+
+	6yBgDcvaIAtI5NTba6KfWO7ynTHXu8WmFFccML+iUJs2f476LJ5a7+P8IZdoJtwWeRyXrO
+	Lfe2E/+R2GSwKhCFoyI2T1Lkthmt3u0DYgEeGrOPMQZhN7JonUQWz6fyKeDSKpvpnnXYEt
+	ocyIjxGPmrfpfyGdH/+EG11m7ar84RUhWTb9rts79ifkXkB8754U4EZcM78qzQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739196484;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zOssjLjrkY6BJ3wqKjlN1VufX0Of1JYjkgwNs2mmKAE=;
+	b=/93SeBLKh22ONlv6A+rCsDY76VFQG7VMnkrll8mGJcg5RYZ59N8PN6QYRBrX2N9+pMpdI/
+	gVRzBGhZFPp3pvDQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org
+Subject: Re: [PATCH 5/8] module: Add module_for_each_mod() function
+Message-ID: <20250210140803.yAy54W0Q@linutronix.de>
+References: <20250205225031.799739376@goodmis.org>
+ <20250205225103.760856859@goodmis.org>
+ <20250206142817.91853f475c681bc2ef7ca962@kernel.org>
+ <20250206102720.0fd57129@gandalf.local.home>
+ <bfe05b54-9714-46bc-9b59-ad091897c62d@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3052001.1739196466.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 10 Feb 2025 14:07:46 +0000
-Message-ID: <3052002.1739196466@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <bfe05b54-9714-46bc-9b59-ad091897c62d@suse.com>
 
-Can you apply the attached patch to your kernel, and then run with:
+On 2025-02-10 14:04:35 [+0100], Petr Pavlu wrote:
+> >> BTW, do we really need to disable preempt or is it enough to call
+> >> rcu_read_lock()?
+> > 
+> > Bah, as I expected this function to be changed, I didn't spend too much
+> > time on looking at its implementation. I just cut and pasted how the other
+> > loops worked. But yes, it should not be disabling preemption. In fact, I
+> > think the module code itself should not be disabling preemption!
+> > 
+> > I'll have to go and look into that.
+> 
+> The series "module: Use RCU instead of RCU-sched" from Sebastian Andrzej
+> Siewior cleans this up [1]. It is currently queued on modules-next (for
+> 6.15-rc1).
+> 
+> The new function module_for_each_mod() should then use "guard(rcu)();".
 
-   echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_read/enable
-   echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_rreq/enable
-   echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_sreq/enable
-   echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_failure/enable
-   echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_donate/enable
-   echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_progress/enable
+So the removal of the preempt-disable statements here already pays off.
+Nice.
 
-enabled.  If you can capture the trace output (and compress it!), that sho=
-uld
-hopefully help debug this.
-
-David
-
-diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
-index e8624f5c7fcc..8b78c1ec0677 100644
---- a/fs/netfs/read_collect.c
-+++ b/fs/netfs/read_collect.c
-@@ -312,6 +312,7 @@ static bool netfs_consume_read_data(struct netfs_io_su=
-brequest *subreq, bool was
- 	printk("folio: %llx-%llx\n", fpos, fend - 1);
- 	printk("donated: prev=3D%zx next=3D%zx\n", prev_donated, next_donated);
- 	printk("s=3D%llx av=3D%zx part=3D%zx\n", start, avail, part);
-+	tracing_off();
- 	BUG();
- }
- =
-
+Sebastian
