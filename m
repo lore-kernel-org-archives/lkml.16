@@ -1,153 +1,203 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C03243378
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2A51B0F00;
+	Mon, 10 Feb 2025 13:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739192999; cv=none; b=ebo6vF32qmaKLh4RsbB0W6DyJqZGOvaYhbc9Spp1eVdviW6KrfZX0iVFaIGh1IFdp82TZ3eCkxohFXPZ2w/W5tKK+ylY2p36UnqGOaCszrLXCga4aSyDu6LM4mQOLKGQe2EHy4hOvrhZnvdfEy+do/mb4gXKpV2sen+lz1Gxzzs=
+	t=1739193250; cv=none; b=GfI/zSoQt1dMtS3UHTu0TWt6pvgDB2z6Mwu1sbxCUGgO251PPnTWE+4zBg9bh5cKAVJW2tXCKYDozx9ovDqfnHnFwo+raDMNFIC38k2672z41HSpWpTjNArdmLTb+Y16GrKU5rjj82qfh4f/4iWhJvAEO/wCgnbq7C+9RMPx9vM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739192999; c=relaxed/simple;
-	bh=Jl2cDYaEC/8KYXJ6+YjEpKKhYtfmG5b+7PhvZl+Ph04=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fPO7ZLOAReCHyePvwS2oYKTW2W+kYhhonRzFbGSlxDA8w4+9wWTuzJt9+a2/ziFCBGsymqmvTIyHoxsWEA9bth0VbL4+wAkNjYpvXTcd+579G1DSQjTYTlzG7TOuWdX/68HTK4fqO0V4wm4PALOR9C8OsEMVB6cty8ZUCO8T28o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Tk9oIRI5; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1739193250; c=relaxed/simple;
+	bh=dgELg2wiAZA+JF3sDD2KDCqfReF5gcMgG9A4PFTS5z8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BrJ0tWOMXQCe3YgVdvUDcvQbCcOeK8tPDYdOLzbGBne84ZPVoO0FOMc7Gf929CDwEeLtkwnb8B7/yUNnxi1zvX5zQDghDQkw1SnAK667qIG/0YR3HeK4+nEJlLWrsAR+YV40RsWiHxArRTH0taT6DaPdLUSrmWYENq7bX3JmiE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=g01tbHpz; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Tk9oIRI5"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5de727f7f05so1892313a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 05:09:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1739192996; x=1739797796; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8iDjitnePveiMkv0iAQCbmoij7UIH9xbSCqXpO1GKK4=;
-        b=Tk9oIRI5cs3v5QR+Ty+mC/CDTGaxIfOyq9wp5qbBWSx47b7ubvExcedkyT0lxKx8i2
-         glToHgHKhS7AX+HyymH8rykWE84IRCbO4NCQFZPm7DO1zMVqSdSn0RcODi5fzL/IQY9k
-         CKO2SVW2TmiijrxwAlF6DgUYRsjGinogDWhB8yjJYJSsYwLvIkFL9L27GLvew9MGdrL2
-         Ba8517CRruQU7PArcPloQG72bxQG6ePfbJP+C6Y8UyJosAldTKdV45bmj1sPjE8fstFd
-         BStUFqVYEiP5SMTFht94H/xPCY6bRspPIp/I23V2eaReoxViY0kG4jwL3KuQwAgA5+3q
-         eUQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739192996; x=1739797796;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8iDjitnePveiMkv0iAQCbmoij7UIH9xbSCqXpO1GKK4=;
-        b=To2SONTBlQSwqmBqwdZ6Z1w6HtfuGWVP3PHYDtnhXDubcLCTlIn1aWSVK1YnwfGLL2
-         CDWqfyxjL1+wNwaeGAuArhCRSNroea0jhBQMCWIMKae6xo3hn08sBATKsA0uWeYIl46+
-         eFLlmhhVBcXBpmaUg9tCgEQwOwln1dnrBuiiL8F3nbKssmRSoNd8XUj6ZUgQhNpNbnj/
-         8oDtxe49g8yfEVerIi/PKQG18CFP+sovpcSI7FPXRiAzOuuBiIPVBzLFZraKoHDGActq
-         PG3MDqT3i53GaGojnQ/90QYMGT84wckBI+pk3M+8l4AKpFBnkF8R6hv5KwJxe5RyAu7e
-         btMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVmvXmM29+zdi/lpHFYOY8149+YUgyXE32oWOaq3Ah9ivqUDQ25fl5pnXJD/O8wOkSCAn7+FoJ87q4IajQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnsIou1Ve7lxczL4/x7S6mDlKtJo2aMbUZOGnaUVWdd+Dpa3ji
-	9+4bQKCd2/mxvKPnV5MieUGt58uZmFnzxeqRxc2ZzY2L3r0o4egSIGC82/sSSpg=
-X-Gm-Gg: ASbGncvb0rZVwTVMwLhGbirqyHOCC89q4AE4feqVuuNpGFGeNooNhaaiiF7K/ifvDyx
-	ZVWlCOu+bRTMh0uTb8oyBoGo24fvVoNWwzrYFyB5nE0bnndwIiXnWF7vsgx1rv7KViVmhPi1jSG
-	TLJe6w49tmZ1tz6QOeB0FJ76ZsDuXw59Uk6jwbKifkHMvS6UWetKbI/AnuCfN1L0yhY0F5/aT6k
-	kfMBZXYvcZfjqpGBKYca8ts59t6ua21mXE05AUmzuNRoEZGs9PIrpG5dcoU20GpANRc4AJ1xuxn
-	s31BsuArpeujxu+4cg==
-X-Google-Smtp-Source: AGHT+IFsPXNm0VN4fhz9j1YlISnSLTnhxSksqXJSZH2pF4LIrrD49Yd5+0t4LxBW7zYNbwlROSfHIw==
-X-Received: by 2002:a05:6402:1ec2:b0:5dc:cc90:a390 with SMTP id 4fb4d7f45d1cf-5de4508fbebmr15214488a12.32.1739192995658;
-        Mon, 10 Feb 2025 05:09:55 -0800 (PST)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de4ba95a32sm6561228a12.40.2025.02.10.05.09.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 05:09:55 -0800 (PST)
-Date: Mon, 10 Feb 2025 14:09:53 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: I Hsin Cheng <richard120310@gmail.com>, rostedt@goodmis.org,
-	linux@rasmusvillemoes.dk, senozhatsky@chromium.org,
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-	jserv@ccns.ncku.edu.tw, shuah@kernel.org
-Subject: Re: [PATCH] vsprintf: Drop unused assignment of fmt.state
-Message-ID: <Z6n6iWwnpA6wuUMD@pathway.suse.cz>
-References: <20250205172508.55358-1-richard120310@gmail.com>
- <Z6TWEHvBF0HOxKsY@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="g01tbHpz"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AD7Cqf025053;
+	Mon, 10 Feb 2025 13:14:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=liKZUk
+	lKnfW7FSG+cP7kmEj5EI0edOcw73zB0BbhOAI=; b=g01tbHpzyd1ruka9vGzG1h
+	r11GUKZA+zME2x87ySz9sqluhuP5a6o1cuLbbEFX34TSVuJ9dwWw3PxWJUau1/YS
+	Qsqs9l2EJskpj6IxzS15iSnDUpIg9oKqa4VrHuWaNHnpxo33xBddlbCaB4qahbme
+	9FUy6HzGKAp8sMisMbuBX4zWPOkOgJe8ur7Tr3dOUT5lMgyMTvfrE5P+y3yL7pl7
+	DaAwvMdfr1BNrYKGBNcsJYhJrGiZ13A2fPFVCZdfbg1I84MI7bn09yeJXQn9ewNA
+	n1wHjW8n/PL1AfY3YRycp7Csz1RJKwqUp83/SdkRbHAVEZzgXpQYPg20jO01PzXA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44q7h9awrf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 13:14:03 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51ADAckm023201;
+	Mon, 10 Feb 2025 13:14:03 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44q7h9awrb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 13:14:03 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51A9s5Jc028716;
+	Mon, 10 Feb 2025 13:14:02 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44pma1e1qa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 13:14:02 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51ADE08729557486
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Feb 2025 13:14:00 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6135058052;
+	Mon, 10 Feb 2025 13:14:00 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 119295805D;
+	Mon, 10 Feb 2025 13:13:58 +0000 (GMT)
+Received: from [9.171.86.231] (unknown [9.171.86.231])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 10 Feb 2025 13:13:57 +0000 (GMT)
+Message-ID: <08cd6e15-3f8c-47a0-8490-103d59abf910@linux.ibm.com>
+Date: Mon, 10 Feb 2025 14:13:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6TWEHvBF0HOxKsY@smile.fi.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] net/smc: use the correct ndev to find pnetid by
+ pnetid table
+To: Guangguan Wang <guangguan.wang@linux.alibaba.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, jaka@linux.ibm.com,
+        alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
+        guwen@linux.alibaba.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, horms@kernel.org, linux-rdma@vger.kernel.org,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Alexandra Winter <wintera@linux.ibm.com>
+References: <20241227040455.91854-1-guangguan.wang@linux.alibaba.com>
+ <1f4a721f-fa23-4f1d-97a9-1b27bdcd1e21@redhat.com>
+ <20250107203218.5787acb4.pasic@linux.ibm.com>
+ <908be351-b4f8-4c25-9171-4f033e11ffc4@linux.alibaba.com>
+ <20250109040429.350fdd60.pasic@linux.ibm.com>
+ <b1053a92-3a3f-4042-9be9-60b94b97747d@linux.alibaba.com>
+ <20250114130747.77a56d9a.pasic@linux.ibm.com>
+ <3dc68650-904c-4a1d-adc4-172e771f640c@linux.alibaba.com>
+ <4339aaa1-f2aa-4454-b5b1-6ffb6415f484@linux.alibaba.com>
+Content-Language: en-US
+From: Wenjia Zhang <wenjia@linux.ibm.com>
+In-Reply-To: <4339aaa1-f2aa-4454-b5b1-6ffb6415f484@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 15FTV8EPZQmyyWbTChmRah1YMwx5izSU
+X-Proofpoint-ORIG-GUID: -iSYw6egEIudQfx3bahwkPDXquKxr180
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_07,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 clxscore=1015 malwarescore=0 impostorscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502100109
 
-On Thu 2025-02-06 17:32:32, Andy Shevchenko wrote:
-> On Thu, Feb 06, 2025 at 01:25:07AM +0800, I Hsin Cheng wrote:
-> > Remove unused assignment of "fmt.state", in both cases the value of
-> > "fmt.state" will be overwritten by either "FORMAT_STATE_PRECISION" or
-> > "FORMAT_STATE_NUM", the value "FORMAT_STATE_NONE" isn't going to be used
-> > after the assignment.
+
+
+On 10.02.25 12:16, Guangguan Wang wrote:
 > 
-> ...
 > 
-> > struct fmt format_decode(struct fmt fmt, struct printf_spec *spec)
+> On 2025/1/15 19:53, Guangguan Wang wrote:
+>>
+>>
+>> On 2025/1/14 20:07, Halil Pasic wrote:
+>>> On Fri, 10 Jan 2025 13:43:44 +0800
+>>> Guangguan Wang <guangguan.wang@linux.alibaba.com> wrote:
+>>>
+>>>>> I think I showed a valid and practical setup that would break with your
+>>>>> patch as is. Do you agree with that statement?
+>>>> Did you mean
+>>>> "
+>>>> Now for something like a bond of two OSA
+>>>> interfaces, I would expect the two legs of the bond to probably have a
+>>>> "HW PNETID", but the netdev representing the bond itself won't have one
+>>>> unless the Linux admin defines a software PNETID, which is work, and
+>>>> can't have a HW PNETID because it is a software construct within Linux.
+>>>> Breaking for example an active-backup bond setup where the legs have
+>>>> HW PNETIDs and the admin did not bother to specify a PNETID for the bond
+>>>> is not acceptable.
+>>>> " ?
+>>>> If the legs have HW pnetids, add pnetid to bond netdev will fail as
+>>>> smc_pnet_add_eth will check whether the base_ndev already have HW pnetid.
+>>>>
+>>>> If the legs without HW pnetids, and admin add pnetids to legs through smc_pnet.
+>>>> Yes, my patch will break the setup. What Paolo suggests(both checking ndev and
+>>>> base_ndev, and replace || by && )can help compatible with the setup.
+>>>
+>>> I'm glad we agree on that part. Things are much more acceptable if we
+>>> are doing both base and ndev.
+>> It is also acceptable for me.
+>>
+>>> Nevertheless I would like to understand
+>>> your problem better, and talk about it to my team. I will also ask some
+>>> questions in another email.
+>> Questions are welcome.
+>>
+>>>
+>>> That said having things work differently if there is a HW PNETID on
+>>> the base, and different if there is none is IMHO wonky and again
+>>> asymmetric.
+>>>
+>>> Imagine the following you have your nice little setup with a PNETID on
+>>> a non-leaf and a base_ndev that has no PNETID. Then your HW admin
+>>> configures a PNETID to your base_ndev, a different one. Suddenly
+>>> your ndev PNETID is ignored for reasons not obvious to you. Yes it is
+>>> similar to having a software PNETID on the base_ndev and getting it
+>>> overruled by a HW PNETID, but much less obvious IMHO. I am wondering if there are any scenarios that require setting different
+>> pnetids for different net devices in one netdev hierarchy. If no, maybe
+>> we should limit that only one pnetid can be set to one netdev hierarchy.
+>>
+>>> I also think
+>>> a software PNETID of the base should probably take precedence over over
+>>> the software pnetid of ndev.
+>> Agree!
+>>
+>> Thanks,
+>> Guangguan Wang
+>>>
+>>> Regards,
+>>> Halil
 > 
-> >  			spec->field_width = -spec->field_width;
-> >  			spec->flags |= LEFT;
-> >  		}
-> > -		fmt.state = FORMAT_STATE_NONE;
-> > +
-> >  		goto precision;
-> >  	}
-> >  
+> Hi Halil,
 > 
-> While both are kinda redundant, this is not obvious what's stated in the commit
-> message. Yes, `goto qualifier;` is straightforward, but not `goto precision;`.
-> Which makes me think that these assignments can make code robust against
-> potential future changes to allow to catch up the wrong code paths.
+> Are there any questions or further discussions about this patch? If no, I will
+> send a v2 patch, in which software pnetid will be searched in both base_ndev and ndev,
+> and base_ndev will take precedence over ndev.
+> 
+> Thanks,
+> Guangguan Wang
+> 
+> 
 
-I fully agree with Andy here.
+Hi Guangguan,
 
-That said, I see the following right below the two conditions modified
-in this patch:
+Thank you for the detailed description and examples; I understand your 
+situation better now. Paolo's suggestions (checking both ndev and 
+base_ndev, and replacing || with &&) could indeed serve as a workaround 
+for certain setups like yours. However, they might also introduce 
+invalid topologies, one example is what Halil mentioned.
 
-	/* By default */
-	fmt.state = FORMAT_STATE_NONE;
+Therefore, neither suggestion is fully acceptable, whether from you or 
+from Paolo. I agree that we should restrict it so that only one pnetid 
+can be assigned to a single netdev hierarchy, based on the base ndev.
 
-A good solution would be to move it up. It will be then obvious
-that we could remove these two initializations. I mean
-to do the following:
+One preliminary idea I have is to enhance the smc_pnet -a -I <ethx> 
+<pnetid> command to analyze the entire hierarchy first, ensuring that 
+only one pnetid is assigned per netdev hierarchy.
 
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -2563,13 +2563,15 @@ struct fmt format_decode(struct fmt fmt, struct printf_spec *spec)
- 	const char *start = fmt.str;
- 	char flag;
- 
-+	/* By default */
-+	fmt.state = FORMAT_STATE_NONE;
-+
- 	/* we finished early by reading the field width */
- 	if (unlikely(fmt.state == FORMAT_STATE_WIDTH)) {
- 		if (spec->field_width < 0) {
- 			spec->field_width = -spec->field_width;
- 			spec->flags |= LEFT;
- 		}
--		fmt.state = FORMAT_STATE_NONE;
- 		goto precision;
- 	}
- 
-@@ -2578,13 +2580,9 @@ struct fmt format_decode(struct fmt fmt, struct printf_spec *spec)
- 		if (spec->precision < 0)
- 			spec->precision = 0;
- 
--		fmt.state = FORMAT_STATE_NONE;
- 		goto qualifier;
- 	}
- 
--	/* By default */
--	fmt.state = FORMAT_STATE_NONE;
--
- 	for (; *fmt.str ; fmt.str++) {
- 		if (*fmt.str == '%')
- 			break;
+Thanks,
+Wenjia
 
-
-Best Regards,
-Petr
