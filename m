@@ -1,84 +1,99 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A603822257B;
-	Mon, 10 Feb 2025 17:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7E11F4629;
+	Mon, 10 Feb 2025 17:19:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739207908; cv=none; b=q7SJS3IF6lfK1s/8W2JGJ4dUPc1IB34wQMRYE983oNblW1dzZHO26UXVVENmMspxk6YjJa1R6boM33qfudPEejxcXrqp5b5TEUZD2V/SzSzNreeiCSOw0j2/xuSIN4oupSh5O9AREET4TO/JlZtnTTjd08Ao4thbyi0YLwHzBbs=
+	t=1739207947; cv=none; b=F9VuIR8lVmjRaoq7B+puDPZXYipveCjcseu5CnEx7Samu17UDzEe2uWpavFrw3qqcUwMKpVD90IzhNVyg4A9RJ795JVj5UZvlhlZ/B87pHUMeJRdaHzJud1nQnClHsPvvOH3G9IC9WuKMfThuvgLFeqSiE93RnPKokLsBaM0Pds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739207908; c=relaxed/simple;
-	bh=VC00JklNOrgwjOXHHIYgIMfJnTeRDFzcAi5RpR/TxNY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j7p8SU4POsFjoe70jn95DSCYv2LcLtqooO1U0AGWPRctcqFSP55m3nBejxj4f0+rlcIWII7Mt1SpxieBGOdtua9/hFfOXKkBfP6RuxB4RPi4HjAY6DD3M3QLT/0PfYp5mJ6Dltifkx82DtmwUE1+KY/6990NyiSlHXXpDHwfMGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ru1aknKU; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739207947; c=relaxed/simple;
+	bh=86mtpW/G4xNuSFW1y68vusyqOuEtCXCn2mBA60c/wGc=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=lPlovNxrnUn7JT8GRdc6zADvZ/ETktVM4m5DAMF2T40hd8IpEgM19NpIPDl7lYEyhw4jBnJMtumq97F9aGBrluS8AdIZ5jvWR6O0ebC+GzdRYBN7Kz1C6rQJO5NXcH/UUyxxovVZE8OguHoysD5I66o+ikaWg9G5CK+1+H8C2Qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UazmHJL+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ru1aknKU"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21f710c17baso35402345ad.1;
-        Mon, 10 Feb 2025 09:18:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739207906; x=1739812706; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y6Hr2gj90SAJvZYYKvX3lI+NWXPn0IZtRtW+Ba4PvwI=;
-        b=Ru1aknKUMj4mAD9llQ8heuqyYDGGqvLM1gw0TrJEcv9nVtJnOgGB3PfrVaRnMeXZgR
-         gax1sfHkRLHNGISRAhcNLid4BzTIPXBRqNoRt3zN6XrfZbvimIjwO7EcAbZQ3a9I+/5r
-         cl5f5WSF/XGsxQ52imY1jeVkM+z7CG0QnWUUaSKs+yJtNLC02GsxshthlKZehbVWfO8V
-         0FABy0pd4frYwOzcM5vDv+qKQSU9/VhYv6CdSg58LaJcof06gFRfmqOK1vqDMa/dMbcz
-         gGU+WxDqiu+x678c/S5vw4qAXi8CoOWdhiXvzjQ5wD5KSf/G3838Z/N0xyiJtf677Hr6
-         HtXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739207906; x=1739812706;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Y6Hr2gj90SAJvZYYKvX3lI+NWXPn0IZtRtW+Ba4PvwI=;
-        b=M71o19AVCKF8fbs9ee2V4bOD89/Szyfi+gxvnURBNjKOfJ+5AZBr2xLCoq7nioY7pM
-         b/9sVbck/Plg5/7gvFOZXC5Ub3ADT+Atq+wOtOBWP7s/xM3tHYxpFsJB4spa/qu4+Rpf
-         IXzBLff5Q0Ed6/oiCdc+sgqGMjD19+Bhhxj2bE63mqI9x11qgWU9byGdYkz1yauGtUZc
-         IKPGBTdcPYVfDg1SW/tx8vR5hKuPKKHsmdqbBVuP/rU6fS4L4r9RxA47Czmu/Ms002bY
-         rnJCZMm1WExnijXziuIwfTbuiH8jlOhYiJOTJniSbdtchH2PAQDllxvB+ne9Zutft8Vh
-         XK2A==
-X-Forwarded-Encrypted: i=1; AJvYcCWk9kLpdp6Njo50Nyk/X2gLY3dMABOBTkpSuV/AbVB0ntqiGl5r0pRTKNCOWMME3kcwF8UhsAASw1ap@vger.kernel.org, AJvYcCWkwCe+/oYho+2z3SOcbMkzFSunrF/02AHQrCyfKTexS0dtA/PgcpT0dtfO8QM04BpVi64SPWXGRUW4nCc=@vger.kernel.org, AJvYcCXerQr08FjLGFytexdqUnHU5DR7LGAz+b3P1kb90UF8xRrAv6Zyt4vYq4uEhPhg9izzITA4am/m@vger.kernel.org
-X-Gm-Message-State: AOJu0YycojomQ89ANVpUcr++OsQU1dI/oY4p1Z9TBU/VDIM32GIOgj1M
-	OGjN7VwM3xq2YUhASTw0lBnsldA08d0icpFbvRbWkjivpvrSK6trK91aCqo4VQ0twTp6+QEggNx
-	19x97VGKYO6mbFd+dobLB+KI756E=
-X-Gm-Gg: ASbGnctWe8yPHGexCtda9g3ivX/+OWJP0dCjBMUs1NXCOZ3M9fSGYP/mB43yxPHe+e7
-	mDYUczL9oLLdrs5Wd8YjPVpgYvXxIdHoxI8npwVp/6WMLcEPdoaqT3GQBd7Of1Kdn09RiWIYJ
-X-Google-Smtp-Source: AGHT+IEXZ5lqBOERsIeVCEiZf+6SKGWkoAr+EjNWtFeKsutJOZCFiQi7Te+5lhD9Pf+7cxxxQEYooMyUXelC0GOYWCg=
-X-Received: by 2002:a17:902:d512:b0:215:b8c6:338a with SMTP id
- d9443c01a7336-21f4e6a05c0mr236794695ad.4.1739207905763; Mon, 10 Feb 2025
- 09:18:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UazmHJL+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 339F4C4CED1;
+	Mon, 10 Feb 2025 17:19:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739207946;
+	bh=86mtpW/G4xNuSFW1y68vusyqOuEtCXCn2mBA60c/wGc=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=UazmHJL+MscqwjOk5sKkRDhpPLij3+E6FOx2nSgjcqDNNidrgaGxFQj+1fDKbOMmV
+	 JEOvMacBN3/xGrd6qE57rY3QMVJjOeX6NdS7hjPib72eL9pVv88upSeF2ZadBWuAzo
+	 fXyWyEdtLE5E4e9XmsuPP0S5Wp9aCL14HXVXuGNzbFGt2lTeNMfz6/zxBV8PtmjrKV
+	 Fn+9ryQrJk2+VWNMyceUbsRrqNx2nGIGxDtcL/G8nl0psslL1/k2p3OsQqCgmxD1j/
+	 7xFN0s/enGAiadBQx7sg1KYTK1qlr5GR/tCg4G3qr3pOZ1ftbPqS1Qx8cvYz/FMNvc
+	 cTlaz/TiwT49w==
+Date: Mon, 10 Feb 2025 11:19:05 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207203441.945196-1-jilliandonahue58@gmail.com> <202502082022.ILQXjseT-lkp@intel.com>
-In-Reply-To: <202502082022.ILQXjseT-lkp@intel.com>
-From: Jillian Donahue <jilliandonahue58@gmail.com>
-Date: Mon, 10 Feb 2025 10:18:13 -0700
-X-Gm-Features: AWEUYZkEYqytkrljgvhIt2HQh3vA3pz_JwF1sjfbnL48BEb20zELvkxqTlRWhmo
-Message-ID: <CAArt=LhOBqH-qZVkdBsh13Csvv1GrDBqakfPGjpFt0TF8KBYsg@mail.gmail.com>
-Subject: Re: [PATCH v3] f_midi_complete to call tasklet_hi_schedule
-To: kernel test robot <lkp@intel.com>
-Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	oe-kbuild-all@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>, 
+ Michael Hennerich <michael.hennerich@analog.com>, 
+ linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org, 
+ Guillaume Stols <gstols@baylibre.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, 
+ Alexandru Ardelean <aardelean@baylibre.com>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Angelo Dureghello <adureghello@baylibre.com>
+In-Reply-To: <20250210-wip-bl-ad7606_add_backend_sw_mode-v4-1-160df18b1da7@baylibre.com>
+References: <20250210-wip-bl-ad7606_add_backend_sw_mode-v4-0-160df18b1da7@baylibre.com>
+ <20250210-wip-bl-ad7606_add_backend_sw_mode-v4-1-160df18b1da7@baylibre.com>
+Message-Id: <173920794511.669517.12561205201983200892.robh@kernel.org>
+Subject: Re: [PATCH v4 1/9] dt-bindings: iio: dac: adi-axi-adc: add ad7606
+ variant
 
-Ah yea, this error happens because in this commit:
-https://github.com/torvalds/linux/commit/8653d71ce3763aedcf3d2331f59beda3fecd79e4
-the tasklets are replaced with works. Should I request the patch to be
-in v5.10 or should I update the fix to use
-queue_work(system_highpri_wq, &midi->work) ?
 
-> >> drivers/usb/gadget/function/f_midi.c:286:31: error: no member named 'tasklet' in 'struct f_midi'
->      286 |                         tasklet_hi_schedule(&midi->tasklet);
->          |                                              ~~~~  ^
->    1 error generated.
+On Mon, 10 Feb 2025 17:10:51 +0100, Angelo Dureghello wrote:
+> From: Guillaume Stols <gstols@baylibre.com>
+> 
+> A new compatible is added to reflect the specialized version of the HDL.
+> We use the parallel interface to write the ADC's registers, and
+> accessing this interface requires to use ADI_AXI_REG_CONFIG_RD,
+> ADI_AXI_REG_CONFIG_WR and ADI_AXI_REG_CONFIG_CTRL in a custom fashion.
+> 
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Guillaume Stols <gstols@baylibre.com>
+> Co-developed-by: Angelo Dureghello <adureghello@baylibre.com>
+> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+> ---
+>  .../devicetree/bindings/iio/adc/adi,axi-adc.yaml   | 70 +++++++++++++++++++++-
+>  1 file changed, 69 insertions(+), 1 deletion(-)
+> 
 
-Jill
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.example.dtb: adc@0: pwm-names: ['convst1'] is too short
+	from schema $id: http://devicetree.org/schemas/iio/adc/adi,ad7606.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250210-wip-bl-ad7606_add_backend_sw_mode-v4-1-160df18b1da7@baylibre.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
