@@ -1,101 +1,116 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BDE7E105
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 06:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA976192B7D;
+	Mon, 10 Feb 2025 06:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739168240; cv=none; b=eq1CinV2qUZG+5n4yjw65ysJsykDamTQZZxZ6BnhjjqfCjIo6Y11S4qzH5pXmI4jGSu+KL1+6AqwqVuidLgt04tMPQClexXlKm6W/xRMmVOGhO9XYNEg9ce6ps/1T8qFfcFYAQYLEmrGxjYibWwyvhBG46iTT7tAhXqevqCbWWE=
+	t=1739168328; cv=none; b=rDzpUeJkgeUYmibXSM/dSnZm5zsjLutbtY9+86BlQRDVZgV2HJghE2OyAkc2EvIFGgu6Vcp8o149S7VW9gvO7cslM8vEu/9LB7wz+PqKaUt3rSIlubeeL44Yhy3OfxoDG1al0L+QK1WRqNEuSfCJGwmQ4/1uuBp4n6VrGhgReNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739168240; c=relaxed/simple;
-	bh=3XcdT4yNmVxPSBFex3qLZKmHw+6RMtBGS5kjr4I0Z4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PniubhRSQszwioYuzjU3udRvJZQg0bxDAToGrwD6+/1xhTyoLQu70J9sqBBPrkFdEgyInU7ox0GufrubwyKd8yb8eKy8DOV/uAo9VqnfT9zc0v/cLJ/5xAvo4ClEKZcprs8VbMrzvY0fEWfIX8kwIlu1+pFDQbYzwAQj+PSK76s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GJO8eqLg; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1739168328; c=relaxed/simple;
+	bh=2xmwt+vliB7hjVoaIaM8KIv+pEZjI3VqvpWU4ypw13A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r3wNPW5t/s5Zd3mOyQQdMNhv8paRriT54oOUk7BFWENgRC//uq1s5mX50zAggqJdGj1Eq6s7RD4Rxbr1zPezwh8xOPGHKKxb4BEe19pckaVfQ2pnTb7PzcS+mck3yR9l1Fbk9lFYR8FUIBOVU8wNZkoz5zD30He8o7TUWf7vZJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hp+eEI40; arc=none smtp.client-ip=209.85.160.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GJO8eqLg"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21f48ab13d5so60090845ad.0
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 22:17:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hp+eEI40"
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2a01bcd0143so3178665fac.2;
+        Sun, 09 Feb 2025 22:18:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1739168238; x=1739773038; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=O9ZedeZs+kwtzzCP8AnQ+V+TUvOdrdlDaOp4e+32cns=;
-        b=GJO8eqLg6jaMVElk59vhZtxBSOalfpz8g8KonU5l1BGkS21O+cWG8gZWcCq+E56kw4
-         sxn714JrNK3auSq+BwtLoa8CQnMsH3L2WHz/PPtc0VF4IPrKAWlsDmA/fLOWPuQUgH6S
-         M+x3MyqhsRlYnkp6LNIPEZGY73oZRHH/y6+Is=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739168238; x=1739773038;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1739168326; x=1739773126; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=O9ZedeZs+kwtzzCP8AnQ+V+TUvOdrdlDaOp4e+32cns=;
-        b=V3DN8CGwRNS/ivRm9N6Y5BpKx40OamTmsLuXhW0rXJd9evK4TyIZxSdOLorY3In/Ww
-         bNGJGKDRgk+wF/6kIOZ2BwtE5NmyHwUvi0Vrp0OwcMB0fbE0mNFRn206KYF0RHTS5WjR
-         rL1mvyPOWfmdESryUlFzZ5iyhLBqPPGTptOyAaurOmhuOpY/01p2l4Tdhedw8o0l0NJw
-         uibpfgXMB5wdjtjW/H13ujI0cMjuzWjNCiVYxUWc7ZbcecieuhPjkNjqBGZZRW6I38a0
-         RpJhWhM3HEixz3VbWvYxddf3B3JFirffOVPiPLW9L59gjRcVfj2mf93DTRyodgydfRVU
-         3AFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVWAEX/iFzjSjmy2l8DH/fiEvAqXMC5CcTEtlDDMc6I3jHUKgKY2GMUTRbkCvowa/xSSIT3IsqVFFtz6Nk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyi+VMAQc5nKAUgjeiDhnj26CuYBzCRfBwIRQdfO/cH+UsuMlsM
-	mKBxNwPhiFtIQZ9rg/496Q/T2gxxGid6lfsPz+g3/yCb2KsXzWB8Ok4H96reQg==
-X-Gm-Gg: ASbGncvbAMlDqQUV3vMVU/IfOWjim026MkChe0wAuhABlsdDzVG4KTPR57cuvDb9t4G
-	CCS52O0mTeM4jcvntMHsqeGtClLhg8g/uPJ53DGmeZmhuX3oBm9Txs0dqa9kqM/9USgcsWcNS2m
-	+/VTTbGfZmrFUc7TAb48oDMZ7fUM+VSn6u9pzKAekX9jPIHOJLsG4JSCCFFsHYZ6uza5p8f2zZW
-	hdPNc3dsYFX/RxcaeZllU5qu0N9EZXUU9/bkMXfAMQT7wEgjVS/uN7qyanL67IREQPZD6zVRen/
-	X3t2UAoJ
-X-Google-Smtp-Source: AGHT+IGnJPubMDmDoWDP22CsmPT0IyrsPjh1dvSu4m2u3/giFYt+WpULUdAVdd7NEdncji8DjNQ2Ag==
-X-Received: by 2002:a05:6a21:8dcc:b0:1ed:75f4:d289 with SMTP id adf61e73a8af0-1ee03a8f4ccmr20075221637.19.1739168238005;
-        Sun, 09 Feb 2025 22:17:18 -0800 (PST)
-Received: from google.com ([2401:fa00:1:10:8713:dbf8:d76f:46f0])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad5453e2366sm2903661a12.47.2025.02.09.22.17.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 22:17:17 -0800 (PST)
-Date: Mon, 10 Feb 2025 14:17:14 +0800
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Pankaj Dubey <pankaj.dubey@samsung.com>,
-	Will McVicker <willmcvicker@google.com>,
-	John Madieu <john.madieu.xa@bp.renesas.com>,
-	Nishanth Menon <nm@ti.com>, Vaishnav Achath <vaishnav.a@ti.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mfd: syscon: Restore device_node_to_regmap() for
- non-syscon nodes
-Message-ID: <20250210061714.GA3153109@google.com>
-References: <20250124191644.2309790-1-robh@kernel.org>
+        bh=56lsSnDRjq7IcAM0xSC3DxXg9ZT8VtXhp/+nHY+SLcs=;
+        b=Hp+eEI40iK9SSvGAg9IjlTkZq1z0uHw4JGw0iFcfZmAI23WHEGpjVNsMI3IUug/cdH
+         WcDGBG1+dctEWsL0OGLMNkwPZYnAh/AEbCS9MK4hehup5GLsNrjKYcFqJvOZzyT7nesN
+         pt+LDh4XhpTrBdbkUGzNYpLCa6s2WipzlsFfnZWwvMpcJvg2CdbGCK/jqTn9VbWdqsUD
+         NUUcS4gcSM1Kl/OLIfhSazLeu+GiAYf7kMEHtlbRWrsn5yNbw8gAu2NkSFyFvW2EvyiB
+         wwfNUXO2fLHQyc0oLMN5zHXjQItzvu5d91lOEcezJtNVEDdw+OSdIqb3cMc/W0kwISq+
+         eIQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739168326; x=1739773126;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=56lsSnDRjq7IcAM0xSC3DxXg9ZT8VtXhp/+nHY+SLcs=;
+        b=wVmElpR3WyrNFxDU6MHYYOrx+slHAwZx5Svl/7jB8rX/fBiCG1TiPj5lyEuMPJCDwr
+         z7bLhYggynGKktNHdWGKpQytPtmXqqABjn5Mw9pIJrV2A6P58ry0LUHMpI+X7u5ZwV4W
+         xtkJv2qJAB235pxteeIySkJ42M9YO342fDuIO0xkYIm9LnXy1gqQwfTJixb0f1Q5s/Ut
+         HuwBUgBwa3NSzL3nliAd6ZPl+9p3GWBURfi1nZFG+bUQ1shBL2XLqt+of3WyX2K6izng
+         C8jcXlRCLfPu/QxVTti3ty5zVd/ncZQ0quCDXFx+jYZZ4vWP+3v+MAXyfaNeyQlZruD2
+         CTOw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMUkBy5SxBgS90EIE39CHXRxXvQjVAcPP6GCj1Wwg5+q4j/G/sGxBSkm9qrDH693QpmZ684j86ZObUYJQ=@vger.kernel.org, AJvYcCX2YwXEkImNEUhLyetLS1NaxOMWu9mptpFfa6kzco9XWPz86w8E7pie6z2cYu9BdI9Xyo6I9EnbGQ0l@vger.kernel.org, AJvYcCXaE1b9bmdRQ7REOk5W9OaOEHg+FyLqLb/27BWji3KbEZ8fIlNSm5I5zwNThv5wMwDZAAKq5gQM@vger.kernel.org
+X-Gm-Message-State: AOJu0YwirkhafyFA05++aRUwgAj92ytTWn/EpWZrNNVjUxmP7mRY9F8U
+	GtqCNHpF8icdGgPAtIGniVmeI18EUnNUUFgjPrmyQs5G5h2rAn5FFHZG+fhqYVOGvRm0nPCV0KF
+	7fhrOhFmHF4rjiiJrexYv5kvAgz0=
+X-Gm-Gg: ASbGncvkrVRTEoMTiQw84vIo4p17slFb+EvmDtKcsnQzaAZpZdgiBn/eqHzpaRNEYpp
+	vlbiEn0c2zvAwhI96Iek3ckLgwqpkhI3Qlf6Q/nSVeZK6YGprW5OSqduoDU7KvdAsxIV135t/6u
+	8=
+X-Google-Smtp-Source: AGHT+IG1bvnSRmkTIX2ou7gO3+SqQlMqKUDrvEsbPmi0zKi/118gvRG5giYAq2HwszcZSkY03rhvkrF3zOicG6JFle0=
+X-Received: by 2002:a05:6870:d623:b0:29e:526a:eeef with SMTP id
+ 586e51a60fabf-2b83ef6b1e7mr8184935fac.34.1739168325834; Sun, 09 Feb 2025
+ 22:18:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250124191644.2309790-1-robh@kernel.org>
+References: <20250205053750.28251-2-ki.chiang65@gmail.com> <20250205224511.00e52a44@foxbook>
+ <CAHN5xi1HoTHx5bye6v24eRWzuKLXcyp6zc4wVpYDyHcR4yu99A@mail.gmail.com> <20250207105124.3cb2e6ae@foxbook>
+In-Reply-To: <20250207105124.3cb2e6ae@foxbook>
+From: Kuangyi Chiang <ki.chiang65@gmail.com>
+Date: Mon, 10 Feb 2025 14:18:37 +0800
+X-Gm-Features: AWEUYZnY7fBOdPr0vosiXO7rHw6zB60OwW1JCAgXv8Wey5w7AqwxqinOpS0JHf0
+Message-ID: <CAHN5xi3K3jXLZew5=4PwH8OUWeCMMcJSm5tpNgm3k1vw7LGe-g@mail.gmail.com>
+Subject: Re: [PATCH v4 1/1] xhci: Correctly handle last TRB of isoc TD on
+ Etron xHCI host
+To: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org, mathias.nyman@intel.com, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 24, 2025 at 01:16:44PM -0600, Rob Herring (Arm) wrote:
-> Commit ba5095ebbc7a ("mfd: syscon: Allow syscon nodes without a
-> "syscon" compatible") broke drivers which call device_node_to_regmap()
-> on nodes without a "syscon" compatible. Restore the prior behavior for
-> device_node_to_regmap().
-> 
-> This also makes using device_node_to_regmap() incompatible with
-> of_syscon_register_regmap() again, so add kerneldoc for
-> device_node_to_regmap() and syscon_node_to_regmap() to make it clear
-> how and when each one should be used.
-> 
-> Fixes: ba5095ebbc7a ("mfd: syscon: Allow syscon nodes without a "syscon" compatible")
-> Cc: Will McVicker <willmcvicker@google.com>
-> Cc: John Madieu <john.madieu.xa@bp.renesas.com>
-> Cc: Nishanth Menon <nm@ti.com>
-> Reported-by: Vaishnav Achath <vaishnav.a@ti.com>
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+Micha=C5=82 Pecio <michal.pecio@gmail.com> =E6=96=BC 2025=E5=B9=B42=E6=9C=
+=887=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=885:51=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+>
+> On Fri, 7 Feb 2025 14:59:25 +0800, Kuangyi Chiang wrote:
+> > >
+> > > >       case COMP_STOPPED:
+> > > > +             /* Think of it as the final event if TD had an error =
+*/
+> > > > +             if (td->error_mid_td)
+> > > > +                     td->error_mid_td =3D false;
+> > > >               sum_trbs_for_length =3D true;
+> > > >               break;
+> > >
+> > > What was the reason for this part?
+> >
+> > To prevent the driver from printing the following debug message twice:
+> >
+> > "Error mid isoc TD, wait for final completion event"
+> >
+> > This can happen if the driver queues a Stop Endpoint command after
+> > mid isoc TD error occurred, see my debug messages below:
+>
+> I see. Not sure if it's a big problem, dynamic debug is disabled by
+> default and anyone using it needs to read the code anyway to understand
+> what those messages mean. And when you read the code it becomes obvious
+> why the message can show up twice (or even more, in fact).
+>
+> I would even say that it is helpful, because it shows that control flow
+> passes exactly as expected when the Stopped event is handled. And it's
+> nothing new, this debug code always worked like that on all HCs.
 
-Tested-by: Chen-Yu Tsai <wenst@chromium.org>
+Got it, thanks for your suggestion.
 
-This restored the power controller and everything depending on it on the
-MT8183 Chromebooks.
+>
+> Regards,
+> Michal
+
+Thanks,
+Kuangyi Chiang
