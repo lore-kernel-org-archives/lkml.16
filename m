@@ -1,94 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C998F2580C8;
-	Mon, 10 Feb 2025 16:20:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 788FF2580C8;
+	Mon, 10 Feb 2025 16:21:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739204413; cv=none; b=Um1ZGfdAvhKAy2z5hiG8ZhtXhFXGnf106W9VJgq3zAbyw/1msOhvDCqZoXR+5xUjkyz2TcEI4OdWt1Oqd+Mj2yWYbmwUVVdbG2BZkq3G9MFsBvVvmJ2Xs/uLcbBOu/5XPSB+pvdxwwhObDHmPVEjsscxxy336tDNr/1o0UxtJNA=
+	t=1739204480; cv=none; b=r3a9tMyy43VEyQJmvejrGDJoUlLg1KB6XRTDgE4DfgsFMgoyYNNKzJpu0DgxHVsZz3XTkLDyVwuKTEShar9hw4bX7OntSSfjZHLIkQCiNPFKxEX1eAvdgdXoKceHdOr6YtbzfweOe2PaeQ1+Qo2WTanYbaUfoK8club6BQxaBn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739204413; c=relaxed/simple;
-	bh=PbUicCmIFdjpcUFcKr4bLsGE918h29ndeodZw27NPJY=;
+	s=arc-20240116; t=1739204480; c=relaxed/simple;
+	bh=5++DRPtjlCi7ZJ3996a5DU7AlRL4Wwr6fONkKsNrvYI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gco3dtXASrCYporuADyoB11uDdySS2rvcZnssZP1qc3fsvChMNX5+1ermD+lyfeAFpRFYuvX5s38d0CKR9OJFBuk3JFSZh7vRtjwcLH1EHDmSdbgaWM5i9rwQAWJA8coQv4mpaw7K7As65IZlDqugjARYG9hZBzVl6TmWclbkZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BpFPhpEh; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CU8jEGxGxTytF501lwsTgzdZn+PGH3V1ILEqRPzkCuUQkE8bdpu7Bqgq2KO9lyQvKxXktOn1xwyy+okGjmZ839yLOdPYXXwHxgjlwYjv1ZzzDjBrcRTo9H4JOnX9elSammW91m2xdaxyIqP8NvQEZr9xIWrTBGOqqB3GRYjk8rM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cT/Q/dKP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BpFPhpEh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 244C4C4CED1;
-	Mon, 10 Feb 2025 16:20:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cT/Q/dKP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 822C0C4CED1;
+	Mon, 10 Feb 2025 16:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739204413;
-	bh=PbUicCmIFdjpcUFcKr4bLsGE918h29ndeodZw27NPJY=;
+	s=k20201202; t=1739204479;
+	bh=5++DRPtjlCi7ZJ3996a5DU7AlRL4Wwr6fONkKsNrvYI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BpFPhpEh2J59IPGvPI1ojhA3QxLZfDTuh0//7bIMogtvZzlLGPhrtpOBiH4lcbFIb
-	 OPXAWvHq9AQJP2YyzVSSzP4z2GKw5TTEIyHpzzm4PL0b2qs1DU74P6Kku8p0LcBrDI
-	 S7Iw+MYQPBha48hvlxbl5bcEVSVfAJsT6mzZGaQ1tO89eNfk999NEuH9GKc6P3Hc85
-	 iPm/3ctXUfMW5RJsWsorF4vbGYQlkIwguhlWSmrS4N7c9xdKsma7wPTd1BDoXuzDy4
-	 K5805Z3XtHiR/dfYBRFasIuCepp06tYt5ybMzeMtmoeqqf9oQnC5DJ+lbHRK7wlH1v
-	 LYADDn1Cz2TNg==
-Date: Mon, 10 Feb 2025 06:20:12 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc: Abel Wu <wuyun.abel@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Yury Norov <yury.norov@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bitao Hu <yaoma@linux.alibaba.com>,
-	Chen Ridong <chenridong@huawei.com>,
-	"open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/3] cgroup/rstat: Add run_delay accounting for cgroups
-Message-ID: <Z6onPMIxS0ixXxj9@slm.duckdns.org>
-References: <20250125052521.19487-1-wuyun.abel@bytedance.com>
- <20250125052521.19487-4-wuyun.abel@bytedance.com>
- <3wqaz6jb74i2cdtvkv4isvhapiiqukyicuol76s66xwixlaz3c@qr6bva3wbxkx>
- <9515c474-366d-4692-91a7-a4c1a5fc18db@bytedance.com>
- <qt3qdbvmrqtbceeogo32bw2b7v5otc3q6gfh7vgsk4vrydcgix@33hepjadeyjb>
+	b=cT/Q/dKPzg28EGcuwFNm43LidbMhaOZqlgxL/+PZcdPr4ZhIKze03vCiu5nYolRJM
+	 +OyOGW4mYwe5ZsNssqW8upQYNQrIR6pZWGdEEmQBkDzAK+HqC/CBXMfrLvDM6epGvM
+	 3ZUX1LPdyV76barsmmrp7Zifm9M610I1rUFmZ4ufHmS7Bg44wZ5lsQJCl/sC8OpWBk
+	 XtNFImcQeuEh1hxIO4YYYO70mhaCySycvnHkxFCofag6cVIkUxt+rfkequnBpn/hsI
+	 UYbXukxfyCv3t4llQ3jxOFaWJVfgxqfjKSzMYL7lsR3adGIhPE7U/ifuDzFhO8m9QV
+	 jbLsQxgZc5YMA==
+Date: Mon, 10 Feb 2025 08:21:18 -0800
+From: Eric Biggers <ebiggers@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Gaurav Kashyap <quic_gaurkash@quicinc.com>,
+	linux-fscrypt@vger.kernel.org, linux-mmc@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v11 7/7] ufs: qcom: add support for wrapped keys
+Message-ID: <20250210162118.GA1264@sol.localdomain>
+References: <20250204060041.409950-1-ebiggers@kernel.org>
+ <20250204060041.409950-8-ebiggers@kernel.org>
+ <20250210044445.vmtfhqjibonhi6j2@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <qt3qdbvmrqtbceeogo32bw2b7v5otc3q6gfh7vgsk4vrydcgix@33hepjadeyjb>
+In-Reply-To: <20250210044445.vmtfhqjibonhi6j2@thinkpad>
 
-On Mon, Feb 10, 2025 at 04:38:56PM +0100, Michal Koutný wrote:
-...
-> The challenge is with nr (assuming they're all runnable during Δt), that
-> would need to be sampled from /sys/kernel/debug/sched/debug. But then
-> you can get whatever load for individual cfs_rqs from there. Hm, does it
-> even make sense to add up run_delays from different CPUs?
+On Mon, Feb 10, 2025 at 10:14:45AM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Feb 03, 2025 at 10:00:41PM -0800, Eric Biggers wrote:
+> > From: Eric Biggers <ebiggers@google.com>
+> > 
+> > Wire up the wrapped key support for ufs-qcom by implementing the needed
+> > methods in struct blk_crypto_ll_ops and setting the appropriate flag in
+> > blk_crypto_profile::key_types_supported.
+> > 
+> > For more information about this feature and how to use it, refer to
+> > the sections about hardware-wrapped keys in
+> > Documentation/block/inline-encryption.rst and
+> > Documentation/filesystems/fscrypt.rst.
+> > 
+> > Based on patches by Gaurav Kashyap <quic_gaurkash@quicinc.com>.
+> > Reworked to use the custom crypto profile support.
+> > 
+> 
+> Instead of mentioning the contribution in description, you should use relevant
+> tags IMO.
 
-The difficulty in aggregating across CPUs is why some and full pressures are
-defined the way they are. Ideally, we'd want full distribution of stall
-states across CPUs but both aggregation and presentation become challenging,
-so some/full provide the two extremes. Sum of all cpu_delay adds more
-incomplete signal on top. I don't know how useful it'd be. At meta, we
-depend on PSI a lot when investigating resource problems and we've never
-felt the need for the sum time, so that's one data point with the caveat
-that usually our focus is on mem and io pressures where some and full
-pressure metrics usually seem to provide sufficient information.
+I had to rewrite this patch from scratch, and it is a much simpler
+implementation of what was originally 6 patches.  So in this case I don't think
+it would make sense to keep authorship or co-developed-by.
 
-As the picture provided by some and full metrics is incomplete, I can
-imagine adding the sum being useful. That said, it'd help if Able can
-provide more concrete examples on it being useful. Another thing to consider
-is whether we should add this across resources monitored by PSI - cpu, mem
-and io.
-
-Thanks.
-
--- 
-tejun
+- Eric
