@@ -1,113 +1,151 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F48022F39B;
-	Mon, 10 Feb 2025 13:43:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BC622E3F7;
+	Mon, 10 Feb 2025 13:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739195035; cv=none; b=bDiqOI4f/D129ocXofltfRVsGSDbqC//RhheVjWF72aWNVuhzT/W7s3U84Q9khTJvq8twD9EuWsdoTjTeeUdWnQR8Z8nCplMGkSQVpndhmw1VaD0uJdvsh6Yy+5vdvrbLq1wE+A1rlTd95lI7FxLL7904Lhegb+hW3HZDJQnnko=
+	t=1739195235; cv=none; b=AV/XmUmCNWJAFzBSRcjBvUrdWyKv50cCIuPfzkxfDD74SonFkOPZeQ2NpXeSHqJgAFCSSIFoveGKSLGimpcHyTBnAbmDOk9SFUYm0dPdgroq59vO4YCHYcsyYSIYN8xAihK2rZQ45P0joVcO+Zf0WRU+FHeGOevO7YBbqdYrbAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739195035; c=relaxed/simple;
-	bh=Wlvzxj03zn35CGnYkYRl6zp3QBzmopWRqmURA9W2vHo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F4z9ne90vLWx70WRhTNUZXXrBO+dCwBzhRmHa1F5Bi2BX+Yv8HS8+ARfbvPvKbHz8Sh8iTB4PTrKUYdMUzRZhHDWffqhauhiD2IV+d+CG4etvdawZPOTquLEYgSifdkfSMWOiXX15ibjz0JIBD6ut880EJ+eDYr2JNsi1VcqfPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.38])
-	by gateway (Coremail) with SMTP id _____8CxqmqTAqpnEUlxAA--.522S3;
-	Mon, 10 Feb 2025 21:43:47 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.38])
-	by front1 (Coremail) with SMTP id qMiowMCxasSNAqpnxVcKAA--.1453S2;
-	Mon, 10 Feb 2025 21:43:45 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Yanteng Si <si.yanteng@linux.dev>,
-	Feiyang Chen <chris.chenfeiyang@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	loongarch@lists.linux.dev,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org,
-	Simon Horman <horms@kernel.org>,
-	Chong Qiao <qiaochong@loongson.cn>
-Subject: [PATCH net V2] net: stmmac: dwmac-loongson: Set correct {tx,rx}_fifo_size
-Date: Mon, 10 Feb 2025 21:43:28 +0800
-Message-ID: <20250210134328.2755328-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1739195235; c=relaxed/simple;
+	bh=8mwmEo6FmaGsKwNYXI4GJ857v7frasERjv80clOnvDc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XttJ8UtXKAyvyvAE2Al8AaGyusnkM8t0nMaeSG7loYVxzgWNNWa8nJjrSlKIHQS0yi5z8mrJl3WCpAYMSbQj52VKNUAvip3xBkwMSoEyN8kxGoK/SceaNRjQCPsqqrmuUTY2GCN/Kc3ZT/CfpmK8IQPJEQsk6Ig8d66LzBg0/WY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ebe4epgr; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ebe4epgr"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-38dcb33cba1so1515523f8f.2;
+        Mon, 10 Feb 2025 05:47:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739195232; x=1739800032; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EJO6wTtYDcc4Uk17wc/tbU2dxXofVYT/Cfh+PATg574=;
+        b=Ebe4epgrkrBjMmNchwqf/tFUPqhSOPa8+4g9V9IbYUKuqcMvHU1qBRj5hl6l1zyEcZ
+         S4KRr3oFim4ElP+eigQNBCWTfY/OQqEwfxToBjksRZhRjQWTC5ieRz3rNRr4EPsOTpcp
+         GJUQhkqMHbiXPiyDsXdCJTOYemukStYVhXExeAmfWX0dH2s96C966Ur/zk+NDnZQRYpz
+         L47xhPSrTeWXkubkX9AcXBMfdKjS/lvXH9m+t+FfaBDcdwePXOrE6rraw0+jdGrPADZu
+         b3LLaCEBmfurgWxrfEhtf+kaaKNAkkc7KQIPNqxfcYSmTo3MouLqh85CIoRfsv1+feoF
+         ssOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739195232; x=1739800032;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EJO6wTtYDcc4Uk17wc/tbU2dxXofVYT/Cfh+PATg574=;
+        b=L32a9+ZtdPhe/bnWfHI2RUE9kDXGaMWIrZYZzPYRMZZ2dEJaOpnUl5Pd3b9T4iNejf
+         AwlKwO7Bq4GJaqv7D39fSBZaOTyruYEq0cChlblUqmqYwCl0+hTvXvf4uPYNt3spp2kt
+         wyFcWL6GetK0WZP3NKr+z8iATaVOk26NjM0FOIrfGRXiflTcOu/OLPSW2mMOm6+iK5Ko
+         oE+WJ4XOowey0KpkoUEoExnp02pM9OmJgLwoGoPAX1T1E7Re06gE5T0RHs7+imezcvHG
+         9VEjSqT++mC8D6yenESO39F3fNqQ0Ossc35el/VINlXYE66+H1d8W0AZkmcAvaeof2/R
+         dQBw==
+X-Forwarded-Encrypted: i=1; AJvYcCUb+mfTPYgxOzLUIn1eSUZNFiOkXsyL8/Ivg/BDeFkpFvYAxKSViNMcsY1U8rsw76rqCa+eqWBGJVI4Kcsr@vger.kernel.org, AJvYcCXmpVF0V47Y1EjdPcAlYPAdnM5qP9WemY7mgX/02wUkM0DiJzhebE31xGKBj3oUxdO+KQQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmgzxntjfePw5cpudOmJC2evhDEsTZgDY6G1gmZxJYTaKtiUt0
+	YCID1JWWehqjlGiBWdLI76FfPeILmljx5ZkUQuzY7bJ/ZqywQgkb
+X-Gm-Gg: ASbGncvmBEftBk9I7Gkz12YJiyhpszW0ZTHKJNT94hyyc06591qQ0Y/xrp6utw8AvsQ
+	ZzDcGYztNzvEK0I8B3H+gK0aZdWrsn+cmqxEpoNz7HxzbPB3Fc4tU5pu79korPUD1nQYYnzn7Tt
+	N6xGbyFu+R4/aQ1ZocIp4OnZmMJEfzTXinoKxwTn0I3I4So25IsnFlWcn5zanoHtkqu53vG9I42
+	0hYU4x5UEWXa/lRiWNTn1BUAOXUtKRs3TAbQZ/88KxiX97xUau9ccPlE40T5C+7Uyq9p6SKQyhc
+	iQ==
+X-Google-Smtp-Source: AGHT+IFyhT1x9aESyLH9Zl5FODdtgAXO6AQKj2bRRSGZZyFo6k4K/MGt9RxO7/bsMxW+3Mtws+kbXQ==
+X-Received: by 2002:a05:6000:1865:b0:386:1cd3:8a03 with SMTP id ffacd0b85a97d-38dc9346494mr10104705f8f.32.1739195231813;
+        Mon, 10 Feb 2025 05:47:11 -0800 (PST)
+Received: from krava ([173.38.220.45])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd07fa80csm8162788f8f.13.2025.02.10.05.47.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 05:47:10 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 10 Feb 2025 14:47:08 +0100
+To: Tao Chen <chen.dylane@gmail.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+	eddyz87@gmail.com, haoluo@google.com, qmo@kernel.org,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v5 4/4] selftests/bpf: Add
+ libbpf_probe_bpf_kfunc API selftests
+Message-ID: <Z6oDXNpqmwHo6lKh@krava>
+References: <20250210055945.27192-1-chen.dylane@gmail.com>
+ <20250210055945.27192-5-chen.dylane@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxasSNAqpnxVcKAA--.1453S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7KFWkCrW7Zr4fJw4DCFy8JFc_yoW8ZryDpr
-	W3Aa4ag34jgr45Cw1DZ3yUCFyruay5trZFgFWIk34fuFWkA3sFqr1YvFWYgrsrArZ3Ga4a
-	qr1q9r1rGF1DCrbCm3ZEXasCq-sJn29KB7ZKAUJUUUUk529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1q6r43M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
-	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-	1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUslALDUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210055945.27192-5-chen.dylane@gmail.com>
 
-Now for dwmac-loongson {tx,rx}_fifo_size are uninitialised, which means
-zero. This means dwmac-loongson doesn't support changing MTU because in
-stmmac_change_mtu() it requires the fifo size be no less than MTU. Thus,
-set the correct tx_fifo_size and rx_fifo_size for it (16KB multiplied by
-queue counts).
+On Mon, Feb 10, 2025 at 01:59:45PM +0800, Tao Chen wrote:
+> Add selftests for prog_kfunc feature probing.
+> 
+>  ./test_progs -t libbpf_probe_kfuncs
+>  #153     libbpf_probe_kfuncs:OK
+>  Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
+> 
+> Signed-off-by: Tao Chen <chen.dylane@gmail.com>
+> ---
+>  .../selftests/bpf/prog_tests/libbpf_probes.c  | 118 ++++++++++++++++++
+>  1 file changed, 118 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c b/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c
+> index 4ed46ed58a7b..fc4c9dc2cbed 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c
+> @@ -126,3 +126,121 @@ void test_libbpf_probe_helpers(void)
+>  		ASSERT_EQ(res, d->supported, buf);
+>  	}
+>  }
+> +
+> +static int module_btf_fd(char *module)
+> +{
+> +	int fd, err;
+> +	__u32 id = 0, len;
+> +	struct bpf_btf_info info;
+> +	char name[64];
+> +
+> +	while (true) {
+> +		err = bpf_btf_get_next_id(id, &id);
+> +		if (err && (errno == ENOENT || errno == EPERM))
+> +			return 0;
+> +		if (err) {
+> +			err = -errno;
+> +			return err;
+> +		}
+> +		fd = bpf_btf_get_fd_by_id(id);
+> +		if (fd < 0) {
+> +			if (errno == ENOENT)
+> +				continue;
+> +			err = -errno;
+> +			return err;
 
-Here {tx,rx}_fifo_size is initialised with the initial value (also the
-maximum value) of {tx,rx}_queues_to_use. So it will keep as 16KB if we
-don't change the queue count, and will be larger than 16KB if we change
-(decrease) the queue count. However stmmac_change_mtu() still work well
-with current logic (MTU cannot be larger than 16KB for stmmac).
+nit, return -errno ?
 
-Note: the Fixes tag picked here is the oldest commit and key commit of
-the dwmac-loongson series "stmmac: Add Loongson platform support".
+jirka
 
-Cc: stable@vger.kernel.org
-Fixes: ad72f783de06 ("net: stmmac: Add multi-channel support")
-Acked-by: Yanteng Si <si.yanteng@linux.dev>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
-V2: Update commit message and CC list.
+> +		}
+> +		len = sizeof(info);
+> +		memset(&info, 0, sizeof(info));
+> +		info.name = ptr_to_u64(name);
+> +		info.name_len = sizeof(name);
+> +		err = bpf_btf_get_info_by_fd(fd, &info, &len);
+> +		if (err) {
+> +			err = -errno;
+> +			goto err_out;
+> +		}
+> +		/* find target module btf */
+> +		if (!strcmp(name, module))
+> +			break;
+> +
+> +		close(fd);
+> +	}
+> +
+> +	return fd;
+> +err_out:
+> +	close(fd);
+> +	return err;
+> +}
 
- drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-index bfe6e2d631bd..79acdf38c525 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-@@ -574,6 +574,9 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
- 	if (ret)
- 		goto err_disable_device;
- 
-+	plat->tx_fifo_size = SZ_16K * plat->tx_queues_to_use;
-+	plat->rx_fifo_size = SZ_16K * plat->rx_queues_to_use;
-+
- 	if (dev_of_node(&pdev->dev))
- 		ret = loongson_dwmac_dt_config(pdev, plat, &res);
- 	else
--- 
-2.47.1
-
+SNIP
