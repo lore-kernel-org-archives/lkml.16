@@ -1,133 +1,135 @@
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4797E2F2A;
-	Mon, 10 Feb 2025 07:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586C91AC892
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739174073; cv=none; b=MK07+ISUru3TssuEaAOKciRm6ljd6lKaBBADq43pB3RjYrhREsJAw+pEJ6LrjvAk9Ski8IVJjfU1ktmNBQF0CSIrqS17qidXelnrb2gkycS8Xrm5psT5smJpqTlUfApdnaJ3JcSv1vYqJvzM6zVQOIu3GgegiX9N6+PazkTnG3k=
+	t=1739174106; cv=none; b=HAsnCqHbeN7EyL/K4dIiyy9xjdgqLADoO6m4T0+3WufivCH2wyNk0y3Z5sWMuLxbLhkMEBhszlfHzLf4d7IMQKOEtPEplMlc0zANtDpoiicCAt186ojJKsErdB8jHpCkB9fwjz4WN5bvk+8MwKq0WSZkAf0OLVu4WneRlL5uOwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739174073; c=relaxed/simple;
-	bh=zGzqUTrmQ524+OgAqr4VcU42+3jZ2qDqqvvZ3J3P0v8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dbJPeRNF9QQxby+tTFjsEm6jj/2yvLzUNLoclBSJNj8iPL/QvxCE/M3sq8q/Ng4IdlDwhWhbXkS2ilP3QuhWMSEiczMn+k5JyuMBgIb1AX9gTDoN/uYvAOlL2mRmEF+UQeT8+JOlMc5j1Z1Lw6wiO5rhFvPw35DrkLFgZAknhr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-867082baa8eso714284241.1;
-        Sun, 09 Feb 2025 23:54:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739174070; x=1739778870;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6QVuU+Pj4WW7p8VfYDhUhfStFdnghuMaJHmBwZ02Z5o=;
-        b=O/gQnRTAKW6PuDNzFg95Yn9r+fWIcCS6FhKxK6XiRUkyFYO1PwPbMAlhwoys0Oyws5
-         9RZy71D5oV0Nbvcdm7d/xbSLV2EkpgN4V/5aVDhpu5+Gq/myaeljWVsBVBJLBeECfXXw
-         B1GdQi7+jwcm5ijihav39kmCCOHs7r/pkoGh8GtRWnbKeFR1ej3j78qxck9dxwrAFFa7
-         IMHki5HDOK5OgmoWX5yFq6Aezag6Wr6EnZS73r73w5C5V2/xzOCKFo6fqI5NkrxSbLfM
-         8BuLqXR0CWkE1CBZYU4YVTDNkAFr3zsZkimuNxJKepILpce1924cAZlolOCbB0YTTBHt
-         qmLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWTsdv/QwWW48ujdbmZa8Jh0APNE9fZ4al3/snxYZQ1AGjFNAwL8M84GTLDQP2FGnfDJJE3Y2s0GFWHm4E=@vger.kernel.org, AJvYcCWh5iFOKTv8kJo9NCQGjhkYXJIB5+EgsweH8UUX6z1XgqshEg8hQ7pmtwPSLeHyfgj0IzkwZg8QO0zxAivAFfWS@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzYaoatYau7smf0BGe+FSuMtM+3UMv3QMSIzeu4DOUoAItAzAl
-	YtoF9OVs/+FeudwUMtDlT+zIj4m790EPk7xkByIHptjV+2ut7NAl+Cju+yM8
-X-Gm-Gg: ASbGncujUIe8jHkXkxVWt5P/Bh/lL9ZnKV+VHM/RJwFswhVptJPgwKNqtqNKq5gjasL
-	Ti/14d+vqAVd753SQ9YnMoEcSwYr1n3W0PSfXq04Rc3sbyn1Lh2VhB7MghvVZbVotPLikZ+npYu
-	CsLGa9mfZtuXwgAQD5ZQlbIXkziZY0QwBf44VNyI19RqC37s9EfvIoUNAct10YzCxFlEMQUkOXa
-	6F7NutxrXbc8R9JFL1iVsnmnWp1Lrd+Tz7ycNGkkcYKsysyvmx+Vvt3WLZv56zKTjgiHbkMn0v1
-	DTYBSxjUrmMuqOPsoppe/WyYaAvBaGEkBRQNj2Pd9Lw9lLrRfagj+Q==
-X-Google-Smtp-Source: AGHT+IGjuVcvT014ehZgGSfSHcd+XVV36feIbwzJLyY58DY6zuXf2LZT8MgiKhibr7rtKkhYugZxRA==
-X-Received: by 2002:a05:6102:372:b0:4ba:971a:41fd with SMTP id ada2fe7eead31-4ba971a441amr5252028137.19.1739174070075;
-        Sun, 09 Feb 2025 23:54:30 -0800 (PST)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4bbc78d2675sm358103137.29.2025.02.09.23.54.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Feb 2025 23:54:29 -0800 (PST)
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86715793b1fso510141241.0;
-        Sun, 09 Feb 2025 23:54:29 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUeajdMWKldA8YkZgO3VhNmbGs3P3w9KwnVDfXOWy7yGFboSMcZLcRcWLCO42i54IFZpPb63S1D4ZvYURU=@vger.kernel.org, AJvYcCVv2fyK4L9gocrZ2F9wiZJIEvI6BwdAilUO48jNSi9z2S/nINHpwq0+4MYUT4muXEXwI7gcrkthyKiF6Rmr7/uP@vger.kernel.org
-X-Received: by 2002:a05:6102:41a0:b0:4ba:7b06:7e68 with SMTP id
- ada2fe7eead31-4ba85f54226mr8216593137.23.1739174069469; Sun, 09 Feb 2025
- 23:54:29 -0800 (PST)
+	s=arc-20240116; t=1739174106; c=relaxed/simple;
+	bh=JomylP+Fs6SJyqj2Jc4h+BAK20Yu8IHbZLtFviRNntM=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=XW30ctjOYMi0xTUVODp64+l766WAT5Aqev2PVOqzPqwtEcdEnIsC8NPM3rkCsjaNSvnee+Qnh1OWqTYdkG/SDYy7i52P1Xr7l24x4uEMD6mc7dT0vPCWpo9+WuUaylXvKGJsxu9sLY2u+cRhjG/KmFz7ndUIG//4CQmy3K9JSa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=DyFh8jMN; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DyFh8jMN"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250210075501epoutp03f52f4349968a1ae7625688433ffdaa4d~iyaFtDn2I2521825218epoutp03k
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:55:01 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250210075501epoutp03f52f4349968a1ae7625688433ffdaa4d~iyaFtDn2I2521825218epoutp03k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1739174101;
+	bh=Kjo+EpNxKONxJbmDV6xPmrDu62bACw6LLEldMcvmQzo=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=DyFh8jMNtMwddJLEJ5FEkkmYbnsZyk5Vcep1M4Z+Y6g5Fy9zhqSSO7v37VQ7aB9G0
+	 jE93jEIVZhtljyt8A8rGkN2TBBXl9fy0PKIQagwNUZ8a8lMCjsGiXp08GoeepXIuCA
+	 Ww4b45gt5PnBuhVIw1v0YCVI9A/lC7FWJdSrSFKc=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20250210075500epcas5p2531b9376732ad53cbb8909b4bb8d4d63~iyaFYDPhG1889218892epcas5p2M;
+	Mon, 10 Feb 2025 07:55:00 +0000 (GMT)
+Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.181]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4Yrxgl5TXdz4x9Pt; Mon, 10 Feb
+	2025 07:54:59 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	15.C8.29212.3D0B9A76; Mon, 10 Feb 2025 16:54:59 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250210075459epcas5p2eb0d4b6916f999e7c98d7e869e2d0ad6~iyaD7Boqz2130321303epcas5p2e;
+	Mon, 10 Feb 2025 07:54:59 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250210075459epsmtrp2eeacef6f877ae1ee64f33fb74fd7bcca~iyaD6UFgG1951919519epsmtrp2P;
+	Mon, 10 Feb 2025 07:54:59 +0000 (GMT)
+X-AuditID: b6c32a50-801fa7000000721c-c8-67a9b0d39803
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	26.AF.18729.3D0B9A76; Mon, 10 Feb 2025 16:54:59 +0900 (KST)
+Received: from INBRO001561 (unknown [107.122.12.6]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250210075458epsmtip23ed4d1a3bb38732f3092bfad636fb382~iyaDFWaaM0703907039epsmtip2y;
+	Mon, 10 Feb 2025 07:54:58 +0000 (GMT)
+From: "Pankaj Dubey" <pankaj.dubey@samsung.com>
+To: "'Aatif Mushtaq'" <aatif4.m@samsung.com>, <vkoul@kernel.org>,
+	<dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Cc: <aswani.reddy@samsung.com>
+In-Reply-To: <20250210061915.26218-4-aatif4.m@samsung.com>
+Subject: RE: [PATCH 3/3] dmaengine: pl330: Add DMA_2D capability
+Date: Mon, 10 Feb 2025 13:24:57 +0530
+Message-ID: <05c801db7b91$15058800$3f109800$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207-bitmap-kunit-convert-v1-0-c520675343b6@gmail.com> <Z6eaDuXnT_rjVSNS@thinkpad>
-In-Reply-To: <Z6eaDuXnT_rjVSNS@thinkpad>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 10 Feb 2025 08:54:16 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUsq_39kgBa8oanXeTzv44HuhS1e5MK7K2jxkVXQ7uWdw@mail.gmail.com>
-X-Gm-Features: AWEUYZm5Xr2vD3ubUCPEj8UL7Ai7XR-3LWBLYpLEYOvMDEsJZO3nw3gZxZYFUGk
-Message-ID: <CAMuHMdUsq_39kgBa8oanXeTzv44HuhS1e5MK7K2jxkVXQ7uWdw@mail.gmail.com>
-Subject: Re: [PATCH 0/3] bitmap: convert self-test to KUnit
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Tamir Duberstein <tamird@gmail.com>, David Gow <davidgow@google.com>, 
-	John Hubbard <jhubbard@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Shuah Khan <shuah@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Muhammad Usama Anjum <usama.anjum@collabora.com>, linux-kernel@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFsIHTrWqAe9Pu9L3iNOvGTrR8WTgJaKAVsAmCg8Nqz+QrNYA==
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplk+LIzCtJLcpLzFFi42LZdlhTS/fyhpXpBu2ntS2OzfjIaHFo81Z2
+	i9VT/7JaXN41h81i550TzA6sHptWdbJ59G1ZxejxeZNcAHNUtk1GamJKapFCal5yfkpmXrqt
+	kndwvHO8qZmBoa6hpYW5kkJeYm6qrZKLT4CuW2YO0EolhbLEnFKgUEBicbGSvp1NUX5pSapC
+	Rn5xia1SakFKToFJgV5xYm5xaV66Xl5qiZWhgYGRKVBhQnbGzZOrGQuesFT8fbGQqYGxmaWL
+	kZNDQsBE4u3dN2xdjFwcQgJ7GCXmbpjFDuF8YpR4MWcHlPONUeLAjivMMC1zF5xghEjsZZSY
+	M2MClPOCUeLejyZWkCo2AX2Jcz/mgdkiAvUSTe0PwRYyC8hJNO1qYQSxOQWsJI6v2sEEYgsL
+	OEg87GsHsjk4WARUJRY8ZQcxeQUsJW5NjQCp4BUQlDg58wnUFHmJ7W/nQN2jIPHz6TKoTU4S
+	XQ/+sUPUiEu8PHoE7AEJgb/sEgcuL2CEaHCRWHjgA1SzsMSr41vYIWwpic/v9rKB7JUQ8JFY
+	utsDIlwisaFnKTS47CUOXJnDAlLCLKApsX6XPsQqPone30+YIDp5JTrahCCq1SS+Pz8DtUhG
+	4mHzUiYI20OifcVi9gmMirOQPDYLyWOzkDwwC2HZAkaWVYxSqQXFuempyaYFhrp5qeXw6E7O
+	z93ECE6PWgE7GFdv+Kt3iJGJg/EQowQHs5IIr8nCFelCvCmJlVWpRfnxRaU5qcWHGE2BgT2R
+	WUo0OR+YoPNK4g1NLA1MzMzMTCyNzQyVxHmbd7akCwmkJ5akZqemFqQWwfQxcXBKNTC57Y0V
+	7/nAqGdUYzbBd+Mmw4X6OkW1wt0Ji52/VuypmNhgqfD+4Camd/l5f+fMUE6acnmz+8Wnb5MZ
+	Isx+/sx5sfjnUtuwm9d2ffw+NaYjQkVxCxeX7+mFIvyTDz1tY92ftWhOZP2n1pUXBJn3MdVf
+	2bKk5gmjlu7BN6JOX67b2hRcNL+cF7069fedQ4d+br6mqK9Vs8/puueqk8c1TY6sFr34rVb8
+	d7HmyURp1+bZ+YtbufwXhTDeU5izWG33ZAN2pmKFN9dK5u9zLzxeqWSYur2caWXA/lq5uuYP
+	y54dvc/4c9nTjus2J+c4WkXv9M8I8NRdrxZ6/snhQ0E/l2bM3vQvPcrJ6ahYf7LOciE/JZbi
+	jERDLeai4kQAAiqenBgEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPLMWRmVeSWpSXmKPExsWy7bCSvO7lDSvTDXb8ELQ4NuMjo8WhzVvZ
+	LVZP/ctqcXnXHDaLnXdOMDuwemxa1cnm0bdlFaPH501yAcxRXDYpqTmZZalF+nYJXBk3T65m
+	LHjCUvH3xUKmBsZmli5GTg4JAROJuQtOMHYxcnEICexmlLj9cy9UQkZi8uoVrBC2sMTKf8/Z
+	IYqeMUosPHCQHSTBJqAvce7HPFaQhIhAM6PEyZ1XwDqYBeQkmna1QI3dySjxYtE9RpAEp4CV
+	xPFVO5hAbGEBB4mHfe1ANgcHi4CqxIKn7CAmr4ClxK2pESAVvAKCEidnPmGBGKkt0fuwlRHC
+	lpfY/nYOM8RxChI/ny4DWysi4CTR9eAfO0SNuMTLo0fYJzAKz0IyahaSUbOQjJqFpGUBI8sq
+	RsnUguLc9NxiwwLDvNRyveLE3OLSvHS95PzcTYzgONHS3MG4fdUHvUOMTByMhxglOJiVRHhN
+	Fq5IF+JNSaysSi3Kjy8qzUktPsQozcGiJM4r/qI3RUggPbEkNTs1tSC1CCbLxMEp1cDUfiN/
+	qVFkb0/afb2MPeYLHf+pXfrxQL8uf7/VrfvS5+00YrJdPbfZt/lHWN/ddvvK2dueZuZStoyS
+	bIEvM+suqsVrtZxl12fie/Dg7WntB/IvT03w4VhYKP9ZeO1MhU8W/8qFtN2b/kc7CCv/rDxb
+	t8Gcw7y6686mHSFrNkY6PhMJUtx98n9zknee3w/uRRvsM4SsORp/uO1dNinkaouhZqSg4Ksj
+	u6qLb0uqFWmUfpxt3n1jfdSv2fKtHZfWruqadvSM6kPHN29DdT2Pnzp1RTuS4SnvGS9FXq6c
+	E+eUJ51v/ahuYJ1aym03Y9ILBaeLybve9U0wnDPzpuze/2wd3XdizZVPXPpsc9VP7r4SS3FG
+	oqEWc1FxIgC47UQGAgMAAA==
+X-CMS-MailID: 20250210075459epcas5p2eb0d4b6916f999e7c98d7e869e2d0ad6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250210062258epcas5p195b96f374fa9ce1802ec4d1c1e73f69c
+References: <20250210061915.26218-1-aatif4.m@samsung.com>
+	<CGME20250210062258epcas5p195b96f374fa9ce1802ec4d1c1e73f69c@epcas5p1.samsung.com>
+	<20250210061915.26218-4-aatif4.m@samsung.com>
 
-Hi Yuri,
 
-On Sat, 8 Feb 2025 at 18:53, Yury Norov <yury.norov@gmail.com> wrote:
-> On Fri, Feb 07, 2025 at 03:14:01PM -0500, Tamir Duberstein wrote:
-> > On 7/27/24 12:35 AM, Shuah Khan wrote:
-> > > Please make sure you aren't taking away the ability to run these tests during
-> > > boot.
-> > >
-> > > It doesn't make sense to convert every single test especially when it
-> > > is intended to be run during boot without dependencies - not as a kunit test
-> > > but a regression test during boot.
-> > >
-> > > bitmap is one example - pay attention to the config help test - bitmap
-> > > one clearly states it runs regression testing during boot. Any test that
-> > > says that isn't a candidate for conversion.
-> > >
-> > > I am going to nack any such conversions.
-> >
-> > The crux of the argument seems to be that the config help text is taken
-> > to describe the author's intent with the fragment "at boot". I think
 
-IMO, "at boot" is a misnomer, as most tests can be either builtin
-or modular.
+> -----Original Message-----
+> From: Aatif Mushtaq <aatif4.m@samsung.com>
+> Sent: Monday, February 10, 2025 11:49 AM
+> To: vkoul@kernel.org; dmaengine@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Cc: pankaj.dubey@samsung.com; aswani.reddy@samsung.com; Aatif Mushtaq
+> <aatif4.m@samsung.com>
+> Subject: [PATCH 3/3] dmaengine: pl330: Add DMA_2D capability
+> 
+> Add a capability to prepare DMA for 2D transfer and create a hook
+> between the DMA engine and the pl330 driver
+> 
+> Signed-off-by: Aatif Mushtaq <aatif4.m@samsung.com>
+> ---
 
-> KUNIT is disabled in defconfig, at least on x86_64. It is also disabled
-> on my Ubuntu 24.04 machine. If I take your patches, I'll be unable to
+Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
 
-I think distros should start setting CONFIG_KUNIT=m.
-
-> boot-test bitmaps. Even worse, I'll be unable to build the standalone
-> test from sources as a module and load it later.
-
-If you could build the standalone test from sources as a module,
-surely you can build the converted standalone test and KUNIT itself as
-modules, and load both of them later?
-
-> Or I misunderstand it, and there's a way to build some particular KUNIT
-> test without enabling KUNIT in config and/or re-compiling the whole kernel?
-> Please teach me, if so
->
-> Unless you give me a way to build and run the test in true
-> production environment, I'm not going with KUNITs. Sorry.
-
-FTR, this is why I've been advocating for making all tests modular, and
-for not letting any test select (possibly unwanted) extra functionality.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
