@@ -1,53 +1,53 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8770018D63E
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEA225742C
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739209817; cv=none; b=eSr5KgX5cO94Md8hbkQkdawLkoCCFaqSKjl7UawrWflqUndZyKDyQ48/prL1f938ZmeuYGcs6Jnk55A0Hg2UpzxVTvua11yTODSs/9rS/25+yAmoM7gBcKns3bHUX6CN8GhpwrKrKO3e2DxQ6bKH2XCX8CWxNnlPPsydy3kpxjE=
+	t=1739209818; cv=none; b=nTSnJVPwG53Zg+p1StdbXT+mS6jv21SWLxJMGXtg2t8RBMMKgrqYJ+dl09+SwgL/1dsA5+cRcYoJLhDTXTIsuSkEqXABnIH7ojV8sxGLuwo3P+inL5G/siy3bzSm0c2nZtriTbadWb1SGVbZTCA21l/9BefjTycwTWS+An6iKCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739209817; c=relaxed/simple;
-	bh=7iSijZUrTtrRR03PZDgH1zpU7xqM0ZMrFF0nsmlrrpE=;
+	s=arc-20240116; t=1739209818; c=relaxed/simple;
+	bh=b5Y7ZBwua8q6S8xoX8bJWja8rSBdbaXg1go2fucz19o=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=QllZ/aLYMSGvZQSCEO7tlCXsFA8PWOFuKY8HH45LA/cun36H8m2hf5/KiiRwjzW2W1ty1Q7I43w+uffHIzPEfOvvBQZvnysCC75FJvKWtsyvBwy0e/AfQW6WmvhXRJnHHR45fOhMdi7tqhc0r3RveU7EjjAWFWHG5eTAWmaBh+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d/xKN1OM; arc=none smtp.client-ip=209.85.221.73
+	 To:Cc:Content-Type; b=KJn8FMCHN5Xd5/ij3aHifXVgu8bIrAGUa6cIKuptf7KodvurwnVESS3AYeE7+r4+TvBH+17PqDMMcodqw+0iDoPK+hVPZCCNxxTzcBKj1dYOGzDUhAXlOCB8SBreke89CfTxgWyU1YCwQmCoWQrnZ/Ft4n2O2wv9B3TdTdtRgPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JZoLnnnu; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d/xKN1OM"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-38dc32f753dso1675158f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:50:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JZoLnnnu"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4392fc6bceaso12663955e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:50:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739209813; x=1739814613; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1739209815; x=1739814615; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=laE9eRboDAND4J5qc5k+GSW4SOFEdoYWGFcZSQBsh/M=;
-        b=d/xKN1OMa/CLaF4e5TqSkfiemECz9A55e4VvxGsoHy3e8IAUzqN9nw6PrhUgiLSR+P
-         TU1+fYB0/ZXDd4Cp0y7IR+stshN98g28yGM3OZ6Wln8WqNd8GXBHGjGOKXGwryCYW2gz
-         qYJFda8FQ/Tcg7ZLpgWUEC/XBvkLXibjP2Dc2Y4+9xFe29v7HMCLcku6GbzeR+mbuyJH
-         nvO6eVkwy3aJe5Y7crW235fGDH9I+Zb57IIRGDXcuezLJLlP5kP4YwV7iJet/q1PAOre
-         ZdPfXv+sId2HGSS5ODicvsqKrYNSg7rAXy5FgNGFFYmykPtupXyZHpV7ChOegrxJhXjX
-         Pc9A==
+        bh=2tIHDOPF0PNls1nT25rio5qx/bjBew1n2yApk83FuUI=;
+        b=JZoLnnnuc1RB97KG6XplP2Rn0PPRj2d1gHHMA337tl2VduP9TZbVUUMqIdxNxCvnJX
+         Elg9ABrpMGDZD4A5vV5h7jrAYQsnkhJCzC/matektP1++y9lzA+85icjRoGzS0y1XnBk
+         zUt/96acAa7dW4j+o7G2DnguflAxELymuc6+n0bcnzwwFIOu3HthfgmAJn6j7p5a/1rj
+         J/M8CrBe3MrKRMhdV05w6GMT/Nc5uuTCyD31+zu5atB/xSjuz24CwvyJ02yx6kZI4NNO
+         12OjpgAcLSam2T3cxgT9BZU1WhU1ARg8nmERIbSOuTNDLs//pwKn65ot/2HSlAUFhGy9
+         eW7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739209813; x=1739814613;
+        d=1e100.net; s=20230601; t=1739209815; x=1739814615;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=laE9eRboDAND4J5qc5k+GSW4SOFEdoYWGFcZSQBsh/M=;
-        b=o/kyf3YkLUtFo2E4OKUUATiIrcdT2W5mM6JCEWLi59PgS/XfYK1Xbs/4mJE0deAEyP
-         iFsn5V01kr4smRXF88q2THF9eZMG2Z27HUzcqbCdevrAnf0mwhadw2kc/+wBW6WX/BT2
-         45QTSHyIV3J2V54n3Ts2t3JKwWgfu9MARiiHN4Gq+6I8tjuzV8l14Un2I6kA/oOdiPGq
-         gzzsYKzAc+Up+Nc7Q/WCiFoA3ENWhjHBLTKhlg1WntZGwLqqx2LuUjxvs786CJ1Dyoe0
-         HNxawgll9klPvSJDA10UPjjksZfobZA2RV02x3TJimg9rA5OETjtZJMn2T1mGayccsrj
-         fK9g==
-X-Gm-Message-State: AOJu0YxiGGK+nNsfvBa79PJQJ92TIG2Luco464IogJawYy4oqYhTU6DQ
-	xvPffrsvntkQ7wD3cARfiKgZv8yG9bliQGV8GDGNViJkjK+0Q5iPf8N4eL8TUZaZi5BpWA==
-X-Google-Smtp-Source: AGHT+IHEVhlSJynqCf5ga+kvT437lPhHVY+w3I8rLxdLC3rp6YXrxz1vR/G4EGZ9cSCMXYWv9sIfrVZ5
-X-Received: from wmbeo3.prod.google.com ([2002:a05:600c:82c3:b0:435:f81b:bac8])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a5d:6d8b:0:b0:38d:e016:a67b
- with SMTP id ffacd0b85a97d-38de41be85fmr539245f8f.39.1739209812969; Mon, 10
- Feb 2025 09:50:12 -0800 (PST)
-Date: Mon, 10 Feb 2025 18:49:48 +0100
+        bh=2tIHDOPF0PNls1nT25rio5qx/bjBew1n2yApk83FuUI=;
+        b=uiuqKL/r0L6+BcKKRD2kI1JXL3/EQUAVHU2s8hlViVmRt7SMsvgjZ3Sg+pFtCnPaP7
+         QfxJApXi3xKvlNpq0caKbpgkiz7K3Ue79576hyQqoAUT98HZ4M/9JhNVLsjctldJfSRi
+         Wj0ZheAYmsbCcR7Oi9I5iAII6jXoRx8PDRZTTKgiRyxPgS95AZ/sJAVL10BCKqbXBzoh
+         kIYAMfrNTLB5kQyVaLFd3opVaRDujUYJSRgwoxB4s29sTgRfhacshB1V36GgrMP3v/t3
+         LMh1cM46piXmlGYMb4q/0IxfVzXAVaBn14F3CptupsKFCNHRknVnELf7YIaHJbAXRwXG
+         htnQ==
+X-Gm-Message-State: AOJu0YyySkSet6cyHB2wt8Qg4tsrWS8QqHZ8jtTnni7luQyMJt+SyQpQ
+	ogbjW/RqU3gOKupkjW26pBvWik0fZC46vs0Fz4DVmB26mknuyJNA+GgXE5D/s9BAChQ4xA==
+X-Google-Smtp-Source: AGHT+IHAUj/EzxRvKtgJ7QJN3LKDxgNe/A0xr0/YERyNf+9C200o4bBPmgSHauUpcJYocmkxvKfPsVKl
+X-Received: from wmqd4.prod.google.com ([2002:a05:600c:34c4:b0:439:4c13:57e5])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:1883:b0:385:f7ef:a57f
+ with SMTP id ffacd0b85a97d-38dc9233968mr11826038f8f.27.1739209814970; Mon, 10
+ Feb 2025 09:50:14 -0800 (PST)
+Date: Mon, 10 Feb 2025 18:49:49 +0100
 In-Reply-To: <20250210174941.3251435-9-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -57,14 +57,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250210174941.3251435-9-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3293; i=ardb@kernel.org;
- h=from:subject; bh=q2h484d7VXWpPU8ScxpoIvyL7JuzBh691XDsMq6nSoU=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIX2VjbWjpu3mLk6py7ZKYiemGF4uSzl3a9HHtx8fPbpy+
- JIos8unjlIWBjEOBlkxRRaB2X/f7Tw9UarWeZYszBxWJpAhDFycAjCRX8sY/scIrtlqn6F1/tie
- o7I27Krm//8/Tk3LMGv0qZ0nuch72T1GhslvU8y+rpW571C25Nu+h8+E1V5Zm6er3JoUc/DkUqX SsywA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2573; i=ardb@kernel.org;
+ h=from:subject; bh=f8GMXZVc+ZgqfzipyO2wKCTDym84g0qfwV9FVQOEoyI=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIX2VjfW5siSre++kNEo+q6+8viNWfFN8/+R3PvYS7nNvr
+ 55w3Um7o5SFQYyDQVZMkUVg9t93O09PlKp1niULM4eVCWQIAxenAEyk6wQjw1olLrm/vxfb6H+u
+ kegTlJXMky4WvijZf2PV6t8O07gijzEyNF955r9ATrrvxU37RbOPae2Ovuw9wf0A88JtW90XOB7 ZywIA
 X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <20250210174941.3251435-15-ardb+git@google.com>
-Subject: [PATCH v2 6/7] x86/efi/mixed: Simplify and document thunking logic
+Message-ID: <20250210174941.3251435-16-ardb+git@google.com>
+Subject: [PATCH v2 7/7] x86/efi/mixed: Move mixed mode startup code into libstub
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-efi@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, x86@kernel.org, hdegoede@redhat.com, 
@@ -73,131 +73,56 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-Now that the GDT/IDT and data segment selector preserve/restore logic
-has been removed from the boot-time EFI mixed mode thunking routines,
-the remaining logic to handle the function arguments can be simplified:
-the setup of the arguments on the stack can be moved into the 32-bit
-callee, which is able to use a more idiomatic sequence of PUSH
-instructions.
+The EFI mixed mode code has been decoupled from the legacy decompressor,
+in order to be able to reuse it with generic EFI zboot images for x86.
 
-This, in turn, allows the far call and far return to be issued using
-plain LCALL and LRET instructions, removing the need to set up the
-return explicitly.
+Move the source file into the libstub source directory to facilitate
+this.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/boot/compressed/efi_mixed.S | 77 ++++++++++----------
- 1 file changed, 37 insertions(+), 40 deletions(-)
+ arch/x86/boot/compressed/Makefile                                                | 1 -
+ drivers/firmware/efi/libstub/Makefile                                            | 3 +++
+ arch/x86/boot/compressed/efi_mixed.S => drivers/firmware/efi/libstub/x86-mixed.S | 0
+ 3 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/boot/compressed/efi_mixed.S b/arch/x86/boot/compressed/efi_mixed.S
-index 984956931ed7..e04ed99bc449 100644
---- a/arch/x86/boot/compressed/efi_mixed.S
-+++ b/arch/x86/boot/compressed/efi_mixed.S
-@@ -22,43 +22,7 @@
- #include <asm/processor-flags.h>
- #include <asm/segment.h>
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index f2051644de94..fc5563704466 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -104,7 +104,6 @@ vmlinux-objs-$(CONFIG_INTEL_TDX_GUEST) += $(obj)/tdx.o $(obj)/tdcall.o $(obj)/td
+ vmlinux-objs-$(CONFIG_UNACCEPTED_MEMORY) += $(obj)/mem.o
  
--	.code64
- 	.text
--SYM_FUNC_START(__efi64_thunk)
--	push	%rbp
--	push	%rbx
--
--	/* Copy args passed on stack */
--	movq	0x18(%rsp), %rbp
--	movq	0x20(%rsp), %rbx
--	movq	0x28(%rsp), %rax
--
--	/*
--	 * Convert x86-64 ABI params to i386 ABI
--	 */
--	subq	$64, %rsp
--	movl	%esi, 0x0(%rsp)
--	movl	%edx, 0x4(%rsp)
--	movl	%ecx, 0x8(%rsp)
--	movl	%r8d, 0xc(%rsp)
--	movl	%r9d, 0x10(%rsp)
--	movl	%ebp, 0x14(%rsp)
--	movl	%ebx, 0x18(%rsp)
--	movl	%eax, 0x1c(%rsp)
--
--	leaq	1f(%rip), %rbp
--	movl	%cs, %ebx
--
--	ljmpl	*efi32_call(%rip)
--
--1:	addq	$64, %rsp
--	movq	%rdi, %rax
--
--	pop	%rbx
--	pop	%rbp
--	RET
--SYM_FUNC_END(__efi64_thunk)
--
- 	.code32
- #ifdef CONFIG_EFI_HANDOVER_PROTOCOL
- SYM_FUNC_START(efi32_stub_entry)
-@@ -81,11 +45,26 @@ SYM_FUNC_END(efi32_stub_entry)
- #endif
+ vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
+-vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_mixed.o
+ vmlinux-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
  
- /*
-- * EFI service pointer must be in %edi.
-+ * Called using a far call from __efi64_thunk() below, using the x86_64 SysV
-+ * ABI (except for R8/R9 which are inaccessible to 32-bit code - EAX/EBX are
-+ * used instead).  EBP+16 points to the arguments passed via the stack.
-  *
-- * The stack should represent the 32-bit calling convention.
-+ * The first argument (EDI) is a pointer to the boot service or protocol, to
-+ * which the remaining arguments are passed, each truncated to 32 bits.
-  */
- SYM_FUNC_START_LOCAL(efi_enter32)
-+	/*
-+	 * Convert x86-64 SysV ABI params to i386 ABI
-+	 */
-+	pushl	32(%ebp)	/* Up to 3 args passed via the stack */
-+	pushl	24(%ebp)
-+	pushl	16(%ebp)
-+	pushl	%ebx		/* R9 */
-+	pushl	%eax		/* R8 */
-+	pushl	%ecx
-+	pushl	%edx
-+	pushl	%esi
-+
- 	/* Disable paging */
- 	movl	%cr0, %eax
- 	btrl	$X86_CR0_PG_BIT, %eax
-@@ -104,11 +83,29 @@ SYM_FUNC_START_LOCAL(efi_enter32)
+ $(obj)/vmlinux: $(vmlinux-objs-y) $(vmlinux-libs-y) FORCE
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index 1141cd06011f..903afd2d3d58 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -62,6 +62,8 @@ KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_LTO), $(KBUILD_CFLAGS))
+ # `-fdata-sections` flag from KBUILD_CFLAGS_KERNEL
+ KBUILD_CFLAGS_KERNEL := $(filter-out -fdata-sections, $(KBUILD_CFLAGS_KERNEL))
  
- 	call	efi32_enable_long_mode
- 
--	pushl	%ebx
--	pushl	%ebp
-+	addl	$32, %esp
-+	movl	%edi, %eax
- 	lret
- SYM_FUNC_END(efi_enter32)
- 
-+	.code64
-+SYM_FUNC_START(__efi64_thunk)
-+	push	%rbp
-+	movl	%esp, %ebp
-+	push	%rbx
++KBUILD_AFLAGS			:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
 +
-+	/* Move args #5 and #6 into 32-bit accessible registers */
-+	movl	%r8d, %eax
-+	movl	%r9d, %ebx
-+
-+	lcalll	*efi32_call(%rip)
-+
-+	pop	%rbx
-+	pop	%rbp
-+	RET
-+SYM_FUNC_END(__efi64_thunk)
-+
-+	.code32
- SYM_FUNC_START_LOCAL(efi32_enable_long_mode)
- 	movl	%cr4, %eax
- 	btsl	$(X86_CR4_PAE_BIT), %eax
+ lib-y				:= efi-stub-helper.o gop.o secureboot.o tpm.o \
+ 				   file.o mem.o random.o randomalloc.o pci.o \
+ 				   skip_spaces.o lib-cmdline.o lib-ctype.o \
+@@ -83,6 +85,7 @@ lib-$(CONFIG_EFI_GENERIC_STUB)	+= efi-stub.o string.o intrinsics.o systable.o \
+ lib-$(CONFIG_ARM)		+= arm32-stub.o
+ lib-$(CONFIG_ARM64)		+= kaslr.o arm64.o arm64-stub.o smbios.o
+ lib-$(CONFIG_X86)		+= x86-stub.o smbios.o
++lib-$(CONFIG_EFI_MIXED)		+= x86-mixed.o
+ lib-$(CONFIG_X86_64)		+= x86-5lvl.o
+ lib-$(CONFIG_RISCV)		+= kaslr.o riscv.o riscv-stub.o
+ lib-$(CONFIG_LOONGARCH)		+= loongarch.o loongarch-stub.o
+diff --git a/arch/x86/boot/compressed/efi_mixed.S b/drivers/firmware/efi/libstub/x86-mixed.S
+similarity index 100%
+rename from arch/x86/boot/compressed/efi_mixed.S
+rename to drivers/firmware/efi/libstub/x86-mixed.S
 -- 
 2.48.1.362.g079036d154-goog
 
