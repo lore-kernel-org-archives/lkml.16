@@ -1,343 +1,157 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255F7256C61;
-	Mon, 10 Feb 2025 16:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD69256C8D
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739206667; cv=none; b=uTMCXgmrwBQK89kgQIZARnC/7BW/dpNHnKW2qMqFLQXPFXllHNeUzjS5iFUale+ZxaJnImwRyYPYqQwMVLRKYPkajQrk6xPJPI2HSHsTV8r1bWqmkEjuUYkAvaTjzRgYWQ8Y/dYp5zOiPj6Gz2uJOevodZrDGTihDkCtUmY+mFg=
+	t=1739206691; cv=none; b=bHO70aVmt8RnUcfroazvyywyEovLCehpGtKZfg800s4+vrhgxoyrfy+v6dva4eO+7PNbS6VYcIMdsdZ+UEOOiSWJCUt1WVp0nS0olGajv6e3f+ZAglpN10ETe1F5r0C689i2mbQlF+AiRJsdLEpjgqtTmyYS/ntnBJnKbJLWP28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739206667; c=relaxed/simple;
-	bh=XfYeMRrae+Q8wnLu94tqacjYLy8fUfYlgHk2r3fqu30=;
+	s=arc-20240116; t=1739206691; c=relaxed/simple;
+	bh=xDIm/RSePeqjNNKN693t7yZjDUS4PKwecZGP9knv6V8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kPf7D5bxSm1eh3Z6FEmrIRBpAzltRQ7kGsvuzgT6RTFUVWgM2K5PO4tl/hUDl3KdRAYmx3z7q11GqXAa6i+8neNw6eNxXyssK9aIyasyOYyepCM2cYnQTC3ESr/JtzbJm5PUdqcg5HIEVIxjfUj/4DOC6RunmfuOtfMHofEUF+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pat8wR7T; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=rPPDA+OdjP+cR6OzIMsj9WwwVYv4Zb76TYS/QsiSA9uNio0Amfx4KJqwn4ZEwqy7eR3z/N1ouKi8cb1lxCoa5e5igslypReiDxQRdWx2pNqM6wY9ru1wmUaBWeE0iV7FD0una6LrAOR6CP2/Bgf3lH3MmQhSFF8lxOdfPA0NJNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eabQkDZL; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pat8wR7T"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21f3c119fe6so102704005ad.0;
-        Mon, 10 Feb 2025 08:57:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eabQkDZL"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21f6f18b474so30327425ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:58:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739206665; x=1739811465; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Db6pXDKLLvwLw7HfWDefzY1+cycooLCFX8aZ6bd8UMs=;
-        b=Pat8wR7ThzBq2lZkRQ86UYYtI6nIdBiZl8fBw/6M8nHFuCDRONUOb8ciGmFkbcxpAX
-         xJTAB4ezmHaAt6RepqyYBIrbMF/6EeNJHyFrsSgXoboppdVMgreIQW5fUk0LAFU1LwEf
-         G7MCoSfvuh/mS+xJ90aYb795AGs18zwGUejZN7TugVLn9IGMrPbH8opWUB+gQ+rLqiaV
-         6Os5aPGiCcyExcElt0LFUWTPTCw/jIAcmXFVBGWkoTwXaomCqtfT7vV41cW5wkx0MghH
-         pLVX099iGOS7G7MFAIjsHbnSItKDuByJ0TBuSYyi6jrQBK9ZjY1AglZBGg9l1flLJd+i
-         N1bQ==
+        d=linaro.org; s=google; t=1739206689; x=1739811489; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=HXK570SN0hPAje/qFbZ+ZB29I/53fXVG5T36GPnTKYo=;
+        b=eabQkDZLJfyvGb+qqDzjR5XknBo09Kxii5C2nJnJi0Zmdsux5A+9ivZMlMZnFkhX6f
+         xnFBxSUKf5swEewHz3NOQJUSWDZsE3w6XpEuUIfnL4eseVs3TxFVqG+/Jnx3b3BK1lhC
+         CunOZfQZUzrUQ1Wpcuyd80j7KNsjE5WARHP5o6ams3uJfDxclfqcfD/nB4XMHNsllQWo
+         lQ7UIslpNRNyAxEj+Ju3XlDkBIF+d2JvIwoDqm7ddDswQywe73/rbDO29Wn8AUjoDH/q
+         DLYfmn+nRM5Jw15+FIvCuj4mn+sdO50futhCUJOCkWJk8GRLnOMLoguoS9T2dQAobCzN
+         dmzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739206665; x=1739811465;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Db6pXDKLLvwLw7HfWDefzY1+cycooLCFX8aZ6bd8UMs=;
-        b=jyKNVy4Sahlr2oH6XSYQdCr/4U9rf4nSOjR8gk/VuB9IZyR9ZqWqcPnpF/chLE1TW3
-         Eb5VWHK7UyI7A9GAx5ScRdjZw8Fv3XIt8R7o5tGQGfslSOgmAGO4cib/nv0bCeOl5HN8
-         PyUpIMowx7xqAx4uC1ognZKsPeCX3cxU8qsA2LsOJBlHnHN51bucfzgldu6EWkq8TeIL
-         9MlYJ5/sG24du5VwRGFbTpqPWX/k4eYZMdVmoWVJBPX8KMtq1Iu1+H202lIY6BAxtpar
-         p90WfFVwVlt+A9vO645aLXEP3Lo9Yo5ef2ptgbPChLKj0wd264oDitQWqFbGfXf1KdPh
-         laOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWRBBFvHl/Jknztjlq8r1rmeC+uWv0H4rkD/nKXHORMR52VNB67tG7jpoSbd0hLu2Z2FeE=@vger.kernel.org, AJvYcCXZLRT6uH/T7ymjwYsfVRRm0cKLdeY6ixq77aKAH8kXD/NmENnfiqZgSHHvv7DMVIggV06bC9r+7gCx9xeU@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcVWJtzDFsByG7Haw4JcXfeBlUsDXSd6LW7PUskh7JMCQc/7SA
-	9Kz3WYOiZgwBbfeMxv1EHEGhDuzs+/0vmEYV3RYY85I6C2x8t+VA
-X-Gm-Gg: ASbGncty3C2SY2eJRi0ruX5YEo+XKD2d3FhT+JxXicqG5r3VLM+4bhT1MHDZTZkW22v
-	5dLul2ywSiPYwmfcGrh2eyMW+MNNJvsa0AvcH6r93GigF1AIiIRej8tf6AQzHvGKROv9rriH/KD
-	RhJ3HhER4sWZyBjuiZ9iH7ix5aeXuateXqgKcQTW01VgWbc1ZBWfngcRM8GAYPJiYF05hQkznS5
-	DGxfeqcq4yywS1QzE63DCT3l2nMmZLPZfQRwaSFitQZhYdZczSHOAwud2/HXB7G/5ekwm6LJw9M
-	XOvYEG3T4awCzNo=
-X-Google-Smtp-Source: AGHT+IEkuUq+yvBOS2lUZdVNzuAlP5PM2oUDqtoLPse40klbCiZm9IcUlKpqmfZuJkwiaFid0ZRzHg==
-X-Received: by 2002:a17:902:d4c1:b0:21f:9736:ba5f with SMTP id d9443c01a7336-21f9736bd9amr64767085ad.23.1739206665194;
-        Mon, 10 Feb 2025 08:57:45 -0800 (PST)
-Received: from localhost ([216.228.125.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f36548e5fsm81193225ad.83.2025.02.10.08.57.44
+        d=1e100.net; s=20230601; t=1739206689; x=1739811489;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HXK570SN0hPAje/qFbZ+ZB29I/53fXVG5T36GPnTKYo=;
+        b=d9zUTqXEBqj+5k5AiONOFcg1cPgLHfJ0E2q5wnpI6CM8KXp5WShpba1DMg/vTsn5dO
+         azMMoCHKWrWfkWWVtta06Fc6gTABMCC48fF6Y9amrulPGnY5Dt2/tjMq/RE1vp/bZTbv
+         rjkksMDjFv5vrObYWPSaYXVC2oC5sLjddNd2mWxxeoWbOHH/C/fEqR3eaNImVd2y6TVG
+         yZuw4dQxhyWSOjUD93pusK+X5wSvxfHlIP8Oi3DkIS26e61tjKEc1d3KIOVOLzTkjXov
+         1YTrwMiWbad4ixpnt3gJFc7X1W/RPLomJzTNHktdotUuk2JH13/DlOEp7QNoYkB0wAQS
+         B9Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCXIxy8bWAcJQqs0idBTR9SD/F2KkULHT1szN62HXfqpSlWavOidoz55BZwBAQo41LrpUGkmiSN6ylBX6sE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcpSdILZWr5m12XHkYmQKuWErhRpI3V5pT+nY/wuhqfhKtIwNk
+	pQXH9BAbxvmtPRDbFC9Y55b3e9wpjhiIoiwwzKNz/SN43VVxT/19s8t6uWzxHw==
+X-Gm-Gg: ASbGncv+sLsEw0opiBrI5FER1VtBEZjn5CKSQ3CvMLZgH2izfHd/SPHWRGd5kKPafJQ
+	bDxbCqRd1GRlphrXfo7aQK7P9f73ohHY1lMr4QwBtLIh3M9rdWgYW8LgDR+COSe9I036GK2B6Cn
+	lq4iqdQqTbliiv3EqpZXVxMCMHRMqU523U+9HxyRCXexKrR6MXxPYm2PMmfEXvwdXUw8vobI36g
+	O9NpDkhmG1GN23A6zaTR/OOD6uRwf+zk7M/FaZYz1Es8hamADIUhJYTbspk8UVXVEzJtVI0Y6Oq
+	EPw4Pi/LEw1GnUnNIeyqsdY3pfcV
+X-Google-Smtp-Source: AGHT+IFXG/X92qZwFcXPEHDQKQJuXIqlaQptvHF4J7uFXPKvpdVbnwkYnUW89gE+sgY0hfXiSW0EGg==
+X-Received: by 2002:a17:902:fc85:b0:21e:fe8e:b571 with SMTP id d9443c01a7336-21f4e760a43mr223092645ad.36.1739206688645;
+        Mon, 10 Feb 2025 08:58:08 -0800 (PST)
+Received: from thinkpad ([220.158.156.173])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3683d55esm80562995ad.152.2025.02.10.08.58.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 08:57:44 -0800 (PST)
-Date: Mon, 10 Feb 2025 11:57:42 -0500
-From: Yury Norov <yury.norov@gmail.com>
-To: Andrea Righi <arighi@nvidia.com>
-Cc: Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
-	Changwoo Min <changwoo@igalia.com>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>, Ian May <ianm@nvidia.com>,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] sched_ext: idle: Per-node idle cpumasks
-Message-ID: <Z6owBvYiArjXvIGC@thinkpad>
-References: <20250207211104.30009-1-arighi@nvidia.com>
- <20250207211104.30009-6-arighi@nvidia.com>
- <Z6ju7vFK5TpJamn5@thinkpad>
+        Mon, 10 Feb 2025 08:58:08 -0800 (PST)
+Date: Mon, 10 Feb 2025 22:28:02 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: krzk+dt@kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, conor+dt@kernel.org,
+	andersson@kernel.org, konradybcio@kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: sa8775p: Add 'global' IRQ for PCIe
+ controllers
+Message-ID: <20250210165802.tbvzx4qjygzdsk2f@thinkpad>
+References: <20250209153940.3489-1-manivannan.sadhasivam@linaro.org>
+ <173920411963.477096.6458317590653327676.robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z6ju7vFK5TpJamn5@thinkpad>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <173920411963.477096.6458317590653327676.robh@kernel.org>
 
-On Sun, Feb 09, 2025 at 01:07:44PM -0500, Yury Norov wrote:
-> On Fri, Feb 07, 2025 at 09:40:52PM +0100, Andrea Righi wrote:
-> > Using a single global idle mask can lead to inefficiencies and a lot of
-> > stress on the cache coherency protocol on large systems with multiple
-> > NUMA nodes, since all the CPUs can create a really intense read/write
-> > activity on the single global cpumask.
+On Mon, Feb 10, 2025 at 10:22:43AM -0600, Rob Herring (Arm) wrote:
 > 
-> Can you put your perf numbers here too?
->  
-> > Therefore, split the global cpumask into multiple per-NUMA node cpumasks
-> > to improve scalability and performance on large systems.
+> On Sun, 09 Feb 2025 21:09:40 +0530, Manivannan Sadhasivam wrote:
+> > 'global' IRQ is used to receive vendor specific events from the PCIe
+> > controller.
 > > 
-> > The concept is that each cpumask will track only the idle CPUs within
-> > its corresponding NUMA node, treating CPUs in other NUMA nodes as busy.
-> > In this way concurrent access to the idle cpumask will be restricted
-> > within each NUMA node.
-> > 
-> > The split of multiple per-node idle cpumasks can be controlled using the
-> > SCX_OPS_BUILTIN_IDLE_PER_NODE flag.
-> > 
-> > By default SCX_OPS_BUILTIN_IDLE_PER_NODE is not enabled and a global
-> > host-wide idle cpumask is used, maintaining the previous behavior.
-> > 
-> > NOTE: if a scheduler explicitly enables the per-node idle cpumasks (via
-> > SCX_OPS_BUILTIN_IDLE_PER_NODE), scx_bpf_get_idle_cpu/smtmask() will
-> > trigger an scx error, since there are no system-wide cpumasks.
-> > 
-> > Signed-off-by: Andrea Righi <arighi@nvidia.com>
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > > ---
-> >  kernel/sched/ext_idle.c | 242 ++++++++++++++++++++++++++++++++--------
-> >  kernel/sched/ext_idle.h |  11 +-
-> >  2 files changed, 203 insertions(+), 50 deletions(-)
+> >  arch/arm64/boot/dts/qcom/sa8775p.dtsi | 10 ++++++----
+> >  1 file changed, 6 insertions(+), 4 deletions(-)
 > > 
-> > diff --git a/kernel/sched/ext_idle.c b/kernel/sched/ext_idle.c
-> > index a3f2b00903ac2..4b90ec9018c1a 100644
-> > --- a/kernel/sched/ext_idle.c
-> > +++ b/kernel/sched/ext_idle.c
-> > @@ -18,25 +18,88 @@ DEFINE_STATIC_KEY_FALSE(scx_builtin_idle_enabled);
-> >  DEFINE_STATIC_KEY_FALSE(scx_builtin_idle_per_node);
-> >  
-> >  #ifdef CONFIG_SMP
-> > -#ifdef CONFIG_CPUMASK_OFFSTACK
-> > -#define CL_ALIGNED_IF_ONSTACK
-> > -#else
-> > -#define CL_ALIGNED_IF_ONSTACK __cacheline_aligned_in_smp
-> > -#endif
-> > -
-> >  /* Enable/disable LLC aware optimizations */
-> >  DEFINE_STATIC_KEY_FALSE(scx_selcpu_topo_llc);
-> >  
-> >  /* Enable/disable NUMA aware optimizations */
-> >  DEFINE_STATIC_KEY_FALSE(scx_selcpu_topo_numa);
-> >  
-> > -static struct {
-> > +/*
-> > + * cpumasks to track idle CPUs within each NUMA node.
-> > + *
-> > + * If SCX_OPS_BUILTIN_IDLE_PER_NODE is not enabled, a single global cpumask
-> > + * from is used to track all the idle CPUs in the system.
-> > + */
-> > +struct idle_cpus {
-> >  	cpumask_var_t cpu;
-> >  	cpumask_var_t smt;
-> > -} idle_masks CL_ALIGNED_IF_ONSTACK;
-> > +};
-> > +
-> > +/*
-> > + * Global host-wide idle cpumasks (used when SCX_OPS_BUILTIN_IDLE_PER_NODE
-> > + * is not enabled).
-> > + */
-> > +static struct idle_cpus scx_idle_global_masks;
-> > +
-> > +/*
-> > + * Per-node idle cpumasks.
-> > + */
-> > +static struct idle_cpus **scx_idle_node_masks;
-> > +
-> > +/*
-> > + * Initialize per-node idle cpumasks.
-> > + *
-> > + * In case of a single NUMA node or if NUMA support is disabled, only a
-> > + * single global host-wide cpumask will be initialized.
-> > + */
-> > +void scx_idle_init_masks(void)
-> > +{
-> > +	int node;
-> > +
-> > +	/* Allocate global idle cpumasks */
-> > +	BUG_ON(!alloc_cpumask_var(&scx_idle_global_masks.cpu, GFP_KERNEL));
-> > +	BUG_ON(!alloc_cpumask_var(&scx_idle_global_masks.smt, GFP_KERNEL));
-> > +
-> > +	/* Allocate per-node idle cpumasks */
-> > +	scx_idle_node_masks = kcalloc(num_possible_nodes(),
-> > +				      sizeof(*scx_idle_node_masks), GFP_KERNEL);
-> > +	BUG_ON(!scx_idle_node_masks);
-> > +
-> > +	for_each_node(node) {
-> > +		scx_idle_node_masks[node] = kzalloc_node(sizeof(**scx_idle_node_masks),
-> > +							 GFP_KERNEL, node);
-> > +		BUG_ON(!scx_idle_node_masks[node]);
-> > +
-> > +		BUG_ON(!alloc_cpumask_var_node(&scx_idle_node_masks[node]->cpu, GFP_KERNEL, node));
-> > +		BUG_ON(!alloc_cpumask_var_node(&scx_idle_node_masks[node]->smt, GFP_KERNEL, node));
-> > +	}
-> > +}
-> > +
-> > +/*
-> > + * Return the idle masks associated to a target @node.
-> > + */
-> > +static struct idle_cpus *idle_cpumask(int node)
-> > +{
-> > +	return node == NUMA_NO_NODE ? &scx_idle_global_masks : scx_idle_node_masks[node];
-> > +}
-> > +
-> > +/*
-> > + * Return the node id associated to a target idle CPU (used to determine
-> > + * the proper idle cpumask).
-> > + */
-> > +static int idle_cpu_to_node(int cpu)
-> > +{
-> > +	if (!static_branch_maybe(CONFIG_NUMA, &scx_builtin_idle_per_node))
-> > +		return NUMA_NO_NODE;
-> > +
-> > +	return cpu_to_node(cpu);
-> > +}
-> >  
-> >  bool scx_idle_test_and_clear_cpu(int cpu)
-> >  {
-> > +	int node = idle_cpu_to_node(cpu);
-> > +	struct cpumask *idle_cpus = idle_cpumask(node)->cpu;
-> > +
-> >  #ifdef CONFIG_SCHED_SMT
-> >  	/*
-> >  	 * SMT mask should be cleared whether we can claim @cpu or not. The SMT
-> > @@ -45,33 +108,38 @@ bool scx_idle_test_and_clear_cpu(int cpu)
-> >  	 */
-> >  	if (sched_smt_active()) {
-> >  		const struct cpumask *smt = cpu_smt_mask(cpu);
-> > +		struct cpumask *idle_smts = idle_cpumask(node)->smt;
-> >  
-> >  		/*
-> >  		 * If offline, @cpu is not its own sibling and
-> >  		 * scx_pick_idle_cpu() can get caught in an infinite loop as
-> > -		 * @cpu is never cleared from idle_masks.smt. Ensure that @cpu
-> > -		 * is eventually cleared.
-> > +		 * @cpu is never cleared from the idle SMT mask. Ensure that
-> > +		 * @cpu is eventually cleared.
-> >  		 *
-> >  		 * NOTE: Use cpumask_intersects() and cpumask_test_cpu() to
-> >  		 * reduce memory writes, which may help alleviate cache
-> >  		 * coherence pressure.
-> >  		 */
-> > -		if (cpumask_intersects(smt, idle_masks.smt))
-> > -			cpumask_andnot(idle_masks.smt, idle_masks.smt, smt);
-> > -		else if (cpumask_test_cpu(cpu, idle_masks.smt))
-> > -			__cpumask_clear_cpu(cpu, idle_masks.smt);
-> > +		if (cpumask_intersects(smt, idle_smts))
-> > +			cpumask_andnot(idle_smts, idle_smts, smt);
-> > +		else if (cpumask_test_cpu(cpu, idle_smts))
-> > +			__cpumask_clear_cpu(cpu, idle_smts);
-> >  	}
-> >  #endif
-> > -	return cpumask_test_and_clear_cpu(cpu, idle_masks.cpu);
-> > +
-> > +	return cpumask_test_and_clear_cpu(cpu, idle_cpus);
-> >  }
-> >  
-> > -s32 scx_pick_idle_cpu(const struct cpumask *cpus_allowed, u64 flags)
-> > +/*
-> > + * Pick an idle CPU in a specific NUMA node.
-> > + */
-> > +s32 pick_idle_cpu_from_node(const struct cpumask *cpus_allowed, int node, u64 flags)
-> >  {
-> >  	int cpu;
-> >  
-> >  retry:
-> >  	if (sched_smt_active()) {
-> > -		cpu = cpumask_any_and_distribute(idle_masks.smt, cpus_allowed);
-> > +		cpu = cpumask_any_and_distribute(idle_cpumask(node)->smt, cpus_allowed);
-> >  		if (cpu < nr_cpu_ids)
-> >  			goto found;
-> >  
-> > @@ -79,7 +147,7 @@ s32 scx_pick_idle_cpu(const struct cpumask *cpus_allowed, u64 flags)
-> >  			return -EBUSY;
-> >  	}
-> >  
-> > -	cpu = cpumask_any_and_distribute(idle_masks.cpu, cpus_allowed);
-> > +	cpu = cpumask_any_and_distribute(idle_cpumask(node)->cpu, cpus_allowed);
-> >  	if (cpu >= nr_cpu_ids)
-> >  		return -EBUSY;
-> >  
-> > @@ -90,6 +158,55 @@ s32 scx_pick_idle_cpu(const struct cpumask *cpus_allowed, u64 flags)
-> >  		goto retry;
-> >  }
-> >  
-> > +/*
-> > + * Find the best idle CPU in the system, relative to @node.
-> > + */
-> > +s32 scx_pick_idle_cpu(const struct cpumask *cpus_allowed, int node, u64 flags)
-> > +{
-> > +	nodemask_t unvisited = NODE_MASK_ALL;
+> 
+> 
+> My bot found new DTB warnings on the .dts files added or changed in this
+> series.
+> 
 
-This should be a NODEMASK_ALLOC(). We don't want to eat up too much of the
-stack, right?
+Ah. I didn't run dtbs check. Please ignore this one, I'll post along with
+bindings change.
 
-> > +	s32 cpu = -EBUSY;
-> > +
-> > +	if (!static_branch_maybe(CONFIG_NUMA, &scx_builtin_idle_per_node))
-> > +		return pick_idle_cpu_from_node(cpus_allowed, NUMA_NO_NODE, flags);
-> > +
-> > +	/*
-> > +	 * If an initial node is not specified, start with the current
-> > +	 * node.
-> > +	 */
-> > +	if (node == NUMA_NO_NODE)
-> > +		node = numa_node_id();
-> > +
-> > +	/*
-> > +	 * Traverse all nodes in order of increasing distance, starting
-> > +	 * from @node.
-> > +	 *
-> > +	 * This loop is O(N^2), with N being the amount of NUMA nodes,
-> > +	 * which might be quite expensive in large NUMA systems. However,
-> > +	 * this complexity comes into play only when a scheduler enables
-> > +	 * SCX_OPS_BUILTIN_IDLE_PER_NODE and it's requesting an idle CPU
-> > +	 * without specifying a target NUMA node, so it shouldn't be a
-> > +	 * bottleneck is most cases.
-> > +	 *
-> > +	 * As a future optimization we may want to cache the list of hop
-> > +	 * nodes in a per-node array, instead of actually traversing them
-> > +	 * every time.
-> > +	 */
-> > +	for_each_numa_node(node, unvisited, N_POSSIBLE) {
-> > +		cpu = pick_idle_cpu_from_node(cpus_allowed, node, flags);
-> > +		if (cpu >= 0)
-> > +			break;
-> > +
-> > +		/*
-> > +		 * Check if the search is restricted to the same core or
-> > +		 * the same node.
-> > +		 */
-> > +		if (flags & SCX_PICK_IDLE_IN_NODE)
-> > +			break;
+- Mani
+
+> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+> are fixed by another series. Ultimately, it is up to the platform
+> maintainer whether these warnings are acceptable or not. No need to reply
+> unless the platform maintainer has comments.
 > 
-> If SCX_PICK_IDLE_IN_NODE is set, you can avoid the loop at all, right?
-> Just:
-> 	if (flags & SCX_PICK_IDLE_IN_NODE)
-> 	        return pick_idle_cpu_from_node(cpus_allowed, node, flags);
+> If you already ran DT checks and didn't see these error(s), then
+> make sure dt-schema is up to date:
 > 
-> 	for_each_numa_node(node, unvisited, N_POSSIBLE) {
-> 		cpu = pick_idle_cpu_from_node(cpus_allowed, node, flags);
-> 		if (cpu >= 0)
-> 			return cpu;
->         }
+>   pip3 install dtschema --upgrade
 > 
-> Thanks,
-> Yury
+> 
+> New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250209153940.3489-1-manivannan.sadhasivam@linaro.org:
+> 
+> arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: pcie@1c00000: interrupts: [[0, 307, 4], [0, 308, 4], [0, 309, 4], [0, 312, 4], [0, 313, 4], [0, 314, 4], [0, 374, 4], [0, 375, 4], [0, 306, 4]] is too long
+> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+> arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: pcie@1c00000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
+> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+> arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: pcie@1c10000: interrupts: [[0, 519, 4], [0, 140, 4], [0, 141, 4], [0, 142, 4], [0, 143, 4], [0, 144, 4], [0, 145, 4], [0, 146, 4], [0, 518, 4]] is too long
+> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+> arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: pcie@1c10000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
+> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+> arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: pcie@1c00000: interrupts: [[0, 307, 4], [0, 308, 4], [0, 309, 4], [0, 312, 4], [0, 313, 4], [0, 314, 4], [0, 374, 4], [0, 375, 4], [0, 306, 4]] is too long
+> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+> arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: pcie@1c00000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
+> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+> arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: pcie@1c10000: interrupts: [[0, 519, 4], [0, 140, 4], [0, 141, 4], [0, 142, 4], [0, 143, 4], [0, 144, 4], [0, 145, 4], [0, 146, 4], [0, 518, 4]] is too long
+> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+> arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: pcie@1c10000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
+> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+> arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: pcie@1c00000: interrupts: [[0, 307, 4], [0, 308, 4], [0, 309, 4], [0, 312, 4], [0, 313, 4], [0, 314, 4], [0, 374, 4], [0, 375, 4], [0, 306, 4]] is too long
+> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+> arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: pcie@1c00000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
+> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+> arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: pcie@1c10000: interrupts: [[0, 519, 4], [0, 140, 4], [0, 141, 4], [0, 142, 4], [0, 143, 4], [0, 144, 4], [0, 145, 4], [0, 146, 4], [0, 518, 4]] is too long
+> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+> arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: pcie@1c10000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
+> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+> arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: pcie@1c00000: interrupts: [[0, 307, 4], [0, 308, 4], [0, 309, 4], [0, 312, 4], [0, 313, 4], [0, 314, 4], [0, 374, 4], [0, 375, 4], [0, 306, 4]] is too long
+> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+> arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: pcie@1c00000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
+> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+> arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: pcie@1c10000: interrupts: [[0, 519, 4], [0, 140, 4], [0, 141, 4], [0, 142, 4], [0, 143, 4], [0, 144, 4], [0, 145, 4], [0, 146, 4], [0, 518, 4]] is too long
+> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+> arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: pcie@1c10000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
+> 	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+> 
+> 
+> 
+> 
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
