@@ -1,177 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB40625B668;
-	Mon, 10 Feb 2025 18:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A29F619149F
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739212456; cv=none; b=HDH7DhWRFmMYmxLmmmNREwFvvoTd6fUe1wXYpEZYHInm3WSsx9ShkRARQtlg1tPriGKyeS1KGHVSvtzJyWWDY4XbL4sBVubZZTJ+yGuivERVjEZ4aUZKVDsWFQFvtiS4vf9Kmq65KWx2yYtubOFi8wPcG7FhMVfO7Mo7/95gJsY=
+	t=1739212503; cv=none; b=UlNgDVwX4J6PK4PV759Y3pmzSO+s8jOmtGUh2svgmgH+VtVQFp2rHFG6f53DoHq2BU+Bfs9HE3cNdWBEWCHWHkIl63YsSkhjQDsdyv81bOxpwIoN05q/h2u7EXv/MLAmw1EIQhtewuuBvbyH2oCY5pdMHgnL/LYmZfjtKZ5PCkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739212456; c=relaxed/simple;
-	bh=ktJrQgrd5tNbtyj+LrP9zGWCOfkEzbfTm6w/svlvBbM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JbzVM/aM0kfha2jYQPAn87CFNOz95Qh/LzBf/n0twwaS+rrlUsWJz+4lCvEoaJis5bK3QXPb1s6U7hjM702VggzdeGFpWL8OFuV1RvXM4b1Qh18a7wUlxFzCF4XUKDdM68A9vnRfhE2q5QbU2MVIX32eOcklikHjmpSqo398HEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o5Wk+kBV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739212503; c=relaxed/simple;
+	bh=Fet6okgf36tAqXpewfQLTQxQKGOhhrsK1Q0AOZ9/Pjs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bqM21boh7BgkCUTNyH67CesKNN1Qr2uk3bmKsfXOwLphCXEeQozASnnhFMfY96ipv5RGSs7boBd4nlKlepu0U9WHmR/rsktNwwgulV8NhQR7W8+/SEdgapDyNdOrFjS1hk037/Va7AhjQGV/wxHxwN22X66N8XzSOooFfrViiog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=wdvvakOT; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o5Wk+kBV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5E6DC4CED1;
-	Mon, 10 Feb 2025 18:34:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739212456;
-	bh=ktJrQgrd5tNbtyj+LrP9zGWCOfkEzbfTm6w/svlvBbM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o5Wk+kBV1aZJtbf3H7CfmLvS51rq9NiYwCuz4IDx8h1ik9VzGoglngQaCFpN6OLJA
-	 skaqSgw/OGOXMym8t5hnoX1PkEt8RUDx8j/okhPpwGqisL2hEMFLsDmJB3TC+jwVJi
-	 ef1TeaYrPbDnyDDRg8tKmv//f4XDEy5i7n91v+CbnePoWvNIr3tnJ44+GKOXpTU22i
-	 G8/m1x3AXaDb8KwR9S8+xLkAQ3Cgw0iw2ZPSAA89UycoX5S/+DKF+e1XsBhJ0E1zGE
-	 NjQzLVAOn5wRf9LVcv8lWSgejbM7F2BRm0zlvJkM59yAjBeokQLuHIakhVk4bDEeRa
-	 3UwFxcrReNcTw==
-Date: Mon, 10 Feb 2025 19:34:13 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, 
-	Jagan Teki <jagan@amarulasolutions.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Paul Kocialkowski <contact@paulk.fr>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	=?utf-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH v6 08/26] drm/bridge: panel: add a panel_bridge to every
- panel
-Message-ID: <20250210-amusing-bobcat-of-pluck-0d4c09@houat>
-References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
- <20250206-hotplug-drm-bridge-v6-8-9d6f2c9c3058@bootlin.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="wdvvakOT"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f7f1e1194so46626825ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:35:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739212501; x=1739817301; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RhlEJGyqamWG33JWVRBIx1wW5JbkDOwIRtN2Z4M+TTw=;
+        b=wdvvakOT5i4wkWWew3IxRKeLgj5OCrPzweUevk8Iq3hGLguyraFOVVBHGkq1VZ4rxx
+         xsNUzog/f+xrfJAVSm04dRMGghOwEYCnOXK37PtvD7+C/uEd8iZLCoFQ98ZPns0s+p14
+         napg0JFTAN2KpQVdZDMIIczO8J8JCkBzHyOigUQp5Ur0lWjNBdruSVzCvYFGDHo3ok2G
+         ZM7X4QqrBB1Yt8PMmkL49JVY5WA4jpABlcJxi3gIFEco7VjqK83RSMe1Q2eNKBCr/oHt
+         2oXw8/tzg5tzQ0HU34XdbN9PB+YkHGWXEzbMfjvqOy7tpm6rIqPGtsOE072YFdwnX3XQ
+         ORQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739212501; x=1739817301;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RhlEJGyqamWG33JWVRBIx1wW5JbkDOwIRtN2Z4M+TTw=;
+        b=p1dJFWgM1GEWL2ttAx27mRJYwgu1rnvZco1B9gNdIfiW9Pu8KjTl0jcfiUKaTK2n25
+         gnnSoigpASZOTw/nIdYL79XLG8U78XfmTB4Y155jo7FuGwjh5E1asx50+Vwvwfz2uSH5
+         dMytmkDykJOdsV+ACygeVqP9poKUUf8AxNjHOskuUpoTzkIG0iBewo4QGlcbho9KXGKf
+         OZ6XqlDsa/jvoyKMgYywdjX4oyc5K6UA1kZFC66rm/ZGVhGueOt0cYIM+PpmTRS+FyA8
+         wBgv58gkcQwF0nMYceMAlkZnFyCSbI5VMw7oeUBeoY+qYn5b6gBKdjGEPziMkpoiFZOD
+         c5CA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0/nUjOjYaUwI3HZCoPQMQC5UbuIlLxEhrZ0jx9+u9zjP/gVZ/ssoKKBR1cti+WjS3+ygeM2tHL+PXjLE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5sV0+S+qEoQXqU2qViZZ2JHJmc/WlvT386z1XRRB3CeZ+6O6j
+	r7M8VmvJjKFHpUzss7zHhKQTFvsVDlOV/igeNnkNEdHxqhmQgYuOibTq6tlNXXg=
+X-Gm-Gg: ASbGnctO+rhsr3ktD4yaRZbhEKDTy5aNP1a2MR+RB1bw5CDMKOTHQx0CGiCH9Rbf/MT
+	yaXDwXMsu8XvHZqW8fu2KGFFg/KSWxF9BdcE4G0pzaDe+4ueK3bpmZ+8tWSZO8Xq6OlyzaY5g/p
+	SD9XITJNJfpa5pAWhT3wfB59S2QGdqZeocPAmRplC3q4Q5tA3+nmJX3cJ9Zq0KuZZkIxN8bO/rq
+	6tPzGw6GXTWL1c7f5oXhg8piQ2ffLdIiHzEgpnha0CerY4PusD4/Ii4lQbCmPWbldfkmAG1a1FG
+	GYnM27aCQvxKvblL3keD6RoeRmlTOpk=
+X-Google-Smtp-Source: AGHT+IGcshiyYeyUumTAxl/O5zl1bGxAtjZfhKbFcjYP8aCSk0OlMXDbqBJ+Y4zN2NdWMp46o5bnIA==
+X-Received: by 2002:a17:902:dac7:b0:21f:b404:5110 with SMTP id d9443c01a7336-21fb40451d5mr20090975ad.34.1739212500849;
+        Mon, 10 Feb 2025 10:35:00 -0800 (PST)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3650e6b5sm82534815ad.46.2025.02.10.10.34.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 10:35:00 -0800 (PST)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Subject: [PATCH v2 0/2] tools: Unify top-level quiet infrastructure
+Date: Mon, 10 Feb 2025 10:34:41 -0800
+Message-Id: <20250210-quiet_tools-v2-0-b2f18cbf72af@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="fcofu4bb2ss3srog"
-Content-Disposition: inline
-In-Reply-To: <20250206-hotplug-drm-bridge-v6-8-9d6f2c9c3058@bootlin.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMFGqmcC/23M0QoCIRCF4VdZ5jrDNZTsqveIJUSndqC0HJNi8
+ d2zve7yP3C+BRgzIcNhWCBjJaYUe6jNAH528YqCQm9QUmmp5E48X4TlXFK6sbDOoLPBaDda6I9
+ Hxgu9V+009Z6JS8qfFa/jb/3v1FFIEZT2e6sNauuOmWpiin7r0x2m1toXG5jhDKkAAAA=
+X-Change-ID: 20250203-quiet_tools-9a6ea9d65a19
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Quentin Monnet <qmo@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+ Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+ Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2111; i=charlie@rivosinc.com;
+ h=from:subject:message-id; bh=Fet6okgf36tAqXpewfQLTQxQKGOhhrsK1Q0AOZ9/Pjs=;
+ b=owGbwMvMwCXWx5hUnlvL8Y3xtFoSQ/oqt1NPEzb84l/zyGE146GrwY9bFd7J1Dz3FjzpdTzr9
+ dSmlEsXOkpZGMS4GGTFFFl4rjUwt97RLzsqWjYBZg4rE8gQBi5OAZjITgaG/9HW/y407VmbHOFu
+ tFAyYTOXt7S4nZ4Nq+R7RasCqdXyMowMS3fb1G+rypyu+E5kzUbPPp1a85cX3rrwNm+x/jG595A
+ wPwA=
+X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
+ fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
+The quiet infrastructure was moved out of Makefile.build to accomidate
+the new syscall table generation scripts in perf. Syscall table
+generation wanted to also be able to be quiet, so instead of again
+copying the code to set the quiet variables, the code was moved into
+Makefile.perf to be used globally. This was not the right solution. It
+should have been moved even further upwards in the call chain.
+Makefile.include is imported in many files so this seems like a proper
+place to put it.
 
---fcofu4bb2ss3srog
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v6 08/26] drm/bridge: panel: add a panel_bridge to every
- panel
-MIME-Version: 1.0
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+---
+Changes in v2:
+- Fix spacing around Q= (Andrii)
+- Link to v1: https://lore.kernel.org/r/20250203-quiet_tools-v1-0-d25c8956e59a@rivosinc.com
 
-On Thu, Feb 06, 2025 at 07:14:23PM +0100, Luca Ceresoli wrote:
-> Adding a panel does currently not add a panel_bridge wrapping it. Usually
-> the panel_bridge creation happens when some other driver (e.g. the previo=
-us
-> bridge or the encoder) calls *_of_get_bridge() and the following element =
-in
-> the pipeline is a panel.
->=20
-> This has some drawbacks:
->=20
->  * the panel_bridge is not created in the context of the driver of the
->    underlying physical device (the panel driver), but of some other driver
->  * that "other driver" is not aware of whether the returned drm_bridge
->    pointer is a panel_bridge created on the fly, a pre-existing
->    panel_bridge or a non-panel bridge
->  * removal of a panel_bridge requires calling drm_panel_bridge_remove(),
->    but the "other driver" doesn't know whether this is needed because it
->    doesn't know whether it has created a panel_bridge or not
->=20
-> So far this approach has been working because devm and drmm ensure the
-> panel bridge would be dealloacted at some later point. However with the
-> upcoming implementation of dynamic bridge lifetime this will get more
-> complicated.
->=20
-> Correct removal of a panel_bridge might possibly be obtained by adding mo=
-re
-> devm/drmm technology to have it freed correctly at all times. However this
-> would add more complexity and not help making lifetime more understandabl=
-e.
->=20
-> Use a different approach instead: always create a panel_bridge with a
-> drm_panel, thus matching the lifetime of the drm_panel and the panel_brid=
-ge
-> wrapping it. This makes lifetime much more straightforward to understand
-> and to further develop on.
->=20
-> With the panel_bridge always created, the functions to get a bridge
-> [devm_drm_of_get_bridge() and drmm_of_get_bridge()] become simpler because
-> the bridge they are looking for exists already (if it can exist at all). =
-In
-> turn, this is implemented based on a variant of
-> drm_of_find_panel_or_bridge() that only looks for panels:
-> of_drm_find_bridge_by_endpoint(). In the future
-> drm_of_find_panel_or_bridge() can be progressively removed because there
-> will never be a panel not exposing a bridge.
->=20
-> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
->=20
-> ---
->=20
-> This patch was added in v6.
-> ---
->  drivers/gpu/drm/bridge/panel.c | 74 +++++++++++++++++++++++++++++++++---=
-------
->  include/drm/drm_panel.h        |  8 +++++
->  2 files changed, 66 insertions(+), 16 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/pane=
-l.c
-> index 58570ff6952ca313b3def084262c9bb3772272ef..6995de605e7317dd1eb153afd=
-475746ced764712 100644
-> --- a/drivers/gpu/drm/bridge/panel.c
-> +++ b/drivers/gpu/drm/bridge/panel.c
-> @@ -69,6 +69,9 @@ EXPORT_SYMBOL(drm_panel_init);
->   */
->  void drm_panel_add(struct drm_panel *panel)
->  {
-> +	panel->bridge =3D drm_panel_bridge_add(panel);
-> +	WARN_ON(!panel->bridge);
-> +
->  	mutex_lock(&panel_lock);
->  	list_add_tail(&panel->list, &panel_list);
->  	mutex_unlock(&panel_lock);
-> @@ -86,6 +89,9 @@ void drm_panel_remove(struct drm_panel *panel)
->  	mutex_lock(&panel_lock);
->  	list_del_init(&panel->list);
->  	mutex_unlock(&panel_lock);
-> +
-> +	drm_panel_bridge_remove(panel->bridge);
-> +	panel->bridge =3D NULL;
->  }
->  EXPORT_SYMBOL(drm_panel_remove);
+---
+Charlie Jenkins (2):
+      tools: Unify top-level quiet infrastructure
+      tools: Remove redundant quiet setup
 
-Given that drm_panel_add and drm_panel_remove are typically called at
-probe/remove, it's pretty much equivalent to using devm. Both of these
-solutions aren't safe, and the drm_panel lifetime is still broken.
+ tools/arch/arm64/tools/Makefile           |  6 -----
+ tools/bpf/Makefile                        |  6 -----
+ tools/bpf/bpftool/Documentation/Makefile  |  6 -----
+ tools/bpf/bpftool/Makefile                |  6 -----
+ tools/bpf/resolve_btfids/Makefile         |  2 --
+ tools/bpf/runqslower/Makefile             |  5 +---
+ tools/build/Makefile                      |  8 +-----
+ tools/lib/bpf/Makefile                    | 13 ----------
+ tools/lib/perf/Makefile                   | 13 ----------
+ tools/lib/thermal/Makefile                | 13 ----------
+ tools/objtool/Makefile                    |  6 -----
+ tools/perf/Makefile.perf                  | 41 -------------------------------
+ tools/scripts/Makefile.include            | 31 ++++++++++++++++++++++-
+ tools/testing/selftests/bpf/Makefile.docs |  6 -----
+ tools/testing/selftests/hid/Makefile      |  2 --
+ tools/thermal/lib/Makefile                | 13 ----------
+ tools/tracing/latency/Makefile            |  6 -----
+ tools/tracing/rtla/Makefile               |  6 -----
+ tools/verification/rv/Makefile            |  6 -----
+ 19 files changed, 32 insertions(+), 163 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250203-quiet_tools-9a6ea9d65a19
+-- 
+- Charlie
 
-I'd rather work on a solution that actually fixes those lifetime issues.
-
-Maxime
-
---fcofu4bb2ss3srog
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ6pGpQAKCRAnX84Zoj2+
-dupmAX0QCqXAlwjOigazwjLqLppxgT//Mch4tKS4d4c1SuZ5OCPF+108O+yXaidt
-tq6KGDwBf1aBzn4NygKkr+X8NMETD8f58JqWfuEBykbqP2ZhQvQgM/RII/JgW0QQ
-gJXXs7dFkQ==
-=CCam
------END PGP SIGNATURE-----
-
---fcofu4bb2ss3srog--
