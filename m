@@ -1,62 +1,62 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013C0253333
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 21:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EDD253F08
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 21:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739223378; cv=none; b=G9JnfvcwO/8wE0l4x/0WkrenUlH3xvmzGU7lieUl0JskT+ead5wUNQ6PZzCcwcacJcS/WXtzWaCFb/hK6GxCu11JU6+mXF9FzpGax2TIJpMdNsVs5heOhG/JGZpBtpuOwBlJSRFiSr450W1YJY6bRyfvLdEumonHods7ujM97vQ=
+	t=1739223379; cv=none; b=mZpkBLLK63TiPrJiw1bc+p1zGq33z34PCSqcR60HGMzL2myrgolC74DgyyaT9PCHBqxRoiG9489HOzWUUUvMpyEZkMkZoLMkBhIGxJdHITO68rkO6DBDZiVl4vbeVNOvvVJWD2ZQep+5AHCeFLYggjyUl+K7F0++ZbZCAZ/KNLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739223378; c=relaxed/simple;
-	bh=o8LicozigsBJPUxfw0UjH/+haPfd2EDEodthfJ8bhLQ=;
+	s=arc-20240116; t=1739223379; c=relaxed/simple;
+	bh=/j+ybqZeARPGCTJZl7exA3+V1IjrXZaSqccG31t9K7Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Jgd260PRAOK4hra+NqY0TcVncIUBGRZBBAFn6ownsnQ6WDZmaWnObDoTxhw89kPSPtSDJFFVr/vquw6eiPsVetO3dXdvJP0zNGRL3OEj3ndwI+FJEp0jevqGsDMzK0SHVz9CjxS9vf4CiD235KbqqWtRaxmx3U8unyil3nignvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ITFlHvtE; arc=none smtp.client-ip=209.85.221.54
+	 MIME-Version:Content-Type; b=cUq8l8cCeoDpVTF/I2vebJmyaEMO+aYPOkILF91PKhouZj/U8YhdSObKhdWI34Gf1u71TcJM1yWmklw2As/UxZcEO+jidGTtawtLCBBXwK7/shaNgncDecx//NAIwCTxRVLgHYyydNHoMCUHdItIc34bmS/Iy3ntgOkb4JxWNfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=c2xebSJ3; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ITFlHvtE"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-38dd14c99c3so1525796f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:36:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="c2xebSJ3"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-38dd0dc2226so2625151f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:36:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739223374; x=1739828174; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739223375; x=1739828175; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NTEMNxwWUDdJDHTSWR5BaYosnBDapUg7Ev6g031TeV8=;
-        b=ITFlHvtE9yI34d5cje450muBPt/uRI0f9R13H4R0RygM0vIL/8Xr2ysMO8unqgYTbL
-         ilwAb+1ia1vprAdNB+fNCPkd5qonAVLvZVCX2Br8Fm4V+SoAaOpCsh54e72jSUdPHbes
-         01iBiW6k0H/dIX1t0423EJjcZY8OqljAgf5P50pxRi+df2jBcTN5l55YapSlJ/eQfrld
-         fpZsQO4LG/uT2O9nulvkbEDsd/2M9frh9SU3Zle1aI5iz4CEWzdSQMHonhxzL8z1n+SK
-         pVAJHfF2Sc3cPaED4zc52foMO+cuFm7Jt9yDbI7D0QtcjgwQcWUtftPkuVEJ828wWWuh
-         gHIg==
+        bh=19zTUPAue8uF+l31WbsHm7jesitbh6CalqtCN/NDhL4=;
+        b=c2xebSJ3LPiHXsGsSjuRfbMFxZxgU8LpqFgZqy0nvxgKR/gnvOAzSE+gHUULgsWAQQ
+         2b1QVMZmDY3xhs7aZuNjCmXS+0eTbsC9RirfpCpY8+xOi/3oljycbnbjSVQNHq5SImVJ
+         H5T3vlT9bVxrMNhoSbKwk86zOxLYGyDfH/CgMbU7RB1KJGrZYOpf2XEjLJ24GkfMQYnN
+         dkZ9A6XqYFM/EqZWF7i01+Jm0OfgxDWblLaUe2OMVx3sMjcgUEhEbADzsDte5OMzpMbr
+         Wa+UHEpkAQFwNVsAbYk0C7+7Mra+qHdS8pJSvlKyKzqLQZKqVPkflGAwASmuWRJQnOYY
+         KJGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739223374; x=1739828174;
+        d=1e100.net; s=20230601; t=1739223375; x=1739828175;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NTEMNxwWUDdJDHTSWR5BaYosnBDapUg7Ev6g031TeV8=;
-        b=Twbq3tT1VN6UF0Gq6oQd6MkzisxJqPyE3JK2hIXmfuAt18z2UdpJzHTRCtevF2KvR2
-         jytA9sPt8v8LzZBlL8+r/VqkWJ1KbRxVxxR/qNYxQlzGutwLSwmP2ISJE6s6nD2tidCh
-         M9jEnZ7lpfBui5MpF5NbXoBkWQW14uB8BFeMEcVmmCZRY/8Ip+IY6UVM/g4GdNlWFkEr
-         qEm2vR+E0CQNvZn17mLru96kK5WaKeB/VIkZ2uE3HgcaCacV2npyxIC62ih7cdnvgenO
-         OhNObrTMYNmJeFrg3QHvTD782UteyUkpfE581/BPkt8/uEkpCGrJcfm9sd/nYOqoL+K0
-         AJXA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0RR4icdkbNVxtvIZ6YsOarAEcI2PJsn8Gw21G9zdePE1n+LyUuJWGx1LEDchpO3vNBTgnHEvrPHoZ4+I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz085A3+zws3ePCifvdJaw1u5gyaK0pLtHI0ZTasWcy3xYJ+h3e
-	TjtwCjai0ET09EjC5oy78DoQprilDkLlGclj41CUUlpybcqoQZnJhRfEwMuXUPg=
-X-Gm-Gg: ASbGncvTRbTBQwSYpwrrpORAjfjhdKWM8eqW1aOuIeQiNonYDrQE1A9+z8p3JdUVEz8
-	/u8SrstqiC/RbxuE8QFvRYTN3qBt1pgBIICCI8QCaLRhqzJDIwBucFe2c2eHwtS1S5f2X+8MMXz
-	zpmQIp/bHdYB8WbyxZ+TR30RFprdnCN2k6atuhFAUwzYdxE0PCLKeDuzmTDU15Kb18eG/bd2FbX
-	Knje+UDfU7BA0DgLR64/41byceQMxxc2e6cDGwAnFSUKW3AyLzhoZefDfemj//8dmFefM9LrVrb
-	9FlbslEbxfokbedW
-X-Google-Smtp-Source: AGHT+IFeyF81bBn0bup3UjkgQ031iOdpi9/jVXiALJpdAtVQDgUVud0mvsDq+oa8j9/bPhnXjupeow==
-X-Received: by 2002:a5d:5552:0:b0:38d:c2d7:b5a1 with SMTP id ffacd0b85a97d-38dc8dddd9amr9308427f8f.19.1739223374260;
-        Mon, 10 Feb 2025 13:36:14 -0800 (PST)
+        bh=19zTUPAue8uF+l31WbsHm7jesitbh6CalqtCN/NDhL4=;
+        b=u98Hppiim3pO0o1tCbCGpsN5BwKXY5fO9w9rhTVQ0KmxYUxcIuHJ1NfqTND0zgLG4M
+         FeTffHVGjcSaOZamUvJJyr66b4YeoD5U57oMEdmonm6FJRUxgJDIXC7cvZAhG0qWerq2
+         xBOWgqxdCQD77GfvDiXRa4W0LJ3Y5Mx17ukLy4SA0+bjQ+HR0smk6jeOTPB9DHAc4nER
+         8+IK3ccIMNhOJRe18NO1ps5aG6kjRw2Glw1ebS4r+BXwezt6SyXpOWnmj013sikjrPJD
+         8vMD88lW7+LWMMzlF+lz1kBHP+L1CW1MJT3iKrMWfKSJxkknGtnGTPvViZ9Z8Sz6N4Db
+         8jyg==
+X-Forwarded-Encrypted: i=1; AJvYcCX0NaDVId1sXJQZu8AXLjYyCZsB3c9YPyTkkS2a9llBrUjFo0/CBQQsXDGwd/i2mYGsxHQhDJYAO2vBxRs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8mNm1YuyhAvzd7SjtP7IfYevARcKRWcyAMqg8ujAEvex8D2eX
+	P9Vk1endAUziw45BXM+LkxoUXGoY0gcUK9ia7GH90sXTa3/EpzE+CB7wy7ENlrY=
+X-Gm-Gg: ASbGnct//rslfVbhYRe+6Si87u4PG/CFBdyNdGV2Z+dJBHi9WpzHnDC4cIUoubVDj/H
+	LnJhbalp0nJmekEqEY6hoqe/dEWiqrnejoUzAlqYoMnE2YMG4zmfXW3L7ThJ3FDoPJXZexXEwyL
+	3fzITBzqn8Iwz/T8rT+hmnmaDkzxB1G8eMHppbU+JaNJrTfUtiY6le8kS80lu+rKDcxKXD2/Fpn
+	dUvQbQFsDWTjpz2aJNBN6jeMvlCXM0wQI6mIT1VlYa5X6Md0+jJBo0Ehst02y/SyHDGXoSIs4SP
+	kGTc5558GqYc6BHg
+X-Google-Smtp-Source: AGHT+IH8mk3UTikqJq637e5ac58oAB2cwKutxDJwkgs3YdoxbObjCQef1GMenNM8qJokTGgudOE/eQ==
+X-Received: by 2002:a5d:648d:0:b0:38d:d969:39b0 with SMTP id ffacd0b85a97d-38dd9693afbmr6558028f8f.2.1739223375424;
+        Mon, 10 Feb 2025 13:36:15 -0800 (PST)
 Received: from carbon-x1.. ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4394376118esm47541515e9.40.2025.02.10.13.36.13
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4394376118esm47541515e9.40.2025.02.10.13.36.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 13:36:13 -0800 (PST)
+        Mon, 10 Feb 2025 13:36:14 -0800 (PST)
 From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
 To: Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
@@ -72,9 +72,9 @@ To: Paul Walmsley <paul.walmsley@sifive.com>,
 	linux-kselftest@vger.kernel.org
 Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
 	Samuel Holland <samuel.holland@sifive.com>
-Subject: [PATCH v2 08/15] riscv: misaligned: enable IRQs while handling misaligned accesses
-Date: Mon, 10 Feb 2025 22:35:41 +0100
-Message-ID: <20250210213549.1867704-9-cleger@rivosinc.com>
+Subject: [PATCH v2 09/15] riscv: misaligned: use get_user() instead of __get_user()
+Date: Mon, 10 Feb 2025 22:35:42 +0100
+Message-ID: <20250210213549.1867704-10-cleger@rivosinc.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250210213549.1867704-1-cleger@rivosinc.com>
 References: <20250210213549.1867704-1-cleger@rivosinc.com>
@@ -87,41 +87,28 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-We can safely reenable IRQs if they were enabled in the previous
-context. This allows to access user memory that could potentially
-trigger a page fault.
+Now that we can safely handle user memory accesses while in the
+misaligned access handlers, use get_user() instead of __get_user() to
+have user memory access checks.
 
 Signed-off-by: Clément Léger <cleger@rivosinc.com>
 ---
- arch/riscv/kernel/traps.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/riscv/kernel/traps_misaligned.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index 55d9f3450398..3eecc2addc41 100644
---- a/arch/riscv/kernel/traps.c
-+++ b/arch/riscv/kernel/traps.c
-@@ -206,6 +206,11 @@ enum misaligned_access_type {
- static void do_trap_misaligned(struct pt_regs *regs, enum misaligned_access_type type)
- {
- 	irqentry_state_t state = irqentry_enter(regs);
-+	bool enable_irqs = !regs_irqs_disabled(regs);
-+
-+	/* Enable interrupts if they were enabled in the interrupted context. */
-+	if (enable_irqs)
-+		local_irq_enable();
- 
- 	if (type ==  MISALIGNED_LOAD) {
- 		if (handle_misaligned_load(regs))
-@@ -217,6 +222,9 @@ static void do_trap_misaligned(struct pt_regs *regs, enum misaligned_access_type
- 				      "Oops - store (or AMO) address misaligned");
- 	}
- 
-+	if (enable_irqs)
-+		local_irq_disable();
-+
- 	irqentry_exit(regs, state);
- }
- 
+diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
+index 1d523cf96ff0..e6685db58bd1 100644
+--- a/arch/riscv/kernel/traps_misaligned.c
++++ b/arch/riscv/kernel/traps_misaligned.c
+@@ -269,7 +269,7 @@ static unsigned long get_f32_rs(unsigned long insn, u8 fp_reg_offset,
+ 	int __ret;					\
+ 							\
+ 	if (user_mode(regs)) {				\
+-		__ret = __get_user(insn, (type __user *) insn_addr); \
++		__ret = get_user(insn, (type __user *) insn_addr); \
+ 	} else {					\
+ 		insn = *(type *)insn_addr;		\
+ 		__ret = 0;				\
 -- 
 2.47.2
 
