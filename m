@@ -1,185 +1,181 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D6335957
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 03:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FEA535957
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 03:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739157670; cv=none; b=Z/mhjDST3fNtKq+YtJlnI+uNsC8Uvp7IPNKMYkOPRH7KcUlGq5R1JCWyGaFoG7e4tIok35HCXZMLN98HvchHtxx9zzt6P6RQRcezqJB/A37hUvIejOG82FIkLQ/AggAjnm41tueV/7WcTichWlBMFv1gi3ubUacyobjeCIYV9hA=
+	t=1739157799; cv=none; b=TtxAn28iTIMzFlpsv/bixZdWw8Or+99RXNWvF1Pwu6tsRFXlc1I7Z0t2DMDjLlDB6gRGnTlGTjwshzreABUH8UCV60CqgRj/9EQ7VK3iMgu9Fa5LxLsgtbq7QDh71UVJ0aSOxi7ufTyf6QUcOHnPkpymbZj67wARZ26eTJJrYQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739157670; c=relaxed/simple;
-	bh=PirnTzmLLW+5gn6niEYq4gn1EtZRWCdnlFA2ExWDARg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n/t9MPhPzhlRa/ma3Xzpm+YROcBAbNCL8SIOBfJx1ayz6Mp419L/uIn9g1fsQoW0/GooH75dRq9jBPBFxXZL1O7V043CdWGKG6AwUt2IMIfZ1l7CajiYZ2FhvOAqH0GkCVpqLomIbtQuKojRd9hkFCjk90bI04TGTNbaXqUv3Os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nrWtbUpO; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739157799; c=relaxed/simple;
+	bh=r/VlNjsLHTgn3Vqm7QpoNGyhrMHtWrZbYsI2Khm5sWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=bBnIJbAf+rFYAVpmYsZ5n9ySoIjDJD+fyXhpr01SX1elL3fERSKQLCRxabk614s9DXad8PfJDhKWCIKC+ls+3To2vsQBHNzfPvcyW66y5JUTZ63enra+mLcWZn+t/Lj5VrXNyjoO87TF6dHEJFS69MfNPpiyyDFNKXHU6QBHV94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lp+TZvMQ; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nrWtbUpO"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21f92258aa6so12846225ad.3
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 19:21:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739157667; x=1739762467; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ierXgC96hwGdKlwsBqeSKwlRoTpZuq9z1RYQs90fMjI=;
-        b=nrWtbUpOw3Z3RNIMvNv66/oj0XA1HOsWy4+Hm5uTnELK4OJLg3pyufHOhW3f4md8Jk
-         dBPoc3vQ0sTq7Vfyq2LvlXINqArzFckBF+Jzy+Gacoe0V+at6eFt4GNZwdI5uHiIXGQy
-         xCne1/Sh0IBJeYmZvzw/yE1eANhRz7t6brQit7LRj+bTLE2zGqwAHzhYhuGLqj/Hotxf
-         frdWgA47tAUl/laYO28QOK1qzrHZfazPKaQbhv6ghw7iSrK9JXZg1EREcxnPPFDxr3M+
-         evfPa+3/cm9ntC62vxCUjlbkF884x5TbxXfbLd9+mGoJ1U1aQcJ7X4z+JelWVYOo6Bnu
-         KgGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739157667; x=1739762467;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ierXgC96hwGdKlwsBqeSKwlRoTpZuq9z1RYQs90fMjI=;
-        b=fKqw8hzp9r3fzxWlqPWP5niyOkvrx1gRDUIzjmH4WNz9fQYG59faTEUXYjL9VabJHV
-         scN7mQEOwPaGiBSxlFJbAMpf9cCdijxdtnDpgjxQlXSQZPIXwG+/VQfX7hHT+ebhMpBg
-         ODLFeJCtljYjOlfCrEmei5OeWybCuNY8eXgPNXKhETT8DE+os83CtGQaUJVN0iRMEkN3
-         G0XH2pXlY7va4oY47rCF/qQiDXT1Za6+CnJN4ztRpDwZE24jqm/m9+fq7aqDrxk1sBXs
-         zVl/LCIOUGFCfQLjVfoX83rUvCcoQJ7C5TKwwBWR38SkmxjvtpSqXaGiLfeNIVrkhVXr
-         VaVA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4NhHS8vtbI8SMNx+c3z9llCApadvh0ATOuUiEQV+GcGwvNzkTqj4iV5LCznVfMdxjOPD4WxFCAQyBzrI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6UkHSH7KwVN2C+XiSxub5x8niTaOFhu/ATLWIOWaJTI7YbKAp
-	na8ULP3mqoRGj5ipl0dW8bx3tl3xS/5mPfSHXhMMrlBckGzqXkCTAaGyT3mTDFc5d/GdikQFW2h
-	J1zd9AI6ZOIG2Ic2aA4DXHS3mfqs=
-X-Gm-Gg: ASbGncsRD90RRLykDAWvSh5axou7EFwEHIgB8BoEK39nj6BjUwb6a/DaPgMMzhzGAHo
-	VTmPl380pgBh8Kf/YAS5WHperonXUFZQJgnQebiZqVcOPTfHzS7HN4sC01ZVOgunknR4ChYau
-X-Google-Smtp-Source: AGHT+IEQdsXoQkr/8P/JCKHQ1Pe+5J9t9y5juRQZBtj9v/sbkI4O0dhjFDP+QIhNW2wXaeDS6/bsbf1EwjVMaxrQNzM=
-X-Received: by 2002:a17:902:c94a:b0:21f:8099:72d9 with SMTP id
- d9443c01a7336-21f8099743emr68916965ad.27.1739157667431; Sun, 09 Feb 2025
- 19:21:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lp+TZvMQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739157798; x=1770693798;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=r/VlNjsLHTgn3Vqm7QpoNGyhrMHtWrZbYsI2Khm5sWk=;
+  b=lp+TZvMQuaM8sZO9ov8IIN8tbOJVnbMWY81QpCYAljGLECwnbMFS0iAU
+   fNMihGTmU7tx+AsjCFcAr2PYkIUNgwaWcOlH/qaJSrYDwwelJULEok5K1
+   RmYHMGRW0CasDvMSUSrTNmQg5FmgbNmXrS0npqcpK031xgqKnXdIcuuyJ
+   OWl/ydDkqvGxO3Jt/RY4cfjlxuPRRJ+4xlwFNpN7K++KH/qiKIF2NSb7R
+   6vcYELwuYSDHvXxiy33YWvsZK1Q4Q5hLNL0J5oJ0U2ujEplkIXKBr6nrX
+   jufKRLnrTq24nZWSw+F3s0AEeUwkkrUryLLx3J2X+5s2nzaatKmaBA19I
+   A==;
+X-CSE-ConnectionGUID: bwPTpbBFQMSE0jcgUMLKqA==
+X-CSE-MsgGUID: ALktQRSxS5eog/43PA+n5w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="51118050"
+X-IronPort-AV: E=Sophos;i="6.13,273,1732608000"; 
+   d="scan'208";a="51118050"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 19:23:17 -0800
+X-CSE-ConnectionGUID: FafrhcL1QWi8OQSoivhCAQ==
+X-CSE-MsgGUID: F7JEbR0sTCyxMeeTawd8BA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="117273144"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 09 Feb 2025 19:23:16 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1thKO9-0012E0-0d;
+	Mon, 10 Feb 2025 03:23:13 +0000
+Date: Mon, 10 Feb 2025 11:22:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mark Pearson <markpearson@lenovo.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>
+Subject: drivers/platform/x86/think-lmi.c:758:51: warning: '%s' directive
+ argument is null
+Message-ID: <202502101149.2WSaGTJp-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207081846.362919-1-linchengming884@gmail.com>
- <20250207081846.362919-2-linchengming884@gmail.com> <8901dcd481a2185ad34fa7dd09997b38@kernel.org>
-In-Reply-To: <8901dcd481a2185ad34fa7dd09997b38@kernel.org>
-From: Cheng Ming Lin <linchengming884@gmail.com>
-Date: Mon, 10 Feb 2025 11:16:57 +0800
-X-Gm-Features: AWEUYZmVVv-4Y0evT9hlqj0Kh75MksKOXechWJSVFw8tDvCu3HhcMQIdiq_TQWg
-Message-ID: <CAAyq3SbnX8WgN9U=YbJ465q6SBWz6GMuykC4svd9jzjnC3EVFQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mtd: spi-nor: macronix: Add post_sfdp fixups for Quad
- Input Page Program
-To: Michael Walle <mwalle@kernel.org>
-Cc: tudor.ambarus@linaro.org, pratyush@kernel.org, miquel.raynal@bootlin.com, 
-	richard@nod.at, vigneshr@ti.com, linux-mtd@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, alvinzhou@mxic.com.tw, leoyu@mxic.com.tw, 
-	Cheng Ming Lin <chengminglin@mxic.com.tw>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Michael,
+Hi Mark,
 
-Michael Walle <mwalle@kernel.org> =E6=96=BC 2025=E5=B9=B42=E6=9C=887=E6=97=
-=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:36=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi Cheng,
->
-> > Although certain Macronix NOR flash support the Quad Input Page Program
-> > feature, the corresponding information in the 4-byte Address
-> > Instruction
-> > Table of these flash is not properly filled. As a result, this feature
-> > cannot be enabled as expected.
-> >
-> > To address this issue, a post_sfdp fixups implementation is required to
-> > correct the missing information.
-> >
-> > Signed-off-by: Cheng Ming Lin <chengminglin@mxic.com.tw>
-> > ---
-> >  drivers/mtd/spi-nor/macronix.c | 23 +++++++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> >
-> > diff --git a/drivers/mtd/spi-nor/macronix.c
-> > b/drivers/mtd/spi-nor/macronix.c
-> > index 830da21eea08..ada17999ccbb 100644
-> > --- a/drivers/mtd/spi-nor/macronix.c
-> > +++ b/drivers/mtd/spi-nor/macronix.c
-> > @@ -45,8 +45,26 @@ mx25l25635_post_bfpt_fixups(struct spi_nor *nor,
-> >       return 0;
-> >  }
-> >
-> > +static int
-> > +macronix_qpp4b_post_sfdp_fixups(struct spi_nor *nor)
-> > +{
-> > +     /* PP_1_1_4_4B is supported but missing in 4BAIT. */
-> > +     struct spi_nor_flash_parameter *params =3D nor->params;
-> > +
-> > +     params->hwcaps.mask |=3D SNOR_HWCAPS_PP_1_1_4;
-> > +     spi_nor_set_pp_settings(&params->page_programs[SNOR_CMD_PP_1_1_4]=
-,
-> > +                     SPINOR_OP_PP_1_1_4_4B, SNOR_PROTO_1_1_4);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >  static const struct spi_nor_fixups mx25l25635_fixups =3D {
-> >       .post_bfpt =3D mx25l25635_post_bfpt_fixups,
-> > +     .post_sfdp =3D macronix_qpp4b_post_sfdp_fixups,
-> > +};
-> > +
-> > +static const struct spi_nor_fixups macronix_qpp4b_fixups =3D {
-> > +     .post_sfdp =3D macronix_qpp4b_post_sfdp_fixups,
-> >  };
-> >
-> >  static const struct flash_info macronix_nor_parts[] =3D {
-> > @@ -102,11 +120,13 @@ static const struct flash_info
-> > macronix_nor_parts[] =3D {
-> >               .size =3D SZ_64M,
-> >               .no_sfdp_flags =3D SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
-> >               .fixup_flags =3D SPI_NOR_4B_OPCODES,
-> > +             .fixups =3D &macronix_qpp4b_fixups,
-> >       }, {
-> >               .id =3D SNOR_ID(0xc2, 0x20, 0x1b),
-> >               .name =3D "mx66l1g45g",
-> >               .size =3D SZ_128M,
-> >               .no_sfdp_flags =3D SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_=
-QUAD_READ,
-> > +             .fixups =3D &macronix_qpp4b_fixups,
-> >       }, {
-> >               .id =3D SNOR_ID(0xc2, 0x23, 0x14),
-> >               .name =3D "mx25v8035f",
-> > @@ -154,18 +174,21 @@ static const struct flash_info
-> > macronix_nor_parts[] =3D {
-> >               .size =3D SZ_64M,
-> >               .no_sfdp_flags =3D SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_=
-QUAD_READ,
-> >               .fixup_flags =3D SPI_NOR_4B_OPCODES,
-> > +             .fixups =3D &macronix_qpp4b_fixups,
-> >       }, {
-> >               .id =3D SNOR_ID(0xc2, 0x25, 0x3a),
-> >               .name =3D "mx66u51235f",
-> >               .size =3D SZ_64M,
-> >               .no_sfdp_flags =3D SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_=
-QUAD_READ,
-> >               .fixup_flags =3D SPI_NOR_4B_OPCODES,
-> > +             .fixups =3D &macronix_qpp4b_fixups,
-> >       }, {
-> >               .id =3D SNOR_ID(0xc2, 0x25, 0x3c),
-> >               .name =3D "mx66u2g45g",
-> >               .size =3D SZ_256M,
-> >               .no_sfdp_flags =3D SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_=
-QUAD_READ,
-> >               .fixup_flags =3D SPI_NOR_4B_OPCODES,
-> > +             .fixups =3D &macronix_qpp4b_fixups,
-> >       }, {
-> >               .id =3D SNOR_ID(0xc2, 0x26, 0x18),
-> >               .name =3D "mx25l12855e",
->
-> Could you also please share the SFDP dumps of these flashes with us?
+FYI, the error/warning still remains.
 
-Certainly, I can share the SFDP dumps of these flashes with you.
-I will send them over shortly.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   a64dcfb451e254085a7daee5fe51bf22959d52d3
+commit: b49f72e7f96d4ed147447428f2ae5b4cea598ca7 platform/x86: think-lmi: Certificate authentication support
+date:   2 years, 11 months ago
+config: x86_64-randconfig-161-20230920 (https://download.01.org/0day-ci/archive/20250210/202502101149.2WSaGTJp-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250210/202502101149.2WSaGTJp-lkp@intel.com/reproduce)
 
->
-> Thanks,
-> -michael
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502101149.2WSaGTJp-lkp@intel.com/
 
-Thanks,
-Cheng Ming Lin
+All warnings (new ones prefixed by >>):
+
+   drivers/platform/x86/think-lmi.c: In function 'certificate_store':
+>> drivers/platform/x86/think-lmi.c:758:51: warning: '%s' directive argument is null [-Wformat-overflow=]
+     758 |                 auth_str = kasprintf(GFP_KERNEL, "%s,%s",
+         |                                                   ^~
+
+
+vim +758 drivers/platform/x86/think-lmi.c
+
+   727	
+   728	static ssize_t certificate_store(struct kobject *kobj,
+   729					  struct kobj_attribute *attr,
+   730					  const char *buf, size_t count)
+   731	{
+   732		struct tlmi_pwd_setting *setting = to_tlmi_pwd_setting(kobj);
+   733		char *auth_str, *new_cert;
+   734		char *guid;
+   735		int ret;
+   736	
+   737		if (!capable(CAP_SYS_ADMIN))
+   738			return -EPERM;
+   739	
+   740		if (!tlmi_priv.certificate_support)
+   741			return -EOPNOTSUPP;
+   742	
+   743		new_cert = kstrdup(buf, GFP_KERNEL);
+   744		if (!new_cert)
+   745			return -ENOMEM;
+   746		/* Strip out CR if one is present */
+   747		strip_cr(new_cert);
+   748	
+   749		/* If empty then clear installed certificate */
+   750		if (new_cert[0] == '\0') { /* Clear installed certificate */
+   751			kfree(new_cert);
+   752	
+   753			/* Check that signature is set */
+   754			if (!setting->signature || !setting->signature[0])
+   755				return -EACCES;
+   756	
+   757			/* Format: 'serial#, signature' */
+ > 758			auth_str = kasprintf(GFP_KERNEL, "%s,%s",
+   759					dmi_get_system_info(DMI_PRODUCT_SERIAL),
+   760					setting->signature);
+   761			if (!auth_str)
+   762				return -ENOMEM;
+   763	
+   764			ret = tlmi_simple_call(LENOVO_CLEAR_BIOS_CERT_GUID, auth_str);
+   765			kfree(auth_str);
+   766			if (ret)
+   767				return ret;
+   768	
+   769			kfree(setting->certificate);
+   770			setting->certificate = NULL;
+   771			return count;
+   772		}
+   773	
+   774		if (setting->cert_installed) {
+   775			/* Certificate is installed so this is an update */
+   776			if (!setting->signature || !setting->signature[0]) {
+   777				kfree(new_cert);
+   778				return -EACCES;
+   779			}
+   780			guid = LENOVO_UPDATE_BIOS_CERT_GUID;
+   781			/* Format: 'Certificate,Signature' */
+   782			auth_str = kasprintf(GFP_KERNEL, "%s,%s",
+   783					new_cert, setting->signature);
+   784		} else {
+   785			/* This is a fresh install */
+   786			if (!setting->valid || !setting->password[0]) {
+   787				kfree(new_cert);
+   788				return -EACCES;
+   789			}
+   790			guid = LENOVO_SET_BIOS_CERT_GUID;
+   791			/* Format: 'Certificate,Admin-password' */
+   792			auth_str = kasprintf(GFP_KERNEL, "%s,%s",
+   793					new_cert, setting->password);
+   794		}
+   795		if (!auth_str) {
+   796			kfree(new_cert);
+   797			return -ENOMEM;
+   798		}
+   799	
+   800		ret = tlmi_simple_call(guid, auth_str);
+   801		kfree(auth_str);
+   802		if (ret) {
+   803			kfree(new_cert);
+   804			return ret;
+   805		}
+   806	
+   807		kfree(setting->certificate);
+   808		setting->certificate = new_cert;
+   809		return count;
+   810	}
+   811	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
