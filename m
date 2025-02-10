@@ -1,141 +1,120 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1C01DF26B
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13D31D416E
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739184855; cv=none; b=mMY3mJajnDACICOSYT9J0p8A3BvUJAt6hbf0He0vKgAIxUE5wQwTwXKE//PrcdcfQnqZ/3cS501HGVBxfXnuOeZwGNKj1SExOS5iagQ/eEku0KSpxmDWIN/i6xpzZJTqYfPklGuWGxEa+gkmw/giQeGHO0tCZfblAc59txm7mRo=
+	t=1739184939; cv=none; b=pPuQ8x1arEvIR2pjn4fF219pvnWB7vbuqAbhG0ovyLUQ/SMSk4lXsUVb+XynCJho7vO+HRjGGQaI+tFQ4tQAaHHJqJWZmoLdQWb1QMk1Q8t/msU8hPupoUkcCEDU3c9GxXBqnVYmEBxsQjKF9LKxLtS5hwivaRbMU1a9W7s8USM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739184855; c=relaxed/simple;
-	bh=veCMq7QlYZI6eCz684E6F779luK4tlDIm37dAlIWBM4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=E6P0224FyOZhzwae5PXaYOa5x0oc4YqOqlqfzbecLCxAFPj1eQfS+RsjEMs2LeZW2zEW0whYjppJds3acqmktA2uA9SLmXRyokMbDwDjDbReg9Zz6zxBEYyuPhqii4Q6vjoCZ1BSFLhkiDVo6TyB6uePpyERHsu1P/QuRwiVIcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i2ww633U; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1739184939; c=relaxed/simple;
+	bh=kf1Y9IksG1zOAT0N3rbawZNMzRh8UBQZaZri2h5M3z4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T0I1IQHqeJmkrr28Oluc86DwZCVcgssgtoRMTIJ9zcscIDox33+QrjMbOiO8oAanFAot0freDP2OP3WO8c8Jhv8KtE9MtyI+0dabawHiP3Xyll114QZiM8t2v13dxoLNfl3awZlZ8M4CjXZoemoGTQ/Dv4Q09WdcwMiq3n5w9dM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=km4giSgs; arc=none smtp.client-ip=209.85.222.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i2ww633U"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2f9c02f54f2so8874429a91.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 02:54:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="km4giSgs"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c0155af484so574848885a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 02:55:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739184853; x=1739789653; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=LQhJyhQWjxv+Zy6zdPYkWUMUnHGtnz45HWDSo6oMzGY=;
-        b=i2ww633U5jy8K4KgTybv4563+pBCllL5abr/8LSt+OtUJMPBKfRdTlDIJB4jCJfXnR
-         444Vg9lFbtENjCGlUnCT7TZadGi2ksupfJaUwcf0CjO2HCB5iJI///mSBi24dO9EbtrZ
-         58BKbBf5jExpS9fMEAMIlUI/gyhHOk72XvaKFii6bSEYiyY9S4k2oVXp0gBywUqNkRGf
-         4Pt1CWaplOrTg4oIs81/40C9tZZ+fpOKeT91TttE8+gnekOnSDxUiiDMdlBDT+vMYca8
-         wiKchmaN28yawgfMmQJUivjrm9SHSVnmRSCP0nHeU8ovpHe27huFrFKnSFTZj8ubMAxb
-         ++Ew==
+        d=google.com; s=20230601; t=1739184936; x=1739789736; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oZTbvRf06WHH8ABQ5ROT9cJPfdttTdmuqStRfKNnJIo=;
+        b=km4giSgs/Z7YO1DQYmJWPFO889OaOowY8MFetNgXj6Ys0OlqM1q4bzmSE0/KYk+G89
+         QL1YDGN+lPrV3cnD2h5J2v4he/0noK2yv/QGDXKVu4thnQfIcLAwQHLTWMYm+e3voeXR
+         Amsnebt3SqKTLizOqX4q7XpnMS2hfpkoD7wRZkg8Wob0PMQIOYkILwvIlVZv1fcJjPM3
+         fwxQSfFtMJGAzMYmITtzsUe5GidkpVfg0XUlUM0QbhUTLutq27H8MbScy8rXGXtgFJCI
+         WyNHcAjWHG4zgkBFOsQBK/TWDlbbBBkEko/C78ah3cPcw21F7ggtlLUC8MaAQ5DydFOS
+         QfgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739184853; x=1739789653;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LQhJyhQWjxv+Zy6zdPYkWUMUnHGtnz45HWDSo6oMzGY=;
-        b=hDKss/w2wjuIhDMAIavMBh2xjuxoJ/Y4lzgbZrAHL9lZjPSpZ5JhwzkGPC2Q0kggCW
-         yTSKhfqkO/IExd6E0TKmKxwGOb8Tu+kaGeEXuPGdJVqxrm/XeuHPKnhx9BWgCoGTzIC0
-         Z17FTdHN77S8p35x+D+/KNYxfhYIlnwlP8/dVRj/TWyZEqrkmNhkpy/vAYHJKBxiS0Ix
-         Yy7q2T7niiNzNkaJ5ICMf+0i9VrVAc/lUAoYt/yD1FAf5GCr7UOCC53eQqMmxf/AtaiJ
-         WvnPTKTbcrMBrTmAkKiaYrlP3QYrKLvpZLkzJngGJbTUWDBNZNCA5yBXj9Fbsqu5RPcz
-         H2rw==
-X-Forwarded-Encrypted: i=1; AJvYcCWlZagoFmAW6OfFY2RaJNoNcoeadr2EYG1pAsOInJTuddJ+fxYh22hV4f2LSC4Rm8Wg9MGC425KIvhpW2U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1R2nVOAg3F9ewnqwJVgrPHUmHg8FsyliH8CZ1DVreaSW2Lqgw
-	cOQ8eGyVwzYNJG606PJhbSfKCo7wPhcKHcTe+2jiY5D3mmozd0GpUgrXa8tmrX3J6kQ3uuTDtx9
-	oYvs/oT4aFw==
-X-Google-Smtp-Source: AGHT+IEvW+/sOqnBG/VAtH/2gdqFYMC0pJvpIBft12t8qfeTZRUBDUmiUgXHCCq/urY4SSKI4OrQQQksWUjU5Q==
-X-Received: from pjboi14.prod.google.com ([2002:a17:90b:3a0e:b0:2ef:d283:5089])
- (user=davidgow job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:4b0b:b0:2f4:49d8:e718 with SMTP id 98e67ed59e1d1-2fa23f6d51cmr20575597a91.9.1739184852968;
- Mon, 10 Feb 2025 02:54:12 -0800 (PST)
-Date: Mon, 10 Feb 2025 18:53:51 +0800
+        d=1e100.net; s=20230601; t=1739184936; x=1739789736;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oZTbvRf06WHH8ABQ5ROT9cJPfdttTdmuqStRfKNnJIo=;
+        b=nujNHJwer4GJyHkRr2BuAGwlVEMfCeR/qxTIKbl2jsmsNuMfWXEBNIrYNGHIiKLfTW
+         GxEBJAura0giJDLkF7AhTO6fg9JgtpaC4xSlM+Q+5Lft5xS77fGH1EHPEaCs/NNgNoGf
+         1eROE7xBxSUZgv39o7sMwt3LavGEiGFVFhIndnWb486Cuuy+4ACiV5Q4E92lkjaMdSsy
+         4SV8gpeL+1yhu4Dl7+vATjdItIcDMHVPkxub/OXN0uge0fOtLyfKOkdghivI1k95b31W
+         lhDaueL0RMmsQXoOAL5cbVYgiEqWYry+a89KZH++TrUa9GnlCrkwpMlc5AMbWaHjbVYo
+         7xgA==
+X-Forwarded-Encrypted: i=1; AJvYcCWpNDKGfuhkilIvXcr5SH5o/xQZshGlOipaXfSOnmYP3ao42PcA1spwVRobnlZahbj99eELfTgiBnO/Imc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMxSSuubLASNxBXaEJGWCpg7c6PLT4rrEksdw27dXtxWxREgf6
+	9DOETP3qd/Za6/q4YL+8g28AcXHu4/aW8q1BQRFvokjFF75D6Ph4BsuzwlVCivuknxvZDsbYkPs
+	b03ooX6pDCpFXcZGEGLzzZsH7MWS1P7un8ZMw
+X-Gm-Gg: ASbGncunvgZ7isrMkqznZff1ktuf+XNm0XVc52hnNE3Dh2NcLg5Z1/6QmCJtMDuHdXK
+	b+FMYXXWcrpqtqeWGuCIaRzR7GBFmo7bJdg6sCM8qzygpFXtdQg0VcdYszrMGFeBQmhfTI0NMXQ
+	==
+X-Google-Smtp-Source: AGHT+IGsHeoYwaR4b+cLOfm/IAdj6GsgRMKpMsh5eDAWykiaAPiYDe+1fWfL4we3hSi/6qmQMlor2HnWS/urw9Rblt0=
+X-Received: by 2002:a05:620a:25cd:b0:7b6:913f:3df3 with SMTP id
+ af79cd13be357-7c047c8cefcmr2158684585a.47.1739184936471; Mon, 10 Feb 2025
+ 02:55:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <20250210105353.2238769-2-davidgow@google.com>
-Subject: [PATCH] arch: um: Pass the correct Rust target and options with gcc
+MIME-Version: 1.0
+References: <20250208-rust-kunit-v1-0-94a026be6d72@weissschuh.net> <20250208-rust-kunit-v1-2-94a026be6d72@weissschuh.net>
+In-Reply-To: <20250208-rust-kunit-v1-2-94a026be6d72@weissschuh.net>
 From: David Gow <davidgow@google.com>
-To: "=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?=" <linux@weissschuh.net>, Miguel Ojeda <ojeda@kernel.org>, 
-	Richard Weinberger <richard@nod.at>, Johannes Berg <johannes@sipsolutions.net>, 
-	Roberto Sassu <roberto.sassu@huaweicloud.com>, 
-	Vincenzo Palazzo <vincenzopalazzodev@gmail.com>
-Cc: David Gow <davidgow@google.com>, x86@kernel.org, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+Date: Mon, 10 Feb 2025 18:55:24 +0800
+X-Gm-Features: AWEUYZkS7f05xkYouMN4Z_uHeEj0_BcTyQqJQGir943IvZJ11LBZ9jjVfVs5i-0
+Message-ID: <CABVgOSmkny3ir9G6XnMmWUKW9Z9vX+6mkd9MCjo9cd37cm+eCg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] rust: add kunitconfig
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
 	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-um@lists.infradead.org, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-	kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In order to work around some issues with disabling SSE on older versions
-of gcc (compilation would fail upon seeing a function declaration
-containing a float, even if it was never called or defined), the
-corresponding CFLAGS and RUSTFLAGS were only set when using clang.
+On Sat, 8 Feb 2025 at 21:32, Thomas Wei=C3=9Fschuh <linux@weissschuh.net> w=
+rote:
+>
+> The kunitconfig file in a directory is used by kunit.py to enable all
+> necessary kernel configurations to run the tests in that subdirectory.
+> Add such a file for rust/.
+>
+> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+> ---
 
-However, this led to two problems:
-- Newer gcc versions also wouldn't get the correct flags, despite not
-  having the bug.
-- The RUSTFLAGS for setting the rust target definition were not set,
-  despite being unrelated. This works by chance for x86_64, as the
-  built-in default target is close enough, but not for 32-bit x86.
+I could swear we already had one of these lying around: maybe it was
+in an old Pull Request somewhere...
 
-Move the target definition outside the conditional block, and update the
-condition to take into account the gcc version.
+Anyway, this is great, thanks!
 
-Fixes: a3046a618a28 ("um: Only disable SSE on clang to work around old GCC bugs")
-Signed-off-by: David Gow <davidgow@google.com>
----
-
-When combined with Thomas' patch [1], this gets Rust/UML building
-correctly with gcc. (Indeed, Thomas' patch works fine by itself for the
-64-bit case, and the 32-bit build is broken anyway due to the Rust block
-driver not supporting 64-bit atomics on 32-bit systems.)
-
-Given the other patches will probably go in via the rust-for-linux tree,
-I'd be happy for this to do so as well (given it mostly affects Rust),
-but it's not a disaster if they go in independently: there shouldn't be
-any merge conflicts, and they work independently.
-
-Note also that I don't actually have an old enough gcc nearby, so
-haven't actually tested this on gcc < 11. So please let me know if this
-breaks for you.
+Reviewed-by: David Gow <davidgow@google.com>
 
 Cheers,
 -- David
 
-[1]: https://lore.kernel.org/rust-for-linux/20250208-rust-kunit-v1-1-94a026be6d72@weissschuh.net/
 
----
- arch/x86/Makefile.um | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/Makefile.um b/arch/x86/Makefile.um
-index a46b1397ad01..c86cbd9cbba3 100644
---- a/arch/x86/Makefile.um
-+++ b/arch/x86/Makefile.um
-@@ -7,12 +7,13 @@ core-y += arch/x86/crypto/
- # GCC versions < 11. See:
- # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=99652
- #
--ifeq ($(CONFIG_CC_IS_CLANG),y)
--KBUILD_CFLAGS += -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx
--KBUILD_RUSTFLAGS += --target=$(objtree)/scripts/target.json
-+ifeq ($(call gcc-min-version, 110000)$(CONFIG_CC_IS_CLANG),y)
-+KBUILD_CFLAGS +=  -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx
- KBUILD_RUSTFLAGS += -Ctarget-feature=-sse,-sse2,-sse3,-ssse3,-sse4.1,-sse4.2,-avx,-avx2
- endif
- 
-+KBUILD_RUSTFLAGS += --target=$(objtree)/scripts/target.json
-+
- ifeq ($(CONFIG_X86_32),y)
- START := 0x8048000
- 
--- 
-2.48.1.502.g6dc24dfdaf-goog
-
+>  rust/.kunitconfig | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/rust/.kunitconfig b/rust/.kunitconfig
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..9e72a5ab03c9a122348fea7c1=
+db69e1b3fedcc00
+> --- /dev/null
+> +++ b/rust/.kunitconfig
+> @@ -0,0 +1,3 @@
+> +CONFIG_KUNIT=3Dy
+> +CONFIG_RUST=3Dy
+> +CONFIG_RUST_KERNEL_DOCTESTS=3Dy
+>
+> --
+> 2.48.1
+>
+>
