@@ -1,119 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228D82500BA;
-	Mon, 10 Feb 2025 17:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271F62566CD
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739209408; cv=none; b=LrQEb7l7KIZ8adqq+8jPpbZ2mpJ15gad8wX3bh7M+PDpYJXScYx2wC9H9G5Bl4+o4gSLx1EzucMeewdCZTis4Xf2Ftsan1KhjXe8lzRhDBh6L0h9NfxxEwG0YI6BbM6mLMscnmyn0Ce+UNkKBwJpnQMq4x1hfoa61lUdb6zfnZY=
+	t=1739209449; cv=none; b=bRUcfvsviCHrQ4RwNB0KhB/PD3ZEU5OcKVYogpwLFAedtSp6cqzM4QxVsotS+0pmyWgIRamH04EjnOyGbqQOKbUK5DqJFURy3aW/r4E7ojAggw9m82NG/70b6oBrrKg4hgcakAwR+X+bF6LV3LBFJgcCx0lvZE8kciSTOGciOTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739209408; c=relaxed/simple;
-	bh=XQfIVqMXGtFLiIZ5YdMD28vM54crvwUo7bL3shsfXMo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jkr4NYtf0psICUVVUbynlok+UmYPQ2VZBIO5Ov+9Zb5MSJtGk78f42DmY9QjWLGS7LicOVvXle0J+Wy+gbk4vUfI6TxF4LTBfjQID0eBvR3wUMizZnlnxgT+dAXHs88VwJDvJmlykwv73Awg123s6hHqzCTwz0rvnfzZjumNBcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ODw/PBDM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739209449; c=relaxed/simple;
+	bh=MZEYtgbgkRzWrOBlQYfmPgTqpgt4KupY+Sbh2oWyooE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KS4CwYWuIxxgtN8w3ZWDHYLFvnxUeyCwOvEU0kzO2i3evI8CqE5m4Xevwqkt/5AXuGit5Ozc3hdGhT1L7RldoqZnjV7Mj8JYATdCjP0l5ELcWwXkCmIK70v+G2QP3GYmXEuEfmtM5QzfuEscXuTDhrYQczX88egb2xTIKzXc+sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wu7zErk4; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ODw/PBDM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41952C4CED1;
-	Mon, 10 Feb 2025 17:43:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739209408;
-	bh=XQfIVqMXGtFLiIZ5YdMD28vM54crvwUo7bL3shsfXMo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ODw/PBDMJLnpTtLG9xR5HWdZAmESh2w6x9fRX22guCAayI+nF0MgHtXRZLkoIarac
-	 AB/1oqPCOnYiZqrXiWv9VvO3K2mZDddXEs5/oIqEhKAqA3IU8rXnmDbJDtVgP1+Maf
-	 D/qUVxNCUcgZif2bTEwbdCo3lbjxnCqMxkQjZ4Jt4McXauwmm8TVOWxh7kaBogtuSl
-	 y0uVhy2M6C8L/eCpvBJIgO9SI1QX30EFAYKAdK3gEh7/H3LD9+cLATHqxbGHXnircx
-	 v4fZjmRc2eFqsLikSovEzGTIKendYtvbp/xaphRV4AbtCG8b4brhChCZ4Q9NkwG7QF
-	 kHvZjsKrusl1A==
-Message-ID: <0bc098bf-6c02-4d62-bcb1-939e1f0b9f95@kernel.org>
-Date: Mon, 10 Feb 2025 18:43:24 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wu7zErk4"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-219f8263ae0so84350625ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:44:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739209447; x=1739814247; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3p0Nb18WEpCUScW3nbIYjqeHasF4SbUZ7UgG+ZawxuE=;
+        b=wu7zErk4JUr5rVYsbpkircTLico4+S1OZNO/FGSLAskDBSblHjc8t1DR7sYw7Bp2C2
+         aXnZRr1GdVGI2wnqGzln/e7yTDjmYY2vtBUGG1K0D9qZPtauSYFrEWrt+A7ZU8PfPvBc
+         I/rSVTKEMeihcHS7ZvU5WFOHX9DvyBv5/Voy5ukTM+rO3m13NyQXc0YF/c5VaszMnFKI
+         dG0FjUALBTW3nvWi7kXPjv7EvgiL/FLBEnnqb9iTsL8sRaNuV8mVUqaOXAZ4F2VGs7Po
+         J6J9RptfjO40kofMsdGn6jFWnUFG4gYrXz+MEu95OklsrKvPloq3nWblameBl8sc7wl8
+         1ewA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739209447; x=1739814247;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3p0Nb18WEpCUScW3nbIYjqeHasF4SbUZ7UgG+ZawxuE=;
+        b=kq4zMxylRKMAmBfKAH/InrYNs8Z979pAO78hDU7EZWK+akaa7d5W11oRKFa72VWxpP
+         P9RDihs3xkFvKyr86Ta/u8tum+xjwSjlXCCEMyV/0jBpmfJOyD6tZ42WUEB7LBFFDiUd
+         pYTrXgvtPb+mA9irddHHleU6ednNzqcfqgkEs7Wm1t6XYAORatZcmvR7W5aMEI7m4Pdq
+         thw78o0La9K9Qo+FR4ypC7tXPOd7eeaaFsFMHaspO+je07Xnpzma3YQbBmt4IxMUEQxR
+         0o0PMXVJegzpLJuo/OHemJYEXMcuty7sCdCQI9jYZvvG+tYo4oZosslcMj8iQz4bZ5/1
+         PEOg==
+X-Forwarded-Encrypted: i=1; AJvYcCVQ26twL9H1u/8bn7egtFNBm2pTIeZ+29HylOrwi8+fiGyxY+jdNF9SjXwT/IAGyVPrKkjL7vFe8wzhGbs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDE+GbnlUYeroDpnO3Pod8g1jl97+0LEWOPp/5QM8hF07A1b3o
+	HRpWiC76YqLA166o3ugJKyd9mjeJvQaKdkUjdEaNElo9T4+BeCnmcEMUkMHazQ==
+X-Gm-Gg: ASbGncvNVl259voMavqGtGVqmMjCUrWynn9e5ZBmDZkN3ox4nH9RzLDnlGeS7aU7aCM
+	tnNiBCzzMYK9CnfN/wPzAIrSiCaljoH6CDQI1/jJLgZvvPjQv0gNieEsb7JBlDqj1vf/RSuxM0V
+	HIe4XZop1Bc5ce1ARzRM1+C2Wlpz0FrmFPLjTtCXF0IWkG6YX5fukuKnNmkTE17CooO4f97dtNn
+	1Lb21IEdBUqBIOL6SAbbvxl1q9HP0JodqHa8ute23pr+So9E4PZL+buDMNDMJJ+kohJJEdfUOoJ
+	9la2VVmhAcJxztq453zZl2u0JdJZ
+X-Google-Smtp-Source: AGHT+IGz+rRFm4sLRz/LKXusArAECr2Awzp9D7TnZpTJWT8jbA5xaFCqDdKdJ/LsYsSZJfGbkx2YGA==
+X-Received: by 2002:a05:6a21:9996:b0:1e1:a693:d5fd with SMTP id adf61e73a8af0-1ee03a93b08mr28177074637.25.1739209447306;
+        Mon, 10 Feb 2025 09:44:07 -0800 (PST)
+Received: from thinkpad ([220.158.156.173])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad543ceacb9sm4274040a12.72.2025.02.10.09.44.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 09:44:06 -0800 (PST)
+Date: Mon, 10 Feb 2025 23:14:00 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Kevin Xie <kevin.xie@starfivetech.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Minda Chen <minda.chen@starfivetech.com>,
+	"open list:PCIE DRIVER FOR STARFIVE JH71x0" <linux-pci@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] PCI: starfive: Fix kmemleak in StarFive PCIe driver's
+ IRQ handling
+Message-ID: <20250210174400.b63bhmtkuqhktb57@thinkpad>
+References: <20250208140110.2389-1-linux.amoon@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] HID: corsair-void: Add Corsair Void headset family
- driver
-To: Stuart <stuart.a.hayhurst@gmail.com>
-Cc: linux-input@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- linux-kernel@vger.kernel.org
-References: <20241008233030.395126-3-stuart.a.hayhurst@gmail.com>
- <5cf187db-1eae-41a8-a33e-ef68a4f66db6@kernel.org>
- <afb96547-7ff3-4070-b960-33f4af7e3edc@kernel.org>
- <CALTg27kaxGOzq2k-dAqbXZ0ez5e-WZRU47Z2eP5297VVHF81kA@mail.gmail.com>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <CALTg27kaxGOzq2k-dAqbXZ0ez5e-WZRU47Z2eP5297VVHF81kA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250208140110.2389-1-linux.amoon@gmail.com>
 
-On 10. 02. 25, 17:15, Stuart wrote:
->> This effectively kills the system. We came here via:
->> corsair_void_raw_event (hid_driver::raw_event)
->>     -> corsair_void_process_receiver
->>       -> scoped_guard(mutex, &drvdata->battery_mutex)
+On Sat, Feb 08, 2025 at 07:31:08PM +0530, Anand Moon wrote:
+> kmemleak reported following debug log
 > 
->> And hid_driver::raw_event can be called from the interrupt context. This
->> happened at:
+> $ sudo cat /sys/kernel/debug/kmemleak
+> unreferenced object 0xffffffd6c47c2600 (size 128):
+>   comm "kworker/u16:2", pid 38, jiffies 4294942263
+>   hex dump (first 32 bytes):
+>     cc 7c 5a 8d ff ff ff ff 40 b0 47 c8 d6 ff ff ff  .|Z.....@.G.....
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace (crc 4f07ff07):
+>     __create_object+0x2a/0xfc
+>     kmemleak_alloc+0x38/0x98
+>     __kmalloc_cache_noprof+0x296/0x444
+>     request_threaded_irq+0x168/0x284
+>     devm_request_threaded_irq+0xa8/0x13c
+>     plda_init_interrupts+0x46e/0x858
+>     plda_pcie_host_init+0x356/0x468
+>     starfive_pcie_probe+0x2f6/0x398
+>     platform_probe+0x106/0x150
+>     really_probe+0x30e/0x746
+>     __driver_probe_device+0x11c/0x2c2
+>     driver_probe_device+0x5e/0x316
+>     __device_attach_driver+0x296/0x3a4
+>     bus_for_each_drv+0x1d0/0x260
+>     __device_attach+0x1fa/0x2d6
+>     device_initial_probe+0x14/0x28
+> unreferenced object 0xffffffd6c47c2900 (size 128):
+>   comm "kworker/u16:2", pid 38, jiffies 4294942281
 > 
-> Damn it, I was suspicious that it was too easy. It's been running for a year
-> without an issue on my system, I'll clearly have to read a bit more.
+> This patch addresses a kmemleak reported during StarFive PCIe driver
+> initialization. The leak was observed with kmemleak reporting
+> unreferenced objects related to IRQ handling. The backtrace pointed
+> to the `request_threaded_irq` and related functions within the
+> `plda_init_interrupts` path, indicating that some allocated memory
+> related to IRQs was not being properly freed.
 > 
-> I'm not sure what the best solution is for this.
-> 'corsair_void_process_receiver()' shouldn't be called frequently, and
-> the locks shouldn't be waiting on each other very often, so I suppose
-> swapping the mutex for a spinlock is probably the best option, instead of
-> increasing code complexity?
+> The issue was that while the driver requested IRQs, it wasn't
+> correctly handling the lifecycle of the associated resources.
 
-Not that easy, as AFAIR power unregister cannot sleep.
+What resources?
+
+> This patch introduces an event IRQ handler and the necessary
+> infrastructure to manage these IRQs, preventing the memory leak.
+> 
+
+These handles appear pointless to me. What purpose are they serving?
+
+- Mani
+
+> Fixes: 647690479660 ("PCI: microchip: Add request_event_irq() callback function")
+> Cc: Minda Chen <minda.chen@starfivetech.com>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+>  drivers/pci/controller/plda/pcie-starfive.c | 39 +++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/plda/pcie-starfive.c b/drivers/pci/controller/plda/pcie-starfive.c
+> index e73c1b7bc8ef..a57177a8be8a 100644
+> --- a/drivers/pci/controller/plda/pcie-starfive.c
+> +++ b/drivers/pci/controller/plda/pcie-starfive.c
+> @@ -381,7 +381,46 @@ static const struct plda_pcie_host_ops sf_host_ops = {
+>  	.host_deinit = starfive_pcie_host_deinit,
+>  };
+>  
+> +/* IRQ handler for PCIe events */
+> +static irqreturn_t starfive_event_handler(int irq, void *dev_id)
+> +{
+> +	struct plda_pcie_rp *port = dev_id;
+> +	struct irq_data *data;
+> +
+> +	/* Retrieve IRQ data */
+> +	data = irq_domain_get_irq_data(port->event_domain, irq);
+> +
+> +	if (data) {
+> +		dev_err_ratelimited(port->dev, "Event IRQ %ld triggered\n",
+> +				    data->hwirq);
+> +	} else {
+> +		dev_err_ratelimited(port->dev, "Invalid event IRQ %d\n", irq);
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +/* Request an IRQ for a specific event */
+> +static int starfive_request_event_irq(struct plda_pcie_rp *plda, int event_irq,
+> +				      int event)
+> +{
+> +	int ret;
+> +
+> +	/* Request the IRQ and associate it with the handler */
+> +	ret = devm_request_irq(plda->dev, event_irq, starfive_event_handler,
+> +			       IRQF_SHARED, "starfivepcie", plda);
+> +
+> +	if (ret) {
+> +		dev_err(plda->dev, "Failed to request IRQ %d: %d\n", event_irq,
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static const struct plda_event stf_pcie_event = {
+> +	.request_event_irq = starfive_request_event_irq,
+>  	.intx_event = EVENT_PM_MSI_INT_INTX,
+>  	.msi_event  = EVENT_PM_MSI_INT_MSI
+>  };
+> 
+> base-commit: bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b
+> -- 
+> 2.48.1
+> 
 
 -- 
-js
-suse labs
+மணிவண்ணன் சதாசிவம்
