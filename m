@@ -1,64 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DC6226887;
-	Mon, 10 Feb 2025 12:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB65223323;
+	Mon, 10 Feb 2025 12:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739190738; cv=none; b=tL9d3pCYuz5uzDtdxXXV0sh5Aju+TPMgxrIcDse5bwODvizXMKb8w65q9HU/ms3Voqjr0weEV/2JcEHcg6nkt4g2CPxyd8nmmU9OFPzSQrK5OdligwBXXPkSkSknIdljvxet7O9Jmq95YuNqjNGv36KHvaHXk6OvLde13WSVDuE=
+	t=1739190749; cv=none; b=FT2+L5iJmBJoOmu3JaVUOe1oWN702sZBwGIzEO1l20fqkkqiWYhFeWz3HakbloXbrflObcFPd5imovBCbg9u4XMtRumMbqnj9lfoj6V0tDFNbGcfySTizhp9HJhvu+cEtwt0ScZha8Y47V1I8NBycX3pIAKjnX1pP2A/YzSVOBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739190738; c=relaxed/simple;
-	bh=EQSHTPcN/Uh4nElazvazKTJRZoJJU/bBqTejOMZvGkI=;
+	s=arc-20240116; t=1739190749; c=relaxed/simple;
+	bh=Jts80uB/oAtAZwBZ4eDRdhcESqZ1GrFBWXUjt1xyOlM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NFPK8haSCNogHq7/e/Yg6broZy6Y1sK3FEJvAlqyvOrsxzq+OTgaNlxvzfVzQLN/9E8L1UIS73TaVuI3wNAdVWI6tN/YirS0X9e0hastNvWHzIF22eErOM6vmgMXd4k5RV6d3z75NEyWb4MBLNLeD9WmK6Z0gx5teeZ883sTBtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C33SsuLl; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=onRTUINYo4gDko8bzpVMILQbU6caDg+Ct7Az9L26N+Ab/XvRNiKoOY1SSC9+tdhcDvFeNMM4AXnQ1qjt0blkWQXJvTMsP847dKqlDSwgtUPEJb9ysp4IyA8YzcrpjmkAdhMNV8aAdOo4/WNdQYmwMkTNBru303YbVocDRQPLKJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=uldDhy9P; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Sei6QLGa; arc=none smtp.client-ip=103.168.172.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C33SsuLl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739190737; x=1770726737;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=EQSHTPcN/Uh4nElazvazKTJRZoJJU/bBqTejOMZvGkI=;
-  b=C33SsuLlgkdSBXaaKkQX7/69H5RrgsNsW/LDHAm9TF4RCTnP+WR5zVyM
-   z9Ef2uy68O4WhW7/A683MyVuuZXmR4CpVhzMRsCPMDOBZOw/tGUYQ1Vzi
-   MBUJRSy/hIPx5g1M/48lhPea+qpCI8RGrLylDpBo7OIpw8mSePSpqFdl6
-   Ok/mVY/PxKMNWGwYcD7n5ZDUn4dXcAWGltN3dO6wuiqV+/V0v8W4UeerL
-   68EaNCcKYxruL5MPLbKWdi4k0MX+jm+S0JHgU8w8/8NnsklgVRkDSMaR9
-   c8OlykZ0krZo7qf5WjUKiyvWipcUQCx1rpUotYQ8sEevh7Gxnv6+G5U+Q
-   g==;
-X-CSE-ConnectionGUID: Pd/kFotYQs60ykA8I3zvNA==
-X-CSE-MsgGUID: zpjvM2IZQtGIRjc9Vvn/xA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="43428138"
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="43428138"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 04:32:16 -0800
-X-CSE-ConnectionGUID: eyBVhNlWQM2C44UMCTkDzg==
-X-CSE-MsgGUID: FPKlJZLJRmiCct1WczRVKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="112121351"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 10 Feb 2025 04:32:14 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1thSxP-0012k7-24;
-	Mon, 10 Feb 2025 12:32:11 +0000
-Date: Mon, 10 Feb 2025 20:31:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dima Volkovsk <s0ldw3ll@gmail.com>, marvin24@gmx.de,
-	gregkh@linuxfoundation.org, ac100@lists.launchpad.net,
-	linux-tegra@vger.kernel.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Dima Volkovsk <s0ldw3ll@gmail.com>
-Subject: Re: [PATCH] Staging: nvec: Fix pm_power_off reset condition in
- tegra_nvec_remove
-Message-ID: <202502102056.z2poG8tW-lkp@intel.com>
-References: <20250209201752.66313-1-s0ldw3ll@gmail.com>
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="uldDhy9P";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Sei6QLGa"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfout.phl.internal (Postfix) with ESMTP id D8AB41380632;
+	Mon, 10 Feb 2025 07:32:25 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Mon, 10 Feb 2025 07:32:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1739190745; x=1739277145; bh=IpFTdBJc1O
+	41rKqs8Xyb0uHiQGbDsr6yvQcsoCSODrw=; b=uldDhy9PqXqZZUsIpoBNbtmnKy
+	Ms9C4m8GS6A0yfJI79g1+yF3kD3LwNo8wy4X7zDGo0J4C5tcRug6ORdKBC88cpOa
+	4Asyf5n7YI8EieJVkC/3BMVmqSJshfYNVEV6RW7v6bZKF+S9J0pa8fRa8PCM+GsA
+	kWb7/BU9xOPrVlbyMntQuPTAW8vXXotH91gEgxKdOxDAdPktsYgSV/5yprjlLkm+
+	nLN39wj0iyVKDV5HGcPeHCeQLSG2IlAGmMIFgBNJ65Nwi045M05D00PKCLCgVZDP
+	OZwt3LkpZzsa2gSnkEdhWTcqrpylNKFjga1D3Y92TKIFpiHwssWEkZpLez3w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1739190745; x=1739277145; bh=IpFTdBJc1O41rKqs8Xyb0uHiQGbDsr6yvQc
+	soCSODrw=; b=Sei6QLGaBOgMOVvamBPgbrHkAU37P9CbvIEkqLHqEV6HqddZNwL
+	9D51IfvaP3FFsnEvouTU+KJ8OzHp3KrAhhVGjY7tqDLW9tZrnvhPOTX1I57teeRu
+	RZS7RS7Ks83SaO1Lumb9DQXC2m1DlO4VPOrb06g8TN+ULeRourvPWidzg82Ygc86
+	JKfOfpH/V5dDgL3I7eUM0ZJV9vCddagYwxk/g3Wyip4ZUZo8S9Cu7WnyYYlq0CzD
+	zAp8mXBubh21sMQXx/548BTmPHKONyWu4xxnTQVYx129PguPzzpoxl6rZiuQAqzV
+	umjWcW74GxwmI8b1QruDS3fAAugZoRC3zYQ==
+X-ME-Sender: <xms:2fGpZzH1kjW1cznnMy7Fth5FQt56YXca2fhKw2Z2PiKVz57pQCq3cQ>
+    <xme:2fGpZwWI_qbccSN8eHxbjboZeuLfTN42ppFqbSyMR5NjS0JVhsU5_jUyb_FiBkIoJ
+    LaSHP_a2Rsgpw>
+X-ME-Received: <xmr:2fGpZ1LAkHriZViKvvrJAwc8RpgpLSHk8hQW_HDtJx4ddvvPLS4K_EMaP3U65wf_trvDWeu3Dvlm-28VDFSO1m74TR2JEo1ckUTtOQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefkedtjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
+    necuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtf
+    frrghtthgvrhhnpeehgedvvedvleejuefgtdduudfhkeeltdeihfevjeekjeeuhfdtueef
+    hffgheekteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehgrhgvgheskhhrohgrhhdrtghomhdpnhgspghrtghpthhtohepuddtpdhmohguvgep
+    shhmthhpohhuthdprhgtphhtthhopegrlhhgohhnvghllhesghhmrghilhdrtghomhdprh
+    gtphhtthhopeguphgvnhhklhgvrhesghhmrghilhdrtghomhdprhgtphhtthhopehlihhn
+    uhigqdhsthgrghhinhhgsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplh
+    hinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    khgvrhhnvghlqdhjrghnihhtohhrshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:2fGpZxH75ugoyUJio0AJWHubIyjVjTQNSL97eDP4CZzF94vRw63UgQ>
+    <xmx:2fGpZ5Xw2R3mkWeYuHsP8cr-wPhvTBcXc9xPLwJHStbZU14Z27KNlw>
+    <xmx:2fGpZ8PpMwSsgVtlI_no_gtk4qZs442-WQECtp0u-LkwCQoppNifVQ>
+    <xmx:2fGpZ41LgXp-FMh6LAcbgxZu70ShqguYWTaV0v_GvYYW9xahhyGOVA>
+    <xmx:2fGpZyPSIbyUvfJbrl8DhvnW9f4ez1ZxCBSgxySvc0cMgZNVFRYzCJSo>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 10 Feb 2025 07:32:25 -0500 (EST)
+Date: Mon, 10 Feb 2025 13:32:22 +0100
+From: Greg KH <greg@kroah.com>
+To: Andrew Kreimer <algonell@gmail.com>
+Cc: Dave Penkler <dpenkler@gmail.com>, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] staging: gpib: Fix typo in TTY_LOG message
+Message-ID: <2025021006-dominion-straining-bcb6@gregkh>
+References: <20250210121552.33455-1-algonell@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,62 +85,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250209201752.66313-1-s0ldw3ll@gmail.com>
+In-Reply-To: <20250210121552.33455-1-algonell@gmail.com>
 
-Hi Dima,
+On Mon, Feb 10, 2025 at 02:15:33PM +0200, Andrew Kreimer wrote:
+> There is a typo in TTY_LOG message:
+>  - sucesfully -> successfully
+> 
+> Fix it via codespell.
+> 
+> Signed-off-by: Andrew Kreimer <algonell@gmail.com>
+> ---
+>  drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c b/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
+> index 85322af62c23..1c3e5dfcc9ec 100644
+> --- a/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
+> +++ b/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
+> @@ -542,7 +542,7 @@ static int usb_gpib_attach(gpib_board_t *board, const gpib_board_config_t *confi
+>  		return -EIO;
+>  
+>  	SHOW_STATUS(board);
+> -	TTY_LOG("Module '%s' has been sucesfully configured\n", NAME);
+> +	TTY_LOG("Module '%s' has been successfully configured\n", NAME);
 
-kernel test robot noticed the following build warnings:
+When drivers are successful, they should be quiet, this line should just
+be removed.
 
-[auto build test WARNING on staging/staging-testing]
+thanks,
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Dima-Volkovsk/Staging-nvec-Fix-pm_power_off-reset-condition-in-tegra_nvec_remove/20250210-041929
-base:   staging/staging-testing
-patch link:    https://lore.kernel.org/r/20250209201752.66313-1-s0ldw3ll%40gmail.com
-patch subject: [PATCH] Staging: nvec: Fix pm_power_off reset condition in tegra_nvec_remove
-config: arm-defconfig (https://download.01.org/0day-ci/archive/20250210/202502102056.z2poG8tW-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 6807164500e9920638e2ab0cdb4bf8321d24f8eb)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250210/202502102056.z2poG8tW-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502102056.z2poG8tW-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/staging/nvec/nvec.c:908:19: warning: using the result of an assignment as a condition without parentheses [-Wparentheses]
-     908 |         if (pm_power_off = nvec_power_off)
-         |             ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
-   drivers/staging/nvec/nvec.c:908:19: note: place parentheses around the assignment to silence this warning
-     908 |         if (pm_power_off = nvec_power_off)
-         |                          ^               
-         |             (                            )
-   drivers/staging/nvec/nvec.c:908:19: note: use '==' to turn this assignment into an equality comparison
-     908 |         if (pm_power_off = nvec_power_off)
-         |                          ^
-         |                          ==
-   1 warning generated.
-
-
-vim +908 drivers/staging/nvec/nvec.c
-
-   896	
-   897	static void tegra_nvec_remove(struct platform_device *pdev)
-   898	{
-   899		struct nvec_chip *nvec = platform_get_drvdata(pdev);
-   900	
-   901		nvec_toggle_global_events(nvec, false);
-   902		mfd_remove_devices(nvec->dev);
-   903		nvec_unregister_notifier(nvec, &nvec->nvec_status_notifier);
-   904		cancel_work_sync(&nvec->rx_work);
-   905		cancel_work_sync(&nvec->tx_work);
-   906	
-   907		/* only reset pm_power_off if it's our handler */
- > 908		if (pm_power_off = nvec_power_off)
-   909			pm_power_off = NULL;
-   910	}
-   911	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+greg k-h
