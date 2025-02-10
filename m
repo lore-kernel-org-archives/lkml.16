@@ -1,163 +1,183 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75841C175C;
-	Mon, 10 Feb 2025 08:17:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F7012CD8B;
+	Mon, 10 Feb 2025 08:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739175439; cv=none; b=oVroC4D/RaN8ifIZOsCjksVB/R+obrhbBaPR9/O3qYjdGhZNgo9wjolAMeB/O3ttDKEUe9as//nxxb0FM4cA4f0+WMSN95L61PalD+l9Qpb1LOAsWgTLDugPYkOzvmYsB/wS7C8Ls9MEUTZT+APp9EXZuz9rjlQS/05hi42xSME=
+	t=1739175474; cv=none; b=a1lmprtnyXmGVXJ33EipE0/xjaMQyX7L+EZWo60zu/0LBhS4Wera6CLSxhI7b/myzcKtPIpA2BHNcHTOUB+NuyTBTFbtafqpTPJ2rfs6MufxXzCIJPVyn8YXFgvQBujkeVBZHvLaqB578p2C/5gLQC43YaOeZS7TuUkKq+OexK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739175439; c=relaxed/simple;
-	bh=HDNAe01n8/xRMwR7TmlJGHtdDncn/boWt591Flp/U1o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=YV+WaKiJcw7vtq2sIchgdEDkIRkSTY9RwMdBCjeyucIkHjISMdICmBo1lMgs9RyfUTNDCNPIuXHTuna+gyDe2eUDZv6Ba6o8avLqxeiNvcVu8Ii6+rIf1ByJO4xhMUBx6adYMGEi7+BDJuvbc9dADurQiunr1I7Owxch8R69iJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EaQFOgg8; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739175474; c=relaxed/simple;
+	bh=uqEuTJZmjX0Ja98hOQj/42kl8sGSMErfMulPFhSUoTk=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=aeQtstVMRrBPYj+EnP2GMdprfW233n5o2UPHh/zIaA1g6aSI33pWvRo0EZwdUDYeI5kVVjYJTCiyq8gWX1DYDxfdD3aiCABJAREnc6bpf0b40KsdA3weyfjJ0kJb/4Eoh6QQU/Grcffb40N4PeY0YiBFNQyuhojw8N4FUjFpvUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=ZfEhN2IR; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EaQFOgg8"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51A0r1Yd023509;
-	Mon, 10 Feb 2025 08:17:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	+BxRYzZd72S5FIXwHCWE+QdIdBOQdqHdZK19tfebQVQ=; b=EaQFOgg8RzzN7DCQ
-	lyZw5RfYLZKY3nBP1A7ZxaC9nLWLgmDNoq2bT/tj519iY5g1ub26vp9tbwlzL1nf
-	oBco4EkwyHZGWsN9uYUKBwYn0a6IV/teXeglPFmf7IGf5g9oBZ+Sh4Z65IGvZ3JS
-	iIj/BceJJl97liQF97phIOcVKrQ6g1h4xJqr+jCn6Blme7iBsjHMWoPHwCMlNaET
-	QRvS2v68zGN6E0GPNEpfZK6L+7L5rhExDeiNf9cYP49xLo0wB48Fkghz8KsFqcSA
-	w7LnfaV4E8HwlygN43IjoWcUfRVRtJZKWb177CYqSkrV2WtpBCEuK0BO5+YTC6o7
-	jrnnTg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0dykgj0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 08:17:10 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51A8H9Eu011615
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 08:17:09 GMT
-Received: from [10.217.219.148] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Feb
- 2025 00:17:05 -0800
-Message-ID: <58de97ff-2f16-40d4-a95c-d751fe26659c@quicinc.com>
-Date: Mon, 10 Feb 2025 13:46:06 +0530
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="ZfEhN2IR"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/18] usb: dwc3: Reserve Higher Bandwidth for HS Periodic
- EPs
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Thinh Nguyen
-	<Thinh.Nguyen@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jack Pham <quic_jackp@quicinc.com>, <kernel@oss.qualcomm.com>,
-        Wesley Cheng
-	<quic_wcheng@quicinc.com>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Vijayavardhan
- Vennapusa" <quic_vvreddy@quicinc.com>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250206111543.17392-1-quic_akakum@quicinc.com>
- <20250206111543.17392-2-quic_akakum@quicinc.com>
- <d0b86591-7bac-42a0-aeac-1f7f6b75b75e@oss.qualcomm.com>
-Content-Language: en-US
-From: AKASH KUMAR <quic_akakum@quicinc.com>
-In-Reply-To: <d0b86591-7bac-42a0-aeac-1f7f6b75b75e@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: VBaUlDPw62Umh3Y5jbrvQ_uGA0Rearm9
-X-Proofpoint-GUID: VBaUlDPw62Umh3Y5jbrvQ_uGA0Rearm9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_04,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- clxscore=1015 lowpriorityscore=0 impostorscore=0 mlxlogscore=999
- mlxscore=0 priorityscore=1501 spamscore=0 adultscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502100068
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1739175469;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xfCRHzFveZzAGV8Z+uWeA7HD1dufJpo8G/47iGVAsSU=;
+	b=ZfEhN2IR8SlgFMvj5IFyT3DSmRK5f1l+1Sj2KDuvqxkjLmRBRILn5pvnC58aUw83sk5hn4
+	3+5xQVFhqt59IE8hfV/sGmxsJU8v3iWWNUtUB3QsorNKEHu7wnvavVbAD1R5/w15VAneTZ
+	kogexvBfzqe1PfQwRIeR7mdD84Z+KSLVlNfpDUR2wNB3dOpM6o2QrIUM96+Uo5EZj0jMA5
+	AVS2xm9KJOUB8o6AHFOLFwgEZQm7p+W+rdYaTWxr4LorSm7tDHAtmHDvILLaL6qJp1EMYd
+	rNWZeIGsp0gq3TCmxSqUW3lGZJA119Ko2bpO3o2di17WOxaFryayR4iLi9krFA==
+Date: Mon, 10 Feb 2025 09:17:48 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Quentin Schulz <quentin.schulz@cherry.de>
+Cc: Quentin Schulz <foss+kernel@0leil.net>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Jagan Teki
+ <jagan@edgeble.ai>, Niklas Cassel <cassel@kernel.org>, Michael Riesch
+ <michael.riesch@wolfvision.net>, Jonas Karlman <jonas@kwiboo.se>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Krzysztof
+ Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v4 3/4] arm64: dts: rockchip: add overlay tests for Rock
+ 5B PCIe overlays
+In-Reply-To: <110a35c5-9450-47fb-9d5f-0ba73e290bf5@cherry.de>
+References: <20250131-pre-ict-jaguar-v4-0-c971e2852e8d@cherry.de>
+ <20250131-pre-ict-jaguar-v4-3-c971e2852e8d@cherry.de>
+ <77b5d0efa6e56bb391575aeeb4d1be80@manjaro.org>
+ <3de1cc52-5579-41b1-a333-0c4e81f96fbd@cherry.de>
+ <cb8f370474df88d1194d9ee92d3ca4e0@manjaro.org>
+ <110a35c5-9450-47fb-9d5f-0ba73e290bf5@cherry.de>
+Message-ID: <a3b98e3d3a2571ee75e59418bb3b6960@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-Hi,
+Hello Quentin,
 
-On 2/6/2025 11:19 PM, Konrad Dybcio wrote:
-> On 6.02.2025 12:15 PM, Akash Kumar wrote:
->> On targets using synopsys usb dwc3 controller, it is observed while testing
->> multiple audio devices, a glitch is observed during testing.
->> As per dwc datasheet,By default, HC reserves 80% of the bandwidth
->> for periodic EPs which can be increased with GUCTL Bit 16.
-> It is observed a glitch is observed.. please massage this paragraph
-> a bit.
-Sure.
->
->> Add quirk to set GUCTL register BIT 16 to accommodate higher
->> bandwidth for 2 isoc eps.
->>
->> If this bit is set, the bandwidth is relaxed to 85% to
->> accommodate two high speed, high bandwidth ISOC EPs.
->> USB 2.0 required 80% bandwidth allocated for ISOC traffic. If
->> two High-bandwidth ISOC devices (HD Webcams) are
->> connected, and if each requires 1024-bytes X 3 packets per
->> Micro-Frame, then the bandwidth required is around 82%. If
->> this bit is set, then it is possible to connect two Webcams of
->> 1024bytes X 3 paylod per Micro-Frame each. Alternatively, you
->> might need to lower the resolution of the webcams.
->> This bit is valid in Host and DRD configuration and is used in
->> host mode operation only.
->> Set this bit for host mode uvc uac usecases where two isoc eps
->> are used and flicker is seen.
-> Re-format your commit text to wrap at ~72 characters
-Ok.
->> Signed-off-by: Akash Kumar <quic_akakum@quicinc.com>
->> ---
->>   drivers/usb/dwc3/core.c | 11 +++++++++++
->>   drivers/usb/dwc3/core.h |  4 ++++
->>   2 files changed, 15 insertions(+)
->>
->> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
->> index dfa1b5fe48dc..7e55c234e4e5 100644
->> --- a/drivers/usb/dwc3/core.c
->> +++ b/drivers/usb/dwc3/core.c
->> @@ -1461,6 +1461,14 @@ static int dwc3_core_init(struct dwc3 *dwc)
->>   		dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
->>   	}
->>   
->> +	if (dwc->revision >= DWC3_REVISION_250A) {
->> +		if (dwc->dwc3_guctl_resbwhseps_quirk) {
->> +			reg = dwc3_readl(dwc->regs, DWC3_GUCTL);
->> +			reg |= DWC3_GUCTL_RESBWHSEPS;
->> +			dwc3_writel(dwc->regs, DWC3_GUCTL, reg);
->> +		}
->> +	}
->> +
->>   	dwc3_config_threshold(dwc);
->>   
->>   	/*
->> @@ -1818,6 +1826,9 @@ static void dwc3_get_properties(struct dwc3 *dwc)
->>   	dwc->dis_split_quirk = device_property_read_bool(dev,
->>   				"snps,dis-split-quirk");
->>   
->> +	dwc->dwc3_guctl_resbwhseps_quirk = device_property_read_bool(dev,
->> +				"snps,dwc3_guctl_resbwhseps_quirk");
-> This needs a dt-bindings entry. Also, underscores are forbidden in property
-> names, use hyphens instead.
+On 2025-02-06 12:07, Quentin Schulz wrote:
+> On 2/4/25 2:35 PM, Dragan Simic wrote:
+>> On 2025-02-04 13:20, Quentin Schulz wrote:
+>>> On 2/4/25 12:22 PM, Dragan Simic wrote:
+>>>> > On 2025-01-31 11:40, Quentin Schulz wrote:
+> 
+> Not discussing CONFIG_OF_ALL_DTBS relevancy wrt hiding overlay tests
+> behind, unrelated to this series I believe :)
+> 
+> [...]
 
-Will update in V2.
+Oh, indeed.  I'll get back to it below.
 
-Thanks
+>>>> With the above-proposed changes in place, and with 
+>>>> CONFIG_OF_ALL_DTBS
+>>>> selected, the relevant part of the "make dtbs" output looks like 
+>>>> this:
+>>>> 
+>>>>    DTC     arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtb
+>>>>    DTC     arch/arm64/boot/dts/rockchip/rk3588-rock-5b-pcie-ep.dtbo
+>>>>    DTC     
+>>>> arch/arm64/boot/dts/rockchip/rk3588-rock-5b-pcie-srns.dtbo
+>>>>    OVL     arch/arm64/boot/dts/rockchip/rk3588-rock-5b-pcie-ep.dtb
+>>>>    OVL     arch/arm64/boot/dts/rockchip/rk3588-rock-5b-pcie-srns.dtb
+>>>> 
+>>>> No more "phony targets" in the produced output. :)
+>>> 
+>>> Funnily enough, I would prefer to see OVL for overlays rather than
+>>> DTC, but I guess it's just one more occurrence of developers
+>>> disagreeing on how to name things :)
+>> 
+>> I actually agree with that, just like I prefer to see .dtbo files
+>> as additions to dtb-$(CONFIG_ARCH_XYZ).  It's all about the overlays,
+>> so they should be both specified and echoed back.
+>> 
+>> Moreover, we currently also have additional .dtb files with applied
+>> overlays left after the build and installed afterwards, which doesn't
+>> make much sense to me.  To me, those additional .dtb files should be
+>> deleted as build artefacts and not installed.
+> 
+> I **think** it could be useful for systems without overlay support.
+> Then you have a dtb which is the result of an overlay applied on top
+> of the base dtb and you can replace your previous dtb with that one,
+> and voilà.
+> 
+> What I don't like is that it's difficult to differentiate them from
+> the "normal" base DTB or even from the DTBO (simple base DTB + overlay
+> test is usually named after the overlay, and in the case of the Rock
+> 5B test: rk3588-rock-5b-pcie-srns.dtbo and
+> arch/arm64/boot/dts/rockchip/rk3588-rock-5b-pcie-srns.dtb), easy to
+> pick the wrong one. Though that is on **me** as I could pick another
+> name for the overlay test and e.g. prepend "test-ovl_" to the filename
+> for example.
 
-Akash
+On second thought, I'd agree that having the additional "extended"
+.dtb files, i.e. the versions with the DT overlays already applied,
+could be quite useful.  It's just that having them built and installed
+as well possibly makes everything a bit more convoluted, maybe even
+a bit confusing, but that's pretty much inevitable.  However, the
+benefits should outweigh those slight downsides.
 
+Regarding the naming, I don't think that prepending a self-descriptive
+prefix would actually work as expected, because of the way "magic"
+in scripts/Makefile.dtbs works.  Actually, I just tested that, and
+it didn't seem to work as expected.
+
+> [...]
+> 
+>>> I won't be too difficult to convince here, just want some "authority"
+>>> or a piece of history about CONFIG_OF_ALL_DTBS that would go your
+>>> direction, before doing the change. I believe automated build tests
+>>> without needing to enable a symbol, and that taking DTB and DTBO from
+>>> the build output and apply DTBO on top of DTB works without having to
+>>> go through some length to get the symbols, are good reasons to keep 
+>>> it
+>>> the way it is in this patch series.
+>> 
+>> I'd like the most to perform the above-proposed "divorcing" of the DT
+>> overlay tests from CONFIG_OF_ALL_DTBS, so we don't have to enable any
+>> additional options to have the overlay tests run automatically, but
+>> to keep .dtbo filenames in dtb-$(CONFIG_ARCH_XYZ).  I think that would
+>> bring the best of both worlds, so to speak.
+> 
+> So, just to recap:
+> 
+> dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-wolfvision-pf5.dtb
+> dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-wolfvision-pf5-display-vz.dtbo
+> dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-wolfvision-pf5-io-expander.dtbo
+> 
+> stays and I add:
+> 
+> dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-wolfvision-pf5-vz-2-uhd.dtb
+> rk3568-wolfvision-pf5-vz-2-uhd-dtbs := rk3568-wolfvision-pf5.dtb \
+> 	rk3568-wolfvision-pf5-display-vz.dtbo \
+> 	rk3568-wolfvision-pf5-io-expander.dtbo
+> 
+> at the bottom of the Makefile. I specifically do NOT want to make this
+> depend on CONFIG_OF_ALL_DTBS (by using dtb- like in ti/), so that the
+> base DTB will always have the symbols in, regardless of
+> CONFIG_OF_ALL_DTBS.
+> 
+> I think the redundancy is unnecessary but I guess it's worth getting
+> away from implicit rules.
+
+I fully agree with getting away from the tests depending on the
+CONFIG_OF_ALL_DTBS configuration option, which I wasn't happy with
+from the very beginning of this discussion.  It just felt and still
+feels wrong, especially because CONFIG_OF_ALL_DTBS depends on other
+configuration option(s) that pretty much don't go together with a
+non-development kernel build.
+
+The above-provided example is perfectly fine with me, and it follows
+the way "magic" in scripts/Makefile.dtbs works.  I just tested it,
+to make sure it works as expected, which it does.  As a note, I like
+that the already present .dtbo lines remain unmoved, because that
+keeps the DT overlay tests separate from the "meat" of the Makefile,
+which should make it more readable and less error-prone.
