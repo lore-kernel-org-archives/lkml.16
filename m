@@ -1,124 +1,86 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82BCF1C07C4
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBD51BBBDD;
+	Mon, 10 Feb 2025 08:42:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739176940; cv=none; b=AyeTXfwcjPaZ2wy9NPG/2yciN04D5PTp9vnvMTLubeyw1ErXOQwZ7Hjo5J71INywrdh5HdsBhyYB3pYvCWMhwMfoAD3VOFGb3uKTwiX6YY6jj2sGvWo2epLojd50IzsaCdIYr6aeh8SAynG+NlAEP/C5JL4E1FpIifvTKZDp8Fc=
+	t=1739176976; cv=none; b=bXHKBaZ0lMOm6GvEPN1ySlZ8PZk08vVCIvo3O9kE1o0LXMS8S1JwloIhnyCnO0bNGzGI9ngeD4y/w+fRdhy8vhRed8C05+7s75szAXJ/768sCmkUvbe+sjmNA6bt9o90oBhxY4/QzV90E1j7rOki2LWiNLF2mm+SjvVBjtkY++Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739176940; c=relaxed/simple;
-	bh=s3EzbJ2aw9HPaJowakCsCi0YPKQtWiBGwEN0PEj6whk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=EIU6AqhfUxvvpxhaKjcwN+C984E6bbIXEOylB5h6mBjE9wfJL46s3rTmGTQVFT4mJGi6Cwb2Lqu/40a9gAp/I+pC3meC1BIatW2fVOHyEsweMQgw7FSCt+Z925JXXwFp2oM6XS8xm6yBMZ4ej+BIbKNI98GC0nkcZRZmno4eHWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ZHKdIddK; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1739176976; c=relaxed/simple;
+	bh=mNgX1iYqxDHBgC2uGf3mhkuchKDpCf8NBQJYzpCXqps=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U5ko2L6sME2mRD29eDc4iFpRlnF6rbuXU8CIKBS4Me+XnSh5pADWQOUxZINM5WVLleayxdJqch+d2H/TDkF9gZx0tC7EyHlVzDmwt5maWKTekiR9fGuvpRjdix3K05NSG3hMb6fsbAQVqe9qQS9g3xGgbw1bjQAJec7MKWVDyxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=FUrJMMO9; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ZHKdIddK"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21f44e7eae4so61206095ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 00:42:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1739176938; x=1739781738; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=k5AVryFW7jIKC9PMx3aJa7fd2zlXZtgnjt/bCXgEFJA=;
-        b=ZHKdIddKNnM281O7FGlQ9kSKSx6mJClOw7nbRsJLNBtKzkEGkvbxDuNHWSmj3ukSsv
-         9qSfW8pPcp+FdZPZXv3XWXmFRTBS+GgHp3FPlXdfqJz+NzQi8P41A9z3XzjxffB8TGy+
-         DdPOEWuKcY3h0sqI/xgxxHnQzFViTju8Qc61i78WAd6z5DuWQN4qT9TztFuxqjVDr7oD
-         B0thH10tOw6veDq7UtbNkvZbTY+AqXaqkKckNXLRcTktuQ+iEWQe0gtYOCz7Tr+HDqun
-         9VtSzxixvzuj7Thyz3ZRAMgtvV8Uwj3mUCLTNKgMfMJ+addtYNL9oDan7aal8zuoM2SB
-         t4ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739176938; x=1739781738;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=k5AVryFW7jIKC9PMx3aJa7fd2zlXZtgnjt/bCXgEFJA=;
-        b=aTx16sJyI6EJASP3XUnoGB0jpwv9xscYfb+VmOpcwk0vSv8GXFBflHv+9cpZu41vI0
-         sFxwy80dy3i3vKfn8hlpKiDxmEtTSKya+uEEBqAKFdsZHOC2d9S1wOPCQxQZ83bY717f
-         Q4RqIWHvsKdxVK34TruZnBFQ/0XUZ5k4j8u/+6k2MMPIz3g0nOh0Lej5PRFDamY+MRDq
-         mE8eIVie+aaihm8DWnyloJNOVDKWrDueiETKjtP4/ohjrzLZPDFBmcOuM6PK2eG+91KB
-         geKOodKaeCmE1arBJR6WDXKd47c6ikHGvDMJ7IJBZb/E8ppgqq0Msz8Q9cVyd7HEx62E
-         eRUA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6rVeII7yvQQuv3ghcO7rQ2QMP2BMGwte2Kq+ulOplZsLwMGnWiYEi8SFhdkzIAXVeY2s+UQ5oMT4MoKo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAiReN91YCQEU0lPhQLwE8mRi//Yg0rjjt/8OX2oop8xaB8004
-	TtUesCfjgPY7Um70Q7NzYO3K3m/PQmTjb7JEnoXWAJvHErMd82vd7ZT4nrNwazO3ifZYiplKviM
-	X
-X-Gm-Gg: ASbGnctlh/JkPChIZUE5kmafymwLl8OfU0iHH6OTShDDeyDqvEjwdPvtIcl6Y2pEHAB
-	W95sHCiS2519tO5UQruA7jMnF0mPY9BU5XXSd1Bn7zx57Fj9NBUZ+kAVLdFCH/M15svBFuz2wlN
-	3Xz+xDiBZ+Mll4leSbbBB/p0yRzqZ68iRhNwespd3gH/ZfKGIKvHuxLUR4EpzuG3fg9dFcCxSat
-	+o8xFxvjteEiNNSZettev+q3ojJC04Gg/C7IXm70P0bXu67v2qwpd4buXZuFAWRCICrmOJBOH4v
-	YTqZLxuLo0eq6Yza09DNQ4Bf+lZxRsCnwnQGMIm83A==
-X-Google-Smtp-Source: AGHT+IFrJ9iyF+ehnd+p5RcTFw9uzH3Jjv3cVTTZFS7lEPb+BTW4LASNKEREzJVE7UzugL6gSYLHqQ==
-X-Received: by 2002:a17:903:2311:b0:215:acb3:3786 with SMTP id d9443c01a7336-21f4e6e649dmr224221095ad.19.1739176937709;
-        Mon, 10 Feb 2025 00:42:17 -0800 (PST)
-Received: from [10.84.150.121] ([203.208.167.150])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f368b6024sm73039775ad.231.2025.02.10.00.42.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 00:42:17 -0800 (PST)
-Message-ID: <4524511c-d685-4af6-9de9-4f15f7dcfe05@bytedance.com>
-Date: Mon, 10 Feb 2025 16:42:13 +0800
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="FUrJMMO9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=si/4sD8rt6Ey/ETwk2Qn/a8OV63DDmK4e+2V0x7IILY=; b=FUrJMMO9Y8bEXN5VfbBb+AJ/zK
+	xIoy9bz0hulili+1WBDrd8jTrDAiwHkp8TNfy1Q3n6xaJVQ7f9ZgpYoRw/KGVmpEd4b1nZAtHEAoz
+	HmRt7wh9rLbRIYDCd9GP47Cs/HdSmyNim1Xl+/aASWb3Sio4cUHxQfFgvEgk3B5SpCTGlQ6p9v2Ct
+	NfnBv/PsH3nSY7MQ6uyC2PKLETyCMLRxkYuvQxp6pAEhDFG7f/JaK0Y/I87oovg9ic1JrRUMwAdFM
+	07oXfS1e4wtx/NmX+zu/Nq6WqbbMk3qs8zaMnucf50zIpALIksxBqAIyPnA+IbLWgxuHpBY+vUJB9
+	OV4GYmrA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1thPNO-00000009CpM-0hkC;
+	Mon, 10 Feb 2025 08:42:46 +0000
+Date: Mon, 10 Feb 2025 08:42:46 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Christian Brauner <brauner@kernel.org>
+Cc: NeilBrown <neilb@suse.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	Steve French <sfrench@samba.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Tom Talpey <tom@talpey.com>, Paul Moore <paul@paul-moore.com>,
+	Eric Paris <eparis@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+	audit@vger.kernel.org, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 0/2] VFS: minor improvements to a couple of interfaces
+Message-ID: <20250210084246.GB1977892@ZenIV>
+References: <20250207034040.3402438-1-neilb@suse.de>
+ <20250210-enten-aufkochen-ffecc8b4d829@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: pgtable: Ensure pml spinlock gets unlock
-Content-Language: en-US
-From: Qi Zheng <zhengqi.arch@bytedance.com>
-To: I Hsin Cheng <richard120310@gmail.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250208184928.219960-1-richard120310@gmail.com>
- <b70f663f-5b72-41dd-bae4-14808a87f262@bytedance.com>
- <Z6m21Rzv6H16oG-U@vaxr-BM6660-BM6360>
- <e5d5bafc-7809-42c2-ba8d-554b9667d00c@bytedance.com>
-In-Reply-To: <e5d5bafc-7809-42c2-ba8d-554b9667d00c@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210-enten-aufkochen-ffecc8b4d829@brauner>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-
-
-On 2025/2/10 16:31, Qi Zheng wrote:
+On Mon, Feb 10, 2025 at 09:25:26AM +0100, Christian Brauner wrote:
+> On Fri, 07 Feb 2025 14:36:46 +1100, NeilBrown wrote:
+> >  I found these opportunities for simplification as part of my work to
+> >  enhance filesystem directory operations to not require an exclusive
+> >  lock on the directory.
+> >  There are quite a collection of users of these interfaces incluing NFS,
+> >  smb/server, bcachefs, devtmpfs, and audit.  Hence the long Cc line.
+> > 
+> > NeilBrown
+> > 
+> > [...]
 > 
+> I've taken your first cleanup. Thanks for splitting those out of the
+> other series.
+> 
+> ---
+> 
+> Applied to the vfs-6.15.misc branch of the vfs/vfs.git tree.
+> Patches in the vfs-6.15.misc branch should appear in linux-next soon.
 
-[...]
-
->>>>
->>>> diff --git a/mm/pt_reclaim.c b/mm/pt_reclaim.c
->>>> index 7e9455a18aae..163e38f1728d 100644
->>>> --- a/mm/pt_reclaim.c
->>>> +++ b/mm/pt_reclaim.c
->>>> @@ -43,7 +43,7 @@ void try_to_free_pte(struct mm_struct *mm, pmd_t 
->>>> *pmd, unsigned long addr,
->>>>        pml = pmd_lock(mm, pmd);
->>>>        start_pte = pte_offset_map_rw_nolock(mm, pmd, addr, &pmdval, 
->>>> &ptl);
->>>>        if (!start_pte)
-
-Maybe we can return directly here:
-
-             if (!start_pte) {
-		spin_unlock(pml);
-                 return;
-             }
-
->>>> -        goto out_ptl;
->>>> +        goto out_pte;
->>>>        if (ptl != pml)
->>>>            spin_lock_nested(ptl, SINGLE_DEPTH_NESTING);
->>>> @@ -68,4 +68,8 @@ void try_to_free_pte(struct mm_struct *mm, pmd_t 
->>>> *pmd, unsigned long addr,
->>>>            pte_unmap_unlock(start_pte, ptl);
->>>>        if (ptl != pml)
->>>>            spin_unlock(pml);
->>>> +    return;
->>>> +
->>>> +out_pte:
->>>> +    spin_unlock(pml);
->>>>    }
->>
+Might be better to put it into a separate branch, so that further
+work in that direction wouldn't be mixed with other stuff...
