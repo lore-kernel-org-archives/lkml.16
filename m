@@ -1,210 +1,93 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33141C5D7A
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB0B1C5F30;
+	Mon, 10 Feb 2025 10:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739183761; cv=none; b=OW6BaHTd9HJZTGxSD8NPQEmkQXZ7Pewof36QYbgvl6zuzXKdfwjw1PbKkjQ7g/tR+FOK8CvUYZott59f7fVmS5y/ZmJT8QHzxn2ESskehW9jFoO1xTE2ajkB3zEETuKyqFx6d2sqOhZDiWHn1yDXxYrK0qsFvtMe3hOloRxwtO4=
+	t=1739183786; cv=none; b=IcDH7oah4th3clgOO2c0AyT4OlTGi4qS1svcJF66qnkAGrcn298Yq1Kn8fkfiBOL+G2a9mvPMzpl57mcfy3Q13XIQz4wQxzgLmXmU6m4TI1Oatxj+IH0XLtF3FZ/8yrAwiYD+bDWhRq8ImslJspN0l4xXcw4GJVgzem0BEp2dV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739183761; c=relaxed/simple;
-	bh=z8keGltcRYdS4CnFon956qG2ds2eIQuQFhCD7k+/4V4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JyzUhggC27+bAlfEUugpBQlbqj2CxwvMExAew3HsVBAGv6OiSIG7CNRf0QkorVmd1hmYAIz6YU24SF+1IoubvQPArKIGC7OE0strEk5pcdMhC4VLBY3kaEuW3VPSQu1cKjGM6PVpYBHKtVNF4II5Kd7uuNCIe42Mc9ugCkhWrjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D/i7Z0ny; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739183786; c=relaxed/simple;
+	bh=cjXUsuPxGkKXxKH/DR3AMnNBl++GarbR2csEFI/F/ps=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=i+rwjtWGF3cbOW7n2t03Izsifn53BbHyhaDC/qHnp8uP8sdvaRgWFjsh1Zb88eKj1htCJzhj/pdGeEMjNYL4DlqDZwQv5J9J5h+f5qd30FYEFphgR71bnmmV83Zr/DN/IeRM6gIvKAl8zKa4j7iASHfuQ7QTA8xg4aPoCxjQR/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WJ5K7JKV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D/i7Z0ny"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6f7440444efso33392537b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 02:35:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739183758; x=1739788558; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7LztZBr9UCNRH3665/itmC4BjC9OAqgTvSMO1KGR3xk=;
-        b=D/i7Z0nyQC+Wm4LvdbJl6APMnJkNid13YSpNeEB/mvgB1xmlqMiV/kTGUuv8yKqUOg
-         8gJnCoN3wOvE98fLZqclrXxQf2Px/dzNpFS2G/MyZqphMTUdb8/Sc++uLuSO+q2iY1Lg
-         rWsoddA5CW9HEijSJFJX0cNJYKcypHEhwh2i6fbwhh0jxpFUbtV8krXiJRvpTfy3nhEo
-         jz551ni1p/r+agr0JW5HbXuSyOkm/T3twrg+bCI7J2pg5m/SyRZNVUpDA4dCONYQkPli
-         gfK/qJDmvx1DMYEY5Uc0XuV/5GemLYUGHbk5ulOkkL3EcmUeYmRMFHbJw+Dkh1gr4l5X
-         RBCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739183758; x=1739788558;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7LztZBr9UCNRH3665/itmC4BjC9OAqgTvSMO1KGR3xk=;
-        b=wLs65lB1Z4OYFg3b5MAp35v9ff+WPBD1IRtqIuueVxdp8Ho57cUNzu3gS668DBCZ5E
-         2r7GWsBRxx9MlBGDQiHilJUvf2OdPA/btdrR1pIjlkXmi6N5U/x+9ue2jIXQ/w9kuBsA
-         oLyKSYNZzjY92lnhPP88e/6kn4IjbyJh2cRdYAMvl+n+4aTtj4keGEhTr4DRn3L4f5rj
-         qvPaEbKCfebzlfyiZY6PlTHJgTGwgBwWcYs/lB+WJMc8SVwSpxpSxLWCMHploOdFlXGw
-         /FwWr7Fa2ARGwnuRD2vKnRzPV9UhXru0/5y4d/8NVI15TsijZsdCYCGUeStzwty8pMJm
-         V4ag==
-X-Forwarded-Encrypted: i=1; AJvYcCVfCL3uHLAPqv6wzOCRbcO7qlqeCme3atME47xiikNY6GcrHSH8AgxmAyFso1wDG711wWRSyx/3Nfbf1Cw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWu8qo5QyX7qEAclyDQB2BcmhYC9yFpGGFTLGXLuCtKmGr4uso
-	HQxz7n/P7vNd6pYGN4lEuJLdHRb8ftqm7/+MqEUJJ2DrEFw/J5MAjlKqKusW3zfhNlvUE1uMiwW
-	UFd58Jc6pvIMWcHaXB4kfyI4Cf61TwCxaP8Mb8E+deJT/ERd1XQc=
-X-Gm-Gg: ASbGncuKZ67r9FTlnWl6MRKCTJWuQpybqLZ95bVQS1V5QveX8p5ZqCBUTf9OTAhiMij
-	QcGHVu+cV2akkmg6jkNi/oXr6FF7EtB8G4j3ug+0BLOhqEUKeiQpc/RZz56AbHVdCE4GY+JUlFJ
-	tbJS3W/mlqL8k=
-X-Google-Smtp-Source: AGHT+IHt8hQwFd2lr2bqG242EFIHlbAYjCytUcpkE4iweROj/UMkohB1x0JR7pFoKeYm/Ay9mFUX1xMElnfFd5zGBZw=
-X-Received: by 2002:a05:690c:610a:b0:6f9:87da:b763 with SMTP id
- 00721157ae682-6f9b2818c4bmr98338027b3.12.1739183758565; Mon, 10 Feb 2025
- 02:35:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WJ5K7JKV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17A20C4CED1;
+	Mon, 10 Feb 2025 10:36:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739183786;
+	bh=cjXUsuPxGkKXxKH/DR3AMnNBl++GarbR2csEFI/F/ps=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=WJ5K7JKVvMTPCkIj1PDn3DL832op06ZkwteFH2JFwfIHSP7OexHtt9Nk0s79eAqaE
+	 u9/yr7MQs8z/MTLsQXjSg2r5O2jBoi+3QePTAcL5cZ4cbf4WCTlOhYc2ppbnNMvQbE
+	 m6FZasyx+FKk6y5SgZuU9FhLDVOk0jTNAW+rWarWKqbigiab+o/LUvWCAOaicoeM0D
+	 y35LMHFnffg+6Gg8Nqsdh9WUqJz7r/yzRAabgsx/EgHKx2txWw5JoQvE4ZZ0jOtyPg
+	 agQYt76jPs4zl5n0wxW8aul4JC+l2JbvUB20YZBURTyG7s9fLgwLj0xkMKkHgeAkmT
+	 3IEWXmJDrOEDA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Charalampos Mitrodimas" <charmitro@posteo.net>
+Cc: "Danilo Krummrich" <dakr@kernel.org>,  "Miguel Ojeda"
+ <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
+ <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno Lossin" <benno.lossin@proton.me>,
+  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Joel Becker" <jlbec@evilplan.org>,  "Christoph Hellwig" <hch@lst.de>,
+  "Peter Zijlstra" <peterz@infradead.org>,  "Ingo Molnar"
+ <mingo@redhat.com>,  "Will Deacon" <will@kernel.org>,  "Waiman Long"
+ <longman@redhat.com>,  "Fiona Behrens" <me@kloenk.dev>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] rust: configfs: introduce rust support for configfs
+In-Reply-To: <m2zfiw9lhi.fsf@posteo.net> (Charalampos Mitrodimas's message of
+	"Sat, 08 Feb 2025 21:26:17 +0000")
+References: <20250207-configfs-v2-0-f7a60b24d38e@kernel.org>
+	<20250207-configfs-v2-2-f7a60b24d38e@kernel.org>
+	<CZGVkZ7mvOAUI_2w8U2G_EoAobqvavP0Ic76I2F-1KzaCpp_SyIadNx_bF_dyjC9ednyqDz3phXuUgekW3uXDg==@protonmail.internalid>
+	<m2zfiw9lhi.fsf@posteo.net>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Mon, 10 Feb 2025 11:36:14 +0100
+Message-ID: <87mseuhysh.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250127044239.578540-1-quic_ekangupt@quicinc.com>
- <20250127044239.578540-6-quic_ekangupt@quicinc.com> <im7gi5ib7wnihu3ff4a2erqctne2pm2zf3wl4qmuejz4dfhf7e@z5au6vnm5por>
- <08b469b8-2339-4fde-9472-fcaadbb4ed87@quicinc.com> <jeixk4dmk53ubnujop3sp2lc6jffugjmzndmmqmyuft7uquibt@s2h2dgj7yj7h>
- <053dd6d6-9ca2-4723-8c21-da4093f00e03@quicinc.com>
-In-Reply-To: <053dd6d6-9ca2-4723-8c21-da4093f00e03@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Mon, 10 Feb 2025 12:35:46 +0200
-X-Gm-Features: AWEUYZmraPlEmdmws6gXHl7rBHz9XPzrdqwD1L7uBe0XsCT7vz2EaVFBgVPPQ0k
-Message-ID: <CAA8EJppDK8MZw0s-2sOM9mf3smRfqCcyy=opq0dEF0AOCnWraA@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] misc: fastrpc: Modify context id mask to support
- polling mode
-To: Ekansh Gupta <quic_ekangupt@quicinc.com>
-Cc: srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, 
-	gregkh@linuxfoundation.org, quic_bkumar@quicinc.com, 
-	linux-kernel@vger.kernel.org, quic_chennak@quicinc.com, 
-	dri-devel@lists.freedesktop.org, arnd@arndb.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-On Mon, 10 Feb 2025 at 11:05, Ekansh Gupta <quic_ekangupt@quicinc.com> wrote:
->
->
->
->
-> On 1/29/2025 4:53 PM, Dmitry Baryshkov wrote:
-> > On Wed, Jan 29, 2025 at 11:13:05AM +0530, Ekansh Gupta wrote:
-> >>
-> >>
-> >> On 1/29/2025 5:00 AM, Dmitry Baryshkov wrote:
-> >>> On Mon, Jan 27, 2025 at 10:12:39AM +0530, Ekansh Gupta wrote:
-> >>>> DSP needs last 4 bits of context id to be 0 for polling mode to be
-> >>>> supported as setting of last 8 is intended for async mode(not yet
-> >>>> supported on upstream driver) and setting these bits restrics
-> >>>> writing to poll memory from DSP. Modify context id mask to ensure
-> >>>> polling mode is supported.
-> >>> Shouldn't this commit come before the previous one?
-> >> Yes, I'll change the order in next series.
-> >>
-> >> Thanks for reviewing the changes.
-> > Please consider asking somebody for the internal review before sending
-> > patches. This should help you to catch such mistakes.
-> >
-> > Next, I keep on asking for a sensible userspace and testing suite. No,
-> > existing fastrpc doesn't pass that criteria. We have discussed that, but
-> > I see no changes in the development. The PR that you've linked in the
-> > cover letter contains a single commit, covering documentation, new
-> > IOCTL, CRC support, poll mode support, etc. What if the discussion ends
-> > up accepting the CRC support but declining the polling mode? Or vice
-> > versa, accepting poll mode but declining the CRC support? There is no
-> > easy way for us to review userspace impact, corresponding changes, etc.
->
-> We are working with our Legal team to push HexagonSDK publicly , that  will
-> have sample apps for all features supported by upstream driver and can be used
-> for testing.
->
-> I'll break down the PR to multiple meaningful commits based on the features
-> that are getting added.
->
-> >
-> > Last, but not least: I want to bring up Sima's response in one of the
-> > earlier discussions ([1]): "Yeah, if fastrpc just keeps growing the
-> > story will completely different."
-> >
-> > You are adding new IOCTL and new ivocation API. That totally sounds
-> > like "keeps growing", which returns us back to the uAPI question,
-> > drm_accel.h and the rest of the questions on the userspace, compiler,
-> > etc.
-> >
-> > [1] https://lore.kernel.org/dri-devel/Znk87-xCx8f3fIUL@phenom.ffwll.local/
->
-> Currently, we are upstreaming the features supported on DSP for publicly
-> available platforms. No features for future platforms are planned for FastRPC
-> driver.
->
-> We are also looking in having the driver under drivers/accel for any new features
-> that are planned in future platforms.
+"Charalampos Mitrodimas" <charmitro@posteo.net> writes:
 
-Granted that there is a single driver, supporting all platforms, I
-don't think that supporting new vs old platforms makes any sense.
-The message from Sima was about growing the driver / uAPI. From my
-point of view, adding a new IOCTL points out active driver development
-(from the upstream kernel point of view).
-Please talk to your only upstream users - libssc / hexagonrpcd
-developers. It should be them reviewing your uAPI changes, not just
-me.
+> Andreas Hindborg <a.hindborg@kernel.org> writes:
+>
+>> This patch adds a rust API for configfs, thus allowing rust modules to use
+>> configfs for configuration. The implementation is a shim on top of the C
+>> configfs implementation allowing safe use of the C infrastructure from
+>> rust.
+>>
+>> The patch enables the `const_mut_refs` feature on compilers before rustc
+>> 1.83. The feature was stabilized in rustc 1.83 and is not required to be
+>> explicitly enabled on later versions.
+>>
+>> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+>>
 
-And yes, from my side, the question would be the same: if you are
-adding a new uAPI, why is it not following drm_accel.h? "It has been
-done this way ages ago" isn't an answer for _new_ IOCTLs.
+[...]
 
 >
-> --ekansh
+> Tested-by: Charalampos Mitrodimas <charmitro@posteo.net>
+
+Thanks for testing!
+
 >
-> >
-> >
-> >> --ekansh
-> >>
-> >>>> Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
-> >>>> ---
-> >>>>  drivers/misc/fastrpc.c | 8 ++++----
-> >>>>  1 file changed, 4 insertions(+), 4 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-> >>>> index 257a741af115..ef56c793c564 100644
-> >>>> --- a/drivers/misc/fastrpc.c
-> >>>> +++ b/drivers/misc/fastrpc.c
-> >>>> @@ -40,7 +40,7 @@
-> >>>>  #define FASTRPC_INIT_HANDLE       1
-> >>>>  #define FASTRPC_DSP_UTILITIES_HANDLE      2
-> >>>>  #define FASTRPC_MAX_STATIC_HANDLE (20)
-> >>>> -#define FASTRPC_CTXID_MASK (0xFF0)
-> >>>> +#define FASTRPC_CTXID_MASK (0xFF0000)
-> >>>>  #define INIT_FILELEN_MAX (2 * 1024 * 1024)
-> >>>>  #define INIT_FILE_NAMELEN_MAX (128)
-> >>>>  #define FASTRPC_DEVICE_NAME       "fastrpc"
-> >>>> @@ -524,7 +524,7 @@ static void fastrpc_context_free(struct kref *ref)
-> >>>>            fastrpc_buf_free(ctx->buf);
-> >>>>
-> >>>>    spin_lock_irqsave(&cctx->lock, flags);
-> >>>> -  idr_remove(&cctx->ctx_idr, ctx->ctxid >> 4);
-> >>>> +  idr_remove(&cctx->ctx_idr, ctx->ctxid >> 16);
-> >>>>    spin_unlock_irqrestore(&cctx->lock, flags);
-> >>>>
-> >>>>    kfree(ctx->maps);
-> >>>> @@ -664,7 +664,7 @@ static struct fastrpc_invoke_ctx *fastrpc_context_alloc(
-> >>>>            spin_unlock_irqrestore(&cctx->lock, flags);
-> >>>>            goto err_idr;
-> >>>>    }
-> >>>> -  ctx->ctxid = ret << 4;
-> >>>> +  ctx->ctxid = ret << 16;
-> >>>>    spin_unlock_irqrestore(&cctx->lock, flags);
-> >>>>
-> >>>>    kref_init(&ctx->refcount);
-> >>>> @@ -2675,7 +2675,7 @@ static int fastrpc_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
-> >>>>    if (len < sizeof(*rsp))
-> >>>>            return -EINVAL;
-> >>>>
-> >>>> -  ctxid = ((rsp->ctx & FASTRPC_CTXID_MASK) >> 4);
-> >>>> +  ctxid = ((rsp->ctx & FASTRPC_CTXID_MASK) >> 16);
-> >>>>
-> >>>>    spin_lock_irqsave(&cctx->lock, flags);
-> >>>>    ctx = idr_find(&cctx->ctx_idr, ctxid);
-> >>>> --
-> >>>> 2.34.1
-> >>>>
->
+> One minor nit, "4096" is mentioned a lot in the sample, which is normal,
+> should we have it as PAGE_SIZE (from kernel::page)?
+
+Yes, I forgot. I will fix that.
 
 
--- 
-With best wishes
-Dmitry
+Best regards,
+Andreas Hindborg
+
+
