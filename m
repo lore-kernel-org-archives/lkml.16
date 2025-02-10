@@ -1,252 +1,158 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 874A51F63F9;
-	Mon, 10 Feb 2025 11:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F611F63E8;
+	Mon, 10 Feb 2025 11:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739188692; cv=none; b=PXzR+AXAqTrmwu1nYEg/nBDmnVeOtWajT/+bxkRuKDJqv24t8x2anTkoNtk6/FyR4baStEzsC6FGgJmfPmS8BRXbun5/Ni+C2DDRJsEZehd6NOSMCVIe0dCRRzjDVNRyYbDHaTz9S5/El5o8Bbm6kiicmJ0UrG/dPEHHicc7HcU=
+	t=1739188695; cv=none; b=OJsohykqp/m7TIJRmWGc4MnzNw6TqpDcsb92TA2JYDpQXBFG5jUAowrUAEp7FrmBSozDQ1T5bMVZ5ABBRcg8LS49Ru2WHEhT4dGABHPz34H0M/S2DRgEes07icvD6d/ggNnnSv/B1MAryVVd2Zzn6+wtBlE2dGFO+QDo9PSh5hI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739188692; c=relaxed/simple;
-	bh=hL9rrvSME9i1CXiLNY5ZTPrGW/xLRIM2uh3rjlwqY3Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X2nc0JEBKgM7g0znsIPNGYqNfUyGSHKxf02fdUbmWj4Cx4O8sRiHsKywIKbR+MLwfvVPgh49ZU1/i7Gj3SKycs5Rot7L1o4GT4oOi+ZDLtnGO/SlG783ny4X9gXFHXJRzRgfJlPHLX/hozz/l1221EVv+i+kh5N+ZWN7c4Xe3Qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CFB1113E;
-	Mon, 10 Feb 2025 03:58:31 -0800 (PST)
-Received: from [10.57.78.92] (unknown [10.57.78.92])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B96843F5A1;
-	Mon, 10 Feb 2025 03:58:05 -0800 (PST)
-Message-ID: <9c216f6d-c885-41e7-ad66-656a09035e9b@arm.com>
-Date: Mon, 10 Feb 2025 11:58:03 +0000
+	s=arc-20240116; t=1739188695; c=relaxed/simple;
+	bh=Avi8Jp4lXtNhe6dygVfFalnwotyIhkW4f+KRhkFCo4g=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=jp5wnhEA1OTLz4wEyEab3C+phxDJb9+DWUDFT9dCCUMAot7W5Vbi/mYsVVv9kYSkPk/fA4XAfn2G9szbvtRNXP+h8hh0uTSJc/MW9owxhdwXGVYpt70IcYQmklzeAPq4NvHI+4MPrZtTxOGkJpSjvrQpNzlAks2+6N0lW/JvBF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FhW7dZuf; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FhW7dZuf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739188693; x=1770724693;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Avi8Jp4lXtNhe6dygVfFalnwotyIhkW4f+KRhkFCo4g=;
+  b=FhW7dZufJQan6AsxqFTAwEO83bKujX+FhxBvPxXbFH5MF9Y3wTA6byIN
+   3JZ5VElnvZlfBHYGinrqH+jIZ8Z4Kv/ReUU6/+3eqpqlTjRl5kBeldPCX
+   RsMXV9zvdt4zrZ/f+Tljo68GRLMtvVv5X6e4IxCmO9qxSU/I55JvxP+Kl
+   3goIudxy9SgEeTqr9gHWKxhB56HbKvC6v7m9sopMNSpSXN3tNfTypo+gi
+   DSJM/VbbrZncMzNhLZv2FE2xzfdX8LKbLYSze08gCLdo+58uHp3kIPGcD
+   vPhNeJzMl4QnE5lB+df8Lz0eqMgYSw7uv6FzYbh4YkgvpHewB78e0LU4m
+   A==;
+X-CSE-ConnectionGUID: PdRbncyOTZ2CTukDyM4L7g==
+X-CSE-MsgGUID: r64XYF0sTyybZKJb14fAfA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="51156162"
+X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
+   d="scan'208";a="51156162"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 03:58:13 -0800
+X-CSE-ConnectionGUID: tGsI6Nf+RcK38Fr/ELC9lA==
+X-CSE-MsgGUID: eeot4O6BQRawInG5lVj1Qw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="112010875"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.72])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 03:58:09 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 10 Feb 2025 13:58:06 +0200 (EET)
+To: Xi Pardee <xi.pardee@linux.intel.com>
+cc: rajvi0912@gmail.com, irenic.rajneesh@gmail.com, 
+    david.e.box@linux.intel.com, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-pm@vger.kernel.org
+Subject: Re: [PATCH v6 5/6] platform/x86:intel/pmc: Move arch specific action
+ to init function
+In-Reply-To: <20250207225615.401235-6-xi.pardee@linux.intel.com>
+Message-ID: <69b2b41b-5fcd-a7f2-576a-b00f2d390d8e@linux.intel.com>
+References: <20250207225615.401235-1-xi.pardee@linux.intel.com> <20250207225615.401235-6-xi.pardee@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 32/43] arm64: rme: Enable PMU support with a realm
- guest
-To: Joey Gouly <joey.gouly@arm.com>
-Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev,
- Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
- Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
- <aneesh.kumar@kernel.org>
-References: <20241212155610.76522-1-steven.price@arm.com>
- <20241212155610.76522-33-steven.price@arm.com>
- <20241212165440.GA1479329@e124191.cambridge.arm.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20241212165440.GA1479329@e124191.cambridge.arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-On 12/12/2024 16:54, Joey Gouly wrote:
-> On Thu, Dec 12, 2024 at 03:55:57PM +0000, Steven Price wrote:
->> Use the PMU registers from the RmiRecExit structure to identify when an
->> overflow interrupt is due and inject it into the guest. Also hook up the
->> configuration option for enabling the PMU within the guest.
->>
->> When entering a realm guest with a PMU interrupt pending, it is
->> necessary to disable the physical interrupt. Otherwise when the RMM
->> restores the PMU state the physical interrupt will trigger causing an
->> immediate exit back to the host. The guest is expected to acknowledge
->> the interrupt causing a host exit (to update the GIC state) which gives
->> the opportunity to re-enable the physical interrupt before the next PMU
->> event.
->>
->> Number of PMU counters is configured by the VMM by writing to PMCR.N.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->> Changes since v2:
->>  * Add a macro kvm_pmu_get_irq_level() to avoid compile issues when PMU
->>    support is disabled.
->> ---
->>  arch/arm64/kvm/arm.c      | 11 +++++++++++
->>  arch/arm64/kvm/guest.c    |  7 +++++++
->>  arch/arm64/kvm/pmu-emul.c |  3 +++
->>  arch/arm64/kvm/rme.c      |  8 ++++++++
->>  arch/arm64/kvm/sys_regs.c |  2 +-
->>  include/kvm/arm_pmu.h     |  4 ++++
->>  6 files changed, 34 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
->> index 6f7f96ab781d..ae3596a25272 100644
->> --- a/arch/arm64/kvm/arm.c
->> +++ b/arch/arm64/kvm/arm.c
->> @@ -15,6 +15,7 @@
->>  #include <linux/vmalloc.h>
->>  #include <linux/fs.h>
->>  #include <linux/mman.h>
->> +#include <linux/perf/arm_pmu.h>
->>  #include <linux/sched.h>
->>  #include <linux/kvm.h>
->>  #include <linux/kvm_irqfd.h>
->> @@ -1209,6 +1210,8 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->>  	run->exit_reason = KVM_EXIT_UNKNOWN;
->>  	run->flags = 0;
->>  	while (ret > 0) {
->> +		bool pmu_stopped = false;
->> +
->>  		/*
->>  		 * Check conditions before entering the guest
->>  		 */
->> @@ -1240,6 +1243,11 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->>  
->>  		kvm_pmu_flush_hwstate(vcpu);
->>  
->> +		if (vcpu_is_rec(vcpu) && kvm_pmu_get_irq_level(vcpu)) {
->> +			pmu_stopped = true;
->> +			arm_pmu_set_phys_irq(false);
->> +		}
->> +
->>  		local_irq_disable();
->>  
->>  		kvm_vgic_flush_hwstate(vcpu);
->> @@ -1342,6 +1350,9 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->>  
->>  		preempt_enable();
->>  
->> +		if (pmu_stopped)
->> +			arm_pmu_set_phys_irq(true);
->> +
->>  		/*
->>  		 * The ARMv8 architecture doesn't give the hypervisor
->>  		 * a mechanism to prevent a guest from dropping to AArch32 EL0
->> diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
->> index 920e0fd73698..b4e3839f6076 100644
->> --- a/arch/arm64/kvm/guest.c
->> +++ b/arch/arm64/kvm/guest.c
->> @@ -804,6 +804,8 @@ int kvm_arm_get_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
->>  	return kvm_arm_sys_reg_get_reg(vcpu, reg);
->>  }
->>  
->> +#define KVM_REG_ARM_PMCR_EL0		ARM64_SYS_REG(3, 3, 9, 12, 0)
+On Fri, 7 Feb 2025, Xi Pardee wrote:
+
+> Move arch specific action from core.c to the init() function of spt.c.
 > 
-> There's already SYS_PMCR_EL0 defined, so it seems this is not needed?
-
-ARM64_SYS_REG() is slightly different from the sys_reg() macro used by
-SYS_PMCR_EL0. The ARM64_SYS_REG() macro encodes extra bits about the
-register size (KVM_REG_SIZE_U64) and that this is an arm64 system
-register (KVM_REG_ARM64 | KVM_REG_ARM64_SYSREG).
-
-There is a KVM_ARM64_SYS_REG() macro used by the selftests which would
-allow using the SYS_PMCR_EL0 to avoid repeating the encoding, but I
-can't find an equivalent outside the selftests.
-
-To be honest I'm not sure quite what the best option here is. I was
-tempted to put them in uapi/asm/kvm.h but other than the timer registers
-(which have quirks due to a accident in the past) we don't define any
-other register names as uABI - and there's no particular reason to start
-for this one.
-
-Thanks,
-Steve
-
->> +
->>  /*
->>   * The RMI ABI only enables setting some GPRs and PC. The selection of GPRs
->>   * that are available depends on the Realm state and the reason for the last
->> @@ -818,6 +820,11 @@ static bool validate_realm_set_reg(struct kvm_vcpu *vcpu,
->>  		u64 off = core_reg_offset_from_id(reg->id);
->>  
->>  		return kvm_realm_validate_core_reg(off);
->> +	} else {
->> +		switch (reg->id) {
->> +		case KVM_REG_ARM_PMCR_EL0:
->> +			return true;
->> +		}
->>  	}
->>  
->>  	return false;
->> diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
->> index 456102bc0b55..5628b573ca41 100644
->> --- a/arch/arm64/kvm/pmu-emul.c
->> +++ b/arch/arm64/kvm/pmu-emul.c
->> @@ -397,6 +397,9 @@ static bool kvm_pmu_overflow_status(struct kvm_vcpu *vcpu)
->>  {
->>  	u64 reg = __vcpu_sys_reg(vcpu, PMOVSSET_EL0);
->>  
->> +	if (vcpu_is_rec(vcpu))
->> +		return vcpu->arch.rec.run->exit.pmu_ovf_status;
->> +
->>  	reg &= __vcpu_sys_reg(vcpu, PMINTENSET_EL1);
->>  
->>  	/*
->> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
->> index 27a479feb907..e562e77c1f94 100644
->> --- a/arch/arm64/kvm/rme.c
->> +++ b/arch/arm64/kvm/rme.c
->> @@ -303,6 +303,11 @@ static int realm_create_rd(struct kvm *kvm)
->>  	params->rtt_base = kvm->arch.mmu.pgd_phys;
->>  	params->vmid = realm->vmid;
->>  
->> +	if (kvm->arch.arm_pmu) {
->> +		params->pmu_num_ctrs = kvm->arch.pmcr_n;
->> +		params->flags |= RMI_REALM_PARAM_FLAG_PMU;
->> +	}
->> +
->>  	params_phys = virt_to_phys(params);
->>  
->>  	if (rmi_realm_create(rd_phys, params_phys)) {
->> @@ -1370,6 +1375,9 @@ int kvm_create_rec(struct kvm_vcpu *vcpu)
->>  	if (!vcpu_has_feature(vcpu, KVM_ARM_VCPU_PSCI_0_2))
->>  		return -EINVAL;
->>  
->> +	if (vcpu->kvm->arch.arm_pmu && !kvm_vcpu_has_pmu(vcpu))
->> +		return -EINVAL;
->> +
->>  	BUILD_BUG_ON(sizeof(*params) > PAGE_SIZE);
->>  	BUILD_BUG_ON(sizeof(*rec->run) > PAGE_SIZE);
->>  
->> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
->> index 83c6b4a07ef5..a4713609e230 100644
->> --- a/arch/arm64/kvm/sys_regs.c
->> +++ b/arch/arm64/kvm/sys_regs.c
->> @@ -1324,7 +1324,7 @@ static int set_pmcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r,
->>  	 * implements. Ignore this error to maintain compatibility
->>  	 * with the existing KVM behavior.
->>  	 */
->> -	if (!kvm_vm_has_ran_once(kvm) &&
->> +	if (!kvm_vm_has_ran_once(kvm) && !kvm_realm_is_created(kvm) &&
->>  	    new_n <= kvm_arm_pmu_get_max_counters(kvm))
->>  		kvm->arch.pmcr_n = new_n;
->>  
->> diff --git a/include/kvm/arm_pmu.h b/include/kvm/arm_pmu.h
->> index e61dd7dd2286..30625a6fd143 100644
->> --- a/include/kvm/arm_pmu.h
->> +++ b/include/kvm/arm_pmu.h
->> @@ -77,6 +77,8 @@ void kvm_vcpu_pmu_restore_guest(struct kvm_vcpu *vcpu);
->>  void kvm_vcpu_pmu_restore_host(struct kvm_vcpu *vcpu);
->>  void kvm_vcpu_pmu_resync_el0(void);
->>  
->> +#define kvm_pmu_get_irq_level(vcpu) ((vcpu)->arch.pmu.irq_level)
->> +
->>  #define kvm_vcpu_has_pmu(vcpu)					\
->>  	(vcpu_has_feature(vcpu, KVM_ARM_VCPU_PMU_V3))
->>  
->> @@ -164,6 +166,8 @@ static inline u64 kvm_pmu_get_pmceid(struct kvm_vcpu *vcpu, bool pmceid1)
->>  	return 0;
->>  }
->>  
->> +#define kvm_pmu_get_irq_level(vcpu) (false)
->> +
->>  #define kvm_vcpu_has_pmu(vcpu)		({ false; })
->>  static inline void kvm_pmu_update_vcpu_events(struct kvm_vcpu *vcpu) {}
->>  static inline void kvm_vcpu_pmu_restore_guest(struct kvm_vcpu *vcpu) {}
+> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/pmc/core.c | 13 -------------
+>  drivers/platform/x86/intel/pmc/spt.c  | 21 +++++++++++++++++++++
+>  2 files changed, 21 insertions(+), 13 deletions(-)
 > 
-> Thanks,
-> Joey
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> index 628cb22221fbc..06821c41fbeb9 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -1416,11 +1416,6 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+>  
+>  MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_ids);
+>  
+> -static const struct pci_device_id pmc_pci_ids[] = {
+> -	{ PCI_VDEVICE(INTEL, SPT_PMC_PCI_DEVICE_ID) },
+> -	{ }
+> -};
+> -
+>  /*
+>   * This quirk can be used on those platforms where
+>   * the platform BIOS enforces 24Mhz crystal to shutdown
+> @@ -1531,14 +1526,6 @@ static int pmc_core_probe(struct platform_device *pdev)
+>  	if (!pmcdev->pkgc_res_cnt)
+>  		return -ENOMEM;
+>  
+> -	/*
+> -	 * Coffee Lake has CPU ID of Kaby Lake and Cannon Lake PCH. So here
+> -	 * Sunrisepoint PCH regmap can't be used. Use Cannon Lake PCH regmap
+> -	 * in this case.
+> -	 */
+> -	if (pmc_dev_info == &spt_pmc_dev && !pci_dev_present(pmc_pci_ids))
+> -		pmc_dev_info = &cnp_pmc_dev;
+> -
+>  	mutex_init(&pmcdev->lock);
+>  
+>  	if (pmc_dev_info->init)
+> diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
+> index 956b2ec1c7510..9289cd76b0145 100644
+> --- a/drivers/platform/x86/intel/pmc/spt.c
+> +++ b/drivers/platform/x86/intel/pmc/spt.c
+> @@ -8,6 +8,8 @@
+>   *
+>   */
+>  
+> +#include <linux/pci.h>
+> +
+>  #include "core.h"
+>  
+>  const struct pmc_bit_map spt_pll_map[] = {
+> @@ -134,6 +136,25 @@ const struct pmc_reg_map spt_reg_map = {
+>  	.pm_vric1_offset = SPT_PMC_VRIC1_OFFSET,
+>  };
+>  
+> +static const struct pci_device_id pmc_pci_ids[] = {
+> +	{ PCI_VDEVICE(INTEL, SPT_PMC_PCI_DEVICE_ID) },
+> +	{ }
+> +};
+> +
+> +static int spt_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
+> +{
+> +	/*
+> +	 * Coffee Lake has CPU ID of Kaby Lake and Cannon Lake PCH. So here
+> +	 * Sunrisepoint PCH regmap can't be used. Use Cannon Lake PCH regmap
+> +	 * in this case.
+> +	 */
+> +	if (!pci_dev_present(pmc_pci_ids))
+> +		return generic_core_init(pmcdev, &cnp_pmc_dev);
+> +
+> +	return generic_core_init(pmcdev, pmc_dev_info);
+> +}
+> +
+>  struct pmc_dev_info spt_pmc_dev = {
+>  	.map = &spt_reg_map,
+> +	.init = spt_core_init,
+>  };
+> 
+
+Hi,
+
+I've applied all but this patch into the review-ilpo-next branch.
+
+This change is good otherwise but I'd prefer the pmc_pci_ids be named 
+better such that it actually relates to why it exists :-). So please 
+respin this patch.
+
+-- 
+ i.
 
