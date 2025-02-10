@@ -1,228 +1,195 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC4254782
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CEAB54782;
+	Mon, 10 Feb 2025 09:05:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739178292; cv=none; b=P1s7gR36P5V1YJ81OHY9km8fChTo2VhrxPyoKH5cAsuj2KEf5yWBsx4x2Lbgh2hfFw1Ok21/b0+iXXrOypnEdmSseAT9bJ3sFfMxYiVHdgWawN39ZDq36Q2J4pcIGxT+p4xLYKoMqDd/58NdPLUdeGtl7lDelKPzlLcDUFSkvu0=
+	t=1739178362; cv=none; b=TP8Jk6/x//+M+G+yfuxhkmXtKedRlbnAahuRCiAk1gp+eaSXlmY/IMj3Vsn6+L6iRn7Jd1n8pOqrlXiiZGwY0U9+PlboVNReyupkJUEQNyiObuhyZ7G+MdQ+CVf2O8sZd1/RaDRV9JkjfLwvuvNoBtZ0gYWolaKHYfqWwo7TcRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739178292; c=relaxed/simple;
-	bh=PiQZGAanf+NLUKhl4DkTxd0J9MlESF0ph5J9hPz4NyA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=mRcJfwt1GCRjkC/f64RI2x7gI3vtBPuFO67AxpVA/KWfcT5ma3hMEbCWvCtLH92qsDJAC/rDW/f4/UHJTPRrNbjBozDEtzp6uSyV/T6NSa43aHQ70a21WnnWI8yJmXnbLSp/Y4L7xlK9EQqUBqvQisD2EpmfSLjelU7t+yzVneM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UAJW7iwm; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739178362; c=relaxed/simple;
+	bh=PinqgSQuIRiDyVmTEU8mxVCTFTknhzoXuBmbBYGLgXw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=NMNUmO9X0JAZXFIlq6sZWW5k+wTa5dGjlq8OFolxMgDWcuP7A9ocJj4KntEirpFgpZ+6u6mYrYwWGL7jsZV5YJkGJvHYx13CgTsBTL37t30aRsC96zlpW0mYATCzPcM63r6Ag9M/sAF9A3DkI93u/mzh3a1ybITi0jEnzSN13PY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NDBKaEm1; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UAJW7iwm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739178291; x=1770714291;
-  h=date:from:to:cc:subject:message-id;
-  bh=PiQZGAanf+NLUKhl4DkTxd0J9MlESF0ph5J9hPz4NyA=;
-  b=UAJW7iwmMH6+G2M5koZSGDKxtboPYe7J+T1nU5xcB9sCm0zNOmVR3QOo
-   0+3sChNngm48gn+VMtKDRSd6G7A7MLIIwCSrxy4LmaHrrtaw5lp56v/ZF
-   eZpr1f1Rx/UsGVLbrm4ovrGnU/I34H9xitrjD0OEfoE0JS6Vfvfa8cpIV
-   c8GaTC1Ug9ICtz1LnYF78Pd822FLvxsV3wLCj2iNqxUwzda6TRKezKHKS
-   9QbC1JAaeXSfA4sB4X2y+w1SfIZZ4l7YsFPgvVAKAmxrIunctlzSOR/Fd
-   3YBZy03P3mNWqj7bVBHk6VZUfl6h2U9z8lvyD2teEyqAWxclxiL5pjfvk
-   w==;
-X-CSE-ConnectionGUID: s6Oo0hXLTEijAbcLDBZnRA==
-X-CSE-MsgGUID: EHNr8wXHRcOiMgo/sYbPPw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="49984207"
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="49984207"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 01:04:50 -0800
-X-CSE-ConnectionGUID: URVvVTsOSzi2F5kzAPWVeQ==
-X-CSE-MsgGUID: M74elzegR7yomu+MR/X1GQ==
-X-Ironport-Invalid-End-Of-Message: True
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113015055"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 10 Feb 2025 01:04:49 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1thPig-0012UJ-2a;
-	Mon, 10 Feb 2025 09:04:46 +0000
-Date: Mon, 10 Feb 2025 17:04:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:tip/urgent] BUILD SUCCESS
- d1c429e409423360ea971b2a2c7790878608132c
-Message-ID: <202502101754.B9C05WKc-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NDBKaEm1"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 519MT7D8028239;
+	Mon, 10 Feb 2025 09:05:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	4w9NfthMBwEcRekiAvRsUrp4oCMwhq6AuwL24E80vlQ=; b=NDBKaEm1lXMQDp4b
+	7XqSHn35ANnA4KLZz5J0y6TbmP19WJW6X4wXd5E+qguR2RyKNtkdWFxnom9j/npO
+	rzrPFL4DY74UykyfEbH0AGibTeAwiUwM64gfyI0jDcxc0oyLoPY9EIapCVm0Qngm
+	sUK51OikUBQMsQWSFi+LxXzlCwUWyi7Wqq1mGQvX9Zutc0cKCAK1D9Io7nKQhZ71
+	m0bYxwrsfPZbv6uMBkpN72SqieCvu2U6CSWKDudQ/5TN0BCdzqJLuYp8RqFYNks1
+	w+w2IIgwKu7NH3gn7/xMZWHm1qGH8y07bV9ofMOCZGENOluboanVb9Z5wS1ohr/m
+	03Niag==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0dxkt0m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 09:05:54 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51A95rIF017711
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 09:05:53 GMT
+Received: from [10.204.65.49] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Feb
+ 2025 01:05:50 -0800
+Message-ID: <053dd6d6-9ca2-4723-8c21-da4093f00e03@quicinc.com>
+Date: Mon, 10 Feb 2025 14:35:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] misc: fastrpc: Modify context id mask to support
+ polling mode
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <quic_bkumar@quicinc.com>,
+        <linux-kernel@vger.kernel.org>, <quic_chennak@quicinc.com>,
+        <dri-devel@lists.freedesktop.org>, <arnd@arndb.de>
+References: <20250127044239.578540-1-quic_ekangupt@quicinc.com>
+ <20250127044239.578540-6-quic_ekangupt@quicinc.com>
+ <im7gi5ib7wnihu3ff4a2erqctne2pm2zf3wl4qmuejz4dfhf7e@z5au6vnm5por>
+ <08b469b8-2339-4fde-9472-fcaadbb4ed87@quicinc.com>
+ <jeixk4dmk53ubnujop3sp2lc6jffugjmzndmmqmyuft7uquibt@s2h2dgj7yj7h>
+Content-Language: en-US
+From: Ekansh Gupta <quic_ekangupt@quicinc.com>
+In-Reply-To: <jeixk4dmk53ubnujop3sp2lc6jffugjmzndmmqmyuft7uquibt@s2h2dgj7yj7h>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 6WC4wc8GZpK5xRxVYR34dXDyx3cdaxJk
+X-Proofpoint-ORIG-GUID: 6WC4wc8GZpK5xRxVYR34dXDyx3cdaxJk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_04,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1015 adultscore=0
+ lowpriorityscore=0 impostorscore=0 malwarescore=0 mlxscore=0 phishscore=0
+ suspectscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2502100076
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tip/urgent
-branch HEAD: d1c429e409423360ea971b2a2c7790878608132c  Merge branch into tip/master: 'sched/urgent'
 
-elapsed time: 776m
 
-configs tested: 150
-configs skipped: 4
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+On 1/29/2025 4:53 PM, Dmitry Baryshkov wrote:
+> On Wed, Jan 29, 2025 at 11:13:05AM +0530, Ekansh Gupta wrote:
+>>
+>>
+>> On 1/29/2025 5:00 AM, Dmitry Baryshkov wrote:
+>>> On Mon, Jan 27, 2025 at 10:12:39AM +0530, Ekansh Gupta wrote:
+>>>> DSP needs last 4 bits of context id to be 0 for polling mode to be
+>>>> supported as setting of last 8 is intended for async mode(not yet
+>>>> supported on upstream driver) and setting these bits restrics
+>>>> writing to poll memory from DSP. Modify context id mask to ensure
+>>>> polling mode is supported.
+>>> Shouldn't this commit come before the previous one?
+>> Yes, I'll change the order in next series.
+>>
+>> Thanks for reviewing the changes.
+> Please consider asking somebody for the internal review before sending
+> patches. This should help you to catch such mistakes.
+>
+> Next, I keep on asking for a sensible userspace and testing suite. No,
+> existing fastrpc doesn't pass that criteria. We have discussed that, but
+> I see no changes in the development. The PR that you've linked in the
+> cover letter contains a single commit, covering documentation, new
+> IOCTL, CRC support, poll mode support, etc. What if the discussion ends
+> up accepting the CRC support but declining the polling mode? Or vice
+> versa, accepting poll mode but declining the CRC support? There is no
+> easy way for us to review userspace impact, corresponding changes, etc.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                                 defconfig    gcc-13.2.0
-arc                   randconfig-001-20250210    gcc-13.2.0
-arc                   randconfig-002-20250210    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                                 defconfig    clang-21
-arm                         nhk8815_defconfig    clang-21
-arm                   randconfig-001-20250210    clang-16
-arm                   randconfig-002-20250210    gcc-14.2.0
-arm                   randconfig-003-20250210    clang-16
-arm                   randconfig-004-20250210    gcc-14.2.0
-arm                        spear6xx_defconfig    clang-19
-arm                           spitz_defconfig    gcc-14.2.0
-arm                    vt8500_v6_v7_defconfig    gcc-14.2.0
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250210    gcc-14.2.0
-arm64                 randconfig-002-20250210    clang-21
-arm64                 randconfig-003-20250210    clang-21
-arm64                 randconfig-004-20250210    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250210    gcc-14.2.0
-csky                  randconfig-002-20250210    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon                             defconfig    clang-21
-hexagon               randconfig-001-20250210    clang-21
-hexagon               randconfig-002-20250210    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250210    gcc-12
-i386        buildonly-randconfig-002-20250210    gcc-12
-i386        buildonly-randconfig-003-20250210    clang-19
-i386        buildonly-randconfig-004-20250210    gcc-12
-i386        buildonly-randconfig-005-20250210    gcc-12
-i386        buildonly-randconfig-006-20250210    gcc-12
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250210    gcc-14.2.0
-loongarch             randconfig-002-20250210    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                          amiga_defconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250210    gcc-14.2.0
-nios2                 randconfig-002-20250210    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-openrisc                  or1klitex_defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250210    gcc-14.2.0
-parisc                randconfig-002-20250210    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc                      katmai_defconfig    clang-18
-powerpc                      mgcoge_defconfig    clang-21
-powerpc               randconfig-001-20250210    clang-21
-powerpc               randconfig-002-20250210    clang-21
-powerpc               randconfig-003-20250210    gcc-14.2.0
-powerpc64             randconfig-001-20250210    gcc-14.2.0
-powerpc64             randconfig-002-20250210    gcc-14.2.0
-powerpc64             randconfig-003-20250210    gcc-14.2.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-21
-riscv                               defconfig    clang-19
-riscv                 randconfig-001-20250210    clang-16
-riscv                 randconfig-001-20250210    clang-21
-riscv                 randconfig-002-20250210    clang-16
-riscv                 randconfig-002-20250210    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-15
-s390                  randconfig-001-20250210    clang-16
-s390                  randconfig-001-20250210    gcc-14.2.0
-s390                  randconfig-002-20250210    clang-16
-s390                  randconfig-002-20250210    clang-19
-sh                               alldefconfig    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                        edosk7705_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250210    clang-16
-sh                    randconfig-001-20250210    gcc-14.2.0
-sh                    randconfig-002-20250210    clang-16
-sh                    randconfig-002-20250210    gcc-14.2.0
-sh                           sh2007_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250210    clang-16
-sparc                 randconfig-001-20250210    gcc-14.2.0
-sparc                 randconfig-002-20250210    clang-16
-sparc                 randconfig-002-20250210    gcc-14.2.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250210    clang-16
-sparc64               randconfig-001-20250210    gcc-14.2.0
-sparc64               randconfig-002-20250210    clang-16
-sparc64               randconfig-002-20250210    gcc-14.2.0
-um                               alldefconfig    clang-19
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250210    clang-16
-um                    randconfig-001-20250210    clang-18
-um                    randconfig-002-20250210    clang-16
-um                           x86_64_defconfig    clang-15
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250210    clang-19
-x86_64      buildonly-randconfig-002-20250210    gcc-12
-x86_64      buildonly-randconfig-003-20250210    clang-19
-x86_64      buildonly-randconfig-004-20250210    clang-19
-x86_64      buildonly-randconfig-005-20250210    clang-19
-x86_64      buildonly-randconfig-006-20250210    clang-19
-x86_64                              defconfig    gcc-11
-x86_64                                  kexec    clang-19
-x86_64                               rhel-9.4    clang-19
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250210    clang-16
-xtensa                randconfig-001-20250210    gcc-14.2.0
-xtensa                randconfig-002-20250210    clang-16
-xtensa                randconfig-002-20250210    gcc-14.2.0
+We are working with our Legal team to push HexagonSDK publicly , that  will
+have sample apps for all features supported by upstream driver and can be used
+for testing.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I'll break down the PR to multiple meaningful commits based on the features
+that are getting added.
+
+>
+> Last, but not least: I want to bring up Sima's response in one of the
+> earlier discussions ([1]): "Yeah, if fastrpc just keeps growing the
+> story will completely different."
+>
+> You are adding new IOCTL and new ivocation API. That totally sounds
+> like "keeps growing", which returns us back to the uAPI question,
+> drm_accel.h and the rest of the questions on the userspace, compiler,
+> etc.
+>
+> [1] https://lore.kernel.org/dri-devel/Znk87-xCx8f3fIUL@phenom.ffwll.local/
+
+Currently, we are upstreaming the features supported on DSP for publicly
+available platforms. No features for future platforms are planned for FastRPC
+driver.
+
+We are also looking in having the driver under drivers/accel for any new features
+that are planned in future platforms.
+
+--ekansh
+
+>
+>
+>> --ekansh
+>>
+>>>> Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
+>>>> ---
+>>>>  drivers/misc/fastrpc.c | 8 ++++----
+>>>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+>>>> index 257a741af115..ef56c793c564 100644
+>>>> --- a/drivers/misc/fastrpc.c
+>>>> +++ b/drivers/misc/fastrpc.c
+>>>> @@ -40,7 +40,7 @@
+>>>>  #define FASTRPC_INIT_HANDLE	1
+>>>>  #define FASTRPC_DSP_UTILITIES_HANDLE	2
+>>>>  #define FASTRPC_MAX_STATIC_HANDLE (20)
+>>>> -#define FASTRPC_CTXID_MASK (0xFF0)
+>>>> +#define FASTRPC_CTXID_MASK (0xFF0000)
+>>>>  #define INIT_FILELEN_MAX (2 * 1024 * 1024)
+>>>>  #define INIT_FILE_NAMELEN_MAX (128)
+>>>>  #define FASTRPC_DEVICE_NAME	"fastrpc"
+>>>> @@ -524,7 +524,7 @@ static void fastrpc_context_free(struct kref *ref)
+>>>>  		fastrpc_buf_free(ctx->buf);
+>>>>  
+>>>>  	spin_lock_irqsave(&cctx->lock, flags);
+>>>> -	idr_remove(&cctx->ctx_idr, ctx->ctxid >> 4);
+>>>> +	idr_remove(&cctx->ctx_idr, ctx->ctxid >> 16);
+>>>>  	spin_unlock_irqrestore(&cctx->lock, flags);
+>>>>  
+>>>>  	kfree(ctx->maps);
+>>>> @@ -664,7 +664,7 @@ static struct fastrpc_invoke_ctx *fastrpc_context_alloc(
+>>>>  		spin_unlock_irqrestore(&cctx->lock, flags);
+>>>>  		goto err_idr;
+>>>>  	}
+>>>> -	ctx->ctxid = ret << 4;
+>>>> +	ctx->ctxid = ret << 16;
+>>>>  	spin_unlock_irqrestore(&cctx->lock, flags);
+>>>>  
+>>>>  	kref_init(&ctx->refcount);
+>>>> @@ -2675,7 +2675,7 @@ static int fastrpc_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
+>>>>  	if (len < sizeof(*rsp))
+>>>>  		return -EINVAL;
+>>>>  
+>>>> -	ctxid = ((rsp->ctx & FASTRPC_CTXID_MASK) >> 4);
+>>>> +	ctxid = ((rsp->ctx & FASTRPC_CTXID_MASK) >> 16);
+>>>>  
+>>>>  	spin_lock_irqsave(&cctx->lock, flags);
+>>>>  	ctx = idr_find(&cctx->ctx_idr, ctxid);
+>>>> -- 
+>>>> 2.34.1
+>>>>
+
