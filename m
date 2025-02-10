@@ -1,178 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44863260A42;
-	Mon, 10 Feb 2025 20:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FEC260A45
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739219255; cv=none; b=NSlp5irQI4Xo/bRKyjHKo/R8gtPpk//1SwnR4yoRWSs3T81qibcmDaNtpchU/zLDaoSp1utVdn34PMpBty38gG2HriVI0K2eCmo7jueDnvnBoOoJwZr0Z1q32QQMECJgdC8IMcWU6K5z7mK3jeRtGB3CJZll7L317K2BxPxWJPQ=
+	t=1739219257; cv=none; b=RZIKzGKtLqN10lNDRqM3oQbyzMr9oa1cCWOxVmmy+n3WLtkkrgyidO2UrFrcq2bm1sPlhHB7PCi1anKEn24NIb9r6KyisnSVx2Yr/12Sv/DP05FbuHGFz+sLBsZWZsP4xbIHg2Uz9nWKq+q7hmY5DjHDTvdeDFQAf1/MM8Vzv2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739219255; c=relaxed/simple;
-	bh=cL+PKhmX30jHbo2cscQxptMC1LXNOM5ta/EiQGb3AxA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eoCkurhwiiUWiERu4IvQntM5QJD1mhEEDJ5te0iJ9k76LiP7Wuvw5vLYmsXpAyLxbRtAzvQT3WNZzeriLCTIB6XQbql/zIKvEnFS4I1HHn5RL8omoEcXJoS8r1BUE8DMxftlIeHjd7HuBgTO/ldZOx8xpSk68pyAARlTYE9NCTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jhVMwDcM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739219257; c=relaxed/simple;
+	bh=eLCcCnwX3oMrnR0hoKevVmuVrExvCA/E4+w0/d6DmO4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=E7OuZXd7n8aYNxONCOJRp/sPdBt9n3CWLcYw6FjgeI0NP5L8uZovS5DPIPINtYJZ4qYtzRIoKB5mp6Plg5KEfTHHpaeFsX5zfcbhtPTtaXoETmhmGCmOfbCy8zMCs3Brt+dnMCnezKITr8xXtcf9cdntRJrWgt7Cci6qOFdeeaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=JXjXcct/; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jhVMwDcM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76950C2BCF6;
-	Mon, 10 Feb 2025 20:27:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739219254;
-	bh=cL+PKhmX30jHbo2cscQxptMC1LXNOM5ta/EiQGb3AxA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jhVMwDcM9/SfG7eKGrJ0NOuLx75OH78xOzvUpR+PFUGHM8v+dPoeQuEDegreBWCEC
-	 ytY3qgn2rLt5QA4dVE1Xiu9e32yq7huQ4DFtL7olXxN6buNmlGeo1bfH5XsSR3+Pww
-	 MGbEkDiwKDUIxyT6VwJz5/wjAmC8r6dpHDx1afCb7BDarebp36qgepsjiO+D9xnfR0
-	 LJsk1JF2OmG52TgcGkTeN7HcTM2vardQlhBSpFVDy9YMgGsSk/DJYW2pbE+bGsjAWO
-	 4ymoWJ3ctbLei7RMhAsVu/lFtCSzoDkXgDhSdNbRINaHNVt0MtEy2Y8dtf3YsCCVu1
-	 c5NTpup6CIKBQ==
-Date: Mon, 10 Feb 2025 21:27:28 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
- linux-kernel@vger.kernel.org, "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- James Clark <james.clark@linaro.org>, Johannes Berg
- <johannes@sipsolutions.net>, Mike Leach <mike.leach@linaro.org>, Suzuki K
- Poulose <suzuki.poulose@arm.com>, Tony Luck <tony.luck@intel.com>,
- bpf@vger.kernel.org, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org,
- linux-f2fs-devel@lists.sourceforge.net, linux-hardening@vger.kernel.org,
- linux-wireless@vger.kernel.org
-Subject: Re: [PATCH 00/27] Improve ABI documentation generation
-Message-ID: <20250210212728.64667005@foz.lan>
-In-Reply-To: <87h651zm7d.fsf@trenco.lwn.net>
-References: <cover.1739182025.git.mchehab+huawei@kernel.org>
-	<87h651zm7d.fsf@trenco.lwn.net>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="JXjXcct/"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21f48ab13d5so77669055ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 12:27:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739219254; x=1739824054; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YHkNmM6XuphgUqeYDdwRc1f9MaOV9mSfy6OUDBv2dEo=;
+        b=JXjXcct/M7+3C5OAO5IyO4KuW7LNd3Ml72k2vFuFTDkSaq1gUBcHZrrdZPtwIpmydo
+         JNCWkTwVsozE9g2eehhltPQZy2U2UTHogtmBnGtqsJFFntz+9Z8voRnGFPJdaywq4dkG
+         lxTgJiJaUvEt7VByaYbVUzmh7xzl7QJ572JHWvjdVPa7vTfO5mEWU+ocALmUhjDI5LQJ
+         Kp6DDFGXOTG+Wi62/EgArBxSwtnmOB4X6yF0tNAlRg7Eu8hz0a6Gla2DxRVvmLyqqGh5
+         PB6uB3hDoiiegX9nuYhRa8X+1a4OVWPDgFqjoN0aKXWY2ILsokF96TJO4mnXN32RXrbn
+         VzOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739219254; x=1739824054;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YHkNmM6XuphgUqeYDdwRc1f9MaOV9mSfy6OUDBv2dEo=;
+        b=f32LvS4IvzCVOPUYrQ9BfuUibl8mMk3YYSiSQVrFlMKT2DpOyndfxIZVTJoLLdRltz
+         7pwJHcNMWeEV7+K4FegBZ03O6Bs4gVaIb0QVjQc0B/xxkfYxRa+7gkTgTrXTIqb3RPh1
+         Ekqv4Jf+QWezKV38LjJafcheN2IsIYjtYuqDwtXFTTXb//84lq98Ncfk/OKjMW9T6I+B
+         LTMCJziVLH2gR/QmBqMSB/VfQHxjVdVX+5tZC2bS8fUXVgJJSlVK2M9viDoY8dHFPETl
+         ylbGEjfck0RzrydI3QmUp8ffsLPBBv3bkK4OIbMhxI22ks/j7iWGohnyyRGe0Xf608m4
+         VOfg==
+X-Gm-Message-State: AOJu0YyvYhF/i+0UFVm46I28eg+NjYYGFVnXL2kQqS1oUVeDt49R0E1e
+	SsnIMULBb8bX6KGRvrbrn7C9RKy96CQLwO3y4EJgidheFs13uk/mH5DOm5DeUeI=
+X-Gm-Gg: ASbGncvbZkxSHWB1zEPjc60rxH38QLdAEEkKWR+pcSHcYUf7orh2UB62w8VRPs9/h3J
+	8Glp1DYGE0SZWO5LBdZvdYEBZg7HX+EdZDxBUDhffVBoY5LNpXFchIuxcbjkI6wKoIjiFEedSvE
+	n4uyGYW7uX6AqFJxKUPp/HXDs71Nu8M0kk7SUBiGdYQ+W8f7iXI09IVKWAv8FBsVTfyq/2XPb5w
+	hPxqm5ZyB+a2sn3ilwdHig2nWMxH1PqHDkAerDjHdc+MiKPiht9lRXv5+ONMKpDx/lgsS8t/ysS
+	7O1NihAOBgS5fj8HqJcgP422eA==
+X-Google-Smtp-Source: AGHT+IFdaxFBkgdagf7y3zqU2s2u/Xx2zJIy3i8Z2j6IzHAvWKa52jNah2tWLGP7hmgNkKb4ANZukA==
+X-Received: by 2002:a17:903:230e:b0:21f:7671:a45f with SMTP id d9443c01a7336-21f7671a6c6mr168719375ad.28.1739219254463;
+        Mon, 10 Feb 2025 12:27:34 -0800 (PST)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3687c187sm83711555ad.168.2025.02.10.12.27.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 12:27:34 -0800 (PST)
+From: Deepak Gupta <debug@rivosinc.com>
+Date: Mon, 10 Feb 2025 12:26:54 -0800
+Subject: [PATCH v10 21/27] riscv: enable kernel access to shadow stack
+ memory via FWFT sbi call
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250210-v5_user_cfi_series-v10-21-163dcfa31c60@rivosinc.com>
+References: <20250210-v5_user_cfi_series-v10-0-163dcfa31c60@rivosinc.com>
+In-Reply-To: <20250210-v5_user_cfi_series-v10-0-163dcfa31c60@rivosinc.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Vlastimil Babka <vbabka@suse.cz>, 
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+ Christian Brauner <brauner@kernel.org>, 
+ Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>, 
+ Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, 
+ Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-mm@kvack.org, linux-riscv@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-arch@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ alistair.francis@wdc.com, richard.henderson@linaro.org, jim.shu@sifive.com, 
+ andybnac@gmail.com, kito.cheng@sifive.com, charlie@rivosinc.com, 
+ atishp@rivosinc.com, evan@rivosinc.com, cleger@rivosinc.com, 
+ alexghiti@rivosinc.com, samitolvanen@google.com, broonie@kernel.org, 
+ rick.p.edgecombe@intel.com, Deepak Gupta <debug@rivosinc.com>
+X-Mailer: b4 0.14.0
 
-Em Mon, 10 Feb 2025 11:30:46 -0700
-Jonathan Corbet <corbet@lwn.net> escreveu:
+Kernel will have to perform shadow stack operations on user shadow stack.
+Like during signal delivery and sigreturn, shadow stack token must be
+created and validated respectively. Thus shadow stack access for kernel
+must be enabled.
 
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
->=20
-> > Hi Jon/Greg,
-> >
-> > This series replace get_abi.pl with a Python version.
-> >
-> > I originally started it due to some issues I noticed when searching for
-> > ABI symbols. While I could just go ahead and fix the already existing
-> > script, I noticed that the script maintainance didn't have much care ov=
-er
-> > all those years, probably because it is easier to find Python programme=
-rs
-> > those days.
-> >
-> > Also, the code is complex and was not using modules or classes and
-> > were using lots of global variables.
-> >
-> > So, I decided to rewrite it in Python. I started with a manual conversi=
-on
-> > for each function. Yet, to avoid future maintainership issues, I opted =
-to
-> > divide the main code on three classes, each on a sepaparate file.
-> >
-> > Just like the original RFC, I opted to keep the Sphinx kernel-abi module
-> > on three different phases:
-> >
-> > - call get_abi.py as an exec file;
-> > - import AbiParser on a minimal integration scenario;
-> > - cleanup the code to avoid needing to parse line numbers from the text.
-> >
-> > This way, if something goes wrong, it would be easier to just revert any
-> > offending patches, It also provides a better rationale about what each
-> > logical change is doing.
-> >
-> > The initial patches on this series do some preparation work and
-> > cleans some ABI symbol bugs that lack ":" delimiter.
-> >
-> > I opted to place on this series the Sphinx and Python version updates.
-> >
-> > I still have ~10 patches here with additional cleanups, from the origin=
-al
-> > series I sent as RFC but let's get the main changes merged first. =20
->=20
-> OK, I have applied this set - it seems to work for me, though it does
-> lead to some changes in the organization of
-> Documentation/admin-guide/abi.html in the output.
+In future when kernel shadow stacks are enabled for linux kernel, it must
+be enabled as early as possible for better coverage and prevent imbalance
+between regular stack and shadow stack. After `relocate_enable_mmu` has
+been done, this is as early as possible it can enabled.
 
-Yes. I moved the files part to separate files, as IMHO this would
-make easier for people to navigate.
-=20
-> It would be nice if, eventually, we could put the README link up at the
-> top rather than under "ABI file",
+Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+---
+ arch/riscv/kernel/asm-offsets.c |  4 ++++
+ arch/riscv/kernel/head.S        | 12 ++++++++++++
+ 2 files changed, 16 insertions(+)
 
-Moving its position is not hard: all we need to do is to change abi.rst
-file. See the enclosed patch.
+diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
+index 0c188aaf3925..21f99d5757b6 100644
+--- a/arch/riscv/kernel/asm-offsets.c
++++ b/arch/riscv/kernel/asm-offsets.c
+@@ -515,4 +515,8 @@ void asm_offsets(void)
+ 	DEFINE(FREGS_A6,	    offsetof(struct __arch_ftrace_regs, a6));
+ 	DEFINE(FREGS_A7,	    offsetof(struct __arch_ftrace_regs, a7));
+ #endif
++	DEFINE(SBI_EXT_FWFT, SBI_EXT_FWFT);
++	DEFINE(SBI_EXT_FWFT_SET, SBI_EXT_FWFT_SET);
++	DEFINE(SBI_FWFT_SHADOW_STACK, SBI_FWFT_SHADOW_STACK);
++	DEFINE(SBI_FWFT_SET_FLAG_LOCK, SBI_FWFT_SET_FLAG_LOCK);
+ }
+diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+index 356d5397b2a2..6244408ca917 100644
+--- a/arch/riscv/kernel/head.S
++++ b/arch/riscv/kernel/head.S
+@@ -164,6 +164,12 @@ secondary_start_sbi:
+ 	call relocate_enable_mmu
+ #endif
+ 	call .Lsetup_trap_vector
++	li a7, SBI_EXT_FWFT
++	li a6, SBI_EXT_FWFT_SET
++	li a0, SBI_FWFT_SHADOW_STACK
++	li a1, 1 /* enable supervisor to access shadow stack access */
++	li a2, SBI_FWFT_SET_FLAG_LOCK
++	ecall
+ 	scs_load_current
+ 	call smp_callin
+ #endif /* CONFIG_SMP */
+@@ -320,6 +326,12 @@ SYM_CODE_START(_start_kernel)
+ 	la tp, init_task
+ 	la sp, init_thread_union + THREAD_SIZE
+ 	addi sp, sp, -PT_SIZE_ON_STACK
++	li a7, SBI_EXT_FWFT
++	li a6, SBI_EXT_FWFT_SET
++	li a0, SBI_FWFT_SHADOW_STACK
++	li a1, 1 /* enable supervisor to access shadow stack access */
++	li a2, SBI_FWFT_SET_FLAG_LOCK
++	ecall
+ 	scs_load_current
+ 
+ #ifdef CONFIG_KASAN
 
-> or even just include its contents
-> there directly.
-
-
->=20
-> Anyway, let's see how this goes :)
->=20
-> Thanks,
->=20
-> jon
-
-Thanks,
-Mauro
-
-=46rom e1b864d1d333d94430420d1d6fc15ea7d8a99b4b Mon Sep 17 00:00:00 2001
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Date: Mon, 10 Feb 2025 21:24:06 +0100
-Subject: [PATCH] docs: ABI: move README contents to the top
-
-The ABI documentation looks a little bit better if it starts
-with the contents of the README is placed at the beginning.
-
-Suggested-by: Jonathan Corbet <corbet@lwn.net>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-diff --git a/Documentation/admin-guide/abi-readme-file.rst b/Documentation/=
-admin-guide/abi-readme-file.rst
-deleted file mode 100644
-index 6172e4ccbda2..000000000000
---- a/Documentation/admin-guide/abi-readme-file.rst
-+++ /dev/null
-@@ -1,6 +0,0 @@
--.. SPDX-License-Identifier: GPL-2.0
--
--ABI README
--=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
--
--.. kernel-abi:: README
-diff --git a/Documentation/admin-guide/abi.rst b/Documentation/admin-guide/=
-abi.rst
-index 15a2dcb1388c..2067336353ae 100644
---- a/Documentation/admin-guide/abi.rst
-+++ b/Documentation/admin-guide/abi.rst
-@@ -4,6 +4,11 @@
- Linux ABI description
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=20
-+ABI README
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+.. kernel-abi:: README
-+
- ABI symbols
- -----------
-=20
-@@ -21,7 +26,6 @@ ABI files
- .. toctree::
-    :maxdepth: 2
-=20
--   abi-readme-file
-    abi-stable-files
-    abi-testing-files
-    abi-obsolete-files
+-- 
+2.34.1
 
