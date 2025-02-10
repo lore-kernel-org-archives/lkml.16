@@ -1,99 +1,96 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC4F24BCED;
-	Mon, 10 Feb 2025 16:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C235244E8A;
+	Mon, 10 Feb 2025 16:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739203314; cv=none; b=iS45xCL4QGu3zUjV3qGE33i5+axdwdT0pQTik1ngnSOcMrPT4Sn5mIHzVmuRpW+GPwCkLwrwY11kVHjSgamH/1AcGZr069Btc2TBJFeLgXFmCSiGoXsxkA5rReEqjxL+kPoTzc6XI0HK+doYCrt4RDAqXl6JkebSroNWj5SJ524=
+	t=1739203316; cv=none; b=Ik58fsKYQM8/B2LXC4MDnP0wPpqOej9Is1053SimzREkCU2r0JXimc5KwymI2hNTFPKewwxP1yr4e4PGUSVUUsqvI4zgvdS8rkZj1MwO1N7b4gtBqblra5mf5k3IfF5Jr4OTmjOUNAyuhUQxgeptloZ9LDtTldjl9WEemQcBBuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739203314; c=relaxed/simple;
-	bh=d04mA6lPd0CGIRyghuiCWsFhyE+RnY8D1tZKu88Lkr4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qU1qjJo/ggcwyfPCJtOBfpm1K7Q478GD932ujU2ZMEDgNKdQ01vKlV97kIpUbO2b4zUv3aJ2xWXDMEkoBjKotT7yNBQHz5SMvX9U9cDh7volomG4IChP09RjgiVrqkOPVzTGOsK0n3U5k7XhZZRPWx5+OSExj6/ndhc6I1diIyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EB9ddyo1; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739203316; c=relaxed/simple;
+	bh=KgsQFKr9kZXuSxFXBCI+ddBpGxj4Ol0vJGkM0lyg/QA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dlZPkp+YE39NCGQR3Q31wjRNtnJeFgzzLpu0tZmjMKomV7m+vKUEgYyiMl0VC8fcVIfjguO9NkXLbKJ17mo1DjGyfIQ/TtJ5uQ3KEQhuIe6w0sdG3T5qihlNu7FhG7lzPzJEB2ilhLXnRXQLoReT83J+2oWZvdby/zNxPXu8Zpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OZR77zNc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EB9ddyo1"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21f53ad05a0so51076465ad.3;
-        Mon, 10 Feb 2025 08:01:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739203312; x=1739808112; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mAb94V99Y9qFdn7g0fbo+3BKlPjASY28rXSeC7/ya+k=;
-        b=EB9ddyo17JdFboNzvAE7c9ROcNuxmDJeV0syb/qeNRFWPxfmdio4rpm4KFr8DLbfHA
-         A79mWobo9A6/UX3RY95P1i01vgbnD6fBAoOprkUlRnfxuPelbeSrBXSBcTpO2cz9alhI
-         y7GBfpOuqC4XZec4rragGdIJWEwWex3S+rqq+vHUBp31W9DUNlNbEWWi3bTYHtbXJjH/
-         iVYyMRxqD9GQWiIjQptA9/K+w47UfeiYAbr3H1Kl8xZnLIdkW7tplYnU/rQNJAhVp+qS
-         d9faHKNA8DKq3QzXaYxjBqjDwkgvSLFOThQAKot/3GQtDk63hoGmT5EptLR8iwHReUPC
-         Nohg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739203312; x=1739808112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mAb94V99Y9qFdn7g0fbo+3BKlPjASY28rXSeC7/ya+k=;
-        b=N2GgPwCBTM/o+v0WGvxVvztKgaAxQIAG2rdH32FkHI7R6CHH1fMTnwXZgZSLedBuek
-         UfmJpX4odfxSmgK53f2Z1tfQichDMgWsVGz63tNl6uwcoztv7NIESxNwp+WfWuTjeUXZ
-         xYTHdHOG0aBofFDUuw+VXGz2PGyIUWfWGpYSexGV0gYukvgvNKCO+c8TgNOylKgy6vrE
-         3GQuOPtZbb4AgmVv9zX3inqoLjEHIRhAUMK2FBELShpSp4fhoPTScZDkCO8FYbzNA16M
-         SRdw5dCbpSA8kfw2J/uz4e1tWGNUFkmsZwaztOOLfb1BrJ75yGBUIpNXxGVnzNxdq/rE
-         dotg==
-X-Forwarded-Encrypted: i=1; AJvYcCV/+aKx81Xn93IP3ThngEAaghnryi/3olIq633IYuveocKGrHAk+rqj8tyMqSKDNC1ELMJp20kJpFC1HY4=@vger.kernel.org, AJvYcCWcg9/dLkajJC7zTFC95tKx5RdwRcYkrL1kMvHaTEbm5BIpWXSWVCd5OSR9PMGS5BBwJwx4tRnGae2ghuX6EQtd@vger.kernel.org, AJvYcCXqlf+V4vJe/mDFz9vazzT57KG2CslyF1GVG5N+Q62qm0cJgQVNAtJPE3hRoYMD/dz7L42DOxb6J5BN52WgLiW8flf0@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9x/qHRngKociOoNgugBErDzMHRXGzhRBRw88zAu5F++iMXYMR
-	T3I+2eYzHbK68ME0HD3IMlDEWOOZ6w7CzCywUD4OYy5dnNhhir63W5ahVOspSbw=
-X-Gm-Gg: ASbGncsB1kAXXgwrvTgSAAueFN0CWv+Y0wGyUdwPxZcljF34IclujLFMs3fNiZLphjK
-	syAaEQ6r8WAtAOu63IdDSixw75lWVNhssnQeA0aCfrsUZ79z1FWxrW5EN7S7R1VlZTeojybMX8/
-	e3p2v7QjRj0oQJFMRaqEoDyCd42h1za7mgMtLxKx09MaEmZZJ9kjqzuwH7kr8QS+fPQ/9CWGCc/
-	9nV+EdoC6+Umy4Y2C8wyL9xPh72W2P+nxCYNeR7uLFwl7VmFKZ9aytQPUj/lR/bazL1XGIvmCoY
-	dCKYaKZnQ4y9mF+/oDuVQpQ=
-X-Google-Smtp-Source: AGHT+IHNkp+rEp9mHSOGY+8yQobNqm11WwyMA64Pwjfj9ER+mP9o2/g6xc0Ppw8iqqadRsvrdcMKnQ==
-X-Received: by 2002:a05:6a00:f8f:b0:730:7d3f:8c70 with SMTP id d2e1a72fcca58-73217f951e2mr204190b3a.21.1739203311941;
-        Mon, 10 Feb 2025 08:01:51 -0800 (PST)
-Received: from linuxmint.. ([14.139.69.34])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-730962210f3sm1464566b3a.179.2025.02.10.08.01.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 08:01:51 -0800 (PST)
-From: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
-To: rostedt@goodmis.org
-Cc: Bharadwaj Raju <bharadwaj.raju777@gmail.com>,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	shuah@kernel.org,
-	skhan@linuxfoundation.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: [PATCH] selftests/ftrace: add 'poll' binary to gitignore
-Date: Mon, 10 Feb 2025 21:31:34 +0530
-Message-ID: <20250210160138.4745-1-bharadwaj.raju777@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OZR77zNc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 220E7C4CEE5;
+	Mon, 10 Feb 2025 16:01:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739203315;
+	bh=KgsQFKr9kZXuSxFXBCI+ddBpGxj4Ol0vJGkM0lyg/QA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OZR77zNcmbEatn6Nlvm/AtrwdTa9H2zBG4fcD021/7mzvZqFiI9N54xKvCZXB/h3A
+	 ZhQfUlRsf2L47MDuw75fl6dh43LQTM1/Qnesrse+kZUK10zdX6ny6NrJyJRFDRwIsU
+	 MLAQ+vLyZPxztzLnnTAIo0XiFklB2SGKEZDfPxhdb69xEXMHXP7yiVVwckCzaqglT8
+	 PQ29juUMysxLBwo6Ob98bSQB+sBfjHvlDpePGTIyIToGDChfgVkeaPD3dmeys9E2L5
+	 PJJnoHP9/wfUHc2CImMyjRq/aMJMp0S9UoWWBoWMxA5RumEAeHOBNl2LwX7Rq9qog+
+	 OYqi0QDq1mH7w==
+Date: Mon, 10 Feb 2025 17:01:50 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v3 3/5] misc: pci_endpoint_test: Fix irq_type to convey
+ the correct type
+Message-ID: <Z6oi7lH7hhA3uN46@ryzen>
+References: <20250210075812.3900646-1-hayashi.kunihiko@socionext.com>
+ <20250210075812.3900646-4-hayashi.kunihiko@socionext.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210075812.3900646-4-hayashi.kunihiko@socionext.com>
 
-When building this test, a binary file 'poll' is
-generated and should be gitignore'd.
+On Mon, Feb 10, 2025 at 04:58:10PM +0900, Kunihiko Hayashi wrote:
+> There are two variables that indicate the interrupt type to be used
+> in the next test execution, "irq_type" as global and test->irq_type.
+> 
+> The global is referenced from pci_endpoint_test_get_irq() to preserve
+> the current type for ioctl(PCITEST_GET_IRQTYPE).
+> 
+> The type set in this function isn't reflected in the global "irq_type",
+> so ioctl(PCITEST_GET_IRQTYPE) returns the previous type.
+> As a result, the wrong type will be displayed in "pcitest" as follows:
+> 
+>     # pcitest -i 0
+>     SET IRQ TYPE TO LEGACY:         OKAY
+>     # pcitest -I
+>     GET IRQ TYPE:           MSI
+> 
+> Fix this issue by propagating the current type to the global "irq_type".
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: b2ba9225e031 ("misc: pci_endpoint_test: Avoid using module parameter to determine irqtype")
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  drivers/misc/pci_endpoint_test.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> index f13fa32ef91a..6a0972e7674f 100644
+> --- a/drivers/misc/pci_endpoint_test.c
+> +++ b/drivers/misc/pci_endpoint_test.c
+> @@ -829,6 +829,7 @@ static int pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
+>  		return ret;
+>  	}
+>  
+> +	irq_type = test->irq_type;
 
-Signed-off-by: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
----
- tools/testing/selftests/ftrace/.gitignore | 1 +
- 1 file changed, 1 insertion(+)
+It feels a bit silly to add this line, when you remove this exact line in
+the next patch. Perhaps just drop this patch?
 
-diff --git a/tools/testing/selftests/ftrace/.gitignore b/tools/testing/selftests/ftrace/.gitignore
-index 2659417cb2c7..4d7fcb828850 100644
---- a/tools/testing/selftests/ftrace/.gitignore
-+++ b/tools/testing/selftests/ftrace/.gitignore
-@@ -1,2 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0-only
- logs
-+poll
--- 
-2.43.0
 
+Kind regards,
+Niklas
