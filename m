@@ -1,172 +1,142 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E593F18A959
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AFD9256C99
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739208990; cv=none; b=cAhHfunporz9jZKVJgLCWvwp7PLQgTAE2LcipCA0XJ5rqf0W3c+OTiXeTZGusSmhPxVmDddLZ+7kcNIHGSHdmAZWwYGfvUF9Ead5a6+e/yDc8IdCQGT/gNx6GCEu5/ec14oiR9uSnP1ra10mxAeJSbANsw4xMeeml5J0mEKEyQQ=
+	t=1739209047; cv=none; b=Wo9ge8LpAxVjznA+9AuzgL0hQbZqjhk8LaBpmGVZc6XQGwSV+4CQhF1MmvrkL16ZiMCasai4jeTyDDCG5yTV+4Kg+1nm5w+MuZ9+mkVcBCbq//jOS4quOQzdBcPymGrZbF6N62acnn3dx30ICgGmmAR9lG9jYklvSkWpZfWDH28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739208990; c=relaxed/simple;
-	bh=u+xBAfgGtWSjK+lShNplBj7ifal6E7BNbQMyEHGnBJo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=JApgMLuY+mxbWyWjAXCmOEXab/1egH+7Tdou8dC1oJ2UFJWwAyJC5K5/l4STz6/a5zSuI4SdZhaUoQMR+Q+E/Rif3UqqpQmHqff+iJo3Zr98HL+Hw0Jmfrwz0VvRD4cXk6yQJDFGobRQ3qPEuwFpMuRNT8ADhablYVVtVsSqLQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TNVef/C9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TNVef/C9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739208988;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jmeQoovG0+h8NkGt8mJ7mUN4l2oR44byLjbsSTWDllc=;
-	b=TNVef/C9tVl7GrjDDWrrk4hKqiVtvBdY+TNx20ou+2MVywJjBiuRS+LAdusTTRCqabnRrS
-	2SiqpNifaNfl25SlyrgBFL3GpF+iEYwRuIyGr0R8M3DIJp2CSXAawX3L6JXmi/qYw5Lo2e
-	q6z9McKvrk7zmUsoFCctS6WLdDv4p8Y=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-640-Yl2hZUNQNK69lIhG2Gf1jQ-1; Mon, 10 Feb 2025 12:36:26 -0500
-X-MC-Unique: Yl2hZUNQNK69lIhG2Gf1jQ-1
-X-Mimecast-MFC-AGG-ID: Yl2hZUNQNK69lIhG2Gf1jQ
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-38dca55788eso1753091f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:36:26 -0800 (PST)
+	s=arc-20240116; t=1739209047; c=relaxed/simple;
+	bh=EZToKP83bY++M1VJibKB1vrHZqLfrQaDGx2+eX1tpZc=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=a5U98Wqth+ZwCgQMscsEVZWuTTD4ZSvEaDaXNfJ7bY+bM8SChjd/e1g3pNfTfJzkK1gOr5sZo68ZuD943CH1PeI/r6T9uporpzoBnXLy4TgcaDNLVHIv9OLbRLH0encYWnWPE3Ii+dmSXgw3wXQXoEP8eIcT4MPYhyTbME2krT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d14950ac9fso64158765ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:37:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739208985; x=1739813785;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jmeQoovG0+h8NkGt8mJ7mUN4l2oR44byLjbsSTWDllc=;
-        b=LNg18o3Yira+GEelq5ZsTvbncyVJN8y3bECauMVF2t98tchI8rweNQ9wf4Q3pdbeWa
-         CPUices6bqtAFEf5mM8z5TAMX2R6+6TmEp8gy4ZHfSHTubFB+ePThaCOAiE1DiQ8nkcA
-         tk0IPOr/9r5IQici7/FNP9BM5FZASkUN77j/sbQ6se/UlbCq1JuZYXZ+x5AAGL5ZE11l
-         1E5w3UGwD50T0YrJ86hVQqZ7cMugSNdjGb1MtS4JKoUIm7pyDrm5CutcRXbfVHnoyE9f
-         Cai06/Xy+4TF9Alq9fhUamLdbEBl+IezODEPw3m9mIXVTtB/12tC7GrIqbIxX58GTz1d
-         AmwQ==
-X-Gm-Message-State: AOJu0YyBGLehjbrWgwh1X8Rj2H9SKNvc0F2mxDXVeiy+Pp5wk4eYPOD5
-	dV6wd0AIvkDlkaDE9rHSLAo6o7Eu8pbIwpKgWcalYpn57db0SgfaExBwl3t9k8dQiTckIgjr2kH
-	PqxEsQzkLDAdIC8uA3ldY6EufmIvbRRjCKlgJpdPjrQ65hHTZq/ygE+aRsQAXYw==
-X-Gm-Gg: ASbGncuIwXBXMircClBW14efw0Z1/t5atDwbiRULXPg/2vCKNNJrhBuh4DKjKnTzikU
-	nKv9o80IEw+U4hwuol1GC3l55yEf30gjW+xLOdQzFbQSYf+otuwj+OkXdxGngKlUWLD/4jxFKEB
-	6S6PceWGjgTXOAn/77WyD5AAlqfE2P3Zulji/Qhtqo4kHkbHIAYAJCWO44JmpfXNHr5KrDT9x8c
-	oLS7dfROIbDaIOLXiHYim8EKsH7/vyJOpuqiADlh8Z6C8K/ENUHeVRbONNmbJRcgtSkyvpyuCk0
-	mvpI8mpkyjXNw3RTcjV75TYLhd0ayl1A2AiEYKZbN1o1EZ14hlBYLp9ylILcdimW4A==
-X-Received: by 2002:a5d:598f:0:b0:38d:e250:d953 with SMTP id ffacd0b85a97d-38de250dbabmr3058628f8f.35.1739208985381;
-        Mon, 10 Feb 2025 09:36:25 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFxfTkrMg3Ut4KvVNhGVu91A0XAdGHvAD9T0QbpHzfP2OmSPgOw5f7LxHQ3fWHxL8NqTxJ5mQ==
-X-Received: by 2002:a5d:598f:0:b0:38d:e250:d953 with SMTP id ffacd0b85a97d-38de250dbabmr3058583f8f.35.1739208984820;
-        Mon, 10 Feb 2025 09:36:24 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbf2ed900sm12687106f8f.53.2025.02.10.09.36.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 09:36:24 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
- <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
- <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
- <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Paul E. McKenney"
- <paulmck@kernel.org>, Jason Baron <jbaron@akamai.com>, Steven Rostedt
- <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
- Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
- Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
- <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
- Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
- <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
- Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 22/30] context_tracking: Exit CT_STATE_IDLE upon
- irq/nmi entry
-In-Reply-To: <Z6ZTBXUiEOLVcSKp@pavilion.home>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-23-vschneid@redhat.com>
- <Z5A6NPqVGoZ32YsN@pavilion.home>
- <xhsmh5xm0pkuo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <xhsmhbjvdk7kq.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <Z6ZTBXUiEOLVcSKp@pavilion.home>
-Date: Mon, 10 Feb 2025 18:36:20 +0100
-Message-ID: <xhsmh8qqdk8h7.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+        d=1e100.net; s=20230601; t=1739209045; x=1739813845;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xrFPlL95YK8qLTiydeaVc1oNNjyzOtj3yWZSUg2CbXQ=;
+        b=PMj1iCIL2e5DUFaspZxXIg/16rRugbzzKfeKOhTilV1aw/p9O3o2JJfNbiZY7OkeHH
+         W5q/4yXZWpm0nTJ1hITaCy9g6sw3isQlVRE0guOqB9Eg9/i617AdHGsYNeyy+UUt7Rr7
+         nxjQScsr844Nn9R5xCXs8QHqm+5Gu/SpTaQLGbBAeB2MYHzSJPZPZmF7ZiiMtBz7aYOn
+         EFR45qkIsXXPwMspl6lxjhDiuoYRZhFPFIXBQGRDuY133EKvPUvMPghGm9gn2DGW1FMy
+         1IYsNF2nhLsNnUmtOyCaP4aRXL3OoZrs61S7NITJa/BgREX3vmKWUMvbVnrhtdK2j3nO
+         CLdA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/xr2PZbRb79JExDLO9DAhutSSbvaaVgBvBYCQLioPQ6tu6eyQLfm2xNj2lEdfWWVhb0czn2vCuTf6VsU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4Ga6/SPtFZUFIA5/PkMpgoX9QTTGDalV/UNnoeURQwDoluS2q
+	9jvM3OG5uQT0JpLCDe+wxxdZXUMwGRiAKvZlWOAbI17VFJjFJKYGl1gCeHwHzaDcTpqxDwZKxfl
+	W9nhU9ZEtwGRoj3czxBL5W6vl3l8uFlShAg42rs+hCxumtRlFCmQprSE=
+X-Google-Smtp-Source: AGHT+IHgVJnIvh3tKPHNfBf22Xct4NEZ2Kc5lS8+vDl4WNTnxXmjbrpdMY3AWNV+GTK4gdtsQvOksW4r7SZU/XO3pcmchh9dRZ2b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a05:6e02:1d91:b0:3cf:b365:dcf8 with SMTP id
+ e9e14a558f8ab-3d13df546a1mr145443075ab.21.1739209045206; Mon, 10 Feb 2025
+ 09:37:25 -0800 (PST)
+Date: Mon, 10 Feb 2025 09:37:25 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67aa3955.050a0220.110943.0031.GAE@google.com>
+Subject: [syzbot] [fs?] WARNING: refcount bug in io_submit_one
+From: syzbot <syzbot+fbb8bdfedfaab15a3895@syzkaller.appspotmail.com>
+To: bcrl@kvack.org, brauner@kernel.org, jack@suse.cz, linux-aio@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
-On 07/02/25 19:37, Frederic Weisbecker wrote:
-> Le Fri, Feb 07, 2025 at 06:06:45PM +0100, Valentin Schneider a =C3=A9crit=
- :
->>
->> Soooo I've been thinking...
->>
->> Isn't
->>
->>   (context_tracking.state & CT_RCU_WATCHING)
->>
->> pretty much a proxy for knowing whether a CPU is executing in kernelspac=
-e,
->> including NMIs?
->
-> You got it!
->
+Hello,
 
-Yay!
+syzbot found the following issue on:
 
->>
->> NMI interrupts userspace/VM/idle -> ct_nmi_enter()   -> it becomes true
->> IRQ interrupts idle              -> ct_irq_enter()   -> it becomes true
->> IRQ interrupts userspace         -> __ct_user_exit() -> it becomes true
->> IRQ interrupts VM                -> __ct_user_exit() -> it becomes true
->>
->> IOW, if I gate setting deferred work by checking for this instead of
->> explicitely CT_STATE_KERNEL, "it should work" and prevent the
->> aforementioned issue? Or should I be out drinking instead? :-)
->
-> Exactly it should work! Now that doesn't mean you can't go out
-> for a drink :-)
->
+HEAD commit:    69b54314c975 Merge tag 'kbuild-fixes-v6.14' of git://git.k..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1508bb18580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a7ddf49cf33ba213
+dashboard link: https://syzkaller.appspot.com/bug?extid=fbb8bdfedfaab15a3895
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=168cd1b0580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=134698e4580000
 
-Well, drinks were had very shortly after sending this email :D
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-69b54314.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/2d0a58d1d655/vmlinux-69b54314.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/b99949b40299/bzImage-69b54314.xz
 
-> Thanks.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+fbb8bdfedfaab15a3895@syzkaller.appspotmail.com
 
+netfs: Couldn't get user pages (rc=-14)
+------------[ cut here ]------------
+refcount_t: underflow; use-after-free.
+WARNING: CPU: 3 PID: 6084 at lib/refcount.c:28 refcount_warn_saturate+0x14a/0x210 lib/refcount.c:28
+Modules linked in:
+CPU: 3 UID: 0 PID: 6084 Comm: syz-executor338 Not tainted 6.14.0-rc1-syzkaller-00276-g69b54314c975 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:refcount_warn_saturate+0x14a/0x210 lib/refcount.c:28
+Code: ff 89 de e8 78 71 f5 fc 84 db 0f 85 66 ff ff ff e8 cb 76 f5 fc c6 05 e5 68 86 0b 01 90 48 c7 c7 00 fb d2 8b e8 97 b2 b5 fc 90 <0f> 0b 90 90 e9 43 ff ff ff e8 a8 76 f5 fc 0f b6 1d c0 68 86 0b 31
+RSP: 0018:ffffc9000435fc68 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff817a1159
+RDX: ffff888030b44880 RSI: ffffffff817a1166 RDI: 0000000000000001
+RBP: ffff888031bf8488 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000000
+R13: ffff88802cd8f700 R14: ffff888031bf83c0 R15: ffff888031bf8478
+FS:  00005555830ae380(0000) GS:ffff88806a900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f51c9f3f000 CR3: 0000000028d22000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __refcount_sub_and_test include/linux/refcount.h:275 [inline]
+ __refcount_dec_and_test include/linux/refcount.h:307 [inline]
+ refcount_dec_and_test include/linux/refcount.h:325 [inline]
+ iocb_put fs/aio.c:1208 [inline]
+ io_submit_one+0x103f/0x1da0 fs/aio.c:2055
+ __do_sys_io_submit fs/aio.c:2111 [inline]
+ __se_sys_io_submit fs/aio.c:2081 [inline]
+ __x64_sys_io_submit+0x1b2/0x340 fs/aio.c:2081
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f51c9f80ee9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffdfc54a368 EFLAGS: 00000246 ORIG_RAX: 00000000000000d1
+RAX: ffffffffffffffda RBX: 00004000000004c0 RCX: 00007f51c9f80ee9
+RDX: 00004000000002c0 RSI: 0000000000000001 RDI: 00007f51c9f3f000
+RBP: 00000000000f4240 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffdfc54a380
+R13: 00007ffdfc54a3a0 R14: 000000000000bf9c R15: 00007ffdfc54a37c
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
