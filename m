@@ -1,224 +1,271 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2063.outbound.protection.outlook.com [40.107.20.63])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDEA41BDA89
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:58:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739221121; cv=none; b=le289wWFDeQ1Nr1xHm8NmNm2+qoqe/si/l+doq2pT1u2be3z5cHGMBkwzT4reR2rLO28dMcL0rv8QZVr3SG/ir+bD2MXsW/7zhjq+RbZAUFCwzfSoL9JU3MTHUNoxdKS+Ue7zFONnjWQw4SmKGiVYx3Ok13yCb98SHGe2IvbHO4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739221121; c=relaxed/simple;
-	bh=11XGu+b0HW/rRG+UoKPdLv3p1YZWVhTMtobxaORYQf4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g45xQ/xJaJFpemwoqPEMN//Oh4YZQyzXgTLcfTsiTdfnfjQ5Kz9HEhnOljXOnXwlQ16gefQq6ANrZrcn703J3gBuiZJYGw6X7SS7LhwErKqfYyI6eFcZ9IIn1XSk5y9uUpZqWhEWxqRbUOF7GA0Xu5POEebCShXUOHx3EUXchzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=AzQ/E1zV; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E03C1BDA89;
+	Mon, 10 Feb 2025 20:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739221193; cv=fail; b=KsR14nvE2ewFIYkfb/kTh4zpsbKx+VTme9tJXtslVeCTq8aK99lpBU9xD+prYhn/QsaxFnMkSC9PKstv+0yT20mbdJsTDfgKWVSsHGSKMBeA/31/wr6sTiu0Vzt+aoSxhi07A/aReoJD4nEuQHyFZDNgyupYhtqlQoly/0ck+0E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739221193; c=relaxed/simple;
+	bh=CONQa124VmskpdCa2A4REE9scW3t5oyP7zDtr6jO7O8=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=bz2WDgMo37iopqrY9gtFz6s5WaYk8mUKmw1JD+V59foh8vCkCSTlK1t3qPePFtcrm7sgTlJYfrYeMrDyModx/wU1CzR2ccGdskzrMgYHDkm5/cWL6GofXeKF5Sdwbdn7Mc7VkUJBvxJ25YpoKt1YfAm35BuRRIlvust2XDEtf3E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=HA1s93rW; arc=fail smtp.client-ip=40.107.20.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="AzQ/E1zV"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-471a01060f3so2727171cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 12:58:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1739221118; x=1739825918; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wl/1DFtCVA8JUg3JrvOVSDvXuYWKhgnuN/JPe0OCyKE=;
-        b=AzQ/E1zVbhsWSha6H71yA872pTWK5X/qO7x3pzC+66ygVSwwc1CEG3/BdfTf+4sqiy
-         bWXaEd2Ic/oePmzfDnIj/l5E+RvuLsDKh8DKzvYBOC5ElNrLJEyF/t+fZqwCNcBUGHP1
-         P1ZhLaxtbOiGZE8yOcOhtG3a5t9SLc2cjoIFKewYmFFUttSGyX7H3CfqJo5hsjD88r7R
-         qIoNela05feDdhFRQEgGptkz+CoPs+bYwvvNSRTxkFmSBBtm/yZWb3Wlx5R1j5IDzsh+
-         Wm6wmu5hZnId/c8wTw/SOt/mrHDxL7N7cAlNq8Y53873mIC9ky6cbyclMzcoxLApcx5n
-         eJiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739221118; x=1739825918;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Wl/1DFtCVA8JUg3JrvOVSDvXuYWKhgnuN/JPe0OCyKE=;
-        b=iYe6uXfSpjl5dNOgnsY5Fm02/FA0t7thqTk/DFIm6IiZkYOjJIzHsvuXZ8bUrDPJ2D
-         wT0Eh2sVDj8pv57md9trkNen8V/2snMIiurc3SYNSiKfOfm8YnnLEx6ZyK/XpZjaCrOG
-         6AD+NyfEpkF3ui4gSpPPB1CYRqoofZwmgdWUpwNTmpR95jhtEV/ddwKu3zRKp3AmDdal
-         YSKCEpRZx8fJgxBU0ncjjycZuEulfXC4HW/I+iYX0s0DGQ3XKwcZCHHILf0r34I2AaFG
-         hrfR/6nLOkPNm/gjVre6qvldwbDoP0sMKcgWKUVWNyccKXRMmaSLJhHE55Mf7krGmPf+
-         4mFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXoPyFuWW9Rf3jt2n8F7HXdX39k+HLDWTaohFMC0iSLvSUOx/Vf5huLE/7KEmx2kPRz2D4O5vpA4Uzhtnk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwllyTqfdWTFXM9/g5IH0eqPDmcVoFp2W2siNb/3nQGpZ0cgZEi
-	SeJkzCg3hn4rLJV5ma2RWxXNwJ3ULFDcj5pN4NuwGw8/315E9GiAR9uZdqkcjKAm1VLqTvIH+Gs
-	8M/86lHcwYtnhiPG5cMBVyseYt+JoSjcL6gff0Q==
-X-Gm-Gg: ASbGncsaEbIT55OT8X+v2k5Kpt9TclXWQwGhcqLycdyA21c6MQnS5rZc7ZntP6gOs80
-	hnppmOufi8EXOXGV4u9TP+jeBUkG6epT5p0M9Bmvo46DD0kCelcuPYpPrE+ETVHqLb+N8Bg==
-X-Google-Smtp-Source: AGHT+IETHCKadrtvKNJ7fIHLak3uf8ALu7tDsyEEqgrBMvB7GxxInEvWUg2pBVKBZMO1RROtaHb319Yhs3eTr5CpbD4=
-X-Received: by 2002:a05:622a:1a05:b0:46c:86d8:fc5 with SMTP id
- d75a77b69052e-471679cb76emr238937621cf.5.1739221117601; Mon, 10 Feb 2025
- 12:58:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="HA1s93rW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=v7c4r+5UcEk3YKQ1CETjpFp8nT2NLs4bf/ArfsbNyzpF0dFbB5xu2AnDRb/aYnaXICgmYgYDQUHuCGVlIsxP6pV56SPrGCQLzEXw3o+JV28R0aqquwIQ7xkiCh0dZ3hHVFM/5fdC7f/5B6ETWWnRCnec3hwoNogL7vJ3QZFVtqHnjdnOIXiMW4MP6w/sPGwf4rYvH5UoFJu8x85rj9jmcRvwO0XLskMtupZIQpesfqoJnP7cAwXtWGc3mvq7d5sEU5Ju3JJYS/xOqBPyEdZL5O9fyBpCFrxFeJjXfOsa+vBkgfxDmHapZqiQ3OnDHDhj/4JdEcpQGQHWs/xrAcJ1ZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QbO77N+c51B/E1M3CewNGUvGCki0Wz9YboStrv8pIA8=;
+ b=O+DsOCeykusGuanAxTODMyKlbBbuCbmlDAyaWFT4xXkGk/r/qbCwkb0l5pIsI+c4/pMFBpP1SMalkrS6U1eQ7qIeS1ZqHcTdZq/ljJQivcbM/2K+MYjlzFo7OvvUcX7FJ31Svc//d7Byt0r+bldAoJ8ygFhWX5IKgxTdEPBb8VpIBql4rjgv/MY717dvvrGe/sD99lx73F54T5eFM0aWDhf4Ow9POjS1fnAnE/d5y/lj3n6M+nU9XgYabDwlCqqYuRuxZKGqyrMFHvPgubtSOuNWGB5MNwHDgJFLvQ/NK6wa4P+bTNxM1ht5nfSI5qFycVhYr51iYsS+OWy0vmXqcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QbO77N+c51B/E1M3CewNGUvGCki0Wz9YboStrv8pIA8=;
+ b=HA1s93rWaNoezeuoq64cHxUoYP6nqiKvs1vgLMXi5IczCn5gv3mSb86pxajPxNshTvxPqXqIoIxTjYOMkl61dweDtB15p/A38cml7MRdYr0epWHhgvb8Tgm1fHmRx/lAOVwvoKDAJtcesZS77R8c2H1QhmO/8epRygcjwXv53vDyMIqjvoJ35Z4IFgEqmB+1ZFwvCILN1O3UHRUKFW/IPrbJCHC622V3bil5GAY2v4Am3we3mr37EvYvET/FnBaZKz1YwOGSKeNg1oJQLHPlsZA2dOHrbBSKE20/60pDypZlYzBzMowIbmCS9rZOENTjuY/cz+8Bs5NsPq09zVdb2w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DBAPR04MB7462.eurprd04.prod.outlook.com (2603:10a6:10:1a0::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Mon, 10 Feb
+ 2025 20:59:46 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8422.012; Mon, 10 Feb 2025
+ 20:59:46 +0000
+From: Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH v3 00/12] media: imx8: add camera support
+Date: Mon, 10 Feb 2025 15:59:19 -0500
+Message-Id: <20250210-8qxp_camera-v3-0-324f5105accc@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKdoqmcC/1XMywrCMBCF4VeRWRuZmaStdeV7iEhMU5tFLyYSK
+ qXvblqE0uU58H8TBOudDXA5TOBtdMH1XRryeADT6O5lhavSBkbOkEiJ83scHka31mthSNdZocp
+ KooJUDN7Wbly12z3txoVP778rHml5/46knRNJoJBUKmT9zDHX124cTqZvYVEibyVjti85lYUkL
+ W1Vc6HUVs7z/AMC7hEs3gAAAA==
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Dong Aisheng <aisheng.dong@nxp.com>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Rui Miguel Silva <rmfrfs@gmail.com>, Martin Kepplinger <martink@posteo.de>, 
+ Purism Kernel Team <kernel@puri.sm>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-media@vger.kernel.org, Robert Chiras <robert.chiras@nxp.com>, 
+ "Guoniu.zhou" <guoniu.zhou@nxp.com>, Frank Li <Frank.Li@nxp.com>
+X-Mailer: b4 0.13-dev-e586c
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739221181; l=4188;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=CONQa124VmskpdCa2A4REE9scW3t5oyP7zDtr6jO7O8=;
+ b=rDo1dkAzaQC9AFSnoRLwIj/WXHw2zPmjxnRlm48E85XyToaK6u3jm/QzioXNaaIWi30AHCle4
+ motCWZI/BnfBya+PmjrbLOJ/5MrGfD/T4Iqik1gNJjJsPsBx/yUNoOa
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: BY3PR03CA0009.namprd03.prod.outlook.com
+ (2603:10b6:a03:39a::14) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206132754.2596694-1-rppt@kernel.org> <20250206132754.2596694-6-rppt@kernel.org>
- <20250210202220.GC3765641@nvidia.com>
-In-Reply-To: <20250210202220.GC3765641@nvidia.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Mon, 10 Feb 2025 15:58:00 -0500
-X-Gm-Features: AWEUYZnfXstpOnVhbWRWzg5zc_KYEQnAl1ReknkHBBoTgx3FQhtVYh2voma8nHI
-Message-ID: <CA+CK2bBBX+HgD0HLj-AyTScM59F2wXq11BEPgejPMHoEwqj+_Q@mail.gmail.com>
-Subject: Re: [PATCH v4 05/14] kexec: Add Kexec HandOver (KHO) generation helpers
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org, 
-	Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Andy Lutomirski <luto@kernel.org>, Anthony Yznaga <anthony.yznaga@oracle.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>, 
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>, Borislav Petkov <bp@alien8.de>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	David Woodhouse <dwmw2@infradead.org>, Eric Biederman <ebiederm@xmission.com>, 
-	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Pratyush Yadav <ptyadav@amazon.de>, 
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, 
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Usama Arif <usama.arif@bytedance.com>, Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBAPR04MB7462:EE_
+X-MS-Office365-Filtering-Correlation-Id: 39f383dd-a1c1-4c8c-86b2-08dd4a15d9ea
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|376014|7416014|52116014|366016|1800799024|7053199007|38350700014|921020;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?L1Y3bFIwRDJ0VTlrblBYM2tqVGh2bXlaK2ExejdHd3JNRDdNQ3duczRTcUhE?=
+ =?utf-8?B?NndDY1I0ODZNTEZUZG54aGRMaUs2N0lGblY0VFNOZlAyeHRsWVZBZUs5TGpM?=
+ =?utf-8?B?UFpVWHBoaWJvSzJrazNNOVBwUGFyeDArWGtIc1lwZE90NC8rNDlOYnR2YVlm?=
+ =?utf-8?B?L291dkRkeDZxZVA1K0RoejZ0ZTdIWjR0T2E1cnJvcFdNMW9ITWJPUjlSVDU4?=
+ =?utf-8?B?U3pNVCtGTkZPQmVyNFhGTVdwZy9XUktpVUZucHpMSE1JVTZ0M3ppSUxHSTNV?=
+ =?utf-8?B?YmUxMlUxRy96UklSMXZZbVJZTUo1SEpJNGZ2WmoxVVhIRTd6eWI2dHJXUlRK?=
+ =?utf-8?B?QjA2WEVtc2lTUHRCbDlGNHFIRU1HamJBdTVxSkhya2dqU2ZHdFhKbnRLMTBj?=
+ =?utf-8?B?bEl1K09pUHBmVGNyeG9GT2ZWVzRPWi93ekpPa2gvZGVoVEpBNkdzOEJVMXBQ?=
+ =?utf-8?B?TkhvcXBIc1FDVGM1dVhjbzNUSDJ2SlBONStkbFNxNzJSelZDM1NGcGRDSW1U?=
+ =?utf-8?B?VlFtZ1R5MHlMNU1zbVVaak5SZjV1aUF0TW1sQXJwUXMzYUlZbzJ4QVJka1cz?=
+ =?utf-8?B?MEo5Mk1MbXlxWHo4djR3MzhENmV4a3V0RnlVSWNsTnY2MGYxT1gxUmNmK2R3?=
+ =?utf-8?B?UlpJUmlJak5aUTZmQS9oYkZaeFY3STh3Z0ZObUpDRjV1dm5PanlJcHN0RzQr?=
+ =?utf-8?B?RWVIQnh6YXRZbnlJdzhFMVF6Y2lna1ZSYVVud2prb1FISkMzdkgwbkYvN3pi?=
+ =?utf-8?B?WUNNN2JLSEwwN0dFN3A5U0kwcnZRRENEd0k2VmNRcUZPZVZHNlZqWW0vTjly?=
+ =?utf-8?B?dkViNHMrRXR0L1RGSVRkaW9hUWhCL0g4RUNhdVltVTdyV0Z6OXZhME1aWFhQ?=
+ =?utf-8?B?UGpvcGFaNFJpSGQyaFhYZGVCNFVTd3pHVTZycDRFcWxnK1JucEZqS0R3NVYv?=
+ =?utf-8?B?cFNtTXRkYXNsSzFlc3Z3MGJEYVVRL3lWNi9NVDJPdTl4VFFSZTQxamNicTdZ?=
+ =?utf-8?B?c2U3SW1wMHF5SEx5Q0hmUHlIOXNJeXN0RzJMT0owTndYbVQvcitQQlRyVFhW?=
+ =?utf-8?B?SFhpMCttMFpJeFdOTUwrR1R3My9qSlVoMjZwNUZzWGduZTQxUk5jeHAwSEU0?=
+ =?utf-8?B?TmtnTVIzWUpEdFc5dk40dndpWlRLcnFUOXBEKzZGaDBkdEJjVjlub3d3MktC?=
+ =?utf-8?B?V0JqQVFsdGFMbWVNTGxWVzJsdGJkUmh6SGpDQjE3dmt1MlJnWjQ1TWJmVnlH?=
+ =?utf-8?B?YWFDZlhjcnM2SU1mOWEzOGplVExGa3hMSG93T1h4Zkx6bHErWXkrU3N0M3pS?=
+ =?utf-8?B?eUQ0WUx3bXpYWmMvU0ZlL0JYcVJGUE1IbUNmOXNPdEx2WXVMVkNnVmUzbmpj?=
+ =?utf-8?B?Zm5kZ2FJK0YzQU9SL0t3WTRuY0VTdXorOHZmM3IvSkZtMkxnWlk1MTV1dUs4?=
+ =?utf-8?B?NUQ4bTQwZTlldHoxZlRRdWI1RWk4THREdmxCdlFXYW9oSktVbDZTMmdEOUUv?=
+ =?utf-8?B?SVBIQkhCLzhkb1Zxa0dTeS8vaTljbnNtR0JSdTl4aGJYTTV0ZExGVmVOcHdV?=
+ =?utf-8?B?bHBUY1Z2ME03WEJoWEIwQkZCRWZXazhJUzF4U0JJakg1L3N6R2ppTzVtdWY4?=
+ =?utf-8?B?ZFFLajNFeTh0MlBGVGlobDE3OWRRV0dEaGx2L1JMekZxdGd2MXRjSXJtcGhj?=
+ =?utf-8?B?aVN6VE4yT2IxdUovTjVoRk5ub2EyYnZaOGJ2eDNnSWJNS21SYkIyaVJ6VW9Z?=
+ =?utf-8?B?em5NOWt6OGk4VnhubXI0aDU3aVlqbGlJT0pEWHc2aTRtYkg5ZGFEY05mNGJW?=
+ =?utf-8?B?U3o4c3hCSTRleGo0SVhlb01oUTRUNVpLUElrYU13ektvVk1uVDl2dmEwOCtW?=
+ =?utf-8?B?Z0NTRlZWOTlwYlhOTHJYaCtpcWFXS3c1ZHR1UFVEdVZNTTl3U0RhWDk5bFk1?=
+ =?utf-8?B?Skk3RHpFRVN4a2hYZlQvREFMN2lZeThMSElZdGtEdThCaldGWFVFeXN3VlUz?=
+ =?utf-8?B?U0Myc2x6c2p3PT0=?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(366016)(1800799024)(7053199007)(38350700014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?UTJKYVpLU3l5ZUJObllLYUE2TExFK1JsZ1gxV2gxVXQ5TFVuNHpRRjIzbnU3?=
+ =?utf-8?B?MldTVVIwQWo3NjdOd3pCdHhkbGwwcXJ3dGxMSXNOeWdSYTlSN0RIR0VsdG94?=
+ =?utf-8?B?dm5md2EvbkpTd1MwZnhWTlRiYUNjQ0g3TFZqeHJvVEUzOG5qSzZ3dHdIc2Zq?=
+ =?utf-8?B?ZzJ4ajQ4SUE1ZWJjdVlzQ3RNT2NQNFV0aWlJdHMxc1NUYkZsbmo2NjJhYVRZ?=
+ =?utf-8?B?K0EvRXFRM2luSFB1ekNRVVF6N0RyMnBpM2htRHNLbWpuM3pqZWZjSUV4ejBn?=
+ =?utf-8?B?ZW1XQWhKT3JENHd3MFU1S0JSY0hSdDFQQ0pqMnZSUFJVeTZZQUVGYWdTSXdi?=
+ =?utf-8?B?dW41NjdYVjNLQWdNZU1wTnJ0U3kwSnRrNHN2aThBY1cxQVRCclk4NFlJOUls?=
+ =?utf-8?B?ZmxlSENiNlRFZ1RLNG9YRmc4SmpWcUR4Z2dldjg2TmxXNVVRWVp2empqNlpB?=
+ =?utf-8?B?TlIycHJRZG1SVlFROVVJTEZ0RFVFM3gxZTBNYlpIQ2FEUzlxQUV5aU5EUzNF?=
+ =?utf-8?B?aDZ4enljanFQbi8zZnZPYjdxQnpRTExYZkhETExoQVN2Mzkva0k4TWdudUhu?=
+ =?utf-8?B?K1FIcUFiS2t1L1lYYkx3WXBkdk92VEtTWXB5Y3ljRUdLaERBUlVVUUwwSjFB?=
+ =?utf-8?B?NmlOdCtQMkRGaFBZQ0hPQjZnSnhKR2llSzFwM25CTzZ0WitBR2Z5WEladmho?=
+ =?utf-8?B?VUJjczhLelJFUm5oZEcycG5aUG9Bd3dGVnFXYUlSb0plbU8rK0hubUdGbUEv?=
+ =?utf-8?B?U0plYTVpVXZMbnBhMDV3MEN0aDFlRE92VVBTbWdMZ25vWDczTXlUTEpGR3pS?=
+ =?utf-8?B?TTkyRHlGT3g4d3JKOE83MlNxQ1B5TFB4ejRoMGxkZ0VycDZBcG5vVkdWc2NB?=
+ =?utf-8?B?aHVtbDlmZkxhZDJPS2dEbTlTbkVUMHMvVmhFUmNrQklCVFZKbTVNa01IR0wy?=
+ =?utf-8?B?UkozQWt1N3EvQUx5bk5HVGI5N01PcmxmWWQ3U2gwOHJJZWYyem9kb3hUSnR4?=
+ =?utf-8?B?Uy85Yy9OUUVsa0pBVXhXckFOemdkaEhhNEtNK291M0xmblYzcUcyYy9ab3Q4?=
+ =?utf-8?B?OWlWMmtLS015SVdVUDhNZkk5MFNZSFdMWXdQNmRZK1NlbXZFVFJuazhxRTVM?=
+ =?utf-8?B?c2F5Ykd6TWlYd0ZFc0JoUlJocFEwWW53ZUV1STUrTi92N0l6bXErUlNBUjA5?=
+ =?utf-8?B?UW8rT1NtL2hrKytFU0tkWFAyNWF2a0F5OEVQRDFHclNQVVdIam95eW95WDl5?=
+ =?utf-8?B?NDAwQXRSRXV2bWQ2U3VKSEFFdkJsUkdUb2t0azhRV2ZxbDBTYVVERDRrcnFa?=
+ =?utf-8?B?Z1dVS2swdXFpbDZhV1A5ektWa3JjdlRiY3FOMm1Ia2pYRTF5WXk0K1FWWklZ?=
+ =?utf-8?B?SHJseDBLc0Zkd1F1cWg5NStzRlRqUzdmLzFxbmFkcllRcEJ4YU9Xbm9wNzMy?=
+ =?utf-8?B?T2lwczlQUEQ2d0FiVVNscUErK0o1Y2RSand0UGcrc2pwZSs5dTFodkt1N2d1?=
+ =?utf-8?B?Q0V2VkRDWktMWitWVWtrVElGaHpwS0h0MXo1Z25xWU4rK2VGNndFRENrSExH?=
+ =?utf-8?B?UTZoaEltYUZqQXNNMitPc2dkSmRsdzdBSlRUQUx0cGhpU1ZCRFdYeHkyN3pQ?=
+ =?utf-8?B?UUpxeDFtVUtjdjBYMVVKV1diaTJEdktKYUd0RmVNeEZvSVFyRjZkMURCcEdW?=
+ =?utf-8?B?SHNRZ2l6UHRmVTFZa2l4YU1QWnZFY2l4bUtJMzZhMkN5RGtYZHJ5QXRzU3Jw?=
+ =?utf-8?B?MDRsRndVMHNXYUxYV0lXYnRISXhsdGU4M2dHWnVtNFpOTWtjekVPbW5GdUtm?=
+ =?utf-8?B?WGZ5ZGx5NHRGRzI2R0lKWWs0QVdUZlBOdmtFVCtGd1U5U1hwOWZ0aTgwNnlB?=
+ =?utf-8?B?VjJSd2poSSt5SWtZeUJwWXFFUWlqelpseHhEUThSbkRBeFJRWkhrR0U4MHd1?=
+ =?utf-8?B?SkJtV1dDWjJ5K2c2YVRhUUpZNGNLaFZ2LzlndDVVbldWWFpib3BSLythbWZh?=
+ =?utf-8?B?Y1ZsanU2WEN0cmtlOWJ6R0J0dEdOT1FZbUdpbFFUOEE4V2xIQjFPU2V6Z0Fj?=
+ =?utf-8?B?VHMvTVZLVFdwZ0VzRFQycmZSQ1FtU1RjZ004UkV1aCtYRVA5a1JJVGFrdUlu?=
+ =?utf-8?Q?3XkI=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 39f383dd-a1c1-4c8c-86b2-08dd4a15d9ea
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 20:59:46.8775
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UnZ4LPi2Y89ywJMJj67siqFKpqOR+es1/EGMewpWwJZoBA21zK63F5TzANowk9gDaSVwWEnsMmu7/z4sUp+kUQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7462
 
-On Mon, Feb 10, 2025 at 3:22=E2=80=AFPM Jason Gunthorpe <jgg@nvidia.com> wr=
-ote:
->
-> On Thu, Feb 06, 2025 at 03:27:45PM +0200, Mike Rapoport wrote:
-> > diff --git a/Documentation/ABI/testing/sysfs-kernel-kho b/Documentation=
-/ABI/testing/sysfs-kernel-kho
-> > new file mode 100644
-> > index 000000000000..f13b252bc303
-> > --- /dev/null
-> > +++ b/Documentation/ABI/testing/sysfs-kernel-kho
-> > @@ -0,0 +1,53 @@
-> > +What:                /sys/kernel/kho/active
-> > +Date:                December 2023
-> > +Contact:     Alexander Graf <graf@amazon.com>
-> > +Description:
-> > +             Kexec HandOver (KHO) allows Linux to transition the state=
- of
-> > +             compatible drivers into the next kexec'ed kernel. To do s=
-o,
-> > +             device drivers will serialize their current state into a =
-DT.
-> > +             While the state is serialized, they are unable to perform
-> > +             any modifications to state that was serialized, such as
-> > +             handed over memory allocations.
-> > +
-> > +             When this file contains "1", the system is in the transit=
-ion
-> > +             state. When contains "0", it is not. To switch between th=
-e
-> > +             two states, echo the respective number into this file.
->
-> I don't think this is a great interface for the actual state machine..
+Add SCU reset driver for i.MX8QM/i.MX8QXP.
+Update binding doc.
+Update driver for imx8qxp and imx8qm.
+Add dts files for it.
 
-In our next proposal we are going to remove this "activate" phase.
+To: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Conor Dooley <conor+dt@kernel.org>
+To: Dong Aisheng <aisheng.dong@nxp.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+To: Shawn Guo <shawnguo@kernel.org>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+To: Pengutronix Kernel Team <kernel@pengutronix.de>
+To: Fabio Estevam <festevam@gmail.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+To: Rui Miguel Silva <rmfrfs@gmail.com>
+To: Martin Kepplinger <martink@posteo.de>
+To: Purism Kernel Team <kernel@puri.sm>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: imx@lists.linux.dev
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-media@vger.kernel.org
+Cc: Robert Chiras <robert.chiras@nxp.com>
+Cc: "Guoniu.zhou" <guoniu.zhou@nxp.com>
 
->
-> > +What:                /sys/kernel/kho/dt_max
-> > +Date:                December 2023
-> > +Contact:     Alexander Graf <graf@amazon.com>
-> > +Description:
-> > +             KHO needs to allocate a buffer for the DT that gets
-> > +             generated before it knows the final size. By default, it
-> > +             will allocate 10 MiB for it. You can write to this file
-> > +             to modify the size of that allocation.
->
-> Seems gross, why can't it use a non-contiguous page list to generate
-> the FDT? :\
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-We will consider some of these ideas in the future version. I like the
-idea of using preserved memory to carry sparse KHO tree: i.e FDT over
-sparse memory, maybe use the anchor page to describe how it should be
-vmapped into a virtually contiguous tree in the next kernel?
+Changes in v3:
+- Remove phy driver parts.
+- csr is dedicate for mipi csi2, so add it as second register space. csr is
+mixed with PHY and link control with csi2.
+- Link to v2: https://lore.kernel.org/r/20250205-8qxp_camera-v2-0-731a3edf2744@nxp.com
 
->
-> See below for a suggestion..
->
-> > +static int kho_serialize(void)
-> > +{
-> > +     void *fdt =3D NULL;
-> > +     int err =3D -ENOMEM;
-> > +
-> > +     fdt =3D kvmalloc(kho_out.dt_max, GFP_KERNEL);
-> > +     if (!fdt)
-> > +             goto out;
-> > +
-> > +     if (fdt_create(fdt, kho_out.dt_max)) {
-> > +             err =3D -EINVAL;
-> > +             goto out;
-> > +     }
-> > +
-> > +     err =3D fdt_finish_reservemap(fdt);
-> > +     if (err)
-> > +             goto out;
-> > +
-> > +     err =3D fdt_begin_node(fdt, "");
-> > +     if (err)
-> > +             goto out;
-> > +
-> > +     err =3D fdt_property_string(fdt, "compatible", "kho-v1");
-> > +     if (err)
-> > +             goto out;
-> > +
-> > +     /* Loop through all kho dump functions */
-> > +     err =3D blocking_notifier_call_chain(&kho_out.chain_head, KEXEC_K=
-HO_DUMP, fdt);
-> > +     err =3D notifier_to_errno(err);
->
-> I don't see this really working long term. I think we'd like each
-> component to be able to serialize at its own pace under userspace
-> control.
->
-> This design requires that the whole thing be wrapped in a notifier
-> callback just so we can make use of the fdt APIs.
->
-> It seems like a poor fit me.
->
-> IMHO if you want to keep using FDT I suggest that each serializing
-> component (ie driver, ftrace whatever) allocate its own FDT fragment
-> from scratch and the main KHO one just link to the memories that holds
-> those fragements.
->
-> Ie the driver experience would be more like
->
->  kho =3D kho_start_storage("my_compatible_string,v1", some_kind_of_instan=
-ce_key);
->
->  fdt...(kho->fdt..)
->
->  kho_finish_storage(kho);
->
-> Where this ends up creating a stand alone FDT fragment:
->
-> /dts-v1/;
-> / {
->   compatible =3D "linux-kho,my_compatible_string,v1";
->   instance =3D some_kind_of_instance_key;
->   key-value-1 =3D <..>;
->   key-value-1 =3D <..>;
-> };
->
-> And then kho_finish_storage() would remember the phys/length until the
-> kexec fdt is produced as the very last step.
->
-> This way we could do things like fdbox an iommufd and create the above
-> FDT fragment completely seperately from any notifier chain and,
-> crucially, disconnected from the fdt_create() for the kexec payload.
->
-> Further, if you split things like this (it will waste some small
-> amount of memory) you can probably get to a point where no single FDT
-> is more than 4k. That looks like it would simplify/robustify alot of
-> stuff?
->
-> Jason
->
+Changes in v2:
+- move scu reset binding doc to top scu doc.
+- isi use seperate binding doc for imx8qxp and imx8qm.
+- phy and csi2, compatible string 8qm fallback to qxp
+- remove internal review tags
+- Link to v1: https://lore.kernel.org/r/20250131-8qxp_camera-v1-0-319402ab606a@nxp.com
+
+---
+Frank Li (9):
+      dt-bindings: firmware: imx: add property reset-controller
+      reset: imx: Add SCU reset driver for i.MX8QXP and i.MX8QM
+      media: dt-bindings: Add binding doc for i.MX8QXP and i.MX8QM ISI
+      media: nxp: imx8-isi: Allow num_sources to be greater than num_sink
+      media: imx8mq-mipi-csi2: Add support for i.MX8QXP
+      arm64: dts: imx8: add capture controller for i.MX8's img subsystem
+      arm64: dts: imx8qm: add 24MHz clock-xtal24m
+      arm64: dts: imx8q: add linux,cma node for imx8qm-mek and imx8qxp-mek
+      arm64: dts: imx8q: add camera ov5640 support for imx8qm-mek and imx8qxp-mek
+
+Guoniu.zhou (1):
+      media: imx8mq-mipi-csi2: Add imx8mq_plat_data for different compatible strings
+
+Robert Chiras (2):
+      media: imx8-isi: Add support for i.MX8QM and i.MX8QXP
+      media: dt-bindings: nxp,imx8mq-mipi-csi2: Add i.MX8QM(QXP) compatible strings
+
+ .../devicetree/bindings/firmware/fsl,scu.yaml      |  12 +
+ .../devicetree/bindings/media/fsl,imx8qm-isi.yaml  | 117 +++++++
+ .../devicetree/bindings/media/fsl,imx8qxp-isi.yaml | 103 ++++++
+ .../bindings/media/nxp,imx8mq-mipi-csi2.yaml       |  38 ++-
+ MAINTAINERS                                        |   1 +
+ arch/arm64/boot/dts/freescale/Makefile             |  12 +
+ arch/arm64/boot/dts/freescale/imx8-ss-img.dtsi     | 376 +++++++++++++++++++++
+ .../boot/dts/freescale/imx8qm-mek-ov5640-csi0.dtso |  90 +++++
+ .../boot/dts/freescale/imx8qm-mek-ov5640-csi1.dtso |  90 +++++
+ arch/arm64/boot/dts/freescale/imx8qm-mek.dts       |  60 ++++
+ arch/arm64/boot/dts/freescale/imx8qm-ss-img.dtsi   |  45 +++
+ arch/arm64/boot/dts/freescale/imx8qm.dtsi          |  12 +
+ .../boot/dts/freescale/imx8qxp-mek-ov5640-csi.dtso |  89 +++++
+ arch/arm64/boot/dts/freescale/imx8qxp-mek.dts      |  44 +++
+ arch/arm64/boot/dts/freescale/imx8qxp-ss-img.dtsi  |  60 ++++
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   5 +
+ .../media/platform/nxp/imx8-isi/imx8-isi-core.c    |  47 +++
+ .../media/platform/nxp/imx8-isi/imx8-isi-core.h    |   2 +
+ .../platform/nxp/imx8-isi/imx8-isi-crossbar.c      |   8 +-
+ drivers/media/platform/nxp/imx8mq-mipi-csi2.c      | 179 +++++++++-
+ drivers/reset/Kconfig                              |   7 +
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-imx-scu.c                      | 101 ++++++
+ 23 files changed, 1477 insertions(+), 22 deletions(-)
+---
+base-commit: ce37eebeae8fa9e6c53f7f1ccd182ad5f27d66cd
+change-id: 20250114-8qxp_camera-c1af5749d304
+
+Best regards,
+---
+Frank Li <Frank.Li@nxp.com>
+
