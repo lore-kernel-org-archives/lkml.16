@@ -1,110 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF09C1AF0AF;
-	Mon, 10 Feb 2025 06:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A9A1A8F74;
+	Mon, 10 Feb 2025 06:51:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739170272; cv=none; b=gD2IdGY9FvM97ItuKEJnWqaC3znBuTOjMKSxEaXZ7O3bm/z+FC9ViqWSpnkcXDMEBp1B3deJZubybCyv74Hu7UhObgg4cfFLc5GDsuptntr8BRblrkV1p7q84P+0K9xUKIGP10xG6GZShuiuN0CkXzFLPOOxTLRp1n9Jtyvf+sI=
+	t=1739170312; cv=none; b=JCvTC84X/TRKPg7/USKvIS2tP0v8m4yFNeTlcwNpAnHXuT7NN3+my9Zw/CtOR28IgZVM0NTGd5kYlPHw6Bx7kTxGE1W/c9CIdmmBZgvVk3X24xGroqoYm3a7CHHq9bkN2dIoxUDYRa9/0jdSr5pQsxy9YE3xkcGfAHiSHY1gyvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739170272; c=relaxed/simple;
-	bh=rmG5AJg763QuUwHiI4zIJ8TFRtKX3Nej46Hu42LYCJw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Mnuz/jB5ibCM3+7CxH/ijwDHN8aIZ8NhQWAXDU+q3rubR0k8rDY7zn4+P+1XzGvD11XdO4sq3jukcNpqn3QRavWZtAqbKxI6aESjdj4T1bFRReNcva0hHYsWAJNS5C0sMqmYV9JjqrExJQ8pqtS0pGZDYO3vc8kn+FmwWXuzTIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=diwcHWQ6; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739170312; c=relaxed/simple;
+	bh=/yiNYw2w1QP43if0EbApxxlUXZtJpdnCU0y+oXqKeS8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J3LKLiktXMvj4I1GzuEtvtL1lqikOPpkzJBVsHXwwBxri8TbBeCItb2XTgkhQSEbaBYEFR269duEen2F5Sp3egAGh8rYSSDGzQni93QD1/mGJWp0CcrwK8geAdPAXW9t5tfdsCcjbPeIZDdOpYJ4wc4OlkTGbmq/HD9Ib1GPxdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=idosch.org; spf=none smtp.mailfrom=idosch.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bafjmJG+; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=idosch.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=idosch.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="diwcHWQ6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739170271; x=1770706271;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=rmG5AJg763QuUwHiI4zIJ8TFRtKX3Nej46Hu42LYCJw=;
-  b=diwcHWQ6Z6Dg099qNctEunjRDt9wFkaBqyThcyUvLswYfKRbBZRsid3R
-   Bx9FgWUPYG1tVIPqJV0hUyLLpir7PLL4ZqWWjpyurb+a/DY/oyPWHmnze
-   fxkI/3V2gM9UFbfJw129bCaMPul8D5jxUxHsmv+ZZLhzMjGCnRo06OK82
-   FRqkfzFC+kfzBq0Dd4mJAVtfhjz89dCLTzZdrERJiZ8o+PkcTLr7Yvb4N
-   Yl7I15/48ECmJkzhi00OwO/sx7kw+wME3WgM/nnWROqj0kyOBoJqO14W9
-   6PybSFNRRR5pzGZfTElwAzw3R1x1xA9mTn/ZW6fJBq/3SbDdjjTAJ8RWO
-   A==;
-X-CSE-ConnectionGUID: WGp/YFGnRMi2lso1lpMj9A==
-X-CSE-MsgGUID: dxioNWiVRXWS0/C2tIy8PA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="43499468"
-X-IronPort-AV: E=Sophos;i="6.13,273,1732608000"; 
-   d="scan'208";a="43499468"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 22:51:11 -0800
-X-CSE-ConnectionGUID: qzXCctUsTDukvjIjjq8hmg==
-X-CSE-MsgGUID: gPxWE5btS8qOJ6Ff6PazAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,273,1732608000"; 
-   d="scan'208";a="117122726"
-Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
-  by orviesa004.jf.intel.com with ESMTP; 09 Feb 2025 22:51:05 -0800
-From: Raag Jadav <raag.jadav@intel.com>
-To: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	linus.walleij@linaro.org,
-	mika.westerberg@linux.intel.com,
-	andriy.shevchenko@linux.intel.com,
-	dmitry.torokhov@gmail.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	sre@kernel.org,
-	jic23@kernel.org,
-	przemyslaw.kitszel@intel.com
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v4 20/20] ASoC: uniphier: use devm_kmemdup_array()
-Date: Mon, 10 Feb 2025 12:19:06 +0530
-Message-Id: <20250210064906.2181867-21-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250210064906.2181867-1-raag.jadav@intel.com>
-References: <20250210064906.2181867-1-raag.jadav@intel.com>
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bafjmJG+"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 8F66F1140113;
+	Mon, 10 Feb 2025 01:51:49 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-09.internal (MEProxy); Mon, 10 Feb 2025 01:51:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1739170309; x=1739256709; bh=Xa+u6TSXdvpnsdktnh6Ldx8knq/jErF9o1m
+	KCq6c5Eo=; b=bafjmJG+wuzoGYnXZs3OWuN0rYfKlg+z2CCIwrfj/QfDpdFjR/y
+	2cOacgCL54YyWCBNjoZjaFeXcEV8V7Vo3hGDBXfeBAwgBDj7XG8lbNfhpvqcM8Lq
+	MD7c6SkqSX0+jdD6DxGDhrPToD93coyrVvPRy+JS80LK5TLdD/tJ9mex2c9TXBV2
+	RDi4k71i5JRRXQXGmFRFwv5x5icJjaWE4KnCK2t9wVzlmvzzp37kdp+eOYbgzEF8
+	JO8yt50GMwHe0B24pDZCPQRzA3eKNhglAP28MRwvf/dteVtwIGq7wpK2m4JDES9R
+	eLhGfH3PxL1+oxB1V0XXxUmbsv/nfiqzaqg==
+X-ME-Sender: <xms:BKKpZyEkbPGdJbINekmZfUB-gH5gCVVDb3gdjKHA72CSOPSz_7kAkA>
+    <xme:BKKpZzUk4ydXVK9ZjUS9wqvx2FVO73_J9By-pDgU08zri40YosGqHiMTatzrZnw00
+    ZLfe2v0vI2btqY>
+X-ME-Received: <xmr:BKKpZ8JgelyjxShIgIdKuTBZRJX7HdCtE23GhFzNUZ-5_xaMQxJoWT1i9rff>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefjeefkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
+    necuhfhrohhmpefkughoucfutghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrd
+    horhhgqeenucggtffrrghtthgvrhhnpeehhfdtjedviefffeduuddvffegteeiieeguefg
+    udffvdfftdefheeijedthfejkeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuve
+    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepihguohhstghh
+    sehiughoshgthhdrohhrghdpnhgspghrtghpthhtohepudehpdhmohguvgepshhmthhpoh
+    huthdprhgtphhtthhopedtgiduvddtjeesghhmrghilhdrtghomhdprhgtphhtthhopehn
+    vghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqd
+    hsthhmfedvsehsthdqmhguqdhmrghilhhmrghnrdhsthhorhhmrhgvphhlhidrtghomhdp
+    rhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrg
+    guvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhk
+    vghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnh
+    drtghhpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphht
+    thhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrse
+    hkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:BKKpZ8HqxAaKpTyiU7gG7xc6MjskSyqqHjmp5EoTbdhh23xWP8oc8A>
+    <xmx:BKKpZ4Ue8dCAHoq82cA_LJFEULIs1ZFVQkIxheG1OC16r3dv9aIuzQ>
+    <xmx:BKKpZ_MYmJG1HtVP8iAw3V0SX2rTdKIuOKCtCPrfT69AS_SZX5GifQ>
+    <xmx:BKKpZ_2CztCc2frUAkqVwVttjA0EA46oQmThzHKTpt6tyFT0gsB3Gw>
+    <xmx:BaKpZ5vNx_rkiYc-31LJg39M5YTGKhVW8TNvfHujyxmwpu4E297FVaNz>
+Feedback-ID: i494840e7:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 10 Feb 2025 01:51:48 -0500 (EST)
+Date: Mon, 10 Feb 2025 08:51:45 +0200
+From: Ido Schimmel <idosch@idosch.org>
+To: Furong Xu <0x1207@gmail.com>
+Cc: netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, xfr@outlook.com,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Brad Griffis <bgriffis@nvidia.com>
+Subject: Re: [PATCH net v1] net: stmmac: Apply new page pool parameters when
+ SPH is enabled
+Message-ID: <Z6miASgDGKfGH9qO@shredder>
+References: <20250207085639.13580-1-0x1207@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207085639.13580-1-0x1207@gmail.com>
 
-Convert to use devm_kmemdup_array() and while at it, make the size robust
-against type changes.
+On Fri, Feb 07, 2025 at 04:56:39PM +0800, Furong Xu wrote:
+> Commit df542f669307 ("net: stmmac: Switch to zero-copy in
+> non-XDP RX path") makes DMA write received frame into buffer at offset
+> of NET_SKB_PAD and sets page pool parameters to sync from offset of
+> NET_SKB_PAD. But when Header Payload Split is enabled, the header is
+> written at offset of NET_SKB_PAD, while the payload is written at
+> offset of zero. Uncorrect offset parameter for the payload breaks dma
+> coherence [1] since both CPU and DMA touch the page buffer from offset
+> of zero which is not handled by the page pool sync parameter.
+> 
+> And in case the DMA cannot split the received frame, for example,
+> a large L2 frame, pp_params.max_len should grow to match the tail
+> of entire frame.
+> 
+> [1] https://lore.kernel.org/netdev/d465f277-bac7-439f-be1d-9a47dfe2d951@nvidia.com/
+> 
+> Reported-by: Jon Hunter <jonathanh@nvidia.com>
+> Reported-by: Brad Griffis <bgriffis@nvidia.com>
+> Suggested-by: Ido Schimmel <idosch@idosch.org>
+> Fixes: df542f669307 ("net: stmmac: Switch to zero-copy in non-XDP RX path")
+> Signed-off-by: Furong Xu <0x1207@gmail.com>
 
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
----
- sound/soc/uniphier/aio-cpu.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/sound/soc/uniphier/aio-cpu.c b/sound/soc/uniphier/aio-cpu.c
-index 470f129166a4..3224c11a527f 100644
---- a/sound/soc/uniphier/aio-cpu.c
-+++ b/sound/soc/uniphier/aio-cpu.c
-@@ -762,14 +762,10 @@ int uniphier_aio_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	chip->num_plls = chip->chip_spec->num_plls;
--	chip->plls = devm_kcalloc(dev,
--				  chip->num_plls,
--				  sizeof(struct uniphier_aio_pll),
--				  GFP_KERNEL);
-+	chip->plls = devm_kmemdup_array(dev, chip->chip_spec->plls, chip->num_plls,
-+					sizeof(*chip->chip_spec->plls), GFP_KERNEL);
- 	if (!chip->plls)
- 		return -ENOMEM;
--	memcpy(chip->plls, chip->chip_spec->plls,
--	       sizeof(struct uniphier_aio_pll) * chip->num_plls);
- 
- 	for (i = 0; i < chip->num_aios; i++) {
- 		struct uniphier_aio *aio = &chip->aios[i];
--- 
-2.34.1
-
+Reviewed-by: Ido Schimmel <idosch@nvidia.com>
