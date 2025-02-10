@@ -1,36 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F402451C3;
-	Mon, 10 Feb 2025 17:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD342417C2;
+	Mon, 10 Feb 2025 17:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739207565; cv=none; b=XLH+BmBIaK1PH+2QPVeGCYocxunrYuE9pVtvV9b4LmaHJRqVsCwAeAOLqYFGzbrIQEurGVDV89kbU2cQWMvoGijohHK/Ol0DUw9JAx6y2ugZtOs0zOAhdQQPfeeuNOfp7mu1w+jExlALbn9KjPl2KMEh/rcAOm3Xk32QnbExtVM=
+	t=1739207579; cv=none; b=k5oH6aj17dvGMrc65rjSsQhwov8fsdZPPMy2kx2mnGYReELo6wL/Es98GLADKEXaJaTo6t3q/gnf3BN/yB1LrurpTNROjmYZx1rjCWuQ16WwDjqnOO9ZxKSLXI5/BnvMeeNQyGBMflw3nyZZOT5cQcWDPuYN6XJ6aZrcNkFm3sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739207565; c=relaxed/simple;
-	bh=4u4Z8DwdSsBiBIG4c5Z2rgo6CiSyS0oIh0DsYtfR8IM=;
+	s=arc-20240116; t=1739207579; c=relaxed/simple;
+	bh=ELQfB2TwDAnJUTIUIxZdiWbQfBEoOjvfsRi0Qb4it4E=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CTGiL82tEVOADsKOoQw10uabJi0r2kr5rQFxVrlvC8YmCo80MfndM6uu4vwLWBTx9S9uQLoHKtZb7J1LgSfkjPhfQn6DfEflCjitbMMdsYS0X0yg1OMS9CDVrnfhuzm5qU6TOSCyk/gccotP4SWvIFER/i+yTknEjycwTtSyS3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC3D2C4CED1;
-	Mon, 10 Feb 2025 17:12:43 +0000 (UTC)
-Date: Mon, 10 Feb 2025 12:12:46 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: David Reaver <me@davidreaver.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Christian Brauner <brauner@kernel.org>,
- linux-fsdevel@vger.kernel.org, cocci@inria.fr, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/6] debugfs: Replace dentry with an opaque handle
- in debugfs API
-Message-ID: <20250210121246.60b2efbf@gandalf.local.home>
-In-Reply-To: <20250210170016.GD1977892@ZenIV>
-References: <20250210052039.144513-1-me@davidreaver.com>
-	<2025021048-thieving-failing-7831@gregkh>
-	<86ldud3hqe.fsf@davidreaver.com>
-	<20250210115313.69299472@gandalf.local.home>
-	<20250210170016.GD1977892@ZenIV>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	 MIME-Version:Content-Type; b=iw9OZoGkxWfCarxAhUymymxYoSrXjTXvneBvXGd+/tYfhldvDhZdTLpNeAZKfXWqIn7Y3ozkta2CcsT3CmNLiBabgCPfMY6ZZ5ANI70PclP0BXr23uJ5fNu6Lcyj/yjtwwvtTot44ws7OxdM4zeNNS9glox4knF+6tt+iyWI3lU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SPtX5V/s; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SPtX5V/s"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 59113442DF;
+	Mon, 10 Feb 2025 17:12:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739207570;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8BWpaX+en9bzlPyCXNv/OsmRVq8aUFdsmvGYZd5/M1M=;
+	b=SPtX5V/suamAJnnxGQkZlrn+ert5cFSOQ/fcB7/3eKG5syOz4feQ8vYsj2ry+AK5SXzIfM
+	4hC3Nmm3KVAKjeDhg+5fMpLhI0M+79OsT7ip6mzM/vKA06fkbIk7flQMcWTSk+R5nyVuu7
+	8dsSpGZLrPNo3PFn4ikkUFQdQbf4WNj3fJobF8vPgNDBqBI5MCb6boobtS+FNeOERcRFib
+	gzUlXDW7B1WWGOjKh/mYwhagfXcc2//kX6BuNBRGgOo2ZOkxVyc7uEFAewU0PUs/QO7J0B
+	zaI6HgaDH6ICGK6YE2TLQ8RnK6xO/rlyK+l5Gkz1hWcISZRnxEoEJni/ChChtg==
+Date: Mon, 10 Feb 2025 18:12:44 +0100
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Maxime Ripard
+ <mripard@kernel.org>
+Cc: Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, Jagan
+ Teki <jagan@amarulasolutions.com>, Marek Szyprowski
+ <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>,
+ Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>,
+ Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Paul Kocialkowski
+ <contact@paulk.fr>, Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss
+ <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, =?UTF-8?B?SGVy?=
+ =?UTF-8?B?dsOp?= Codina <herve.codina@bootlin.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Paul Kocialkowski
+ <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH v6 14/26] drm/bridge: add support for refcounted DRM
+ bridges
+Message-ID: <20250210181244.0e3e9189@booty>
+In-Reply-To: <ucttjaf3trkgtpvhnsj7xfsybhnoi4qqow5ucwghlggivbagy7@gngjhbtu73lb>
+References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
+	<20250206-hotplug-drm-bridge-v6-14-9d6f2c9c3058@bootlin.com>
+	<20250207-ingenious-daffodil-dugong-51be57@houat>
+	<ucttjaf3trkgtpvhnsj7xfsybhnoi4qqow5ucwghlggivbagy7@gngjhbtu73lb>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,40 +72,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefkeeigecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeglefffefghefhtddvfeeufeeiveekgffgleekieduteekkeetvdehudekgfdvvdenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefjedprhgtphhtthhopegumhhithhrhidrsggrrhihshhhkhhovheslhhinhgrrhhordhorhhgpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdpr
+ hgtphhtthhopehinhhkihdruggrvgesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopehjrghgrghnsegrmhgrrhhulhgrshholhhuthhiohhnshdrtghomhdprhgtphhtthhopehmrdhsiiihphhrohifshhkihesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthhtohepfihilhhlsehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Mon, 10 Feb 2025 17:00:16 +0000
-Al Viro <viro@zeniv.linux.org.uk> wrote:
+Hi Maxime, Dmitry
 
-> On Mon, Feb 10, 2025 at 11:53:13AM -0500, Steven Rostedt wrote:
->=20
-> > No it will not be fine. You should not be using dentry at all. I thought
-> > this was going to convert debugfs over to kernfs. The debugfs_node shou=
-ld
-> > be using kernfs and completely eliminate the use of dentry. =20
->=20
-> I disagree, actually - kernfs is an awful model for anything, sysfs inclu=
-ded...
+On Fri, 7 Feb 2025 21:54:06 +0200
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
 
-Then what would you suggest? It's the only generic system that is
-appropriate for control features, where the underlining "files" are
-actually functions to modify or query information from the kernel.
+> > > +/* Internal function (for refcounted bridges) */
+> > > +void __drm_bridge_free(struct kref *kref)
+> > > +{
+> > > +	struct drm_bridge *bridge = container_of(kref, struct drm_bridge, refcount);
+> > > +	void *container = ((void *)bridge) - bridge->container_offset;
+> > > +
+> > > +	DRM_DEBUG("bridge=%p, container=%p FREE\n", bridge, container);  
+> > 
+> > Pointers are not really useful to track here, since they are obfuscated
+> > most of the time. Using the bridge device name would probably be better
+> > (or removing the SHOUTING DEBUG entirely :))  
+> 
+> bridge device name or bridge funcs (I opted for the latter for the
+> debugfs file)
 
-The entire VFS layer is designed for efficient management of some kind of
-storage device, where the only interaction with the storage device is
-through VFS.
+These DRM_DEBUG()s proved extremely useful exactly because of the
+pointer. This is because when using hotplug one normally has the same
+device added and removed multiple times, and so the device name or
+bridge funcs is always the same, preventing from understanding which
+instance is leaking, or being freed, get, put, etc.
 
-For pseudo file systems like debugfs, sysfs and tracefs, the underlining
-"storage" is the kernel itself, where we need a way for the "storage" part
-to work with the kernel. The VFS layer doesn't give that, which is why
-debugfs and tracefs used dentry as that interface, as the dentry does
-represent the underlining storage.
+Do you think this is a sufficient motivation to keep it?
 
-=46rom what I understand (and Christian can correct me), is that kernfs was
-created to be that interface of the "storage" connecting back to the
-kernel. Where the VFS layer deals with the user accessing the file system
-(read, write, mkdir, etc) but kernfs is the "data storage" that attaches
-those call back to the kernel to retrieve kernel information or even modify
-the kernel behavior.
+Luca
 
--- Steve
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
