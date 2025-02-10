@@ -1,66 +1,80 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from gimli.kloenk.de (gimli.kloenk.de [49.12.72.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2C624FBFB;
-	Mon, 10 Feb 2025 17:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D07F1F4626;
+	Mon, 10 Feb 2025 17:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.72.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739206822; cv=none; b=onssGobh8UAbSha15c3rNTxf+8Ahs7rFFnPV11eo5avmHUxqLAXq9QVsaBklzO5Ikg6LaGlxkr6HFWX0InA06egm+L4ar7G+P4lY2g8hGWqnDY/zclNI+X3MdgJUQatt7efIxy1ts2fcB/P/f8AMDdZwbWOQRiMXSNtS1kb7pyI=
+	t=1739206835; cv=none; b=GlBTQiet3XFkdqYrtk2Wpf9k3+C7kpywNaEFYtyHoKuO8oZztdbGmqkCNCgns/Tc8/66jgL5FqoiktFxDAYa63G5/yPgE7bJQma9GkRY5HiuKpXAWY6aXhljaYSDhmNJAaxZect3Ttl4rKf9b/XrlrBnJPzvF+TdUXoGR/lJXyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739206822; c=relaxed/simple;
-	bh=rO0JRWBaYP8RPL9Khbv4P0/RCh3JELHU5FgN/G1z4Ok=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zx+mtmL+bVVe5YTaVaZWVpDkrYX8FfRfArvDX6hut/tZSy29G5aZYw/psjcIzr/jC+K6JKkhamDyVD7Pl3JLTNBR+wslKZraTgdWeTBF7dWoEhdx/PauyBl65Rd3eFnxTCI8NahcrpIbGfZipvIqtAdzMkPcfIHDy4fShZE//2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=AVUHrXPI; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1739206835; c=relaxed/simple;
+	bh=4Y4k0nUZHd1oCq1XPyw8Qyk6L1nSopy7901vsvJquTs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=SEXyGVDeX0YaSiQbNudq+4RVwfB7lYtKy83ZYFo+TLoIADZpQe/7aII29YSXD2OC6nZlUsPE1adLZ4wlOX7NyBaRYbSU5r7lqDn7WeuHTCakYHaQbzeBviIgEDqRSK4ueQ7KeQoUMlL9qp7NATycy7ahTJePTAoyZdzjGDsgy/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev; spf=pass smtp.mailfrom=kloenk.dev; dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b=I2iOQ7ct; arc=none smtp.client-ip=49.12.72.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kloenk.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="AVUHrXPI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=rO0JRWBaYP8RPL9Khbv4P0/RCh3JELHU5FgN/G1z4Ok=; b=AVUHrXPIUB1PM4gwbWgTcDQsV/
-	Yd9eVqQbskGtBdI5sSpP9iDV0cvNwVETw/P5AZ6icYqsiMBRXtYp3cU+jDvCNglUJTE9PYHb3IA0O
-	PZAPrZvY1waDH4eEjxoI4v1ILyywpqEUCj3tw7XoNW1mkl/O0JK9woFMHuUJim0b98EbBuEEFq/Sb
-	ZYorX5A6ptUrBJ7NALsqXHMgZACXTV9jD8wcrgmudNzOT79hI8TVffHrMInjOIWHIXlr2ZdYt6Ppp
-	o8o4kqknj5nfb4nyIdYkCDcwo9Ew4x8PJaraMz3K7zypYtziWbdLkq8QPen8UzkpFBmoTX6OOvb2k
-	vEBqtdgw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1thX8q-00000009dX9-1QaO;
-	Mon, 10 Feb 2025 17:00:16 +0000
-Date: Mon, 10 Feb 2025 17:00:16 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: David Reaver <me@davidreaver.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org, cocci@inria.fr,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/6] debugfs: Replace dentry with an opaque handle in
- debugfs API
-Message-ID: <20250210170016.GD1977892@ZenIV>
-References: <20250210052039.144513-1-me@davidreaver.com>
- <2025021048-thieving-failing-7831@gregkh>
- <86ldud3hqe.fsf@davidreaver.com>
- <20250210115313.69299472@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b="I2iOQ7ct"
+From: Fiona Behrens <me@kloenk.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kloenk.dev; s=mail;
+	t=1739206828; bh=4Y4k0nUZHd1oCq1XPyw8Qyk6L1nSopy7901vsvJquTs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=I2iOQ7ct+CCF8mpIai8Dz+Zb1/QPGiY2hRnumMw5nRZ1XONbI9aRGZEU9qQaiAsbN
+	 4N4tQU+X0fgBS08kRcnrP+W+MfzE6xVmeY/e7tm3yYtAzU6YZy43oo2JBihVUJOPnJ
+	 hE0/UURngylOWmi6WVgIiK9vOajfoomCHIG2aE6c=
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>,  Alex Gaynor <alex.gaynor@gmail.com>,
+  Boqun Feng <boqun.feng@gmail.com>,  Gary Guo <gary@garyguo.net>,
+  =?utf-8?Q?Bj=C3=B6rn?=
+ Roy Baron <bjorn3_gh@protonmail.com>,  Benno Lossin
+ <benno.lossin@proton.me>,  Andreas Hindborg <a.hindborg@kernel.org>,
+  Alice Ryhl <aliceryhl@google.com>,  Trevor Gross <tmgross@umich.edu>,
+  Boris-Chengbiao Zhou <bobo1239@web.de>,  Kees Cook <kees@kernel.org>,
+  rust-for-linux@vger.kernel.org,  linux-kernel@vger.kernel.org,  Chayim
+ Refael Friedman <chayimfr@gmail.com>
+Subject: Re: [PATCH v2] scripts: generate_rust_analyzer.py: add missing
+ macros deps
+In-Reply-To: <CAJ-ks9m3SV4ezHda0cu00_TRLwY8mNg+GxJrji+FQMs=mfuL2w@mail.gmail.com>
+	(Tamir Duberstein's message of "Mon, 10 Feb 2025 11:51:26 -0500")
+References: <20250209-rust-analyzer-macros-core-dep-v2-1-897338344d16@gmail.com>
+	<87a5atbw1j.fsf@kloenk.dev>
+	<CAJ-ks9m3SV4ezHda0cu00_TRLwY8mNg+GxJrji+FQMs=mfuL2w@mail.gmail.com>
+Date: Mon, 10 Feb 2025 18:00:08 +0100
+Message-ID: <874j11buqv.fsf@kloenk.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210115313.69299472@gandalf.local.home>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 10, 2025 at 11:53:13AM -0500, Steven Rostedt wrote:
+Tamir Duberstein <tamird@gmail.com> writes:
 
-> No it will not be fine. You should not be using dentry at all. I thought
-> this was going to convert debugfs over to kernfs. The debugfs_node should
-> be using kernfs and completely eliminate the use of dentry.
+> On Mon, Feb 10, 2025 at 11:32=E2=80=AFAM Fiona Behrens <me@kloenk.dev> wr=
+ote:
+>>
+>> Competing with https://lore.kernel.org/rust-for-linux/20241205115438.234=
+221-1-me@kloenk.dev/
+>> but I do like your aproach more.
+>
+> Missed this one go by. Sorry!
 
-I disagree, actually - kernfs is an awful model for anything, sysfs included...
+No worries at all, was mostly also to make sure that not both gets merged.
+
+>
+>> Reviewed-by: Fiona Behrens <me@kloenk.dev>
+>
+> Thanks for reviewing! I'm going to respin v3 that looks a little bit
+> more like https://lore.kernel.org/all/20250209-rust-analyzer-host-v1-3-a2=
+286a2a2fa3@gmail.com/
+> which is the proper fix. If you're OK with it, I'll keep your tag.
+
+Sure, feel also free to ping on zullip if anything specific before
+sending. But your code already looks very good. Like it with the types
+and such.
+
+Thanks
+Fiona
