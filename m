@@ -1,63 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10ED624C671
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 21:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D81C26462C;
+	Mon, 10 Feb 2025 21:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739222868; cv=none; b=fu1CIka4P7ZqhuBQy1AK6kVd7FU+mQTucz1ElfiU0lxUPm+MmGPB6nQFTwt97zPsiVehv2mq4n/XVP1N71GI4W4RgFgsm/SWvSdc+/pI9lkpLz9yPMjB+j6D2g+z8S5nL17fdAhbZGhVeP9Tj55kL5bDjmb1X5X1EIfX6kGpye0=
+	t=1739222917; cv=none; b=trvQFhVeewmA4av64jkHBLNRilIdA3bP7y/OP/IA2jtH1x0n0rme6VOxl00Zzmp4lqcxlba7KnYU4QfOj4SQIYK7In8O3EH06ba/98IMIwOzfZwXNfXJEiDenA8qr8JmPcG3CamDMhpIwabrdtDFehKNWbMjU83WPPDUbszAsf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739222868; c=relaxed/simple;
-	bh=s5MWA/KSzvHvAzpKfg9uxF2a7Wa1wO5hWQ48cIfWj58=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=lxE7sRy4pnfPkzRDozZwh51EggDCmpDvvUwNZLhKu8pgvtdT36fIDOwHY/I+jQSsIpamETq+0ke4ozL4P6wa/5eFgoQjgOQRtNw60RfyVzZ8Q+dxW4vGWH8oXbVnOCtiMnS4gtHktUYOdA185FKuSM04IQNrycvJD4J+kNG3cAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lkba1sJj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739222917; c=relaxed/simple;
+	bh=rkzcfXmdY0cWJ7g2nVzxenNJdNZ4J5vhQvxNLSura8U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h+8ONVdNYRabcxFLjPPscU0YruFAIGImlLkORX0iC8ikfA5AItpnUi3ZhKR4NHYJZSs++wwVzrwD3qTcR2YGi6USoZzVn5v995xNp0374mM0J94akN1Zk1pmqfwVDPQuxZCqKkk/XIjDYPNOBNvYafondPWgzXbATw9i98+scrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=mDryXL/Q; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lkba1sJj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1DD1C4CEE4;
-	Mon, 10 Feb 2025 21:27:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739222867;
-	bh=s5MWA/KSzvHvAzpKfg9uxF2a7Wa1wO5hWQ48cIfWj58=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=Lkba1sJjHc6aDNm8o9izyO/sB1BgmiYVqqPUQ+2Vgs6vxvw0Le7mZ75BU+g6n215M
-	 DEs6OAqHIh9UWt+8kePDQlfHitDwwtJ1GHcc2892X9OZ3+3pTJ4iSzpDqHY8SXAIJ2
-	 UlF7B3SuKHGTY3Bt+RVIY3PaCmZ4oPSNMcK43V5gso0unelI7AIGUXkgOV37eYBrPy
-	 3Otx176RhkzoatVSueaUDPHFVZHJr/8h8a4O6+CQv3orPpy/Z7CxuTPpLVMjB4ishW
-	 RDxju/8yReqHMFyEz289rW0emISG2hwrQaXYpV6XmhRwdZAjKkcs1vouAa9GPlnbWx
-	 gqA5EVU4Ko5pg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE283380AA66;
-	Mon, 10 Feb 2025 21:28:17 +0000 (UTC)
-Subject: Re: [GIT PULL] HID fixes for 6.14
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <p38o7633-64s6-8os0-p7or-2n96o2n97qq6@xreary.bet>
-References: <p38o7633-64s6-8os0-p7or-2n96o2n97qq6@xreary.bet>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <p38o7633-64s6-8os0-p7or-2n96o2n97qq6@xreary.bet>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git tags/hid-for-linus-2025021001
-X-PR-Tracked-Commit-Id: b051ffa2aeb2a60e092387b6fb2af1ad42f51a3c
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 58c9bf3363e596d744f56616d407278ef5f97f5a
-Message-Id: <173922289615.3879151.2869975147385398692.pr-tracker-bot@kernel.org>
-Date: Mon, 10 Feb 2025 21:28:16 +0000
-To: Jiri Kosina <jikos@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="mDryXL/Q"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=Ighf+cCWtVjDbwA7lBmh2KFlX0F9HHQRRAc+dU8AEZg=; b=mDryXL/QcS2+NLebwVNJ221iK4
+	LemKm77+MSODAz2Y0hgwvV615EN55OW0NrUlN61R36ifemEa9qBJbYGWv0M/DCqms/SWlaBV0dpPE
+	ei9nGBDp23yzLuXTXxpWee8HgVq/qjQ6Vr1bh9QnNDCjx92IJOIIppt4XOzrGmGwlo+4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1thbKG-00CqAI-HD; Mon, 10 Feb 2025 22:28:20 +0100
+Date: Mon, 10 Feb 2025 22:28:20 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Yijie Yang <quic_yijiyang@quicinc.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 2/4] net: stmmac: dwmac-qcom-ethqos: Mask PHY mode if
+ configured with rgmii-id
+Message-ID: <f0e45ece-3242-4d8b-a2d1-fa1478f05005@lunn.ch>
+References: <20250121-dts_qcs615-v3-0-fa4496950d8a@quicinc.com>
+ <20250121-dts_qcs615-v3-2-fa4496950d8a@quicinc.com>
+ <30450f09-83d4-4ff0-96b2-9f251f0c0896@kernel.org>
+ <48ce7924-bbb7-4a0f-9f56-681c8b2a21bd@quicinc.com>
+ <2bd19e9e-775d-41b0-99d4-accb9ae8262d@kernel.org>
+ <71da0edf-9b2a-464e-8979-8e09f7828120@oss.qualcomm.com>
+ <46423f11-9642-4239-af5d-3eb3b548b98c@quicinc.com>
+ <60fecdb9-d039-4f76-a368-084664477160@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <60fecdb9-d039-4f76-a368-084664477160@oss.qualcomm.com>
 
-The pull request you sent on Mon, 10 Feb 2025 09:10:11 +0100 (CET):
+> > But what about the out-of-tree boards that Andrew mentioned? We need to ensure we don't break them, right?
+> 
+> No. What's not on the list, doesn't exist
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git tags/hid-for-linus-2025021001
+How i worded it was:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/58c9bf3363e596d744f56616d407278ef5f97f5a
+> We care less about out of tree boards, but we also don't needlessly
+> break them.
 
-Thank you!
+I guess if Qualcomm wants to break all its customers boards, that is
+up to Qualcomm. But we can also make it easier for Qualcomm customers
+to get off the vendor crap kernel and to mainline if we at least give
+them an easier migration path.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+     Andrew
