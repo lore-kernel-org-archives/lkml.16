@@ -1,196 +1,124 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B541417591;
-	Mon, 10 Feb 2025 04:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF4317591;
+	Mon, 10 Feb 2025 04:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739162178; cv=none; b=BiQ8KDEj8X0KMKEmKjCppdOxCT3P7UXJRX4wEpcG9ytAhyZVyBJy+sH5kEp8FkjP61RBAy1bchzcmYgU7pJYY6VbxmKLuYAg1VSyAnnZXapFeXoWDHV2SLMza/rTQ5h4aDLpPo2AhE8fxbuJXIfIsoBtq7bLsFw/nFgYVgBFJNQ=
+	t=1739162226; cv=none; b=VVJ/wrR81fIxHOZLPPDAmMgxSGsHsA9VOh6uJ54YNJuVJzPyrW57IdncNPQcPAc5HC6Chnq4evJ6lEWT3HmYsgHNoB0wLxE7xrlt61QQbup/AAKLLld9i7PNoXvDlNv1R/Bq5HeUPJA6XX4I9iJGuIcKo3x3HhgMId/Uyq7eQDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739162178; c=relaxed/simple;
-	bh=Jal0V51wS/3IV3CeOYIwPOr3EmD9bLixle3Xa5+XlZk=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=Y4iI2/YsocNDRxna0Oov5xZZJ3Wyg/FFlankOEpdmsn8FXZLoUhFWCi9iyDYgAMuL6i5qTJz1GvX4zbv4DWkrYhFCo+ydzz8HozQvoJ+EMQVH/6KlawS89qsKEQyx3PA0cOfpmf5NGg0cpvCLRPxWT5pHd9uqhNm+ebA45LE118=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iKhucb7o; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DK59YW8Y; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iKhucb7o; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DK59YW8Y; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1739162226; c=relaxed/simple;
+	bh=98YvdDd8MACN2jIjR7PjcggzsLEldn9tlL9QS0Lp7q8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Lz7PQKzN1KdhfE1dDlMEcXmXaYjR1JWGQ2dAmOtEqpbV4ABarA3aq1iIDiNVakuE7HpCujoxzQDdBktxjoQHpkyTzD/Ftwk1FNvx3eIu8tKver4tvXb8l/jcSsmp7/x48L1p4BbXRhNUeHzfCU7yhS2NKTPFNIU/5C6rfZDioVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=TTeoTgHk; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iKhucb7o";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DK59YW8Y";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iKhucb7o";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DK59YW8Y"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="TTeoTgHk"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id AA8331F391;
-	Mon, 10 Feb 2025 04:36:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739162174; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=USljhevswOz9MNxT6YoXfwehy10AWLKUPepXgviuPZ8=;
-	b=iKhucb7okltIKMRJpss0jB/ekdgLf9ib4e5eQT9uL51Yu4p+4sX8jWbWCrrPwZhJ5afGU1
-	DksZ1AN7qVnmFCL76FiSV/izO9gRhNcMQzD0Y4/4+lw7iDYHY/YsIXTHDwXC9q03smnTKT
-	QeeFgLB34OEzemn8oFYKaiGUn+igPQo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739162174;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=USljhevswOz9MNxT6YoXfwehy10AWLKUPepXgviuPZ8=;
-	b=DK59YW8YKWijk6ctr60fOrjhJTEg77tvJfyMK4cXrN45nJZBuV/UVtGcShtvOusWvqblDv
-	od4fu2o13ILlY5AQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739162174; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=USljhevswOz9MNxT6YoXfwehy10AWLKUPepXgviuPZ8=;
-	b=iKhucb7okltIKMRJpss0jB/ekdgLf9ib4e5eQT9uL51Yu4p+4sX8jWbWCrrPwZhJ5afGU1
-	DksZ1AN7qVnmFCL76FiSV/izO9gRhNcMQzD0Y4/4+lw7iDYHY/YsIXTHDwXC9q03smnTKT
-	QeeFgLB34OEzemn8oFYKaiGUn+igPQo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739162174;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=USljhevswOz9MNxT6YoXfwehy10AWLKUPepXgviuPZ8=;
-	b=DK59YW8YKWijk6ctr60fOrjhJTEg77tvJfyMK4cXrN45nJZBuV/UVtGcShtvOusWvqblDv
-	od4fu2o13ILlY5AQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ED80F13707;
-	Mon, 10 Feb 2025 04:36:11 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id VEWWJzuCqWdaYwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 10 Feb 2025 04:36:11 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4YrsHJ1GFhz9ssM;
+	Mon, 10 Feb 2025 05:37:00 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
+	s=MBO0001; t=1739162220;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=U5/LwMtOeJ6224+d5XpyHm/ckyi9zP3Rw8TDDPRJNIU=;
+	b=TTeoTgHkMOicZho9YKX2bN0b4sqymlcc9wOBBvMZUJUGIKzyeTfyxCA5zHH9/08HRO+VbW
+	KnelvbFEI9gt44MN9vkNu1R8mh3C7tUoKtD5uTMerpuikZDhqIQhHrklOlHkvFBfvN8W3a
+	FJ3pMjqvIQcHbFhf1uYcvivO7pf0WTYJqd/DNpN8tYfF412JjkOX18zA69iAOFBESjoktm
+	oH8DKF3hSFc+JaRZNVxxJOBrR1aC8HM7vu3tjbEWD+EsMWjUr4ldBJy1TgeUSfPVklevJV
+	ENjBUmpTakExrVN0ZK6K0zWDObYHnUlDo+YvT2zOLzErVYmMmYeB3r9JrUdriQ==
+From: Ethan Carter Edwards <ethan@ethancedwards.com>
+Date: Sun, 09 Feb 2025 23:36:50 -0500
+Subject: [PATCH] wifi: ath12k: Fix uninitialized variable and remove goto
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Al Viro" <viro@zeniv.linux.org.uk>
-Cc: "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Jeff Layton" <jlayton@kernel.org>, "Dave Chinner" <david@fromorbit.com>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/19] VFS: introduce vfs_mkdir_return()
-In-reply-to: <20250207194538.GE1977892@ZenIV>
-References: <>, <20250207194538.GE1977892@ZenIV>
-Date: Mon, 10 Feb 2025 15:36:04 +1100
-Message-id: <173916216443.22054.1710124383016579976@noble.neil.brown.name>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250209-ath12k-uninit-v1-1-afc8005847be@ethancedwards.com>
+X-B4-Tracking: v=1; b=H4sIAGGCqWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDIwNL3cSSDEOjbN3SvMy8zBJdQwtTM4O0FEvDZANzJaCegqLUtMwKsHn
+ RsbW1ALKQzXJfAAAA
+X-Change-ID: 20250209-ath12k-uninit-18560fd91c07
+To: Kalle Valo <kvalo@kernel.org>, 
+ Karthikeyan Periyasamy <quic_periyasa@quicinc.com>
+Cc: Jeff Johnson <jjohnson@kernel.org>, 
+ Harshitha Prem <quic_hprem@quicinc.com>, 
+ Kalle Valo <quic_kvalo@quicinc.com>, 
+ Jeff Johnson <jeff.johnson@oss.qualcomm.com>, 
+ linux-wireless@vger.kernel.org, ath12k@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, 
+ Ethan Carter Edwards <ethan@ethancedwards.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1580;
+ i=ethan@ethancedwards.com; h=from:subject:message-id;
+ bh=98YvdDd8MACN2jIjR7PjcggzsLEldn9tlL9QS0Lp7q8=;
+ b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
+ GhQcXlVeHBLOXN5bWk5eVBQVDZlSnBWZG16bG5yVHp0MjlQcS9VCmNMbWMxblB6S0tzZ05kUGZV
+ NTUwbExJd2lIRXh5SW9wc3Z6UFVVNTdxRGxEWWVkZmx5YVlPYXhNSUVNWXVEZ0YKWUNJemZCbit
+ lMzRURno2c3MyV3hEeTlEWDRiKzNManZKeGNHYjN4ZXcvcC8xYysvdGZ6Smlvd01CMzFsK202TA
+ pQUHA3Ty8zRzlNU29YWWRyVHN4ZGtWMGFuN2xqUXUvRGVtVXROZ0NnbGs2bgo9TnJHdgotLS0tL
+ UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
+X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
+ fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
 
-On Sat, 08 Feb 2025, Al Viro wrote:
-> On Thu, Feb 06, 2025 at 04:42:38PM +1100, NeilBrown wrote:
-> > vfs_mkdir() does not guarantee to make the child dentry positive on
-> > success.  It may leave it negative and then the caller needs to perform a
-> > lookup to find the target dentry.
-> >=20
-> > This patch introduced vfs_mkdir_return() which performs the lookup if
-> > needed so that this code is centralised.
-> >=20
-> > This prepares for a new inode operation which will perform mkdir and
-> > returns the correct dentry.
->=20
-> * Calling conventions stink; make it _consume_ dentry reference and
-> return dentry reference or ERR_PTR().  Callers will be happier that way
-> (check it).
+There is a possibility for an uninitialized *ret* variable to be
+returned in some code paths.
 
-With later patches it will need to consume the lock on the dentry as
-well, and either transfer it to the new one or (for error) unlock it.
-We need to have the result dentry still locked for fsnotify_mkdir().
+This moves *ret* inside the conditional and explicitly returns 0 without
+an error. Also removes goto that returned *ret*.
 
-Transferring the dentry lock would have to be done in d_splice_alias().=20
-The __d_unalias() branch should be ok because I already trylock in there
-and fail if I can't get the lock.  For the IS_ROOT branch ....  I think
-it is safe to fail if a trylock doesn't succeed.
+Addresses-Coverity-ID: 1642337 ("Uninitialized scalar variable")
+Fixes: b716a10d99a28 ("wifi: ath12k: enable MLO setup and teardown from core")
+Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+---
+ drivers/net/wireless/ath/ath12k/core.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-So I can probably make that work - thanks.
+diff --git a/drivers/net/wireless/ath/ath12k/core.c b/drivers/net/wireless/ath/ath12k/core.c
+index 0606116d6b9c491b6ede401b2e1aedfb619339a8..ae75cdad3bd6b6eb80a35fee94c18d365d123cbd 100644
+--- a/drivers/net/wireless/ath/ath12k/core.c
++++ b/drivers/net/wireless/ath/ath12k/core.c
+@@ -908,7 +908,6 @@ int ath12k_mac_mlo_ready(struct ath12k_hw_group *ag)
+ {
+ 	struct ath12k_hw *ah;
+ 	struct ath12k *ar;
+-	int ret;
+ 	int i, j;
+ 
+ 	for (i = 0; i < ag->num_hw; i++) {
+@@ -918,14 +917,13 @@ int ath12k_mac_mlo_ready(struct ath12k_hw_group *ag)
+ 
+ 		for_each_ar(ah, ar, j) {
+ 			ar = &ah->radio[j];
+-			ret = __ath12k_mac_mlo_ready(ar);
++			int ret = __ath12k_mac_mlo_ready(ar);
+ 			if (ret)
+-				goto out;
++				return ret;
+ 		}
+ 	}
+ 
+-out:
+-	return ret;
++	return 0;
+ }
+ 
+ static int ath12k_core_mlo_setup(struct ath12k_hw_group *ag)
 
-Hmm... kernfs reportedly can leave the mkdir dentry negative and fill in
-the inode later.  How does that work?  I assume it will still be hashed
-so mkdir won't try the lookup.
+---
+base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+change-id: 20250209-ath12k-uninit-18560fd91c07
 
-done_path_create() will need to accept an IS_ERR() dentry.
+Best regards,
+-- 
+Ethan Carter Edwards <ethan@ethancedwards.com>
 
->=20
-> * Calling conventions should be documented in commit message *and* in
-> D/f/porting
-
-What is the scope of "porting" ?  IT seems to be mostly about
-_operations interfaces, but I do see other things in there.  I'll try to
-remember that - thanks.
-
-
->=20
-> * devpts, nfs4recover and xfs might as well convert (not going to hit
-> the "need a lookup" case anyway)
-
-good point - avoiding the lookup when not requested is a pointless
-optimisation because it is hardly every needed and should always be
-cheap - we expect it to be in the dcache.
-
->=20
-> * that=20
-> +                       /* Need a "const" pointer.  We know d_name is const
-> +                        * because we hold an exclusive lock on i_rwsem
-> +                        * in d_parent.
-> +                        */
-> +                       const struct qstr *d_name =3D (void*)&dentry->d_nam=
-e;
-> +                       d =3D lookup_dcache(d_name, dentry->d_parent, 0);
-> +                       if (!d)
-> +                               d =3D __lookup_slow(d_name, dentry->d_paren=
-t, 0);
-> doesn't need a cast.  C is perfectly fine with
-> 	T *x =3D foo();
-> 	const T *y =3D x;
->=20
-> You are not allowed to _strip_ qualifiers; adding them is fine.
-> Same reason why you are allowed to pass char * to strlen() without
-> any casts whatsoever.
-
-hmm..  I thought I had tried that.  Maybe I didn't try hard enough.
-Thanks for the guidance.
->=20
-> Comment re stability is fine; the cast is pure WTF material.
->=20
-
-
-Thanks,
-NeilBrown
