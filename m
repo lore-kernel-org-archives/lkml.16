@@ -1,129 +1,196 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263701A3159
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD728F49;
+	Mon, 10 Feb 2025 07:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739172335; cv=none; b=jm4KJ7HLtT7QkT2y3NC8D95MArV8N+JSLVDKS5R0BJG3SuqrsDxHidh1/YA66WTic30qHMOjmvMIFZ4oGm5RytAqo0qvx50E6WMbwP5ADvgw7zFchyLw09EO6kyi79j9T/PdFi9SyD45UjIN1gh9b3YwSpwE1rzZTP4USSzQt/s=
+	t=1739172373; cv=none; b=ErKeeoU3GsJbPSsufsTzbezIsmg3VzhSkPvqJIsmVsnaMHp+zaUcKk1gexxo49rXr06RFOX/tgrEnffnpMpV7ELPTQGDEwO98KwYlDSmQEiVfsEThYpxA011XOkadNdQPlV682sK8IS3cPBsX3ARdqqtQxkMmz0qJdyp2WooD+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739172335; c=relaxed/simple;
-	bh=WEi94AOxFT0BGKWJYlk93RgBEivYtkgEu7vcoa48KDE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ox5al1iCDLHiaVm9X8UgjoT+DuFMIHFCDh5ZXHRflbapFFDVeqt3pD0vy6d1pjYhT4fFi0Pd/RnYcJbSIaDgiTOWGKJaDDudWWqiA4KbIMdFQdwVoGbPMdFDSB/jF06Zj89sPCOxrWAmr0Z9S1SFCOzfK6uVDbunBBcGFH7Vdx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kXBzap/g; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739172373; c=relaxed/simple;
+	bh=hA2WQKcyIFGPy8Gcfi9P9tXtAN4ae9v97yc/jfyhsDY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kgPlyzoh00c6Ms02WOfoCsxrU8CdpyNZpKf6KlByvn68SCzMRgqDMfp/d/cWyJKfW4vfpDAM/M672x+h5KhLf0Rp0nKWAAjto69zJ3hVMusE7W8/eTGsGzYD5RR4GfBHeowySB4bKKC/g4F4TNXs3Pq9OU9KGnkih651MwKGFDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KT/zJf+V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kXBzap/g"
-Date: Sun, 9 Feb 2025 23:25:20 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739172327;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hwD1lIdtcJvdTFhSGkZrNjpxJv3lx+G0x/gy4Oqkqlg=;
-	b=kXBzap/gTr4HWJcRXQDm7DOBGfeTNHMzoNaXlGUNiV7By6TX5/ld3/RKw3r36+uzamfZRI
-	9kgaxEmEWNycuEOd4PYpqoSR5TDvsEOojoBeDhe2bivBUMSPju67z9EPUaf4pn2VbQBK1g
-	p83LqS1ZQhg3kef6BQ6B20f6CBvi5hs=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: kvm@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [RFC PATCH v2 2/4] perf: arm_pmuv3: Introduce module param to
- partition the PMU
-Message-ID: <Z6mp4NeklzORJg5y@linux.dev>
-References: <20250208020111.2068239-1-coltonlewis@google.com>
- <20250208020111.2068239-3-coltonlewis@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KT/zJf+V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CB35C4CED1;
+	Mon, 10 Feb 2025 07:26:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739172372;
+	bh=hA2WQKcyIFGPy8Gcfi9P9tXtAN4ae9v97yc/jfyhsDY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KT/zJf+VYZ5ByF25193/MCt1Kp/b+aa928muRkqsRfKUmcT28L+xxCMioQDQC30D+
+	 xLyjY46HaGxXsXi2zNi7nlwzx8Oyb7/KF3ka+6ZqLXOS/Anp7v0CwYxBCXVM1wuG8O
+	 kJR2jdaZCv4C84ppx3CTIXbzPRKc0xjW6mqW+JQEJGgna9+czEwdq0sVDkKlWiWdm6
+	 IIN3+E8mVR6kLRuPuxqgCcp26NNff/Np8WNULMTow04zYugFtgJtPpLO9vaS/WCLVK
+	 Eot2CMNlygJHhU35N5WQKd74GX2uFt/w1LhaPWdpthfwtopOdQt6eMCPmui2PrgxrQ
+	 gsFJUwWYnEl7A==
+Message-ID: <5cf187db-1eae-41a8-a33e-ef68a4f66db6@kernel.org>
+Date: Mon, 10 Feb 2025 08:26:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250208020111.2068239-3-coltonlewis@google.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] HID: corsair-void: Add Corsair Void headset family
+ driver
+To: Stuart Hayhurst <stuart.a.hayhurst@gmail.com>, linux-input@vger.kernel.org
+Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ linux-kernel@vger.kernel.org
+References: <20241008233030.395126-3-stuart.a.hayhurst@gmail.com>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20241008233030.395126-3-stuart.a.hayhurst@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Colton,
-
-On Sat, Feb 08, 2025 at 02:01:09AM +0000, Colton Lewis wrote:
-> For PMUv3, the register MDCR_EL2.HPMN partitiones the PMU counters
-> into two ranges where counters 0..HPMN-1 are accessible by EL1 and, if
-> allowed, EL0 while counters HPMN..N are only accessible by EL2.
+On 09. 10. 24, 1:30, Stuart Hayhurst wrote:
+> Introduce a driver for the Corsair Void family of headsets, supporting:
+>   - Battery reporting (power_supply)
+>   - Sidetone setting support
+>   - Physical microphone location reporting
+>   - Headset and receiver firmware version reporting
+>   - Built-in alert triggering
+>   - USB wireless_status
 > 
-> Introduce a module parameter in the PMUv3 driver to set this
-> register. The name reserved_host_counters reflects the intent to
-> reserve some counters for the host so the guest may eventually be
-> allowed direct access to a subset of PMU functionality for increased
-> performance.
-> 
-> Track HPMN and whether the pmu is partitioned in struct arm_pmu
-> because KVM will need to know that to handle guests correctly.
-> 
-> While FEAT_HPMN0 does allow HPMN to be set to 0, this patch
-> specifically disallows that case because it's not useful given the
-> intention to allow guests access to their own counters.
-
-Quite the contrary.
-
-FEAT_HPMN0 is useful if userspace wants to provide a vPMU that has a
-fixed cycle counter w/o event counters. Certain OSes refuse to boot
-without it...
-
-> static inline u32 read_mdcr(void)
-> {
-> 	return read_sysreg(HDCR);
-> }
-> 
-> static inline void write_mdcr(u32 val)
-> {
-> 	write_sysreg(val, HDCR);
-> }
-> 
-
-Hmm... While this fixes the 32bit compilation issues, it opens a new can
-of worms.
-
-VHE is a 64bit only feature, so you're *guaranteed* that these accessors
-will undef (running at EL1).
-
-> +static void armv8pmu_partition(u8 hpmn)
+> Tested with a Void Pro Wireless, Void Elite Wireless and a Void Elite Wired
+...
+> --- /dev/null
+> +++ b/drivers/hid/hid-corsair-void.c
+> @@ -0,0 +1,829 @@
+...
+> +static void corsair_void_process_receiver(struct corsair_void_drvdata *drvdata,
+> +					  int raw_battery_capacity,
+> +					  int raw_connection_status,
+> +					  int raw_battery_status)
 > +{
-> +	u64 mdcr = armv8pmu_mdcr_read();
+> +	struct corsair_void_battery_data *battery_data = &drvdata->battery_data;
+> +	struct corsair_void_battery_data orig_battery_data;
 > +
-> +	mdcr &= ~ARMV8_PMU_MDCR_HPMN;
-> +	mdcr |= FIELD_PREP(ARMV8_PMU_MDCR_HPMN, hpmn);
-> +	/* Prevent guest counters counting at EL2 */
-> +	mdcr |= ARMV8_PMU_MDCR_HPMD;
+> +	/* Save initial battery data, to compare later */
+> +	orig_battery_data = *battery_data;
 > +
-> +	armv8pmu_mdcr_write(mdcr);
-> +}
+> +	/* Headset not connected, or it's wired */
+> +	if (raw_connection_status != CORSAIR_VOID_WIRELESS_CONNECTED)
+> +		goto unknown_battery;
 > +
+> +	/* Battery information unavailable */
+> +	if (raw_battery_status == 0)
+> +		goto unknown_battery;
+> +
+> +	/* Battery must be connected then */
+> +	battery_data->present = true;
+> +	battery_data->capacity_level = POWER_SUPPLY_CAPACITY_LEVEL_NORMAL;
+> +
+> +	/* Set battery status */
+> +	switch (raw_battery_status) {
+> +	case CORSAIR_VOID_BATTERY_NORMAL:
+> +	case CORSAIR_VOID_BATTERY_LOW:
+> +	case CORSAIR_VOID_BATTERY_CRITICAL:
+> +		battery_data->status = POWER_SUPPLY_STATUS_DISCHARGING;
+> +		if (raw_battery_status == CORSAIR_VOID_BATTERY_LOW)
+> +			battery_data->capacity_level = POWER_SUPPLY_CAPACITY_LEVEL_LOW;
+> +		else if (raw_battery_status == CORSAIR_VOID_BATTERY_CRITICAL)
+> +			battery_data->capacity_level = POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
+> +
+> +		break;
+> +	case CORSAIR_VOID_BATTERY_CHARGED:
+> +		battery_data->status = POWER_SUPPLY_STATUS_FULL;
+> +		break;
+> +	case CORSAIR_VOID_BATTERY_CHARGING:
+> +		battery_data->status = POWER_SUPPLY_STATUS_CHARGING;
+> +		break;
+> +	default:
+> +		hid_warn(drvdata->hid_dev, "unknown battery status '%d'",
+> +			 raw_battery_status);
+> +		goto unknown_battery;
+> +		break;
+> +	}
+> +
+> +	battery_data->capacity = raw_battery_capacity;
+> +	corsair_void_set_wireless_status(drvdata);
+> +
+> +	goto success;
+> +unknown_battery:
+> +	corsair_void_set_unknown_batt(drvdata);
+> +success:
+> +
+> +	/* Inform power supply if battery values changed */
+> +	if (memcmp(&orig_battery_data, battery_data, sizeof(*battery_data))) {
+> +		scoped_guard(mutex, &drvdata->battery_mutex) {
 
-After giving this a read, I don't think the host PMU driver should care
-about MDCR_EL2 at all. The only time that 'guest' events are loaded into
-the PMU is between vcpu_load() / vcpu_put(), at which point *KVM* has
-reconfigured MDCR_EL2.
+This effectively kills the system. We came here via:
+corsair_void_raw_event (hid_driver::raw_event)
+   -> corsair_void_process_receiver
+     -> scoped_guard(mutex, &drvdata->battery_mutex)
 
-I'm not sure if there's much involvement with the host PMU driver beyond
-it pinky-swearing to only use the specified counters. KVM is what
-actually will program HPMN.
+And hid_driver::raw_event can be called from the interrupt context. This 
+happened at:
+https://bugzilla.suse.com/show_bug.cgi?id=1236843
 
-That'd alleviate the PMU driver from having VHE awareness or caring
-about MDCR_EL2.
+In particular, from BH (USB URB BH: usb_giveback_urb_bh()), see the 
+backtrace at:
+https://bugzilla.suse.com/attachment.cgi?id=880175
 
+Perhaps you need a separate _spin_ lock for drvdata->battery and use it 
+here for getting and on "= NULL" and "=new_supply" for setting? Or 
+schedule another work for power_supply_changed()? Or perhaps you unify 
+the add/remove/update work into one?
+
+> +			if (drvdata->battery) {
+> +				power_supply_changed(drvdata->battery);
+> +			}
+
+...
+
+thanks,
 -- 
-Thanks,
-Oliver
+js
+suse labs
+
