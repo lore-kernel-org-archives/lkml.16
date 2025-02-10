@@ -1,62 +1,61 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791BF24BCE9
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:33:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA24623E251
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:33:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739201605; cv=none; b=ClN5Z3fMZpv3H0xNvLLYMh+8MpsqSERzAhG142fUhJ1B+Ssv3FlXXrMofEzKMJjpgz7AHhCeWd+JUtp/3KU/JSf7XiwKnKBdfMKYqIRObOhqUNcU4tIn4crCM9NmrjaL3jP3L7y5qrxOdRrk2x+Miqu+TZfNwuhSsJ+IZ5d+bQs=
+	t=1739201610; cv=none; b=fWaES8KL6QeVyRuLKkvmtc5Jrb8GsDVA+mDrwu4T+8DIzGfhXgFF2h6fWSubVLP3zZR52I88qMN1Ett7XBLrSdVB55Oj3wNFzjldpGXGffYwNIFZQ1DLu+xCvBUC03GKwm5n57v2P6P29vtls+0hDGKW1Un40F2CL7gBL41+A08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739201605; c=relaxed/simple;
-	bh=hXKMFjUxmniwLPmXl/zrhJcXY2dfco4gVE9XyWgbOhs=;
+	s=arc-20240116; t=1739201610; c=relaxed/simple;
+	bh=9Rwb0Zy0TFYVzR/n/xQHWwS/ZMTa05qSikjypC3FsLY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ei40++OPW4gTav4fJkH9e0QDdL5PL7+BT6/0Mcm6vdtf09Tt521gJN+uPzgI4Buo00XMDSNtIZZ3TNiv4T5JoHYk3NMqDPsOUbUc0yNG5GBd/RHRydwlqqNQfLYQEsfRFKW+fRJdnAK5b+HjF3Duf7nhmp0+ze9zAwVUw9a6J7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AZcGtqO8; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=kYwg8XuwAi1A3GTZ/AevDy/vba3wHqOVoExIzi5d8Gcpli60csh5UHPA5Mum/tX/XxrXKn3aiPsXGsg6N8gymZ0BxGa/dgn1Az9I5t2oOTerHEZ3jS5J1QNbjqEbRlpwSVCsvmWObK5rPxNggadfYr2iD8QtdlhjzudHXWYXTM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W2O2eBD3; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AZcGtqO8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W2O2eBD3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739201602;
+	s=mimecast20190719; t=1739201607;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5B84Awu6JUpstdhEM0yzA51Ej2LPUV/BX8OiM6ds56M=;
-	b=AZcGtqO8LiLbCqFqYoP1gnQohLd+I8NzM7srrv15WS2iMYc++IKASArPQij/54ILIVOqFw
-	i4Lmc8Ho6HH7sQcQfbJm0aiBn6TYs1VciGjm1VRWTRhoAKgd8CU4Fb4m6mwCo5U+2qhAuf
-	EjN7hqtWuRpqLhOyJ5FKE2Q0voayQ8w=
+	bh=191fmzOplUZF3eh9uENAPy4J7EnijRk6+X9V7IdEjDw=;
+	b=W2O2eBD3E8pjhmYSE8GEGr8/XD7u8OHOXC5HitoXJTMk1iv6Pb+nl9AjgNmUS30iAQUha6
+	AxCRxpHn8IWnxjUpaF46unkVeNr7ofs3LmpZaFx2qI/BoPs9NWu1LNq9ObaVht2FbjkN8U
+	Uv200T5SdStclJn8GT1NG6B2+R2+aOM=
 Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-377-b9b0u06MOzOGh5KpIVY7hQ-1; Mon,
- 10 Feb 2025 10:33:16 -0500
-X-MC-Unique: b9b0u06MOzOGh5KpIVY7hQ-1
-X-Mimecast-MFC-AGG-ID: b9b0u06MOzOGh5KpIVY7hQ
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-209-x8Sp5xoAOn6BdzEqQLm_KQ-1; Mon,
+ 10 Feb 2025 10:33:21 -0500
+X-MC-Unique: x8Sp5xoAOn6BdzEqQLm_KQ-1
+X-Mimecast-MFC-AGG-ID: x8Sp5xoAOn6BdzEqQLm_KQ
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F40821955D5C;
-	Mon, 10 Feb 2025 15:33:14 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 910BD1955DDD;
+	Mon, 10 Feb 2025 15:33:19 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.34.65])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 73CDE18004A7;
-	Mon, 10 Feb 2025 15:33:10 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id ACA0118004A7;
+	Mon, 10 Feb 2025 15:33:15 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	linux-mm@kvack.org
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Marco Elver <elver@google.com>,
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Ingo Molnar <mingo@kernel.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
 	"Paul E. McKenney" <paulmck@kernel.org>,
 	Shuah Khan <shuah@kernel.org>
-Subject: [PATCH v6 1/3] sched: Compact RSEQ concurrency IDs with reduced threads and affinity
-Date: Mon, 10 Feb 2025 16:32:50 +0100
-Message-ID: <20250210153253.460471-2-gmonaco@redhat.com>
+Subject: [PATCH v6 2/3] sched: Move task_mm_cid_work to mm delayed work
+Date: Mon, 10 Feb 2025 16:32:51 +0100
+Message-ID: <20250210153253.460471-3-gmonaco@redhat.com>
 In-Reply-To: <20250210153253.460471-1-gmonaco@redhat.com>
 References: <20250210153253.460471-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -68,123 +67,252 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Currently, the task_mm_cid_work function is called in a task work
+triggered by a scheduler tick to frequently compact the mm_cids of each
+process. This can delay the execution of the corresponding thread for
+the entire duration of the function, negatively affecting the response
+in case of real time tasks. In practice, we observe task_mm_cid_work
+increasing the latency of 30-35us on a 128 cores system, this order of
+magnitude is meaningful under PREEMPT_RT.
 
-When a process reduces its number of threads or clears bits in its CPU
-affinity mask, the mm_cid allocation should eventually converge towards
-smaller values.
+Run the task_mm_cid_work in a new delayed work connected to the
+mm_struct rather than in the task context before returning to
+userspace.
 
-However, the change introduced by:
+This delayed work is initialised while allocating the mm and disabled
+before freeing it, its execution is no longer triggered by scheduler
+ticks but run periodically based on the defined MM_CID_SCAN_DELAY.
 
-commit 7e019dcc470f ("sched: Improve cache locality of RSEQ concurrency
-IDs for intermittent workloads")
+The main advantage of this change is that the function can be offloaded
+to a different CPU and even preempted by RT tasks.
 
-adds a per-mm/CPU recent_cid which is never unset unless a thread
-migrates.
+Moreover, this new behaviour could be more predictable with periodic
+tasks with short runtime, which may rarely run during a scheduler tick.
+Now, the work is always scheduled with the same periodicity for each mm
+(though the periodicity is not guaranteed due to interference from other
+tasks, but mm_cid compaction is mostly best effort).
 
-This is a tradeoff between:
+To avoid excessively increased runtime, we quickly return from the
+function if we have no work to be done (i.e. no mm_cid is allocated).
+This is helpful for tasks that sleep for a long time, but also for
+terminated task. We are no longer following the process' state, hence
+the function continues to run after a process terminates but before its
+mm is freed.
 
-A) Preserving cache locality after a transition from many threads to few
-   threads, or after reducing the hamming weight of the allowed CPU mask.
-
-B) Making the mm_cid upper bounds wrt nr threads and allowed CPU mask
-   easy to document and understand.
-
-C) Allowing applications to eventually react to mm_cid compaction after
-   reduction of the nr threads or allowed CPU mask, making the tracking
-   of mm_cid compaction easier by shrinking it back towards 0 or not.
-
-D) Making sure applications that periodically reduce and then increase
-   again the nr threads or allowed CPU mask still benefit from good
-   cache locality with mm_cid.
-
-Introduce the following changes:
-
-* After shrinking the number of threads or reducing the number of
-  allowed CPUs, reduce the value of max_nr_cid so expansion of CID
-  allocation will preserve cache locality if the number of threads or
-  allowed CPUs increase again.
-
-* Only re-use a recent_cid if it is within the max_nr_cid upper bound,
-  else find the first available CID.
-
-Fixes: 7e019dcc470f ("sched: Improve cache locality of RSEQ concurrency IDs for intermittent workloads")
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Marco Elver <elver@google.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Tested-by: Gabriele Monaco <gmonaco@redhat.com>
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Fixes: 223baf9d17f2 ("sched: Fix performance regression introduced by mm_cid")
+Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- include/linux/mm_types.h |  7 ++++---
- kernel/sched/sched.h     | 25 ++++++++++++++++++++++---
- 2 files changed, 26 insertions(+), 6 deletions(-)
+ include/linux/mm_types.h | 16 ++++++----
+ include/linux/sched.h    |  1 -
+ kernel/sched/core.c      | 66 +++++-----------------------------------
+ kernel/sched/sched.h     |  7 -----
+ 4 files changed, 18 insertions(+), 72 deletions(-)
 
 diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 6b27db7f94963..0234f14f2aa6b 100644
+index 0234f14f2aa6b..3aeadb519cac5 100644
 --- a/include/linux/mm_types.h
 +++ b/include/linux/mm_types.h
-@@ -875,10 +875,11 @@ struct mm_struct {
+@@ -861,12 +861,6 @@ struct mm_struct {
+ 		 * runqueue locks.
  		 */
- 		unsigned int nr_cpus_allowed;
+ 		struct mm_cid __percpu *pcpu_cid;
+-		/*
+-		 * @mm_cid_next_scan: Next mm_cid scan (in jiffies).
+-		 *
+-		 * When the next mm_cid scan is due (in jiffies).
+-		 */
+-		unsigned long mm_cid_next_scan;
  		/**
--		 * @max_nr_cid: Maximum number of concurrency IDs allocated.
-+		 * @max_nr_cid: Maximum number of allowed concurrency
-+		 *              IDs allocated.
+ 		 * @nr_cpus_allowed: Number of CPUs allowed for mm.
  		 *
--		 * Track the highest number of concurrency IDs allocated for the
--		 * mm.
-+		 * Track the highest number of allowed concurrency IDs
-+		 * allocated for the mm.
+@@ -889,6 +883,7 @@ struct mm_struct {
+ 		 * mm nr_cpus_allowed updates.
  		 */
- 		atomic_t max_nr_cid;
- 		/**
+ 		raw_spinlock_t cpus_allowed_lock;
++		struct delayed_work mm_cid_work;
+ #endif
+ #ifdef CONFIG_MMU
+ 		atomic_long_t pgtables_bytes;	/* size of all page tables */
+@@ -1180,11 +1175,16 @@ static inline void vma_iter_init(struct vma_iterator *vmi,
+ 
+ #ifdef CONFIG_SCHED_MM_CID
+ 
++#define SCHED_MM_CID_PERIOD_NS	(100ULL * 1000000)	/* 100ms */
++#define MM_CID_SCAN_DELAY	100			/* 100ms */
++
+ enum mm_cid_state {
+ 	MM_CID_UNSET = -1U,		/* Unset state has lazy_put flag set. */
+ 	MM_CID_LAZY_PUT = (1U << 31),
+ };
+ 
++extern void task_mm_cid_work(struct work_struct *work);
++
+ static inline bool mm_cid_is_unset(int cid)
+ {
+ 	return cid == MM_CID_UNSET;
+@@ -1257,12 +1257,16 @@ static inline int mm_alloc_cid_noprof(struct mm_struct *mm, struct task_struct *
+ 	if (!mm->pcpu_cid)
+ 		return -ENOMEM;
+ 	mm_init_cid(mm, p);
++	INIT_DELAYED_WORK(&mm->mm_cid_work, task_mm_cid_work);
++	schedule_delayed_work(&mm->mm_cid_work,
++			      msecs_to_jiffies(MM_CID_SCAN_DELAY));
+ 	return 0;
+ }
+ #define mm_alloc_cid(...)	alloc_hooks(mm_alloc_cid_noprof(__VA_ARGS__))
+ 
+ static inline void mm_destroy_cid(struct mm_struct *mm)
+ {
++	disable_delayed_work_sync(&mm->mm_cid_work);
+ 	free_percpu(mm->pcpu_cid);
+ 	mm->pcpu_cid = NULL;
+ }
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 9632e3318e0d6..515b15f946cac 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1397,7 +1397,6 @@ struct task_struct {
+ 	int				last_mm_cid;	/* Most recent cid in mm */
+ 	int				migrate_from_cpu;
+ 	int				mm_cid_active;	/* Whether cid bitmap is active */
+-	struct callback_head		cid_work;
+ #endif
+ 
+ 	struct tlbflush_unmap_batch	tlb_ubc;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 165c90ba64ea9..c65003ab8c55b 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -4524,7 +4524,6 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
+ 	p->wake_entry.u_flags = CSD_TYPE_TTWU;
+ 	p->migration_pending = NULL;
+ #endif
+-	init_sched_mm_cid(p);
+ }
+ 
+ DEFINE_STATIC_KEY_FALSE(sched_numa_balancing);
+@@ -5662,7 +5661,6 @@ void sched_tick(void)
+ 		resched_latency = cpu_resched_latency(rq);
+ 	calc_global_load_tick(rq);
+ 	sched_core_tick(rq);
+-	task_tick_mm_cid(rq, donor);
+ 	scx_tick(rq);
+ 
+ 	rq_unlock(rq, &rf);
+@@ -10528,38 +10526,17 @@ static void sched_mm_cid_remote_clear_weight(struct mm_struct *mm, int cpu,
+ 	sched_mm_cid_remote_clear(mm, pcpu_cid, cpu);
+ }
+ 
+-static void task_mm_cid_work(struct callback_head *work)
++void task_mm_cid_work(struct work_struct *work)
+ {
+-	unsigned long now = jiffies, old_scan, next_scan;
+-	struct task_struct *t = current;
+ 	struct cpumask *cidmask;
+-	struct mm_struct *mm;
++	struct delayed_work *delayed_work = container_of(work, struct delayed_work, work);
++	struct mm_struct *mm = container_of(delayed_work, struct mm_struct, mm_cid_work);
+ 	int weight, cpu;
+ 
+-	SCHED_WARN_ON(t != container_of(work, struct task_struct, cid_work));
+-
+-	work->next = work;	/* Prevent double-add */
+-	if (t->flags & PF_EXITING)
+-		return;
+-	mm = t->mm;
+-	if (!mm)
+-		return;
+-	old_scan = READ_ONCE(mm->mm_cid_next_scan);
+-	next_scan = now + msecs_to_jiffies(MM_CID_SCAN_DELAY);
+-	if (!old_scan) {
+-		unsigned long res;
+-
+-		res = cmpxchg(&mm->mm_cid_next_scan, old_scan, next_scan);
+-		if (res != old_scan)
+-			old_scan = res;
+-		else
+-			old_scan = next_scan;
+-	}
+-	if (time_before(now, old_scan))
+-		return;
+-	if (!try_cmpxchg(&mm->mm_cid_next_scan, &old_scan, next_scan))
+-		return;
+ 	cidmask = mm_cidmask(mm);
++	/* Nothing to clear for now */
++	if (cpumask_empty(cidmask))
++		goto out;
+ 	/* Clear cids that were not recently used. */
+ 	for_each_possible_cpu(cpu)
+ 		sched_mm_cid_remote_clear_old(mm, cpu);
+@@ -10570,35 +10547,8 @@ static void task_mm_cid_work(struct callback_head *work)
+ 	 */
+ 	for_each_possible_cpu(cpu)
+ 		sched_mm_cid_remote_clear_weight(mm, cpu, weight);
+-}
+-
+-void init_sched_mm_cid(struct task_struct *t)
+-{
+-	struct mm_struct *mm = t->mm;
+-	int mm_users = 0;
+-
+-	if (mm) {
+-		mm_users = atomic_read(&mm->mm_users);
+-		if (mm_users == 1)
+-			mm->mm_cid_next_scan = jiffies + msecs_to_jiffies(MM_CID_SCAN_DELAY);
+-	}
+-	t->cid_work.next = &t->cid_work;	/* Protect against double add */
+-	init_task_work(&t->cid_work, task_mm_cid_work);
+-}
+-
+-void task_tick_mm_cid(struct rq *rq, struct task_struct *curr)
+-{
+-	struct callback_head *work = &curr->cid_work;
+-	unsigned long now = jiffies;
+-
+-	if (!curr->mm || (curr->flags & (PF_EXITING | PF_KTHREAD)) ||
+-	    work->next != work)
+-		return;
+-	if (time_before(now, READ_ONCE(curr->mm->mm_cid_next_scan)))
+-		return;
+-
+-	/* No page allocation under rq lock */
+-	task_work_add(curr, work, TWA_RESUME);
++out:
++	schedule_delayed_work(delayed_work, msecs_to_jiffies(MM_CID_SCAN_DELAY));
+ }
+ 
+ void sched_mm_cid_exit_signals(struct task_struct *t)
 diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 38e0e323dda26..606c96b74ebfa 100644
+index 606c96b74ebfa..fc613d9090bed 100644
 --- a/kernel/sched/sched.h
 +++ b/kernel/sched/sched.h
-@@ -3698,10 +3698,28 @@ static inline int __mm_cid_try_get(struct task_struct *t, struct mm_struct *mm)
- {
- 	struct cpumask *cidmask = mm_cidmask(mm);
- 	struct mm_cid __percpu *pcpu_cid = mm->pcpu_cid;
--	int cid = __this_cpu_read(pcpu_cid->recent_cid);
-+	int cid, max_nr_cid, allowed_max_nr_cid;
+@@ -3622,16 +3622,11 @@ extern void sched_dynamic_update(int mode);
  
-+	/*
-+	 * After shrinking the number of threads or reducing the number
-+	 * of allowed cpus, reduce the value of max_nr_cid so expansion
-+	 * of cid allocation will preserve cache locality if the number
-+	 * of threads or allowed cpus increase again.
-+	 */
-+	max_nr_cid = atomic_read(&mm->max_nr_cid);
-+	while ((allowed_max_nr_cid = min_t(int, READ_ONCE(mm->nr_cpus_allowed),
-+					   atomic_read(&mm->mm_users))),
-+	       max_nr_cid > allowed_max_nr_cid) {
-+		/* atomic_try_cmpxchg loads previous mm->max_nr_cid into max_nr_cid. */
-+		if (atomic_try_cmpxchg(&mm->max_nr_cid, &max_nr_cid, allowed_max_nr_cid)) {
-+			max_nr_cid = allowed_max_nr_cid;
-+			break;
-+		}
-+	}
- 	/* Try to re-use recent cid. This improves cache locality. */
--	if (!mm_cid_is_unset(cid) && !cpumask_test_and_set_cpu(cid, cidmask))
-+	cid = __this_cpu_read(pcpu_cid->recent_cid);
-+	if (!mm_cid_is_unset(cid) && cid < max_nr_cid &&
-+	    !cpumask_test_and_set_cpu(cid, cidmask))
- 		return cid;
- 	/*
- 	 * Expand cid allocation if the maximum number of concurrency
-@@ -3709,8 +3727,9 @@ static inline int __mm_cid_try_get(struct task_struct *t, struct mm_struct *mm)
- 	 * and number of threads. Expanding cid allocation as much as
- 	 * possible improves cache locality.
- 	 */
--	cid = atomic_read(&mm->max_nr_cid);
-+	cid = max_nr_cid;
- 	while (cid < READ_ONCE(mm->nr_cpus_allowed) && cid < atomic_read(&mm->mm_users)) {
-+		/* atomic_try_cmpxchg loads previous mm->max_nr_cid into cid. */
- 		if (!atomic_try_cmpxchg(&mm->max_nr_cid, &cid, cid + 1))
- 			continue;
- 		if (!cpumask_test_and_set_cpu(cid, cidmask))
+ #ifdef CONFIG_SCHED_MM_CID
+ 
+-#define SCHED_MM_CID_PERIOD_NS	(100ULL * 1000000)	/* 100ms */
+-#define MM_CID_SCAN_DELAY	100			/* 100ms */
+-
+ extern raw_spinlock_t cid_lock;
+ extern int use_cid_lock;
+ 
+ extern void sched_mm_cid_migrate_from(struct task_struct *t);
+ extern void sched_mm_cid_migrate_to(struct rq *dst_rq, struct task_struct *t);
+-extern void task_tick_mm_cid(struct rq *rq, struct task_struct *curr);
+-extern void init_sched_mm_cid(struct task_struct *t);
+ 
+ static inline void __mm_cid_put(struct mm_struct *mm, int cid)
+ {
+@@ -3899,8 +3894,6 @@ static inline void switch_mm_cid(struct rq *rq,
+ static inline void switch_mm_cid(struct rq *rq, struct task_struct *prev, struct task_struct *next) { }
+ static inline void sched_mm_cid_migrate_from(struct task_struct *t) { }
+ static inline void sched_mm_cid_migrate_to(struct rq *dst_rq, struct task_struct *t) { }
+-static inline void task_tick_mm_cid(struct rq *rq, struct task_struct *curr) { }
+-static inline void init_sched_mm_cid(struct task_struct *t) { }
+ #endif /* !CONFIG_SCHED_MM_CID */
+ 
+ extern u64 avg_vruntime(struct cfs_rq *cfs_rq);
 -- 
 2.48.1
 
