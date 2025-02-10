@@ -1,91 +1,128 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD1F25B68E
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33AAF25B69C;
+	Mon, 10 Feb 2025 17:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739209519; cv=none; b=tPjPRpzT4JwHoTUlgA6yelv0F5Ff7uv7PiEJDW9ImNbH5R/ak5tY3oODw8I0BDc96oVVCEcjEYAajVWvPFVSac97mf14wQDpqxgM1ePUmnOqnv6Eg6K5q+fqSV0M2QcvlsyvkHEmc48ReEaCclKMgi0HeWlhfevR/JtBepwXE94=
+	t=1739209561; cv=none; b=Uv5JjrQIM87ZWmeuhJhcvsV6/LJFMLP8AxBWFITN3BCEYksj/Zi60ZP3ye11zRDQzT0OAa3bMdLyrLVXV2SH92s656iHWqL6R+iD8FqCaEd6W1g+iYVcFLLucRBcwSDUEDllC6/zV+iU5PPksXjm4t9oaJMScw9QQx0id/3nTUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739209519; c=relaxed/simple;
-	bh=fdNx1DUDaVtYdgrnYwf8qDr5+EznUmUeXdfIPP1MsRA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CGAejXCxwnTLUeaJTlqymfIclJUA1+gU0RyFh7Jt5nUzHPKteDqdd4kB1ozJfKt8H2rqtcBQqY/n9BS186R45ckmjPG4XTBt1/b5ncB+MmtmI7uEIFujPPh8ogYGDeseJdB23RmV5zoEpAsjBkak2eVuCVaJpQZX0hxtBelWw1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=NgslL5rP; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1739209561; c=relaxed/simple;
+	bh=4Tvn487GXiKnkZ519LF64Yv54vgWRGaq99W5sfCgT1Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XMS/wLiTOqG7bdQGNI7C+irdVXxcYqYg5XoEhvt1C71urSF1SobolXg2qp8yqvNRz+quE/4C1EDQ26rw2F8NDVz2RdjNdqt9IgL+fC9FaKJD+wxl5nPzrjdvWCdh9tnQ3J+Am54cp5dF9CFR+0eC/QRKAy+Z3n21QUbQlpldy8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ogZLgVLk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="NgslL5rP"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aaf900cc7fbso786881566b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:45:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1739209515; x=1739814315; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fdNx1DUDaVtYdgrnYwf8qDr5+EznUmUeXdfIPP1MsRA=;
-        b=NgslL5rPJnNz+XbPkiPKl0NqG+mDs9PfAUXwrFlPzJc4GjuPubjq+Vu+wnyFU9g2M/
-         WuH0QcIYi1oVRmBN62LFO2J3yOL/k2sIzWrjsm4n1hdtyvPxJKSHYY0dqFIhArL9ycrp
-         dSS2baxxgwLDURj2bmQnZinDeJJMppx0+3vnTqkj3yc3GMFFQLyXajNZ4sRBBhjFdqdM
-         vgjCk1YAZqvteUz/sOqhYPR8sDZi2VF/mz3D807WqvHWJ5vv5b/8esfz6R0IRgAVhxuv
-         +MMMthkhCMss18aSTT/AXGWEZWz2okNabraRSo8eInDFans1GyGaZnGdEyXWZ7jyNK/g
-         lg1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739209515; x=1739814315;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fdNx1DUDaVtYdgrnYwf8qDr5+EznUmUeXdfIPP1MsRA=;
-        b=G3oyAN7/Vw/jQ8AMU24F/lmygcmuFgW9B6e89PiKLAiQCteoN2Y5+E0Mrvs2BZvGHG
-         YA4FOcLu/nDFUkbeeQ1B+IgmbasOWPSz9wbZUIkNfPFSZhZV04gH0b/tvnIuaLqlNTyM
-         V0yUSy7jLNhZ0DXqCKhRMOFPSc1SZ9+OUwR8s0Qdbed2ZMIQRrpCHhouBbx46u2bZb6a
-         k3sqso5r8UrRzVIhPdYZlwVaiHUw/p5/gdr1j+W9sIh0taKOx3lAHfx2x/ZknovnaGoT
-         S5INFahx94FlM5+YJQFLU+aWcmOOPOlsHzLwvhS4QFCSRMCLong+wqvZfhnIcU25guna
-         yeMA==
-X-Forwarded-Encrypted: i=1; AJvYcCVGPs6dpiBAeq4MrAm/dlLEMstDNZz9dPs/oSgRp8J7HFBE04odrAvUUvVMfHaW7JrPK99Wvlu0RngO+Dc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZNiTzl4A9HkqXpsdfpKM3dvd32xgBK3Xt1Yol+xuykgs0pziN
-	n7sqMsE6FfC+jstSpomLlfKxRnDmAzd5TKMmCLoFxlZJhuutr1OwYNK/Goa1v5AOUlr8DubHAKn
-	Qj0ECMwglpXicd19ltf+vzluSoXsUB7IS4itYbw==
-X-Gm-Gg: ASbGncuHGEvwlFwnZSVNl/vB6FYohK5huQezkbLGH9aMkBSglptM/ie3r+XBplrAwqB
-	W20JuqdYk7ihlRxzf9ykQMUYD2B+P3I3AMB7PspmKxruEN/7YEEExFoYRBGs35v4F7qtbo5xl5z
-	OLzhDCMla+elmWqa4BMeKT2r8hFA==
-X-Google-Smtp-Source: AGHT+IGXUbcrbs9jCJWCCDSj0H7A7skcP2xO/8QiwRx0Lv2OP1hLehSE5+2+D1t/ncKajx8/C0dIGmPhKHOCuJcDXr8=
-X-Received: by 2002:a17:907:94d5:b0:ab7:6c50:5f19 with SMTP id
- a640c23a62f3a-ab789aed850mr1642511966b.31.1739209514948; Mon, 10 Feb 2025
- 09:45:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ogZLgVLk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A2AFC4CED1;
+	Mon, 10 Feb 2025 17:46:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739209560;
+	bh=4Tvn487GXiKnkZ519LF64Yv54vgWRGaq99W5sfCgT1Q=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ogZLgVLkZwJBuVh3rfR1FiXL30RcxtCmcWUwlVBlBqE7BKUxNn42gUkBoKWInQVMo
+	 YagLZX8e1ubC6/5K7wRW9ju04XvORNOT5w1zuRZFVSOsl5Ut7FBbLQSdBzaaV5v1P6
+	 rn6zuYZUJOrf30eSuU6w7YYa29bZYZx7JbYsXHran26c9Kl8hiQiopTHvGnb7FrGrE
+	 6a73ncY1OiJHhyC0Xdeg4itRgfR7bCs/89z80+Xnp+YUuDH4NhyJqojkE3VhMjldN/
+	 a7UlKDffcy4ClPQhJaEso3z1CEqnk2z2DiMxc0vMosneOj5Yx3rSH79bdzfklGPBlP
+	 6RhPGa4vmAt/g==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: linux-crypto@vger.kernel.org,
+	x86@kernel.org,
+	linux-block@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Keith Busch <kbusch@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH v4 0/6] x86 CRC optimizations
+Date: Mon, 10 Feb 2025 09:45:34 -0800
+Message-ID: <20250210174540.161705-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAKPOu+_4mUwYgQtRTbXCmi+-k3PGvLysnPadkmHOyB7Gz0iSMA@mail.gmail.com>
- <3052002.1739196466@warthog.procyon.org.uk> <CAKPOu+_tjkiU7mMC0mCwhH23BQ03o=QTgTH60TQ6=aC4fQr7LA@mail.gmail.com>
-In-Reply-To: <CAKPOu+_tjkiU7mMC0mCwhH23BQ03o=QTgTH60TQ6=aC4fQr7LA@mail.gmail.com>
-From: Max Kellermann <max.kellermann@ionos.com>
-Date: Mon, 10 Feb 2025 18:45:04 +0100
-X-Gm-Features: AWEUYZmS9NnwMn_wzMK0r5f-lnnWPNLNfcts3sg_BGm3yC1zJ8jSxnW_V6mGylE
-Message-ID: <CAKPOu+_Cbkq7ROF=azCnWNcgDS4V=SyKC-_ixVo9siyE_SOeow@mail.gmail.com>
-Subject: Re: "netfs: Can't donate prior to front"
-To: David Howells <dhowells@redhat.com>
-Cc: netfs@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
-	linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 10, 2025 at 6:41=E2=80=AFPM Max Kellermann <max.kellermann@iono=
-s.com> wrote:
-> Additionally, here you have a file with a dump of *subreq and *req (of
-> R=3D8). I have added additional fields "start0" and "len0" which contain
-> the values initially set on these.
+This patchset applies to the crc tree and is also available at:
 
-btw. this happens because there is only one subrequest (R=3D8[7]), but
-the start offset is being rounded down (folio_order=3D2), thus
-"fpos<start":
+    git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git crc-x86-v4
 
- (gdb) p/x fpos
- $5 =3D 0x1c0000
- (gdb) p/x fend
- $6 =3D 0x200000
- (gdb) p/x start
- $7 =3D 0x1c6000
+This series replaces the existing x86 PCLMULQDQ optimized CRC code with
+new code that is shared among the different CRC variants and also adds
+VPCLMULQDQ support, greatly improving performance on recent CPUs.  The
+last patch wires up the same optimization to crc64_be() and crc64_nvme()
+(a.k.a. the old "crc64_rocksoft") which previously were unoptimized,
+improving the performance of those CRC functions by as much as 100x.
+crc64_be is used by bcachefs, and crc64_nvme is used by blk-integrity.
+
+Changed in v4:
+- More small cleanups for gen-crc-consts.py and crc-pclmul-template.S.
+
+Changed in v3:
+- It's back to just the x86 patches now, since I've applied the CRC64
+  library rework patches.
+- Added review and ack tags.
+- Made more improvements to crc-pclmul-template.S and gen-crc-consts.py,
+  such as improving the comments that explain some of the steps,
+  tweaking the exact choice of constants in certain cases where more
+  than one is equivalent, sharing a bit more of the source code between
+  lsb and msb-first CRCs, and eliminating an unnecessary instruction.
+
+Changed in v2:
+- Rebased onto upstream
+- Added CRC64 library rework patches
+- Capitalized YMM and ZMM
+- Moved gen-crc-consts.py from scripts/crc/ to just scripts/
+- Renamed crc-pclmul-template-glue.h to just crc-pclmul-template.h
+- The asm functions that use longer vectors no longer tail-call the ones
+  that use shorter vectors in order to handle short lengths.  Each
+  function now handles all lengths >= 16 bytes directly.
+- Made various other improvements to crc-pclmul-template.S and
+  gen-crc-consts.py
+- It's 2025 now; updated the copyright statements
+- Improved commit messages
+- Added ack tags
+
+Eric Biggers (6):
+  x86: move ZMM exclusion list into CPU feature flag
+  scripts/gen-crc-consts: add gen-crc-consts.py
+  x86/crc: add "template" for [V]PCLMULQDQ based CRC functions
+  x86/crc32: implement crc32_le using new template
+  x86/crc-t10dif: implement crc_t10dif using new template
+  x86/crc64: implement crc64_be and crc64_nvme using new template
+
+ MAINTAINERS                         |   1 +
+ arch/x86/Kconfig                    |   3 +-
+ arch/x86/crypto/aesni-intel_glue.c  |  22 +-
+ arch/x86/include/asm/cpufeatures.h  |   1 +
+ arch/x86/kernel/cpu/intel.c         |  22 ++
+ arch/x86/lib/Makefile               |   5 +-
+ arch/x86/lib/crc-pclmul-consts.h    | 195 ++++++++++
+ arch/x86/lib/crc-pclmul-template.S  | 584 ++++++++++++++++++++++++++++
+ arch/x86/lib/crc-pclmul-template.h  |  81 ++++
+ arch/x86/lib/crc-t10dif-glue.c      |  23 +-
+ arch/x86/lib/crc16-msb-pclmul.S     |   6 +
+ arch/x86/lib/crc32-glue.c           |  37 +-
+ arch/x86/lib/crc32-pclmul.S         | 219 +----------
+ arch/x86/lib/crc64-glue.c           |  50 +++
+ arch/x86/lib/crc64-pclmul.S         |   7 +
+ arch/x86/lib/crct10dif-pcl-asm_64.S | 332 ----------------
+ scripts/gen-crc-consts.py           | 238 ++++++++++++
+ 17 files changed, 1213 insertions(+), 613 deletions(-)
+ create mode 100644 arch/x86/lib/crc-pclmul-consts.h
+ create mode 100644 arch/x86/lib/crc-pclmul-template.S
+ create mode 100644 arch/x86/lib/crc-pclmul-template.h
+ create mode 100644 arch/x86/lib/crc16-msb-pclmul.S
+ create mode 100644 arch/x86/lib/crc64-glue.c
+ create mode 100644 arch/x86/lib/crc64-pclmul.S
+ delete mode 100644 arch/x86/lib/crct10dif-pcl-asm_64.S
+ create mode 100755 scripts/gen-crc-consts.py
+
+
+base-commit: 0645b245a2bd1abf1b36b570db47517e5519819c
+-- 
+2.48.1
+
