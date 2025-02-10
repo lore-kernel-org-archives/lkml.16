@@ -1,144 +1,105 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE57C221DA9
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 710FD221DA9
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739193702; cv=none; b=qCeZt3OSYzzc73Ulnr/QZyauM82MxV0zpWipG//3M3Yp0VvumdiM3SZJryiSGLybm9QMwhxn/v736Ru9n6A7eKFMndJO/ihG11yPNpnQm2oarYd/7w9S/x/cM/G7JoM6/iTXUtCq5NIy7oUuP4ljAU1jhQNSkfslEtb6YFQ2IcU=
+	t=1739193753; cv=none; b=X9RItJg6weWxtBsM6YSGUULFFuW6+wJvpQG+WXM8vGEdVrKvXvOHctEFN9vO0cF2DKHXdHA1acR60oDLvI1YfptLFD7bCgVwbvxeVpO8xscCGVitkideCaMJAx/mq8Gxq7J3G+vKtZk8ha/G9+aoIagYNzyyNBtFf6A6j45bvvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739193702; c=relaxed/simple;
-	bh=PAbz7UvKpFEgLj5Z7hCy2WOCUWyJvYsgJPImf2cSkAY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FEPR/VYxJzb1NLgqla2bnWyYRGObItdEEIymj7VOweT21wkFgLJ/TYs/YKApcJB6HIJZvjj0BfGceeK7+RTup7OEn8N0ojwQWTYygBxSn/QlGpFcVxffrmaNSofBu8BCq+3ZeaMbMNUc4Gjci3IA3qOy8OMtnv128DUn+ZVNtY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ALA6V6Nq; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ALA6V6Nq"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6f6ae4846c7so35101697b3.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 05:21:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739193700; x=1739798500; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uSOkGddlFU/lkCcHnNp+1rcvb+cBDqhlRIZAqPb9NJ8=;
-        b=ALA6V6NqTbpqeUcyRkvDFyHR3O9phqg6duCl0D43BHbZWiio9aeFsSKvo/ZqvbAGOT
-         i+IlIwuFomW1Y6qS7KRk8MCuF+zk8v6qge5qtUm7EtEczXEyyggSBV96oDUXKCs3eB9K
-         rhXrNNR403C2pEncKfpo5gCvnzWiddJMU6/CAgwCY51cqt4QBO1Q97LPr0ew44Z1qbEU
-         23HoCSnAepJtFS39NR1QMaoJddkdw5gPJyk8BkJFfqVKiE/NNYc6D969CLCxqLZhlEFP
-         8rxEEVux9hT6jA/r6hHkCKXzsMg3eOxg+Gk9yToQr8iQ80xEEtne/eDhetAdAICZbtKX
-         ObTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739193700; x=1739798500;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uSOkGddlFU/lkCcHnNp+1rcvb+cBDqhlRIZAqPb9NJ8=;
-        b=BWVPkz6Ul67TjwmAITnEyI9qaIz/Kh0PEmdUvhkvv/Wwfg9ZDxc+4CnlrvKC8tBnMz
-         +vNumhWPTVlUJbH8MjdipXIPVPNGDn/+EsRA0yc/vuDrMTGV/9BRG6g+ZspPHQfaOBqZ
-         C+uU92kRbbuLO0I2tUmvPuvUpQsiHpdGo0crpggekF7PBhb5c7oQ3HHVeHsLKZQIfaec
-         vopWgA2/cpUuGAtSusSTA8hIA4CJWNAWAEz1CxXWkIOLSHpiCpSM4ZH0ViEff2dz71wR
-         lZxm2y0zaDBcFJ7Go8GI7GvxfvU+6k3AGNUedaQNwr24CRDho3yglqM3wtfV1ihuHQ7J
-         0X5w==
-X-Gm-Message-State: AOJu0YyS/uRTVnf4JHHTTIPJd7XJAZUOxZzZ1OcIYQtSirYsHTirZDdY
-	YT4YfnK9lKxaR0hM59wkNgybcIq0wW88xK82to2VF2pFwQcyZsBnX64X9upndQLL76IfygJywC0
-	k8HLRd5E8JIyAGTDIKUdRUqu8CjDd0kCDKInGNg==
-X-Gm-Gg: ASbGnctY64ZnDM/rbMb4+17gPYSDLjdUciGQ0j45idUnez2F3itKiuSs/h9RVyb02hx
-	6sf58iu6EWZqxvWAhbLPq8zipLG8V13gdWKB/z8Bp3jdRqGf5dFSZTDcfEMeqqwCdWHh0tMy+hA
-	==
-X-Google-Smtp-Source: AGHT+IGT/GDZ6Gxp5I3tVgS1PGL22uLGu8gT3RwgG3Vcr3l8bKWAi7Qxr4psOTaJndd7ZmGbBmIMtA2xZ5DujtxikjI=
-X-Received: by 2002:a05:690c:fc4:b0:6f9:4bae:450c with SMTP id
- 00721157ae682-6f9b2981b0amr124519297b3.26.1739193698224; Mon, 10 Feb 2025
- 05:21:38 -0800 (PST)
+	s=arc-20240116; t=1739193753; c=relaxed/simple;
+	bh=/maDo5bWD+jijserh85sAAmI+TFHqLooi38X/dy4bko=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n4DiQS0JVLb0A5NHdQDYeF/RQHtkHGwe7W8FmlQzWNMGkD/Nxh0oHfKPdJLlK4RgZCKqCv2S8hr7oohyB+/fIqjFfDXF96It5JiVHA6vtnA2QQc3NfZC4N7m9UKiIeCnshWFcYlELgZlUvUAKT8fAdv7rDQmu51cAtr/000aaIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C6761BA8;
+	Mon, 10 Feb 2025 05:22:52 -0800 (PST)
+Received: from [10.1.196.57] (eglon.cambridge.arm.com [10.1.196.57])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 976AB3F58B;
+	Mon, 10 Feb 2025 05:22:27 -0800 (PST)
+Message-ID: <ea62c5fc-0022-40fd-a565-de6d6e8d72da@arm.com>
+Date: Mon, 10 Feb 2025 13:22:26 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206220940.10553-1-kamal.dasu@broadcom.com>
-In-Reply-To: <20250206220940.10553-1-kamal.dasu@broadcom.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 10 Feb 2025 14:21:02 +0100
-X-Gm-Features: AWEUYZmw4p2ewkot51drspCy3hd_woeZ-XwIYUHgv-bUaKg6vpiCs0WxHAlmW94
-Message-ID: <CAPDyKFq1ZbP4c9ECfM1SY+MEopf+dC19w9PkqXaUjevf=bPjcw@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/3] mmc: sdhci-brcmstb: Add rpmb sharing support
-To: Kamal Dasu <kamal.dasu@broadcom.com>, Jens Wiklander <jens.wiklander@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	adrian.hunter@intel.com, linux-mmc@vger.kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, wsa+renesas@sang-engineering.com, 
-	f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 27/40] x86/resctrl: Move thread_throttle_mode_init() to
+ be managed by resctrl
+To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Fenghua Yu <fenghua.yu@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
+ shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+References: <20241004180347.19985-1-james.morse@arm.com>
+ <20241004180347.19985-28-james.morse@arm.com>
+ <9ef7e709-7bc8-4bf5-b5b6-960e2eed5cfc@intel.com>
+Content-Language: en-GB
+From: James Morse <james.morse@arm.com>
+In-Reply-To: <9ef7e709-7bc8-4bf5-b5b6-960e2eed5cfc@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-+ Jens
+Hi Reinette,
 
-On Thu, 6 Feb 2025 at 23:09, Kamal Dasu <kamal.dasu@broadcom.com> wrote:
->
-> This patch set adds support for Broadcom TZOS to read and write to RPMB
-> partition using synchronized access to the controller hardware.
-> To achieve this Linux OS and the secure TZOS make use of:
-> - shared hardware semaphore register
-> - a set of SDIO shared work registers and
-> - IPI interrupt registers
-> The sdio shared work registers indicates next in queue to access the controller
-> and current agent in the queue. The currently running OS that needs access to
-> the controller puts itself in its slot of work register and if its next in line
-> it can try to grab the hardware semaphore and complete its mmc requests.
-> Next agent queue state is changed under the hardware semaphore lock before it
-> release it by looking at work slot register. send and receive IPI interrupts
-> between linux and secure world are used to indicatecompletion of transaction to
-> the waiting OS. TZOS has its own RPMB driver which accesses partition when it
-> wants to read/write RPMB frames. Current implementation assumes Linux and TZOS
-> as the two work agents.
+On 23/10/2024 23:59, Reinette Chatre wrote:
+> On 10/4/24 11:03 AM, James Morse wrote:
+>> thread_throttle_mode_init() is called from the architecture specific code
+>> to make the 'thread_throttle_mode' file visible. The architecture specific
+>> code has already set the membw.throttle_mode in the rdt_resource.
+>>
+>> This doesn't need to be specific to the architecture, the throttle_mode
+>> can be used by resctrl to determine if the 'thread_throttle_mode' file
+>> should be visible.
+>>
+>> Call thread_throttle_mode_init() from resctrl_setup(), check the
+>> membw.throttle_mode on the MBA resource. This avoids publishing an
+>> extra function between the architecture and filesystem code.
 
-We recently added an in-kernel interface/subsystem for RPMB
-(drivers/misc/rpmb-core.c). The optee driver (drivers/tee/*) uses it
-ro read/write frames and route them for the secure OS.
 
-When the mmc subsystem probes the eMMC card, it registers it as an
-RPMB device via the new RPMB subsystem. In this way, it allows
-consumers (as the optee driver) to read/write to/from it.
+>> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> index 3f10e6897daa..596f5f087834 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> @@ -2048,10 +2048,15 @@ static struct rftype *rdtgroup_get_rftype_by_name(const char *name)
+>>  	return NULL;
+>>  }
+>>  
+>> -void __init thread_throttle_mode_init(void)
+>> +static void __init thread_throttle_mode_init(void)
+>>  {
+>> +	struct rdt_resource *r = resctrl_arch_get_resource(RDT_RESOURCE_MBA);
+>>  	struct rftype *rft;
+>>  
+>> +	if (!r->alloc_capable ||
+>> +	    r->membw.throttle_mode == THREAD_THROTTLE_UNDEFINED)
+>> +		return;
+>> +
+> 
+> The goal from the changelog is to make "thread_throttle_mode_init()" not be specific
+> to an architecture. It does so by checking the value of rdt_resource->resctrl_membw->membw_throttle_mode.
+> I thus expect that as part of being non-architectural it should check this for all
+> resources that initialize resctrl_membw, this includes RDT_RESOURCE_SMBA.
 
->
-> Change required adding two core mmc_host_ops request_start() and request_done()
-> to let the host controller driver know when a mmc request starts and ends so
-> that the access can be synchronized. This has been tested with both the sdhci
-> and cqhci access. Currently these ops are implemented by the sdhci-brcmstb
-> controller dirver to acquire and release the hardware semaphore before and
-> after access. This change to the mmc/core driver does not have any impact to
-> existing controller drivers.
+Sure.
 
-It seems to me that this isn't needed at all, assuming we have an
-in-kernel tee driver that can route the RPMB frames, but maybe I don't
-fully understand the use case.
+Adding this creates the new corner-case where MBA has a throttle_mode but SMBA does not.
+I'll add the corresponding logic to rdt_thread_throttle_mode_show() to print 'undefined'
+to user-space if that ever happens.
 
-I have looped in Jens Wiklander, allowing him to comment on this too.
 
-Kind regards
-Uffe
+Thanks,
 
->
-> Posting this path to get comments on the initial implementation.
->
-> Todo :
-> - Provide  hardware smeaphore using the harware spinlock driver framework
-> - Use IPI send receive interrupt controller driver
->
-> Kamal Dasu (3):
->   mmc: add request_start() and request_done() mmc ops
->   dt-bindings: mmc: brcm,sdhci-brcmstb: Add sdio sharing support
->   mmc: sdhci-brcmstb: Add rpmb sharing support in host driver
->
->  .../bindings/mmc/brcm,sdhci-brcmstb.yaml      |  16 +-
->  drivers/mmc/core/core.c                       |  14 +-
->  drivers/mmc/host/sdhci-brcmstb.c              | 275 +++++++++++++++++-
->  include/linux/mmc/host.h                      |   4 +
->  4 files changed, 303 insertions(+), 6 deletions(-)
->
-> --
-> 2.17.1
->
-
-Kind regards
-Uffe
+James
