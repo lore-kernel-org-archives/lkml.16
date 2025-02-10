@@ -1,163 +1,86 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292F6253345
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919D11C2DA2
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739227303; cv=none; b=SOIv+PC/oozc6OQFWNV3M0qsAJfpG0oUSJ/4NgegIZL5IJHATkKpcC+s9ytc3UJVRweUMhNQpFW8NEoOebBsa/LN46reoJdyOmWs8X+Gj6ujxozuvyH+G2+IB+l36g36sYU8ckPUIbH8nYSo912TkKucd2gU6kuM7R88EhoggV8=
+	t=1739227381; cv=none; b=E9bpfZC7Psuux1vme43u5aweMom1a3UeUGLjX1TvzCjx3+jqvbkPiRW3aTTJLCrW/NJ1+loH5cUtTUe6HRcNDz3snLARoscLGK9M1DEGr/kDQHkDcsNT4pcyhmbM/dUKlVPi/PHgRO4KuZE6Jio+944Q16Cg7+guXjXF6T7Xa2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739227303; c=relaxed/simple;
-	bh=J2M5LBZIRA6dmTpu1re8X+PdJJRdN2XLIrkz2r8effU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sq5r3247qKTuyq5xB358pzUNrNnqTgyzNWcrzwcdIZSHJ4Y5nqVvZJSdvfKge6R5foDzvAiBmjksHUzqKjdNWbSOetONxKYg2OL+BgGcLO7i1RAbKf6mnncPgaJhjaJQrK/aJufnJRewwPaPeaKAy8PZYRC0UXaVf5iSVh76PYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4rHaX52s; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1739227381; c=relaxed/simple;
+	bh=pJ3AFthbhn2IjEmAwvy7YS/7fiOfR0wUHuutA87vzQk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R0cbbnjwpEOJltbccdyB9laB17iLO5O2Eq5fvtY0FsDPpnYxHQw8KH6zQoO+6VYvWf31W8im9SejUD5KuGs5f0cympgJhphayJwD3W27xasDUT5wJcAO8xScbwjg2wyyFkXYlmsfPLE2xAgzmXLnzYA+3Py3CIWnretZ8VoK9gU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nXxFgAA0; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4rHaX52s"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fa3b466245so5841877a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:41:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739227301; x=1739832101; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DZD6V+4k9UUTVu1q6+YHZha34NbYh40y70H3kTsa6mc=;
-        b=4rHaX52sRJ4jIAyvJLAOq2hrrp9wiZ8j1Ner8REYgdlK5KyBt84oPCXh4eVtORkuRA
-         B/F6jDotZn0UprV0Dx72Rboz34bU0vby3ajujLRXYG3bKph6HtPmXXT5o5h+cw/NuO55
-         39XnICl6g0LkImXReEMpZ7+LCr+aRA00nprKnMaIml6FWZZMP1tjlD10/10lkhIcOJxL
-         gQyOM4wtNta1W8nd/vPM/Wuew7M7BeKkK4/cE4S43ZN8Fg88ehBMCrZNNOfhM7idxD8k
-         Zop4d9snir/d0ugURk7zVutou/GDnh6eXTyyp8/UKCLBUxz1Bn7Kq63LHrW2IicZSUq3
-         ydfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739227301; x=1739832101;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DZD6V+4k9UUTVu1q6+YHZha34NbYh40y70H3kTsa6mc=;
-        b=MVgaC2ye1Zi0lV7WT2HR+zHEBYX2XD3467A6jBOmNhD0HFQ+WaNLA4r2VKPabT5gZK
-         xOqGk7W/ESNEaqsKAzEPBmONUv57xAzrsO64Gg2vdlEbxbhxX2qIqpYBOl/PIBtQDjTV
-         8rMYnhCIELcxzoKnUDMlxM9xP23RaNfZTfwrlokKnxoaWebfZVt7n8XVA/gvVwhx1X2J
-         drfcMiTG7NG7Ov9kfxndWuY4l21k/d2/4iy2mQUI63JJ30Ili9rOERMq0tPm8Z1GcDXR
-         Qv+B9YSJ4kyEA5o6YUyTJEBq3tDq8fHfErpvx3E0l7ephjtMJAnhoBERb5kiHtWUnn1r
-         oqaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU7ajF7JansjANTm17UHDRGNyue/9w8azNt94PxZtoz4NjtnfMvX+LLHPw+1i2bBSth1nQzzsFHQZfS6uU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5s/SF3a+Gn2YNH5DitwQO3zE6labihB/Ce2m8Zx+Ptk+KyGGO
-	fwDVUukSPQr3e/3JaNO62EQZYIoca2X4rs7QOGd+qIXcxil+b+/iXfhvgKU7siFkyKsRk6BZJLk
-	Suw==
-X-Google-Smtp-Source: AGHT+IH2c0dkWdxSoUH/P+c/MHYnOos+sGeNLUsxpV+Tj6PKAdhff85ZIO3F/CXDLvmSmNqvrbsH0zqif9M=
-X-Received: from pjbsq11.prod.google.com ([2002:a17:90b:530b:b0:2f7:ff61:48e7])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2d8c:b0:2ea:2a8d:dd2a
- with SMTP id 98e67ed59e1d1-2fa242e6928mr22387097a91.27.1739227301444; Mon, 10
- Feb 2025 14:41:41 -0800 (PST)
-Date: Mon, 10 Feb 2025 14:41:40 -0800
-In-Reply-To: <Z6bJF8uA9R0x3QGp@yzhao56-desk.sh.intel.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nXxFgAA0"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739227377;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=YZhQ2JMipPfK0C7SvJ4X1y2p34Ne5eOf0xju/PAVEgM=;
+	b=nXxFgAA0saOIfIGqqMlqUuO0hqMX8oWX+vVvSMN286mIl1tb52GqSsZ1FTC2eV6AqWmiDj
+	TA7yuvuzQC2bZ2EVToHRyY7aGc8W2zxgEwz0oZmJ+4Y6pkYmXfPcM6jY/XVNcFTXMh83c5
+	MXFdazgQqH9rDpiIPHMya/Fkjob+CHI=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Shivaprasad G Bhat <sbhat@linux.ibm.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Gaurav Batra <gbatra@linux.ibm.com>,
+	Brian King <brking@linux.vnet.ibm.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] powerpc/iommu: Use str_disabled_enabled() helper
+Date: Mon, 10 Feb 2025 23:42:44 +0100
+Message-ID: <20250210224246.363318-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250207030640.1585-1-yan.y.zhao@intel.com> <20250207030931.1902-1-yan.y.zhao@intel.com>
- <Z6YixPh_j517vqcP@google.com> <Z6bJF8uA9R0x3QGp@yzhao56-desk.sh.intel.com>
-Message-ID: <Z6qApByaoCs_Y0eb@google.com>
-Subject: Re: [PATCH 4/4] KVM: x86/mmu: Free obsolete roots when pre-faulting SPTEs
-From: Sean Christopherson <seanjc@google.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: pbonzini@redhat.com, rick.p.edgecombe@intel.com, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Sat, Feb 08, 2025, Yan Zhao wrote:
-> On Fri, Feb 07, 2025 at 07:12:04AM -0800, Sean Christopherson wrote:
-> > On Fri, Feb 07, 2025, Yan Zhao wrote:
-> > > Always free obsolete roots when pre-faulting SPTEs in case it's called
-> > > after a root is invalidated (e.g., by memslot removal) but before any
-> > > vcpu_enter_guest() processing of KVM_REQ_MMU_FREE_OBSOLETE_ROOTS.
-> > > 
-> > > Lack of kvm_mmu_free_obsolete_roots() in this scenario can lead to
-> > > kvm_mmu_reload() failing to load a new root if the current root hpa is an
-> > > obsolete root (which is not INVALID_PAGE). Consequently,
-> > > kvm_arch_vcpu_pre_fault_memory() will retry infinitely due to the checking
-> > > of is_page_fault_stale().
-> > > 
-> > > It's safe to call kvm_mmu_free_obsolete_roots() even if there are no
-> > > obsolete roots or if it's called a second time when vcpu_enter_guest()
-> > > later processes KVM_REQ_MMU_FREE_OBSOLETE_ROOTS. This is because
-> > > kvm_mmu_free_obsolete_roots() sets an obsolete root to INVALID_PAGE and
-> > > will do nothing to an INVALID_PAGE.
-> > 
-> > Why is userspace changing memslots while prefaulting?
-> It currently only exists in the kvm selftest (written by myself...)
-> Not sure if there's any real use case like this.
+Remove hard-coded strings by using the str_disabled_enabled() helper.
 
-It's decidedly odd.  I asked, because maybe there's a way we can disallow the
-scenario.  Doing that without making things more complex than simply handling
-obsolete roots is probably a fool's errand though.
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ arch/powerpc/kernel/iommu.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> > > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> > > ---
-> > >  arch/x86/kvm/mmu/mmu.c | 5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > > 
-> > > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> > > index 47fd3712afe6..72f68458049a 100644
-> > > --- a/arch/x86/kvm/mmu/mmu.c
-> > > +++ b/arch/x86/kvm/mmu/mmu.c
-> > > @@ -4740,7 +4740,12 @@ long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
-> > >  	/*
-> > >  	 * reload is efficient when called repeatedly, so we can do it on
-> > >  	 * every iteration.
-> > > +	 * Before reload, free obsolete roots in case the prefault is called
-> > > +	 * after a root is invalidated (e.g., by memslot removal) but
-> > > +	 * before any vcpu_enter_guest() processing of
-> > > +	 * KVM_REQ_MMU_FREE_OBSOLETE_ROOTS.
-> > >  	 */
-> > > +	kvm_mmu_free_obsolete_roots(vcpu);
-> > >  	r = kvm_mmu_reload(vcpu);
-> > >  	if (r)
-> > >  		return r;
-> > 
-> > I would prefer to do check for obsolete roots in kvm_mmu_reload() itself, but
-> Yes, it's better!
-> I previously considered doing in this way, but I was afraid to introduce
-> overhead (the extra compare) to kvm_mmu_reload(), which is called quite
-> frequently.
-> 
-> But maybe we can remove the check in vcpu_enter_guest() to reduce the overhead?
-> 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index b2d9a16fd4d3..6a1f2780a094 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -10731,8 +10731,6 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->                                 goto out;
->                         }
->                 }
-> -               if (kvm_check_request(KVM_REQ_MMU_FREE_OBSOLETE_ROOTS, vcpu))
-> -                       kvm_mmu_free_obsolete_roots(vcpu);
->                 if (kvm_check_request(KVM_REQ_MIGRATE_TIMER, vcpu))
->                         __kvm_migrate_timers(vcpu);
->                 if (kvm_check_request(KVM_REQ_MASTERCLOCK_UPDATE, vcpu))
-> 
-> > keep the main kvm_check_request() so that the common case handles the resulting
-> > TLB flush without having to loop back around in vcpu_enter_guest().
-> Hmm, I'm a little confused.
-> What's is the resulting TLB flush?
+diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
+index 0ebae6e4c19d..244eb4857e7f 100644
+--- a/arch/powerpc/kernel/iommu.c
++++ b/arch/powerpc/kernel/iommu.c
+@@ -16,6 +16,7 @@
+ #include <linux/mm.h>
+ #include <linux/spinlock.h>
+ #include <linux/string.h>
++#include <linux/string_choices.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/bitmap.h>
+ #include <linux/iommu-helper.h>
+@@ -769,8 +770,8 @@ struct iommu_table *iommu_init_table(struct iommu_table *tbl, int nid,
+ 	iommu_table_clear(tbl);
+ 
+ 	if (!welcomed) {
+-		printk(KERN_INFO "IOMMU table initialized, virtual merging %s\n",
+-		       novmerge ? "disabled" : "enabled");
++		pr_info("IOMMU table initialized, virtual merging %s\n",
++			str_disabled_enabled(novmerge));
+ 		welcomed = 1;
+ 	}
+ 
+-- 
+2.48.0
 
-For the common case where KVM_REQ_MMU_FREE_OBSOLETE_ROOTS is pending before
-vcpu_enter_guest, kvm_mmu_free_obsolete_roots() may trigger KVM_REQ_TLB_FLUSH
-via kvm_mmu_commit_zap_page().  Processing KVM_REQ_MMU_FREE_OBSOLETE_ROOTS before
-KVM_REQ_TLB_FLUSH means vcpu_enter_guest() doesn't have to "abort" and redo the
-whole loop (the newly pending request won't be detected until kvm_vcpu_exit_request(),
-which isn't that late in the entry sequence, but there is a decent amount of work
-that needs to be undone).
-
-On the other hand, the cost of kvm_check_request(), especially a check that's
-guarded by kvm_request_pending(), is negligible.
-
-That said, obsolete roots shouldn't actually require a TLB flush.  E.g. the TDP
-MMU hasn't flushed invalid roots since commit fcdffe97f80e ("KVM: x86/mmu: Don't
-do TLB flush when zappings SPTEs in invalid roots").  I'd have to think more about
-whether or not that's safe/correct for the shadow MMU though.
-
-For this case, I think it makes sense to just add the check in kvm_mmu_reload().
