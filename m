@@ -1,174 +1,124 @@
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3C325C6E2;
-	Mon, 10 Feb 2025 19:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF09825C6E2;
+	Mon, 10 Feb 2025 19:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739217534; cv=none; b=u1erFEeVw5dMgJCT/+CBj8QNzqbdx64dosCtj9bq1LCS8L48HbTTgzp8fLyJahbNdgI2oCpLla9PICcAg87QeGprAGW7j6PpHu7U1CRwwZIgEnuzQ5c16hEGdyqBXjZXQbjYDC75BddIs/br8IWDCLeoIgSjKNPNvk+YLVTGJ7g=
+	t=1739217567; cv=none; b=ikVI7VAYtmXH5lnf6sRUeMlMq2v1fF0nPO0AaJYR4QC8+U5M0NthJpIwrKR2bgxoG4ZKrkuE0K1Tr4EXf6i6BEf0BhA4POFdIn8mbh6LQDulKJKMHUhH54VnOz/RHVQ3xsagzM+ulXZ17gU/Y9noszeRgNnBYOuV3R88+LYauzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739217534; c=relaxed/simple;
-	bh=PNIM2nvS+oM+kXk3ZFDMX8nqLjD92ZayFZQf+DB0PS4=;
+	s=arc-20240116; t=1739217567; c=relaxed/simple;
+	bh=fQTVaLBmxwzCQpGzYKkvesS9adJeVdXniYYtPc98sLc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JBaDhzROTgFCskV3NxZ3517CBHoDG95TLM0Eh/m8+rCxhHGtTOQYKG805T+m74DS+YuWQQW+Xp89KKWUf+la/nzdBVN4md222PLghIalyttvFyv80EeTTKAv/3g6HTY6jyFfdHNjWgB1fHUFHiCjSOZzsJlxc9LFDp9/ahTkdhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 6662A30008F12;
-	Mon, 10 Feb 2025 20:58:48 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 520FE4649DE; Mon, 10 Feb 2025 20:58:48 +0100 (CET)
-Date: Mon, 10 Feb 2025 20:58:48 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Aditya Garg <gargaditya08@live.com>
-Cc: Lleyton Gray <lleyton@fyralabs.com>, Ard Biesheuvel <ardb@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>
-Subject: Re: [PATCH] x86/efistub: Add options for forcing Apple set_os
- protocol
-Message-ID: <Z6paeFrjdv7L3mtv@wunner.de>
-References: <20241228202212.89069-1-lleyton@fyralabs.com>
- <Z3EdkuCBzTGzTHK3@wunner.de>
- <CAMj1kXHWoD78QdFnEY_=Mtz02zN3rhN5+Skgv=fHG91TD8Mmvw@mail.gmail.com>
- <Z3EmoNWbkbYZ7NZO@wunner.de>
- <CAMj1kXEb9NPSwEr2brHYJtFQhnW55hoPycjcAgoPAfjU5ZFqZw@mail.gmail.com>
- <abe2274b-4341-4212-85a8-113273ce1b18@fyralabs.com>
- <PN3PR01MB7728B4C94846673A5FFACE29B80B2@PN3PR01MB7728.INDPRD01.PROD.OUTLOOK.COM>
+	 Content-Type:Content-Disposition:In-Reply-To; b=C4orMExrg661SxBF8Smc/bvzULP/4//Ij7bknjhipBvYf57N2pcyTfiQRT0Rk2R+XOkotaeWvE2P3CIXFnaMJ+1GwfLFRNaE5uqGRifuLp06//Eay797MvdAL2Ac6Z/NUAKGrO5WGJDnnIlXRrodvU4PjbbHjyuCQ1UCMualAiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sudhREMJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sudhREMJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EAE8C4CED1;
+	Mon, 10 Feb 2025 19:59:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739217567;
+	bh=fQTVaLBmxwzCQpGzYKkvesS9adJeVdXniYYtPc98sLc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sudhREMJT4WBnHYFJc/WPrg0ZoMxrcqEUCMOeexJmHaOiEZfimgGYSRjbJ/o5h9Wp
+	 RMF272+Jr++MBMkDIXhDPhOfTBJzTfW3N6EtK0Q4xug9A7lS9Ldk5fmad4Y/qnbnlV
+	 TYwg6c9W9o/IlgDyk6vNbpXsintBs/foNG+WFLPny1djDBPyO/FOYIH07+mFCc75o2
+	 VcekXrcZSmMK3f29jPeSpBQuOoTSzDSivhGVIIkxRPTkiGat9NKHlTqAKP/5h1t8oV
+	 c+/DsLO0XwjKfK0xWdhneNUIonZJyR5lQKO+KcNTtJhfWuH28qIEyolXKiHNLfVh9F
+	 k8zzaCZlVukqg==
+Date: Mon, 10 Feb 2025 11:59:24 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Hao Ge <gehao@kylinos.cn>,
+	James Clark <james.clark@linaro.org>,
+	Howard Chu <howardchu95@gmail.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Levi Yun <yeoreum.yun@arm.com>, Xu Yang <xu.yang_2@nxp.com>,
+	Tengda Wu <wutengda@huaweicloud.com>,
+	Yang Jihong <yangjihong1@huawei.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 00/10] Move uid filtering to BPF filters
+Message-ID: <Z6panMzNSm1op8Di@google.com>
+References: <20250111190143.1029906-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <PN3PR01MB7728B4C94846673A5FFACE29B80B2@PN3PR01MB7728.INDPRD01.PROD.OUTLOOK.COM>
+In-Reply-To: <20250111190143.1029906-1-irogers@google.com>
 
-Hi Aditya,
+On Sat, Jan 11, 2025 at 11:01:33AM -0800, Ian Rogers wrote:
+> Rather than scanning /proc and skipping PIDs based on their UIDs, use
+> BPF filters for uid filtering. The /proc scanning in thread_map is
+> racy as the PID may exit before the perf_event_open causing perf to
+> abort. BPF UID filters are more robust as they avoid the race. Add a
+> helper for commands that support UID filtering and wire up. Remove the
+> non-BPF UID filtering support.
 
-sorry for the delay!
+Hmm.. then non-BPF build cannot use the UID filtering anymore, right?
+Also non-root users will be limited unless it pinned the BPF program in
+advance.
 
-On Wed, Jan 01, 2025 at 11:39:13AM +0000, Aditya Garg wrote:
-> We have had issues with other people unable to use their eGPU if their
-> Mac doesn't have the apple set os quirk. We probably could do dual VGA
-> checks suggested by Lukas, but will it work with GPU hotplug?
-
-FWIW, below would be my suggestion for replacing the DMI-based quirk
-with one that is based on the number of GPUs.
-
-It should invoke the apple_set_os protocol both on dual GPU laptops
-as well as ones with an eGPU, hence my expectation is that it should
-fix the issue reported by Lleyton.
-
-The quirk is not applied e.g. on single GPU MacBook Airs, hence
-should avoid regressing those.
-
-The patch is compile-tested only.
-
-It performs one additional 16-bit config space read for every PCI
-device in the system.  If anyone objects to that and wants it
-constrained to Apple systems, that could be changed easily.
+I think you can keep the original behavior and convert to BPF only when
+it's available.
 
 Thanks,
+Namhyung
 
-Lukas
-
--- >8 --
-
-diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index 863910e9eefc..3092a6e5166f 100644
---- a/drivers/firmware/efi/libstub/x86-stub.c
-+++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -27,6 +27,7 @@ const efi_system_table_t *efi_system_table;
- const efi_dxe_services_table_t *efi_dxe_table;
- static efi_loaded_image_t *image = NULL;
- static efi_memory_attribute_protocol_t *memattr;
-+static unsigned int nr_gpus;
- 
- typedef union sev_memory_acceptance_protocol sev_memory_acceptance_protocol_t;
- union sev_memory_acceptance_protocol {
-@@ -39,6 +40,23 @@ union sev_memory_acceptance_protocol {
- 	} mixed_mode;
- };
- 
-+static void update_nr_gpus(efi_pci_io_protocol_t *pci)
-+{
-+	efi_status_t status;
-+	u16 class;
-+
-+	status = efi_call_proto(pci, pci.read, EfiPciIoWidthUint16,
-+				PCI_CLASS_DEVICE, 1, &class);
-+
-+	if (status != EFI_SUCCESS) {
-+		efi_err("Failed to read device class\n");
-+		return;
-+	}
-+
-+	if (class >> 8 == PCI_BASE_CLASS_DISPLAY)
-+		nr_gpus++;
-+}
-+
- static efi_status_t
- preserve_pci_rom_image(efi_pci_io_protocol_t *pci, struct pci_setup_rom **__rom)
- {
-@@ -150,6 +168,8 @@ static void setup_efi_pci(struct boot_params *params)
- 			params->hdr.setup_data = (unsigned long)rom;
- 
- 		data = (struct setup_data *)rom;
-+
-+		update_nr_gpus(pci);
- 	}
- }
- 
-@@ -203,37 +223,6 @@ static void retrieve_apple_device_properties(struct boot_params *boot_params)
- 	}
- }
- 
--static bool apple_match_product_name(void)
--{
--	static const char type1_product_matches[][15] = {
--		"MacBookPro11,3",
--		"MacBookPro11,5",
--		"MacBookPro13,3",
--		"MacBookPro14,3",
--		"MacBookPro15,1",
--		"MacBookPro15,3",
--		"MacBookPro16,1",
--		"MacBookPro16,4",
--	};
--	const struct efi_smbios_type1_record *record;
--	const u8 *product;
--
--	record = (struct efi_smbios_type1_record *)efi_get_smbios_record(1);
--	if (!record)
--		return false;
--
--	product = efi_get_smbios_string(record, product_name);
--	if (!product)
--		return false;
--
--	for (int i = 0; i < ARRAY_SIZE(type1_product_matches); i++) {
--		if (!strcmp(product, type1_product_matches[i]))
--			return true;
--	}
--
--	return false;
--}
--
- static void apple_set_os(void)
- {
- 	struct {
-@@ -243,7 +232,7 @@ static void apple_set_os(void)
- 	} *set_os;
- 	efi_status_t status;
- 
--	if (!efi_is_64bit() || !apple_match_product_name())
-+	if (!efi_is_64bit() || nr_gpus < 2)
- 		return;
- 
- 	status = efi_bs_call(locate_protocol, &APPLE_SET_OS_PROTOCOL_GUID, NULL,
+> 
+> Ian Rogers (10):
+>   perf bench evlist-open-close: Reduce scope of 2 variables
+>   perf parse-events filter: Use evsel__find_pmu
+>   perf target: Separate parse_uid into its own function
+>   perf parse-events: Add parse_uid_filter helper
+>   perf record: Switch user option to use BPF filter
+>   perf top: Switch user option to use BPF filter
+>   perf trace: Switch user option to use BPF filter
+>   perf bench evlist-open-close: Switch user option to use BPF filter
+>   perf target: Remove uid from target
+>   perf thread_map: Remove uid options
+> 
+>  tools/perf/bench/evlist-open-close.c        | 76 ++++++++++++---------
+>  tools/perf/builtin-ftrace.c                 |  1 -
+>  tools/perf/builtin-kvm.c                    |  2 -
+>  tools/perf/builtin-record.c                 | 26 +++----
+>  tools/perf/builtin-stat.c                   |  4 +-
+>  tools/perf/builtin-top.c                    | 22 +++---
+>  tools/perf/builtin-trace.c                  | 25 ++++---
+>  tools/perf/tests/backward-ring-buffer.c     |  1 -
+>  tools/perf/tests/event-times.c              |  8 +--
+>  tools/perf/tests/keep-tracking.c            |  2 +-
+>  tools/perf/tests/mmap-basic.c               |  2 +-
+>  tools/perf/tests/openat-syscall-all-cpus.c  |  2 +-
+>  tools/perf/tests/openat-syscall-tp-fields.c |  1 -
+>  tools/perf/tests/openat-syscall.c           |  2 +-
+>  tools/perf/tests/perf-record.c              |  1 -
+>  tools/perf/tests/perf-time-to-tsc.c         |  2 +-
+>  tools/perf/tests/switch-tracking.c          |  2 +-
+>  tools/perf/tests/task-exit.c                |  1 -
+>  tools/perf/tests/thread-map.c               |  2 +-
+>  tools/perf/util/bpf-filter.c                |  2 +-
+>  tools/perf/util/evlist.c                    |  3 +-
+>  tools/perf/util/parse-events.c              | 25 ++++---
+>  tools/perf/util/parse-events.h              |  1 +
+>  tools/perf/util/python.c                    | 10 +--
+>  tools/perf/util/target.c                    | 54 ++-------------
+>  tools/perf/util/target.h                    | 15 +---
+>  tools/perf/util/thread_map.c                | 32 +--------
+>  tools/perf/util/thread_map.h                |  6 +-
+>  tools/perf/util/top.c                       |  4 +-
+>  tools/perf/util/top.h                       |  1 +
+>  30 files changed, 135 insertions(+), 200 deletions(-)
+> 
+> -- 
+> 2.47.1.613.gc27f4b7a9f-goog
+> 
