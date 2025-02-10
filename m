@@ -1,182 +1,149 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E10A1CC8AE
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:49:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D3A1CC8AE;
+	Mon, 10 Feb 2025 10:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739184567; cv=none; b=FdYPXdPXXzLYHphiLxafA+M43Dr1rPpxb3MwHX+/nWX8+gEXrMSkkfZjCK4jE4k948CF93M3BaMm2iUSa0aaUv1WJo3JMJHOr8BAZCQtoyH9KJS4LdkZ81IYjuDOb03ZpWGPns7BEpvajmQrE5j1zIX6gLMFNKF1IvAD5Ry174Q=
+	t=1739184581; cv=none; b=iB8vY/UIzJYyegvELRQbzkyODnjqGHogV7Ubwzg4LsY94nwHs9E4m3CfwN1wdqzM9BdE8/OFbcjP8Eh6U6cXeLDtKpAhPQmgKO6s11eJwynuyUrwQSpBEOgvJSwWK/AsVsvhqRK5C1grqpb/RJBxY7a0NQRT2KxHCfcF1yjzRuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739184567; c=relaxed/simple;
-	bh=IVKj2r27O+WG8GrGI4AhKVmooWlcMfAIv1M4IG04wS0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=MpHLlThP/R0ULq+JGpWgA+bpA+qHdct5/eOS3HfT3YVcdJcz9EJ7xE1/Z7vIgQsbs3lFVUqlPK4Jf6FrDj4VkX+zpB+dVG6zSVVs23JpZOx0nP5PS+OElUD5nI7KBfihqcb3MjfBcR7ssRCH+QnVMqE6FmTagiBgeriADE9GLAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d14c647935so42668305ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 02:49:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739184564; x=1739789364;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=h3fwt6a+ZSRl2GT0BVgVYdt+ykyjBYZya/Ag/6HqCEE=;
-        b=olja4y36jGVEO+tv4J3OcyfmJkFnsmY82Q7ZjztHkLonGUrGYDsRclcYrHeSm4GGqq
-         Lw2zuSTANwtue4jw8HySfCGUYiPFvDp6CjNlldLplM5a2fkI2jMYD7fDjx6qZd7RI3j9
-         CJV24xEvCE+7Qi/cIordGYO6ZeNILB6U8TUQhEY+ey2cofnoMQl6jQ3NJ3FV09hZllzk
-         PuZx45S1wlIVDIYtrXJX1NbyDIys+oL1ig6d4nKTgvMaRkmU8NxfNhBdElMPVYbx26U3
-         +GB07Yk7naUioIDyltMopWYEah5beqQmu8yEMgVIrGREPr+Aa1yshwr5EydYb5c+S/Xj
-         RmEg==
-X-Forwarded-Encrypted: i=1; AJvYcCUMAYsDv7Kzgus+omY35PBjSvXujrj0TpTjBN9CL/OTW8Zkgbh+azNS5P5o4yxuV8m2r/67Iw61KyjnfI0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAHHXLFaQ1SnRiPnEH+8he2jrITTLU5//RzuJfnpMZJyt7bXEC
-	lmMowMlOvAikLKE4BPJqPU6z31NlM0+ilrUIPn3JY3nrBwzTdsNhynM3ObRGNhBqkhchAq/TLo0
-	myDqou+4kP/qiFy+DZYWWScbtLti0ATskB84F6Jg/8SbUsS7THGZNx1c=
-X-Google-Smtp-Source: AGHT+IE3ajIjtm6u+ny5DA4/LPdiAoExyiznPqAVkQ8pdsGad4TUhnFmnovUvfvnTsggMRDFKRGAKDtZUQBkLX1Zrt7M+JDyeLUZ
+	s=arc-20240116; t=1739184581; c=relaxed/simple;
+	bh=vqaPtBe2lpI01lWukY3VkenZTfW9VVESMP58mrA4fgg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oGMO4vEdimeSNwDabz7afJbnQZHGh7PE7GKokwjiJ6AG5bpOU5HH2iSa60Q5GfPZt67iP43rjLuCL0QaDlE6xbkBvVDy2pdQFEYKqAbWtscJuaOUSMeFcItC0tR0EbfdG6KpFDa/EZdxqF0/E47K/G9Va0PGWj2fjsmqNJhhN7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mC4fAAuc; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mC4fAAuc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=nH3pvSNUkRlhL4+G+UMDC3b1XyL6w6N3TYBSbml6HW4=; b=mC4fAAucdktIJs1dcferucyMCq
+	iUodFybqvGDFlBZzy1zrhMimjKL7I0TbxG2cd8C08ej2aLQ+93uVGBNzJDRzVxPSbAwx7u9Ajj/nJ
+	ZjhAhHc2iZ6jdS3v+LTGwoUx+zA/cr6kSl7uJygXyMDcnvWjjQ8F1lplnLyfwApXuNnp0l3iaWPJq
+	/qKbdmAqaGV+O3vhvDBFvMbLtNyEO5KrtOH077D/qCozXqswghktIN9PdUNJKsiIRKxxz4yp2tk2N
+	LN6xOwsTYMhHKwNE5WckDEVNbQcAmvBv+5cd6cJJl7DAHn1L5mcbVLqpkjVk9t8y78FR08cKAw8dN
+	jcINHt5A==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1thRM4-000000007Pm-2dgV;
+	Mon, 10 Feb 2025 10:49:32 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 2B580300318; Mon, 10 Feb 2025 11:49:31 +0100 (CET)
+Date: Mon, 10 Feb 2025 11:49:31 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Will Deacon <will@kernel.org>, Waiman Long <llong@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Barret Rhoden <brho@google.com>, Josh Don <joshdon@google.com>,
+	Dohyun Kim <dohyunkim@google.com>,
+	linux-arm-kernel@lists.infradead.org, kernel-team@meta.com
+Subject: Re: [PATCH bpf-next v2 00/26] Resilient Queued Spin Lock
+Message-ID: <20250210104931.GE31462@noisy.programming.kicks-ass.net>
+References: <20250206105435.2159977-1-memxor@gmail.com>
+ <20250210093840.GE10324@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2383:b0:3d0:19c6:c9e1 with SMTP id
- e9e14a558f8ab-3d13dd68f9fmr112558235ab.13.1739184564552; Mon, 10 Feb 2025
- 02:49:24 -0800 (PST)
-Date: Mon, 10 Feb 2025 02:49:24 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a9d9b4.050a0220.110943.002d.GAE@google.com>
-Subject: [syzbot] [net?] general protection fault in vxlan_vnigroup_uninit
-From: syzbot <syzbot+6a9624592218c2c5e7aa@syzkaller.appspotmail.com>
-To: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250210093840.GE10324@noisy.programming.kicks-ass.net>
 
-Hello,
+On Mon, Feb 10, 2025 at 10:38:41AM +0100, Peter Zijlstra wrote:
+> On Thu, Feb 06, 2025 at 02:54:08AM -0800, Kumar Kartikeya Dwivedi wrote:
+> 
+> 
+> > Deadlock Detection
+> > ~~~~~~~~~~~~~~~~~~
+> > We handle two cases of deadlocks: AA deadlocks (attempts to acquire the
+> > same lock again), and ABBA deadlocks (attempts to acquire two locks in
+> > the opposite order from two distinct threads). Variants of ABBA
+> > deadlocks may be encountered with more than two locks being held in the
+> > incorrect order. These are not diagnosed explicitly, as they reduce to
+> > ABBA deadlocks.
+> > 
+> > Deadlock detection is triggered immediately when beginning the waiting
+> > loop of a lock slow path.
+> > 
+> > While timeouts ensure that any waiting loops in the locking slow path
+> > terminate and return to the caller, it can be excessively long in some
+> > situations. While the default timeout is short (0.5s), a stall for this
+> > duration inside the kernel can set off alerts for latency-critical
+> > services with strict SLOs.  Ideally, the kernel should recover from an
+> > undesired state of the lock as soon as possible.
+> > 
+> > A multi-step strategy is used to recover the kernel from waiting loops
+> > in the locking algorithm which may fail to terminate in a bounded amount
+> > of time.
+> > 
+> >  * Each CPU maintains a table of held locks. Entries are inserted and
+> >    removed upon entry into lock, and exit from unlock, respectively.
+> >  * Deadlock detection for AA locks is thus simple: we have an AA
+> >    deadlock if we find a held lock entry for the lock we’re attempting
+> >    to acquire on the same CPU.
+> >  * During deadlock detection for ABBA, we search through the tables of
+> >    all other CPUs to find situations where we are holding a lock the
+> >    remote CPU is attempting to acquire, and they are holding a lock we
+> >    are attempting to acquire. Upon encountering such a condition, we
+> >    report an ABBA deadlock.
+> >  * We divide the duration between entry time point into the waiting loop
+> >    and the timeout time point into intervals of 1 ms, and perform
+> >    deadlock detection until timeout happens. Upon entry into the slow
+> >    path, and then completion of each 1 ms interval, we perform detection
+> >    of both AA and ABBA deadlocks. In the event that deadlock detection
+> >    yields a positive result, the recovery happens sooner than the
+> >    timeout.  Otherwise, it happens as a last resort upon completion of
+> >    the timeout.
+> > 
+> > Timeouts
+> > ~~~~~~~~
+> > Timeouts act as final line of defense against stalls for waiting loops.
+> > The ‘ktime_get_mono_fast_ns’ function is used to poll for the current
+> > time, and it is compared to the timestamp indicating the end time in the
+> > waiter loop. Each waiting loop is instrumented to check an extra
+> > condition using a macro. Internally, the macro implementation amortizes
+> > the checking of the timeout to avoid sampling the clock in every
+> > iteration.  Precisely, the timeout checks are invoked every 64k
+> > iterations.
+> > 
+> > Recovery
+> > ~~~~~~~~
+> 
+> I'm probably bad at reading, but I failed to find anything that
+> explained how you recover from a deadlock.
+> 
+> Do you force unload the BPF program?
 
-syzbot found the following issue on:
+Even the simple AB-BA case,
 
-HEAD commit:    69b54314c975 Merge tag 'kbuild-fixes-v6.14' of git://git.k..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=124d6bdf980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a7ddf49cf33ba213
-dashboard link: https://syzkaller.appspot.com/bug?extid=6a9624592218c2c5e7aa
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1466c2a4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=121f3b18580000
+  CPU0		CPU1
+  lock-A	lock-B
+  lock-B	lock-A <-
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-69b54314.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/2d0a58d1d655/vmlinux-69b54314.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b99949b40299/bzImage-69b54314.xz
+just having a random lock op return -ETIMO doesn't actually solve
+anything. Suppose CPU1's lock-A will time out; it will have to unwind
+and release lock-B before CPU0 can make progress.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+6a9624592218c2c5e7aa@syzkaller.appspotmail.com
+Worse, if CPU1 isn't quick enough to unwind and release B, then CPU0's
+lock-B will also time out.
 
-RBP: 0000000000000002 R08: 00007ffcf7f2bc26 R09: 00000000000000a0
-R10: 0000000000000002 R11: 0000000000000206 R12: 0000400000000114
-R13: 0000400000000110 R14: 0000400000000088 R15: 0000000000000001
- </TASK>
-Oops: general protection fault, probably for non-canonical address 0xdffffc000000002c: 0000 [#1] PREEMPT SMP KASAN NOPTI
-KASAN: null-ptr-deref in range [0x0000000000000160-0x0000000000000167]
-CPU: 0 UID: 0 PID: 5952 Comm: syz-executor397 Not tainted 6.14.0-rc1-syzkaller-00276-g69b54314c975 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:vxlan_vnigroup_uninit+0x89/0x500 drivers/net/vxlan/vxlan_vnifilter.c:912
-Code: 00 48 8b 44 24 08 4c 8b b0 98 41 00 00 49 8d 86 60 01 00 00 48 89 c2 48 89 44 24 10 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 4d 04 00 00 49 8b 86 60 01 00 00 48 ba 00 00 00
-RSP: 0018:ffffc90003f67218 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000000001 RCX: ffffffff8672effb
-RDX: 000000000000002c RSI: ffffffff8672ecb9 RDI: ffff8880326b4f18
-RBP: ffff8880326b4ef4 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000020000
-R13: ffff8880326b0d80 R14: 0000000000000000 R15: dffffc0000000000
-FS:  0000555568fc8380(0000) GS:ffff88806a600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007faf08e2b246 CR3: 0000000012f30000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- vxlan_uninit+0x1ab/0x200 drivers/net/vxlan/vxlan_core.c:2942
- unregister_netdevice_many_notify+0x12d6/0x1f30 net/core/dev.c:11824
- rtnl_newlink_create net/core/rtnetlink.c:3823 [inline]
- __rtnl_newlink net/core/rtnetlink.c:3906 [inline]
- rtnl_newlink+0x1459/0x1d60 net/core/rtnetlink.c:4021
- rtnetlink_rcv_msg+0x95b/0xea0 net/core/rtnetlink.c:6911
- netlink_rcv_skb+0x16b/0x440 net/netlink/af_netlink.c:2543
- netlink_unicast_kernel net/netlink/af_netlink.c:1322 [inline]
- netlink_unicast+0x53c/0x7f0 net/netlink/af_netlink.c:1348
- netlink_sendmsg+0x8b8/0xd70 net/netlink/af_netlink.c:1892
- sock_sendmsg_nosec net/socket.c:718 [inline]
- __sock_sendmsg net/socket.c:733 [inline]
- ____sys_sendmsg+0xaaf/0xc90 net/socket.c:2573
- ___sys_sendmsg+0x135/0x1e0 net/socket.c:2627
- __sys_sendmsg+0x16e/0x220 net/socket.c:2659
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7faf08dd5a69
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 a1 1a 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffcf7f2be88 EFLAGS: 00000206 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007ffcf7f2bea0 RCX: 00007faf08dd5a69
-RDX: 0000000004008840 RSI: 0000400000000000 RDI: 0000000000000003
-RBP: 0000000000000002 R08: 00007ffcf7f2bc26 R09: 00000000000000a0
-R10: 0000000000000002 R11: 0000000000000206 R12: 0000400000000114
-R13: 0000400000000110 R14: 0000400000000088 R15: 0000000000000001
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:vxlan_vnigroup_uninit+0x89/0x500 drivers/net/vxlan/vxlan_vnifilter.c:912
-Code: 00 48 8b 44 24 08 4c 8b b0 98 41 00 00 49 8d 86 60 01 00 00 48 89 c2 48 89 44 24 10 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 4d 04 00 00 49 8b 86 60 01 00 00 48 ba 00 00 00
-RSP: 0018:ffffc90003f67218 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000000001 RCX: ffffffff8672effb
-RDX: 000000000000002c RSI: ffffffff8672ecb9 RDI: ffff8880326b4f18
-RBP: ffff8880326b4ef4 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000020000
-R13: ffff8880326b0d80 R14: 0000000000000000 R15: dffffc0000000000
-FS:  0000555568fc8380(0000) GS:ffff88806a800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffcf7f2bd88 CR3: 0000000012f30000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	00 48 8b             	add    %cl,-0x75(%rax)
-   3:	44 24 08             	rex.R and $0x8,%al
-   6:	4c 8b b0 98 41 00 00 	mov    0x4198(%rax),%r14
-   d:	49 8d 86 60 01 00 00 	lea    0x160(%r14),%rax
-  14:	48 89 c2             	mov    %rax,%rdx
-  17:	48 89 44 24 10       	mov    %rax,0x10(%rsp)
-  1c:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
-  23:	fc ff df
-  26:	48 c1 ea 03          	shr    $0x3,%rdx
-* 2a:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1) <-- trapping instruction
-  2e:	0f 85 4d 04 00 00    	jne    0x481
-  34:	49 8b 86 60 01 00 00 	mov    0x160(%r14),%rax
-  3b:	48                   	rex.W
-  3c:	ba                   	.byte 0xba
-  3d:	00 00                	add    %al,(%rax)
+At which point they'll both try again and you're stuck in the same
+place, no?
 
+Given you *have* to unwind to make progress; why not move the entire
+thing to a wound-wait style lock? Then you also get rid of the whole
+timeout mess.
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
