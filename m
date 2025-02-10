@@ -1,121 +1,185 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A8B3D3B3;
-	Mon, 10 Feb 2025 03:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D6335957
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 03:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739157612; cv=none; b=KSbS0VN3nM7rbBSVpUw0UZNfBvTsYBzV/I1Y1JpZUY47iQnoFFZtCnec4mLGCwGlz/Zam/95MpPgvFY/8Ffep3Y5fUALyIHA1F3BL9n7UKf8evZYXhlAiZXf5g0rHALaioyUohjx7MjMt0b/2ejKRFxLKjT+4Ccdq7Vy6+UqtQI=
+	t=1739157670; cv=none; b=Z/mhjDST3fNtKq+YtJlnI+uNsC8Uvp7IPNKMYkOPRH7KcUlGq5R1JCWyGaFoG7e4tIok35HCXZMLN98HvchHtxx9zzt6P6RQRcezqJB/A37hUvIejOG82FIkLQ/AggAjnm41tueV/7WcTichWlBMFv1gi3ubUacyobjeCIYV9hA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739157612; c=relaxed/simple;
-	bh=FTNloSIsULYEVQLn77ypmmzSibgTN2hcd9NUNMfbr8k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KgzNLrr/631gWW41PLROETaHNqCka8v8Bjjbs8Xw/oPe1xfIPnXjyOEZTnQ58wW95IQG14kjZcWQuEx4MexbYD9OwpVFEKD5K4VaVNpzJIuTHEvjw3CgGEOh/yg4vlrL+3/M5ARizCEOGxdgNqwwrmz5IcOUtdqY9qHdptd2RM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=izFeY0F4; arc=none smtp.client-ip=54.206.34.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1739157670; c=relaxed/simple;
+	bh=PirnTzmLLW+5gn6niEYq4gn1EtZRWCdnlFA2ExWDARg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n/t9MPhPzhlRa/ma3Xzpm+YROcBAbNCL8SIOBfJx1ayz6Mp419L/uIn9g1fsQoW0/GooH75dRq9jBPBFxXZL1O7V043CdWGKG6AwUt2IMIfZ1l7CajiYZ2FhvOAqH0GkCVpqLomIbtQuKojRd9hkFCjk90bI04TGTNbaXqUv3Os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nrWtbUpO; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="izFeY0F4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1739157572;
-	bh=k4n8m3GI4D6i5H2T1WzC/bEg9b4WYBfpAGAFhLHf9F4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=izFeY0F44k9M+yuGMamxD6wbzZhlatPt1KHzVljKhu5CkhvqDL5dA418XR2WQb/Y6
-	 czKJH6XqXIIVAFO7oaw+pvRTEM3ASqKheZNrV2S6DUVBSlLdxjtX1zhabO0LiWw7vy
-	 kgw0sKgTfU3Fm+TWaeaJi+M4ocu0WWYW+mej2Xr8=
-X-QQ-mid: bizesmtp77t1739157546t4ra4iro
-X-QQ-Originating-IP: VepxTGZxCLaidXlt0efKUm5/0axcq1XJMTlwOZ3rS/w=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 10 Feb 2025 11:19:04 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 9070452930109930730
-From: Chen Linxuan <chenlinxuan@uniontech.com>
-To: Tejun Heo <tj@kernel.org>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: Chen Linxuan <chenlinxuan@uniontech.com>,
-	Wen Tao <wentao@uniontech.com>,
-	cgroups@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] blk-cgroup: validate alloc/free function pairs at the start of blkcg_policy_register()
-Date: Mon, 10 Feb 2025 11:18:27 +0800
-Message-ID: <EE1CE61DFCF2C98F+20250210031827.25557-1-chenlinxuan@uniontech.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nrWtbUpO"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21f92258aa6so12846225ad.3
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 19:21:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739157667; x=1739762467; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ierXgC96hwGdKlwsBqeSKwlRoTpZuq9z1RYQs90fMjI=;
+        b=nrWtbUpOw3Z3RNIMvNv66/oj0XA1HOsWy4+Hm5uTnELK4OJLg3pyufHOhW3f4md8Jk
+         dBPoc3vQ0sTq7Vfyq2LvlXINqArzFckBF+Jzy+Gacoe0V+at6eFt4GNZwdI5uHiIXGQy
+         xCne1/Sh0IBJeYmZvzw/yE1eANhRz7t6brQit7LRj+bTLE2zGqwAHzhYhuGLqj/Hotxf
+         frdWgA47tAUl/laYO28QOK1qzrHZfazPKaQbhv6ghw7iSrK9JXZg1EREcxnPPFDxr3M+
+         evfPa+3/cm9ntC62vxCUjlbkF884x5TbxXfbLd9+mGoJ1U1aQcJ7X4z+JelWVYOo6Bnu
+         KgGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739157667; x=1739762467;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ierXgC96hwGdKlwsBqeSKwlRoTpZuq9z1RYQs90fMjI=;
+        b=fKqw8hzp9r3fzxWlqPWP5niyOkvrx1gRDUIzjmH4WNz9fQYG59faTEUXYjL9VabJHV
+         scN7mQEOwPaGiBSxlFJbAMpf9cCdijxdtnDpgjxQlXSQZPIXwG+/VQfX7hHT+ebhMpBg
+         ODLFeJCtljYjOlfCrEmei5OeWybCuNY8eXgPNXKhETT8DE+os83CtGQaUJVN0iRMEkN3
+         G0XH2pXlY7va4oY47rCF/qQiDXT1Za6+CnJN4ztRpDwZE24jqm/m9+fq7aqDrxk1sBXs
+         zVl/LCIOUGFCfQLjVfoX83rUvCcoQJ7C5TKwwBWR38SkmxjvtpSqXaGiLfeNIVrkhVXr
+         VaVA==
+X-Forwarded-Encrypted: i=1; AJvYcCV4NhHS8vtbI8SMNx+c3z9llCApadvh0ATOuUiEQV+GcGwvNzkTqj4iV5LCznVfMdxjOPD4WxFCAQyBzrI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6UkHSH7KwVN2C+XiSxub5x8niTaOFhu/ATLWIOWaJTI7YbKAp
+	na8ULP3mqoRGj5ipl0dW8bx3tl3xS/5mPfSHXhMMrlBckGzqXkCTAaGyT3mTDFc5d/GdikQFW2h
+	J1zd9AI6ZOIG2Ic2aA4DXHS3mfqs=
+X-Gm-Gg: ASbGncsRD90RRLykDAWvSh5axou7EFwEHIgB8BoEK39nj6BjUwb6a/DaPgMMzhzGAHo
+	VTmPl380pgBh8Kf/YAS5WHperonXUFZQJgnQebiZqVcOPTfHzS7HN4sC01ZVOgunknR4ChYau
+X-Google-Smtp-Source: AGHT+IEQdsXoQkr/8P/JCKHQ1Pe+5J9t9y5juRQZBtj9v/sbkI4O0dhjFDP+QIhNW2wXaeDS6/bsbf1EwjVMaxrQNzM=
+X-Received: by 2002:a17:902:c94a:b0:21f:8099:72d9 with SMTP id
+ d9443c01a7336-21f8099743emr68916965ad.27.1739157667431; Sun, 09 Feb 2025
+ 19:21:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-QQ-XMAILINFO: MoXwTY6T4qpU1nqYPWHDHMHsNormvuAYQflUpqvdEWjiX597abV/b92U
-	I/WtBJPl0OnLAxuhnVdYA0zoq9DSZYjWcrOf9lfYzNTKlVbIfFoIvuTXZCTckk45V/8CdhB
-	E56ZmRxqWZvElJXcnhfk6DqPZ01tDfBUQ4yFpGN3DGF6VFHj7g7wMSshZl/19hvkdSU7UIw
-	ctWP4ONI0T7wIVHMVOJD5n3IsGCjIF7mYQCN1KTC2Q14XF/vUfl9VBrqk3UZm6faU6WNz1i
-	AP6x8xIBlyiQJrmxkRPXZgo7CxUnGp7BFXqqGEGWnqJlCxtjOevfe7UGK/ySSz09WDL5axQ
-	TNyITz5Zo1ywdex6ow4QB/GF5N/gvRNslSEYu0A5LFd/qAQPCsBBlf8urVy5FTfQo4qJdQV
-	wgC/D4bFhx0BqtSN9dPhpQBNkcn87lLVHzTR17C68lq+wterRQTmQ1vdhm5Z7wWrXeSp0SM
-	gMnZX/b9Lg6zpKYWnFAJBoR0vBA9/Iz+eOngR361K8pVEe8KQo1bNhXfiRipN7UDgBOiSE5
-	O55v8YHXI4KqlVTl7QQsQCbGpvEWwzDdd5BSbetIHbPbDEriCH6wr+D7N9wwwlbH/GjIRDr
-	c0ajsISnxhO38mt3Wj4B5nir2PFVkktIQEYoZ1peCy4GdP+cypiNquO8rau6Z5/SaLnWMlY
-	1pBZp30upyaVKXKXoTro6+yplSjBIUB2Tl/63jqDmqkPTrZH11xPKqhBBDy0cUE8ir0cMM5
-	WbZdopqMs7d2haX+enjDjNsdaV3uaikbrzrayR5zv58RfBn6xtiPjJTmvH7l5Z6M9PhTcA9
-	QZ//G3Bs7bAhoMSw96Ryiiw0YG+IEVdzh3Y4UoU6ZyDSPXVKzGfbD3qqMtcLX9ObbMibcWN
-	V6QzkMWjSuuhn1AXnOovd2JCpHs/SYn2aOSUzU2tS5sAE4iPYdLOutBZsNEzIssXviy2trL
-	vHRcQwcNTZnJp3BBt6seHOjj+0NqdPLBXS9F41F8kGjnzYpiDrvKXXo+pmdgrk7YqQA8=
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-X-QQ-RECHKSPAM: 0
+References: <20250207081846.362919-1-linchengming884@gmail.com>
+ <20250207081846.362919-2-linchengming884@gmail.com> <8901dcd481a2185ad34fa7dd09997b38@kernel.org>
+In-Reply-To: <8901dcd481a2185ad34fa7dd09997b38@kernel.org>
+From: Cheng Ming Lin <linchengming884@gmail.com>
+Date: Mon, 10 Feb 2025 11:16:57 +0800
+X-Gm-Features: AWEUYZmVVv-4Y0evT9hlqj0Kh75MksKOXechWJSVFw8tDvCu3HhcMQIdiq_TQWg
+Message-ID: <CAAyq3SbnX8WgN9U=YbJ465q6SBWz6GMuykC4svd9jzjnC3EVFQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mtd: spi-nor: macronix: Add post_sfdp fixups for Quad
+ Input Page Program
+To: Michael Walle <mwalle@kernel.org>
+Cc: tudor.ambarus@linaro.org, pratyush@kernel.org, miquel.raynal@bootlin.com, 
+	richard@nod.at, vigneshr@ti.com, linux-mtd@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, alvinzhou@mxic.com.tw, leoyu@mxic.com.tw, 
+	Cheng Ming Lin <chengminglin@mxic.com.tw>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Move the validation check for cpd/pd_alloc_fn and cpd/pd_free_fn function
-pairs to the start of blkcg_policy_register(). This ensures we immediately
-return -EINVAL if the function pairs are not correctly provided, rather
-than returning -ENOSPC after locking and unlocking mutexes unnecessarily.
+Hi Michael,
 
-Co-authored-by: Wen Tao <wentao@uniontech.com>
-Signed-off-by: Wen Tao <wentao@uniontech.com>
-Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
----
- block/blk-cgroup.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Michael Walle <mwalle@kernel.org> =E6=96=BC 2025=E5=B9=B42=E6=9C=887=E6=97=
+=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:36=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi Cheng,
+>
+> > Although certain Macronix NOR flash support the Quad Input Page Program
+> > feature, the corresponding information in the 4-byte Address
+> > Instruction
+> > Table of these flash is not properly filled. As a result, this feature
+> > cannot be enabled as expected.
+> >
+> > To address this issue, a post_sfdp fixups implementation is required to
+> > correct the missing information.
+> >
+> > Signed-off-by: Cheng Ming Lin <chengminglin@mxic.com.tw>
+> > ---
+> >  drivers/mtd/spi-nor/macronix.c | 23 +++++++++++++++++++++++
+> >  1 file changed, 23 insertions(+)
+> >
+> > diff --git a/drivers/mtd/spi-nor/macronix.c
+> > b/drivers/mtd/spi-nor/macronix.c
+> > index 830da21eea08..ada17999ccbb 100644
+> > --- a/drivers/mtd/spi-nor/macronix.c
+> > +++ b/drivers/mtd/spi-nor/macronix.c
+> > @@ -45,8 +45,26 @@ mx25l25635_post_bfpt_fixups(struct spi_nor *nor,
+> >       return 0;
+> >  }
+> >
+> > +static int
+> > +macronix_qpp4b_post_sfdp_fixups(struct spi_nor *nor)
+> > +{
+> > +     /* PP_1_1_4_4B is supported but missing in 4BAIT. */
+> > +     struct spi_nor_flash_parameter *params =3D nor->params;
+> > +
+> > +     params->hwcaps.mask |=3D SNOR_HWCAPS_PP_1_1_4;
+> > +     spi_nor_set_pp_settings(&params->page_programs[SNOR_CMD_PP_1_1_4]=
+,
+> > +                     SPINOR_OP_PP_1_1_4_4B, SNOR_PROTO_1_1_4);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  static const struct spi_nor_fixups mx25l25635_fixups =3D {
+> >       .post_bfpt =3D mx25l25635_post_bfpt_fixups,
+> > +     .post_sfdp =3D macronix_qpp4b_post_sfdp_fixups,
+> > +};
+> > +
+> > +static const struct spi_nor_fixups macronix_qpp4b_fixups =3D {
+> > +     .post_sfdp =3D macronix_qpp4b_post_sfdp_fixups,
+> >  };
+> >
+> >  static const struct flash_info macronix_nor_parts[] =3D {
+> > @@ -102,11 +120,13 @@ static const struct flash_info
+> > macronix_nor_parts[] =3D {
+> >               .size =3D SZ_64M,
+> >               .no_sfdp_flags =3D SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
+> >               .fixup_flags =3D SPI_NOR_4B_OPCODES,
+> > +             .fixups =3D &macronix_qpp4b_fixups,
+> >       }, {
+> >               .id =3D SNOR_ID(0xc2, 0x20, 0x1b),
+> >               .name =3D "mx66l1g45g",
+> >               .size =3D SZ_128M,
+> >               .no_sfdp_flags =3D SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_=
+QUAD_READ,
+> > +             .fixups =3D &macronix_qpp4b_fixups,
+> >       }, {
+> >               .id =3D SNOR_ID(0xc2, 0x23, 0x14),
+> >               .name =3D "mx25v8035f",
+> > @@ -154,18 +174,21 @@ static const struct flash_info
+> > macronix_nor_parts[] =3D {
+> >               .size =3D SZ_64M,
+> >               .no_sfdp_flags =3D SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_=
+QUAD_READ,
+> >               .fixup_flags =3D SPI_NOR_4B_OPCODES,
+> > +             .fixups =3D &macronix_qpp4b_fixups,
+> >       }, {
+> >               .id =3D SNOR_ID(0xc2, 0x25, 0x3a),
+> >               .name =3D "mx66u51235f",
+> >               .size =3D SZ_64M,
+> >               .no_sfdp_flags =3D SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_=
+QUAD_READ,
+> >               .fixup_flags =3D SPI_NOR_4B_OPCODES,
+> > +             .fixups =3D &macronix_qpp4b_fixups,
+> >       }, {
+> >               .id =3D SNOR_ID(0xc2, 0x25, 0x3c),
+> >               .name =3D "mx66u2g45g",
+> >               .size =3D SZ_256M,
+> >               .no_sfdp_flags =3D SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_=
+QUAD_READ,
+> >               .fixup_flags =3D SPI_NOR_4B_OPCODES,
+> > +             .fixups =3D &macronix_qpp4b_fixups,
+> >       }, {
+> >               .id =3D SNOR_ID(0xc2, 0x26, 0x18),
+> >               .name =3D "mx25l12855e",
+>
+> Could you also please share the SFDP dumps of these flashes with us?
 
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index 9ed93d91d754..81c166ee003b 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -1727,6 +1727,14 @@ int blkcg_policy_register(struct blkcg_policy *pol)
- 	struct blkcg *blkcg;
- 	int i, ret;
- 
-+	/*
-+	 * Make sure cpd/pd_alloc_fn and cpd/pd_free_fn in pairs, and policy
-+	 * without pd_alloc_fn/pd_free_fn can't be activated.
-+	 */
-+	if ((!pol->cpd_alloc_fn ^ !pol->cpd_free_fn) ||
-+	    (!pol->pd_alloc_fn ^ !pol->pd_free_fn))
-+		return -EINVAL;
-+
- 	mutex_lock(&blkcg_pol_register_mutex);
- 	mutex_lock(&blkcg_pol_mutex);
- 
-@@ -1740,14 +1748,6 @@ int blkcg_policy_register(struct blkcg_policy *pol)
- 		goto err_unlock;
- 	}
- 
--	/*
--	 * Make sure cpd/pd_alloc_fn and cpd/pd_free_fn in pairs, and policy
--	 * without pd_alloc_fn/pd_free_fn can't be activated.
--	 */
--	if ((!pol->cpd_alloc_fn ^ !pol->cpd_free_fn) ||
--	    (!pol->pd_alloc_fn ^ !pol->pd_free_fn))
--		goto err_unlock;
--
- 	/* register @pol */
- 	pol->plid = i;
- 	blkcg_policy[pol->plid] = pol;
--- 
-2.43.0
+Certainly, I can share the SFDP dumps of these flashes with you.
+I will send them over shortly.
 
+>
+> Thanks,
+> -michael
+
+Thanks,
+Cheng Ming Lin
