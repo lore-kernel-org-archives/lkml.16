@@ -1,101 +1,142 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2040D24418C
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BEA325B690;
+	Mon, 10 Feb 2025 18:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739211745; cv=none; b=BRFqS4qqptGr6StkizK7ht3pFjvPsoX9UaZItv98nJFZKI4h889ge77CLBf8kffKhG07WDY5+L9ZcFbfs+3QKnAmQ6V1TGO7tRZsSwcmZ0C3uM4kU9Wp1J64VAFjlpbYFujrcd+lm8qnpv2/fnSIRadBBXnT8NXWG+cFB4qQ1NA=
+	t=1739211806; cv=none; b=LBYHc0EqOXpBNsayeAWGrAU5pxza3Lyl5lNupGA7SGsEB8Iii1hgyW5XRKoGtD4WkH64RwvnJtQ3PHQaoDYvPu+rXfuppoQpeqKzSEA3P+fKi5EHb8fXf4WFp849eZ+DzGNIX9kDZ5EfvLEjeVEqgS/AUSizAEaGqVet26cBVLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739211745; c=relaxed/simple;
-	bh=IcdrIqs90CcLCAGhFUsmvv1jkxcaZyMPFUeEij+QgGg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=rHA5kXujflw8lJIzcfRYXO0kvn99AYoNIhs7+CYraDQwymtQbXn/CPsJfVuqPQdq8/BntYpaw/YdlV+aBGpMKuK5JCWglWnMN8B5rlo//ECxlSFjgZSmwqHWinsbmk7XHvGkO3TIw7TdYC6qGUaaZoBhAR8mA8ocL/6dxdqJtl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b1olh1jz; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739211806; c=relaxed/simple;
+	bh=eqq5ajvjea3MeOhWfO3+dxXQWvINLCgWfRuHmU74dSs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FYyisZuZ6JxK6Z3eL41K+Y+ro+bzgxJnmNyy5l1HAiiVrkqZk5hyZ0W/uS4E6xog/LKX+VcnHqpASW3zEWHIm+gg0qwVs7Fjh2PmJSeQCO7gQ1rpQERbztVVmLwe7oEy8f0tShZzOnp9hE6d4qs1td7yygBK/Yl9hdVQvjypMuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MbnDdv9F; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b1olh1jz"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3d146357fb2so4295ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:22:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MbnDdv9F"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6d8e8445219so37832656d6.0;
+        Mon, 10 Feb 2025 10:23:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739211743; x=1739816543; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IcdrIqs90CcLCAGhFUsmvv1jkxcaZyMPFUeEij+QgGg=;
-        b=b1olh1jzEupzU/TXA4iKTVqgf6+0E7yYWLgFM6zHR4n16dH78YZ83whPBcdbsqpTLB
-         hXKq6pWb0LEq8PCN1LRR6lA2p7i8yw1FpFQsSFlqDWme2rsi4Nf0y7AWVpeWBmKTr5YI
-         Ic5LLI/PWhjIIhRc6GMHnHEE9yIJjIGa+eLMKy77bR2UGCGBz+vRVvKKJPbWCVqTlQ9O
-         fKX/GEMTOH9ky3QLZqzyu3MUzIzW6D+knSZuk4wzWDc75JD+ev0skfcRnGBfzjBFRo3+
-         fuMfxZYL9gt5TlKLo/QY/5XaEqeTRtyWr+Q0smWjjb9/IjzB6lG1ST96rSeX+jUmOM1k
-         +6HA==
+        d=gmail.com; s=20230601; t=1739211804; x=1739816604; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zywqNIFDXEwlE7hLyD+JRB5FcKOg2ioCGIncmY+HT84=;
+        b=MbnDdv9FMhidJwSyokcNQpwikdHGjbCZGKdKBTrQsT7bYd9VqR6TUYZLqWAsRSuk2D
+         Bz3mpdAahrmKmE+Y4xo1x63SU3TU7UImeEd+1Bmsv4FJk1iflTllkQVidPcqEbtQA81W
+         FuePaX2t1Nd+05CUIIcCuD9MII3Mdh4pGH3EtiQehrGoUwiMj6Ar6jYNNcU4KbeDZ61+
+         APSufWC2Xojj55ifCtOobZ6fIOO71UMWxhUqtOuwYzsHJDwm5dGpr8wLwORQvZKbGfYr
+         /RR804as2O8a9G1zMYv0eyujlY9H0HE3JR8t1ZmXErpNRO+bkR8Txwn3G/DlHyakWkGj
+         OfOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739211743; x=1739816543;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IcdrIqs90CcLCAGhFUsmvv1jkxcaZyMPFUeEij+QgGg=;
-        b=FlhI03bC5yYhb+JoLfN+dkxjZn+7AqEVhkFdp/8IkeQS6Ad6M4Jt+mFMCOcpIkyX55
-         MEr7PRhLYI8Of7+93A2xRzDKvFfuuDvtF4tI/U4Y2wRSaYo4svKSmeHJtHn2LHRDY5x5
-         VQ8+bi0voaoE9DDvHbw4OChdtcfUucw6BMPpFxfjX8eBOIlpGjQJKofuskeHk0voyVrk
-         E8JCrkUCA7BPo/jGYiWBfLvR4PD0sElGDzVJs28PD+tnNh48YeIueeDnnsyZKuNJUXa9
-         5CQxwbp3rqWca0KrZNam4a4s35gmERCNGoBoF6jgKcjV9ww9KOowuwqCqBDHasmMXyIS
-         Kx3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUgSWwNp3ER+UhRSdDxNmHGp/SmrpBhcaYe7mUukmwGUN0NkY5pSQBEpYpV9UHHo1VIyQWlrsxQrATbwbQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxs5I6gUqclwaCC865ba1XtEXj6DZ8sUwmZL/yOMBQP5RFQ1Es8
-	EwO8Vm2uDn+gPEGbsBFtlAJtybGdAEZ98bg9LQp8VQcGZIr/ZUPGdSr47ARvyOk50/Yh0ym8eiw
-	3ilyZbHy7BeSTqjWInEHqyOsyH8OkzpFdTFco
-X-Gm-Gg: ASbGncvhgYzB8XSslnWHzeVbotviYwTKJXqqGfKlNUgHq48SfYyNrOwFiMMtZJReBz9
-	taqRJgfDV67v9UqU7iE2UU3cOa3wLxfGuwUDQOeBSYrwe3R5IgBY5N3BNqyV2eysdfGWGjRWA0q
-	pJvt+SnRNXjE197rDxDO/uHWWl
-X-Google-Smtp-Source: AGHT+IFTAuNfiw/XhQoBcYu+J9Hya4qnn2jHdbkYvCPw3zBjIRxktXB1NTEFecewpM4GA6NHDMZjZHi5G1f5cYQe1Cg=
-X-Received: by 2002:a05:6e02:2491:b0:3d0:62be:12c3 with SMTP id
- e9e14a558f8ab-3d14efbfcd0mr7274625ab.1.1739211743085; Mon, 10 Feb 2025
- 10:22:23 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739211804; x=1739816604;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zywqNIFDXEwlE7hLyD+JRB5FcKOg2ioCGIncmY+HT84=;
+        b=FpvYO+RZNTjoT+hLg1au7oZa485RaGynaPZNPJbR5XIiN3W5uvMwM/0VMKKWtxMp8H
+         6LinpmJXr/6J/27dPuEQPdE5vEOdiw3XlwhYVLepBykezCNM+9Qidcs/1iIJEa0snmtQ
+         4e5E20K4U457LpfUWLp1uWwk/ViEx1Fc2WoRWGwXvPmF7ELSotmuCWENn2GePZTDHHM5
+         ba6bNeLZxRTwa/05RZNl55kugtVJemxo/F/8SvrgLXKFHGhF+l0tKBc4++t+3cI8/xrN
+         SnCsP6nPHghh3bxbdnpwvH0x+kRNxoQaRT4vO8DSSjw12+vhE9hC4RVZ2kNr6sR23Vx2
+         wmuA==
+X-Forwarded-Encrypted: i=1; AJvYcCW5nircOLbVEZVqh29DHWfmG0AFn5pi7yzJYTg6KoNckDX4MmfNlKBwFysTbBkRarQczJzG81iU4bo=@vger.kernel.org, AJvYcCXVuMxgKqnDBGa+jh2E2/0t+O5djOeeM3fYE/SNz6ATu9FFC0TDletGpdkAz9WxpPlvER8YbZ9JYQmdVRv2K1iK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2QYDSoyyreii5m426juRuFwod4JH6MSih/BCemIWot1Fdapw4
+	GH/bv6OKTNNLp2BfcjYCeGkeXWbFl4Z/2rS1dnD+DdxPz5ieJ/OF
+X-Gm-Gg: ASbGncsGo7b3mNXX8rBHrZiUYnLzPHO5WNcGKxP8oUUUbgb2OHicrdKPsaSZ5TIrxxc
+	rcmfG9PR15o5tVsW8cRGUQvPv1nYvcCpBW6QTpgKr9l1tn6sQjqItCi1cXznqJPkMArgUOq2ZNk
+	+7vxJbeG1idMU7eFEQe984O2vpK1ak+0KQzn80ZBoIvoRQ5lDHgxcBM6YXKf6gdETs7wrDm/Ope
+	i0Op5flE0iwepOtIPhCei8kn2f2OjigHsAk4vXzNUHDjVcO2jnnQ8l4UR2khcv2y665fHskDRN9
+	djUgyxy9wkuhRsFYFIV+rPM5vK6ip5008ZoPG/MO1NS+Eu3ubACqxjUHTmaRnln7mMmQVDnHSXL
+	lMj+jONZc/T2myTc4dQUSYdtg
+X-Google-Smtp-Source: AGHT+IHJUbDxjdCsNNj+OQxZXpiKoN2yODdzK86kuSDraz80IM/wj9UOVb/ft5Ok46q9atDDV1Hi/g==
+X-Received: by 2002:ad4:5dea:0:b0:6e4:29f5:b8b3 with SMTP id 6a1803df08f44-6e44562d887mr219755746d6.20.1739211804219;
+        Mon, 10 Feb 2025 10:23:24 -0800 (PST)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:cc94])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e440d902d3sm45436456d6.7.2025.02.10.10.23.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 10:23:23 -0800 (PST)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH v3 0/2] printf: convert self-test to KUnit
+Date: Mon, 10 Feb 2025 13:23:21 -0500
+Message-Id: <20250210-printf-kunit-convert-v3-0-ee6ac5500f5e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250106215443.198633-1-irogers@google.com>
-In-Reply-To: <20250106215443.198633-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 10 Feb 2025 10:22:12 -0800
-X-Gm-Features: AWEUYZmXHIPhU1yc2AP2lYcBo-6OHxpX8oMootUclJA7tttmBpiUKue4uJ9MEFM
-Message-ID: <CAP-5=fWvsy74obPj7Fs2ghUHNVu1A5ywkpjOU6ibC7vvWu2b0w@mail.gmail.com>
-Subject: Re: [PATCH v1] tools build: Fix a number of Wconversion warnings
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABlEqmcC/3XNTQ6CMBCG4auQrq1pp+UnrryHcVHKABO1JQUbD
+ eHuFtyw0OX7JfPMzEYMhCM7ZTMLGGkk71KoQ8Zsb1yHnJrUDATkQirJh0Buavnt6Wji1ruIYeJ
+ to4UEYwBtwdLpELCl18Zerql7Gicf3tuXKNf1C4LQv8EoueBoW1lXujC6wXP3MHQ/Wv9gKxhhj
+ 5R/EEiIyMsaVFWICtQeWZblA0B3Ep79AAAA
+X-Change-ID: 20250131-printf-kunit-convert-fd4012aa2ec6
+To: Arpitha Raghunandan <98.arpi@gmail.com>, 
+ David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+ Sergey Senozhatsky <senozhatsky@chromium.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Naveen N Rao <naveen@kernel.org>, 
+ Brendan Higgins <brendan.higgins@linux.dev>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
+ linuxppc-dev@lists.ozlabs.org, Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-On Mon, Jan 6, 2025 at 1:54=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> There's some expressed interest in having the compiler flag
-> -Wconversion detect at build time certain kinds of potential problems:
-> https://lore.kernel.org/lkml/20250103182532.GB781381@e132581.arm.com/
->
-> As feature detection passes -Wconversion from CFLAGS when set, the
-> feature detection compile tests need to not fail because of
-> -Wconversion as the failure will be interpretted as a missing
-> feature. Switch various types to avoid the -Wconversion issue, the
-> exact meaning of the code is unimportant as it is typically looking
-> for header file definitions.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+This is one of just 3 remaining "Test Module" kselftests (the others
+being bitmap and scanf), the rest having been converted to KUnit.
 
-Ping. Also:
-Reviewed-by: James Clark <james.clark@linaro.org>
-Would be nice to be cleaner wrt compiler warnings.
+I tested this using:
 
-Thanks,
-Ian
+$ tools/testing/kunit/kunit.py run --arch arm64 --make_options LLVM=1 printf
+
+I have also sent out a series converting scanf[0].
+
+Link: https://lore.kernel.org/all/20250204-scanf-kunit-convert-v3-0-386d7c3ee714@gmail.com/T/#u [0]
+
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+Changes in v3:
+- Remove extraneous trailing newlines from failure messages.
+- Replace `pr_warn` with `kunit_warn`.
+- Drop arch changes.
+- Remove KUnit boilerplate from CONFIG_PRINTF_KUNIT_TEST help text.
+- Restore `total_tests` counting.
+- Remove tc_fail macro in last patch.
+- Link to v2: https://lore.kernel.org/r/20250207-printf-kunit-convert-v2-0-057b23860823@gmail.com
+
+Changes in v2:
+- Incorporate code review from prior work[0] by Arpitha Raghunandan.
+- Link to v1: https://lore.kernel.org/r/20250204-printf-kunit-convert-v1-0-ecf1b846a4de@gmail.com
+
+Link: https://lore.kernel.org/lkml/20200817043028.76502-1-98.arpi@gmail.com/t/#u [0]
+
+---
+Tamir Duberstein (2):
+      printf: convert self-test to KUnit
+      printf: break kunit into test cases
+
+ Documentation/core-api/printk-formats.rst |   2 +-
+ MAINTAINERS                               |   2 +-
+ lib/Kconfig.debug                         |  12 +-
+ lib/Makefile                              |   2 +-
+ lib/{test_printf.c => printf_kunit.c}     | 429 +++++++++++++-----------------
+ tools/testing/selftests/lib/config        |   1 -
+ tools/testing/selftests/lib/printf.sh     |   4 -
+ 7 files changed, 192 insertions(+), 260 deletions(-)
+---
+base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+change-id: 20250131-printf-kunit-convert-fd4012aa2ec6
+
+Best regards,
+-- 
+Tamir Duberstein <tamird@gmail.com>
+
