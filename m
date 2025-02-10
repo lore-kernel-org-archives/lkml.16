@@ -1,113 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E58817C220;
-	Mon, 10 Feb 2025 05:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBB38F58;
+	Mon, 10 Feb 2025 05:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739166026; cv=none; b=Ot9O8u415jtrguzW0QJC7G7V/MmDx188AOOVH/LI7iqTKXNUhsB1XayFaETXJ1VC+b+BjeKuKHgAMl/F56l+ftACsRNfJvE/aWG3zEb9UZIlkPdS/4+vCcfMtlVwP3r5Jukzzl4zAPEHE2XeIqJ9ntKuU6kkd6V1wGZxa3miOQQ=
+	t=1739166249; cv=none; b=fI//uQ0MJ3npOyRCJUAJgovcbcUpe0/poJNTTFCptmnxSXEC+aQcelavcPXLPNhSlU+fpO2XWT1SLsll7qTl8+Ztt56psUIReA+gVlKBjD3bf5ZWXCYVOuHSrI2bclDOQK6edl066l7TKjNRP2lBZC9lW8I9C55eGiMM6t81Rkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739166026; c=relaxed/simple;
-	bh=wqqJHWBJ+k5VNxqZ8rwbBAUHuSes0w4hjTbau4Q3OF4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tki4Fx76opyB4T9Ky5Z1wpBy86zw4P+gvYu7yl16ft6PSVgXiRKZkYmVC2jsvs5rUh0J6J4M1MiLweIU7HDBdktaf7kAU9BdtDucGgY20rUpS+mp8l5iD5JJjyHYpxAicH26I4zH6Q4+IS0IHqgU7zNZB4Z0mTWHiGXRVJYDZlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hPrxWAEm; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739166249; c=relaxed/simple;
+	bh=QsKlo5lRihncyD4jf3O/19ocwBlCJAhbEv+gr4CqoAs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CYj5tJp3nP8Cq2o1j/LgmYw9SIQDr+/NBaiYgzqK/dcJRRnCdD+cNdAmWYMDMWM2TZcc87HvHlhJjk8cW8+jdtosWHIqJ1QvQnH7d8J009UKDH2STQdOrIqR9TFtcXTHS6RdFumbk8eX8PcGBXK3BVAC06KH2rZ9qeL0E+CV0iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fR5V6ay0; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hPrxWAEm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739166025; x=1770702025;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wqqJHWBJ+k5VNxqZ8rwbBAUHuSes0w4hjTbau4Q3OF4=;
-  b=hPrxWAEmQ45/FrtRrdkZRdbd8qU26I2apEnXb3E8SP090tuJLOrZ1BHl
-   9+ZmrxxT1m9w6tmksh52qVUPf8fvrs6zTEYWAi+MDe0uQyrRjqQXILRlo
-   NtweJbh/tqLoYa16JlSQpXrRzCo4lm9ZFnFxja8L1QV+c02Nb9LMrYm0I
-   oMdcxtaQgHaOApC+lBfABk8hhQsU9edzJs6R1XqBx4uRkFUmTeER7bxfo
-   yZggIe12NpQyBdh9qd4Bxs7wnYG2fpqJAEKNvsAvzblknKt1Trr33SLx2
-   dMnaZj3V+Lvj9vxQyUJd7Ih3KLMOkK9tXTn0q7HNzmgpvjwntHygrUOGZ
-   Q==;
-X-CSE-ConnectionGUID: 3OTKSoGFSGK8NHluVYIuhQ==
-X-CSE-MsgGUID: niaS2vP8SxiORS4u4Y1rcw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="39754641"
-X-IronPort-AV: E=Sophos;i="6.13,273,1732608000"; 
-   d="scan'208";a="39754641"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 21:40:24 -0800
-X-CSE-ConnectionGUID: dY9cPuvhSvaibce0BbRdBg==
-X-CSE-MsgGUID: k2hJYR98S/qGieL3zs4VEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="135343330"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 21:40:20 -0800
-Date: Mon, 10 Feb 2025 06:36:43 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Ethan Carter Edwards <ethan@ethancedwards.com>
-Cc: Piotr Kwapulinski <piotr.kwapulinski@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jedrzej Jagielski <jedrzej.jagielski@intel.com>,
-	Simon Horman <horms@kernel.org>,
-	Stefan Wegrzyn <stefan.wegrzyn@intel.com>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ixgbe: remove self assignment
-Message-ID: <Z6mQa0l6Y4tb9BrY@mev-dev.igk.intel.com>
-References: <20250209-e610-self-v1-1-34c6c46ffe11@ethancedwards.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fR5V6ay0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=25tCAJSvng3HpkeQlkOkZCZn9tqQLSrQ/1A3tOLGXtI=; b=fR5V6ay01P+rV/ADPEZA0yhSRU
+	1L/dV+ttTTfxUOMsfLhGx1z2UsQGEP6VNtvWmaRP2BwBToAB5e2Z5iOzi6B7RZEaRfxy++bxfrMZE
+	Qq9Q3MxkujOU05ZXoTuCd8cbsY+6pE/nl8+MicJue/diuTbK2xV3N1x9PBxaHByUGOwYdELXdnl/c
+	TQB/ksuLm1BNz2FXQZj6xtJtslaYWgqHtLACbWwXpYZQcHH4ER7362afSzmSF856IiDDkxpkwKGqW
+	cSYleficNzmdK/LuEtBRBQqV9N9dqaZR68Lwn5CxE+I+Ub7S9JLdpuRycj3RGmOqiJLK8E1D8I5ag
+	r3G/nLfg==;
+Received: from [50.53.2.24] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1thMaR-0000000EkQx-2hot;
+	Mon, 10 Feb 2025 05:44:03 +0000
+Message-ID: <710360ce-fe10-481c-9db8-917d3cf73b51@infradead.org>
+Date: Sun, 9 Feb 2025 21:43:59 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250209-e610-self-v1-1-34c6c46ffe11@ethancedwards.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Documentation: proofreading Documentation
+To: Armin <armin.mahdilou@gmail.com>, corbet@lwn.net
+Cc: shuah@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250210041800.357393-1-Armin.Mahdilou@gmail.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250210041800.357393-1-Armin.Mahdilou@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, Feb 09, 2025 at 11:47:24PM -0500, Ethan Carter Edwards wrote:
-> Variable self assignment does not have any effect.
+
+
+On 2/9/25 8:17 PM, Armin wrote:
+> Fixed some spelling issues in documentations.
 > 
-> Addresses-Coverity-ID: 1641823 ("Self assignment")
-> Fixes: 46761fd52a886 ("ixgbe: Add support for E610 FW Admin Command Interface")
-> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+> Signed-off-by: Armin <Armin.Mahdilou@gmail.com>
+
+Looks good. Thanks.
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+
 > ---
->  drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c | 1 -
->  1 file changed, 1 deletion(-)
+>  Documentation/ABI/testing/configfs-usb-gadget-midi2 | 2 +-
+>  Documentation/input/devices/elantech.rst            | 2 +-
+>  Documentation/nvme/nvme-pci-endpoint-target.rst     | 2 +-
+>  Documentation/sound/soc/machine.rst                 | 2 +-
+>  Documentation/usb/gadget-testing.rst                | 2 +-
+>  5 files changed, 5 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c
-> index 683c668672d65535fca3b2fe6f58a9deda1188fa..6b0bce92476c3c5ec3cf7ab79864b394b592c6d4 100644
-> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c
-> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c
-> @@ -145,7 +145,6 @@ static int ixgbe_aci_send_cmd_execute(struct ixgbe_hw *hw,
->  	if ((hicr & IXGBE_PF_HICR_SV)) {
->  		for (i = 0; i < IXGBE_ACI_DESC_SIZE_IN_DWORDS; i++) {
->  			raw_desc[i] = IXGBE_READ_REG(hw, IXGBE_PF_HIDA(i));
-> -			raw_desc[i] = raw_desc[i];
->  		}
->  	}
+> diff --git a/Documentation/ABI/testing/configfs-usb-gadget-midi2 b/Documentation/ABI/testing/configfs-usb-gadget-midi2
+> index 0eac3aaba137..d76a52e2ca7f 100644
+> --- a/Documentation/ABI/testing/configfs-usb-gadget-midi2
+> +++ b/Documentation/ABI/testing/configfs-usb-gadget-midi2
+> @@ -47,7 +47,7 @@ Description:
+>  		midi1_first_group	The first UMP Group number for MIDI 1.0 (0-15)
+>  		midi1_num_groups	The number of groups for MIDI 1.0 (0-16)
+>  		ui_hint			0: unknown, 1: receiver, 2: sender, 3: both
+> -		midi_ci_verison		Supported MIDI-CI version number (8 bit)
+> +		midi_ci_version		Supported MIDI-CI version number (8 bit)
+>  		is_midi1		Legacy MIDI 1.0 device (0, 1 or 2)
+>  		sysex8_streams		Max number of SysEx8 streams (8 bit)
+>  		active			Active FB flag (0 or 1)
+> diff --git a/Documentation/input/devices/elantech.rst b/Documentation/input/devices/elantech.rst
+> index c3374a7ce7af..98163a258b83 100644
+> --- a/Documentation/input/devices/elantech.rst
+> +++ b/Documentation/input/devices/elantech.rst
+> @@ -556,7 +556,7 @@ Note on debounce:
+>  In case the box has unstable power supply or other electricity issues, or
+>  when number of finger changes, F/W would send "debounce packet" to inform
+>  driver that the hardware is in debounce status.
+> -The debouce packet has the following signature::
+> +The debounce packet has the following signature::
 >  
+>      byte 0: 0xc4
+>      byte 1: 0xff
+> diff --git a/Documentation/nvme/nvme-pci-endpoint-target.rst b/Documentation/nvme/nvme-pci-endpoint-target.rst
+> index 66e7b7d869b4..b699595d1762 100644
+> --- a/Documentation/nvme/nvme-pci-endpoint-target.rst
+> +++ b/Documentation/nvme/nvme-pci-endpoint-target.rst
+> @@ -86,7 +86,7 @@ configurable through configfs before starting the controller. To avoid issues
+>  with excessive local memory usage for executing commands, MDTS defaults to 512
+>  KB and is limited to a maximum of 2 MB (arbitrary limit).
+>  
+> -Mimimum number of PCI Address Mapping Windows Required
+> +Minimum number of PCI Address Mapping Windows Required
+>  ------------------------------------------------------
+>  
+>  Most PCI endpoint controllers provide a limited number of mapping windows for
+> diff --git a/Documentation/sound/soc/machine.rst b/Documentation/sound/soc/machine.rst
+> index 9db132bc0070..1828f5edca3e 100644
+> --- a/Documentation/sound/soc/machine.rst
+> +++ b/Documentation/sound/soc/machine.rst
+> @@ -75,7 +75,7 @@ In the above struct, dai’s are registered using names but you can pass
+>  either dai name or device tree node but not both. Also, names used here
+>  for cpu/codec/platform dais should be globally unique.
+>  
+> -Additionaly below example macro can be used to register cpu, codec and
+> +Additionally below example macro can be used to register cpu, codec and
+>  platform dai::
+>  
+>    SND_SOC_DAILINK_DEFS(wm2200_cpu_dsp,
+> diff --git a/Documentation/usb/gadget-testing.rst b/Documentation/usb/gadget-testing.rst
+> index bf555c2270f5..1998dc146c56 100644
+> --- a/Documentation/usb/gadget-testing.rst
+> +++ b/Documentation/usb/gadget-testing.rst
+> @@ -1050,7 +1050,7 @@ Its attributes are:
+>  	midi1_num_groups	The number of groups for MIDI 1.0 (0-16)
+>  	ui_hint			UI-hint of this FB
+>  				0: unknown, 1: receiver, 2: sender, 3: both
+> -	midi_ci_verison		Supported MIDI-CI version number (8 bit)
+> +	midi_ci_version		Supported MIDI-CI version number (8 bit)
+>  	is_midi1		Legacy MIDI 1.0 device (0-2)
+>  				0: MIDI 2.0 device,
+>  				1: MIDI 1.0 without restriction, or
 
-Thanks for the patch. This change is already in progress [1] (I hope,
-waiting for v3).
-
-[1] https://lore.kernel.org/netdev/20250115034117.172999-1-dheeraj.linuxdev@gmail.com/
-
-Thanks,
-Michal
-
-> 
-> ---
-> base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
-> change-id: 20250209-e610-self-85eac1f0e338
-> 
-> Best regards,
-> -- 
-> Ethan Carter Edwards <ethan@ethancedwards.com>
+-- 
+~Randy
