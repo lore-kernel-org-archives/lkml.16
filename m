@@ -1,125 +1,144 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345771A3159;
-	Mon, 10 Feb 2025 07:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965771B21BD
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739173347; cv=none; b=nuVrip8FeOAojy9kL2SP3yBBk4EplXgcTM4i1NdB3gmfKEvMAiJjmEhsuKboy628vhM81a09TMMfNPwXNVXWx6Yv/hw4KiNjw8Pm+kbXOFIX41Nz5yGfLzcXMpBREJBi4/YcCOAKoGd+JfNQvDkftbf4Z7uho4fY1JftyjjfoMM=
+	t=1739173363; cv=none; b=KE+ZS2UEpPQ6WR6bbj2RoWIp546PwDTESedkAXNNUEuW9Z548lYnVZA8IGGcNuHUeDenDy+Ey5jA3flsnD4MWP/7d0DRlUXhvBoi0Y7m0wj9tsPBne6pavqrNCupDaKiRMKeZHnl4JrFhfPp+GzG6WVI49SbS/ZBc6rz/Ha+csc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739173347; c=relaxed/simple;
-	bh=QSeVFrS8AlRqMMnu5KVH+XMuflenwRZOO6LZ39/DS28=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f7F7LODxW5lZi2EaMJa2gneZK+guvlH9JWXjwocJeDuniEdgkugQUtcMsMnAzvRiS35FuVDRYzkongKJxpuBle2EeL/0chz6GxDu6f8g/ZMfSzTDXM11YFeHHDhdnu+EU8guSCL7SQro6kV0vlgRLbL/SKZru9mLDwdP+2l0SNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lg463z4c; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739173363; c=relaxed/simple;
+	bh=uELykYu2UfnPFrcbXaL5ytU50E2XF8fxhOESv8wBqLc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u75FGHT8xQs63vKlDc01pi+AFRqcz2jhRLpxH4nQdL60617kovyGxYR771tKeRcllFyjj4ci1927fjcPQ35BicvyDWVNxNeG6whlytXo4ZcP4ULBN7HNYdQQ402bgfbfLwrGifFKjOTO8G/AdJBUfU6ZdmuCyn5XdTKNX/MhqzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=hEHhEnub; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lg463z4c"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ab78d9c5542so470461866b.1;
-        Sun, 09 Feb 2025 23:42:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="hEHhEnub"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-38dc6d9b292so1495608f8f.2
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 23:42:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739173344; x=1739778144; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ltfGinCJ7NHfrB+q5DH7Wu/bz6rIJOHJC14+oF7o8aE=;
-        b=Lg463z4cDCXrxvmQic2S6BYhduZNUcioZNbFoIjd98Mf/LZFtO7b9OpJFlbMk9bZSQ
-         lq2E2IQnL+Qb74UlJlYkxe19qRWyNd7fzdQU7yRj5xOnTFfzaiGXnMdHABT4cjDZjAwx
-         44L9TbFPLImQe7lDS9xBmFpdVaS22K0V6gAgaNv6wglVYZlHfirc7zwN1JbpC2qapUNu
-         u0kNX7dEaOUqKyFYdLINwRNSV66yEKkLT4DiMWl5vx0Qi62X2vNFTaSKCcVp/X0Rbkr/
-         QjtSaWWTShEG/e3Lv2e5HFXdpiXKzHig4DuuKZ+23ubIeiQvaonL6NmaEbLIMsrRPzBS
-         M/6A==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739173360; x=1739778160; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Jki0b2am8yzlz3QyhCDEFnMh6r+K6Xff5FC3zmcGxIQ=;
+        b=hEHhEnub9vJ60lxT2vbKKBzRLmTMTfzEohjaxyIuLzLiow2SvvpkSatF4AZQxAJjnt
+         GldSg7omHp61iZ44O1NoCTj6O106Fa44wXsTEgwrO3V6PzE0XKFkh6b/1ZhCnDiUMPLD
+         iwdjtrUpH14ypIzDoUIvMM99VMZk3yMbhrAuLsSxv/dZnbni6dapXkUUVW/cIaTFVxpU
+         G5YOpqgvdH6tvuTG1XbLoQT9/+QjN8WaQ3SBagZb0OxHRyre8cxLMu7PshbV34ULqsvb
+         gv/zLIyYV/g09f6i49Cxt3Z9AKBh7vYEdtAS2ASA6AqW2u06PJmqX7yjLhHIybimdYpn
+         yLVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739173344; x=1739778144;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ltfGinCJ7NHfrB+q5DH7Wu/bz6rIJOHJC14+oF7o8aE=;
-        b=nM31m4Ho2KieF4CDsT1QshZjKk5lb+OOaOn/qPxKHNFqHLl/TnJso7medmww49Fp7o
-         X5ZVqnhtparwzpaO95IZE7gQhdyhd06fj3pz2Q+1AEnwHzL0KRelfehjh/9hMDC7M6kA
-         rOQiHTDJ6am6jmxRb+Kub4X3k0QRSBeFaR7m3yhsLzyX7rMu6lhNlM98n/nywcxWUSI6
-         pamY2QSQ/aE4bH2GWXJy1rn/oejlX2dd365j5qjL+EWg+bptMlwuLtuJbh6xHTqtsA9w
-         uiHG2THM+7hheLMxqBUban77lJO8U8cZYZIx2gDVWdKRSkfw+7SnxGGuU8lm4rhq4q3B
-         j0+g==
-X-Forwarded-Encrypted: i=1; AJvYcCVA89t/Gd0Yi9kPCY9VE6XFiZ0BW8ICKB/tK89FYDuYLgMN+IQ4IMY0NE12KEMoi9hbLkblY64hKD0hp6I=@vger.kernel.org, AJvYcCXmdQRmlPSUpwu9E6+U8taxoShSCmvd1OZ+KUIC5PIpE9j9VNZOHUQla6+tHnFf5BKAZhtGiAvYreHh@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmUj1jwwlUhfKMgDqdSxuYlKNh9/gjMwoJ0f7BMEaN4FDYoEmI
-	Nj/cnHEz27YRglfn+gDZT8GGlvimpyYiPVvR6CsHv+km85hPXfmS
-X-Gm-Gg: ASbGncvcEjbvJZoQ67rYgsyNy1pDdWPQmpxJXsbYnAxay+80MgAPmJ/m/VxaIMXl+pW
-	t091NTXhl3c9u8ZNmlB4alGK8BWyuBNbGRr6tU07GrgxeAFAT8V97jABnuRE5AjuUJWWcLHrCYq
-	mUfTDTBJBj1V2KmmNhZsLPYi5APD9KZpMPNFEJ7A+rpukcd9c7to5RfV3TyE1Khx/fylBN3PaDk
-	Ld6Ji+mCw35R78rfL8RXtVnDahr29mNAhaiM3cSbhr+LEq5oXrfQWJzcIn9ZvyTkTf7AHf/5uQh
-	0IIDCqYWohmpeYJfnOaIbeOqgBn0WZeQ
-X-Google-Smtp-Source: AGHT+IGSeWpHu/qJEW7zfEADCO3fh7nw3R6ZvVw1kcqO7eQWmoYB4onDA2ciAEdKNsc9ooJau7TgaA==
-X-Received: by 2002:a17:906:46db:b0:ab7:9f12:6787 with SMTP id a640c23a62f3a-ab79f1286demr749705466b.50.1739173344134;
-        Sun, 09 Feb 2025 23:42:24 -0800 (PST)
-Received: from foxbook (adtq181.neoplus.adsl.tpnet.pl. [79.185.228.181])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7cf027239sm33229166b.181.2025.02.09.23.42.23
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Sun, 09 Feb 2025 23:42:23 -0800 (PST)
-Date: Mon, 10 Feb 2025 08:42:20 +0100
-From: Michal Pecio <michal.pecio@gmail.com>
-To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman 
- <gregkh@linuxfoundation.org>
-Cc: Niklas Neronin <niklas.neronin@linux.intel.com>,
- linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] usb: xhci: Skip only one TD on Ring Underrun/Overrun
-Message-ID: <20250210084220.3e5414e9@foxbook>
-In-Reply-To: <20250210083718.2dd337c3@foxbook>
-References: <20250210083718.2dd337c3@foxbook>
+        d=1e100.net; s=20230601; t=1739173360; x=1739778160;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jki0b2am8yzlz3QyhCDEFnMh6r+K6Xff5FC3zmcGxIQ=;
+        b=qDY5d4Qx7rYKtVreIMvZAQ+QiKwsDa1hzquKKfBByfkCI3AV9HoGLppV/s0dpBV3P9
+         8CuQwt2r+/ojYus61+FbMR4pal0T39pOYAheoNvBF3cD3wuIpamThCL99VszX5qXUTSS
+         dP9UD2dx/CeNdrXI+8gs87kWzBnJN4vgdsImYCuK7VmYwgXAh8A/5hRooaoqrGPv2bqd
+         9V8FSUMjRvni/ubrE6Kd66YiyJtEVfnQ4+m2ClhnOo2GYM9V/mVl2ElC0MtHLnXAr4s/
+         VaEU+XgPk4yfK9eLxzaFOUiHvIWnUeJjNIvRKd/gkFNOct0X07EbjbHqUbtL4gAwtu67
+         qpyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVrUpWpFcjYsTT3BAO8VjpqwSO+XbtfuD3wLLFtwXkgjax0bdpidmUb5d2SB9YODr1wsGqoEcXVkS9EMEQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVG/HLJIjxZ/LzMutBNgAzkfV9NpZRVVoPzWMOaYKCDqjGYyuK
+	u/ivbq8YG+NX1H9QM9RKI54kjjueUI1QryKCS7OzKR6TldwHzP7U5NEWgemo3aQ=
+X-Gm-Gg: ASbGncuhQSKZwdcVWCB/JhoHC/KAXwg5F29Vhw0jJbxT4wThdyw5unSE4C+XEJpIFFZ
+	55ljA29Im53163Lwrh/zq38KhIhz+R4znM5fL0yhHKnSfWmsdCBp/pqHdpMcqlrcGANTUihHW9T
+	tQS8FdCdQ12JWIjpdMIJgN2NKWKlKTtGLM4b6ZBg/1z0QH2lNI+k0rueSaPkFXzmq51NHMyo7r5
+	FVXM9sUlKoHmOqQ7Zyes96uSoEDJiTLp9V5dtZLxh33UlKbaZJC6VyIuKLjaz8k/4ueKnHVNCbn
+	zpPwySC2OzBffp1yoKeMNVGaJfPjJH4tagLpuAjQSnnuMemGc+bN+tFtf0eH
+X-Google-Smtp-Source: AGHT+IF39BdEkA9ZgcBIHbLRArZRwyqYfhbYwkkcPtQvR89C0KQhk8Xnq25iZkfcHIflDsp+ppJQFw==
+X-Received: by 2002:a5d:47ad:0:b0:38b:d7c3:3768 with SMTP id ffacd0b85a97d-38dc90fdb89mr7501603f8f.12.1739173359748;
+        Sun, 09 Feb 2025 23:42:39 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d896d70sm171375435e9.0.2025.02.09.23.42.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Feb 2025 23:42:38 -0800 (PST)
+Message-ID: <4320b0be-acce-43b2-b148-1577c6a56dff@rivosinc.com>
+Date: Mon, 10 Feb 2025 08:42:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 14/26] riscv/traps: Introduce software check exception
+To: Deepak Gupta <debug@rivosinc.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Christian Brauner <brauner@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>,
+ Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+ Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ alistair.francis@wdc.com, richard.henderson@linaro.org, jim.shu@sifive.com,
+ andybnac@gmail.com, kito.cheng@sifive.com, charlie@rivosinc.com,
+ atishp@rivosinc.com, evan@rivosinc.com, alexghiti@rivosinc.com,
+ samitolvanen@google.com, broonie@kernel.org, rick.p.edgecombe@intel.com
+References: <20250204-v5_user_cfi_series-v9-0-b37a49c5205c@rivosinc.com>
+ <20250204-v5_user_cfi_series-v9-14-b37a49c5205c@rivosinc.com>
+ <fec3b7be-4259-4eef-87f9-b2cee5718cae@rivosinc.com>
+ <Z6Z6mhiQ3DmsNZe9@debug.ba.rivosinc.com>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <Z6Z6mhiQ3DmsNZe9@debug.ba.rivosinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-If skipping is deferred to events other than Missed Service Error itsef,
-it means we are running on an xHCI 1.0 host and don't know how many TDs
-were missed until we reach some ordinary transfer completion event.
 
-And in case of ring xrun, we can't know where the xrun happened either.
 
-If we skip all pending TDs, we may prematurely give back TDs added after
-the xrun had occurred, risking data loss or buffer UAF by the xHC.
+On 07/02/2025 22:26, Deepak Gupta wrote:
+> Hi Clement,
+> 
+> Thanks for looking at it. Inline
+> On Thu, Feb 06, 2025 at 02:49:09PM +0100, Clément Léger wrote:
+>>
+>>
+>> On 05/02/2025 02:22, Deepak Gupta wrote:
+>>> zicfiss / zicfilp introduces a new exception to priv isa `software check
+>>> exception` with cause code = 18. This patch implements software check
+>>> exception.
+>>
+>> Hey Deepak,
+>>
+>> While not directly related to this patch, is the exception 18 delegation
+>> documented in the SBI doc ? I mean, should we specify that it is always
+>> delegated when implementing FWFT LANDING_PAD/SHADOW_STACK ?
+> 
+> I don't think it's document in SBI spec anywhere. Should it be ?
 
-If we skip none, a driver may become confused and stop working when all
-its URBs are missed and appear to be "in flight" forever.
+That's a good question ! I don't know the process to document that part
+of the SBI but that would probably be nice to document it anyway I
+guess. Atish may know what to do with that.
 
-Skip exactly one TD on each xrun event - the first one that was missed,
-as we can now be sure that the HC has finished processing it. Provided
-that one more TD is queued before any subsequent doorbell ring, it will
-become safe to skip another TD by the time we get an xrun again.
+Clément
 
-Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
----
- drivers/usb/host/xhci-ring.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+> 
+> 
+> In code, opensbi delegates the exception (SW_CHECK)
+> https://github.com/riscv-software-src/opensbi/
+> commit/110524441a827e026db3547ed03c5723b9c9e211
+> 
+>>
+>> Thanks,
+>>
+>> Clément
+>>
+>>>
 
-diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index 878abf5b745d..049206a1db76 100644
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -2875,6 +2875,18 @@ static int handle_tx_event(struct xhci_hcd *xhci,
- 
- 			if (!ep_seg && usb_endpoint_xfer_isoc(&td->urb->ep->desc)) {
- 				skip_isoc_td(xhci, td, ep, status);
-+
-+				if (ring_xrun_event) {
-+					/*
-+					 * If we are here, we are on xHCI 1.0 host with no idea how
-+					 * many TDs were missed and where the xrun occurred. Don't
-+					 * skip more TDs, they may have been queued after the xrun.
-+					 */
-+					xhci_dbg(xhci, "Skipped one TD for slot %u ep %u",
-+							slot_id, ep_index);
-+					break;
-+				}
-+
- 				if (!list_empty(&ep_ring->td_list))
- 					continue;
- 
--- 
-2.48.1
