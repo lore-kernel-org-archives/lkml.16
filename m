@@ -1,80 +1,85 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EF423CB;
-	Mon, 10 Feb 2025 00:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 557348F49;
+	Mon, 10 Feb 2025 00:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739147284; cv=none; b=G3/Fw0s+B/RVqQA00kqAgI6YWp82u0vK28DPPYQY9EFnzadAWp9FB3bbLLmxoiy8FE2DDUIODnLj3GMgXdgfcgQox62lCXOKKgeA8cZF8F+SyHZtfPFS/vHl4E4/3oKeqzq4iwzMIGvsQpGhSRyUSiZ9jjnBf1vA9WBhkjzf2h8=
+	t=1739147305; cv=none; b=EwLqM718N0+sT72PyIKH57ajz7qhRyMZs90F5pVo6oOfGbOCfjMspZUjk6vhwVBlvx+dYyfKJtRFufJCkLfbwYjWGM5AnUC84N6dfbiAfBqlIWFCiW7CUbqpVgO5h/oVOu/J0nqN7U30FeDCfGh9m9xps9kfdqJQgsJ/SLpz7Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739147284; c=relaxed/simple;
-	bh=fvqZn3dds/2vc743MN+NhZL253B6zh0m/oJAf86dSQs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UKU4iZfm5CgCUiPzlRzx7ztDj0nFtBxuQHWS2jZubO35aujnptKsv8X7zgCeQdx9a0kKgAZ2nqIY3qYbFdl7Sw3TLVEOTH3INuk0dnZ5tivR/h9FJTeJzLezo2EHn5HrVS4Rfc2xBVHaEP/Al27MOuSPxuU3fC3d2RmutrpZK0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=tJ+Ysb81; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1739147305; c=relaxed/simple;
+	bh=KKvJwv/1kq5mF8ZtnlLKAz9MPFThYJ9I6SabWafH1mM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=E2Byot9QadybVknEbAK2Fe41+dqXd3AuE3MMi/fXnsyZ0rpdkw5YKd28x/3qYWGG50Hv1UVscp2Z0dUZypPnCCerYF2K/ifulz8gtlhhBhsfijxSaBr5YOhWrwT3xGJ8oKjNebv/xS1nvurhQ0Htc8wTr/kmlAcsycGen0ZKzXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=NqUt8P7G; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="tJ+Ysb81"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=9+OuQB8vrs+CeMFvejhrtScCH5/Bhssr04jN9BqY/Ig=; b=tJ+Ysb81mPEctH9wES4dKgtK5b
-	ix/tJ/3uqz7VeeEMP7zC9Q9lSy/eyasx8tlX2rH+ci5buSImWKcmcJESC4RMWeCRQAzxLhSeqYTGW
-	CnzJ4otjw6eLvSEnyOzwds+qINFWKWjJzqH/f+fJorCDWmUVIn727rDo+fRZ8WSxzULI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1thHeP-00CYAE-Nu; Mon, 10 Feb 2025 01:27:49 +0100
-Date: Mon, 10 Feb 2025 01:27:49 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Dimitri Fedrau <dima.fedrau@gmail.com>
-Cc: Stefan Eichenberger <eichest@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
-	Gregor Herburger <gregor.herburger@ew.tq-group.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2] net: phy: marvell-88q2xxx: Add support for
- PHY LEDs on 88q2xxx
-Message-ID: <bc53a976-fa27-488b-9891-658014550950@lunn.ch>
-References: <20250207-marvell-88q2xxx-leds-v2-1-d0034e79e19d@gmail.com>
- <Z6eJ6qPs7ORuOrbt@eichest-laptop>
- <20250209084135.GA3453@debian>
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="NqUt8P7G"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 51A0S6J501315859, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1739147286; bh=KKvJwv/1kq5mF8ZtnlLKAz9MPFThYJ9I6SabWafH1mM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=NqUt8P7GvLL6V8uogrY04EY0q0qSp33rqKuBn3q2l/YTTmIRBNewO0J39qscoz7PR
+	 H90+AAkHV0TNJql2GfNgdbxmXXKHBcPX4FJdZnQDPH8/1NjbRaZ5uF+UdWlNjO2zro
+	 bjcohXtZl7CiERusHh5ScQlGuVOLe8gTBKxigFoLfnXL+L6YMk6Ja0TWvYTWSt9AhU
+	 Nwe7S7SSfdTwylo7r3glS8fHhOkObVwOtdMTbLkNNrGQRDZAEnCOOBfRvCnMOZb7nQ
+	 aAVLDbshADaptz6zV1TrXLOL2iVrXBSwevsk9fsuSFUFFq4FKUE36e4UCEloEu7uet
+	 9XLDoUVBUgm5w==
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 51A0S6J501315859
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Feb 2025 08:28:06 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 10 Feb 2025 08:28:06 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 10 Feb 2025 08:28:06 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::48ab:b54f:96a1:6553]) by
+ RTEXMBS04.realtek.com.tw ([fe80::48ab:b54f:96a1:6553%5]) with mapi id
+ 15.01.2507.035; Mon, 10 Feb 2025 08:28:06 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Andrew Kreimer <algonell@gmail.com>, Kalle Valo <kvalo@kernel.org>,
+        Bitterblue Smith <rtl8821cerfe2@gmail.com>
+CC: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+Subject: RE: [PATCH net-next] wifi: rtlwifi: rtl8192de: Fix typos
+Thread-Topic: [PATCH net-next] wifi: rtlwifi: rtl8192de: Fix typos
+Thread-Index: AQHbeHCiBXmrjmRhyEKJoU1kzj62i7M/s8Ww
+Date: Mon, 10 Feb 2025 00:28:05 +0000
+Message-ID: <d525ed7b3b564238b25b0f3653f20067@realtek.com>
+References: <20250206082457.9148-1-algonell@gmail.com>
+In-Reply-To: <20250206082457.9148-1-algonell@gmail.com>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250209084135.GA3453@debian>
 
-On Sun, Feb 09, 2025 at 09:41:35AM +0100, Dimitri Fedrau wrote:
-> Hi Stefan,
-> 
-> Am Sat, Feb 08, 2025 at 05:44:26PM +0100 schrieb Stefan Eichenberger:
-> > On Fri, Feb 07, 2025 at 05:24:20PM +0100, Dimitri Fedrau wrote:
-> > > Marvell 88Q2XXX devices support up to two configurable Light Emitting
-> > > Diode (LED). Add minimal LED controller driver supporting the most common
-> > > uses with the 'netdev' trigger.
-> > > 
-> > > Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
-> > 
-> > Reviewed-by: Stefan Eichenberger <eichest@gmail.com>
-> > 
-> 
-> thanks for reviewing. I just noticed that led0 is enabled in
-> mv88q222x_config_init, but I think it should be enabled in
-> mv88q2xxx_config_init because LED configuration is same for all
-> mv88q2xxx devices. What do you think ?
+Andrew Kreimer <algonell@gmail.com> wrote:
+> There are some typos in comments/messages:
+>  - althougth -> although
+>  - asume -> assume
+>=20
+> Fix them via codespell.
+>=20
+> Signed-off-by: Andrew Kreimer <algonell@gmail.com>
 
-The code looks O.K. to me, so please add my Reviewed-by: Andrew Lunn
-<andrew@lunn.ch> if you decide to change to the generic 2xxx.
+Acked-by: Ping-Ke Shih <pkshih@realtek.com>
 
-    Andrew
+To be unique subject, I will change it to=20
+" wifi: rtlwifi: rtl8192de: Fix debug message typos of phy setting"
+
+By the way, patch goes to wireless-next instead.=20
+
+
