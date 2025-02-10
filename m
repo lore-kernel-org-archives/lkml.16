@@ -1,157 +1,114 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636B6225A25;
-	Mon, 10 Feb 2025 15:53:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD44243945;
+	Mon, 10 Feb 2025 15:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739202836; cv=none; b=VTDqi3HO1o0XbdebpM+Vjg72sfXmWaLuyJuSNo4uVIPFrhWSKwiz4DEKqMuTHxGZmAOCG+QJVvnepF2fpogiBFKfcn2L0TMUOn/ktV60Ra+Uen7YhBGZG/cjMCXj+kydqSj4aOPlBrcy6+YHoIjwfoX5gDZdXt/ItfKXb2URz4s=
+	t=1739202899; cv=none; b=qb8BCkpjXWZOT/KKxYYxPXyHwncFgUY/UoQcCQul2kRhM0+zY9N0CBn72PHmcMgxmBftmsiqbLOsqZGTa9qR3fA8xOcob/WEr54qwcIQZ5NZ+EPtiBnBcP7bumWy171/YC8B91wjfUFwVYoyy08ZzTRC7zDwL8A2ioq75nxPqAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739202836; c=relaxed/simple;
-	bh=cIgi1DHgDfNqKjDJ0XcW+59oMsLbTI9nYXSJyVdXZeo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gW2jpAUM3RjejtRXaFZpjnKYP3ywzXYSEZXg39esafmTg3dZjIvuAoG96feqPScnd8AZhYIuexuf4XbiO5ldlekKF2dzhF1rO7nBARtI2PAHQZnwwkGnIaijwOyy0HLgUxgMzrCkjyN5PUiaC2WaXjROynVFR4cZOHZVsjiMALY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UfLNFWCl; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1739202899; c=relaxed/simple;
+	bh=hhsFU8gPjECmItok2kUI2lFVPDCYOcaW+TghAH+ay9Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Et65XmO9qRGp6mDkTV80xqjn9gOVtJ6MCGJt7Dpjrk91MfrH6RnXDSgIvo4hnSfopW6BbgB4B7/UW+YCg7mBlh9r0y0Br4BS2w9l4gfcbwM6rm9i5Lt8n9Gio96KXGhMZlKFizk1982rWFhbrTRdK6zDaYgIDoqpBAuH5//MOME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UfLNFWCl"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43934d6b155so11843915e9.1;
-        Mon, 10 Feb 2025 07:53:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739202832; x=1739807632; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eNWUTPT+t4grgeyPMpGy9NCUbuKV1aJrX2mhHwdTFfE=;
-        b=UfLNFWCl9kM5bUc5G/ftt6f89j9ABEwpMgp5FBx6p09Rwu5PwpXj7ULsBdc6LpiOj6
-         YKpThlv8HzXV/9Hd+WYRW8Li9JJcN6Dpu4SJ2ZE3F+mWlL4QtE0Ly8i7I/o/5chR9oNR
-         899rhQCP3WAL2dGhbpazrKe7mfsVYKTIiI4jzawByr4TjCz4bu5YZs7hlvSD0A35DV0K
-         aURDIO2gZdM4C6vmGZ8gCbXUjeHr/fT6TrH9dV0jyMkykK+kJKFdRBRaIAbK1MCA9jfX
-         c1AXy73PxqjNwTmEvLzLJeMpjxm4FQqWJ5f2SmWOGDhzG/m3B6lVXiu5OqJH8bCtW+XL
-         3D2w==
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-51eb18130f9so1242096e0c.3;
+        Mon, 10 Feb 2025 07:54:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739202832; x=1739807632;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1739202896; x=1739807696;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=eNWUTPT+t4grgeyPMpGy9NCUbuKV1aJrX2mhHwdTFfE=;
-        b=eXWo3NfP7Tyj5OLO8H54tNCpCU0ELUaF9bktXfUAF0yiXWrhAD2ejUI1bMxs6Hq33w
-         jzEzJN4mQf+UnKg6dYArzRd9+wO5DKDQKCKaTkezirBgbOMsMHVcA2im+/gJLjQpcHxE
-         0Q2/S8McJJgey0N7ABTkivxgMSqoAr3ZIizqCk/eVG4UKJt1VzGbBKCBGUHwenbktnEw
-         9r8c3KPUUWTlGydb3L6aTxasdmTb0i6p6nSuyRuu441ec7z58oMZ1ZwVNGyLBmDseKAK
-         s27DsIwb3a3WqnDTpQjHmEcJrGm+qPiw0bdwYx4TBwhLMBfvkaTqORGBTbXCjgiI0Awz
-         98KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXtQYtkr9XQuq5hSowiR1/mrOq4h9olCdv5wulXqvK3X9p9T261tuIJ2x6cXmEzW4boJedOLypFdXvQbg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9TXZmUrmdFaUcon+EHoHYBZfefmeYENx57xtbzUcqWZ16dTMF
-	Ou8iZsFg9Ml5NdHM1KKrSKoBFuLwFv/If9GZloTjXpfo+qjOs/6N
-X-Gm-Gg: ASbGncvb5tLpkxfiUu/mbQ1QFaV/GQSvViwKFruKQ3CokqbrEUEZ7cw9Pq6Q4NgYng6
-	u4ODJb/5YCOIGuORNobkJ0bsQkmuH6VxHf7Xju88WWk8DzY4CZP6udh0ah2OlNvf4ew7dzP2Zmm
-	TC/zVgWrl0Wu2zwMDYd+ZAQkj5lDjPkyTSUL7QeXqu05+0PILTIZCbodsZGWoytUWzgpU3lsNSs
-	x7J/jDbriuDJ0RiclfomrwiWfYV1tFwUb1KtAqVZ2q/oH2RsGoMKOP5IovGqNisbqM1xAh1GmTT
-	7iPbn+qi8116x7WyDi4kOLd0GuT+OdUOOHypePZb0Yc=
-X-Google-Smtp-Source: AGHT+IEtBivb0snLHXxsE1OSuLQfg6PxESIGs0lSyDRH+k1gbp4GS40kpyPhzr07l3BmUp2vchm9SQ==
-X-Received: by 2002:a05:600c:1ca9:b0:439:4c7f:e167 with SMTP id 5b1f17b1804b1-4394c7fe345mr3217405e9.1.1739202832420;
-        Mon, 10 Feb 2025 07:53:52 -0800 (PST)
-Received: from localhost.localdomain ([2a02:2f0e:c501:f600:21cb:f6d7:4e65:6e28])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d896d70sm183980335e9.0.2025.02.10.07.53.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 07:53:52 -0800 (PST)
-From: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
-To: ike.pan@canonical.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ovidiu Panait <ovidiu.panait.oss@gmail.com>
-Subject: [PATCH] platform/x86: ideapad-laptop: use dev_groups to register attribute groups
-Date: Mon, 10 Feb 2025 17:53:33 +0200
-Message-ID: <20250210155333.1145867-1-ovidiu.panait.oss@gmail.com>
-X-Mailer: git-send-email 2.47.1
+        bh=JK/1qq/3I2HSkSoByzgJPyKcW6MuWYkz0tPFTzqda8s=;
+        b=rTyZPkD1MLp6VwSfiLU0fC72VQM8oef4yqaeWowwYKTwmNDJ1cx90WQwb3gLKOrfSY
+         /s3yS6w+89algXwZRbSeLLUmfCPIZ+PqughcusdCJxYOQQT8jrbQSU2I5uckgE7yTqgC
+         qJ5FIiwZn7cNaVNecH1yeMsMtLawQm8FRT8Rwxlclb5OJTdOnTvyEVyPJaS1kB0HlaWF
+         Zo/QNURZB5S34MEjl75nYWpGTfAozCYxKXOUXbz2r2OUR5MfTTfUmshXhTO5ak5YashN
+         ytdSzdRuN34qVVklhxSIDcicZOka6Pz4LjEYBo0ytoyQr1uDmI++s1RsgOI+Hw7hQvB5
+         E9nQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfcGWoKAExrEP5Bg44+dMw4gW748dWzwux4sbukfuurLCqZDt7f5kwwYFyBpoyb/Y62m3YdvAwCECeJXGa@vger.kernel.org, AJvYcCWLdLJh+XE3Sx2a/R9ilZNp2Rdb6vod+m2FMQGoAkeHPBq1WOcEH+Qzl3VkvVan/lFp5g2dWcu8brqIQxqGITwVk7g=@vger.kernel.org, AJvYcCXxcsQA8vzmqr/2SQgO5+qCRavwMuePjq7hgYDoSWpaOPtm5kVGx1Zzvx7SdKvo3dIECLW45OxTUvud@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6mxnK4ZHsE9Z3UA4s5pffMsbDEV6MvurcxN9ieJ+qhcdxGPHB
+	0JtSdUPmIYISLneVjLdJFXcxXjpzSdpRKef2PEDLtno+yyF7jlTX+yMnb3IT
+X-Gm-Gg: ASbGncuH0P1JVNH9pJu0aWbRxYUaIsDGc6sqhBVXXawR1GZyXxl3vokfXazloMAnA9q
+	iH2tkYUzI3hGilhT7vyUMJs8oA8a9tcojagtXRcS8DG3wp6ZdeG0R8zIsRun0EksEU9vL06yAhA
+	8Qay/VhhVnikq6chTvV9jad60gGaf2iRAvpCXSG4JiL6sC9Xp2nV7mW2gLudH7srdbn46kiYU8q
+	Cnaind1JvGzupe9/jjiyZJjmYOgchLlH4an7wtMjWnov4+wxOiVXNEe5JG2C+I98Zil6gYtm+Yz
+	1c7I9rP7kKMQIyxaOPMkI0IQvJcJTzet5YtwU9iPLqyWDRK+QzOStA==
+X-Google-Smtp-Source: AGHT+IFFOZGN/ym2gJpCceGs0duNhKS+4twLIIwgt/iw2QH/MfpEqMwEM3Q/94yKWMdDaJast6gXyg==
+X-Received: by 2002:a05:6122:a26:b0:520:3e1c:500f with SMTP id 71dfb90a1353d-5205721d689mr267577e0c.8.1739202896568;
+        Mon, 10 Feb 2025 07:54:56 -0800 (PST)
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51fde67e00asm727716e0c.18.2025.02.10.07.54.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 07:54:56 -0800 (PST)
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-86718c2c3b9so397451241.2;
+        Mon, 10 Feb 2025 07:54:56 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU6qnSRgxmn6YjJ8biPz9Xwniu1Rmv0RZmL9IhENvQCacnle+w1pnnaU1kRO8UQaFnpWMcBM2vfPb31EUQ63V0V/c0=@vger.kernel.org, AJvYcCX4UqmbQRIwBjqd3+iyUo4EzgEknrO+TJu6WhkvCLZLAdQWDH0PdYDMdrKZU4WOaAKa0nPf8LiZtQpu@vger.kernel.org, AJvYcCXM67e/TIn4yhzHiAiNeLVCPhIj/rKCj9ay+dQnPoyU1LxRp3onI1IJMtxKmDEDnXoV6aK6XL6NlBjaWIsk@vger.kernel.org
+X-Received: by 2002:a05:6102:2d05:b0:4bb:c490:7d77 with SMTP id
+ ada2fe7eead31-4bbe054ee9amr241383137.23.1739202896216; Mon, 10 Feb 2025
+ 07:54:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com> <20250129165122.2980-14-thierry.bultel.yh@bp.renesas.com>
+In-Reply-To: <20250129165122.2980-14-thierry.bultel.yh@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 10 Feb 2025 16:54:43 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWtX-MK4HNvq2VvBxYdX6WtH5Re2aMz1w_CpCv=+1515A@mail.gmail.com>
+X-Gm-Features: AWEUYZlhXz_pMLLXmRFGDXOST8wsuL6L1WEG7yOjaQ_Bnufz2H8DKm6AyuygLEY
+Message-ID: <CAMuHMdWtX-MK4HNvq2VvBxYdX6WtH5Re2aMz1w_CpCv=+1515A@mail.gmail.com>
+Subject: Re: [PATCH 13/14] arm64: dts: renesas: Add initial support for
+ renesas RZ/T2H eval board
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Instead of manually adding/removing attribute groups, set
-(struct device_driver).dev_groups pointer to have the driver
-core do it.
+Hi Thierry,
 
-Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
----
- drivers/platform/x86/ideapad-laptop.c | 23 ++---------------------
- 1 file changed, 2 insertions(+), 21 deletions(-)
+On Wed, 29 Jan 2025 at 17:53, Thierry Bultel
+<thierry.bultel.yh@bp.renesas.com> wrote:
+> Add the initial device tree for the RZ/T2H evaluation board.
+>
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 30bd366d7b58..17a09b7784ed 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -854,6 +854,7 @@ static const struct attribute_group ideapad_attribute_group = {
- 	.is_visible = ideapad_is_visible,
- 	.attrs = ideapad_attributes
- };
-+__ATTRIBUTE_GROUPS(ideapad_attribute);
- 
- /*
-  * DYTC Platform profile
-@@ -1244,21 +1245,6 @@ static void ideapad_unregister_rfkill(struct ideapad_private *priv, int dev)
- 	rfkill_destroy(priv->rfk[dev]);
- }
- 
--/*
-- * Platform device
-- */
--static int ideapad_sysfs_init(struct ideapad_private *priv)
--{
--	return device_add_group(&priv->platform_device->dev,
--				&ideapad_attribute_group);
--}
--
--static void ideapad_sysfs_exit(struct ideapad_private *priv)
--{
--	device_remove_group(&priv->platform_device->dev,
--			    &ideapad_attribute_group);
--}
--
- /*
-  * input device
-  */
-@@ -2175,10 +2161,6 @@ static int ideapad_acpi_add(struct platform_device *pdev)
- 
- 	ideapad_check_features(priv);
- 
--	err = ideapad_sysfs_init(priv);
--	if (err)
--		return err;
--
- 	ideapad_debugfs_init(priv);
- 
- 	err = ideapad_input_init(priv);
-@@ -2265,7 +2247,6 @@ static int ideapad_acpi_add(struct platform_device *pdev)
- 
- input_failed:
- 	ideapad_debugfs_exit(priv);
--	ideapad_sysfs_exit(priv);
- 
- 	return err;
- }
-@@ -2293,7 +2274,6 @@ static void ideapad_acpi_remove(struct platform_device *pdev)
- 	ideapad_kbd_bl_exit(priv);
- 	ideapad_input_exit(priv);
- 	ideapad_debugfs_exit(priv);
--	ideapad_sysfs_exit(priv);
- }
- 
- #ifdef CONFIG_PM_SLEEP
-@@ -2325,6 +2305,7 @@ static struct platform_driver ideapad_acpi_driver = {
- 		.name   = "ideapad_acpi",
- 		.pm     = &ideapad_pm,
- 		.acpi_match_table = ACPI_PTR(ideapad_device_ids),
-+		.dev_groups = ideapad_attribute_groups,
- 	},
- };
- 
+Thanks for your patch!
+
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dts
+> @@ -0,0 +1,37 @@
+> +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +/*
+> + * Device Tree Source for the RZ/T2H Development EVK board
+> + *
+> + * Copyright (C) 2025 Renesas Electronics Corp.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "r9a09g077m44.dtsi"
+> +
+> +/ {
+> +       model = "Renesas Development EVK based on r9a09g077m44";
+> +       compatible = "renesas,r9a9g077m44-rzt2h-evk", "renesas,r9a9g077";
+
+"renesas,r9a9g077m44-rzt2h-evk" is undocumented.
+Missing "renesas,r9a9g077m44" in between.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.47.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
