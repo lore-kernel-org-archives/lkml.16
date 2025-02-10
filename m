@@ -1,54 +1,53 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80E51F4627;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C37255E29;
 	Mon, 10 Feb 2025 18:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739211546; cv=none; b=RZFgNmHanDoGi07CNAZxP+gxt1HnSU6O5RN29+rVXTN6bpxtRI+1mNgby62BPpMgXKx9ncErXAK4As6MQm8WdpEFo2lpc7RJCG5YTBUJqnLfKj8UB+DWApe40WDh+ospGOF8+UrOJ8IrrZF3E3xOHEGSlkOwAc1Xbh1jpgoLVyo=
+	t=1739211549; cv=none; b=CVqpR7wjR0TYwfTFZXEP5n+IUrbOVn8hjCygwnCF5RoD7RjGPLD+KzWZ7uKd6hVEms/MKZL7qdolI9dG39VZXHHo/rxG3fluQUee5mazT5g57Byd94Ubx4NHy+2Fm7HJHwdV2isRGO4d14JUWzPaH3yzcIHp9Q3XvJHAZI4se7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739211546; c=relaxed/simple;
-	bh=T1jt/7m3ygthlgwa18s0xrNKJh33jRt9XUEXWyoYukc=;
+	s=arc-20240116; t=1739211549; c=relaxed/simple;
+	bh=UfE+rMQNmgA+sHSmDsa1hZh19rbUWEQL6BbCIF3zKHY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vq44aqIJbrdsTmNHsAPFKIdObjZZ+2OntiosZjJ39XE0w3otHE+1Wd6ZeouLD+FdddN2KWS63ra9X2yTJJPXFlF2MLzonxIk9ws6TuuISvSC4wLTgB0BMhOM6kk/vsQUqkeejpkd/SiQ09pZrwf5UpSnCvA2jOTYYRze1s/RABA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qBpadJJW; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZZRchDduzkNbteO5STuhh0d8CMd8hdznY6zse3lB/MXF6GesE381BQP9q8L826Wg+N0qo69mGCnJvs4/D1o+6dtASm4LqjkLPfqrI7c43kMh7mRDMROi9iqz6fS4v8k+flAdvW7XSmeRi1NaIm9WsO0cXbPaUM9XnZ+IATCR1Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=a1C5nVOZ; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qBpadJJW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EA7FC4CEE4;
-	Mon, 10 Feb 2025 18:19:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739211546;
-	bh=T1jt/7m3ygthlgwa18s0xrNKJh33jRt9XUEXWyoYukc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qBpadJJWCZMEcwVRrTDjh3AQjek3aF5Bor9YeXnfGNWHQAP/1JGP7ABwBQIKr5Jvc
-	 j45U1pwmSNt2Ciee9rcmcy1KFFJMtkMB4DRjyfwZu56ecCf75DBiEr6qMdNO8w1mYN
-	 MJoFSvsNwI4CjQScySpK2icX/02uVYelvakkpj74pgUDx90pXFNveXMpb4BMkFBEHN
-	 uTwj2pscrhMb8Krw3vkN9jg+HFVJB+O3A4Kxc5Jtf9dUvLgIGMfGncAdMQcVzBpeOH
-	 /cxmff9MT1F0sMM4nXcTOFCltgsYT56k2ZlsFVONmFBSVCtH1DfH5YksFj0ZPaYCtN
-	 LK2kmFMoqzI3g==
-Date: Mon, 10 Feb 2025 19:18:59 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-	Mark Brown <broonie@kernel.org>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Zijun Hu <quic_zijuhu@quicinc.com>, linux-usb@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Subject: Re: [PATCH v4 2/9] rust/kernel: Add faux device bindings
-Message-ID: <Z6pDEyDcmhxqE0U4@pollux>
-References: <2025021023-sandstorm-precise-9f5d@gregkh>
- <2025021026-exert-accent-b4c6@gregkh>
- <c00ee85d-8e8f-4d59-9c90-af5fd35cc4ac@proton.me>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="a1C5nVOZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=DgHnzerLbExQSTgDRSZcWE+bzYwaMHRj1ZVldrd4BcY=; b=a1C5nVOZxfPSMkaxdQWzmd35Xw
+	mCZ8IvPhTl3nJmjWrmW8A0ln4EiewDN5GHFeSSWXcAW5lIdAaRIST6j9HwL6BV9VpM6LvFdT4L+4l
+	7sqZxc4bntJteAQ4RKwdlAM2hPyeIc6dkTpQ+fwyuAd0BpmYjk1vG6b28111XpDfuMugKXahYjRVf
+	MS+ys4/jEUrIsoHZ+J79bQpz5GzAbf12fV21klsYeq5fyy+Vql5iJLGWCjaSl+vyYAFrYTAgc6jBQ
+	RS+dtzNB5CYd3BWlikVBaBroBLWaCyUPtxtZSoC8OLdAjmoPXQT1mv/gPc8kJtBQQQci0QH+Ylkqx
+	ipPO/y9Q==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1thYN4-00000009hZz-1FaM;
+	Mon, 10 Feb 2025 18:19:02 +0000
+Date: Mon, 10 Feb 2025 18:19:02 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Zicheng Qu <quzicheng@huawei.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>, jlayton@kernel.org,
+	axboe@kernel.dk, joel.granados@kernel.org, tglx@linutronix.de,
+	linux-kernel@vger.kernel.org, hch@lst.de, len.brown@intel.com,
+	pavel@ucw.cz, pengfei.xu@intel.com, rafael@kernel.org,
+	syzkaller-bugs@googlegroups.com, linux-pm@vger.kernel.org,
+	tanghui20@huawei.com, zhangqiao22@huawei.com,
+	judy.chenhui@huawei.com
+Subject: Re: [PATCH] acct: Prevent NULL pointer dereference when writing to
+ sysfs
+Message-ID: <20250210181902.GE1977892@ZenIV>
+References: <20250127091811.3183623-1-quzicheng@huawei.com>
+ <20250210131719.528717-1-quzicheng@huawei.com>
+ <20250210-unordnung-petersilie-90e37411db18@brauner>
+ <20250210152146.GC1977892@ZenIV>
+ <20250210-erstsemester-eckpunkte-f2f0d922ed01@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,41 +56,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c00ee85d-8e8f-4d59-9c90-af5fd35cc4ac@proton.me>
+In-Reply-To: <20250210-erstsemester-eckpunkte-f2f0d922ed01@brauner>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Mon, Feb 10, 2025 at 04:32:15PM +0000, Benno Lossin wrote:
-> On 10.02.25 13:30, Greg Kroah-Hartman wrote:
-> > From: Lyude Paul <lyude@redhat.com>
+On Mon, Feb 10, 2025 at 05:02:35PM +0100, Christian Brauner wrote:
+> On Mon, Feb 10, 2025 at 03:21:46PM +0000, Al Viro wrote:
+> > On Mon, Feb 10, 2025 at 04:12:54PM +0100, Christian Brauner wrote:
 > > 
-> > This introduces a module for working with faux devices in rust, along with
-> > adding sample code to show how the API is used. Unlike other types of
-> > devices, we don't provide any hooks for device probe/removal - since these
-> > are optional for the faux API and are unnecessary in rust.
+> > > One fix would be to move exit_fs() past exit_task_work(). It looks like
+> > > that this should be doable without much of a problem and it would fix
+> > > the path_init() problem.
+> > > 
+> > > There should hopefully be nothing relying on task->fs == NULL in
+> > > exit_task_work().
+> > 
+> > There's a question of the task_work_add() issued by exit_task_fs(),
+> > though.
 > 
-> For me it would be useful to know why this is the case. I looked at the
-> dummy regulator driver and it still has a `probe` function. Presumably,
-> because it has to wait until other resources are usable and that is the
-> case once `probe` gets called. But doesn't the same hold for Rust? Or
-> are Rust modules loaded later than C modules? Because if I were to
-> rewrite the regulator driver in Rust (assuming we had the abstractions),
-> the `probe` code would be put into the `Module::init` function, right?
-> Or am I missing something?
+> Can't we simply remove the pins on the mounts of fs->root and fs->pwd in
+> exit_fs() explicitly? If that works I think that's a fair enough
+> compromise for this shite.
 
-AFAICS, the only reason for the dummy regulator driver to have probe() is
-because it calls devm_regulator_register() (which given that it neither ever
-removes the driver nor the device is meaningless, but let's ignore that).
+I'd rather go for a simpler approach...  Why do we need those writes
+to be done in context of exiting process in the first place?  It's
+not as if they needed to go out before it terminates, so what's to
+stop us from having a kernel thread in background and queue the data
+to be written for it to pick up?
 
-Actually, not even that would be a blocker, since the same would be valid as
-long as you ensure to call devm_*() after faux_device_create() and before
-faux_device_remove(). But obviously, it's way cleaner to enforce this through
-having the scope of the probe() callback.
-
-In Rust we only need devres for real device resources, which a faux device can
-never have. Given the example above, in Rust we wouldn't have anything like
-devm_regulator_register(), but a module structure with a regulator::Registration
-member, such that the registration is automatically removed when the module is
-dropped.
-
-I cannot predict if we ever gonna need probe() for the faux bus in Rust. Maybe
-at some point we will, and then we can add the corresponding abstraction. But
-for now, I don't see what we would need it for.
+Does anybody see problems with that approach?
