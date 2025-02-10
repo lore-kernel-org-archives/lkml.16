@@ -1,97 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2AB2528E1;
-	Mon, 10 Feb 2025 15:13:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A772620485F;
+	Mon, 10 Feb 2025 15:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739200407; cv=none; b=p0/JLVrgTCAQ9Pyl/uxJ/Nm1sKktAFDnB47ZuNx8UgKiE/2fGQuuL0fIPtus9A42Bqw55XNGf+28Sa8wW482Pu55V1a9aUDejXxI9ha/a7JJU2XZOTsiciBd+4W+hm9MSbw1xIEE5xKx05WLaCDrujCffglfHO5w3hQytGWJFkI=
+	t=1739200544; cv=none; b=gw9yBCRQaMNG0Xg8SI0dxHN99BrnrncPgfX5jyJe52LP6kmQynh0+hJ69J/4Fs+i78o8OdtxytoEZAGF0ag5truyj+iqQjnxGkszemdAuK6N55YGQrLKRIN2rxHsKkZSGrkTjMq+Svu1OAg2aItXvr61D+f8chbwhjZq1JT2GRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739200407; c=relaxed/simple;
-	bh=UXSwpCbZZloxFOKQ4lZ23qNeuJVml4BdbrotS6nr70w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sDP7aSnod1ZDsnBB+WvAAHf8gHrZ5C6kAGEaRuWESKCwZmBDdfefQyZZ3sOxA+GJzWEROvyO8kDqPXTUBbFgMl2lf62FrhU4GufWMoQ4VPEILFopA1W20qIYazhbiD4yw8qh4Due1H8tr6o8Q4PrXILTY69Tqawp/kJ0JjeYJyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xekjm++Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739200544; c=relaxed/simple;
+	bh=hwWrEvltiRHAjVgSUXhdzAXJjuUHGywLxolwHaSxYJ4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Hw3a4RVvBeehicKvbwI4shdWjXCt5thWzkD3Ib7uXian+CJp18vwN6szR1Y+6kFKw2OurCxtBuWMegFUqleqJYV3LxdfitiWFFBuZrWEgi2cJt30qNRdzOJUhw2NYC2XeWvzQ1/620oiwgZCtPReFoFx157w/8tR0dT6uNuYGnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=c9sM934H; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xekjm++Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37DAEC4CEDF;
-	Mon, 10 Feb 2025 15:13:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739200406;
-	bh=UXSwpCbZZloxFOKQ4lZ23qNeuJVml4BdbrotS6nr70w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Xekjm++ZAARokl6QlAhSemplHdg8xccS9S3jd/br7ch+KvSE/LZsMvWARC1MQkqN2
-	 AGfg2MPoKavCk8MasMmHqtIG3qtHKC8wNVSuHy5125xVyz5FInlisrKPZFsdmDh+FB
-	 oMzXVK5Cn4ew1jOI/cMnmZKKaSHBSXFsRo126wJfjr22jX4TsvCL/QEZgdDQ30WQRl
-	 /b3x81rdtezOZkBD/rm1z7zsakWr1uLvPU7GTMlof4AyiAd2DLtYcNZ4g5Qbzl3XTE
-	 wqqkb4iaME2EabgRtHY0PL/yevMildALnWUXJHNnSuCa43N/2a3JduoUE8m4Ryp109
-	 E3Pekp1dud84A==
-Message-ID: <584c3152-e730-4cbf-a79e-aa5404de6ab5@kernel.org>
-Date: Mon, 10 Feb 2025 09:13:25 -0600
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="c9sM934H"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 89D0E440F7;
+	Mon, 10 Feb 2025 15:15:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739200540;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2BuDequG6EZO1QNTpWbwf3tZ30bqjnVT5i0K+9L/qjc=;
+	b=c9sM934H6A4jJUaJ7FMnoMxHxOqVbwve9CAwl3B2Bsm7c/jdmfq6IqRF1GlpWXXgdeO9DZ
+	xFHN0KGd29zwmUooY/o0oGyeH+h9qjlFFMh+AWcHrBACdljmIy1kwClGuzRvrVgv8t60u0
+	pGHWzFvBgC3Duuwdgj1dgSEp0DzVKJwyNRMWQ8T2JUJFkT5BrKY44BFzDRt6HFbkFDfcBf
+	78x8QcmYiMlhAgNjTGTPBsSAmmwTUMmYMqWkCPGwWDIlLYNSuMPSs/YfKmwFXxBh02Jfgz
+	mmZ6TBaguGRqRKSnVGPTry0V35Gi3ntOfyIgYQZN+o5BwppWPIGq1TUpG+N0tA==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,  Richard
+ Weinberger <richard@nod.at>,  Vignesh Raghavendra <vigneshr@ti.com>,
+  linux-mtd@lists.infradead.org,  linux-arm-msm@vger.kernel.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mtd: rawnand: qcom: finish converting register to
+ FIELD_PREP
+In-Reply-To: <20250209145439.19047-1-ansuelsmth@gmail.com> (Christian
+	Marangi's message of "Sun, 9 Feb 2025 15:54:32 +0100")
+References: <20250209145439.19047-1-ansuelsmth@gmail.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Mon, 10 Feb 2025 16:15:38 +0100
+Message-ID: <877c5xu8yt.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/14] cpufreq/amd-pstate: Show a warning when a CPU fails
- to setup
-To: "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
- Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-Cc: Perry Yuan <perry.yuan@amd.com>,
- "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
- <linux-kernel@vger.kernel.org>,
- "open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250206215659.3350066-1-superm1@kernel.org>
- <20250206215659.3350066-2-superm1@kernel.org>
- <c7b4e115-91b6-4964-ad4a-58e8924997a3@amd.com>
- <Z6oELkyt+XEMp/nk@BLRRASHENOY1.amd.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <Z6oELkyt+XEMp/nk@BLRRASHENOY1.amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefkeegtdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffeghfejtdefieeguddukedujeektdeihfelleeuieeuveehkedvleduheeivdefnecukfhppeelvddrudekgedrleekrdekgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeelvddrudekgedrleekrdekgedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepjedprhgtphhtthhopegrnhhsuhgvlhhsmhhthhesghhmrghilhdrtghomhdprhgtphhtthhopehmrghnihhvrghnnhgrnhdrshgrughhrghsihhvrghmsehlihhnrghrohdrohhrghdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtp
+ hhtthhopehlihhnuhigqdgrrhhmqdhmshhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On 2/10/2025 07:50, Gautham R. Shenoy wrote:
-> On Mon, Feb 10, 2025 at 05:29:24PM +0530, Dhananjay Ugwekar wrote:
->> On 2/7/2025 3:26 AM, Mario Limonciello wrote:
->>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>
->>> I came across a system that MSR_AMD_CPPC_CAP1 for some CPUs isn't
->>> populated.  This is an unexpected behavior that is most likely a
->>> BIOS bug. In the event it happens I'd like users to report bugs
->>> to properly root cause and get this fixed.
->>
->> I'm okay with this patch, but I see a similar pr_debug in caller cpufreq_online(),
->> so not sure if this is strictly necessary.
->>
->> 1402                 /*
->> 1403                  * Call driver. From then on the cpufreq must be able
->> 1404                  * to accept all calls to ->verify and ->setpolicy for this CPU.
->> 1405                  */
->> 1406                 ret = cpufreq_driver->init(policy);
->> 1407                 if (ret) {
->> 1408                         pr_debug("%s: %d: initialization failed\n", __func__,
->> 1409                                  __LINE__);
->> 1410                         goto out_free_policy;
->> 1411
->>
-> 
-> Well, the pr_debug() doesn't always get printed unless the loglevel is
-> set to debug, which is usually done by the developers and not the end
-> users.
-> 
-> However you have a point that since the code jumps to free_cpudata1 on
-> failures from amd_pstate_init_perf(), amd_pstate_init_freq(),
-> amd_pstate_init_boost_support(), freq_qos_add_request(). So the
-> pr_warn() doesn't indicate that the failure is due to
-> MSR_AMD_CPPC_CAP1 not being populated.
-> 
+Hello Christian,
 
-Right; my point is that without the warning no one knows there is a problem.
+On 09/02/2025 at 15:54:32 +01, Christian Marangi <ansuelsmth@gmail.com> wro=
+te:
 
-I don't expect we can anticipate all the potential causes, and I want 
-anyone who hits this to raise a bug and we can ask them to turn on 
-dynamic debug / ftrace and then triage it.
+> With some research in some obscure old QSDK, it was possible to find the
+> MASK of the last register there were still set with raw shift and
+> convert them to FIELD_PREP API.
+>
+> This is only a cleanup and modernize the code a bit and doesn't make
+> any behaviour change.
+>
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> ---
+>  drivers/mtd/nand/raw/qcom_nandc.c    | 36 ++++++++++++++--------------
+
+I'm fine with your two patches. I was about to apply them, but the first
+one needs to go through fixes, whereas the second through next, and they
+are dependent on each other. I propose the following modification:
+- create patch 1/2 with the content of the cleanup done just below, but
+  only adapted to the very specific spot that is touched by the fix "fix
+  broken config...". It would be a prerequisite for the fix.
+- patch 2/2 would be the content of "fix broken config..."
+
+And aside, a totally independent patch easy to apply on -rc1 with the
+rest of this patch.
+
+Would that work for you?
+
+Thanks,
+Miqu=C3=A8l
