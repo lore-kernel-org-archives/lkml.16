@@ -1,128 +1,94 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEA225742C
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:50:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6238A25B665
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739209818; cv=none; b=nTSnJVPwG53Zg+p1StdbXT+mS6jv21SWLxJMGXtg2t8RBMMKgrqYJ+dl09+SwgL/1dsA5+cRcYoJLhDTXTIsuSkEqXABnIH7ojV8sxGLuwo3P+inL5G/siy3bzSm0c2nZtriTbadWb1SGVbZTCA21l/9BefjTycwTWS+An6iKCo=
+	t=1739209838; cv=none; b=C0dNF+6ZC80gkS4zKHWozsXVoTLtYrRGt4tS0XlikCysAHLDV0XfptkAYmFFpszkUmYP3ZfdLDzY6zL2lJG0Yem+9BqheH1wz0amE05vSI1kxXCmsqMr2LEe9yjm9nqJzjVZT2B2HCsg/DVZHKa/7fiEZzdocHGlKLoMhXI0QAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739209818; c=relaxed/simple;
-	bh=b5Y7ZBwua8q6S8xoX8bJWja8rSBdbaXg1go2fucz19o=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KJn8FMCHN5Xd5/ij3aHifXVgu8bIrAGUa6cIKuptf7KodvurwnVESS3AYeE7+r4+TvBH+17PqDMMcodqw+0iDoPK+hVPZCCNxxTzcBKj1dYOGzDUhAXlOCB8SBreke89CfTxgWyU1YCwQmCoWQrnZ/Ft4n2O2wv9B3TdTdtRgPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JZoLnnnu; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	s=arc-20240116; t=1739209838; c=relaxed/simple;
+	bh=W5Xfglk5c7yZ3/lTqN6BaQyihdI2aZ1RG4De4M2GtaA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=W8JutkbnxLn4E2mQQBd1TVxTuKafOP9pT2t1ZmfCYHEnqF6VKLV/rnmbmZm96F04Ss7SBJ0s7z6rfPHtyEZOlKwGWrWdK5+Aj10JDCve7/N4KzeRfeou6Dj0CfDShspJoFBLTFHnu0ozgEaawNUjkTKO5KgevB4hXouFQSxjq8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pGRWPoWy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JZoLnnnu"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4392fc6bceaso12663955e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:50:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739209815; x=1739814615; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2tIHDOPF0PNls1nT25rio5qx/bjBew1n2yApk83FuUI=;
-        b=JZoLnnnuc1RB97KG6XplP2Rn0PPRj2d1gHHMA337tl2VduP9TZbVUUMqIdxNxCvnJX
-         Elg9ABrpMGDZD4A5vV5h7jrAYQsnkhJCzC/matektP1++y9lzA+85icjRoGzS0y1XnBk
-         zUt/96acAa7dW4j+o7G2DnguflAxELymuc6+n0bcnzwwFIOu3HthfgmAJn6j7p5a/1rj
-         J/M8CrBe3MrKRMhdV05w6GMT/Nc5uuTCyD31+zu5atB/xSjuz24CwvyJ02yx6kZI4NNO
-         12OjpgAcLSam2T3cxgT9BZU1WhU1ARg8nmERIbSOuTNDLs//pwKn65ot/2HSlAUFhGy9
-         eW7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739209815; x=1739814615;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2tIHDOPF0PNls1nT25rio5qx/bjBew1n2yApk83FuUI=;
-        b=uiuqKL/r0L6+BcKKRD2kI1JXL3/EQUAVHU2s8hlViVmRt7SMsvgjZ3Sg+pFtCnPaP7
-         QfxJApXi3xKvlNpq0caKbpgkiz7K3Ue79576hyQqoAUT98HZ4M/9JhNVLsjctldJfSRi
-         Wj0ZheAYmsbCcR7Oi9I5iAII6jXoRx8PDRZTTKgiRyxPgS95AZ/sJAVL10BCKqbXBzoh
-         kIYAMfrNTLB5kQyVaLFd3opVaRDujUYJSRgwoxB4s29sTgRfhacshB1V36GgrMP3v/t3
-         LMh1cM46piXmlGYMb4q/0IxfVzXAVaBn14F3CptupsKFCNHRknVnELf7YIaHJbAXRwXG
-         htnQ==
-X-Gm-Message-State: AOJu0YyySkSet6cyHB2wt8Qg4tsrWS8QqHZ8jtTnni7luQyMJt+SyQpQ
-	ogbjW/RqU3gOKupkjW26pBvWik0fZC46vs0Fz4DVmB26mknuyJNA+GgXE5D/s9BAChQ4xA==
-X-Google-Smtp-Source: AGHT+IHAUj/EzxRvKtgJ7QJN3LKDxgNe/A0xr0/YERyNf+9C200o4bBPmgSHauUpcJYocmkxvKfPsVKl
-X-Received: from wmqd4.prod.google.com ([2002:a05:600c:34c4:b0:439:4c13:57e5])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:1883:b0:385:f7ef:a57f
- with SMTP id ffacd0b85a97d-38dc9233968mr11826038f8f.27.1739209814970; Mon, 10
- Feb 2025 09:50:14 -0800 (PST)
-Date: Mon, 10 Feb 2025 18:49:49 +0100
-In-Reply-To: <20250210174941.3251435-9-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pGRWPoWy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9981C4CED1;
+	Mon, 10 Feb 2025 17:50:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739209837;
+	bh=W5Xfglk5c7yZ3/lTqN6BaQyihdI2aZ1RG4De4M2GtaA=;
+	h=From:Date:Subject:To:Cc:From;
+	b=pGRWPoWyAjBhhaa7+63szsFWen6WueXliLYM+/TcuovrQ6/TOmUe9IsDJLwVSCHsP
+	 FHaCyFsIjIvfjm+/0nRbvBtD1IKO91+UxjXamni4KKQVrqnBzo7kttW27KQRgwTYNM
+	 e1rKz5ex2RfziMKew8QBYguOXDIArob3iX04qeHH2lYhcbTnwmHWTBEtkdCzkf4/Ji
+	 hY3qVrJPNJbkng0KOqcD9B0Naj4LG50iRKnjGQikJ7rWLsxDXNQLMAKKl3B8WS0JIi
+	 +kkQ4nrVfqFfDw8Zx2jbvc4orNlmfQlr9/KVg17iY5rKQo2l0+smG5kgJzxKmTy2Es
+	 0tujbSSXwg3Gw==
+From: Mark Brown <broonie@kernel.org>
+Date: Mon, 10 Feb 2025 17:49:33 +0000
+Subject: [PATCH] arm64: Add missing registrations of SF8MMx hwcaps
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250210174941.3251435-9-ardb+git@google.com>
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2573; i=ardb@kernel.org;
- h=from:subject; bh=f8GMXZVc+ZgqfzipyO2wKCTDym84g0qfwV9FVQOEoyI=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIX2VjfW5siSre++kNEo+q6+8viNWfFN8/+R3PvYS7nNvr
- 55w3Um7o5SFQYyDQVZMkUVg9t93O09PlKp1niULM4eVCWQIAxenAEyk6wQjw1olLrm/vxfb6H+u
- kegTlJXMky4WvijZf2PV6t8O07gijzEyNF955r9ATrrvxU37RbOPae2Ovuw9wf0A88JtW90XOB7 ZywIA
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <20250210174941.3251435-16-ardb+git@google.com>
-Subject: [PATCH v2 7/7] x86/efi/mixed: Move mixed mode startup code into libstub
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-efi@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, hdegoede@redhat.com, 
-	Ard Biesheuvel <ardb@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250210-arm64-fix-2024-dpisa-v1-1-d77f43c7b253@kernel.org>
+X-B4-Tracking: v=1; b=H4sIACw8qmcC/x2MywqAIBBFfyVm3YCaGvYr0UJyqln0QCEC6d8bW
+ p7LuadCocxUYGgqZLq58HkI6LaBeYvHSshJGIwyThnVY8y7t7jwgzJZTBeXiL5z0QWvvQozyPX
+ KJMafHaf3/QBW3TXmZgAAAA==
+X-Change-ID: 20250207-arm64-fix-2024-dpisa-635a5961609c
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.15-dev-1b0d6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1539; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=W5Xfglk5c7yZ3/lTqN6BaQyihdI2aZ1RG4De4M2GtaA=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBnqjxr1YVPIfyfzPmejX6wYEOpJwjzzzmpfL/8zXHX
+ NgvdSvCJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZ6o8awAKCRAk1otyXVSH0OGtB/
+ 4/PDjh3t+kWCG4dZxEqJW8vUoDm5RRs0T12DF0lmSr/EBSeo9EO9SHNJjpQRwOK+Ug4dM50NGmZf8o
+ kkKsog9JBOBfAMqgQ/zjzvt4lhgtH6PFc6JHrfbbTKAUxgk1wyl/ZhGs20l0oMTeTYnkP/UKsNL8Id
+ ubtg0e4jts8QNB0hcg0dM+RFzqdmIml9WZiRvx4Rk6qWrTsDWzlxTwNyNKW18e34oS6bzi5a4hGShB
+ hOXl9NxMpxQAg9tRK5DhKk6sXo5tQrS7N/wpBymqpw8Cy1IlFt7r1jUJSVyyXppv5hZ7nHlDGAkpEb
+ aZJhGUvY3vVzqxRx4JCIi+DNyLVW3i
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-From: Ard Biesheuvel <ardb@kernel.org>
+Commit 819935464cb2 ("arm64/hwcap: Describe 2024 dpISA extensions to
+userspace") added definitions for HWCAP_F8MM8 and HWCAP_F8MM4 but did
+not include the crucial registration in arm64_elf_hwcaps.  Add it.
 
-The EFI mixed mode code has been decoupled from the legacy decompressor,
-in order to be able to reuse it with generic EFI zboot images for x86.
-
-Move the source file into the libstub source directory to facilitate
-this.
-
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Fixes: 819935464cb2 ("arm64/hwcap: Describe 2024 dpISA extensions to userspace")
+Reported-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- arch/x86/boot/compressed/Makefile                                                | 1 -
- drivers/firmware/efi/libstub/Makefile                                            | 3 +++
- arch/x86/boot/compressed/efi_mixed.S => drivers/firmware/efi/libstub/x86-mixed.S | 0
- 3 files changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/cpufeature.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index f2051644de94..fc5563704466 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -104,7 +104,6 @@ vmlinux-objs-$(CONFIG_INTEL_TDX_GUEST) += $(obj)/tdx.o $(obj)/tdcall.o $(obj)/td
- vmlinux-objs-$(CONFIG_UNACCEPTED_MEMORY) += $(obj)/mem.o
- 
- vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
--vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_mixed.o
- vmlinux-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
- 
- $(obj)/vmlinux: $(vmlinux-objs-y) $(vmlinux-libs-y) FORCE
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 1141cd06011f..903afd2d3d58 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -62,6 +62,8 @@ KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_LTO), $(KBUILD_CFLAGS))
- # `-fdata-sections` flag from KBUILD_CFLAGS_KERNEL
- KBUILD_CFLAGS_KERNEL := $(filter-out -fdata-sections, $(KBUILD_CFLAGS_KERNEL))
- 
-+KBUILD_AFLAGS			:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
-+
- lib-y				:= efi-stub-helper.o gop.o secureboot.o tpm.o \
- 				   file.o mem.o random.o randomalloc.o pci.o \
- 				   skip_spaces.o lib-cmdline.o lib-ctype.o \
-@@ -83,6 +85,7 @@ lib-$(CONFIG_EFI_GENERIC_STUB)	+= efi-stub.o string.o intrinsics.o systable.o \
- lib-$(CONFIG_ARM)		+= arm32-stub.o
- lib-$(CONFIG_ARM64)		+= kaslr.o arm64.o arm64-stub.o smbios.o
- lib-$(CONFIG_X86)		+= x86-stub.o smbios.o
-+lib-$(CONFIG_EFI_MIXED)		+= x86-mixed.o
- lib-$(CONFIG_X86_64)		+= x86-5lvl.o
- lib-$(CONFIG_RISCV)		+= kaslr.o riscv.o riscv-stub.o
- lib-$(CONFIG_LOONGARCH)		+= loongarch.o loongarch-stub.o
-diff --git a/arch/x86/boot/compressed/efi_mixed.S b/drivers/firmware/efi/libstub/x86-mixed.S
-similarity index 100%
-rename from arch/x86/boot/compressed/efi_mixed.S
-rename to drivers/firmware/efi/libstub/x86-mixed.S
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index f0910f20fbf8c18fbeb63bcee18abf13371b1d5e..2cde1e6e309a1b840e0e8dc3a5a55f07f0aadd82 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -3190,6 +3190,8 @@ static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
+ 	HWCAP_CAP(ID_AA64FPFR0_EL1, F8FMA, IMP, CAP_HWCAP, KERNEL_HWCAP_F8FMA),
+ 	HWCAP_CAP(ID_AA64FPFR0_EL1, F8DP4, IMP, CAP_HWCAP, KERNEL_HWCAP_F8DP4),
+ 	HWCAP_CAP(ID_AA64FPFR0_EL1, F8DP2, IMP, CAP_HWCAP, KERNEL_HWCAP_F8DP2),
++	HWCAP_CAP(ID_AA64FPFR0_EL1, F8MM8, IMP, CAP_HWCAP, KERNEL_HWCAP_F8MM8),
++	HWCAP_CAP(ID_AA64FPFR0_EL1, F8MM4, IMP, CAP_HWCAP, KERNEL_HWCAP_F8MM4),
+ 	HWCAP_CAP(ID_AA64FPFR0_EL1, F8E4M3, IMP, CAP_HWCAP, KERNEL_HWCAP_F8E4M3),
+ 	HWCAP_CAP(ID_AA64FPFR0_EL1, F8E5M2, IMP, CAP_HWCAP, KERNEL_HWCAP_F8E5M2),
+ #ifdef CONFIG_ARM64_POE
+
+---
+base-commit: 21fed7c223e20e694b91dbf25936d922a50c8b19
+change-id: 20250207-arm64-fix-2024-dpisa-635a5961609c
+
+Best regards,
 -- 
-2.48.1.362.g079036d154-goog
+Mark Brown <broonie@kernel.org>
 
