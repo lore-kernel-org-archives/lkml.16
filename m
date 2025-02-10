@@ -1,147 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7940B2566CB;
-	Mon, 10 Feb 2025 19:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC3625742A;
+	Mon, 10 Feb 2025 19:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739215669; cv=none; b=OMMpPTPasbOi5/ZDC7FP3EdBtSug29erAO7d3DIkmjkDJcG2KdnziYLiIJIRH75kUveLNgSxEkSQZl/omUT22UPogxK1ao4oIbK6SnhpavpRe/7+Z8YY27QhTfVCwgbKtwyfzB780IX1Etwf0IGNB8CuidFnd6t6B1NWOYCTfrY=
+	t=1739215695; cv=none; b=JRIjxI98hxeq9nq13gBbQJS4Qd5rRSBxeeGvCf2Lz38JxjCLW/76JB7/hdOSXbhKo78yvSHr8W76RytNlTfMhAvrRXJyTSRkca8gcbkTGJtgkKG2J+8tENRJISmBvYWfhB5KlObkvY7MWyzPg3hgatzY7TRtI4ngQof4+DfkL1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739215669; c=relaxed/simple;
-	bh=I1srf/if4T44Admu2U0Lb/obhkkyKynLmn43hK8odaA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fM9WXupB4oWgCVfExxFtHQks3VeLAhd4JP/tON8FkIc2fEMc3RJ3rPUEwpxiWPdhsRIZLbKASjzNDh5RD5M8tsc+zlB6JTsm4CsNvQ/fY4woaXlXxNeGs1gXSOlKRFesHQEoSk0OnIyRdtZ6ibTcgv23XgMQiO1SQKE9DhhYBwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XC1jqVmk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739215695; c=relaxed/simple;
+	bh=B0NhETpnvPQVSyO/GpKfAdXFTG5DHeiGwtAVdN5A7Cs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DIUSn8PpM8JJwtBjFb9P0ISOs1IVZoIhuALZObS+e3qakdcBNVj6g+pG1ygi7STuuJM6JaPltTfx1kxoqZ08WEdxw6sw/AAlLQokeWe/fk10JHwax2rS/p7UlVphIE26cXUwmDRiOBOJaADkGbmcRYQZNiZsQQvszJwIilUPg6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VIgcO5bD; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XC1jqVmk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0932FC4CED1;
-	Mon, 10 Feb 2025 19:27:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739215669;
-	bh=I1srf/if4T44Admu2U0Lb/obhkkyKynLmn43hK8odaA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XC1jqVmkTGXmdNARhxDcMByE1sgwEe68PAo4peSTft+yvG7h4Kco6Q9zSctHzO9J8
-	 100+RSXWikuUDVSfPzKdubwp1QYXRxshu/dBN5whVXUebi2LEQkwQaiCwRp5sgtfOn
-	 jc3jK2BmDk7t+loX1C3f6iWdC1qYyqdSlzpH42+cfmy6oUBcC6VtB8rbEkXtnAZod1
-	 99xAqdSE9oODQ4gDYnZ6n+TyHOD7Y14ovzd0nSDD2co+AnQcOy4gxvgaK9sYO9p/nZ
-	 qjan9tk6vFmDrlZOwAtrurbpKmvEVNw2PT/eFWEeuBGN77dDjk4KI/Tgp6DoWOHIfJ
-	 w+O6GKmac9E+g==
-Message-ID: <2fe7a404-be2c-4ac8-8980-2b3d07a74bca@kernel.org>
-Date: Mon, 10 Feb 2025 20:27:34 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIgcO5bD"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5de6ff9643fso3299242a12.3;
+        Mon, 10 Feb 2025 11:28:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739215692; x=1739820492; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vmW1HfK2SM2OqIojXGSSnLO3+e4bjP6WcfB/geKC4z0=;
+        b=VIgcO5bDPNBHAbmamdPRaDXAb2AHyKZxdW9ftUCQHit3mxfmQfV4SJmB2huAO7fPFe
+         LFhUi/8qh9w3qXhvpMOnMshwkW4WaB/r+VINsDVXJ3oPuG3NfSqI0XUWO/JxFrDzZJ6c
+         IgRnQmGEcSzIHsgQvvlAkY6iGYc5QuN0tlXlgjpu+g0q45FD+Y6n2oWBmjiFqDZh+fvZ
+         W0V/dTZ1SutVNch2YeGmGO80obeDGPM7riUjVQaklg88vH2KnK7ffp4+axZqhIWw/KYu
+         7NF1WNiPWHQaTaO+ulno9VbMdGYCtbMllct8lDSoP4GLqhDjLxsT1KD/82+4NCZz10+v
+         wSoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739215692; x=1739820492;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=vmW1HfK2SM2OqIojXGSSnLO3+e4bjP6WcfB/geKC4z0=;
+        b=WDjhuWlkt+lpdnZrdNuzZxcw9vKghdcy/KU2jO7vPZ76j9eKdU/EtYAuRK2SECp4Re
+         utxIREu3WnA/a51YyQ8zoky91iVyWg8LWxy2AtbLx4dUMSm/HFd7mR6tA2b2xCVMOwTs
+         +OqQLnpMZxd5Hs5cyc9eRGj41XG57eEpQqPuk4QioVoFnqWCNUfSQCckueY6m0yfJVuw
+         D+8Cn65SZtqi/YVmpIaeb6T93d8hV0qDEJVe/VtzmqRWIA5URL7rchhLIGycc9/vUGaB
+         7dZojCd3+d2UyY7zwX1FgqHkEFxPYlonAPGTkWM2A645dz0IxFpLVGMJ8ZiSFfPJHY43
+         vPJw==
+X-Forwarded-Encrypted: i=1; AJvYcCVUDi/KF/wvq5t9PuYbq0UUx3euOndE0qMnx2ccUmXG8AUlScaLhx+ED7Dz3DBIZtzmBPagXJ5/HGin0NqT@vger.kernel.org, AJvYcCXOB2Hq73UNjiqJObMfhBgSlHAC5/IsRh+AJ1384AueRZjaakMR2Ovw/DbAIYXp7R6/hW9qeWfxOXE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNtNe9O/6eAdR1ajWgT4w0MYUWeMvrftuDrqHRKYeK63Wm8X5z
+	2BVqLT7g3Ea6CRSkI0az1zcffgtltS8Jb13fkKMIdbfqTkmj6Eo4
+X-Gm-Gg: ASbGncuTGsvajMQkbXnJ9H1p2RrFVJYLBDzULnYIMHWi2G8TR3TX+JTUSCx3IFXNLca
+	t0FQ6gZLVTJ7ZizGrAB3h8uATsIfCK0ozKIh1IpiHEKyz2zdUHEkph1zhvajf8IE4+dP7uHKW02
+	aKqkH0n9ZtbSr9KEy7WfsNMwg1iBKSo6tSlMesKf0m3SwEEqDWAAQPC9AuF9z5cCC/IULAGa4Ay
+	WtTSHnHmninUjYyWMlhqcNdbtAimS+T+7sXDxLFuOUvYaD3SMdqWEmetZw+PvS4+W/njX7mT7q9
+	ofRfCxdqJdziuW/et+Yzysq36CxJo0mNBqw=
+X-Google-Smtp-Source: AGHT+IEvr71u5k+r2/bgZtzaewDxM9eo+2QMspsHoaG61WMLpWVHGjMh8wiDQzEmBjvyBkIxe1lP6w==
+X-Received: by 2002:a05:6402:5309:b0:5de:8332:a8e1 with SMTP id 4fb4d7f45d1cf-5de8332aa41mr5553113a12.18.1739215691603;
+        Mon, 10 Feb 2025 11:28:11 -0800 (PST)
+Received: from nyx.. (g171115.upc-g.chello.nl. [80.57.171.115])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de4d250084sm6576804a12.16.2025.02.10.11.28.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 11:28:10 -0800 (PST)
+Sender: Armin M <arminmahdilou@gmail.com>
+From: Armin Mahdilou <armin.mahdilou@gmail.com>
+X-Google-Original-From: Armin Mahdilou <Armin.Mahdilou@gmail.com>
+To: corbet@lwn.net
+Cc: shuah@kernel.org,
+	skhan@linuxfoundation.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Armin Mahdilou <Armin.Mahdilou@gmail.com>
+Subject: [PATCH v2] Documentation: proofreading Documentation
+Date: Mon, 10 Feb 2025 20:25:31 +0100
+Message-ID: <20250210192754.30283-1-Armin.Mahdilou@gmail.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <87bjv91yi3.fsf@trenco.lwn.net>
+References: <87bjv91yi3.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 14/14] Documentation: KHO: Add memblock bindings
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
- Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>,
- Andy Lutomirski <luto@kernel.org>, Anthony Yznaga
- <anthony.yznaga@oracle.com>, Arnd Bergmann <arnd@arndb.de>,
- Ashish Kalra <ashish.kalra@amd.com>,
- Benjamin Herrenschmidt <benh@kernel.crashing.org>,
- Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- David Woodhouse <dwmw2@infradead.org>, Eric Biederman
- <ebiederm@xmission.com>, Ingo Molnar <mingo@redhat.com>,
- James Gowans <jgowans@amazon.com>, Jonathan Corbet <corbet@lwn.net>,
- Mark Rutland <mark.rutland@arm.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, "H. Peter Anvin"
- <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Pratyush Yadav <ptyadav@amazon.de>, Rob Herring <robh+dt@kernel.org>,
- Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
- Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
- Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>,
- Tom Lendacky <thomas.lendacky@amd.com>, Usama Arif
- <usama.arif@bytedance.com>, Will Deacon <will@kernel.org>,
- devicetree@vger.kernel.org, kexec@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-mm@kvack.org, x86@kernel.org
-References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206132754.2596694-15-rppt@kernel.org>
- <45df0d7a-622a-4268-9683-c5c6067483c3@kernel.org>
- <Z6jFZII5b-j7hzkj@kernel.org>
- <a3cca0ed-64ca-4921-bb4c-27c0e06b78c6@kernel.org>
- <Z6kTCvex3DGhB-3C@kernel.org>
- <18529b1f-dc79-4c85-a485-a0a2cdd48670@kernel.org>
- <aa4ec16a-b35f-41b0-92f7-40b3eb64124a@kernel.org>
- <20250210191539.GA3765641@nvidia.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250210191539.GA3765641@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 10/02/2025 20:15, Jason Gunthorpe wrote:
-> On Sun, Feb 09, 2025 at 09:50:37PM +0100, Krzysztof Kozlowski wrote:
->>> Ah, neat, that would almost solve the problem but you wrote:
->>>
->>> +$id: http://devicetree.org/schemas/memblock/reserve_mem.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>
->>> so no, this does not work like that. You use devicetree here namespace
->>> and ignore its rules.
->>
->> ... and that obviously is barely parseable, so maybe one more try:
->> "You use here devicetree namespace but ignore its rules."
-> 
-> It makes sense to me, there should be zero cross-over of the two
-> specs, KHO should be completely self defined and stand alone.
-> 
-> There is some documentation missing, I think. This yaml describes one
-> node type, but the entire overall structure of the fdt does not seem
-> to have documentation?
+Fixed some spelling issues in documentations.
 
-A lot of ABI is missing there and undocumented like: node name (which
-for every standard DT would be a NAK), few properties. This binding
-describes only subset while skipping all the rest and effectively
-introducing implied/undocumented ABI.
+Signed-off-by: Armin Mahdilou <Armin.Mahdilou@gmail.com>
+---
+Thanks the Ack and Review. This is my first patch for the kernel.
+Fixed SOB.
 
-Best regards,
-Krzysztof
+Regards
+
+ Documentation/ABI/testing/configfs-usb-gadget-midi2 | 2 +-
+ Documentation/input/devices/elantech.rst            | 2 +-
+ Documentation/nvme/nvme-pci-endpoint-target.rst     | 2 +-
+ Documentation/sound/soc/machine.rst                 | 2 +-
+ Documentation/usb/gadget-testing.rst                | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/ABI/testing/configfs-usb-gadget-midi2 b/Documentation/ABI/testing/configfs-usb-gadget-midi2
+index 0eac3aaba137..d76a52e2ca7f 100644
+--- a/Documentation/ABI/testing/configfs-usb-gadget-midi2
++++ b/Documentation/ABI/testing/configfs-usb-gadget-midi2
+@@ -47,7 +47,7 @@ Description:
+ 		midi1_first_group	The first UMP Group number for MIDI 1.0 (0-15)
+ 		midi1_num_groups	The number of groups for MIDI 1.0 (0-16)
+ 		ui_hint			0: unknown, 1: receiver, 2: sender, 3: both
+-		midi_ci_verison		Supported MIDI-CI version number (8 bit)
++		midi_ci_version		Supported MIDI-CI version number (8 bit)
+ 		is_midi1		Legacy MIDI 1.0 device (0, 1 or 2)
+ 		sysex8_streams		Max number of SysEx8 streams (8 bit)
+ 		active			Active FB flag (0 or 1)
+diff --git a/Documentation/input/devices/elantech.rst b/Documentation/input/devices/elantech.rst
+index c3374a7ce7af..98163a258b83 100644
+--- a/Documentation/input/devices/elantech.rst
++++ b/Documentation/input/devices/elantech.rst
+@@ -556,7 +556,7 @@ Note on debounce:
+ In case the box has unstable power supply or other electricity issues, or
+ when number of finger changes, F/W would send "debounce packet" to inform
+ driver that the hardware is in debounce status.
+-The debouce packet has the following signature::
++The debounce packet has the following signature::
+ 
+     byte 0: 0xc4
+     byte 1: 0xff
+diff --git a/Documentation/nvme/nvme-pci-endpoint-target.rst b/Documentation/nvme/nvme-pci-endpoint-target.rst
+index 66e7b7d869b4..b699595d1762 100644
+--- a/Documentation/nvme/nvme-pci-endpoint-target.rst
++++ b/Documentation/nvme/nvme-pci-endpoint-target.rst
+@@ -86,7 +86,7 @@ configurable through configfs before starting the controller. To avoid issues
+ with excessive local memory usage for executing commands, MDTS defaults to 512
+ KB and is limited to a maximum of 2 MB (arbitrary limit).
+ 
+-Mimimum number of PCI Address Mapping Windows Required
++Minimum number of PCI Address Mapping Windows Required
+ ------------------------------------------------------
+ 
+ Most PCI endpoint controllers provide a limited number of mapping windows for
+diff --git a/Documentation/sound/soc/machine.rst b/Documentation/sound/soc/machine.rst
+index 9db132bc0070..1828f5edca3e 100644
+--- a/Documentation/sound/soc/machine.rst
++++ b/Documentation/sound/soc/machine.rst
+@@ -75,7 +75,7 @@ In the above struct, dai’s are registered using names but you can pass
+ either dai name or device tree node but not both. Also, names used here
+ for cpu/codec/platform dais should be globally unique.
+ 
+-Additionaly below example macro can be used to register cpu, codec and
++Additionally below example macro can be used to register cpu, codec and
+ platform dai::
+ 
+   SND_SOC_DAILINK_DEFS(wm2200_cpu_dsp,
+diff --git a/Documentation/usb/gadget-testing.rst b/Documentation/usb/gadget-testing.rst
+index bf555c2270f5..1998dc146c56 100644
+--- a/Documentation/usb/gadget-testing.rst
++++ b/Documentation/usb/gadget-testing.rst
+@@ -1050,7 +1050,7 @@ Its attributes are:
+ 	midi1_num_groups	The number of groups for MIDI 1.0 (0-16)
+ 	ui_hint			UI-hint of this FB
+ 				0: unknown, 1: receiver, 2: sender, 3: both
+-	midi_ci_verison		Supported MIDI-CI version number (8 bit)
++	midi_ci_version		Supported MIDI-CI version number (8 bit)
+ 	is_midi1		Legacy MIDI 1.0 device (0-2)
+ 				0: MIDI 2.0 device,
+ 				1: MIDI 1.0 without restriction, or
+-- 
+2.47.2
+
