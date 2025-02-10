@@ -1,192 +1,338 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2083.outbound.protection.outlook.com [40.107.92.83])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11BF325E463;
-	Mon, 10 Feb 2025 19:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739216180; cv=fail; b=OxQhC2itl0/yj81JPSXUZ/41LsXzy9HORLKppHG6IyOMTEVCBIwev0MLztTP4NKRr9xjwSY835eBKsFMtCPcls7nzrVvXwgRsvXAcguXIcpBaJVMHuUrpkVHhnctWJMQn8IuM+qd0dboRaT7yxVobjsZ2q1ye1Uo5+Q2ugyG4KU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739216180; c=relaxed/simple;
-	bh=kRmawHGjR44fzElCwUWT3pEvdhWXBtToxmQQnUxC7E4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZhVpd5YyYGjPccp6Sufa8vNMWciD7Oyk8MFa+s34Lg08up7xrSv36y3r7kYcooYkBC34yNrzdtkm36EnKGSJjS1trrZFqrSHsoINGPNF9qDakQYyu3oUmW2OXyqGwza0S8P/MEIW2lUz5Z9TY8mPToFbXlDEvrBFgj9Nv6AmJe8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=iN64Vdti; arc=fail smtp.client-ip=40.107.92.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDFB325E463
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739216291; cv=none; b=SzPynE0CVYy/gS+caNtOpQavOAj8xw4zCLXeOznVmMKSyTU8a9Nbh59ouNuSZSvtd3R+kcAF2X8m5aYZ3M4rAxDfFi6WFpawakzffx35AH3QoVlhJ/JmqV52EpsOkNMAWSuA/tpoF2zdx3F9YAkHvkfnAx4qvRHXWOXak3FZ8hY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739216291; c=relaxed/simple;
+	bh=apI3TaNZZL36DYa7Oiv1+x3h78ZZQgNoP4cKlZ77AWk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=igvVcGzQoDS9/z3zXq8Yh+ePzMtjNbrs4alTgeCB3dP4FlvE+LEriQyyNUXyB5TI/4Tpo0yLlg/xIMmJO8QAhkBG2UCW0H2v2lplAsLC4fi9lTCEqFlEeJ6qwhkIkcsVzlnIi0FW7QFZMfDYnkkDUWnyexnFh/4Fa3uxBpCe37Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UtP5y4Yr; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="iN64Vdti"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dStBtIAdefcaEaR//yfvXc26TtBm5QebZjpdHPcshJY81hTmsnnyeQ94IC7mnv5iG538wa1ZEygRdtZWpVN7aVFm9urabCmK6Pbi+T9mJRLgGOxNAVwIl8cfPZugMiOhjZ+8NETqJDFcu9WmYc+dF9GWu24tiSJ9DZzS9ct6trDMxbYC5aUMgcqYYGbDx+riY2lhqQSQpxk1GHI7Ntux5/CizUDNFx9DJxA7ki9ruqxfH4o36FWG72PCfquss5AhaR0J0VXrBBFSSx6ZgCI9NBLjI8k1baVuQy7hS0XegBMggKEP5nyeUN5kun7O/IzvwI99tEA9fnJ+7gpPn/lslA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mZMUxCVp69WYhHe5ROJW8AidBf7CU55pUWp2yom9Gwg=;
- b=ilrKRugjMJ++ul8fjGT0NI2VDTP2LrOL799HTALGyOYSBs2HBOiskNm8sVZPq3isky/kjncpHJpbso60sM6M/Vl458IAGyitao9flaEmTSakpikaSNFNIuau5Yimkx+paYeZth8t9/GxJ6orC5YRKaNmkrlzjRxbIHvYCQAoZWp/4SJo+QUW5eUTMCc1M4qjQ2M6BsvK/inJ1LAGdTTPCrYu3WKE2uVVUDbRkJzm1e5vYEEoAbx8v2ueUnr+zsN1ffz7eCkTXU4UxQRZw55igIGOFF1yjSwHodFiKEyivsY617l213+T6FgRINa+Sv2Rt9iouYDmS7MHpsFP2bdWTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=linux-m68k.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mZMUxCVp69WYhHe5ROJW8AidBf7CU55pUWp2yom9Gwg=;
- b=iN64VdtisDoowOVTWSU7/ACcUMv+zQwAKnxRjyiw5Lyv6psff/G5sSCYyZ14YxzvaX10Vf8dovkg06T+x6OgHidhxjimvvIxJTv2itqELgY9xIz94IP8GBN6sNbhBi8vdDZFZKEKJDpu+ybpKfFSkefEaJiYQYgqPzUwi/S/03sN+9eLZwpRKBEP3JKJlfAeWP4CI6ogJWOP1sPHoLMt/jf4wpj/qqyrMe6H6dgfjfpQwEVyeMeEYNBrMeWHWKkA2y3B+3lSko3C6AHHdWgaq36fDzBoOxwd4J9iJ48k8sHRje5xMLfJISRwVN5FTa5ONkQewGNiUVKvhmXHtDsemg==
-Received: from SN6PR04CA0099.namprd04.prod.outlook.com (2603:10b6:805:f2::40)
- by SA1PR12MB7320.namprd12.prod.outlook.com (2603:10b6:806:2b7::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Mon, 10 Feb
- 2025 19:36:12 +0000
-Received: from SA2PEPF00001505.namprd04.prod.outlook.com
- (2603:10b6:805:f2:cafe::5d) by SN6PR04CA0099.outlook.office365.com
- (2603:10b6:805:f2::40) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.31 via Frontend Transport; Mon,
- 10 Feb 2025 19:36:12 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SA2PEPF00001505.mail.protection.outlook.com (10.167.242.37) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8445.10 via Frontend Transport; Mon, 10 Feb 2025 19:36:11 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 10 Feb
- 2025 11:35:54 -0800
-Received: from [10.110.48.28] (10.126.231.35) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 10 Feb
- 2025 11:35:53 -0800
-Message-ID: <bd71c705-5f57-4067-b200-fd80b98ddbc9@nvidia.com>
-Date: Mon, 10 Feb 2025 11:35:48 -0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UtP5y4Yr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739216288;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MCWz0QKB/3zA+wyPgSQYXWNTlsWbH4Vu3NwNK9eMowA=;
+	b=UtP5y4YrC1pXYufZxEZPPslSmSH/8v3Y3WvMrBxzNAnVt2I3Hx7OSsHo5YcuyHvM0L0BAc
+	zoOuc88gNEXhYq1M6XFVuli56bK2U47AaNNOsU/umrrbjMWvatKnnuKF0wQyiH2MO8iCqH
+	KIIHoh5XO5x/UNcjue3xUM8hVK+DfJs=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-221-NXl1DONrP4KZxJFH7RNqnA-1; Mon, 10 Feb 2025 14:38:07 -0500
+X-MC-Unique: NXl1DONrP4KZxJFH7RNqnA-1
+X-Mimecast-MFC-AGG-ID: NXl1DONrP4KZxJFH7RNqnA
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43933b8d9b1so12559005e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:38:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739216286; x=1739821086;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MCWz0QKB/3zA+wyPgSQYXWNTlsWbH4Vu3NwNK9eMowA=;
+        b=E7ih25wu0odlXlwDfKMahZjZ7mm3ugDaLUgiw7DJfRKMikEiZhwYA0EJoKrGoI5UEO
+         +mRyt96VzB9QSa2NpGzq3aDJoyL+xN83GaW8lqt9WB0aKf4QcHwtCxyevhITo6g8VCcT
+         6mcMZeEXJYmXy4/PGJOzWStmIWkDLS0sSjNVvZanWUFNcBlqPa0FJZ6TY1XDSlR5vRcU
+         VJGonuxOchy/4ENwJ5WStIiWL3vMkBmLuHyV1apQolLASHGKghyGbRFVjPe48lScikwK
+         iyuNel5ibBt3vqOYMljmqtdpJmYQm8dyLpP/dfNo8SsWiq6eZBzWubxr7C+uO1MlH0+6
+         AAQQ==
+X-Gm-Message-State: AOJu0YxUcP4aTQzAtBq7LDE7ToISBT0MxbktV+/s09WXNfQJ3sMffJz+
+	8EtnRGdFef9GaCud1M9wg80Ho1KU/8HQc/Lh3aKbJVBTS0DRrWszhaV89EA4s0QD2i9n5QOjf8P
+	OreWAodOKMhcp8kBvTYdn2LF1q44lJDzrTSJCQxKPdVl0ZUdD2ulZhKzXSZ1QRr/Smas3Is20FZ
+	n7DvGElorzEhFXMGOcDIvlfSI+z1JJ5ogZKPWdXN1ebMBt
+X-Gm-Gg: ASbGncvP0WU2xFTdhB0sDVySOFnxvkr6LCvOaGEFPh79PVdu7mTMzw3GkCF1HPFXO/k
+	8V+plYgpd3mthRXC5j4a1k3waGYgZKl9lnpT2GHQ87HB1EAkUsTGuJwP3yJ3UmQHTDD8RyK37ib
+	SaoAlsLZokGqZYrJWNSn9po8qoyRyz23whjGxR6u8ma1DY839Ob0Z63k6D8E/hjj74UemFNdbpV
+	wohsjT81ILZuSPCfsgEkx9E0WG7x4ugDgASMj23MWs19+smx4oD6jvEn8b0Mcx8haSmu1/hwUa2
+	cYYW/7hIQuF8L+MAuPlyRElbUlpJ5NA8qBjVsN4WhOaGOQE2IY8BgYPplnUPJHwYew==
+X-Received: by 2002:a05:600c:1e0e:b0:431:5e3c:2ff0 with SMTP id 5b1f17b1804b1-439249889a8mr117185055e9.8.1739216286157;
+        Mon, 10 Feb 2025 11:38:06 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEHEaOpDMG7a/03CRbYKSofR+ckzDf4tR3vs9lDmaTs2zKGFHodBnTigVeQlsjTuu7+8Xv9cw==
+X-Received: by 2002:a05:600c:1e0e:b0:431:5e3c:2ff0 with SMTP id 5b1f17b1804b1-439249889a8mr117184625e9.8.1739216285660;
+        Mon, 10 Feb 2025 11:38:05 -0800 (PST)
+Received: from localhost (p200300cbc734b80012c465cd348aaee6.dip0.t-ipconnect.de. [2003:cb:c734:b800:12c4:65cd:348a:aee6])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4390d94db77sm189019515e9.15.2025.02.10.11.38.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 11:38:04 -0800 (PST)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-mm@kvack.org,
+	nouveau@lists.freedesktop.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	damon@lists.linux.dev,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Alex Shi <alexs@kernel.org>,
+	Yanteng Si <si.yanteng@linux.dev>,
+	Karol Herbst <kherbst@redhat.com>,
+	Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	SeongJae Park <sj@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Jann Horn <jannh@google.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Peter Xu <peterx@redhat.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: [PATCH v2 00/17] mm: fixes for device-exclusive entries (hmm)
+Date: Mon, 10 Feb 2025 20:37:42 +0100
+Message-ID: <20250210193801.781278-1-david@redhat.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: distro support for CONFIG_KUNIT: [PATCH 0/3] bitmap: convert
- self-test to KUnit
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Yury Norov
-	<yury.norov@gmail.com>
-CC: Tamir Duberstein <tamird@gmail.com>, David Gow <davidgow@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>, Madhavan Srinivasan
-	<maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
-	<npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, "Naveen
- N Rao" <naveen@kernel.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	"Shuah Khan" <shuah@kernel.org>, Kees Cook <kees@kernel.org>, Muhammad Usama
- Anjum <usama.anjum@collabora.com>, <linux-kernel@vger.kernel.org>,
-	<linux-m68k@lists.linux-m68k.org>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-kselftest@vger.kernel.org>, Brad Figg <bfigg@nvidia.com>, "David
- Hildenbrand" <david@redhat.com>, Michal Hocko <mhocko@suse.com>, "Jason
- Gunthorpe" <jgg@nvidia.com>
-References: <20250207-bitmap-kunit-convert-v1-0-c520675343b6@gmail.com>
- <Z6eaDuXnT_rjVSNS@thinkpad>
- <CAMuHMdUsq_39kgBa8oanXeTzv44HuhS1e5MK7K2jxkVXQ7uWdw@mail.gmail.com>
-Content-Language: en-US
-From: John Hubbard <jhubbard@nvidia.com>
-In-Reply-To: <CAMuHMdUsq_39kgBa8oanXeTzv44HuhS1e5MK7K2jxkVXQ7uWdw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00001505:EE_|SA1PR12MB7320:EE_
-X-MS-Office365-Filtering-Correlation-Id: 45f9e31b-8c45-4366-4be5-08dd4a0a2cf2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TkhXRld6T2huK0IvVitzdnV2azAvYU50Vm93VnRkYUY0QnUzR044bnN2aGd4?=
- =?utf-8?B?RGhTQmxxNzlYbzM1K2dnTncxK3BkSVRUZGkzZzMvNThNUDJVSHdQNjdxYnZE?=
- =?utf-8?B?d2EvbVoyUk9NcFU1OGlFQzhtTm8zZDFUY2xwUmFjc2g1dldkbkdLaU93NVNa?=
- =?utf-8?B?Z3V1RVlTczFtL3BSalpXUmp5THE3MEFRMUc1V3drYUhIRTlqZWhmWnlFdklw?=
- =?utf-8?B?T3A5b3k1NzFrY21iS1p1MmY4T0dwZ2Evci9wdDcxakhMQnJQaFdlL3FBdzM1?=
- =?utf-8?B?QzdiMmFRTUpDd1Y0WWI1WkJ2NlYyYXhvc3NhTFNyMjFOL3hPTmxhTDZNM0Fq?=
- =?utf-8?B?UnRNb2x0UkpGN0NYNFh0Zms5RW5QU2hRR1JxeFdFeHc2a2J6eGY3alJqZ0Jt?=
- =?utf-8?B?UXp3RFFwZFZNLzdsaHFZMHBObVdLNmlTWVNJOXdXUkFlVDhGRjZtd2d3SStW?=
- =?utf-8?B?VjdCQ2NVWFVaZUZxWkx5eXlzQjZOUXlkazY0QVBTcDlzd1NrY0ZsRjNVQUMz?=
- =?utf-8?B?NUNIakZUVCtVVVEvdHBrQnk1ckxUUERxMVdLVHZVOGtjaVFnVDZmZkk4ZUNV?=
- =?utf-8?B?encrazVjNUVGTmYvMEtRbHZ6ZDlHUkhia0RITURCaisxVWs1eGcvUXBzQjQ5?=
- =?utf-8?B?bnBPWlpFUk5zVlN4elJXZmU5NHJ0L2kyY2ZiZ2JheDNwaG9MNVhKVmIwMkZW?=
- =?utf-8?B?NURjbExRRGlFeklyUlVRVHhwRmpUOW4xOUhmUHltdnA1VW80cVNyUGlRNGc4?=
- =?utf-8?B?ZXM3YmNBVGxpei9OS0g4cERVRFFqOGdpSDlacEN2VHkyanVoVGk1Y2htMUty?=
- =?utf-8?B?VE1qaWFNaVRscUFFRXpKVy9RSU1pM1MwZ0RGbDVNOEFNbTJjYU4rK280aWNr?=
- =?utf-8?B?bW9jbkRCQVpUSXNlMEVkZjQrMUhhVGdtdWFJMHYvL0ZJV2tzRzYyWS82T2Jn?=
- =?utf-8?B?THgwNDUyU1Boby80N21XajA5ZXlxVHRmU0FXUkxHRCt4WnBjeUtJbmVjYW11?=
- =?utf-8?B?TEowSUQrVGtvakZuY3krN1ZsTnNQK0J3UmFwMUo0YVQxVTEzNGNPNm9BV1Fp?=
- =?utf-8?B?ZXE3Rkx6c0NFRVZ4bmRpZTh3WVZCMlpMUDJLeFprMEhiWDZra01PL3dJYnZ5?=
- =?utf-8?B?VzczOENmYmxleXhrQ1NOa2lsUnYvcUZWdEFlQW1EOElGR0JvdThOckl4TUJH?=
- =?utf-8?B?TWpSeiszTVNFOTh4cWxkc0FWT2V2YUdveUpOcUlSMCsrMmI4M3lCMVF2Tkls?=
- =?utf-8?B?aDhnRjN3RzBncXRQTklKTzkzSTZJTERlYWxibTZ4YVFaY1lJeWR1aVdKUXps?=
- =?utf-8?B?T2dCcDBkZ1J5TExuKzBvZjhsaEVmbkxKNFluc0hxU3VQSjA1VVZJTXFqNlBR?=
- =?utf-8?B?VGdnOUlYeEJ0M29Celo0KzB0ZEpLMkw2djJUTEd5bXI4dytmOWhvL0xZNEl0?=
- =?utf-8?B?eHVZTUZuMHFCbkJ0SjUzR3lYZG1rajZhUHY1N2o1dm0zKzlJRi9HOHNyamFo?=
- =?utf-8?B?ZzA4K28xOGw3VDNXR1VvNngvWURRbys2OUFWbU1lU3pmeUVMRndZN0F3OUs2?=
- =?utf-8?B?QXFjMzBSZjEvc0ZiWUd0Y0w0TEdFbHpqVlZpeDNmRjJ5MjVaZFBIb3g5R1g0?=
- =?utf-8?B?eUtRMkZpcllqQ3NnR2FDdU14cEZnejVzRmcrSHRYenppeXZqRTk4c1RSUFo4?=
- =?utf-8?B?UTM5RVQ5K0szTDcrS0hnQUxlMFVZemhLU0U1Q2VhTkxrWE1xcnhlUzlIL254?=
- =?utf-8?B?S2VvNVpObmE0cmtuOHMrQ2ttSldDeThVb1VEeGlEUGZsWkdYc1VrZllSd2Zm?=
- =?utf-8?B?Sk9rbm1McEkzajU3cjg1dXdMN0JMTUxJT20zZHBIalJvUFBCQUM0VGZ6aVpJ?=
- =?utf-8?B?eTlDczlzRUtrS1ZwNlJFblBRcXRXMTdUWFFUM050Nnk5TFV4VlNtUlROelVh?=
- =?utf-8?B?ZDNJN3AyTnA0clpaWUo1bWVncXpzV3NkQm12VzFRVHJsVDd0b2pTQkpHTkx5?=
- =?utf-8?Q?Br0yjLsl1rEDQD5RuELNSf8TR5U5VQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 19:36:11.9120
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45f9e31b-8c45-4366-4be5-08dd4a0a2cf2
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00001505.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7320
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 2/9/25 11:54 PM, Geert Uytterhoeven wrote:
-> On Sat, 8 Feb 2025 at 18:53, Yury Norov <yury.norov@gmail.com> wrote:
->> On Fri, Feb 07, 2025 at 03:14:01PM -0500, Tamir Duberstein wrote:
->>> On 7/27/24 12:35 AM, Shuah Khan wrote:
+Against mm-hotfixes-stable for now.
+
+Discussing the PageTail() call in make_device_exclusive_range() with
+Willy, I recently discovered [1] that device-exclusive handling does
+not properly work with THP, making the hmm-tests selftests fail if THPs
+are enabled on the system.
+
+Looking into more details, I found that hugetlb is not properly fenced,
+and I realized that something that was bugging me for longer -- how
+device-exclusive entries interact with mapcounts -- completely breaks
+migration/swapout/split/hwpoison handling of these folios while they have
+device-exclusive PTEs.
+
+The program below can be used to allocate 1 GiB worth of pages and
+making them device-exclusive on a kernel with CONFIG_TEST_HMM.
+
+Once they are device-exclusive, these folios cannot get swapped out
+(proc$pid/smaps_rollup will always indicate 1 GiB RSS no matter how
+much one forces memory reclaim), and when having a memory block onlined
+to ZONE_MOVABLE, trying to offline it will loop forever and complain about
+failed migration of a page that should be movable.
+
+# echo offline > /sys/devices/system/memory/memory136/state
+# echo online_movable > /sys/devices/system/memory/memory136/state
+# ./hmm-swap &
+... wait until everything is device-exclusive
+# echo offline > /sys/devices/system/memory/memory136/state
+[  285.193431][T14882] page: refcount:2 mapcount:0 mapping:0000000000000000
+  index:0x7f20671f7 pfn:0x442b6a
+[  285.196618][T14882] memcg:ffff888179298000
+[  285.198085][T14882] anon flags: 0x5fff0000002091c(referenced|uptodate|
+  dirty|active|owner_2|swapbacked|node=1|zone=3|lastcpupid=0x7ff)
+[  285.201734][T14882] raw: ...
+[  285.204464][T14882] raw: ...
+[  285.207196][T14882] page dumped because: migration failure
+[  285.209072][T14882] page_owner tracks the page as allocated
+[  285.210915][T14882] page last allocated via order 0, migratetype
+  Movable, gfp_mask 0x140dca(GFP_HIGHUSER_MOVABLE|__GFP_COMP|__GFP_ZERO),
+  id 14926, tgid 14926 (hmm-swap), ts 254506295376, free_ts 227402023774
+[  285.216765][T14882]  post_alloc_hook+0x197/0x1b0
+[  285.218874][T14882]  get_page_from_freelist+0x76e/0x3280
+[  285.220864][T14882]  __alloc_frozen_pages_noprof+0x38e/0x2740
+[  285.223302][T14882]  alloc_pages_mpol+0x1fc/0x540
+[  285.225130][T14882]  folio_alloc_mpol_noprof+0x36/0x340
+[  285.227222][T14882]  vma_alloc_folio_noprof+0xee/0x1a0
+[  285.229074][T14882]  __handle_mm_fault+0x2b38/0x56a0
+[  285.230822][T14882]  handle_mm_fault+0x368/0x9f0
 ...
->>> The crux of the argument seems to be that the config help text is taken
->>> to describe the author's intent with the fragment "at boot". I think
-> 
-> IMO, "at boot" is a misnomer, as most tests can be either builtin
-> or modular.
 
-Right.
+This series fixes all issues I found so far. There is no easy way to fix
+without a bigger rework/cleanup. I have a bunch of cleanups on top (some
+previous sent, some the result of the discussion in v1) that I will send
+out separately once this landed and I get to it.
 
-> 
->> KUNIT is disabled in defconfig, at least on x86_64. It is also disabled
->> on my Ubuntu 24.04 machine. If I take your patches, I'll be unable to
+I wish we could just use some special present PROT_NONE PTEs instead of
+these (non-present, non-none) fake-swap entries; but that just results in
+the same problem we keep having (lack of spare PTE bits), and staring at
+other similar fake-swap entries, that ship has sailed.
 
-OK so I just bought a shiny new test machine, and installed one of the
-big name distros on it, hoping they've moved ahead and bought into the kunit
-story...
+With this series, make_device_exclusive() doesn't actually belong into
+mm/rmap.c anymore, but I'll leave moving that for another day.
 
-$ grep KUNIT /boot/config-6.8.0-52-generic
-# CONFIG_KUNIT is not set
+I only tested this series with the hmm-tests selftests due to lack of HW,
+so I'd appreciate some testing, especially if the interaction between
+two GPUs wanting a device-exclusive entry works as expected.
 
-...gagghh! No such luck. One more data point, in support of Yuri's complaint. :)
+<program>
+#include <stdio.h>
+#include <fcntl.h>
+#include <stdint.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/mman.h>
+#include <sys/ioctl.h>
+#include <linux/types.h>
+#include <linux/ioctl.h>
 
-> 
-> I think distros should start setting CONFIG_KUNIT=m.
+#define HMM_DMIRROR_EXCLUSIVE _IOWR('H', 0x05, struct hmm_dmirror_cmd)
 
-Yes they should! kunit really does have important advantages for many use
-cases, including bitmaps here, and "CONFIG_KUNIT is not set" is the main
-obstacle.
+struct hmm_dmirror_cmd {
+	__u64 addr;
+	__u64 ptr;
+	__u64 npages;
+	__u64 cpages;
+	__u64 faults;
+};
 
-Let me add a few people to Cc who might be able to influence some distros.
+const size_t size = 1 * 1024 * 1024 * 1024ul;
+const size_t chunk_size = 2 * 1024 * 1024ul;
 
-thanks,
+int main(void)
+{
+	struct hmm_dmirror_cmd cmd;
+	size_t cur_size;
+	int fd, ret;
+	char *addr, *mirror;
+
+	fd = open("/dev/hmm_dmirror1", O_RDWR, 0);
+	if (fd < 0) {
+		perror("open failed\n");
+		exit(1);
+	}
+
+	addr = mmap(NULL, size, PROT_READ | PROT_WRITE,
+		    MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+	if (addr == MAP_FAILED) {
+		perror("mmap failed\n");
+		exit(1);
+	}
+	madvise(addr, size, MADV_NOHUGEPAGE);
+	memset(addr, 1, size);
+
+	mirror = malloc(chunk_size);
+
+	for (cur_size = 0; cur_size < size; cur_size += chunk_size) {
+		cmd.addr = (uintptr_t)addr + cur_size;
+		cmd.ptr = (uintptr_t)mirror;
+		cmd.npages = chunk_size / getpagesize();
+		ret = ioctl(fd, HMM_DMIRROR_EXCLUSIVE, &cmd);
+		if (ret) {
+			perror("ioctl failed\n");
+			exit(1);
+		}
+	}
+	pause();
+	return 0;
+}
+</program>
+
+[1] https://lkml.kernel.org/r/25e02685-4f1d-47fa-be5b-01ff85bb0ce2@redhat.com
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Alex Shi <alexs@kernel.org>
+Cc: Yanteng Si <si.yanteng@linux.dev>
+Cc: Karol Herbst <kherbst@redhat.com>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Danilo Krummrich <dakr@kernel.org>
+Cc: David Airlie <airlied@gmail.com>
+Cc: Simona Vetter <simona@ffwll.ch>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: SeongJae Park <sj@kernel.org>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Jann Horn <jannh@google.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Peter Xu <peterx@redhat.com>
+Cc: Alistair Popple <apopple@nvidia.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>
+
+v1 -> v2:
+ * "mm/rmap: convert make_device_exclusive_range() to make_device_exclusive()"
+  -> Fix and simplify return value handling when calling dmirror_atomic_map()
+  -> Fix parameter order when calling make_device_exclusive()
+  [both things were fixed by the separate cleanups I previously sent, realized
+   it when re-testing the fixes here only]
+  -> Heavily extend documentation of make_device_exclusive()
+ * "mm/rmap: implement make_device_exclusive() using folio_walk instead of
+    rmap walk"
+  -> Keep MMU_NOTIFY_EXCLUSIVE, and update comments/description
+ * "mm/rmap: handle device-exclusive entries correctly in try_to_migrate_one()"
+  -> Handle PageHWPoison with device-private pages differently
+ * Added a bunch of "handle device-exclusive entries correctly" fixes,
+   now handling all page_vma_mapped_walk() callers correctly
+ * Added "mm/rmap: avoid -EBUSY from make_device_exclusive()" to fix some
+   hmm selftest failures I saw while testing under memory pressure
+ * Plenty of comment/description updates and improvements
+
+David Hildenbrand (17):
+  mm/gup: reject FOLL_SPLIT_PMD with hugetlb VMAs
+  mm/rmap: reject hugetlb folios in folio_make_device_exclusive()
+  mm/rmap: convert make_device_exclusive_range() to
+    make_device_exclusive()
+  mm/rmap: implement make_device_exclusive() using folio_walk instead of
+    rmap walk
+  mm/memory: detect writability in restore_exclusive_pte() through
+    can_change_pte_writable()
+  mm: use single SWP_DEVICE_EXCLUSIVE entry type
+  mm/page_vma_mapped: device-exclusive entries are not migration entries
+  kernel/events/uprobes: handle device-exclusive entries correctly in
+    __replace_page()
+  mm/ksm: handle device-exclusive entries correctly in
+    write_protect_page()
+  mm/rmap: handle device-exclusive entries correctly in
+    try_to_unmap_one()
+  mm/rmap: handle device-exclusive entries correctly in
+    try_to_migrate_one()
+  mm/rmap: handle device-exclusive entries correctly in
+    page_vma_mkclean_one()
+  mm/page_idle: handle device-exclusive entries correctly in
+    page_idle_clear_pte_refs_one()
+  mm/damon: handle device-exclusive entries correctly in
+    damon_folio_young_one()
+  mm/damon: handle device-exclusive entries correctly in
+    damon_folio_mkold_one()
+  mm/rmap: keep mapcount untouched for device-exclusive entries
+  mm/rmap: avoid -EBUSY from make_device_exclusive()
+
+ Documentation/mm/hmm.rst                    |   2 +-
+ Documentation/translations/zh_CN/mm/hmm.rst |   2 +-
+ drivers/gpu/drm/nouveau/nouveau_svm.c       |   5 +-
+ include/linux/mmu_notifier.h                |   2 +-
+ include/linux/rmap.h                        |   5 +-
+ include/linux/swap.h                        |   7 +-
+ include/linux/swapops.h                     |  27 +-
+ kernel/events/uprobes.c                     |  13 +-
+ lib/test_hmm.c                              |  41 +-
+ mm/damon/ops-common.c                       |  23 +-
+ mm/damon/paddr.c                            |  10 +-
+ mm/gup.c                                    |   3 +
+ mm/ksm.c                                    |   9 +-
+ mm/memory.c                                 |  28 +-
+ mm/mprotect.c                               |   8 -
+ mm/page_idle.c                              |   9 +-
+ mm/page_table_check.c                       |   5 +-
+ mm/page_vma_mapped.c                        |   3 +-
+ mm/rmap.c                                   | 469 +++++++++-----------
+ 19 files changed, 315 insertions(+), 356 deletions(-)
+
+
+base-commit: e5b2a356dc8a88708d97bd47cca3b8f7ed7af6cb
 -- 
-John Hubbard
+2.48.1
 
