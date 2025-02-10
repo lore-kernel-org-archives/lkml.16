@@ -1,115 +1,66 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457EE189906;
-	Mon, 10 Feb 2025 06:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B932F85B;
+	Mon, 10 Feb 2025 06:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739167394; cv=none; b=J9TltLHtqrWe6hr+sDAdP1mDqtGEk/MWMl3nBre6eoh+UpctSrPlTArXh5KZNEt1SksXnYEToZ6JLvQrGcVQzXywrisKMiQUoBsTfeiY2ZWMWxTSRM70vabhWclPZxkpXQRUBtZMqUgYT82NCV9Kb57Ls9ht7dL7g/LVXOLHXNQ=
+	t=1739167507; cv=none; b=prM6T+e2QP/E4VJZUh1an7MS0mqK1MqVM4VvKE/iDNP/VFtOxNn0uStERfnVEq7fZNXt/2jDQAl2jy9qErO4ms7zZSr4hDdxhsjUsGh0vDs+sgBBWmLJq61bZW/fcl3hJ7Ob5KTf0KvVsbOmTRcvKGl5sPcHL6RGrewc0N0Yg/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739167394; c=relaxed/simple;
-	bh=PdnSNbfqlPaAeM8g+EXz+FdCiZRtKAMpuUjYtSMo+9U=;
+	s=arc-20240116; t=1739167507; c=relaxed/simple;
+	bh=rRYJteOQgsHZbcvoZwYX3N714vayvL0FCI84xdksnrY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZPqOZdF96oIfh3oaEdx7cSzcmS9QCQ3X/5zODV/6L8e5a6iiV3q7N2Kc9nWYU5ZOsy05PQ/sHw1+DUgNHtXvazEmhVP7S2Rw0uGEdwM/OPv4DUVdlSkUBAVa9LPmuAWM+MRvnQs230USSyFMYuRHmFTFsUn7gugmlfKloGW32/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NUivTwnX; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=XoM3O9/hyKt6rsgSgkcxbvEqZCqtEYpF5EsdigGze9jcnGfnTgepKUJJGsdsSF+lPVPvhcDI0YDf4iduQ1vGZYlUW14Mpjc8ernFKLEah3j44On4hA7tXcJdSo+WAad9p7apIokpe+qfRqg0wozoPQ65q6biNEDC+D8oLK3VDRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UUxznfMj; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NUivTwnX"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c05c2dc5ddso80752085a.1;
-        Sun, 09 Feb 2025 22:03:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739167391; x=1739772191; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LKWXl8MTm6gUQV5WQREvCDDX8UQM5VlckT9ixmVr0tM=;
-        b=NUivTwnXdeJzUpg6H3AblB1Ko0xgYsC7BMkNUSScB9PDp+tt1hcyGBMk44yOW2lPbm
-         X9PHFY2uaezzJ9WUlm6BrLQLjAr3XjVrNCC1yo4JfoXLMevDDDLGVoKc9Lf9LHTrRT/n
-         UHi3X3GqznHv6YYBBOd/tqcnvzISMgkdcaYKKTlPThVzsVknisaSk8lgb+Un51RlDa7G
-         0bey2rBrcYRyGuM88U3mSRfSh4VlOEoHSIrz9kK5xyq9mi6tMNsi83gpuS5XYhwAac1g
-         jlQlIL9E8DUWHJDLSQ5/BOHFgdFw9/KcgL26+nSs7Tef9bv/yyVOqpsFYhIep5kmoLdM
-         h/Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739167391; x=1739772191;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LKWXl8MTm6gUQV5WQREvCDDX8UQM5VlckT9ixmVr0tM=;
-        b=I4LLnDtDG/pHUC8amUHq+334nRHoQVDPqBq/ZlGCYaB+Ac9dkTEkgC+c2L/M5MgiB4
-         PnNMDgovwROPK5HmmR2EprPqlrKieW3oEYR19a+vrAVtkLs2TgojoxSq9LvObrp/K7Zk
-         PU3HsTIqf5WTRJSGMtqUsvBFIa/YQkNPbmpSNJUfQwpQ+an73+1L3m2VZmDlgEaxbcWj
-         zV7NglhSVCSvwSNzJp+jJtgT5lkBGSq3BBl0rFakBUSgMe3oZxkdME0N0VSdBL7zy95U
-         7SNPY7UNDjho4/PH/w32FWISjOGwsqPtvjsLozJhSz8tK/EowTIRJYd6e1pM9Mt/zFhd
-         ekTg==
-X-Forwarded-Encrypted: i=1; AJvYcCU13v22wl6u0MZsYlK8ECCGbnNPNNW4+AzT2EoyQyDjK44khvNPR7PZwXudm6/96jWS8FXjcy6gDU1KTEs=@vger.kernel.org, AJvYcCWk5ZD51NX2NIvUowiAXXFxzDIK/qPDYEyATp0tfplpIv9vnDEvJfuQm56056qqDtDjPIhClqmmYonjOAu9YV4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpBToYSjLDsqApje2TWxQgUiunB8llg9eXXWUyqIiQE+GAtz1y
-	+Appf+r28IiRn+JT1K1FtTxB9vvsnJVKRuU0j54CusjEYNa4E9Vg
-X-Gm-Gg: ASbGncsqxZXGB8P2qqiDuXLaa6o7O7tKT9SvTliqjyAdUEt9IJXnlG8pF7tQFCbK9mu
-	Z0Y8DNoCqF942P7/2GsDwMHALFaLIUhVM4J9M/nNsXzYPg300Kwh9fpFcIgL4ltA6bvy2fIo9ee
-	iVcmKNK1OU3g1j5BoF3bRWjU8EmxywnQbGlH1UlSO1IGzL/K5dvGsWFHEfYqqUMpHSs/a4eTCX2
-	OliE6MdGeM9tBE9xao0qmkXHTEK8W8dS5rFjErp9/S0eihAldgHt4ko27+/+h3kpWUNWX5m1Kh+
-	mRRJ4evoXBdGdO2x7W/TVRGiT4tSS7o4iEyL1geHgjB0lBOOiPhgs7XoSTViRWrxfLjcpGQFEe1
-	D1vdHnA==
-X-Google-Smtp-Source: AGHT+IG5+VU7zRM/3r0g+sE/Wg4Ktyu7wdrWw+1NPB3fYwy5Y4TagVJrNa1v04JtKUEcyOmVxBbGUg==
-X-Received: by 2002:a05:620a:290c:b0:7a3:5f3f:c084 with SMTP id af79cd13be357-7c047c45d4bmr1937165685a.30.1739167391164;
-        Sun, 09 Feb 2025 22:03:11 -0800 (PST)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041ded12asm495385885a.5.2025.02.09.22.03.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 22:03:10 -0800 (PST)
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 41E001200043;
-	Mon, 10 Feb 2025 01:03:10 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Mon, 10 Feb 2025 01:03:10 -0500
-X-ME-Sender: <xms:npapZ1SZhivTxCTX1RoW-zzAB6row9ZzSGxLGA_ofGHo3Qk6TUipQA>
-    <xme:npapZ-zcdu86-RmDvfTvA3SDb0XcZh0C-NF88kYY7fsOCbW4eNwJoTa0KGBPXRHTx
-    GS-_hBAEekex97ODQ>
-X-ME-Received: <xmr:npapZ61wCAllvYsjPP-7r-X1uONfGElfPoMXiDoyUQJD3xtQKUH6T-jyOg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefjedvkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
-    drtghomheqnecuggftrfgrthhtvghrnhephfdukeeiueevheffkeekffeufeelheektddu
-    iefhjefgveehvdetjeffteeviedvnecuffhomhgrihhnpedugedqrhgtuddrqdhlihhnkh
-    dpkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
-    rghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthi
-    dqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghi
-    lhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopedugedpmhhouggvpe
-    hsmhhtphhouhhtpdhrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhm
-    pdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghgrrh
-    ihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhrohht
-    ohhnmhgrihhlrdgtohhmpdhrtghpthhtohepsggvnhhnohdrlhhoshhsihhnsehprhhoth
-    honhdrmhgvpdhrtghpthhtoheprgdrhhhinhgusghorhhgsehkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopehtmhhgrhhoshhssehumhhitghhrdgvughupdhrtghpthhtohepphgvth
-    gvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepmhhinhhgohesrhgvughh
-    rghtrdgtohhm
-X-ME-Proxy: <xmx:npapZ9DTMpg0rtjkLPhGDN4AfmaAWVdm4EL8_AlZP9z0M3ZElbbEgg>
-    <xmx:npapZ-jT9Ffv2wQMx_nPmX89VP1hh_q7L927T4tx7fhCa8apghha4w>
-    <xmx:npapZxpGZ3Q5bDWKwDNX6r35ww7HCzbiYQrVUmdWIOcMHJrjSGBPdg>
-    <xmx:npapZ5jGifcx16iuVSPPnRgJGlW57ft_3MlSe3ChM-tqzuHzxzU9Yw>
-    <xmx:npapZ5Tr5hr3Pi9pa6xvM-gDD9nEbD4Wk4STqp46zVmfpvjQAS42WGf1>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 10 Feb 2025 01:03:09 -0500 (EST)
-Date: Sun, 9 Feb 2025 22:03:08 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] rust: sync: add accessor for the lock behind a given
- guard
-Message-ID: <Z6mWnMWpAKmSjOBg@Mac.home>
-References: <20250205-guard-get-lock-v2-1-ba32a8c1d5b7@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UUxznfMj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739167506; x=1770703506;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rRYJteOQgsHZbcvoZwYX3N714vayvL0FCI84xdksnrY=;
+  b=UUxznfMj/TLniGMapgtZPKua9IZEdeZXG+FnDbhkERk4spJMTkYP8T1c
+   T6MMu5YjY0/+pxo5TX0sJnY+uZzpF4nUFBwr/TPsnheVUyqjkugcSGnjx
+   E0yMmHWQABJt+pX8s1IFJmh7B36K3pt7+jgWnwS7dDqeBshU+LdaN74lu
+   vH0oeIMSxl/DTVgq2YQI1+QPR+hFFgNsqv62oe2pUMvu+ZmxkXOcN/LwN
+   YhNslJOSRvAqNHJtJh2CzzGC9ebaHo2afradsivVRofD2l1Q6yrvcoH2+
+   j6BL4m1i8TaHxFWL1JF4NSMLfXZagIgyZu+jpRlLieQPXvM3oIFkgbpp0
+   w==;
+X-CSE-ConnectionGUID: heXIHRHuRVW6g4QRjl0fMg==
+X-CSE-MsgGUID: isVcMtsqRZettLawMEu/TQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="65089297"
+X-IronPort-AV: E=Sophos;i="6.13,273,1732608000"; 
+   d="scan'208";a="65089297"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 22:05:05 -0800
+X-CSE-ConnectionGUID: ukIvttzbRHSU1vhKl0BCeQ==
+X-CSE-MsgGUID: 7YuVGQOLTeGjdM/8qQ6T5w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,273,1732608000"; 
+   d="scan'208";a="111926110"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 22:05:02 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1thMuh-0000000A23u-1NV2;
+	Mon, 10 Feb 2025 08:04:59 +0200
+Date: Mon, 10 Feb 2025 08:04:59 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: subramanian.mohan@intel.com
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	gregkh@linuxfoundation.org, giometti@enneenne.com,
+	tglx@linutronix.de, corbet@lwn.net, eddie.dong@intel.com,
+	christopher.s.hall@intel.com, pandith.n@intel.com,
+	thejesh.reddy.t.r@intel.com, david.zage@intel.com,
+	srinivasan.chinnadurai@intel.com
+Subject: Re: [PATCH v13 1/4] drivers pps/generators: replace copy of pps-gen
+ info struct with const pointer
+Message-ID: <Z6mXC7loE3qRYpUQ@smile.fi.intel.com>
+References: <20250210050421.29256-1-subramanian.mohan@intel.com>
+ <20250210050421.29256-2-subramanian.mohan@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -118,99 +69,76 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250205-guard-get-lock-v2-1-ba32a8c1d5b7@google.com>
+In-Reply-To: <20250210050421.29256-2-subramanian.mohan@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi,
-
-On Wed, Feb 05, 2025 at 10:54:50AM +0000, Alice Ryhl wrote:
-> Binder has some methods where the caller provides a lock guard, and
-> Binder needs to be able to assert that the guard is associated with the
-> right lock. To enable this, add an accessor to obtain a reference to the
-> underlying lock that you can pass to `ptr::eq`.
+On Mon, Feb 10, 2025 at 10:34:18AM +0530, subramanian.mohan@intel.com wrote:
+> From: Subramanian Mohan <subramanian.mohan@intel.com>
 > 
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> ---
-> Changes in v2:
-> - Rename to lock_ref() to avoid confusion with lock().
-> - Rebase on v6.14-rc1.
-> - Link to v1: https://lore.kernel.org/r/20250130-guard-get-lock-v1-1-8ed87899920a@google.com
-> ---
->  rust/kernel/sync/lock.rs | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+> Some PPS generator drivers may need to retrieve a pointer to their
+> internal data while executing the PPS generator enable() method.
 > 
-> diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
-> index eb80048e0110..8e7e6d5f61e4 100644
-> --- a/rust/kernel/sync/lock.rs
-> +++ b/rust/kernel/sync/lock.rs
-> @@ -199,7 +199,12 @@ pub struct Guard<'a, T: ?Sized, B: Backend> {
->  // SAFETY: `Guard` is sync when the data protected by the lock is also sync.
->  unsafe impl<T: Sync + ?Sized, B: Backend> Sync for Guard<'_, T, B> {}
->  
-> -impl<T: ?Sized, B: Backend> Guard<'_, T, B> {
-> +impl<'a, T: ?Sized, B: Backend> Guard<'a, T, B> {
-> +    /// Returns the lock that this guard originates from.
-> +    pub fn lock_ref(&self) -> &'a Lock<T, B> {
-> +        self.lock
-> +    }
-> +
->      pub(crate) fn do_unlocked<U>(&mut self, cb: impl FnOnce() -> U) -> U {
->          // SAFETY: The caller owns the lock, so it is safe to unlock it.
->          unsafe { B::unlock(self.lock.state.get(), &self.state) };
+> During the driver registration the pps_gen_device pointer is returned
+> from the framework, and for that reason, there is difficulty in
+> getting generator driver data back in the enable function. We won't be
+> able to use container_of macro as it results in static assert, and we
+> might end up in using static pointer.
 > 
-> ---
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> change-id: 20250130-guard-get-lock-dd5452793d9a
+> To solve the issue and to get back the generator driver data back, we
+> should not copy the struct pps_gen_source_info within the struct
+> pps_gen_device during the registration stage, but simply save the
+> pointer of the driver one. In this manner, driver may get a pointer
+> to their internal data as shown below:
 > 
-> Best regards,
-> -- 
-> Alice Ryhl <aliceryhl@google.com>
+> struct pps_gen_foo_data_s {
+>         ...
+> 	struct pps_gen_source_info gen_info;
+> 	struct pps_gen_device *pps_gen;
+> 	...
+> };
 > 
+> static int __init pps_gen_foo_init(void)
+> {
+>         struct pps_gen_foo_data_s *foo;
+> 	...
+> 
+>         foo->pps_gen = pps_gen_register_source(&foo->gen_info);
+> 	...
+> }
+> 
+> Then, in the enable() method, we can retrieve the pointer to the main
+> struct by using the code below:
+> 
+> static int pps_gen_foo_enable(struct pps_gen_device *pps_gen, bool enable)
+> {
+>         struct pps_gen_foo_data_s *foo = container_of(pps_gen->info,
 
-I queued this with some changes on the commit log to make it more of an
-objective tone, please see below, thanks!
+> 	       			      struct pps_gen_foo_data_s, gen_info);
 
-Regards,
-Boqun
+TABs/spaces mix.
 
---------------------------->8
-Subject: [PATCH] rust: sync: Add accessor for the lock behind a given guard
+>         ...
+> }
 
-In order to assert a particular `Guard` is associated with a particular
-`Lock`, add an accessor to obtain a reference to the underlying `Lock`
-of a `Guard`.
+> Signed-off-by: Rodolfo Giometti <giometti@enneenne.com>
 
-Binder needs this assertion to ensure unsafe list operations are done
-with the correct lock held.
+Hmm... Is Rodolfo indeed a correct to be mentioned here?
+I think you wanted Suggested-by with somebody else.
 
-[Boqun: Capitalize the title and reword the commit log]
+...
 
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-Reviewed-by: Fiona Behrens <me@kloenk.dev>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Link: https://lore.kernel.org/r/20250205-guard-get-lock-v2-1-ba32a8c1d5b7@google.com
----
- rust/kernel/sync/lock.rs | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+> -struct pps_gen_device *pps_gen_register_source(struct pps_gen_source_info *info)
+> +struct pps_gen_device *pps_gen_register_source(
+> +					const struct pps_gen_source_info *info)
 
-diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
-index eb80048e0110..8e7e6d5f61e4 100644
---- a/rust/kernel/sync/lock.rs
-+++ b/rust/kernel/sync/lock.rs
-@@ -199,7 +199,12 @@ pub struct Guard<'a, T: ?Sized, B: Backend> {
- // SAFETY: `Guard` is sync when the data protected by the lock is also sync.
- unsafe impl<T: Sync + ?Sized, B: Backend> Sync for Guard<'_, T, B> {}
- 
--impl<T: ?Sized, B: Backend> Guard<'_, T, B> {
-+impl<'a, T: ?Sized, B: Backend> Guard<'a, T, B> {
-+    /// Returns the lock that this guard originates from.
-+    pub fn lock_ref(&self) -> &'a Lock<T, B> {
-+        self.lock
-+    }
-+
-     pub(crate) fn do_unlocked<U>(&mut self, cb: impl FnOnce() -> U) -> U {
-         // SAFETY: The caller owns the lock, so it is safe to unlock it.
-         unsafe { B::unlock(self.lock.state.get(), &self.state) };
+Still leave it a single line.
+
+...
+
+Otherwise looks good to me, thanks for taking this approach!
+
 -- 
-2.39.5 (Apple Git-154)
+With Best Regards,
+Andy Shevchenko
 
 
