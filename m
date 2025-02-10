@@ -1,85 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f201.google.com (mail-il1-f201.google.com [209.85.166.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EDF22586FA;
-	Mon, 10 Feb 2025 23:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81AFC25EF9B
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:07:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739228862; cv=none; b=lqUjqfeJlwE1TvJMW+KARg+Nz9sf9n31BK8u4fwHKaO3+x3t1D0oX2wK9/rTmz4rlUv9vEWNXG1AnWobN1B2+lR2cmWC7sFuppCzylFxvdiFObJZiXN5+Cz+Sn3QghD8+GbYwm0vpe+AH58yqzIRClAkFysBZF5vJlx084VNtuE=
+	t=1739228878; cv=none; b=eu6C9H+1KwfLa2iZTlIANUVKvROWu/QOxO5s9gdxEALqyxuqu4x6TmtrR8XGvqiOCuyb3kSdyWkiDQ4nBC0TxkXuR7CrNIwaceY979x8Gk4jJ3Kd6V5xIJJabFyMoNWGYpWfkPQU3m/jyLecMnRHGAqUPZsZCW2oj8ksbgR1Bx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739228862; c=relaxed/simple;
-	bh=5Ad+mDP0f4rkKnJARYGaDv1lwZ6hbqhdNqwk2x11ziE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kKS02BTFm3y6bk0KgDVLAI4D1dB+M1mK7xYhDLwcTJ7/qKPrEpPn9N9i9n4RhwLXk0nfESUHDloMavgAC4CU3Rim2tc/XjFXdxPVIYgy5+tkmm0stSIZMvCj1daakApIfRl7QyIwhZ2H05O0EPhifzBt9xHuIrGk1zrKB4QJZoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YniOKWZd; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739228878; c=relaxed/simple;
+	bh=AxQ0BatG3tWnwllw3i3I8ZpefXtmDeo0wa5eJwy1kCw=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=R0Pc5m8BcUyctreSQiTakZKnHU3mDxnCLzVVjbwSEFfH8CxbfckEdinFDwAeRmdESPb9qOlvDFu5D7ydpvgyy59tdotAuZZZJQPYSi6pR4tR2Wu0AiZy4uAR9ieVcxcbIZiyEWZySSjlLeOtk4WJ8YO2vbCP8VuC9FmapMG3tHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WTM6Kw6O; arc=none smtp.client-ip=209.85.166.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YniOKWZd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739228861; x=1770764861;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5Ad+mDP0f4rkKnJARYGaDv1lwZ6hbqhdNqwk2x11ziE=;
-  b=YniOKWZdnVEZsPmFZDJdqF3C1dpHEReZkUcOFYDpk5G5eftMUqFqt5JY
-   3Z+9FF1K8l8H+9TpyhS6qCa9U0MNHdl55TcQML+zcc7lGP1xP6G6fmlzD
-   c0wWtSYDM4+kf63rs19R4mYEwFxGeOxQpGC00dAS36gCkzNwjFpu3NIRE
-   M8P0DHn6GOTjpf5MqPw2EIt7XZnW8exIWUnoo1Ajq7axj4Zgp3p8kIaXn
-   CuIDXe8ZUM2dRTHIQ43LVeV6wPYhBdyC0Mzv2y8L3q0uNTDSGpJuUsDlt
-   Md02+D3BFhUQkN2C4jgQIMVev8dHMAJJ+REAK/MqyeTbgN50ZVg9YZq2X
-   w==;
-X-CSE-ConnectionGUID: unn9jk2+RCSzK2ex47ldXQ==
-X-CSE-MsgGUID: GDmhlwVbQGOYO200/H3Kug==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="40099706"
-X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
-   d="scan'208";a="40099706"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 15:07:40 -0800
-X-CSE-ConnectionGUID: W+uTPteqRxaqvriAKsP9+Q==
-X-CSE-MsgGUID: Zkib2YFtSS+773YNKGPQMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
-   d="scan'208";a="112303550"
-Received: from bergbenj-mobl1.ger.corp.intel.com (HELO intel.com) ([10.245.246.18])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 15:07:38 -0800
-Date: Tue, 11 Feb 2025 00:07:34 +0100
-From: Andi Shyti <andi.shyti@linux.intel.com>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Markus Theil <theil.markus@gmail.com>, linux-kernel@vger.kernel.org,
-	intel-gfx@lists.freedesktop.org, netdev@vger.kernel.org,
-	tytso@mit.edu
-Subject: Re: [PATCH] prandom: remove next_pseudo_random32
-Message-ID: <Z6qGtsEdjpz4ETvl@ashyti-mobl2.lan>
-References: <20250210133556.66431-1-theil.markus@gmail.com>
- <CAHmME9oqvWp_Nd1Gwgyw52qy8wxztMyCpNsjByH=VnRaXqczww@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WTM6Kw6O"
+Received: by mail-il1-f201.google.com with SMTP id e9e14a558f8ab-3d14a3f812fso64129065ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:07:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739228876; x=1739833676; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=NzOtRn06dmJeLMt6lIohnur0KCLnTsq8EA/pFJWvUPc=;
+        b=WTM6Kw6Oq/0/pFVlJhgSfg25VRe4w318dx3x3tDoY5irJ3qYxQxm1BqBuZqYetjgaD
+         bO1tl5Om6YGrtqRNLP2icuDGBpJTujwGiNrwtdltyfX4A8oTkpZQgP8Px/fcIs5Xu1tW
+         B+O6HbR4YXXJs10k558a1MAQP9SLczBOhItOSULb5rYzk6iGyYyCSh+0L8cvaOKAaYMY
+         pqja/JCY5j2J3Po3WB2Eg/BFF71bXnUxqaxvmTG7+/seqTpH3BYB0IOTMypkHfxD49Tk
+         SgLQJ6nhWP76uS92hfitTS+qYrWLAUByUyVjOelDuXhluZNmAumHUbkuz75BD7AtrYJ8
+         3wCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739228876; x=1739833676;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NzOtRn06dmJeLMt6lIohnur0KCLnTsq8EA/pFJWvUPc=;
+        b=UpOTxTsZHaFf4pk7vshFkHINg/ztBYX2Fal937N24jxpi47aOUY9VbkbwVU2d9qPm1
+         Z/WqDGan4qUafjTfw6Q5zqBKN2VukB0RtzBcNfAdhmdoT4OaqCKQcaMBdsjWIIof+Pn0
+         LU+6n/I4Dd3er3x4P0Kt54kRPxoqilWE9pTXzENjrqyL/w19VaSYR3fsxaQwkXG9zeKY
+         hNuKNQmnXkoFkMkmkr4gfZ9yj+ungrblKizzBHfWtm24x4gkOLwe/rc7tkPT52uO58Wv
+         l/IeA9gnA8g4dntEs2r6kyR4LgDQTj6cadBZ5Rbj1QYoNhuJeXu5UmRZmjTtM6E5Xp0+
+         kF1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXlzbaVi22hP5BwdEV1M/SFGaTNCT3AYx+7mNmjn1/FRY00ZgUtEo/pby8z0TpDJyUjjSAv8WjhRbKMOd0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzb/Svi/4Vuk0aysZLAhdLn8LMgEt95S+i9EyyPK6c1p9TlsAsf
+	/DXuCcNTLQP0MfTeg6V+/Lq6pmDBWqFmkAtMLPMZYr96RJByeLtYCwFm7t0v4QU6YagBYPJ2xTL
+	HQssQc47sWm44tlMxDmLBYg==
+X-Google-Smtp-Source: AGHT+IEYUiomyuN/bGInuZpdaF2fRRM/BetqkFJjxK+LoWD1u4DPDFiIADjLJWFWyB1MEsSvhotxG42I2ZAf1MOJBQ==
+X-Received: from ilbbn13.prod.google.com ([2002:a05:6e02:338d:b0:3d0:23fd:8ce4])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6e02:481c:b0:3cf:b626:66c2 with SMTP id e9e14a558f8ab-3d13df546c4mr121244895ab.19.1739228875706;
+ Mon, 10 Feb 2025 15:07:55 -0800 (PST)
+Date: Mon, 10 Feb 2025 23:07:54 +0000
+In-Reply-To: <Z6mp4NeklzORJg5y@linux.dev> (message from Oliver Upton on Sun, 9
+ Feb 2025 23:25:20 -0800)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHmME9oqvWp_Nd1Gwgyw52qy8wxztMyCpNsjByH=VnRaXqczww@mail.gmail.com>
+Mime-Version: 1.0
+Message-ID: <gsntfrkl1jqt.fsf@coltonlewis-kvm.c.googlers.com>
+Subject: Re: [RFC PATCH v2 2/4] perf: arm_pmuv3: Introduce module param to
+ partition the PMU
+From: Colton Lewis <coltonlewis@google.com>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: kvm@vger.kernel.org, linux@armlinux.org.uk, catalin.marinas@arm.com, 
+	will@kernel.org, maz@kernel.org, joey.gouly@arm.com, suzuki.poulose@arm.com, 
+	yuzenghui@huawei.com, mark.rutland@arm.com, pbonzini@redhat.com, 
+	shuah@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev, 
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
-Hi,
+Hi Oliver, thanks for the review.
 
-On Mon, Feb 10, 2025 at 02:39:43PM +0100, Jason A. Donenfeld wrote:
-> Hey Markus,
-> 
-> Thanks for this. I hadn't realized that next_pseudo_random32() only
-> had two users left. Excellent.
-> 
-> I'll queue this up in the random tree (unless there are objections
-> from the maintainers of that test code).
+Oliver Upton <oliver.upton@linux.dev> writes:
 
-actually would be better if we apply the i915 part in drm-tip
-rather than waiting for kernel releases to receive this change in
-our branch. It has been source of conflicts and headaches.
+> Hi Colton,
 
-May I ask Markus to split the patch in two parts and we handle
-the i915 side?
+> On Sat, Feb 08, 2025 at 02:01:09AM +0000, Colton Lewis wrote:
+>> For PMUv3, the register MDCR_EL2.HPMN partitiones the PMU counters
+>> into two ranges where counters 0..HPMN-1 are accessible by EL1 and, if
+>> allowed, EL0 while counters HPMN..N are only accessible by EL2.
 
-Thanks,
-Andi
+>> Introduce a module parameter in the PMUv3 driver to set this
+>> register. The name reserved_host_counters reflects the intent to
+>> reserve some counters for the host so the guest may eventually be
+>> allowed direct access to a subset of PMU functionality for increased
+>> performance.
+
+>> Track HPMN and whether the pmu is partitioned in struct arm_pmu
+>> because KVM will need to know that to handle guests correctly.
+
+>> While FEAT_HPMN0 does allow HPMN to be set to 0, this patch
+>> specifically disallows that case because it's not useful given the
+>> intention to allow guests access to their own counters.
+
+> Quite the contrary.
+
+> FEAT_HPMN0 is useful if userspace wants to provide a vPMU that has a
+> fixed cycle counter w/o event counters. Certain OSes refuse to boot
+> without it...
+
+Cool. I'll make sure writing 0 is allowed if we have FEAT_HPMN0.
+
+>> static inline u32 read_mdcr(void)
+>> {
+>> 	return read_sysreg(HDCR);
+>> }
+
+>> static inline void write_mdcr(u32 val)
+>> {
+>> 	write_sysreg(val, HDCR);
+>> }
+
+
+> Hmm... While this fixes the 32bit compilation issues, it opens a new can
+> of worms.
+
+> VHE is a 64bit only feature, so you're *guaranteed* that these accessors
+> will undef (running at EL1).
+
+True. I mentioned in the cover letter they aren't intended to actually
+run in the PMU driver because I guard for VHE there.
+
+>> +static void armv8pmu_partition(u8 hpmn)
+>> +{
+>> +	u64 mdcr = armv8pmu_mdcr_read();
+>> +
+>> +	mdcr &= ~ARMV8_PMU_MDCR_HPMN;
+>> +	mdcr |= FIELD_PREP(ARMV8_PMU_MDCR_HPMN, hpmn);
+>> +	/* Prevent guest counters counting at EL2 */
+>> +	mdcr |= ARMV8_PMU_MDCR_HPMD;
+>> +
+>> +	armv8pmu_mdcr_write(mdcr);
+>> +}
+>> +
+
+> After giving this a read, I don't think the host PMU driver should care
+> about MDCR_EL2 at all. The only time that 'guest' events are loaded into
+> the PMU is between vcpu_load() / vcpu_put(), at which point *KVM* has
+> reconfigured MDCR_EL2.
+
+> I'm not sure if there's much involvement with the host PMU driver beyond
+> it pinky-swearing to only use the specified counters. KVM is what
+> actually will program HPMN.
+
+> That'd alleviate the PMU driver from having VHE awareness or caring
+> about MDCR_EL2.
+
+That does seem like a cleaner solution. I can lift that handling into
+KVM code, but I will still need the variables I introduced in struct
+arm_pmu to be populated so the driver knows what counters to use.
+
+Without looking, I'm concerned there might be an initilization ordering
+issue with that where KVM will get the value for HPMN first because it's
+initialized first but then can't store them somewhere accessible to the
+driver because the driver hasn't been initialized yet. Then the driver
+is initialized and used without knowing HPMN and is now using counters
+we wanted the guest to have.
+
+There is probably an easy way around this, but I'll need to do some
+digging.
