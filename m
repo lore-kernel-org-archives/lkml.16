@@ -1,81 +1,62 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A222423E222
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA5923E25C
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739201942; cv=none; b=knVgOg6+HIn6ptkgErS+DU40QGB1VEneXIxN1VwTDV0aBD7uEj8i4cPQtc5CJLMMj9iV0ch9y1wF0svX7K0ohO3KipXWBvCYHiTWHbKwdpY2iey6fTWJTqjwnBGI5vxiM2tVC8ClDrIUMBAVgjFOfBNDMReiv4NZFoTiZJovows=
+	t=1739201949; cv=none; b=t4g8IutfmHiof6fqPtjM8LX3VImRWKCpWrjkh8pWDVUNdutieGnJSYpWuw1OzelZBr57PynvIRt8gKBJCpsdTWLXv6JnqkEWKBE0CuArHqGAIco9AYJDXP8I0K6mLWiKeK/SDm1pZxKURLXCUEYmrxK7POGtXsaXkeUyEYagP2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739201942; c=relaxed/simple;
-	bh=+ZO1rTDnY2L4DK8ir1ncT8Jdms8oqofICMxDveJrpVs=;
+	s=arc-20240116; t=1739201949; c=relaxed/simple;
+	bh=bhIHagS9meSabUPfTGuF7xlaMWOXvPmjoZ4/jfSEJsI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bueg7Z6lyXhgQuCMZR73C2Qul6yz+NgpMv3/ZtYHGmuUA/uVTcHtplw3WWvFmUoGSviIoHqErOOjUBM0jZOUBPXemP6GqhfxB/tzfHZv4NdSZNhm24GF9BN6R1n9ksNnULtwPsmRABeDDDz+V5TlE8cqreZKUTZQ7bSLzHvAkhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BXGkIxo0; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=GTW46702Y3t+rOEOOILPN0cIAa/arqlj4Wz+5ripMF/9bxplkY+oC6FLWFZFaDNZzwFtIW2Bm+KFh7283NGvnhdDwiWyN2wB63L8f72RbasttXGUA10Hms3mWOCa+smk/r8aJfVGvGilRpee+eknCvYVWJxyBDQEghlbswv00B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qPV+niyt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JC0Ek3bS; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BXGkIxo0"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ab7483b9bf7so669955266b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:39:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1739201939; x=1739806739; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=gn5jBDSuUTKZUT+LyUeeWJnri0H/pvMZv3ujQ1+ZSQ4=;
-        b=BXGkIxo0rM3GbUtB/sfmckxDanCPt/+HRgRw/7z2B0/ehnKdJXeK0RPiU5evZAxYMl
-         HRHugo3f3hcKkO8PFT6r8hYwwdLmo8RRbeJUvXEiKb6f9UiUhTbH93IWl4C2J8wHCABW
-         7g8UbDnluvkRMjH/QTtadqTB6WTxq1mWTjgEXX3yX0Lo7szddUMRdLktLIbdNlTnqqG1
-         GXdVdFZBVx2HiuWKizuE3ZwhitUtexGZh4Lcwnmy6vho9megLQqwjUGiBXcsZi4qajZe
-         5xzpPv5U5Zfjsu63PuvTvkeWMmhYkXq8F92gWgs2d6BWnELXVXDVF9dnjwAEA/ATmVwo
-         r5AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739201939; x=1739806739;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gn5jBDSuUTKZUT+LyUeeWJnri0H/pvMZv3ujQ1+ZSQ4=;
-        b=SEFaZa5aBj6zoRDwKaCL7BLC/7DAoIemcyPV8nAavIZP2jBrH+MbzoT+8yQzQhi9UC
-         GQv5xpQHCTCjGRIr/wJe2X7dLTuEBuV1vIxZUmUFYZlDC65layBpPjDZT+oBQFkv7n3m
-         v7N5XT6D9m3JZi3PJ+U0sVBev/HxDunC1mSmmFuF31Lz+XjIHWqQtMbGub+V5s76OQ2s
-         uU0eeeb9tMkPZz71lgC8SlifFFQWTDz8e2qcue9Lsp9QWPHYHyzVjvKQbMK/1j4qUZkC
-         o1+LLR6YrkK57yl91SfAoVcyJLIWbvu7yIqzOlVJqNvlQFs69alIJhHMRAMZWFaBAWoU
-         L3FA==
-X-Forwarded-Encrypted: i=1; AJvYcCW1hLsgfx/pArcGZiFQLppVS3K8xc00xuBOEK9Yjj+ytT1hv2f/FaELhLh+Q/ztiRhwf9barwESEdjx2zQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBdIZOsjUyyHTqE+xMvz0FlAGy2RzZq3o/AA6HZ6qHs/8vaHiB
-	kJ/FhlI32LwYuTc+BbPylVYcL5jZB44Fr3exr1tkq1Zi0i9KIf2XWV9bKb18ByY=
-X-Gm-Gg: ASbGncv1VaQ7PxC+9WQZLZ3c872CjJ6txl0nZ8xRsOYK6npubDi+I8pV4GtwjeBYCKe
-	Ndn4AtFwcYQdZ3zk0SJVec3TFhQ1zKnFaIWP3FawbVuAj3dotkAuq09M1KDIO6aiXQ9IWnrOTRK
-	RxdtY215wR4JwgzGoGVGEA9vA6ftOtede0w3c2cImMq3DmfJ9Q6YeTkCrtbKB5X8D0uMoaA8SHt
-	Uvn3ZTdIYW4trqNjjyIamA9TjXw0UUiAL31xtytonSNW+PBMAPvP9atja4dsfVDGcuiQKH/beL9
-	NA/pHMxTTlLBLJ4n1Q==
-X-Google-Smtp-Source: AGHT+IEkhOZI/bjOnubCCDmribYUDcUAGpriYeg1lXWJzTqKc4+MCipChQCFc1nZQcDkz7yfY286uQ==
-X-Received: by 2002:a17:907:9627:b0:ab7:5c95:3a82 with SMTP id a640c23a62f3a-ab789a6b63bmr1317004266b.1.1739201938875;
-        Mon, 10 Feb 2025 07:38:58 -0800 (PST)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7bb9cc86fsm294087066b.140.2025.02.10.07.38.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 07:38:58 -0800 (PST)
-Date: Mon, 10 Feb 2025 16:38:56 +0100
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Abel Wu <wuyun.abel@bytedance.com>
-Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Yury Norov <yury.norov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Bitao Hu <yaoma@linux.alibaba.com>, Chen Ridong <chenridong@huawei.com>, 
-	"open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/3] cgroup/rstat: Add run_delay accounting for cgroups
-Message-ID: <qt3qdbvmrqtbceeogo32bw2b7v5otc3q6gfh7vgsk4vrydcgix@33hepjadeyjb>
-References: <20250125052521.19487-1-wuyun.abel@bytedance.com>
- <20250125052521.19487-4-wuyun.abel@bytedance.com>
- <3wqaz6jb74i2cdtvkv4isvhapiiqukyicuol76s66xwixlaz3c@qr6bva3wbxkx>
- <9515c474-366d-4692-91a7-a4c1a5fc18db@bytedance.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qPV+niyt";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JC0Ek3bS"
+Date: Mon, 10 Feb 2025 16:39:02 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739201945;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FVUBiaoeWeksMfqaUXNGg5STI1bae+8Yqz5cnicePdE=;
+	b=qPV+niytIhYOhSM7bRzAb3GXPXTNY9jj6pj718SCdZX+U5XVSAcgRr1JLZodYs/9TFUSQt
+	jTYU6SV2RiLnrzyV2jZDlWgwA+0bquQFo03QwdnTXBDhwoYoe980wGtHj4QxOr06RT4DSt
+	8ddXsI2fpEn0ubX+eaF5UTWuqud2TYsdIroRau2Wndbgs7his95TPoNyABloBlr/7Xw/8B
+	bDKfEPenzMJSWoeKq9+icGVHgTD7Rkxg33pUjFZJJ/YkgFjPMFLrW73YmrnhMNCOtBBhkp
+	QAgElWCt1siSQL7Evu4w9YM3as5CrBCeEYAFvv9c01I61W2gqIxxSA/IPmg7IQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739201945;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FVUBiaoeWeksMfqaUXNGg5STI1bae+8Yqz5cnicePdE=;
+	b=JC0Ek3bSh7t7IktBNjUPgmVDll0jqwdgwkJ2nqdgT6WYgw2HTZbpzp2lOtqAK28AbE3d/0
+	9HFPIP14YS4FHwAQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Ben Segall <bsegall@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 3/9] arm: Rely on generic printing of preemption model.
+Message-ID: <20250210153902.06VTSS6d@linutronix.de>
+References: <20250203141632.440554-1-bigeasy@linutronix.de>
+ <20250203141632.440554-4-bigeasy@linutronix.de>
+ <20250210120429.iFfBClW1@linutronix.de>
+ <Z6oYO5uKlEJ8C8Ne@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,58 +65,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9515c474-366d-4692-91a7-a4c1a5fc18db@bytedance.com>
+In-Reply-To: <Z6oYO5uKlEJ8C8Ne@shell.armlinux.org.uk>
 
-Hello Abel (sorry for my delay).
-
-On Wed, Jan 29, 2025 at 12:48:09PM +0800, Abel Wu <wuyun.abel@bytedance.com> wrote:
-> PSI tracks stall times for each cpu, and
+On 2025-02-10 15:16:11 [+0000], Russell King (Oracle) wrote:
+> On Mon, Feb 10, 2025 at 01:04:29PM +0100, Sebastian Andrzej Siewior wrote:
+> > On 2025-02-03 15:16:26 [+0100], To linux-kernel@vger.kernel.org wrote:
+> > > __die() invokes later __show_regs() -> show_regs_print_info() which
+> > > prints the current preemption model.
+> > > Remove it from the initial line.
+> > > 
+> > > Cc: Russell King <linux@armlinux.org.uk>
+> > > Cc: linux-arm-kernel@lists.infradead.org
+> > > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > 
+> > Is it okay, to route this via the sched tree?
 > 
-> 	tSOME[cpu] = time(nr_delayed_tasks[cpu] != 0)
+> Sorry, its not obvious where show_regs_print_info() prints this.
+> dump_stack_print_info() itself doesn't directly. print_worker_info()
+> doesn't. print_stop_info() doesn't. Not sure whether print_scx_info()
+> does.
 > 
-> which turns nr_delayed_tasks[cpu] into boolean value, hence loses
-> insight into how severely this task group is stalled on this cpu.
+> Maybe showing example output would help?
 
-Thanks for example. So the lost information is kind of a group load.
-What meaning it has when there is no group throttling?
+Patch 2/9 adds this. [ https://lore.kernel.org/all/20250203141632.440554-3-bigeasy@linutronix.de/ ]
 
-Honestly, I can't reason neither about PSI.some nor Σ run_delay wrt
-feedback for resource control. What it is slightly bugging me is
-introduction of another stats field before first one was explored :-)
+This this applied, die("test") on ARM ends as:
 
-But if there's information loss with PSI -- could cpu.pressure:some be
-removed in favor of Σ run_delay? (The former could be calculated from
-latter if you're right :-p)
+[    1.595106] Kernel panic - not syncing: test
+[    1.596044] CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W          6.14.0-rc2-00009-gb80a798df08c-dirty #13 PREEMPT 
+[    1.596768] Tainted: [W]=WARN
+[    1.596946] Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 02/02/2022
+[    1.597407] Call trace: 
+[    1.598183]  unwind_backtrace from show_stack+0x10/0x14
+[    1.599231]  show_stack from dump_stack_lvl+0x50/0x64
+[    1.599492]  dump_stack_lvl from panic+0x114/0x358
+[    1.599824]  panic from kernel_init+0x64/0x74
+[    1.600048]  kernel_init from ret_from_fork+0x14/0x38
+[    1.600349] Exception stack(0xdf829fb0 to 0xdf829ff8)
+[    1.600730] 9fa0:                                     00000000 00000000 00000000 00000000
+[    1.601102] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[    1.601447] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[    1.603163] ---[ end Kernel panic - not syncing: test ]---
 
-(I didn't like the before/after shuffling with enum cpu_usage_stat
-NR_STATS but I saw v4 where you tackled that.)
-
-Michal
-
-
-More context form previous message, the difference is between a) and c),
-or better equal lanes:
-
-a')
-   t1 |----|
-   t2 |xx--|
-   t3 |----|
-
-c)
-   t1 |----|
-   t2 |xx--|
-   t3 |xx--|
-
-      <-Δt->
-
-run_delay can be calculated indepently of cpu.pressure:some
-because there is still difference between a') and c) in terms of total
-cpu usage.
-
-	Δrun_delay = nr * Δt - Δusage
-
-The challenge is with nr (assuming they're all runnable during Δt), that
-would need to be sampled from /sys/kernel/debug/sched/debug. But then
-you can get whatever load for individual cfs_rqs from there. Hm, does it
-even make sense to add up run_delays from different CPUs?
+Sebastian
