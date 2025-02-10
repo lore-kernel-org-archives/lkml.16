@@ -1,118 +1,177 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAEF31BDA95;
-	Mon, 10 Feb 2025 08:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6A113CFB6
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739177023; cv=none; b=NcVPc3GG6UgkCafLZhWVH38rh/x8Em2CnQE0fIUgs2r1rsPChW53trhakp/Sh+Pg7cyqnv0uzP6e3ndKGK8Jo7OStl4QN+EwMm3j0LSnmnmEUFNhIAk+J+I3YGnXM2HnyTu5rahklMKvsO6JQxgUxFrYam8yuLGNHBimBFK7Ca0=
+	t=1739177079; cv=none; b=i+2P2r7porUrxHSM3czurGEtAcqZDP8G1fIrHxMzMWPF1N8s9fzgj8wTWQjUKgNF11nUHIoshIaeFRpE8ktzbfhlpUWaGA5xLk40dHazG557NWBVT6bi3WlOjqNlVNiFKRiZfHiKMW9cyh8VG8fHSyH6R87e/WMRqmsn2kcFk9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739177023; c=relaxed/simple;
-	bh=Mdg0SrPX+N0sJvGRpoqt/A0aLHrXFS32YIG1eZopRI0=;
+	s=arc-20240116; t=1739177079; c=relaxed/simple;
+	bh=4fZ8hkk0JfCQHZ3YWUau2oqwdEOKuxV5oYRE3kgnKgM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MjXDQBfYJFAIMa4Qc/wyvWkomtwJyru93Gx4Eq0b1oh6/v6occebSvBITT8mVxDUECRl1l3V40/j0dKKp/99i5uDnBZ/visuPkXQ0xXSQMPiXSQYZUxe0ohNiTC9OqUL60IB2UCCdGIWgwaXTABNbbOLVNjw9WSnCr96s9PnAPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=R4Nz+1Og; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s0ARSOsA; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=L1uwS5USTy9CgdPpMn4kYAbti2YqfzMCy18CvIqWVmKUo5hUBS1k45ndOIDieZ1vPpOs+O5C465e2h5Hl2ejUkrnZQ3zSqwC3vJBov50CVmfmoXkgTkCstvYZjyaYL5jETSUpaXjGnHQ/+AEkfvZH8qWI1CIcqItZ1TZVgwRF6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tXn/xoGa; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R4Nz+1Og";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s0ARSOsA"
-Date: Mon, 10 Feb 2025 09:43:31 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739177013;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cIuRcjptjh9/AMgIrM80ZU522dtLicptkr1+Q41B1sE=;
-	b=R4Nz+1OgIWm/jaJ40jwvDEJHT0xx6tsCC8J2gX+2mQTo+oBAmRxO6UokMjwj/IYy33qYOA
-	UALDMy1n83bp2tBYJ63ObnptX0CCTzXxql0psHe4MwnMmmAN0ETpzGvSsNEJkzfbANBIvX
-	jdn7czu/GuLkDZArqYBV3A3wzYxxKc8Em4jFLF1lZPqoWf6cRkxGcmT2KqBAsnHRTbllNa
-	bkdaRpPb8luWXjWIaFnRpsG691WEu8IPzyrSvl6bhFdczyDtaubgf+iQp1VOTpHZo2aaVQ
-	DRpcHsrnKohSa//0a08k+OoBhEh6B/rgj95X4E9NgfeWzn5s7PMrQuHA84OWXA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739177013;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cIuRcjptjh9/AMgIrM80ZU522dtLicptkr1+Q41B1sE=;
-	b=s0ARSOsALs0PNUGuLU7s1AfucQpyJovs44nzK0JRkeXQ3tDazfk0Q491HyzlAuTiLiojBC
-	OZF1Dn4qxpHH+eDw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Hillf Danton <hdanton@sina.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Marco Elver <elver@google.com>, Tejun Heo <tj@kernel.org>,
-	tglx@linutronix.de, Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>, bpf@vger.kernel.org
-Subject: Re: [PATCH v7 5/6] kernfs: Use RCU to access kernfs_node::parent.
-Message-ID: <20250210084331.IJB3qKdl@linutronix.de>
-References: <20250203135023.416828-1-bigeasy@linutronix.de>
- <20250203135023.416828-6-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tXn/xoGa"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-436ce2ab251so27028845e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 00:44:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739177075; x=1739781875; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=a9jWy1Q5jX1SgFclMU8WZwRWsNWJuzin+o6tDoU266o=;
+        b=tXn/xoGawRSLSqMTkgezffT1G3FlX5wJBLkivK8WnL9Lqt6Cmb3uCu385D+HUh+7lN
+         Iu+/qEm/7VDBrh/BEwxAuehSRyVPQjb2kpj7kO7bnhDXtfJNznC1J9hlg7hjIssMrjk/
+         MJyokiGlvX0D0INFqXA1/DoQgVZ457c9pI5KzAoLAVcFU+4gwM4k7VV5E+5pxWlGdBZ3
+         bOldhGd3fTLCZoNci1geLdYUpfCvClzDp9EHXF5YEpoYC5S06TlZQe+7hzBn+uraHKKT
+         vwAvAM7ePK5+vi2ZL1gQFrNrU9jap+MFKMbE/VoYA2AKW95yr8TICO+UHCtGcOqIIxvx
+         zgIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739177075; x=1739781875;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a9jWy1Q5jX1SgFclMU8WZwRWsNWJuzin+o6tDoU266o=;
+        b=uk+9CT0W/wJwOPW1CZO0tLGgPDbBCH2eaNFZYT16/bqbrsApoNpM70z38mX1QV3p2n
+         W1n8z/YwT57uv3+aiBm6U3edOrLxzWt23bk67euRQRsDJZ3zd+1IJPYTKw7Wzp5+Fh37
+         VrFmrkQ/gcBIHUsyZZK8coB2tyXKzPNyOAoahhDfvmDcyySxrhrOqDSvfCqpNvL+B0cR
+         652uAqSxGmbZyXpgXcxXVXVy2Plne+5nz+HU2ZGeRTEO1Xs87PX7t3UF0Ds2X8D3SChk
+         LvXJDn/C9l04svbcsAVUHFG+7i/EHvLiUNSHjUZcHis2nkSk39BmU/SFyv/cGjVPJEbj
+         t1Rw==
+X-Forwarded-Encrypted: i=1; AJvYcCUcZHjgWVdsOq+HbsCxqplLK+SUZWI3igIuVTBXUvhnHsHVppqFpEMTa9ziSU3/lRwQZGZ55LDumJrsHas=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhiY7H/Smf93KrcEkQ3mogaDjSTTMxK8Db27jJqk3ldOSrVflk
+	5XAIf4DEnF+ZUcvHD2pfCKncvxcHyY7Y6nLwLvWXS0JPeUqn3WWVsj9b/o79o6PLdcxWfFJoNW+
+	9
+X-Gm-Gg: ASbGncsC09LDEqoL6k4f4iQV+rU9lhapKHUTMh295LXpJsBZ+OUWh4gFM7gwbxp8uv/
+	yjOqQLWKxRhPISr1PvK4HuC89VCaUmE0mGNztv4kcVXna6tt4eKxp43Npwojcl2fD2o8UYWjw9L
+	9HO/al6Qdsstp0MFoFg6pkM6Fb8O+pySHn1GapBcIV50UgZNAOEQMxsAgoMXGGrnx5yx9frcajz
+	temZ2nzToOlLIWApOufkx7auBqwuyaWgofzH2diEHz2dvVO0SS6LCL333WW7PFDZ6RyPw0KU6TX
+	beioN+yK3uUszljXcIwH5cmbykw=
+X-Google-Smtp-Source: AGHT+IEIHivwIw1YLGXpQln/J8OfUdVcDuE29uK5Y0cehr1g+Cm1qc4Jrq0qwsltV208ZxXpHMxo2w==
+X-Received: by 2002:a05:600c:5248:b0:439:422d:d642 with SMTP id 5b1f17b1804b1-439422dd712mr30757655e9.23.1739177075235;
+        Mon, 10 Feb 2025 00:44:35 -0800 (PST)
+Received: from linaro.org ([2a02:2454:ff21:ef30:ef53:9f00:dac2:a172])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcde66729sm8119137f8f.81.2025.02.10.00.44.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 00:44:34 -0800 (PST)
+Date: Mon, 10 Feb 2025 09:44:30 +0100
+From: Stephan Gerhold <stephan.gerhold@linaro.org>
+To: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Md Sadre Alam <quic_mdalam@quicinc.com>,
+	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Georgi Djakov <djakov@kernel.org>
+Subject: Re: [PATCH] dmaengine: qcom: bam_dma: Avoid accessing BAM_REVISION
+ on remote BAM
+Message-ID: <Z6m8btwhJ9q4RjB6@linaro.org>
+References: <20250207-bam-read-fix-v1-1-027975cf1a04@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250203135023.416828-6-bigeasy@linutronix.de>
+In-Reply-To: <20250207-bam-read-fix-v1-1-027975cf1a04@oss.qualcomm.com>
 
-On 2025-02-03 14:50:22 [+0100], To cgroups@vger.kernel.org wrote:
-> kernfs_rename_lock is used to obtain stable kernfs_node::{name|parent}
-> pointer. This is a preparation to access kernfs_node::parent under RCU
-> and ensure that the pointer remains stable under the RCU lifetime
-> guarantees.
-=E2=80=A6
+On Fri, Feb 07, 2025 at 12:17:33PM -0800, Bjorn Andersson wrote:
+> Commit '57a7138d0627 ("dmaengine: qcom: bam_dma: Avoid writing
+> unavailable register")' made this read unconditional, in order to
+> identify if the instance is BAM-NDP or BAM-Lite.
+> But the BAM_REVISION register is not accessible on remotely managed BAM
+> instances and attempts to access it causes the system to crash.
+> 
+> Move the access back to be conditional and expand the checks that was
+> introduced to restore the old behavior when no revision information is
+> available.
+> 
+> Fixes: 57a7138d0627 ("dmaengine: qcom: bam_dma: Avoid writing unavailable register")
+> Reported-by: Georgi Djakov <djakov@kernel.org>
+> Closes: https://lore.kernel.org/lkml/9ef3daa8-cdb1-49f2-8d19-a72d6210ff3a@kernel.org/
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
 
-The robot complained that the selftests for bpf broke. As it turns out,
-the tests access kernfs_node::{parent|name} and after the rename
-::parent is gone so it does not compile.
-If there are no objections, I would merge this into 5/6 and repost.
-"test_progs -a test_profiler" passes.
+This patch fixes the most critical regression (the bus hang), but the
+in_range(..., BAM_NDP) checks are also wrong. They do not consider the
+plain "BAM" type where the register is apparently also available. The
+check should be !in_range(..., BAM_LITE) instead to fix this.
 
-diff --git a/tools/testing/selftests/bpf/progs/profiler.inc.h b/tools/testi=
-ng/selftests/bpf/progs/profiler.inc.h
-index 8bd1ebd7d6afd..a4f518ee5f4de 100644
---- a/tools/testing/selftests/bpf/progs/profiler.inc.h
-+++ b/tools/testing/selftests/bpf/progs/profiler.inc.h
-@@ -223,7 +223,7 @@ static INLINE void* read_full_cgroup_path(struct kernfs=
-_node* cgroup_node,
- 		if (bpf_cmp_likely(filepart_length, <=3D, MAX_PATH)) {
- 			payload +=3D filepart_length;
- 		}
--		cgroup_node =3D BPF_CORE_READ(cgroup_node, parent);
-+		cgroup_node =3D BPF_CORE_READ(cgroup_node, __parent);
- 	}
- 	return payload;
- }
-@@ -300,6 +300,7 @@ static INLINE void* populate_cgroup_info(struct cgroup_=
-data_t* cgroup_data,
- 	cgroup_data->cgroup_proc_length =3D 0;
- 	cgroup_data->cgroup_full_length =3D 0;
-=20
-+	bpf_rcu_read_lock();
- 	size_t cgroup_root_length =3D
- 		bpf_probe_read_kernel_str(payload, MAX_PATH,
- 					  BPF_CORE_READ(root_kernfs, name));
-@@ -323,6 +324,7 @@ static INLINE void* populate_cgroup_info(struct cgroup_=
-data_t* cgroup_data,
- 		cgroup_data->cgroup_full_length =3D payload_end_pos - payload;
- 		payload =3D payload_end_pos;
- 	}
-+	bpf_rcu_read_unlock();
-=20
- 	return (void*)payload;
- }
---=20
-2.47.2
+I mentioned this twice to Md Sadre Alam [1, 2], but a fix was
+unfortunately never sent for that part of the regression.
 
-Sebastian
+I think we should take Caleb's patch and revert the entire patch for the
+6.14 cycle. There are several incorrect assumptions in the original
+patch, it will be easier to review a fixed version with the full diff,
+rather than looking at incremental fixups.
+
+On a somewhat related note, I'm working on a patch series for bam_dma to
+clean up the handling of remotely controlled BAMs. It will make it more
+clear when it's safe to access BAM registers and when not, and should
+allow reading the revision also for remotely controlled BAMs. This would
+avoid the need for all these if (!bdev->bam_revision) checks.
+
+Thanks,
+Stephan
+
+[1]: https://lore.kernel.org/linux-arm-msm/Z4D2jQNNW94qGIlv@linaro.org/
+[2]: https://lore.kernel.org/linux-arm-msm/Z4_U19_QyH2RJvKW@linaro.org/
+
+> ---
+>  drivers/dma/qcom/bam_dma.c | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+> index c14557efd577..d42d913492a8 100644
+> --- a/drivers/dma/qcom/bam_dma.c
+> +++ b/drivers/dma/qcom/bam_dma.c
+> @@ -445,8 +445,8 @@ static void bam_reset(struct bam_device *bdev)
+>  	writel_relaxed(val, bam_addr(bdev, 0, BAM_CTRL));
+>  
+>  	/* set descriptor threshold, start with 4 bytes */
+> -	if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
+> -		     BAM_NDP_REVISION_END))
+> +	if (!bdev->bam_revision ||
+> +	    in_range(bdev->bam_revision, BAM_NDP_REVISION_START, BAM_NDP_REVISION_END))
+>  		writel_relaxed(DEFAULT_CNT_THRSHLD,
+>  			       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
+>  
+> @@ -1006,8 +1006,8 @@ static void bam_apply_new_config(struct bam_chan *bchan,
+>  			maxburst = bchan->slave.src_maxburst;
+>  		else
+>  			maxburst = bchan->slave.dst_maxburst;
+> -		if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
+> -			     BAM_NDP_REVISION_END))
+> +		if (!bdev->bam_revision ||
+> +		    in_range(bdev->bam_revision, BAM_NDP_REVISION_START, BAM_NDP_REVISION_END))
+>  			writel_relaxed(maxburst,
+>  				       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
+>  	}
+> @@ -1199,11 +1199,12 @@ static int bam_init(struct bam_device *bdev)
+>  	u32 val;
+>  
+>  	/* read revision and configuration information */
+> -	val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
+> -	if (!bdev->num_ees)
+> +	if (!bdev->num_ees) {
+> +		val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
+>  		bdev->num_ees = (val >> NUM_EES_SHIFT) & NUM_EES_MASK;
+>  
+> -	bdev->bam_revision = val & REVISION_MASK;
+> +		bdev->bam_revision = val & REVISION_MASK;
+> +	}
+>  
+>  	/* check that configured EE is within range */
+>  	if (bdev->ee >= bdev->num_ees)
+> 
+> ---
+> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+> change-id: 20250207-bam-read-fix-2b31297d3fa1
+> 
+> Best regards,
+> -- 
+> Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+> 
