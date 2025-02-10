@@ -1,165 +1,172 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D9D1DEFFC;
-	Mon, 10 Feb 2025 11:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C1314A629
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739187113; cv=none; b=jXHfYrCkl96OQIMUDux4Fzero4iGpdUBLgjZk4U1KDTmOKKx0EceKUJH3PY29KfdnxdbIULZHjyyzNjFQbpW1dVViH25HmwlrH1IpMqm3DN33+e3XFSzuLhz3M+8ZM73wpRihaRB17r5jf/87lhIz4IRCrKF6BIWAjtdJhv+lbs=
+	t=1739187135; cv=none; b=p1lSitkBpRE+eTKyYWTA2PLvrz0SVqYFORqWDDb+FN+3pcQRNq834hga45NW06+XwBcP3K7X1vx3Ot4L+iTVKLGCbQ0E6L7iA/M8gn1Hw+3PUC0r2dXYYTaJSKw1l86yRwm8t43/J7/Z+TcVkGdWZUvl3JjF9j2F4hGvH3OGNi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739187113; c=relaxed/simple;
-	bh=lHfVa4WaezjaNaPZ+xqar2iWP4d9jh7xMhWtcE8W7mQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Zzmx/G65jRR2/jfqUWVJejAfdIxzxOqGoX8XMx02owi0r9pmaX6PxhPZq2zw35YnuqCJEi2cPHzyT+F/jd8bH8rB9N/8wJC2tNa71+xTMKbzZqzJOp3Qs6wrTPBqNB9ZZTILuxV6B+YhlGGldU+KARCEAz/Xv9B7SM45SWdshYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=I1nw7tqi; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739187135; c=relaxed/simple;
+	bh=9yL8yKsVg56eXF6gBgrbmMDEHR/t0nnj17bTdgOkCA0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=of39ScWqUUkEGhNT2Hqr0UDKT00Va0CUrSfjcNu1itgVVt6rXsMr4irCbRbe0KwALu6HuWtfzMGacA84ZIJdb3BWx2JGh+Z/bvidzEnCDVzNOBtwL7QmqKALeIoQPR/Q9gPW0z4n1ewyA4UrKuykhEbFfFuia6W0togfLC+aM9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ArL8VDkD; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="I1nw7tqi"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51A75xOs010163;
-	Mon, 10 Feb 2025 11:31:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	DX94Y1DLftOcH76cc/D2dTQlv3D9/SsCUAFkAr8Sem8=; b=I1nw7tqiz/kFxhle
-	Holws7trVi6BbmPtbdZWtxDXO1BYTSZYNzA6vQX6lyPfjqpMGFS8TaxpIqaPB9pS
-	r+F6220WPsqkv5A6PeAfjP8HaEjV16ol5TChfvLQXyuW9+0lbtncAgLwNes/Y8Yl
-	L+LHCj5IoMnNPgMCNJza9rwcrPQ7MuwvlvruR13buTflMezkp90Bs1C4xEnHSsCs
-	rn8dFMFO72BhMpf2fae4LYcQJ13YrcGnq4kGhOK70rxKYJxIgMUnml7Z2vCX/npH
-	UBC0vUf0AyyGf935f+62qdKw6m+pbQLXZ59TWMeiIAHc0kP8wXSRHfUKf6j5+u4O
-	4C9b7A==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qcs58sem-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 11:31:40 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51ABVdQB028977
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 11:31:39 GMT
-Received: from [10.216.18.35] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Feb
- 2025 03:31:35 -0800
-Message-ID: <6ddda82b-d90c-4f16-a1e5-1a63fca7aba2@quicinc.com>
-Date: Mon, 10 Feb 2025 17:01:26 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ArL8VDkD"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e460717039fso3092423276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 03:32:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739187131; x=1739791931; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=K0t7XPMJtnScQiFAUkjXlhhg/FgQ9ukhMGIEHnDiTC8=;
+        b=ArL8VDkD1DO0w75b9uzLu1QfVV2U/xSyzaBV9aasCM67TOJJISiMm4JRArMLp4kbm5
+         2pRCjQMb99x/eMTAE4xibqfh+FH5/7WzB8Ish83dHkXZx9V62ERD1a6QC9bVubw24C+P
+         6q1sqEYDQyGkc8WBtsCC7c3yOVKuR35KCZQr3QEU0PSEtJhVAU178rB31vaYxVi4cDbC
+         LOtfcm5yvinCrHifUl+QuxVJj9nvSAeLzmSRepni4R+LRCakkPCzg5jtHmB2HkDqk7Yx
+         K0xdgBk4skSLqdXP7oXFhMx4+ilXtNgcJ4Elf+uJv9XEQWk3KZpsRJdjTYl9j1aEsN2h
+         f9Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739187131; x=1739791931;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K0t7XPMJtnScQiFAUkjXlhhg/FgQ9ukhMGIEHnDiTC8=;
+        b=XhjsqPSCvUWyjoeyjC+OutdBI1WNFVGe79FLh5TA2VIiL8Y/3WABpGftiApCzpCR3a
+         VMDxuTyVbfkiUilZy2+YwGiieA5dsv6gRHlF9DZjcXDzA6CwUolooqMISicLsH0CHTtq
+         GPW3pjZaYrWDJG//qG7LiwY4fF+pxZK7m6GKpsIaAnqsUEwjkW2jNfjwf53s/T0S3vnf
+         GBvoQETtjMBOS4ccj0yFq378lIcIPB4Bl8OZu6cXUFet2BgzoHM0HqOooQh1GgTLulrV
+         X2Rqx0DhEjxSVwNcJdq2sY+E05Fa+5CT9N46M8gihPXPORk781vs2VLoz9sPLhTjBZuV
+         jhCg==
+X-Forwarded-Encrypted: i=1; AJvYcCVX+nPzZEQYBuP9iDIM/nqe26bgYijx5blgUzTWzwD+W4oVimagf8a/HJkcMYe9ev2NPQLoteVLgnYCRSI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxripXRYaAUrT573BVhKjVdL+T+Fz+WKz76YfZK9GMP/QTjYIrJ
+	cq13Yuuj5sS/IfsTOBzcxLL+7uaPGc4bz+u+2gv/cjKMEa0YgRoMN3DjZ3r43p+mDXp4lI87DpY
+	qSvSOv05j7xbtulBUVhmjYRZwo3Xf7dKcV40SQw==
+X-Gm-Gg: ASbGncuE5CsWNLdIgj2OibZvKZKd8h3cOaxJqiWv8DG3JseXbW/19grsJtMZfpO3Ppp
+	YAex7S4Oim+Zltc2MJEXIJejsuZexaAYToCnk5wnI/ySwiDX+yH21DcpbNrLA2Zx7gYgu3WyXrA
+	==
+X-Google-Smtp-Source: AGHT+IG0aR9/4plkySCbp1bqTtI82MdpqrOiHVZLPWZsEQ6ce+6yiD5Wlvdmwvaf0DBMBOWwyD2Skk7a8hAGjrj5wzE=
+X-Received: by 2002:a05:6902:32a2:b0:e5b:54b0:6ad5 with SMTP id
+ 3f1490d57ef6-e5b54b06b74mr5887024276.43.1739187131488; Mon, 10 Feb 2025
+ 03:32:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: qcs8300: Add device node for
- gfx_smmu
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg
- Roedel <joro@8bytes.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>
-References: <20250203-b4-branch-gfx-smmu-v4-0-eaa7aa762f48@quicinc.com>
- <20250203-b4-branch-gfx-smmu-v4-2-eaa7aa762f48@quicinc.com>
- <464vbzwgv44fn4iw5vj5yzpstzhcsb7rzuedf4fwl23hmdhews@d4q33ro6hxq3>
-Content-Language: en-US
-From: Pratyush Brahma <quic_pbrahma@quicinc.com>
-In-Reply-To: <464vbzwgv44fn4iw5vj5yzpstzhcsb7rzuedf4fwl23hmdhews@d4q33ro6hxq3>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 1FNwXa16gvd1MBf64JJ-2x1HySUAS9rq
-X-Proofpoint-GUID: 1FNwXa16gvd1MBf64JJ-2x1HySUAS9rq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_06,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- mlxlogscore=946 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
- adultscore=0 clxscore=1015 mlxscore=0 priorityscore=1501 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502100097
+References: <6137505.lOV4Wx5bFT@rjwysocki.net>
+In-Reply-To: <6137505.lOV4Wx5bFT@rjwysocki.net>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Mon, 10 Feb 2025 12:31:34 +0100
+X-Gm-Features: AWEUYZmHSQbQffF7_ka9s0NS0kXgD2P_JnaSOcnNvX6dibEuupIM41BukF4WqIA
+Message-ID: <CAPDyKFqEK3jBQxmuGTRHGHgyNUY+veE+iiujgcJpyOuLjw0vBg@mail.gmail.com>
+Subject: Re: [PATCH v1] PM: sleep: core: Restrict power.set_active propagation
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <helgaas@kernel.org>, 
+	Linux PCI <linux-pci@vger.kernel.org>, Johan Hovold <johan@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kevin Xie <kevin.xie@starfivetech.com>, 
+	Jon Hunter <jonathanh@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 
-
-On 2/10/2025 4:31 PM, Dmitry Baryshkov wrote:
-> On Mon, Feb 03, 2025 at 11:17:02AM +0530, Pratyush Brahma wrote:
->> Add the device node for gfx smmu that is required for gpu
->> specific address translations.
->>
->> Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
->> ---
->>   arch/arm64/boot/dts/qcom/qcs8300.dtsi | 39 +++++++++++++++++++++++++++++++++++
->>   1 file changed, 39 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/qcs8300.dtsi b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
->> index 4a057f7c0d9fae0ebd1b3cf3468746b382bc886b..7a8211bec139375b5aab939f123d88fca7aceff2 100644
->> --- a/arch/arm64/boot/dts/qcom/qcs8300.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
->> @@ -2674,6 +2674,45 @@ gpucc: clock-controller@3d90000 {
->>   			#power-domain-cells = <1>;
->>   		};
->>   
->> +		adreno_smmu: iommu@3da0000 {
->> +			compatible = "qcom,qcs8300-smmu-500", "qcom,adreno-smmu",
->> +				     "qcom,smmu-500", "arm,mmu-500";
->> +			reg = <0x0 0x3da0000 0x0 0x20000>;
->> +			#iommu-cells = <2>;
->> +			#global-interrupts = <2>;
->> +
->> +			interrupts = <GIC_SPI 672 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 673 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 678 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 679 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 680 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 681 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 682 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 683 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 684 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 685 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 686 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 687 IRQ_TYPE_LEVEL_HIGH>;
->> +
->> +			clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
->> +				 <&gpucc GPU_CC_HUB_CX_INT_CLK>,
->> +				 <&gpucc GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK>,
->> +				 <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
->> +				 <&gcc GCC_GPU_SNOC_DVM_GFX_CLK>,
->> +				 <&gpucc GPU_CC_AHB_CLK>,
->> +				 <&gpucc GPU_CC_HUB_AON_CLK>;
->> +
->> +			 clock-names = "gcc_gpu_memnoc_gfx_clk",
-> Stray whitespace after the Tab symbol
+On Sat, 8 Feb 2025 at 18:54, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
 >
->> +				       "gcc_gpu_snoc_dvm_gfx_clk",
->> +				       "gpu_cc_ahb_clk",
->> +				       "gpu_cc_hlos1_vote_gpu_smmu_clk",
->> +				       "gpu_cc_cx_gmu_clk",
->> +				       "gpu_cc_hub_cx_int_clk",
->> +				       "gpu_cc_hub_aon_clk";
-> clocks and clock-names do not match.
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 >
->> +			power-domains = <&gpucc GPU_CC_CX_GDSC>;
->> +			dma-coherent;
->> +		};
->> +
->>   		pmu@9091000 {
->>   			compatible = "qcom,qcs8300-llcc-bwmon", "qcom,sc7280-llcc-bwmon";
->>   			reg = <0x0 0x9091000 0x0 0x1000>;
->>
->> -- 
->> 2.34.1
->>
-Thanks for checking. Will address these in next version.
+> Commit 3775fc538f53 ("PM: sleep: core: Synchronize runtime PM status of
+> parents and children") exposed an issue related to simple_pm_bus_pm_ops
+> that uses pm_runtime_force_suspend() and pm_runtime_force_resume() as
+> bus type PM callbacks for the noirq phases of system-wide suspend and
+> resume.
+>
+> The problem is that pm_runtime_force_suspend() does not distinguish
+> runtime-suspended devices from devices for which runtime PM has never
+> been enabled, so if it sees a device with runtime PM status set to
+> RPM_ACTIVE, it will assume that runtime PM is enabled for that device
+> and so it will attempt to suspend it with the help of its runtime PM
+> callbacks which may not be ready for that.  As it turns out, this
+> causes simple_pm_bus_runtime_suspend() to crash due to a NULL pointer
+> dereference.
+>
+> Another problem related to the above commit and simple_pm_bus_pm_ops is
+> that setting runtime PM status of a device handled by the latter to
+> RPM_ACTIVE will actually prevent it from being resumed because
+> pm_runtime_force_resume() only resumes devices with runtime PM status
+> set to RPM_SUSPENDED.
+>
+> To mitigate these issues, do not allow power.set_active to propagate
+> beyond the parent of the device with DPM_FLAG_SMART_SUSPEND set that
+> will need to be resumed, which should be a sufficient stop-gap for the
+> time being, but they will need to be properly addressed in the future
+> because in general during system-wide resume it is necessary to resume
+> all devices in a dependency chain in which at least one device is going
+> to be resumed.
+>
+> Fixes: 3775fc538f53 ("PM: sleep: core: Synchronize runtime PM status of parents and children")
+> Closes: https://lore.kernel.org/linux-pm/1c2433d4-7e0f-4395-b841-b8eac7c25651@nvidia.com/
+> Reported-by: Jon Hunter <jonathanh@nvidia.com>
+> Tested-by: Johan Hovold <johan+linaro@kernel.org>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
--- 
-Thanks and Regards
-Pratyush Brahma
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
+Kind regards
+Uffe
+
+> ---
+>  drivers/base/power/main.c |   21 +++++++++------------
+>  1 file changed, 9 insertions(+), 12 deletions(-)
+>
+> --- a/drivers/base/power/main.c
+> +++ b/drivers/base/power/main.c
+> @@ -1191,24 +1191,18 @@
+>         return PMSG_ON;
+>  }
+>
+> -static void dpm_superior_set_must_resume(struct device *dev, bool set_active)
+> +static void dpm_superior_set_must_resume(struct device *dev)
+>  {
+>         struct device_link *link;
+>         int idx;
+>
+> -       if (dev->parent) {
+> +       if (dev->parent)
+>                 dev->parent->power.must_resume = true;
+> -               if (set_active)
+> -                       dev->parent->power.set_active = true;
+> -       }
+>
+>         idx = device_links_read_lock();
+>
+> -       list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node) {
+> +       list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node)
+>                 link->supplier->power.must_resume = true;
+> -               if (set_active)
+> -                       link->supplier->power.set_active = true;
+> -       }
+>
+>         device_links_read_unlock(idx);
+>  }
+> @@ -1287,9 +1281,12 @@
+>                 dev->power.must_resume = true;
+>
+>         if (dev->power.must_resume) {
+> -               dev->power.set_active = dev->power.set_active ||
+> -                       dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND);
+> -               dpm_superior_set_must_resume(dev, dev->power.set_active);
+> +               if (dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND)) {
+> +                       dev->power.set_active = true;
+> +                       if (dev->parent && !dev->parent->power.ignore_children)
+> +                               dev->parent->power.set_active = true;
+> +               }
+> +               dpm_superior_set_must_resume(dev);
+>         }
+>
+>  Complete:
+>
+>
+>
