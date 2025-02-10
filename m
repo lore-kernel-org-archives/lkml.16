@@ -1,133 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2CA1B87E4
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442DF18E764;
+	Mon, 10 Feb 2025 08:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739175015; cv=none; b=jYNDcl6KxUVvsWEsEVmCtSpHkCLZDusjFfesz3yeKSrvSYW7sfui4czH+k/GMgvrxXIT7xVxL6pSiPZBhHRfClGUW4X0WS4xMfniuAoVlxuzKOZl+Q3S7vPoHUppHPRoqasPB3Gy4JTokrkJDj7L3WFlJ7g95sjy2G89PUh/UJM=
+	t=1739175075; cv=none; b=aaGBgFLQ9B1qIN7b7KXlEslqLL2EOSnXIVBqPQS1cIwJxuxrXTPtvZsp8EjjEuxOEXYysBhlF8FOCRi2SO+bsjTz06q/Ca+WXp8WvJikdb/rP5vWCAxm9fpAFqe7nJYJDMgjCQAbek8VM4B+GSLToPl5s0bxvq7MfmOpwazMblY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739175015; c=relaxed/simple;
-	bh=KX7xfLEjv0lnM/MON0ngBJgBQpWsyI+USLV0lN/n/Y8=;
-	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=ajg7MI8X/l+kF6rTHWQOy70fVvUaPNduiZLPbhvwS9XdqwBQi8Jf/nAeUDNaIgp0A3HWwBzWpbIGx/zNikRIMtPfygjwwJMDzAcoErATOWF4g3potOF6FwufOmejXJ6GrTdXfSySIFU2L+Dd6FqLlZSL0xHdThs25kpp1A0ib4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kewhC9UC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739175075; c=relaxed/simple;
+	bh=zuqJQylTq4neHnU/MvGUQZGDKz2jD1Qz4h91sh4A/xo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xahue2i4kZtudBnXIJmwUvfTNeJKjJkfM5uhXODXTAoCskYiD9XQ3aHnqElA1SVAAAp9JPa9JjTF+1XHa1Hbq5DD3gUWp9c/ZgVWhaXu9QcNZNezSH2b5KH8+NdRoJipDLt7eqy5BPNbJpnT6/ERID2HqhBxgTMBPJsEK9depF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=RPntgzGD; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kewhC9UC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEBAFC4CED1;
-	Mon, 10 Feb 2025 08:10:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739175014;
-	bh=KX7xfLEjv0lnM/MON0ngBJgBQpWsyI+USLV0lN/n/Y8=;
-	h=Date:From:To:cc:Subject:From;
-	b=kewhC9UCGlHNCTACXTyACVCz19amkMAMGjjMOTrkpMh9F1fLukOPB5345+lMmQEZu
-	 c1YqyZnB+wyQBUdJ8DgpKSkii25ocC7AhXN8LoIKTXNxRnivIkxZ4re2xwgliDEnrz
-	 QB0s3xikdnFeCPDfK7YvLqowZNYOMFR4Uzu+Y9P5Tj+HS1E+Qe0E1/QC8lvN+MF8V6
-	 AwVxMpSxf6xeuU/Kyx1E2FaIWzisyO3DJh6oT+EYOybZjg43i/KTIevWFRjZlxR8yU
-	 kfZDjkhxOqwQo8JjCGkFTl8Aptw+nalW6ni0wSTgBBfC0KP7bzRwOmi9upz8jZAMGe
-	 RvT0nvlgLDrUw==
-Date: Mon, 10 Feb 2025 09:10:11 +0100 (CET)
-From: Jiri Kosina <jikos@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-cc: linux-kernel@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
-Subject: [GIT PULL] HID fixes for 6.14
-Message-ID: <p38o7633-64s6-8os0-p7or-2n96o2n97qq6@xreary.bet>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="RPntgzGD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=U01uS+0yDujzAsWBjGqN0xojmmeCjhBYgqHkcf2iILk=; b=RPntgzGDU9DUcWxsiRGXCxhrjm
+	8T11R3hnBoSCZawmN7ynGlmD6T7Ees+76NCYZwSoEA4EA4SzU2eUzJf2VDY2PCeIEv3MEtEXZAsS5
+	+1vTzp705s47EZBPcGuG9KyqZfZyfTHNpC9v0dbjp8mR3Ud1qCNsW7gfN69HzSaW2Hn8UOiqUsOeW
+	uO0MryNb80IY7qiEX+1xEhRwgYMpM11RHwUv2gVpYDDWTgBnE9oQ3S1pY/2D4XIdWtIqyAkfURh9X
+	I5kGA4n8altY9Avwg8DGHVN9flU+0hdaQuCOY9Z3wXOwlqWT27GOXJBQ1KBAH3y5Ztz4oJIU/9kBL
+	848cybXw==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1thOfL-00Gd9s-2s;
+	Mon, 10 Feb 2025 16:10:37 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 10 Feb 2025 16:10:36 +0800
+Date: Mon, 10 Feb 2025 16:10:36 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: David Howells <dhowells@redhat.com>
+Cc: Eric Biggers <ebiggers@kernel.org>, netdev@vger.kernel.org,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Cabiddu, Giovanni" <giovanni.cabiddu@intel.com>,
+	qat-linux <qat-linux@intel.com>, linux-crypto@vger.kernel.org,
+	linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 03/24] crypto: Add 'krb5enc' hash and cipher AEAD
+ algorithm
+Message-ID: <Z6m0fFH2p5YpKiFX@gondor.apana.org.au>
+References: <20250207200419.GA2819332@google.com>
+ <20250203142343.248839-1-dhowells@redhat.com>
+ <20250203142343.248839-4-dhowells@redhat.com>
+ <1934772.1739126247@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1934772.1739126247@warthog.procyon.org.uk>
 
-Linus,
+On Sun, Feb 09, 2025 at 06:37:27PM +0000, David Howells wrote:
+>
+>  (2) It really needs batching to make it cheap enough to use.  This might
+>      actually be less of a problem - at least for rxgk.  The data is split up
+>      into fixed-size packets, but for a large amount of data we can end up
+>      filling packets faster than we can transmit them.  This offers the
+>      opportunity to batch them - up to ~8192 packets in a single batch.
 
-please pull from
+Hopefully this will become a solved problem once my request chaining
+work is complete.  This should allow you to provide enough data that
+even something slow like PCI offload can work.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git tags/hid-for-linus-2025021001
-
-to receive HID subsystem fixes, namely:
-
-=====
-- build/dependency fixes for hid-lenovo and hid-intel-thc (Arnd Bergmann)
-- functional fixes for hid-corsair-void (Stuart Hayhurst)
-- workqueue handling and ordering fix for hid-steam (Vicki Pfau)
-- Gamepad mode vs. Lizard mode fix for hid-steam (Vicki Pfau)
-- OOB read fix for hid-thrustmaster (Tulio Fernandes)
-- fix for very long timeout on certain firmware in intel-ish-hid (Zhang 
-  Lixu)
-- other assorted small code fixes and device ID additions
-=====
-
-Thanks.
-
-----------------------------------------------------------------
-Alex Henrie (1):
-      HID: apple: fix up the F6 key on the Omoton KB066 keyboard
-
-Arnd Bergmann (2):
-      HID: lenovo: select CONFIG_ACPI_PLATFORM_PROFILE
-      HID: intel-thc: fix CONFIG_HID dependency
-
-Charles Han (2):
-      HID: winwing: Add NULL check in winwing_init_led()
-      HID: multitouch: Add NULL check in mt_input_configured
-
-Chia-Lin Kao (AceLan) (1):
-      HID: ignore non-functional sensor in HP 5MP Camera
-
-Daniel Brackenbury (1):
-      HID: topre: Fix n-key rollover on Realforce R3S TKL boards
-
-Ievgen Vovk (1):
-      HID: hid-apple: Apple Magic Keyboard a3203 USB-C support
-
-Jinghao Jia (2):
-      samples/hid: remove unnecessary -I flags from libbpf EXTRA_CFLAGS
-      samples/hid: fix broken vmlinux path for VMLINUX_BTF
-
-Stuart Hayhurst (2):
-      HID: corsair-void: Add missing delayed work cancel for headset status
-      HID: corsair-void: Initialise memory for psy_cfg
-
-Tulio Fernandes (1):
-      HID: hid-thrustmaster: fix stack-out-of-bounds read in usb_check_int_endpoints()
-
-Vicki Pfau (3):
-      HID: hid-steam: Fix issues with disabling both gamepad mode and lizard mode
-      HID: hid-steam: Move hidraw input (un)registering to work
-      HID: hid-steam: Don't use cancel_delayed_work_sync in IRQ context
-
-Zhang Lixu (3):
-      HID: intel-ish-hid: fix the length of MNG_SYNC_FW_CLOCK in doorbell
-      HID: intel-ish-hid: Send clock sync message immediately after reset
-      HID: intel-ish-hid: ipc: Add Panther Lake PCI device IDs
-
- drivers/hid/Kconfig                         | 15 ++++++----
- drivers/hid/amd-sfh-hid/Kconfig             |  1 -
- drivers/hid/hid-apple.c                     |  8 +++++
- drivers/hid/hid-corsair-void.c              |  3 +-
- drivers/hid/hid-ids.h                       |  3 ++
- drivers/hid/hid-lenovo.c                    |  7 +----
- drivers/hid/hid-multitouch.c                |  5 +++-
- drivers/hid/hid-quirks.c                    |  1 +
- drivers/hid/hid-steam.c                     | 46 ++++++++++++++++++++++-------
- drivers/hid/hid-thrustmaster.c              |  2 +-
- drivers/hid/hid-topre.c                     |  7 +++++
- drivers/hid/hid-winwing.c                   |  2 ++
- drivers/hid/i2c-hid/Kconfig                 |  2 +-
- drivers/hid/intel-ish-hid/Kconfig           |  1 -
- drivers/hid/intel-ish-hid/ipc/hw-ish.h      |  2 ++
- drivers/hid/intel-ish-hid/ipc/ipc.c         | 15 ++++++----
- drivers/hid/intel-ish-hid/ipc/pci-ish.c     |  7 +++++
- drivers/hid/intel-ish-hid/ishtp/ishtp-dev.h |  2 ++
- drivers/hid/intel-thc-hid/Kconfig           |  1 -
- drivers/hid/surface-hid/Kconfig             |  2 --
- drivers/hid/usbhid/Kconfig                  |  3 +-
- net/bluetooth/hidp/Kconfig                  |  3 +-
- samples/hid/Makefile                        | 13 ++++----
- 23 files changed, 104 insertions(+), 47 deletions(-)
-
+Cheers,
 -- 
-Jiri Kosina
-SUSE Labs
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
