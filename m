@@ -1,83 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2C924BCFD;
-	Mon, 10 Feb 2025 15:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBE824BD00;
+	Mon, 10 Feb 2025 15:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739201186; cv=none; b=GMDE4iDH/fiXCoSxUAWrLqmV6XhjmGjjDIGuWDtPBJvVW9kDngZ0CFjotiFm4y87lBKs1VPlZJOyASCXZ1OnOEju1hWWaYW20ZWk5g8wToe8GksRJxFi1EAw/Qtm5/A3kuGCjlbh/33w4LceyrTU9Q/vliTvPIMI1Y/hwwfBAgQ=
+	t=1739201225; cv=none; b=sn6QAbu0j27JWqQihJgNuGAjyNSYXJ5XBap8g54T8cg9TljUgq63NIRH7PoMY4aYa1QlnoP7EM/HnKkPPKQIFqy/5xbYOx3XSgHiC+LfycTFzZiowlz1gTZFIlZfLN1WQtE3q9yrGruTIRLZZ06Vw0bLfzRiTgiqegkL28euCi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739201186; c=relaxed/simple;
-	bh=rgjBGIwbwdCHfwK+dMv2p0xxA5lB/D3muieewI3L6bg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pJ3tt36oqySLzzbgKqXhIR2AGxhESA4BlL8MKSPF9Z+VxzrZ4B9WzPzC8Oik2MqN0YhGAKM85L9Z/jAOzagYgdSSDrR3Hk6aKXjtH7Eap7xpdcM6enQwEE64H/20lX78AMkdIFPel3pscZiGsMNR5M2kUvv4bsoxiCLS7AcW2WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iTkcfh6Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739201225; c=relaxed/simple;
+	bh=8nO+xL0xvAUxQXLyv8lbUUhQKgTEHzCCFPQaA3a+aUE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KGHV0AZ6mCH/fpevbPdLoRlcZqOeUr0jY43QnIHLNi20TCpQw0OOSY9EegFQJyPggbofER8GMdI1hWVM5H1rqKZwSN87XuaXwyrOwXYkqtxJPoVrKtAEavmBAaGST3/CbisSkreN1X8A5/rZku8SUMRCsoKmaUqbSUqnOFobbj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GBziaNKF; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iTkcfh6Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD8C4C4CEDF;
-	Mon, 10 Feb 2025 15:26:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739201185;
-	bh=rgjBGIwbwdCHfwK+dMv2p0xxA5lB/D3muieewI3L6bg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iTkcfh6QAswEIujmFctjgh7vjIeBc9JdiGQ/qG6025Con878swP2TOG1Zs7rKKxA1
-	 SYL1MaqA3nvASUzZXodO2+f0skIvzWXZgpXZmRjbeLJoO/OpgR5clRS0R9COvUpKWP
-	 /9bP2msKE4WiJlCal9XRW55DT/blGbp+m3X6HM9RRog+dGeGAgvI+RGkarj/ntpyG0
-	 RMhb5KiMby/NzPgLBLUZ1+GO2ZG9eHv3XYx5zVtEqfVrtbN52S8LaKzkIl+A3aM7rA
-	 aFRyAw3uQi0saSKQ34z5evcQ0//zpgx6uGx/yP18iHM69neQXRR2uBzARE3toxORgr
-	 OGM+3bjybMTvg==
-Date: Mon, 10 Feb 2025 15:26:21 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>, linux-hwmon@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] hwmon: (gpio-fan) Add regulator support
-Message-ID: <0c82f6dc-4f5b-4787-9e43-4990681ea6a2@sirena.org.uk>
-References: <20250210145934.761280-1-alexander.stein@ew.tq-group.com>
- <20250210145934.761280-6-alexander.stein@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GBziaNKF"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id EF459204A1;
+	Mon, 10 Feb 2025 15:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739201221;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NfteH80PM3ST7bvqhv9G7FOT+Y/mpIyoF6NjchenmzY=;
+	b=GBziaNKFwVWu+pN3NcdtktbCzUqKd/a2TjDy7/Y0bwj6Qj8RVV25qG74q1Yef/oo3wNPUX
+	lmBtuKV3O/vjATJvuwo30PFzKTbxX68Ctwn4s4efgfoLQyRDyhukIn0lYHD930GFFd5DZS
+	Wgq1kw/pI4CIw5HVPALE/xb/0VFT4nWTUD3DHbq6j1aiEREr9KFtg22LhIy2bx+DVCnwr/
+	qNz1Pi+OExJ6Jq5Y8IiUBb8204pLhpRrmQrCdsYNOGyfu/tfbuwomMun0GpVKyja9hL6yV
+	R4a5RnNEg1W0qLgOk7cjWrVmiOyIwQ2PPhCfCBefNH+vhWkEo0HxCScv1lT6NQ==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	linux@treblig.org,
+	Shen Lichuan <shenlichuan@vivo.com>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	u.kleine-koenig@baylibre.com,
+	nirav.rabara@altera.com,
+	linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	niravkumar.l.rabara@intel.com
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] mtd: rawnand: cadence: improvement and fixes
+Date: Mon, 10 Feb 2025 16:26:53 +0100
+Message-ID: <173920118908.61047.14353398163992295945.b4-ty@bootlin.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250210053551.2399716-1-niravkumar.l.rabara@intel.com>
+References: <20250210053551.2399716-1-niravkumar.l.rabara@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vR4IdK7od5hKEhVI"
-Content-Disposition: inline
-In-Reply-To: <20250210145934.761280-6-alexander.stein@ew.tq-group.com>
-X-Cookie: A beer delayed is a beer denied.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefkeegfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhggtgfgsehtkeertdertdejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepfeeugfdvffefhfduhfetfffgieeiudeugeffvdehvddvledujeejvedvgfdtvefgnecukfhppeelvddrudekgedrleekrdekgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeelvddrudekgedrleekrdekgedphhgvlhhopehlohgtrghlhhhoshhtrdhlohgtrghlughomhgrihhnpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehlihhnuhigsehtrhgvsghlihhgrdhorhhgpdhrtghpthhtohepshhhvghnlhhitghhuhgrnhesvhhivhhordgtohhmpdhrtghpthhtoheprhhurghnjhhinhhjihgvsehhuhgrfigvihdrtghomhdprhgtphhtthhopehurdhklhgvi
+ hhnvgdqkhhovghnihhgsegsrgihlhhisghrvgdrtghomhdprhgtphhtthhopehnihhrrghvrdhrrggsrghrrgesrghlthgvrhgrrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrgh
+X-GND-Sasl: miquel.raynal@bootlin.com
 
+On Mon, 10 Feb 2025 13:35:48 +0800, niravkumar.l.rabara@intel.com wrote:
+> From: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
+> 
+> This patchset introduces improvements and fixes for cadence nand driver.
+> The changes include:
+> 
+> 1. Replace dma_request_channel() with dma_request_chan_by_mask() and use
+>    helper functions to return proper error code instead of fixed -EBUSY.
+> 2. Remap the slave DMA I/O resources to enhance driver portability.
+> 3. Fixed dma_unmap_single to use correct physical/bus device.
+> 
+> [...]
 
---vR4IdK7od5hKEhVI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied to mtd/fixes, thanks!
 
-On Mon, Feb 10, 2025 at 03:59:33PM +0100, Alexander Stein wrote:
+[1/3] mtd: rawnand: cadence: fix error code in cadence_nand_init()
+      commit: 2b9df00cded911e2ca2cfae5c45082166b24f8aa
+[2/3] mtd: rawnand: cadence: use dma_map_resource for sdma address
+      commit: d76d22b5096c5b05208fd982b153b3f182350b19
+[3/3] mtd: rawnand: cadence: fix incorrect device in dma_unmap_single
+      commit: f37d135b42cb484bdecee93f56b9f483214ede78
 
-> +	fan_data->supply = devm_regulator_get_optional(dev, "fan");
-> +	if (IS_ERR(fan_data->supply)) {
-> +		err = PTR_ERR(fan_data->supply);
+Patche(s) should be available on mtd/linux.git and will be
+part of the next PR (provided that no robot complains by then).
 
-Unless fans are expected to operate without power (which does seem
-unlikely) the supply should really be mandatory.
-
---vR4IdK7od5hKEhVI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmeqGpwACgkQJNaLcl1U
-h9BaCgf+LxGkVSPEwiLl6y11Qu6r2QZL+Ac8X/1BzsVRoXUMBtyBaApXVkg+HtKf
-EtmBA27aahQDADQGgUYovwgm7ITuI9LjL9irTfj1bKKoBDvo0oka/6uFxxmJhmDS
-VIDzf6ZQBqrdkNIKVS1bywuZ++Dj/uf7KCERdf2lKTWAr00WwSxhj0dhtfn/rN/l
-V74c7X5Eak2LrT00rlJX/Dn4japgc/wjtFAcAC8uE/+RKb3+63irXmZOzvPWtMD0
-bipk7ifhXyAqsMjEec040TiOnml5YOcaIlrh9p5mrt9PzBxPZAC1D9MAuMtOmeQa
-/ubKVeVzx4OD99OIvhJ10Mc1Ndctaw==
-=x7MM
------END PGP SIGNATURE-----
-
---vR4IdK7od5hKEhVI--
+Kind regards,
+Miquèl
