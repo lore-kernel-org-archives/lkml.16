@@ -1,49 +1,60 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A53E419342F
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705391DF255;
+	Mon, 10 Feb 2025 11:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739187615; cv=none; b=Y5EjbIbF8OhT38COIDsBp/TZxIyEP2NGz+lZDfB2DORmhn7ktOy6yaM3U2vbw95oTph0VFaQ/gPY+k2MunreAVl+yzADPMSmscXGGecBbaSbMQBL/RecDPDmt4rH7EShVeYZcR1yAb7t/65TngZVgI2xeLXyyi2XehOplkB+RUY=
+	t=1739187631; cv=none; b=SH3VNCcBs5KcJxf4dyqtTTUgUDuTe8drw+Xa/kB8snSFUDFC2VsyGmmJtBQrX6R9H3TafSHCH06avJ4NfEx0EERWy6XM5y+S5x86wQFAeiBv1nICM1azG9PHsAQJ3n0CXx+f/g2k5QjItJDOmKcXhctKdFT3yrYzVOPigAV+Hqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739187615; c=relaxed/simple;
-	bh=qezRuAIBrBFcI9KEUzjTRRq13g/Om3B705dyWQQzesY=;
+	s=arc-20240116; t=1739187631; c=relaxed/simple;
+	bh=TGHXxe8wx8I2ur48GAs8hCIjesrBs1bBEW0IqAvNpW4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cPQE0oMmSVtOy7FYkpzl+0glzPe0vh9kyhdlfXdpvM5rJogBMbPqu4VXIusQ4h59TrvS545xkixzv4DNQeWX+mGZuAuk5aEc4QOxuA5olEDIm3qL2uBSqwO8mQOjlf/KmZ7CWxUP90JLxMX1/UizV/OFOAbusuqQ2GvvIiqhEsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5354F1424;
-	Mon, 10 Feb 2025 03:40:34 -0800 (PST)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D2C3A3F5A1;
-	Mon, 10 Feb 2025 03:40:05 -0800 (PST)
-Date: Mon, 10 Feb 2025 11:40:03 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, oleg@redhat.com,
-	sstabellini@kernel.org, tglx@linutronix.de, peterz@infradead.org,
-	luto@kernel.org, mingo@redhat.com, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, kees@kernel.org, wad@chromium.org,
-	akpm@linux-foundation.org, samitolvanen@google.com,
-	masahiroy@kernel.org, hca@linux.ibm.com, aliceryhl@google.com,
-	rppt@kernel.org, xur@google.com, paulmck@kernel.org, arnd@arndb.de,
-	mbenes@suse.cz, puranjay@kernel.org, pcc@google.com,
-	ardb@kernel.org, sudeep.holla@arm.com, guohanjun@huawei.com,
-	rafael@kernel.org, liuwei09@cestc.cn, dwmw@amazon.co.uk,
-	Jonathan.Cameron@huawei.com, liaochang1@huawei.com,
-	kristina.martsenko@arm.com, ptosi@google.com, broonie@kernel.org,
-	thiago.bauermann@linaro.org, kevin.brodsky@arm.com,
-	joey.gouly@arm.com, liuyuntao12@huawei.com, leobras@redhat.com,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH -next v5 05/22] arm64: entry: Use preempt_count() and
- need_resched() helper
-Message-ID: <Z6nlkyxAZEtY_M7T@J2N7QTR9R3>
-References: <20241206101744.4161990-1-ruanjinjie@huawei.com>
- <20241206101744.4161990-6-ruanjinjie@huawei.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z+q4J5fDr5Rp7njmnRFf6xOpz8+gAxgw72ajdV9llz24uHI8xSMy6aQa7B3iB2AsPqB1Cf6XBROYoS0ybYVamBqibZhUynqQ76jSjk0xVjfrIrgl1VmtDTw5SHA8Hu3ZOhU2q0MAB6sq1hXtamQ2OVpgmps1P0n4xs3qfPbXkms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5de47cf9329so4901689a12.3;
+        Mon, 10 Feb 2025 03:40:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739187628; x=1739792428;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E1+x4PaTh4h+P+RGSOhj4ONKpjrMgR8e1unjSRPDp2Y=;
+        b=iBsF1ZmeuBZzwH/I8LlOQGFVM8Pq+6lJzGSEW2QaA5jjl8X86RAwUa6MRfmNljEi2L
+         OwlozIrNunasagtXPtraVQMKsDt9rb1o/E4AwygD45y+OHUlJSmyS6Err+EsXi7fHIPd
+         LdDOLRTRnoBFkAPq3Ryjm2iKcuFmzdY6gj8qKDWzScXfCuQxcBgAQzcvk60j2dj8Pth3
+         jq17U4fsncnCnrn3ICOrpCE1OZcZ3SP3JzECajofXMgLLoWqTKRZw/CQMxEwm1SI/OX5
+         cfD3cQtihnvUxNuPnRCmEh6mds/XVN/YPuEtMiyqJfP0JWwYI0FR4sRmZIAgbeMt/xiY
+         f0Sw==
+X-Forwarded-Encrypted: i=1; AJvYcCUnbGeXSRC9cyZpP9gE+dren+9GSSXnKp/+2sWFjGxg5Pkicnk+WKK9rvqJEXQVs+x8PN3CGJSk@vger.kernel.org, AJvYcCXbMYj+Ian5G14owNrrq/Upk2Y4+Wkg2pq037KUY11loq6ywpqsTUEfebcOhGe4ejz8yfVqsU6eWbrAKHI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxfpezm6nKm/H2AN6Jsyil3kG8pjDTPi8GFTs7gH0FaEJLnunty
+	TO38eDl7c/deCReH2ge+iiKEH+prXfEktfG9Fz2PHfUH4KcVm8w3
+X-Gm-Gg: ASbGncsFwJNCXCl+ZOoUuGPTRPpNRELCeIKN6sMs55D/o+f0SusmT3/JQ7JuvL+RwVR
+	y3p9quhpOUhVd7FaY0Ha/GDL4EXPSuuI9Qjm2i0oMqY+V15XitkbeRcUEqIxBm3bD3EwNxm9pha
+	DM94hSjVmZqwKeyzsvLN/zOvvfYhvo8WtNxGLJs3+o5q11S8J+3wduVFLIQ9q6NSJ2LSk63CbHc
+	jmDk6lrNtx2zr7+iktm3XFGMdL+xbk6kntBcm7y1wnHN8W4d4Sky7AIIwm6/QushQZr3jUWiiBp
+	x+uu5A==
+X-Google-Smtp-Source: AGHT+IEyGe6A3tyAukAWlIjzWLta6wiu0P6GcVHRBURMnG/JgVDbAY9lpdr4Y6owC6HGgNljr8g49A==
+X-Received: by 2002:a05:6402:13c8:b0:5d0:ed71:3ce4 with SMTP id 4fb4d7f45d1cf-5de44feaa0bmr15682084a12.6.1739187627478;
+        Mon, 10 Feb 2025 03:40:27 -0800 (PST)
+Received: from gmail.com ([2a03:2880:30ff:7::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de4aa38a1asm6172554a12.79.2025.02.10.03.40.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 03:40:27 -0800 (PST)
+Date: Mon, 10 Feb 2025 03:40:24 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, kernel-team@meta.com, kuniyu@amazon.com,
+	ushankar@purestorage.com
+Subject: Re: [PATCH RFC net-next] net: Add dev_getbyhwaddr_rtnl() helper
+Message-ID: <20250210-furry-toad-of-satiation-fce507@leitao>
+References: <20250207-arm_fix_selftest-v1-1-487518d2fd1c@debian.org>
+ <20250207162718.4f26219e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,71 +63,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241206101744.4161990-6-ruanjinjie@huawei.com>
+In-Reply-To: <20250207162718.4f26219e@kernel.org>
 
-On Fri, Dec 06, 2024 at 06:17:27PM +0800, Jinjie Ruan wrote:
-> The generic entry code uses preempt_count() and need_resched() helpers to
-> check if it is time to resched. Currently, arm64 use its own check logic,
-> that is "READ_ONCE(current_thread_info()->preempt_count == 0", which is
-> equivalent to "preempt_count() == 0 && need_resched()".
+Hello Jakub,
 
-Hmm. The existing code relies upon preempt_fold_need_resched() to work
-correctly. If we want to move from:
+On Fri, Feb 07, 2025 at 04:27:18PM -0800, Jakub Kicinski wrote:
+> On Fri, 07 Feb 2025 04:11:34 -0800 Breno Leitao wrote:
+> > +static bool dev_comp_addr(struct net_device *dev,
+> > +			  unsigned short type,
+> > +			  const char *ha)
 
-	READ_ONCE(current_thread_info()->preempt_count) == 0
+> static bool dev_comp_addr(struct net_device *dev, unsigned short type,
+> 			  const char *ha)
 
-... to:
+This one aligns better with the other functions in the file. Example:
 
-	!preempt_count() && need_resched()
+  struct net_device *dev_getbyhwaddr_rcu(struct net *net, unsigned short type,
+                                         const char *ha)
 
-... then that change should be made *before* we change the preemption
-logic to preempt non-IRQ exceptions in patch 3. Otherwise, that logic is
-consuming stale data most of the time.
-
-Mark.
-
-> In preparation for moving arm64 over to the generic entry code, use
-> these helpers to replace arm64's own code and move it ahead.
+> > + */
+> > +struct net_device *dev_getbyhwaddr_rtnl(struct net *net, unsigned short type,
+> > +					const char *ha)
 > 
-> No functional changes.
-> 
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> ---
->  arch/arm64/kernel/entry-common.c | 14 ++++----------
->  1 file changed, 4 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
-> index da68c089b74b..efd1a990d138 100644
-> --- a/arch/arm64/kernel/entry-common.c
-> +++ b/arch/arm64/kernel/entry-common.c
-> @@ -88,14 +88,6 @@ static inline bool arm64_need_resched(void)
->  	if (!need_irq_preemption())
->  		return false;
->  
-> -	/*
-> -	 * Note: thread_info::preempt_count includes both thread_info::count
-> -	 * and thread_info::need_resched, and is not equivalent to
-> -	 * preempt_count().
-> -	 */
-> -	if (READ_ONCE(current_thread_info()->preempt_count) != 0)
-> -		return false;
-> -
->  	/*
->  	 * DAIF.DA are cleared at the start of IRQ/FIQ handling, and when GIC
->  	 * priority masking is used the GIC irqchip driver will clear DAIF.IF
-> @@ -141,8 +133,10 @@ static __always_inline void __exit_to_kernel_mode(struct pt_regs *regs,
->  			return;
->  		}
->  
-> -		if (arm64_need_resched())
-> -			preempt_schedule_irq();
-> +		if (!preempt_count() && need_resched()) {
-> +			if (arm64_need_resched())
-> +				preempt_schedule_irq();
-> +		}
->  
->  		trace_hardirqs_on();
->  	} else {
-> -- 
-> 2.34.1
-> 
+> You missed adding this to a header file?
+
+Yes. NIPA caught this one beautifully:
+
+	https://patchwork.kernel.org/project/netdevbpf/patch/20250207-arm_fix_selftest-v1-1-487518d2fd1c@debian.org/
+
+I will send a v2 soon,
+
+Thanks for the review
+--breno
