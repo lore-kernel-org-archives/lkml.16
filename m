@@ -1,162 +1,204 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B06225D7;
-	Mon, 10 Feb 2025 01:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA2CC125;
+	Mon, 10 Feb 2025 01:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739150308; cv=none; b=NBgZdLeq9WixFst21c5HLjWAIBCPw0AdK63F0PL9WE6kOcIA3MlLotwFPNZFsc7BbMSM4V/jkfDjBo3bYIfc8LQXg2K7+ua2xZHSEZzCQ+TauDhgiNBhZ6JOHhenJ4Xo2+3NeqnlBmO+wJG6QwQmpHlQC1a/VkRBF1xkBYtEdGs=
+	t=1739150428; cv=none; b=VLzZMzsfkdP+PAV7fLf88jx91oPhXaD9B9awUi8do18ctYrzCcjm2VZLSr20xbDgaLjOtGqLcZ+YECJHNMdgXvUJqftgpJ6WURDcRDMPSBkgK9hzFU4Y9ckc5fKoEuqf1xScEms0i4bSmBWKSezJJTViePCv91USBjLdqpHB+54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739150308; c=relaxed/simple;
-	bh=daT6zVmufzYakIvNPPfT9sxGtST7RMT+oUHTc4nb89A=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=UGVOnc32pyLmxjE3BvH8PUbb8AtDWxJIWZZkPy/dnaO7bQBm4guHnfxjsHtq7MtZiRkl078uUQVhrbNGNJSXx9VaSYJexhtl3NZXiX8mOWyesQZFcApl65MAUxNoqXm1zwKWkPrBoRZjuohB/0/qPymM7YJQVC7LYIQy65yqg20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RrKRpPcE; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739150428; c=relaxed/simple;
+	bh=6vm4jw6wg9RdZqCVO4c/MR5vasxo/EaDKybb5J4L5A0=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=ErxwaYqR5tt2wVL0MTQnCrGEIgt7P7S9LFbYz3+/RxZioKigOCTnn1Uq/Tofa3QYkFFal0CiQBbKCXq3JRlyDG1XcBJS94kZ3n7yiZ8TARzeMm7Zfx49J9Mskk4RyJXS1AtF8wnfLGI3fsPumEkslyRWRoNnVUCwberXIR8J3Q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GVvg4m6O; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RbVKTVRS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GVvg4m6O; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RbVKTVRS; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RrKRpPcE"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e5b1837d182so3929084276.0;
-        Sun, 09 Feb 2025 17:18:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739150305; x=1739755105; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=daT6zVmufzYakIvNPPfT9sxGtST7RMT+oUHTc4nb89A=;
-        b=RrKRpPcEeXP0zH8drSCn/BJ8QJhPSLhjdleUGdILy1Ul7lXglVDC779N9m+w3SJEmS
-         wSJBau/Cakl2SaR587SxGxla/trE2SjdH5PNAy4qvE4oxXMo1t2cnp03XvGn7/pvPRLJ
-         t0FmR2XnDhL6Jw3c8rWNRFN7kdXvVaOZlHLiuqXM59EPvv9ikHyFsVP3fdByL4p+qu/9
-         IXuY7MgkMmYZvM3QQ25IK1gAI3y2LbZsnK81kys/09586J1MhpcckgJ8+g7IbG6RCM+N
-         Qx37s/fX2MUpi5xN04/mwc4lOEyPEXYCHdFLhZQjjBUV0DVfwR7Le6UfDz9TYnCTjsKe
-         34cA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739150305; x=1739755105;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=daT6zVmufzYakIvNPPfT9sxGtST7RMT+oUHTc4nb89A=;
-        b=TjE3eAK3xmL5H1PwKCtkoPcxsC7zue9W8FjXKp9kiKmudNPiMftic1K6iK35Kbc7h0
-         EjgJvBn7eIMRRd2B4a5DP1MEu3xgl9iVw6pEafzJoqeG/xSB9j2xwVx9N+db8f3Uh2jq
-         P0YjVEvJ3tg5gkxB+/pEaJCg/h+4edhbxMlXWy3jZP1lr+amDsSIibdm8RMhQvZ/FZUp
-         kACKLD87ryTGdtfa9R4wfvUVIdXvFHr4K+3NmvQtDbnHxezRHJcFaGonxXndS2Hf2Iil
-         ZzCIoxCEXWd5k1kX5LWgYDVsimYP+ShMrxgq58cMx1Sjbd2E9391n7RjIJIRnFNkWUku
-         ThCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUb2019or5qnXprQDz7Nwu07/PIVPrx0zSgYMhXRimTfiWV2pCossLIfn5CnOW775uJX6P33Nrr93ckL9Y=@vger.kernel.org, AJvYcCV/agY+Vs5E9nsg7iQeGSPO/XnvplAw4LgORKFuw2Pnag9YJ4k54EFZ5BtczBjKd1tfgM+vEuCBpBuTTw+NKDFrS8tNHA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/bCxhDQiZB9VAbE4UeYCm2ke8VpVP0h+AZNvOTDiVvHcqa4Nl
-	fPgiv0a9+yA3/NVE8e/QU3ppfFhJhK9GCyT/1vlsUKKdF+35OCZSQBd+TQ==
-X-Gm-Gg: ASbGncsSZ1hGYQvBXtwslXkz952vZI3Hxflpd5xwa0XXfOLb9WlY4WMkJQ4cVoc34PF
-	NkkpnLHIkzxgdmik47P/T0mmC3d95ijNI4i4muGW34ysu+JVVSxqsq1WJQKBatzdgrtkxfZLp4j
-	K+UBY1puxoiurgXaz/QjqpNAg+KTgJ32Ce1Zc2qdoaWALajjL7ns/lOypuFYSfDuIFTr8rxqF1N
-	wyL6/f75/XRyYx+5YlgTJ3S9HN/pLi5vFjRS4H7tpn6z1cgVVmtPVvu5L348Tycf12MYMvBaUoN
-	Hyq5SdA=
-X-Google-Smtp-Source: AGHT+IGViJJNXyso0QbBbMM7UhZRatKT0qMtEpUJIi6D40/1eb520ogA06ehSInai9JUvTK1Koc6oA==
-X-Received: by 2002:a05:690c:4493:b0:6f9:c7ef:4cd9 with SMTP id 00721157ae682-6f9c7ef5000mr65934257b3.7.1739150305333;
-        Sun, 09 Feb 2025 17:18:25 -0800 (PST)
-Received: from localhost ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f9d950a342sm5982837b3.115.2025.02.09.17.18.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Feb 2025 17:18:24 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GVvg4m6O";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RbVKTVRS";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GVvg4m6O";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RbVKTVRS"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2B82921102;
+	Mon, 10 Feb 2025 01:20:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739150425; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kNHkLWb8LhlVxwfN71tab7fM7Ihwg66qglqKNi6jmFg=;
+	b=GVvg4m6Oi+5Nf73A3l4nea6uMla+aAQMPpYPlG8SWuZ7oRQepMR8R9VmmtKyM73xUIh4X8
+	470qmg9kUKy1tnAru1Wrl9o4Tv+dVCprIlazwc2A4YvAKbYdNOP86tNqxDPENlx58ONqeW
+	oPeqOtzaGLovzCA95Uyfv78PZECyg7k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739150425;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kNHkLWb8LhlVxwfN71tab7fM7Ihwg66qglqKNi6jmFg=;
+	b=RbVKTVRSav7aiYPr8v8nupZZlw+Bdw+DsmKbdWDU8HAdGceAvEXvrFVD8+hjZxcIymRl2T
+	CXfKlMNq8eRzBqDQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739150425; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kNHkLWb8LhlVxwfN71tab7fM7Ihwg66qglqKNi6jmFg=;
+	b=GVvg4m6Oi+5Nf73A3l4nea6uMla+aAQMPpYPlG8SWuZ7oRQepMR8R9VmmtKyM73xUIh4X8
+	470qmg9kUKy1tnAru1Wrl9o4Tv+dVCprIlazwc2A4YvAKbYdNOP86tNqxDPENlx58ONqeW
+	oPeqOtzaGLovzCA95Uyfv78PZECyg7k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739150425;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kNHkLWb8LhlVxwfN71tab7fM7Ihwg66qglqKNi6jmFg=;
+	b=RbVKTVRSav7aiYPr8v8nupZZlw+Bdw+DsmKbdWDU8HAdGceAvEXvrFVD8+hjZxcIymRl2T
+	CXfKlMNq8eRzBqDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7B2BF13AA4;
+	Mon, 10 Feb 2025 01:20:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id gKKtC1JUqWcyNgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 10 Feb 2025 01:20:18 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 09 Feb 2025 20:18:22 -0500
-Message-Id: <D7ODBVBQFOGF.BV2A80SGPAYK@gmail.com>
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-Cc: "Hans de Goede" <hdegoede@redhat.com>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, "Limonciello, Mario"
- <mario.limonciello@amd.com>, "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix registration of tpacpi
- platform driver
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <mpearson-lenovo@squebb.ca>
- <20250208091438.5972-1-mpearson-lenovo@squebb.ca>
- <D7MSPR52PB4E.N0X1UFVQOODZ@gmail.com>
- <aee5fbe6-4309-450f-bea3-c0842172b043@app.fastmail.com>
- <D7N45UX5LBMY.NCG1A7Y0SKXF@gmail.com>
- <be3804af-339a-4b5b-927a-06d98dfadc11@app.fastmail.com>
-In-Reply-To: <be3804af-339a-4b5b-927a-06d98dfadc11@app.fastmail.com>
+MIME-Version: 1.0
+From: "NeilBrown" <neilb@suse.de>
+To: "Kent Overstreet" <kent.overstreet@linux.dev>
+Cc: "Christian Brauner" <brauner@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ "Namjae Jeon" <linkinjeon@kernel.org>, "Steve French" <sfrench@samba.org>,
+ "Sergey Senozhatsky" <senozhatsky@chromium.org>,
+ "Tom Talpey" <tom@talpey.com>, "Paul Moore" <paul@paul-moore.com>,
+ "Eric Paris" <eparis@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, audit@vger.kernel.org
+Subject: Re: [PATCH 1/2] VFS: change kern_path_locked() and
+ user_path_locked_at() to never return negative dentry
+In-reply-to: <4bxqnnpfau5sq2h7oexvrvazqqpn55e7vsjlj44epdcas2clzf@424354eeo6dl>
+References:
+ <>, <4bxqnnpfau5sq2h7oexvrvazqqpn55e7vsjlj44epdcas2clzf@424354eeo6dl>
+Date: Mon, 10 Feb 2025 12:20:15 +1100
+Message-id: <173915041509.22054.12649815796390080222@noble.neil.brown.name>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Hi Mark,
+On Sat, 08 Feb 2025, Kent Overstreet wrote:
+> On Fri, Feb 07, 2025 at 06:30:00PM +1100, NeilBrown wrote:
+> > On Fri, 07 Feb 2025, Kent Overstreet wrote:
+> > > On Fri, Feb 07, 2025 at 05:34:23PM +1100, NeilBrown wrote:
+> > > > On Fri, 07 Feb 2025, Kent Overstreet wrote:
+> > > > > On Fri, Feb 07, 2025 at 03:53:52PM +1100, NeilBrown wrote:
+> > > > > > Do you think there could be a problem with changing the error ret=
+urned
+> > > > > > in this circumstance? i.e. if you try to destroy a subvolume with=
+ a
+> > > > > > non-existant name on a different filesystem could getting -ENOENT
+> > > > > > instead of -EXDEV be noticed?
+> > > > >=20
+> > > > > -EXDEV is the standard error code for "we're crossing a filesystem
+> > > > > boundary and we can't or aren't supposed to be", so no, let's not c=
+hange
+> > > > > that.
+> > > > >=20
+> > > >=20
+> > > > OK.  As bcachefs is the only user of user_path_locked_at() it shouldn=
+'t
+> > > > be too hard.
+> > >=20
+> > > Hang on, why does that require keeping user_path_locked_at()? Just
+> > > compare i_sb...
+> > >=20
+> >=20
+> > I changed user_path_locked_at() to not return a dentry at all when the
+> > full path couldn't be found.  If there is no dentry, then there is no
+> > ->d_sb.
+> > (if there was an ->i_sb, there would be an inode and this all wouldn't
+> > be an issue).
+> >=20
+> > To recap: the difference happens if the path DOESN'T exist but the
+> > parent DOES exist on a DIFFERENT filesystem.  It is very much a corner
+> > case and the error code shouldn't matter.  But I had to ask...
+>=20
+> Ahh...
+>=20
+> Well, if I've scanned the series correctly (sorry, we're on different
+> timezones and I haven't had much caffeine yet) I hope you don't have to
+> keep that function just for bcachefs - but I do think the error code is
+> important.
+>=20
+> Userspace getting -ENOENT and reporting -ENOENT to the user will
+> inevitably lead to head banging frustration by someone, somewhere, when
+> they're trying to delete something and the system is tell them it
+> doesn't exist when they can see it very much does exist, right there :)
+> the more precise error code is a very helpful cue...
+>=20
 
-On Sun Feb 9, 2025 at 7:54 PM -05, Mark Pearson wrote:
-> Hi Kurt,
->
-> On Sat, Feb 8, 2025, at 8:54 AM, Kurt Borja wrote:
->> On Sat Feb 8, 2025 at 11:26 AM -05, Mark Pearson wrote:
->>> Thanks Kurt,
->>>
->>> On Fri, Feb 7, 2025, at 11:56 PM, Kurt Borja wrote:
->>>> Hi Mark,
->>>>
->>>> On Sat Feb 8, 2025 at 4:14 AM -05, Mark Pearson wrote:
->>>>> When reviewing and testing the recent platform profile changes I had
->>>>> missed that they prevent the tpacpi platform driver from registering.
->>>>> This error is seen in the kernel logs, and the various tpacpi entries
->>>>> are not created:
->>>>> [ 7550.642171] platform thinkpad_acpi: Resources present before probi=
-ng
->>>>
->>>> This happens because in thinkpad_acpi_module_init(), ibm_init() is
->>>> called before platform_driver_register(&tpacpi_pdriver), therefore
->>>> devm_platform_profile_register() is called before tpacpi_pdev probes.
->>>>
->>>> As you can verify in [1], in the probing sequence, the driver core
->>>> verifies the devres list is empty, which in this case is not because o=
-f
->>>> the devm_ call.
->>>>
->>>>>
->>>>> I believe this is because the platform_profile driver registers the
->>>>> device as part of it's initialisation in devm_platform_profile_regist=
-er,
->>>>> and the thinkpad_acpi driver later fails as the resource is already u=
-sed.
->>>>>
->>>>> Modified thinkpad_acpi so that it has a separate platform driver for =
-the
->>>>> profile handling, leaving the existing tpacpi_pdev to register
->>>>> successfully.
->>>>
->>>> While this works, it does not address the problem directly. Also it is
->>>> discouraged to create "fake" platform devices [2].
->>>>
->>>> May I suggest moving tpacpi_pdriver registration before ibm_init()
->>>> instead, so ibm_init_struct's .init callbacks can use devres?
->>>>
->>>
->>> Yep - you're right. Moving it before the init does also fix it.
->>>
->>> I can't see any issues with this approach, but I'll test it out a bit m=
-ore carefully and do an updated version with this approach.
->>
->> Thinking about it a bit more. With this approach you should maybe create
->> the tpacpi_pdev with platform_create_bundle() (I'm pretty sure you can
->> pass a NULL (*probe) callback) to avoid races.
->>
->> platform_create_bundle() only returns after the device has been
->> successfully bound to the driver.
->>
-> Unfortunately having a null probe callback doesn't work - you end up with=
- an oops for a null pointer dereference.
+???
+You will only get -ENOENT if there is no ent.  There is no question of a
+confusing error message.
+If you ask for a non-exist name on the correct filesystem, you get -ENOENT
+If you ask for an existing name of the wrong filesystem, you get -EXDEV
+That all works as expected and always has.
 
-Are you sure? I just tested this on the for-next branch and it works
-without issues. Also checked the code and (*probe) is only dereferenced
-safely inside platform_bus_type's probe. Maybe another pointer is being
-deferenced? Keep in mind that platform_create_bundle() also registers
-the driver so maybe there is an issue there.
+But what if you ask for a non-existing name in a directory on the
+wrong filesystem? =20
+The code you originally wrote in 42d237320e9817a9 would return
+-ENOENT because that it what user_path_at() would return.
+But using user_path_at() is "wrong" because it doesn't lock the directory
+so ->d_parent is not guaranteed to be stable.
+Al fixed that in bbe6a7c899e7f265c using user_path_locked_at(), but
+that doesn't check for a negative dentry so Al added a check to return
+-ENOENT, but that was added *after* the test that returns -EXDEV.
 
---
-~ Kurt
+So now if you call subvolume_destroy on a non-existing name in a
+directory on the wrong filesystem, you get -EXDEV.  I think that is
+a bit weird but not a lot weird.
+My patch will change it back to -ENOENT - the way you originally wrote
+it.
 
->
-> Thanks
-> Mark
+I hope you are ok with that.
+
+NeilBrown
 
