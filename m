@@ -1,113 +1,92 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0A5256C6B;
-	Mon, 10 Feb 2025 21:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536DC264629;
+	Mon, 10 Feb 2025 21:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739222063; cv=none; b=eIXtepFhgDukadQ+xM6ohNcJA8ymlDZqPXNvNSldIDVBMLtcRg0pMnqeZkPQPeTgDHaK6UYht6IaXbJXayTPZA8k7AU09FeXW1OWGEFakp31AQFtg5OjEspuef79gxZg5RgbURXJ9Ko0DTw/qOo2qvw7pZAQXyhRwRd30xe19+0=
+	t=1739222254; cv=none; b=Wbgc8ipKDj/WjChlILkVGO9akzLCLZAfWfuSRTPglVTqtTZsr0RMc18PtncVNgoNvIlsOLoH4p2HdjuDGzyYyjRU6uw0CpHb01S7jMEpaXwC4KZq3dopXKoi9PwAxgb3kG0302dh30eO01GzZexWEiZt0V8WohxV1PGGB3aFHSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739222063; c=relaxed/simple;
-	bh=unETEqL21PPGjcJ+5ThZ5Xx9TlKma2kepF5jLOEMdPY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OJfWwL6xPeo/mHrkSnEdZqD5WbYnfWx5OPXdN+Z0rpgfzDeNkLKHROn/eAAHvyHNsZBTjbTgEoNe7SPgUzZZQ/4hcmxZaBFPeiYIT8OdjcGcGlz31lszBO7lS51xOyMAO/B3I3IYU/N/aiiU/JPNBRt+3zf7kFEHYBQKc0A/TMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=dDwEnlh/; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1739222254; c=relaxed/simple;
+	bh=NbgMzbcyw2owQ9/39eGsTtzw7KL8UJNuQApxo5Y7/VE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cu5diER+1x3P9Tw+SWOc3Y9PvDgwngBQsXErqQAgO4jHrhYo3e7Ms7EqNyvUCrvpvt3oRak+Z9caLnUikRo4zukM00xJWiM/orncwj1PywibitZQRtpq4XszpKZBJgJ4YN8EyGPXtduVgIDiceeK+OyOrDb1xv7Cd5EMmVMBTJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=VqRkoeDv; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="dDwEnlh/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1739222061; x=1770758061;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=unETEqL21PPGjcJ+5ThZ5Xx9TlKma2kepF5jLOEMdPY=;
-  b=dDwEnlh//fm9WkQOm9Th9vpn88QnBCfcrvol9jw9fsbMrbCqnd0tjMwJ
-   Jm6WT03DbahE4haHRNbLeezHg1wrEDBc8PJugDKOTKiiROS5nX+5U6sZu
-   fiy07Eza1ZIthNRpHIFU+yJ59xKuEn0+LQOoG58AeIU+0qVdE0cXrtnd3
-   n300gu5mVDkzttFblyJ7UXdpLo8tx43CQRSiVNbQ8VjcdvFP4y951fN+9
-   IghVvNLknX++Ay42d0Nr5rp5SMOsC1X8zXABt6IJlzdQkxK4Km+WaX/H6
-   OdJFPSFsCCT9p0i2hUaQaeLsxMxwynmfjWpIkdKcVTrBg/cQH5UKqUtZB
-   w==;
-X-CSE-ConnectionGUID: AYqW9AG9RbOJ2Xf8Pt97Yw==
-X-CSE-MsgGUID: 0agEuR3bS46pa3Vj3mw/1g==
-X-IronPort-AV: E=Sophos;i="6.13,275,1732604400"; 
-   d="scan'208";a="205027996"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 10 Feb 2025 14:14:07 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 10 Feb 2025 14:13:47 -0700
-Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Mon, 10 Feb 2025 14:13:47 -0700
-From: <Ryan.Wanner@microchip.com>
-To: <lee@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <claudiu.beznea@tuxon.dev>, <sre@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<p.zabel@pengutronix.de>
-CC: <linux@armlinux.org.uk>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-rtc@vger.kernel.org>, "Ryan
- Wanner" <Ryan.Wanner@microchip.com>
-Subject: [PATCH v2 15/15] ARM: dts: microchip: add shutdown controller and rtt timer
-Date: Mon, 10 Feb 2025 14:13:15 -0700
-Message-ID: <709f5268da63c123cc4eee9e47875324df81c454.1739221064.git.Ryan.Wanner@microchip.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1739221064.git.Ryan.Wanner@microchip.com>
-References: <cover.1739221064.git.Ryan.Wanner@microchip.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="VqRkoeDv"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1B94F40E0192;
+	Mon, 10 Feb 2025 21:17:30 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id etHQdUE8OFdG; Mon, 10 Feb 2025 21:17:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1739222246; bh=RaxWY8Nec5n9lz+Fu9jiIKNndnwovJmtFQRUBkpX9nk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VqRkoeDvvI8pgX4TyzdOE2Dd4ITfwg878q4pRYQLCmorDIs24bX2UjvDCUW7X4uVu
+	 dJonaxq3DZPmUVPM5AUpwlvrtWuyToKecy3Hzt1gF90+f5yWlvinCrmbxWNLdUPHNA
+	 qhTFpT9VpsleS26MWYHjrjuN+jOxVCczCp4Acphc5SBW9+3sBSthZcb8rY6g0aUKxK
+	 76uyTV6Z7PmSI+G2dBEByiPjFWo0pj77xTQzBCtZ2JQJYnvqgaFcA0XCclcl2lG3Lq
+	 gCuvYDJsTLnxDrGfmW4Ar5j8fzL9bIuOX83rAOLGiQAKCIpI3lwk1LDkiupT1lecEv
+	 YYyGt6Ta4lY+galkXHQ9UMwZEEgpoVFUxT4U4Dvdvxtrd0wQjAH4tauMhlJrXx4yvS
+	 bRV2IyxILYaYe/tIS9Ir4pOLLAdHeLnuxvuyEMjuotr+9zVH+fH5fA37eVIe3P+RYx
+	 2i1ZbPDI0mB8bB/cAOypjl/h28Um/pS5T/j8jwBMdmKxSRqoNz7YA5rkmOANDBG+E/
+	 WegEgz0y2tO4ZslCYTac6sqaIxf5U9k3Vw/zWdAV4/u0KxtvufyQspQEl9ncRXfnoh
+	 QTPVRxJhV1n1RJMIHSkg8LRgOHXy2ij2TnB6BRIM2Vmhi7Kq3r+5CVnSvMeCeWbLBj
+	 rIcPA5o18Tq9tWvQqp1m2XXE=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 04AD340E0176;
+	Mon, 10 Feb 2025 21:17:15 +0000 (UTC)
+Date: Mon, 10 Feb 2025 22:17:10 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	x86@kernel.org, linux-block@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>, Keith Busch <kbusch@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v4 1/6] x86: move ZMM exclusion list into CPU feature flag
+Message-ID: <20250210211710.GCZ6ps1pNklAXyqD0p@fat_crate.local>
+References: <20250210174540.161705-1-ebiggers@kernel.org>
+ <20250210174540.161705-2-ebiggers@kernel.org>
+ <20250210204030.GBZ6pkPumjGQMaHWLb@fat_crate.local>
+ <20250210210103.GC348261@sol.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250210210103.GC348261@sol.localdomain>
 
-From: Ryan Wanner <Ryan.Wanner@microchip.com>
+On Mon, Feb 10, 2025 at 01:01:03PM -0800, Eric Biggers wrote:
+> I see that cpu_feature_enabled() uses code patching while boot_cpu_has() does
+> not.  All these checks occur once at module load time, though, so code patching
+> wouldn't be beneficial.
 
-Add shutdown controller and rtt timer to support shutdown and wake up.
+We want to convert all code to use a single interface for testing CPU features
+- cpu_feature_enabled() - and the implementation shouldn't be important to
+users - it should just work.
 
-Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
----
- .../boot/dts/microchip/at91-sama7d65_curiosity.dts | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Since you're adding new code, you might as well use the proper interface. As
+to converting crypto/ and the rest of the tree, that should happen at some
+point... eventually...
 
-diff --git a/arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts b/arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts
-index 0f86360fb733a..d1d0b06fbfc43 100644
---- a/arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts
-+++ b/arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dts
-@@ -77,6 +77,11 @@ pinctrl_uart6_default: uart6-default {
- 	};
- };
- 
-+&rtt {
-+	atmel,rtt-rtc-time-reg = <&gpbr 0x0>;
-+	status = "disabled";
-+};
-+
- &sdmmc1 {
- 	bus-width = <4>;
- 	pinctrl-names = "default";
-@@ -84,6 +89,15 @@ &sdmmc1 {
- 	status = "okay";
- };
- 
-+&shdwc {
-+	debounce-delay-us = <976>;
-+	status = "okay";
-+
-+	input@0 {
-+		reg = <0>;
-+	};
-+};
-+
- &slow_xtal {
- 	clock-frequency = <32768>;
- };
+Thx.
+
 -- 
-2.43.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
