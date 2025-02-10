@@ -1,52 +1,44 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 189F025B683;
-	Mon, 10 Feb 2025 17:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F5624418C;
+	Mon, 10 Feb 2025 18:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739210373; cv=none; b=uSL9tNYN1qpHCM1TjZsFicRQRRopZNdISXWxf2HWMWZyXai1paBjUWE0qQ/C23SjCZmPpEbUXMPbVXVox6g4xkXkGzk56QfUcg1juM8v9YCv+CpzUKGtIoqIb0D/NyGegG6Dlld5ETCRUn+aKj55dogSltuUkzWmS7ob+Ou/euw=
+	t=1739210407; cv=none; b=TYvH9nXa0b/B/UGYJ/c0CaP0XC/tGSMC3CK5LjOyvO5GfsdRePZHPbP6UHUjb6cEKnXBMWcP3wUnWMRazL1uyTN2lY3YVDDrkvrZeOWNDzDyrdR1EJsE4qxZeOeYGpeK65YEGMI9HKQbsmqWFgUZlfvq+7H2Qe6ZFc0of1ptMG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739210373; c=relaxed/simple;
-	bh=r+nZwoc8DznFjgy/dTbOCqlQ7KMSfy+0N+izBrPJHCs=;
+	s=arc-20240116; t=1739210407; c=relaxed/simple;
+	bh=1sRd6SLf08idOZTnt/wPTPKpubV5V6E4Po7IfkUz+8Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HAzOILimWR1R61WjaiVJulH6rlX6LEQQ3/8IjEUakyniHO0wVl4P9NFsxnnJnkHMb/ExBX18DcM1Loh8yxe3LomfEJxy0Jim+BPDOLEN+tOEUYISmTisDpyp+1ZiUK6MuurT48SqylylpJ7tfeIW3VrIGkx6LOKmFnOGtv9ae+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Bgp1w5ri; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=NaevGlvYzYK/PFZRC+ZE8LuMn9iwiC+05JEVh3nqzIrKU75VmwCrYPRJQ7yNy4MOAXS163+fz8kgoeRqfwe2JWYBG1edj7X7NDO6T7WI/Udf7So8Q1Y/EKMDSeKOrfs8or1eAH9oUrPpZ86ttHIsxiRC5QDdpJHp6F4wy8JncUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f3xzQ8S4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Bgp1w5ri"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id B33C42053680; Mon, 10 Feb 2025 09:59:31 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B33C42053680
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1739210371;
-	bh=7oxVU9z7LmtD31jnoqMb1VBGVzB/peaBuGcPzFmyIKE=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f3xzQ8S4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3BD0C4CED1;
+	Mon, 10 Feb 2025 18:00:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739210407;
+	bh=1sRd6SLf08idOZTnt/wPTPKpubV5V6E4Po7IfkUz+8Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Bgp1w5riQmFzhWcIc2AZ6XzukiyUoghwjljDoOb7G1RElHuLaE2CUYsYL9MHGT5ay
-	 Xs3Eq0NMaY3DKgcTk29sSN1RwRHoiPtzPO79ybW6lDr1J1Zz3LwCvf0exrD8kth4fI
-	 yMmutd/vCgWReiNksZ7UEZKAW+iuiTu0iWUZ8pEw=
-Date: Mon, 10 Feb 2025 09:59:31 -0800
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Eric Dumazet <edumazet@google.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Long Li <longli@microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Erick Archer <erick.archer@outlook.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v2 net-next 1/2] net: mana: Allow tso_max_size to go
- up-to GSO_MAX_SIZE
-Message-ID: <20250210175931.GA18891@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1739162392-6356-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1739162428-6679-1-git-send-email-shradhagupta@linux.microsoft.com>
- <CANn89iJ3cT6BWLmFpdkxn6EeeLTM7rF0pwWGArq1gG8pk8orsg@mail.gmail.com>
- <20250210175753.GA17857@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+	b=f3xzQ8S4OvU62D3PyL1n9Bty9HiMFu2U/qRNCNnCpXIu3uAEl7BhnuXisblKVKdhH
+	 16/0JFfqI9+50Dt0nOc7d7cyhbIEIXXm/ECIJZXQl2cs+EpykoN2Tqy5s5QNW8kug2
+	 XtsCDh9elsA+zf4BNS4yeZ6eWCpCvQnxxU6KyC1EwgP1hOnPQisBWzJjmCg7fJ1DFy
+	 TUFjRVFpe7jNunbaiX1zqtSrvxsG3cFu4Ew6qu+IuhNGObjP7E+ElaHMeJvpX5UrgW
+	 CapbRj1L4bu/kHDZ0qFlnRkOBL5LQDMoasGpX8fIS48UBS2NnzdHqfUMhKN4Su1sKb
+	 fKD6u61u+dckw==
+Date: Mon, 10 Feb 2025 10:00:05 -0800
+From: Eric Biggers <ebiggers@kernel.org>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Mustafa Ismail <mustafa.ismail@intel.com>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] RDMA/irdma: switch to using the crc32c library
+Message-ID: <20250210180005.GE1264@sol.localdomain>
+References: <20250207033643.59904-1-ebiggers@kernel.org>
+ <20250207035750.GA43210@sol.localdomain>
+ <20250209091255.GA17863@unreal>
+ <20250209154416.GA1230@sol.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,30 +47,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250210175753.GA17857@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20250209154416.GA1230@sol.localdomain>
 
-On Mon, Feb 10, 2025 at 09:57:53AM -0800, Shradha Gupta wrote:
-> On Mon, Feb 10, 2025 at 04:55:54PM +0100, Eric Dumazet wrote:
-> > On Mon, Feb 10, 2025 at 5:40???AM Shradha Gupta
-> > <shradhagupta@linux.microsoft.com> wrote:
-> > >
-> > > Allow the max aggregated pkt size to go up-to GSO_MAX_SIZE for MANA NIC.
-> > > This patch only increases the max allowable gso/gro pkt size for MANA
-> > > devices and does not change the defaults.
-> > > Following are the perf benefits by increasing the pkt aggregate size from
-> > > legacy gso_max_size value(64K) to newer one(up-to 511K)
-> > >
-> > > for i in {1..10}; do netperf -t TCP_RR  -H 10.0.0.5 -p50000 -- -r80000,80000
-> > > -O MIN_LATENCY,P90_LATENCY,P99_LATENCY,THROUGHPUT|tail -1; done
+On Sun, Feb 09, 2025 at 07:44:18AM -0800, Eric Biggers wrote:
+> On Sun, Feb 09, 2025 at 11:12:55AM +0200, Leon Romanovsky wrote:
+> > On Thu, Feb 06, 2025 at 07:57:50PM -0800, Eric Biggers wrote:
+> > > On Thu, Feb 06, 2025 at 07:36:43PM -0800, Eric Biggers wrote:
+> > > > +int irdma_ieq_check_mpacrc(const void *addr, u32 len, u32 val)
+> > > >  {
+> > > > -	u32 crc = 0;
+> > > > -
+> > > > -	crypto_shash_digest(desc, addr, len, (u8 *)&crc);
+> > > > -	if (crc != val)
+> > > > +	if (~crc32c(~0, addr, len) != val)
+> > > >  		return -EINVAL;
+> > > >  
+> > > >  	return 0;
+> > > >  }
+> > > 
+> > > Sorry, I just realized this isn't actually equivalent on big endian CPUs, since
+> > > the byte array produced by crypto_shash_digest() used little endian byte order,
+> > > whereas crc32c() just returns a CPU endian value.
+> > > 
+> > > And of course this broken subsystem uses u32 for the little endian values
+> > > instead of __le32 like the result of the kernel.
+> > > 
+> > > Not sure it's worth my time to continue to try to fix this subsystem properly.
 > > 
-> > Was this tested with IPv6 ?
+> > There is no need to be such dramatic. You are not fixing anything by
+> > switch to new APIs
 > 
-> Hi Eric,
-> yes, sanity and functional testing where performed(manually) and passed on azure
-> VMs with IPv6.
-Forgot to mention that the tests were performed on both IPv4 and IPv6
-and these numbers are from IPv4 testing
+> Exactly.  That's because I dropped the patches that actually did fix real
+> endianness bugs, because of the pointless pushback I received -- see
+> https://lore.kernel.org/linux-rdma/20250127223840.67280-1-ebiggers@kernel.org/T/#u
 
-regards,
-Shradha.
+Anyway, I already sent v3 of this patch that keeps the cpu_to_le32() to maintain
+the exact same behavior as the old code, so please consider that if you are
+interested.  Note that I had to add '(__force u32)' to be compatible with this
+driver's incorrect types, but that was effectively already there before, just
+hidden by writing bytes into a u32.
+
+- Eric
