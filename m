@@ -1,40 +1,48 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069001CAA88;
-	Mon, 10 Feb 2025 11:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4A91B414F;
+	Mon, 10 Feb 2025 11:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739186134; cv=none; b=XOWPZ7svcJSEmf+C0ffdYisZNl4XXR+eEwhbmOnaIjSQZACWZDH9cVwYloj4pAX06x3EDMAbLxM9ure5wWXFlkJCzj6e7XSKaGHiTJa08MPJojuD8YjNvTQd/IBAD5XTt6abXQmYppR8nf6QLXdMpnqas0c21M73OJg+zQ3/q+M=
+	t=1739186152; cv=none; b=BPUBSFZoowMF1GTeTkw6iPvFDM4HIygmg75dX2mAx+yIqk6xA4vYMTbtAG5rMwLR02kzxZJhf8aYV1g4ktOlbX8qclpOVSDVDgEjqkdd5ODWD8fNO26AJKaBbAolQT/ql1wfQuXmlwKDjw33lS8q1S2iVbh+YncFfWSM5ZmdPIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739186134; c=relaxed/simple;
-	bh=yghw6cquksN8zPqbgLipZY4BM8xR8DkXkhGUySC4WRA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ceq2lwj8mIpmeXEa2yfOa3725Z7RZrLpT41Pu2Y2CXc0caZRSzc4GAjgZvnbm6gY2zG9b8PN2Fh/+aHRbmENiUcTf8tIykbS6b0yDrNVRzNPUiuo+IDqnjxWGN1AMnYs1D5+6jZDOnvIbNv5BQLS68we3KDGZWaD74LcE4aRgD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ESmPJunG; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1739186152; c=relaxed/simple;
+	bh=BOOHUEpWTZSL5i9RRmTkOJFKo2narcNl7FiTLRAEYqI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SuGkJW+0pPicmI/jXL8B1CBDf9oDADvxmnTUcPwP3R3KRPZEnoMjfMgI+0iTxuWcY50rfI6G9rFxY44MScJ76HhDO96MW003nXD+xrPlzbPoa1ILdOQxQUau3O/FsysVWUjdkLKoN5YmSoQmOWFYHAI7V1wTj4b+bfVatuAeWGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Dk8ZtkTT; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ESmPJunG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739186129;
-	bh=yghw6cquksN8zPqbgLipZY4BM8xR8DkXkhGUySC4WRA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ESmPJunGKo+yuyT+lTgsSKQkXws5Oh5vtwZRmhalZJPGz9I7fqqA1b5qZVgeScorm
-	 7fiHrJE9BW5p5by+M6fn++6G8oZZp16w+p+0puAsBVg0drC36ANH0wqBpmez62KFz7
-	 U/2nXk7Bg7CokDrDbVCEGM9y1xZsPTIrn4rGMvVKsyY/RN5V/eRJjdoO4sF5ybqdzg
-	 vV9FGtZz+Co5iGC1twH5yDOfNG3gsXGQbIwjW0UUAnQOjQfGR/7Mg/JdUhfQSZT6zq
-	 P5kFUrMn3pteKxxx7JLw0nZPSPCdNyBhww+p+UUE0vQaNSi76MZXeSP7LDMP0778/m
-	 gn1No4pdI4JfQ==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9548817E014F;
-	Mon, 10 Feb 2025 12:15:28 +0100 (CET)
-Message-ID: <98caee8a-b78e-4dcb-96d9-37fd4f279e68@collabora.com>
-Date: Mon, 10 Feb 2025 12:15:28 +0100
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Dk8ZtkTT"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51A76Cuk010407;
+	Mon, 10 Feb 2025 11:15:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	bwV0O+olVTuwBu36jiuSKcfz1/+C1/1A8aX/BMtVtnE=; b=Dk8ZtkTT11SKYTcl
+	wtE2MyB5lmPCCFcegrm2E3dbyFtxL4iCjjVRGRZJBCOaj95C1mekJcZHZY4SBMHR
+	B2RFcYjd5ZPS2KoLhRTL121vVYOCeko1MGH3cZb8H4HDwk4ZV3d7a/w5pZ8z4I/b
+	E8wNkKMPljPaHltayNkYZj9ea7M4T6xLTyHsVxYOVF/MoQxzldizry0enA3/Rj58
+	2r7qt/FOzc1TAa+jyl4fqEVz9MrzkPPMPP3VsMYVoN52VSqoIZ3znS/IX1fFtENc
+	uMkGa2GHjoiL9mOKKiWNIQCLAZv8pYW+HOIH8ulB+bVaMC7o4fYstCyE1YfcltSV
+	G6mInA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qcs58r6d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 11:15:36 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51ABFZWF013481
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 11:15:35 GMT
+Received: from [10.218.7.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Feb
+ 2025 03:15:27 -0800
+Message-ID: <92e77d82-7c76-4cc4-8e7d-7b72b57ab416@quicinc.com>
+Date: Mon, 10 Feb 2025 16:45:24 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,153 +50,123 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 23/34] drm/mediatek: mtk_hdmi: Move output init to
- mtk_hdmi_register_audio_driver()
-To: =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
- "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>
-Cc: "robh@kernel.org" <robh@kernel.org>,
- "jie.qiu@mediatek.com" <jie.qiu@mediatek.com>,
- "tzimmermann@suse.de" <tzimmermann@suse.de>,
- "simona@ffwll.ch" <simona@ffwll.ch>, "mripard@kernel.org"
- <mripard@kernel.org>, =?UTF-8?B?Sml0YW8gU2hpICjnn7PorrDmtpsp?=
- <jitao.shi@mediatek.com>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "kernel@collabora.com" <kernel@collabora.com>,
- "dmitry.baryshkov@linaro.org" <dmitry.baryshkov@linaro.org>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- =?UTF-8?B?TGV3aXMgTGlhbyAo5buW5p+P6YieKQ==?= <Lewis.Liao@mediatek.com>,
- "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- =?UTF-8?B?VG9tbXlZTCBDaGVuICjpmbPlvaXoia8p?= <TommyYL.Chen@mediatek.com>,
- =?UTF-8?B?SXZlcyBDaGVuamggKOmZs+S/iuW8mCk=?= <Ives.Chenjh@mediatek.com>,
- "airlied@gmail.com" <airlied@gmail.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- =?UTF-8?B?SmFzb24tSkggTGluICjmnpfnnb/npaUp?= <Jason-JH.Lin@mediatek.com>,
- "junzhi.zhao@mediatek.com" <junzhi.zhao@mediatek.com>
-References: <20250113145232.227674-1-angelogioacchino.delregno@collabora.com>
- <20250113145232.227674-24-angelogioacchino.delregno@collabora.com>
- <1d5a94f3b974d4617a58f2d9dfc54d5dc889f18a.camel@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH 0/5] Add UFS support for SM8750
+To: <neil.armstrong@linaro.org>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Konrad Dybcio
+	<konrad.dybcio@oss.qualcomm.com>
+CC: Melody Olvera <quic_molvera@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        "Satya Durga Srinivasu Prabhala" <quic_satyap@quicinc.com>,
+        Trilok Soni
+	<quic_tsoni@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        Manish Pandey
+	<quic_mapa@quicinc.com>
+References: <20250113-sm8750_ufs_master-v1-0-b3774120eb8c@quicinc.com>
+ <c6352263-8329-4409-b769-a22f98978ac8@oss.qualcomm.com>
+ <20250209152140.cyry6g7ltccxcmyj@thinkpad>
+ <ae9ba351-53c8-4389-b13b-7b23926a8390@linaro.org>
 Content-Language: en-US
-In-Reply-To: <1d5a94f3b974d4617a58f2d9dfc54d5dc889f18a.camel@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Nitin Rawat <quic_nitirawa@quicinc.com>
+In-Reply-To: <ae9ba351-53c8-4389-b13b-7b23926a8390@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: DmIkOamB9RlxLWlGNq2rO4zHHm3xhCRP
+X-Proofpoint-GUID: DmIkOamB9RlxLWlGNq2rO4zHHm3xhCRP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_05,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ mlxlogscore=999 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ adultscore=0 clxscore=1011 mlxscore=0 priorityscore=1501 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502100094
 
-Il 07/02/25 06:46, CK Hu (胡俊光) ha scritto:
-> Hi, Angelo:
+
+
+On 2/10/2025 3:09 PM, neil.armstrong@linaro.org wrote:
+> On 09/02/2025 16:21, Manivannan Sadhasivam wrote:
+>> On Fri, Feb 07, 2025 at 11:47:12PM +0100, Konrad Dybcio wrote:
+>>> On 13.01.2025 10:46 PM, Melody Olvera wrote:
+>>>> Add UFS support for SM8750 SoCs.
+>>>>
+>>>> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+>>>> ---
+>>>> Nitin Rawat (5):
+>>>>        dt-bindings: phy: qcom,sc8280xp-qmp-ufs-phy: Document the 
+>>>> SM8750 QMP UFS PHY
+>>>>        phy: qcom-qmp-ufs: Add PHY Configuration support for SM8750
+>>>>        dt-bindings: ufs: qcom: Document the SM8750 UFS Controller
+>>>>        arm64: dts: qcom: sm8750: Add UFS nodes for SM8750 SoC
+>>>>        arm64: dts: qcom: sm8750: Add UFS nodes for SM8750 QRD and 
+>>>> MTP boards
+>>>
+>>> You still need the same workaround 8550/8650 have in the UFS driver
+>>> (UFSHCD_QUIRK_BROKEN_LSDBS_CAP) for it to work reliably, or at least
+>>> that was the case for me on a 8750 QRD.
+>>>
+>>> Please check whether we can make that quirk apply based on ctrl
+>>> version or so, so that we don't have to keep growing the compatible
+>>> list in the driver.
+>>>
+>>
+>> That would be a bizarre. When I added the quirk, I was told that it 
+>> would affect
+>> only SM8550 and SM8650 (this one I learned later). I'm not against 
+>> applying the
+>> quirk based on UFSHC version if the bug is carried forward, but that 
+>> would be an
+>> indication of bad design.
 > 
-> On Mon, 2025-01-13 at 15:52 +0100, AngeloGioacchino Del Regno wrote:
->> External email : Please do not click links or open attachments until you have verified the sender or the content.
->>
->>
->> In preparation for moving the common bits of this driver, merge the
->> contents of mtk_hdmi_output_init in mtk_hdmi_register_audio_driver
->> function to aggregate all of the initial audio setup together in
->> the same function and to make it clear that all of the setup that
->> is performed in mtk_hdmi_output_init is specifically related only
->> to audio and not video.
->>
->> While at it, also remove the "%s driver bound to HDMI" debugging
->> print disguised as informative.
->>
->> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->> ---
->>   drivers/gpu/drm/mediatek/mtk_hdmi.c | 28 ++++++++--------------------
->>   1 file changed, 8 insertions(+), 20 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
->> index e2393f7558f9..4345c91e92e7 100644
->> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
->> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
->> @@ -1025,20 +1025,6 @@ static int mtk_hdmi_setup_vendor_specific_infoframe(struct mtk_hdmi *hdmi,
->>          return 0;
->>   }
->>
->> -static int mtk_hdmi_output_init(struct mtk_hdmi *hdmi)
->> -{
->> -       struct hdmi_audio_param *aud_param = &hdmi->aud_param;
->> -
->> -       aud_param->aud_codec = HDMI_AUDIO_CODING_TYPE_PCM;
->> -       aud_param->aud_sample_size = HDMI_AUDIO_SAMPLE_SIZE_16;
->> -       aud_param->aud_input_type = HDMI_AUD_INPUT_I2S;
->> -       aud_param->aud_i2s_fmt = HDMI_I2S_MODE_I2S_24BIT;
->> -       aud_param->aud_mclk = HDMI_AUD_MCLK_128FS;
->> -       aud_param->aud_input_chan_type = HDMI_AUD_CHAN_TYPE_2_0;
->> -
->> -       return 0;
->> -}
->> -
->>   static void mtk_hdmi_audio_enable(struct mtk_hdmi *hdmi)
->>   {
->>          mtk_hdmi_hw_send_aud_packet(hdmi, true);
->> @@ -1616,6 +1602,7 @@ static void mtk_hdmi_unregister_audio_driver(void *data)
->>   static int mtk_hdmi_register_audio_driver(struct device *dev)
->>   {
->>          struct mtk_hdmi *hdmi = dev_get_drvdata(dev);
->> +       struct hdmi_audio_param *aud_param = &hdmi->aud_param;
->>          struct hdmi_codec_pdata codec_data = {
->>                  .ops = &mtk_hdmi_audio_codec_ops,
->>                  .max_i2s_channels = 2,
->> @@ -1625,6 +1612,13 @@ static int mtk_hdmi_register_audio_driver(struct device *dev)
->>          };
->>          int ret;
->>
->> +       aud_param->aud_codec = HDMI_AUDIO_CODING_TYPE_PCM;
->> +       aud_param->aud_sample_size = HDMI_AUDIO_SAMPLE_SIZE_16;
->> +       aud_param->aud_input_type = HDMI_AUD_INPUT_I2S;
->> +       aud_param->aud_i2s_fmt = HDMI_I2S_MODE_I2S_24BIT;
->> +       aud_param->aud_mclk = HDMI_AUD_MCLK_128FS;
->> +       aud_param->aud_input_chan_type = HDMI_AUD_CHAN_TYPE_2_0;
->> +
->>          hdmi->audio_pdev = platform_device_register_data(dev,
->>                                                           HDMI_CODEC_DRV_NAME,
->>                                                           PLATFORM_DEVID_AUTO,
->> @@ -1638,7 +1632,6 @@ static int mtk_hdmi_register_audio_driver(struct device *dev)
->>          if (ret)
->>                  return ret;
->>
->> -       DRM_INFO("%s driver bound to HDMI\n", HDMI_CODEC_DRV_NAME);
+> Isn't 8750 capable of using MCQ now ? because this is the whole issue 
+> behind
+> this UFSHCD_QUIRK_BROKEN_LSDBS_CAP, it's supposed to use MCQ by 
+> default... but
+> we don't.
 > 
-> This modification is not related to the title. If necessary, separate this to another patch.
-> But I don't know why remove this. Could you explain more?
+> Is there any news about that ? It's a clear regression against 
+> downstream, not
+> having MCQ makes the UFS driver struggle to reach high bandwidth when 
+> the system
+> is busy because we can't spread the load over all CPUs and we have only 
+> single
+> queue to submit requests.
+
+Hi Neil,
+
+There is no relation b/w LSDBS_CAP Register and MCQ support.
+That registers just indicate when MCQ support is present on any SOC,
+whether Single queue mode is supported or not on that SOC.
+
+In SM8650 and SM86550, just the pored value of that register was 
+incorrect which was fixed by WA but actually functionality was present 
+and working fine.
+
+Pored value of that register has been fixed from SM8750 onwards.
+
+Regards,
+Nitin
+
 > 
-
-It's a cleanup... if every driver in the kernel said "bound to" or "registered",
-the kernel log would be extremely long and unreadable... so that's why this print
-was removed.
-
-I can separate this to a different patch if you want, even though that'd be
-overkill, imo.
-
-Cheers,
-Angelo
-
-> Regards,
-> CK
+> Neil
 > 
->>          return 0;
->>   }
 >>
->> @@ -1667,11 +1660,6 @@ static int mtk_hdmi_probe(struct platform_device *pdev)
->>          mutex_init(&hdmi->update_plugged_status_lock);
->>          platform_set_drvdata(pdev, hdmi);
->>
->> -       ret = mtk_hdmi_output_init(hdmi);
->> -       if (ret)
->> -               return dev_err_probe(dev, ret,
->> -                                    "Failed to initialize hdmi output\n");
->> -
->>          ret = mtk_hdmi_register_audio_driver(dev);
->>          if (ret)
->>                  return dev_err_probe(dev, ret,
->> --
->> 2.47.0
+>> - Mani
 >>
 > 
 
