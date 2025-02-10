@@ -1,196 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD728F49;
-	Mon, 10 Feb 2025 07:26:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E21E8F49;
+	Mon, 10 Feb 2025 07:27:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739172373; cv=none; b=ErKeeoU3GsJbPSsufsTzbezIsmg3VzhSkPvqJIsmVsnaMHp+zaUcKk1gexxo49rXr06RFOX/tgrEnffnpMpV7ELPTQGDEwO98KwYlDSmQEiVfsEThYpxA011XOkadNdQPlV682sK8IS3cPBsX3ARdqqtQxkMmz0qJdyp2WooD+E=
+	t=1739172472; cv=none; b=O4/0fFPU5jhpZ5aO+mWThdzhS+OCbm139HfoNh9uuksKjfG2rhVPisVU14idqVXRTh1nHatADQKRQUlGIEnjjlJzHZiNr7kzrhfHAB9D/+qnouCchWWGWuZq2Ubdw59xhexyxBjmbHW+WlT3Usr5Z3ElBY1uUciqgI/9j4vP8fE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739172373; c=relaxed/simple;
-	bh=hA2WQKcyIFGPy8Gcfi9P9tXtAN4ae9v97yc/jfyhsDY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kgPlyzoh00c6Ms02WOfoCsxrU8CdpyNZpKf6KlByvn68SCzMRgqDMfp/d/cWyJKfW4vfpDAM/M672x+h5KhLf0Rp0nKWAAjto69zJ3hVMusE7W8/eTGsGzYD5RR4GfBHeowySB4bKKC/g4F4TNXs3Pq9OU9KGnkih651MwKGFDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KT/zJf+V; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739172472; c=relaxed/simple;
+	bh=io+aPIWHumdCGQZeZed0nhFjIJYgHleGcqa00PqvCA8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ovwL+FdhQ/iuaIk3DJf53sl+vj/KcMDEUKVF055752FhsFGd36S9cHadDD9nWEcOJ85MuftYJv/UCtcnpsKsPZ8EP/CnepS712QO8fVneQSvKurtZhUkjvlBmJ1XRz1wllzypN/cilCW04kik0Bt2iZEOHTo98g6mgh8PyW/L0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aYz4sHBk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KT/zJf+V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CB35C4CED1;
-	Mon, 10 Feb 2025 07:26:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aYz4sHBk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13839C4CED1;
+	Mon, 10 Feb 2025 07:27:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739172372;
-	bh=hA2WQKcyIFGPy8Gcfi9P9tXtAN4ae9v97yc/jfyhsDY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KT/zJf+VYZ5ByF25193/MCt1Kp/b+aa928muRkqsRfKUmcT28L+xxCMioQDQC30D+
-	 xLyjY46HaGxXsXi2zNi7nlwzx8Oyb7/KF3ka+6ZqLXOS/Anp7v0CwYxBCXVM1wuG8O
-	 kJR2jdaZCv4C84ppx3CTIXbzPRKc0xjW6mqW+JQEJGgna9+czEwdq0sVDkKlWiWdm6
-	 IIN3+E8mVR6kLRuPuxqgCcp26NNff/Np8WNULMTow04zYugFtgJtPpLO9vaS/WCLVK
-	 Eot2CMNlygJHhU35N5WQKd74GX2uFt/w1LhaPWdpthfwtopOdQt6eMCPmui2PrgxrQ
-	 gsFJUwWYnEl7A==
-Message-ID: <5cf187db-1eae-41a8-a33e-ef68a4f66db6@kernel.org>
-Date: Mon, 10 Feb 2025 08:26:09 +0100
+	s=k20201202; t=1739172472;
+	bh=io+aPIWHumdCGQZeZed0nhFjIJYgHleGcqa00PqvCA8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=aYz4sHBkexH3zcP6ZHhwCY/js7zCpMTCmyfAe3o+uWAwHXSHR4iMLv5zEJHhqtiCj
+	 t1ovl0XJ9NuNySnbw0086oQpQci/Ys3PFOnFAzumjjThlHOPCKJZmnq6JFrJ2OJRd9
+	 M/99DDq6d8CkWvrrC/sUrN5wb3xQCnaRYRxiVbb8VzvNBUMGkDFiVQE30Wa+typQbm
+	 vFSUDAGLaJQXe9ux7z/Ao7dk2g4k9NKom+v3kCqZIp+Wn2TmfnLJ6vfY5IqpMqQoab
+	 PSYzTQcJiQUydb9NkgdaSmSrRnOygtPibZO4ffEfUdZvd89tkV3yFZF3o9r7y5NIGh
+	 1h74ioKPqEUyw==
+Date: Mon, 10 Feb 2025 08:27:48 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC v2 18/38] docs: sphinx/kernel_abi: use AbiParser directly
+Message-ID: <20250210082748.05ba85ae@foz.lan>
+In-Reply-To: <878qqlfxc9.fsf@trenco.lwn.net>
+References: <cover.1738020236.git.mchehab+huawei@kernel.org>
+	<fb800900352d90a0e501e5d6732e1bea277478f2.1738020236.git.mchehab+huawei@kernel.org>
+	<87lduu7efu.fsf@trenco.lwn.net>
+	<20250129014324.60a8dfce@foz.lan>
+	<20250202155652.1652e420@foz.lan>
+	<878qqlfxc9.fsf@trenco.lwn.net>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] HID: corsair-void: Add Corsair Void headset family
- driver
-To: Stuart Hayhurst <stuart.a.hayhurst@gmail.com>, linux-input@vger.kernel.org
-Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- linux-kernel@vger.kernel.org
-References: <20241008233030.395126-3-stuart.a.hayhurst@gmail.com>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20241008233030.395126-3-stuart.a.hayhurst@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 09. 10. 24, 1:30, Stuart Hayhurst wrote:
-> Introduce a driver for the Corsair Void family of headsets, supporting:
->   - Battery reporting (power_supply)
->   - Sidetone setting support
->   - Physical microphone location reporting
->   - Headset and receiver firmware version reporting
->   - Built-in alert triggering
->   - USB wireless_status
+Em Tue, 04 Feb 2025 10:12:22 -0700
+Jonathan Corbet <corbet@lwn.net> escreveu:
+
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 > 
-> Tested with a Void Pro Wireless, Void Elite Wireless and a Void Elite Wired
-...
-> --- /dev/null
-> +++ b/drivers/hid/hid-corsair-void.c
-> @@ -0,0 +1,829 @@
-...
-> +static void corsair_void_process_receiver(struct corsair_void_drvdata *drvdata,
-> +					  int raw_battery_capacity,
-> +					  int raw_connection_status,
-> +					  int raw_battery_status)
-> +{
-> +	struct corsair_void_battery_data *battery_data = &drvdata->battery_data;
-> +	struct corsair_void_battery_data orig_battery_data;
-> +
-> +	/* Save initial battery data, to compare later */
-> +	orig_battery_data = *battery_data;
-> +
-> +	/* Headset not connected, or it's wired */
-> +	if (raw_connection_status != CORSAIR_VOID_WIRELESS_CONNECTED)
-> +		goto unknown_battery;
-> +
-> +	/* Battery information unavailable */
-> +	if (raw_battery_status == 0)
-> +		goto unknown_battery;
-> +
-> +	/* Battery must be connected then */
-> +	battery_data->present = true;
-> +	battery_data->capacity_level = POWER_SUPPLY_CAPACITY_LEVEL_NORMAL;
-> +
-> +	/* Set battery status */
-> +	switch (raw_battery_status) {
-> +	case CORSAIR_VOID_BATTERY_NORMAL:
-> +	case CORSAIR_VOID_BATTERY_LOW:
-> +	case CORSAIR_VOID_BATTERY_CRITICAL:
-> +		battery_data->status = POWER_SUPPLY_STATUS_DISCHARGING;
-> +		if (raw_battery_status == CORSAIR_VOID_BATTERY_LOW)
-> +			battery_data->capacity_level = POWER_SUPPLY_CAPACITY_LEVEL_LOW;
-> +		else if (raw_battery_status == CORSAIR_VOID_BATTERY_CRITICAL)
-> +			battery_data->capacity_level = POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
-> +
-> +		break;
-> +	case CORSAIR_VOID_BATTERY_CHARGED:
-> +		battery_data->status = POWER_SUPPLY_STATUS_FULL;
-> +		break;
-> +	case CORSAIR_VOID_BATTERY_CHARGING:
-> +		battery_data->status = POWER_SUPPLY_STATUS_CHARGING;
-> +		break;
-> +	default:
-> +		hid_warn(drvdata->hid_dev, "unknown battery status '%d'",
-> +			 raw_battery_status);
-> +		goto unknown_battery;
-> +		break;
-> +	}
-> +
-> +	battery_data->capacity = raw_battery_capacity;
-> +	corsair_void_set_wireless_status(drvdata);
-> +
-> +	goto success;
-> +unknown_battery:
-> +	corsair_void_set_unknown_batt(drvdata);
-> +success:
-> +
-> +	/* Inform power supply if battery values changed */
-> +	if (memcmp(&orig_battery_data, battery_data, sizeof(*battery_data))) {
-> +		scoped_guard(mutex, &drvdata->battery_mutex) {
+> > Hi Jon,  
+> 
+> > As I'll be preparing such patches for merge along this week, I'd
+> > like to know what do you prefer in terms of directories:
+> >
+> > 1. Keep it as-is;
+> > 2. have a separate library directory for Python modules
+> >    (scripts/lib?);
+> > 3. place python modules inside scripts/;
+> > 4. place python modules inside Documentation/sphinx (IMO a bad
+> >    idea);
+> > 5. something else  
+> 
+> Honestly, I'm not sure.  I do feel that importing out of scripts/ is
+> inelegant at best; having a dedicated directory for modules meant to be
+> imported would be better.  So maybe scripts/lib?  Or lib/python, though
+> that might raise eyebrows elsewhere, dunno.  Pick something you like,
+> and we'll give that a try.
 
-This effectively kills the system. We came here via:
-corsair_void_raw_event (hid_driver::raw_event)
-   -> corsair_void_process_receiver
-     -> scoped_guard(mutex, &drvdata->battery_mutex)
+I would go for scripts/lib then.
 
-And hid_driver::raw_event can be called from the interrupt context. This 
-happened at:
-https://bugzilla.suse.com/show_bug.cgi?id=1236843
+> 
+> > Btw, I'm considering to also submit later a patchset similar to
+> > this one converting kernel-doc to Python. I already started writing
+> > something like that (written from the scratch, following as much
+> > as possible what we have today on Perl to avoid regressions).
+> >
+> > I would probably split the code into separate classes to make the code 
+> > more readable/maintainable (a base class, a class with rest output,
+> > another one with man output, and a few other helper classes).  
+> 
+> I definitely approve of the idea - I've pondered doing such a thing, but
+> have never come close to finding the time.  It's probably worth looking
+> at the rewrite Markus did years ago as a starting point?
 
-In particular, from BH (USB URB BH: usb_giveback_urb_bh()), see the 
-backtrace at:
-https://bugzilla.suse.com/attachment.cgi?id=880175
+I took a look on Markus work: it was licensed under GPL 3.0 and it was
+written in 2016. There were several changes on kerneldoc since them,
+including the addition of a regex that it is not compatible with
+Python re[1]:
 
-Perhaps you need a separate _spin_ lock for drvdata->battery and use it 
-here for getting and on "= NULL" and "=new_supply" for setting? Or 
-schedule another work for power_supply_changed()? Or perhaps you unify 
-the add/remove/update work into one?
+        $members =~ s/\bSTRUCT_GROUP(\(((?:(?>[^)(]+)|(?1))*)\))[^;]*;/$2/gos;
 
-> +			if (drvdata->battery) {
-> +				power_supply_changed(drvdata->battery);
-> +			}
+This one use:
 
-...
+	- recursive patterns: ?1
+	- atomic grouping (?>...)
 
-thanks,
--- 
-js
-suse labs
+Also, it is hard to map what he does with the existing script. I'm
+opting to write a new script from scratch. I have already a version
+that does ReST conversion (still missing man pages and filtering).
+I'll send a RFC patch once I get it to the point it works properly.
 
+[1] In the specific case of such regex, added on this commit:
+
+	 50d7bd38c3aa ("stddef: Introduce struct_group() helper macro")
+
+    I'm not sure why a very complex regex was used there. I'm currently 
+    stuck on handling it properly in Python. An option would be do to:
+
+	try:
+		import regex as re
+		has_regex_advanced_features = True
+	except:
+		import re
+		has_regex_advanced_features = False
+
+    And, if has_regex_advanced_features is false, use a simpler regex 
+    that would work in Python or would just ignore struct_group
+    expressions.
+
+    Another option would be to re-implement such regexes without using
+    such advanced patterns.
+
+Thanks,
+Mauro
