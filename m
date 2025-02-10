@@ -1,104 +1,89 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74441C5F0C
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1131C5F1F;
+	Mon, 10 Feb 2025 10:18:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739182668; cv=none; b=JjWVPBLBWAlADuAv6ADNTo4hRV/Au0FdzTI03Gfc+vZ+6TjjuCR3O4nU+r6hu/FcH3O5Rme0K1JHG7awjjH9kJg4zM9HZS+8MW3sXphrgwkTC56PDDSCz5cZpZH33Bt7ajSowrYYCe16aU+7vvvDUBKR0V0J4vRpD7wFoOYljnk=
+	t=1739182704; cv=none; b=gcW9Gn+bKdnIrTlNa6NyjhJAP3mdsJRKFsjtt96dXi5cOViLPdgxixKNs4HXlZjEFTO+rP7gl3SAr0uLCIHePSNfF+YW4rdJfVVf0LAVfd8XS3EpnMGt4rRYIjhFfpEaM4rSKbQA7ikuzsF0K4n9EMy4rAcRwf2f2sNvowwaROA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739182668; c=relaxed/simple;
-	bh=ZSL/qGmugR1ce7doF3eXwejZY+twQt/eF8UuLMVs69g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mo3xG22AJ/srOXF2G1nEAqBrwnw0teHf+JAQv584fVUPfbFlRHxHdJ89sO0Qy+7sONfAmXiu2nlt/BXt3mF1I3WfTq/iT/5vr9RhjGtMbSb0JZY1CjgHqvMtUVG3pTZuCJ+SbW+YNXcdEgJpib9hkd6s9SR/exdXsV5squ9CWwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GqnTQWaG; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739182704; c=relaxed/simple;
+	bh=LI59JQtyPV/HF12ShAdqHJX2HFF3NXc8/5bk+IONPNM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=raoHHuRsIlSqI0R0d7e/ryHcoViV9+i+huj+4s/YkWZHHAQ1UQ1196OApwfVM4UcWcirHilaqBhLfP0A/zvLpGy7OckzCK4w3x/eaVK+1rGi21ZgFhRWS66k93MSJqYWxukbvXFRiAwqmPLbss2ybzDMzQ3pMuy9A1M2t8m+Rdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nO62iX7S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GqnTQWaG"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21c2f1b610dso102260675ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 02:17:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739182666; x=1739787466; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9i0AGLd99zO9PPisviE6AdnYOR4wb3NHpW6/eGahu5k=;
-        b=GqnTQWaGhtt+GHvSTFH7ON2QjZeiiRTGSCFdZrklAqD6pq1z7vPNkCkoWHTjXrINeF
-         +NYR4haXF0YQXjyRr7MOrWg+iJiHYuMyZJq8n9IlZUjgkM/uv9QWrOcwYtP/Rrj5f8je
-         SfporwACFPgrTUqaZdUJarF0qzzSZtrJFPo7qJdD26eAcwUqeBVYp32pOzyI3Ykse5k2
-         CrvSYjjNGp8rw5CToh7TlkDU8+AHlCass+G7Tc3qrvYnxB5a6iECbCqy73bXSk+zY8Lx
-         Fg1pvaeINBWmNt8NmMY5PEms/OFDN48vbkcpZXj6I0kOQTDZycjguI/yc2weQYNsliUg
-         lItQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739182666; x=1739787466;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9i0AGLd99zO9PPisviE6AdnYOR4wb3NHpW6/eGahu5k=;
-        b=U9AnN9kKLXMAGWd0CN+89q4FKZQsuCYBQN4XjkpWKqaMPRV9G20pdjzFe0jG6djSXr
-         dPN2XZESraLjZT+/avb3/IA4NbEMHyFnRHjsnCdH9w0yjX2Yp3epNvDoCOwJmii2a8uu
-         3ud6t0B9COv6ldxI6sj8k6uWIPSgcSwceK9hCAB0uh18upTgZ0NKejxGLgxE1yDb7VTX
-         7idKBX8GqaVNynJy8GlO9MdPOYyD4xBeTxxweVGwakk4mh2Tj3qATnF9we44/Q2jiAQI
-         xXGx/cZWMpV8bMYFFrVDi+zmaMZr+iZo9QoVNxsMS+Z42d324dgm51e4tFR/3jtl976F
-         eh6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVe5hEq6gKVsUbbaSbE4wEd6IPxcxQiAof5n2RMZ1PiXNCsW21jWCCy8Uxolma8yvNcIkgTW+9sgfkf82g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2DcIUlAzzbgqFitv5N6cvzWoILCWUgbShoAccEaDdr07hBEAm
-	E+2MSVj4qXvOEn85BP/Nc/dqqmxSvlfvWcnI3wV11u8F14SkNVEqIHD17PcWX/M=
-X-Gm-Gg: ASbGnctX21LuuIXZ4Q/JhRu9MyG/fLUJXzNoQCaQpwz3zorqZb/deaqux89ASwP7wev
-	E7wBJpGlD/Y4DPpyC7dE+mAhXx7MIJmGgp7lt3UQq1dtUpigdHnGLEFb3Tl0SPcjBQDm4ofVpXV
-	mceHQBwhfypChCQ1hWmaerOXtI50KUk93hv68WZBtLoIhyAqKHIZSCFl2NCFGmcogeJaLglfCTo
-	38inHDyUzXTInbgOPAt1Z54xBtiyj3MOx4j453c9HDsScgaLkoEvOR4emwRwq4GP0WTZHAkmoAq
-	hfTmrxUy9SlwAE/IUQ==
-X-Google-Smtp-Source: AGHT+IGNZ1LdwSLrAygAeyU2l4PUTGtgEddlFC4BdeZIasrbNWW51em0a2J4IYoXDABwR1ybMH65yA==
-X-Received: by 2002:a05:6a21:9985:b0:1eb:7da4:305e with SMTP id adf61e73a8af0-1ee03b70cbcmr19829114637.39.1739182665838;
-        Mon, 10 Feb 2025 02:17:45 -0800 (PST)
-Received: from localhost ([122.172.84.139])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7308540cb30sm2399099b3a.115.2025.02.10.02.17.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 02:17:45 -0800 (PST)
-Date: Mon, 10 Feb 2025 15:47:43 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 17/18] firmware: arm_ffa: Add support for handling
- framework notifications
-Message-ID: <20250210101743.aqbhqqkdbvka2i46@vireshk-i7>
-References: <20250131-ffa_updates-v2-0-544ba4e35387@arm.com>
- <20250131-ffa_updates-v2-17-544ba4e35387@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nO62iX7S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFD75C4CEEB;
+	Mon, 10 Feb 2025 10:18:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739182704;
+	bh=LI59JQtyPV/HF12ShAdqHJX2HFF3NXc8/5bk+IONPNM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=nO62iX7S28S3shm7FksdxtyPreI2cGS6vi10HoQx+ObzswtwhDDeWQtpScBku+cfh
+	 gFhql5aAGvyOhNISZ5EmnbovIYanDSAbdfvNYT+CKFtBe6ShOJXPBPH62dZPUtSFsH
+	 /9DXMZ5Za8qeXXjLFCBjJMQBdOUmiKF9a8r90j1LbiNP7OuZPI3Fz/XJt3ZLjQ3cy7
+	 OMmb8sI73yuK0P0M54zqtxXza6o7rx4Jrr4iEiW7RQFwdUnO4k3Fsk2ZOmgg/S37TM
+	 /1gYxlDf5k72He6hNuyZAtv/irgoR/KpiU0WidVNS2SX97c5eB1TEpJO0gNkTo0o2C
+	 8nocUmRXPqJ7A==
+Received: from mchehab by mail.kernel.org with local (Exim 4.98)
+	(envelope-from <mchehab+huawei@kernel.org>)
+	id 1thQru-00000006Cia-0CEy;
+	Mon, 10 Feb 2025 11:18:22 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	"Jonathan Corbet" <corbet@lwn.net>,
+	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
+	Chao Yu <mchehab+huawei@kernel.org>,
+	Jaegeuk Kim <mchehab+huawei@kernel.org>,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 07/27] ABI: sysfs-fs-f2fs: fix date tags
+Date: Mon, 10 Feb 2025 11:17:56 +0100
+Message-ID: <336ab631c0636e419282a38e7dd5b5cfb52fcd2d.1739182025.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <cover.1739182025.git.mchehab+huawei@kernel.org>
+References: <cover.1739182025.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250131-ffa_updates-v2-17-544ba4e35387@arm.com>
+Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-On 31-01-25, 11:24, Sudeep Holla wrote:
-> +static void handle_fwk_notif_callbacks(u32 bitmap)
-> +{
-> +	void *buf;
-> +	uuid_t uuid;
-> +	int notify_id = 0, target;
-> +	struct ffa_indirect_msg_hdr *msg;
-> +	struct notifier_cb_info *cb_info = NULL;
-> +
-> +	/* Only one framework notification defined and supported for now */
-> +	if (!(bitmap & FRAMEWORK_NOTIFY_RX_BUFFER_FULL))
-> +		return;
-> +
-> +	mutex_lock(&drv_info->rx_lock);
-> +
-> +	msg = drv_info->rx_buffer;
-> +	buf = kmalloc(msg->size, GFP_KERNEL);
-> +	if (!buf) {
-> +		mutex_unlock(&drv_info->rx_lock);
-> +		return;
-> +	}
-> +	memcpy(buf, (void *)msg + msg->offset, msg->size);
+Some date tags are missing colons. Add them to comply with
+ABI description and produce right results when converted to html/pdf.
 
-Can use kmemdup() here instead.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/ABI/testing/sysfs-fs-f2fs | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
+index 3e1630c70d8a..e44bb614964b 100644
+--- a/Documentation/ABI/testing/sysfs-fs-f2fs
++++ b/Documentation/ABI/testing/sysfs-fs-f2fs
+@@ -347,7 +347,7 @@ Description:	Used to control configure extension list:
+ 		- [c] means add/del cold file extension
+ 
+ What:		/sys/fs/f2fs/<disk>/unusable
+-Date		April 2019
++Date:		April 2019
+ Contact:	"Daniel Rosenberg" <drosen@google.com>
+ Description:	If checkpoint=disable, it displays the number of blocks that
+ 		are unusable.
+@@ -355,7 +355,7 @@ Description:	If checkpoint=disable, it displays the number of blocks that
+ 		would be unusable if checkpoint=disable were to be set.
+ 
+ What:		/sys/fs/f2fs/<disk>/encoding
+-Date		July 2019
++Date:		July 2019
+ Contact:	"Daniel Rosenberg" <drosen@google.com>
+ Description:	Displays name and version of the encoding set for the filesystem.
+ 		If no encoding is set, displays (none)
 -- 
-viresh
+2.48.1
+
