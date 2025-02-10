@@ -1,143 +1,67 @@
-Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4682424F5BB;
-	Mon, 10 Feb 2025 16:45:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB1824F5BB
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739205950; cv=none; b=Sz8w+9/by/EsbM99Q2Fl6jBrOxmPKyFi19AkjVMHWWGFyzDkKr5gT0Er356U2fkL7ZjNjN6Al8mo8CP+7b+HmPYw2w6pWzmPbTK/fP4z9YI5iCne+1btEHkClsEalGsFKTiHqyz6/nEt9RyfXG90AP4MHfF3Iti+nI6Y105sryE=
+	t=1739205958; cv=none; b=FwzmmLI71hZixwE8CFN1jQqbjHpNQaAIMdL4TNLZvFnRA1f/K4M/xHKoRS07ffLDssRP6EGidM0SVHeesULe6PZASZrEdap4i1ZLHG1/TXS42iOimBUILFKen0HFOLVucVg+PSRb9711KQywtOTR7kkyLKKnH+a6QgvRZvb+ScE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739205950; c=relaxed/simple;
-	bh=GMFw1/abymd1ov05uZwkd1yWlJK+I5N0ohjbO8CqvMw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GM59R99g6eoq2ZDw1Z33wI7ggHHg3dcObJQN/P7zN/63O+aBPu3iVMGowj4L1BkWdzEHSKSqBgDQt99kgYK3zPadKp5HRegAJN+ytWdnuDYaAkDVXwW394hgWMGWIQ18lh3D6MC+crdzNyJFl5koa2A+3aMG5FjgDbRJuoLLRaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=mt+s6AcA; arc=none smtp.client-ip=217.92.40.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
+	s=arc-20240116; t=1739205958; c=relaxed/simple;
+	bh=9gvyOOFmg5CPuMfjbJ+kzg9bK442MgLgDg5rgoH1bVo=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=lXlJYsNosEP1aqsNDuDrnLq79m5svAPwp+2uk0d3uPcKe2/xeFNe1X6kjhAwoS6idAoH/M3b4XPR1jzsKH+l/0moewnHVsAm9eab/IMc7cOOVV+BjSr7KMkrxMIuyXWsEeYdUsJ1RfHMgEd28NxO2WhIuVgt5gxkvObubdpEdyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KcJsdIBv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="mt+s6AcA"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id DD53C1480320;
-	Mon, 10 Feb 2025 17:45:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
-	t=1739205947;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JxVraOdaNDoa+gL84QMf+jc4LDKQyFyDdKOVrhJTQNU=;
-	b=mt+s6AcAI14JX3eZwDjERM8NyrjFx+5WuXH238XMXaxWVLeZ7DgMKY7ipf84kiRGqCHUJi
-	FERQ3cjmDy1cnVGCXBATXKBXaj/gaqnP3i5QsqYOAaRVbrOh+8Sn6ZmApR6hz9xwmuNdAb
-	8Zbd8cfM2P3eZV3jOW3+snM/g1cyh5HCe6WSd/+3QtONJnaIErcHgbVCuf5jWBscMhyScU
-	wIiMN1/BRmIbINqqmb/sDMHFlOunGmcw7M5d5cuNxRTin1TdNzTQywB4PX/ols3QFOki04
-	/axBkI/mbF5FKp/5mGgLUQwnbACzIyP/2QVIUO/YHUiGtGDGdq1CuYfDPbV31A==
-From: Alexander Dahl <ada@thorsis.com>
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Ryan Wanner <ryan.wanner@microchip.com>,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Subject: [PATCH v2 08/16] dt-bindings: nvmem: microchip-otpc: Add required clocks
-Date: Mon, 10 Feb 2025 17:44:58 +0100
-Message-Id: <20250210164506.495747-9-ada@thorsis.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250210164506.495747-1-ada@thorsis.com>
-References: <20250210164506.495747-1-ada@thorsis.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KcJsdIBv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18864C4CED1;
+	Mon, 10 Feb 2025 16:45:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739205957;
+	bh=9gvyOOFmg5CPuMfjbJ+kzg9bK442MgLgDg5rgoH1bVo=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=KcJsdIBv2eLjhq/IHC8fU/x211ixQNHDvI8Re3rRFHjpz6N7VRvec1YFVCSD1Q6uJ
+	 uVVMp2qxbnchjI22690/smhkGaw/hR+uPSJCL4FZmrucCq8sEKASWp1QovNELgFk4V
+	 j8HhAoeSldKSx2OBdkemwAEobIXP0wXMzr11DFd9SETMAozVtR40UETTwjqwcETSDx
+	 YmZUZGcd7RkWKUk+uI+bPBWxd894dGmednv1yLogcF37XkhDZO/L8oyNCe4dk8us0l
+	 k7MwSwB7uFy1RmOYpZmgiK1LtMduPJD4d1Q1+tUZzRhI6JpzKj+q461AS51T36637t
+	 rKNMR4LvQxwcQ==
+From: Lee Jones <lee@kernel.org>
+To: Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250114192538.911970-1-krzysztof.kozlowski@linaro.org>
+References: <20250114192538.911970-1-krzysztof.kozlowski@linaro.org>
+Subject: Re: (subset) [PATCH] mfd: Use str_enable_disable-like helpers
+Message-Id: <173920595682.1897869.4639096050845535889.b4-ty@kernel.org>
+Date: Mon, 10 Feb 2025 16:45:56 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+X-Mailer: b4 0.13.0
 
-The OTPC requires both the peripheral clock through PMC and the main RC
-oscillator.  Seemed to work without explicitly enabling those clocks on
-sama7g5 before, but did not on sam9x60.
+On Tue, 14 Jan 2025 20:25:38 +0100, Krzysztof Kozlowski wrote:
+> Replace ternary (condition ? "enable" : "disable") syntax with helpers
+> from string_choices.h because:
+> 1. Simple function call with one argument is easier to read.  Ternary
+>    operator has three arguments and with wrapping might lead to quite
+>    long code.
+> 2. Is slightly shorter thus also easier to read.
+> 3. It brings uniformity in the text - same string.
+> 4. Allows deduping by the linker, which results in a smaller binary
+>    file.
+> 
+> [...]
 
-Older datasheets were not clear and explicit about this, but recent are,
-e.g. SAMA7G5 series datasheet (DS60001765B),
-section 30.4.1 Power Management:
+Applied, thanks!
 
-> The OTPC is clocked through the Power Management Controller (PMC).
-> The user must power on the main RC oscillator and enable the
-> peripheral clock of the OTPC prior to reading or writing the OTP
-> memory.
+[1/1] mfd: Use str_enable_disable-like helpers
+      commit: 32bd3cfecbd0b7f2a0aa31797d037a9884f4e6f9
 
-Link: https://lore.kernel.org/linux-clk/ec34efc2-2051-4b8a-b5d8-6e2fd5e08c28@microchip.com/T/#u
-Signed-off-by: Alexander Dahl <ada@thorsis.com>
----
-
-Notes:
-    v2:
-    - new patch, not present in v1
-
- .../nvmem/microchip,sama7g5-otpc.yaml         | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml b/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml
-index 9a7aaf64eef32..1fa40610888f3 100644
---- a/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml
-@@ -29,6 +29,16 @@ properties:
-   reg:
-     maxItems: 1
- 
-+  clocks:
-+    items:
-+      - description: main rc oscillator
-+      - description: otpc peripheral clock
-+
-+  clock-names:
-+    items:
-+      - const: main_rc_osc
-+      - const: otpc_clk
-+
- required:
-   - compatible
-   - reg
-@@ -37,6 +47,8 @@ unevaluatedProperties: false
- 
- examples:
-   - |
-+    #include <dt-bindings/clock/at91.h>
-+    #include <dt-bindings/clock/microchip,sama7g5-pmc.h>
-     #include <dt-bindings/nvmem/microchip,sama7g5-otpc.h>
- 
-     otpc: efuse@e8c00000 {
-@@ -44,10 +56,26 @@ examples:
-         reg = <0xe8c00000 0xec>;
-         #address-cells = <1>;
-         #size-cells = <1>;
-+        clocks = <&pmc PMC_TYPE_CORE SAMA7G5_PMC_MAIN_RC>, <&pmc PMC_TYPE_PERIPHERAL 67>;
-+        clock-names = "main_rc_osc", "otpc_clk";
- 
-         temperature_calib: calib@1 {
-             reg = <OTP_PKT(1) 76>;
-         };
-     };
- 
-+  - |
-+    #include <dt-bindings/clock/at91.h>
-+    #include <dt-bindings/clock/microchip,sam9x60-pmc.h>
-+    #include <dt-bindings/nvmem/microchip,sama7g5-otpc.h>
-+
-+    efuse@eff00000 {
-+        compatible = "microchip,sam9x60-otpc", "syscon";
-+        reg = <0xeff00000 0xec>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        clocks = <&pmc PMC_TYPE_CORE SAM9X60_PMC_MAIN_RC>, <&pmc PMC_TYPE_PERIPHERAL 46>;
-+        clock-names = "main_rc_osc", "otpc_clk";
-+    };
-+
- ...
--- 
-2.39.5
+--
+Lee Jones [李琼斯]
 
