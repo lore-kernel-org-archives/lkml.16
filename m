@@ -1,130 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE8F2500BA;
-	Mon, 10 Feb 2025 17:45:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD1F25B68E
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739209508; cv=none; b=AOvBUbxZAlOE8ab7uy1MtRBDeraHjtiTNRi6hsOTydV+AzuK7tFSBWD6t6HkDWAqyfm/etkB2OSKzXB9AXJxcReQ3Dpowd1G9JZibumrnzl0HgZR6SdgbtlOLuPftqhyXFEKXfwpg+ZxGkMOnbGBgBd1Hhb+74sGCm7eSqGOHJk=
+	t=1739209519; cv=none; b=tPjPRpzT4JwHoTUlgA6yelv0F5Ff7uv7PiEJDW9ImNbH5R/ak5tY3oODw8I0BDc96oVVCEcjEYAajVWvPFVSac97mf14wQDpqxgM1ePUmnOqnv6Eg6K5q+fqSV0M2QcvlsyvkHEmc48ReEaCclKMgi0HeWlhfevR/JtBepwXE94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739209508; c=relaxed/simple;
-	bh=EkPg0iVWp2FJbeErYnYBxnLlulonUWK0FxLvxy3RRK4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eb4GB9yKwOvz3JR7C4qAgfgk9qLQ/kjtDHmwEfe0R8N+cV+0C0/I3F2CRyaG5vQN90TzooTdtQCKaEcTA1pyKuw/2H+/RqrxITi8lPKVSzTo3M40JRTOQs405cNq2ZK1CAlu4y3AKQMZ/V3p87pjmDBtKw1jCPolfeSWp+l7E00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A8PBU0H4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739209519; c=relaxed/simple;
+	bh=fdNx1DUDaVtYdgrnYwf8qDr5+EznUmUeXdfIPP1MsRA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CGAejXCxwnTLUeaJTlqymfIclJUA1+gU0RyFh7Jt5nUzHPKteDqdd4kB1ozJfKt8H2rqtcBQqY/n9BS186R45ckmjPG4XTBt1/b5ncB+MmtmI7uEIFujPPh8ogYGDeseJdB23RmV5zoEpAsjBkak2eVuCVaJpQZX0hxtBelWw1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=NgslL5rP; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A8PBU0H4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 567D9C4CEE5;
-	Mon, 10 Feb 2025 17:45:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739209507;
-	bh=EkPg0iVWp2FJbeErYnYBxnLlulonUWK0FxLvxy3RRK4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=A8PBU0H4UdGp7EEii9SVKDYE3xCTXFxnvsSm8n6vjdQKVpgfLVGBqMvwYcxapcqpG
-	 /e9WhuyHheagw0ggp5DGCOWc0AnApALJ0iW4WveKnDahwmH/3SJlhgo1lV/7jv8OUM
-	 9GU+cJNUit24AYXhDaBEmgBns7TT5XjQR3jrX52kpazd8M8GoYAfD8Up8/CBz6OHio
-	 evRcWwznTb4ubpjoL+hvA6H/uZIB7GRBQwh3/B28BQvPkoR7l1xCZJ/E2l5MKHCZlz
-	 vhHUHKstenVnlUZ9HBkO70ibzWQbihBg72d9QfAhGNuXuTc2MI/jcCN433DEyLGhd7
-	 oSogFORbTUGWQ==
-From: Kees Cook <kees@kernel.org>
-To: Tariq Toukan <tariqt@nvidia.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] net/mlx4_core: Avoid impossible mlx4_db_alloc() order value
-Date: Mon, 10 Feb 2025 09:45:05 -0800
-Message-Id: <20250210174504.work.075-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="NgslL5rP"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aaf900cc7fbso786881566b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:45:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1739209515; x=1739814315; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fdNx1DUDaVtYdgrnYwf8qDr5+EznUmUeXdfIPP1MsRA=;
+        b=NgslL5rPJnNz+XbPkiPKl0NqG+mDs9PfAUXwrFlPzJc4GjuPubjq+Vu+wnyFU9g2M/
+         WuH0QcIYi1oVRmBN62LFO2J3yOL/k2sIzWrjsm4n1hdtyvPxJKSHYY0dqFIhArL9ycrp
+         dSS2baxxgwLDURj2bmQnZinDeJJMppx0+3vnTqkj3yc3GMFFQLyXajNZ4sRBBhjFdqdM
+         vgjCk1YAZqvteUz/sOqhYPR8sDZi2VF/mz3D807WqvHWJ5vv5b/8esfz6R0IRgAVhxuv
+         +MMMthkhCMss18aSTT/AXGWEZWz2okNabraRSo8eInDFans1GyGaZnGdEyXWZ7jyNK/g
+         lg1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739209515; x=1739814315;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fdNx1DUDaVtYdgrnYwf8qDr5+EznUmUeXdfIPP1MsRA=;
+        b=G3oyAN7/Vw/jQ8AMU24F/lmygcmuFgW9B6e89PiKLAiQCteoN2Y5+E0Mrvs2BZvGHG
+         YA4FOcLu/nDFUkbeeQ1B+IgmbasOWPSz9wbZUIkNfPFSZhZV04gH0b/tvnIuaLqlNTyM
+         V0yUSy7jLNhZ0DXqCKhRMOFPSc1SZ9+OUwR8s0Qdbed2ZMIQRrpCHhouBbx46u2bZb6a
+         k3sqso5r8UrRzVIhPdYZlwVaiHUw/p5/gdr1j+W9sIh0taKOx3lAHfx2x/ZknovnaGoT
+         S5INFahx94FlM5+YJQFLU+aWcmOOPOlsHzLwvhS4QFCSRMCLong+wqvZfhnIcU25guna
+         yeMA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGPs6dpiBAeq4MrAm/dlLEMstDNZz9dPs/oSgRp8J7HFBE04odrAvUUvVMfHaW7JrPK99Wvlu0RngO+Dc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZNiTzl4A9HkqXpsdfpKM3dvd32xgBK3Xt1Yol+xuykgs0pziN
+	n7sqMsE6FfC+jstSpomLlfKxRnDmAzd5TKMmCLoFxlZJhuutr1OwYNK/Goa1v5AOUlr8DubHAKn
+	Qj0ECMwglpXicd19ltf+vzluSoXsUB7IS4itYbw==
+X-Gm-Gg: ASbGncuHGEvwlFwnZSVNl/vB6FYohK5huQezkbLGH9aMkBSglptM/ie3r+XBplrAwqB
+	W20JuqdYk7ihlRxzf9ykQMUYD2B+P3I3AMB7PspmKxruEN/7YEEExFoYRBGs35v4F7qtbo5xl5z
+	OLzhDCMla+elmWqa4BMeKT2r8hFA==
+X-Google-Smtp-Source: AGHT+IGXUbcrbs9jCJWCCDSj0H7A7skcP2xO/8QiwRx0Lv2OP1hLehSE5+2+D1t/ncKajx8/C0dIGmPhKHOCuJcDXr8=
+X-Received: by 2002:a17:907:94d5:b0:ab7:6c50:5f19 with SMTP id
+ a640c23a62f3a-ab789aed850mr1642511966b.31.1739209514948; Mon, 10 Feb 2025
+ 09:45:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3608; i=kees@kernel.org; h=from:subject:message-id; bh=EkPg0iVWp2FJbeErYnYBxnLlulonUWK0FxLvxy3RRK4=; b=owGbwMvMwCVmps19z/KJym7G02pJDOmrrBU+V3w5JxDieixNs3bKsg1HJS8/6yu7FMJesI1tm pLqtFOhHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABP51MzI0MoVuTjI7V/Imin7 fz7hVjPYxvHm6E3Otf6rcjqulj8oZWFkWPLgkVkHT6j8q3Pf+ATFrK/NPaLA8+9Z9M87ipV2kz4 f4AQA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <CAKPOu+_4mUwYgQtRTbXCmi+-k3PGvLysnPadkmHOyB7Gz0iSMA@mail.gmail.com>
+ <3052002.1739196466@warthog.procyon.org.uk> <CAKPOu+_tjkiU7mMC0mCwhH23BQ03o=QTgTH60TQ6=aC4fQr7LA@mail.gmail.com>
+In-Reply-To: <CAKPOu+_tjkiU7mMC0mCwhH23BQ03o=QTgTH60TQ6=aC4fQr7LA@mail.gmail.com>
+From: Max Kellermann <max.kellermann@ionos.com>
+Date: Mon, 10 Feb 2025 18:45:04 +0100
+X-Gm-Features: AWEUYZmS9NnwMn_wzMK0r5f-lnnWPNLNfcts3sg_BGm3yC1zJ8jSxnW_V6mGylE
+Message-ID: <CAKPOu+_Cbkq7ROF=azCnWNcgDS4V=SyKC-_ixVo9siyE_SOeow@mail.gmail.com>
+Subject: Re: "netfs: Can't donate prior to front"
+To: David Howells <dhowells@redhat.com>
+Cc: netfs@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
+	linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-GCC can see that the value range for "order" is capped, but this leads
-it to consider that it might be negative, leading to a false positive
-warning (with GCC 15 with -Warray-bounds -fdiagnostics-details):
+On Mon, Feb 10, 2025 at 6:41=E2=80=AFPM Max Kellermann <max.kellermann@iono=
+s.com> wrote:
+> Additionally, here you have a file with a dump of *subreq and *req (of
+> R=3D8). I have added additional fields "start0" and "len0" which contain
+> the values initially set on these.
 
-../drivers/net/ethernet/mellanox/mlx4/alloc.c:691:47: error: array subscript -1 is below array bounds of 'long unsigned int *[2]' [-Werror=array-bounds=]
-  691 |                 i = find_first_bit(pgdir->bits[o], MLX4_DB_PER_PAGE >> o);
-      |                                    ~~~~~~~~~~~^~~
-  'mlx4_alloc_db_from_pgdir': events 1-2
-  691 |                 i = find_first_bit(pgdir->bits[o], MLX4_DB_PER_PAGE >> o);                        |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      |                     |                         |                                                   |                     |                         (2) out of array bounds here
-      |                     (1) when the condition is evaluated to true                             In file included from ../drivers/net/ethernet/mellanox/mlx4/mlx4.h:53,
-                 from ../drivers/net/ethernet/mellanox/mlx4/alloc.c:42:
-../include/linux/mlx4/device.h:664:33: note: while referencing 'bits'
-  664 |         unsigned long          *bits[2];
-      |                                 ^~~~
+btw. this happens because there is only one subrequest (R=3D8[7]), but
+the start offset is being rounded down (folio_order=3D2), thus
+"fpos<start":
 
-Switch the argument to unsigned int, which removes the compiler needing
-to consider negative values.
-
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Tariq Toukan <tariqt@nvidia.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: Yishai Hadas <yishaih@nvidia.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-rdma@vger.kernel.org
----
- drivers/net/ethernet/mellanox/mlx4/alloc.c | 6 +++---
- include/linux/mlx4/device.h                | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx4/alloc.c b/drivers/net/ethernet/mellanox/mlx4/alloc.c
-index b330020dc0d6..f2bded847e61 100644
---- a/drivers/net/ethernet/mellanox/mlx4/alloc.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/alloc.c
-@@ -682,9 +682,9 @@ static struct mlx4_db_pgdir *mlx4_alloc_db_pgdir(struct device *dma_device)
- }
- 
- static int mlx4_alloc_db_from_pgdir(struct mlx4_db_pgdir *pgdir,
--				    struct mlx4_db *db, int order)
-+				    struct mlx4_db *db, unsigned int order)
- {
--	int o;
-+	unsigned int o;
- 	int i;
- 
- 	for (o = order; o <= 1; ++o) {
-@@ -712,7 +712,7 @@ static int mlx4_alloc_db_from_pgdir(struct mlx4_db_pgdir *pgdir,
- 	return 0;
- }
- 
--int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, int order)
-+int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, unsigned int order)
- {
- 	struct mlx4_priv *priv = mlx4_priv(dev);
- 	struct mlx4_db_pgdir *pgdir;
-diff --git a/include/linux/mlx4/device.h b/include/linux/mlx4/device.h
-index 27f42f713c89..86f0f2a25a3d 100644
---- a/include/linux/mlx4/device.h
-+++ b/include/linux/mlx4/device.h
-@@ -1135,7 +1135,7 @@ int mlx4_write_mtt(struct mlx4_dev *dev, struct mlx4_mtt *mtt,
- int mlx4_buf_write_mtt(struct mlx4_dev *dev, struct mlx4_mtt *mtt,
- 		       struct mlx4_buf *buf);
- 
--int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, int order);
-+int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, unsigned int order);
- void mlx4_db_free(struct mlx4_dev *dev, struct mlx4_db *db);
- 
- int mlx4_alloc_hwq_res(struct mlx4_dev *dev, struct mlx4_hwq_resources *wqres,
--- 
-2.34.1
-
+ (gdb) p/x fpos
+ $5 =3D 0x1c0000
+ (gdb) p/x fend
+ $6 =3D 0x200000
+ (gdb) p/x start
+ $7 =3D 0x1c6000
