@@ -1,253 +1,70 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F23204850
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:02:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A981E283C;
+	Mon, 10 Feb 2025 16:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739203325; cv=none; b=uXbewUpPws5NELNXZ937BcCnCvUCadBFcICN91KCAgr8F+cJEYtxdAGW1kObfCLikTi23goGKsFZgK8ywWT7r05x83QIHR9GWcU4hNiFEZ8dkTPPKxtC3XUzmyw6A+jTzxCoBvzK56u2wJlzq96WmdVAw6hQ/PW/HXANGPbeSyE=
+	t=1739203364; cv=none; b=hWJAAJRdFh12pVp/WYfrR8J/b5VyEoXlpk8QlahN3nCU5FrzLCWluzrhDKfRd5zlLmt6PSkbrSgOyhQhV7Tnw6r1X9fzKVkfvTbjoltvs0KPVNX0uLnLJLkJjUOQGrb8B+kBspsEcmbLPLXhyrKtT3AjLbzlEHFRmD6scLEKZvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739203325; c=relaxed/simple;
-	bh=u0VAYcq/akyEWKSTt6GgPq/wArBPZN2RGKupkPBoI9U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X0PqN2mwlrAp8qMC4ri3sWkRbAntZDjNRvSssISGBYJ3Mzw+b/wqI0bmnyqhJWg3DKwWAux9PfX8oL0jnr1X2n9DtMdXUyAJ6gc6XPj54VMjHPZVt7Lg3DnAQgqxHFeaZQnmkkdOl/DNzYqYbLXS4fsYunAKurP3lV41OA1wadc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=by1l6cjA; arc=none smtp.client-ip=209.85.210.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1739203364; c=relaxed/simple;
+	bh=4LZebtsJjVMW3bL1G3KYxi2tJi8LyA0u74DrAcHXvRg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oObT2vHjLcdJ8WX2B256yxgERWxjkx2Ewnkd8mJkWuxzW6/A6ALWjowvLIrofEZPJJ7n7S2bY3GnUjSHwoI917qW1AsLXZ6w0J3OiVABtCVHE3C5Nf8mHgyALgpXPb9kw6EU+XHAWB/pmD7Tu/BETlL1Pc6qlR10ts9rAZhpMqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YeMzVvs8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="by1l6cjA"
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-723442fd88aso1379472a34.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:02:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739203321; x=1739808121; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V9hNY1B3hiFWbuQVz7IVTYjJtWHZaIF3fkXcrf0/HLc=;
-        b=by1l6cjAYc0fhrKXUYScnFBk65YXDFVSsHpa/Pux4dscqAJzIlo7ToU3Qx0mQRw8If
-         mALiPurZ9eMt5jGUnugbqiUYTTp2yyei/rIE3nIPJ+REpuEezQe/PsuiPls+RG4gzXLX
-         mIs/8cdPbeU7Y5bugrP9Ssxkz7XFrnAc9Qq8Raw+/LudAV11AHSxJypFKSsFCw3nh9f6
-         0uNwMWTkGbITbt2r8fuJf+JbvcseWDSQgEOqFtEycCjrXcoD6C8/UDOzNpTmf/15sLWQ
-         D1r9ltQndNdsqQUbiACkEz8nmUCOi2DR/atV6pZ5X4QsueYXa6uWqWAgt8wXuCtWNQV0
-         1uqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739203321; x=1739808121;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V9hNY1B3hiFWbuQVz7IVTYjJtWHZaIF3fkXcrf0/HLc=;
-        b=skQa3vem1wZqVh2Q6hNnr0a7NW0C16Vj/qkP0Wl4ouPGyqKro6foIDdYLDykz9gADI
-         lYKzTXLP/W1BmabLAXoCUZpn/8Frh5vY/kuMfetT/asm3xcJaV0jfPk7XWSXXs9UiZHx
-         S3XjPVoEE23t+ybGIkbMwAbKv1tfeIIy8CEwtUSMaKGe0Maz0A8j5P0ZRuPdqOadzish
-         bjpsqKDSGBjkdf87lAuo1cWnVgiHdWmNuLkYkHSWx8xXsMoPRAoxsFQMlNAV7XgdGkIg
-         sk5TT1upu9vqVk77/EiyHP2+0ywkoMX0OR9eQFnDSMGqe0WzC/+EkbJwH8JymhMr34jE
-         irRg==
-X-Forwarded-Encrypted: i=1; AJvYcCWvGO1SrBfoZTfPB1B/e7KQAKq3wB9HLG3l1+yMZQBQQ6x/sYG+KWg+jUrRi8flzFqRk1xEO2rXBiTYoOQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTKMbrZe11sQ4IGYdepBoiFRUoSRZ75nYfl3xIKCb6nZ3m3iRS
-	/QFdxE/xWbZDBZB70IGFZfV6MMuPFof3xlq1VuVsRP6s0NJAG1nNo6VWfNyX1Dk=
-X-Gm-Gg: ASbGncsuJ3iJ+nGQAK22oKVYGV3QCG+VO2hfeNOrCEgZdbj9PNyz6Fu3eSy6dSy9u1Q
-	LrvHRIqiANjtzpAu7xsXTR4ekp5hg78gn4TkvXayYsvsKyIFGhTAz4+Kh6N4h7cMv8SSse8V9BI
-	42XR6M3Ox7n71hlXss3dsO0lfkuLGIdeaVn6pX4zkThnf3nBPKHUbNm6sst+G6O8OozPGzwBDw4
-	yenSxG/JAnlmU4luCihV/pmqq+Lsv7IrD3mVHLTW3zqGclt4koej9ddM0rr1LMaxbYTvQPFGCbK
-	p+cuLUYPWxlSP1vjHt6fsdGb71+yu37CDWABTsAKFmACAkq79xEE
-X-Google-Smtp-Source: AGHT+IEmz/z79n57foTM2IiZV1RAkBRrvXZ8JCigqm1/04tEth3DdNZfHmVNCMaJppLzGcpSIjFH7A==
-X-Received: by 2002:a05:6830:6010:b0:71f:bbbd:ab60 with SMTP id 46e09a7af769-726b88cbe92mr9464407a34.26.1739203321488;
-        Mon, 10 Feb 2025 08:02:01 -0800 (PST)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b854f77c92sm1842798fac.30.2025.02.10.08.01.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 08:01:59 -0800 (PST)
-Message-ID: <8a8432e7-86b9-43dd-9aa0-75875747eedb@baylibre.com>
-Date: Mon, 10 Feb 2025 10:01:57 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YeMzVvs8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62AA1C4CED1;
+	Mon, 10 Feb 2025 16:02:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739203362;
+	bh=4LZebtsJjVMW3bL1G3KYxi2tJi8LyA0u74DrAcHXvRg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YeMzVvs8+hTty3Lx8I6BS397VLwtvDy1llw7EVUaX4CthnLUWbfz4RQ+IFANuQCfz
+	 UBzl6oUse9WDty/wk4yMX7+HLIN52Hka4wL4WJwhYCe006DB0pZr4owYQ5a0Ij2LGH
+	 kB7ciLFZO3luWqgtBYDZHLbURONxPKGRdCdvaGXCrITm1nQXsKbaO9U4/UEIEoJN0f
+	 EGkKdO0uk0MpVtSxSn8jsTvHm+3Jj3ipc4rES5kLfUlcMruYX9B2xT0GDf32G4Mp07
+	 hrTQ8VvXe0reD55UEhCMu6pLujDZu5pyE3d5WnaDUI+ZObqkc4jN2Zto6NI+7RDut9
+	 TwpCyyCvrcldQ==
+Date: Mon, 10 Feb 2025 17:02:35 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Zicheng Qu <quzicheng@huawei.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, jlayton@kernel.org, axboe@kernel.dk, joel.granados@kernel.org, 
+	tglx@linutronix.de, linux-kernel@vger.kernel.org, hch@lst.de, len.brown@intel.com, 
+	pavel@ucw.cz, pengfei.xu@intel.com, rafael@kernel.org, 
+	syzkaller-bugs@googlegroups.com, linux-pm@vger.kernel.org, tanghui20@huawei.com, 
+	zhangqiao22@huawei.com, judy.chenhui@huawei.com
+Subject: Re: [PATCH] acct: Prevent NULL pointer dereference when writing to
+ sysfs
+Message-ID: <20250210-erstsemester-eckpunkte-f2f0d922ed01@brauner>
+References: <20250127091811.3183623-1-quzicheng@huawei.com>
+ <20250210131719.528717-1-quzicheng@huawei.com>
+ <20250210-unordnung-petersilie-90e37411db18@brauner>
+ <20250210152146.GC1977892@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 14/17] iio: adc: ad4695: Add support for SPI offload
-To: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Lars-Peter Clausen <lars@metafoo.de>, David Jander <david@protonic.nl>,
- Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
- <20250207-dlech-mainline-spi-engine-offload-2-v8-14-e48a489be48c@baylibre.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250207-dlech-mainline-spi-engine-offload-2-v8-14-e48a489be48c@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250210152146.GC1977892@ZenIV>
 
-On 2/7/25 2:09 PM, David Lechner wrote:
-> Add support for SPI offload to the ad4695 driver. SPI offload allows
-> sampling data at the max sample rate (500kSPS or 1MSPS).
+On Mon, Feb 10, 2025 at 03:21:46PM +0000, Al Viro wrote:
+> On Mon, Feb 10, 2025 at 04:12:54PM +0100, Christian Brauner wrote:
 > 
-> This is developed and tested against the ADI example FPGA design for
-> this family of ADCs [1].
+> > One fix would be to move exit_fs() past exit_task_work(). It looks like
+> > that this should be doable without much of a problem and it would fix
+> > the path_init() problem.
+> > 
+> > There should hopefully be nothing relying on task->fs == NULL in
+> > exit_task_work().
 > 
-> [1]: http://analogdevicesinc.github.io/hdl/projects/ad469x_fmc/index.html
-> 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
-> 
+> There's a question of the task_work_add() issued by exit_task_fs(),
+> though.
 
-...
-
-> ---
->  drivers/iio/adc/Kconfig  |   1 +
->  drivers/iio/adc/ad4695.c | 445 +++++++++++++++++++++++++++++++++++++++++++++--
->  2 files changed, 429 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 995b9cacbaa964d26424346120c139858f93cdcd..ec60b64c46e187e2be18ab1f8ca9e6f4f03299f9 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -52,6 +52,7 @@ config AD4695
->  	tristate "Analog Device AD4695 ADC Driver"
->  	depends on SPI
->  	select IIO_BUFFER
-> +	select IIO_BUFFER_DMAENGINE
->  	select IIO_TRIGGERED_BUFFER
->  	select REGMAP
-
-I missed adding
-
-	select SPI_OFFLOAD
-
-Closes: https://lore.kernel.org/oe-kbuild-all/202502090910.ganYXEeF-lkp@intel.com/
-
->  	help
-
-...
-
-
-> +static int ad4695_offload_buffer_postenable(struct iio_dev *indio_dev)
-> +{
-> +	struct ad4695_state *st = iio_priv(indio_dev);
-> +	struct spi_offload_trigger_config config = {
-> +		.type = SPI_OFFLOAD_TRIGGER_DATA_READY,
-> +	};
-> +	struct spi_transfer *xfer = &st->buf_read_xfer[0];
-> +	struct pwm_state state;
-> +	u8 temp_chan_bit = st->chip_info->num_voltage_inputs;
-> +	u8 num_slots = 0;
-> +	u8 temp_en = 0;
-> +	unsigned int bit;
-> +	int ret;
-> +
-> +	iio_for_each_active_channel(indio_dev, bit) {
-> +		if (bit == temp_chan_bit) {
-> +			temp_en = 1;
-> +			continue;
-> +		}
-> +
-> +		ret = regmap_write(st->regmap, AD4695_REG_AS_SLOT(num_slots),
-> +				   FIELD_PREP(AD4695_REG_AS_SLOT_INX, bit));
-> +		if (ret)
-> +			return ret;
-> +
-> +		num_slots++;
-> +	}
-> +
-> +	/*
-> +	 * For non-offload, we could discard data to work around this
-> +	 * restriction, but with offload, that is not possible.
-> +	 */
-> +	if (num_slots < 2) {
-> +		dev_err(&st->spi->dev,
-> +			"At least two voltage channels must be enabled.\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = regmap_update_bits(st->regmap, AD4695_REG_TEMP_CTRL,
-> +				 AD4695_REG_TEMP_CTRL_TEMP_EN,
-> +				 FIELD_PREP(AD4695_REG_TEMP_CTRL_TEMP_EN,
-> +					    temp_en));
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Each BUSY event means just one sample for one channel is ready. */
-> +	memset(xfer, 0, sizeof(*xfer));
-> +	xfer->offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
-> +	/* Using 19 bits per word to allow for possible oversampling */
-> +	xfer->bits_per_word = 19;
-> +	xfer->len = 4;
-> +
-> +	spi_message_init_with_transfers(&st->buf_read_msg, xfer, 1);
-> +	st->buf_read_msg.offload = st->offload;
-> +
-> +	ret = spi_optimize_message(st->spi, &st->buf_read_msg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * NB: technically, this is part the SPI offload trigger enable, but it
-> +	 * doesn't work to call it from the offload trigger enable callback
-> +	 * because it requires accessing the SPI bus. Calling it from the
-> +	 * trigger enable callback could cause a deadlock.
-> +	 */
-> +	ret = regmap_set_bits(st->regmap, AD4695_REG_GP_MODE,
-> +			      AD4695_REG_GP_MODE_BUSY_GP_EN);
-> +	if (ret)
-> +		goto err_unoptimize_message;
-> +
-> +	ret = spi_offload_trigger_enable(st->offload, st->offload_trigger,
-> +					 &config);
-> +	if (ret)
-> +		goto err_disable_busy_output;
-> +
-> +	ret = ad4695_enter_advanced_sequencer_mode(st, num_slots);
-> +	if (ret)
-> +		goto err_offload_trigger_disable;
-> +
-> +	guard(mutex)(&st->cnv_pwm_lock);
-
-Apparently clang doesn't like this guard() after goto, so I'll have to figure
-out what to do about that. Probably need to add a helper function to avoid
-goto below from jumping out of scoped_guard().
-
-https://lore.kernel.org/oe-kbuild-all/202502090806.KxEvxCZC-lkp@intel.com/
-
-> +	pwm_get_state(st->cnv_pwm, &state);
-> +	/*
-> +	 * PWM subsystem generally rounds down, so requesting 2x minimum high
-> +	 * time ensures that we meet the minimum high time in any case.
-> +	 */
-> +	state.duty_cycle = AD4695_T_CNVH_NS * 2;
-> +	ret = pwm_apply_might_sleep(st->cnv_pwm, &state);
-> +	if (ret)
-> +		goto err_offload_exit_conversion_mode;
-> +
-> +	return 0;
-> +
-> +err_offload_exit_conversion_mode:
-> +	/*
-> +	 * We have to unwind in a different order to avoid triggering offload.
-> +	 * ad4695_exit_conversion_mode() triggers a conversion, so it has to be
-> +	 * done after spi_offload_trigger_disable().
-> +	 */
-> +	spi_offload_trigger_disable(st->offload, st->offload_trigger);
-> +	ad4695_exit_conversion_mode(st);
-> +	goto err_disable_busy_output;
-> +
-> +err_offload_trigger_disable:
-> +	spi_offload_trigger_disable(st->offload, st->offload_trigger);
-> +
-> +err_disable_busy_output:
-> +	regmap_clear_bits(st->regmap, AD4695_REG_GP_MODE,
-> +			  AD4695_REG_GP_MODE_BUSY_GP_EN);
-> +
-> +err_unoptimize_message:
-> +	spi_unoptimize_message(&st->buf_read_msg);
-> +
-> +	return ret;
-> +}
+Can't we simply remove the pins on the mounts of fs->root and fs->pwd in
+exit_fs() explicitly? If that works I think that's a fair enough
+compromise for this shite.
