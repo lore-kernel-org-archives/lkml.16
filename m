@@ -1,72 +1,82 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1789F13AD3F;
-	Mon, 10 Feb 2025 05:59:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03FB813AD3F;
+	Mon, 10 Feb 2025 05:59:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739167143; cv=none; b=Dxmb+u0bEl8Cs7meBSEzwuEWQuz0zn4Xgn4pRlifiiii1AFRykN8eoz7UVg8+o6BW/vNLYwhj6Zo1I6tE2xX817uX8LNQZUQXjEPF7srk0y4lFHRJNiN17wY5D0aceHgLlENWj2+PDq+8usEINrydt7vSVT72Uml/IFrIqlFENc=
+	t=1739167168; cv=none; b=iX6yzVrQbM+bxI8TC+cWGUQMX/QgLivLM2PgVQUnEDSQae9WOVzGY1/MLZSLvLEqigMc1rpqGxx4xoMOubjkHPvtaH1JA7YBSGFQbdqV7KOAsvBYaIJtdYWgdFdeVwlOYy3m29YB27pgIdMdti8FMCZUWjreHPdEdKoKLmXB+K4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739167143; c=relaxed/simple;
-	bh=b2a3gJg8r8XY47Xb30aNYxU05tTtZlUoIqy5iyha99Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mpu+qTW4Qe9oWwROlYQqFevg5pVtkP3hRXWiCmNj2ORwjXMVMIS00kUAtLqqtam4yLb8Ecixb378mS+QzDWadIJaUCydgrsCx62WpNAYmjmC4yBawMXevjf6ZlsLASd6wJOCfG1SWO1o7naYSNwABh0Miy/5sOLvT+u8Sy3AiLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=nALuQFsy; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="nALuQFsy"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=+T5uj758NieMk8bBUK5X8Wsdb6Nz4WNL4skk6Wb/mi4=; b=nALuQFsynagrv6fdtkvbOEi4wa
-	xFxu2dPfwpgnwwMcQNlyukAW6+Xmm2edOvse2IkiZrEh+skoNl5E6ITA7JwK1AdUIO0IvPHxJu3U0
-	k/t6IwZ8nlaY1b83Ed9LmmwU6ca8u12pyAXAzJSbn/i53MRbl8pmqn5pG03auGLywnowpaYHJP4n/
-	Qz/MPwT1qfoPrYfk0loWgztK8k8BAyNcCAb3Vr3nolBU4cJ0PMUDo/jYh4qYb8VbnBh9ISg87/YZg
-	tKO9rRSOg+PJTGUX5RHFoEU9hqNYM20BBd9vV9eVeawcq+Aa8mA9KnnIXJW2IJxFKDX7DxRmEc5Kp
-	9/42VFuw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1thMos-000000094nn-0SYO;
-	Mon, 10 Feb 2025 05:58:58 +0000
-Date: Mon, 10 Feb 2025 05:58:58 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: David Reaver <me@davidreaver.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org, cocci@inria.fr,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 6/6] debugfs: Replace debugfs_node #define with
- struct wrapping dentry
-Message-ID: <20250210055858.GA1977892@ZenIV>
-References: <20250210052039.144513-1-me@davidreaver.com>
- <20250210052039.144513-7-me@davidreaver.com>
+	s=arc-20240116; t=1739167168; c=relaxed/simple;
+	bh=+PGA/I/gqDY95kLnGVig5cIeoNC/OI7Zp8T8BhzqzCc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ex4ldmurbjGQPOVl20xTvyMeoDsEullmF3CBdgmgXUrmimeNi8Phg0DVVR8Pt1/+KiVywQv6fiuTFRdLWuNu8QmR58QcOYs4atvTx9Ib0EtUih9rMhyjkVUuWdKP/J/MKWieKGIaBJNJGZU2RSGi52UOQAWTIydPKTnlo9B9PNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Yrv256vJ2z1ltZW;
+	Mon, 10 Feb 2025 13:55:41 +0800 (CST)
+Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id D54C9140156;
+	Mon, 10 Feb 2025 13:59:24 +0800 (CST)
+Received: from kwepemn100009.china.huawei.com (7.202.194.112) by
+ dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 10 Feb 2025 13:59:24 +0800
+Received: from localhost.localdomain (10.28.79.22) by
+ kwepemn100009.china.huawei.com (7.202.194.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 10 Feb 2025 13:59:23 +0800
+From: Huisong Li <lihuisong@huawei.com>
+To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<oss-drivers@corigine.com>
+CC: <irusskikh@marvell.com>, <andrew+netdev@lunn.ch>, <davem@davemloft.net>,
+	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<louis.peens@corigine.com>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
+	<kabel@kernel.org>, <zhanjie9@hisilicon.com>, <zhenglifeng1@huawei.com>,
+	<liuyonglong@huawei.com>, <lihuisong@huawei.com>
+Subject: [PATCH v2 0/5] Use HWMON_CHANNEL_INFO macro to simplify code
+Date: Mon, 10 Feb 2025 13:47:05 +0800
+Message-ID: <20250210054710.12855-1-lihuisong@huawei.com>
+X-Mailer: git-send-email 2.22.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210052039.144513-7-me@davidreaver.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemn100009.china.huawei.com (7.202.194.112)
 
-On Sun, Feb 09, 2025 at 09:20:26PM -0800, David Reaver wrote:
+The HWMON_CHANNEL_INFO macro is provided by hwmon.h and used widely by many
+other drivers. This series use HWMON_CHANNEL_INFO macro to simplify code
+in net subsystem.
 
-> +static inline struct debugfs_node *dentry_to_node(struct dentry *dentry)
-> +{
-> +	return container_of(dentry, struct debugfs_node, dentry);
-> +}
+Note: These patches do not depend on each other. Put them togeter just for
+belonging to the same subsystem.
 
-No.  And you don't have any fields left in struct dentry to replace
-that with following a pointer.
+---
+ -v2:
+  * detach these patches from the series[1]
 
-Again, do not embed struct dentry into any other object; you are not just
-doing that on temporary basis, it's left in that form by the end of the
-series.  No go.
+[1] https://lore.kernel.org/lkml/20250124022635.16647-3-lihuisong@huawei.com/T/
 
-NAKed-by: Al Viro <viro@zeniv.linux.org.uk>
+Huisong Li (5):
+  net: aquantia: Use HWMON_CHANNEL_INFO macro to simplify code
+  net: nfp: Use HWMON_CHANNEL_INFO macro to simplify code
+  net: phy: marvell: Use HWMON_CHANNEL_INFO macro to simplify code
+  net: phy: marvell10g: Use HWMON_CHANNEL_INFO macro to simplify code
+  net: phy: aquantia: Use HWMON_CHANNEL_INFO macro to simplify code
+
+ .../ethernet/aquantia/atlantic/aq_drvinfo.c   | 14 +------
+ .../net/ethernet/netronome/nfp/nfp_hwmon.c    | 40 +++----------------
+ drivers/net/phy/aquantia/aquantia_hwmon.c     | 32 +++------------
+ drivers/net/phy/marvell.c                     | 24 +----------
+ drivers/net/phy/marvell10g.c                  | 24 +----------
+ 5 files changed, 17 insertions(+), 117 deletions(-)
+
+-- 
+2.22.0
+
