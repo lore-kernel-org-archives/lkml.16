@@ -1,88 +1,150 @@
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37CA22FF37;
-	Mon, 10 Feb 2025 13:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E7922FF46;
+	Mon, 10 Feb 2025 13:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739194860; cv=none; b=cP+lr1q1RUIb177eohKaNJWrezgb0CTMC+yttQQ97suzPVaTv8+vWV9dWxZty5UOLW0/uSWE0/jOT6WUmZQ5U+sydYB06yOcJqlILLdL+iKcCMTXTUcjw0qii4nAMeLJN0xk5v1PmeQwyCDfmMo8IjObgFLFAXqIqWojGDhwz5Y=
+	t=1739194869; cv=none; b=a07kPEHxylAFwW0SN/6FDY6nG35+ezaoXbCHPVYwzsUEfIapDDIv1KXMA6VkFsNEUmKP6WHro+T4/FwxvPWgwHPmwBOOA42vRt1CfAYh7GRGQYzSresF/KjxOlkxPmWF/nYFx7vqYOmh+CUyZYUcNZXFzZKJJMF0ixDYfz3rJo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739194860; c=relaxed/simple;
-	bh=d5M7CjkiBfF1U3RRyoCwbTcDqhRkdFy8/esIO2PXoJo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AA/wf31TqsUhRWjYS3elo/i83kOiJ/J/YBhOBroQW1lSNoUWtSAsfCzQcIAkHvgOg3rniKQN3ineI3nmUWNAAWxAvxeeY7ockSUYWHs+FXc0P90jVIeChRNmKFzidO9ygKxFpXVIz2qJRC9mc5U2z/1ine1emxPbGvCQ0fxMl5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4bbbab48111so463763137.0;
-        Mon, 10 Feb 2025 05:40:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739194857; x=1739799657;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vaarjJMAl4KW3gMJM03j2ekRCVmUK5mi2YhdBinkVdU=;
-        b=riuQKYLPowknXqy8BRKNxpv7Hlq7HXYRyc3rmiDBreZa4p+gtnvkgmt9lXlHwWBZUn
-         rMVpB79sSSWP9fv31tMXUepyL2ckZivWCRZzbQeEV4UIRlQFILAhGqL3e4Fg6f/5mf3Z
-         k7JgO2RcdOAh+mg8D//9I6N4FFK+TiiYIK8JPseRWufnr72p0TFQ2fHE3tydtHCux/EO
-         p07HdJ2gxzgA52G78znp6CZMEIfZEFlITvbY5KiQRZRcMw7hYJgpIjYUxuIqq5TYWr1U
-         sJzVG49yC44L6rueMsWpxGYhxYesHA+sO6Bl9wXsKQSZ1s1aw6SQ9XToH/PVgeiaTbfg
-         ZV0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUD9mtu+D59APVNrBUZo1DJa4TLdafG3QmuGoR75BBHArFtajrRDb3KJsoX0F0KXo1Y2VfkQqJtP/BcMLCOWQgNfgc=@vger.kernel.org, AJvYcCVkBen6djS4JLn/xYshXfQOfOIth0Eip672BIOmuM52o388AlLs0c6CC3gaGmRUO1Cj9ec4sU2DIAbzEWA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxP7SpRw4Qp2po/gistoOF/iALrRyGnQ/PXvRaNGik79U+CWkSy
-	4cSGFWvnnziFHmv3CB3/LZB0uYw/fUyW/LwA9tEaPwwXrmDjjI3Ao65sjka5
-X-Gm-Gg: ASbGncvb5F/q58TGJFAuuDGuU5pe5hbiBsrE+sps651Nk+eNwDrzrswLqTJDUSyZ49Q
-	zTJ3F/ziStvzeXjbKPD5UZw0GjtSzg1rgvqnR0FCQc5JB1xhqoopg4vCM1K3002VLHLCNqg8zoZ
-	Wr/pyQsFg3h8nbiPJD5AvPRo/DlKCg0dW6WrGofVrrA/2+wMI/o0BMfoedi7ycrq+Gh9jBRkiw9
-	patYexWkULpEX5ZpITeD7L8gWVmeEkiwJDcYi11fKXR8mdjQwF23HszwtAJ+qC1IgYpcZrJhgQv
-	YDjSfmIHjh4NmTvRh7MjUqPU/cswmsLCRWMUFQ24xm5gYPumkHXQ5A==
-X-Google-Smtp-Source: AGHT+IEfrzu4U4+eO7mu+QkqoJ+LRvp33PWcfmcQrsJSsTee5y8DyyoP2V28lYjLSv00YyW0Nh2IzA==
-X-Received: by 2002:a05:6102:a54:b0:4bb:d394:46b5 with SMTP id ada2fe7eead31-4bbd394581dmr974505137.1.1739194856862;
-        Mon, 10 Feb 2025 05:40:56 -0800 (PST)
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866f97d9237sm1623556241.26.2025.02.10.05.40.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 05:40:56 -0800 (PST)
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-8622c3be2f4so993740241.1;
-        Mon, 10 Feb 2025 05:40:56 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWP3qjliDyi+uYqgx6Rhz7/xnkGUfddJND5LafMR94kihybSsQfe5f3/3EVYCqJ1dEUTXgaRZcJjCkXjNo=@vger.kernel.org, AJvYcCWla3xfwRHeMgKw//Bb5B5N/6C+cPELEgE2uIqx1oTcd4QAppmkErZxq9jguBkuAtuG3gybhqOeklXF0T6RxCJ7HUI=@vger.kernel.org
-X-Received: by 2002:a05:6102:8082:b0:4b2:9eeb:518f with SMTP id
- ada2fe7eead31-4ba85e4b3a9mr8769141137.10.1739194856282; Mon, 10 Feb 2025
- 05:40:56 -0800 (PST)
+	s=arc-20240116; t=1739194869; c=relaxed/simple;
+	bh=AFjHQoTaIvtANhU1liah60ozR1dUibI/E3nIVdzWrGs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XN3YMoy9qs/cyX6P8xGRkUK+fYpZmcapInSocuela+a4/ffiSUYp8W3lFFnlLzmi7pao/C+XKdNbLWcAE96uK3hR/JCxrzhFI4/RpKsFWh2lQCs2m6mXFX2FxznLkHpjsZAYyzCrh3imMTl/CbArV8+66xIsaWvz45a7dU5KhGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nO5FdiJ+; arc=none smtp.client-ip=217.70.178.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nO5FdiJ+"
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::228])
+	by mslow3.mail.gandi.net (Postfix) with ESMTP id DD2635827C9;
+	Mon, 10 Feb 2025 13:29:55 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9215F4444B;
+	Mon, 10 Feb 2025 13:29:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739194188;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1GF2t3R1YAxOaP/I6N9EoSBBP5RdZCf7+8UhwSbU9Uo=;
+	b=nO5FdiJ+j7KQHbJp1aky5COAJFt7gP2C+Qedw+ueIULuhDoIYq1CA8FNaLOmzbZyEVZW7y
+	oAYmY/yHyZ0BHimFRhSlqfDK2NCS/0lxEVQaZqNI5Y7k/FwiqTsVUOxuKs77lW1WCgBT/a
+	WFW2vqbZdEag8zfI6t1dstqschrKBVSyMgTtG1phsGEGsNsiIVRpf6kc7Y6LUv6aleDXqh
+	ZbaYfOU0lHjQiEnDQcKs6H4hX41J0bzgKEvWJjZIOQqOWFZCJYA3czVdkvML95Ozz6Wa8x
+	1B7hR1msLRWYufscJicTWBbPOrK5ixCZN5Ezt6aa/FGli1bnOcnFl7Eh3MKGMw==
+Date: Mon, 10 Feb 2025 14:29:43 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ =?UTF-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Raspberry Pi Kernel
+ Maintenance <kernel-list@raspberrypi.com>, Marek Vasut <marex@denx.de>,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Louis Chauvet <louis.chauvet@bootlin.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 4/4] drm: bridge: ti-sn65dsi83: Add error recovery
+ mechanism
+Message-ID: <20250210142943.478c3066@bootlin.com>
+In-Reply-To: <6136272.lOV4Wx5bFT@steina-w>
+References: <20250203161607.223731-1-herve.codina@bootlin.com>
+	<8756830.T7Z3S40VBb@steina-w>
+	<20250207190816.2002d313@bootlin.com>
+	<6136272.lOV4Wx5bFT@steina-w>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com> <20250129165122.2980-6-thierry.bultel.yh@bp.renesas.com>
-In-Reply-To: <20250129165122.2980-6-thierry.bultel.yh@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 10 Feb 2025 14:40:44 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVrzVLWbe4497bzVxcU=KeJVnZoXb-9JpS3oMdc1qKwww@mail.gmail.com>
-X-Gm-Features: AWEUYZkiR4_qGtQj6v1cYcK2m850RJRv00LcgMxTtGuLt824D2iCsCpKUZqN4b8
-Message-ID: <CAMuHMdVrzVLWbe4497bzVxcU=KeJVnZoXb-9JpS3oMdc1qKwww@mail.gmail.com>
-Subject: Re: [PATCH 05/14] soc: renesas: Add RZ/T2H (R9A09G077) config option
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefkedukecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvhfeljedtfedtjeevffegtddutdeghfettdduhfeuhfdttdffieeuiefgvdfhvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvhedprhgtphhtthhopegrlhgvgigrnhguvghrrdhsthgvihhnsegvfidrthhqqdhgrhhouhhprdgtohhmpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhto
+ hepnfgruhhrvghnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehjohhnrghssehkfihisghoohdrshgvpdhrtghpthhtohepjhgvrhhnvghjrdhskhhrrggsvggtsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Wed, 29 Jan 2025 at 17:52, Thierry Bultel
-<thierry.bultel.yh@bp.renesas.com> wrote:
-> Add a configuration option for the RZ/T2H SoC.
->
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Hi Alexander,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Mon, 10 Feb 2025 11:42:09 +0100
+Alexander Stein <alexander.stein@ew.tq-group.com> wrote:
 
-Gr{oetje,eeting}s,
+> Hi Herve,
+> 
+> Am Freitag, 7. Februar 2025, 19:08:16 CET schrieb Herve Codina:
+> > Hi Alexander,
+> > 
+> > On Thu, 06 Feb 2025 16:39:09 +0100
+> > Alexander Stein <alexander.stein@ew.tq-group.com> wrote:
+> >   
+> > > Hi Herve,
+> > > 
+> > > Am Donnerstag, 6. Februar 2025, 16:20:48 CET schrieb Herve Codina:  
+> > > > Hi Alexander,
+> > > > 
+> > > > On Thu, 06 Feb 2025 15:38:42 +0100
+> > > > Alexander Stein <alexander.stein@ew.tq-group.com> wrote:
+> > > > 
+> > > > ...    
+> > > > > With interrupt configured I got the following stack trace upon
+> > > > > reboot/poweroff:
+> > > > > 
+> > > > > [   91.317264] sn65dsi83 2-002d: reset the pipe
+> > > > > [   91.344093] Unable to handle ke
+> > > > > ** replaying previous printk message **
+> > > > > [   91.344093] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000    
+> > > > ...
+> > > > 
+> > > > Ouch :(
+> > > > 
+> > > > One question to help me investigating:
+> > > > Do you have the issue at init/probe or when you start to display graphics?    
+> > > 
+> > > This is during shutdown/poweroff. I assume that regmap_reg() in
+> > > sn65dsi83_handle_errors() fails and because of that reset_work is scheduled.
+> > >   
+> > 
+> > Found the issue.
+> > 
+> > Can you give me following information so that I can validate what I
+> > understood:
+> >   - Is your interrupt line connected directly to the SoC?  
+> 
+> No, unfortunately not. It's connected to a GPIO expander, which in turn
+> delivers an IRQ to the SoC. In between the bridge and the expander is a
+> buffer for voltage switch (1V8 -> 3V3).
+> 
+> >   - Is there any pullup/pulldown on your interrupt line?  
+> 
+> As far a I can tell, there is no pullup/pulldown on the IRQ line to
+> the buffer.
+> 
+> >   - In your devicetree what is the configuration used for this interrupt in
+> >     terms of level or edge.  
+> 
+> As this line is connected to an expander (pca9555) only edge triggered
+> interrupts are supported.
+> 
+> > Anyway, I will send a fix in the next iteration.  
+> 
 
-                        Geert
+Thanks for all those details.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+I've just sent a new iteration:
+  https://lore.kernel.org/all/20250210132620.42263-1-herve.codina@bootlin.com/
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Can you test it on your side?
+
+Best regards,
+Hervé
