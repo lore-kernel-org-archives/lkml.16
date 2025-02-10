@@ -1,262 +1,167 @@
-Received: from YQZPR01CU011.outbound.protection.outlook.com (mail-canadaeastazon11020110.outbound.protection.outlook.com [52.101.191.110])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25E3244195
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.191.110
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739203770; cv=fail; b=q0TRslUT7ocKeD9521IvFxwSTy5W7CoK5hzV9NVhCfxeWUWidA/2pD/vhGu2aBg4GeBdssmfEo4AzAC/VubFS+1j0eF5MCRjaLIf1KkLGJodESCILvcjE7kiC0NNxaUxcmrOHODQu1a2iZxhCf3Oiguq62jqoMGH0ygiY/RegzU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739203770; c=relaxed/simple;
-	bh=i4BfPEhK6pUfjQa2A3ogzFnwC5O0zoNDPYoPyVclcek=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=dB0ZOoqd/W6ZyBr6m0GTUFEAToISIdBeyYTxVk8yP42GOxFLBIhwQVTKvfE+WB4V9LdOYJk7q2+LeuAOPkxC17tn8/Q1TreQ9Wkc0lAmZbPZuYDyspuA4zTkbS7oVnnD71mXBJQdG7Ths9a2SuiwT07ydbMR3DBL2p09BwV3uLg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=shKt6kX3; arc=fail smtp.client-ip=52.101.191.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B357244195;
+	Mon, 10 Feb 2025 16:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739203823; cv=none; b=gYtv5hmZsM4+2bJt2UHGatvufJCFA+Ibii/Pk0LJ90JJYcDG14ZlXzkbG1WbrtF4vfoqEb+ySw3qJ4+m4KygerziH2RlWcdusd1U1YoR987xv3XXLYulKi09Eg5UOsLWzW3zSgnNwnXw72OiirZqwDXEvluOfRq2gUYLDGlHLmo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739203823; c=relaxed/simple;
+	bh=kQSx4IU/m6R9MPvDY5/22wbi1KGghWKBeHhjKPuP/Sw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YYPoY6RwIV/d+f64OVBS9a/sovC3OPkZpiDeDTN3I6b2xYm2G7n++drLQDDAbp83TINwsidx/TBIsG7sHMG6EahLLOMxXSP0b0sZdNC9UGXyyCOjiqawWMyp1uJimw//mPprMmbYku/CC0hIM6ZVY5Zy7yCrzWKFeoUfv0eSgfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V3JYh9j1; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="shKt6kX3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mcWxnsmmwlI5ojXuqbF/olQTmE+Z4GIOXZpDDRvKhAWmtI53AHCAapg6T+xvPBZBEfK3isAks9noMvo1m4LGkvCvSmLpUO+BK5Id6OshWwd3CzuAofG3xB/YVE0fJd3Rkegz5/iGrN0bgU1Nj1sfmKYRvmj+OJ+ElFpmv7I5AJ++nP1Wcpm+Y0Fvo7MXArQzm9AfbiKShdDkpERcrjnj6J7aHVahdDuFYIj0OBy7qiGWxQPf67Dltd5FLAEkfH6HtCTEggTJieSbVQObjqX4StMfx0kLtcXqU+Iu44Rw+0YvygG/DxNiRRb2cQ1Br9xr1+gkRzOod2Cw847nitkThg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rAH7jm/eaUTFDWADmMRO+tWAQwTO5e2EdyV9v51qJF0=;
- b=F+H3ecxbhB8FofYC39k8d5TOnZ4tMas4hctHWjOTuBzW/9htWE6DXIzd9L/PiA8oJ2AFEpCk1S/KQX1VCgsQgmTTaSEKtXIc5TmbAtKY6Wuk4EkmsLsEc0dTt2y+sm0pZCxtK7qXWRJ6dsylmu+TWl2pARZuYdmtN8wegw0+QgJBh7XFo6DOQk4gM1wrBLJWoqt0sDLv+8v3riKTSGzMs/S6hn/s891TFwCuB9itfXndwnRLRwGCbckd+PkOPkVYTJ/ohkR1uz5zMNkdmrYKwpEpwllg+S/nGHik3noGQa34OGYe3HbiwhoCvM27+tazcPxvVN2p6U9fLbT7HJJDLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rAH7jm/eaUTFDWADmMRO+tWAQwTO5e2EdyV9v51qJF0=;
- b=shKt6kX3yPyWbHyE2h5R3qZd6X1XPCf/xM6v5Cga7vFPMznrXQz+sSmEtSp8YtG82iSqIza1rYfZwIH6iR8dcXrrq4ah52p1Y4cIlrXyZ3QooJ+atmIg0AoiwwOAJmPjbRRLWaO8iwE0U5Aw+Qx7x7g30RmBHEAaHIvxkiXdCSm9ciA9yIn0KDBiQ80O+VaOW3OFyGQhaR4FWJl2OTtIj4fm99O8F9STy16jbpmyp5nB3ohrIK7o0t63fwEIL49Ias4t5M2ccMk26fZPMWBDbwycZ9A5aaNJMuHWGQlZKuz8XlPCWb1wqTUSClDQs6JUNwOww35qFeTOFVOAbV0nOA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
- by YT4PR01MB10421.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:e7::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Mon, 10 Feb
- 2025 16:09:25 +0000
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4%4]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
- 16:09:25 +0000
-Message-ID: <efa8561c-b417-4b75-b93a-f149c35335b3@efficios.com>
-Date: Mon, 10 Feb 2025 17:09:19 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/3] sched: Restructure task_mm_cid_work for
- predictability
-To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- "Paul E. McKenney" <paulmck@kernel.org>, Shuah Khan <shuah@kernel.org>
-References: <20250210153253.460471-1-gmonaco@redhat.com>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <20250210153253.460471-1-gmonaco@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQBP288CA0011.CANP288.PROD.OUTLOOK.COM
- (2603:10b6:c01:6a::22) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:be::5)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3JYh9j1"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21f7f1e1194so42457005ad.2;
+        Mon, 10 Feb 2025 08:10:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739203821; x=1739808621; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=+TJgYMmTYcZw8reK5LOjccSW5UTYnPTpO1MNsbf/OOI=;
+        b=V3JYh9j1FT7usZimTDMOjw9MkWGFyyh1VEQDiRbsFusiHPwsosgo/663GvbnXbewI8
+         d5GqDSpD4wg+N6rWt37PqV1t3+JdlHp36rZ5skYmCvdxWX/CQV3YC9O3gdL+1nyurZuh
+         UJ6pGbX/VTGgUWbL/xow3hVCrTfW9M8ogGlvmsqtjPt4PCvzxX11BZu+iDQpmImaXWW/
+         N3aF0CbPcC5iZ/MlmYZ4p5Z3lyJFc5pRt8fZMrbnH48tTW9OfIs0iVyknyvlEBozzi3U
+         FIwvJ1YGoQBCc0hokkY5+Dg87+6xjAeqi/oooA0TGx+Jl8BAq55+2YP5UwG5/qASlt8T
+         44NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739203821; x=1739808621;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+TJgYMmTYcZw8reK5LOjccSW5UTYnPTpO1MNsbf/OOI=;
+        b=aDVWZKXjtU/WvA6d0bFx2LNXA5kIrhHLDyLl2k/c5fcWwwB6aaSpDcwoi80nc490hO
+         ysAaITgN07Io9emQEGTLctqlZcKdVikTks5CIpxybtLyCoZobbpbGZw+xgxs+b0e0ZGo
+         ThcsRdndW283D91hFLezQdtQ9ERw6l57aHD4/s4k955DlQ+OOsSxN3hwfQG2We/cj+9/
+         ptO7YwWpkpQ1J4FJCsrFeiQ2yC9kc3dmG336BYXcDPCKvXSWNZUsNgY8j7SrEEdXrDPt
+         914xKXLQAGuS4qgFxV9Ts2R7Usae3tgdbTW36TxGPAx1A6GLOouJrhhKlenixW07+uY/
+         ZNjw==
+X-Forwarded-Encrypted: i=1; AJvYcCWHaC0hzMpHpTHc8K6kBl3XTZN+8Fd5ydn6kXQ56uiFmP0VOFpu67mg12+sfXgv6BlL9UP0blW+U9CjllpD@vger.kernel.org, AJvYcCWVg7DakAnuEubJS/wE/Z+Bogd4l7U3uf4oGc4BIP744/M3tHWiyvNCS1EJqiUpt/8/3BIEvvj0rs/v/g==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbO3cJjQ44ganDS7nsnk7Y6fA3v2bN3SGD/NSmr6o7AwE72kqZ
+	Q3jC/upI0w0l8Dq5H0LcpLo7TjTKSUtwr0b90LaXAv0l4CaFuz6L
+X-Gm-Gg: ASbGnctx2JSM72Ogi8qx4SNZQWAzy1os9KzM8UALYgIm+SmJHb1yNvhxPtxozKqdNfA
+	kfp7vtrbuMAw6rALQyEjSLy25dWM3VTn54xy9tB9A8P1J80SI6a/vs/h1TMRqmxpS5mQBpB6Foi
+	zmTsqTdTpLNhNvIn6kl23G2jpRJauV19WczD4d5xSa53QYLDLW7dgpXDQz6khVwxQe89Yket+sV
+	nCwJEEtj05GbZYfNvvAOfgSBxJTEUmuzlkPGbpBnK70Fzzsaw5nz2b98KmqfoExbUKKNRhCEuRX
+	lJNVRluRpp/xGMzSci0/ApjNfqaMpmyl/1G68o2pN56ejHeU3LlYvvUrE6e4xlOu
+X-Google-Smtp-Source: AGHT+IHcwFTzmEqZWtoeh7mWEArFs4yJg+WNPnZYC2w6JCoYCAfFh+25IR89qFyLWfT2M7UzYZ+kfw==
+X-Received: by 2002:a17:902:e802:b0:21f:35fd:1b6c with SMTP id d9443c01a7336-21f4e76372cmr225654315ad.45.1739203821295;
+        Mon, 10 Feb 2025 08:10:21 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3653c997sm79890705ad.78.2025.02.10.08.10.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 08:10:20 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <637e2e72-2799-4914-aa96-9987edc1bfa4@roeck-us.net>
+Date: Mon, 10 Feb 2025 08:10:01 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT4PR01MB10421:EE_
-X-MS-Office365-Filtering-Correlation-Id: e8a8b8b3-9df0-4a6a-54ac-08dd49ed49ff
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UkhXSkhCZHY5eU51TUdJbVVpdjNORC81em9YbEFvWlVCZzRHZWE4dHQ2OGY2?=
- =?utf-8?B?V1lIVDdZQ3BmSDhzaXdINEZ4VmxmVEFuajd1Z1lMM0crc3pRTVM0YlJJMGlK?=
- =?utf-8?B?QVF6bWcwVXZSNXZibVZ1SWpWdGtWMmtGeFRETGpVODQ3NVhSTWlwYUFuQXJl?=
- =?utf-8?B?UGlwYU1NSHNUQlJNU2UzY2hyVFVqMUVSOGZWVWdiVXZSNWZpOGpMeGh3WUsr?=
- =?utf-8?B?UDluanpMZ3c5dXAwTk15YlJHNHJUdE9pVEpCeERBdHpPMVRIMmY1a2gvdGRm?=
- =?utf-8?B?N3hDaVduKzRBK2Voc3ZiUHpCT2hTYVJTVWNOaU5KWlQ0RGVBeVRwMXNsYS9J?=
- =?utf-8?B?dU04Z2RNTUJ4amc0dzN0bUVFa1JHR3dCZXpoTUNyUXo0VGpJRVpLTVI0c01k?=
- =?utf-8?B?ajZrNXJDemd2NDlKc0RSRk5Wd1gyZkdTMkZZUWRDSllyZGY0b0lVY2w3QUxE?=
- =?utf-8?B?ZVJaS0lEYVNNS0pLR0pEY2IrTVNOejR1dTNjNVJ4ZXVHS01hOUR5R01ydU5z?=
- =?utf-8?B?RXNoSUdDcUl4SVpndGdlZ2dwSWhqL2VCbk02WEkzRjZoWlJtczlFcUt0Z2tO?=
- =?utf-8?B?bkdmUUhzRkNCajhFZkVkQkNMZ3UyKyt0dzRYclNQVnJaL1dKZUFIZDRIcW1D?=
- =?utf-8?B?NHZDRFdPUllBanRvSFYzczlZbkVsUEZRRTA0dFJxN2lyU0hMMlBKWFNhTDM5?=
- =?utf-8?B?YVlVRGdkT0Y5OGtzaXh2anptaEx6VEZGYkpTOEJGaFhmSlFxWTYrQUU5SUFa?=
- =?utf-8?B?RjRrNi93b01Gcm5yMkJTcWFMTkJhem1FRFIvVWprZTY1N245SVpad2dlbW5S?=
- =?utf-8?B?YU04bFlPeFpoVXk3djZiN2x6ZFBkWHNxMXZNM2hJNHo3Qkx0MzBIQWlkQmx2?=
- =?utf-8?B?YVgzSGg3S3JkOWlxMVBJMU82OHBDcW11MDRETVZPQm9FancxTE4ybVdONity?=
- =?utf-8?B?VFFNVkE5bHdBZTNYQlIrSXRjWXZEcjFuc3JPeTBqelhYZGZERUJKMVFBNmhz?=
- =?utf-8?B?V2tyOFNGUkE3RUIrekcwUkxwZ3hRVjRCQTZIVmNGOVA3bW1Gdm01bnVzcVBj?=
- =?utf-8?B?TCsybTloNzdMRXVTS1ZzSnJLcWFkQnlyTDh6aXVaUjRLWnNNV1g2clpIb21p?=
- =?utf-8?B?QjFReC9ROWNFWUlwSmtsTTFxZWM5NDNSTEQxUkVOMUZvc3hqa3pvM0tuaHpL?=
- =?utf-8?B?amltSm9mWk9tTDNUVDZBekU4WWRCeEhrMTU5cmUxaWF5bmlZelpuMXF6YTlL?=
- =?utf-8?B?MXgxS2JoWUUxSkdDZzEzZEJZbmhpU3Z2Q0JZNWNlelpXTk83aGhxN0dPa2Ir?=
- =?utf-8?B?UlZsNWN2VGFTMlBQQ0pvZ0xYRUJIS3Z5dENzY0kwUDdncjR5YmhySnNkUkxz?=
- =?utf-8?B?WTI4NmVkaVk0OGViVEVGa2NraTZtS0pRSkd5YjRwdHNsSUE3anBZNVZsMjV5?=
- =?utf-8?B?UitjcFh3QXFqNjdwNWczOVJOckwzT2dHdzVxMVl4THZ3M1dlQTJueGQ0VW9k?=
- =?utf-8?B?ZTlHY2xuOTR2RStKZWkxR255UVNZVzhTNE1VRGM5VzRKUmhyQzZGcmRrUjhy?=
- =?utf-8?B?S0RCbERVS3cxWktKTlRsMGlkQlZEcW41bHI2UHFuTytRUU91dlpVVmt4d0sx?=
- =?utf-8?B?LzUvUUpaSS9BL0NYaVZ3S0cxTUl3MjgzaTBWMTZEM1U4ZFZ4NldVNk9iRW9D?=
- =?utf-8?B?c0orNWp6amxtQXZhcHlaVFMrR0Q3WEdsWnZpemQ0ZG13UGgvYVNhc3hQOUdo?=
- =?utf-8?Q?TWmnXPkmDjvsdhgsZN/JkTKxcVD4V5O8upVlwsy?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cE1reExWY0pPSWs4VTFucE9oQ2pJaktsN3g0VlVONXZRaWxVbnNXb1d0ZnZR?=
- =?utf-8?B?SGh0Y25pSDJGTWV6ZGxKb0VBUXV6NTBlRHlhK2lZcitzU2R3NG9ndW9SNkpo?=
- =?utf-8?B?T3pjc2Jra2RWcWhoRW5SeWRuOXFDUEg0ei9VR2E2S040YS92SjB3QXNBTGRR?=
- =?utf-8?B?QjVxcGhHTXRENVhTbjVhYlJVOUl0NFJVVEN0N0NTWERMQ2ZWbW9KaFZRZnJ5?=
- =?utf-8?B?WnU2L1YvTW11TEk0WVFyZ1ZDeXhySm1GYUQ4b0JzSGxMVWxrME4zdlBtWGRR?=
- =?utf-8?B?eWZzNEhEUS94UDNacm4wSjFER1dZdEZSZDdzTmdKNTRZL0FYTmNDMkVQYVFx?=
- =?utf-8?B?eUNPajNCaHp0TERDR1prYWxIRjJFbHAvdnRUYkF1VUV3Vk1UdUdXU2lpUlN0?=
- =?utf-8?B?VnhPUTlUT0Q4SDk4bklhL1JNRzZwSFc1TmJKZCt1TGgvd2tOYkN0NTQ0Vy9B?=
- =?utf-8?B?MkUyMnJLTUk2VjVXZUFUek1pSVBTdE9EVzhxRURwcVFmMHdnbzFhT1A1ZUtj?=
- =?utf-8?B?RWFHNlJyY1NBaUpIcTVITTczM0FRNVM2SVM0eFplcmhWSjB0bWM3UGxOR294?=
- =?utf-8?B?cHVZc3lBbXVDYmw1K2psbWxFUGp1UjhZVzQrK0p3Y2FZUUt6Z3N4MER3aGUz?=
- =?utf-8?B?TUl4MW5KMlcrOGdScjJSc0R5Qmt4N0ZmSnd5SWJ3ZWxSaisySUpidzJOWFlx?=
- =?utf-8?B?M1JNdnVhTlFDTW9HaWFiRzd5UWlNZzlGWmFPTXhiY3U0bGFxV29BZHk4MXpp?=
- =?utf-8?B?cXZCWG4rUjZ4WXl3QXBieDdRVGNNNnlRbUtzVVFORHZPS1FWVHRHTE9sV29l?=
- =?utf-8?B?TURzd0t3MmNHUmhKTENIMjVuRDhlWDlHQy9Za2pYQTlLY0d0aTZuYXRmOGFQ?=
- =?utf-8?B?TnppTDhUQkhsZDdpL3MwUTV6QkdBbSsrOWtKQ3FPVVlWUUhFTVlGdGhoMmpR?=
- =?utf-8?B?Q1ZNYjVaZTFTRjk5Z2VzNlZLVHhZNFJ5NmF5MUMxQkhpRlF4dkEzRlByRTEr?=
- =?utf-8?B?bTFYdFZMbU5FbDBYbUlPMXVnc3RzR1VaenlUeVI3Y2lzVjczYjZudmZPS29u?=
- =?utf-8?B?M0RGR2xuajN5MytyNEMwQVBsaUhNdUlZejhUODZyNXUrdk13RFJFbmFmY2la?=
- =?utf-8?B?enIvQmp5ZUNBenRCb0VyTzMxTUkyWkp3b2g2aUs4UTA5TWhPUUNsNTY1b3Ay?=
- =?utf-8?B?Njd1ZnorUzM3WDg1MER4SFFsTXI1QVRveGNqSjlROFdjNndXZDJFMnA0YjNk?=
- =?utf-8?B?OGVwa0U3TGFXcEU0VTZ4RWk0NU1wNFNnVEVTSjV0Um1OY3QrczlxSURTVEl6?=
- =?utf-8?B?NE5ORVhiTmVDWDRkSTZqRllFbEs1NUJCZ3VRQ3kzVGtXMWZ3WmFkY1JobmxQ?=
- =?utf-8?B?MlZ5WjZwZjhUcTN4TWVIdE9XVm9qK3R0NnVIcHZ5VzZvQ0pZVlVvNHZtSG54?=
- =?utf-8?B?REJMcTM5RHNzSTYrbXphdUg2MHZ1cFRGa21oaWdsMDBmN3NnSlh1SVE3NkZ0?=
- =?utf-8?B?aHBUeTBub1c3VTdlb0pWcUY3UEd5OWZhUEI3T2VLUDBaYkpqNmFqdlovV2FE?=
- =?utf-8?B?TmMxVVVIZVJubWZ0VXEyL29RRDAxRU1lZER2UFdFZkxrdyttMDdLV3Q1Znc1?=
- =?utf-8?B?TWFtdXYrZEFqaWpiWjRYVHJjcWdUYVRwR3QreXBBS0F1dWJ3YmRINTRQbDAr?=
- =?utf-8?B?clkzNWtTcStOMnFtT082UFRHdlU4K2svb0l1eFY4WDYybG43Q1cvUmJHT2xF?=
- =?utf-8?B?T0l0dnR3UzlOWWt6OEJuRHZvdU9IY2hzR0tPOXV2K1dmdlNqcXo0ZUdOSzlT?=
- =?utf-8?B?SS9YR09sVU9FSE5FVW1CRjJyNVl2dDJzNGE3RDRIUysxUURiVDFtcDQydGdn?=
- =?utf-8?B?ajBzcWNOVm8xNGJSNHBLSmM0Vng0MHhvRCtYb2I2SEFqeTBSVGZvZTM2ZnFw?=
- =?utf-8?B?ZGtRUWFGM2s4WGZzczI2L0YwanZXNFBhYXJuYlFEb2d1TDZJVjA1SXo1Tk5q?=
- =?utf-8?B?aXBXaWlDTnQ5VG8vL29oc0ZFZTM4bFJIN0VLcFhBRWhlUUROOXN1WTZ1ZkFR?=
- =?utf-8?B?WWFrdGE4ZGRDSStlUllBb0lIUVp5UUlmV0xhUUdsVE5vQnNtVXZFS2x3SHJP?=
- =?utf-8?B?dysrZVhsQ041dzBJUkZURVBKUnFUZ25XblRQWnp4OG51SHpnS2NKbHNjbDJB?=
- =?utf-8?Q?m+yece0NfBDiuibPz+wTicg=3D?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e8a8b8b3-9df0-4a6a-54ac-08dd49ed49ff
-X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 16:09:25.5437
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iJl5ABdmcIQLfTulzUb0i5Bbdod37VJ+znWRJ10HOY8BRaOnctlpQprh6dNVNWl3iQFlW7QBL7Don4KQlpJemqhFmA3QYWcyUdHTtxQxlPY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT4PR01MB10421
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] hwmon: emc2305: Update cooling device registration to
+ include device node
+To: florin.leotescu@oss.nxp.com, Jean Delvare <jdelvare@suse.com>,
+ linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+ viorel.suman@nxp.com
+Cc: Florin Leotescu <florin.leotescu@nxp.com>
+References: <20250210073158.336522-1-florin.leotescu@oss.nxp.com>
+ <20250210073158.336522-2-florin.leotescu@oss.nxp.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20250210073158.336522-2-florin.leotescu@oss.nxp.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 2025-02-10 16:32, Gabriele Monaco wrote:
-> This patchset moves the task_mm_cid_work to a preemptible and migratable
-> context. This reduces the impact of this task to the scheduling latency
-> of real time tasks.
-> The change makes the recurrence of the task a bit more predictable.
-> We also add optimisation and fixes to make sure the task_mm_cid_work
-> works as intended.
-
-Ingo, Peter, this series is ready to be pulled into tip.
-
-Thanks!
-
-Mathieu
+On 2/9/25 23:31, florin.leotescu@oss.nxp.com wrote:
+> From: Florin Leotescu <florin.leotescu@nxp.com>
+> 
+> This patch updates the EMC2305 hwmon driver to register the thermal
+> cooling device with Device Tree (DTS) node. This change allows
+> cooling device to be configured based on the properties defined
+> in the Device Tree.
+> 
+> Signed-off-by: Florin Leotescu <florin.leotescu@nxp.com>
+> ---
+>   drivers/hwmon/emc2305.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/hwmon/emc2305.c b/drivers/hwmon/emc2305.c
+> index 4d39fbd83769..18e765902d32 100644
+> --- a/drivers/hwmon/emc2305.c
+> +++ b/drivers/hwmon/emc2305.c
+> @@ -293,8 +293,9 @@ static int emc2305_set_single_tz(struct device *dev, int idx)
+>   	pwm = data->pwm_min[cdev_idx];
+>   
+>   	data->cdev_data[cdev_idx].cdev =
+> -		thermal_cooling_device_register(emc2305_fan_name[idx], data,
+> -						&emc2305_cooling_ops);
+> +		devm_thermal_of_cooling_device_register(dev, dev->of_node,
+> +							emc2305_fan_name[idx], data,
+> +							&emc2305_cooling_ops);
 
 
-> 
-> The behaviour causing latency was introduced in commit 223baf9d17f2
-> ("sched: Fix performance regression introduced by mm_cid") which
-> introduced a task work tied to the scheduler tick.
-> That approach presents two possible issues:
-> * the task work runs before returning to user and causes, in fact, a
->    scheduling latency (with order of magnitude significant in PREEMPT_RT)
-> * periodic tasks with short runtime are less likely to run during the
->    tick, hence they might not run the task work at all
-> 
-> Patch 1 allows the mm_cids to be actually compacted when a process
-> reduces its number of threads, which was not the case since the same
-> mm_cids were reused to improve cache locality, more details in [4].
-> 
-> Patch 2 contains the main changes, removing the task_work on the
-> scheduler tick and using a delayed_work instead.
-> Additionally, we terminate the call immediately if we see that no mm_cid
-> is actually active, which could happen on processes sleeping for long
-> time or which exited but whose mm has not been freed yet.
-> 
-> Patch 3 adds a selftest to validate the functionality of the
-> task_mm_cid_work (i.e. to compact the mm_cids). The test fails if patch
-> 1 is not applied and is flaky without patch 2. We expect it to always
-> pass with the entire patchset applied.
-> 
-> Changes since V5:
-> * Punctuation
-> 
-> Changes since V4 [1]:
-> * Fixes on the selftest
->      * Polished memory allocation and cleanup
->      * Handle the test failure in main
-> 
-> Changes since V3 [2]:
-> * Fixes on the selftest
->      * Minor style issues in comments and indentation
->      * Use of perror where possible
->      * Add a barrier to align threads execution
->      * Improve test failure and error handling
-> 
-> Changes since V2 [3]:
-> * Change the order of the patches
-> * Merge patches changing the main delayed_work logic
-> * Improved self-test to spawn 1 less thread and use the main one instead
-> 
-> Changes since V1 [4]:
-> * Re-arm the delayed_work at each invocation
-> * Cancel the work synchronously at mmdrop
-> * Remove next scan fields and completely rely on the delayed_work
-> * Shrink mm_cid allocation with nr thread/affinity (Mathieu Desnoyers)
-> * Add self test
-> 
-> Overhead comparison in [4]
-> 
-> [1] - https://lore.kernel.org/lkml/20250113074231.61638-4-gmonaco@redhat.com
-> [2] - https://lore.kernel.org/lkml/20241216130909.240042-1-gmonaco@redhat.com
-> [3] - https://lore.kernel.org/lkml/20241213095407.271357-1-gmonaco@redhat.com
-> [4] - https://lore.kernel.org/lkml/20241205083110.180134-2-gmonaco@redhat.com
-> 
-> To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> To: Peter Zijlstra <peterz@infradead.org>
-> To: Ingo Molnar <mingo@kernel.org>
-> To: Paul E. McKenney <paulmck@kernel.org>
-> To: Shuah Khan <shuah@kernel.org>
-> 
-> Gabriele Monaco (2):
->    sched: Move task_mm_cid_work to mm delayed work
->    rseq/selftests: Add test for mm_cid compaction
-> 
-> Mathieu Desnoyers (1):
->    sched: Compact RSEQ concurrency IDs with reduced threads and affinity
-> 
->   include/linux/mm_types.h                      |  23 +-
->   include/linux/sched.h                         |   1 -
->   kernel/sched/core.c                           |  66 +-----
->   kernel/sched/sched.h                          |  32 ++-
->   tools/testing/selftests/rseq/.gitignore       |   1 +
->   tools/testing/selftests/rseq/Makefile         |   2 +-
->   .../selftests/rseq/mm_cid_compaction_test.c   | 200 ++++++++++++++++++
->   7 files changed, 246 insertions(+), 79 deletions(-)
->   create mode 100644 tools/testing/selftests/rseq/mm_cid_compaction_test.c
-> 
-> 
-> base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+The use of a devm_ function means that
 
+         for (i = 0; i < EMC2305_PWM_MAX; i++)
+                 if (data->cdev_data[i].cdev)
+                         thermal_cooling_device_unregister(data->cdev_data[i].cdev);
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+and thus each call to emc2305_unset_tz() will be fatal after this change.
+I don't mind the change itself, but emc2305_unset_tz() and all calls to it
+will have to be removed as well.
+
+Guenter
+
