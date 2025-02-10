@@ -1,214 +1,166 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B301F8BA4
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E9E252906;
+	Mon, 10 Feb 2025 14:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739198871; cv=none; b=ao9I36R3NivhNp/LKetgvJX6bHrPNXAxVFy/wJOzlmmsXmtN4vhHGEoa6+rqEoqhS846pZ/IYKSbeTSZBjCODW5Upal91bh3lJeH/JLQUBuK4xbp3Eb6WmOZiq+goVrY3zhcw1KbrudPQ6Ip6YV/DJoIyQW3ZSRr0hPV9v1HNK8=
+	t=1739198939; cv=none; b=CJ3TyqTwoCgHvw0et+k08XBqU4SaxO+RkcQkCEQR/VRpFqi5uKd0A2NsRSzOLptubkBzXw3V9dunPgGYOiaizzCkpxpiv9BcghclEWypfQsrZlRLskn5ZuSik0nmowyEGZL4g6hxTmhWSAQ2IQ0F3I8RQUUBrqMtpE/sD6EAKh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739198871; c=relaxed/simple;
-	bh=FSpTQe3b8o6+Jav6J98B+jgoo4xBuSUgUI/RFXjz5AE=;
+	s=arc-20240116; t=1739198939; c=relaxed/simple;
+	bh=9COVxLzKZseAYxARFBFeHUP0vM+MnKZUuXUAmWDEp/g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c3fpMZUl57+c5B5XRE/PQHv+Ua0kgRzmi1kG58nvhIRA+03tFz2Gv0LcIC9tMn5VNbUmI6K3BeYdBlGcegUYJzPDqy37i1huWMltwX6IjvoU7qAW4kFqAWfmp1AxKljqfO2HgrE46SHfssSEJL3QO11urfdVWnzh7s0w7z//2bE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gCsrhQL8; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gCsrhQL8"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38dcb97e8a3so2550873f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 06:47:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739198866; x=1739803666; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SbiQm+cpPA7ar4TiCqD5Kv0ylLMwSCONMu3++tRjFfo=;
-        b=gCsrhQL8UiEczk7ztYqPbWnZf4r2vxuMxCNh137H2d7YMrDCF7aFT0Gwy8It2fKrOl
-         UOM/kjTexKpbTFYtp+q4pv0XmrHCTLJoc082mkCVPfzTAQiR2JGpeqBKQUoHoH8zIFMI
-         YPZBROrhGR29OLbwCNX7lnxBL/Vn6r0Aw9GJqTp0Dl6rLldp1le5G/nnsuDk0W1Dd5iM
-         x4HKjntJHS6IuBkDhm8OGcKmP7uho5RQrXNBg7Gj0Es5mf3x50Evf1ZQuwnZdda8gas2
-         yEcsdz44Xr7yELJ0tkvjksWrGtf0sUDA3EKlGuiHB9w65m2voyzvOcXj7Jj4V0G7q+SB
-         TKtw==
+	 To:Cc:Content-Type; b=tWsNG0HGl74NYHrLYC/SBybuX87IlCwscCKTq1FsFTbOlbU5gfv43/pnznKemgU2QDIyALeX3GkQfxQ4NDr85MGw4W0QV2s7GsI8lKtCOilK7K1TaJey4W8PWhZOhEc8zWcpMpWWdZ+gXkBGKN8EyzdJ6BJ1+X9HRSOdKrEtl34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-52031ffca74so565827e0c.2;
+        Mon, 10 Feb 2025 06:48:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739198866; x=1739803666;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SbiQm+cpPA7ar4TiCqD5Kv0ylLMwSCONMu3++tRjFfo=;
-        b=Uo5c7CkCV4IkbzZtpvDVhjcKCVy/q+eadog2iiWL7/B5CWxnvIsC07PIlu7Lk8TSGf
-         hAs9a4b+Sz8Hhi2BZoKxBjawhw1HoueF8Tqoya9mE7Qi+QZ07YJverS9bapN+mj11/Rp
-         C1ZQlMkf3RrSBNdAdYFAKs9WyX7PblQM0QHqEmj7sQ+IyhX5OjJs3u8J3oUp2dUT69XC
-         yVtkn9/dAgFeaKIuRN1o/tSu9JAd2urjFFzA1fgzuD/gHjnuTIb1CNTPshSmRx0kXt6g
-         1C0iTOhMRdzd3fnI6Kablo0qoMpdQ7HgO6wbuHyonDyDI/hlWZB1moa1dmBCoEFItWPW
-         cV7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWQ5klsp/AcyztQp/De96ViPX6rU9FPNYyDqXJPKtH8y04BZLI+Yni/x1e9Br2PnVsSNbrrLnm+i92aV6w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyS+Uz4U3M5m+noOPXTinR1Zf0+Yl90h5HGfyhPRCEsfXEzPoGC
-	pUv7gVzmqbqy1vfcH/+5EdFTpRuG+52UAZ7y8OaNJ5ORniVTOuAcUx8UJV5JAVf9IoJC22EYUOM
-	gFmyBRAiaOYrHzv0zo60PRah/hGLUN3NGzYJP
-X-Gm-Gg: ASbGncs7ONdwpl8XQVUfXTCvMhMuoeQ6wSTb+6b1jpJ5A7+7KR9R99LXQk/ciMhoCDm
-	onTlWr16xxntYK+LqydiwsM5lV2kui++e6ZfF8m/OKzwtkij0mlVrpZiyr1kCPwRpc43chOjt6u
-	rJ3azqBAQ4qykycSpLn21vHO/i5A==
-X-Google-Smtp-Source: AGHT+IG7ldY5/6LO+N9pj46753edUT2gqJvmRR+tJ8Khu38aqx9VLAlDJZDdXzi4iznKekfdWT52gtXGVIC+vKwwsMM=
-X-Received: by 2002:a05:6000:1448:b0:38d:af2e:d5c3 with SMTP id
- ffacd0b85a97d-38dc8dd1864mr9957958f8f.17.1739198866457; Mon, 10 Feb 2025
- 06:47:46 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739198935; x=1739803735;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KwcSF59IzY/sbaPR253H2gim/DkadBRpCCKdYSENeIk=;
+        b=jZkAAIELKHtN+bLeQhKV9gg3dIAovDu3aHlWOZFf2E3okbfojCOvJ3ti4OD+zYJyvD
+         lSFBxIFIOCzkGxN57SpD90L6/wRKw+TgsDGcOhZ95zKDMLTSdaVhjfTzvicpAhKzv/9d
+         jYcjHMhOVNv7MIYTaw5V7gOMow9POnoy7BXQXIMewdE6XRWUy5D9h4F1J8zAClj8cN5r
+         Hni1JdoDG7+DhIFjc3juIoMiQmJ6q/5lVAOyHJbpBkMVI7O8VxFCFrOTF2C1oP5844RY
+         Hu9plRWRptJg0P3SQ8epjiiNSRr/JE3D4BhmvJoGYeXe6H2ChiN2tf1ZRU+xecPWWPCp
+         ZuPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUUUjLsNPhX3z70sxGgGXsySUUfNxHS1VJUN3umipKZGz+ctkwTugoxXOO6aEaBT1QQUfHWG2/WVHiV@vger.kernel.org, AJvYcCUzd22oDpRJczyZtqovOWmLGmu4XgRgeP3qz5dvRWurcnunJVIy9F2BlyGUrnDKvM1m6uXftuXcX6+ujmjK@vger.kernel.org, AJvYcCX2yWRjw+LgeVeba4OTsW/aCHESKAw8YxAbQz9sIWfVouORooJE5VkI4eSbj34kWQ4B5hF0BiBq8ZxRSPbr@vger.kernel.org, AJvYcCXySPKhRBJgGAQGjbGiymnoISxFuLXOVZ5ynNRDT3Cu/iifSdjdnTcWKbhlrH+LR1rxRGGyB+CXxU1KcI7PXC23y14=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsPpsKfbk+T1I3VYM1tvVazXXPmzbndI/VlgRgMdvlRLkUu4aT
+	T3GEMM+xMGxfOem+QTeWeAxNYH8uut9hu79LRMCzNUjFxkvfmLuo4aqvpdW3
+X-Gm-Gg: ASbGnctD33lsi5K/ibiEpGcBw5ze6og8Tm5W7Hd2KECcqxeto2jY+mnOTwU6VoPqAbU
+	w9mpbcEuc82smJxyBwjVkQf9OXn/xmkNZ3cgxsWrKZTl2q1Af70yzmH/bGDEMl6kiKN9tfrhrtR
+	aODQ8wOLYjoSoDliQaePrMQMyIv368fO2qxpxMjRfjjZiC7QJ8Z2r2hy5Ji7nf6Ybpiq6YHe0ZU
+	fROkfSNc583yvM9vLs2/WLsFtOi0P/HYv3CNbpS6H+d73qVUkdblGXWX9AcOeOJ8Ngm9a2AGt5w
+	f/YdeK7hnT+buLXY7h1g7LT7nn1ucbNA4f3AkeLh30wbU4fZyrrqNw==
+X-Google-Smtp-Source: AGHT+IGCWFMlyHEGblA5hGdod5/D90LAoajlMOpsRNPvd100BZyQ5PoVfZOr4+yx/nHhH9dF4bdfYg==
+X-Received: by 2002:a05:6122:251d:b0:519:fcf2:ef51 with SMTP id 71dfb90a1353d-51f2e12026dmr8479550e0c.5.1739198935011;
+        Mon, 10 Feb 2025 06:48:55 -0800 (PST)
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52044da707fsm278307e0c.24.2025.02.10.06.48.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 06:48:54 -0800 (PST)
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-864e4f5b253so1189335241.1;
+        Mon, 10 Feb 2025 06:48:54 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU2sDsjEmAVr1qDRVN6lE5OCAilIVCebniOdONgPbDiku6f9YrxL6tirilKySY7rkLXEbUQup7sOeTCuV5D@vger.kernel.org, AJvYcCVwMEpMoP5VHEnm2XebJnj6GzgQiRNZjYO+0xCPyXXWa4kzbKfRKwI2jtCI2lDsXgHAV4xh7G5XvENQInqE@vger.kernel.org, AJvYcCWK+uFSbIWGL3JG39934V6AhtGm33waSqko9qh6h8L2dVMyriWy+VzP4My5POj6X161UWGGpeGDbyHNKEMaspb8rco=@vger.kernel.org, AJvYcCX3K+2sd/alcfDFjaLHlI7rzBUvkpnf+wJmtOMOsqB/xdgOmGZnb6dkhy8VvG0/+tG2nIFOsX2NYyJl@vger.kernel.org
+X-Received: by 2002:a05:6102:41a7:b0:4bb:9b46:3f93 with SMTP id
+ ada2fe7eead31-4bb9b4679f8mr4371410137.8.1739198934075; Mon, 10 Feb 2025
+ 06:48:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1739171594.git.yan@cloudflare.com> <85618439eea75930630685c467ccefeac0942e2b.1739171594.git.yan@cloudflare.com>
- <Z6nEsGSbWqCSaVp3@krava>
-In-Reply-To: <Z6nEsGSbWqCSaVp3@krava>
-From: Brian Vazquez <brianvv@google.com>
-Date: Mon, 10 Feb 2025 09:47:31 -0500
-X-Gm-Features: AWEUYZldNIPj7qeSesCp6JrxJzjY8eMHw9cqOTJjk2DHFgRetrTVHr8pLaFcEP4
-Message-ID: <CAMzD94QZQjpwOA8Os3khG32d2zgH8i=Sy1VoudRCGqZudyHkag@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf 1/2] bpf: skip non exist keys in generic_map_lookup_batch
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Yan Zhai <yan@cloudflare.com>, bpf@vger.kernel.org, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Mykola Lysenko <mykolal@fb.com>, 
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kernel-team@cloudflare.com, 
-	Hou Tao <houtao@huaweicloud.com>
+References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com>
+ <20250129165122.2980-3-thierry.bultel.yh@bp.renesas.com> <CAMuHMdVB2W6R+xYeTUKSv_dMGruECSft-P19m6nZD61=ROngXw@mail.gmail.com>
+ <TY3PR01MB11346D5D895C190EBE8C8A84B86F22@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <CAMuHMdUpaV71Svyenq=hXMk3GfjgZvHn-0APkv_LKSzyytKzag@mail.gmail.com>
+ <TY3PR01MB11346D0C3FA9E451ADD3F5BB386F22@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <CAMuHMdWDd4MawW_cybPTy+3Sc6-9t1-ZF9_V+mPQHTHNnmEg2A@mail.gmail.com>
+ <TY3PR01MB113461CABD5E18F03B7BE9B8486F22@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <TY3PR01MB11346287906F19FDFF7ACA52886F22@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY3PR01MB11346287906F19FDFF7ACA52886F22@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 10 Feb 2025 15:48:42 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXVLyY10AgqR8J9FHB5mKiPXSWZ04EkW5ykE6bDj6EGPA@mail.gmail.com>
+X-Gm-Features: AWEUYZksMNriPrElI1r872-idh3W1qkzqfDu8Ca9WoDMxgWJZlnyPhBwWI8ZnOM
+Message-ID: <CAMuHMdXVLyY10AgqR8J9FHB5mKiPXSWZ04EkW5ykE6bDj6EGPA@mail.gmail.com>
+Subject: Re: [PATCH 02/14] dt-bindings: serial: Document sci bindings for the
+ Renesas RZ/T2H (a.k.a r9a09g077) SoC
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 10, 2025 at 4:19=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
->
-> On Sun, Feb 09, 2025 at 11:22:35PM -0800, Yan Zhai wrote:
-> > The generic_map_lookup_batch currently returns EINTR if it fails with
-> > ENOENT and retries several times on bpf_map_copy_value. The next batch
-> > would start from the same location, presuming it's a transient issue.
-> > This is incorrect if a map can actually have "holes", i.e.
-> > "get_next_key" can return a key that does not point to a valid value. A=
-t
-> > least the array of maps type may contain such holes legitly. Right now
-> > these holes show up, generic batch lookup cannot proceed any more. It
-> > will always fail with EINTR errors.
-> >
-> > Rather, do not retry in generic_map_lookup_batch. If it finds a non
-> > existing element, skip to the next key. This simple solution comes with
-> > a price that transient errors may not be recovered, and the iteration
-> > might cycle back to the first key under parallel deletion. For example,
->
-> probably stupid question, but why not keep the retry logic and when
-> it fails then instead of returning EINTR just jump to the next key
->
-> jirka
+Hi Biju,
 
-+1, keeping the retry logic but moving to the next key on error sounds
-like a sensible approach.
-
-
+On Mon, 10 Feb 2025 at 15:46, Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> > From: Biju Das <biju.das.jz@bp.renesas.com>
+> > > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > On Mon, 10 Feb 2025 at 15:26, Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> > > > > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > > > On Mon, 10 Feb 2025 at 14:19, Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> > > > > > > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > > > > > On Wed, 29 Jan 2025 at 17:52, Thierry Bultel <thierry.bultel.yh@bp.renesas.com> wrote:
+> > > > > > > > Document RZ/T2H (a.k.a r9a09g077) in SCI binding.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Thierry Bultel
+> > > > > > > > <thierry.bultel.yh@bp.renesas.com>
+> > > > > > >
+> > > > > > > Thanks for your patch!
+> > > > > > >
+> > > > > > > > --- /dev/null
+> > > > > > > > +++ b/Documentation/devicetree/bindings/serial/renesas,rzsci
+> > > > > > > > +++ .y
+> > > > > > > > +++ aml
+> > > > > > > > @@ -0,0 +1,100 @@
+> > > > > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > > > > > +%YAML
+> > > > > > > > +1.2
+> > > > > > > > +---
+> > > > > > > > +$id:
+> > > > > > > > +http://devicetree.org/schemas/serial/renesas,rzsci.yaml#
+> > > > > > >
+> > > > > > > "rzsci" is IMHO a bad name, as SCI on RZ/T2 differs from the
+> > > > > > > similar-named "SCI" (sometimes called "RSCI" or "SCIg") on
+> > > > > > > RZ/A1H, RZ/A2M, RZ/G2L, RZ/V2L, and
+> > > > > RZ/G3S (and most old SuperH SoCs).
+> > > > > > >
+> > > > > > > BTW, I believe the variant on RZ/T2 is also used on RZ/N2, RZ/V2H, and RZ/G3E?
+> > > > > > >
+> > > > > > > However, binding-wise, they all seem to be very similar.
+> > > > > > > So perhaps you can just add this to the existing
+> > > > > > > Documentation/devicetree/bindings/serial/renesas,sci.yaml?
+> > > > > >
+> > > > > > It is present in RZ/G3E as well.
+> > > > > > RSCI supports sci, scif, i2c and spi that is the reason renesas,rzsci.yaml introduced.
+> > > > >
+> > > > > If you plan to add support for I2C and SPI, you will need
+> > > > > different bindings under Documentation/devicetree/bindings/{i2c,spi}/.
+> > > >
+> > > > OK, I thought since it is a single IP, we need to use a single
+> > > > compatible and instantiate appropriate device based on the device
+> > > > property rather than separate SCI,
+> > > i2c and spi compatible.
+> > > >
+> > > > Yes, I agree having different device compatible for same IP make
+> > > > life easier, no need to add specific vendor property.
+> > >
+> > > I said "different bindings", not "different compatible values"!
+> > >
+> > > Cfr. "renesas,tpu" having bindings in both
+> > > Documentation/devicetree/bindings/timer/renesas,tpu.yaml
+> > > and Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml.
+> >
+> > Thanks for clarification. This is simple solution.
 >
+> But, here we need to decide, which channels to be used in SCI, I2C and SPI
+> in SoC dtsi
 >
-> > Hou Tao <houtao@huaweicloud.com> pointed out a following scenario:
-> >
-> > For LPM trie map:
-> > (1) ->map_get_next_key(map, prev_key, key) returns a valid key
-> >
-> > (2) bpf_map_copy_value() return -ENOMENT
-> > It means the key must be deleted concurrently.
-> >
-> > (3) goto next_key
-> > It swaps the prev_key and key
-> >
-> > (4) ->map_get_next_key(map, prev_key, key) again
-> > prev_key points to a non-existing key, for LPM trie it will treat just
-> > like prev_key=3DNULL case, the returned key will be duplicated.
-> >
-> > With the retry logic, the iteration can continue to the key next to the
-> > deleted one. But if we directly skip to the next key, the iteration loo=
-p
-> > would restart from the first key for the lpm_trie type.
-> >
-> > However, not all races may be recovered. For example, if current key is
-> > deleted after instead of before bpf_map_copy_value, or if the prev_key
-> > also gets deleted, then the loop will still restart from the first key
-> > for lpm_tire anyway. For generic lookup it might be better to stay
-> > simple, i.e. just skip to the next key. To guarantee that the output
-> > keys are not duplicated, it is better to implement map type specific
-> > batch operations, which can properly lock the trie and synchronize with
-> > concurrent mutators.
-> >
-> > Fixes: cb4d03ab499d ("bpf: Add generic support for lookup batch op")
-> > Closes: https://lore.kernel.org/bpf/Z6JXtA1M5jAZx8xD@debian.debian/
-> > Signed-off-by: Yan Zhai <yan@cloudflare.com>
-> > Acked-by: Hou Tao <houtao1@huawei.com>
-> > ---
-> > v2->v3: deleted a used macro
-> > v1->v2: incorporate more useful information inside commit message.
-> > ---
-> >  kernel/bpf/syscall.c | 18 +++++-------------
-> >  1 file changed, 5 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> > index c420edbfb7c8..e5f1c7fd0ba7 100644
-> > --- a/kernel/bpf/syscall.c
-> > +++ b/kernel/bpf/syscall.c
-> > @@ -1968,8 +1968,6 @@ int generic_map_update_batch(struct bpf_map *map,=
- struct file *map_file,
-> >       return err;
-> >  }
-> >
-> > -#define MAP_LOOKUP_RETRIES 3
-> > -
-> >  int generic_map_lookup_batch(struct bpf_map *map,
-> >                                   const union bpf_attr *attr,
-> >                                   union bpf_attr __user *uattr)
-> > @@ -1979,8 +1977,8 @@ int generic_map_lookup_batch(struct bpf_map *map,
-> >       void __user *values =3D u64_to_user_ptr(attr->batch.values);
-> >       void __user *keys =3D u64_to_user_ptr(attr->batch.keys);
-> >       void *buf, *buf_prevkey, *prev_key, *key, *value;
-> > -     int err, retry =3D MAP_LOOKUP_RETRIES;
-> >       u32 value_size, cp, max_count;
-> > +     int err;
-> >
-> >       if (attr->batch.elem_flags & ~BPF_F_LOCK)
-> >               return -EINVAL;
-> > @@ -2026,14 +2024,8 @@ int generic_map_lookup_batch(struct bpf_map *map=
-,
-> >               err =3D bpf_map_copy_value(map, key, value,
-> >                                        attr->batch.elem_flags);
-> >
-> > -             if (err =3D=3D -ENOENT) {
-> > -                     if (retry) {
-> > -                             retry--;
-> > -                             continue;
-> > -                     }
-> > -                     err =3D -EINTR;
-> > -                     break;
-> > -             }
-> > +             if (err =3D=3D -ENOENT)
-> > +                     goto next_key;
-> >
-> >               if (err)
-> >                       goto free_buf;
-> > @@ -2048,12 +2040,12 @@ int generic_map_lookup_batch(struct bpf_map *ma=
-p,
-> >                       goto free_buf;
-> >               }
-> >
-> > +             cp++;
-> > +next_key:
-> >               if (!prev_key)
-> >                       prev_key =3D buf_prevkey;
-> >
-> >               swap(prev_key, key);
-> > -             retry =3D MAP_LOOKUP_RETRIES;
-> > -             cp++;
-> >               cond_resched();
-> >       }
-> >
-> > --
-> > 2.39.5
-> >
-> >
+> or
+>
+> Maybe define all the channels as sci as default and override it in board dts for
+> I2c and spi based on customer use case??
+
+The latter, please.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
