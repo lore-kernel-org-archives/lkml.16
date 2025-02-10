@@ -1,86 +1,118 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBD51BBBDD;
-	Mon, 10 Feb 2025 08:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAEF31BDA95;
+	Mon, 10 Feb 2025 08:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739176976; cv=none; b=bXHKBaZ0lMOm6GvEPN1ySlZ8PZk08vVCIvo3O9kE1o0LXMS8S1JwloIhnyCnO0bNGzGI9ngeD4y/w+fRdhy8vhRed8C05+7s75szAXJ/768sCmkUvbe+sjmNA6bt9o90oBhxY4/QzV90E1j7rOki2LWiNLF2mm+SjvVBjtkY++Y=
+	t=1739177023; cv=none; b=NcVPc3GG6UgkCafLZhWVH38rh/x8Em2CnQE0fIUgs2r1rsPChW53trhakp/Sh+Pg7cyqnv0uzP6e3ndKGK8Jo7OStl4QN+EwMm3j0LSnmnmEUFNhIAk+J+I3YGnXM2HnyTu5rahklMKvsO6JQxgUxFrYam8yuLGNHBimBFK7Ca0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739176976; c=relaxed/simple;
-	bh=mNgX1iYqxDHBgC2uGf3mhkuchKDpCf8NBQJYzpCXqps=;
+	s=arc-20240116; t=1739177023; c=relaxed/simple;
+	bh=Mdg0SrPX+N0sJvGRpoqt/A0aLHrXFS32YIG1eZopRI0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U5ko2L6sME2mRD29eDc4iFpRlnF6rbuXU8CIKBS4Me+XnSh5pADWQOUxZINM5WVLleayxdJqch+d2H/TDkF9gZx0tC7EyHlVzDmwt5maWKTekiR9fGuvpRjdix3K05NSG3hMb6fsbAQVqe9qQS9g3xGgbw1bjQAJec7MKWVDyxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=FUrJMMO9; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=MjXDQBfYJFAIMa4Qc/wyvWkomtwJyru93Gx4Eq0b1oh6/v6occebSvBITT8mVxDUECRl1l3V40/j0dKKp/99i5uDnBZ/visuPkXQ0xXSQMPiXSQYZUxe0ohNiTC9OqUL60IB2UCCdGIWgwaXTABNbbOLVNjw9WSnCr96s9PnAPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=R4Nz+1Og; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s0ARSOsA; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="FUrJMMO9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=si/4sD8rt6Ey/ETwk2Qn/a8OV63DDmK4e+2V0x7IILY=; b=FUrJMMO9Y8bEXN5VfbBb+AJ/zK
-	xIoy9bz0hulili+1WBDrd8jTrDAiwHkp8TNfy1Q3n6xaJVQ7f9ZgpYoRw/KGVmpEd4b1nZAtHEAoz
-	HmRt7wh9rLbRIYDCd9GP47Cs/HdSmyNim1Xl+/aASWb3Sio4cUHxQfFgvEgk3B5SpCTGlQ6p9v2Ct
-	NfnBv/PsH3nSY7MQ6uyC2PKLETyCMLRxkYuvQxp6pAEhDFG7f/JaK0Y/I87oovg9ic1JrRUMwAdFM
-	07oXfS1e4wtx/NmX+zu/Nq6WqbbMk3qs8zaMnucf50zIpALIksxBqAIyPnA+IbLWgxuHpBY+vUJB9
-	OV4GYmrA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1thPNO-00000009CpM-0hkC;
-	Mon, 10 Feb 2025 08:42:46 +0000
-Date: Mon, 10 Feb 2025 08:42:46 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Christian Brauner <brauner@kernel.org>
-Cc: NeilBrown <neilb@suse.de>,
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R4Nz+1Og";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s0ARSOsA"
+Date: Mon, 10 Feb 2025 09:43:31 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739177013;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cIuRcjptjh9/AMgIrM80ZU522dtLicptkr1+Q41B1sE=;
+	b=R4Nz+1OgIWm/jaJ40jwvDEJHT0xx6tsCC8J2gX+2mQTo+oBAmRxO6UokMjwj/IYy33qYOA
+	UALDMy1n83bp2tBYJ63ObnptX0CCTzXxql0psHe4MwnMmmAN0ETpzGvSsNEJkzfbANBIvX
+	jdn7czu/GuLkDZArqYBV3A3wzYxxKc8Em4jFLF1lZPqoWf6cRkxGcmT2KqBAsnHRTbllNa
+	bkdaRpPb8luWXjWIaFnRpsG691WEu8IPzyrSvl6bhFdczyDtaubgf+iQp1VOTpHZo2aaVQ
+	DRpcHsrnKohSa//0a08k+OoBhEh6B/rgj95X4E9NgfeWzn5s7PMrQuHA84OWXA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739177013;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cIuRcjptjh9/AMgIrM80ZU522dtLicptkr1+Q41B1sE=;
+	b=s0ARSOsALs0PNUGuLU7s1AfucQpyJovs44nzK0JRkeXQ3tDazfk0Q491HyzlAuTiLiojBC
+	OZF1Dn4qxpHH+eDw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Namjae Jeon <linkinjeon@kernel.org>,
-	Steve French <sfrench@samba.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Tom Talpey <tom@talpey.com>, Paul Moore <paul@paul-moore.com>,
-	Eric Paris <eparis@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-	audit@vger.kernel.org, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH 0/2] VFS: minor improvements to a couple of interfaces
-Message-ID: <20250210084246.GB1977892@ZenIV>
-References: <20250207034040.3402438-1-neilb@suse.de>
- <20250210-enten-aufkochen-ffecc8b4d829@brauner>
+	Hillf Danton <hdanton@sina.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Marco Elver <elver@google.com>, Tejun Heo <tj@kernel.org>,
+	tglx@linutronix.de, Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>, bpf@vger.kernel.org
+Subject: Re: [PATCH v7 5/6] kernfs: Use RCU to access kernfs_node::parent.
+Message-ID: <20250210084331.IJB3qKdl@linutronix.de>
+References: <20250203135023.416828-1-bigeasy@linutronix.de>
+ <20250203135023.416828-6-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250210-enten-aufkochen-ffecc8b4d829@brauner>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250203135023.416828-6-bigeasy@linutronix.de>
 
-On Mon, Feb 10, 2025 at 09:25:26AM +0100, Christian Brauner wrote:
-> On Fri, 07 Feb 2025 14:36:46 +1100, NeilBrown wrote:
-> >  I found these opportunities for simplification as part of my work to
-> >  enhance filesystem directory operations to not require an exclusive
-> >  lock on the directory.
-> >  There are quite a collection of users of these interfaces incluing NFS,
-> >  smb/server, bcachefs, devtmpfs, and audit.  Hence the long Cc line.
-> > 
-> > NeilBrown
-> > 
-> > [...]
-> 
-> I've taken your first cleanup. Thanks for splitting those out of the
-> other series.
-> 
-> ---
-> 
-> Applied to the vfs-6.15.misc branch of the vfs/vfs.git tree.
-> Patches in the vfs-6.15.misc branch should appear in linux-next soon.
+On 2025-02-03 14:50:22 [+0100], To cgroups@vger.kernel.org wrote:
+> kernfs_rename_lock is used to obtain stable kernfs_node::{name|parent}
+> pointer. This is a preparation to access kernfs_node::parent under RCU
+> and ensure that the pointer remains stable under the RCU lifetime
+> guarantees.
+=E2=80=A6
 
-Might be better to put it into a separate branch, so that further
-work in that direction wouldn't be mixed with other stuff...
+The robot complained that the selftests for bpf broke. As it turns out,
+the tests access kernfs_node::{parent|name} and after the rename
+::parent is gone so it does not compile.
+If there are no objections, I would merge this into 5/6 and repost.
+"test_progs -a test_profiler" passes.
+
+diff --git a/tools/testing/selftests/bpf/progs/profiler.inc.h b/tools/testi=
+ng/selftests/bpf/progs/profiler.inc.h
+index 8bd1ebd7d6afd..a4f518ee5f4de 100644
+--- a/tools/testing/selftests/bpf/progs/profiler.inc.h
++++ b/tools/testing/selftests/bpf/progs/profiler.inc.h
+@@ -223,7 +223,7 @@ static INLINE void* read_full_cgroup_path(struct kernfs=
+_node* cgroup_node,
+ 		if (bpf_cmp_likely(filepart_length, <=3D, MAX_PATH)) {
+ 			payload +=3D filepart_length;
+ 		}
+-		cgroup_node =3D BPF_CORE_READ(cgroup_node, parent);
++		cgroup_node =3D BPF_CORE_READ(cgroup_node, __parent);
+ 	}
+ 	return payload;
+ }
+@@ -300,6 +300,7 @@ static INLINE void* populate_cgroup_info(struct cgroup_=
+data_t* cgroup_data,
+ 	cgroup_data->cgroup_proc_length =3D 0;
+ 	cgroup_data->cgroup_full_length =3D 0;
+=20
++	bpf_rcu_read_lock();
+ 	size_t cgroup_root_length =3D
+ 		bpf_probe_read_kernel_str(payload, MAX_PATH,
+ 					  BPF_CORE_READ(root_kernfs, name));
+@@ -323,6 +324,7 @@ static INLINE void* populate_cgroup_info(struct cgroup_=
+data_t* cgroup_data,
+ 		cgroup_data->cgroup_full_length =3D payload_end_pos - payload;
+ 		payload =3D payload_end_pos;
+ 	}
++	bpf_rcu_read_unlock();
+=20
+ 	return (void*)payload;
+ }
+--=20
+2.47.2
+
+Sebastian
