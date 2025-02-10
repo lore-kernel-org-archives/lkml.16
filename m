@@ -1,779 +1,167 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905382566F5;
-	Mon, 10 Feb 2025 18:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC572566DC;
+	Mon, 10 Feb 2025 18:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739211811; cv=none; b=RZ+dUNpJXz4BItGqACm+pzDWL6VvQJCvC/uVRkRCJBMtjzMmPs1DzRm9ASOKsNhF3IJm7nfB7JIYTYE5iKUt6GNPsvhhUl3N1c0IJiKdkECxqk+9rYiyLIxbV1J4tNifttxaDuhmCSmQe4R80iUQAp4Utg7YE7g5F5kTXw2gW5E=
+	t=1739211831; cv=none; b=nSPtFKxYdc48k78HQqyXuk2iqjNNSLpQtPxu6jzoQDrPeuEbaraVLhgdE/L05gKXy/FzT+ovOAyJhyAG43hyFRLTXswbB+M1gSFNt56pLBhPpGFNHJyPdFHH979IzWgy7kH9WliotgS5wbbwR7/Y89GUlY7aYNIhSQHOBYJ+ejI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739211811; c=relaxed/simple;
-	bh=+8LeJ0BFrjpAfAi6uw54u7DTnLNITgIBm+ndoUB5j84=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=P9hIYLUCBCewMwAeTrJCII61iZ6I5erGvqClerjcNYONgoEhZLNY1twXNB2ha7iCoPf6VTyUcS/QycFvmvoEZOrTou2AXN8SSTkkSpOsArSoOsfgcdzx0RcTMpKkza+Cq0OnORAyrHxO8QBm7YZ458X7yCdL8DaXDO+TTKQd+ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=byV8rWJe; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739211831; c=relaxed/simple;
+	bh=oYaoNIca/prrl6BbAu9QFMCD9Wkhq7BkULEeqssB7Bs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MPuhrnTbQQxHPseSxQHy+xUV7uQKwixsDZdBGnQV+Lez+SF5aH/YFh22OBreE6BHrhzFLe7GboxCIrk3oM3+9roXFWQT2HbIzvamiag7i5l4giiYXJ4tgcImyg7JfR8LYNFQV6hSHn09oBoxV31SUB3SoIYu8hfhp7e5cX5Bt9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D2evZvDm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="byV8rWJe"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4719141e711so11022601cf.0;
-        Mon, 10 Feb 2025 10:23:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739211808; x=1739816608; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8j2bJmhADEYZ8mCa5Jc3rXkBB0QVEtv6kx6cNdcOdls=;
-        b=byV8rWJed39cD2ZCfqa7Ru3HeIEwDaRgxnFXSgvppTDJBYRWd0Xtyru5N/M5AhqbN+
-         a9WoRCvCJZFyENMSG8QaWnu3JgFI8OiAO0wSu+chszE5xdAWAqkyObGdpYIR8VFLeg3/
-         GbfNFMXfqUXom7Hxodp3GbBGFUIF9Uc6Zmr73zaNVDgTEDi3+YztQL030PrTR2HiB7PY
-         c1/iJ7VdEyJ0aAKSk4o0eq0qyXmjQW4l+ba0tA5Q/RL6Lf7GlF52AW0SoR7zafrk6bF0
-         O9Toe88v0jeuw56qKMzWBaqRr3D9tMsiPxuzcbNzxyfpfOgxxueHKA7PBlUqb2tVY50k
-         Yw0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739211808; x=1739816608;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8j2bJmhADEYZ8mCa5Jc3rXkBB0QVEtv6kx6cNdcOdls=;
-        b=f6Aa1W7dsRgVIBFQgziBg3a+wBTVDqVCbKaKIj3P2o/vikKC9/zCHAyz9bi+oxPJmW
-         KC1MCG32NpvpD+j1NolGAaknR8V0ynfn8VYATia/jEeEe7BWAiEpiyJ+n2n0UcLaYlYe
-         2LHTXsmVVENwwDljmCYGuXISAdpoyjiyDvQgQ5HNfJs+lwWU76fdRnpzTNZDUfngNKuQ
-         Jmc5q6D7v5oM85p5BcHVrfD9V7m3cqpxcz/5p8M8G+7OYCnRYYIEB02+u2KOtJ2kaiOx
-         V3ee3Nne1fi5Dr3rml5xX1v76fUXUb5+l6brIQEQ9sBv1ZTowdJcDwxKF93/Nr556sEh
-         yG1A==
-X-Forwarded-Encrypted: i=1; AJvYcCVccM+s6h6mYMvgILtnWAsyem910pJam2dS6lslKQ7MDsMKyQXolvhMyeTgUAqeC8/CLz/Vv9+9ZfA=@vger.kernel.org, AJvYcCVoIY7PYiUCF610C3DbzPebZzmnqdX21UVJHLRqPVK1R55EAVM9b6A6wmDafIfeYSqQ0/TwMB+T0DVTQO7wUva1@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbP5JPW/jI0YV+2wxiKt8W8YeRjod7QA2Sa4Ea4B3iP2U28ssb
-	ixf1tWWlfN5ZgD3EAL9EwmgGuR3OCnkyWNKimY/DiUyENqefZR/k
-X-Gm-Gg: ASbGnctujYZC81LLl5AEcL5IYsom64BoNgCZwTqke3CYJJjXadubpIaA6hIkWuFbeTm
-	5YFa0MXXtVSPOV/GOlZMSC1/FAd6rX+mxznUtH6SIffBwd+wFHVDNZ1wcHbqjpidIp5EXDOzjwD
-	ZEoNdYfCh1O7Kxh2i9Ur1dHN2lU5cS2pam7VLauCAVaEqh/KvahkCjQPTL1+rU0vLa3ADywhrp/
-	XOj6niNODe4t7vS6uRoJgYPr72jxKo2H2vfm5DsBwoERP0jvqEXU7LL1OLUCp1J+XkbsSYE4/Dw
-	M9cy1uabRHNO3p6KlA99nRwvDJlozMSknaixWnWxYOOmObVphwxyZb33Aaq+OXykns0j76Q7wYq
-	FmrQ7cmVga59UE1G+hXW75Swe
-X-Google-Smtp-Source: AGHT+IEnEkGCtTLPZBnfF+XiEiFW+kZgSjvA0T/NM+uWP3Y+L9VX1NzG9vcRZq5nZh1+OQOIra7TMg==
-X-Received: by 2002:a05:6214:20cf:b0:6d9:3016:d101 with SMTP id 6a1803df08f44-6e445707956mr156072856d6.41.1739211806776;
-        Mon, 10 Feb 2025 10:23:26 -0800 (PST)
-Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:cc94])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e440d902d3sm45436456d6.7.2025.02.10.10.23.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 10:23:26 -0800 (PST)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 10 Feb 2025 13:23:23 -0500
-Subject: [PATCH v3 2/2] printf: break kunit into test cases
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D2evZvDm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF350C4CEEB;
+	Mon, 10 Feb 2025 18:23:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739211830;
+	bh=oYaoNIca/prrl6BbAu9QFMCD9Wkhq7BkULEeqssB7Bs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D2evZvDm6o+cP6BrTglQP35ObWhuCuDK/FcZISz+0R5Kf3YzsV9ZAsdZek9eua8k2
+	 2PI3jfczob2R0shNArMq12gB+zCqAjNLgBEzHZ1xyFT0g00Q1AWp32mKKeAihEVspG
+	 c5iI09SYNlvyLtCZjQdkPMKlu2/jEqr+SZc+JkVt/ESIyIUmZRj/hS8a4E0qm16dpH
+	 MjhhFZNZp/ZOawzjKiEFvhP9vnD0rQG94ni4b+ou9Nu2X7M6kNZanCQ1VIjxEgPgG9
+	 GlmDfmt4VT3wRLIyHI51b4Ml7/jZ+WaMFdEw/l2R8kTWOSSKkjFxt3sr9UP+Zd0T0S
+	 1fXHpKEEkW8kg==
+Date: Mon, 10 Feb 2025 19:23:47 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, 
+	Jagan Teki <jagan@amarulasolutions.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Paul Kocialkowski <contact@paulk.fr>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	=?utf-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH v6 11/26] drm/bridge: samsung-dsim: use
+ devm_drm_of_get_bridge[_by_node] to find the out_bridge
+Message-ID: <20250210-bronze-copperhead-of-faith-12d0a9@houat>
+References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
+ <20250206-hotplug-drm-bridge-v6-11-9d6f2c9c3058@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250210-printf-kunit-convert-v3-2-ee6ac5500f5e@gmail.com>
-References: <20250210-printf-kunit-convert-v3-0-ee6ac5500f5e@gmail.com>
-In-Reply-To: <20250210-printf-kunit-convert-v3-0-ee6ac5500f5e@gmail.com>
-To: Arpitha Raghunandan <98.arpi@gmail.com>, 
- David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>, Geert Uytterhoeven <geert@linux-m68k.org>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Naveen N Rao <naveen@kernel.org>, 
- Brendan Higgins <brendan.higgins@linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
- linuxppc-dev@lists.ozlabs.org, Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="etdpmgzxb265ivsl"
+Content-Disposition: inline
+In-Reply-To: <20250206-hotplug-drm-bridge-v6-11-9d6f2c9c3058@bootlin.com>
 
-Move all tests into `printf_test_cases`. This gives us nicer output in
-the event of a failure.
 
-Combine `plain_format` and `plain_hash` into `hash_pointer` since
-they're testing the same scenario.
+--etdpmgzxb265ivsl
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v6 11/26] drm/bridge: samsung-dsim: use
+ devm_drm_of_get_bridge[_by_node] to find the out_bridge
+MIME-Version: 1.0
 
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- lib/printf_kunit.c | 331 ++++++++++++++++++++---------------------------------
- 1 file changed, 121 insertions(+), 210 deletions(-)
+On Thu, Feb 06, 2025 at 07:14:26PM +0100, Luca Ceresoli wrote:
+> In order to support panels described either via graph links or via a
+> subnode (e.g. "panel@0"), this driver uses low-level deprecated functions
+> to find the next bridge. The resulting logic is complex and duplicates co=
+de
+> already present in the DRM bridge core. Switch to the new APIs in DRM
+> bridge core that allow to do the same in a much cleaner way.
+>=20
+> Note there are two slight changes in the new logic intended to improve the
+> final result:
+>=20
+>  * the old code looks for a subnode with any name except "port" or "ports=
+",
+>    while the new code uses the node passed as a parameter
+>=20
+>  * the old code looks for a subnode first and falls back to a graph link,
+>    while the new code uses the reverse order because graph links are the
+>    recommended device tree representation now
+>=20
+> The first change makes the code more robust by avoiding the risk of using
+> an unrelated node which is not describing a panel and not names "port" or
+> "ports".
+>=20
+> The second change is not expected to expose regressions because, in the
+> cases where both a subnode and a graph link are used to describe a panel,
+> the graph link should point to the subnode itself, such as in
+> arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+>=20
+> As a further cleanup, use a temporary variable to assign dsi->out_bridge
+> only on success. This avoids the risk of leaving a non-NULL value in
+> dsi->out_bridge when samsung_dsim_host_attach() fails.
+>=20
+> Suggested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+>=20
+> ---
+>=20
+> This patch was added in v6.
+> ---
+>  drivers/gpu/drm/bridge/samsung-dsim.c | 55 ++++++-----------------------=
+------
+>  1 file changed, 9 insertions(+), 46 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c b/drivers/gpu/drm/brid=
+ge/samsung-dsim.c
+> index f8b4fb8357659018ec0db65374ee5d05330639ae..bbd0a4f5a3f52b61bf48f10d6=
+e8ca741bffa5e46 100644
+> --- a/drivers/gpu/drm/bridge/samsung-dsim.c
+> +++ b/drivers/gpu/drm/bridge/samsung-dsim.c
+> @@ -1704,55 +1704,16 @@ static int samsung_dsim_host_attach(struct mipi_d=
+si_host *host,
+>  	const struct samsung_dsim_plat_data *pdata =3D dsi->plat_data;
+>  	struct device *dev =3D dsi->dev;
+>  	struct device_node *np =3D dev->of_node;
+> -	struct device_node *remote;
+> -	struct drm_panel *panel;
+> +	struct drm_bridge *out_bridge;
+>  	int ret;
+> =20
+> -	/*
+> -	 * Devices can also be child nodes when we also control that device
+> -	 * through the upstream device (ie, MIPI-DCS for a MIPI-DSI device).
+> -	 *
+> -	 * Lookup for a child node of the given parent that isn't either port
+> -	 * or ports.
+> -	 */
+> -	for_each_available_child_of_node(np, remote) {
+> -		if (of_node_name_eq(remote, "port") ||
+> -		    of_node_name_eq(remote, "ports"))
+> -			continue;
+> +	out_bridge =3D devm_drm_of_get_bridge(dev, np, 1, 0);
+> +	if (IS_ERR(out_bridge) && PTR_ERR(out_bridge) !=3D -EPROBE_DEFER)
+> +		out_bridge =3D devm_drm_of_get_bridge_by_node(dev, device->dev.of_node=
+);
+> =20
 
-diff --git a/lib/printf_kunit.c b/lib/printf_kunit.c
-index 287bbfb61148..00c35eb0abdc 100644
---- a/lib/printf_kunit.c
-+++ b/lib/printf_kunit.c
-@@ -38,13 +38,8 @@ static unsigned int total_tests;
- static char *test_buffer;
- static char *alloced_buffer;
- 
--static struct kunit *kunittest;
--
--#define tc_fail(fmt, ...) \
--	KUNIT_FAIL(kunittest, fmt, ##__VA_ARGS__)
--
--static void __printf(4, 0)
--do_test(int bufsize, const char *expect, int elen,
-+static void __printf(5, 0)
-+do_test(struct kunit *kunittest, int bufsize, const char *expect, int elen,
- 	const char *fmt, va_list ap)
- {
- 	va_list aq;
-@@ -58,59 +53,64 @@ do_test(int bufsize, const char *expect, int elen,
- 	va_end(aq);
- 
- 	if (ret != elen) {
--		tc_fail("vsnprintf(buf, %d, \"%s\", ...) returned %d, expected %d",
--			bufsize, fmt, ret, elen);
-+		KUNIT_FAIL(kunittest, "vsnprintf(buf, %d, \"%s\", ...) returned %d, expected %d",
-+			   bufsize, fmt, ret, elen);
- 		return;
- 	}
- 
- 	if (memchr_inv(alloced_buffer, FILL_CHAR, PAD_SIZE)) {
--		tc_fail("vsnprintf(buf, %d, \"%s\", ...) wrote before buffer",
--			bufsize, fmt);
-+		KUNIT_FAIL(kunittest, "vsnprintf(buf, %d, \"%s\", ...) wrote before buffer",
-+			   bufsize, fmt);
- 		return;
- 	}
- 
- 	if (!bufsize) {
- 		if (memchr_inv(test_buffer, FILL_CHAR, BUF_SIZE + PAD_SIZE)) {
--			tc_fail("vsnprintf(buf, 0, \"%s\", ...) wrote to buffer", fmt);
-+			KUNIT_FAIL(kunittest, "vsnprintf(buf, 0, \"%s\", ...) wrote to buffer",
-+				   fmt);
- 		}
- 		return;
- 	}
- 
- 	written = min(bufsize-1, elen);
- 	if (test_buffer[written]) {
--		tc_fail("vsnprintf(buf, %d, \"%s\", ...) did not nul-terminate buffer",
--			bufsize, fmt);
-+		KUNIT_FAIL(kunittest,
-+			   "vsnprintf(buf, %d, \"%s\", ...) did not nul-terminate buffer",
-+			   bufsize, fmt);
- 		return;
- 	}
- 
- 	if (memchr_inv(test_buffer + written + 1, FILL_CHAR, bufsize - (written + 1))) {
--		tc_fail("vsnprintf(buf, %d, \"%s\", ...) wrote beyond the nul-terminator",
--			bufsize, fmt);
-+		KUNIT_FAIL(kunittest,
-+			   "vsnprintf(buf, %d, \"%s\", ...) wrote beyond the nul-terminator",
-+			   bufsize, fmt);
- 		return;
- 	}
- 
- 	if (memchr_inv(test_buffer + bufsize, FILL_CHAR, BUF_SIZE + PAD_SIZE - bufsize)) {
--		tc_fail("vsnprintf(buf, %d, \"%s\", ...) wrote beyond buffer", bufsize, fmt);
-+		KUNIT_FAIL(kunittest, "vsnprintf(buf, %d, \"%s\", ...) wrote beyond buffer",
-+			   bufsize, fmt);
- 		return;
- 	}
- 
- 	if (memcmp(test_buffer, expect, written)) {
--		tc_fail("vsnprintf(buf, %d, \"%s\", ...) wrote '%s', expected '%.*s'",
--			bufsize, fmt, test_buffer, written, expect);
-+		KUNIT_FAIL(kunittest, "vsnprintf(buf, %d, \"%s\", ...) wrote '%s', expected '%.*s'",
-+			   bufsize, fmt, test_buffer, written, expect);
- 		return;
- 	}
- }
- 
--static void __printf(3, 4)
--__test(const char *expect, int elen, const char *fmt, ...)
-+static void __printf(4, 5)
-+__test(struct kunit *kunittest, const char *expect, int elen, const char *fmt, ...)
- {
- 	va_list ap;
- 	int rand;
- 	char *p;
- 
- 	if (elen >= BUF_SIZE) {
--		tc_fail("error in test suite: expected output length %d too long. Format was '%s'.",
--			elen, fmt);
-+		KUNIT_FAIL(kunittest,
-+			   "error in test suite: expected length (%d) >= BUF_SIZE (%d). fmt=\"%s\"",
-+			   elen, BUF_SIZE, fmt);
- 		return;
- 	}
- 
-@@ -122,18 +122,19 @@ __test(const char *expect, int elen, const char *fmt, ...)
- 	 * enough and 0), and then we also test that kvasprintf would
- 	 * be able to print it as expected.
- 	 */
--	do_test(BUF_SIZE, expect, elen, fmt, ap);
-+	do_test(kunittest, BUF_SIZE, expect, elen, fmt, ap);
- 	rand = get_random_u32_inclusive(1, elen + 1);
- 	/* Since elen < BUF_SIZE, we have 1 <= rand <= BUF_SIZE. */
--	do_test(rand, expect, elen, fmt, ap);
--	do_test(0, expect, elen, fmt, ap);
-+	do_test(kunittest, rand, expect, elen, fmt, ap);
-+	do_test(kunittest, 0, expect, elen, fmt, ap);
- 
- 	p = kvasprintf(GFP_KERNEL, fmt, ap);
- 	if (p) {
- 		total_tests++;
- 		if (memcmp(p, expect, elen+1)) {
--			tc_fail("kvasprintf(..., \"%s\", ...) returned '%s', expected '%s'",
--				fmt, p, expect);
-+			KUNIT_FAIL(kunittest,
-+				   "kvasprintf(..., \"%s\", ...) returned '%s', expected '%s'",
-+				   fmt, p, expect);
- 		}
- 		kfree(p);
- 	}
-@@ -141,10 +142,10 @@ __test(const char *expect, int elen, const char *fmt, ...)
- }
- 
- #define test(expect, fmt, ...)					\
--	__test(expect, strlen(expect), fmt, ##__VA_ARGS__)
-+	__test(kunittest, expect, strlen(expect), fmt, ##__VA_ARGS__)
- 
- static void
--test_basic(void)
-+test_basic(struct kunit *kunittest)
- {
- 	/* Work around annoying "warning: zero-length gnu_printf format string". */
- 	char nul = '\0';
-@@ -152,11 +153,11 @@ test_basic(void)
- 	test("", &nul);
- 	test("100%", "100%%");
- 	test("xxx%yyy", "xxx%cyyy", '%');
--	__test("xxx\0yyy", 7, "xxx%cyyy", '\0');
-+	__test(kunittest, "xxx\0yyy", 7, "xxx%cyyy", '\0');
- }
- 
- static void
--test_number(void)
-+test_number(struct kunit *kunittest)
- {
- 	test("0x1234abcd  ", "%#-12x", 0x1234abcd);
- 	test("  0x1234abcd", "%#12x", 0x1234abcd);
-@@ -178,7 +179,7 @@ test_number(void)
- }
- 
- static void
--test_string(void)
-+test_string(struct kunit *kunittest)
- {
- 	test("", "%s%.0s", "", "123");
- 	test("ABCD|abc|123", "%s|%.3s|%.*s", "ABCD", "abcdef", 3, "123456");
-@@ -215,29 +216,6 @@ test_string(void)
- #define ZEROS "00000000"	/* hex 32 zero bits */
- #define ONES "ffffffff"		/* hex 32 one bits */
- 
--static int
--plain_format(void)
--{
--	char buf[PLAIN_BUF_SIZE];
--	int nchars;
--
--	nchars = snprintf(buf, PLAIN_BUF_SIZE, "%p", PTR);
--
--	if (nchars != PTR_WIDTH)
--		return -1;
--
--	if (strncmp(buf, PTR_VAL_NO_CRNG, PTR_WIDTH) == 0) {
--		kunit_warn(kunittest, "crng possibly not yet initialized. plain 'p' buffer contains \"%s\"",
--			PTR_VAL_NO_CRNG);
--		return 0;
--	}
--
--	if (strncmp(buf, ZEROS, strlen(ZEROS)) != 0)
--		return -1;
--
--	return 0;
--}
--
- #else
- 
- #define PTR_WIDTH 8
-@@ -247,89 +225,44 @@ plain_format(void)
- #define ZEROS ""
- #define ONES ""
- 
--static int
--plain_format(void)
--{
--	/* Format is implicitly tested for 32 bit machines by plain_hash() */
--	return 0;
--}
--
- #endif	/* BITS_PER_LONG == 64 */
- 
--static int
--plain_hash_to_buffer(const void *p, char *buf, size_t len)
-+static void
-+plain_hash_to_buffer(struct kunit *kunittest, const void *p, char *buf, size_t len)
- {
--	int nchars;
--
--	nchars = snprintf(buf, len, "%p", p);
--
--	if (nchars != PTR_WIDTH)
--		return -1;
-+	KUNIT_ASSERT_EQ(kunittest, snprintf(buf, len, "%p", p), PTR_WIDTH);
- 
- 	if (strncmp(buf, PTR_VAL_NO_CRNG, PTR_WIDTH) == 0) {
- 		kunit_warn(kunittest, "crng possibly not yet initialized. plain 'p' buffer contains \"%s\"",
- 			PTR_VAL_NO_CRNG);
--		return 0;
- 	}
--
--	return 0;
- }
- 
--static int
--plain_hash(void)
--{
--	char buf[PLAIN_BUF_SIZE];
--	int ret;
--
--	ret = plain_hash_to_buffer(PTR, buf, PLAIN_BUF_SIZE);
--	if (ret)
--		return ret;
--
--	if (strncmp(buf, PTR_STR, PTR_WIDTH) == 0)
--		return -1;
--
--	return 0;
--}
--
--/*
-- * We can't use test() to test %p because we don't know what output to expect
-- * after an address is hashed.
-- */
- static void
--plain(void)
-+hash_pointer(struct kunit *kunittest)
- {
--	int err;
-+	if (no_hash_pointers)
-+		kunit_skip(kunittest, "hash pointers disabled");
- 
--	if (no_hash_pointers) {
--		kunit_warn(kunittest, "skipping plain 'p' tests");
--		return;
--	}
-+	char buf[PLAIN_BUF_SIZE];
- 
--	err = plain_hash();
--	if (err) {
--		tc_fail("plain 'p' does not appear to be hashed");
--		return;
--	}
-+	plain_hash_to_buffer(kunittest, PTR, buf, PLAIN_BUF_SIZE);
- 
--	err = plain_format();
--	if (err) {
--		tc_fail("hashing plain 'p' has unexpected format");
--	}
-+	/*
-+	 * We can't use test() to test %p because we don't know what output to expect
-+	 * after an address is hashed.
-+	 */
-+
-+	KUNIT_EXPECT_MEMEQ(kunittest, buf, ZEROS, strlen(ZEROS));
-+	KUNIT_EXPECT_MEMNEQ(kunittest, buf+strlen(ZEROS), PTR_STR, PTR_WIDTH);
- }
- 
- static void
--test_hashed(const char *fmt, const void *p)
-+test_hashed(struct kunit *kunittest, const char *fmt, const void *p)
- {
- 	char buf[PLAIN_BUF_SIZE];
--	int ret;
- 
--	/*
--	 * No need to increase failed test counter since this is assumed
--	 * to be called after plain().
--	 */
--	ret = plain_hash_to_buffer(p, buf, PLAIN_BUF_SIZE);
--	if (ret)
--		return;
-+	plain_hash_to_buffer(kunittest, p, buf, PLAIN_BUF_SIZE);
- 
- 	test(buf, fmt, p);
- }
-@@ -338,7 +271,7 @@ test_hashed(const char *fmt, const void *p)
-  * NULL pointers aren't hashed.
-  */
- static void
--null_pointer(void)
-+null_pointer(struct kunit *kunittest)
- {
- 	test(ZEROS "00000000", "%p", NULL);
- 	test(ZEROS "00000000", "%px", NULL);
-@@ -349,7 +282,7 @@ null_pointer(void)
-  * Error pointers aren't hashed.
-  */
- static void
--error_pointer(void)
-+error_pointer(struct kunit *kunittest)
- {
- 	test(ONES "fffffff5", "%p", ERR_PTR(-11));
- 	test(ONES "fffffff5", "%px", ERR_PTR(-11));
-@@ -359,26 +292,26 @@ error_pointer(void)
- #define PTR_INVALID ((void *)0x000000ab)
- 
- static void
--invalid_pointer(void)
-+invalid_pointer(struct kunit *kunittest)
- {
--	test_hashed("%p", PTR_INVALID);
-+	test_hashed(kunittest, "%p", PTR_INVALID);
- 	test(ZEROS "000000ab", "%px", PTR_INVALID);
- 	test("(efault)", "%pE", PTR_INVALID);
- }
- 
- static void
--symbol_ptr(void)
-+symbol_ptr(struct kunit *kunittest)
- {
- }
- 
- static void
--kernel_ptr(void)
-+kernel_ptr(struct kunit *kunittest)
- {
- 	/* We can't test this without access to kptr_restrict. */
- }
- 
- static void
--struct_resource(void)
-+struct_resource(struct kunit *kunittest)
- {
- 	struct resource test_resource = {
- 		.start = 0xc0ffee00,
-@@ -427,7 +360,7 @@ struct_resource(void)
- }
- 
- static void
--struct_range(void)
-+struct_range(struct kunit *kunittest)
- {
- 	struct range test_range = DEFINE_RANGE(0xc0ffee00ba5eba11,
- 					       0xc0ffee00ba5eba11);
-@@ -443,17 +376,17 @@ struct_range(void)
- }
- 
- static void
--addr(void)
-+addr(struct kunit *kunittest)
- {
- }
- 
- static void
--escaped_str(void)
-+escaped_str(struct kunit *kunittest)
- {
- }
- 
- static void
--hex_string(void)
-+hex_string(struct kunit *kunittest)
- {
- 	const char buf[3] = {0xc0, 0xff, 0xee};
- 
-@@ -464,7 +397,7 @@ hex_string(void)
- }
- 
- static void
--mac(void)
-+mac(struct kunit *kunittest)
- {
- 	const u8 addr[6] = {0x2d, 0x48, 0xd6, 0xfc, 0x7a, 0x05};
- 
-@@ -476,7 +409,7 @@ mac(void)
- }
- 
- static void
--ip4(void)
-+ip4(struct kunit *kunittest)
- {
- 	struct sockaddr_in sa;
- 
-@@ -491,19 +424,12 @@ ip4(void)
- }
- 
- static void
--ip6(void)
--{
--}
--
--static void
--ip(void)
-+ip6(struct kunit *kunittest)
- {
--	ip4();
--	ip6();
- }
- 
- static void
--uuid(void)
-+uuid(struct kunit *kunittest)
- {
- 	const char uuid[16] = {0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7,
- 			       0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf};
-@@ -530,7 +456,7 @@ static struct dentry test_dentry[4] = {
- };
- 
- static void
--dentry(void)
-+dentry(struct kunit *kunittest)
- {
- 	test("foo", "%pd", &test_dentry[0]);
- 	test("foo", "%pd2", &test_dentry[0]);
-@@ -551,12 +477,12 @@ dentry(void)
- }
- 
- static void
--struct_va_format(void)
-+struct_va_format(struct kunit *kunittest)
- {
- }
- 
- static void
--time_and_date(void)
-+time_and_date(struct kunit *kunittest)
- {
- 	/* 1543210543 */
- 	const struct rtc_time tm = {
-@@ -590,12 +516,12 @@ time_and_date(void)
- }
- 
- static void
--struct_clk(void)
-+struct_clk(struct kunit *kunittest)
- {
- }
- 
- static void
--large_bitmap(void)
-+large_bitmap(struct kunit *kunittest)
- {
- 	const int nbits = 1 << 16;
- 	unsigned long *bits = bitmap_zalloc(nbits, GFP_KERNEL);
-@@ -609,7 +535,7 @@ large_bitmap(void)
- }
- 
- static void
--bitmap(void)
-+bitmap(struct kunit *kunittest)
- {
- 	DECLARE_BITMAP(bits, 20);
- 	const int primes[] = {2,3,5,7,11,13,17,19};
-@@ -628,11 +554,11 @@ bitmap(void)
- 	test("fffff|fffff", "%20pb|%*pb", bits, 20, bits);
- 	test("0-19|0-19", "%20pbl|%*pbl", bits, 20, bits);
- 
--	large_bitmap();
-+	large_bitmap(kunittest);
- }
- 
- static void
--netdev_features(void)
-+netdev_features(struct kunit *kunittest)
- {
- }
- 
-@@ -658,8 +584,8 @@ static const struct page_flags_test pft[] = {
- };
- 
- static void
--page_flags_test(int section, int node, int zone, int last_cpupid,
--		int kasan_tag, unsigned long flags, const char *name,
-+page_flags_test(struct kunit *kunittest, int section, int node, int zone,
-+		int last_cpupid, int kasan_tag, unsigned long flags, const char *name,
- 		char *cmp_buf)
- {
- 	unsigned long values[] = {section, node, zone, last_cpupid, kasan_tag};
-@@ -696,25 +622,24 @@ page_flags_test(int section, int node, int zone, int last_cpupid,
- }
- 
- static void
--flags(void)
-+flags(struct kunit *kunittest)
- {
- 	unsigned long flags;
- 	char *cmp_buffer;
- 	gfp_t gfp;
- 
--	cmp_buffer = kmalloc(BUF_SIZE, GFP_KERNEL);
--	if (!cmp_buffer)
--		return;
-+	cmp_buffer = kunit_kmalloc(kunittest, BUF_SIZE, GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(kunittest, cmp_buffer);
- 
- 	flags = 0;
--	page_flags_test(0, 0, 0, 0, 0, flags, "", cmp_buffer);
-+	page_flags_test(kunittest, 0, 0, 0, 0, 0, flags, "", cmp_buffer);
- 
- 	flags = 1UL << NR_PAGEFLAGS;
--	page_flags_test(0, 0, 0, 0, 0, flags, "", cmp_buffer);
-+	page_flags_test(kunittest, 0, 0, 0, 0, 0, flags, "", cmp_buffer);
- 
- 	flags |= 1UL << PG_uptodate | 1UL << PG_dirty | 1UL << PG_lru
- 		| 1UL << PG_active | 1UL << PG_swapbacked;
--	page_flags_test(1, 1, 1, 0x1fffff, 1, flags,
-+	page_flags_test(kunittest, 1, 1, 1, 0x1fffff, 1, flags,
- 			"uptodate|dirty|lru|active|swapbacked",
- 			cmp_buffer);
- 
-@@ -739,11 +664,9 @@ flags(void)
- 							(unsigned long) gfp);
- 	gfp |= __GFP_HIGH;
- 	test(cmp_buffer, "%pGg", &gfp);
--
--	kfree(cmp_buffer);
- }
- 
--static void fwnode_pointer(void)
-+static void fwnode_pointer(struct kunit *kunittest)
- {
- 	const struct software_node first = { .name = "first" };
- 	const struct software_node second = { .name = "second", .parent = &first };
-@@ -757,8 +680,7 @@ static void fwnode_pointer(void)
- 
- 	rval = software_node_register_node_group(group);
- 	if (rval) {
--		kunit_warn(kunittest, "cannot register softnodes; rval %d", rval);
--		return;
-+		kunit_skip(kunittest, "cannot register softnodes; rval %d", rval);
- 	}
- 
- 	test(full_name_second, "%pfw", software_node_fwnode(&second));
-@@ -770,7 +692,7 @@ static void fwnode_pointer(void)
- 	software_node_unregister_node_group(group);
- }
- 
--static void fourcc_pointer(void)
-+static void fourcc_pointer(struct kunit *kunittest)
- {
- 	struct {
- 		u32 code;
-@@ -788,13 +710,13 @@ static void fourcc_pointer(void)
- }
- 
- static void
--errptr(void)
-+errptr(struct kunit *kunittest)
- {
- 	test("-1234", "%pe", ERR_PTR(-1234));
- 
- 	/* Check that %pe with a non-ERR_PTR gets treated as ordinary %p. */
- 	BUILD_BUG_ON(IS_ERR(PTR));
--	test_hashed("%pe", PTR);
-+	test_hashed(kunittest, "%pe", PTR);
- 
- #ifdef CONFIG_SYMBOLIC_ERRNAME
- 	test("(-ENOTSOCK)", "(%pe)", ERR_PTR(-ENOTSOCK));
-@@ -807,65 +729,54 @@ errptr(void)
- #endif
- }
- 
--static void
--test_pointer(void)
--{
--	plain();
--	null_pointer();
--	error_pointer();
--	invalid_pointer();
--	symbol_ptr();
--	kernel_ptr();
--	struct_resource();
--	struct_range();
--	addr();
--	escaped_str();
--	hex_string();
--	mac();
--	ip();
--	uuid();
--	dentry();
--	struct_va_format();
--	time_and_date();
--	struct_clk();
--	bitmap();
--	netdev_features();
--	flags();
--	errptr();
--	fwnode_pointer();
--	fourcc_pointer();
--}
--
--static void printf_test(struct kunit *test)
-+static int printf_suite_init(struct kunit_suite *suite)
- {
-+	total_tests = 0;
-+
- 	alloced_buffer = kmalloc(BUF_SIZE + 2*PAD_SIZE, GFP_KERNEL);
- 	if (!alloced_buffer)
--		return;
-+		return -ENOMEM;
- 	test_buffer = alloced_buffer + PAD_SIZE;
- 
--	kunittest = test;
--
--	test_basic();
--	test_number();
--	test_string();
--	test_pointer();
--
--	kfree(alloced_buffer);
--}
--
--static int printf_suite_init(struct kunit_suite *suite)
--{
--	total_tests = 0;
- 	return 0;
- }
- 
- static void printf_suite_exit(struct kunit_suite *suite)
- {
-+	kfree(alloced_buffer);
-+
- 	kunit_info(suite, "ran %u tests", total_tests);
- }
- 
- static struct kunit_case printf_test_cases[] = {
--	KUNIT_CASE(printf_test),
-+	KUNIT_CASE(test_basic),
-+	KUNIT_CASE(test_number),
-+	KUNIT_CASE(test_string),
-+	KUNIT_CASE(hash_pointer),
-+	KUNIT_CASE(null_pointer),
-+	KUNIT_CASE(error_pointer),
-+	KUNIT_CASE(invalid_pointer),
-+	KUNIT_CASE(symbol_ptr),
-+	KUNIT_CASE(kernel_ptr),
-+	KUNIT_CASE(struct_resource),
-+	KUNIT_CASE(struct_range),
-+	KUNIT_CASE(addr),
-+	KUNIT_CASE(escaped_str),
-+	KUNIT_CASE(hex_string),
-+	KUNIT_CASE(mac),
-+	KUNIT_CASE(ip4),
-+	KUNIT_CASE(ip6),
-+	KUNIT_CASE(uuid),
-+	KUNIT_CASE(dentry),
-+	KUNIT_CASE(struct_va_format),
-+	KUNIT_CASE(time_and_date),
-+	KUNIT_CASE(struct_clk),
-+	KUNIT_CASE(bitmap),
-+	KUNIT_CASE(netdev_features),
-+	KUNIT_CASE(flags),
-+	KUNIT_CASE(errptr),
-+	KUNIT_CASE(fwnode_pointer),
-+	KUNIT_CASE(fourcc_pointer),
- 	{}
- };
- 
+For the same reason I mentioned earlier, this is inherently unsafe if
+the bridge device goes away but the DRM device doesn't.
 
--- 
-2.48.1
+Maxime
 
+--etdpmgzxb265ivsl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ6pEMwAKCRAnX84Zoj2+
+doYqAX0ZaluJTI4PSfPTqVMOAG5TZK+XUyRofxt6QFR9rI9Q4sU0nkYYSkhQYgjF
+pn8pQS0BgNQjNe0c2Ynpkp6HpXjapBAAkIo35EtMoD45WFYl09nft0+VjWBNwrN4
+vaCFaeigwA==
+=lqhs
+-----END PGP SIGNATURE-----
+
+--etdpmgzxb265ivsl--
