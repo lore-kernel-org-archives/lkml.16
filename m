@@ -1,325 +1,301 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazolkn19012046.outbound.protection.outlook.com [52.103.7.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B8426462C;
-	Mon, 10 Feb 2025 21:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739223320; cv=none; b=GCO7QfKRmRG60DnffvX1QsDUoiihAuzz6pDMJYHrHHCoRAlRqLJY5JkhRh2tte8TEryQcy+3E9Q/zsi+RjDDDh8vUn9BkPsIdJV0w09UiWqtaX1e8zQOQnGwzmT59CrOm/CruZDmbZq2iiDFZgmMcfimy7y8KnZ47AW6hnHMUa0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739223320; c=relaxed/simple;
-	bh=H7RSqJLsURJtj4e0K5zWf3Vea8L8TxbXHl2Kl4kO0KA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WSwiadaxd3SJRx+bcKK5AJXUeKLLxVj6c+E1moPZkYtv/3BqPWMmHXvB7+WQUUa3u8WgYPfudmoDS3eHynrdGLrRlzka1nFAo8EXC1wqleA8OEvO1SScwRDi0HqK/1HrTx6v97wdo5a/iMQph+5At4UIc8P/+L37GYpamDxMgpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UEfCDIaq; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927FC1C5F14;
+	Mon, 10 Feb 2025 21:35:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.7.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739223346; cv=fail; b=lVSVE4eX2k4ITR2RzBffjhn1iHaXLx7GAk2C/Arw3s6ryaxMMSIzdCflY83jigW4DWdfySuQ9wPiRcqSKPgTNT0U4W+LPkT13Ro3XdVk7BEsbc26YnRyrF34TIK3yAJtNovUOkOADWQtpNfex2DzQmpTLS32PvEW91aAQBDMkuU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739223346; c=relaxed/simple;
+	bh=7z9NPV/YA660xpeScozwWJrmaEwVyd8DeyH3MFsgW+4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=dE3wSOi/c0fF438kESL13T3JPXQ67hCiZ0SC1SaPxyvsqqg/gmCD/qnv8pSxDalfximzJXUj9O1UDyecCUOMk9smOBGVsZ4OKQI+PI7RnVPepdDNPnfk1GF4r58qJVC1+tJgy/V5tzFQSeT0YJ/OxmG6zGQi4aP978R/gWk6fgk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=sHViBu/7; arc=fail smtp.client-ip=52.103.7.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UEfCDIaq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739223318; x=1770759318;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=H7RSqJLsURJtj4e0K5zWf3Vea8L8TxbXHl2Kl4kO0KA=;
-  b=UEfCDIaq5sj1xixvHWxVUpohvY1cMJb3+GYJ10xZcgL3DUGuqOcr9YRu
-   UXDuTH22JewcOlI7yf38f3oeX2R7kPAANkdeGdY4kYuJumVo0TEHIKbpl
-   8vAkNg/JM8/UOz6hqcd97GmIcYtbnRYrYmZ2hjk+kW+OmW61xxDau97ho
-   iebU6qS6qoUwDnLLMTdCTfY0OY1b2TSAcESupitZQGxKrqtj1haomyDdh
-   GqRYPb32vAHFQth8vuAi1qRPtE84NVxCh/gjghVndU9pqVLlg2Ap0vsPG
-   xVLg2Pe8grgyn6ZJ+ATRga0EnuK8xZRgU5ZH6UZRI3EDPxzGwl9RFiDVp
-   A==;
-X-CSE-ConnectionGUID: jtk2WAk+R+aNd0UzDRV87w==
-X-CSE-MsgGUID: vSmdpoXdSxyCD/2BvkiLGw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="50812055"
-X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
-   d="scan'208";a="50812055"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 13:35:17 -0800
-X-CSE-ConnectionGUID: glPiKZtjRjS9g6fzlCmivQ==
-X-CSE-MsgGUID: heVC2K6PRKyNOw3v7yoCeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117515530"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 13:35:12 -0800
-Date: Mon, 10 Feb 2025 23:35:09 +0200
-From: Raag Jadav <raag.jadav@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: kernel test robot <lkp@intel.com>, Arnd Bergmann <arnd@arndb.de>,
-	gregkh@linuxfoundation.org, rafael@kernel.org,
-	linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
-	dmitry.torokhov@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-	sre@kernel.org, jic23@kernel.org, przemyslaw.kitszel@intel.com,
-	oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-sound@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-iio@vger.kernel.org
-Subject: Re: [PATCH v4 01/20] driver core: Split devres APIs to
- device/devres.h
-Message-ID: <Z6pxDTUE60CKwHlE@black.fi.intel.com>
-References: <20250210064906.2181867-2-raag.jadav@intel.com>
- <202502102201.zLWaJC6V-lkp@intel.com>
- <Z6oZ9dnYrlp5djiQ@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="sHViBu/7"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GEVN0kBUkt5sudp9wxEYFJbwekTIQQJZohE1TjtZAAIt3uxK9ct7JD74HEM/OzQT8cm8EE4xbDWCmPuw6Q3aZlZFYhNcm7HwflFNvDbWLAa8aS9RvkAf6qwtJP2Cnyb4XqFhI4MmsFd6wxf8GvoRBDv7v3aCMSPOBy2lidbvLXNh4M7E0v4nZNjNW3XOqspk1HYC2FpfQGdQo1iP/nrthPuPtJKhPMd7JbLAKNsRLPMmDdPGiU124u3DoDnZ9jh9N/ZeyM1L4QMe9635D46u11oFPURomo3imYiWO4yNT05Ij7F0SeIOifievpS/OxyiAS39ajwgvGNvzc3VbRADxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7z9NPV/YA660xpeScozwWJrmaEwVyd8DeyH3MFsgW+4=;
+ b=UKd0vdUrVuu4SpskNBKo9fXCKfMmCkxOXMpO66t1h7rzEm/cCNrxqSqkLQC6MGLXZNN2U0I/uB2+Hv0jyGm4GpiGfT4bROTVa7ZETennm7FM+H3FawBFAcl2HKXAbeTDA+Ni3uaOll/XQuVPz0NdxWjt+3QOVCu7k1b3dPksxzmPMWAlLNeIlQT4S48Uq2HoEYXmvW2JEPJA0QZHfcGupDAg5l4PdQGcl+GdJPNrIRTmHN2XwjCwnpQB/t0gnTvR8Ufw/e7v+iyfy5Ynpkf0RVCguu15fGY2goayS8VY/7HPXdXVHgEEVfSQWfmgLGKZXP4q0puYRnD9PgLdC/OgFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7z9NPV/YA660xpeScozwWJrmaEwVyd8DeyH3MFsgW+4=;
+ b=sHViBu/7os517CFvwJslszxBJy3VjHviojb/kYfpiAMKVeSiYczqecJcTJkBadtL+et0rx9J3tPqqB4LLfYERwZYEyfnQ7U29M6RvZcosGbZiA1jsrymwElx2lmJ5qiRuF4dR4VpBkpEIERHK3xXzB1RXTwjy0A+JJZVLAglRExQ8ibjp34ekrBoSC6n5qWvePr721oysUeXbKblkTGkUL736iDsHIbimrrFiQH06D07sFDrqz8jX6/I0HBCZqrgHBvN6yP0TzWXGDM2F4TsqmGfT/hTEzgRsmcc7w7Hma8vTm6fhiZqu8ueVxTqEG/Gt9aJYFjSFrbLcIfFq+bISw==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by IA0PR02MB9605.namprd02.prod.outlook.com (2603:10b6:208:3de::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.16; Mon, 10 Feb
+ 2025 21:35:41 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8422.010; Mon, 10 Feb 2025
+ 21:35:40 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: "thomas.tai@oracle.com" <thomas.tai@oracle.com>, "mhkelley58@gmail.com"
+	<mhkelley58@gmail.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+	<decui@microsoft.com>, "drawat.floss@gmail.com" <drawat.floss@gmail.com>,
+	"javierm@redhat.com" <javierm@redhat.com>, Helge Deller <deller@gmx.de>,
+	"daniel@ffwll.ch" <daniel@ffwll.ch>, "airlied@gmail.com" <airlied@gmail.com>,
+	"tzimmermann@suse.de" <tzimmermann@suse.de>
+CC: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: RE: hyper_bf soft lockup on Azure Gen2 VM when taking kdump or
+ executing kexec
+Thread-Topic: hyper_bf soft lockup on Azure Gen2 VM when taking kdump or
+ executing kexec
+Thread-Index:
+ AdtzQ0vu6eNj8snBS+OSvfShEIJEjQABFnwAAALyBRAAANwVQADJ+eeAAJV+q6AADyinUACvDNEAAAzAXmA=
+Date: Mon, 10 Feb 2025 21:35:40 +0000
+Message-ID:
+ <SN6PR02MB41574DC1576DC20772D9CB05D4F22@SN6PR02MB4157.namprd02.prod.outlook.com>
+References:
+ <BLAPR10MB521793485093FDB448F7B2E5FDE92@BLAPR10MB5217.namprd10.prod.outlook.com>
+ <BLAPR10MB521780F7C93DC013E2E031BDFDE92@BLAPR10MB5217.namprd10.prod.outlook.com>
+ <SN6PR02MB415732CABA59155898531226D4E92@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <BLAPR10MB521743AC3C146116D8F6BCACFDE92@BLAPR10MB5217.namprd10.prod.outlook.com>
+ <SN6PR02MB415777C53A930259A54E213ED4F52@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB41578AC54B7C0B7386B8ED00D4F62@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB41572155B6D139C499814EB7D4F12@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <edf0e21a-db9f-42a8-ae0f-76a9d93713fb@oracle.com>
+In-Reply-To: <edf0e21a-db9f-42a8-ae0f-76a9d93713fb@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|IA0PR02MB9605:EE_
+x-ms-office365-filtering-correlation-id: 4a997dd7-c8b9-454d-91be-08dd4a1add75
+x-ms-exchange-slblob-mailprops:
+ znQPCv1HvwU46ctkesNAQSdI89rGQphJImtz2fuFci1yvbHQE0cPcyHGkH3KbjoN1m8g6WNvPo5Zx6OVujBNnSUPDnt39wSN1ZR4waJwYVfTVqXl3Dwt6gltWHvh3AwSfzguCTWcCLs3yNppLfUzRVWViEEV1GgtYbw8hPuDOpP27bMSkW71yTowBjoTz+ICL1zDT4SPjwSrU4xiUnJMwL40MnkdHK0McZ+GQSI6NpRjfgz58fc8NlIu7080aRcdzQhO1dInv5DuNeZatjVsB0mrSwdw+ClZ8PVLYCVqF4MI8rUtpj40NkM9GQSLONzTedatpRamUXfJxb29em8FQZx8NGKtA8SJ0rQGIv9Zx55Jzkk0uOuiQ1ezeD73tQOMpme34XoupM2PxNIM1xDLik5pRaRDjPEtiNhysdzveXAUn3VdfEZVxMYU3ydw3RgHFkWDmGX3CBn+zGNYrt45ioIhGUZN3fde88fXY0OTvjlZKgh4vJEwVX+MLJgqs7dSS2iY/hpY1TZRKqXyI1TWjb8j2gv+Tqfza0KL9uI3a4DeYaDlxB4tYls0+fXtAVdHnUsbPKO0BbosphuDiDrMTY2Oz3uvFjJmY21EILse1NfYeEzbKAQPmR5fuePs3OmOOoZsvDMAXMgiIPWfoOweDQJirVhR6++pZcw15lhUVUuGuigcHlwy4QOs0mLcBsuoXRSUwnrXSgfoRMMMiPGI4ZqzlHF+G64qmLEQSDZUH4wgDNnbhbEzw2YPfFzOTIPK5tmUHDyZIAI=
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|15080799006|8062599003|19110799003|8060799006|461199028|56899033|440099028|3412199025|102099032|41001999003;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?enRkYzhoODJSQkEzUy95ZjhlNkprZFVvOEhkeHlycjJJNUZmVXZZQXQyTEFa?=
+ =?utf-8?B?ZTN2Rlc4c3VHQ0pPTlVhQnF3akhJS2NSK1phMDZxZ1lvSkxTbFkxbndtajNX?=
+ =?utf-8?B?MDVHa1FTVUl1NzNSVENVQTBpVkVxeEU5aHAvc3U0OFhCYzlHMktCbkZxc1py?=
+ =?utf-8?B?M2JqdXJpaU44aWorZ2p5RVU4eE5XZGRsNVJ0T3Y5dEVYaEltdVBWNFBiVkl5?=
+ =?utf-8?B?cGV3TWlkWmNJZ0lCQXQzM0kzT0IrbFlBdWM4UzlYL2hKVTBZL3NnWTVlRGZo?=
+ =?utf-8?B?Y1I4RXErb2VVbUNLMmJqL0FSTjBtWU5rNlZkWE0vQjlpNHFlTFJhZ3lRQUQ2?=
+ =?utf-8?B?bTl1Y1oyYm9XdXBwK3l0YytHSU5vRzI5MGFyeG5iSUJINm1rZG41UkVCWTRF?=
+ =?utf-8?B?R1dUazBqUzlqY3JLTDZEeHRjK21lODJZZjE5T1hENjE2eEhIT1dXaG5zc29w?=
+ =?utf-8?B?SHVDaWs4ZHg0eFkvUTQvcUltdFdhUnVJeFJ1R2kwNGM2Z2tPdFFTWlVoTGgv?=
+ =?utf-8?B?WThzU1hNQ0NLVWFhNDRvTVowOW5RS1U1R21aTzlRc3FVVjJyMytWU05tV0F1?=
+ =?utf-8?B?MGo0T3FJTDd1cE9uV2lMRkZkNTQ1ZEJqTG5LdkNCZ3AxNE9yaU5hdXFIdjRi?=
+ =?utf-8?B?Nm9WNW5pTmN3ZEZ3VWFtMk1Ba1kvL0dPV2hrT2ZXMUEyK1RTUEZqdGFySEdq?=
+ =?utf-8?B?TlEvcUV5ekYxYzJQc0xDQWE4UC93NXlKOVhZaW5uQkdJZFM3UXZ3UzNyTzNm?=
+ =?utf-8?B?SldMZzBaSHhGSklTQlk0MEFLWWVPTWxOeTNNeUNQdnBPbEpoMG81ekVPSElU?=
+ =?utf-8?B?ZE1pYUVjcHI0OFByM0k5RGI5dDM0V21FY1lEWDBZVVZhOW5aeTY5dW9ZVmFO?=
+ =?utf-8?B?V3FCb0gzQm0vd1BiVHR0UG5GZXU5U0FJRUpqSzZuT1M4NkpNamhVRSswUVZZ?=
+ =?utf-8?B?YnJqeURvaFNzVFBUM1ZmcG5Ydm9SVFRLcEtxSWgreFlrV0tuQ1dPOUhkOSty?=
+ =?utf-8?B?NTlZUmdhY29EdDdaUW51VkFWK0pTbVNZemxFcWREK1BVRFF2R0RTZXNxSFdK?=
+ =?utf-8?B?VW9hdHRFQ1RHZDI0WnRwcUk2eEFuZlJVSnh5aEJQb3BQVDNxRUtEK0VKWS9H?=
+ =?utf-8?B?WlpEYk43OVpnbThOR0dnTlFyR1NMTThoSk5HNGwzckdzZmg4MHg5RGZnV2hX?=
+ =?utf-8?B?N2pEZGszbjd3bFJaSXl0WHlKYmtYWUdiYklUbzkxVTQ2dlpodklZMjNpMmpn?=
+ =?utf-8?B?WThwUC80TUxvSzFOYnRMb3RtUkZHMlJFTGZTWXRGTERwNmExQ0ZwRUFST1Vk?=
+ =?utf-8?B?amUyYUd1OHJWTXVOcVZiQklRRTVlV01YR05PYno2V05VL2s4MjFORnd2RzJ2?=
+ =?utf-8?B?YytuREVWMEEwS3BUN09NbUw0VWpIckNWRk9jQldlQWplRzRrUWd6MDhKMC9m?=
+ =?utf-8?B?MENyeUtrZmdGY3JSQy96Y1NVQmE1U2wyQUFFL2l3PT0=?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?UGZETFJsS2FScERuVEJMODVMZ0dQUjRQdEd2VTdoUmhBdDVsVGJaQlpRM1Rl?=
+ =?utf-8?B?VXZIT1pLM0M1M0k0RTgwSTRDY1pMVHM5NzVmQ2pjeGdJazl5ZWhaL1FGMGRo?=
+ =?utf-8?B?Rjl5L1h4ZGxIenlOLzFpMTVLRFU3cDFRbGVUd0wxbmFJcEpuZ2lQTldHRXlZ?=
+ =?utf-8?B?WEw1ZVJBRmg1MWYzd0gxYXBaekE5NEFHZFNmWVk4YnR3TjNhVHFadjF1d1hT?=
+ =?utf-8?B?dGVudDQ1L2tLckh5akozMjBSa3VyTGxkeCtwN0JpaG1xWXU0Uy9WTzBjblMr?=
+ =?utf-8?B?c0EwMmgzUUlTSVlKWXU2R2txbm1MR1QyVjR3amcxcml1b0c4aHczMFVDY0Vu?=
+ =?utf-8?B?OFVKc0xCYlZuNXhPaEpLbSswTFNXN1M0VitpSHlVTTJKaGNnYUhzOVhjeWx6?=
+ =?utf-8?B?cXFOVlp1MUp5Ui9sNmt6aVlGM2owZU9GWjNGY0lWcDdSTEhybnF2bFRuNEV3?=
+ =?utf-8?B?Q254MmVDejNXMERTQVVUaU16VzdJWlo3ZTJSQ2llZ0V5bUJJY2I4NThYclI5?=
+ =?utf-8?B?VnlqZzNqOVlzbE9VcWFEa09nbWZuRUJBRGFiQmM4c2x0QUFjWkVFSnZ1a2dU?=
+ =?utf-8?B?L1QyNUhlOUQrSVRPazdPTVN2ZlUvTllKdkFJRXRFRmpkckZ0Q0RxVklYc1J0?=
+ =?utf-8?B?ZGJhWG9HeXB2aENiRE9IME9ZdHUreStPYjJJY2FMVkUwK0tvUkpPWG1oKy9H?=
+ =?utf-8?B?L2NUSmxaTjVUSUtiMkpBRE1ZV3VYZWZpK01YcmxORVNMSEMyY1hGcjM3czBM?=
+ =?utf-8?B?VkE3Yzd2RW5SYWtVa1YwVURzMjlZWSswWTFob2VVdklMdkRSVHEwWlV6K1Zz?=
+ =?utf-8?B?elAxYnlRNmsvWjMxbEdGa0ZJd3RnV2prVkw1emxSYXJxd0tQNUVHTElyVXlr?=
+ =?utf-8?B?N08xMVRkVkxHZWRYQzZXZE9JaXFLQ2lwUytiRkk5Mlppc1A0d0duQUlGNTJZ?=
+ =?utf-8?B?K1ZFM0Z0cGlLR2QrWUxPenl4Sm84dWMvblB6RjQ1VTkzNll6STNGbTBqVmhy?=
+ =?utf-8?B?NTlHV2Uvb1VmcGo3dkFMdURuNGlPOFc3eGlMZHhCVHdoL1Z0cUJPVnc0RUk0?=
+ =?utf-8?B?cmU0L0pOU0x3Wm5DaUltUXpvVS9lQkFGeWp4dkFQUUIzZVB2Y2lWa0wyNVo0?=
+ =?utf-8?B?OTBXVzM0aUtYS0h1WXRxNTdoaTYzaVEwdE5FenZOMGNONEtScmRPeGs4aktn?=
+ =?utf-8?B?Y1orZkw0WE1IR2pNdGVNZm90WEJ2OW9FWTlVcE1UYmUyb2x4VG1RYkl1V05P?=
+ =?utf-8?B?QWJZcnZsVGQ1aHhuQXJlQmZhOCt3SWJwdFMrNzJkVjZIWWlNTkJ5WEIzY2RY?=
+ =?utf-8?B?Q0hzSUhRamk3L3AxVGJjcXU5c0lmOVJuMnM1NkQremduK3h6aUFndU8zS0Vn?=
+ =?utf-8?B?VCtQd2NxdytjYktVamVkY2RuQU40UXRQTkpiMkUra2h2dXltaU1uTlc5c1Az?=
+ =?utf-8?B?cUplbnlGdDl4dUhyYmdJbklHWHBSRDZVRVZZdU9JKzdGOFhIZktBR09aY1l3?=
+ =?utf-8?B?bVdUbHp4VkNIMGJiUjloeHBheWIrbTZ0THFSRFZ4K2pURTVha3RQTHNXa2N3?=
+ =?utf-8?B?Q2VjcU9JMTRFNTJacmdWRmMzWXRSdGRiZ3kvNThXWlIwS2RsOTllVS8zd3VM?=
+ =?utf-8?Q?s63k5zczrrEEyPZreQ63x5eDaIExRRnxIeOE7Rufg0Sg=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6oZ9dnYrlp5djiQ@smile.fi.intel.com>
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a997dd7-c8b9-454d-91be-08dd4a1add75
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Feb 2025 21:35:40.1314
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR02MB9605
 
-On Mon, Feb 10, 2025 at 05:23:33PM +0200, Andy Shevchenko wrote:
-> +Cc: Arnd
-> 
-> On Mon, Feb 10, 2025 at 10:30:28PM +0800, kernel test robot wrote:
-> > Hi Raag,
-> > 
-> > kernel test robot noticed the following build errors:
-> > 
-> > [auto build test ERROR on a1e062ab4a1f19bb0e94093ef90ab9a74f1f7744]
-> > 
-> > url:    https://github.com/intel-lab-lkp/linux/commits/Raag-Jadav/driver-core-Split-devres-APIs-to-device-devres-h/20250210-145732
-> > base:   a1e062ab4a1f19bb0e94093ef90ab9a74f1f7744
-> > patch link:    https://lore.kernel.org/r/20250210064906.2181867-2-raag.jadav%40intel.com
-> > patch subject: [PATCH v4 01/20] driver core: Split devres APIs to device/devres.h
-> > config: powerpc64-randconfig-002-20250210 (https://download.01.org/0day-ci/archive/20250210/202502102201.zLWaJC6V-lkp@intel.com/config)
-> > compiler: powerpc64-linux-gcc (GCC) 14.2.0
-> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250210/202502102201.zLWaJC6V-lkp@intel.com/reproduce)
-> > 
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202502102201.zLWaJC6V-lkp@intel.com/
-> > 
-> > All error/warnings (new ones prefixed by >>):
-> 
-> TBH I have no quick idea how to address this. It seems that io.h includes device.h
-> for no reason (but I haven't checked that carefully). OTOH, we need only
-> IOMEM_IS_ERR() definition which can simply be moved from io.h to err.h as the
-> former includes the latter and the definition depends only on compiler_types.h.
-
-I atleast managed to build this after dropping device.h from asm/io.h however
-eeh.h is just something else.
-
-Raag
-
-> Arnd?
-> 
-> >    In file included from include/linux/device/devres.h:7,
-> >                     from include/linux/device.h:31,
-> >                     from arch/powerpc/include/asm/io.h:22,
-> >                     from include/linux/scatterlist.h:9,
-> >                     from crypto/rsassa-pkcs1.c:11:
-> >    include/linux/io.h: In function 'pci_remap_cfgspace':
-> >    include/linux/io.h:106:16: error: implicit declaration of function 'ioremap_np' [-Wimplicit-function-declaration]
-> >      106 |         return ioremap_np(offset, size) ?: ioremap(offset, size);
-> >          |                ^~~~~~~~~~
-> >    include/linux/io.h:106:44: error: implicit declaration of function 'ioremap' [-Wimplicit-function-declaration]
-> >      106 |         return ioremap_np(offset, size) ?: ioremap(offset, size);
-> >          |                                            ^~~~~~~
-> >    include/linux/io.h:106:42: error: returning 'int' from a function with return type 'void *' makes pointer from integer without a cast [-Wint-conversion]
-> >      106 |         return ioremap_np(offset, size) ?: ioremap(offset, size);
-> >          |                ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
-> >    arch/powerpc/include/asm/io.h: At top level:
-> > >> arch/powerpc/include/asm/io.h:885:22: error: conflicting types for 'ioremap'; have 'void *(phys_addr_t,  long unsigned int)' {aka 'void *(long long unsigned int,  long unsigned int)'}
-> >      885 | extern void __iomem *ioremap(phys_addr_t address, unsigned long size);
-> >          |                      ^~~~~~~
-> >    include/linux/io.h:106:44: note: previous implicit declaration of 'ioremap' with type 'int()'
-> >      106 |         return ioremap_np(offset, size) ?: ioremap(offset, size);
-> >          |                                            ^~~~~~~
-> >    In file included from include/asm-generic/io.h:17,
-> >                     from arch/powerpc/include/asm/io.h:1031:
-> > >> include/asm-generic/iomap.h:106:20: error: conflicting types for 'ioremap_np'; have 'void *(phys_addr_t,  size_t)' {aka 'void *(long long unsigned int,  long unsigned int)'}
-> >      106 | #define ioremap_np ioremap_np
-> >          |                    ^~~~~~~~~~
-> >    include/asm-generic/iomap.h:107:29: note: in expansion of macro 'ioremap_np'
-> >      107 | static inline void __iomem *ioremap_np(phys_addr_t offset, size_t size)
-> >          |                             ^~~~~~~~~~
-> >    include/linux/io.h:106:16: note: previous implicit declaration of 'ioremap_np' with type 'int()'
-> >      106 |         return ioremap_np(offset, size) ?: ioremap(offset, size);
-> >          |                ^~~~~~~~~~
-> > --
-> >    In file included from arch/powerpc/include/asm/io.h:274,
-> >                     from include/linux/io.h:14,
-> >                     from include/linux/device/devres.h:7,
-> >                     from include/linux/device.h:31,
-> >                     from include/linux/acpi.h:14,
-> >                     from include/linux/i2c.h:13,
-> >                     from drivers/input/touchscreen/ili210x.c:5:
-> > >> arch/powerpc/include/asm/eeh.h:304:45: warning: 'struct iommu_group' declared inside parameter list will not be visible outside of this definition or declaration
-> >      304 | struct eeh_pe *eeh_iommu_group_to_pe(struct iommu_group *group);
-> >          |                                             ^~~~~~~~~~~
-> > --
-> >    In file included from arch/powerpc/include/asm/io.h:274,
-> >                     from include/linux/io.h:14,
-> >                     from include/linux/device/devres.h:7,
-> >                     from include/linux/device.h:31,
-> >                     from include/linux/input.h:19,
-> >                     from drivers/input/touchscreen/touchright.c:17:
-> > >> arch/powerpc/include/asm/eeh.h:304:45: warning: 'struct iommu_group' declared inside parameter list will not be visible outside of this definition or declaration
-> >      304 | struct eeh_pe *eeh_iommu_group_to_pe(struct iommu_group *group);
-> >          |                                             ^~~~~~~~~~~
-> >    drivers/input/touchscreen/touchright.c: In function 'tr_connect':
-> >    drivers/input/touchscreen/touchright.c:114:49: warning: '/input0' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-> >      114 |         snprintf(tr->phys, sizeof(tr->phys), "%s/input0", serio->phys);
-> >          |                                                 ^~~~~~~
-> >    drivers/input/touchscreen/touchright.c:114:9: note: 'snprintf' output between 8 and 39 bytes into a destination of size 32
-> >      114 |         snprintf(tr->phys, sizeof(tr->phys), "%s/input0", serio->phys);
-> >          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > --
-> >    In file included from arch/powerpc/include/asm/io.h:274,
-> >                     from include/linux/io.h:14,
-> >                     from include/linux/device/devres.h:7,
-> >                     from include/linux/device.h:31,
-> >                     from include/linux/input.h:19,
-> >                     from drivers/input/touchscreen/penmount.c:17:
-> > >> arch/powerpc/include/asm/eeh.h:304:45: warning: 'struct iommu_group' declared inside parameter list will not be visible outside of this definition or declaration
-> >      304 | struct eeh_pe *eeh_iommu_group_to_pe(struct iommu_group *group);
-> >          |                                             ^~~~~~~~~~~
-> >    drivers/input/touchscreen/penmount.c: In function 'pm_connect':
-> >    drivers/input/touchscreen/penmount.c:211:49: warning: '/input0' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-> >      211 |         snprintf(pm->phys, sizeof(pm->phys), "%s/input0", serio->phys);
-> >          |                                                 ^~~~~~~
-> >    drivers/input/touchscreen/penmount.c:211:9: note: 'snprintf' output between 8 and 39 bytes into a destination of size 32
-> >      211 |         snprintf(pm->phys, sizeof(pm->phys), "%s/input0", serio->phys);
-> >          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > --
-> >    In file included from arch/powerpc/include/asm/io.h:274,
-> >                     from include/linux/io.h:14,
-> >                     from include/linux/device/devres.h:7,
-> >                     from include/linux/device.h:31,
-> >                     from include/linux/input.h:19,
-> >                     from drivers/input/touchscreen/inexio.c:19:
-> > >> arch/powerpc/include/asm/eeh.h:304:45: warning: 'struct iommu_group' declared inside parameter list will not be visible outside of this definition or declaration
-> >      304 | struct eeh_pe *eeh_iommu_group_to_pe(struct iommu_group *group);
-> >          |                                             ^~~~~~~~~~~
-> >    drivers/input/touchscreen/inexio.c: In function 'inexio_connect':
-> >    drivers/input/touchscreen/inexio.c:126:59: warning: '/input0' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-> >      126 |         snprintf(pinexio->phys, sizeof(pinexio->phys), "%s/input0", serio->phys);
-> >          |                                                           ^~~~~~~
-> >    drivers/input/touchscreen/inexio.c:126:9: note: 'snprintf' output between 8 and 39 bytes into a destination of size 32
-> >      126 |         snprintf(pinexio->phys, sizeof(pinexio->phys), "%s/input0", serio->phys);
-> >          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > --
-> >    In file included from arch/powerpc/include/asm/io.h:274,
-> >                     from include/linux/io.h:14,
-> >                     from include/linux/device/devres.h:7,
-> >                     from include/linux/device.h:31,
-> >                     from include/linux/input.h:19,
-> >                     from drivers/input/touchscreen/touchwin.c:24:
-> > >> arch/powerpc/include/asm/eeh.h:304:45: warning: 'struct iommu_group' declared inside parameter list will not be visible outside of this definition or declaration
-> >      304 | struct eeh_pe *eeh_iommu_group_to_pe(struct iommu_group *group);
-> >          |                                             ^~~~~~~~~~~
-> >    drivers/input/touchscreen/touchwin.c: In function 'tw_connect':
-> >    drivers/input/touchscreen/touchwin.c:121:49: warning: '/input0' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-> >      121 |         snprintf(tw->phys, sizeof(tw->phys), "%s/input0", serio->phys);
-> >          |                                                 ^~~~~~~
-> >    drivers/input/touchscreen/touchwin.c:121:9: note: 'snprintf' output between 8 and 39 bytes into a destination of size 32
-> >      121 |         snprintf(tw->phys, sizeof(tw->phys), "%s/input0", serio->phys);
-> >          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > --
-> >    In file included from arch/powerpc/include/asm/io.h:274,
-> >                     from include/linux/io.h:14,
-> >                     from include/linux/device/devres.h:7,
-> >                     from include/linux/device.h:31,
-> >                     from include/linux/input.h:19,
-> >                     from drivers/input/touchscreen/hampshire.c:19:
-> > >> arch/powerpc/include/asm/eeh.h:304:45: warning: 'struct iommu_group' declared inside parameter list will not be visible outside of this definition or declaration
-> >      304 | struct eeh_pe *eeh_iommu_group_to_pe(struct iommu_group *group);
-> >          |                                             ^~~~~~~~~~~
-> >    drivers/input/touchscreen/hampshire.c: In function 'hampshire_connect':
-> >    drivers/input/touchscreen/hampshire.c:122:21: warning: '/input0' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-> >      122 |                  "%s/input0", serio->phys);
-> >          |                     ^~~~~~~
-> >    drivers/input/touchscreen/hampshire.c:121:9: note: 'snprintf' output between 8 and 39 bytes into a destination of size 32
-> >      121 |         snprintf(phampshire->phys, sizeof(phampshire->phys),
-> >          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >      122 |                  "%s/input0", serio->phys);
-> >          |                  ~~~~~~~~~~~~~~~~~~~~~~~~~
-> > --
-> >    In file included from arch/powerpc/include/asm/io.h:274,
-> >                     from include/linux/io.h:14,
-> >                     from include/linux/device/devres.h:7,
-> >                     from include/linux/device.h:31,
-> >                     from include/linux/input.h:19,
-> >                     from drivers/input/touchscreen/tsc40.c:12:
-> > >> arch/powerpc/include/asm/eeh.h:304:45: warning: 'struct iommu_group' declared inside parameter list will not be visible outside of this definition or declaration
-> >      304 | struct eeh_pe *eeh_iommu_group_to_pe(struct iommu_group *group);
-> >          |                                             ^~~~~~~~~~~
-> >    drivers/input/touchscreen/tsc40.c: In function 'tsc_connect':
-> >    drivers/input/touchscreen/tsc40.c:95:53: warning: '/input0' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-> >       95 |         snprintf(ptsc->phys, sizeof(ptsc->phys), "%s/input0", serio->phys);
-> >          |                                                     ^~~~~~~
-> >    drivers/input/touchscreen/tsc40.c:95:9: note: 'snprintf' output between 8 and 39 bytes into a destination of size 32
-> >       95 |         snprintf(ptsc->phys, sizeof(ptsc->phys), "%s/input0", serio->phys);
-> >          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > --
-> >    In file included from arch/powerpc/include/asm/io.h:274,
-> >                     from include/linux/io.h:14,
-> >                     from include/linux/device/devres.h:7,
-> >                     from include/linux/device.h:31,
-> >                     from include/linux/input.h:19,
-> >                     from drivers/input/touchscreen/dynapro.c:20:
-> > >> arch/powerpc/include/asm/eeh.h:304:45: warning: 'struct iommu_group' declared inside parameter list will not be visible outside of this definition or declaration
-> >      304 | struct eeh_pe *eeh_iommu_group_to_pe(struct iommu_group *group);
-> >          |                                             ^~~~~~~~~~~
-> >    drivers/input/touchscreen/dynapro.c: In function 'dynapro_connect':
-> >    drivers/input/touchscreen/dynapro.c:123:21: warning: '/input0' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-> >      123 |                  "%s/input0", serio->phys);
-> >          |                     ^~~~~~~
-> >    drivers/input/touchscreen/dynapro.c:122:9: note: 'snprintf' output between 8 and 39 bytes into a destination of size 32
-> >      122 |         snprintf(pdynapro->phys, sizeof(pdynapro->phys),
-> >          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >      123 |                  "%s/input0", serio->phys);
-> >          |                  ~~~~~~~~~~~~~~~~~~~~~~~~~
-> > 
-> > 
-> > vim +885 arch/powerpc/include/asm/io.h
-> > 
-> > ^1da177e4c3f415 include/asm-ppc64/io.h        Linus Torvalds         2005-04-16  853  
-> > ^1da177e4c3f415 include/asm-ppc64/io.h        Linus Torvalds         2005-04-16  854  /**
-> > ^1da177e4c3f415 include/asm-ppc64/io.h        Linus Torvalds         2005-04-16  855   * ioremap     -   map bus memory into CPU space
-> > ^1da177e4c3f415 include/asm-ppc64/io.h        Linus Torvalds         2005-04-16  856   * @address:   bus address of the memory
-> > ^1da177e4c3f415 include/asm-ppc64/io.h        Linus Torvalds         2005-04-16  857   * @size:      size of the resource to map
-> > ^1da177e4c3f415 include/asm-ppc64/io.h        Linus Torvalds         2005-04-16  858   *
-> > ^1da177e4c3f415 include/asm-ppc64/io.h        Linus Torvalds         2005-04-16  859   * ioremap performs a platform specific sequence of operations to
-> > ^1da177e4c3f415 include/asm-ppc64/io.h        Linus Torvalds         2005-04-16  860   * make bus memory CPU accessible via the readb/readw/readl/writeb/
-> > ^1da177e4c3f415 include/asm-ppc64/io.h        Linus Torvalds         2005-04-16  861   * writew/writel functions and the other mmio helpers. The returned
-> > ^1da177e4c3f415 include/asm-ppc64/io.h        Linus Torvalds         2005-04-16  862   * address is not guaranteed to be usable directly as a virtual
-> > ^1da177e4c3f415 include/asm-ppc64/io.h        Linus Torvalds         2005-04-16  863   * address.
-> > 4cb3cee03d558fd include/asm-powerpc/io.h      Benjamin Herrenschmidt 2006-11-11  864   *
-> > 4cb3cee03d558fd include/asm-powerpc/io.h      Benjamin Herrenschmidt 2006-11-11  865   * We provide a few variations of it:
-> > 4cb3cee03d558fd include/asm-powerpc/io.h      Benjamin Herrenschmidt 2006-11-11  866   *
-> > 4cb3cee03d558fd include/asm-powerpc/io.h      Benjamin Herrenschmidt 2006-11-11  867   * * ioremap is the standard one and provides non-cacheable guarded mappings
-> > 4cb3cee03d558fd include/asm-powerpc/io.h      Benjamin Herrenschmidt 2006-11-11  868   *   and can be hooked by the platform via ppc_md
-> > 4cb3cee03d558fd include/asm-powerpc/io.h      Benjamin Herrenschmidt 2006-11-11  869   *
-> > 40f1ce7fb7e8b5d arch/powerpc/include/asm/io.h Anton Blanchard        2011-05-08  870   * * ioremap_prot allows to specify the page flags as an argument and can
-> > 40f1ce7fb7e8b5d arch/powerpc/include/asm/io.h Anton Blanchard        2011-05-08  871   *   also be hooked by the platform via ppc_md.
-> > 4cb3cee03d558fd include/asm-powerpc/io.h      Benjamin Herrenschmidt 2006-11-11  872   *
-> > be135f40899cb33 arch/powerpc/include/asm/io.h Anton Blanchard        2011-05-08  873   * * ioremap_wc enables write combining
-> > be135f40899cb33 arch/powerpc/include/asm/io.h Anton Blanchard        2011-05-08  874   *
-> > 86c391bd5f47101 arch/powerpc/include/asm/io.h Christophe Leroy       2018-10-09  875   * * ioremap_wt enables write through
-> > 86c391bd5f47101 arch/powerpc/include/asm/io.h Christophe Leroy       2018-10-09  876   *
-> > 86c391bd5f47101 arch/powerpc/include/asm/io.h Christophe Leroy       2018-10-09  877   * * ioremap_coherent maps coherent cached memory
-> > 86c391bd5f47101 arch/powerpc/include/asm/io.h Christophe Leroy       2018-10-09  878   *
-> > 4cb3cee03d558fd include/asm-powerpc/io.h      Benjamin Herrenschmidt 2006-11-11  879   * * iounmap undoes such a mapping and can be hooked
-> > 4cb3cee03d558fd include/asm-powerpc/io.h      Benjamin Herrenschmidt 2006-11-11  880   *
-> > 1cdab55d8a8313f arch/powerpc/include/asm/io.h Benjamin Herrenschmidt 2009-02-22  881   * * __ioremap_caller is the same as above but takes an explicit caller
-> > 1cdab55d8a8313f arch/powerpc/include/asm/io.h Benjamin Herrenschmidt 2009-02-22  882   *   reference rather than using __builtin_return_address(0)
-> > 1cdab55d8a8313f arch/powerpc/include/asm/io.h Benjamin Herrenschmidt 2009-02-22  883   *
-> > ^1da177e4c3f415 include/asm-ppc64/io.h        Linus Torvalds         2005-04-16  884   */
-> > 68a64357d15ae4f include/asm-powerpc/io.h      Benjamin Herrenschmidt 2006-11-13 @885  extern void __iomem *ioremap(phys_addr_t address, unsigned long size);
-> > 8d05554dca2af6a arch/powerpc/include/asm/io.h Christophe Leroy       2023-07-06  886  #define ioremap ioremap
-> > 8d05554dca2af6a arch/powerpc/include/asm/io.h Christophe Leroy       2023-07-06  887  #define ioremap_prot ioremap_prot
-> > be135f40899cb33 arch/powerpc/include/asm/io.h Anton Blanchard        2011-05-08  888  extern void __iomem *ioremap_wc(phys_addr_t address, unsigned long size);
-> > 894fa235eb4ca0b arch/powerpc/include/asm/io.h Christophe Leroy       2020-11-21  889  #define ioremap_wc ioremap_wc
-> > 894fa235eb4ca0b arch/powerpc/include/asm/io.h Christophe Leroy       2020-11-21  890  
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+RnJvbTogdGhvbWFzLnRhaUBvcmFjbGUuY29tIDx0aG9tYXMudGFpQG9yYWNsZS5jb20+IFNlbnQ6
+IE1vbmRheSwgRmVicnVhcnkgMTAsIDIwMjUgNzowOCBBTQ0KPiANCj4gPHNuaXA+DQo+IA0KPiA+
+PiBUaGVuIHRoZSBxdWVzdGlvbiBpcyB3aHkgdGhlIGVmaWZiIGRyaXZlciBkb2Vzbid0IHdvcmsg
+aW4gdGhlIGtkdW1wDQo+ID4+IGtlcm5lbC4gQWN0dWFsbHksIGl0ICpkb2VzKiB3b3JrIGluIG1h
+bnkgY2FzZXMuIEkgYnVpbHQgdGhlIDYuMTMuMCBrZXJuZWwNCj4gPj4gb24gdGhlIE9yYWNsZSBM
+aW51eCA5LjQgc3lzdGVtLCBhbmQgdHJhbnNmZXJyZWQgdGhlIGtlcm5lbCBpbWFnZSBiaW5hcnkN
+Cj4gPj4gYW5kIG1vZHVsZSBiaW5hcmllcyB0byBhbiBVYnVudHUgMjAuMDQgVk0gaW4gQXp1cmUu
+IEluIHRoYXQgVk0sIHRoZQ0KPiA+PiBlZmlmYiBkcml2ZXIgaXMgbG9hZGVkIGFzIHBhcnQgb2Yg
+dGhlIGtkdW1wIGtlcm5lbCwgYW5kIGl0IGRvZXNuJ3QgY2F1c2UNCj4gPj4gYW55IHByb2JsZW1z
+LiBCdXQgdGhlcmUncyBhbiBpbnRlcmVzdGluZyBkaWZmZXJlbmNlLiBJbiB0aGUgT3JhY2xlIExp
+bnV4DQo+ID4+IDkuNCBWTSwgdGhlIGVmaWZiIGRyaXZlciBmaW5kcyB0aGUgZnJhbWVidWZmZXIg
+YXQgMHg0MDAwMDAwMCwgd2hpbGUgb24NCj4gPj4gdGhlIFVidW50dSAyMC4wNCBWTSwgaXQgZmlu
+ZHMgdGhlIGZyYW1lYnVmZmVyIGF0IDB4NDA5MDAwMDAuIFRoaXMNCj4gPj4gZGlmZmVyZW5jZSBp
+cyBkdWUgdG8gZGlmZmVyZW5jZXMgaW4gaG93IHRoZSBzY3JlZW5faW5mbyB2YXJpYWJsZSBnZXRz
+DQo+ID4+IHNldHVwIGluIHRoZSB0d28gVk1zLg0KPiA+Pg0KPiA+PiBXaGVuIHRoZSBub3JtYWwg
+a2VybmVsIHN0YXJ0cyBpbiBhIGZyZXNobHkgYm9vdGVkIFZNLCBIeXBlci1WIHByb3ZpZGVzDQo+
+ID4+IHRoZSBFRkkgZnJhbWVidWZmZXIgYXQgMHg0MDAwMDAwMCwgYW5kIGl0IHdvcmtzLiBCdXQg
+YWZ0ZXIgdGhlIEh5cGVyLVYNCj4gPj4gRkIgZHJpdmVyIG9yIEh5cGVyLVYgRFJNIGRyaXZlciBo
+YXMgaW5pdGlhbGl6ZWQsIExpbnV4IGhhcyBwaWNrZWQgYQ0KPiA+PiBkaWZmZXJlbnQgTU1JTyBh
+ZGRyZXNzIHJhbmdlIGFuZCB0b2xkIEh5cGVyLVYgdG8gdXNlIHRoZSBuZXcNCj4gPj4gYWRkcmVz
+cyByYW5nZSAod2hpY2ggb2Z0ZW4gc3RhcnRzIGF0IDB4NDA5MDAwMDApLiBBIGtleGVjIGRvZXMg
+Km5vdCoNCj4gPj4gcmVzZXQgSHlwZXItVidzIHRyYW5zaXRpb24gdG8gdGhlIG5ldyByYW5nZSwg
+c28gd2hlbiB0aGUgZWZpZmIgZHJpdmVyDQo+ID4+IHRyaWVzIHRvIHVzZSB0aGUgZnJhbWVidWZm
+ZXIgYXQgMHg0MDAwMDAwMCwgdGhlIGFjY2Vzc2VzIHRyYXAgdG8NCj4gPj4gSHlwZXItViBhbmQg
+cHJvYmFibHkgZmFpbCBvciB0aW1lb3V0IChJJ20gbm90IHN1cmUgb2YgdGhlIGRldGFpbHMpLiBB
+ZnRlcg0KPiA+PiB0aGUgZ3Vlc3QgZG9lcyBzb21lIG51bWJlciBvZiB0aGVzZSBiYWQgcmVmZXJl
+bmNlcywgSHlwZXItViBjb25zaWRlcnMNCj4gPj4gaXRzZWxmIHRvIGJlIHVuZGVyIGF0dGFjayBm
+cm9tIGFuIGlsbC1iZWhhdmluZyBndWVzdCwgYW5kIHRocm90dGxlcyB0aGUNCj4gPj4gZ3Vlc3Qg
+c28gdGhhdCBpdCBkb2Vzbid0IHJ1biBmb3IgYSBmZXcgc2Vjb25kcy4gVGhlIHRocm90dGxpbmcg
+cmVwZWF0cywNCj4gPj4gYW5kIHJlc3VsdHMgaW4gZXh0cmVtZWx5IHNsb3cgcnVubmluZyBpbiB0
+aGUga2R1bXAga2VybmVsLg0KPiA+Pg0KPiA+PiBTb21laG93IGluIHRoZSBVYnVudHUgMjAuMDQg
+Vk0sIHRoZSBsb2NhdGlvbiBvZiB0aGUgZnJhbWUgYnVmZmVyDQo+ID4+IGFzIHN0b3JlZCBpbiBz
+Y3JlZW5faW5mby5sZmJfYmFzZSBnZXRzIHVwZGF0ZWQgdG8gYmUgMHg0MDkwMDAwMC4gSQ0KPiA+
+PiBoYXZlbid0IGZ1bGx5IGRlYnVnZ2VkIGhvdyB0aGF0IGhhcHBlbnMuIEJ1dCB3aXRoIHRoYXQg
+dXBkYXRlLCB0aGUNCj4gPj4gZWZpZmIgZHJpdmVyIGlzIHVzaW5nIHRoZSB1cGRhdGVkIGZyYW1l
+YnVmZmVyIGFkZHJlc3MgYW5kIGl0IHdvcmtzLiBPbg0KPiA+PiB0aGUgT3JhY2xlIExpbnV4IDku
+NCBzeXN0ZW0sIHRoYXQgdXBkYXRlIGRvZXNuJ3QgYXBwZWFyIHRvIGhhcHBlbiwNCj4gPj4gYW5k
+IHRoZSBwcm9ibGVtIG9jY3Vycy4NCj4gPj4NCj4gPj4gVGhpcyBpbiBhbiBpbnRlcmltIHVwZGF0
+ZSBvbiB0aGUgcHJvYmxlbS4gSSdtIHN0aWxsIGludmVzdGlnYXRpbmcgaG93DQo+ID4+IHNjcmVl
+bl9pbmZvLmxmYl9iYXNlIGlzIHNldCBpbiB0aGUga2R1bXAga2VybmVsLCBhbmQgd2h5IGl0IGlz
+IGRpZmZlcmVudA0KPiA+PiBpbiB0aGUgVWJ1bnR1IDIwLjA0IFZNIHZzLiBpbiB0aGUgT3JhY2xl
+IExpbnV4IDkuNCBWTS4gT25jZSB0aGF0IGlzDQo+ID4+IHdlbGwgdW5kZXJzdG9vZCwgd2UgY2Fu
+IGNvbnRlbXBsYXRlIGhvdyB0byBmaXggdGhlIHByb2JsZW0uIFVuZG9pbmcNCj4gPj4gdGhlIHJl
+dmVydCB0aGF0IGlzIGNvbW1pdCAyYmViYzNjZDQ4NzAgZG9lc24ndCBzZWVtIGxpa2UgdGhlIHNv
+bHV0aW9uDQo+ID4+IHNpbmNlIHRoZSBvcmlnaW5hbCBjb2RlIHRoZXJlIHdhcyByZXBvcnRlZCB0
+byBjYXVzZSBtYW55IG90aGVyIGlzc3Vlcy4NCj4gPj4gVGhlIHNvbHV0aW9uIGZvY3VzIHdpbGwg
+bGlrZWx5IGJlIG9uIGhvdyB0byBlbnN1cmUgdGhlIGtkdW1wIGtlcm5lbCBnZXRzDQo+ID4+IHRo
+ZSBjb3JyZWN0IGZyYW1lYnVmZmVyIGFkZHJlc3Mgc28gdGhlIGVmaWZiIGRyaXZlciB3b3Jrcywg
+c2luY2UgdGhlDQo+ID4+IGZyYW1lYnVmZmVyIGFkZHJlc3MgY2hhbmdpbmcgaXMgYSBxdWlyayBv
+ZiBIeXBlci1WIGJlaGF2aW9yLg0KPiA+Pg0KPiA+PiBJZiBhbnlvbmUgZWxzZSBoYXMgaW5zaWdo
+dCBpbnRvIHdoYXQncyBnb2luZyBvbiBoZXJlLCBwbGVhc2UgY2hpbWUgaW4uDQo+ID4+IFdoYXQg
+SSd2ZSBsZWFybmVkIHNvIGZhciBpcyBzdGlsbCBzb21ld2hhdCB0ZW50YXRpdmUuDQo+ID4+DQo+
+ID4gSGVyZSdzIHdoYXQgaXMgaGFwcGVuaW5nLiBPbiBVYnVudHUgMjAuMDQsIHRoZSBrZHVtcCBp
+bWFnZSBpcw0KPiA+IGxvYWRlZCBpbnRvIGNyYXNoIG1lbW9yeSB1c2luZyB0aGUga2V4ZWMgY29t
+bWFuZC4gVWJ1bnR1IDIwLjA0DQo+ID4gaGFzIGtleGVjIGZyb20gdGhlIGtleGVjLXRvb2xzIHBh
+Y2thZ2UgdmVyc2lvbiAyLjAuMTgtMXVidW50dTEuMSwNCj4gPiBhbmQgcGVyIHRoZSBrZXhlYyBt
+YW4gcGFnZSwgaXQgZGVmYXVsdHMgdG8gdXNpbmcgdGhlIG9sZGVyIGtleGVjX2xvYWQoKQ0KPiA+
+IHN5c3RlbSBjYWxsLiBXaGVuIHVzaW5nIGtleGVjX2xvYWQoKSwgdGhlIGNvbnRlbnRzIHRvIGJl
+IGxvYWRlZCBpbnRvDQo+ID4gY3Jhc2ggbWVtb3J5IGlzIGNvbnN0cnVjdGVkIGluIHVzZXIgc3Bh
+Y2UgYnkgdGhlIGtleGVjIGNvbW1hbmQuDQo+ID4gVGhlIGtleGVjIGNvbW1hbmQgZ2V0cyB0aGUg
+InNjcmVlbl9pbmZvIiBzZXR0aW5ncywgaW5jbHVkaW5nIHRoZQ0KPiA+IHBoeXNpY2FsIGFkZHJl
+c3Mgb2YgdGhlIGZyYW1lIGJ1ZmZlciwgdmlhIHRoZSBGQklPR0VUX0ZTQ1JFRU5JTkZPDQo+ID4g
+aW9jdGwgYWdhaW5zdCAvZGV2L2ZiMC4gVGhlIEh5cGVyLVYgRkIgb3IgRFJNIGRyaXZlciByZWdp
+c3RlcnMgaXRzZWxmDQo+ID4gd2l0aCB0aGUgZmJkZXYgc3Vic3lzdGVtIHNvIHRoYXQgaXQgaXMg
+L2Rldi9mYjAsIGFuZCB0aGUgaW9jdGwgcmV0dXJucw0KPiA+IHRoZSB1cGRhdGVkIGZyYW1lYnVm
+ZmVyIGFkZHJlc3MuIFNvIHRoZSBlZmlmYiBkcml2ZXIgbG9hZHMgYW5kIHJ1bnMNCj4gPiBjb3Jy
+ZWN0bHkuDQo+ID4NCj4gPiBPbiBPcmFjbGUgTGludXggOS40LCB0aGUga2R1bXAgaW1hZ2UgaXMg
+YWxzbyBsb2FkZWQgd2l0aCB0aGUNCj4gPiBrZXhlYyBjb21tYW5kLCBidXQgZnJvbSBrZXhlYy10
+b29scyBwYWNrYWdlIHZlcnNpb24NCj4gPiBrZXhlYy10b29scy0yLjAuMjgtMS4wLjEwLmVsOV81
+Lng4Nl82NCwgd2hpY2ggaXMgc2xpZ2h0bHkgbGF0ZXIgdGhhbg0KPiA+IHRoZSB2ZXJzaW9uIG9u
+IFVidW50dSAyMC4wNC4gVGhpcyBuZXdlciBrZXhlYyBkZWZhdWx0cyB0byB1c2luZyB0aGUNCj4g
+PiBuZXdlciBrZXhlY19maWxlX2xvYWQoKSBzeXN0ZW0gY2FsbC4gVGhpcyBzeXN0ZW0gY2FsbCBn
+ZXRzIHRoZQ0KPiA+IGZyYW1lYnVmZmVyIGFkZHJlc3MgZnJvbSB0aGUgc2NyZWVuX2luZm8gdmFy
+aWFibGUgaW4gdGhlIGtlcm5lbCwgd2hpY2gNCj4gPiBoYXMgbm90IGJlZW4gdXBkYXRlZCB0byBy
+ZWZsZWN0IHRoZSBuZXcgZnJhbWVidWZmZXIgYWRkcmVzcy4gSGVuY2UNCj4gPiBpbiB0aGUga2R1
+bXAga2VybmVsLCB0aGUgZWZpZmIgZHJpdmVyIHVzZXMgdGhlIG9sZCBmcmFtZWJ1ZmZlciBhZGRy
+ZXNzLA0KPiA+IGFuZCBoZW5jZSB0aGUgcHJvYmxlbS4NCj4gPg0KPiA+IFRvIGZ1cnRoZXIgY29t
+cGxpY2F0ZSBtYXR0ZXJzLCB0aGUga2V4ZWMgb24gT3JhY2xlIExpbnV4IDkuNCBzZWVtcyB0bw0K
+PiA+IGhhdmUgYSBidWcgd2hlbiB0aGUgLWMgb3B0aW9uIGZvcmNlcyB0aGUgdXNlIG9mIGtleGVj
+X2xvYWQoKSBpbnN0ZWFkDQo+ID4gb2Yga2V4ZWNfZmlsZV9sb2FkKCkuIEFzIGFuIGV4cGVyaW1l
+bnQsIEkgbW9kaWZpZWQgdGhlIGtkdW1wY3RsIHNoZWxsDQo+ID4gc2NyaXB0IHRvIGFkZCB0aGUg
+Ii1jIiBvcHRpb24gdG8ga2V4ZWMsIGJ1dCBpbiB0aGF0IGNhc2UgdGhlIHZhbHVlICIweDAiDQo+
+ID4gaXMgcGFzc2VkIGFzIHRoZSBmcmFtZWJ1ZmZlciBhZGRyZXNzLCB3aGljaCBpcyB3cm9uZy4g
+RnVydGhlcm1vcmUsDQo+ID4gdGhlICIgc2NyZWVuX2luZm8ub3JpZ192aWRlb19pc1ZHQSIgdmFs
+dWUgKHdoaWNoIEkgbWVudGlvbmVkIGVhcmxpZXINCj4gPiBpbiBjb25uZWN0aW9uIHdpdGggY29t
+bWl0IDJiZWJjM2NkNDg3MCkgaXMgYWxzbyBzZXQgdG8gMCwgc28gdGhlDQo+ID4ga2R1bXAga2Vy
+bmVsIG5vIGxvbmdlciB0aGlua3MgaXQgaGFzIGFuIEVGSSBmcmFtZWJ1ZmZlci4gSGVuY2UgdGhl
+DQo+ID4gZWZpZmIgZHJpdmVyIGlzbid0IGxvYWRlZCwgYW5kIHRoZSBrZHVtcCB3b3JrcywgdGhv
+dWdoIGZvciB0aGUgd3JvbmcNCj4gPiByZWFzb25zLiBJZiBrZXhlYyAyLjAuMTggZnJvbSBVYnVu
+dHUgaXMgY29waWVkIG9udG8gdGhlIE9yYWNsZSBMaW51eCA5LjQNCj4gPiBWTSwgdGhlbiBrZHVt
+cCB3b3JrcyBhcyBleHBlY3RlZCwgd2l0aCB0aGUgZWZpZmIgZHJpdmVyIGJlaW5nIGxvYWRlZA0K
+PiA+IGFuZCB1c2luZyB0aGUgY29ycmVjdCBmcmFtZWJ1ZmZlciBhZGRyZXNzLiBTbyBzb21ldGhp
+bmcgaXMgZ29pbmcgd3JvbmcNCj4gPiB3aXRoIGtleGVjIDIuMC4yOCBpbiBob3cgaXQgc2V0cyB1
+cCB0aGUgc2NyZWVuX2luZm8gd2hlbiB0aGUgLWMgb3B0aW9uDQo+ID4gaXMgdXNlZC4gSSdsbCBs
+ZWF2ZSB0aGUgZGVidWdnaW5nIG9mIHRoZSBrZXhlYyBidWcgdG8gc29tZW9uZSBlbHNlLg0KPg0K
+PiBIaSBNaWNoYWVsLA0KPiANCj4gRG8geW91IHRoaW5rIHdlIG5lZWQgdG8gaGFuZGxlIEF6dXJl
+IEdlbjIgVk0gZGlmZmVyZW50bHkgaW4gdGhlIGtleGVjPw0KPiANCj4gT3Igc2hvdWxkIHdlIGNo
+YW5nZSB0aGUga2V4ZWNfZmlsZV9sb2FkKCkgc3lzdGVtIGNhbGwgdG8gcmV0cmlldmUgdGhlIGNv
+cnJlY3QNCj4gZnJhbWVidWZmZXIgYWRkcmVzcz8NCg0KSSdtIHRoaW5raW5nIHRoZXJlIG1heSBi
+ZSBhIGZpeCBpbiB0aGUgSHlwZXItViBGQiBhbmQgSHlwZXItViBEUk0gZHJpdmVycy4NCkNvbW1p
+dCBjMjVhMTlhZmI4MWMgbWF5IGFsc28gYmUgYSBjYXVzZSBvZiB0aGUgcHJvYmxlbSAtLSBzZWUg
+cHJlY3Vyc29yDQpjb21taXQgM2NiNzNiYzNmYTJhLCB3aGljaCBkZXNjcmliZXMgZXhhY3RseSB0
+aGUgcHJvYmxlbS4gSSBzdGlsbCBuZWVkIHRvDQpkbyBzb21lIHRlc3RpbmcsIGJ1dCB3aXRob3V0
+IHRoYXQgY29tbWl0LCBrZHVtcCB3b24ndCBkZXRlY3QgdGhhdCBpdCBoYXMNCmFuIEVGSSBmcmFt
+ZWJ1ZmZlciwgd29uJ3QgbG9hZCB0aGUgZWZpZmIgZHJpdmVyLCBhbmQgc28gd29uJ3QgZW5jb3Vu
+dGVyIHRoZQ0KcHJvYmxlbS4gQnV0IHdlIHByb2JhYmx5IG5lZWQgdG8gZ2V0IFRob21hcyBaaW1t
+ZXJtYW4gdG8gd2VpZ2ggaW4gb24NCnRoZSBpbXBsaWNhdGlvbnMgb2YgcmV2ZXJ0aW5nIGMyNWEx
+OWFmYjgxYy4NCg0KVGhlcmUncyBvbmUgYWRkaXRpb25hbCB2YXJpYXRpb24gb2YgdGhlIHByb2Js
+ZW0uIEFzc3VtZSB0aGUgSHlwZXItViBGQg0KZHJpdmVyIGlzIGxvYWRlZCAoZm9yIGV4YW1wbGUp
+IGR1cmluZyBib290IGFuZCBtb3ZlcyB0aGUgZnJhbWVidWZmZXIuIFRoZW4NCnN5c3RlbSBydW5z
+IGtleGVjIGFzIHBhcnQgb2YgYXJtaW5nIGtkdW1wIGR1cmluZyB0aGUgYm9vdCBzZXF1ZW5jZS4N
+ClRoZSBtb3N0IHJlY2VudCBsb2NhdGlvbiBvZiB0aGUgZnJhbWVidWZmZXIgKGFuZCB3aGV0aGVy
+IGl0IGlzIGFuIEVGSSBmcmFtZWJ1ZmZlcikNCmdldHMgcGlja2VkIGF0IHRoZSB0aW1lIGtleGVj
+IHJ1bnMsIGFuZCBpcyBzdG9yZWQgaW4gdGhlIGNyYXNoIGtlcm5lbCBtZW1vcnkgYXJlYS4NCkJ1
+dCB3aGF0IGlmIHRoZSBmcmFtZWJ1ZmZlciBsYXRlciBtb3ZlcywgcGVyaGFwcyBiZWNhdXNlIHRo
+ZSBIeXBlci1WIEZCIGRyaXZlcg0KaXMgdW5ib3VuZD8gVGhlIGNyYXNoIGtlcm5lbCBtZW1vcnkg
+YXJlYSBkb2VzbuKAmXQgZ2V0IHVwZGF0ZWQgYW5kIGtkdW1wDQpjb3VsZCBzdGlsbCBoYXZlIHRo
+ZSB3cm9uZyBmcmFtZWJ1ZmZlciBhZGRyZXNzLiBUaGlzIGFub21hbHkgYXJndWVzIGZvciB0aGUN
+CmNvbW1pdCAzY2I3M2JjM2ZhMmEgYXBwcm9hY2ggb2YganVzdCBlbnN1cmluZyB0aGF0IHRoZSBl
+ZmlmYiBkcml2ZXIgZG9lc24ndA0KbG9hZC4gT2YgY291cnNlIHRoYXQgYXBwcm9hY2ggbWVhbnMg
+dGhhdCB0aGUga2R1bXAga2VybmVsICptdXN0KiBjb250YWluDQplaXRoZXIgdGhlIEh5cGVyLVYg
+RkIgb3IgSHlwZXItViBEUk0gZHJpdmVyIGluIG9yZGVyIHRvIHdvcmsgb24gYSBzeXN0ZW0NCndp
+dGggb25seSBhIGZyYW1lYnVmZmVyIGZvciB0ZXh0IG91dHB1dC4gVGhlIGVmaWZiIGRyaXZlciB3
+b24ndCB3b3JrLiBCdXQNCnBlcmhhcHMgdGhhdCdzIE9LLg0KDQpDaGFuZ2luZyBrZXhlYyAob3Ig
+dGhlIGludm9raW5nIHNjcmlwdCkgdG8gc3BlY2lhbCBjYXNlIEh5cGVyLVYgR2VuIDIgVk1zIGFu
+ZA0KYWx3YXlzIHVzZSBrZXhlY19sb2FkKCkgaW5zdGVhZCBvZiBrZXhlY19maWxlX2xvYWQoKSBz
+b3VuZHMgbGlrZSBhIGJpZyBoYWNrDQp0byBtZS4gIEFuZCB3aXRoIHRoYXQgYXBwcm9hY2gsIHlv
+dSBnaXZlIHVwIHRoZSBhYmlsaXR5IHRvIGVuZm9yY2UgbG9hZGluZyBvbmx5DQpwcm9wZXJseSBz
+aWduZWQga2R1bXAgaW1hZ2VzLiBUaGlzIGlzIHNvbWV0aGluZyBrZXhlY19maWxlX2xvYWQoKSBw
+cm92aWRlcw0KdGhhdCBrZXhlY19sb2FkKCkgZG9lc24ndCwgYW5kIGlzIG9uZSBvZiB0aGUgbWFp
+biByZWFzb25zIHRoYXQga2V4ZWNfZmlsZV9sb2FkKCkNCndhcyBhZGRlZC4NCg0KV2hldGhlciB0
+aGUga2V4ZWNfZmlsZV9sb2FkKCkgc3lzdGVtIGNhbGwgY291bGQgYmUgZW5oYW5jZWQgdG8gZ2V0
+IHRoZQ0KZnJhbWUgYnVmZmVyIGluZm9ybWF0aW9uIGZyb20gdGhlIC9kZXYvZmIwIGRldmljZSwg
+SSdtIG5vdCBzdXJlLiBUaGF0IG1pZ2h0DQpiZSBhIHJlYXNvbmFibGUgYXBwcm9hY2gsIHRob3Vn
+aCBpdCBzdGlsbCBoYXMgdGhlIHByb2JsZW0gdGhhdCB0aGUgZnJhbWVidWZmZXINCmFkZHJlc3Mg
+Y291bGQgY2hhbmdlICphZnRlcioga2V4ZWNfZmlsZV9sb2FkKCkgcnVucy4NCg0KQW55d2F5LCB0
+aGF0J3MgYSBkdW1wIG9mIG15IGN1cnJlbnQgdGhvdWdodHMuIEkgaGF2ZW4ndCByZWFjaGVkIGEg
+ZmluYWwNCmNvbmNsdXNpb24gb3IgcmVjb21tZW5kYXRpb24geWV0LiBDb21tZW50cyBmcm9tIG90
+aGVycyBvbiB0aGUNCnRocmVhZCBhcmUgd2VsY29tZS4NCg0KTWljaGFlbA0KDQo+IA0KPiBUaGFu
+ayB5b3UsDQo+IFRob21hcw0KPg0KPiA+IEknbSBzdGlsbCB0aGlua2luZyBhYm91dCBhbHRlcm5h
+dGl2ZXMgdG8gZml4IHRoaXMgbWVzcy4gUGxlYXNlIGNoaW1lDQo+ID4gaW4gaWYgeW91IGhhdmUg
+c3VnZ2VzdGlvbnMuDQo+ID4NCj4gPiBNaWNoYWVsDQo=
