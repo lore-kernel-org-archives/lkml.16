@@ -1,44 +1,66 @@
-Received: from mail.kaechele.ca (mail.kaechele.ca [54.39.219.105])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4D52F2A;
-	Mon, 10 Feb 2025 05:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.39.219.105
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A43D2F2A;
+	Mon, 10 Feb 2025 05:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739163766; cv=none; b=S0XF0mISCBMf9ZC4F8Cqd9Y3+Jym2z8bmsggauajCLbzC5nZMsLW/qIf8684+3xkGhYXmT7vhiRjpSKkV47eF5msX4dvYWFDrosTeUocXAaH9908G74EBmB7bihMRH+BYi2rIaorxjwf7LwCg1RgxmTTMByhsO3UUJxRwlJupXo=
+	t=1739163870; cv=none; b=OJaz+A6ACK4mOqdVJ5M7lOJQKgiK3gnw5Wl7J8qHcMtISTkp7aDUsy3Di+Xa3XjJn6qY17BdbopYCIigsVyIzvuOIjE8CMx77u3ZxE/AXkkwjloHRmBVet2soXnZhjyI5Nz6hg2mVKUw9kJG8s00NDVf/sErUNo9wVO4WejY3TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739163766; c=relaxed/simple;
-	bh=dj0TKfk5lmdhnyy8yBqB3UF6wNeDh11HLS3XDxff4F8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JpYfhJ4A/J5ksFNaAJds2yjg5zc6H6RhBCidsP0uKurGqa72ghxrW+epzvNqkQr/9vUbiQvvtC2n0jSZwApk4Dmmv2ZSWIJml4+um+LpJ7MAd2kdfPttPax6KbXf3u9GL4ZgXTBNTh/SVv+RO0qWthFIPphdc2p0Xz0MyAKGN6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaechele.ca; spf=pass smtp.mailfrom=kaechele.ca; dkim=pass (1024-bit key) header.d=kaechele.ca header.i=@kaechele.ca header.b=SPZlCrJ8; arc=none smtp.client-ip=54.39.219.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaechele.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaechele.ca
+	s=arc-20240116; t=1739163870; c=relaxed/simple;
+	bh=+wVMqDUoFJrXyl+eWeoZvjSJ48Rh2HzkP3a7Q5+dw/k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aETf976bzJdjPG1DxVYJ60OeUBVMX9X4628zbjuBT91SoE5VbaSa9ZMRNFALDz2CgZK1CJmuLV2NMet36ZE4hirtIhbXFurP+QkghMjp2T4h2omi7JqYV9gXbcKZ283mNYTKK19qQFtHn0WWkP59z9JpzEwNrYO4/Q6CUBz0HHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TjVCBqrs; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kaechele.ca header.i=@kaechele.ca header.b="SPZlCrJ8"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2260EC006A;
-	Mon, 10 Feb 2025 00:02:34 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kaechele.ca; s=201907;
-	t=1739163759;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gGADIh97zIcbr/W+/NgjtXwdlW0zk4tHNG7sqPEye4E=;
-	b=SPZlCrJ8hy9EbwZ3jYdHeS3rWbdQweVq7R7N8irmm7y8Su9FN9jIjJXnMUlXHRhivBWEyE
-	InhqB9igKH/OV9IfKouI8QHaA0s4zawftEYbpGtuS/rkUkeK9Rkb/w4UQYE5pVY98kSAOy
-	z3IQ/tWPiKOrxn3itllYQigqLI+5AkI=
-From: Felix Kaechele <felix@kaechele.ca>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: =?UTF-8?q?Barnab=C3=A1s=20Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] Input: rmi_i2c: introduce reset GPIO handling
-Date: Mon, 10 Feb 2025 00:02:09 -0500
-Message-ID: <20250210050220.634497-2-felix@kaechele.ca>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250210050220.634497-1-felix@kaechele.ca>
-References: <20250210050220.634497-1-felix@kaechele.ca>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TjVCBqrs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739163868; x=1770699868;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+wVMqDUoFJrXyl+eWeoZvjSJ48Rh2HzkP3a7Q5+dw/k=;
+  b=TjVCBqrsnIo2a+z/7/UEr5Mwgz/Z1YxTDUaiA6iDUdFRbL/wprtzk+l1
+   xCULEBVzzfbSeTcUgEUgS8eAZlygre9MjXj4u+wNdUMr2tlxC/ook9YVj
+   JSNJMYd2R6yjzLbVDJhdlymYVMmVFt6fVdWf6x6XntgO5ROgVegQs1N0J
+   hyRda1ALdH9R5wwetDYqRNcV0JoMDsWwiA6pwDWkS8bZqHpfNxDe1lz6A
+   rEhnVYo6iTQR9OGce9liLL7hMEvaC0eSrBEHAnGZOJDM1OtywB82x10Fc
+   /ZrGauOUHmefOs1TCGLqhfZrBYoKpsERzNbmYggWclX9l3tdzpplCeiPW
+   A==;
+X-CSE-ConnectionGUID: lftuL8JrSa6/aw5pyPLkpA==
+X-CSE-MsgGUID: r5D1IVU3S9SeQPXgPJz8/Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="50369424"
+X-IronPort-AV: E=Sophos;i="6.13,273,1732608000"; 
+   d="scan'208";a="50369424"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2025 21:04:27 -0800
+X-CSE-ConnectionGUID: /SRVjfbjQam6BlWpgBgFDg==
+X-CSE-MsgGUID: 46XZSpRTST6N6As1m1n6hA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,273,1732608000"; 
+   d="scan'208";a="112312185"
+Received: from inlubt0246.iind.intel.com ([10.191.24.87])
+  by fmviesa008.fm.intel.com with ESMTP; 09 Feb 2025 21:04:23 -0800
+From: subramanian.mohan@intel.com
+To: linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	gregkh@linuxfoundation.org,
+	andriy.shevchenko@linux.intel.com,
+	giometti@enneenne.com,
+	tglx@linutronix.de,
+	corbet@lwn.net
+Cc: eddie.dong@intel.com,
+	christopher.s.hall@intel.com,
+	pandith.n@intel.com,
+	thejesh.reddy.t.r@intel.com,
+	david.zage@intel.com,
+	srinivasan.chinnadurai@intel.com,
+	subramanian.mohan@intel.com
+Subject: [PATCH v13 0/4] Add support for Intel PPS Generator
+Date: Mon, 10 Feb 2025 10:34:17 +0530
+Message-Id: <20250210050421.29256-1-subramanian.mohan@intel.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,115 +68,137 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
 
-Implement reset GPIO handling logic for the rmi_i2c driver. This logic
-is required for some mobile devices to successfully initialize the touch
-controller.
+From: Subramanian Mohan <subramanian.mohan@intel.com>
 
-The timings for the assertion of the reset GPIO were derived from the
-GPLv2+ licensed synaptics-dsx-v2.1 vendor driver release and research I
-conducted into downstream device tree sources. Values of 10ms to 20ms
-are commonly found.
+The goal of the PPS (Pulse Per Second) hardware/software is to generate a
+signal from the system on a wire so that some third-party hardware can
+observe that signal and judge how close the system's time is to another
+system or piece of hardware.
 
-Tested-On: Motorola Moto G5 Plus (XT1685 "potter")
+Existing methods (like parallel ports) require software to flip a bit at
+just the right time to create a PPS signal. Many things can prevent
+software from doing this precisely. This (Timed I/O) method is better
+because software only "arms" the hardware in advance and then depends on
+the hardware to "fire" and flip the signal at just the right time.
 
-Signed-off-by: Felix Kaechele <felix@kaechele.ca>
----
- drivers/input/rmi4/rmi_driver.c |  1 -
- drivers/input/rmi4/rmi_driver.h |  2 ++
- drivers/input/rmi4/rmi_i2c.c    | 23 +++++++++++++++++++++++
- 3 files changed, 25 insertions(+), 1 deletion(-)
+To generate a PPS signal with this new hardware, the kernel wakes up
+twice a second, once for 1->0 edge and other for the 0->1 edge. It does
+this shortly (~10ms) before the actual change in the signal needs to be
+made. It computes the TSC value at which edge will happen, convert to a
+value hardware understands and program this value to Timed I/O hardware.
+The actual edge transition happens without any further action from the
+kernel.
 
-diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
-index 2168b6cd7167..ff6aed6a11c1 100644
---- a/drivers/input/rmi4/rmi_driver.c
-+++ b/drivers/input/rmi4/rmi_driver.c
-@@ -30,7 +30,6 @@
- #define RMI4_PAGE_MASK 0xFF00
- 
- #define RMI_DEVICE_RESET_CMD	0x01
--#define DEFAULT_RESET_DELAY_MS	100
- 
- void rmi_free_function_list(struct rmi_device *rmi_dev)
- {
-diff --git a/drivers/input/rmi4/rmi_driver.h b/drivers/input/rmi4/rmi_driver.h
-index 3bfe9013043e..e01453bd680f 100644
---- a/drivers/input/rmi4/rmi_driver.h
-+++ b/drivers/input/rmi4/rmi_driver.h
-@@ -16,6 +16,8 @@
- #define SYNAPTICS_INPUT_DEVICE_NAME "Synaptics RMI4 Touch Sensor"
- #define SYNAPTICS_VENDOR_ID 0x06cb
- 
-+#define DEFAULT_RESET_DELAY_MS	100
-+
- #define GROUP(_attrs) { \
- 	.attrs = _attrs,  \
- }
-diff --git a/drivers/input/rmi4/rmi_i2c.c b/drivers/input/rmi4/rmi_i2c.c
-index 3c0c5fd44702..beff566ca2c8 100644
---- a/drivers/input/rmi4/rmi_i2c.c
-+++ b/drivers/input/rmi4/rmi_i2c.c
-@@ -4,6 +4,7 @@
-  * Copyright (c) 2011 Unixphere
-  */
- 
-+#include <linux/gpio/consumer.h>
- #include <linux/i2c.h>
- #include <linux/rmi.h>
- #include <linux/of.h>
-@@ -26,7 +27,9 @@
-  * @tx_buf_size: Size of the buffer
-  *
-  * @supplies: Array of voltage regulators
-+ * @reset_gpio: Reference to the reset GPIO
-  * @startup_delay: Milliseconds to pause after powering up the regulators
-+ * @reset_delay: Milliseconds to pause after resetting the device
-  */
- struct rmi_i2c_xport {
- 	struct rmi_transport_dev xport;
-@@ -39,7 +42,9 @@ struct rmi_i2c_xport {
- 	size_t tx_buf_size;
- 
- 	struct regulator_bulk_data supplies[2];
-+	struct gpio_desc *reset_gpio;
- 	u32 startup_delay;
-+	u32 reset_delay;
- };
- 
- #define RMI_PAGE_SELECT_REGISTER 0xff
-@@ -227,6 +232,15 @@ static int rmi_i2c_probe(struct i2c_client *client)
- 		return -ENODEV;
- 	}
- 
-+	rmi_i2c->reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
-+						      GPIOD_OUT_HIGH);
-+	if (IS_ERR(rmi_i2c->reset_gpio)) {
-+		error = PTR_ERR(rmi_i2c->reset_gpio);
-+		dev_err(&client->dev, "failed to get reset GPIO: %d\n", error);
-+		return error;
-+	}
-+	gpiod_set_consumer_name(rmi_i2c->reset_gpio, "rmi4 reset");
-+
- 	rmi_i2c->supplies[0].supply = "vdd";
- 	rmi_i2c->supplies[1].supply = "vio";
- 	error = devm_regulator_bulk_get(&client->dev,
-@@ -251,6 +265,15 @@ static int rmi_i2c_probe(struct i2c_client *client)
- 
- 	msleep(rmi_i2c->startup_delay);
- 
-+	if (rmi_i2c->reset_gpio) {
-+		of_property_read_u32(client->dev.of_node, "syna,reset-delay-ms",
-+				     &rmi_i2c->reset_delay);
-+		gpiod_set_value_cansleep(rmi_i2c->reset_gpio, 1);
-+		usleep_range(10000, 20000);
-+		gpiod_set_value_cansleep(rmi_i2c->reset_gpio, 0);
-+		msleep(rmi_i2c->reset_delay ?: DEFAULT_RESET_DELAY_MS);
-+	}
-+
- 	rmi_i2c->client = client;
- 	mutex_init(&rmi_i2c->page_mutex);
- 
+The result here is a signal coming out of the system that is roughly
+1,000 times more accurate than the old methods. If the system is heavily
+loaded, the difference in accuracy is larger in old methods.
+
+Application Interface:
+The API to use Timed I/O is very simple. It is enabled and disabled by
+writing a '1' or '0' value to the sysfs enable attribute associated with
+the Timed I/O PPS device. Each Timed I/O pin is represented by a PPS
+device. When enabled, a pulse-per-second (PPS) synchronized with the
+system clock is continuously produced on the Timed I/O pin, otherwise it
+is pulled low.
+
+The Timed I/O signal on the motherboard is enabled in the BIOS setup.
+Intel Advanced Menu -> PCH IO Configuration -> Timed I/O <Enable>
+
+References:
+https://en.wikipedia.org/wiki/Pulse-per-second_signal
+https://drive.google.com/file/d/1vkBRRDuELmY8I3FlfOZaEBp-DxLW6t_V/view
+https://youtu.be/JLUTT-lrDqw
+
+Patch 1 Replaced copy of pps-gen info struct with const pointer in
+pps-gen framework..
+Patch 2 adds the pps(pulse per second) generator tio driver to the pps
+subsystem.
+Patch 3 documentation and usage of the pps tio generator module.
+Patch 4 includes documentation for sysfs interface.
+
+These patches are based on the timers/core branch:
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/?h=timers/core
+These changes are dependent on patches that are merged in [1].
+
+Please help to review the changes.
+
+Thanks in advance,
+Subramanian Mohan
+
+Changes from v2:
+ - Split patch 1 to remove the functions in later stages.
+ - Include required headers in pps_gen_tio.
+
+Changes from v3:
+ - Corrections in Documentation.
+ - Introducing non-RFC version of the patch series.
+
+Changes from v4:
+ - Setting id in ice_ptp
+ - Modified conversion logic in convert_base_to_cs.
+ - Included the usage of the APIs in the commit message of 2nd patch.
+
+Changes from v5:
+ - Change nsecs variable to use_nsecs.
+ - Change order of 1&2 patches and modify the commit message.
+ - Add sysfs abi file entry in MAINTAINERS file.
+ - Add check to find if any event is missed and disable hardware
+   accordingly.
+
+Changes from v6:
+ - Split patch 1 into 1&2 patches.
+ - Add check for overflow in convert_ns_to_cs().
+ - Refine commit messages.
+
+Changes from v7:
+ - Split the if condition and return error if current time exceeds
+   expire time.
+ - Update kernel version and month in ABI file.
+
+Changes from v8:
+ - Add function to enable Timed I/O.
+ - Changed the updating of tio->enabled to a centralized place in
+   disable and enable functions.
+
+Changes from v9:
+ - use tio->enabled instead of reading ctrl register.
+ - change error code in enable_store to -ENODEV.
+
+Changes from v10:
+ - Rebased to latest codebase.
+
+Changes from v11:
+ - Rebased to latest codebase.
+
+Changes from v12:
+ - As part of pps-gen framework, Replaced copy of pps-gen info struct
+   with const pointer.
+ - TIO driver adapted to pps-gen framework.
+ - Fixed review comments by Andy.
+ - Rebased to latest codebase.
+
+Subramanian Mohan (4):
+  drivers pps/generators: replace copy of pps-gen info struct with const
+    pointer
+  pps: generators: Add PPS Generator TIO Driver
+  Documentation: driver-api: pps: Add Intel Timed I/O PPS generator
+  ABI: pps: Add ABI documentation for Intel TIO
+
+ Documentation/ABI/testing/sysfs-pps-gen-tio |   6 +
+ Documentation/driver-api/pps.rst            |  27 +-
+ MAINTAINERS                                 |   1 +
+ drivers/pps/generators/Kconfig              |  16 ++
+ drivers/pps/generators/Makefile             |   1 +
+ drivers/pps/generators/pps_gen-dummy.c      |   2 +-
+ drivers/pps/generators/pps_gen.c            |  13 +-
+ drivers/pps/generators/pps_gen_tio.c        | 272 ++++++++++++++++++++
+ drivers/pps/generators/sysfs.c              |   6 +-
+ include/linux/pps_gen_kernel.h              |   4 +-
+ 10 files changed, 334 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-pps-gen-tio
+ create mode 100644 drivers/pps/generators/pps_gen_tio.c
+
 -- 
-2.48.1
+2.35.3
 
