@@ -1,76 +1,61 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ADE81DF99F
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A574C195B37
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739187096; cv=none; b=Iy9rycQ+YL9L3R/sH7uh+SyB0z2tJhkAQ3k3HEM/Lwx6YanxG9wfrGgQzKed0BOHaoPX8RkJUr96TpCrXuV7Safa2KYguyEnDhq7LWX+sVwd0GI5/wRidamIGCDhmvyDVoSbr6JwLhm8uP1xCcYbPdYkfJxBlJSEUBOYai7lfqw=
+	t=1739187108; cv=none; b=lMrXLaozJlbIR/9wNLJoise4h77bMgVaERuI/0AG67m4gv+SJkv8yzR4DFFpTUQqf2pCx96ueprstvAaeCnPIkoeJh9FjY6gUZJox0nOFNJ7Tz2WtdqqbkPC53EIdRw5gMZMVp/H0QTQ36mYX3Y3LN/ti2TVT0cvPfGQi1HTPFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739187096; c=relaxed/simple;
-	bh=JF/n15lnAm7NZMFbEUTi4J8f8m2TQ7lxj7+v1eHdIuY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EYuJoAAARB+vl0nO5hZ22/QL4IpJW4+eqF2BLhD25IzEbxSKD6g6fzThN2EKeuBEm5iyaeQM7vHi07WcZNGaCLWodFAqwaLZgQ0zlpvZAPU1Z3obrtoJGTV0L8EwCa63OpaRHc7alsMCr6LXux6d4ZUdHA4k+heqYbIuACmXCMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=JpmWN1g6; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1739187108; c=relaxed/simple;
+	bh=uD24vpMHjIDvnNg9Yk5gleO0qA/L2sqeXXlSpc2KcRc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=avItoE6jEpKsbXKkvl1Sh/qzrznnVlB9DHwu4U11tjKOzm/kSeO00TnsnGK8e0DqHj0DdVGt+Abm8QGTcmZld22nid9Af6ZuFYYlBqDMY6gC6EjvBmKbBxyVlgv9sTeOzzgxzlyatM56QL1315ciM+//VmsL+HZyWFBqbB0OgUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BAWeicZi; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="JpmWN1g6"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 1A025240103
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 12:31:25 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1739187085; bh=JF/n15lnAm7NZMFbEUTi4J8f8m2TQ7lxj7+v1eHdIuY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:From;
-	b=JpmWN1g6e9WQyrXQ7YqKa6Kz7YaEDYolPFawuJollCAzXyAykqbJGoZ+zalrhTLl8
-	 0f20eLO/gb+kGMQG2fH5TKmJEFrqGaN6UwBOAyyTSCiSuA57Gfh1FfJR75F2BTuW7Y
-	 /y2wCp2bUoNfwe8q67lwJI2tleg3YW+PS4g+S57IUQyxrG6AeC8sx71dc9aXf0Q5rE
-	 ikLvW6yzzw4cRkk6JOrSz2ttcOw/XLuzsx6rsHe0z0p6E3OCWI5L8kDFa14iqPeDcP
-	 /xijkoq/1z1YJJwTE3M4e6n7DlQEG+y3BB99cR2HqY4pCUnD30XDSw+fWIzzAOuBpH
-	 CY8rACCyyxnAw==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4Ys2TK4ysMz6tw3;
-	Mon, 10 Feb 2025 12:31:17 +0100 (CET)
-Date: Mon, 10 Feb 2025 11:31:01 +0000
-From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-To: Crystal Wood <oss@buserror.net>
-Cc: j.ne@posteo.net, devicetree@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-mtd@lists.infradead.org, Li Yang <leoyang.li@nxp.com>,
-	John Ogness <john.ogness@linutronix.de>
-Subject: Re: [PATCH v2 09/12] dt-bindings: memory-controllers: Convert
- fsl,elbc to YAML
-Message-ID: <Z6njdeo8kHw6RtYH@probook>
-References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
- <20250207-ppcyaml-v2-9-8137b0c42526@posteo.net>
- <Z6kQpuQf5m-bXTyt@buserror.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BAWeicZi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739187106; x=1770723106;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=uD24vpMHjIDvnNg9Yk5gleO0qA/L2sqeXXlSpc2KcRc=;
+  b=BAWeicZiy0yffIT8fUZMD5OSz7bZBla7LcM5cLaOmNmU2BKRdGMDj3yk
+   IffXkEG3oUVecxB975OB7W6dLoIHE3D+RgOv6Ly0KcWmVMUkAbxCnSb53
+   6gX501WVOwaWL0T4YM6AXVWwuJtVl/zQ7GX6kjuSC8dbhEGJTv2dVUO0y
+   qnP61GfwyZnnDs+20Y4f5x7n9lTe4QLiiKgV/R10BX+YF9CzQHiS/i5Pu
+   bYW3r2jftcg3T4f6JYB8C0Zp+Uufd+cfnf6MNOSnP6hRSQiElS1Xf4jms
+   Mcan1oIX1XODV9TjTLjl8CHaTAnZq9qbd8GqANHcpuSb+4vM/WDhlYh6B
+   A==;
+X-CSE-ConnectionGUID: 0Tt34ubVQjO8Vuobg+33mQ==
+X-CSE-MsgGUID: cqB77i2CTUqrXWce1vZtFQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="50401477"
+X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
+   d="scan'208";a="50401477"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 03:31:45 -0800
+X-CSE-ConnectionGUID: Y1wboBuoQ4Wpsg8HqlW5tQ==
+X-CSE-MsgGUID: MpoMJlTqQwSp7FuMSscSbQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="117376393"
+Received: from iklimasz-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.244])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 03:31:41 -0800
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Egor Vorontsov <sdoregor@sdore.me>, linux-kernel@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Egor Vorontsov
+ <sdoregor@sdore.me>
+Subject: Re: [PATCH RESEND] drm/edid: Implement DisplayID Type IX & X timing
+ blocks parsing
+In-Reply-To: <e60254ec3544d37367c9917bc0e1cd5fdb95248d.camel@sdore.me>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <e60254ec3544d37367c9917bc0e1cd5fdb95248d.camel@sdore.me>
+Date: Mon, 10 Feb 2025 13:31:38 +0200
+Message-ID: <87o6za3ujp.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,188 +63,228 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z6kQpuQf5m-bXTyt@buserror.net>
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Feb 09, 2025 at 02:31:34PM -0600, Crystal Wood wrote:
-> On Fri, Feb 07, 2025 at 10:30:26PM +0100, J. Neuschäfer via B4 Relay wrote:
-> > From: "J. Neuschäfer" <j.ne@posteo.net>
-> > 
-> > Convert the Freescale localbus controller bindings from text form to
-> > YAML. The updated list of compatible strings reflects current usage
-> > in arch/powerpc/boot/dts/, except that many existing device trees
-> > erroneously specify "simple-bus" in addition to fsl,*elbc.
-> > 
-> > Changes compared to the txt version:
-> >  - removed the board-control (fsl,mpc8272ads-bcsr) node because it only
-> >    appears in this example and nowhere else
-> >  - added a new example with NAND flash
-> >  - updated list of compatible strings
-> > 
-> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> > ---
-> > 
-> > V2:
-> > - fix order of properties in examples, according to dts coding style
-> > - move to Documentation/devicetree/bindings/memory-controllers
-> > - clarify the commit message a tiny bit
-> > - remove unnecessary multiline markers (|)
-> > - define address format in patternProperties
-> > - trim subject line (remove "binding")
-> > - remove use of "simple-bus", because it's technically incorrect
-> 
-> While I admit I haven't been following recent developments in this area,
-> as someone who was involved when "simple-bus" was created (and was on the
-> ePAPR committee that standardized it) I'm surprised to hear simple-bus
-> being called "erroneous" or "technically incorrect" here.
+On Sat, 08 Feb 2025, Egor Vorontsov <sdoregor@sdore.me> wrote:
+> Some newer high refresh rate consumer monitors (including those by Samsun=
+g)
+> make use of DisplayID 2.1 timing blocks in their EDID data, notably for
+> their highest refresh rate modes. Such modes won't be available as of now.
+>
+> Implement partial support for such blocks in order to enable native
+> support of HRR modes of most such monitors for users without having to re=
+ly
+> on EDID patching/override (or need thereof).
 
-It is quite possible that my understanding of it is incomplete or wrong.
+Thanks for the patch. It appears to do what's desired, but please find
+quite a bit of comments inline.
 
-> 
-> For non-NAND devices this bus generally meets the definition of "an
-> internal I/O bus that cannot be probed for devices" where "devices on the
-> bus can be accessed directly without additional configuration
-> required".  NAND flash is an exception, but those devices have
-> compatibles that are specific to the bus controller.
-> 
-> The fact that the address encoding is non-linear is irrelevant; the
-> addresses can still be translated using the standard "ranges" mechanism. 
-> This seems to be a disconnect between the schema verification and the way
-> the compatible has previously been defined and used.
+> Link: https://gitlab.freedesktop.org/drm/misc/kernel/-/issues/55
 
-This is what led me to my assumptions: The simple-bus validation logic
-in dtc complains about unit addresses such as nand@1,0 which are quite
-appropriate for the eLBC.
+I think "Closes:" is what we want.
 
-> 
-> And as a practical matter, unless I'm missing something (which I might be
-> since I haven't been in devicetree-land for nearly a decade), Linux is
-> relying on simple-bus to probe these devices.  There is a driver that
-> binds to the bus itself but that is just for error interrupts and NAND.
+> Suggested-by: Maximilian Bo=C3=9Fe <max@bosse.io>
+> Signed-off-by: Egor Vorontsov <sdoregor@sdore.me>
+>
+> ---
+>
+> The formatting was taken from the neighboring code for consistency,
+> thus some warnings.
 
-As of now, yes, that's correct. Without simple-bus, a current Linux
-kernel doesn't find the device nodes inside such a localbus.
+Sometimes it's good to follow the surrounding code, but let's not
+duplicate existing mistakes. ;)
 
-> 
-> You'd probably need something like commit 3e25f800afb82bd9e5f8 ("memory:
-> fsl_ifc: populate child devices without relying on simple-bus") and the 
-> subsequent fix in dd8adc713b1656 ("memory: fsl_ifc: populate child
-> nodes of buses and mfd devices")...
+>
+> [Resent due to some Spamhaus issues that are now resolved.]
+>
+>  drivers/gpu/drm/drm_displayid_internal.h | 13 +++++
+>  drivers/gpu/drm/drm_edid.c               | 61 ++++++++++++++++++++++++
+>  2 files changed, 74 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/drm_displayid_internal.h b/drivers/gpu/drm/d=
+rm_displayid_internal.h
+> index aee1b86a73c1..a75d0f637b72 100644
+> --- a/drivers/gpu/drm/drm_displayid_internal.h
+> +++ b/drivers/gpu/drm/drm_displayid_internal.h
+> @@ -66,6 +66,7 @@ struct drm_edid;
+>  #define DATA_BLOCK_2_STEREO_DISPLAY_INTERFACE	0x27
+>  #define DATA_BLOCK_2_TILED_DISPLAY_TOPOLOGY	0x28
+>  #define DATA_BLOCK_2_CONTAINER_ID		0x29
+> +#define DATA_BLOCK_2_TYPE_10_FORMULA_TIMING	0x2a
+>  #define DATA_BLOCK_2_VENDOR_SPECIFIC		0x7e
+>  #define DATA_BLOCK_2_CTA_DISPLAY_ID		0x81
+>=20=20
+> @@ -129,6 +130,18 @@ struct displayid_detailed_timing_block {
+>  	struct displayid_detailed_timings_1 timings[];
+>  };
+>=20=20
+> +struct displayid_formula_timings_9 {
+> +	u8 flags;
+> +	u8 hactive[2];
+> +	u8 vactive[2];
 
-I have prepared such a patch, based on the same assumptions:
+Regardless of what was done in struct displayid_detailed_timings_1, I'd
+go for defining these as:
 
-  [PATCH] powerpc/fsl_lbc: Explicitly populate bus
-  https://lore.kernel.org/lkml/20250209-localbus-v1-1-efcd780153a0@posteo.net/
+	__be16 hactive;
+	__be16 vactive;
 
-> 
-> I'm curious what the reasoning was for removing simple-bus from IFC.  It
-> seems that the schema verification also played a role in that:
-> https://www.spinics.net/lists/devicetree/msg220418.html
+and using be16_to_cpu() instead of hand-rolling it.
 
-Yes, that's the same as my reasoning.
+> +	u8 refresh;
 
-> 
-> ...but there's also the comment in 985ede63a045eabf3f9d ("dt-bindings:
-> memory: fsl: convert ifc binding to yaml schema") that "this will help to
-> enforce the correct probe order between parent device and child devices",
-> but was that really not already guaranteed by the parent/child
-> relationship (and again, it should only really matter for NAND except for
-> the possibility of missing error reports during early boot)?
+Nitpick, I'd go for vrefresh.
 
-I'm inclined to agree with you, but it's somewhat beyond my skill level.
+> +} __packed;
+> +
+> +struct displayid_formula_timing_block {
+> +	struct displayid_block base;
+> +	struct displayid_formula_timings_9 timings[];
+> +};
 
-I'll let Li Yang or Rob Herring comment on that.
+I know it's lacking in struct displayid_detailed_timing_block, but I'd
+add __packed here too.
 
-> 
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +          - enum:
-> > +              - fsl,mpc8313-elbc
-> > +              - fsl,mpc8315-elbc
-> > +              - fsl,mpc8377-elbc
-> > +              - fsl,mpc8378-elbc
-> > +              - fsl,mpc8379-elbc
-> > +              - fsl,mpc8536-elbc
-> > +              - fsl,mpc8569-elbc
-> > +              - fsl,mpc8572-elbc
-> > +              - fsl,p1020-elbc
-> > +              - fsl,p1021-elbc
-> > +              - fsl,p1023-elbc
-> > +              - fsl,p2020-elbc
-> > +              - fsl,p2041-elbc
-> > +              - fsl,p3041-elbc
-> > +              - fsl,p4080-elbc
-> > +              - fsl,p5020-elbc
-> > +              - fsl,p5040-elbc
-> > +          - const: fsl,elbc
-> 
-> Is it really necessary to list every single chip?
-> 
-> And then it would need to be updated when new ones came out?  I know this
-> particular line of chips is not going to see any new members at this
-> point, but as far as the general approach goes...
+> +
+>  #define DISPLAYID_VESA_MSO_OVERLAP	GENMASK(3, 0)
+>  #define DISPLAYID_VESA_MSO_MODE		GENMASK(6, 5)
+>=20=20
+> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+> index 13bc4c290b17..8a4dec1d781c 100644
+> --- a/drivers/gpu/drm/drm_edid.c
+> +++ b/drivers/gpu/drm/drm_edid.c
+> @@ -6833,6 +6833,64 @@ static int add_displayid_detailed_1_modes(struct d=
+rm_connector *connector,
+>  	return num_modes;
+>  }
+>=20=20
+> +static struct drm_display_mode *drm_mode_displayid_formula(struct drm_de=
+vice *dev,
+> +							   struct displayid_formula_timings_9 *timings,
 
-As far as I'm aware, this reflects common practice today.
+const
 
-> 
-> Does the schema validation complain if it sees an extra compatible it
-> doesn't recognize?  If so that's obnoxious.
+> +							   bool type_10)
+> +{
+> +	struct drm_display_mode *mode;
+> +	unsigned hactive =3D (timings->hactive[0] | timings->hactive[1] << 8) +=
+ 1;
+> +	unsigned vactive =3D (timings->vactive[0] | timings->vactive[1] << 8) +=
+ 1;
 
-Yes.
+	u16 hactive =3D be16_to_cpu(timings->hactive) + 1;
+        etc.
 
-> 
-> > +examples:
-> > +  - |
-> > +    localbus@f0010100 {
-> > +        compatible = "fsl,mpc8272-localbus",
-> > +                     "fsl,pq2-localbus";
-> > +        reg = <0xf0010100 0x40>;
-> > +        ranges = <0x0 0x0 0xfe000000 0x02000000
-> > +                  0x1 0x0 0xf4500000 0x00008000
-> > +                  0x2 0x0 0xfd810000 0x00010000>;
-> > +        #address-cells = <2>;
-> > +        #size-cells = <1>;
-> > +
-> > +        flash@0,0 {
-> > +            compatible = "jedec-flash";
-> > +            reg = <0x0 0x0 0x2000000>;
-> > +            bank-width = <4>;
-> > +            device-width = <1>;
-> > +        };
-> > +
-> > +        simple-periph@2,0 {
-> > +            compatible = "fsl,elbc-gpcm-uio";
-> > +            reg = <0x2 0x0 0x10000>;
-> > +            elbc-gpcm-br = <0xfd810800>;
-> > +            elbc-gpcm-or = <0xffff09f7>;
-> > +        };
-> 
-> I know this isn't new, but... since we're using this as an example,
-> where is the documentation for this fsl,elbc-gpcm-uio and
-> elbc-gpcm-br/or?  What exactly is a simple-periph?
+> +	u8 rb =3D timings->flags & 0b111;
 
-fsl,elbc-gpcm-uio is handled in the following patch
-(dt-bindings: memory-controllers: Add fsl,elbc-gpcm-uio).
+I'd call this formula or algorithm instead of just rb.
 
-simple-periph is something I haven't thought about, because this whole
-example comes from the old txt-format binding. The whole purpose of
-fsl,elbc-gpcm-uio is to allow userspace drivers to interact with
-localbus devices, so that doesn't make the intention any clearer, either.
+Please avoid 0b, it's very rarely used. Just 0x7. Or we could start
+defining macros for these in drm_displayid_internal.h...
 
-> 
-> There are no in-tree device trees that use this either.  The bcsr
-> node was actually a much more normal example, despite that particular
-> platform having been removed.  There are other bcsr nodes that still
-> exist that could be used instead.
+Please add a blank line between declarations and code here.
 
-Ah, fsl,mpc8568mds-bcsr for example, good point. I'll add it back.
+> +	/* TODO: support RB-v2 & RB-v3 */
+> +	if (rb > 1)
+> +		return NULL;
+> +
+> +	mode =3D drm_cvt_mode(dev, hactive, vactive, timings->refresh, rb =3D=
+=3D 1, false, false);
 
-> 
-> -Crystal
+Refresh rate is -1 in the data block, so this needs timings->refresh +
+1.
 
-Thank you for reaching out!
+> +	if (!mode)
+> +		return NULL;
+> +
+> +	/* TODO: interpret S3D flags */
 
-Best regards,
-J. Neuschäfer
+More important is TODO for fractional refresh rate indicated by bit 4 of
+flags.
+
+> +
+> +	mode->type =3D DRM_MODE_TYPE_DRIVER;
+> +
+> +	if (timings->flags & 0x80)
+> +		mode->type |=3D DRM_MODE_TYPE_PREFERRED;
+
+There's no such thing?
+
+> +	drm_mode_set_name(mode);
+> +
+> +	return mode;
+> +}
+> +
+> +static int add_displayid_formula_modes(struct drm_connector *connector,
+> +				       const struct displayid_block *block)
+> +{
+> +	struct displayid_formula_timing_block *fb =3D (struct displayid_formula=
+_timing_block *)block;
+
+Please avoid fb as the name for this. Everyone's going to go all
+"framebuffer", wtf, backtrack, oh, "formula block". ;)
+
+This should also be a const pointer. (I know, the detailed modes one
+isn't. Let's not duplicate mistakes from there.)
+
+> +	int num_timings;
+> +	struct drm_display_mode *newmode;
+> +	int num_modes =3D 0;
+> +	bool type_10 =3D block->tag =3D=3D DATA_BLOCK_2_TYPE_10_FORMULA_TIMING;
+> +	u8 timing_size =3D 6 + ((fb->base.rev & 0x70) >> 4);
+
+I'd go for int timing_size.
+
+Blank line here.
+
+> +	/* extended blocks are not supported yet */
+> +	if (timing_size !=3D 6)
+> +		return 0;
+> +
+> +	if (block->num_bytes % timing_size)
+> +		return 0;
+> +
+> +	num_timings =3D block->num_bytes / timing_size;
+> +	for (int i =3D 0; i < num_timings; i++) {
+> +		struct displayid_formula_timings_9 *timings =3D \
+
+const. Please don't use \ line continuations, it's not necessary.
+
+> +			(struct displayid_formula_timings_9 *)&((u8 *)fb->timings)[i * timing=
+_size];
+
+Since we only support the one size for now, and that size is fixed in
+struct displayid_formula_timings_9, there's no need to do all this
+hackery. Just formula->timings[i].
+
+Whoever fixes this for size 7 might have a better idea how to handle the
+size anyway.
+
+> +
+> +		newmode =3D drm_mode_displayid_formula(connector->dev, timings, type_1=
+0);
+> +		if (!newmode)
+> +			continue;
+> +
+> +		drm_mode_probed_add(connector, newmode);
+> +		num_modes++;
+> +	}
+> +	return num_modes;
+> +}
+> +
+>  static int add_displayid_detailed_modes(struct drm_connector *connector,
+>  					const struct drm_edid *drm_edid)
+>  {
+> @@ -6845,6 +6903,9 @@ static int add_displayid_detailed_modes(struct drm_=
+connector *connector,
+>  		if (block->tag =3D=3D DATA_BLOCK_TYPE_1_DETAILED_TIMING ||
+>  		    block->tag =3D=3D DATA_BLOCK_2_TYPE_7_DETAILED_TIMING)
+>  			num_modes +=3D add_displayid_detailed_1_modes(connector, block);
+> +		else if (block->tag =3D=3D DATA_BLOCK_2_TYPE_9_FORMULA_TIMING ||
+> +			 block->tag =3D=3D DATA_BLOCK_2_TYPE_10_FORMULA_TIMING)
+> +			num_modes +=3D add_displayid_formula_modes(connector, block);
+>  	}
+>  	displayid_iter_end(&iter);
+
+--=20
+Jani Nikula, Intel
