@@ -1,172 +1,118 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4A91B414F;
-	Mon, 10 Feb 2025 11:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8871AE00E
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739186152; cv=none; b=BPUBSFZoowMF1GTeTkw6iPvFDM4HIygmg75dX2mAx+yIqk6xA4vYMTbtAG5rMwLR02kzxZJhf8aYV1g4ktOlbX8qclpOVSDVDgEjqkdd5ODWD8fNO26AJKaBbAolQT/ql1wfQuXmlwKDjw33lS8q1S2iVbh+YncFfWSM5ZmdPIs=
+	t=1739186169; cv=none; b=tiQMRo76bFmQ/HMKBGj0DxzlaVnNPy7ndJQDPkahnDFbOvZzqAGCldfSmG672APytX1O+AfFJEibCnREYxE7af1OFwBKA6A4TtN1pjHHD8iLWhd5+aFzt4ngvQ4GiRjOeeYKGR/wleB+dbQR2SHRivduWHa6GtN3atl0Em+gzoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739186152; c=relaxed/simple;
-	bh=BOOHUEpWTZSL5i9RRmTkOJFKo2narcNl7FiTLRAEYqI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SuGkJW+0pPicmI/jXL8B1CBDf9oDADvxmnTUcPwP3R3KRPZEnoMjfMgI+0iTxuWcY50rfI6G9rFxY44MScJ76HhDO96MW003nXD+xrPlzbPoa1ILdOQxQUau3O/FsysVWUjdkLKoN5YmSoQmOWFYHAI7V1wTj4b+bfVatuAeWGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Dk8ZtkTT; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739186169; c=relaxed/simple;
+	bh=AkEC99uo88xoZdBkphHswzqNaZ7b00UJ8ejtUX3Y6SA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hlMx59HskVcqIyUmyuImBLltFbx5K+B3cMcu0JDHDJ7tDhfqVMVFVMvHnEsFzLd2BRMmX0ppsi4R+KfAjEoXIVv9oCzrAMf2N/OewEwfIZIdZhroriWnQPZsUrIdKxgd5j/HPCy2zC60XWAD+ninqJoc7/SB+5qK4bQ67pS5lnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NBIQYh2w; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Dk8ZtkTT"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51A76Cuk010407;
-	Mon, 10 Feb 2025 11:15:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	bwV0O+olVTuwBu36jiuSKcfz1/+C1/1A8aX/BMtVtnE=; b=Dk8ZtkTT11SKYTcl
-	wtE2MyB5lmPCCFcegrm2E3dbyFtxL4iCjjVRGRZJBCOaj95C1mekJcZHZY4SBMHR
-	B2RFcYjd5ZPS2KoLhRTL121vVYOCeko1MGH3cZb8H4HDwk4ZV3d7a/w5pZ8z4I/b
-	E8wNkKMPljPaHltayNkYZj9ea7M4T6xLTyHsVxYOVF/MoQxzldizry0enA3/Rj58
-	2r7qt/FOzc1TAa+jyl4fqEVz9MrzkPPMPP3VsMYVoN52VSqoIZ3znS/IX1fFtENc
-	uMkGa2GHjoiL9mOKKiWNIQCLAZv8pYW+HOIH8ulB+bVaMC7o4fYstCyE1YfcltSV
-	G6mInA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qcs58r6d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 11:15:36 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51ABFZWF013481
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 11:15:35 GMT
-Received: from [10.218.7.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Feb
- 2025 03:15:27 -0800
-Message-ID: <92e77d82-7c76-4cc4-8e7d-7b72b57ab416@quicinc.com>
-Date: Mon, 10 Feb 2025 16:45:24 +0530
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NBIQYh2w"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-47190a013d4so191761cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 03:16:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739186166; x=1739790966; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=aiaizxySKQv99eEb2pd6l3voLehByupE/uzXO/LATYo=;
+        b=NBIQYh2waUjXbLRGwToNyU4uc9c0eKD3lkB4+7B9ssReDgM7SvWBlTjdTL7l4fAf6N
+         fmE7cXhQLHcdU/5Bk2Glk4mbV7g8Ykq8Wt8Fcze5Av2ff4U6LIxFd97E8t92ye6UcSGh
+         sRv02oGZ3r1EroGGtoA8blQC2F52057HQAMZcpOFKWvIs3zyUphYuy/MxI7X9g0X5R+V
+         mMvoEKJhaoN29gHJDUhTYcZ1RF9u8ffOw5Ix5Ah46Tt5442l10lYZ0EascrWStDlhRsL
+         y2rFEC7xd+Jm776NqJn1pUSE3kp9NHeCx5WkU5ZBMl0tUfKH07OeTeSHjZCDYq5jVpjX
+         qwYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739186166; x=1739790966;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aiaizxySKQv99eEb2pd6l3voLehByupE/uzXO/LATYo=;
+        b=kopG0MotuU/jMNuiFkoKT5FhJGVonQvhKrhtEks2+Xw6I/TmjNtqeQ2F5NWkaZuYSY
+         XVRUuKl/6WtLI+c9eJDSYjEyLl5zEpYBdghNrG0RUBMXGYhCXgYejtJ5nQogUQum5ObP
+         LbVJuKPkuSL14TezZdW1YgMbzdATK19Tw42eme/5Tm281g8VGlIxbLrRNpCElVMjFFE8
+         6lD6wW/4YnEwMplZOwqxeYz/OODpHPxqsjV/ww3AelqRtx0IV98FHSt4Eglsav/gm6kw
+         dfiMvRCgYPe+BWB6Ajspuwh6/6hIdhXlh3sD16cfM/v/XC3UEfqzSzATEscbug2lUyxO
+         eCNw==
+X-Forwarded-Encrypted: i=1; AJvYcCXDqjY8pSJYl/kLu1vFZq2/AKDGIDvVnfiYvXhmoQkwuoiHgAmhe3bFsK/UiC8TI64Fy8uw1cj3bIOGe/4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9LW0DyqA6EM9/9Y2Mch7tbXr6ByLSH+EJ8UZZaew4sLPBr5YE
+	uIi1whYYeqvjfeCOaiErqSsuu5pNKVpN2N4fMQ1zZ/NU10vEBYVcGNhyN7Fbqw5KSjjQ6ltgiOi
+	BoURqbMLKNtgLwoSVtv1d4uuZN1AAQbtYGS2r
+X-Gm-Gg: ASbGnctWCAURbrYnhEZCCr3HT3Mk4I+R5CNTHbmDdaheA6j+I8ZnDCX7QhraWaMDfah
+	ubkMQ3ysYoHMgKP9oL5J0xaFKuhCnbThqaAWdovKPoHkR7Nq1HYx8StG6v2tgNjhgkjTU8nGxBq
+	2F07LzWnp7evho2AHTH9KOQ26RXoU=
+X-Google-Smtp-Source: AGHT+IFuGLNJg10PJmFyoMKxrkIonv996LbUX7yfBM5xz7c59TtQ3nYDUZg66MCfuS/IvA1cbLhSC9h3m87uDT1cJ1M=
+X-Received: by 2002:ac8:5b8d:0:b0:465:c590:ed18 with SMTP id
+ d75a77b69052e-47177e86974mr6092741cf.9.1739186166382; Mon, 10 Feb 2025
+ 03:16:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] Add UFS support for SM8750
-To: <neil.armstrong@linaro.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Konrad Dybcio
-	<konrad.dybcio@oss.qualcomm.com>
-CC: Melody Olvera <quic_molvera@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        "Satya Durga Srinivasu Prabhala" <quic_satyap@quicinc.com>,
-        Trilok Soni
-	<quic_tsoni@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        Manish Pandey
-	<quic_mapa@quicinc.com>
-References: <20250113-sm8750_ufs_master-v1-0-b3774120eb8c@quicinc.com>
- <c6352263-8329-4409-b769-a22f98978ac8@oss.qualcomm.com>
- <20250209152140.cyry6g7ltccxcmyj@thinkpad>
- <ae9ba351-53c8-4389-b13b-7b23926a8390@linaro.org>
-Content-Language: en-US
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
-In-Reply-To: <ae9ba351-53c8-4389-b13b-7b23926a8390@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: DmIkOamB9RlxLWlGNq2rO4zHHm3xhCRP
-X-Proofpoint-GUID: DmIkOamB9RlxLWlGNq2rO4zHHm3xhCRP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_05,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- mlxlogscore=999 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
- adultscore=0 clxscore=1011 mlxscore=0 priorityscore=1501 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502100094
+References: <20250206044346.3810242-1-riel@surriel.com> <20250206044346.3810242-4-riel@surriel.com>
+ <CA+i-1C2+Pva55qPEHHS9vc83_vmGJaUzUTPmoE2M3_qvCpcsUQ@mail.gmail.com> <1edea8a714fd1df0734f7fe15bb690e4c3a556dc.camel@surriel.com>
+In-Reply-To: <1edea8a714fd1df0734f7fe15bb690e4c3a556dc.camel@surriel.com>
+From: Brendan Jackman <jackmanb@google.com>
+Date: Mon, 10 Feb 2025 12:15:55 +0100
+X-Gm-Features: AWEUYZn3hWD36MO2gHjHYtpqDqJsgNmHP_6nAhOej5-G6whc4kZ0wQRZaGCn3mg
+Message-ID: <CA+i-1C3kBZkwikfczSbu8H1T3EaDRref=LFgS_mSJYLQhmFn2g@mail.gmail.com>
+Subject: Re: [PATCH v9 03/12] x86/mm: consolidate full flush threshold decision
+To: Rik van Riel <riel@surriel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de, 
+	peterz@infradead.org, dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com, 
+	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com, 
+	linux-mm@kvack.org, akpm@linux-foundation.org, jannh@google.com, 
+	mhklinux@outlook.com, andrew.cooper3@citrix.com, 
+	Dave Hansen <dave.hansen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
+On Fri, 7 Feb 2025 at 21:25, Rik van Riel <riel@surriel.com> wrote:
+>
+> On Fri, 2025-02-07 at 15:50 +0100, Brendan Jackman wrote:
+> > On Thu, 6 Feb 2025 at 05:45, Rik van Riel <riel@surriel.com> wrote:
+> > > @@ -1276,7 +1282,7 @@ void arch_tlbbatch_flush(struct
+> > > arch_tlbflush_unmap_batch *batch)
+> > >
+> > >         int cpu = get_cpu();
+> > >
+> > > -       info = get_flush_tlb_info(NULL, 0, TLB_FLUSH_ALL, 0, false,
+> > > +       info = get_flush_tlb_info(NULL, 0, TLB_FLUSH_ALL,
+> > > PAGE_SHIFT, false,
+> > >                                   TLB_GENERATION_INVALID);
+> >
+> > [Why] do we need this change? If it's necessary here, why isn't it
+> > needed everywhere else that does TLB_FLUSH_ALL too, like
+> > flush_tlb_mm()?
+> >
+> flush_tlb_mm() calls flush_tlb_mm_range(), which
+> does also use get_flush_tlb_info().
+>
+> We pass in PAGE_SHIFT here to ensure that the
+> stride shift is specified correctly to the
+> INVLPGB instruction later on.
 
+Hm I don't follow your answer here so lemme just state my current
+understanding more verbosely...
 
-On 2/10/2025 3:09 PM, neil.armstrong@linaro.org wrote:
-> On 09/02/2025 16:21, Manivannan Sadhasivam wrote:
->> On Fri, Feb 07, 2025 at 11:47:12PM +0100, Konrad Dybcio wrote:
->>> On 13.01.2025 10:46 PM, Melody Olvera wrote:
->>>> Add UFS support for SM8750 SoCs.
->>>>
->>>> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
->>>> ---
->>>> Nitin Rawat (5):
->>>>        dt-bindings: phy: qcom,sc8280xp-qmp-ufs-phy: Document the 
->>>> SM8750 QMP UFS PHY
->>>>        phy: qcom-qmp-ufs: Add PHY Configuration support for SM8750
->>>>        dt-bindings: ufs: qcom: Document the SM8750 UFS Controller
->>>>        arm64: dts: qcom: sm8750: Add UFS nodes for SM8750 SoC
->>>>        arm64: dts: qcom: sm8750: Add UFS nodes for SM8750 QRD and 
->>>> MTP boards
->>>
->>> You still need the same workaround 8550/8650 have in the UFS driver
->>> (UFSHCD_QUIRK_BROKEN_LSDBS_CAP) for it to work reliably, or at least
->>> that was the case for me on a 8750 QRD.
->>>
->>> Please check whether we can make that quirk apply based on ctrl
->>> version or so, so that we don't have to keep growing the compatible
->>> list in the driver.
->>>
->>
->> That would be a bizarre. When I added the quirk, I was told that it 
->> would affect
->> only SM8550 and SM8650 (this one I learned later). I'm not against 
->> applying the
->> quirk based on UFSHC version if the bug is carried forward, but that 
->> would be an
->> indication of bad design.
-> 
-> Isn't 8750 capable of using MCQ now ? because this is the whole issue 
-> behind
-> this UFSHCD_QUIRK_BROKEN_LSDBS_CAP, it's supposed to use MCQ by 
-> default... but
-> we don't.
-> 
-> Is there any news about that ? It's a clear regression against 
-> downstream, not
-> having MCQ makes the UFS driver struggle to reach high bandwidth when 
-> the system
-> is busy because we can't spread the load over all CPUs and we have only 
-> single
-> queue to submit requests.
+flush_tlb_mm() indirectly calls get_flush_tlb_info() with
+end=TLB_FLUSH_ALL and stride_shift=0. That's an invalid stride shift,
+but this doesn't break anything because with TLB_FLUSH_ALL the stride
+shift is never used (except to check for values above PMD_SHIFT).
 
-Hi Neil,
+So here I think passing stride_shift=0 would be fine too. Concretely,
+here we specifically call invlpgb_flush_all_nonglobals() which doesn't
+care about stride_shift, and flush_tlb_func() is the same as before
+this patchset in this respect.
 
-There is no relation b/w LSDBS_CAP Register and MCQ support.
-That registers just indicate when MCQ support is present on any SOC,
-whether Single queue mode is supported or not on that SOC.
-
-In SM8650 and SM86550, just the pored value of that register was 
-incorrect which was fixed by WA but actually functionality was present 
-and working fine.
-
-Pored value of that register has been fixed from SM8750 onwards.
-
-Regards,
-Nitin
-
-> 
-> Neil
-> 
->>
->> - Mani
->>
-> 
-
+I would be quite happy with removing the "it's invalid but it doesn't
+matter" thing everywhere but this seems to be localised and I think
+the issue is orthogonal to the presence of invlpgb.
