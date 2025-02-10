@@ -1,78 +1,173 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9724824FBE9
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:09:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF19A22258D
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739207359; cv=none; b=cs2SSJi/FtCfhPuIAfzr4L2TawPni1CfsdjBHSz6qdxyWeBaefqltcri7zwaJx5DSsJpKy4tMV7ZXmpXWGmWIl+fj4XCy2GNOfzQpkfZvbyeUJsvVOXD3DV+l8cWaQsprBXtQPtL+HsFQZnYliy+B6ThHI9wx/s2ezvf/tu7VEw=
+	t=1739207384; cv=none; b=lQbPTEJlIkG95NZMxgp/yP7zD24NxvB87F/bH5OeT41zH8qJxhqns/NmtQyMmGwMf0CMvve3O73LTxhkfefk4iRxUYYDfCR9zxI3EdrI9fLrzEIWugDSFiYgcBB+78vNXEvo9JRFF4TFQZq4ukppLakXFYDrMPOPDHB+wwWxfBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739207359; c=relaxed/simple;
-	bh=WCIhmVbkS/WqIDLA7gxS6UmXEsiFjvtmzN5rqRoO8W8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XKP2rtz5T5Jd2L3f0NXDbYbD4sR8axLEFy8fmTiw9Z6e+d2Ux+2pziKLurNg/Rsh7VBDUtEFzCA4SqlV4CUq3fA1BvBS5/amVkEUI8Noo+xeFgws47TMhRNXhu/8FtlIAYD1DFhtR4KTMSSnSbJPVWD+Mst4rbS9nJfAjxsi6Xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NZx8WfJb; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739207384; c=relaxed/simple;
+	bh=xOScN2bodPrckCGV7B/z1q5PKAcxPlDYV4Vg/92EUcI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FFrH5noT9+C28rLAmwUqNpRLYNuX9n2nb4cIoJIfiIIJdh86frXUspzQTH/bAxyQNbyjZvUKVrNSS5JcWhf9tq3mgQe2pIi6Nevz3D444c90xE/l6QXnPuoMTyJvWec0jaYcFKjr5qzSt79QdMajoqel78F+koZpFIVJP3sY8C8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=IW8pZXp1; arc=none smtp.client-ip=209.85.210.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NZx8WfJb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739207358; x=1770743358;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WCIhmVbkS/WqIDLA7gxS6UmXEsiFjvtmzN5rqRoO8W8=;
-  b=NZx8WfJbsIdijsPBc/GVL5HJmjSiRaZlWoY9Li4VqzmHh/6Ryz3Cq6ag
-   v2Xwrr7Cbz0eCZ/Ce+JVJA3jGC09oToCysNx7LMe71j9jND3wLO/JFZxo
-   RRpi4izw4FlMlK5xqdhHVQ91HyhNwV2YPSFrqtFRmfauI5fnm9J5V6S0d
-   P7qnW+JB8DQbMDeALWcp4ZQI547/HMv+AF23lIAJ69tnxt9EOP/UVmvjZ
-   BdNVm8H+6fzUiVfJvN4ukYpZxlM7dNStFhqMkjRJD3dcz8oxTlTCLx7iK
-   0DUnt2GbHoRP4k5mJzd2Yjb6tJW8OyGN3uzw9NlQF41UfeJCjf+Y79cy8
-   w==;
-X-CSE-ConnectionGUID: Zutm/fJoQWuagDVegMiyvA==
-X-CSE-MsgGUID: Ncb25TzQRLy0PV93Mg0qYg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="39714384"
-X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
-   d="scan'208";a="39714384"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 09:09:03 -0800
-X-CSE-ConnectionGUID: ZAanvtOQTv6hZBKSgZKOzw==
-X-CSE-MsgGUID: 8bG7DA87RjS0dqhf5MZFfQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113121595"
-Received: from bergbenj-mobl1.ger.corp.intel.com (HELO intel.com) ([10.245.246.18])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 09:09:01 -0800
-Date: Mon, 10 Feb 2025 18:08:56 +0100
-From: Andi Shyti <andi.shyti@linux.intel.com>
-To: l1138897701@163.com
-Cc: jani.nikula@linux.intel.com, luoqing@kylinos.cn,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests: i915: Use struct_size() helper in kmalloc()
-Message-ID: <Z6oyqL8aDCOmoCbd@ashyti-mobl2.lan>
-References: <20250208013539.3586855-1-l1138897701@163.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="IW8pZXp1"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-71e173ed85bso2593203a34.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:09:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1739207382; x=1739812182; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=lQTe5PQLHfMGykdWvW9p6zXGCaA0hCvjKNx0WDmkIQE=;
+        b=IW8pZXp1fip52HHIe/G5FiIQU+i8Yba/TO4iO6kz1Xn5L5wvvcq1OSCjOlHvS99iGM
+         ct4/qAX4PpFVUjwVCYJcDfiNt0vHkaL65rLv6NStYsusn91WYg0Ihu9h7Mbo6eVMhW/o
+         WoyZZQnG+DH1JTXsY4ZgWvKuYaeZjdZC232E4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739207382; x=1739812182;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lQTe5PQLHfMGykdWvW9p6zXGCaA0hCvjKNx0WDmkIQE=;
+        b=eXlKjrZS2IRM9Oqee8/47jG7rETPKEk/TIi3WCq4N+nFy/tl1TLZQldDzdFpBVuCJR
+         lAL/Rf8+As65Ao3Fa6h3F3LTSS33zhd4JSH3cotGD0ioO/5255BHp6czHY+hdbj2ch0c
+         OpDtFKNZQezGIQedy+Jtplb3RFzsat9jkjDu1J69HK3gWI6t6Fblrx3cocTRvRajAyzA
+         2+qBElKXUa/1VnQg3F5+RU5ocqbJTVooIna335jSHZib0iJoMOIi/Bng5MUv3AcVIhTA
+         WoSRsF9HUm9gWivt8v3ZxuQqj4nsM2/dENP2TFz1YeH3CwNRsNHOS6xEQgECvD/+mOaq
+         A2zQ==
+X-Gm-Message-State: AOJu0Yxz6DJfp2S5nud4UiD5Sw/HZQAXM3hFH49yEkOQJLT5CDSYH+kH
+	WN7WiHSSg6EwViH1zxAy8m3TIofnUkUeK7Vx/ZYH3ZNLEiWPTGudr3OOYtbAJQ==
+X-Gm-Gg: ASbGncsiAoOfDne5ZqkyLgQ5u+F2f4wPzUCd1JlZOou81AsW6Oa5+P2dtVs4v3E50lv
+	i+0AGVDS6MH/aqA/pCHjE+WJBHpExc37k8T4X2fESZGNU+iBsX6JJTquI56h8n1QAt797Hyml46
+	c4x8ZnDMVLXSqiavKubPKyFKAVwV+jEOeiDKe+mvU7A2hxAxdm7vyiLno9mMWn7nqo8FyUYxPZT
+	OOl9X6E9kmZlFXt7Za4dA97duvWksa9o+I6OvshR5N8kPEoDaScfIV45JecAbtip/B8QA34LVrX
+	vC/MKDfGnPQMY9W5EmNfB/yvylDrNpSLXuBV2BWRxC3UQ4yFXgVdhV8=
+X-Google-Smtp-Source: AGHT+IGbMkAByqSoYHlkURXBou8gZYgAclNItaKhRl1qDrIPhmwpsCzeK4N/g1CfrnsNmEvAMtwCiA==
+X-Received: by 2002:a05:6808:22a3:b0:3f3:b3d0:bf32 with SMTP id 5614622812f47-3f3b3d0c139mr3218894b6e.36.1739207381608;
+        Mon, 10 Feb 2025 09:09:41 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3f389fb517fsm2382709b6e.33.2025.02.10.09.09.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 09:09:40 -0800 (PST)
+Message-ID: <115a59e1-75b2-4d09-bbf9-50dfcd2b62dd@broadcom.com>
+Date: Mon, 10 Feb 2025 09:09:38 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250208013539.3586855-1-l1138897701@163.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 0/3] mmc: sdhci-brcmstb: Add rpmb sharing support
+To: Ulf Hansson <ulf.hansson@linaro.org>, Kamal Dasu
+ <kamal.dasu@broadcom.com>, Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ adrian.hunter@intel.com, linux-mmc@vger.kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, wsa+renesas@sang-engineering.com,
+ f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com
+References: <20250206220940.10553-1-kamal.dasu@broadcom.com>
+ <CAPDyKFq1ZbP4c9ECfM1SY+MEopf+dC19w9PkqXaUjevf=bPjcw@mail.gmail.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <CAPDyKFq1ZbP4c9ECfM1SY+MEopf+dC19w9PkqXaUjevf=bPjcw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi luoqing,
-
-On Sat, Feb 08, 2025 at 09:35:39AM +0800, l1138897701@163.com wrote:
-> From: luoqing <luoqing@kylinos.cn>
+On 2/10/25 05:21, Ulf Hansson wrote:
+> + Jens
 > 
-> Make use of the struct_size() helper instead of an open-coded version,
-> in order to avoid any potential type mistakes or integer overflows that,
-> in the worst scenario, could lead to heap overflows.
+> On Thu, 6 Feb 2025 at 23:09, Kamal Dasu <kamal.dasu@broadcom.com> wrote:
+>>
+>> This patch set adds support for Broadcom TZOS to read and write to RPMB
+>> partition using synchronized access to the controller hardware.
+>> To achieve this Linux OS and the secure TZOS make use of:
+>> - shared hardware semaphore register
+>> - a set of SDIO shared work registers and
+>> - IPI interrupt registers
+>> The sdio shared work registers indicates next in queue to access the controller
+>> and current agent in the queue. The currently running OS that needs access to
+>> the controller puts itself in its slot of work register and if its next in line
+>> it can try to grab the hardware semaphore and complete its mmc requests.
+>> Next agent queue state is changed under the hardware semaphore lock before it
+>> release it by looking at work slot register. send and receive IPI interrupts
+>> between linux and secure world are used to indicatecompletion of transaction to
+>> the waiting OS. TZOS has its own RPMB driver which accesses partition when it
+>> wants to read/write RPMB frames. Current implementation assumes Linux and TZOS
+>> as the two work agents.
 > 
-> Signed-off-by: luoqing <luoqing@kylinos.cn>
+> We recently added an in-kernel interface/subsystem for RPMB
+> (drivers/misc/rpmb-core.c). The optee driver (drivers/tee/*) uses it
+> ro read/write frames and route them for the secure OS.
+> 
+> When the mmc subsystem probes the eMMC card, it registers it as an
+> RPMB device via the new RPMB subsystem. In this way, it allows
+> consumers (as the optee driver) to read/write to/from it.
 
-Reviewed-by: Andi Shyti <andi.shyti@linux.intel.com>
+Yes we are quite familiar with this subsystem and the many iterations 
+that were proposed before it eventually landed upstream. At the time the 
+hardware was designed, we were not sure of the direction that the 
+generic RPMB subsystem would take so we decided to add the semaphore, 
+scratch registers and interrupt generation capability so we would not be 
+dependent upon such a subsystem. We also had other factors playing into 
+designing it the way it is, such as allowing for N participants, 
+including another processor/firmware.
 
-Thanks,
-Andi
+> 
+>>
+>> Change required adding two core mmc_host_ops request_start() and request_done()
+>> to let the host controller driver know when a mmc request starts and ends so
+>> that the access can be synchronized. This has been tested with both the sdhci
+>> and cqhci access. Currently these ops are implemented by the sdhci-brcmstb
+>> controller dirver to acquire and release the hardware semaphore before and
+>> after access. This change to the mmc/core driver does not have any impact to
+>> existing controller drivers.
+> 
+> It seems to me that this isn't needed at all, assuming we have an
+> in-kernel tee driver that can route the RPMB frames, but maybe I don't
+> fully understand the use case.
+
+The proposed scheme here scales to an arbitrary number of agents in the 
+system. Our immediate use case is for both Linux and a Trusted OS (not 
+OP-TEE based BTW) to share the eMMC controller, but we also accounted 
+for a third agent which is a power management micro controller firmware 
+to be able to participate in the scheme and occasionally make its own 
+eMMC operations.
+-- 
+Florian
