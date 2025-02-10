@@ -1,138 +1,125 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC2722F143
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A7821C9E0;
+	Mon, 10 Feb 2025 14:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739196383; cv=none; b=dz746+42/ZsGUCpjJUscX4+3bKmXGQc5IOau4OREFYZZm6vIbuI/dK85KMszJP5WtGLMKoao5im1COFobdJZFruACPgT1uEtlPeb97Ko4YOqJeTg5+EE7XVhTutFNSe+UelNwRKAEobXlMfD8oza4mNG+mgvs9BHqeHz4+VJmhw=
+	t=1739196406; cv=none; b=PPcdXzviVVANYEkcb9vYvFB6DUsy+KkXwUUx04bVM1MtsNgWKB3hlSc2qtHdEbxK88PTc25AqRIM6qqA05IDL9U6ibArzkz88xScQKspFf1FTZQXLNtfJajoVJdHQKf23ZaevFQuOHPwE0+0Zc7xgZD2+yqZUDajuy8Byz0GZus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739196383; c=relaxed/simple;
-	bh=jQXdsAM70gjnQnwuRxxLgbXuXJ0RXrC8eEqPycA/l1I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q3BKhcKCXMBvtU7txKG3O+cFMnGTrpqcrjjmQeYkTt0XP3Z5xpvznYZOGh1+Lm269sT5+jah7sm+N8APpKvzpz+RCxUrU3otwkD+mVNmXpK7qW9ZmKRKzV9v6Ah4RQoqzTNqLziMOuVXEhtgm6J2ZHv+2tKPS6Xx31LsguUPpfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=djao1pWG; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="djao1pWG"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-38dc6d55ebaso2011503f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 06:06:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1739196380; x=1739801180; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=IrKg/+BbMX221XE9ME81BjtPrEG6eZ+0UQKPsDeAQvI=;
-        b=djao1pWGPdXsIWRYzcMDgNh3K9/00/Q7GmvRh0crKrdE6l6kYWQcBXWSojraBUwXey
-         qZ0f1LBN7kMV1laSJ2U1ZMwdEwJvDETvVXRww9qfUz6TQekqMAy43u5/vOvt3zRJEnjN
-         m47W3+DgmmMvQXwoZTdcBND/7GQxeOlh8eADwbr5GoLA12VpZ9T8FKxogCNT9oqXib2w
-         ED+1RGDKz0iT01v4M3ml0P+Mb3M2tEeCCF5FMr0I70/s+/lq6Wd/pBp+28bIqGqVtSxs
-         lpqqaAJrSaQcIp3FwRvZC8turbj3ppmtsqNFQ3Idvs/lRzU6sYMpeGAl/s3w+yJaYbDW
-         2slA==
+	s=arc-20240116; t=1739196406; c=relaxed/simple;
+	bh=s/SxefOb0H15AdMHQedNI/+EiassRRLisDihao+TjBQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eW51xcGCSaHYQcOzST4hT78se4E2LnnvnVmAELC69FsLUK9i+f2MIs1uSLJb52TvZl6YYBJaiq6vJoeBDHF1+GEXmRttcth6gQg84rdU+sTfio3sRGLx8nbQUkLzMYoxfKfPCkz3YMn0sQdQ6JNHGMeZeOUDERoqVdmF7PUG1h0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-86707fe3eccso1975327241.0;
+        Mon, 10 Feb 2025 06:06:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739196380; x=1739801180;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IrKg/+BbMX221XE9ME81BjtPrEG6eZ+0UQKPsDeAQvI=;
-        b=ac428I26bwibItyruZE0dOUUshDtrI1RAJno/fVmHpyOGrgteI/HSIzRpWF5Q0hrlA
-         ydUJ7j/6Dcf1QcPwzpPYzfbQYzpNew22/GYRNmDfMwseM+2nC5sljhXZAN0JJUJt4C8e
-         2HE3wrUsrTcYfSumtm0ebQakkPQ0pXF2zo4N//GYedh9subsan6UWgqvUoV9aS0LkCnc
-         TCUFck5Q+nTiNeOfOaoZfzwY9fdoVskZQyOc7KeBXSjtGynTovvEJYaCVSQOf3R4s7ky
-         o6C2TH1pb4Tc19ZJpyj5KAjAX22cbf+Ms56Riavz8N1Ql/03BK6b4x/cuTsyIgYiDDEQ
-         zGtg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpcdhAhfVgHzXxQhRom4ebmfh63LP5DQc5q5wBRE7bQWhiegTepB2emE3L0tqo0JTNd7LktmGZmgmYm1E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvMrLCoFt3AzDfFm1Js68jAzQAnwKJYb1GiskU8eqRe3kSv8MW
-	4n6th+pTHc2orieW/q3qcZiAZUN7rIz2RJA9JUlGlCYmcsbnU6pIAc8Aumf18N0=
-X-Gm-Gg: ASbGncum0XU6DKSH3R8l5x46VLVBrYMtM+OVoABgWsyynGX7LqvdFiIZfjPUfrkGuD7
-	fQ2QFhgqio2/Fj3oAE0IZ2EHmkXdLcaSoNdi9p5W16tlzeKY0TfxTnqWvKXGNO7YKnBXEP+PSf5
-	s2FFgwOGp+Kga+FQp5fMjAf3GbObRmhlbWn0d8F4kGx0iyrpgUrK/JsgGT5yUy0pJsGCS9Ts+H0
-	2iVpdatIQFoIZvbsFrOm9PU7kF21Jlay7q2HLdSnyFa4bycKSy/8CHrxV+eX2j3Rig3I85jjae2
-	KQ4=
-X-Google-Smtp-Source: AGHT+IH37wNkEhz3Kh3Sg+JvAHzqc4n3gX2HNxkJEROvKoGeOgsvuEujhAparcHpL/6WFVp/9Yf81w==
-X-Received: by 2002:a5d:6d0e:0:b0:38d:b12f:60d1 with SMTP id ffacd0b85a97d-38dc9ba41e1mr8530261f8f.26.1739196379198;
-        Mon, 10 Feb 2025 06:06:19 -0800 (PST)
-Received: from localhost ([2a02:8308:a00c:e200::766e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd511e626sm6694401f8f.74.2025.02.10.06.06.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 06:06:18 -0800 (PST)
-Date: Mon, 10 Feb 2025 15:06:18 +0100
-From: Andrew Jones <ajones@ventanamicro.com>
-To: =?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-Cc: Anup Patel <anup@brainfault.org>, 
-	Charlie Jenkins <charlie@rivosinc.com>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, jesse@rivosinc.com, 
-	Anup Patel <apatel@ventanamicro.com>
-Subject: Re: [PATCH 7/9] riscv: Prepare for unaligned access type table
- lookups
-Message-ID: <20250210-e6a2dfcd7995ffc8a6d918e4@orel>
-References: <20250207161939.46139-11-ajones@ventanamicro.com>
- <20250207161939.46139-18-ajones@ventanamicro.com>
- <Z6ax7B45OsGerjfA@ghost>
- <CAAhSdy2tjOE5aajzydFs8A_drHdBSbWrYTX3CX4e7B6Rm107Bw@mail.gmail.com>
- <c6f98a70-b1c7-4955-bf5d-546e4563cf1c@rivosinc.com>
+        d=1e100.net; s=20230601; t=1739196403; x=1739801203;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=W6kDmgOXvSCpquS8DR4mGKaDibtph7+ZMfxSIa+WafI=;
+        b=smf8qhtWvm1/SfJWPtCyq9qY+cbVAOD+MzC+REuNsSXuBgRp0LPiQ2dmv1K95QwOTA
+         3KxpXlXUEo7V7NKNnYToGOTI9BHn0Am8ZyVX/G/RcjAKYHeLEoa9t12+YIDC/IdqxrZn
+         upFGH7nc1B2Z/G4J1Jc96hYqriD81ki1iXLYdXgTsc5GMwp+gTICvn/eBAJR6h19BiBI
+         4h/6RATDokY20/aaQVi4n1Q3cbAYngZDsVtXaE27rPd9WR5GbdAQbc21P6In12zvx2sM
+         pY8IL35ywLkyVij/CbxqrjtkwrHzYqFt4puhKYjto/TwGQBDKiT284g04XJDRse+BMmS
+         ntlw==
+X-Forwarded-Encrypted: i=1; AJvYcCVa2A5LyZ43U8KcKo72wnQOFSA5LKsANEZ1TrQpqtcp9B1V651OV4DDFZeVnqeVKPyWXj3Qp0oXMpfy5ust@vger.kernel.org, AJvYcCW1Aj2OqoMavwZjwf3P4IAV8ArRcFqlB0cQZvOhW0DBoAtvfajzHsX6EQCUxTwSdeUYyQRT7NEVj1Dh73NaGedb7RI=@vger.kernel.org, AJvYcCWbLTU1NiXF1FbEGkmEBW9CrpNuZwU4o0IbOqrtxcdXqAizd7MWe1J6PeqFKnN2ZkKTF4m9Ev3mIfs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzE+OpTGQZq/h+yORuWII5mUw2dlntoFoYpRQScv0QXqq/Jtx6o
+	Ysk0olYw0M0EcggZuM/UxJ8KHOussRuLFCfPs6RGf2V4eoNh5phNsO7z4gHu
+X-Gm-Gg: ASbGncsO9T6K1Wjx+1FHGe/6PF1lTZfupdyPqkEv8tWApf/n8ykfhlYyfOvudjX8Y4U
+	TE0cYCHoFM+7o/HY5uifJIfqlsQPw+QTsx+lF7T8PQxj8Fvw6d3pTi1Qz2nsdN1aO+kYCyWlOw3
+	zfduZwy16oFUHR84PvMOB0Ar9WaK9/+2rm+f8zfLjgNjwP+c2seVCGIXfGzW6XwXX62PAMKSV/O
+	RHRD5J+1MTRQtOnl3lZoqDkQjhLG5aFUf1I79O2RTA0juy84hWwA+xKA7rFcQMbK87Fv0O552TG
+	3Wqa9m+zpdB7yUMIyx3GJzPqSvIvq/ueOvcfkpzxJj0bZgTp56fl0QHXqg==
+X-Google-Smtp-Source: AGHT+IE+4XSQ2aR0FjRorBL+9LH2mQxQzUkHI3/2oMG3atZU/FeaJxfnMLyvVb4pPDBxqfaiMvHY/A==
+X-Received: by 2002:a05:6122:17a0:b0:520:3aea:e55d with SMTP id 71dfb90a1353d-5203aeae7d8mr2920965e0c.5.1739196402013;
+        Mon, 10 Feb 2025 06:06:42 -0800 (PST)
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com. [209.85.221.169])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5204e43616esm133891e0c.21.2025.02.10.06.06.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 06:06:41 -0800 (PST)
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-52043dec766so600990e0c.1;
+        Mon, 10 Feb 2025 06:06:41 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCULYTzDSetat2ZwQ+qSp9UE5cqPcWe0RpyBsCGyMsDb/Pvk2r2whtoBUQ+pdBCvuWmTZCJxf/9Locx2GNZT@vger.kernel.org, AJvYcCV/8nU8tgJ3d/Ay25XxRo8eBsLICZ0xSzq0Ys1MfqIMnSMtg6I801GXBjS9s+f3z8EDWd/gZrfY8B4=@vger.kernel.org, AJvYcCWDkb1zgnJXuvY8SvS0UZEaDdQiNF0amfFk1jjOPbuc+pcYInSA2PIyZOjk3hBMGe8J/E5eXf3Psu3Vtlsy3yYthso=@vger.kernel.org
+X-Received: by 2002:a05:6122:11ad:b0:520:5267:819c with SMTP id
+ 71dfb90a1353d-5205267840emr509770e0c.1.1739196400794; Mon, 10 Feb 2025
+ 06:06:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c6f98a70-b1c7-4955-bf5d-546e4563cf1c@rivosinc.com>
+References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com> <20250129165122.2980-7-thierry.bultel.yh@bp.renesas.com>
+In-Reply-To: <20250129165122.2980-7-thierry.bultel.yh@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 10 Feb 2025 15:06:29 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVUhXQ80DRbr7yFNgzmGMuDEuScZZhKihhtee1U4qP3UA@mail.gmail.com>
+X-Gm-Features: AWEUYZnxtULZ_SWBBZBuFBwb88yi1TbL8Xe3rYQd7YgpyPS1Ki3tGXTD_QAkkWk
+Message-ID: <CAMuHMdVUhXQ80DRbr7yFNgzmGMuDEuScZZhKihhtee1U4qP3UA@mail.gmail.com>
+Subject: Re: [PATCH 06/14] clk: renesas: Add support for RZ/T2H family clock
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Feb 10, 2025 at 12:07:40PM +0100, Clément Léger wrote:
-> 
-> 
-> On 10/02/2025 11:16, Anup Patel wrote:
-> > On Sat, Feb 8, 2025 at 6:53 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
-> >>
-> >> On Fri, Feb 07, 2025 at 05:19:47PM +0100, Andrew Jones wrote:
-> >>> Probing unaligned accesses on boot is time consuming. Provide a
-> >>> function which will be used to look up the access type in a table
-> >>> by id registers. Vendors which provide table entries can then skip
-> >>> the probing.
-> >>
-> >> The access checker in my experience is only time consuming on slow
-> >> hardware. Hardware that supports fast unaligned accesses isn't really
-> >> impacted by this? Avoiding a list of hardware that has slow/fast
-> >> unaligned accesses in the kernel was the main reason for dynamically
-> >> checking. We did introduce the config option to compile the kernel with
-> >> assumed slow/fast accesses, which of course has the downside of
-> >> recompiling the kernel and I assume that you already considered that.
-> > 
-> > The kconfig option does not align with the vision of running the same
-> > kernel image across platforms.
-> 
-> I'd would be advocating to remove compile time options as well and use
-> another way to skip the probe (see below).
-> 
-> > 
-> >>
-> >> Instead of having a table in the kernel, something that would be more
-> >> platform agnostic would be to have an extension that signals this
-> >> information. That seems like it would accomplish the same goal and
-> >> leverage the existing infrastructure in the kernel, albeit with the need
-> >> to make a new extension.
-> >>
-> > 
-> > IMO, expecting an ISA extension to be defined for all possible
-> > microarchitectural choices is not going to scale so it is better
-> > to have infrastructure in kernel itself to infer microarchitectural
-> > choices based on RISC-V implementation ID.
-> 
-> Since adding an extension seems quite unlikely, and that a device-tree
-> property is likely DT centric and not applicable to ACPI as well, was a
-> command line argument considered ?
+Hi Thierry,
+
+On Wed, 29 Jan 2025 at 17:52, Thierry Bultel
+<thierry.bultel.yh@bp.renesas.com> wrote:
+> Add the CPG driver for T2H family.
 >
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
 
-I did consider adding a command line option in addition to the table,
-allowing platforms which neither have a table entry [yet] nor want to do
-the speed test, to set whatever they like. In the end, I dropped it, since
-I don't have a use case at this time. However, if we really don't want a
-table, then I can look into the command line option instead.
+Thanks for your patch!
 
-Thanks,
-drew
+> --- /dev/null
+> +++ b/drivers/clk/renesas/rzt2h-cpg.c
+> @@ -0,0 +1,549 @@
+
+> +static void __init
+> +rzt2h_cpg_register_mod_clk(const struct rzt2h_mod_clk *mod,
+> +                          const struct rzt2h_cpg_info *info,
+> +                          struct rzt2h_cpg_priv *priv)
+> +{
+> +       struct mstp_clock *clock = NULL;
+> +       struct device *dev = priv->dev;
+> +       unsigned int id = mod->id;
+> +       struct clk_init_data init;
+> +       struct clk *parent, *clk;
+> +       const char *parent_name;
+> +       unsigned int i;
+> +
+> +       WARN_DEBUG(id < priv->num_core_clks);
+> +       WARN_DEBUG(id >= priv->num_core_clks + priv->num_mod_clks);
+> +       WARN_DEBUG(mod->parent >= priv->num_core_clks + priv->num_mod_clks);
+> +       WARN_DEBUG(PTR_ERR(priv->clks[id]) != -ENOENT);
+> +
+> +       /* Skip NULLified clock */
+> +       if (!mod->name)
+> +               return;
+
+Copied from rzg2l-cpg.c (which copied from renesas-cpg-mssr.c)?
+Do you need this?
+
+Given RZ/T2 does not use the "write bit 16 + n when touching bit
+n"-scheme (like RZ/G2L and RZ/V2H), I am wondering if it would be easier
+to use renesas-cpg-mssr.c instead, like R-Car and RZ/A2M are doing?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
