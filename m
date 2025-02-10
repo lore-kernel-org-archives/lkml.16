@@ -1,75 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6603B264604;
-	Mon, 10 Feb 2025 22:07:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA308264604;
+	Mon, 10 Feb 2025 22:07:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739225239; cv=none; b=hd8F2a97s8DTYuuo8G2GfCzHa7wewFf6b33EOt23dC8Shy8qkMYy0s0sv4uYhjXa5veQp8Tj9WrvzjUNJAJ+FavIX3gOfGmTfRCD9ovclwNNK4Z81Ilt8yafrFRbqukQLpt/abIepdCLyDUfrksSeHwbHZnFesE4RcLXPjtgxgE=
+	t=1739225272; cv=none; b=ml6FtKjqPSc20TaLvX+5RUPVUYoy4WrVnjDC4OnLJLKXqplJUHsGphiYe9hnLr/tjNtGCQP45JDCfvl8uSuRj9h6fQmaORbRZbBOTR6Y30TZg7QHTf9lYqVrfI2tSJBIHbr+PYfekQ4UXzHe09KSNYnua3kJYuk9nfOPTufxtmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739225239; c=relaxed/simple;
-	bh=ZnKjEUxTzLTwhOhThWkm7CEAoD5+A2C5AYJAEYl3+2Q=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=D+1vVYVmObZibZ5yd2UZ2IdC12siAgJt7Z+/ptaQiqh9koxl5dErpjVduOS7CYPai3pDDntaKqSmHw2HVCPJ4SdsXbowWrKvqjsvKGS6eBD+1MwCB2FJu2/5kZHLTccT4NBEz2PcMgEkrGrJfxtxPuHax0pgnhJppqEF2nEDZRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ph5cjXU9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739225272; c=relaxed/simple;
+	bh=soGGYi5SZ7hfquIE86n6wxhLDKzRy/sjal53c1wfsY0=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=crzJh6qJ7dTnKaqz4b0yTJfeqazVRvyOMBXqSUp5erj8YueqfcbGl1WyWY3ZzUmGCC5zG//Nt6VJ/RXmiWaGL1csN7hPvbYL9V3dQjg4+cEt47EYnnGq9da3P99ZmHIr3AlDyhEl4ECTZjrrm/IaU+cqEIPseefQfNU7qr4tGAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kQIrr4TP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ph5cjXU9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D837C4CED1;
-	Mon, 10 Feb 2025 22:07:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kQIrr4TP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1F00C4CED1;
+	Mon, 10 Feb 2025 22:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739225238;
-	bh=ZnKjEUxTzLTwhOhThWkm7CEAoD5+A2C5AYJAEYl3+2Q=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=ph5cjXU9XTTCQjLqgVd89dWkc2T5wD8FFtPWNLMKLLG8XiQ5Yw7ctfoy+g682Mm5y
-	 z35wVtdIHPC4/m8YtzHaVyYKZ0lR0n6wW/Ig7/RBFqfc+S7K1lG+b+nFzeAy7X0bOI
-	 6eGkoz5RqMdG5WNFgCRivXsS3QSxWaQ6KDX+HzP1gDaIz+GJyZ57N3XtG/y7W15SJj
-	 lyXnzqd+O6iRJdCKhJv620uc7mOhvqrxEnNvR0K/4YOQmWKdsZEqsJYTVE3EDUvbeT
-	 AW0H8kige1jab1eqixlObCjGcaT0umctsky1oDB74Xt4lETKOtBbn+pNuor5NVGDNe
-	 gq2uzu8hMkd/Q==
-Date: Mon, 10 Feb 2025 23:07:16 +0100 (CET)
-From: Jiri Kosina <jikos@kernel.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
-    Kate Hsuan <hpa@redhat.com>, 
-    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-    Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the hid tree
-In-Reply-To: <20250210104347.3d291afb@canb.auug.org.au>
-Message-ID: <64504o9q-5os6-79p3-o18s-5pn6q9s0q6n7@xreary.bet>
-References: <20250210104347.3d291afb@canb.auug.org.au>
+	s=k20201202; t=1739225272;
+	bh=soGGYi5SZ7hfquIE86n6wxhLDKzRy/sjal53c1wfsY0=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=kQIrr4TPbWfLCp09znKaOCMCRcXmAsnF6bsbBaRFkl9EQDQwQDEjMAA98sXrWr/hK
+	 t4al5X+2jM0+HVKP1cXr/YSu36GJ8IF0hF7BD7vKVPGVAoOFYNCUzn48K2uUz8ZWMV
+	 GueGQ6rWq8BEtYatNcVQ+GZntF6n+fdO8oKCcU9P54cmMIOqZflrfbD5LOpMCYx37L
+	 EXCE1bF4kdkfgo0/Yqmf0GWoQtyiRtTPcgHW7OEhUkW30U7abDpQWtVr/6jZCZ8E94
+	 fLOv3BG8kd2D7tdjy0CGyf+NrTWsAUn+5aG8d5urK8S5oo1io+ykfDu6Crn/e2ACuP
+	 Ge2Z+QtLTbRbQ==
+Message-ID: <a66c949345e9118b2ebbdca39e4962c5.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <Z6VBo51g54xAmelQ@cassiopeiae>
+References: <cover.1738832118.git.viresh.kumar@linaro.org> <c68081e18d939aefc7f6dac798df6b72e81bba4b.1738832118.git.viresh.kumar@linaro.org> <Z6ShsuLykigNscz8@pollux> <Z6SiiRubSXGInbgj@pollux> <0cd42d2d683ea057e6034978b02c7f84.sboyd@kernel.org> <Z6VBo51g54xAmelQ@cassiopeiae>
+Subject: Re: [PATCH V8 06/14] rust: Add bare minimal bindings for clk framework
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rafael J. Wysocki <rafael@kernel.org>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Michael Turquette <mturquette@baylibre.com>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Nishanth Menon <nm@ti.com>, rust-for-linux@vger.kernel.org, Manos Pitsidianakis <manos.pitsidianakis@linaro.org>, Erik Schilling <erik.schilling@linaro.org>, Alex =?utf-8?q?Benn=C3=A9e?= <alex.bennee@linaro.org>, Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Danilo Krummrich <dakr@kernel.org>
+Date: Mon, 10 Feb 2025 14:07:49 -0800
+User-Agent: alot/0.12.dev1+gaa8c22fdeedb
 
-On Mon, 10 Feb 2025, Stephen Rothwell wrote:
+Quoting Danilo Krummrich (2025-02-06 15:11:31)
+> On Thu, Feb 06, 2025 at 12:05:59PM -0800, Stephen Boyd wrote:
+>=20
+> > as most clk consumer operations bail out early in that case.
+>=20
+> Most? Does that mean NULL isn't *always* valid?
 
-> Hi all,
-> 
-> After merging the hid tree, today's linux-next build (powerpc
-> ppc64_defconfig) failed like this:
-> 
-> ERROR: modpost: "led_mc_calc_color_components" [drivers/hid/hid-lg-g15.ko] undefined!
-> ERROR: modpost: "devm_led_classdev_multicolor_register_ext" [drivers/hid/hid-lg-g15.ko] undefined!
-> 
-> Caused by commit
-> 
->   a3a064146c50 ("HID: hid-lg-g15: Use standard multicolor LED API")
-> 
-> # CONFIG_LEDS_CLASS_MULTICOLOR is not set
-> 
-> I have used the hid tree from next-20250207 for today.
-
-Indeed, this was reported by 0day bot as well.
-
-Kate, are you planning to send a fix please?
-
-Thanks,
-
--- 
-Jiri Kosina
-SUSE Labs
-
+I'm hedging because the common clk framework is just one implementation
+of the clk.h API in the kernel. We still have a couple other
+implementations (sadly) where I haven't checked to see what they do if a
+NULL pointer is passed in. But NULL should always be a valid clk handle
+per the clk.h API documentation, so an implementation that fails at that
+is broken.
