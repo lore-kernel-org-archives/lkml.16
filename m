@@ -1,84 +1,124 @@
-Received: from mail.namei.org (namei.org [65.99.196.166])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B12F1F4611;
-	Mon, 10 Feb 2025 21:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.99.196.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7348424BCFD;
+	Mon, 10 Feb 2025 21:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739221927; cv=none; b=VAG5N2IEH5mBBj5RWBbp2Y2dmnYg/ifmAiiggy8r0EfXiTySGR9EQAWV5aBgrvqmQCVXN+osnRtwEd2Ks0G9hXivGE/rgMdM3mW5D/cpV/iu1pZHnqho1Q8hv3nXLDh08No+9PRy5QtRLFQn71OPdWOo5DWjW5D13ry44HU+EUg=
+	t=1739221953; cv=none; b=EzRqva941R2pk/vQK41BTgH0D9cXEOJ+y5C+UpdijC0XecW1hq8louHs0ruH6XkA740nxFKl/TyviS4tRK85IDu2ckUCTlch8YUb0ISBbyRxfFal24AkWCfW/LY2T0PL5ar78x5IMh/aeiZjuT1QLD6wROQKVhnz5e2SR5tmqWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739221927; c=relaxed/simple;
-	bh=UBCe9p8sj/JNzRoVoJtwDN+Lk8MaBoj1Z2Y1UU8mEbI=;
-	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=BKhwXwFG0OLan0KTy/a7dZVyq+9LfSClAodj1rPZZBiIHj53WbaSGYFF54jSROIT0cr4IVi8vUrQpHk+1rzX8FgCl2zcsrhr7BxBGjL/av/AeeT7h6vI4772nVTEAwvi4nmolVzpBDA3KtLFtm6kN0IRlRWSVoyO8jA53unoBdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=namei.org; spf=pass smtp.mailfrom=namei.org; dkim=pass (1024-bit key) header.d=namei.org header.i=@namei.org header.b=ZyGYKtxX; arc=none smtp.client-ip=65.99.196.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=namei.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=namei.org
+	s=arc-20240116; t=1739221953; c=relaxed/simple;
+	bh=FhBhyXDJXIuoPanAZKFkaze/gZWzPhRBvVyIHTjIrZ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZWpm5nJp1m0WBu+2/RsRkDaiMDgQV0FsJne+FiBH5ksfkFHvOMQ9fG6sijs7UbqodR+fhfxGvkZowpZBppGjOueRxE7lRuD4pFLUH9b8DknTlCA4e/y8lALzoj8JIWetojpXf9jWBnqVG0W2UYhk39EA2iDVWU7V9wUapCuQLaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P31MKEsA; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=namei.org header.i=@namei.org header.b="ZyGYKtxX"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.namei.org (Postfix) with ESMTPS id 6B6F6C9;
-	Mon, 10 Feb 2025 21:03:02 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.namei.org 6B6F6C9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=namei.org; s=2;
-	t=1739221382; bh=h3x3P3W8K+9OlCaN6BjlODAjJulvwo/lejT6q6M/Los=;
-	h=Date:From:To:cc:Subject:From;
-	b=ZyGYKtxXADc7f/1Rh/aC10cIngjwj16ltm/q3MfCt8DpEmDiqR+PtyGUWVSR0kvRz
-	 WXzo9JxxhLYZGiDmsn7pRtZqTKtOIt2S8lftxNWQi+yDOhiUqDdhK6GX2dF3J+WjHA
-	 woDtfm+66JQFoacJ2svGVd5rL0o5ADlT7Wh/OkFs=
-Date: Mon, 10 Feb 2025 13:03:02 -0800 (PST)
-From: James Morris <jmorris@namei.org>
-To: linux-security-module@vger.kernel.org
-cc: Linux Security Summit Program Committee <lss-pc@lists.linuxfoundation.org>, 
-    linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com, 
-    linux-integrity@vger.kernel.org, lwn@lwn.net
-Subject: [Announce] Linux Security Summit North America 2025 CfP
-Message-ID: <35b17495-427f-549f-6e46-619c56545b34@namei.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P31MKEsA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739221952; x=1770757952;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=FhBhyXDJXIuoPanAZKFkaze/gZWzPhRBvVyIHTjIrZ0=;
+  b=P31MKEsARvLLXNUQ0yO5mytlzUQHxKhUiVRfQM+51VDE7bB6iak5tr7J
+   v6xJA4fHbyIJRvf20SH6QMJv+5YcInQgXhVDmKtiD0JLWr96IcyvVzFis
+   rUWijw2dPDNtKoId5FxG9TsS8hQkU3UZ2i19ned7pcln3XhGIvsfIV0jg
+   07EczEseVDS9/YKPujw7VxnGjYNxQfjryYGyoKeiKEmTG7UWr39ck/SOs
+   pCFxu78xavAcyI0ggJHExDMcSrlWocyMCVPc0QFCPMVR5twR6jDQvPjZ9
+   BO7B3Wm3keycA7LXZxfZf66PCQ/fXD6XghYskD90rsd+mVnOdCjY8OXgJ
+   g==;
+X-CSE-ConnectionGUID: ZZMhWvRETUOBjgwPzQBztw==
+X-CSE-MsgGUID: BAisLiPPQGWLycj2uXDZzQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="39969728"
+X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
+   d="scan'208";a="39969728"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 13:12:31 -0800
+X-CSE-ConnectionGUID: Y00ORRFoQKuySL54Ru0/uQ==
+X-CSE-MsgGUID: SBYD10rIQyqCrrJYW1lmjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="116393877"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 13:12:30 -0800
+From: Tony Luck <tony.luck@intel.com>
+To: Robert Moore <robert.moore@intel.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Len Brown <lenb@kernel.org>
+Cc: linux-acpi@vger.kernel.org,
+	acpica-devel@lists.linux.dev,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	David Hildenbrand <david@redhat.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	Tony Luck <tony.luck@intel.com>
+Subject: [PATCH 0/4] Add interfaces for ACPI MRRM table
+Date: Mon, 10 Feb 2025 13:12:19 -0800
+Message-ID: <20250210211223.6139-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="1665246916-1759655948-1739221181=:1918214"
-Content-ID: <1eebfa2-83a-d771-38e3-a986f4542214@namei.org>
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Memory used to be homogeneous. Then NUMA came along. Later different
+types of memory (persistent memory, on-package high bandwidth memory,
+CXL attached memory).
 
---1665246916-1759655948-1739221181=:1918214
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: 8BIT
-Content-ID: <30fe1e86-d93-3681-6dff-9a32f4d6df6@namei.org>
+Each type of memory has its own performance characteristics, and users
+will need to monitor and control access by type.
 
-The Call for Participation for the 2025 Linux Security Summit North 
-America (LSS-NA) is now open.
+The MRRM solution is to tag physical address ranges with "region IDs"
+so that platform firmware[1] can indicate the type of memory for each
+range (with separate tags available for local vs. remote access to
+each range).
 
-LSS-NA 2025 is a technical forum for collaboration between Linux 
-developers, researchers, and end-users. Its primary aim is to foster 
-community efforts in deeply analyzing and solving Linux operating system 
-security challenges, including those in the Linux kernel. Presentations 
-are expected to focus deeply on new or improved technology and how it 
-advances the state of practice for addressing these challenges.
+The region IDs will be used to provide separate event counts for each
+region for "perf" and for the "resctrl" file system to monitor and
+control memory bandwidth in each region.
 
-Key dates:
+Users will need to know the address range(s) that are part of each
+region. This patch series adds /sys/devices/memory/rangeX directories
+to provide user space accessible enumeration.
 
-    - CFP Closes:  Monday, March 10 at 11:59 PM MDT / 10:59 PM PDT
-    - CFP Notifications: Monday, March 31
-    - Schedule Announcement: Wednesday, April 2
-    - Presentation Slide Due Date: Tuesday, June 24
-    - Event Dates: Thursday, June 26 – Friday, June 27
+-Tony
 
-Location: Denver, Colorado, USA (co-located with OSS).
+[1] MRRM definition allow for future expansion for the OS to assign
+these region IDs.
 
-Full details may be found here: 
-https://events.linuxfoundation.org/linux-security-summit-north-america/
+Fenghua Yu (1):
+  ACPICA: Define MRRM ACPI table
 
-Follow LSS event updates here:
-https://social.kernel.org/LinuxSecSummit
+Tony Luck (3):
+  ACPI/MRRM: Create /sys/devices/system/memory/rangeX ABI
+  ACPI/MRRM: Add "node" symlink to /sys/devices/system/memory/rangeX
+  ACPI/MRRM: ABI documentation for /sys/devices/system/memory/rangeX
+
+ include/linux/memory.h                        |   9 +
+ include/acpi/actbl3.h                         |  40 ++++
+ drivers/acpi/acpi_mrrm.c                      | 188 ++++++++++++++++++
+ drivers/base/memory.c                         |   9 +
+ .../ABI/testing/sysfs-devices-memory          |  32 +++
+ arch/x86/Kconfig                              |   1 +
+ drivers/acpi/Kconfig                          |   4 +
+ drivers/acpi/Makefile                         |   1 +
+ 8 files changed, 284 insertions(+)
+ create mode 100644 drivers/acpi/acpi_mrrm.c
 
 
-
+base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
 -- 
-James Morris
-<jmorris@namei.org>
---1665246916-1759655948-1739221181=:1918214--
+2.48.1
+
