@@ -1,142 +1,175 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676621F8BDA
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C504C2528E1;
+	Mon, 10 Feb 2025 15:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739200643; cv=none; b=Cinj0RkNcU/TtLfM/6ZKazVYfWgJQ7Wbap2xkx0FkLXZ9vbpl8viMocz4vLHeCDkiGBgPYvyw/gelXW2LV1KPDZr0XqsLUwQLRcUPJT7X79E3GvvLUXGsEu0HYCaLbj6vEMXZJObqfDDQD5Y7Vh7Y49+MZyxGEWbqVhyrsUizVo=
+	t=1739200719; cv=none; b=sen9wh6zlOdpyEVg34cucyKmDb3Hm3xlZyUCQh8UnM68jNvWN8+0aCfozwgSpfJsxDh27LHqMmHBKQ0KbKC6H6NmMbWI0NADZ8MlIU1pM99Rvrhluh/F0UhEMzqVtX+M+qqvm+OUKLFKh719b2Bki4cDVmeZF6lDUX1exIwwaO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739200643; c=relaxed/simple;
-	bh=uG272hbqp19He+noX6bJMf3lAmn0BOPTkAquhMcRT5c=;
-	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type; b=t1Zptwmi8J0eL7sdP7NBsDR4Lvk1YF/kYE2kAcDivOWTnbjXXvRj6aHQOcEwo3PENiBvNl9nP5Lz3C89T9YbyUR9EnmxIiqbSuNwReJz8Zi1TaELLlKUBotQyAGmiIeI7nY/yO8Ck9vjGeHtvVAonnLJ6rM585Fovy6JH+IVV5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=telus.net; spf=pass smtp.mailfrom=telus.net; dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b=Fi5HiAbG; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=telus.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=telus.net
+	s=arc-20240116; t=1739200719; c=relaxed/simple;
+	bh=HQXa2XZpLkFsDl+MGL2N9ezPt2El0y7jK/+k0k9ydJo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gTCk6uzZIK6m5rqbOrrAhZWbPOTill/2h5F3iL25afnJH7HQ3qJy6luKrJsfKFuldhwnrTJQj4nmEnP5/hBLcPt3z2AG+m59wTxI0bontAr5PpjK6tUfJGefft1VgD/g/LvoIfFsEl//T54R73nFsLeLNm79uA4F0P1AA1iMgXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com; spf=pass smtp.mailfrom=bsbernd.com; dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b=ZvP4+NX9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=c2o8fP2V; arc=none smtp.client-ip=202.12.124.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsbernd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="Fi5HiAbG"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21f573ff39bso60378375ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:17:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=telus.net; s=google; t=1739200640; x=1739805440; darn=vger.kernel.org;
-        h=thread-index:content-language:content-transfer-encoding
-         :mime-version:message-id:date:subject:in-reply-to:references:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uG272hbqp19He+noX6bJMf3lAmn0BOPTkAquhMcRT5c=;
-        b=Fi5HiAbGzSRAIAJs0vuLmdWxwuJ8e6gS+kf5c1IGp5/ovzpag5MFkAzTx05qfryoXo
-         yPsgPHLjkgE71TfOUcrhewhcCcw7MlJeA+sqhWAGaF1leVfA9kL0GuvQnRWKdhgzdfag
-         yrX0az8Hfmh1qg4farpMHpyRBTigy8C6MHXpjvghMhTes5D2cMb62BnaNN1pYlkNZX0a
-         JSmp3LMc0MbpnK2t2u9kBmJ9S3bcoEHpYwZe0A+soelaQR1kJHni7Vgqq52y38IMGfrm
-         uJCfUkMkJsF0dtmQQNWDg1wpL2RDpEGPIxv0+Qhln2m1dOjTebW6tbWa+eWyhRFiryZ6
-         Zgiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739200640; x=1739805440;
-        h=thread-index:content-language:content-transfer-encoding
-         :mime-version:message-id:date:subject:in-reply-to:references:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uG272hbqp19He+noX6bJMf3lAmn0BOPTkAquhMcRT5c=;
-        b=CA/IvTsIzBZG7uG+phJkr4KVGdzy9+344KGDGJZ6OaM/5IABFwFKOwbUA8rsDfmhys
-         fxYtgPtNzEkm6cxisBRf0oMIRiggW4J/hyTbZRFh4fEDjy5xFf69m5ncjeWAMj/F42AG
-         f/+DouB6LWEGivYKO2uBB6k1hyxcdmj3KLnp3iMYr3OyvX8mpFnS5olajn4vCwQ4f0G2
-         /29/otTndJxtJ+y/Wa5GlTxpH2Gpew953ipMGvB/kBovoqOnvxAndlxhvPKnWXt6XMRo
-         S4YNCRe4mPjvG9BV/9cwfcBYzzvab09Fb1phxS0z49x2jHux2TdOV8ZsUbLwuftaeocZ
-         9d2A==
-X-Forwarded-Encrypted: i=1; AJvYcCXN3K8pWqL5CsCwPLI5UZRzal+kJ2t1ysuIpfI0UjayGP0SXGoSU/WogzhjbcC9L6mTaAJwzMqJL6b8RRg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcatcvHH4vuxT1ud5XGx1sAKvHxXOg8XskdgzFkRtszBhBoTp/
-	DhTvwjt0qnZy7b5kYiQ2Otgf0jP/6X6g/0hn5lleSnKlqWvXOlreR9oVS6UFanU=
-X-Gm-Gg: ASbGnct+u1zjUY4IZtW02JDLQN75LqPaEIYGmHonWwRxNo4Pux2qHSsVPjUaTC3sx0b
-	gmnKECxBKvlERFrpwU9dmKxalzPQBZq4I0m2z+nAVhByolClBtTNQbO7BZwQYSQDEI+vkhqsu0X
-	gRzmbbarh62sim0b2BdFM9gLrlAtmLcCnMboWMcbZs/xlIKVarU9RFPxGANe2ajIcJeo1Ik+8gU
-	Jqly4IH4t8zYMCOF8MJEKTAovQrWnI/WhSnG6LNmJlpmXVtR++w+ztirOaBvGcpTDOWC1sGaoxs
-	teAY8CW2yq+3DNXkmkR7LqHarR8QfvZntTiP3mkXYWjpveVbZuudlpDe
-X-Google-Smtp-Source: AGHT+IFxmBR+FDM9oZjyzx/qEh8soWZgzP/gXnemDEFlV+s8l9s07tFUKyXRU5C3ABLP4UXcu4ylTw==
-X-Received: by 2002:a05:6a20:394c:b0:1db:e40d:5f89 with SMTP id adf61e73a8af0-1ee03bacc31mr23897302637.28.1739200640659;
-        Mon, 10 Feb 2025 07:17:20 -0800 (PST)
-Received: from DougS18 (s66-183-142-209.bc.hsia.telus.net. [66.183.142.209])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad51aecf47asm6624275a12.31.2025.02.10.07.17.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Feb 2025 07:17:20 -0800 (PST)
-From: "Doug Smythies" <dsmythies@telus.net>
-To: "'Rafael J. Wysocki'" <rafael@kernel.org>
-Cc: "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
-	"'LKML'" <linux-kernel@vger.kernel.org>,
-	"'Daniel Lezcano'" <daniel.lezcano@linaro.org>,
-	"'Christian Loehle'" <christian.loehle@arm.com>,
-	"'Artem Bityutskiy'" <artem.bityutskiy@linux.intel.com>,
-	"'Aboorva Devarajan'" <aboorvad@linux.ibm.com>,
-	"'Linux PM'" <linux-pm@vger.kernel.org>,
-	"Doug Smythies" <dsmythies@telus.net>
-References: <12630185.O9o76ZdvQC@rjwysocki.net> <009d01db79b9$aecd1c70$0c675550$@telus.net> <CAJZ5v0jELEw3yAoRFLPgEcfBRoUyd6tKSNHO2Q1O6_CoeR1Bng@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jELEw3yAoRFLPgEcfBRoUyd6tKSNHO2Q1O6_CoeR1Bng@mail.gmail.com>
-Subject: RE: [RFT][PATCH v1] cpuidle: teo: Avoid selecting deepest idle state over-eagerly
-Date: Mon, 10 Feb 2025 07:17:21 -0800
-Message-ID: <000e01db7bce$e1d3b8b0$a57b2a10$@telus.net>
+	dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b="ZvP4+NX9";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="c2o8fP2V"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfout.stl.internal (Postfix) with ESMTP id 923AB11400A1;
+	Mon, 10 Feb 2025 10:18:34 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-09.internal (MEProxy); Mon, 10 Feb 2025 10:18:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bsbernd.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1739200714;
+	 x=1739287114; bh=l2o7Ctl/b1mebUuS5v7a27TgU4ZziO9MD5ZdLF//IwQ=; b=
+	ZvP4+NX9BZ71Pu1Tlh20l3SfUghq6zl/vx+CCbZ+ymwIzQb7olhr+/OxlwiKZBP6
+	yOYanjdOiiNGTPuCVAdsLwz+fgxe2faZ9h5KkpYM5cqdrJw9bh1un6ZfTcmGPNkO
+	TYB/gkYwIAlq+ybI83z3CLoBMMmfFk1IXSIIi1la4ydTNCWNGN4K3pnnysQRgS4m
+	SSKJQCWTVAZnCUogC5bv3gZfYnffeUWwjKhfpAc5zjDiu5xhNGtjQ+85fvVquG1R
+	kxuYgmqxKI64kObeVMB4sti/jsNyya0GTOwF/3gm/ZMJ+lzlRjQfHy2aEcxiuuaN
+	JVDHoC4gV0RCmUICHziOFQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739200714; x=
+	1739287114; bh=l2o7Ctl/b1mebUuS5v7a27TgU4ZziO9MD5ZdLF//IwQ=; b=c
+	2o8fP2VKkOVeJLvycq/uJNUGFjb7inbe1S6+rEE/w5D6Hj1osxK6rqhVLa4B4YlX
+	aXX2ps40Fk+1aus+LbG9TCTAPSXYZIp5ak7BHhbBp+0M5aEGSOVtdpZ8sKZWlsKw
+	GQN4tId/1cxBMpt6mCngMgrgwJ1X2JhvFn7IFegWsVRQyswN1j2+nfFf0lyavBy7
+	jKT09hnQY0LW3/sfpy9K2G+C2tDqMMqrIZUAX62qv91AwQtnV8O/0a0ejy0yuRJg
+	m1h0rfYFDKewSNsVbInuZ2MO+4Nvz5YjT216UX4I4z/plus3cnSDxtDT7DKnVWbG
+	EPRKZsqF22+IhhWiV+a+Q==
+X-ME-Sender: <xms:yRiqZ8VW9OfQDbvMGKE7lX6GNNmGDKR5KWv6wfrsmB6yFLiPbTTS2g>
+    <xme:yRiqZwkMkGS62Dj7PN6_OvDmDJJSYVb11H0MrIe8IqU7cBR4b9uioghUbQMQ78tRQ
+    8SFse3hHJM0jn3d>
+X-ME-Received: <xmr:yRiqZwaO0RlJU3QwdylFQV2XdC9MU_MIagDDY0meeylYHPB-ME70eIGZ5mwi1InJ6eE_X64LihrvtouJQPvSXrZqejOiaUSPyX9SwWmATktcNmkXUia_>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefkeegudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddv
+    jeenucfhrhhomhepuegvrhhnugcuufgthhhusggvrhhtuceosggvrhhnugessghssggvrh
+    hnugdrtghomheqnecuggftrfgrthhtvghrnhepjefgleejueffhefhueekvdduhfetteeh
+    tdehfeejhfevudethefhtdetvdekkeevnecuffhomhgrihhnpehkvghrnhgvlhdrohhrgh
+    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsvghr
+    nhgusegsshgsvghrnhgurdgtohhmpdhnsggprhgtphhtthhopeehpdhmohguvgepshhmth
+    hpohhuthdprhgtphhtthhopehluhhishesihhgrghlihgrrdgtohhmpdhrtghpthhtohep
+    sghstghhuhgsvghrthesuggunhdrtghomhdprhgtphhtthhopehmihhklhhoshesshiivg
+    hrvgguihdrhhhupdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhk
+    vghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrd
+    hkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:yRiqZ7VIPqqJ5WGAzmV1tocJWpadgUEJicjBc0VcgZq7WfebAAvEBw>
+    <xmx:yRiqZ2lX96rQyBUGCqPnQt4S_p60_hGiXyes0WHgwYv9EofCSgH6vg>
+    <xmx:yRiqZwcqiyfMng4kq46HVYUcdeRt-iwVeCpA-IydLAdSkKJhTUCupw>
+    <xmx:yRiqZ4HAFCEUJlv8k4WZSEp0K9KwhjwSR0Lgg2MdK2EA2GgqMpAQ1g>
+    <xmx:yhiqZ9trLqp3pMIYIsUXAq5R8svZB1emeK39A9kxOqfYBKDv4rO18lnX>
+Feedback-ID: i5c2e48a5:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 10 Feb 2025 10:18:32 -0500 (EST)
+Message-ID: <400ffcf9-9b98-4e94-81eb-3e33177ba334@bsbernd.com>
+Date: Mon, 10 Feb 2025 16:18:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-ca
-Thread-Index: AQLC2T+pvcOY0U2G0e8FLXneTSytVAF1rbSKAnCZaQyxUrGngA==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2] fuse: add new function to invalidate cache for all
+ inodes
+To: Luis Henriques <luis@igalia.com>, Bernd Schubert <bschubert@ddn.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250210094840.5627-1-luis@igalia.com>
+ <b5db41a7-1b26-4d12-b99f-c630f3054585@ddn.com> <87pljqyt10.fsf@igalia.com>
+From: Bernd Schubert <bernd@bsbernd.com>
+Content-Language: en-US, de-DE, fr
+In-Reply-To: <87pljqyt10.fsf@igalia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2025.02.08 03:25 Rafael J. Wysocki wrote:
->On Sat, Feb 8, 2025 at 12:40=E2=80=AFAM Doug Smythies =
-<dsmythies@telus.net> wrote:
->> On 2025.02.04 12:58 Rafael J. Wysocki wrote:
+
+
+On 2/10/25 11:48, Luis Henriques wrote:
+> [re-sending -- for some reason I did a simple 'reply', not a 'reply-all'.]
+> 
+> On Mon, Feb 10 2025, Bernd Schubert wrote:
+> 
+>> On 2/10/25 10:48, Luis Henriques wrote:
+>>> Currently userspace is able to notify the kernel to invalidate the cache for
+>>> an inode.  This means that, if all the inodes in a filesystem need to be
+>>> invalidated, then userspace needs to iterate through all of them and do this
+>>> kernel notification separately.
 >>>
->>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-... snip ...
+>>> This patch adds a new option that allows userspace to invalidate all the
+>>> inodes with a single notification operation.  In addition to invalidate all
+>>> the inodes, it also shrinks the sb dcache.
+>>>
+>>> Signed-off-by: Luis Henriques <luis@igalia.com>
+>>> ---
+>>> Hi!
+>>>
+>>> As suggested by Bernd, this patch v2 simply adds an helper function that
+>>> will make it easier to replace most of it's code by a call to function
+>>> super_iter_inodes() when Dave Chinner's patch[1] eventually gets merged.
+>>>
+>>> [1] https://lore.kernel.org/r/20241002014017.3801899-3-david@fromorbit.com
+>>>
+>>>  fs/fuse/inode.c           | 59 +++++++++++++++++++++++++++++++++++++++
+>>>  include/uapi/linux/fuse.h |  3 ++
+>>>  2 files changed, 62 insertions(+)
+>>>
+>>> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+>>> index e9db2cb8c150..be51b53006d8 100644
+>>> --- a/fs/fuse/inode.c
+>>> +++ b/fs/fuse/inode.c
+>>> @@ -547,6 +547,62 @@ struct inode *fuse_ilookup(struct fuse_conn *fc, u64 nodeid,
+>>>  	return NULL;
+>>>  }
+>>>  
+>>> +static void inval_single_inode(struct inode *inode, struct fuse_conn *fc)
+>>> +{
+>>> +	struct fuse_inode *fi;
+>>> +
+>>> +	fi = get_fuse_inode(inode);
+>>> +	spin_lock(&fi->lock);
+>>> +	fi->attr_version = atomic64_inc_return(&fc->attr_version);
+>>> +	spin_unlock(&fi->lock);
+>>> +	fuse_invalidate_attr(inode);
+>>> +	forget_all_cached_acls(inode);
 >>
->> Test durations were >=3D 45 minutes each.
 >>
->> Kernel 6.14-rc1: Includes cpuidle: teo: Cleanups and very frequent =
-wakeups handling update
->> Average Idle Power: teo governor: 2.199 watts (+25.51%)
->> Average Idle power: menu governor: 1.873 watts (+6.91%)
->
-> menu hasn't changed in 6.14-rc1, so this would be variation between
->runs I suppose.
-
-Perhaps the way I presented my data wasn't the best method.
-All the % were relative to kernel 6.13 and the teo idle governor.
-Relative to kernel 6.13 menu governor that would be: -1.9%,
-certainly within the noise floor.
-=20
->> Kernel 6.14-rc1-p: Added this patch for teo and "cpuidle: menu: Avoid =
-discarding useful information when processing recent idle intervals" for =
-menu
->> Average Idle Power: teo governor: 9.401 watts (+436.6%)
->> Only 69.61% idle is in the deepest idle state. More typically it =
-would be 98% to 99%.
->
-> Ah, not good.
->
-> OK, this clearly doesn't go in the right direction.
->
->> 28.6531% idle time is in state 1. More typically it would be 0.03%
->> Average Idle Power: menu governor: 1.820 watts (+3.9%)
+>> Thank you, much easier to read.
 >>
->> Kernel 6.13: before "cpuidle: teo: Cleanups and very frequent wakeups =
-handling update"
->> Average Idle Power: teo governor: 1.752 watts (reference: 0.0%)
->> Average Idle power: menu governor: 1.909 watts (+9.0%)
->
-> Thanks, I'm just going to drop this patch then.
->
-> If you don't mind, I'll have a couple more teo updates for testing.
+>> Could fuse_reverse_inval_inode() call into this?
+> 
+> Yep, it could indeed.  I'll do that in the next iteration, thanks!
+> 
+>> What are the semantics 
+>> for  invalidate_inode_pages2_range() in this case? Totally invalidate?
+>> No page cache invalidation at all as right now? If so, why?
+> 
+> So, if I change fuse_reverse_inval_inode() to use this help, it will still
+> need to keep the call to invalidate_inode_pages2_range().  But in the new
+> function fuse_reverse_inval_all(), I'm not doing it explicitly.  Instead,
+> that function calls into shrink_dcache_sb().  I *think* that by doing so
+> the invalidation will eventually happen.  Or am I wrong assuming that?
 
-O.K. I'll watch for the patches.
-Plenty to do in the meantime, acquiring baseline data and continuing =
-with the:
-"cpuidle: menu: Avoid discarding useful information when processing =
-recent idle intervals"
-patch set portion of kernel 6.14-rc1-p
+I think it will drop it, if the dentry cache is the last user/reference
+of the inode. My issue is that it changes semantics a bit - without
+FUSE_INVAL_ALL_INODES the page cache is invalidated based on the given
+offset. Obviously we cannot give the offset for all inodes, but we
+at least document the different semantics in a comment above
+FUSE_INVAL_ALL_INODES? Sorry, should have asked earlier for it, just
+busy with multiple things in parallel...
 
 
+Thanks,
+Bernd
