@@ -1,115 +1,98 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A31CC259487;
-	Mon, 10 Feb 2025 22:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E871F259498;
+	Mon, 10 Feb 2025 22:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739228344; cv=none; b=loKgKpAq1AdahqArRztoQW/7DBsFOKG+vdRda+pKrOdI1ZpFDWTjDG5Zd8E13UsbB6jZ5HRmdyO/w4NRAdqQD/hWX18MF3Pxy+F5M0+nlDN4cRa5jj9JBtLs6EDZpcql74dCmiLiQ2G2M/ZvoDxCrTGykfBr4qZMu1LfIefYiJI=
+	t=1739228345; cv=none; b=i9ZyrBx0zLRLfOkDImwyZEsKQGDosS8kfmf/mGM6EzbQz8WNUWYDK58R7J6nFFAseaxHGd+g3F6nQBgtzD6P0e3zM15CRYeMiA5vwfqUU2zQP5yRlgkqaLMNao56Lp6BJCByZMOPevGAQ+RDfNioTcnKHwGwpzcPSLQYOEkKruc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739228344; c=relaxed/simple;
-	bh=pZYQdXNFzRf8C0YJAzloVfDX1NE2ZpT9HDzfyjFymh8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=YWhAXJw8qiMxJWHuhnOfOzDGnbWGcwf0humdfhyb3OrJGC4C6AJM7kf9knHY6C7SwQWH8+OBQ7v+vyYC1LGBHI62FFGfpe7rxZ9xSil58tL4YuZ7wdsy3hl29x/i/O509LmLS2X2SjsDRu4jErJQIvfh6HGjIEWfnQHE2uIpBhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dqnejJ/X; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1739228345; c=relaxed/simple;
+	bh=Fk1azYuFQHAswP5Ho7T+xUf6Gp56bO005ZzH+4Da4QM=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=ehdtrUbpdupEhIBFOWIi8LejDgq7S2Ei4ctpLmPUw2bPOBJZjHLwoKLnDr7yLSwsMZjEY+QR7E+C0r67r44l3HTc11KXQ82odc68hIODHMusUEc2cO2o03Enyr5wkpElR4vI6BxOtsE1NwMZJ9SeV0grXaAwEAaXOO9S8bvizc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=17+NwEOm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iWp8JE66; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dqnejJ/X"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51AMwugi3582852
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Feb 2025 16:58:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1739228336;
-	bh=iC2U8Wn7kGF2PEm+pmf5NLerIZgG0BIk56qtZD7q44Q=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=dqnejJ/X0ryB7ScIfgsJFcvSNN3cmwt973RK9/Tgwh8KgAoUYuLA58xQVl8Vc/WN5
-	 S5+jivfP8OAQPWkjozy2v4OfymtO04aJPtD7q6Ytrzxy1ufts3i0MytshV4fQx0ODd
-	 iu+DY2942lNE1m7aZB2etsX3PlcgcCQe3S+k4Zpo=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51AMwuJ6008459
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 10 Feb 2025 16:58:56 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 10
- Feb 2025 16:58:55 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 10 Feb 2025 16:58:55 -0600
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51AMwtCc052847;
-	Mon, 10 Feb 2025 16:58:55 -0600
-Message-ID: <fa37b036-7ff0-46d4-b276-f97a7eab7dfb@ti.com>
-Date: Mon, 10 Feb 2025 16:58:55 -0600
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="17+NwEOm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iWp8JE66"
+Date: Mon, 10 Feb 2025 22:58:58 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739228341;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=9vFG05ZBCSIl92GevUiwsuMRZtjcIfxZJzJtSVWIBGw=;
+	b=17+NwEOm9Wub+LpA15oz8nnHaadZnORqW+C3yv3bsCdpHVCjiCnlsB8s8RLnV+ljn7ybN5
+	elsEmK8+hsceYcDtqrS4Yr0CjSKgpK/g545ryQW62YXl615t39gqWH3q1/FJOF9YTeGN/Y
+	zmVIzYWPJNycSmxQ/iU3PFH2cMEdDgvyj7Ca331QiPI7Y6k4yZCfSrRg+8FYSK/SVLg8Bc
+	ZhxnC4dGkg5KgyWFR53BSE/wG4h//o5Tnt13rvKQWuJ5W/fBuge1EEM4LbT0OFimreKrXX
+	UVvFlxihaLXzQZiUUQHpxNZC7oX/LNiCjlo8tCbU98Uh/Y+72Abs7PVFF39O+A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739228341;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=9vFG05ZBCSIl92GevUiwsuMRZtjcIfxZJzJtSVWIBGw=;
+	b=iWp8JE66kAaqE0gwEua0081BogyTDOUK0XqeYLXXkQTQLFmIwpvsKSSocrXsVa+rIdwiLl
+	2OvI4iHCSgppCrDg==
+From: "tip-bot2 for Eric Biggers" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/fpu] x86/fpu: Fully optimize out WARN_ON_FPU()
+Cc: Sean Christopherson <seanjc@google.com>,
+ Eric Biggers <ebiggers@google.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 04/10] arm64: dts: ti: k3-am62a-main: Add C7xv device
- node
-To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Hari Nagalla
-	<hnagalla@ti.com>
-References: <20250210221530.1234009-1-jm@ti.com>
- <20250210221530.1234009-5-jm@ti.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20250210221530.1234009-5-jm@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Message-ID: <173922833909.10177.3477028255611601484.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 2/10/25 4:15 PM, Judith Mendez wrote:
-> From: Jai Luthra <j-luthra@ti.com>
-> 
-> AM62A SoCs have a C7xv DSP subsystem with Analytics engine capability.
-> This subsystem is intended for deep learning purposes. Define the
-> device node for C7xv DSP.
-> 
-> Signed-off-by: Jai Luthra <j-luthra@ti.com>
-> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
-> Signed-off-by: Judith Mendez <jm@ti.com>
-> ---
+The following commit has been merged into the x86/fpu branch of tip:
 
-Acked-by: Andrew Davis <afd@ti.com>
+Commit-ID:     ccb7735a1ea22621f21c3133e4f5f3da5fe5f5b7
+Gitweb:        https://git.kernel.org/tip/ccb7735a1ea22621f21c3133e4f5f3da5fe5f5b7
+Author:        Eric Biggers <ebiggers@google.com>
+AuthorDate:    Mon, 27 Jan 2025 14:45:23 -08:00
+Committer:     Dave Hansen <dave.hansen@linux.intel.com>
+CommitterDate: Mon, 10 Feb 2025 14:45:59 -08:00
 
-> Changes since v4:
-> - No change
-> ---
->   arch/arm64/boot/dts/ti/k3-am62a-main.dtsi | 12 ++++++++++++
->   1 file changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-> index a1daba7b1fad5..f6ebc4eabaf14 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-> @@ -1123,6 +1123,18 @@ vpu: video-codec@30210000 {
->   		power-domains = <&k3_pds 204 TI_SCI_PD_EXCLUSIVE>;
->   	};
->   
-> +	c7x_0: dsp@7e000000 {
-> +		compatible = "ti,am62a-c7xv-dsp";
-> +		reg = <0x00 0x7e000000 0x00 0x00100000>;
-> +		reg-names = "l2sram";
-> +		ti,sci = <&dmsc>;
-> +		ti,sci-dev-id = <208>;
-> +		ti,sci-proc-ids = <0x04 0xff>;
-> +		resets = <&k3_reset 208 1>;
-> +		firmware-name = "am62a-c71_0-fw";
-> +		status = "disabled";
-> +	};
-> +
->   	e5010: jpeg-encoder@fd20000 {
->   		compatible = "ti,am62a-jpeg-enc", "img,e5010-jpeg-enc";
->   		reg = <0x00 0xfd20000 0x00 0x100>,
+x86/fpu: Fully optimize out WARN_ON_FPU()
+
+Currently WARN_ON_FPU evaluates its argument even if
+CONFIG_X86_DEBUG_FPU is disabled, which adds unnecessary instructions to
+several functions, for example kernel_fpu_begin().  Fix this by using
+BUILD_BUG_ON_INVALID(x) in the no-debug case rather than (void)(x).
+
+Fixes: 83242c515881 ("x86/fpu: Make WARN_ON_FPU() more robust in the !CONFIG_X86_DEBUG_FPU case")
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lore.kernel.org/all/20250127224523.94300-1-ebiggers%40kernel.org
+---
+ arch/x86/kernel/fpu/internal.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/fpu/internal.h b/arch/x86/kernel/fpu/internal.h
+index dbdb31f..975de07 100644
+--- a/arch/x86/kernel/fpu/internal.h
++++ b/arch/x86/kernel/fpu/internal.h
+@@ -18,7 +18,7 @@ static __always_inline __pure bool use_fxsr(void)
+ #ifdef CONFIG_X86_DEBUG_FPU
+ # define WARN_ON_FPU(x) WARN_ON_ONCE(x)
+ #else
+-# define WARN_ON_FPU(x) ({ (void)(x); 0; })
++# define WARN_ON_FPU(x) ({ BUILD_BUG_ON_INVALID(x); 0; })
+ #endif
+ 
+ /* Used in init.c */
