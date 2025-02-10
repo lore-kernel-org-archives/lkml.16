@@ -1,58 +1,58 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2EF1ADC93
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305E91BD9D2
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739174246; cv=none; b=ADK521y6WNKnu5DpBAEaRjWum4WY1omDFjUWLG+WUM5+mFhvRW18f9np5Gt/xaBMaeZjBbDrPdVQh0hMOfvBRXGkNnlLGAZ46l/cOGa7ESIMxDtAMldIScjl6dpXNSHfEysWXV6Ji7IZuWUyoxD7UalzZpYh7r0L7YMaC6R8jL8=
+	t=1739174251; cv=none; b=kEPLxJfUKArtN/B+sr/2pvAtwbvir7ywzuXFzTGlCyO/iZuiOi8T8p/4FMrVD1Siq3I9wQ64i50samQd/m6Wcg582NNpo9yox2nyt1k/PTL6ZN3d712G+QFtokGHgYo44FXXAbhfVaMR1dg6zoJY/NWmrvi98JdiETqXUDfC+AI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739174246; c=relaxed/simple;
-	bh=9Rwb0Zy0TFYVzR/n/xQHWwS/ZMTa05qSikjypC3FsLY=;
+	s=arc-20240116; t=1739174251; c=relaxed/simple;
+	bh=LslBjilOQWGk/1dv9Ss26Pci8tgoh8FFt/CGpG6YnUo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PYDbdes9vZy8BxjfnzpXJpqi0UixtPzLyFYA3GWVRrRfFr3C4bB+tjJ0E6U06vNavVcL6JHsvpxnqJtXaAUirAy/iQ1IGALs3NC8GkepY/vuMQ8JM0fH+6hUthj2dBp7BMwQJG7zg7n2D799CXUQCEZhVwmavHAQi5+/5fjT6gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FCb9meWa; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=UoztPAL9iX73uDYee68G1yyK5QmgZmSVmUw4NaRtrYTTw5r4TzooWbUstvUqqk6r5WIfQY2PGeB+di/PFzCoM0JTpulIZIv3EbluHK7szY3blhtMnTcRdOAqUlZDQIIf2lqz6xgL7P86BdBhc9SGpCFBMAxDwgn9pkGnBwQNzBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C0P5p92c; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FCb9meWa"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C0P5p92c"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739174242;
+	s=mimecast20190719; t=1739174249;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=191fmzOplUZF3eh9uENAPy4J7EnijRk6+X9V7IdEjDw=;
-	b=FCb9meWam/BWumkiJ4TeFJywWtD1tHKXhk+YIB+GY9rVPhRoYFKCfdh1MStu42VYL+yXTw
-	xp1xT9sPCC9+s5HewutWgYU8LNlwpKwKWcSGQ0EIPpALruXIoZxZPy7u81PW4o1mFM/Mqr
-	55B8Kv61TcbJmQSJHEuTELbczJVioFw=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=e/iey1qz6bn6O+gtmiYI/1qV8XvJoRLKZ4+LXzBzL8E=;
+	b=C0P5p92cZ1LXmzUVbCaKa/A+gfCDVT4pIoz5395zpWT6/0sVNt02YTV0DPpgd8ztGyBzPF
+	Btn5g3cKF31UWTtp/xj9fNXM0HKO8mhP+jJMmCkjvDv/qrr9bJPgD62aZhyiSMTH0jRCk5
+	eXX7+rTruvnW7TTJ9tOKpaPmFcnH67g=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-192-AZ7QjBytP0ekvYcyr7b2GQ-1; Mon,
- 10 Feb 2025 02:57:19 -0500
-X-MC-Unique: AZ7QjBytP0ekvYcyr7b2GQ-1
-X-Mimecast-MFC-AGG-ID: AZ7QjBytP0ekvYcyr7b2GQ
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-593-a8fd4jEvNIaq4UvStufQ1A-1; Mon,
+ 10 Feb 2025 02:57:23 -0500
+X-MC-Unique: a8fd4jEvNIaq4UvStufQ1A-1
+X-Mimecast-MFC-AGG-ID: a8fd4jEvNIaq4UvStufQ1A
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D7CA71956094;
-	Mon, 10 Feb 2025 07:57:17 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0C2E11956095;
+	Mon, 10 Feb 2025 07:57:22 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.32.69])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1CE131800358;
-	Mon, 10 Feb 2025 07:57:14 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C60EC1800358;
+	Mon, 10 Feb 2025 07:57:18 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ingo Molnar <mingo@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
 Cc: Gabriele Monaco <gmonaco@redhat.com>
-Subject: [PATCH v5 2/3] sched: Move task_mm_cid_work to mm delayed work
-Date: Mon, 10 Feb 2025 08:57:01 +0100
-Message-ID: <20250210075703.79125-3-gmonaco@redhat.com>
+Subject: [PATCH v5 3/3] rseq/selftests: Add test for mm_cid compaction
+Date: Mon, 10 Feb 2025 08:57:02 +0100
+Message-ID: <20250210075703.79125-4-gmonaco@redhat.com>
 In-Reply-To: <20250210075703.79125-1-gmonaco@redhat.com>
 References: <20250210075703.79125-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -64,252 +64,263 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Currently, the task_mm_cid_work function is called in a task work
-triggered by a scheduler tick to frequently compact the mm_cids of each
-process. This can delay the execution of the corresponding thread for
-the entire duration of the function, negatively affecting the response
-in case of real time tasks. In practice, we observe task_mm_cid_work
-increasing the latency of 30-35us on a 128 cores system, this order of
-magnitude is meaningful under PREEMPT_RT.
+A task in the kernel (task_mm_cid_work) runs somewhat periodically to
+compact the mm_cid for each process. Add a test to validate that it runs
+correctly and timely.
 
-Run the task_mm_cid_work in a new delayed work connected to the
-mm_struct rather than in the task context before returning to
-userspace.
+The test spawns 1 thread pinned to each CPU, then each thread, including
+the main one, runs in short bursts for some time. During this period, the
+mm_cids should be spanning all numbers between 0 and nproc.
 
-This delayed work is initialised while allocating the mm and disabled
-before freeing it, its execution is no longer triggered by scheduler
-ticks but run periodically based on the defined MM_CID_SCAN_DELAY.
+At the end of this phase, a thread with high enough mm_cid (>= nproc/2)
+is selected to be the new leader, all other threads terminate.
 
-The main advantage of this change is that the function can be offloaded
-to a different CPU and even preempted by RT tasks.
+After some time, the only running thread should see 0 as mm_cid, if that
+doesn't happen, the compaction mechanism didn't work and the test fails.
 
-Moreover, this new behaviour could be more predictable with periodic
-tasks with short runtime, which may rarely run during a scheduler tick.
-Now, the work is always scheduled with the same periodicity for each mm
-(though the periodicity is not guaranteed due to interference from other
-tasks, but mm_cid compaction is mostly best effort).
+The test never fails if only 1 core is available, in which case, we
+cannot test anything as the only available mm_cid is 0.
 
-To avoid excessively increased runtime, we quickly return from the
-function if we have no work to be done (i.e. no mm_cid is allocated).
-This is helpful for tasks that sleep for a long time, but also for
-terminated task. We are no longer following the process' state, hence
-the function continues to run after a process terminates but before its
-mm is freed.
-
-Fixes: 223baf9d17f2 ("sched: Fix performance regression introduced by mm_cid")
-Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- include/linux/mm_types.h | 16 ++++++----
- include/linux/sched.h    |  1 -
- kernel/sched/core.c      | 66 +++++-----------------------------------
- kernel/sched/sched.h     |  7 -----
- 4 files changed, 18 insertions(+), 72 deletions(-)
+ tools/testing/selftests/rseq/.gitignore       |   1 +
+ tools/testing/selftests/rseq/Makefile         |   2 +-
+ .../selftests/rseq/mm_cid_compaction_test.c   | 200 ++++++++++++++++++
+ 3 files changed, 202 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/rseq/mm_cid_compaction_test.c
 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 0234f14f2aa6b..3aeadb519cac5 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -861,12 +861,6 @@ struct mm_struct {
- 		 * runqueue locks.
- 		 */
- 		struct mm_cid __percpu *pcpu_cid;
--		/*
--		 * @mm_cid_next_scan: Next mm_cid scan (in jiffies).
--		 *
--		 * When the next mm_cid scan is due (in jiffies).
--		 */
--		unsigned long mm_cid_next_scan;
- 		/**
- 		 * @nr_cpus_allowed: Number of CPUs allowed for mm.
- 		 *
-@@ -889,6 +883,7 @@ struct mm_struct {
- 		 * mm nr_cpus_allowed updates.
- 		 */
- 		raw_spinlock_t cpus_allowed_lock;
-+		struct delayed_work mm_cid_work;
- #endif
- #ifdef CONFIG_MMU
- 		atomic_long_t pgtables_bytes;	/* size of all page tables */
-@@ -1180,11 +1175,16 @@ static inline void vma_iter_init(struct vma_iterator *vmi,
+diff --git a/tools/testing/selftests/rseq/.gitignore b/tools/testing/selftests/rseq/.gitignore
+index 16496de5f6ce4..2c89f97e4f737 100644
+--- a/tools/testing/selftests/rseq/.gitignore
++++ b/tools/testing/selftests/rseq/.gitignore
+@@ -3,6 +3,7 @@ basic_percpu_ops_test
+ basic_percpu_ops_mm_cid_test
+ basic_test
+ basic_rseq_op_test
++mm_cid_compaction_test
+ param_test
+ param_test_benchmark
+ param_test_compare_twice
+diff --git a/tools/testing/selftests/rseq/Makefile b/tools/testing/selftests/rseq/Makefile
+index 5a3432fceb586..ce1b38f46a355 100644
+--- a/tools/testing/selftests/rseq/Makefile
++++ b/tools/testing/selftests/rseq/Makefile
+@@ -16,7 +16,7 @@ OVERRIDE_TARGETS = 1
  
- #ifdef CONFIG_SCHED_MM_CID
+ TEST_GEN_PROGS = basic_test basic_percpu_ops_test basic_percpu_ops_mm_cid_test param_test \
+ 		param_test_benchmark param_test_compare_twice param_test_mm_cid \
+-		param_test_mm_cid_benchmark param_test_mm_cid_compare_twice
++		param_test_mm_cid_benchmark param_test_mm_cid_compare_twice mm_cid_compaction_test
  
-+#define SCHED_MM_CID_PERIOD_NS	(100ULL * 1000000)	/* 100ms */
-+#define MM_CID_SCAN_DELAY	100			/* 100ms */
+ TEST_GEN_PROGS_EXTENDED = librseq.so
+ 
+diff --git a/tools/testing/selftests/rseq/mm_cid_compaction_test.c b/tools/testing/selftests/rseq/mm_cid_compaction_test.c
+new file mode 100644
+index 0000000000000..701719b320049
+--- /dev/null
++++ b/tools/testing/selftests/rseq/mm_cid_compaction_test.c
+@@ -0,0 +1,200 @@
++// SPDX-License-Identifier: LGPL-2.1
++#define _GNU_SOURCE
++#include <assert.h>
++#include <pthread.h>
++#include <sched.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <stddef.h>
 +
- enum mm_cid_state {
- 	MM_CID_UNSET = -1U,		/* Unset state has lazy_put flag set. */
- 	MM_CID_LAZY_PUT = (1U << 31),
- };
- 
-+extern void task_mm_cid_work(struct work_struct *work);
++#include "../kselftest.h"
++#include "rseq.h"
 +
- static inline bool mm_cid_is_unset(int cid)
- {
- 	return cid == MM_CID_UNSET;
-@@ -1257,12 +1257,16 @@ static inline int mm_alloc_cid_noprof(struct mm_struct *mm, struct task_struct *
- 	if (!mm->pcpu_cid)
- 		return -ENOMEM;
- 	mm_init_cid(mm, p);
-+	INIT_DELAYED_WORK(&mm->mm_cid_work, task_mm_cid_work);
-+	schedule_delayed_work(&mm->mm_cid_work,
-+			      msecs_to_jiffies(MM_CID_SCAN_DELAY));
- 	return 0;
- }
- #define mm_alloc_cid(...)	alloc_hooks(mm_alloc_cid_noprof(__VA_ARGS__))
- 
- static inline void mm_destroy_cid(struct mm_struct *mm)
- {
-+	disable_delayed_work_sync(&mm->mm_cid_work);
- 	free_percpu(mm->pcpu_cid);
- 	mm->pcpu_cid = NULL;
- }
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 9632e3318e0d6..515b15f946cac 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1397,7 +1397,6 @@ struct task_struct {
- 	int				last_mm_cid;	/* Most recent cid in mm */
- 	int				migrate_from_cpu;
- 	int				mm_cid_active;	/* Whether cid bitmap is active */
--	struct callback_head		cid_work;
- #endif
- 
- 	struct tlbflush_unmap_batch	tlb_ubc;
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 165c90ba64ea9..c65003ab8c55b 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4524,7 +4524,6 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
- 	p->wake_entry.u_flags = CSD_TYPE_TTWU;
- 	p->migration_pending = NULL;
- #endif
--	init_sched_mm_cid(p);
- }
- 
- DEFINE_STATIC_KEY_FALSE(sched_numa_balancing);
-@@ -5662,7 +5661,6 @@ void sched_tick(void)
- 		resched_latency = cpu_resched_latency(rq);
- 	calc_global_load_tick(rq);
- 	sched_core_tick(rq);
--	task_tick_mm_cid(rq, donor);
- 	scx_tick(rq);
- 
- 	rq_unlock(rq, &rf);
-@@ -10528,38 +10526,17 @@ static void sched_mm_cid_remote_clear_weight(struct mm_struct *mm, int cpu,
- 	sched_mm_cid_remote_clear(mm, pcpu_cid, cpu);
- }
- 
--static void task_mm_cid_work(struct callback_head *work)
-+void task_mm_cid_work(struct work_struct *work)
- {
--	unsigned long now = jiffies, old_scan, next_scan;
--	struct task_struct *t = current;
- 	struct cpumask *cidmask;
--	struct mm_struct *mm;
-+	struct delayed_work *delayed_work = container_of(work, struct delayed_work, work);
-+	struct mm_struct *mm = container_of(delayed_work, struct mm_struct, mm_cid_work);
- 	int weight, cpu;
- 
--	SCHED_WARN_ON(t != container_of(work, struct task_struct, cid_work));
--
--	work->next = work;	/* Prevent double-add */
--	if (t->flags & PF_EXITING)
--		return;
--	mm = t->mm;
--	if (!mm)
--		return;
--	old_scan = READ_ONCE(mm->mm_cid_next_scan);
--	next_scan = now + msecs_to_jiffies(MM_CID_SCAN_DELAY);
--	if (!old_scan) {
--		unsigned long res;
--
--		res = cmpxchg(&mm->mm_cid_next_scan, old_scan, next_scan);
--		if (res != old_scan)
--			old_scan = res;
--		else
--			old_scan = next_scan;
--	}
--	if (time_before(now, old_scan))
--		return;
--	if (!try_cmpxchg(&mm->mm_cid_next_scan, &old_scan, next_scan))
--		return;
- 	cidmask = mm_cidmask(mm);
-+	/* Nothing to clear for now */
-+	if (cpumask_empty(cidmask))
-+		goto out;
- 	/* Clear cids that were not recently used. */
- 	for_each_possible_cpu(cpu)
- 		sched_mm_cid_remote_clear_old(mm, cpu);
-@@ -10570,35 +10547,8 @@ static void task_mm_cid_work(struct callback_head *work)
- 	 */
- 	for_each_possible_cpu(cpu)
- 		sched_mm_cid_remote_clear_weight(mm, cpu, weight);
--}
--
--void init_sched_mm_cid(struct task_struct *t)
--{
--	struct mm_struct *mm = t->mm;
--	int mm_users = 0;
--
--	if (mm) {
--		mm_users = atomic_read(&mm->mm_users);
--		if (mm_users == 1)
--			mm->mm_cid_next_scan = jiffies + msecs_to_jiffies(MM_CID_SCAN_DELAY);
--	}
--	t->cid_work.next = &t->cid_work;	/* Protect against double add */
--	init_task_work(&t->cid_work, task_mm_cid_work);
--}
--
--void task_tick_mm_cid(struct rq *rq, struct task_struct *curr)
--{
--	struct callback_head *work = &curr->cid_work;
--	unsigned long now = jiffies;
--
--	if (!curr->mm || (curr->flags & (PF_EXITING | PF_KTHREAD)) ||
--	    work->next != work)
--		return;
--	if (time_before(now, READ_ONCE(curr->mm->mm_cid_next_scan)))
--		return;
--
--	/* No page allocation under rq lock */
--	task_work_add(curr, work, TWA_RESUME);
-+out:
-+	schedule_delayed_work(delayed_work, msecs_to_jiffies(MM_CID_SCAN_DELAY));
- }
- 
- void sched_mm_cid_exit_signals(struct task_struct *t)
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 606c96b74ebfa..fc613d9090bed 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -3622,16 +3622,11 @@ extern void sched_dynamic_update(int mode);
- 
- #ifdef CONFIG_SCHED_MM_CID
- 
--#define SCHED_MM_CID_PERIOD_NS	(100ULL * 1000000)	/* 100ms */
--#define MM_CID_SCAN_DELAY	100			/* 100ms */
--
- extern raw_spinlock_t cid_lock;
- extern int use_cid_lock;
- 
- extern void sched_mm_cid_migrate_from(struct task_struct *t);
- extern void sched_mm_cid_migrate_to(struct rq *dst_rq, struct task_struct *t);
--extern void task_tick_mm_cid(struct rq *rq, struct task_struct *curr);
--extern void init_sched_mm_cid(struct task_struct *t);
- 
- static inline void __mm_cid_put(struct mm_struct *mm, int cid)
- {
-@@ -3899,8 +3894,6 @@ static inline void switch_mm_cid(struct rq *rq,
- static inline void switch_mm_cid(struct rq *rq, struct task_struct *prev, struct task_struct *next) { }
- static inline void sched_mm_cid_migrate_from(struct task_struct *t) { }
- static inline void sched_mm_cid_migrate_to(struct rq *dst_rq, struct task_struct *t) { }
--static inline void task_tick_mm_cid(struct rq *rq, struct task_struct *curr) { }
--static inline void init_sched_mm_cid(struct task_struct *t) { }
- #endif /* !CONFIG_SCHED_MM_CID */
- 
- extern u64 avg_vruntime(struct cfs_rq *cfs_rq);
++#define VERBOSE 0
++#define printf_verbose(fmt, ...)                    \
++	do {                                        \
++		if (VERBOSE)                        \
++			printf(fmt, ##__VA_ARGS__); \
++	} while (0)
++
++/* 0.5 s */
++#define RUNNER_PERIOD 500000
++/* Number of runs before we terminate or get the token */
++#define THREAD_RUNS 5
++
++/*
++ * Number of times we check that the mm_cid were compacted.
++ * Checks are repeated every RUNNER_PERIOD.
++ */
++#define MM_CID_COMPACT_TIMEOUT 10
++
++struct thread_args {
++	int cpu;
++	int num_cpus;
++	pthread_mutex_t *token;
++	pthread_barrier_t *barrier;
++	pthread_t *tinfo;
++	struct thread_args *args_head;
++};
++
++static void __noreturn *thread_runner(void *arg)
++{
++	struct thread_args *args = arg;
++	int i, ret, curr_mm_cid;
++	cpu_set_t cpumask;
++
++	CPU_ZERO(&cpumask);
++	CPU_SET(args->cpu, &cpumask);
++	ret = pthread_setaffinity_np(pthread_self(), sizeof(cpumask), &cpumask);
++	if (ret) {
++		errno = ret;
++		perror("Error: failed to set affinity");
++		abort();
++	}
++	pthread_barrier_wait(args->barrier);
++
++	for (i = 0; i < THREAD_RUNS; i++)
++		usleep(RUNNER_PERIOD);
++	curr_mm_cid = rseq_current_mm_cid();
++	/*
++	 * We select one thread with high enough mm_cid to be the new leader
++	 * all other threads (including the main thread) will terminate.
++	 * After some time, the mm_cid of the only remaining thread should
++	 * converge to 0, if not, the test fails.
++	 */
++	if (curr_mm_cid >= args->num_cpus / 2 &&
++	    !pthread_mutex_trylock(args->token)) {
++		printf_verbose(
++			"cpu%d has mm_cid=%d and will be the new leader.\n",
++			sched_getcpu(), curr_mm_cid);
++		for (i = 0; i < args->num_cpus; i++) {
++			if (args->tinfo[i] == pthread_self())
++				continue;
++			ret = pthread_join(args->tinfo[i], NULL);
++			if (ret) {
++				errno = ret;
++				perror("Error: failed to join thread");
++				abort();
++			}
++		}
++		pthread_barrier_destroy(args->barrier);
++		free(args->tinfo);
++		free(args->token);
++		free(args->barrier);
++		free(args->args_head);
++
++		for (i = 0; i < MM_CID_COMPACT_TIMEOUT; i++) {
++			curr_mm_cid = rseq_current_mm_cid();
++			printf_verbose("run %d: mm_cid=%d on cpu%d.\n", i,
++				       curr_mm_cid, sched_getcpu());
++			if (curr_mm_cid == 0)
++				exit(EXIT_SUCCESS);
++			usleep(RUNNER_PERIOD);
++		}
++		exit(EXIT_FAILURE);
++	}
++	printf_verbose("cpu%d has mm_cid=%d and is going to terminate.\n",
++		       sched_getcpu(), curr_mm_cid);
++	pthread_exit(NULL);
++}
++
++int test_mm_cid_compaction(void)
++{
++	cpu_set_t affinity;
++	int i, j, ret = 0, num_threads;
++	pthread_t *tinfo;
++	pthread_mutex_t *token;
++	pthread_barrier_t *barrier;
++	struct thread_args *args;
++
++	sched_getaffinity(0, sizeof(affinity), &affinity);
++	num_threads = CPU_COUNT(&affinity);
++	tinfo = calloc(num_threads, sizeof(*tinfo));
++	if (!tinfo) {
++		perror("Error: failed to allocate tinfo");
++		return -1;
++	}
++	args = calloc(num_threads, sizeof(*args));
++	if (!args) {
++		perror("Error: failed to allocate args");
++		ret = -1;
++		goto out_free_tinfo;
++	}
++	token = malloc(sizeof(*token));
++	if (!token) {
++		perror("Error: failed to allocate token");
++		ret = -1;
++		goto out_free_args;
++	}
++	barrier = malloc(sizeof(*barrier));
++	if (!barrier) {
++		perror("Error: failed to allocate barrier");
++		ret = -1;
++		goto out_free_token;
++	}
++	if (num_threads == 1) {
++		fprintf(stderr, "Cannot test on a single cpu. "
++				"Skipping mm_cid_compaction test.\n");
++		/* only skipping the test, this is not a failure */
++		goto out_free_barrier;
++	}
++	pthread_mutex_init(token, NULL);
++	ret = pthread_barrier_init(barrier, NULL, num_threads);
++	if (ret) {
++		errno = ret;
++		perror("Error: failed to initialise barrier");
++		goto out_free_barrier;
++	}
++	for (i = 0, j = 0; i < CPU_SETSIZE && j < num_threads; i++) {
++		if (!CPU_ISSET(i, &affinity))
++			continue;
++		args[j].num_cpus = num_threads;
++		args[j].tinfo = tinfo;
++		args[j].token = token;
++		args[j].barrier = barrier;
++		args[j].cpu = i;
++		args[j].args_head = args;
++		if (!j) {
++			/* The first thread is the main one */
++			tinfo[0] = pthread_self();
++			++j;
++			continue;
++		}
++		ret = pthread_create(&tinfo[j], NULL, thread_runner, &args[j]);
++		if (ret) {
++			errno = ret;
++			perror("Error: failed to create thread");
++			abort();
++		}
++		++j;
++	}
++	printf_verbose("Started %d threads.\n", num_threads);
++
++	/* Also main thread will terminate if it is not selected as leader */
++	thread_runner(&args[0]);
++
++	/* only reached in case of errors */
++out_free_barrier:
++	free(barrier);
++out_free_token:
++	free(token);
++out_free_args:
++	free(args);
++out_free_tinfo:
++	free(tinfo);
++
++	return ret;
++}
++
++int main(int argc, char **argv)
++{
++	if (!rseq_mm_cid_available()) {
++		fprintf(stderr, "Error: rseq_mm_cid unavailable\n");
++		return -1;
++	}
++	if (test_mm_cid_compaction())
++		return -1;
++	return 0;
++}
 -- 
 2.48.1
 
