@@ -1,197 +1,445 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56C61E32A2
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AFF4241C8C;
+	Mon, 10 Feb 2025 15:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739202760; cv=none; b=g5vl2ruVEHicf546oJjLMPn8aS486AXHiXYLXnVAemGU9IMW8vwVg+dhG1fRvyrw0w4zKmzCuOvnyDhARHRPPRuq/2qPzISJu8GtT4VeQDBd1X4yek71rHZe3cVzUl5/ANz79ZdyLyakBkdfez+ny6G2aRGTiY6ktCgsBUpgj7s=
+	t=1739202774; cv=none; b=lrFrwB9zg+6IHOz+0qUXM0tdv2GtNERMJZYKzqASHf2II9qx2Hpz03z+LGb5NLRwfiE9CQDsKt5V14Zy8xxEu2/NwePUS2C2uFZcZxJXnuqIahq18G/KXbCsR4w3CbLhtOE8fF6wOqg+5se+fSLi/PAuUx2Dw1IoK87YjW9wACk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739202760; c=relaxed/simple;
-	bh=dbgPVkzKzM9CKBPX/eJ3L19EFwFMyl9joEkMFw47fDs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LzOEt9XCEYcp64P+lC427weR4YGwbtmm6PkGtvkuPCmFDufLIZWGM+1AMgunP5lxXCStDSFkVZxvFqPefqcUMSzSFX1JquuSCVKv5l0R3VZtz9DTeQ4JFPQlBx2cPVNqtA94YIxryZQ6jaD+ryXWmpe9ef1qYk6ee+71uF86hy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursulin.net; spf=none smtp.mailfrom=ursulin.net; dkim=pass (2048-bit key) header.d=ursulin-net.20230601.gappssmtp.com header.i=@ursulin-net.20230601.gappssmtp.com header.b=gpcRK5qT; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursulin.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ursulin.net
+	s=arc-20240116; t=1739202774; c=relaxed/simple;
+	bh=rKOwFOfsipfa9wPNHmasS5ZcLFGDYxB+ligkXFp0Yb4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=N0fgmyAC33OeLcPeCoBVqRB7iY2UGxwrD67aZlE1mvK7xgZFNTtLrRMRm2VNuYQSDpNVqwGiE9nH3hvJUMK5Qn0f8T1274CYz6U2ycdgfxkvkIDP7j08WFqbC/polnnFQlt+zj/ZYHnlFLWaV0Kkeyoadgkpn5e7XnjGNzhnxIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QiwYn0+D; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ursulin-net.20230601.gappssmtp.com header.i=@ursulin-net.20230601.gappssmtp.com header.b="gpcRK5qT"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-436345cc17bso31380805e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:52:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QiwYn0+D"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6f679788fd1so31054337b3.2;
+        Mon, 10 Feb 2025 07:52:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ursulin-net.20230601.gappssmtp.com; s=20230601; t=1739202757; x=1739807557; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pwcghbDLhfpEKI26qkNX4Y8A/7H6gZuyW/uIEoD0XHE=;
-        b=gpcRK5qTPhNuKd0CTTwa20BeVJyitrsL3qf5a6rLNBlnO67wDmnS1803v5ZAdqR0Ff
-         cHB7b6ycEIrCwAOFPOx7nXCVZ8aVKZ17tIc07kFwglKfdu1Y6XECKP62aK+tn3RPOI2b
-         VGhyhoJCWSkuCSPonBKVkD2fCMTXIv4Cf1m+FHIK+5EhKcICtC+efFuPhFYJ9Cbdnpow
-         Jlq/2aNJaEVTHmcn33pXDJizbkSqDHw5h0lhHbO2xOoROOLuLNWoKWy0d4cs6Cg9BSrA
-         lQZKIH3NPEV0I/gYm9YmY7LKTK9CQX3QCQ/GDlHalmrqCScrylY7dVtrXpfipL77Iv8K
-         eROg==
+        d=gmail.com; s=20230601; t=1739202771; x=1739807571; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tx8qAGo6u66VT7oFc8oLwkLNzptb0WyYcd14aqioSJs=;
+        b=QiwYn0+DLtHvycxLYqmjy+sWdn/F78O5bY9jmbuEChlRWwIHDPU8+fIdn8teF89R31
+         4qssr3JqN8pilwUcWL6U0CKdKYHMj3NB46j05hLgjJCpe2o4be1TvjrTZSaKiv/dJrw9
+         v9mTC1rONSZgIVOcDn8H20wPuHNYvIINh4LdmqrgqasY1NvlHKXwdTVzqxIWBKwDXcT4
+         u2qSSJN3Ce9BsBfUwahJs1UgEBYy8xVZNXe8a8TcGEUBUcM3rCU/7zzJEcXrBkmsKy9u
+         8KfoOtKROqD++sfgIg02pmzkTgO7lUa9WyTzql9JgdqJozGrKTbJZlfStC3kBYX/PYth
+         aqXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739202757; x=1739807557;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pwcghbDLhfpEKI26qkNX4Y8A/7H6gZuyW/uIEoD0XHE=;
-        b=tlipu3mcMsDW+9cb/rD/dpriZMtrrBxQVxmHridZ7AIhMJtEBwY2QZ07Bnkj//MC9c
-         wDJ0xTREbG5jKBgY7KNYSKu+BhD/IS6npVTFnCIu6GZyp8+JLGC1tDsRy1P1gj4/MQAl
-         PvV49PNB85TyHyR+hdq2TDRXLnT654SKTwH3icu9wEtKA5vqx+Ec+sjTrv/YR69VIS1C
-         XyJqD0y0kdIr/vO9COe48kjW5w8GrdA7ENY35ArLg4WMGlnIB12K25/dQZp/Iwwjil3L
-         A33JeivbqPr4q9LxabHV/UUCV2DwHs7XeY0bu+XjCDw7tQVKo4tN6bWQCJUmmMOTo9lt
-         EbAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXizbtQMNm6E8fEvPHBxLFHW/J4/zA97AyuDMqqXeOTQDooSeq7fVPBqdXpUO2Z7TlGeVmnjrLuYKW42ho=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2Dy5COWC/GzdC256w+9ZO9DCwFat+TnSYSeOUG9bWgErL4KSe
-	NmKCY7OFWgsoc9tgG9cX3SGNDo6/wG/9Lm4rGHWzejADllwuvEalWJBZWHOLRA0=
-X-Gm-Gg: ASbGncu2VctaPA13w5N7k3HLyNzSMjkWHQ5LY2gAXld8Ck73+GhSFmClK+0me/VFRaB
-	N8obnYVGufmgVu+XE7hdv7/cD8t7PoRBGCJgzdLmWqFP2RC4uHGB4BXZ9GOYJWjVPo359NBmYGg
-	rAqaHV5P1awM7f0TlbOKrBPUFiagd8lUe6mML2p5du1cegOnfiDGDNUPF6aesRO17xBziyx51Ll
-	aivP/jSkZGzQYrrJHKTFzoSxvm0NdZfrxkjx+32OXYxF9Uy7F6MjSGNsqDW9CW9TckgZzNxd5cC
-	DwT1MKYL/9sqdPsYPqoMnBTVP3cxfrE=
-X-Google-Smtp-Source: AGHT+IEGOFGcXaagghoiZrtFqwpV0sDrO7e3NQ9lVK6/2NzWEtMCQ2D8esE/k6+VcKNG+ZVSQyP+jA==
-X-Received: by 2002:a5d:6d0b:0:b0:38d:dffc:c151 with SMTP id ffacd0b85a97d-38de41c3d0cmr52236f8f.48.1739202756935;
-        Mon, 10 Feb 2025 07:52:36 -0800 (PST)
-Received: from [192.168.0.101] ([90.241.98.187])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dcae129sm148183925e9.17.2025.02.10.07.52.35
+        d=1e100.net; s=20230601; t=1739202771; x=1739807571;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Tx8qAGo6u66VT7oFc8oLwkLNzptb0WyYcd14aqioSJs=;
+        b=aHAsZ0aaWsfYXfEwFfuRZKBiErZrgWymDNME7s4MfWNAEA1+8/J0srpDfGT1x/4GUw
+         zPnNa4pdQMKoO9jrqZIgSGYdqu7RsRV6/VfgDaMRdGx6Nhvhd7vhpbKMpnX95ptcCT2J
+         Q7mmGT1dsNeYKATb5yo2MBWnryR5aEbV9aOiv1o1I5BviScy9NOb3pYym9GI9hL437Yg
+         uJOn9TT2djkOzOlhXFhvvkTwj1mIt/XRFfehSmkhvIGqxNo9/4nx/KjYrj8W6Ts8c4BX
+         7cjs8Yhj/MU0NuYPwF6KbLtvrjLNE60lWDDL/DoZBLpC+i8uHLxx0j9U5gU8zrtOj1Eu
+         zRsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVkjECXfVDA78v52WklkNlnT/Laht3qzLbSrYob4GTCA7doFjx8+ASm4Z0ToZIJZh3UoSSEPqdLZ90=@vger.kernel.org, AJvYcCW8QGQMIgWHR6BO8cdCNwVgoVM+ZIihiyW67p6H9sBhqKpoCLD1H2Af/HxlybkBMX3mNoe8Tu/Re3gyyYG3P+0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzh3+cfZKLWEbtnyWHmgogVDmatK5CdWUSttNNMNdtN6jvuIsaq
+	LHsRLzKNJNL/GKU69/8D58foAse/Xoxx9uWVoasVioVIlfcs5y29ZWvaDA==
+X-Gm-Gg: ASbGncsDdNZZYb2T45y5cAU+y0vy9/qQ1cdmgZUdMdCxcpd0yY0ZTQa1p7JfTfNjX/7
+	P1fwCbF1qZSbGcVZrxFBYoqK+EPYcjUJVJDmafrm9lwGYQrQMg53T01MeXW7hQuihC2OCqKEbBv
+	Pi8AFn7e4buzOvgWk2ATXpKgehqdabox+/bIN5R3YiafgEd+xEgPU9tqtOaWCrvotr401jEKC8J
+	TORe4+uG3lKDYncMvVzVVJBp9s3F/0bfuUpr8mfNXpCfnvxhkHE1AbMzsuleEeo20kJNBo1mCUn
+	BUZlGII=
+X-Google-Smtp-Source: AGHT+IG0Er/1xfsmtvOSAK3YenUT3p7jPaESAawHmRD3GQhSkM9KUtn0NYvjk00PcXgTKnGERsRc4Q==
+X-Received: by 2002:a05:690c:6010:b0:6f7:5605:c62b with SMTP id 00721157ae682-6fb0b5e3c0fmr1026867b3.27.1739202771188;
+        Mon, 10 Feb 2025 07:52:51 -0800 (PST)
+Received: from localhost ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f9a34c4bc2sm16757037b3.27.2025.02.10.07.52.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 07:52:36 -0800 (PST)
-Message-ID: <2ec2a848-90f4-49bc-aaaf-8eb256f271db@ursulin.net>
-Date: Mon, 10 Feb 2025 15:52:35 +0000
+        Mon, 10 Feb 2025 07:52:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] drm/panthor: Replace sleep locks with spinlocks in
- fdinfo path
-To: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20250210124203.124191-1-adrian.larumbe@collabora.com>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tursulin@ursulin.net>
-In-Reply-To: <20250210124203.124191-1-adrian.larumbe@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 10 Feb 2025 10:52:47 -0500
+Message-Id: <D7OVXDJEMH53.18HAI8VKLN997@gmail.com>
+Cc: <linux-kernel@vger.kernel.org>, "Lyude Paul" <lyude@redhat.com>, "Rafael
+ J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ "Alexander Lobakin" <aleksander.lobakin@intel.com>, "Andy Shevchenko"
+ <andriy.shevchenko@linux.intel.com>, "Bjorn Helgaas" <bhelgaas@google.com>,
+ "Jonathan Cameron" <Jonathan.Cameron@huawei.com>, "Liam Girdwood"
+ <lgirdwood@gmail.com>, "Lukas Wunner" <lukas@wunner.de>, "Mark Brown"
+ <broonie@kernel.org>, =?utf-8?q?Ma=C3=ADra_Canal?= <mairacanal@riseup.net>,
+ "Robin Murphy" <robin.murphy@arm.com>, "Simona Vetter"
+ <simona.vetter@ffwll.ch>, "Zijun Hu" <quic_zijuhu@quicinc.com>,
+ <linux-usb@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Subject: Re: [PATCH v4 1/9] driver core: add a faux bus for use when a
+ simple device/bus is needed
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <2025021023-sandstorm-precise-9f5d@gregkh>
+ <2025021026-atlantic-gibberish-3f0c@gregkh>
+ <D7OU5VOXCS8M.39YEYRWFL1MPW@gmail.com> <2025021038-pushy-prior-5dfd@gregkh>
+ <D7OURQCZ3I1X.85BUFMYU6H8A@gmail.com>
+ <2025021028-showgirl-waviness-b4bf@gregkh>
+In-Reply-To: <2025021028-showgirl-waviness-b4bf@gregkh>
 
+On Mon Feb 10, 2025 at 10:36 AM -05, Greg Kroah-Hartman wrote:
+> On Mon, Feb 10, 2025 at 09:58:24AM -0500, Kurt Borja wrote:
+>> On Mon Feb 10, 2025 at 9:45 AM -05, Greg Kroah-Hartman wrote:
+>> > On Mon, Feb 10, 2025 at 09:29:52AM -0500, Kurt Borja wrote:
+>> >> Hi Greg,
+>> >>=20
+>> >> On Mon Feb 10, 2025 at 7:30 AM -05, Greg Kroah-Hartman wrote:
+>> >> > Many drivers abuse the platform driver/bus system as it provides a
+>> >> > simple way to create and bind a device to a driver-specific set of
+>> >> > probe/release functions.  Instead of doing that, and wasting all of=
+ the
+>> >> > memory associated with a platform device, here is a "faux" bus that
+>> >> > can be used instead.
+>> >> >
+>> >> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> >> > Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+>> >> > Reviewed-by: Lyude Paul <lyude@redhat.com>
+>> >> > Reviewed-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de=
+>
+>> >> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> >> > ---
+>> >> > v4: - really removed the name logic
+>> >> >     - added #include <linux/container_of.h> to faux.h
+>> >> >     - added parent pointer to api call
+>> >> >     - minor documentation updates
+>> >> >     - made probe synchronous
+>> >> > v3: - loads of documentation updates and rewrites
+>> >> >     - added to the documentation build
+>> >> >     - removed name[] array as it's no longer needed
+>> >> >     - added faux_device_create_with_groups()
+>> >> >     - added functions to get/set devdata
+>> >> >     - renamed faux_driver_ops -> faux_device_ops
+>> >> >     - made faux_device_ops a const *
+>> >> >     - minor cleanups
+>> >> >     - tested it, again.
+>> >> >
+>> >> > v2: - renamed bus and root device to just "faux" thanks to Thomas
+>> >> >     - removed the one-driver-per-device and now just have one drive=
+r
+>> >> >       entirely thanks to Danilo
+>> >> >     - kerneldoc fixups and additions and string handling bounds che=
+cks
+>> >> >       thanks to Andy
+>> >> >     - coding style fix thanks to Jonathan
+>> >> >     - tested that the destroy path actually works
+>> >> >  Documentation/driver-api/infrastructure.rst |   6 +
+>> >> >  drivers/base/Makefile                       |   2 +-
+>> >> >  drivers/base/base.h                         |   1 +
+>> >> >  drivers/base/faux.c                         | 232 ++++++++++++++++=
+++++
+>> >> >  drivers/base/init.c                         |   1 +
+>> >> >  include/linux/device/faux.h                 |  69 ++++++
+>> >> >  6 files changed, 310 insertions(+), 1 deletion(-)
+>> >> >  create mode 100644 drivers/base/faux.c
+>> >> >  create mode 100644 include/linux/device/faux.h
+>> >> >
+>> >> > diff --git a/Documentation/driver-api/infrastructure.rst b/Document=
+ation/driver-api/infrastructure.rst
+>> >> > index 3d52dfdfa9fd..35e36fee4238 100644
+>> >> > --- a/Documentation/driver-api/infrastructure.rst
+>> >> > +++ b/Documentation/driver-api/infrastructure.rst
+>> >> > @@ -41,6 +41,12 @@ Device Drivers Base
+>> >> >  .. kernel-doc:: drivers/base/class.c
+>> >> >     :export:
+>> >> > =20
+>> >> > +.. kernel-doc:: include/linux/device/faux.h
+>> >> > +   :internal:
+>> >> > +
+>> >> > +.. kernel-doc:: drivers/base/faux.c
+>> >> > +   :export:
+>> >> > +
+>> >> >  .. kernel-doc:: drivers/base/node.c
+>> >> >     :internal:
+>> >> > =20
+>> >> > diff --git a/drivers/base/Makefile b/drivers/base/Makefile
+>> >> > index 7fb21768ca36..8074a10183dc 100644
+>> >> > --- a/drivers/base/Makefile
+>> >> > +++ b/drivers/base/Makefile
+>> >> > @@ -6,7 +6,7 @@ obj-y			:=3D component.o core.o bus.o dd.o syscore.=
+o \
+>> >> >  			   cpu.o firmware.o init.o map.o devres.o \
+>> >> >  			   attribute_container.o transport_class.o \
+>> >> >  			   topology.o container.o property.o cacheinfo.o \
+>> >> > -			   swnode.o
+>> >> > +			   swnode.o faux.o
+>> >> >  obj-$(CONFIG_AUXILIARY_BUS) +=3D auxiliary.o
+>> >> >  obj-$(CONFIG_DEVTMPFS)	+=3D devtmpfs.o
+>> >> >  obj-y			+=3D power/
+>> >> > diff --git a/drivers/base/base.h b/drivers/base/base.h
+>> >> > index 8cf04a557bdb..0042e4774b0c 100644
+>> >> > --- a/drivers/base/base.h
+>> >> > +++ b/drivers/base/base.h
+>> >> > @@ -137,6 +137,7 @@ int hypervisor_init(void);
+>> >> >  static inline int hypervisor_init(void) { return 0; }
+>> >> >  #endif
+>> >> >  int platform_bus_init(void);
+>> >> > +int faux_bus_init(void);
+>> >> >  void cpu_dev_init(void);
+>> >> >  void container_dev_init(void);
+>> >> >  #ifdef CONFIG_AUXILIARY_BUS
+>> >> > diff --git a/drivers/base/faux.c b/drivers/base/faux.c
+>> >> > new file mode 100644
+>> >> > index 000000000000..531e9d789ee0
+>> >> > --- /dev/null
+>> >> > +++ b/drivers/base/faux.c
+>> >> > @@ -0,0 +1,232 @@
+>> >> > +// SPDX-License-Identifier: GPL-2.0-only
+>> >> > +/*
+>> >> > + * Copyright (c) 2025 Greg Kroah-Hartman <gregkh@linuxfoundation.o=
+rg>
+>> >> > + * Copyright (c) 2025 The Linux Foundation
+>> >> > + *
+>> >> > + * A "simple" faux bus that allows devices to be created and added
+>> >> > + * automatically to it.  This is to be used whenever you need to c=
+reate a
+>> >> > + * device that is not associated with any "real" system resources,=
+ and do
+>> >> > + * not want to have to deal with a bus/driver binding logic.  It i=
+s
+>> >> > + * intended to be very simple, with only a create and a destroy fu=
+nction
+>> >> > + * available.
+>> >> > + */
+>> >> > +#include <linux/err.h>
+>> >> > +#include <linux/init.h>
+>> >> > +#include <linux/slab.h>
+>> >> > +#include <linux/string.h>
+>> >> > +#include <linux/container_of.h>
+>> >> > +#include <linux/device/faux.h>
+>> >> > +#include "base.h"
+>> >> > +
+>> >> > +/*
+>> >> > + * Internal wrapper structure so we can hold a pointer to the
+>> >> > + * faux_device_ops for this device.
+>> >> > + */
+>> >> > +struct faux_object {
+>> >> > +	struct faux_device faux_dev;
+>> >> > +	const struct faux_device_ops *faux_ops;
+>> >> > +};
+>> >> > +#define to_faux_object(dev) container_of_const(dev, struct faux_ob=
+ject, faux_dev.dev)
+>> >> > +
+>> >> > +static struct device faux_bus_root =3D {
+>> >> > +	.init_name	=3D "faux",
+>> >> > +};
+>> >> > +
+>> >> > +static int faux_match(struct device *dev, const struct device_driv=
+er *drv)
+>> >> > +{
+>> >> > +	/* Match always succeeds, we only have one driver */
+>> >> > +	return 1;
+>> >> > +}
+>> >> > +
+>> >> > +static int faux_probe(struct device *dev)
+>> >> > +{
+>> >> > +	struct faux_object *faux_obj =3D to_faux_object(dev);
+>> >> > +	struct faux_device *faux_dev =3D &faux_obj->faux_dev;
+>> >> > +	const struct faux_device_ops *faux_ops =3D faux_obj->faux_ops;
+>> >> > +	int ret =3D 0;
+>> >> > +
+>> >> > +	if (faux_ops && faux_ops->probe)
+>> >> > +		ret =3D faux_ops->probe(faux_dev);
+>> >> > +
+>> >> > +	return ret;
+>> >> > +}
+>> >> > +
+>> >> > +static void faux_remove(struct device *dev)
+>> >> > +{
+>> >> > +	struct faux_object *faux_obj =3D to_faux_object(dev);
+>> >> > +	struct faux_device *faux_dev =3D &faux_obj->faux_dev;
+>> >> > +	const struct faux_device_ops *faux_ops =3D faux_obj->faux_ops;
+>> >> > +
+>> >> > +	if (faux_ops && faux_ops->remove)
+>> >> > +		faux_ops->remove(faux_dev);
+>> >> > +}
+>> >> > +
+>> >> > +static const struct bus_type faux_bus_type =3D {
+>> >> > +	.name		=3D "faux",
+>> >> > +	.match		=3D faux_match,
+>> >> > +	.probe		=3D faux_probe,
+>> >> > +	.remove		=3D faux_remove,
+>> >> > +};
+>> >> > +
+>> >> > +static struct device_driver faux_driver =3D {
+>> >> > +	.name		=3D "faux_driver",
+>> >> > +	.bus		=3D &faux_bus_type,
+>> >> > +	.probe_type	=3D PROBE_FORCE_SYNCHRONOUS,
+>> >> > +};
+>> >> > +
+>> >> > +static void faux_device_release(struct device *dev)
+>> >> > +{
+>> >> > +	struct faux_object *faux_obj =3D to_faux_object(dev);
+>> >> > +
+>> >> > +	kfree(faux_obj);
+>> >> > +}
+>> >> > +
+>> >> > +/**
+>> >> > + * faux_device_create_with_groups - Create and register with the d=
+river
+>> >> > + *		core a faux device and populate the device with an initial
+>> >> > + *		set of sysfs attributes.
+>> >> > + * @name:	The name of the device we are adding, must be unique for
+>> >> > + *		all faux devices.
+>> >> > + * @parent:	Pointer to a potential parent struct device.  If set t=
+o
+>> >> > + *		NULL, the device will be created in the "root" of the faux
+>> >> > + *		device tree in sysfs.
+>> >> > + * @faux_ops:	struct faux_device_ops that the new device will call=
+ back
+>> >> > + *		into, can be NULL.
+>> >> > + * @groups:	The set of sysfs attributes that will be created for t=
+his
+>> >> > + *		device when it is registered with the driver core.
+>> >> > + *
+>> >> > + * Create a new faux device and register it in the driver core pro=
+perly.
+>> >> > + * If present, callbacks in @faux_ops will be called with the devi=
+ce that
+>> >> > + * for the caller to do something with at the proper time given th=
+e
+>> >> > + * device's lifecycle.
+>> >> > + *
+>> >> > + * Note, when this function is called, the functions specified in =
+struct
+>> >> > + * faux_ops can be called before the function returns, so be prepa=
+red for
+>> >> > + * everything to be properly initialized before that point in time=
+.
+>> >> > + *
+>> >> > + * Return:
+>> >> > + * * NULL if an error happened with creating the device
+>> >> > + * * pointer to a valid struct faux_device that is registered with=
+ sysfs
+>> >> > + */
+>> >> > +struct faux_device *faux_device_create_with_groups(const char *nam=
+e,
+>> >> > +						   struct device *parent,
+>> >> > +						   const struct faux_device_ops *faux_ops,
+>> >> > +						   const struct attribute_group **groups)
+>> >> > +{
+>> >> > +	struct faux_object *faux_obj;
+>> >> > +	struct faux_device *faux_dev;
+>> >> > +	struct device *dev;
+>> >> > +	int ret;
+>> >> > +
+>> >> > +	faux_obj =3D kzalloc(sizeof(*faux_obj), GFP_KERNEL);
+>> >> > +	if (!faux_obj)
+>> >> > +		return NULL;
+>> >> > +
+>> >> > +	/* Save off the callbacks so we can use them in the future */
+>> >> > +	faux_obj->faux_ops =3D faux_ops;
+>> >> > +
+>> >> > +	/* Initialize the device portion and register it with the driver =
+core */
+>> >> > +	faux_dev =3D &faux_obj->faux_dev;
+>> >> > +	dev =3D &faux_dev->dev;
+>> >> > +
+>> >> > +	device_initialize(dev);
+>> >> > +	dev->release =3D faux_device_release;
+>> >> > +	if (parent)
+>> >> > +		dev->parent =3D parent;
+>> >> > +	else
+>> >> > +		dev->parent =3D &faux_bus_root;
+>> >> > +	dev->bus =3D &faux_bus_type;
+>> >> > +	dev->groups =3D groups;
+>> >> > +	dev_set_name(dev, "%s", name);
+>> >> > +
+>> >> > +	ret =3D device_add(dev);
+>> >> > +	if (ret) {
+>> >> > +		pr_err("%s: device_add for faux device '%s' failed with %d\n",
+>> >> > +		       __func__, name, ret);
+>> >> > +		put_device(dev);
+>> >> > +		return NULL;
+>> >> > +	}
+>> >>=20
+>> >> Now that the probe is synchronous, what do you think about returning
+>> >> -ENODEV if the device failed to bind to the driver?
+>> >
+>> > Nope, that would make all callers have to deal with a pointer or a NUL=
+L,
+>> > or an error value encorporated in a pointer.
+>>=20
+>> Right! I thought for a sec this function returned ERR_PTRs.
+>>=20
+>> >
+>> >> This would be useful for modules that may want to unload if the probe
+>> >> fails.
+>> >
+>> > Then just test for NULL, there's nothing preventing that, right?
+>>=20
+>> Please, correct me if I'm wrong. If the probe the user provided fails
+>> the device would still be added successfully to the bus. That means this
+>> function would return a valid pointer and the module has no way of
+>> knowing if the probe succeeded in an __init section.
+>
+> Ah, yes, you are totally correct here.  You don't know if the probe
+> failed or not.  But your device is still "live" and you can only get rid
+> of it by calling faux_device_destroy(), all that might be wrong with it
+> is that it's not really associated with the bus.
 
-On 10/02/2025 12:41, Adrián Larumbe wrote:
-> Panthor's fdinfo handler is routed through the /proc file system, which
-> executes in an atomic context. That means we cannot use mutexes because
-> they might sleep.
+I'm curious of what happens with the sysfs groups you pass if the probe
+fails. Do they get assigned on driver attachment or right after
+device_add()? Because those sysfs attributes may depend on resources
+initialized on the probe.
 
-Have the debug splat at hand? I am thinking it is not because of fdinfo 
-reads, which are allowed to sleep, but has to be something else.
+>
+> You can still assign resources to it, AND the resources will be freed up
+> when the device goes away (see the comment in device_release() for
+> specifics as to this happening today for platform devices.)
+>
+> I guess we can test for this and handle it, if you feel it is necessary,
+> it wouldn't be hard to do so, but let me add this later as it's the same
+> problem with platform devices and odds are we want to fix that issue up
+> there too, right?
 
-Regards,
+Platform devices have platform_create_bundle() which does check if the
+probe succeeded.
 
-Tvrtko
+>
+>> > Also, the only way probe can fail is if the probe you passed into the
+>> > call fails.  Or if you picked a name that is already in the system, bo=
+th
+>>=20
+>> Exactly. I'm thinking of modules that are very simple and just care
+>> about the probe succeeding, so having the device hanging around in the
+>> bus and the module loaded would be a waste of resources.
+>
+> Modules usually don't need to do the probe callback at all.  I show one
+> example in this series (the regulator dummy driver), but it can be
+> easily rewritten to not need that at all.
 
-> This bug was uncovered by enabling some of the kernel's mutex-debugging
-> features:
-> 
-> CONFIG_DEBUG_RT_MUTEXES=y
-> CONFIG_DEBUG_MUTEXES=y
-> 
-> Replace Panthor's group fdinfo data mutex with a guarded spinlock.
-> 
-> Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
-> Fixes: e16635d88fa0 ("drm/panthor: add DRM fdinfo support")
-> ---
->   drivers/gpu/drm/panthor/panthor_sched.c | 26 ++++++++++++-------------
->   1 file changed, 12 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
-> index 0b93bf83a9b2..7a267d1efeb6 100644
-> --- a/drivers/gpu/drm/panthor/panthor_sched.c
-> +++ b/drivers/gpu/drm/panthor/panthor_sched.c
-> @@ -9,6 +9,7 @@
->   #include <drm/panthor_drm.h>
->   
->   #include <linux/build_bug.h>
-> +#include <linux/cleanup.h>
->   #include <linux/clk.h>
->   #include <linux/delay.h>
->   #include <linux/dma-mapping.h>
-> @@ -631,10 +632,10 @@ struct panthor_group {
->   		struct panthor_gpu_usage data;
->   
->   		/**
-> -		 * @lock: Mutex to govern concurrent access from drm file's fdinfo callback
-> -		 * and job post-completion processing function
-> +		 * @fdinfo.lock: Spinlock to govern concurrent access from drm file's fdinfo
-> +		 * callback and job post-completion processing function
->   		 */
-> -		struct mutex lock;
-> +		spinlock_t lock;
->   
->   		/** @fdinfo.kbo_sizes: Aggregate size of private kernel BO's held by the group. */
->   		size_t kbo_sizes;
-> @@ -910,8 +911,6 @@ static void group_release_work(struct work_struct *work)
->   						   release_work);
->   	u32 i;
->   
-> -	mutex_destroy(&group->fdinfo.lock);
-> -
->   	for (i = 0; i < group->queue_count; i++)
->   		group_free_queue(group, group->queues[i]);
->   
-> @@ -2861,12 +2860,12 @@ static void update_fdinfo_stats(struct panthor_job *job)
->   	struct panthor_job_profiling_data *slots = queue->profiling.slots->kmap;
->   	struct panthor_job_profiling_data *data = &slots[job->profiling.slot];
->   
-> -	mutex_lock(&group->fdinfo.lock);
-> -	if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_CYCLES)
-> -		fdinfo->cycles += data->cycles.after - data->cycles.before;
-> -	if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_TIMESTAMP)
-> -		fdinfo->time += data->time.after - data->time.before;
-> -	mutex_unlock(&group->fdinfo.lock);
-> +	scoped_guard(spinlock, &group->fdinfo.lock) {
-> +		if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_CYCLES)
-> +			fdinfo->cycles += data->cycles.after - data->cycles.before;
-> +		if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_TIMESTAMP)
-> +			fdinfo->time += data->time.after - data->time.before;
-> +	}
->   }
->   
->   void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
-> @@ -2880,12 +2879,11 @@ void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
->   
->   	xa_lock(&gpool->xa);
->   	xa_for_each(&gpool->xa, i, group) {
-> -		mutex_lock(&group->fdinfo.lock);
-> +		guard(spinlock)(&group->fdinfo.lock);
->   		pfile->stats.cycles += group->fdinfo.data.cycles;
->   		pfile->stats.time += group->fdinfo.data.time;
->   		group->fdinfo.data.cycles = 0;
->   		group->fdinfo.data.time = 0;
-> -		mutex_unlock(&group->fdinfo.lock);
->   	}
->   	xa_unlock(&gpool->xa);
->   }
-> @@ -3531,7 +3529,7 @@ int panthor_group_create(struct panthor_file *pfile,
->   	mutex_unlock(&sched->reset.lock);
->   
->   	add_group_kbo_sizes(group->ptdev, group);
-> -	mutex_init(&group->fdinfo.lock);
-> +	spin_lock_init(&group->fdinfo.lock);
->   
->   	return gid;
->   
-> 
-> base-commit: 2eca617f12586abff62038db1c14cb3aa60a15aa
-> prerequisite-patch-id: 7e787ce5973b5fc7e9f69f26aa4d7e5ec03d5caa
-> prerequisite-patch-id: 03a619b8c741444b28435850e23d9ec463171c13
-> prerequisite-patch-id: 290e1053f8bf4a8b80fb037a87cae7e096b5aa96
-> prerequisite-patch-id: bc49bb8c29905650fb4788acc528bb44013c0240
-> prerequisite-patch-id: 46cab4c980824c03e5164afc43085fec23e1cba5
+This is a good point, but from a developer standpoint I would always try
+to use the probe callback. This API seems to suggest that's the
+appropiate use.
+
+Also it would be amazing if the probe could reside in an __init section.
+
+>
+> And bonus, the rust binding doesn't allow you to provide a probe()
+> callback that could fail, so any code written using that will not have
+> this issue at all :)
+
+This is very interesting. I will check the bindings and learn some rust
+in the process :)
+
+--=20
+ ~ Kurt
+
+>
+> thanks,
+>
+> greg k-h
 
