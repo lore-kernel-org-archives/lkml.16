@@ -1,213 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150EA1D5CE8;
-	Mon, 10 Feb 2025 10:18:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56241C3F36;
+	Mon, 10 Feb 2025 10:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739182705; cv=none; b=VSe50Kj5rBhcjRyhIfKRKopqgjVKV68Ob4IKBzOuDzUuUIhfPGYQ0TVwgvlc4TRxTLxkCh0MZN0BIWDmv1aiTlbsn+FQHsqglgC8+tMnvGhLLEdRv7TIPiivcNgNG+t2vb73Qvf4lHGRkj7f7aJemrnYWf49qb/lJ7sXV0aNHO8=
+	t=1739182705; cv=none; b=iuVkC3Yt8V7Kh1hqEYOuTUjRh1Q7DzqGZC0IJc8HNWo5k65lQFjkuRmg2/PbNZIVYREhtwdW4mDFWRBQ3UIyghwKwMos4Ki0R3+Qj/hdlOOOsInxKSoezADmApZxErZGTHKERHd29wgxvGZ95ZqRp8o/6cd3/OPh9NlTxg2L/Jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739182705; c=relaxed/simple;
-	bh=5Ehk+UnXsY+f4nC8KlN3P04pRtl7e+QgRfiunel5DWg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EXkeOOziBPdgN5w/gZq0ckSevCY5ddGq6LAcEP9k3qfwW+eGOwJ/42gDZmSfGk8XnisNpMalNnURGAsbTf8ll+MADaDQO9CbmeXa4rJscf4xJnsm56cZvAdOj2jkVpMIYVZz3OsSCnfOwTWH8XiffVaRHGrwvdRCnqJWQBIgL0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JOB2SwnE; arc=none smtp.client-ip=10.30.226.201
+	bh=eSvTyMDnhmkmFcppWwSm3V3i6quSbs6CTcyP13KbZDw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=czofnmAwNng5Z/clVsz1PlRajBAVYGJ3i6l4LL8BOLk6gV7h4MXBnmZrHg+w0lkHL6FBXc8rqocwCe/fE7efFpmObAH5qsEb+PyNds0vBQuURakRk8BCwt0Pssd7YeBjxz6f6MuLspDOwsOZbhYEMjG1IlmomZeM/4N4PDRi7Rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JOlncvx5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lAJmG8ai; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JOB2SwnE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E829C116D0;
-	Mon, 10 Feb 2025 10:18:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739182704;
-	bh=5Ehk+UnXsY+f4nC8KlN3P04pRtl7e+QgRfiunel5DWg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JOB2SwnEwLEat9BCdCQ8eJtn2FdkoUJfMDpEMoohH34xD34BjnamPjqmgBlDcWt98
-	 prp8/UxdPNnmXBLmLb6x8arPl2Hze3U777bjN/nUdU9xd+1xqRxQpGFN7LEYIeFb8F
-	 tzZwmjj2eWVehRDGp5ODZL+PJrvRBAyWCE79LbvL8P2TIKHVKRzFxZpKWgE99YIHIw
-	 0ns9HKVw/Y1KyPH4co5CDxJ+OpNEWKomsjj7ElFbQzRtVPCccls+r/Oz2m4x/pKYC5
-	 vlmkt2UlcclHvSBkPNIDQomkIq98qtPIkqD7blIqbTWxWHHi7pev4xcgVvrZESq9tI
-	 iEfsO0+170dUA==
-Received: from mchehab by mail.kernel.org with local (Exim 4.98)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1thQru-00000006CjU-1jh5;
-	Mon, 10 Feb 2025 11:18:22 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	"Jonathan Corbet" <corbet@lwn.net>,
-	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 21/27] docs: admin-guide/abi: split files from symbols
-Date: Mon, 10 Feb 2025 11:18:10 +0100
-Message-ID: <30e3cf2a8aeef23ca889de60a90f7de141e0dc0e.1739182025.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1739182025.git.mchehab+huawei@kernel.org>
-References: <cover.1739182025.git.mchehab+huawei@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JOlncvx5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lAJmG8ai"
+Date: Mon, 10 Feb 2025 11:18:20 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739182702;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oONuz56ffauYF3gP0eUnBA886a0FrJODrLFYvs7U1Ig=;
+	b=JOlncvx5rr2rWhQOyUyuJaQDJ3Kc87n9AxLdVgpg85mVVsRSuvpS18oo2i+EzhXDtx5o9l
+	X9BYY2sQ9Fn7pvLm4PrdapzT1iyTSzYibu4OxPE3oGPPRmiMfMJYe0Q8GRnW1jXojazg9Y
+	o51FlNl88dS/auoi7sRkIvkAICWEjzkNOeXAxdhuxeSAPIdhHu9CH/E/CP8jBDMXQw8uZm
+	e9tEDl5/eD5/mZgKz7ABSo2TjmNBIFm0hdzblu+XWo1gOxP4h1eOVmCWG4xPbH0cv/C78Y
+	4fuSsnusUk5Ofa6ftD/lOwAhnDM6AUt8ffPPvkb501Phtd2PpOYr2mYSFJQbZA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739182702;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oONuz56ffauYF3gP0eUnBA886a0FrJODrLFYvs7U1Ig=;
+	b=lAJmG8airbZW1/09009CVPUxyO1FpKLB8cXVjv4WV5CTiHr39O4f1zqwK4K3VqODHtQhY9
+	N69kUIM+hYWvZ2CA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: kazuhiro3.hayashi@toshiba.co.jp
+Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	cip-dev@lists.cip-project.org, tglx@linutronix.de,
+	rostedt@goodmis.org, linux-rt-users@vger.kernel.org, pavel@denx.de
+Subject: Re: RE: [PATCH 4.4 4.9 v1 2/2] mm: slub: allocate_slab() enables IRQ
+ right after scheduler starts
+Message-ID: <20250210101820.lXceJi98@linutronix.de>
+References: <1738629964-11977-1-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
+ <1738629964-11977-3-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
+ <20250204081813.7qsvLFsU@linutronix.de>
+ <TYCPR01MB11385E033624D2D9D93992A95E1F22@TYCPR01MB11385.jpnprd01.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <TYCPR01MB11385E033624D2D9D93992A95E1F22@TYCPR01MB11385.jpnprd01.prod.outlook.com>
 
-Now that get_abi has gained support for filtering its output,
-split ABI symbols from files at the html output.
+On 2025-02-10 07:20:35 [+0000], kazuhiro3.hayashi@toshiba.co.jp wrote:
+> Hello,
+Hi,
 
-That makes pages smaller and easier to navigate.
+> The question here is whether to insert SYSTEM_SCHEDULING is acceptable
+> or not in LTS phase. This addition would change behavior of future fixes
+> or out-of-tree codes that check system_state, so adjustments similar to
+> the mainline series[2] (2/17 ~ 15/17) are needed for them.
+> Can I ask if it's recommended to introduce SYSTEM_SCHEDULING even in LTS?
+> It's v4.4-rt specific topic but I think similar discussion is regularly
+> happening in newer -rt branches and LTS branches where PREEMPT_RT is merged.
 
-As an additional bonus, as it will paralelize files handling,
-it gives an additional performance improvement.
+In general I try to have the same code if it is easily possible. A few
+examples where this was not the case:
+- The printk code, as work is in progress, was never fully backported.
+  The changes between kernel versions were small and there was little to
+  none user visible changes. However changes under the hood were usually
+  big so in general it was not worth the effort.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/admin-guide/abi-obsolete-files.rst |  7 +++++++
- Documentation/admin-guide/abi-obsolete.rst       |  1 +
- Documentation/admin-guide/abi-readme-file.rst    |  6 ++++++
- Documentation/admin-guide/abi-removed-files.rst  |  7 +++++++
- Documentation/admin-guide/abi-removed.rst        |  1 +
- Documentation/admin-guide/abi-stable-files.rst   |  7 +++++++
- Documentation/admin-guide/abi-stable.rst         |  1 +
- Documentation/admin-guide/abi-testing-files.rst  |  7 +++++++
- Documentation/admin-guide/abi-testing.rst        |  1 +
- Documentation/admin-guide/abi.rst                | 15 +++++++++++++++
- 10 files changed, 53 insertions(+)
- create mode 100644 Documentation/admin-guide/abi-obsolete-files.rst
- create mode 100644 Documentation/admin-guide/abi-readme-file.rst
- create mode 100644 Documentation/admin-guide/abi-removed-files.rst
- create mode 100644 Documentation/admin-guide/abi-stable-files.rst
- create mode 100644 Documentation/admin-guide/abi-testing-files.rst
+- scheduling wise, we went from PREEMPT_LAZY to PREEMPT_AUTO to
+  LAZY_PREEMPT. Fixes within one implementation went all the way down
+  but the implementation as a whole was never backported. PREEMPT_AUTO
+  could be considered as half way done but nobody complained about
+  something in particular. It was "recently" discussed whether or not to
+  backport LAZY_PREEMPT to replace PREEMPT_AUTO in some of the lower
+  kernels but the changes required to backport it would be huge because
+  the scheduler in particular changed. So this is hard to justify.
 
-diff --git a/Documentation/admin-guide/abi-obsolete-files.rst b/Documentation/admin-guide/abi-obsolete-files.rst
-new file mode 100644
-index 000000000000..3061a916b4b5
---- /dev/null
-+++ b/Documentation/admin-guide/abi-obsolete-files.rst
-@@ -0,0 +1,7 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+Obsolete ABI Files
-+==================
-+
-+.. kernel-abi:: obsolete
-+   :no-symbols:
-diff --git a/Documentation/admin-guide/abi-obsolete.rst b/Documentation/admin-guide/abi-obsolete.rst
-index bdef91d2cea4..640f3903e847 100644
---- a/Documentation/admin-guide/abi-obsolete.rst
-+++ b/Documentation/admin-guide/abi-obsolete.rst
-@@ -10,3 +10,4 @@ The description of the interface will document the reason why it is
- obsolete and when it can be expected to be removed.
- 
- .. kernel-abi:: obsolete
-+   :no-files:
-diff --git a/Documentation/admin-guide/abi-readme-file.rst b/Documentation/admin-guide/abi-readme-file.rst
-new file mode 100644
-index 000000000000..6172e4ccbda2
---- /dev/null
-+++ b/Documentation/admin-guide/abi-readme-file.rst
-@@ -0,0 +1,6 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+ABI README
-+==========
-+
-+.. kernel-abi:: README
-diff --git a/Documentation/admin-guide/abi-removed-files.rst b/Documentation/admin-guide/abi-removed-files.rst
-new file mode 100644
-index 000000000000..f1bdfadd2ec4
---- /dev/null
-+++ b/Documentation/admin-guide/abi-removed-files.rst
-@@ -0,0 +1,7 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+Removed ABI Files
-+=================
-+
-+.. kernel-abi:: removed
-+   :no-symbols:
-diff --git a/Documentation/admin-guide/abi-removed.rst b/Documentation/admin-guide/abi-removed.rst
-index bea0608b8442..88832d3eacd6 100644
---- a/Documentation/admin-guide/abi-removed.rst
-+++ b/Documentation/admin-guide/abi-removed.rst
-@@ -4,3 +4,4 @@ ABI removed symbols
- ===================
- 
- .. kernel-abi:: removed
-+   :no-files:
-diff --git a/Documentation/admin-guide/abi-stable-files.rst b/Documentation/admin-guide/abi-stable-files.rst
-new file mode 100644
-index 000000000000..f867738fc178
---- /dev/null
-+++ b/Documentation/admin-guide/abi-stable-files.rst
-@@ -0,0 +1,7 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+Stable ABI Files
-+================
-+
-+.. kernel-abi:: stable
-+   :no-symbols:
-diff --git a/Documentation/admin-guide/abi-stable.rst b/Documentation/admin-guide/abi-stable.rst
-index 33637c0d4fd5..528c68401f4b 100644
---- a/Documentation/admin-guide/abi-stable.rst
-+++ b/Documentation/admin-guide/abi-stable.rst
-@@ -13,3 +13,4 @@ Most interfaces (like syscalls) are expected to never change and always
- be available.
- 
- .. kernel-abi:: stable
-+   :no-files:
-diff --git a/Documentation/admin-guide/abi-testing-files.rst b/Documentation/admin-guide/abi-testing-files.rst
-new file mode 100644
-index 000000000000..1da868e42fdb
---- /dev/null
-+++ b/Documentation/admin-guide/abi-testing-files.rst
-@@ -0,0 +1,7 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+Testing ABI Files
-+=================
-+
-+.. kernel-abi:: testing
-+   :no-symbols:
-diff --git a/Documentation/admin-guide/abi-testing.rst b/Documentation/admin-guide/abi-testing.rst
-index 55054985a8ff..6153ebd38e2d 100644
---- a/Documentation/admin-guide/abi-testing.rst
-+++ b/Documentation/admin-guide/abi-testing.rst
-@@ -19,3 +19,4 @@ name to the description of these interfaces, so that the kernel
- developers can easily notify them if any changes occur.
- 
- .. kernel-abi:: testing
-+   :no-files:
-diff --git a/Documentation/admin-guide/abi.rst b/Documentation/admin-guide/abi.rst
-index 64e772bde943..15a2dcb1388c 100644
---- a/Documentation/admin-guide/abi.rst
-+++ b/Documentation/admin-guide/abi.rst
-@@ -4,6 +4,9 @@
- Linux ABI description
- =====================
- 
-+ABI symbols
-+-----------
-+
- .. toctree::
-    :maxdepth: 2
- 
-@@ -11,3 +14,15 @@ Linux ABI description
-    abi-testing
-    abi-obsolete
-    abi-removed
-+
-+ABI files
-+---------
-+
-+.. toctree::
-+   :maxdepth: 2
-+
-+   abi-readme-file
-+   abi-stable-files
-+   abi-testing-files
-+   abi-obsolete-files
-+   abi-removed-files
--- 
-2.48.1
+What questions can you ask?
+- Do you backport code that relies on `system_states' or did so in the
+  past?
+- Is more likely to backport code from before v4.13 or after? Either way
+  you need to look at this.
 
+> Best regards,
+> Kazu
+
+Sebastian
