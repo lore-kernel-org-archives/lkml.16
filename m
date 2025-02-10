@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CC31CAA88;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BBA1CCB40;
 	Mon, 10 Feb 2025 10:18:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739182704; cv=none; b=I+E3mZDdUOsvTGUKiUcN1aopOeOCebq2dNlF90kU+V3FQUOWYiv1aBXlaxn2imAabO9wpxe40ndvzkWCTY/2pvCL+Q6vbNJ169PuXzFhMeoOkX5iuDpSAiM5Oa+fPpPm65jYINpZN3wpR8kHRtPPzahSD4xK6k77NvbbOsiDw3k=
+	t=1739182705; cv=none; b=IpJNuKZkpPjikkUFypInyxFZ2WNAI3YaUeA5+zbWtfi/HniS80GP56KIcL+iQbS9DeY1mYr4tPoANpTbrU08jiAPkTbEAUgWji4heFnTlB6fjrmv6e82nMcjt1tCPdII9EX+dxEdQcH7iaxTL7jn+lmSXrJ0DaKpogRIZqzGKLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739182704; c=relaxed/simple;
-	bh=FlLRiN2V72fQvc3QqtN/JA2r//R7FqyHjc0oxGoo5k8=;
+	s=arc-20240116; t=1739182705; c=relaxed/simple;
+	bh=RqzmVDLNe9DdW+lbrE2RQgi36O2JCG3KESmSozKEG4s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sUgF29wqVOXMaXqnK3NSGaT+D1UQqFhQ7YHqLeU7Ld1NkerKnN0vNEFjXP6fC1y/keo7owAh6e3KyS8nyJGWUSTwEEmbm4Op3U0ev61RXB4mDScAUlJnVX6ddQ6UZv1TrKuwtEmW1n2gc1v+dOyaEKFw1P4A6MCqCMN65H/wglg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GtPt9cUZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=V8ht8Wo7JtRsKXZ692q28J3/WwmxMGousRzSf2IDTCm9G7tpKokSuhSFGm2D8q6y6+VDOJzVxZIE5RADLI7Bj0ec+eqsx8qJO8tyaNrlerXxmpCGk7z5149xDhj8AwQi3AMbUvUo3LOovmRAYKsDVXNZEQQ60Dsj7jo/jntErck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G91Fp+XL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GtPt9cUZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12661C4CEF4;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G91Fp+XL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 189D6C4CEF9;
 	Mon, 10 Feb 2025 10:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1739182704;
-	bh=FlLRiN2V72fQvc3QqtN/JA2r//R7FqyHjc0oxGoo5k8=;
+	bh=RqzmVDLNe9DdW+lbrE2RQgi36O2JCG3KESmSozKEG4s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GtPt9cUZeeRoYRN9XgG9wxoeSfdUzhPKM6mumAhz0FEpSb5IPDEXo7cguOAwMvEGf
-	 k+cT9WPhQjoXQarwQbs/5qOsk1bD3YJwWkd2frsFZ1pLCYSsWJHWmDUhY2gY9h5qef
-	 UhHgN3he0WmEajOrsNcEME/GWIbdhbz/OFuk7SZapEZ7+CDmkhlxWQevdB0JoXKBGJ
-	 IYmpnqlPSDK1LfvjfI8zSKJQB4CNvTRIJ6JQefVbOAkJ+MtlsIYfpesTYK98gSz+4G
-	 VaMV0niyA5Fv9J3edCQX1nVLVRYxOh1FDSNpRbv3vHcfSm9mEDo0RNeoRJM4Yqm9Fp
-	 D6cCElc+Ay/wg==
+	b=G91Fp+XLtfedHi6Zewz592FKCmP4rMMopCwUIRiPRSh8372fdUOlfikEvMZQuuJXT
+	 bGLHa60vFYRdDzxFjRnqd7K8YNe3gX3QiUL/6HB73A9wqju1s/p8Q3dc/VM8JT/H2/
+	 Rf3Ha5iPfFiR+z94RBYIAIi2sRCoHWjaflG7gwgaxME4EIr0+MZsXMbv+VNTfAsJVc
+	 RCQftOSZatn8xb94lyer5FPXJnyK0gX6RYLRvc5K1YhqXzAV7kOseL8CAnwO+mazA8
+	 N4GnmyasNEEOz1kIefNCVwVq+5W0SPOtwfke9sD0O0BEtfHP8udFolHZTqFex2AIVS
+	 7vsxURIY3WK7A==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1thQru-00000006Ciq-0dv0;
+	id 1thQru-00000006Ciy-0rae;
 	Mon, 10 Feb 2025 11:18:22 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
@@ -36,9 +36,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Jonathan Corbet" <corbet@lwn.net>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 11/27] scripts/get_abi.py: add support for symbol search
-Date: Mon, 10 Feb 2025 11:18:00 +0100
-Message-ID: <21b2c48657dde112d5417dcd7e0aa7cd383b9a0a.1739182025.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 13/27] scripts/lib/abi/abi_parser.py: optimize parse_abi() function
+Date: Mon, 10 Feb 2025 11:18:02 +0100
+Message-ID: <190dd358897017ed82c56f1e263192215ffbae43.1739182025.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1739182025.git.mchehab+huawei@kernel.org>
 References: <cover.1739182025.git.mchehab+huawei@kernel.org>
@@ -51,117 +51,100 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Add support for searching symbols from Documentation/ABI using
-regular expressions to match the symbols' names.
+Instead of using glob, use a recursive function to parse all files.
+
+Such change reduces the total excecution time by 15% with my SSD disks.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/get_abi.py            | 24 ++++++++++++++++
- scripts/lib/abi/abi_parser.py | 52 +++++++++++++++++++++++++++++++++++
- 2 files changed, 76 insertions(+)
+ scripts/lib/abi/abi_parser.py | 57 +++++++++++++++++++++++------------
+ 1 file changed, 38 insertions(+), 19 deletions(-)
 
-diff --git a/scripts/get_abi.py b/scripts/get_abi.py
-index bb17c54feeff..30439f21fdd0 100755
---- a/scripts/get_abi.py
-+++ b/scripts/get_abi.py
-@@ -85,6 +85,29 @@ class AbiValidate:
-         parser.check_issues()
- 
- 
-+class AbiSearch:
-+    """Initialize an argparse subparser for ABI search"""
-+
-+    def __init__(self, subparsers):
-+        """Initialize argparse subparsers"""
-+
-+        parser = subparsers.add_parser("search",
-+                                       formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-+                                       description="Search ABI using a regular expression")
-+
-+        parser.add_argument("expression",
-+                            help="Case-insensitive search pattern for the ABI symbol")
-+
-+        parser.set_defaults(func=self.run)
-+
-+    def run(self, args):
-+        """Run subparser"""
-+
-+        parser = AbiParser(args.dir, debug=args.debug)
-+        parser.parse_abi()
-+        parser.search_symbols(args.expression)
-+
-+
- def main():
-     """Main program"""
- 
-@@ -97,6 +120,7 @@ def main():
- 
-     AbiRest(subparsers)
-     AbiValidate(subparsers)
-+    AbiSearch(subparsers)
- 
-     args = parser.parse_args()
- 
 diff --git a/scripts/lib/abi/abi_parser.py b/scripts/lib/abi/abi_parser.py
-index b3fa70eee412..bea7f1a76165 100644
+index bea7f1a76165..6052a8aec443 100644
 --- a/scripts/lib/abi/abi_parser.py
 +++ b/scripts/lib/abi/abi_parser.py
-@@ -510,3 +510,55 @@ class AbiParser:
-                     f.append(f"{fname} lines {", ".join(str(x) for x in lines)}")
+@@ -12,7 +12,6 @@ import logging
+ import os
+ import re
  
-             self.log.warning("%s is defined %d times: %s", what, len(f), "; ".join(f))
+-from glob import glob
+ from pprint import pformat
+ from random import randrange, seed
+ 
+@@ -46,7 +45,11 @@ class AbiParser:
+         self.file_refs = {}
+         self.what_refs = {}
+ 
++        # Ignore files that contain such suffixes
++        self.ignore_suffixes = (".rej", ".org", ".orig", ".bak", "~")
 +
-+    def search_symbols(self, expr):
-+        """ Searches for ABI symbols """
+         # Regular expressions used on parser
++        self.re_abi_dir = re.compile(r"(.*)" + ABI_DIR)
+         self.re_tag = re.compile(r"(\S+)(:\s*)(.*)", re.I)
+         self.re_valid = re.compile(self.TAGS)
+         self.re_start_spc = re.compile(r"(\s*)(\S.*)")
+@@ -322,26 +325,42 @@ class AbiParser:
+                 for w in fdata.what:
+                     self.add_symbol(what=w, fname=fname, xref=fdata.key)
+ 
+-    def parse_abi(self):
++    def _parse_abi(self, root=None):
++        """Internal function to parse documentation ABI recursively"""
 +
-+        regex = re.compile(expr, re.I)
++        if not root:
++            root = self.directory
 +
-+        found_keys = 0
-+        for t in sorted(self.data.items(), key=lambda x: [0]):
-+            v = t[1]
++        with os.scandir(root) as obj:
++            for entry in obj:
++                name = os.path.join(root, entry.name)
 +
-+            wtype = v.get("type", "")
-+            if wtype == "File":
-+                continue
++                if entry.is_dir():
++                    self.parse_abi(name)
++                    continue
 +
-+            for what in v.get("what", [""]):
-+                if regex.search(what):
-+                    found_keys += 1
++                if not entry.is_file():
++                    continue
 +
-+                    kernelversion = v.get("kernelversion", "").strip(" \t\n")
-+                    date = v.get("date", "").strip(" \t\n")
-+                    contact = v.get("contact", "").strip(" \t\n")
-+                    users = v.get("users", "").strip(" \t\n")
-+                    desc = v.get("description", "").strip(" \t\n")
++                basename = os.path.basename(name)
 +
-+                    files = []
-+                    for f in v.get("file", ()):
-+                        files.append(f[0])
++                if basename == "README":
++                    continue
 +
-+                    what = str(found_keys) + ". " + what
-+                    title_tag = "-" * len(what)
++                if basename.startswith("."):
++                    continue
 +
-+                    print(f"\n{what}\n{title_tag}\n")
++                if basename.endswith(self.ignore_suffixes):
++                    continue
 +
-+                    if kernelversion:
-+                        print(f"Kernel version:\t\t{kernelversion}")
++                path = self.re_abi_dir.sub("", os.path.dirname(name))
 +
-+                    if date:
-+                        print(f"Date:\t\t\t{date}")
++                self.parse_file(name, path, basename)
 +
-+                    if contact:
-+                        print(f"Contact:\t\t{contact}")
-+
-+                    if users:
-+                        print(f"Users:\t\t\t{users}")
-+
-+                    print(f"Defined on file{'s'[:len(files) ^ 1]}:\t{", ".join(files)}")
-+
-+                    if desc:
-+                        print(f"\n{desc.strip("\n")}\n")
-+
-+        if not found_keys:
-+            print(f"Regular expression /{expr}/ not found.")
++    def parse_abi(self, root=None):
+         """Parse documentation ABI"""
+ 
+-        ignore_suffixes = ("rej", "org", "orig", "bak", "~")
+-        re_abi = re.compile(r".*" + ABI_DIR)
+-
+-        for fname in glob(os.path.join(self.directory, "**"), recursive=True):
+-            if os.path.isdir(fname):
+-                continue
+-
+-            basename = os.path.basename(fname)
+-
+-            if basename == "README":
+-                continue
+-            if basename.startswith(".") or basename.endswith(ignore_suffixes):
+-                continue
+-
+-            path = re_abi.sub("", os.path.dirname(fname))
+-
+-            self.parse_file(fname, path, basename)
++        self._parse_abi(root)
+ 
+         if self.debug & AbiDebug.DUMP_ABI_STRUCTS:
+             self.log.debug(pformat(self.data))
 -- 
 2.48.1
 
