@@ -1,130 +1,139 @@
-Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A41725E444
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:37:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6991E25EF97
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739227078; cv=none; b=h7idXS4K3GrFl6p47WOaKRTVEYREvwgUoXhlBMNYvNYCBUhUKopp7ikbz3Mq3iWH+P0CuC32pGuXLwMLEFk3JJrKg25suZOJPyv65S7bE5D56bIZPKRf/+SIdB9I+4DVI7w61sD7XRXgeb5xAgs27HLwl6z7OojI8QTiwCeVYXc=
+	t=1739227080; cv=none; b=Z9X9ey7A8CchJKaD8lxNR2UH1AJlZtai4kO6xanUnheYezt1SybuG0X0amuykt5/Wo/h3aOQNUCEdS4+qwWM1yUf/TA6EXe1kuyhHjCnPQRJZW9UtK9G4obIpfqU4yPsNexC35CZnFemANPL+jjkU1LqAwQsZDc63jT83j90OOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739227078; c=relaxed/simple;
-	bh=mlCF+3bzZOAa8f3gAfZzRMJclFUXFMrrk4oBZGG7YHg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cilaZ4WDgwxaxfwVhsuQ9MdMBLh3PZ+o07ikxLYopzZaDBaMTM3RKuQm9p/QCXNDtE3uKN0Y0XmbtGoNbOcDZ8SODybO2TBrZP5VDs3gWvbnJ8VybT5JzhK99hiaMTQbeLPXOPEvQVL49eA539pvkBaYeswXblLF1pi78E5pQqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lfUekzGa; arc=none smtp.client-ip=91.218.175.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739227080; c=relaxed/simple;
+	bh=w2oc7RoPm/sb7RYTc8soBDQAfVbctsAzru+e/xVugio=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=f1CbTX15fnmoUFrurSOQQQCeoS6SpcWdxnLATR74lb0B41j+vNWYdcDZM8HZ9aPPa7erFus3N+bPbUK8A54efLcDTuQKHe2ONHZMV68kcIDqd9do4Gaq/UR/RBc5DymLta4MTOqRk/ZrRTHzyz3xHb6yQXS56kIp2dmOKid5CXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=EX6Geyr2; arc=none smtp.client-ip=209.85.167.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lfUekzGa"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739227074;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Brim4R+j1jrxpbFoMdiijr4HsKQ5qnKt7XsTd8hfjR4=;
-	b=lfUekzGaOH4UnYI5HuG/u7a1EDH//PP0nnR5JYxDOv9IJ9GV0zwbuVjg/tHNQDkJZfZl1N
-	3YVrT0AEpM3nxHU2U5H74uC3UmXkSx4U1Tuxnl3hTh1u9Vc6VTk1uZw/fDopCGrEdMxez+
-	ncTcrrHHQzObidJ07SQQ3v/BnY/+rnw=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Chen Ridong <chenridong@huawei.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: bcm - set memory to zero only once
-Date: Mon, 10 Feb 2025 23:36:44 +0100
-Message-ID: <20250210223647.362921-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="EX6Geyr2"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3f3b8f6ff68so698439b6e.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:37:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739227078; x=1739831878; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=teHDghklDJ1V7cAi8g37Bvg2ko8a0NpXKiatSq796/g=;
+        b=EX6Geyr2f5PrlcFQSDLNi8nG/h2PCdswLOTbPl4cfWLsKNV2v0DyC90gNZ3HcnGcC7
+         WLFTD6vVne9vl9xZfLrI850yPkknlKXY+s9FoBjWe0o6kfDt05hvDX6Z4xPtx2twLoDu
+         Gg5/75WgIukUpmgSmbfgiekGaK/Uz2lI3X3FXAvJDPj3bqjUqSCBLtBayYCCwiM+d6P7
+         8wFqrDDLd/EwGgjGGVqn1XWvp23Ng9elYqsFt7WQrjcFELX6uRC5J6xC+yKawGNvuLEN
+         loDm8yXQayJvC4kj+QCMv0rbMw2wPJCXPEWGTqZgBHuVYhUPwJg1c1WoYlntxYKYpzUR
+         40sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739227078; x=1739831878;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=teHDghklDJ1V7cAi8g37Bvg2ko8a0NpXKiatSq796/g=;
+        b=X4xoGfm0hPZJg37+4K/PIzd1Bx8M2bULT1jDgugeNvS1t2zQROFNeiWvrnPnXAPI1H
+         0ofccFnmzHv3Qo77Hc6WtahhXHwleWX++M7yYTGxMdouAbkMVrLTISE3N6Ouwhn08afJ
+         mFJzjDtQifcHNeS57yTOIGFPMiSczD66R15yD8nJ3bxK525NxWRFPlq3NHiR0ks3eaBF
+         ddXwbcl9LqYtiCB7sF5Bm/XvDZot10okazHWREhqpmGg5BgZKssYAqNiM7MJZSCvpTsB
+         wy2G1gMbL+CSbF+l2DNwSSTMZ48yLnqATA+0yNg0we77UlLJtw+PwMifNzlNbVgudGkc
+         j8VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWr7+OgPV9COGIIYsZeENYY6nKjwj7NR/6w+qh7Juo3YQwXshyI68zJnbHNWBskHhHuUZtreGVeSZk111I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOU2j9Ya3gx0fbcEaAnlLfz6fcfUFp9FMlnOqXnI4V26cCcZrv
+	r/O0qF0M4RzUF65oVBVcH6OUS6I+gqRAPZO04hYDawQRLXzKrTI8BgUdScRGk4I=
+X-Gm-Gg: ASbGnctr7u0UijzcgRBJ5pwQMX/bAuAXqRKitI0IJSZ2CTjb222ZyEFUjBwjKRv/Cpv
+	Iup92qipMGkpwIqNPsGwE+k8s9HgnM0MmrFtZjqbepzwEPHgl8bJb5Zk6RTnkxF7a7JYaZyPAIz
+	SN8n0PidDDBVLC9ZtO8I3GxaQT/4IOmWmV7XhPWLnm5p7iqWDnAX3VMPWFXIWtTg2hW4AHmnxYx
+	/VaGTsn9MMRM0HYZ22ZLK2RsalokXXf7Q9PBeZFyOjdeRbstGmbQlHtIanbaEiNx4QUqbZPkoAR
+	CZTOBBaP7qtocn+/iG+eLRJjQKyZ4T37bHmh2PL3J+V1BaU=
+X-Google-Smtp-Source: AGHT+IG3DTzAWvVW4SJ21A/SRgFk31074gXMN9+oGlJqzs/MtMc8XsiOogFgKzSWDZ9AZ40PkdjrRg==
+X-Received: by 2002:a05:6808:3c8e:b0:3f3:bda5:5739 with SMTP id 5614622812f47-3f3bda570bamr2064722b6e.17.1739227077726;
+        Mon, 10 Feb 2025 14:37:57 -0800 (PST)
+Received: from [127.0.1.1] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3f389ed1ca2sm2521820b6e.11.2025.02.10.14.37.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 14:37:56 -0800 (PST)
+From: David Lechner <dlechner@baylibre.com>
+Date: Mon, 10 Feb 2025 16:33:35 -0600
+Subject: [PATCH v3 09/15] iio: resolver: ad2s1210: use
+ gpiod_multi_set_value_cansleep
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250210-gpio-set-array-helper-v3-9-d6a673674da8@baylibre.com>
+References: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
+In-Reply-To: <20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com>
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+ Geert Uytterhoeven <geert@linux-m68k.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+ Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org, 
+ netdev@vger.kernel.org, linux-phy@lists.infradead.org, 
+ linux-sound@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ David Lechner <dlechner@baylibre.com>
+X-Mailer: b4 0.14.2
 
-Use kmalloc_array() instead of kcalloc() because sg_init_table() already
-sets the memory to zero. This avoids zeroing the memory twice.
+Reduce verbosity by using gpiod_multi_set_value_cansleep() instead of
+gpiod_set_array_value().
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+These are not called in an atomic context, so changing to the cansleep
+variant is fine.
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
- drivers/crypto/bcm/cipher.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/iio/resolver/ad2s1210.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/crypto/bcm/cipher.c b/drivers/crypto/bcm/cipher.c
-index 9e6798efbfb7..d4da2b5b595f 100644
---- a/drivers/crypto/bcm/cipher.c
-+++ b/drivers/crypto/bcm/cipher.c
-@@ -140,8 +140,8 @@ spu_skcipher_rx_sg_create(struct brcm_message *mssg,
- 	struct iproc_ctx_s *ctx = rctx->ctx;
- 	u32 datalen;		/* Number of bytes of response data expected */
+diff --git a/drivers/iio/resolver/ad2s1210.c b/drivers/iio/resolver/ad2s1210.c
+index b681129a99b6cf399668bf01a1f5a15fbc4f95b8..7f18df790157f1e411fb70de193a49f0677c999f 100644
+--- a/drivers/iio/resolver/ad2s1210.c
++++ b/drivers/iio/resolver/ad2s1210.c
+@@ -182,8 +182,7 @@ static int ad2s1210_set_mode(struct ad2s1210_state *st, enum ad2s1210_mode mode)
  
--	mssg->spu.dst = kcalloc(rx_frag_num, sizeof(struct scatterlist),
--				rctx->gfp);
-+	mssg->spu.dst = kmalloc_array(rx_frag_num, sizeof(struct scatterlist),
-+				      rctx->gfp);
- 	if (!mssg->spu.dst)
- 		return -ENOMEM;
+ 	bitmap[0] = mode;
  
-@@ -204,8 +204,8 @@ spu_skcipher_tx_sg_create(struct brcm_message *mssg,
- 	u32 datalen;		/* Number of bytes of response data expected */
- 	u32 stat_len;
+-	return gpiod_set_array_value(gpios->ndescs, gpios->desc, gpios->info,
+-				     bitmap);
++	return gpiod_multi_set_value_cansleep(gpios, bitmap);
+ }
  
--	mssg->spu.src = kcalloc(tx_frag_num, sizeof(struct scatterlist),
--				rctx->gfp);
-+	mssg->spu.src = kmalloc_array(tx_frag_num, sizeof(struct scatterlist),
-+				      rctx->gfp);
- 	if (unlikely(!mssg->spu.src))
- 		return -ENOMEM;
+ /*
+@@ -1473,10 +1472,7 @@ static int ad2s1210_setup_gpios(struct ad2s1210_state *st)
  
-@@ -531,8 +531,8 @@ spu_ahash_rx_sg_create(struct brcm_message *mssg,
- 	struct scatterlist *sg;	/* used to build sgs in mbox message */
- 	struct iproc_ctx_s *ctx = rctx->ctx;
+ 		bitmap[0] = st->resolution;
  
--	mssg->spu.dst = kcalloc(rx_frag_num, sizeof(struct scatterlist),
--				rctx->gfp);
-+	mssg->spu.dst = kmalloc_array(rx_frag_num, sizeof(struct scatterlist),
-+				      rctx->gfp);
- 	if (!mssg->spu.dst)
- 		return -ENOMEM;
- 
-@@ -586,8 +586,8 @@ spu_ahash_tx_sg_create(struct brcm_message *mssg,
- 	u32 datalen;		/* Number of bytes of response data expected */
- 	u32 stat_len;
- 
--	mssg->spu.src = kcalloc(tx_frag_num, sizeof(struct scatterlist),
--				rctx->gfp);
-+	mssg->spu.src = kmalloc_array(tx_frag_num, sizeof(struct scatterlist),
-+				      rctx->gfp);
- 	if (!mssg->spu.src)
- 		return -ENOMEM;
- 
-@@ -1076,8 +1076,8 @@ static int spu_aead_rx_sg_create(struct brcm_message *mssg,
- 		/* have to catch gcm pad in separate buffer */
- 		rx_frag_num++;
- 
--	mssg->spu.dst = kcalloc(rx_frag_num, sizeof(struct scatterlist),
--				rctx->gfp);
-+	mssg->spu.dst = kmalloc_array(rx_frag_num, sizeof(struct scatterlist),
-+				      rctx->gfp);
- 	if (!mssg->spu.dst)
- 		return -ENOMEM;
- 
-@@ -1178,8 +1178,8 @@ static int spu_aead_tx_sg_create(struct brcm_message *mssg,
- 	u32 assoc_offset = 0;
- 	u32 stat_len;
- 
--	mssg->spu.src = kcalloc(tx_frag_num, sizeof(struct scatterlist),
--				rctx->gfp);
-+	mssg->spu.src = kmalloc_array(tx_frag_num, sizeof(struct scatterlist),
-+				      rctx->gfp);
- 	if (!mssg->spu.src)
- 		return -ENOMEM;
- 
+-		ret = gpiod_set_array_value(resolution_gpios->ndescs,
+-					    resolution_gpios->desc,
+-					    resolution_gpios->info,
+-					    bitmap);
++		ret = gpiod_multi_set_value_cansleep(resolution_gpios, bitmap);
+ 		if (ret < 0)
+ 			return dev_err_probe(dev, ret,
+ 					     "failed to set resolution gpios\n");
+
 -- 
-2.48.1
+2.43.0
 
