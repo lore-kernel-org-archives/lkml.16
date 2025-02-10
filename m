@@ -1,99 +1,164 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E1B24F58E;
-	Mon, 10 Feb 2025 16:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89746244195;
+	Mon, 10 Feb 2025 16:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739203889; cv=none; b=pEstUkwQ8TVRX702GKMbbnk/GuuGugbsihw39V8tNzExrD/XwuA0pR7LVp4exniRLCgxvA62czYKCKbmyQnThSWjFfX+bJHYdes/rDIvXw6h6BOKgdiKIaohtRky6bmawa0MvGcO5hxl2yEUXrL6lXRO9FZbLKOxcsMK49z4Up0=
+	t=1739203927; cv=none; b=WFmZ5NwVbLefaGbyWArc5myVOIYw6Va9y8+JHwvnQ2l7UxFX4QhnrA3KkYx2unm37LRj7ifdQlJm0AAj6SH2AwGJiJv5CWlt1WzJLgiEWw9hk9Ctq3DzvEwG6n5lHqTeIkBLmWKwV7+li585ZMHl0T9W7jJDDamWqXZQEqM1JZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739203889; c=relaxed/simple;
-	bh=Ju+jLIC+hdALWDNfTRKoeZW9qn5r+NTUgbFhV/yjG5k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ujZJacQEyiaEsccjCEu2dyB95fYTIIyrxRDAraGPopI5fSPuQaqwqO1GpiYaLPTL0wOdoAoDpgj0MT9gVRZaj4/AzyfDQAziPykUl3GPdjpQHrW4LucDBFLEfju049WmhiLUV52QT5TPMJ4ByXSZlfnysBOn4ZxHARYTr9q13vU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nrXTm6rU; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739203927; c=relaxed/simple;
+	bh=AHwUIBv6+Erw5t7tMPI91G8lNiY1gI+y8pq1yPoloQY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=r7V451qjlQ9IfFuD9oFK970ZGR9SyfqB1wGUHqdgUr+5XbSk35lyCg8KYYkT2NZf7WKo4grbsmQMz7sFKt20nQPv+k8jQIZr77Qth4B0fo5AgJXe/5R2pTTNoPfG227rJQNrElnRCZSF1gikkSH2Sl8t6vdW8LRd4OLbmjXgGqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kFZS9m9/; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nrXTm6rU"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21f62cc4088so45226985ad.3;
-        Mon, 10 Feb 2025 08:11:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739203887; x=1739808687; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lt/TBqL493WxqFjgvfkZ2tS4krtyuV+0wcigwiXRZIM=;
-        b=nrXTm6rU0YgVlCbv4nn8RE9ZJXHcHGM0Ax2lnDYWix7c5tQynmMtMUqq7/oEI5qqdY
-         pK6clt2aO9nu0NBBsKCgbk1wDpANIAdaNCssmJ8aZSpAsetdCb5QzwcvXazGWx2L/dPP
-         UY9ExkGkVdjsCHS3kzVa7yLuaYIVHCrsxHXfTA1Dn2gf8AoP3PJU/zUHwq6Ri50y6eoT
-         q++GvJk/q53xt6lR7vk4TH+an96wX61w2o+2TlYfia3bt5TP7cGKp9y/qc5ZC6+36dlx
-         XVpsusIW4kGCmp7RKxKEFsD9nZMTWSmKzje+BMUzds/2o1Rlo4/zuEVYRJE5pbw4+vF9
-         DSLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739203887; x=1739808687;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lt/TBqL493WxqFjgvfkZ2tS4krtyuV+0wcigwiXRZIM=;
-        b=Zq20xygWUjjmLwo3IUasS70jqgpvg5HTw+//kcJX5YNvlg0S6YmlX0G/cNxOdc6HHz
-         58aNq1WDDXCh0maJld+DEMUBm6e+TN6fGxi24QdEPGUZpUlfl4YBM17tt1SANpgOxW92
-         HqwL4BOX9ki3UNbyvkQ7ONVIDZ07+W4XSSHZVLxfl3F4qYwUV+rMNKYJC4YrR16T67jX
-         Avh9eUJqwD5+OhjbEg5GK4m6FSKdKskL1PbZXHDBWEwXdsRtDWT4acSixeN1cZP1kySA
-         8uBlGjXPamGg+FSKtnJ6mPWtgQY66XxWfVvmuuYAn82aPXYWoDyhweZfiYa2iuUzBMat
-         VbrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU//gfLljOI165jkY1MtgYeeLIZEXaK4rq/o62i+IIb+kPCQy2IS4D+jwInIQ1DhjVEt4/f5QFg7X5qI9ze74Klsp8VpIaR@vger.kernel.org, AJvYcCUiCv5CZWhWsW04IngWemx/7tf32yGbzsQ+5/UkM9opnqY7GcA2jJmxHHTCldJy6uqnv5a0PXAZTX48DJF/tdEn@vger.kernel.org, AJvYcCXNMxVyvHxtwwIpf3gc2CJ6V/7obEtH4OQ0/bCZMS0q/KEdHfG0ZzvFn0bKWsb0CvEEIsAp5FObEnADTME=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCVNhCF2k/bDnwllHUHpsa9Ryc38KzpI+V6DclR7ToRSQsVoWU
-	GzaxYiAMrJs8rdzvY9gctvPrJD+P23AS4epGMF5j00Rs8gGfAGBs
-X-Gm-Gg: ASbGnctsx2QD/QA0iKAXbYFH4cBOkBZpju+UR5LaFCQBKMx8di4OM+aRBQJQfn3Bgo3
-	17/40TdXNejGj1VMS47QB4czi+uQKpbtigLzcYKDrxvmCUqOb3v5uu2aBu2VzHnyMo2G7k+lywP
-	zS2dY4OZXSybrhRoXSmZ8NN+lXlIwFyfN+0YuYrHahn20TuHjcZF03hvDjwOBnyADs09S8DriG4
-	wbt1wYbcaG6nBIpGF/V6E/bz4CjN8V78ySMUvi2R0K4EFVh4DXhH/eUxef9LHlILu+FUBuC6jOd
-	82dH+IJ1e7kyyiph3ls3J9I=
-X-Google-Smtp-Source: AGHT+IGBP1tsRARuyphuA4dc3+m2aWSwlcSZROST1syG8GihtPtpjMQ+VBiiwMW4vsoTibNHhabUyg==
-X-Received: by 2002:a05:6a00:148d:b0:730:97a6:f06 with SMTP id d2e1a72fcca58-73097a61364mr3937341b3a.8.1739203885416;
-        Mon, 10 Feb 2025 08:11:25 -0800 (PST)
-Received: from linuxmint.. ([14.139.69.34])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73083c1f029sm3022516b3a.125.2025.02.10.08.11.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 08:11:24 -0800 (PST)
-From: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
-To: mic@digikod.net
-Cc: Bharadwaj Raju <bharadwaj.raju777@gmail.com>,
-	gnoack@google.com,
-	shuah@kernel.org,
-	skhan@linuxfoundation.org,
-	linux-security-module@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: [PATCH] selftests/landlock: add binaries to gitignore
-Date: Mon, 10 Feb 2025 21:40:57 +0530
-Message-ID: <20250210161101.6024-1-bharadwaj.raju777@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kFZS9m9/"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51A96uHC008036;
+	Mon, 10 Feb 2025 16:11:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Ovlsn9F30Fw0mJ+hUyiy+C9ddMhEbRMDrmwls+a82pI=; b=kFZS9m9/ioBWHCtY
+	1d7MYDui0SC3jhtXICjAxvatoICxpGdIEOUjvCd9zTTfm7VpqJMCyo3qqdzVFxyi
+	52bEzChpaDPkca8ok/e7f4MJH1ctM6/uDx/zwBoaezH9iWI+BjQrG4GhsGvZurKR
+	1AiVa6lxoNvkU6o5HgM0/q2wZiDlByNJVAlL0yzRfAPdeYitOvNhUyhX7E4fiUBf
+	9RbP5pYazyuPc2D07X70xbEz4BEQKyWlrNXZeSKeFMn1JArf4GELhcMvdkivjfdS
+	rPKhW19nO9KhoswFfDAjZO7EJZRuqiXy6yvRbj/foaxzEwPj6BX1/P+6jIO9pLxj
+	DznO2g==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0guvucd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 16:11:55 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51AGBsbu016531
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 16:11:54 GMT
+Received: from [10.216.47.54] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Feb
+ 2025 08:11:50 -0800
+Message-ID: <e5dcc2f0-df6d-46ed-b341-46de513c0728@quicinc.com>
+Date: Mon, 10 Feb 2025 21:41:28 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/3] i3c: master: Add Qualcomm I3C master controller
+ driver
+To: Krzysztof Kozlowski <krzk@kernel.org>, <alexandre.belloni@bootlin.com>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <jarkko.nikula@linux.intel.com>, <linux-i3c@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250205143109.2955321-1-quic_msavaliy@quicinc.com>
+ <20250205143109.2955321-3-quic_msavaliy@quicinc.com>
+ <fec85cd8-4c56-4b48-a15f-e7ae08352cc2@kernel.org>
+ <e5cad9d0-e602-442f-b216-2f655a9526e3@quicinc.com>
+ <1e3a103d-d468-40c6-b03c-723427d7bb41@kernel.org>
+Content-Language: en-US
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+In-Reply-To: <1e3a103d-d468-40c6-b03c-723427d7bb41@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: vYpgUUbtsYet6KvVYzwGWPWZ3NDOxJUo
+X-Proofpoint-GUID: vYpgUUbtsYet6KvVYzwGWPWZ3NDOxJUo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_09,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 phishscore=0
+ clxscore=1015 adultscore=0 bulkscore=0 mlxscore=0 spamscore=0
+ mlxlogscore=999 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2502100133
 
-Building the test creates binaries 'wait-pipe' and
-'sandbox-and-launch' which need to be gitignore'd.
+Thanks Krzysztof !
 
-Signed-off-by: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
----
- tools/testing/selftests/landlock/.gitignore | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/tools/testing/selftests/landlock/.gitignore b/tools/testing/selftests/landlock/.gitignore
-index 470203a7cd73..0566c50dfcad 100644
---- a/tools/testing/selftests/landlock/.gitignore
-+++ b/tools/testing/selftests/landlock/.gitignore
-@@ -1,2 +1,4 @@
- /*_test
- /true
-+/wait-pipe
-+/sandbox-and-launch
--- 
-2.43.0
+On 2/9/2025 5:10 PM, Krzysztof Kozlowski wrote:
+> On 07/02/2025 13:03, Mukesh Kumar Savaliya wrote:
+>>>> +	gi3c->se.clk = devm_clk_get(&pdev->dev, "se-clk");
+>>>> +	if (IS_ERR(gi3c->se.clk)) {
+>>>> +		ret = PTR_ERR(gi3c->se.clk);
+>>>> +		dev_err(&pdev->dev, "Error getting SE Core clk %d\n", ret);
+>>>> +		return ret;
+>>>> +	}
+>>>> +
+>>>> +	ret = device_property_read_u32(&pdev->dev, "se-clock-frequency", &gi3c->clk_src_freq);
+>>>
+>>> You never tested your DTS or this code... Drop
+>>>
+>> I have tested on SM8550 MTP only. Below entry in my internal/local DTSI.
+> 
+> 
+> And how is it supposed to work? Are you going to send us your local
+> internal DTSI? Is it going to pass any checks?
+was saying about code was testing with MTP. DTS was tested using 
+dt-bindings check.
+I should add "se-clock-frequency" and "dfs-index"
+> 
+>> Do you mean to say i should add this property in yaml too ?
+> 
+> Yes.
+> 
+> You cannot add undocumented ABI. That's a strong NAK.
+> 
+sure , adding both properties into yaml.
+> 
+>> se-clock-frequency = <100000000>;
+>>>
+>>>> +	if (ret) {
+>>>> +		dev_info(&pdev->dev, "SE clk freq not specified, default to 100 MHz.\n");
+>>>> +		gi3c->clk_src_freq = 100000000;
+>>>> +	}
+>>>> +
+>>>> +	ret = geni_icc_get(&gi3c->se, NULL);
+>>>> +	if (ret)
+>>>> +		return ret;
+>>>> +
+>>>> +	/* Set the bus quota to a reasonable value for register access */
+>>>> +	gi3c->se.icc_paths[GENI_TO_CORE].avg_bw = GENI_DEFAULT_BW;
+>>>> +	gi3c->se.icc_paths[CPU_TO_GENI].avg_bw = GENI_DEFAULT_BW;
+>>>> +	ret = geni_icc_set_bw(&gi3c->se);
+>>>> +	if (ret) {
+>>>> +		dev_err(&pdev->dev, "%s: icc set bw failed ret:%d\n", __func__, ret);
+>>>> +		return ret;
+>>>> +	}
+>>>> +	dev_dbg(&pdev->dev, "%s: GENI_TO_CORE:%d CPU_TO_GENI:%d\n", __func__,
+>>>> +		gi3c->se.icc_paths[GENI_TO_CORE].avg_bw, gi3c->se.icc_paths[CPU_TO_GENI].avg_bw);
+>>>> +
+>>>> +	ret = device_property_read_u32(&pdev->dev, "dfs-index", &gi3c->dfs_idx);
+>>>
+>>> The same. You cannot send us hidden ABI.
+>>>
+>>> This code does not look like ready for upstream. Are you sure it was
+>>> internally reviewed?
+>>>
+>> yes, we have taken 2 rounds internally.
+> 
+> 
+> And none of the reviewers spotted undocumented ABI? OK, learning
+> experience for me.
+> 
+> 
+>> Are you saying i should add this into yaml ?  what do you mean by
+>> hiddern ABI ?
+> 
+> 
+> Where is the documentation of the ABI?
+> 
+can you please point to other ABI document so i can prepare and share it.
+> 
+> 
+> Best regards,
+> Krzysztof
 
