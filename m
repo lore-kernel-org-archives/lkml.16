@@ -1,198 +1,268 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276F224F588
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:10:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739203845; cv=pass; b=XXa4hfT4q+qGSxhoKHuoErFT4uYZLYEgB99asDcgdcKT6mKlnHvSmLnjDdg3GETJ0FPD9sctVWBhws+w3tNGHA4wDk01rsw7bID/WRMjcrf+0UDH6yz5GtHcksAI26fOX86nqaOAO3O2E2uxou/BEahzmVggg71xwl5lTusr/cA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739203845; c=relaxed/simple;
-	bh=eS90uzrC1VmoWa/UH3TscbPfyy9fPLv9EMAixNakVcY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QAzROFrECqhq5AvnyqslesurT5Rt4B6pUkmLu28qOPweNhRmceeEttAXZt9JcVb9l8tJ24pBJOTk/WHfY0OTDYy8q6oJK8WxdOM2h660KTLE55NUQrCxuNGlZY+eUvTwsogQR1AXg3B5YAmVNWuC1TCQc5MCVWnSPO7LLMtF9T4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=SW1X40h6; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96AA6244195
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739203871; cv=none; b=oRvJneSkW7Cqr1LGRgcCvvMOrHV8acseZf/lkw85/U3MJp1B0SQQrAl7GN17BnBhB2ytzlgTir4v1YrqGWMBXRcM1PAjV1x64xZgre/fRGhxQfIuckBX43hRKi3R49n8DCU75lv5We/e2PuBq+0XcN2jFfLi6ICrqsKzPu0kiHU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739203871; c=relaxed/simple;
+	bh=R0MKiDoY26HPIOwFUCB6t2y9Vc87PkYPzVYIjoMb/DQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L3oNXLKqs6cFjGY2Vd1vC4TEjMaJTQuE1jluPuaFq4DHcxbfHhqW2buVLa55SyFVkryxwAHdQf7L7UWmexAM2l0SD24FJvO0qJwD5KuPAmkpOK1QO0A3O4agIcghtJw3kL+Q7aPhyKWBasfN9VfxdGKK05ya3K2u7XK7mOZ5xlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jGGMWVTO; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="SW1X40h6"
-ARC-Seal: i=1; a=rsa-sha256; t=1739203827; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Hf/RLdlUNYREiBQJ8fiX4v8SdnSWhAVgMGa8VKGwfHf6C2aWOE5A/OrmoXnD4OWveukgUGKnG9Mv066D8XED3yh3ckXW13Pe1jUKUxggRkXNVx8ca7FDtbn5k1sOLTPnPRmncnl9u8uVf9pzfuVpaAtGhYxCaMoO5sIOUw48qk4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739203827; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=zEeMspH9+O8rSxQqjspXXQMp9KLZr6bhowachpeWPeM=; 
-	b=kw0Kxs/LJ3pcBpak1SIWuFt6r4BA/Xu8IESaaGPjlsO88h5licXtgPL3/ursh+yGF2kBI0BJ8M4lpDaMTyDK0Y2LZrvwRDqmvSYOhPJ+xP0IdxdvawD7uEkZSFo/GaIJeAb7rin56rR1vMdDV9J0ZR4Smpg9VzS1y40J9Fzq3hg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
-	dmarc=pass header.from=<adrian.larumbe@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739203827;
-	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:Message-Id:Reply-To;
-	bh=zEeMspH9+O8rSxQqjspXXQMp9KLZr6bhowachpeWPeM=;
-	b=SW1X40h63+2I5ZjQ1v5SqWSre31q7EfZzfoKU+UmNtMdJY32Cw+RG7yuLaw8r/6T
-	/b7UrnjqTOg0tDoCB8XJfWuNUB6lE11GxtTHAP+sB+Ts5Sjp5Bju4M/tWOr+O+xyUSg
-	tJBZ7i7Z0/IFDHFv65AQA0fomAXuaNTLw71Du5As=
-Received: by mx.zohomail.com with SMTPS id 1739203825785373.87392798918313;
-	Mon, 10 Feb 2025 08:10:25 -0800 (PST)
-Date: Mon, 10 Feb 2025 16:10:23 +0000
-From: =?utf-8?Q?Adri=C3=A1n?= Larumbe <adrian.larumbe@collabora.com>
-To: Tvrtko Ursulin <tursulin@ursulin.net>
-Cc: Boris Brezillon <boris.brezillon@collabora.com>, 
-	Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, kernel@collabora.com, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] drm/panthor: Replace sleep locks with spinlocks in
- fdinfo path
-Message-ID: <aryumfhxzg2hqszlgwfjtnvf5lgu6a6rvfbhv6jmvabonghxpm@iowcjhketo2q>
-References: <20250210124203.124191-1-adrian.larumbe@collabora.com>
- <2ec2a848-90f4-49bc-aaaf-8eb256f271db@ursulin.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jGGMWVTO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739203870; x=1770739870;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=R0MKiDoY26HPIOwFUCB6t2y9Vc87PkYPzVYIjoMb/DQ=;
+  b=jGGMWVTORZfbhIdW2Uw37wWY7aJXAnWQ4X5+s4uhqkIlIGw/qXfll1KE
+   RUNgsAcociQcRJe9YZDOJ65LAHXfzEUF3Gxkbd8YX44xCprq7UWLJZ7zl
+   jm1TYNZKH3N5DxEEUZkgiSGVwvmMGJ+WyiBVA0Mr4tKhlNOrS0VjzTTO6
+   D8abRRXauj94TspLx7LWJ7TpFmrSrralo0ag0xL5NLr9oytwW9yZrjBry
+   QNWKACEBUqoe284tpZ4UuMJqvJobNnuaw3MeJfXuEPPzaLrIR/N4n2HOn
+   kUr10b3tSgRyu87FJw1bX2Z+/G5hnAS0UPtA4CHcBFGn1W/5zdVxCFlTg
+   w==;
+X-CSE-ConnectionGUID: Zxj0RyKORdyVUCPcErd4AA==
+X-CSE-MsgGUID: dsy2vSzNRueO9E5HiqMdxw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="43449896"
+X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
+   d="scan'208";a="43449896"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 08:11:09 -0800
+X-CSE-ConnectionGUID: gqvKAhIGRT6AOhwQOxa9dg==
+X-CSE-MsgGUID: QQlx2Dr2QO6s54FsjWjVgw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="149423919"
+Received: from irvmail002.ir.intel.com ([10.43.11.120])
+  by orviesa001.jf.intel.com with ESMTP; 10 Feb 2025 08:11:03 -0800
+Received: from soc-PF3291X2.clients.intel.com (unknown [10.245.121.166])
+	by irvmail002.ir.intel.com (Postfix) with ESMTP id 233B032EA9;
+	Mon, 10 Feb 2025 16:11:02 +0000 (GMT)
+From: Bertrand Wlodarczyk <bertrand.wlodarczyk@intel.com>
+To: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org
+Cc: mhocko@suse.com,
+	dave.hansen@linux.intel.com,
+	apw@canonical.com,
+	joe@perches.com,
+	dwaipayanray1@gmail.com,
+	lukas.bulwahn@gmail.com,
+	Bertrand Wlodarczyk <bertrand.wlodarczyk@intel.com>,
+	Tim Chen <tim.c.chen@linux.intel.com>
+Subject: [PATCH] vmscan, cleanup: add for_each_managed_zone_pgdat macro
+Date: Mon, 10 Feb 2025 17:07:49 +0100
+Message-ID: <20250210160818.686-1-bertrand.wlodarczyk@intel.com>
+X-Mailer: git-send-email 2.47.1.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2ec2a848-90f4-49bc-aaaf-8eb256f271db@ursulin.net>
 
-This is the debug log for the second patch in the series:
+The macro is introduced to eliminate redundancy in the repeated iteration
+over managed zones in pgdat data structure, reducing the potential for
+errors. This change doesn't introduce any functional modifications.
+Due to concentration of the pattern in vmscan.c the macro is placed
+locally in that file.
 
-[18325.029172] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:562
-[18325.029947] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 203483, name: cat
-[18325.030646] preempt_count: 1, expected: 0
-[18325.031012] RCU nest depth: 0, expected: 0
-[18325.031387] INFO: lockdep is turned off.
-[18325.031754] CPU: 4 UID: 0 PID: 203483 Comm: cat Tainted: G        W          6.14.0-rc1-panthor-next-rk3588-fdinfo+ #1
-[18325.031763] Tainted: [W]=WARN
-[18325.031767] Hardware name: Radxa ROCK 5B (DT)
-[18325.031772] Call trace:
-[18325.031777]  show_stack+0x24/0x38 (C)
-[18325.031813]  dump_stack_lvl+0x3c/0x98
-[18325.031827]  dump_stack+0x18/0x24
-[18325.031833]  __might_resched+0x298/0x2b0
-[18325.031844]  __might_sleep+0x6c/0xb0
-[18325.031850]  __mutex_lock_common+0x7c/0x1950
-[18325.031875]  mutex_lock_nested+0x38/0x50
-[18325.031889]  panthor_vm_heaps_sizes+0xa8/0x158 [panthor]
-[18325.031973]  panthor_show_fdinfo+0x1a0/0x228 [panthor]
-[18325.032040]  drm_show_fdinfo+0x1a4/0x1e0 [drm]
-[18325.032328]  seq_show+0x274/0x358
-[18325.032343]  seq_read_iter+0x1d4/0x630
-[18325.032358]  seq_read+0x148/0x1a0
-[18325.032364]  vfs_read+0x114/0x3e0
-[18325.032377]  ksys_read+0x90/0x110
-[18325.032383]  __arm64_sys_read+0x50/0x70
-[18325.032389]  invoke_syscall+0x60/0x178
-[18325.032400]  el0_svc_common+0x104/0x148
-[18325.032406]  do_el0_svc+0x3c/0x58
-[18325.032413]  el0_svc+0x50/0xa8
-[18325.032422]  el0t_64_sync_handler+0x78/0x108
-[18325.032427]  el0t_64_sync+0x198/0x1a0
+Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
+Signed-off-by: Bertrand Wlodarczyk <bertrand.wlodarczyk@intel.com>
+---
+There is an ERROR in checkpatch.pl script: "Macros should be enclosed in
+Do-While loop" which seems to be false positive. Similar patch ee99c71c59f89
+also raises the same error. Added maintainers of checkpatch.pl to review
+and investigate.
+---
+ mm/vmscan.c | 83 +++++++++++++++++++++--------------------------------
+ 1 file changed, 32 insertions(+), 51 deletions(-)
 
-On 10.02.2025 15:52, Tvrtko Ursulin wrote:
-> 
-> On 10/02/2025 12:41, Adrián Larumbe wrote:
-> > Panthor's fdinfo handler is routed through the /proc file system, which
-> > executes in an atomic context. That means we cannot use mutexes because
-> > they might sleep.
-> 
-> Have the debug splat at hand? I am thinking it is not because of fdinfo reads,
-> which are allowed to sleep, but has to be something else.
-> 
-> Regards,
-> 
-> Tvrtko
-> 
-> > This bug was uncovered by enabling some of the kernel's mutex-debugging
-> > features:
-> > 
-> > CONFIG_DEBUG_RT_MUTEXES=y
-> > CONFIG_DEBUG_MUTEXES=y
-> > 
-> > Replace Panthor's group fdinfo data mutex with a guarded spinlock.
-> > 
-> > Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
-> > Fixes: e16635d88fa0 ("drm/panthor: add DRM fdinfo support")
-> > ---
-> >   drivers/gpu/drm/panthor/panthor_sched.c | 26 ++++++++++++-------------
-> >   1 file changed, 12 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
-> > index 0b93bf83a9b2..7a267d1efeb6 100644
-> > --- a/drivers/gpu/drm/panthor/panthor_sched.c
-> > +++ b/drivers/gpu/drm/panthor/panthor_sched.c
-> > @@ -9,6 +9,7 @@
-> >   #include <drm/panthor_drm.h>
-> >   #include <linux/build_bug.h>
-> > +#include <linux/cleanup.h>
-> >   #include <linux/clk.h>
-> >   #include <linux/delay.h>
-> >   #include <linux/dma-mapping.h>
-> > @@ -631,10 +632,10 @@ struct panthor_group {
-> >   		struct panthor_gpu_usage data;
-> >   		/**
-> > -		 * @lock: Mutex to govern concurrent access from drm file's fdinfo callback
-> > -		 * and job post-completion processing function
-> > +		 * @fdinfo.lock: Spinlock to govern concurrent access from drm file's fdinfo
-> > +		 * callback and job post-completion processing function
-> >   		 */
-> > -		struct mutex lock;
-> > +		spinlock_t lock;
-> >   		/** @fdinfo.kbo_sizes: Aggregate size of private kernel BO's held by the group. */
-> >   		size_t kbo_sizes;
-> > @@ -910,8 +911,6 @@ static void group_release_work(struct work_struct *work)
-> >   						   release_work);
-> >   	u32 i;
-> > -	mutex_destroy(&group->fdinfo.lock);
-> > -
-> >   	for (i = 0; i < group->queue_count; i++)
-> >   		group_free_queue(group, group->queues[i]);
-> > @@ -2861,12 +2860,12 @@ static void update_fdinfo_stats(struct panthor_job *job)
-> >   	struct panthor_job_profiling_data *slots = queue->profiling.slots->kmap;
-> >   	struct panthor_job_profiling_data *data = &slots[job->profiling.slot];
-> > -	mutex_lock(&group->fdinfo.lock);
-> > -	if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_CYCLES)
-> > -		fdinfo->cycles += data->cycles.after - data->cycles.before;
-> > -	if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_TIMESTAMP)
-> > -		fdinfo->time += data->time.after - data->time.before;
-> > -	mutex_unlock(&group->fdinfo.lock);
-> > +	scoped_guard(spinlock, &group->fdinfo.lock) {
-> > +		if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_CYCLES)
-> > +			fdinfo->cycles += data->cycles.after - data->cycles.before;
-> > +		if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_TIMESTAMP)
-> > +			fdinfo->time += data->time.after - data->time.before;
-> > +	}
-> >   }
-> >   void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
-> > @@ -2880,12 +2879,11 @@ void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
-> >   	xa_lock(&gpool->xa);
-> >   	xa_for_each(&gpool->xa, i, group) {
-> > -		mutex_lock(&group->fdinfo.lock);
-> > +		guard(spinlock)(&group->fdinfo.lock);
-> >   		pfile->stats.cycles += group->fdinfo.data.cycles;
-> >   		pfile->stats.time += group->fdinfo.data.time;
-> >   		group->fdinfo.data.cycles = 0;
-> >   		group->fdinfo.data.time = 0;
-> > -		mutex_unlock(&group->fdinfo.lock);
-> >   	}
-> >   	xa_unlock(&gpool->xa);
-> >   }
-> > @@ -3531,7 +3529,7 @@ int panthor_group_create(struct panthor_file *pfile,
-> >   	mutex_unlock(&sched->reset.lock);
-> >   	add_group_kbo_sizes(group->ptdev, group);
-> > -	mutex_init(&group->fdinfo.lock);
-> > +	spin_lock_init(&group->fdinfo.lock);
-> >   	return gid;
-> > 
-> > base-commit: 2eca617f12586abff62038db1c14cb3aa60a15aa
-> > prerequisite-patch-id: 7e787ce5973b5fc7e9f69f26aa4d7e5ec03d5caa
-> > prerequisite-patch-id: 03a619b8c741444b28435850e23d9ec463171c13
-> > prerequisite-patch-id: 290e1053f8bf4a8b80fb037a87cae7e096b5aa96
-> > prerequisite-patch-id: bc49bb8c29905650fb4788acc528bb44013c0240
-> > prerequisite-patch-id: 46cab4c980824c03e5164afc43085fec23e1cba5
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index c767d71c43d7..2c77bd6f6f2f 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -271,6 +271,25 @@ static int sc_swappiness(struct scan_control *sc, struct mem_cgroup *memcg)
+ }
+ #endif
+ 
++/* for_each_managed_zone_pgdat - helper macro to iterate over all managed zones in a pgdat up to
++ * and including the specified highidx
++ * @zone: The current zone in the iterator
++ * @pgdat: The pgdat which node_zones are being iterated
++ * @idx: The index variable
++ * @highidx: The index of the highest zone to return
++ *
++ * This macro iterates through all managed zones up to and including the specified highidx.
++ * The zone iterator enters an invalid state after macro call and must be reinitialized
++ * before it can be used again.
++ */
++#define for_each_managed_zone_pgdat(zone, pgdat, idx, highidx)	\
++	for ((idx) = 0, (zone) = (pgdat)->node_zones;		\
++	    (idx) <= (highidx);					\
++	    (idx)++, (zone)++)					\
++		if (!managed_zone(zone))			\
++			continue;				\
++		else
++
+ static void set_task_reclaim_state(struct task_struct *task,
+ 				   struct reclaim_state *rs)
+ {
+@@ -396,13 +415,9 @@ static unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru,
+ {
+ 	unsigned long size = 0;
+ 	int zid;
++	struct zone *zone;
+ 
+-	for (zid = 0; zid <= zone_idx; zid++) {
+-		struct zone *zone = &lruvec_pgdat(lruvec)->node_zones[zid];
+-
+-		if (!managed_zone(zone))
+-			continue;
+-
++	for_each_managed_zone_pgdat(zone, lruvec_pgdat(lruvec), zid, zone_idx) {
+ 		if (!mem_cgroup_disabled())
+ 			size += mem_cgroup_get_zone_lru_size(lruvec, lru, zid);
+ 		else
+@@ -495,7 +510,7 @@ static bool skip_throttle_noprogress(pg_data_t *pgdat)
+ {
+ 	int reclaimable = 0, write_pending = 0;
+ 	int i;
+-
++	struct zone *zone;
+ 	/*
+ 	 * If kswapd is disabled, reschedule if necessary but do not
+ 	 * throttle as the system is likely near OOM.
+@@ -508,12 +523,7 @@ static bool skip_throttle_noprogress(pg_data_t *pgdat)
+ 	 * throttle as throttling will occur when the folios cycle
+ 	 * towards the end of the LRU if still under writeback.
+ 	 */
+-	for (i = 0; i < MAX_NR_ZONES; i++) {
+-		struct zone *zone = pgdat->node_zones + i;
+-
+-		if (!managed_zone(zone))
+-			continue;
+-
++	for_each_managed_zone_pgdat(zone, pgdat, i, MAX_NR_ZONES - 1) {
+ 		reclaimable += zone_reclaimable_pages(zone);
+ 		write_pending += zone_page_state_snapshot(zone,
+ 						  NR_ZONE_WRITE_PENDING);
+@@ -2372,17 +2382,13 @@ static void prepare_scan_control(pg_data_t *pgdat, struct scan_control *sc)
+ 		unsigned long total_high_wmark = 0;
+ 		unsigned long free, anon;
+ 		int z;
++		struct zone *zone;
+ 
+ 		free = sum_zone_node_page_state(pgdat->node_id, NR_FREE_PAGES);
+ 		file = node_page_state(pgdat, NR_ACTIVE_FILE) +
+ 			   node_page_state(pgdat, NR_INACTIVE_FILE);
+ 
+-		for (z = 0; z < MAX_NR_ZONES; z++) {
+-			struct zone *zone = &pgdat->node_zones[z];
+-
+-			if (!managed_zone(zone))
+-				continue;
+-
++		for_each_managed_zone_pgdat(zone, pgdat, z, MAX_NR_ZONES - 1) {
+ 			total_high_wmark += high_wmark_pages(zone);
+ 		}
+ 
+@@ -5843,6 +5849,7 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
+ 	unsigned long pages_for_compaction;
+ 	unsigned long inactive_lru_pages;
+ 	int z;
++	struct zone *zone;
+ 
+ 	/* If not in reclaim/compaction mode, stop */
+ 	if (!in_reclaim_compaction(sc))
+@@ -5862,11 +5869,7 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
+ 		return false;
+ 
+ 	/* If compaction would go ahead or the allocation would succeed, stop */
+-	for (z = 0; z <= sc->reclaim_idx; z++) {
+-		struct zone *zone = &pgdat->node_zones[z];
+-		if (!managed_zone(zone))
+-			continue;
+-
++	for_each_managed_zone_pgdat(zone, pgdat, z, sc->reclaim_idx) {
+ 		/* Allocation can already succeed, nothing to do */
+ 		if (zone_watermark_ok(zone, sc->order, min_wmark_pages(zone),
+ 				      sc->reclaim_idx, 0))
+@@ -6393,11 +6396,7 @@ static bool allow_direct_reclaim(pg_data_t *pgdat)
+ 	if (pgdat->kswapd_failures >= MAX_RECLAIM_RETRIES)
+ 		return true;
+ 
+-	for (i = 0; i <= ZONE_NORMAL; i++) {
+-		zone = &pgdat->node_zones[i];
+-		if (!managed_zone(zone))
+-			continue;
+-
++	for_each_managed_zone_pgdat(zone, pgdat, i, ZONE_NORMAL) {
+ 		if (!zone_reclaimable_pages(zone))
+ 			continue;
+ 
+@@ -6702,12 +6701,7 @@ static bool pgdat_balanced(pg_data_t *pgdat, int order, int highest_zoneidx)
+ 	 * Check watermarks bottom-up as lower zones are more likely to
+ 	 * meet watermarks.
+ 	 */
+-	for (i = 0; i <= highest_zoneidx; i++) {
+-		zone = pgdat->node_zones + i;
+-
+-		if (!managed_zone(zone))
+-			continue;
+-
++	for_each_managed_zone_pgdat(zone, pgdat, i, highest_zoneidx) {
+ 		if (sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING)
+ 			mark = promo_wmark_pages(zone);
+ 		else
+@@ -6792,11 +6786,7 @@ static bool kswapd_shrink_node(pg_data_t *pgdat,
+ 
+ 	/* Reclaim a number of pages proportional to the number of zones */
+ 	sc->nr_to_reclaim = 0;
+-	for (z = 0; z <= sc->reclaim_idx; z++) {
+-		zone = pgdat->node_zones + z;
+-		if (!managed_zone(zone))
+-			continue;
+-
++	for_each_managed_zone_pgdat(zone, pgdat, z, sc->reclaim_idx) {
+ 		sc->nr_to_reclaim += max(high_wmark_pages(zone), SWAP_CLUSTER_MAX);
+ 	}
+ 
+@@ -6827,12 +6817,7 @@ update_reclaim_active(pg_data_t *pgdat, int highest_zoneidx, bool active)
+ 	int i;
+ 	struct zone *zone;
+ 
+-	for (i = 0; i <= highest_zoneidx; i++) {
+-		zone = pgdat->node_zones + i;
+-
+-		if (!managed_zone(zone))
+-			continue;
+-
++	for_each_managed_zone_pgdat(zone, pgdat, i, highest_zoneidx) {
+ 		if (active)
+ 			set_bit(ZONE_RECLAIM_ACTIVE, &zone->flags);
+ 		else
+@@ -6893,11 +6878,7 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int highest_zoneidx)
+ 	 * stall or direct reclaim until kswapd is finished.
+ 	 */
+ 	nr_boost_reclaim = 0;
+-	for (i = 0; i <= highest_zoneidx; i++) {
+-		zone = pgdat->node_zones + i;
+-		if (!managed_zone(zone))
+-			continue;
+-
++	for_each_managed_zone_pgdat(zone, pgdat, i, highest_zoneidx) {
+ 		nr_boost_reclaim += zone->watermark_boost;
+ 		zone_boosts[i] = zone->watermark_boost;
+ 	}
+-- 
+2.48.1
+
