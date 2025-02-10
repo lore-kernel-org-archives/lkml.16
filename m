@@ -1,87 +1,129 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B879B22301;
-	Mon, 10 Feb 2025 02:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4DEC224CC;
+	Mon, 10 Feb 2025 02:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739153843; cv=none; b=UMet7yriTkPkQXAKIxr9RRWsjkAEPgMuOgngC+mB2YbqCPA3jFWWAuySXgE0objdFMjaLRis3Ln85K9ZoMGxQrWAPlKdiSx3Cl5BcjpMlI5da0dhUOOeNoEwg8lWFlhO4CM5mGc7MiMiX+0CN8FvnoLN87tqjrnx1jU6gowxvEE=
+	t=1739153903; cv=none; b=Jz3gdq21WnT0C/yKjxs4oZ5rVjYl3DWxIKDyhetNyIbPn9Zkyf5TUFZiYTUVEq1vFXrPJm2ll0IDaX3obBOGAZf2ziJ7dHBvgBCXIfAw1dk6mqL0Fna2u3CQtY9NK7pJ7yibm4U2gSxBRBIi5bDPEqurWy+LYlDQW6ueTKJj7qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739153843; c=relaxed/simple;
-	bh=OonBsXVcqw16AkZT/JvRk7VH9bQnPgHVTelt+TYvzWs=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=ZOqyuKC08XokRlTvocDUXJSllOpuTPev4D0Yb9jEstB61rMJA/sCWNURE3OD1tdHVOK+oX6/oHR/u7f2EdPlUGt476lsFxs1onOP75c8eaBnyX8NCY44WPfBCPO8ITzkkpQVNSlOtb/ONV0MUzZ/XNBOYXFmcTSrDOlmNXKg6bQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Qc6Ggwih; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1739153903; c=relaxed/simple;
+	bh=5wdGOtQ+WCoVtj83txux2ncaqVrSvdPlm2bBpsnktOk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aV0clehCPkn7KIkfney+sEgp99W18RWezqUAJIxB6vMEl2RrpbFDn2Kcf0YKbVf0qA21JF4pYD6z1RGcV/NPzMgu8JoBneWGuwVANpUj9PzB0pkXlv1GmOyq0Jjx4gS0l7OIIVLtV0gqOi5QRvmri8TS+1jdXnuDbn6duDKHGtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hWZksRA7; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Qc6Ggwih"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51A2Fa0Q1936056
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Sun, 9 Feb 2025 18:15:37 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51A2Fa0Q1936056
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025011701; t=1739153739;
-	bh=OonBsXVcqw16AkZT/JvRk7VH9bQnPgHVTelt+TYvzWs=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=Qc6GgwihV10i/7iazZlJA9de3OWWVwwezsmDbahCRSGSF/fy+K3tCR/3FaKyLCsei
-	 rUt6+42N2gWeJe/slRPW4qi4hVCcnLwgbDbm/HqMCUuByHAFIeJuJSvaj022R+hRP4
-	 xbNgbAWQQJiKjraN8//YXCHE3XSlmHczw7ylhpNz0JzGIguW9FRcUU2HlEL+WoTVyF
-	 69oDbl/RiaKs3aPskzcedIu7tOhKjmDb/+5GYk+ol3XtOo6IWHTWQRYN7cngOMt5E9
-	 uwa8JNmeidCmOCv2ODKFcJnWt2iVtYuNbaLcAN3jyw2OD3xHmG3jvlKx6W7JyqiR89
-	 B74KZOx7gH4oA==
-Date: Sun, 09 Feb 2025 18:15:35 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Rik van Riel <riel@surriel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Laight <david.laight.linux@gmail.com>
-CC: x86@kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>, linux-arch@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>, kernel-hardening@lists.openwall.com,
-        "Paul E.McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH 1/1] x86: In x86-64 barrier_nospec can always be lfence
-User-Agent: K-9 Mail for Android
-In-Reply-To: <15734b32cecddde7905d3a97005a0c883383cc74.camel@surriel.com>
-References: <20250209191008.142153-1-david.laight.linux@gmail.com> <CAHk-=wiQQQ9yo84KCk=Y_61siPsrH=dF9t5LPva0Sbh_RZ0-3Q@mail.gmail.com> <20250209214047.4552e806@pumpkin> <CAHk-=wiSnNEWsvDariBQ4O-mz7Nc7LbkdKUQntREVCFWiMe9zw@mail.gmail.com> <15734b32cecddde7905d3a97005a0c883383cc74.camel@surriel.com>
-Message-ID: <119B5F1F-7319-4C28-8A91-EB570BF5ABEB@zytor.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hWZksRA7"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2fa1a3c88c5so4540318a91.3;
+        Sun, 09 Feb 2025 18:18:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739153901; x=1739758701; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pra/oOUTQO2yZOLjR2ZipvGGXwjEY9SiYtTQgWiqLL0=;
+        b=hWZksRA7eSRgX66vk/3pDShaA0w/IC1LphxUukVwpk5Fe2Bd/yYxabO8DLBH9FoJ7j
+         AbWoAE6Q7rZ164eUfqJmR180l1q0l0lNmMIA98yPm/aJfqDUEcTdKRAsKhliaf2AjyEL
+         uzxAsv5xYgaTfqJYhp5yEbeJNXDPcbNy6SOeBFMoibvwJSFKOAFthdMfDU8FMoHWkLMV
+         T7wJV+BD5QSoaxZ0oLcTUC6uDI3MIDGDnd/O4FDh8ocVJkxinWKDvoNReilaSGKVax7G
+         zjBhZpxydWmrOwCS5Ib6acWQTqHatxcdMWwKxidu7E1lTQ3WrRg1heI8LAimKOlthRUA
+         ztVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739153901; x=1739758701;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Pra/oOUTQO2yZOLjR2ZipvGGXwjEY9SiYtTQgWiqLL0=;
+        b=e3IkmiNgsA0ZlCpwkmwg0ItS4AN+Y1/Vt9a/i+pCbmq08x6K8Ik+ORZmJzJdjHl7BO
+         N0I5khVxJbhtGBPgYJJNhQq4Rzes2b3r2V5cLgvQFrgO1/nITmWgdnlq9+j7hYSN+CMK
+         Fi4oYsAIUVJZirgIJydJgGvv6ymVLJOUv/RtiOyNnaKuccbXyNT5Cxh2VaYEhxbBkgP+
+         vEtdifXZ6vid4JQcohoo2xFhZRXonv0O/x8mHkPkQgFcU/BdPgD2JTywO3+bmcF2AH0F
+         YW2EarwaO4wqnwI2p4MCQUWAOsBP4s4oxk7csJ4EAIeNqVO7bHtJyuP3wijKDUKAAbCf
+         iIrw==
+X-Forwarded-Encrypted: i=1; AJvYcCX24coh5IkUoVG12E1bGfvYeilz8WQN9MLfar/MfzOXTRuZc8xQ1UK6iOKBgzjAGRPvUIL93t46bww=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyd9qw3kCqBWgOj078E9o5dEjMbsbxAazgXNl+vbC3UaLGmjpeS
+	cYg1+ZshfajQgO55YVYUuojKJmoI8wzIsldjOi4cvPBG13B33BS5O0T90A==
+X-Gm-Gg: ASbGncttoCsRUmdpzJWr/FiK66hvyVvs/9QEA1N7zMjfNfpV60L3Io5b2CfEZ39z+7z
+	3a2VtNgKpbkuwxvyYxFpIvzbpdGl7VSEfeKHZFPWLOuPbmYbbY2R03kbgKjnY01mXjm3uWHpVep
+	4CGQS+PEPEdWMYr6VsR9W4/pOkkBbHSiELi/QI1CKbsEyJ0PR67TUvXUrDnoc3xZrJ93HR2YOTp
+	11Ujq0X4GjhKnEnhDVAjRdNV3SBhEZeI11iWitaWO2lXpw0UMGn31LN+Vm8Wh0JjWuuDQ8SuvbX
+	Y4TWjvEDQ9WOWDs=
+X-Google-Smtp-Source: AGHT+IGAVndFTV+DV78WX/Ayo0O2pEYbWNwUS8TyCwA96kczLn+f3VS4tdoh+KmpDqgHmFzfI9jSjQ==
+X-Received: by 2002:a17:90b:368f:b0:2fa:1f1b:3db9 with SMTP id 98e67ed59e1d1-2fa243f05b1mr15799780a91.26.1739153900950;
+        Sun, 09 Feb 2025 18:18:20 -0800 (PST)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa184ac945sm7260682a91.46.2025.02.09.18.18.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2025 18:18:19 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id 8CB9F4208FB4; Mon, 10 Feb 2025 09:18:17 +0700 (WIB)
+Date: Mon, 10 Feb 2025 09:18:17 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Brendan Connelly <brendanjconnelly17@gmail.com>, corbet@lwn.net
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	dmitry.torokhov@gmail.com
+Subject: Re: [PATCH] Documentation: input: Add section pertaining to polled
+ input devices
+Message-ID: <Z6lh6QC7qwuw71N9@archie.me>
+References: <20250208173554.209688-1-brendanjconnelly17@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="MzJliMcHmfnza9QT"
+Content-Disposition: inline
+In-Reply-To: <20250208173554.209688-1-brendanjconnelly17@gmail.com>
+
+
+--MzJliMcHmfnza9QT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On February 9, 2025 5:09:51 PM PST, Rik van Riel <riel@surriel=2Ecom> wrote=
-:
->On Sun, 2025-02-09 at 13:57 -0800, Linus Torvalds wrote:
->>=20
->> So on x86, both read and write barriers are complete no-ops, because
->> all reads are ordered, and all writes are ordered=2E
->
->Given that this thread started with a reference
->to rdtsc, it may be worth keeping in mind that
->rdtsc reads themselves do not always appear to
->be ordered=2E
->
->Paul and I spotted some occasionaly "backwards
->TSC values" from the CSD lock instrumentation code,=C2=A0
->which went away when using ordered TSC reads:
->
->https://lkml=2Eiu=2Eedu/hypermail/linux/kernel/2410=2E1/03202=2Ehtml
->
->I guess maybe a TSC read does not follow all the same
->rules as a memory read, sometimes?
->
+On Sat, Feb 08, 2025 at 12:35:54PM -0500, Brendan Connelly wrote:
+> +Polled input devices
+> +~~~~~~~~~~~~~~~~~~~~
+> +
+> +Input polling is set up by passing an input device struct and a callback=
+ to
+> +the function::
+> +
+> +    int input_setup_polling(struct input_dev *dev,
+> +        void (*poll_fn)(struct input_dev *dev))
+> +
+> +Within the callback, devices should use the regular input_report_* funct=
+ions
+> +and input_sync as is used by other devices.
+> +
+> +There is also the function::
+> +
+> +    void input_set_poll_interval(struct input_dev *dev, unsigned int int=
+erval)
+> +
+> +which is used to configure the interval, in milliseconds, that the devic=
+e will
+> +be polled at.
 
-It probably doesn't, at least on uarches=2E
+Looks good, thanks!
+
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--MzJliMcHmfnza9QT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ6lh6QAKCRD2uYlJVVFO
+oykjAP0Wg05htKkLMtzwvpBRhM2345oR/4W/HgFEivvwW8i9MQD+PGdhYFvIJ5qH
+hN33E8vEbFoJprBBPAr4pDNrDS6uTw0=
+=H9Fp
+-----END PGP SIGNATURE-----
+
+--MzJliMcHmfnza9QT--
