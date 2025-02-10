@@ -1,56 +1,64 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8339E24BCE9
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:33:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791BF24BCE9
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:33:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739201598; cv=none; b=Le88KUlQ6lzqGzTpiKwJvhAPPZpFPzyddCOsN6GX9S54PWbh8O1AJqBCvDj1QfAmMQtiLnkbEY/o/KBr+A+hVv8cDgbgVLeK61hqYcz3myrUfnW0NJwZmCluH/g+uJehtF0SZGLdWdTwbvXUQXC4gEXaAXRWzIlztXLtnan7WPo=
+	t=1739201605; cv=none; b=ClN5Z3fMZpv3H0xNvLLYMh+8MpsqSERzAhG142fUhJ1B+Ssv3FlXXrMofEzKMJjpgz7AHhCeWd+JUtp/3KU/JSf7XiwKnKBdfMKYqIRObOhqUNcU4tIn4crCM9NmrjaL3jP3L7y5qrxOdRrk2x+Miqu+TZfNwuhSsJ+IZ5d+bQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739201598; c=relaxed/simple;
-	bh=EPxg2vuIPde8wI7OFwEcn7eo2lJFTvpWh9vfBUqd9E0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uOtpDU7XL7114WtQWz/Y5q8e56Kv3cC5To6zIoOUQ/fE++rUkDRSWq438GeHG9Mztf6EK100OnoycXOnsCCvrho8f7vWtwm6MBJqBnGj61SIciRW8dK9DX65jYV1CVJ0xc4vIxTKY8YiOBrb5YUal/ibfrwyB7w9YixuGwJ1p6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JXHTJT6O; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1739201605; c=relaxed/simple;
+	bh=hXKMFjUxmniwLPmXl/zrhJcXY2dfco4gVE9XyWgbOhs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ei40++OPW4gTav4fJkH9e0QDdL5PL7+BT6/0Mcm6vdtf09Tt521gJN+uPzgI4Buo00XMDSNtIZZ3TNiv4T5JoHYk3NMqDPsOUbUc0yNG5GBd/RHRydwlqqNQfLYQEsfRFKW+fRJdnAK5b+HjF3Duf7nhmp0+ze9zAwVUw9a6J7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AZcGtqO8; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JXHTJT6O"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AZcGtqO8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739201594;
+	s=mimecast20190719; t=1739201602;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=fUnvnGSy7d8KARdhNW8vax06A3CqMJJcvRUMg/G4Jz4=;
-	b=JXHTJT6O6HJ00OQaTCxDleevC/tsZXVlusbT57MZLIrLtIxMEl2NlA0h3/iUBl+eYE0K6u
-	v+VZNpqFvOtCpN7Wp/Eu2TZgQe7c7Tl7lwZnUxkioqNoZe009ZPdlSM0H2vv1CR4a/amtc
-	IqTg2nyIf9JnlnjPDA6B+FRbIMvGalk=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5B84Awu6JUpstdhEM0yzA51Ej2LPUV/BX8OiM6ds56M=;
+	b=AZcGtqO8LiLbCqFqYoP1gnQohLd+I8NzM7srrv15WS2iMYc++IKASArPQij/54ILIVOqFw
+	i4Lmc8Ho6HH7sQcQfbJm0aiBn6TYs1VciGjm1VRWTRhoAKgd8CU4Fb4m6mwCo5U+2qhAuf
+	EjN7hqtWuRpqLhOyJ5FKE2Q0voayQ8w=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-663-3PpysBU9N9u_8NN2mwuBMg-1; Mon,
- 10 Feb 2025 10:33:11 -0500
-X-MC-Unique: 3PpysBU9N9u_8NN2mwuBMg-1
-X-Mimecast-MFC-AGG-ID: 3PpysBU9N9u_8NN2mwuBMg
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-377-b9b0u06MOzOGh5KpIVY7hQ-1; Mon,
+ 10 Feb 2025 10:33:16 -0500
+X-MC-Unique: b9b0u06MOzOGh5KpIVY7hQ-1
+X-Mimecast-MFC-AGG-ID: b9b0u06MOzOGh5KpIVY7hQ
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A7C36195608E;
-	Mon, 10 Feb 2025 15:33:09 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F40821955D5C;
+	Mon, 10 Feb 2025 15:33:14 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.34.65])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BADB618004A7;
-	Mon, 10 Feb 2025 15:33:06 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 73CDE18004A7;
+	Mon, 10 Feb 2025 15:33:10 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>,
+	linux-mm@kvack.org
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Marco Elver <elver@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
 	"Paul E. McKenney" <paulmck@kernel.org>,
 	Shuah Khan <shuah@kernel.org>
-Cc: Gabriele Monaco <gmonaco@redhat.com>
-Subject: [PATCH v6 0/3] sched: Restructure task_mm_cid_work for predictability
-Date: Mon, 10 Feb 2025 16:32:49 +0100
-Message-ID: <20250210153253.460471-1-gmonaco@redhat.com>
+Subject: [PATCH v6 1/3] sched: Compact RSEQ concurrency IDs with reduced threads and affinity
+Date: Mon, 10 Feb 2025 16:32:50 +0100
+Message-ID: <20250210153253.460471-2-gmonaco@redhat.com>
+In-Reply-To: <20250210153253.460471-1-gmonaco@redhat.com>
+References: <20250210153253.460471-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,96 +68,123 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-This patchset moves the task_mm_cid_work to a preemptible and migratable
-context. This reduces the impact of this task to the scheduling latency
-of real time tasks.
-The change makes the recurrence of the task a bit more predictable.
-We also add optimisation and fixes to make sure the task_mm_cid_work
-works as intended.
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-The behaviour causing latency was introduced in commit 223baf9d17f2
-("sched: Fix performance regression introduced by mm_cid") which
-introduced a task work tied to the scheduler tick.
-That approach presents two possible issues:
-* the task work runs before returning to user and causes, in fact, a
-  scheduling latency (with order of magnitude significant in PREEMPT_RT)
-* periodic tasks with short runtime are less likely to run during the
-  tick, hence they might not run the task work at all
+When a process reduces its number of threads or clears bits in its CPU
+affinity mask, the mm_cid allocation should eventually converge towards
+smaller values.
 
-Patch 1 allows the mm_cids to be actually compacted when a process
-reduces its number of threads, which was not the case since the same
-mm_cids were reused to improve cache locality, more details in [4].
+However, the change introduced by:
 
-Patch 2 contains the main changes, removing the task_work on the
-scheduler tick and using a delayed_work instead.
-Additionally, we terminate the call immediately if we see that no mm_cid
-is actually active, which could happen on processes sleeping for long
-time or which exited but whose mm has not been freed yet.
+commit 7e019dcc470f ("sched: Improve cache locality of RSEQ concurrency
+IDs for intermittent workloads")
 
-Patch 3 adds a selftest to validate the functionality of the
-task_mm_cid_work (i.e. to compact the mm_cids). The test fails if patch
-1 is not applied and is flaky without patch 2. We expect it to always
-pass with the entire patchset applied.
+adds a per-mm/CPU recent_cid which is never unset unless a thread
+migrates.
 
-Changes since V5:
-* Punctuation
+This is a tradeoff between:
 
-Changes since V4 [1]:
-* Fixes on the selftest
-    * Polished memory allocation and cleanup
-    * Handle the test failure in main
+A) Preserving cache locality after a transition from many threads to few
+   threads, or after reducing the hamming weight of the allowed CPU mask.
 
-Changes since V3 [2]:
-* Fixes on the selftest
-    * Minor style issues in comments and indentation
-    * Use of perror where possible
-    * Add a barrier to align threads execution
-    * Improve test failure and error handling
+B) Making the mm_cid upper bounds wrt nr threads and allowed CPU mask
+   easy to document and understand.
 
-Changes since V2 [3]:
-* Change the order of the patches
-* Merge patches changing the main delayed_work logic
-* Improved self-test to spawn 1 less thread and use the main one instead
+C) Allowing applications to eventually react to mm_cid compaction after
+   reduction of the nr threads or allowed CPU mask, making the tracking
+   of mm_cid compaction easier by shrinking it back towards 0 or not.
 
-Changes since V1 [4]:
-* Re-arm the delayed_work at each invocation
-* Cancel the work synchronously at mmdrop
-* Remove next scan fields and completely rely on the delayed_work
-* Shrink mm_cid allocation with nr thread/affinity (Mathieu Desnoyers)
-* Add self test
+D) Making sure applications that periodically reduce and then increase
+   again the nr threads or allowed CPU mask still benefit from good
+   cache locality with mm_cid.
 
-Overhead comparison in [4]
+Introduce the following changes:
 
-[1] - https://lore.kernel.org/lkml/20250113074231.61638-4-gmonaco@redhat.com
-[2] - https://lore.kernel.org/lkml/20241216130909.240042-1-gmonaco@redhat.com
-[3] - https://lore.kernel.org/lkml/20241213095407.271357-1-gmonaco@redhat.com
-[4] - https://lore.kernel.org/lkml/20241205083110.180134-2-gmonaco@redhat.com
+* After shrinking the number of threads or reducing the number of
+  allowed CPUs, reduce the value of max_nr_cid so expansion of CID
+  allocation will preserve cache locality if the number of threads or
+  allowed CPUs increase again.
 
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Peter Zijlstra <peterz@infradead.org>
-To: Ingo Molnar <mingo@kernel.org>
-To: Paul E. McKenney <paulmck@kernel.org>
-To: Shuah Khan <shuah@kernel.org>
+* Only re-use a recent_cid if it is within the max_nr_cid upper bound,
+  else find the first available CID.
 
-Gabriele Monaco (2):
-  sched: Move task_mm_cid_work to mm delayed work
-  rseq/selftests: Add test for mm_cid compaction
+Fixes: 7e019dcc470f ("sched: Improve cache locality of RSEQ concurrency IDs for intermittent workloads")
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Marco Elver <elver@google.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Tested-by: Gabriele Monaco <gmonaco@redhat.com>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
+ include/linux/mm_types.h |  7 ++++---
+ kernel/sched/sched.h     | 25 ++++++++++++++++++++++---
+ 2 files changed, 26 insertions(+), 6 deletions(-)
 
-Mathieu Desnoyers (1):
-  sched: Compact RSEQ concurrency IDs with reduced threads and affinity
-
- include/linux/mm_types.h                      |  23 +-
- include/linux/sched.h                         |   1 -
- kernel/sched/core.c                           |  66 +-----
- kernel/sched/sched.h                          |  32 ++-
- tools/testing/selftests/rseq/.gitignore       |   1 +
- tools/testing/selftests/rseq/Makefile         |   2 +-
- .../selftests/rseq/mm_cid_compaction_test.c   | 200 ++++++++++++++++++
- 7 files changed, 246 insertions(+), 79 deletions(-)
- create mode 100644 tools/testing/selftests/rseq/mm_cid_compaction_test.c
-
-
-base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 6b27db7f94963..0234f14f2aa6b 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -875,10 +875,11 @@ struct mm_struct {
+ 		 */
+ 		unsigned int nr_cpus_allowed;
+ 		/**
+-		 * @max_nr_cid: Maximum number of concurrency IDs allocated.
++		 * @max_nr_cid: Maximum number of allowed concurrency
++		 *              IDs allocated.
+ 		 *
+-		 * Track the highest number of concurrency IDs allocated for the
+-		 * mm.
++		 * Track the highest number of allowed concurrency IDs
++		 * allocated for the mm.
+ 		 */
+ 		atomic_t max_nr_cid;
+ 		/**
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 38e0e323dda26..606c96b74ebfa 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -3698,10 +3698,28 @@ static inline int __mm_cid_try_get(struct task_struct *t, struct mm_struct *mm)
+ {
+ 	struct cpumask *cidmask = mm_cidmask(mm);
+ 	struct mm_cid __percpu *pcpu_cid = mm->pcpu_cid;
+-	int cid = __this_cpu_read(pcpu_cid->recent_cid);
++	int cid, max_nr_cid, allowed_max_nr_cid;
+ 
++	/*
++	 * After shrinking the number of threads or reducing the number
++	 * of allowed cpus, reduce the value of max_nr_cid so expansion
++	 * of cid allocation will preserve cache locality if the number
++	 * of threads or allowed cpus increase again.
++	 */
++	max_nr_cid = atomic_read(&mm->max_nr_cid);
++	while ((allowed_max_nr_cid = min_t(int, READ_ONCE(mm->nr_cpus_allowed),
++					   atomic_read(&mm->mm_users))),
++	       max_nr_cid > allowed_max_nr_cid) {
++		/* atomic_try_cmpxchg loads previous mm->max_nr_cid into max_nr_cid. */
++		if (atomic_try_cmpxchg(&mm->max_nr_cid, &max_nr_cid, allowed_max_nr_cid)) {
++			max_nr_cid = allowed_max_nr_cid;
++			break;
++		}
++	}
+ 	/* Try to re-use recent cid. This improves cache locality. */
+-	if (!mm_cid_is_unset(cid) && !cpumask_test_and_set_cpu(cid, cidmask))
++	cid = __this_cpu_read(pcpu_cid->recent_cid);
++	if (!mm_cid_is_unset(cid) && cid < max_nr_cid &&
++	    !cpumask_test_and_set_cpu(cid, cidmask))
+ 		return cid;
+ 	/*
+ 	 * Expand cid allocation if the maximum number of concurrency
+@@ -3709,8 +3727,9 @@ static inline int __mm_cid_try_get(struct task_struct *t, struct mm_struct *mm)
+ 	 * and number of threads. Expanding cid allocation as much as
+ 	 * possible improves cache locality.
+ 	 */
+-	cid = atomic_read(&mm->max_nr_cid);
++	cid = max_nr_cid;
+ 	while (cid < READ_ONCE(mm->nr_cpus_allowed) && cid < atomic_read(&mm->mm_users)) {
++		/* atomic_try_cmpxchg loads previous mm->max_nr_cid into cid. */
+ 		if (!atomic_try_cmpxchg(&mm->max_nr_cid, &cid, cid + 1))
+ 			continue;
+ 		if (!cpumask_test_and_set_cpu(cid, cidmask))
 -- 
 2.48.1
 
