@@ -1,255 +1,1995 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2066.outbound.protection.outlook.com [40.107.100.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E912257438;
-	Mon, 10 Feb 2025 16:51:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739206303; cv=fail; b=etv2e57XW68tXVZVaglQ7AtgMajxPNYqYbLPE6e8hqdUXoijN71YHJw5q7WkQlbG7IFM30S8LVQwggBXYSelICpmGGTHgowYE6QwcAs2q0f+7M1w2u1hsHnXmCyKRxRvQKYlWqXb4vch6GDn1izMotIv06M+rOIt4fF3nwzSDkw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739206303; c=relaxed/simple;
-	bh=Js2qsr1/dHFzK+Og3y+sJoqdkOKLHXAaLg52PM0LKBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=UMr2n8Q1VGifER9XO+qfVR/hXtXBI0dNVkduQ2Sn1YTK+aUh5v0+lD6YhOue9gCY+Gqs9YX4uIuAyNL/ZJKUrQLtuV0MQsKPtAlPUgtzH/Vv6ggr4B9wj5O8B7ezNCc5Czior1k9Wszrrf97FX+p+9AnK+74fBCz4L1bArUeIGU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=pIqNyUE+; arc=fail smtp.client-ip=40.107.100.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950F8257424;
+	Mon, 10 Feb 2025 16:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739206295; cv=none; b=XqWLrEAC7ZSi5qMYWGw42hon6wJnkiIG849kcbCyZxKQEmfLI+vh10bcca2n76qtI7IgKog8hdsdaDvUD0Dy+Rz/DgjBtYSKA2VtMV0JW2q57RWBj79mkI8YIQr+G1Taejnas0w3opynYKc6L7k7BF47SLCkNO0CeEXVoDAklxo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739206295; c=relaxed/simple;
+	bh=jz4hJCMcubkPva5O+d5vFSg5q0IlGYchP3YJLg1R8v0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DnT70f0w2REgHjF86IorTc3lxjyEYt8jUawqgTGTH+Nnlqn6hDels5cL0h0arofoaadiwfQZydlxnsY9M/ZQ76K7Yiuq7sdveMTNWpLysuD6VhfTNFH8mrhYvbtMgy3OTfLE6vCePZbtrutRt/4YNoeeYZVUeOkGujG3BLpgJYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bkyYTavc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="pIqNyUE+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=arbiTGHgLchkl9PUVVWL8dCvXa0cp4eVKgX75kytwf5PqCFENKfWTOzV9qLKCBWCLQBOodv3HESOVBo021aJGme4bWI/4zi1cjb/ocqGh4q9DxQqrexY0IiUpzKBtzl+imR+5dzPHv5q3xZoFkKX0xsfXaGgfgcUO03cUHID/YTK7E6Rv0bKoyKdFMoQG2t779yV9flGE4kQNpxttig1FRp+XgwBLlND+wVt8GF4J3N/zFWHJ+7e5S8WoiTqqh7YFqERor3XHs1QwhtS6a6wLpIHa9DS4GObhSCqh8kUqazfvieNs6H69CKzdmOZT9FoOvDfVBUFxV0c/Z+hzx8WPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uyC1OAaEz1TdUbTRH542W3LfxwaU91l3ACp0foSvTAg=;
- b=rGcJLA/ni+WWBJHmKG4zCRrOKWKt+7/4/VV7z8jPWirj9tPTKM5bdPHdVuV2hhadxoK2UobSkGd9HWBhFmXeyc2TWw9afsedqOruBQwINUE9LYPnlFmIQbh1gLVOdZo2LhpLb5kxhYumgnupreLFgpF9v9wktwvi+Aw2yPFuAI1yaT3+dEn9jjkTy4B0GlbawMZLh5NVEDgamsMcnuGgzpqHPjshEQDKeR3ngql2sGbMHniSrSTSGjeXQCZcbwrZLVK7f4RllSJtkt7SrGfMJlmrv0hR+0cSMnnNMUcYAMi2BcddldLR+qcqalFceWWoMKqYROveRbhAKbWj3FKkqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uyC1OAaEz1TdUbTRH542W3LfxwaU91l3ACp0foSvTAg=;
- b=pIqNyUE+cPA32f2wtyz9XDv815TQ2o5PZJp2KrSqLKB4uQw4tQlzE7KPVmZHlVRh6t3E4GZohKOi6BB524D5cb+TXt/s4OVltyYtZjyZjKi5YQLkOEVfF1InQs40NbFpr7NRFPZXSwsBEb7JLw+DGDFufmWyYsh3x7DhxO1bBpY0MXbBJJ6YUO0qOGJi7F6C1QO5igvLC3n5787iNdyW5RICwz8VWlmPBobokM/COV8zIKoW9lgB0txkboMWEQS7e/PBNUscldyqbPVrY7bIpl1LoXPScin9zb989W1rLCjhAja77bLu6cNoFAUMORNXwvIbvOv8W0X+MAh9bpcNsA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
- by DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Mon, 10 Feb
- 2025 16:51:38 +0000
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5%7]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
- 16:51:38 +0000
-Date: Mon, 10 Feb 2025 17:51:31 +0100
-From: Andrea Righi <arighi@nvidia.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
-	Changwoo Min <changwoo@igalia.com>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>, Ian May <ianm@nvidia.com>,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] mm/numa: Introduce numa_nearest_nodemask()
-Message-ID: <Z6ouk-c9mLk6_yVd@gpd3>
-References: <20250207211104.30009-1-arighi@nvidia.com>
- <20250207211104.30009-2-arighi@nvidia.com>
- <Z6joYmcjyT8eY32H@thinkpad>
- <Z6m4tEoiUBNBmIjV@gpd3>
- <Z6osTMrXVv54cES9@thinkpad>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6osTMrXVv54cES9@thinkpad>
-X-ClientProxiedBy: FR3P281CA0124.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:94::15) To CY5PR12MB6405.namprd12.prod.outlook.com
- (2603:10b6:930:3e::17)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bkyYTavc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EA09C4CEE8;
+	Mon, 10 Feb 2025 16:51:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739206295;
+	bh=jz4hJCMcubkPva5O+d5vFSg5q0IlGYchP3YJLg1R8v0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bkyYTavcL23JiVs2r314vdxeeddKEeAG78DakeAckvVzKaEiF5DTc/tHjh2K6UdeP
+	 D61Z3Nh2j/iLxySLCUS22NmZ9m+m/HmqRbmJj6WU0FTbXh8afEqkiuErvlnRO+UAWC
+	 zQqvmyl3KTCu1BYMN5ceoz9AeM9puAy3+jQwlcn0yJNoUETrtVWH2HFkPjJwpFZUey
+	 oZXquLF2qgcEBv4LjSRRxEMFAyAVa0HMm2uDcnwjRGdrcAC4MiNHvcsSna3hOTU3Q9
+	 OtX5zD3ibN+pefw+VL3cH+LgYTIVb5Y1H1Tx7w/WWq/47r8XtQgktBiE44jVQSl6yf
+	 Ov3hw4hmHdTyQ==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH v4] crypto: x86/aes-ctr - rewrite AESNI+AVX optimized CTR and add VAES support
+Date: Mon, 10 Feb 2025 08:50:20 -0800
+Message-ID: <20250210165020.42611-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|DS7PR12MB9473:EE_
-X-MS-Office365-Filtering-Correlation-Id: ca868854-c616-42dd-fc99-08dd49f32f55
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?F/yH5s20HGTBp/ofL7Xemvv/gAYlz7wOxy72HnJqiJ74eZOS3rUObbUuUZmA?=
- =?us-ascii?Q?TnAeVu5hJCyarZgomuLJTCqDqJrp3oX4jfbN0SrWdAgiq1ZPKXis6QQ/JGVQ?=
- =?us-ascii?Q?NUVKKZ2JFvfXfmYUMaUU2Nq/vzYN82WBg8M0HkoRlgYqnWfYcFbEcCzavi3g?=
- =?us-ascii?Q?gDs3JR4ELHePTHi+v0EvgaeR64z8Ia6PPQzlqpZNLMyH5J50vc2tFuenuCe0?=
- =?us-ascii?Q?No9zKYjUGVnEsD7uDu/9r/sfcPIMMhgu6mSo7cm2KfKO0d7PLO0cPVvy1FeE?=
- =?us-ascii?Q?QB63PvjB8F92exP6O0PWi3eQ3BMwQlXjfbwfQy9BKlOZoNbxtlEgEJNEKmlO?=
- =?us-ascii?Q?Ned13jJbiYQ8QP4R16QHs18dvv2T36Z3FRJicjzPxBFVFq2iqB96XpJqAGH7?=
- =?us-ascii?Q?6J7QXoJV0PMyEHr6EjhjEWJ+ohpV5k0olfQucjeYC5lIboPWIuCHeO6E2d8i?=
- =?us-ascii?Q?5cKwkQaB7+f23LArKaYpJNjUt9BdC9tlZH/Xzjivjm8o5IHNJUbGCchGwPhD?=
- =?us-ascii?Q?LympcziyoO9AbPbiRAcd5vTttK87IAP1oPbXI3dLIYg7i+e0e6Vpi3GWLnMc?=
- =?us-ascii?Q?2oa8QGKJu2AsBXG309fwTdiO4g0Ji2raC/msUjKrgz18MxgN4GyZFIXJQp9I?=
- =?us-ascii?Q?ncjb5Qne4lABBCDZxPUsK8v2K2X/2PV5+wnS/IT8aryrkCLnSCNOzgjFw4CD?=
- =?us-ascii?Q?jfgyOPmh/Q/eXagE7/lYXrb/PGkOePNg9SPSZdiVIwu0DNhR/9M5Kvjk+iX5?=
- =?us-ascii?Q?BxEgQsk8dCymjGKm9FPhwl5vU+cxwX01hVVUL+6PzHMEVSjG9TzMRjzNoweB?=
- =?us-ascii?Q?Qh5ucjerFmweC8ZgU85qg4IMJ7xSi1kTKDcdoBKRKF8iQElHLZefiy20JF6X?=
- =?us-ascii?Q?n+4Kpdk0Nm3Onuj+wRyhsMclCGvmLupX5UlCA+ZXATyoPYrALyz4h8luEEei?=
- =?us-ascii?Q?s2t+GlRvR3QfBTQvXAwfdrprpct+4z53H7YCweAsKDUa2A3lCNoVQX0ycAip?=
- =?us-ascii?Q?3jOBXCzFl8kNIV3GqecX78+VvL9KIXOQFy+5AFXhvhfDNP+DuFJ/vTaVCbc1?=
- =?us-ascii?Q?3nx6iAL7bCJycqR2Ldca12V4rIa+NNEtiWFdu3xoNOw0hsOb/DKQEe4PYbB8?=
- =?us-ascii?Q?KDuoqP1p594GuRWuSk+OAofKv51oAxTzb8obiEbWxo6KmTx9qyvbBKN/K9O/?=
- =?us-ascii?Q?/kduwC5QuSuQG//LB5APV/P/zbSfg+8O+ErPCxulxzcSUBwWg5dPKoUmpiK+?=
- =?us-ascii?Q?8dczMR1wZf/gCIdRVpKdULnYgGyPx39XnOY6HL8nKzqQzrvktDs91bsCo4x3?=
- =?us-ascii?Q?UBNjrIm7VNAUgSG/sAFTrvN1fWGZ38yBE3CMAC/dLxKF9tIPrMoMsiHa7Vm8?=
- =?us-ascii?Q?Nzw7Jcs7qGe471GfpeqaeS9FU+J5?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Yu7XDPs8TBpstJy6ZI7c4MiCIOEVo7RG9picZWoQDWe5zEqJfxKEUwzND1PY?=
- =?us-ascii?Q?SMSP1fnOaOlaVu3RvM3/kl3LR58Iw5EdNOyVo7y6Zh3JV+qO7KmzLbCXCkut?=
- =?us-ascii?Q?/GRV+UVv/RRNrpRu7hib8DQZnCQMahzCflviCqaUF66xGAM0J8dtmKIhJ5uR?=
- =?us-ascii?Q?cSM61ySXAeP3JIQ0YTVYcDsRzkvsuM0rAFfDfXZIPrcwrOmVXtHr6Y1G3wQV?=
- =?us-ascii?Q?wPcEwkfG1uGrxPuyisiGsZgn5w/o2NplOBEBrdUce5SDshOgljXGUeK3xg7l?=
- =?us-ascii?Q?SAzN9qXMVUBk1lImqbHyes9K1f/9V6JFf6nuJAR7Ml8GuMxMDgLV15pcUQtg?=
- =?us-ascii?Q?TDODwJB85dNUCJqRSVqUeeMgrnP02g0SMsPwH8Bh1LZ35IXLAV9GDNPPIffa?=
- =?us-ascii?Q?Vbqp6/e9pkTsuaD4LE2cPID6zsHWDxrsFhQNmVbTyf++s6rNfUpFqCaUIf74?=
- =?us-ascii?Q?yhtXoS4IjWTvQamTwxifZJwuse+p+ARJPDhyfQwgxe1PuiTNqWvDabgufIWc?=
- =?us-ascii?Q?oaJ+fkNZfbWeZcgIsmelCmHZaMCOACQLjL9cu2l2wptqw7D9tB8SKNi2OZOC?=
- =?us-ascii?Q?uGyNUe++e8xdwKmE+oo7ITaEpTF9wVHZayMF67ASoNNI7KhngetKepS5CodF?=
- =?us-ascii?Q?yfNT1wHZRyMECVblo8c3BZsmgPmIxLjJR8baanKk/eQlTC2H61jVVJov2pQ1?=
- =?us-ascii?Q?HuuNc/5rw0nNOPhKxZmoyBIO1yBKqn7hvImepQ3oBCWkw1hO+Mt7rMeBIxUv?=
- =?us-ascii?Q?M3H1Ykt41b7xjeTSgJTx94SGImhHOXn6Ee6kII98eaZWFFzOFrvFbrhG1445?=
- =?us-ascii?Q?ZoF3oOIjNA8gz5lfj3iYlkaYg4o9/2rg68Ckf4cumGjEal26JOCbaZfKCki1?=
- =?us-ascii?Q?JCgMIUAq6qKHLfDI7O4ypkQ0yl6BNw2j9zV7BOL3riRvR3iF7srflBL3phmq?=
- =?us-ascii?Q?e+azPd+35nK4Niz/fGkKt0QuM4xJQaRZL/vLRuVDwInRNnyQ5QRkcyCACm8u?=
- =?us-ascii?Q?lYYp8pDpPo1noAsLheotlBVuN0QeMRxgBk/bm38FAhOmrSba81djah9IKZey?=
- =?us-ascii?Q?6DshTwgqVPLTHeE/8SWwvwv5vvQ75OUDM3Y2qdddREPRY7poJDxoQ41QPeJL?=
- =?us-ascii?Q?vpb4gvNZi7R959+txd5ZOvB0sBEDKenOzz0cbd3fNS91hrSx5U1QlWCcqy+K?=
- =?us-ascii?Q?0vxYr/woSu+c7aa4q7vRc7mJs940hM7robd1fEM+iBTYcGRg1kGTM2SNJaDG?=
- =?us-ascii?Q?CRy0FVxC+bZNIjENLy4kfpPz8is4+4b3vD0DBqUdWbzg6207egN9H1wGJNkr?=
- =?us-ascii?Q?FT1BrnfWeI2mBPLtUccvUHBpUHqM30nbu7CBwhmrMgEL9SBFPLn8y6ZEgs8N?=
- =?us-ascii?Q?Wyvp9gEhFkBExn3PdT3NOqOxfD/zQtEc7BJy4u2nc2t46R1fkUG9+qAdXite?=
- =?us-ascii?Q?ZV01GBaE6gCRrqX+JkecLLIa/YPJiMxJ/IgGOfMr6/ccPFBhFn3Ijj+kHQlr?=
- =?us-ascii?Q?8apzHkpzoUMSV0f1VFRVrmIm1qiT4s9ipBjLr0U1G7XU2Nne3adrI7wA/3ZV?=
- =?us-ascii?Q?tZoKA1t7pCjSHYCm+to+wF4GZuaTEdIpKd820rqS?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca868854-c616-42dd-fc99-08dd49f32f55
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 16:51:38.0101
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SBylDH0WZry4b5WMhF7DUMiMYJqdTnBdRZqgZIOZ4Yv76NKTIitCpBSjw6Or5C2VLR4lo/d4lmqublFlk9tGaA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB9473
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 10, 2025 at 11:41:48AM -0500, Yury Norov wrote:
-...
-> > > Numa should include this via linux/nodemask_types.h, or maybe
-> > > nodemask.h.
-> > 
-> > Hm... nodemask_types.h needs to include numa.h to resolve MAX_NUMNODES,
-> > Maybe we can move numa_nearest_nodemask() to linux/nodemask.h?
-> 
-> Maybe yes, but it's generally wrong. nodemask.h is a library, and
-> numa.h (generally, NUMA code) is one user. The right way to go is when
-> client code includes all necessary libs, not vise-versa.
+From: Eric Biggers <ebiggers@google.com>
 
-Ok, makes sense.
+Delete aes_ctrby8_avx-x86_64.S and add a new assembly file
+aes-ctr-avx-x86_64.S which follows a similar approach to
+aes-xts-avx-x86_64.S in that it uses a "template" to provide AESNI+AVX,
+VAES+AVX2, VAES+AVX10/256, and VAES+AVX10/512 code, instead of just
+AESNI+AVX.  Wire it up to the crypto API accordingly.
 
-> 
-> Regarding MAX_NUMNODES, it's a natural property of nodemasks, and
-> should be declared in nodemask.h. The attached patch reverts the
-> inclusion paths dependency. I build-tested it against today's master
-> and x86_64 defconfig. Can you consider taking it and prepending your
-> series?
+This greatly improves the performance of AES-CTR and AES-XCTR on
+VAES-capable CPUs, with the best case being AMD Zen 5 where an over 230%
+increase in throughput is seen on long messages.  Performance on
+non-VAES-capable CPUs remains about the same, and the non-AVX AES-CTR
+code (aesni_ctr_enc) is also kept as-is for now.  There are some slight
+regressions (less than 10%) on some short message lengths on some CPUs;
+these are difficult to avoid, given how the previous code was so heavily
+unrolled by message length, and they are not particularly important.
+Detailed performance results are given in the tables below.
 
-Sure, I'll test it and include it in the next version.
+Both CTR and XCTR support is retained.  The main loop remains
+8-vector-wide, which differs from the 4-vector-wide main loops that are
+used in the XTS and GCM code.  A wider loop is appropriate for CTR and
+XCTR since they have fewer other instructions (such as vpclmulqdq) to
+interleave with the AES instructions.
 
->  
-> > > >  #ifdef CONFIG_NUMA
-> > > >  #include <asm/sparsemem.h>
-> > > >  
-> > > > @@ -38,6 +40,7 @@ void __init alloc_offline_node_data(int nid);
-> > > >  
-> > > >  /* Generic implementation available */
-> > > >  int numa_nearest_node(int node, unsigned int state);
-> > > > +int numa_nearest_nodemask(int node, unsigned int state, struct nodemask *mask);
-> > > >  
-> > > >  #ifndef memory_add_physaddr_to_nid
-> > > >  int memory_add_physaddr_to_nid(u64 start);
-> > > > @@ -55,6 +58,11 @@ static inline int numa_nearest_node(int node, unsigned int state)
-> > > >  	return NUMA_NO_NODE;
-> > > >  }
-> > > >  
-> > > > +static inline int numa_nearest_nodemask(int node, unsigned int state, struct nodemask *mask)
-> > > > +{
-> > > > +	return NUMA_NO_NODE;
-> > > > +}
-> > > > +
-> > > >  static inline int memory_add_physaddr_to_nid(u64 start)
-> > > >  {
-> > > >  	return 0;
-> > > > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> > > > index 162407fbf2bc7..1cfee509c7229 100644
-> > > > --- a/mm/mempolicy.c
-> > > > +++ b/mm/mempolicy.c
-> > > > @@ -196,6 +196,44 @@ int numa_nearest_node(int node, unsigned int state)
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(numa_nearest_node);
-> > > >  
-> > > > +/**
-> > > > + * numa_nearest_nodemask - Find the node in @mask at the nearest distance
-> > > > + *			   from @node.
-> > > > + *
-> > > 
-> > > So, I have a feeling about this whole naming scheme. At first, this
-> > > function (and the existing numa_nearest_node()) searches for something,
-> > > but doesn't begin with find_, search_ or similar. Second, the naming
-> > > of existing numa_nearest_node() doesn't reflect that it searches
-> > > against the state. Should we always include some state for search? If
-> > > so, we can skip mentioning the state, otherwise it should be in the
-> > > name, I guess...
-> > > 
-> > > The problem is that I have no idea for better naming, and I have no
-> > > understanding about the future of this functions family. If it's just
-> > > numa_nearest_node() and numa_nearest_nodemask(), I'm OK to go this
-> > > way. If we'll add more flavors similarly to find_bit() family, we
-> > > could probably discuss a naming scheme.
-> > > 
-> > > Also, mm/mempolicy.c is a historical place for them, but maybe we need
-> > > to move it somewhere else?
-> > > 
-> > > Any thoughts appreciated.
-> > 
-> > Personally I think adding "find_" to the name would be a bit redundant, as
-> > it seems quite obvious that it's finding the nearest node. It sounds a bit
-> > like the get_something() discussion and we can just use something().
-> > 
-> > About adding "_state" to the name, it'd make sense since we have
-> > for_each_node_state/for_each_node(), but we would need to change
-> > numa_nearest_node() -> numa_nearest_node_state((), that is beyond the scope
-> > of this patch set.
-> > 
-> > If I had to design this completely from scratch I'd probably propose
-> > something like this:
-> >  - nearest_node_state(node, state)
-> >  - nearest_node(node) -> nearest_node_state(node, N_POSSIBLE)
-> >  - nearest_node_nodemask(node, nodemask) -> here the state can be managed
-> >    with the nodemask (as you suggested below)
-> > 
-> > But again, this is probably a more generic discussion that can be addressed
-> > in a separate thread.
-> 
-> Yes, it's not related to your series. Please just introduce
-> nearest_node_nodemask(node, nodemask) as your minimal required change.
-> I will do a necessary cleanup later, if needed.
+Similar to what was the case for AES-GCM, the new assembly code also has
+a much smaller binary size, as it fixes the excessive unrolling by data
+length and key length present in the old code.  Specifically, the new
+assembly file compiles to about 9 KB of text vs. 28 KB for the old file.
+This is despite 4x as many implementations being included.
 
-Ok, thanks!
+The tables below show the detailed performance results.  The tables show
+percentage improvement in single-threaded throughput for repeated
+encryption of the given message length; an increase from 6000 MB/s to
+12000 MB/s would be listed as 100%.  They were collected by directly
+measuring the Linux crypto API performance using a custom kernel module.
+The tested CPUs were all server processors from Google Compute Engine
+except for Zen 5 which was a Ryzen 9 9950X desktop processor.
 
--Andrea
+Table 1: AES-256-CTR throughput improvement,
+         CPU microarchitecture vs. message length in bytes:
+
+                     | 16384 |  4096 |  4095 |  1420 |   512 |   500 |
+---------------------+-------+-------+-------+-------+-------+-------+
+AMD Zen 5            |  232% |  203% |  212% |  143% |   71% |   95% |
+Intel Emerald Rapids |  116% |  116% |  117% |   91% |   78% |   79% |
+Intel Ice Lake       |  109% |  103% |  107% |   81% |   54% |   56% |
+AMD Zen 4            |  109% |   91% |  100% |   70% |   43% |   59% |
+AMD Zen 3            |   92% |   78% |   87% |   57% |   32% |   43% |
+AMD Zen 2            |    9% |    8% |   14% |   12% |    8% |   21% |
+Intel Skylake        |    7% |    7% |    8% |    5% |    3% |    8% |
+
+                     |   300 |   200 |    64 |    63 |    16 |
+---------------------+-------+-------+-------+-------+-------+
+AMD Zen 5            |   57% |   39% |   -9% |    7% |   -7% |
+Intel Emerald Rapids |   37% |   42% |   -0% |   13% |   -8% |
+Intel Ice Lake       |   39% |   30% |   -1% |   14% |   -9% |
+AMD Zen 4            |   42% |   38% |   -0% |   18% |   -3% |
+AMD Zen 3            |   38% |   35% |    6% |   31% |    5% |
+AMD Zen 2            |   24% |   23% |    5% |   30% |    3% |
+Intel Skylake        |    9% |    1% |   -4% |   10% |   -7% |
+
+Table 2: AES-256-XCTR throughput improvement,
+         CPU microarchitecture vs. message length in bytes:
+
+                     | 16384 |  4096 |  4095 |  1420 |   512 |   500 |
+---------------------+-------+-------+-------+-------+-------+-------+
+AMD Zen 5            |  240% |  201% |  216% |  151% |   75% |  108% |
+Intel Emerald Rapids |  100% |   99% |  102% |   91% |   94% |  104% |
+Intel Ice Lake       |   93% |   89% |   92% |   74% |   50% |   64% |
+AMD Zen 4            |   86% |   75% |   83% |   60% |   41% |   52% |
+AMD Zen 3            |   73% |   63% |   69% |   45% |   21% |   33% |
+AMD Zen 2            |   -2% |   -2% |    2% |    3% |   -1% |   11% |
+Intel Skylake        |   -1% |   -1% |    1% |    2% |   -1% |    9% |
+
+                     |   300 |   200 |    64 |    63 |    16 |
+---------------------+-------+-------+-------+-------+-------+
+AMD Zen 5            |   78% |   56% |   -4% |   38% |   -2% |
+Intel Emerald Rapids |   61% |   55% |    4% |   32% |   -5% |
+Intel Ice Lake       |   57% |   42% |    3% |   44% |   -4% |
+AMD Zen 4            |   35% |   28% |   -1% |   17% |   -3% |
+AMD Zen 3            |   26% |   23% |   -3% |   11% |   -6% |
+AMD Zen 2            |   13% |   24% |   -1% |   14% |   -3% |
+Intel Skylake        |   16% |    8% |   -4% |   35% |   -3% |
+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+
+Changed in v4:
+- Used 'varargs' in assembly macros where appropriate.
+
+Changed in v3:
+- Dropped the patch removing the non-AVX AES-CTR for now
+- Changed license of aes-ctr-avx-x86_64.S to Apache-2.0 OR BSD-2-Clause,
+  same as what I used for the AES-GCM assembly files.  I've received
+  interest in this code possibly being reused in other projects.
+- Updated commit message to remove an ambiguous statement
+- Updated commit message to clarify that the non-AVX code is unchanged
+- Added comment above ctr_crypt_aesni() noting that it's non-AVX
+
+Changed in v2:
+- Split the removal of the non-AVX implementation of AES-CTR into a
+  separate patch, and removed the assembly code too.
+- Made some minor tweaks to the new assembly file, including fixing a
+  build error when aesni-intel is built as a module.
+
+ arch/x86/crypto/Makefile                |   2 +-
+ arch/x86/crypto/aes-ctr-avx-x86_64.S    | 592 +++++++++++++++++++++++
+ arch/x86/crypto/aes_ctrby8_avx-x86_64.S | 597 ------------------------
+ arch/x86/crypto/aesni-intel_glue.c      | 404 ++++++++--------
+ 4 files changed, 803 insertions(+), 792 deletions(-)
+ create mode 100644 arch/x86/crypto/aes-ctr-avx-x86_64.S
+ delete mode 100644 arch/x86/crypto/aes_ctrby8_avx-x86_64.S
+
+diff --git a/arch/x86/crypto/Makefile b/arch/x86/crypto/Makefile
+index 07b00bfca64b5..5d19f41bde583 100644
+--- a/arch/x86/crypto/Makefile
++++ b/arch/x86/crypto/Makefile
+@@ -46,11 +46,11 @@ obj-$(CONFIG_CRYPTO_CHACHA20_X86_64) += chacha-x86_64.o
+ chacha-x86_64-y := chacha-avx2-x86_64.o chacha-ssse3-x86_64.o chacha_glue.o
+ chacha-x86_64-$(CONFIG_AS_AVX512) += chacha-avx512vl-x86_64.o
+ 
+ obj-$(CONFIG_CRYPTO_AES_NI_INTEL) += aesni-intel.o
+ aesni-intel-y := aesni-intel_asm.o aesni-intel_glue.o
+-aesni-intel-$(CONFIG_64BIT) += aes_ctrby8_avx-x86_64.o \
++aesni-intel-$(CONFIG_64BIT) += aes-ctr-avx-x86_64.o \
+ 			       aes-gcm-aesni-x86_64.o \
+ 			       aes-xts-avx-x86_64.o
+ ifeq ($(CONFIG_AS_VAES)$(CONFIG_AS_VPCLMULQDQ),yy)
+ aesni-intel-$(CONFIG_64BIT) += aes-gcm-avx10-x86_64.o
+ endif
+diff --git a/arch/x86/crypto/aes-ctr-avx-x86_64.S b/arch/x86/crypto/aes-ctr-avx-x86_64.S
+new file mode 100644
+index 0000000000000..1685d8b24b2ca
+--- /dev/null
++++ b/arch/x86/crypto/aes-ctr-avx-x86_64.S
+@@ -0,0 +1,592 @@
++/* SPDX-License-Identifier: Apache-2.0 OR BSD-2-Clause */
++//
++// Copyright 2025 Google LLC
++//
++// Author: Eric Biggers <ebiggers@google.com>
++//
++// This file is dual-licensed, meaning that you can use it under your choice of
++// either of the following two licenses:
++//
++// Licensed under the Apache License 2.0 (the "License").  You may obtain a copy
++// of the License at
++//
++//	http://www.apache.org/licenses/LICENSE-2.0
++//
++// Unless required by applicable law or agreed to in writing, software
++// distributed under the License is distributed on an "AS IS" BASIS,
++// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++// See the License for the specific language governing permissions and
++// limitations under the License.
++//
++// or
++//
++// Redistribution and use in source and binary forms, with or without
++// modification, are permitted provided that the following conditions are met:
++//
++// 1. Redistributions of source code must retain the above copyright notice,
++//    this list of conditions and the following disclaimer.
++//
++// 2. Redistributions in binary form must reproduce the above copyright
++//    notice, this list of conditions and the following disclaimer in the
++//    documentation and/or other materials provided with the distribution.
++//
++// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
++// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
++// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
++// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
++// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
++// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++// POSSIBILITY OF SUCH DAMAGE.
++//
++//------------------------------------------------------------------------------
++//
++// This file contains x86_64 assembly implementations of AES-CTR and AES-XCTR
++// using the following sets of CPU features:
++//	- AES-NI && AVX
++//	- VAES && AVX2
++//	- VAES && (AVX10/256 || (AVX512BW && AVX512VL)) && BMI2
++//	- VAES && (AVX10/512 || (AVX512BW && AVX512VL)) && BMI2
++//
++// See the function definitions at the bottom of the file for more information.
++
++#include <linux/linkage.h>
++#include <linux/cfi_types.h>
++
++.section .rodata
++.p2align 4
++
++.Lbswap_mask:
++	.octa	0x000102030405060708090a0b0c0d0e0f
++
++.Lctr_pattern:
++	.quad	0, 0
++.Lone:
++	.quad	1, 0
++.Ltwo:
++	.quad	2, 0
++	.quad	3, 0
++
++.Lfour:
++	.quad	4, 0
++
++.text
++
++// Move a vector between memory and a register.
++// The register operand must be in the first 16 vector registers.
++.macro	_vmovdqu	src, dst
++.if VL < 64
++	vmovdqu		\src, \dst
++.else
++	vmovdqu8	\src, \dst
++.endif
++.endm
++
++// Move a vector between registers.
++// The registers must be in the first 16 vector registers.
++.macro	_vmovdqa	src, dst
++.if VL < 64
++	vmovdqa		\src, \dst
++.else
++	vmovdqa64	\src, \dst
++.endif
++.endm
++
++// Broadcast a 128-bit value from memory to all 128-bit lanes of a vector
++// register.  The register operand must be in the first 16 vector registers.
++.macro	_vbroadcast128	src, dst
++.if VL == 16
++	vmovdqu		\src, \dst
++.elseif VL == 32
++	vbroadcasti128	\src, \dst
++.else
++	vbroadcasti32x4	\src, \dst
++.endif
++.endm
++
++// XOR two vectors together.
++// Any register operands must be in the first 16 vector registers.
++.macro	_vpxor	src1, src2, dst
++.if VL < 64
++	vpxor		\src1, \src2, \dst
++.else
++	vpxord		\src1, \src2, \dst
++.endif
++.endm
++
++// Load 1 <= %ecx <= 15 bytes from the pointer \src into the xmm register \dst
++// and zeroize any remaining bytes.  Clobbers %rax, %rcx, and \tmp{64,32}.
++.macro	_load_partial_block	src, dst, tmp64, tmp32
++	sub		$8, %ecx		// LEN - 8
++	jle		.Lle8\@
++
++	// Load 9 <= LEN <= 15 bytes.
++	vmovq		(\src), \dst		// Load first 8 bytes
++	mov		(\src, %rcx), %rax	// Load last 8 bytes
++	neg		%ecx
++	shl		$3, %ecx
++	shr		%cl, %rax		// Discard overlapping bytes
++	vpinsrq		$1, %rax, \dst, \dst
++	jmp		.Ldone\@
++
++.Lle8\@:
++	add		$4, %ecx		// LEN - 4
++	jl		.Llt4\@
++
++	// Load 4 <= LEN <= 8 bytes.
++	mov		(\src), %eax		// Load first 4 bytes
++	mov		(\src, %rcx), \tmp32	// Load last 4 bytes
++	jmp		.Lcombine\@
++
++.Llt4\@:
++	// Load 1 <= LEN <= 3 bytes.
++	add		$2, %ecx		// LEN - 2
++	movzbl		(\src), %eax		// Load first byte
++	jl		.Lmovq\@
++	movzwl		(\src, %rcx), \tmp32	// Load last 2 bytes
++.Lcombine\@:
++	shl		$3, %ecx
++	shl		%cl, \tmp64
++	or		\tmp64, %rax		// Combine the two parts
++.Lmovq\@:
++	vmovq		%rax, \dst
++.Ldone\@:
++.endm
++
++// Store 1 <= %ecx <= 15 bytes from the xmm register \src to the pointer \dst.
++// Clobbers %rax, %rcx, and \tmp{64,32}.
++.macro	_store_partial_block	src, dst, tmp64, tmp32
++	sub		$8, %ecx		// LEN - 8
++	jl		.Llt8\@
++
++	// Store 8 <= LEN <= 15 bytes.
++	vpextrq		$1, \src, %rax
++	mov		%ecx, \tmp32
++	shl		$3, %ecx
++	ror		%cl, %rax
++	mov		%rax, (\dst, \tmp64)	// Store last LEN - 8 bytes
++	vmovq		\src, (\dst)		// Store first 8 bytes
++	jmp		.Ldone\@
++
++.Llt8\@:
++	add		$4, %ecx		// LEN - 4
++	jl		.Llt4\@
++
++	// Store 4 <= LEN <= 7 bytes.
++	vpextrd		$1, \src, %eax
++	mov		%ecx, \tmp32
++	shl		$3, %ecx
++	ror		%cl, %eax
++	mov		%eax, (\dst, \tmp64)	// Store last LEN - 4 bytes
++	vmovd		\src, (\dst)		// Store first 4 bytes
++	jmp		.Ldone\@
++
++.Llt4\@:
++	// Store 1 <= LEN <= 3 bytes.
++	vpextrb		$0, \src, 0(\dst)
++	cmp		$-2, %ecx		// LEN - 4 == -2, i.e. LEN == 2?
++	jl		.Ldone\@
++	vpextrb		$1, \src, 1(\dst)
++	je		.Ldone\@
++	vpextrb		$2, \src, 2(\dst)
++.Ldone\@:
++.endm
++
++// Prepare the next two vectors of AES inputs in AESDATA\i0 and AESDATA\i1, and
++// XOR each with the zero-th round key.  Also update LE_CTR if !\final.
++.macro	_prepare_2_ctr_vecs	is_xctr, i0, i1, final=0
++.if \is_xctr
++  .if USE_AVX10
++	_vmovdqa	LE_CTR, AESDATA\i0
++	vpternlogd	$0x96, XCTR_IV, RNDKEY0, AESDATA\i0
++  .else
++	vpxor		XCTR_IV, LE_CTR, AESDATA\i0
++	vpxor		RNDKEY0, AESDATA\i0, AESDATA\i0
++  .endif
++	vpaddq		LE_CTR_INC1, LE_CTR, AESDATA\i1
++
++  .if USE_AVX10
++	vpternlogd	$0x96, XCTR_IV, RNDKEY0, AESDATA\i1
++  .else
++	vpxor		XCTR_IV, AESDATA\i1, AESDATA\i1
++	vpxor		RNDKEY0, AESDATA\i1, AESDATA\i1
++  .endif
++.else
++	vpshufb		BSWAP_MASK, LE_CTR, AESDATA\i0
++	_vpxor		RNDKEY0, AESDATA\i0, AESDATA\i0
++	vpaddq		LE_CTR_INC1, LE_CTR, AESDATA\i1
++	vpshufb		BSWAP_MASK, AESDATA\i1, AESDATA\i1
++	_vpxor		RNDKEY0, AESDATA\i1, AESDATA\i1
++.endif
++.if !\final
++	vpaddq		LE_CTR_INC2, LE_CTR, LE_CTR
++.endif
++.endm
++
++// Do all AES rounds on the data in the given AESDATA vectors, excluding the
++// zero-th and last rounds.
++.macro	_aesenc_loop	vecs:vararg
++	mov		KEY, %rax
++1:
++	_vbroadcast128	(%rax), RNDKEY
++.irp i, \vecs
++	vaesenc		RNDKEY, AESDATA\i, AESDATA\i
++.endr
++	add		$16, %rax
++	cmp		%rax, RNDKEYLAST_PTR
++	jne		1b
++.endm
++
++// Finalize the keystream blocks in the given AESDATA vectors by doing the last
++// AES round, then XOR those keystream blocks with the corresponding data.
++// Reduce latency by doing the XOR before the vaesenclast, utilizing the
++// property vaesenclast(key, a) ^ b == vaesenclast(key ^ b, a).
++.macro	_aesenclast_and_xor	vecs:vararg
++.irp i, \vecs
++	_vpxor		\i*VL(SRC), RNDKEYLAST, RNDKEY
++	vaesenclast	RNDKEY, AESDATA\i, AESDATA\i
++.endr
++.irp i, \vecs
++	_vmovdqu	AESDATA\i, \i*VL(DST)
++.endr
++.endm
++
++// XOR the keystream blocks in the specified AESDATA vectors with the
++// corresponding data.
++.macro	_xor_data	vecs:vararg
++.irp i, \vecs
++	_vpxor		\i*VL(SRC), AESDATA\i, AESDATA\i
++.endr
++.irp i, \vecs
++	_vmovdqu	AESDATA\i, \i*VL(DST)
++.endr
++.endm
++
++.macro	_aes_ctr_crypt		is_xctr
++
++	// Define register aliases V0-V15 that map to the xmm, ymm, or zmm
++	// registers according to the selected Vector Length (VL).
++.irp i, 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
++  .if VL == 16
++	.set	V\i,		%xmm\i
++  .elseif VL == 32
++	.set	V\i,		%ymm\i
++  .elseif VL == 64
++	.set	V\i,		%zmm\i
++  .else
++	.error "Unsupported Vector Length (VL)"
++  .endif
++.endr
++
++	// Function arguments
++	.set	KEY,		%rdi	// Initially points to the start of the
++					// crypto_aes_ctx, then is advanced to
++					// point to the index 1 round key
++	.set	KEY32,		%edi	// Available as temp register after all
++					// keystream blocks have been generated
++	.set	SRC,		%rsi	// Pointer to next source data
++	.set	DST,		%rdx	// Pointer to next destination data
++	.set	LEN,		%ecx	// Remaining length in bytes.
++					// Note: _load_partial_block relies on
++					// this being in %ecx.
++	.set	LEN64,		%rcx	// Zero-extend LEN before using!
++	.set	LEN8,		%cl
++.if \is_xctr
++	.set	XCTR_IV_PTR,	%r8	// const u8 iv[AES_BLOCK_SIZE];
++	.set	XCTR_CTR,	%r9	// u64 ctr;
++.else
++	.set	LE_CTR_PTR,	%r8	// const u64 le_ctr[2];
++.endif
++
++	// Additional local variables
++	.set	RNDKEYLAST_PTR,	%r10
++	.set	AESDATA0,	V0
++	.set	AESDATA0_XMM,	%xmm0
++	.set	AESDATA1,	V1
++	.set	AESDATA1_XMM,	%xmm1
++	.set	AESDATA2,	V2
++	.set	AESDATA3,	V3
++	.set	AESDATA4,	V4
++	.set	AESDATA5,	V5
++	.set	AESDATA6,	V6
++	.set	AESDATA7,	V7
++.if \is_xctr
++	.set	XCTR_IV,	V8
++.else
++	.set	BSWAP_MASK,	V8
++.endif
++	.set	LE_CTR,		V9
++	.set	LE_CTR_XMM,	%xmm9
++	.set	LE_CTR_INC1,	V10
++	.set	LE_CTR_INC2,	V11
++	.set	RNDKEY0,	V12
++	.set	RNDKEYLAST,	V13
++	.set	RNDKEY,		V14
++
++	// Create the first vector of counters.
++.if \is_xctr
++  .if VL == 16
++	vmovq		XCTR_CTR, LE_CTR
++  .elseif VL == 32
++	vmovq		XCTR_CTR, LE_CTR_XMM
++	inc		XCTR_CTR
++	vmovq		XCTR_CTR, AESDATA0_XMM
++	vinserti128	$1, AESDATA0_XMM, LE_CTR, LE_CTR
++  .else
++	vpbroadcastq	XCTR_CTR, LE_CTR
++	vpsrldq		$8, LE_CTR, LE_CTR
++	vpaddq		.Lctr_pattern(%rip), LE_CTR, LE_CTR
++  .endif
++	_vbroadcast128	(XCTR_IV_PTR), XCTR_IV
++.else
++	_vbroadcast128	(LE_CTR_PTR), LE_CTR
++  .if VL > 16
++	vpaddq		.Lctr_pattern(%rip), LE_CTR, LE_CTR
++  .endif
++	_vbroadcast128	.Lbswap_mask(%rip), BSWAP_MASK
++.endif
++
++.if VL == 16
++	_vbroadcast128	.Lone(%rip), LE_CTR_INC1
++.elseif VL == 32
++	_vbroadcast128	.Ltwo(%rip), LE_CTR_INC1
++.else
++	_vbroadcast128	.Lfour(%rip), LE_CTR_INC1
++.endif
++	vpsllq		$1, LE_CTR_INC1, LE_CTR_INC2
++
++	// Load the AES key length: 16 (AES-128), 24 (AES-192), or 32 (AES-256).
++	movl		480(KEY), %eax
++
++	// Compute the pointer to the last round key.
++	lea		6*16(KEY, %rax, 4), RNDKEYLAST_PTR
++
++	// Load the zero-th and last round keys.
++	_vbroadcast128	(KEY), RNDKEY0
++	_vbroadcast128	(RNDKEYLAST_PTR), RNDKEYLAST
++
++	// Make KEY point to the first round key.
++	add		$16, KEY
++
++	// This is the main loop, which encrypts 8 vectors of data at a time.
++	add		$-8*VL, LEN
++	jl		.Lloop_8x_done\@
++.Lloop_8x\@:
++	_prepare_2_ctr_vecs	\is_xctr, 0, 1
++	_prepare_2_ctr_vecs	\is_xctr, 2, 3
++	_prepare_2_ctr_vecs	\is_xctr, 4, 5
++	_prepare_2_ctr_vecs	\is_xctr, 6, 7
++	_aesenc_loop	0,1,2,3,4,5,6,7
++	_aesenclast_and_xor 0,1,2,3,4,5,6,7
++	sub		$-8*VL, SRC
++	sub		$-8*VL, DST
++	add		$-8*VL, LEN
++	jge		.Lloop_8x\@
++.Lloop_8x_done\@:
++	sub		$-8*VL, LEN
++	jz		.Ldone\@
++
++	// 1 <= LEN < 8*VL.  Generate 2, 4, or 8 more vectors of keystream
++	// blocks, depending on the remaining LEN.
++
++	_prepare_2_ctr_vecs	\is_xctr, 0, 1
++	_prepare_2_ctr_vecs	\is_xctr, 2, 3
++	cmp		$4*VL, LEN
++	jle		.Lenc_tail_atmost4vecs\@
++
++	// 4*VL < LEN < 8*VL.  Generate 8 vectors of keystream blocks.  Use the
++	// first 4 to XOR 4 full vectors of data.  Then XOR the remaining data.
++	_prepare_2_ctr_vecs	\is_xctr, 4, 5
++	_prepare_2_ctr_vecs	\is_xctr, 6, 7, final=1
++	_aesenc_loop	0,1,2,3,4,5,6,7
++	_aesenclast_and_xor 0,1,2,3
++	vaesenclast	RNDKEYLAST, AESDATA4, AESDATA0
++	vaesenclast	RNDKEYLAST, AESDATA5, AESDATA1
++	vaesenclast	RNDKEYLAST, AESDATA6, AESDATA2
++	vaesenclast	RNDKEYLAST, AESDATA7, AESDATA3
++	sub		$-4*VL, SRC
++	sub		$-4*VL, DST
++	add		$-4*VL, LEN
++	cmp		$1*VL-1, LEN
++	jle		.Lxor_tail_partial_vec_0\@
++	_xor_data	0
++	cmp		$2*VL-1, LEN
++	jle		.Lxor_tail_partial_vec_1\@
++	_xor_data	1
++	cmp		$3*VL-1, LEN
++	jle		.Lxor_tail_partial_vec_2\@
++	_xor_data	2
++	cmp		$4*VL-1, LEN
++	jle		.Lxor_tail_partial_vec_3\@
++	_xor_data	3
++	jmp		.Ldone\@
++
++.Lenc_tail_atmost4vecs\@:
++	cmp		$2*VL, LEN
++	jle		.Lenc_tail_atmost2vecs\@
++
++	// 2*VL < LEN <= 4*VL.  Generate 4 vectors of keystream blocks.  Use the
++	// first 2 to XOR 2 full vectors of data.  Then XOR the remaining data.
++	_aesenc_loop	0,1,2,3
++	_aesenclast_and_xor 0,1
++	vaesenclast	RNDKEYLAST, AESDATA2, AESDATA0
++	vaesenclast	RNDKEYLAST, AESDATA3, AESDATA1
++	sub		$-2*VL, SRC
++	sub		$-2*VL, DST
++	add		$-2*VL, LEN
++	jmp		.Lxor_tail_upto2vecs\@
++
++.Lenc_tail_atmost2vecs\@:
++	// 1 <= LEN <= 2*VL.  Generate 2 vectors of keystream blocks.  Then XOR
++	// the remaining data.
++	_aesenc_loop	0,1
++	vaesenclast	RNDKEYLAST, AESDATA0, AESDATA0
++	vaesenclast	RNDKEYLAST, AESDATA1, AESDATA1
++
++.Lxor_tail_upto2vecs\@:
++	cmp		$1*VL-1, LEN
++	jle		.Lxor_tail_partial_vec_0\@
++	_xor_data	0
++	cmp		$2*VL-1, LEN
++	jle		.Lxor_tail_partial_vec_1\@
++	_xor_data	1
++	jmp		.Ldone\@
++
++.Lxor_tail_partial_vec_1\@:
++	add		$-1*VL, LEN
++	jz		.Ldone\@
++	sub		$-1*VL, SRC
++	sub		$-1*VL, DST
++	_vmovdqa	AESDATA1, AESDATA0
++	jmp		.Lxor_tail_partial_vec_0\@
++
++.Lxor_tail_partial_vec_2\@:
++	add		$-2*VL, LEN
++	jz		.Ldone\@
++	sub		$-2*VL, SRC
++	sub		$-2*VL, DST
++	_vmovdqa	AESDATA2, AESDATA0
++	jmp		.Lxor_tail_partial_vec_0\@
++
++.Lxor_tail_partial_vec_3\@:
++	add		$-3*VL, LEN
++	jz		.Ldone\@
++	sub		$-3*VL, SRC
++	sub		$-3*VL, DST
++	_vmovdqa	AESDATA3, AESDATA0
++
++.Lxor_tail_partial_vec_0\@:
++	// XOR the remaining 1 <= LEN < VL bytes.  It's easy if masked
++	// loads/stores are available; otherwise it's a bit harder...
++.if USE_AVX10
++  .if VL <= 32
++	mov		$-1, %eax
++	bzhi		LEN, %eax, %eax
++	kmovd		%eax, %k1
++  .else
++	mov		$-1, %rax
++	bzhi		LEN64, %rax, %rax
++	kmovq		%rax, %k1
++  .endif
++	vmovdqu8	(SRC), AESDATA1{%k1}{z}
++	_vpxor		AESDATA1, AESDATA0, AESDATA0
++	vmovdqu8	AESDATA0, (DST){%k1}
++.else
++  .if VL == 32
++	cmp		$16, LEN
++	jl		1f
++	vpxor		(SRC), AESDATA0_XMM, AESDATA1_XMM
++	vmovdqu		AESDATA1_XMM, (DST)
++	add		$16, SRC
++	add		$16, DST
++	sub		$16, LEN
++	jz		.Ldone\@
++	vextracti128	$1, AESDATA0, AESDATA0_XMM
++1:
++  .endif
++	mov		LEN, %r10d
++	_load_partial_block	SRC, AESDATA1_XMM, KEY, KEY32
++	vpxor		AESDATA1_XMM, AESDATA0_XMM, AESDATA0_XMM
++	mov		%r10d, %ecx
++	_store_partial_block	AESDATA0_XMM, DST, KEY, KEY32
++.endif
++
++.Ldone\@:
++.if VL > 16
++	vzeroupper
++.endif
++	RET
++.endm
++
++// Below are the definitions of the functions generated by the above macro.
++// They have the following prototypes:
++//
++//
++// void aes_ctr64_crypt_##suffix(const struct crypto_aes_ctx *key,
++//				 const u8 *src, u8 *dst, int len,
++//				 const u64 le_ctr[2]);
++//
++// void aes_xctr_crypt_##suffix(const struct crypto_aes_ctx *key,
++//				const u8 *src, u8 *dst, int len,
++//				const u8 iv[AES_BLOCK_SIZE], u64 ctr);
++//
++// Both functions generate |len| bytes of keystream, XOR it with the data from
++// |src|, and write the result to |dst|.  On non-final calls, |len| must be a
++// multiple of 16.  On the final call, |len| can be any value.
++//
++// aes_ctr64_crypt_* implement "regular" CTR, where the keystream is generated
++// from a 128-bit big endian counter that increments by 1 for each AES block.
++// HOWEVER, to keep the assembly code simple, some of the counter management is
++// left to the caller.  aes_ctr64_crypt_* take the counter in little endian
++// form, only increment the low 64 bits internally, do the conversion to big
++// endian internally, and don't write the updated counter back to memory.  The
++// caller is responsible for converting the starting IV to the little endian
++// le_ctr, detecting the (very rare) case of a carry out of the low 64 bits
++// being needed and splitting at that point with a carry done in between, and
++// updating le_ctr after each part if the message is multi-part.
++//
++// aes_xctr_crypt_* implement XCTR as specified in "Length-preserving encryption
++// with HCTR2" (https://eprint.iacr.org/2021/1441.pdf).  XCTR is an
++// easier-to-implement variant of CTR that uses little endian byte order and
++// eliminates carries.  |ctr| is the per-message block counter starting at 1.
++
++.set	VL, 16
++.set	USE_AVX10, 0
++SYM_TYPED_FUNC_START(aes_ctr64_crypt_aesni_avx)
++	_aes_ctr_crypt	0
++SYM_FUNC_END(aes_ctr64_crypt_aesni_avx)
++SYM_TYPED_FUNC_START(aes_xctr_crypt_aesni_avx)
++	_aes_ctr_crypt	1
++SYM_FUNC_END(aes_xctr_crypt_aesni_avx)
++
++#if defined(CONFIG_AS_VAES) && defined(CONFIG_AS_VPCLMULQDQ)
++.set	VL, 32
++.set	USE_AVX10, 0
++SYM_TYPED_FUNC_START(aes_ctr64_crypt_vaes_avx2)
++	_aes_ctr_crypt	0
++SYM_FUNC_END(aes_ctr64_crypt_vaes_avx2)
++SYM_TYPED_FUNC_START(aes_xctr_crypt_vaes_avx2)
++	_aes_ctr_crypt	1
++SYM_FUNC_END(aes_xctr_crypt_vaes_avx2)
++
++.set	VL, 32
++.set	USE_AVX10, 1
++SYM_TYPED_FUNC_START(aes_ctr64_crypt_vaes_avx10_256)
++	_aes_ctr_crypt	0
++SYM_FUNC_END(aes_ctr64_crypt_vaes_avx10_256)
++SYM_TYPED_FUNC_START(aes_xctr_crypt_vaes_avx10_256)
++	_aes_ctr_crypt	1
++SYM_FUNC_END(aes_xctr_crypt_vaes_avx10_256)
++
++.set	VL, 64
++.set	USE_AVX10, 1
++SYM_TYPED_FUNC_START(aes_ctr64_crypt_vaes_avx10_512)
++	_aes_ctr_crypt	0
++SYM_FUNC_END(aes_ctr64_crypt_vaes_avx10_512)
++SYM_TYPED_FUNC_START(aes_xctr_crypt_vaes_avx10_512)
++	_aes_ctr_crypt	1
++SYM_FUNC_END(aes_xctr_crypt_vaes_avx10_512)
++#endif // CONFIG_AS_VAES && CONFIG_AS_VPCLMULQDQ
+diff --git a/arch/x86/crypto/aes_ctrby8_avx-x86_64.S b/arch/x86/crypto/aes_ctrby8_avx-x86_64.S
+deleted file mode 100644
+index 2402b9418cd7a..0000000000000
+--- a/arch/x86/crypto/aes_ctrby8_avx-x86_64.S
++++ /dev/null
+@@ -1,597 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only OR BSD-3-Clause */
+-/*
+- * AES CTR mode by8 optimization with AVX instructions. (x86_64)
+- *
+- * Copyright(c) 2014 Intel Corporation.
+- *
+- * Contact Information:
+- * James Guilford <james.guilford@intel.com>
+- * Sean Gulley <sean.m.gulley@intel.com>
+- * Chandramouli Narayanan <mouli@linux.intel.com>
+- */
+-/*
+- * This is AES128/192/256 CTR mode optimization implementation. It requires
+- * the support of Intel(R) AESNI and AVX instructions.
+- *
+- * This work was inspired by the AES CTR mode optimization published
+- * in Intel Optimized IPSEC Cryptographic library.
+- * Additional information on it can be found at:
+- *    https://github.com/intel/intel-ipsec-mb
+- */
+-
+-#include <linux/linkage.h>
+-
+-#define VMOVDQ		vmovdqu
+-
+-/*
+- * Note: the "x" prefix in these aliases means "this is an xmm register".  The
+- * alias prefixes have no relation to XCTR where the "X" prefix means "XOR
+- * counter".
+- */
+-#define xdata0		%xmm0
+-#define xdata1		%xmm1
+-#define xdata2		%xmm2
+-#define xdata3		%xmm3
+-#define xdata4		%xmm4
+-#define xdata5		%xmm5
+-#define xdata6		%xmm6
+-#define xdata7		%xmm7
+-#define xcounter	%xmm8	// CTR mode only
+-#define xiv		%xmm8	// XCTR mode only
+-#define xbyteswap	%xmm9	// CTR mode only
+-#define xtmp		%xmm9	// XCTR mode only
+-#define xkey0		%xmm10
+-#define xkey4		%xmm11
+-#define xkey8		%xmm12
+-#define xkey12		%xmm13
+-#define xkeyA		%xmm14
+-#define xkeyB		%xmm15
+-
+-#define p_in		%rdi
+-#define p_iv		%rsi
+-#define p_keys		%rdx
+-#define p_out		%rcx
+-#define num_bytes	%r8
+-#define counter		%r9	// XCTR mode only
+-#define tmp		%r10
+-#define	DDQ_DATA	0
+-#define	XDATA		1
+-#define KEY_128		1
+-#define KEY_192		2
+-#define KEY_256		3
+-
+-.section .rodata
+-.align 16
+-
+-byteswap_const:
+-	.octa 0x000102030405060708090A0B0C0D0E0F
+-ddq_low_msk:
+-	.octa 0x0000000000000000FFFFFFFFFFFFFFFF
+-ddq_high_add_1:
+-	.octa 0x00000000000000010000000000000000
+-ddq_add_1:
+-	.octa 0x00000000000000000000000000000001
+-ddq_add_2:
+-	.octa 0x00000000000000000000000000000002
+-ddq_add_3:
+-	.octa 0x00000000000000000000000000000003
+-ddq_add_4:
+-	.octa 0x00000000000000000000000000000004
+-ddq_add_5:
+-	.octa 0x00000000000000000000000000000005
+-ddq_add_6:
+-	.octa 0x00000000000000000000000000000006
+-ddq_add_7:
+-	.octa 0x00000000000000000000000000000007
+-ddq_add_8:
+-	.octa 0x00000000000000000000000000000008
+-
+-.text
+-
+-/* generate a unique variable for ddq_add_x */
+-
+-/* generate a unique variable for xmm register */
+-.macro setxdata n
+-	var_xdata = %xmm\n
+-.endm
+-
+-/* club the numeric 'id' to the symbol 'name' */
+-
+-.macro club name, id
+-.altmacro
+-	.if \name == XDATA
+-		setxdata %\id
+-	.endif
+-.noaltmacro
+-.endm
+-
+-/*
+- * do_aes num_in_par load_keys key_len
+- * This increments p_in, but not p_out
+- */
+-.macro do_aes b, k, key_len, xctr
+-	.set by, \b
+-	.set load_keys, \k
+-	.set klen, \key_len
+-
+-	.if (load_keys)
+-		vmovdqa	0*16(p_keys), xkey0
+-	.endif
+-
+-	.if \xctr
+-		movq counter, xtmp
+-		.set i, 0
+-		.rept (by)
+-			club XDATA, i
+-			vpaddq	(ddq_add_1 + 16 * i)(%rip), xtmp, var_xdata
+-			.set i, (i +1)
+-		.endr
+-		.set i, 0
+-		.rept (by)
+-			club	XDATA, i
+-			vpxor	xiv, var_xdata, var_xdata
+-			.set i, (i +1)
+-		.endr
+-	.else
+-		vpshufb	xbyteswap, xcounter, xdata0
+-		.set i, 1
+-		.rept (by - 1)
+-			club XDATA, i
+-			vpaddq	(ddq_add_1 + 16 * (i - 1))(%rip), xcounter, var_xdata
+-			vptest	ddq_low_msk(%rip), var_xdata
+-			jnz 1f
+-			vpaddq	ddq_high_add_1(%rip), var_xdata, var_xdata
+-			vpaddq	ddq_high_add_1(%rip), xcounter, xcounter
+-			1:
+-			vpshufb	xbyteswap, var_xdata, var_xdata
+-			.set i, (i +1)
+-		.endr
+-	.endif
+-
+-	vmovdqa	1*16(p_keys), xkeyA
+-
+-	vpxor	xkey0, xdata0, xdata0
+-	.if \xctr
+-		add $by, counter
+-	.else
+-		vpaddq	(ddq_add_1 + 16 * (by - 1))(%rip), xcounter, xcounter
+-		vptest	ddq_low_msk(%rip), xcounter
+-		jnz	1f
+-		vpaddq	ddq_high_add_1(%rip), xcounter, xcounter
+-		1:
+-	.endif
+-
+-	.set i, 1
+-	.rept (by - 1)
+-		club XDATA, i
+-		vpxor	xkey0, var_xdata, var_xdata
+-		.set i, (i +1)
+-	.endr
+-
+-	vmovdqa	2*16(p_keys), xkeyB
+-
+-	.set i, 0
+-	.rept by
+-		club XDATA, i
+-		vaesenc	xkeyA, var_xdata, var_xdata		/* key 1 */
+-		.set i, (i +1)
+-	.endr
+-
+-	.if (klen == KEY_128)
+-		.if (load_keys)
+-			vmovdqa	3*16(p_keys), xkey4
+-		.endif
+-	.else
+-		vmovdqa	3*16(p_keys), xkeyA
+-	.endif
+-
+-	.set i, 0
+-	.rept by
+-		club XDATA, i
+-		vaesenc	xkeyB, var_xdata, var_xdata		/* key 2 */
+-		.set i, (i +1)
+-	.endr
+-
+-	add	$(16*by), p_in
+-
+-	.if (klen == KEY_128)
+-		vmovdqa	4*16(p_keys), xkeyB
+-	.else
+-		.if (load_keys)
+-			vmovdqa	4*16(p_keys), xkey4
+-		.endif
+-	.endif
+-
+-	.set i, 0
+-	.rept by
+-		club XDATA, i
+-		/* key 3 */
+-		.if (klen == KEY_128)
+-			vaesenc	xkey4, var_xdata, var_xdata
+-		.else
+-			vaesenc	xkeyA, var_xdata, var_xdata
+-		.endif
+-		.set i, (i +1)
+-	.endr
+-
+-	vmovdqa	5*16(p_keys), xkeyA
+-
+-	.set i, 0
+-	.rept by
+-		club XDATA, i
+-		/* key 4 */
+-		.if (klen == KEY_128)
+-			vaesenc	xkeyB, var_xdata, var_xdata
+-		.else
+-			vaesenc	xkey4, var_xdata, var_xdata
+-		.endif
+-		.set i, (i +1)
+-	.endr
+-
+-	.if (klen == KEY_128)
+-		.if (load_keys)
+-			vmovdqa	6*16(p_keys), xkey8
+-		.endif
+-	.else
+-		vmovdqa	6*16(p_keys), xkeyB
+-	.endif
+-
+-	.set i, 0
+-	.rept by
+-		club XDATA, i
+-		vaesenc	xkeyA, var_xdata, var_xdata		/* key 5 */
+-		.set i, (i +1)
+-	.endr
+-
+-	vmovdqa	7*16(p_keys), xkeyA
+-
+-	.set i, 0
+-	.rept by
+-		club XDATA, i
+-		/* key 6 */
+-		.if (klen == KEY_128)
+-			vaesenc	xkey8, var_xdata, var_xdata
+-		.else
+-			vaesenc	xkeyB, var_xdata, var_xdata
+-		.endif
+-		.set i, (i +1)
+-	.endr
+-
+-	.if (klen == KEY_128)
+-		vmovdqa	8*16(p_keys), xkeyB
+-	.else
+-		.if (load_keys)
+-			vmovdqa	8*16(p_keys), xkey8
+-		.endif
+-	.endif
+-
+-	.set i, 0
+-	.rept by
+-		club XDATA, i
+-		vaesenc	xkeyA, var_xdata, var_xdata		/* key 7 */
+-		.set i, (i +1)
+-	.endr
+-
+-	.if (klen == KEY_128)
+-		.if (load_keys)
+-			vmovdqa	9*16(p_keys), xkey12
+-		.endif
+-	.else
+-		vmovdqa	9*16(p_keys), xkeyA
+-	.endif
+-
+-	.set i, 0
+-	.rept by
+-		club XDATA, i
+-		/* key 8 */
+-		.if (klen == KEY_128)
+-			vaesenc	xkeyB, var_xdata, var_xdata
+-		.else
+-			vaesenc	xkey8, var_xdata, var_xdata
+-		.endif
+-		.set i, (i +1)
+-	.endr
+-
+-	vmovdqa	10*16(p_keys), xkeyB
+-
+-	.set i, 0
+-	.rept by
+-		club XDATA, i
+-		/* key 9 */
+-		.if (klen == KEY_128)
+-			vaesenc	xkey12, var_xdata, var_xdata
+-		.else
+-			vaesenc	xkeyA, var_xdata, var_xdata
+-		.endif
+-		.set i, (i +1)
+-	.endr
+-
+-	.if (klen != KEY_128)
+-		vmovdqa	11*16(p_keys), xkeyA
+-	.endif
+-
+-	.set i, 0
+-	.rept by
+-		club XDATA, i
+-		/* key 10 */
+-		.if (klen == KEY_128)
+-			vaesenclast	xkeyB, var_xdata, var_xdata
+-		.else
+-			vaesenc	xkeyB, var_xdata, var_xdata
+-		.endif
+-		.set i, (i +1)
+-	.endr
+-
+-	.if (klen != KEY_128)
+-		.if (load_keys)
+-			vmovdqa	12*16(p_keys), xkey12
+-		.endif
+-
+-		.set i, 0
+-		.rept by
+-			club XDATA, i
+-			vaesenc	xkeyA, var_xdata, var_xdata	/* key 11 */
+-			.set i, (i +1)
+-		.endr
+-
+-		.if (klen == KEY_256)
+-			vmovdqa	13*16(p_keys), xkeyA
+-		.endif
+-
+-		.set i, 0
+-		.rept by
+-			club XDATA, i
+-			.if (klen == KEY_256)
+-				/* key 12 */
+-				vaesenc	xkey12, var_xdata, var_xdata
+-			.else
+-				vaesenclast xkey12, var_xdata, var_xdata
+-			.endif
+-			.set i, (i +1)
+-		.endr
+-
+-		.if (klen == KEY_256)
+-			vmovdqa	14*16(p_keys), xkeyB
+-
+-			.set i, 0
+-			.rept by
+-				club XDATA, i
+-				/* key 13 */
+-				vaesenc	xkeyA, var_xdata, var_xdata
+-				.set i, (i +1)
+-			.endr
+-
+-			.set i, 0
+-			.rept by
+-				club XDATA, i
+-				/* key 14 */
+-				vaesenclast	xkeyB, var_xdata, var_xdata
+-				.set i, (i +1)
+-			.endr
+-		.endif
+-	.endif
+-
+-	.set i, 0
+-	.rept (by / 2)
+-		.set j, (i+1)
+-		VMOVDQ	(i*16 - 16*by)(p_in), xkeyA
+-		VMOVDQ	(j*16 - 16*by)(p_in), xkeyB
+-		club XDATA, i
+-		vpxor	xkeyA, var_xdata, var_xdata
+-		club XDATA, j
+-		vpxor	xkeyB, var_xdata, var_xdata
+-		.set i, (i+2)
+-	.endr
+-
+-	.if (i < by)
+-		VMOVDQ	(i*16 - 16*by)(p_in), xkeyA
+-		club XDATA, i
+-		vpxor	xkeyA, var_xdata, var_xdata
+-	.endif
+-
+-	.set i, 0
+-	.rept by
+-		club XDATA, i
+-		VMOVDQ	var_xdata, i*16(p_out)
+-		.set i, (i+1)
+-	.endr
+-.endm
+-
+-.macro do_aes_load val, key_len, xctr
+-	do_aes \val, 1, \key_len, \xctr
+-.endm
+-
+-.macro do_aes_noload val, key_len, xctr
+-	do_aes \val, 0, \key_len, \xctr
+-.endm
+-
+-/* main body of aes ctr load */
+-
+-.macro do_aes_ctrmain key_len, xctr
+-	cmp	$16, num_bytes
+-	jb	.Ldo_return2\xctr\key_len
+-
+-	.if \xctr
+-		shr	$4, counter
+-		vmovdqu	(p_iv), xiv
+-	.else
+-		vmovdqa	byteswap_const(%rip), xbyteswap
+-		vmovdqu	(p_iv), xcounter
+-		vpshufb	xbyteswap, xcounter, xcounter
+-	.endif
+-
+-	mov	num_bytes, tmp
+-	and	$(7*16), tmp
+-	jz	.Lmult_of_8_blks\xctr\key_len
+-
+-	/* 1 <= tmp <= 7 */
+-	cmp	$(4*16), tmp
+-	jg	.Lgt4\xctr\key_len
+-	je	.Leq4\xctr\key_len
+-
+-.Llt4\xctr\key_len:
+-	cmp	$(2*16), tmp
+-	jg	.Leq3\xctr\key_len
+-	je	.Leq2\xctr\key_len
+-
+-.Leq1\xctr\key_len:
+-	do_aes_load	1, \key_len, \xctr
+-	add	$(1*16), p_out
+-	and	$(~7*16), num_bytes
+-	jz	.Ldo_return2\xctr\key_len
+-	jmp	.Lmain_loop2\xctr\key_len
+-
+-.Leq2\xctr\key_len:
+-	do_aes_load	2, \key_len, \xctr
+-	add	$(2*16), p_out
+-	and	$(~7*16), num_bytes
+-	jz	.Ldo_return2\xctr\key_len
+-	jmp	.Lmain_loop2\xctr\key_len
+-
+-
+-.Leq3\xctr\key_len:
+-	do_aes_load	3, \key_len, \xctr
+-	add	$(3*16), p_out
+-	and	$(~7*16), num_bytes
+-	jz	.Ldo_return2\xctr\key_len
+-	jmp	.Lmain_loop2\xctr\key_len
+-
+-.Leq4\xctr\key_len:
+-	do_aes_load	4, \key_len, \xctr
+-	add	$(4*16), p_out
+-	and	$(~7*16), num_bytes
+-	jz	.Ldo_return2\xctr\key_len
+-	jmp	.Lmain_loop2\xctr\key_len
+-
+-.Lgt4\xctr\key_len:
+-	cmp	$(6*16), tmp
+-	jg	.Leq7\xctr\key_len
+-	je	.Leq6\xctr\key_len
+-
+-.Leq5\xctr\key_len:
+-	do_aes_load	5, \key_len, \xctr
+-	add	$(5*16), p_out
+-	and	$(~7*16), num_bytes
+-	jz	.Ldo_return2\xctr\key_len
+-	jmp	.Lmain_loop2\xctr\key_len
+-
+-.Leq6\xctr\key_len:
+-	do_aes_load	6, \key_len, \xctr
+-	add	$(6*16), p_out
+-	and	$(~7*16), num_bytes
+-	jz	.Ldo_return2\xctr\key_len
+-	jmp	.Lmain_loop2\xctr\key_len
+-
+-.Leq7\xctr\key_len:
+-	do_aes_load	7, \key_len, \xctr
+-	add	$(7*16), p_out
+-	and	$(~7*16), num_bytes
+-	jz	.Ldo_return2\xctr\key_len
+-	jmp	.Lmain_loop2\xctr\key_len
+-
+-.Lmult_of_8_blks\xctr\key_len:
+-	.if (\key_len != KEY_128)
+-		vmovdqa	0*16(p_keys), xkey0
+-		vmovdqa	4*16(p_keys), xkey4
+-		vmovdqa	8*16(p_keys), xkey8
+-		vmovdqa	12*16(p_keys), xkey12
+-	.else
+-		vmovdqa	0*16(p_keys), xkey0
+-		vmovdqa	3*16(p_keys), xkey4
+-		vmovdqa	6*16(p_keys), xkey8
+-		vmovdqa	9*16(p_keys), xkey12
+-	.endif
+-.align 16
+-.Lmain_loop2\xctr\key_len:
+-	/* num_bytes is a multiple of 8 and >0 */
+-	do_aes_noload	8, \key_len, \xctr
+-	add	$(8*16), p_out
+-	sub	$(8*16), num_bytes
+-	jne	.Lmain_loop2\xctr\key_len
+-
+-.Ldo_return2\xctr\key_len:
+-	.if !\xctr
+-		/* return updated IV */
+-		vpshufb	xbyteswap, xcounter, xcounter
+-		vmovdqu	xcounter, (p_iv)
+-	.endif
+-	RET
+-.endm
+-
+-/*
+- * routine to do AES128 CTR enc/decrypt "by8"
+- * XMM registers are clobbered.
+- * Saving/restoring must be done at a higher level
+- * aes_ctr_enc_128_avx_by8(void *in, void *iv, void *keys, void *out,
+- *			unsigned int num_bytes)
+- */
+-SYM_FUNC_START(aes_ctr_enc_128_avx_by8)
+-	/* call the aes main loop */
+-	do_aes_ctrmain KEY_128 0
+-
+-SYM_FUNC_END(aes_ctr_enc_128_avx_by8)
+-
+-/*
+- * routine to do AES192 CTR enc/decrypt "by8"
+- * XMM registers are clobbered.
+- * Saving/restoring must be done at a higher level
+- * aes_ctr_enc_192_avx_by8(void *in, void *iv, void *keys, void *out,
+- *			unsigned int num_bytes)
+- */
+-SYM_FUNC_START(aes_ctr_enc_192_avx_by8)
+-	/* call the aes main loop */
+-	do_aes_ctrmain KEY_192 0
+-
+-SYM_FUNC_END(aes_ctr_enc_192_avx_by8)
+-
+-/*
+- * routine to do AES256 CTR enc/decrypt "by8"
+- * XMM registers are clobbered.
+- * Saving/restoring must be done at a higher level
+- * aes_ctr_enc_256_avx_by8(void *in, void *iv, void *keys, void *out,
+- *			unsigned int num_bytes)
+- */
+-SYM_FUNC_START(aes_ctr_enc_256_avx_by8)
+-	/* call the aes main loop */
+-	do_aes_ctrmain KEY_256 0
+-
+-SYM_FUNC_END(aes_ctr_enc_256_avx_by8)
+-
+-/*
+- * routine to do AES128 XCTR enc/decrypt "by8"
+- * XMM registers are clobbered.
+- * Saving/restoring must be done at a higher level
+- * aes_xctr_enc_128_avx_by8(const u8 *in, const u8 *iv, const void *keys,
+- * 	u8* out, unsigned int num_bytes, unsigned int byte_ctr)
+- */
+-SYM_FUNC_START(aes_xctr_enc_128_avx_by8)
+-	/* call the aes main loop */
+-	do_aes_ctrmain KEY_128 1
+-
+-SYM_FUNC_END(aes_xctr_enc_128_avx_by8)
+-
+-/*
+- * routine to do AES192 XCTR enc/decrypt "by8"
+- * XMM registers are clobbered.
+- * Saving/restoring must be done at a higher level
+- * aes_xctr_enc_192_avx_by8(const u8 *in, const u8 *iv, const void *keys,
+- * 	u8* out, unsigned int num_bytes, unsigned int byte_ctr)
+- */
+-SYM_FUNC_START(aes_xctr_enc_192_avx_by8)
+-	/* call the aes main loop */
+-	do_aes_ctrmain KEY_192 1
+-
+-SYM_FUNC_END(aes_xctr_enc_192_avx_by8)
+-
+-/*
+- * routine to do AES256 XCTR enc/decrypt "by8"
+- * XMM registers are clobbered.
+- * Saving/restoring must be done at a higher level
+- * aes_xctr_enc_256_avx_by8(const u8 *in, const u8 *iv, const void *keys,
+- * 	u8* out, unsigned int num_bytes, unsigned int byte_ctr)
+- */
+-SYM_FUNC_START(aes_xctr_enc_256_avx_by8)
+-	/* call the aes main loop */
+-	do_aes_ctrmain KEY_256 1
+-
+-SYM_FUNC_END(aes_xctr_enc_256_avx_by8)
+diff --git a/arch/x86/crypto/aesni-intel_glue.c b/arch/x86/crypto/aesni-intel_glue.c
+index 3e0cc15050f32..82225fe50ec12 100644
+--- a/arch/x86/crypto/aesni-intel_glue.c
++++ b/arch/x86/crypto/aesni-intel_glue.c
+@@ -21,11 +21,10 @@
+ #include <linux/types.h>
+ #include <linux/module.h>
+ #include <linux/err.h>
+ #include <crypto/algapi.h>
+ #include <crypto/aes.h>
+-#include <crypto/ctr.h>
+ #include <crypto/b128ops.h>
+ #include <crypto/gcm.h>
+ #include <crypto/xts.h>
+ #include <asm/cpu_device_id.h>
+ #include <asm/simd.h>
+@@ -80,34 +79,12 @@ asmlinkage void aesni_xts_enc(const struct crypto_aes_ctx *ctx, u8 *out,
+ 
+ asmlinkage void aesni_xts_dec(const struct crypto_aes_ctx *ctx, u8 *out,
+ 			      const u8 *in, unsigned int len, u8 *iv);
+ 
+ #ifdef CONFIG_X86_64
+-
+ asmlinkage void aesni_ctr_enc(struct crypto_aes_ctx *ctx, u8 *out,
+ 			      const u8 *in, unsigned int len, u8 *iv);
+-DEFINE_STATIC_CALL(aesni_ctr_enc_tfm, aesni_ctr_enc);
+-
+-asmlinkage void aes_ctr_enc_128_avx_by8(const u8 *in, u8 *iv,
+-		void *keys, u8 *out, unsigned int num_bytes);
+-asmlinkage void aes_ctr_enc_192_avx_by8(const u8 *in, u8 *iv,
+-		void *keys, u8 *out, unsigned int num_bytes);
+-asmlinkage void aes_ctr_enc_256_avx_by8(const u8 *in, u8 *iv,
+-		void *keys, u8 *out, unsigned int num_bytes);
+-
+-
+-asmlinkage void aes_xctr_enc_128_avx_by8(const u8 *in, const u8 *iv,
+-	const void *keys, u8 *out, unsigned int num_bytes,
+-	unsigned int byte_ctr);
+-
+-asmlinkage void aes_xctr_enc_192_avx_by8(const u8 *in, const u8 *iv,
+-	const void *keys, u8 *out, unsigned int num_bytes,
+-	unsigned int byte_ctr);
+-
+-asmlinkage void aes_xctr_enc_256_avx_by8(const u8 *in, const u8 *iv,
+-	const void *keys, u8 *out, unsigned int num_bytes,
+-	unsigned int byte_ctr);
+ #endif
+ 
+ static inline struct crypto_aes_ctx *aes_ctx(void *raw_ctx)
+ {
+ 	return aes_align_addr(raw_ctx);
+@@ -374,28 +351,12 @@ static int cts_cbc_decrypt(struct skcipher_request *req)
+ 
+ 	return skcipher_walk_done(&walk, 0);
+ }
+ 
+ #ifdef CONFIG_X86_64
+-static void aesni_ctr_enc_avx_tfm(struct crypto_aes_ctx *ctx, u8 *out,
+-			      const u8 *in, unsigned int len, u8 *iv)
+-{
+-	/*
+-	 * based on key length, override with the by8 version
+-	 * of ctr mode encryption/decryption for improved performance
+-	 * aes_set_key_common() ensures that key length is one of
+-	 * {128,192,256}
+-	 */
+-	if (ctx->key_length == AES_KEYSIZE_128)
+-		aes_ctr_enc_128_avx_by8(in, iv, (void *)ctx, out, len);
+-	else if (ctx->key_length == AES_KEYSIZE_192)
+-		aes_ctr_enc_192_avx_by8(in, iv, (void *)ctx, out, len);
+-	else
+-		aes_ctr_enc_256_avx_by8(in, iv, (void *)ctx, out, len);
+-}
+-
+-static int ctr_crypt(struct skcipher_request *req)
++/* This is the non-AVX version. */
++static int ctr_crypt_aesni(struct skcipher_request *req)
+ {
+ 	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
+ 	struct crypto_aes_ctx *ctx = aes_ctx(crypto_skcipher_ctx(tfm));
+ 	u8 keystream[AES_BLOCK_SIZE];
+ 	struct skcipher_walk walk;
+@@ -405,14 +366,13 @@ static int ctr_crypt(struct skcipher_request *req)
+ 	err = skcipher_walk_virt(&walk, req, false);
+ 
+ 	while ((nbytes = walk.nbytes) > 0) {
+ 		kernel_fpu_begin();
+ 		if (nbytes & AES_BLOCK_MASK)
+-			static_call(aesni_ctr_enc_tfm)(ctx, walk.dst.virt.addr,
+-						       walk.src.virt.addr,
+-						       nbytes & AES_BLOCK_MASK,
+-						       walk.iv);
++			aesni_ctr_enc(ctx, walk.dst.virt.addr,
++				      walk.src.virt.addr,
++				      nbytes & AES_BLOCK_MASK, walk.iv);
+ 		nbytes &= ~AES_BLOCK_MASK;
+ 
+ 		if (walk.nbytes == walk.total && nbytes > 0) {
+ 			aesni_enc(ctx, keystream, walk.iv);
+ 			crypto_xor_cpy(walk.dst.virt.addr + walk.nbytes - nbytes,
+@@ -424,63 +384,10 @@ static int ctr_crypt(struct skcipher_request *req)
+ 		kernel_fpu_end();
+ 		err = skcipher_walk_done(&walk, nbytes);
+ 	}
+ 	return err;
+ }
+-
+-static void aesni_xctr_enc_avx_tfm(struct crypto_aes_ctx *ctx, u8 *out,
+-				   const u8 *in, unsigned int len, u8 *iv,
+-				   unsigned int byte_ctr)
+-{
+-	if (ctx->key_length == AES_KEYSIZE_128)
+-		aes_xctr_enc_128_avx_by8(in, iv, (void *)ctx, out, len,
+-					 byte_ctr);
+-	else if (ctx->key_length == AES_KEYSIZE_192)
+-		aes_xctr_enc_192_avx_by8(in, iv, (void *)ctx, out, len,
+-					 byte_ctr);
+-	else
+-		aes_xctr_enc_256_avx_by8(in, iv, (void *)ctx, out, len,
+-					 byte_ctr);
+-}
+-
+-static int xctr_crypt(struct skcipher_request *req)
+-{
+-	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
+-	struct crypto_aes_ctx *ctx = aes_ctx(crypto_skcipher_ctx(tfm));
+-	u8 keystream[AES_BLOCK_SIZE];
+-	struct skcipher_walk walk;
+-	unsigned int nbytes;
+-	unsigned int byte_ctr = 0;
+-	int err;
+-	__le32 block[AES_BLOCK_SIZE / sizeof(__le32)];
+-
+-	err = skcipher_walk_virt(&walk, req, false);
+-
+-	while ((nbytes = walk.nbytes) > 0) {
+-		kernel_fpu_begin();
+-		if (nbytes & AES_BLOCK_MASK)
+-			aesni_xctr_enc_avx_tfm(ctx, walk.dst.virt.addr,
+-				walk.src.virt.addr, nbytes & AES_BLOCK_MASK,
+-				walk.iv, byte_ctr);
+-		nbytes &= ~AES_BLOCK_MASK;
+-		byte_ctr += walk.nbytes - nbytes;
+-
+-		if (walk.nbytes == walk.total && nbytes > 0) {
+-			memcpy(block, walk.iv, AES_BLOCK_SIZE);
+-			block[0] ^= cpu_to_le32(1 + byte_ctr / AES_BLOCK_SIZE);
+-			aesni_enc(ctx, keystream, (u8 *)block);
+-			crypto_xor_cpy(walk.dst.virt.addr + walk.nbytes -
+-				       nbytes, walk.src.virt.addr + walk.nbytes
+-				       - nbytes, keystream, nbytes);
+-			byte_ctr += nbytes;
+-			nbytes = 0;
+-		}
+-		kernel_fpu_end();
+-		err = skcipher_walk_done(&walk, nbytes);
+-	}
+-	return err;
+-}
+ #endif
+ 
+ static int xts_setkey_aesni(struct crypto_skcipher *tfm, const u8 *key,
+ 			    unsigned int keylen)
+ {
+@@ -719,12 +626,12 @@ static struct skcipher_alg aesni_skciphers[] = {
+ 		.min_keysize	= AES_MIN_KEY_SIZE,
+ 		.max_keysize	= AES_MAX_KEY_SIZE,
+ 		.ivsize		= AES_BLOCK_SIZE,
+ 		.chunksize	= AES_BLOCK_SIZE,
+ 		.setkey		= aesni_skcipher_setkey,
+-		.encrypt	= ctr_crypt,
+-		.decrypt	= ctr_crypt,
++		.encrypt	= ctr_crypt_aesni,
++		.decrypt	= ctr_crypt_aesni,
+ #endif
+ 	}, {
+ 		.base = {
+ 			.cra_name		= "__xts(aes)",
+ 			.cra_driver_name	= "__xts-aes-aesni",
+@@ -746,39 +653,109 @@ static struct skcipher_alg aesni_skciphers[] = {
+ 
+ static
+ struct simd_skcipher_alg *aesni_simd_skciphers[ARRAY_SIZE(aesni_skciphers)];
+ 
+ #ifdef CONFIG_X86_64
+-/*
+- * XCTR does not have a non-AVX implementation, so it must be enabled
+- * conditionally.
+- */
+-static struct skcipher_alg aesni_xctr = {
+-	.base = {
+-		.cra_name		= "__xctr(aes)",
+-		.cra_driver_name	= "__xctr-aes-aesni",
+-		.cra_priority		= 400,
+-		.cra_flags		= CRYPTO_ALG_INTERNAL,
+-		.cra_blocksize		= 1,
+-		.cra_ctxsize		= CRYPTO_AES_CTX_SIZE,
+-		.cra_module		= THIS_MODULE,
+-	},
+-	.min_keysize	= AES_MIN_KEY_SIZE,
+-	.max_keysize	= AES_MAX_KEY_SIZE,
+-	.ivsize		= AES_BLOCK_SIZE,
+-	.chunksize	= AES_BLOCK_SIZE,
+-	.setkey		= aesni_skcipher_setkey,
+-	.encrypt	= xctr_crypt,
+-	.decrypt	= xctr_crypt,
+-};
+-
+-static struct simd_skcipher_alg *aesni_simd_xctr;
+-
+ asmlinkage void aes_xts_encrypt_iv(const struct crypto_aes_ctx *tweak_key,
+ 				   u8 iv[AES_BLOCK_SIZE]);
+ 
+-#define DEFINE_XTS_ALG(suffix, driver_name, priority)			       \
++/* __always_inline to avoid indirect call */
++static __always_inline int
++ctr_crypt(struct skcipher_request *req,
++	  void (*ctr64_func)(const struct crypto_aes_ctx *key,
++			     const u8 *src, u8 *dst, int len,
++			     const u64 le_ctr[2]))
++{
++	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
++	const struct crypto_aes_ctx *key = aes_ctx(crypto_skcipher_ctx(tfm));
++	unsigned int nbytes, p1_nbytes, nblocks;
++	struct skcipher_walk walk;
++	u64 le_ctr[2];
++	u64 ctr64;
++	int err;
++
++	ctr64 = le_ctr[0] = get_unaligned_be64(&req->iv[8]);
++	le_ctr[1] = get_unaligned_be64(&req->iv[0]);
++
++	err = skcipher_walk_virt(&walk, req, false);
++
++	while ((nbytes = walk.nbytes) != 0) {
++		if (nbytes < walk.total) {
++			/* Not the end yet, so keep the length block-aligned. */
++			nbytes = round_down(nbytes, AES_BLOCK_SIZE);
++			nblocks = nbytes / AES_BLOCK_SIZE;
++		} else {
++			/* It's the end, so include any final partial block. */
++			nblocks = DIV_ROUND_UP(nbytes, AES_BLOCK_SIZE);
++		}
++		ctr64 += nblocks;
++
++		kernel_fpu_begin();
++		if (likely(ctr64 >= nblocks)) {
++			/* The low 64 bits of the counter won't overflow. */
++			(*ctr64_func)(key, walk.src.virt.addr,
++				      walk.dst.virt.addr, nbytes, le_ctr);
++		} else {
++			/*
++			 * The low 64 bits of the counter will overflow.  The
++			 * assembly doesn't handle this case, so split the
++			 * operation into two at the point where the overflow
++			 * will occur.  After the first part, add the carry bit.
++			 */
++			p1_nbytes = min_t(unsigned int, nbytes,
++					  (nblocks - ctr64) * AES_BLOCK_SIZE);
++			(*ctr64_func)(key, walk.src.virt.addr,
++				      walk.dst.virt.addr, p1_nbytes, le_ctr);
++			le_ctr[0] = 0;
++			le_ctr[1]++;
++			(*ctr64_func)(key, walk.src.virt.addr + p1_nbytes,
++				      walk.dst.virt.addr + p1_nbytes,
++				      nbytes - p1_nbytes, le_ctr);
++		}
++		kernel_fpu_end();
++		le_ctr[0] = ctr64;
++
++		err = skcipher_walk_done(&walk, walk.nbytes - nbytes);
++	}
++
++	put_unaligned_be64(ctr64, &req->iv[8]);
++	put_unaligned_be64(le_ctr[1], &req->iv[0]);
++
++	return err;
++}
++
++/* __always_inline to avoid indirect call */
++static __always_inline int
++xctr_crypt(struct skcipher_request *req,
++	   void (*xctr_func)(const struct crypto_aes_ctx *key,
++			     const u8 *src, u8 *dst, int len,
++			     const u8 iv[AES_BLOCK_SIZE], u64 ctr))
++{
++	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
++	const struct crypto_aes_ctx *key = aes_ctx(crypto_skcipher_ctx(tfm));
++	struct skcipher_walk walk;
++	unsigned int nbytes;
++	u64 ctr = 1;
++	int err;
++
++	err = skcipher_walk_virt(&walk, req, false);
++	while ((nbytes = walk.nbytes) != 0) {
++		if (nbytes < walk.total)
++			nbytes = round_down(nbytes, AES_BLOCK_SIZE);
++
++		kernel_fpu_begin();
++		(*xctr_func)(key, walk.src.virt.addr, walk.dst.virt.addr,
++			     nbytes, req->iv, ctr);
++		kernel_fpu_end();
++
++		ctr += DIV_ROUND_UP(nbytes, AES_BLOCK_SIZE);
++		err = skcipher_walk_done(&walk, walk.nbytes - nbytes);
++	}
++	return err;
++}
++
++#define DEFINE_AVX_SKCIPHER_ALGS(suffix, driver_name_suffix, priority)	       \
+ 									       \
+ asmlinkage void								       \
+ aes_xts_encrypt_##suffix(const struct crypto_aes_ctx *key, const u8 *src,      \
+ 			 u8 *dst, int len, u8 tweak[AES_BLOCK_SIZE]);	       \
+ asmlinkage void								       \
+@@ -793,36 +770,84 @@ static int xts_encrypt_##suffix(struct skcipher_request *req)		       \
+ static int xts_decrypt_##suffix(struct skcipher_request *req)		       \
+ {									       \
+ 	return xts_crypt(req, aes_xts_encrypt_iv, aes_xts_decrypt_##suffix);   \
+ }									       \
+ 									       \
+-static struct skcipher_alg aes_xts_alg_##suffix = {			       \
+-	.base = {							       \
+-		.cra_name		= "__xts(aes)",			       \
+-		.cra_driver_name	= "__" driver_name,		       \
+-		.cra_priority		= priority,			       \
+-		.cra_flags		= CRYPTO_ALG_INTERNAL,		       \
+-		.cra_blocksize		= AES_BLOCK_SIZE,		       \
+-		.cra_ctxsize		= XTS_AES_CTX_SIZE,		       \
+-		.cra_module		= THIS_MODULE,			       \
+-	},								       \
+-	.min_keysize	= 2 * AES_MIN_KEY_SIZE,				       \
+-	.max_keysize	= 2 * AES_MAX_KEY_SIZE,				       \
+-	.ivsize		= AES_BLOCK_SIZE,				       \
+-	.walksize	= 2 * AES_BLOCK_SIZE,				       \
+-	.setkey		= xts_setkey_aesni,				       \
+-	.encrypt	= xts_encrypt_##suffix,				       \
+-	.decrypt	= xts_decrypt_##suffix,				       \
+-};									       \
++asmlinkage void								       \
++aes_ctr64_crypt_##suffix(const struct crypto_aes_ctx *key,		       \
++			 const u8 *src, u8 *dst, int len, const u64 le_ctr[2]);\
++									       \
++static int ctr_crypt_##suffix(struct skcipher_request *req)		       \
++{									       \
++	return ctr_crypt(req, aes_ctr64_crypt_##suffix);		       \
++}									       \
++									       \
++asmlinkage void								       \
++aes_xctr_crypt_##suffix(const struct crypto_aes_ctx *key,		       \
++			const u8 *src, u8 *dst, int len,		       \
++			const u8 iv[AES_BLOCK_SIZE], u64 ctr);		       \
++									       \
++static int xctr_crypt_##suffix(struct skcipher_request *req)		       \
++{									       \
++	return xctr_crypt(req, aes_xctr_crypt_##suffix);		       \
++}									       \
+ 									       \
+-static struct simd_skcipher_alg *aes_xts_simdalg_##suffix
++static struct skcipher_alg skcipher_algs_##suffix[] = {{		       \
++	.base.cra_name		= "__xts(aes)",				       \
++	.base.cra_driver_name	= "__xts-aes-" driver_name_suffix,	       \
++	.base.cra_priority	= priority,				       \
++	.base.cra_flags		= CRYPTO_ALG_INTERNAL,			       \
++	.base.cra_blocksize	= AES_BLOCK_SIZE,			       \
++	.base.cra_ctxsize	= XTS_AES_CTX_SIZE,			       \
++	.base.cra_module	= THIS_MODULE,				       \
++	.min_keysize		= 2 * AES_MIN_KEY_SIZE,			       \
++	.max_keysize		= 2 * AES_MAX_KEY_SIZE,			       \
++	.ivsize			= AES_BLOCK_SIZE,			       \
++	.walksize		= 2 * AES_BLOCK_SIZE,			       \
++	.setkey			= xts_setkey_aesni,			       \
++	.encrypt		= xts_encrypt_##suffix,			       \
++	.decrypt		= xts_decrypt_##suffix,			       \
++}, {									       \
++	.base.cra_name		= "__ctr(aes)",				       \
++	.base.cra_driver_name	= "__ctr-aes-" driver_name_suffix,	       \
++	.base.cra_priority	= priority,				       \
++	.base.cra_flags		= CRYPTO_ALG_INTERNAL,			       \
++	.base.cra_blocksize	= 1,					       \
++	.base.cra_ctxsize	= CRYPTO_AES_CTX_SIZE,			       \
++	.base.cra_module	= THIS_MODULE,				       \
++	.min_keysize		= AES_MIN_KEY_SIZE,			       \
++	.max_keysize		= AES_MAX_KEY_SIZE,			       \
++	.ivsize			= AES_BLOCK_SIZE,			       \
++	.chunksize		= AES_BLOCK_SIZE,			       \
++	.setkey			= aesni_skcipher_setkey,		       \
++	.encrypt		= ctr_crypt_##suffix,			       \
++	.decrypt		= ctr_crypt_##suffix,			       \
++}, {									       \
++	.base.cra_name		= "__xctr(aes)",			       \
++	.base.cra_driver_name	= "__xctr-aes-" driver_name_suffix,	       \
++	.base.cra_priority	= priority,				       \
++	.base.cra_flags		= CRYPTO_ALG_INTERNAL,			       \
++	.base.cra_blocksize	= 1,					       \
++	.base.cra_ctxsize	= CRYPTO_AES_CTX_SIZE,			       \
++	.base.cra_module	= THIS_MODULE,				       \
++	.min_keysize		= AES_MIN_KEY_SIZE,			       \
++	.max_keysize		= AES_MAX_KEY_SIZE,			       \
++	.ivsize			= AES_BLOCK_SIZE,			       \
++	.chunksize		= AES_BLOCK_SIZE,			       \
++	.setkey			= aesni_skcipher_setkey,		       \
++	.encrypt		= xctr_crypt_##suffix,			       \
++	.decrypt		= xctr_crypt_##suffix,			       \
++}};									       \
++									       \
++static struct simd_skcipher_alg *					       \
++simd_skcipher_algs_##suffix[ARRAY_SIZE(skcipher_algs_##suffix)]
+ 
+-DEFINE_XTS_ALG(aesni_avx, "xts-aes-aesni-avx", 500);
++DEFINE_AVX_SKCIPHER_ALGS(aesni_avx, "aesni-avx", 500);
+ #if defined(CONFIG_AS_VAES) && defined(CONFIG_AS_VPCLMULQDQ)
+-DEFINE_XTS_ALG(vaes_avx2, "xts-aes-vaes-avx2", 600);
+-DEFINE_XTS_ALG(vaes_avx10_256, "xts-aes-vaes-avx10_256", 700);
+-DEFINE_XTS_ALG(vaes_avx10_512, "xts-aes-vaes-avx10_512", 800);
++DEFINE_AVX_SKCIPHER_ALGS(vaes_avx2, "vaes-avx2", 600);
++DEFINE_AVX_SKCIPHER_ALGS(vaes_avx10_256, "vaes-avx10_256", 700);
++DEFINE_AVX_SKCIPHER_ALGS(vaes_avx10_512, "vaes-avx10_512", 800);
+ #endif
+ 
+ /* The common part of the x86_64 AES-GCM key struct */
+ struct aes_gcm_key {
+ 	/* Expanded AES key and the AES key length in bytes */
+@@ -1550,40 +1575,49 @@ static int __init register_avx_algs(void)
+ {
+ 	int err;
+ 
+ 	if (!boot_cpu_has(X86_FEATURE_AVX))
+ 		return 0;
+-	err = simd_register_skciphers_compat(&aes_xts_alg_aesni_avx, 1,
+-					     &aes_xts_simdalg_aesni_avx);
++	err = simd_register_skciphers_compat(skcipher_algs_aesni_avx,
++					     ARRAY_SIZE(skcipher_algs_aesni_avx),
++					     simd_skcipher_algs_aesni_avx);
+ 	if (err)
+ 		return err;
+ 	err = simd_register_aeads_compat(aes_gcm_algs_aesni_avx,
+ 					 ARRAY_SIZE(aes_gcm_algs_aesni_avx),
+ 					 aes_gcm_simdalgs_aesni_avx);
+ 	if (err)
+ 		return err;
++	/*
++	 * Note: not all the algorithms registered below actually require
++	 * VPCLMULQDQ.  But in practice every CPU with VAES also has VPCLMULQDQ.
++	 * Similarly, the assembler support was added at about the same time.
++	 * For simplicity, just always check for VAES and VPCLMULQDQ together.
++	 */
+ #if defined(CONFIG_AS_VAES) && defined(CONFIG_AS_VPCLMULQDQ)
+ 	if (!boot_cpu_has(X86_FEATURE_AVX2) ||
+ 	    !boot_cpu_has(X86_FEATURE_VAES) ||
+ 	    !boot_cpu_has(X86_FEATURE_VPCLMULQDQ) ||
+ 	    !boot_cpu_has(X86_FEATURE_PCLMULQDQ) ||
+ 	    !cpu_has_xfeatures(XFEATURE_MASK_SSE | XFEATURE_MASK_YMM, NULL))
+ 		return 0;
+-	err = simd_register_skciphers_compat(&aes_xts_alg_vaes_avx2, 1,
+-					     &aes_xts_simdalg_vaes_avx2);
++	err = simd_register_skciphers_compat(skcipher_algs_vaes_avx2,
++					     ARRAY_SIZE(skcipher_algs_vaes_avx2),
++					     simd_skcipher_algs_vaes_avx2);
+ 	if (err)
+ 		return err;
+ 
+ 	if (!boot_cpu_has(X86_FEATURE_AVX512BW) ||
+ 	    !boot_cpu_has(X86_FEATURE_AVX512VL) ||
+ 	    !boot_cpu_has(X86_FEATURE_BMI2) ||
+ 	    !cpu_has_xfeatures(XFEATURE_MASK_SSE | XFEATURE_MASK_YMM |
+ 			       XFEATURE_MASK_AVX512, NULL))
+ 		return 0;
+ 
+-	err = simd_register_skciphers_compat(&aes_xts_alg_vaes_avx10_256, 1,
+-					     &aes_xts_simdalg_vaes_avx10_256);
++	err = simd_register_skciphers_compat(skcipher_algs_vaes_avx10_256,
++					     ARRAY_SIZE(skcipher_algs_vaes_avx10_256),
++					     simd_skcipher_algs_vaes_avx10_256);
+ 	if (err)
+ 		return err;
+ 	err = simd_register_aeads_compat(aes_gcm_algs_vaes_avx10_256,
+ 					 ARRAY_SIZE(aes_gcm_algs_vaes_avx10_256),
+ 					 aes_gcm_simdalgs_vaes_avx10_256);
+@@ -1591,17 +1625,19 @@ static int __init register_avx_algs(void)
+ 		return err;
+ 
+ 	if (x86_match_cpu(zmm_exclusion_list)) {
+ 		int i;
+ 
+-		aes_xts_alg_vaes_avx10_512.base.cra_priority = 1;
++		for (i = 0; i < ARRAY_SIZE(skcipher_algs_vaes_avx10_512); i++)
++			skcipher_algs_vaes_avx10_512[i].base.cra_priority = 1;
+ 		for (i = 0; i < ARRAY_SIZE(aes_gcm_algs_vaes_avx10_512); i++)
+ 			aes_gcm_algs_vaes_avx10_512[i].base.cra_priority = 1;
+ 	}
+ 
+-	err = simd_register_skciphers_compat(&aes_xts_alg_vaes_avx10_512, 1,
+-					     &aes_xts_simdalg_vaes_avx10_512);
++	err = simd_register_skciphers_compat(skcipher_algs_vaes_avx10_512,
++					     ARRAY_SIZE(skcipher_algs_vaes_avx10_512),
++					     simd_skcipher_algs_vaes_avx10_512);
+ 	if (err)
+ 		return err;
+ 	err = simd_register_aeads_compat(aes_gcm_algs_vaes_avx10_512,
+ 					 ARRAY_SIZE(aes_gcm_algs_vaes_avx10_512),
+ 					 aes_gcm_simdalgs_vaes_avx10_512);
+@@ -1611,31 +1647,35 @@ static int __init register_avx_algs(void)
+ 	return 0;
+ }
+ 
+ static void unregister_avx_algs(void)
+ {
+-	if (aes_xts_simdalg_aesni_avx)
+-		simd_unregister_skciphers(&aes_xts_alg_aesni_avx, 1,
+-					  &aes_xts_simdalg_aesni_avx);
++	if (simd_skcipher_algs_aesni_avx[0])
++		simd_unregister_skciphers(skcipher_algs_aesni_avx,
++					  ARRAY_SIZE(skcipher_algs_aesni_avx),
++					  simd_skcipher_algs_aesni_avx);
+ 	if (aes_gcm_simdalgs_aesni_avx[0])
+ 		simd_unregister_aeads(aes_gcm_algs_aesni_avx,
+ 				      ARRAY_SIZE(aes_gcm_algs_aesni_avx),
+ 				      aes_gcm_simdalgs_aesni_avx);
+ #if defined(CONFIG_AS_VAES) && defined(CONFIG_AS_VPCLMULQDQ)
+-	if (aes_xts_simdalg_vaes_avx2)
+-		simd_unregister_skciphers(&aes_xts_alg_vaes_avx2, 1,
+-					  &aes_xts_simdalg_vaes_avx2);
+-	if (aes_xts_simdalg_vaes_avx10_256)
+-		simd_unregister_skciphers(&aes_xts_alg_vaes_avx10_256, 1,
+-					  &aes_xts_simdalg_vaes_avx10_256);
++	if (simd_skcipher_algs_vaes_avx2[0])
++		simd_unregister_skciphers(skcipher_algs_vaes_avx2,
++					  ARRAY_SIZE(skcipher_algs_vaes_avx2),
++					  simd_skcipher_algs_vaes_avx2);
++	if (simd_skcipher_algs_vaes_avx10_256[0])
++		simd_unregister_skciphers(skcipher_algs_vaes_avx10_256,
++					  ARRAY_SIZE(skcipher_algs_vaes_avx10_256),
++					  simd_skcipher_algs_vaes_avx10_256);
+ 	if (aes_gcm_simdalgs_vaes_avx10_256[0])
+ 		simd_unregister_aeads(aes_gcm_algs_vaes_avx10_256,
+ 				      ARRAY_SIZE(aes_gcm_algs_vaes_avx10_256),
+ 				      aes_gcm_simdalgs_vaes_avx10_256);
+-	if (aes_xts_simdalg_vaes_avx10_512)
+-		simd_unregister_skciphers(&aes_xts_alg_vaes_avx10_512, 1,
+-					  &aes_xts_simdalg_vaes_avx10_512);
++	if (simd_skcipher_algs_vaes_avx10_512[0])
++		simd_unregister_skciphers(skcipher_algs_vaes_avx10_512,
++					  ARRAY_SIZE(skcipher_algs_vaes_avx10_512),
++					  simd_skcipher_algs_vaes_avx10_512);
+ 	if (aes_gcm_simdalgs_vaes_avx10_512[0])
+ 		simd_unregister_aeads(aes_gcm_algs_vaes_avx10_512,
+ 				      ARRAY_SIZE(aes_gcm_algs_vaes_avx10_512),
+ 				      aes_gcm_simdalgs_vaes_avx10_512);
+ #endif
+@@ -1664,17 +1704,10 @@ static int __init aesni_init(void)
+ {
+ 	int err;
+ 
+ 	if (!x86_match_cpu(aesni_cpu_id))
+ 		return -ENODEV;
+-#ifdef CONFIG_X86_64
+-	if (boot_cpu_has(X86_FEATURE_AVX)) {
+-		/* optimize performance of ctr mode encryption transform */
+-		static_call_update(aesni_ctr_enc_tfm, aesni_ctr_enc_avx_tfm);
+-		pr_info("AES CTR mode by8 optimization enabled\n");
+-	}
+-#endif /* CONFIG_X86_64 */
+ 
+ 	err = crypto_register_alg(&aesni_cipher_alg);
+ 	if (err)
+ 		return err;
+ 
+@@ -1688,31 +1721,18 @@ static int __init aesni_init(void)
+ 					 ARRAY_SIZE(aes_gcm_algs_aesni),
+ 					 aes_gcm_simdalgs_aesni);
+ 	if (err)
+ 		goto unregister_skciphers;
+ 
+-#ifdef CONFIG_X86_64
+-	if (boot_cpu_has(X86_FEATURE_AVX))
+-		err = simd_register_skciphers_compat(&aesni_xctr, 1,
+-						     &aesni_simd_xctr);
+-	if (err)
+-		goto unregister_aeads;
+-#endif /* CONFIG_X86_64 */
+-
+ 	err = register_avx_algs();
+ 	if (err)
+ 		goto unregister_avx;
+ 
+ 	return 0;
+ 
+ unregister_avx:
+ 	unregister_avx_algs();
+-#ifdef CONFIG_X86_64
+-	if (aesni_simd_xctr)
+-		simd_unregister_skciphers(&aesni_xctr, 1, &aesni_simd_xctr);
+-unregister_aeads:
+-#endif /* CONFIG_X86_64 */
+ 	simd_unregister_aeads(aes_gcm_algs_aesni,
+ 			      ARRAY_SIZE(aes_gcm_algs_aesni),
+ 			      aes_gcm_simdalgs_aesni);
+ unregister_skciphers:
+ 	simd_unregister_skciphers(aesni_skciphers, ARRAY_SIZE(aesni_skciphers),
+@@ -1728,14 +1748,10 @@ static void __exit aesni_exit(void)
+ 			      ARRAY_SIZE(aes_gcm_algs_aesni),
+ 			      aes_gcm_simdalgs_aesni);
+ 	simd_unregister_skciphers(aesni_skciphers, ARRAY_SIZE(aesni_skciphers),
+ 				  aesni_simd_skciphers);
+ 	crypto_unregister_alg(&aesni_cipher_alg);
+-#ifdef CONFIG_X86_64
+-	if (boot_cpu_has(X86_FEATURE_AVX))
+-		simd_unregister_skciphers(&aesni_xctr, 1, &aesni_simd_xctr);
+-#endif /* CONFIG_X86_64 */
+ 	unregister_avx_algs();
+ }
+ 
+ module_init(aesni_init);
+ module_exit(aesni_exit);
+
+base-commit: b16510a530d1e6ab9683f04f8fb34f2e0f538275
+-- 
+2.48.1
+
