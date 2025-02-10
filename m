@@ -1,163 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D603241C89;
-	Mon, 10 Feb 2025 15:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D57DD24BD18
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739202262; cv=none; b=Aa+1Zw3P98lr079/7RJze8aeWGFiOEVlQGXJoBwJqiQ6/rNrg+RFaMTLdcnbKjZrRvmoK04fzx8CTcznrEmKeXvSaCDmOJKQCd8IhDW5vTcbEX9WgJQn2W806MkJSV2DOCww7QPITYqGNq5hQjclanJjPbt9NiPxIIZ98AJplRA=
+	t=1739202340; cv=none; b=TkuLaqYlJkovb9DU6jQPMNS/PdUNHm/t3BkghZjt/aBi4m0POlBa/OTyfPBxydRl925jJsBZjy+TaEwyMH3I7wHehcMT6Sgcn4sOnbKxunUIjljJ7fz4pNlUI+9bzO+xG1MbZ93GVoTWpPuam7uZmys1u/rUn8SW2/flyPtOmHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739202262; c=relaxed/simple;
-	bh=a1YPttl+qkE5UPQa+Ej7ligSEOM91uyMY3DsNFx/Ops=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ncjdGAtb5RgHJDaS+UAvFp5AMjtwDl0wXTNipxuchUmDNO7YXnZHLiwAaKrIHg0BYTPC0yOj0l2mqDEkJmovowuSibH4ZNah1wAljz4yFsf+mP+DjL7YxIOyubjix3UasRUYwIPw8L6HUhOTIzGYazYZvAaoqXAzvgaLVc2SgcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=buqlvxwG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739202340; c=relaxed/simple;
+	bh=UUjKrez83wi/5Y0smhJ/qK967xlrmuFXA+yORjES1w0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=SBWStu5Gh7vAq1SWvNMxz0xYgNeLqTtTeOp/8BV2Vr/QfN+cQy6BO5eWnynpXT2jIMk8M37BhlfWfX2RCqocbAipiLisOWzAYqDgWHzTrOZmVpDNOIRvELgb3azxdz2t5RjGHeaoRjhD4KQZC8pITzrj4NXH37u+bRcSX3sTF4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tk+FsO0f; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="buqlvxwG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62C30C4CED1;
-	Mon, 10 Feb 2025 15:44:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739202262;
-	bh=a1YPttl+qkE5UPQa+Ej7ligSEOM91uyMY3DsNFx/Ops=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=buqlvxwGzRgS9DeXYQ+MjvkLCJEHL0Wxn+Ebq5PZaum/c6jXytv/wRu/7TBWw0nMB
-	 3NKC69Nu1bHvKFBu9t2x1Y94ckDNY0NCmhdTY35fZUOYGvBYYmNVx3vpZSuvCzMUpT
-	 QvUsaQK9isnSriujDOoe25jOeb9xoXF05Hyx7ofUDk4nCCEwYtJ04fwU3VwhBHxd+C
-	 uj6DtDZvXQ0h8ZcIojWZxaVA+ttLh7ZLiL+fryG4Qt3BNxHK1S9bfL+ykMP3XlofPQ
-	 ybOsx5CQi4ZRZwVsogW2DurSfr5tWQuhBBjVMUsxhQ43PXnrwT43eTRwKm9Lc1yzy/
-	 ptcQNsBApq7kQ==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [RFC PATCH v2 3/3] tracing: Freeable reserved ring buffer
-Date: Tue, 11 Feb 2025 00:44:17 +0900
-Message-ID: <173920225773.826592.6428338529686044470.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <173920222697.826592.3726270716809214055.stgit@devnote2>
-References: <173920222697.826592.3726270716809214055.stgit@devnote2>
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tk+FsO0f"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739202339; x=1770738339;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=UUjKrez83wi/5Y0smhJ/qK967xlrmuFXA+yORjES1w0=;
+  b=Tk+FsO0fX/RIFCTyMEOzp3hDsawx0317iKQ3mnyhuMXD6ImbQOzO05cf
+   Cs3lctU/24CherNiaasZtf8niRudniso39NKwZZVDfCST5dDaGWeM2LT1
+   KX3Cw44GsuYdrSqob8NuWO6aWln6UCpFtVBXqCSdw2hn6Lfgs0G6e8IUd
+   c4PO4oH2v4+L9vo3QBKPb8YkQCAeC7oB0MX4QfUV1vfwXpjYEEY8wqEJ1
+   qFb/IIJcBy+3RJXgn6OtKxCVXfT2XFDjOqdtlAakhjGr7dJSgpkpNPjFU
+   InXuP7+nPP1+1PtTjLW+HpLqRTGwdxIezmFa2P0V4BkMo9aP1QPq5kvpc
+   w==;
+X-CSE-ConnectionGUID: etratfSKTWO4Gjs4KuEFXg==
+X-CSE-MsgGUID: sgkbZAZ8RYC1cnSJfm8iJQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="50419256"
+X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
+   d="scan'208";a="50419256"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 07:45:38 -0800
+X-CSE-ConnectionGUID: q+UuFAnERyWDSo1d9OmAaQ==
+X-CSE-MsgGUID: /cjp3IqGTv2R4itLYAbHtw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="143120729"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 10 Feb 2025 07:45:37 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1thVyY-0012yn-2O;
+	Mon, 10 Feb 2025 15:45:34 +0000
+Date: Mon, 10 Feb 2025 23:44:48 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Alex Maftei (amaftei)" <amaftei@solarflare.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: drivers/net/ethernet/sfc/ethtool_common.c:170:32: warning: '%-24s'
+ directive output may be truncated writing between 24 and 31 bytes into a
+ region of size 25
+Message-ID: <202502102316.8R6hTLsF-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   a64dcfb451e254085a7daee5fe51bf22959d52d3
+commit: 3653954da498fc80c5da3642ae3f8d8168d7f820 sfc: move some ethtool code
+date:   5 years ago
+config: x86_64-randconfig-001-20241126 (https://download.01.org/0day-ci/archive/20250210/202502102316.8R6hTLsF-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250210/202502102316.8R6hTLsF-lkp@intel.com/reproduce)
 
-Make the ring buffer on reserved memory to be freeable. This allows us
-to free the trace instance on the reserved memory without changing
-cmdline and rebooting. Even if we can not change the kernel cmdline
-for security reason, we can release the reserved memory for the ring
-buffer as free (available) memory.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502102316.8R6hTLsF-lkp@intel.com/
 
-For example, boot kernel with reserved memory;
-"reserve_mem=20M:2M:trace trace_instance=boot_mapped^traceoff@trace"
+All warnings (new ones prefixed by >>):
 
- # free
-              total        used        free      shared  buff/cache   available
-Mem:        1994720       45292     1931960       14908       17468     1915920
-Swap:             0           0           0
- # rmdir /sys/kernel/tracing/instances/boot_mapped/
- # free
-              total        used        free      shared  buff/cache   available
-Mem:        1994720       17204     1960060       14912       17456     1944012
-Swap:             0           0           0
+   drivers/net/ethernet/sfc/ethtool_common.c:150:6: warning: no previous prototype for 'efx_fill_test' [-Wmissing-prototypes]
+     150 | void efx_fill_test(unsigned int test_index, u8 *strings, u64 *data,
+         |      ^~~~~~~~~~~~~
+   drivers/net/ethernet/sfc/ethtool_common.c:192:5: warning: no previous prototype for 'efx_fill_loopback_test' [-Wmissing-prototypes]
+     192 | int efx_fill_loopback_test(struct efx_nic *efx,
+         |     ^~~~~~~~~~~~~~~~~~~~~~
+   drivers/net/ethernet/sfc/ethtool_common.c:296:8: warning: no previous prototype for 'efx_describe_per_queue_stats' [-Wmissing-prototypes]
+     296 | size_t efx_describe_per_queue_stats(struct efx_nic *efx, u8 *strings)
+         |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/net/ethernet/sfc/ethtool_common.c: In function 'efx_fill_test':
+>> drivers/net/ethernet/sfc/ethtool_common.c:170:32: warning: '%-24s' directive output may be truncated writing between 24 and 31 bytes into a region of size 25 [-Wformat-truncation=]
+     170 |                          "%-6s %-24s", unit_str, test_str);
+         |                                ^~~~~             ~~~~~~~~
+   drivers/net/ethernet/sfc/ethtool_common.c:168:17: note: 'snprintf' output 32 or more bytes (assuming 39) into a destination of size 32
+     168 |                 snprintf(strings + test_index * ETH_GSTRING_LEN,
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     169 |                          ETH_GSTRING_LEN,
+         |                          ~~~~~~~~~~~~~~~~
+     170 |                          "%-6s %-24s", unit_str, test_str);
+         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/trace.c |   17 +++++++++++++++--
- kernel/trace/trace.h |    1 +
- 2 files changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index dde8000a5614..113ad3179ecd 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -9594,6 +9594,9 @@ static void free_trace_buffers(struct trace_array *tr)
- #ifdef CONFIG_TRACER_MAX_TRACE
- 	free_trace_buffer(&tr->max_buffer);
- #endif
-+
-+	if (tr->range_addr_start)
-+		vunmap((void *)tr->range_addr_start);
- }
- 
- static void init_trace_flags_index(struct trace_array *tr)
-@@ -9755,6 +9758,7 @@ trace_array_create_systems(const char *name, const char *systems,
- 	free_cpumask_var(tr->pipe_cpumask);
- 	free_cpumask_var(tr->tracing_cpumask);
- 	kfree_const(tr->system_names);
-+	kfree(tr->range_name);
- 	kfree(tr->name);
- 	kfree(tr);
- 
-@@ -9857,8 +9861,10 @@ static int __remove_instance(struct trace_array *tr)
- 	int i;
- 
- 	/* Reference counter for a newly created trace array = 1. */
--	if (tr->ref > 1 || (tr->current_trace && tr->trace_ref))
-+	if (tr->ref > 1 || (tr->current_trace && tr->trace_ref)) {
-+		pr_info("Instance is busy: ref %d trace_ref %d\n", tr->ref, tr->trace_ref);
- 		return -EBUSY;
-+	}
- 
- 	list_del(&tr->list);
- 
-@@ -9881,6 +9887,11 @@ static int __remove_instance(struct trace_array *tr)
- 	free_trace_buffers(tr);
- 	clear_tracing_err_log(tr);
- 
-+	if (tr->range_name) {
-+		reserved_mem_release_by_name(tr->range_name);
-+		kfree(tr->range_name);
-+	}
-+
- 	for (i = 0; i < tr->nr_topts; i++) {
- 		kfree(tr->topts[i].topts);
- 	}
-@@ -10740,6 +10751,7 @@ __init static void enable_instances(void)
- 		bool traceoff = false;
- 		char *flag_delim;
- 		char *addr_delim;
-+		char *rname __free(kfree) = NULL;
- 
- 		tok = strsep(&curr_str, ",");
- 
-@@ -10796,6 +10808,7 @@ __init static void enable_instances(void)
- 				pr_warn("Failed to map boot instance %s to %s\n", name, tok);
- 				continue;
- 			}
-+			rname = kstrdup(tok, GFP_KERNEL);
- 		}
- 
- 		if (start) {
-@@ -10832,7 +10845,7 @@ __init static void enable_instances(void)
- 		 */
- 		if (start) {
- 			tr->flags |= TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT;
--			tr->ref++;
-+			tr->range_name = no_free_ptr(rname);
- 		}
- 
- 		while ((tok = strsep(&curr_str, ","))) {
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 47c0742fe9ec..ae8f7fac6592 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -348,6 +348,7 @@ struct trace_array {
- 	unsigned int		mapped;
- 	unsigned long		range_addr_start;
- 	unsigned long		range_addr_size;
-+	char			*range_name;
- 	long			text_delta;
- 	int			nr_modules;
- 	long			*module_delta;
+vim +170 drivers/net/ethernet/sfc/ethtool_common.c
 
+   136	
+   137	/**
+   138	 * efx_fill_test - fill in an individual self-test entry
+   139	 * @test_index:		Index of the test
+   140	 * @strings:		Ethtool strings, or %NULL
+   141	 * @data:		Ethtool test results, or %NULL
+   142	 * @test:		Pointer to test result (used only if data != %NULL)
+   143	 * @unit_format:	Unit name format (e.g. "chan\%d")
+   144	 * @unit_id:		Unit id (e.g. 0 for "chan0")
+   145	 * @test_format:	Test name format (e.g. "loopback.\%s.tx.sent")
+   146	 * @test_id:		Test id (e.g. "PHYXS" for "loopback.PHYXS.tx_sent")
+   147	 *
+   148	 * Fill in an individual self-test entry.
+   149	 */
+   150	void efx_fill_test(unsigned int test_index, u8 *strings, u64 *data,
+   151			   int *test, const char *unit_format, int unit_id,
+   152			   const char *test_format, const char *test_id)
+   153	{
+   154		char unit_str[ETH_GSTRING_LEN], test_str[ETH_GSTRING_LEN];
+   155	
+   156		/* Fill data value, if applicable */
+   157		if (data)
+   158			data[test_index] = *test;
+   159	
+   160		/* Fill string, if applicable */
+   161		if (strings) {
+   162			if (strchr(unit_format, '%'))
+   163				snprintf(unit_str, sizeof(unit_str),
+   164					 unit_format, unit_id);
+   165			else
+   166				strcpy(unit_str, unit_format);
+   167			snprintf(test_str, sizeof(test_str), test_format, test_id);
+   168			snprintf(strings + test_index * ETH_GSTRING_LEN,
+   169				 ETH_GSTRING_LEN,
+ > 170				 "%-6s %-24s", unit_str, test_str);
+   171		}
+   172	}
+   173	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
