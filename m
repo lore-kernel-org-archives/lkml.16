@@ -1,267 +1,105 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 124A216D9C2
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:12:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A808E1CB337;
+	Mon, 10 Feb 2025 11:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739185978; cv=none; b=iWz1n8qvyGzp5y1m5dchpq2QcYf3jUD37/jshNKYOdCEi7VjKIb4zfuCoogmmu+1bnq9uQlpC4csieza9zEgkKt63s2h1F42izSEafH9Up6bS9vzM3rqqAGdmTqzFwcpWdMMY/nskXyX0YL03ACmlbbrWaG7/loasBNH82ZUc7I=
+	t=1739186013; cv=none; b=C0f6S+iIRxQdgWuqmuvdvV3i0O3KOEwRnnmN+zUPDitwJLNFifDskRvPZprIa5Ats2hy57q7nW0dc7815HZHLU8XuCITosMUQycT0sFr6F3OydztIK8egkICGDRihftox5JVZvAg0qipHc5VOvPhQQllTdTWKSCeRcksU+ynKOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739185978; c=relaxed/simple;
-	bh=AWUVwQnEThI97XXtO53ZIPvCSkcjNSnxOPKfedqnmTk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JR4X5pxx3eVF7zOb7Dyzqn1xfYsnPPyCbVR7ZTXuxEGEr48mvK148ZUQ4ElLdcPdcxhzp9xEAdFe73Ctnvb3SLiGg7Ej4IBwysAK++M18A1Ilny7zdlB4mQngOm4jo8qUW9xjCWlm5pA+81bWcp2q5LNMm1n5cqUbHYhUBpLD7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 426D71BC0;
-	Mon, 10 Feb 2025 03:13:17 -0800 (PST)
-Received: from [10.57.81.206] (unknown [10.57.81.206])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A51623F5A1;
-	Mon, 10 Feb 2025 03:12:52 -0800 (PST)
-Message-ID: <a5d66063-c3a0-46fc-ab88-21ae2448c9f0@arm.com>
-Date: Mon, 10 Feb 2025 11:12:51 +0000
+	s=arc-20240116; t=1739186013; c=relaxed/simple;
+	bh=2zJ77jcUVTjeAXAGAxzJaL/gPkHMt5mWPCza1IUne8s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sVeRotJ/5jGSisF1VIlziKk7T07WpRXgPzZyVLwk/4cyA77SCToOYVBgMJou0FiQGX8z20Vwzrz954ugD148RavT0rm6xBbHbq2LY/sK3JNE6CckIldIY0HYZnkEfYxuVtkSZ7TeSup0yzTR6/6twZ3pSxqmJwRGYz1HcllCPZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eUFDZAT3; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eUFDZAT3"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4361f664af5so47312795e9.1;
+        Mon, 10 Feb 2025 03:13:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739186010; x=1739790810; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LSdJQgcp2y7iHjwit0HOOl9HKbnE8QQbbuMwDImG398=;
+        b=eUFDZAT3xzlqz88/IIBLKL/zc5StcsBcgmiNm5D305ZPjdyfOUXDOT9a1WMyqTsOEc
+         UQusRf8VKMu0DU7cwcP1KeEMpam0saD0mvZJtqhK4vmMilZv+kAbM5KnV0UE2c0EgGGn
+         FgmW52AzcFKrYEfGpkbXKzRxxSiBxmMIBm3xW7tx0aWr9niQlxqc83hlwoxukh6a12kZ
+         RdKynkX5Jsl/ZA760Lh6l59eCn4tI0Wm/fz4J7TO/OCwP0vaGlQWaFpO61+Qa/l2iOVU
+         JxTm9DAXRagSdBx4CzEY7SWmAR4jIy6rw5JeyCmkGzMKrVjzAPjSRIbzEi5bDCYXInqL
+         ROOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739186010; x=1739790810;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LSdJQgcp2y7iHjwit0HOOl9HKbnE8QQbbuMwDImG398=;
+        b=m5hMzFGWT/pxAF00wR4HwrkDxqvhYQZ7alpPcE72/Go2tEUX1jSKt3typYK5xiLYTr
+         vRTB+I01/cxo0jubIoPbym9N4H34rhX+BUYxUJ0R/05w/K3Nyb47AF4ERIKicdnPMg2m
+         YbCht2lefPECNfIaflHQjPaG21Y2yMcAP/RdK2fy632y7yVrYeNCUt1cxonAGfhRYMXg
+         /kdSDkg+HcOfxVt7X4GC1E9TtZJfilzSz0WivHD4BFrpX8FeyV2yQad/HC4avUeLJx8Q
+         5GuAGRjpMH+U8G/p+BhkosmRha43k1rhaI8b0ruhNo6gzTcs1hw0MLaqJeogATzHIWZR
+         JbTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVNd91y97fw7bhrLVjnzsgvoZ4jsuP/r9NG4/HiXyoodQfgElgYdKePfb2E9O/CCp7da1K9dUClUNC29SpV@vger.kernel.org, AJvYcCWFVGT4kupeiWLrO0YBo9hBGOfYvTeu+I4tLHMTQJ7bB8+w2kHxI0Am0LTTIRcXQjkBKGYAvAzet90vCj/Xm7g=@vger.kernel.org, AJvYcCXFbagOX6WqnlUcqawqZPrLueRwLOWE0RaEtzwrNWdSrs+9CYMOFqKfVc1+LMDx3JGtrs8mDP2Hl523ExE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIP9O4s/7E6qsBCndUiulZZswF5jlwZvXyjrYRpU6SPe7gLFjZ
+	gajQ4CyAjBAw9BfP9UqKoUpPsIqALMJe/UHIek6SF+5O4Zb8xmg7
+X-Gm-Gg: ASbGnctU2K9PHw8UC0mEkmRorkzcciSU8nygCXyl5swbfLsUmdl8WRLIBG4W59oYHNA
+	Hg+LjaTsBZVRvTmjr83ED5SOqcqXRI842Yxh/ApeuZ28WBZVtKShoBptt++H6hzGDsYmi5CDnfh
+	sBJs8jmP8ecwvHwVJZNSQqe666i0t7Xn9HRxSRUeve4LOUSUBmod+qC5ideL4SoChG3XixzCpGO
+	lbFzxeAieDaWJaI/ABRJcxm5jfyFFlgMUFMqCyJhECPysw14cjwgC+nqVabzssZh2WNKcp0qGH4
+	TURZB1YuTW1u
+X-Google-Smtp-Source: AGHT+IFaU2YoCTpHdtd/tojrjTH8ALsB9SNLM2ym1wrDznm+SKutFiqojoOwPae3ZpHcm6k0gVP0mA==
+X-Received: by 2002:a05:600c:468c:b0:435:23c:e23e with SMTP id 5b1f17b1804b1-4392498a1eemr107768405e9.12.1739186009633;
+        Mon, 10 Feb 2025 03:13:29 -0800 (PST)
+Received: from void.void ([141.226.169.178])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc672b55bsm10260635f8f.79.2025.02.10.03.13.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 03:13:29 -0800 (PST)
+From: Andrew Kreimer <algonell@gmail.com>
+To: Philipp Reisner <philipp.reisner@linbit.com>,
+	Lars Ellenberg <lars.ellenberg@linbit.com>,
+	=?UTF-8?q?Christoph=20B=C3=B6hmwalder?= <christoph.boehmwalder@linbit.com>,
+	Jens Axboe <axboe@kernel.dk>
+Cc: drbd-dev@lists.linbit.com,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Andrew Kreimer <algonell@gmail.com>
+Subject: [PATCH] drbd: Fix typo in error directive
+Date: Mon, 10 Feb 2025 13:13:05 +0200
+Message-ID: <20250210111324.29407-1-algonell@gmail.com>
+X-Mailer: git-send-email 2.48.1.268.g9520f7d998
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 16/16] arm64/mm: Defer barriers when updating kernel
- mappings
-Content-Language: en-GB
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Muchun Song <muchun.song@linux.dev>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
- Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
- Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250205151003.88959-1-ryan.roberts@arm.com>
- <20250205151003.88959-17-ryan.roberts@arm.com>
- <9bc5527e-16f4-45cc-aced-55b1ace6c143@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <9bc5527e-16f4-45cc-aced-55b1ace6c143@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 10/02/2025 08:03, Anshuman Khandual wrote:
-> 
-> 
-> On 2/5/25 20:39, Ryan Roberts wrote:
->> Because the kernel can't tolerate page faults for kernel mappings, when
->> setting a valid, kernel space pte (or pmd/pud/p4d/pgd), it emits a
->> dsb(ishst) to ensure that the store to the pgtable is observed by the
->> table walker immediately. Additionally it emits an isb() to ensure that
->> any already speculatively determined invalid mapping fault gets
->> canceled.> 
->> We can improve the performance of vmalloc operations by batching these
->> barriers until the end of a set up entry updates. The newly added
->> arch_update_kernel_mappings_begin() / arch_update_kernel_mappings_end()
->> provide the required hooks.
->>
->> vmalloc improves by up to 30% as a result.
->>
->> Two new TIF_ flags are created; TIF_KMAP_UPDATE_ACTIVE tells us if we
->> are in the batch mode and can therefore defer any barriers until the end
->> of the batch. TIF_KMAP_UPDATE_PENDING tells us if barriers are queued to
->> be emited at the end of the batch.
-> 
-> Why cannot this be achieved with a single TIF_KMAP_UPDATE_ACTIVE which is
-> set in __begin(), cleared in __end() and saved across a __switch_to().
+There is a typo in error directive:
+ - endianess -> endianness
 
-So unconditionally emit the barriers in _end(), and emit them in __switch_to()
-if TIF_KMAP_UPDATE_ACTIVE is set?
+Fix it via codespell.
 
-I guess if calling _begin() then you are definitely going to be setting at least
-1 PTE. So you can definitely emit the barriers unconditionally. I was trying to
-protect against the case where you get pre-empted (potentially multiple times)
-while in the loop. The TIF_KMAP_UPDATE_PENDING flag ensures you only emit the
-barriers when you definitely need to. Without it, you would have to emit on
-every pre-emption even if no more PTEs got set.
+Signed-off-by: Andrew Kreimer <algonell@gmail.com>
+---
+ drivers/block/drbd/drbd_state.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-But I suspect this is a premature optimization. Probably it will never occur. So
-I'll simplify as you suggest.
-
-Thanks,
-Ryan
-
-> 
->>
->> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
->> ---
->>  arch/arm64/include/asm/pgtable.h     | 65 +++++++++++++++++++---------
->>  arch/arm64/include/asm/thread_info.h |  2 +
->>  arch/arm64/kernel/process.c          | 20 +++++++--
->>  3 files changed, 63 insertions(+), 24 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
->> index ff358d983583..1ee9b9588502 100644
->> --- a/arch/arm64/include/asm/pgtable.h
->> +++ b/arch/arm64/include/asm/pgtable.h
->> @@ -39,6 +39,41 @@
->>  #include <linux/mm_types.h>
->>  #include <linux/sched.h>
->>  #include <linux/page_table_check.h>
->> +#include <linux/pgtable_modmask.h>
->> +
->> +static inline void emit_pte_barriers(void)
->> +{
->> +	dsb(ishst);
->> +	isb();
->> +}
-> 
-> There are many sequence of these two barriers in this particular header,
-> hence probably a good idea to factor this out into a common helper.
-> >> +
->> +static inline void queue_pte_barriers(void)
->> +{
->> +	if (test_thread_flag(TIF_KMAP_UPDATE_ACTIVE)) {
->> +		if (!test_thread_flag(TIF_KMAP_UPDATE_PENDING))
->> +			set_thread_flag(TIF_KMAP_UPDATE_PENDING);
->> +	} else
->> +		emit_pte_barriers();
->> +}
->> +
->> +#define arch_update_kernel_mappings_begin arch_update_kernel_mappings_begin
->> +static inline void arch_update_kernel_mappings_begin(unsigned long start,
->> +						     unsigned long end)
->> +{
->> +	set_thread_flag(TIF_KMAP_UPDATE_ACTIVE);
->> +}
->> +
->> +#define arch_update_kernel_mappings_end arch_update_kernel_mappings_end
->> +static inline void arch_update_kernel_mappings_end(unsigned long start,
->> +						   unsigned long end,
->> +						   pgtbl_mod_mask mask)
->> +{
->> +	if (test_thread_flag(TIF_KMAP_UPDATE_PENDING))
->> +		emit_pte_barriers();
->> +
->> +	clear_thread_flag(TIF_KMAP_UPDATE_PENDING);
->> +	clear_thread_flag(TIF_KMAP_UPDATE_ACTIVE);
->> +}
->>  
->>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->>  #define __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
->> @@ -323,10 +358,8 @@ static inline void __set_pte_complete(pte_t pte)
->>  	 * Only if the new pte is valid and kernel, otherwise TLB maintenance
->>  	 * or update_mmu_cache() have the necessary barriers.
->>  	 */
->> -	if (pte_valid_not_user(pte)) {
->> -		dsb(ishst);
->> -		isb();
->> -	}
->> +	if (pte_valid_not_user(pte))
->> +		queue_pte_barriers();
->>  }
->>  
->>  static inline void __set_pte(pte_t *ptep, pte_t pte)
->> @@ -791,10 +824,8 @@ static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
->>  
->>  	WRITE_ONCE(*pmdp, pmd);
->>  
->> -	if (pmd_valid_not_user(pmd)) {
->> -		dsb(ishst);
->> -		isb();
->> -	}
->> +	if (pmd_valid_not_user(pmd))
->> +		queue_pte_barriers();
->>  }
->>  
->>  static inline void pmd_clear(pmd_t *pmdp)
->> @@ -869,10 +900,8 @@ static inline void set_pud(pud_t *pudp, pud_t pud)
->>  
->>  	WRITE_ONCE(*pudp, pud);
->>  
->> -	if (pud_valid_not_user(pud)) {
->> -		dsb(ishst);
->> -		isb();
->> -	}
->> +	if (pud_valid_not_user(pud))
->> +		queue_pte_barriers();
->>  }
->>  
->>  static inline void pud_clear(pud_t *pudp)
->> @@ -960,10 +989,8 @@ static inline void set_p4d(p4d_t *p4dp, p4d_t p4d)
->>  
->>  	WRITE_ONCE(*p4dp, p4d);
->>  
->> -	if (p4d_valid_not_user(p4d)) {
->> -		dsb(ishst);
->> -		isb();
->> -	}
->> +	if (p4d_valid_not_user(p4d))
->> +		queue_pte_barriers();
->>  }
->>  
->>  static inline void p4d_clear(p4d_t *p4dp)
->> @@ -1098,10 +1125,8 @@ static inline void set_pgd(pgd_t *pgdp, pgd_t pgd)
->>  
->>  	WRITE_ONCE(*pgdp, pgd);
->>  
->> -	if (pgd_valid_not_user(pgd)) {
->> -		dsb(ishst);
->> -		isb();
->> -	}
->> +	if (pgd_valid_not_user(pgd))
->> +		queue_pte_barriers();
->>  }
->>  
->>  static inline void pgd_clear(pgd_t *pgdp)
->> diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
->> index 1114c1c3300a..382d2121261e 100644
->> --- a/arch/arm64/include/asm/thread_info.h
->> +++ b/arch/arm64/include/asm/thread_info.h
->> @@ -82,6 +82,8 @@ void arch_setup_new_exec(void);
->>  #define TIF_SME_VL_INHERIT	28	/* Inherit SME vl_onexec across exec */
->>  #define TIF_KERNEL_FPSTATE	29	/* Task is in a kernel mode FPSIMD section */
->>  #define TIF_TSC_SIGSEGV		30	/* SIGSEGV on counter-timer access */
->> +#define TIF_KMAP_UPDATE_ACTIVE	31	/* kernel map update in progress */
->> +#define TIF_KMAP_UPDATE_PENDING	32	/* kernel map updated with deferred barriers */
->>  
->>  #define _TIF_SIGPENDING		(1 << TIF_SIGPENDING)
->>  #define _TIF_NEED_RESCHED	(1 << TIF_NEED_RESCHED)
->> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
->> index 42faebb7b712..1367ec6407d1 100644
->> --- a/arch/arm64/kernel/process.c
->> +++ b/arch/arm64/kernel/process.c
->> @@ -680,10 +680,10 @@ struct task_struct *__switch_to(struct task_struct *prev,
->>  	gcs_thread_switch(next);
->>  
->>  	/*
->> -	 * Complete any pending TLB or cache maintenance on this CPU in case
->> -	 * the thread migrates to a different CPU.
->> -	 * This full barrier is also required by the membarrier system
->> -	 * call.
->> +	 * Complete any pending TLB or cache maintenance on this CPU in case the
->> +	 * thread migrates to a different CPU. This full barrier is also
->> +	 * required by the membarrier system call. Additionally it is required
->> +	 * for TIF_KMAP_UPDATE_PENDING, see below.
->>  	 */
->>  	dsb(ish);
->>  
->> @@ -696,6 +696,18 @@ struct task_struct *__switch_to(struct task_struct *prev,
->>  	/* avoid expensive SCTLR_EL1 accesses if no change */
->>  	if (prev->thread.sctlr_user != next->thread.sctlr_user)
->>  		update_sctlr_el1(next->thread.sctlr_user);
->> +	else if (unlikely(test_thread_flag(TIF_KMAP_UPDATE_PENDING))) {
->> +		/*
->> +		 * In unlikely event that a kernel map update is on-going when
->> +		 * preemption occurs, we must emit_pte_barriers() if pending.
->> +		 * emit_pte_barriers() consists of "dsb(ishst); isb();". The dsb
->> +		 * is already handled above. The isb() is handled if
->> +		 * update_sctlr_el1() was called. So only need to emit isb()
->> +		 * here if it wasn't called.
->> +		 */
->> +		isb();
->> +		clear_thread_flag(TIF_KMAP_UPDATE_PENDING);
->> +	}
->>  
->>  	/* the actual thread switch */
->>  	last = cpu_switch_to(prev, next);
+diff --git a/drivers/block/drbd/drbd_state.h b/drivers/block/drbd/drbd_state.h
+index cbaeb8018dbf..89d7c828eb59 100644
+--- a/drivers/block/drbd/drbd_state.h
++++ b/drivers/block/drbd/drbd_state.h
+@@ -106,7 +106,7 @@ union drbd_dev_state {
+ 		unsigned peer:2 ;   /* 3/4	 primary/secondary/unknown */
+ 		unsigned role:2 ;   /* 3/4	 primary/secondary/unknown */
+ #else
+-# error "this endianess is not supported"
++# error "this endianness is not supported"
+ #endif
+ 	};
+ 	unsigned int i;
+-- 
+2.48.1.268.g9520f7d998
 
