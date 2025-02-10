@@ -1,87 +1,244 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 223681C6F70;
-	Mon, 10 Feb 2025 10:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B24E1CB337
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739185005; cv=none; b=XC/QL49+M62hqAwLDZ1L0f5qd6WqwTEEruWN6C2NclfV0M28Hy6PLXEUv86MLYNOjmuIg/azezu0hK0GIwnEefF7b9+Oob9Z0D9phHW9vOAiCASymRGFXULYwu/uTulqKWVZgzV895ozUFdFKoX9wrab3RrWyUdHFsnG4LmP1sw=
+	t=1739185027; cv=none; b=N9B5yPlReItlIpE2aICEuoin99L0m73tNwWdQG5rCzgE2cWgvXxd8JATPcIJCpCe9BUnG7xcofZF9MPuqGvxF0gpsHU1PN5CxbhmgRphZY1fwJ7PTqjgl2f+6rf6HPMNMDdBXI3JzJywOy9Tu8OKjzqcGu54LlkTte4SEPtlgwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739185005; c=relaxed/simple;
-	bh=ktC9CGjjL2cK7vFGI+t8o65NobGAFD0a2MtqEaxpWTI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=knb6vrM5Nvgnw/wb/DStzD00p+rIGgAANqjVkkpA2BIMQUQPbf9+dZ+Ehgri9z83v/pH5h2eCmhGixpSjkwtpST3GQFsIHpZ4TRifo36UrKzmooB8QLnA6M6djBZITX/rVmJyUWW3lVn2LaLPCdixjBHW8/wUd2IZv2CHvLsokI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=VDIALnGM; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1739185027; c=relaxed/simple;
+	bh=iyDDi1r4riFULUgod5wCm2MoIyCOnVwU3km7vkRgHgg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fPcmC9O7sHe88lj6uKGUIbIWpmHLHZGQhL8v6pDTlU7JDsr5Yr7e26SBnHOk/cPnGlIIuWi6H9UzG6mGYXB+OBnasP4ObALotBbO0A8HYbjmjgnPStkobsiFm7FhjnSHAYXONo2c0LEoS2f/io23PUYoCACo/02I36eOzD7XLx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ezuv+mLV; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="VDIALnGM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739185002;
-	bh=ktC9CGjjL2cK7vFGI+t8o65NobGAFD0a2MtqEaxpWTI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VDIALnGMNk86NrAPmfAd//FQLk4s/j7kOe0F0n8rU1AgHnkN+pGf2mMHWtgI2EcLT
-	 EJuZCOQfrFUko7tDluFAUWNZ+QgrJ/t0yExuxM+74rynDfLRqcsFoJf23rVUQQlB26
-	 TwrHNQxxJdHe5gcN+8SsrU7j5IVjGvzgu0TvvCtCwx10WGhQV2WC7X0RBjUwt7mmkW
-	 QrW+7OO7oAR6TbKLfDGGroGrKflj6HdDOmsDI+WDwqsvxJ1lSRlNEGgINxLDJtrdcn
-	 mCX83JTYosnDUGW4HNpIM4CQupfp2bHWXNP6A/mSxhGuCW0yfzBc9iUhPsm14DKUiH
-	 wxQwbGJSDiGDg==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9E57917E0EA4;
-	Mon, 10 Feb 2025 11:56:41 +0100 (CET)
-Message-ID: <b56a7597-fa39-4e02-b601-db05bfa48472@collabora.com>
-Date: Mon, 10 Feb 2025 11:56:40 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ezuv+mLV"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5450cf3ebc2so790293e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 02:57:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739185023; x=1739789823; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6xd+vxcqG1mZGT915T0HX9ILQH/E7rjAK2oLVDx9yII=;
+        b=ezuv+mLVh82zeTpiJ3bNiqw5ygj2NriYPftMzParFxgKTi3AdObY3aU7pPKca9vKP3
+         KTpH8V/XYhxoLzAgMWjFNZHN6uBfm3mgtkqWay8cebPOzfqcSfE6BHu20G1qDNDThOKM
+         Uw1Ao4zOxXT22c22WJm7d9/p3cDVIFSdbc3l8d15KsD8pEBeZxBE0gCuN34Okzs5Ndem
+         BGv6hqTkt8cv6lGo2Uro8EjUYuE6fqPHX05UcnlUVvy9aw+pcozq1BQMMzXg2uybBnA8
+         fLV3AKjIJYGnTtao8ulr9OvKtdm3hpyB+Hfk8BkcTDnDZiuc3/tiX6A3NZg/friy9wLz
+         QBaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739185023; x=1739789823;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6xd+vxcqG1mZGT915T0HX9ILQH/E7rjAK2oLVDx9yII=;
+        b=KQIFdDVbIh5vhll2MmUUKsmiEO261AxS7kkptEmAZFrGrPuBHFvhi8R854M/NOhCeZ
+         uf9YE/eSRrjS1fdprQ0ipo2gFRjiQ1jOT9SdMDHGfRaf4Bi+G7Dzkq3khEH91+4xmvBo
+         Zvs+gkAnPkU5Lt/EfXKMvYVKttWrCGUCgRl8SJa/7i9JbR8wSAFC1FOkDNiagokE7rsd
+         thLbQcjFHK/X6xW/rZl/J4/tCUu/udKkMSo7D2knau5ecPT8HVApBoPe5c9Ngu2ChI4W
+         Jvq6GrTw+sLw8Ilbf3+kkkqwt8NgoaB2DDkisRbDiNMeG8y6HsdxSiQIhmeBhPWyEfJG
+         29jA==
+X-Forwarded-Encrypted: i=1; AJvYcCVP2HHVjArAXkt8RbaVFojBObMVjQxHIowc36IPAEukWAUBr8Gbh/9KiywHr/ttVxRW8jD9djLbUhZW9Ko=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCV+9TgjX6o10RbiMPkfLg9TB5wGB6fukrvNYdSjZ/G1Stx7F9
+	wnxigiY68DWAD0KSGRQ7QctpMd/qHM8LSVLXTSahvaV5YWVldxpEut97IAUneF4=
+X-Gm-Gg: ASbGncsBYh/cztQgBboI0NFxLGgNPcE7fWAZDniKg9pgYh/TFZMxmKOsn7LcnpHM2Re
+	QDA2pe2F09wMXT5Yj7WkN+Wgr7LgPjzXly6ihkw0AFz62NCl3CqKoMXwZlvORkfbXcpqvtEwv0p
+	4JcgJ90nv2Bki9JKvgZsOUsJUH5pfaaEzFNFIF/9kWOiVP7lW4DK2wSOvj7SWfBo9TFr0q/USPw
+	Snn09/Y2MTDQhCGeeH3gzXFEKbdQJFsyfRe5Rix476tBqHz0rU5Htn+2VDn9vkzcxD2syZDua4O
+	o+BXm8ZHvJSOUgszMyiugzdE09Xa/g5RD9mTDtpbBQkI/ct+c51zwiOpZo+XRbn/BFj2Pt8=
+X-Google-Smtp-Source: AGHT+IHwDEpaVSkoV9uzP8u1aUI2Q7JyUrXFsxYabhPcKGbqKSc1h4oh6oLKcGACEjWOIjuumC9uOA==
+X-Received: by 2002:a05:6512:e89:b0:545:ea9:1a17 with SMTP id 2adb3069b0e04-5450ea91b4amr641356e87.13.1739185022967;
+        Mon, 10 Feb 2025 02:57:02 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5450d27e43csm228979e87.214.2025.02.10.02.57.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 02:57:01 -0800 (PST)
+Date: Mon, 10 Feb 2025 12:57:00 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>
+Cc: Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Odelu Kukatla <quic_okukatla@quicinc.com>, Mike Tipton <quic_mdtipton@quicinc.com>, 
+	Jeff Johnson <quic_jjohnson@quicinc.com>, Andrew Halaney <ahalaney@redhat.com>, 
+	Sibi Sankar <quic_sibis@quicinc.com>, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V8 3/7] interconnect: qcom: Add multidev EPSS L3 support
+Message-ID: <fclfywuw3p43pcj42gi2w5kutvnto3rcrdng2zl2pzgpvz7dis@cjx2e6v4skfm>
+References: <20250205182743.915-1-quic_rlaggysh@quicinc.com>
+ <20250205182743.915-4-quic_rlaggysh@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: mediatek: mt7988a-bpi-r4: allow hw variants
- of bpi-r4
-To: Frank Wunderlich <linux@fw-web.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Frank Wunderlich <frank-w@public-files.de>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20250207135501.30741-1-linux@fw-web.de>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250207135501.30741-1-linux@fw-web.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250205182743.915-4-quic_rlaggysh@quicinc.com>
 
-Il 07/02/25 14:54, Frank Wunderlich ha scritto:
-> From: Frank Wunderlich <frank-w@public-files.de>
+On Wed, Feb 05, 2025 at 06:27:39PM +0000, Raviteja Laggyshetty wrote:
+> EPSS on SA8775P has two instances, necessitating the creation of two
+> device nodes with different compatibles due to the unique ICC node ID
+> and name limitations in the interconnect framework. Add multidevice
+> support for the OSM-L3 provider to dynamically obtain unique node IDs
+> and register with the framework.
 > 
-> Sinovoip has released other variants of Bananapi-R4 board.
-> The known changes affecting only the LAN SFP+ slot which is replaced
-> by a 2.5G phy with optional PoE.
-> 
-> As the SFP-Ports are not upstreamed yet this patch simply renames the
-> current board dts to dtsi, creating new dts for the board including
-> the new dtsi and move i2c-mux channel for sfp lan to board dts.
-> 
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-
-I understand what's going on, and I agree, but this change alone doesn't make a lot
-of sense, does it?
-
-If I were to see a commit that moves everything in a dtsi, and justifies that by
-adding two dts for the two variants, though, things would be different.... :-)
-
-Cheers,
-Angelo
-
+> Signed-off-by: Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>
 > ---
->   .../dts/mediatek/mt7988a-bananapi-bpi-r4.dts  | 404 +-----------------
->   .../dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi | 403 +++++++++++++++++
->   2 files changed, 407 insertions(+), 400 deletions(-)
->   create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
+>  drivers/interconnect/qcom/osm-l3.c | 46 +++++++++++++++++-------------
+>  1 file changed, 26 insertions(+), 20 deletions(-)
 > 
+> diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
+> index 6a656ed44d49..da2d82700b5a 100644
+> --- a/drivers/interconnect/qcom/osm-l3.c
+> +++ b/drivers/interconnect/qcom/osm-l3.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+>   * Copyright (c) 2020-2021, The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+>   */
+>  
+>  #include <linux/args.h>
+> @@ -33,6 +34,7 @@
+>  #define EPSS_REG_PERF_STATE		0x320
+>  
+>  #define OSM_L3_MAX_LINKS		1
+> +#define ALLOC_DYN_ID			-1
+
+This should be defined by ICC framework.
+
+>  
+>  #define to_osm_l3_provider(_provider) \
+>  	container_of(_provider, struct qcom_osm_l3_icc_provider, provider)
+> @@ -55,46 +57,40 @@ struct qcom_osm_l3_icc_provider {
+>   */
+>  struct qcom_osm_l3_node {
+>  	const char *name;
+> -	u16 links[OSM_L3_MAX_LINKS];
+> -	u16 id;
+> +	struct qcom_osm_l3_node *links[OSM_L3_MAX_LINKS];
+> +	int id;
+>  	u16 num_links;
+>  	u16 buswidth;
+>  };
+>  
+>  struct qcom_osm_l3_desc {
+> -	const struct qcom_osm_l3_node * const *nodes;
+> +	struct qcom_osm_l3_node * const *nodes;
+>  	size_t num_nodes;
+>  	unsigned int lut_row_size;
+>  	unsigned int reg_freq_lut;
+>  	unsigned int reg_perf_state;
+>  };
+>  
+> -enum {
+> -	OSM_L3_MASTER_NODE = 10000,
+> -	OSM_L3_SLAVE_NODE,
+> -};
+> -
+> -#define DEFINE_QNODE(_name, _id, _buswidth, ...)			\
+> -	static const struct qcom_osm_l3_node _name = {			\
+> +#define DEFINE_QNODE(_name, _buswidth, ...)			\
+> +	static struct qcom_osm_l3_node _name = {			\
+>  		.name = #_name,						\
+> -		.id = _id,						\
+>  		.buswidth = _buswidth,					\
+>  		.num_links = COUNT_ARGS(__VA_ARGS__),			\
+>  		.links = { __VA_ARGS__ },				\
+>  	}
+>  
+> -DEFINE_QNODE(osm_l3_master, OSM_L3_MASTER_NODE, 16, OSM_L3_SLAVE_NODE);
+> -DEFINE_QNODE(osm_l3_slave, OSM_L3_SLAVE_NODE, 16);
+> +DEFINE_QNODE(osm_l3_slave, 16);
+> +DEFINE_QNODE(osm_l3_master, 16, &osm_l3_slave);
+>  
+> -static const struct qcom_osm_l3_node * const osm_l3_nodes[] = {
+> +static struct qcom_osm_l3_node * const osm_l3_nodes[] = {
+>  	[MASTER_OSM_L3_APPS] = &osm_l3_master,
+>  	[SLAVE_OSM_L3] = &osm_l3_slave,
+>  };
+>  
+> -DEFINE_QNODE(epss_l3_master, OSM_L3_MASTER_NODE, 32, OSM_L3_SLAVE_NODE);
+> -DEFINE_QNODE(epss_l3_slave, OSM_L3_SLAVE_NODE, 32);
+> +DEFINE_QNODE(epss_l3_slave, 32);
+> +DEFINE_QNODE(epss_l3_master, 32, &epss_l3_slave);
+>  
+> -static const struct qcom_osm_l3_node * const epss_l3_nodes[] = {
+> +static struct qcom_osm_l3_node * const epss_l3_nodes[] = {
+>  	[MASTER_EPSS_L3_APPS] = &epss_l3_master,
+>  	[SLAVE_EPSS_L3_SHARED] = &epss_l3_slave,
+>  };
+> @@ -164,7 +160,7 @@ static int qcom_osm_l3_probe(struct platform_device *pdev)
+>  	const struct qcom_osm_l3_desc *desc;
+>  	struct icc_onecell_data *data;
+>  	struct icc_provider *provider;
+> -	const struct qcom_osm_l3_node * const *qnodes;
+> +	struct qcom_osm_l3_node * const *qnodes;
+>  	struct icc_node *node;
+>  	size_t num_nodes;
+>  	struct clk *clk;
+> @@ -242,6 +238,10 @@ static int qcom_osm_l3_probe(struct platform_device *pdev)
+>  
+>  	icc_provider_init(provider);
+>  
+> +	/*Initialize IDs to ALLOC_DYN_ID to indicate dynamic id allocation*/
+> +	for (i = 0; i < num_nodes; i++)
+> +		qnodes[i]->id = ALLOC_DYN_ID;
+
+This can be initialized statically.
+
+> +
+>  	for (i = 0; i < num_nodes; i++) {
+>  		size_t j;
+>  
+> @@ -250,14 +250,19 @@ static int qcom_osm_l3_probe(struct platform_device *pdev)
+>  			ret = PTR_ERR(node);
+>  			goto err;
+>  		}
+> +		qnodes[i]->id = node->id;
+
+Should not be necessary.
+
+>  
+>  		node->name = qnodes[i]->name;
+>  		/* Cast away const and add it back in qcom_osm_l3_set() */
+>  		node->data = (void *)qnodes[i];
+>  		icc_node_add(node, provider);
+>  
+> -		for (j = 0; j < qnodes[i]->num_links; j++)
+> -			icc_link_create(node, qnodes[i]->links[j]);
+> +		for (j = 0; j < qnodes[i]->num_links; j++) {
+> +			struct qcom_osm_l3_node *link_node = qnodes[i]->links[j];
+> +
+> +			icc_link_create(node, link_node->id);
+
+Please add icc_link_nodes() (or something like that), taking two struct
+icc_node instances. Then you can use it here, instead of reading back
+the ID. Ideally the 'ID' should become an internal detail which is of no
+concern for the ICC drivers.
+
+> +			link_node->id = (node->links[node->num_links - 1])->id;
+> +		}
+>  
+>  		data->nodes[i] = node;
+>  	}
+> @@ -278,6 +283,7 @@ static int qcom_osm_l3_probe(struct platform_device *pdev)
+>  static const struct of_device_id osm_l3_of_match[] = {
+>  	{ .compatible = "qcom,epss-l3", .data = &epss_l3_l3_vote },
+>  	{ .compatible = "qcom,osm-l3", .data = &osm_l3 },
+> +	{ .compatible = "qcom,sa8775p-epss-l3", .data = &epss_l3_perf_state },
+>  	{ .compatible = "qcom,sc7180-osm-l3", .data = &osm_l3 },
+>  	{ .compatible = "qcom,sc7280-epss-l3", .data = &epss_l3_perf_state },
+>  	{ .compatible = "qcom,sdm845-osm-l3", .data = &osm_l3 },
+> -- 
+> 2.39.2
+> 
+
+-- 
+With best wishes
+Dmitry
