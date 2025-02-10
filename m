@@ -1,135 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B2E2580D8;
-	Mon, 10 Feb 2025 16:43:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9890D2580D8;
+	Mon, 10 Feb 2025 16:44:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739205781; cv=none; b=ISum0pcOsTHB1Mw6u9WS4JPsX+gpSZxJjhCemp/MNa/L0NM4s9Yir7aAvVSf42k1XlrWXHRqsVK1M/gqGFYc+fHoFrGh3C+V7vGzTxxOOwLeG8Z19eDDyQ997bkbSoi51HEHYX/fXfpfIkUdN2HqwbSb2B0bAh54v8IjxKAcTg4=
+	t=1739205855; cv=none; b=pcqKzFI6JxRQa9PRWPhOz6udfHRAzBmW1RVQ6H71Ju6+R2WOpMj1Ufx+g6NTwvppz3QkUKtbyLksH2a0JmoytLn85fUyVXnrS965wcOkeLiSX4P1LnfZqhH0nWbEfcymJcO+OzfhfGuuqc9E8NgXwjznh0YtKjj/eXbfNTXgZF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739205781; c=relaxed/simple;
-	bh=mPMQ/r2tER76Ym5c2/i5WaN/wRM3LmL3waxtdryUaBY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s1zGArRzjdDsczExnk7qp7rjy0klqblReHisY5s1wlO1OLnjMHXl4oXTK2/V8i7TUg6VoczYE9aXkipWqaeQExO8CZ8sbhuDmfrB7ImJdTUOxSElDCXKZ9ozkPDmlJB10rro/VUvSt0S/xPDm4mWxflG8LQpmB9Xy59OkBXrdVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k6CRwpAP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739205855; c=relaxed/simple;
+	bh=pJIYPWJ+5c+OJAajVySyzvOkJYxLdGI/XLkulyWGlJA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=jhPgAQyFl7yJ+cswhFEIBQcIcqmWH9A6VCydAlwIQJB6BE8yfVvPsJMkXC2Z9U0Io3SiwAlJPw9yrySa1iBdohzbraVqHCI2NzCIimjUcl5zTymnfRYj8gzUOMZZcM6zAraSdJMPTDAWvrM0Yiomm8gokHvKRdU7D0R6jnIO/A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sap1xWyb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k6CRwpAP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C473DC4CEDF;
-	Mon, 10 Feb 2025 16:42:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sap1xWyb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F6BDC4CED1;
+	Mon, 10 Feb 2025 16:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739205780;
-	bh=mPMQ/r2tER76Ym5c2/i5WaN/wRM3LmL3waxtdryUaBY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=k6CRwpAPipNwWpQaCTXwPnOf+2w1rmiKX2u5l+E1Q1r5ljg/P/XjX6IS0mX4MhujU
-	 5TqJcCFPlfx7GwKz7qhusSce6nnF3jpC9D0EEkZKzMuE+k/Ngn40ywJwpfQjVyGgQF
-	 rh5y75r08I3w8BHA+QZwVUrEeJgbF6aLnK6rA73lflq0uRD4QLx2pVn+WQzQwXHvYb
-	 c2cLn37NpyS3GcWcpXzexsjK+hL1eXOCVkGjPqBjr8j+3v9cxciV4A6ZmkS45HoEnI
-	 hLGd9teilbBneYgcfDlngYP9it6EX+6bY3EkvCWptfgv2mpfeJKk/xW0VB4kTjTPRy
-	 I5F/AWrtmlEow==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	linux-kbuild@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers),
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: [PATCH] kbuild: rust: add rustc-min-version support function
-Date: Mon, 10 Feb 2025 17:42:45 +0100
-Message-ID: <20250210164245.282886-1-ojeda@kernel.org>
+	s=k20201202; t=1739205855;
+	bh=pJIYPWJ+5c+OJAajVySyzvOkJYxLdGI/XLkulyWGlJA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Sap1xWyb/Xua4wOkYzVszhdi1qatQ6+kI68L3yl8aizC4TP6ZfceuQNPR4xa3UP4a
+	 GcGTPc4GzCih4oxnvKRM/JRcfJuxnwVJIPoBOP1pO4+IDJnyNmdLDruSE2QX9xhwvX
+	 EhUrumg/0Jp5TOiR5H4oAa8Nh6yapeQllKnvCKasdsEqs/3JdNOjgUxdnbJMtu2bKj
+	 uu5e23d5Ub57GKgZKwkPFpklHe4zyCPoxx37+rrOX/YBbmpHvx75c8jQAkjW+Mm5Ih
+	 f6h4+4B0fGSmfE1IbxIjpBOqxH9dXNOp9s5TIWkHXgqzUov/To0QI/h/YJy73ztR71
+	 aOcRpvV+6+PbA==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org, ukleinek@kernel.org, alexandre.torgue@foss.st.com, 
+ Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+ wbg@kernel.org, jic23@kernel.org, catalin.marinas@arm.com, will@kernel.org, 
+ devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ olivier.moysan@foss.st.com
+In-Reply-To: <20250110091922.980627-1-fabrice.gasnier@foss.st.com>
+References: <20250110091922.980627-1-fabrice.gasnier@foss.st.com>
+Subject: Re: (subset) [PATCH v3 0/8] Add STM32MP25 timers support: MFD,
+ PWM, IIO and counter drivers
+Message-Id: <173920585199.1896384.5521926980550161552.b4-ty@kernel.org>
+Date: Mon, 10 Feb 2025 16:44:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.13.0
 
-Introduce `rustc-min-version` support function that mimics
-`{gcc,clang}-min-version` ones, following commit 88b61e3bff93
-("Makefile.compiler: replace cc-ifversion with compiler-specific macros").
+On Fri, 10 Jan 2025 10:19:14 +0100, Fabrice Gasnier wrote:
+> This series adds STM32MP25 support on MFD PWM, IIO, counter timer drivers.
+> This new timer variant is managed by using a new DT compatible string.
+> It comes with a slightly updated register set, some new features and new
+> interconnect signals inside the SoC. There is also a new instance (TIM20).
+> Same feature list as on STM32MP1x is supported currently, except for PWM
+> capture (not enabled, by DT).
+> The device tree files add all instances in stm32mp251 dtsi. PWM, counter
+> and trigger examples are provided for stm32mp257f-ev1 board.
+> 
+> [...]
 
-In addition, use it in the first use case we have in the kernel (which
-was done independently to minimize the changes needed for the fix).
+Applied, thanks!
 
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
----
-This is based on top of the fix so that the fix remains as simple as
-possible:
+[1/8] dt-bindings: mfd: stm32-timers: add support for stm32mp25
+      commit: 4c1d04d013e3e5073a7e78e57cba82c3cd81d586
+[2/8] mfd: stm32-timers: add support for stm32mp25
+      commit: 3c81d423568ad28540a7dab4ca8ea66ded9b352f
 
-    https://lore.kernel.org/rust-for-linux/20250210163732.281786-1-ojeda@kernel.org/
-
- Documentation/kbuild/makefiles.rst | 14 ++++++++++++++
- arch/arm64/Makefile                |  2 +-
- scripts/Makefile.compiler          |  4 ++++
- 3 files changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
-index d36519f194dc..2608aa32c762 100644
---- a/Documentation/kbuild/makefiles.rst
-+++ b/Documentation/kbuild/makefiles.rst
-@@ -670,6 +670,20 @@ cc-cross-prefix
-             endif
-     endif
-
-+$(RUSTC) support functions
-+--------------------------
-+
-+rustc-min-version
-+  rustc-min-version tests if the value of $(CONFIG_RUSTC_VERSION) is greater
-+  than or equal to the provided value and evaluates to y if so.
-+
-+  Example::
-+
-+    rustflags-$(call rustc-min-version, 108500) := -Cfoo
-+
-+  In this example, rustflags-y will be assigned the value -Cfoo if
-+  $(CONFIG_RUSTC_VERSION) is >= 1.85.0.
-+
- $(LD) support functions
- -----------------------
-
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index 2b25d671365f..1d5dfcd1c13e 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -48,7 +48,7 @@ KBUILD_CFLAGS	+= $(CC_FLAGS_NO_FPU) \
- KBUILD_CFLAGS	+= $(call cc-disable-warning, psabi)
- KBUILD_AFLAGS	+= $(compat_vdso)
-
--ifeq ($(call test-ge, $(CONFIG_RUSTC_VERSION), 108500),y)
-+ifeq ($(call rustc-min-version, 108500),y)
- KBUILD_RUSTFLAGS += --target=aarch64-unknown-none-softfloat
- else
- KBUILD_RUSTFLAGS += --target=aarch64-unknown-none -Ctarget-feature="-neon"
-diff --git a/scripts/Makefile.compiler b/scripts/Makefile.compiler
-index 8c1029687e2e..8956587b8547 100644
---- a/scripts/Makefile.compiler
-+++ b/scripts/Makefile.compiler
-@@ -67,6 +67,10 @@ gcc-min-version = $(call test-ge, $(CONFIG_GCC_VERSION), $1)
- # Usage: cflags-$(call clang-min-version, 110000) += -foo
- clang-min-version = $(call test-ge, $(CONFIG_CLANG_VERSION), $1)
-
-+# rustc-min-version
-+# Usage: rustc-$(call rustc-min-version, 108500) += -Cfoo
-+rustc-min-version = $(call test-ge, $(CONFIG_RUSTC_VERSION), $1)
-+
- # ld-option
- # Usage: KBUILD_LDFLAGS += $(call ld-option, -X, -Y)
- ld-option = $(call try-run, $(LD) $(KBUILD_LDFLAGS) $(1) -v,$(1),$(2),$(3))
 --
-2.48.1
+Lee Jones [李琼斯]
+
