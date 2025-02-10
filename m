@@ -1,157 +1,178 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73BD250C1E
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44863260A42;
+	Mon, 10 Feb 2025 20:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739219254; cv=none; b=SI8t5SnuckFf+tdLVyW9voYtGDhWCINi8PEm8z1V5MQm+SYuIRhAkH27egUHvId2aGiM8LAISK45Ods7kxUbdVdUmP5ZkrVf6bZ5z40/e/Yob7RmijbN5e0TMNhPat5XsShhZRi8N+JbiTqO0xAPtqAc9mmXWAigtElN8Jb/uQA=
+	t=1739219255; cv=none; b=NSlp5irQI4Xo/bRKyjHKo/R8gtPpk//1SwnR4yoRWSs3T81qibcmDaNtpchU/zLDaoSp1utVdn34PMpBty38gG2HriVI0K2eCmo7jueDnvnBoOoJwZr0Z1q32QQMECJgdC8IMcWU6K5z7mK3jeRtGB3CJZll7L317K2BxPxWJPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739219254; c=relaxed/simple;
-	bh=lD6rgHPb/ib2WH9dder9ZLKtBlS2SotatDP0DK7YItE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iQwSKaXvDBOfUMq9G9oRnbu0Y7R8X4Zy7tlYCZ2ZmL5a3RgSXlvJmbqNhCJziiGRvS6voUtf6AY64U5luClYt6e+5cwjDWT/BvfTYNXC41lsM8Bl9zmAHDlfQxCJE64ve7c38bBdfKcvRYi4aBS8McPPXrkevWFPdml9+mLnCBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=pEHSKQqI; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1739219255; c=relaxed/simple;
+	bh=cL+PKhmX30jHbo2cscQxptMC1LXNOM5ta/EiQGb3AxA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eoCkurhwiiUWiERu4IvQntM5QJD1mhEEDJ5te0iJ9k76LiP7Wuvw5vLYmsXpAyLxbRtAzvQT3WNZzeriLCTIB6XQbql/zIKvEnFS4I1HHn5RL8omoEcXJoS8r1BUE8DMxftlIeHjd7HuBgTO/ldZOx8xpSk68pyAARlTYE9NCTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jhVMwDcM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="pEHSKQqI"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21f464b9a27so79500825ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 12:27:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739219252; x=1739824052; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=a5uI84SXblQRDID2BHNWhhHsRc7xVUDdoiei4kS9c/0=;
-        b=pEHSKQqIAf+6LNPMWppnKRBxWyONMxZqPDBESoy4Ea6Mw3sChnDCgqwo9bvPudmorl
-         vaYEWaINHZfAsBP67CS+bCZsUv5gqzia0Dta6fdGggaGQ78yTPWxm5dyLVj7dkLWnsV3
-         MsaXMZAvWnUbWBT85GS9W+Wwlz5/8lHMEGk5RlPd95uatHiiC9ggG/NyZuoCN81sOE2E
-         /bM7t85VuIApTNqMlUQLvNmml03OTxjCi0SRDBV/SagmHH0BAIKM1Lp/5w9XqFoWGGdO
-         jMr229mx+QFVkGmFRlQA8t07OB0KoLzsTbtKIUnZgU2C4hdz43gp9kj3yc+5ulwoiqlH
-         Ts0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739219252; x=1739824052;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a5uI84SXblQRDID2BHNWhhHsRc7xVUDdoiei4kS9c/0=;
-        b=hpxLIFA9DJd/akY+nAHTq7WLyUPq9FgeMsQLz0E1TJi+3ZwrE8BrKEgMPUCpO+M5zp
-         H1tqIizlk8+O/2cGWaZsw5B7PZ7nzh+ACSr4pAMyIs+gB3839cJTGruXrL6rWwiXd1K8
-         Zh2i86AbYQujC2miEhEevbhn66R9MRIqlbRVGPnDJNziMVr7oYxbW/eGcfe0Bt67BYsU
-         YOx/Knq826Gy6kVPgX2SM516SpL5phGhxKTnJELuRU4gyI+OlB+SvfBI4bL2Mie+nL53
-         YdS3FdqsNA6GbI2NyXVXUAmdw914QrkEycTt1BfHZV/oz1U6WL3hu9x6r7yCEl48kx+W
-         2gAA==
-X-Gm-Message-State: AOJu0YxtOxi4KO4Oth/7k/OC64+JWPQ/aGhiky/ac3HEZzFq5khDaEcI
-	XhLvatBZZvKx57YOhFlrlJwc5fKecH3KlbhtaD5b3nuD5RnG+jL1MU+PExwwvew=
-X-Gm-Gg: ASbGncuTq5ksMbEsuv0Vbf8EP3mxBt4iSgiwtCcezdpfsibAJjzs3bFujEMDNZqFAST
-	IW6SHq/jtEeiiNHL8btsi0SoEEIUN1Bt4lk0bRh6D6czVN9WRkKCVaE6QvvFiM7frLCZ0VLl99i
-	RnXRg1nbtGG2oOLKtCTMjf4UmxKcombdxqOej/X2RI9wOeQU+viRfjZTow7SP50buXkNJ8/OWL8
-	ACvMNsnNKbuxGTeW11JQ0WH95O/ICpu3rRWTPL+Gs0+j2BXeDzZMMb4H/TaylAJb3h/zBPEttgY
-	X0vUvqga3Zis9hnLCfmd12fMRA==
-X-Google-Smtp-Source: AGHT+IGRSFFgWaceOiIiNm5tv+e7IogqAyyOZF4Jzr3uh0XSSHp0Pwy9ipwzTE00hP4VjDiSKq3vug==
-X-Received: by 2002:a17:903:32c7:b0:216:39fa:5cb4 with SMTP id d9443c01a7336-21f4e6ce13bmr265561195ad.25.1739219251992;
-        Mon, 10 Feb 2025 12:27:31 -0800 (PST)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3687c187sm83711555ad.168.2025.02.10.12.27.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 12:27:31 -0800 (PST)
-From: Deepak Gupta <debug@rivosinc.com>
-Date: Mon, 10 Feb 2025 12:26:53 -0800
-Subject: [PATCH v10 20/27] riscv: Add Firmware Feature SBI extensions
- definitions
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jhVMwDcM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76950C2BCF6;
+	Mon, 10 Feb 2025 20:27:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739219254;
+	bh=cL+PKhmX30jHbo2cscQxptMC1LXNOM5ta/EiQGb3AxA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jhVMwDcM9/SfG7eKGrJ0NOuLx75OH78xOzvUpR+PFUGHM8v+dPoeQuEDegreBWCEC
+	 ytY3qgn2rLt5QA4dVE1Xiu9e32yq7huQ4DFtL7olXxN6buNmlGeo1bfH5XsSR3+Pww
+	 MGbEkDiwKDUIxyT6VwJz5/wjAmC8r6dpHDx1afCb7BDarebp36qgepsjiO+D9xnfR0
+	 LJsk1JF2OmG52TgcGkTeN7HcTM2vardQlhBSpFVDy9YMgGsSk/DJYW2pbE+bGsjAWO
+	 4ymoWJ3ctbLei7RMhAsVu/lFtCSzoDkXgDhSdNbRINaHNVt0MtEy2Y8dtf3YsCCVu1
+	 c5NTpup6CIKBQ==
+Date: Mon, 10 Feb 2025 21:27:28 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ James Clark <james.clark@linaro.org>, Johannes Berg
+ <johannes@sipsolutions.net>, Mike Leach <mike.leach@linaro.org>, Suzuki K
+ Poulose <suzuki.poulose@arm.com>, Tony Luck <tony.luck@intel.com>,
+ bpf@vger.kernel.org, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-hardening@vger.kernel.org,
+ linux-wireless@vger.kernel.org
+Subject: Re: [PATCH 00/27] Improve ABI documentation generation
+Message-ID: <20250210212728.64667005@foz.lan>
+In-Reply-To: <87h651zm7d.fsf@trenco.lwn.net>
+References: <cover.1739182025.git.mchehab+huawei@kernel.org>
+	<87h651zm7d.fsf@trenco.lwn.net>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250210-v5_user_cfi_series-v10-20-163dcfa31c60@rivosinc.com>
-References: <20250210-v5_user_cfi_series-v10-0-163dcfa31c60@rivosinc.com>
-In-Reply-To: <20250210-v5_user_cfi_series-v10-0-163dcfa31c60@rivosinc.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
- Vlastimil Babka <vbabka@suse.cz>, 
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
- Christian Brauner <brauner@kernel.org>, 
- Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>, 
- Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, 
- Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- linux-mm@kvack.org, linux-riscv@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-arch@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- alistair.francis@wdc.com, richard.henderson@linaro.org, jim.shu@sifive.com, 
- andybnac@gmail.com, kito.cheng@sifive.com, charlie@rivosinc.com, 
- atishp@rivosinc.com, evan@rivosinc.com, cleger@rivosinc.com, 
- alexghiti@rivosinc.com, samitolvanen@google.com, broonie@kernel.org, 
- rick.p.edgecombe@intel.com
-X-Mailer: b4 0.14.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-From: Clément Léger <cleger@rivosinc.com>
+Em Mon, 10 Feb 2025 11:30:46 -0700
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-Add necessary SBI definitions to use the FWFT extension.
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+>=20
+> > Hi Jon/Greg,
+> >
+> > This series replace get_abi.pl with a Python version.
+> >
+> > I originally started it due to some issues I noticed when searching for
+> > ABI symbols. While I could just go ahead and fix the already existing
+> > script, I noticed that the script maintainance didn't have much care ov=
+er
+> > all those years, probably because it is easier to find Python programme=
+rs
+> > those days.
+> >
+> > Also, the code is complex and was not using modules or classes and
+> > were using lots of global variables.
+> >
+> > So, I decided to rewrite it in Python. I started with a manual conversi=
+on
+> > for each function. Yet, to avoid future maintainership issues, I opted =
+to
+> > divide the main code on three classes, each on a sepaparate file.
+> >
+> > Just like the original RFC, I opted to keep the Sphinx kernel-abi module
+> > on three different phases:
+> >
+> > - call get_abi.py as an exec file;
+> > - import AbiParser on a minimal integration scenario;
+> > - cleanup the code to avoid needing to parse line numbers from the text.
+> >
+> > This way, if something goes wrong, it would be easier to just revert any
+> > offending patches, It also provides a better rationale about what each
+> > logical change is doing.
+> >
+> > The initial patches on this series do some preparation work and
+> > cleans some ABI symbol bugs that lack ":" delimiter.
+> >
+> > I opted to place on this series the Sphinx and Python version updates.
+> >
+> > I still have ~10 patches here with additional cleanups, from the origin=
+al
+> > series I sent as RFC but let's get the main changes merged first. =20
+>=20
+> OK, I have applied this set - it seems to work for me, though it does
+> lead to some changes in the organization of
+> Documentation/admin-guide/abi.html in the output.
 
-Signed-off-by: Clément Léger <cleger@rivosinc.com>
----
- arch/riscv/include/asm/sbi.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Yes. I moved the files part to separate files, as IMHO this would
+make easier for people to navigate.
+=20
+> It would be nice if, eventually, we could put the README link up at the
+> top rather than under "ABI file",
 
-diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-index 3d250824178b..23bfb254e3f4 100644
---- a/arch/riscv/include/asm/sbi.h
-+++ b/arch/riscv/include/asm/sbi.h
-@@ -35,6 +35,7 @@ enum sbi_ext_id {
- 	SBI_EXT_DBCN = 0x4442434E,
- 	SBI_EXT_STA = 0x535441,
- 	SBI_EXT_NACL = 0x4E41434C,
-+	SBI_EXT_FWFT = 0x46574654,
- 
- 	/* Experimentals extensions must lie within this range */
- 	SBI_EXT_EXPERIMENTAL_START = 0x08000000,
-@@ -401,6 +402,31 @@ enum sbi_ext_nacl_feature {
- 
- #define SBI_NACL_SHMEM_SRET_X(__i)		((__riscv_xlen / 8) * (__i))
- #define SBI_NACL_SHMEM_SRET_X_LAST		31
-+/* SBI function IDs for FW feature extension */
-+#define SBI_EXT_FWFT_SET		0x0
-+#define SBI_EXT_FWFT_GET		0x1
+Moving its position is not hard: all we need to do is to change abi.rst
+file. See the enclosed patch.
+
+> or even just include its contents
+> there directly.
+
+
+>=20
+> Anyway, let's see how this goes :)
+>=20
+> Thanks,
+>=20
+> jon
+
+Thanks,
+Mauro
+
+=46rom e1b864d1d333d94430420d1d6fc15ea7d8a99b4b Mon Sep 17 00:00:00 2001
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Date: Mon, 10 Feb 2025 21:24:06 +0100
+Subject: [PATCH] docs: ABI: move README contents to the top
+
+The ABI documentation looks a little bit better if it starts
+with the contents of the README is placed at the beginning.
+
+Suggested-by: Jonathan Corbet <corbet@lwn.net>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+diff --git a/Documentation/admin-guide/abi-readme-file.rst b/Documentation/=
+admin-guide/abi-readme-file.rst
+deleted file mode 100644
+index 6172e4ccbda2..000000000000
+--- a/Documentation/admin-guide/abi-readme-file.rst
++++ /dev/null
+@@ -1,6 +0,0 @@
+-.. SPDX-License-Identifier: GPL-2.0
+-
+-ABI README
+-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+-
+-.. kernel-abi:: README
+diff --git a/Documentation/admin-guide/abi.rst b/Documentation/admin-guide/=
+abi.rst
+index 15a2dcb1388c..2067336353ae 100644
+--- a/Documentation/admin-guide/abi.rst
++++ b/Documentation/admin-guide/abi.rst
+@@ -4,6 +4,11 @@
+ Linux ABI description
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+=20
++ABI README
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 +
-+enum sbi_fwft_feature_t {
-+	SBI_FWFT_MISALIGNED_EXC_DELEG		= 0x0,
-+	SBI_FWFT_LANDING_PAD			= 0x1,
-+	SBI_FWFT_SHADOW_STACK			= 0x2,
-+	SBI_FWFT_DOUBLE_TRAP			= 0x3,
-+	SBI_FWFT_PTE_AD_HW_UPDATING		= 0x4,
-+	SBI_FWFT_LOCAL_RESERVED_START		= 0x5,
-+	SBI_FWFT_LOCAL_RESERVED_END		= 0x3fffffff,
-+	SBI_FWFT_LOCAL_PLATFORM_START		= 0x40000000,
-+	SBI_FWFT_LOCAL_PLATFORM_END		= 0x7fffffff,
++.. kernel-abi:: README
 +
-+	SBI_FWFT_GLOBAL_RESERVED_START		= 0x80000000,
-+	SBI_FWFT_GLOBAL_RESERVED_END		= 0xbfffffff,
-+	SBI_FWFT_GLOBAL_PLATFORM_START		= 0xc0000000,
-+	SBI_FWFT_GLOBAL_PLATFORM_END		= 0xffffffff,
-+};
-+
-+#define SBI_FWFT_GLOBAL_FEATURE_BIT		(1 << 31)
-+#define SBI_FWFT_PLATFORM_FEATURE_BIT		(1 << 30)
-+
-+#define SBI_FWFT_SET_FLAG_LOCK			(1 << 0)
- 
- /* SBI spec version fields */
- #define SBI_SPEC_VERSION_DEFAULT	0x1
-
--- 
-2.34.1
+ ABI symbols
+ -----------
+=20
+@@ -21,7 +26,6 @@ ABI files
+ .. toctree::
+    :maxdepth: 2
+=20
+-   abi-readme-file
+    abi-stable-files
+    abi-testing-files
+    abi-obsolete-files
 
