@@ -1,85 +1,97 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7DA2F2E;
-	Mon, 10 Feb 2025 05:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E8417ADF8;
+	Mon, 10 Feb 2025 05:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739166828; cv=none; b=bDtc9N1ACYSaGV+0vBvUnnoNsYBwcVaxebJ1Xptg8wdONEFUlThAJ6B5PaWi7NgSucNkkcV5F6xBdqTc4qOfVwuMvuxuCuExbn5ChU2xBFsZ+iUgbwcYz/WoI5KCcM8YFGbVPnTggTMfd/slewovLCUp/IHj20/lSWDEhKO1pws=
+	t=1739167091; cv=none; b=E3vj0MJ62eT1NzJS3u0Nsi792v+nTtf7xoUyI48X7vdBxyPjduH6/UmRaScnAzFQa+fJhvSOidj2Kun634Cc7e5flstWafx6Uots3RmfZ9KxlLiBlctP+ubyWbnOJEIhJirAZcf1chjwPMHmMbadbrMJgIWTV9GAqaenhcdgU4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739166828; c=relaxed/simple;
-	bh=8dp3yp+chNrfH+5YEymmAyuzInspRrSxObIGPMzAqm0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hzum3L++1T3rozvdVp971CY+HIGUUaq93wI5+w9YDZLTeEtW0jyw9KBilCOY3xvjo9wjYXwb67Tgb8q85Y0kRqeth59B/Out5QVg96/RTJbLwzwqnDULTkyZBhGHVYHGyV1TLcC8ucSHyZNyNL/6AmsVxcoFJu162BiqolcsrAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=GtwUm8RX; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="GtwUm8RX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=84y4QeGazzPnxyheSUGC6dxlwC9g9ggxs1w9zCAEAdk=; b=GtwUm8RXNR9zfA3Ii6m++D/Hq/
-	jzj09yeu0o+wuk5zzktvH/89LX/Gb+WkqCRmQ1s8jcV2p281t+bnucxwsm5F8NQpZuvfWV8pmpPVv
-	qRAs6wU50Z50+Ua8U+jL/Z8fkKK6bBKsWJkQL6gq7/f2MbZUCu1xxmOekOuYMxTjc1cO8vTFdFR20
-	ASru4qTnFRJAIY4l6BAmA21wVopLyliPDWEM97V07PUqll5pwAbkbAMv9vV/GjwbqxcIAy6wfbHly
-	Ei8inWO6FRDcqO8TKqOnSkPqEQ8LSR7mSTxkwYHp74th3vHiVxFnjh/o2kALRVkzJeJT0lG4JHebz
-	xoEvWhkw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1thMjl-000000094XM-11C4;
-	Mon, 10 Feb 2025 05:53:41 +0000
-Date: Mon, 10 Feb 2025 05:53:41 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: David Reaver <me@davidreaver.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org, cocci@inria.fr,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/6] debugfs: Replace dentry with an opaque handle in
- debugfs API
-Message-ID: <20250210055341.GZ1977892@ZenIV>
-References: <20250210052039.144513-1-me@davidreaver.com>
+	s=arc-20240116; t=1739167091; c=relaxed/simple;
+	bh=ab/y7cXj9QgjxXLU8g2+XSI1lA7YeSRH875MKtzI1Vs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nZOgk4DikXK9yjC6oSA/YF47E2+pOLHIg2QXUF4JDhD69l2LpBq88VBe5Fqz56Txbd6cXAfo2h1rOBELnry9VFJcQZD8vS21rJJ3Fqpc4ki5rMM/KB5vchOpgN7Pwsuz+Mnfxng6yKKf2TMhW/ncdW8rpiAdYxB5QTbpRijCHhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Yrv0V0TfLz1ltZW;
+	Mon, 10 Feb 2025 13:54:18 +0800 (CST)
+Received: from dggemv703-chm.china.huawei.com (unknown [10.3.19.46])
+	by mail.maildlp.com (Postfix) with ESMTPS id EDF0014022F;
+	Mon, 10 Feb 2025 13:58:00 +0800 (CST)
+Received: from kwepemn100009.china.huawei.com (7.202.194.112) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 10 Feb 2025 13:58:00 +0800
+Received: from localhost.localdomain (10.28.79.22) by
+ kwepemn100009.china.huawei.com (7.202.194.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 10 Feb 2025 13:58:00 +0800
+From: Huisong Li <lihuisong@huawei.com>
+To: <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <alexandre.belloni@bootlin.com>, <zhanjie9@hisilicon.com>,
+	<zhenglifeng1@huawei.com>, <liuyonglong@huawei.com>, <lihuisong@huawei.com>
+Subject: [PATCH v2 2/2] rtc: ds3232: Use HWMON_CHANNEL_INFO macro to simplify code
+Date: Mon, 10 Feb 2025 13:45:46 +0800
+Message-ID: <20250210054546.10785-3-lihuisong@huawei.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20250210054546.10785-1-lihuisong@huawei.com>
+References: <20250210054546.10785-1-lihuisong@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210052039.144513-1-me@davidreaver.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemn100009.china.huawei.com (7.202.194.112)
 
-On Sun, Feb 09, 2025 at 09:20:20PM -0800, David Reaver wrote:
-> Overview
-> ========
-> 
-> This patch series replaces raw dentry pointers in the debugfs API with
-> an opaque wrapper struct:
-> 
-> 	struct debugfs_node {
-> 		struct dentry dentry;
-> 	};
-> 
-> Intermediate commits rely on "#define debugfs_node dentry" to migrate
-> debugfs users without breaking the build. The final commit introduces
-> the struct and updates debugfs internals accordingly.
-> 
-> Why an RFC?
-> ===========
-> 
-> This is a large change, and I expect a few iterations -- unless this
-> entire approach is NACKed of course :) Any advice is appreciated, and
-> I'm particularly looking for feedback on the following:
+Use HWMON_CHANNEL_INFO macro to simplify code.
 
-Do not embed struct dentry into anything else.
+Signed-off-by: Huisong Li <lihuisong@huawei.com>
+---
+ drivers/rtc/rtc-ds3232.c | 24 ++----------------------
+ 1 file changed, 2 insertions(+), 22 deletions(-)
 
-Do not take over its lifetime rules.
+diff --git a/drivers/rtc/rtc-ds3232.c b/drivers/rtc/rtc-ds3232.c
+index 19c09c418746..18f35823b4b5 100644
+--- a/drivers/rtc/rtc-ds3232.c
++++ b/drivers/rtc/rtc-ds3232.c
+@@ -339,29 +339,9 @@ static int ds3232_hwmon_read(struct device *dev,
+ 	return err;
+ }
+ 
+-static u32 ds3232_hwmon_chip_config[] = {
+-	HWMON_C_REGISTER_TZ,
+-	0
+-};
+-
+-static const struct hwmon_channel_info ds3232_hwmon_chip = {
+-	.type = hwmon_chip,
+-	.config = ds3232_hwmon_chip_config,
+-};
+-
+-static u32 ds3232_hwmon_temp_config[] = {
+-	HWMON_T_INPUT,
+-	0
+-};
+-
+-static const struct hwmon_channel_info ds3232_hwmon_temp = {
+-	.type = hwmon_temp,
+-	.config = ds3232_hwmon_temp_config,
+-};
+-
+ static const struct hwmon_channel_info * const ds3232_hwmon_info[] = {
+-	&ds3232_hwmon_chip,
+-	&ds3232_hwmon_temp,
++	HWMON_CHANNEL_INFO(chip, HWMON_C_REGISTER_TZ),
++	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
+ 	NULL
+ };
+ 
+-- 
+2.22.0
 
-For the record:
-
-	Anything of that sort is going to be vetoed.
