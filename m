@@ -1,102 +1,112 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F2A23645A
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E34B241CA6;
+	Mon, 10 Feb 2025 15:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739202982; cv=none; b=TgG+dJC0tk15YCm3mesP1a00GEYHeYPSWtJ0Z1kKxNDZ1St72Zzmoj8P+Zg3rw9lE5g2RIH9yujovRl6XxHuj0jpW69hBx3KetXu9LULWkXaeYD5aVhqn98IwiCP2MvT613C7uZ0f/k3AoRuZRMhpEjJHERucdrletDDefdOh4M=
+	t=1739203000; cv=none; b=Mt4vZrlNKeQRI//jIaJI8+swBfbdDs3zhKsoEPAMbSbNcI9APxMBgOaUVMHiwfivignnIYWdTSqGACb5HwEEQX1yY8j/TETmhJPDlj/DUI9vN/Arevvt70JTfLHiTQNSYymJ946jiQ/PlMvIyuyTPMivYJsgrVOe9XylOCbOzeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739202982; c=relaxed/simple;
-	bh=QTK660jHPxvWpe4DiJjXjBt8c30/AClWzLEoYIE5ts8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=haJ15hOmCapiJnDNEZaKxJmnig/dJNjtsK4slLv0/Ga5rkcmzp/1HAz2SigRJIzC7Sm4nR00n+h97elGBeAhQ7RlrQbhhczCia0We3Y9+ACAluYL8hQf2/R84IOuAl0uJNanEsTHRCvMmwJRCRLCFStUTbJqmZqBbH3koN8P0PI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=fOylWNBY; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1739203000; c=relaxed/simple;
+	bh=rDedKxEefXsackABt6YFb3UahVifC+H9tWsS17tmshE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=peot3ezsYf5KM9KpJckFcWKfdaz0FQLcnT976RCloMBmHK+8e14j8ollJsBFlxTrTd4dePuivk9tEsaV8NEQ5wgb34oOGvKOyOsr3zai8pzm9/HB/lg1RKZMZfo2vJa0sEoTH4HzOmmnoFBV0l0iZUY59066yE29Qx31V2bpxeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cigTyyx2; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="fOylWNBY"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so9631895e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:56:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739202979; x=1739807779; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dwvpqgCc60HMle4gfhwGXC+m016RdUxEz0jvpf/EWvY=;
-        b=fOylWNBYfoHT/yFk6anVfTtx5AP1IvIre/moWFTQLtdS9YYmdpzTHYcPGoljSGdLWD
-         EhKj1F8v28jqcs2AY5yXxepeonNS8H47/neEYwkN0I1/R5UFux+V7oOMeJlgERRM8Lr6
-         pEp4c1TSHVbiGBWs4YQ+RI+WrJX5SMSWE3ibx47PkDYShKq6CF1wgn0bdOfFn95dQuXU
-         WYYKoT/6CVnHYB22Wnaba9Vo7aQA/xLHyEr8MS7a+0HmG3X6PswYj7mncxIrOBFSFCKD
-         GPvQptcg9zFqFFtE0flZc1WpjoiYZzh9i0bDp8lu5oj/asJn2kEH95xbxmx0LZbbqfr3
-         p3Aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739202979; x=1739807779;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dwvpqgCc60HMle4gfhwGXC+m016RdUxEz0jvpf/EWvY=;
-        b=p+SW5ixp7a7eqng0QbZgB/llgPDY6lo5gvF51g6DnX1y+yEdeCVEJ/sYspnsUdZjZh
-         CR/wuseNNrOfENkFOse1Ajnyp8IDAeI15pEvl12p1/d1lEYSNrlrL9xXXZIO6hPzYsIc
-         Lo0CHn+Zzo2RPTnLT81otXWCEeXZBCyXEwERjNqEFutVy0cPSf/3Gg9hrHWq/EVubXJw
-         6UImHIFJO0LthPyHMmNM2s86egYjd4ILdsb5tsUVpaH0WyifqHMJGKrsgBQl3LL64/vK
-         hiWV939DewNAEddAx+Vbfhm4Pr6LUDMHeaTFCZTd81ZM15j31rKILLnOsX1B1IGmnO7b
-         yyJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV9dqOYjV0UP8mh+f1mWvnYjEv8M5s3YsnWstyPNWX7U6bXipf8N8w+mzf/TtLSNFFYlkiX1IVSVfAoVAo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycacD45mGD1igImOQ5FJbB07NCk7GVGz8HNpfzLNessbVF//IK
-	pMrrJRdpwelS4XxR7W4sLCcFZIQ/cggt96yHdTnZRz1wMASMMKIlY7vybdHn424=
-X-Gm-Gg: ASbGncvRPJSTDjDjQUbEcZaX35iX/d9qYVaxsK+CpokNCqrm7iIJfsuko0kYNt7pMid
-	oN5AgXYBEas+2ge0vWccEnkcJIZHZAkJXRrLoggSVJEv3TkKNPZPMFIbtaQ8Ys/Vsgkvgd78yij
-	wfhGmz4uRCzcYUSTpBD6dsKQpwE3BejsbBp8paWCvmOLhtRHhvAnlIkT2c3O08lLx1GG0JWygDZ
-	fduZO74bFFkFCshiH2YqeLjB+vQlUaGaiB8OVR/jkicspfOcX+ZZQGMjsyz1J3pw5M1lv1UHMgF
-	5hzwqvAxcWdUNSiC
-X-Google-Smtp-Source: AGHT+IF60Nrg56AuVmMzOdpuxKpb48uNb4fjvgwNZgYIhjdvOfRQGICperZSi1yz93HUq9t/Mg45tQ==
-X-Received: by 2002:a05:6000:154d:b0:385:e17a:ce61 with SMTP id ffacd0b85a97d-38de41c5b79mr78637f8f.53.1739202978665;
-        Mon, 10 Feb 2025 07:56:18 -0800 (PST)
-Received: from carbon-x1.. ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38ddbfbb4ffsm4521649f8f.94.2025.02.10.07.56.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 07:56:18 -0800 (PST)
-From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-riscv@lists.infradead.org (open list:RISC-V ARCHITECTURE),
-	linux-kernel@vger.kernel.org (open list)
-Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Conor Dooley <conor@kernel.org>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH] riscv: cpufeature: use bitmap_equal() instead of memcmp()
-Date: Mon, 10 Feb 2025 16:56:14 +0100
-Message-ID: <20250210155615.1545738-1-cleger@rivosinc.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cigTyyx2"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51A9HoDP001462;
+	Mon, 10 Feb 2025 15:56:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=Wa0cJZMSZapOEwhgl8wBba
+	D2/qRsUY1uAW8tNNERCZ4=; b=cigTyyx2orDbmVFdHth0Y8Rib+2svLsWU6l/0q
+	ubLo9aF8vFpIbAH60i7U4UiL4DqAZdIU14XBMr+fuq9VOnMiEjLYrUDnZcVpnRQR
+	Lfza7jj6Y0lwIOHvu4gG6zkC0QLXZRXQEs9swBiPsbbz3rI2iVu2ntcVz5FS4gw0
+	JresF/gge1wkl5ilI1tg7KgvGvk5MhBo3zOPeU+pDosKvQkbGPMMaBkzgyLQIlFv
+	e+pa6GnIB6pK0gct2J8DM+RcnaXeJxq1b6b/b1ZJ6AElxE4l45sLZifLY4SBfugG
+	tSWNngV4FNyksXs/1BEr2XqwfGm/njV2K2RCehjLTx7DM7dw==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qepxh0wf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 15:56:27 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51AFuPRD021331
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 15:56:25 GMT
+Received: from hu-vikramsa-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 10 Feb 2025 07:56:20 -0800
+From: Vikram Sharma <quic_vikramsa@quicinc.com>
+To: <rfoss@kernel.org>, <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
+        <mchehab@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <hverkuil-cisco@xs4all.nl>,
+        <cros-qcom-dts-watchers@chromium.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <quic_vikramsa@quicinc.com>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v1 0/2] arm64: dts: qcom: sa8775p: Add sa8775p camss support
+Date: Mon, 10 Feb 2025 21:26:03 +0530
+Message-ID: <20250210155605.575367-1-quic_vikramsa@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: _t0PWLJZIDep5kaAbqjtJanOuosYooqK
+X-Proofpoint-ORIG-GUID: _t0PWLJZIDep5kaAbqjtJanOuosYooqK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_09,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ phishscore=0 priorityscore=1501 mlxscore=0 suspectscore=0 impostorscore=0
+ mlxlogscore=613 clxscore=1015 lowpriorityscore=0 malwarescore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502100132
 
-Comparison of bitmaps should be done using bitmap_equal(), not memcmp(),
-use the former one to compare isa bitmaps.
+SA8775P is a Qualcomm SoC. This series adds bindings and devicetree to bring
+up CSIPHY, TPG, CSID, VFE/RDI interfaces in SA8775P.
 
-Signed-off-by: Clément Léger <cleger@rivosinc.com>
----
- arch/riscv/kernel/cpufeature.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+SA8775P provides
+- 2 x VFE, 3 RDI per VFE
+- 5 x VFE Lite, 6 RDI per VFE
+- 2 x CSID
+- 5 x CSID Lite
+- 3 x TPG
+- 4 x CSIPHY
 
-diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-index c6ba750536c3..40ac72e407b6 100644
---- a/arch/riscv/kernel/cpufeature.c
-+++ b/arch/riscv/kernel/cpufeature.c
-@@ -479,7 +479,7 @@ static void __init riscv_resolve_isa(unsigned long *source_isa,
- 			if (bit < RISCV_ISA_EXT_BASE)
- 				*this_hwcap |= isa2hwcap[bit];
- 		}
--	} while (loop && memcmp(prev_resolved_isa, resolved_isa, sizeof(prev_resolved_isa)));
-+	} while (loop && !bitmap_equal(prev_resolved_isa, resolved_isa, RISCV_ISA_EXT_MAX));
- }
- 
- static void __init match_isa_ext(const char *name, const char *name_end, unsigned long *bitmap)
+Used following tools for the sanity check of these changes.
+
+- make CHECK_DTBS=y W=1 DT_SCHEMA_FILES=media/qcom,sc7280-camss.yaml
+qcom/qcs6490-rb3gen2-vision-mezzanine.dtb
+- make DT_CHECKER_FLAGS=-m W=1
+DT_SCHEMA_FILES=media/qcom,sc7280-camss.yaml dt_binding_check
+- make -j32 W=1
+- ./scripts/checkpatch.pl
+
+Signed-off-by: Vikram Sharma <quic_vikramsa@quicinc.com>
+
+Vikram Sharma (2):
+  media: dt-bindings: Add qcom,sa8775p-camss
+  arm64: dts: qcom: sa8775p: Add support for camss
+
+ .../bindings/media/qcom,sa8775p-camss.yaml    | 351 ++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi         | 187 ++++++++++
+ 2 files changed, 538 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/qcom,sa8775p-camss.yaml
+
 -- 
-2.47.2
+2.25.1
 
