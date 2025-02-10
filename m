@@ -1,143 +1,168 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2BF4264604;
-	Mon, 10 Feb 2025 22:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D9324C665
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739225078; cv=none; b=tcVD/WRS1OPYcFID/IT9vmEpT8RnLXSdEvzg9PwQcxUXrazQqSAtsJDPUfzGxJ0phAq8z9V4LFVUOS37l3nfs61jmiiB8YfOc3eEbGxrF5sj8pkCaZIWYGjY8+Dwt8XJ6pxCmpvJ2ap01o41i2u39SfUGX4Fzq1dShduVvhMbmI=
+	t=1739225193; cv=none; b=EzvBssKKwE5p7wo70Ije4lMrEhlMOsf72+bmkdS1Q/mw3h1QTuTEouPtuRi7iIc/g/PZqGkOUVj+5an+ztT26tJ3lxNvYeEB7MwbH3tZLbH1OgkAsxEztmcNhhkDw5M+CKLPSfWMpT0sB5894/XO58z2evNArgNuewdQK1WFtBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739225078; c=relaxed/simple;
-	bh=4U2b8ZnGGxbJ5aRMeDe1RY0Z3qOwKUd/CS7+KZzK02I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XUcffhzLVerKA8iLJnYNi59Dc5azz+IUHjdnb3JepEVft9cd6k1UpNUedxDO0nDeSObQEGra6/T1wi0yFHFm51gu8G3xeL18hsBG32IScm8/HTl9d/Rle3Bk8DDuW97qUf2at+/tLM1O+/KCG4bXOAyUgBGglTlV/lNgJrsxny0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z2aLvKGM; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739225193; c=relaxed/simple;
+	bh=THdabyNrKHIr+V3Ysipng7wfjnbb0mAYrhDJOSeQsfQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QFLR6D8Tcn0wF2YVO1XFQbrDA817s8ueaENPoeUV6bK9OfamHR1HA+dLThm0q42AYiBOaHQnb8QiwGRzcKf2NvGVDanjxip+LjyMzzxzxXaeLheqfcPnZkGhse7zRQOyJ58QP5xjqhR3hPqWnDQiYUztuAvv193wr+3OZQg9TCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PxjBMIBp; arc=none smtp.client-ip=209.85.166.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z2aLvKGM"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso7428495e9.0;
-        Mon, 10 Feb 2025 14:04:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PxjBMIBp"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3d147331fb5so44815ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:06:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739225075; x=1739829875; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1739225190; x=1739829990; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lAfxx6PPXMC3/snEXpozscQmAWqzWP+DEkEEu3/totI=;
-        b=Z2aLvKGMCJTFXkg0jLJSFOlCxFsouOpRncqvXU6EMU9QDLxyYT0KSthRuEWUahld3W
-         ueQfK9+FjTlT2Z27qkWrI2TZXugCN60Cz10Kkuv8Jy+BdNMKsT9DKW9RqyPnjML5GNS3
-         xhniYqriI8UNiGyLGzqhhzR4IE+1QY8s2iFkFT/eyRsyU0bPWE8b0WXDI0OXn2KEgW6t
-         +oE6L3ryoKkSdCBn9NKDDvtPDSiwu7DRkZSEmdKxYX7Z5uztQ4WsELqPk7utf8HxM0pH
-         sdiV3jRvhWNGB8qX+rbYWBQSdJ76IOCAbMB3GgHW044XPQj1yTArj3BGxaAyzc+q4P+c
-         Qj8A==
+        bh=THdabyNrKHIr+V3Ysipng7wfjnbb0mAYrhDJOSeQsfQ=;
+        b=PxjBMIBp4xyHRWGyHh/7cvP+TFtwQgw5NhmcW2SFZfyFKIGA1lO6QangHMlYlLOOlA
+         ZgkIZZtIdo1EJnjH+BdsnE0A7xFU1u+IV/UnMixGQmAOFrkfxrK8y2utFqzgvbOXQKGx
+         r9TZ2q5pbQsAey32RIGlF/YJAgQoxiP6giuGlvCfaW+5r++wXEtb1jViFbysiJCOUFpo
+         9x4rW8lF9AWnlhCiUfHWwvSEHoKURPRwS3uw+3ktG45hGDeBGboSdrPTOGy8+E2KUDRv
+         ACHVwWrMTqAYA6tTQ4MB2x3zMIQrxxr0kkztXWoLTrjyWMWSXWuu0+N8Ov54GbmbnOon
+         8asg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739225075; x=1739829875;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739225190; x=1739829990;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lAfxx6PPXMC3/snEXpozscQmAWqzWP+DEkEEu3/totI=;
-        b=IuTNMwLNz1V9k4vZhvVoR7GeokR+AKcXV7kX8G+pqbMOCb0z4g+1f+deuSpRkjT1Yg
-         vdfQ7uqC9YOKkKXH2Mxph/OfavxLU6PsrngY6wlJuW7ubXdAYQxYwojgT9EJolPOTIEo
-         rr60Nzrmuyae3mUAqBA2jpILPf1CQWNu5759JyVSW9aCEa5TFmAp96IFmJ8nfKmOyScb
-         sMiOahtACOCa/W8SJ3V7JVRmVKZ3stTr1goxdkQoRE4BRbfBIYXg3eEipDy8dsJw+rZp
-         jVwyPUTiIov9wiTfZf+pxfWWAYmeIYfnOTujbVGuG1V4fIFE3SlJLvZv8IJz1lth3+aJ
-         9ULQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVzZbQB+yKbO9fqIeLtKnZ2UBWfsRK5WzPJRcBSVW6cVRBpWuM9A3DHPbx2s9oJvFbkGHEBdUJq+h4r+0g0Jd96pJps@vger.kernel.org, AJvYcCWQtZXAC5WALbk9Ax0Uoh0NP+TSxqZPQZr7eMSpIi9t4OVNxNSR2GTK5rVunub7P9nxn4yElczeB+cL8lU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyR6H30cBVN23knXw4JqxqwjYPiIQPbtF9MOfilw5joc4eYPsz5
-	fcRLuUjCYD/bbdQrcf4TFPML/NyCys0ZoO0Xz08FCnW0lAAOGk9p
-X-Gm-Gg: ASbGnctUlS74AQB0VOVuITtsfj1sEviMllKB1gvVVgGgfu9ibF3h4gqOjT37bbKOKIn
-	mDvl2iBLLEeaTL9PuYQFulEgF41Nos8RLucRlh8kQ9ni2M6QhZJ6bzntekYT9DZmx+Jk2kdDg6r
-	wO/YfKr+v4vAsMIl/H5iJBKVJL15ltQ9WiOgSi5z58UgQ1DghWz8wqnrn9+7QtewkTrXLeVq7wz
-	h3Sem9Ks7VzcsyBhvoz6BxQPq4PYX6Y6smsX9kX82nIdyZUmp8PUPvk29CaJU/+SxY/KYIHqhzq
-	RzYl0Tj8TYrcxzWsBTX90HBHdEokRAqu1MKvvtK+R9GyXE9etGbdrQ==
-X-Google-Smtp-Source: AGHT+IGIxZWWfbB/W2U9oMQGCnWyHAdx3AL9TPAWqX4BAdcbLH6Yt0taRdTOtqkzyIRBU8CrF7YTew==
-X-Received: by 2002:a05:600c:1e0e:b0:431:5e3c:2ff0 with SMTP id 5b1f17b1804b1-439249889a8mr119888105e9.8.1739225074683;
-        Mon, 10 Feb 2025 14:04:34 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4394376118esm48084765e9.40.2025.02.10.14.04.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 14:04:34 -0800 (PST)
-Date: Mon, 10 Feb 2025 22:04:33 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Joel Fernandes
- <joel@joelfernandes.org>, Prakash Sangappa <prakash.sangappa@oracle.com>,
- Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Ankur Arora <ankur.a.arora@oracle.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, linux-mm@kvack.org, x86@kernel.org, Andrew
- Morton <akpm@linux-foundation.org>, luto@kernel.org, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de,
- jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Konrad Wilk <konrad.wilk@oracle.com>,
- jgross@suse.com, Andrew.Cooper3@citrix.com, Vineeth Pillai
- <vineethrp@google.com>, Suleiman Souhlal <suleiman@google.com>, Ingo Molnar
- <mingo@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Clark Williams <clark.williams@gmail.com>, daniel.wagner@suse.com, Joseph
- Salisbury <joseph.salisbury@oracle.com>, broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250210220433.24f6c6c7@pumpkin>
-In-Reply-To: <20250210144321.1f5974a6@gandalf.local.home>
-References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
-	<9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
-	<20250204220418.35949317@gandalf.local.home>
-	<CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
-	<20250205081635.397eacb0@gandalf.local.home>
-	<CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
-	<20250206083039.0916ad24@gandalf.local.home>
-	<20250206134408.lD_POjuG@linutronix.de>
-	<20250210144321.1f5974a6@gandalf.local.home>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        bh=THdabyNrKHIr+V3Ysipng7wfjnbb0mAYrhDJOSeQsfQ=;
+        b=kUTkJ4PYdfMUxT+g3zwnTIg+kIDEwurV3/N4maWrjxgmrsRs6pG5r862JDENnIISWX
+         3hOj4mnvFTtjMWjsy3g8rpZAIahCoW9Mv3jBoMV9N1JymLkWEGMhcohjh9FPuqqTtCH9
+         WHrwJZ8HpvLYxZnNeM85TEFYs8Pr6wDEfYnwHJWAuSK0WI3EJmP4PaPMTHYUdfxhfl5q
+         iZzuHL0QiCopbB7PwNLCjaUyXSeVsUTU+okYG6MYRJn90eJKraR22si6KcjxyC4co8oq
+         CcK5ZCdDbcPlO4uVojaMQObLH/WAvopcvO+DTe46WN81PX/Qm5iOzUNw+Iz1o9qUkpqg
+         k+XA==
+X-Forwarded-Encrypted: i=1; AJvYcCX8OkN1WZXfyDorYUVjtd6MmbrCaQeRCPQQPd3EMoscw1Np2R/yCsPwk0m/0MXa8POQk2yPdYW077NMr4E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJSAFEowUEKgVUHFv6BuGkJLNcKaCrJZAvvPKphNEsaimpqSOk
+	0n1cTrk3MdqgY78r/knmGebGV9JYQtqoTaESm/yWv+Eh3hpGRGuqOmDTGbyFqhxK+OQLnO+UGjG
+	yas4P0s24QaTPBenNCkKES30T9UsummOO5YVG
+X-Gm-Gg: ASbGncsMYufqul7PkNTIiB//g2v2VA/sKJrdK207iO9LXwlOmY3KMb6P948do4qiikd
+	/J0K3dxheBBUgaxm+tFauwAbZjA5WNu1gds45U7zL5Ay27WhVFxf8aZ6Rbr9IL3CgI3QpuIDq/u
+	fkBR7vgXT9bXAGxgE/uC1HyS6G
+X-Google-Smtp-Source: AGHT+IHbmaFsg0uQPoONiAHkOtoySaUgQ9K2OpFMnMHTj6dQRyAljGoHjrvfihITbTh3+H7DHH+dost7jlKkscY54Fk=
+X-Received: by 2002:a05:6e02:b45:b0:3cf:a4e4:8f89 with SMTP id
+ e9e14a558f8ab-3d16fde3fbdmr1033355ab.4.1739225190504; Mon, 10 Feb 2025
+ 14:06:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250111190143.1029906-1-irogers@google.com> <Z6panMzNSm1op8Di@google.com>
+In-Reply-To: <Z6panMzNSm1op8Di@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 10 Feb 2025 14:06:18 -0800
+X-Gm-Features: AWEUYZlOOA-fIoE8-LlW-53jmuF6Hg-u3vSRU9Gu28Ay0nhYmrBf7WlcZRy7N58
+Message-ID: <CAP-5=fUY83gifsMZA0Q45kiQQbAKp2uJxkuwrwGtHK2hiUFRDA@mail.gmail.com>
+Subject: Re: [PATCH v1 00/10] Move uid filtering to BPF filters
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Hao Ge <gehao@kylinos.cn>, James Clark <james.clark@linaro.org>, 
+	Howard Chu <howardchu95@gmail.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Levi Yun <yeoreum.yun@arm.com>, Xu Yang <xu.yang_2@nxp.com>, 
+	Tengda Wu <wutengda@huaweicloud.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 10 Feb 2025 14:43:21 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, Feb 10, 2025 at 11:59=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> On Sat, Jan 11, 2025 at 11:01:33AM -0800, Ian Rogers wrote:
+> > Rather than scanning /proc and skipping PIDs based on their UIDs, use
+> > BPF filters for uid filtering. The /proc scanning in thread_map is
+> > racy as the PID may exit before the perf_event_open causing perf to
+> > abort. BPF UID filters are more robust as they avoid the race. Add a
+> > helper for commands that support UID filtering and wire up. Remove the
+> > non-BPF UID filtering support.
+>
+> Hmm.. then non-BPF build cannot use the UID filtering anymore, right?
+> Also non-root users will be limited unless it pinned the BPF program in
+> advance.
+>
+> I think you can keep the original behavior and convert to BPF only when
+> it's available.
 
-> On Thu, 6 Feb 2025 14:44:08 +0100
-> Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
-> 
-> > I did add a scheduling point in rt_spin_unlock() if LAZY was set and
-> > based on few tests it was something between noise and worse. It seems
-> > that "run to completion" is better than interrupt the kernel in the
-> > middle whatever it is doing. "Don't preempt the lock owner" is already
-> > handled by LAZY with the scheduling point on return to userland.  
-> 
-> Does that mean that PREEMPT_RT requires a non preempt method for
-> SCHED_OTHER for SCHED_OTHER to not hit the issues that we were originally
-> hitting? That is, with being able to preempt spin_locks in PREEMPT_RT,
-> running a system with PREEMPT_RT in full preemption mode will still suffer
-> performance issues against a non PREEMPT_RT running in full preemption mode?
+Using BPF when available would be limited progress. The issues I have
+with not removing the existing approach are:
 
-My 'gut feel' is that all the context switches with PREEMPT_RT add a significant
-overhead.
-It might not matter if your system is lightly loaded (overspecified),
-but if you need to run at 95%+ cpu then they will hit you hard.
+1) It is broken
+Scanning /proc for pids and then doing perf_event_open means that any
+time a process exits the perf_event_open fails.
+Steps to reproduce:
+This bug reproduces easily but if your machine is lightly loaded in
+one terminal run `perf test`, in another terminal run `sudo perf top
+-u $(id -u)` the perf top command will exit with:
+```
+Error:
+The sys_perf_event_open() syscall returned with 3 (No such process)
+for event (cycles:P).
+/bin/dmesg | grep -i perf may provide additional information.
+```
 
-Maybe you can afford to drop softint and napi code to a high(ish) priority
-thread, but I'd have thought that most interrupts should stay that way and
-most spinlocks stay as spinlocks - and probably all disable interrupts!
-Any interrupts that take 'a long time' or spinlocks that are held for 'a long time'
-really need changing anyway.
+2) It is a work in progress that isn't progressing. Scanning /proc
+will only tell you about started processes; it won't tell you about
+processes that start during the profiling run, whether it be perf top
+or perf record. Extra work would be necessary to make this most basic
+of use-cases work, perhaps you could use tracepoints to capture
+starting processes and then enable user profiling on those processes.
+It would be horribly complicated, suffer from delays between observing
+things happen and doing the perf_event_open, biases in the samples,
+etc. I don't expect anyone to do it, especially when BPF filtering
+already solves the problem better. There have been 13 years that
+someone could have fixed it.
 
-But there are some really dreadful bits of code in the kernel.
-One of the Intel ethernet drivers spins for ages whenever the bios is accessing
-the hardware - you can't run RTP audio tests on that system.
+3) it adds significant useless complexity to the code base. Having
+'user' in the target makes it look like perf_event_open can work on a
+pid, system wide or user basis. The user basis doesn't exist so the
+majority of the code base is just ignoring it - search for users of
+uid_str on target. Those that do run into problems (1) and (2).
 
-Perhaps interrupt disable and pre-emption times should (optionally) be monitored
-and a warning output every time they go up significantly.
-A 'name and shame' policy might improve matters.
+4) It is redundant and leads to confusion with BPF filtering. Having
+the BPF filter on evsels is non-zero cost in terms of the code base
+complexity, but it is something broadly useful. As user filtering has
+never worked (see above) it isn't broadly used but is adding
+complexity. If both approaches were wanted then it is unclear what the
+code should be doing, presumably the mish-mash of BPF filtering and
+/proc scanning that happens today and will be broken due to (1) and
+(2). Putting everything into the BPF filter makes sense as you can
+combine a BPF filter with an additional BPF filter on user.
 
-	David
+5) It is untested and adding a test leads to an always broken test due
+to testing being an example of where things break, see point 1 and its
+example.
 
-> 
-> -- Steve
-> 
+6) Nobody wants the non-BPF approach. As it was broken nobody used the
+previous feature, maintaining it for no users is overhead. Let me know
+if someone is using this option (I doubt it given points 1 and 2) and
+they wouldn't be better served by BPF. People building perf today have
+to explicitly opt-out of wanting BPF in their tooling. I posted this
+change a month ago and nobody has jumped up saying please don't remove
+the old approach.
 
+7) The interaction with this feature and changes in behavior, say
+ignoring events that fail to open, is non-obvious and not testable as
+testing would be broken as the functionality itself is broken. Having
+the broken feature hanging around and being untestable means that we
+slow progress on new features, testing and other improvements.
+
+Yes, we could try to fix all of that but why? Nobody has cared or
+tried in 13 years and I would like the tech debt off our plate with a
+better approach in its place.
+
+Thanks,
+Ian
