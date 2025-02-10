@@ -1,192 +1,104 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96DE21F76A8
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4E61ACED2
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739214870; cv=none; b=AYW38yc/Vl3dUpwHeu0olZpxbgZyhx15PGoeqaivuv2ZgOIAApBoIchT9a8F5dhVUmtSJllga0c76cPy/V2lTRQfHR+O+kn7utOi7IPUPC6Ok1sMpzMDhATx9c15dkzt2PTas245bh4Tv0sUFOt2NfLd1E7DKlB93jxSdXVqzxI=
+	t=1739214903; cv=none; b=SdgQ06USG8C+z8gCZ3nJxU9f2mJ7Kkb+dJ6/InYc4l/L3Czt4DjH8SGGeSSXDPw9dXuX1Bux6iMccCaAoR/UCrpJucmXEbLybaRr0vWOOM/u/+ILNd9TAxSsxnG6KRTkQc6RaI5nI8WFDhg6JDeISkhs/YH4s5iZ0fMQ0nMDhwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739214870; c=relaxed/simple;
-	bh=X9wUf0/KLMn21rtND5bb3daS3KaNjeTHthMpob+ENes=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=EcbWFb/JeE3r9qkpVcr2S/yP5NkEEDWUegTTBMjIFJvui7YIWJ8gn0myeZ7osebCr/khlPXY+2f4BYdGo77yn3qiwi5sWjDLJeLuz9Tja4ghwZWhw5EUtx7Atz53aORlmGlvNTzZjXb50TZt2vo9sHLdZFEccb592+tE7snaUI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pmGCU/Jf; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1739214903; c=relaxed/simple;
+	bh=6DCRnBCL901/XVVau507X6b9q7VHuRUUYVnPkWTt7S0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jUPc5RWI1rtdCm2lvSi1ACSwfblf/Xq5f6gqs/n+Bi5tMj4alGbOLFZB0HchqMg5O5Ah4kOWzI4avg8TiITXuSKAAbsW44J94R7/uKmi/gLAeR8wOtK5kV/8qS6QjiE5KgR0pq80atxdepFKhx8lThSrzuV3J/6mFDViHpiuf3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZuQEoJDC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pmGCU/Jf"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51A9VSVp008054
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:14:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ETjjjuQUc5pHSX3yBeU6idxOQ9U9vuazBiCwM3NwEKs=; b=pmGCU/JfshY/9Mh0
-	zQBJzaek2Ddrgwzg5swf9mG4JSzJdGKUk3OI8NCiYCEy/wp8BOSkBFgBC1gxI93Q
-	rL8eThnX3J7ZYkm53xq9pnxjLdqg2/yKJkweFYXSyd3g0LudXO4CN6UHCNm5i10V
-	MF+N3GNvPReKMtNLo6GQmkqatGldG4/z5wbNYNRqpvrjvj76se8rI0jitHHG2Nl/
-	Xir8AJoZN7NtPHvTNXMmARDAsUSCA6ViYbqdn0hT/6mgWGKzKrriWDIezbEd36Wd
-	YBWcUZTLmk1JMQREcXeEM8JEIuVJkm0nbrQZu6oaLXaEItDtrSG/ZwBBpy6N84qA
-	uhFK2Q==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0dxne13-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:14:27 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e45cd4145bso4064366d6.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:14:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739214866; x=1739819666;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ETjjjuQUc5pHSX3yBeU6idxOQ9U9vuazBiCwM3NwEKs=;
-        b=tus34LSK0dfxXa/Kq08w8kFwkIMVZ3attVVtWG9dkPNcasm6mBcXx3qHFn2DCVZFRO
-         jaH6aRiP9gBILKqRfEVdl3wOlLloysTfkHa89nUcqVIcE0B/yv+V0b+tv0ixA1KckQbv
-         EQc/AEtjODF1/xY6ziYMnNNI7qp7J4SA4MpskZ9Ct29RKeUnF1u+2k8+/XqK2YP5/lZw
-         vKyq96fGpX7yglpT8RMD6kP6smibtI9FiyDMUQ6IztF67ShoJh+WzzNEo2RKj53Pshwz
-         KQIt7SqJ9uzJJcA4J0gk2bob+OHMRjKm/JX93E6xGZVbejHwUTmN8TdtZEB8hKfwBmEl
-         WH4A==
-X-Forwarded-Encrypted: i=1; AJvYcCWb4vIr6rb/KiWpc6CZPx+bZMtHhhW4laIUo7dqb5VolnNLKeDrbd3KEIPOZIZsgIwAk1WX+V5SZMA02Bk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRryQ4Aph/JUQGaCGZvPqRqyZbQKxaBVBIHsqsah9PqzI8+ks9
-	irNYCUOb088yyF4r/8D6TGrdEZuZ1woQ9WVQOrtpkcfnbwBz113gs18peraiyLZiuT/ymP8wfuK
-	HxcrgRmJ5yUYrSyYCiloaWg3IxgNrdwB1gbaELeypoX7N1TXfUTwWToUwJjDqEig=
-X-Gm-Gg: ASbGncsHPeL+VaTF7xZBwalDo64Uqpe1Zm8+13fZwt8OluXBtusEg4vMthqLmU38r+E
-	7YSClO4z0ZnQ5frDUKZknjdccnqhHNRM6zyYkGfJkRNk2Q17ekleJrI7gW2jkcae/Dju/wWr5dU
-	x0Znx9mQwwxRt9grpvsK1VdtlVEBWnSGfXFaGkVo4AzfYohW2XDExn3o1je0jAlpMg4C+GspwDY
-	DIQ/xvli9vZ5WTOCEN+AERaqaJs6lWSJ+ygtG4dD4O6055qaYxCa1pTk09j8RAjhukVXS+IC+AG
-	GDzKhS/deCFpFzf2+5NgrkY5SjsEH1qkxtqHKbJY41VHBgM2FnNxQxpmTzc=
-X-Received: by 2002:a05:6214:226a:b0:6e4:2e03:c55a with SMTP id 6a1803df08f44-6e445705e57mr80589676d6.10.1739214866457;
-        Mon, 10 Feb 2025 11:14:26 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFi3+tZ3onY9PM5B+ZRVR/Zg17E/DK7VPjVLQUCOO6KcOVvBRA2fmi6hwkbimYG7gCvx5WsRw==
-X-Received: by 2002:a05:6214:226a:b0:6e4:2e03:c55a with SMTP id 6a1803df08f44-6e445705e57mr80589336d6.10.1739214865950;
-        Mon, 10 Feb 2025 11:14:25 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7d5f84968sm66674366b.164.2025.02.10.11.14.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 11:14:25 -0800 (PST)
-Message-ID: <32b02433-bf2a-4f22-afb3-485bcef4f85d@oss.qualcomm.com>
-Date: Mon, 10 Feb 2025 20:14:22 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZuQEoJDC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61490C4CED1;
+	Mon, 10 Feb 2025 19:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739214902;
+	bh=6DCRnBCL901/XVVau507X6b9q7VHuRUUYVnPkWTt7S0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZuQEoJDCP5K0u0T2iPP5IpLhJEf7d6hpcn3ToGfFguQfQIoObJLphMqhllsTwpO/4
+	 nupvcCk0IcPBkgRBkP/HlYHnLWNGfUQJlb+f8kDT8Efv4lW0qHBW0SYvEpsTQrks2V
+	 Z1FF+bFCdHTDzI/aE6wUsMhdR5Uvex6BL1dfQZ8Co7CbqILl0Y8whtEqdFxOi0UQ5n
+	 M30k/VMealufxYF6+zvPP+qSqZRzJyhJiJ+rkegOd8jj3rSOaAlfJO7d8nsxjU1muI
+	 J7JPMwbUgu91CTlNPH2Oq85dug0PyJziAsW1nGCRKxso/gJL9h7G3Tjteo8WfsXVfZ
+	 XFuTjpblJd61w==
+Date: Mon, 10 Feb 2025 19:14:58 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: Add missing registrations of SF8MMx hwcaps
+Message-ID: <dae7f7b2-f066-4adc-974b-54649ba69306@sirena.org.uk>
+References: <20250210-arm64-fix-2024-dpisa-v1-1-d77f43c7b253@kernel.org>
+ <Z6pHPKXXnQ1whg57@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] clk: qcom: apss-ipq5424: Add ipq5424 apss clock
- controller
-To: Sricharan Ramabadhran <quic_srichara@quicinc.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, andersson@kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, konradybcio@kernel.org,
-        rafael@kernel.org, viresh.kumar@linaro.org, ilia.lin@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-References: <20250127093128.2611247-1-quic_srichara@quicinc.com>
- <20250127093128.2611247-3-quic_srichara@quicinc.com>
- <47f7553d-74a2-4da0-a64c-cc49a2170efb@oss.qualcomm.com>
- <123a324c-561a-4081-be43-8d8ed0662acc@quicinc.com>
- <6c8bb178-1758-4b73-bbaf-8572dc1216d3@oss.qualcomm.com>
- <7031f2da-36bb-4655-a4df-fa85c99e6eb4@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <7031f2da-36bb-4655-a4df-fa85c99e6eb4@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: srtj5Jg0oQHDt1smNXLB8-fjS7bAbwz9
-X-Proofpoint-ORIG-GUID: srtj5Jg0oQHDt1smNXLB8-fjS7bAbwz9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_10,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 bulkscore=0 clxscore=1015 adultscore=0
- lowpriorityscore=0 impostorscore=0 malwarescore=0 mlxscore=0 phishscore=0
- suspectscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502100154
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2+LFPLCGeXCcrnFn"
+Content-Disposition: inline
+In-Reply-To: <Z6pHPKXXnQ1whg57@J2N7QTR9R3>
+X-Cookie: A beer delayed is a beer denied.
 
-On 4.02.2025 7:28 AM, Sricharan Ramabadhran wrote:
-> 
-> 
-> On 2/1/2025 8:55 PM, Konrad Dybcio wrote:
->> On 30.01.2025 11:03 AM, Sricharan Ramabadhran wrote:
->>>
->>>
->>> On 1/28/2025 5:29 PM, Konrad Dybcio wrote:
->>>> On 27.01.2025 10:31 AM, Sricharan R wrote:
->>>>> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
->>>>>
->>>>> CPU on Qualcomm ipq5424 is clocked by huayra PLL with RCG support.
->>>>> Add support for the APSS PLL, RCG and clock enable for ipq5424.
->>>>> The PLL, RCG register space are clubbed. Hence adding new APSS driver
->>>>> for both PLL and RCG/CBC control. Also the L3 cache has a separate pll
->>>>> and needs to be scaled along with the CPU.
->>>>>
->>>>> Co-developed-by: Md Sadre Alam <quic_mdalam@quicinc.com>
->>>>> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
->>>>> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
->>>>> ---
->>
->> [...]
->>
->>>>> +    clk_alpha_pll_configure(&ipq5424_l3_pll, regmap, &l3_pll_config);
->>>>> +
->>>>> +    clk_alpha_pll_configure(&ipq5424_apss_pll, regmap, &apss_pll_config);
->>>>> +
->>>>> +    ret = qcom_cc_really_probe(dev, &apss_ipq5424_desc, regmap);
->>>>> +    if (ret)
->>>>> +        return ret;
->>>>> +
->>>>> +    dev_dbg(&pdev->dev, "Registered APSS & L3 clock provider\n");
->>>>> +
->>>>> +    apss_ipq5424_cfg->dev = dev;
->>>>> +    apss_ipq5424_cfg->hw = &apss_silver_clk_src.clkr.hw;
->>>>> +    apss_ipq5424_cfg->cpu_clk_notifier.notifier_call = cpu_clk_notifier_fn;
->>>>> +
->>>>> +    apss_ipq5424_cfg->l3_clk = clk_hw_get_clk(&l3_core_clk.clkr.hw, "l3_clk");
->>>>> +    if (IS_ERR(apss_ipq5424_cfg->l3_clk)) {
->>>>> +        dev_err(&pdev->dev, "Failed to get L3 clk, %ld\n",
->>>>> +            PTR_ERR(apss_ipq5424_cfg->l3_clk));
->>>>> +        return PTR_ERR(apss_ipq5424_cfg->l3_clk);
->>>>> +    }
->>>>
->>>> Now that you'll use OPP, you can drop all this getting.. maybe even the
->>>> apss_ipq5424_cfg struct could be let go
->>>
->>> ok, is the suggestion here to use devm_pm_opp_set_config ?
->>
->> Since what you tried to do here is binding CPU and L3 frequencies together,
->> yeah, we can just scale two clocks from OPP.
->>
->> On some newer platforms using the epss-l3 driver, or on msm8996 with a more
->> complex setup, we expose the L3 voter as an interconnect, but here it would
->> seem that we directly control the clock that feeds it.
-> 
-> ok, will update and check.
 
-+Dmitry
+--2+LFPLCGeXCcrnFn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Giving it yet another thought, we now have infrastructure in clk/qcom/common.c
-to register icc clocks. We can register the L3 one as such and make the
-description like:
+On Mon, Feb 10, 2025 at 06:41:09PM +0000, Mark Rutland wrote:
+> On Mon, Feb 10, 2025 at 05:49:33PM +0000, Mark Brown wrote:
+> > Commit 819935464cb2 ("arm64/hwcap: Describe 2024 dpISA extensions to
+> > userspace") added definitions for HWCAP_F8MM8 and HWCAP_F8MM4 but did
+> > not include the crucial registration in arm64_elf_hwcaps.  Add it.
 
-cpu0: cpu@0 {
-	[...]
-	interconnects = <&apss L3_CLK>;
-	[...]
-};
+> Looking again, it looks like KERNEL_HWCAP_FPRCVT also isn't wired up?
 
-cpu_opp_table: opp-table {
-	opp-1234000 {
-		opp-hz = /bits/ 64 <1234000>;
-		opp-peak-kBps = <SOME_L3_FREQ>;
-	};
-};
+Indeed.  I'll add that separately.
 
-as that will both match how we modeled msm8996 & require less code changes
+> I did a quick check for suspects in that commit with:
 
-Dmitry, Bjorn?
+> | [mark@lakrids:~/src/linux]% git show 819935464cb2 | grep '^+\s' | grep -o 'KERNEL_HWCAP_[A-Z0-9_]\+' | sort | uniq -c | sort -n
 
-Konrad
+> Checking against a tree based on v6.14-rc1, it superficially looks like
+> we're not missing any other KERNEL_HWCAP_* bits per a coarse search,
+> which shows three missing entries in cpufeature.c:
+
+> | [mark@lakrids:~/src/linux]% git grep -oh 'KERNEL_HWCAP_[A-Z0-9_]\+' -- arch/arm64/kernel/cpuinfo.c | sort | uniq | wc -l
+> | 112
+> | [mark@lakrids:~/src/linux]% git grep -oh 'KERNEL_HWCAP_[A-Z0-9_]\+' -- arch/arm64/kernel/cpufeature.c | sort | uniq | wc -l
+> | 109
+
+> ... but maybe that misses something, and I haven't checked
+> COMPAT_HWCAP(*) or COMPAT_HWCAP2(*).
+
+> Could you please go check if there's anything else missing more generally?
+
+The other two (on top of FPRCVT) are CPUID and EVTSTRM.  Both of these
+are set using cpu_set_named_feature() which doesn't use match your grep
+for KERNEL_HWCAP_ in cpufeature.c but instead generates the constant
+name via token pasting.
+
+--2+LFPLCGeXCcrnFn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmeqUDEACgkQJNaLcl1U
+h9D1vAf/fgog2XudEHzm95uGgRT8Er/xgKvo2K85ZGRXpZE1ZTqaecc27E9f2+O2
+wKdO9h/Ba+DMfOKUhHQHlyV8FHtw+LVgd8Wq2jrKcjxkd6k3xjt1K7udeDeX5x+0
+xzP35gU31I4idBTDXM7KAjx/HCv9vuksAzfXH0QdPy5G9t/d7OUGP15sxIzAn8tG
+vZrHj8O1IDlKcZtbwU1aOpK98KM/OOTVyCgRDzxzGtMgf/2kW3UP+ZgSo5oKJI5Y
+yERJjKW6Mx0GL07aupnyCmCZoqAbuEGtmeSgX/4cuv6Xz45JblEBWv+Q+ZvBxYT4
+BbzPGHs1p+ozWol+S6o8XrB5SOSldQ==
+=LIhr
+-----END PGP SIGNATURE-----
+
+--2+LFPLCGeXCcrnFn--
