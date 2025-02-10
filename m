@@ -1,154 +1,202 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EFB01F3BA8
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A539514D29B;
+	Mon, 10 Feb 2025 11:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739188143; cv=none; b=amKH+LDMG+mEz87CcR6LbNJGxoQg0mgkvRl7my1VDL/eyXv5zXu7Pc795LNdoiud3B5/2iaLl8KhoeI0QamsnqBRQfsQVdzexjztP+eJl18WFB/PT0c08u+iqlMWkDqn20JyiY7Vl0JVSqjffoSOomDNbRReNtS9JZfDxG8IMH4=
+	t=1739188254; cv=none; b=BlGoHu5Tv+GgzxbhM+yt1ETDvj0PmigI5+cqepC/VPtfAxRmLnTl1YIiyDD7Amh9MOwu14r3jRzNFFGBEuok5KM56HVbjLxt/dIAxxsQGKV1ecg7fy6NLIu3Uesxs4DI8mQxbTTbyUU7brbNAJDbv+us8ZL22msAquk4YLHTEkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739188143; c=relaxed/simple;
-	bh=agNU50GObrX2tseacOlJ8ke2fRnXg5Qt4qTZibWZMys=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TP7pUoP5M0vRzo5bhVd0FOZlNkOg8l4TDZ4Ba94SBvayTXjzJ58nMuI73Eu8yOE4Iw0ums6BrtANTGNTprfBGUziJZ8ERM/Ak3aHm9ADF1lHRDLhfLpXERSJ+HKDH5aWh5ywIg/opo1stI0FgCA9jt8tUOBmmWDclIUw4Fdxz40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D1B41424;
-	Mon, 10 Feb 2025 03:49:22 -0800 (PST)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C4A63F5A1;
-	Mon, 10 Feb 2025 03:48:53 -0800 (PST)
-Date: Mon, 10 Feb 2025 11:48:51 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, oleg@redhat.com,
-	sstabellini@kernel.org, tglx@linutronix.de, peterz@infradead.org,
-	luto@kernel.org, mingo@redhat.com, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, kees@kernel.org, wad@chromium.org,
-	akpm@linux-foundation.org, samitolvanen@google.com,
-	masahiroy@kernel.org, hca@linux.ibm.com, aliceryhl@google.com,
-	rppt@kernel.org, xur@google.com, paulmck@kernel.org, arnd@arndb.de,
-	mbenes@suse.cz, puranjay@kernel.org, pcc@google.com,
-	ardb@kernel.org, sudeep.holla@arm.com, guohanjun@huawei.com,
-	rafael@kernel.org, liuwei09@cestc.cn, dwmw@amazon.co.uk,
-	Jonathan.Cameron@huawei.com, liaochang1@huawei.com,
-	kristina.martsenko@arm.com, ptosi@google.com, broonie@kernel.org,
-	thiago.bauermann@linaro.org, kevin.brodsky@arm.com,
-	joey.gouly@arm.com, liuyuntao12@huawei.com, leobras@redhat.com,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH -next v5 06/22] arm64: entry: Expand the
- need_irq_preemption() macro ahead
-Message-ID: <Z6nno7db_6iOYkT2@J2N7QTR9R3>
-References: <20241206101744.4161990-1-ruanjinjie@huawei.com>
- <20241206101744.4161990-7-ruanjinjie@huawei.com>
+	s=arc-20240116; t=1739188254; c=relaxed/simple;
+	bh=+WeROGh0IxRi9ENLiNY69RRv2egDN0g2bYDLctyHo44=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sR+b+MYTArKfIWzNsaiyNLbKoJwFwdALWC4UI5UJZv0y6O47mxX29vzBZw8j/PyMBHbdJ0LjOTsT6QyFFf8ZnwYpxSCvHE+eaZHbKGXzXo3sN5AvEohF2ruTlFXhCwiYeMJbf0RXMA3VG2+R4Yrs7/rta0HMoCeUFdlQC67B3qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=HEz9H+6Q; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="HEz9H+6Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739188250;
+	bh=+WeROGh0IxRi9ENLiNY69RRv2egDN0g2bYDLctyHo44=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HEz9H+6QOsA296TDuoufEDidTU7hVQ6bZYMICdFoHQ/oorkC4Tv0eaj0Ukyn4tHVO
+	 8vnoitsAR4mJmDb1TNiBo51HH8eevn+Jq5Rz6Vs5iXCKrC4j+jIhyrOjrbtVsfzEXw
+	 ZArZ/75YuNonfRn3AZyxa/pNCregDZHtgDI5UZ7Yaw37odh+wZbVEbS7VqEX0iOYeh
+	 fDkXjbc2lwrjBnM/ErdRjwcXF4u6OpNIl9EXqWaxrmSIyHtlWL3pTEEF4RT2nrY38W
+	 LbWutO0VmtLnvJfyqmCkNEYdhqg3Gm5JPQOAhbo5qt+dWt/LeMewFSGJYOqv0L9MOw
+	 WhBU6GAdaW0Lw==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 74CA117E0239;
+	Mon, 10 Feb 2025 12:50:49 +0100 (CET)
+Message-ID: <b85aeb50-1cfc-4f26-a488-f01564108d61@collabora.com>
+Date: Mon, 10 Feb 2025 12:50:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241206101744.4161990-7-ruanjinjie@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 10/34] drm/mediatek: mtk_hdmi_ddc: Switch to register
+ as module_platform_driver
+To: =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
+ "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>
+Cc: "robh@kernel.org" <robh@kernel.org>,
+ "jie.qiu@mediatek.com" <jie.qiu@mediatek.com>,
+ "tzimmermann@suse.de" <tzimmermann@suse.de>,
+ "simona@ffwll.ch" <simona@ffwll.ch>, "mripard@kernel.org"
+ <mripard@kernel.org>, =?UTF-8?B?Sml0YW8gU2hpICjnn7PorrDmtpsp?=
+ <jitao.shi@mediatek.com>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "kernel@collabora.com" <kernel@collabora.com>,
+ "dmitry.baryshkov@linaro.org" <dmitry.baryshkov@linaro.org>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ =?UTF-8?B?TGV3aXMgTGlhbyAo5buW5p+P6YieKQ==?= <Lewis.Liao@mediatek.com>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ =?UTF-8?B?VG9tbXlZTCBDaGVuICjpmbPlvaXoia8p?= <TommyYL.Chen@mediatek.com>,
+ =?UTF-8?B?SXZlcyBDaGVuamggKOmZs+S/iuW8mCk=?= <Ives.Chenjh@mediatek.com>,
+ "airlied@gmail.com" <airlied@gmail.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ =?UTF-8?B?SmFzb24tSkggTGluICjmnpfnnb/npaUp?= <Jason-JH.Lin@mediatek.com>,
+ "junzhi.zhao@mediatek.com" <junzhi.zhao@mediatek.com>
+References: <20250113145232.227674-1-angelogioacchino.delregno@collabora.com>
+ <20250113145232.227674-11-angelogioacchino.delregno@collabora.com>
+ <424656ad6c9fbd1c32a62d7ed7b35eb322e94720.camel@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <424656ad6c9fbd1c32a62d7ed7b35eb322e94720.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Dec 06, 2024 at 06:17:28PM +0800, Jinjie Ruan wrote:
-> The generic entry has the same logic as need_irq_preemption()
-> macro and use a helper function to check other resched condition.
+Il 10/02/25 08:01, CK Hu (胡俊光) ha scritto:
+> On Mon, 2025-01-13 at 15:52 +0100, AngeloGioacchino Del Regno wrote:
+>> External email : Please do not click links or open attachments until you have verified the sender or the content.
+>>
+>>
+>> In preparation for splitting out the common bits from the HDMI
+>> driver, change the mtk_cec driver from being registered from the
+>> HDMI driver itself to be a module_platform_driver of its own.
 > 
-> In preparation for moving arm64 over to the generic entry code,
-> check and expand need_irq_preemption() ahead and extract arm64 resched
-> check code to a helper function.
+> "change the mtk_hdmi_ddc driver"
+> 
+> I think ddc is not the common part, so the reason is not splitting out the common bits.
+> 
 
-I think this is just saying that the goal is to align the structure of
-the code with raw_irqentry_exit_cond_resched() from the generic entry
-code.
+Thanks, I didn't notice this typo!
 
-It'd be a bit clearer to say that, and to do this *before* moving the
-call into __exit_to_kernel_mode().
+Regards,
+Angelo
 
-Mark.
+>>
+>> With this change, there are no more users of the mtk_hdmi.h header
+>> so, while at it, also remove it.
+>>
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> ---
+>>   drivers/gpu/drm/mediatek/Makefile       |  6 ++----
+>>   drivers/gpu/drm/mediatek/mtk_hdmi.c     |  2 --
+>>   drivers/gpu/drm/mediatek/mtk_hdmi.h     | 13 -------------
+>>   drivers/gpu/drm/mediatek/mtk_hdmi_ddc.c |  2 +-
+>>   4 files changed, 3 insertions(+), 20 deletions(-)
+>>   delete mode 100644 drivers/gpu/drm/mediatek/mtk_hdmi.h
+>>
+>> diff --git a/drivers/gpu/drm/mediatek/Makefile b/drivers/gpu/drm/mediatek/Makefile
+>> index bdd3a062f797..43afd0a26d14 100644
+>> --- a/drivers/gpu/drm/mediatek/Makefile
+>> +++ b/drivers/gpu/drm/mediatek/Makefile
+>> @@ -21,10 +21,8 @@ mediatek-drm-y := mtk_crtc.o \
+>>
+>>   obj-$(CONFIG_DRM_MEDIATEK) += mediatek-drm.o
+>>
+>> -mediatek-drm-hdmi-objs := mtk_hdmi.o \
+>> -                         mtk_hdmi_ddc.o
+>> -
+>>   obj-$(CONFIG_DRM_MEDIATEK_HDMI) += mtk_cec.o
+>> -obj-$(CONFIG_DRM_MEDIATEK_HDMI) += mediatek-drm-hdmi.o
+>> +obj-$(CONFIG_DRM_MEDIATEK_HDMI) += mtk_hdmi.o
+>> +obj-$(CONFIG_DRM_MEDIATEK_HDMI) += mtk_hdmi_ddc.o
+> 
+> It's not necessary to separate ddc to an independent module.
+> 
+> Regards,
+> CK
+> 
+>>
+>>   obj-$(CONFIG_DRM_MEDIATEK_DP) += mtk_dp.o
+>> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+>> index da725182f0db..e648fb5714e7 100644
+>> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
+>> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+>> @@ -31,7 +31,6 @@
+>>   #include <drm/drm_probe_helper.h>
+>>
+>>   #include "mtk_cec.h"
+>> -#include "mtk_hdmi.h"
+>>   #include "mtk_hdmi_regs.h"
+>>
+>>   #define NCTS_BYTES     7
+>> @@ -1804,7 +1803,6 @@ static struct platform_driver mtk_hdmi_driver = {
+>>   };
+>>
+>>   static struct platform_driver * const mtk_hdmi_drivers[] = {
+>> -       &mtk_hdmi_ddc_driver,
+>>          &mtk_hdmi_driver,
+>>   };
+>>
+>> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.h b/drivers/gpu/drm/mediatek/mtk_hdmi.h
+>> deleted file mode 100644
+>> index e40bc4651995..000000000000
+>> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.h
+>> +++ /dev/null
+>> @@ -1,13 +0,0 @@
+>> -/* SPDX-License-Identifier: GPL-2.0-only */
+>> -/*
+>> - * Copyright (c) 2014 MediaTek Inc.
+>> - * Author: Jie Qiu <jie.qiu@mediatek.com>
+>> - */
+>> -#ifndef _MTK_HDMI_CTRL_H
+>> -#define _MTK_HDMI_CTRL_H
+>> -
+>> -struct platform_driver;
+>> -
+>> -extern struct platform_driver mtk_hdmi_ddc_driver;
+>> -
+>> -#endif /* _MTK_HDMI_CTRL_H */
+>> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_ddc.c b/drivers/gpu/drm/mediatek/mtk_hdmi_ddc.c
+>> index 07db68067844..6358e1af69b4 100644
+>> --- a/drivers/gpu/drm/mediatek/mtk_hdmi_ddc.c
+>> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi_ddc.c
+>> @@ -20,7 +20,6 @@
+>>   #include <linux/of_platform.h>
+>>
+>>   #include "mtk_drm_drv.h"
+>> -#include "mtk_hdmi.h"
+>>
+>>   #define SIF1_CLOK              (288)
+>>   #define DDC_DDCMCTL0           (0x0)
+>> @@ -337,6 +336,7 @@ struct platform_driver mtk_hdmi_ddc_driver = {
+>>                  .of_match_table = mtk_hdmi_ddc_match,
+>>          },
+>>   };
+>> +module_platform_driver(mtk_hdmi_ddc_driver);
+>>
+>>   MODULE_AUTHOR("Jie Qiu <jie.qiu@mediatek.com>");
+>>   MODULE_DESCRIPTION("MediaTek HDMI DDC Driver");
+>> --
+>> 2.47.0
+>>
+> 
 
-> 
-> No functional changes.
-> 
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> ---
->  arch/arm64/include/asm/preempt.h |  1 +
->  arch/arm64/kernel/entry-common.c | 28 +++++++++++++++++-----------
->  2 files changed, 18 insertions(+), 11 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/preempt.h b/arch/arm64/include/asm/preempt.h
-> index 0159b625cc7f..d0f93385bd85 100644
-> --- a/arch/arm64/include/asm/preempt.h
-> +++ b/arch/arm64/include/asm/preempt.h
-> @@ -85,6 +85,7 @@ static inline bool should_resched(int preempt_offset)
->  void preempt_schedule(void);
->  void preempt_schedule_notrace(void);
->  
-> +void raw_irqentry_exit_cond_resched(void);
->  #ifdef CONFIG_PREEMPT_DYNAMIC
->  
->  DECLARE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
-> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
-> index efd1a990d138..80b47ca02db2 100644
-> --- a/arch/arm64/kernel/entry-common.c
-> +++ b/arch/arm64/kernel/entry-common.c
-> @@ -77,17 +77,10 @@ static noinstr irqentry_state_t enter_from_kernel_mode(struct pt_regs *regs)
->  
->  #ifdef CONFIG_PREEMPT_DYNAMIC
->  DEFINE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
-> -#define need_irq_preemption() \
-> -	(static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
-> -#else
-> -#define need_irq_preemption()	(IS_ENABLED(CONFIG_PREEMPTION))
->  #endif
->  
->  static inline bool arm64_need_resched(void)
->  {
-> -	if (!need_irq_preemption())
-> -		return false;
-> -
->  	/*
->  	 * DAIF.DA are cleared at the start of IRQ/FIQ handling, and when GIC
->  	 * priority masking is used the GIC irqchip driver will clear DAIF.IF
-> @@ -111,6 +104,22 @@ static inline bool arm64_need_resched(void)
->  	return true;
->  }
->  
-> +void raw_irqentry_exit_cond_resched(void)
-> +{
-> +#ifdef CONFIG_PREEMPT_DYNAMIC
-> +	if (!static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
-> +		return;
-> +#else
-> +	if (!IS_ENABLED(CONFIG_PREEMPTION))
-> +		return;
-> +#endif
-> +
-> +	if (!preempt_count()) {
-> +		if (need_resched() && arm64_need_resched())
-> +			preempt_schedule_irq();
-> +	}
-> +}
-> +
->  /*
->   * Handle IRQ/context state management when exiting to kernel mode.
->   * After this function returns it is not safe to call regular kernel code,
-> @@ -133,10 +142,7 @@ static __always_inline void __exit_to_kernel_mode(struct pt_regs *regs,
->  			return;
->  		}
->  
-> -		if (!preempt_count() && need_resched()) {
-> -			if (arm64_need_resched())
-> -				preempt_schedule_irq();
-> -		}
-> +		raw_irqentry_exit_cond_resched();
->  
->  		trace_hardirqs_on();
->  	} else {
-> -- 
-> 2.34.1
-> 
+
