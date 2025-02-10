@@ -1,167 +1,420 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013057.outbound.protection.outlook.com [40.107.162.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC3625742A;
-	Mon, 10 Feb 2025 19:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739215695; cv=none; b=JRIjxI98hxeq9nq13gBbQJS4Qd5rRSBxeeGvCf2Lz38JxjCLW/76JB7/hdOSXbhKo78yvSHr8W76RytNlTfMhAvrRXJyTSRkca8gcbkTGJtgkKG2J+8tENRJISmBvYWfhB5KlObkvY7MWyzPg3hgatzY7TRtI4ngQof4+DfkL1g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739215695; c=relaxed/simple;
-	bh=B0NhETpnvPQVSyO/GpKfAdXFTG5DHeiGwtAVdN5A7Cs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DIUSn8PpM8JJwtBjFb9P0ISOs1IVZoIhuALZObS+e3qakdcBNVj6g+pG1ygi7STuuJM6JaPltTfx1kxoqZ08WEdxw6sw/AAlLQokeWe/fk10JHwax2rS/p7UlVphIE26cXUwmDRiOBOJaADkGbmcRYQZNiZsQQvszJwIilUPg6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VIgcO5bD; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8085125E467;
+	Mon, 10 Feb 2025 19:31:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739215874; cv=fail; b=cHixFnhPW839X0n17BsjIGMUqd+358CvqMKN+03GzJS64R8TYYqIMCnrOdMM3BZ5sjk/KBGLHEXFzC7x2lFDRhxK+89Tf3ojBg2desBGWAIGzT5LlJrLyTu//fJSaLEVXNwNIjibcS2PTcCPxlX7OFIFJqcTFN5LItMCmNok7UA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739215874; c=relaxed/simple;
+	bh=+ArYYYV8AIGMPqIv8xGSVkdbhD41mx9wC1YjZ1qVMUE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Jti/2YOwZTVMh/0oCzGNbQD1HmNqySKFfU2SRsnYOJ4g5z17U3oE4EwKWPOi4ug0d0TNDVZXD4YpijmEZ6vBwFSZuC+rnUqbQIkBv2IXis644LLHDQAGaZIeOkWnEseuOVH8YAmqMRgLXuD3ATZKfP/hsv19X8MwSoi/QHbyjuQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=fail (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=QyV9lo3H reason="signature verification failed"; arc=fail smtp.client-ip=40.107.162.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIgcO5bD"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5de6ff9643fso3299242a12.3;
-        Mon, 10 Feb 2025 11:28:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739215692; x=1739820492; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vmW1HfK2SM2OqIojXGSSnLO3+e4bjP6WcfB/geKC4z0=;
-        b=VIgcO5bDPNBHAbmamdPRaDXAb2AHyKZxdW9ftUCQHit3mxfmQfV4SJmB2huAO7fPFe
-         LFhUi/8qh9w3qXhvpMOnMshwkW4WaB/r+VINsDVXJ3oPuG3NfSqI0XUWO/JxFrDzZJ6c
-         IgRnQmGEcSzIHsgQvvlAkY6iGYc5QuN0tlXlgjpu+g0q45FD+Y6n2oWBmjiFqDZh+fvZ
-         W0V/dTZ1SutVNch2YeGmGO80obeDGPM7riUjVQaklg88vH2KnK7ffp4+axZqhIWw/KYu
-         7NF1WNiPWHQaTaO+ulno9VbMdGYCtbMllct8lDSoP4GLqhDjLxsT1KD/82+4NCZz10+v
-         wSoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739215692; x=1739820492;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=vmW1HfK2SM2OqIojXGSSnLO3+e4bjP6WcfB/geKC4z0=;
-        b=WDjhuWlkt+lpdnZrdNuzZxcw9vKghdcy/KU2jO7vPZ76j9eKdU/EtYAuRK2SECp4Re
-         utxIREu3WnA/a51YyQ8zoky91iVyWg8LWxy2AtbLx4dUMSm/HFd7mR6tA2b2xCVMOwTs
-         +OqQLnpMZxd5Hs5cyc9eRGj41XG57eEpQqPuk4QioVoFnqWCNUfSQCckueY6m0yfJVuw
-         D+8Cn65SZtqi/YVmpIaeb6T93d8hV0qDEJVe/VtzmqRWIA5URL7rchhLIGycc9/vUGaB
-         7dZojCd3+d2UyY7zwX1FgqHkEFxPYlonAPGTkWM2A645dz0IxFpLVGMJ8ZiSFfPJHY43
-         vPJw==
-X-Forwarded-Encrypted: i=1; AJvYcCVUDi/KF/wvq5t9PuYbq0UUx3euOndE0qMnx2ccUmXG8AUlScaLhx+ED7Dz3DBIZtzmBPagXJ5/HGin0NqT@vger.kernel.org, AJvYcCXOB2Hq73UNjiqJObMfhBgSlHAC5/IsRh+AJ1384AueRZjaakMR2Ovw/DbAIYXp7R6/hW9qeWfxOXE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNtNe9O/6eAdR1ajWgT4w0MYUWeMvrftuDrqHRKYeK63Wm8X5z
-	2BVqLT7g3Ea6CRSkI0az1zcffgtltS8Jb13fkKMIdbfqTkmj6Eo4
-X-Gm-Gg: ASbGncuTGsvajMQkbXnJ9H1p2RrFVJYLBDzULnYIMHWi2G8TR3TX+JTUSCx3IFXNLca
-	t0FQ6gZLVTJ7ZizGrAB3h8uATsIfCK0ozKIh1IpiHEKyz2zdUHEkph1zhvajf8IE4+dP7uHKW02
-	aKqkH0n9ZtbSr9KEy7WfsNMwg1iBKSo6tSlMesKf0m3SwEEqDWAAQPC9AuF9z5cCC/IULAGa4Ay
-	WtTSHnHmninUjYyWMlhqcNdbtAimS+T+7sXDxLFuOUvYaD3SMdqWEmetZw+PvS4+W/njX7mT7q9
-	ofRfCxdqJdziuW/et+Yzysq36CxJo0mNBqw=
-X-Google-Smtp-Source: AGHT+IEvr71u5k+r2/bgZtzaewDxM9eo+2QMspsHoaG61WMLpWVHGjMh8wiDQzEmBjvyBkIxe1lP6w==
-X-Received: by 2002:a05:6402:5309:b0:5de:8332:a8e1 with SMTP id 4fb4d7f45d1cf-5de8332aa41mr5553113a12.18.1739215691603;
-        Mon, 10 Feb 2025 11:28:11 -0800 (PST)
-Received: from nyx.. (g171115.upc-g.chello.nl. [80.57.171.115])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de4d250084sm6576804a12.16.2025.02.10.11.28.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 11:28:10 -0800 (PST)
-Sender: Armin M <arminmahdilou@gmail.com>
-From: Armin Mahdilou <armin.mahdilou@gmail.com>
-X-Google-Original-From: Armin Mahdilou <Armin.Mahdilou@gmail.com>
-To: corbet@lwn.net
-Cc: shuah@kernel.org,
-	skhan@linuxfoundation.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Armin Mahdilou <Armin.Mahdilou@gmail.com>
-Subject: [PATCH v2] Documentation: proofreading Documentation
-Date: Mon, 10 Feb 2025 20:25:31 +0100
-Message-ID: <20250210192754.30283-1-Armin.Mahdilou@gmail.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <87bjv91yi3.fsf@trenco.lwn.net>
-References: <87bjv91yi3.fsf@trenco.lwn.net>
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="QyV9lo3H"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oGfv85l+uc0QdkprzPe+6xwUfnHync1TUwMxUHHOJFBJHp5vQhhr3+2MslQn5b18pgwfjqodxSWTG19LUp5NSC2OhGo+izCwObfkDGNK+y1/18APf9HUQ+VbO2fv4/2laYYEXcHOOi9RaqwsXp8lG1AsiPLqW0QMAqqgfOL/hZYxD+3YeTirlWwuJtgi3AddhP8EtPOAqfqmivu0SFJx3HpVVWy6vXw9ZqiA0VPDEqTNOyXO7tDjbACklKTK+YEMgLthJh4Ol3nQY/mXMqdS0h1jFfwBNjqcUGg8icyWr6aiuEd82FTYnu2R/vLX6wAsOyuSazs3xY/UNGiiEbi30w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SUH04Zx+SK5nmXrHU5UNRd2OrW4RAyS470UJVbxyJgU=;
+ b=I5Y8JaDSszwMVnIyfvYbzZB60ppwjL3NJMmKVve0M4PcrOb7jrbyn3TpfxdHhEfUGRYFjxBeJAxc2wA/DxHPbBYVAZCIzs1+S8zHfi+2I+VS7fGNS3gzBLIFGO96PMnAhAstDGmHRIqj3C/Aq0qfPIMz9IKAFZYp6TH3F3H48Zr+icS1wR99zIi8d0gA3ENLuLIq45uQiQk8SOBu5VKmDol1CTZS2H3s0IODuwRQASTjjitBbKvuCizQhVt8mKEJ66CHxLDompj2tyvilulEgb3HF9SDZdDFsnpIitB8L5W2Je6Wf9ZwVTeqrKJwkZYM4w2E//6AkrYDA7VTVZwpxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SUH04Zx+SK5nmXrHU5UNRd2OrW4RAyS470UJVbxyJgU=;
+ b=QyV9lo3HYvX1Jr5wSrJe87Jh2CIQzOn0nBjTI3tpItl13gk4GfjaqwHZPaHj91G+OMQpblNtpOrcRAjYcnPzGYAc1n2P5EHa//xx43usC1bap5TrWQoexofNq2kvs/8R49a+G8hRrH0GfCLUUAc9jYV+fselQ3N/v/uj1qAJ3IHlKynqBZHVkNftv5Vc30ly9PJMOZ3NNUfeKROECyO6SGsoRBsJyvyiWtgUG5n+6VK2P8mWpW+U6d0z45bx4WifhrwRa6cNcbv4peHG5Md+d0VsUCwgLJ5gNENGr8mO5o+49XdWbVguF/VyMSMtYNPSgc83aPd/jzWfoUl4QOAuog==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AM8PR04MB7249.eurprd04.prod.outlook.com (2603:10a6:20b:1d0::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Mon, 10 Feb
+ 2025 19:31:08 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8422.012; Mon, 10 Feb 2025
+ 19:31:08 +0000
+Date: Mon, 10 Feb 2025 14:30:54 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: j.ne@posteo.net
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 03/12] dt-bindings: crypto: Convert fsl,sec-2.0 to
+ YAMLy
+Message-ID: <Z6pT7mR1itWOtVfb@lizhi-Precision-Tower-5810>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <20250207-ppcyaml-v2-3-8137b0c42526@posteo.net>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250207-ppcyaml-v2-3-8137b0c42526@posteo.net>
+X-ClientProxiedBy: SJ0PR03CA0049.namprd03.prod.outlook.com
+ (2603:10b6:a03:33e::24) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM8PR04MB7249:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6d9cd9f4-15b3-44a0-e1ce-08dd4a097819
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|52116014|366016|1800799024|7053199007|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?iso-8859-1?Q?KH3L08NHvpeBna5BnIeMK8tL5Dvl3ktvAvx8lLKeWIkY9mP3EoFOkDqEwv?=
+ =?iso-8859-1?Q?6bc5XxHRFCpGbF1CFm+l/Cbb54cuDcP8HgapmyPHLmIbq90MHFtT6y8t0o?=
+ =?iso-8859-1?Q?cPLcwQq0IASAUN8Pngs5hCsfVh1Pxxyt74Hk1pTniysIsWc0MKj5HyKJaz?=
+ =?iso-8859-1?Q?MWK32gFZMOdM3JwvCU+m+Jc2vQwshS+eHDs2E8ruBYJfYI0tshIygp4+U2?=
+ =?iso-8859-1?Q?NM5tNPK++tGsXJFJIePjOvrEkGrJbJ55gykXmrZ92bK4l07dhpzsWFAXTo?=
+ =?iso-8859-1?Q?N4oR2T8GnSvyV/+gR3X5PVGGxWs4lRXtjiey1U894eqLrT2jP2JkEH7kMg?=
+ =?iso-8859-1?Q?TAeKXk1NsiqKSjljAckyD9hrnhMaFEvM9rc2a5gFZj8YWV3Ls2IbFa7Qke?=
+ =?iso-8859-1?Q?A1l9878plQDXjWsNWZjvaP38mrW2Uecea8VWec/M2lNO5yUbroF8v4MaVW?=
+ =?iso-8859-1?Q?ygw7JfLJaaUDVBdLcVUA2U9clRbRM7kVqtBY6EPJftwZd5ZoZE9L1R9P/k?=
+ =?iso-8859-1?Q?MDDpJpzSNCjGzNTV/UrOYFqEtkYlWJK5ymmegjo3GS4lGBvCVqsxsv1gOn?=
+ =?iso-8859-1?Q?XcsjfMWkWj4McG+KhnTWZFl6X6mgqRQD8cHLzj4KL7nH9MOZ4MoeONc7OT?=
+ =?iso-8859-1?Q?SX4gu8vltZgjYzdNAPmMwwFwEC5Yx/2i9sg7tqPoAwwQLoa/NtRK1Pe3X2?=
+ =?iso-8859-1?Q?jXBnl9n+kkerOG0cxR8ETej8kbnljEWWq7FFsxsmC4xDtgy2EEQM4aMawk?=
+ =?iso-8859-1?Q?QwLgahicrqLra5jLD7l1mnQj9tR4zBH8XW86gVFAKwqOKD1ZogDGNj/0EV?=
+ =?iso-8859-1?Q?os2uaXVCtD/52b65JMuT3DBhB6RlINobn8F/10HGMekxY34fXdQe4YMTvW?=
+ =?iso-8859-1?Q?vwiiZY3DdDKEQ55N1vNhJQlCdbZ+L3/yUFUnK/oWrRGTTNH82jMtlOb+Lk?=
+ =?iso-8859-1?Q?352wJSysUu8hEby0tcek/UVa+sxVZHP0yttoOxdA7v7VlZaUXEsHsUDhA9?=
+ =?iso-8859-1?Q?a2H2s18eUZFgszihkoSqL79dizyeKvbWH3rV8gBWoOAz9Dbcc+7Wn2zg15?=
+ =?iso-8859-1?Q?5xRaH0rghnFcyeLP8z/HODZ3xbQaYJAnHmYVy8ber1eZ1njV20CjysKcrx?=
+ =?iso-8859-1?Q?g9U4KRahZXp11nyunHMRZLtk/fw8MfPuyJW3FUYFeVo2JW6y2ESnQqhItI?=
+ =?iso-8859-1?Q?FhH4D723XloQcBFtkhbUqJCO+lElfISp3GBoCHUovm8SWY/xo+EyJFvfNZ?=
+ =?iso-8859-1?Q?587U0ElLGpq26SDaM9NGomz0ZDVDlV9z9DbuFm0DrjFYDLM8tqC9XqC6R3?=
+ =?iso-8859-1?Q?EK4O7GjRQODqSsNRFFP+kmjFx4Sc+Gz/HsR0oMUVAfnD54G/PWaK1wVXLA?=
+ =?iso-8859-1?Q?jwSL3jxq4oHoR6lrwin+W5hlH9YYPIgA0ChOnZhRtqo3S+eitXbDP75TgR?=
+ =?iso-8859-1?Q?jINgF2VXPCeer/OT?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(366016)(1800799024)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?iso-8859-1?Q?jmPEnuHU//Z+oyw4CZHC3ipnqunMJ7apDRyE1Ex7uGMk0hcfUL3PUn/AZC?=
+ =?iso-8859-1?Q?UMhttsK7GVEnQo0w4FFlBHSEF03bv4OOn9BqZs4SeEanvc8vRLomZ3S/nb?=
+ =?iso-8859-1?Q?CLH1wXcBNbhist6LpjgpXGbvrW/+ArZdU1gZwM1ooj5+JokUXMUe4FFm9Y?=
+ =?iso-8859-1?Q?poR7y/mdvHp+z+smP+0r3VPhsJPsNYn9a+wRvkfV88DuIYmCSKNiBvq0hZ?=
+ =?iso-8859-1?Q?NXqzo/f6EvMcN6ZU+1P8rMi2WeRLXf/f4eIT3eJD+PRnH8517TB9FrKLW5?=
+ =?iso-8859-1?Q?3O6GM1xkUEUYbIXGhUii84yMoocD8DMznmOc+N4dWknE0z3+mIprJ7DPB6?=
+ =?iso-8859-1?Q?RslqeEt4EQQT2ikDcLNaWjytdbRT8/U5Dbnl0rZLnbYXMWbbMA95NtMbx5?=
+ =?iso-8859-1?Q?Bmm9G6LdTvI9QizDS2CDN2nz5vayto8CPX/zaeQFIgolnJmfpjbyMk6xwM?=
+ =?iso-8859-1?Q?XjeDg6JMsjfbTiyUaH4/ZdxYHLaN3qDyUZPfPNflYcIXvXv3dQtHloYU4/?=
+ =?iso-8859-1?Q?aJ822yAW/fTTyL7DjG4iJgibyACaBeHc7/bk4XOxBvZNq84A+gbK5UumBZ?=
+ =?iso-8859-1?Q?IjW6N7qQ93JmFCr+2q/uw5QT70QtP7sihiN+/9aImME7qse7elombLVg4O?=
+ =?iso-8859-1?Q?W4Dim6YG0mROUqHY9Dir4xRPPKBuzHFJkWI31DLmFejIHxlBDsmkFLMQEA?=
+ =?iso-8859-1?Q?kZjkePV1Z+TICHo1gV5EPuSMbfHOkhF63X76GcgxlgeGxZHGZdlG8Lwgwm?=
+ =?iso-8859-1?Q?h0GeJb5dKvO0Q/xN6AF2m922+X0ihUxTVbRD/2J0/IV+onjMRH2UcgVwWj?=
+ =?iso-8859-1?Q?zuGKfMNNShCz31QQd2cQWloLPiWCExnYrxIUHuleOjBRto2AEh/uMGZOiI?=
+ =?iso-8859-1?Q?HmItmgnvJGhXN1zkl5v6Z5euug77NanwcLFCSCMACVyhnteihZJo43t+Wp?=
+ =?iso-8859-1?Q?QjJjDzqsGpTbVbpf7Ch1eCOsrwM5truwI5W5lRwVgsw4bCi8FwI7IuuKR0?=
+ =?iso-8859-1?Q?35NvSTro7Rm4bx9ODkZOuoI+Psn/ka1BZVPJMopQxMj6l7aEc/v48lpBuP?=
+ =?iso-8859-1?Q?pFXEPyxOcQBfXTD8D3LWGYKGIJTUPrVy6cqvyAuSzyGrfLwNeUhDRdihlQ?=
+ =?iso-8859-1?Q?VXlje3GSRbegpVSt6CjTfNHm42KM4961JVuKDlqnIIYdjJWjuUb40lzYo8?=
+ =?iso-8859-1?Q?KU80PdLVcWKj+IMFoGE6IaVEZJ+9agVzPQaFLt9sgkybCD6mLS1/AZulWm?=
+ =?iso-8859-1?Q?NHAlEd2was3kFWYw0mlc9ABnAO0wCnoJT8eksZn4bFlE0iQ/xOSJEMflB+?=
+ =?iso-8859-1?Q?D+VGJf0TTe27GQ0ZvHnAz3oXq8io4jt/umBrIIYTpihZ0fIRzH+X5AYu+x?=
+ =?iso-8859-1?Q?9+fwvG+6tANMjCoNjanBBaPR2kHWVb/gRnh6SwNKny/lFo6t5k+FcbY43a?=
+ =?iso-8859-1?Q?H+9cqAvZ3UYPaO6AdBc+dw2L/q9N0bQXlXLIM+JvKys3gqdvujyTNmEghd?=
+ =?iso-8859-1?Q?5/6HD2+bMqlURxubvSpB1Gj8P4F1iLAF9Dh5F7r/I/wa6yo0MbuKEyeO8v?=
+ =?iso-8859-1?Q?2nmZ2L2BymC2j6NEBsoxUw1+t3Ri9hz/6HAbcHLgjV/WglZ7ILVF4f7B6X?=
+ =?iso-8859-1?Q?LsaFHn9fld/ns=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d9cd9f4-15b3-44a0-e1ce-08dd4a097819
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 19:31:08.7971
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: byxaJDM39Rd0RuGVD7MXb3+2gZdV0aGFEF8MzKEhYaCJ9vf1/4habV/jeqTnNBfFJsyaqZ1YqFZPCPuq6+rDzg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7249
 
-Fixed some spelling issues in documentations.
+On Fri, Feb 07, 2025 at 10:30:20PM +0100, J. Neuschäfer via B4 Relay wrote:
+> From: "J. Neuschäfer" <j.ne@posteo.net>
+>
+> Convert the Freescale security engine (crypto accelerator) binding from
+> text form to YAML. The list of compatible strings reflects what was
+> previously described in prose; not all combinations occur in existing
+> devicetrees.
+>
+> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
 
-Signed-off-by: Armin Mahdilou <Armin.Mahdilou@gmail.com>
----
-Thanks the Ack and Review. This is my first patch for the kernel.
-Fixed SOB.
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-Regards
-
- Documentation/ABI/testing/configfs-usb-gadget-midi2 | 2 +-
- Documentation/input/devices/elantech.rst            | 2 +-
- Documentation/nvme/nvme-pci-endpoint-target.rst     | 2 +-
- Documentation/sound/soc/machine.rst                 | 2 +-
- Documentation/usb/gadget-testing.rst                | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/ABI/testing/configfs-usb-gadget-midi2 b/Documentation/ABI/testing/configfs-usb-gadget-midi2
-index 0eac3aaba137..d76a52e2ca7f 100644
---- a/Documentation/ABI/testing/configfs-usb-gadget-midi2
-+++ b/Documentation/ABI/testing/configfs-usb-gadget-midi2
-@@ -47,7 +47,7 @@ Description:
- 		midi1_first_group	The first UMP Group number for MIDI 1.0 (0-15)
- 		midi1_num_groups	The number of groups for MIDI 1.0 (0-16)
- 		ui_hint			0: unknown, 1: receiver, 2: sender, 3: both
--		midi_ci_verison		Supported MIDI-CI version number (8 bit)
-+		midi_ci_version		Supported MIDI-CI version number (8 bit)
- 		is_midi1		Legacy MIDI 1.0 device (0, 1 or 2)
- 		sysex8_streams		Max number of SysEx8 streams (8 bit)
- 		active			Active FB flag (0 or 1)
-diff --git a/Documentation/input/devices/elantech.rst b/Documentation/input/devices/elantech.rst
-index c3374a7ce7af..98163a258b83 100644
---- a/Documentation/input/devices/elantech.rst
-+++ b/Documentation/input/devices/elantech.rst
-@@ -556,7 +556,7 @@ Note on debounce:
- In case the box has unstable power supply or other electricity issues, or
- when number of finger changes, F/W would send "debounce packet" to inform
- driver that the hardware is in debounce status.
--The debouce packet has the following signature::
-+The debounce packet has the following signature::
- 
-     byte 0: 0xc4
-     byte 1: 0xff
-diff --git a/Documentation/nvme/nvme-pci-endpoint-target.rst b/Documentation/nvme/nvme-pci-endpoint-target.rst
-index 66e7b7d869b4..b699595d1762 100644
---- a/Documentation/nvme/nvme-pci-endpoint-target.rst
-+++ b/Documentation/nvme/nvme-pci-endpoint-target.rst
-@@ -86,7 +86,7 @@ configurable through configfs before starting the controller. To avoid issues
- with excessive local memory usage for executing commands, MDTS defaults to 512
- KB and is limited to a maximum of 2 MB (arbitrary limit).
- 
--Mimimum number of PCI Address Mapping Windows Required
-+Minimum number of PCI Address Mapping Windows Required
- ------------------------------------------------------
- 
- Most PCI endpoint controllers provide a limited number of mapping windows for
-diff --git a/Documentation/sound/soc/machine.rst b/Documentation/sound/soc/machine.rst
-index 9db132bc0070..1828f5edca3e 100644
---- a/Documentation/sound/soc/machine.rst
-+++ b/Documentation/sound/soc/machine.rst
-@@ -75,7 +75,7 @@ In the above struct, daiâ€™s are registered using names but you can pass
- either dai name or device tree node but not both. Also, names used here
- for cpu/codec/platform dais should be globally unique.
- 
--Additionaly below example macro can be used to register cpu, codec and
-+Additionally below example macro can be used to register cpu, codec and
- platform dai::
- 
-   SND_SOC_DAILINK_DEFS(wm2200_cpu_dsp,
-diff --git a/Documentation/usb/gadget-testing.rst b/Documentation/usb/gadget-testing.rst
-index bf555c2270f5..1998dc146c56 100644
---- a/Documentation/usb/gadget-testing.rst
-+++ b/Documentation/usb/gadget-testing.rst
-@@ -1050,7 +1050,7 @@ Its attributes are:
- 	midi1_num_groups	The number of groups for MIDI 1.0 (0-16)
- 	ui_hint			UI-hint of this FB
- 				0: unknown, 1: receiver, 2: sender, 3: both
--	midi_ci_verison		Supported MIDI-CI version number (8 bit)
-+	midi_ci_version		Supported MIDI-CI version number (8 bit)
- 	is_midi1		Legacy MIDI 1.0 device (0-2)
- 				0: MIDI 2.0 device,
- 				1: MIDI 1.0 without restriction, or
--- 
-2.47.2
-
+> ---
+>
+> V2:
+> - several improvements suggested by Rob Herring:
+>   - remove unnecessary multiline markers
+>   - constrain fsl,num-channels to enum: [1,4]
+>   - constrain fsl,channel-fifo-len to plausible limits
+>   - constrain fsl,exec-units-mask to maximum=0xfff
+> - trim subject line (remove "binding")
+> ---
+>  .../devicetree/bindings/crypto/fsl,sec2.0.yaml     | 142 +++++++++++++++++++++
+>  .../devicetree/bindings/crypto/fsl-sec2.txt        |  65 ----------
+>  2 files changed, 142 insertions(+), 65 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/crypto/fsl,sec2.0.yaml b/Documentation/devicetree/bindings/crypto/fsl,sec2.0.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..0b82f3b68b5f82e7fb52d292a623d452c1cdb059
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/fsl,sec2.0.yaml
+> @@ -0,0 +1,142 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/crypto/fsl,sec2.0.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale SoC SEC Security Engines versions 1.x-2.x-3.x
+> +
+> +maintainers:
+> +  - J. Neuschäfer <j.ne@posteo.net.
+> +
+> +properties:
+> +  compatible:
+> +    description:
+> +      Should contain entries for this and backward compatible SEC versions,
+> +      high to low. Warning - SEC1 and SEC2 are mutually exclusive.
+> +    oneOf:
+> +      - items:
+> +          - const: fsl,sec3.3
+> +          - const: fsl,sec3.1
+> +          - const: fsl,sec3.0
+> +          - const: fsl,sec2.4
+> +          - const: fsl,sec2.2
+> +          - const: fsl,sec2.1
+> +          - const: fsl,sec2.0
+> +      - items:
+> +          - const: fsl,sec3.1
+> +          - const: fsl,sec3.0
+> +          - const: fsl,sec2.4
+> +          - const: fsl,sec2.2
+> +          - const: fsl,sec2.1
+> +          - const: fsl,sec2.0
+> +      - items:
+> +          - const: fsl,sec3.0
+> +          - const: fsl,sec2.4
+> +          - const: fsl,sec2.2
+> +          - const: fsl,sec2.1
+> +          - const: fsl,sec2.0
+> +      - items:
+> +          - const: fsl,sec2.4
+> +          - const: fsl,sec2.2
+> +          - const: fsl,sec2.1
+> +          - const: fsl,sec2.0
+> +      - items:
+> +          - const: fsl,sec2.2
+> +          - const: fsl,sec2.1
+> +          - const: fsl,sec2.0
+> +      - items:
+> +          - const: fsl,sec2.1
+> +          - const: fsl,sec2.0
+> +      - items:
+> +          - const: fsl,sec2.0
+> +      - items:
+> +          - const: fsl,sec1.2
+> +          - const: fsl,sec1.0
+> +      - items:
+> +          - const: fsl,sec1.0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  fsl,num-channels:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [ 1, 4 ]
+> +    description: An integer representing the number of channels available.
+> +
+> +  fsl,channel-fifo-len:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    maximum: 100
+> +    description:
+> +      An integer representing the number of descriptor pointers each channel
+> +      fetch fifo can hold.
+> +
+> +  fsl,exec-units-mask:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    maximum: 0xfff
+> +    description: |
+> +      The bitmask representing what execution units (EUs) are available.
+> +      EU information should be encoded following the SEC's Descriptor Header
+> +      Dword EU_SEL0 field documentation, i.e. as follows:
+> +
+> +        bit 0  = reserved - should be 0
+> +        bit 1  = set if SEC has the ARC4 EU (AFEU)
+> +        bit 2  = set if SEC has the DES/3DES EU (DEU)
+> +        bit 3  = set if SEC has the message digest EU (MDEU/MDEU-A)
+> +        bit 4  = set if SEC has the random number generator EU (RNG)
+> +        bit 5  = set if SEC has the public key EU (PKEU)
+> +        bit 6  = set if SEC has the AES EU (AESU)
+> +        bit 7  = set if SEC has the Kasumi EU (KEU)
+> +        bit 8  = set if SEC has the CRC EU (CRCU)
+> +        bit 11 = set if SEC has the message digest EU extended alg set (MDEU-B)
+> +
+> +      remaining bits are reserved for future SEC EUs.
+> +
+> +  fsl,descriptor-types-mask:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      The bitmask representing what descriptors are available. Descriptor type
+> +      information should be encoded following the SEC's Descriptor Header Dword
+> +      DESC_TYPE field documentation, i.e. as follows:
+> +
+> +        bit 0  = set if SEC supports the aesu_ctr_nonsnoop desc. type
+> +        bit 1  = set if SEC supports the ipsec_esp descriptor type
+> +        bit 2  = set if SEC supports the common_nonsnoop desc. type
+> +        bit 3  = set if SEC supports the 802.11i AES ccmp desc. type
+> +        bit 4  = set if SEC supports the hmac_snoop_no_afeu desc. type
+> +        bit 5  = set if SEC supports the srtp descriptor type
+> +        bit 6  = set if SEC supports the non_hmac_snoop_no_afeu desc.type
+> +        bit 7  = set if SEC supports the pkeu_assemble descriptor type
+> +        bit 8  = set if SEC supports the aesu_key_expand_output desc.type
+> +        bit 9  = set if SEC supports the pkeu_ptmul descriptor type
+> +        bit 10 = set if SEC supports the common_nonsnoop_afeu desc. type
+> +        bit 11 = set if SEC supports the pkeu_ptadd_dbl descriptor type
+> +
+> +      ..and so on and so forth.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - fsl,num-channels
+> +  - fsl,channel-fifo-len
+> +  - fsl,exec-units-mask
+> +  - fsl,descriptor-types-mask
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    /* MPC8548E */
+> +    crypto@30000 {
+> +        compatible = "fsl,sec2.1", "fsl,sec2.0";
+> +        reg = <0x30000 0x10000>;
+> +        interrupts = <29 2>;
+> +        interrupt-parent = <&mpic>;
+> +        fsl,num-channels = <4>;
+> +        fsl,channel-fifo-len = <24>;
+> +        fsl,exec-units-mask = <0xfe>;
+> +        fsl,descriptor-types-mask = <0x12b0ebf>;
+> +    };
+> diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec2.txt b/Documentation/devicetree/bindings/crypto/fsl-sec2.txt
+> deleted file mode 100644
+> index 125f155d00d052eec7d5093b5c5076cbe720417f..0000000000000000000000000000000000000000
+> --- a/Documentation/devicetree/bindings/crypto/fsl-sec2.txt
+> +++ /dev/null
+> @@ -1,65 +0,0 @@
+> -Freescale SoC SEC Security Engines versions 1.x-2.x-3.x
+> -
+> -Required properties:
+> -
+> -- compatible : Should contain entries for this and backward compatible
+> -  SEC versions, high to low, e.g., "fsl,sec2.1", "fsl,sec2.0" (SEC2/3)
+> -                             e.g., "fsl,sec1.2", "fsl,sec1.0" (SEC1)
+> -    warning: SEC1 and SEC2 are mutually exclusive
+> -- reg : Offset and length of the register set for the device
+> -- interrupts : the SEC's interrupt number
+> -- fsl,num-channels : An integer representing the number of channels
+> -  available.
+> -- fsl,channel-fifo-len : An integer representing the number of
+> -  descriptor pointers each channel fetch fifo can hold.
+> -- fsl,exec-units-mask : The bitmask representing what execution units
+> -  (EUs) are available. It's a single 32-bit cell. EU information
+> -  should be encoded following the SEC's Descriptor Header Dword
+> -  EU_SEL0 field documentation, i.e. as follows:
+> -
+> -	bit 0  = reserved - should be 0
+> -	bit 1  = set if SEC has the ARC4 EU (AFEU)
+> -	bit 2  = set if SEC has the DES/3DES EU (DEU)
+> -	bit 3  = set if SEC has the message digest EU (MDEU/MDEU-A)
+> -	bit 4  = set if SEC has the random number generator EU (RNG)
+> -	bit 5  = set if SEC has the public key EU (PKEU)
+> -	bit 6  = set if SEC has the AES EU (AESU)
+> -	bit 7  = set if SEC has the Kasumi EU (KEU)
+> -	bit 8  = set if SEC has the CRC EU (CRCU)
+> -	bit 11 = set if SEC has the message digest EU extended alg set (MDEU-B)
+> -
+> -remaining bits are reserved for future SEC EUs.
+> -
+> -- fsl,descriptor-types-mask : The bitmask representing what descriptors
+> -  are available. It's a single 32-bit cell. Descriptor type information
+> -  should be encoded following the SEC's Descriptor Header Dword DESC_TYPE
+> -  field documentation, i.e. as follows:
+> -
+> -	bit 0  = set if SEC supports the aesu_ctr_nonsnoop desc. type
+> -	bit 1  = set if SEC supports the ipsec_esp descriptor type
+> -	bit 2  = set if SEC supports the common_nonsnoop desc. type
+> -	bit 3  = set if SEC supports the 802.11i AES ccmp desc. type
+> -	bit 4  = set if SEC supports the hmac_snoop_no_afeu desc. type
+> -	bit 5  = set if SEC supports the srtp descriptor type
+> -	bit 6  = set if SEC supports the non_hmac_snoop_no_afeu desc.type
+> -	bit 7  = set if SEC supports the pkeu_assemble descriptor type
+> -	bit 8  = set if SEC supports the aesu_key_expand_output desc.type
+> -	bit 9  = set if SEC supports the pkeu_ptmul descriptor type
+> -	bit 10 = set if SEC supports the common_nonsnoop_afeu desc. type
+> -	bit 11 = set if SEC supports the pkeu_ptadd_dbl descriptor type
+> -
+> -  ..and so on and so forth.
+> -
+> -Example:
+> -
+> -	/* MPC8548E */
+> -	crypto@30000 {
+> -		compatible = "fsl,sec2.1", "fsl,sec2.0";
+> -		reg = <0x30000 0x10000>;
+> -		interrupts = <29 2>;
+> -		interrupt-parent = <&mpic>;
+> -		fsl,num-channels = <4>;
+> -		fsl,channel-fifo-len = <24>;
+> -		fsl,exec-units-mask = <0xfe>;
+> -		fsl,descriptor-types-mask = <0x12b0ebf>;
+> -	};
+>
+> --
+> 2.48.0.rc1.219.gb6b6757d772
+>
+>
