@@ -1,144 +1,138 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E7524E4B1
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC54D1C07D9;
+	Mon, 10 Feb 2025 22:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739225377; cv=none; b=Qesd/WJJVEBe84mE2QSPxk/gvowQsGGK39ZRLEf1CUw+nvucts4wLryJD4cIilR2AQhV1qCYPClK9Mmqutu9zzq4Aup5PEzhGtQZhk4NgWztCee6ZVr4a5Y8xJS0qj904iE4R0KVisaDdsh67cxVnjm33pJtpcNVOqAt6vb8HbE=
+	t=1739225472; cv=none; b=JsnXGrsvBZJ6Sgm8fMnqPMB9SPcuod+mo6pYTaw8/m7t1hach+96YWHc+L7oBB9+JuqJHMrhyWPM0arkzSR/Jj2MJwjMCTSh+o5ytqGK6xeuluSJo0Nda4+XqHwR+9zML+1xQYLubyHhKzXe/dU9v2GF+HbOjLQCLhSRtXKOjJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739225377; c=relaxed/simple;
-	bh=44AOn8KPG/5b/gwXWVMZM4o0cSu0C5gCOO/mytEsVzc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L6Nfu8VSCAlVE4W7gyi2cIVys0tfzsAr9MsL9DQgIF4J6EbULm12F9oZYXJQTqqi/2VZis6AFUXEhbPfZPV0z8C/8x54UV2TBG2vIaA1rNka2xYajvW1synGqxiY9NdUJPUAC/vuQlGsfik/p7dFM4VHDizLxG4HemJz1QfRsDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Er4k8Jgg; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739225472; c=relaxed/simple;
+	bh=fxlBqkkfGS9G0KmkfiGacPTftMamdDnTKm1+cbpRGcU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tz3P+px+3Zb5Mhq9cxXolp28QKEkVCkWnOZRUB1NvB5D2YgF0rEW36aqBRXYMjkJtv/AaQPjF3eDc7VT5Gl3BSKAEw+vH848MYM+1ZfAhTFeQCkJe5Lfou0u1i9vj0PJDKHQFiIjru9VBJH6QY1h94f/Z9khVL11uQKBHF9t6Qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lhq6jIKV; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Er4k8Jgg"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5de6d412ee9so934a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:09:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lhq6jIKV"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-388cae9eb9fso2560901f8f.3;
+        Mon, 10 Feb 2025 14:11:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739225374; x=1739830174; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1739225469; x=1739830269; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=44AOn8KPG/5b/gwXWVMZM4o0cSu0C5gCOO/mytEsVzc=;
-        b=Er4k8Jggi+SM4CnJwm27bFFKeQkowgsaqOyOh89teRf+uRTV8W9l50Gr/9vDaBFO2l
-         DdtALmmisHwzd0PONwPMwil4vpdlJoTeTDFTI3ixQL7x7X8vLAV4839xH0GVspld/V+6
-         96JBHWoYyIJDLDlzGZC/6SyFOwuKXU6qjZY/YzEQ8WeXnGJ1AsmfW2qXHUaA2we5g0v/
-         ArIgVC/8Sq4RykAHj7LkOYAzsNPoLcj/bsq01O5TmO1a6pxI+7SI8q9/zDIrXXSR8D6Y
-         AZAXikH7tZA/LJrwUl9A5DHiVLl+THQrcU87unLFsk16627Gmr4dY3LrCGoj8FQzh2mc
-         KLnA==
+        bh=WBnqMoe0ij4/z97GnIELIa4Xg29mNqaZDUnaHmVwXd0=;
+        b=Lhq6jIKVh77dhBzPnXYlynb6LVA/5IhnLlN1pDD/k+cUl8m1kjC/1K7oC5VDTtVZuo
+         FD9wTdqcZlyU+GtGyovGyAwoF0CJhFmJHpjIenrVBw71cvyFL8XegNIkIpkpqN5Fdaf2
+         EI4drSwg7+nJ/FLSp9IcHr0PoAosRaO7k6glwSj7zF1VZCFB+sxRmyWSxDNg7a6Q/agy
+         LavzWNWAffws32H3BJjwrJlNkftJHbhPUAgI9qjF2BPs5dJl/EAb8K3rc/ppmnbyt6x7
+         nio4KP37ESD5RKxdCFLQ3MhQsyTkrMn0HM/LRVoxEcR48kCYnNjGZ0NvoWeduamLE1FW
+         8+yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739225374; x=1739830174;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739225469; x=1739830269;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=44AOn8KPG/5b/gwXWVMZM4o0cSu0C5gCOO/mytEsVzc=;
-        b=Z3VtAQYA+VCfHpKDb5SlkpfvAsKWkU0O28bvMExE8MPHuFKpTp+kaJGCmjcKugXPmR
-         2+HCrnvZ9nZNEXd8UGiZOWTV6mH2J4vZ929UQoLXiMnQBFbXXq5A7d+daoWHfiEhn77D
-         4JMo44x8cSTfhvvEJWRcLs6oN5VQdvrIsZDvHTtgdoyHjsNZUey/MMxmZA3PwEXaJ4vk
-         D/jM6lzdQ2au2GjndgrOEQR/TH01sSk4X1KCYxgQ5Gv8bk+GLb5M9V0C2ZiJNf8Gs9A9
-         gXsPHh0ZROFPWr/wTqUG7wE+zoqVtfoGSKZPdVtSkKotgVeHDNo6SI/HSzGsIF2ARKgI
-         hftQ==
-X-Gm-Message-State: AOJu0YyYA4qASzg5Z+7pCKtcYGEkcBAUwcMJQfXjDQi0a+fSvBND6oX2
-	xhdPH2AyLSBFEO2plQaB2Xq0DzOj1MYMRm3lH1AcPJOduWhd77TdZ136WjniZMkHhD+COwrSrwy
-	xWD/zn4F6DLPyJK8gemLc++Ohx+8+zkHlASq8
-X-Gm-Gg: ASbGncsfySo8gpCYlTbTC/YNSzBa8MC4OwaVUeSH+ztuxHYECNXtHBDpYuT3obGydqp
-	dCsklGhSFPA/foWkCSZIfHhUsO+0vtd3//D4h7jogw8FrcK6MuLG+MctqsTmL622AHGyLOEOVq1
-	JZJEdYbGl1UBwRFlKVG47tj78=
-X-Google-Smtp-Source: AGHT+IG6JmQxBrqAHiHQy9r7fd0aAn9Heiw/iaJpJbhcsh707Pq8kG+sl2h6STthD8Ujnt3Wdn5OEmJdDMQ5PMlBL9s=
-X-Received: by 2002:a50:aa93:0:b0:5dc:d08e:e128 with SMTP id
- 4fb4d7f45d1cf-5dea05e7838mr1520a12.5.1739225373121; Mon, 10 Feb 2025 14:09:33
- -0800 (PST)
+        bh=WBnqMoe0ij4/z97GnIELIa4Xg29mNqaZDUnaHmVwXd0=;
+        b=XlP0Uif5Ai/NBBSIrpWUOIVyIOuIolurL9MnWDW9nl6aA4X3Pmdbh+J7CECHlyAKXw
+         X7STnIggbTTZRxON45P2JFSkF2pGcP/rPKb/DNczkxT6qrp0dEyt05nnKu25/Z3UINq2
+         Xc2RPHJRFVLaA4+n2cNEVkJe1TZaZKHk+3Fq0ksUE41qEYhXafi6wPGp9GS6vMLfYYHW
+         ifN7mBFLn9eh2SbHMDdamEBVk6nYXWRDRq8baTEN05FqaobhElPmbHo33BO6ArqQNHwY
+         /1ocrJXhJdIzb8txw+RsX83EhxZAAYuWat6cUq1OXe4ezEibojDWARAd43ECnwjAJ6IS
+         VzgA==
+X-Forwarded-Encrypted: i=1; AJvYcCXE77YrNQUsQ0Lz5Fd0jHNfMtLZjNIkNNvU1uBUqBdxW2q90DxuWiMSjiAU9zBVTUnef25bLumuMsWr@vger.kernel.org, AJvYcCXJ+EFBIKhtjcl+oF4AwAxbxp1gEkty0Eq7ZUvZWfJlelGJtZUax0gJfL/OosjGHjHam/ozAwrEYPaXHYA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG70p/I6mMUt3iBC1+av48wSDJSBFetRb36DOdS9NRWBgb5e+U
+	2oZppbjnT8K3ol010HboNn9MSbd8t0gDZz9Okkhm3dQ1Qu9PN78n
+X-Gm-Gg: ASbGnctWsucEDFID6DCd1QYJ3tg3Xi0xue2RmOozDJ4El4HWCR/w6rVTXSVaSlQkFyZ
+	0TlOTTwub4eAKX5qcdyMS3rHQNZGXQy/Z4rpBBIl8CeQSNO2L/7W/PpXoJ/dw2ujDXUVlx6ACJR
+	35AKHNktJv5zhSsDWc+POxZtx5mUB8xvtIcAqeQQDYA+3H8iEq53VFRKHjumyGqkkvYXhPIE9sx
+	IbciaMLLX2bM9fxrqHeg6Mx3QcVXKmTKDjiQrWlhVRot3/ljRu2R/GWYqvlSFZNS/fueYFkVDMu
+	Pp9hgkqvK01FvDYLutn13/SDhIQwEsSmWUX1Q/sG8rkMVkgP3OMuHQ==
+X-Google-Smtp-Source: AGHT+IH5FQdV2KOv/gbgcQCqZR0FYgwe8smObXUqh5iXmhfVX0k4hW3h0dtARWlMLxDGeGEW5k/EDA==
+X-Received: by 2002:a5d:6da9:0:b0:38d:e2c1:9749 with SMTP id ffacd0b85a97d-38de2c1995emr3032192f8f.35.1739225469117;
+        Mon, 10 Feb 2025 14:11:09 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbf2ed900sm13123689f8f.53.2025.02.10.14.11.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 14:11:08 -0800 (PST)
+Date: Mon, 10 Feb 2025 22:11:07 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, bhelgaas@google.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ mitchell.augustin@canonical.com, ilpo.jarvinen@linux.intel.com
+Subject: Re: [PATCH v2] PCI: Batch BAR sizing operations
+Message-ID: <20250210221107.60d608ba@pumpkin>
+In-Reply-To: <20250210134848.78a1ab4a.alex.williamson@redhat.com>
+References: <20250120182202.1878581-1-alex.williamson@redhat.com>
+	<20250209154512.GA18688@redhat.com>
+	<20250210093641.0be242ae.alex.williamson@redhat.com>
+	<20250210195658.GK32480@redhat.com>
+	<20250210200819.GL32480@redhat.com>
+	<20250210134848.78a1ab4a.alex.williamson@redhat.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250114175143.81438-1-vschneid@redhat.com> <20250114175143.81438-30-vschneid@redhat.com>
- <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
- <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com> <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-In-Reply-To: <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-From: Jann Horn <jannh@google.com>
-Date: Mon, 10 Feb 2025 23:08:55 +0100
-X-Gm-Features: AWEUYZmtdNVDV_xq3vvo5TVQ7aaS79EFzdycTCfl72XGpztchND9QHjN9zcxWNo
-Message-ID: <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
-Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer flush_tlb_kernel_range()
- targeting NOHZ_FULL CPUs
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
-	virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, 
-	bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>, 
-	Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov <alexey.amakhalov@broadcom.com>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Jason Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
-	Joel Fernandes <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>, 
-	Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>, 
-	Tomas Glozar <tglozar@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, 
-	Mel Gorman <mgorman@suse.de>, Kees Cook <kees@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@infradead.org>, 
-	Shuah Khan <shuah@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, 
-	Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Yosry Ahmed <yosryahmed@google.com>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 10, 2025 at 7:36=E2=80=AFPM Valentin Schneider <vschneid@redhat=
-.com> wrote:
-> What if isolated CPUs unconditionally did a TLBi as late as possible in
-> the stack right before returning to userspace? This would mean that upon
-> re-entering the kernel, an isolated CPU's TLB wouldn't contain any kernel
-> range translation - with the exception of whatever lies between the
-> last-minute flush and the actual userspace entry, which should be feasibl=
-e
-> to vet? Then AFAICT there wouldn't be any work/flush to defer, the IPI
-> could be entirely silenced if it targets an isolated CPU.
+On Mon, 10 Feb 2025 13:48:48 -0700
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-Two issues with that:
+> On Mon, 10 Feb 2025 21:08:19 +0100
+> Oleg Nesterov <oleg@redhat.com> wrote:
+> 
+> > On 02/10, Oleg Nesterov wrote:  
+> > >
+> > > On 02/10, Alex Williamson wrote:    
+> > > >
+> > > > --- a/drivers/pci/probe.c
+> > > > +++ b/drivers/pci/probe.c
+> > > > @@ -345,7 +345,8 @@ static void pci_read_bases(struct pci_dev *dev, unsigned int howmany, int rom)
 
-1. I think the "Common not Private" feature Will Deacon referred to is
-incompatible with this idea:
-<https://developer.arm.com/documentation/101811/0104/Address-spaces/Common-=
-not-Private>
-says "When the CnP bit is set, the software promises to use the ASIDs
-and VMIDs in the same way on all processors, which allows the TLB
-entries that are created by one processor to be used by another"
+You probably need __always_inline to have any chance of a compile-time
+test of howmany.
 
-2. It's wrong to assume that TLB entries are only populated for
-addresses you access - thanks to speculative execution, you have to
-assume that the CPU might be populating random TLB entries all over
-the place.
+> > > >  	unsigned int pos, reg;
+> > > >  	u16 orig_cmd;
+> > > >
+> > > > -	BUILD_BUG_ON(howmany > PCI_STD_NUM_BARS);
+> > > > +	if (__builtin_constant_p(howmany))
+> > > > +		BUILD_BUG_ON(howmany > PCI_STD_NUM_BARS);    
+> > >
+> > > Or just
+> > >
+> > > 	BUILD_BUG_ON(__builtin_constant_p(howmany) && howmany > PCI_STD_NUM_BARS);
+
+	statically_true(howmany > PCI_STD_NUM_BARS)
+
+> > >
+> > > I dunno... Works for me in any case.
+> > >
+> > > I don't know if this is "right" solution though,    
+> > 
+> > I mean, atm I simply don't know if with the newer compiler
+> > __builtin_constant_p(howmany) will be true in this case.  
+> 
+> That I can confirm.  With gcc 14.2.1, if I change the call in
+> pci_setup_device() to use 7 rather than 6 for howmany, the build fails.
+> If you confirm this resolves the build on older gcc, it seems like a
+> valid fix.  I installed a VM with Fedora 23, which uses gcc 3.5.1, but
+> I haven't yet been able to successfully build any kernel with it.  I'll
+> post a patch if you want to provide a Tested-by.  Thanks,
+
+Far too old a version to be supported.
+
+	David
+
+> 
+> Alex
+> 
+> 
+
