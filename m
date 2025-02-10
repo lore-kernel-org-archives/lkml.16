@@ -1,151 +1,779 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756D9257422;
-	Mon, 10 Feb 2025 18:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905382566F5;
+	Mon, 10 Feb 2025 18:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739211812; cv=none; b=mDetlEsxNJ63msyej3cXro66kIfchc4abYcGqHENuaV2Qf0HKk/UMaSBytSfNXXVks1wg4CdrdnZGDkw0fOwdFbKkmtNsiwFdUSuWlHn3tKF8w1lmn2bjroOZuF0pnzfWL2CVqlNgI5oYS0CkvPUsP9S2IerLZGkHLzKRSEWOSU=
+	t=1739211811; cv=none; b=RZ+dUNpJXz4BItGqACm+pzDWL6VvQJCvC/uVRkRCJBMtjzMmPs1DzRm9ASOKsNhF3IJm7nfB7JIYTYE5iKUt6GNPsvhhUl3N1c0IJiKdkECxqk+9rYiyLIxbV1J4tNifttxaDuhmCSmQe4R80iUQAp4Utg7YE7g5F5kTXw2gW5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739211812; c=relaxed/simple;
-	bh=acd9COQLFDN5gRd5/GOJ2Ge9i2RRPpwPQsPAyv1SxtY=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=c9gW9/dEsp6T1fUzBFzN/l70fRKpoqd9M3LVzbbhw8/I3NQMUt0LDgmWLcJbu9baSFlvcGOCtOoF4coBl+2UwR5qMiXGIKHrFvmi2ScoanH/JgXARj4hb2ff9QSLK/bUdscwDMS76cLhMdM+605NH6TPEXmlJHPzmXdyaPBP8mI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=KzB7fxZt; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	s=arc-20240116; t=1739211811; c=relaxed/simple;
+	bh=+8LeJ0BFrjpAfAi6uw54u7DTnLNITgIBm+ndoUB5j84=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=P9hIYLUCBCewMwAeTrJCII61iZ6I5erGvqClerjcNYONgoEhZLNY1twXNB2ha7iCoPf6VTyUcS/QycFvmvoEZOrTou2AXN8SSTkkSpOsArSoOsfgcdzx0RcTMpKkza+Cq0OnORAyrHxO8QBm7YZ458X7yCdL8DaXDO+TTKQd+ZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=byV8rWJe; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="KzB7fxZt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="byV8rWJe"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4719141e711so11022601cf.0;
+        Mon, 10 Feb 2025 10:23:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739211808; x=1739816608; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8j2bJmhADEYZ8mCa5Jc3rXkBB0QVEtv6kx6cNdcOdls=;
+        b=byV8rWJed39cD2ZCfqa7Ru3HeIEwDaRgxnFXSgvppTDJBYRWd0Xtyru5N/M5AhqbN+
+         a9WoRCvCJZFyENMSG8QaWnu3JgFI8OiAO0wSu+chszE5xdAWAqkyObGdpYIR8VFLeg3/
+         GbfNFMXfqUXom7Hxodp3GbBGFUIF9Uc6Zmr73zaNVDgTEDi3+YztQL030PrTR2HiB7PY
+         c1/iJ7VdEyJ0aAKSk4o0eq0qyXmjQW4l+ba0tA5Q/RL6Lf7GlF52AW0SoR7zafrk6bF0
+         O9Toe88v0jeuw56qKMzWBaqRr3D9tMsiPxuzcbNzxyfpfOgxxueHKA7PBlUqb2tVY50k
+         Yw0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739211808; x=1739816608;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8j2bJmhADEYZ8mCa5Jc3rXkBB0QVEtv6kx6cNdcOdls=;
+        b=f6Aa1W7dsRgVIBFQgziBg3a+wBTVDqVCbKaKIj3P2o/vikKC9/zCHAyz9bi+oxPJmW
+         KC1MCG32NpvpD+j1NolGAaknR8V0ynfn8VYATia/jEeEe7BWAiEpiyJ+n2n0UcLaYlYe
+         2LHTXsmVVENwwDljmCYGuXISAdpoyjiyDvQgQ5HNfJs+lwWU76fdRnpzTNZDUfngNKuQ
+         Jmc5q6D7v5oM85p5BcHVrfD9V7m3cqpxcz/5p8M8G+7OYCnRYYIEB02+u2KOtJ2kaiOx
+         V3ee3Nne1fi5Dr3rml5xX1v76fUXUb5+l6brIQEQ9sBv1ZTowdJcDwxKF93/Nr556sEh
+         yG1A==
+X-Forwarded-Encrypted: i=1; AJvYcCVccM+s6h6mYMvgILtnWAsyem910pJam2dS6lslKQ7MDsMKyQXolvhMyeTgUAqeC8/CLz/Vv9+9ZfA=@vger.kernel.org, AJvYcCVoIY7PYiUCF610C3DbzPebZzmnqdX21UVJHLRqPVK1R55EAVM9b6A6wmDafIfeYSqQ0/TwMB+T0DVTQO7wUva1@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbP5JPW/jI0YV+2wxiKt8W8YeRjod7QA2Sa4Ea4B3iP2U28ssb
+	ixf1tWWlfN5ZgD3EAL9EwmgGuR3OCnkyWNKimY/DiUyENqefZR/k
+X-Gm-Gg: ASbGnctujYZC81LLl5AEcL5IYsom64BoNgCZwTqke3CYJJjXadubpIaA6hIkWuFbeTm
+	5YFa0MXXtVSPOV/GOlZMSC1/FAd6rX+mxznUtH6SIffBwd+wFHVDNZ1wcHbqjpidIp5EXDOzjwD
+	ZEoNdYfCh1O7Kxh2i9Ur1dHN2lU5cS2pam7VLauCAVaEqh/KvahkCjQPTL1+rU0vLa3ADywhrp/
+	XOj6niNODe4t7vS6uRoJgYPr72jxKo2H2vfm5DsBwoERP0jvqEXU7LL1OLUCp1J+XkbsSYE4/Dw
+	M9cy1uabRHNO3p6KlA99nRwvDJlozMSknaixWnWxYOOmObVphwxyZb33Aaq+OXykns0j76Q7wYq
+	FmrQ7cmVga59UE1G+hXW75Swe
+X-Google-Smtp-Source: AGHT+IEnEkGCtTLPZBnfF+XiEiFW+kZgSjvA0T/NM+uWP3Y+L9VX1NzG9vcRZq5nZh1+OQOIra7TMg==
+X-Received: by 2002:a05:6214:20cf:b0:6d9:3016:d101 with SMTP id 6a1803df08f44-6e445707956mr156072856d6.41.1739211806776;
+        Mon, 10 Feb 2025 10:23:26 -0800 (PST)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:cc94])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e440d902d3sm45436456d6.7.2025.02.10.10.23.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 10:23:26 -0800 (PST)
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Mon, 10 Feb 2025 13:23:23 -0500
+Subject: [PATCH v3 2/2] printf: break kunit into test cases
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1739211802;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cdqhCB4hXabwkdtEITMDy97ItQnEBoqzYanBuxH4qII=;
-	b=KzB7fxZt+phnih+KMdT/jFC0YLXuIQhPmG8vJjua9rAgZ1NtFI3C6JlbR0BRirFJqzAsT4
-	rtG60hlkMhJ8vZm8pKh8/jDC/mpnoXRWHhwljYZiMl2hfXqLSTeFp4mA7GKsdaqbbCMaSG
-	Uoj9iwRa4i1mpLsUOVCEOYiWG72c636UWOx8q2wn3V8bgu3YXH5MgAX/3Ikd3vaayFBKlI
-	vHKGEZFkcohZ0P7gxQpOvSFxrAanDqYd/obwH1nFeVNfhlIU7pJLXXKKc0k5NtibPaCO70
-	Qyww5e6cL+5dU6zAw40kcCmvZyxeXAS8nCMCibjlabJcaQsS4tMswhYMX47KXg==
-Date: Mon, 10 Feb 2025 19:23:22 +0100
-From: Dragan Simic <dsimic@manjaro.org>
-To: Quentin Schulz <quentin.schulz@cherry.de>
-Cc: Quentin Schulz <foss+kernel@0leil.net>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Jagan Teki
- <jagan@edgeble.ai>, Niklas Cassel <cassel@kernel.org>, Michael Riesch
- <michael.riesch@wolfvision.net>, Jonas Karlman <jonas@kwiboo.se>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/4] arm64: dts: rockchip: add overlay test for
- WolfVision PF5
-In-Reply-To: <9615521e-8a2a-44d7-99ea-5571f5de1e57@cherry.de>
-References: <20250207-pre-ict-jaguar-v5-0-a70819ea0692@cherry.de>
- <20250207-pre-ict-jaguar-v5-1-a70819ea0692@cherry.de>
- <ef9133d217bc35f611ef390da8042510@manjaro.org>
- <9615521e-8a2a-44d7-99ea-5571f5de1e57@cherry.de>
-Message-ID: <3cadb698a9bf7a898c91c0d851233ac1@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250210-printf-kunit-convert-v3-2-ee6ac5500f5e@gmail.com>
+References: <20250210-printf-kunit-convert-v3-0-ee6ac5500f5e@gmail.com>
+In-Reply-To: <20250210-printf-kunit-convert-v3-0-ee6ac5500f5e@gmail.com>
+To: Arpitha Raghunandan <98.arpi@gmail.com>, 
+ David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+ Sergey Senozhatsky <senozhatsky@chromium.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Naveen N Rao <naveen@kernel.org>, 
+ Brendan Higgins <brendan.higgins@linux.dev>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
+ linuxppc-dev@lists.ozlabs.org, Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-Hello Quentin,
+Move all tests into `printf_test_cases`. This gives us nicer output in
+the event of a failure.
 
-On 2025-02-10 18:56, Quentin Schulz wrote:
-> On 2/10/25 9:46 AM, Dragan Simic wrote:
->> On 2025-02-07 16:19, Quentin Schulz wrote:
->>> From: Quentin Schulz <quentin.schulz@cherry.de>
->>> 
->>> The WolfVision PF5 can have a PF5 Visualizer display and PF5 IO 
->>> Expander
->>> board connected to it. Therefore, let's generate an overlay test so 
->>> the
->>> application of the two overlays are validated against the base DTB.
->>> 
->>> Suggested-by: Michael Riesch <michael.riesch@wolfvision.net>
->>> Reviewed-by: Michael Riesch <michael.riesch@wolfvision.net>
->>> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
->>> 
->>> ---
->>>  arch/arm64/boot/dts/rockchip/Makefile | 22 ++++++++++++++++++++++
->>>  1 file changed, 22 insertions(+)
->>> 
->>> diff --git a/arch/arm64/boot/dts/rockchip/Makefile
->>> b/arch/arm64/boot/dts/rockchip/Makefile
->>> index
->>> def1222c1907eb16b23cff6d540174a4e897abc9..534e70a649eeada7f9b6f12596b83f5c47b184b4
->>> 100644
->>> --- a/arch/arm64/boot/dts/rockchip/Makefile
->>> +++ b/arch/arm64/boot/dts/rockchip/Makefile
->>> @@ -170,3 +170,25 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s- 
->>> orangepi-5.dtb
->>>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-orangepi-5b.dtb
->>>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-rock-5a.dtb
->>>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-rock-5c.dtb
->>> +
->>> +# Overlay application tests
->>> +#
->>> +# A .dtbo must have its own
->>> +#
->>> +#  dtb-$(CONFIG_ARCH_ROCKCHIP) += <overlay>.dtbo
->>> +#
->>> +# entry, and at least one overlay application test - ideally 
->>> reflecting how it
->>> +# will be used in real life -:
->> 
->> Hmm, what's "-:" actually doing in the line right above?  I mean,
->> it's a minor nitpick, so might be worth addressing only if there
->> will be the v6...  Also, "test - ideally" might be replaced by
->> "test, ideally", because splicing sentences together using em/en
->> dashes is generally frowned upon. :)
-> 
-> That was supposed to be an em-dash yes.
+Combine `plain_format` and `plain_hash` into `hash_pointer` since
+they're testing the same scenario.
 
-I see.  To explain it a bit further, here's how hyphens, en and em
-dashes should look like when an unproportional font is used:
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+ lib/printf_kunit.c | 331 ++++++++++++++++++++---------------------------------
+ 1 file changed, 121 insertions(+), 210 deletions(-)
 
-- When it comes to hyphens, it's a somewhat-limited option.
-- Using en dashes -- as visible here -- is a bit more involved.
-- If you use em dashes---like here---it gets borderline ugly.
+diff --git a/lib/printf_kunit.c b/lib/printf_kunit.c
+index 287bbfb61148..00c35eb0abdc 100644
+--- a/lib/printf_kunit.c
++++ b/lib/printf_kunit.c
+@@ -38,13 +38,8 @@ static unsigned int total_tests;
+ static char *test_buffer;
+ static char *alloced_buffer;
+ 
+-static struct kunit *kunittest;
+-
+-#define tc_fail(fmt, ...) \
+-	KUNIT_FAIL(kunittest, fmt, ##__VA_ARGS__)
+-
+-static void __printf(4, 0)
+-do_test(int bufsize, const char *expect, int elen,
++static void __printf(5, 0)
++do_test(struct kunit *kunittest, int bufsize, const char *expect, int elen,
+ 	const char *fmt, va_list ap)
+ {
+ 	va_list aq;
+@@ -58,59 +53,64 @@ do_test(int bufsize, const char *expect, int elen,
+ 	va_end(aq);
+ 
+ 	if (ret != elen) {
+-		tc_fail("vsnprintf(buf, %d, \"%s\", ...) returned %d, expected %d",
+-			bufsize, fmt, ret, elen);
++		KUNIT_FAIL(kunittest, "vsnprintf(buf, %d, \"%s\", ...) returned %d, expected %d",
++			   bufsize, fmt, ret, elen);
+ 		return;
+ 	}
+ 
+ 	if (memchr_inv(alloced_buffer, FILL_CHAR, PAD_SIZE)) {
+-		tc_fail("vsnprintf(buf, %d, \"%s\", ...) wrote before buffer",
+-			bufsize, fmt);
++		KUNIT_FAIL(kunittest, "vsnprintf(buf, %d, \"%s\", ...) wrote before buffer",
++			   bufsize, fmt);
+ 		return;
+ 	}
+ 
+ 	if (!bufsize) {
+ 		if (memchr_inv(test_buffer, FILL_CHAR, BUF_SIZE + PAD_SIZE)) {
+-			tc_fail("vsnprintf(buf, 0, \"%s\", ...) wrote to buffer", fmt);
++			KUNIT_FAIL(kunittest, "vsnprintf(buf, 0, \"%s\", ...) wrote to buffer",
++				   fmt);
+ 		}
+ 		return;
+ 	}
+ 
+ 	written = min(bufsize-1, elen);
+ 	if (test_buffer[written]) {
+-		tc_fail("vsnprintf(buf, %d, \"%s\", ...) did not nul-terminate buffer",
+-			bufsize, fmt);
++		KUNIT_FAIL(kunittest,
++			   "vsnprintf(buf, %d, \"%s\", ...) did not nul-terminate buffer",
++			   bufsize, fmt);
+ 		return;
+ 	}
+ 
+ 	if (memchr_inv(test_buffer + written + 1, FILL_CHAR, bufsize - (written + 1))) {
+-		tc_fail("vsnprintf(buf, %d, \"%s\", ...) wrote beyond the nul-terminator",
+-			bufsize, fmt);
++		KUNIT_FAIL(kunittest,
++			   "vsnprintf(buf, %d, \"%s\", ...) wrote beyond the nul-terminator",
++			   bufsize, fmt);
+ 		return;
+ 	}
+ 
+ 	if (memchr_inv(test_buffer + bufsize, FILL_CHAR, BUF_SIZE + PAD_SIZE - bufsize)) {
+-		tc_fail("vsnprintf(buf, %d, \"%s\", ...) wrote beyond buffer", bufsize, fmt);
++		KUNIT_FAIL(kunittest, "vsnprintf(buf, %d, \"%s\", ...) wrote beyond buffer",
++			   bufsize, fmt);
+ 		return;
+ 	}
+ 
+ 	if (memcmp(test_buffer, expect, written)) {
+-		tc_fail("vsnprintf(buf, %d, \"%s\", ...) wrote '%s', expected '%.*s'",
+-			bufsize, fmt, test_buffer, written, expect);
++		KUNIT_FAIL(kunittest, "vsnprintf(buf, %d, \"%s\", ...) wrote '%s', expected '%.*s'",
++			   bufsize, fmt, test_buffer, written, expect);
+ 		return;
+ 	}
+ }
+ 
+-static void __printf(3, 4)
+-__test(const char *expect, int elen, const char *fmt, ...)
++static void __printf(4, 5)
++__test(struct kunit *kunittest, const char *expect, int elen, const char *fmt, ...)
+ {
+ 	va_list ap;
+ 	int rand;
+ 	char *p;
+ 
+ 	if (elen >= BUF_SIZE) {
+-		tc_fail("error in test suite: expected output length %d too long. Format was '%s'.",
+-			elen, fmt);
++		KUNIT_FAIL(kunittest,
++			   "error in test suite: expected length (%d) >= BUF_SIZE (%d). fmt=\"%s\"",
++			   elen, BUF_SIZE, fmt);
+ 		return;
+ 	}
+ 
+@@ -122,18 +122,19 @@ __test(const char *expect, int elen, const char *fmt, ...)
+ 	 * enough and 0), and then we also test that kvasprintf would
+ 	 * be able to print it as expected.
+ 	 */
+-	do_test(BUF_SIZE, expect, elen, fmt, ap);
++	do_test(kunittest, BUF_SIZE, expect, elen, fmt, ap);
+ 	rand = get_random_u32_inclusive(1, elen + 1);
+ 	/* Since elen < BUF_SIZE, we have 1 <= rand <= BUF_SIZE. */
+-	do_test(rand, expect, elen, fmt, ap);
+-	do_test(0, expect, elen, fmt, ap);
++	do_test(kunittest, rand, expect, elen, fmt, ap);
++	do_test(kunittest, 0, expect, elen, fmt, ap);
+ 
+ 	p = kvasprintf(GFP_KERNEL, fmt, ap);
+ 	if (p) {
+ 		total_tests++;
+ 		if (memcmp(p, expect, elen+1)) {
+-			tc_fail("kvasprintf(..., \"%s\", ...) returned '%s', expected '%s'",
+-				fmt, p, expect);
++			KUNIT_FAIL(kunittest,
++				   "kvasprintf(..., \"%s\", ...) returned '%s', expected '%s'",
++				   fmt, p, expect);
+ 		}
+ 		kfree(p);
+ 	}
+@@ -141,10 +142,10 @@ __test(const char *expect, int elen, const char *fmt, ...)
+ }
+ 
+ #define test(expect, fmt, ...)					\
+-	__test(expect, strlen(expect), fmt, ##__VA_ARGS__)
++	__test(kunittest, expect, strlen(expect), fmt, ##__VA_ARGS__)
+ 
+ static void
+-test_basic(void)
++test_basic(struct kunit *kunittest)
+ {
+ 	/* Work around annoying "warning: zero-length gnu_printf format string". */
+ 	char nul = '\0';
+@@ -152,11 +153,11 @@ test_basic(void)
+ 	test("", &nul);
+ 	test("100%", "100%%");
+ 	test("xxx%yyy", "xxx%cyyy", '%');
+-	__test("xxx\0yyy", 7, "xxx%cyyy", '\0');
++	__test(kunittest, "xxx\0yyy", 7, "xxx%cyyy", '\0');
+ }
+ 
+ static void
+-test_number(void)
++test_number(struct kunit *kunittest)
+ {
+ 	test("0x1234abcd  ", "%#-12x", 0x1234abcd);
+ 	test("  0x1234abcd", "%#12x", 0x1234abcd);
+@@ -178,7 +179,7 @@ test_number(void)
+ }
+ 
+ static void
+-test_string(void)
++test_string(struct kunit *kunittest)
+ {
+ 	test("", "%s%.0s", "", "123");
+ 	test("ABCD|abc|123", "%s|%.3s|%.*s", "ABCD", "abcdef", 3, "123456");
+@@ -215,29 +216,6 @@ test_string(void)
+ #define ZEROS "00000000"	/* hex 32 zero bits */
+ #define ONES "ffffffff"		/* hex 32 one bits */
+ 
+-static int
+-plain_format(void)
+-{
+-	char buf[PLAIN_BUF_SIZE];
+-	int nchars;
+-
+-	nchars = snprintf(buf, PLAIN_BUF_SIZE, "%p", PTR);
+-
+-	if (nchars != PTR_WIDTH)
+-		return -1;
+-
+-	if (strncmp(buf, PTR_VAL_NO_CRNG, PTR_WIDTH) == 0) {
+-		kunit_warn(kunittest, "crng possibly not yet initialized. plain 'p' buffer contains \"%s\"",
+-			PTR_VAL_NO_CRNG);
+-		return 0;
+-	}
+-
+-	if (strncmp(buf, ZEROS, strlen(ZEROS)) != 0)
+-		return -1;
+-
+-	return 0;
+-}
+-
+ #else
+ 
+ #define PTR_WIDTH 8
+@@ -247,89 +225,44 @@ plain_format(void)
+ #define ZEROS ""
+ #define ONES ""
+ 
+-static int
+-plain_format(void)
+-{
+-	/* Format is implicitly tested for 32 bit machines by plain_hash() */
+-	return 0;
+-}
+-
+ #endif	/* BITS_PER_LONG == 64 */
+ 
+-static int
+-plain_hash_to_buffer(const void *p, char *buf, size_t len)
++static void
++plain_hash_to_buffer(struct kunit *kunittest, const void *p, char *buf, size_t len)
+ {
+-	int nchars;
+-
+-	nchars = snprintf(buf, len, "%p", p);
+-
+-	if (nchars != PTR_WIDTH)
+-		return -1;
++	KUNIT_ASSERT_EQ(kunittest, snprintf(buf, len, "%p", p), PTR_WIDTH);
+ 
+ 	if (strncmp(buf, PTR_VAL_NO_CRNG, PTR_WIDTH) == 0) {
+ 		kunit_warn(kunittest, "crng possibly not yet initialized. plain 'p' buffer contains \"%s\"",
+ 			PTR_VAL_NO_CRNG);
+-		return 0;
+ 	}
+-
+-	return 0;
+ }
+ 
+-static int
+-plain_hash(void)
+-{
+-	char buf[PLAIN_BUF_SIZE];
+-	int ret;
+-
+-	ret = plain_hash_to_buffer(PTR, buf, PLAIN_BUF_SIZE);
+-	if (ret)
+-		return ret;
+-
+-	if (strncmp(buf, PTR_STR, PTR_WIDTH) == 0)
+-		return -1;
+-
+-	return 0;
+-}
+-
+-/*
+- * We can't use test() to test %p because we don't know what output to expect
+- * after an address is hashed.
+- */
+ static void
+-plain(void)
++hash_pointer(struct kunit *kunittest)
+ {
+-	int err;
++	if (no_hash_pointers)
++		kunit_skip(kunittest, "hash pointers disabled");
+ 
+-	if (no_hash_pointers) {
+-		kunit_warn(kunittest, "skipping plain 'p' tests");
+-		return;
+-	}
++	char buf[PLAIN_BUF_SIZE];
+ 
+-	err = plain_hash();
+-	if (err) {
+-		tc_fail("plain 'p' does not appear to be hashed");
+-		return;
+-	}
++	plain_hash_to_buffer(kunittest, PTR, buf, PLAIN_BUF_SIZE);
+ 
+-	err = plain_format();
+-	if (err) {
+-		tc_fail("hashing plain 'p' has unexpected format");
+-	}
++	/*
++	 * We can't use test() to test %p because we don't know what output to expect
++	 * after an address is hashed.
++	 */
++
++	KUNIT_EXPECT_MEMEQ(kunittest, buf, ZEROS, strlen(ZEROS));
++	KUNIT_EXPECT_MEMNEQ(kunittest, buf+strlen(ZEROS), PTR_STR, PTR_WIDTH);
+ }
+ 
+ static void
+-test_hashed(const char *fmt, const void *p)
++test_hashed(struct kunit *kunittest, const char *fmt, const void *p)
+ {
+ 	char buf[PLAIN_BUF_SIZE];
+-	int ret;
+ 
+-	/*
+-	 * No need to increase failed test counter since this is assumed
+-	 * to be called after plain().
+-	 */
+-	ret = plain_hash_to_buffer(p, buf, PLAIN_BUF_SIZE);
+-	if (ret)
+-		return;
++	plain_hash_to_buffer(kunittest, p, buf, PLAIN_BUF_SIZE);
+ 
+ 	test(buf, fmt, p);
+ }
+@@ -338,7 +271,7 @@ test_hashed(const char *fmt, const void *p)
+  * NULL pointers aren't hashed.
+  */
+ static void
+-null_pointer(void)
++null_pointer(struct kunit *kunittest)
+ {
+ 	test(ZEROS "00000000", "%p", NULL);
+ 	test(ZEROS "00000000", "%px", NULL);
+@@ -349,7 +282,7 @@ null_pointer(void)
+  * Error pointers aren't hashed.
+  */
+ static void
+-error_pointer(void)
++error_pointer(struct kunit *kunittest)
+ {
+ 	test(ONES "fffffff5", "%p", ERR_PTR(-11));
+ 	test(ONES "fffffff5", "%px", ERR_PTR(-11));
+@@ -359,26 +292,26 @@ error_pointer(void)
+ #define PTR_INVALID ((void *)0x000000ab)
+ 
+ static void
+-invalid_pointer(void)
++invalid_pointer(struct kunit *kunittest)
+ {
+-	test_hashed("%p", PTR_INVALID);
++	test_hashed(kunittest, "%p", PTR_INVALID);
+ 	test(ZEROS "000000ab", "%px", PTR_INVALID);
+ 	test("(efault)", "%pE", PTR_INVALID);
+ }
+ 
+ static void
+-symbol_ptr(void)
++symbol_ptr(struct kunit *kunittest)
+ {
+ }
+ 
+ static void
+-kernel_ptr(void)
++kernel_ptr(struct kunit *kunittest)
+ {
+ 	/* We can't test this without access to kptr_restrict. */
+ }
+ 
+ static void
+-struct_resource(void)
++struct_resource(struct kunit *kunittest)
+ {
+ 	struct resource test_resource = {
+ 		.start = 0xc0ffee00,
+@@ -427,7 +360,7 @@ struct_resource(void)
+ }
+ 
+ static void
+-struct_range(void)
++struct_range(struct kunit *kunittest)
+ {
+ 	struct range test_range = DEFINE_RANGE(0xc0ffee00ba5eba11,
+ 					       0xc0ffee00ba5eba11);
+@@ -443,17 +376,17 @@ struct_range(void)
+ }
+ 
+ static void
+-addr(void)
++addr(struct kunit *kunittest)
+ {
+ }
+ 
+ static void
+-escaped_str(void)
++escaped_str(struct kunit *kunittest)
+ {
+ }
+ 
+ static void
+-hex_string(void)
++hex_string(struct kunit *kunittest)
+ {
+ 	const char buf[3] = {0xc0, 0xff, 0xee};
+ 
+@@ -464,7 +397,7 @@ hex_string(void)
+ }
+ 
+ static void
+-mac(void)
++mac(struct kunit *kunittest)
+ {
+ 	const u8 addr[6] = {0x2d, 0x48, 0xd6, 0xfc, 0x7a, 0x05};
+ 
+@@ -476,7 +409,7 @@ mac(void)
+ }
+ 
+ static void
+-ip4(void)
++ip4(struct kunit *kunittest)
+ {
+ 	struct sockaddr_in sa;
+ 
+@@ -491,19 +424,12 @@ ip4(void)
+ }
+ 
+ static void
+-ip6(void)
+-{
+-}
+-
+-static void
+-ip(void)
++ip6(struct kunit *kunittest)
+ {
+-	ip4();
+-	ip6();
+ }
+ 
+ static void
+-uuid(void)
++uuid(struct kunit *kunittest)
+ {
+ 	const char uuid[16] = {0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7,
+ 			       0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf};
+@@ -530,7 +456,7 @@ static struct dentry test_dentry[4] = {
+ };
+ 
+ static void
+-dentry(void)
++dentry(struct kunit *kunittest)
+ {
+ 	test("foo", "%pd", &test_dentry[0]);
+ 	test("foo", "%pd2", &test_dentry[0]);
+@@ -551,12 +477,12 @@ dentry(void)
+ }
+ 
+ static void
+-struct_va_format(void)
++struct_va_format(struct kunit *kunittest)
+ {
+ }
+ 
+ static void
+-time_and_date(void)
++time_and_date(struct kunit *kunittest)
+ {
+ 	/* 1543210543 */
+ 	const struct rtc_time tm = {
+@@ -590,12 +516,12 @@ time_and_date(void)
+ }
+ 
+ static void
+-struct_clk(void)
++struct_clk(struct kunit *kunittest)
+ {
+ }
+ 
+ static void
+-large_bitmap(void)
++large_bitmap(struct kunit *kunittest)
+ {
+ 	const int nbits = 1 << 16;
+ 	unsigned long *bits = bitmap_zalloc(nbits, GFP_KERNEL);
+@@ -609,7 +535,7 @@ large_bitmap(void)
+ }
+ 
+ static void
+-bitmap(void)
++bitmap(struct kunit *kunittest)
+ {
+ 	DECLARE_BITMAP(bits, 20);
+ 	const int primes[] = {2,3,5,7,11,13,17,19};
+@@ -628,11 +554,11 @@ bitmap(void)
+ 	test("fffff|fffff", "%20pb|%*pb", bits, 20, bits);
+ 	test("0-19|0-19", "%20pbl|%*pbl", bits, 20, bits);
+ 
+-	large_bitmap();
++	large_bitmap(kunittest);
+ }
+ 
+ static void
+-netdev_features(void)
++netdev_features(struct kunit *kunittest)
+ {
+ }
+ 
+@@ -658,8 +584,8 @@ static const struct page_flags_test pft[] = {
+ };
+ 
+ static void
+-page_flags_test(int section, int node, int zone, int last_cpupid,
+-		int kasan_tag, unsigned long flags, const char *name,
++page_flags_test(struct kunit *kunittest, int section, int node, int zone,
++		int last_cpupid, int kasan_tag, unsigned long flags, const char *name,
+ 		char *cmp_buf)
+ {
+ 	unsigned long values[] = {section, node, zone, last_cpupid, kasan_tag};
+@@ -696,25 +622,24 @@ page_flags_test(int section, int node, int zone, int last_cpupid,
+ }
+ 
+ static void
+-flags(void)
++flags(struct kunit *kunittest)
+ {
+ 	unsigned long flags;
+ 	char *cmp_buffer;
+ 	gfp_t gfp;
+ 
+-	cmp_buffer = kmalloc(BUF_SIZE, GFP_KERNEL);
+-	if (!cmp_buffer)
+-		return;
++	cmp_buffer = kunit_kmalloc(kunittest, BUF_SIZE, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_NULL(kunittest, cmp_buffer);
+ 
+ 	flags = 0;
+-	page_flags_test(0, 0, 0, 0, 0, flags, "", cmp_buffer);
++	page_flags_test(kunittest, 0, 0, 0, 0, 0, flags, "", cmp_buffer);
+ 
+ 	flags = 1UL << NR_PAGEFLAGS;
+-	page_flags_test(0, 0, 0, 0, 0, flags, "", cmp_buffer);
++	page_flags_test(kunittest, 0, 0, 0, 0, 0, flags, "", cmp_buffer);
+ 
+ 	flags |= 1UL << PG_uptodate | 1UL << PG_dirty | 1UL << PG_lru
+ 		| 1UL << PG_active | 1UL << PG_swapbacked;
+-	page_flags_test(1, 1, 1, 0x1fffff, 1, flags,
++	page_flags_test(kunittest, 1, 1, 1, 0x1fffff, 1, flags,
+ 			"uptodate|dirty|lru|active|swapbacked",
+ 			cmp_buffer);
+ 
+@@ -739,11 +664,9 @@ flags(void)
+ 							(unsigned long) gfp);
+ 	gfp |= __GFP_HIGH;
+ 	test(cmp_buffer, "%pGg", &gfp);
+-
+-	kfree(cmp_buffer);
+ }
+ 
+-static void fwnode_pointer(void)
++static void fwnode_pointer(struct kunit *kunittest)
+ {
+ 	const struct software_node first = { .name = "first" };
+ 	const struct software_node second = { .name = "second", .parent = &first };
+@@ -757,8 +680,7 @@ static void fwnode_pointer(void)
+ 
+ 	rval = software_node_register_node_group(group);
+ 	if (rval) {
+-		kunit_warn(kunittest, "cannot register softnodes; rval %d", rval);
+-		return;
++		kunit_skip(kunittest, "cannot register softnodes; rval %d", rval);
+ 	}
+ 
+ 	test(full_name_second, "%pfw", software_node_fwnode(&second));
+@@ -770,7 +692,7 @@ static void fwnode_pointer(void)
+ 	software_node_unregister_node_group(group);
+ }
+ 
+-static void fourcc_pointer(void)
++static void fourcc_pointer(struct kunit *kunittest)
+ {
+ 	struct {
+ 		u32 code;
+@@ -788,13 +710,13 @@ static void fourcc_pointer(void)
+ }
+ 
+ static void
+-errptr(void)
++errptr(struct kunit *kunittest)
+ {
+ 	test("-1234", "%pe", ERR_PTR(-1234));
+ 
+ 	/* Check that %pe with a non-ERR_PTR gets treated as ordinary %p. */
+ 	BUILD_BUG_ON(IS_ERR(PTR));
+-	test_hashed("%pe", PTR);
++	test_hashed(kunittest, "%pe", PTR);
+ 
+ #ifdef CONFIG_SYMBOLIC_ERRNAME
+ 	test("(-ENOTSOCK)", "(%pe)", ERR_PTR(-ENOTSOCK));
+@@ -807,65 +729,54 @@ errptr(void)
+ #endif
+ }
+ 
+-static void
+-test_pointer(void)
+-{
+-	plain();
+-	null_pointer();
+-	error_pointer();
+-	invalid_pointer();
+-	symbol_ptr();
+-	kernel_ptr();
+-	struct_resource();
+-	struct_range();
+-	addr();
+-	escaped_str();
+-	hex_string();
+-	mac();
+-	ip();
+-	uuid();
+-	dentry();
+-	struct_va_format();
+-	time_and_date();
+-	struct_clk();
+-	bitmap();
+-	netdev_features();
+-	flags();
+-	errptr();
+-	fwnode_pointer();
+-	fourcc_pointer();
+-}
+-
+-static void printf_test(struct kunit *test)
++static int printf_suite_init(struct kunit_suite *suite)
+ {
++	total_tests = 0;
++
+ 	alloced_buffer = kmalloc(BUF_SIZE + 2*PAD_SIZE, GFP_KERNEL);
+ 	if (!alloced_buffer)
+-		return;
++		return -ENOMEM;
+ 	test_buffer = alloced_buffer + PAD_SIZE;
+ 
+-	kunittest = test;
+-
+-	test_basic();
+-	test_number();
+-	test_string();
+-	test_pointer();
+-
+-	kfree(alloced_buffer);
+-}
+-
+-static int printf_suite_init(struct kunit_suite *suite)
+-{
+-	total_tests = 0;
+ 	return 0;
+ }
+ 
+ static void printf_suite_exit(struct kunit_suite *suite)
+ {
++	kfree(alloced_buffer);
++
+ 	kunit_info(suite, "ran %u tests", total_tests);
+ }
+ 
+ static struct kunit_case printf_test_cases[] = {
+-	KUNIT_CASE(printf_test),
++	KUNIT_CASE(test_basic),
++	KUNIT_CASE(test_number),
++	KUNIT_CASE(test_string),
++	KUNIT_CASE(hash_pointer),
++	KUNIT_CASE(null_pointer),
++	KUNIT_CASE(error_pointer),
++	KUNIT_CASE(invalid_pointer),
++	KUNIT_CASE(symbol_ptr),
++	KUNIT_CASE(kernel_ptr),
++	KUNIT_CASE(struct_resource),
++	KUNIT_CASE(struct_range),
++	KUNIT_CASE(addr),
++	KUNIT_CASE(escaped_str),
++	KUNIT_CASE(hex_string),
++	KUNIT_CASE(mac),
++	KUNIT_CASE(ip4),
++	KUNIT_CASE(ip6),
++	KUNIT_CASE(uuid),
++	KUNIT_CASE(dentry),
++	KUNIT_CASE(struct_va_format),
++	KUNIT_CASE(time_and_date),
++	KUNIT_CASE(struct_clk),
++	KUNIT_CASE(bitmap),
++	KUNIT_CASE(netdev_features),
++	KUNIT_CASE(flags),
++	KUNIT_CASE(errptr),
++	KUNIT_CASE(fwnode_pointer),
++	KUNIT_CASE(fourcc_pointer),
+ 	{}
+ };
+ 
 
-> , and at least one overlay application test (ideally reflecting how it
-> will be used in real life):
-> 
-> Would that work? I don't like the : following "ideally reflecting how
-> it will be used in real life" as it applies to "overlay application
-> test" and not the end of the sentence.
+-- 
+2.48.1
 
-It works, although I'd suggest that a comma is added after "ideally".
-Technically, it would be better not to use parentheses here, but it's
-still fine.  Though, here's another option for the wording:
-
-   , and at least one overlay application test that represents
-   the overlay's intended real-life use:
-
->>> +#
->>> +#  dtb-$(CONFIG_ARCH_ROCKCHIP) += <name of overlay application 
->>> test>.dtb
->>> +#  <name of overlay application test>-dtbs := <base>.dtb
->>> <overlay-1>.dtbo [<overlay-2>.dtbo ...]
->> 
->> As another minor nitpick, I'd suggest that
->> 
->>      "<name of overlay application test>.dtb"
->> 
->> is replaced with
->> 
->>      "<name-of-overlay-application-test>.dtb"
-> 
-> OK.
-
-Thanks.
