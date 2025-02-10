@@ -1,207 +1,164 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2041.outbound.protection.outlook.com [40.107.244.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705A721C9E0;
-	Mon, 10 Feb 2025 13:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739195615; cv=none; b=Ps+xqloqrBfXga3+rpNiQKHHJSkB/8ySnMcnGCl1MhRHFYJxMjcY7nd0h7hIva5y8Wch/tDUIJ4I2KFwhIqD8gEq4ey7/LHvv3bRn1D2emp5Pbh3jfj9sChsF6nX+LdELVC02cZGW91oPful1Z8qGdjUJokHxzRYg1A5SnQS9Zg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739195615; c=relaxed/simple;
-	bh=+yxgt6+xyAp6s+YD52QMLqkv1qTdvCPj8HeHjseiZRs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J5E54DTQnjd7fjulF1Ql76MLMRGilivYNqPPrntZVZEjItKh+QDUaVMxa/BJDYjTNDnMn05Fw5GHTCFm3D1nGk3YRj1SK8wy3h+5EgGNYr67Mkr6Q+kPjQqnefztjUN3pkCE1ahdofp4WK8+hQnRvlkb64RNogW6I5G7yEU7hgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TJr+InTy; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA69122E410;
+	Mon, 10 Feb 2025 13:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739195676; cv=fail; b=Gj40OfW/kvnO5/z8JsO9zlx1iHa9zO0604RPsXqwrlQAaqMrdHxogWkPKsAZwPWdBuPbjIssV84Gi27RbB1hd6BCexC+kBJHGBHCnODdFbhDBDfjtOKkVsrsLU4f9o1X4plLRSSLXLilFwpbRCZ3cd3GOh7Ic8sU0hyCniioHv0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739195676; c=relaxed/simple;
+	bh=Zdx6P5//ZtdUeedVwSAqAWdVOqzbkGnhmbxaMJE+gUE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ssm3n2RXjAg1A69F9HcJ/9ZQI7P8ncjFrqfx8xB6lohpeaHYPoYG65NCumCHAmZ75YV4rVZM7x+gtsCMdDXww7/KxCxQ927TRKeRaLvGjnSFX2A5ofxjdWcSvFU5TxpE3EgFCoYe8uZLKz38BUu9GgGi/Rtb0Doa47txbvE6PNY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=IjlRBGys; arc=fail smtp.client-ip=40.107.244.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TJr+InTy"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51A7X6pI020862;
-	Mon, 10 Feb 2025 13:53:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=550vrO
-	d5X6IQBeVHaRhw+8u8h7h1HP+3g0ov9GC21RM=; b=TJr+InTyJZ9U4e04kJrytk
-	TwJ4Y2I0jSZ15emqC840+rzjNbytEVwEU/lt/wand0gR0BoviixxVOJpSaMhOlS8
-	y+ZMnkQk2SXAs5vTt8qoVZVnyTsjoTLo5Z3v//EyuBrn/tHRkUsoX3LrNGKq+R7Z
-	3BAMh3qft29S3lBHZPTZJBAsquinG36AT2IHK3WtaScwRr33w4TRy3RXfgA9IRnY
-	02PkVsED2of93IVp/NuX+5CxYQWlR6V/X4bGTsPTu9SyRXBWukzrz2i0V9ZBIbFG
-	I53vfu9U2395SU2cBG/5iRAx8lNk952FuWL9JzLr3ybAjPKQcjZQuWPlMCS+i1Zg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44qd5nsq38-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 13:53:15 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51ADoGFH029176;
-	Mon, 10 Feb 2025 13:53:14 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44qd5nsq33-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 13:53:14 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51AC7PkY001051;
-	Mon, 10 Feb 2025 13:53:13 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44pjkmxj66-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 13:53:13 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51ADrAVp14680354
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Feb 2025 13:53:10 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 03057200F2;
-	Mon, 10 Feb 2025 13:53:10 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 137E9200F0;
-	Mon, 10 Feb 2025 13:53:09 +0000 (GMT)
-Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.171.22.27])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Mon, 10 Feb 2025 13:52:58 +0000 (GMT)
-Date: Mon, 10 Feb 2025 14:52:55 +0100
-From: Halil Pasic <pasic@linux.ibm.com>
-To: Guangguan Wang <guangguan.wang@linux.alibaba.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, wenjia@linux.ibm.com, jaka@linux.ibm.com,
-        alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
-        guwen@linux.alibaba.com, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, horms@kernel.org, linux-rdma@vger.kernel.org,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alexandra Winter <wintera@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Subject: Re: [PATCH net] net/smc: use the correct ndev to find pnetid by
- pnetid table
-Message-ID: <20250210145255.793e6639.pasic@linux.ibm.com>
-In-Reply-To: <b1053a92-3a3f-4042-9be9-60b94b97747d@linux.alibaba.com>
-References: <20241227040455.91854-1-guangguan.wang@linux.alibaba.com>
-	<1f4a721f-fa23-4f1d-97a9-1b27bdcd1e21@redhat.com>
-	<20250107203218.5787acb4.pasic@linux.ibm.com>
-	<908be351-b4f8-4c25-9171-4f033e11ffc4@linux.alibaba.com>
-	<20250109040429.350fdd60.pasic@linux.ibm.com>
-	<b1053a92-3a3f-4042-9be9-60b94b97747d@linux.alibaba.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="IjlRBGys"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZS2fJsCOuADiF85l/sjDegvd19grQJgdeClVUhpAXdt4CfDV/Gwc3qxxbk5mEp4DkSdo/IiEIIIuZNrcdtRs9sUN9D09g3Xw4+vUmgiwrNVJjmHSLq9yjgk+0lBd8eUuFzu70lLlGN22U0zkVMxgv76bZDqMax4Kt6EBR0vvXfM80CpLc8rZwURICr2CQA0PKiro7Iza5TxlxsdoQCcmorb5/IGZd/TtbfNQNlUm/4ll25X2HqvBBdIioelwKvHiU7mXlNfcFNVhFR3mJX1a+qV/3hoB5M5pMVx7/PMMwHC3uIt9kruWHgM7Be6LuEJ2r0EtN0Qz09g3jID+5uHGlA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gaxJ0Vrdl39xChtY6zjhN+Eobpa1UJn+hiyJF0n3tRU=;
+ b=L/+/Jlhc2ecLPgs0YSOWizJu4dD2rQa1KFxVRO48TlOxYoi8kzJo52lkVkY5qOkDQOtqE4wGA31rQFTFXU0XZ8ej9B4PpkgPpszL0IJea4ybe39pypB/T4Wmvpz3L4YemyQbSABgHnERB7Fv3T/1gX5thomsr5dtMz0VjWtya7uuK/nlSwKOtuwTx3ax3ifV7+0uRdnzm1EK++cn+6rkJ4kkNjehtis3ngzRtbUGMaZLaiDEPhY4yBu9tBLSCozNgjR7yWtv+RI03S6AOCNTqJ96UEA5o9MFRDi/s/hTZIaz/rjUxyZ+rYyq41Uj93YxoUJRAcs4O0Miyq4Q9AA4Aw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gaxJ0Vrdl39xChtY6zjhN+Eobpa1UJn+hiyJF0n3tRU=;
+ b=IjlRBGysdyjJlzC6Dj8KytZ6GDP5wCd0RmqXzJIoCbsMPS2cVOybTn5ICdPudLBAJqneYdPB9XvY0x/CNQHl/gdGfoq2lJ6k3enwcxnP0EhvXu7lrNLrWUP4Z1GHLpQ+09ZWDySTbay8l9QxrcfbbnKVIl1RfGSjt/9Iy6MavCdNKsI9wrcsjB4ob6VhERsmyXp8ohsTKbUJqOvpzDXmyi5J+ZBV9sRpziEM47t1uoZLjyx0Fsn7OsSAiScxZag0qvptgDQxDgy+TVX2G58N9TSvpkx5NSJ1itA9Dyw6s22mLhkqkI+KhM9XtV7qcBu6s/v+TV2STshpY+bYv356bA==
+Received: from CH0PR03CA0109.namprd03.prod.outlook.com (2603:10b6:610:cd::24)
+ by DM6PR12MB4420.namprd12.prod.outlook.com (2603:10b6:5:2a7::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Mon, 10 Feb
+ 2025 13:54:31 +0000
+Received: from CH2PEPF0000013C.namprd02.prod.outlook.com
+ (2603:10b6:610:cd:cafe::6a) by CH0PR03CA0109.outlook.office365.com
+ (2603:10b6:610:cd::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.31 via Frontend Transport; Mon,
+ 10 Feb 2025 13:54:31 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ CH2PEPF0000013C.mail.protection.outlook.com (10.167.244.73) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8445.10 via Frontend Transport; Mon, 10 Feb 2025 13:54:31 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 10 Feb
+ 2025 05:54:20 -0800
+Received: from drhqmail202.nvidia.com (10.126.190.181) by
+ drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 10 Feb 2025 05:54:19 -0800
+Received: from 13db4e1-lcedt.nvidia.com (10.127.8.11) by mail.nvidia.com
+ (10.126.190.181) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Mon, 10 Feb 2025 05:54:17 -0800
+From: Mohan Kumar D <mkumard@nvidia.com>
+To: <vkoul@kernel.org>, <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
+CC: <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>, Mohan Kumar D
+	<mkumard@nvidia.com>
+Subject: [PATCH v5 0/2] Tegra ADMA fixes
+Date: Mon, 10 Feb 2025 19:24:11 +0530
+Message-ID: <20250210135413.2504272-1-mkumard@nvidia.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: z7c8wxOxHz5HvQIUQRHj7y0YaOkhha7N
-X-Proofpoint-ORIG-GUID: 9lggT4HDYvzhX0pavHSmB7QoLTkpK_W8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_07,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 phishscore=0 mlxscore=0 clxscore=1015 spamscore=0
- mlxlogscore=999 suspectscore=0 malwarescore=0 impostorscore=0
- lowpriorityscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502100113
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF0000013C:EE_|DM6PR12MB4420:EE_
+X-MS-Office365-Filtering-Correlation-Id: 435466f4-51e6-447f-072c-08dd49da7173
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ZcgFfWRbBeeIBGE1w7FstK3hZG4AUeDXmt6NIBeY66BS7tBa5PX51WoLjcjf?=
+ =?us-ascii?Q?Kgjf/EKY1QLoGDk4hF0UqhGSSE0MWGXEKcc4tlNrfA7HNLyQI7KsZKjtpU/l?=
+ =?us-ascii?Q?8baG9OtpfJ8pgcp8cZ1HEAnd+PTwV+ObXnNDxKXMiveIkCToBV0zreGAG430?=
+ =?us-ascii?Q?9sPELcgfBKshX0D6oqczhYmudoMD7kmf0WXJBiXHQuJSNj1aHoz7Abx8Iuc+?=
+ =?us-ascii?Q?PPAD5NZ3HLGFmyYY7c2UNU0yDx2jgjX1D3Loi/Jkd1SQGaGdKtJR7xZrmd8y?=
+ =?us-ascii?Q?/f1NC5wtCszQTQEbf4F3o275j6DKpik/9DUsZQifvqZcx73FY5hbKwoE6CSj?=
+ =?us-ascii?Q?Mqfc2paSLdmDDq7gGxhHLSZf5YXrevu5rXzeemFZZVc3IJNlCKDszJbLQp3W?=
+ =?us-ascii?Q?WseHx/RJQ4P27x98k0rp2sDpxLV8zF4/6CDpWYCcoUQ1hIY8kvkjhLxpiua+?=
+ =?us-ascii?Q?HDamiU7TqnbQYhtYeQ41sh9n8lXsr233hI9ltSRKxnSMfbYhFUjrTNwvxwAh?=
+ =?us-ascii?Q?mc3M9m17GGB4EzHkrXkwkyDqCLmLP+7W/at4SXPkaK6youSh43dDHrnfPIv2?=
+ =?us-ascii?Q?zWgLNl6XHwUn6Sju7oaI9h6HKpK/oEyT+dXzZscBl9klQ3+bXDeSc4mrjSeX?=
+ =?us-ascii?Q?Mi60WgMw86AVewY9H2XIwWricd3u1TwP0AygjfqJVpmBWsnKxGx4VVfyZTpf?=
+ =?us-ascii?Q?KTuFMO9M6oumEYreEH/uz7dkG74+MkwttdcwnFeSQXGi8RG0Kj4wSvCz2P7U?=
+ =?us-ascii?Q?pQweg4Ln60dUlIsdY29YtsGZ2q4AkqelZ63wzF6TWaR9X6Hh0NZ7UnoHDMAa?=
+ =?us-ascii?Q?lCiCWzHfeGBiOZut6qrlxPFSA7VCRKAFCxuqMuCWGYOAkl9YhhuLFCXezByQ?=
+ =?us-ascii?Q?qbvi07q6Dv9X4kgktTBGB+mQafq5nUJrHuq/4rR/XXLaEzPw/LgLRFfx37ov?=
+ =?us-ascii?Q?aKH7Ko53sMsT0g4yK098clUMARgVm6mHOpf6Wcjf7e284xedMVkM4jwLZlIg?=
+ =?us-ascii?Q?36cHofUfeA+8t98uRsyxVrpHoMY1MtrqKWW7Ugq4lBLLFVifWmQ2OJLTcqst?=
+ =?us-ascii?Q?EEQvZrzDxUNIpcIdUYIHGDROH/ah12GIGo4RomwdMeU2LHMy2zRFFa2sbKq1?=
+ =?us-ascii?Q?BkIv8OqnmzgNwuugcA94w6oCCBaGfOZYeEvw0aA0ler0hTiCpiEbup86SfDA?=
+ =?us-ascii?Q?vnzjIBKGKRuCK9N6/QXe9p9PxUW6XCIlk3PjvSsiBzlnPaZ2X5OmCTe/uoBH?=
+ =?us-ascii?Q?1gkI13w/2yEP90ClBwzmBv7dBDzLp+rGAPS5LI7swWFYD4mgXz/u0x6o0hSF?=
+ =?us-ascii?Q?/skFJSXncncfQ9qYzs9YasBuoPNtY9KI9MUXiABlupx9Cv19hfq8L10Vd5RR?=
+ =?us-ascii?Q?XnZSuKSadEjOen0jIjTaHWkwqbvQ8Fh9HtAJcd4rl3JCzARfPUKswJPxy2+r?=
+ =?us-ascii?Q?CeCsrLhYL96LCXCF50ZTEMHskcngIkxnufpB1M1kMZj7wggh2VsuMJADG8dc?=
+ =?us-ascii?Q?OyzojeAa+EWPDkU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 13:54:31.0134
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 435466f4-51e6-447f-072c-08dd49da7173
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH2PEPF0000013C.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4420
 
-On Fri, 10 Jan 2025 13:43:44 +0800
-Guangguan Wang <guangguan.wang@linux.alibaba.com> wrote:
+- Kernel test robot reported the build errors on 32-bit platforms due to
+plain 64-by-32 division. Fix build error by using div_u64()
 
-> We want to use SMC in container on cloud environment, and encounter problem
-> when using smc_pnet with commit 890a2cb4a966. In container, there have choices
-> of different container network, such as directly using host network, virtual
-> network IPVLAN, veth, etc. Different choices of container network have different
-> netdev hierarchy. Examples of netdev hierarchy show below. (eth0 and eth1 in host
-> below is the netdev directly related to the physical device).
->  _______________________________      ________________________________   
-> |   _________________           |     |   _________________           |  
-> |  |POD              |          |     |  |POD  __________  |          |  
-> |  |                 |          |     |  |    |upper_ndev| |          |  
-> |  | eth0_________   |          |     |  |eth0|__________| |          |  
-> |  |____|         |__|          |     |  |_______|_________|          |  
-> |       |         |             |     |          |lower netdev        |  
-> |       |         |             |     |        __|______              |  
-> |   eth1|base_ndev| eth0_______ |     |   eth1|         | eth0_______ |  
-> |       |         |    | RDMA  ||     |       |base_ndev|    | RDMA  ||  
-> | host  |_________|    |_______||     | host  |_________|    |_______||  
-> ———————————————————————————————-      ———————————————————————————————-    
->  netdev hierarchy if directly          netdev hierarchy if using IPVLAN    
->    using host network
->  _______________________________
-> |   _____________________       |
-> |  |POD        _________ |      |
-> |  |          |base_ndev||      |
-> |  |eth0(veth)|_________||      |
-> |  |____________|________|      |
-> |               |pairs          |
-> |        _______|_              |
-> |       |         | eth0_______ |
-> |   veth|base_ndev|    | RDMA  ||
-> |       |_________|    |_______||
-> |        _________              |
-> |   eth1|base_ndev|             |
-> | host  |_________|             |
->  ———————————————————————————————
->   netdev hierarchy if using veth
-> 
-> Due to some reasons, the eth1 in host is not RDMA attached netdevice, pnetid
-> is needed to map the eth1(in host) with RDMA device so that POD can do SMC-R.
-> Because the eth1(in host) is managed by CNI plugin(such as Terway, network
-> management plugin in container environment), and in cloud environment the
-> eth(in host) can dynamically be inserted by CNI when POD create and dynamically
-> be removed by CNI when POD destroy and no POD related to the eth(in host)
-> anymore.
+- Additional check for adma max page
 
-I'm pretty clueless when it comes to the details of CNI but I think
-I'm barely able to follow. Nevertheless if you have the feeling that
-my extrapolations are wrong, please do point it out.
+Changelog
+=========
 
-> It is hard for us to config the pnetid to the eth1(in host). So we
-> config the pnetid to the netdevice which can be seen in POD.
+v1 -> v2:
+   * Used lower_32_bits() to truncate the 64-bit address space for
+     division
+   * Included additional patch to check for adma max page
 
-Hm, this sounds like you could set PNETID on eth1 (in host) for each of
-the cases and everything would be cool (and would work), but because CNI
-and the environment do not support it, or supports it in a very
-inconvenient way, you are looking for a workaround where PNETID is set
-in the POD. Is that right? Or did I get something wrong?
+v2 -> v3:
+   * Removed unwanter file change
 
-> When do SMC-R, both
-> the container directly using host network and the container using veth network
-> can successfully match the RDMA device, because the configured pnetid netdev is a
-> base_ndev. But the container using IPVLAN can not successfully match the RDMA
-> device and 0x03030000 fallback happens, because the configured pnetid netdev is
-> not a base_ndev. Additionally, if config pnetid to the eth1(in host) also can not
-> work for matching RDMA device when using veth network and doing SMC-R in POD.
+v3 -> v4:
+   * Used div_u64() to perform the 64-bit division of adma address
+     differences
 
-That I guess answers my question from the first paragraph. Setting
-PNETID on eth1 (host) would not be sufficient for veth. Right?
+v4 -> v5:
+   * Updated commit message of the patchsets
 
-Another silly question: is making the PNETID basically a part of the Pod
-definition shifting PNETID from the realm of infrastructure (i.e.
-configured by the cloud provider) to the ream of an application (i.e.
-configured by the tenant)?
+Mohan Kumar D (2):
+  dmaengine: tegra210-adma: Use div_u64 for 64 bit division
+  dmaengine: tegra210-adma: check for adma max page
 
-AFAIU veth (host) is bridged (or similar) to eth1 (host) and that is in
-the host, and this is where we make sure that the requirements for SMC-R
-are satisfied.
+ drivers/dma/tegra210-adma.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-But veth (host) could be attached to eth3 which is on a network not
-reachable via eth0 (host) or eth1 (host). In that case the pod could
-still set PNETID on veth (POD). Or?
+-- 
+2.25.1
 
-> 
-> My patch can resolve the problem we encountered and also can unify the pnetid setup
-> of different network choices list above, assuming the pnetid is not limited to
-> config to the base_ndev directly related to the physical device(indeed, the current
-> implementation has not limited it yet).
-
-I see some problems here, but I'm afraid we see different problems. For
-me not being able to set eth0 (veth/POD)'s PNEDID from the host is a
-problem. Please notice that with the current implementation users can
-only control the PNETID if infrastructure does not do so in the first
-place.
-
-
-Can you please help me reason about this? I'm unfortunately lacking
-Kubernetes skills here, and it is difficult for me to think along.
-
-Regards,
-Halil
