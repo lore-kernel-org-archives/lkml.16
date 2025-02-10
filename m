@@ -1,177 +1,103 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6A113CFB6
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D688D1E4A9;
+	Mon, 10 Feb 2025 08:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739177079; cv=none; b=i+2P2r7porUrxHSM3czurGEtAcqZDP8G1fIrHxMzMWPF1N8s9fzgj8wTWQjUKgNF11nUHIoshIaeFRpE8ktzbfhlpUWaGA5xLk40dHazG557NWBVT6bi3WlOjqNlVNiFKRiZfHiKMW9cyh8VG8fHSyH6R87e/WMRqmsn2kcFk9M=
+	t=1739177133; cv=none; b=WOSzAmx+FdNbRKt8aJs0afrTV92+8PpLO0p8fdnsZX9fKbG1yDqRpwGTzxVop1+tkfd05oCXi97GhBZ2PlrAm6rB0RNFJv/eWAU0Dz1ZT0nue0wJVYSCID8+U20mr7skaFUcpNpuCAut5gqzamqJ+qBHtYOBmMNOqD7qa5WhUX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739177079; c=relaxed/simple;
-	bh=4fZ8hkk0JfCQHZ3YWUau2oqwdEOKuxV5oYRE3kgnKgM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L1uwS5USTy9CgdPpMn4kYAbti2YqfzMCy18CvIqWVmKUo5hUBS1k45ndOIDieZ1vPpOs+O5C465e2h5Hl2ejUkrnZQ3zSqwC3vJBov50CVmfmoXkgTkCstvYZjyaYL5jETSUpaXjGnHQ/+AEkfvZH8qWI1CIcqItZ1TZVgwRF6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tXn/xoGa; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739177133; c=relaxed/simple;
+	bh=8e9TvzMvnN655dD9mW3ziQ4pedVgVTCtFygXZeQGWbI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=KyxgRLA/Ci3epCkfPiSGZZ3uXWW52YyNBuEfnc4EqMpXVobiGuEXG9r+99AVQV8RfEiCWqv9SkE3filo8TaDep31yyI9TBqHIWkb3ryNdvPDQlotWHJ0ordISoiYT1hX5hWztS3Mc41vKOmV+k1Hbj6AwKx5sBEshAjEgB2Ac5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZY02NguF; arc=none smtp.client-ip=217.70.178.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tXn/xoGa"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-436ce2ab251so27028845e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 00:44:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739177075; x=1739781875; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=a9jWy1Q5jX1SgFclMU8WZwRWsNWJuzin+o6tDoU266o=;
-        b=tXn/xoGawRSLSqMTkgezffT1G3FlX5wJBLkivK8WnL9Lqt6Cmb3uCu385D+HUh+7lN
-         Iu+/qEm/7VDBrh/BEwxAuehSRyVPQjb2kpj7kO7bnhDXtfJNznC1J9hlg7hjIssMrjk/
-         MJyokiGlvX0D0INFqXA1/DoQgVZ457c9pI5KzAoLAVcFU+4gwM4k7VV5E+5pxWlGdBZ3
-         bOldhGd3fTLCZoNci1geLdYUpfCvClzDp9EHXF5YEpoYC5S06TlZQe+7hzBn+uraHKKT
-         vwAvAM7ePK5+vi2ZL1gQFrNrU9jap+MFKMbE/VoYA2AKW95yr8TICO+UHCtGcOqIIxvx
-         zgIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739177075; x=1739781875;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a9jWy1Q5jX1SgFclMU8WZwRWsNWJuzin+o6tDoU266o=;
-        b=uk+9CT0W/wJwOPW1CZO0tLGgPDbBCH2eaNFZYT16/bqbrsApoNpM70z38mX1QV3p2n
-         W1n8z/YwT57uv3+aiBm6U3edOrLxzWt23bk67euRQRsDJZ3zd+1IJPYTKw7Wzp5+Fh37
-         VrFmrkQ/gcBIHUsyZZK8coB2tyXKzPNyOAoahhDfvmDcyySxrhrOqDSvfCqpNvL+B0cR
-         652uAqSxGmbZyXpgXcxXVXVy2Plne+5nz+HU2ZGeRTEO1Xs87PX7t3UF0Ds2X8D3SChk
-         LvXJDn/C9l04svbcsAVUHFG+7i/EHvLiUNSHjUZcHis2nkSk39BmU/SFyv/cGjVPJEbj
-         t1Rw==
-X-Forwarded-Encrypted: i=1; AJvYcCUcZHjgWVdsOq+HbsCxqplLK+SUZWI3igIuVTBXUvhnHsHVppqFpEMTa9ziSU3/lRwQZGZ55LDumJrsHas=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhiY7H/Smf93KrcEkQ3mogaDjSTTMxK8Db27jJqk3ldOSrVflk
-	5XAIf4DEnF+ZUcvHD2pfCKncvxcHyY7Y6nLwLvWXS0JPeUqn3WWVsj9b/o79o6PLdcxWfFJoNW+
-	9
-X-Gm-Gg: ASbGncsC09LDEqoL6k4f4iQV+rU9lhapKHUTMh295LXpJsBZ+OUWh4gFM7gwbxp8uv/
-	yjOqQLWKxRhPISr1PvK4HuC89VCaUmE0mGNztv4kcVXna6tt4eKxp43Npwojcl2fD2o8UYWjw9L
-	9HO/al6Qdsstp0MFoFg6pkM6Fb8O+pySHn1GapBcIV50UgZNAOEQMxsAgoMXGGrnx5yx9frcajz
-	temZ2nzToOlLIWApOufkx7auBqwuyaWgofzH2diEHz2dvVO0SS6LCL333WW7PFDZ6RyPw0KU6TX
-	beioN+yK3uUszljXcIwH5cmbykw=
-X-Google-Smtp-Source: AGHT+IEIHivwIw1YLGXpQln/J8OfUdVcDuE29uK5Y0cehr1g+Cm1qc4Jrq0qwsltV208ZxXpHMxo2w==
-X-Received: by 2002:a05:600c:5248:b0:439:422d:d642 with SMTP id 5b1f17b1804b1-439422dd712mr30757655e9.23.1739177075235;
-        Mon, 10 Feb 2025 00:44:35 -0800 (PST)
-Received: from linaro.org ([2a02:2454:ff21:ef30:ef53:9f00:dac2:a172])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcde66729sm8119137f8f.81.2025.02.10.00.44.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 00:44:34 -0800 (PST)
-Date: Mon, 10 Feb 2025 09:44:30 +0100
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-To: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Md Sadre Alam <quic_mdalam@quicinc.com>,
-	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Georgi Djakov <djakov@kernel.org>
-Subject: Re: [PATCH] dmaengine: qcom: bam_dma: Avoid accessing BAM_REVISION
- on remote BAM
-Message-ID: <Z6m8btwhJ9q4RjB6@linaro.org>
-References: <20250207-bam-read-fix-v1-1-027975cf1a04@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZY02NguF"
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::227])
+	by mslow3.mail.gandi.net (Postfix) with ESMTP id 55A93582BA6;
+	Mon, 10 Feb 2025 08:27:35 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6E7EC441F0;
+	Mon, 10 Feb 2025 08:27:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739176047;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8e9TvzMvnN655dD9mW3ziQ4pedVgVTCtFygXZeQGWbI=;
+	b=ZY02NguFvp2D4ou3No/QCzpfSTJ/vEq/6qT+XJ/nvm4ksYAK39lFMb0mQgDBqM0QIBRl1F
+	8lQkkIF/mc8rfl0l4flqx4G6JMtztvl8iq4f4mpGpYsw9F+0rmgop6/sp/OOfQsixdP9Hn
+	F5EBu6cuuY9MfhzpBOyfm3OiCFVmX2cf9gRlizM56NuNZNK60icbcTT+3/d+T/Unba6ad9
+	nIAJD/b54HfwpeWm89ATdYeoXB7ZO5w+IHsHy0eoz3L543OybW2v5YkqjOB1Y1pInLZonw
+	gvl82hS9MNgYZaE0ZItYKARh4AqYqBh+HH0IcpFf14eU4/gDM4YqjQJ7ekjhow==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: J. =?utf-8?Q?Neusch=C3=A4fer?= via B4 Relay
+ <devnull+j.ne.posteo.net@kernel.org>
+Cc: devicetree@vger.kernel.org,  linuxppc-dev@lists.ozlabs.org,  Krzysztof
+ Kozlowski <krzk@kernel.org>,  j.ne@posteo.net,  imx@lists.linux.dev,
+  Scott Wood <oss@buserror.net>,  Madhavan Srinivasan
+ <maddy@linux.ibm.com>,  Michael Ellerman <mpe@ellerman.id.au>,  Nicholas
+ Piggin <npiggin@gmail.com>,  Christophe Leroy
+ <christophe.leroy@csgroup.eu>,  Naveen N Rao <naveen@kernel.org>,  Rob
+ Herring <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>,  Damien Le Moal <dlemoal@kernel.org>,
+  Niklas Cassel <cassel@kernel.org>,  Herbert Xu
+ <herbert@gondor.apana.org.au>,  "David S. Miller" <davem@davemloft.net>,
+  Lee Jones <lee@kernel.org>,  Vinod Koul <vkoul@kernel.org>,  Lorenzo
+ Pieralisi <lpieralisi@kernel.org>,  Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+ <kw@linux.com>,
+  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,  Bjorn Helgaas
+ <bhelgaas@google.com>,  J. =?utf-8?Q?Neusch=C3=A4fer?=
+ <j.neuschaefer@gmx.net>,  Wim Van
+ Sebroeck <wim@linux-watchdog.org>,  Guenter Roeck <linux@roeck-us.net>,
+  Mark Brown <broonie@kernel.org>,  Richard Weinberger <richard@nod.at>,
+  Vignesh Raghavendra <vigneshr@ti.com>,  linux-kernel@vger.kernel.org,
+  linux-ide@vger.kernel.org,  linux-crypto@vger.kernel.org,
+  dmaengine@vger.kernel.org,  linux-pci@vger.kernel.org,
+  linux-watchdog@vger.kernel.org,  linux-spi@vger.kernel.org,
+  linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 12/12] dt-bindings: mtd: raw-nand-chip: Relax node
+ name pattern
+In-Reply-To: <20250207-ppcyaml-v2-12-8137b0c42526@posteo.net> ("J.
+ =?utf-8?Q?Neusch=C3=A4fer?=
+	via B4 Relay"'s message of "Fri, 07 Feb 2025 22:30:29 +0100")
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+	<20250207-ppcyaml-v2-12-8137b0c42526@posteo.net>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Mon, 10 Feb 2025 09:27:22 +0100
+Message-ID: <87o6zaurv9.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207-bam-read-fix-v1-1-027975cf1a04@oss.qualcomm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefjeehkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffeghfejtdefieeguddukedujeektdeihfelleeuieeuveehkedvleduheeivdefnecukfhppeelvddrudekgedrleekrdekgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeelvddrudekgedrleekrdekgedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfeelpdhrtghpthhtohepuggvvhhnuhhllhdojhdrnhgvrdhpohhsthgvohdrnhgvtheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugihpphgtqdguvghvsehlihhsthhsrdhoiihlrggsshdrohhrghdprhgtphhtthhopehkrhiikheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhdrnhgvsehpohhst
+ hgvohdrnhgvthdprhgtphhtthhopehimhigsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohepohhsshessghushgvrhhrohhrrdhnvghtpdhrtghpthhtohepmhgrugguhieslhhinhhugidrihgsmhdrtghomh
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Fri, Feb 07, 2025 at 12:17:33PM -0800, Bjorn Andersson wrote:
-> Commit '57a7138d0627 ("dmaengine: qcom: bam_dma: Avoid writing
-> unavailable register")' made this read unconditional, in order to
-> identify if the instance is BAM-NDP or BAM-Lite.
-> But the BAM_REVISION register is not accessible on remotely managed BAM
-> instances and attempts to access it causes the system to crash.
-> 
-> Move the access back to be conditional and expand the checks that was
-> introduced to restore the old behavior when no revision information is
-> available.
-> 
-> Fixes: 57a7138d0627 ("dmaengine: qcom: bam_dma: Avoid writing unavailable register")
-> Reported-by: Georgi Djakov <djakov@kernel.org>
-> Closes: https://lore.kernel.org/lkml/9ef3daa8-cdb1-49f2-8d19-a72d6210ff3a@kernel.org/
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+Hello,
 
-This patch fixes the most critical regression (the bus hang), but the
-in_range(..., BAM_NDP) checks are also wrong. They do not consider the
-plain "BAM" type where the register is apparently also available. The
-check should be !in_range(..., BAM_LITE) instead to fix this.
+On 07/02/2025 at 22:30:29 +01, J. Neusch=C3=A4fer via B4 Relay <devnull+j.n=
+e.posteo.net@kernel.org> wrote:
 
-I mentioned this twice to Md Sadre Alam [1, 2], but a fix was
-unfortunately never sent for that part of the regression.
+> From: "J. Neusch=C3=A4fer" <j.ne@posteo.net>
+>
+> In some scenarios, such as under the Freescale eLBC bus, there are raw
+> NAND chips with a unit address that has a comma in it (cs,offset).
+> Relax the $nodename pattern in raw-nand-chip.yaml to allow such unit
+> addresses.
 
-I think we should take Caleb's patch and revert the entire patch for the
-6.14 cycle. There are several incorrect assumptions in the original
-patch, it will be easier to review a fixed version with the full diff,
-rather than looking at incremental fixups.
-
-On a somewhat related note, I'm working on a patch series for bam_dma to
-clean up the handling of remotely controlled BAMs. It will make it more
-clear when it's safe to access BAM registers and when not, and should
-allow reading the revision also for remotely controlled BAMs. This would
-avoid the need for all these if (!bdev->bam_revision) checks.
+This is super specific to this controller, I'd rather avoid that in the
+main (shared) files. I believe you can force another node name in the
+controller's binding instead?
 
 Thanks,
-Stephan
-
-[1]: https://lore.kernel.org/linux-arm-msm/Z4D2jQNNW94qGIlv@linaro.org/
-[2]: https://lore.kernel.org/linux-arm-msm/Z4_U19_QyH2RJvKW@linaro.org/
-
-> ---
->  drivers/dma/qcom/bam_dma.c | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-> index c14557efd577..d42d913492a8 100644
-> --- a/drivers/dma/qcom/bam_dma.c
-> +++ b/drivers/dma/qcom/bam_dma.c
-> @@ -445,8 +445,8 @@ static void bam_reset(struct bam_device *bdev)
->  	writel_relaxed(val, bam_addr(bdev, 0, BAM_CTRL));
->  
->  	/* set descriptor threshold, start with 4 bytes */
-> -	if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
-> -		     BAM_NDP_REVISION_END))
-> +	if (!bdev->bam_revision ||
-> +	    in_range(bdev->bam_revision, BAM_NDP_REVISION_START, BAM_NDP_REVISION_END))
->  		writel_relaxed(DEFAULT_CNT_THRSHLD,
->  			       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
->  
-> @@ -1006,8 +1006,8 @@ static void bam_apply_new_config(struct bam_chan *bchan,
->  			maxburst = bchan->slave.src_maxburst;
->  		else
->  			maxburst = bchan->slave.dst_maxburst;
-> -		if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
-> -			     BAM_NDP_REVISION_END))
-> +		if (!bdev->bam_revision ||
-> +		    in_range(bdev->bam_revision, BAM_NDP_REVISION_START, BAM_NDP_REVISION_END))
->  			writel_relaxed(maxburst,
->  				       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
->  	}
-> @@ -1199,11 +1199,12 @@ static int bam_init(struct bam_device *bdev)
->  	u32 val;
->  
->  	/* read revision and configuration information */
-> -	val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
-> -	if (!bdev->num_ees)
-> +	if (!bdev->num_ees) {
-> +		val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
->  		bdev->num_ees = (val >> NUM_EES_SHIFT) & NUM_EES_MASK;
->  
-> -	bdev->bam_revision = val & REVISION_MASK;
-> +		bdev->bam_revision = val & REVISION_MASK;
-> +	}
->  
->  	/* check that configured EE is within range */
->  	if (bdev->ee >= bdev->num_ees)
-> 
-> ---
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> change-id: 20250207-bam-read-fix-2b31297d3fa1
-> 
-> Best regards,
-> -- 
-> Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-> 
+Miqu=C3=A8l
