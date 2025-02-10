@@ -1,239 +1,304 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B2B259487;
-	Mon, 10 Feb 2025 23:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220E325E47F
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:05:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739228727; cv=none; b=OV7b7hFPd7+WZEfME8Z2183wH4bkBYCo3V+3a3hhQPDZR1+y86fEFd7R9J46MS6ktqlmxhS2PQ0QLgdkU9YvwhwL8bzEHbmVu5fzGo3ycpfmc5c9tLv8mgffC7dmvB7iRm1LWyTy/TZ8xRV/VJXssCU/+xB7XzMczSNE1fqm7SY=
+	t=1739228746; cv=none; b=D5UDrswMCaDNG42oTZ17S318UyJNaShadxR0QvMgHRJhyWp8ilsZHkZTlgV0rctm6oY0WcaBgh4rZiNzYc2fOmbzmuQx6yVU9K/Vkk/EXG2Y54wI6WN7nZJyoTZQqCMYz3DkmFXaigwSAVT7ZMzLgy9JBmmZJSW/M2r5cG/Fu4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739228727; c=relaxed/simple;
-	bh=8L0eOoa57DQYzqthF2KJubMJik6qRQp8eVAjf9JUQkc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=byyHpjwWVDVxTgXUa67A+4KtFhihmsP5vupdjsJZQKdK3Qk+6PmeV/GZD3ogCcE1v85JkvYMSXKBSZITtNnQm3Xrxfp0V3vuVRCTeVIArkUbbuFUG/1Ot4/rG6hFsKze9mCpqkYrMDhv+L5M5caS8duuCaUcAd6qfojKG3xtZrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10343C4CED1;
-	Mon, 10 Feb 2025 23:05:24 +0000 (UTC)
-Date: Mon, 10 Feb 2025 18:05:28 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Menglong Dong <menglong8.dong@gmail.com>
-Cc: alexei.starovoitov@gmail.com, x86@kernel.org, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- dongml2@chinatelecom.cn, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [RFC PATCH] x86: add function metadata support
-Message-ID: <20250210180528.01118537@gandalf.local.home>
-In-Reply-To: <20250210104034.146273-1-dongml2@chinatelecom.cn>
-References: <20250210104034.146273-1-dongml2@chinatelecom.cn>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1739228746; c=relaxed/simple;
+	bh=6FKNnv1UlunHEYx7mLMFNp9z4ArXL9NQF8vpKdralCA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KX3ZjiU6cjFYvZhkEbZi2/9HeFxte0bfOsxd908xVxqfxUdAi4ktecQUye9NRgxe737pn8no4X45ncMLyzKaUzYWvBYgWXpNnW3ZZGJIFH12TuddbtbAmjfQ4JalK4u2hTqG+mJ7TNPjH//sE6QB01saOx67bL9F/CV7v/AdfiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kFhd0ukZ; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kFhd0ukZ"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5450abbdce0so1711245e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:05:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739228741; x=1739833541; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fcigvOsom8rW0TkFj/qoAV54vRWRNJIlkjwbdGodttY=;
+        b=kFhd0ukZ9BGJMfD+Sx9c+gAT7Ae4sf7Og7RvdjevJzv9sYxsjjGWyWTLlCjufrVMIR
+         ZWQyMOsTEBjgMQbBBwQthFK7mVMVbPzcQM6vhaLp1k+P93pvn4Ikm5qJeadgHGtN8FSR
+         EmKsZq0Rnh4RWLt96bk7oVQ0XyL9AStV22shECeCkBzh0BsxTTvZvUwo7p4hHyu+VWRC
+         2mDTAPZxVr5jE7ex0g8VuxS45W1d0IwxsOMyIXGd9Ry8U+vBzKoD0RAfEDbkfZ0nyRK4
+         B2MGiIu2d5HkPebzW3EvUTi+bVpliie70h1HI9NrmHjxO3cxpbWzsf5hTcUEP57uaEAC
+         4Kaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739228741; x=1739833541;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fcigvOsom8rW0TkFj/qoAV54vRWRNJIlkjwbdGodttY=;
+        b=aIxCH1mup5jsjcPZ2CSU/msNgHvkGgyPT9pxASegZLzCA/82ZSuqUg6xmyC5yTEj/4
+         p5ueD9c/iMAl4uR5zkErc5nV4dnP9v4OWDePvwMJgKOHqdoEnzUIHicQbv4HCJQHN014
+         55M3LsLD4HutPOdKuGN9iQOO7/j+EuvEEA+GboF1YNfWfcB206DagPywvpX2sPKPQ35u
+         ldKksDjH1bKVRASHJPJUD3pNgd0srn/MLOVzGEbnkPPYnQsPZ6jpHH9HwOscFggjq/CV
+         md5WG8aqwRvGlyBChaVlnADHZlpt44qwc1wTEHpYm9OLh6m9F0qPd8jy3kLmKwvHDcV5
+         48Gg==
+X-Forwarded-Encrypted: i=1; AJvYcCUWiIrslidqXzbHMrbxyFY8JBM45MEN3kqHUNz32+dsSc/abDynEznkNaB7VpXTFTMV4qVKplBs2oKdUBk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOj4wXO00kbIZc5UzY+8oqy48Y0BCv0hVEAtdBy0GUFABB45YK
+	7+QfDtf8pi7cR0nx+rtXR+VVUfeN6fW/1dFKPviaQ0PwxSRudAVH0tciqJ6QSlw=
+X-Gm-Gg: ASbGnctY6aUPX6L6uKsHC3ldqwb0Saw2v4sbPg2TuRUcEuShBWc/H8kSIEMYPNfbSEe
+	M/Yspkzt/iPJwFfWV+0XWEuAWmVUnaFj/KCpH5UQ/9USSkTuo30GnZHwUbnhtfyTKMRw1WqulWq
+	eKOM41LDNfYqnptiIL9QIQ0tgzg9nclKhPm51/iJ8d3BL1CrNRrKqDv+KoO/lRmWRDJ8ZlGrykQ
+	nd2uOrparnPWfw+qyuurKe6H1j600/khj5C/BtRhMzkmDJ44SrQ5/1PgsdPXI04zrAY7hcn7nh5
+	V4tBxfnCPwqVakW5muyHx3xYe0BTNOdJ+AmhEU+9qfx9C4FfuxdD4mxQAs08PsXBUgFC1EM=
+X-Google-Smtp-Source: AGHT+IHRg+0Zf5ZCqEHB/UKL+jMQrzL4szRlq+eqUZM1LIEU2ZEwlyiJWsv4K7Wf57PiyQ+cyZgSZg==
+X-Received: by 2002:a05:6512:4029:b0:545:aaf:13f5 with SMTP id 2adb3069b0e04-5451186f38dmr443679e87.37.1739228740990;
+        Mon, 10 Feb 2025 15:05:40 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5450d947959sm349039e87.6.2025.02.10.15.05.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 15:05:39 -0800 (PST)
+Date: Tue, 11 Feb 2025 01:05:38 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Yongbang Shi <shiyongbang@huawei.com>
+Cc: xinliang.liu@linaro.org, tiantao6@hisilicon.com, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, 
+	daniel@ffwll.ch, kong.kongxinwei@hisilicon.com, liangjian010@huawei.com, 
+	chenjianmin@huawei.com, lidongming5@huawei.com, libaihan@huawei.com, 
+	shenjian15@huawei.com, shaojijie@huawei.com, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 drm-dp 2/7] drm/hisilicon/hibmc: Add dp serdes cfg in
+ dp process
+Message-ID: <cqlf4jj5mtxig4pw7nn5wi34miisuh7veuv5i4lz2wrxafbdb7@h7glfdpl6tyf>
+References: <20250210144959.100551-1-shiyongbang@huawei.com>
+ <20250210144959.100551-3-shiyongbang@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210144959.100551-3-shiyongbang@huawei.com>
 
-On Mon, 10 Feb 2025 18:40:34 +0800
-Menglong Dong <menglong8.dong@gmail.com> wrote:
+On Mon, Feb 10, 2025 at 10:49:54PM +0800, Yongbang Shi wrote:
+> From: Baihan Li <libaihan@huawei.com>
+> 
+> Add dp serdes cfg in link training process, and related adapting
+> and modificating. We change some init values about training,
 
-> With CONFIG_CALL_PADDING enabled, there will be 16-bytes(or more) padding
-> space before all the kernel functions. And some kernel features can use
-> it, such as MITIGATION_CALL_DEPTH_TRACKING, CFI_CLANG, FINEIBT, etc.
+Imperative language, please. Use 'change', not 'we change'.
 
-Please start your change log off with why you are doing this. Then you can
-go into the details of what you are doing.
-
-Explain what and how kernel features can use this.
-
+> because we want completely to negotiation process, so we start with
+> the maximum rate and the electrical characteristic level is 0.
 > 
-> In this commit, we add supporting to store per-function metadata in the
-
-Don't ever say "In this commit" in a change long. We know this is a commit.
-The above can be written like:
-
-"Support per-function metadata storage.." Although that should be after you
-explain why this is being submitted.
-
-> function padding, and previous discussion can be found in [1]. Generally
-> speaking, we have two way to implement this feature:
-> 
-> 1. create a function metadata array, and prepend a 5-bytes insn
-> "mov %eax, 0x12345678", and store the insn to the function padding.
-> And 0x12345678 means the index of the function metadata in the array.
-> By this way, 5-bytes will be consumed in the function padding.
-> 
-> 2. prepend a 10-bytes insn "mov %rax, 0x12345678aabbccdd" and store
-> the insn to the function padding, and 0x12345678aabbccdd means the address
-> of the function metadata.
-> 
-> Compared with way 2, way 1 consume less space, but we need to do more work
-> on the global function metadata array. And in this commit, we implemented
-> the way 1.
-> 
-> In my research, MITIGATION_CALL_DEPTH_TRACKING will consume the tail
-> 9-bytes in the function padding, and FINEIBT+CFI_CLANG will consume
-> the head 7-bytes. So there will be no space for us if
-> MITIGATION_CALL_DEPTH_TRACKING and CFI_CLANG are both enabled. So I have
-> following logic:
-> 1. use the head 5-bytes if CFI_CLANG is not enabled
-> 2. use the tail 5-bytes if MITIGATION_CALL_DEPTH_TRACKING is not enabled
-> 3. compile the kernel with extra 5-bytes padding if
->    MITIGATION_CALL_DEPTH_TRACKING and CFI_CLANG are both enabled.
-> 
-> In the third case, we compile the kernel with a function padding of
-> 21-bytes, which means the real function is not 16-bytes aligned any more.
-> And in [2], I tested the performance of the kernel with different padding,
-> and it seems that extra 5-bytes don't have impact on the performance.
-> However, it's a huge change to make the kernel function unaligned in
-> 16-bytes, and I'm sure if there are any other influence. So another choice
-> is to compile the kernel with 32-bytes aligned if there is no space
-> available for us in the function padding. But this will increase the text
-> size ~5%. (And I'm not sure with method to use.)
-> 
-> The beneficiaries of this feature can be BPF and ftrace. For BPF, we can
-> implement a "dynamic trampoline" and add tracing multi-link supporting
-> base on this feature. And for ftrace, we can optimize its performance
-> base on this feature.
-> 
-> This commit is not complete, as the synchronous of func_metas is not
-> considered :/
-> 
-> Link: https://lore.kernel.org/bpf/CADxym3anLzM6cAkn_z71GDd_VeKiqqk1ts=xuiP7pr4PO6USPA@mail.gmail.com/ [1]
-> Link: https://lore.kernel.org/bpf/CADxym3af+CU5Mx8myB8UowdXSc3wJOqWyH4oyq+eXKahXBTXyg@mail.gmail.com/ [2]
-> Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+> Signed-off-by: Baihan Li <libaihan@huawei.com>
+> Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
 > ---
->  arch/x86/Kconfig          |  15 ++++
->  arch/x86/Makefile         |  17 ++--
->  include/linux/func_meta.h |  17 ++++
->  kernel/trace/Makefile     |   1 +
->  kernel/trace/func_meta.c  | 184 ++++++++++++++++++++++++++++++++++++++
->  5 files changed, 228 insertions(+), 6 deletions(-)
->  create mode 100644 include/linux/func_meta.h
->  create mode 100644 kernel/trace/func_meta.c
+> ChangeLog:
+> v1 -> v2:
+>   - splittting the patch and add more detailed the changes in the commit message, suggested by Dmitry Baryshkov.
+> ---
+>  .../gpu/drm/hisilicon/hibmc/dp/dp_config.h    |  1 +
+>  drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c    |  6 +++-
+>  drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c  | 33 ++++++++++++++++---
+>  drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h   |  1 +
+>  .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c   |  8 ++---
+>  5 files changed, 38 insertions(+), 11 deletions(-)
 > 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 6df7779ed6da..0ff3cb74cfc0 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -2510,6 +2510,21 @@ config PREFIX_SYMBOLS
->  	def_bool y
->  	depends on CALL_PADDING && !CFI_CLANG
+> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_config.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_config.h
+> index 74dd9956144e..c5feef8dc27d 100644
+> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_config.h
+> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_config.h
+> @@ -15,5 +15,6 @@
+>  #define HIBMC_DP_CLK_EN			0x7
+>  #define HIBMC_DP_SYNC_EN_MASK		0x3
+>  #define HIBMC_DP_LINK_RATE_CAL		27
+> +#define HIBMC_DP_SYNC_DELAY(lanes)	((lanes) == 0x2 ? 86 : 46)
 >  
-> +config FUNCTION_METADATA
-> +	bool "Enable function metadata support"
-> +	select CALL_PADDING
-> +	default y
-> +	help
-> +	  This feature allow us to set metadata for kernel functions, and
-
-Who's "us"?
-
-> +	  get the metadata of the function by its address without any
-> +	  costing.
-> +
-> +	  The index of the metadata will be stored in the function padding,
-> +	  which will consume 5-bytes. The spare space of the padding
-> +	  is enough for us with CALL_PADDING and FUNCTION_ALIGNMENT_16B if
-> +	  CALL_THUNKS or CFI_CLANG not enabled. Or, we need extra 5-bytes
-> +	  in the function padding, which will increases text ~1%.
-> +
->  menuconfig CPU_MITIGATIONS
->  	bool "Mitigations for CPU vulnerabilities"
->  	default y
-> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-> index 5b773b34768d..05689c9a8942 100644
-> --- a/arch/x86/Makefile
-> +++ b/arch/x86/Makefile
-> @@ -240,13 +240,18 @@ ifdef CONFIG_MITIGATION_SLS
->  endif
+>  #endif
+> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
+> index 39fd3687efca..ee1ff205ff56 100644
+> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
+> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
+> @@ -3,6 +3,7 @@
 >  
->  ifdef CONFIG_CALL_PADDING
-> -PADDING_CFLAGS := -fpatchable-function-entry=$(CONFIG_FUNCTION_PADDING_BYTES),$(CONFIG_FUNCTION_PADDING_BYTES)
-> -KBUILD_CFLAGS += $(PADDING_CFLAGS)
-> -export PADDING_CFLAGS
-> +  __padding_bytes := $(CONFIG_FUNCTION_PADDING_BYTES)
-> +  ifneq ($(and $(CONFIG_FUNCTION_METADATA),$(CONFIG_CALL_THUNKS),$(CONFIG_CFI_CLANG)),)
-> +    __padding_bytes := $(shell echo $(__padding_bytes) + 5 | bc)
-> +  endif
+>  #include <linux/io.h>
+>  #include <linux/delay.h>
+> +#include <drm/drm_managed.h>
+>  #include "dp_config.h"
+>  #include "dp_comm.h"
+>  #include "dp_reg.h"
+> @@ -73,6 +74,9 @@ static void hibmc_dp_set_sst(struct hibmc_dp_dev *dp, struct drm_display_mode *m
+>  				 HIBMC_DP_CFG_STREAM_HTOTAL_SIZE, htotal_size);
+>  	hibmc_dp_reg_write_field(dp, HIBMC_DP_VIDEO_HORIZONTAL_SIZE,
+>  				 HIBMC_DP_CFG_STREAM_HBLANK_SIZE, hblank_size);
+> +	hibmc_dp_reg_write_field(dp, HIBMC_DP_VIDEO_PACKET,
+> +				 HIBMC_DP_CFG_STREAM_SYNC_CALIBRATION,
+> +				 HIBMC_DP_SYNC_DELAY(dp->link.cap.lanes));
+>  }
+>  
+>  static void hibmc_dp_link_cfg(struct hibmc_dp_dev *dp, struct drm_display_mode *mode)
+> @@ -170,7 +174,7 @@ int hibmc_dp_hw_init(struct hibmc_dp *dp)
+>  		return -EAGAIN;
+>  
+>  	dp_dev->link.cap.lanes = 0x2;
+> -	dp_dev->link.cap.link_rate = DP_LINK_BW_2_7;
+> +	dp_dev->link.cap.link_rate = DP_LINK_BW_8_1;
+>  
+>  	/* hdcp data */
+>  	writel(HIBMC_DP_HDCP, dp_dev->base + HIBMC_DP_HDCP_CFG);
+> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
+> index f6355c16cc0a..43a4b656493f 100644
+> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
+> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
+> @@ -6,6 +6,7 @@
+>  #include <drm/drm_print.h>
+>  #include "dp_comm.h"
+>  #include "dp_reg.h"
+> +#include "dp_serdes.h"
+>  
+>  #define HIBMC_EQ_MAX_RETRY 5
+>  
+> @@ -108,7 +109,11 @@ static int hibmc_dp_link_training_cr_pre(struct hibmc_dp_dev *dp)
+>  		return ret;
+>  
+>  	for (i = 0; i < dp->link.cap.lanes; i++)
+> -		train_set[i] = DP_TRAIN_VOLTAGE_SWING_LEVEL_2;
+> +		train_set[i] = DP_TRAIN_VOLTAGE_SWING_LEVEL_0;
 > +
-> +  PADDING_CFLAGS := -fpatchable-function-entry=$(__padding_bytes),$(__padding_bytes)
-> +  KBUILD_CFLAGS += $(PADDING_CFLAGS)
-> +  export PADDING_CFLAGS
+> +	ret = hibmc_dp_serdes_set_tx_cfg(dp, dp->link.train_set);
+> +	if (ret)
+> +		return ret;
+>  
+>  	ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_LANE0_SET, train_set, dp->link.cap.lanes);
+>  	if (ret != dp->link.cap.lanes) {
+> @@ -137,21 +142,28 @@ static bool hibmc_dp_link_get_adjust_train(struct hibmc_dp_dev *dp,
+>  	return false;
+>  }
+>  
+> -static inline int hibmc_dp_link_reduce_rate(struct hibmc_dp_dev *dp)
+> +static int hibmc_dp_link_reduce_rate(struct hibmc_dp_dev *dp)
+>  {
+> +	u8 rate = 0;
+> +
+>  	switch (dp->link.cap.link_rate) {
+>  	case DP_LINK_BW_2_7:
+>  		dp->link.cap.link_rate = DP_LINK_BW_1_62;
+> -		return 0;
+> +		rate = DP_SERDES_BW_1_62;
+> +		break;
+>  	case DP_LINK_BW_5_4:
+>  		dp->link.cap.link_rate = DP_LINK_BW_2_7;
+> -		return 0;
+> +		rate = DP_SERDES_BW_2_7;
+> +		break;
+>  	case DP_LINK_BW_8_1:
+>  		dp->link.cap.link_rate = DP_LINK_BW_5_4;
+> -		return 0;
+> +		rate = DP_SERDES_BW_5_4;
+> +		break;
+>  	default:
+>  		return -EINVAL;
+>  	}
+> +
+> +	return hibmc_dp_serdes_rate_switch(rate, dp);
 
-Arm64 and other archs add meta data before the functions too. Can we have
-an effort to perhaps share these methods?
+This looks like:
+
+if (dp->link.cap.link_rate == DP_LINK_BW_1_62)
+    return -EINVAL;
+
+dp->link.cap.link_rate++;
+return hibmc_dp_serdes_rate_switch(rate, dp);
+
+>  }
+>  
+>  static inline int hibmc_dp_link_reduce_lane(struct hibmc_dp_dev *dp)
+> @@ -159,6 +171,7 @@ static inline int hibmc_dp_link_reduce_lane(struct hibmc_dp_dev *dp)
+>  	switch (dp->link.cap.lanes) {
+>  	case 0x2:
+>  		dp->link.cap.lanes--;
+> +		drm_warn(dp->dev, "dp link training reduce to 1 lane\n");
+
+drm_dbg
+
+>  		break;
+>  	case 0x1:
+>  		drm_err(dp->dev, "dp link training reduce lane failed, already reach minimum\n");
+> @@ -206,6 +219,11 @@ static int hibmc_dp_link_training_cr(struct hibmc_dp_dev *dp)
+>  		}
+>  
+>  		level_changed = hibmc_dp_link_get_adjust_train(dp, lane_status);
+> +
+> +		ret = hibmc_dp_serdes_set_tx_cfg(dp, dp->link.train_set);
+> +		if (ret)
+> +			return ret;
+> +
+>  		ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_LANE0_SET, dp->link.train_set,
+>  					dp->link.cap.lanes);
+>  		if (ret != dp->link.cap.lanes) {
+> @@ -255,6 +273,11 @@ static int hibmc_dp_link_training_channel_eq(struct hibmc_dp_dev *dp)
+>  		}
+>  
+>  		hibmc_dp_link_get_adjust_train(dp, lane_status);
+> +
+> +		ret = hibmc_dp_serdes_set_tx_cfg(dp, dp->link.train_set);
+> +		if (ret)
+> +			return ret;
+> +
+>  		ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_LANE0_SET,
+>  					dp->link.train_set, dp->link.cap.lanes);
+>  		if (ret != dp->link.cap.lanes) {
+> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
+> index 4a515c726d52..f2fa9807d8ab 100644
+> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
+> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
+> @@ -72,5 +72,6 @@
+>  #define HIBMC_DP_CFG_STREAM_TU_SYMBOL_FRAC_SIZE	GENMASK(9, 6)
+>  #define HIBMC_DP_CFG_STREAM_HTOTAL_SIZE		GENMASK(31, 16)
+>  #define HIBMC_DP_CFG_STREAM_HBLANK_SIZE		GENMASK(15, 0)
+> +#define HIBMC_DP_CFG_STREAM_SYNC_CALIBRATION	GENMASK(31, 20)
+
+Please consider restructuring the header so that it becomes more
+obvious, which register are these masks for.
 
 >  
-> -PADDING_RUSTFLAGS := -Zpatchable-function-entry=$(CONFIG_FUNCTION_PADDING_BYTES),$(CONFIG_FUNCTION_PADDING_BYTES)
-> -KBUILD_RUSTFLAGS += $(PADDING_RUSTFLAGS)
-> -export PADDING_RUSTFLAGS
-> +  PADDING_RUSTFLAGS := -Zpatchable-function-entry=$(__padding_bytes),$(__padding_bytes)
-> +  KBUILD_RUSTFLAGS += $(PADDING_RUSTFLAGS)
-> +  export PADDING_RUSTFLAGS
->  endif
+>  #endif
+> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> index e6de6d5edf6b..bade693d9730 100644
+> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> @@ -28,9 +28,7 @@
+>  #include "hibmc_drm_drv.h"
+>  #include "hibmc_drm_regs.h"
 >  
->  KBUILD_LDFLAGS += -m elf_$(UTS_MACHINE)
-> diff --git a/include/linux/func_meta.h b/include/linux/func_meta.h
-> new file mode 100644
-> index 000000000000..840cbd858c47
-> --- /dev/null
-> +++ b/include/linux/func_meta.h
+> -#define HIBMC_DP_HOST_SERDES_CTRL		0x1f001c
+> -#define HIBMC_DP_HOST_SERDES_CTRL_VAL		0x8a00
+> -#define HIBMC_DP_HOST_SERDES_CTRL_MASK		0x7ffff
+> +#define HIBMC_DP_HOST_SERDES_CTRL	0x1f001c
 
-If this is x86 only, why is this in generic code?
+Unnecessary whitespace change.
 
-> @@ -0,0 +1,17 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _LINUX_FUNC_META_H
-> +#define _LINUX_FUNC_META_H
-> +
-> +#include <linux/kernel.h>
-> +
-> +struct func_meta {
-> +	int users;
-> +	void *func;
-> +};
-> +
-> +extern struct func_meta *func_metas;
-> +
-> +struct func_meta *func_meta_get(void *ip);
-> +void func_meta_put(void *ip, struct func_meta *meta);
-> +
-> +#endif
-> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-> index 057cd975d014..4042c168dcfc 100644
-> --- a/kernel/trace/Makefile
-> +++ b/kernel/trace/Makefile
+Why HIBMC_DP_HOST_SERDES_CTRL is not in the dp_reg.h?
 
-Same here.
-
-> @@ -106,6 +106,7 @@ obj-$(CONFIG_FTRACE_RECORD_RECURSION) += trace_recursion_record.o
->  obj-$(CONFIG_FPROBE) += fprobe.o
->  obj-$(CONFIG_RETHOOK) += rethook.o
->  obj-$(CONFIG_FPROBE_EVENTS) += trace_fprobe.o
-> +obj-$(CONFIG_FUNCTION_METADATA) += func_meta.o
 >  
->  obj-$(CONFIG_TRACEPOINT_BENCHMARK) += trace_benchmark.o
->  obj-$(CONFIG_RV) += rv/
-> diff --git a/kernel/trace/func_meta.c b/kernel/trace/func_meta.c
-> new file mode 100644
-> index 000000000000..9ce77da81e71
-> --- /dev/null
-> +++ b/kernel/trace/func_meta.c
+>  DEFINE_DRM_GEM_FOPS(hibmc_fops);
+>  
+> @@ -122,8 +120,8 @@ static int hibmc_kms_init(struct hibmc_drm_private *priv)
+>  	}
+>  
+>  	/* if DP existed, init DP */
+> -	if ((readl(priv->mmio + HIBMC_DP_HOST_SERDES_CTRL) &
+> -	     HIBMC_DP_HOST_SERDES_CTRL_MASK) == HIBMC_DP_HOST_SERDES_CTRL_VAL) {
+> +	ret = readl(priv->mmio + HIBMC_DP_HOST_SERDES_CTRL);
+> +	if (ret) {
+>  		ret = hibmc_dp_init(priv);
+>  		if (ret)
+>  			drm_err(dev, "failed to init dp: %d\n", ret);
+> -- 
+> 2.33.0
+> 
 
-Unless this file will support arm64 meta data and other architectures
-besides x86, then it should not be in the kernel/trace directory.
-
--- Steve
-
-
-> @@ -0,0 +1,184 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/slab.h>
-> +#include <linux/memory.h>
-> +#include <linux/func_meta.h>
-> +#include <linux/text-patching.h>
-> +
+-- 
+With best wishes
+Dmitry
