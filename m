@@ -1,90 +1,66 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57DA1E411C;
-	Mon, 10 Feb 2025 10:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5E91C5D56;
+	Mon, 10 Feb 2025 10:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739181805; cv=none; b=pZe5dlhcCFIZl0pYyPcF/Wk3XdItg8lXmfT72RRLtk5GwaSlcXgXLUdJkiO7wSSrU/ZHKylkCfIDGYpJhEs0oURPGNVKhN1RbszjXyss2i9J02aVA19aeKaaC7TP54HvA0iwSKTwYwJEfJAJvqrPK/oUHZqBtJBmmrfEh0Awp7c=
+	t=1739181873; cv=none; b=INqfh7Dj0402aCf+beIM4sWhZeDvt2F+wf8HuoKxzz9DEaRcDjt09KtD2+R86vue6eeWBYMVX+Iq0HJ8H3wga4nV7mxua+lUt1Pime+lJD3W0Zfvc3UNTsgQoA4qhUFwEG+bpNw5qS10uiJM0jZucoRH9RffCcHds2QLkiMW2nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739181805; c=relaxed/simple;
-	bh=PzxEsAIy2Y5q3RbrVB+WOxbJUD5XYZedRMncBTZPGBA=;
+	s=arc-20240116; t=1739181873; c=relaxed/simple;
+	bh=7L2ha/YngK5jMueC7mLCC2P45ZJ5Oa8CNhph4EuCsSQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jUhjPt/k/FP+uBEVHHrzPRrXqPyRwqX1IyChY0h47mHgLoiPcPua3cyIwWjO+OMr1GLZE1Q2T2xavggFkMJ8GAk55bGAX7AxKgnEZazAwCUeVHws9rs9zLYZehaW9ks25NElOe7qHA3k7HBWU/wYIgWni4u2d5ZWE5Si7Pgeeeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=K8XBpdDu; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=cXLYkBDfXWXc0wnIJVbvjJcl4EuMnQZH1EqkrBYy4kXs5/HzyxEygGExu0X0y+18Es8KIwGFyXSiruQmutpngV4+5Mgt/N2bwKnLg73yOmsZz25YUB5fgJyPeLyK9hF9hS5ZccduBfePCui5Rx+Hoo8GURcmLHhrkst7t5bO7KE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HadQvcNy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K8XBpdDu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=O0wPUHmZjIrRfM0ZgTZXmcA69jfXxoml1nbssdgLHCs=; b=K8XBpdDuiRODbexqwMX9pNYznz
-	hULWHzlk8AlRFXXw69F0usCa6fxq5n35WcWIqmBvZnvD8nnXC0pbvcTrsVkoM6Fb5tJZnV47Jt8EL
-	AIjtl0i2cK43NSQJmJC46mDcY5SjkrPcudRVuN5oYaccBKRxEnGYAf9BEQq4VnuiCBD/Io8uiwz6e
-	QCL1xbjt0O3zyEzGuInfSU6OMcPrbjEMkwl5x6Ob9WPCuw9YsjVpLIdIIEhYbheILuDu9jeqa6MoL
-	BX7P4JyGddLA1BHyBEjQTE/Cpzskv75SfF2rkb5gyHcu8fMqyew4h3vTyNn7CVBYxjy0wqpSJMfS2
-	Noyh+HEw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1thQdI-0000000FUSp-23kB;
-	Mon, 10 Feb 2025 10:03:16 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 173AA3002E5; Mon, 10 Feb 2025 11:03:16 +0100 (CET)
-Date: Mon, 10 Feb 2025 11:03:16 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ankur Arora <ankur.a.arora@oracle.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Will Deacon <will@kernel.org>, Waiman Long <llong@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Barret Rhoden <brho@google.com>, Josh Don <joshdon@google.com>,
-	Dohyun Kim <dohyunkim@google.com>,
-	linux-arm-kernel@lists.infradead.org, kernel-team@meta.com
-Subject: Re: [PATCH bpf-next v2 17/26] rqspinlock: Hardcode cond_acquire
- loops to asm-generic implementation
-Message-ID: <20250210100316.GD31462@noisy.programming.kicks-ass.net>
-References: <20250206105435.2159977-1-memxor@gmail.com>
- <20250206105435.2159977-18-memxor@gmail.com>
- <20250210095324.GG10324@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HadQvcNy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 378B1C4CED1;
+	Mon, 10 Feb 2025 10:04:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739181872;
+	bh=7L2ha/YngK5jMueC7mLCC2P45ZJ5Oa8CNhph4EuCsSQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HadQvcNyiQEIpvzP3QIYWdrOT4ClSpOay4MttGI3cYGp1ebeBhcOa0DDJKg6s8HoF
+	 jZZSB9vjhe6AsdiCODgld+unX+vNka5AtWMmdfxMPgxl7iZ8LL6LO7RjVUHMdb77yO
+	 PzdHJFtbj5Ob4p9LeZHVpFjGhYgFpuuBwYaUwit/owGKHjAImUCa9X7UE+00irIuaJ
+	 YOX5zj3qacz5vE3shms4d2Vo7dJHPv/eMNd8/wN5HZFtR8O50y9hJCvkR5sMl6f7AR
+	 eLai+TAWMGLswIpUkt7KRPy98nAhg8T4xKllMQiJOeXCaaHMn6kFy0BpxqW82zwB+w
+	 rW1sEIV4YF/VQ==
+Date: Mon, 10 Feb 2025 11:04:29 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Andy Yan <andyshrk@163.com>
+Cc: heiko@sntech.de, hjc@rock-chips.com, krzk+dt@kernel.org, 
+	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+	derek.foreman@collabora.com, detlev.casanova@collabora.com, daniel@fooishbar.org, 
+	robh@kernel.org, sebastian.reichel@collabora.com, 
+	Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v13 12/13] dt-bindings: display: vop2: Add rk3576 support
+Message-ID: <20250210-crimson-weasel-of-diversity-ece7c5@krzk-bin>
+References: <20250206064457.11396-1-andyshrk@163.com>
+ <20250206064607.11495-1-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250210095324.GG10324@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250206064607.11495-1-andyshrk@163.com>
 
-On Mon, Feb 10, 2025 at 10:53:25AM +0100, Peter Zijlstra wrote:
-> On Thu, Feb 06, 2025 at 02:54:25AM -0800, Kumar Kartikeya Dwivedi wrote:
-> > Currently, for rqspinlock usage, the implementation of
-> > smp_cond_load_acquire (and thus, atomic_cond_read_acquire) are
-> > susceptible to stalls on arm64, because they do not guarantee that the
-> > conditional expression will be repeatedly invoked if the address being
-> > loaded from is not written to by other CPUs. When support for
-> > event-streams is absent (which unblocks stuck WFE-based loops every
-> > ~100us), we may end up being stuck forever.
-> > 
-> > This causes a problem for us, as we need to repeatedly invoke the
-> > RES_CHECK_TIMEOUT in the spin loop to break out when the timeout
-> > expires.
-> > 
-> > Hardcode the implementation to the asm-generic version in rqspinlock.c
-> > until support for smp_cond_load_acquire_timewait [0] lands upstream.
-> > 
+On Thu, Feb 06, 2025 at 02:46:03PM +0800, Andy Yan wrote:
+> From: Andy Yan <andy.yan@rock-chips.com>
 > 
-> *sigh*.. this patch should go *before* patch 8. As is that's still
-> horribly broken and I was WTF-ing because your 0/n changelog said you
-> fixed it.
+> Add vop found on rk3576, the main difference between rk3576 and the
+> previous vop is that each VP has its own interrupt line.
+> 
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> 
+> ---
 
-And since you're doing local copies of things, why not take a lobal copy
-of the smp_cond_load_acquire_timewait() thing?
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
+
