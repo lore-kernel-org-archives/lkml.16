@@ -1,96 +1,253 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C235244E8A;
-	Mon, 10 Feb 2025 16:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F23204850
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739203316; cv=none; b=Ik58fsKYQM8/B2LXC4MDnP0wPpqOej9Is1053SimzREkCU2r0JXimc5KwymI2hNTFPKewwxP1yr4e4PGUSVUUsqvI4zgvdS8rkZj1MwO1N7b4gtBqblra5mf5k3IfF5Jr4OTmjOUNAyuhUQxgeptloZ9LDtTldjl9WEemQcBBuo=
+	t=1739203325; cv=none; b=uXbewUpPws5NELNXZ937BcCnCvUCadBFcICN91KCAgr8F+cJEYtxdAGW1kObfCLikTi23goGKsFZgK8ywWT7r05x83QIHR9GWcU4hNiFEZ8dkTPPKxtC3XUzmyw6A+jTzxCoBvzK56u2wJlzq96WmdVAw6hQ/PW/HXANGPbeSyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739203316; c=relaxed/simple;
-	bh=KgsQFKr9kZXuSxFXBCI+ddBpGxj4Ol0vJGkM0lyg/QA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dlZPkp+YE39NCGQR3Q31wjRNtnJeFgzzLpu0tZmjMKomV7m+vKUEgYyiMl0VC8fcVIfjguO9NkXLbKJ17mo1DjGyfIQ/TtJ5uQ3KEQhuIe6w0sdG3T5qihlNu7FhG7lzPzJEB2ilhLXnRXQLoReT83J+2oWZvdby/zNxPXu8Zpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OZR77zNc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739203325; c=relaxed/simple;
+	bh=u0VAYcq/akyEWKSTt6GgPq/wArBPZN2RGKupkPBoI9U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X0PqN2mwlrAp8qMC4ri3sWkRbAntZDjNRvSssISGBYJ3Mzw+b/wqI0bmnyqhJWg3DKwWAux9PfX8oL0jnr1X2n9DtMdXUyAJ6gc6XPj54VMjHPZVt7Lg3DnAQgqxHFeaZQnmkkdOl/DNzYqYbLXS4fsYunAKurP3lV41OA1wadc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=by1l6cjA; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OZR77zNc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 220E7C4CEE5;
-	Mon, 10 Feb 2025 16:01:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739203315;
-	bh=KgsQFKr9kZXuSxFXBCI+ddBpGxj4Ol0vJGkM0lyg/QA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OZR77zNcmbEatn6Nlvm/AtrwdTa9H2zBG4fcD021/7mzvZqFiI9N54xKvCZXB/h3A
-	 ZhQfUlRsf2L47MDuw75fl6dh43LQTM1/Qnesrse+kZUK10zdX6ny6NrJyJRFDRwIsU
-	 MLAQ+vLyZPxztzLnnTAIo0XiFklB2SGKEZDfPxhdb69xEXMHXP7yiVVwckCzaqglT8
-	 PQ29juUMysxLBwo6Ob98bSQB+sBfjHvlDpePGTIyIToGDChfgVkeaPD3dmeys9E2L5
-	 PJJnoHP9/wfUHc2CImMyjRq/aMJMp0S9UoWWBoWMxA5RumEAeHOBNl2LwX7Rq9qog+
-	 OYqi0QDq1mH7w==
-Date: Mon, 10 Feb 2025 17:01:50 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] misc: pci_endpoint_test: Fix irq_type to convey
- the correct type
-Message-ID: <Z6oi7lH7hhA3uN46@ryzen>
-References: <20250210075812.3900646-1-hayashi.kunihiko@socionext.com>
- <20250210075812.3900646-4-hayashi.kunihiko@socionext.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="by1l6cjA"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-723442fd88aso1379472a34.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:02:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739203321; x=1739808121; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=V9hNY1B3hiFWbuQVz7IVTYjJtWHZaIF3fkXcrf0/HLc=;
+        b=by1l6cjAYc0fhrKXUYScnFBk65YXDFVSsHpa/Pux4dscqAJzIlo7ToU3Qx0mQRw8If
+         mALiPurZ9eMt5jGUnugbqiUYTTp2yyei/rIE3nIPJ+REpuEezQe/PsuiPls+RG4gzXLX
+         mIs/8cdPbeU7Y5bugrP9Ssxkz7XFrnAc9Qq8Raw+/LudAV11AHSxJypFKSsFCw3nh9f6
+         0uNwMWTkGbITbt2r8fuJf+JbvcseWDSQgEOqFtEycCjrXcoD6C8/UDOzNpTmf/15sLWQ
+         D1r9ltQndNdsqQUbiACkEz8nmUCOi2DR/atV6pZ5X4QsueYXa6uWqWAgt8wXuCtWNQV0
+         1uqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739203321; x=1739808121;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V9hNY1B3hiFWbuQVz7IVTYjJtWHZaIF3fkXcrf0/HLc=;
+        b=skQa3vem1wZqVh2Q6hNnr0a7NW0C16Vj/qkP0Wl4ouPGyqKro6foIDdYLDykz9gADI
+         lYKzTXLP/W1BmabLAXoCUZpn/8Frh5vY/kuMfetT/asm3xcJaV0jfPk7XWSXXs9UiZHx
+         S3XjPVoEE23t+ybGIkbMwAbKv1tfeIIy8CEwtUSMaKGe0Maz0A8j5P0ZRuPdqOadzish
+         bjpsqKDSGBjkdf87lAuo1cWnVgiHdWmNuLkYkHSWx8xXsMoPRAoxsFQMlNAV7XgdGkIg
+         sk5TT1upu9vqVk77/EiyHP2+0ywkoMX0OR9eQFnDSMGqe0WzC/+EkbJwH8JymhMr34jE
+         irRg==
+X-Forwarded-Encrypted: i=1; AJvYcCWvGO1SrBfoZTfPB1B/e7KQAKq3wB9HLG3l1+yMZQBQQ6x/sYG+KWg+jUrRi8flzFqRk1xEO2rXBiTYoOQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTKMbrZe11sQ4IGYdepBoiFRUoSRZ75nYfl3xIKCb6nZ3m3iRS
+	/QFdxE/xWbZDBZB70IGFZfV6MMuPFof3xlq1VuVsRP6s0NJAG1nNo6VWfNyX1Dk=
+X-Gm-Gg: ASbGncsuJ3iJ+nGQAK22oKVYGV3QCG+VO2hfeNOrCEgZdbj9PNyz6Fu3eSy6dSy9u1Q
+	LrvHRIqiANjtzpAu7xsXTR4ekp5hg78gn4TkvXayYsvsKyIFGhTAz4+Kh6N4h7cMv8SSse8V9BI
+	42XR6M3Ox7n71hlXss3dsO0lfkuLGIdeaVn6pX4zkThnf3nBPKHUbNm6sst+G6O8OozPGzwBDw4
+	yenSxG/JAnlmU4luCihV/pmqq+Lsv7IrD3mVHLTW3zqGclt4koej9ddM0rr1LMaxbYTvQPFGCbK
+	p+cuLUYPWxlSP1vjHt6fsdGb71+yu37CDWABTsAKFmACAkq79xEE
+X-Google-Smtp-Source: AGHT+IEmz/z79n57foTM2IiZV1RAkBRrvXZ8JCigqm1/04tEth3DdNZfHmVNCMaJppLzGcpSIjFH7A==
+X-Received: by 2002:a05:6830:6010:b0:71f:bbbd:ab60 with SMTP id 46e09a7af769-726b88cbe92mr9464407a34.26.1739203321488;
+        Mon, 10 Feb 2025 08:02:01 -0800 (PST)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b854f77c92sm1842798fac.30.2025.02.10.08.01.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 08:01:59 -0800 (PST)
+Message-ID: <8a8432e7-86b9-43dd-9aa0-75875747eedb@baylibre.com>
+Date: Mon, 10 Feb 2025 10:01:57 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210075812.3900646-4-hayashi.kunihiko@socionext.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 14/17] iio: adc: ad4695: Add support for SPI offload
+To: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, David Jander <david@protonic.nl>,
+ Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
+ <20250207-dlech-mainline-spi-engine-offload-2-v8-14-e48a489be48c@baylibre.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250207-dlech-mainline-spi-engine-offload-2-v8-14-e48a489be48c@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 10, 2025 at 04:58:10PM +0900, Kunihiko Hayashi wrote:
-> There are two variables that indicate the interrupt type to be used
-> in the next test execution, "irq_type" as global and test->irq_type.
+On 2/7/25 2:09 PM, David Lechner wrote:
+> Add support for SPI offload to the ad4695 driver. SPI offload allows
+> sampling data at the max sample rate (500kSPS or 1MSPS).
 > 
-> The global is referenced from pci_endpoint_test_get_irq() to preserve
-> the current type for ioctl(PCITEST_GET_IRQTYPE).
+> This is developed and tested against the ADI example FPGA design for
+> this family of ADCs [1].
 > 
-> The type set in this function isn't reflected in the global "irq_type",
-> so ioctl(PCITEST_GET_IRQTYPE) returns the previous type.
-> As a result, the wrong type will be displayed in "pcitest" as follows:
+> [1]: http://analogdevicesinc.github.io/hdl/projects/ad469x_fmc/index.html
 > 
->     # pcitest -i 0
->     SET IRQ TYPE TO LEGACY:         OKAY
->     # pcitest -I
->     GET IRQ TYPE:           MSI
-> 
-> Fix this issue by propagating the current type to the global "irq_type".
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: b2ba9225e031 ("misc: pci_endpoint_test: Avoid using module parameter to determine irqtype")
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
 > ---
->  drivers/misc/pci_endpoint_test.c | 1 +
->  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index f13fa32ef91a..6a0972e7674f 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -829,6 +829,7 @@ static int pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
->  		return ret;
->  	}
->  
-> +	irq_type = test->irq_type;
 
-It feels a bit silly to add this line, when you remove this exact line in
-the next patch. Perhaps just drop this patch?
+...
+
+> ---
+>  drivers/iio/adc/Kconfig  |   1 +
+>  drivers/iio/adc/ad4695.c | 445 +++++++++++++++++++++++++++++++++++++++++++++--
+>  2 files changed, 429 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 995b9cacbaa964d26424346120c139858f93cdcd..ec60b64c46e187e2be18ab1f8ca9e6f4f03299f9 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -52,6 +52,7 @@ config AD4695
+>  	tristate "Analog Device AD4695 ADC Driver"
+>  	depends on SPI
+>  	select IIO_BUFFER
+> +	select IIO_BUFFER_DMAENGINE
+>  	select IIO_TRIGGERED_BUFFER
+>  	select REGMAP
+
+I missed adding
+
+	select SPI_OFFLOAD
+
+Closes: https://lore.kernel.org/oe-kbuild-all/202502090910.ganYXEeF-lkp@intel.com/
+
+>  	help
+
+...
 
 
-Kind regards,
-Niklas
+> +static int ad4695_offload_buffer_postenable(struct iio_dev *indio_dev)
+> +{
+> +	struct ad4695_state *st = iio_priv(indio_dev);
+> +	struct spi_offload_trigger_config config = {
+> +		.type = SPI_OFFLOAD_TRIGGER_DATA_READY,
+> +	};
+> +	struct spi_transfer *xfer = &st->buf_read_xfer[0];
+> +	struct pwm_state state;
+> +	u8 temp_chan_bit = st->chip_info->num_voltage_inputs;
+> +	u8 num_slots = 0;
+> +	u8 temp_en = 0;
+> +	unsigned int bit;
+> +	int ret;
+> +
+> +	iio_for_each_active_channel(indio_dev, bit) {
+> +		if (bit == temp_chan_bit) {
+> +			temp_en = 1;
+> +			continue;
+> +		}
+> +
+> +		ret = regmap_write(st->regmap, AD4695_REG_AS_SLOT(num_slots),
+> +				   FIELD_PREP(AD4695_REG_AS_SLOT_INX, bit));
+> +		if (ret)
+> +			return ret;
+> +
+> +		num_slots++;
+> +	}
+> +
+> +	/*
+> +	 * For non-offload, we could discard data to work around this
+> +	 * restriction, but with offload, that is not possible.
+> +	 */
+> +	if (num_slots < 2) {
+> +		dev_err(&st->spi->dev,
+> +			"At least two voltage channels must be enabled.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = regmap_update_bits(st->regmap, AD4695_REG_TEMP_CTRL,
+> +				 AD4695_REG_TEMP_CTRL_TEMP_EN,
+> +				 FIELD_PREP(AD4695_REG_TEMP_CTRL_TEMP_EN,
+> +					    temp_en));
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Each BUSY event means just one sample for one channel is ready. */
+> +	memset(xfer, 0, sizeof(*xfer));
+> +	xfer->offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
+> +	/* Using 19 bits per word to allow for possible oversampling */
+> +	xfer->bits_per_word = 19;
+> +	xfer->len = 4;
+> +
+> +	spi_message_init_with_transfers(&st->buf_read_msg, xfer, 1);
+> +	st->buf_read_msg.offload = st->offload;
+> +
+> +	ret = spi_optimize_message(st->spi, &st->buf_read_msg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * NB: technically, this is part the SPI offload trigger enable, but it
+> +	 * doesn't work to call it from the offload trigger enable callback
+> +	 * because it requires accessing the SPI bus. Calling it from the
+> +	 * trigger enable callback could cause a deadlock.
+> +	 */
+> +	ret = regmap_set_bits(st->regmap, AD4695_REG_GP_MODE,
+> +			      AD4695_REG_GP_MODE_BUSY_GP_EN);
+> +	if (ret)
+> +		goto err_unoptimize_message;
+> +
+> +	ret = spi_offload_trigger_enable(st->offload, st->offload_trigger,
+> +					 &config);
+> +	if (ret)
+> +		goto err_disable_busy_output;
+> +
+> +	ret = ad4695_enter_advanced_sequencer_mode(st, num_slots);
+> +	if (ret)
+> +		goto err_offload_trigger_disable;
+> +
+> +	guard(mutex)(&st->cnv_pwm_lock);
+
+Apparently clang doesn't like this guard() after goto, so I'll have to figure
+out what to do about that. Probably need to add a helper function to avoid
+goto below from jumping out of scoped_guard().
+
+https://lore.kernel.org/oe-kbuild-all/202502090806.KxEvxCZC-lkp@intel.com/
+
+> +	pwm_get_state(st->cnv_pwm, &state);
+> +	/*
+> +	 * PWM subsystem generally rounds down, so requesting 2x minimum high
+> +	 * time ensures that we meet the minimum high time in any case.
+> +	 */
+> +	state.duty_cycle = AD4695_T_CNVH_NS * 2;
+> +	ret = pwm_apply_might_sleep(st->cnv_pwm, &state);
+> +	if (ret)
+> +		goto err_offload_exit_conversion_mode;
+> +
+> +	return 0;
+> +
+> +err_offload_exit_conversion_mode:
+> +	/*
+> +	 * We have to unwind in a different order to avoid triggering offload.
+> +	 * ad4695_exit_conversion_mode() triggers a conversion, so it has to be
+> +	 * done after spi_offload_trigger_disable().
+> +	 */
+> +	spi_offload_trigger_disable(st->offload, st->offload_trigger);
+> +	ad4695_exit_conversion_mode(st);
+> +	goto err_disable_busy_output;
+> +
+> +err_offload_trigger_disable:
+> +	spi_offload_trigger_disable(st->offload, st->offload_trigger);
+> +
+> +err_disable_busy_output:
+> +	regmap_clear_bits(st->regmap, AD4695_REG_GP_MODE,
+> +			  AD4695_REG_GP_MODE_BUSY_GP_EN);
+> +
+> +err_unoptimize_message:
+> +	spi_unoptimize_message(&st->buf_read_msg);
+> +
+> +	return ret;
+> +}
