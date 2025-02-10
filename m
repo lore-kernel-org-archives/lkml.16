@@ -1,138 +1,172 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBB38F58;
-	Mon, 10 Feb 2025 05:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF022F2E;
+	Mon, 10 Feb 2025 05:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739166249; cv=none; b=fI//uQ0MJ3npOyRCJUAJgovcbcUpe0/poJNTTFCptmnxSXEC+aQcelavcPXLPNhSlU+fpO2XWT1SLsll7qTl8+Ztt56psUIReA+gVlKBjD3bf5ZWXCYVOuHSrI2bclDOQK6edl066l7TKjNRP2lBZC9lW8I9C55eGiMM6t81Rkk=
+	t=1739166508; cv=none; b=sDZSW9G9Ca5X9v4A8eJY5h0wm+NfRhOr9PKzvWwvlF0QB4LHmGdSc0F6EeQHy7zF86p5pAHo/jE3QtW7zTe/2z21Lz6sdiq29lFvne66ZjqYkeG8nzLdEOzy3Cg9+Sio2yVCwoN3kJqVWsi3HAz4d5Co00Cy0MMRe3h+f28Z//c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739166249; c=relaxed/simple;
-	bh=QsKlo5lRihncyD4jf3O/19ocwBlCJAhbEv+gr4CqoAs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CYj5tJp3nP8Cq2o1j/LgmYw9SIQDr+/NBaiYgzqK/dcJRRnCdD+cNdAmWYMDMWM2TZcc87HvHlhJjk8cW8+jdtosWHIqJ1QvQnH7d8J009UKDH2STQdOrIqR9TFtcXTHS6RdFumbk8eX8PcGBXK3BVAC06KH2rZ9qeL0E+CV0iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fR5V6ay0; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1739166508; c=relaxed/simple;
+	bh=+NAxRQC5smRZ5HsmXOpBI0/Ve2ax8F4QGZ7SNEUkpNM=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=FyAFU2sN6sK/iyYVj/uPN/oTBoHYl6i/pxNkvtTI4WmyXDw0C7WQDfwqwvdtx/N6YWUw1P/qGeGm1F8CDMpmHZqjmWZDKW85omGG+9MHTTsRpbdb+uCHJoPON5dMduU3qj9HOudw6WHJfckoISrZeBFOzpqOktL7ZuAB2y52LMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=dZzqJ7Qc; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fR5V6ay0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=25tCAJSvng3HpkeQlkOkZCZn9tqQLSrQ/1A3tOLGXtI=; b=fR5V6ay01P+rV/ADPEZA0yhSRU
-	1L/dV+ttTTfxUOMsfLhGx1z2UsQGEP6VNtvWmaRP2BwBToAB5e2Z5iOzi6B7RZEaRfxy++bxfrMZE
-	Qq9Q3MxkujOU05ZXoTuCd8cbsY+6pE/nl8+MicJue/diuTbK2xV3N1x9PBxaHByUGOwYdELXdnl/c
-	TQB/ksuLm1BNz2FXQZj6xtJtslaYWgqHtLACbWwXpYZQcHH4ER7362afSzmSF856IiDDkxpkwKGqW
-	cSYleficNzmdK/LuEtBRBQqV9N9dqaZR68Lwn5CxE+I+Ub7S9JLdpuRycj3RGmOqiJLK8E1D8I5ag
-	r3G/nLfg==;
-Received: from [50.53.2.24] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1thMaR-0000000EkQx-2hot;
-	Mon, 10 Feb 2025 05:44:03 +0000
-Message-ID: <710360ce-fe10-481c-9db8-917d3cf73b51@infradead.org>
-Date: Sun, 9 Feb 2025 21:43:59 -0800
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="dZzqJ7Qc"
+Received: from [127.0.0.1] (254C220D.nat.pool.telekom.hu [37.76.34.13])
+	by mail.mainlining.org (Postfix) with ESMTPSA id 83E49E4533;
+	Mon, 10 Feb 2025 05:48:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1739166504;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bwdoMmgPxPuwsmi4DTSKg54itX3LuYY47U5m5IBWkVQ=;
+	b=dZzqJ7Qc1i19o14nPMXRoCPBKMmBsnCzUVvxlm8fPvS99E2oX2o53PF/1MPyx+1nrjbRea
+	taI9xEel0OoM57zVdxmhpb00g1ty8nNpVYE+fbTYm7iXAuzBYQYsihLNgtnEcgsUJ1uP1f
+	yhBhWTqBACM49wK7vAbhYeaBibwQe3CzlXq6gLosiljz4J88CUjJbME3qx+kPK63+zD/ci
+	NI9Udny9cwzz1lW8FoDuO27CjmfBYBYK6Z4heVyIJY+ZRVUM0AINWC6QKoDUHO3jkxNgB1
+	z8xJn+HKfYunYMezBql7594CgSLJyHME3JOHrEmph8JvLbzwrLtOL4QGorRNBQ==
+Date: Mon, 10 Feb 2025 06:48:24 +0100
+From: =?ISO-8859-1?Q?Barnab=E1s_Cz=E9m=E1n?= <barnabas.czeman@mainlining.org>
+To: Felix Kaechele <felix@kaechele.ca>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+CC: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] Input: rmi_i2c: introduce reset GPIO handling
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250210050220.634497-2-felix@kaechele.ca>
+References: <20250210050220.634497-1-felix@kaechele.ca> <20250210050220.634497-2-felix@kaechele.ca>
+Message-ID: <8A6D08BB-B830-4275-B61B-15D367415D59@mainlining.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Documentation: proofreading Documentation
-To: Armin <armin.mahdilou@gmail.com>, corbet@lwn.net
-Cc: shuah@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250210041800.357393-1-Armin.Mahdilou@gmail.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250210041800.357393-1-Armin.Mahdilou@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
 
-On 2/9/25 8:17 PM, Armin wrote:
-> Fixed some spelling issues in documentations.
-> 
-> Signed-off-by: Armin <Armin.Mahdilou@gmail.com>
+On February 10, 2025 6:02:09 AM GMT+01:00, Felix Kaechele <felix@kaechele=
+=2Eca> wrote:
+>Implement reset GPIO handling logic for the rmi_i2c driver=2E This logic
+>is required for some mobile devices to successfully initialize the touch
+>controller=2E
+>
+>The timings for the assertion of the reset GPIO were derived from the
+>GPLv2+ licensed synaptics-dsx-v2=2E1 vendor driver release and research I
+>conducted into downstream device tree sources=2E Values of 10ms to 20ms
+>are commonly found=2E
+>
+>Tested-On: Motorola Moto G5 Plus (XT1685 "potter")
+>
+>Signed-off-by: Felix Kaechele <felix@kaechele=2Eca>
+>---
+> drivers/input/rmi4/rmi_driver=2Ec |  1 -
+> drivers/input/rmi4/rmi_driver=2Eh |  2 ++
+> drivers/input/rmi4/rmi_i2c=2Ec    | 23 +++++++++++++++++++++++
+> 3 files changed, 25 insertions(+), 1 deletion(-)
 
-Looks good. Thanks.
+Tested-by: Barnab=C3=A1s Cz=C3=A9m=C3=A1n <barnabas=2Eczeman@mainlining=2E=
+org>
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-
-> ---
->  Documentation/ABI/testing/configfs-usb-gadget-midi2 | 2 +-
->  Documentation/input/devices/elantech.rst            | 2 +-
->  Documentation/nvme/nvme-pci-endpoint-target.rst     | 2 +-
->  Documentation/sound/soc/machine.rst                 | 2 +-
->  Documentation/usb/gadget-testing.rst                | 2 +-
->  5 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/configfs-usb-gadget-midi2 b/Documentation/ABI/testing/configfs-usb-gadget-midi2
-> index 0eac3aaba137..d76a52e2ca7f 100644
-> --- a/Documentation/ABI/testing/configfs-usb-gadget-midi2
-> +++ b/Documentation/ABI/testing/configfs-usb-gadget-midi2
-> @@ -47,7 +47,7 @@ Description:
->  		midi1_first_group	The first UMP Group number for MIDI 1.0 (0-15)
->  		midi1_num_groups	The number of groups for MIDI 1.0 (0-16)
->  		ui_hint			0: unknown, 1: receiver, 2: sender, 3: both
-> -		midi_ci_verison		Supported MIDI-CI version number (8 bit)
-> +		midi_ci_version		Supported MIDI-CI version number (8 bit)
->  		is_midi1		Legacy MIDI 1.0 device (0, 1 or 2)
->  		sysex8_streams		Max number of SysEx8 streams (8 bit)
->  		active			Active FB flag (0 or 1)
-> diff --git a/Documentation/input/devices/elantech.rst b/Documentation/input/devices/elantech.rst
-> index c3374a7ce7af..98163a258b83 100644
-> --- a/Documentation/input/devices/elantech.rst
-> +++ b/Documentation/input/devices/elantech.rst
-> @@ -556,7 +556,7 @@ Note on debounce:
->  In case the box has unstable power supply or other electricity issues, or
->  when number of finger changes, F/W would send "debounce packet" to inform
->  driver that the hardware is in debounce status.
-> -The debouce packet has the following signature::
-> +The debounce packet has the following signature::
->  
->      byte 0: 0xc4
->      byte 1: 0xff
-> diff --git a/Documentation/nvme/nvme-pci-endpoint-target.rst b/Documentation/nvme/nvme-pci-endpoint-target.rst
-> index 66e7b7d869b4..b699595d1762 100644
-> --- a/Documentation/nvme/nvme-pci-endpoint-target.rst
-> +++ b/Documentation/nvme/nvme-pci-endpoint-target.rst
-> @@ -86,7 +86,7 @@ configurable through configfs before starting the controller. To avoid issues
->  with excessive local memory usage for executing commands, MDTS defaults to 512
->  KB and is limited to a maximum of 2 MB (arbitrary limit).
->  
-> -Mimimum number of PCI Address Mapping Windows Required
-> +Minimum number of PCI Address Mapping Windows Required
->  ------------------------------------------------------
->  
->  Most PCI endpoint controllers provide a limited number of mapping windows for
-> diff --git a/Documentation/sound/soc/machine.rst b/Documentation/sound/soc/machine.rst
-> index 9db132bc0070..1828f5edca3e 100644
-> --- a/Documentation/sound/soc/machine.rst
-> +++ b/Documentation/sound/soc/machine.rst
-> @@ -75,7 +75,7 @@ In the above struct, dai’s are registered using names but you can pass
->  either dai name or device tree node but not both. Also, names used here
->  for cpu/codec/platform dais should be globally unique.
->  
-> -Additionaly below example macro can be used to register cpu, codec and
-> +Additionally below example macro can be used to register cpu, codec and
->  platform dai::
->  
->    SND_SOC_DAILINK_DEFS(wm2200_cpu_dsp,
-> diff --git a/Documentation/usb/gadget-testing.rst b/Documentation/usb/gadget-testing.rst
-> index bf555c2270f5..1998dc146c56 100644
-> --- a/Documentation/usb/gadget-testing.rst
-> +++ b/Documentation/usb/gadget-testing.rst
-> @@ -1050,7 +1050,7 @@ Its attributes are:
->  	midi1_num_groups	The number of groups for MIDI 1.0 (0-16)
->  	ui_hint			UI-hint of this FB
->  				0: unknown, 1: receiver, 2: sender, 3: both
-> -	midi_ci_verison		Supported MIDI-CI version number (8 bit)
-> +	midi_ci_version		Supported MIDI-CI version number (8 bit)
->  	is_midi1		Legacy MIDI 1.0 device (0-2)
->  				0: MIDI 2.0 device,
->  				1: MIDI 1.0 without restriction, or
-
--- 
-~Randy
+>
+>diff --git a/drivers/input/rmi4/rmi_driver=2Ec b/drivers/input/rmi4/rmi_d=
+river=2Ec
+>index 2168b6cd7167=2E=2Eff6aed6a11c1 100644
+>--- a/drivers/input/rmi4/rmi_driver=2Ec
+>+++ b/drivers/input/rmi4/rmi_driver=2Ec
+>@@ -30,7 +30,6 @@
+> #define RMI4_PAGE_MASK 0xFF00
+>=20
+> #define RMI_DEVICE_RESET_CMD	0x01
+>-#define DEFAULT_RESET_DELAY_MS	100
+>=20
+> void rmi_free_function_list(struct rmi_device *rmi_dev)
+> {
+>diff --git a/drivers/input/rmi4/rmi_driver=2Eh b/drivers/input/rmi4/rmi_d=
+river=2Eh
+>index 3bfe9013043e=2E=2Ee01453bd680f 100644
+>--- a/drivers/input/rmi4/rmi_driver=2Eh
+>+++ b/drivers/input/rmi4/rmi_driver=2Eh
+>@@ -16,6 +16,8 @@
+> #define SYNAPTICS_INPUT_DEVICE_NAME "Synaptics RMI4 Touch Sensor"
+> #define SYNAPTICS_VENDOR_ID 0x06cb
+>=20
+>+#define DEFAULT_RESET_DELAY_MS	100
+>+
+> #define GROUP(_attrs) { \
+> 	=2Eattrs =3D _attrs,  \
+> }
+>diff --git a/drivers/input/rmi4/rmi_i2c=2Ec b/drivers/input/rmi4/rmi_i2c=
+=2Ec
+>index 3c0c5fd44702=2E=2Ebeff566ca2c8 100644
+>--- a/drivers/input/rmi4/rmi_i2c=2Ec
+>+++ b/drivers/input/rmi4/rmi_i2c=2Ec
+>@@ -4,6 +4,7 @@
+>  * Copyright (c) 2011 Unixphere
+>  */
+>=20
+>+#include <linux/gpio/consumer=2Eh>
+> #include <linux/i2c=2Eh>
+> #include <linux/rmi=2Eh>
+> #include <linux/of=2Eh>
+>@@ -26,7 +27,9 @@
+>  * @tx_buf_size: Size of the buffer
+>  *
+>  * @supplies: Array of voltage regulators
+>+ * @reset_gpio: Reference to the reset GPIO
+>  * @startup_delay: Milliseconds to pause after powering up the regulator=
+s
+>+ * @reset_delay: Milliseconds to pause after resetting the device
+>  */
+> struct rmi_i2c_xport {
+> 	struct rmi_transport_dev xport;
+>@@ -39,7 +42,9 @@ struct rmi_i2c_xport {
+> 	size_t tx_buf_size;
+>=20
+> 	struct regulator_bulk_data supplies[2];
+>+	struct gpio_desc *reset_gpio;
+> 	u32 startup_delay;
+>+	u32 reset_delay;
+> };
+>=20
+> #define RMI_PAGE_SELECT_REGISTER 0xff
+>@@ -227,6 +232,15 @@ static int rmi_i2c_probe(struct i2c_client *client)
+> 		return -ENODEV;
+> 	}
+>=20
+>+	rmi_i2c->reset_gpio =3D devm_gpiod_get_optional(&client->dev, "reset",
+>+						      GPIOD_OUT_HIGH);
+>+	if (IS_ERR(rmi_i2c->reset_gpio)) {
+>+		error =3D PTR_ERR(rmi_i2c->reset_gpio);
+>+		dev_err(&client->dev, "failed to get reset GPIO: %d\n", error);
+>+		return error;
+>+	}
+>+	gpiod_set_consumer_name(rmi_i2c->reset_gpio, "rmi4 reset");
+>+
+> 	rmi_i2c->supplies[0]=2Esupply =3D "vdd";
+> 	rmi_i2c->supplies[1]=2Esupply =3D "vio";
+> 	error =3D devm_regulator_bulk_get(&client->dev,
+>@@ -251,6 +265,15 @@ static int rmi_i2c_probe(struct i2c_client *client)
+>=20
+> 	msleep(rmi_i2c->startup_delay);
+>=20
+>+	if (rmi_i2c->reset_gpio) {
+>+		of_property_read_u32(client->dev=2Eof_node, "syna,reset-delay-ms",
+>+				     &rmi_i2c->reset_delay);
+>+		gpiod_set_value_cansleep(rmi_i2c->reset_gpio, 1);
+>+		usleep_range(10000, 20000);
+>+		gpiod_set_value_cansleep(rmi_i2c->reset_gpio, 0);
+>+		msleep(rmi_i2c->reset_delay ?: DEFAULT_RESET_DELAY_MS);
+>+	}
+>+
+> 	rmi_i2c->client =3D client;
+> 	mutex_init(&rmi_i2c->page_mutex);
+>=20
