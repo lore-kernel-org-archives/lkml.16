@@ -1,165 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D5D257AF7;
-	Mon, 10 Feb 2025 18:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E29A25E444
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739213046; cv=none; b=RXXTebJiXAwiyK5h9lNPYjWVseXDh48PG9CtRdBxou7BcrwCWHyNUSY/z3Fu7tnqaOspHMldjevqanoGdMnIgGEXvV1a63/G+nj2kZGEaf0UBEXmRjK3ueNLqbcKPPmU2xbQp84fgWitVeLd/PLfhZaOqIuValuwfcjwEnxXUWA=
+	t=1739213092; cv=none; b=BQYtTfjNlrMi8HpxRV2L3IyvT5FaV+42OG3wJSSCGYPj3rcyfH+7V8zYPWeqinPWQ83rxh6rqFkDE1QBVebMPuQN9ZzyS4UXlNlydFg0rE1CI+/psxTdz7mfe8ovJyOrMSMFfJGxXDYQZiIrQwiDuYVkQclvOAX0D8nx/AOzhPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739213046; c=relaxed/simple;
-	bh=F/oLFAsAG4O3sgYtk2OCtyqCA7pKAu0hVAyFxYmR1LI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R0cdf6vgK/KDhNSxrDsjhRXY/LgHIyUtwaJlIgrjgPmbx9RS4GOsP9JrsCWp49ImN4pHbdSv7vaKoq3mhRGDt+Cbw2qR/tECy3MJ3H8UCbMYHBCiVoy5gUBhKmd8H/HlkCjgCqU0JzmXQF+/kKAdBTrZsvi8NYNWLljc7/q+Q3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AuH9vNyp; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739213092; c=relaxed/simple;
+	bh=AGre9BQxotedvxZKBXsmgoQuTy1F4TM0uQThdsEnGrY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SWQqMXlwD4zxTJ2tfeRe4De8utW/daQkhPFpf9QqGS6WgeyC462yjMplrAx3PiV5GKu3PexAtJp0imOJ/SWoCBTdTt9x+GkIwwNRGjvM4tHnq44q7ZwKW8qZmN5/L4NKX4vv4qTd5UYW+BqlDC+QLlfOqI+81HvO1a/KGYBHwck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ad/A+YmB; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AuH9vNyp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739213044; x=1770749044;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=F/oLFAsAG4O3sgYtk2OCtyqCA7pKAu0hVAyFxYmR1LI=;
-  b=AuH9vNypspWPmFDQfFMZJshgiUeszyOAPkjsZPc+QeK2X6BpANF3wSeT
-   4Yxhg9FxGG6pDWBX+okPzp92ppahN9cYMHP02ITYPZr9WEVqdkjjX1obY
-   fIeYJq4U4F3nDCqrKFjp0mc9YoyvS8jjVvJzUR4r/HJ9JYQu2v2N+s63N
-   n38Kyii1jL5B/uq8qNIsLythEfPq59GU9Ml4d03llwT9TV3fGOg0GH9Pp
-   hOdKw94PNUdmwO8KMndH1dhqIpW0MhbbuMZlh5FeTLr/qkRu+wHxwFuiE
-   AQJuNO2W2i0k/9bHiOAbtkNWiFfO2n/RZ/sDc0Rq8U9GJeY1IgyPLPZvZ
-   w==;
-X-CSE-ConnectionGUID: Zw3wK6DgSACfTTNCIPPv2w==
-X-CSE-MsgGUID: RK3AUgDpRB++mWYQyO2phA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="50446546"
-X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
-   d="scan'208";a="50446546"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 10:44:03 -0800
-X-CSE-ConnectionGUID: 9rYFJW/PQUKsazG2Bj+83w==
-X-CSE-MsgGUID: fCjjHb5vSfyS3GeQ/UtrLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
-   d="scan'208";a="117352813"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 10 Feb 2025 10:43:59 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1thYlA-0013Ct-2b;
-	Mon, 10 Feb 2025 18:43:56 +0000
-Date: Tue, 11 Feb 2025 02:43:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Raag Jadav <raag.jadav@intel.com>, gregkh@linuxfoundation.org,
-	rafael@kernel.org, linus.walleij@linaro.org,
-	mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
-	dmitry.torokhov@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-	sre@kernel.org, jic23@kernel.org, przemyslaw.kitszel@intel.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-sound@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-iio@vger.kernel.org, Raag Jadav <raag.jadav@intel.com>
-Subject: Re: [PATCH v4 01/20] driver core: Split devres APIs to
- device/devres.h
-Message-ID: <202502110256.ZtYROQTy-lkp@intel.com>
-References: <20250210064906.2181867-2-raag.jadav@intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ad/A+YmB"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AC7GSj014061;
+	Mon, 10 Feb 2025 18:44:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=/sfZo4VnTTbgtBXOjHc1EMP0EjzaL6Vg1Lr6lCGxp
+	sk=; b=Ad/A+YmBKeK9eO3NoDqP33y46uu9mSeY9lWQYBXfO5Y1z7ZmyEm/xf7cg
+	/yXiWpDSNYBBtpRckRZDkRFrcvUh2iXEIB0sLSlVqkRDMMRaGIp0abrINLQ1veV3
+	/E8XXjlk3+u75ZLgxioe1T0qTOSQ8Dbfyb90T0ZHDyqJwxY6uVwdIQwk5+0jaZ1T
+	8bRtBpuFldXoMngcQO5nQAatmGBqDB5oVspspysgiJdCLDofU9RCKKpXSawxDyRg
+	jxWj+ZC94N/vnBWYsse8K4RNI19ZLzaIhVnqpcsS36lHiFjQ37rinqJOZeQm0jW6
+	qU8Be9RjhCQPUaCYoiNBL9hRlifDw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44q89yvenb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 18:44:23 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51AIXHXB030868;
+	Mon, 10 Feb 2025 18:44:22 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44q89yven8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 18:44:22 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51AFOCuj028217;
+	Mon, 10 Feb 2025 18:44:22 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44phyy7vkg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 18:44:22 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51AIiIIY50200834
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Feb 2025 18:44:18 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 204E720040;
+	Mon, 10 Feb 2025 18:44:18 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1BBD320043;
+	Mon, 10 Feb 2025 18:44:16 +0000 (GMT)
+Received: from li-7bb28a4c-2dab-11b2-a85c-887b5c60d769.ibm.com.com (unknown [9.39.21.225])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 10 Feb 2025 18:44:15 +0000 (GMT)
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+To: maddy@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        christophe.leroy@csgroup.eu
+Cc: sshegde@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+        bigeasy@linutronix.de, will@kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/1] powerpc: Enable dynamic preemption
+Date: Tue, 11 Feb 2025 00:13:33 +0530
+Message-ID: <20250210184334.567383-1-sshegde@linux.ibm.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210064906.2181867-2-raag.jadav@intel.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: TVaZM5MAqNqCkiNaS_iUsIIujLviuuZv
+X-Proofpoint-ORIG-GUID: LPA-Cgz7nPLnLml3cyj4btBaBdbQBwiM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_10,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 mlxlogscore=582 clxscore=1015 impostorscore=0
+ spamscore=0 bulkscore=0 suspectscore=0 adultscore=0 malwarescore=0
+ mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502100149
 
-Hi Raag,
+Now that preempt=lazy patches are merged upstream, sending out the
+patch to support dynamic preemption based on DYNAMIC_KEY.
 
-kernel test robot noticed the following build warnings:
+Once the arch supports static inline calls, it would be needed to
+evaluate to see if that gives better performance.
 
-[auto build test WARNING on a1e062ab4a1f19bb0e94093ef90ab9a74f1f7744]
+This makes the same code for arm64 and powerpc. Will be sending an RFC
+patch to move this static key into sched/core. 
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Raag-Jadav/driver-core-Split-devres-APIs-to-device-devres-h/20250210-145732
-base:   a1e062ab4a1f19bb0e94093ef90ab9a74f1f7744
-patch link:    https://lore.kernel.org/r/20250210064906.2181867-2-raag.jadav%40intel.com
-patch subject: [PATCH v4 01/20] driver core: Split devres APIs to device/devres.h
-config: powerpc-allyesconfig (https://download.01.org/0day-ci/archive/20250211/202502110256.ZtYROQTy-lkp@intel.com/config)
-compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cbf1a2591520c2491aa35339f227775f4d3adf6)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250211/202502110256.ZtYROQTy-lkp@intel.com/reproduce)
+v3->v4:
+- Use static key instead of using preempt_model_preemptible 
+  (Sebastian Andrzej Siewior and Christophe Leroy)
+- Dropped printing the preemption model, since it is addressed 
+  in a patchset from Sebastian Andrzej Siewior
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502110256.ZtYROQTy-lkp@intel.com/
+v2->v3:
+- fixed a build error reported by linux test robot by including jump
+  label header.
 
-All warnings (new ones prefixed by >>):
+v1->v2:
+- Instead of copying asm-generic preempt.h content include it in
+  arch/asm preempt.h. (Christophe Leroy)
+- Merge the patches into one patch (Christophe Leroy)
 
-   In file included from drivers/input/input.c:14:
-   In file included from include/linux/input/mt.h:11:
-   In file included from include/linux/input.h:19:
-   In file included from include/linux/device.h:31:
-   In file included from include/linux/device/devres.h:7:
-   In file included from include/linux/io.h:14:
-   In file included from arch/powerpc/include/asm/io.h:274:
->> arch/powerpc/include/asm/eeh.h:304:45: warning: declaration of 'struct iommu_group' will not be visible outside of this function [-Wvisibility]
-   struct eeh_pe *eeh_iommu_group_to_pe(struct iommu_group *group);
-                                               ^
-   1 warning generated.
---
-   In file included from drivers/input/touchscreen/mms114.c:10:
-   In file included from include/linux/i2c.h:13:
-   In file included from include/linux/acpi.h:14:
-   In file included from include/linux/device.h:31:
-   In file included from include/linux/device/devres.h:7:
-   In file included from include/linux/io.h:14:
-   In file included from arch/powerpc/include/asm/io.h:274:
->> arch/powerpc/include/asm/eeh.h:304:45: warning: declaration of 'struct iommu_group' will not be visible outside of this function [-Wvisibility]
-   struct eeh_pe *eeh_iommu_group_to_pe(struct iommu_group *group);
-                                               ^
-   drivers/input/touchscreen/mms114.c:507:15: warning: cast to smaller integer type 'enum mms_type' from 'const void *' [-Wvoid-pointer-to-enum-cast]
-           data->type = (enum mms_type)match_data;
-                        ^~~~~~~~~~~~~~~~~~~~~~~~~
-   2 warnings generated.
---
-   In file included from drivers/input/touchscreen/wdt87xx_i2c.c:12:
-   In file included from include/linux/i2c.h:13:
-   In file included from include/linux/acpi.h:14:
-   In file included from include/linux/device.h:31:
-   In file included from include/linux/device/devres.h:7:
-   In file included from include/linux/io.h:14:
-   In file included from arch/powerpc/include/asm/io.h:274:
->> arch/powerpc/include/asm/eeh.h:304:45: warning: declaration of 'struct iommu_group' will not be visible outside of this function [-Wvisibility]
-   struct eeh_pe *eeh_iommu_group_to_pe(struct iommu_group *group);
-                                               ^
-   drivers/input/touchscreen/wdt87xx_i2c.c:1156:36: warning: unused variable 'wdt87xx_acpi_id' [-Wunused-const-variable]
-   static const struct acpi_device_id wdt87xx_acpi_id[] = {
-                                      ^
-   2 warnings generated.
+v3: https://lore.kernel.org/all/20250106051919.55020-1-sshegde@linux.ibm.com/
 
+Shrikanth Hegde (1):
+  powerpc: enable dynamic preemption
 
-vim +304 arch/powerpc/include/asm/eeh.h
-
-55037d176107c3 arch/powerpc/include/asm/eeh.h Gavin Shan        2012-09-07  292  
-c44e4ccadaca58 arch/powerpc/include/asm/eeh.h Sam Bobroff       2019-08-16  293  void eeh_show_enabled(void);
-d125aedb404204 arch/powerpc/include/asm/eeh.h Oliver O'Halloran 2020-09-18  294  int __init eeh_init(struct eeh_ops *ops);
-3e938052fb7655 arch/powerpc/include/asm/eeh.h Gavin Shan        2014-09-30  295  int eeh_check_failure(const volatile void __iomem *token);
-f8f7d63fd96ead arch/powerpc/include/asm/eeh.h Gavin Shan        2012-09-07  296  int eeh_dev_check_failure(struct eeh_dev *edev);
-685a0bc00abcf1 arch/powerpc/include/asm/eeh.h Sam Bobroff       2019-08-16  297  void eeh_addr_cache_init(void);
-e86350f70a02e5 arch/powerpc/include/asm/eeh.h Oliver O'Halloran 2020-03-06  298  void eeh_probe_device(struct pci_dev *pdev);
-807a827d4e7455 arch/powerpc/include/asm/eeh.h Gavin Shan        2013-07-24  299  void eeh_remove_device(struct pci_dev *);
-188fdea69fa91d arch/powerpc/include/asm/eeh.h Sam Bobroff       2018-11-29  300  int eeh_unfreeze_pe(struct eeh_pe *pe);
-5cfb20b96f624e arch/powerpc/include/asm/eeh.h Gavin Shan        2014-09-30  301  int eeh_pe_reset_and_recover(struct eeh_pe *pe);
-212d16cdca2d0f arch/powerpc/include/asm/eeh.h Gavin Shan        2014-06-10  302  int eeh_dev_open(struct pci_dev *pdev);
-212d16cdca2d0f arch/powerpc/include/asm/eeh.h Gavin Shan        2014-06-10  303  void eeh_dev_release(struct pci_dev *pdev);
-212d16cdca2d0f arch/powerpc/include/asm/eeh.h Gavin Shan        2014-06-10 @304  struct eeh_pe *eeh_iommu_group_to_pe(struct iommu_group *group);
-212d16cdca2d0f arch/powerpc/include/asm/eeh.h Gavin Shan        2014-06-10  305  int eeh_pe_set_option(struct eeh_pe *pe, int option);
-212d16cdca2d0f arch/powerpc/include/asm/eeh.h Gavin Shan        2014-06-10  306  int eeh_pe_get_state(struct eeh_pe *pe);
-1ef52073fd25ea arch/powerpc/include/asm/eeh.h Sam Bobroff       2018-11-29  307  int eeh_pe_reset(struct eeh_pe *pe, int option, bool include_passed);
-212d16cdca2d0f arch/powerpc/include/asm/eeh.h Gavin Shan        2014-06-10  308  int eeh_pe_configure(struct eeh_pe *pe);
-ec33d36e5ab5d5 arch/powerpc/include/asm/eeh.h Gavin Shan        2015-03-26  309  int eeh_pe_inject_err(struct eeh_pe *pe, int type, int func,
-ec33d36e5ab5d5 arch/powerpc/include/asm/eeh.h Gavin Shan        2015-03-26  310  		      unsigned long addr, unsigned long mask);
-b0e2b828dfca64 arch/powerpc/include/asm/eeh.h Narayana Murty N  2024-09-09  311  int eeh_pe_inject_mmio_error(struct pci_dev *pdev);
-e2a296eeaa3444 include/asm-powerpc/eeh.h      Linas Vepstas     2005-11-03  312  
+ arch/powerpc/Kconfig               |  1 +
+ arch/powerpc/include/asm/preempt.h | 16 ++++++++++++++++
+ arch/powerpc/kernel/interrupt.c    |  6 +++++-
+ arch/powerpc/lib/vmx-helper.c      |  2 +-
+ 4 files changed, 23 insertions(+), 2 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/preempt.h
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.3
+
