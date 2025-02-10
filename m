@@ -1,233 +1,416 @@
-Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010041.outbound.protection.outlook.com [52.101.229.41])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A8CF2528F6;
-	Mon, 10 Feb 2025 14:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739198531; cv=fail; b=Lng9F54PVRNu3Fz2FR1whqTu3hkl8rAflDUbYAoF562QlL+nrUIhL4P5XwuqSIYdPsFJx2cu+i+mouYRaa2zlBdRS99nwMgcHOrvNvsdNkKSmKQfbCs6h/XrcSZLOy73GVld0FhU1m/faAmbqxqmpzK2ryrgaHtesR8DCpJGFBY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739198531; c=relaxed/simple;
-	bh=lDYxLroffYYC6NDRrlb6p2XpoejjO41aN0FN0UwsVu0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=tkRafpAyOjmYhzgJ5AGjUSuoRQk8fr80mWWANrDcO3kL7Fo5bK1oXMQf1oAnk2tfAzk7flOmD3n4XZ4HJUZvFyUZH3P+vu67eHeDI7nkuP5X2vOCTLM0xc9gyV1aLNiB7fxxRl+Z9XvPxqY6pS3FHVAVjR1xPWVBtQvM4vgCYBk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=JnkdAnPr; arc=fail smtp.client-ip=52.101.229.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE7125290A;
+	Mon, 10 Feb 2025 14:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739198649; cv=none; b=NzjycemjBmwChimD5B/irpxBQZkEZ3lnFpGkBsdZJHBB9swMcciQBNvXoW8RDupXYq8/oLgc5oVqsCHTExTFhByrgfD2EnK+ZKYaNZO2ZO5jZCREO4IL7DLFbp2UkPTBcK1QhNP1isw78CjXkDz5vlGTP+HatbPpgsg46Q+nDLY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739198649; c=relaxed/simple;
+	bh=mKztR/EOo7pcxQJIOtLoD6WsfGO+IjyNofiojLnK7fw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=icF0F1YuU8LtWdBERUpl8au/yoFV47WnYV5GDvVBP9U3pxy3wia0Rm4QOSh0GfyKdWdYo8r6v/SomidLEjLnP4uc9LQWeENJdSWu808IflUuy00PmE3lN7EghNQ5PTtxVIq6ECR/jJ1/PE/KIDkXXk/BdNfjU3+Atb0rKoPW6/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uphC45ug; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="JnkdAnPr"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=htm8UMzvTpIPWuK8AFUQMbym2nWkFjvT8BEduV1Ivv31gt9bgv3i1epoGbeFoOn6F5FOUBCYr0j3YutjKwnF2LyHTYsd01jphtXM+GiYhukX/6+nJJWjTIfYzmQK2Gq/KsoaqsCD7ChGVU7wveBQOvwkPD9mPNB6YyVmAVnkeJFc+i6Ejj4A491JjM0FG+fZ+Nb0M3mv4xGlTNzx3wJkKcj/RlEIiG6CZlEqgM1YonkUMs8ybrlVCdJ0xqVxIPrTMBKhqrvEf1R2pSig4Mlh/sL5/4O/P2weNCBgftRUvaCI7C9vwo8O7fDZ+S6escpyRrZUtZA9Id9ZjsIGhzfxPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lDYxLroffYYC6NDRrlb6p2XpoejjO41aN0FN0UwsVu0=;
- b=lz63jRs/0C3Ktklcfh6Itoh+te6Hr0jECf+kDqgcUrO2Mw+Tg36wuMvLCX0TahaHA7lbHkwvRKTVLEG25n6FUgxIC46s9mKcq7f5EiFMf64jJuctgRv1dO+HVw7UHsQWCad478Wq++LzbDseBzDve9OS7ebXStVZuBtsPu2MQAGxJVp51HfRUozQbENOsHS9E1Rcj60sr2ZXyz/iVy2UZ4UAjBXxIfPKaKI9fyMTdl9UHDKSlApjd4+1LTcuOu1U5a2azOvssvR08d4x4XzOP5OuwA8dCwWGNHj5M9lZ3XlcoU9oJ1Vrp2vFfkTcoEiLeBcjmkJ8r4/TLh/izd11rQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lDYxLroffYYC6NDRrlb6p2XpoejjO41aN0FN0UwsVu0=;
- b=JnkdAnPrqq4vCHaYwTRlvagWCKUY8EOtgygVk4i7UTJysC3PPsk48qDC/zQjZ6Pk5YcRvKkU1QX+t8zHjxx6LBhQGy0vdMkO0h3ZBhFYHh3rIDHTSvbfkmCh86TMd6MXTdvKtQNi9aXX7NOUtHq75uMjM31HkrxTZkOpwKyzEro=
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
- by TYWPR01MB10425.jpnprd01.prod.outlook.com (2603:1096:400:24d::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Mon, 10 Feb
- 2025 14:42:05 +0000
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1%4]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
- 14:42:05 +0000
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-CC: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH 02/14] dt-bindings: serial: Document sci bindings for the
- Renesas RZ/T2H (a.k.a r9a09g077) SoC
-Thread-Topic: [PATCH 02/14] dt-bindings: serial: Document sci bindings for the
- Renesas RZ/T2H (a.k.a r9a09g077) SoC
-Thread-Index:
- AQHbcm43r4oLrSpVA0ON7evH4m8LNLNAlqCAgAAAnrCAABBIAIAAAZ4wgAAEBACAAAF94A==
-Date: Mon, 10 Feb 2025 14:42:05 +0000
-Message-ID:
- <TY3PR01MB113461CABD5E18F03B7BE9B8486F22@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com>
- <20250129165122.2980-3-thierry.bultel.yh@bp.renesas.com>
- <CAMuHMdVB2W6R+xYeTUKSv_dMGruECSft-P19m6nZD61=ROngXw@mail.gmail.com>
- <TY3PR01MB11346D5D895C190EBE8C8A84B86F22@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <CAMuHMdUpaV71Svyenq=hXMk3GfjgZvHn-0APkv_LKSzyytKzag@mail.gmail.com>
- <TY3PR01MB11346D0C3FA9E451ADD3F5BB386F22@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <CAMuHMdWDd4MawW_cybPTy+3Sc6-9t1-ZF9_V+mPQHTHNnmEg2A@mail.gmail.com>
-In-Reply-To:
- <CAMuHMdWDd4MawW_cybPTy+3Sc6-9t1-ZF9_V+mPQHTHNnmEg2A@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|TYWPR01MB10425:EE_
-x-ms-office365-filtering-correlation-id: c7a1f4fd-2fe4-4673-3bf5-08dd49e116b0
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?NU40OEI1dllKcEcvN210Z2h6UFArdFdxSXQ2b3dMdS9zbldHR3RHbDlHdE83?=
- =?utf-8?B?UGJMY1A3emJQc1oyeENoT0hHVFpyVlRtZzJQRHZaQ3RUV1d5Q1RXNmhYaXJu?=
- =?utf-8?B?Si9Ob1RmNjByMzB6alRjMnFQajVFUEtpRzhDYVpPaDhuRGRxcmEzT3lzZDVo?=
- =?utf-8?B?SE1Zb3hsRGtpWkpzemN6MDBQUjZjbWpBTWZCNXpBZGVaZ1U3bE9vaEpOS0Fu?=
- =?utf-8?B?dXZCS3E4dmtyK1RLMDJQOXJSU1lKcHNwVEVqZ0NRMGtSczdMSkU1b25PMkx6?=
- =?utf-8?B?OGVSS0tzM0pDZVAxeWNUS2xzRDdBTnE3dk9GZHg4WUY5cHpzMlNFNzl6UUJm?=
- =?utf-8?B?d0dnTC9SeVFFRTZpK0FPTjh4TFVMU3A4NUVxWmljcWFneGV4ZVdUUkRNZWxJ?=
- =?utf-8?B?TExUTi83SUN3cGtiWkFSVktJcElseXg5bldSUVhxdTQ2andqOS8vajBzdXNh?=
- =?utf-8?B?NENvNS9Tb0dwVkxsVDhIbEt0UzA4T1NIQ1JGemJvaFBNNzJVTC9rRjk1VWFi?=
- =?utf-8?B?UTc4UEJqbjhlcm8vVFZ1SjI1ZjVpMk1TNGJhQ1RyNXFZelVrazNOM1M5YWhx?=
- =?utf-8?B?RGdZWk1xRlhRWHJiVzZaMlpLRlhFcXdEbXB2RTRHYVNHQm5FTnlza3VMamFp?=
- =?utf-8?B?c08xc1ZpVzNxVTJDUWgyV3hXTk8xZWhxeFYwb0ZVT1hqdmRyU3k1bndHdmNi?=
- =?utf-8?B?aTVVZ3N2NDNiajNIcStmTlpKYUNnR2tLRGF3SGVtY25WWmd2RFNnMldueHVI?=
- =?utf-8?B?Y3kxMWhVWC81dXloOE1pMHhYcFo0WlR3a2NiT3hxQ3hHa3RaLzdMaEJXK1ho?=
- =?utf-8?B?N2NQdS9LK0x2djJmc29JRTNVdGdHMkFGU2pIdkp1dzNwTjFUcmZFTENmZDlO?=
- =?utf-8?B?d2h2TE1kRTVGY0VBME1BNkM4QTZoZFVXTU1Nd2MvTTA2ZE9IOXkwakh1bVhT?=
- =?utf-8?B?bVFrajBxOTB1ZmxsclNqeEJDWkxJSUxrcVJlUzhSalROUWYvd3ZCdmdlQnVR?=
- =?utf-8?B?eXE2a0lWRm15ZDJRV1VscmxMMFd2Rk0zY09BS1JMY2J6L2ZiMVZvYjk3TTJ5?=
- =?utf-8?B?SnhQa2NneTUwUG5pcEk1enNONnYvRGtiR0ZJeERtRkZlUmcwV3hCaUM4Wkpv?=
- =?utf-8?B?VmRML0lWcXFLRnlON1pmWDhaMU9hY1d0V3RuV25RVnUzczZidnB4aWJmVEln?=
- =?utf-8?B?cHhES29aa3NrcGlnN3lMdksxZkVFWGorLzdkVFVtTlNuZTNrRW1iYVZydEl6?=
- =?utf-8?B?Nk56REt5VWdaeUlJRHZpU0E4YTg3MWcwS0FQWk01MWlqb2lReGxxKzNETklm?=
- =?utf-8?B?dEd3UmhVbTJ0bUlEb3VkUlJqc1Fwc1dEdVVWTDVRU3lXbHN1aHVBWmZCVkt2?=
- =?utf-8?B?dUp2ek9OTlZvcFQ1cDZKOFcyL3VWV3QwSlhoRFU4aGpuZ1o0VzljUXN0Rkc2?=
- =?utf-8?B?dDZ4N3ZFTlZmSjRNSE1lcnhOaWc3YTUwemFGWkJmZ21jM3MxNDFFV2hIVm5m?=
- =?utf-8?B?SHRBcHFUczRYdi85YVFFY1ZoUHVndUlHVUdHaVI3MU9hUVQvTnpPdEhweHE3?=
- =?utf-8?B?RG91VWN0a1NQeHozazFRN0NLVkFJOE5maW43RW9LUk9Ma3ZUWmxEWFVHQWpE?=
- =?utf-8?B?OEtzK1lFckdPTER2WmdLVEdRZHdUaEFqZmJkQTRXYi81ZUhJRlE5dlltQzRN?=
- =?utf-8?B?VVR3NWRoc1JFLzVsc0swVWlTZWpSQjRaS2tCampqbytRRklqNFZGT2hWbUpl?=
- =?utf-8?B?V0RSUER6Sk92MHRtekh2a1JKa003Y1RPNUtMWml3UmxjM0psNlo1bFJ4VUYv?=
- =?utf-8?B?aHZ3S01CU2o4WGlROFg5L1Z2dmU3WnZxNTMzakY2K2UzY04xY2ZWSStaMnF2?=
- =?utf-8?Q?cYj41rUd/oK+7?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?N2MwZ1NmVU9sRW9DNUVJaWFVZ0NhUlYvODZOUFdHMnpaemdBL2tiUFlRcHc3?=
- =?utf-8?B?ajlBNEJyUDF0MlVMSk9pODlsbmdKZktETFR6cFdkQXpJVGtidG1YTDJHdTAy?=
- =?utf-8?B?T05icUcvTFNnQTZiVER1YVl6UWszRHdOb0dhODBVMXVPdThEeTBPRDJMSGNS?=
- =?utf-8?B?TzREeXI3dWY4V3B1OWcyZFQyMjNVOG5UWHBZbUhITlBMMFlmVlBmdEpRTXYr?=
- =?utf-8?B?aHo3NFUrb21uRnFETU95VElyejA4Z0ZIMGtaQkRKQmVOTWh4VnpNd2lmbHRT?=
- =?utf-8?B?Zk5pN3JGYUdqUlVpUWVBR1BnVVk0Q085OStXaENCazlJSmtZdVBwYVlybU1k?=
- =?utf-8?B?QWNIVTRYNGhmVnNpd0V1UytWL1NMNC9DWlRlcytMa0tpSUhZb0dsNDE4enBZ?=
- =?utf-8?B?ZTQrTUhoR2dBVlRndkdIcnk2WnRJRW5sSnBKU3pKeWtMeFNJc2NuNDhUb3Fh?=
- =?utf-8?B?VWVYcXdTSXdkOUtOcnk3d1pDZzlCS0Q4MURKVXZ3dlFjWVpYZmFjem14dEd4?=
- =?utf-8?B?Ti8vV0d1ZFVWdDF4TGF3VGRCdnU1SHpuNVFxRDFpU0pUMkx0L0JvT29HYTA1?=
- =?utf-8?B?d01xdG9LdWI2c3AvU1ByY1BsQ21DeWo2aGdHaGp1S2ZlVUVCemhPRzZVTElJ?=
- =?utf-8?B?aGZvbHpBNXF4aFNVNHVDb05MNFVNRjZyZWtZekQ2d3FBUk0yVmlwQjM3TVVu?=
- =?utf-8?B?cmpWSzNnTFhJTEk0WjZNcDNBRm5ZbWppY1d5WVFydEYzdWp0T3hDemdBZDZo?=
- =?utf-8?B?R1B2Z0c3NFNSaUEzYk5IbityMVllUjZKMy9FZ29PU2M5dzQ2ZFVuRmJXMGd6?=
- =?utf-8?B?U3Job2pacS81OXhuZTd3TGpIQjB5R0pMK0hiREI3NnNHWlBMUEJ4L0c1N0lp?=
- =?utf-8?B?YmdPZ014cUZCMnZJVzR4NXpQdldLNTE2aWVYTjFkQmZaTlRsTFJQTnJXSjly?=
- =?utf-8?B?UW9WSWdHSGp6ZC9EajBnRUlrRzhZdFFUa2xNSVNCWEJWaHhlcFNoOUtqb2Ft?=
- =?utf-8?B?aFFuVUpPcTRITUx5RWdRYkNKVzdlcHB4anFDTDRrdks0NUJ5aWh4dS9xWk1Q?=
- =?utf-8?B?VHdkRWhEUDR4a2RjZWNPdUxaMXo5U0hLTE1SOFZlRGR4N0g2SmVyNStIOVcv?=
- =?utf-8?B?aVpzZnNzMHZ3MURvRHVCSEZoeml0YUE1TWtvWG5sZEFaZ3NJeFRLQTJhb2lp?=
- =?utf-8?B?eEQ3NWoxd1VyZDFBK0o4clpSRll4UjQ0bVh0S09oYVNjV2Nva2hYYWoxbEFZ?=
- =?utf-8?B?dThXVVduTzc4QmlJU2kyVk5DL0dBZFJ3RFgrQVg1c0d5L3lkTXdzMEJzZFNX?=
- =?utf-8?B?SmlWK3loSGgxZFIzSzB1bUc0bDFXTVFqTElCVlV3aHpMdHpjbDBFenErSFEw?=
- =?utf-8?B?VndnWmZKcHJCSXdoYmMyMVA0SWl2aVRrQlAxVDc1RnNBa2dLc2ViYUI3Wi9m?=
- =?utf-8?B?NmxyY3ExbDNjQXZaWXFBVWtJdzlPYWJoNmoxOW5zRFZHc3BPdm1zblJTT29x?=
- =?utf-8?B?RGhtSmkyM1ZUc2FPTDZIWnI1T1czN2dJTDdLS3AxUXljZE5sb3hmZE5nMElO?=
- =?utf-8?B?Vmp4OUNLeG1RblpDbTdhL3cwZHdDRlNJc2Q1dC9Vc2VsbzJVRW0xNmhnekFM?=
- =?utf-8?B?WnREeittWmpPM3lvdnZ6R29JdDZpQm11TWRzU0NlaWZtZXlIS2R5L2oyS0tC?=
- =?utf-8?B?aGFNWWtwd1o0R2pUM1dvNmtuamF5Z1pZUDhQZjhXSVdNSmxDalVTdHBRM3Y5?=
- =?utf-8?B?VGFSTkRCY1UvZjZTd0FScUtoN0UrZjF1cUR4TG9UVm45S0cvYmpHK1FubVp5?=
- =?utf-8?B?SGFnRjFEaVArVk82aHFJV1ZMZTRDeU9RakZZcmQ4Z1RWZDQ2QXVJL3RYTzRV?=
- =?utf-8?B?ZWZ3a0RUTHE1VzBSNHJDek5aTnJSSmFFdDI3TXNZZXFVc2tTODlKampIZ2hq?=
- =?utf-8?B?Q1grSFI3YnRNT2tsSlFlMEgycitlY3JZbHU3c1FuWXE1d2FwdU5iTUo4aGF4?=
- =?utf-8?B?dXJZSmpFRmlRcEhLNGpYMGlkNE5TWGlubWVzSFo5MmZOdk5OdE9VaXdUNVpz?=
- =?utf-8?B?eExmb0h2RFFqV3UxQXpOcFcvQURQL1lndFk0a09jaFVOQTVIblNycVRpY2VW?=
- =?utf-8?B?VHc4eHNJQXZzcHhEcTJqME5vTkNlK0ZCODV2eUJmUnpKTjhGNGtOREhkRGVi?=
- =?utf-8?B?bEE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uphC45ug"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF209C4CEDF;
+	Mon, 10 Feb 2025 14:44:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739198649;
+	bh=mKztR/EOo7pcxQJIOtLoD6WsfGO+IjyNofiojLnK7fw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uphC45ug7DlL1MjXDfk5WvSxnPV45Qpkv6HAAXP9ARn2t9951B7ztDhCelEMZ8kNf
+	 8KDdUQyocWRODTlanT46kiSFQlGRY+ObEnKiBqdyfkqZrk0sxzwMsKAOSwTfGexuqt
+	 nCHAtvCOGlgLvnGO8AqfqrVzkWh5DA+dxG5b9xGyIMUKN0wX1hL99FLq1OwYpVei9y
+	 yE1D7OGL0/jtWD2WnjZIX4AvJ8Rj8SnNxFfyl2wAyx87dZiayOVnmU0r8dsZ1I5ew6
+	 n3c6afgsI8Em2jtPpSYdd65eoaO2iyz6pbMYI5i/MSelepA1RJ+EyB09pPy5NzlSVA
+	 UG/QV2Yc65LqQ==
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3f3c0abde9eso55083b6e.1;
+        Mon, 10 Feb 2025 06:44:08 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVaNk92s6dNLmEuoJeFcxGaVofZMXBf9lyB9d3f5SkEILYL80ozBou91fVidb7WpJFnm4lig+VxUtM=@vger.kernel.org, AJvYcCW+wpFAwPMqkL55LUjLfProMBF0QphqUv8LGkKK5BSHg6ldenMV4n5+tSnw/yzRX0BmeYE71W0p8mq29Z4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFj+Fprq7fctplDPLzabq8bG/YjuBEOPyYAEdI7Q8+9SeKdRWl
+	xwxlkPBgT5y3JyzNHJUE1OWTBx3jDr0HmBlgX99q09kIuyz+E8JAYGQTPgA+Hx9zJiwBh6y0dGk
+	OBADAdXtD8GM0K8uCWF8fpDmKi0Q=
+X-Google-Smtp-Source: AGHT+IGnEAsEWdNIV7yAvXEXHa/IGcp6KlYQWYt3AZjv01jrBooHJmUQLH5azqks/wugzO7+mtXa/IHhTJLUHCZtY6s=
+X-Received: by 2002:a05:6808:384e:b0:3eb:575e:3ecb with SMTP id
+ 5614622812f47-3f392314b94mr9453465b6e.19.1739198648102; Mon, 10 Feb 2025
+ 06:44:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7a1f4fd-2fe4-4673-3bf5-08dd49e116b0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Feb 2025 14:42:05.3169
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +aauaqCSx7e2rz64VSa1mMDHLVvQmm3HOeeZdik/vhOPXWSiDGof3aN/kTs//84lhxEkCGbTwenrVsRQuU+vWv7xNfpbsh8HORPSiIOxbXQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB10425
+References: <1916668.tdWV9SEqCh@rjwysocki.net> <bd69d9dc-0494-4975-bebd-881f3560e659@arm.com>
+In-Reply-To: <bd69d9dc-0494-4975-bebd-881f3560e659@arm.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 10 Feb 2025 15:43:56 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0hxx-9AVJPJRRVPU8kx4kt9pgr6NhDuhEU_RHj=tCJQvw@mail.gmail.com>
+X-Gm-Features: AWEUYZlC9ftfUBiYvfeV6tI57tuOj45FtlCM67xMecxlG6slB6rX0CEn0pPRD-E
+Message-ID: <CAJZ5v0hxx-9AVJPJRRVPU8kx4kt9pgr6NhDuhEU_RHj=tCJQvw@mail.gmail.com>
+Subject: Re: [RFT][PATCH v1 0/5] cpuidle: menu: Avoid discarding useful
+ information when processing recent idle intervals
+To: Christian Loehle <christian.loehle@arm.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, 
+	Aboorva Devarajan <aboorvad@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGkgR2VlcnQsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR2VlcnQg
-VXl0dGVyaG9ldmVuIDxnZWVydEBsaW51eC1tNjhrLm9yZz4NCj4gU2VudDogMTAgRmVicnVhcnkg
-MjAyNSAxNDozNQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDAyLzE0XSBkdC1iaW5kaW5nczogc2Vy
-aWFsOiBEb2N1bWVudCBzY2kgYmluZGluZ3MgZm9yIHRoZSBSZW5lc2FzIFJaL1QySCAoYS5rLmEN
-Cj4gcjlhMDlnMDc3KSBTb0MNCj4gDQo+IEhpIEJpanUsDQo+IA0KPiBPbiBNb24sIDEwIEZlYiAy
-MDI1IGF0IDE1OjI2LCBCaWp1IERhcyA8YmlqdS5kYXMuanpAYnAucmVuZXNhcy5jb20+IHdyb3Rl
-Og0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IEdlZXJ0IFV5
-dHRlcmhvZXZlbiA8Z2VlcnRAbGludXgtbTY4ay5vcmc+DQo+ID4gPiBTZW50OiAxMCBGZWJydWFy
-eSAyMDI1IDE0OjE1DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIDAyLzE0XSBkdC1iaW5kaW5n
-czogc2VyaWFsOiBEb2N1bWVudCBzY2kNCj4gPiA+IGJpbmRpbmdzIGZvciB0aGUgUmVuZXNhcyBS
-Wi9UMkggKGEuay5hDQo+ID4gPiByOWEwOWcwNzcpIFNvQw0KPiA+ID4NCj4gPiA+IE9uIE1vbiwg
-MTAgRmViIDIwMjUgYXQgMTQ6MTksIEJpanUgRGFzIDxiaWp1LmRhcy5qekBicC5yZW5lc2FzLmNv
-bT4gd3JvdGU6DQo+ID4gPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+ID4g
-PiBGcm9tOiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4LW02OGsub3JnPg0KPiA+ID4g
-PiA+IFNlbnQ6IDEwIEZlYnJ1YXJ5IDIwMjUgMTM6MTUNCj4gPiA+ID4gPiBTdWJqZWN0OiBSZTog
-W1BBVENIIDAyLzE0XSBkdC1iaW5kaW5nczogc2VyaWFsOiBEb2N1bWVudCBzY2kNCj4gPiA+ID4g
-PiBiaW5kaW5ncyBmb3IgdGhlIFJlbmVzYXMgUlovVDJIIChhLmsuYQ0KPiA+ID4gPiA+IHI5YTA5
-ZzA3NykgU29DDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBPbiBXZWQsIDI5IEphbiAyMDI1IGF0IDE3
-OjUyLCBUaGllcnJ5IEJ1bHRlbCA8dGhpZXJyeS5idWx0ZWwueWhAYnAucmVuZXNhcy5jb20+IHdy
-b3RlOg0KPiA+ID4gPiA+ID4gRG9jdW1lbnQgUlovVDJIIChhLmsuYSByOWEwOWcwNzcpIGluIFND
-SSBiaW5kaW5nLg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IFRoaWVy
-cnkgQnVsdGVsDQo+ID4gPiA+ID4gPiA8dGhpZXJyeS5idWx0ZWwueWhAYnAucmVuZXNhcy5jb20+
-DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBUaGFua3MgZm9yIHlvdXIgcGF0Y2ghDQo+ID4gPiA+ID4N
-Cj4gPiA+ID4gPiA+IC0tLSAvZGV2L251bGwNCj4gPiA+ID4gPiA+ICsrKyBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9zZXJpYWwvcmVuZXNhcyxyenNjaS55DQo+ID4gPiA+ID4g
-PiArKysgYW1sDQo+ID4gPiA+ID4gPiBAQCAtMCwwICsxLDEwMCBAQA0KPiA+ID4gPiA+ID4gKyMg
-U1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlKQ0K
-PiA+ID4gPiA+ID4gKyVZQU1MDQo+ID4gPiA+ID4gPiArMS4yDQo+ID4gPiA+ID4gPiArLS0tDQo+
-ID4gPiA+ID4gPiArJGlkOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9zZXJpYWwvcmVu
-ZXNhcyxyenNjaS55YW1sIw0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gInJ6c2NpIiBpcyBJTUhPIGEg
-YmFkIG5hbWUsIGFzIFNDSSBvbiBSWi9UMiBkaWZmZXJzIGZyb20gdGhlDQo+ID4gPiA+ID4gc2lt
-aWxhci1uYW1lZCAiU0NJIiAoc29tZXRpbWVzIGNhbGxlZCAiUlNDSSIgb3IgIlNDSWciKSBvbg0K
-PiA+ID4gPiA+IFJaL0ExSCwgUlovQTJNLCBSWi9HMkwsIFJaL1YyTCwgYW5kDQo+ID4gPiBSWi9H
-M1MgKGFuZCBtb3N0IG9sZCBTdXBlckggU29DcykuDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBCVFcs
-IEkgYmVsaWV2ZSB0aGUgdmFyaWFudCBvbiBSWi9UMiBpcyBhbHNvIHVzZWQgb24gUlovTjIsIFJa
-L1YySCwgYW5kIFJaL0czRT8NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IEhvd2V2ZXIsIGJpbmRpbmct
-d2lzZSwgdGhleSBhbGwgc2VlbSB0byBiZSB2ZXJ5IHNpbWlsYXIuDQo+ID4gPiA+ID4gU28gcGVy
-aGFwcyB5b3UgY2FuIGp1c3QgYWRkIHRoaXMgdG8gdGhlIGV4aXN0aW5nDQo+ID4gPiA+ID4gRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NlcmlhbC9yZW5lc2FzLHNjaS55YW1sPw0K
-PiA+ID4gPg0KPiA+ID4gPiBJdCBpcyBwcmVzZW50IGluIFJaL0czRSBhcyB3ZWxsLg0KPiA+ID4g
-PiBSU0NJIHN1cHBvcnRzIHNjaSwgc2NpZiwgaTJjIGFuZCBzcGkgdGhhdCBpcyB0aGUgcmVhc29u
-IHJlbmVzYXMscnpzY2kueWFtbCBpbnRyb2R1Y2VkLg0KPiA+ID4NCj4gPiA+IElmIHlvdSBwbGFu
-IHRvIGFkZCBzdXBwb3J0IGZvciBJMkMgYW5kIFNQSSwgeW91IHdpbGwgbmVlZCBkaWZmZXJlbnQN
-Cj4gPiA+IGJpbmRpbmdzIHVuZGVyIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy97
-aTJjLHNwaX0vLg0KPiA+DQo+ID4gT0ssIEkgdGhvdWdodCBzaW5jZSBpdCBpcyBhIHNpbmdsZSBJ
-UCwgd2UgbmVlZCB0byB1c2UgYSBzaW5nbGUNCj4gPiBjb21wYXRpYmxlIGFuZCBpbnN0YW50aWF0
-ZSBhcHByb3ByaWF0ZSBkZXZpY2UgYmFzZWQgb24gdGhlIGRldmljZSBwcm9wZXJ0eSByYXRoZXIg
-dGhhbiBzZXBhcmF0ZSBTQ0ksDQo+IGkyYyBhbmQgc3BpIGNvbXBhdGlibGUuDQo+ID4NCj4gPiBZ
-ZXMsIEkgYWdyZWUgaGF2aW5nIGRpZmZlcmVudCBkZXZpY2UgY29tcGF0aWJsZSBmb3Igc2FtZSBJ
-UCBtYWtlIGxpZmUNCj4gPiBlYXNpZXIsIG5vIG5lZWQgdG8gYWRkIHNwZWNpZmljIHZlbmRvciBw
-cm9wZXJ0eS4NCj4gDQo+IEkgc2FpZCAiZGlmZmVyZW50IGJpbmRpbmdzIiwgbm90ICJkaWZmZXJl
-bnQgY29tcGF0aWJsZSB2YWx1ZXMiIQ0KPiANCj4gQ2ZyLiAicmVuZXNhcyx0cHUiIGhhdmluZyBi
-aW5kaW5ncyBpbiBib3RoIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9y
-ZW5lc2FzLHRwdS55YW1sDQo+IGFuZCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cHdtL3JlbmVzYXMsdHB1LXB3bS55YW1sLg0KDQpUaGFua3MgZm9yIGNsYXJpZmljYXRpb24uIFRo
-aXMgaXMgc2ltcGxlIHNvbHV0aW9uLg0KDQpDaGVlcnMsDQpCaWp1DQo=
+On Mon, Feb 10, 2025 at 3:15=E2=80=AFPM Christian Loehle
+<christian.loehle@arm.com> wrote:
+>
+> On 2/6/25 14:21, Rafael J. Wysocki wrote:
+> > Hi Everyone,
+> >
+> > This work had been triggered by a report that commit 0611a640e60a ("eve=
+ntpoll:
+> > prefer kfree_rcu() in __ep_remove()") had caused the critical-jOPS metr=
+ic of
+> > the SPECjbb 2015 benchmark [1] to drop by around 50% even though it gen=
+erally
+> > reduced kernel overhead.  Indeed, it was found during further investiga=
+tion
+> > that the total interrupt rate while running the SPECjbb workload had fa=
+llen as
+> > a result of that commit by 55% and the local timer interrupt rate had f=
+allen by
+> > almost 80%.
+> >
+> > That turned out to cause the menu cpuidle governor to select the deepes=
+t idle
+> > state supplied by the cpuidle driver (intel_idle) much more often which=
+ added
+> > significantly more idle state latency to the workload and that led to t=
+he
+> > decrease of the critical-jOPS score.
+> >
+> > Interestingly enough, this problem was not visible when the teo cpuidle
+> > governor was used instead of menu, so it appeared to be specific to the
+> > latter.  CPU wakeup event statistics collected while running the worklo=
+ad
+> > indicated that the menu governor was effectively ignoring non-timer wak=
+eup
+> > information and all of its idle state selection decisions appeared to b=
+e
+> > based on timer wakeups only.  Thus, it appeared that the reduction of t=
+he
+> > local timer interrupt rate caused the governor to predict a idle durati=
+on
+> > much more often while running the workload and the deepest idle state w=
+as
+> > selected significantly more often as a result of that.
+> >
+> > A subsequent inspection of the get_typical_interval() function in the m=
+enu
+> > governor indicated that it might return UINT_MAX too often which then c=
+aused
+> > the governor's decisions to be based entirely on information related to=
+ timers.
+> >
+> > Generally speaking, UINT_MAX is returned by get_typical_interval() if i=
+t
+> > cannot make a prediction based on the most recent idle intervals data w=
+ith
+> > sufficiently high confidence, but at least in some cases this means tha=
+t
+> > useful information is not taken into account at all which may lead to
+> > significant idle state selection mistakes.  Moreover, this is not reall=
+y
+> > unlikely to happen.
+> >
+> > One issue with get_typical_interval() is that, when it eliminates outli=
+ers from
+> > the sample set in an attempt to reduce the standard deviation (and so i=
+mprove
+> > the prediction confidence), it does that by dropping high-end samples o=
+nly,
+> > while samples at the low end of the set are retained.  However, the sam=
+ples
+> > at the low end very well may be the outliers and they should be elimina=
+ted
+> > from the sample set instead of the high-end samples.  Accordingly, the
+> > likelihood of making a meaningful idle duration prediction can be impro=
+ved
+> > by making it also eliminate low-end samples if they are farther from th=
+e
+> > average than high-end samples.  This is done in patch [4/5].
+> >
+> > Another issue is that get_typical_interval() gives up after eliminating=
+ 1/4
+> > of the samples if the standard deviation is still not as low as desired=
+ (within
+> > 1/6 of the average or within 20 us if the average is close to 0), but t=
+he
+> > remaining samples in the set still represent useful information at that=
+ point
+> > and discarding them altogether may lead to suboptimal idle state select=
+ion.
+> >
+> > For instance, the largest idle duration value in the get_typical_interv=
+al()
+> > data set is the maximum idle duration observed recently and it is likel=
+y that
+> > the upcoming idle duration will not exceed it.  Therefore, in the absen=
+ce of
+> > a better choice, this value can be used as an upper bound on the target
+> > residency of the idle state to select.  Patch [5/5] works along these l=
+ines,
+> > but it takes the maximum data point remaining after the elimination of
+> > outliers.
+> >
+> > The first two patches in the series are straightforward cleanups (in fa=
+ct,
+> > the first patch is kind of reversed by patch [4/5], but it is there bec=
+ause
+> > it can be applied without the latter) and patch [3/5] is a cosmetic cha=
+nge
+> > made in preparation for the subsequent ones.
+> >
+> > This series turns out to restore the SPECjbb critical-jOPS metric on af=
+fected
+> > systems to the level from before commit 0611a640e60a and it also happen=
+s to
+> > increase its max-jOPS metric by around 3%.
+> >
+> > For easier reference/testing it is present in the git branch at
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log=
+/?h=3Dexperimental/menu
+> >
+> > based on the cpuidle material that went into 6.14-rc1.
+> >
+> > If possible, please let me know if it works for you.
+> >
+> > Thanks!
+> >
+> >
+> > [1] Link: https://www.spec.org/jbb2015/
+>
+> 5/5 shows significant IO workload improvements (the shorter wakeup scenar=
+io is
+> much more likely to be picked up now).
+> I don't see a significant regression in idle misses so far, I'll try Andr=
+oid
+> backports soon and some other system.
+
+Sounds good, thanks!
+
+> Here's a full dump, sorry it's from a different system (rk3588, only two =
+idle
+> states), apparently eth networking is broken on 6.14-rc1 now on rk3399 :(
+>
+> For dm-delay 51ms (dm-slow) the command is (8 CPUs)
+> fio --minimal --time_based --group_reporting --name=3Dfiotest --filename=
+=3D/dev/mapper/dm-slow --runtime=3D30s --numjobs=3D16 --rw=3Drandread --bs=
+=3D4k --ioengine=3Dpsync --iodepth=3D1 --direct=3D1
+> For the rest:
+> fio --minimal --time_based --name=3Dfiotest --filename=3D/dev/mmcblk1 --r=
+untime=3D30s --rw=3Drandread --bs=3D4k --ioengine=3Dpsync --iodepth=3D1 --d=
+irect=3D1
+
+Thanks for the data!
+
+Do I understand correctly that menu-X is menu with patches [1-X/5]
+applied?  And what's menu-m?
+
+> device   gov     iter    iops    idles   idle_misses     idle_miss_ratio =
+        belows  aboves
+> mapper/dm-slow  menu    0       307     99648   318     0.003   318     0
+> mapper/dm-slow  menu    1       307     100948  389     0.004   389     0
+> mapper/dm-slow  menu    2       307     99512   380     0.004   380     0
+> mapper/dm-slow  menu    3       307     99212   307     0.003   307     0
+> mapper/dm-slow  menu    4       307     100156  343     0.003   343     0
+> mapper/dm-slow  menu-1  0       307     97434   260     0.003   260     0
+> mapper/dm-slow  menu-1  1       307     94628   324     0.003   324     0
+> mapper/dm-slow  menu-1  2       307     98004   248     0.003   248     0
+> mapper/dm-slow  menu-1  3       307     97524   263     0.003   263     0
+> mapper/dm-slow  menu-1  4       307     97048   304     0.003   304     0
+> mapper/dm-slow  menu-2  0       307     98340   376     0.004   376     0
+> mapper/dm-slow  menu-2  1       307     96246   275     0.003   275     0
+> mapper/dm-slow  menu-2  2       307     96456   317     0.003   317     0
+> mapper/dm-slow  menu-2  3       307     100054  268     0.003   268     0
+> mapper/dm-slow  menu-2  4       307     93378   288     0.003   288     0
+> mapper/dm-slow  menu-3  0       307     95140   303     0.003   303     0
+> mapper/dm-slow  menu-3  1       307     95858   318     0.003   318     0
+> mapper/dm-slow  menu-3  2       307     100528  302     0.003   302     0
+> mapper/dm-slow  menu-3  3       307     98274   311     0.003   311     0
+> mapper/dm-slow  menu-3  4       307     98428   327     0.003   327     0
+> mapper/dm-slow  menu-4  0       307     100340  304     0.003   304     0
+> mapper/dm-slow  menu-4  1       307     101628  359     0.004   359     0
+> mapper/dm-slow  menu-4  2       307     100624  281     0.003   281     0
+> mapper/dm-slow  menu-4  3       307     99824   340     0.003   340     0
+> mapper/dm-slow  menu-4  4       307     98318   290     0.003   290     0
+> mapper/dm-slow  menu-5  0       307     96842   310     0.003   310     0
+> mapper/dm-slow  menu-5  1       307     98884   271     0.003   271     0
+> mapper/dm-slow  menu-5  2       307     99706   259     0.003   259     0
+> mapper/dm-slow  menu-5  3       307     93096   270     0.003   270     0
+> mapper/dm-slow  menu-5  4       307     101590  333     0.003   333     0
+> mapper/dm-slow  menu-m  0       307     94270   297     0.003   297     0
+> mapper/dm-slow  menu-m  1       307     99820   355     0.004   355     0
+> mapper/dm-slow  menu-m  2       307     99284   313     0.003   313     0
+> mapper/dm-slow  menu-m  3       307     99320   288     0.003   288     0
+> mapper/dm-slow  menu-m  4       307     99666   269     0.003   269     0
+> mmcblk1         menu    0       818     227246  32716   0.144   32716   0
+> mmcblk1         menu    1       818     252552  33582   0.133   33582   0
+> mmcblk1         menu    2       825     255822  31958   0.125   31958   0
+> mmcblk1         menu    3       822     255814  33374   0.130   33374   0
+> mmcblk1         menu    4       822     253200  33310   0.132   33310   0
+> mmcblk1         menu-1  0       822     254768  33545   0.132   33545   0
+> mmcblk1         menu-1  1       819     249476  33289   0.133   33289   0
+> mmcblk1         menu-1  2       823     256152  32838   0.128   32838   0
+> mmcblk1         menu-1  3       824     231098  31120   0.135   31120   0
+> mmcblk1         menu-1  4       820     254590  33189   0.130   33189   0
+> mmcblk1         menu-2  0       824     256084  32927   0.129   32927   0
+> mmcblk1         menu-2  1       806     240166  33672   0.140   33672   0
+> mmcblk1         menu-2  2       808     253178  33963   0.134   33963   0
+> mmcblk1         menu-2  3       822     240628  32860   0.137   32860   0
+> mmcblk1         menu-2  4       811     251522  33478   0.133   33478   0
+> mmcblk1         menu-3  0       810     251914  32477   0.129   32477   0
+> mmcblk1         menu-3  1       811     253324  32344   0.128   32344   0
+> mmcblk1         menu-3  2       826     239634  31478   0.131   31478   0
+> mmcblk1         menu-3  3       811     252462  33810   0.134   33810   0
+> mmcblk1         menu-3  4       806     231730  33646   0.145   33646   0
+> mmcblk1         menu-4  0       826     231986  32301   0.139   32301   0
+> mmcblk1         menu-4  1       821     256988  34290   0.133   34290   0
+> mmcblk1         menu-4  2       805     247456  35092   0.142   35092   0
+> mmcblk1         menu-4  3       807     255072  35291   0.138   35291   0
+> mmcblk1         menu-4  4       808     255076  35222   0.138   35222   0
+> mmcblk1         menu-5  0       861     308822  26267   0.085   26267   0
+> mmcblk1         menu-5  1       835     288153  26496   0.092   26496   0
+> mmcblk1         menu-5  2       841     304148  26916   0.088   26916   0
+> mmcblk1         menu-5  3       858     304838  26347   0.086   26347   0
+> mmcblk1         menu-5  4       859     303370  26090   0.086   26090   0
+> mmcblk1         menu-m  0       811     243486  33215   0.136   33215   0
+> mmcblk1         menu-m  1       827     256902  32863   0.128   32863   0
+> mmcblk1         menu-m  2       807     249032  34080   0.137   34080   0
+> mmcblk1         menu-m  3       809     253537  33718   0.133   33718   0
+> mmcblk1         menu-m  4       824     241996  32842   0.136   32842   0
+> mmcblk1         teo     0       874     346720  18326   0.053   18326   0
+> mmcblk1         teo     1       889     350712  19364   0.055   19364   0
+> mmcblk1         teo     2       874     341195  19004   0.056   19004   0
+> mmcblk1         teo     3       870     343718  18770   0.055   18770   0
+> mmcblk1         teo     4       871     321152  18415   0.057   18415   0
+> nvme0n1         menu    0       11546   819014  110717  0.135   110717  0
+> nvme0n1         menu    1       10507   745534  86297   0.116   86297   0
+> nvme0n1         menu    2       11758   829030  110667  0.133   110667  0
+> nvme0n1         menu    3       10762   768898  93655   0.122   93655   0
+> nvme0n1         menu    4       11719   820536  110456  0.135   110456  0
+> nvme0n1         menu-1  0       11409   811374  111285  0.137   111285  0
+> nvme0n1         menu-1  1       11432   805208  108621  0.135   108621  0
+> nvme0n1         menu-1  2       11154   781534  100566  0.129   100566  0
+> nvme0n1         menu-1  3       10180   724944  73523   0.101   73523   0
+> nvme0n1         menu-1  4       11667   827804  110505  0.133   110505  0
+> nvme0n1         menu-2  0       11091   791998  105824  0.134   105824  0
+> nvme0n1         menu-2  1       10664   748122  90282   0.121   90282   0
+> nvme0n1         menu-2  2       10921   773806  95668   0.124   95668   0
+> nvme0n1         menu-2  3       11445   807918  112475  0.139   112475  0
+> nvme0n1         menu-2  4       10629   761546  90181   0.118   90181   0
+> nvme0n1         menu-3  0       10330   723824  74813   0.103   74813   0
+> nvme0n1         menu-3  1       10242   717762  74187   0.103   74187   0
+> nvme0n1         menu-3  2       10579   754108  86841   0.115   86841   0
+> nvme0n1         menu-3  3       10161   730416  76722   0.105   76722   0
+> nvme0n1         menu-3  4       11665   820052  112621  0.137   112621  0
+> nvme0n1         menu-4  0       11279   789456  106411  0.135   106411  0
+> nvme0n1         menu-4  1       11095   766714  98036   0.128   98036   0
+> nvme0n1         menu-4  2       11003   786088  98979   0.126   98979   0
+> nvme0n1         menu-4  3       10371   746978  77039   0.103   77039   0
+> nvme0n1         menu-4  4       10761   770218  89958   0.117   89958   0
+> nvme0n1         menu-5  0       13243   926672  514     0.001   514     0
+> nvme0n1         menu-5  1       14235   985852  1054    0.001   1054    0
+> nvme0n1         menu-5  2       13032   911560  506     0.001   506     0
+> nvme0n1         menu-5  3       13074   917252  691     0.001   691     0
+> nvme0n1         menu-5  4       13361   933126  466     0.000   466     0
+> nvme0n1         menu-m  0       10290   739468  73692   0.100   73692   0
+> nvme0n1         menu-m  1       10647   763144  80430   0.105   80430   0
+> nvme0n1         menu-m  2       11067   790362  98525   0.125   98525   0
+> nvme0n1         menu-m  3       11337   806888  102446  0.127   102446  0
+> nvme0n1         menu-m  4       11519   818128  110233  0.135   110233  0
+> nvme0n1         teo     0       14267   994532  273     0.000   273     0
+> nvme0n1         teo     1       13857   965726  395     0.000   395     0
+> nvme0n1         teo     2       12762   892900  311     0.000   311     0
+> nvme0n1         teo     3       13056   900172  269     0.000   269     0
+> nvme0n1         teo     4       13687   956048  240     0.000   240     0
+> sda     menu    0       1943    1044428         162298  0.155   162298  0
+> sda     menu    1       1601    860152  232733  0.271   232733  0
+> sda     menu    2       1947    1089550         154879  0.142   154879  0
+> sda     menu    3       1917    992278  146316  0.147   146316  0
+> sda     menu    4       1706    947224  257686  0.272   257686  0
+> sda     menu-1  0       1981    1109204         174590  0.157   174590  0
+> sda     menu-1  1       1778    989142  271685  0.275   271685  0
+> sda     menu-1  2       1759    955310  252735  0.265   252735  0
+> sda     menu-1  3       1818    985389  180365  0.183   180365  0
+> sda     menu-1  4       1782    915060  247016  0.270   247016  0
+> sda     menu-2  0       1877    959734  181691  0.189   181691  0
+> sda     menu-2  1       1718    961724  262950  0.273   262950  0
+> sda     menu-2  2       1751    949092  259223  0.273   259223  0
+> sda     menu-2  3       1808    1011822         211016  0.209   211016  0
+> sda     menu-2  4       1734    959348  261769  0.273   261769  0
+> sda     menu-3  0       1723    952826  260493  0.273   260493  0
+> sda     menu-3  1       1718    931974  254462  0.273   254462  0
+> sda     menu-3  2       1773    984232  239335  0.243   239335  0
+> sda     menu-3  3       1741    969477  265131  0.273   265131  0
+> sda     menu-3  4       1735    970372  263907  0.272   263907  0
+> sda     menu-4  0       1911    1030290         170538  0.166   170538  0
+> sda     menu-4  1       1769    972168  233029  0.240   233029  0
+> sda     menu-4  2       1737    969896  260880  0.269   260880  0
+> sda     menu-4  3       1738    941298  253874  0.270   253874  0
+> sda     menu-4  4       1701    953710  258250  0.271   258250  0
+> sda     menu-5  0       2463    1349556         26158   0.019   26158   0
+> sda     menu-5  1       2359    1344306         80343   0.060   80343   0
+> sda     menu-5  2       2280    1306554         115670  0.089   115670  0
+> sda     menu-5  3       2573    1420702         4765    0.003   4765    0
+> sda     menu-5  4       2348    1355996         70428   0.052   70428   0
+> sda     menu-m  0       1738    962150  261205  0.271   261205  0
+> sda     menu-m  1       1667    922214  238208  0.258   238208  0
+> sda     menu-m  2       1696    911352  255364  0.280   255364  0
+> sda     menu-m  3       1840    1006556         193333  0.192   193333  0
+> sda     menu-m  4       1681    919693  251029  0.273   251029  0
+> sda     teo     0       2503    1427634         25997   0.018   25997   0
+> sda     teo     1       2424    1401434         35228   0.025   35228   0
+> sda     teo     2       2527    1454382         27546   0.019   27546   0
+> sda     teo     3       2481    1430128         16678   0.012   16678   0
+> sda     teo     4       2589    1481254         13389   0.009   13389   0
+> nullb0  menu    0       337827  88502   200     0.002   200     0
+> nullb0  menu    1       337833  87476   188     0.002   188     0
+> nullb0  menu    2       336378  88862   92      0.001   92      0
+> nullb0  menu    3       336022  86174   188     0.002   188     0
+> nullb0  menu    4       335158  87880   156     0.002   156     0
+> nullb0  menu-1  0       334663  89150   199     0.002   199     0
+> nullb0  menu-1  1       338526  88184   111     0.001   111     0
+> nullb0  menu-1  2       336671  89210   211     0.002   211     0
+> nullb0  menu-1  3       337454  82408   198     0.002   198     0
+> nullb0  menu-1  4       338256  86994   118     0.001   118     0
+> nullb0  menu-2  0       336636  82202   165     0.002   165     0
+> nullb0  menu-2  1       337580  77918   171     0.002   171     0
+> nullb0  menu-2  2       336260  89198   226     0.003   226     0
+> nullb0  menu-2  3       338440  85444   215     0.003   215     0
+> nullb0  menu-2  4       333633  87244   119     0.001   119     0
+> nullb0  menu-3  0       336890  88096   122     0.001   122     0
+> nullb0  menu-3  1       335804  68502   79      0.001   79      0
+> nullb0  menu-3  2       336863  87258   195     0.002   195     0
+> nullb0  menu-3  3       337091  76452   127     0.002   127     0
+> nullb0  menu-3  4       336142  80664   83      0.001   83      0
+> nullb0  menu-4  0       336840  86936   128     0.001   128     0
+> nullb0  menu-4  1       334498  88792   113     0.001   113     0
+> nullb0  menu-4  2       336736  88542   104     0.001   104     0
+> nullb0  menu-4  3       336476  64548   70      0.001   70      0
+> nullb0  menu-4  4       337513  84776   107     0.001   107     0
+> nullb0  menu-5  0       338498  89216   135     0.002   135     0
+> nullb0  menu-5  1       335087  87424   85      0.001   85      0
+> nullb0  menu-5  2       336965  75456   179     0.002   179     0
+> nullb0  menu-5  3       337415  88112   114     0.001   114     0
+> nullb0  menu-5  4       332365  76456   82      0.001   82      0
+> nullb0  menu-m  0       337718  88018   125     0.001   125     0
+> nullb0  menu-m  1       337801  86584   164     0.002   164     0
+> nullb0  menu-m  2       336760  84262   102     0.001   102     0
+> nullb0  menu-m  3       337524  87902   147     0.002   147     0
+> nullb0  menu-m  4       333724  87916   117     0.001   117     0
+> nullb0  teo     0       336215  88312   231     0.003   231     0
+> nullb0  teo     1       337653  88802   266     0.003   266     0
+> nullb0  teo     2       337198  87960   234     0.003   234     0
+> nullb0  teo     3       338716  88516   227     0.003   227     0
+> nullb0  teo     4       336334  88978   261     0.003   261     0
+>
