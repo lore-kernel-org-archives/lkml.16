@@ -1,198 +1,137 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE75236A7C
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:15:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DAD7237177;
+	Mon, 10 Feb 2025 14:19:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739196930; cv=none; b=ULy4/n+Jb4UZfD95iSoA82HhKRXUiXykMx/NinYQAGt4UZwX7ojQpzraj8qzc20IeKnCaDsLGZFEjEql9Q/QGUw6dXEuoek+OcCazRS5ZPFwlCelOe8kXCnKRHaGP4NAoT4LD9SmvjSSTRdZ2dnHgdnFkIGDXhYKMgae9fvamBs=
+	t=1739197173; cv=none; b=CY9btvKls66d+wfq44kAY6li3re/VSyxK1z0BUIySBHywLDz2bIjfIDonf3+JsVgklmhwv386jXoxTuQCUsngkUqEp0oU1BigpVkitfXIh5w4AGTOi7R0d2B18MW3gc8xi7FZrJ30ZgVVKIdFPQ7AmHHvSSf5Cq/qHDIuYDYobw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739196930; c=relaxed/simple;
-	bh=jV9ZM9KJ4l97B3XM23mtjzvW6/V0AEvG7zDBIxfNdAA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pd9seE6T10Ed99Aim/5OOsHfvR44GGbVWe0+rOLceHaprNyGSDwkFcNw1a1UkWTIAdMzBrU9utYTjwLYpL7+gZJnRwZRW/yYVxfse4UPu8q3gcOKRY4r8DminP4MYGCJzGyfpM84otzEpMLAhPcFBhJ0sSwc9DMs206y/9rYuEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ij2N/ihe; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739197173; c=relaxed/simple;
+	bh=tc4eeJ6oXgsOFuV3/HtEN1P7ANINGxbJ8KhoSu06eTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h06gzoyjnrrs6kxmfZVMFBW3by7GOV9cy9L2UeWFu3abHf52P/OKAkHiLCwF1n5w1XeydiUej63KcQEEpZu6pb/Il40tN5Wd2DpLIgLx5OBGJp7a+oCcTgXKvWioaG3xGHUO1lMSXZEzPojYbhTBwkPKLv11risHkgxd1+Mp0ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rmrzRNvo; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ij2N/ihe"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4718e224eb1so232861cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 06:15:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739196927; x=1739801727; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=dLdP/oKxMdakWzZ4EPoe5ogtcPVBnnydtLFs9opdq1M=;
-        b=ij2N/ihePRy6Y7+AAXyUJlfH55ivDsEEl9iWh0dOgG2KWHrQplwIc7Cg96GILDGlKh
-         KjX1ZU2zZqVjxbIW8JIst/vDq1tYn6JptXd02YIc/TduvG75BAmxKOJSybhzZUrOas4N
-         qjubgQbRIa9XnzyhOJXkJIls2jdj5duhaUGePpCnu1sHs/YU3es/HzYQqpsq55k47fZu
-         Kw+AxBq/eRQlrlh/8iDT8dDHacYVNDaPaoET6ooU7QYQ5QuLvsCAmrq52H8HDy2PKhVx
-         C/eUw+jvWoZuyKtQtjlm3ocxEtqbq3asY+hlCJNXNXYtH+2HorY8VIcNVwIfJbYbeIBb
-         MfSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739196927; x=1739801727;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dLdP/oKxMdakWzZ4EPoe5ogtcPVBnnydtLFs9opdq1M=;
-        b=xSkYcujQFEcGilnnwzXcl8oSlW4iM9OhZpJjL1f417VzLMHjBcMUUjtVmLBrKDGz5w
-         gP6yBUq0Q91l+2cV9swnRl81EUGYHLiZ7Cz4TVxLyWassM9SFOKuPunRqeVq567u21UL
-         c+0Ib5hlWFvhWgglLILdV+bvY9Di2ijsIkgJOyMss6UsSfSsIyd8Tu3ZpFgQF9JLt3FH
-         DZttfayENsyBVeLCXvwgrD8RcQarhFQRbzzDo7UQWe6Xiv0+P69ZaJYtsg0trFLGxE0V
-         PMIWKJz0oz8udma32Ra7+d5jA3wMbuOC3W9RTHlDCbAxm6LUzo24pQqgshqJoFTG5Yqy
-         05iw==
-X-Forwarded-Encrypted: i=1; AJvYcCWh55h/u/+us6kDAZEtA0dWN8OHGwnTxgEucuonEO3z6eq5CcGaw91w9jUCzzvMvkEStc6JlkFfqk/rOME=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNCJUo4pV3pq0HA+1FrjCVTiIx3l2drbxzyxM4GSux/pcpGCCU
-	y98w9/kFZ8QkhjoI2rjvcvUlu8oEDT1mMPUY/jprxK5mClG3KIu63Xk7Kzbk8KEwoP0N37r6sPB
-	PkvT2TzGGHq6EiGFWkRq7AJr2hz/6BPAprgle
-X-Gm-Gg: ASbGncuThj2YumPoHarQ5E26Fp9yOTucpCm65MPg2VIALXRM9Dfzy0QNHyC/buu3Plo
-	QJOSIsmteOKa7in3+asGYfsNRu/4MqTXouRGMrPUZV9gB72hA7tKtUcaybo5pFHELIeMtBOpcgC
-	qpxovYBZ02FRlUBi6JK3JQbds96Gg=
-X-Google-Smtp-Source: AGHT+IEGexvXS6MPJZAKDHaRlF5nijqAut2h9euMWvOzIVltnkcIQSbLpdWS9TcKpaINqYk37SxjSgdRI0B8hH1PTpc=
-X-Received: by 2002:a05:622a:4291:b0:466:975f:b219 with SMTP id
- d75a77b69052e-471759fcc9cmr7886411cf.8.1739196926921; Mon, 10 Feb 2025
- 06:15:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rmrzRNvo"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AC7mLU016074;
+	Mon, 10 Feb 2025 14:19:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Tv4nL2
+	2TJCpg9Kk+KxUkvQiLf6XNSk6aI0GzIp72GAU=; b=rmrzRNvoKd6Wi2dKcFoB/L
+	BnYOj+M6lVhd84cNG8TkKVamiUFKuB1LUHjVtHqCeuWX060JI37eE/V3+zS0VFKx
+	ZR4iBHAzHdbe127qZdYpQIiRldDJrd2sR7b2ycTM7vpwRqLK9NcB7yHihmEtpDoF
+	fSPGk2WhQPAWDZUFyFhkEZFsko1c+rvyrnzAqhrLCJFffiRVqYRjiddfMWPteZdz
+	x+qQ8TPnBl6zqtDrDEvgot9aSj/IXGYTYxZvxonQyqc7T/7lTujVLmmTLF/69XDZ
+	v7D/n85OJ+QjCzWU6fruu4C2qmp2aFP5dsIYkmm3krgVoKxQdH7v5OjUGwxrPcfQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44q5gabq04-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 14:19:26 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51AED2YQ026980;
+	Mon, 10 Feb 2025 14:19:25 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44q5gabpyy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 14:19:25 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51ACK4Iv016743;
+	Mon, 10 Feb 2025 14:19:24 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44pk3jxm1r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 14:19:24 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51AEJKFD28574344
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Feb 2025 14:19:20 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 111FF2013F;
+	Mon, 10 Feb 2025 14:19:20 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CE04C2013B;
+	Mon, 10 Feb 2025 14:19:18 +0000 (GMT)
+Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.171.22.27])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with SMTP;
+	Mon, 10 Feb 2025 14:19:18 +0000 (GMT)
+Date: Mon, 10 Feb 2025 15:19:17 +0100
+From: Halil Pasic <pasic@linux.ibm.com>
+To: Guangguan Wang <guangguan.wang@linux.alibaba.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, wenjia@linux.ibm.com, jaka@linux.ibm.com,
+        alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
+        guwen@linux.alibaba.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, horms@kernel.org, linux-rdma@vger.kernel.org,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Alexandra Winter <wintera@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Subject: Re: [PATCH net] net/smc: use the correct ndev to find pnetid by
+ pnetid table
+Message-ID: <20250210151917.394e8567.pasic@linux.ibm.com>
+In-Reply-To: <3dc68650-904c-4a1d-adc4-172e771f640c@linux.alibaba.com>
+References: <20241227040455.91854-1-guangguan.wang@linux.alibaba.com>
+	<1f4a721f-fa23-4f1d-97a9-1b27bdcd1e21@redhat.com>
+	<20250107203218.5787acb4.pasic@linux.ibm.com>
+	<908be351-b4f8-4c25-9171-4f033e11ffc4@linux.alibaba.com>
+	<20250109040429.350fdd60.pasic@linux.ibm.com>
+	<b1053a92-3a3f-4042-9be9-60b94b97747d@linux.alibaba.com>
+	<20250114130747.77a56d9a.pasic@linux.ibm.com>
+	<3dc68650-904c-4a1d-adc4-172e771f640c@linux.alibaba.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206044346.3810242-1-riel@surriel.com> <20250206044346.3810242-10-riel@surriel.com>
-In-Reply-To: <20250206044346.3810242-10-riel@surriel.com>
-From: Brendan Jackman <jackmanb@google.com>
-Date: Mon, 10 Feb 2025 15:15:15 +0100
-X-Gm-Features: AWEUYZk8MqG_c7jLb4tGoW116wgmCinWT2b92SLYLT4paBK5Ts1DNGfOwUSJIZU
-Message-ID: <CA+i-1C37LM62cvM33rNCfejA4fSumh_OSVkuuDU91iur_ZxCtQ@mail.gmail.com>
-Subject: Re: [PATCH v9 09/12] x86/mm: enable broadcast TLB invalidation for
- multi-threaded processes
-To: Rik van Riel <riel@surriel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de, 
-	peterz@infradead.org, dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com, 
-	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com, 
-	linux-mm@kvack.org, akpm@linux-foundation.org, jannh@google.com, 
-	mhklinux@outlook.com, andrew.cooper3@citrix.com, 
-	Manali Shukla <Manali.Shukla@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: yCIZ2RZbueuUY42KIuKe0GPL3TjLKFnv
+X-Proofpoint-ORIG-GUID: cLrpU6az_SIFJpqqb_HRqbnlL0GKtwWA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_08,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 clxscore=1015 suspectscore=0 mlxlogscore=957 spamscore=0
+ lowpriorityscore=0 phishscore=0 malwarescore=0 bulkscore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502100117
 
-On Thu, 6 Feb 2025 at 05:47, Rik van Riel <riel@surriel.com> wrote:
-> +static u16 get_global_asid(void)
-> +{
-> +
-> +       u16 asid;
-> +
-> +       lockdep_assert_held(&global_asid_lock);
-> +
-> +       /* The previous allocated ASID is at the top of the address space. */
-> +       if (last_global_asid >= MAX_ASID_AVAILABLE - 1)
-> +               reset_global_asid_space();
-> +
-> +       asid = find_next_zero_bit(global_asid_used, MAX_ASID_AVAILABLE, last_global_asid);
-> +
-> +       if (asid >= MAX_ASID_AVAILABLE) {
-> +               /* This should never happen. */
-> +               VM_WARN_ONCE(1, "Unable to allocate global ASID despite %d available\n", global_asid_available);
+On Wed, 15 Jan 2025 19:53:15 +0800
+Guangguan Wang <guangguan.wang@linux.alibaba.com> wrote:
 
-If you'll forgive the nitpicking, please put the last arg on a new
-line or otherwise break this up, the rest of this file keeps below 100
-chars (this is 113).
+> > Imagine the following you have your nice little setup with a PNETID on
+> > a non-leaf and a base_ndev that has no PNETID. Then your HW admin
+> > configures a PNETID to your base_ndev, a different one. Suddenly
+> > your ndev PNETID is ignored for reasons not obvious to you. Yes it is
+> > similar to having a software PNETID on the base_ndev and getting it
+> > overruled by a HW PNETID, but much less obvious IMHO. I am wondering if there are any scenarios that require setting different  
+> pnetids for different net devices in one netdev hierarchy. If no, maybe
+> we should limit that only one pnetid can be set to one netdev hierarchy.
 
-> +               return 0;
-> +       }
-> +
-> +       /* Claim this global ASID. */
-> +       __set_bit(asid, global_asid_used);
-> +       last_global_asid = asid;
-> +       global_asid_available--;
-> +       return asid;
-> +}
-> +
-> +/*
-> + * Returns true if the mm is transitioning from a CPU-local ASID to a global
-> + * (INVLPGB) ASID, or the other way around.
-> + */
-> +static bool needs_global_asid_reload(struct mm_struct *next, u16 prev_asid)
-> +{
-> +       u16 global_asid = mm_global_asid(next);
-> +
-> +       if (global_asid && prev_asid != global_asid)
-> +               return true;
-> +
-> +       if (!global_asid && is_global_asid(prev_asid))
-> +               return true;
+I wonder what topologies and changes to topologies are possible. If
+changes to a topology are possible then making sure there is only one
+PNETID within a netdev hierarchy can be difficult, as we would need
+to prevent changing the topology if a device has a not PNETID. (E.g.
+we first set a pnetid when the netdev is still not in a hierarchy
+and then try to put it into the hierarchy that already has a different
+PNETID within). Regarding allowable topologies, using your ASCII-art.
 
-I think this needs clarification around when switches from
-global->nonglobal happen. Maybe commentary or maybe there's a way to
-just express the code that makes it obvious. Here's what I currently
-understand, please correct me if I'm wrong:
+I think you could add 2 Pods with an IPVLAN eth0 (Pod) on top of eth1
+(host) each. Those would be in a single hierarchy I guess, but I guess
+you would still want to be able to set (most likely the same) PNETID
+on each.
 
-- Once a process gets a global ASID it keeps it forever. So within a
-process we never switch global->nonglobal.
+Bottom line is, this approach looks tricky to me. Maybe with a crisper
+explanation on what are these upper-lower links for. Maybe I am
+overgeneralizing here.
 
-- In flush_tlb_func() we are just calling this to check if the process
-has just been given a global ASID - there's no way loaded_mm_asid can
-be global yet !mm_global_asid(loaded_mm).
-
-- When we call this from switch_mm_irqs_off() we are in the prev==next
-case. Is there something about lazy TLB that can cause the case above
-to happen here?
-
-> +static bool meets_global_asid_threshold(struct mm_struct *mm)
-> +{
-> +       if (!global_asid_available)
-
-I think we need READ_ONCE here.
-
-Also - this doesn't really make sense in this function as it's currently named.
-
-I think we could just inline this whole function into
-consider_global_asid(), it would still be nice and readable IMO.
-
-> @@ -786,6 +1101,8 @@ static void flush_tlb_func(void *info)
->                 return;
->         }
->
-> +       local_tlb_gen = this_cpu_read(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen);
-> +
->         if (unlikely(f->new_tlb_gen != TLB_GENERATION_INVALID &&
->                      f->new_tlb_gen <= local_tlb_gen)) {
->                 /*
-> @@ -953,7 +1270,7 @@ STATIC_NOPV void native_flush_tlb_multi(const struct cpumask *cpumask,
->          * up on the new contents of what used to be page tables, while
->          * doing a speculative memory access.
->          */
-> -       if (info->freed_tables)
-> +       if (info->freed_tables || in_asid_transition(info->mm))
->                 on_each_cpu_mask(cpumask, flush_tlb_func, (void *)info, true);
->         else
->                 on_each_cpu_cond_mask(should_flush_tlb, flush_tlb_func,
-> @@ -1058,9 +1375,12 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
->          * a local TLB flush is needed. Optimize this use-case by calling
->          * flush_tlb_func_local() directly in this case.
->          */
-> -       if (cpumask_any_but(mm_cpumask(mm), cpu) < nr_cpu_ids) {
-> +       if (mm_global_asid(mm)) {
-> +               broadcast_tlb_flush(info);
-> +       } else if (cpumask_any_but(mm_cpumask(mm), cpu) < nr_cpu_ids) {
->                 info->trim_cpumask = should_trim_cpumask(mm);
->                 flush_tlb_multi(mm_cpumask(mm), info);
-> +               consider_global_asid(mm);
-
-Why do we do this here instead of when the CPU enters the mm? Is the
-idea that in combination with the jiffies thing in
-consider_global_asid() we get a probability of getting a global ASID
-(within some time period) that scales with the amount of TLB flushing
-the process does? So then we avoid using up ASID space on processes
-that are multithreaded but just sit around with stable VMAs etc?
-
-I guess another reason would be in the bizarre case that we ran out of
-global ASIDs and then entered one big workload that effectively owns
-all the CPUs, that big workload can still get a global ASID later once
-the old processes free them up, even if we enter it before
-reset_global_asid_space().
-
-Just to be clear - this isn't an objection, I just wanna see if I
-actually understood the design.
-
-I guess it would be worth having a comment about it - especially if
-I'm missing something or totally wrong.
+Regards,
+Halil
