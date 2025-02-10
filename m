@@ -1,214 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98C7254AE5;
-	Mon, 10 Feb 2025 22:45:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62D4254B1D
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:46:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739227554; cv=none; b=HJlNh+mb82aK3hihRxMt8WjXJb1xkgpcBq3sMf8Xp9FFpiXuciNPRT/Op39HxYNHN1Mg/rbAiU0TsbD5g0exCL7SM6dk2h6GGD0qEP/V40hwAV60l5BtqLvX/9cWZLPQVmf7MjI6fVhJL2DxJwdeaFy5M5bT5d1wbNuTiKOWoI0=
+	t=1739227584; cv=none; b=stfzVi3/zMPrijXgkFeZek8G+UKr71v6lJOKgR6dOCo/dITbTZ/umuAgvhwg/k7QuaKUm65uKnvNGvKqSfXxJ1L/wYn+nifY0Y58/9jBMSxQSbfQDXwdzjOvDfwjikoELKwqDN/fZ9MRNgmCF5EK3VXPBnHo8cXVLknsXj/hJ24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739227554; c=relaxed/simple;
-	bh=2QvQuvjtWE2UoAZsXwkMffIgHlLcQCVPXK+vM2BoV2g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eclykzfUZZdn600UFIZKmL2CZtxLsLreqjGhdxLrE8aFxEonEz3ZIgZlv5iqjwpbCvGlII3K0HxQoMRu6bHc1ydHrsI9DeeDlep9qD48jJS1nB/w/zYFhieogwqCu1fT8ueXlfxES4O5Zulzj1iDEJF7VS/07PMdcJzz2aXL+Ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77522C4CED1;
-	Mon, 10 Feb 2025 22:45:53 +0000 (UTC)
-Date: Mon, 10 Feb 2025 17:45:56 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Purva Yeshi <purvayeshi550@gmail.com>
-Cc: mhiramat@kernel.org, corbet@lwn.net, skhan@linuxfoundation.org,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2] docs: trace: Refactor index documentation
-Message-ID: <20250210174556.70fc53b7@gandalf.local.home>
-In-Reply-To: <20250206141453.139613-1-purvayeshi550@gmail.com>
-References: <20250206141453.139613-1-purvayeshi550@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1739227584; c=relaxed/simple;
+	bh=TzHEd5eTrFeLbGCy70Lrd3O19A/neSYiwaiTebrdjf0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kxQRG7393jIWKJ4ldnFaqGHIV3oh1JbKbjqwbCG/FWMx9OFCcxEjUhhYxYLtT5uKQwB32nz2ai2zlNwOPX3z5+6DYZKa6lrR6JRTRMdlF9DeDGdCjsT1fmTe9zBfZW9HOX1XraVh9xcn25oJfui3IgeEuX/iMebDlZnQgs7RK/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hfRg5zvL; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hfRg5zvL"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739227580;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=XhJoOYylyScttjl10zGIAvAlzbdG8kDOJU/varHqtVg=;
+	b=hfRg5zvL9Im70+0AggXrST6EVT5FWYpWkkbbVv5YrTYWQhzVj2svSG7I376FPWtaXwAj96
+	bBf7Gwytn92VZSxl2xsyd7ZLUQyGLiwNGTEE6LpOWLURoqMq8D5D/c6O9PiLR19pU2p17l
+	5W9tidyE/LKDAzdF5acV0gfeDhaWPD8=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	sound-open-firmware@alsa-project.org,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: SOF: ipc3: Use str_enabled_disabled() helper function
+Date: Mon, 10 Feb 2025 23:44:54 +0100
+Message-ID: <20250210224453.363638-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu,  6 Feb 2025 19:44:53 +0530
-Purva Yeshi <purvayeshi550@gmail.com> wrote:
+Remove hard-coded strings by using the str_enabled_disabled() helper
+function. Remove unnecessary curly braces.
 
-Note, subject should start with: "docs: tracing: ..." as "tracing" is the
-subsystem and not "trace". Even though the directory is "trace" the
-subsystem is "tracing".
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ sound/soc/sof/ipc3.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-> Refactored Documentation/trace/index.rst to improve clarity, structure, 
-> and organization. Reformatted sections, added appropriate headings.
-> 
-> Background of Patch:
-> This patch is inspired by the maintainer's suggestion on the v1 patch to
+diff --git a/sound/soc/sof/ipc3.c b/sound/soc/sof/ipc3.c
+index 7de5e3d285e7..4a194a705ace 100644
+--- a/sound/soc/sof/ipc3.c
++++ b/sound/soc/sof/ipc3.c
+@@ -801,20 +801,16 @@ int sof_ipc3_validate_fw_version(struct snd_sof_dev *sdev)
+ 		return -EINVAL;
+ 	}
+ 
+-	if (ready->flags & SOF_IPC_INFO_BUILD) {
++	if (ready->flags & SOF_IPC_INFO_BUILD)
+ 		dev_info(sdev->dev,
+ 			 "Firmware debug build %d on %s-%s - options:\n"
+ 			 " GDB: %s\n"
+ 			 " lock debug: %s\n"
+ 			 " lock vdebug: %s\n",
+ 			 v->build, v->date, v->time,
+-			 (ready->flags & SOF_IPC_INFO_GDB) ?
+-				"enabled" : "disabled",
+-			 (ready->flags & SOF_IPC_INFO_LOCKS) ?
+-				"enabled" : "disabled",
+-			 (ready->flags & SOF_IPC_INFO_LOCKSV) ?
+-				"enabled" : "disabled");
+-	}
++			 str_enabled_disabled(ready->flags & SOF_IPC_INFO_GDB),
++			 str_enabled_disabled(ready->flags & SOF_IPC_INFO_LOCKS),
++			 str_enabled_disabled(ready->flags & SOF_IPC_INFO_LOCKSV));
+ 
+ 	/* copy the fw_version into debugfs at first boot */
+ 	memcpy(&sdev->fw_version, v, sizeof(*v));
+-- 
+2.48.1
 
-Usually it's bad form to have a patch reference itself as "Patch". The
-above could be written as:
-
-   Background:
-   These changes were inspired by...
-
-> bring the documentation into real order, similar to commit '270beb5b2aae'
-> from Linux 6.13, improving clarity, structure, and usability.
-> 
-> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
-> ---
-> V1 - https://lore.kernel.org/all/20250204133616.27694-1-purvayeshi550@gmail.com/
-> V2 - Refined formatting and improved section organization.
-> 
->  Documentation/trace/index.rst | 86 ++++++++++++++++++++++++++++++-----
->  1 file changed, 75 insertions(+), 11 deletions(-)
-> 
-> diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
-> index 2c991dc96..c4ff7e7de 100644
-> --- a/Documentation/trace/index.rst
-> +++ b/Documentation/trace/index.rst
-> @@ -1,39 +1,103 @@
-> -==========================
-> -Linux Tracing Technologies
-> -==========================
-> +================================
-> +Linux Tracing Technologies Guide
-> +================================
-> +
-> +Tracing in the Linux kernel is a powerful mechanism that allows
-> +developers and system administrators to analyze and debug system
-> +behavior. This guide provides documentation on various tracing
-> +frameworks and tools available in the Linux kernel.
-> +
-> +Introduction to Tracing
-> +-----------------------
-> +
-> +This section provides an overview of Linux tracing mechanisms
-> +and debugging approaches.
->  
->  .. toctree::
-> -   :maxdepth: 2
-> +   :maxdepth: 1
-
-I don't really know what the maxdepth gives here, but there was no mention
-in the change log why it had to be converted from 2 to 1.
-
->  
-> -   ftrace-design
-> +   debugging
-> +   tracepoints
->     tracepoint-analysis
-> +
-> +Core Tracing Frameworks
-> +-----------------------
-> +
-> +The following are the primary tracing frameworks integrated into
-> +the Linux kernel.
-> +
-> +.. toctree::
-> +   :maxdepth: 1
-> +
->     ftrace
-> +   ftrace-design
->     ftrace-uses
-> -   fprobe
->     kprobes
->     kprobetrace
->     uprobetracer
->     fprobetrace
-> -   tracepoints
-> +   fprobe
-> +
-> +Event Tracing and Analysis
-> +--------------------------
-> +
-> +A detailed explanation of event tracing mechanisms and their
-> +applications.
-> +
-> +.. toctree::
-> +   :maxdepth: 1
-> +
->     events
->     events-kmem
->     events-power
->     events-nmi
->     events-msr
-> -   mmiotrace
-> +   boottime-trace
->     histogram
->     histogram-design
-> -   boottime-trace
-> -   debugging
-
-
->     hwlat_detector
->     osnoise-tracer
->     timerlat-tracer
-
-The above 3 probably should be in the hardware interactions section below.
-
-> +
-> +Hardware and Performance Tracing
-> +--------------------------------
-> +
-> +This section covers tracing features that monitor hardware
-> +interactions and system performance.
-> +
-> +.. toctree::
-> +   :maxdepth: 1
-> +
->     intel_th
-
->     ring-buffer-design
-
-The ring-buffer-design should be in "Core Tracing Frameworks".
-
->     ring-buffer-map
-
-This describes how to map the ring buffer in user space. Maybe it should go
-at the "Introduction" section?
-
-
->     stm
->     sys-t
->     coresight/index
-> -   user_events
->     rv/index
->     hisi-ptt
-> +
-> +User-space Tracing
-> +------------------
-> +
-> +These tools allow tracing user-space applications and
-> +interactions.
-> +
-> +.. toctree::
-> +   :maxdepth: 1
-> +
-> +   user_events
-
-> +   mmiotrace
-
-mmiotrace traces events between hardware and the drivers. Perhaps this
-should go up into the Hardware and Performance tracing.
-
-> +
-> +Additional Resources
-> +--------------------
-> +
-> +For more details, refer to the respective documentation of each
-> +tracing tool and framework.
-> +
-> +.. only:: subproject and html
-> +
-> +   Indices
-> +   =======
-> +
-> +   * :ref:`genindex`
-> \ No newline at end of file
-
-
-Thanks,
-
--- Steve
