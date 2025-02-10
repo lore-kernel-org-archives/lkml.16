@@ -1,127 +1,92 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095FD256C8D
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25ABF256C88;
+	Mon, 10 Feb 2025 16:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739206715; cv=none; b=m0I4SFYbWUfj6X6dP9K2MoaBBqRg4/FMhHahhAqVep+EHyxU1/Ugy5LRQ5tN7/v+b+mNfgz4bUySvgYof7SOux+VBlr5K13lA9iKSe8jOZiUQiEb21jmwEAOx2gy5BXiS3AQPQoNVe6AhFy0ZS6umdZ/5tkho+pn0KyeIEzXn0o=
+	t=1739206769; cv=none; b=pRz6XXYMo3JVah2AeXlV07lTuljyzpfb2brqJsYcV2gz0BG71htg5/xJgGZtkaR2stLr9AjrS+f8y5rCJkT+yuYkVRYZAS4GXIPLLJg2wXptXPDZVoMNgcbb+Syy2pCPP+SU8R5B3dJTKIUbBpgCmTJA6WOn/y+DIia+zIMltxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739206715; c=relaxed/simple;
-	bh=+EYxoO/4eaTKKnUK7wm1jcos/P6WRb0f5cS36rove7U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZJ7czAoK7dv3PdWm9b+f1KAdqXXRktNIGlCzh/JGEAr1Qp33au1OHUcFsTVCwSczQ8tyfiSRyJ8QVRGf0GjNez921Sr736Wg2RR8WZV6cuiwZ4tXX4tTyLZQgjXAGvXJTbQ+zd7ZPeAiF2uvJuGW++DGmT7D6u3u6NiB9BxOW+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bDzyzdby; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739206769; c=relaxed/simple;
+	bh=EqjZQKixxYPB7j/vkC+p5WO+e5I+dXqgZTguykjhQ64=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mvlN6ewpjXOfpc6M8LFT7iN4qIe3ICXa7rWEwVY/2pKNtHFSNZNYFnsLNHOB08cbQfFrpmLe78P5w93walmTffBmUqAdGR3N6LrCPl4M1TAKc4NK0wFOLyShYhMBAc0z/qNYpkAYHNK0rik7mDtj2bYFwc0Vl9b20xwDp/gPk+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ifcxRZHv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bDzyzdby"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5dbfc122b82so14248a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:58:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739206712; x=1739811512; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cm57wNvbQ2vdjEciVDp1te7Id5gFdsUL8knVkzn6Sqk=;
-        b=bDzyzdbyLoZak/jvy+BCX89O+5+eN8rT93N2fG1TR0Wl3V0bfe+VMr2MmYF/OPo5lb
-         wt5ATiuuyjHa1T/Ox6dbkNrYqWZ96r65IJwW8tS4b5qBZfBMFV/Q/AV1KPAFk6aTG4Yq
-         HY0BayNEDSj8UhPVOVGTCvGFgj/g94w7XTUODX90w7Eh6IMuHXlchQW0RS//TZnit5X1
-         ARTOz5dqmRRUypawQJxv3TRi3UYHksEl11PSbvXZBWDLQAuOmmxiCu0UN/vrWpGhljtO
-         +9lv5r8DTidY7Bz3m/O4IMXn4rnVbcIuWoXxtTlglNdwVFvqpnif+bYj9A8jfGhSk2XP
-         NK5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739206712; x=1739811512;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cm57wNvbQ2vdjEciVDp1te7Id5gFdsUL8knVkzn6Sqk=;
-        b=M25jRF6NHdqOhU1KYlPkenHK6EFwVoP7eCIxJxkUYokX153CVBcunBKD/CLr6NSbjN
-         A5CkPbkOM03atcTtZnrAIVgdwKKZMPLIGZ17uzqmPWxmUcY6qQuJR2YoQaLWC7gWXX3I
-         90kCbW8jr1tGFEYvR78Bl7FmajrZ1TEsWv0KdbSUUEiQcJUefVUxl2UrkPTAFgTNMvnW
-         91ObvJuzAFq1snAk1ft4v/Q4zR5fNpzWm6bc49t3tW7aTwkVpmTVg0eM8MHEHLICTG3n
-         j4CsGFFq2DTfo4eOTfq26cXk3L8k2u6w5mcXU5joc7wp51Nk1qtUmbBXAPS4peJ+dFMA
-         G2gQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVnhTHIWxWeq5sZ+w/p1t3QykJgkdBlIhkqSgyp4BMwOIBzcSB8K+I+DZe+AEMRLjxMVKg0mvQ6irOGBio=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywsy7j9RG1ruUMR239MUZo0wZYkpaMJ7Ia+AFGukdkpnPhd2Z5n
-	iTrHu4DRz9y08RFSEEt/vYeSvkf6pD/ViokaHCnzo+xafMMoz9jNEFSd0mJJFee5P+kpwr6lRg5
-	opQjTApRb43p1Yl5RJ8BdSRuGXwsL/daHEZHwKlZzkK1mQQPk0Ltm
-X-Gm-Gg: ASbGncuaY7dgphS8baT983gZUviVAYKFv++QaLYILmb1CNeCHg8cJF7Q0FTaEoVTcNp
-	ogB2AGg7ulntK+MLEvume0uwmtXrQrCnONiSKj2O/7eAiyzia0+3UYiLpD97NuC2vwGDmwQ==
-X-Google-Smtp-Source: AGHT+IFnw841MFqZMe6UVhOR0RXEyOzas0we/b8udxrzoxTVjI3QHNpgdB6s5ClL8XfbUoDdeSPb0JGGXaFyvlKzHfw=
-X-Received: by 2002:a05:6402:2054:b0:5dc:e09f:d069 with SMTP id
- 4fb4d7f45d1cf-5de5bf43e67mr177841a12.6.1739206712123; Mon, 10 Feb 2025
- 08:58:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ifcxRZHv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B850C4CED1;
+	Mon, 10 Feb 2025 16:59:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739206768;
+	bh=EqjZQKixxYPB7j/vkC+p5WO+e5I+dXqgZTguykjhQ64=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ifcxRZHvi5GRrbyjMrKfQ/vkX8nHDzmrZ3bJPJdd6R/EpNhngmus2iJ9xYS30UYlJ
+	 /lvYPiNxaZGIHY2X5oVMRiQlwSxCUxez/agIWb5S2MaSe5stYfsS7yWQDXMy3u3lJZ
+	 sA+n95+tbujncQ5fpVzdrqcXHkVMVOaj1/ujh082lk6QjiYXOcIN+QF1944RAz0cH2
+	 AdTka+6WeRN5eeiBqchQH4k4d+0UQPiOFY+ePGba04NFJGUf86eGFuami6+XEcWOk3
+	 DKuHfhYeC6bbQG+ngly4I+GggaDtVSAjDzQl6FAsuIcn3idT5aGlRAY+Il8/GeFRKA
+	 ktkOX8MxQ96Kw==
+Date: Mon, 10 Feb 2025 16:59:23 +0000
+From: Lee Jones <lee@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>
+Subject: Re: (subset) [PATCH v11 3/3] leds: Add LED1202 I2C driver
+Message-ID: <20250210165923.GC1868108@google.com>
+References: <20241218183401.41687-1-vicentiu.galanopulo@remote-tech.co.uk>
+ <20241218183401.41687-4-vicentiu.galanopulo@remote-tech.co.uk>
+ <173641864745.2570436.6359371577917683428.b4-ty@kernel.org>
+ <CAMuHMdXNOEXuEADeSGGHw88Tse+QjSkknKYGH-kk02jSpiuNiQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <629167c1-9be0-6128-8605-eb02391e821d@redhat.com>
-In-Reply-To: <629167c1-9be0-6128-8605-eb02391e821d@redhat.com>
-From: Sami Tolvanen <samitolvanen@google.com>
-Date: Mon, 10 Feb 2025 08:57:55 -0800
-X-Gm-Features: AWEUYZmZq810A2nkZIkAKPj4stps_q_lRKH-4FpQTq4FT9GxN7r_QaAqRE1hH8U
-Message-ID: <CABCJKucmOTVF1jY3vM7VKHuLkDeUxK1EU7YK=C+vgfWvgZFWPQ@mail.gmail.com>
-Subject: Re: [PATCH] dm-verity: do forward error correction on metadata I/O errors
-To: Mikulas Patocka <mpatocka@redhat.com>
-Cc: Akilesh Kailash <akailash@google.com>, kernel-team@android.com, 
-	Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, Milan Broz <gmazyland@gmail.com>, 
-	dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdXNOEXuEADeSGGHw88Tse+QjSkknKYGH-kk02jSpiuNiQ@mail.gmail.com>
 
-Hi Mikulas,
+On Tue, 21 Jan 2025, Geert Uytterhoeven wrote:
 
-On Mon, Feb 10, 2025 at 7:04=E2=80=AFAM Mikulas Patocka <mpatocka@redhat.co=
-m> wrote:
->
-> Do forward error correction if metadata I/O fails.
->
-> Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
->
-> ---
->  drivers/md/dm-verity-target.c |   19 +++++++++++++++++--
->  1 file changed, 17 insertions(+), 2 deletions(-)
->
-> Index: linux-2.6/drivers/md/dm-verity-target.c
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- linux-2.6.orig/drivers/md/dm-verity-target.c        2025-02-04 13:52:=
-45.000000000 +0100
-> +++ linux-2.6/drivers/md/dm-verity-target.c     2025-02-10 15:55:42.00000=
-0000 +0100
-> @@ -324,8 +324,22 @@ static int verity_verify_level(struct dm
->                                                 &buf, bio->bi_ioprio);
->         }
->
-> -       if (IS_ERR(data))
-> -               return PTR_ERR(data);
-> +       if (IS_ERR(data)) {
-> +               r =3D PTR_ERR(data);
-> +               data =3D dm_bufio_new(v->bufio, hash_block, &buf);
-> +               if (IS_ERR(data))
-> +                       return r;
-> +               if (verity_fec_decode(v, io, DM_VERITY_BLOCK_TYPE_METADAT=
-A,
-> +                                     hash_block, data) =3D=3D 0) {
-> +                       aux =3D dm_bufio_get_aux_data(buf);
-> +                       aux->hash_verified =3D 1;
-> +                       goto release_ok;
-> +               } else {
-> +                       dm_bufio_release(buf);
-> +                       dm_bufio_forget(v->bufio, hash_block);
-> +                       return r;
-> +               }
-> +       }
+> Hi Lee,
+> 
+> On Thu, Jan 9, 2025 at 11:31 AM Lee Jones <lee@kernel.org> wrote:
+> > On Wed, 18 Dec 2024 18:33:59 +0000, Vicentiu Galanopulo wrote:
+> > > The output current can be adjusted separately for each channel by 8-bit
+> > > analog (current sink input) and 12-bit digital (PWM) dimming control. The
+> > > LED1202 implements 12 low-side current generators with independent dimming
+> > > control.
+> > > Internal volatile memory allows the user to store up to 8 different patterns,
+> > > each pattern is a particular output configuration in terms of PWM
+> > > duty-cycle (on 4096 steps). Analog dimming (on 256 steps) is per channel but
+> > > common to all patterns. Each device tree LED node will have a corresponding
+> > > entry in /sys/class/leds with the label name. The brightness property
+> > > corresponds to the per channel analog dimming, while the patterns[1-8] to the
+> > > PWM dimming control.
+> > >
+> > > [...]
+> >
+> > Applied, thanks!
+> >
+> > [3/3] leds: Add LED1202 I2C driver
+> >       commit: 939757aafeb9c266dda37657ee5f7a73ffd35ae2
+> 
+> You also have commit 259230378c65ebb6 ("leds: Add LED1202 I2C driver")
+> in mfd/for-mfd-next, which dropped the change to drivers/leds/Makefile,
+> and changed the Link:-tag to point to the older version v10?
 
-Don't we still have to check for io->in_bh before trying to correct the err=
-or?
+Interesting.  Not sure I noticed and if I did, I must have fixed it.
 
-Overall, it would be nice not to duplicate code here. Should the
-metadata error correction / handling be moved to a separate function
-similar to verity_handle_data_hash_mismatch?
+This is the commit that made it in:
 
-Sami
+  939757aafeb9 ("leds: Add LED1202 I2C driver")
+
+-- 
+Lee Jones [李琼斯]
