@@ -1,79 +1,148 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715BB1C1F3B;
-	Mon, 10 Feb 2025 09:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BED1BEF90
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739179897; cv=none; b=TuHH5IzXn59csZ7EfpgffTRSfo2VyPkrv28g8Qn5DPNFfDUdq1apXpmpjjyG3pNRs8kDsjR9Sxrw+EalqrhiOrH+CPtXL7JYXhCI0w5abkDZCRaB0jlwF1X7sGwua8UJeW8p6aguYF+e8U8WhsXeTYV30cpC0ufy1VOpwd3ciTA=
+	t=1739179970; cv=none; b=Wy3L8+3BH5a1yqnNoGHGqExzJA1aIyVmDSq5oSDi4qvyY9IKmdpRP0JtcsUNB0bgPPc9WAOmAiaNuoY3FnYVLJYMA/4HdIJvvajCdRO9BQtYmE9z1DP3RuaiksTCAYdMFdOWtetEEV0nAVI2ETtE+oMo5unRZ7cglVD7RnGmeBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739179897; c=relaxed/simple;
-	bh=pXGxIo5hn5kOmvtAgHj2x3TMkl0BfhjgSsLMST5UZsk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fqVG7DboH7qPW5AoSPQd+EnAm1tONwjXlEI+lmWH5PpY158h/TXdCsyLM1AQJbTdeSQ2lwrKk9B6G1IuXtr4Msn3Qrg9eFSCEcTc+dht/3v5mXaqIRD4Phy3OqDge5CZiEBZXZt0x7EuON6JZlFjtBDGh2qbNLv7bAqdoCeuJnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Lj6juPHd; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1739179970; c=relaxed/simple;
+	bh=V0pnai3sG2FUHiUUgHCPEL9XqGih2gi3fiou37xJXjA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NUYZXfJqSn7q5gIDYqjv6nGyc/uGuK84n2NgqwjYVsGnqRJRV7emuN7FIBPMbjhGMU4T5aFSGJOHGfMTLxAyRy8fI5PUz9ktFYyINEg/gFlTxsWeIryhRx8P9j0UO3gkHKSeiNpOVGo6Lq/otSYMBtPN+0ocZISSXsnhgPOVXNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CYya6BjD; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Lj6juPHd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=Csho2nHTJojR4kG1I27uhgWuIKghIgeeXA2mkBpOoks=; b=Lj6juPHdtwNkVoknQTMeTyGjbu
-	ESHY2wLJ/UG7qaJrJI1BNxOOU3YcTaJkDbs7PsZpK6Q0TMFnGr6Bf8zIGMDCPYxeYMYejSgboF2lc
-	xTArcGjyj21uefzndwThQM3TUxqVT9PECXaZcsu7uhVzU74aBVdGvt3afMR88sZexWiq+0Ka2MYPi
-	SQl46T8AvehS2MoevhlPLsiqPU/sFgJ//oneCsEjkJfrvZyVMTyp8St6+GDOvqpv5uaNn8XnK8om1
-	jnljKIpjGo9sAxVyoX/V0WJvJnsndn2PYoj5eslhh+872qTWAxgH+xryS1HN6v6aB/CItLPrY8YrC
-	fEy10S6w==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1thQ8W-000000006lL-1e85;
-	Mon, 10 Feb 2025 09:31:28 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id EE9B43003E1; Mon, 10 Feb 2025 10:31:27 +0100 (CET)
-Date: Mon, 10 Feb 2025 10:31:27 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Will Deacon <will@kernel.org>, Waiman Long <llong@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Barret Rhoden <brho@google.com>, Josh Don <joshdon@google.com>,
-	Dohyun Kim <dohyunkim@google.com>,
-	linux-arm-kernel@lists.infradead.org, kernel-team@meta.com
-Subject: Re: [PATCH bpf-next v2 00/26] Resilient Queued Spin Lock
-Message-ID: <20250210093127.GD10324@noisy.programming.kicks-ass.net>
-References: <20250206105435.2159977-1-memxor@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CYya6BjD"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43618283d48so27593655e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 01:32:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739179967; x=1739784767; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VzZ4qnyDjt3/FJ2e8uCPnYFFvXSGSVm1CHMdsRPG1Pg=;
+        b=CYya6BjDrMNVXAC9qlwTxasiRAhx0POBDfYLtv6CQmH4oPnKAcX7P7RFbyII1pbBZR
+         PN4U/CjfIXIc5c9OXKKi9/bjecgEU8QqBPzIj7LqQF0moUJd+tKsJ9Zvcnk6PUvxCoVy
+         c5P/EOfPKhY+ovMIsfhP4Mm97B1VLOVHW2WYSCtae5av24zy8Wvo4lQ29io0seq70nM5
+         kGxlaiijxJkGADApwBCELEbnQGDf6gahuTXFQGH7Brk8MUEaw9yonEwfs0nQfAlP9F7g
+         ovn52rxGB8VC3xhJWfwhf8nn+apKtqk2FAVrYGWJAAIHW7fSPJsCLfYccamzB4Rs9bZM
+         I7rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739179967; x=1739784767;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VzZ4qnyDjt3/FJ2e8uCPnYFFvXSGSVm1CHMdsRPG1Pg=;
+        b=MM8sYSqqpeWlL9usaPxPT70eYS1KIMHFMvFQIJ5VkbF4GObJQFFWO/Z0JpAiXkcdZk
+         2KqbcsWIupB5YuXpoXGdux2MXokwn7XdhDLDXjU1Zx1xqzJMaXciFM3tOx65wU50vTaf
+         L1QjShnFKMIzw9sDd/2jlTNu7N12vtTGOakvGV9U6iLOd6DFJ3dNglSHdFExO7dzCnP+
+         FJj8LZ5FnHusO6upzHgFRrGRcHSCwdxZAUYLs7hmEZzsaqskHf1zU1zl8dlb8ihhyU00
+         8o8+z7/iXKimgxUnCiRVrjzjUoAbE7mnHOl63IL/0/7gMG8IhLDPZ2N6eQ19AK1Tl53n
+         L+cw==
+X-Forwarded-Encrypted: i=1; AJvYcCUrUkK5ljlqrp8vev8tm7jqkJej3eZ/IjRzELtzTjIYMTDO51KGIIr5BWdhdeA270krLak0IFmaXJWSjqQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1CvdA+NySArsLqFEFiYr9rxvIuAeu7Lba6xrM+Afu8tY3ff3z
+	4rzclko09+qntOjJ1Vlb5+KHtSif43hzhabclUuYhnpNF3f/0BK5CTh09UB+T2g=
+X-Gm-Gg: ASbGncuOaSzLKTCOP75WIrsgdpSLpvl84Jc/R+4RxaSI7vo4QxzUpbPjqVrgGIjzLH1
+	q5lcKBDgbAgNMTWMhWZjbrAXUHHwQE8pQQ+3co+6EUGxs7znwEkfFHgZBuy8vld7P0bjpfvCTaY
+	ceZ/mBj3lMWNR1FoL1kzTetAXgxRWuifGImx7plrd8+VwEO3ayS3P76pAneG2rpW8l9ctWp7hRe
+	5yac0f5UDScPpC2k1EyGmvlIDOeRH9VrcrdeYnRojoP0DmQ9IVE9jsYlSwdw0Dxxmrl0h95zAx+
+	q8oMLcDf66s+4bQVxcGnGtGX9XW9kZ7RSXmA
+X-Google-Smtp-Source: AGHT+IGNDPBJFJRV2pnpEXOymShd+51OHk+y0ckKkGyIoLDZ3cbt+pXP/FQMMjjsEzIh0bn9twywjQ==
+X-Received: by 2002:a05:600c:4f47:b0:434:a367:2bd9 with SMTP id 5b1f17b1804b1-4392499090cmr104561845e9.14.1739179967075;
+        Mon, 10 Feb 2025 01:32:47 -0800 (PST)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391da964e2sm141340895e9.4.2025.02.10.01.32.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 01:32:46 -0800 (PST)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: [PATCH v3 0/4] dt-bindings: display: qcom,sm8[56]50-mdss: properly
+ document the interconnect paths
+Date: Mon, 10 Feb 2025 10:32:38 +0100
+Message-Id: <20250210-topic-sm8x50-mdss-interconnect-bindings-fix-v3-0-54c96a9d2b7f@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250206105435.2159977-1-memxor@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALbHqWcC/6WNQQ6CMBBFr0K6dkwZLKAr72FcAJ3CJNKStiEYw
+ t0t7Nzq8v3kv7eKQJ4piFu2Ck8zB3Y2QXHKRDc0tidgnVigRCVRVhDdxB2EsV6UhFGHAGwj+c5
+ ZS12Elq1m2wcwvIDW10oZxEJLJZJx8pTmo/Z4Jh44ROffR3zO9/W3zpyDhFphm+uyIbqU9xfbx
+ ruz873YQzP+IcckN1WOba1Nme5f8m3bPpm/5dFEAQAA
+X-Change-ID: 20250207-topic-sm8x50-mdss-interconnect-bindings-fix-dd975f223d05
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1982;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=V0pnai3sG2FUHiUUgHCPEL9XqGih2gi3fiou37xJXjA=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBnqce7qdjWC+8P/KsuKPrL8cabCUEntHyRqm8B1enU
+ NRMB9pCJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ6nHuwAKCRB33NvayMhJ0fGGEA
+ C0r9MZn5sVQ28nvrKPf5shEIsxNoLOdCxbfktrO0LwKE2O/uoA9mrOfbpaJCkho3ey4zrlR6XFNepd
+ 3uQFLaLMDOdbm7UBGJnoar2pIWXhAwPCEwxF5PG4kyZ8la7OVzUQ8aX7OQOQgRfPZieGV3s/ZLrKQU
+ RIo4a8UcTjgMrSMShHWmOCHua61d7o/i5Qokg5xMAIrHGMC0VKsVh5lG6tB4n9zxghrjoipVbFfzfz
+ LntwRNOdj5u0jodvvpVX2LMnwFnLCIazTJ8wpbr5bMYmAyxcd/hy/63VD6t1LYquYox38LSmql9L2w
+ 4tt8Cg2A4kdDPXxNR/BDutUHqSD8GWwD5s0TWJACxaJPqlZde3/+rLcoqsBkiNNCLr/wvgnkrtjLTi
+ uOXiiknsfJQ5lREtRagYonl//UAGRT7gftmKKtxWuTeNsp6ufUP/6bnwHeaoeZTi2K8xaKc3YCyMRJ
+ 4QJwynbAlGDAcK4MJSrvmDFCY668ep2bx/z0scGvsHaV7xxbZIcNDeogQnj27SeLQp66dpbHo5u2zN
+ tJbCY+tdjU9wsR7l8MpInQHS/mEAPlMKUiNnB8IxG5dGRSK/lfgiN8Eq/pIr/oBfbL7w0o4fHbuc1O
+ 0Bv4X1yzetydPzeVALJNNzwAxH/9Kud6NbVvzew4Eqwh87+YLox5h9UKiZYQ==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-On Thu, Feb 06, 2025 at 02:54:08AM -0800, Kumar Kartikeya Dwivedi wrote:
+The mdp1-mem is not supported on the SM8550 & SM8650 SoCs, so properly document
+the mdp0-mem and cpu-cfg interconnect entries.
 
-> Additionally, eBPF programs attached to different parts of the kernel
-> can introduce new control flow into the kernel, which increases the
-> likelihood of deadlocks in code not written to handle reentrancy. There
-> have been multiple syzbot reports surfacing deadlocks in internal kernel
-> code due to the diverse ways in which eBPF programs can be attached to
-> different parts of the kernel.  By switching the BPF subsystem’s lock
-> usage to rqspinlock, all of these issues can be mitigated at runtime.
+This fixes the following errors:
+display-subsystem@ae00000: interconnects: [[200, 3, 7, 32, 1, 7]] is too short
+        from schema $id: http://devicetree.org/schemas/display/msm/qcom,sm8650-mdss.yaml#
+display-subsystem@ae00000: interconnect-names: ['mdp0-mem'] is too short
+        from schema $id: http://devicetree.org/schemas/display/msm/qcom,sm8650-mdss.yaml#
 
-Only if the called stuff is using this new lock. IIRC we've had a number
-of cases where eBPF was used to tie together 'normal' kernel functions
-in a way that wasn't sound. You can't help there.
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+Changes in v3:
+- EDITME: describe what is new in this series revision.
+- EDITME: use bulletpoints and terse descriptions.
+- Link to v2: https://lore.kernel.org/r/20250207-topic-sm8x50-mdss-interconnect-bindings-fix-v2-0-f712b8df6020@linaro.org
 
-As an example, eBPF calling strncpy_from_user(), which ends up in fault
-injection and badness happens -- this has been since fixed, but still.
+Changes in v2:
+- fixed example in qcom,sm8550-mdss.yaml
+- Link to v1: https://lore.kernel.org/r/20250207-topic-sm8x50-mdss-interconnect-bindings-fix-v1-0-852b1d6aee46@linaro.org
+
+---
+Neil Armstrong (4):
+      dt-bindings: display: qcom,sm8550-mdss: explicitly document mdp0-mem and cpu-cfg interconnect paths
+      dt-bindings: display: qcom,sm8650-mdss: explicitly document mdp0-mem and cpu-cfg interconnect paths
+      arm64: dts: qcom: sm8550: add missing cpu-cfg interconnect path in the mdss node
+      arm64: dts: qcom: sm8650: add missing cpu-cfg interconnect path in the mdss node
+
+ .../devicetree/bindings/display/msm/qcom,sm8550-mdss.yaml  | 14 +++++++++-----
+ .../devicetree/bindings/display/msm/qcom,sm8650-mdss.yaml  | 13 +++++++++++--
+ arch/arm64/boot/dts/qcom/sm8550.dtsi                       |  5 +++--
+ arch/arm64/boot/dts/qcom/sm8650.dtsi                       |  7 +++++--
+ 4 files changed, 28 insertions(+), 11 deletions(-)
+---
+base-commit: 808eb958781e4ebb6e9c0962af2e856767e20f45
+change-id: 20250207-topic-sm8x50-mdss-interconnect-bindings-fix-dd975f223d05
+
+Best regards,
+-- 
+Neil Armstrong <neil.armstrong@linaro.org>
+
