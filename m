@@ -1,105 +1,197 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F962566D2
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10EC025742A;
+	Mon, 10 Feb 2025 18:17:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739211461; cv=none; b=KnS2dackeqB6fv64kUZOt++zFyjBDZVAih+0gziVfl6SNY4pPEnO8pxZbfgSHDWuRekIuHpEQOBZiL0F9dmKIvPRDsGGRS0l+VBQlPPXCQz7aOMfDqXMWko2jl1B+Fu2Hczn53/VdAQYDzIbpqGzbsgqqaeLEk3vwTP2rchPfGY=
+	t=1739211463; cv=none; b=JN5MArl5Wvayea9zwzUcYrf2bHljeytzvLXIe+AVEoCRs6tZr8v04Qau3VCHQhS6dGQmThhetw77LPy2yvSQmoCYtJgiwePdi62ZpfJvoXunMJAg+i8JSiPEYkMXrGnZO1l5eFCPWToHmeLpU9TCbjAPbrJYs3pK6t4f5Vg4vGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739211461; c=relaxed/simple;
-	bh=Wh5yx6BMUnphP2RVBhvJu+atXSSYBvxEAcLfKspktSE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XGJENo0Dlu9bQU8E1cfPUXBAcKtWZ6AcoOix1qWYZoxqM1sRKanyAiVX06AH3s5IaFWPBdPSGe4LKRzOUGAKMTJUWr+qwDOqAQdZ/gYNIq3BRFejc6guvetcvCym5+kv8/itsgIYC0p7rowoHeBTZdpKq6X0Kwodc7UzTKCEZM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PsQprjGz; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739211463; c=relaxed/simple;
+	bh=WiOKGuitaydzhswX/7JM6O1nTPijJq8eyPlKsuXqT/0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iywAW9+cos94xVC7hArxKDIvz50a4H2lPOQPm2Tv5jB073OtIzNA3eAArwjkxlDhgbIwE2Zz3vHExq9beM50ju+bQlLT+rusf1AOOrhc8tEzh2l+/Nm7n1Ygy2ZgGBLIm8eJqjdpwqIZQhuXE4ojctGoKrW07Q4GHYncafYl9GE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SYC5e8jA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PsQprjGz"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5de74599749so2315718a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:17:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739211458; x=1739816258; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qHaDIsqj34B8usesjY16LwOg4JnnE1Cbsm7V9RJsdE4=;
-        b=PsQprjGz3ROFlSIQZf+hdQLGtFdi6zZZR9+GIGFv2lB6OQyU6mrcFoC60ODFSq74PW
-         oBSuTWodn50rcSzX/+F+W3s69hs66SENM9HFRmd3NHK2jdkimURKnlJ264OE9oHxRlB5
-         NutwbHN641OhEOxVfLRLLsoyI08JD7/IJNGrpd4/rufdwH+dTW08pdv4z1J5isqAuGcf
-         PNSbvRoKIxkht7ggH2D8JDtwmGDhK7nHZjwwpgunWIpqcoNodRIMZTsCiC0TJve6GQXr
-         7Fd4THN2slCEQdeOJHR+AkyOMtp+OCDxPhkdf4SKmA6IF3tfoIQbg1Db7uKS63oSjWqQ
-         dHhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739211458; x=1739816258;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qHaDIsqj34B8usesjY16LwOg4JnnE1Cbsm7V9RJsdE4=;
-        b=KvAi2uCSGC2Z4CteuKh064zcehstWaI2eZmmHOcLS9TibhYgB1qmLeiCR1BXjzj7rw
-         3xR6MVS9omCioz53ZtszwMM2SlFz9d17znXukJshh+4S3aj8Z/sAYnh6FCPKHGJrm6Gm
-         zbWuZ/zxZMvRVULHmICyUWwHQL/2siEmN0si0wfzgrOLMSROch/oimLHa0X6SgQ3/wC2
-         kkFssm6GhKBDml9zztNqzOiZ6qfdNiYT8IaOtbo3p4qSfA24cwWadAzy3oZlWulE4cw0
-         8WP8zSoRbAnrwa7hwMU0T1VWunO4qoIjZeNZ5VgriEwNFgRl3T3g0XqFtMrRmnZgV8KF
-         PRKQ==
-X-Gm-Message-State: AOJu0YwlNro0xqrspSauvvjSvtDHzX8NqDmUBQ9Kpnih0kPhu3R6HUSm
-	WS/08+n5gAOniTznhMlceY5j7zVeUQxMQFCpyvTDic8FBaHoc+MeHY7joPY1qvw=
-X-Gm-Gg: ASbGncsWkm6bnP6RDWWaJcTiy8e+plpj8wklZ7exe1a2/bJpw4sbiPV36dWGONivxsY
-	x04O24v/zJHQatg7uC3QpU4iPjK5BjYdOiKVoDqivg8fMxz+itjxqLKTDwqdusXOkMnEpaW7RNT
-	p6n+2jf+8g12kZ0W7jaOlgcpgbRFdwnA/LrSsAeHgmYGO7KlJ97q0rTU0Y1bW0KFWGE2Ayqmbh+
-	tNvpjEDR55MU2qMyP5d8J/YEKdxXAJNpfkNNCdZ+p+h6BoVArRtQJFcGKKT+S5LDlykKNque8ei
-	BAT7WGM98AH1mkXLzWtunJJN
-X-Google-Smtp-Source: AGHT+IE17precGVn60p0mKS1K0f7v1etGQpp1R/N00rlHb4aVUugfxbIzoj2Q7spw41fxBN5V9dokA==
-X-Received: by 2002:a05:6402:5290:b0:5d9:a62:32b with SMTP id 4fb4d7f45d1cf-5de4503ff1emr15027701a12.7.1739211458355;
-        Mon, 10 Feb 2025 10:17:38 -0800 (PST)
-Received: from [192.168.0.14] ([79.115.63.124])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de4690311csm7037457a12.60.2025.02.10.10.17.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 10:17:37 -0800 (PST)
-Message-ID: <88c69965-ed8b-4895-ac99-11a6cddd1a42@linaro.org>
-Date: Mon, 10 Feb 2025 18:17:34 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SYC5e8jA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02401C4CEE6;
+	Mon, 10 Feb 2025 18:17:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739211462;
+	bh=WiOKGuitaydzhswX/7JM6O1nTPijJq8eyPlKsuXqT/0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SYC5e8jAmnFQbgWzl7VBI9YMtbd7So6JvOfGkmZR4rPjBqZ4L77d44l+d00zp2aPK
+	 vdY2EDi971nV/mQePhMvYhghFcmArOCv3gVcP2lJiAK0FN3KPcy2bhUNSh+b8pbgMK
+	 jD+oZXJW6CRk1yRxk36qHlpWWwKFwyXuQ5iEPykue89vmpXr2X9MqFOqc2O0gBdD6a
+	 oCyBLJXpsqq0u00imJlBSuR+8Y6VTLMeycXL1n0SI8dszQCypYTkKHx4OGpFwOmEiT
+	 jYACq03l9RxT9tsx6qROQ4SbUcgSmnx8ymMVJUb1kGv2HGgKdi5gmL/d1Y97vRoS9w
+	 3uMgSSMariMfg==
+Date: Mon, 10 Feb 2025 19:17:39 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, 
+	Jagan Teki <jagan@amarulasolutions.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Paul Kocialkowski <contact@paulk.fr>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, =?utf-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH v6 14/26] drm/bridge: add support for refcounted DRM
+ bridges
+Message-ID: <20250210-proficient-millipede-of-recreation-91da6c@houat>
+References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
+ <20250206-hotplug-drm-bridge-v6-14-9d6f2c9c3058@bootlin.com>
+ <20250207-ingenious-daffodil-dugong-51be57@houat>
+ <ucttjaf3trkgtpvhnsj7xfsybhnoi4qqow5ucwghlggivbagy7@gngjhbtu73lb>
+ <20250210-bold-steel-collie-cecbad@houat>
+ <CAA8EJppyDiAeH8bm-rdCUsGoyVOrp=4AvrYLJ-=5BTLtmnP11g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/4] arm64: exynos: gs101: add ACPM related nodes
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>,
- daniel.lezcano@linaro.org, devicetree@vger.kernel.org,
- Alim Akhtar <alim.akhtar@samsung.com>, peter.griffin@linaro.org,
- vincent.guittot@linaro.org, Conor Dooley <conor+dt@kernel.org>,
- linux-arm-kernel@lists.infradead.org,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, willmcvicker@google.com,
- linux-samsung-soc@vger.kernel.org, andre.draszik@linaro.org,
- Catalin Marinas <catalin.marinas@arm.com>, ulf.hansson@linaro.org,
- Will Deacon <will@kernel.org>, arnd@arndb.de, kernel-team@android.com
-References: <20250207-gs101-acpm-dt-v4-0-230ba8663a2d@linaro.org>
- <173920411592.476427.15574016492470186426.robh@kernel.org>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <173920411592.476427.15574016492470186426.robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="ctkvotoob64tevup"
+Content-Disposition: inline
+In-Reply-To: <CAA8EJppyDiAeH8bm-rdCUsGoyVOrp=4AvrYLJ-=5BTLtmnP11g@mail.gmail.com>
 
 
+--ctkvotoob64tevup
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v6 14/26] drm/bridge: add support for refcounted DRM
+ bridges
+MIME-Version: 1.0
 
-On 2/10/25 4:22 PM, Rob Herring (Arm) wrote:
+On Mon, Feb 10, 2025 at 04:23:44PM +0200, Dmitry Baryshkov wrote:
+> On Mon, 10 Feb 2025 at 14:31, Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > On Fri, Feb 07, 2025 at 09:54:06PM +0200, Dmitry Baryshkov wrote:
+> > > On Fri, Feb 07, 2025 at 12:47:51PM +0100, Maxime Ripard wrote:
+> > > > Hi,
+> > > >
+> > > > On Thu, Feb 06, 2025 at 07:14:29PM +0100, Luca Ceresoli wrote:
+> > > > > DRM bridges are currently considered as a fixed element of a DRM =
+card, and
+> > > > > thus their lifetime is assumed to extend for as long as the card
+> > > > > exists. New use cases, such as hot-pluggable hardware with video =
+bridges,
+> > > > > require DRM bridges to be added and removed to a DRM card without=
+ tearing
+> > > > > the card down. This is possible for connectors already (used by D=
+P MST), so
+> > > > > add this possibility to DRM bridges as well.
+> > > > >
+> > > > > Implementation is based on drm_connector_init() as far as it make=
+s sense,
+> > > > > and differs when it doesn't. A difference is that bridges are not=
+ exposed
+> > > > > to userspace, hence struct drm_bridge does not embed a struct
+> > > > > drm_mode_object which would provide the refcount. Instead we add =
+to struct
+> > > > > drm_bridge a refcount field (we don't need other struct drm_mode_=
+object
+> > > > > fields here) and instead of using the drm_mode_object_*() functio=
+ns we
+> > > > > reimplement from those functions the few lines that drm_bridge ne=
+eds for
+> > > > > refcounting.
+> > > > >
+> > > > > Also add a new devm_drm_bridge_alloc() macro to allocate a new re=
+fcounted
+> > > > > bridge.
+> > > > >
+> > > > > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> > > >
+> > > > So, a couple of general comments:
+> > > >
+> > > > - I've said it a couple of times already, but I really think you're
+> > > >   making it harder than necessary for you here. This (and only this=
+!)
+> > > >   should be the very first series you should be pushing. The rest c=
+an
+> > > >   only ever work if that work goes through, and it's already hard e=
+nough
+> > > >   as it is. So, split that patch into a series of its own, get that
+> > > >   merged, and then we will be able to deal with panels conversion a=
+nd
+> > > >   whatever. That's even more true with panels since there's ongoing=
+ work
+> > > >   that will make it easier for you too. So the best thing here is
+> > > >   probably to wait.
+> > >
+> > > Luca and I had a quick chat on this during FOSDEM. I really think that
+> > > panel (part of the) series can go in first as it fixes a very well kn=
+own
+> > > bug _and_ allows a pretty good cleanup to a whole set of drivers.
+> >
+> > I don't necessarily disagree on principle, but if you state that it can
+> > get first, and fixes a known problem (which one?), then it should be a
+> > separate, standalone, series.
+>=20
+> A problem of panel bridges having the wrong lifetime because of devm_
+> attachment to a wrong device and so either being kept for too long or
+> being destroyed too early.
 
-cut
+Yeah, and panels too. Which isn't solved there.
 
->> Bindings for google,gs101-acpm-ipc are proposed at:
->> Link: https://lore.kernel.org/linux-samsung-soc/20250207-gs101-acpm-v7-0-ffd7b2fb15ae@linaro.org/T/#mb557ee342de628b1a8e462d4fb7c3ac6eb8be4e4
+> > Ever-expanding features are bad for both the reviewers and the
+> > contributors, even more so when the discussion happens off-list.
+> >
+> > > With all those panel / bridge wrappers gone we should be able to see a
+> > > clearer picture of what individual drivers are doing. In other words,
+> > > which memory and which code actually hosts and uses internal
+> > > 'next_bridge' reference.
+> > >
+> > > > - This patch really needs to be split into several patches, somethi=
+ng
+> > > >   along the lines of:
+> > > >
+> > > >   + Creating devm_drm_bridge_alloc()
+> > > >   + Adding refcounting
+> > > >   + Taking the references in all the needed places
+> > > >   + Converting a bunch of drivers
+> > >
+> > > The last two parts seem troublematic to me, but, I must admit, I didn=
+'t
+> > > spend so much time reviewing all drm_bridge usage patterns.
+> >
+> > Why? the third one is already done by that patch, the fourth can
+> > relatively easily be done using coccinelle.
+>=20
+> I have doubts about cocci. It doesn't have a way to know, what is the
+> lifetime of the references to the reference-holding memory. Maybe I'm
+> missing a point there.
 
-cut
+It doesn't matter? Cocci doesn't (have to) understand the code, it
+generates a patch for you. It's up to the author to make a correct
+patch.
 
-> New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/exynos/' for 20250207-gs101-acpm-dt-v4-0-230ba8663a2d@linaro.org:
-> 
-> arch/arm64/boot/dts/exynos/google/gs101-oriole.dtb: /firmware/power-management: failed to match any schema with compatible: ['google,gs101-acpm-ipc']
+Maxime
 
-Thanks for the report. The bindings are proposed at the link above.
+--ctkvotoob64tevup
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Cheers,
-ta
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ6pCwwAKCRAnX84Zoj2+
+ds3DAYCmyuWWTQzL+uHFZsj4ooH84JF7ylfCHkygjk4bJCQXQisORfKKbJfiPywk
+z2E+5o0BgLSZ3mrnwgjna4TApCO5ujytoxWxMXYaZK8XX1nkPOV0t4H3yXXgLltd
+APIGGfkStg==
+=nbSx
+-----END PGP SIGNATURE-----
+
+--ctkvotoob64tevup--
