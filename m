@@ -1,65 +1,67 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2105.outbound.protection.outlook.com [40.107.255.105])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2058.outbound.protection.outlook.com [40.107.92.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A9126296
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 06:47:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.105
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DEB2134BD;
+	Mon, 10 Feb 2025 06:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.58
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739170027; cv=fail; b=HwbayPtIFizoIunRqiWn8GHOxq6qucoUj67P6u/B7cxrCrNgcRikvWshrXpU+Oa0tuWOAqz5qA2GCbS6ww8H0wVqaAoBNW66186a+qy/6/s4lQWSOCCMB0zmqI9veScFOccbZmYU20K2eWlMGRrmUDz/f9QZ+jPacvGbwfYh56s=
+	t=1739170126; cv=fail; b=HToWdqiGSAMyDd/Adql9+tMP6NkXwuNu1lkYw36KktkjqmO2t7ZHrmS++6A/5ZVMpJ28dotKyWIWTaCPuLJRfRg/vo42Ngoi2xWd27N9ixCJVbdqleLHUXGpcbFUcJKMYvACHXAoWUte7uherbBWeUD8IUakdPQgkMDLtJXP/SU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739170027; c=relaxed/simple;
-	bh=HJ3F0k92bHzIpaHa3DmI/Wl+TSgTVore5yvdipyizec=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=a+U3S5wRTmxlscAUWJsk165angyEurLXcv/O1WEL5hLxNa830fo+gi4fQWhxjLFmH4/OPe6ldLeEnfwYPw1R100OwErpC0yUm/32XuFctWKEIcU4YWmqegf6P0o5RLWx1bB0ah09sYG/j0ubjDyZBFMV2ukrFQu67QqbvHT6O50=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=hiYBNoQU; arc=fail smtp.client-ip=40.107.255.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+	s=arc-20240116; t=1739170126; c=relaxed/simple;
+	bh=G9FqypnUUT+f9kerBppRCWFP5gmdmP9Qoe/8tDYdf4s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=abBFbEfCzTHO3HmD6eO4jQ/TeqZ88kE7WbUMidqfd0B+ZTptV9cESts5+jCimuiaog2h1nt/Bgx62U3tgARDwLs7qbaxwDpBqgZNW/IffqFWnxEv1BCQJnBEFDHQXGsKHKUm/XuFoSbO1PuC7yqgSuuY17Gj4q+ySqO/I5IAt24=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=r7Ks1RkC; arc=fail smtp.client-ip=40.107.92.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="hiYBNoQU"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="r7Ks1RkC"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JD4nFIRgi2hyXUb71qfrdu41BWFnbnKQljlb8v4QlM6DrAIwrNQhlRNcbani/Sc+rkizc2mKcZ5zq8RYckN05Okrk24GbY8vqmaw1rrERvvpMfcdpZQ5COb3C0+T7Ku/lO3ASVb24CDrhjUjKup0KjW1UWUN/aLUC1dCJApMedjf/UgeQMiFvK7YsqvSU6Z/NooLEEmqnRAgoQ5Td/7SmTgAH4ij7MrtV0PE6S5uiwBDhI5LsJk5FPurJ8kt3SOiDTHTAUBRIQpLZZRz+r9zdsfzwzB/nG9czHXl3OjSB5Ol/Kdaoi6WpjONp6TiXj8j6t4+WDkvLizDRVgXuKFn5A==
+ b=X6VxOhchp/ETiue4rBQZ21bwISly7OxFaqiv/85UtflRQQZikq/EK6XyxRuWhjK/2MR2c9yPOVUjRvLGcBEit6UirgildwqfaNHfinQLvuDW0JUuvNeXa3pNjFHXoCQVFax0AHXhpGsTw7bN5MtHuW7XhflQfvmiHlweGBeKjvkh9eBbeqQFAbKWCybATHdB6WPO+Zw9H0yv5UIL309hZDDzrpdOdyTm97Y0F2PTmpM9/jZQw9EaokbULav87hNtA0uVYx8mI8Gvg5nm46aCYzbM/sWc6CPZYC8xQCyTwZ/W0qwBx6FaDUxA9dmTDVgnQAXILy5p19FV/PhQyDMEsw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qLShpQ+GcGX1O6scCtLD508voNktZZvh0+KDBe4CwmI=;
- b=mdlYDyoOBTQiFMSHels8IMB7oMBazeLrR0Yse3hwhE4zH0dx7O5BTyWC62fjsHpdM4wcWs3ysW1gTOD3hT7NL4wAer5u5gngMjZCfrzKrf60P/Ym4diUG/vrfvX/tyd9nb4OPAFJHyjZ76XEjeQynHgWW0pDSbZunXxqFat4A1WrupkA0S4K424Jdl2Ye8J90J8cGSHa+xSdTF+OCnu8Zms7YwqiIqVVMNXvWw7/GhdA/Fxc+THwWsUxwBO9vLAp+xnfQ8ephtYOf2LuyzUAlHwCSVVwicsZ4Yhm4J9iyUjwM8aAL7DDpRH7asigh/rADj+AagT2pizN0vXVt0rSeA==
+ bh=EP0QLnsRoCEjmYmS5ZcEU8SpzNo7kXIaEEqVCFY3C8E=;
+ b=uYituHiJ5wMT440qo1cLNqbvbhKnUbPS1KmLHMeBXAymbPqCTz/4Ngk2fEKImpeHNqz71mF9n8EAqUv4DKozh+/gpoZHlUyhqesA8bPh3AHzcg0RgWVWDqPzqzPY8d56Twp4cA3uRJXD5Q8yAUfnP7BVQikizN+sgGv2m7LPYFpdDbAVLeB6c3Ipfr9Z7Zr+wVWXcuQsQtIfEcIguYVbwoOVe8tOquB5a7tPY30LbELE+QfwyNgJUZ6SjuBU+k/hXptiU7Jo4EypivwGZWYJEUCKieZBR2lqJ3OcwSQjYah9TVvQIUZv0o/609CxR1TZOfqumAMWhxDxRWSS8c7FKA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
- dkim=pass header.d=amlogic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
- s=selector1;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qLShpQ+GcGX1O6scCtLD508voNktZZvh0+KDBe4CwmI=;
- b=hiYBNoQUXDf64jC59WGoIowpbhcKUlWsMkQ/fr5VlrUVkT8fldoPwBcf4H/kq4gQe/fkeN9dyK3S1TLOLSE+/k5jZWWVx3Djii20Eo4qpsgadmYgyRrVjoPkyDp+8bIJYAsjmjHL6pgWk6Uy1qh38utcjCEtEmsYi6WNQ7OJwxSH/yX3gUPK6W9JJFMhHc5m1ietYUdmcXrtwQKOJS3bUejYTsYgLVCwtLaUFbVn7Me7yU3jrXrXv0YMVzCd8zHiEP6pbLPgmwqmOQkIjOL0EaJGpqOfMiIdEMqAwJ36VS6Xyfb5A0HMKCS7NF3Qb5vKX7NlbJPFFwGvhOcGyg7X6g==
+ bh=EP0QLnsRoCEjmYmS5ZcEU8SpzNo7kXIaEEqVCFY3C8E=;
+ b=r7Ks1RkCpU8qDhdfhXpCHZZ0s2vseXPgsxUvA1UHClfe31uLmPkXYRgqSRXBt7va4QrEcErNk5y6x2kmYoE8t03jgOZ+E3XazpfLcLjXBgs7GQol8LTx42YtTiZXotZyDI+HjjeIBYl5K3JtLsCeaNEsjQJUCeCArTjUDHdd13m/13bZIicHMOPePaJ8NmFUrSD733iNv3LXi1ZB/2JSu9AnTss32rHFmwolFjeY9NIEankT2FDQqOHpLCnaZ7Gx5r1+eNbK0YcS4/sTBuXMzlraGoy5kxGpAha0CQe3Bj6LbwjVAwfCOqq72jZxjhiu/IZnuPpXzBmrk307XZhNNw==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amlogic.com;
-Received: from KL1PR03MB5778.apcprd03.prod.outlook.com (2603:1096:820:6d::13)
- by SEYPR03MB7168.apcprd03.prod.outlook.com (2603:1096:101:d3::6) with
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SA3PR12MB7901.namprd12.prod.outlook.com (2603:10b6:806:306::12)
+ by CH2PR12MB4215.namprd12.prod.outlook.com (2603:10b6:610:ab::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.16; Mon, 10 Feb
- 2025 06:46:57 +0000
-Received: from KL1PR03MB5778.apcprd03.prod.outlook.com
- ([fe80::9d11:d1f6:1097:22ca]) by KL1PR03MB5778.apcprd03.prod.outlook.com
- ([fe80::9d11:d1f6:1097:22ca%5]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
- 06:46:56 +0000
-Message-ID: <f08d0c8d-46a1-4b66-9d62-4b758d0ab949@amlogic.com>
-Date: Mon, 10 Feb 2025 14:46:38 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] soc: amlogic: clk-measure: Optimize the memory size of
- clk-measure
-To: Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250205-optimize_memory_size_of_clk_measure-v2-1-4f546053495d@amlogic.com>
-From: Chuan Liu <chuan.liu@amlogic.com>
-In-Reply-To: <20250205-optimize_memory_size_of_clk_measure-v2-1-4f546053495d@amlogic.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2PR01CA0003.apcprd01.prod.exchangelabs.com
- (2603:1096:4:191::16) To KL1PR03MB5778.apcprd03.prod.outlook.com
- (2603:1096:820:6d::13)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.14; Mon, 10 Feb
+ 2025 06:48:42 +0000
+Received: from SA3PR12MB7901.namprd12.prod.outlook.com
+ ([fe80::66fc:f8a2:1bfb:6de8]) by SA3PR12MB7901.namprd12.prod.outlook.com
+ ([fe80::66fc:f8a2:1bfb:6de8%7]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
+ 06:48:42 +0000
+Date: Mon, 10 Feb 2025 08:48:32 +0200
+From: Ido Schimmel <idosch@nvidia.com>
+To: Eric Woudstra <ericwouds@gmail.com>
+Cc: Petr Machata <petrm@nvidia.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v1 net-next] net: mlxsw_sp: Use
+ switchdev_handle_port_obj_add_foreign() for vxlan
+Message-ID: <Z6mhQL-b58L5xkK4@shredder>
+References: <20250208141518.191782-1-ericwouds@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250208141518.191782-1-ericwouds@gmail.com>
+X-ClientProxiedBy: FR2P281CA0164.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:99::14) To SA3PR12MB7901.namprd12.prod.outlook.com
+ (2603:10b6:806:306::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,341 +69,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: KL1PR03MB5778:EE_|SEYPR03MB7168:EE_
-X-MS-Office365-Filtering-Correlation-Id: ce5b9b89-7721-490b-d387-08dd499eb619
+X-MS-TrafficTypeDiagnostic: SA3PR12MB7901:EE_|CH2PR12MB4215:EE_
+X-MS-Office365-Filtering-Correlation-Id: a3ee3bb0-30b0-40e1-6642-08dd499ef506
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QnV6bzRMRjZWaGszTzVvWGNvQVAzVU9Ja2pJMHc4NFlMUnhzNjl2U1J6UFQv?=
- =?utf-8?B?VnlYSFNvSEMxRTVSWmlZUnNSempGYjhFNW8vbjkrMkRLeW1MbFZLWnlwRklQ?=
- =?utf-8?B?TkhOL1N3T293L0ZZWUIwdEpDdmtxSU9kOThqY3NRZE14UVRTOW9KcUd6dlUv?=
- =?utf-8?B?Zk80Z0FmYnBobXlqSTJtRlFMSkI3NG5rekUzNFRtV3V6TDdIUFFoT0VmWm9P?=
- =?utf-8?B?TkJmbUlNcEVrRjdidTV2Ri9zeFB1OW9TZ1RjREpZV3AyNHBIcWNjQjd2cHht?=
- =?utf-8?B?WFRUTFl2RWZqNWRqV0M5UHBHcy8rRkZaYXdabFRyOEFEOVBNMVh6NC9XVDcv?=
- =?utf-8?B?VGQ4YStWeGlmR2hsckVlOHpCSEZ3SnBXamp5cDlReXBFdlNuNlZSY0lpUWRm?=
- =?utf-8?B?WklycVY1b0hGRnRFd1psdXpBaVluTlM5TVRVK2xQOGtOUmlNQ0pTWjJWbG5R?=
- =?utf-8?B?N2s0a0VMUXhiUW5rREM1dUY3dFdNdWhYRnFGdnlHaGliWkM3RTZpZ3RLN3VT?=
- =?utf-8?B?NjV2L25ZVjc5Q1FScHF6R2tyU3dGN2tvR2JUa1oxVTc2NDB3VmFUSSthblVm?=
- =?utf-8?B?OG03d1FvbTRsQlJBdC9oQ3J1QTZlNEwwYTVOVDdvSWhpbG96NEhZSVR6ZUQy?=
- =?utf-8?B?TFIvMGhienFxalNGcW9sR05OeE1nLzk2MTR0SmUyQmhJazAveU9FTTZmTWQz?=
- =?utf-8?B?TXNOYk5Ec3UwTjFQODc1b0owUnZlRE00bHBiYXQyRTJmZlVnbUVCajUwZzhF?=
- =?utf-8?B?WE9uN3NDbFRmNTQ3djZiQldDVnFoQXREQzcvK0NpY2x3bHhmSU1TcDNhWTNs?=
- =?utf-8?B?VGRhWTA4dTZERStkbkQxaDN4T0EvNFNvSGNDV3NHcUQ0MXp4Q1BLdGZnTVhD?=
- =?utf-8?B?T1l0aFFHSEtWTjM4eXBpb2xDdHVlWDlueVhNQURzSU1OeUFLeHVEMytOUVh3?=
- =?utf-8?B?by8wSGhub2s3STd0UTJveEpoRHBKR2d1OHhXaHdwZUI1RXkrVGZCbGRoSEwy?=
- =?utf-8?B?ang1cS9ZblNGc1FTMGhRMXhGQmY3Q2krd0tzd3Q1emNjTFFKM2ErQ0lDOXNI?=
- =?utf-8?B?SzNObmt6L2pyWWVvdCtlL3kwdk5HbGJSRkk5aTZGTHVvb2ZGYzhzb2d1R2Iz?=
- =?utf-8?B?bkRJaFFkakRCcFBwek9yRy9SZjh3dlN0cmFaU3JJbGsvWTE2b0t3K0RoaFIv?=
- =?utf-8?B?N1NmV2YyL1B5UWJzOVh3bFd1UlBJYnR6dVl2WG9RSjFTVjVYVUFtSFo0NkJQ?=
- =?utf-8?B?ZHlld0NKaEx6T0JPQytXalhWN1BlUWxEa256WjJFUFRFa3cvREt3Z090TkJm?=
- =?utf-8?B?aHJCU3E0R1pHdzBOci80cUJoRmx6V1poTEowTEZDSE5Oa0FzTEF5Y01xcVVo?=
- =?utf-8?B?NG1YS3lLUERDYllma2pydkpTbHpEeHkxQk8rQmI1dk55SXV5cHk3OWYvZC84?=
- =?utf-8?B?eHNTeUNyeTJZTUFhV0ZMc0VEaGRRbXc3R2VTSUwxOEpzOUNmL0t5bWNUV0xp?=
- =?utf-8?B?ME8wTGRyWlhVM0RySVlEcGJDa1hob3JqdnZsRkNNb015bXNJamJwMzZKZUlT?=
- =?utf-8?B?WU1nV3h4cFNrSVBHb3hNWTBTU2FsM01MRFF6MDlmUEM1Tk9sc1RRNjR4NjZH?=
- =?utf-8?B?citaVGFXVjZTZ1hscWdJMVlDYUlVOEJzUnZENjRpZUpBVnhyTUd1d0hRTFlr?=
- =?utf-8?B?VFB6d1JycUlIZzMyak9nRFMzcGRFWnE3Q2RoYXVHOGZhOWFNdEZKSEVHNE1t?=
- =?utf-8?B?TG9vWExvYTRDL0p4SExjQ1FyV3VaY2RISWNqZFBpdFpJQmtISmk0MTdLcHBM?=
- =?utf-8?B?T0pzekZMQjlUdnc4QWE0c1kxLzdlNUZlUlc5dmh0V3VXT0Rhajlhd1JQWXlK?=
- =?utf-8?Q?LwtxvSmI/pY5T?=
+	=?us-ascii?Q?BvDd4jp8IB3gYoYi1gyE1DzkleeJLd9xuvtMpA1kolQexEzAQ1tGUAXzLvx9?=
+ =?us-ascii?Q?ToOB6QB6Jgw9zA0+ylcTSxPpxi/dIhWfx5mGheR5Oc653UuENapVg1MMfx/X?=
+ =?us-ascii?Q?YmZO9I/WkA9VEryR3+/kCPTDGH1DnhTqKIPRnn5ddjGDuoCfOVMS5qixreQQ?=
+ =?us-ascii?Q?q1WQomZAHmWJadnwH0RsoKsgU1bUTnhwYCRyGX68/Pca1DKHbom3Twmqi9Ha?=
+ =?us-ascii?Q?y77SIvxzcSUzni5sJuqTSJeJpj69l26FsZ7LHt7X2072xKqoWGcAd7kflnRt?=
+ =?us-ascii?Q?fB/+dIFTekP3mROg7xsoAG4W+ioYCPmRO2Znj5IlBNF0hWuBY9bQ5az3Duvg?=
+ =?us-ascii?Q?w/T7tOr/bPe6K9wvpir3dJr7uGRPLDExUcTqfrFO2uJf++rcCUho/4aAOV/0?=
+ =?us-ascii?Q?YvaPQHk33wnRMBjZt22XTXPueRXFsrESASoBs+yfTTxVK/ZLwIpLK4BsoE4o?=
+ =?us-ascii?Q?wkjadaOe5uPPogBp9PryjBVTaGIpA+yCHqop3ZpJbBZjVZiacFCN7ZDrh+Rn?=
+ =?us-ascii?Q?1tuXStql9R6ylUppTjovRgfgdgswn0cnXeJRw3NKmnVuJE7ZDRQUTDE3wB3j?=
+ =?us-ascii?Q?AvlVYOvWhGs9vL7Tw7yipxEzg3ggVAeJcILXlWDCeig0YnR7jaTABKr1Sr/X?=
+ =?us-ascii?Q?2Fwk6H9C0zIdL/V73kSpsR9OoSxJ/ZoZPtgMlQ56e5bIhRurnG9sbv5O3zn8?=
+ =?us-ascii?Q?0AyHVctfRm0WX4mVq34u1RqfkPi35TuwipzQ6FV4iohADP15pXLcsmUXymf8?=
+ =?us-ascii?Q?3B4+wYwdUiXERF0uUv5kSTqOZdjxESXcsIr7fvzivTd+6tGpdqStIO4zzpBP?=
+ =?us-ascii?Q?KV6MopJ1FZmrtmSbsysmOTZqEQxNk9T2O6kP65xDo5mlD4QIFCZkslX1zwTc?=
+ =?us-ascii?Q?vrRyGhppi4oppYZDHynejO/MUfbWScGeMxgNOxYW1h6mVUPWOe/XD9AiSudg?=
+ =?us-ascii?Q?1J7csqnuApTcyceAzB56XnzRpdxglhHJo3SdUoFqF5K9W5ioQznCc3A/ylcS?=
+ =?us-ascii?Q?ptZpgWateByiwYHKtnZSyZSRrk4uieCAOPWAhMHA+vf0qF9AjuGQDglpidYk?=
+ =?us-ascii?Q?8vcRIcty8SsYta4jbD5WTKuMdRioBrFzPmTPO2Z+Ym380DN5Hywwc9cZEBh5?=
+ =?us-ascii?Q?YguzTiUALb5iFdWEE9ggaT1oWpFCcZ3BVXO2WRgfc8BN2fEksRtfRsuRAbAL?=
+ =?us-ascii?Q?J5g5rNfKatxDj8h/jF4bysMr1qvaKVW4Li9kAhhY9daaAaPhOgOcmPwb6w4r?=
+ =?us-ascii?Q?c8vSnvvYXEVoKMePeCK+vRI2ZudRwWEtVl/CitwZmr9e8JbyIIpQkCbL27fl?=
+ =?us-ascii?Q?gwIPXGJ4wXCvWVnkEjbwlSG9BACRxFDHcBFTk5hpJK6pIKKBpMfmVok8VQGc?=
+ =?us-ascii?Q?bblam3SCZ/lng7PsyQKceISKJGPZ?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR03MB5778.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR12MB7901.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bFJDdTFXWG5KdXJDOGc3YU5qaFR5UU9yUTdLcHl0Q3Jpd3A5Q0ZrTVhlVlFZ?=
- =?utf-8?B?TnBwSmU1K09QWHpOc3Y2anNFUnBFTWszSzBzdURBS3dKblJPSGszL2NPS0Fx?=
- =?utf-8?B?Z292TzZ2V29qQm1mZzQvM1dKRjdMSG5LRXNIQUx6eE1XcFhNMHZ1WDhrbkov?=
- =?utf-8?B?U3BrekNHMExKeGg0ZW1KRlp3enN5UVRFODFoZ2VIbFd3M3pSNUh2QTZTWjJ0?=
- =?utf-8?B?MmRZQTIxSlRXdE14eE5wemVNT2d2aDRIcnJQT2hJdjBYR1ViUmdmaCtYS1p6?=
- =?utf-8?B?VEFDQ3h3cXV5ZExNL2IxMWlVaVlGeHFVQ2xYUFJ4LzJMRkZPNXBCVTN3UDV5?=
- =?utf-8?B?cEp4RVcvNGE2LzFaclN4MTFvckdqelMzSGxFLzR0TkRjamIxdDVSMmdrSmpH?=
- =?utf-8?B?OG1rME4zQjh6V3RISTREeHVJbW80c053TWRtNmJRaVl6MXhTeUJQQUFXYnNp?=
- =?utf-8?B?YjNPVEdwR1lhY2Y4anRKQmduSnJEUTU4MHlYTXhLUnY5WTBaTHJEK3JpOWgr?=
- =?utf-8?B?MXIrcWtxRFBONlZDNVBNU1YvNWcxSG5UMGpRYjVJc1Q0UGYyaFo0bjNZZm5l?=
- =?utf-8?B?ZVY0ZWJUdTZGS3pFMmhKdXV3ZUdXRkwybFdEdGJIY0FyYndYcyt1QWRkYWNo?=
- =?utf-8?B?aHBrZEZNM1ZYd0grZ0Mxb1F4VGl0cHVteGljVlRtWUYvT2xyNy9Ya3FyREh0?=
- =?utf-8?B?ZTdETDVtMHRUZ3UvRlVCeCtWdkJaRjFBak9lZG82cythTmxGT3BGN1dnWFc0?=
- =?utf-8?B?ZldXMTdIazFQc0hkODlxSU1pN01OTHV4clBJQTROcURDMXBxcElWUTkyRWVD?=
- =?utf-8?B?RlVUY3hWYWNYaEMyWS94UnBJWEhEMmhNN1NWK0lESUZTZWJOM2JsSkdSVnZP?=
- =?utf-8?B?RmJSY2tMTnc5Q1BUV3VHeDZwYTJjZkRsSUJsVFdreEN0dFQxWm91OWFOKy8z?=
- =?utf-8?B?QmUxeEVHMTN2ZFZldmlpcmd4UUM2WDhPaTBKWGNZb09SbGVob1Z6cTVyUFBp?=
- =?utf-8?B?NXFJcVF2QmlPYnVUSXhmd3ZKdFMxTzVoNHJvTXlPT2x0dnlIOG1aeGFNaFVF?=
- =?utf-8?B?ejhhTTBLblVTaU5KMThkWUdCZ3lKTm9KVmJvcVdlVzFmVittUGFKMlVDSWxq?=
- =?utf-8?B?d0JlL3M2eUNYQjMzQTZNOVBleUJlMStCdFp4K1VkKytKUG9LR1lhdVlId0ZK?=
- =?utf-8?B?VGc5ejNTamtVRnNSMHFKc09Fb3lDRk9WcUxGMVIybFJZWmdsTENzdW5CaTQx?=
- =?utf-8?B?SXZwWk5zeWtBOS9PcW9xZUFrWGJIK042WENiclcrTSt5NTROSFNFcjJzVzM2?=
- =?utf-8?B?T0VjbHRJUnFvRDg2K1hjMmZUajIwVzZMT3FQWWRVSTBUN1dkOUVKMVBsaVAy?=
- =?utf-8?B?UHgyQjZHdXhxdWhtT0o4VHRSWU9kNmUxRGRqbUM3OTJmVFl6aGNCak9JNUN0?=
- =?utf-8?B?UG9KNmhhNnRhSk1ydFVYZ29hMW9ZQ1gzMGs5RkYxMWF4RzhadlpTZU9hVUhN?=
- =?utf-8?B?S3UvUmpHaExoYkhLd0cwc0lxSmc0RjRoWEhNRjNINFU1bkVvTnlDem1LOWZZ?=
- =?utf-8?B?QjNnek5nQnE2MmtqaVZhcVc4bjhLNkI4Uzg3RE54cHFUSWdFUWJxdTVHRzhB?=
- =?utf-8?B?TVNWRFFGYnFQYjlXTDFiaFptS3VJd21jNXo4N0pqRlE4RDNHNUJ4SXpiL0w0?=
- =?utf-8?B?bk1yQkNQZlRKMFFVakM3OVN2VllZWGdIUC9GWEFGVzg4Z2pFWUFRVkgxMERC?=
- =?utf-8?B?M09lS1hXZlZpSXNjeVZhTUcxRXpBQmQzanNsTnJhTHAxRTZCM01pcmtDTmR2?=
- =?utf-8?B?RjhVR3ZlajR4KzhQWU9PbGNVS2daSFlkNVJLQ0E5R2duSm9MNHNGQzhIdHdm?=
- =?utf-8?B?ZzdyaXpia1JTZkswVFE4SDg4Z3gwMnQ4YStTenIveTBqYWRwOFJ0QkZ6SnVT?=
- =?utf-8?B?Rmk1Zll2M1NrcGxyU1k2SW40aUlJNHJEK3A3UGFEQmVSVk5BVXVmaEd1bnEw?=
- =?utf-8?B?NFgvU0NxdHQ2VEE0d040aTVYUUtrOTVaRThycGxPVlM1aFhLc0JHQzRZU3Zo?=
- =?utf-8?B?SzNIWFgrV0orOXZxUWR3UzVTMWpMZWd6eExVLzRXOXQ4N00xNGViamJKM3B0?=
- =?utf-8?Q?zyi74t90AKKIKhB25zc8iSLOh?=
-X-OriginatorOrg: amlogic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce5b9b89-7721-490b-d387-08dd499eb619
-X-MS-Exchange-CrossTenant-AuthSource: KL1PR03MB5778.apcprd03.prod.outlook.com
+	=?us-ascii?Q?3PoyzbkuqkKz4HUBiwbc6xGFC5PQb4nVkrga4zmN3ZmYlhWmyAcnBCPq/WPC?=
+ =?us-ascii?Q?O2XjMiG38nXhFQL2GgO2QExqotrN9sXqCN8NucaeHM3IvwKLlUPeweEW8jIK?=
+ =?us-ascii?Q?uImHlzGwfSkApPGTLY9/o3z4Dr3Q6Z3Z2Lgkh2aBJT8DXhGNczbbHKmzZ2IV?=
+ =?us-ascii?Q?BzIfeNaCDMSs8cBAy5kZlYyTAWUkc7HpzzzYDcaaaF30UcWINhr9WF56kuqA?=
+ =?us-ascii?Q?LhlpwSHrGyKtfqGDf61iihs3DkontMRTcqEGhS1hme7cB/kAHSOaps7+rh8O?=
+ =?us-ascii?Q?MDiA1TrzFohGeKMWAxay1oME8Glr5eh7eLESzxbuZCCLWn19i46VZcviLALh?=
+ =?us-ascii?Q?p3akZ9qUwBWvqGKJ/pOOOixx0d+4qgYXA2g69WX5PN3mDYooUr9eM1XmdLoa?=
+ =?us-ascii?Q?MgvZ04D+E1Rj5gnp03LpLysmdB5xLvIZ9vNLQzfwUEYwkIPvcXyg1NZVnNjO?=
+ =?us-ascii?Q?DjMKC5CiTjpRRxaUYG7rlT49xpuPL4/6S+aXQbCYFNSbiMuaKcgFvTFmOPhv?=
+ =?us-ascii?Q?HdSh3RVSIYUs8RN6v9Ph9BKXChDisQ6cAuDiFRLXcDjiGKApesnoAysU+0K7?=
+ =?us-ascii?Q?ryvZq2UHI2Bw20S+lNDeB44rkFiMVKkZG3SYHVkmUPSm31D48b0T+93U9r3u?=
+ =?us-ascii?Q?SxnlT0Vm1RuA6LyraeApmH6jrk3PupXlBPVffjjCVS7fovyDwWlJ+lIVdBeR?=
+ =?us-ascii?Q?xmLFU+rr4J+sE/MPadL/EGBOJnIhExy2zUd+vUXHl2hB6K4SPm10xliGleng?=
+ =?us-ascii?Q?V/pfGOK6THCt3t/dWdD0BN5ByQOdnoWxeU0zeL/06V+6RKt+eTtz7sqMszSV?=
+ =?us-ascii?Q?iDEu0VHHYNwLOjTFrpIx0ZY2B4GivT1HzKkDM7Lz8RtGvazk5eU5iVVZcYT/?=
+ =?us-ascii?Q?mO9ZfZQ4dDXEt0cjtsBqRRHpnGK9HqUzozzqecoN/FMK4RDKoR4YzaaiStra?=
+ =?us-ascii?Q?oS8dD+BeP3RQ+P7Ff4IrELYvBYRhdrz/tgxxV+dKuUosgBXw7X14yknegLY2?=
+ =?us-ascii?Q?tEOG67dO76BZEAGN8taNsoccu8LJqpBP5SRzwOukaxXttfm6DZOfNWvqghCF?=
+ =?us-ascii?Q?Ia98glEqQAEfNmTNNItSQJTsAm4Llm+L2SkBTMOWsMFk0mndvvjin0uSmxU6?=
+ =?us-ascii?Q?k6xhc25jG7T9Qvwhq8OwFZJfji7j2Vz0DW0XGT8CLlTYTAeyrR+Xqn6/fKNe?=
+ =?us-ascii?Q?NEdj2pn6P622ZVFMdwOhKyLfuV4fw5lPUQx9tGjz8gfKkpRed4LzW0haRAGe?=
+ =?us-ascii?Q?RdFSDFHYcsE4BuzXtYf0MslaXPAUjWIXcc+oGrP7UnC56d0IkjNtAT6TgSjA?=
+ =?us-ascii?Q?ylmgG8WAHsY181VSX6ygO9Rvhi/ysPzjW1LWSfmmd/Pg3RNWgrofoOpOP9Iq?=
+ =?us-ascii?Q?36WjA63oX59jnAiJqrcIfSb9Z2TyxmX72jaWs5R9tfmTGz/SZZilnhnlez/e?=
+ =?us-ascii?Q?fLHRfUAdqy0yTQ4X1ggZ+RA63PlHv0PSx10PI+Cof7NHfXmk63yHYGnwgwmF?=
+ =?us-ascii?Q?EPCyyx06+IHqQx23ZCL8YHnLHOQGbMQUtzYj42srCN8+jnTG6kfCKA/TTBvQ?=
+ =?us-ascii?Q?jwbfoJFgBPzi5iuEKgKTnWUwrSPwaRKgb6dPC8oZ?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a3ee3bb0-30b0-40e1-6642-08dd499ef506
+X-MS-Exchange-CrossTenant-AuthSource: SA3PR12MB7901.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 06:46:56.8215
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 06:48:42.2064
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FWk0gB9324SALm+hRTahb8ut64tJdfbHhwy4uN6OojIdDVwny0b6DHFwG6j4p8FBKiK3E/J8JcSPZINFe728Gg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR03MB7168
+X-MS-Exchange-CrossTenant-UserPrincipalName: OowYong0HGXmz0U5hMYC5R7V2SezY5VjaYnIGxJ/t3Qb4NbGKU299QKALQtJlwanLmfLBG37usOd6tXiK1vNMg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4215
 
-Hi, Neil:
+On Sat, Feb 08, 2025 at 03:15:18PM +0100, Eric Woudstra wrote:
+> Sending as RFC as I do not own this hardware. This code is not tested.
+> 
+> Vladimir found this part of the spectrum switchdev, while looking at
+> another issue here:
+> 
+> https://lore.kernel.org/all/20250207220408.zipucrmm2yafj4wu@skbuf/
+> 
+> As vxlan seems a foreign port, wouldn't it be better to use
+> switchdev_handle_port_obj_add_foreign() ?
 
-Do you have any further suggestions regarding this patch?
-
-I plan to submit the relevant patches for S4 and C3 support of
-clk-measure based on this patch.
-
-
-On 2/5/2025 3:58 PM, Chuan Liu via B4 Relay wrote:
-> [ EXTERNAL EMAIL ]
->
-> From: Chuan Liu <chuan.liu@amlogic.com>
->
-> Drop "CLK_MSR_MAX" and replace it with adding a member "msr_count" in
-> the structure to specify the count of msr_id.
->
-> Mark the table of msr_id as const.
->
-> Signed-off-by: Chuan Liu <chuan.liu@amlogic.com>
-> ---
-> The number of msr_ids for each chip is inconsistent. Defining a
-> fixed-size array for each chip to store msr_ids would waste memory.
-> ---
-> Changes in v2:
-> - Discard the global variable and restore the "priv" member in the
-> "struct meson_msr_id".
-> - Mark msr_id_table as const.
-> - Link to v1: https://lore.kernel.org/r/20250123-optimize_memory_size_of_clk_measure-v1-1-06aa6a01ff37@amlogic.com
-> ---
->   drivers/soc/amlogic/meson-clk-measure.c | 86 ++++++++++++++++++++++++---------
->   1 file changed, 62 insertions(+), 24 deletions(-)
->
-> diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
-> index a6453ffeb753..39638d6a593c 100644
-> --- a/drivers/soc/amlogic/meson-clk-measure.c
-> +++ b/drivers/soc/amlogic/meson-clk-measure.c
-> @@ -33,23 +33,26 @@ static DEFINE_MUTEX(measure_lock);
->   #define DIV_STEP               32
->   #define DIV_MAX                        640
->
-> -#define CLK_MSR_MAX            128
-> -
->   struct meson_msr_id {
->          struct meson_msr *priv;
->          unsigned int id;
->          const char *name;
->   };
->
-> +struct meson_msr_data {
-> +       struct meson_msr_id *msr_table;
-> +       unsigned int msr_count;
-> +};
-> +
->   struct meson_msr {
->          struct regmap *regmap;
-> -       struct meson_msr_id msr_table[CLK_MSR_MAX];
-> +       struct meson_msr_data data;
->   };
->
->   #define CLK_MSR_ID(__id, __name) \
->          [__id] = {.id = __id, .name = __name,}
->
-> -static struct meson_msr_id clk_msr_m8[CLK_MSR_MAX] = {
-> +static const struct meson_msr_id clk_msr_m8[] = {
->          CLK_MSR_ID(0, "ring_osc_out_ee0"),
->          CLK_MSR_ID(1, "ring_osc_out_ee1"),
->          CLK_MSR_ID(2, "ring_osc_out_ee2"),
-> @@ -98,7 +101,7 @@ static struct meson_msr_id clk_msr_m8[CLK_MSR_MAX] = {
->          CLK_MSR_ID(63, "mipi_csi_cfg"),
->   };
->
-> -static struct meson_msr_id clk_msr_gx[CLK_MSR_MAX] = {
-> +static const struct meson_msr_id clk_msr_gx[] = {
->          CLK_MSR_ID(0, "ring_osc_out_ee_0"),
->          CLK_MSR_ID(1, "ring_osc_out_ee_1"),
->          CLK_MSR_ID(2, "ring_osc_out_ee_2"),
-> @@ -168,7 +171,7 @@ static struct meson_msr_id clk_msr_gx[CLK_MSR_MAX] = {
->          CLK_MSR_ID(82, "ge2d"),
->   };
->
-> -static struct meson_msr_id clk_msr_axg[CLK_MSR_MAX] = {
-> +static const struct meson_msr_id clk_msr_axg[] = {
->          CLK_MSR_ID(0, "ring_osc_out_ee_0"),
->          CLK_MSR_ID(1, "ring_osc_out_ee_1"),
->          CLK_MSR_ID(2, "ring_osc_out_ee_2"),
-> @@ -242,7 +245,7 @@ static struct meson_msr_id clk_msr_axg[CLK_MSR_MAX] = {
->          CLK_MSR_ID(109, "audio_locker_in"),
->   };
->
-> -static struct meson_msr_id clk_msr_g12a[CLK_MSR_MAX] = {
-> +static const struct meson_msr_id clk_msr_g12a[] = {
->          CLK_MSR_ID(0, "ring_osc_out_ee_0"),
->          CLK_MSR_ID(1, "ring_osc_out_ee_1"),
->          CLK_MSR_ID(2, "ring_osc_out_ee_2"),
-> @@ -358,7 +361,7 @@ static struct meson_msr_id clk_msr_g12a[CLK_MSR_MAX] = {
->          CLK_MSR_ID(122, "audio_pdm_dclk"),
->   };
->
-> -static struct meson_msr_id clk_msr_sm1[CLK_MSR_MAX] = {
-> +static const struct meson_msr_id clk_msr_sm1[] = {
->          CLK_MSR_ID(0, "ring_osc_out_ee_0"),
->          CLK_MSR_ID(1, "ring_osc_out_ee_1"),
->          CLK_MSR_ID(2, "ring_osc_out_ee_2"),
-> @@ -489,7 +492,7 @@ static struct meson_msr_id clk_msr_sm1[CLK_MSR_MAX] = {
->   };
->
->   static int meson_measure_id(struct meson_msr_id *clk_msr_id,
-> -                              unsigned int duration)
-> +                           unsigned int duration)
->   {
->          struct meson_msr *priv = clk_msr_id->priv;
->          unsigned int val;
-> @@ -573,13 +576,14 @@ DEFINE_SHOW_ATTRIBUTE(clk_msr);
->   static int clk_msr_summary_show(struct seq_file *s, void *data)
->   {
->          struct meson_msr_id *msr_table = s->private;
-> +       unsigned int msr_count = msr_table->priv->data.msr_count;
->          unsigned int precision = 0;
->          int val, i;
->
->          seq_puts(s, "  clock                     rate    precision\n");
->          seq_puts(s, "---------------------------------------------\n");
->
-> -       for (i = 0 ; i < CLK_MSR_MAX ; ++i) {
-> +       for (i = 0 ; i < msr_count ; ++i) {
->                  if (!msr_table[i].name)
->                          continue;
->
-> @@ -604,7 +608,7 @@ static const struct regmap_config meson_clk_msr_regmap_config = {
->
->   static int meson_msr_probe(struct platform_device *pdev)
->   {
-> -       const struct meson_msr_id *match_data;
-> +       const struct meson_msr_data *match_data;
->          struct meson_msr *priv;
->          struct dentry *root, *clks;
->          void __iomem *base;
-> @@ -621,7 +625,16 @@ static int meson_msr_probe(struct platform_device *pdev)
->                  return -ENODEV;
->          }
->
-> -       memcpy(priv->msr_table, match_data, sizeof(priv->msr_table));
-> +       priv->data.msr_table = devm_kcalloc(&pdev->dev,
-> +                                           match_data->msr_count,
-> +                                           sizeof(struct meson_msr_id),
-> +                                           GFP_KERNEL);
-> +       if (!priv->data.msr_table)
-> +               return -ENOMEM;
-> +
-> +       memcpy(priv->data.msr_table, match_data->msr_table,
-> +              match_data->msr_count * sizeof(struct meson_msr_id));
-> +       priv->data.msr_count = match_data->msr_count;
->
->          base = devm_platform_ioremap_resource(pdev, 0);
->          if (IS_ERR(base))
-> @@ -636,45 +649,70 @@ static int meson_msr_probe(struct platform_device *pdev)
->          clks = debugfs_create_dir("clks", root);
->
->          debugfs_create_file("measure_summary", 0444, root,
-> -                           priv->msr_table, &clk_msr_summary_fops);
-> +                           priv->data.msr_table, &clk_msr_summary_fops);
->
-> -       for (i = 0 ; i < CLK_MSR_MAX ; ++i) {
-> -               if (!priv->msr_table[i].name)
-> +       for (i = 0 ; i < priv->data.msr_count ; ++i) {
-> +               if (!priv->data.msr_table[i].name)
->                          continue;
->
-> -               priv->msr_table[i].priv = priv;
-> +               priv->data.msr_table[i].priv = priv;
->
-> -               debugfs_create_file(priv->msr_table[i].name, 0444, clks,
-> -                                   &priv->msr_table[i], &clk_msr_fops);
-> +               debugfs_create_file(priv->data.msr_table[i].name, 0444, clks,
-> +                                   &priv->data.msr_table[i], &clk_msr_fops);
->          }
->
->          return 0;
->   }
->
-> +static const struct meson_msr_data clk_msr_gx_data = {
-> +       .msr_table = (void *)clk_msr_gx,
-> +       .msr_count = ARRAY_SIZE(clk_msr_gx),
-> +};
-> +
-> +static const struct meson_msr_data clk_msr_m8_data = {
-> +       .msr_table = (void *)clk_msr_m8,
-> +       .msr_count = ARRAY_SIZE(clk_msr_m8),
-> +};
-> +
-> +static const struct meson_msr_data clk_msr_axg_data = {
-> +       .msr_table = (void *)clk_msr_axg,
-> +       .msr_count = ARRAY_SIZE(clk_msr_axg),
-> +};
-> +
-> +static const struct meson_msr_data clk_msr_g12a_data = {
-> +       .msr_table = (void *)clk_msr_g12a,
-> +       .msr_count = ARRAY_SIZE(clk_msr_g12a),
-> +};
-> +
-> +static const struct meson_msr_data clk_msr_sm1_data = {
-> +       .msr_table = (void *)clk_msr_sm1,
-> +       .msr_count = ARRAY_SIZE(clk_msr_sm1),
-> +};
-> +
->   static const struct of_device_id meson_msr_match_table[] = {
->          {
->                  .compatible = "amlogic,meson-gx-clk-measure",
-> -               .data = (void *)clk_msr_gx,
-> +               .data = &clk_msr_gx_data,
->          },
->          {
->                  .compatible = "amlogic,meson8-clk-measure",
-> -               .data = (void *)clk_msr_m8,
-> +               .data = &clk_msr_m8_data,
->          },
->          {
->                  .compatible = "amlogic,meson8b-clk-measure",
-> -               .data = (void *)clk_msr_m8,
-> +               .data = &clk_msr_m8_data,
->          },
->          {
->                  .compatible = "amlogic,meson-axg-clk-measure",
-> -               .data = (void *)clk_msr_axg,
-> +               .data = &clk_msr_axg_data,
->          },
->          {
->                  .compatible = "amlogic,meson-g12a-clk-measure",
-> -               .data = (void *)clk_msr_g12a,
-> +               .data = &clk_msr_g12a_data,
->          },
->          {
->                  .compatible = "amlogic,meson-sm1-clk-measure",
-> -               .data = (void *)clk_msr_sm1,
-> +               .data = &clk_msr_sm1_data,
->          },
->          { /* sentinel */ }
->   };
->
-> ---
-> base-commit: 1e1fd26ed4ca05cc1f0e5857918da4dd54967f7d
-> change-id: 20250123-optimize_memory_size_of_clk_measure-f9c40e815794
->
-> Best regards,
-> --
-> Chuan Liu <chuan.liu@amlogic.com>
->
->
+Thanks for the patch, but the VXLAN port is not foreign to the other
+switch ports. That is, forwarding between these ports and VXLAN happens
+in hardware. And yes, switchdev_bridge_port_offload() does need to be
+called for the VXLAN port so that it's assigned the same hardware domain
+as the other ports.
