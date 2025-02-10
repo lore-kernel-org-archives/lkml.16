@@ -1,173 +1,255 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2050.outbound.protection.outlook.com [40.107.93.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334132B2DA;
-	Mon, 10 Feb 2025 09:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739180780; cv=fail; b=BJNelLnKHAh9d7zCvVxXKgX4MrcjsbeAWsvYNeeKNxa4PJiLwds0/NoQA95mJuImQO73SJSGFUGSH7TeJBH+gkjftVOLBJI5kYJYHBiteMtvWAhRkK7vG5HovAX6zxLGoo3HDU9pC0qO5bxt/Yp8UtUPYSZh1Bv+CoSLWzpTs24=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739180780; c=relaxed/simple;
-	bh=+0t0ENLDNETsFicvszXycbnw5WQeN8Nf4J/cU0XAbTE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ixDWwQYUBdXcBUqGnx9I54e26LOe7zZvzhYzyaCVOGkWXrrowP678jFvkgu+GAX3a9iiWhfJ03tLQ7iYfyBAqHUScxb275JHciyDykI2NWTryQ1KYiNPw8NFjCP/QmyAfekwD6ZBaLqggV4mKRYOCj8TX7KdNK73OLz2zslJkOQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=G/+Xg4JB; arc=fail smtp.client-ip=40.107.93.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3491C07FA
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739180839; cv=none; b=p6OWei/On9LzsRr78xl74zB4cSFklqsTdP2PVnLipzBNj4oXd/NQURc5NLLzFAO8I6bJZCjlZ1aVtlmQ2pRxHHFQbQyeBADdLk9Cm4pEOi1jQUIOn0HCymKVlXOvGk+S8bOkE1uS3pooGHGpwjlIM79TYeEcwajecxrIfZXUD94=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739180839; c=relaxed/simple;
+	bh=2r7TZMDfSPPm5LU5bgV4VCkElX81ruoMbFQWk9qpFW8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UdkD1yGWzanUIMY0803b89/LU2qmDAobH5UBYeX9fzR9Khs7VfgAhLW9daJQHBCeQV1ACmGReg8C45kxH/nHgkqfKwOPa7ORaEB8a9IJf4Q/KO1StE1IefCUki2F1c9kKK5+pd3zUN77OGvN4r4X3d0GPW63T0GCxbjra++TGwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZSbXEeVj; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="G/+Xg4JB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tsKp/nY9GRPzF/OMpkV7E9LaM54iMoHPW6FvkbTH+RcAkv9lQc1Dd60slRd71VCIbkfNUrGK/goHuu1yN12B+qfV8+ze5nK0aH7DIe6B76dNYoY3Uk0fw8oVrRhtxumBiwrJuoNL4BPrOOceNlg2jqRYxeSNMzu6qqB8gowjtmcJgU//Pee/bNQ0H4sM3TihGz80wQb4tCu889AhOEW1xPcF2wdu0/rkKBte36N+cqovGMpcbpS92ZDYfiYzVz3/zzYDHDJRiqlDxrCz/1ahVS0X8oGnNVV1fBlJ+RC8pgDPWI6vRJ42P5mUhty46z3FdcgAZe5mdPSz1vt7c2ozng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5qMQyjogxUTvore1yL5up4FoFjLtfeQyH1UEdV+3Vr8=;
- b=VKlWFllmj7MrGL7aFh9NQQ+kQRJLrdjixuamq1MHfY4rPYy76GYVotjXITLfAXdV4zHZOPhKCKMSVHYWHGyzS76ILay2cQ7sYO7N/8xD7S3jk04w6djU3xEaTPE+PjmoTTZjYHuWaopF8Agfz8fmkf6xBpX+qvbFF/ZbV3DNrHxDu29rFEIJ445Ed+GSwBLvzueTRfICNHB7R1U3nFv5N9Z/Rce/ZLt3MqmDPbm5ncW16AiM2nHcSLa8gDNBITW1BrOa/MByLnYgBBHdZ0KO2jRBN1BsRR3NiUjVd4DZwf/0oPPt7Lh/Ojm3hQWkxX/ujopil8DWMANHqcskUMU2AQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5qMQyjogxUTvore1yL5up4FoFjLtfeQyH1UEdV+3Vr8=;
- b=G/+Xg4JBV57PLtffg5v6Pna+c+bsIGzNx1JFU9s9tVGphind3K784E1rSQBUVweeNuu64CBbmWrxh4H3XiCnli1o4NanUv8HwAxubG2WeXhgELimUm5qpFQdgZJE1UFMOXEFxCIjmtZY1SiSh3pYrRUtfvBtotNTAU/PjSjj3OU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB8252.namprd12.prod.outlook.com (2603:10b6:8:ee::7) by
- CH3PR12MB8209.namprd12.prod.outlook.com (2603:10b6:610:123::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.16; Mon, 10 Feb
- 2025 09:46:17 +0000
-Received: from DS7PR12MB8252.namprd12.prod.outlook.com
- ([fe80::2d0c:4206:cb3c:96b7]) by DS7PR12MB8252.namprd12.prod.outlook.com
- ([fe80::2d0c:4206:cb3c:96b7%6]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
- 09:46:17 +0000
-Date: Mon, 10 Feb 2025 15:16:08 +0530
-From: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
-To: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
-Cc: mario.limonciello@amd.com, rafael@kernel.org, viresh.kumar@linaro.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 04/12] cpufreq/amd-pstate: Remove the redundant des_perf
- clamping in adjust_perf
-Message-ID: <Z6nK4FvvIwM9VePQ@BLRRASHENOY1.amd.com>
-References: <20250205112523.201101-1-dhananjay.ugwekar@amd.com>
- <20250205112523.201101-5-dhananjay.ugwekar@amd.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205112523.201101-5-dhananjay.ugwekar@amd.com>
-X-ClientProxiedBy: PN3PR01CA0164.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:de::6) To DS7PR12MB8252.namprd12.prod.outlook.com
- (2603:10b6:8:ee::7)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZSbXEeVj"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2fa488351ffso2251611a91.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 01:47:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739180836; x=1739785636; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=t/gWsTAHhuQ8YNanqgzy8vlnvRL8N2S0+AFXHj4eSWE=;
+        b=ZSbXEeVjxY8f2sp8JYpHuTSdZiq9HqAsXV3A/pAeJwjVmArB07DERNauCDebVJm4jm
+         fqLa9z8ni7ekao0wYvj2XlxVa5ETQ6diGkd97HNnv4W0Jf7N8ItDR4o+Wtc8vJ9vBFlr
+         eVhHRDTkvAiMxf+gpw/F0SES57RGkNio7rrcUVCogJ2Km/6LE6cslUOsCZe9pugon7gw
+         oue3YIxkk1KaqefUUEg3gqPq7XG7F1Ef5fm7UmhrvVxPMPfOk/2LHSm5oIjFWoLwRqlc
+         T4UHE6L+KBQ6SbZtWLJSx5rtt6y7vS4LOye0o3aAcyM7N5YojRZKpTVwPa4z6hfKGooJ
+         yCYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739180836; x=1739785636;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=t/gWsTAHhuQ8YNanqgzy8vlnvRL8N2S0+AFXHj4eSWE=;
+        b=c8wtGXCxRxF0QCCNgY5sJrOhNLblH+IR1/3rTeIfvCQ3mhJ8+6DEJ+btl4t7wuyg0P
+         5fflfV4r/KrrF567xn33I/wGRLLbjByFb9ZAMrOPBYZx2BUZavd3hq1pcVKp6Wdi0CpU
+         +glOrJP6MiWJRQtA36RLpDxP7U2j4Fh4Gbvg6a+fu7SyOlANoIQ59agJG075zJZc1Fme
+         r6ByrUitWv3MOJcMYYyVmZ+t+CdV0sYWIvD+rpNDa/kpnWNlWeFPz13eEqOMY/0RvNqr
+         2VObTeRlZylNHoAu6U08ErS9DDzVXgPRALuHVk1sNLFAFqDdnPVj0RhI0PbIgIaaSpm8
+         86qw==
+X-Forwarded-Encrypted: i=1; AJvYcCXCenMpulUgvJqDTp4xl4sPtpBuNANLu5i9PhgXB0udfK8obWNs9L7g7IQa3sFNEJ6siVC3DheeR63Y+AY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzh7ypM8qKGMWOn9ZoITxD7THc0bf2696yBmEOqsOTh4hUa1pSD
+	aDaIMcSWGI2w3wsEfsOFEebLHaBW0Ee8+ebF7tJY5dQdiqDRDpJyW2FczjXFYw==
+X-Gm-Gg: ASbGncsLN4e0IdCR34cgo3HApR99ogNb5SwmWAupkO3iuGtWbCtGASpbtf8ep5VqJC7
+	/oQv/J2Q/yqGoHtYYmPgksPdQfbcmz3Sw+nldDj5IEWdL/oK764HsawPoJkk9vbhw5zUhvNv6mt
+	fEaXHyQi0lmORPD55AsYq5NsRGZKFTSA9UM+w5pcz5F2tL23R6B24dVrKT3Po2grGnX190KpZvL
+	7A75iShdojlXH5VDMJ0lf60GxlGLbFPQZm/SfWvbGdPVG4sJEexAB1FeAGHVenZhkrlkQW7IEkr
+	Bq5y/cMZSXUCPpq8kkUJv+TCKgn0
+X-Google-Smtp-Source: AGHT+IFwNvzVnIUWkxJ/1/slugP24suDHvocJcj8q023qee4IEM8MzOMQEU4Cx+QKRBUSYzX9cSTkw==
+X-Received: by 2002:a17:90b:4a46:b0:2ea:aa56:499 with SMTP id 98e67ed59e1d1-2fa23f55de0mr18813704a91.1.1739180836421;
+        Mon, 10 Feb 2025 01:47:16 -0800 (PST)
+Received: from thinkpad ([220.158.156.173])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa2a201b9dsm6167759a91.22.2025.02.10.01.47.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 01:47:16 -0800 (PST)
+Date: Mon, 10 Feb 2025 15:17:09 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: cros-qcom-dts-watchers@chromium.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com,
+	quic_mrana@quicinc.com, quic_vpernami@quicinc.com,
+	mmareddy@quicinc.com
+Subject: Re: [PATCH v4 4/4] PCI: qcom: Enable ECAM feature
+Message-ID: <20250210094709.lih7lhnwjhmvrk7r@thinkpad>
+References: <20250207-ecam_v4-v4-0-94b5d5ec5017@oss.qualcomm.com>
+ <20250207-ecam_v4-v4-4-94b5d5ec5017@oss.qualcomm.com>
+ <20250210092240.5b67fsdervb2tvxp@thinkpad>
+ <5fc8c993-4993-d930-2687-96fdf95dc1cf@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB8252:EE_|CH3PR12MB8209:EE_
-X-MS-Office365-Filtering-Correlation-Id: ccb772a1-4835-4893-b2ae-08dd49b7c3bc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cO0Gzei0BEMznXKkZTwqIP3in8apJAx8zIxyb1HnO8CVPBVrzw+7DK0ce22x?=
- =?us-ascii?Q?QwTbhwOvIwsaYZH9DRAwwbG4LSSDtQzx+a0pvrJURmGZrdsKBYqo0RjjAjiw?=
- =?us-ascii?Q?eQctb0QrnVI1nmeDus8NZlRzcOFhLulZf80Y2RsnhhLTYdQd3pjpOKPzAGKr?=
- =?us-ascii?Q?uSZ5rpN/O+m3EHpXqdYsyLn7Pi6rjSWtF8DE44r5P5yC8i9b4RjinCI/yBR2?=
- =?us-ascii?Q?grgV6iaTVbA37ESb/dYJHAeeR2FEVDT3xb8Ch/E2H5ozreTx4W1EMFF/hKFb?=
- =?us-ascii?Q?xVLBGDV3LZMyuytWYuwjyM8fDEcybTEosJ80pcLbYXqEWnu0ru4SVaHxzj3i?=
- =?us-ascii?Q?MMovlEgyOtp10heWi+z4gJGJXWn5NQcv4skEKXsEbHAYQUFMfm63Xpsyaomf?=
- =?us-ascii?Q?yXkLooDwEdGjkDEEGkU10bGQUS2fsmxN3cix8KyNoEH7Q4WqPXIdUHQYmHFL?=
- =?us-ascii?Q?ZCxjFbRICd3s6h9VYm2KApjLs79wQCycjRQdlxRrlUek0O+S1PPfTyJaEBLJ?=
- =?us-ascii?Q?FExHnmXRtTomO9O4wgzkFuvyvFjQ5W8txRI2hHgdzjk788QXC76WmQ9Ach73?=
- =?us-ascii?Q?E3Y1asrB6EvUvIA7HN3/zaNMBid+b3PWzgi6OGNs/4pT9tdfTCKZ4mMBO+2X?=
- =?us-ascii?Q?/OdpDWqSb4N3vQgLfUoY51gc+GuCupAMlraf+VNngx4TqQr7hLS9XKQQKWQ0?=
- =?us-ascii?Q?zBrAjdqROZsiMqGqfTu98NoCAFCLlm/s20zIaXdjrR1HSodmV8YBWBz3pBgO?=
- =?us-ascii?Q?OBQm2DHZXi4gxA7zIPXccuX8dc9k21CAMIJF9CAtRXaMl39WLruVazdMEjPt?=
- =?us-ascii?Q?Xbwke11Y5vjskiwiJfYTxNbY5TskCYbl85yStv8tcZUPYJeRx/xvrkTQgzpB?=
- =?us-ascii?Q?HvQrDYFrQlaMvGNoIaWR8NQFHR5gh+MlqXqnskuZJERCr2NefDL3s5ETwC01?=
- =?us-ascii?Q?/kiME7uIZni17TOyvTVRc3Mg2fpuP71+Xv9LeSSVHo1yfr4E6u4UrlS06syD?=
- =?us-ascii?Q?aYF36DJoaNkzRg7MdYUKQez8pTD7U/9NlXcEMTtH9daWZ0Hk2df8XC83r0Xd?=
- =?us-ascii?Q?TmOLdoumtD1EfG9sdTZqYwdcqO1tAbwCO2chBxYEtfOQ2JFDOiVb9PE+sLFR?=
- =?us-ascii?Q?+KqYtoQeTjs3mNVxqGjjUyEgtWgj4/oZS4Lnn2LR/KOy6uQW1Y07GISmM4rd?=
- =?us-ascii?Q?O8UzNchOjb2D1budUwWSEDUmc+72q3s9bbmnmIngWnpXprpjy5uA+ZZj27BE?=
- =?us-ascii?Q?aXFwQSRJK3ruYNb4HJlanCuOBomp59DHqKpQg0BsPOQKwjFdutGn6ngTiStF?=
- =?us-ascii?Q?x+t269DVsU3Bthc5POepEFGXTKpSDsFnfisR6qhDIDY/uvBpJ/fbVgp/OwCw?=
- =?us-ascii?Q?htnri5kfOYX4YtTKrPS8j9yaFEci?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB8252.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Wcyo6I0YelnS5rTSyFx8pmu/Pls6s1iE1KSNjgMDEm9EwosYg7wio+0DsZzq?=
- =?us-ascii?Q?glFuB7xteUDOosWisJpf48L6yfYCKfcy/tZgTX5KwkJig2kX4YF3U9H+Djne?=
- =?us-ascii?Q?KvCuYkLSR56S8HEZD2hBnbHopmWNR5elTuq5jsbIyfmwSRyQrnRD+TPQ1rra?=
- =?us-ascii?Q?/OWcUd/ojgeMI9lBkKg86kS5XOaYHMuemAK3cKx4v2fG4YCZ+wo3rQPbW7Sl?=
- =?us-ascii?Q?GlwCkTFKJ63Hli67SLKKCff0cJ7SXhOu95AgVxtH5cuXR+QFE9TKwuWNxRP2?=
- =?us-ascii?Q?6BcOYopUhqq4NlLWhB5AbA0ps2/yMgeeozdEcgIwqRYw4ymSB3aO+yPWUWn9?=
- =?us-ascii?Q?mx9jl8sOAWiwh381N87Eo1V9Im+qjCjX4iG2lNaEI1ISSHGop1vCqEjmo3/N?=
- =?us-ascii?Q?kWbMVC0E6upzk7CGln5u2YbVnBr8uAU8cfZj/IFAjR3HArRS/GshBuDFKdID?=
- =?us-ascii?Q?SyKjgeikwYbnXiASWC9LDTQeU3z/2hBA7OqsqnVVGBpdQlw2gEKQzTKJXcU6?=
- =?us-ascii?Q?Civj7SZClK3JHKsofFnIQlUpzgHPSrueC52Y9GrukTjNzRK9pLk2KuNoVskA?=
- =?us-ascii?Q?SlaXCIhAQYROBLLu9csOpgXTy0Fu/G87UfRxY5JwWja1t7JxnfK8kcZvvRrb?=
- =?us-ascii?Q?ZkYp9uQJ6ImCpGd+e7OxXJHeqyCKf8Cq3H3GjSzfdinR0IjcPXuXJh4dQ3sn?=
- =?us-ascii?Q?Rj5ghKvr9qrQiagEwKtncL5PbFP84yH8OqWxhiuTNASgYslzWKCG/JmOLxQC?=
- =?us-ascii?Q?SH0OuIM/CbN+VxNE4ZTTL6+K+szkqc04LeaAMDUVzIxmGfUTFI3mYIDGNf+X?=
- =?us-ascii?Q?YKpFDPZKtOPhT2dMacQ1m99dO7/oYronF9ZPe35XzUqSkoax7vgrpo58wJOa?=
- =?us-ascii?Q?qJs+qewCjJd1xAfda7pdoS2ytHkORCRsAQKR3ZlK/bPkJ36FAmdYfBFpJn6s?=
- =?us-ascii?Q?zWLULUM6HJvBepWqxzexJC70ZclzHQDAeMQjxPOnf5lsRmvxLtZDhf/Wqgyg?=
- =?us-ascii?Q?hngcOherJD1WSlrGgxHsEPDWujsTDev2AfK8nhCbogsUYtxkGRYY4L0x5GWH?=
- =?us-ascii?Q?IhXVuaw9aU4qZJEtddp3DvUiIa5i/crieBBuMncvqQYMZbDE8B+9sx1XGBKj?=
- =?us-ascii?Q?RE/5c47ZZs4+QCNRRDwEOZkBaqVAivQkCSW81r9xPNC8qUgy1XQbStoJnhyI?=
- =?us-ascii?Q?qS3rmryG6Y9FdRo0ezJovl7m7XeoWV2UP3ZhXMg6XVereisGyBjL34gTfgFS?=
- =?us-ascii?Q?k2fTZ3mywbS+9yPyECCCtePxIs45/999IqPx8J101RY3cH/qlcpn98iorxg2?=
- =?us-ascii?Q?Z1LzflfGN8bv3ncsUlMpUGo2JF8oyJ135CZtRjj1f24fztoeihOU9rq/EJC0?=
- =?us-ascii?Q?VmxE+7kq1hfxfmOF+cIH8mT04OECqH+PPZvJfRuudyWXjITBn18yybkuHilH?=
- =?us-ascii?Q?33kBOW6juaSUq43ACyu8TtvkvyoDXrQ8jULeRs1FPpztYE/95fCkc1TRifbm?=
- =?us-ascii?Q?98EZ93NN9jdgt5EpMj8kOCbkJ9YmMeOL1rD/qtX/w59izUytMyBDKn5DXUPN?=
- =?us-ascii?Q?j2dC1f7VIjjnefBNBjfmWGvjJfWzTwgWNuneVPel?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ccb772a1-4835-4893-b2ae-08dd49b7c3bc
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB8252.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 09:46:17.1579
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pog2p40+XrRzNd+DCPQPI+5qgn/LnPvkeFM12iihh4TxPPSCbUyO1DsXAWX7MqbZ/F96lmIySgb/De6MNvyk5w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8209
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5fc8c993-4993-d930-2687-96fdf95dc1cf@oss.qualcomm.com>
 
-On Wed, Feb 05, 2025 at 11:25:15AM +0000, Dhananjay Ugwekar wrote:
-> des_perf is later on clamped between min_perf and max_perf in
-> amd_pstate_update. So, remove the redundant clamping from
-> amd_pstate_adjust_perf.
+On Mon, Feb 10, 2025 at 03:04:43PM +0530, Krishna Chaitanya Chundru wrote:
 > 
-> Signed-off-by: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
+> 
+> On 2/10/2025 2:52 PM, Manivannan Sadhasivam wrote:
+> > On Fri, Feb 07, 2025 at 04:58:59AM +0530, Krishna Chaitanya Chundru wrote:
+> > > The ELBI registers falls after the DBI space, PARF_SLV_DBI_ELBI register
+> > > gives us the offset from which ELBI starts. so use this offset and cfg
+> > > win to map these regions instead of doing the ioremap again.
+> > > 
+> > > On root bus, we have only the root port. Any access other than that
+> > > should not go out of the link and should return all F's. Since the iATU
+> > > is configured for the buses which starts after root bus, block the
+> > > transactions starting from function 1 of the root bus to the end of
+> > > the root bus (i.e from dbi_base + 4kb to dbi_base + 1MB) from going
+> > > outside the link through ECAM blocker through PARF registers.
+> > > 
+> > > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> > > ---
+> > >   drivers/pci/controller/dwc/pcie-qcom.c | 77 ++++++++++++++++++++++++++++++++--
+> > >   1 file changed, 73 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > index e4d3366ead1f..84297b308e7e 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > @@ -52,6 +52,7 @@
+> > >   #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
+> > >   #define PARF_Q2A_FLUSH				0x1ac
+> > >   #define PARF_LTSSM				0x1b0
+> > > +#define PARF_SLV_DBI_ELBI			0x1b4
+> > >   #define PARF_INT_ALL_STATUS			0x224
+> > >   #define PARF_INT_ALL_CLEAR			0x228
+> > >   #define PARF_INT_ALL_MASK			0x22c
+> > > @@ -61,6 +62,17 @@
+> > >   #define PARF_DBI_BASE_ADDR_V2_HI		0x354
+> > >   #define PARF_SLV_ADDR_SPACE_SIZE_V2		0x358
+> > >   #define PARF_SLV_ADDR_SPACE_SIZE_V2_HI		0x35c
+> > > +#define PARF_BLOCK_SLV_AXI_WR_BASE		0x360
+> > > +#define PARF_BLOCK_SLV_AXI_WR_BASE_HI		0x364
+> > > +#define PARF_BLOCK_SLV_AXI_WR_LIMIT		0x368
+> > > +#define PARF_BLOCK_SLV_AXI_WR_LIMIT_HI		0x36c
+> > > +#define PARF_BLOCK_SLV_AXI_RD_BASE		0x370
+> > > +#define PARF_BLOCK_SLV_AXI_RD_BASE_HI		0x374
+> > > +#define PARF_BLOCK_SLV_AXI_RD_LIMIT		0x378
+> > > +#define PARF_BLOCK_SLV_AXI_RD_LIMIT_HI		0x37c
+> > > +#define PARF_ECAM_BASE				0x380
+> > > +#define PARF_ECAM_BASE_HI			0x384
+> > > +
+> > >   #define PARF_NO_SNOOP_OVERIDE			0x3d4
+> > >   #define PARF_ATU_BASE_ADDR			0x634
+> > >   #define PARF_ATU_BASE_ADDR_HI			0x638
+> > > @@ -84,6 +96,7 @@
+> > >   /* PARF_SYS_CTRL register fields */
+> > >   #define MAC_PHY_POWERDOWN_IN_P2_D_MUX_EN	BIT(29)
+> > > +#define PCIE_ECAM_BLOCKER_EN			BIT(26)
+> > >   #define MST_WAKEUP_EN				BIT(13)
+> > >   #define SLV_WAKEUP_EN				BIT(12)
+> > >   #define MSTR_ACLK_CGC_DIS			BIT(10)
+> > > @@ -294,6 +307,44 @@ static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
+> > >   	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
+> > >   }
+> > > +static void qcom_pci_config_ecam(struct dw_pcie_rp *pp)
+> > > +{
+> > > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > > +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+> > > +	u64 addr, addr_end;
+> > > +	u32 val;
+> > > +
+> > > +	/* Set the ECAM base */
+> > > +	writel_relaxed(lower_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE);
+> > > +	writel_relaxed(upper_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE_HI);
+> > > +
+> > > +	/*
+> > > +	 * The only device on root bus is the Root Port. Any access other than that
+> > > +	 * should not go out of the link and should return all F's. Since the iATU
+> > > +	 * is configured for the buses which starts after root bus, block the transactions
+> > > +	 * starting from function 1 of the root bus to the end of the root bus (i.e from
+> > > +	 * dbi_base + 4kb to dbi_base + 1MB) from going outside the link.
+> > > +	 */
+> > > +	addr = pci->dbi_phys_addr + SZ_4K;
+> > > +	writel_relaxed(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE);
+> > > +	writel_relaxed(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE_HI);
+> > > +
+> > > +	writel_relaxed(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE);
+> > > +	writel_relaxed(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE_HI);
+> > > +
+> > > +	addr_end = pci->dbi_phys_addr + SZ_1M - 1;
+> > > +
+> > > +	writel_relaxed(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT);
+> > > +	writel_relaxed(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT_HI);
+> > > +
+> > > +	writel_relaxed(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT);
+> > > +	writel_relaxed(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT_HI);
+> > > +
+> > > +	val = readl_relaxed(pcie->parf + PARF_SYS_CTRL);
+> > > +	val |= PCIE_ECAM_BLOCKER_EN;
+> > > +	writel_relaxed(val, pcie->parf + PARF_SYS_CTRL);
+> > > +}
+> > > +
+> > >   static int qcom_pcie_start_link(struct dw_pcie *pci)
+> > >   {
+> > >   	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+> > > @@ -303,6 +354,9 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
+> > >   		qcom_pcie_common_set_16gt_lane_margining(pci);
+> > >   	}
+> > > +	if (pci->pp.ecam_mode)
+> > > +		qcom_pci_config_ecam(&pci->pp);
+> > > +
+> > >   	/* Enable Link Training state machine */
+> > >   	if (pcie->cfg->ops->ltssm_enable)
+> > >   		pcie->cfg->ops->ltssm_enable(pcie);
+> > > @@ -1233,6 +1287,7 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
+> > >   {
+> > >   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > >   	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+> > > +	u16 offset;
+> > >   	int ret;
+> > >   	qcom_ep_reset_assert(pcie);
+> > > @@ -1241,6 +1296,11 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
+> > >   	if (ret)
+> > >   		return ret;
+> > > +	if (pp->ecam_mode) {
+> > > +		offset = readl(pcie->parf + PARF_SLV_DBI_ELBI);
+> > > +		pcie->elbi = pci->dbi_base + offset;
+> > > +	}
+> > 
+> > If you use the existing 'elbi' register offset defined in DT, you can just rely
+> > on the DWC core to call dw_pcie_ecam_supported() as I mentioned in my comment in
+> > patch 3.
+> >  >> +
+> > >   	ret = phy_set_mode_ext(pcie->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_RC);
+> > >   	if (ret)
+> > >   		goto err_deinit;
+> > > @@ -1615,6 +1675,13 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+> > >   	pci->ops = &dw_pcie_ops;
+> > >   	pp = &pci->pp;
+> > > +	pp->bridge = devm_pci_alloc_host_bridge(dev, 0);
+> > > +	if (!pp->bridge) {
+> > > +		ret = -ENOMEM;
+> > > +		goto err_pm_runtime_put;
+> > > +	}
+> > > +
+> > 
+> > This will also go away.
+> > 
+> Hi Mani,
+> 
+> I get your point but the problem is in ECAM mode the DBI address to maximum
+> of 256 MB will be ioremap by pci_ecam_create(). If we don't skip
+> this ioremap of elbi ioremap in pci_ecam_create because we already
+> iormaped elbi which falls in dbi address to 256 MB region( as we can't
+> remap same region twice). so we need to skip doing ioremap for elbi
+> region.
+> 
 
-Nice catch.
+Then obviously, your DT entries are wrong. You cannot define overlapping regions
+on purpose. Can't you leave the ELBI region and start the config region?
 
-Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
+- Mani
 
 -- 
-Thanks and Regards
-gautham.
-> ---
->  drivers/cpufreq/amd-pstate.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-> index a23fb78a442b..2926f292be7b 100644
-> --- a/drivers/cpufreq/amd-pstate.c
-> +++ b/drivers/cpufreq/amd-pstate.c
-> @@ -703,8 +703,6 @@ static void amd_pstate_adjust_perf(unsigned int cpu,
->  	if (max_perf < min_perf)
->  		max_perf = min_perf;
->  
-> -	des_perf = clamp_t(unsigned long, des_perf, min_perf, max_perf);
-> -
->  	amd_pstate_update(cpudata, min_perf, des_perf, max_perf, true,
->  			policy->governor->flags);
->  	cpufreq_cpu_put(policy);
-> -- 
-> 2.34.1
-> 
+மணிவண்ணன் சதாசிவம்
