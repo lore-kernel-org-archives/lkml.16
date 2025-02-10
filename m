@@ -1,172 +1,153 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C1314A629
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:32:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C092D1957FF
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739187135; cv=none; b=p1lSitkBpRE+eTKyYWTA2PLvrz0SVqYFORqWDDb+FN+3pcQRNq834hga45NW06+XwBcP3K7X1vx3Ot4L+iTVKLGCbQ0E6L7iA/M8gn1Hw+3PUC0r2dXYYTaJSKw1l86yRwm8t43/J7/Z+TcVkGdWZUvl3JjF9j2F4hGvH3OGNi8=
+	t=1739187199; cv=none; b=ChW79cs8G/6xmJ2VWaxETy+WCt+S58/hhFRGk2HQLlrdq18bMFsiLrdkZzTGdgEuzgVMw9MeixcS2lDDQLUURRkvDvHsjwZXEee3pRiMABXNwAg1aERkudI0azfQa8ZMNmgEQr0TTkrdUu18ldyyWBmxAqGIQEF8fK+cF/FrQ3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739187135; c=relaxed/simple;
-	bh=9yL8yKsVg56eXF6gBgrbmMDEHR/t0nnj17bTdgOkCA0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=of39ScWqUUkEGhNT2Hqr0UDKT00Va0CUrSfjcNu1itgVVt6rXsMr4irCbRbe0KwALu6HuWtfzMGacA84ZIJdb3BWx2JGh+Z/bvidzEnCDVzNOBtwL7QmqKALeIoQPR/Q9gPW0z4n1ewyA4UrKuykhEbFfFuia6W0togfLC+aM9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ArL8VDkD; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ArL8VDkD"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e460717039fso3092423276.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 03:32:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739187131; x=1739791931; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=K0t7XPMJtnScQiFAUkjXlhhg/FgQ9ukhMGIEHnDiTC8=;
-        b=ArL8VDkD1DO0w75b9uzLu1QfVV2U/xSyzaBV9aasCM67TOJJISiMm4JRArMLp4kbm5
-         2pRCjQMb99x/eMTAE4xibqfh+FH5/7WzB8Ish83dHkXZx9V62ERD1a6QC9bVubw24C+P
-         6q1sqEYDQyGkc8WBtsCC7c3yOVKuR35KCZQr3QEU0PSEtJhVAU178rB31vaYxVi4cDbC
-         LOtfcm5yvinCrHifUl+QuxVJj9nvSAeLzmSRepni4R+LRCakkPCzg5jtHmB2HkDqk7Yx
-         K0xdgBk4skSLqdXP7oXFhMx4+ilXtNgcJ4Elf+uJv9XEQWk3KZpsRJdjTYl9j1aEsN2h
-         f9Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739187131; x=1739791931;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K0t7XPMJtnScQiFAUkjXlhhg/FgQ9ukhMGIEHnDiTC8=;
-        b=XhjsqPSCvUWyjoeyjC+OutdBI1WNFVGe79FLh5TA2VIiL8Y/3WABpGftiApCzpCR3a
-         VMDxuTyVbfkiUilZy2+YwGiieA5dsv6gRHlF9DZjcXDzA6CwUolooqMISicLsH0CHTtq
-         GPW3pjZaYrWDJG//qG7LiwY4fF+pxZK7m6GKpsIaAnqsUEwjkW2jNfjwf53s/T0S3vnf
-         GBvoQETtjMBOS4ccj0yFq378lIcIPB4Bl8OZu6cXUFet2BgzoHM0HqOooQh1GgTLulrV
-         X2Rqx0DhEjxSVwNcJdq2sY+E05Fa+5CT9N46M8gihPXPORk781vs2VLoz9sPLhTjBZuV
-         jhCg==
-X-Forwarded-Encrypted: i=1; AJvYcCVX+nPzZEQYBuP9iDIM/nqe26bgYijx5blgUzTWzwD+W4oVimagf8a/HJkcMYe9ev2NPQLoteVLgnYCRSI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxripXRYaAUrT573BVhKjVdL+T+Fz+WKz76YfZK9GMP/QTjYIrJ
-	cq13Yuuj5sS/IfsTOBzcxLL+7uaPGc4bz+u+2gv/cjKMEa0YgRoMN3DjZ3r43p+mDXp4lI87DpY
-	qSvSOv05j7xbtulBUVhmjYRZwo3Xf7dKcV40SQw==
-X-Gm-Gg: ASbGncuE5CsWNLdIgj2OibZvKZKd8h3cOaxJqiWv8DG3JseXbW/19grsJtMZfpO3Ppp
-	YAex7S4Oim+Zltc2MJEXIJejsuZexaAYToCnk5wnI/ySwiDX+yH21DcpbNrLA2Zx7gYgu3WyXrA
-	==
-X-Google-Smtp-Source: AGHT+IG0aR9/4plkySCbp1bqTtI82MdpqrOiHVZLPWZsEQ6ce+6yiD5Wlvdmwvaf0DBMBOWwyD2Skk7a8hAGjrj5wzE=
-X-Received: by 2002:a05:6902:32a2:b0:e5b:54b0:6ad5 with SMTP id
- 3f1490d57ef6-e5b54b06b74mr5887024276.43.1739187131488; Mon, 10 Feb 2025
- 03:32:11 -0800 (PST)
+	s=arc-20240116; t=1739187199; c=relaxed/simple;
+	bh=5/17RId6uUeNYmgqg757mgbxlgrWCyfGRDCPBd+59OQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RAEqOqegbkb1lkoQ/UOSk0iirYoGwhn7VKhO8fW6fyqpY2skSy1F7fAK9MlNDZZ2YL1qdtgH+KYwozQa67Xm0xXNkFx2FFxGMMA30RfQ4iXSW39HZkGcanQj17S5ptdd+9awQUP0z5uo2Knps0ho7pWi8k8cpoIe0c04uLDo72U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 95BD41007;
+	Mon, 10 Feb 2025 03:33:38 -0800 (PST)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0DC243F5A1;
+	Mon, 10 Feb 2025 03:33:09 -0800 (PST)
+Date: Mon, 10 Feb 2025 11:33:07 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oleg@redhat.com,
+	sstabellini@kernel.org, tglx@linutronix.de, peterz@infradead.org,
+	luto@kernel.org, mingo@redhat.com, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	vschneid@redhat.com, kees@kernel.org, wad@chromium.org,
+	akpm@linux-foundation.org, samitolvanen@google.com,
+	masahiroy@kernel.org, hca@linux.ibm.com, aliceryhl@google.com,
+	rppt@kernel.org, xur@google.com, paulmck@kernel.org, arnd@arndb.de,
+	mbenes@suse.cz, puranjay@kernel.org, pcc@google.com,
+	ardb@kernel.org, sudeep.holla@arm.com, guohanjun@huawei.com,
+	rafael@kernel.org, liuwei09@cestc.cn, dwmw@amazon.co.uk,
+	Jonathan.Cameron@huawei.com, liaochang1@huawei.com,
+	kristina.martsenko@arm.com, ptosi@google.com, broonie@kernel.org,
+	thiago.bauermann@linaro.org, kevin.brodsky@arm.com,
+	joey.gouly@arm.com, liuyuntao12@huawei.com, leobras@redhat.com,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	xen-devel@lists.xenproject.org
+Subject: Re: [PATCH -next v5 04/22] arm64: entry: Rework
+ arm64_preempt_schedule_irq()
+Message-ID: <Z6nj81GG_dLOzozI@J2N7QTR9R3>
+References: <20241206101744.4161990-1-ruanjinjie@huawei.com>
+ <20241206101744.4161990-5-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6137505.lOV4Wx5bFT@rjwysocki.net>
-In-Reply-To: <6137505.lOV4Wx5bFT@rjwysocki.net>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 10 Feb 2025 12:31:34 +0100
-X-Gm-Features: AWEUYZmHSQbQffF7_ka9s0NS0kXgD2P_JnaSOcnNvX6dibEuupIM41BukF4WqIA
-Message-ID: <CAPDyKFqEK3jBQxmuGTRHGHgyNUY+veE+iiujgcJpyOuLjw0vBg@mail.gmail.com>
-Subject: Re: [PATCH v1] PM: sleep: core: Restrict power.set_active propagation
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <helgaas@kernel.org>, 
-	Linux PCI <linux-pci@vger.kernel.org>, Johan Hovold <johan@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kevin Xie <kevin.xie@starfivetech.com>, 
-	Jon Hunter <jonathanh@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241206101744.4161990-5-ruanjinjie@huawei.com>
 
-On Sat, 8 Feb 2025 at 18:54, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> Commit 3775fc538f53 ("PM: sleep: core: Synchronize runtime PM status of
-> parents and children") exposed an issue related to simple_pm_bus_pm_ops
-> that uses pm_runtime_force_suspend() and pm_runtime_force_resume() as
-> bus type PM callbacks for the noirq phases of system-wide suspend and
-> resume.
->
-> The problem is that pm_runtime_force_suspend() does not distinguish
-> runtime-suspended devices from devices for which runtime PM has never
-> been enabled, so if it sees a device with runtime PM status set to
-> RPM_ACTIVE, it will assume that runtime PM is enabled for that device
-> and so it will attempt to suspend it with the help of its runtime PM
-> callbacks which may not be ready for that.  As it turns out, this
-> causes simple_pm_bus_runtime_suspend() to crash due to a NULL pointer
-> dereference.
->
-> Another problem related to the above commit and simple_pm_bus_pm_ops is
-> that setting runtime PM status of a device handled by the latter to
-> RPM_ACTIVE will actually prevent it from being resumed because
-> pm_runtime_force_resume() only resumes devices with runtime PM status
-> set to RPM_SUSPENDED.
->
-> To mitigate these issues, do not allow power.set_active to propagate
-> beyond the parent of the device with DPM_FLAG_SMART_SUSPEND set that
-> will need to be resumed, which should be a sufficient stop-gap for the
-> time being, but they will need to be properly addressed in the future
-> because in general during system-wide resume it is necessary to resume
-> all devices in a dependency chain in which at least one device is going
-> to be resumed.
->
-> Fixes: 3775fc538f53 ("PM: sleep: core: Synchronize runtime PM status of parents and children")
-> Closes: https://lore.kernel.org/linux-pm/1c2433d4-7e0f-4395-b841-b8eac7c25651@nvidia.com/
-> Reported-by: Jon Hunter <jonathanh@nvidia.com>
-> Tested-by: Johan Hovold <johan+linaro@kernel.org>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Fri, Dec 06, 2024 at 06:17:26PM +0800, Jinjie Ruan wrote:
+> The generic entry do preempt_schedule_irq() by checking if need_resched()
+> satisfied, but arm64 has some of its own additional checks such as
+> GIC priority masking.
+> 
+> In preparation for moving arm64 over to the generic entry code, rework
+> arm64_preempt_schedule_irq() to check whether it need resched in a check
+> function called arm64_need_resched().
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+I think what this is saying is that the generic entry code has the form:
 
-Kind regards
-Uffe
+| raw_irqentry_exit_cond_resched()
+| {
+| 	if (!preempt_count()) {
+| 		...
+| 		if (need_resched())
+| 			preempt_schedule_irq();
+| 	}
+| }
 
+... but it's not obvious why it's better to have and
+arm64_need_resched() rather than a arm64_preempt_schedule_irq().
+
+Having some idea of the change you intend to make to the generic code
+would be helpful, and/or that generic change should be made earlier as a
+preparatory patch.
+
+Mark.
+
+> No functional changes.
+> 
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 > ---
->  drivers/base/power/main.c |   21 +++++++++------------
->  1 file changed, 9 insertions(+), 12 deletions(-)
->
-> --- a/drivers/base/power/main.c
-> +++ b/drivers/base/power/main.c
-> @@ -1191,24 +1191,18 @@
->         return PMSG_ON;
->  }
->
-> -static void dpm_superior_set_must_resume(struct device *dev, bool set_active)
-> +static void dpm_superior_set_must_resume(struct device *dev)
+>  arch/arm64/kernel/entry-common.c | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
+> index 7a588515ee07..da68c089b74b 100644
+> --- a/arch/arm64/kernel/entry-common.c
+> +++ b/arch/arm64/kernel/entry-common.c
+> @@ -83,10 +83,10 @@ DEFINE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
+>  #define need_irq_preemption()	(IS_ENABLED(CONFIG_PREEMPTION))
+>  #endif
+>  
+> -static void __sched arm64_preempt_schedule_irq(void)
+> +static inline bool arm64_need_resched(void)
 >  {
->         struct device_link *link;
->         int idx;
->
-> -       if (dev->parent) {
-> +       if (dev->parent)
->                 dev->parent->power.must_resume = true;
-> -               if (set_active)
-> -                       dev->parent->power.set_active = true;
-> -       }
->
->         idx = device_links_read_lock();
->
-> -       list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node) {
-> +       list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node)
->                 link->supplier->power.must_resume = true;
-> -               if (set_active)
-> -                       link->supplier->power.set_active = true;
-> -       }
->
->         device_links_read_unlock(idx);
+>  	if (!need_irq_preemption())
+> -		return;
+> +		return false;
+>  
+>  	/*
+>  	 * Note: thread_info::preempt_count includes both thread_info::count
+> @@ -94,7 +94,7 @@ static void __sched arm64_preempt_schedule_irq(void)
+>  	 * preempt_count().
+>  	 */
+>  	if (READ_ONCE(current_thread_info()->preempt_count) != 0)
+> -		return;
+> +		return false;
+>  
+>  	/*
+>  	 * DAIF.DA are cleared at the start of IRQ/FIQ handling, and when GIC
+> @@ -103,7 +103,7 @@ static void __sched arm64_preempt_schedule_irq(void)
+>  	 * DAIF we must have handled an NMI, so skip preemption.
+>  	 */
+>  	if (system_uses_irq_prio_masking() && read_sysreg(daif))
+> -		return;
+> +		return false;
+>  
+>  	/*
+>  	 * Preempting a task from an IRQ means we leave copies of PSTATE
+> @@ -113,8 +113,10 @@ static void __sched arm64_preempt_schedule_irq(void)
+>  	 * Only allow a task to be preempted once cpufeatures have been
+>  	 * enabled.
+>  	 */
+> -	if (system_capabilities_finalized())
+> -		preempt_schedule_irq();
+> +	if (!system_capabilities_finalized())
+> +		return false;
+> +
+> +	return true;
 >  }
-> @@ -1287,9 +1281,12 @@
->                 dev->power.must_resume = true;
->
->         if (dev->power.must_resume) {
-> -               dev->power.set_active = dev->power.set_active ||
-> -                       dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND);
-> -               dpm_superior_set_must_resume(dev, dev->power.set_active);
-> +               if (dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND)) {
-> +                       dev->power.set_active = true;
-> +                       if (dev->parent && !dev->parent->power.ignore_children)
-> +                               dev->parent->power.set_active = true;
-> +               }
-> +               dpm_superior_set_must_resume(dev);
->         }
->
->  Complete:
->
->
->
+>  
+>  /*
+> @@ -139,7 +141,8 @@ static __always_inline void __exit_to_kernel_mode(struct pt_regs *regs,
+>  			return;
+>  		}
+>  
+> -		arm64_preempt_schedule_irq();
+> +		if (arm64_need_resched())
+> +			preempt_schedule_irq();
+>  
+>  		trace_hardirqs_on();
+>  	} else {
+> -- 
+> 2.34.1
+> 
