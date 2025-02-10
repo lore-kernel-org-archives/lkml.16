@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718381F4639;
-	Mon, 10 Feb 2025 16:22:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C209324F5AD;
+	Mon, 10 Feb 2025 16:22:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739204564; cv=none; b=Ep3Svq65cf+gAQQjVqUXmRMP2YXGmNpkzFZQJhtauPme3+OttCD8t6HFvl3raG0hYEoOP0rMBZmxVOhWwKFMNxPrEwLMSB0R+hNLXGpU9d0K/c08mPgUI0J9i8omTcQpsVRKfN0kM56SKx8+xeFM/xBvRgjERjdcWYdsDkorQmE=
+	t=1739204567; cv=none; b=mFt9SlfYgSbAFNRu9NwFYCcKTv4huYTa9B7CYQQjIDcOGBaxlDqNfOtlMs2LbS3KdcCphgpqkUOD56pwyxqcsMTN9yaSonT+Fq2cTwuxrJbDk+msoRA9cfONO3nrPOQHH9kBkd5XDd7E9K3bB743NYtvdqgG3ySYdNpy2GOYk7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739204564; c=relaxed/simple;
-	bh=pXGdmhYk7WaHCM2tK0X0wGnl92yW8776DxyCrGx/Ztk=;
+	s=arc-20240116; t=1739204567; c=relaxed/simple;
+	bh=RFxvxcK/bzZqs3JATGrcjxdRDeI3+RT3KUeYcBmhG+o=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=rojCAit+rq0LyamGh1NIj3EMO9nIrNxNlsNORhp1SC5M0fBlA9X6e3fLqxtUgSfugN0btob+8rY+C4CnZ4WQDwkUOW6hnub/QW7I6vLpdxaJ+zdIcMCLhXH5Ju/zFJn/l7n0GViREDp3dmrfX+pYODPRbBsrxktSOx/Qh0dT7gQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LcB4rPQJ; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=Tz9YJPcAi//EeU9N2+xuNiF6REFCvg/KehOp+tmXXDgDZ76WcIiqUPmVKYvqc7IasDjqtkc1OQYCIkbkCNBj9oDkdRJwEf3jkn+EI99hd+uVMuLaRTa3EJ5NGMUtiH9NUX3mycc6MYKWzkwGRIUwLMSC/neHcWNdjv9VPXFJGSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Se1+wX7b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LcB4rPQJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A3F2C4CEDF;
-	Mon, 10 Feb 2025 16:22:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Se1+wX7b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1132FC4CEE6;
+	Mon, 10 Feb 2025 16:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739204564;
-	bh=pXGdmhYk7WaHCM2tK0X0wGnl92yW8776DxyCrGx/Ztk=;
+	s=k20201202; t=1739204567;
+	bh=RFxvxcK/bzZqs3JATGrcjxdRDeI3+RT3KUeYcBmhG+o=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=LcB4rPQJf8t+Qmpl1lCSu8mqCgZpgs6dO7NKfHbQzi1KODyDXNode0Tcy025YxPdK
-	 sdH/PvfF69QciIoR2FRa+gl+e+ul28zv7EXb3HhTRVByJPvawsJNwYDlL7MMArKypA
-	 pI6k9vcBTO2fV5mgRhj7ZaeHF+3UHjj4dmonsSPYVtPUXEa32dvcjsQJ/oL/3l9W7t
-	 b4vXux3x0dhTOnwDh5m+7oGNluH56tgr79G1DNCNJ+jsmJMMWkkZoGuZOytJZE7yFT
-	 msWVfoVTpTAKO873s6YLygCwEGg7++/tuTtSn5GWhfH+qAJt15tf8et8Ie+HWOpiuD
-	 PCgkg7/qMHwug==
-Date: Mon, 10 Feb 2025 10:22:43 -0600
+	b=Se1+wX7bZq1dD2sAg3ZZqXd0nUauHnWdAGH3nGikit7a5xbBi0t3MPDkv7jVlwmTu
+	 dmi6KiiAv9mfFFAG3QFrPkN91IyDfZQDy6Osq5S1SLP9OKniQkZ2JJveJhXxhxdIay
+	 kPEONsfBnbFODu+RR5onpzD3hw0r0Va+xfKJFGwFFN0QSShH0yg/8/4LYLWOOsPGST
+	 kWZxx/0bwQyW+zlOL9rWQllhai0yR1TI9Fj+QsMm1vsgkvy4s8h7z1/HkqYbaGVdGg
+	 y00vgE6qxn+k/XgcBYk7cax2nqBd0WoXlPEzCEj/OHnWpYmElB1iz9wcx762+VgfUb
+	 hjCXQBnaUL3dg==
+Date: Mon, 10 Feb 2025 10:22:45 -0600
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,25 +36,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: krzk+dt@kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, conor+dt@kernel.org, andersson@kernel.org, 
- konradybcio@kernel.org, devicetree@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-In-Reply-To: <20250209153940.3489-1-manivannan.sadhasivam@linaro.org>
-References: <20250209153940.3489-1-manivannan.sadhasivam@linaro.org>
-Message-Id: <173920411963.477096.6458317590653327676.robh@kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sa8775p: Add 'global' IRQ for PCIe
- controllers
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Dinh Nguyen <dinguyen@kernel.org>, linux-kernel@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+ nirav.rabara@altera.com
+To: niravkumar.l.rabara@intel.com
+In-Reply-To: <20250210074604.2410783-1-niravkumar.l.rabara@intel.com>
+References: <20250210074604.2410783-1-niravkumar.l.rabara@intel.com>
+Message-Id: <173920412142.477451.9950583431294395280.robh@kernel.org>
+Subject: Re: [PATCH v3 0/2] arm64: dts: socfpga: agilex5: add NAND daughter
+ board
 
 
-On Sun, 09 Feb 2025 21:09:40 +0530, Manivannan Sadhasivam wrote:
-> 'global' IRQ is used to receive vendor specific events from the PCIe
-> controller.
+On Mon, 10 Feb 2025 15:46:02 +0800, niravkumar.l.rabara@intel.com wrote:
+> From: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sa8775p.dtsi | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+> Agilex5 SoCFPGA devkit supports a separate NAND daughter board.
+> Document NAND daughter board compatible string and add board file.
+> 
+> Changes in v3:
+>   * Document Agilex5 NAND daughter board and use that compatible
+>     in the device tree.
+> 
+> link to v2:
+>  - https://lore.kernel.org/all/20250205101318.1778757-1-niravkumar.l.rabara@intel.com/
+> 
+> Changes in v2:
+>  * Use nand flash node name according to dt bindings to fix dt build warnings.
+>  * Arrange node in sequence.
+> 
+> link to v1:
+>  - https://lore.kernel.org/all/20250107084831.2750035-1-niravkumar.l.rabara@intel.com/
+> 
+> Niravkumar L Rabara (2):
+>   dt-bindings: intel: document Agilex5 NAND daughter board
+>   arm64: dts: socfpga: agilex5: add NAND daughter board
+> 
+>  .../bindings/arm/intel,socfpga.yaml           |  1 +
+>  arch/arm64/boot/dts/intel/Makefile            |  1 +
+>  .../dts/intel/socfpga_agilex5_socdk_nand.dts  | 89 +++++++++++++++++++
+>  3 files changed, 91 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex5_socdk_nand.dts
+> 
+> --
+> 2.25.1
+> 
+> 
 > 
 
 
@@ -72,40 +99,10 @@ make sure dt-schema is up to date:
   pip3 install dtschema --upgrade
 
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250209153940.3489-1-manivannan.sadhasivam@linaro.org:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/intel/' for 20250210074604.2410783-1-niravkumar.l.rabara@intel.com:
 
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: pcie@1c00000: interrupts: [[0, 307, 4], [0, 308, 4], [0, 309, 4], [0, 312, 4], [0, 313, 4], [0, 314, 4], [0, 374, 4], [0, 375, 4], [0, 306, 4]] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: pcie@1c00000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: pcie@1c10000: interrupts: [[0, 519, 4], [0, 140, 4], [0, 141, 4], [0, 142, 4], [0, 143, 4], [0, 144, 4], [0, 145, 4], [0, 146, 4], [0, 518, 4]] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: pcie@1c10000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: pcie@1c00000: interrupts: [[0, 307, 4], [0, 308, 4], [0, 309, 4], [0, 312, 4], [0, 313, 4], [0, 314, 4], [0, 374, 4], [0, 375, 4], [0, 306, 4]] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: pcie@1c00000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: pcie@1c10000: interrupts: [[0, 519, 4], [0, 140, 4], [0, 141, 4], [0, 142, 4], [0, 143, 4], [0, 144, 4], [0, 145, 4], [0, 146, 4], [0, 518, 4]] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: pcie@1c10000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: pcie@1c00000: interrupts: [[0, 307, 4], [0, 308, 4], [0, 309, 4], [0, 312, 4], [0, 313, 4], [0, 314, 4], [0, 374, 4], [0, 375, 4], [0, 306, 4]] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: pcie@1c00000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: pcie@1c10000: interrupts: [[0, 519, 4], [0, 140, 4], [0, 141, 4], [0, 142, 4], [0, 143, 4], [0, 144, 4], [0, 145, 4], [0, 146, 4], [0, 518, 4]] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: pcie@1c10000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: pcie@1c00000: interrupts: [[0, 307, 4], [0, 308, 4], [0, 309, 4], [0, 312, 4], [0, 313, 4], [0, 314, 4], [0, 374, 4], [0, 375, 4], [0, 306, 4]] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: pcie@1c00000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: pcie@1c10000: interrupts: [[0, 519, 4], [0, 140, 4], [0, 141, 4], [0, 142, 4], [0, 143, 4], [0, 144, 4], [0, 145, 4], [0, 146, 4], [0, 518, 4]] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: pcie@1c10000: interrupt-names: ['msi0', 'msi1', 'msi2', 'msi3', 'msi4', 'msi5', 'msi6', 'msi7', 'global'] is too long
-	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
+arch/arm64/boot/dts/intel/socfpga_n5x_socdk.dtb: clock-controller@ffd10000: 'clocks' is a required property
+	from schema $id: http://devicetree.org/schemas/clock/intel,easic-n5x.yaml#
 
 
 
