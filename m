@@ -1,146 +1,103 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6F91C174E
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:24:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A270B1B85D6;
+	Mon, 10 Feb 2025 08:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739175858; cv=none; b=cLloSRhMc6borwS9118FmBwp0SyG1fgx+/yauYp5RVqr5Xj3FZohKIHF7oZppdVnmSuCf9JLTcZ9Gq/SJsjZ0E7ZNJLDDRdIf9aDWiqVHWt8NtPRPwlk3SUS3DLMNEPjnvzQsjoaKo/GqgCR9rBo/YdaKgxLrPj+XQPLlD1nREI=
+	t=1739175981; cv=none; b=It3ywH37lYbJu2+5TaVRStxoLiqWRQ8bBe+NNkgh9JfYzQQX/woYyi61kOQyAI/LZljv+DF5d0bI/c0mwlj6Psvbrjz4++59cXOuiMqc5yA2pCkTBCP7L3t3riYgodzxBCYQ75/9YC0m1yRR7DxAnTEuO82Bwhteb/7SZbea8+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739175858; c=relaxed/simple;
-	bh=8uZ3Bd2+9Y2lL4JbcJ3q0uxnHCxYlNxJIRDfPT99dOI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gv1posZeTXTe8JvcW54EvIuQZ/OLQVLJlrxcakC6nt4OA9lRP7OEkBXM314dabO8I4vi0fPQCPg8qdB6bzfRoxIQhU+Z44BbXlo8ygY1UTK9Vc2+qXGNWGz7eErAOX4I1ik38i0AoMizcc82u6m+MgW7gW6W8nt4x/loAJUKpZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1thP5E-0001zK-SJ; Mon, 10 Feb 2025 09:24:00 +0100
-Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1thP5D-000DBl-15;
-	Mon, 10 Feb 2025 09:23:59 +0100
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1thP5D-000qEb-0s;
-	Mon, 10 Feb 2025 09:23:59 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
+	s=arc-20240116; t=1739175981; c=relaxed/simple;
+	bh=5urbR4rIwHqeAiOUkrF6k1054cNQnB2RdKLoeznPyLE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cpdrXng0Bx9vIcqXKIcFbqB1o4l/UyYW30vL9mGNsHyQEaJ/pirbsuiSxA2Uh+L01mzvttl8IB9We1V5zAfkp0k+9x9rlwY7xwSCqrxLLmBv7JARzLixRj1AUnXQPvpb8nKft7cYTT8371bhbtfDLKykJqhKj2/doZzYBAJI4R4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YxErLAi/; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YxErLAi/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2CA8C4CEE4;
+	Mon, 10 Feb 2025 08:26:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739175981;
+	bh=5urbR4rIwHqeAiOUkrF6k1054cNQnB2RdKLoeznPyLE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=YxErLAi/Oyz8lGrKaeA+EkAtWjfBdKb0UG4u60ZNg1PLu6GNe9O9+BvTbVwX0Vgxu
+	 cJs6FBxt+9UvPbr5n8USCm10DQanNA8dq9ixHkYX77Vc/BwcWtIJwMy7FJKxMcne7t
+	 MK9oVKi/2rABCiBFm9L3o37uAxON0El0xrMsjGlW5E2eYYoUmzm8Eukx7AuPtz77Kg
+	 VRndGw3RCp/x3yg5vmQsHvSPKmfcjoTl7rrDWkXFY8n1nYRpdWPDUE8+SiMzH/Z9bs
+	 Y2Ut/w6TF7ChbJJ3qzoloNNKoXs4Z18JG2dWMOscGiZD8lQn5YVlw+gKuorq9Nn2me
+	 LWgBxqSDe5cKA==
+From: Christian Brauner <brauner@kernel.org>
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	Steve French <sfrench@samba.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Tom Talpey <tom@talpey.com>,
+	Paul Moore <paul@paul-moore.com>,
+	Eric Paris <eparis@redhat.com>,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH net-next v4 1/2] net: phy: Add support for driver-specific next update time
-Date: Mon, 10 Feb 2025 09:23:57 +0100
-Message-Id: <20250210082358.200751-2-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250210082358.200751-1-o.rempel@pengutronix.de>
-References: <20250210082358.200751-1-o.rempel@pengutronix.de>
+	linux-bcachefs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-cifs@vger.kernel.org,
+	audit@vger.kernel.org,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 0/2] VFS: minor improvements to a couple of interfaces
+Date: Mon, 10 Feb 2025 09:25:26 +0100
+Message-ID: <20250210-enten-aufkochen-ffecc8b4d829@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250207034040.3402438-1-neilb@suse.de>
+References: <20250207034040.3402438-1-neilb@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1428; i=brauner@kernel.org; h=from:subject:message-id; bh=5urbR4rIwHqeAiOUkrF6k1054cNQnB2RdKLoeznPyLE=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSv3KEQEC01YfKub6Y5H/erlyVXHp+wRHOb7dFXgb+u6 MQfu2y7u6OUhUGMi0FWTJHFod0kXG45T8Vmo0wNmDmsTCBDGLg4BWAij54w/K8+INgr8++dbeqq TIaJbE9EDcw8l6jXCuUkKvUu4L9edZSR4e2jaD+PG9VXbLLfez3csq/jTsahVULObdKre59mX0+ MZwEA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Introduce the `phy_get_next_update_time` function to allow PHY drivers
-to dynamically determine the time (in jiffies) until the next state
-update event. This enables more flexible and adaptive polling intervals
-based on the link state or other conditions.
+On Fri, 07 Feb 2025 14:36:46 +1100, NeilBrown wrote:
+>  I found these opportunities for simplification as part of my work to
+>  enhance filesystem directory operations to not require an exclusive
+>  lock on the directory.
+>  There are quite a collection of users of these interfaces incluing NFS,
+>  smb/server, bcachefs, devtmpfs, and audit.  Hence the long Cc line.
+> 
+> NeilBrown
+> 
+> [...]
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+I've taken your first cleanup. Thanks for splitting those out of the
+other series.
+
 ---
-changes v4:
-- fix comment width
-- fix copy paste artifact in the comment
-changes v3:
-- use jiffies instead of milliseconds
-changes v2:
-- phy_get_next_update_time: remove useless variable
----
- drivers/net/phy/phy.c | 21 ++++++++++++++++++++-
- include/linux/phy.h   | 13 +++++++++++++
- 2 files changed, 33 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index d0c1718e2b16..347ad1b64497 100644
---- a/drivers/net/phy/phy.c
-+++ b/drivers/net/phy/phy.c
-@@ -1501,6 +1501,24 @@ void phy_free_interrupt(struct phy_device *phydev)
- }
- EXPORT_SYMBOL(phy_free_interrupt);
- 
-+/**
-+ * phy_get_next_update_time - Determine the next PHY update time
-+ * @phydev: Pointer to the phy_device structure
-+ *
-+ * This function queries the PHY driver to get the time for the next polling
-+ * event. If the driver does not implement the callback, a default value is
-+ * used.
-+ *
-+ * Return: The time for the next polling event in jiffies
-+ */
-+static unsigned int phy_get_next_update_time(struct phy_device *phydev)
-+{
-+	if (phydev->drv && phydev->drv->get_next_update_time)
-+		return phydev->drv->get_next_update_time(phydev);
-+
-+	return PHY_STATE_TIME;
-+}
-+
- enum phy_state_work {
- 	PHY_STATE_WORK_NONE,
- 	PHY_STATE_WORK_ANEG,
-@@ -1580,7 +1598,8 @@ static enum phy_state_work _phy_state_machine(struct phy_device *phydev)
- 	 * called from phy_disconnect() synchronously.
- 	 */
- 	if (phy_polling_mode(phydev) && phy_is_started(phydev))
--		phy_queue_state_machine(phydev, PHY_STATE_TIME);
-+		phy_queue_state_machine(phydev,
-+					phy_get_next_update_time(phydev));
- 
- 	return state_work;
- }
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 19f076a71f94..0493553ed60b 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -1273,6 +1273,19 @@ struct phy_driver {
- 	 */
- 	int (*led_polarity_set)(struct phy_device *dev, int index,
- 				unsigned long modes);
-+
-+	/**
-+	 * @get_next_update_time: Get the time until the next update event
-+	 * @dev: PHY device
-+	 *
-+	 * Callback to determine the time (in jiffies) until the next
-+	 * update event for the PHY state  machine. Allows PHY drivers to
-+	 * dynamically adjust polling intervals based on link state or other
-+	 * conditions.
-+	 *
-+	 * Returns the time in jiffies until the next update event.
-+	 */
-+	unsigned int (*get_next_update_time)(struct phy_device *dev);
- };
- #define to_phy_driver(d) container_of_const(to_mdio_common_driver(d),		\
- 				      struct phy_driver, mdiodrv)
--- 
-2.39.5
+Applied to the vfs-6.15.misc branch of the vfs/vfs.git tree.
+Patches in the vfs-6.15.misc branch should appear in linux-next soon.
 
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.15.misc
+
+[1/2] VFS: change kern_path_locked() and user_path_locked_at() to never return negative dentry
+      https://git.kernel.org/vfs/vfs/c/2ebf0c6b48d8
+[2/2] VFS: add common error checks to lookup_one_qstr_excl()
+      https://git.kernel.org/vfs/vfs/c/4b3c043c69bc
