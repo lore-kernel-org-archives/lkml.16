@@ -1,78 +1,96 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E560A1E5732;
-	Mon, 10 Feb 2025 10:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567CE1E7C1C;
+	Mon, 10 Feb 2025 10:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739182982; cv=none; b=sYF7NSbx2Fq9Zevo/2narPpQynucwk42kFYxr7X42fr6wph4HD6V+z5ks5b4lyKosqKyeCMy3lLL5/kslRocQLz+7a1CkydET+nA+S1J6Ljnl5bZTLUr4gZ67a93k8G5CgK0N421hGVTCyAb6z/3jb4MBsClZ8Bs4zCwDRBXCGs=
+	t=1739183043; cv=none; b=Qo6VyoJpiUUrJbYG13BrKqbMX8YvulSUDEHIUc2QjaPqM6vY0DtJTSZwy1BLCKqqDGIfHMVm21RpAWzzmkqG3zWbqk1cacVcdTTQmCASaGkzj5U8t9tbGV4j8e4BzIwWXzancE3bwtYCmwKVfpoBk9Umyp61FES+nfGZQDfqCHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739182982; c=relaxed/simple;
-	bh=1AH1+qDGBe3izN60C7CJNQrPXyH8uryGwGB9HKh0fPI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GYhTfXAtAt0MWYQHj9dV5JorZC+sTpeMoPxFKgVwyaZbJncvXlVpBzhXAGLwafUobbU4RyyKjWwPPWDtKo28Vd35u69o6+DCIIY75/TQzoeTq9hIfd/fVZD6YLHZtiuUPOn4wv24JNA4fPJE42ftCMHHyKJ/B9+RJS99JpZAZyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ys0x222gZz6K9Hx;
-	Mon, 10 Feb 2025 18:21:42 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id F14731402A4;
-	Mon, 10 Feb 2025 18:22:51 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 10 Feb
- 2025 11:22:51 +0100
-Date: Mon, 10 Feb 2025 10:22:50 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-CC: Antoni Pokusinski <apokusinski01@gmail.com>, Linux Kernel Mailing List
-	<linux-kernel@vger.kernel.org>, Linux Next Mailing List
-	<linux-next@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the iio tree
-Message-ID: <20250210102250.00006bfc@huawei.com>
-In-Reply-To: <20250209173446.19590956@canb.auug.org.au>
-References: <20250209173446.19590956@canb.auug.org.au>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1739183043; c=relaxed/simple;
+	bh=ntoOiImb78BlQL0UwLciwQEQuyzEUEb5lGqhwhFfqOU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KYOAtiY/Q1miyBYQUig5zbDXHFRGHY/ACzAEsIIcMqL6t8rGdWh7b4xP2r3T8AiHCZydxCo+civEwW6ye0oDblzlShQmQaEcSQT4MbF+sOpgVjnJIpMLgFMnNl8QN4JhB7yGp0t+fQX6oh6dRdjwp96MwonWcGrj7t4VccbXuow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OU1UcQgG; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OU1UcQgG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0DFAC4CEE6;
+	Mon, 10 Feb 2025 10:24:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739183042;
+	bh=ntoOiImb78BlQL0UwLciwQEQuyzEUEb5lGqhwhFfqOU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OU1UcQgGxyej+8N/NmwfNcsGdxNkcP1SGRCUKpnbBQ7oZ2PJ4QiARn6GZ4a6RcwD6
+	 4iSGfPnupJBMjbJPaJHTg3WdJxfIxGBJzw2PQ+YzWUyV0WcW8dAhjnXj00vD+1gkk6
+	 l2bBHg4ypU1RLtwV/XWo/MK4DogN9ssAhHVBPcsajntu3//7yNGVYKbaq7oDrMJ8tX
+	 wvvBAFbdVyiuT0XEUB7H57zvaSK15WkFQgjlNzrrWCTml7tJF/KrbcfBIGO7X16bGh
+	 jxLqj3ryMjNXg+Os9cWQ39GF9ICamYNN5TBT1gOIgBE6DEnFZ4OPvKSbdj87NjnVfg
+	 n9BgJsGhUByWQ==
+Date: Mon, 10 Feb 2025 11:23:59 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Dinh Nguyen <dinguyen@kernel.org>, kernel@pengutronix.de, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/6] dt-bindings: net: dwmac: add compatible for
+ Agilex5
+Message-ID: <20250210-hissing-discerning-vulture-d741cd@krzk-bin>
+References: <20250205-v6-12-topic-socfpga-agilex5-v4-0-ebf070e2075f@pengutronix.de>
+ <20250205-v6-12-topic-socfpga-agilex5-v4-3-ebf070e2075f@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250205-v6-12-topic-socfpga-agilex5-v4-3-ebf070e2075f@pengutronix.de>
 
-On Sun, 9 Feb 2025 17:34:46 +1100
-Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On Wed, Feb 05, 2025 at 04:32:24PM +0100, Steffen Trumtrar wrote:
+> The Agilex5 SoCs have three Synopsys DWXGMAC-compatible ethernet
+> IP-cores.
+> 
+> Add a SoC-specific front compatible to the binding.
+> 
+> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> ---
+>  Documentation/devicetree/bindings/net/socfpga-dwmac.yaml | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/socfpga-dwmac.yaml b/Documentation/devicetree/bindings/net/socfpga-dwmac.yaml
+> index 2568dd90f4555485f18912b5352f191824bb918c..31c163bf1b59e14216d1fb4b4b9aaa747e1b19e2 100644
+> --- a/Documentation/devicetree/bindings/net/socfpga-dwmac.yaml
+> +++ b/Documentation/devicetree/bindings/net/socfpga-dwmac.yaml
+> @@ -21,6 +21,7 @@ select:
+>          enum:
+>            - altr,socfpga-stmmac # For Cyclone5/Arria5 SoCs
+>            - altr,socfpga-stmmac-a10-s10 # For Arria10/Agilex/Stratix10 SoCs
+> +          - altr,socfpga-stmmac-agilex5 # For Agilex5 SoCs
+>    required:
+>      - compatible
+>  
+> @@ -45,6 +46,12 @@ properties:
+>                - altr,socfpga-stmmac-a10-s10
+>            - const: snps,dwmac-3.74a
+>            - const: snps,dwmac
+> +      - items:
+> +          - enum:
+> +              - altr,socfpga-stmmac-agilex5
+> +          - const: altr,socfpga-stmmac-a10-s10
+> +          - const: snps,dwxgmac-2.10
 
-> Hi all,
-> 
-> In commit
-> 
->   3e2a7cb538ec ("iio: magnetometer: si7210: fix magnetic field measurement scale")
-> 
-> Fixes tag
-> 
->   Fixes: cb29542a178f ("iio: magnetometer: si7210: add driver for Si7210")
-> 
-> has these problem(s):
-> 
->   - Target SHA1 does not exist
-> 
-> Maybe you meant
-> 
-> Fixes: e0f5349ba881 ("iio: magnetometer: si7210: add driver for Si7210")
-> 
+No, don't grow this pattern. a10-s10 *MUST* be one specific device, so
+it cannot be compatible with 3.72, 3.74 and 2.10 in the same time.
 
-Sorry, I pushed an update to fix this to my testing branch (squashed the commit)
-but failed to update the togreg branch I'd pushed out earlier in the day.
+I understand that old DTS was here wrong, that ship has failed, but
+don't grow it. All your compatibles must be specific, which means they
+must represent one logical choice. You claim now that a10-s10 covers now
+three entirely different devices.
 
-Will fix up when I'm next on the right computer.
+Best regards,
+Krzysztof
 
-Thanks,
-
-Jonathan
