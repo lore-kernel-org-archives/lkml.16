@@ -1,113 +1,143 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55B21B425A
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D311B425A
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739177950; cv=none; b=qoZlwYv6iYAWF8DfzYSKFunO4ARTjN9r2DfGPVj5XPY0qjuxF2PHwBD8SEYY0qulQHC2u0eSmelL0XJ9YLTK2Vd+qRr60AAN19apQukDQyZJuLROIVb9u0YQRA1GpjdLCt16l+7EuGZ0RWxbr1Br+Lw2UJx4Dl5Bk4fRNTno7/w=
+	t=1739177965; cv=none; b=f1TPioiD18InhO4ct9TYJ39N3t3D7BOw3kqmeiwV8rpPBf4C4WuAJ2aFIWz+BuEOS6Co3Wg/CRl9mzdA/kCHU8vdCUKfvwSd3USPnh/ETS474Bh+u0zBnUQR7XNkH907I0qPG9ZZsK31K2qJAutyY84JKfGveGhab7+IRvbfh0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739177950; c=relaxed/simple;
-	bh=r9kfscMu2nQ0HRBU8e9l53pIAaPhrUF5mA9gkyOUvGs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dpgH6ZmpLra9zuvvEYJwpF9wWB6tuYecGUlsfuyVetMgogBPUYgsUtzfCrjTqN52zkLhFxRTFEiPcq7lWwfVmIvO37DT4hiWhLm7f9c7dRNn5BsgCnj7sSSwrNTcH/I5J/0Ujim+FlAPUnVOJWDKMd1PTASzOmA7y0BheuClmMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QKQz9lJh; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739177965; c=relaxed/simple;
+	bh=ktCZVxsM0fD1x59ALUygdH79WIh7ptg4qefM/jd53Tg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ebi4hJ0MBQ5V4Q0DKKDUFt0VI73SpmnsVI7rK8pIFTy5PILz2jKTSFyxh0YmkjQjCWpZHX1yHCz1mDyJqSiZUHg7tIUbfcB9fTTgg20Cwzzk8Pw3OsgT+KZkHBIug6EQnVU8QXdon2F/Jgnd5Ou/wQeore70oOkIiAyUnRc2tWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pbs73Emu; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QKQz9lJh"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38dcb97e8a3so2201642f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 00:59:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pbs73Emu"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21f818a980cso15094245ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 00:59:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739177947; x=1739782747; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hgguTSFnjwWEUxBDa2C5Pf4WCfOFI/5UFo5VErVUJi0=;
-        b=QKQz9lJh4MU4d7M+yyZEL3U+fQY/fZe7sKfb1tWuatdbn/tbxwx31c8q8S4Cvc/IdJ
-         4H2RgNasN2geJh+pWXv3I6FXwTffx9T2SpweypnvLKQ7nQUarr2sZrNZ8FQLhv7jzfde
-         hev4NIWOf1iprkZbItLcR0ynUBiCPMLPoNGUocwu3I+GEekr7420rdfP9y5saow3ekuc
-         FHGvQ/hOo3fyDEzfpjhWvulSguero1dQiYg57qQ/DwvWKgXnDWUyeSnJIgIQ926mozve
-         F9Ms0+kQCfn6KsWqfIndBEveIe1Ovb6Tc4dtR6HaLd5+SlGL9A3TdsKRcWMXvu22zND1
-         vhOQ==
+        d=gmail.com; s=20230601; t=1739177963; x=1739782763; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=V0FOdeNN8xEA771wgYDIWAiBn8a2qFfFqcNYmlhYwUY=;
+        b=Pbs73EmuXTnKCGzcaRhcoYmyqY9K9q2hUzkzdhhOXMxOpFAqcUTaVMXiHuNyKgDQ93
+         tjC9XdrSOE/cZ9/7/woOdPLwLieirvJaXttdHOs/xwCRAFmIFmev5m4XUXRvOyX42mEN
+         050pejkWW8NBLas8POmIy0vaqxUAjbmivm5qcuh8P5ziy36AzN6T4iKAN3OCyOe/EPLR
+         3pNQWhRJw37gZ2ynqQhbD+0lVjzya3gwJ4awK3W1ID1SICTONyJ0ACRPtVdTrKTRZL7b
+         cRoK/tmqEIosAUw4V4Mlb7nZkQ2As92ZJermd01wf5Zn8t9aO0M+9v6S9NSwm1YDX59F
+         4c3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739177947; x=1739782747;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1739177963; x=1739782763;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hgguTSFnjwWEUxBDa2C5Pf4WCfOFI/5UFo5VErVUJi0=;
-        b=Fj+/if5PDtHAKP0Y5vl2otfbxf4g8BA44g9taqONu32rnzP5my3m8wY0gQ8xw8B3wi
-         hP5o/okWHysJZOIBioXceXMRKkSYWxnm9sGlrEVYWnVDOQhRfx5OqEDWy7U2cVyeI6zJ
-         w8Yg3j/ug5PSp3AK8q8RDnYtTH9uSp12bXCzFJJFASjbzLZtZ8v5FetrhOaf4Mivcw9T
-         Rvh2mWt+XK7B4izsWx7nOsO9wJsnJoIJED4b3eAojrDGuTOR8bswHLKwQ3Y7mVC9/vS1
-         WB3Vsw4JBH23Tb3Fab2BcSxfiMknME8r2d551iLr3DFSxGzCeZdUENjMLTCFu8Yy3FsH
-         RsiA==
-X-Gm-Message-State: AOJu0Yy+QYdGlwhTS7DIcX29f6Q3swgeXsGfmNsjw+RmmCeviOq4jOCK
-	oa8VdaLlQsJYkQM6XAODxxGX166eSpRhCpSTtLh9EC7xlkpFzJkKbjPS07A00Cw=
-X-Gm-Gg: ASbGncvKjUfSiENAx1uRsL3CfJWyp8dTmPLE6zThlqhGqNncgdRKQ0eYvWwaIDfAC3k
-	j0ZrgEl9DGrtt2pnu1r4T806O/QEKrdNZ57j2XiyQrJgwvFlaotK9yvc7H4O/Pzfy+NxRLOrmu0
-	MXw3ZIks06k+CCixeUyUxqtM/59GYjLrzRok15M6xnNFSyjuqYIx1Bf37ZaFUq9vhvikJNnhqbs
-	7Wn07qLe2owj3rMAN+NGTUkyM1di6fwW7DBw6sQrC93060khfOjfI23abkfsz2A0JcQG0ZKwAA/
-	a82IqHMkxGybKWStYcFgyE4Y
-X-Google-Smtp-Source: AGHT+IHW35O2w+OVAfjf6xNzfb+RSzDit7DIG4eCcKdu75kyP3tGrbONMFt1iHptvel8q6LbiT3P3Q==
-X-Received: by 2002:a5d:6d8d:0:b0:38d:dac3:482f with SMTP id ffacd0b85a97d-38ddac34a13mr3776794f8f.20.1739177946954;
-        Mon, 10 Feb 2025 00:59:06 -0800 (PST)
-Received: from [192.168.0.14] ([79.115.63.124])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd4d826c6sm6159674f8f.69.2025.02.10.00.59.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 00:59:06 -0800 (PST)
-Message-ID: <503b7ec9-e0b1-4351-aa34-3089b2055eb9@linaro.org>
-Date: Mon, 10 Feb 2025 08:59:04 +0000
+        bh=V0FOdeNN8xEA771wgYDIWAiBn8a2qFfFqcNYmlhYwUY=;
+        b=lLsGyiDKfxX9ImH8t/T/QWT9McJylOQyDd0WCIBHJgXrGUCNKxlZkhEw56+kciThvE
+         QDkIUnot8dVVySj2NyjQR+NI6aMWT2A4c+ewmQ5Ldsejwm8qVUHIcHTkKRC45Sj2Ztn8
+         N9RA+JHbHK4DBp0jiJ+LOl9ZYe7QQwk76DP2otQs/StMckHy5RxujXXhFH4j6XI1Nmnr
+         WFEcYWIsCcJ8rHriTK0B07b64w5qbQbH3UdTj4ZeL5qDC1zkF7/EH1AFr0ySq/uBhni4
+         8MiHRh3E0zhCMWZatE/sxLMlg9ASYyTfChZeYQy9oqC4h9dc+kWX8/ceHrsvvYu38rhc
+         qarw==
+X-Forwarded-Encrypted: i=1; AJvYcCVdW08fASQV0uBU6J1wU1LO/8tCUonwdyNoWiTetB9qgHOJ0Z7CC4MgYBbPwxtRJANK8EDYc3DE80UcS2I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yww3wjNDdKDYE2Yymn7dnpKeO87ijcv49buw/qGTfMzrwJfqTAP
+	j+CR1cBlZQ9BMrila5+iqXrEXWPXZ7kFoUEIii3J6ocS0+zJ8JKMZW2cOc8+
+X-Gm-Gg: ASbGncuw0f1bufZHI4fuK+4+An0/fF4sC9WcYY1bT0YSZF+W09V/5Cxu9OjwNYod/yE
+	ojc99P4HGrugn4bfOWA7kWHz+iqb8eBECJgox3ZmdScSt5lZrG/vEBOcc9F4PKl+CxvTggsoii9
+	KcYOtgkBb4JIkNz1G8xXMIdtGU0FUULh8I+4HDa7JHlOeVJIF0NBMV00QwJspVkxvLOjqxkbmMQ
+	agK7PvW/dJRGNKtKziRzaLMYq/mtihT8/V4iC1fYXoGcMWuPvitYan1Em6yrKKsB+2gvhwWOV99
+	6ggQiRTxLUMbqPnRXUo1EgOOHf6zSAnN
+X-Google-Smtp-Source: AGHT+IFASvhac+YpuX5T0KXy41OzK3q+6qgA4rC3Ayz2rGb68mM3SVOAwCo3OKKQ5X0mreUc5GFsvA==
+X-Received: by 2002:a17:903:2345:b0:216:6fb5:fd83 with SMTP id d9443c01a7336-21f4e716972mr179450335ad.29.1739177963406;
+        Mon, 10 Feb 2025 00:59:23 -0800 (PST)
+Received: from vaxr-BM6660-BM6360 ([2001:288:7001:2703:83e6:5a50:60c5:d373])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3650ce16sm73639075ad.9.2025.02.10.00.59.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 00:59:22 -0800 (PST)
+Date: Mon, 10 Feb 2025 16:59:19 +0800
+From: I Hsin Cheng <richard120310@gmail.com>
+To: Qi Zheng <zhengqi.arch@bytedance.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: pgtable: Ensure pml spinlock gets unlock
+Message-ID: <Z6m_55VAsY13GcHh@vaxr-BM6660-BM6360>
+References: <20250208184928.219960-1-richard120310@gmail.com>
+ <b70f663f-5b72-41dd-bae4-14808a87f262@bytedance.com>
+ <Z6m21Rzv6H16oG-U@vaxr-BM6660-BM6360>
+ <e5d5bafc-7809-42c2-ba8d-554b9667d00c@bytedance.com>
+ <4524511c-d685-4af6-9de9-4f15f7dcfe05@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 2/3] firmware: add Exynos ACPM protocol driver
-To: Markus Elfring <Markus.Elfring@web.de>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- Alim Akhtar <alim.akhtar@samsung.com>, Conor Dooley <conor+dt@kernel.org>,
- Jassi Brar <jassisinghbrar@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-team@android.com,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>,
- Peter Griffin <peter.griffin@linaro.org>, Rob Herring <robh@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Will McVicker <willmcvicker@google.com>
-References: <20250207-gs101-acpm-v7-2-ffd7b2fb15ae@linaro.org>
- <e1fffd3b-d3dd-4f46-b7b6-1f03f934dd30@web.de>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <e1fffd3b-d3dd-4f46-b7b6-1f03f934dd30@web.de>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <4524511c-d685-4af6-9de9-4f15f7dcfe05@bytedance.com>
 
-
-
-On 2/8/25 3:31 PM, Markus Elfring wrote:
-> …
->> +++ b/drivers/firmware/samsung/exynos-acpm.c
->> @@ -0,0 +1,771 @@
-> …
->> +static int acpm_dequeue_by_polling(struct acpm_chan *achan,
->> +				   const struct acpm_xfer *xfer)
->> +{
-> …
->> +	do {
->> +		mutex_lock(&achan->rx_lock);
->> +		ret = acpm_get_rx(achan, xfer);
->> +		mutex_unlock(&achan->rx_lock);
-> …
+On Mon, Feb 10, 2025 at 04:42:13PM +0800, Qi Zheng wrote:
 > 
-> Under which circumstances would you become interested to apply a statement
-> like “guard(mutex)(&achan->rx_lock);”?
-> https://elixir.bootlin.com/linux/v6.13.1/source/include/linux/mutex.h#L201
+> 
+> On 2025/2/10 16:31, Qi Zheng wrote:
+> > 
+> 
+> [...]
+> 
+> > > > > 
+> > > > > diff --git a/mm/pt_reclaim.c b/mm/pt_reclaim.c
+> > > > > index 7e9455a18aae..163e38f1728d 100644
+> > > > > --- a/mm/pt_reclaim.c
+> > > > > +++ b/mm/pt_reclaim.c
+> > > > > @@ -43,7 +43,7 @@ void try_to_free_pte(struct mm_struct *mm,
+> > > > > pmd_t *pmd, unsigned long addr,
+> > > > >        pml = pmd_lock(mm, pmd);
+> > > > >        start_pte = pte_offset_map_rw_nolock(mm, pmd, addr,
+> > > > > &pmdval, &ptl);
+> > > > >        if (!start_pte)
+> 
+> Maybe we can return directly here:
+> 
+>             if (!start_pte) {
+> 		spin_unlock(pml);
+>                 return;
+>             }
+> 
+> > > > > -        goto out_ptl;
+> > > > > +        goto out_pte;
+> > > > >        if (ptl != pml)
+> > > > >            spin_lock_nested(ptl, SINGLE_DEPTH_NESTING);
+> > > > > @@ -68,4 +68,8 @@ void try_to_free_pte(struct mm_struct *mm,
+> > > > > pmd_t *pmd, unsigned long addr,
+> > > > >            pte_unmap_unlock(start_pte, ptl);
+> > > > >        if (ptl != pml)
+> > > > >            spin_unlock(pml);
+> > > > > +    return;
+> > > > > +
+> > > > > +out_pte:
+> > > > > +    spin_unlock(pml);
+> > > > >    }
+> > >
 
-I'll replace the open-coded mutex handling with cleanup.h guard(mutex)
-and scoped_guard(mutex, ...), thanks.
+Hi Qi,
 
-Cheers,
-ta
+> Maybe we can return directly here:
+>
+>             if (!start_pte) {
+>               spin_unlock(pml);
+>                 return;
+>             }
+
+Ahh that's right I think it's better than adding another label,
+it doesn't even need to jump.
+
+Should I send patch v2 for it or wait for the maintainer's review
+first?
+
+Best regards,
+I Hsin Cheng
+
