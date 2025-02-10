@@ -1,117 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5883D1F8BCC;
-	Mon, 10 Feb 2025 14:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342522253B0;
+	Mon, 10 Feb 2025 14:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739199156; cv=none; b=HY5FueCRI/KgbKA9IA/WxZ2Jqtx7qF/HfoBz5+/KCqRGe6VmFjoYM72idsv7B7WxwlYcUZhRLsipQ9MaLJGhQwkIaHZg2Xnwq6vXOYyLCPgUYpHoelqU8ynUVsaZjB3La0NrFMDZrnAeZ43pNLSlpnzZnw1qjtrnTqA8bWMZ45E=
+	t=1739199163; cv=none; b=ZFDDClUdX2H7PWS5ESsBmAHH/h5bprYmg+D8D4kzF94htGDc6H7MxtJmVSKjCqw3s54r8O1rABpkHcrj5iNkVA3E2g9Y8Oy0y0SURSrORu6WGZF4NzBvyoJXcgxFhU1UbxKC4Qr1bSbs6Qxt8vgduf2+3VgqY7mXCXiDqCGNbdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739199156; c=relaxed/simple;
-	bh=HNcbYnzHO18TyVd6ABCg4Wajlo8GzqSxCWV3Zsn7hkg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mRvFjbnjuT+bofvC1utpCHucvfY/A7s4lbKzUlZF3PeLZ00EyqQpcL3iMKgqKpjj+MkTyFNovwAD6DAJapCIVanhljQeG91MCQZdmZ81qnZFPUcYXPDzX1U8w/4Z31fdaHwSkOz4rDvcd9Ns3bDwE5Q+i3+GLLrj5NZNI/CqLuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qYojaCmr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qYojaCmr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 023C1C4CEE6;
-	Mon, 10 Feb 2025 14:52:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739199155;
-	bh=HNcbYnzHO18TyVd6ABCg4Wajlo8GzqSxCWV3Zsn7hkg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=qYojaCmrwCxldnXH3qTBYPOqlqPPcOVrgt9Rtw9THaL8Xu6GZ155qUg5omCvMilbC
-	 QYLZhiY871+nZi4k6avHqC8xgThwyZ/Dg/3mWUPzas72IONB1GuXYRVw7cBHWfMwLA
-	 akDl+SXI0eeuXvlk4T9m0MUK2B99yiahxg+UYSMIRZcJg5HnsIWleXPb0jmtcf3gH5
-	 elApzBHvDuZJIuZEXNxQS6eNAwg+nR/NG9e2S6NG3hUkTkFwBy9iBHwm4imfeMkTZV
-	 VZAkuboF+wcFLBKM5NuY8DbWj9jbGpcVpdRRLoSe2RTu9ZP16A5+6dmpBF8Q2t9dq9
-	 7X9tZWNMnF/UA==
-From: Roger Quadros <rogerq@kernel.org>
-Date: Mon, 10 Feb 2025 16:52:17 +0200
-Subject: [PATCH net 3/3] net: ethernet: ti: am65_cpsw: fix tx_cleanup for
- XDP case
+	s=arc-20240116; t=1739199163; c=relaxed/simple;
+	bh=wda1mNMZX4KbseNBkq3rXwGn7M4th8PLAawTHL22Dew=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tcIOxM8QpnP23+rEvZkZgzANLicEO1BUZVcAcbFOsPaNEfD5XkgYgs1DK14rYfHibtIcl3x/dqFtK4wHleQFeFLhGEf2x6KQTCoT7LW6Lew6XITnxC03LrPc3HHt6OywDShaYVLJWysaXsXBH/OW7BQp47Eo+VeW52kgUDfndHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-51eb18130f9so1212217e0c.3;
+        Mon, 10 Feb 2025 06:52:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739199158; x=1739803958;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u703hN5aY5SqOZOgV7UZtvwsQZeKBEWLZawWzSIr9eM=;
+        b=FWZCWTDiM7b0HYNTyY7kpYdPHYsv/ViFHuYZ3Glhmpna9dRxUorlofXqkjh6N3JTHM
+         lKZJ6mwCGIgvzRygFq63SDeXfwF5r8wFjzn0w/jsGv4fQF5arhrpIkdNDsgH9QIDIjJj
+         1J9xmPTTcyKJPSSVYS0nx5LYZ3Oifu53v7Gh2Ps4yQgsQqHVQD5N9dN6c7fa543+nTbz
+         VqnWFBq/r64aZ/lUhdELYLeD7JLBdSg6b+HYtf8aKlRouLM/U3pqdz2T4Vwoye/4slgh
+         FZBjV/XtMmL56dY3zpHdd+hXFCmUZXkwX6hrb1GjPfiI+Wbkfsu8yYltMGXPgCcbLhbL
+         AuDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCURYkCOFaRTPSqPTxQPaoTRhWVtZ0IxDfutGBMPyd69qw86Z/B+TncXJbmaLEIIbIAUF++Qw1L6MsxlXmI=@vger.kernel.org, AJvYcCVfPiaRYlhjU4l/CnS2p0lsG9Ik2xaANCiBelXlvIwoip/R79FGNfXMh97Aax0jveVX8JnZ595YPWhl7XbX/n3n@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcPjzd/Q5NzySU8u36lcLM63NzrVUaKTFFBlMtYddnihjE8LdA
+	++v2IDR6h4HXsgLq75VwPPILY4akdgAXk8gzzIxmJ3a1cfhGfDBwYQh/x2MU
+X-Gm-Gg: ASbGncv3BzNH1IcpcC0/TJ3rQMrKolNT0XPOvxWigLbpsLXM3pzxj0bcaOGHrV7BEXx
+	7I/EOqZwM5c+YSQKEGaLOJDsfwob6Bva7oj3PCEsGI945Unh7nkWZhfLy00IiwwD01Qd1fDQgq2
+	nrszaILKY5nKIRWK/DbeABkkaBEru1o17E2eTR2a26XjbVP3DRHhfhGZoeeTt3BxrOkWcRdfRp8
+	glG75wRHmSgyp0Zi1JA3/RM5la0ceoSehMIGtceSEwqJOwT0zozPubuu37u+DhG39EljAfy5Guw
+	e8zSktLuFx1k2MYdYOVCMp6tFaeZPyU4TU5n+zZj/hIPxXsicntxZg==
+X-Google-Smtp-Source: AGHT+IEQYr1ky3o2AX0q0vGPIYeg+C2FIiPYZokvRP7ecSZ6K05Xj7kkAfZHR5UUFUvpxCfc4Qir+w==
+X-Received: by 2002:a05:6122:30ac:b0:518:8bfe:d5f0 with SMTP id 71dfb90a1353d-52056f33161mr110227e0c.0.1739199158243;
+        Mon, 10 Feb 2025 06:52:38 -0800 (PST)
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5204eb4396esm143222e0c.43.2025.02.10.06.52.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 06:52:37 -0800 (PST)
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4bbc406499fso324745137.1;
+        Mon, 10 Feb 2025 06:52:37 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUjsj+zUQ6AJR46YX+9opvJPxIuDcU7WP6rkjbPvQ/XVLOQnP1pfUYfwcYriP2xOIoq7QHfocOawGkUFIg=@vger.kernel.org, AJvYcCV4730TF/rJh4riNPJ5ff9BflepwIQXZIprKG0/oBVARWuYWiCuHjVtyqyG1VMTcGRGDlDOgeuyxEcXjkTJCtxi@vger.kernel.org
+X-Received: by 2002:a05:6102:151a:b0:4bb:cf25:c5a7 with SMTP id
+ ada2fe7eead31-4bbcf25c92fmr1968497137.7.1739199156936; Mon, 10 Feb 2025
+ 06:52:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250210-am65-cpsw-xdp-fixes-v1-3-ec6b1f7f1aca@kernel.org>
-References: <20250210-am65-cpsw-xdp-fixes-v1-0-ec6b1f7f1aca@kernel.org>
-In-Reply-To: <20250210-am65-cpsw-xdp-fixes-v1-0-ec6b1f7f1aca@kernel.org>
-To: Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
- Jesper Dangaard Brouer <hawk@kernel.org>, 
- John Fastabend <john.fastabend@gmail.com>, 
- Julien Panis <jpanis@baylibre.com>, Jacob Keller <jacob.e.keller@intel.com>
-Cc: danishanwar@ti.com, s-vadapalli@ti.com, srk@ti.com, 
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
- Roger Quadros <rogerq@kernel.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1578; i=rogerq@kernel.org;
- h=from:subject:message-id; bh=HNcbYnzHO18TyVd6ABCg4Wajlo8GzqSxCWV3Zsn7hkg=;
- b=owEBbQKS/ZANAwAIAdJaa9O+djCTAcsmYgBnqhKiCPZFRwQQnzzDX1Za3HRlmO8EtOYKxR4Eq
- dxKAmLUEe2JAjMEAAEIAB0WIQRBIWXUTJ9SeA+rEFjSWmvTvnYwkwUCZ6oSogAKCRDSWmvTvnYw
- k17xEADEofTjt0PuuvMAa+WeaALn9lkbgeG6I6m4p/gMSoZUDWNdaavMSHHFzqcgiIMfyvp2d3U
- hgZvSLtm/Bzd2oufPS053gCX7CusrMbYO9yfig690PoqpNahgYmlW+ScgsIxQl1dclZSEoA3Hci
- duBsU62mtRtOr36NLTsL96n2f71m83+oMg+blKg45LE62mkW2qU0XWWWoBZ/GzZ/kLV4dzq0icA
- LvBp/pl+hv2vKz8+X2hIXl4wprNMdPnr+Hg+KyyZsir6ZEv5Al+bDddQ8ISaLMouuinivH0EHZn
- +Th9wYFW12S4xmIYxUCmJYbFmqsT0nC0hPZl17M/Y6GF2wPHL7I55I+fqnsHueOBrE0BdmtFCIB
- RvqpJAMglI32znRg6DN/LBFp3yYC3jAM/n0QFeQ8IxSn7gyiJFmBv/3o1indiGBU4xQdq7f3UdD
- 0JLeRG8kEzUuhAcY5Y7iisgK48R3GVs/RXBzIzFc3AW1iUCf6cz/zC207yqQKiP1hKyoIHnQfUE
- lcWMza1HOFrVf6XwjaXcNfuHxS/wcPsEoC7MK3NYIOoxOpintNupRPYkih1XHWusJ08/ab4nKyv
- 8Qc9DCrl9+46HUvbuB2Y0Fo3l3E1vjYTMU0KreyeEpIlLItxL+drFbA0QubFHQZD+tgNE4KTQth
- UpTZqleGUGXg1VA==
-X-Developer-Key: i=rogerq@kernel.org; a=openpgp;
- fpr=412165D44C9F52780FAB1058D25A6BD3BE763093
+References: <20250207-printf-kunit-convert-v2-0-057b23860823@gmail.com>
+ <20250207-printf-kunit-convert-v2-1-057b23860823@gmail.com>
+ <87tt92q7hw.fsf@prevas.dk> <CAJ-ks9=SEBCZiuq2YE3Uj5wJ4Pv+78W-VBTeV7CSzLYJZqsR8Q@mail.gmail.com>
+In-Reply-To: <CAJ-ks9=SEBCZiuq2YE3Uj5wJ4Pv+78W-VBTeV7CSzLYJZqsR8Q@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 10 Feb 2025 15:52:25 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXSprzzCBTBM+w39FN+OudEYPT_SX6BOMSus+8NLvZNVA@mail.gmail.com>
+X-Gm-Features: AWEUYZnbQ7L8tglpj5Mx35LbIIF1lFB7ko_RSeqwpqDtti_3gf22adqXaIDCR7Q
+Message-ID: <CAMuHMdXSprzzCBTBM+w39FN+OudEYPT_SX6BOMSus+8NLvZNVA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] printf: convert self-test to KUnit
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>, Arpitha Raghunandan <98.arpi@gmail.com>, 
+	David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-For XDP transmit case, swdata doesn't contain SKB but the
-XDP Frame. Infer the correct swdata based on buffer type
-and return the XDP Frame for XDP transmit case.
+Hi Tamir,
 
-Signed-off-by: Roger Quadros <rogerq@kernel.org>
-Fixes: 8acacc40f733 ("net: ethernet: ti: am65-cpsw: Add minimal XDP support")
----
- drivers/net/ethernet/ti/am65-cpsw-nuss.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+On Mon, 10 Feb 2025 at 15:37, Tamir Duberstein <tamird@gmail.com> wrote:
+> On Mon, Feb 10, 2025 at 8:01=E2=80=AFAM Rasmus Villemoes
+> <linux@rasmusvillemoes.dk> wrote:
+> >
+> > On Fri, Feb 07 2025, Tamir Duberstein <tamird@gmail.com> wrote:
+> >
+> > [...]
+> >
+> > If/when you do re-roll a v3, can you split the defconfig changes off to
+> > a separate patch? It's a little annoying to scroll through all those
+> > mechanical one-liner diffs to get to the actual changes.
+>
+> Yep. I'll split them into one for m68k and another for powerpc. Geert,
+> I'll move your Acked-by to the m68k patch.
 
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index bee2d66b9ccf..a2b6a30918f6 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-+++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -828,16 +828,24 @@ static void am65_cpsw_nuss_xmit_free(struct am65_cpsw_tx_chn *tx_chn,
- static void am65_cpsw_nuss_tx_cleanup(void *data, dma_addr_t desc_dma)
- {
- 	struct am65_cpsw_tx_chn *tx_chn = data;
-+	enum am65_cpsw_tx_buf_type buf_type;
- 	struct cppi5_host_desc_t *desc_tx;
-+	struct xdp_frame *xdpf;
- 	struct sk_buff *skb;
- 	void **swdata;
- 
- 	desc_tx = k3_cppi_desc_pool_dma2virt(tx_chn->desc_pool, desc_dma);
- 	swdata = cppi5_hdesc_get_swdata(desc_tx);
--	skb = *(swdata);
--	am65_cpsw_nuss_xmit_free(tx_chn, desc_tx);
-+	buf_type = am65_cpsw_nuss_buf_type(tx_chn, desc_dma);
-+	if (buf_type == AM65_CPSW_TX_BUF_TYPE_SKB) {
-+		skb = *(swdata);
-+		dev_kfree_skb_any(skb);
-+	} else {
-+		xdpf = *(swdata);
-+		xdp_return_frame(xdpf);
-+	}
- 
--	dev_kfree_skb_any(skb);
-+	am65_cpsw_nuss_xmit_free(tx_chn, desc_tx);
- }
- 
- static struct sk_buff *am65_cpsw_build_skb(void *page_addr,
+Fine for me!
 
--- 
-2.34.1
+Alternatively, you could just drop them. I do refresh the m68k
+defconfigs after every kernel release, but these updates only go
+upstream one cycle later.  In this case that doesn't matter at all.
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
