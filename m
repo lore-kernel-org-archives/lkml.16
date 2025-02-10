@@ -1,125 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7E9237175;
-	Mon, 10 Feb 2025 15:24:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576412528E7;
+	Mon, 10 Feb 2025 15:24:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739201065; cv=none; b=FdpSpanO15K2MAYU8P9BeV+cJbPotYsYjG811NBDM5x4X4aVZPydC5SlIEIMgx0E5Qwrss/n5o5aTtPnr3Oe7jpgWxBxMrlFsNLWtv+DuvGx9A3z+y/iOwZd9q4U1dkdFpm+W9oB5limhhqnvZWiWGmo4h1NCY5Xr6JBPRj5kbU=
+	t=1739201085; cv=none; b=eIlU4hqHzbebJRPBox//66CwVwhexhZ0aVxRbfmiQqj2zT5EJpQ3GVp6+XUG6xq1pp80Fcg516tTRS55pum23a94q741A4tceeQYayENWNVx6hz671J916Z10/G6ynFe1a/sb85tx5HrsKqSXFFLCquP/MOnpjEODSlkPFuguKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739201065; c=relaxed/simple;
-	bh=k6idhpb5EfnXCXdLyqak7g5xf0Nu9GKOyShe2gEqqk8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kZqQB898vxeS5iVEcxBAoDwx5TLOvachmk38MgPXbSc/W/ErUPZDaBnt0G7mrHgwHH75AZcVOKMM3ClP5JBoMIzQugOR/nPIaoHmSMldX9bhLl7FGMxXKP3GjWRJqzkzYjXYTrKZOSCONzQZIM07u5iegrmez7L19U7WJtjbJbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=na1eNQzS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739201085; c=relaxed/simple;
+	bh=RrrddgdXo772lyuy2X/JajBQ2JiCmVZxtBpkXIyV/lA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=gwEXFK+fK86j7QoJb7A4FKfs+MwV333B/ObXoMVuTCVOjLp7c46Vq9UCC5V9JddRKwWugVfUteoID6EJKegXa/WXGLos0EbOZhGyljDm5QYlJfKoqgpBqYoPwrpoyEVmFTadB+ZTW+klB2GCV9a9UbNbgogwtVYWerQNZBKHsMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=p9vF3wz5; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="na1eNQzS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FC07C4CEDF;
-	Mon, 10 Feb 2025 15:24:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739201064;
-	bh=k6idhpb5EfnXCXdLyqak7g5xf0Nu9GKOyShe2gEqqk8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=na1eNQzSkQBj9Xf7DVo4YubAfxZrjIvPj5RoFhWXGBrURlDkFY7LW30mfWqWTYb/r
-	 WGtgc0D/iChavrMEA0aCoZWioojWZOJRGcfxvTtHafmcVvC5k1+Ju+w1U/Tt4EBr6a
-	 AB1Nw+TtLuC3K1x7DNVAOKbPD9DGLkwsokbafDGbO5IGq2NrNQwkZFdbF52QRL9/bN
-	 5I8oKkfd+ZE4OK9bD0+HB7/c5iD9aKrmJcXZUAvfSoJZcg/cS281ywMv/C/Y4o/TNe
-	 PaZ63Ek/GKqvpNla696RLVvyjHoxPANlMVbnYPGvEgFS3TGLlE7sOX1sd/AYeJt//b
-	 me8dB6nFU80+w==
-Message-ID: <6de33406-04f0-4182-9ada-c41092fbded9@kernel.org>
-Date: Mon, 10 Feb 2025 16:24:18 +0100
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="p9vF3wz5"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AF0k9D002292;
+	Mon, 10 Feb 2025 16:24:22 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	XVA5ICq5nAYIo8gZGmJ4+8mx0W8LPY7vXxJIxOTznJ0=; b=p9vF3wz566Ej0xxx
+	NLCFfj426citN9x4LK+LoWGJB6uOekdh9aSQ5uiLUL2BEEbkZRmD5RbOBEySnuyD
+	n9UWm8JguI88gPdEQ5dp1dyHKJHApi1dVuerIY3PsNedRbjjYnTIZFQhKelxmLyq
+	vrf3QgySVpchDinVgHXX7eMuThd/XRUiEbEcobRGaQs9tU+7MaIzZC2z4qBHF1jw
+	kr5BFBJM44vyWltGw8YsI2hU9eyzGMhZynqOOmTK0ilsXcczEmPw17poETUpHltm
+	kPN9scgsh7SaQD/gIW47JGZq6xshrP4CfocwxMttLBPxqdhgCdRVRI2vBeeayFiu
+	46LGTA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44p0pyq6hc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 16:24:22 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 526F640049;
+	Mon, 10 Feb 2025 16:23:13 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 98AE1294F43;
+	Mon, 10 Feb 2025 16:21:37 +0100 (CET)
+Received: from localhost (10.48.87.120) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 10 Feb
+ 2025 16:21:37 +0100
+From: Amelie Delaunay <amelie.delaunay@foss.st.com>
+Date: Mon, 10 Feb 2025 16:20:55 +0100
+Subject: [PATCH 01/10] dt-bindings: stm32: document stm32mp257f-dk board
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: qcs8300-ride: enable WLAN on
- qcs8300-ride
-To: Stone Zhang <quic_stonez@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, quic_miaoqing@quicinc.com,
- quic_zhichen@quicinc.com, quic_yuzha@quicinc.com
-References: <20250210062910.3618336-1-quic_stonez@quicinc.com>
- <20250210062910.3618336-3-quic_stonez@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250210062910.3618336-3-quic_stonez@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-ID: <20250210-b4-stm32mp2_new_dts-v1-1-e8ef1e666c5e@foss.st.com>
+References: <20250210-b4-stm32mp2_new_dts-v1-0-e8ef1e666c5e@foss.st.com>
+In-Reply-To: <20250210-b4-stm32mp2_new_dts-v1-0-e8ef1e666c5e@foss.st.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>
+CC: <devicetree@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>,
+        Amelie Delaunay <amelie.delaunay@foss.st.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_08,2025-02-10_01,2024-11-22_01
 
-On 10/02/2025 07:29, Stone Zhang wrote:
-> Enable WLAN on qcs8300-ride by adding a node for the PMU module
-> of the WCN6855 and assigning its LDO power outputs to the existing
-> WiFi module.
-> 
-> Signed-off-by: Stone Zhang <quic_stonez@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/qcs8300-ride.dts | 96 +++++++++++++++++++++++
->  1 file changed, 96 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts b/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-> index c4c0db6f8b31..84c9e74ea4c9 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-> +++ b/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-> @@ -22,6 +22,76 @@ aliases {
->  	chosen {
->  		stdout-path = "serial0:115200n8";
->  	};
-> +
-> +	vreg_conn_1p8: vreg_conn_1p8 {
+Add new entry for stm32mp257f-dk board.
 
+Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+---
+ Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Follow DTS coding style and recommended naming for regulator.
+diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+index 6825d965da3daf2b508fbd88e8c9d40e20ba1f59..7cf9c6be0388365e6bce5e34a00ccf0a0eaa89cf 100644
+--- a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
++++ b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+@@ -180,6 +180,7 @@ properties:
+       - description: ST STM32MP257 based Boards
+         items:
+           - enum:
++              - st,stm32mp257f-dk
+               - st,stm32mp257f-ev1
+           - const: st,stm32mp257
+ 
 
-You just shipped to us your downstream code. NAK.
+-- 
+2.25.1
 
-Best regards,
-Krzysztof
