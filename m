@@ -1,129 +1,133 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B924419CC33;
-	Mon, 10 Feb 2025 11:18:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F0E19CC33
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739186311; cv=none; b=JOi7R/wOPQ4hfsgBpz3UsTibzP0XNQ36YgB4BZFhvEjUvWohLdcWOJY7UCMGgp5AjQY6mMJK5+LpuZBUdbHdgseG80rFOGN01amHNi8xtfPohpOdRz6e8IS5py0az8Q04ImS+sh2PrfTjjLQoVJ98A33yuNaD5laQZbDYD0m3K0=
+	t=1739186350; cv=none; b=fC88Vtu8B+fKTa+cOlUH9LfJdL+33ao5RwQnZ7mO1LLNBO12tw/KnRAkigEmowVJ06u5iXnITNMXKfNk9/OVswcfR+JgtJLzmln55ObNy6EIbSEgJBx6ig/oplGegmjPRR8kBH7C4EJT1iM6tOYfWhCjF1M2GySSaRJw5Ktl08c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739186311; c=relaxed/simple;
-	bh=2HcDy5BNfv+9o3ehWem9KjVCh3qqQnf3GauidfHjWKM=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=gcq/5rRmZnxB3j3Ti4V2VlelydPrjxZoNuK6o15kqgZaHzjq2SQBL4s0+URYaqYC6pFyvCSfCM4eBeypL48+HJi9G7/PTV4hYQ4aKOyE2B1ZXpIS8i/UzLdEbpL6QGPcc6BdFRjI0LG5Wlf6oPq53KZv+tUbb/VKhSVVEgTc5qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=XguuVXkS; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
+	s=arc-20240116; t=1739186350; c=relaxed/simple;
+	bh=juUILDNuz+vzUiT9bEhkA2Uw+36itTZA8IbPx+mDCpw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G7j45QjL6AhdOpsuaLPfXT6dcFRYumUrmFu/HAZJUTQ+G3v9kMSaPbeSKBgUbdRAHwBRUe6h7dxyo56URG6kNEUbfjVp/Hw9HWXSU4o21KNIOXQWIhMdEGinKsL+bDr1BRSYgOFfNdO6G8JS3k5aKqEq54LlWBYA9XNhi5DFwCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TftEeVf+; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="XguuVXkS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
-	s=s31663417; t=1739186306; x=1739791106; i=frank-w@public-files.de;
-	bh=MRrN1tWDeaJ7i6/rFG0b6OeSwpoxIWxTneKR/1obUmU=;
-	h=X-UI-Sender-Class:Date:From:To:CC:Subject:Reply-to:In-Reply-To:
-	 References:Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=XguuVXkSas9wYqgCyI9iMyWsQzxDgGPrTbKwjzcin1hupG+abFu6t544hil5/CP6
-	 nRESHFK1bzQyZ3RMhLOQltk24EgsMhzx+7rFpWPsfZMdHpymg9cUpKL/FkkgRw6p4
-	 SH7IqxGRMVCPo/VshyKuhMVnzBnrQv9+EeKYx1+ksyM7mxSrYYK3g397SjOuESdnk
-	 6DjwWdEr2rcb4oLtSlYKRrzyTm2wMdbb5ZD6spLS6MHPs0NDkJGiBjRIouTM9DyNc
-	 idb7/sMzoUVHCXawVD7VVuS7cafFIvPJ+Q+Ii50tK0BZ6whlZxaoHPzIZv5q4bYV7
-	 gLag3KFkhdLV007frQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [IPv6:::1] ([80.187.69.174]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MPGRp-1u22AO2nNN-00UEAg; Mon, 10
- Feb 2025 12:18:25 +0100
-Date: Mon, 10 Feb 2025 12:18:23 +0100
-From: Frank Wunderlich <frank-w@public-files.de>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Frank Wunderlich <linux@fw-web.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>
-CC: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_arm64=3A_dts=3A_mediatek=3A_mt79?=
- =?US-ASCII?Q?88a-bpi-r4=3A_allow_hw_variants_of_bpi-r4?=
-User-Agent: K-9 Mail for Android
-Reply-to: frank-w@public-files.de
-In-Reply-To: <b56a7597-fa39-4e02-b601-db05bfa48472@collabora.com>
-References: <20250207135501.30741-1-linux@fw-web.de> <b56a7597-fa39-4e02-b601-db05bfa48472@collabora.com>
-Message-ID: <EADAC3BA-3D8C-4E04-B8E3-629CAFF0194F@public-files.de>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TftEeVf+"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso687124566b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 03:19:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1739186346; x=1739791146; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AOZLct+qV3pNzK/kYdO49CmGouhIq9bQC2J2rxm7uS0=;
+        b=TftEeVf+MzPkZT9BSbO6dclgJsYiBrhInGf7/QrL7Q6LeWFItrr/KgiBtP88NFVxTv
+         ezlg4XOuBJCZ1nWZM8Zm/R3s3YMAJ3gSP3Caz/Gf/ynUfxjEt7KZbBvs7zYRfg4U1ZuW
+         5zfvdfmpgOx8/eNDFrtywt9537U/gyWs+yVgrrpO5MRYLxu+wfhAUPJEUdctMM74wyJ2
+         fqFj5aa61nOg8qFU0f2DHxjqP6TxUWUgYv4GvpNIH6h3z5VwwFCPjfmS+meEr6rQxpPU
+         eiBxnRR7buuMaCIGH/cDqj1kH83DpU26D6PWULC+OCe1c/p0uqwo8aT3VZ2JekQU/Wgn
+         mLWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739186346; x=1739791146;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AOZLct+qV3pNzK/kYdO49CmGouhIq9bQC2J2rxm7uS0=;
+        b=gWBihiobEh0QiBBUyiVPGRlPOX03dx8hj6r2iVtVDuGEvHe8P/mw9wSayPDequvgsb
+         te4MLhV6r6hm9HkSNa2Cx7yrEWjNGXkx9SFlZ1kN6QQ96ld/pwSloo4J84O+9ozrDGPm
+         z2/ZX1FPDu0SU7/OlMUwLnltrV+T84nXTEXUqcwzbcEveSWQGWrMGdi4xJlmujNWhyCs
+         eX2Hy4fDhk2+Gh+DqjeJpX2Np34inEllBW+zPg00YWcuBeWKbmCH6RnNFmCqubgxZXm+
+         y8HspJ1lNge5MDzkJoPBXMIpL+YWUuMWt6+upVX6eN3ouAAheHFSw16hzusu9tOSptLF
+         eVxg==
+X-Forwarded-Encrypted: i=1; AJvYcCXhxTi3DwILekgv+zKBp7Qbg8pz2lmxCGi1VH3ETiRZxabeS698LGzxZMaR7LvN9nM4Kde7eknXsBXL6rQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGQ9pUFHFXMLWe1cND1OdNKSUTE9EzFZOnlXQdQCFPg1pcbVpb
+	oKsKG1mgdMuoJjb0NYN4xGopZ0tmCaxy74o+1p9nYl6iXXPMl7+6LFuQzHn50lpAps6zQQ9iJW8
+	W
+X-Gm-Gg: ASbGncsm/CPBq3r/1vqZQyn90Gg4kM2qUKa7B2wjrF30MvvBJ/ZgxE1vmUsuKR+vbQz
+	13pLDsI6OF3fViZC2ZJZaxHTjt/Jt/vwKhjIpo6QrXHjtjfKsEUFNAkyKsnDKa92w1KTSMWP2XL
+	pC9fbHrCqhFPCYBJHi5F5fkB1mgP48sEdK4s+A3JwXTVqvBWpy6eLYtQiIhyBaSupEmkaCa915s
+	FZzrHwi5BZ+8XBafhsIWJkIcZE/SAoX1SOhognz/gz2A4vMkJtjy5wVtFUrLpSsJGqIBsDiglc4
+	kvbFbBXlhyhEz5b9YBkdni3wm80M
+X-Google-Smtp-Source: AGHT+IFAz153X5vcICG8zzXj6wcDOOnjP9Zg1pwaZ/blrVka419ZdJB++ySz04hKJ+rtzkgtRskeAA==
+X-Received: by 2002:a17:907:3e17:b0:ab6:f4e7:52f9 with SMTP id a640c23a62f3a-ab789aed845mr1525011766b.25.1739186346349;
+        Mon, 10 Feb 2025 03:19:06 -0800 (PST)
+Received: from localhost (109-81-84-135.rct.o2.cz. [109.81.84.135])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ab773331db7sm844842566b.127.2025.02.10.03.19.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 03:19:06 -0800 (PST)
+Date: Mon, 10 Feb 2025 12:19:05 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Hillf Danton <hdanton@sina.com>
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 6/6 v2] mm: Drain LRUs upon resume to userspace on
+ nohz_full CPUs
+Message-ID: <Z6ngqT7eLUW6Eeb_@tiehlicka>
+References: <20250209223005.11519-1-frederic@kernel.org>
+ <20250210105028.2134-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Fh0DnkQD1cSAk3kEV8uLTJFU4fKtgHsxg3UVKYznYNF6N6PLYNL
- ac+bVkUvkC2h9HHY5Ldd2XwBYdG0GLXfx3Uy4g0Gj9nFK69AnbPL1GoLCidiHyPuOqNoEt0
- sJtGHaZRhXC9oKcT7KkdWqP9sLc+xlzrKi7422l6pbzRb3qbdnSSPyM0BV00dOjiUWxy8O3
- uxLdxrlkLgFtC1ZPe0nkQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:P+2RQecfEzY=;FwCZ6grwvk3/b9RmcG92LoQkEY/
- HiymK7VJhujTVnV8u3zUjqBwQmNUW3iahixTDK0CfgrJareC8poJqLPWqRRKodcythmv8RaRx
- GjsXQW6d/5wJxUSnFh1MDjXG/P0Q3Miv6kyvogGHZCifeG9cmK1pCWoe1GA6sqMCbqur60HyB
- HoPbc9QZAUlbPpt3v9UQfDWX34XwJSJ3zNYsLhxtKQifhxUrgXif7IYvOG3cfMXsrdb9O1+qW
- p7GpJ02s33QXQiF+pQm0NNSe/SBqcCr0HVSRimyzgS8vSqm6366U/ECR+iU9iZ6aNiLqZEKj/
- jOpZIu0z5XIuxOhgIlEDdwwyse3iakIitnUk/KZAwtSxvUkFQTwE+xQG115ZI2lo/HMjHycYy
- ed9vf3cmlHtaO/kIE4ioxlTFJlNL6GQqAw8+uXTk/F3pw8h8/A96BsM3m6ExjtfDBuxB28kLY
- 9svePqMVJ/MSSvBSyGAlT/HqbotRd5Ldc+idEE0/yoB1jTfAdyPeN+HT+fSsM5BZkMVRvXxar
- 0og1jcjFIJtEEQNjAMMZnWK4KyL2FR5L6mE6kB/EMpl8LGMZguVM4S3DQwstWN6dLm1WS0wZe
- yNTFVwh7giK7uYC3ZoRfiDmQREHpAR8I7L+30QRsDEY5fg6WO5w1i6YnTlJDMV6ih1xfGfHYI
- ysxLrEFAKRc44140jQwP+/IlJmODfMiiPab+6PG7CkkIRssIO1mK04StcSKbMangctkfVjL9O
- iGjK8dQ0PZIAizaKgWJBsFJ+B8MbanKiZ/Fge5fevoAak866mwiXXQj+Yrvh9jmrVnZFUjsGn
- CbOXSP8fiUgNHDNn/fk7nDwZF2W0ZvlR0zDGc/e0SclS0qxK2l2OM4kYuP1kevqTCWvzXR5JP
- w3ieCU/AKXfd1zBb9AYb8CFbDCe4uMh0p1hP+13fjgTiontYWJpdomRySKPxehFFm5JgCrW9c
- U65VaTcxIxm7xrIgyRc7Mr/pw0FQUSHYLzA9uFxIifMtrD6CFDBaCtIvMWQ7WTMNjJ8OxPqFr
- e/RygEEYssYugYHzVbM/EDWGPxjdPCXtcMvK8qD003k4PZz/eRWcFfz3wiu9oxt3ilXbYhlh+
- zWOsNlW5N46ePOmioLvP9kp0tszKtZuf48vjSwyTf2Tl3hXO6+0oBU8a9AwrYAdBS2OPMnn6p
- 0Tc+o2nmOZPzx4mDqKzZSei3DeoAmEeP6orfd6guK6llZuyfnNTil+4SfxKCCR9sb6ARvH6J7
- OLmcq2ngkSuhAObRT0AtAqhWFUhotzaocOrqE12W6TTgKh5yHomoEgiH8MpuYFffOap9H2pA3
- nqFw+DeCbVEdExwHyHHZv2YZsGE3aCf7nthH60n3damF05cP4OcW0ZuQOv5b5lIjUcpMiR2TY
- x83Ks6KSA4ga5Dl7ylxfsFE2l5PSUjCgMrTRI=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210105028.2134-1-hdanton@sina.com>
 
-Am 10=2E Februar 2025 11:56:40 MEZ schrieb AngeloGioacchino Del Regno <ange=
-logioacchino=2Edelregno@collabora=2Ecom>:
->Il 07/02/25 14:54, Frank Wunderlich ha scritto:
->> From: Frank Wunderlich <frank-w@public-files=2Ede>
->>=20
->> Sinovoip has released other variants of Bananapi-R4 board=2E
->> The known changes affecting only the LAN SFP+ slot which is replaced
->> by a 2=2E5G phy with optional PoE=2E
->>=20
->> As the SFP-Ports are not upstreamed yet this patch simply renames the
->> current board dts to dtsi, creating new dts for the board including
->> the new dtsi and move i2c-mux channel for sfp lan to board dts=2E
->>=20
->> Signed-off-by: Frank Wunderlich <frank-w@public-files=2Ede>
->
->I understand what's going on, and I agree, but this change alone doesn't =
-make a lot
->of sense, does it?
->
->If I were to see a commit that moves everything in a dtsi, and justifies =
-that by
->adding two dts for the two variants, though, things would be different=2E=
-=2E=2E=2E :-)
->
->Cheers,
->Angelo
->
->> ---
->>   =2E=2E=2E/dts/mediatek/mt7988a-bananapi-bpi-r4=2Edts  | 404 +--------=
----------
->>   =2E=2E=2E/dts/mediatek/mt7988a-bananapi-bpi-r4=2Edtsi | 403 +++++++++=
-++++++++
->>   2 files changed, 407 insertions(+), 400 deletions(-)
->>   create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-=
-r4=2Edtsi
->>=20
+On Mon 10-02-25 18:50:26, Hillf Danton wrote:
+> On Sun,  9 Feb 2025 23:30:04 +0100 Frederic Weisbecker <frederic@kernel.org>
+> > @@ -769,6 +772,9 @@ static bool cpu_needs_drain(unsigned int cpu)
+> >  {
+> >  	struct cpu_fbatches *fbatches = &per_cpu(cpu_fbatches, cpu);
+> >  
+> > +	if (!housekeeping_cpu(cpu, HK_TYPE_KERNEL_NOISE))
+> > +		return false;
+> > +
+> >  	/* Check these in order of likelihood that they're not zero */
+> >  	return folio_batch_count(&fbatches->lru_add) ||
+> >  		folio_batch_count(&fbatches->lru_move_tail) ||
+> > -- 
+> > 2.46.0
+> 
+> Nit, I'd like to add a debug line to test your assumption that
+> isolated tasks are pinned to a single nohz_full CPU.
 
-It is preparation for adding additional nodes like sfp cages=2E I only hav=
-e the dual-sfp board so i can only add these based on schematic=2E The one =
-(wan-sfp) would go into dtsi and lan-sfp go into dts because other variants=
- using a phy here as described=2E
-regards Frank
+Why? And why would you like to add a trivial VM_BUG_ON vector to the
+kernel?
+
+> --- x/mm/swap.c
+> +++ y/mm/swap.c
+> @@ -767,9 +767,10 @@ static void lru_add_drain_per_cpu(struct
+>  static bool cpu_needs_drain(unsigned int cpu)
+>  {
+>  	struct cpu_fbatches *fbatches = &per_cpu(cpu_fbatches, cpu);
+> +	bool yes;
+>  
+>  	/* Check these in order of likelihood that they're not zero */
+> -	return folio_batch_count(&fbatches->lru_add) ||
+> +	yes = folio_batch_count(&fbatches->lru_add) ||
+>  		folio_batch_count(&fbatches->lru_move_tail) ||
+>  		folio_batch_count(&fbatches->lru_deactivate_file) ||
+>  		folio_batch_count(&fbatches->lru_deactivate) ||
+> @@ -777,6 +778,12 @@ static bool cpu_needs_drain(unsigned int
+>  		folio_batch_count(&fbatches->lru_activate) ||
+>  		need_mlock_drain(cpu) ||
+>  		has_bh_in_lru(cpu, NULL);
+> +
+> +	if (!housekeeping_cpu(cpu, HK_TYPE_KERNEL_NOISE)) {
+> +		VM_BUG_ON(yes);
+> +		return false;
+> +	}
+> +	return yes;
+>  }
+>  
+>  /*
+
+-- 
+Michal Hocko
+SUSE Labs
