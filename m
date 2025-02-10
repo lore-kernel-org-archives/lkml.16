@@ -1,161 +1,151 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335571CA84;
-	Mon, 10 Feb 2025 15:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EAD20485F
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:12:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739200325; cv=none; b=PVz+EGXtRCxPwu32MXv9HgfVaEwWXeSOXNi4FWv4p20T7QT5u3nHdmPw7gliTioW7T1yjnMDJPzAu7R3GxX5O0VCQE7by+kBIZHiI9sU/qqyzIWpxJMEk2TL9oCYsbBBu1JTMUsauGlyUGLbII/Z4wIH4SSoiOpJ84VWWkZqhwU=
+	t=1739200379; cv=none; b=mdHD8vfS1PdawWjRk3WtzlcnA7ker596tv7cBitEXO/Haj3CaEw/HYVPU9oK3JxfgSsHr5samxTIq3T/EfyNYaFUftITc3ZxhvjRuY1s/6+5N123MkQ94Ig3O83WNd7TCUeSkbdwo7e+51AWxfhIkTkxU4DCdTsfTqaQTo2o4I4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739200325; c=relaxed/simple;
-	bh=x/7S1tchuBT4T48aebrLbaQ1SbEdg8BOEkE3/s6U9BU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EEzd4YW8/3CQ5VQ82JSMxG9iOHy4ihLfnuzCWF0miauq0+6C9P3KoYFb/xFH9yg6QDXIxAneXMgxf+7JkTq19NcQR1XMSztQNKuLcfHZ1jgsYh0sfP7/4UWw3LPENOZVCBhz1olhcTiOxaDQZ9pileMpr2MjFKUpxU+1I/kvsqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LnzQrgKR; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739200379; c=relaxed/simple;
+	bh=+0+OTGy/IlZfe8fbfVCeZWpUYt2alRVziCCdrmZbW30=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TbM0S9j2tBogUpGDGi3YVz7n6/c3PhFQyLZr06r64JWOrXOaxwbHFK55J94bUZUhw7SEqGa1ptjKv2ywstXRLZIIzxcI/PrDlunvAx6UQiYgE/SR0S0Xn/H78Z5n9RVHOD6hc56mAcCCw8tYsSFRE8kuLmIM3RTFJcnTeWz9h2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bAWZkfOu; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LnzQrgKR"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21f48ab13d5so71272015ad.0;
-        Mon, 10 Feb 2025 07:12:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bAWZkfOu"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aa68b513abcso856617066b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:12:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739200323; x=1739805123; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+        d=suse.com; s=google; t=1739200375; x=1739805175; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TwlaKob5aPZVu9GIo5whxhxN00CNR1c8p78BFmqhxnQ=;
-        b=LnzQrgKRdfaTmMRArDXvyKysBqe1l8weQzneVQ2m7jlTNetAHJ8AZ5bEGMkQPJGHwg
-         eEMzjbRysqZV0TwR6wDulKtHDjvVfQ09VCvWSz80pFjkuz8GiHKmCt1bOKp2FoK1CT1o
-         EtAZNtY5fEVXMRf7D2in3TuyGXOsjDk7myDRGoNUKOWxeTiR/MpjaetgCa3L5ybWucbn
-         DshoHXlChRzZkcknZ7pqVSSYhGWPGbj+z3Vo7pb3VtxqlM28Q2HFVzKhC0wOZ5ALfoJV
-         95IsXdfNMLwI3S/vHgkO33fbqlqNwdyBXxdvlLgKwtJG5Cpgfj+kQphkYoKByUrJ3cSK
-         ZxEQ==
+        bh=LHPvs5h0lN5qcRjT7tnplrDlfrX3Yssy64qHxvPIi1w=;
+        b=bAWZkfOuJYPgN8oSyv5kk9kNLMHhI2QytCT4UlwY0q/lc0OTtiUJGGtQ7vFGLw+THX
+         IxUbUReEknQxZZsU4dWzhWqU3jQeVvYBm3vrQDuy+3ggPo4qH2sgFydZhrfNaRpv+EBt
+         O/GIJVyUuLUp6+Abqnq9IAVbcQmBT21LVqj26jS0G1On1KR6lmPPgu1jQ+P1vEKoUd6x
+         C1i120JGZl3m/iOeLSIg21i3i/ClRVCU6lHBpk97ym9TJOyRZp2w04C4X1pAuGjECl29
+         lfCb5wUGYvQgi/wJboagn0jXOzOHa3pKJWyn9MCoOtTMrW5NsnmXqtFdbXpeJR4q3ZKY
+         BMQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739200323; x=1739805123;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=TwlaKob5aPZVu9GIo5whxhxN00CNR1c8p78BFmqhxnQ=;
-        b=OFAA8epRDWeDXx/Emh9LeTiY2TBnFDvZtE0smc/tDLUO1k5NeJyQR5K3hBkplgiedK
-         AWyj5+GoX8WSCYjKa2U/C2F7fEt7CA0zFUGAWzAv7qWqvq5NDtynCf1pzgjXCpDQHrYd
-         tmcFkCTb4BI3Ow+SWrUwxYscAGXMCTOI6Bx1T0OyMtiHDFmDtKLBeXjjMLtszpZTHaQA
-         g4iv19DIBaUKN97n3tmIMQvXq5dn6UB+YIDJczTs/ofdZfCjpQFIibs+zlicLC0jZ3mI
-         Fhkx1HCu+TSNV+Vev8LPo9ZfY+1VR5PkUHXY7XlfSHshXQRl70h6m865HH/ZKh+bIpal
-         8X2A==
-X-Forwarded-Encrypted: i=1; AJvYcCXYRw3UMUCpf4F1hQXja4B00GfOE4QfeCWO2oyena8tkyu8IC0jl0pUZ+Ni+42KUBwuH57ihX4XhvtIXN6k@vger.kernel.org, AJvYcCXkWFoxMkylK/uww5RF5qk70zAaxo6QZrgep9rGsgawih2G/Tw05epD7OqIag7786T/P7g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6uxPnbK8dWULM2Yz9wt5NFs2OdREX56xFUqZCHr1xoFESNhDB
-	IGFQ2NEiL85lx5RKHJKax6lmEWx8+zGWrOt4eW32uA9P8ndVjbihZqoz+g==
-X-Gm-Gg: ASbGncs+DXZWOSxZd+Pqdj0gEkrr3vfQgLDEt7CfW34IxyuzbokECMBrZ32rvDUx4u0
-	KcTLOZJgh3SRJxr2ZkWDk4uvBAtewoMTP3XedSkwighOdjCqZ1rsaBJk+9OwUJpsGJgYlylJ8K/
-	mDe2nYIvO+MrCjg7PioHZqMqV/ck76vzDqFILxtAyce+63eKBeYNBCALT0qlWCffhnX3ZCwEtAS
-	xHYeGA1W8lo4WMF7pPzV5aAnOfgr2YBDmVAH/rX2Es/Voj+vHMcoTddpGTy3yCKN/F+LL5EqCLL
-	VKuj2jMqXDP3
-X-Google-Smtp-Source: AGHT+IHRU7SfP3/WrS2oIjmCiGCsoVPhbHW8Xu9AvHFvJV4J1y32M+1ILa6ZWYEGUWW4UaGRYenVcQ==
-X-Received: by 2002:a17:902:ec84:b0:21f:85d0:828 with SMTP id d9443c01a7336-21f85d00ac1mr104164225ad.41.1739200323218;
-        Mon, 10 Feb 2025 07:12:03 -0800 (PST)
-Received: from [0.0.0.0] ([5.34.218.148])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad53de9ee79sm3573749a12.40.2025.02.10.07.11.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 07:12:02 -0800 (PST)
-Message-ID: <179645b8-fd74-415b-8522-9de13e84c883@gmail.com>
-Date: Mon, 10 Feb 2025 23:11:57 +0800
+        d=1e100.net; s=20230601; t=1739200375; x=1739805175;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LHPvs5h0lN5qcRjT7tnplrDlfrX3Yssy64qHxvPIi1w=;
+        b=k7/AOmGfGoP2h+1iAX+j63bQvr8HbZdtVcfbkExBJtWszCEhLZc9J6rHFLWWyP9KJY
+         jdtdkWRBUSmeMDhH0NkWxoUva3rXwaEvwKW0+b7Yit4UnFIukH81NujGkmwHhuM6oQhp
+         ghkh0z+WRb0WDWng5q0e5LWA4xPjZcC0+wKZCocps3LMFyS0LiEpKu3n3CW4m/QzGxcx
+         UdZbzJ9u1GjL6ZYtRV2wcmKH95k88zA13u3MYgTOhd2+4OFU0JnEb2MoQCh/YzC336rp
+         SrNc08dMmNuo4D/SgF95hmXPXSf6LrGjF3nVHed/evotLNCBzcUhbX1EE2iocZUrXYY8
+         d38g==
+X-Forwarded-Encrypted: i=1; AJvYcCXN+LbYswjw+EaD/MXzb4fbXfdZbqeFoNgkL1Zb92P451rVfGz8fyYcfSAsybWsGcyju1wS2+5j0RdSjdU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywx6Tgbfez+5NkDGUgotRlLm14vqICvhbp0HGXKgL7OvzpGs4w5
+	TaqUGAYSG70TJUZYwBmcl8s5xWUv4G69QUn+exC5QrjfR8neYsES7rttwJs6Dff8DBUAWKDBzMZ
+	z
+X-Gm-Gg: ASbGncu3i1yS3vH3BYQnZIV95mH3d+KufL406fEJCEBOJZDkblcS2zIscEaKPZzSkWx
+	4eDigMv8Vs8K4Js9dc1L6oL8IGgiG+EpXC2TDTNCSFosN6QtXr5fQvoeybrCicU7uqAO138J85P
+	bBSuo6hLHN/YssAb7SnnkmPfrRGS3UFKRNkwW2Q9/kspXCsokMzBdTlkoo/8EsM7A30mucIkSMj
+	OyaDXr195S0NiFLECE26sB4njsGmiq2406PZgw/Dr+t4+ELBTO+eYXSTVnMVzid70No4hyOONhF
+	EKRzHUopI5NkPti81g==
+X-Google-Smtp-Source: AGHT+IEqT2HqyEU97xbfdsBL84h2jKrpMtkd/2pq59J3hPZeDg9i4UwQ1Su0OfZqBDIMGK/V+nmmOw==
+X-Received: by 2002:a17:907:748:b0:ab7:a39:db4 with SMTP id a640c23a62f3a-ab789cfaef4mr1355751566b.57.1739200375206;
+        Mon, 10 Feb 2025 07:12:55 -0800 (PST)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab773339e82sm895192866b.143.2025.02.10.07.12.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 07:12:54 -0800 (PST)
+From: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+To: cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Frederic Weisbecker <fweisbecker@suse.com>
+Subject: [PATCH 1/9] sched: Convert CONFIG_RT_GROUP_SCHED macros to code conditions
+Date: Mon, 10 Feb 2025 16:12:31 +0100
+Message-ID: <20250210151239.50055-2-mkoutny@suse.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250210151239.50055-1-mkoutny@suse.com>
+References: <20250210151239.50055-1-mkoutny@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v5 4/4] selftests/bpf: Add libbpf_probe_bpf_kfunc
- API selftests
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- eddyz87@gmail.com, haoluo@google.com, qmo@kernel.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250210055945.27192-1-chen.dylane@gmail.com>
- <20250210055945.27192-5-chen.dylane@gmail.com> <Z6oDXNpqmwHo6lKh@krava>
-From: Tao Chen <chen.dylane@gmail.com>
-In-Reply-To: <Z6oDXNpqmwHo6lKh@krava>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-在 2025/2/10 21:47, Jiri Olsa 写道:
-> On Mon, Feb 10, 2025 at 01:59:45PM +0800, Tao Chen wrote:
->> Add selftests for prog_kfunc feature probing.
->>
->>   ./test_progs -t libbpf_probe_kfuncs
->>   #153     libbpf_probe_kfuncs:OK
->>   Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
->>
->> Signed-off-by: Tao Chen <chen.dylane@gmail.com>
->> ---
->>   .../selftests/bpf/prog_tests/libbpf_probes.c  | 118 ++++++++++++++++++
->>   1 file changed, 118 insertions(+)
->>
->> diff --git a/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c b/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c
->> index 4ed46ed58a7b..fc4c9dc2cbed 100644
->> --- a/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c
->> +++ b/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c
->> @@ -126,3 +126,121 @@ void test_libbpf_probe_helpers(void)
->>   		ASSERT_EQ(res, d->supported, buf);
->>   	}
->>   }
->> +
->> +static int module_btf_fd(char *module)
->> +{
->> +	int fd, err;
->> +	__u32 id = 0, len;
->> +	struct bpf_btf_info info;
->> +	char name[64];
->> +
->> +	while (true) {
->> +		err = bpf_btf_get_next_id(id, &id);
->> +		if (err && (errno == ENOENT || errno == EPERM))
->> +			return 0;
->> +		if (err) {
->> +			err = -errno;
->> +			return err;
->> +		}
->> +		fd = bpf_btf_get_fd_by_id(id);
->> +		if (fd < 0) {
->> +			if (errno == ENOENT)
->> +				continue;
->> +			err = -errno;
->> +			return err;
-> 
-> nit, return -errno ?
-> 
-> jirka
-> 
+Convert the blocks guarded by macros to regular code so that the RT
+group code gets more compile validation. Reasoning is in
+Documentation/process/coding-style.rst 21) Conditional Compilation.
+With that, no functional change is expected.
 
-Ack.
+Signed-off-by: Michal Koutný <mkoutny@suse.com>
+---
+ kernel/sched/rt.c       | 10 ++++------
+ kernel/sched/syscalls.c |  2 +-
+ 2 files changed, 5 insertions(+), 7 deletions(-)
 
->> +		}
->> +		len = sizeof(info);
->> +		memset(&info, 0, sizeof(info));
->> +		info.name = ptr_to_u64(name);
->> +		info.name_len = sizeof(name);
->> +		err = bpf_btf_get_info_by_fd(fd, &info, &len);
->> +		if (err) {
->> +			err = -errno;
->> +			goto err_out;
->> +		}
->> +		/* find target module btf */
->> +		if (!strcmp(name, module))
->> +			break;
->> +
->> +		close(fd);
->> +	}
->> +
->> +	return fd;
->> +err_out:
->> +	close(fd);
->> +	return err;
->> +}
-> 
-> SNIP
-
-
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index 4b8e33c615b12..3116745be304b 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -1068,13 +1068,12 @@ inc_rt_prio_smp(struct rt_rq *rt_rq, int prio, int prev_prio)
+ {
+ 	struct rq *rq = rq_of_rt_rq(rt_rq);
+ 
+-#ifdef CONFIG_RT_GROUP_SCHED
+ 	/*
+ 	 * Change rq's cpupri only if rt_rq is the top queue.
+ 	 */
+-	if (&rq->rt != rt_rq)
++	if (IS_ENABLED(CONFIG_RT_GROUP_SCHED) && &rq->rt != rt_rq)
+ 		return;
+-#endif
++
+ 	if (rq->online && prio < prev_prio)
+ 		cpupri_set(&rq->rd->cpupri, rq->cpu, prio);
+ }
+@@ -1084,13 +1083,12 @@ dec_rt_prio_smp(struct rt_rq *rt_rq, int prio, int prev_prio)
+ {
+ 	struct rq *rq = rq_of_rt_rq(rt_rq);
+ 
+-#ifdef CONFIG_RT_GROUP_SCHED
+ 	/*
+ 	 * Change rq's cpupri only if rt_rq is the top queue.
+ 	 */
+-	if (&rq->rt != rt_rq)
++	if (IS_ENABLED(CONFIG_RT_GROUP_SCHED) && &rq->rt != rt_rq)
+ 		return;
+-#endif
++
+ 	if (rq->online && rt_rq->highest_prio.curr != prev_prio)
+ 		cpupri_set(&rq->rd->cpupri, rq->cpu, rt_rq->highest_prio.curr);
+ }
+diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
+index 456d339be98fb..8629a87628ebf 100644
+--- a/kernel/sched/syscalls.c
++++ b/kernel/sched/syscalls.c
+@@ -640,7 +640,7 @@ int __sched_setscheduler(struct task_struct *p,
+ 			retval = -EPERM;
+ 			goto unlock;
+ 		}
+-#endif
++#endif /* CONFIG_RT_GROUP_SCHED */
+ #ifdef CONFIG_SMP
+ 		if (dl_bandwidth_enabled() && dl_policy(policy) &&
+ 				!(attr->sched_flags & SCHED_FLAG_SUGOV)) {
 -- 
-Best Regards
-Dylane Chen
+2.48.1
+
