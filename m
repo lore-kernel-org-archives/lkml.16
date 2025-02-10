@@ -1,107 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D192586D8;
-	Mon, 10 Feb 2025 16:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39431256C66;
+	Mon, 10 Feb 2025 16:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739206344; cv=none; b=UPz1pxo+8i5K+iNBLfo+M/bdp0RcqVzBPMXDUTBMEdwKnaSrodySFDWK6ALDhw4Y/9Foso6RN0NnSGR11hfL/+NhkfbKuzpswdgyaXr7wVus70VytwcWH5w0B9mBNyusxK5reNmYXoGbcPGsO2FmKxJ9vApE801qVluEgKmrul0=
+	t=1739206392; cv=none; b=OekD8S0yvt1GBNoo77PzbiSsmG+2M8Jdmbv9MBWympjuF0B3lseoF3ZPlGyWUS3VfwjLMTeWjyVlEl7qpGthu1lzHcE0f77mQyaWgbPTuDh4Hw5vbr9DPApTYpXb+Q+gVHNavBdr5TqLZSiuD1RrSF9RQBUfXaM4dipr0GelROE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739206344; c=relaxed/simple;
-	bh=Fq0nz+qJpFshRjC9OyZc9Qy66WzrIAZthe2Fsrt5qak=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UxWrAYrjTMxqNkiSa0wI1RmuXlUSiRtKM9FLFkxyvZgwKB8c/EqRXuxVUuAE3AaAak/HGJW53jkksJHz4XHUn9bDnGnQ+OyB7yvI8KrIb7y+DNAkejR4kSTE7jf6x5AVHhIbKeXmzZKG80eg/D2QzZbkF9bSGtYQetPC0mykuwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wnkcrlre; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wnkcrlre"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739206343; x=1770742343;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Fq0nz+qJpFshRjC9OyZc9Qy66WzrIAZthe2Fsrt5qak=;
-  b=WnkcrlreHqfO+qwoK/P5y5xwFVVMn478zKm2SkDgQL0UqLO1JKiNA3Zo
-   pNvAEs53fJixsY24AkWB2yIoe8SRkSoCbF9w3mMHhL9yBmtPC44/UQmLO
-   CCnL6cFzPops7cDdFnEg0HB9WD+mEbP9JHxE5/7hoF/piLYo4jltUTIBF
-   aZrCXKkrNDuKn0EiUD5C09fPufBlHeD+tNjJXV4zPIrxVNf4vI9HI3U4y
-   iITad0mrxfNv/Fyah0i//V9TKFqYmk9ualoEu5CRzYXAu5Y0uTEZW8BlP
-   3UM6a3XeqangCjragomjU96NWKmdUFgIeUwNV/rGG92pHGpDzor7WHe+b
-   A==;
-X-CSE-ConnectionGUID: nZ88tRsfRc+/WJn2YJtKBQ==
-X-CSE-MsgGUID: qdfmsfdsSxSsdUzSkn8WKw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="57334255"
-X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
-   d="scan'208";a="57334255"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 08:52:21 -0800
-X-CSE-ConnectionGUID: tdRaJw2FRe6OqFX167lc9g==
-X-CSE-MsgGUID: 5tCAIJnSRUWFzFUo1rA+zQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="149431797"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa001.jf.intel.com with ESMTP; 10 Feb 2025 08:52:18 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 45C362F2; Mon, 10 Feb 2025 18:52:16 +0200 (EET)
-Date: Mon, 10 Feb 2025 18:52:16 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	David Jander <david@protonic.nl>,
-	Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v8 04/17] spi: offload-trigger: add PWM trigger driver
-Message-ID: <Z6ouwG98_kIY0FxZ@black.fi.intel.com>
-References: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
- <20250207-dlech-mainline-spi-engine-offload-2-v8-4-e48a489be48c@baylibre.com>
+	s=arc-20240116; t=1739206392; c=relaxed/simple;
+	bh=Q//plCetu74vtgrezSGZhTsyWcdKX2EfYkrS7/YBYfY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LODeWXYJAYpTjt01oLH7quGiE7OXiXN3THwFXRVhEgYQS8/h+yKbbqR873MLOF+8mzzAjwYFBpBF4lYpNZHBmxM7pCHGCwXPkyIXHUjAn/o3uue5FpgFZeIlaZ05WaSB3FNAZzraATFIkZ6/lhsBEcGz26+mPpVRrppUOeA9NO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFBBDC4CED1;
+	Mon, 10 Feb 2025 16:53:10 +0000 (UTC)
+Date: Mon, 10 Feb 2025 11:53:13 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: David Reaver <me@davidreaver.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Christian Brauner
+ <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ linux-fsdevel@vger.kernel.org, cocci@inria.fr, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/6] debugfs: Replace dentry with an opaque handle
+ in debugfs API
+Message-ID: <20250210115313.69299472@gandalf.local.home>
+In-Reply-To: <86ldud3hqe.fsf@davidreaver.com>
+References: <20250210052039.144513-1-me@davidreaver.com>
+	<2025021048-thieving-failing-7831@gregkh>
+	<86ldud3hqe.fsf@davidreaver.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207-dlech-mainline-spi-engine-offload-2-v8-4-e48a489be48c@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 07, 2025 at 02:09:01PM -0600, David Lechner wrote:
-> Add a new driver for a generic PWM trigger for SPI offloads.
+On Mon, 10 Feb 2025 08:08:25 -0800
+David Reaver <me@davidreaver.com> wrote:
 
-...
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+> 
+> >
+> > First off, many thanks for attempting this, I didn't think it was ready
+> > to even be attempted, so it's very nice to see this.
+> >  
+> 
+> No problem, and thank you for taking a look!
+> 
+> > That being said, I agree with Al, we can't embed a dentry in a structure
+> > like that as the lifecycles are going to get messy fast.
+> >  
+> 
+> Ack, I'll do something different in v2.
+> 
+> For my own education: what goes wrong with lifecycles with this embed?
+> Feel free to point me at a doc or something.
+> 
+> Also, Al and Greg, would wrapping a pointer be fine?
+> 
+> 	struct debugfs_node {
+> 		struct dentry *dentry;
+> 	};
 
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/spi/offload/provider.h>
-> +#include <linux/types.h>
-
-You probably want also to have (in the comments the examples of the users)
-device.h // dev_*(), devm_kzalloc()
-err.h // EINVAL, PTR_ERR(), ...
-math.h // DIV_ROUND_UP_ULL()
-module.h // MODULE_*()
-property.h // dev_fwnode()
-time.h // NSEC_PER_SEC
-
-> +struct spi_offload_trigger_pwm_state {
-> +	struct device *dev;
-> +	struct pwm_device *pwm;
-> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
+No it will not be fine. You should not be using dentry at all. I thought
+this was going to convert debugfs over to kernfs. The debugfs_node should
+be using kernfs and completely eliminate the use of dentry.
 
 
+> 
+> I was trying to do the simplest thing possible so the bulk of the change
+> was mechanical. Wrapping a pointer is slightly more complicated because
+> we have to deal with memory allocation, but it is still totally doable.
+> 
+> > Also, your replacement of many of the dentry functions with wrappers
+> > seems at bit odd, ideally you would just return a dentry from a call
+> > like "debugfs_node_to_dentry()" and then let the caller do with it what
+> > it wants to, that way you don't need to wrap everything.
+
+What caller should ever touch a dentry? What I got from my "conversation"
+with Linus, is that dentry is an internal caching descriptor of the VFS
+layer, and should only be used by the VFS layer. Nothing outside of VFS
+should ever need a dentry.
+
+-- Steve
