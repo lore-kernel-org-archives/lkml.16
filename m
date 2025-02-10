@@ -1,146 +1,110 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC01B22488F;
-	Mon, 10 Feb 2025 13:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3972122539C;
+	Mon, 10 Feb 2025 13:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739193681; cv=none; b=Y7vHISRFOG/Ptt4BBgvcGbJEu0cro63H/cN4BEMvfbmiya+cHOgtx5TMH4pIzISP1XxEYE832HA16wtOfK1aq0jnBuhgf1UOLOisxBtiD3/D/pWGiHKumRNcad5kQFefvOkhunHbr8WuuODX+VwCHHsFHHcysoWePtRoKKHKzBA=
+	t=1739193683; cv=none; b=ZK/p6uFaJoNIl1aTK8y8leMc79cyB5Cb7J28S1rNz+uoLVLONAFzWc71wBtloSdUFN3NoZ+dcSFe+T1ePbAuqope0ZQO0625jz9c5tQ9HO3Dpkv5WLvRQFn1b8A3zjr+DhoStXekN7xrzSA7OqQ9oV4NTJ5DZCCrHFLZ+cxH/iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739193681; c=relaxed/simple;
-	bh=UKa2ylWbo4mcE7K9r1aFsBvvBScze8WMLWO0wMLlloY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gXHS1i8oxZKtbaBVafopiCRTHhHvCVkzw/+oa/UfHxhNyf1KeTc5j1khwH+0YOQyxMouTOeqEwroOkTks/omHIH9LxGYWu4xvSQq00XZk12CXd68wzaRrLOiSIVrGJpiAbM9jd4485aTHn54JZJVy3440eSKKoV3xQtI3gcsAKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=79ip39LY; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="79ip39LY"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AColNa009299;
-	Mon, 10 Feb 2025 14:21:03 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	H8xFMbGxRLLTUkmlLiMsIiW5m7hZpOYwtYz1DcgyA4I=; b=79ip39LYKOzqFX1D
-	EA7SEKFOhr3YaImGyyhcdQCsljzns5w0o37whchOKq8E0IACY68n7M7pVkqeLMs9
-	FxYthBwRmj/xVUCNy69ICwTAD9E1j2xkj+SOT0awye1ZPxq/2PVFdFxQKmEp+5Nj
-	xN1Z8aJtfVqQwQBsLVBVoF/ovYDiv5WQ4cNmZpgTf+mFOnUfVlMMhXGYdwuy8O86
-	4YWl3XhXsmRRr5qOYXiJTgofUXJKmLJpAMCUGWldHP0sRuqoH4tZZF3t+wPURuLg
-	y6rWPEFT9pOGbylOCq9pqYe02dbulBdz+ajvRwiO2lYhgSvxTKp6gHIRFDwrTXd0
-	NgxxvQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44p0pypq6c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 14:21:03 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0BE2D4004C;
-	Mon, 10 Feb 2025 14:19:39 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 51F0B25E30C;
-	Mon, 10 Feb 2025 14:18:37 +0100 (CET)
-Received: from localhost (10.48.87.62) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 10 Feb
- 2025 14:18:37 +0100
-From: <patrice.chotard@foss.st.com>
-To: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Alexandre
- Torgue <alexandre.torgue@foss.st.com>,
-        Philipp Zabel
-	<p.zabel@pengutronix.de>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-CC: <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <christophe.kerello@foss.st.com>, <patrice.chotard@foss.st.com>
-Subject: [PATCH v3 7/8] arm64: dts: st: Add SPI NOR flash support on stm32mp257f-ev1 board
-Date: Mon, 10 Feb 2025 14:18:25 +0100
-Message-ID: <20250210131826.220318-8-patrice.chotard@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250210131826.220318-1-patrice.chotard@foss.st.com>
-References: <20250210131826.220318-1-patrice.chotard@foss.st.com>
+	s=arc-20240116; t=1739193683; c=relaxed/simple;
+	bh=ohkkgGTG4JF6ToAOEObWn6G3QV4+Sz3wakpWczA4erY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EuP8GGWAInxVnZiN2nVMFyLpIShRjpCB36ewsU12C+Nv1WRLsQo1aAw2+wQDgLiEFJZdBYqfXn6TzaCNvpwD7AbSbFgSli4Y5LjxcfMevxfLY42yTnXVZ1nE8gQf8xmIRpQRrwLi63v+aftDU7DQlwt6ehFS5YDeIiAp6swD4ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-5203d852d68so205172e0c.3;
+        Mon, 10 Feb 2025 05:21:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739193678; x=1739798478;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vHGhOyAGanlUaS2JnMpIwfheVhKHrjDiwSH6kU5CdaY=;
+        b=InNq5qKlIfut+B4dIVtFbD9cxImuSm6meEkPO/pCn4v8208J027L9POlCX9DLbNI32
+         c1WULf/FZg1YYMXrRvFfXRS30uOrVgo2DhMkx51QUni/qANGrrjFdNlYVgUUTc5mHuYT
+         +ZVdkJxWMRe2eSwWgjsUkYnmXXH92Jucjf3zH/IFuhyiviQIA96t2q2OxUwoIPTFK/vb
+         ZMvMOVXD79yCodnNgm+avE1V8RFI47t+LXNXvSeJDeAxH5OpGFIlXYAVRG90nYoQrQS6
+         52kAh2iENXirT/HbwZlPHMuymtTARnvCVtyRRsLjNjhRKcGk5n23w+tqWBx8rdqzN++V
+         n8jA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSN71M+m0UuAEfBDfy3norY9DjnEvT/c3b27QtuEqPqcv/4+CUa6iA4zA/nne3aBH0t7wEgwIvKm65@vger.kernel.org, AJvYcCVNkfn976OhLi7AXlRXkersbpGzftjh2xSBaOJoA+0C9w168G3XrzB6WB7frr7hZYMVL/7SjNruChobCECz/x6T3s4=@vger.kernel.org, AJvYcCWelcMDdfD/dOon1nAoozR4Xp3nlkEBdOvi9GW6Fr0bEntgo9EEGobpfT0wKCXwEdGF1JC5ZlX7/jQkvocY@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWuyGZGp9YzR9xsz9STQ84iqcM4bEPpl79gEGeOKJzZ5yvoJeI
+	CdnleC7ciC7YCwNKrMKoViPenwGB/Ju5lgI6qX0BHfV5mYcspBbKslMlmb3f
+X-Gm-Gg: ASbGncuJNomGseZqp1W84BKMz3RIjLUrpU3fOlwp+JWO6fplj/1OQmwoe6yLIAFKmX0
+	VaDil/qS0c6XpTeg/8C02tbrZHF2wLdnQO6RRAMXRmtzWYk3AhuNNs+DnMmAILGn8vwbxUTHBMM
+	Mvs45N6u59f7kpYuCxMynMQbgrGwGjZUMv4h46oUhbregPcpb8xjuW5abFHKPMlKGUvJPIVJLNI
+	6EIX/fIU+UOhKaK3mm+r43O6qHCS8UVlOTc3O8t57yi5H/N3GZAexTsT7BZHEVDdvcUb90Y8alt
+	61a6rzxxUjoFVLOHOfnp9KyeNZLqnV6pAhnTcD1nOf8uz4pI7lD2bQ==
+X-Google-Smtp-Source: AGHT+IHVdwttEpZCuNw6WSzSpJRnBTPNqVjFPyPj6XaCHif2FcpY6C6V1XoIaZtpxJ+Yl6if9VkKbw==
+X-Received: by 2002:a05:6122:2528:b0:517:4e40:6838 with SMTP id 71dfb90a1353d-51f2e252893mr9281960e0c.6.1739193678219;
+        Mon, 10 Feb 2025 05:21:18 -0800 (PST)
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866f97d7902sm1627737241.27.2025.02.10.05.21.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 05:21:17 -0800 (PST)
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-866f84385b4so1345556241.3;
+        Mon, 10 Feb 2025 05:21:17 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWrSvl47TPAQE80LSLyKurk7lNRKQNSmiN+lXoO/eAqiD32TdBVc7lZZKoHyDqpBho0oDku4CAJChxR7Fx/ZMhjeRU=@vger.kernel.org, AJvYcCXQJiG2u5gtS48X4QazBYFient8ibuyAqI1VxyUXIxcFLNLf5RtxGU5a6ukvZuMKYn8TO/uah+5SdTxkPso@vger.kernel.org, AJvYcCXtuWoLYw47u6rdMDnDseF4SQsBCzgz27kqtxewl2SLbQGcOa6PDDG3upt/raT2U44SfMp5qPfAbhul@vger.kernel.org
+X-Received: by 2002:a05:6122:2528:b0:517:4e40:6838 with SMTP id
+ 71dfb90a1353d-51f2e252893mr9281897e0c.6.1739193677200; Mon, 10 Feb 2025
+ 05:21:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SAFCAS1NODE1.st.com (10.75.90.11) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_07,2025-02-10_01,2024-11-22_01
+References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com> <20250129165122.2980-4-thierry.bultel.yh@bp.renesas.com>
+In-Reply-To: <20250129165122.2980-4-thierry.bultel.yh@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 10 Feb 2025 14:21:05 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWLdLiyQUuO-Xox5zQ9waTqWYk474yYL4qqfyfkvxFs6Q@mail.gmail.com>
+X-Gm-Features: AWEUYZlFKstD4BLVvqWXfkoH1N2BT6tmZi6nxuQO1z6GWEkW07mrq_NPLX2epyQ
+Message-ID: <CAMuHMdWLdLiyQUuO-Xox5zQ9waTqWYk474yYL4qqfyfkvxFs6Q@mail.gmail.com>
+Subject: Re: [PATCH 03/14] dt-bindings: soc: Document the Renesas RZ/T2H
+ Evaluation board for the R9A09G077 SoC
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Patrice Chotard <patrice.chotard@foss.st.com>
+Hi Thierry,
 
-Add SPI NOR flash nor support on stm32mp257f-ev1 board.
+Thanks for your patch!
 
-Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
----
- arch/arm64/boot/dts/st/stm32mp257f-ev1.dts | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+On Wed, 29 Jan 2025 at 17:52, Thierry Bultel
+<thierry.bultel.yh@bp.renesas.com> wrote:
+> Add the RZ/T2H Evaluation board (r9a9g077m44-dev) in documentation.
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-index 1b88485a62a1..76970c15e043 100644
---- a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-+++ b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-@@ -80,6 +80,11 @@ fw@80000000 {
- 			reg = <0x0 0x80000000 0x0 0x4000000>;
- 			no-map;
- 		};
-+
-+		mm_ospi1: mm-ospi@60000000 {
-+			reg = <0x0 0x60000000 0x0 0x10000000>;
-+			no-map;
-+		};
- 	};
- };
- 
-@@ -190,6 +195,33 @@ &i2c8 {
- 	status = "disabled";
- };
- 
-+&ommanager {
-+	memory-region = <&mm_ospi1>;
-+	pinctrl-0 = <&ospi_port1_clk_pins_a
-+		     &ospi_port1_io03_pins_a
-+		     &ospi_port1_cs0_pins_a>;
-+	pinctrl-1 = <&ospi_port1_clk_sleep_pins_a
-+		     &ospi_port1_io03_sleep_pins_a
-+		     &ospi_port1_cs0_sleep_pins_a>;
-+	pinctrl-names = "default", "sleep";
-+	status = "okay";
-+
-+	spi@40430000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		memory-region = <&mm_ospi1>;
-+		status = "okay";
-+
-+		flash0: flash@0 {
-+			compatible = "jedec,spi-nor";
-+			reg = <0>;
-+			spi-rx-bus-width = <4>;
-+			spi-tx-bus-width = <4>;
-+			spi-max-frequency = <50000000>;
-+		};
-+	};
-+};
-+
- &rtc {
- 	status = "okay";
- };
+This is the Evaluation Board Kit for RZ/T2H, "RZ/T2H-EVKIT" aka "rzt2hevb"?
+
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+
+> --- a/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
+> +++ b/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
+> @@ -537,6 +537,8 @@ properties:
+>
+>        - description: RZ/T2H (R9A09G077)
+>          items:
+> +          - enum:
+> +            - renesas,r9a9g077m44-dev # RZ/T2H Evaluation Board
+
+Perhaps "renesas,rzt2hevb" or "renesas,rzt2h-evb"?
+
+>            - enum:
+>              - renesas,r9a09g077 # RZ/T2H with Quad Cortex-A55 + Dual Cortex-R52
+>              - renesas,r9a09g077m04 # RZ/T2H with Single Cortex-A55 + Dual Cortex-R52 - no security
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.25.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
