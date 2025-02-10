@@ -1,108 +1,105 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86452580D6
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F0F2580D6;
+	Mon, 10 Feb 2025 16:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739205030; cv=none; b=H6QOplxeWaJrzaIBxe1+x/K+9Pxt5t/UNl+gdCj0EK8hz/YdBfWNFu9zJ+PI/6XoI54Sv4CLTHfAWpUD7CKoaY0p/fxOfNaXD7nyYDengliIQ/sdGOzHXcjamgS1L/39PoqLGGiYUIKXkqetfa7ExA0whZApu59T+tuf9Wpdbko=
+	t=1739205048; cv=none; b=Qc069ibELeA5kr7QMRLLivpaKXMdkDt6zy53a5gUyEPNI9fh6ztMPmdaBD2N4b5X1sSN8KmaesdMAZ4/lw1/Vkkjzvy7YtKGI3WZ3xP3P3CNCm9AyCY0w3WUyfgdq3tMYDBKkBsfuUEjWp4gwg4AEzYKBEA7Cq4jWokv3GVK3Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739205030; c=relaxed/simple;
-	bh=FZK2RdN1Jl4Sm3VXjk6M+lzSSnDzvxADPxzKKhy+bag=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TYQL4mOfVXE7KnOChksEWH+upy+d1wnSjGcAAMhoi+8vL9wklF48Fg1r18TPM/R8jiT8R7JW703cyJaUe9xYwKUWCfkR9GWCJ9udtE4VmcZtnvo2zs654pm+dDO7snmygrMzofGVWIN7iUUlUByRgUxMooG5Lhu1F26HhxOMqUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Bkg2oSue; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1739205048; c=relaxed/simple;
+	bh=z+1Kq60tzkMsngBcFA1I3F53of+lTcYmSG8z/d3l6Sg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ogAA2TCigawSHsdVLiSI/B59wemvcGj/mbHD7Wf9B6HLnZb2OOrfK6yvs14+hRfgheGebEjvv8ORISNef9GYssS4xkLulDeQMdAJbLgLRC46IHFn2U1d02Ag4EvEeyO1UqlRbCp1D+jYs/VWtwIijY0zOurpzwlHEWlD4KXL53M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eOVT2n8I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bkg2oSue"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-308edbc368cso12105711fa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:30:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1739205027; x=1739809827; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JdUVu0dcxly4vbZP3Qlon6lZSX6w+e5X22dhkvb+tew=;
-        b=Bkg2oSueEubmHAp2h/iGzhCrYp2M+dAyyHYk77CuoxpxOs5TQpX3yRbEvBPWdtCg/f
-         VQ2iXq81G3LfPNFv3QAT9lEJIx257fL4s7sxnxwpsimIdu+l3S9ek1C6pqkFkPhdZwpm
-         kxKl09VwXa8eHm/+4CdGN0HZD4ku8jB5plFxw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739205027; x=1739809827;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JdUVu0dcxly4vbZP3Qlon6lZSX6w+e5X22dhkvb+tew=;
-        b=JBo+aYIZsRoK9ygaqRpm0g0wQHwEB+Dj40L4SXat4lAJ8V2JoMQFINKIHdTjWt9xvP
-         PIYE+X4ujG1Yx34t/cRYOvJ7vqOC8/jnmmFv3BZvGp6RYL4L2R1ynWPxk7n9vh6S1Xx8
-         sh94eNvdKoeiANJgMYRNEWY/nUFi/U92bybzFlbkIQwTm8aG4fFFKPYm8dupa/YOqJ0z
-         lfMi6aQReVMjYjoPMtRhZQMZIKSXxlHy9JEzYeBwzuLB7zEj7bqoWCm8bKOoATV1rAZ0
-         VaylKfKPZwzlVxaheEULdVyyEZFKDMotovh3Xie6KF14DJkF8MF5f0Aj1bHPNiuf9BRj
-         rSpw==
-X-Forwarded-Encrypted: i=1; AJvYcCVwvSu4Qk85JTlqubyrD23DaCnIOelRpQH6bUQ2SD2frXKhq+ENFfg/MxVbzuPcZo9txItogGE7ZGE2mxM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3CEVj5vFhssLkFS7u/FF3dJp6fHwjMY2w4zhPmCQby+5Umz3N
-	cTkM6A/xWeNgtc72dLR8hH0jfRqy5IKsakGhCfvrlOC7KVYoA17NXWD/1/RmhD1q4ZvZfU+x/Nu
-	3XQ==
-X-Gm-Gg: ASbGncvtHbxMvzgGgGEFV2hG4TcuEld8u7Db0x7HbwVz9POFft/qml8WM4Wjh7/tpcY
-	bbzYlPxDR7GK7MWUyiXBkGPSvEXzkiG5/UZm3NztS/o6WX9ko4qS9i91Hr+sRb7xLkSFUvfSn1G
-	XRVCG4S2k7szqSsW+OHWrzAykiCr2MOoMMAv1G9wBEcj4inSaYAIXQT+F1ZLgwier61nZxw2LN5
-	FDCFh7EGs13BAHbqegaXCDDNPKyjHDbmXrMuEQNuesPlhrTQ3tccCbQjc9Efissr/drjqLSWtrZ
-	02AjyTqG2aNMjbnOk1KU9N2QFmWfbxqUedPBIty6ZHeSym0OmGdQld8=
-X-Google-Smtp-Source: AGHT+IHM8yzpd1vcWcCpIUhRc9WpwRiH3qKgXk7FpW8KK2Mmah7z0avBpn1fk1Spz91QS2lkUxU/FQ==
-X-Received: by 2002:a2e:a9a0:0:b0:2ff:c3a2:f408 with SMTP id 38308e7fff4ca-308f835967amr2260611fa.12.1739205026686;
-        Mon, 10 Feb 2025 08:30:26 -0800 (PST)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-308f6d148f4sm993551fa.97.2025.02.10.08.30.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 08:30:26 -0800 (PST)
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-545097ff67cso1516378e87.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:30:25 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCULyLxRoKtF+fVtjQqUQ6HEKvALoQ+f19wL9YNCnqYmlkvNj4oxIPnKvJAFgqdWfaBmuJVKY2LO9BWk32Q=@vger.kernel.org
-X-Received: by 2002:a05:6512:3190:b0:545:c5f:8551 with SMTP id
- 2adb3069b0e04-5451186f17amr138772e87.35.1739205024931; Mon, 10 Feb 2025
- 08:30:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eOVT2n8I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75E6AC4CEDF;
+	Mon, 10 Feb 2025 16:30:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739205047;
+	bh=z+1Kq60tzkMsngBcFA1I3F53of+lTcYmSG8z/d3l6Sg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eOVT2n8IUIHT6BoMqW3rMtlZriffRLGo4r9pyBNpQO+CoyWL0bTNGdvV34FwaMxTj
+	 8qe+enyeWOQbtYXlar8wl1UEzemKHyZ4avrGbedVatNmVlw6aT8vWFmyEYKI+X+8eX
+	 eB7uytdL1rkqEMUWatRzVzJODlLz5dNefzKu6QWpSTcuxg84wd5Qxpj7XVks8YEX6v
+	 WjkXvTPZGL8hZP6yAr0nyxO9OZIwhyNdobClOaVIQp0QrpiFhS+il5GDqBVCG8HhUT
+	 tZcoxcy6qi3/UOmkD2IgDonuZmfXzUbZNNXg6QDEB6RPGZa3qLH0osWvakOrdLip++
+	 YUZ3aehpXW7Tg==
+Date: Mon, 10 Feb 2025 17:30:42 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] misc: pci_endpoint_test: Remove global irq_type
+Message-ID: <Z6opssGJ91MVWgRC@ryzen>
+References: <20250210075812.3900646-1-hayashi.kunihiko@socionext.com>
+ <20250210075812.3900646-5-hayashi.kunihiko@socionext.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250204054741.GB1219827@lichtman.org>
-In-Reply-To: <20250204054741.GB1219827@lichtman.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 10 Feb 2025 08:30:13 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=UCiGuwuVatoviUvYPeBFkfiWm+oWaiQRG_1U-j6LGGGA@mail.gmail.com>
-X-Gm-Features: AWEUYZn85rAuQRw1g6-QmTQkE-eAMlrK1NxFvsPsHDW32v7yV2tRQrsa76Sqsy0
-Message-ID: <CAD=FV=UCiGuwuVatoviUvYPeBFkfiWm+oWaiQRG_1U-j6LGGGA@mail.gmail.com>
-Subject: Re: [PATCH v2] kdb: remove usage of static environment buffer
-To: Nir Lichtman <nir@lichtman.org>
-Cc: jason.wessel@windriver.com, danielt@kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210075812.3900646-5-hayashi.kunihiko@socionext.com>
 
-Hi,
+On Mon, Feb 10, 2025 at 04:58:11PM +0900, Kunihiko Hayashi wrote:
+> The global variable "irq_type" preserves the current value of
+> ioctl(GET_IRQTYPE), however, it's enough to use test->irq_type.
+> Remove the variable, and replace with test->irq_type.
 
-On Mon, Feb 3, 2025 at 9:47=E2=80=AFPM Nir Lichtman <nir@lichtman.org> wrot=
-e:
->
-> Problem: The set environment variable logic uses a static "heap" like
-> buffer to store the values of the variables, and they are never freed,
-> on top of that this is redundant since the kernel supplies allocation
-> facilities which are even used also in this file.
->
-> Solution: Remove the weird static buffer logic and use kmalloc instead,
-> call kfree when overriding an existing variable.
->
-> Signed-off-by: Nir Lichtman <nir@lichtman.org>
+I think the commit message is missing the biggest point.
+
+ioctl(SET_IRQTYPE) sets test->irq_type.
+PCITEST_WRITE/PCITEST_READ/PCITEST_COPY all use test->irq_type when
+writing the PCI_ENDPOINT_TEST_IRQ_TYPE register in test_reg_bar.
+
+The endpoint function driver (pci-epf-test) will look at
+PCI_ENDPOINT_TEST_IRQ_TYPE register in test_reg_bar when determining
+which type of IRQ it should raise.
+
+This means that the kernel module parameter is basically useless,
+since it is unused if anyone has called ioctl(SET_IRQTYPE).
+
+Both the old pcitest.sh and the new pci_endpoint_test kselftest call
+ioctl(SET_IRQTYPE), so in practice the irq_type kernel module parameter
+is dead code.
+
+
+> 
+> The ioctl(GET_IRQTYPE) returns an error if test->irq_type has
+> IRQ_TYPE_UNDEFINED.
+> 
+> Suggested-by: Niklas Cassel <cassel@kernel.org>
+> Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > ---
->
-> v2: Fixes following Doug's CR - use kmalloc_const instead of kmalloc &
-> rm redundant print in case of allocation error
->
->  include/linux/kdb.h         |  2 +-
->  kernel/debug/kdb/kdb_main.c | 48 +++++++------------------------------
->  2 files changed, 9 insertions(+), 41 deletions(-)
+>  drivers/misc/pci_endpoint_test.c | 13 ++++---------
+>  1 file changed, 4 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> index 6a0972e7674f..8d98cd18634d 100644
+> --- a/drivers/misc/pci_endpoint_test.c
+> +++ b/drivers/misc/pci_endpoint_test.c
+> @@ -100,10 +100,6 @@ static bool no_msi;
+>  module_param(no_msi, bool, 0444);
+>  MODULE_PARM_DESC(no_msi, "Disable MSI interrupt in pci_endpoint_test");
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Considering that you are removing the irq_type kernel module parameter,
+it doesn't make sense to keep the no_msi kernel module parameter IMO.
+
+The exact same argument for why we are removing irq_type, can be made for
+no_msi.
+
+
+Kind regards,
+Niklas
