@@ -1,124 +1,84 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF4317591;
-	Mon, 10 Feb 2025 04:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 800A517591;
+	Mon, 10 Feb 2025 04:40:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739162226; cv=none; b=VVJ/wrR81fIxHOZLPPDAmMgxSGsHsA9VOh6uJ54YNJuVJzPyrW57IdncNPQcPAc5HC6Chnq4evJ6lEWT3HmYsgHNoB0wLxE7xrlt61QQbup/AAKLLld9i7PNoXvDlNv1R/Bq5HeUPJA6XX4I9iJGuIcKo3x3HhgMId/Uyq7eQDw=
+	t=1739162403; cv=none; b=dAG/cQIgVvC7/J2zsDMuAOCgR+tKtqBVm6dQj17W0uVN+9racmQOISuVDyo1txpitAKiP/xcF56qWx8+RqVUDfz63znM+SQ+G42NmJcKK82cipzS3pkpY+eVs/fbq/lJOcOKP9VgE85d11WPvEv+KdU26W0J66RY5Mu8cFABESI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739162226; c=relaxed/simple;
-	bh=98YvdDd8MACN2jIjR7PjcggzsLEldn9tlL9QS0Lp7q8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Lz7PQKzN1KdhfE1dDlMEcXmXaYjR1JWGQ2dAmOtEqpbV4ABarA3aq1iIDiNVakuE7HpCujoxzQDdBktxjoQHpkyTzD/Ftwk1FNvx3eIu8tKver4tvXb8l/jcSsmp7/x48L1p4BbXRhNUeHzfCU7yhS2NKTPFNIU/5C6rfZDioVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=TTeoTgHk; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
+	s=arc-20240116; t=1739162403; c=relaxed/simple;
+	bh=d3pV3j43AsP8m9lPylMVzrWwG+gr6ukwWZ/O4CtjSFc=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=Ks/LBa9CZCsg4bFQbEWVdl1mvH0/HgUXZO7usAyjImEh0mNPghmjzEU8tdnSBBTxKwJR+dMNcc2MHkiXtv/rYoDezWa2GXr2tDlVdMVcgQad1HUVvKuXI68l+LDvbMa+/gVg+jdhF90wCsNcM6jIHVk0DosVIcW8WCeHlb6gh8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qrYUg9xj; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="TTeoTgHk"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4YrsHJ1GFhz9ssM;
-	Mon, 10 Feb 2025 05:37:00 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1739162220;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=U5/LwMtOeJ6224+d5XpyHm/ckyi9zP3Rw8TDDPRJNIU=;
-	b=TTeoTgHkMOicZho9YKX2bN0b4sqymlcc9wOBBvMZUJUGIKzyeTfyxCA5zHH9/08HRO+VbW
-	KnelvbFEI9gt44MN9vkNu1R8mh3C7tUoKtD5uTMerpuikZDhqIQhHrklOlHkvFBfvN8W3a
-	FJ3pMjqvIQcHbFhf1uYcvivO7pf0WTYJqd/DNpN8tYfF412JjkOX18zA69iAOFBESjoktm
-	oH8DKF3hSFc+JaRZNVxxJOBrR1aC8HM7vu3tjbEWD+EsMWjUr4ldBJy1TgeUSfPVklevJV
-	ENjBUmpTakExrVN0ZK6K0zWDObYHnUlDo+YvT2zOLzErVYmMmYeB3r9JrUdriQ==
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Sun, 09 Feb 2025 23:36:50 -0500
-Subject: [PATCH] wifi: ath12k: Fix uninitialized variable and remove goto
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qrYUg9xj"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 1D5FC210733A; Sun,  9 Feb 2025 20:39:56 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1D5FC210733A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1739162396;
+	bh=Er+lXYAhcnUfPZM9iGtlwf9RnKEucLNECiLZQ1E0qjw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qrYUg9xjJFm0Ax1VL1i1U6JbwSslEAP95EUGqZ80kH6GALzfknJYkiwgUuVJoXQJd
+	 DChX36Hl5AicneULGDJrHsSRt86/mVN5/WI9m2IS7JufoKqZ/TtIopepW0SJOAYadZ
+	 fiNitoVuBbZ4SaQBLqzWSo8n6nvqCuirMwCdzr70=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Long Li <longli@microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Erick Archer <erick.archer@outlook.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH v2 net-next 0/2] Enable Big TCP for MANA devices
+Date: Sun,  9 Feb 2025 20:39:52 -0800
+Message-Id: <1739162392-6356-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250209-ath12k-uninit-v1-1-afc8005847be@ethancedwards.com>
-X-B4-Tracking: v=1; b=H4sIAGGCqWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDIwNL3cSSDEOjbN3SvMy8zBJdQwtTM4O0FEvDZANzJaCegqLUtMwKsHn
- RsbW1ALKQzXJfAAAA
-X-Change-ID: 20250209-ath12k-uninit-18560fd91c07
-To: Kalle Valo <kvalo@kernel.org>, 
- Karthikeyan Periyasamy <quic_periyasa@quicinc.com>
-Cc: Jeff Johnson <jjohnson@kernel.org>, 
- Harshitha Prem <quic_hprem@quicinc.com>, 
- Kalle Valo <quic_kvalo@quicinc.com>, 
- Jeff Johnson <jeff.johnson@oss.qualcomm.com>, 
- linux-wireless@vger.kernel.org, ath12k@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- linux-hardening@vger.kernel.org, 
- Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1580;
- i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=98YvdDd8MACN2jIjR7PjcggzsLEldn9tlL9QS0Lp7q8=;
- b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeHBLOXN5bWk5eVBQVDZlSnBWZG16bG5yVHp0MjlQcS9VCmNMbWMxblB6S0tzZ05kUGZV
- NTUwbExJd2lIRXh5SW9wc3Z6UFVVNTdxRGxEWWVkZmx5YVlPYXhNSUVNWXVEZ0YKWUNJemZCbit
- lMzRURno2c3MyV3hEeTlEWDRiKzNManZKeGNHYjN4ZXcvcC8xYysvdGZ6Smlvd01CMzFsK202TA
- pQUHA3Ty8zRzlNU29YWWRyVHN4ZGtWMGFuN2xqUXUvRGVtVXROZ0NnbGs2bgo9TnJHdgotLS0tL
- UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
-X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
- fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
 
-There is a possibility for an uninitialized *ret* variable to be
-returned in some code paths.
+Allow the max gso/gro aggregated pkt size to go up to GSO_MAX_SIZE for
+MANA NIC. On Azure, this not possible without allowing the same for
+netvsc NIC (as the NICs are bonded together).
+Therefore, we use netif_set_tso_max_size() to set max aggregated pkt size
+to VF's tso_max_size for netvsc too, when the data path is switched over
+to the VF
 
-This moves *ret* inside the conditional and explicitly returns 0 without
-an error. Also removes goto that returned *ret*.
+The first patch allows MANA to configure aggregated pkt size of up-to
+GSO_MAX_SIZE
 
-Addresses-Coverity-ID: 1642337 ("Uninitialized scalar variable")
-Fixes: b716a10d99a28 ("wifi: ath12k: enable MLO setup and teardown from core")
-Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
----
- drivers/net/wireless/ath/ath12k/core.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+The second patch enables the same on the netvsc NIC, if the data path
+for the bonded NIC is switched to the VF
 
-diff --git a/drivers/net/wireless/ath/ath12k/core.c b/drivers/net/wireless/ath/ath12k/core.c
-index 0606116d6b9c491b6ede401b2e1aedfb619339a8..ae75cdad3bd6b6eb80a35fee94c18d365d123cbd 100644
---- a/drivers/net/wireless/ath/ath12k/core.c
-+++ b/drivers/net/wireless/ath/ath12k/core.c
-@@ -908,7 +908,6 @@ int ath12k_mac_mlo_ready(struct ath12k_hw_group *ag)
- {
- 	struct ath12k_hw *ah;
- 	struct ath12k *ar;
--	int ret;
- 	int i, j;
- 
- 	for (i = 0; i < ag->num_hw; i++) {
-@@ -918,14 +917,13 @@ int ath12k_mac_mlo_ready(struct ath12k_hw_group *ag)
- 
- 		for_each_ar(ah, ar, j) {
- 			ar = &ah->radio[j];
--			ret = __ath12k_mac_mlo_ready(ar);
-+			int ret = __ath12k_mac_mlo_ready(ar);
- 			if (ret)
--				goto out;
-+				return ret;
- 		}
- 	}
- 
--out:
--	return ret;
-+	return 0;
- }
- 
- static int ath12k_core_mlo_setup(struct ath12k_hw_group *ag)
+ Changes in v2
+ * Instead of using 'tcp segment' throughout the patch used the words
+   'aggregated pkt size'
 
----
-base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
-change-id: 20250209-ath12k-uninit-18560fd91c07
+Shradha Gupta (2):
+  net: mana: Allow tso_max_size to go up-to GSO_MAX_SIZE in MANA
+  hv_netvsc: Use VF's tso_max_size value when data path is VF
 
-Best regards,
+ drivers/net/ethernet/microsoft/mana/mana_en.c |  2 ++
+ drivers/net/hyperv/hyperv_net.h               |  2 ++
+ drivers/net/hyperv/netvsc_drv.c               | 15 +++++++++++++++
+ drivers/net/hyperv/rndis_filter.c             | 13 +++++++------
+ 4 files changed, 26 insertions(+), 6 deletions(-)
+
 -- 
-Ethan Carter Edwards <ethan@ethancedwards.com>
+2.34.1
 
