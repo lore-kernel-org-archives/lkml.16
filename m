@@ -1,59 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657A223E224;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C56823E246;
 	Mon, 10 Feb 2025 15:36:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739201801; cv=none; b=UUHfYcQL/pp4tkRUoC4T5WOqHC1pFSa6gsT7HUoyQTuHc6SQd1f0M3w3tVSZu5r4orLyq0v901l9W4O83Eg0cfxRxGao7uj0un5ZwHYZ46TxIlMWP7oSm5P5gVVGsIoGQt9/vvASnyqtoAHAj4wIGYy0m0kXC3kS+3cLUlRGn3Y=
+	t=1739201804; cv=none; b=Q+iY/Ml6YsK0BSaO4FnPRZUoyowJg1gcthNs/vgj1oAmIwc4bMx8IkYDrDyyfWQkiXGZzrZDszeMHWc5/wrGV0j8zLsfEwgDX5jSmFdDMARgnX/0gIZhOcLtth2/P5rq/JetJ95/v3McDHIbsvTk5XcLJWUTvter2hvw5tvCDvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739201801; c=relaxed/simple;
-	bh=LDu8/7xSoMiChUQJXRsucp39IYUFFUemD0/F+BNQrt8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f/S4m8ef7thQqYZKDjJ7LN9rXXrKtm8hnCRL0qTi4aucU5M9/pMM6cALYHvFIQlLHgPHm1z0ytt82YPaW1zk+YWr8GAB9sexwoIf12r+re4oK4/PqGTlarlDYYVT0rCMJg9kh0t21SnZFQNFaT1ALOWqVlKrxRSHeEEnYaMHQw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S5JBMcp1; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S5JBMcp1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FA23C4CED1;
-	Mon, 10 Feb 2025 15:36:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739201800;
-	bh=LDu8/7xSoMiChUQJXRsucp39IYUFFUemD0/F+BNQrt8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S5JBMcp1d7uE8gz3FdsSmxPjpcHFaivdOWUD8N1WmigmSLDmxgj6n3EP8uOdFj+9q
-	 N559Sg6fIHXWCWfLbqpqYAPEgzpV5mU9ZSxF08Z+/o7I8FmzWQkuOpaCxDav2wyS5a
-	 zlXnWWxpIanOmoB+V8iIjGse6laOQ3EEFxnE9F4WjZ5Y3NdHxky3G8WkxaDcvitSAO
-	 zh+nS4t3t+tU958Z+dMsinPIlniEImq3sMGIP0Prdlfhv2J7wSEfORI3fFPM3nPkMR
-	 JfO65PX8evOt3/5NohBuiNvdYfTmAPjwa7vWocRsO9svH00m7hRKfEq9p2nQKpDvtr
-	 pAwW5OifT++Zw==
-Date: Mon, 10 Feb 2025 07:36:39 -0800
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Ole Schuerks <ole0811sch@gmail.com>
-Cc: linux-kbuild@vger.kernel.org, jude.gyimah@rub.de,
-	thorsten.berger@rub.de, deltaone@debian.org, jan.sollmann@rub.de,
-	masahiroy@kernel.org, linux-kernel@vger.kernel.org,
-	nathan@kernel.org, nicolas@fjasle.eu
-Subject: Re: [PATCH v7 03/11] kbuild: Add list_count_nodes and
- list_for_each_entry_from
-Message-ID: <Z6odBxaAI47FTiWI@bombadil.infradead.org>
-References: <20250208163959.3973163-1-ole0811sch@gmail.com>
- <20250208163959.3973163-4-ole0811sch@gmail.com>
+	s=arc-20240116; t=1739201804; c=relaxed/simple;
+	bh=8uVfs/aG4YnHpNLZxvcGpef4XZx9t4Ld5yo1LSV6aO4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d+vKxPpxA2Y2dC8jD1nY5YMztGc17C0lXQVSdH5x6k+ap3hayMNBv/YUjAhrYincdiv3w0K2FzTUD8HizwDiYwH0dzqPjrbnGh0QcLD5mtJJuQlYXvwsVItOC1fomMqyLnKZHFtn9RBQ2W02JzDcpgStIfcpykm/Tm3N66t0vcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4bbd394e0ddso245925137.3;
+        Mon, 10 Feb 2025 07:36:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739201799; x=1739806599;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e1bFeL+nSrBiBiPg1cidpZULBVfMrReHY5NMj4mDP5Y=;
+        b=Q627IDNj+Qrcofh1S7xJDueM07WRShMR0L4QinOsGaDAU5MHV1PupGY6pVYOeGqG1n
+         guI63jnJ2xwF9dYVQunU7GWuX3WHlxXgWddRNqY9tiTtIN1G//8nvrbcbh1B8oB7BA6q
+         0gYfd2CpD64mLGGSC86liLBhAl7E/nU4dubL5dAk/YBFd1AlMUdHk+u9iRj7cTbYOUIL
+         ezPDM/c9XG8hz3E41mu6vbm5hFFtUfYuuoR4Jt0vtJ5k2EVfL7cXwN68IVDfuYQKZAtZ
+         bTERtv/pySdd6NOBl3uMwT2xWeJyamrJTsvm/W6RLOoRkdOa0l4nUSD82ARZyFW81V7C
+         o3bQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUu0XkcVnSGHdfVlN2UieM5f1MHpNhMr8WItyGJ4S/VhF6QTEvMqdk5DoT3d2Eom9FlThkCstHrYhNPa1ML+QHaCig=@vger.kernel.org, AJvYcCXVXf4JpUHfubm9W8K3DHQePUHy97nmf+F1cAVYQ0QW7K6y2La2kr5fa+/U88LKg93nnc7jldG8ikDCL8k=@vger.kernel.org, AJvYcCXcWbV0yYdlOqcOtc2gt819gyk43YnkVL7XMi0On94gVPmDQTbq4aoAUtTwKXuBe2JivsbC6x9BJsq885g+@vger.kernel.org
+X-Gm-Message-State: AOJu0YwR73GBK2M9bLyN/SbJPMH7DONe2NG/5OBR6JGa/9myrACgTjbM
+	Rp53Yh+P9W9ZNhCNySOOID7MI3ZVpv1kqSDHzLnch5ofd+wJpm8JFICVcnPy
+X-Gm-Gg: ASbGncvEnR8VGwLluWDCEwDN3uODS/QaeL838LeGrn1yxt4BFdCng+aETV2xA5Z/Asy
+	LGZ5IRWoI/22ztvdMU89fOlhQlvA9ztBZR8/DEiTGYgAYWGGSC+wzGELFkqvQLGi0vrw+EctWsS
+	S77EvEbZJHUXcfU8PC+BkVlaRg3BLltzTsfLII+hAOHYzDodG+Tl1IydHvQ1MAxQV2VqX7VyxL3
+	f9BL4lSJsCOSoVF+c2/BazrOLO49GXy9EjiZSL3eRvH5LkmOEPqWHGixoIO7KQ/cFXoH7BEwEnV
+	RE9tALFOUgYAgQLrCWoW5QlpnLan+btyRn1MEJWwI8qxaSLmimt59A==
+X-Google-Smtp-Source: AGHT+IGLX3bJgFsWU60BI5QcpPD819ccwThR9xJr+o8GJDzuU426t1shwi9V0ezIgIvqoWcdCZAipw==
+X-Received: by 2002:a05:6102:4bc2:b0:4bb:d394:46da with SMTP id ada2fe7eead31-4bbd394585dmr1660462137.6.1739201798181;
+        Mon, 10 Feb 2025 07:36:38 -0800 (PST)
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ba9aa45be2sm1047748137.14.2025.02.10.07.36.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 07:36:37 -0800 (PST)
+Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4bbd394e0ddso245912137.3;
+        Mon, 10 Feb 2025 07:36:37 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUTOW6Tr0INJbpZZgBxHJIO3IQp7zXaUn95hiUaOIaFLMw+hyRz6xRm3H9X9GMz8yj/pZh8bp6d2FS4KcTa@vger.kernel.org, AJvYcCUaQH/TYOySccpXaEzK/ATQ23Yb90KsjmC3vdx5juibdpKOEJGWW8FLIWFig+sGoVSQcwsf38mx/ckKKL8AWRzSzA0=@vger.kernel.org, AJvYcCWui2TieI05a6AyFJJQt68EiwscYQDmamjaSCPAjVuNdLZ6+1IKzg7219MWhojszC5zf3tzF0MNwrFU7Ls=@vger.kernel.org
+X-Received: by 2002:a05:6102:4b8a:b0:4bb:d062:44e with SMTP id
+ ada2fe7eead31-4bbd06213dcmr2190050137.1.1739201797741; Mon, 10 Feb 2025
+ 07:36:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250208163959.3973163-4-ole0811sch@gmail.com>
+References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com>
+ <20250129165122.2980-10-thierry.bultel.yh@bp.renesas.com> <CAMuHMdVD1dLP53V_zOhxpqazDdPDVafJ6iohY8u6WPQrmYH5Sw@mail.gmail.com>
+In-Reply-To: <CAMuHMdVD1dLP53V_zOhxpqazDdPDVafJ6iohY8u6WPQrmYH5Sw@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 10 Feb 2025 16:36:25 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVc435-0TDheV_r56Am=REx_eD2baKQFW=YzcsBiLgZ0w@mail.gmail.com>
+X-Gm-Features: AWEUYZkb5Ge2ONaFnqqebJfE-1yZ0lNIfDqp-u30dHNAHwBHf2save9f0Esu0nE
+Message-ID: <CAMuHMdVc435-0TDheV_r56Am=REx_eD2baKQFW=YzcsBiLgZ0w@mail.gmail.com>
+Subject: Re: [PATCH 09/14] serial: sh-sci: Introduced function pointers
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Feb 08, 2025 at 05:39:51PM +0100, Ole Schuerks wrote:
-> list_count_nodes and list_for_each_entry_from exist in
-> include/linux/list.h. Add them to scripts/include/list.h.
-> 
-> Signed-off-by: Ole Schuerks <ole0811sch@gmail.com>
+CC linux-renesas-soc
 
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+On Mon, 10 Feb 2025 at 15:45, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Thierry,
+>
+> On Wed, 29 Jan 2025 at 18:03, Thierry Bultel
+> <thierry.bultel.yh@bp.renesas.com> wrote:
+> > The aim here is to prepare support for new sci controllers like
+> > the T2H/RSCI whose registers are too much different for being
+> > handled in common code.
+> >
+> > This named serial controller also has 32 bits register,
+> > so some return types had to be changed.
+> >
+> > The needed generic functions are no longer static, with prototypes
+> > defined in sh-sci-common.h so that they can be used from specific
+> > implementation in a separate file, to keep this driver as little
+> > changed as possible.
+> >
+> > For doing so, a set of 'ops' is added to struct sci_port.
+> >
+> > Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> I can't say I am super-enthusiastic about this approach.
+> The SCI variant in RZ/T2 seems to differ a lot from the already
+> supported SCI, SCIF, SCIFA, SCIFB, and HSCIF variants. The latter
+> are very similar, but usually have just more features/registers, and
+> further differ in a few different register offsets and bit locations.
+> If you compare the RZ/T2 SCI block diagram with the SH7751 SCI block
+> diagram (or even the R-Car SCIF block diagram), the most striking
+> similarity is that both have a baud rate generator that can divide
+> Pclk by 1, 4, 16, or 64 ;-)
+> So perhaps you're better off adding a completely new driver?
+>
+> What do other people think?
+> Thanks!
 
-  Luis
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
