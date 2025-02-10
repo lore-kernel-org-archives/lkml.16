@@ -1,94 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6238A25B665
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E2925B66C
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739209838; cv=none; b=C0dNF+6ZC80gkS4zKHWozsXVoTLtYrRGt4tS0XlikCysAHLDV0XfptkAYmFFpszkUmYP3ZfdLDzY6zL2lJG0Yem+9BqheH1wz0amE05vSI1kxXCmsqMr2LEe9yjm9nqJzjVZT2B2HCsg/DVZHKa/7fiEZzdocHGlKLoMhXI0QAg=
+	t=1739209838; cv=none; b=RFP6Lg9CHFur+Pt8OeqSCc7C+lEtnXLsLBwXBaMS1Xkvc0AwwwUEy9RPQ5rHXkXGUbRKi7TFNgT1LpYEfI1TW8TxUSNgYC0j6kyFGCDyp/RQNLMk+QmDrusgOmnLTpQYeAGVsrA7ONeIC1UcsOXlgHa+QhxuMtl2uhKt40KE7kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739209838; c=relaxed/simple;
-	bh=W5Xfglk5c7yZ3/lTqN6BaQyihdI2aZ1RG4De4M2GtaA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=W8JutkbnxLn4E2mQQBd1TVxTuKafOP9pT2t1ZmfCYHEnqF6VKLV/rnmbmZm96F04Ss7SBJ0s7z6rfPHtyEZOlKwGWrWdK5+Aj10JDCve7/N4KzeRfeou6Dj0CfDShspJoFBLTFHnu0ozgEaawNUjkTKO5KgevB4hXouFQSxjq8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pGRWPoWy; arc=none smtp.client-ip=10.30.226.201
+	bh=5itngRyI3QLkc3iUAXbbXE3l84sxybC0VJY8BsapT6Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lPVPayfm7VmMNi/AfC3tHpWmJmGEoNkV8XI0xQ7laezrMyvWzsA7y/LgjpQgK5wiPOi3aXh8hhOH4UDfbW/ck0jdOoVdVIa7BuJVhvO1sw0/vGa9MaxUNsyccM32Wu+B9CM/msHPjceoWxdwCSHjUyZYl57Bz+X8HdW3sBkN3hQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=Y/JIWh+N; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pGRWPoWy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9981C4CED1;
-	Mon, 10 Feb 2025 17:50:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739209837;
-	bh=W5Xfglk5c7yZ3/lTqN6BaQyihdI2aZ1RG4De4M2GtaA=;
-	h=From:Date:Subject:To:Cc:From;
-	b=pGRWPoWyAjBhhaa7+63szsFWen6WueXliLYM+/TcuovrQ6/TOmUe9IsDJLwVSCHsP
-	 FHaCyFsIjIvfjm+/0nRbvBtD1IKO91+UxjXamni4KKQVrqnBzo7kttW27KQRgwTYNM
-	 e1rKz5ex2RfziMKew8QBYguOXDIArob3iX04qeHH2lYhcbTnwmHWTBEtkdCzkf4/Ji
-	 hY3qVrJPNJbkng0KOqcD9B0Naj4LG50iRKnjGQikJ7rWLsxDXNQLMAKKl3B8WS0JIi
-	 +kkQ4nrVfqFfDw8Zx2jbvc4orNlmfQlr9/KVg17iY5rKQo2l0+smG5kgJzxKmTy2Es
-	 0tujbSSXwg3Gw==
-From: Mark Brown <broonie@kernel.org>
-Date: Mon, 10 Feb 2025 17:49:33 +0000
-Subject: [PATCH] arm64: Add missing registrations of SF8MMx hwcaps
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="Y/JIWh+N"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21f5660c2fdso59599005ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:50:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1739209836; x=1739814636; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OCO3aIRcq5bPxRXLWL+/UKDcQnItmXbvQb/S10a8uSI=;
+        b=Y/JIWh+NTFsGFS8sJ0F23YHaZC+GWW5HJj3+TEOHzKo/XyBEUqur76CkwGKb7CAHKz
+         Nw2S/XsPt36cjhZJfAOBnm/W3rtepRc67H4yH95yNl6BVVy60Yrr05Dv0xv7yoUsATXf
+         XkkvnqQT+rogwFP6lAXwXGWmCA+eNirQQcYVA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739209836; x=1739814636;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OCO3aIRcq5bPxRXLWL+/UKDcQnItmXbvQb/S10a8uSI=;
+        b=PwkP3g7IG5uwIjU4gAc/3+4DKt/3/1VziZacV+nS0pB87BdKOpHF4QnQPxXpIiqLX1
+         qMs6JVticBX40+k/w1x43UElAmuIFTaY9Qt/rXEzYMQn/tP+PXD04Rx0pTZUsRtZT46j
+         zO26n1L05f4xWFT5X2fDBoElXdN3p6++PgC7lPCdYe346LtSSzZK+ulfFZEextHWzNkd
+         JSsvLJ/JTB0NczUdo97EZ6x/Ib4wWSY2RlJR5qDTjKaGlQze5BGkZBtQeYyYxIcGGX0v
+         TgiKH0w8VHtr9u+Z7O5oWk36TQVJY3SJ+HYvHZXhQ2Jo7xjSYrMreIC7KdW3zQPC2UcD
+         hezg==
+X-Forwarded-Encrypted: i=1; AJvYcCWB6FqqwvHkB4xiboeW6lEVs2V3U+cBpaqduBaLtOFgnenfS8DdxqYizzblUUDdNymg4c9zty24z0fl0EY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1sKstLbhJXMS0dZ5wC83bTc5PezQVfiGSJlyeoswgSXlf1Y9b
+	tUg9c09b73pEsuTGSrG8Td0510lK3Z/iBftvIl7r5I9kicow1UdxoBSMJcwuefg=
+X-Gm-Gg: ASbGnctvF2r0ISPf70+9PylOFx3pcSpwCBpNMlR+ZlN4ZoCADbHvrosMz0X3h506aq/
+	C0+yeF8Ub/OGt0TH0Y4xvrUVj65SnS0o28e9jPXlebprYyOyuL5k9UZ3K+L9T0EBrnYytGQJfeD
+	q1ItWOUC82sCC0RRdd/nGQOZphtud2k2Iif/7HX60mpectVlVvSE7/wvbp3b2U5HpyjROmjJKpI
+	Mko0VIC+8p+pnnZQZtwI3m+KELy3cQyuJRffDB2Bipl98MNel7FIwKUA8qNSuJSIHcVocdIsKDH
+	lrVoJR6rLSJtub//0Gs5d12QuUNeSWjqTXh+1ucoSEYpr237BveyH5l4sw==
+X-Google-Smtp-Source: AGHT+IESIWs0nDg5kAqiOuNPxZ9VJShu5naJndD6KAbqxfopHAr2qsG48oAN4aHnkGyTLNqhk6vhKg==
+X-Received: by 2002:a17:902:f78d:b0:21f:68ae:56e3 with SMTP id d9443c01a7336-21f68ae57dcmr162636775ad.39.1739209836373;
+        Mon, 10 Feb 2025 09:50:36 -0800 (PST)
+Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f36897faesm81159455ad.213.2025.02.10.09.50.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 09:50:35 -0800 (PST)
+Date: Mon, 10 Feb 2025 09:50:33 -0800
+From: Joe Damato <jdamato@fastly.com>
+To: Purva Yeshi <purvayeshi550@gmail.com>
+Cc: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	skhan@linuxfoundation.org, Simon Horman <horms@kernel.org>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2] af_unix: Fix undefined 'other' error
+Message-ID: <Z6o8aeG_GqxtwXV9@LQ3V64L9R2>
+Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
+	Purva Yeshi <purvayeshi550@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	skhan@linuxfoundation.org, Simon Horman <horms@kernel.org>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250210075006.9126-1-purvayeshi550@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250210-arm64-fix-2024-dpisa-v1-1-d77f43c7b253@kernel.org>
-X-B4-Tracking: v=1; b=H4sIACw8qmcC/x2MywqAIBBFfyVm3YCaGvYr0UJyqln0QCEC6d8bW
- p7LuadCocxUYGgqZLq58HkI6LaBeYvHSshJGIwyThnVY8y7t7jwgzJZTBeXiL5z0QWvvQozyPX
- KJMafHaf3/QBW3TXmZgAAAA==
-X-Change-ID: 20250207-arm64-fix-2024-dpisa-635a5961609c
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.15-dev-1b0d6
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1539; i=broonie@kernel.org;
- h=from:subject:message-id; bh=W5Xfglk5c7yZ3/lTqN6BaQyihdI2aZ1RG4De4M2GtaA=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBnqjxr1YVPIfyfzPmejX6wYEOpJwjzzzmpfL/8zXHX
- NgvdSvCJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZ6o8awAKCRAk1otyXVSH0OGtB/
- 4/PDjh3t+kWCG4dZxEqJW8vUoDm5RRs0T12DF0lmSr/EBSeo9EO9SHNJjpQRwOK+Ug4dM50NGmZf8o
- kkKsog9JBOBfAMqgQ/zjzvt4lhgtH6PFc6JHrfbbTKAUxgk1wyl/ZhGs20l0oMTeTYnkP/UKsNL8Id
- ubtg0e4jts8QNB0hcg0dM+RFzqdmIml9WZiRvx4Rk6qWrTsDWzlxTwNyNKW18e34oS6bzi5a4hGShB
- hOXl9NxMpxQAg9tRK5DhKk6sXo5tQrS7N/wpBymqpw8Cy1IlFt7r1jUJSVyyXppv5hZ7nHlDGAkpEb
- aZJhGUvY3vVzqxRx4JCIi+DNyLVW3i
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210075006.9126-1-purvayeshi550@gmail.com>
 
-Commit 819935464cb2 ("arm64/hwcap: Describe 2024 dpISA extensions to
-userspace") added definitions for HWCAP_F8MM8 and HWCAP_F8MM4 but did
-not include the crucial registration in arm64_elf_hwcaps.  Add it.
+On Mon, Feb 10, 2025 at 01:20:06PM +0530, Purva Yeshi wrote:
+> Fix issue detected by smatch tool:
+> An "undefined 'other'" error occur in __releases() annotation.
+> 
+> Fix an undefined 'other' error in unix_wait_for_peer() caused by  
+> __releases(&unix_sk(other)->lock) being placed before 'other' is in  
+> scope. Since AF_UNIX does not use Sparse annotations, remove it to fix  
+> the issue.  
+> 
+> Eliminate the error without affecting functionality.  
+> 
+> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> ---
+> V1 - https://lore.kernel.org/lkml/20250209184355.16257-1-purvayeshi550@gmail.com/
+> V2 - Remove __releases() annotation as AF_UNIX does not use Sparse annotations.
+>  net/unix/af_unix.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
 
-Fixes: 819935464cb2 ("arm64/hwcap: Describe 2024 dpISA extensions to userspace")
-Reported-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- arch/arm64/kernel/cpufeature.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index f0910f20fbf8c18fbeb63bcee18abf13371b1d5e..2cde1e6e309a1b840e0e8dc3a5a55f07f0aadd82 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -3190,6 +3190,8 @@ static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
- 	HWCAP_CAP(ID_AA64FPFR0_EL1, F8FMA, IMP, CAP_HWCAP, KERNEL_HWCAP_F8FMA),
- 	HWCAP_CAP(ID_AA64FPFR0_EL1, F8DP4, IMP, CAP_HWCAP, KERNEL_HWCAP_F8DP4),
- 	HWCAP_CAP(ID_AA64FPFR0_EL1, F8DP2, IMP, CAP_HWCAP, KERNEL_HWCAP_F8DP2),
-+	HWCAP_CAP(ID_AA64FPFR0_EL1, F8MM8, IMP, CAP_HWCAP, KERNEL_HWCAP_F8MM8),
-+	HWCAP_CAP(ID_AA64FPFR0_EL1, F8MM4, IMP, CAP_HWCAP, KERNEL_HWCAP_F8MM4),
- 	HWCAP_CAP(ID_AA64FPFR0_EL1, F8E4M3, IMP, CAP_HWCAP, KERNEL_HWCAP_F8E4M3),
- 	HWCAP_CAP(ID_AA64FPFR0_EL1, F8E5M2, IMP, CAP_HWCAP, KERNEL_HWCAP_F8E5M2),
- #ifdef CONFIG_ARM64_POE
-
----
-base-commit: 21fed7c223e20e694b91dbf25936d922a50c8b19
-change-id: 20250207-arm64-fix-2024-dpisa-635a5961609c
-
-Best regards,
--- 
-Mark Brown <broonie@kernel.org>
-
+Reviewed-by: Joe Damato <jdamato@fastly.com>
