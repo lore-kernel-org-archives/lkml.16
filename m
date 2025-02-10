@@ -1,355 +1,326 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from MA0PR01CU012.outbound.protection.outlook.com (mail-southindiaazolkn19011026.outbound.protection.outlook.com [52.103.67.26])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E7F126C02;
-	Mon, 10 Feb 2025 02:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739155850; cv=none; b=dilDfn/DTu0sjwv+rRyDBuWWV8lJ/RYVclHBIjsWv6/p0nghdgNa8MgoVWhSUwzS2DZYF8Z9q+y4py+IGDmcPZjszWt91uE0N1sBryDk9aChyxZeITD1LxHk9n6oKeVJx23kSGm6/syB75tv9tHdhJLw9h1eaFUBAf+EKltLuyk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739155850; c=relaxed/simple;
-	bh=76xzes49qZQQ+ZrW1wrDOC5gBpy9mX4Jzf/HLLoa0lg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qoVIU0Mm+axFpquiSw7tEuQFMV8uDgQrwQDDSFFf32MHD4aAsxivW1kjx8Ic63RG7bqb6JPXh8m3Are4br01a+ru01x3LBQv4bvPEFhJdjdG1dpZwGiXUlk5GiYIqCM8xY3AKi+oVEWnnwj25N3BKZ0hA9UfqTRF92bWXiPxw7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IvxoziST; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3B01C28E;
+	Mon, 10 Feb 2025 02:56:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.26
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739156207; cv=fail; b=MlZOREcrfJh+2TYc9trxbFEUiUnbnU5bnARj1D0DcdfTi3S2g0D5Gx9kTG8uXWvQqTL9WdCftaWPSftt4/rETdqEYyhEM4UhdKMh6GtQy6Bf8IzA2crzyvBl3C6b1IaltbtXdzGaVYce5bvQpC9M6hk2ZBfv4BMJvYQrKvwa5R4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739156207; c=relaxed/simple;
+	bh=UqZq4OXwLoEI+BKUJi9ffYqpiBWIAV0SR/O4nenmgkc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HylOS3k/31tnRGJegzZlWAqDVsvN2Pk9Row0JX2D2junmFgNkrN1ksuUxqwk9inKi/VuTBs2Az52HrEZMrBER589mILuiASyobvouB+vBFqEC1SYAuI16SJ01fiyNpX+fw5WLQ8tCwTpyUC5f9SVlo5xym3D/BL7XDw27T7fCtc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=lvRbNj8Z; arc=fail smtp.client-ip=52.103.67.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IvxoziST"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e432beabbdso29214276d6.3;
-        Sun, 09 Feb 2025 18:50:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739155847; x=1739760647; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MHC8abhOLTo+IK0k0Tlk4SdfffAfHpPY+tvgZKxOkqs=;
-        b=IvxoziSTIjtBAGptYVIbpVdGDVblblKqy+nC8w78WDRhGEVzND9eoRpQprfAhxYcTk
-         jjOjhwamWhdjlc2WSHAYbQeuQFIfow8RHHNnM26YEzwJUkdaaL1dLkZ2zbsH8jjfOVTv
-         bGTtyiq8v8FzZVMnuR68TN2eE0UIlx3sZJ4hADYF7hiDiTqk3TJCNiaiA7TVjSH0hzg5
-         mmFFzfszK3PCrXWReiU52EN8nqK/sw4n6EKdP4vEaPYjtCOrl9IyHzOG17sAPu8LItVO
-         mQnQEIrI1Ee5+VNRG+0IyFXkwWaJgWZUlugou84WnoypR1RC/eo7HvSHThO/Vd82dGYt
-         Gq9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739155847; x=1739760647;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MHC8abhOLTo+IK0k0Tlk4SdfffAfHpPY+tvgZKxOkqs=;
-        b=rznTJPxCJyPFZal8N8aGYlBpehoTvHuE/hbwO1xgiXRy4qJcbZzcL6vzGbZ/wCDrt3
-         t/tv9jVY8NxNOa+BnYxv+PG+LIwPmMhXLiBnr5TRSqIgxDZ2dUYUeImtnADIfSNIral2
-         zsa4O2j+0GzZrytUsZsYhvV57E+qWnaHOXAUKlenUAkWjJcCssZowGBYOhkCQSuyidaW
-         /ma5fO2WvqxXxfPc3hBBMfO1/8QeUnUxSyCgOCNcyD6m724cL7g8Hi4k577idThV/mXH
-         /tbbo7DO+mWCMwfhfoZhWguDXT1VHLX78Y4guNSeas3VU6IhWC0Hxa3wk697aH+nyMbo
-         eU9A==
-X-Forwarded-Encrypted: i=1; AJvYcCVOhz63ldcZ2r6y4oDUKGYQ5vN61mrZe4WkpclF8Gv3qkEvOSxNMAPvfHpIyC2pyfhYbGDDaEmZY35r9Z8=@vger.kernel.org, AJvYcCXZ3MEGCLwHmlySHoJ+gFCRjKgMsezjH6qmJnBy/2XDxsSnbF5IOj62dVwfZoqRImwl/WPEveJj7mm4xWEMRw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFjE2507Yq2s2VHectN5KhHEVnfqhgQNPQLU/c4EwxHFHbpVky
-	DL8C5wi3Ri9FLSA6XY8ccm/HGkOXJ39UjisXtq1le8IdTm+qUj95ZcPs/FxUAMzPqPWkKBr+bNo
-	yTJZZLYZWxNPiMe4ml0No+W7p0/A=
-X-Gm-Gg: ASbGncsrJlIgNELliyw3AbSakfQdYNKkfYjvm3MZz05MQkDrm0E1Xlq5rxLz7EYZkP4
-	KhbwGY7oIilgUwfamvD9a1A5FmyeHHpy0y1PUsF2NT9O9p4ZbJx98pgRl04F6mAywvrP96JHsWA
-	==
-X-Google-Smtp-Source: AGHT+IHHNqLSErUgRY17HszaiDl7aNNFwvoePCi/Y7WHzVw0G7QzTdKkWvt2kFkSVXjqKc/yM3ud20/9a4j02ysLcaw=
-X-Received: by 2002:a05:6214:5094:b0:6e4:41a0:3bdb with SMTP id
- 6a1803df08f44-6e4456713c0mr135762456d6.26.1739155847278; Sun, 09 Feb 2025
- 18:50:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="lvRbNj8Z"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=c/ewq5GYFt+5XK4oR4Ygv2OuD+vBAarSGvz3PI2t5pks37JjHqDFd0qlh2RYkT3g4lXamEQrHhz88HoOQ+uMn+KFkVTBSJRsgex2aAWBXp5qnEa7kLI/TUfokhCV0/9IfU+ryHRmbReewSaJeIwQF9KROidFU44AAxWJjsW6jlvfKN9BbZsyAZKQRBLxyvt6o9/rhU7ndgQftIiAazM2xQUt6tCYrxbDdkn1WPlB8swgT5JHHoQ7D7rtqMSe12cfmege6WdCNWHpyP1/JJc0EFlneDOIaNHqkSlBpzlQV/DXsyCdxAU97DStsNYOrgoF0a2V0xSRYec4Yhr6oklimw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/tCu8uOc6h8wWfp8FvTTV6HHimo2HXIyfFI80OfLD9Q=;
+ b=YqZ45uoB+SblhTaGaNjMqO8Ml1W1UtUMJiFq+CRgAG6kK4TqiVhWVgHsJhCEZELqOj/3TBKIcQ8SDcnoXXZmMBmdYju+30WRSbDsNtjyigQ0qWbiutL6ZEsh7lP20OzEpBfcmB1RgdupcfFgZheQ3B2RToJ4lrcp/nz0IIWL5OWvu/JcLUpUOfZ+PQDDBuOg9bMz2h/kFpDzeZLxqcIPDQ/viqCHxxgJZQd4nlhw7wmedujZSlsPLXjHpZGo7dOv1SErHgiOguqfwe4afPQRjD85LhAf/Q2odQvfXRcr3FqfClPgGiY6TU5Ij/LEZBsEm/y/fzBh66UIv6kz2fLsVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/tCu8uOc6h8wWfp8FvTTV6HHimo2HXIyfFI80OfLD9Q=;
+ b=lvRbNj8ZwPZmo4/7BQG+fta5MBqTKnbFmQltrCbwyfkijfzCoSgKe6IaDXfyPk9AbfD8zzsxf6PnQue/IfxVg2FSKuSavyV15V6g8uFLs5nBbwZ1GheOvPATFd1vhy6xDi7RCsPFdg3XhaMjTZXiFdSLH+Rzd30JpeMG/AxdKv35Y/hDQcdHiCePdcL3M7ISNmzcozTPIGItB7eLv7yhrh2jHHhR8j2oTClFiHOLoQ/azhuruhx+W+H5mDTL08J1DZoG0Y9kPPjca9TmQd43LTh6bLd2JIDfLOdjmp9OX0zM++l29fXfYdGvH5PpEYJv29gRuk2LL6oQYJv45WiLwA==
+Received: from BMXPR01MB2440.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:3a::19)
+ by MAYPR01MB10650.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:158::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Mon, 10 Feb
+ 2025 02:56:37 +0000
+Received: from BMXPR01MB2440.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::2148:4778:79a3:ba71]) by BMXPR01MB2440.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::2148:4778:79a3:ba71%7]) with mapi id 15.20.8422.012; Mon, 10 Feb 2025
+ 02:56:37 +0000
+Message-ID:
+ <BMXPR01MB2440FA4006BA4E3EDC0CD11AFEF22@BMXPR01MB2440.INDPRD01.PROD.OUTLOOK.COM>
+Date: Mon, 10 Feb 2025 10:56:30 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] riscv: dts: sophgo: add reset generator for Sophgo
+ CV1800 series SoC
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Inochi Amaoto <inochiama@gmail.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Inochi Amaoto <inochiama@outlook.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+ Jisheng Zhang <jszhang@kernel.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ Longbin Li <looong.bin@gmail.com>
+References: <20250209122936.2338821-1-inochiama@gmail.com>
+ <20250209122936.2338821-4-inochiama@gmail.com>
+ <BMXPR01MB24406BB0EA039CEBDEEBBDC8FEF22@BMXPR01MB2440.INDPRD01.PROD.OUTLOOK.COM>
+ <20250210012045-GYA12775@gentoo>
+From: Chen Wang <unicorn_wang@outlook.com>
+In-Reply-To: <20250210012045-GYA12775@gentoo>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI2P153CA0001.APCP153.PROD.OUTLOOK.COM (2603:1096:4:140::7)
+ To BMXPR01MB2440.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:3a::19)
+X-Microsoft-Original-Message-ID:
+ <e26f1b31-abbe-46f2-9295-72b1d5f93ee8@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250127063526.76687-1-laoar.shao@gmail.com> <Z5eOIQ4tDJr8N4UR@pathway.suse.cz>
- <CALOAHbBZc6ORGzXwBRwe+rD2=YGf1jub5TEr989_GpK54P2o1A@mail.gmail.com>
- <alpine.LSU.2.21.2501311414281.10231@pobox.suse.cz> <CALOAHbDwsZqo9inSLNV1FQV3NYx2=eztd556rCZqbRvEu+DDFQ@mail.gmail.com>
- <Z6IQi4wpph0dnSD7@pathway.suse.cz> <CALOAHbBktE_jYd5zSzvmbo_K7PkFDXrykTqV1-ZDQju64EYPyg@mail.gmail.com>
- <Z6Xn61Bjm8pMd8zX@pathway.suse.cz> <CALOAHbBs5sfAxSw4HA6KwjWbH3GmhkHJqcni0d4iB7oVZ_3vjw@mail.gmail.com>
-In-Reply-To: <CALOAHbBs5sfAxSw4HA6KwjWbH3GmhkHJqcni0d4iB7oVZ_3vjw@mail.gmail.com>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Mon, 10 Feb 2025 10:50:10 +0800
-X-Gm-Features: AWEUYZmJ1kcFiT-RLkVv-BDbPvNTZHtgwkALqNoDsPSQySkJ23q6DnFf7iPC43Q
-Message-ID: <CALOAHbC1OVHk8oqWAYkf0pMVUeUajJQFPvtT6tm1-ipxLcYV5A@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/2] livepatch: Add support for hybrid mode
-To: Petr Mladek <pmladek@suse.com>
-Cc: Miroslav Benes <mbenes@suse.cz>, jpoimboe@kernel.org, jikos@kernel.org, 
-	joe.lawrence@redhat.com, live-patching@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BMXPR01MB2440:EE_|MAYPR01MB10650:EE_
+X-MS-Office365-Filtering-Correlation-Id: d1cd7250-3f0d-4c4d-0ba2-08dd497e88e7
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|19110799003|5072599009|6090799003|8060799006|461199028|7092599003|15080799006|4302099013|3412199025|10035399004|440099028|41001999003|21061999003|12091999003|12071999003|1602099012;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TWpYY1lEL1lGbDIyVTNaK1I5SjFOck92cm1lNTNxMEtHaXRqS0lucWNpZHJK?=
+ =?utf-8?B?dG9vbExhU3VUNGJUODJ4UXJWUENTZDQwUXZ3aTJWNXBqOWthNHZaaTV4VVVR?=
+ =?utf-8?B?TDJncVpnSTZrS1BKcHAzUlg2R0EzRktoNjM4N2RUSW5sT0tyb0diNDU1ZEVN?=
+ =?utf-8?B?NUNZanRkc1ZEMit2a3hGOXBBKytzOTAvS0FvVnQwTWZBQnppb3NNaGcxMGxj?=
+ =?utf-8?B?b3hJU1pCQ1BjN3BrT3N1TVBkc2UrQkZYbk5GVzc4QVYydlNRbWNBcDdqK1gw?=
+ =?utf-8?B?cGZ0eGh4bUZGKzRtZ3kveVdLS1VBazNuNDZzTktDWFhlUkdKUDlkNmVvSURG?=
+ =?utf-8?B?VEsrMUhyaDVOL0d2T1U2ZVd0T3hpSHIzY21NZjdubktFRUR6L3lid1JvUCtO?=
+ =?utf-8?B?aDJUcE5RN2Jua3lKaGs1Z0kzc1BUT2FRNFNNaHdZYlRDYm54ZjVjb0NhOUJU?=
+ =?utf-8?B?SUdURTg4czF1ZVU1MHJJbXZ2VFZIVmRRUWFncE9YOVpZNTl4c2ora3VmU2Jt?=
+ =?utf-8?B?S29oYS9aK2xEUkZFNzFza3Y2N0U2TXJyVWMzWHh2Z0l2MklrQUZSOTRVWWk0?=
+ =?utf-8?B?RTUxbDNLLzBtSUZNcmx1TTBiMG9hZi8rb1dTd29zZ3puS0QreGtreUdXTHpG?=
+ =?utf-8?B?MU02Rkp4U2NiVW16bkoyWlpzQ1lJTnljSVdDdFcvWk5oaDREUEhlZkxPRktL?=
+ =?utf-8?B?NUdha20vWVJxVTd4SHQwa0ZHMFRJMTBUOEFIOVdjZmlFVmlLSytUZDBpdlRM?=
+ =?utf-8?B?c0syN2kzZkNnWjBpOTlNRmxpUEl6RVJuWlNKdnBGb1FyT2JLc3RFSHJFK1NS?=
+ =?utf-8?B?emhiSTI2VTUzcEIveDJyNERvM0NsOHN2VGRVczdwYklTMWQxcDBiNnFuRVlB?=
+ =?utf-8?B?YWxHR3lTRW81TlVZeEpJSG1KK2VuR1lnV1dnSlV6TkZkQWJxcXRLdEFDV0pq?=
+ =?utf-8?B?UGtzbTRLRnZQb3VTSlpmTmFpbG1zZjhFNVJSemxvUzVlaXY3QkxzSTZrTDYv?=
+ =?utf-8?B?cTdWMmQvUlZyNWY5ZjJXMVBnL1JzQjArMDVzR0VOSm5PNnZuQXc2Qk5YdWFM?=
+ =?utf-8?B?QTlkUWZyTnNPM2lERkt3dDIzS09oWkY1TWk3MEpMSkRzV0xlOTJSaC8xMDMy?=
+ =?utf-8?B?WHZFelZJdlJ6aHdHa1hXbTlUVmljOW5EWXF5aW9EVGt0QXM1dHFtTVp1VlFl?=
+ =?utf-8?B?WXZXaUlGeWpWTnlPSHd4cWN0MHNTWTQ0M3FOTWFhOUc1OU9tV1BBMEV3dEtH?=
+ =?utf-8?B?Ny9zUkV3TEdiS1p1dFZaYitUNVRzaXltRE11MExjbzQyV0dMRkFObktMRW5X?=
+ =?utf-8?B?dmtZSjg0RVJHYlowLzd6ZnoyVnRNZUZDSmVBN2tLRWVWVnZzblhkYUdxNVdp?=
+ =?utf-8?B?ME4wYitzbkdMbHhOcmJpVi9OSDVsdVo4QllzcUlGbDFyK0VyVWJvNjgwZ3RG?=
+ =?utf-8?B?MG84TGdwMkhOeUhJeEJtYm15M1dCbWsrejBibW1CK0dpMmdTNW02NWZ6b25U?=
+ =?utf-8?B?TzQ5a0NydlJGUnlTdENXdVBmTHJWWHVZTnBvRkM2eHNiTkpnZE1QMk1DOC9y?=
+ =?utf-8?B?TlJjWkdRdUgvcWRHbXQzZGVpdHVqR3VoZGZaTTNqWExaRm1OR1dubHRkaGI0?=
+ =?utf-8?B?UW9FaUZLMWt3ZWd3a3o4L2dEME8zMlF5Ukh1TzlEYjUvdjNiNXVKRzJsb25M?=
+ =?utf-8?B?b0Z4R3Qwb2cxSk5nSDFxenBhZnFScHNxcytKSWthWjNUcFluelZ0MG1TaEth?=
+ =?utf-8?B?a0hSeWtaWVN0WkVUbXlZWFVnR1d6TGxPb1hzdVoxZm4wK0lZQk8zaVpLcmxy?=
+ =?utf-8?B?RjZBMU1NSXhqZlluYWFpb09JSUdxdmVBb3hWdWFqT2VGaW5sTExST1lRZkJy?=
+ =?utf-8?B?d2V1cXNGV20vd2hmaFhvaDNWLzdQbzV0MjU4OS91SW1yVUE9PQ==?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?emNCMFNwM3NoWDk1cUdNMEtKZSs2djIvU0VJcW43SjAzOVN4U05MODNLWjZw?=
+ =?utf-8?B?THJLWHNOV0JxT0o3Und0U2JYUk5mNEFFWk5FVGJLTDVyWlNEanhENWZhNlox?=
+ =?utf-8?B?TTRibGd3UVBkSFF6YXFmclprMDloaHZhR1FMbEo0RHFLTTlyWEFhbDNhNDlm?=
+ =?utf-8?B?UDU4RFFGODhldHZ0QWRXV2ZFOTJ1OWRBdTNWbDlEeW8wci9DTmJNbHRHaXlS?=
+ =?utf-8?B?YVdKUjVHZE96NmdkbE1SZnJSbThCRWF1eGVkZmgwdmxFTUtCUWp4bGpjajFG?=
+ =?utf-8?B?MUlKVTdUNzFuNVdBK3RTUmVXazE1UHJRSFdEV2t0RWY5YVpKR2VmZ2tXU2VN?=
+ =?utf-8?B?QWdYZE4rcXRhZFRwR09ZL0tGelhFdElkd0tpcWxEbXF4bUlnaTNXNzZWTUx5?=
+ =?utf-8?B?cnFKdUhVak1KSWx6bDRzV1FIU3JlYjdlSSt3ZGlidVN1NXU2Um5tRmk1aWZX?=
+ =?utf-8?B?UGhTS3g1NnkwVzlkaUZaNEtqNG1GbzBrM3pHL1JuSk90UGYzb0trZXU5anRN?=
+ =?utf-8?B?VnROOE91WGJqWHNWK3NiT0lPNG9scEphOW5wZFVVaitCbGY4S2lkckVISDJV?=
+ =?utf-8?B?SkxoU3E3cmpuNlh2RUo0NHZJQWFmY0xYOE9IM3lPci94VFBuNDBHR3U0WFBh?=
+ =?utf-8?B?dStBOXJuUVJvWGZSY1o4R3ZSK3hGODZHSWZjRC9iR1ZQZUFCSWZPL3ZwdEJB?=
+ =?utf-8?B?MXBtazZpdWVuUWJKY3dycDF1Mm1LNlFxUExRam9GZ2x1ZnlQYTdsYUExTXJt?=
+ =?utf-8?B?WkxWR3doUnB3SGswK21VckkvNGY0QjJkY2c5Z3VKZDhQSVpjWUNNT2lBYjRv?=
+ =?utf-8?B?Y2tmdzRoYVB0aWpIZUMxRWhwV24wazIzWXBZSFMzR1ZqSXdlc1puOTVPNllj?=
+ =?utf-8?B?TnZQZlhGZkdNRXlLWGRkaXk0cko2QTZ4VDhYWFNlOG5xVWlJdUNjSEpVelFX?=
+ =?utf-8?B?MVV0QnE0ZzQyTFhEY2pjK1RqMDlldjNBTjhCQTVkMzA5ZWVGbXpGUVhQc3Vr?=
+ =?utf-8?B?UkpxdWR0RGZ6K1BJa3NtOTEwMnNLN2FxSm9zSjJ4OXV6aWxVY1dvSzBsSnln?=
+ =?utf-8?B?R2tpQndySnI3RUU4ZEpDNEs4Tk1lKzlDaHBES3ZlLzZZZW5MUFA0aDVOaStq?=
+ =?utf-8?B?dHdkaWFLMS82T0ZqcWJCT1dadHZnS0ZrQUFnVENhTVMxUUJGeEJEcCtsOTBT?=
+ =?utf-8?B?RXU5VXJ1aDF4enJ3Q0ZSVm1VWmxOU2h4eE1RbXZHTlhWMWNxR2Z1aEhNOWtY?=
+ =?utf-8?B?WHdab1RjckE1MmZKa0FWZ3JXZ0J5UTNQektld0NDb0h4a013WFROOFpzQmtM?=
+ =?utf-8?B?RUVjZXkwYSs0cGo4WHZVd1V6aFEzazBLUzZ6T3lVbUxLZklTKzlJMG80UTNt?=
+ =?utf-8?B?QlJxeW1YdGZnWno3d1FQbEJKbURYalB6T0RYMzVmQXZZOFBYU0lnZUxmMjBN?=
+ =?utf-8?B?dDVhTXlSWlkxbEhCVkZxUk1IN2ZDeHB3UXZsbTVJWDJzOCtBdUoxUDRXdDZ1?=
+ =?utf-8?B?bzFWa1AwcXRQWit0Z2dmUjJjUVQ5dHpoYlIxc1hWWlczNVF5TGFKamk0NVdI?=
+ =?utf-8?B?a2xWM1luN0FWVDFVejJMYmdUdWUzM2puWXJZTmRmeWlMVlhyWjF2QnRKUTQv?=
+ =?utf-8?B?K2dVZXAwaWxLKzhUbnk3d05yblcrZWZDT25YbDJPYWVkMzBWbVVYdkNwZ3pi?=
+ =?utf-8?B?VytRcXBOdEVLNFVKemY4ZmxvTFFWSmJzLysvbWRkNTZKc0ZldHJkZ0JFcUVO?=
+ =?utf-8?Q?nKr0gZIO8+DGIwPq24JuqEZBpoogBoJKJwlS3D4?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1cd7250-3f0d-4c4d-0ba2-08dd497e88e7
+X-MS-Exchange-CrossTenant-AuthSource: BMXPR01MB2440.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 02:56:37.0811
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAYPR01MB10650
 
-On Sat, Feb 8, 2025 at 10:49=E2=80=AFAM Yafang Shao <laoar.shao@gmail.com> =
-wrote:
->
-> On Fri, Feb 7, 2025 at 7:01=E2=80=AFPM Petr Mladek <pmladek@suse.com> wro=
-te:
-> >
-> > On Wed 2025-02-05 14:16:42, Yafang Shao wrote:
-> > > On Tue, Feb 4, 2025 at 9:05=E2=80=AFPM Petr Mladek <pmladek@suse.com>=
- wrote:
-> > > >
-> > > > On Mon 2025-02-03 17:44:52, Yafang Shao wrote:
-> > > > > On Fri, Jan 31, 2025 at 9:18=E2=80=AFPM Miroslav Benes <mbenes@su=
-se.cz> wrote:
-> > > > > >
-> > > > > > > >
-> > > > > > > >   + What exactly is meant by frequent replacements (busy lo=
-op?, once a minute?)
-> > > > > > >
-> > > > > > > The script:
-> > > > > > >
-> > > > > > > #!/bin/bash
-> > > > > > > while true; do
-> > > > > > >         yum install -y ./kernel-livepatch-6.1.12-0.x86_64.rpm
-> > > > > > >         ./apply_livepatch_61.sh # it will sleep 5s
-> > > > > > >         yum erase -y kernel-livepatch-6.1.12-0.x86_64
-> > > > > > >         yum install -y ./kernel-livepatch-6.1.6-0.x86_64.rpm
-> > > > > > >         ./apply_livepatch_61.sh  # it will sleep 5s
-> > > > > > > done
-> > > > > >
-> > > > > > A live patch application is a slowpath. It is expected not to r=
-un
-> > > > > > frequently (in a relative sense).
-> > > > >
-> > > > > The frequency isn=E2=80=99t the main concern here; _scalability_ =
-is the key issue.
-> > > > > Running livepatches once per day (a relatively low frequency) acr=
-oss all of our
-> > > > > production servers (hundreds of thousands) isn=E2=80=99t feasible=
-. Instead, we need to
-> > > > > periodically run tests on a subset of test servers.
-> > > >
-> > > > I am confused. The original problem was a system crash when
-> > > > livepatching do_exit() function, see
-> > > > https://lore.kernel.org/r/CALOAHbA9WHPjeZKUcUkwULagQjTMfqAdAg+akqPz=
-bZ7Byc=3Dqrw@mail.gmail.com
-> > >
-> > > Why do you view this patchset as a solution to the original problem?
-> >
-> > You discovered the hardlockup warnings when trying to reproduce the
-> > original problem. At least, you mentioned this at
-> > https://lore.kernel.org/r/20250122085146.41553-1-laoar.shao@gmail.com
-> >
-> > And using the hybrid module would allow to livepatch do_exit() only
-> > once and do not touch it any longer. It is not the right solution
-> > but it would be a workaround.
-> >
-> >
-> > > > The rcu watchdog warning was first mentioned in this patchset.
-> > > > Do you see rcu watchdog warning in production or just
-> > > > with this artificial test, please?
-> > >
-> > > So, we shouldn=E2=80=99t run any artificial tests on the livepatch, c=
-orrect?
-> > > What exactly is the issue with these test cases?
-> >
-> > Some tests might be too artificial. They might find problems which
-> > do not exist in practice.
-> >
-> > Disclaimer: I do not say that this is the case. You actually prove
-> >         later in this mail that the hardlockup warning happen
-> >         even in production.
-> >
-> > Anyway, if an artificial test finds a potential problem and the fix is
-> > complicated then we need to decide if it is worth it.
-> >
-> > It does not make sense to complicate the code too much when
-> > the fixed problem does not happen in practice.
-> >
-> >   + Too complicated code might introduce regressions which are
-> >     more serious than the original problem.
-> >
-> >   + Too complicated code increases the maintenance cost. It is
-> >     more complicated to add new features or fix bugs.
-> >
-> >
-> > > > > > If you stress it like this, it is quite
-> > > > > > expected that it will have an impact. Especially on a large bus=
-y system.
-> > > > >
-> > > > > It seems you agree that the current atomic-replace process lacks =
-scalability.
-> > > > > When deploying a livepatch across a large fleet of servers, it=E2=
-=80=99s impossible to
-> > > > > ensure that the servers are idle, as their workloads are constant=
-ly varying and
-> > > > > are not deterministic.
-> > > >
-> > > > Do you see the scalability problem in production, please?
-> > >
-> > > Yes, the livepatch transition was stalled.
-> >
-> > Good to know.
-> >
-> > >
-> > > > And could you prove that it was caused by livepatching, please?
-> > >
-> > > When the livepatch transition is stalled, running `kpatch list` will
-> > > display the stalled information.
-> >
-> > OK.
-> >
-> > > > > The challenges are very different when managing 1K servers versus=
- 1M servers.
-> > > > > Similarly, the issues differ significantly between patching a sin=
-gle
-> > > > > function and
-> > > > > patching 100 functions, especially when some of those functions a=
-re critical.
-> > > > > That=E2=80=99s what scalability is all about.
-> > > > >
-> > > > > Since we transitioned from the old livepatch mode to the new
-> > > > > atomic-replace mode,
-> > > >
-> > > > What do you mean with the old livepatch mode, please?
-> > >
-> > > $ kpatch-build -R
-> >
-> > I am not familiar with kpatch-build. OK, I see the following at
-> > https://github.com/dynup/kpatch/blob/master/kpatch-build/kpatch-build
-> >
-> > echo "          -R, --non-replace       Disable replace patch (replace =
-is on by default)" >&2
-> >
-> > > >
-> > > > Did you allow to install more livepatches in parallel?
-> > >
-> > > No.
-> >
-> > I guess that there is a misunderstanding. I am sorry my wording was
-> > not clear enough.
-> >
-> > By "installing" more livepatches in parallel I meant to "have enabled"
-> > more livepatches in parallel. It is possible only when you do not
-> > use the atomic replace.
-> >
-> > By other words, if you use "kpatch-build -R" then you could have
-> > enabled more livepatches in parallel.
-> >
-> >
-> > > > What was the motivation to switch to the atomic replace, please?
-> > >
-> > > This is the default behavior of kpatch [1] after upgrading to a new v=
-ersion.
-> > >
-> > > [1].  https://github.com/dynup/kpatch/tree/master
-> >
-> > OK. I wonder if the atomic replace simplified some actions for you.
->
-> Actually, it simplifies the livepatch deployment since it only
-> involves a single livepatch.
->
-> >
-> > I ask because the proposed "hybrid" model is very similar to the "old"
-> > model which did not use the atomic replace.
->
-> It=E2=80=99s essentially a hybrid of the old model and the atomic replace=
- model.
->
-> >
-> > What are the advantages of the "hybrid" model over the "old" model, ple=
-ase?
->
-> - Advantages compared to the old model
->   In the old model, it=E2=80=99s not possible to replace a specific livep=
-atch
-> with a new one. In the hybrid model, however, you can replace specific
-> livepatches as needed.
->
-> - Advantages and disadvantages compared to the atomic replace model
->    - Advantage
->      In the atomic replace model, you must replace all old
-> livepatches, regardless of whether they are relevant to the new
-> livepatch. In the hybrid model, you only need to replace the relevant
-> livepatches.
->
->    - Disadvantage
->      In the atomic replace model, you only need to maintain a single
-> livepatch. However, in the hybrid model, you need to manage multiple
-> livepatches.
->
-> >
-> >
-> > > > > our SREs have consistently reported that one or more servers beco=
-me
-> > > > > stalled during
-> > > > > the upgrade (replacement).
-> > > >
-> > > > What is SRE, please?
-> > >
-> > > >From the wikipedia : https://en.wikipedia.org/wiki/Site_reliability_=
-engineering
-> >
-> > Good to know.
-> >
-> > > > Could you please show some log from a production system?
-> > >
-> > > When the SREs initially reported that the livepatch transition was
-> > > stalled, I simply advised them to try again. However, after
-> > > experiencing these crashes, I dug deeper into the livepatch code and
-> > > realized that scalability is a concern. As a result, periodically
-> > > replacing an old livepatch triggers RCU warnings on our production
-> > > servers.
-> > >
-> > > [Wed Feb  5 10:56:10 2025] livepatch: enabling patch 'livepatch_61_re=
-lease6'
-> > > [Wed Feb  5 10:56:10 2025] livepatch: 'livepatch_61_release6':
-> > > starting patching transition
-> > > [Wed Feb  5 10:56:24 2025] rcu_tasks_wait_gp: rcu_tasks grace period
-> > > 1126113 is 10078 jiffies old.
-> > > [Wed Feb  5 10:56:38 2025] rcu_tasks_wait_gp: rcu_tasks grace period
-> > > 1126117 is 10199 jiffies old.
-> > > [Wed Feb  5 10:56:52 2025] rcu_tasks_wait_gp: rcu_tasks grace period
-> > > 1126121 is 10047 jiffies old.
-> > > [Wed Feb  5 10:56:57 2025] livepatch: 'livepatch_61_release6': patchi=
-ng complete
-> >
-> > I guess that this happens primary because there are many processes
-> > running in kernel code:
-> >
-> >        + many processes =3D> long task list
-> >        + in kernel code =3D> need to check stack
-> >
-> > I wondered how much it is caused by livepatching do_exit() which
-> > takes tasklist_lock. The idea was:
->
-> I=E2=80=99ll drop the changes in do_exit() and run the test again.
 
-The RCU warning is still triggered even when the do_exit() is not
-livepatched, but the frequency of occurrence decreases slightly.
+On 2025/2/10 9:20, Yixun Lan wrote:
+> Hi Chen:
+>
+> On 08:55 Mon 10 Feb     , Chen Wang wrote:
+>> On 2025/2/9 20:29, Inochi Amaoto wrote:
+>>> Add reset generator node for all CV18XX series SoC.
+>>>
+>>> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+>>> ---
+>>>    arch/riscv/boot/dts/sophgo/cv18xx-reset.h | 98 +++++++++++++++++++++++
+>> Why it's not include/dt-bindings/reset/sophgo,cv18xx-reset.h?
+>>
+> then first need to answer if it's really a binding, there are some disucssions
+> I personally favor Inochi's way here
+>
+> https://lore.kernel.org/linux-devicetree/c7e243e3-3f61-4d63-8727-3837838bdfcc@linaro.org
+> https://lore.kernel.org/linux-devicetree/c088e01c-0714-82be-8347-6140daf56640@linaro.org/
 
-However, with the following change, the RCU warning ceases to appear,
-even when do_exit() is present and the test is run at a high frequency
-(once every 5 seconds).
+Well, it's fine if you don't want to define it as binding just because 
+the ids are not continuous. In fact, for simple-reset, I think there is 
+no big problem to define it as bindings.
 
-diff --git a/kernel/livepatch/transition.c b/kernel/livepatch/transition.c
-index 30187b1..c436aa6 100644
---- a/kernel/livepatch/transition.c
-+++ b/kernel/livepatch/transition.c
-@@ -400,11 +400,22 @@ void klp_try_complete_transition(void)
-         * unless the patch includes changes to a very common function.
-         */
-        read_lock(&tasklist_lock);
--       for_each_process_thread(g, task)
-+       for_each_process_thread(g, task) {
-+               if (task->patch_state =3D=3D klp_target_state)
-+                       continue;
-                if (!klp_try_switch_task(task))
-                        complete =3D false;
-+
-+               if (need_resched()) {
-+                       complete =3D false;
-+                       break;
-+               }
-+       }
-        read_unlock(&tasklist_lock);
+Actually, in the first link upon, I see Krzysztof also said 
+"simple-reset is an exception."
 
-+       /* The above operation might be expensive. */
-+       cond_resched();
-+
-        /*
-         * Ditto for the idle "swapper" tasks.
-         */
+I recall we ever discussed this when Jisheng submitted the first version 
+of reset driver for cv18xx. FYI. See 
+https://lore.kernel.org/linux-riscv/42ad3f60-2755-4d3b-a766-8e4404f76a7c@linaro.org/.
 
---=20
-Regards
-Yafang
+>> Regards,
+>>
+>> Chen
+>>
+>>>    arch/riscv/boot/dts/sophgo/cv18xx.dtsi    |  7 ++
+>>>    2 files changed, 105 insertions(+)
+>>>    create mode 100644 arch/riscv/boot/dts/sophgo/cv18xx-reset.h
+>>>
+>>> diff --git a/arch/riscv/boot/dts/sophgo/cv18xx-reset.h b/arch/riscv/boot/dts/sophgo/cv18xx-reset.h
+>>> new file mode 100644
+>>> index 000000000000..3d9aa9ec7e90
+>>> --- /dev/null
+>>> +++ b/arch/riscv/boot/dts/sophgo/cv18xx-reset.h
+>>> @@ -0,0 +1,98 @@
+>>> +/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
+>>> +/*
+>>> + * Copyright (C) 2025 Inochi Amaoto <inochiama@outlook.com>
+>>> + */
+>>> +
+>>> +#ifndef _SOPHGO_CV18XX_RESET
+>>> +#define _SOPHGO_CV18XX_RESET
+>>> +
+>>> +#define RST_DDR				2
+>>> +#define RST_H264C			3
+>>> +#define RST_JPEG			4
+>>> +#define RST_H265C			5
+>>> +#define RST_VIPSYS			6
+>>> +#define RST_TDMA			7
+>>> +#define RST_TPU				8
+>>> +#define RST_TPUSYS			9
+>>> +#define RST_USB				11
+>>> +#define RST_ETH0			12
+>>> +#define RST_ETH1			13
+>>> +#define RST_NAND			14
+>>> +#define RST_EMMC			15
+>>> +#define RST_SD0				16
+>>> +#define RST_SDMA			18
+>>> +#define RST_I2S0			19
+>>> +#define RST_I2S1			20
+>>> +#define RST_I2S2			21
+>>> +#define RST_I2S3			22
+>>> +#define RST_UART0			23
+>>> +#define RST_UART1			24
+>>> +#define RST_UART2			25
+>>> +#define RST_UART3			26
+>>> +#define RST_I2C0			27
+>>> +#define RST_I2C1			28
+>>> +#define RST_I2C2			29
+>>> +#define RST_I2C3			30
+>>> +#define RST_I2C4			31
+>>> +#define RST_PWM0			32
+>>> +#define RST_PWM1			33
+>>> +#define RST_PWM2			34
+>>> +#define RST_PWM3			35
+>>> +#define RST_SPI0			40
+>>> +#define RST_SPI1			41
+>>> +#define RST_SPI2			42
+>>> +#define RST_SPI3			43
+>>> +#define RST_GPIO0			44
+>>> +#define RST_GPIO1			45
+>>> +#define RST_GPIO2			46
+>>> +#define RST_EFUSE			47
+>>> +#define RST_WDT				48
+>>> +#define RST_AHB_ROM			49
+>>> +#define RST_SPIC			50
+>>> +#define RST_TEMPSEN			51
+>>> +#define RST_SARADC			52
+>>> +#define RST_COMBO_PHY0			58
+>>> +#define RST_SPI_NAND			61
+>>> +#define RST_SE				62
+>>> +#define RST_UART4			74
+>>> +#define RST_GPIO3			75
+>>> +#define RST_SYSTEM			76
+>>> +#define RST_TIMER			77
+>>> +#define RST_TIMER0			78
+>>> +#define RST_TIMER1			79
+>>> +#define RST_TIMER2			80
+>>> +#define RST_TIMER3			81
+>>> +#define RST_TIMER4			82
+>>> +#define RST_TIMER5			83
+>>> +#define RST_TIMER6			84
+>>> +#define RST_TIMER7			85
+>>> +#define RST_WGN0			86
+>>> +#define RST_WGN1			87
+>>> +#define RST_WGN2			88
+>>> +#define RST_KEYSCAN			89
+>>> +#define RST_AUDDAC			91
+>>> +#define RST_AUDDAC_APB			92
+>>> +#define RST_AUDADC			93
+>>> +#define RST_VCSYS			95
+>>> +#define RST_ETHPHY			96
+>>> +#define RST_ETHPHY_APB			97
+>>> +#define RST_AUDSRC			98
+>>> +#define RST_VIP_CAM0			99
+>>> +#define RST_WDT1			100
+>>> +#define RST_WDT2			101
+>>> +#define RST_AUTOCLEAR_CPUCORE0		128
+>>> +#define RST_AUTOCLEAR_CPUCORE1		129
+>>> +#define RST_AUTOCLEAR_CPUCORE2		130
+>>> +#define RST_AUTOCLEAR_CPUCORE3		131
+>>> +#define RST_AUTOCLEAR_CPUSYS0		132
+>>> +#define RST_AUTOCLEAR_CPUSYS1		133
+>>> +#define RST_AUTOCLEAR_CPUSYS2		134
+>>> +#define RST_CPUCORE0			160
+>>> +#define RST_CPUCORE1			161
+>>> +#define RST_CPUCORE2			162
+>>> +#define RST_CPUCORE3			163
+>>> +#define RST_CPUSYS0			164
+>>> +#define RST_CPUSYS1			165
+>>> +#define RST_CPUSYS2			166
+>>> +
+>>> +#endif /* _SOPHGO_CV18XX_RESET */
+>>> diff --git a/arch/riscv/boot/dts/sophgo/cv18xx.dtsi b/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
+>>> index c18822ec849f..9aa28ade73a4 100644
+>>> --- a/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
+>>> +++ b/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
+>>> @@ -7,6 +7,7 @@
+>>>    #include <dt-bindings/clock/sophgo,cv1800.h>
+>>>    #include <dt-bindings/gpio/gpio.h>
+>>>    #include <dt-bindings/interrupt-controller/irq.h>
+>>> +#include "cv18xx-reset.h"
+>>>    
+>>>    / {
+>>>    	#address-cells = <1>;
+>>> @@ -61,6 +62,12 @@ clk: clock-controller@3002000 {
+>>>    			#clock-cells = <1>;
+>>>    		};
+>>>    
+>>> +		rst: reset-controller@3003000 {
+>>> +			compatible = "sophgo,cv1800b-reset";
+>>> +			reg = <0x3003000 0x1000>;
+>>> +			#reset-cells = <1>;
+>>> +		};
+>>> +
+>>>    		gpio0: gpio@3020000 {
+>>>    			compatible = "snps,dw-apb-gpio";
+>>>    			reg = <0x3020000 0x1000>;
