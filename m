@@ -1,261 +1,113 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2458717BB6
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:43:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F48022F39B;
+	Mon, 10 Feb 2025 13:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739195013; cv=none; b=o4jakDqWBgpl0n5CSfgXxYyC3Pp03sc1aR1eFKyp6/WJcsYaO7iFA4wzNQ2teSl/rikWj8yWnIp+9QDLd9IKA+1Ua2II6RlJKMaxc6aujyjeO9atuSrs8ib/a3SWm+lVdsx1TjhNVtSTTRfThqcLlBZlZoENunlj2Neo4uGwJQs=
+	t=1739195035; cv=none; b=bDiqOI4f/D129ocXofltfRVsGSDbqC//RhheVjWF72aWNVuhzT/W7s3U84Q9khTJvq8twD9EuWsdoTjTeeUdWnQR8Z8nCplMGkSQVpndhmw1VaD0uJdvsh6Yy+5vdvrbLq1wE+A1rlTd95lI7FxLL7904Lhegb+hW3HZDJQnnko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739195013; c=relaxed/simple;
-	bh=B9RcPANSN+ctBiEjVkkRMrzvUOf3OkkUxX1JyFg5IZ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I8pLazeTOF9F4KSIFza4+tTnZCQzi7u0Q7bHJgrV/diyFUqx2jKg9juPynT57AQ5KegIQoNyOYAE4f2jEpe3yejoKGRmBf8FRTMya9ffrY9b8elsWdQic0MStzx9dZZfAdtlQ1iWfiTGGNnrI0jSX8GL18kk8hkYTjspCngvu1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC0261BA8
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 05:43:51 -0800 (PST)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D64EA3F58B
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 05:43:29 -0800 (PST)
-Date: Mon, 10 Feb 2025 13:43:17 +0000
-From: Liviu Dudau <liviu.dudau@arm.com>
-To: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: =?utf-8?Q?Adri=C3=A1n?= Larumbe <adrian.larumbe@collabora.com>,
-	Steven Price <steven.price@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Mihail Atanassov <mihail.atanassov@arm.com>, kernel@collabora.com,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] drm/panthor: Avoid sleep locking in the internal BO
- size path
-Message-ID: <Z6oCdebq2ftGaZdq@e110455-lin.cambridge.arm.com>
-References: <20250210124203.124191-1-adrian.larumbe@collabora.com>
- <20250210124203.124191-2-adrian.larumbe@collabora.com>
- <20250210141807.064ccacf@collabora.com>
+	s=arc-20240116; t=1739195035; c=relaxed/simple;
+	bh=Wlvzxj03zn35CGnYkYRl6zp3QBzmopWRqmURA9W2vHo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F4z9ne90vLWx70WRhTNUZXXrBO+dCwBzhRmHa1F5Bi2BX+Yv8HS8+ARfbvPvKbHz8Sh8iTB4PTrKUYdMUzRZhHDWffqhauhiD2IV+d+CG4etvdawZPOTquLEYgSifdkfSMWOiXX15ibjz0JIBD6ut880EJ+eDYr2JNsi1VcqfPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.38])
+	by gateway (Coremail) with SMTP id _____8CxqmqTAqpnEUlxAA--.522S3;
+	Mon, 10 Feb 2025 21:43:47 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.38])
+	by front1 (Coremail) with SMTP id qMiowMCxasSNAqpnxVcKAA--.1453S2;
+	Mon, 10 Feb 2025 21:43:45 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Yanteng Si <si.yanteng@linux.dev>,
+	Feiyang Chen <chris.chenfeiyang@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	loongarch@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org,
+	Simon Horman <horms@kernel.org>,
+	Chong Qiao <qiaochong@loongson.cn>
+Subject: [PATCH net V2] net: stmmac: dwmac-loongson: Set correct {tx,rx}_fifo_size
+Date: Mon, 10 Feb 2025 21:43:28 +0800
+Message-ID: <20250210134328.2755328-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250210141807.064ccacf@collabora.com>
+X-CM-TRANSID:qMiowMCxasSNAqpnxVcKAA--.1453S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7KFWkCrW7Zr4fJw4DCFy8JFc_yoW8ZryDpr
+	W3Aa4ag34jgr45Cw1DZ3yUCFyruay5trZFgFWIk34fuFWkA3sFqr1YvFWYgrsrArZ3Ga4a
+	qr1q9r1rGF1DCrbCm3ZEXasCq-sJn29KB7ZKAUJUUUUk529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1q6r43M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUslALDUUUU
 
-On Mon, Feb 10, 2025 at 02:18:07PM +0100, Boris Brezillon wrote:
-> On Mon, 10 Feb 2025 12:42:00 +0000
-> Adrián Larumbe <adrian.larumbe@collabora.com> wrote:
-> 
-> > A previous commit dealt with a similar situation, whereby upon enabling
-> > some mutex debug features, a warning about sleep muteces being used in a
-> 
->                                                    ^ mutexes
->  
-> > /proc file read atomic context was being triggered.
-> > 
-> > Because in this case replacing the heap mutex with a spinlock isn't
-> > feasible, the fdinfo handler no longer traverses the list of heaps for
-> > every single VM associated with an open DRM file. Instad, when a new heap
-> > chunk is allocated, its size is accumulated into a VM-wide tally, which
-> > also makes the atomic context code path somewhat faster.
-> > 
-> > Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
-> > Fixes: 3e2c8c718567 ("drm/panthor: Expose size of driver internal BO's over fdinfo")
-> > ---
-> >  drivers/gpu/drm/panthor/panthor_heap.c | 38 ++++++++------------------
-> >  drivers/gpu/drm/panthor/panthor_heap.h |  2 --
-> >  drivers/gpu/drm/panthor/panthor_mmu.c  | 18 +++++++-----
-> >  drivers/gpu/drm/panthor/panthor_mmu.h  |  1 +
-> >  4 files changed, 23 insertions(+), 36 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/panthor/panthor_heap.c b/drivers/gpu/drm/panthor/panthor_heap.c
-> > index db0285ce5812..686f209f5b09 100644
-> > --- a/drivers/gpu/drm/panthor/panthor_heap.c
-> > +++ b/drivers/gpu/drm/panthor/panthor_heap.c
-> > @@ -127,6 +127,8 @@ static void panthor_free_heap_chunk(struct panthor_vm *vm,
-> >  	heap->chunk_count--;
-> >  	mutex_unlock(&heap->lock);
-> >  
-> > +	panthor_vm_heaps_accumulate(vm, -heap->chunk_size);
-> > +
-> >  	panthor_kernel_bo_destroy(chunk->bo);
-> >  	kfree(chunk);
-> >  }
-> > @@ -180,6 +182,8 @@ static int panthor_alloc_heap_chunk(struct panthor_device *ptdev,
-> >  	heap->chunk_count++;
-> >  	mutex_unlock(&heap->lock);
-> >  
-> > +	panthor_vm_heaps_accumulate(vm, heap->chunk_size);
-> > +
-> >  	return 0;
-> >  
-> >  err_destroy_bo:
-> > @@ -389,6 +393,7 @@ int panthor_heap_return_chunk(struct panthor_heap_pool *pool,
-> >  			removed = chunk;
-> >  			list_del(&chunk->node);
-> >  			heap->chunk_count--;
-> > +			panthor_vm_heaps_accumulate(chunk->bo->vm, -heap->chunk_size);
-> >  			break;
-> >  		}
-> >  	}
-> > @@ -560,6 +565,8 @@ panthor_heap_pool_create(struct panthor_device *ptdev, struct panthor_vm *vm)
-> >  	if (ret)
-> >  		goto err_destroy_pool;
-> >  
-> > +	panthor_vm_heaps_accumulate(vm, pool->gpu_contexts->obj->size);
-> > +
-> >  	return pool;
-> >  
-> >  err_destroy_pool:
-> > @@ -594,8 +601,11 @@ void panthor_heap_pool_destroy(struct panthor_heap_pool *pool)
-> >  	xa_for_each(&pool->xa, i, heap)
-> >  		drm_WARN_ON(&pool->ptdev->base, panthor_heap_destroy_locked(pool, i));
-> >  
-> > -	if (!IS_ERR_OR_NULL(pool->gpu_contexts))
-> > +	if (!IS_ERR_OR_NULL(pool->gpu_contexts)) {
-> > +		panthor_vm_heaps_accumulate(pool->gpu_contexts->vm,
-> > +					    -pool->gpu_contexts->obj->size);
-> >  		panthor_kernel_bo_destroy(pool->gpu_contexts);
-> > +	}
-> >  
-> >  	/* Reflects the fact the pool has been destroyed. */
-> >  	pool->vm = NULL;
-> > @@ -603,29 +613,3 @@ void panthor_heap_pool_destroy(struct panthor_heap_pool *pool)
-> >  
-> >  	panthor_heap_pool_put(pool);
-> >  }
-> > -
-> > -/**
-> > - * panthor_heap_pool_size() - Calculate size of all chunks across all heaps in a pool
-> > - * @pool: Pool whose total chunk size to calculate.
-> > - *
-> > - * This function adds the size of all heap chunks across all heaps in the
-> > - * argument pool. It also adds the size of the gpu contexts kernel bo.
-> > - * It is meant to be used by fdinfo for displaying the size of internal
-> > - * driver BO's that aren't exposed to userspace through a GEM handle.
-> > - *
-> > - */
-> > -size_t panthor_heap_pool_size(struct panthor_heap_pool *pool)
-> > -{
-> > -	struct panthor_heap *heap;
-> > -	unsigned long i;
-> > -	size_t size = 0;
-> > -
-> > -	down_read(&pool->lock);
-> > -	xa_for_each(&pool->xa, i, heap)
-> > -		size += heap->chunk_size * heap->chunk_count;
-> > -	up_read(&pool->lock);
-> > -
-> > -	size += pool->gpu_contexts->obj->size;
-> > -
-> > -	return size;
-> > -}
-> > diff --git a/drivers/gpu/drm/panthor/panthor_heap.h b/drivers/gpu/drm/panthor/panthor_heap.h
-> > index e3358d4e8edb..25a5f2bba445 100644
-> > --- a/drivers/gpu/drm/panthor/panthor_heap.h
-> > +++ b/drivers/gpu/drm/panthor/panthor_heap.h
-> > @@ -27,8 +27,6 @@ struct panthor_heap_pool *
-> >  panthor_heap_pool_get(struct panthor_heap_pool *pool);
-> >  void panthor_heap_pool_put(struct panthor_heap_pool *pool);
-> >  
-> > -size_t panthor_heap_pool_size(struct panthor_heap_pool *pool);
-> > -
-> >  int panthor_heap_grow(struct panthor_heap_pool *pool,
-> >  		      u64 heap_gpu_va,
-> >  		      u32 renderpasses_in_flight,
-> > diff --git a/drivers/gpu/drm/panthor/panthor_mmu.c b/drivers/gpu/drm/panthor/panthor_mmu.c
-> > index 0a4e352b5505..aaad1a560805 100644
-> > --- a/drivers/gpu/drm/panthor/panthor_mmu.c
-> > +++ b/drivers/gpu/drm/panthor/panthor_mmu.c
-> > @@ -345,6 +345,10 @@ struct panthor_vm {
-> >  
-> >  		/** @heaps.lock: Lock used to protect access to @pool. */
-> >  		struct mutex lock;
-> > +
-> > +		/** @heaps.size: Size of all chunks across all heaps in the pool. */
-> > +		ssize_t size;
-> 
-> Let's put that into an fdinfo struct.
-> 
-> > +
-> 
-> Drop the extra blank-line.
-> 
-> >  	} heaps;
-> >  
-> >  	/** @node: Used to insert the VM in the panthor_mmu::vm::list. */
-> > @@ -1539,6 +1543,7 @@ static void panthor_vm_destroy(struct panthor_vm *vm)
-> >  	mutex_lock(&vm->heaps.lock);
-> >  	panthor_heap_pool_destroy(vm->heaps.pool);
-> >  	vm->heaps.pool = NULL;
-> > +	vm->heaps.size = 0;
-> >  	mutex_unlock(&vm->heaps.lock);
-> >  
-> >  	drm_WARN_ON(&vm->ptdev->base,
-> > @@ -1963,13 +1968,7 @@ void panthor_vm_heaps_sizes(struct panthor_file *pfile, struct drm_memory_stats
-> >  
-> >  	xa_lock(&pfile->vms->xa);
-> >  	xa_for_each(&pfile->vms->xa, i, vm) {
-> > -		size_t size = 0;
-> > -
-> > -		mutex_lock(&vm->heaps.lock);
-> > -		if (vm->heaps.pool)
-> > -			size = panthor_heap_pool_size(vm->heaps.pool);
-> > -		mutex_unlock(&vm->heaps.lock);
-> > -
-> > +		size_t size = vm->heaps.size;
-> >  		stats->resident += size;
-> >  		if (vm->as.id >= 0)
-> >  			stats->active += size;
-> > @@ -1977,6 +1976,11 @@ void panthor_vm_heaps_sizes(struct panthor_file *pfile, struct drm_memory_stats
-> >  	xa_unlock(&pfile->vms->xa);
-> >  }
-> >  
-> > +void panthor_vm_heaps_accumulate(struct panthor_vm *vm, ssize_t acc)
-> > +{
-> 
-> Either there's some lock protecting this operation and we want a
-> lockdep_assert_held(), or we need to make it an atomic operation (and
-> make the size an atomic_t) to avoid races.
+Now for dwmac-loongson {tx,rx}_fifo_size are uninitialised, which means
+zero. This means dwmac-loongson doesn't support changing MTU because in
+stmmac_change_mtu() it requires the fifo size be no less than MTU. Thus,
+set the correct tx_fifo_size and rx_fifo_size for it (16KB multiplied by
+queue counts).
 
-If Adrián moves the call site in panthor_{alloc,free}_heap_chunk() before he drops the heap->lock,
-would that be sufficient? Pool create and destroy are hopefully race-free and panthor_heap_return_chunk()
-should be also safe.
+Here {tx,rx}_fifo_size is initialised with the initial value (also the
+maximum value) of {tx,rx}_queues_to_use. So it will keep as 16KB if we
+don't change the queue count, and will be larger than 16KB if we change
+(decrease) the queue count. However stmmac_change_mtu() still work well
+with current logic (MTU cannot be larger than 16KB for stmmac).
 
-Best regards,
-Liviu
+Note: the Fixes tag picked here is the oldest commit and key commit of
+the dwmac-loongson series "stmmac: Add Loongson platform support".
 
-> 
-> > +	vm->heaps.size += acc;
-> > +}
-> > +
-> >  static u64 mair_to_memattr(u64 mair, bool coherent)
-> >  {
-> >  	u64 memattr = 0;
-> > diff --git a/drivers/gpu/drm/panthor/panthor_mmu.h b/drivers/gpu/drm/panthor/panthor_mmu.h
-> > index fc274637114e..b6686896f8ef 100644
-> > --- a/drivers/gpu/drm/panthor/panthor_mmu.h
-> > +++ b/drivers/gpu/drm/panthor/panthor_mmu.h
-> > @@ -39,6 +39,7 @@ struct panthor_heap_pool *
-> >  panthor_vm_get_heap_pool(struct panthor_vm *vm, bool create);
-> >  
-> >  void panthor_vm_heaps_sizes(struct panthor_file *pfile, struct drm_memory_stats *stats);
-> > +void panthor_vm_heaps_accumulate(struct panthor_vm *vm, ssize_t acc);
-> >  
-> >  struct panthor_vm *panthor_vm_get(struct panthor_vm *vm);
-> >  void panthor_vm_put(struct panthor_vm *vm);
-> 
+Cc: stable@vger.kernel.org
+Fixes: ad72f783de06 ("net: stmmac: Add multi-channel support")
+Acked-by: Yanteng Si <si.yanteng@linux.dev>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+V2: Update commit message and CC list.
 
+ drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+index bfe6e2d631bd..79acdf38c525 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+@@ -574,6 +574,9 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
+ 	if (ret)
+ 		goto err_disable_device;
+ 
++	plat->tx_fifo_size = SZ_16K * plat->tx_queues_to_use;
++	plat->rx_fifo_size = SZ_16K * plat->rx_queues_to_use;
++
+ 	if (dev_of_node(&pdev->dev))
+ 		ret = loongson_dwmac_dt_config(pdev, plat, &res);
+ 	else
 -- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+2.47.1
+
