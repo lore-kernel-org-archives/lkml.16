@@ -1,280 +1,435 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from flow-a8-smtp.messagingengine.com (flow-a8-smtp.messagingengine.com [103.168.172.143])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743032441AD;
-	Mon, 10 Feb 2025 16:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739203481; cv=fail; b=kMsZe60ast34j6aDtvJ9lqd+Gl4hTT8TkZA4vHA5OGwyeC+UHnhncvwq6TZbq+aCT+54hbYT9th3jT2TTAgZoRINaYM+hh9lvxF4CRD+EGrL7bDiOTC4OOrd9+TITAol04J8dm5fXgbQdxcYA//5GJ0qF7E5w93bmGjisZlVzKo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739203481; c=relaxed/simple;
-	bh=t8/q4/JhKXMuw4G4fD/N5wOFIoCfRnd3EsRaBlQXd68=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=jAnF8hKZOjn8+dIUjqNyEOvWPzR6J2eu0uOXl7/TtMG4XGiV++biPyTjyt+/QwJq+e46eIZ0vAmvoNfMh+T331CWR0iGfnUeq70QXcBpD+D0GCpHJZ4mx2K8L6WuHzfvmgf0bASTvkCOzFbck5PRQeWuPMLCr8ODxHbuS4jVyAk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nynmeA/K; arc=fail smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6467C2441AD;
+	Mon, 10 Feb 2025 16:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.143
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739203501; cv=none; b=RzjvmgDGpFcS2RsavP5Ur6+grM31AUMw45nZ+xEHsymcJaXaHLE4Tn2GeDfWNOYNbpduDVEq1zcO5t2wZ4dOiUHFfSdZZUHbGb+PancYW8I0FXXf2M/p12WYmbVJB77v40UtwAygQrTcWKqzCvRZa/8rnl0HM7fjOGc/hoRQqZI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739203501; c=relaxed/simple;
+	bh=cK3odLC0MCztbkfIE1C1AYvnC4RLplpka+AsEEoIFoQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T6ZA/yvrT2AV1q2beYHLW4nGqF2N9yw6AoshNY6RuQaf1UmZmCg6JNujuJJOdSBLcAcavjXSdEc+wI4xJ0RCY7T3pOsl0OnTdGnT2SbDpmy4O4ekomdpK6wj5puaR3LXUL87NxS+puNXyXVqqrChuCOqXBguz20lT448FcMFEr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=GXIIXz5c; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=m9tBeQXb; arc=none smtp.client-ip=103.168.172.143
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nynmeA/K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739203480; x=1770739480;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=t8/q4/JhKXMuw4G4fD/N5wOFIoCfRnd3EsRaBlQXd68=;
-  b=nynmeA/KAIcwDns9SQMw6rvMzSKLAz0Zn0/3yT3utcEGsR+f0OXzDm/b
-   M5k5sGXHvJDlAYzJxQ9xz0aC2Av7BdetlN11OuLMgfqQtJS/otiLQ+GtR
-   fVL1j7oVo4sWxsjNcorE+u/xLCwY2F5DIFp7cMkOah44GrSitVLcWxB2C
-   X4CGHVDB5qeFlUJe9//5EEU9GUyXT1mCUwpmvoLTjv7QnodsYonrVld9p
-   RR2W0hXTwOVLDhTraUGWM2eVDgaUaWxJ1NMI94BKq1MH0eglQHscXJ/NZ
-   7rO032wD8Vd83wlUzN4hYNHp1X4Sl82GiovfTKBzrdFcMWnXfWSlS7Mp3
-   Q==;
-X-CSE-ConnectionGUID: QqYXi2qmTJCDPmOg4j/OEg==
-X-CSE-MsgGUID: gobor0pYRSmxiCadIA7PyQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="57203417"
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="57203417"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 08:04:39 -0800
-X-CSE-ConnectionGUID: vA+PE5ezSTmvuH1YHQAKTw==
-X-CSE-MsgGUID: m+DdNsdNSZylIw9axV4JTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="135487219"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Feb 2025 08:04:37 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 10 Feb 2025 08:04:36 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Mon, 10 Feb 2025 08:04:36 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.172)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 10 Feb 2025 08:04:34 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=i8YTC9cGO5KWnxZebzD50TA9zxuz3orISYplmxW5Ldwe3Iw7Q851rgcZDIZLSO+UhMZYNvMQAQoaxW3I0x6izHZN7iJGRKIYkeShrSkMIrD6TwEbHI6D80to3+j7ij+57hs8mxcZB+WzS2lWfgauiG+KQqPsZY3NjXsNT1VEdQtS0Tur1ev74k+voDBGp2DzAkfzhNeLC7ase9bDMAjSD94CscW4WBTw1LMZgRCBcJQi8u9K60oSF3X5deWcBat0/fI9PnzRV6avrQeB+h503Jbchi5a8KXjaI2XQp5orVhRItZn0SzhhNYsRUrqMefKQellOw9/M0XuUf5tw7m6Wg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=v1awoWwxc4FAQOM0T20WrmK+ngMNlY6/YpKDOTxkB7Y=;
- b=bSV/ZYB3VBu7yOf+11y1Ph9P80BAp2yOW7IAv3GEOfOHkWyvFIkGAgIuw8fPEPPpvpkvEwKLrNtBBQ+DCFqVBSey3cGryhbhELejkjNtdLiNowpmB8Hj+7aGKq/nW6TGv+FuUJQJI1KiWHCzu0EueRnW19TIDFpLI/2aUqau+iGhRJH+umDcUQIu8TACLcXvFc4JsSovBVq4fQYiCmoaZOTolgwUpwuKHV9UGDPUU3oMhy0HdKuwqHXs5wYsrufvae6wyyS2BeuvgcQUJKjGEoo6wUc7l1B5qkLjbC2HSYSuwIiVFLFFAzNdheEraUNs9YMVMlpIgamVY6Zje3nSJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
- by IA0PR11MB8378.namprd11.prod.outlook.com (2603:10b6:208:48e::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Mon, 10 Feb
- 2025 16:04:31 +0000
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::4b3b:9dbe:f68c:d808]) by DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::4b3b:9dbe:f68c:d808%4]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
- 16:04:31 +0000
-Message-ID: <6d247107-5a9a-4ac7-8364-2619fce0c310@intel.com>
-Date: Mon, 10 Feb 2025 17:00:36 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 4/4] xsk: add helper to get &xdp_desc's DMA and
- meta pointer in one go
-To: Simon Horman <horms@kernel.org>
-CC: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov
-	<ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
-	<john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, "Jose E.
- Marchesi" <jose.marchesi@oracle.com>,
-	=?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>, "Magnus
- Karlsson" <magnus.karlsson@intel.com>, Maciej Fijalkowski
-	<maciej.fijalkowski@intel.com>, Przemek Kitszel
-	<przemyslaw.kitszel@intel.com>, Jason Baron <jbaron@akamai.com>, "Casey
- Schaufler" <casey@schaufler-ca.com>, Nathan Chancellor <nathan@kernel.org>,
-	<bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20250206182630.3914318-1-aleksander.lobakin@intel.com>
- <20250206182630.3914318-5-aleksander.lobakin@intel.com>
- <20250209110344.GA554665@kernel.org>
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-Content-Language: en-US
-In-Reply-To: <20250209110344.GA554665@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: VI1P190CA0027.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:802:2b::40) To DS0PR11MB8718.namprd11.prod.outlook.com
- (2603:10b6:8:1b9::20)
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="GXIIXz5c";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="m9tBeQXb"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailflow.phl.internal (Postfix) with ESMTP id 38054200E27;
+	Mon, 10 Feb 2025 11:04:56 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Mon, 10 Feb 2025 11:04:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1739203496;
+	 x=1739210696; bh=YNeJadkWRVGgukUkuDzsFJCjGYV/G32zn9RD7X0nWNg=; b=
+	GXIIXz5ciV/micb486OBxpB5U+4fRAKFrC+RgoOp/gxz0BmkccL1ePls3x39Y0fU
+	OADiY5Br7e7YA+Cu4wt8d6lNBzRSMyKv1+sPpRsX9cml7PlKzFVlhhBXNV0XOl91
+	dMs6Hj0e4iULgNkvw8SxJw05PtY/dDAwbWVU6VCe//He60487ODyZIbMkUmpp2kJ
+	cfdDodE0nEvWs6dB1s93RhWGc89kUcDPztb78+xdgF4f5OSjapCCB1j0E64bNpWJ
+	7mfJUeRgMBh7nEqwmDZHCxtCg/GnWWmMkl/qny+ewrxK9oMDDXAHOflJvivqOgtX
+	NETJybsowFnbjqhiPoKjDA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739203496; x=
+	1739210696; bh=YNeJadkWRVGgukUkuDzsFJCjGYV/G32zn9RD7X0nWNg=; b=m
+	9tBeQXbGcP8ipu0IcWYGvDXlHxB/2pNM2cTWhIt/KOteJ75QVYYH6XrhaJQzd+W9
+	QI5Z7JkidVvNEnZk3/oV3TG/29nW3b7jfoblCQ64PcXzHpQ1stJevsXjWE+HvOEd
+	h9rZEkJuDJIw9hMviFGmqIa3WVP9pisoyh5I7/A04SiH1fjP+A+/3gZPP+5NInUe
+	il1dL6NqjWB1lkPzQKsm6lhHfSYz02kHvRw8xbW+0ml57M9z7ZxXAbF8ubXdId+k
+	5wZbef4NolPQEkqaKU+l26cg4ANROMP6+edvnK0inixxaPiJO+tuPEc0eYkC20Qe
+	ldQNiHVafvSUCzawqhNjA==
+X-ME-Sender: <xms:pSOqZ_Pa0itnI6kG321XQ0BfIamcX6bQtT-rfgQ6mH2ItXIb1Q-1kQ>
+    <xme:pSOqZ5-nd_MTqh3bPmxq_QYd2dqPVnl-fkKB0_BeY4RriV5dCn5uqIUQFoR6JaN0x
+    XqxxOLNf7blYkRtEMk>
+X-ME-Received: <xmr:pSOqZ-SQf4pGdvAPsuoCKuJmlbqBe9Ik91Hi_vJQ2MwgqzwVbtkQNYWKOGhjxLSLMbz7K2uvGXzwmIX--G6Y5eL3Iak4dxrhag>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefkeehtdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddt
+    jeenucfhrhhomheppfhikhhlrghsucfunpguvghrlhhunhguuceonhhikhhlrghsrdhsoh
+    guvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgeqnecuggftrfgrthhtvghrnhepgeei
+    hfegveekteelteeugedtgfelveejtdekjeejteejleekkeekiefhjeetfeffnecuffhomh
+    grihhnpeguvghvihgtvghtrhgvvgdrohhrghdprghnrghlohhgrdgtohhmpdhlihhnuhig
+    thhvrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
+    homhepnhhikhhlrghsrdhsohguvghrlhhunhgusehrrghgnhgrthgvtghhrdhsvgdpnhgs
+    pghrtghpthhtohepvdejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegurghvih
+    gusehigihithdrtgiipdhrtghpthhtohepmhgthhgvhhgrsgeskhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikh
+    doughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtohepphgrvhgvlhesuhgtfidrtgiipdhrtghpthhtohepsh
+    grkhgrrhhirdgrihhluhhssehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohep
+    lhgrrhhssehmvghtrghfohhordguvgdprhgtphhtthhopehkihgvrhgrnhdrsghinhhghh
+    grmhesihguvggrshhonhgsohgrrhgurdgtohhm
+X-ME-Proxy: <xmx:pSOqZzv1kCNjJ3kmdf4XuZtptXhCPmTOmhJz-tjkGGT5m-0r8y_7hw>
+    <xmx:pSOqZ3cws9k7qirlXcPzQLfDuYU9k85MpktwqBatpO8iVf5yPUyjuA>
+    <xmx:pSOqZ_0ocQ8lk20M2n6lug_nYU5p1vKtve6UKTu2CWDkEtaJJJid7Q>
+    <xmx:pSOqZz9T29-tp7luvlLuGQwfQ_5Pcn4PfPXaIBGC2WskHnF9ox6Eeg>
+    <xmx:qCOqZwu1lBQOBfNs8aWdpqnHKz4_ryIEIak8ALsDIADb-oDHxn1SVLbo>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 10 Feb 2025 11:04:52 -0500 (EST)
+Date: Mon, 10 Feb 2025 17:04:50 +0100
+From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+To: David Heidelberg <david@ixit.cz>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Shawn Guo <shawnguo@kernel.org>,	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Ramesh Shanmugasundaram <rashanmu@gmail.com>,
+	Tim Harvey <tharvey@gateworks.com>,	"Lad,
+ Prabhakar" <prabhakar.csengg@gmail.com>,
+	Akinobu Mita <akinobu.mita@gmail.com>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] media: dt-bindings: media: i2c: align filenames format
+ with standard
+Message-ID: <20250210160450.GA1658528@ragnatech.se>
+References: <20250209195517.148700-1-david@ixit.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|IA0PR11MB8378:EE_
-X-MS-Office365-Filtering-Correlation-Id: c221a50b-c347-4723-dea3-08dd49ec9ac4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?L3BENEd4QzVST0hVMko5MW03RUdEemVzNDdTWGxTY0tmTENISEFwT0pldUNP?=
- =?utf-8?B?bnRCbWd6bmorSU85d0g1eE9tVkgrVG1MWFZsMUpsbUJsR0JUcFJ3eGk0L1Zi?=
- =?utf-8?B?dERmWFcwdlV5MmhQQTJBaVE2dVlPSnpYZGNCb29SdmJqMUFObWJJV2JGRHdt?=
- =?utf-8?B?Mi9id2grdTJmN1pRYzRDTzl3MU9rTDVkSWJDQUpBcGxUWjlXVTVyOWZDRDJU?=
- =?utf-8?B?aFlJTytFK0FTMHBHekdlTnJRUW5pNWt3aHNvVFduT2NoSFI1NXdiaFp1c1JK?=
- =?utf-8?B?MUt0V1lFNVcwLzRraC9DNHE2UWVQVkpDamhFWDlpUk5TOGpHTDJrTnNPblIr?=
- =?utf-8?B?YTRLVFhXVXEvU29jNGErM0p2S25jRnFRbndYNE44aHlsaDNndk9qY2hhRUpp?=
- =?utf-8?B?OXJtZTQ3YVNFYkUvME90dStoOHA5SFVIQzBtY1kyRnV3L0dzcFNwTE1ta01U?=
- =?utf-8?B?cmlPbTRGeFl1Z2xLZ0xTTnhZNGZ0VHArTUNhcm9NUEVYZDJvclo4am95V3I1?=
- =?utf-8?B?SWt5dWlmckltcXhwa1ZhNjNwQ2JPZWtIYWhYRFJQZGJjeUo3eW9sSVdWdUJS?=
- =?utf-8?B?VDJMaFNlTUpNWjBPdkQrNkUxSmFKQzZxV1dZODUxRng2eGJjdTN3US83Ukhj?=
- =?utf-8?B?ZzNhVnJ5eVhubUdwWHhKcUZGd0FqbGQyYlo0V1VmTnVKZXNoM2RvSHlMamFX?=
- =?utf-8?B?d2tXVHc3SWpmcjJOa3Azb09td2dPTldxWmI4UXpvc1Q1ZG1jQm54NDVjSUF0?=
- =?utf-8?B?M2JYVXRCVDJISlhWc3lvY2xjWnJnUzhKUE1NQXI2R1RZMVloNUk2UkEwVDgx?=
- =?utf-8?B?QXd2RjZ3Tk10akwvMzBDY0w5RnpEYmE5YjlOT29iQmUrdmczVlFINmNGODBq?=
- =?utf-8?B?V2lLWERoM21JSkphcTFURGdQU2RlVVRxYWllQW9jT2NtaHBzdloreitYTWxC?=
- =?utf-8?B?Q0Z2RGNrNGcvQ0xER0tZd2hmdkNHVDNxbUZROVQ1OEl1L0VjWk12V0hRbnRo?=
- =?utf-8?B?N3FUcjRoZWo0bUtXaEdJbjE2Wk9jc05La29ERFo0ZWlET0czUVlpcHdROGRn?=
- =?utf-8?B?bUl6Y0Z0ODJ2N3RPeDBpTzBES0drdFRacEVtTVgyVHFkWVM4OUZ1OCtUQXpr?=
- =?utf-8?B?N2FobzM2bDFiK2tMckExSzJtWVhSQlhmQmFCZGhndzEvRUIvTm1xZmNTbHFN?=
- =?utf-8?B?UnFUZURJN1J3b2Z6bWYzRkg1cWlqcndpOTV3YktjRjdJWlk0ejBDeVBMbDM0?=
- =?utf-8?B?YjJkK3BIZDFRcVExcWZoaDVYaGlLTmRvNWNaTVJBcnU2WTVlanJNODJnTklM?=
- =?utf-8?B?VnhBQVRySTFDWEt1N2Z1ZGtvU3I5dTljaEdlUElvMTF4MEFCQnBMQmpJU2Jp?=
- =?utf-8?B?cFpwZGhjMVRacGJVcE5hMEtFOHlGYU1PUXVsVjFUc3gyd3c3eDk5ekFHbmJE?=
- =?utf-8?B?TUNvTzRJakFyQTFRUlI3L2xiTEtNYWN0SnNJNU1GMGVWdUpocktOZFhnbi9D?=
- =?utf-8?B?aWhvRENvSi8wdHN6b01BVkpHYm9QOTdLMWRkWVczdFU5ejNVdHRVZS9jNlRS?=
- =?utf-8?B?SkRTdTlHM3BWVlNuSTZyWU5QSlp5N0Z3enkrRFJ5Vk9SOGE3Skd3Mk1nUVFz?=
- =?utf-8?B?cnB1cnJibERpM3V0Vm8vRm41Nk02MnF6TFVRNzVQUnF1SkFnOW0veVZMVnQ4?=
- =?utf-8?B?NlkzWDlPLzZLc1dRTnF4M0NDZEJnSVNsS2lYNGNrSHhHYmpQSENXTGRHL0d4?=
- =?utf-8?B?Q3plTENMdHlqRElidXRTak5oV1ZjWldKcmRZK2pIU0RWaklwVDI5Zkl0SHpv?=
- =?utf-8?B?SzNkUU5yZ25MT1lYOEdRQnlmSHhKUzY3eWlIY2F6dHNGWlFBeGFUYjMwWXRZ?=
- =?utf-8?Q?oW2Ou0thomrfC?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SVVpUUZTazRDVncrc2dmb0ZNdEE4akJndFBIL0wwMzB3S1BKYVlad3QyN2o1?=
- =?utf-8?B?QklzU1VHaEozNU9aaTF3L1M3TnlKTHE2QjBpSGY4MzBuODNWN0xCMG4zWnQx?=
- =?utf-8?B?L1JabS8xenR3eXdSa29QNkl1QmNJRTF6ZVFYUkFrQVR5STBzM0JZMHRhVXlP?=
- =?utf-8?B?UkNUOVJFQlRKTzVsQXNOSnExSmNDYU83ZklsRFk5d08xVlFUdEdraVVvS2Za?=
- =?utf-8?B?REFvanJRc1lZY3d4TjFKOVhuYWVlNGEwY2FIay9kRFR6WjJoTWZMQ3U2Z3kw?=
- =?utf-8?B?Q1dCZU9QdUZkMzRaNk9WNkt6N29oY2ZoQjNsOW5QeTBYRUlNYStMTkliazdP?=
- =?utf-8?B?SUpBVXI5MEFXNUw5aHpmK0tPK240eW1yVXduaHhaZkdNUHltcUs4TVNzZjFB?=
- =?utf-8?B?ZFZObWZoSVBmS2x6WnNCVkVYQzZMN1ZNQTM5UTRDK3VDdFNSMzVmQWRDeExC?=
- =?utf-8?B?cHIyZTRXRldVZk1PazhwbVZrRjRaQ1g3UGRRZ2NtemE4SHFSWXdRY05FU3hh?=
- =?utf-8?B?ajNlMUp3OVVCRkI5bDFQT0ozYVd6cEg1cFl4Q1dxQXdaU1VlZzg3M1QrM1Ay?=
- =?utf-8?B?OElqcm00Q3IweE1IMkZ4dGVUSmN4eTYraUFaWElERHRFUmZpazduRG51TTZ1?=
- =?utf-8?B?Nm4wZ01zSXRRZGpDTGF2bEdQVXg3SkNmQUpHYUhqbzVVdHBhanFENk14WEsx?=
- =?utf-8?B?aFFzNHI4TFNEVC9kdHV4czE1UDRPRGFiNXo2cDFPYkZEOC90M0Q5dlUwVTVB?=
- =?utf-8?B?ejU1SHNxd1NQdFRSTm9KMkZCVmZkWnRUbkt2MW9vVis2NXRPeTRqWDNJS2dV?=
- =?utf-8?B?bWVOelJ1S2FrancvUEswa3JSNEduMGtacWtMUXdnaDFwMENuQmFjZDlsUHZY?=
- =?utf-8?B?aVVkdmdwbHBQSUZRdk8zOEpBbENQdVVNRDBJQ2ZwdHoyelIyZ1czVHo3ME1E?=
- =?utf-8?B?ZVVZamNRVUczMDlvNEZSSytNay8rdE5LTXNzemE4Z0wyNm15UitaODFPQVF3?=
- =?utf-8?B?L3ZzUmlyZ2VmUnlSRWQzcHM3VldqMjV5dzA5TWZ3UkhSMisrWW5DSlQ3cHdi?=
- =?utf-8?B?VnZVN0hFRkhJbXR1OFBtMHpxbUJITFpmaDk5bkpNZ2lKQndwamRZUHAzcjh1?=
- =?utf-8?B?eVJhUGw3SzV4WXdBbnhhTDNQaWRqZThrZnA4WjlmdTQ2UHJTQk5pWnlYNkpx?=
- =?utf-8?B?a0RhWmlBYTcrdUF0TlhzTEJkKzBSa1BTY3AxcGZMSXFiUmZYSDR2V0tFeWsz?=
- =?utf-8?B?cExLMldRRitFam5XM3o0Z3R1M0pyUlljeXdCT0ozRisvd0s4MU44ZmhVbUtV?=
- =?utf-8?B?Tk5ERnRwRWY5dTBqY0dtU2lCQzNnOU5rM1QxeXkxMXNJRkZHWkt0SW5RZ3BP?=
- =?utf-8?B?a0MwbkwzRXNqcklYbFZQTmRKcEdZYkZHZkErbXZxZkFVVXprb044aDlzRmVY?=
- =?utf-8?B?azZpWm16UGppc2tHbHU1MjRFNEI5NVZSQWk5UHBVVGtpQ1NIcjIvUi9RcmVJ?=
- =?utf-8?B?KzlqNVlub1BTYmFidkFTMjM1MVhMbzE1WC9yN1BkTnBLS1BWUmJHaERzL2l2?=
- =?utf-8?B?Q0plbU5qaHNOYWdmMU1WWURuVEYweWp2bXRmdzhVcmlRZ3lIUXJ2TDZ6VWFx?=
- =?utf-8?B?RnVyWXN2blU4bUErTmprZ3ZYdGJQK3JFa0VBTzlDcE9qckxZWkpXZ1FOcDQ2?=
- =?utf-8?B?YWRib2tsa3VMRFFrNVoxNGZzckhJVjNKZEQzL2FselU2YWFHZXhRVjN3WW9V?=
- =?utf-8?B?OWg3MmNJend6ejhvRTVkazdPZjk5SERYOUIzcGZldk1iRjlNVVVMRkMvYUtH?=
- =?utf-8?B?SGhJanI3dTdqQjhDOXpYWGJwS2U1dnpFTk1VSlB5VEtqM204ak9zVXpkSVcz?=
- =?utf-8?B?RUliUkQ4VStNTjZzMjdkZzFFQ1lDQmtUUHF3OGcwUm90Y1pqanBIYXJwVWw3?=
- =?utf-8?B?RGxSa3BSUk5ydlhML0FTY3lhYTRXOEtMSC83b3NuS3J2ZEQyaUYxUE1aRmNZ?=
- =?utf-8?B?T2w0Qm5EMHA3ejNPVlVsK0x4Q3dlcG44QUVGVDdkc2RrbC9ZSk4vZEFNdFZW?=
- =?utf-8?B?dFhIckFFdUViSjhUWWQ3S2xNTWZWaGF3SUhOekpXeGo3T0V4REVweUVFWVNs?=
- =?utf-8?B?NVp5M0pZM2tWSHQ1bGY3Q2pBQXNTckMvQ3N5RGZqc2dWcGlzWXhya3kwR253?=
- =?utf-8?B?Y1E9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c221a50b-c347-4723-dea3-08dd49ec9ac4
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 16:04:31.7013
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /2n+NqR650mnX43yBYnVdvegfyACnMsGDp+wwQmhyl2fpwM3Tlj4S3Jowr479H4fBuvpD4jC8d8VnPcvr6WZu6hdnMNgK0I+tpwfu/saVRg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB8378
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250209195517.148700-1-david@ixit.cz>
 
-From: Simon Horman <horms@kernel.org>
-Date: Sun, 9 Feb 2025 11:03:44 +0000
+Hi David,
 
-> On Thu, Feb 06, 2025 at 07:26:29PM +0100, Alexander Lobakin wrote:
->> Currently, when your driver supports XSk Tx metadata and you want to
->> send an XSk frame, you need to do the following:
->>
->> * call external xsk_buff_raw_get_dma();
->> * call inline xsk_buff_get_metadata(), which calls external
->>   xsk_buff_raw_get_data() and then do some inline checks.
->>
->> This effectively means that the following piece:
->>
->> addr = pool->unaligned ? xp_unaligned_add_offset_to_addr(addr) : addr;
->>
->> is done twice per frame, plus you have 2 external calls per frame, plus
->> this:
->>
->> 	meta = pool->addrs + addr - pool->tx_metadata_len;
->> 	if (unlikely(!xsk_buff_valid_tx_metadata(meta)))
->>
->> is always inlined, even if there's no meta or it's invalid.
->>
->> Add xsk_buff_raw_get_ctx() (xp_raw_get_ctx() to be precise) to do that
->> in one go. It returns a small structure with 2 fields: DMA address,
->> filled unconditionally, and metadata pointer, non-NULL only if it's
->> present and valid. The address correction is performed only once and
->> you also have only 1 external call per XSk frame, which does all the
->> calculations and checks outside of your hotpath. You only need to
->> check `if (ctx.meta)` for the metadata presence.
->> To not copy any existing code, derive address correction and getting
->> virtual and DMA address into small helpers. bloat-o-meter reports no
->> object code changes for the existing functionality.
->>
->> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+Thanks for your work.
+
+On 2025-02-09 20:53:43 +0100, David Heidelberg wrote:
+> Append missing vendor and align with other sony definitions.
 > 
-> Hi Alexander,
+> Signed-off-by: David Heidelberg <david@ixit.cz>
+
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
+> ---
+>  .../media/i2c/{ad5820.txt => adi,ad5820.txt}  |  0
+>  .../i2c/{adp1653.txt => adi,adp1653.txt}      |  0
+>  .../i2c/{adv7180.yaml => adi,adv7180.yaml}    |  2 +-
+>  .../i2c/{adv7343.txt => adi,adv7343.txt}      |  0
+>  .../i2c/{adv748x.yaml => adi,adv748x.yaml}    |  2 +-
+>  .../i2c/{adv7604.yaml => adi,adv7604.yaml}    |  2 +-
+>  .../i2c/{mt9v032.txt => aptina,mt9v032.txt}   |  0
+>  .../i2c/{max2175.txt => maxim,max2175.txt}    |  0
+>  .../i2c/{mt9m111.txt => micron,mt9m111.txt}   |  0
+>  .../i2c/{tda1997x.txt => nxp,tda1997x.txt}    |  0
+>  .../i2c/{mt9m001.txt => onnn,mt9m001.txt}     |  0
+>  .../media/i2c/{ov2640.txt => ovti,ov2640.txt} |  0
+>  .../media/i2c/{ov2659.txt => ovti,ov2659.txt} |  0
+>  .../media/i2c/{ov7670.txt => ovti,ov7670.txt} |  0
+>  .../media/i2c/{ov7740.txt => ovti,ov7740.txt} |  0
+>  .../media/i2c/{ov9650.txt => ovti,ov9650.txt} |  0
+>  .../i2c/{imx219.yaml => sony,imx219.yaml}     |  2 +-
+>  .../media/i2c/{ths8200.txt => ti,ths8200.txt} |  0
+>  .../media/i2c/{tvp514x.txt => ti,tvp514x.txt} |  0
+>  .../media/i2c/{tvp5150.txt => ti,tvp5150.txt} |  0
+>  .../media/i2c/{tvp7002.txt => ti,tvp7002.txt} |  0
+>  .../{tc358743.txt => toshiba,tc358743.txt}    |  0
+>  MAINTAINERS                                   | 22 +++++++++++--------
+>  23 files changed, 17 insertions(+), 13 deletions(-)
+>  rename Documentation/devicetree/bindings/media/i2c/{ad5820.txt => adi,ad5820.txt} (100%)
+>  rename Documentation/devicetree/bindings/media/i2c/{adp1653.txt => adi,adp1653.txt} (100%)
+>  rename Documentation/devicetree/bindings/media/i2c/{adv7180.yaml => adi,adv7180.yaml} (98%)
+>  rename Documentation/devicetree/bindings/media/i2c/{adv7343.txt => adi,adv7343.txt} (100%)
+>  rename Documentation/devicetree/bindings/media/i2c/{adv748x.yaml => adi,adv748x.yaml} (98%)
+>  rename Documentation/devicetree/bindings/media/i2c/{adv7604.yaml => adi,adv7604.yaml} (98%)
+>  rename Documentation/devicetree/bindings/media/i2c/{mt9v032.txt => aptina,mt9v032.txt} (100%)
+>  rename Documentation/devicetree/bindings/media/i2c/{max2175.txt => maxim,max2175.txt} (100%)
+>  rename Documentation/devicetree/bindings/media/i2c/{mt9m111.txt => micron,mt9m111.txt} (100%)
+>  rename Documentation/devicetree/bindings/media/i2c/{tda1997x.txt => nxp,tda1997x.txt} (100%)
+>  rename Documentation/devicetree/bindings/media/i2c/{mt9m001.txt => onnn,mt9m001.txt} (100%)
+>  rename Documentation/devicetree/bindings/media/i2c/{ov2640.txt => ovti,ov2640.txt} (100%)
+>  rename Documentation/devicetree/bindings/media/i2c/{ov2659.txt => ovti,ov2659.txt} (100%)
+>  rename Documentation/devicetree/bindings/media/i2c/{ov7670.txt => ovti,ov7670.txt} (100%)
+>  rename Documentation/devicetree/bindings/media/i2c/{ov7740.txt => ovti,ov7740.txt} (100%)
+>  rename Documentation/devicetree/bindings/media/i2c/{ov9650.txt => ovti,ov9650.txt} (100%)
+>  rename Documentation/devicetree/bindings/media/i2c/{imx219.yaml => sony,imx219.yaml} (97%)
+>  rename Documentation/devicetree/bindings/media/i2c/{ths8200.txt => ti,ths8200.txt} (100%)
+>  rename Documentation/devicetree/bindings/media/i2c/{tvp514x.txt => ti,tvp514x.txt} (100%)
+>  rename Documentation/devicetree/bindings/media/i2c/{tvp5150.txt => ti,tvp5150.txt} (100%)
+>  rename Documentation/devicetree/bindings/media/i2c/{tvp7002.txt => ti,tvp7002.txt} (100%)
+>  rename Documentation/devicetree/bindings/media/i2c/{tc358743.txt => toshiba,tc358743.txt} (100%)
 > 
-> I think that this patch needs to be accompanied by at least one
-> patch that uses xsk_buff_raw_get_ctx() in a driver.
-
-This mini-series is the final part of my Chapter III, which was all
-about prereqs in order to add libeth_xdp and then XDP for idpf.
-This helper will be used in the next series (Chapter IV) I'll send once
-this lands.
-
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Documentation/devicetree/bindings/media/i2c/adi,ad5820.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/i2c/ad5820.txt
+> rename to Documentation/devicetree/bindings/media/i2c/adi,ad5820.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adp1653.txt b/Documentation/devicetree/bindings/media/i2c/adi,adp1653.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/i2c/adp1653.txt
+> rename to Documentation/devicetree/bindings/media/i2c/adi,adp1653.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7180.yaml b/Documentation/devicetree/bindings/media/i2c/adi,adv7180.yaml
+> similarity index 98%
+> rename from Documentation/devicetree/bindings/media/i2c/adv7180.yaml
+> rename to Documentation/devicetree/bindings/media/i2c/adi,adv7180.yaml
+> index 4371a0ef27617..4636ad601c3ee 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/adv7180.yaml
+> +++ b/Documentation/devicetree/bindings/media/i2c/adi,adv7180.yaml
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>  %YAML 1.2
+>  ---
+> -$id: http://devicetree.org/schemas/media/i2c/adv7180.yaml#
+> +$id: http://devicetree.org/schemas/media/i2c/adi,adv7180.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+>  title: Analog Devices ADV7180 analog video decoder family
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7343.txt b/Documentation/devicetree/bindings/media/i2c/adi,adv7343.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/i2c/adv7343.txt
+> rename to Documentation/devicetree/bindings/media/i2c/adi,adv7343.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.yaml b/Documentation/devicetree/bindings/media/i2c/adi,adv748x.yaml
+> similarity index 98%
+> rename from Documentation/devicetree/bindings/media/i2c/adv748x.yaml
+> rename to Documentation/devicetree/bindings/media/i2c/adi,adv748x.yaml
+> index d6353081402be..254987350321b 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/adv748x.yaml
+> +++ b/Documentation/devicetree/bindings/media/i2c/adi,adv748x.yaml
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>  %YAML 1.2
+>  ---
+> -$id: http://devicetree.org/schemas/media/i2c/adv748x.yaml#
+> +$id: http://devicetree.org/schemas/media/i2c/adi,adv748x.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+>  title: Analog Devices ADV748X video decoder with HDMI receiver
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.yaml b/Documentation/devicetree/bindings/media/i2c/adi,adv7604.yaml
+> similarity index 98%
+> rename from Documentation/devicetree/bindings/media/i2c/adv7604.yaml
+> rename to Documentation/devicetree/bindings/media/i2c/adi,adv7604.yaml
+> index 7589d377c6864..6c403003cdda1 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.yaml
+> +++ b/Documentation/devicetree/bindings/media/i2c/adi,adv7604.yaml
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>  %YAML 1.2
+>  ---
+> -$id: http://devicetree.org/schemas/media/i2c/adv7604.yaml#
+> +$id: http://devicetree.org/schemas/media/i2c/adi,adv7604.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+>  title: Analog Devices ADV7604/10/11/12 video decoder with HDMI receiver
+> diff --git a/Documentation/devicetree/bindings/media/i2c/mt9v032.txt b/Documentation/devicetree/bindings/media/i2c/aptina,mt9v032.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+> rename to Documentation/devicetree/bindings/media/i2c/aptina,mt9v032.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/max2175.txt b/Documentation/devicetree/bindings/media/i2c/maxim,max2175.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/i2c/max2175.txt
+> rename to Documentation/devicetree/bindings/media/i2c/maxim,max2175.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/mt9m111.txt b/Documentation/devicetree/bindings/media/i2c/micron,mt9m111.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/i2c/mt9m111.txt
+> rename to Documentation/devicetree/bindings/media/i2c/micron,mt9m111.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/tda1997x.txt b/Documentation/devicetree/bindings/media/i2c/nxp,tda1997x.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/i2c/tda1997x.txt
+> rename to Documentation/devicetree/bindings/media/i2c/nxp,tda1997x.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/mt9m001.txt b/Documentation/devicetree/bindings/media/i2c/onnn,mt9m001.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/i2c/mt9m001.txt
+> rename to Documentation/devicetree/bindings/media/i2c/onnn,mt9m001.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov2640.txt b/Documentation/devicetree/bindings/media/i2c/ovti,ov2640.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/i2c/ov2640.txt
+> rename to Documentation/devicetree/bindings/media/i2c/ovti,ov2640.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov2659.txt b/Documentation/devicetree/bindings/media/i2c/ovti,ov2659.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/i2c/ov2659.txt
+> rename to Documentation/devicetree/bindings/media/i2c/ovti,ov2659.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov7670.txt b/Documentation/devicetree/bindings/media/i2c/ovti,ov7670.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/i2c/ov7670.txt
+> rename to Documentation/devicetree/bindings/media/i2c/ovti,ov7670.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov7740.txt b/Documentation/devicetree/bindings/media/i2c/ovti,ov7740.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/i2c/ov7740.txt
+> rename to Documentation/devicetree/bindings/media/i2c/ovti,ov7740.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov9650.txt b/Documentation/devicetree/bindings/media/i2c/ovti,ov9650.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/i2c/ov9650.txt
+> rename to Documentation/devicetree/bindings/media/i2c/ovti,ov9650.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/imx219.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx219.yaml
+> similarity index 97%
+> rename from Documentation/devicetree/bindings/media/i2c/imx219.yaml
+> rename to Documentation/devicetree/bindings/media/i2c/sony,imx219.yaml
+> index 07d088cf66e0b..8b23e5fc6a24f 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/imx219.yaml
+> +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx219.yaml
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>  %YAML 1.2
+>  ---
+> -$id: http://devicetree.org/schemas/media/i2c/imx219.yaml#
+> +$id: http://devicetree.org/schemas/media/i2c/sony,imx219.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+>  title: Sony 1/4.0-Inch 8Mpixel CMOS Digital Image Sensor
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ths8200.txt b/Documentation/devicetree/bindings/media/i2c/ti,ths8200.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/i2c/ths8200.txt
+> rename to Documentation/devicetree/bindings/media/i2c/ti,ths8200.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp514x.txt b/Documentation/devicetree/bindings/media/i2c/ti,tvp514x.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+> rename to Documentation/devicetree/bindings/media/i2c/ti,tvp514x.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/ti,tvp5150.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+> rename to Documentation/devicetree/bindings/media/i2c/ti,tvp5150.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.txt b/Documentation/devicetree/bindings/media/i2c/ti,tvp7002.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+> rename to Documentation/devicetree/bindings/media/i2c/ti,tvp7002.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/tc358743.txt b/Documentation/devicetree/bindings/media/i2c/toshiba,tc358743.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/media/i2c/tc358743.txt
+> rename to Documentation/devicetree/bindings/media/i2c/toshiba,tc358743.txt
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index df1ecd2c7c3d3..9951eddae74b2 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -527,6 +527,7 @@ ADP1653 FLASH CONTROLLER DRIVER
+>  M:	Sakari Ailus <sakari.ailus@iki.fi>
+>  L:	linux-media@vger.kernel.org
+>  S:	Maintained
+> +F:	Documentation/devicetree/bindings/media/i2c/adi,adp1653.txt
+>  F:	drivers/media/i2c/adp1653.c
+>  F:	include/media/i2c/adp1653.h
+>  
+> @@ -1545,14 +1546,14 @@ M:	Lars-Peter Clausen <lars@metafoo.de>
+>  L:	linux-media@vger.kernel.org
+>  S:	Supported
+>  W:	https://ez.analog.com/linux-software-drivers
+> -F:	Documentation/devicetree/bindings/media/i2c/adv7180.yaml
+> +F:	Documentation/devicetree/bindings/media/i2c/adi,adv7180.yaml
+>  F:	drivers/media/i2c/adv7180.c
+>  
+>  ANALOG DEVICES INC ADV748X DRIVER
+>  M:	Kieran Bingham <kieran.bingham@ideasonboard.com>
+>  L:	linux-media@vger.kernel.org
+>  S:	Maintained
+> -F:	Documentation/devicetree/bindings/media/i2c/adv748x.yaml
+> +F:	Documentation/devicetree/bindings/media/i2c/adi,adv748x.yaml
+>  F:	drivers/media/i2c/adv748x/*
+>  
+>  ANALOG DEVICES INC ADV7511 DRIVER
+> @@ -1565,7 +1566,7 @@ ANALOG DEVICES INC ADV7604 DRIVER
+>  M:	Hans Verkuil <hverkuil-cisco@xs4all.nl>
+>  L:	linux-media@vger.kernel.org
+>  S:	Maintained
+> -F:	Documentation/devicetree/bindings/media/i2c/adv7604.yaml
+> +F:	Documentation/devicetree/bindings/media/i2c/adi,adv7604.yaml
+>  F:	drivers/media/i2c/adv7604*
+>  
+>  ANALOG DEVICES INC ADV7842 DRIVER
+> @@ -14158,7 +14159,7 @@ M:	Ramesh Shanmugasundaram <rashanmu@gmail.com>
+>  L:	linux-media@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://linuxtv.org/media.git
+> -F:	Documentation/devicetree/bindings/media/i2c/max2175.txt
+> +F:	Documentation/devicetree/bindings/media/i2c/maxim,max2175.txt
+>  F:	Documentation/userspace-api/media/drivers/max2175.rst
+>  F:	drivers/media/i2c/max2175*
+>  F:	include/uapi/linux/max2175.h
+> @@ -16160,7 +16161,7 @@ M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>  L:	linux-media@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://linuxtv.org/media.git
+> -F:	Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+> +F:	Documentation/devicetree/bindings/media/i2c/aptina,mt9v032.txt
+>  F:	drivers/media/i2c/mt9v032.c
+>  F:	include/media/i2c/mt9v032.h
+>  
+> @@ -16790,6 +16791,7 @@ M:	Pavel Machek <pavel@ucw.cz>
+>  M:	Sakari Ailus <sakari.ailus@iki.fi>
+>  L:	linux-media@vger.kernel.org
+>  S:	Maintained
+> +F:	Documentation/devicetree/bindings/media/i2c/adi,ad5820.txt
+>  F:	drivers/media/i2c/ad5820.c
+>  F:	drivers/media/i2c/et8ek8
+>  
+> @@ -17525,7 +17527,7 @@ OMNIVISION OV7740 SENSOR DRIVER
+>  L:	linux-media@vger.kernel.org
+>  S:	Orphan
+>  T:	git git://linuxtv.org/media.git
+> -F:	Documentation/devicetree/bindings/media/i2c/ov7740.txt
+> +F:	Documentation/devicetree/bindings/media/i2c/ovti,ov7740.txt
+>  F:	drivers/media/i2c/ov7740.c
+>  
+>  OMNIVISION OV8856 SENSOR DRIVER
+> @@ -17566,7 +17568,7 @@ R:	Sylwester Nawrocki <s.nawrocki@samsung.com>
+>  L:	linux-media@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://linuxtv.org/media.git
+> -F:	Documentation/devicetree/bindings/media/i2c/ov9650.txt
+> +F:	Documentation/devicetree/bindings/media/i2c/ovti,ov9650.txt
+>  F:	drivers/media/i2c/ov9650.c
+>  
+>  OMNIVISION OV9734 SENSOR DRIVER
+> @@ -17768,6 +17770,7 @@ S:	Maintained
+>  W:	https://linuxtv.org
+>  Q:	http://patchwork.linuxtv.org/project/linux-media/list/
+>  T:	git git://linuxtv.org/mhadli/v4l-dvb-davinci_devices.git
+> +F:	Documentation/devicetree/bindings/media/i2c/ovti,ov2659.txt
+>  F:	drivers/media/i2c/ov2659.c
+>  F:	include/media/i2c/ov2659.h
+>  
+> @@ -21992,7 +21995,7 @@ M:	Dave Stevenson <dave.stevenson@raspberrypi.com>
+>  L:	linux-media@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://linuxtv.org/media.git
+> -F:	Documentation/devicetree/bindings/media/i2c/imx219.yaml
+> +F:	Documentation/devicetree/bindings/media/i2c/sony,imx219.yaml
+>  F:	drivers/media/i2c/imx219.c
+>  
+>  SONY IMX258 SENSOR DRIVER
+> @@ -23131,6 +23134,7 @@ L:	linux-media@vger.kernel.org
+>  S:	Maintained
+>  W:	https://linuxtv.org
+>  Q:	http://patchwork.linuxtv.org/project/linux-media/list/
+> +F:	Documentation/devicetree/bindings/media/i2c/nxp,tda1997x.txt
+>  F:	drivers/media/i2c/tda1997x.*
+>  
+>  TDA827x MEDIA DRIVER
+> @@ -23967,7 +23971,7 @@ TOSHIBA TC358743 DRIVER
+>  M:	Hans Verkuil <hverkuil-cisco@xs4all.nl>
+>  L:	linux-media@vger.kernel.org
+>  S:	Maintained
+> -F:	Documentation/devicetree/bindings/media/i2c/tc358743.txt
+> +F:	Documentation/devicetree/bindings/media/i2c/toshiba,tc358743.txt
+>  F:	drivers/media/i2c/tc358743*
+>  F:	include/media/i2c/tc358743.h
+>  
+> -- 
+> 2.47.2
 > 
-> Also, as this seems to be an optimisation, some performance data would
-> be nice too.
 
--1 Kb of object code which has an unrolled-by-8 loop which used this
-function each iteration. I don't remember the perf numbers since it was
-a year ago and since then I've been using this helper only, but it was
-something around a couple procent (which is several hundred Kpps when it
-comes to XSk).
-
-> 
-> Which brings me to my last point. I'd always understood that
-> returning a struct was discouraged due to performance implications.
-
-Rather stack usage, not perf implications. Compound returns are used
-heavily throughout the kernel code when sizeof(result) <= 16 bytes.
-Here it's also 16 bytes. Just the same as one __u128. Plus this function
-doesn't recurse, so the stack won't blow up.
-
-> Perhaps that information is out of date, doesn't apply because
-> the returned struct is so small in this case, or just plain wrong.
-> But I'd appreciate it if you could add some colour to this.
-
-Moreover, the function is global, not inline, so passing a pointer here
-instead of returning a struct may even behave worse in this case.
-
-(and we'll save basically only 8 bytes on the stack, which I don't
- believe is worth it).
-
-Thanks,
-Olek
+-- 
+Kind Regards,
+Niklas Söderlund
