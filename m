@@ -1,57 +1,57 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CEDC25743B
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:38:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D937257453
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739212698; cv=none; b=osxV2Plw+0Ypi62C78hF/wb1xOZEPbq4SzpebGPlAYLxenZLhyf7tK+xOeL1rVKZFRc9KcX/YAYP+1kJl5kcYTi8OghjXxpJMoFIieVa3xANZ4/GZxTCJ1fihpbXjm6w6NA4DkeyVGOShAQS/xSaASHZ/yEt/x0hTv+SU4/ACEM=
+	t=1739212700; cv=none; b=iayfIID0kLZeyn0ZxfdJDlcpzPwCnNXYN+pbd2Co7nMrYk5r4Jg2UqH1m+ugp7gm0l+ANMN78wXhFSmCRGkS+ESqmZg7T0jL8lP+v7l91vlzOOLrrQos4IvBGuFQ0scyfYE8soCw8r/2f+fTonTQs6J9vOYdxvfWbQV6EG3VDpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739212698; c=relaxed/simple;
-	bh=OFakRqNQKHADdpdhmZgfVErGfxtO80Hgq1mtytTW264=;
+	s=arc-20240116; t=1739212700; c=relaxed/simple;
+	bh=6ixW3uqiFvuVD+HyDPYyEDMckDxt6jrLcM7mLWSWT0Q=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=fUfmmnCoF7iiT5c0DHyYLRdC25pRqaIOhHA0Ij3ssgmARhwmGb8/dX+jaF1Mwaix4dcFxgIxLAz+qs9Y1V2TeRTBxeeHvkHFkglimFMi3qeASP7U2VIe8z3mKnTrn/61MF/OR4asIoJk57ebKAGUCMraeQOMFArllL/B8rN0xdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qtqYaJwH; arc=none smtp.client-ip=209.85.219.201
+	 To:Content-Type; b=dvv4GKo74EUKe/c19gmrsTm5wyhCebuDbSzMR6Ere0Qj5kFcR41RE6wK/sLUTYSiiSuY3IcKNhF13suetBVigUjQvlSRYBiDg5YQDJ50Xkn+lF/Kix+uhVJ6uI7hNL64ir3Gl9ug0gOJrNf1hAQyySVbXjmA/6o9IoIP2sxrFmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rj+Wbo4I; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qtqYaJwH"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e5b2bf5a317so7255130276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:38:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rj+Wbo4I"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e5b3ae2e0d9so5755070276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:38:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739212695; x=1739817495; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1739212697; x=1739817497; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=vYBVa7z0m4z3JsO7DUulpiX1vMOJnR6DEMUcDKBuhfA=;
-        b=qtqYaJwHcdPbGa6uWIo4NL37DHQxutq+G1HWSKu9sCcmi/Q2xzHRgTy2aml6ep5QG+
-         Pid4BuVBXLm/ZBkcJoPWYH6JCDO/xiRYvdX2Pnt9OKINUQM2hIhVT/DsXXBhWufr4Khl
-         Bqegvo9SsGH1j249gBHsRvmcaHtCDb+l1kBT2zrh+wbVN8mbLxjbY+XbY7GooIX7aBwg
-         HJXH9dhph+ARkxHgDhzSM9UykfB9d9FcRHYdUhoyXyGhfKWWHoxlee+aIHsicgleplCN
-         iK6qeq3urwPd8dEejrPEFwDXR4h1fGM0C+lvUlLG8f/74WCdB2BUXRaarjUx8xI1W5qL
-         QzQw==
+        bh=HCljTNPPwHKTDTDfBQ8knfX7jWJi09j9Ne8EmTtzMbc=;
+        b=rj+Wbo4IrdqiKPq7fPxzwq4og/dn5lf5HVF4v9SCGpNciqwQt0mr1MIU8JSqL5hJFE
+         rEpEduaTca1qABu0c1BSc07NnIyfFy1iiscbtDolkts0nb1mtIn+Qwfn3OIsANLeqFt0
+         nvQlfLUu7/qCudzAg7HCteeUJ7fm1UhY7ct5cnBJ2jnm37do0rERqoYPZcIQalIaskkp
+         eXSv5cPBM4jYygcgT6pghc3X/3sqFYasXd3h7U1mn7qpLLr6fU17BeMYs7100XihQw84
+         KZMR7n1cKmqKGsnCrQluqIFgvjFpCASJ1OX8hMzB5s9O+r0YWfvzZnsuP/mAYA3Kew0Z
+         7h7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739212695; x=1739817495;
+        d=1e100.net; s=20230601; t=1739212697; x=1739817497;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vYBVa7z0m4z3JsO7DUulpiX1vMOJnR6DEMUcDKBuhfA=;
-        b=blS+8Px/U1InGTUXDbuPTdyxk+//affoPLD5l6nBaZZmxPcJ2ibPjVM2KS7zCa4SDB
-         pZv5aHK9y62nc+Cl2bslju+F8bu/j0Mpms9gUnTWL5OHP8/X58qIReuautUcLlDO4xhi
-         lPJdJOTXIQC2OqskDlqkBNMoxlCyAaHYDPaYa/HHZ9sisEmrwWVOwODY+Ej2q5e13d30
-         ifaTGk7SdeXRzYEFrBxktjAQbL8qhUWOo/7Wjam46ltDZ0ubz8fnX/on0Ni5Y8Gz4wMo
-         XY6XfZCnbTI6Adx9ffK3uqJxqs9UOljffU/AKiTMgWWX/Vsyi/0/0tk36dj+Mw9ec/gF
-         pSOw==
-X-Forwarded-Encrypted: i=1; AJvYcCVM8p8RRYNHEl0ufsXxhBG5yqorfzS2yv6u9FebCGjvj0SuDqoU4B/WOnHLl9Ji48sPtjitwFScQoiwQ1M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvGNJd+LQoKBQoQuN+PQYpiPpkuXQltAjnfT3BPyE1fzuJqC/s
-	pqFKvUU9Mk+BzWEr96npj5MomiXC9UbGdn0hOtHcECQmItz8cEk7Hj8vbHg9NrUiVOXMEsBGGnL
-	qwMQSag==
-X-Google-Smtp-Source: AGHT+IHKeCisUol3zDmhjIr5zbOJ7wY6aZEFAXOChmLKaU4l4cT6Voj+AsLIzjf79+Pu4qf2BTOgzii8z1sH
+        bh=HCljTNPPwHKTDTDfBQ8knfX7jWJi09j9Ne8EmTtzMbc=;
+        b=wus2Y/EOz3HG8Xm9UKc69ExYQHyq+L0zp+ZKmyZnRbr3xY+WHneRbiISyz/bLcoldr
+         IRMCSdkM4E6ncYOlW5dqrY/I74FaJrG+TrflXQDJeCSC/T8kMPDgQq1y+4+b61w4FvLt
+         HWmCFG2tCUihaT4Wp8lGaZTiZlWAHe+yiSFQsVW0tsmLriU7FLUibNnTFc0ViKeHqm8+
+         3BYJVb7T5+dHtMm8o4qQtASbFQZ8AiUusWWJfN2ilN0VvHc5My95I5Cv96yIrDO/p779
+         ZYeYNajvToBGruZUQnHzO10hCW1pJhU/ZST/WA7+OQR0voS7UlAliDVNyq6giLtJM/SJ
+         N0Ow==
+X-Forwarded-Encrypted: i=1; AJvYcCUbCMqp7zErwHMfRiWpb7VXR/KRv+4myo55B8RL2b+PzC44M8EijKueVT9u8jZHqfmr2li56Va1DJsIkds=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxM50HD4mc+qByi+UgBVNkEz47uHg4eZY8X8irQusoE9xh3zWMD
+	qTMYrv1q/b3eiiVqDAGohiVxsQOsLD1EJ64zAdJwP7q/O4VbARDKviny7rODXgTGQQlRE2+BNt2
+	8a4ChOQ==
+X-Google-Smtp-Source: AGHT+IF/3fXdDMGjHwsubbKV2X/CqJQNFBb0YnBrBMqMQu/nTbASFKI5+C4RdgJWfhkPD5Ov2HtATvcRKtCT
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:c64e:af58:30d4:168d])
- (user=irogers job=sendgmr) by 2002:a25:7a44:0:b0:e5b:3445:d33c with SMTP id
- 3f1490d57ef6-e5b461801d0mr111693276.3.1739212695310; Mon, 10 Feb 2025
- 10:38:15 -0800 (PST)
-Date: Mon, 10 Feb 2025 10:38:05 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:1365:b0:e58:98ba:77a8 with SMTP
+ id 3f1490d57ef6-e5b46261c65mr114792276.6.1739212697325; Mon, 10 Feb 2025
+ 10:38:17 -0800 (PST)
+Date: Mon, 10 Feb 2025 10:38:06 -0800
 In-Reply-To: <20250210183808.130522-1-irogers@google.com>
-Message-Id: <20250210183808.130522-2-irogers@google.com>
+Message-Id: <20250210183808.130522-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,8 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250210183808.130522-1-irogers@google.com>
 X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Subject: [PATCH v5 1/4] libperf cpumap: Add ability to create CPU from a
- single CPU number
+Subject: [PATCH v5 2/4] perf stat: Use counter cpumask to skip zero values
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -75,49 +74,66 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add perf_cpu_map__new_int so that a CPU map can be created from a
-single integer.
+When a counter is 0 it may or may not be skipped. For uncore counters
+it is common they are only valid on 1 logical CPU and all other CPUs
+should be skipped. The PMU's cpumask was used for the skip
+calculation, but that cpumask may not reflect user
+overrides. Similarly a counter on a core PMU may explicitly not
+request a CPU be gathered. If the counter on this CPU's value is 0
+then the counter should be skipped as it wasn't requested. Switch from
+using the PMU cpumask to that associated with the evsel to support
+these cases.
+
+Avoid potential crash with --per-thread mode where config->aggr_get_id
+is NULL. Add some examples for the tool event 0 counter skipping.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/perf/cpumap.c              | 10 ++++++++++
- tools/lib/perf/include/perf/cpumap.h |  2 ++
- 2 files changed, 12 insertions(+)
+ tools/perf/util/stat-display.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-index fcc47214062a..f3054894ff0c 100644
---- a/tools/lib/perf/cpumap.c
-+++ b/tools/lib/perf/cpumap.c
-@@ -242,6 +242,16 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
- 	return cpus;
- }
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index e65c7e9f15d1..126fe6cc8893 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -1022,8 +1022,16 @@ static bool should_skip_zero_counter(struct perf_stat_config *config,
+ 		return true;
  
-+struct perf_cpu_map *perf_cpu_map__new_int(int cpu)
-+{
-+	struct perf_cpu_map *cpus = perf_cpu_map__alloc(1);
+ 	/*
+-	 * Many tool events are only gathered on the first index, skip other
+-	 * zero values.
++	 * In per-thread mode the aggr_map and aggr_get_id functions may be
++	 * NULL, assume all 0 values should be output in that case.
++	 */
++	if (!config->aggr_map || !config->aggr_get_id)
++		return false;
 +
-+	if (cpus)
-+		RC_CHK_ACCESS(cpus)->map[0].cpu = cpu;
-+
-+	return cpus;
-+}
-+
- static int __perf_cpu_map__nr(const struct perf_cpu_map *cpus)
- {
- 	return RC_CHK_ACCESS(cpus)->nr;
-diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
-index 188a667babc6..077133935bf4 100644
---- a/tools/lib/perf/include/perf/cpumap.h
-+++ b/tools/lib/perf/include/perf/cpumap.h
-@@ -36,6 +36,8 @@ LIBPERF_API struct perf_cpu_map *perf_cpu_map__new_online_cpus(void);
-  *                     perf_cpu_map__new_online_cpus is returned.
-  */
- LIBPERF_API struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
-+/** perf_cpu_map__new_int - create a map with the one given cpu. */
-+LIBPERF_API struct perf_cpu_map *perf_cpu_map__new_int(int cpu);
- LIBPERF_API struct perf_cpu_map *perf_cpu_map__get(struct perf_cpu_map *map);
- LIBPERF_API int perf_cpu_map__merge(struct perf_cpu_map **orig,
- 				    struct perf_cpu_map *other);
++	/*
++	 * Tool events may be gathered on all logical CPUs, for example
++	 * system_time, but for many the first index is the only one used, for
++	 * example num_cores. Don't skip for the first index.
+ 	 */
+ 	if (evsel__is_tool(counter)) {
+ 		struct aggr_cpu_id own_id =
+@@ -1031,15 +1039,12 @@ static bool should_skip_zero_counter(struct perf_stat_config *config,
+ 
+ 		return !aggr_cpu_id__equal(id, &own_id);
+ 	}
+-
+ 	/*
+-	 * Skip value 0 when it's an uncore event and the given aggr id
+-	 * does not belong to the PMU cpumask.
++	 * Skip value 0 when the counter's cpumask doesn't match the given aggr
++	 * id.
+ 	 */
+-	if (!counter->pmu || !counter->pmu->is_uncore)
+-		return false;
+ 
+-	perf_cpu_map__for_each_cpu(cpu, idx, counter->pmu->cpus) {
++	perf_cpu_map__for_each_cpu(cpu, idx, counter->core.cpus) {
+ 		struct aggr_cpu_id own_id = config->aggr_get_id(config, cpu);
+ 
+ 		if (aggr_cpu_id__equal(id, &own_id))
 -- 
 2.48.1.502.g6dc24dfdaf-goog
 
