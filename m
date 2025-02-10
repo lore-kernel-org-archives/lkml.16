@@ -1,125 +1,137 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A533F2500DA
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63BA25B680;
+	Mon, 10 Feb 2025 17:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739209989; cv=none; b=a0V4goIAZjE8mcFf8nu8bJWgwJW0QBFb9Iv2MTmlju8PYevAiAgDcjExdTrkn/oNXIxOBNE6KtDo8wQSJOiJS8Wap4kaaAwsrdKSKrkOQBn63PKwgJ084MyyNY4SZ4QqyoI7q+BsbzAdcDEQE/8OpmbH7zzoOwa8+3nyfK5E5UU=
+	t=1739210027; cv=none; b=h0o/yovoXedNHN+7buyRqC0fMUfQE0kWuY2Wlof4Pvd3mtjQZkjEkipwEDXKDSgrNq8QaB6xMn3wTjpdMjcC7mJ1dGnbymnrAoJQt0Io7OUATD8pCQ/oWDqXxRD/vFF2EdljFFvc79nkJsZGqMnRjIboMcPwA43DFs+QlXnQo0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739209989; c=relaxed/simple;
-	bh=U+YQ5PhZVcxOIzhFI+20sedITuhk+41a7YpPgwQM7HE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S3/qXU4m8PgagLjlsAe6jdplUqvPGmGBULtA5HQxnzerlV1HXt7iB3KAUTP1JL/ZTPBuRL/hzLvMzJu6X2myyHuyrj41x0j3yui4HHjxFtwxSLQDIs+A9qgpKiV/SNLwET/FuENmJT4Ez2ddCjflrPHh9+llXB2kTjMDnzw5SIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KDBkQNeS; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739210027; c=relaxed/simple;
+	bh=g4hD9FU044pQJDiMUw+fFqeYHEj1TgqWTXH3iBwJrkU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=a+Yiz3vqZHy2yed6/nEUiP2PfGHfVu/k7o9WpeEHz/UL4bM44YNzX7LYS4J149poFRTYE2oICMwlGwWiL7w6geS3E/ayyvGuJU8cTiYvtUocf/YpL231aevXLFQlBPudlSf4+rHqlvfwCV5u1GlQ4Kj/mYbjwZjmCWsgjjXwc3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidreaver.com; spf=pass smtp.mailfrom=davidreaver.com; dkim=pass (2048-bit key) header.d=davidreaver.com header.i=@davidreaver.com header.b=mX7KiW8e; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=nADWn/nf; arc=none smtp.client-ip=202.12.124.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidreaver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=davidreaver.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KDBkQNeS"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2fa19e1d027so5807148a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:53:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739209987; x=1739814787; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=LGsMNA7hkuFPRoTb9bXf92iX6DhOUuWxNMoqTKxh3jw=;
-        b=KDBkQNeS3QfNzmRGRZsNWvNWBJiQhiBPXYbbiF9ipG2ZPXAh5CZ3hmbytZ+4eX8SYp
-         xLZRE1sh+aJkqb075+yIxx+7UR43dWa/pyknWkf6MkJe80QzMumX3ky33M8v4P7AiwQ5
-         QQ4o/AYvthZCSwKis7OmhBy4Pm2iZ+Dxil2u7p/fKSdMgqwsO21ypPrDa6wxpBui7AeA
-         TH0lSsyQq7QCIcNw4IXTwzHJsHz+kZbfEbAnivhM45xpKHP2WBGjJBjcoxOEHpifbWM6
-         YYpNjvzBxGybdovKXZD1Sq/4QWHYLGKxb0S4RIso/hsOtzQzE3C+N+h5TZ8F9b0YfFMg
-         Z0rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739209987; x=1739814787;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LGsMNA7hkuFPRoTb9bXf92iX6DhOUuWxNMoqTKxh3jw=;
-        b=sE9Em6enOzzvADnMv3TvmYjHgx/+naDZ8Nxfcq5GfkoXT3yS85ofBYdJCMGiR1ficC
-         uEkCerOtzfqGHJ6uHvY59WFGNEFQokgc+qWBMnPAriiyxgnSd7Bb9eJfCgnw4bu38kOn
-         vp6+zOY1JA6RT2qux7hzo87BHLNU7+rzWxpBQ36CKcqg0KDAh9KNeVsRPKaWse8/0zFL
-         +UhCNLKOJquHYZrRQHcdoG5Or+iZdr477uRukz9QoemP/slWxw3ICALd2AsHyL/R8XOX
-         pSY0GdPU/ReY7LQz8OZ7MD4sW9lldwmnia7ruD6I3KWopUaHyqyRe5GCcP7y3vubbZoh
-         GaPw==
-X-Forwarded-Encrypted: i=1; AJvYcCVySYOjXI4/HL+owNMfzzBoD5Pg19VoPRH/ADw4GLIcOhs9UPT2LczbhC4/Zdy8ebwqgPm4ALQYPQe/KlQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzadaMgw3AH71xCxJRi5N7F0vE8gpMir8/FPKvCo9TJFRt9PbRH
-	xdFG1G22JRgqbPZtfhnFZ4x07jv6saxwTMETQWK5kli2SGB8BTyLvUCnoj7bJg==
-X-Gm-Gg: ASbGnctU47fF7N2CRYR7ncBaWIP7oYG94x3+8ADFRdZY7K5u1EAxjcEshEaGEOrHdTC
-	yjMDL+RO0z+9g77SuYwXc9qxcJueeNEERyFF7q6ULNQ1PS77umZrxqmmk3iNbC2aihWEmxlSExY
-	eu7plE9EH9fEp+onTDTzVdtINIBMkbYDD7boS5JTKbltfccVygAKCvV3dpR6qo4SKXquB91upC1
-	TdYPWQTBLr1OM/Q5hLfNpBeRx6EpzT9PjPW3fHnT+Orx+d9LJsXZ+U/5y6HHqN6I/J6b9PWcvdq
-	VPM6epgpvoBUIBQq2LMhz4s/slF0
-X-Google-Smtp-Source: AGHT+IGXtPEY3mjc1Vv3Gaj+GWe5Fs2qY7xOB5/6dE0Jux/iJmgud1Xfm7AdIWKZQ7mORD5U/TLpnw==
-X-Received: by 2002:a17:90b:3e8a:b0:2ee:d96a:5816 with SMTP id 98e67ed59e1d1-2fa24062e1fmr23566047a91.10.1739209986903;
-        Mon, 10 Feb 2025 09:53:06 -0800 (PST)
-Received: from thinkpad ([220.158.156.173])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa099f4d6asm9079409a91.6.2025.02.10.09.53.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 09:53:06 -0800 (PST)
-Date: Mon, 10 Feb 2025 23:22:58 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Easwar Hariharan <eahariha@linux.microsoft.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	"open list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
-	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>, Hyper-V/Azure@thinkpad,
-	CORE@thinkpad, AND@thinkpad, DRIVERS@thinkpad, status: 
-	Supported@thinkpad, PCI@thinkpad, NATIVE@thinkpad, HOST@thinkpad,
-	BRIDGE@thinkpad, ENDPOINT@thinkpad, SUBSYSTEM@thinkpad
-Subject: Re: [PATCH v2] PCI: hv: Correct a comment
-Message-ID: <20250210175258.pwaqr3dqxstcjmui@thinkpad>
-References: <20250207190716.89995-1-eahariha@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=davidreaver.com header.i=@davidreaver.com header.b="mX7KiW8e";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nADWn/nf"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 83DD72540135;
+	Mon, 10 Feb 2025 12:53:43 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-09.internal (MEProxy); Mon, 10 Feb 2025 12:53:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=davidreaver.com;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1739210023; x=
+	1739296423; bh=9YNp4mbohM/7lWf7uXTJa3pcrFvbaYJczil0eE5s/Tc=; b=m
+	X7KiW8eJ7fsz9er8oiEGA9j2sthF2lsHF4fw5aoI4VXRGIskHsAboyuX4Ya3aX6z
+	O32CcGTn625nzZ1dMroVnJ6D+yrcadUws74AXu3snihjbTwr6Fy27C5fdEV2WMR5
+	8pDYeZHHLMKpZbUWzzmhnI743b4Ke6Ly9FKGAdh4QY/UrtgufpySQQxzMUy5eU7K
+	u5gK2Yljp0LbY8wBuIRfQcVtY31x2c6uSBdD+1YeLIAVIbnlpjCd6feZF1zTPWEJ
+	4ZWlP196DIeg+h3VTRN5sEzBoG7QVtnRvNvo2G+SxtmP0svKOJZ7h0lXwT59VZiF
+	EG4tYS0fEDrQDYq5+yxiw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1739210023; x=1739296423; bh=9YNp4mbohM/7lWf7uXTJa3pcrFvbaYJczil
+	0eE5s/Tc=; b=nADWn/nf34RFQ9hy1ns2O4bHDiVhrzes1ytP9wbOur331SzhB4G
+	Og/M5rML1fKw5H9cyXtQaRvIUNSsb+ol2IEcOrhVSJaPdrZ6IJripYlQ4iHh2Bg+
+	rOTO8zo4yLoluvfdR8mSaGMTNRLL91kU8DL9mL/p6SsynwuNYSu8v4NwL47e7mLH
+	aOtF/C9j4otTDXLO7fHcUKPrY0LsG0qDqj2xhPQAAX/qSD2h0NkYslg577TWUR87
+	Q0qNB7TWsZ/B//IPqOTdFVfr1tdL7wLLYrLPzSfaB0JZ+l+5md0kosDGsbx3UoGg
+	kF3l8NNXCgFhEpejrxZwSXckywTpiO3AvpQ==
+X-ME-Sender: <xms:Jj2qZ1X5QKiMIF0WMtUUADbP5bcq1w5C5zKLehz8QAURUcdKRToDcA>
+    <xme:Jj2qZ1mj_ts1e6D9lU1YmLYC1A2BCwDT_45Ej62PDFsWr-yc37q-fKm-q9Pp1hUjf
+    vEoZfDig-FZJs3N8NQ>
+X-ME-Received: <xmr:Jj2qZxbbmS21-RUUGPaxp7K8MZnyQ-iGdlx8p7Og7aVp2Mh21V-VGh61WdMRfqqAxz1erae_eERKeOTgM5FyRqsIc3Jy1w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefkeejfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtsehttdertddtredt
+    necuhfhrohhmpeffrghvihguucftvggrvhgvrhcuoehmvgesuggrvhhiughrvggrvhgvrh
+    drtghomheqnecuggftrfgrthhtvghrnhepudetjefhvdeujefhkefhteelffelheevtddu
+    ueelkeeludevteekteekjeevvddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepmhgvsegurghvihgurhgvrghvvghrrdgtohhmpdhnsggprhgt
+    phhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigqdhkvg
+    hrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohgttghisehi
+    nhhrihgrrdhfrhdprhgtphhtthhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtohepvhhirhhoseiivghnihhvrdhlihhnuhigrdho
+    rhhgrdhukhdprhgtphhtthhopegsrhgruhhnvghrsehkvghrnhgvlhdrohhrghdprhgtph
+    htthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehk
+    vghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurg
+    htihhonhdrohhrghdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhg
+X-ME-Proxy: <xmx:Jj2qZ4V4g_a7bgpbXcYypZhG0TuLqtlIA1S8isTJzLz5FcgS5JUEOQ>
+    <xmx:Jj2qZ_mSIcEpsNEmdPdxMqccuGjkJHDIs3LQzOtfBm7yYaYdXPuBlA>
+    <xmx:Jj2qZ1fmyVFc6QOSJgLFG_rKewDiC4ib-orj-s1YhZ0qUhhYGZSnQg>
+    <xmx:Jj2qZ5HOunSPNAw0Ife39dI5YEfkaSSSTdy9WVxumpzJ6JRT08Fwhw>
+    <xmx:Jz2qZ4jEqzdgQ8PgV_S73J_t6e9k_R9_PZpCp0lL3IR-qMLFKd6eo8LW>
+Feedback-ID: i67e946c9:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 10 Feb 2025 12:53:41 -0500 (EST)
+From: David Reaver <me@davidreaver.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,  "Rafael J . Wysocki"
+ <rafael@kernel.org>,  Danilo Krummrich <dakr@kernel.org>,  Christian
+ Brauner <brauner@kernel.org>,  Alexander Viro <viro@zeniv.linux.org.uk>,
+  linux-fsdevel@vger.kernel.org,  cocci@inria.fr,
+  linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 5/6] debugfs: Manual fixes for incomplete Coccinelle
+ conversions
+In-Reply-To: <20250210114531.20ea15cf@gandalf.local.home> (Steven Rostedt's
+	message of "Mon, 10 Feb 2025 11:45:31 -0500")
+References: <20250210052039.144513-1-me@davidreaver.com>
+	<20250210052039.144513-6-me@davidreaver.com>
+	<20250210114531.20ea15cf@gandalf.local.home>
+User-Agent: mu4e 1.12.8; emacs 29.4
+Date: Mon, 10 Feb 2025 09:53:40 -0800
+Message-ID: <86cyfp3cuz.fsf@davidreaver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250207190716.89995-1-eahariha@linux.microsoft.com>
+Content-Type: text/plain
 
-On Fri, Feb 07, 2025 at 07:07:15PM +0000, Easwar Hariharan wrote:
-> The VF driver controls an endpoint attached to the pci-hyperv
-> controller. An invalidation sent by the PF driver in the host would be
-> delivered *to* the endpoint driver by the controller driver.
-> 
-> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+Steven Rostedt <rostedt@goodmis.org> writes:
+>
+> Why are you adding these defines?
+>
+> All files should be just including <linux/debugfs.h>
+>
+> so that they can use either "dentry" or "debugfs_node" while you do he
+> conversion.
+>
+> Then the last patch should just modify debugfs and debugfs.h and no other
+> file should be touched.
+>
+> I'll comment on the last patch to explain what I was expecting to be done
+> that should satisfy Al.
+>
+> -- Steve
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Hey Steve, there are two reasons for the temporary defines:
 
-> ---
+1. There are a few files touched in this series where replacing the
+   define or later forward declaration with an include <linux/debugfs.h>
+   caused errors related to circular includes.
 
-Where is the changelog?
+2. The heuristic of adding a define or forward declaration wherever a
+   struct dentry declaration existed was far easier to automate than
+   conditionally adding an #include <linux/debugfs.h>. It is harder for
+   Coccinelle figure out where to put the #include if there multiple
+   #include blocks, no #includes in the file, etc.
 
-- Mani
+However, I'm having trouble reproducing point 1. I'd be happy to use
+#include <linux/debugfs.h> instead of forward declarations. I'll see if
+I can find a way to mostly automate that. There are "only" 56 additions
+of struct dentry forward declarations so far in this patch series, so
+even if I have to eyeball these #includes by hand that might be okay.
 
->  drivers/pci/controller/pci-hyperv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 6084b38bdda1..3ae3a8a79dcf 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1356,7 +1356,7 @@ static struct pci_ops hv_pcifront_ops = {
->   *
->   * If the PF driver wishes to initiate communication, it can "invalidate" one or
->   * more of the first 64 blocks.  This invalidation is delivered via a callback
-> - * supplied by the VF driver by this driver.
-> + * supplied to the VF driver by this driver.
->   *
->   * No protocol is implied, except that supplied by the PF and VF drivers.
->   */
-> -- 
-> 2.43.0
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+Thanks,
+David Reaver
