@@ -1,102 +1,89 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48170C2C8;
-	Mon, 10 Feb 2025 03:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E7043179;
+	Mon, 10 Feb 2025 03:51:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739159494; cv=none; b=pJso35mUXsM5LOnFQku4tZOFOGtuFm64raQPyuAe4ojPDygbFrtHquhV1Z8ye1t5oWx4qh5nw/xUYyKrJKR0I9rC3BiLPkE4rbBzXBz5d/1keKHAWKSHjH1oMR21N61O/kbhVICLJFxxFizRFxJyLR+cXRrA51coQRaBR8zeips=
+	t=1739159513; cv=none; b=GsLUxYl6tSxIAGcShIOGxu/8kkohh/pbQiVXAlf+u+wxl/GK7JV/XodiDi4HHG3DJpf/CIMkjY2lJRhz+F/PHrtD+UfPD9zMW1rTLek8aMYCFQufsZO+clcyXsY/T9qotV05TeAzQiMiE724lNnl+NQPbka2xMm91eBzZ022rDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739159494; c=relaxed/simple;
-	bh=/PFtgm6HF2RDDoDcQABIGvWvhYsO61xo4pVLmqIwCpU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o5QExVLnvFMausH9LSr9ag+WpHAjQ3KyMNLn5SAb/eOhdTG/m+4O8zOEioN5Um3XwyPjyR9q5E6BL+LAMCLghxZYKMo2MCJaEDj0nq5POR+fdDQTGQlPAmw8v/lojGnvnCeVIJgHp5dldbVK8Ur62SSdv98HOlA8PKTmqZFSrQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=hFTG77JR; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
+	s=arc-20240116; t=1739159513; c=relaxed/simple;
+	bh=USxjU0Ejh8dzpgjSPKAsKXHOWmUqAOKs5SMG0Vx4Hos=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=qjoSDZY3kCSMoxDYlbPvRMQfCKTrXjCvLSuI7CBk6USr5GW4XBIsXGciBtZBvJE/EXlUK4MthJbd6tXiFGvVdW+heJtNZ1xnt4wI4usauEycP5M5Oe6ZrY20FT+g/jwIhig2R8AffhBLVBTism0IlDhutXMJoIlrHtCwEqs/ukQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=QuD2iPsa; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="hFTG77JR"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QuD2iPsa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1739159508;
+	bh=nH66e4zZp//nGIZAmkjOk4zKpfsbVFB0TMVgq7LTyqs=;
+	h=Date:From:To:Cc:Subject:From;
+	b=QuD2iPsa5QTk1qecuSPHEjek+9hTwSX6IhlbDTpCpVv2nl060ARDqek2Cu0+C2GMs
+	 pYQxmiHRavhJS01Bdew6UKzNINpaQyhYhe2bepeatKsO1u+95/GfLI+4ZWu7rJXoQR
+	 D1yc1lCesVtVZhKR9KESnE9iDMXlksffp6qvXY/AcY3940LpaQKxn1BgOBU3aH0AoX
+	 LBbJDv7Nb5ui4ZNZ6NGd0lRH/YE/zDy+wZm5ZkGxVNyVQfaioiHmRm0QDdUJauCMXf
+	 b03+Awq88/w0pVCUmD7nNSesawDKHtDkuwS4xmJo6xtiZI7aGT7xqghIhCiSQg92zf
+	 2vroQyyNURtHw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4Yrr4C4hG0z9sc4;
-	Mon, 10 Feb 2025 04:42:19 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1739158939;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V9z64xaAcptd3m22dbWB7eghov4SGAeR/tFjHud6L30=;
-	b=hFTG77JRQ2XMSvS6Ohuu2Mq/JN0NYyUaJMbDj7PvF8vkosVh/hZ9cnqZD9SssHW9JtchFM
-	MsxRXIK4WKWCUX9Ycx9Fg31jb06SLk41R6w0Aqxvk2dHV1WT4Z3LBCNWK6e+5p4s9CC3eP
-	GZEsebw7rKPjAXTItGCUqHK50zfwhwOVgW2+Ljd7/ZFZ/lgdo/azqCZ31vm0af3OjgTH9T
-	QBYMno8tTkt/nIYZ6bPcnU8GRDFi1l3PsikTHGQnU2h6Jxvv2sGVu38hraiaW47ekS2kBO
-	9IsLVGY7tXaBD9k8J5+In5hGacRprkCgIiIp/74IX5tPjbZn06nzVwqh5HNfUA==
-Date: Sun, 9 Feb 2025 22:42:16 -0500
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, Simona Vetter <simona@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/msm/dpu: Fix uninitialized variable
-Message-ID: <ycd7uds73swh2ql42455ifv6fmdpa5sklmldgdfk5y2b5is6jk@etmnysxnenn7>
-References: <20250209-dpu-v1-1-0db666884f70@ethancedwards.com>
- <o7yqskbm6px5t2klbiid7dklogrchyn4we2radaoznopupczxw@imywm2ngpoc5>
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YrrH86KR5z4wcw;
+	Mon, 10 Feb 2025 14:51:48 +1100 (AEDT)
+Date: Mon, 10 Feb 2025 14:51:48 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build warning after merge of the mm tree
+Message-ID: <20250210145148.23e53bea@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <o7yqskbm6px5t2klbiid7dklogrchyn4we2radaoznopupczxw@imywm2ngpoc5>
+Content-Type: multipart/signed; boundary="Sig_/obA=5=yVVnXJ_2zj7OEoAm1";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 25/02/10 05:41AM, Dmitry Baryshkov wrote:
-> On Sun, Feb 09, 2025 at 10:32:33PM -0500, Ethan Carter Edwards wrote:
-> > There is a possibility for an uninitialized *ret* variable to be
-> > returned in some code paths.
-> > 
-> > Fix this by initializing *ret* to 0.
-> > 
-> > Addresses-Coverity-ID: 1642546 ("Uninitialized scalar variable")
-> > Fixes: 774bcfb731765d ("drm/msm/dpu: add support for virtual planes")
-> > Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
-> > ---
-> >  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> > index 098abc2c0003cde90ce6219c97ee18fa055a92a5..74edaa9ecee72111b70f32b832486aeebe545a28 100644
-> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> > @@ -1164,7 +1164,7 @@ int dpu_assign_plane_resources(struct dpu_global_state *global_state,
-> >  			       unsigned int num_planes)
-> >  {
-> >  	unsigned int i;
-> > -	int ret;
-> > +	int ret = 0;
-> 
-> Thanks, but I think it better to make the function return ret from
-> within the loop and return explicit 0 if there was no error.
-Will do, v2 incoming...
+--Sig_/obA=5=yVVnXJ_2zj7OEoAm1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-> 
-> >  
-> >  	for (i = 0; i < num_planes; i++) {
-> >  		struct drm_plane_state *plane_state = states[i];
-> > 
-> > ---
-> > base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
-> > change-id: 20250209-dpu-c3fac78fc617
-> > 
-> > Best regards,
-> > -- 
-> > Ethan Carter Edwards <ethan@ethancedwards.com>
-> > 
-> 
-> -- 
-> With best wishes
-> Dmitry
+After merging the mm tree, today's linux-next build (htmldocs) produced
+this warning:
+
+include/linux/memblock.h:60: warning: Enum value 'MEMBLOCK_RSRV_KERN' not d=
+escribed in enum 'memblock_flags'
+
+Introduced by commit
+
+  2bcb44ca91c2 ("memblock: add MEMBLOCK_RSRV_KERN flag")
+
+from the mm-unstable branch of the mm tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/obA=5=yVVnXJ_2zj7OEoAm1
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmepd9QACgkQAVBC80lX
+0GwfXQf9G1QnCVsSHXx7mHF1WZf0tYQmoOeiqMaSk0GAr1j6LLDWn8SL+Idg/R21
+XbRhhwprrM8j/BBzn6W3XrFwJ+H0Qz0epQhTu1T1mD49ZLDelf/mKR7VxyhQ11jl
+jZ1W61EkV+7jsmcmvM38Lg0GgfnBbaRiGvSuQVpe72Ag/Y1PUx5oUpbZl+jIFIxd
+VJY1TisiRO3pYBUr247KGZi/r6QEnmBOfJHhvCN4UwOaSYuIPV/v+i1I6f+LNCLG
+54A6E23gzOVrtjuEPatCFdBWK/Q279pP8oB+cThdS0bMC1BJobL+v+i88CCBj6Aa
+7Mqbq3zrgGqkz1MVaji2Ey7D6XIOvw==
+=4vy4
+-----END PGP SIGNATURE-----
+
+--Sig_/obA=5=yVVnXJ_2zj7OEoAm1--
