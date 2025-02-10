@@ -1,115 +1,84 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.166.231])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A68A24C687
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7AD24E4B0
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:13:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739218398; cv=none; b=AAO7mqXrDZA8NuH4mhTP1OJ79s2q+ZYQNmcr5FFKI2c5+KjWzSFVPD2uHngYK7JyeDNFNXDj2hjKkEaFctTYRV9+VMs3cdbiamkBvndwbtzLlcPfZV9PUdQYgRZv5MiXs+nN37YA56yzKOETgh90IkLjIZXv6QM9eyxemwbafAw=
+	t=1739218421; cv=none; b=rkyFhxH9mfqRgQ/3YrPyelXwFpkyzWlpQm4qAa7wGmM8o30keOWHN2OzhhMaByy2fUX71z8emRyEWOqVqzu8g8Bh27lVDFGjoSh/BpRwwythIBj6dA8bmKLweP+ssZ3uOmZwDvgpf5R9Zg7sxxLB7pU5amfk2vljqIvbKOVn9JQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739218398; c=relaxed/simple;
-	bh=1c4M5xL5N+ZqW32clpzVCbTlEl8XeyMzw4K37//6rlY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=noZqvDAQ6pWRBPqmKryDijSRrVwHKqCYXLGi2E1EYck+wwu7Z6us6UDnOv5d1jUMNUS9sIWP3ljTGkvZRsx6bkcZE448KxY+wFoEfIbiElPw6TdcaYZlkVSkfSmnt6ieCVxvfr81jOtm1PONgqb1ZopjY2mfVGcciX0NZhX9u/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=U61+4GpY; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1739218421; c=relaxed/simple;
+	bh=eS7Xiq1mBUz2ufzFA3rI+awIHkaF6JmT7B8fpLKxT04=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lJ1hCRhbinpZbVR2VxMXtbDMsh8ut7+4XDQRZ56S58lbX3BcIVCdMPXqbFLgLQKjynJbafiTORZHYytlFkjv8LXHhnuvGw5MuMWN6KGHJLzZYUbp6x7ibc0QMThLa1S2ltAsxILEHn3Le4YWdz2cmshvX/26DdyTx2Fnn2YjysE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=XmF0I/Lz; arc=none smtp.client-ip=192.19.166.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="U61+4GpY"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6e4565be0e0so23700026d6.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 12:13:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1739218396; x=1739823196; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IsA2D7RWwZNKkZanu5txIKeWQkXNdP5BKkyfvi0dKOg=;
-        b=U61+4GpYCHcufU8AZAbuPtapiX4t0ewrhRzeN8y9+0sFeWUvy+slSXPW6umtFe0Y/J
-         543HLMudwMqDgNHSVWqtn1IVM/4YqSbaGjXbG4QcMCS+5lho7+gU6M+Ai+/mGLFpC4Uw
-         /P0hxuHX7g1zw8o/lRq2m0VatouvDewW9vD17EHG/8yKPOyDyfCxXL8muiP1Y9gVx8pc
-         W7D8URb9RAwKHc9j8kO30sJBJFZ65Rs++/tzgc0KliD0rmzn3o+uNPVBGxA4/7Jk927j
-         uYAW2EJAHNJHTM2A9/xo+WqUV/rEH6QTdpWqziZkowU8b3QKQ6lHtBrVZA4EVRm2xBfV
-         Za1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739218396; x=1739823196;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IsA2D7RWwZNKkZanu5txIKeWQkXNdP5BKkyfvi0dKOg=;
-        b=YjrWN4mfWIdZSbEfHEphTupLcuV9xnlJ2/5B1ey8I6gB/8r/URA3n5EwKw/ATfP8eM
-         MpgscQqxRZ4zCnk17WBw0z5sxtyrvufc466+AVUPiHTjItsTJQJUA10hKE2QYC5eygBi
-         HPRqEGtzrnjoX8C4Jeiz+bsAuOSg0xRjOzUwYa4Y2iXngN9WzWFX8C6A02Bs+wKesQo3
-         kRv1F1mrqKsIK3XFXl+yty3n9fq/gLJ2MLGS5U9WpuqI3uteKxDZr7qPr4GtP8aLxTTB
-         BW3Bs+/3cDFk9NKd0v9lPsMhV3MGyakxgV7CbFtkxwpybDk5Rw55QKZwN+MFM/icYl53
-         aX9w==
-X-Forwarded-Encrypted: i=1; AJvYcCVfGNV1LAJXOp7k9CVZuIHyUoNfOVPyDbDmwm/ag8d5JKrF4DvyG7x3LxvoM9WOs0SBoRQh+ojwi+LIbUk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxp3/1h0Hz/OIOevuUHEsBcLQUMv6lx/olG9BQy8SrpOLfalAUz
-	EBKFlvmNR5lLJtP9fHa8I7TwhyuMsxOMBx5qqBL0I62g8W/sXyqnxCgOhrrdJl0=
-X-Gm-Gg: ASbGncsePDD4b9c3JiqS/41IFf3oLxBsMiZLDxB6v8ZjhAmdCO9obP7o4CM/RgtbDqY
-	27HTSczknrPU+kvTgMMEv3xNHxzsIwlf2aCYnTNxq96HXtUDYUSz5KWknGq3jKrXVzsS+GaAHk4
-	U59eTYuylQaYOYeioPSUpErp1+LPXA8Q7lSYSZdNRkz5TXtL91IHsOYDf+xp04o5rV4rtgeBQk4
-	eybMNZlSj1Wwy+kcTTJWEKdsubIEnNkETkxBunqAu5qYnhupHc8J1ZO1HK5dKdGvj51tmoMms4f
-	2VdBkZz1owAY820mIamXl3JASKsSHIjkMKdyjLTxKt/gzwA9vxC9m7AZGDPo1/LBuodyXik0lA=
-	=
-X-Google-Smtp-Source: AGHT+IHUip5YMADfXv9mqUnuwstRyUZVEWa8wwzCcohodaY75zHwttm/vgjHcKoIUdbSid7/1TXa5A==
-X-Received: by 2002:ad4:5dea:0:b0:6d8:a946:eee5 with SMTP id 6a1803df08f44-6e445692b85mr232828896d6.23.1739218395869;
-        Mon, 10 Feb 2025 12:13:15 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e456893843sm25923626d6.59.2025.02.10.12.13.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 12:13:15 -0800 (PST)
-Date: Mon, 10 Feb 2025 15:13:13 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
-	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
-	rrichter@amd.com, nathan.fontenot@amd.com,
-	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
-	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
-Subject: Re: [PATCH v6 06/17] PCI/AER: Add CXL PCIe Port uncorrectable error
- recovery in AER service driver
-Message-ID: <Z6pd2QYTfRFxadey@gourry-fedora-PF4VCD3F>
-References: <20250208002941.4135321-1-terry.bowman@amd.com>
- <20250208002941.4135321-7-terry.bowman@amd.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="XmF0I/Lz"
+Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id E276EC0006F0;
+	Mon, 10 Feb 2025 12:06:44 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com E276EC0006F0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1739218004;
+	bh=eS7Xiq1mBUz2ufzFA3rI+awIHkaF6JmT7B8fpLKxT04=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XmF0I/LzSUHscSi6zGQB4WrExzx6BfEbSqIOYNQt/alFEAM8wkZUuSLBKPgSbDQjX
+	 sBoWjTPZIo1oZrh9fAsV4UiWLOjO2MPu+prW2g0pbNMFj22FGaB6KCcqa+PTdNv+D9
+	 Co1TDxgZvh/JB+tW8rq1Svf+Eevo4/TyZF6KjQjY=
+Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id BB93718041CAC6;
+	Mon, 10 Feb 2025 12:06:44 -0800 (PST)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: linux-kernel@vger.kernel.org
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-mm@kvack.org (open list:MEMORY MANAGEMENT)
+Subject: [PATCH] tools/mm: Fix build warnings with musl-libc
+Date: Mon, 10 Feb 2025 12:05:18 -0800
+Message-ID: <20250210200518.1137295-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250208002941.4135321-7-terry.bowman@amd.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 07, 2025 at 06:29:30PM -0600, Terry Bowman wrote:
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index a5c65f79db18..eda532f7440c 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -661,10 +661,16 @@ static void __cxl_handle_cor_ras(struct cxl_dev_state *cxlds,
->  
->  	addr = ras_base + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
->  	status = readl(addr);
-> -	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
-> -		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-> -		trace_cxl_aer_correctable_error(cxlds->cxlmd, status);
-> +	if (!(status & CXL_RAS_CORRECTABLE_STATUS_MASK)) {
-> +		dev_err(cxl_dev, "%s():%d: CE Status is empty\n", __func__, __LINE__);
-> +		return;
->  	}
-> +	writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-> +
-> +	if (is_cxl_memdev(cxl_dev))
-> +		trace_cxl_aer_correctable_error(to_cxl_memdev(cxl_dev), status);
-> +	else if (is_cxl_port(cxl_dev))
-> +		trace_cxl_port_aer_correctable_error(cxl_dev, pcie_dev, status);
->  }
+musl-libc warns about the following:
 
-Build errors here - after looking into it a little more, seems like these changes
-are actually meant for a later commit. I dropped this and let the later
-commits pick it up and it seems to build more cleanly.
+/home/florian/dev/buildroot/output/arm64/rpi4-b/host/aarch64-buildroot-linux-musl/sysroot/usr/include/sys/errno.h:1:2: attention: #warning redirecting incorrect #include <sys/errno.h> to <errno.h> [-Wcpp]
+    1 | #warning redirecting incorrect #include <sys/errno.h> to <errno.h>
+      |  ^~~~~~~
+/home/florian/dev/buildroot/output/arm64/rpi4-b/host/aarch64-buildroot-linux-musl/sysroot/usr/include/sys/fcntl.h:1:2: attention: #warning redirecting incorrect #include <sys/fcntl.h> to <fcntl.h> [-Wcpp]
+    1 | #warning redirecting incorrect #include <sys/fcntl.h> to <fcntl.h>
+      |  ^~~~~~~
 
-~Gregory
+include errno.h and fcntl.h directly.
+
+Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+---
+ tools/mm/page-types.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/mm/page-types.c b/tools/mm/page-types.c
+index bcac7ebfb51f..d7e5e8902af8 100644
+--- a/tools/mm/page-types.c
++++ b/tools/mm/page-types.c
+@@ -24,8 +24,8 @@
+ #include <signal.h>
+ #include <inttypes.h>
+ #include <sys/types.h>
+-#include <sys/errno.h>
+-#include <sys/fcntl.h>
++#include <errno.h>
++#include <fcntl.h>
+ #include <sys/mount.h>
+ #include <sys/statfs.h>
+ #include <sys/mman.h>
+-- 
+2.43.0
+
