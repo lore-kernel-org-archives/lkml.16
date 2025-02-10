@@ -1,143 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E00254B16
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90C22586E8
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739227819; cv=none; b=HwDVNjnG5N+xKat/ZogbSiGJOUO4a8yErD5M3YQTqZA8S+UPIEWFMb2tLzJ9xaHzjsl5+IGPSKk99UU5oUnwpzbh7sp3lnQes8tRSdGKQav22ixwWRbHMD5HT0JArB8QQ6Jeyzd7Mh1pRStkJeYIQD1bKB60hDRP0ul0uReaipc=
+	t=1739227840; cv=none; b=CXjAJVMVSOMKubBVCSBZrOCOomSq0fu5YfY74b3Lq2We0j8rzhTU6ERatZDTqSfSDMFdNZNz1Yz3zzVEgPOxC36t+hV2yepDqwzpeoGf+d1oyWXIeVjapIL0HizEfrPK5LCeNjB00IiZbQBBYL4FSB7O8Z1gtywJtlW5JbZPPKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739227819; c=relaxed/simple;
-	bh=Wb+45gPEf/20Zpf4ACHISTZsESbTgHpFa70rqm2g/88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dObEx3QLGQG3qIIrDt1mKIcXf0xNfbfIElSFkP5eCv8rsj+jnu+TlxIdP4PA7l18SkCoAjwR8sfSHwOmLl2nA8s3/b5xzl+T5Devy9TMwZ1ecREm43iJfyANh50Z3JlbrDD+Sys0PvTu+7D0d/3pUl6ScBoP91VRaco+Ob3MROs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cM5Ac2v/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739227840; c=relaxed/simple;
+	bh=5zbZ0mjlc5mJspBqAdHsl+XIcsIzXXEkeeddcLU17Ww=;
+	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XdjbpvnKGLpMe//7okCLkaXO1qT+fy8Nhp4Kxa4MmX2TW+n8WksdBJRzOJVf+COXV3YpIDk79jGx+e/VKndlvpg44+vxFAnKMwwYXl8b546TJt9QM1BjXVgk8RMXG8FT5bRynlURBX8Hm66r/k9yAfKNzPisRO4+7HKHc9kmgHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Fn1WTRYx; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cM5Ac2v/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1332C4CED1;
-	Mon, 10 Feb 2025 22:50:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739227818;
-	bh=Wb+45gPEf/20Zpf4ACHISTZsESbTgHpFa70rqm2g/88=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cM5Ac2v/Di5k05eaTYIpt1WoDN7XmbsMNK3Fw1M+zwvzzbLXm8Tf0nNdq2aM6ZyIO
-	 Drys65HWOvIDTmqDFu0ImFqdPVANi8gXItNI/3izjK4m4yek1lMSC9DI6UC5U4TMvr
-	 fA8AhNd264t5C2S97LCDxf89U/XXfqgBCIp5MV/46rwV6O9/l7p85TPtpbRE+xQqcD
-	 orrCZ7vnzIHGLeyCJrQn6MICRjTNrFrGIHeaJDNsnPNPC5OyuC/Qk4Jpe7p/XPUtCp
-	 CTliCPxUjZuPPZfi9io1P3HJNT76h4XYJYeOkWZkn3d/QrTnxcC4l8HdQlMnA6cudS
-	 RL/yy4v2KmkMA==
-Date: Mon, 10 Feb 2025 14:50:16 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: David Kaplan <david.kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 05/35] x86/bugs: Restructure taa mitigation
-Message-ID: <20250210225016.cosuartrzzuaftqf@jpoimboe>
-References: <20250108202515.385902-1-david.kaplan@amd.com>
- <20250108202515.385902-6-david.kaplan@amd.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Fn1WTRYx"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6dd420f82e2so63139356d6.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:50:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1739227837; x=1739832637; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5zbZ0mjlc5mJspBqAdHsl+XIcsIzXXEkeeddcLU17Ww=;
+        b=Fn1WTRYxcY/IF+pLgssEdlj4HJBpjPUtmFK36ZDZGyP0aHwRFj22JO9P/0V4RjcdUb
+         nIlz+Z7/f892FtYCN26Fl4MB91dA/W6Gy5EtCxH1Wu2HepQ3jf5Tq9oo/RG2nz6qKQFL
+         eBbEcXJ8LqbRwhIU0xYjPIqCUekQ4MytyxNtw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739227837; x=1739832637;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5zbZ0mjlc5mJspBqAdHsl+XIcsIzXXEkeeddcLU17Ww=;
+        b=gpfR1XOx/aAGt2RqeMy/fsgk5gLVpjJ5RjD3+0TuTMoLj3rYfXPwqiq5mpZGzS3u7z
+         oqlSx2TB9gjpkBjD39twxs8NLwhUqgyrZAqzLxV4O8N9jpPLa3LQYsbQEN3wfxihnwFt
+         3aHPm9HIKcOFSC6R3dTcREQmn1ksB4plagLvOAXY4doABhvHvGt2cLIyvhtFXE/KMJj5
+         K6zn/sFyI+dnVDwkPhqMma7YeQLHeh8R3cV59wfB9BOK92FP36QByDWA490OrE7rY+vd
+         rmRnJfAdvKP8IZW741EvfzKDvozeSQHLHAmXcriFPysZLt5HCoDpoNY/B4ztcYtcZoPx
+         7YFA==
+X-Gm-Message-State: AOJu0YzOWg/X9bAru1i+mJOP8OmCd1wk5bkmp3tJZ7Ny3+3q2NYrVvzk
+	D+bKN3E5s8vKVQ0sCvPMW0SmwaA8L+8BC2rASG00J8xTv7Rw7kzf7GBGHKhqI2WGa27Ngvno1VS
+	jsuBicYqNWvPDLR8B7W55+UdMZOdweAv308z7
+X-Gm-Gg: ASbGnct2JJfNVyoMcyJKEMdOmbLyrozNgFscmaf5+FMddAOdmRNaAIgCAd8ZW3mDR4N
+	0nROBI1DqEAH5v1DyCDYzJzehzDOw/CEQBNh5ff+DR5ah8WtoE1xWOGf5jU9af/pulBXXKqOyXx
+	F5l5zNPvqr/iWT5CH6PEk23xBP
+X-Google-Smtp-Source: AGHT+IGL4SmQgIAC10xipCYbVaexIQbpQQDDIqhx2hGeOo7wq1KUJ/UwijMW6vgDIGzhCGOUFwEwrakNbbsm+km09q4=
+X-Received: by 2002:a05:6214:240f:b0:6df:99f7:a616 with SMTP id
+ 6a1803df08f44-6e4455d2fdemr247845286d6.2.1739227837669; Mon, 10 Feb 2025
+ 14:50:37 -0800 (PST)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 10 Feb 2025 16:50:37 -0600
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 10 Feb 2025 16:50:37 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250108202515.385902-6-david.kaplan@amd.com>
+In-Reply-To: <87895166-659e-475f-99bf-5791a6e1ac3b@oss.qualcomm.com>
+References: <20250205233016.1600517-1-swboyd@chromium.org> <20250205233016.1600517-2-swboyd@chromium.org>
+ <74527323-31ff-4ed0-b19f-e535f26abf2b@oss.qualcomm.com> <CAE-0n50DXcAXQMaLtsamvxHjUrkJVBz42G6gtgKgW9Rh=qd31Q@mail.gmail.com>
+ <87895166-659e-475f-99bf-5791a6e1ac3b@oss.qualcomm.com>
+From: Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.12.dev1+gaa8c22fdeedb
+Date: Mon, 10 Feb 2025 16:50:37 -0600
+X-Gm-Features: AWEUYZmtYYT334_kTXnpfDawnzC3OarpU1PJNDWzV_jXYgahC0sPCiJwqwU3_-I
+Message-ID: <CAE-0n51zc65GSm5J9TbHe_g4reos2h_iv-ozMU6CCrAuOt3Kww@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: chrome: Add binding for ChromeOS Pogo
+ pin connector
+To: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+	Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	patches@lists.linux.dev, cros-qcom-dts-watchers@chromium.org, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Benson Leung <bleung@chromium.org>, devicetree@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, Pin-yen Lin <treapking@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jan 08, 2025 at 02:24:45PM -0600, David Kaplan wrote:
-> @@ -400,48 +402,71 @@ static void __init taa_select_mitigation(void)
->  		return;
->  	}
->  
-> -	if (cpu_mitigations_off()) {
-> +	if (cpu_mitigations_off())
->  		taa_mitigation = TAA_MITIGATION_OFF;
-> -		return;
-> -	}
->  
->  	/*
->  	 * TAA mitigation via VERW is turned off if both
->  	 * tsx_async_abort=off and mds=off are specified.
-> +	 *
-> +	 * MDS mitigation will be checked in taa_update_mitigation().
->  	 */
-> -	if (taa_mitigation == TAA_MITIGATION_OFF &&
-> -	    mds_mitigation == MDS_MITIGATION_OFF)
-> +	if (taa_mitigation == TAA_MITIGATION_OFF)
->  		return;
+Quoting Konrad Dybcio (2025-02-10 11:09:57)
+> On 6.02.2025 9:43 PM, Stephen Boyd wrote:
+> >
+> > Do you have a device that could use such a generic binding? I can't
+> > really design something in the abstract without two or more concrete use
+> > cases. Coming up with something generic looks like a quagmire, because
+> > as you say the signals going through the pins could be anything: i2c,
+> > 1-wire, etc.
+>
+> Right, we can't be overly generic either. FWIW I'm not standing in the way
+> of this patch getting merged.
+>
 
-This check seems rather pointless, the only thing after this is the
-TAA_MITIGATION_AUTO check.
-
->  
-> -	if (boot_cpu_has(X86_FEATURE_MD_CLEAR))
-> +	/* Microcode will be checked in taa_update_mitigation(). */
-> +	if (taa_mitigation == TAA_MITIGATION_AUTO)
->  		taa_mitigation = TAA_MITIGATION_VERW;
-> -	else
-> -		taa_mitigation = TAA_MITIGATION_UCODE_NEEDED;
-
-In the previous patch, MDS checks for ucode in both select and update,
-which is overkill.  That should probably be done only in
-mds_update_mitigation() to be consistent with how TAA does it here?
-
->  
-> -	/*
-> -	 * VERW doesn't clear the CPU buffers when MD_CLEAR=1 and MDS_NO=1.
-> -	 * A microcode update fixes this behavior to clear CPU buffers. It also
-> -	 * adds support for MSR_IA32_TSX_CTRL which is enumerated by the
-> -	 * ARCH_CAP_TSX_CTRL_MSR bit.
-> -	 *
-> -	 * On MDS_NO=1 CPUs if ARCH_CAP_TSX_CTRL_MSR is not set, microcode
-> -	 * update is required.
-> -	 */
-> -	if ( (x86_arch_cap_msr & ARCH_CAP_MDS_NO) &&
-> -	    !(x86_arch_cap_msr & ARCH_CAP_TSX_CTRL_MSR))
-> -		taa_mitigation = TAA_MITIGATION_UCODE_NEEDED;
-> +}
-
-Extra whitespace here at the end of the function.
-
-> +static void __init taa_update_mitigation(void)
-> +{
-> +	if (!boot_cpu_has_bug(X86_BUG_TAA) || cpu_mitigations_off())
-> +		return;
-> +
-> +	if (verw_mitigation_enabled())
-> +		taa_mitigation = TAA_MITIGATION_VERW;
-
-This overwrites TAA_MITIGATION_TSX_DISABLED?
-
-I think reporting TSX disabled here is more accurate than reporting
-VERW, since the VERW is only done to mitigate the other vulns.
-
-> +static void __init taa_apply_mitigation(void)
-> +{
-> +	if (taa_mitigation == TAA_MITIGATION_VERW ||
-> +	    taa_mitigation == TAA_MITIGATION_UCODE_NEEDED) {
-> +		/*
-> +		 * TSX is enabled, select alternate mitigation for TAA which is
-> +		 * the same as MDS. Enable MDS static branch to clear CPU buffers.
-> +		 *
-> +		 * For guests that can't determine whether the correct microcode is
-> +		 * present on host, enable the mitigation for UCODE_NEEDED as well.
-> +		 */
-> +		setup_force_cpu_cap(X86_FEATURE_CLEAR_CPU_BUF);
-> +
-> +		if (taa_nosmt || cpu_mitigations_auto_nosmt())
-> +			cpu_smt_disable(false);
-> +	}
->  
-> -	if (taa_nosmt || cpu_mitigations_auto_nosmt())
-> -		cpu_smt_disable(false);
->  }
-
-Another extra whitespace here at the end of the function.
-
--- 
-Josh
+Ok, got it. I've renamed this to google,usb-pogo-keyboard and made it
+keyboard specific. I'll send v3 shortly.
