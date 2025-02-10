@@ -1,118 +1,170 @@
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C69130E58;
-	Mon, 10 Feb 2025 07:11:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32AA7176ADE
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739171519; cv=none; b=W5H4CUXkddXNdenS/Wqn2n7irjQ6nj8GkJ+Bg3ialRpqWMU+xYVYNozs+cMe5wvv7PBSFOp5ftDIrzH8yt9vR5W8ct1UF4BxbDQbMSEL4lPkJaOYO8cAviWGHGZFrSXpvIlkBMo9upVvfiDW6iAkOC3ggjjAtB3KgCMMVxugQRw=
+	t=1739171842; cv=none; b=cworuiC50w4Mv2oNlp71ChkQ4BB9fROqiw4HGN2l4K7jzkhCKvElkJy+GBOvVQMMWOOsYyReTT0G9EM88re+SY3Zlz2UhxUrNT9pkg6jmDeGiBPRNhudiNKbl6YZAajLjjfZp/8NcEXYmK9p0C1dXUgd8eGwrTcHpjabUS6KCs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739171519; c=relaxed/simple;
-	bh=H3GEoIqEgWbPMNxEhTrT/w4m5WQ5UgLYo290XO3njYE=;
+	s=arc-20240116; t=1739171842; c=relaxed/simple;
+	bh=PqU5A4FMZFlxYJ6n4cp0rMsHR8kXG5WST25sekbrfMQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TuU9bEi3/TItaI8uH2UQ/WktjC4nj48XSudo+7deu/iI/9d43c8fn993LslF/+2K0EHYei55ajRmumv7xfx4nbYhOyso7Ksmv/ASuB6Mht9EA5LD5EDLXMjDss5pVuu/ItKOjzDmQuHN/YwXFDwjFRkoWOl9k+1RVDClVXo+ATM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cY6nSKwn; arc=none smtp.client-ip=209.85.217.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=m3ijkIi5UAwR7sHsQ2GFoYili/Sr9lTwL9/SzgRkLMgfwK5z4bOSQiWggpDovbBygq/1PMUIcoMb4O4Z6rGkQvzPEeMSYhyuq8/A2qpRuzDCFKvKpPL9Yy8b4yA8DpJLlc8TU1Pr56yQUYaF2b9cnbL9fM+oDeECqXlQsz77atE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wF2BRsyI; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cY6nSKwn"
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4bb0e7e6cceso235901137.1;
-        Sun, 09 Feb 2025 23:11:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wF2BRsyI"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-308ec50eb3dso7392811fa.1
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 23:17:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739171517; x=1739776317; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w9v7M60N7k/hqWmhBY/iyMoBnIb4DpUfGV8sZCADpqE=;
-        b=cY6nSKwnYoRfGTLq/4AzMbf6Y75LrhqKUK24p2SeXmNOgzhVj+uzOJSqNj/Isuc9ov
-         RU1wRgVpPEdk9STynOkrvIArZzcrPW6HyXfKP0NF3vuqsVGS39BuXNF0WNnE/wTzItAS
-         qJZA5icJlAIW3mNdF+cTwIrwCzaLaqs+IR1THzxXGTqycl1YTNsrORC6JuQWD5NFdnqX
-         Z9eg4GkmTGi/ArP3Np60/MKeMDXw/jN7V33MBl2rsUYsMgdkedZp1uuxceWpGi2PTykT
-         rE0XxRs5oV4Via1lxt1VjfqcFvPiY1LQrt9mYz1zBgeKpdiGl3JMLgvuCScuW2dlHkOm
-         fRHA==
+        d=google.com; s=20230601; t=1739171838; x=1739776638; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GxiCixcf/BZLPpNs6FKNBHElHTuusaAfh8RJs/w71Nc=;
+        b=wF2BRsyI9QF+hB+ZcHVeKVkVi3DwOo2IJszPIi3YnNI3jVXv3FI4XcwgINMQ9Z7ijX
+         3Fj2bR5r3Wj5Y3wSiHpji+9cq0nMxqXF/zs5Jv/z9tUCHxMlTHxLS/qkdWSkh6UecIWQ
+         GPhtb7ttc7ak+6Uz/GuDLBK9jueD3uU2EMyo8hyogzCc7MxwyXVbOzUbXHcIon9P1x5M
+         fkG+tjmwqCeZ4v8M0ruSE022F+lH+4fyqoAIfTqEshyUC9ZwaChYM2JwkUOf/PwvYhnc
+         uB5XLYMcFPltBePPIpMDxXsl+Y6Wk2qyCqU+rDPs5Hp43NCT+D5zQEmQunrvlZdO/ayB
+         +ckg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739171517; x=1739776317;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w9v7M60N7k/hqWmhBY/iyMoBnIb4DpUfGV8sZCADpqE=;
-        b=uW3LEwddByb9YbHWNk/81BJEKTmYSavAw/Cb0y8jWpY/3TBgEmOAMyZ6sew27q2Zit
-         umyw8+X6UqjkpvUaAZMryJXqwD+ENaxYbFLpB7cqnRSvvjdfT4ykGX7cLokipWgFBydL
-         CEMcnXCc7+Ma3fw1KtIn0MShyl2mfQGcF7flx0EMxWRpWUA3kJpeiQRE2nZ92Auw23Ro
-         DbzUUXHvHWx9ekhvf5n6aTIL58MiF4iZz193jiQ21M6W00Yix61avu2xBJ7QTXyeoJgj
-         g7ghCuq5eR9O2QNY3PmLtvBgW1r7wTypIeMCrCqNyIuOSDh6MGDsn24wkHDoRGfBDVSb
-         EMkw==
-X-Forwarded-Encrypted: i=1; AJvYcCUeabvITNpYBYGBiWiTUmGC5XRdR+S96sUIhR5HukRhpoYt/N2Zu6mOor2v6DfI9LpBAEFuqqmFqNg=@vger.kernel.org, AJvYcCUwky0kPj6aEhj9+Si8StrFbJOgsdHCF/uACsdR39qFK/2OEpO+oxJ76/BG0mn0Rrvyd3rcD9QLsHRQU3uk@vger.kernel.org, AJvYcCV07yvPngT5zj9KUB4LVUXUnuoKIUFgIHziZdV4jm9ZphtiWK7pqwjqlKtljNeA9r1AQUiUnvFPKGfY@vger.kernel.org, AJvYcCWavdpPlP98FkhtKssZGKBL/4LLaAL7JWRxJPM9m/dHXlNNbmzNzVP5RFP5u+fxTX7vZXKP9lAMpUgffrY=@vger.kernel.org, AJvYcCXPfhmqEuov6RjQLQWtoOVV0clX0ZtfNC5f0PnEBIgKAtFLYCinZ7fYRV98h3qzQF2NNnA2nlMT/1m1/Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEnX/K3ZWWE6UQHURnWS7qaDZhPI0jKl9GlnT9miIaALcQBnhq
-	DfT5OgSQ40TzsNfFyq9OtQwFN9E43RN0heG49TM7YV/TlE4jA7d3eX/Y4SAVOQq2fOaiePf4HWn
-	/qAou6vNlnbtSmGLu8Q/KTp6wkwQ=
-X-Gm-Gg: ASbGncsx57HvsOthy/SLBbdI/9rqIv+YL/HStsWPdF3WvAN3jFhSvSdBEWVsT78WSGm
-	04fn7jLJ/X4+/TAsjlwxh5Dpa9vJz1cQJFey1Pyaqf20a3sSjE5RgcvS0URbOKbEJHPGIbqk=
-X-Google-Smtp-Source: AGHT+IHL5q/jtji7+1Vd8bARh6p5DubUkwFmeTKo/+J2lD9ripmH8UXPhv8PlDl44fvPDSEJKmEQwMdR0u0m9ooKraQ=
-X-Received: by 2002:a05:6102:304a:b0:4bb:5d61:1288 with SMTP id
- ada2fe7eead31-4bb5d611a73mr2792124137.23.1739171516931; Sun, 09 Feb 2025
- 23:11:56 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739171838; x=1739776638;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GxiCixcf/BZLPpNs6FKNBHElHTuusaAfh8RJs/w71Nc=;
+        b=YvUIl0H3krT7u+xrGAg39dSZBlfDp7FvLw/z4FYzj6yg94C2Fz+SpU8bQh4K4vkOUd
+         j/MZWqgvD6zhYSlxl/vtIl/efpC2qcdFKbuq9ZW4OC7SL/5mZk74ZYf3TtljIyHH77AB
+         3Hp1IQGQubthJETEFHlfoV300BP4YHRwVpZR7coTx5/+aO+uivefidI0oPmx5aki3exW
+         YlIkV0cjSpJLgLuMgL2FnM93l9a1+eT2BWEjIRUPRPn0kYSOnWPP+0Y0ffxIlLdFzZwN
+         WymCfTJUmxeUHTL1lbSZU+IFBneuFQgWiIXsxvzPjD7OIyh4oDw3cgP1Axn9fq6/27GO
+         JZQg==
+X-Forwarded-Encrypted: i=1; AJvYcCXDjgaZ1B7PZKzsm7q9s54thvs0L7d6wOQdoYodAL2PNiffm+K+88+L1SJyxLD/6r6Rzh7DKo5JYeF1IeU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUwEHOyQAK6h/GbSU6KXf4GW2OhHdrcWA0iR2kouwwvebAf2ll
+	qlrobytUTagMZBRPgCfm10uk/c+GTdrVu+YT8xeiHGl8phZZfes/QS6fqeSXcRqdjX0ej5r42JP
+	xCaqSQPXiD2OOgouYnWWhRJCac2k6ONwgqLdM
+X-Gm-Gg: ASbGncuJ/Uf8jJqqehY4S+l52JU9MFGXtUlcqqRCbwqMrguFyxlYldLUvWngha3YpSS
+	PKMJ/r77Jda977CIkJx5fQb49t+Mkm8KYX61WMyNLYtNKKAqvoir2xcjZDsIg3zOBIK5e6PazHD
+	QAEJHUulAFaCvs802LLNnawXXrFxTx+g==
+X-Google-Smtp-Source: AGHT+IGLhFLNb1n+WrmHp8E6o8lZALCn+qvMi+KnDesdv7ZGzAxB5bSmJ2j9mR41XtqD20dXheJ8AwH3v6zs+SFKvfY=
+X-Received: by 2002:a05:651c:221c:b0:308:eb58:6591 with SMTP id
+ 38308e7fff4ca-308eb586865mr15288651fa.25.1739171838058; Sun, 09 Feb 2025
+ 23:17:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABTCjFBx-QpCKFWs5MPCgLAjJWT6ygrvS_A0nJk2BBxmWAxF+Q@mail.gmail.com>
- <e67c0375-1024-483b-aabf-6a11339ab9af@linaro.org>
-In-Reply-To: <e67c0375-1024-483b-aabf-6a11339ab9af@linaro.org>
-From: Dzmitry Sankouski <dsankouski@gmail.com>
-Date: Mon, 10 Feb 2025 10:11:45 +0300
-X-Gm-Features: AWEUYZk6CIEra92QKBlWA-4eq8zR0aFX3oxFj_GszgMw82sXZR5leVvr7QeEdtw
-Message-ID: <CABTCjFBvYkEG0WYhCt6tP_cO8Ct82t0=UhwBefZEJrUiFc7vAw@mail.gmail.com>
-Subject: Re: Patchset status - 'Add support for Maxim Integrated MAX77705 PMIC'
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Pavel Machek <pavel@ucw.cz>, Hans de Goede <hdegoede@redhat.com>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Sebastian Krzyszkowiak <sebastian.krzyszkowiak@puri.sm>, Purism Kernel Team <kernel@puri.sm>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-pm@vger.kernel.org, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-input@vger.kernel.org, 
-	linux-leds@vger.kernel.org
+References: <cover.1738772628.git.dvyukov@google.com> <87ldujkjsi.fsf@linux.intel.com>
+ <CACT4Y+awFXT2j+HMeAy2RKnoBzb--+heFzJUoBZWp9iJevy1Dw@mail.gmail.com> <Z6ZRVeoFxT0NV9yb@tassilo>
+In-Reply-To: <Z6ZRVeoFxT0NV9yb@tassilo>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Mon, 10 Feb 2025 08:17:06 +0100
+X-Gm-Features: AWEUYZnHFduaB6kEOZO1RVzeSKo8nMj3KreybZn7JDEc96KYZaaLwsoJ8m1r8ko
+Message-ID: <CACT4Y+bOVd4hw2fkE4ahJnbyAuc_=wMu_HMkAUbAhL--dTxBiA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/8] perf report: Add latency and parallelism profiling
+To: Andi Kleen <ak@linux.intel.com>
+Cc: namhyung@kernel.org, irogers@google.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-=D0=B2=D1=81, 9 =D1=84=D0=B5=D0=B2=D1=80. 2025=E2=80=AF=D0=B3. =D0=B2 22:38=
-, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org>:
+On Fri, 7 Feb 2025 at 19:30, Andi Kleen <ak@linux.intel.com> wrote:
 >
-> On 09/02/2025 15:13, Dzmitry Sankouski wrote:
-> > For the patchset I sent 2 weeks ago, [patchwork][1] shows status
-> > 'Handled Elsewhere, archived'. Is anything blocking it?
+> > > I assume it just works, but might be worth checking.
 > >
-> > [1]: https://patchwork.kernel.org/project/linux-pm/list/?series=3D92784=
-8&archive=3Dboth&state=3D*
+> > Yes, it seems to just work as one would assume. Things just combine as intended.
 >
-> That's PM patchwork, not necessarily power supply. But anyway, what does
-> the cover letter say? Who do you expect to merge it? Above link does not
-> provide cover letter, unfortunately.
+> Great.
 >
+> >
+> > > It was intended to address some of these issues too.
+> >
+> > What issue? Latency profiling? I wonder what approach you had in mind?
+>
+> The problem with gaps in parallelism is usually how things change
+> over time. If you have e.g. idle periods they tend to look different
+> in the profile. with the full aggregation you don't see it, but with
+> a time series it tends to stand out.
+>
+> But yes that approach usually only works for large gaps. I guess
+> yours is better for more fine grained issues.
+>
+> And I guess it might not be the most intutive for less experienced
+> users.
+>
+> This is BTW actually a case for using a perf data GUI like hotspot or
+> vtune which can visualize this better and you can zoom arbitrarily.
+> Standard perf has only timechart for it, but it's a bit clunky to use
+> and only shows the reschedules.
+>
+> > Also (1) user still needs to understand the default profile is wrong,
+> > (2) be proficient with perf features, (3) manually aggregate lots of
+> > data (time slicing increases amount of data in the profile X times),
+> > (4) deal with inaccuracy caused by edge effects (e.g. slice is 1s, but
+> > program phase changed mid-second).
+>
+> If you're lucky and the problem is not long tail you can use a high
+> percentage cut off (--percent-limit) to eliminate most of the data.
+>
+> Then you just have "topN functions over time" which tends to be quite
+> readable. One drawback of that approach is that it doesn't show
+> the "other", but perhaps we'll fix that one day.
+>
+> But yes that perf has too many options and is not intuitive and most
+> people miss most of the features is an inherent problem. I don't have
+> a good solution for that unfortunately, other than perhaps better
+> documentation.
 
-I didn't found anything related to power supply in the list of mail lists a=
-t
-https://subspace.kernel.org/vger.kernel.org.html.
+I don't think this is a solution :(
 
-However I found my series in linux-input with New status.
+I provided lots of rationale for making this latency profiling enabled
+by default in this patch series for this reason. If we just capture
+context switches, then we can show both overhead and latency, even if
+we sort by overhead by default, people would still see the latency
+column and may start thinking/asking questions.
+But this is not happening, so mostly people on this thread will know about it :)
 
-Here is my cover letter:
-https://lore.kernel.org/all/20250123-starqltechn_integration_upstream-v17-0=
--8b06685b6612@gmail.com/
 
-I guess I would expect a person from the MAINTAINERS list to merge it?  In =
-that
-case it would be Chanwoo Choi <cw00.choi@samsung.com> and
-Krzysztof Kozlowski <krzk@kernel.org> from
-MAXIM PMIC AND MUIC DRIVERS FOR EXYNOS BASED BOARDS entry.
+> > But it does open some interesting capabilities in combination with a
+> > latency profile, e.g. the following shows how parallelism was changing
+> > over time.
+> >
+> > for perf make profile:
+>
+> Very nice! Looks useful.
+>
+> Perhaps add that variant to tips.txt too.
 
---=20
+That's a good idea.
+I am waiting for other feedback to not resend the series just because of this.
 
-Best regards,
-Dzmitry
+
+> > perf report -F time,latency,parallelism --time-quantum=1s
+> >
+> > # Time           Latency  Parallelism
+> > # ............  ........  ...........
+> > #
+> >   1795957.0000     1.42%            1
+> >   1795957.0000     0.07%            2
+> >   1795957.0000     0.01%            3
+> >   1795957.0000     0.00%            4
+> >
+> >   1795958.0000     4.82%            1
+> >   1795958.0000     0.11%            2
+> >   1795958.0000     0.00%            3
+> > ...
+> >   1795964.0000     1.76%            2
+> >   1795964.0000     0.58%            4
+> >   1795964.0000     0.45%            1
+> >   1795964.0000     0.23%           10
+> >   1795964.0000     0.21%            6
+> >
+> > /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+> >
+> > Here it finally started running on more than 1 CPU.
+>
+>
+> -Andi
