@@ -1,154 +1,122 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3768243370
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 01:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44810243370;
+	Mon, 10 Feb 2025 01:17:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739150195; cv=none; b=bqhdJJaXYv2vAK9+YZkou1GZNRHrBGo7rJ6ZTgO/vC4sf6AyxtaG2C+OVqZaviPcR4esKMXyTTvvfY9CYhLpRXgvzjiNp2fkRbed11UDMqLuh4JQxIHm8OhX168ohb4kaUCniRKDM0Tc12JzncM7J6muQFD3JSb59GqBUHHDnNk=
+	t=1739150263; cv=none; b=jLpn9j9DTCcmnV4NNKqt6SdmsST39ynhdsOEreT+qmTadbDI/eu8/edihMAd+5p0lZk0COKRMCUVRbMBoMcxJzpjQGSwL4xtp+oI+gf2zikSs7KV0DLr24MWJwoEVwRQp0z2SYSFv/pEmbdMtdX55febTnUlQP0GnxAFAtxqZe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739150195; c=relaxed/simple;
-	bh=DuZeMhp5oN+Ad1f/OM6YurV+/AuxnboY41McH/sNFxQ=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=NTO7rE7hiOfhG22fa1zTOS2ARFbbTLhlavn3UxrDf3/EQdNMFS7xwwHO14pmgGfDqAjs9c2zbuOb0U0gTKKyRPKc78JyPNdyrveJutCxyFmk5buN5lSjEPXQeLnxC2Mjpb+ahFIy46Fg1zfINjUZYPCuAoR34CI4I7B3m1rxnIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-84cb445557aso923932439f.3
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 17:16:33 -0800 (PST)
+	s=arc-20240116; t=1739150263; c=relaxed/simple;
+	bh=bKlpFT6PrHym8PX4uf7rFAciKgOW9Ca8NPYUAwletjc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Id3v0URHxxtsEI8wtujR+IKF9cBzmFAQc5xnocefDp6M+9TXIpppTLyM/lgGDnQx3v1ItTSl9ViBv8vmimCepRvkKGpGO8s6etCLBs+MjA1SBHzCJInfQ+n/qLQQoS+Lnzw7o2SMD0VEz3BIo+KxzdaX45REKFXchoFh0+rxSzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NSyFwvfL; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NSyFwvfL"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5de7519e5a7so719605a12.2;
+        Sun, 09 Feb 2025 17:17:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739150260; x=1739755060; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ks9udvKd96mPLbUFD9boqSQ9LwZ8UE6lqZxDKa9Cl+8=;
+        b=NSyFwvfL0vKvWW/PkYkPPt/I+bnjn+jv6tsQNik86ygu3KYNjeIoMhuhLXWfAo/Tik
+         76PIT/+t2V13Az64RolKkJAyMy+N0RbMcCP0uF0EaNEHN74cK2cSWS1PJ9x3++plZ7DL
+         uVth1cszV9dXuXeWDFMDleBA0oUVxtHIVE1IlaxKkZy8YvL3+MiN+oeXZB17xzIasV7n
+         dpsBVA8yoEQwScCE8upayP8n+hmL41iGr2Hp8tZ1N9YNYvOMqC1HsjnaDT+B/UiUjS57
+         ZixdYMyHaD86w1IK/GXN8zsBThjSIlpzQ8Y94C/KAFvlvBIu8xWsyA3bKB5Wpw2t9QCJ
+         jCsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739150193; x=1739754993;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4JQRilZSEsRfSdZVX7rLS980iHRw58YbaBBmRysg5RU=;
-        b=uIfoJ29/LqcFluKEaqzs9szae2T4OscvulOrB07hOX79qSnIbeINodNlTMvlEZ3ruP
-         ula0cEvNA2Owu6IZ5k9GVBmk9lS97QR+l8medLwagsApopt80Zd3lxbjnZnWpUp1P03s
-         aQQQ73P15OTJ7bHsnGoaegIh+/jHibCp1YAzKsAgKccBKap+Fikr+wCDv3P10FgkgKlH
-         pkMvDPrxGd5zsGkxFzCSiReBof6sn4xiDbu/cHavWbJrjF7W4SNFEuSRkGwQswF+WPbu
-         DH6D735v5Y3DhlLD9RkgoNJwk2FlHeUU1dUb0sEBOZh7rFfivIrWy6oK4vxLtcUlla42
-         BwXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVeRYHDTkhu898pAzqg9sGmhNKGYBSCWeeVTZkxlXTnBW+bP9UjscPKgXAqgZkh2+iSdYH09IKXv/3HHqE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBB7EYI+5nz43WxgVa1Z23AQQMUxLUgGLYMxSSeLfl5NvEbxSO
-	Bh2Z00OqVaCWnG9HgwMtxfFtBqPe6IpfAxsCOdmixvEl+spp5Y/FvEpCNB7eSpaT8FDTqMCiL9M
-	/j3Q9rH5XphRUa0YVu7VyVAmYauz8GgzMFfs7JgL2YdaIdXa78g/2Ggw=
-X-Google-Smtp-Source: AGHT+IHrk+lqCr+stsnTqDdO03qvfqYcXjhVDikHEeNHFyTDnJGFth3jufml1vwpOq0ECBSg246dxhputw7CKSOVjNq77hE2titY
+        d=1e100.net; s=20230601; t=1739150260; x=1739755060;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ks9udvKd96mPLbUFD9boqSQ9LwZ8UE6lqZxDKa9Cl+8=;
+        b=sYwlJrHcHnBa9y0T/QCIt+cvgYAp5SrtbEUSpH7OQEICkPxoCyMtisUDkoQJYykO40
+         9+CsuFr+ehbhEioLUna9bFTEDK/0ZrwGJg3vuOG14h0zqCtfYvBMvowikkFKJyWAIW9p
+         7l6WI+F59Scp6pz0d9ehG2y9vobRNxrTdrJUocMwHfRNi1FTOgc4S03Pb5QhtcgcZdeF
+         vgswMlwMTG53ox2Vnx5l9ieC3GOcRQpNQ4PLjHfSSzOG0/7OhIoUX0f2IlHAuwzpBuNT
+         v74BD9gixWxTza91+ZRpvHTVlBC34EIL1Oxjj7x4XhpDfskHUVjU8+KYpAI4LGH69hTv
+         FJIA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0DARg8ItyeaGB1mIpOm/VPPPyPEzA8CO9iu4JbETyKcpf5dHITuK2NbI0kdCSx5Mu5VwT7mcb@vger.kernel.org, AJvYcCXl2XwIR0SiyzvXzEVr16yzBV7zDmMxHk8zQmaK9E615sUTWVqdDCiC62UeUP6j0Ez0ZrnmDcei8qyAA88=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+1GWCAgbE8/w0ImYbR6VayUn5LpTl0f4Cyep7igNqHG161XCs
+	wgmC7igqocVZsbiZdftu2JHivE7VGa0EKJbP6u96JakjTMeEJbuzgEnTMSnePSK/ct/4WSiWA9G
+	t4JipPPcrn51Hi2hOtyY17cZONwk=
+X-Gm-Gg: ASbGncvBU8GO+apYRQ0S/VdEWKoZUpeN47RHOlUqEMQiUzOVOTYD/D0UxwydJPkgW4q
+	TdpZgU7YC13SxmwAf/YG0T7y45gjTtAkCW+rkYrfEwFcCiOpddZLohGjBpa2enB7g/jVEqCyY8w
+	==
+X-Google-Smtp-Source: AGHT+IHqdWdyJGHhDPdk2qUdT/YSoJ8MN8YkmKFvF4vWVU1IkrrYjnOolSTtN45eIsb0W8v10/Wt8QLl78LGUCKKdOM=
+X-Received: by 2002:a17:907:3d91:b0:ab7:c426:f33 with SMTP id
+ a640c23a62f3a-ab7c426114dmr146360766b.56.1739150260350; Sun, 09 Feb 2025
+ 17:17:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c263:0:b0:3cf:c803:1295 with SMTP id
- e9e14a558f8ab-3d13dcfcdeamr109250035ab.3.1739150192680; Sun, 09 Feb 2025
- 17:16:32 -0800 (PST)
-Date: Sun, 09 Feb 2025 17:16:32 -0800
-In-Reply-To: <671ff85a.050a0220.11b624.04b3.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a95370.050a0220.3d72c.0046.GAE@google.com>
-Subject: Re: [syzbot] [ocfs2?] kernel BUG in ocfs2_journal_toggle_dirty
-From: syzbot <syzbot+ea8d1726e1e3367085ce@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, djwong@kernel.org, hch@lst.de, jack@suse.cz, 
-	jlbec@evilplan.org, joseph.qi@linux.alibaba.com, linux-kernel@vger.kernel.org, 
-	mark@fasheh.com, ocfs2-devel@lists.linux.dev, ocfs2-devel@oss.oracle.com, 
-	syzkaller-bugs@googlegroups.com
+References: <20250210003200.368428-1-jjcolemanx86@gmail.com> <db722f47-0b61-4905-a4a8-c0770fbf8945@lunn.ch>
+In-Reply-To: <db722f47-0b61-4905-a4a8-c0770fbf8945@lunn.ch>
+From: Jamie Bainbridge <jamie.bainbridge@gmail.com>
+Date: Mon, 10 Feb 2025 11:17:28 +1000
+X-Gm-Features: AWEUYZkznMg4o2_S5g5_DWiaL3CmXwiLukTqn5lWww_rfG9VfcoPcjnZBz7igZs
+Message-ID: <CAAvyFNiTgZyVX79FztAB-4LGrq6ygKNXYYkOdLF0AY5TGF58ug@mail.gmail.com>
+Subject: Re: [PATCH net] ethtool: check device is present when getting ioctl settings
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: John J Coleman <jjcolemanx86@gmail.com>, Jakub Kicinski <kuba@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Jiri Pirko <jiri@resnulli.us>, 
+	Ben Hutchings <bhutchings@solarflare.com>, David Decotigny <decot@googlers.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-syzbot has found a reproducer for the following issue on:
+On Mon, 10 Feb 2025 at 10:51, Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Sun, Feb 09, 2025 at 05:31:56PM -0700, John J Coleman wrote:
+> > An ioctl caller of SIOCETHTOOL ETHTOOL_GSET can provoke the legacy
+> > ethtool codepath on a non-present device, leading to kernel panic:
+> >
+> >      [exception RIP: qed_get_current_link+0x11]
+> >   #8 [ffffa2021d70f948] qede_get_link_ksettings at ffffffffc07bfa9a [qede]
+> >   #9 [ffffa2021d70f9d0] __rh_call_get_link_ksettings at ffffffff9bad2723
+> >  #10 [ffffa2021d70fa30] ethtool_get_settings at ffffffff9bad29d0
+> >  #11 [ffffa2021d70fb18] __dev_ethtool at ffffffff9bad442b
+> >  #12 [ffffa2021d70fc28] dev_ethtool at ffffffff9bad6db8
+> >  #13 [ffffa2021d70fc60] dev_ioctl at ffffffff9ba7a55c
+> >  #14 [ffffa2021d70fc98] sock_do_ioctl at ffffffff9ba22a44
+> >  #15 [ffffa2021d70fd08] sock_ioctl at ffffffff9ba22d1c
+> >  #16 [ffffa2021d70fd78] do_vfs_ioctl at ffffffff9b584cf4
+> >
+> > Device is not present with no state bits set:
+> >
+> > crash> net_device.state ffff8fff95240000
+> >   state = 0x0,
+> >
+> > Existing patch commit a699781c79ec ("ethtool: check device is present
+> > when getting link settings") fixes this in the modern sysfs reader's
+> > ksettings path.
+> >
+> > Fix this in the legacy ioctl path by checking for device presence as
+> > well.
+>
+> What is not clear to my is why ethtool_get_settings() is special. Why
+> does ethtool_set_settings() not suffer from the same problem, or any
+> of the other ioctls?
 
-HEAD commit:    69b54314c975 Merge tag 'kbuild-fixes-v6.14' of git://git.k..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=178742a4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1909f2f0d8e641ce
-dashboard link: https://syzkaller.appspot.com/bug?extid=ea8d1726e1e3367085ce
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=107a3b18580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10d86bdf980000
+ethtool_set_settings() would suffer the same problem. Last time I did
+this (with what became a699781c79ec) I was discouraged from fixing
+additional theoretical problems which weren't the actual problem I
+faced.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-69b54314.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/e32e396b49c9/vmlinux-69b54314.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/30d7fe7e4148/bzImage-69b54314.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/16cf04118a70/mount_0.gz
-  fsck result: OK (log: https://syzkaller.appspot.com/x/fsck.log?x=13586bdf980000)
+We did not review other ioctls. Looking now, I see commit
+f32a213765739 ("ethtool: runtime-resume netdev parent before ethtool
+ioctl ops") would have protected against this as it adds the
+netif_device_present() check one function back in dev_ethtool(). We do
+not yet have that commit in our kernel.
 
-The issue was bisected to:
+It seems we can forget this. Many thanks for the review Andrew.
 
-commit 98ded54a33839e7b8f8bed772e01a544f48e33a7
-Author: Christoph Hellwig <hch@lst.de>
-Date:   Wed Mar 30 05:29:10 2022 +0000
-
-    loop: remove the racy bd_inode->i_mapping->nrpages asserts
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=144cf0b0580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=164cf0b0580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=124cf0b0580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ea8d1726e1e3367085ce@syzkaller.appspotmail.com
-Fixes: 98ded54a3383 ("loop: remove the racy bd_inode->i_mapping->nrpages asserts")
-
-(syz-executor198,5726,0):ocfs2_inode_lock_full_nested:2512 ERROR: status = -30
-(syz-executor198,5726,0):ocfs2_shutdown_local_alloc:412 ERROR: status = -30
-------------[ cut here ]------------
-kernel BUG at fs/ocfs2/journal.c:1012!
-Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI
-CPU: 0 UID: 0 PID: 5726 Comm: syz-executor198 Not tainted 6.14.0-rc1-syzkaller-00276-g69b54314c975 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:ocfs2_journal_toggle_dirty+0x397/0x3a0 fs/ocfs2/journal.c:1012
-Code: 6f fe e9 f7 fd ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c 2a fe ff ff 48 89 df e8 d4 68 6f fe e9 1d fe ff ff e8 da cf 08 fe 90 <0f> 0b e8 92 58 3f 08 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 0000:ffffc9000e2fefe0 EFLAGS: 00010293
-RAX: ffffffff83b67fc6 RBX: 00000000ffffffff RCX: ffff88801f368000
-RDX: 0000000000000000 RSI: 00000000ffffffff RDI: 0000000000000000
-RBP: ffffc9000e2ff0b0 R08: ffffffff83b67d30 R09: 1ffffffff285f32a
-R10: dffffc0000000000 R11: fffffbfff285f32b R12: dffffc0000000000
-R13: ffff88804121a740 R14: ffff8880449e9600 R15: 1ffff92001c5fe04
-FS:  00007f04682156c0(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f046066b000 CR3: 000000005005a000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- ocfs2_journal_shutdown+0x479/0xc10 fs/ocfs2/journal.c:1094
- ocfs2_mount_volume fs/ocfs2/super.c:1785 [inline]
- ocfs2_fill_super+0x668e/0x7200 fs/ocfs2/super.c:1083
- get_tree_bdev_flags+0x48c/0x5c0 fs/super.c:1636
- vfs_get_tree+0x90/0x2b0 fs/super.c:1814
- do_new_mount+0x2be/0xb40 fs/namespace.c:3560
- do_mount fs/namespace.c:3900 [inline]
- __do_sys_mount fs/namespace.c:4111 [inline]
- __se_sys_mount+0x2d6/0x3c0 fs/namespace.c:4088
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f0468a70faa
-Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 7e 09 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f0468214f88 EFLAGS: 00000282 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 0000400000004440 RCX: 00007f0468a70faa
-RDX: 0000400000004440 RSI: 0000400000000040 RDI: 00007f0468214fe0
-RBP: 00007f0468214fe0 R08: 00007f0468215020 R09: 000000000000441b
-R10: 00000000000008c0 R11: 0000000000000282 R12: 0000400000000040
-R13: 00007f0468215020 R14: 0000000000004421 R15: 0000400000000080
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:ocfs2_journal_toggle_dirty+0x397/0x3a0 fs/ocfs2/journal.c:1012
-Code: 6f fe e9 f7 fd ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c 2a fe ff ff 48 89 df e8 d4 68 6f fe e9 1d fe ff ff e8 da cf 08 fe 90 <0f> 0b e8 92 58 3f 08 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 0000:ffffc9000e2fefe0 EFLAGS: 00010293
-RAX: ffffffff83b67fc6 RBX: 00000000ffffffff RCX: ffff88801f368000
-RDX: 0000000000000000 RSI: 00000000ffffffff RDI: 0000000000000000
-RBP: ffffc9000e2ff0b0 R08: ffffffff83b67d30 R09: 1ffffffff285f32a
-R10: dffffc0000000000 R11: fffffbfff285f32b R12: dffffc0000000000
-R13: ffff88804121a740 R14: ffff8880449e9600 R15: 1ffff92001c5fe04
-FS:  00007f04682156c0(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f0460bff000 CR3: 000000005005a000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Jamie
