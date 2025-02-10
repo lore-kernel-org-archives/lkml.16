@@ -1,87 +1,59 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC1413A25B;
-	Mon, 10 Feb 2025 04:01:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9AF149E1A
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 04:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739160068; cv=none; b=NygixDqvxH6hXn8G+n6bE9IVHDzIGb0wM0K4Gd7431Y+GOjTUSfRhasAFQPd43vRm8ZvGnzW1BBXBagbOwAgjooKyem0Zh+1EjbWhIdUw8GsHjbRbiVf0em8hJHLYniLWPwLv4f1UY0ws5vJG6xIDRdaT5gBPfDBlFant2cIfh4=
+	t=1739160300; cv=none; b=oKaN8bXViIwP+hrBfEP6LT6Jt49xxlgpogFA/ONOszyT8MPLat6gp0i50vTMuiZO0V30zDaFa9cn0fFxRLOaz5hQhK/8fU+7wm/aPh+YF1DGw4paTTrhPseiH0kB9xGiyx1n4mDOprq4yCKgmAchCTKPNgwQYMg/CGG7vF9NSyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739160068; c=relaxed/simple;
-	bh=f0KDuAUflNARbT58GUMeTukf/oPlGSMSUkPVBMaPwtU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HBawrKqB7trm4zjAqX9p9UqiPMBYpancOs2xsV10ZWBm7V8qGuvoc1zpEwdGTglf94yAb0wr0f5Jq/1FNRKoWdccf3ceZtSPcljS4bsuM1YCwnbRT3YTBbJ2YIp+lW9dYo4u/uzPxCglSvKhwHRbPc9x5VnwG0zEWWCe1alk+jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4YrrNc3m5Cz1W5QX;
-	Mon, 10 Feb 2025 11:56:32 +0800 (CST)
-Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 93505140159;
-	Mon, 10 Feb 2025 12:00:56 +0800 (CST)
-Received: from kwepemn100009.china.huawei.com (7.202.194.112) by
- dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 10 Feb 2025 12:00:56 +0800
-Received: from localhost.localdomain (10.28.79.22) by
- kwepemn100009.china.huawei.com (7.202.194.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 10 Feb 2025 12:00:55 +0800
-From: Huisong Li <lihuisong@huawei.com>
-To: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <matt@ranostay.sg>, <mchehab@kernel.org>, <zhanjie9@hisilicon.com>,
-	<zhenglifeng1@huawei.com>, <liuyonglong@huawei.com>, <lihuisong@huawei.com>
-Subject: [PATCH v2] media: video-i2c: Use HWMON_CHANNEL_INFO macro to simplify code
-Date: Mon, 10 Feb 2025 11:48:42 +0800
-Message-ID: <20250210034842.17410-1-lihuisong@huawei.com>
-X-Mailer: git-send-email 2.22.0
+	s=arc-20240116; t=1739160300; c=relaxed/simple;
+	bh=/oegG0DYsf8+eZbpRhMQF1APNdBnPMoD3Tpoy0gnUsQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XGzIqpUOCLSA+EqKXxZLYRz8y8p1Sp6LoN5arRaZC/ZPbXwFxrvZGMjI0j050xcQadNAsN8jQBj/4yHdvnFZF71c8JaI0GvstcebtPycI5gmCKeczlc8dBjkz2eoMZqwMLX1cEoQ99lotFE+EAxxJ7UOf6wza+RzGnEy/G6m4T4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 5550B68C4E; Mon, 10 Feb 2025 05:04:46 +0100 (CET)
+Date: Mon, 10 Feb 2025 05:04:46 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
+	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+	andersson@kernel.org, konradybcio@kernel.org, rafael@kernel.org,
+	ulf.hansson@linaro.org
+Subject: Re: [PATCH] nvme-pci: Use NVME_QUIRK_SIMPLE_SUSPEND for Qualcomm
+ Snapdragon 8cx Gen 3 platforms
+Message-ID: <20250210040446.GA2823@lst.de>
+References: <20250126050309.7243-1-manivannan.sadhasivam@linaro.org> <20250208185124.GA1120888@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemn100009.china.huawei.com (7.202.194.112)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250208185124.GA1120888@bhelgaas>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Use HWMON_CHANNEL_INFO macro to simplify code.
+On Sat, Feb 08, 2025 at 12:51:24PM -0600, Bjorn Helgaas wrote:
+> > +	/*
+> > +	 * Qualcomm Snapdragon 8cx Gen 3 (SC8280XP) platforms doesn't retain
+> > +	 * power to the PCIe bus after entering low power CX power collapse
+> > +	 * state during system suspend. So shutdown the NVMe devices to have a
+> > +	 * working system suspend on these platforms.
+> > +	 */
+> > +	if (dmi_match(DMI_PRODUCT_FAMILY, "SCP_MAKENA") ||
+> > +	    dmi_match(DMI_PRODUCT_FAMILY, "ThinkPad X13s Gen 1"))
+> > +		return NVME_QUIRK_SIMPLE_SUSPEND;
+> 
+> I certainly acknowledge that this is a big problem for users.  At the
+> same time, this seems like a maintenance nightmare of
+> platform-specific hacks scattered through endpoint drivers.
 
-Signed-off-by: Huisong Li <lihuisong@huawei.com>
----
- -v2: detach this patch from the series[1]
-
-[1] https://lore.kernel.org/lkml/20250124022635.16647-3-lihuisong@huawei.com/T/
-
----
- drivers/media/i2c/video-i2c.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
-
-diff --git a/drivers/media/i2c/video-i2c.c b/drivers/media/i2c/video-i2c.c
-index 036a6375627a..0dd991d70d53 100644
---- a/drivers/media/i2c/video-i2c.c
-+++ b/drivers/media/i2c/video-i2c.c
-@@ -264,18 +264,8 @@ static int amg88xx_set_power(struct video_i2c_data *data, bool on)
- 
- #if IS_REACHABLE(CONFIG_HWMON)
- 
--static const u32 amg88xx_temp_config[] = {
--	HWMON_T_INPUT,
--	0
--};
--
--static const struct hwmon_channel_info amg88xx_temp = {
--	.type = hwmon_temp,
--	.config = amg88xx_temp_config,
--};
--
- static const struct hwmon_channel_info * const amg88xx_info[] = {
--	&amg88xx_temp,
-+	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
- 	NULL
- };
- 
--- 
-2.22.0
-
+Yes.  And it's what we stated that we won't do multiple times.
+This needs to be taken on in the firmware or at least core PCI/PM
+code.
