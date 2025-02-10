@@ -1,211 +1,109 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A374C23DE95;
-	Mon, 10 Feb 2025 15:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCA5244186
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:57:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739203070; cv=none; b=hJWOeAWZ6IDQddsnLpINe5t/s3Gb1AM4/pI5fOFlOaFoTFPr1wXTGsp+KbNhmOvWZqMl1ZCmSKkHvbeDA09peQWA5OAuzejLeOsRXMuwV2XQH2SAuBB9K5uP37PfDRFOcbyAx0ztQaFClSILxErTOIj79M7FPfEAXWIqlAz9iU8=
+	t=1739203073; cv=none; b=nWAk7pZ0GA8wKd/+8MjS/1nRzQq9nN46k3JRkzIe3z666ngdOmIav50Wk8RDm3fz1bb1trukmWOgZ1qfiu7CpK0AWIadeLQSgxfKAjIaoQxjYyflGjHb2Ad3hmt4Zoh22TUdiCoc+AbNgBF8XlblvtDfd9oAFUSmS8MOb4cnYLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739203070; c=relaxed/simple;
-	bh=ngoa/pnNW9MKgFWcNtEvcQHznTvuhl7Mc0/xE2QvkOA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m5OVGgfubXo0f1KKWhq0JqeQgvkZz/iPBwuogtqxpxoiea/Rd7dZGO6tZgTcB7LtfCTf2tBDkOkZut+C9hUkW8/gVr9PS1/HsuZ7NmZNe2Sna5sfeEn09iptxiu55qWsES8wPWkSFy09opGjADTiJGok2s9vNBVYfFK4QiP/FJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SfqD5Gtq; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1739203073; c=relaxed/simple;
+	bh=lQ9xjXE4fQ5E3R9uQe1RdCFTA3rQo7TSFCMdjBUTzJk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=scg2WBLWJ4/i6apE/2x/SpOqnn+NoJfNQBc7GpG+6EIGyCoiEIRoAuvHCmU8ltzxP6/5pptEx20gR0DYPCA5lrpAuELJDzcMj0HmXxl9r6a0+3Axybi9IwyTCVxVjpAcBWO560STHPfm7mSl2n6k3p2qiWtO3iBZiJPXC3IBiqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=XJ32rxft; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SfqD5Gtq"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51A9k4RP015298;
-	Mon, 10 Feb 2025 15:56:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=JFQg6/
-	mm1mCQ9hm1UAMD/WpOw3HzXsccpaFRpJs7log=; b=SfqD5GtqADN9Ps6T/QLBGG
-	cc5Vlp1lkLY1VOcvvWOChBIrbnx7HGsw8VVqlrysOfZPGpLiODcQURivlh+27t06
-	ohdu0iO87ipKULigC30GsUEkrpgkwtACCerbh4wmv/Glx/B+pXV1ZB4Ouu3LUTJA
-	uSVYBovfK3TlQUcgTQQsxufZAkL7QHum6fV/DUX1RV6msphcXZ/V3zAgcbneJ8TS
-	Fa//0RGUduVCRn1up5NbbCds/oWeOXlzI1IiWnvMAL4QhDBdvMDHF5XD/a2S8KpE
-	a1avWJAWZBzDgxMwzQd8SAwFEHuKz6FgLZIwRY4pK8kK5RTFtDDCtShN5/gsaWGw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44q5gac7ud-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 15:56:45 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51AFqaKx029544;
-	Mon, 10 Feb 2025 15:56:44 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44q5gac7ub-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 15:56:44 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51AF5LH2028268;
-	Mon, 10 Feb 2025 15:56:43 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44phyy760s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 15:56:43 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51AFudfL44564780
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Feb 2025 15:56:39 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7C5BB20043;
-	Mon, 10 Feb 2025 15:56:39 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 67CC720040;
-	Mon, 10 Feb 2025 15:56:38 +0000 (GMT)
-Received: from [9.171.134.37] (unknown [9.171.134.37])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 10 Feb 2025 15:56:38 +0000 (GMT)
-Message-ID: <465e4bf4-8d81-4d2f-8d50-92032e718fea@linux.ibm.com>
-Date: Mon, 10 Feb 2025 16:56:39 +0100
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="XJ32rxft"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 8156024002A
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:57:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1739203069; bh=lQ9xjXE4fQ5E3R9uQe1RdCFTA3rQo7TSFCMdjBUTzJk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=XJ32rxft95edBr+EDeVQZGHUeecj5jwxAYiaY0fmQiw2umt38i4PSHy9Xqg3hFJiG
+	 /zwvz+V5oKOw72WAw2xrq8hAP8wB+Yc79C5RKXPI+nT84dGnO8FJJe6BgjV+2KCv1K
+	 1a/Sv9v6+tUMPu1OxatgL5s/rO/RkvTTXucwVQkuLC0FQKgeXGmOlzDLtEJL/rvaCK
+	 3aSKa8WrXTNh5x1YiXZFYpqIAEdpStyegfE2z3NDSW+zSkvotggBkO6XagnhOYe+Gy
+	 f22mnkpYg4Jfa392j6ToQbc6mTrz2xOh4/2lLIwaI1sSOLm6xfkPKEKVOGeJI1JRD3
+	 asuBpZK0jhXeA==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4Ys8Nl2HW4z9rxD;
+	Mon, 10 Feb 2025 16:57:42 +0100 (CET)
+Date: Mon, 10 Feb 2025 15:57:42 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Mark Brown <broonie@kernel.org>
+Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
+	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 00/12] YAML conversion of several Freescale/PowerPC DT
+ bindings
+Message-ID: <Z6oh9t2QQzz17Yt6@probook>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <611e47da-ba87-4c21-a6b7-cf051dc88158@sirena.org.uk>
+ <Z6a_f03Ct9aB7Bbn@probook>
+ <0fe3416c-c3f3-44c4-a1c0-7e8262c54d4b@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 19/39] unwind_user/sframe: Add support for reading
- .sframe contents
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <77c0d1ec143bf2a53d66c4ecb190e7e0a576fbfd.1737511963.git.jpoimboe@kernel.org>
- <b35ca3a3-8de5-4d32-8d30-d4e562f6b0de@linux.ibm.com>
- <20250204185121.jt5ylxsouqi5dyie@jpoimboe>
- <d2345191-0b73-4860-89be-9a189078d85e@linux.ibm.com>
- <20250207210614.nks6bxad4jhdulwg@jpoimboe>
-From: Jens Remus <jremus@linux.ibm.com>
-Content-Language: en-US
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20250207210614.nks6bxad4jhdulwg@jpoimboe>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: c_VdntBFuYXB9sW5Z0uoy5rIJYlR5mAK
-X-Proofpoint-ORIG-GUID: rRqaPihsbnZgi5VN3hTyR-Gv-amt3F5x
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_08,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 clxscore=1015 suspectscore=0 mlxlogscore=999 spamscore=0
- lowpriorityscore=0 phishscore=0 malwarescore=0 bulkscore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502100128
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <0fe3416c-c3f3-44c4-a1c0-7e8262c54d4b@sirena.org.uk>
 
-On 07.02.2025 22:06, Josh Poimboeuf wrote:
-> On Wed, Feb 05, 2025 at 10:47:58AM +0100, Jens Remus wrote:
->> UNSAFE_GET_USER_INC(ra_off, cur, offset_size, Efault);
->>
->> With offset_size=1 expands into:
->>
->> __UNSAFE_GET_USER_INC(/*to=*/ra_off, /*from=*cur, /*type=*/u8, /*label=*/Efault);
->>
->> Expands into:
->>
->> {
->> 	u8 __to;
->> 	unsafe_get_user(__to, (u8 __user *)cur, Efault);
->> 	cur += sizeof(__to);
->> 	ra_off = (typeof(ra_off))__to;
->> }
->>
->> The issue is that on the last line __to is u8 instead of s8 and thus
->> u8 gets casted to s32, which is performed without sign extension.  __to
->> would need to be s8 or get casted to s8 for sign extension to take
->> place.
-> 
-> Ah, I get it now, thanks for spelling that out for me.
-> 
-> Here's what I have at the moment:
+On Mon, Feb 10, 2025 at 12:59:35PM +0000, Mark Brown wrote:
+> On Sat, Feb 08, 2025 at 02:20:47AM +0000, J. Neusch=C3=A4fer wrote:
+> > On Fri, Feb 07, 2025 at 09:38:05PM +0000, Mark Brown wrote:
+>=20
+> > > What's the story with dependencies here - why is all this stuff in one
+> > > series?
+>=20
+> > The patches are independent of each other, except for the four elbc/nand
+> > patches. They are in the same series because they came up during the
+> > same project and achieve similar goals, but it isn't necessary.
+>=20
+> Please don't do this, it just makes it harder to merge things since it
+> makes it look like there's cross tree merges needed when that's not the
+> case, complicating merging, and puts the entire series in everyone's
+> inbox which makes things more noisy.
 
-Thanks!  Using your new UNSAFE_GET_USER_INC() in all places works great
-on s390 when resolving the duplicate macro names (see below).
+How should I proceed with this series, in your opinion?
+I see potential advantages (less of the issues you describe) and
+disadvantages (somewhat harder to track patches) of splitting it up
+before sending v3.
 
-> 
-> #define __UNSAFE_GET_USER_INC(to, from, type, label)			\
-> ({									\
-> 	type __to;							\
-> 	unsafe_get_user(__to, (type __user *)from, label);		\
-> 	from += sizeof(__to);						\
-> 	to = __to;							\
-> })
-> 
-> #define __UNSAFE_GET_USER_INC(to, from, size, label, u_or_s)		\
+(Outside of this series, the conclusion is clear and simple)
 
-That does not compile.  One of the macros needs to be renamed.
 
-   CC      kernel/unwind/sframe.o
-kernel/unwind/sframe.c:141:9: warning: "__UNSAFE_GET_USER_INC" redefined
-   141 | #define __UNSAFE_GET_USER_INC(to, from, size, label, u_or_s)            \
-       |         ^~~~~~~~~~~~~~~~~~~~~
-kernel/unwind/sframe.c:133:9: note: this is the location of the previous definition
-   133 | #define __UNSAFE_GET_USER_INC(to, from, type, label)                    \
-       |         ^~~~~~~~~~~~~~~~~~~~~
-
-> ({									\
-> 	switch (size) {							\
-> 	case 1:								\
-> 		__UNSAFE_GET_USER_INC(to, from, u_or_s##8, label);	\
-> 		break;							\
-> 	case 2:								\
-> 		__UNSAFE_GET_USER_INC(to, from, u_or_s##16, label);	\
-> 		break;							\
-> 	case 4:								\
-> 		__UNSAFE_GET_USER_INC(to, from, u_or_s##32, label);	\
-> 		break;							\
-> 	default:							\
-> 		dbg_sec_uaccess("%d: bad unsafe_get_user() size %u\n",	\
-> 				__LINE__, size);			\
-> 		return -EFAULT;						\
-> 	}								\
-> })
-> 
-> #define UNSAFE_GET_USER_UNSIGNED_INC(to, from, size, label)		\
-> 	__UNSAFE_GET_USER_INC(to, from, size, label, u)
-> 
-> #define UNSAFE_GET_USER_SIGNED_INC(to, from, size, label)		\
-> 	__UNSAFE_GET_USER_INC(to, from, size, label, s)
-> 
-> #define UNSAFE_GET_USER_INC(to, from, size, label)				\
-> 	_Generic(to,								\
-> 		 u8:	UNSAFE_GET_USER_UNSIGNED_INC(to, from, size, label),	\
-> 		 u16:	UNSAFE_GET_USER_UNSIGNED_INC(to, from, size, label),	\
-> 		 u32:	UNSAFE_GET_USER_UNSIGNED_INC(to, from, size, label),	\
-> 		 s8:	UNSAFE_GET_USER_SIGNED_INC(to, from, size, label),	\
-> 		 s16:	UNSAFE_GET_USER_SIGNED_INC(to, from, size, label),	\
-> 		 s32:	UNSAFE_GET_USER_SIGNED_INC(to, from, size, label))
-
-Regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
-
+J. Neusch=C3=A4fer
