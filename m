@@ -1,188 +1,110 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7991DFE3A
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF6E1E570A;
+	Mon, 10 Feb 2025 11:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739187679; cv=none; b=emJg1EFkb+1M/A1hhGCU08BHi7QqZD/3pjXceC6XTbjxE2XKMMxd/6700b6HaHzoy4hH3OPS3bHLH108jC+gRrCPxUCaySRVZFxPTEuT5dtwcDQB0KVVVPn1RxCKvJSJdPBYK1I/QT9w6D6gdnIP/mQYjhP/UgrTCcJwPdQgsBs=
+	t=1739187717; cv=none; b=bJkbw358mG7UmuUL/BbBd0OTHT9OnWQfkm/BhL2PVuz4kNDWVV/tebfTUVLIfzgTLs5bZDkVDOM0E3iqdJjJZhYs5DW3vrzqkzPg2/xKP8Mqt7rrQjtKalIpMipSGIfoUD7w/rgepQSWx/dP13o1ncWwIjtdUkQGs39IEGm/Rp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739187679; c=relaxed/simple;
-	bh=A0Z5p7jAtcJP+bUxNWQBTn+qyqsJKGT8czafy7DAnfs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fuwuVbjfHj1huu9UKgLRl1044yHNmEvoiLUb+pIElA3E3rT4h/JlcZfDk97AsDcsOEaJK05INcl/AYDxYLSdz+HSx55dtbeA7TgbkYSShHwzh9Qh9/dzTjKPdxkmvAh+BL+0k7hnIzIEwry0yWS3hxBEAHnnCnI70QvFEnAOg5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IhOoeCRC; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739187717; c=relaxed/simple;
+	bh=Lis5FT6NMT38CbNQPOuKvs8FJ5MnAh47jLG4RAe9Mfc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pRLlfFTyYbZefHQLkYYsKKTseAJtaq/gBFbhCFiJxhbm+uhyOo6n8s/ldLeSvMpeRh1FKQC+1B9QcCwl9YzDBFlu9MtNeszYNqMBkFGnr/+nz3hKHVP+AlYvmzNPffo8x/unREmpVeOZKR26X6iDpv/A7hWxtzeglVzX5oCZetU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aweTzWdy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IhOoeCRC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739187675;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ClbELSS8AwfbHSwnhY5LOEfcBwAX2tRaVpjOvrMpwf0=;
-	b=IhOoeCRCIv8yQz9ky65A7bcfIu5qF/QoQL3QzUv4nmQe9d1TqMD1Ub3PTl/27xsUYZIM9y
-	MF4pYoL5IH7JVsxE8SPUHRnKCvWRyoDPV6k25lUIYkdoHHsy9yWkOclVBnLk2kLd3ui2i+
-	w7BBc8LApq0g1LJvWVZR60wtKRsVBWI=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-682-Qa8SLWEQPIG-s5zBQCTFAw-1; Mon,
- 10 Feb 2025 06:41:14 -0500
-X-MC-Unique: Qa8SLWEQPIG-s5zBQCTFAw-1
-X-Mimecast-MFC-AGG-ID: Qa8SLWEQPIG-s5zBQCTFAw
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D3E6F1955DB8;
-	Mon, 10 Feb 2025 11:41:11 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.113])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 383721800570;
-	Mon, 10 Feb 2025 11:41:06 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 10 Feb 2025 12:40:45 +0100 (CET)
-Date: Mon, 10 Feb 2025 12:40:39 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Cc: David Howells <dhowells@redhat.com>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>,
-	Oliver Sang <oliver.sang@intel.com>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] pipe: change pipe_write() to never add a zero-sized
- buffer
-Message-ID: <20250210114039.GA3588@redhat.com>
-References: <20250209150718.GA17013@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aweTzWdy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52F34C4CED1;
+	Mon, 10 Feb 2025 11:41:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739187716;
+	bh=Lis5FT6NMT38CbNQPOuKvs8FJ5MnAh47jLG4RAe9Mfc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aweTzWdydLGggARMi7Q6l9vy+bX0TZybZD3mFlqWBA/o2p+SfP1O6em8fbcZJRxf6
+	 wzIG9m7Ft2tiByN2kFBiAN8Zhbb+Mijm4YXdRPlihk10oyalnrmC2eNgG4nVVO+Y9G
+	 Vtmy2oZhcetNjLYsalH/Dltto1YSUFEGMq5H1H+dgjYfq7gCrfQp9R7P2QV1a/Fn3t
+	 ISejEhEEb5N3CzGGY+csZznWb0N2QUf+qK/j4vN15O1tYFfjRycu7gdu1u9WmJAvbw
+	 pgH+Fhk7BMZLHs5mk3I76n9bSuMIWKASr8AuRXFiYp3RYi71oAa9V0xcochacZwZlZ
+	 5Lpb5EFSimiww==
+Message-ID: <990bb621-5056-4460-82db-9805699d8a8d@kernel.org>
+Date: Mon, 10 Feb 2025 12:41:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250209150718.GA17013@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: qcs8300: Add device node for
+ gfx_smmu
+To: Pratyush Brahma <quic_pbrahma@quicinc.com>
+Cc: andersson@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
+ iommu@lists.linux.dev, joro@8bytes.org, konradybcio@kernel.org,
+ krzk+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ robh@kernel.org, robin.murphy@arm.com, will@kernel.org
+References: <20250203-b4-branch-gfx-smmu-v4-2-eaa7aa762f48@quicinc.com>
+ <ed3cc71a-426e-4044-86dd-945751e282d5@quicinc.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <ed3cc71a-426e-4044-86dd-945751e282d5@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-a194dfe6e6f6 ("pipe: Rearrange sequence in pipe_write() to preallocate slot")
-changed pipe_write() to increment pipe->head in advance.  IIUC to avoid the
-race with the post_one_notification()-like code which can add another buffer
-under pipe->rd_wait.lock without pipe->mutex.
+On 10/02/2025 05:58, Pratyush Brahma wrote:
+> Hi
+> 
+> Can someone kindly review this patch?
+> 
 
-This is no longer necessary after c73be61cede5 ("pipe: Add general notification
-queue support"), pipe_write() checks pipe_has_watch_queue() and returns -EXDEV
-at the start. And can't help in any case, pipe_write() no longer takes this
-rd_wait.lock spinlock.
-
-Change pipe_write() to call copy_page_from_iter() first and do nothing if it
-fails. This way pipe_write() can't add a zero-sized buffer and we can simplify
-pipe_read() which currently has to take care of this very unlikely case.
-
-Also, with this patch we can probably kill eat_empty_buffer() and more
-"is this buffer empty" checks in fs/splice.c later.
-
-Link: https://lore.kernel.org/all/20250209150718.GA17013@redhat.com/
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
----
- fs/pipe.c | 45 +++++++++------------------------------------
- 1 file changed, 9 insertions(+), 36 deletions(-)
-
-diff --git a/fs/pipe.c b/fs/pipe.c
-index 2ae75adfba64..b0641f75b1ba 100644
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -360,29 +360,9 @@ anon_pipe_read(struct kiocb *iocb, struct iov_iter *to)
- 			break;
- 		}
- 		mutex_unlock(&pipe->mutex);
--
- 		/*
- 		 * We only get here if we didn't actually read anything.
- 		 *
--		 * However, we could have seen (and removed) a zero-sized
--		 * pipe buffer, and might have made space in the buffers
--		 * that way.
--		 *
--		 * You can't make zero-sized pipe buffers by doing an empty
--		 * write (not even in packet mode), but they can happen if
--		 * the writer gets an EFAULT when trying to fill a buffer
--		 * that already got allocated and inserted in the buffer
--		 * array.
--		 *
--		 * So we still need to wake up any pending writers in the
--		 * _very_ unlikely case that the pipe was full, but we got
--		 * no data.
--		 */
--		if (unlikely(wake_writer))
--			wake_up_interruptible_sync_poll(&pipe->wr_wait, EPOLLOUT | EPOLLWRNORM);
--		kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
--
--		/*
- 		 * But because we didn't read anything, at this point we can
- 		 * just return directly with -ERESTARTSYS if we're interrupted,
- 		 * since we've done any required wakeups and there's no need
-@@ -391,7 +371,6 @@ anon_pipe_read(struct kiocb *iocb, struct iov_iter *to)
- 		if (wait_event_interruptible_exclusive(pipe->rd_wait, pipe_readable(pipe)) < 0)
- 			return -ERESTARTSYS;
- 
--		wake_writer = false;
- 		wake_next_reader = true;
- 		mutex_lock(&pipe->mutex);
- 	}
-@@ -526,33 +505,27 @@ anon_pipe_write(struct kiocb *iocb, struct iov_iter *from)
- 				pipe->tmp_page = page;
- 			}
- 
--			/* Allocate a slot in the ring in advance and attach an
--			 * empty buffer.  If we fault or otherwise fail to use
--			 * it, either the reader will consume it or it'll still
--			 * be there for the next write.
--			 */
--			pipe->head = head + 1;
-+			copied = copy_page_from_iter(page, 0, PAGE_SIZE, from);
-+			if (unlikely(copied < PAGE_SIZE && iov_iter_count(from))) {
-+				if (!ret)
-+					ret = -EFAULT;
-+				break;
-+			}
- 
-+			pipe->head = head + 1;
-+			pipe->tmp_page = NULL;
- 			/* Insert it into the buffer array */
- 			buf = &pipe->bufs[head & mask];
- 			buf->page = page;
- 			buf->ops = &anon_pipe_buf_ops;
- 			buf->offset = 0;
--			buf->len = 0;
- 			if (is_packetized(filp))
- 				buf->flags = PIPE_BUF_FLAG_PACKET;
- 			else
- 				buf->flags = PIPE_BUF_FLAG_CAN_MERGE;
--			pipe->tmp_page = NULL;
- 
--			copied = copy_page_from_iter(page, 0, PAGE_SIZE, from);
--			if (unlikely(copied < PAGE_SIZE && iov_iter_count(from))) {
--				if (!ret)
--					ret = -EFAULT;
--				break;
--			}
--			ret += copied;
- 			buf->len = copied;
-+			ret += copied;
- 
- 			if (!iov_iter_count(from))
- 				break;
--- 
-2.25.1.362.g51ebf55
+After 7 days? Community is not working for you to make such demands.
+Observe standard waiting time. Or better: Please relax, and help out by
+reviewing other patches on the mailing lists in order to relieve the
+burden of maintainers and move your patches higher up the list.
 
 
+Best regards,
+Krzysztof
