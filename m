@@ -1,103 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CD625E464;
-	Mon, 10 Feb 2025 19:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D513C25E464
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:06:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739214343; cv=none; b=LgHdzHLwN3MTuUYnGHO8ZSeQ4wTY0TO8IaylLyNhINdf7HK2AaL4HUHk2mf/mGwiUKt3puDy3xGyylPz3Fm36X/4mrUKRMDHq/ljTwwBXDpXQZau0yWyTr0VuTnTFaX7IOtY6JyIA9ZmttcvHoUsM821g+ZOEXYW9W2Ut9i+e70=
+	t=1739214376; cv=none; b=d8JP9jnHJFChURY1BbPglvaQQXMADgFaZMxNRWC2ezZLmoKBmqkH4FsY568ra6bLzHOnVelWsb/2aIgZ6naJ6ex+DtQMMpBiy3H2zO6U+PXKOk6TIVwW9zncVUh4QoeqHkzfzCF5oupqIO+9wAB9Z9mvuvJgGuMGhOZ5THDffZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739214343; c=relaxed/simple;
-	bh=zXBfHFcJ8y1Ef8wxt5I3wKzH1G1cWo22aipJAEO5+d8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JTD3+KJEpksKRqujcCnQ4KnJT5f6mfvvOvQtU13P6KWDAfGjYG8lz1K/qJHzUjGnqnbPv4UFlQflrirj6LJNqpN9qSQ4LckP07L+auYCB1C67ArYwD4gB6uPqTlF0iOv12dVdUNzNwjUjKL+MZokRZ38BziSKteHsf+6VJ9gl6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VWufO9Dv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739214376; c=relaxed/simple;
+	bh=BbE1NPV6pkAhM8QjnUZu8drl74MJljLQIQHTE0TQfJ0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rNXqdrSINS4uYk+qhu7C6YQi2GF40MurJLPiGKMAM16we3vTXgwxfIjAOcL+lfzvh9UPW4jBAayXVmhmyScpH+wi1qHmSSeUTu7Ee6z964ke/vXPSutbH4IQZrRQVxvDLNgbNJXrSw6CC/EdEA/suUBmyTC7iWCYGMhHDHBfUgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=B4uYTsKJ; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VWufO9Dv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 064E2C4CED1;
-	Mon, 10 Feb 2025 19:05:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739214343;
-	bh=zXBfHFcJ8y1Ef8wxt5I3wKzH1G1cWo22aipJAEO5+d8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VWufO9DvWwnhOR4lrjCZhiQN5gxZfJBIhouFkBGqN9i2zwsZBlALn+ZRhF9lEbo3V
-	 d6KNNZIhHoMkt4Xb1A9GD+S76m6r6jLPd8NYg0MA6InfmsN2+WkT5AdT4g23HaiyT5
-	 uu8LZQgHkBr3fe67bSqHkgu/RQOfVCnkEJwmYRcXrUlSwoe5yZXG7LoB3VQEVIPnK2
-	 Xb5AdhxEXOjPZ+n7sMttPRVkm/HR+RWLwwGdfNUoExBXJgaI6cJNkSy3WYv4balluv
-	 8bNY5PltM372FVBZ213e7K7HrV4Ti9oyoq4K95R0NkL655CMIGpPD0uf4/Gv/0Yfds
-	 Xrn/HMHZhj5YA==
-Date: Mon, 10 Feb 2025 11:05:41 -0800
-From: Eric Biggers <ebiggers@kernel.org>
-To: Sami Tolvanen <samitolvanen@google.com>
-Cc: Mikulas Patocka <mpatocka@redhat.com>,
-	Akilesh Kailash <akailash@google.com>, kernel-team@android.com,
-	Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
-	Milan Broz <gmazyland@gmail.com>, dm-devel@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dm-verity: do forward error correction on metadata I/O
- errors
-Message-ID: <20250210190541.GG1264@sol.localdomain>
-References: <629167c1-9be0-6128-8605-eb02391e821d@redhat.com>
- <CABCJKucmOTVF1jY3vM7VKHuLkDeUxK1EU7YK=C+vgfWvgZFWPQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="B4uYTsKJ"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6f9b1bc594dso27550017b3.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:06:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google; t=1739214372; x=1739819172; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GQHvYxw9TC0a/hgF8QnKVxqks9sj1+2Y1os4NAgJLRk=;
+        b=B4uYTsKJPuOqYyET0lzjHDLGqgc6OBc6cvV20CqkJIOxosUyEhIAXhxVsdukBWErBF
+         555jleNEWX0MDk6tJO+ai1JXlZSDR2Hi3pgO+wyXu4QquC6RhWKZlVjkyMLGejuf+ysg
+         1S5NhbWEOt3UZ/7ny4BZWeNdeVaxgMRH8XJEoNoCJ+uBab31cnmbK6rgjARh4oUN4rag
+         9e+m9+5A/yxRVzQ1h/bOFqjMtIxnD2k5w5HRU6bDTj9Q6jCqOT6zGh2sK4GRjwdOieDn
+         lycoMWtfuGOvSNAmiYwaesSCKsMWWhzMyEuBxLH9MJ25WuJeqb6UA85QA/cTUmK6GcvF
+         y/LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739214372; x=1739819172;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GQHvYxw9TC0a/hgF8QnKVxqks9sj1+2Y1os4NAgJLRk=;
+        b=kqVdN/MQNZIrUPPWUTR62XLiU2Etp+66M3pKfc1rPmC5ChypknFQblz6FcSqH2Bif9
+         XjYD+shu8cWLieJLbOdqnDwOFVIyelxsQp6FVWrYbBBN0RFgiOsQweLu6D87pBsLCB6j
+         +Jf2tDqquluIp3WLAINVqhm5v/j1BttP5vjGKPOR6605H9svKzZBZq/te7k2h0v2bMb4
+         ncb3JtKoRkyB5ovmCoxlgtqhHb/scgu+tZPfzsfDST9catYh4r65q4qRV+E6a4tATKtm
+         8W1gQSfsdwYnixBHKalg8/x32hFIJ50sJlk99kQmL7ENv8bs9kF7w0td6qf0vM5aE4Tz
+         4Z1g==
+X-Forwarded-Encrypted: i=1; AJvYcCXiydPjutiZbhrNKdnHGTK9qrREOa5JLXUT1CwY7Qnc5px9N168+VUsssUHej1cJYlQhj0EneeFZ3gO/mY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykM4qQMwPG70UrPZTcL7EQ4Tkzrv2SUWJ7uTFanpOyLFU5vRzj
+	sZDWex+oyorukhuE9LJBGOk0TGVJr9KQAGjzsMk03HMtJtUijN2IZpjvpA8aPZIiMFArlx+5onF
+	BdVphJfuN8cEJ5hXyKcHHGFJjsT/pkNRCx5gJVA==
+X-Gm-Gg: ASbGncvzyFN9E0V4dYBUcSDpj0UErC/ki3IIIeAdBv4ETfSTLDR0YAlVrFXu/9XD7+Z
+	xkeKR3LZXAxAU94fw2/fBqgXSO3P4ZfXy3ZAo4UF1FjEWpJiSB47YqUmZT0skT2e3ASxWWIkTXl
+	NkZMd/P89pLL9RSdDOE3OU7S7aYIUl
+X-Google-Smtp-Source: AGHT+IF0tZL586tW8GGxeKA1tKG8GTUu6ZxMVARFBs0eFcDGr5bElYO+qGMDJQAhG35dHcXOrlWVp0l/WbPydKTEpSI=
+X-Received: by 2002:a05:690c:4444:b0:6f9:ac35:4483 with SMTP id
+ 00721157ae682-6f9b29e5926mr121879627b3.25.1739214371748; Mon, 10 Feb 2025
+ 11:06:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABCJKucmOTVF1jY3vM7VKHuLkDeUxK1EU7YK=C+vgfWvgZFWPQ@mail.gmail.com>
+References: <20250204-imx219_fixes-v6-0-84ffa5030972@ideasonboard.com> <20250204-imx219_fixes-v6-4-84ffa5030972@ideasonboard.com>
+In-Reply-To: <20250204-imx219_fixes-v6-4-84ffa5030972@ideasonboard.com>
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date: Mon, 10 Feb 2025 19:05:52 +0000
+X-Gm-Features: AWEUYZnA3pQgJDo0ZfsATW499IeRezl6cMBBmQLRAPfYQOID6yvwO8rhTG10ULk
+Message-ID: <CAPY8ntC1-S6zKtDvmc6EgyxP+j6rTShuG8Dr8PKb9XQr2PeS_w@mail.gmail.com>
+Subject: Re: [PATCH v6 4/5] media: i2c: imx219: Increase minimum LLP to fix
+ blocky artefacts
+To: Jai Luthra <jai.luthra@ideasonboard.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Feb 10, 2025 at 08:57:55AM -0800, Sami Tolvanen wrote:
-> Hi Mikulas,
-> 
-> On Mon, Feb 10, 2025 at 7:04 AM Mikulas Patocka <mpatocka@redhat.com> wrote:
-> >
-> > Do forward error correction if metadata I/O fails.
-> >
-> > Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-> >
-> > ---
-> >  drivers/md/dm-verity-target.c |   19 +++++++++++++++++--
-> >  1 file changed, 17 insertions(+), 2 deletions(-)
-> >
-> > Index: linux-2.6/drivers/md/dm-verity-target.c
-> > ===================================================================
-> > --- linux-2.6.orig/drivers/md/dm-verity-target.c        2025-02-04 13:52:45.000000000 +0100
-> > +++ linux-2.6/drivers/md/dm-verity-target.c     2025-02-10 15:55:42.000000000 +0100
-> > @@ -324,8 +324,22 @@ static int verity_verify_level(struct dm
-> >                                                 &buf, bio->bi_ioprio);
-> >         }
-> >
-> > -       if (IS_ERR(data))
-> > -               return PTR_ERR(data);
-> > +       if (IS_ERR(data)) {
-> > +               r = PTR_ERR(data);
-> > +               data = dm_bufio_new(v->bufio, hash_block, &buf);
-> > +               if (IS_ERR(data))
-> > +                       return r;
-> > +               if (verity_fec_decode(v, io, DM_VERITY_BLOCK_TYPE_METADATA,
-> > +                                     hash_block, data) == 0) {
-> > +                       aux = dm_bufio_get_aux_data(buf);
-> > +                       aux->hash_verified = 1;
-> > +                       goto release_ok;
-> > +               } else {
-> > +                       dm_bufio_release(buf);
-> > +                       dm_bufio_forget(v->bufio, hash_block);
-> > +                       return r;
-> > +               }
-> > +       }
-> 
-> Don't we still have to check for io->in_bh before trying to correct the error?
-> 
-> Overall, it would be nice not to duplicate code here. Should the
-> metadata error correction / handling be moved to a separate function
-> similar to verity_handle_data_hash_mismatch?
-> 
+Hi Jai
 
-It's also incorrect to do this when skip_verified=true, since in that case
-want_digest (which verity_fec_decode() uses) has not been initialized yet.
+Thanks for the patch
 
-- Eric
+On Tue, 4 Feb 2025 at 07:05, Jai Luthra <jai.luthra@ideasonboard.com> wrote:
+>
+> The sensor's internal ADC supports a minimum line length of 3448 pixels,
+> which may be too small to use with analog binning, where ADC operates on
+> two lines together. Switch to a higher minimum line length of 3560
+> pixels to fix the blocky artefacts seen with analog binning [1].
+>
+> To keep the same default framerate as before for all the modes, lower
+> the default fll value to compensate for the increase in llp.
+
+Extending the line length as you've done reduces the maximum frame
+rate of all modes by ~3%.
+Why do we need to reduce the max frame rate for non-binned modes which
+have no artefacts?
+
+Default frame rate is a relatively useless setting - any sensible
+application should be setting the blanking controls to configure the
+frame rate that it wants.
+
+The datasheet does list line_length_pix default value as 3448 (0xd78),
+and 3448 is mentioned numerous times throughout the datasheet for
+calculations. Deviating from it for all modes is a brave move IMHO.
+
+  Dave
+
+> [1]: https://github.com/raspberrypi/rpicam-apps/issues/281#issuecomment-1082894118
+>
+> Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
+> ---
+>  drivers/media/i2c/imx219.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
+> index 8239e7ea8ec03849b339c1f314485266d4c4d8bd..e4aa6e66b673bb7a8942bf8daf27267c2884ec95 100644
+> --- a/drivers/media/i2c/imx219.c
+> +++ b/drivers/media/i2c/imx219.c
+> @@ -74,7 +74,7 @@
+>  #define IMX219_FLL_MAX                 0xffff
+>  #define IMX219_VBLANK_MIN              32
+>  #define IMX219_REG_LINE_LENGTH_A       CCI_REG16(0x0162)
+> -#define IMX219_LLP_MIN                 0x0d78
+> +#define IMX219_LLP_MIN                 0x0de8
+>  #define IMX219_LLP_MAX                 0x7ff0
+>
+>  #define IMX219_REG_X_ADD_STA_A         CCI_REG16(0x0164)
+> @@ -286,25 +286,25 @@ static const struct imx219_mode supported_modes[] = {
+>                 /* 8MPix 15fps mode */
+>                 .width = 3280,
+>                 .height = 2464,
+> -               .fll_def = 3526,
+> +               .fll_def = 3415,
+>         },
+>         {
+>                 /* 1080P 30fps cropped */
+>                 .width = 1920,
+>                 .height = 1080,
+> -               .fll_def = 1763,
+> +               .fll_def = 1707,
+>         },
+>         {
+>                 /* 2x2 binned 30fps mode */
+>                 .width = 1640,
+>                 .height = 1232,
+> -               .fll_def = 1763,
+> +               .fll_def = 1707,
+>         },
+>         {
+>                 /* 640x480 30fps mode */
+>                 .width = 640,
+>                 .height = 480,
+> -               .fll_def = 1763,
+> +               .fll_def = 1707,
+>         },
+>  };
+>
+>
+> --
+> 2.48.1
+>
