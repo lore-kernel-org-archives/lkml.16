@@ -1,133 +1,194 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E02C1C5D7C;
-	Mon, 10 Feb 2025 11:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069001CAA88;
+	Mon, 10 Feb 2025 11:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739186114; cv=none; b=eLbEmW7cBhDmtIs1Q7/iOSSRDMLDZPiM27be47z75VNo3/llFQOas6v9to1MEFeDh6bxyD0/j/YLAnE3LKR0Mj1QlJrh5Ty6GLs+hzul58nDdw56uiyMtUiEKuPISapI99N9TNtZd1XOzbSDVeckJlqQUuN4Hhqj11PF2b1DQ14=
+	t=1739186134; cv=none; b=XOWPZ7svcJSEmf+C0ffdYisZNl4XXR+eEwhbmOnaIjSQZACWZDH9cVwYloj4pAX06x3EDMAbLxM9ure5wWXFlkJCzj6e7XSKaGHiTJa08MPJojuD8YjNvTQd/IBAD5XTt6abXQmYppR8nf6QLXdMpnqas0c21M73OJg+zQ3/q+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739186114; c=relaxed/simple;
-	bh=5CBqDfYk0oFqMBufkZckF4ZUcwXX+m/vSHvF0rrzvWQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZOHaUGhlZEsOfY5oa3U4r+8RDks9e7LrzFkrnICLGNVIf5+eePev4DlgqPEpZp5uoGzm5+M6+uB6xD3rTlJZfnYJiU90+VyDxvnSAC9+P74uVxYLU12yL/MEMAa90f8o7+egC8iLi549tdKd/73/u1c6WQRVsSJKd+Ji/99XIL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=cw61DjqK; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1739186134; c=relaxed/simple;
+	bh=yghw6cquksN8zPqbgLipZY4BM8xR8DkXkhGUySC4WRA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ceq2lwj8mIpmeXEa2yfOa3725Z7RZrLpT41Pu2Y2CXc0caZRSzc4GAjgZvnbm6gY2zG9b8PN2Fh/+aHRbmENiUcTf8tIykbS6b0yDrNVRzNPUiuo+IDqnjxWGN1AMnYs1D5+6jZDOnvIbNv5BQLS68we3KDGZWaD74LcE4aRgD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ESmPJunG; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="cw61DjqK"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 14815352;
-	Mon, 10 Feb 2025 12:13:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1739186034;
-	bh=5CBqDfYk0oFqMBufkZckF4ZUcwXX+m/vSHvF0rrzvWQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cw61DjqKaw7PXxQCCiwrbqPgnn0D4nalMo8V9cnkjFNi432mQszqyzPYk7e3j9lxB
-	 XUGZnn6e5C/vQO5o8wC3GAYdgCntxcHhq+e3Rlzjy0xred0b+g+R/PB0U0tbUU/8Ty
-	 4zgRXFAk/VrrIni2ntTpQyHuQJBP9raAD2P6hOOk=
-Date: Mon, 10 Feb 2025 13:15:01 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Jonathan Corbet <corbet@lwn.net>, workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v4] docs: clarify rules wrt tagging other people
-Message-ID: <20250210111501.GF2966@pendragon.ideasonboard.com>
-References: <588cf2763baa8fea1f4825f4eaa7023fe88bb6c1.1738852082.git.linux@leemhuis.info>
- <20250207090518.GE24886@pendragon.ideasonboard.com>
- <f50c7b22-2b31-47d2-8353-41d80f5241c1@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ESmPJunG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739186129;
+	bh=yghw6cquksN8zPqbgLipZY4BM8xR8DkXkhGUySC4WRA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ESmPJunGKo+yuyT+lTgsSKQkXws5Oh5vtwZRmhalZJPGz9I7fqqA1b5qZVgeScorm
+	 7fiHrJE9BW5p5by+M6fn++6G8oZZp16w+p+0puAsBVg0drC36ANH0wqBpmez62KFz7
+	 U/2nXk7Bg7CokDrDbVCEGM9y1xZsPTIrn4rGMvVKsyY/RN5V/eRJjdoO4sF5ybqdzg
+	 vV9FGtZz+Co5iGC1twH5yDOfNG3gsXGQbIwjW0UUAnQOjQfGR/7Mg/JdUhfQSZT6zq
+	 P5kFUrMn3pteKxxx7JLw0nZPSPCdNyBhww+p+UUE0vQaNSi76MZXeSP7LDMP0778/m
+	 gn1No4pdI4JfQ==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9548817E014F;
+	Mon, 10 Feb 2025 12:15:28 +0100 (CET)
+Message-ID: <98caee8a-b78e-4dcb-96d9-37fd4f279e68@collabora.com>
+Date: Mon, 10 Feb 2025 12:15:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <f50c7b22-2b31-47d2-8353-41d80f5241c1@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 23/34] drm/mediatek: mtk_hdmi: Move output init to
+ mtk_hdmi_register_audio_driver()
+To: =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
+ "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>
+Cc: "robh@kernel.org" <robh@kernel.org>,
+ "jie.qiu@mediatek.com" <jie.qiu@mediatek.com>,
+ "tzimmermann@suse.de" <tzimmermann@suse.de>,
+ "simona@ffwll.ch" <simona@ffwll.ch>, "mripard@kernel.org"
+ <mripard@kernel.org>, =?UTF-8?B?Sml0YW8gU2hpICjnn7PorrDmtpsp?=
+ <jitao.shi@mediatek.com>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "kernel@collabora.com" <kernel@collabora.com>,
+ "dmitry.baryshkov@linaro.org" <dmitry.baryshkov@linaro.org>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ =?UTF-8?B?TGV3aXMgTGlhbyAo5buW5p+P6YieKQ==?= <Lewis.Liao@mediatek.com>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ =?UTF-8?B?VG9tbXlZTCBDaGVuICjpmbPlvaXoia8p?= <TommyYL.Chen@mediatek.com>,
+ =?UTF-8?B?SXZlcyBDaGVuamggKOmZs+S/iuW8mCk=?= <Ives.Chenjh@mediatek.com>,
+ "airlied@gmail.com" <airlied@gmail.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ =?UTF-8?B?SmFzb24tSkggTGluICjmnpfnnb/npaUp?= <Jason-JH.Lin@mediatek.com>,
+ "junzhi.zhao@mediatek.com" <junzhi.zhao@mediatek.com>
+References: <20250113145232.227674-1-angelogioacchino.delregno@collabora.com>
+ <20250113145232.227674-24-angelogioacchino.delregno@collabora.com>
+ <1d5a94f3b974d4617a58f2d9dfc54d5dc889f18a.camel@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <1d5a94f3b974d4617a58f2d9dfc54d5dc889f18a.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, Feb 08, 2025 at 04:36:47PM +0100, Thorsten Leemhuis wrote:
-> On 07.02.25 10:05, Laurent Pinchart wrote:
-> > Thank you for the patch.
+Il 07/02/25 06:46, CK Hu (胡俊光) ha scritto:
+> Hi, Angelo:
 > 
-> Thx for saying that!
+> On Mon, 2025-01-13 at 15:52 +0100, AngeloGioacchino Del Regno wrote:
+>> External email : Please do not click links or open attachments until you have verified the sender or the content.
+>>
+>>
+>> In preparation for moving the common bits of this driver, merge the
+>> contents of mtk_hdmi_output_init in mtk_hdmi_register_audio_driver
+>> function to aggregate all of the initial audio setup together in
+>> the same function and to make it clear that all of the setup that
+>> is performed in mtk_hdmi_output_init is specifically related only
+>> to audio and not video.
+>>
+>> While at it, also remove the "%s driver bound to HDMI" debugging
+>> print disguised as informative.
+>>
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> ---
+>>   drivers/gpu/drm/mediatek/mtk_hdmi.c | 28 ++++++++--------------------
+>>   1 file changed, 8 insertions(+), 20 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+>> index e2393f7558f9..4345c91e92e7 100644
+>> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
+>> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+>> @@ -1025,20 +1025,6 @@ static int mtk_hdmi_setup_vendor_specific_infoframe(struct mtk_hdmi *hdmi,
+>>          return 0;
+>>   }
+>>
+>> -static int mtk_hdmi_output_init(struct mtk_hdmi *hdmi)
+>> -{
+>> -       struct hdmi_audio_param *aud_param = &hdmi->aud_param;
+>> -
+>> -       aud_param->aud_codec = HDMI_AUDIO_CODING_TYPE_PCM;
+>> -       aud_param->aud_sample_size = HDMI_AUDIO_SAMPLE_SIZE_16;
+>> -       aud_param->aud_input_type = HDMI_AUD_INPUT_I2S;
+>> -       aud_param->aud_i2s_fmt = HDMI_I2S_MODE_I2S_24BIT;
+>> -       aud_param->aud_mclk = HDMI_AUD_MCLK_128FS;
+>> -       aud_param->aud_input_chan_type = HDMI_AUD_CHAN_TYPE_2_0;
+>> -
+>> -       return 0;
+>> -}
+>> -
+>>   static void mtk_hdmi_audio_enable(struct mtk_hdmi *hdmi)
+>>   {
+>>          mtk_hdmi_hw_send_aud_packet(hdmi, true);
+>> @@ -1616,6 +1602,7 @@ static void mtk_hdmi_unregister_audio_driver(void *data)
+>>   static int mtk_hdmi_register_audio_driver(struct device *dev)
+>>   {
+>>          struct mtk_hdmi *hdmi = dev_get_drvdata(dev);
+>> +       struct hdmi_audio_param *aud_param = &hdmi->aud_param;
+>>          struct hdmi_codec_pdata codec_data = {
+>>                  .ops = &mtk_hdmi_audio_codec_ops,
+>>                  .max_i2s_channels = 2,
+>> @@ -1625,6 +1612,13 @@ static int mtk_hdmi_register_audio_driver(struct device *dev)
+>>          };
+>>          int ret;
+>>
+>> +       aud_param->aud_codec = HDMI_AUDIO_CODING_TYPE_PCM;
+>> +       aud_param->aud_sample_size = HDMI_AUDIO_SAMPLE_SIZE_16;
+>> +       aud_param->aud_input_type = HDMI_AUD_INPUT_I2S;
+>> +       aud_param->aud_i2s_fmt = HDMI_I2S_MODE_I2S_24BIT;
+>> +       aud_param->aud_mclk = HDMI_AUD_MCLK_128FS;
+>> +       aud_param->aud_input_chan_type = HDMI_AUD_CHAN_TYPE_2_0;
+>> +
+>>          hdmi->audio_pdev = platform_device_register_data(dev,
+>>                                                           HDMI_CODEC_DRV_NAME,
+>>                                                           PLATFORM_DEVID_AUTO,
+>> @@ -1638,7 +1632,6 @@ static int mtk_hdmi_register_audio_driver(struct device *dev)
+>>          if (ret)
+>>                  return ret;
+>>
+>> -       DRM_INFO("%s driver bound to HDMI\n", HDMI_CODEC_DRV_NAME);
 > 
-> > On Thu, Feb 06, 2025 at 03:30:10PM +0100, Thorsten Leemhuis wrote:
-> >> Point out that explicit permission is usually needed to tag other people
-> >> in changes, but mention that implicit permission can be sufficient in
-> >> certain cases. This fixes slight inconsistencies between Reported-by:
-> >> and Suggested-by: and makes the usage more intuitive.
-> >>
-> >> While at it, explicitly mention the dangers of our bugzilla instance, as
-> >> it makes it easy to forget that email addresses visible there are only
-> >> shown to logged-in users.
-> >>
-> >> The latter is not a theoretical issue, as one maintainer mentioned that
-> >> his employer received a EU GDPR (general data protection regulation)
-> >> complaint after exposing a email address used in bugzilla through a tag
-> >> in a patch description.
-> > [...]
-> >> -Be careful in the addition of tags to your patches, as only Cc: is appropriate
-> >> -for addition without the explicit permission of the person named; using
-> >> -Reported-by: is fine most of the time as well, but ask for permission if
-> >> -the bug was reported in private.
-> >> +Be careful in the addition of the aforementioned tags to your patches, as all
-> >> +except for Cc:, Reported-by:, and Suggested-by: need explicit permission of the
-> >> +person named. For those three implicit permission is sufficient if the person
-> >> +contributed to the Linux kernel using that name and email address according
-> >> +to the lore archives or the commit history -- and in case of Reported-by:
-> >> +and Suggested-by: did the reporting or suggestion in public. Note,
-> >> +bugzilla.kernel.org is a public place in this sense, but email addresses
-> >> +used there are private; so do not expose them in tags, unless the person
-> >> +used them in earlier contributions.
-> > 
-> > I like this text very much, it's concise and clear.
+> This modification is not related to the title. If necessary, separate this to another patch.
+> But I don't know why remove this. Could you explain more?
 > 
-> Glad to hear!
+
+It's a cleanup... if every driver in the kernel said "bound to" or "registered",
+the kernel log would be extremely long and unreadable... so that's why this print
+was removed.
+
+I can separate this to a different patch if you want, even though that'd be
+overkill, imo.
+
+Cheers,
+Angelo
+
+> Regards,
+> CK
 > 
-> > My only possible
-> > concern is that "explicit permission" isn't defined. I assume that
-> > someone sendubg a Reviewed-by or Acked-by tag in a public mail thread
-> > counts as permission, but strictly speaking it's not explicit.
-> > 
-> > Regardless of that, I think we can clarify what explicit permission
-> > means in a follow-up patch. If you would like to merge this one as-is,
+>>          return 0;
+>>   }
+>>
+>> @@ -1667,11 +1660,6 @@ static int mtk_hdmi_probe(struct platform_device *pdev)
+>>          mutex_init(&hdmi->update_plugged_status_lock);
+>>          platform_set_drvdata(pdev, hdmi);
+>>
+>> -       ret = mtk_hdmi_output_init(hdmi);
+>> -       if (ret)
+>> -               return dev_err_probe(dev, ret,
+>> -                                    "Failed to initialize hdmi output\n");
+>> -
+>>          ret = mtk_hdmi_register_audio_driver(dev);
+>>          if (ret)
+>>                  return dev_err_probe(dev, ret,
+>> --
+>> 2.47.0
+>>
 > 
-> Hmmmm. Not totally sure that I exactly understand what you mean, but I
-> think I see it.
 
-What I meant is that I interpret "explicit" as requiring an explicit
-mention of permission (e.g. "You can add my tag to the commit"), while
-replying to a patch with a tag on a public list seems to me to convey an
-implicit permission instead.
-
-> But I'm not sure how to solve that. Would simply
-> dropping the "explicit" solve this? Or should I start the section like this:
-
-Dropping "explicit" seems to be the simplest solution, but the next
-sentence mentions "implicit permission" which would then sound weird.
-
-> ""
-> Be careful in the addition of the aforementioned tags to your patches,
-> almost all need permission by the person named; one can be assumed if
-> the person provided that tag in a reply or acknowledged its inclusion
-
-"in a reply to a public list"
-
-> after being made aware that name and email address will end up in public
-> places where they can't be removed.
-> 
-> The tags Cc:, Reported-by:, and Suggested-by: are an exception: for
-> those three implicit permission is sufficient, ...
-> """
-
-This sounds good to me.
-
--- 
-Regards,
-
-Laurent Pinchart
