@@ -1,117 +1,323 @@
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F0E21F8BA4;
-	Mon, 10 Feb 2025 14:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3582F252904;
+	Mon, 10 Feb 2025 14:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739198719; cv=none; b=BWI476bB/QHFzWiX7iY1n7hp3SW2J00R/z1iFt0igRcn0TLi1ch2vQROMv759jLeazDdhqZ4kZHPTKNcLyAluhhzhz2rymrOim+8oaSw36s5jTwztkBSeE8InkeRBr3k8/XwHdNohbOJwl5nSxQGjcEDZTBYtElptpl2ladoftQ=
+	t=1739198758; cv=none; b=er4YjvNcmFvREbV/YSiHv8dibKRKlwjdq+xFDEVtZDXy4B5euCMFUjrNSS7azF+HmMBQ+zXedHHYHMNvvQyXQH3pc2v3zx2ZKJW5K7IWjeiA04Uyip3o694glf0lvTV3ldGwVJRefOBBTRICjmsLHSaFNDrY1aYtYsY8wf5DDYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739198719; c=relaxed/simple;
-	bh=nhr7hpK1VIvrvV+z1ur/qKnGF8vyc+TGKnlWmKdWXeQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lh+xjpVgmE3uwlewFjnRIoq4TojM26u1xPK8vJGuFREW1k20S2taSU9CII/TwYoFfDtXZGgH/z22h5UptZg1w0Qxewh/uXxcdHOUYtAEH2ZLjESL/W29OO/R+WVFHrVOkB+UuuNBvulLPpSrnuwqWGS2zojXuqrAiNtxmM+YJQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-51f227e8bf6so981151e0c.2;
-        Mon, 10 Feb 2025 06:45:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739198716; x=1739803516;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uAJLVUtV1uNk8a8Qt0AzYeA1T74JqitGZuvVYe9BX6U=;
-        b=bVU0TP5t2JilJdL6aATSD6HBjRs8QGe9Ct0AFHSPgR+RKfuqjjMsMEvmR0Y1fNLiez
-         0UJIUOBPNGBd2SwkLmAEsdz623UlbC5NZYqlZU1ke01IQA/eZ4n4S/KWN5ROfCsox0bZ
-         70r/p2NHtiJnU0uEWFh5ZE6hJmOsAyK0UZ+xxToiNq9YMCBbiZ+SYGaRvftRwyAtivQt
-         pRk0NVd8+sbQdRlNECh0yhSDOv6HOzlYWBdtJD/0PiMfezCKrGBzjKEtjtwcha7p/BN0
-         VNhs9LyF43OSgy3/bFEw9MKOiHpa2c/eyYBaEboyLJLTwTIib6lyqq3sgtiYlEAxw4Hp
-         NZgw==
-X-Forwarded-Encrypted: i=1; AJvYcCVj3eDU7D11a+QjHSEoZ+u4f9ut8xTlqAZtcVc7jRguMMdCTx9yqG+0OBiJRlAiofo+2fY0YohBSq2LKi+0@vger.kernel.org, AJvYcCXNfki/3I5Ma4yjduqsKExqLo8f7o4hK8Y8zLLRbjhjoBh/R94DrnaNQf66gH3rzqgAC0g/gjmsK06Kt5Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJiBxyQ2ga+7+lwwK4c4efI79t//tMtZLLLSw84zOOZHdfTV7i
-	k7BG912Kb7mMhdXqZNNMrlS93515bxG1MvoyB6xwkgCBScaCFIhsLHlKKsXt
-X-Gm-Gg: ASbGncu5ceUCVcIUZ3MevjoMrZuu0KzKuSpRqYfUxWKK0qNCUwrW0AttbQ1etJF3Cwq
-	cEka1MtHl9Q3e9eWPpAr4K0zGLw7oHEFpjXy7cufi1bWwbYBp103q95/D+U85wTgBSEarpX05N4
-	W+gwU+z1u9N8ZkRPAUwZdffs9lOv6r3EEdXlVtvbFJYpWdMgdCoY05cbNH3/u77he1t9AzMMvXs
-	hh5nSEmHdT4Cm9KAESOKYiqnvPAATwy5sZRE0K38CktQf6XmPngEOPEtBznTlB7gvygbi/g16tC
-	pWU4k1CAldPt46M3UqxjXVFhiMMAImgQzdN5YdZAWX0R3D1FBDliBw==
-X-Google-Smtp-Source: AGHT+IEcHfxqaN3rWEXMOjU/PbxokS9siLxZQ6IMkqhUcZXlwk9XMsdJuSw6tMmeE0bJzAEMfuRy8g==
-X-Received: by 2002:a05:6122:794:b0:518:7ab7:afbc with SMTP id 71dfb90a1353d-51f2e251f93mr9142946e0c.7.1739198715593;
-        Mon, 10 Feb 2025 06:45:15 -0800 (PST)
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51f2295a7fcsm1350817e0c.46.2025.02.10.06.45.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 06:45:15 -0800 (PST)
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86112ab1ad4so1301329241.1;
-        Mon, 10 Feb 2025 06:45:15 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVuR3B2oQiOaVkEHoBc4WYbM1x0AfyuJeOcZuoFvfrvNeBzz1i0LQA48tt4EKuHchWA2sQMD2/XIOrIroAo@vger.kernel.org, AJvYcCXGeiGrZFbguClmHjpZbpwfpzVCp5irnpoypJPCp0SYqgotL8Xxunj5OU8Gbg41BKYL1wcLPHaiTvjOGWY=@vger.kernel.org
-X-Received: by 2002:a05:6102:5089:b0:4bb:b809:36c6 with SMTP id
- ada2fe7eead31-4bbb8093b3amr4440243137.11.1739198714935; Mon, 10 Feb 2025
- 06:45:14 -0800 (PST)
+	s=arc-20240116; t=1739198758; c=relaxed/simple;
+	bh=njls6SgZ/Etd7f4Ggli0BHBmPD2iGopXs0V/tJeNT+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BhoU4yXRvQ+GGHTwtIsP5zt/WDDxHb44x/ix1Jza4GXNLTNCO8rTEstcFnAIg6cb4EWLcAvH0cvqqVTcp7xIC81+XKgdEBM0nkMObSTk+CLZP4WHHOdIpLQ+ZEtL1ugt11884oARG7+uCLsaYEW8GayN3/rgQfYN6FJh1sgevUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=uIdgL0od; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="uIdgL0od"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01A82C4CED1;
+	Mon, 10 Feb 2025 14:45:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739198757;
+	bh=njls6SgZ/Etd7f4Ggli0BHBmPD2iGopXs0V/tJeNT+M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uIdgL0ode7uRkc/cutQ2fMwPKyfROHFyjBLgSWRgE7Ug937KomWE+scvMohnrBku3
+	 0LWBZUx9XX2FeCFsDSHtZiSAIfkllumMAvQnPgrvKXHyuVnvNr8TpungIXrsAqPvXN
+	 ewwAiArYN+F8Fnvkn0ICN9CQzkxbJ6wnoA1IV4/A=
+Date: Mon, 10 Feb 2025 15:45:54 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+	Mark Brown <broonie@kernel.org>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Zijun Hu <quic_zijuhu@quicinc.com>, linux-usb@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Subject: Re: [PATCH v4 1/9] driver core: add a faux bus for use when a simple
+ device/bus is needed
+Message-ID: <2025021038-pushy-prior-5dfd@gregkh>
+References: <2025021023-sandstorm-precise-9f5d@gregkh>
+ <2025021026-atlantic-gibberish-3f0c@gregkh>
+ <D7OU5VOXCS8M.39YEYRWFL1MPW@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com> <20250129165122.2980-10-thierry.bultel.yh@bp.renesas.com>
-In-Reply-To: <20250129165122.2980-10-thierry.bultel.yh@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 10 Feb 2025 15:45:02 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVD1dLP53V_zOhxpqazDdPDVafJ6iohY8u6WPQrmYH5Sw@mail.gmail.com>
-X-Gm-Features: AWEUYZkLBpiXQf6Zr-W1Pn76AhNH67cEtoc5GxK0GOKzsykkyraYzk22LHV8nZo
-Message-ID: <CAMuHMdVD1dLP53V_zOhxpqazDdPDVafJ6iohY8u6WPQrmYH5Sw@mail.gmail.com>
-Subject: Re: [PATCH 09/14] serial: sh-sci: Introduced function pointers
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D7OU5VOXCS8M.39YEYRWFL1MPW@gmail.com>
 
-Hi Thierry,
+On Mon, Feb 10, 2025 at 09:29:52AM -0500, Kurt Borja wrote:
+> Hi Greg,
+> 
+> On Mon Feb 10, 2025 at 7:30 AM -05, Greg Kroah-Hartman wrote:
+> > Many drivers abuse the platform driver/bus system as it provides a
+> > simple way to create and bind a device to a driver-specific set of
+> > probe/release functions.  Instead of doing that, and wasting all of the
+> > memory associated with a platform device, here is a "faux" bus that
+> > can be used instead.
+> >
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+> > Reviewed-by: Lyude Paul <lyude@redhat.com>
+> > Reviewed-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ---
+> > v4: - really removed the name logic
+> >     - added #include <linux/container_of.h> to faux.h
+> >     - added parent pointer to api call
+> >     - minor documentation updates
+> >     - made probe synchronous
+> > v3: - loads of documentation updates and rewrites
+> >     - added to the documentation build
+> >     - removed name[] array as it's no longer needed
+> >     - added faux_device_create_with_groups()
+> >     - added functions to get/set devdata
+> >     - renamed faux_driver_ops -> faux_device_ops
+> >     - made faux_device_ops a const *
+> >     - minor cleanups
+> >     - tested it, again.
+> >
+> > v2: - renamed bus and root device to just "faux" thanks to Thomas
+> >     - removed the one-driver-per-device and now just have one driver
+> >       entirely thanks to Danilo
+> >     - kerneldoc fixups and additions and string handling bounds checks
+> >       thanks to Andy
+> >     - coding style fix thanks to Jonathan
+> >     - tested that the destroy path actually works
+> >  Documentation/driver-api/infrastructure.rst |   6 +
+> >  drivers/base/Makefile                       |   2 +-
+> >  drivers/base/base.h                         |   1 +
+> >  drivers/base/faux.c                         | 232 ++++++++++++++++++++
+> >  drivers/base/init.c                         |   1 +
+> >  include/linux/device/faux.h                 |  69 ++++++
+> >  6 files changed, 310 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/base/faux.c
+> >  create mode 100644 include/linux/device/faux.h
+> >
+> > diff --git a/Documentation/driver-api/infrastructure.rst b/Documentation/driver-api/infrastructure.rst
+> > index 3d52dfdfa9fd..35e36fee4238 100644
+> > --- a/Documentation/driver-api/infrastructure.rst
+> > +++ b/Documentation/driver-api/infrastructure.rst
+> > @@ -41,6 +41,12 @@ Device Drivers Base
+> >  .. kernel-doc:: drivers/base/class.c
+> >     :export:
+> >  
+> > +.. kernel-doc:: include/linux/device/faux.h
+> > +   :internal:
+> > +
+> > +.. kernel-doc:: drivers/base/faux.c
+> > +   :export:
+> > +
+> >  .. kernel-doc:: drivers/base/node.c
+> >     :internal:
+> >  
+> > diff --git a/drivers/base/Makefile b/drivers/base/Makefile
+> > index 7fb21768ca36..8074a10183dc 100644
+> > --- a/drivers/base/Makefile
+> > +++ b/drivers/base/Makefile
+> > @@ -6,7 +6,7 @@ obj-y			:= component.o core.o bus.o dd.o syscore.o \
+> >  			   cpu.o firmware.o init.o map.o devres.o \
+> >  			   attribute_container.o transport_class.o \
+> >  			   topology.o container.o property.o cacheinfo.o \
+> > -			   swnode.o
+> > +			   swnode.o faux.o
+> >  obj-$(CONFIG_AUXILIARY_BUS) += auxiliary.o
+> >  obj-$(CONFIG_DEVTMPFS)	+= devtmpfs.o
+> >  obj-y			+= power/
+> > diff --git a/drivers/base/base.h b/drivers/base/base.h
+> > index 8cf04a557bdb..0042e4774b0c 100644
+> > --- a/drivers/base/base.h
+> > +++ b/drivers/base/base.h
+> > @@ -137,6 +137,7 @@ int hypervisor_init(void);
+> >  static inline int hypervisor_init(void) { return 0; }
+> >  #endif
+> >  int platform_bus_init(void);
+> > +int faux_bus_init(void);
+> >  void cpu_dev_init(void);
+> >  void container_dev_init(void);
+> >  #ifdef CONFIG_AUXILIARY_BUS
+> > diff --git a/drivers/base/faux.c b/drivers/base/faux.c
+> > new file mode 100644
+> > index 000000000000..531e9d789ee0
+> > --- /dev/null
+> > +++ b/drivers/base/faux.c
+> > @@ -0,0 +1,232 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright (c) 2025 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > + * Copyright (c) 2025 The Linux Foundation
+> > + *
+> > + * A "simple" faux bus that allows devices to be created and added
+> > + * automatically to it.  This is to be used whenever you need to create a
+> > + * device that is not associated with any "real" system resources, and do
+> > + * not want to have to deal with a bus/driver binding logic.  It is
+> > + * intended to be very simple, with only a create and a destroy function
+> > + * available.
+> > + */
+> > +#include <linux/err.h>
+> > +#include <linux/init.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/string.h>
+> > +#include <linux/container_of.h>
+> > +#include <linux/device/faux.h>
+> > +#include "base.h"
+> > +
+> > +/*
+> > + * Internal wrapper structure so we can hold a pointer to the
+> > + * faux_device_ops for this device.
+> > + */
+> > +struct faux_object {
+> > +	struct faux_device faux_dev;
+> > +	const struct faux_device_ops *faux_ops;
+> > +};
+> > +#define to_faux_object(dev) container_of_const(dev, struct faux_object, faux_dev.dev)
+> > +
+> > +static struct device faux_bus_root = {
+> > +	.init_name	= "faux",
+> > +};
+> > +
+> > +static int faux_match(struct device *dev, const struct device_driver *drv)
+> > +{
+> > +	/* Match always succeeds, we only have one driver */
+> > +	return 1;
+> > +}
+> > +
+> > +static int faux_probe(struct device *dev)
+> > +{
+> > +	struct faux_object *faux_obj = to_faux_object(dev);
+> > +	struct faux_device *faux_dev = &faux_obj->faux_dev;
+> > +	const struct faux_device_ops *faux_ops = faux_obj->faux_ops;
+> > +	int ret = 0;
+> > +
+> > +	if (faux_ops && faux_ops->probe)
+> > +		ret = faux_ops->probe(faux_dev);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static void faux_remove(struct device *dev)
+> > +{
+> > +	struct faux_object *faux_obj = to_faux_object(dev);
+> > +	struct faux_device *faux_dev = &faux_obj->faux_dev;
+> > +	const struct faux_device_ops *faux_ops = faux_obj->faux_ops;
+> > +
+> > +	if (faux_ops && faux_ops->remove)
+> > +		faux_ops->remove(faux_dev);
+> > +}
+> > +
+> > +static const struct bus_type faux_bus_type = {
+> > +	.name		= "faux",
+> > +	.match		= faux_match,
+> > +	.probe		= faux_probe,
+> > +	.remove		= faux_remove,
+> > +};
+> > +
+> > +static struct device_driver faux_driver = {
+> > +	.name		= "faux_driver",
+> > +	.bus		= &faux_bus_type,
+> > +	.probe_type	= PROBE_FORCE_SYNCHRONOUS,
+> > +};
+> > +
+> > +static void faux_device_release(struct device *dev)
+> > +{
+> > +	struct faux_object *faux_obj = to_faux_object(dev);
+> > +
+> > +	kfree(faux_obj);
+> > +}
+> > +
+> > +/**
+> > + * faux_device_create_with_groups - Create and register with the driver
+> > + *		core a faux device and populate the device with an initial
+> > + *		set of sysfs attributes.
+> > + * @name:	The name of the device we are adding, must be unique for
+> > + *		all faux devices.
+> > + * @parent:	Pointer to a potential parent struct device.  If set to
+> > + *		NULL, the device will be created in the "root" of the faux
+> > + *		device tree in sysfs.
+> > + * @faux_ops:	struct faux_device_ops that the new device will call back
+> > + *		into, can be NULL.
+> > + * @groups:	The set of sysfs attributes that will be created for this
+> > + *		device when it is registered with the driver core.
+> > + *
+> > + * Create a new faux device and register it in the driver core properly.
+> > + * If present, callbacks in @faux_ops will be called with the device that
+> > + * for the caller to do something with at the proper time given the
+> > + * device's lifecycle.
+> > + *
+> > + * Note, when this function is called, the functions specified in struct
+> > + * faux_ops can be called before the function returns, so be prepared for
+> > + * everything to be properly initialized before that point in time.
+> > + *
+> > + * Return:
+> > + * * NULL if an error happened with creating the device
+> > + * * pointer to a valid struct faux_device that is registered with sysfs
+> > + */
+> > +struct faux_device *faux_device_create_with_groups(const char *name,
+> > +						   struct device *parent,
+> > +						   const struct faux_device_ops *faux_ops,
+> > +						   const struct attribute_group **groups)
+> > +{
+> > +	struct faux_object *faux_obj;
+> > +	struct faux_device *faux_dev;
+> > +	struct device *dev;
+> > +	int ret;
+> > +
+> > +	faux_obj = kzalloc(sizeof(*faux_obj), GFP_KERNEL);
+> > +	if (!faux_obj)
+> > +		return NULL;
+> > +
+> > +	/* Save off the callbacks so we can use them in the future */
+> > +	faux_obj->faux_ops = faux_ops;
+> > +
+> > +	/* Initialize the device portion and register it with the driver core */
+> > +	faux_dev = &faux_obj->faux_dev;
+> > +	dev = &faux_dev->dev;
+> > +
+> > +	device_initialize(dev);
+> > +	dev->release = faux_device_release;
+> > +	if (parent)
+> > +		dev->parent = parent;
+> > +	else
+> > +		dev->parent = &faux_bus_root;
+> > +	dev->bus = &faux_bus_type;
+> > +	dev->groups = groups;
+> > +	dev_set_name(dev, "%s", name);
+> > +
+> > +	ret = device_add(dev);
+> > +	if (ret) {
+> > +		pr_err("%s: device_add for faux device '%s' failed with %d\n",
+> > +		       __func__, name, ret);
+> > +		put_device(dev);
+> > +		return NULL;
+> > +	}
+> 
+> Now that the probe is synchronous, what do you think about returning
+> -ENODEV if the device failed to bind to the driver?
 
-On Wed, 29 Jan 2025 at 18:03, Thierry Bultel
-<thierry.bultel.yh@bp.renesas.com> wrote:
-> The aim here is to prepare support for new sci controllers like
-> the T2H/RSCI whose registers are too much different for being
-> handled in common code.
->
-> This named serial controller also has 32 bits register,
-> so some return types had to be changed.
->
-> The needed generic functions are no longer static, with prototypes
-> defined in sh-sci-common.h so that they can be used from specific
-> implementation in a separate file, to keep this driver as little
-> changed as possible.
->
-> For doing so, a set of 'ops' is added to struct sci_port.
->
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Nope, that would make all callers have to deal with a pointer or a NULL,
+or an error value encorporated in a pointer.
 
-Thanks for your patch!
+> This would be useful for modules that may want to unload if the probe
+> fails.
 
-I can't say I am super-enthusiastic about this approach.
-The SCI variant in RZ/T2 seems to differ a lot from the already
-supported SCI, SCIF, SCIFA, SCIFB, and HSCIF variants. The latter
-are very similar, but usually have just more features/registers, and
-further differ in a few different register offsets and bit locations.
-If you compare the RZ/T2 SCI block diagram with the SH7751 SCI block
-diagram (or even the R-Car SCIF block diagram), the most striking
-similarity is that both have a baud rate generator that can divide
-Pclk by 1, 4, 16, or 64 ;-)
-So perhaps you're better off adding a completely new driver?
+Then just test for NULL, there's nothing preventing that, right?
 
-What do other people think?
-Thanks!
+Also, the only way probe can fail is if the probe you passed into the
+call fails.  Or if you picked a name that is already in the system, both
+of which you have full control over.
 
-Gr{oetje,eeting}s,
+thanks,
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+greg k-h
