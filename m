@@ -1,97 +1,144 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBE022258D;
-	Mon, 10 Feb 2025 17:11:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11840256C69
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739207474; cv=none; b=UT65YB+ORxKcvWtJTWfd4wTmT0HJAfCepA37J0h4QI86vgsZaYBtXJPCOIXPHeep0QH8R+5PLBlPImPnxibv3G6spzjPl7iKgm84GovWX0ybbW/RbN8dxHyYQei8CL3MbTFTKf8I5wJet/Wc+cSIX9v4KReLD0AiHLG6lKT3XTA=
+	t=1739207489; cv=none; b=RoyHn6uzdEKX5MMQ4WH7ujE3iAkiDQ3K92yXexNK2zHeyuV8SZLYjdPoC1yjw7Q5aSiIp8C4HJL5lHaTOaot4htK4dFBZyQErqUwSnaXov11Y82Le/vQFJPMS3YfjwEPOAVyJ+wPopp3w7cg1JAANk0ebUZaQRK0UeRoCceJk0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739207474; c=relaxed/simple;
-	bh=i//L9LO/eHFu/2zQpwB5EoGkGlMUVpJiGcOVAdHJs0M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=q8ndpEXDHrs6oEid+aDJGSO1esTp/7r6ClTx/KX7DuoyEz/LaQBLeZaxHz51INQJKXilFzCAXssMVSatXAfcOOeHy20hTymZWfO6xM5iXDMrFY28T+/mPIyzY30pm9kfYIzaW7uVO7uu6+dhNZGI8YHjm99cJlHFf+2biZBI8pI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=jgeXBblM; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1739207489; c=relaxed/simple;
+	bh=l6ixI9ocsg5QZ16cvn2QkpaT8QZyQoyW5ibERsaeAMM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZkobXV0PbkigM6QW5jhqPDi4nwPcyk7ovd3/0w4FDAiJXerxSy2rh6nN5VGQiLb/0lu9V5ACt4OxqgLN5Swe5T8LO5h86mzyN/9j3kg+NJ7kMaQ0jh96nr/V0wq1bsYx9a8xIGD70q+ImFQog4HJjmkWRZicTHkw0SBAX2wf9fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=LrQG0WeQ; arc=none smtp.client-ip=209.85.160.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="jgeXBblM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1739207469;
-	bh=i//L9LO/eHFu/2zQpwB5EoGkGlMUVpJiGcOVAdHJs0M=;
-	h=From:Date:Subject:To:Cc:From;
-	b=jgeXBblMIsuM6MZpQnOKK27pfoht4YM+NT8gRuObsbsCla4ZoqElZQWeK9jrhWnEN
-	 KFauw6aJiOE2+jWDYynA/Ug/iSMIO8TSXnvjOdzWboJLK59Z3vTPhgtu8olUjjehAg
-	 T8j7dCApUnJPfaEWFiJtvUgCwZyzmgp3TdCZ7OOI=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Mon, 10 Feb 2025 18:08:50 +0100
-Subject: [PATCH] kbuild, rust: use -fremap-path-prefix to make paths
- relative
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="LrQG0WeQ"
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2a8690dcb35so1392255fac.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:11:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739207486; x=1739812286; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=y62wEuUB23NjmeSDjcZkJZH4kkElpdd1L2B2fifJwGY=;
+        b=LrQG0WeQbLzRgqLVKAkVeAz4SHc4lcfp6bMBkIsb+jVM0E4FE7akiPx+EYM8VSC8/6
+         /hi/wJ0PgriVCqlPCNjJZFUrtwqqUVGgIi4GXI9a0102U1BIFzBKwpwIMXHry92rPydn
+         pfc4rAP11sr8VP2+t/+0EJT+rXtM7n+9pBGCaLcjEgrxGm9IVe6VfBH6F5R6FqPZvQg8
+         d2h2SpkL5260d3eMxyVDkYTHuzSzdeAej6e3e2WHBwcCMoqqyGrMJVqPvmb8I8rqv6ED
+         Y/buAZrg21luPF79Wne8GJY1Z8XSN0U0K7RFEsAUrOSca+YXCJeLsE+J5DggIitggNcS
+         v7WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739207486; x=1739812286;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y62wEuUB23NjmeSDjcZkJZH4kkElpdd1L2B2fifJwGY=;
+        b=vFh9BJIewzt2tlzeVTwvbn0/NETKRGDJnJkGRMWaroXRzvvSXJ6ztt7sBjiWfMSoFM
+         VHfqTUvLh95D0NJFczbZBMyNjbNtdmkjDgOdeJnVVIjgqDLer/7iIo47b/cxDDymuaNk
+         tLypda53omdQixSopSXgdhysCxgf/wuIRQdQ6h4AOeTNQFrFEUqeh6BqaPc0WmdZ3md9
+         IHsE8y2h1vV87bllhJxCZ71sMWAdHsq6PphzzjWaws9TUMqXjgQPg9u2c9e2hxKqQ/V6
+         4sc1XS5lkJu8PLVLA9EtKQaAW5jmqc2M+ap8jE1II0hpDb3pv8RJ/R1zhZ6nxshQEcuV
+         rZjA==
+X-Forwarded-Encrypted: i=1; AJvYcCXdfOatJLZsMC+OpiNtz8OxA65jHJezure1nht44jJlK6Ftl5lsgalPR1cvBOu/kP85vKGlrxSS8CIH0Ww=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIRf29LI3pvHsSM3LTwgdEps6NUbJ6ELkOM+rP8eOf9nizn4pE
+	v+yYYofu9gXh06FutlxvyfO8gn4EExBP7wSdeugnA4dj4C/dWut7VtU6HwC8y+k=
+X-Gm-Gg: ASbGncsMpyqlpftYIabYNceHfPGIrgVWpb2YKqEeCofU4m4ftvcak3pmaGndWhs/Dfw
+	8V12TiOCzmjjQisHzm1U2mq7MXiMjjGSdJOOqX+Kh/wt0ycsm8boVnbj4t4Tiy2+RMri+oHI66t
+	htqvb/eIUH8wVb23yWl401pNLAc/VaWWQlx7UIELi13mHa8Ur+aZUm2W8+WwLp3PeXcJW/dLrpL
+	cRH7ckHhP/3tCjabbuO+m4ODzvRK/VOg2LF8WntxlAsJweYJ2HDnJg56K1B2+1hsSLPnDtVIV58
+	vxrPrW6g1KUs6fMZOeQqT8m0ADwUcMXONh1axgOlNQQJTy6/gDwd
+X-Google-Smtp-Source: AGHT+IEo4eH2CuOA2OmnMHMRwgQDew3LfoTfoARBZw+mgbte0DXZ4AUD2tzn6839+X+KetyoPMS0Gw==
+X-Received: by 2002:a05:6871:6aa:b0:29d:ca24:c044 with SMTP id 586e51a60fabf-2b83eb4d220mr8661498fac.8.1739207486107;
+        Mon, 10 Feb 2025 09:11:26 -0800 (PST)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b8a8c46e7dsm251881fac.35.2025.02.10.09.11.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 09:11:25 -0800 (PST)
+Message-ID: <27d2a88c-b44a-4712-b066-b999e41774f0@baylibre.com>
+Date: Mon, 10 Feb 2025 11:11:23 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250210-rust-path-remap-v1-1-021c48188df1@weissschuh.net>
-X-B4-Tracking: v=1; b=H4sIAKEyqmcC/x3MQQ5AMBBG4avIrE3SNkG4ilg09WMWaKaIRNxdY
- /kt3nsoQQWJuuIhxSVJ9i3DlgWFxW8zWMZscsZVxlnDeqaDoz8WVqw+MtomIDQWtfWUq6iY5P6
- P/fC+H/j5Q7FhAAAA
-X-Change-ID: 20250210-rust-path-remap-e97cec71e61a
-To: Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
- rust-for-linux@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739207468; l=1373;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=i//L9LO/eHFu/2zQpwB5EoGkGlMUVpJiGcOVAdHJs0M=;
- b=l/N+YPuwNOcWbbf448LFb4B7j4VKk1V6lKcjHk2C9Jmf/LWE6wp5JThfogVQG+Z8o+FDsrxb1
- OCEzxqoxaevB90o4TSddldWZ9VB/9tEm5PZFFPUkJ1MEtjKJuUkbGyh
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 01/17] spi: add basic support for SPI offloading
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, Michael Hennerich <Michael.Hennerich@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, David Jander <david@protonic.nl>,
+ Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
+ <20250207-dlech-mainline-spi-engine-offload-2-v8-1-e48a489be48c@baylibre.com>
+ <Z6otFlsmEikIbI__@black.fi.intel.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <Z6otFlsmEikIbI__@black.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Remap source path prefixes in all output, including compiler
-diagnostics, debug information, macro expansions, etc.
-This removes a few absolute paths from the binary and also makes it
-possible to use core::panic::Location properly.
+On 2/10/25 10:45 AM, Andy Shevchenko wrote:
+> On Fri, Feb 07, 2025 at 02:08:58PM -0600, David Lechner wrote:
+>> Add the basic infrastructure to support SPI offload providers and
+>> consumers.
+>>
+>> SPI offloading is a feature that allows the SPI controller to perform
+>> transfers without any CPU intervention. This is useful, e.g. for
+>> high-speed data acquisition.
+>>
+>> SPI controllers with offload support need to implement the get_offload
+>> and put_offload callbacks and can use the devm_spi_offload_alloc() to
+>> allocate offload instances.
+>>
+>> SPI peripheral drivers will call devm_spi_offload_get() to get a
+>> reference to the matching offload instance. This offload instance can
+>> then be attached to a SPI message to request offloading that message.
+>>
+>> It is expected that SPI controllers with offload support will check for
+>> the offload instance in the SPI message in the ctlr->optimize_message()
+>> callback and handle it accordingly.
+>>
+>> CONFIG_SPI_OFFLOAD is intended to be a select-only option. Both
+>> consumer and provider drivers should `select SPI_OFFLOAD` in their
+>> Kconfig to ensure that the SPI core is built with offload support.
+> 
+> (I know that this is now in SPI tree, but still we have time to address something)
+> 
+>> +++ b/include/linux/spi/offload/consumer.h
+> 
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * Copyright (C) 2024 Analog Devices Inc.
+>> + * Copyright (C) 2024 BayLibre, SAS
+>> + */
+>> +
+>> +#ifndef __LINUX_SPI_OFFLOAD_CONSUMER_H
+>> +#define __LINUX_SPI_OFFLOAD_CONSUMER_H
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/spi/offload/types.h>
+>> +#include <linux/types.h>
+> 
+>> +MODULE_IMPORT_NS("SPI_OFFLOAD");
+> 
+> This diminishes the point of the namespaces. Anybody who includes a (dangling)
+> header gets namespace imported, which is not good. Same for other globally
+> visible headers.
+> 
+> (This is the main concern of this patch).
 
-Equivalent to the same configuration done for C sources in
-commit 1d3730f0012f ("kbuild: support -fmacro-prefix-map for external modules")
-and commit a73619a845d5 ("kbuild: use -fmacro-prefix-map to make __FILE__ a relative path").
-
-Link: https://doc.rust-lang.org/rustc/command-line-arguments.html#--remap-path-prefix-remap-source-names-in-output
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
----
- Makefile | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Makefile b/Makefile
-index 9e0d63d9d94b90672f91929e5e148e5a0c346cb6..ac35083180c825b72f13149ec3acfd7d6d74ef98 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1068,6 +1068,7 @@ endif
- # change __FILE__ to the relative path to the source directory
- ifdef building_out_of_srctree
- KBUILD_CPPFLAGS += $(call cc-option,-fmacro-prefix-map=$(srcroot)/=)
-+KBUILD_RUSTFLAGS += $(call rustc-option,--remap-path-prefix=$(srcroot)/=)
- endif
- 
- # include additional Makefiles when needed
-
----
-base-commit: beeb78d46249cab8b2b8359a2ce8fa5376b5ad2d
-change-id: 20250210-rust-path-remap-e97cec71e61a
-
-Best regards,
--- 
-Thomas Weißschuh <linux@weissschuh.net>
+In this case, we specifically split up the headers so that the only time you
+would ever include this header is if you need to call functions in this
+namespace (i.e. struct definitions are in linux/spi/offload/types.h which
+doesn't import the namespace). So this doesn't actually seem like a problem
+to me.
 
