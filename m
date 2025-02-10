@@ -1,172 +1,147 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2060.outbound.protection.outlook.com [40.107.102.60])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F091116D9C2;
-	Mon, 10 Feb 2025 11:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739185940; cv=fail; b=fpOD+gvbPoJlxHms7b1aYhefys1SpNOC7YG0ZWAbPdCRC8jc0+nXVwvBKzGKyYjX3AvhIxNdtDLi6SEbPXLVZQ9lo2MrOOB+ddv9O1pTyhENFcQKQ9+MBZEyNjBsP6wfdBfknBiJhCzNiGhJJPNZa1ZG3H2y6EZSEiJyIv2BrXE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739185940; c=relaxed/simple;
-	bh=w21gVhvg/nRzuRUnJTG6SQ29qTngHIslseCLDUIqsKE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=W9vIFx6k0qGoS4AWAlevxQA/xgTKywly0eSxHIn4rqqMLShCWPAOpF9xlNzmxTJYEu0O6+0KV8Aaj7O2qzgbRIeiP4Pd7KaRuZZisY/s0IKQ2sjWvtxCVdMKKlW6b31sJJfabsASqIIYrX4X5VoIgMcQu4lvaJHGmA9nikh0rSU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nv/18rMK; arc=fail smtp.client-ip=40.107.102.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038DC16D9C2
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739185972; cv=none; b=rnycrNOTiWYG15xpvGhboEln18rmW/13uCmRKW05cSSGK8gCf4zN7v/vUXI5TPtlhNXpHO679KLHxZ7oEkkaYAl6APk0DA4hSsyXoqv1H6ilbdp8VqQPeRl9xc+zjSRrX1BlS+QuEzqGTA9sAq6iuenFgPR5f64zut1wUrr5MRg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739185972; c=relaxed/simple;
+	bh=kLa245Ex+g41bu7Cp8rMbIVdC/gRWBdIQ6HQlDIJzmE=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=GSykvnSpqSD8otMoQ2i1J9zHR2AmuS/XPQIfnNNSBeSFN8g4ocT0s96+ez5oKkBy7qSYO5EyF4BjKm8qFOlWFLBeU91BwSruwGs+kegr+zdQUdrFsPUxh4znnaErHlOr1EKVlll52BRB/6XsQ1KZC2C72sHYsqgimAQHfBU0zpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eTLCs8aV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nv/18rMK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=X32vjAIJwclxiULPpyHnCoL9xjM3XuVZhPX4ENwvyYIKliyJhKlEonfhVQeiU3cRgKxa6mTyY2CzAruR7bop26scxwbBCCn2RXfUYEier54irW4+4KCbEO/vDn7nNsh9FanutvA29Vkh5RzTPqtsaoOqokY8L7zH6lND2Jx/3fCrU6rmAUQ6DtQN/fYGFF+rHINsx7fDST18Cu92mGsIJrUfc+zzGNEUTjIWconC+6uJpketmZhTT/TQAuBNteiU302LXTVaXFO138jsk96zoeI7HG8diCFIzwFBFCR8AeGBI/jgONNxlGxWFuJ8bBOaYn9Olhc1j6Bet/EQRgfFCw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AsZtPeEVavHdtoh+KqnkwX4MlhRqIywnxq6cZ6h+zeM=;
- b=urxK6NOe5YYg3Wst3U2l33EiHdVvaVDPS1jN+UTabWvKSy6hmObZuBu5F9fcN8FVkGxVt8bTEBfBTEcVTjUaxz0jawApndNzHbeNOc8Wq8lY0fgkPqizgwfWxt2GrGTiGse9JUKbvLFYMIVy7eLrS8r0PgcHvtCT9Rot8oneyZFwLiytV/nuz7Nk6uOH5FAG2FD+iF1y0MFvQgXz0F3RnlrqR3FzM1KISdyxnOb+V8fK0g7BEcu9VJR0qFMTHEhP7ifacA1rzVMBt3aNsHZhO09Yi+cLbyObdTNsYKbTYH/KH/mN1MtDXPxOydAAyMszFn9xvRUuTm9WHSdHdksPZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AsZtPeEVavHdtoh+KqnkwX4MlhRqIywnxq6cZ6h+zeM=;
- b=nv/18rMKvDiRqfD4GsKRviLbf0z7rgFkowZdza/JjyFPZ/vM3q2/htBHtZYrfiycaJgqK570ohuU74pVV1b7LkHPFlGvoMhWUnRCrvjAwyn59dFJ7MFgxXWe/hH0+7tqtq+OYYbO+YTVQCbSkyEFLOL0xosG9SxWgxy7UO/og60=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB8252.namprd12.prod.outlook.com (2603:10b6:8:ee::7) by
- SN7PR12MB7105.namprd12.prod.outlook.com (2603:10b6:806:2a0::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Mon, 10 Feb
- 2025 11:12:16 +0000
-Received: from DS7PR12MB8252.namprd12.prod.outlook.com
- ([fe80::2d0c:4206:cb3c:96b7]) by DS7PR12MB8252.namprd12.prod.outlook.com
- ([fe80::2d0c:4206:cb3c:96b7%6]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
- 11:12:15 +0000
-Date: Mon, 10 Feb 2025 16:42:07 +0530
-From: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
-To: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
-Cc: mario.limonciello@amd.com, rafael@kernel.org, viresh.kumar@linaro.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 12/12] cpufreq/amd-pstate: Remove the unncecessary
- driver_lock in amd_pstate_update_limits
-Message-ID: <Z6nfB9tbb6uwv2xY@BLRRASHENOY1.amd.com>
-References: <20250205112523.201101-1-dhananjay.ugwekar@amd.com>
- <20250205112523.201101-13-dhananjay.ugwekar@amd.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205112523.201101-13-dhananjay.ugwekar@amd.com>
-X-ClientProxiedBy: PN3PR01CA0151.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:c8::14) To DS7PR12MB8252.namprd12.prod.outlook.com
- (2603:10b6:8:ee::7)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eTLCs8aV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739185969;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XghnrJPPKnRqzZD+n1h385B8O5oGF3rpRLFRKp+cnJM=;
+	b=eTLCs8aVuqnZsziId4n0aVP3AOvVg0T2i2VeHpQ8Km2rbdvXRXlDF9qnSkKPcBePqaPEbg
+	9ACN9ZzyC4+ci5gk9JIgGzD0+G5mFrGuQDKVzYby3B0/hHjDbYiMslTblbx4BtwCNwfZTT
+	F6o2290XdXMtBaZMMRmQxvpjBN2SnWo=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-435-lL-aKo8QNE22K11qKeSweQ-1; Mon,
+ 10 Feb 2025 06:12:46 -0500
+X-MC-Unique: lL-aKo8QNE22K11qKeSweQ-1
+X-Mimecast-MFC-AGG-ID: lL-aKo8QNE22K11qKeSweQ
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EEA431800873;
+	Mon, 10 Feb 2025 11:12:42 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.92])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D41DB195608D;
+	Mon, 10 Feb 2025 11:12:37 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <335ad811ae2cf5ebdfc494c185b9f02e9ca40c3e@linux.dev>
+References: <335ad811ae2cf5ebdfc494c185b9f02e9ca40c3e@linux.dev> <3173328.1738024385@warthog.procyon.org.uk> <3187377.1738056789@warthog.procyon.org.uk>
+To: "Ihor Solodrai" <ihor.solodrai@linux.dev>
+Cc: dhowells@redhat.com, "Marc Dionne" <marc.dionne@auristor.com>,
+    "Steve French" <stfrench@microsoft.com>,
+    "Eric Van Hensbergen" <ericvh@kernel.org>,
+    "Latchesar
+ Ionkov" <lucho@ionkov.net>,
+    "Dominique Martinet" <asmadeus@codewreck.org>,
+    "Christian Schoenebeck" <linux_oss@crudebyte.com>,
+    "Paulo Alcantara" <pc@manguebit.com>,
+    "Jeff Layton" <jlayton@kernel.org>,
+    "Christian Brauner" <brauner@kernel.org>, v9fs@lists.linux.dev,
+    linux-cifs@vger.kernel.org, netfs@lists.linux.dev,
+    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+    ast@kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH] netfs: Add retry stat counters
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB8252:EE_|SN7PR12MB7105:EE_
-X-MS-Office365-Filtering-Correlation-Id: 12bc090d-5e0e-4c81-0fc8-08dd49c3c62a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?V5SCcH7ZRIzDK6lG8RdOxwXkbmJmZOVClziQuHthoGThBKxjeEpgoXSl+g5l?=
- =?us-ascii?Q?A/MLKxB+Lo4SiwpxyNSSpKZgf04/N+75RZwtN9f7E04GOcgzH29D+Rkdc8OW?=
- =?us-ascii?Q?JoLi6vVMcC5LqMUF3d217Pb16lYpc/FwGg7nTSzSriLsr/xs5LpXgGrjI+6u?=
- =?us-ascii?Q?xq5NmK9POJAH99uE/OfJpy3ivFJ27OLV8F6OhNB2+tjlq3ihpNBYidHNJP6k?=
- =?us-ascii?Q?8RpwACCBIDKbW5NA1hq6kDDiOZFIKDyflhv96GX2yWoPjJAnURT+ViEXMl9g?=
- =?us-ascii?Q?lA2SlAdYkgT4a/jO+PvUCAkrm4wtYg7W+DLc8zee3+mRCulB3O8URMnwNRxh?=
- =?us-ascii?Q?R7IWSXqcY3NkQcMjqHFprWhmuWidx7l/j47DNjHW7q16GwjojFuLdfRNsqsh?=
- =?us-ascii?Q?FCl6WY4r74mKaDTXiRq3BimIKB6WYQDjyoapTu43kfRkb5l/HprCVZVnfSct?=
- =?us-ascii?Q?eZzHZWYkiZHgkNqCynqZAUeFwvEY4IGtfo+MDgpQfDTEazRTvfw2d147Au33?=
- =?us-ascii?Q?EdfkvKFuFSyeo+gDlCpQpKCYsu4qvBUyWkw5cOUCjqh59CAroYtnLAEHRx2o?=
- =?us-ascii?Q?wxtutpFG35fMcT10j5uXSMjOR9a1X+cRBSk+EdBrF4/wAYSOXQKIy82ltFlJ?=
- =?us-ascii?Q?E2oT1khwioQ21ggRlYyVQ4CIDtu28rBoesRB61S7fZPOZvlUxkXGw4PWPw3k?=
- =?us-ascii?Q?TWQty8/23JEf4F2fH7zWsU/EWe7tM1UUx3YFDHKJr1v8NEfO9+vXVfkQHP1D?=
- =?us-ascii?Q?v6a9fakSKDOngQFBMOD9M0SLVa6Sndk1y0GKll7P+LL2zFRXepWyuVAJAgsp?=
- =?us-ascii?Q?FOvTPL1sZM7GI+iqA55/HmJS8N6e+jbA5faoN916MD5efGq+dI7qFYYNHGae?=
- =?us-ascii?Q?1yxEkSokaYYQ5DQur2VqehFQX2lc/QbSGUe9/f2czZSL1CxrMGzdCKVWxe85?=
- =?us-ascii?Q?WPX+/ONI2YzPmzIvsUiHGxQHd4ilhxpEBCAbCTgOy6bkrpkzmfqLDdKSKHiq?=
- =?us-ascii?Q?cUkt7iOhqBHuYtHs9rvk1EFiPmyXxQ6GqpYgqQR/HjBX8QeOHWJXESjeGh5f?=
- =?us-ascii?Q?nQMW9OLLzO3lChUc83kRtSmQ1JfdOmNknttiBuRVKglhDrKvQAItBHXLErny?=
- =?us-ascii?Q?TxMQ4KuRY+z1ucyHic76odXGtSeOC5j05QysF6fmwqtlj2B42VGO/mlPs3X7?=
- =?us-ascii?Q?qKFhBpSxB9cguftAqlkZbTX5LwXFYWzTkbIpV4vB/l0l6F8btCxsm+VZONKE?=
- =?us-ascii?Q?PpiF8dG+fkyEYV/tbFZGslg7ebhBYH6jUVmXG+8pDsaPdlYEWDOFX0yeJuoO?=
- =?us-ascii?Q?KQLVQajsY/3yDFhGTHSo1tH+6WGTtyyUq5hofZa6NKUBsQet8YEiWMBSrAC6?=
- =?us-ascii?Q?/skCMBLPeWkUnggPkQfOhugncyxw?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB8252.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?QtZgTu4MttvEOZUUsE7E07gefAYTP8mwV2rlmMpcTkWF2gLfS3sMnZ8np9kP?=
- =?us-ascii?Q?v7/AKjfpEeH51/U9psd+5Keu09fOi2TykD8iVB3OE/4zLpwcXDr8PT7m+3u1?=
- =?us-ascii?Q?t8eFIoswZvuGMdcxiImXPnyZYh3J3ly2/QbCZbxfmr7OvUGmFYt7WKDOYJbZ?=
- =?us-ascii?Q?nX/OgLmi7czNh5JXKtQ6bWE8wTgVLVWEWzeqlFR1fnnJe+2q6HnjX/OravLW?=
- =?us-ascii?Q?zM7SXFxFmnVVXq3u3XLFJdAtTgacd0yYY1R0FbuDzmSviv8USl/3RcGvApSG?=
- =?us-ascii?Q?r7Q9FcYON7PoKP1bpaggq4dQKx6A4JqQ9zEW06o0A4XAADdGxRBPHkhZnXsE?=
- =?us-ascii?Q?t0t8FEq81jXRQIBd9nvbzM3tvZena68IOnp0evi3ld4XcRMptLmDQRFX7y8D?=
- =?us-ascii?Q?CDM3C6iJkpZ/zAkq/5jpRhh89EpWA3qw4Hw1JZafZobEVY5X65KYkZJenAuh?=
- =?us-ascii?Q?Y6Nk2aAEbwf9T9nF+F2lLwo/OtaQTWrpF8Njq2lkce8tgTReak+K2FcM6App?=
- =?us-ascii?Q?pRKZEEdGB8p+WhE6LpHBteAX9/WDGNhjkdZpL7rRxbcU3ng2WrFzZXw29rsa?=
- =?us-ascii?Q?RSTGDUSpShYm7PjA7PXOfgVSMPBz//mWfpIInEFXBiK73XmsE8X23/1G0nmD?=
- =?us-ascii?Q?9dSB4GsVENngTTRGNwCf+8tsjp8yj9udrbnL6SL4bTiQ7amiat9390thUYCK?=
- =?us-ascii?Q?6Y5t+wDZJWxD29c2u37iQisnvjhba3ZqELDkpi3KMKi3FVlgAMwHk4T4Si+D?=
- =?us-ascii?Q?88NS2skud8GNStPi42dAnJcvMk5EpUSfSTHNu87lT0d+6raePn+vWj4m3ycg?=
- =?us-ascii?Q?wSflBsSHaeS2GNdhxduLonGrKqlAVKin8udMuRm4o1lsj3bzq+mt+iXeAmOj?=
- =?us-ascii?Q?jEA2xmlYCb8miuQjTpbHxhJmzg5jpMSoZBIbnWRj4fkwT2ecRrsPVhDiA2gH?=
- =?us-ascii?Q?/9z/Y152MQemVMWZqU0l3UsBIfPF8L3bRqxDE685JBZ3m3YHND1p8+1C0UZF?=
- =?us-ascii?Q?3EGLoQuWmoeG7xaPr79tmqvY9r65my5xr9eG+RGv0/ewNFh9yDPInEAzU+3z?=
- =?us-ascii?Q?zLqlAYNZgx96sc22wrgSUygT8pOUZcKwhlHKUkTdqOaSlQSB3OCS9+pk9JyP?=
- =?us-ascii?Q?PBJ2j1DARKqf27TZs1IGprcIFZt2aef0vynI6M4YsTg9p8UcbwDKbZQrX4NZ?=
- =?us-ascii?Q?oejKNg/2AFQqx6i/F18SK+gXmSmCM4+wpnI5bRAtH1FT3YY6iEZqDccKg959?=
- =?us-ascii?Q?zlG0cho2dRsP5Ew9xSs00swLxVrbQhqvuz+oKyW8tS+9w9qwxB5vTzY4AP+x?=
- =?us-ascii?Q?iqBMNYgKnT+tEwc18Txjim+b9ct+NgFfRrfdHB3inPMF+kv+Z2f+29iWkWic?=
- =?us-ascii?Q?jjnWC/rcFCRauQk4UktkewSJEfL402GeeBh1ln9e7WGzQlrndh4Y7bnv17xa?=
- =?us-ascii?Q?w5G7OI3WobQYvhlJ6tMvXEOziBjSp3kZhRW+bF/cPUTumQw36bJWXtm59Apt?=
- =?us-ascii?Q?Sp30Ax7KQbiPr57l7hMKaSXm3kr8GtX52JjlUGzeaaqlKdT+O5MTd62kA68c?=
- =?us-ascii?Q?KBOFJUY4+1ROXfrlQIXr2E9wpz53Y9AEA9pBKaed?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12bc090d-5e0e-4c81-0fc8-08dd49c3c62a
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB8252.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 11:12:14.9786
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TeOmyXS9ZQl/NWR7fltTgOvX8ho+yXtpAHmC8ty0n2SH+ifMTPzBpqVqMmkDN0idTSPwa8kSB907HWTsaj7Y3A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7105
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2986468.1739185956.1@warthog.procyon.org.uk>
+Date: Mon, 10 Feb 2025 11:12:36 +0000
+Message-ID: <2986469.1739185956@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Wed, Feb 05, 2025 at 11:25:23AM +0000, Dhananjay Ugwekar wrote:
-> There is no need to take a driver wide lock while updating the
-> highest_perf value in the percpu cpudata struct. Hence remove it.
+Ihor Solodrai <ihor.solodrai@linux.dev> wrote:
 
-Yup!
-
-Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
-
--- 
-Thanks and Regards
-gautham.
+> Bash piece starting a process collecting /proc/fs/netfs/stats:
 > 
-> Signed-off-by: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
-> ---
->  drivers/cpufreq/amd-pstate.c | 2 --
->  1 file changed, 2 deletions(-)
+>     function tail_netfs {
+>         echo -n > /mnt/vmtest/netfs-stats.log
+>         while true; do
+>             echo >> /mnt/vmtest/netfs-stats.log
+>             cat /proc/fs/netfs/stats >> /mnt/vmtest/netfs-stats.log
+>             sleep 1
+>         done
+>     }
+>     export -f tail_netfs
+>     nohup bash -c 'tail_netfs' & disown
+
+I'm afraid, intermediate snapshots of this file aren't particularly useful -
+just the last snapshot:
+
+> Last recored /proc/fs/netfs/stats (note 0 retries):
 > 
-> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-> index ee7e3f0a4c0a..08ae48076812 100644
-> --- a/drivers/cpufreq/amd-pstate.c
-> +++ b/drivers/cpufreq/amd-pstate.c
-> @@ -832,8 +832,6 @@ static void amd_pstate_update_limits(unsigned int cpu)
->  	if (!policy)
->  		return;
->  
-> -	guard(mutex)(&amd_pstate_driver_lock);
-> -
->  	if (amd_get_highest_perf(cpu, &cur_high))
->  		return;
->  
-> -- 
-> 2.34.1
-> 
+>     Reads  : DR=0 RA=15184 RF=5 RS=0 WB=0 WBZ=0
+>     Writes : BW=488 WT=0 DW=0 WP=488 2C=0
+>     ZeroOps: ZR=7964 sh=0 sk=0
+>     DownOps: DL=15189 ds=15189 df=0 di=0
+>     CaRdOps: RD=0 rs=0 rf=0
+>     UpldOps: UL=488 us=488 uf=0
+>     CaWrOps: WR=0 ws=0 wf=0
+>     Retries: rq=0 rs=0 wq=0 ws=0
+>     Objs   : rr=2 sr=1 foq=1 wsc=0
+>     WbLock : skip=0 wait=0
+>     -- FS-Cache statistics --
+>     Cookies: n=0 v=0 vcol=0 voom=0
+>     Acquire: n=0 ok=0 oom=0
+>     LRU    : n=0 exp=0 rmv=0 drp=0 at=0
+>     Invals : n=0
+>     Updates: n=0 rsz=0 rsn=0
+>     Relinqs: n=0 rtr=0 drop=0
+>     NoSpace: nwr=0 ncr=0 cull=0
+>     IO     : rd=0 wr=0 mis=0
+
+Could you collect some tracing:
+
+echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_read/enable
+echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_write/enable
+echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_write_iter/enable
+echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_rreq/enable
+echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_rreq_ref/enable
+echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_sreq/enable
+echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_sreq_ref/enable
+echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_failure/enable
+
+and then collect the tracelog:
+
+trace-cmd show | bzip2 >some_file_somewhere.bz2
+
+And if you could collect /proc/fs/netfs/requests as well, that will show the
+debug IDs of the hanging requests.  These can be used to grep the trace by
+prepending "R=".  For example, if you see:
+
+	REQUEST  OR REF FL ERR  OPS COVERAGE
+	======== == === == ==== === =========
+	00000043 WB   1 2120    0   0 @34000000 0/0
+
+then:
+
+	trace-cmd show | grep R=00000043
+
+Thanks,
+David
+
