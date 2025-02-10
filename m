@@ -1,105 +1,152 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111DD1BEF76
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D983596B
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739176221; cv=none; b=mS7d8nt7xvSj3hwsBLkjd2gJL6DpWWgsqnFSIj3H18BYBnfDp+g7P0y+HNyz3w0sSX3Bqp+V3XdlOtYc++gQyb183OoTcElR7k+HG+CzDEOwHRAqjXSo6/KUU4UEBJpzLx1pzD/F58jST1lCf/EaN1WcLi1fybNSbGIDyzFL0QM=
+	t=1739176328; cv=none; b=pMfVc8oR0O34BCPm1K+F8xwCnI4s9TzRy4iZJ9WbC5c19Bno9aq6A3rOhJt63tMe0mG373zzUmeUqH8G2Vtp5X7WgwK5iIGsAB1NdvcE0LcSijfd3s5+oYWpEFk/zseacMMINkWomV7eQ9Z09b3uJncc7q8x9vNXNiwSe2grgtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739176221; c=relaxed/simple;
-	bh=PPmmV6mrjHp+lAp5KhBgmJc4ilN/3JaEJWAOyFrLPSw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=GKcM3tfqCvCDnAvKD9kCcmGCHMkWoCaUBB5cbw1UG7KYH0S+WOgmFcPMHyjMoyD4jBdPLGcGbUl0/IuI6+AEvSUMRy2dY11W1zGE4CJiOb2K/z/c21Fc+0Xv778HMlhU/9yzq7u3P+5JVM4SXg8Q6BFgQtQw+J3q//Q4S6Tw3yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--wnliu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HBdFdtZ6; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--wnliu.bounces.google.com
+	s=arc-20240116; t=1739176328; c=relaxed/simple;
+	bh=/EsZOcNIkpQuc3C0IjSM3JdLmGoYFCU2rhrAxfd8K4E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gw0c2uzBXqbhYFkijK1lPU9qcTwS/WxL1FajJZZpKROi+ztGQQ9yqw2Jlb0LMcS+/n+edGqJGcOaZoJ2tuQ/oGiWe8Rr9senc4gdHw51sWHSnKQPSA+yYXNYb4N36BMjQisU1TViDTDCwtIdV1zbrC68XQMcOoKP9SCSl5FLBmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=hOJWinEN; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HBdFdtZ6"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fa32e4044bso5124725a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 00:30:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="hOJWinEN"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-21f61b01630so33659675ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 00:32:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739176219; x=1739781019; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PPmmV6mrjHp+lAp5KhBgmJc4ilN/3JaEJWAOyFrLPSw=;
-        b=HBdFdtZ6JSHjJJd3i3oiGM5RcWOB/3gKKGkpOXMp9hhM4TSpwwSuXJ0x16fU0X7Sw1
-         k3IFOEiaOnlbaWcIh0qzts39EMozAwzlsCFs9ci9VVFIerlbmki9s5rU2DALc75ooGrm
-         ORZQqARub0fhNvZpO8sAC1IXXzoDkxW9Lh9dQ0PGSc7BPGHukWSoHmLM9Qm2dy+RTzQ+
-         mh7R9RCjeOSmwqNaNE0x6RAPnn0XS1Gp3S/daMZdGYbLh1QMzAnsr5HJktAVHM174LrL
-         h4hPXDlxwfC4svcCWJ54qZQBh9WZf3MufmeFmTGfTnMOydT1FvfTBb4wwJ5/1MLQhv9u
-         mM5g==
+        d=bytedance.com; s=google; t=1739176325; x=1739781125; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OUcYToRhpuhHDr2Q17cbnKHMqCKY55p2oZxgfc3xS98=;
+        b=hOJWinENVISpQEOuVOBzloMuFozU6oz2+Vc/EpbOvUY9kH/CXAKdppzBUmNDxojdw8
+         W1ciZrmACvILtPywgKdv16B54ZPlMWqDRi8ZIESbYmsKdzyudGyamp43+XqQRM1uagD9
+         RJElZDJttffxh4ia46pmGpWwrEV1MYlSZULdFcesspmzqlltI3d95z0fBxJLpLr3XmAW
+         qxevwG1L5krUZ/5aX2IJOrEAs5arELrFjN5ZbP0k8tFqDA/B1+wofLO/SVhQK4hvgYWX
+         Hb1iWEXa7suOILAY0zxzV69/9eN9g4l09Dt58l5/BAA7vqf87RD/WWSJVLOXTL48CEZc
+         XQ8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739176219; x=1739781019;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PPmmV6mrjHp+lAp5KhBgmJc4ilN/3JaEJWAOyFrLPSw=;
-        b=cIAZyOUgz2J8E1NXaR4OspqdvZGBctZE6fbWfs0x06iXwC3B+uX4ErPuimTW+ibego
-         Edmn+KUoTjIfTfzFX+2U1G531g3S7BUbi5f5GcJBmMQVY8xii9iR6/RWd360RvIRytvl
-         kWzIPogQ/XT9CYoC+kiqWQtqSbbtCPxwx0v855ciMja8FYX7JErql13Tve08eqDrHEnG
-         G1+uAFzeuJX1RfZOveHMLHHKQt1FsN9PiaigciQ2tynoJtYJSaWzhU3qI9ybIv2Ww3LN
-         pohSjGorX0ryP2s7yDz9dFxBnMPkZWRY6qW3ofVoyJkinENxki6xgXcY8R9SHNaGXCkq
-         4saQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGyN7/+HON/QMtP4FhSFckDLrGAl5WNnZGzRxrvjwQrfTnwvuINAUW3hf87npuyNt2gVY0jRvdxkHMiOg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzj3hIAQEI/cMi/g1vf63ZYCd3Y0c9CUjrV5IVFfREJfK0ejPft
-	yVT6SiIuwAKqDafrD3jMR6YKiUrhtY9Nlgoj33ovZGdaAoixuiq4kZtW7fnO/8D1yUe/JSoWmA=
-	=
-X-Google-Smtp-Source: AGHT+IEXo1lV682Dvui+xqTqQ9vsTUnOVO23WNyemCNciJ06wQPtgH2MGkCCmvZ/liuvldm8njt7IMjgAA==
-X-Received: from pfbbi7.prod.google.com ([2002:a05:6a00:3107:b0:730:9499:1f46])
- (user=wnliu job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:850:b0:730:949d:2d3f
- with SMTP id d2e1a72fcca58-730949d3086mr2135669b3a.7.1739176219304; Mon, 10
- Feb 2025 00:30:19 -0800 (PST)
-Date: Mon, 10 Feb 2025 08:30:15 +0000
-In-Reply-To: <mb61pikpm3q76.fsf@kernel.org>
+        d=1e100.net; s=20230601; t=1739176325; x=1739781125;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OUcYToRhpuhHDr2Q17cbnKHMqCKY55p2oZxgfc3xS98=;
+        b=Beqj3emdUisI7FWcGn9Ub/Yy2MqVv9ketd1KYqhzdnbHmD/0tHuSyZLEdcr7xr9QlM
+         Mg1ldc8Gg6VKDAUVBvRi6hninSKfO0BlLvyj8mwl/HcjCcrUApfAjbai3CeikLgdsXru
+         XxjKPG0H+t+NKdAnA/Eqohj+BLsI37aRIkpkmy/UpRSXriQKoW2i0ASt8bkmwam0MUV2
+         ukV7qdEzUQUj5PK93n0sK4Ytlz4YU+FDGlBUK9gro8fO2cUzoz511ipqQf6MWanxJC6s
+         3dvMQhKO1VGd1M50Q9hhXTKcAZ/0n8COOZZtsNCkpMGxCsx3uzRAVXdj0t7XcvOlfCrV
+         o/uw==
+X-Forwarded-Encrypted: i=1; AJvYcCWwi6zMxllz7hs3qkjktKTmHOy0tWeI1PoGVu95rkmgaiojdrNpbsNQCa5TNncwZ32PmKJQzLDNtyO4rhw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzDnbpbmXq5ehv9rqUUFBLOqDS7tPO77HS5Bd54h0uk2dUbmD8
+	/i+6O7Jmz/Zp0GxsKmmdutEHM/NLdYDJah3oSMH1jrZI1dQYZ+Z6LNBfEwFOygWYg3Nf7u7rPok
+	G
+X-Gm-Gg: ASbGncsFrauUADP5vs5Suchkty27zhlRcyrGgu/OlxyaZYuTS0/8bthhPi/sdr7XE/r
+	+E0Ly0IPJfmF5AcbMgFb5GhtT4EwvXJsWOfu/kUrkJgNT6NNXz7YlQUZsoVAuFvVStpeBy3wGs2
+	oRiL/jCBT3N+bbKb7aq3PkW/A+Y7o8r5WPcplzE7MiERyhMLZy8RGTR/yJBig/ne3AesWTxGKEg
+	L3rEInzD5b4wQ6rkzr3PdHMdO62TN9M8ck5szPK+9/9dDqr9prUCxCs1RZoJML+0lBo42wQ6J18
+	DP6haS6wnuB5Pe1/RkG7juRxf4HVL1cxGEDMG1JKiA==
+X-Google-Smtp-Source: AGHT+IF6fZPOzbILUuM2rhW3U3R4xSndVBqQEShpK9A8O0NyscJ2fDBGKMKmXYk+t1ivHGlVzFHL4A==
+X-Received: by 2002:a17:903:1a0c:b0:215:a303:24e9 with SMTP id d9443c01a7336-21f4f0efcb1mr206775945ad.3.1739176325072;
+        Mon, 10 Feb 2025 00:32:05 -0800 (PST)
+Received: from [10.84.150.121] ([203.208.167.149])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3687c68asm73373745ad.172.2025.02.10.00.32.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 00:32:04 -0800 (PST)
+Message-ID: <e5d5bafc-7809-42c2-ba8d-554b9667d00c@bytedance.com>
+Date: Mon, 10 Feb 2025 16:31:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <mb61pikpm3q76.fsf@kernel.org>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <20250210083017.280937-1-wnliu@google.com>
-Subject: Re: [PATCH 0/8] unwind, arm64: add sframe unwinder for kernel
-From: Weinan Liu <wnliu@google.com>
-To: puranjay@kernel.org
-Cc: indu.bhagat@oracle.com, irogers@google.com, joe.lawrence@redhat.com, 
-	jpoimboe@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-toolchains@vger.kernel.org, 
-	live-patching@vger.kernel.org, mark.rutland@arm.com, peterz@infradead.org, 
-	roman.gushchin@linux.dev, rostedt@goodmis.org, will@kernel.org, 
-	wnliu@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: pgtable: Ensure pml spinlock gets unlock
+Content-Language: en-US
+To: I Hsin Cheng <richard120310@gmail.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250208184928.219960-1-richard120310@gmail.com>
+ <b70f663f-5b72-41dd-bae4-14808a87f262@bytedance.com>
+ <Z6m21Rzv6H16oG-U@vaxr-BM6660-BM6360>
+From: Qi Zheng <zhengqi.arch@bytedance.com>
+In-Reply-To: <Z6m21Rzv6H16oG-U@vaxr-BM6660-BM6360>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 7, 2025 at 4:16=E2=80=AFAM Puranjay Mohan <puranjay@kernel.org>=
- wrote:
->
-> Yes, I think we should, but others people could add more to this.
->=20
-> I have been testing this series with Kpatch and created a PR that works
-> with this unwinder: https://github.com/dynup/kpatch/pull/1439
->=20
-> For the modules, I think we need per module sframe tables that are
-> initialised when the module is loaded. And the unwinder should use the
-> module specific table if the IP is in a module's code.
->=20
-> Have you already started working on it? if not I would like to help and
-> work on that.
->=20
-> Thanks,
-> Puranjay
 
-Thanks for updating the arm64 kpatch PR so quickly.
-So we can use kpatch to test this proposal.
 
-I already have a WIP patch to add sframe support to the kernel module.
-However, it is not yet working. I had trouble unwinding frames for the=20
-kernel module using the current algorithm.
+On 2025/2/10 16:20, I Hsin Cheng wrote:
+> On Mon, Feb 10, 2025 at 12:05:05PM +0800, Qi Zheng wrote:
+>>
+>>
+>> On 2025/2/9 02:49, I Hsin Cheng wrote:
+>>> When !start_pte is true, the "pml" spinlock is still being holded and
+>>> the branch "out_pte" is taken. If "ptl" is equal to "pml", the lock
+>>> "pml" will still be locked when the function returns.
+>>
+>> No. When start_pte is NULL, the ptl must also be NULL, so the ptl and
+>> pml will not be equal.
+>>
+>>>
+>>> It'll be better to set a new branch "out_pte" and jump to it when
+>>> !start_pte is true at the first place, therefore no additional check for
+>>> "start_pte" or "ptl != pml" is needed, simply unlock "pml" and return.
+>>>
+>>> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+>>> ---
+>>>    mm/pt_reclaim.c | 6 +++++-
+>>>    1 file changed, 5 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/mm/pt_reclaim.c b/mm/pt_reclaim.c
+>>> index 7e9455a18aae..163e38f1728d 100644
+>>> --- a/mm/pt_reclaim.c
+>>> +++ b/mm/pt_reclaim.c
+>>> @@ -43,7 +43,7 @@ void try_to_free_pte(struct mm_struct *mm, pmd_t *pmd, unsigned long addr,
+>>>    	pml = pmd_lock(mm, pmd);
+>>>    	start_pte = pte_offset_map_rw_nolock(mm, pmd, addr, &pmdval, &ptl);
+>>>    	if (!start_pte)
+>>> -		goto out_ptl;
+>>> +		goto out_pte;
+>>>    	if (ptl != pml)
+>>>    		spin_lock_nested(ptl, SINGLE_DEPTH_NESTING);
+>>> @@ -68,4 +68,8 @@ void try_to_free_pte(struct mm_struct *mm, pmd_t *pmd, unsigned long addr,
+>>>    		pte_unmap_unlock(start_pte, ptl);
+>>>    	if (ptl != pml)
+>>>    		spin_unlock(pml);
+>>> +	return;
+>>> +
+>>> +out_pte:
+>>> +	spin_unlock(pml);
+>>>    }
+> 
+> Hi Qi,
+> 
+> Thanks for your kindly review!
+> 
+>> No. When start_pte is NULL, the ptl must also be NULL, so the ptl and
+>> pml will not be equal.
+> 
+> Since this is the case, we don't have to do any addtional check for
+> "start_pte" and "ptl != pml", we can be sure that only the second check
+> will be true so we can unlock "pml" without the redundant check, that's
+> my understanding, what do you think?
+Adding a label
 
-Indu has likely identified the issue and will be addressing it from the
-toolchain side.
+vs
 
-https://sourceware.org/bugzilla/show_bug.cgi?id=3D32666
+Redundant check in rare cases
+
+Not sure if this is worth it. ;)
+
+> 
+> Best regards,
+> I Hsin Cheng
+> 
+> 
