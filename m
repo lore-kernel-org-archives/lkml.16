@@ -1,108 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782CB24F581;
-	Mon, 10 Feb 2025 16:07:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B31248163
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739203624; cv=none; b=dZyucIXyFgJgcnRMoeBE5EfmbszxrCEGy1fTrhWt7u9peK8hJhafGoDOtAUB0cPP9mCakerclvP1LalTFS1ZfET3g4wfc/9vCPpBEbi0Hf7Eu1bo2fCfaWY9lmeF4nExbJ1f7hUeLGGVPcsVSCw/lzZOg3+86olH4wLG7e3L7kg=
+	t=1739203667; cv=none; b=oPv38Qe0KUO72bldBQGI753v7doaowIxVxJ+13Wr3vpRgxty5jDU/pSLWOQH/z3OcL6m9A2U6KC4phWfk3G1c2NubBUwiRnVDbehZrkuwmk3eXFtELFJ3OkWn29OhH6AwkU5BRj1BdbptzMWCImp4sqM4e4MsgA0ZUTubS2LNnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739203624; c=relaxed/simple;
-	bh=SRw1k0y7hlo/yKZBQQG2C4q1HQF4yRbq7z7c9vCQa3w=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=g0RazudOcwrOIkeWMNHfYLIliB9s0RYIQMxmrhFgY+yEmdKtJXoq0xWUBmVjVnmZdvPGcv0JlAKn7eHo8vs5DJvm2BBwWqpH0p9IGsa3SgPCM7aWw+dMYsIrmENSu3C2GS+GZNRYa4gD7mvJrzjI2LNbiFEvOPCfuQBqTdS6lFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J31+ezEO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739203667; c=relaxed/simple;
+	bh=Pm5JicYMot7Tym1Zb0/aX5QKN/E+G+wocop1y+Xhx34=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qwtKzu2cgo2rpwjRcJVbLFlfJ2KzcJUgkJYtADDdgrC/oUyLf/rdkchWzG36pIKSJqP6Fc8LGl4iMPJPQNRr9kh7+oQbPogYhWoR00Q9FcKlzWL64VG6bbTe5wZUW+EypP6/Gc+ptQlzpUNqeWahfXvqIB1GonZNTNqsO2jEOXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YVJPmCPH; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J31+ezEO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25046C4CEE7;
-	Mon, 10 Feb 2025 16:07:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739203624;
-	bh=SRw1k0y7hlo/yKZBQQG2C4q1HQF4yRbq7z7c9vCQa3w=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=J31+ezEOgxu409oZ9mNTPJ4US64p6hPYNfqvOSdnI7GyHsyI3tVygykx7FHcuXU9B
-	 0HXWxckwuv0mggKb5Ro2cCIdlXyPN5oIQQlXMNtjrrC9kdVLtIpXBB5DaDMHqFq8V0
-	 H9IpEv/20U3iQidnte8tiW7L6JQLlEVnZGDPyhI86LDvCat7eS2TyHl32sV6Gu9OOI
-	 94PsHDSGsLr7eScDcaS3ffXp/CFmfUZKarukeUvYYEoZqECQSQqJFnonl8/PtvdAut
-	 6wr5tPRK0t4d48FagU8OUsBZqk0Op2t41h677XOfHu7BBbGe6bx6q/Mfl56i22v4te
-	 kNo0Wuh4iJOvg==
-From: Mark Brown <broonie@kernel.org>
-To: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- David Lechner <dlechner@baylibre.com>
-Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Lars-Peter Clausen <lars@metafoo.de>, David Jander <david@protonic.nl>, 
- Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-iio@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- Axel Haslam <ahaslam@baylibre.com>
-In-Reply-To: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
-References: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
-Subject: Re: (subset) [PATCH v8 00/17] spi: axi-spi-engine: add offload
- support
-Message-Id: <173920362087.57731.5305051508878680047.b4-ty@kernel.org>
-Date: Mon, 10 Feb 2025 16:07:00 +0000
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YVJPmCPH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739203664;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=77GL/tYmPl7+mQAdfsy5azygebvcP1znrXsaoed79iE=;
+	b=YVJPmCPHozY8czqcmAH4C6+7WiZ6eahnKOBq15AQjw7E3xeMz2OjNlrbHrtlr+gSWTqq4n
+	IhDwOgk3Jdw8NBzAarKR5i6qUC0ksDcbVj4nR7Sk+DQMYvaQ+8T8wGpnul06C9SGSy880/
+	I7zjGHHwz5SN8fnLzRl1I+7PYSEqYM0=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-658-pm98jNnMPAyT08SKSRPsfA-1; Mon, 10 Feb 2025 11:07:41 -0500
+X-MC-Unique: pm98jNnMPAyT08SKSRPsfA-1
+X-Mimecast-MFC-AGG-ID: pm98jNnMPAyT08SKSRPsfA
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ab7a3a033b4so162537266b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:07:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739203659; x=1739808459;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=77GL/tYmPl7+mQAdfsy5azygebvcP1znrXsaoed79iE=;
+        b=uYiFfe7F9AG4XMs04tiw2ycIm+aNtw+ex8NMsIr9VxeF3E4hLxodTlJe1iOx/Q9MMw
+         646oPOvh+maN7AcXGtluqH2MN7cqVUGIgfBsY6RZe2v2Owvf1N9tK+buUohCS0Gmei/5
+         uRKiPzehrqsk7TCjfAUnjV7As7wW5wMfk68vhupwllZQdwDAWUTp0UkbbLUoQE30XD7f
+         USbvSfReQ3nu/BjqtC1ZSbzrJMOZA+9tE8HLuRxFSOhlGY1p6GkO40aFUQhNoV2mDn8Z
+         PxXrZOOBTX5ddPf2Td1AMQprGFHUP+FSBH7Xse1p0Xo11T1mpuon0uO9zxLcGDZM9Myd
+         RrpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWXUz19uzjaVJ4x1vIuNsOJu6E3jPQSh7P8j0P73sC0t26hq6Na18pXpzmrW8G0brJAklqhYMZXRNnsUu8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXh1QsBrEZRxVKT9Dmjm6baoq8slAwJHoZpTapqx23kGJSETe9
+	1zxWmWhIi85BKfuPhme19uuLc2fvfcd3ZVf0wWssmD15CYFKmuS2PnWn3wLZFd38EO8/UN9cIfx
+	Cw68rwW4HsE3rYt1tsI4R8mGW89OKRnw7O7rJHUEpzK9GK4ZHdakD4iOL1LEF0Q==
+X-Gm-Gg: ASbGncsbHLyJk6kVes6lXgwl1JPnCSr/GMXzk2b6IFRTCww6hymrJfk4nLIbSlLLRQA
+	M8qytnPcCQ24+wGO2sUW37HrD1raI++icYkqIWBqPtsadSTUmIfTWhK+ql0nxMqewMhSW5NUq1o
+	T8255NA8bAw/9x1E1IIU6NTjYgGTPXBKYUVLoOru1ypkf5ksBBZN1/17mtC42YYNhBqk0h4gJi+
+	JPMtV/Nz5wSpvPjmIq2vNfLn8/ROau0T6GCUql3rKheuuk51SCUpNy6my8LecwBrCMc74q91LP1
+	ZrnKoJV13zw956zyeiKSkrP/nEjHYLNROaoRXGLTnPkCDfHmVR9Rbw+c5DeJLN3q5XaMpORavKR
+	ci5DvQrlR8nW3WS3xBoFKm6OZSI7io4Vm7bZtNswFH/6+Ra4MSPiAj3M=
+X-Received: by 2002:a17:906:dc90:b0:ab7:bfb1:99c3 with SMTP id a640c23a62f3a-ab7bfb1a9d4mr534420666b.53.1739203658803;
+        Mon, 10 Feb 2025 08:07:38 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFLUgPZe8+WVFOm7+M26Lip/0MK3cHsXrNGEsuLT+IXXY6SoDI7mvOVYZYpW3234IkyWlg3Hg==
+X-Received: by 2002:a17:906:dc90:b0:ab7:bfb1:99c3 with SMTP id a640c23a62f3a-ab7bfb1a9d4mr534415266b.53.1739203658299;
+        Mon, 10 Feb 2025 08:07:38 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7d9ca16dasm2302466b.180.2025.02.10.08.07.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 08:07:37 -0800 (PST)
+Message-ID: <6b472224-0789-46c8-bfd0-7c1c4ea67246@redhat.com>
+Date: Mon, 10 Feb 2025 17:07:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v17 00/17] media: uvcvideo: Implement UVC v1.5 ROI
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Yunke Cao <yunkec@chromium.org>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Yunke Cao <yunkec@google.com>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Daniel Scally <dan.scally@ideasonboard.com>
+References: <20250203-uvc-roi-v17-0-5900a9fed613@chromium.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20250203-uvc-roi-v17-0-5900a9fed613@chromium.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
 
-On Fri, 07 Feb 2025 14:08:57 -0600, David Lechner wrote:
-> Only very minor fixes in this revision.
+Hi Ricardo,
+
+On 3-Feb-25 12:55 PM, Ricardo Ribalda wrote:
+> This patchset implements UVC v1.5 region of interest using V4L2
+> control API.
 > 
-> Also, now that trees are rebased on v6.14-rc1 we no longer have
-> dependencies for the IIO patches. So Mark can pick up all of the
-> patches if we want to go that way. In any case though, Jonathan will
-> need an immutable branch since we have other IIO patches in-flight
-> building on top of this series.
+> ROI control is consisted two uvc specific controls.
+> 1. A rectangle control with a newly added type V4L2_CTRL_TYPE_RECT.
+> 2. An auto control with type bitmask.
 > 
-> [...]
+> V4L2_CTRL_WHICH_MIN/MAX_VAL is added to support the rectangle control.
+> 
+> The corresponding v4l-utils series can be found at
+> https://patchwork.linuxtv.org/project/linux-media/list/?series=11069 .
+> 
+> Tested with v4l2-compliance, v4l2-ctl, calling ioctls on usb cameras and
+> VIVID with a newly added V4L2_CTRL_TYPE_RECT control.
+> 
+> This set includes also the patch:
+> media: uvcvideo: Fix event flags in uvc_ctrl_send_events
+> It is not technically part of this change, but we conflict with it.
+> 
+> I am continuing the work that Yunke did.
+> 
+> Changes in v17:
+> - Rebase on latest media-committers/next
+> - Link to v16: https://lore.kernel.org/r/20241210-uvc-roi-v16-0-e8201f7e8e57@chromium.org
 
-Applied to
+Thank you for the rebased series.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+I've merge the entire series into:
+https://gitlab.freedesktop.org/linux-media/users/uvc/ -next now.
 
-Thanks!
+Regards,
 
-[01/17] spi: add basic support for SPI offloading
-        commit: 8e02d188698851436f76038ea998b726193d1b10
-[02/17] spi: offload: add support for hardware triggers
-        commit: d7231be4b4657e5f922a4c6dc11e8dffc71fee87
-[03/17] dt-bindings: trigger-source: add generic PWM trigger source
-        commit: 83f37ba7b76ab17e029ab4127ec64ccccce64c00
-[04/17] spi: offload-trigger: add PWM trigger driver
-        commit: ebb398ae1e052c4245b7bcea679fe073111db2ce
-[05/17] spi: add offload TX/RX streaming APIs
-        commit: 700a281905f2a4ccf6f3b2d3cd6985e034b4b021
-[06/17] spi: dt-bindings: axi-spi-engine: add SPI offload properties
-        commit: e1101373df5cd7672d988bb4e9cdd5eb97003165
-[07/17] spi: axi-spi-engine: implement offload support
-        commit: 5a19e1985d014fab9892348f6175a19143cec810
+Hans
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
 
-Thanks,
-Mark
+
+
+> Changes in v16:
+> - add documentation
+> - discard re-style
+> - refactor -ENOMEM
+> - remove "Use the camera to clamp compound controls"
+> - move uvc_rect
+> - data_out = 0
+> - s/max/min in uvc_set_rect()
+> - Return -EINVAL in uvc_ioctl_xu_ctrl_map instead of -ENOTTY.
+> - Use switch inside uvc_set_le_value.
+> - Link to v15: https://lore.kernel.org/r/20241114-uvc-roi-v15-0-64cfeb56b6f8@chromium.org
+> 
+> Changes in v15:
+> - Modify mapping set/get to support any size
+> - Remove v4l2_size field. It is not needed, we can use the v4l2_type to
+>   infer it.
+> - Improve documentation.
+> - Lots of refactoring, now adding compound and roi are very small
+>   patches.
+> - Remove rectangle clamping, not supported by some firmware.
+> - Remove init, we can add it later.
+> - Move uvc_cid to USER_BASE
+> 
+> - Link to v14: https://lore.kernel.org/linux-media/20231201071907.3080126-1-yunkec@google.com/
+> 
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+> Hans Verkuil (1):
+>       media: v4l2-ctrls: add support for V4L2_CTRL_WHICH_MIN/MAX_VAL
+> 
+> Ricardo Ribalda (10):
+>       media: uvcvideo: Handle uvc menu translation inside uvc_get_le_value
+>       media: uvcvideo: Handle uvc menu translation inside uvc_set_le_value
+>       media: uvcvideo: refactor uvc_ioctl_g_ext_ctrls
+>       media: uvcvideo: uvc_ioctl_(g|s)_ext_ctrls: handle NoP case
+>       media: uvcvideo: Support any size for mapping get/set
+>       media: uvcvideo: Factor out clamping from uvc_ctrl_set
+>       media: uvcvideo: Factor out query_boundaries from query_ctrl
+>       media: uvcvideo: let v4l2_query_v4l2_ctrl() work with v4l2_query_ext_ctrl
+>       media: uvcvideo: Introduce uvc_mapping_v4l2_size
+>       media: uvcvideo: Add sanity check to uvc_ioctl_xu_ctrl_map
+> 
+> Yunke Cao (6):
+>       media: v4l2_ctrl: Add V4L2_CTRL_TYPE_RECT
+>       media: vivid: Add a rectangle control
+>       media: uvcvideo: add support for compound controls
+>       media: uvcvideo: support V4L2_CTRL_WHICH_MIN/MAX_VAL
+>       media: uvcvideo: implement UVC v1.5 ROI
+>       media: uvcvideo: document UVC v1.5 ROI
+> 
+>  .../userspace-api/media/drivers/uvcvideo.rst       |  64 ++
+>  .../userspace-api/media/v4l/vidioc-g-ext-ctrls.rst |  26 +-
+>  .../userspace-api/media/v4l/vidioc-queryctrl.rst   |  14 +
+>  .../userspace-api/media/videodev2.h.rst.exceptions |   4 +
+>  drivers/media/i2c/imx214.c                         |   4 +-
+>  drivers/media/platform/qcom/venus/venc_ctrls.c     |   9 +-
+>  drivers/media/test-drivers/vivid/vivid-ctrls.c     |  34 +
+>  drivers/media/usb/uvc/uvc_ctrl.c                   | 799 ++++++++++++++++-----
+>  drivers/media/usb/uvc/uvc_v4l2.c                   |  77 +-
+>  drivers/media/usb/uvc/uvcvideo.h                   |  25 +-
+>  drivers/media/v4l2-core/v4l2-ctrls-api.c           |  54 +-
+>  drivers/media/v4l2-core/v4l2-ctrls-core.c          | 167 ++++-
+>  drivers/media/v4l2-core/v4l2-ioctl.c               |   4 +-
+>  include/media/v4l2-ctrls.h                         |  38 +-
+>  include/uapi/linux/usb/video.h                     |   1 +
+>  include/uapi/linux/uvcvideo.h                      |  13 +
+>  include/uapi/linux/v4l2-controls.h                 |   7 +
+>  include/uapi/linux/videodev2.h                     |   5 +
+>  18 files changed, 1058 insertions(+), 287 deletions(-)
+> ---
+> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+> change-id: 20241113-uvc-roi-66bd6cfa1e64
+> 
+> Best regards,
 
