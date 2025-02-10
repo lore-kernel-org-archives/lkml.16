@@ -1,171 +1,137 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-yw1-f196.google.com (mail-yw1-f196.google.com [209.85.128.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD7C170826
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D1C24394C
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:10:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739207424; cv=none; b=eTwCILloNM/Z1GWGpuVhdlrabN8tP9WRbbh2uksE0IkAURoBZqYEYmmaaZ7Hr2yJEEjL0GOfMBotlrT5bNN/rMpb7Li2IIkTT0kJDvi7+ZX/7LDAkpMSamyGZTh78LLyhGuZXA81T9c6De2n60fMwEo3p1YRPmXzHU/a+Wv6kvg=
+	t=1739207435; cv=none; b=ivH5zTCp7SLHgxGnFYLkpJZdmsJBHaTgGR08dZqFzdnhmZ9ap3kt5nJoMIefre+K1KlkKR2CZWjOo+cnFFVZzzIck3+HiPA3HHvlKwuSWRPVHQDa1cEZmG2tbl/YMNozRCsWSie4zqjr5j6xYoUfd+DWgozjyyfixqocOedQFrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739207424; c=relaxed/simple;
-	bh=33obMPf5mqSs6wPrXyBZW3o1+l4eJAntmMYywvCOYOk=;
+	s=arc-20240116; t=1739207435; c=relaxed/simple;
+	bh=I4f9LjEoqx7t/00Ki9BJQWCcYoVNANkuEBdoUlbIggQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tXax+gb4gczCOIxh8lbyej2mzs+7Ylc/Y3MZcQ5HjwxZWAhtppRM1T0YxUt/AL7RNA7mtgOOKQt+OnHyz5z0oznWU9RBPWBBUswZiTknjSczl8LYpG+0s8rQK/gg82CfG/XnRDBBfB4rI3UEHv7BEkvCKITtW59y0yuDBHONEsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=grmkWbwR; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=gagFZswMVoWwrAz9K5Zr2iXsGishPRyAIGV2xK+DxxyCVkCnfgt/TdWrx2t2paG9G5bewkiLVwuQT1SkRz2OJ/B3M8wwrmd/1mHh/i8Ly12xBH40SpX3xrXmtPgxnWCUCkqUclmSGXulsudDqX4h1BWpBMvzZngcpHv3MJIcXKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=KPYLjH/o; arc=none smtp.client-ip=209.85.128.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="grmkWbwR"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21f2339dcfdso73684485ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:10:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="KPYLjH/o"
+Received: by mail-yw1-f196.google.com with SMTP id 00721157ae682-6f7031ea11cso43985967b3.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:10:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739207422; x=1739812222; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=iJBo65n/x3cGPmTDY6dfaDs6s3ZVqbAaIw7gB8ar1TU=;
-        b=grmkWbwRR61jXYhgSgX08nsc1LwM5cX/vF5k1XWhZ5s1ANfFcZoZQXettLtC/eZLhb
-         YbKMp/sk9BQc8hZxxK6FljCrN5O5+6yfJd9gzoDTkHQPRpNuZ9Ibs1cAuDrSI8FtHKO8
-         3xGn0R13WQFkqdTSDX9y1eT2kECEG3MA7eBfhkBv6Py/7NN+iPXOBbpExw5R4pwUvQE8
-         1WnNZpucv/DxGJJfJQloeL1gWNlFXTg2ZtFC1I4zvy99NNxaiTCwg5DfVz0L40/mADdo
-         +sXkwBQH1U+WLTPDjuWgxTujKcvuVSvTyqp0uFuUhQKq4zGAE8cfZTGz0R8XwtdT1fvd
-         b0zA==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739207432; x=1739812232; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nJMRwPZx3iU33VFjfO3EAQ5wMZ8xyLmg7gDRe7Q3+/s=;
+        b=KPYLjH/o95DZvWRsk07JtykUyGZJ+WxD99BaVBgQzdUv1Ow0KbYuQOQFKrdX+fp8ov
+         HZFFSR44oHP+h95NL05DwKxOcd2y4BlcBUYri6jXj2eFASByOlMvRL3ngpbD/PQHK4J1
+         uGnS4dzxVYzBBe61+U56kTiNigc+E8Vqj6+vNsM5PcPklFpmAgJDTJ4Z96KDdVY0hFE5
+         28d4wP9wDY2NsxqqNrFqXyiHprRdjgOob4zC+jYs2/rgRwnFA6ASbF34fhfe7vR6Ifr2
+         H/e8qnwwTf4koTGJf5qhUaiWIhxDM+9+iIRoRzi9wPK3g88Ykh90cQDE3lfu0wO/hb3i
+         m8Ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739207422; x=1739812222;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iJBo65n/x3cGPmTDY6dfaDs6s3ZVqbAaIw7gB8ar1TU=;
-        b=ABfFBPDr21Sr1bHDnY9JgtlgnvDGQAxcvArt2LWsLe5gYglekVqXlMSF7RMaRME1f+
-         /oEJJspuW+DgqjGwCNvfjgRNsXdKkPRG+pHmii3rhO0YzKlEQORbBBrTK1wlAMdXBFZj
-         0ZsA8+d+muxOAmNTHhktvZHgwravZwzF+rVaJXHgQ/pNvQbK0B3usMe2XAocsa78TDkf
-         Or/EM1YFlJn+9i3lVFOl5l9Atn9IBK2Y4JXhXnXMN0E5QgeZibRYahEkFi5TdRcV5+Pd
-         1tZvERirpYUQujAueWj9Hrz3je4xTxl+tmiZm6EXPb8E6NEiL2kSWYpojLtHRy9OHMcD
-         wnhA==
-X-Forwarded-Encrypted: i=1; AJvYcCUD3RV3viWX1o2vs5TsAEoSaDmoO5DhTwiDNJEN8roinHZLj/dVN8+zEqNOguzkMcW9zXpqtRkyy2/tXXw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEmduZUfrv92se4EXbc9pWidwTEtFAg3R0XEnseEtbZKswySVF
-	c75/8Iv8WN1RnLxOeLNKOsrM0JdwYzeMwIYnNd6DHyxE2WQ3m+K5J8LVGJZaAQ==
-X-Gm-Gg: ASbGncsnQVmewNFyED9n5INDdfstYVHAXlNlcKAbzYPpeHP8CFUr6Zv1+sX/l/dRhKm
-	SkHwiM83wOOWZ5LwbIydyNhbS19FXEMlxVrsTV8WasSVu0+H7ou7CbGqaTc/RVvSUcaB0E3Rn+z
-	+WAPLCN+Dt6p8xtOKtnALDklxgaUUoc67Nbq1Y408fomf79PEwC7Nb+Q4KK7CLueTD/piD6IJgI
-	2frnehG542O++HGCqmJAu+Y0Dhk6+vCDkguYisehuda7rOdIE2I0pSDqjRd3jS+KQNuUYf2d4uW
-	DsDR2cd7hIiiIFWenUjGIMrXCuth
-X-Google-Smtp-Source: AGHT+IF56qTkw7TJubOEXPIM9zfQyfQzn7+cZYQk9mn9YGpujIBnDlW/B1WsBT0lOvPG9bCSoLR7yg==
-X-Received: by 2002:a17:902:e54d:b0:21f:3823:482b with SMTP id d9443c01a7336-21fb6f54a29mr1014975ad.25.1739207395874;
-        Mon, 10 Feb 2025 09:09:55 -0800 (PST)
-Received: from thinkpad ([220.158.156.173])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f365446d7sm81455805ad.82.2025.02.10.09.09.52
+        d=1e100.net; s=20230601; t=1739207432; x=1739812232;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nJMRwPZx3iU33VFjfO3EAQ5wMZ8xyLmg7gDRe7Q3+/s=;
+        b=i8goch3uUPISgMHeLK0sZSDvL9j1yLvaskA4JSkU1An6PoO8FM7IWdL7oJQEMorDh4
+         tIte1+6SoDjVnCDRj4ex7yn9Fa2MMOsFWRomHjPN0fjYNnP6ihNanQwmDnM6hMWdSAuL
+         pCaGFQMmhpCgCn+bIOxmnSiH4aTj3FDPEbme2nAjl58NFO4ju5rSdwarhvyBVgf2LXWw
+         cYZJMquIazaZHTFN1T/pP0uKLbkhE+p9UbMGmfhf/jgAQws1FP+WgwXa3wNKUz/QnM0h
+         0mxF68QNuGRP4VgyaMVVyp8rq4K9iesB0WjEwu6DfZKf7txiveuHvT8cbHRY+qG+Uytx
+         MKZg==
+X-Forwarded-Encrypted: i=1; AJvYcCW3dHawvS3K1Zupmj5rOsc9DatlGnBjLl6OqOmsNe1Q7N3I7C295NL4mN0JRAlT+ZgBcWXqNV95hDu48kY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxazeRHSMf/P70DVG0sHqDyX6DUx0x2Xf2jgmdPI6UMFy7a9/yV
+	tBBvyppmZHiVnbsZUC2FP4imldamNz4ctK0rRrmKNbi1p3m2evoy0yHfCviKC4Y=
+X-Gm-Gg: ASbGnctuUvQJLLysryEJSG/URA6JC09nh5ULxE+s83+z+eDMrQIZvEkISOMqNih2Jl6
+	Yg52edevwTBsJSq90q1LirS4RAeSeAYF9GS6AcXfCQ6Q40NIg6wUfaRm/3MDGfwVKssHPg8gB7K
+	Rt8rrCq0gMM4vDzeo3sFKv/8+AWBHI8hn/xsXtFM5QSlPhaSaUY/8RVa4kjUC/Sj6C9gg8E196r
+	/IDlG3gdzsYUEMsT8ydjLmItid9+zTbJiWDu31jiPWR8ir2cPVIErxlcIbdwX9/wJbfsyls5ECY
+	ESg=
+X-Google-Smtp-Source: AGHT+IF7lKxvTgaEV/I4an/VqlLCpMFOtwQL5q2GuuLjaCF02RBe/SO5iWJjxKW9CNbSttB801OpuQ==
+X-Received: by 2002:a05:690c:6f8c:b0:6ef:e390:1d4a with SMTP id 00721157ae682-6f9b2876ac4mr138897167b3.11.1739207432175;
+        Mon, 10 Feb 2025 09:10:32 -0800 (PST)
+Received: from ghost ([50.146.0.9])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99fd557absm17268277b3.56.2025.02.10.09.10.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 09:09:55 -0800 (PST)
-Date: Mon, 10 Feb 2025 22:39:50 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Md Sadre Alam <quic_mdalam@quicinc.com>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	linux-mtd@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Robert Marko <robimarko@gmail.com>
-Subject: Re: [PATCH v2] mtd: rawnand: qcom: fix broken config in
- qcom_param_page_type_exec
-Message-ID: <20250210170950.zxgm5hjeb2a4evfn@thinkpad>
-References: <20250209140941.16627-1-ansuelsmth@gmail.com>
+        Mon, 10 Feb 2025 09:10:31 -0800 (PST)
+Date: Mon, 10 Feb 2025 09:10:30 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	paul.walmsley@sifive.com, palmer@dabbelt.com, jesse@rivosinc.com,
+	Anup Patel <apatel@ventanamicro.com>
+Subject: Re: [PATCH 7/9] riscv: Prepare for unaligned access type table
+ lookups
+Message-ID: <Z6ozBlumaaAReM7l@ghost>
+References: <20250207161939.46139-11-ajones@ventanamicro.com>
+ <20250207161939.46139-18-ajones@ventanamicro.com>
+ <Z6ax7B45OsGerjfA@ghost>
+ <20250210-51cedc94f4cba8c96516adc5@orel>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250209140941.16627-1-ansuelsmth@gmail.com>
+In-Reply-To: <20250210-51cedc94f4cba8c96516adc5@orel>
 
-On Sun, Feb 09, 2025 at 03:09:38PM +0100, Christian Marangi wrote:
-> Fix broken config in qcom_param_page_type_exec caused by copy-paste error
-> from commit 0c08080fd71c ("mtd: rawnand: qcom: use FIELD_PREP and GENMASK")
+On Mon, Feb 10, 2025 at 10:43:18AM +0100, Andrew Jones wrote:
+> On Fri, Feb 07, 2025 at 05:22:52PM -0800, Charlie Jenkins wrote:
+> > On Fri, Feb 07, 2025 at 05:19:47PM +0100, Andrew Jones wrote:
+> > > Probing unaligned accesses on boot is time consuming. Provide a
+> > > function which will be used to look up the access type in a table
+> > > by id registers. Vendors which provide table entries can then skip
+> > > the probing.
+> > 
+> > The access checker in my experience is only time consuming on slow
+> > hardware. Hardware that supports fast unaligned accesses isn't really
+> > impacted by this?
 > 
-> In qcom_param_page_type_exec the value needs to be set to
-> nandc->regs->cfg0 instead of host->cfg0. This wrong configuration caused
-> the Qcom NANDC driver to malfunction on any device that makes use of it
-> (IPQ806x, IPQ40xx, IPQ807x, IPQ60xx) with the following error:
+> That's true, but...
 > 
+> > Avoiding a list of hardware that has slow/fast
+> > unaligned accesses in the kernel was the main reason for dynamically
+> > checking.
+> 
+> ...I'm not sure why we should try to avoid determining hardware support
+> by its description when a description can be provided.
 
-I'm wondering whether the offending commit was really tested or not :(
+I worry about scalability of this. This to me seems like a slippery
+slope of hardcoding performance tables into the kernel. There are a lot
+of riscv vendors and allowing anybody to add a table to the kernel to
+dynamically change behavior specifically for their hardware could become
+a maintainability nightmare. Avoiding this maintainability issue was the
+motivation for the runtime checker.
 
-> [    0.885369] nand: device found, Manufacturer ID: 0x2c, Chip ID: 0xaa
-> [    0.885909] nand: Micron NAND 256MiB 1,8V 8-bit
-> [    0.892499] nand: 256 MiB, SLC, erase size: 128 KiB, page size: 2048, OOB size: 64
-> [    0.896823] nand: ECC (step, strength) = (512, 8) does not fit in OOB
-> [    0.896836] qcom-nandc 79b0000.nand-controller: No valid ECC settings possible
-> [    0.910996] bam-dma-engine 7984000.dma-controller: Cannot free busy channel
-> [    0.918070] qcom-nandc: probe of 79b0000.nand-controller failed with error -28
 > 
-> Restore original configuration fix the problem and makes the driver work
-> again.
+> > We did introduce the config option to compile the kernel with
+> > assumed slow/fast accesses, which of course has the downside of
+> > recompiling the kernel and I assume that you already considered that.
 > 
-> Also restore the wrongly dropped cpu_to_le32 to correctly support BE
-> systems.
+> yup
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: 0c08080fd71c ("mtd: rawnand: qcom: use FIELD_PREP and GENMASK")
-> Tested-by: Robert Marko <robimarko@gmail.com> # IPQ8074 and IPQ6018
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> > 
+> > Instead of having a table in the kernel, something that would be more
+> > platform agnostic would be to have an extension that signals this
+> > information. That seems like it would accomplish the same goal and
+> > leverage the existing infrastructure in the kernel, albeit with the need
+> > to make a new extension.
+> 
+> Yes, I agree that another profile "named feature" may be the best
+> approach. I'll consider proposing one, but [1] implies there may be
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Yeah that thread does highlight the unfortunate way that riscv has
+evolved, but I hope that wouldn't be a prohibiting factor here.
 
-Thanks for the fix!
+- Charlie
 
-- Mani
-
-> ---
-> Changes v2:
-> - Fix smatch warning (add missing cpu_to_le32 that was also dropped
->   from the FIELD_PREP patch)
+> some resistance to creating something like that.
 > 
->  drivers/mtd/nand/raw/qcom_nandc.c | 24 ++++++++++++------------
->  1 file changed, 12 insertions(+), 12 deletions(-)
+> [1] https://github.com/riscv/riscv-isa-manual/issues/1611
 > 
-> diff --git a/drivers/mtd/nand/raw/qcom_nandc.c b/drivers/mtd/nand/raw/qcom_nandc.c
-> index d2d2aeee42a7..6720b547892b 100644
-> --- a/drivers/mtd/nand/raw/qcom_nandc.c
-> +++ b/drivers/mtd/nand/raw/qcom_nandc.c
-> @@ -1881,18 +1881,18 @@ static int qcom_param_page_type_exec(struct nand_chip *chip,  const struct nand_
->  	nandc->regs->addr0 = 0;
->  	nandc->regs->addr1 = 0;
->  
-> -	host->cfg0 = FIELD_PREP(CW_PER_PAGE_MASK, 0) |
-> -		     FIELD_PREP(UD_SIZE_BYTES_MASK, 512) |
-> -		     FIELD_PREP(NUM_ADDR_CYCLES_MASK, 5) |
-> -		     FIELD_PREP(SPARE_SIZE_BYTES_MASK, 0);
-> -
-> -	host->cfg1 = FIELD_PREP(NAND_RECOVERY_CYCLES_MASK, 7) |
-> -		     FIELD_PREP(BAD_BLOCK_BYTE_NUM_MASK, 17) |
-> -		     FIELD_PREP(CS_ACTIVE_BSY, 0) |
-> -		     FIELD_PREP(BAD_BLOCK_IN_SPARE_AREA, 1) |
-> -		     FIELD_PREP(WR_RD_BSY_GAP_MASK, 2) |
-> -		     FIELD_PREP(WIDE_FLASH, 0) |
-> -		     FIELD_PREP(DEV0_CFG1_ECC_DISABLE, 1);
-> +	nandc->regs->cfg0 = cpu_to_le32(FIELD_PREP(CW_PER_PAGE_MASK, 0) |
-> +					FIELD_PREP(UD_SIZE_BYTES_MASK, 512) |
-> +					FIELD_PREP(NUM_ADDR_CYCLES_MASK, 5) |
-> +					FIELD_PREP(SPARE_SIZE_BYTES_MASK, 0));
-> +
-> +	nandc->regs->cfg1 = cpu_to_le32(FIELD_PREP(NAND_RECOVERY_CYCLES_MASK, 7) |
-> +					FIELD_PREP(BAD_BLOCK_BYTE_NUM_MASK, 17) |
-> +					FIELD_PREP(CS_ACTIVE_BSY, 0) |
-> +					FIELD_PREP(BAD_BLOCK_IN_SPARE_AREA, 1) |
-> +					FIELD_PREP(WR_RD_BSY_GAP_MASK, 2) |
-> +					FIELD_PREP(WIDE_FLASH, 0) |
-> +					FIELD_PREP(DEV0_CFG1_ECC_DISABLE, 1));
->  
->  	if (!nandc->props->qpic_version2)
->  		nandc->regs->ecc_buf_cfg = cpu_to_le32(ECC_CFG_ECC_DISABLE);
-> -- 
-> 2.47.1
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+> Thanks,
+> drew
