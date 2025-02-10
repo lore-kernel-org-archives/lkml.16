@@ -1,95 +1,100 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F022580C9;
-	Mon, 10 Feb 2025 16:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495082580C8;
+	Mon, 10 Feb 2025 16:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739204126; cv=none; b=TXC9MVAHIf8Q6Z2Bvcb0bnkaY95jBB7HcSfbN48/RVYSQHeRImg2wQ/QNkwi2QZd8mX58Caz2cxJHP5JB6ew3cvdysmYLXanHDO/aukgcSA5mt+LSlf8q1yS7r5QtA9yLWaQJkU2ZT7/7eeJ0r/Z1ZCLTgebM0yGi7RtktZT98A=
+	t=1739204229; cv=none; b=WHU9vUXUl6jYTIHBfDjVr1dtzD8bi4sRLeZOacmNtSF5GUs3WbtP9oMg6uuA8iu1KaY+EKYcEaKTki0F3FlXFDtnAhCHMTgO+ISbj934NxcJU5DRRkVXM7MN9wUDi5iDTr6O5rvVi0FjBlYExIj3dbp/nUV4MacdJcqA2RvfJ10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739204126; c=relaxed/simple;
-	bh=UXDqlY9n1msb36iRIn+UVyGFu6AL1jpxFlahRfkA2VU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=anuRCUFJj/rnWI8+fwEASq/htobTbsMYX3ikvbKQAC5nNv+yQTpYS75c+rqQ9TcU2in/u2j3aRDAsdksXeXKUqmf3m5i83BNEJiwnlgHaD/7e7BPzF4ktoQQaPD4EDSKQM7PunxRvhiiNdhpJ+sAKskIass+IVHsU4PtEjEOrF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HMCYWpzP; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739204229; c=relaxed/simple;
+	bh=LBFXb/q8egi7aIgS1a/3CHKLjebuCXgihE4lRbZKC3k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=p99Or570wt/1MuLmDkMnU0IJjxUoMmADRvLLWqCstna0GkFWW4xfmxWrlrWAnl1qawsGb/TDMaI9NRpDhPAKigqAUx1n/Ryqe7K/Xj3QjX7PB/dz4OUo7MB1HCpVeEzAG7oZGzbtb/xMoLS5eEpzW8Tt1VD+82USESeItZc/Nb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hieS5rm5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HMCYWpzP"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-38dc1dfd9f2so2981014f8f.3;
-        Mon, 10 Feb 2025 08:15:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739204123; x=1739808923; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QAvIhc8+F4Z/iCQGPEOkeXSN7GErg7UTH2cuNvRR8uw=;
-        b=HMCYWpzPI+Gz+1rxqjV8xKZHtURroX8KLTzYSkEwW8w+sIVzcruuk+GIU2bZ8OLcXT
-         W1FMqbLxV8/Xig9F5cBGTKjj9tzI03Dx8plXBA+AZAH+KfhsihUp0Z/adlz0JuTj0xgM
-         sOxRqsdzQ7AIJelHQF2eAEeGo9ypBKSljSkaRGWEGAngTXxmv+Hk9U+iAWeFpxWHN+Fw
-         tmOBdbTt7BSJEL7T7qAhMxu1pixq3vBql4phWAqUcqOkCQAvn4FQ38UscmD1q5KzyPSi
-         W7wcJc+mfCCoVTQZ3moF8iMA8d/DMP4pm3ZhXEy6Qi9It32Ok3bshLcqvF8jJi86f1Yf
-         iHjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739204123; x=1739808923;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QAvIhc8+F4Z/iCQGPEOkeXSN7GErg7UTH2cuNvRR8uw=;
-        b=XDxZMViDAoihvf6qCnhZQPENywXVJBEI9U2KOd68TNPteI0757U+nrKhVMnCco0F20
-         8A49Uly1Dr5oKEiKDkvWG7LSo0+ES9+OIdksh4AZ1GT3tLOZfUHwm3tXHH4ygRw2DA5l
-         RfedLnMWXOWcsmFPdiHMnWTQC293zfkMBW/0hahFShdBduJko+ObXwp/psoWLd1rEzM/
-         hCc1AC4ZqMChqsDgCWobPbbUWx7i2Vjzm4VNv49em+CLOJuCwO3DJ0j3oDi4WhjFn1+a
-         07O5kiYsj7FKT3TlpYK5n3EdredvFe6C3KdaD4FlRXRhzThQaGSti4HRhIZIrBdkAZnB
-         rhww==
-X-Forwarded-Encrypted: i=1; AJvYcCUaP1s+qpknMQKW538T2dpKYmydULHkQH7SO6VlWrZqdw6Yssk64hGziUXfcen1ZZpOFheAeAFCxcmRO88=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNtz2+V/j1XVXVFL2UcfEzkiMxCh+UORC7zK7JNVJzyKUQ8awF
-	0QGD/XINy5TI0LjCC29maL1o0/elSb28wNiUECtuOlpToNaHfNARZmqTVzIg4PiuIW9fFNFLu7Q
-	092FNhyjY/gzuYKUpNlw+SpYv9bVgkVqf
-X-Gm-Gg: ASbGncsRtaspboCBkiCeuZwOuwuvHp+QEslBwN3FkHagUdGyAry0ju8x+foRwU6Qp+I
-	iDYTBCQdWzGh5l90z/pHD8kt/G/ug6RHA18bPGeVkh47WLGC5fyme79byyNnQFSQo7yZrCpbbzQ
-	==
-X-Google-Smtp-Source: AGHT+IFnu09VB51eVbkID4img9JsElU5J7oM/IdYKee9PFnhjFeDbM1iN1xkor7JElGZV/CUF3Td52eXNDPXlqmKI/o=
-X-Received: by 2002:adf:f58d:0:b0:38d:a8f7:cb73 with SMTP id
- ffacd0b85a97d-38dc9138f08mr10197975f8f.40.1739204123229; Mon, 10 Feb 2025
- 08:15:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hieS5rm5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD704C4CEF0;
+	Mon, 10 Feb 2025 16:17:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739204228;
+	bh=LBFXb/q8egi7aIgS1a/3CHKLjebuCXgihE4lRbZKC3k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hieS5rm5ILhtBNITlfSOIS2HNBE7LoGeT1ZcLDYwxLHkBXszSXF85vadt/qgxJk6p
+	 un1Ngt+H/xPFt0DbdYMlcqKhG6hmqpISHLeSQT/X94pWMPYJrMHcWI+xyuohziJE9H
+	 dwMPnSgdl4S/ShJg5LQm7zauiJpxIdepytkvpdOf7A7ZPE2np3CXMe9wkOBu9urCQM
+	 ZwX/+18vnohSZAUQZwLiYYXvCG3cOXaoJgB6yJFn++4dmBF2HjpGwlthB8ecX1345t
+	 RuhaBBoSzY77jr6YKluok+GZKMAJFr394VUMUVHcX+nIEMaaLeEi7dsXdUAGLOVldk
+	 lWfGHNQbcHxqQ==
+Date: Mon, 10 Feb 2025 17:16:58 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+ workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Laurent Pinchart
+ <laurent.pinchart@ideasonboard.com>, Simona Vetter
+ <simona.vetter@ffwll.ch>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH v4] docs: clarify rules wrt tagging other people
+Message-ID: <20250210171658.5eb4dc2e@sal.lan>
+In-Reply-To: <559e84cc-4da3-45a5-9ff0-2283d2c53d0a@leemhuis.info>
+References: <588cf2763baa8fea1f4825f4eaa7023fe88bb6c1.1738852082.git.linux@leemhuis.info>
+	<Z6Vk-7OgDB3DM7Yb@archie.me>
+	<559e84cc-4da3-45a5-9ff0-2283d2c53d0a@leemhuis.info>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241008233030.395126-3-stuart.a.hayhurst@gmail.com>
- <5cf187db-1eae-41a8-a33e-ef68a4f66db6@kernel.org> <afb96547-7ff3-4070-b960-33f4af7e3edc@kernel.org>
-In-Reply-To: <afb96547-7ff3-4070-b960-33f4af7e3edc@kernel.org>
-From: Stuart <stuart.a.hayhurst@gmail.com>
-Date: Mon, 10 Feb 2025 16:15:11 +0000
-X-Gm-Features: AWEUYZkEOeEjc8YvJEaBxjaHn72XKgHjXq465jVSG4TIidsUrxtnbqoRx3Qg8UA
-Message-ID: <CALTg27kaxGOzq2k-dAqbXZ0ez5e-WZRU47Z2eP5297VVHF81kA@mail.gmail.com>
-Subject: Re: [PATCH v5] HID: corsair-void: Add Corsair Void headset family driver
-To: Jiri Slaby <jirislaby@kernel.org>
-Cc: linux-input@vger.kernel.org, Jiri Kosina <jikos@kernel.org>, 
-	Benjamin Tissoires <bentiss@kernel.org>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-> This effectively kills the system. We came here via:
-> corsair_void_raw_event (hid_driver::raw_event)
->    -> corsair_void_process_receiver
->      -> scoped_guard(mutex, &drvdata->battery_mutex)
+Em Fri, 7 Feb 2025 09:24:56 +0100
+Thorsten Leemhuis <linux@leemhuis.info> escreveu:
 
-> And hid_driver::raw_event can be called from the interrupt context. This
-> happened at:
+> On 07.02.25 02:42, Bagas Sanjaya wrote:
+> > On Thu, Feb 06, 2025 at 03:30:10PM +0100, Thorsten Leemhuis wrote:  
+> >> diff --git a/Documentation/process/5.Posting.rst b/Documentation/process/5.Posting.rst
+> >> index dbb763a8de901d..22fa925353cf54 100644
+> >> --- a/Documentation/process/5.Posting.rst
+> >> +++ b/Documentation/process/5.Posting.rst
+> >> @@ -268,10 +268,15 @@ The tags in common use are:
+> >>   - Cc: the named person received a copy of the patch and had the
+> >>     opportunity to comment on it.
+> >>  
+> >> -Be careful in the addition of tags to your patches, as only Cc: is appropriate
+> >> -for addition without the explicit permission of the person named; using
+> >> -Reported-by: is fine most of the time as well, but ask for permission if
+> >> -the bug was reported in private.
+> >> +Be careful in the addition of the aforementioned tags to your patches, as all
+> >> +except for Cc:, Reported-by:, and Suggested-by: need explicit permission of the
+> >> +person named. For those three implicit permission is sufficient if the person
+> >> +contributed to the Linux kernel using that name and email address according
+> >> +to the lore archives or the commit history -- and in case of Reported-by:
+> >> +and Suggested-by: did the reporting or suggestion in public. Note,
+> >> +bugzilla.kernel.org is a public place in this sense, but email addresses
+> >> +used there are private; so do not expose them in tags, unless the person
+> >> +used them in earlier contributions.  
+> > 
+> > So for example I can only include Tested-by: when a contributor who tested
+> > my patch explicitly offer the tag by replying to it i.e. with the tag, right?  
+> At some point a text must leave the interpretation up to the reader. I
+> would say a "yes, that's okay" to the question "is it okay to add a
+> 'tested-by' tag in the patch description; note, your name and email
+> address will then end up in the commit history and can not be removed
+> there" is sufficient "permission" as well.
 
-Damn it, I was suspicious that it was too easy. It's been running for a year
-without an issue on my system, I'll clearly have to read a bit more.
+For me, it sounds reasonable to accept a public reply about someone
+testing a patch as a reason to add a tested-by tag. Yet, I don't add 
+tested-by myself based on replies. What I do when someone sends 
+a reply saying that the patch was tested is to request the tester to 
+reply with a tested-by with a short description about the test scenario.
 
-I'm not sure what the best solution is for this.
-'corsair_void_process_receiver()' shouldn't be called frequently, and
-the locks shouldn't be waiting on each other very often, so I suppose
-swapping the mutex for a spinlock is probably the best option, instead of
-increasing code complexity?
+IMO it is important to ask it to the tester, not only to have an explicit
+tag, but also because as a simple tested-by without a test scenario is 
+usually not very useful. 
 
-Happy to put a patch in for whatever seems best :)
-
-Thanks,
-Stuart
+Regards,
+Mauro
