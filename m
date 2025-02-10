@@ -1,84 +1,90 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6A31E1A20;
-	Mon, 10 Feb 2025 12:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E907220691
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 12:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739189208; cv=none; b=DCnOmoyFrThc23nKvgPCzo70hIJig3tFp4Md6dPDaL8z+uNU/0NodHIKbY6KhEG+xge7KZnwYDFBmfRS2OT+l6XrfzL0uAKr6uD6t6MbdFw6PUY+cZmi7nnprP0y3I6RpaKXnAprMwCDXs2tKaqbF9km9qdPEGfEgcZsa4J/f/s=
+	t=1739189276; cv=none; b=DuiUKXJpc3wVZr/bG7tEVMmp04rT5ooUssT5f+qQUicM46pBCm0qHMHiC4XC7ltIJf82OnaP+WSdbydtJAP98201b+iSgudKmpL/GKvCC1X/fyY2u4RrIwWp1adrLhiT2I8AuW3XclOVV5B7saOYQWZqU7amFD9w8Lq4EfEs1pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739189208; c=relaxed/simple;
-	bh=HuBxKJ4Rxe9SCxOs5nQLEVz0BLQk8VkiesS5pXJ1q9w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B6KJSbzq+M4p7Y1WnVeDWKnm+2kWsuGvloAir2aGDQS8nPjL2Dlca9jPiy+Kws9O+LJE0PD/obE8obU1HAlJYV0Gvq4qpWwVAkqtUaq6+F2Xq51LCAC10Gxbjo6/Opo829JOUhHc5qel2bNxh/F/39zcj94YjZJNfuR7epOu+bA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=s+Nok+jk; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1739189276; c=relaxed/simple;
+	bh=BtQ9N1MvirivDuLCQDNFtrplYfp2RM+U8t6UQeof8HE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IRGZCzKKc/Fm+9lgEgGc+0RAX8xAe0FilswtYLs0HcHWF3zRsPVQnuyg52UeaaBq+WeftRaYQChdIbha3L+vJncs1n1uGgIKMYoqUkRCBXUmAjQr83sAF8Zmg4AjVKKL8PEUXfHlfL8M1UXIV2V4mBYPNfjiTW5Klq6O/DREsNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PFJ4T1bq; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="s+Nok+jk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=8Kcu6XE1Pl2R37OZwgbkQSGdnaUlnMNddlRe2ugSH6Q=; b=s+Nok+jkiSksrF0Bg8qUzmTpKu
-	xHzZe3Tay4sGEcE78uh5thldvZIPOOLd56Rf0IB8HIN8lwYbeMXvkDJqkkcibBnP6731vJffpPPU4
-	Glmm4XjmZhBcaxLZBtm6CU0al0HDQ1DSlfWivGsUf0wqRX8zBkdUn+lfJQupDdGPisqD3/KKitJ+Z
-	prM9X2NVoNJscwzMUO1srUEPptaktuLkdnSyDciNZuxrgi5PxBIIQca9S9A1yA5YoruhNCAjkpuY3
-	6bQcMMIyEENL/8Rm3ZqytQoigwr0tPbFygC7YW96js1te25raJPaNpwA2m/QH8IJnx0UsnMHUUYbJ
-	nvKBJ/OA==;
-Received: from i53875bc0.versanet.de ([83.135.91.192] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1thSYJ-00025C-EW; Mon, 10 Feb 2025 13:06:15 +0100
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Diederik de Haas <didi.debian@cknow.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Dragan Simic <dsimic@manjaro.org>,
- Maximilian Weigand <mweigand@mweigand.net>, Marek Kraus <gamiee@pine64.org>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH v1] arm64: dts: rockchip: add 'chassis-type' property on PineNote
-Date: Mon, 10 Feb 2025 13:06:14 +0100
-Message-ID: <2663295.taCxCBeP46@diego>
-In-Reply-To: <87a29b78-5fab-48eb-9a86-f12c41369dfa@kernel.org>
-References:
- <20250207111157.297276-1-didi.debian@cknow.org>
- <87a29b78-5fab-48eb-9a86-f12c41369dfa@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PFJ4T1bq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739189272;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TNwsmie5gRPqqyVCLb3IhqDqH4N/saJWdmlC5n8Dh5I=;
+	b=PFJ4T1bqs3jrSk3fKB0EIoSm4GaHiXw65N27M1G1Wiq2KWpasrBMSZTBN2yp888mlCtfmd
+	pTt+gqWYHMdKmP1ixwdZCDVwQnd5M16mn6wD5AeNxI1kfWjqtf/TtWbwCJxDIIG7OC2NM9
+	cGByEL1VsAonjLQm6hlnpjqVgto8+vk=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-240-jW7P-b8EOCOzDHiXADTIjw-1; Mon,
+ 10 Feb 2025 07:07:49 -0500
+X-MC-Unique: jW7P-b8EOCOzDHiXADTIjw-1
+X-Mimecast-MFC-AGG-ID: jW7P-b8EOCOzDHiXADTIjw
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 98008195608E;
+	Mon, 10 Feb 2025 12:07:45 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.113])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 811B8180035E;
+	Mon, 10 Feb 2025 12:07:38 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 10 Feb 2025 13:07:19 +0100 (CET)
+Date: Mon, 10 Feb 2025 13:07:10 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, Kees Cook <kees@kernel.org>,
+	Eyal Birger <eyal.birger@gmail.com>, stable@vger.kernel.org,
+	Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	x86@kernel.org, bpf@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+	Deepak Gupta <debug@rivosinc.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH bpf-next] uprobes: Harden uretprobe syscall trampoline
+ check
+Message-ID: <20250210120710.GB32480@redhat.com>
+References: <20250209220515.2554058-1-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250209220515.2554058-1-jolsa@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Am Montag, 10. Februar 2025, 12:06:15 MEZ schrieb Krzysztof Kozlowski:
-> On 07/02/2025 12:11, Diederik de Haas wrote:
-> > Add the recommended chassis-type root node property so userspace can
-> > request the form factor and adjust their behavior accordingly.
-> > 
-> > Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
-> > Link: https://github.com/devicetree-org/devicetree-specification/blob/main/source/chapter3-devicenodes.rst#root-node
-> 
-> Drop link, no need to point to source of every property. You don't do it
-> for aliases, compatible, model etc, right?
-> 
-> With link dropped:
-> 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+On 02/09, Jiri Olsa wrote:
+>
+> [1] https://lore.kernel.org/bpf/202502081235.5A6F352985@keescook/T/#m9d416df341b8fbc11737dacbcd29f0054413cbbf
+> Cc: Kees Cook <kees@kernel.org>
+> Cc: Eyal Birger <eyal.birger@gmail.com>
+> Cc: stable@vger.kernel.org
+> Reported-by: Jann Horn <jannh@google.com>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  arch/x86/kernel/uprobes.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
 
-I've amended the patch [0] by dropping the Link and adding Krzysztof's
-Reviewed-by.
-
-
-Heiko
-
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git/commit/?h=for-next&id=aba881f30e0294a58c0cb076918d366e39801185
-
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 
