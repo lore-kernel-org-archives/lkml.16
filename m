@@ -1,208 +1,164 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444FA19D072;
-	Mon, 10 Feb 2025 09:19:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAB21B6D15
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739179191; cv=none; b=o+520OIQnI2htSyY3+pDkEdnCOe9YGBdTPxvQGae9GIts6E3t+dby/uSBuylxvPn4kUqn37W4Fu4ZJHpZgknEyFGT+trYF0zBGqRADUHASRQCIsIkyBp9+sqc9S2NTZ+9slIv8ObPiH2uxBRPM1eLTrslUCXFz4p1/7fq6KI9cQ=
+	t=1739179221; cv=none; b=bE5p2piOnXKaxSkn5HBRZBOmQ7fl4+9T9m95tyEJbcSGg/H3UgZF3U/wv7V+PWqUpkeldqaPE2U/sPWG1g3hWoBEFP54XKBWLDKe/T8sBo3Yfm+oXYyH4t+wKu8sKhgEN4Q+//K3fzLM39TSQYGVwiMNmI0qP3Bg7+LXS7GuwgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739179191; c=relaxed/simple;
-	bh=HAv8mkXs22nJ9qO9Ygj1yVJPwqs0ZDo+F21aqZ7BJFE=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AMMahfBOMqhCUhNPAP9YAMpU4bGIvbhfLqjE6tuhZbCsDTyS4QVV2t3NcZEBkNC18CMgrHglKDSfniNIlpCrqj91m9CHCRxPskQGabVC1zTJYQd+asoyN0X/WkpRrIoBXh79cemHd8lcd9AKzWZ51E8LIql836rlX9KbOslzJa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rr20On+J; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739179221; c=relaxed/simple;
+	bh=2Hd0+L6N5jG7D5+yOI5Eh0udHf8fZgIAry9GwgHy85o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=feBDCgQd9WVw1aAEA2lmAqYaBbEk3Nz5PWxuXc2u0+W176bInGocNbpZ/8yOMGLReUwkU6ax+zzGkJHTTsvQenHSCBEI7qPQPU6E3qmC0H4TyOePD2JJR07yr2H9oPXhRK5frrNq+c/6ILAn/anGH4o2rLEfh0VVj7P42+S/oTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EEfkQZoL; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rr20On+J"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43618283dedso40533565e9.3;
-        Mon, 10 Feb 2025 01:19:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EEfkQZoL"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f78b1fb7dso17896415ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 01:20:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739179187; x=1739783987; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SUqRsgayv98ELGejV6zmw9ZnEwHxjQ0BZzJqfeUUpT8=;
-        b=Rr20On+JdJMM/zcnOLkNBZA7ufl1OcUgi4gzbNxAd/jEftC6zukbBQKrVwzvWI+uag
-         VAOrpi4hqamfFatm61Aew8RdqLZBdUnCGGrbpH8hq/Nllk2T05R4PHKYBvdW8flokwlx
-         xifV6AcxY5BIH/ZFi91Glyy0QX0UKXKbzi+BFI0DvZoaumrCOcuV6Z+Qho72yLI2/TC5
-         j/2OSLCunHA8WMsthHrP84miLvCkG3K9DA85bWmdivVnJyrtGHsYVpsI1bBg1oxMsiwX
-         HM6P880Udw8Xhh9pPFN9s3KcAbnPB3nWhrWwvHwiqKPC9G0Mm0HfjginnWR6KZUKTt8i
-         FSEQ==
+        d=linaro.org; s=google; t=1739179217; x=1739784017; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6Qe2qcRZ88BSLH/SzbhXpYMzUQ4getoZho+X5vsY0Kg=;
+        b=EEfkQZoLcYoxLMrWxUFJn+djj/jND5RgZBv6016e1HTdLhaSF/xqfJcphBiLzvZoJd
+         EOpVFlEuGu4fRFBW9AH1cDh7V+R75qffuP4Wv1jgaRIcQc2vE9g3rQOWRaWzotZ3dsbO
+         T3sOj4oti0dPdQHLa8M45xM+AkQe/6NYCk27jwemP8GngnVA+lytLpXPGrY1Oe9hY34M
+         9M70z6sm4yMn6ocxMj/3LJdwNmJbMPnp9Y0Bho6oeOU3Dz8AgPPgypzl+JU2UxH5YEmd
+         eemoecEbNSI/SxLgchQUsUtnGJhXad0Bf+z0Lg93zBjXEnF0H7SFP4NYDURLBwolr9JL
+         9z/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739179187; x=1739783987;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SUqRsgayv98ELGejV6zmw9ZnEwHxjQ0BZzJqfeUUpT8=;
-        b=SI5HIO2s8osXGe0uJOFvkxXBcliZQr7wloaGLZJWleO3PFL3aS3jrFDIg6F+lHeqar
-         qX60rKvlYuL/6fNRt0IYcL5zppKmyZDwlraNNVG/UgYNufVhDSJ69WGlSCwwkzGht/2Y
-         AKPCqCXvgKRz7AkHRnc6uI6ju+k0xc942qmK69knCu8IZ30e/FIb6xhN79mq090AM7OM
-         Y8Or3lkL5uwSA6A0bK5jtR0MHF23BmDh+/+lgConHNvg9PNtkpfbzY/0CF+ErpdMUZ/N
-         Z1LfIhOlbl5gMJM9x/zgRRJdNMnN/e/2L7Wwgst18Pv+j6r4RJWRDrvwV1CM0DeLg0ot
-         aJhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHs9q3ETMZUXGtEfNRjpWbf1gKMqXb6VhCHxEgsJP6pSWgCPcOCJtnXAXDh+/sLZ2pduN+hN31s246l50=@vger.kernel.org, AJvYcCXMVDb9iw3W7JUh6v5Ebuzcn0F7VbCV/MdKrp5zbiPXhsnNACJ9oUWbsUIQLhMf0u6eLy8mrURNkQV37k8EJaq3@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLvuVnblyAwFKmiK/8HJBN7sfyxfbMXipwTdEh86FqbSSdN22F
-	5tE/hKHN/PvkHT40Peyn5ZACWbdUBxBf11i+o7QKldMWgyHsX9L6
-X-Gm-Gg: ASbGncs+KGnfiXlH0pSNw439HMnjJSH7T6LXL6bUpNkTngoqrqby/3BxULH747hr6Ex
-	7hp5FGW/DcWkiRiUkLYWf1E/rSSvcn/eF5JRdCrvLZWnfnG0bbQio/NJ86EGzqWGkK5NHyz36v0
-	dEYvuJdml5B78P+v/gFmL4RM12j3ZYR/+EFjsfi1nuZfjL4F4vPeXmzwIs/R4sCR014CepsEbIX
-	dx69r0dNoO1ck4xblMjcIimvJry8r4FhOd8ESltCmgvCKmRUw5Xerqtwvkg818fOr7OCL21uxp1
-	Cg==
-X-Google-Smtp-Source: AGHT+IGNHvLL2+ZUcGcgn9qFHqbaFk1iBN1I2yhBLhXj6vo3pWLFrd2eocJ5X3XFyAArm5ulZ3axKA==
-X-Received: by 2002:a05:600c:3c87:b0:438:c18c:5ad8 with SMTP id 5b1f17b1804b1-439249d189cmr103632795e9.31.1739179187157;
-        Mon, 10 Feb 2025 01:19:47 -0800 (PST)
-Received: from krava ([173.38.220.45])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390daf3c70sm174197545e9.26.2025.02.10.01.19.45
+        d=1e100.net; s=20230601; t=1739179217; x=1739784017;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6Qe2qcRZ88BSLH/SzbhXpYMzUQ4getoZho+X5vsY0Kg=;
+        b=DpLcV2gqB7x0oy1CyDFq/loGK7Kkq1BRvKEtLc9BaJnE3NSi78qfqMIWupNVi1v/Dp
+         m437jIH3LU7gsvIglmWd0bNz0/Vt1VO3AYWt8RjOy/90SYZEks82W2TCqDV1H/Xs9LEK
+         G/dcb491USrCkQFEi4nJ+aQh7+8za9qmr+KTiy2o/UgCQ5QVPxPy7vquO6zRUXrdlRLP
+         mni97rO4PQj3Ln4Up8zbla533L/6eg3Twd/L9FSzOvh6YWhnAO+Nbkjq/KQczfuDUFYo
+         uoAm37M2CWJH3BTCwZtqM6x16Q0QPZg8YawSXKrHZZ4ZWv80XXWmjm8MOCKT3mU1LutH
+         KpDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUvkX4FD02znCldsV0JTaUB/+NfH6HhMcqmGWDlmCVC69LvDRV/4MNGmY7zSqwr8kR5XQ3sfo9z1jQVs/s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylgAPG1AV8ta/VkSxM2N5aBFOmIoOQOXfK/fXeTxrvQfqsW8Nj
+	JWSprj7kpaDw2bdz6X4t+vFehUB4hQFrUmGY/lcybDpn/NOc2np0eKodLJzMDw==
+X-Gm-Gg: ASbGncuC7As2ltrrleWmfNY4ReQzy/PWzKvTC2ct2t/2aBfg7tQ/aK/lD8zLmrG1GbC
+	1hGzBwaLXKYmOWc0jb3r1z1jQZ+z1uzlCmPCjM1d1Jb/pZiMYsHjNJbte2Qk2qFE0VD4evrlkJi
+	cX1zuvBqqrvvTazMQkyoxgn2BLY0wWy36jiYFfvx+iJCRv8iejvMIjkO2eUIc6UOly0BdMhTsYv
+	aXhDIhLjJUP3h9UNC0eLKTm77xs86kTo58pRztGeSY66W9VI0t9ZP+N7XN6jXyxlPiJYVhZ59Za
+	2u/AwQrK+x+p7hoa6HgcSqm/Ydme
+X-Google-Smtp-Source: AGHT+IFGxn0rXuvYtc581KEtsKuAorkqiaER6So77Bh1zTJq6DAV0+/8Q0ZfTy+t7Puq9tJIaUHHPw==
+X-Received: by 2002:a05:6a00:71c7:b0:730:7499:4036 with SMTP id d2e1a72fcca58-73074994503mr10207025b3a.22.1739179217138;
+        Mon, 10 Feb 2025 01:20:17 -0800 (PST)
+Received: from thinkpad ([220.158.156.173])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7307a29ecdesm3490924b3a.173.2025.02.10.01.20.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 01:19:46 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 10 Feb 2025 10:19:44 +0100
-To: Yan Zhai <yan@cloudflare.com>
-Cc: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>, Brian Vazquez <brianvv@google.com>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kernel-team@cloudflare.com, Hou Tao <houtao@huaweicloud.com>
-Subject: Re: [PATCH v3 bpf 1/2] bpf: skip non exist keys in
- generic_map_lookup_batch
-Message-ID: <Z6nEsGSbWqCSaVp3@krava>
-References: <cover.1739171594.git.yan@cloudflare.com>
- <85618439eea75930630685c467ccefeac0942e2b.1739171594.git.yan@cloudflare.com>
+        Mon, 10 Feb 2025 01:20:16 -0800 (PST)
+Date: Mon, 10 Feb 2025 14:50:10 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: cros-qcom-dts-watchers@chromium.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com,
+	quic_mrana@quicinc.com, quic_vpernami@quicinc.com,
+	mmareddy@quicinc.com
+Subject: Re: [PATCH v4 3/4] PCI: dwc: Reduce DT reads by allocating host
+ bridge via DWC glue driver
+Message-ID: <20250210092010.nyt3n3tflipcrpt2@thinkpad>
+References: <20250207-ecam_v4-v4-0-94b5d5ec5017@oss.qualcomm.com>
+ <20250207-ecam_v4-v4-3-94b5d5ec5017@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <85618439eea75930630685c467ccefeac0942e2b.1739171594.git.yan@cloudflare.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250207-ecam_v4-v4-3-94b5d5ec5017@oss.qualcomm.com>
 
-On Sun, Feb 09, 2025 at 11:22:35PM -0800, Yan Zhai wrote:
-> The generic_map_lookup_batch currently returns EINTR if it fails with
-> ENOENT and retries several times on bpf_map_copy_value. The next batch
-> would start from the same location, presuming it's a transient issue.
-> This is incorrect if a map can actually have "holes", i.e.
-> "get_next_key" can return a key that does not point to a valid value. At
-> least the array of maps type may contain such holes legitly. Right now
-> these holes show up, generic batch lookup cannot proceed any more. It
-> will always fail with EINTR errors.
-> 
-> Rather, do not retry in generic_map_lookup_batch. If it finds a non
-> existing element, skip to the next key. This simple solution comes with
-> a price that transient errors may not be recovered, and the iteration
-> might cycle back to the first key under parallel deletion. For example,
+On Fri, Feb 07, 2025 at 04:58:58AM +0530, Krishna Chaitanya Chundru wrote:
+> dw_pcie_ecam_supported() needs to read bus-range to find the maximum
+> bus range value. The devm_pci_alloc_host_bridge() is already reading
+> bus range and storing it in host bridge.If devm_pci_alloc_host_bridge()
 
-probably stupid question, but why not keep the retry logic and when
-it fails then instead of returning EINTR just jump to the next key
+What do you mean by 'storig in host bridge' here? Mention the exact structure
+name if that's what you are referring to.
 
-jirka
+> moved to start of the controller probe, the dt reading can be avoided
+> and use values stored in the host bridge.
 
+Same here.
 
-> Hou Tao <houtao@huaweicloud.com> pointed out a following scenario:
 > 
-> For LPM trie map:
-> (1) ->map_get_next_key(map, prev_key, key) returns a valid key
+> Allow DWC glue drivers to allocate the host bridge, avoiding redundant
+> device tree reads primarily in dw_pcie_ecam_supported().
 > 
-> (2) bpf_map_copy_value() return -ENOMENT
-> It means the key must be deleted concurrently.
-> 
-> (3) goto next_key
-> It swaps the prev_key and key
-> 
-> (4) ->map_get_next_key(map, prev_key, key) again
-> prev_key points to a non-existing key, for LPM trie it will treat just
-> like prev_key=NULL case, the returned key will be duplicated.
-> 
-> With the retry logic, the iteration can continue to the key next to the
-> deleted one. But if we directly skip to the next key, the iteration loop
-> would restart from the first key for the lpm_trie type.
-> 
-> However, not all races may be recovered. For example, if current key is
-> deleted after instead of before bpf_map_copy_value, or if the prev_key
-> also gets deleted, then the loop will still restart from the first key
-> for lpm_tire anyway. For generic lookup it might be better to stay
-> simple, i.e. just skip to the next key. To guarantee that the output
-> keys are not duplicated, it is better to implement map type specific
-> batch operations, which can properly lock the trie and synchronize with
-> concurrent mutators.
-> 
-> Fixes: cb4d03ab499d ("bpf: Add generic support for lookup batch op")
-> Closes: https://lore.kernel.org/bpf/Z6JXtA1M5jAZx8xD@debian.debian/
-> Signed-off-by: Yan Zhai <yan@cloudflare.com>
-> Acked-by: Hou Tao <houtao1@huawei.com>
+
+This makes little sense to me. By this change, you essentially want DWC glue
+drivers to call devm_pci_alloc_host_bridge() just to get rid of one range
+parsing.
+
+I'd suggest to move dw_pcie_ecam_supported() inside dw_pcie_host_init() and call
+after devm_pci_alloc_host_bridge(). This way, the glue drivers can rely on DWC
+core to detect ECAM like other resources. And the API could be renamed as
+dw_pcie_ecam_detect() to match other resource detection like iATU, eDMA.
+
+More in patch 4.
+
+- Mani
+
+> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 > ---
-> v2->v3: deleted a used macro
-> v1->v2: incorporate more useful information inside commit message.
-> ---
->  kernel/bpf/syscall.c | 18 +++++-------------
->  1 file changed, 5 insertions(+), 13 deletions(-)
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 > 
-> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> index c420edbfb7c8..e5f1c7fd0ba7 100644
-> --- a/kernel/bpf/syscall.c
-> +++ b/kernel/bpf/syscall.c
-> @@ -1968,8 +1968,6 @@ int generic_map_update_batch(struct bpf_map *map, struct file *map_file,
->  	return err;
->  }
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 826ff9338646..a18cb1e411e4 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -484,8 +484,8 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  	struct device *dev = pci->dev;
+>  	struct device_node *np = dev->of_node;
+>  	struct platform_device *pdev = to_platform_device(dev);
+> +	struct pci_host_bridge *bridge = pp->bridge;
+>  	struct resource_entry *win;
+> -	struct pci_host_bridge *bridge;
+>  	struct resource *res;
+>  	int ret;
 >  
-> -#define MAP_LOOKUP_RETRIES 3
-> -
->  int generic_map_lookup_batch(struct bpf_map *map,
->  				    const union bpf_attr *attr,
->  				    union bpf_attr __user *uattr)
-> @@ -1979,8 +1977,8 @@ int generic_map_lookup_batch(struct bpf_map *map,
->  	void __user *values = u64_to_user_ptr(attr->batch.values);
->  	void __user *keys = u64_to_user_ptr(attr->batch.keys);
->  	void *buf, *buf_prevkey, *prev_key, *key, *value;
-> -	int err, retry = MAP_LOOKUP_RETRIES;
->  	u32 value_size, cp, max_count;
-> +	int err;
+> @@ -527,7 +527,12 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  	if (!bridge)
+>  		return -ENOMEM;
 >  
->  	if (attr->batch.elem_flags & ~BPF_F_LOCK)
->  		return -EINVAL;
-> @@ -2026,14 +2024,8 @@ int generic_map_lookup_batch(struct bpf_map *map,
->  		err = bpf_map_copy_value(map, key, value,
->  					 attr->batch.elem_flags);
+> -	pp->bridge = bridge;
+> +	if (!pp->bridge) {
+> +		bridge = devm_pci_alloc_host_bridge(dev, 0);
+> +		if (!bridge)
+> +			return -ENOMEM;
+> +		pp->bridge = bridge;
+> +	}
 >  
-> -		if (err == -ENOENT) {
-> -			if (retry) {
-> -				retry--;
-> -				continue;
-> -			}
-> -			err = -EINTR;
-> -			break;
-> -		}
-> +		if (err == -ENOENT)
-> +			goto next_key;
->  
->  		if (err)
->  			goto free_buf;
-> @@ -2048,12 +2040,12 @@ int generic_map_lookup_batch(struct bpf_map *map,
->  			goto free_buf;
->  		}
->  
-> +		cp++;
-> +next_key:
->  		if (!prev_key)
->  			prev_key = buf_prevkey;
->  
->  		swap(prev_key, key);
-> -		retry = MAP_LOOKUP_RETRIES;
-> -		cp++;
->  		cond_resched();
->  	}
->  
+>  	/* Get the I/O range from DT */
+>  	win = resource_list_first_type(&bridge->windows, IORESOURCE_IO);
+> 
 > -- 
-> 2.39.5
+> 2.34.1
 > 
-> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
