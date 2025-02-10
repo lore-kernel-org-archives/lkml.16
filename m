@@ -1,85 +1,210 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442DF18E764;
-	Mon, 10 Feb 2025 08:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7841AF0AF
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739175075; cv=none; b=aaGBgFLQ9B1qIN7b7KXlEslqLL2EOSnXIVBqPQS1cIwJxuxrXTPtvZsp8EjjEuxOEXYysBhlF8FOCRi2SO+bsjTz06q/Ca+WXp8WvJikdb/rP5vWCAxm9fpAFqe7nJYJDMgjCQAbek8VM4B+GSLToPl5s0bxvq7MfmOpwazMblY=
+	t=1739175128; cv=none; b=uHqMsoO5jWBibFzWKGO6aIB9nB/DwK51XtkJvArMbz8dLkSPy1blA8FE/hEaxSu87G6Z1bWHDWiPGPQnmYtQdIY3QH2APBCYLnmAo0iOfzlQvUM4awwA1KJOHDbKGBPnqmNXHAwvlUyABWzSLYUhviiWUoyIvHzMkKhmiO41pEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739175075; c=relaxed/simple;
-	bh=zuqJQylTq4neHnU/MvGUQZGDKz2jD1Qz4h91sh4A/xo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xahue2i4kZtudBnXIJmwUvfTNeJKjJkfM5uhXODXTAoCskYiD9XQ3aHnqElA1SVAAAp9JPa9JjTF+1XHa1Hbq5DD3gUWp9c/ZgVWhaXu9QcNZNezSH2b5KH8+NdRoJipDLt7eqy5BPNbJpnT6/ERID2HqhBxgTMBPJsEK9depF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=RPntgzGD; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1739175128; c=relaxed/simple;
+	bh=awbNpMF2sf1eDClsvAQkVkA+VM1bZntm1nwVVbMfvvU=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=eWag6BagNzl2Dr1r3ZaepinwtlnPPch7DDJ38jPUqgmcep6Y727Ksi+OkpOEySEGXDvsxIAl7iQm0uL/KEY+wiNOBs+Q/AGO0fTjF/F4E5OzOUucXMY04Noy7exIErD6Gx5wLRG6CIvNFJKg094pcR1BFoCuYZz4AqVmeFxH/YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tnj75o4S; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="RPntgzGD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=U01uS+0yDujzAsWBjGqN0xojmmeCjhBYgqHkcf2iILk=; b=RPntgzGDU9DUcWxsiRGXCxhrjm
-	8T11R3hnBoSCZawmN7ynGlmD6T7Ees+76NCYZwSoEA4EA4SzU2eUzJf2VDY2PCeIEv3MEtEXZAsS5
-	+1vTzp705s47EZBPcGuG9KyqZfZyfTHNpC9v0dbjp8mR3Ud1qCNsW7gfN69HzSaW2Hn8UOiqUsOeW
-	uO0MryNb80IY7qiEX+1xEhRwgYMpM11RHwUv2gVpYDDWTgBnE9oQ3S1pY/2D4XIdWtIqyAkfURh9X
-	I5kGA4n8altY9Avwg8DGHVN9flU+0hdaQuCOY9Z3wXOwlqWT27GOXJBQ1KBAH3y5Ztz4oJIU/9kBL
-	848cybXw==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1thOfL-00Gd9s-2s;
-	Mon, 10 Feb 2025 16:10:37 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 10 Feb 2025 16:10:36 +0800
-Date: Mon, 10 Feb 2025 16:10:36 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: David Howells <dhowells@redhat.com>
-Cc: Eric Biggers <ebiggers@kernel.org>, netdev@vger.kernel.org,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Cabiddu, Giovanni" <giovanni.cabiddu@intel.com>,
-	qat-linux <qat-linux@intel.com>, linux-crypto@vger.kernel.org,
-	linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 03/24] crypto: Add 'krb5enc' hash and cipher AEAD
- algorithm
-Message-ID: <Z6m0fFH2p5YpKiFX@gondor.apana.org.au>
-References: <20250207200419.GA2819332@google.com>
- <20250203142343.248839-1-dhowells@redhat.com>
- <20250203142343.248839-4-dhowells@redhat.com>
- <1934772.1739126247@warthog.procyon.org.uk>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tnj75o4S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739175127; x=1770711127;
+  h=date:from:to:cc:subject:message-id;
+  bh=awbNpMF2sf1eDClsvAQkVkA+VM1bZntm1nwVVbMfvvU=;
+  b=Tnj75o4S4Aq71rqIVUx93LBurBe+OXQ/+unmwUEFbB7AonZSZIo+gGYF
+   SvsXkCS7xxDiKQH5tzm0d/rC+rL3Qjf9wgfx6PjZcutprP6xWr35xpfWY
+   XJUSpVfCVgm3Sbbth0AWJQngsAkhKroS4m2XYapcjVSdxq7mGCktobmA/
+   F4pKlPU0dq6/mi6+EdJk5fLKAZvVjK/So8RmFxxoKzLVSwuCEFmTktZSS
+   cytslWv+aUxjFQrrQr14PFq7KrJibyR7zfTx7k7ytl8n7LukaWtb+9Kyq
+   SmuYVXBtAUpkNtELGX6tG4wlNdY9+zVNS2f+RZ8JOA2dkZUt24Qv/wOQr
+   g==;
+X-CSE-ConnectionGUID: mbCj0DzjQ8qvveTtFc5PyA==
+X-CSE-MsgGUID: LTcaHIa7TP6qgT/xsw4Xwg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="43401987"
+X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
+   d="scan'208";a="43401987"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 00:11:44 -0800
+X-CSE-ConnectionGUID: w+Kh6/pLRlinDQvIW/LzYA==
+X-CSE-MsgGUID: srPi5xfbQ5ioLBOVr5+How==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="117057498"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 10 Feb 2025 00:11:44 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1thOtI-0012R1-2v;
+	Mon, 10 Feb 2025 08:11:40 +0000
+Date: Mon, 10 Feb 2025 16:11:03 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ fe59c3cc690a26e3d597cc43b15d604ec7d9aee5
+Message-ID: <202502101657.prR0JhIe-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1934772.1739126247@warthog.procyon.org.uk>
 
-On Sun, Feb 09, 2025 at 06:37:27PM +0000, David Howells wrote:
->
->  (2) It really needs batching to make it cheap enough to use.  This might
->      actually be less of a problem - at least for rxgk.  The data is split up
->      into fixed-size packets, but for a large amount of data we can end up
->      filling packets faster than we can transmit them.  This offers the
->      opportunity to batch them - up to ~8192 packets in a single batch.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
+branch HEAD: fe59c3cc690a26e3d597cc43b15d604ec7d9aee5  Merge branch into tip/master: 'x86/mm'
 
-Hopefully this will become a solved problem once my request chaining
-work is complete.  This should allow you to provide enough data that
-even something slow like PCI offload can work.
+elapsed time: 723m
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+configs tested: 133
+configs skipped: 5
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                                 defconfig    gcc-13.2.0
+arc                 nsimosci_hs_smp_defconfig    gcc-13.2.0
+arc                   randconfig-001-20250210    gcc-13.2.0
+arc                   randconfig-002-20250210    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                                 defconfig    clang-21
+arm                   milbeaut_m10v_defconfig    clang-21
+arm                         nhk8815_defconfig    clang-21
+arm                   randconfig-001-20250210    clang-16
+arm                   randconfig-002-20250210    gcc-14.2.0
+arm                   randconfig-003-20250210    clang-16
+arm                   randconfig-004-20250210    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                               defconfig    gcc-14.2.0
+arm64                 randconfig-001-20250210    gcc-14.2.0
+arm64                 randconfig-002-20250210    clang-21
+arm64                 randconfig-003-20250210    clang-21
+arm64                 randconfig-004-20250210    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                                defconfig    gcc-14.2.0
+csky                  randconfig-001-20250210    gcc-14.2.0
+csky                  randconfig-002-20250210    gcc-14.2.0
+hexagon                          allmodconfig    clang-21
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-18
+hexagon                             defconfig    clang-21
+hexagon               randconfig-001-20250210    clang-21
+hexagon               randconfig-002-20250210    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250210    gcc-12
+i386        buildonly-randconfig-002-20250210    gcc-12
+i386        buildonly-randconfig-003-20250210    clang-19
+i386        buildonly-randconfig-004-20250210    gcc-12
+i386        buildonly-randconfig-005-20250210    gcc-12
+i386        buildonly-randconfig-006-20250210    gcc-12
+i386                                defconfig    clang-19
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch                           defconfig    gcc-14.2.0
+loongarch             randconfig-001-20250210    gcc-14.2.0
+loongarch             randconfig-002-20250210    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                          amiga_defconfig    gcc-14.2.0
+m68k                       m5249evb_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+microblaze                          defconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                           ip27_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250210    gcc-14.2.0
+nios2                 randconfig-002-20250210    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250210    gcc-14.2.0
+parisc                randconfig-002-20250210    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-16
+powerpc                      ppc6xx_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250210    clang-21
+powerpc               randconfig-002-20250210    clang-21
+powerpc               randconfig-003-20250210    gcc-14.2.0
+powerpc64             randconfig-001-20250210    gcc-14.2.0
+powerpc64             randconfig-002-20250210    gcc-14.2.0
+powerpc64             randconfig-003-20250210    gcc-14.2.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-21
+riscv                               defconfig    clang-19
+riscv                 randconfig-001-20250210    clang-21
+riscv                 randconfig-002-20250210    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-15
+s390                  randconfig-001-20250210    gcc-14.2.0
+s390                  randconfig-002-20250210    clang-19
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                    randconfig-001-20250210    gcc-14.2.0
+sh                    randconfig-002-20250210    gcc-14.2.0
+sh                           sh2007_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250210    gcc-14.2.0
+sparc                 randconfig-002-20250210    gcc-14.2.0
+sparc64                          alldefconfig    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250210    gcc-14.2.0
+sparc64               randconfig-002-20250210    gcc-14.2.0
+um                               alldefconfig    clang-19
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250210    clang-18
+um                    randconfig-002-20250210    clang-16
+um                           x86_64_defconfig    clang-15
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250210    clang-19
+x86_64      buildonly-randconfig-002-20250210    gcc-12
+x86_64      buildonly-randconfig-003-20250210    clang-19
+x86_64      buildonly-randconfig-004-20250210    clang-19
+x86_64      buildonly-randconfig-005-20250210    clang-19
+x86_64      buildonly-randconfig-006-20250210    clang-19
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250210    gcc-14.2.0
+xtensa                randconfig-002-20250210    gcc-14.2.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
