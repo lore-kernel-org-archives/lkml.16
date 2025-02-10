@@ -1,29 +1,29 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24A0252906
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233A5204860
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739199432; cv=none; b=skJcj6phGlfnMJ6ygNKVP5YRZXkBF7P0yghIeNVuqB9JxaOHAmLt1tqKk6ExgHApAg1GN0gJ7ewC62z3MwGJPGZRNIfT4o1/CRrN+HYwTK5G2Q8yJU865aSyuxhT5CYpGiLZciUhHWaaAbBdiZW/wNX9aUPKdszG+CqWjFGI5rA=
+	t=1739199433; cv=none; b=si1qv1CPqokpk1V9CP5CfjCgQwub0AAMtQV25A7qawMnjBmkZihBdFpeODZnTM2wjuq4E7c3N5EP+D8ZFm8bYvdRtDjgFrTiQPGL5kTCz0+6sAL2QJWNXZhiMViyv5ZPgNjhIbkMZkt3pAGFSEhl+SM3S+Tf3PB89Asi5aD0ziA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739199432; c=relaxed/simple;
-	bh=E24jyHSWzsmWc3aNUHieRFw1vnJR0BNWLRSFvUa7nio=;
+	s=arc-20240116; t=1739199433; c=relaxed/simple;
+	bh=6pQw5w0xQv1NPS3XWZ2nfaqAZOBn18DoebMgtdcedxY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=asvi0PA3nqgsKvKtMzbVo58UFwdDWY3Yx/46yafgwkD6apsIwhtXwzDagaHTUSnihOhsBnwcm0k+THoKTMOUuXeciZUA6r+IM825vT4mMxvY+Pcq84RTqd3UcnGt4Td6NI+HfbBHtaQiRQMt+IHe5wyWO7syZDJduw2On0b8pKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+	 MIME-Version:Content-Type; b=SUAchpLNVTQAYueywudMrCxCp9cFFtzNQvtfaK5FJLRIRBuQ6tYtBTfB9z+I87oZoq2obVAfp5mdCtXt/5bl0k3EaRaVDPlPf+z0orBN+QoUrdkqSCP8jeVWZkpgWR6TJc6qW+m6hSwpr1A/Wkkw6ozaG8NBL17Z36bnAsLHmiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Ys6xj2Kfcz1W5W8;
-	Mon, 10 Feb 2025 22:52:41 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Ys71H1bBPz1JHqL;
+	Mon, 10 Feb 2025 22:55:47 +0800 (CST)
 Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
-	by mail.maildlp.com (Postfix) with ESMTPS id EB14F180113;
-	Mon, 10 Feb 2025 22:57:05 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 53F451402C7;
+	Mon, 10 Feb 2025 22:57:08 +0800 (CST)
 Received: from localhost.huawei.com (10.169.71.169) by
  kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Mon, 10 Feb 2025 22:57:04 +0800
+ 15.2.1258.34; Mon, 10 Feb 2025 22:57:06 +0800
 From: Yongbang Shi <shiyongbang@huawei.com>
 To: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
 	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
@@ -33,9 +33,9 @@ CC: <liangjian010@huawei.com>, <chenjianmin@huawei.com>,
 	<lidongming5@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
 	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
 	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 drm-dp 2/7] drm/hisilicon/hibmc: Add dp serdes cfg in dp process
-Date: Mon, 10 Feb 2025 22:49:54 +0800
-Message-ID: <20250210144959.100551-3-shiyongbang@huawei.com>
+Subject: [PATCH v2 drm-dp 4/7] drm/hisilicon/hibmc: Add colorbar-cfg: set color bar cfg
+Date: Mon, 10 Feb 2025 22:49:56 +0800
+Message-ID: <20250210144959.100551-5-shiyongbang@huawei.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20250210144959.100551-1-shiyongbang@huawei.com>
 References: <20250210144959.100551-1-shiyongbang@huawei.com>
@@ -52,194 +52,140 @@ X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
 
 From: Baihan Li <libaihan@huawei.com>
 
-Add dp serdes cfg in link training process, and related adapting
-and modificating. We change some init values about training,
-because we want completely to negotiation process, so we start with
-the maximum rate and the electrical characteristic level is 0.
+This is a DP IP controller's feature. It can be used as a debug method
+which can check DP controller is working good. The colorbar displaying
+doesn't rely on other IPs work in the chip, like: GPU or DDR (vram) and
+so on, because colorbar diplaying data is generated by controller itself
+inside the DP IP.
 
 Signed-off-by: Baihan Li <libaihan@huawei.com>
 Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
 ---
 ChangeLog:
 v1 -> v2:
-  - splittting the patch and add more detailed the changes in the commit message, suggested by Dmitry Baryshkov.
+  - add colorbar introduction in commit, suggested by Dmitry Baryshkov.
+  - splittting colorbar and debugfs in different patches, suggested by Dmitry Baryshkov.
 ---
- .../gpu/drm/hisilicon/hibmc/dp/dp_config.h    |  1 +
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c    |  6 +++-
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c  | 33 ++++++++++++++++---
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h   |  1 +
- .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c   |  8 ++---
- 5 files changed, 38 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c  | 43 +++++++++++++++++++++
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h  | 29 ++++++++++++++
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h |  2 +
+ 3 files changed, 74 insertions(+)
 
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_config.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_config.h
-index 74dd9956144e..c5feef8dc27d 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_config.h
-+++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_config.h
-@@ -15,5 +15,6 @@
- #define HIBMC_DP_CLK_EN			0x7
- #define HIBMC_DP_SYNC_EN_MASK		0x3
- #define HIBMC_DP_LINK_RATE_CAL		27
-+#define HIBMC_DP_SYNC_DELAY(lanes)	((lanes) == 0x2 ? 86 : 46)
- 
- #endif
 diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
-index 39fd3687efca..ee1ff205ff56 100644
+index 77f02d5151f7..8adace0befde 100644
 --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
 +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
-@@ -3,6 +3,7 @@
+@@ -226,3 +226,46 @@ int hibmc_dp_mode_set(struct hibmc_dp *dp, struct drm_display_mode *mode)
  
- #include <linux/io.h>
- #include <linux/delay.h>
-+#include <drm/drm_managed.h>
- #include "dp_config.h"
- #include "dp_comm.h"
- #include "dp_reg.h"
-@@ -73,6 +74,9 @@ static void hibmc_dp_set_sst(struct hibmc_dp_dev *dp, struct drm_display_mode *m
- 				 HIBMC_DP_CFG_STREAM_HTOTAL_SIZE, htotal_size);
- 	hibmc_dp_reg_write_field(dp, HIBMC_DP_VIDEO_HORIZONTAL_SIZE,
- 				 HIBMC_DP_CFG_STREAM_HBLANK_SIZE, hblank_size);
-+	hibmc_dp_reg_write_field(dp, HIBMC_DP_VIDEO_PACKET,
-+				 HIBMC_DP_CFG_STREAM_SYNC_CALIBRATION,
-+				 HIBMC_DP_SYNC_DELAY(dp->link.cap.lanes));
+ 	return 0;
  }
- 
- static void hibmc_dp_link_cfg(struct hibmc_dp_dev *dp, struct drm_display_mode *mode)
-@@ -170,7 +174,7 @@ int hibmc_dp_hw_init(struct hibmc_dp *dp)
- 		return -EAGAIN;
- 
- 	dp_dev->link.cap.lanes = 0x2;
--	dp_dev->link.cap.link_rate = DP_LINK_BW_2_7;
-+	dp_dev->link.cap.link_rate = DP_LINK_BW_8_1;
- 
- 	/* hdcp data */
- 	writel(HIBMC_DP_HDCP, dp_dev->base + HIBMC_DP_HDCP_CFG);
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
-index f6355c16cc0a..43a4b656493f 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
-@@ -6,6 +6,7 @@
- #include <drm/drm_print.h>
- #include "dp_comm.h"
- #include "dp_reg.h"
-+#include "dp_serdes.h"
- 
- #define HIBMC_EQ_MAX_RETRY 5
- 
-@@ -108,7 +109,11 @@ static int hibmc_dp_link_training_cr_pre(struct hibmc_dp_dev *dp)
- 		return ret;
- 
- 	for (i = 0; i < dp->link.cap.lanes; i++)
--		train_set[i] = DP_TRAIN_VOLTAGE_SWING_LEVEL_2;
-+		train_set[i] = DP_TRAIN_VOLTAGE_SWING_LEVEL_0;
 +
-+	ret = hibmc_dp_serdes_set_tx_cfg(dp, dp->link.train_set);
-+	if (ret)
-+		return ret;
++static const struct hibmc_dp_color_raw g_rgb_raw[] = {
++	{CBAR_COLOR_BAR, 0x000, 0x000, 0x000},
++	{CBAR_WHITE,     0xfff, 0xfff, 0xfff},
++	{CBAR_RED,       0xfff, 0x000, 0x000},
++	{CBAR_ORANGE,    0xfff, 0x800, 0x000},
++	{CBAR_YELLOW,    0xfff, 0xfff, 0x000},
++	{CBAR_GREEN,     0x000, 0xfff, 0x000},
++	{CBAR_CYAN,      0x000, 0x800, 0x800},
++	{CBAR_BLUE,      0x000, 0x000, 0xfff},
++	{CBAR_PURPLE,    0x800, 0x000, 0x800},
++	{CBAR_BLACK,     0x000, 0x000, 0x000},
++};
++
++void hibmc_dp_set_cbar(struct hibmc_dp *dp, const struct hibmc_dp_cbar_cfg *cfg)
++{
++	struct hibmc_dp_dev *dp_dev = dp->dp_dev;
++	struct hibmc_dp_color_raw raw_data;
++
++	if (cfg->enable) {
++		hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, BIT(9),
++					 cfg->self_timing);
++		hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, GENMASK(8, 1),
++					 cfg->dynamic_rate);
++		if (cfg->pattern == CBAR_COLOR_BAR) {
++			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, BIT(10), 0);
++		} else {
++			raw_data = g_rgb_raw[cfg->pattern];
++			drm_dbg_dp(dp->drm_dev, "r:%x g:%x b:%x\n", raw_data.r_value,
++				   raw_data.g_value, raw_data.b_value);
++			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, BIT(10), 1);
++			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, GENMASK(23, 12),
++						 raw_data.r_value);
++			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL1, GENMASK(23, 12),
++						 raw_data.g_value);
++			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL1, GENMASK(11, 0),
++						 raw_data.b_value);
++		}
++	}
++
++	hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, BIT(0), cfg->enable);
++	writel(HIBMC_DP_SYNC_EN_MASK, dp_dev->base + HIBMC_DP_TIMING_SYNC_CTRL);
++}
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h
+index 53b6d0beecea..621a0a1d7eb7 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h
++++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h
+@@ -14,6 +14,33 @@
  
- 	ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_LANE0_SET, train_set, dp->link.cap.lanes);
- 	if (ret != dp->link.cap.lanes) {
-@@ -137,21 +142,28 @@ static bool hibmc_dp_link_get_adjust_train(struct hibmc_dp_dev *dp,
- 	return false;
- }
+ struct hibmc_dp_dev;
  
--static inline int hibmc_dp_link_reduce_rate(struct hibmc_dp_dev *dp)
-+static int hibmc_dp_link_reduce_rate(struct hibmc_dp_dev *dp)
- {
-+	u8 rate = 0;
++enum hibmc_dp_cbar_pattern {
++	CBAR_COLOR_BAR,
++	CBAR_WHITE,
++	CBAR_RED,
++	CBAR_ORANGE,
++	CBAR_YELLOW,
++	CBAR_GREEN,
++	CBAR_CYAN,
++	CBAR_BLUE,
++	CBAR_PURPLE,
++	CBAR_BLACK,
++};
 +
- 	switch (dp->link.cap.link_rate) {
- 	case DP_LINK_BW_2_7:
- 		dp->link.cap.link_rate = DP_LINK_BW_1_62;
--		return 0;
-+		rate = DP_SERDES_BW_1_62;
-+		break;
- 	case DP_LINK_BW_5_4:
- 		dp->link.cap.link_rate = DP_LINK_BW_2_7;
--		return 0;
-+		rate = DP_SERDES_BW_2_7;
-+		break;
- 	case DP_LINK_BW_8_1:
- 		dp->link.cap.link_rate = DP_LINK_BW_5_4;
--		return 0;
-+		rate = DP_SERDES_BW_5_4;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
++struct hibmc_dp_color_raw {
++	enum hibmc_dp_cbar_pattern pattern;
++	u32 r_value;
++	u32 g_value;
++	u32 b_value;
++};
 +
-+	return hibmc_dp_serdes_rate_switch(rate, dp);
- }
++struct hibmc_dp_cbar_cfg {
++	bool enable;
++	bool self_timing;
++	u8 dynamic_rate; /* 0:static, 1-255(frame):dynamic */
++	enum hibmc_dp_cbar_pattern pattern;
++};
++
+ struct hibmc_dp {
+ 	struct hibmc_dp_dev *dp_dev;
+ 	struct drm_device *drm_dev;
+@@ -21,10 +48,12 @@ struct hibmc_dp {
+ 	struct drm_connector connector;
+ 	void __iomem *mmio;
+ 	struct drm_dp_aux aux;
++	struct hibmc_dp_cbar_cfg cfg;
+ };
  
- static inline int hibmc_dp_link_reduce_lane(struct hibmc_dp_dev *dp)
-@@ -159,6 +171,7 @@ static inline int hibmc_dp_link_reduce_lane(struct hibmc_dp_dev *dp)
- 	switch (dp->link.cap.lanes) {
- 	case 0x2:
- 		dp->link.cap.lanes--;
-+		drm_warn(dp->dev, "dp link training reduce to 1 lane\n");
- 		break;
- 	case 0x1:
- 		drm_err(dp->dev, "dp link training reduce lane failed, already reach minimum\n");
-@@ -206,6 +219,11 @@ static int hibmc_dp_link_training_cr(struct hibmc_dp_dev *dp)
- 		}
- 
- 		level_changed = hibmc_dp_link_get_adjust_train(dp, lane_status);
-+
-+		ret = hibmc_dp_serdes_set_tx_cfg(dp, dp->link.train_set);
-+		if (ret)
-+			return ret;
-+
- 		ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_LANE0_SET, dp->link.train_set,
- 					dp->link.cap.lanes);
- 		if (ret != dp->link.cap.lanes) {
-@@ -255,6 +273,11 @@ static int hibmc_dp_link_training_channel_eq(struct hibmc_dp_dev *dp)
- 		}
- 
- 		hibmc_dp_link_get_adjust_train(dp, lane_status);
-+
-+		ret = hibmc_dp_serdes_set_tx_cfg(dp, dp->link.train_set);
-+		if (ret)
-+			return ret;
-+
- 		ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_LANE0_SET,
- 					dp->link.train_set, dp->link.cap.lanes);
- 		if (ret != dp->link.cap.lanes) {
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
-index 4a515c726d52..f2fa9807d8ab 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
-+++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
-@@ -72,5 +72,6 @@
- #define HIBMC_DP_CFG_STREAM_TU_SYMBOL_FRAC_SIZE	GENMASK(9, 6)
- #define HIBMC_DP_CFG_STREAM_HTOTAL_SIZE		GENMASK(31, 16)
- #define HIBMC_DP_CFG_STREAM_HBLANK_SIZE		GENMASK(15, 0)
-+#define HIBMC_DP_CFG_STREAM_SYNC_CALIBRATION	GENMASK(31, 20)
+ int hibmc_dp_hw_init(struct hibmc_dp *dp);
+ int hibmc_dp_mode_set(struct hibmc_dp *dp, struct drm_display_mode *mode);
+ void hibmc_dp_display_en(struct hibmc_dp *dp, bool enable);
++void hibmc_dp_set_cbar(struct hibmc_dp *dp, const struct hibmc_dp_cbar_cfg *cfg);
  
  #endif
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-index e6de6d5edf6b..bade693d9730 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-@@ -28,9 +28,7 @@
- #include "hibmc_drm_drv.h"
- #include "hibmc_drm_regs.h"
- 
--#define HIBMC_DP_HOST_SERDES_CTRL		0x1f001c
--#define HIBMC_DP_HOST_SERDES_CTRL_VAL		0x8a00
--#define HIBMC_DP_HOST_SERDES_CTRL_MASK		0x7ffff
-+#define HIBMC_DP_HOST_SERDES_CTRL	0x1f001c
- 
- DEFINE_DRM_GEM_FOPS(hibmc_fops);
- 
-@@ -122,8 +120,8 @@ static int hibmc_kms_init(struct hibmc_drm_private *priv)
- 	}
- 
- 	/* if DP existed, init DP */
--	if ((readl(priv->mmio + HIBMC_DP_HOST_SERDES_CTRL) &
--	     HIBMC_DP_HOST_SERDES_CTRL_MASK) == HIBMC_DP_HOST_SERDES_CTRL_VAL) {
-+	ret = readl(priv->mmio + HIBMC_DP_HOST_SERDES_CTRL);
-+	if (ret) {
- 		ret = hibmc_dp_init(priv);
- 		if (ret)
- 			drm_err(dev, "failed to init dp: %d\n", ret);
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
+index f2fa9807d8ab..c43ad6b30c2c 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
++++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
+@@ -23,6 +23,8 @@
+ #define HIBMC_DP_VIDEO_MSA1			0x11c
+ #define HIBMC_DP_VIDEO_MSA2			0x120
+ #define HIBMC_DP_VIDEO_HORIZONTAL_SIZE		0X124
++#define HIBMC_DP_COLOR_BAR_CTRL			0x260
++#define HIBMC_DP_COLOR_BAR_CTRL1		0x264
+ #define HIBMC_DP_TIMING_GEN_CONFIG0		0x26c
+ #define HIBMC_DP_TIMING_GEN_CONFIG2		0x274
+ #define HIBMC_DP_TIMING_GEN_CONFIG3		0x278
 -- 
 2.33.0
 
