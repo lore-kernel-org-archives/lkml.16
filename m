@@ -1,290 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A574C195B37
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:31:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D9D1DEFFC;
+	Mon, 10 Feb 2025 11:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739187108; cv=none; b=lMrXLaozJlbIR/9wNLJoise4h77bMgVaERuI/0AG67m4gv+SJkv8yzR4DFFpTUQqf2pCx96ueprstvAaeCnPIkoeJh9FjY6gUZJox0nOFNJ7Tz2WtdqqbkPC53EIdRw5gMZMVp/H0QTQ36mYX3Y3LN/ti2TVT0cvPfGQi1HTPFk=
+	t=1739187113; cv=none; b=jXHfYrCkl96OQIMUDux4Fzero4iGpdUBLgjZk4U1KDTmOKKx0EceKUJH3PY29KfdnxdbIULZHjyyzNjFQbpW1dVViH25HmwlrH1IpMqm3DN33+e3XFSzuLhz3M+8ZM73wpRihaRB17r5jf/87lhIz4IRCrKF6BIWAjtdJhv+lbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739187108; c=relaxed/simple;
-	bh=uD24vpMHjIDvnNg9Yk5gleO0qA/L2sqeXXlSpc2KcRc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=avItoE6jEpKsbXKkvl1Sh/qzrznnVlB9DHwu4U11tjKOzm/kSeO00TnsnGK8e0DqHj0DdVGt+Abm8QGTcmZld22nid9Af6ZuFYYlBqDMY6gC6EjvBmKbBxyVlgv9sTeOzzgxzlyatM56QL1315ciM+//VmsL+HZyWFBqbB0OgUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BAWeicZi; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739187113; c=relaxed/simple;
+	bh=lHfVa4WaezjaNaPZ+xqar2iWP4d9jh7xMhWtcE8W7mQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Zzmx/G65jRR2/jfqUWVJejAfdIxzxOqGoX8XMx02owi0r9pmaX6PxhPZq2zw35YnuqCJEi2cPHzyT+F/jd8bH8rB9N/8wJC2tNa71+xTMKbzZqzJOp3Qs6wrTPBqNB9ZZTILuxV6B+YhlGGldU+KARCEAz/Xv9B7SM45SWdshYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=I1nw7tqi; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BAWeicZi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739187106; x=1770723106;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=uD24vpMHjIDvnNg9Yk5gleO0qA/L2sqeXXlSpc2KcRc=;
-  b=BAWeicZiy0yffIT8fUZMD5OSz7bZBla7LcM5cLaOmNmU2BKRdGMDj3yk
-   IffXkEG3oUVecxB975OB7W6dLoIHE3D+RgOv6Ly0KcWmVMUkAbxCnSb53
-   6gX501WVOwaWL0T4YM6AXVWwuJtVl/zQ7GX6kjuSC8dbhEGJTv2dVUO0y
-   qnP61GfwyZnnDs+20Y4f5x7n9lTe4QLiiKgV/R10BX+YF9CzQHiS/i5Pu
-   bYW3r2jftcg3T4f6JYB8C0Zp+Uufd+cfnf6MNOSnP6hRSQiElS1Xf4jms
-   Mcan1oIX1XODV9TjTLjl8CHaTAnZq9qbd8GqANHcpuSb+4vM/WDhlYh6B
-   A==;
-X-CSE-ConnectionGUID: 0Tt34ubVQjO8Vuobg+33mQ==
-X-CSE-MsgGUID: cqB77i2CTUqrXWce1vZtFQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="50401477"
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="50401477"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 03:31:45 -0800
-X-CSE-ConnectionGUID: Y1wboBuoQ4Wpsg8HqlW5tQ==
-X-CSE-MsgGUID: MpoMJlTqQwSp7FuMSscSbQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117376393"
-Received: from iklimasz-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.244])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 03:31:41 -0800
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Egor Vorontsov <sdoregor@sdore.me>, linux-kernel@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, Egor Vorontsov
- <sdoregor@sdore.me>
-Subject: Re: [PATCH RESEND] drm/edid: Implement DisplayID Type IX & X timing
- blocks parsing
-In-Reply-To: <e60254ec3544d37367c9917bc0e1cd5fdb95248d.camel@sdore.me>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <e60254ec3544d37367c9917bc0e1cd5fdb95248d.camel@sdore.me>
-Date: Mon, 10 Feb 2025 13:31:38 +0200
-Message-ID: <87o6za3ujp.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="I1nw7tqi"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51A75xOs010163;
+	Mon, 10 Feb 2025 11:31:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	DX94Y1DLftOcH76cc/D2dTQlv3D9/SsCUAFkAr8Sem8=; b=I1nw7tqiz/kFxhle
+	Holws7trVi6BbmPtbdZWtxDXO1BYTSZYNzA6vQX6lyPfjqpMGFS8TaxpIqaPB9pS
+	r+F6220WPsqkv5A6PeAfjP8HaEjV16ol5TChfvLQXyuW9+0lbtncAgLwNes/Y8Yl
+	L+LHCj5IoMnNPgMCNJza9rwcrPQ7MuwvlvruR13buTflMezkp90Bs1C4xEnHSsCs
+	rn8dFMFO72BhMpf2fae4LYcQJ13YrcGnq4kGhOK70rxKYJxIgMUnml7Z2vCX/npH
+	UBC0vUf0AyyGf935f+62qdKw6m+pbQLXZ59TWMeiIAHc0kP8wXSRHfUKf6j5+u4O
+	4C9b7A==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qcs58sem-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 11:31:40 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51ABVdQB028977
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 11:31:39 GMT
+Received: from [10.216.18.35] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Feb
+ 2025 03:31:35 -0800
+Message-ID: <6ddda82b-d90c-4f16-a1e5-1a63fca7aba2@quicinc.com>
+Date: Mon, 10 Feb 2025 17:01:26 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: qcs8300: Add device node for
+ gfx_smmu
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg
+ Roedel <joro@8bytes.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>
+References: <20250203-b4-branch-gfx-smmu-v4-0-eaa7aa762f48@quicinc.com>
+ <20250203-b4-branch-gfx-smmu-v4-2-eaa7aa762f48@quicinc.com>
+ <464vbzwgv44fn4iw5vj5yzpstzhcsb7rzuedf4fwl23hmdhews@d4q33ro6hxq3>
+Content-Language: en-US
+From: Pratyush Brahma <quic_pbrahma@quicinc.com>
+In-Reply-To: <464vbzwgv44fn4iw5vj5yzpstzhcsb7rzuedf4fwl23hmdhews@d4q33ro6hxq3>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 1FNwXa16gvd1MBf64JJ-2x1HySUAS9rq
+X-Proofpoint-GUID: 1FNwXa16gvd1MBf64JJ-2x1HySUAS9rq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_06,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ mlxlogscore=946 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ adultscore=0 clxscore=1015 mlxscore=0 priorityscore=1501 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502100097
 
-On Sat, 08 Feb 2025, Egor Vorontsov <sdoregor@sdore.me> wrote:
-> Some newer high refresh rate consumer monitors (including those by Samsun=
-g)
-> make use of DisplayID 2.1 timing blocks in their EDID data, notably for
-> their highest refresh rate modes. Such modes won't be available as of now.
+
+On 2/10/2025 4:31 PM, Dmitry Baryshkov wrote:
+> On Mon, Feb 03, 2025 at 11:17:02AM +0530, Pratyush Brahma wrote:
+>> Add the device node for gfx smmu that is required for gpu
+>> specific address translations.
+>>
+>> Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
+>> ---
+>>   arch/arm64/boot/dts/qcom/qcs8300.dtsi | 39 +++++++++++++++++++++++++++++++++++
+>>   1 file changed, 39 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/qcs8300.dtsi b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
+>> index 4a057f7c0d9fae0ebd1b3cf3468746b382bc886b..7a8211bec139375b5aab939f123d88fca7aceff2 100644
+>> --- a/arch/arm64/boot/dts/qcom/qcs8300.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
+>> @@ -2674,6 +2674,45 @@ gpucc: clock-controller@3d90000 {
+>>   			#power-domain-cells = <1>;
+>>   		};
+>>   
+>> +		adreno_smmu: iommu@3da0000 {
+>> +			compatible = "qcom,qcs8300-smmu-500", "qcom,adreno-smmu",
+>> +				     "qcom,smmu-500", "arm,mmu-500";
+>> +			reg = <0x0 0x3da0000 0x0 0x20000>;
+>> +			#iommu-cells = <2>;
+>> +			#global-interrupts = <2>;
+>> +
+>> +			interrupts = <GIC_SPI 672 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 673 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 678 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 679 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 680 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 681 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 682 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 683 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 684 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 685 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 686 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 687 IRQ_TYPE_LEVEL_HIGH>;
+>> +
+>> +			clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
+>> +				 <&gpucc GPU_CC_HUB_CX_INT_CLK>,
+>> +				 <&gpucc GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK>,
+>> +				 <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
+>> +				 <&gcc GCC_GPU_SNOC_DVM_GFX_CLK>,
+>> +				 <&gpucc GPU_CC_AHB_CLK>,
+>> +				 <&gpucc GPU_CC_HUB_AON_CLK>;
+>> +
+>> +			 clock-names = "gcc_gpu_memnoc_gfx_clk",
+> Stray whitespace after the Tab symbol
 >
-> Implement partial support for such blocks in order to enable native
-> support of HRR modes of most such monitors for users without having to re=
-ly
-> on EDID patching/override (or need thereof).
-
-Thanks for the patch. It appears to do what's desired, but please find
-quite a bit of comments inline.
-
-> Link: https://gitlab.freedesktop.org/drm/misc/kernel/-/issues/55
-
-I think "Closes:" is what we want.
-
-> Suggested-by: Maximilian Bo=C3=9Fe <max@bosse.io>
-> Signed-off-by: Egor Vorontsov <sdoregor@sdore.me>
+>> +				       "gcc_gpu_snoc_dvm_gfx_clk",
+>> +				       "gpu_cc_ahb_clk",
+>> +				       "gpu_cc_hlos1_vote_gpu_smmu_clk",
+>> +				       "gpu_cc_cx_gmu_clk",
+>> +				       "gpu_cc_hub_cx_int_clk",
+>> +				       "gpu_cc_hub_aon_clk";
+> clocks and clock-names do not match.
 >
-> ---
->
-> The formatting was taken from the neighboring code for consistency,
-> thus some warnings.
+>> +			power-domains = <&gpucc GPU_CC_CX_GDSC>;
+>> +			dma-coherent;
+>> +		};
+>> +
+>>   		pmu@9091000 {
+>>   			compatible = "qcom,qcs8300-llcc-bwmon", "qcom,sc7280-llcc-bwmon";
+>>   			reg = <0x0 0x9091000 0x0 0x1000>;
+>>
+>> -- 
+>> 2.34.1
+>>
+Thanks for checking. Will address these in next version.
 
-Sometimes it's good to follow the surrounding code, but let's not
-duplicate existing mistakes. ;)
+-- 
+Thanks and Regards
+Pratyush Brahma
 
->
-> [Resent due to some Spamhaus issues that are now resolved.]
->
->  drivers/gpu/drm/drm_displayid_internal.h | 13 +++++
->  drivers/gpu/drm/drm_edid.c               | 61 ++++++++++++++++++++++++
->  2 files changed, 74 insertions(+)
->
-> diff --git a/drivers/gpu/drm/drm_displayid_internal.h b/drivers/gpu/drm/d=
-rm_displayid_internal.h
-> index aee1b86a73c1..a75d0f637b72 100644
-> --- a/drivers/gpu/drm/drm_displayid_internal.h
-> +++ b/drivers/gpu/drm/drm_displayid_internal.h
-> @@ -66,6 +66,7 @@ struct drm_edid;
->  #define DATA_BLOCK_2_STEREO_DISPLAY_INTERFACE	0x27
->  #define DATA_BLOCK_2_TILED_DISPLAY_TOPOLOGY	0x28
->  #define DATA_BLOCK_2_CONTAINER_ID		0x29
-> +#define DATA_BLOCK_2_TYPE_10_FORMULA_TIMING	0x2a
->  #define DATA_BLOCK_2_VENDOR_SPECIFIC		0x7e
->  #define DATA_BLOCK_2_CTA_DISPLAY_ID		0x81
->=20=20
-> @@ -129,6 +130,18 @@ struct displayid_detailed_timing_block {
->  	struct displayid_detailed_timings_1 timings[];
->  };
->=20=20
-> +struct displayid_formula_timings_9 {
-> +	u8 flags;
-> +	u8 hactive[2];
-> +	u8 vactive[2];
-
-Regardless of what was done in struct displayid_detailed_timings_1, I'd
-go for defining these as:
-
-	__be16 hactive;
-	__be16 vactive;
-
-and using be16_to_cpu() instead of hand-rolling it.
-
-> +	u8 refresh;
-
-Nitpick, I'd go for vrefresh.
-
-> +} __packed;
-> +
-> +struct displayid_formula_timing_block {
-> +	struct displayid_block base;
-> +	struct displayid_formula_timings_9 timings[];
-> +};
-
-I know it's lacking in struct displayid_detailed_timing_block, but I'd
-add __packed here too.
-
-> +
->  #define DISPLAYID_VESA_MSO_OVERLAP	GENMASK(3, 0)
->  #define DISPLAYID_VESA_MSO_MODE		GENMASK(6, 5)
->=20=20
-> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-> index 13bc4c290b17..8a4dec1d781c 100644
-> --- a/drivers/gpu/drm/drm_edid.c
-> +++ b/drivers/gpu/drm/drm_edid.c
-> @@ -6833,6 +6833,64 @@ static int add_displayid_detailed_1_modes(struct d=
-rm_connector *connector,
->  	return num_modes;
->  }
->=20=20
-> +static struct drm_display_mode *drm_mode_displayid_formula(struct drm_de=
-vice *dev,
-> +							   struct displayid_formula_timings_9 *timings,
-
-const
-
-> +							   bool type_10)
-> +{
-> +	struct drm_display_mode *mode;
-> +	unsigned hactive =3D (timings->hactive[0] | timings->hactive[1] << 8) +=
- 1;
-> +	unsigned vactive =3D (timings->vactive[0] | timings->vactive[1] << 8) +=
- 1;
-
-	u16 hactive =3D be16_to_cpu(timings->hactive) + 1;
-        etc.
-
-> +	u8 rb =3D timings->flags & 0b111;
-
-I'd call this formula or algorithm instead of just rb.
-
-Please avoid 0b, it's very rarely used. Just 0x7. Or we could start
-defining macros for these in drm_displayid_internal.h...
-
-Please add a blank line between declarations and code here.
-
-> +	/* TODO: support RB-v2 & RB-v3 */
-> +	if (rb > 1)
-> +		return NULL;
-> +
-> +	mode =3D drm_cvt_mode(dev, hactive, vactive, timings->refresh, rb =3D=
-=3D 1, false, false);
-
-Refresh rate is -1 in the data block, so this needs timings->refresh +
-1.
-
-> +	if (!mode)
-> +		return NULL;
-> +
-> +	/* TODO: interpret S3D flags */
-
-More important is TODO for fractional refresh rate indicated by bit 4 of
-flags.
-
-> +
-> +	mode->type =3D DRM_MODE_TYPE_DRIVER;
-> +
-> +	if (timings->flags & 0x80)
-> +		mode->type |=3D DRM_MODE_TYPE_PREFERRED;
-
-There's no such thing?
-
-> +	drm_mode_set_name(mode);
-> +
-> +	return mode;
-> +}
-> +
-> +static int add_displayid_formula_modes(struct drm_connector *connector,
-> +				       const struct displayid_block *block)
-> +{
-> +	struct displayid_formula_timing_block *fb =3D (struct displayid_formula=
-_timing_block *)block;
-
-Please avoid fb as the name for this. Everyone's going to go all
-"framebuffer", wtf, backtrack, oh, "formula block". ;)
-
-This should also be a const pointer. (I know, the detailed modes one
-isn't. Let's not duplicate mistakes from there.)
-
-> +	int num_timings;
-> +	struct drm_display_mode *newmode;
-> +	int num_modes =3D 0;
-> +	bool type_10 =3D block->tag =3D=3D DATA_BLOCK_2_TYPE_10_FORMULA_TIMING;
-> +	u8 timing_size =3D 6 + ((fb->base.rev & 0x70) >> 4);
-
-I'd go for int timing_size.
-
-Blank line here.
-
-> +	/* extended blocks are not supported yet */
-> +	if (timing_size !=3D 6)
-> +		return 0;
-> +
-> +	if (block->num_bytes % timing_size)
-> +		return 0;
-> +
-> +	num_timings =3D block->num_bytes / timing_size;
-> +	for (int i =3D 0; i < num_timings; i++) {
-> +		struct displayid_formula_timings_9 *timings =3D \
-
-const. Please don't use \ line continuations, it's not necessary.
-
-> +			(struct displayid_formula_timings_9 *)&((u8 *)fb->timings)[i * timing=
-_size];
-
-Since we only support the one size for now, and that size is fixed in
-struct displayid_formula_timings_9, there's no need to do all this
-hackery. Just formula->timings[i].
-
-Whoever fixes this for size 7 might have a better idea how to handle the
-size anyway.
-
-> +
-> +		newmode =3D drm_mode_displayid_formula(connector->dev, timings, type_1=
-0);
-> +		if (!newmode)
-> +			continue;
-> +
-> +		drm_mode_probed_add(connector, newmode);
-> +		num_modes++;
-> +	}
-> +	return num_modes;
-> +}
-> +
->  static int add_displayid_detailed_modes(struct drm_connector *connector,
->  					const struct drm_edid *drm_edid)
->  {
-> @@ -6845,6 +6903,9 @@ static int add_displayid_detailed_modes(struct drm_=
-connector *connector,
->  		if (block->tag =3D=3D DATA_BLOCK_TYPE_1_DETAILED_TIMING ||
->  		    block->tag =3D=3D DATA_BLOCK_2_TYPE_7_DETAILED_TIMING)
->  			num_modes +=3D add_displayid_detailed_1_modes(connector, block);
-> +		else if (block->tag =3D=3D DATA_BLOCK_2_TYPE_9_FORMULA_TIMING ||
-> +			 block->tag =3D=3D DATA_BLOCK_2_TYPE_10_FORMULA_TIMING)
-> +			num_modes +=3D add_displayid_formula_modes(connector, block);
->  	}
->  	displayid_iter_end(&iter);
-
---=20
-Jani Nikula, Intel
