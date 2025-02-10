@@ -1,80 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A4684D0F
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 04:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC1413A25B;
+	Mon, 10 Feb 2025 04:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739160048; cv=none; b=k3tnWD0w03A28q6Plt1/KcZSgJVlauwFCOOgGDn/wGyBpQ70+d0661Tsja7ZbxbI7o4+K/cXt7j/Naalw+rHxcu61OQpWiP1+6wIbJQffQxQUntHuXcRjuaYXPI3LfpfSCsu4Ro2uU6XrikHWvpDwJsSntm0y7lbyIWa+K44GaU=
+	t=1739160068; cv=none; b=NygixDqvxH6hXn8G+n6bE9IVHDzIGb0wM0K4Gd7431Y+GOjTUSfRhasAFQPd43vRm8ZvGnzW1BBXBagbOwAgjooKyem0Zh+1EjbWhIdUw8GsHjbRbiVf0em8hJHLYniLWPwLv4f1UY0ws5vJG6xIDRdaT5gBPfDBlFant2cIfh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739160048; c=relaxed/simple;
-	bh=ntsmlY0jpVX4Lm1eK1BI7ZOaVIn3coY8rcFBvAwAGOE=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:MIME-Version:
-	 Content-Type; b=q8+4c8U/oBTJqp+P3WxzwnbQhZ5xDd8y4Vb2v0+pdlbvuYNaZLIek5vYbK618FaPHT938qddhgrQ/zzL3GvpsHvgkqNuy/SktaC7P8hth7UuHMZhIPM9CeaLbqMCGuMq1AnQJwq4ejnBQd+ccK4tO3o/ryElYi+LCYGMYCNsADc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PzfRm6G1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PzfRm6G1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739160045;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=SS5Smp61Ec5KdkvJmSkB2J4L12nhkco2Uk0Cj2ggrLk=;
-	b=PzfRm6G1x2fBDBk/wieKsEfxX9K4n4eyFDpxpTmdallI0p6i1od96YwIG80M/FNNTl8meb
-	V9wtldNU7Y5zcoiqlYU43Xvt44NSPKrmup4LuqMC4ITMxxcvYkWWWJh8LuYvqvWVWkw5s1
-	3hoIw8/RxPQINiojz+bk844NzRqSzlg=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-138-PmXzrWh8PWW2aWFr-3IgjA-1; Sun,
- 09 Feb 2025 23:00:43 -0500
-X-MC-Unique: PmXzrWh8PWW2aWFr-3IgjA-1
-X-Mimecast-MFC-AGG-ID: PmXzrWh8PWW2aWFr-3IgjA
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BC8421800268
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 04:00:42 +0000 (UTC)
-Received: from greed.delorie.com (unknown [10.22.88.86])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D96991800873
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 04:00:41 +0000 (UTC)
-Received: from greed.delorie.com.redhat.com (localhost [127.0.0.1])
-	by greed.delorie.com (8.16.1/8.16.1) with ESMTP id 51A31oe03267208;
-	Sun, 9 Feb 2025 22:01:50 -0500
-From: DJ Delorie <dj@redhat.com>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: miguel.ojeda.sandonis@gmail.com, eblake@redhat.com, will.newton@linaro.org,
-        eggert@cs.ucla.edu, linux-man@vger.kernel.org, dakr@kernel.org,
-        tamird@gmail.com, ojeda@kernel.org, alex.gaynor@gmail.com,
-        boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-        benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
-        tmgross@umich.edu, rust-for-linux@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] rust: alloc: satisfy `aligned_alloc` requirements
-In-Reply-To: <iocqkifz6dsywt2ueqppsdw53bgcp6i7ju7vadxxxu7pow6w5c@n2wqgypsiq2d>
- (message from Alejandro Colomar on Sun, 9 Feb 2025 00:35:55 +0100)
-Date: Sun, 09 Feb 2025 22:01:50 -0500
-Message-ID: <xn1pw6o63l.fsf@greed.delorie.com>
+	s=arc-20240116; t=1739160068; c=relaxed/simple;
+	bh=f0KDuAUflNARbT58GUMeTukf/oPlGSMSUkPVBMaPwtU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HBawrKqB7trm4zjAqX9p9UqiPMBYpancOs2xsV10ZWBm7V8qGuvoc1zpEwdGTglf94yAb0wr0f5Jq/1FNRKoWdccf3ceZtSPcljS4bsuM1YCwnbRT3YTBbJ2YIp+lW9dYo4u/uzPxCglSvKhwHRbPc9x5VnwG0zEWWCe1alk+jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4YrrNc3m5Cz1W5QX;
+	Mon, 10 Feb 2025 11:56:32 +0800 (CST)
+Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 93505140159;
+	Mon, 10 Feb 2025 12:00:56 +0800 (CST)
+Received: from kwepemn100009.china.huawei.com (7.202.194.112) by
+ dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 10 Feb 2025 12:00:56 +0800
+Received: from localhost.localdomain (10.28.79.22) by
+ kwepemn100009.china.huawei.com (7.202.194.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 10 Feb 2025 12:00:55 +0800
+From: Huisong Li <lihuisong@huawei.com>
+To: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <matt@ranostay.sg>, <mchehab@kernel.org>, <zhanjie9@hisilicon.com>,
+	<zhenglifeng1@huawei.com>, <liuyonglong@huawei.com>, <lihuisong@huawei.com>
+Subject: [PATCH v2] media: video-i2c: Use HWMON_CHANNEL_INFO macro to simplify code
+Date: Mon, 10 Feb 2025 11:48:42 +0800
+Message-ID: <20250210034842.17410-1-lihuisong@huawei.com>
+X-Mailer: git-send-email 2.22.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemn100009.china.huawei.com (7.202.194.112)
 
-Alejandro Colomar <alx@kernel.org> writes:
-> On retrospective, we should have added some more details to that commit
-> message.  DJ, has the requirement of the size been lifted?  Was it never
-> present?
+Use HWMON_CHANNEL_INFO macro to simplify code.
 
-The current code checks alignment but not size.
+Signed-off-by: Huisong Li <lihuisong@huawei.com>
+---
+ -v2: detach this patch from the series[1]
 
-It looks like that was always the case.
+[1] https://lore.kernel.org/lkml/20250124022635.16647-3-lihuisong@huawei.com/T/
 
-And no, I don't remember where I got the size requirement from ;-)
-(but at least it says "should" instead of "must")
+---
+ drivers/media/i2c/video-i2c.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
+
+diff --git a/drivers/media/i2c/video-i2c.c b/drivers/media/i2c/video-i2c.c
+index 036a6375627a..0dd991d70d53 100644
+--- a/drivers/media/i2c/video-i2c.c
++++ b/drivers/media/i2c/video-i2c.c
+@@ -264,18 +264,8 @@ static int amg88xx_set_power(struct video_i2c_data *data, bool on)
+ 
+ #if IS_REACHABLE(CONFIG_HWMON)
+ 
+-static const u32 amg88xx_temp_config[] = {
+-	HWMON_T_INPUT,
+-	0
+-};
+-
+-static const struct hwmon_channel_info amg88xx_temp = {
+-	.type = hwmon_temp,
+-	.config = amg88xx_temp_config,
+-};
+-
+ static const struct hwmon_channel_info * const amg88xx_info[] = {
+-	&amg88xx_temp,
++	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
+ 	NULL
+ };
+ 
+-- 
+2.22.0
 
