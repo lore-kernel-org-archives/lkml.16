@@ -1,179 +1,87 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1950D264602
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD50264603;
+	Mon, 10 Feb 2025 20:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739219836; cv=none; b=gPQ2KDTWpPBXzVyjeixDB9DGo66Iwc12snXn/eSb3tjX7yvYq7HNR866F9Gp6MSCpOXMaawYkf+2o7HD/3YSbJfiLjXEY5kqXgETYEYttsluh5JOrn1Ktp22Wb6lGVx0lPYtc1SFRiDoknzdZOMPw7bG5v6EqdUFmJAUOr2b/tQ=
+	t=1739220062; cv=none; b=l0zTdajnNIeosBBdf6Q4eCcZPZ7DJUo0lqmdJKztbk8rmFcalcFtG/jZnCgBd0gWJNpNUF8lSV7UAWe6208qWkrKtAroIjbRE4RJt1py0xUN2WoYBNbENtZHOQqYDf717TIkiH/52XVXl11VnE3hdu5tlLJd71ZBV37eJgoGTLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739219836; c=relaxed/simple;
-	bh=EAObRawXOOGvefLFyL7RIy+Z9TJ8lkUMWO/dX2vb42w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BYqvUUL44qnZaq/QzOBCanXZ8EANec/mTKnPnI+f8GmuzC+en9TMUwHec+IjN3zsEy3APC7ZodZQUMNzzxtSZfZZanyzi/QrgWlN9bmmdgn9dtD38L7oRIXIEBV/M8k8rBjkCGCKz4DOQ80EBWe45YhGp2TYSS6PnSDwBRSjilU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=cgLnntZb; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1739220062; c=relaxed/simple;
+	bh=yPdHdObYJs7N4Nlg9KX0zJlMQlUolWycQynndsFpYPs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sBaaNt8+dIc+rLc6gPeoeLkaiNKp1MwxmpeR+YWWRS+t+1M50Wn8s3/zsV+XMq1jdRxjewG+I8eMvbTGtYWkfsa29Q7TOWrWh5T4OVlFc/dB9gXUcwMfacwzKg0jjEaF/PJ5Ff2wGq2cX0/lvfIgwGcYt5r4HL94eaAZUQRTB0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=azvVQWX1; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="cgLnntZb"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4393f6a2c1bso10036755e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 12:37:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739219832; x=1739824632; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zF8JNEp1p5HATEVRpzQkJmS0WE0xGZZUGSUWwC6nfqY=;
-        b=cgLnntZbDYW0h/j9a2G/LtDwm+khY3g88j8DRNY9Hd50lG414MaUHT+MbHbPYjmSIq
-         HevLqC1Igg51bgU+cqbnBpU2/ybOOc/2UcnrMszxlIwM/DwGnudhVFTxWWUvML5g24e0
-         pS8Tqc2K4kjvyKqI1Q8Q4dw0GuwCYA/ELOlZRhQX3ghv4Ye9MM2XGAIVNo1bwpx5HZka
-         E7LZB3pg42oPLj36sWzjKNPoPDIKGF0SBmjs8jUj8nYRWz86Em/l8GlLPExdCBff5111
-         eIGFPzIFvhaAF8BDsAYA0ZpjSWXuqteK39BmSJL+0IP4/4n9/1kEjvK5j1+cARhVLEWd
-         VCcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739219832; x=1739824632;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zF8JNEp1p5HATEVRpzQkJmS0WE0xGZZUGSUWwC6nfqY=;
-        b=OarwFWTEFQV8D/5Vk2zGR2O4BiI+Bxt1YFHI5ETRTbeYRmBpdkNrLnjvywr69pg9LC
-         I5/Tlhe5X9ZQfffk0dOE0D5LTXuHln3TyuYTjHKCaGDVUWyIEZ67E+ArViDeTXFBck69
-         kU67CGoALtAHor/1jxA2WmZd0PGBpt+U/3SOpUQdtaqjMfIHpTw+n67/VJXBEa6YL5Gi
-         TQifIXVm5Nwm7kgIQZF3euXvKqgCHeUJ+d4xkvXCV0Q6Hw02ORKA7Neu6100ltOOfnbI
-         vyC+ieE4GWeHzNDhXMWs6jQEeFGqIvyiz8mjP6fPAasHK9qMyB4YoROjMU99a5qlYPet
-         2gZw==
-X-Forwarded-Encrypted: i=1; AJvYcCWw4C6Yctx7LBU/xmYl763ATECnXaDNiz631v1nhPrO+NocCNk2lTGgs+MOyc4mFH6Ez6+vDxOuq9QfAhM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQYAqcb62BFGOyVpBGZOQMjXxqCUUF3p8pya0vRZMVy5Pcg1vv
-	IbWhFPqz2gnhtQlm5cCt8qj9jDIUywawNTKXm4o6V4Ndxu+sjdFpJb6kLDRBufY=
-X-Gm-Gg: ASbGncvoJ8SH16jxElcxlquds8cgXVtU9B+EuxSMYntskZMmvdtyAWSqSouT/Nwbmdd
-	PQkocDYe27fpibL+z5BHX6FPEXbg0uA6HT30qY1qrHjoLv+vae6ZmwOQWWQVyqYTPG+Cu2HHaCq
-	yT6vk0YFun2pQNE0ZlIyLMY+MAZUi6kl6R6wH/2gYZdUBXlf6zUG3KkNamNAZKWiu1SghucasF2
-	Tnr2oEXAnzzXuyW2FuMQg4IvFe6RqznZ/4d03KcRBO8o5Px2NSTQWvgs4LsZx2sLXQOjU0fYnyd
-	+A3pIxH+GwTFvamDBQg1SguFKbFkqGN2XA6xLQLTOI1wvmt+6gaI6azEETG9
-X-Google-Smtp-Source: AGHT+IEJZFlCvbId46lKW+AZhgUnAKa1SwE6bqkYSfGcKVOn13gxNvfjbBZj3gpbLfDQanR66+Ey4w==
-X-Received: by 2002:a05:600c:5108:b0:434:f9ad:7222 with SMTP id 5b1f17b1804b1-4394cec56d7mr6348975e9.7.1739219832219;
-        Mon, 10 Feb 2025 12:37:12 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc17e278bsm12255723f8f.48.2025.02.10.12.37.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 12:37:11 -0800 (PST)
-Message-ID: <65f48829-56d2-47fc-8f61-074ff122d964@rivosinc.com>
-Date: Mon, 10 Feb 2025 21:37:10 +0100
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="azvVQWX1"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 604B240E0177;
+	Mon, 10 Feb 2025 20:40:53 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id TS2OdWt8lwlR; Mon, 10 Feb 2025 20:40:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1739220049; bh=SSfTdyjRwC6La0TaEkrgbjDaAq72qiIrANDEpo1CPAY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=azvVQWX1ofvYjZI0GftI0JZggJ2c+ockYm5kgrxnX+dX5adZguekHmFd+ci9CSpGp
+	 8gQ2orMhD7BMSStQ5W7XXmVYeqpoEHlgcROsyoRaQC9d4Te+JTrA6LpbEehg+3MROP
+	 neWEnkpaoP9uEPPyx9S/Kn5sANlVRmxypXoMMPsDr8ftoIB6JYg47ulDDoBlNAhcys
+	 aoC7f2F2MDzrh6qEc5zDqwmQvV0n33vgzCe3F2GJcAFjpyQ9mN8VGsZhyazb7qAIGc
+	 5kKTyxWCL/3QFVMkFsSbYZlvw6zuZd7FeFs+yQ7K+Pjk1ep1XlIgCk406DRymXnpKH
+	 1Yos9zMRslwMGy4B61+8Hm/1nNoOUf+FnxGzbG/jdjLG+E6W4StNuz6UP+M8i/LOm/
+	 k897CgGj0AXOCxloPiBW15OWRlLanpW/LNbT3xxsU6WCNFX0ipHJiwCTqDroSwmoz5
+	 DZ2qRScR0vC0ijm5e63djvG/I+w6s5B5P7VvuzBo/jZtpzFgmJDHXW7ryUZXc2rcw8
+	 QbnCrcqFInWSp4VNrKVn3F9EhZdHbRcCN6wtSzL8Aymy7TbJodlojiIECW7QbWlq7z
+	 490r49QJLHb8RgH5c8U3CQnPuf6z9WST42E4htcNjPTOT2b6Gta7/kI9T3aoS7ysYm
+	 Ywc4z10aKLRdwIbLx725zt+k=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CAF8240E016E;
+	Mon, 10 Feb 2025 20:40:38 +0000 (UTC)
+Date: Mon, 10 Feb 2025 21:40:30 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	x86@kernel.org, linux-block@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>, Keith Busch <kbusch@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v4 1/6] x86: move ZMM exclusion list into CPU feature flag
+Message-ID: <20250210204030.GBZ6pkPumjGQMaHWLb@fat_crate.local>
+References: <20250210174540.161705-1-ebiggers@kernel.org>
+ <20250210174540.161705-2-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/9] riscv: Prepare for unaligned access type table
- lookups
-To: Charlie Jenkins <charlie@rivosinc.com>, Anup Patel <anup@brainfault.org>
-Cc: Andrew Jones <ajones@ventanamicro.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
- jesse@rivosinc.com, Anup Patel <apatel@ventanamicro.com>
-References: <20250207161939.46139-11-ajones@ventanamicro.com>
- <20250207161939.46139-18-ajones@ventanamicro.com> <Z6ax7B45OsGerjfA@ghost>
- <CAAhSdy2tjOE5aajzydFs8A_drHdBSbWrYTX3CX4e7B6Rm107Bw@mail.gmail.com>
- <Z6o1NCo5nLPwBsUT@ghost>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <Z6o1NCo5nLPwBsUT@ghost>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250210174540.161705-2-ebiggers@kernel.org>
 
+On Mon, Feb 10, 2025 at 09:45:35AM -0800, Eric Biggers wrote:
+> @@ -1598,11 +1578,11 @@ static int __init register_avx_algs(void)
+>  					 ARRAY_SIZE(aes_gcm_algs_vaes_avx10_256),
+>  					 aes_gcm_simdalgs_vaes_avx10_256);
+>  	if (err)
+>  		return err;
+>  
+> -	if (x86_match_cpu(zmm_exclusion_list)) {
+> +	if (boot_cpu_has(X86_FEATURE_PREFER_YMM)) {
 
+s/boot_cpu_has/cpu_feature_enabled/
 
-On 10/02/2025 18:19, Charlie Jenkins wrote:
-> On Mon, Feb 10, 2025 at 03:46:46PM +0530, Anup Patel wrote:
->> On Sat, Feb 8, 2025 at 6:53 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
->>>
->>> On Fri, Feb 07, 2025 at 05:19:47PM +0100, Andrew Jones wrote:
->>>> Probing unaligned accesses on boot is time consuming. Provide a
->>>> function which will be used to look up the access type in a table
->>>> by id registers. Vendors which provide table entries can then skip
->>>> the probing.
->>>
->>> The access checker in my experience is only time consuming on slow
->>> hardware. Hardware that supports fast unaligned accesses isn't really
->>> impacted by this? Avoiding a list of hardware that has slow/fast
->>> unaligned accesses in the kernel was the main reason for dynamically
->>> checking. We did introduce the config option to compile the kernel with
->>> assumed slow/fast accesses, which of course has the downside of
->>> recompiling the kernel and I assume that you already considered that.
->>
->> The kconfig option does not align with the vision of running the same
->> kernel image across platforms.
-> 
-> I just don't think that vision is realistic.
-> 
-> I am a proponent for compile time defines because ri ght now we are
-> catering the kernel to both microcontrollers and for high performance
-> platforms. I am in favor of having a set of configur ations that are
-> ideal for these microcontrollers and a different set for high
-> performance platforms. This is where the RVI profile s would ideally
-> come in, having different configs for different profiles that target low
-> performance/high performance.
-> 
-> Compiler optimizations for extensions are not possib le to do by just
-> having these different methods of selecting at runti me. By enabling
-> extra extensions like the bitmanip extensions during compilation via a
-> config flag we can optimize the entire kernel. It is not possible to
-> push all optimizations off to runtime detection.
+-- 
+Regards/Gruss,
+    Boris.
 
-While this might be true for the bitmanip extension and other extensions
-that the compiler can take advantage of, that isn't true for the
-misaligned speed probing code. The only meaningful misaligned access
-configuration option for kernel "speed" optimization is
-RISCV_EFFICIENT_UNALIGNED_ACCESS (which is ironically not easily
-selectable since it is under NON_PORTABLE).
-
-Currently all the config options that have been added around misaligned
-support "just" allows to get rid of the probing code at compile time and
-set a predefined speed. That does not really improve the kernel
-performance itself, just allows for a faster boot. That could as well be
-supported using a command line option as suggested.
-
-That being said, I agree that some additional configuration options
-should be added to enable additional extension support at compile time,
-enabling a faster kernel. Having a single image for all hardware is as
-you said not realistic but profiles configuration as you proposed might
-be the key for this support.
-
-Clément
-
-> 
->>
->>>
->>> Instead of having a table in the kernel, something that would be more
->>> platform agnostic would be to have an extension that signals this
->>> information. That seems like it would accomplish the same goal and
->>> leverage the existing infrastructure in the kernel, albeit with the need
->>> to make a new extension.
->>>
->>
->> IMO, expecting an ISA extension to be defined for all possible
->> microarchitectural choices is not going to scale so it is better
->> to have infrastructure in kernel itself to infer microarchitectural
->> choices based on RISC-V implementation ID.
-> 
-> How is keeping tables in the kernel for all microarchitectural details
-> any more scalable than having extensions that do the same thing? I would
-> argue that having it in the kernel is less scalable since it needs to be
-> described for all implementation IDs, and all changes require going
-> through the kernel review process. Dynamic probing avoids these issues.
-> Having an extension has the one-time process of getting the extension
-> into something like a profile, but then anybody could use it without
-> needing a kernel patch.
-> 
-> - Charlie
-> 
->>
->> Regards,
->> Anup
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
-
+https://people.kernel.org/tglx/notes-about-netiquette
