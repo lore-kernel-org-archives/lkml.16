@@ -1,95 +1,102 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4261F4606
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9364A2580D6;
+	Mon, 10 Feb 2025 16:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739204712; cv=none; b=Mo5Vg+P/enM7bMYm3fOajtgRBpk8umEOXRD9qRyvX+lXmPQkLWoPyUREqkmJxTohZyqhA0AYtWkhWwdmky0doeLkI3NjEgfNLDbxdnyBpIl/4pUTXa25PGc3UNCl8HcEOIREBcsnpjExFbRMu69uOEafCCOd+Vfr5VRGIjWGrLE=
+	t=1739204750; cv=none; b=CfIf53/MgNRjogw7ZzB/X9TCmrzY/FGkxu36a4IT48/UPYtnReQiseJ9bQ8sYuHoAy1H/zS0jzQqkMyY62pwZKB6mckvBWUrn4UxglmUoAdxdWym0VpRoa6/4+nSHAxjN9pKFR9fOOij98MGJsAWYPGEKP+2wsxpCFJ15GGEwxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739204712; c=relaxed/simple;
-	bh=FCiYJE3m6dJEp5E9AYYZVvUr2U88AURFgv082f+Ob8g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lCbu0X9cF2p824jrPrtnQz2MoSNv59i7r4zISPMcTZ6BuZW9a7yC23dfhw7YvaO5AwXnnN7n6TdVnqzXwAe6l/DDKSSevalXDqD4hqvxJMYQ6cD0fro1FTXAQdb7UqfH4FVu1alNGNVXlVw6yC/FPHUe/amJLAp18j0MYauAwYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CKur/CDX; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739204750; c=relaxed/simple;
+	bh=48RpgmHD1hoBrZcm4gSDbROrUBR/h5yG6mfOKRTppm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DeQbs8VT3o0nnIXcTs74zHe+qn+NsJRdp88YzIivxEyqbaATJtdljPmd/DnkErX2RorqYx7Gw+gk+MXA0GiM0u26sebHb0Y3WE2ulb7Mjv+rJtEngMOpc0BfTNN3UHT3e/4TOdH0VKQNmceS1bvwsd9O7sXgmELbdTEGgaJy1ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A3XnPEH5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CKur/CDX"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-47180c199ebso416991cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:25:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739204710; x=1739809510; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XCRQwJ1QD7FEc1KzbgN8T/wqMvuH/W9jsnGYGuIgbn0=;
-        b=CKur/CDXZC0Go3Zfeskw8V5da3A6rC9/VpR8UXR9Gqrqnscb+6FSI3mSm7B9AWYeOp
-         96Kh0NJfEb8zOqWLIia1lNYKkx5IsBdB8xfX9NmK1ehmM4LAeULPna9nuNbVWI9vdNFA
-         XY6wBh0o4fdhxb03WLf0osCemWDIBZ4sQwCPPiPZ+F9bryrDIdEJh1RaWLg6RUupoTV+
-         v7NimkvTsCJ3Ev/Y/uQ/WYWN/10nPf1R02Sy43ZirqMFw2MFZHDFwozol3ZaX9/gGhNK
-         Q5B07KMSJL5XxlY7R+Eehk7fAs7KvPBrmY3zHaAntmQaKdx/PiTJAtb7R3vZYguR7Nbr
-         POHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739204710; x=1739809510;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XCRQwJ1QD7FEc1KzbgN8T/wqMvuH/W9jsnGYGuIgbn0=;
-        b=mRD/EZTnTgjFH2SbaaakNkzuf9agnvYdMpIDe63+5VmmLj0iLBO2t1jIf9ZFb7TYsQ
-         wg4lRapGEAyzjK8/6Ut0E7vhV2NuCF3yyWh5h8lvpUHUOW/aekuwad2v8L0Jzks7efTH
-         fYmXPRs7QbDt3wy9Whhtx/4vBIwC5aQwtedw7yTgqxtJ4qbDZ9aKl+mf5uD4lISwAnrW
-         Z5fdEVpJorH8qrL8PBEpkNkrNL+/u42yTfbWDgUFV356OOSxTu8Kx3vYE0l0bhGHCvZm
-         1CM2IoodrPRaAuVU54HP08D4ISMV76/7UbUlvQ96UsgWyt4T9W1v4oehyfM8XVlWuEwj
-         CktA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBDBhw8WFXiDxcscQAtsQEv/MfCy3TInOltV1aPwtqCWfhSAL47dXWAUatnIc+KwoTi+5oEgvVfmlfxDM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUCFIkkY6lX1O0jxTtKb4bXGUMPLsNrtOwBmr3Joz33CUerpEV
-	b2m/eEz5t5qQuHR4eMtcZKOqMIYYBSfvMpGXHXWq3hMiYLEJT7oT0WSePdBkm3tZupMxd27+SKs
-	wziO+uKoCmKIQMtfsCLx3/FqzUQZXkTjbzO8l
-X-Gm-Gg: ASbGncsWOVYHM9hDa1lZwTbGyB5tW8L0xZR2a/9UFy4sqvauRFmISjxKZ16PjNfkayB
-	fBPWBjMZ3Pd85zE4MhrdtugZdOykHfa8PQlPm3xMYeCqTcTcGlce1qz9zScbZVg9dFy6iuL4nrC
-	UHkWnoI2CmRoXuvTdzapYKNZSMMJU=
-X-Google-Smtp-Source: AGHT+IGw2na8JVDqeF0Oa0LW5AO6mEczz1ZHISYXlQz8W8ohi84aCaK0ct+BLsHDZhsL8fadhckfa1qgS4Vdy16lQYk=
-X-Received: by 2002:a05:622a:1992:b0:471:9fd1:92ed with SMTP id
- d75a77b69052e-4719fd1994bmr699061cf.4.1739204709846; Mon, 10 Feb 2025
- 08:25:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A3XnPEH5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26691C4CED1;
+	Mon, 10 Feb 2025 16:25:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739204750;
+	bh=48RpgmHD1hoBrZcm4gSDbROrUBR/h5yG6mfOKRTppm4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A3XnPEH5cn1vz9o7echKUcZ/LbuRSpi8TJAzRBzzQPtQdVwnGQnvCOEF+r2h9wEI4
+	 2aIBf5nEz7ibAQBTAlI31MlOQddU+VsUVRQN14RaHmnSJhBQZ2OtUxK8BTTs83BO0g
+	 gLbl+ThDA2Re7Sf+lx2ajw8Qy5ZI2s6x6gEt66E1wDBv4tfh3rAYliL3dfNUaRUGT2
+	 1daiqLv2OeOApjTYk86uTSmtGzNqAAhVu7PVLiuYh51SECmFo7QvrEOsugpnwpuRF9
+	 PVa0Xbd7S0zZ42KBDotfTEu3woITZq/NIAl6ZxgOpDqd95SjZ3P2yToMCYOfm7TS8R
+	 WvdZbMPUPiIOg==
+Date: Mon, 10 Feb 2025 16:25:43 +0000
+From: Simon Horman <horms@kernel.org>
+To: Suman Ghosh <sumang@marvell.com>
+Cc: sgoutham@marvell.com, gakula@marvell.com, sbhatta@marvell.com,
+	hkelam@marvell.com, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lcherian@marvell.com,
+	jerinj@marvell.com, john.fastabend@gmail.com, bbhushan2@marvell.com,
+	hawk@kernel.org, andrew+netdev@lunn.ch, ast@kernel.org,
+	daniel@iogearbox.net, bpf@vger.kernel.org, larysa.zaremba@intel.com
+Subject: Re: [net-next PATCH v5 1/6] octeontx2-pf: use xdp_return_frame() to
+ free xdp buffers
+Message-ID: <20250210162543.GF554665@kernel.org>
+References: <20250206085034.1978172-1-sumang@marvell.com>
+ <20250206085034.1978172-2-sumang@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250108202515.385902-1-david.kaplan@amd.com> <20250108202515.385902-6-david.kaplan@amd.com>
-In-Reply-To: <20250108202515.385902-6-david.kaplan@amd.com>
-From: Brendan Jackman <jackmanb@google.com>
-Date: Mon, 10 Feb 2025 17:24:58 +0100
-X-Gm-Features: AWEUYZnmQ398qxLyW56FW4LeHT9hlmSWAS4jGnKUmsXPTICz2WHJQohQb25KrWc
-Message-ID: <CA+i-1C2g=8ALQ6nazX1P7Cpz7PmSC49yMAFO69EmjhAfDv1rCw@mail.gmail.com>
-Subject: Re: [PATCH v3 05/35] x86/bugs: Restructure taa mitigation
-To: David Kaplan <david.kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206085034.1978172-2-sumang@marvell.com>
 
-On Wed, 8 Jan 2025 at 21:27, David Kaplan <david.kaplan@amd.com> wrote:
-> @@ -400,48 +402,71 @@ static void __init taa_select_mitigation(void)
->                 return;
->         }
->
-> -       if (cpu_mitigations_off()) {
-> +       if (cpu_mitigations_off())
->                 taa_mitigation = TAA_MITIGATION_OFF;
-> -               return;
-> -       }
->
->         /*
->          * TAA mitigation via VERW is turned off if both
->          * tsx_async_abort=off and mds=off are specified.
-> +        *
-> +        * MDS mitigation will be checked in taa_update_mitigation().
+On Thu, Feb 06, 2025 at 02:20:29PM +0530, Suman Ghosh wrote:
+> xdp_return_frames() will help to free the xdp frames and their
+> associated pages back to page pool.
+> 
+> Signed-off-by: Geetha sowjanya <gakula@marvell.com>
+> Signed-off-by: Suman Ghosh <sumang@marvell.com>
 
-What we are actually talking about here is the new
-verw_mitigation_enabled(), right? I don't think this block/commentary
-adds any clarity any more. Maybe just delete it?
+> diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
+> index 224cef938927..d46f05993d3f 100644
+> --- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
+> +++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
+> @@ -96,20 +96,22 @@ static unsigned int frag_num(unsigned int i)
+>  
+>  static void otx2_xdp_snd_pkt_handler(struct otx2_nic *pfvf,
+>  				     struct otx2_snd_queue *sq,
+> -				 struct nix_cqe_tx_s *cqe)
+> +				     struct nix_cqe_tx_s *cqe)
+>  {
+>  	struct nix_send_comp_s *snd_comp = &cqe->comp;
+>  	struct sg_list *sg;
+>  	struct page *page;
+> -	u64 pa;
+> +	u64 pa, iova;
+>  
+>  	sg = &sq->sg[snd_comp->sqe_id];
+>  
+> -	pa = otx2_iova_to_phys(pfvf->iommu_domain, sg->dma_addr[0]);
+> -	otx2_dma_unmap_page(pfvf, sg->dma_addr[0],
+> -			    sg->size[0], DMA_TO_DEVICE);
+> +	iova = sg->dma_addr[0];
+> +	pa = otx2_iova_to_phys(pfvf->iommu_domain, iova);
+>  	page = virt_to_page(phys_to_virt(pa));
+> -	put_page(page);
+
+Hi Suman,
+
+With this patch applied page is assigned but otherwise unused in this
+function. So unless there are some side effects of the above, I think
+page and in turn pa and iova can be removed.
+
+> +	if (sg->flags & XDP_REDIRECT)
+> +		otx2_dma_unmap_page(pfvf, sg->dma_addr[0], sg->size[0], DMA_TO_DEVICE);
+> +	xdp_return_frame((struct xdp_frame *)sg->skb);
+> +	sg->skb = (u64)NULL;
+>  }
+>  
+>  static void otx2_snd_pkt_handler(struct otx2_nic *pfvf,
+
+...
