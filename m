@@ -1,87 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A750222566;
-	Mon, 10 Feb 2025 14:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5049252906;
+	Mon, 10 Feb 2025 14:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739199461; cv=none; b=c3FqMv9+KPjpHCLFxKVw4YhpOKMkBjME2QfK4m3rfx9JN1wBAtGznebFvjZziJLyz5Cxr0lrQFp/L3Bc6JsyCncy6mznCEBUDSS6qy6c1Ve6Gb88nqV1BMLPflMQk618Cj+HcekWTyX4hbGXWuM0gUchUH+wR45MciTA09ByxHI=
+	t=1739199507; cv=none; b=a9XBA2oDscyztMLpJp5WlS0XogzAVDv9lAZgb7KzrRp2fIArob4TemZtNO6CcKPQNF7IqYDGS2j463hv9UJK5UsDeUHGOYFzBAY+6AG4YcWm8NWNyrMvHhF4KyI5utrpnslm7/piN6bCqZpHo2/q6+XoDPbu6zXd+etsG5HW5xI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739199461; c=relaxed/simple;
-	bh=roz7Amt882FN5/NfmsS3VPitTiCQLfLXOgUxYhzn3cs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JwPJ6w7MownvSHTrDmFpiDLq+J/U+Rpj3lvxQXVsqp0/R2RIPfvx2fhTaULSneCwEyjsapP/nCPOGqzXLrRF4BMCHQpLU9xYysqUSNLxf8LSmdVKLVksm/OPmhxA2AysAf6N6m2vHSSTju4fBNYxet9OO8wjkCRVGy+W5oOoDpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S6Jj+JxB; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739199507; c=relaxed/simple;
+	bh=WpcGmZJ6w571dQbmUFpPZ0AAhNX8QPR5ztQLdlGTRTU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rqp4KEXBEq6i/4Bixul7RCsNksjAmWq4JjFz8asjIZwsMGDYNnsT0WoN0NDEBQ1jx78tCxtdsYAU3PMaI9vNh8aY/SOtO/5m2B4WpN7Wib0S4wVx5Ujmz4NprzF6t9/RQbpwTnZcss7lqfl0qlrPAXISl3idIvKCvU6O44ilNb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ISIdDpFe; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S6Jj+JxB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739199460; x=1770735460;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=roz7Amt882FN5/NfmsS3VPitTiCQLfLXOgUxYhzn3cs=;
-  b=S6Jj+JxBfdfw998T9izTbDHhuu+6wCeAB8d2XbPQK3BPC0frSGIVG6K7
-   no5ykh9ptv6JClodm7pe3SxO/wNLKdvrjgvQIt2SzzWdBhWMpVU65tESU
-   yMNksRW0KHFnrbCvUYGaKUtvBEGavC3lnsQy8b3UEuo46lgLHjGK1+9Wf
-   o6g/RJsDJ7ZDqTqnMyZMwUMSNanFYmBUteFPDvA0GYqfWPmPjCbQHr0lc
-   UdXUA9rGSkbA1lRrSuwj8YPpZD2dpPwWSERH398wlhArQD+chrUDWrCrz
-   Kz9AbmNFK6GiHtyrVQjR7jPI8/yuz4Nepkz4gC4pVc+9uWpgqRpPM5HUy
-   Q==;
-X-CSE-ConnectionGUID: kHrJ544jTNSp3KOO7g0s8A==
-X-CSE-MsgGUID: nUfroH/OQTiQYwLHKX0ZHg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="65134991"
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="65134991"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 06:57:20 -0800
-X-CSE-ConnectionGUID: ZEmIWfSsStChT+zPyvUoTw==
-X-CSE-MsgGUID: Cfg6lExASaqFqUSZMitzfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113089610"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.72])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 06:57:14 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: hdegoede@redhat.com, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250206193953.58365-1-mpearson-lenovo@squebb.ca>
-References: <mpearson-lenovo@squebb.ca>
- <20250206193953.58365-1-mpearson-lenovo@squebb.ca>
-Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Support for V9 DYTC
- platform profiles
-Message-Id: <173919942921.8268.14156457834157623584.b4-ty@linux.intel.com>
-Date: Mon, 10 Feb 2025 16:57:09 +0200
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ISIdDpFe"
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 4E8892107A88; Mon, 10 Feb 2025 06:58:25 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4E8892107A88
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1739199505;
+	bh=U3Bmpl4+PMzafapmUj7vG4ZjJLgdaMDjiPMhN512elQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ISIdDpFejyApoXMpssaLlTBsymleMq1Nqx1yt3JM590fPxAcN0mnfUHvg3yH4JGCz
+	 MPITGCk8IkpyTF0ZJm7gU5NrTNiK20dWp8isJA5eyqrmfCMivOq5SJ9nv8X2QKUO/I
+	 YR/gn124pZGkCoaZ/mvgR51iES3GStwhWaayMOv8=
+Date: Mon, 10 Feb 2025 06:58:25 -0800
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"deller@gmx.de" <deller@gmx.de>,
+	"weh@microsoft.com" <weh@microsoft.com>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: Re: [PATCH 1/1] fbdev: hyperv_fb: iounmap() the correct memory when
+ removing a device
+Message-ID: <20250210145825.GA12377@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20250209235252.2987-1-mhklinux@outlook.com>
+ <20250210124043.GA17819@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <SN6PR02MB4157B0F36D7B99A5BF01471CD4F22@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB4157B0F36D7B99A5BF01471CD4F22@SN6PR02MB4157.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Thu, 06 Feb 2025 14:39:41 -0500, Mark Pearson wrote:
-
-> Newer Thinkpad AMD platforms are using V9 DYTC and this changes the
-> profiles used for PSC mode. Add support for this update.
-> Tested on P14s G5 AMD
+On Mon, Feb 10, 2025 at 02:28:35PM +0000, Michael Kelley wrote:
+> From: Saurabh Singh Sengar <ssengar@linux.microsoft.com> Sent: Monday, February 10, 2025 4:41 AM
+> > 
+> > On Sun, Feb 09, 2025 at 03:52:52PM -0800, mhkelley58@gmail.com wrote:
+> > > From: Michael Kelley <mhklinux@outlook.com>
+> > >
+> > > When a Hyper-V framebuffer device is removed, or the driver is unbound
+> > > from a device, any allocated and/or mapped memory must be released. In
+> > > particular, MMIO address space that was mapped to the framebuffer must
+> > > be unmapped. Current code unmaps the wrong address, resulting in an
+> > > error like:
+> > >
+> > > [ 4093.980597] iounmap: bad address 00000000c936c05c
+> > >
+> > > followed by a stack dump.
+> > >
+> > > Commit d21987d709e8 ("video: hyperv: hyperv_fb: Support deferred IO for
+> > > Hyper-V frame buffer driver") changed the kind of address stored in
+> > > info->screen_base, and the iounmap() call in hvfb_putmem() was not
+> > > updated accordingly.
+> > >
+> > > Fix this by updating hvfb_putmem() to unmap the correct address.
+> > >
+> > > Fixes: d21987d709e8 ("video: hyperv: hyperv_fb: Support deferred IO for Hyper-V frame buffer driver")
+> > > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> > > ---
+> > >  drivers/video/fbdev/hyperv_fb.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
+> > > index 7fdb5edd7e2e..363e4ccfcdb7 100644
+> > > --- a/drivers/video/fbdev/hyperv_fb.c
+> > > +++ b/drivers/video/fbdev/hyperv_fb.c
+> > > @@ -1080,7 +1080,7 @@ static void hvfb_putmem(struct hv_device *hdev, struct fb_info *info)
+> > >
+> > >  	if (par->need_docopy) {
+> > >  		vfree(par->dio_vp);
+> > > -		iounmap(info->screen_base);
+> > > +		iounmap(par->mmio_vp);
+> > >  		vmbus_free_mmio(par->mem->start, screen_fb_size);
+> > >  	} else {
+> > >  		hvfb_release_phymem(hdev, info->fix.smem_start,
+> > > --
+> > > 2.25.1
+> > >
+> > 
+> > Thanks for fixing this:
+> > Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > 
+> > 
+> > While we are at it, I want to mention that I also observed below WARN
+> > while removing the hyperv_fb, but that needs a separate fix.
+> > 
+> > 
+> > [   44.111220] WARNING: CPU: 35 PID: 1882 at drivers/video/fbdev/core/fb_info.c:70 framebuffer_release+0x2c/0x40
+> > < snip >
+> > [   44.111289] Call Trace:
+> > [   44.111290]  <TASK>
+> > [   44.111291]  ? show_regs+0x6c/0x80
+> > [   44.111295]  ? __warn+0x8d/0x150
+> > [   44.111298]  ? framebuffer_release+0x2c/0x40
+> > [   44.111300]  ? report_bug+0x182/0x1b0
+> > [   44.111303]  ? handle_bug+0x6e/0xb0
+> > [   44.111306]  ? exc_invalid_op+0x18/0x80
+> > [   44.111308]  ? asm_exc_invalid_op+0x1b/0x20
+> > [   44.111311]  ? framebuffer_release+0x2c/0x40
+> > [   44.111313]  ? hvfb_remove+0x86/0xa0 [hyperv_fb]
+> > [   44.111315]  vmbus_remove+0x24/0x40 [hv_vmbus]
+> > [   44.111323]  device_remove+0x40/0x80
+> > [   44.111325]  device_release_driver_internal+0x20b/0x270
+> > [   44.111327]  ? bus_find_device+0xb3/0xf0
+> > 
 > 
+> Thanks for pointing this out. Interestingly, I'm not seeing this WARN
+> in my experiments. What base kernel are you testing with? Are you
+> testing on a local VM or in Azure? What exactly are you doing
+> to create the problem? I've been doing unbind of the driver,
+> but maybe you are doing something different.
 > 
+> FWIW, there is yet another issue where after doing two unbind/bind
+> cycles of the hyperv_fb driver, there's an error about freeing a
+> non-existent resource. I know what that problem is, and it's in
+> vmbus_drv.c. I'll be submitting a patch for that as soon as I figure out
+> a clean fix.
+> 
+> Michael
 
+This is on local Hyper-V. Kernel: 6.14.0-rc1-next-20250205+
+I run below command to reproduce the above error:
+echo "5620e0c7-8062-4dce-aeb7-520c7ef76171" > /sys/bus/vmbus/devices/5620e0c7-8062-4dce-aeb7-520c7ef76171/driver/unbind
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
+When hvfb_remove is called I can see the refcount for framebuffer is 2 when ,
+I expect it to be 1. After unregistering this framebuffer there is still 1 refcount
+remains, which is the reason for this WARN at the time of framebuffer_release.
 
-The list of commits applied:
-[1/1] platform/x86: thinkpad_acpi: Support for V9 DYTC platform profiles
-      commit: 9cff907cbf8c7fb5345918dbcc7b74a01656f34f
+I wonder who is registering/using this extra framebuffer. Its not hyperv_drm or
+hyperv_fb IIUC.
 
---
- i.
-
+- Saurabh
