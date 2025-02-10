@@ -1,146 +1,250 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF2D25B67D
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739211953; cv=none; b=rbrI1dJpLHblEdnY+duNej26Hz2dAQymbRXEe1x/h/roM8oPDoeGtsZYVFYIBe3CYxGSgSaBqhMaVozJvcb4p4nhE4aHac8VjdgUMRgON17efSPiObvloAbScZyMlWAIT5Gpq8LxgWz55QHhclt0T5mdKDoIrXeeuDs8qcrXZCc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739211953; c=relaxed/simple;
-	bh=yw+lKZDoeBK7rkNspoTrT5upsSeMqE0byCe2rNIKGy8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UJTNJLzjaSdgiF0CN96m4i0yty1GfnziSMLmD07OQ9K4YtZnPnKes9rR1LuNKajdx3821QHhnIJlaTEmuFchsMI61JuVikV0t4qaXJ5oySXFPvrkQv7nyL++1BixQM+fgK2d7hum878nJZALXu7OVCZ1QWjfoXiSiiuks7wDAY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=B1sBZ8qX; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7EF92566D1;
+	Mon, 10 Feb 2025 18:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739211956; cv=fail; b=QNODj+Ywt3yXmnw7yeFpO1I+Sprd7LCSoz0ZBV3OBpYWpqcP+8SF4plboSjeO+pOQ6gL8UDg6/DImAKoD30lWxuyG29eM8ikxuq3F9d/zbR5yvhwToEBC3GO+FSweGL1Oea92jaGpcAU65T23pfCG/e2gJxcwgJu1TmYWBmoq6E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739211956; c=relaxed/simple;
+	bh=zxtcwITcgBZWbF/Xf492YwiMq/cO4pXrSoUQKDmwsQw=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=SOUyTzzDgnS25spZDrNm0ff2c6HdB1F/ILwha0lmJ0yzjyePK5zePeItlDgJ6noKtTPp2CkwXHEGtpzor+24cyvay7Kf6ZJcD8xw5+EsjZGz6BIiM7MqTtSjiKhEfMWerug9IneOcwaqWYJXA9c9NjWmWhD9DNuoB3zKBmzcdIA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UXATAj0R; arc=fail smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="B1sBZ8qX"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c060568959so104558485a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:25:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1739211950; x=1739816750; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1hZK6XGnRLi/IyorocuGwcKKQPXtEGusIrxLUfwsFRE=;
-        b=B1sBZ8qX4Q8msELlEl2SM0O5rUMt8TZEmz9rZ2GXv0qCach+Abcsl5xPFjVHsbIP5I
-         RyLsiVVeh6/f4zQc+lVZeOSR+FwtUOA3jDOL6YuZseo089k2cs/5MDHbjn8qQVzm36i+
-         OaMUesmprHldlagm0wt8ybRrFodTVQpgTHt6FQ137MQVyugmQw6nvwcqS1Gd7UX7e5aB
-         qWQ8pDWS7CTW37KSGOtwtO4ZMs6vppaV7lh9daWz5DAd/J6Rld2r4Qm0pEb2/9dPSmg/
-         zcADcgwe3JSETooMSLwJOG6cAQkuPpL3qSTgwioHCUGpp/siNI2p6W9FOLFmrqSVQiAl
-         In+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739211950; x=1739816750;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1hZK6XGnRLi/IyorocuGwcKKQPXtEGusIrxLUfwsFRE=;
-        b=hjvbyUQ5RdLb6swcfnh9xAHAFRhS2Uv91y9suk/YLAb8S9KC5bR12MBAXRbZH704zB
-         491W0Sh8KdxTahe30IQZvFFekHIey6bjkt+kmFi815Ywp17eb3fm6egvX8gVzjRhAPPS
-         +/52REMhiMZHYHmLsT2RPDvyMnVAHOJx1Rurd5yMvCZipRvFxIni3INemK80aqZn6jOu
-         TtKZGyYtNL0ajH6Th1HRe/qrIP8qKdf9K/aOEz+gM5juysd6KHhJkM9Bypa/xXLnrh7y
-         Y+3Kl6IGusSvWc79j1kma3ealfgANy49GCJ3DDVjMJLUAhLSFXy40MapsxYIUcIcxIde
-         B3UQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXQLgmKLzrCQ33aeRzJbNQGstzAhK+fBy3nrs3oSKXWDINcgr1XCMJgMQhi/vuRUu/Pb7Yon0xjtHRt3A8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8tH36XId2waSZtSB78uwLVAtyh3PF/fqqr3rch18u0iZdh0d5
-	YIjjm9lWGOz3WKCot4QL8+UrLgOnN1xqfgrkPK04j/2uLR6j34tSvcWfvB7lxzo=
-X-Gm-Gg: ASbGnctOQzS6TmwdGd0whVqSrfQaarU0GY/0RLka85oNpJyQr3YZEE/3L8dcWkO8M5Q
-	oeDxVwKnrO1e94VmAXNUUA109R0Id5GxSQ6nEoI4f21KvBjR5OqxNpzzkVy/PNeNVvAoUVAw7/h
-	QEJ6V32BEmroPBg3kQk90SjB+G1JMqBuefUocc83UTEwB2qWp1MMA3jbdAm+ZfoX6zXG26m0UoQ
-	QyfybsS57+BP7AKf3000X4Zl0fFQkXzmKsOaCvCbHTYylCFcb2DPbQm/GuLx8oPTpWieD7AwVyi
-	EYWdHIDQ3SEjRA==
-X-Google-Smtp-Source: AGHT+IERn1pEjIUK9eVekbDQIrmmcjZ+a9exbhT86XMP+EPRyQ3FbMbg8dM1n6UR9Wtt9h0PfLk7Tw==
-X-Received: by 2002:a05:620a:2549:b0:7b3:5858:1286 with SMTP id af79cd13be357-7c047c45da8mr2008700085a.47.1739211949818;
-        Mon, 10 Feb 2025 10:25:49 -0800 (PST)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c05fdd0d58sm140341085a.6.2025.02.10.10.25.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 10:25:49 -0800 (PST)
-Date: Mon, 10 Feb 2025 13:25:45 -0500
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Tejun Heo <tj@kernel.org>
-Cc: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Abel Wu <wuyun.abel@bytedance.com>,
-	Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Yury Norov <yury.norov@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Bitao Hu <yaoma@linux.alibaba.com>,
-	Chen Ridong <chenridong@huawei.com>,
-	"open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/3] cgroup/rstat: Add run_delay accounting for cgroups
-Message-ID: <20250210182545.GA2484@cmpxchg.org>
-References: <20250125052521.19487-1-wuyun.abel@bytedance.com>
- <20250125052521.19487-4-wuyun.abel@bytedance.com>
- <3wqaz6jb74i2cdtvkv4isvhapiiqukyicuol76s66xwixlaz3c@qr6bva3wbxkx>
- <9515c474-366d-4692-91a7-a4c1a5fc18db@bytedance.com>
- <qt3qdbvmrqtbceeogo32bw2b7v5otc3q6gfh7vgsk4vrydcgix@33hepjadeyjb>
- <Z6onPMIxS0ixXxj9@slm.duckdns.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UXATAj0R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739211954; x=1770747954;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=zxtcwITcgBZWbF/Xf492YwiMq/cO4pXrSoUQKDmwsQw=;
+  b=UXATAj0R8s+/coWgAlAN7TvzAQrWmZFP7PfThxY4D+sspD1/p2KVaXQT
+   R0oDa+x08+66P19wbIOzr83B9eyZ17BQrXDAGGLRDbxJCdSGVt3ClKtHy
+   MLU3NL37PNsExGMo5SegbpQuZ04nXIZjeh9bafx3em9ELUWIbeCutfuZq
+   Y7CLrUws5zNjHsUFCvPnhfiEo+E44bmay8xy+wWzeMEzNpeNhfLHG7c5T
+   q48ZFKSZWgE7ZH/bquOzzSo9fq1E1Q3It2XSy0QCWFwlM/h7K6cjPY3iB
+   SMoAs3B+HUIi9iecOPF+xm878AH2zaHKGhpiBo2V8JRams78ZsaHB1W39
+   w==;
+X-CSE-ConnectionGUID: tUoyGMGYTLqrZAN3a7EVHA==
+X-CSE-MsgGUID: iKXCPZOHRhCMZONAq0c8Mw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="39955355"
+X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
+   d="scan'208";a="39955355"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 10:25:52 -0800
+X-CSE-ConnectionGUID: 0DE22eBPS6y96RPLdeKdxA==
+X-CSE-MsgGUID: c74EIrS7SSyZmUGpHhrt+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
+   d="scan'208";a="112014035"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Feb 2025 10:25:51 -0800
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Mon, 10 Feb 2025 10:25:48 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Mon, 10 Feb 2025 10:25:48 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.170)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Mon, 10 Feb 2025 10:25:48 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=g5mEB1LyI5I0Oz0rYW3yj2oxfDO3caCzw4pp/JWzGZAW6g//GWteQDxLuD/pty8tZTYTrxzSymGocuZNqCQ2r8l15AmIqFCoVQ+5fQZIUCxTGgiO45ufH0qQV5ICUhurcatjf0T4EJW4duJMhjOK56NWJ15uKMQtBYSnZYJVsBWneRtgf3dGR3yHtoz7UjcBXPXUr8aKh60P5a7ZWSav7aoKieQyP9E+RTcNsO6cKd9Ga+VctDwNa9S/reBxHjYOwxcor7XqZMTYluiilXnozNiA17A6WSTk8NSy1YfUCRW0Wo/mw0KQLZmMdzBiLENPr68iRVIZaOt7oxQ7Sss7PQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yxTXUt+prIZi/VVEuheflmsjXx/f3QyYj7EKFTGo8P8=;
+ b=lnFFd30bTZsp8dni7OMXeeTfCM94GstDhiH+7iTv9SqzR1gL92qPdMAAGDActfePy6OLX/e7jJlEnZEQWLS1an+e4Tz6Lzh7gEUKO9lSU/JReA6hxqIuBn1hd2GEaIVN8WPiDQ+dly2TiW6ZRw7M9e7k9G/OjozGdKDoWG3Dtxm+bg7lmE5lFHYEUNLWHSMaquYl1C6Mw0Mw8O1BdJAdvkoarX3SaHmWi3qsYWGflPleLhcR1A3TYNUhiNHK/l2DidDqR3QWc/yuf/Q9T3EtOoy9QZ/LvPi7N/EPRfPgMJhOpKmMDWR0bhySfMZUyRn6mHgNHQRzZ4+VSLwtey6jAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by PH0PR11MB4775.namprd11.prod.outlook.com (2603:10b6:510:34::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Mon, 10 Feb
+ 2025 18:25:38 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf%4]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
+ 18:25:38 +0000
+Message-ID: <b1d95024-55e2-4afc-93fe-1b119fc93a79@intel.com>
+Date: Mon, 10 Feb 2025 10:25:35 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 15/23] x86/resctrl: Add the functionality to assigm
+ MBM events
+To: "Moger, Babu" <bmoger@amd.com>, Babu Moger <babu.moger@amd.com>,
+	<corbet@lwn.net>, <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <tony.luck@intel.com>,
+	<peternewman@google.com>
+CC: <x86@kernel.org>, <hpa@zytor.com>, <paulmck@kernel.org>,
+	<akpm@linux-foundation.org>, <thuth@redhat.com>, <rostedt@goodmis.org>,
+	<xiongwei.song@windriver.com>, <pawan.kumar.gupta@linux.intel.com>,
+	<daniel.sneddon@linux.intel.com>, <jpoimboe@kernel.org>,
+	<perry.yuan@amd.com>, <sandipan.das@amd.com>, <kai.huang@intel.com>,
+	<xiaoyao.li@intel.com>, <seanjc@google.com>, <xin3.li@intel.com>,
+	<andrew.cooper3@citrix.com>, <ebiggers@google.com>,
+	<mario.limonciello@amd.com>, <james.morse@arm.com>,
+	<tan.shaopeng@fujitsu.com>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <maciej.wieczor-retman@intel.com>,
+	<eranian@google.com>
+References: <cover.1737577229.git.babu.moger@amd.com>
+ <c6f275566395ffb528f1bd254335c13274567c7f.1737577229.git.babu.moger@amd.com>
+ <b49fbe20-ec79-41e6-ba58-3e5c8fab3a46@intel.com>
+ <802aac6d-b261-45b3-9a36-3532a1d8f519@amd.com>
+From: Reinette Chatre <reinette.chatre@intel.com>
+Content-Language: en-US
+In-Reply-To: <802aac6d-b261-45b3-9a36-3532a1d8f519@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MW4PR04CA0110.namprd04.prod.outlook.com
+ (2603:10b6:303:83::25) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z6onPMIxS0ixXxj9@slm.duckdns.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|PH0PR11MB4775:EE_
+X-MS-Office365-Filtering-Correlation-Id: 62ad7f1f-0ce4-4d6a-c407-08dd4a00518e
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016|921020;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?R29hQ3l1aDhlWXl1R1ZtSWtJMWI3bUQ2QU4xQkRrdVF6VDZyM3FqeDdlS0Zt?=
+ =?utf-8?B?VHo1dTR6bGpwU3ZsZHFvU2R0K2dHRFpuVEYxdlRKZG5TRzR2N3kyNlBaQjRy?=
+ =?utf-8?B?YlpobHlaSy96RVN3WktSUE5vbEJ1bXRwZzFJWnZHamdtbW1oTTlIbm1jOE96?=
+ =?utf-8?B?NDZXazhFbmI0Ui9haGkvYlkxblcybzhlclowbUdsSnVuM0NScjFmYmtBMW1w?=
+ =?utf-8?B?L0x5THNxdGp4ZzJveS9VQkI5SmlnSDRwaVdGR3ZKV01icjNYdlpEWTBDOTRr?=
+ =?utf-8?B?cm9VbmdqL2RNdUpzRGZNWVNFN3NlRVFYalp3TFI1cHFnbjVuamxyaXREYzkr?=
+ =?utf-8?B?Y3ZFL0p3WjhZanNiUDFkYnRWd01TRTdhemJyUlRkUWVRMnF4T2gyZFhXM0sv?=
+ =?utf-8?B?V3ZiZnJWdnFwb3FjYnlaSEt1NldENnUvLzR5b1F2UkV2dnNyTFp3cVB4dkdv?=
+ =?utf-8?B?aGJVaHJNa3cyb3k2bldFQXBIc3dtMmlTQ3RVTUx2Z24xckhEL0gyUUMyZEx1?=
+ =?utf-8?B?UXRJUDJVcTJQNUdDbmNzUjBmc0JUVFAwdmRwaC9Rd2g1bGwzTm5RbG1scG5O?=
+ =?utf-8?B?V2V1T0ZoVjEwcmE4anVEZkcwdjVKU2h4K0IrRWQraE9uSHdwRWNoeFk0bVR4?=
+ =?utf-8?B?ZFlZdndGRmxZTkcxcXJ4RGdCVWE1T25HbWVReGhhcWVBN3Y0NlovL2JPRWt6?=
+ =?utf-8?B?ZU5TbzlrcDB2MVExdURhVzFlenZOVU9KS1VXY0VJclBDaUZEZURGYktuZW4w?=
+ =?utf-8?B?MEltN29WclBCQlBlOGoxSUlVR2xtRmRjMkpOVTdPd1JmWVZlSnFucGd4Y0FD?=
+ =?utf-8?B?OXZTcTVRWkFuNFVpZlIySjdjV2Q0bXhISWloUEtuOWJobVAxQnpYZ0l2YjB5?=
+ =?utf-8?B?MVExTGV0UGtZb25sU280SmNwMkhmTkMrK0hSWTlQMHNyVTA5WTZsd0l4YXFY?=
+ =?utf-8?B?cDJiTHJFZ0VaU2ZYVWRIN05xbStCOXh1YkJ0T1g2QUp0d0EzV0tpaHpmVEVk?=
+ =?utf-8?B?QWVldWphY20yMmhXUEcvOHpNdTFibTJzbWJPM1dsZUsvcURXWmhLRUZVeFl0?=
+ =?utf-8?B?aVJ6TUU1N3hRUmw1a0Y4TG1HYmlOTGRTVjdKQURnVC9zUUc2QzBnbGZwczJQ?=
+ =?utf-8?B?Y3F2V1VTQmdLYnBOb0NHaGZrbU1raWoyZzRTTHRHMmlmNEdmQTk0K0ErZnZj?=
+ =?utf-8?B?QlB5ZEhiM2ZmaEl5cU0yVTg0cEF2Z3ZuRC83b29zbUx1VU8rT21BS0hReENK?=
+ =?utf-8?B?MHVjWHI5MW1Uc0lXSXdvZkF6dVppVVNrQ3hKdnlBVkNKZmV6VTA1SDZBQUsw?=
+ =?utf-8?B?azBiMlNwQTJhSjJyOEhCeXh4eXZaQkN1OFpQalljMTlnY2wvV0NnRzcybUJu?=
+ =?utf-8?B?ZThLUmNXd3FRZVBjUTBCSW94RUQ4aE1OYWUzOGVkb0FULzMvcEEvQ241M3Ns?=
+ =?utf-8?B?RVFnVmRlR0VYS05zQXhUTWlPck9DSGJLRkdFdnBLNldBNkJpVUM2SGwrNHpx?=
+ =?utf-8?B?Zzc5YjlkNkJJUnF4YWRjY1lndHpMUGk2RUdXWUp3YXhvbUhxSUxnY296N3M3?=
+ =?utf-8?B?WTFFV0p2WHFPaWpZdGJTUU5LZndndEtqelNKM1RDNmlBNWZSVTEyUFcySXpm?=
+ =?utf-8?B?WVBsTlZNQjVtTC8vQTZuOFJ3c3VCZy9zQlAzQkYxanZ0V0pWbDdOWEdhWEx6?=
+ =?utf-8?B?dlhIOHNJK0FseW43S3RtQ05jbmtVTW5Zd1F1aTR5NVN0THJkS1RtT1dvZlpV?=
+ =?utf-8?B?OHJvcFZCMytKZUJSMGFwOVRRR3B5RHVlTUJ5cWR5NjhSbkU5L25rbDFNamMv?=
+ =?utf-8?B?MCtTREpjQXlqeGVBWDk5MGt5RU01Lyt6emtPSTVjY1ZCMHZaUHliK2h5R1pT?=
+ =?utf-8?B?S0cydkxDbS94ZDI1NEFTdXVuM0RMRDFoYmlvTU8rUmhiNkUzTTBZajNWM3VY?=
+ =?utf-8?Q?tSzCgixvDzc=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MWJjN1BPS0U2RG16RW9yODUyazhNU21aV3BLL091UDVQUU82OC8rMXE2UWd1?=
+ =?utf-8?B?OSsvRzNENjVKQ0tDK3d6b3RGaXZtdTBKRUdRNTJMOXlkMUZxaUlsbXNTMDFi?=
+ =?utf-8?B?M01jbGZLQ0JTZzhubk1uL3VZQkxLVmtTK3RQQ29LbytoNlZNeWpiM05FbzV0?=
+ =?utf-8?B?dFQwVFpTRW5KRUc5RDVXa3lHRUZPWE9aREo4eWdhbU1VbkE3eEpPd3VyS1Q4?=
+ =?utf-8?B?VkxqUUwzZlRnclBKdGREZzlPMTQ3MkpOMTRZSjRxZDZhcWM1bEJNbmhPczB0?=
+ =?utf-8?B?Q0NrTGZGZy8wY1JMYzcrUzQ0YXBEWUF4YTdHU1RPVHhZelBIdTN3R1Rpd1pJ?=
+ =?utf-8?B?WlFTa21xWlpZL1o5TzBUMFA3YjI3eFhEZmJZMEw2S2tqTDVMYW1TWHIwQWQ3?=
+ =?utf-8?B?S0YvZXJmMzZtaHpjL1VEbm91QTRVZ29kL0swZG9VbzVYMDh2enlMQmRJakx1?=
+ =?utf-8?B?TjJyaUFsTzE2TnVLSlFtb3dFTU51MnUxK0ZsVjQxNjNKL1BIVUFPRi9maDlQ?=
+ =?utf-8?B?VXJmWnVHVXlKcDdvWTVvenplUXpQcjExcHlwWTNyMHlaakdoNmtHcU91SEdv?=
+ =?utf-8?B?alRQcWNtRmpYNUdQVWlqbVE0bEcxTmJyalZpUlpUUnplbW5pZ0tHNlFsVExk?=
+ =?utf-8?B?aTRqbW40M3Q3UVVXaFQ1SDl0K05xVnVhV2NIWDZBVTRzTDVtVDZHajhEdmpv?=
+ =?utf-8?B?UXExZ2oxUzN5eDFOSE5pZlRYM2pEYU5MWDZqSmFEZlBBeFlVaFh2UTI1MUZE?=
+ =?utf-8?B?ZW02WGFWUTlrUWV5QjE0WDZMclZHWXRwNW1TSko0K0xQalJHQXNYcnZEa1I5?=
+ =?utf-8?B?MWNicVR3VkNxVlV3U05RaUJvdytaeWFJY3R0VVZJNGVOcERRZVlPNmtGbXk1?=
+ =?utf-8?B?V1dMeDJSZDFoSWhpeUlubkduQmlQcW5SS05YeVdzSUhnSXVGajNFT0dPQmpO?=
+ =?utf-8?B?YTdFb0RtOUwyR0pIaGhZd3g1K25uWk9SWTlwZHZZTnpmNEV0SEVldjR5UnJz?=
+ =?utf-8?B?NGFaclFEK3BNY1Nld1VYQ2dqNTJJb3dLVVo4cEFZT1VKUE9uNjExVHZIOWVp?=
+ =?utf-8?B?S0hTQ1lrd3ZnUGd4bjlaaTRaaDBlQnZBSVZyUE1PeEkwcWIwd3NoUjVIVzNY?=
+ =?utf-8?B?N29jQUtBT3cyRkNPb1l4ODl6TWNBdTA1M3d4SmxsS0FnQlVTWlVHbTRicFRH?=
+ =?utf-8?B?V2hWQzdCM1V6a0xPMUN3VEdhQnVvbmJidi95ZmxCU05hUUEveGJBQTVVS1p0?=
+ =?utf-8?B?cElLQU13VWNZcm1CM09HbVU0RlV4S0RpeWErZ21DOGZkWjc2cGZLVmF2TDZS?=
+ =?utf-8?B?TTlOdGw4RmV5Nnh0bG1oaFBTNklMN2o3S3ExNjNjeDkxSm1rN3k2Z2R1ZXRW?=
+ =?utf-8?B?ZlVTaFpRMFFXUEZBM1l4Vnhxd01IYkV1QWZKMjhtZERvTUJpcldoaUJ0MHZR?=
+ =?utf-8?B?YW5pTzlxaGNpVFc2WWtKeWpDYWcwZU9qZVQvVndacEFaSlRvczRtZ0FZT0pF?=
+ =?utf-8?B?eTQ1bStCNG5paVhxRlZ0T2ppbW1nUzA1SnVNVjBsVXVySytlaUNka1FaajNj?=
+ =?utf-8?B?ZTA1MTlSY251TFBnTkxJeWlHM0NMTFlTaVRXcnRrbUpNNkJYcUZKcERsQ1dx?=
+ =?utf-8?B?TFFLU2Jkblc0dHVSTmZYeDBWUDdYdnkxb3dWdzNJNzZwdHBmZmNoTS82Zmln?=
+ =?utf-8?B?K3ExUERZY0dzUDBFNEFmaXF0ZTBlejdEZ292dnVjZE1qQTlPbDE0OWtWRHlm?=
+ =?utf-8?B?TWdjUmcrVDdzSTlkeURPVVJ0YlhxdU8rUVpVUTlpMWhRUDk5a0M2KzY5aERj?=
+ =?utf-8?B?L1VPTHdjK3oxQkJXTWZNc2JVb1ArTHRQTGxiZ1c2YWxId3BRd1ZCTU13eHJz?=
+ =?utf-8?B?QkJBTEJLNWNDN2lvcTRNVStuOW5qaHlSVzNOUFpyMEJYbERtUGhBMVFuQllU?=
+ =?utf-8?B?TzIvZmNySGVic1FOVXRaTTlkU3Nxdm1KUVBPcEpHWE1QWmNzOXlsTFRUNDBV?=
+ =?utf-8?B?T05JYWpnTU94cUk4a3hwNlRaenNLZTBmVTkwcWU3S0M2am9EcVl6cTBPK3I0?=
+ =?utf-8?B?cGE2Yk4rUEJpaW5RL1pVOVRvV1JHcUVFb25mV3dDdlViZy9YVllIV1RydHQy?=
+ =?utf-8?B?dTZhOGpjRzlVaEc2VVpZbTF3QXRwejV0QmNNc1psK2dVMi8xbk02VGY0Q2Fn?=
+ =?utf-8?B?bEE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62ad7f1f-0ce4-4d6a-c407-08dd4a00518e
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 18:25:38.6552
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xZOut6sfiHnEocxecuTTP8eiQ6TfMzZABvLz8fa08yCPZ03G/Cinm6DdKyrehkvnXjMsCNU3DTSyhxdIiZKx/9b38yaYzhfLb+kDeZbfGkc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4775
+X-OriginatorOrg: intel.com
 
-On Mon, Feb 10, 2025 at 06:20:12AM -1000, Tejun Heo wrote:
-> On Mon, Feb 10, 2025 at 04:38:56PM +0100, Michal Koutný wrote:
-> ...
-> > The challenge is with nr (assuming they're all runnable during Δt), that
-> > would need to be sampled from /sys/kernel/debug/sched/debug. But then
-> > you can get whatever load for individual cfs_rqs from there. Hm, does it
-> > even make sense to add up run_delays from different CPUs?
+Hi Babu,
+
+On 2/7/25 1:10 PM, Moger, Babu wrote:
+> Hi Reinette,
 > 
-> The difficulty in aggregating across CPUs is why some and full pressures are
-> defined the way they are. Ideally, we'd want full distribution of stall
-> states across CPUs but both aggregation and presentation become challenging,
-> so some/full provide the two extremes. Sum of all cpu_delay adds more
-> incomplete signal on top. I don't know how useful it'd be. At meta, we
-> depend on PSI a lot when investigating resource problems and we've never
-> felt the need for the sum time, so that's one data point with the caveat
-> that usually our focus is on mem and io pressures where some and full
-> pressure metrics usually seem to provide sufficient information.
+> On 2/5/2025 7:05 PM, Reinette Chatre wrote:
+>> On 1/22/25 12:20 PM, Babu Moger wrote:
+>>> The mbm_cntr_assign mode offers several counters that can be assigned
+>>
+>> This "several counters" contradicts the "very small number of assignable
+>> counters" used in earlier patch to justify how counters are managed.
 > 
-> As the picture provided by some and full metrics is incomplete, I can
-> imagine adding the sum being useful. That said, it'd help if Able can
-> provide more concrete examples on it being useful. Another thing to consider
-> is whether we should add this across resources monitored by PSI - cpu, mem
-> and io.
+> How about?
+> 
+> The mbm_cntr_assign mode offers "num_mbm_cntrs" number of counters that can be assigned to an RMID, event pair and monitor the bandwidth as long as it is assigned.
 
-Yes, a more detailed description of the usecase would be helpful.
+Sure. The word "several" can just be dropped from original also. The concern is not
+the language but instead that the description moves from "several" in one patch
+and then "limited" in the next patch.
 
-I'm not exactly sure how the sum of wait times in a cgroup would be
-used to gauge load without taking available concurrency into account.
-One second of aggregate wait time means something very different if
-you have 200 cpus compared to if you have 2.
 
-This is precisely what psi tries to capture. "Some" does provide group
-loading information in a sense, but it's a ratio over available
-concurrency, and currently capped at 100%. I.e. if you have N cpus,
-100% some is "at least N threads waiting at all times." There is a
-gradient below that, but not above.
+...
 
-It's conceivable percentages over 100% might be useful, to capture the
-degree of contention beyond that. Although like Tejun says, we've not
-felt the need for that so far. Whether something is actionable or not
-tends to be in the 0-1 range, and beyond that it's just "all bad".
+>>> +        }
+>>> +
+>>> +        ret = resctrl_config_cntr(r, d, evtid, rdtgrp->mon.rmid, rdtgrp->closid,
+>>> +                      cntr_id, true);
+>>> +        if (ret) {
+>>> +            rdt_last_cmd_printf("Assignment failed on domain %d\n", d->hdr.id);
+>>
+>> I assume this targets the scenario when user space requests "all" domains to be changed
+>> and the error message in resctrl_process_flags() will then print "*" instead of the
+>> actual domain ID. If this is the goal to give more detail to error then the event
+>> can be displayed also?
+> 
+> Sure. Will change it to.
+> 
+> rdt_last_cmd_printf("Assignment of event %d failed on domain %d\n", d->hdr.id, evtid);
 
-High overload scenarios can also be gauged with tools like runqlat[1],
-which give a histogram over individual tasks' delays. We've used this
-one extensively to track down issues.
+ok, printing the event ID should be OK since the ID will be part of resctrl fs and
+not architecture specific. Please just swap last two parameters.
 
-[1] https://github.com/iovisor/bcc/blob/master/tools/runqlat.py
+Reinette
