@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2F72566C1;
-	Mon, 10 Feb 2025 17:46:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E96257456;
+	Mon, 10 Feb 2025 17:46:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739209561; cv=none; b=jMEpYDw47Gxpei2HlUQr42+Y/4TDw0BJhJx3JkrXvL2D9UxD6AqSmaQ7aM4dAmGCUBsvDImhzbdTkuREk0RRNcS4EYim3feW5LlpUqjpqe24Z86T0Q9+5TJHwwUZsxiEq1bt6gN9mfgA7Du8kg/H5BJcjcXrud8y8xMSrOHUxsQ=
+	t=1739209562; cv=none; b=FeBq0HWR/afBNejmYsVE94r26ZDXKRJ/UBaIlCVYoM+9Y97OHdpdbfV2YKj08SUpvAj1MIhcKb3eu/siNt05AkXpd5Zid7x8z1zv37FVUW/iRXgGdYVj1vu4bDh2WHQhcoolgpwDAMVU+q9KkRUOUtNGX3FKeeqJvRQluFYoYHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739209561; c=relaxed/simple;
-	bh=T5hqQeUupPHzwOIX5PSggkmivKwHW+Wj9jOMPQK7JEc=;
+	s=arc-20240116; t=1739209562; c=relaxed/simple;
+	bh=F4V82h98SHCOKzxf3nBrpwV7MPYF4gyLV1ygLyE8b+w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OBeWAffc3kjhzNvknU2gNQ9cI95v29I79e6rc9Uw+lW/8rxE8puwK4RneE2U/xEhnjE3DPJ+9JYk6iohJpCKAVhw/XD+L026b0iNw+DIVmDbM5UH2sfjhrJl1/s8A4Tfj4H4AVFDtiCDOx22fC41WWI7yJIYQ8dmHHDuD5suNmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LLqhyVr3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IY0IMapNm2taHVr/Haiu2GUqe/B7Biou4JY42fwFIcq5MgIaXQ7ZMg+TxLv/kolIitdlnu1g+P6FKSnHg+mwx3MIrszOhc/0oFyA0CL8gw70GqDBnmd83m6euI+4Ta776ysXh6Sd9n7L1MyUK+jOWMclnJVYBKR0bsaEq7w7Xcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R5UCLQ+p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LLqhyVr3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 324ADC4CEEC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R5UCLQ+p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05032C4CEE7;
 	Mon, 10 Feb 2025 17:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739209561;
-	bh=T5hqQeUupPHzwOIX5PSggkmivKwHW+Wj9jOMPQK7JEc=;
+	s=k20201202; t=1739209562;
+	bh=F4V82h98SHCOKzxf3nBrpwV7MPYF4gyLV1ygLyE8b+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LLqhyVr3l2uYlDyp9UaLJivWSaZcu8QYgbGgbyfbZCfV6dz319MhekNUFaEdd/Skr
-	 9Pnr5gSyI9niICRBaEI3uBhxYsd6Z2RXO8U5nZj17zWBM0q/nGB3NJ+zcU9JtUKDss
-	 kiYHN+pYTyy5/LGqoiLv4W6gACEw+mSb0wtfsN6aL/7574pMBORNW4wl2LGwZkFlVD
-	 pjoubreVQnWqo7aGgp7exVKW01AMTgAl2Yt6L8M6H24IVWK0jibyGqaE06FiBWbHu6
-	 UvaZRHPpZmJi3wN9my+2XLcdUtOsjOIM6dd0j0KiiONnDSrpYF8noKcyVn8OUTEF2s
-	 7YuJDo4/RnBdg==
+	b=R5UCLQ+puGZaD6dtGGZf6eD0vpXXfDYk3kc9equrs5pMkBGT4MVAMmtpXpo/VYrys
+	 lQ6hdCYq2/peAC3NaQR65v6OyKSE7LiTn/QKZpvpWuZ0dQVC8UXZ37ZFSvWhy/GiKY
+	 Jr6/8hsEBwhdoxYYN46dDeTDTSrezN8rxd5gNnb8+PPxawDMN/v0+obfLFBi4Y/3Z8
+	 SokwXWPBTMTQwFbW/WY1umnIgvR2Hpy/NeV9fBlZLnCYS2+C74pUy5tp8ENvhPX+KW
+	 Pq2BHxIK3iEh+7V5ttsUepFcvq6PyOfNngHhaYR7vrd9XfAbIW/MOkosxcvj2aEcG3
+	 YcW9zL0p6iHKg==
 From: Eric Biggers <ebiggers@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: linux-crypto@vger.kernel.org,
@@ -35,9 +35,9 @@ Cc: linux-crypto@vger.kernel.org,
 	Keith Busch <kbusch@kernel.org>,
 	Kent Overstreet <kent.overstreet@linux.dev>,
 	"Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH v4 2/6] scripts/gen-crc-consts: add gen-crc-consts.py
-Date: Mon, 10 Feb 2025 09:45:36 -0800
-Message-ID: <20250210174540.161705-3-ebiggers@kernel.org>
+Subject: [PATCH v4 4/6] x86/crc32: implement crc32_le using new template
+Date: Mon, 10 Feb 2025 09:45:38 -0800
+Message-ID: <20250210174540.161705-5-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250210174540.161705-1-ebiggers@kernel.org>
 References: <20250210174540.161705-1-ebiggers@kernel.org>
@@ -51,295 +51,404 @@ Content-Transfer-Encoding: 8bit
 
 From: Eric Biggers <ebiggers@google.com>
 
-Add a Python script that generates constants for computing the given CRC
-variant(s) using x86's pclmulqdq or vpclmulqdq instructions.
+Instantiate crc-pclmul-template.S for crc32_le, and delete the original
+PCLMULQDQ optimized implementation.  This has the following advantages:
 
-This is specifically tuned for x86's crc-pclmul-template.S.  However,
-other architectures with a 64x64 => 128-bit carryless multiplication
-instruction should be able to use the generated constants too.  (Some
-tweaks may be warranted based on the exact instructions available on
-each arch, so the script may grow an arch argument in the future.)
+- Less CRC-variant-specific code.
+- VPCLMULQDQ support, greatly improving performance on sufficiently long
+  messages on newer CPUs.
+- A faster reduction from 128 bits to the final CRC.
+- Support for lengths not a multiple of 16 bytes, improving performance
+  for such lengths.
+- Support for misaligned buffers, improving performance in such cases.
 
-The script also supports generating the tables needed for table-based
-CRC computation.  Thus, it can also be used to reproduce the tables like
-t10_dif_crc_table[] and crc16_table[] that are currently hardcoded in
-the source with no generation script explicitly documented.
+Benchmark results on AMD Ryzen 9 9950X (Zen 5) using crc_kunit:
 
-Python is used rather than C since it enables implementing the CRC math
-in the simplest way possible, using arbitrary precision integers.  The
-outputs of this script are intended to be checked into the repo, so
-Python will continue to not be required to build the kernel, and the
-script has been optimized for simplicity rather than performance.
+	Length     Before        After
+	------     ------        -----
+	     1     427 MB/s      605 MB/s
+	    16     710 MB/s     3631 MB/s
+	    64     704 MB/s     7615 MB/s
+	   127    3610 MB/s     9710 MB/s
+	   128    8759 MB/s    12702 MB/s
+	   200    7083 MB/s    15343 MB/s
+	   256   17284 MB/s    22904 MB/s
+	   511   10919 MB/s    27309 MB/s
+	   512   19849 MB/s    48900 MB/s
+	  1024   21216 MB/s    62630 MB/s
+	  3173   22150 MB/s    72437 MB/s
+	  4096   22496 MB/s    79593 MB/s
+	 16384   22018 MB/s    85106 MB/s
 
 Acked-by: Ard Biesheuvel <ardb@kernel.org>
 Acked-by: Keith Busch <kbusch@kernel.org>
+Reviewed-by: "Martin K. Petersen" <martin.petersen@oracle.com>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- MAINTAINERS               |   1 +
- scripts/gen-crc-consts.py | 238 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 239 insertions(+)
- create mode 100755 scripts/gen-crc-consts.py
+ arch/x86/lib/crc-pclmul-consts.h |  53 ++++++++
+ arch/x86/lib/crc32-glue.c        |  37 ++----
+ arch/x86/lib/crc32-pclmul.S      | 219 +------------------------------
+ 3 files changed, 65 insertions(+), 244 deletions(-)
+ create mode 100644 arch/x86/lib/crc-pclmul-consts.h
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 896a307fa0654..3532167f31939 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6130,10 +6130,11 @@ S:	Maintained
- T:	git https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git crc-next
- F:	Documentation/staging/crc*
- F:	arch/*/lib/crc*
- F:	include/linux/crc*
- F:	lib/crc*
-+F:	scripts/gen-crc-consts.py
- 
- CREATIVE SB0540
- M:	Bastien Nocera <hadess@hadess.net>
- L:	linux-input@vger.kernel.org
- S:	Maintained
-diff --git a/scripts/gen-crc-consts.py b/scripts/gen-crc-consts.py
-new file mode 100755
-index 0000000000000..aa678a50897d9
+diff --git a/arch/x86/lib/crc-pclmul-consts.h b/arch/x86/lib/crc-pclmul-consts.h
+new file mode 100644
+index 0000000000000..34fdcb0446b03
 --- /dev/null
-+++ b/scripts/gen-crc-consts.py
-@@ -0,0 +1,238 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+#
-+# Script that generates constants for computing the given CRC variant(s).
-+#
-+# Copyright 2025 Google LLC
-+#
-+# Author: Eric Biggers <ebiggers@google.com>
++++ b/arch/x86/lib/crc-pclmul-consts.h
+@@ -0,0 +1,53 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * CRC constants generated by:
++ *
++ *	./scripts/gen-crc-consts.py x86_pclmul crc32_lsb_0xedb88320
++ *
++ * Do not edit manually.
++ */
 +
-+import sys
-+
-+# XOR (add) an iterable of polynomials.
-+def xor(iterable):
-+    res = 0
-+    for val in iterable:
-+        res ^= val
-+    return res
-+
-+# Multiply two polynomials.
-+def clmul(a, b):
-+    return xor(a << i for i in range(b.bit_length()) if (b & (1 << i)) != 0)
-+
-+# Polynomial division floor(a / b).
-+def div(a, b):
-+    q = 0
-+    while a.bit_length() >= b.bit_length():
-+        q ^= 1 << (a.bit_length() - b.bit_length())
-+        a ^= b << (a.bit_length() - b.bit_length())
-+    return q
-+
-+# Reduce the polynomial 'a' modulo the polynomial 'b'.
-+def reduce(a, b):
-+    return a ^ clmul(div(a, b), b)
-+
-+# Reflect the bits of a polynomial.
-+def bitreflect(poly, num_bits):
-+    assert poly.bit_length() <= num_bits
-+    return xor(((poly >> i) & 1) << (num_bits - 1 - i) for i in range(num_bits))
-+
-+# Format a polynomial as hex.  Bit-reflect it if the CRC is lsb-first.
-+def fmt_poly(variant, poly, num_bits):
-+    if variant.lsb:
-+        poly = bitreflect(poly, num_bits)
-+    return f'0x{poly:0{2*num_bits//8}x}'
-+
-+# Print a pair of 64-bit polynomial multipliers.  They are always passed in the
-+# order [HI64_TERMS, LO64_TERMS] but will be printed in the appropriate order.
-+def print_mult_pair(variant, mults):
-+    mults = list(mults if variant.lsb else reversed(mults))
-+    terms = ['HI64_TERMS', 'LO64_TERMS'] if variant.lsb else ['LO64_TERMS', 'HI64_TERMS']
-+    for i in range(2):
-+        print(f'\t\t{fmt_poly(variant, mults[i]["val"], 64)},\t/* {terms[i]}: {mults[i]["desc"]} */')
-+
-+# Pretty-print a polynomial.
-+def pprint_poly(prefix, poly):
-+    terms = [f'x^{i}' for i in reversed(range(poly.bit_length()))
-+             if (poly & (1 << i)) != 0]
-+    j = 0
-+    while j < len(terms):
-+        s = prefix + terms[j] + (' +' if j < len(terms) - 1 else '')
-+        j += 1
-+        while j < len(terms) and len(s) < 73:
-+            s += ' ' + terms[j] + (' +' if j < len(terms) - 1 else '')
-+            j += 1
-+        print(s)
-+        prefix = ' * ' + (' ' * (len(prefix) - 3))
-+
-+# Print a comment describing constants generated for the given CRC variant.
-+def print_header(variant, what):
-+    print('/*')
-+    s = f'{"least" if variant.lsb else "most"}-significant-bit-first CRC-{variant.bits}'
-+    print(f' * {what} generated for {s} using')
-+    pprint_poly(' * G(x) = ', variant.G)
-+    print(' */')
-+
-+class CrcVariant:
-+    def __init__(self, bits, generator_poly, bit_order):
-+        self.bits = bits
-+        if bit_order not in ['lsb', 'msb']:
-+            raise ValueError('Invalid value for bit_order')
-+        self.lsb = bit_order == 'lsb'
-+        self.name = f'crc{bits}_{bit_order}_0x{generator_poly:0{(2*bits+7)//8}x}'
-+        if self.lsb:
-+            generator_poly = bitreflect(generator_poly, bits)
-+        self.G = generator_poly ^ (1 << bits)
-+
-+# Generate tables for CRC computation using the "slice-by-N" method.
-+# N=1 corresponds to the traditional byte-at-a-time table.
-+def gen_slicebyN_tables(variants, n):
-+    for v in variants:
-+        print('')
-+        print_header(v, f'Slice-by-{n} CRC table')
-+        print(f'static const u{v.bits} __maybe_unused {v.name}_table[{256*n}] = {{')
-+        s = ''
-+        for i in range(256 * n):
-+            # The i'th table entry is the CRC of the message consisting of byte
-+            # i % 256 followed by i // 256 zero bytes.
-+            poly = (bitreflect(i % 256, 8) if v.lsb else i % 256) << (v.bits + 8*(i//256))
-+            next_entry = fmt_poly(v, reduce(poly, v.G), v.bits) + ','
-+            if len(s + next_entry) > 71:
-+                print(f'\t{s}')
-+                s = ''
-+            s += (' ' if s else '') + next_entry
-+        if s:
-+            print(f'\t{s}')
-+        print('};')
-+
-+# Generate constants for carryless multiplication based CRC computation.
-+def gen_x86_pclmul_consts(variants):
-+    # These are the distances, in bits, to generate folding constants for.
-+    FOLD_DISTANCES = [2048, 1024, 512, 256, 128]
-+
-+    for v in variants:
-+        (G, n, lsb) = (v.G, v.bits, v.lsb)
-+        print('')
-+        print_header(v, 'CRC folding constants')
-+        print('static const struct {')
-+        if not lsb:
-+            print('\tu8 bswap_mask[16];')
-+        for i in FOLD_DISTANCES:
-+            print(f'\tu64 fold_across_{i}_bits_consts[2];')
-+        print('\tu8 shuf_table[48];')
-+        print('\tu64 barrett_reduction_consts[2];')
-+        print(f'}} {v.name}_consts ____cacheline_aligned __maybe_unused = {{')
-+
-+        # Byte-reflection mask, needed for msb-first CRCs
-+        if not lsb:
-+            print('\t.bswap_mask = {' + ', '.join(str(i) for i in reversed(range(16))) + '},')
-+
-+        # Fold constants for all distances down to 128 bits
-+        for i in FOLD_DISTANCES:
-+            print(f'\t.fold_across_{i}_bits_consts = {{')
-+            # Given 64x64 => 128 bit carryless multiplication instructions, two
-+            # 64-bit fold constants are needed per "fold distance" i: one for
-+            # HI64_TERMS that is basically x^(i+64) mod G and one for LO64_TERMS
-+            # that is basically x^i mod G.  The exact values however undergo a
-+            # couple adjustments, described below.
-+            mults = []
-+            for j in [64, 0]:
-+                pow_of_x = i + j
-+                if lsb:
-+                    # Each 64x64 => 128 bit carryless multiplication instruction
-+                    # actually generates a 127-bit product in physical bits 0
-+                    # through 126, which in the lsb-first case represent the
-+                    # coefficients of x^1 through x^127, not x^0 through x^126.
-+                    # Thus in the lsb-first case, each such instruction
-+                    # implicitly adds an extra factor of x.  The below removes a
-+                    # factor of x from each constant to compensate for this.
-+                    # For n < 64 the x could be removed from either the reduced
-+                    # part or unreduced part, but for n == 64 the reduced part
-+                    # is the only option.  Just always use the reduced part.
-+                    pow_of_x -= 1
-+                # Make a factor of x^(64-n) be applied unreduced rather than
-+                # reduced, to cause the product to use only the x^(64-n) and
-+                # higher terms and always be zero in the lower terms.  Usually
-+                # this makes no difference as it does not affect the product's
-+                # congruence class mod G and the constant remains 64-bit, but
-+                # part of the final reduction from 128 bits does rely on this
-+                # property when it reuses one of the constants.
-+                pow_of_x -= 64 - n
-+                mults.append({ 'val': reduce(1 << pow_of_x, G) << (64 - n),
-+                               'desc': f'(x^{pow_of_x} mod G) * x^{64-n}' })
-+            print_mult_pair(v, mults)
-+            print('\t},')
-+
-+        # Shuffle table for handling 1..15 bytes at end
-+        print('\t.shuf_table = {')
-+        print('\t\t' + (16*'-1, ').rstrip())
-+        print('\t\t' + ''.join(f'{i:2}, ' for i in range(16)).rstrip())
-+        print('\t\t' + (16*'-1, ').rstrip())
-+        print('\t},')
-+
-+        # Barrett reduction constants for reducing 128 bits to the final CRC
-+        print('\t.barrett_reduction_consts = {')
-+        mults = []
-+
-+        val = div(1 << (63+n), G)
-+        desc = f'floor(x^{63+n} / G)'
-+        if not lsb:
-+            val = (val << 1) - (1 << 64)
-+            desc = f'({desc} * x) - x^64'
-+        mults.append({ 'val': val, 'desc': desc })
-+
-+        val = G - (1 << n)
-+        desc = f'G - x^{n}'
-+        if lsb and n == 64:
-+            assert (val & 1) != 0  # The x^0 term should always be nonzero.
-+            val >>= 1
-+            desc = f'({desc} - x^0) / x'
-+        else:
-+            pow_of_x = 64 - n - (1 if lsb else 0)
-+            val <<= pow_of_x
-+            desc = f'({desc}) * x^{pow_of_x}'
-+        mults.append({ 'val': val, 'desc': desc })
-+
-+        print_mult_pair(v, mults)
-+        print('\t},')
-+
-+        print('};')
-+
-+def parse_crc_variants(vars_string):
-+    variants = []
-+    for var_string in vars_string.split(','):
-+        bits, bit_order, generator_poly = var_string.split('_')
-+        assert bits.startswith('crc')
-+        bits = int(bits.removeprefix('crc'))
-+        assert generator_poly.startswith('0x')
-+        generator_poly = generator_poly.removeprefix('0x')
-+        assert len(generator_poly) % 2 == 0
-+        generator_poly = int(generator_poly, 16)
-+        variants.append(CrcVariant(bits, generator_poly, bit_order))
-+    return variants
-+
-+if len(sys.argv) != 3:
-+    sys.stderr.write(f'Usage: {sys.argv[0]} CONSTS_TYPE[,CONSTS_TYPE]... CRC_VARIANT[,CRC_VARIANT]...\n')
-+    sys.stderr.write('  CONSTS_TYPE can be sliceby[1-8] or x86_pclmul\n')
-+    sys.stderr.write('  CRC_VARIANT is crc${num_bits}_${bit_order}_${generator_poly_as_hex}\n')
-+    sys.stderr.write('     E.g. crc16_msb_0x8bb7 or crc32_lsb_0xedb88320\n')
-+    sys.stderr.write('     Polynomial must use the given bit_order and exclude x^{num_bits}\n')
-+    sys.exit(1)
-+
-+print('/* SPDX-License-Identifier: GPL-2.0-or-later */')
-+print('/*')
-+print(' * CRC constants generated by:')
-+print(' *')
-+print(f' *\t{sys.argv[0]} {" ".join(sys.argv[1:])}')
-+print(' *')
-+print(' * Do not edit manually.')
-+print(' */')
-+consts_types = sys.argv[1].split(',')
-+variants = parse_crc_variants(sys.argv[2])
-+for consts_type in consts_types:
-+    if consts_type.startswith('sliceby'):
-+        gen_slicebyN_tables(variants, int(consts_type.removeprefix('sliceby')))
-+    elif consts_type == 'x86_pclmul':
-+        gen_x86_pclmul_consts(variants)
-+    else:
-+        raise ValueError(f'Unknown consts_type: {consts_type}')
++/*
++ * CRC folding constants generated for least-significant-bit-first CRC-32 using
++ * G(x) = x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 + x^10 + x^8 + x^7 +
++ *        x^5 + x^4 + x^2 + x^1 + x^0
++ */
++static const struct {
++	u64 fold_across_2048_bits_consts[2];
++	u64 fold_across_1024_bits_consts[2];
++	u64 fold_across_512_bits_consts[2];
++	u64 fold_across_256_bits_consts[2];
++	u64 fold_across_128_bits_consts[2];
++	u8 shuf_table[48];
++	u64 barrett_reduction_consts[2];
++} crc32_lsb_0xedb88320_consts ____cacheline_aligned __maybe_unused = {
++	.fold_across_2048_bits_consts = {
++		0x00000000ce3371cb,	/* HI64_TERMS: (x^2079 mod G) * x^32 */
++		0x00000000e95c1271,	/* LO64_TERMS: (x^2015 mod G) * x^32 */
++	},
++	.fold_across_1024_bits_consts = {
++		0x0000000033fff533,	/* HI64_TERMS: (x^1055 mod G) * x^32 */
++		0x00000000910eeec1,	/* LO64_TERMS: (x^991 mod G) * x^32 */
++	},
++	.fold_across_512_bits_consts = {
++		0x000000008f352d95,	/* HI64_TERMS: (x^543 mod G) * x^32 */
++		0x000000001d9513d7,	/* LO64_TERMS: (x^479 mod G) * x^32 */
++	},
++	.fold_across_256_bits_consts = {
++		0x00000000f1da05aa,	/* HI64_TERMS: (x^287 mod G) * x^32 */
++		0x0000000081256527,	/* LO64_TERMS: (x^223 mod G) * x^32 */
++	},
++	.fold_across_128_bits_consts = {
++		0x00000000ae689191,	/* HI64_TERMS: (x^159 mod G) * x^32 */
++		0x00000000ccaa009e,	/* LO64_TERMS: (x^95 mod G) * x^32 */
++	},
++	.shuf_table = {
++		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
++		 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
++		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
++	},
++	.barrett_reduction_consts = {
++		0xb4e5b025f7011641,	/* HI64_TERMS: floor(x^95 / G) */
++		0x00000001db710640,	/* LO64_TERMS: (G - x^32) * x^31 */
++	},
++};
+diff --git a/arch/x86/lib/crc32-glue.c b/arch/x86/lib/crc32-glue.c
+index 131c305e9ea0d..9c3f9c1b7bb9d 100644
+--- a/arch/x86/lib/crc32-glue.c
++++ b/arch/x86/lib/crc32-glue.c
+@@ -5,47 +5,24 @@
+  * Copyright (C) 2008 Intel Corporation
+  * Copyright 2012 Xyratex Technology Limited
+  * Copyright 2024 Google LLC
+  */
+ 
+-#include <asm/cpufeatures.h>
+-#include <asm/simd.h>
+-#include <crypto/internal/simd.h>
+ #include <linux/crc32.h>
+-#include <linux/linkage.h>
+ #include <linux/module.h>
+-
+-/* minimum size of buffer for crc32_pclmul_le_16 */
+-#define CRC32_PCLMUL_MIN_LEN	64
++#include "crc-pclmul-template.h"
+ 
+ static DEFINE_STATIC_KEY_FALSE(have_crc32);
+ static DEFINE_STATIC_KEY_FALSE(have_pclmulqdq);
+ 
+-u32 crc32_pclmul_le_16(u32 crc, const u8 *buffer, size_t len);
++DECLARE_CRC_PCLMUL_FUNCS(crc32_lsb, u32);
+ 
+ u32 crc32_le_arch(u32 crc, const u8 *p, size_t len)
+ {
+-	if (len >= CRC32_PCLMUL_MIN_LEN + 15 &&
+-	    static_branch_likely(&have_pclmulqdq) && crypto_simd_usable()) {
+-		size_t n = -(uintptr_t)p & 15;
+-
+-		/* align p to 16-byte boundary */
+-		if (n) {
+-			crc = crc32_le_base(crc, p, n);
+-			p += n;
+-			len -= n;
+-		}
+-		n = round_down(len, 16);
+-		kernel_fpu_begin();
+-		crc = crc32_pclmul_le_16(crc, p, n);
+-		kernel_fpu_end();
+-		p += n;
+-		len -= n;
+-	}
+-	if (len)
+-		crc = crc32_le_base(crc, p, len);
+-	return crc;
++	CRC_PCLMUL(crc, p, len, crc32_lsb, crc32_lsb_0xedb88320_consts,
++		   have_pclmulqdq);
++	return crc32_le_base(crc, p, len);
+ }
+ EXPORT_SYMBOL(crc32_le_arch);
+ 
+ #ifdef CONFIG_X86_64
+ #define CRC32_INST "crc32q %1, %q0"
+@@ -95,12 +72,14 @@ EXPORT_SYMBOL(crc32_be_arch);
+ 
+ static int __init crc32_x86_init(void)
+ {
+ 	if (boot_cpu_has(X86_FEATURE_XMM4_2))
+ 		static_branch_enable(&have_crc32);
+-	if (boot_cpu_has(X86_FEATURE_PCLMULQDQ))
++	if (boot_cpu_has(X86_FEATURE_PCLMULQDQ)) {
+ 		static_branch_enable(&have_pclmulqdq);
++		INIT_CRC_PCLMUL(crc32_lsb);
++	}
+ 	return 0;
+ }
+ arch_initcall(crc32_x86_init);
+ 
+ static void __exit crc32_x86_exit(void)
+diff --git a/arch/x86/lib/crc32-pclmul.S b/arch/x86/lib/crc32-pclmul.S
+index f9637789cac19..f20f40fb0172d 100644
+--- a/arch/x86/lib/crc32-pclmul.S
++++ b/arch/x86/lib/crc32-pclmul.S
+@@ -1,217 +1,6 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright 2012 Xyratex Technology Limited
+- *
+- * Using hardware provided PCLMULQDQ instruction to accelerate the CRC32
+- * calculation.
+- * CRC32 polynomial:0x04c11db7(BE)/0xEDB88320(LE)
+- * PCLMULQDQ is a new instruction in Intel SSE4.2, the reference can be found
+- * at:
+- * http://www.intel.com/products/processor/manuals/
+- * Intel(R) 64 and IA-32 Architectures Software Developer's Manual
+- * Volume 2B: Instruction Set Reference, N-Z
+- *
+- * Authors:   Gregory Prestas <Gregory_Prestas@us.xyratex.com>
+- *	      Alexander Boyko <Alexander_Boyko@xyratex.com>
+- */
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++// Copyright 2025 Google LLC
+ 
+-#include <linux/linkage.h>
++#include "crc-pclmul-template.S"
+ 
+-
+-.section .rodata
+-.align 16
+-/*
+- * [x4*128+32 mod P(x) << 32)]'  << 1   = 0x154442bd4
+- * #define CONSTANT_R1  0x154442bd4LL
+- *
+- * [(x4*128-32 mod P(x) << 32)]' << 1   = 0x1c6e41596
+- * #define CONSTANT_R2  0x1c6e41596LL
+- */
+-.Lconstant_R2R1:
+-	.octa 0x00000001c6e415960000000154442bd4
+-/*
+- * [(x128+32 mod P(x) << 32)]'   << 1   = 0x1751997d0
+- * #define CONSTANT_R3  0x1751997d0LL
+- *
+- * [(x128-32 mod P(x) << 32)]'   << 1   = 0x0ccaa009e
+- * #define CONSTANT_R4  0x0ccaa009eLL
+- */
+-.Lconstant_R4R3:
+-	.octa 0x00000000ccaa009e00000001751997d0
+-/*
+- * [(x64 mod P(x) << 32)]'       << 1   = 0x163cd6124
+- * #define CONSTANT_R5  0x163cd6124LL
+- */
+-.Lconstant_R5:
+-	.octa 0x00000000000000000000000163cd6124
+-.Lconstant_mask32:
+-	.octa 0x000000000000000000000000FFFFFFFF
+-/*
+- * #define CRCPOLY_TRUE_LE_FULL 0x1DB710641LL
+- *
+- * Barrett Reduction constant (u64`) = u` = (x**64 / P(x))` = 0x1F7011641LL
+- * #define CONSTANT_RU  0x1F7011641LL
+- */
+-.Lconstant_RUpoly:
+-	.octa 0x00000001F701164100000001DB710641
+-
+-#define CONSTANT %xmm0
+-
+-#ifdef __x86_64__
+-#define CRC     %edi
+-#define BUF     %rsi
+-#define LEN     %rdx
+-#else
+-#define CRC     %eax
+-#define BUF     %edx
+-#define LEN     %ecx
+-#endif
+-
+-
+-
+-.text
+-/**
+- *      Calculate crc32
+- *      CRC - initial crc32
+- *      BUF - buffer (16 bytes aligned)
+- *      LEN - sizeof buffer (16 bytes aligned), LEN should be greater than 63
+- *      return %eax crc32
+- *      u32 crc32_pclmul_le_16(u32 crc, const u8 *buffer, size_t len);
+- */
+-
+-SYM_FUNC_START(crc32_pclmul_le_16) /* buffer and buffer size are 16 bytes aligned */
+-	movdqa  (BUF), %xmm1
+-	movdqa  0x10(BUF), %xmm2
+-	movdqa  0x20(BUF), %xmm3
+-	movdqa  0x30(BUF), %xmm4
+-	movd    CRC, CONSTANT
+-	pxor    CONSTANT, %xmm1
+-	sub     $0x40, LEN
+-	add     $0x40, BUF
+-	cmp     $0x40, LEN
+-	jb      .Lless_64
+-
+-#ifdef __x86_64__
+-	movdqa .Lconstant_R2R1(%rip), CONSTANT
+-#else
+-	movdqa .Lconstant_R2R1, CONSTANT
+-#endif
+-
+-.Lloop_64:/*  64 bytes Full cache line folding */
+-	prefetchnta    0x40(BUF)
+-	movdqa  %xmm1, %xmm5
+-	movdqa  %xmm2, %xmm6
+-	movdqa  %xmm3, %xmm7
+-#ifdef __x86_64__
+-	movdqa  %xmm4, %xmm8
+-#endif
+-	pclmulqdq $0x00, CONSTANT, %xmm1
+-	pclmulqdq $0x00, CONSTANT, %xmm2
+-	pclmulqdq $0x00, CONSTANT, %xmm3
+-#ifdef __x86_64__
+-	pclmulqdq $0x00, CONSTANT, %xmm4
+-#endif
+-	pclmulqdq $0x11, CONSTANT, %xmm5
+-	pclmulqdq $0x11, CONSTANT, %xmm6
+-	pclmulqdq $0x11, CONSTANT, %xmm7
+-#ifdef __x86_64__
+-	pclmulqdq $0x11, CONSTANT, %xmm8
+-#endif
+-	pxor    %xmm5, %xmm1
+-	pxor    %xmm6, %xmm2
+-	pxor    %xmm7, %xmm3
+-#ifdef __x86_64__
+-	pxor    %xmm8, %xmm4
+-#else
+-	/* xmm8 unsupported for x32 */
+-	movdqa  %xmm4, %xmm5
+-	pclmulqdq $0x00, CONSTANT, %xmm4
+-	pclmulqdq $0x11, CONSTANT, %xmm5
+-	pxor    %xmm5, %xmm4
+-#endif
+-
+-	pxor    (BUF), %xmm1
+-	pxor    0x10(BUF), %xmm2
+-	pxor    0x20(BUF), %xmm3
+-	pxor    0x30(BUF), %xmm4
+-
+-	sub     $0x40, LEN
+-	add     $0x40, BUF
+-	cmp     $0x40, LEN
+-	jge     .Lloop_64
+-.Lless_64:/*  Folding cache line into 128bit */
+-#ifdef __x86_64__
+-	movdqa  .Lconstant_R4R3(%rip), CONSTANT
+-#else
+-	movdqa  .Lconstant_R4R3, CONSTANT
+-#endif
+-	prefetchnta     (BUF)
+-
+-	movdqa  %xmm1, %xmm5
+-	pclmulqdq $0x00, CONSTANT, %xmm1
+-	pclmulqdq $0x11, CONSTANT, %xmm5
+-	pxor    %xmm5, %xmm1
+-	pxor    %xmm2, %xmm1
+-
+-	movdqa  %xmm1, %xmm5
+-	pclmulqdq $0x00, CONSTANT, %xmm1
+-	pclmulqdq $0x11, CONSTANT, %xmm5
+-	pxor    %xmm5, %xmm1
+-	pxor    %xmm3, %xmm1
+-
+-	movdqa  %xmm1, %xmm5
+-	pclmulqdq $0x00, CONSTANT, %xmm1
+-	pclmulqdq $0x11, CONSTANT, %xmm5
+-	pxor    %xmm5, %xmm1
+-	pxor    %xmm4, %xmm1
+-
+-	cmp     $0x10, LEN
+-	jb      .Lfold_64
+-.Lloop_16:/* Folding rest buffer into 128bit */
+-	movdqa  %xmm1, %xmm5
+-	pclmulqdq $0x00, CONSTANT, %xmm1
+-	pclmulqdq $0x11, CONSTANT, %xmm5
+-	pxor    %xmm5, %xmm1
+-	pxor    (BUF), %xmm1
+-	sub     $0x10, LEN
+-	add     $0x10, BUF
+-	cmp     $0x10, LEN
+-	jge     .Lloop_16
+-
+-.Lfold_64:
+-	/* perform the last 64 bit fold, also adds 32 zeroes
+-	 * to the input stream */
+-	pclmulqdq $0x01, %xmm1, CONSTANT /* R4 * xmm1.low */
+-	psrldq  $0x08, %xmm1
+-	pxor    CONSTANT, %xmm1
+-
+-	/* final 32-bit fold */
+-	movdqa  %xmm1, %xmm2
+-#ifdef __x86_64__
+-	movdqa  .Lconstant_R5(%rip), CONSTANT
+-	movdqa  .Lconstant_mask32(%rip), %xmm3
+-#else
+-	movdqa  .Lconstant_R5, CONSTANT
+-	movdqa  .Lconstant_mask32, %xmm3
+-#endif
+-	psrldq  $0x04, %xmm2
+-	pand    %xmm3, %xmm1
+-	pclmulqdq $0x00, CONSTANT, %xmm1
+-	pxor    %xmm2, %xmm1
+-
+-	/* Finish up with the bit-reversed barrett reduction 64 ==> 32 bits */
+-#ifdef __x86_64__
+-	movdqa  .Lconstant_RUpoly(%rip), CONSTANT
+-#else
+-	movdqa  .Lconstant_RUpoly, CONSTANT
+-#endif
+-	movdqa  %xmm1, %xmm2
+-	pand    %xmm3, %xmm1
+-	pclmulqdq $0x10, CONSTANT, %xmm1
+-	pand    %xmm3, %xmm1
+-	pclmulqdq $0x00, CONSTANT, %xmm1
+-	pxor    %xmm2, %xmm1
+-	pextrd  $0x01, %xmm1, %eax
+-
+-	RET
+-SYM_FUNC_END(crc32_pclmul_le_16)
++DEFINE_CRC_PCLMUL_FUNCS(crc32_lsb, /* bits= */ 32, /* lsb= */ 1)
 -- 
 2.48.1
 
