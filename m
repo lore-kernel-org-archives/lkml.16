@@ -1,128 +1,104 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA51D125B2;
-	Mon, 10 Feb 2025 03:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D89C2C8;
+	Mon, 10 Feb 2025 03:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739159532; cv=none; b=Ee9Rxq0hZDDGlklhV+5dkCplj3CdSShheIfuTAApti6tWdYQ71UpaKQkPEy14/gs0sMrDx1N9Ro+FWLaJVYYRitLD6ubVYSxxcDdVGcWJLznbMvY181b14x75Viu38kQAr8m3Xl3ggmNjUTOAEg36zedHMDOKHU8Qa4B9KFR17A=
+	t=1739159632; cv=none; b=KyLQC9enbQ5T+gHjpsbrRq9lv+46Qiw/sysq/cQZeIB5l6aPEyr933rnxlV2X3bx3nwJq7htE2IoD5kUxRAPxLLAN4umS4A/zU5zsVBBM6faZbaKEdtpyEpaPYk71af9lL6/4J3CvGgaJq/Q/GoApKYzM7f7b1U3oLkR8775WTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739159532; c=relaxed/simple;
-	bh=28nhjIqmGv2HbdXYQNPlD/qwIn8nqK1Z1FnvA35GsIs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=cKqrufoUp1YbJSE+CTfwszog4JCMAIQAlnverB5Wt1fnqBu3hY/2YGHjNYeDPOF7i0/qNrOLDWN4bcldbuzqKdI9eav9L4dKNw5nZ3jE14gFrH3wcM4x977qPmPNr2Db0zGI4HS3X3y3ec6gWANKgB21deQJ07ksonK0seAwCyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=GFSvKdEk; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
+	s=arc-20240116; t=1739159632; c=relaxed/simple;
+	bh=vom67kOHKiQuX8fnXwa0GURTiCPE8OBtrY6jq06pSx8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CdO5uJbPhK1aIgWQGCzEG4DcaahTw12UVipT/6+0r1fmWcG8SU+sC2Skm7L0H1NdHDvZhSo3UQIaM614lbLID9zskZrNne+v3L/rhRsBIdSIlkpEJpv6rcm2Iy3XGZx778aHCECmCYoTYZj8YdsxYtNkjGFipxy3Wer8slRyNDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=BGlI/Hcb; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="GFSvKdEk"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BGlI/Hcb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1739159628;
+	bh=aMvp0QFhdjAW7mg6EKEmRiSR9LwEqTvh2enm+qN5jtU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=BGlI/HcbwcGjyWyHEmNYsDW+Ocof2vzjzPQU2cZp1q7lkJHLPsnxKLnRt+uzZZ4VP
+	 UWFW6bLhYX69WOcV5tRIBmAmdDV9adQDVH8ML1JoI6qjzaSmiivTkzTn05ntHrdwgO
+	 3ex4ibOdnsxEi2Y7CxsYc0oEgFn7basEnfuVSy7sb+7toUzWVhM6Nf4LszR3ISGzT9
+	 n3yZBqkhmGgUaq3YelInEsj9kBspX1ayKvDs70+30ytyQleUFkOUK/hhZweJQnoarR
+	 Sx1rihmBEkURhmkcNuDSSSPCWYhYxE12sfAhzHTgmWx1wjAX+bwaRTcqL5TCngxvil
+	 YNxVPl/rKFXHA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4YrrHP2MQmz9shp;
-	Mon, 10 Feb 2025 04:52:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
-	s=MBO0001; t=1739159521;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=NSZuHneQJ8E7PuSXeM+u1QfGVntSHexPdYDiQ+xH+8w=;
-	b=GFSvKdEkBADv1j9CAKotDU7aEWO2kPTxKB4iGWRMssF0vGQjYfY9418/KuQ+AeGpCjOGCr
-	Rq+9vI1EKtSlTqyzT/QSxGq7Q5ha0NocR+s1bNX7lbyP8jJGHU8qtK+sxfv1e6Q304ipxy
-	3X4Bs2trOamT6t51W5r6xcn7HXoI9Cm0TtVg0qIz9GRe9vyGDYMR/pYTtWGyy/bfhC79qN
-	hhTAmi/v36hF6LC1mKFa4p74pG4ItEk/G5rrpp/79QvwGLfzwala1gdMlAvBOBTczq/K7V
-	+45krd3MRqWJkUWESgD0B9ab/Ypurdkp6rtlYXmi+Kp6a0/16hJZWG6N6XwgrA==
-From: Ethan Carter Edwards <ethan@ethancedwards.com>
-Date: Sun, 09 Feb 2025 22:51:54 -0500
-Subject: [PATCH v2] drm/msm/dpu: Fix uninitialized variable
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YrrKS6Bn4z4wby;
+	Mon, 10 Feb 2025 14:53:48 +1100 (AEDT)
+Date: Mon, 10 Feb 2025 14:53:48 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>, Linux Kernel Mailing
+ List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the security tree
+Message-ID: <20250210145348.59791103@canb.auug.org.au>
+In-Reply-To: <CAHC9VhSJceL2PmFw1RiQEd9B3c7wjt6i_KzFxUjVdHV-Zxdyzw@mail.gmail.com>
+References: <20250210121813.3e24cdaa@canb.auug.org.au>
+	<CAHC9VhSJceL2PmFw1RiQEd9B3c7wjt6i_KzFxUjVdHV-Zxdyzw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250209-dpu-v2-1-114dfd4ebefd@ethancedwards.com>
-X-B4-Tracking: v=1; b=H4sIANl3qWcC/1WNQQ7CIBREr9L8tRhABezKe5gu8POxLCwNVNQ03
- F3szuWbzLxZIVMKlKHvVkhUQg5xaiB3HeBopzux4BqD5PLEJT8zNz8ZHrxFbTwqoaE150Q+vDf
- LdWg8hrzE9NmkRfzS/30RTDDubkopY45e8wst7QzJvWxyeY/xAUOt9Quk107cngAAAA==
-X-Change-ID: 20250209-dpu-c3fac78fc617
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
- David Airlie <airlied@gmail.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- Simona Vetter <simona@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- linux-hardening@vger.kernel.org, 
- Ethan Carter Edwards <ethan@ethancedwards.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1837;
- i=ethan@ethancedwards.com; h=from:subject:message-id;
- bh=28nhjIqmGv2HbdXYQNPlD/qwIn8nqK1Z1FnvA35GsIs=;
- b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
- GhQcXlVeHBLOHN2K3YwTkNySmRIZGNFODlGZzlNVHF3NW5PdTBJCkZ2YnphRGxWTHBYMmdJSGg2
- ZTJPVWhZR01TNEdXVEZGbHY4NXlta1BOV2NvN1B6cjBnUXpoNVVKWkFnREY2Y0EKVE1UekNpUER
- vMmVtcXBrTWJENEZ0d1RZRFlxK0xIbmRiZC8xZGwvRnEvODhic2Q5MWorWXcvQS8vdEd1OWUreQ
- pGdkhVVmN5ODQ2b3cyMzJkNkYrVHk5OXFIUjh1VEM2VWQ4eG5CUUJSQms0Uwo9cHZzKwotLS0tL
- UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
-X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
- fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
-X-Rspamd-Queue-Id: 4YrrHP2MQmz9shp
+Content-Type: multipart/signed; boundary="Sig_/vS1sW4cJo2su/RIXY388RZK";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-There is a possibility for an uninitialized *ret* variable to be
-returned in some code paths.
+--Sig_/vS1sW4cJo2su/RIXY388RZK
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Fix this by initializing *ret* to 0.
+Hi Paul,
 
-Addresses-Coverity-ID: 1642546 ("Uninitialized scalar variable")
-Fixes: 774bcfb731765d ("drm/msm/dpu: add support for virtual planes")
-Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
----
-Changes in v2:
-- Return explicit 0 when no error occurs
-- Add hardening mailing lists
-- Link to v1: https://lore.kernel.org/r/20250209-dpu-v1-1-0db666884f70@ethancedwards.com
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+On Sun, 9 Feb 2025 22:44:42 -0500 Paul Moore <paul@paul-moore.com> wrote:
+>
+> On Sun, Feb 9, 2025 at 8:18=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.or=
+g.au> wrote:
+> >
+> > After merging the security tree, today's linux-next build (arm
+> > multi_v7_defconfig) failed like this:
+> >
+> > In file included from include/linux/perf_event.h:62,
+> >                  from arch/arm/vfp/vfpmodule.c:21:
+> > include/linux/security.h:2379:12: warning: no previous prototype for 's=
+ecurity_uring_allowed' [-Wmissing-prototypes]
+> >  2379 | extern int security_uring_allowed(void)
+> >       |            ^~~~~~~~~~~~~~~~~~~~~~ =20
+>=20
+> Thanks Stephen, I just pushed a fix to the LSM tree, it should be
+> fixed on your next pull.
+>=20
+> https://lore.kernel.org/linux-security-module/20250210034132.8448-2-paul@=
+paul-moore.com/
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-index 098abc2c0003cde90ce6219c97ee18fa055a92a5..af3e541f60c303eb5212524e877129359b5ca98c 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-@@ -1164,7 +1164,6 @@ int dpu_assign_plane_resources(struct dpu_global_state *global_state,
- 			       unsigned int num_planes)
- {
- 	unsigned int i;
--	int ret;
- 
- 	for (i = 0; i < num_planes; i++) {
- 		struct drm_plane_state *plane_state = states[i];
-@@ -1173,13 +1172,13 @@ int dpu_assign_plane_resources(struct dpu_global_state *global_state,
- 		    !plane_state->visible)
- 			continue;
- 
--		ret = dpu_plane_virtual_assign_resources(crtc, global_state,
-+		int ret = dpu_plane_virtual_assign_resources(crtc, global_state,
- 							 state, plane_state);
- 		if (ret)
--			break;
-+			return ret;
- 	}
- 
--	return ret;
-+	return 0;
- }
- 
- static void dpu_plane_flush_csc(struct dpu_plane *pdpu, struct dpu_sw_pipe *pipe)
+Shouldn't it be "static inline" instead of "extern inline"?
 
----
-base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
-change-id: 20250209-dpu-c3fac78fc617
+--=20
+Cheers,
+Stephen Rothwell
 
-Best regards,
--- 
-Ethan Carter Edwards <ethan@ethancedwards.com>
+--Sig_/vS1sW4cJo2su/RIXY388RZK
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmepeEwACgkQAVBC80lX
+0GxrLgf+JgtgFOPsoNv++HjaxBXhL1YJ2SftbWFblPSJNvZh3IOrfaTz+lFaNmwi
+XdkM0lYo+Ud5f0OiFy3uJNxqaMsKnOIJ3Czyrdx+QgchCEI8AiOs1S4ECkMH2etK
+S9SwKLDZmfTL1PPQEqLjIhjqBdGIfpP1TBwaM4g+e47ovBHMR+Up+Jy6eaFW03Dz
+kDmEKfJk9vkH7S7PUTJe6l3sWGDslOKHwuTVlDX1thiuDYU664BvW2pJZKI2F75n
+RYJj2kExavwoIQGNTQHFDcMWSL3KjOeCXsVo/JYwqjZrS2eEdm0f2GV2fqUrVG37
+vdCjlaLdHs1ccTG0bA5UhsuRombD9g==
+=n09/
+-----END PGP SIGNATURE-----
+
+--Sig_/vS1sW4cJo2su/RIXY388RZK--
