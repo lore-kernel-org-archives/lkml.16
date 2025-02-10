@@ -1,101 +1,149 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746D51F61C
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 01:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98DBD23CB;
+	Mon, 10 Feb 2025 01:39:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.248.49.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739150976; cv=none; b=ZyCZvxajac1yZO+oXoeNK8JlfaJreOSLp9GaXXWvkHuYOVDwGso9HwqdYXv1WCt+bJg8qKquq3dZxE+ybfDttRbU1fNqVuaJibcB2sf5ntdQVtulDwWW7MjSP232SRnyh5p5Z+GvFJf7+YhAUpuRuPhBH2BCl+QHzDF192UwylA=
+	t=1739151593; cv=none; b=oUHfvgunDLCjvXg6Rzyk5skCytPxJybT+Hh7vc1jPHTedU7oqPh+1DLefO4GOkZg+Q5M4DG3y2QCK5PSFuLLQvHepyImXLlmNi3RTHDFY57U+1NOu1zvsWmGtMOyRCeaaPMrG+1hRQnvHjqDt2E8HNtIh/iumIDZ6DT++W3fORg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739150976; c=relaxed/simple;
-	bh=07o3I4HbYlJica2FANHzS2eFyyfsfbFG9rhm1kC1orc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=knDawa3uy8+lCtSmQRZ5wMxRrHXBVWYOzinX5E8mm56FTOGf7G7Q6X99A7eC7Pnz41ll4EnHcPBvW8ddOtHDD8zRBfuVgTH4cwes4c9bOpsuCC6L7NPeRCM99FIcmdIDRAEZT5V9ia9oeD6DgWYpthzl0ql0husE/2DA1J1dbRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=1V/Fr5r1; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="1V/Fr5r1"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38dc5764fc0so2626670f8f.3
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 17:29:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1739150973; x=1739755773; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=07o3I4HbYlJica2FANHzS2eFyyfsfbFG9rhm1kC1orc=;
-        b=1V/Fr5r14jSE7yWvVlRdfWQZzJYtp2OffCLt3K2b2UiaoyOWYAyvEaVNqYIdJQetoB
-         7E3DvgomyW3tYwtJIQ8lkksKn++7PeXahrsDaXUL9ozQ4FDYdwi0k2N7oMngPJISqlW/
-         6OBMj+9MEm2LYQfyft6fJ/o4u37+KNXq4Ch8zKj+m2KvX08JclF8ywwOd9YgdWqbgiKs
-         cmYNbJ20lofdX3vb3Ba1PovmpmOlrPQDSxpI0We3C0UvJqwY/lL/KPXWFdfbXo/ovKOu
-         X4FMnYz7MtrFwl8fdRc+3/hhSR/roZboMxJIEzQsVBtWh1gsUN3p10/b16BApogOm5l5
-         +fig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739150973; x=1739755773;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=07o3I4HbYlJica2FANHzS2eFyyfsfbFG9rhm1kC1orc=;
-        b=W3X4kwDiIjSGW/purl36zn5nc4AjpayXj8iWUvGBm25NFgdVc4ttf4M+Olqp63nohM
-         /wqIIwAEyHfUSu/ySUDPD5J2b9QHLEhLM6iMd75YLt8wbLBELtRaTgEzWeYBbgmZFGpx
-         Gefqwfi+kOP/weBJ4VkRcfRAHmwotswmq2+PjYViwmY+rmbh94GPLKd0q9kBT+FGsrtL
-         CnKsXOCiuIskNA3NNkD9d+BLJVazHO3FXtrzJaxvk+MpjXMGX7QeCn2GPsx9kff1EJFZ
-         MlXBpqXtJuoXX7iGwM4WKapV50tH/FO+shLbAJgc+Ypl9QlOaBLozg2JGKVRVNZNM+cN
-         8DnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBlmqNUf+l79kzG+1cNjB2SicSqwPdy1Le0ChPScbbNOQba6vpks5HC8T/3g1PCwIZg93jqylbwt0shh4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxa/AgvRObXYUnzzCXs9ItpBkctyLjLFhpKeg8FsqolcQCjrr37
-	8u6Vrnw5FYSF3nyAMhdPdKrDWUIudEQbTpmbZ3yX48h0OhsJ7oNF9djiDyJSI5M=
-X-Gm-Gg: ASbGnctwQtG+qRhDGZGTOhFxWAOev1u0p0PxJjr7L9KwhcvlQXa8Ti0m24cQetuMNlE
-	DcWRMs2mjOYkddEa36SWzQP3ec+iRvPlIhqG67x7alT5nSSgJ8M2BSuw22+4cCgaXwPk9QNuUV8
-	0GmsvnFZlVteb7Eeou9w0SYZDqHbXT8JwqNwmyOKcWzjE+oLDEaMz6H5ZOISEeDuK+07k0K5iqp
-	A2tQACgDyUyeUmQBscEHlyGnGoYllOMUD90UhOcDP2fWv1Eb1VOzIuKXxvhXSgtmds6q2g53pSK
-	0y5uYHFm2ZJQDGQDT0FLQVpteEH276C5+jh4oD225ebgf0mEFyGuNEWvbvSkV91/iDqY
-X-Google-Smtp-Source: AGHT+IFYUIyDwevBfJtWM7u0O8PeQ8NTrReFXYV+cCtuH80ZcC06C1A2DIhIt3PXfhDjajrlX8JlkA==
-X-Received: by 2002:a5d:6d0d:0:b0:385:fa3d:1988 with SMTP id ffacd0b85a97d-38dc8da6410mr8135110f8f.8.1739150972484;
-        Sun, 09 Feb 2025 17:29:32 -0800 (PST)
-Received: from airbuntu (host109-154-33-115.range109-154.btcentralplus.com. [109.154.33.115])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc17e278bsm10048041f8f.48.2025.02.09.17.29.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 17:29:32 -0800 (PST)
-Date: Mon, 10 Feb 2025 01:29:31 +0000
-From: Qais Yousef <qyousef@layalina.io>
-To: zihan zhou <15645113830zzh@gmail.com>
-Cc: bsegall@google.com, dietmar.eggemann@arm.com, juri.lelli@redhat.com,
-	linux-kernel@vger.kernel.org, mgorman@suse.de, mingo@redhat.com,
-	peterz@infradead.org, rostedt@goodmis.org,
-	vincent.guittot@linaro.org, vschneid@redhat.com
-Subject: Re: [PATCH V3 1/2] sched: Reduce the default slice to avoid tasks
- getting an extra tick
-Message-ID: <20250210012931.ym337oexdcjmwwzv@airbuntu>
-References: <20250208074821.11832-1-15645113830zzh@gmail.com>
- <20250208075322.13139-1-15645113830zzh@gmail.com>
+	s=arc-20240116; t=1739151593; c=relaxed/simple;
+	bh=6tI7QAXib5VmS3pEdyl1MKQdUwVYq/ESMzWC+7SK860=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JA8gv4Yce2+F9fpl2H7QW42c/QiV2vzQ9jS75R0D6zxlldeBNodcXvRJrjjYxEKvwwHbjDtNV0WO7NNBn9jLxlv/VBHswQzIxLgJSlG116aoOc/MlonOTsmUKwCadqB6I82FZLsxi7FWePFAoeoR1n8iZ1riJfMa3RAERbbKYQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com; spf=pass smtp.mailfrom=socionext.com; arc=none smtp.client-ip=202.248.49.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=socionext.com
+Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 10 Feb 2025 10:39:43 +0900
+Received: from mail.mfilter.local (mail-arc01.css.socionext.com [10.213.46.36])
+	by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id 8D8232006EA4;
+	Mon, 10 Feb 2025 10:39:43 +0900 (JST)
+Received: from iyokan2.css.socionext.com ([172.31.9.53]) by m-FILTER with ESMTP; Mon, 10 Feb 2025 10:39:43 +0900
+Received: from [10.212.246.222] (unknown [10.212.246.222])
+	by iyokan2.css.socionext.com (Postfix) with ESMTP id 32C5CAB187;
+	Mon, 10 Feb 2025 10:39:43 +0900 (JST)
+Message-ID: <90c7077f-0e2e-4d9e-912d-913a51170acc@socionext.com>
+Date: Mon, 10 Feb 2025 10:39:42 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250208075322.13139-1-15645113830zzh@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] misc: pci_endpoint_test: Avoid issue of interrupts
+ remaining after request_irq error
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+ Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250122022446.2898248-1-hayashi.kunihiko@socionext.com>
+ <20250122022446.2898248-2-hayashi.kunihiko@socionext.com>
+ <20250128141242.pog2tuorvqmobain@thinkpad>
+ <2cdb5e43-47e0-43ba-ba17-87e8d5dc602d@socionext.com>
+ <20250207180229.klwodx7m3rmmopnq@thinkpad>
+Content-Language: en-US
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+In-Reply-To: <20250207180229.klwodx7m3rmmopnq@thinkpad>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 02/08/25 15:53, zihan zhou wrote:
-> The old default value for slice is 0.75 msec * (1 + ilog(ncpus)) which
-> means that we have a default slice of
-> 0.75 for 1 cpu
-> 1.50 up to 3 cpus
-> 2.25 up to 7 cpus
-> 3.00 for 8 cpus and above.
+Hi Manivannan,
 
-I brought the topic up of these magic values with Peter and Vincent in LPC as
-I think this logic is confusing. I have nothing against your patch, but if the
-maintainers agree I am in favour of removing it completely in favour of setting
-it to a single value that is the same across all systems.
+On 2025/02/08 3:02, Manivannan Sadhasivam wrote:
+> On Wed, Jan 29, 2025 at 04:54:46PM +0900, Kunihiko Hayashi wrote:
+>> Hi Manivannan,
+>>
+>> On 2025/01/28 23:12, Manivannan Sadhasivam wrote:
+>>> On Wed, Jan 22, 2025 at 11:24:44AM +0900, Kunihiko Hayashi wrote:
+>>>> After devm_request_irq() fails with error,
+>>>> pci_endpoint_test_free_irq_vectors() is called to free allocated
+>>>> vectors
+>>>> with pci_free_irq_vectors().
+>>>>
+>>>
+>>> You should mention the function name which you are referring to. Here it
+>>> is,
+>>> pci_endpoint_test_request_irq().
+>>
+>> I see. I'll make the commit message more clear.
+>>
+>>>> However some requested IRQs are still allocated, so there are still
+>>>
+>>> This is confusing. Are you saying that the previously requested IRQs are
+>>> not
+>>> freed when an error happens during the for loop in
+>>> pci_endpoint_test_request_irq()?
+>>
+>> Yes, after jumping to "fail:" label, it just prints an error message and
+>> returns the function.
+>>
+>> The pci_endpoint_test_request_irq() is called from the following
+>> functions:
+>> - pci_endpoint_test_probe()
+>> - pci_endpoint_test_set_irq()
+>>
+>> Both call pci_endpoint_test_free_irq_vectors() after the error, though,
+>> requested IRQs are not freed anywhere.
+>>
+> 
+> You should not use the word 'allocated' since that has a different meaning
+> and the source of confusion.
 
-I do think 1ms makes more sense as a default value given how modern workloads
-need faster responsiveness across the board. But keeping it 3ms to avoid much
-disturbance would be fine. We could also make it equal to TICK_MSEC (this
-define doesn't exist) if it is higher than 3ms.
+Surely, 'allocated' means the vectors allocated with pci_irq_vectors(), not
+the interrupts requested with request_irq().
 
-Do you use HZ=100 by the way? If yes, are you able to share the reasons? This
-configuration is too aggressive and bad for latencies and I doubt this tweak of
-the formula will make things better to them anyway.
+I'll rewrite with a right description.
+
+>>>> /proc/irq/* entries remaining and we encounters WARN() with the
+>>>> following
+>>>> message:
+>>>>
+>>>>       remove_proc_entry: removing non-empty directory 'irq/30', leaking
+>>>> at
+>>>>       least 'pci-endpoint-test.0'
+>>>>       WARNING: CPU: 0 PID: 80 at fs/proc/generic.c:717
+>>>> remove_proc_entry
+>>>>       +0x190/0x19c
+>>>
+>>> When did you encounter this WARN?
+>>
+>> Usually request_irq() can successfully get an interrupt.
+>> If request_irq() returned an error, pci_endpoint_test_free_irq_vectors()
+>> was
+>> called and the following call-trace was obtained:
+>>
+>> [   18.772522] Call trace:
+>> [   18.773743]  remove_proc_entry+0x190/0x19c
+>> [   18.775789]  unregister_irq_proc+0xd0/0x104
+>> [   18.777881]  free_desc+0x4c/0xcc
+>> [   18.779495]  irq_free_descs+0x68/0x8c
+>> [   18.781325]  irq_domain_free_irqs+0x15c/0x1bc
+>> [   18.783502]  msi_domain_free_locked.part.0+0x184/0x1d4
+>> [   18.786069]  msi_domain_free_irqs_all_locked+0x64/0x8c
+>> [   18.788637]  pci_msi_teardown_msi_irqs+0x48/0x54
+>> [   18.790947]  pci_free_msi_irqs+0x18/0x38
+>> [   18.792907]  pci_free_irq_vectors+0x64/0x8c
+>> [   18.794997]  pci_endpoint_test_ioctl+0x7e8/0xf40
+>> [   18.797304]  __arm64_sys_ioctl+0xa4/0xe8
+>> [   18.799265]  invoke_syscall+0x48/0x110
+>> [   18.801139]  el0_svc_common.constprop.0+0x40/0xe8
+>> [   18.803489]  do_el0_svc+0x20/0x2c
+>> [   18.805145]  el0_svc+0x30/0xd0
+>> [   18.806673]  el0t_64_sync_handler+0x13c/0x158
+>> [   18.808850]  el0t_64_sync+0x190/0x194
+>> [   18.810680] ---[ end trace 0000000000000000 ]---
+>>
+> 
+> Please add this info to the patch description.
+
+Okay, I'll add the call trace into the patch.
+
+Thank you,
+
+---
+Best Regards
+Kunihiko Hayashi
