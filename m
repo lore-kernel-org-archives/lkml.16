@@ -1,35 +1,35 @@
 Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8121D381B9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811A125291D
 	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:44:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739198670; cv=none; b=ZWbct1TSR0KpyuT8EHS0FxUlx5EamPbn5jKjAPivNPHeon82d0Rt2XKiY1AXnDq8Z7NSEJshvbxNvCRClvVgFhgGnLb+SL5ziSRlrMg3xBo7gR1PVQsURtCKkFIKmd8bPQVnyUWR0Lckx0cjmX9yPCIlKxojvRYae6P/fo4/ejc=
+	t=1739198670; cv=none; b=gZOLVmBEzVuEy2Cd9WJ7sKXNvq+dHoMwZUW5j7BA7esJ84y/gPQEV/0icQNR2AOZ3P3VKc2YX4xJM54a2NVA/P3etRlMLVVuan7+1gjdFEDFduBWz2b3Ud6mOfyub5yww41/7U3dhRKDmPX8tjE6/cPRUa9cal+g5JeSq+fppC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739198670; c=relaxed/simple;
-	bh=bimP60C+Iae4enK47JIucP2daR0elAA8ZZcHs8xsFq0=;
+	bh=ppMbnCRWPsfQbJrEQKyqp8woC+/d4djc4c6CY0GQa0s=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BJ1dCXa3aHJizWsRYfLfcVPLUf2Xs3KkrEYxim9pcElLEUzXO7XeePaso1hU+0jJoasW2T0ujT78CFn1Cx622wKdwuZqUqZpkEWsVXnd+h9cIPXvIrcUvfMxivjBAmrIpgz+7KLWCB2zrdAU4dXGTyw2GnFqAZE1UO6IoOtsJxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=jeIAL+lM; arc=none smtp.client-ip=45.89.224.132
+	 MIME-Version:Content-Type; b=pDrmf8y0J7MrW9Zc9aD1eSAcZ2dqap3xqU09mTJb8NXk7qBzHRYjrRS43mZQYL9tnTlhf5PjfnXOB/sn00mcrSIJHF81znq2oLwRJ44yauhofiZ6UZg/LltuHka6qT8B7EPFkRRVfzJ0bvNUk8O0B3+MI9jU23Fnx+juZ5pwdF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=f5Gk/fkc; arc=none smtp.client-ip=45.89.224.132
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="jeIAL+lM"
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="f5Gk/fkc"
 Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 4675E120008;
+	by mx1.sberdevices.ru (Postfix) with ESMTP id E7F0512000A;
 	Mon, 10 Feb 2025 17:34:41 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 4675E120008
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru E7F0512000A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
 	s=mail; t=1739198081;
-	bh=Z65oLmBcPx/herXhhzANuhgaRDcagc8x/OOfb0G4WKs=;
+	bh=gliwmRdogZU9sIlqZabr1bwcTTR24V3Y3ITQxHOj+S0=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=jeIAL+lM3gC20v753wT6BquatLl/7/zfEqwcVnIXCZvCx6dx9Xoaj2Td62sBswB/A
-	 Dk4qZK8wbcUGW1TfUwariq5CdlHOBgdfiW7B2InHJder9ft1uCE3Ul9SDauPCwUzp0
-	 ci+f3Rp9uBMZPTz9QSP+yoZJaG0f2IPBxZBk5osJ2lC3aNePVHHrW/ha0zZXyk/+6p
-	 LLEyUU+knXQXCzLmt3MA6bAc0TCkob5J1F16MTSir8zHntvL5Qd0MUkJeGTMcNMdUA
-	 eXxOa64YLOoY0n8LKR08lC21dxeAYEQAs/7PG2iPChoa4rKew+sJbmiUtuOpqNl8Kt
-	 uYoj1qhh00/rw==
+	b=f5Gk/fkcs9Jj/SPL1SvHIN/wbz3MqMocd/s4MSBfYdNI2/YhPjeGn4KnvPIKKqLV6
+	 0n/KYf6UWNqYkl0N0v1QLuKm1CuiA8h0gpslbOFCEApg+d3AIm9ywbnHsMs6ZoTfCO
+	 ReF17lpfzoxozfpdu9hQgHEjKuFJ4D8AcTFkKUuoffCUeCScSaOE3nrgE5h8SRxmRn
+	 +ajwv0snAfKXhH+z95rM3hy38bQkDKxK0aiNbfV1oQjFDShDURQQpo2+7tLan+SQYd
+	 eDZNci98KPSSVrdnf60jj4/SbHm983N/ZYHa8DmUqR99n0zxnl8/S6huysvVpQ+jvR
+	 diwgNj8C/98Ng==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
@@ -44,9 +44,9 @@ To: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger
 	<avromanov@salutedevices.com>
 CC: <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
 	<kernel@salutedevices.com>, Martin Kurbanov <mmkurbanov@salutedevices.com>
-Subject: [PATCH v5 4/6] mtd: spinand: otp: add helpers functions
-Date: Mon, 10 Feb 2025 17:34:16 +0300
-Message-ID: <20250210143429.286803-5-mmkurbanov@salutedevices.com>
+Subject: [PATCH v5 6/6] mtd: spinand: esmt: OTP access for F50{L,D}1G41LB
+Date: Mon, 10 Feb 2025 17:34:18 +0300
+Message-ID: <20250210143429.286803-7-mmkurbanov@salutedevices.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250210143429.286803-1-mmkurbanov@salutedevices.com>
 References: <20250210143429.286803-1-mmkurbanov@salutedevices.com>
@@ -77,74 +77,94 @@ X-KSMG-LinksScanning: Clean
 X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2025/02/10 08:53:00 #27153032
 X-KSMG-AntiVirus-Status: Clean, skipped
 
-The global functions spinand_otp_read() and spinand_otp_write() have
-been introduced. Since most SPI-NAND flashes read/write OTP in the same
-way, let's define global functions to avoid code duplication.
+Support for OTP area access on ESMT F50L1G41LB and F50D1G41LB chips.
 
 Signed-off-by: Martin Kurbanov <mmkurbanov@salutedevices.com>
 ---
- drivers/mtd/nand/spi/otp.c  | 109 ++++++++++++++++++++++++++++++++++++
- include/linux/mtd/spinand.h |   7 +++
- 2 files changed, 116 insertions(+)
+ drivers/mtd/nand/spi/esmt.c | 90 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 88 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mtd/nand/spi/otp.c b/drivers/mtd/nand/spi/otp.c
-index af9a7a69fc0f..ce41bca86ea9 100644
---- a/drivers/mtd/nand/spi/otp.c
-+++ b/drivers/mtd/nand/spi/otp.c
-@@ -66,6 +66,115 @@ static int spinand_user_otp_check_bounds(struct spinand_device *spinand,
- 					&spinand->user_otp->layout);
- }
+diff --git a/drivers/mtd/nand/spi/esmt.c b/drivers/mtd/nand/spi/esmt.c
+index 323a20901fc9..a164d821464d 100644
+--- a/drivers/mtd/nand/spi/esmt.c
++++ b/drivers/mtd/nand/spi/esmt.c
+@@ -8,10 +8,15 @@
+ #include <linux/device.h>
+ #include <linux/kernel.h>
+ #include <linux/mtd/spinand.h>
++#include <linux/spi/spi-mem.h>
  
-+static int spinand_otp_rw(struct spinand_device *spinand, loff_t ofs,
-+			  size_t len, size_t *retlen, u8 *buf, bool is_write,
-+			  const struct spinand_otp_layout *layout)
+ /* ESMT uses GigaDevice 0xc8 JECDEC ID on some SPI NANDs */
+ #define SPINAND_MFR_ESMT_C8			0xc8
+ 
++#define ESMT_F50L1G41LB_CFG_OTP_PROTECT		BIT(7)
++#define ESMT_F50L1G41LB_CFG_OTP_LOCK		\
++	(CFG_OTP_ENABLE | ESMT_F50L1G41LB_CFG_OTP_PROTECT)
++
+ static SPINAND_OP_VARIANTS(read_cache_variants,
+ 			   SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
+ 			   SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
+@@ -102,6 +107,83 @@ static const struct mtd_ooblayout_ops f50l1g41lb_ooblayout = {
+ 	.free = f50l1g41lb_ooblayout_free,
+ };
+ 
++static int f50l1g41lb_otp_info(struct spinand_device *spinand, size_t len,
++			       struct otp_info *buf, size_t *retlen, bool user)
 +{
-+	struct nand_page_io_req req = {};
-+	unsigned long long page;
-+	size_t copied = 0;
-+	size_t otp_pagesize = spinand_otp_page_size(spinand);
++	if (len < sizeof(*buf))
++		return -EINVAL;
++
++	buf->locked = 0;
++	buf->start = 0;
++	buf->length = user ? spinand_user_otp_size(spinand) :
++			     spinand_fact_otp_size(spinand);
++
++	*retlen = sizeof(*buf);
++	return 0;
++}
++
++static int f50l1g41lb_fact_otp_info(struct spinand_device *spinand, size_t len,
++				    struct otp_info *buf, size_t *retlen)
++{
++	return f50l1g41lb_otp_info(spinand, len, buf, retlen, false);
++}
++
++static int f50l1g41lb_user_otp_info(struct spinand_device *spinand, size_t len,
++				    struct otp_info *buf, size_t *retlen)
++{
++	return f50l1g41lb_otp_info(spinand, len, buf, retlen, true);
++}
++
++static int f50l1g41lb_otp_lock(struct spinand_device *spinand, loff_t from,
++			       size_t len)
++{
++	struct spi_mem_op write_op = SPINAND_WR_EN_DIS_OP(true);
++	struct spi_mem_op exec_op = SPINAND_PROG_EXEC_OP(0);
++	u8 status;
 +	int ret;
 +
-+	if (!len)
-+		return 0;
-+
-+	ret = spinand_otp_check_bounds(spinand, ofs, len, layout);
-+	if (ret)
++	ret = spinand_upd_cfg(spinand, ESMT_F50L1G41LB_CFG_OTP_LOCK,
++			      ESMT_F50L1G41LB_CFG_OTP_LOCK);
++	if (!ret)
 +		return ret;
 +
-+	ret = spinand_upd_cfg(spinand, CFG_OTP_ENABLE, CFG_OTP_ENABLE);
-+	if (ret)
-+		return ret;
++	ret = spi_mem_exec_op(spinand->spimem, &write_op);
++	if (!ret)
++		goto out;
 +
-+	page = ofs;
-+	req.dataoffs = do_div(page, otp_pagesize);
-+	req.pos.page = page + layout->start_page;
-+	req.type = is_write ? NAND_PAGE_WRITE : NAND_PAGE_READ;
-+	req.mode = MTD_OPS_RAW;
-+	req.databuf.in = buf;
++	ret = spi_mem_exec_op(spinand->spimem, &exec_op);
++	if (!ret)
++		goto out;
 +
-+	while (copied < len) {
-+		req.datalen = min_t(unsigned int,
-+				    otp_pagesize - req.dataoffs,
-+				    len - copied);
++	ret = spinand_wait(spinand,
++			   SPINAND_WRITE_INITIAL_DELAY_US,
++			   SPINAND_WRITE_POLL_DELAY_US,
++			   &status);
++	if (!ret && (status & STATUS_PROG_FAILED))
++		ret = -EIO;
 +
-+		if (is_write)
-+			ret = spinand_write_page(spinand, &req);
-+		else
-+			ret = spinand_read_page(spinand, &req);
-+
-+		if (ret < 0)
-+			break;
-+
-+		req.databuf.in += req.datalen;
-+		req.pos.page++;
-+		req.dataoffs = 0;
-+		copied += req.datalen;
-+	}
-+
-+	*retlen = copied;
-+
-+	if (spinand_upd_cfg(spinand, CFG_OTP_ENABLE, 0)) {
++out:
++	if (spinand_upd_cfg(spinand, ESMT_F50L1G41LB_CFG_OTP_LOCK, 0)) {
 +		dev_warn(&spinand_to_mtd(spinand)->dev,
 +			 "Can not disable OTP mode\n");
 +		ret = -EIO;
@@ -153,78 +173,43 @@ index af9a7a69fc0f..ce41bca86ea9 100644
 +	return ret;
 +}
 +
-+/**
-+ * spinand_fact_otp_read() - Read from OTP area
-+ * @spinand: the spinand device
-+ * @ofs: the offset to read
-+ * @len: the number of data bytes to read
-+ * @retlen: the pointer to variable to store the number of read bytes
-+ * @buf: the buffer to store the read data
-+ *
-+ * Return: 0 on success, an error code otherwise.
-+ */
-+int spinand_fact_otp_read(struct spinand_device *spinand, loff_t ofs,
-+			  size_t len, size_t *retlen, u8 *buf)
-+{
-+	return spinand_otp_rw(spinand, ofs, len, retlen, buf, false,
-+			      &spinand->fact_otp->layout);
-+}
++static const struct spinand_user_otp_ops f50l1g41lb_user_otp_ops = {
++	.info = f50l1g41lb_user_otp_info,
++	.lock = f50l1g41lb_otp_lock,
++	.read = spinand_user_otp_read,
++	.write = spinand_user_otp_write,
++};
 +
-+/**
-+ * spinand_user_otp_read() - Read from OTP area
-+ * @spinand: the spinand device
-+ * @ofs: the offset to read
-+ * @len: the number of data bytes to read
-+ * @retlen: the pointer to variable to store the number of read bytes
-+ * @buf: the buffer to store the read data
-+ *
-+ * Return: 0 on success, an error code otherwise.
-+ */
-+int spinand_user_otp_read(struct spinand_device *spinand, loff_t ofs,
-+			  size_t len, size_t *retlen, u8 *buf)
-+{
-+	return spinand_otp_rw(spinand, ofs, len, retlen, buf, false,
-+			      &spinand->user_otp->layout);
-+}
++static const struct spinand_fact_otp_ops f50l1g41lb_fact_otp_ops = {
++	.info = f50l1g41lb_fact_otp_info,
++	.read = spinand_fact_otp_read,
++};
 +
-+/**
-+ * spinand_user_otp_write() - Write to OTP area
-+ * @spinand:  the spinand device
-+ * @ofs: the offset to write to
-+ * @len: the number of bytes to write
-+ * @retlen: the pointer to variable to store the number of written bytes
-+ * @buf: the buffer with data to write
-+ *
-+ * Return: 0 on success, an error code otherwise.
-+ */
-+int spinand_user_otp_write(struct spinand_device *spinand, loff_t ofs,
-+			   size_t len, size_t *retlen, const u8 *buf)
-+{
-+	return spinand_otp_rw(spinand, ofs, len, retlen, (u8 *)buf, true,
-+			      &spinand->user_otp->layout);
-+}
-+
- static int spinand_mtd_otp_info(struct mtd_info *mtd, size_t len,
- 				size_t *retlen, struct otp_info *buf,
- 				bool is_fact)
-diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
-index 597d28339d15..73424405232a 100644
---- a/include/linux/mtd/spinand.h
-+++ b/include/linux/mtd/spinand.h
-@@ -689,6 +689,13 @@ size_t spinand_otp_page_size(struct spinand_device *spinand);
- size_t spinand_fact_otp_size(struct spinand_device *spinand);
- size_t spinand_user_otp_size(struct spinand_device *spinand);
- 
-+int spinand_fact_otp_read(struct spinand_device *spinand, loff_t ofs,
-+			  size_t len, size_t *retlen, u8 *buf);
-+int spinand_user_otp_read(struct spinand_device *spinand, loff_t ofs,
-+			  size_t len, size_t *retlen, u8 *buf);
-+int spinand_user_otp_write(struct spinand_device *spinand, loff_t ofs,
-+			   size_t len, size_t *retlen, const u8 *buf);
-+
- int spinand_set_mtd_otp_ops(struct spinand_device *spinand);
- 
- #endif /* __LINUX_MTD_SPINAND_H */
+ static const struct spinand_info esmt_c8_spinand_table[] = {
+ 	SPINAND_INFO("F50L1G41LB",
+ 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_ADDR, 0x01, 0x7f,
+@@ -112,7 +194,9 @@ static const struct spinand_info esmt_c8_spinand_table[] = {
+ 					      &write_cache_variants,
+ 					      &update_cache_variants),
+ 		     0,
+-		     SPINAND_ECCINFO(&f50l1g41lb_ooblayout, NULL)),
++		     SPINAND_ECCINFO(&f50l1g41lb_ooblayout, NULL),
++		     SPINAND_USER_OTP_INFO(28, 2, &f50l1g41lb_user_otp_ops),
++		     SPINAND_FACT_OTP_INFO(2, 0, &f50l1g41lb_fact_otp_ops)),
+ 	SPINAND_INFO("F50D1G41LB",
+ 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_ADDR, 0x11, 0x7f,
+ 				0x7f, 0x7f),
+@@ -122,7 +206,9 @@ static const struct spinand_info esmt_c8_spinand_table[] = {
+ 					      &write_cache_variants,
+ 					      &update_cache_variants),
+ 		     0,
+-		     SPINAND_ECCINFO(&f50l1g41lb_ooblayout, NULL)),
++		     SPINAND_ECCINFO(&f50l1g41lb_ooblayout, NULL),
++		     SPINAND_USER_OTP_INFO(28, 2, &f50l1g41lb_user_otp_ops),
++		     SPINAND_FACT_OTP_INFO(2, 0, &f50l1g41lb_fact_otp_ops)),
+ 	SPINAND_INFO("F50D2G41KA",
+ 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_ADDR, 0x51, 0x7f,
+ 				0x7f, 0x7f),
 -- 
 2.43.0
 
