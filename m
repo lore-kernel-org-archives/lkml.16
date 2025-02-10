@@ -1,61 +1,62 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9234419993D
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDD81ADC89
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739172159; cv=none; b=njycbYE4/iUZMa2G7h2AUcNrHwob/pXTS5eLOhJRX4Xcm0pRRc+SQJcNeMTiLwxAapXZQzNt9KOdyU5l+CZHmzimeOs/+Tn0RZocOM8N/T1vnUGTkVIjLx0lg3CqY4sgHuSmfRLjxOVrwTZA5ZE5nqpaywVk8xDhL8rYVbaa46E=
+	t=1739172162; cv=none; b=hN+F5dfxRqMyAxShdrzchie0Hp/dOaIsskTYuSJ/VkF9+vICmOXTivIIzcC51Jx0fsnCP2ZVI3irfyzzoFBwu8Vb90zFmQIfKmacHMoXSkMkbNtGqU3fw9KukWz4CBGWbXfeBwFIXvPgJBIllZ7WT7t/2erg+Q08RljAv+uOcj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739172159; c=relaxed/simple;
-	bh=Fq7AOqywtozLGyzDhVRKESkoXd49xTjrcIyMW3nGG/Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=C2v8ZuMl6n7tiv/GkXjQ49RSPMH5jht3oN9UrUD2gspYPkf83EUZQSqBXQGKM2zY1Np11Dm+Vec4AVxg2hRR6yINWq73wHOpKU5uQH9R5C54y17efaLMKzwqRcrjEWlYK2lGQbif4X0vD5gwrXA/863Tr4iORCee37OQKdL73ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=W8drf9h4; arc=none smtp.client-ip=209.85.222.169
+	s=arc-20240116; t=1739172162; c=relaxed/simple;
+	bh=gF2eMyTOLb6cKzMVtZrMlI7thdNCfssIfqf+cnBW0jk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KkpFt+KaM7wODL8kF1YSUEHp0iyZ+9t39j/sSBH1Y1x7bTK2qLuQTba8JuAGLyj93uVxybgaul6V8BT5K8uJx/1/Bjy8AsYyhJY+EDJPwFl/YfaJzym5DJyAcgly0rfHXrxPNSJguk9wu41KeZ9SFFu5uHmVCC244zEsihLjvVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=bOJKXR3j; arc=none smtp.client-ip=209.85.222.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="W8drf9h4"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c0506ec9b3so180286485a.1
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 23:22:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="bOJKXR3j"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c05b700b78so85278385a.2
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 23:22:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1739172155; x=1739776955; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2eifM2TJgSxcTeM2vc1cnmxmV71PALyO8f+gK0jI++w=;
-        b=W8drf9h4j2l7W+FWvCLfUTf9EGst8FOk5l/3T+J6ICTl3A45vdlVbpEp3RznvCA6Rc
-         DijWqsFFhngXXyZ0skLOGCsEniR6ag99tIihIdA6rM8VSqRQUw9nzffzGQFWVFcd8O+Z
-         7z0iLWkeMN8McnOALFs5ymYnCPMIqjfOpK2i18a6YAykyfslgI7GVD+NgPnq+lZfrH34
-         Qk/dxATBaGY90WLbdRB3otqVD2rqSuhZlhoLeG92FWS/e2STbA3bcAujJ9gdgFP28Gwd
-         QWkS+CeVJ1W0AZ5u2NgNoX7Rg/gDz516oGIz+hxo3XrpQ9MdYPoiPphhboQeHFmRYCMw
-         EHMg==
+        d=cloudflare.com; s=google09082023; t=1739172159; x=1739776959; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Lp4WDTh7aU0LAokfvQ9vfZPrliNLs/vu/ZlOg7/rnDw=;
+        b=bOJKXR3j2vL8/FGGG+wL/XeQybDbcPO1FdY3MPeG5uli/mZ4nMg7/qpZpEG+2ldH4G
+         rjAWNxXB7BGNzwNytiqz9CtkrJL4eY/cnKUUH7/QsTb5ChAeIIhM7frPOeN3D27l6j7N
+         a3/EjoqbzeyTR4UustFwgK5/ukHykK3xMBYAyMltogM6uA9DcZsVi6sisRt0ymKRth0W
+         PY6M25NOArxAqrwpkoUkLEg131QUYWjPXbbiR3Hphr5AhuNI886+5DmOy9YuLW21tnwg
+         NGgtVMSjNnYe8d+hAjQCNIzmTSmCO4FOYKS+F1BuDkmDBE+UImDlCqk4KSmMvgbaRl4L
+         8iyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739172155; x=1739776955;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2eifM2TJgSxcTeM2vc1cnmxmV71PALyO8f+gK0jI++w=;
-        b=XM0RKhC+V6LqHRmLH4J6NdLaajTU2FuLIh2vql+LkULCaOtVoIyOLAMxrb6p6GC5K5
-         jBBI8O07J+PP7/kK1ppo2ZCv3SBmX5+ff/wvSE61Wo9unpEbopvvJt1yWs40SSYPImOx
-         4Pp1mdi7M/twl0N7gLZWYGV9goYYE+tBw2ajQGlAKpuCZZAhUHzmp3e/JWTJCwg7aaiR
-         qwKcCVMDH99F4CJjGJbiiByGFwT5hKJD3SCXhCo+jwxeKnTycq1CuHQePYkOxAInMCQD
-         HAitCcBKfTqh3RvP65A3XZdsOdJFl6KfdpYqU29sMe2QoxtWgS0RjfDmvYgw0NSb1fET
-         k33g==
-X-Forwarded-Encrypted: i=1; AJvYcCVyZCSd0v5fI0bHoSACtD0wiDvb6OTP8codhymjphIRIC8VH4cgvupNSUBbkgx3lPMH8A+OnRTddWez7eU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoHkBTG+odo2H/1JMhip4emQQpVkuA8KCG177YbErV9hPAEEzR
-	/cXeLnxSGpjgsrZAiVjwuAOsEhFjXXZnF6IO/98QdpIm9avr2FrvdZkeZjErdVc=
-X-Gm-Gg: ASbGnctOLyN7t10MXUQ1XwHnY6nPcJSu/SiSI/9uqjy3CQxKJtDzqm1xFwCn0SDhNNm
-	CYZcsRSQAmPB2MmwfeI5AGPlRpU2eapT5y/vRVJ6vvqRwOCDKRo8qimjUBOnrFfUCpmX5+e0ywA
-	j4CtDRHap9CuxSOKojTYUYLiIut184U7+bzaAYstSnuIxdRPiElCblqTILpRyxjSN3vSDLXMBD6
-	8ZCl96XxgCzNDe1BsrJQgPTSwb1EiPUeABfHbKq6l3pPnGCbp3y37J3oNoZPTl0CsHXxJPbGUWZ
-	WXbK
-X-Google-Smtp-Source: AGHT+IFqoVnPbfDlA0I7Lpzq5OYGCiuDOBCLRt/SyBPdEZ3hBHFAoO/pSle/c5P109+yMKGpe128IQ==
-X-Received: by 2002:a05:620a:390e:b0:7b7:142d:53a4 with SMTP id af79cd13be357-7c047ca7edamr1803066785a.51.1739172155488;
-        Sun, 09 Feb 2025 23:22:35 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739172159; x=1739776959;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Lp4WDTh7aU0LAokfvQ9vfZPrliNLs/vu/ZlOg7/rnDw=;
+        b=M9lDOSygp+s1pcWVXLKHX36DQcV1v1ihRlz5gJYMsiMZk7VH9S1DPfygLWB0Dp531e
+         lhiBftMoLGPprGwtDNWB6dE1s2taHC8QHjTSkoX6HUeUwCYD8dkVFKvZzo8u/Tql0oy0
+         YVmqeN+5SpAqO5Tj6yKupUHebQg+q04smz1/DuHY6MagWxktoVCovX0c1tuwMOxATBXl
+         hnZwmu7+w6KrhJAoaXvwFVleSa2EghC6fk81LhfZ7PBkAP7TXs79tntwr9uI4UCmPfA6
+         +H5fHgTWDSsSPGE63cmzpEJgIyOQPhzLQgOyDUfAwfv6oYd+Fm5jJIDlN4plq+Xjim0/
+         tU5g==
+X-Forwarded-Encrypted: i=1; AJvYcCWej5F33WHtJ7mk/rhrDonMTtsdkSYQrcYeusvoiqn/etUC3o4brGEOux/lpPFm7rrhC2Vm2FZ13GNbfcA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBjLhGycZotn7ykB7iIfsdGqozU0vsqn+0j1oHsPozVUvfokaI
+	zWS1kxS0trQQgCfkytx8BwUJ1tpcn+t+ZdrGLxRDYyYO+zPAk9DrOet1Pj6PpyI=
+X-Gm-Gg: ASbGnctiFL4RdRJf+URQOxRuEElzUMiRHr3Irv/qpgM4/Vwh0gaFG5yidJ+cUCBVlJA
+	ThQ634x48dliNQ8+CKIHLP3ZRpsxoLh3xQN6lbns+Ze1kvHH2I1iVFv0sWaGhHd/jLQmN8bFt+L
+	a08kuExKpUTNH/hr9DzGjUeVvC8QCoAsesJcxzgZHRPBe/NI0HhONTsyfmTLBfwC+wxk8bhVAl0
+	1tTm/JYXt6yNcicbysC2r/LYxr4URX5nDCfGkqpeXEnESw9gjg19eV9laz9wIQDwip24WYqwyML
+	+dlA
+X-Google-Smtp-Source: AGHT+IEjBZhZuALA3RKeEOhkSOGO8BcLbjZzT8lCDmkLwUBg4Uo9I4Bz4Xpb76/AtD+EXiCFw9kxDA==
+X-Received: by 2002:a05:620a:2612:b0:7c0:61d2:4ec4 with SMTP id af79cd13be357-7c061d25019mr141452385a.57.1739172159380;
+        Sun, 09 Feb 2025 23:22:39 -0800 (PST)
 Received: from debian.debian ([2a09:bac5:79dd:f9b::18e:183])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041dec31dsm499971685a.1.2025.02.09.23.22.32
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4719729977csm5587051cf.18.2025.02.09.23.22.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 23:22:34 -0800 (PST)
-Date: Sun, 9 Feb 2025 23:22:31 -0800
+        Sun, 09 Feb 2025 23:22:38 -0800 (PST)
+Date: Sun, 9 Feb 2025 23:22:35 -0800
 From: Yan Zhai <yan@cloudflare.com>
 To: bpf@vger.kernel.org
 Cc: Alexei Starovoitov <ast@kernel.org>,
@@ -71,9 +72,10 @@ Cc: Alexei Starovoitov <ast@kernel.org>,
 	Yan Zhai <yan@cloudflare.com>, Brian Vazquez <brianvv@google.com>,
 	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
 	kernel-team@cloudflare.com, Hou Tao <houtao@huaweicloud.com>
-Subject: [PATCH v3 bpf 0/2] bpf: skip non exist keys in
+Subject: [PATCH v3 bpf 1/2] bpf: skip non exist keys in
  generic_map_lookup_batch
-Message-ID: <cover.1739171594.git.yan@cloudflare.com>
+Message-ID: <85618439eea75930630685c467ccefeac0942e2b.1739171594.git.yan@cloudflare.com>
+References: <cover.1739171594.git.yan@cloudflare.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,6 +84,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cover.1739171594.git.yan@cloudflare.com>
 
 The generic_map_lookup_batch currently returns EINTR if it fails with
 ENOENT and retries several times on bpf_map_copy_value. The next batch
@@ -92,23 +95,104 @@ least the array of maps type may contain such holes legitly. Right now
 these holes show up, generic batch lookup cannot proceed any more. It
 will always fail with EINTR errors.
 
-This patch fixes this behavior by skipping the non-existing key, and
-does not return EINTR any more.
+Rather, do not retry in generic_map_lookup_batch. If it finds a non
+existing element, skip to the next key. This simple solution comes with
+a price that transient errors may not be recovered, and the iteration
+might cycle back to the first key under parallel deletion. For example,
+Hou Tao <houtao@huaweicloud.com> pointed out a following scenario:
 
-V2->V3: deleted a unused macro
-V1->V2: split the fix and selftests; fixed a few selftests issues.
+For LPM trie map:
+(1) ->map_get_next_key(map, prev_key, key) returns a valid key
 
-V2: https://lore.kernel.org/bpf/cover.1738905497.git.yan@cloudflare.com/
-V1: https://lore.kernel.org/bpf/Z6OYbS4WqQnmzi2z@debian.debian/
+(2) bpf_map_copy_value() return -ENOMENT
+It means the key must be deleted concurrently.
 
-Yan Zhai (2):
-  bpf: skip non exist keys in generic_map_lookup_batch
-  selftests: bpf: test batch lookup on array of maps with holes
+(3) goto next_key
+It swaps the prev_key and key
 
- kernel/bpf/syscall.c                          | 18 ++----
- .../bpf/map_tests/map_in_map_batch_ops.c      | 62 +++++++++++++------
- 2 files changed, 49 insertions(+), 31 deletions(-)
+(4) ->map_get_next_key(map, prev_key, key) again
+prev_key points to a non-existing key, for LPM trie it will treat just
+like prev_key=NULL case, the returned key will be duplicated.
 
+With the retry logic, the iteration can continue to the key next to the
+deleted one. But if we directly skip to the next key, the iteration loop
+would restart from the first key for the lpm_trie type.
+
+However, not all races may be recovered. For example, if current key is
+deleted after instead of before bpf_map_copy_value, or if the prev_key
+also gets deleted, then the loop will still restart from the first key
+for lpm_tire anyway. For generic lookup it might be better to stay
+simple, i.e. just skip to the next key. To guarantee that the output
+keys are not duplicated, it is better to implement map type specific
+batch operations, which can properly lock the trie and synchronize with
+concurrent mutators.
+
+Fixes: cb4d03ab499d ("bpf: Add generic support for lookup batch op")
+Closes: https://lore.kernel.org/bpf/Z6JXtA1M5jAZx8xD@debian.debian/
+Signed-off-by: Yan Zhai <yan@cloudflare.com>
+Acked-by: Hou Tao <houtao1@huawei.com>
+---
+v2->v3: deleted a used macro
+v1->v2: incorporate more useful information inside commit message.
+---
+ kernel/bpf/syscall.c | 18 +++++-------------
+ 1 file changed, 5 insertions(+), 13 deletions(-)
+
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index c420edbfb7c8..e5f1c7fd0ba7 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -1968,8 +1968,6 @@ int generic_map_update_batch(struct bpf_map *map, struct file *map_file,
+ 	return err;
+ }
+ 
+-#define MAP_LOOKUP_RETRIES 3
+-
+ int generic_map_lookup_batch(struct bpf_map *map,
+ 				    const union bpf_attr *attr,
+ 				    union bpf_attr __user *uattr)
+@@ -1979,8 +1977,8 @@ int generic_map_lookup_batch(struct bpf_map *map,
+ 	void __user *values = u64_to_user_ptr(attr->batch.values);
+ 	void __user *keys = u64_to_user_ptr(attr->batch.keys);
+ 	void *buf, *buf_prevkey, *prev_key, *key, *value;
+-	int err, retry = MAP_LOOKUP_RETRIES;
+ 	u32 value_size, cp, max_count;
++	int err;
+ 
+ 	if (attr->batch.elem_flags & ~BPF_F_LOCK)
+ 		return -EINVAL;
+@@ -2026,14 +2024,8 @@ int generic_map_lookup_batch(struct bpf_map *map,
+ 		err = bpf_map_copy_value(map, key, value,
+ 					 attr->batch.elem_flags);
+ 
+-		if (err == -ENOENT) {
+-			if (retry) {
+-				retry--;
+-				continue;
+-			}
+-			err = -EINTR;
+-			break;
+-		}
++		if (err == -ENOENT)
++			goto next_key;
+ 
+ 		if (err)
+ 			goto free_buf;
+@@ -2048,12 +2040,12 @@ int generic_map_lookup_batch(struct bpf_map *map,
+ 			goto free_buf;
+ 		}
+ 
++		cp++;
++next_key:
+ 		if (!prev_key)
+ 			prev_key = buf_prevkey;
+ 
+ 		swap(prev_key, key);
+-		retry = MAP_LOOKUP_RETRIES;
+-		cp++;
+ 		cond_resched();
+ 	}
+ 
 -- 
 2.39.5
 
