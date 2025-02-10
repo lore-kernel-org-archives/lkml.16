@@ -1,130 +1,129 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6A619CC33;
-	Mon, 10 Feb 2025 11:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B924419CC33;
+	Mon, 10 Feb 2025 11:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739186227; cv=none; b=oAF63MIB0avXJ3HO7SsJlXq2OArJnOtPCClEinYlmj9VG1csUCFdCdzH2heTvpr8w7xh7fc/AtTqhsWW7dATpG2pKDoKeQAobFH13Ce5mKlVL+lQSdn/JQuBzaIDY8pcLcTv+f7a7Ko6Xvc/nneBWsWFIipjlr32N+myAzHJidA=
+	t=1739186311; cv=none; b=JOi7R/wOPQ4hfsgBpz3UsTibzP0XNQ36YgB4BZFhvEjUvWohLdcWOJY7UCMGgp5AjQY6mMJK5+LpuZBUdbHdgseG80rFOGN01amHNi8xtfPohpOdRz6e8IS5py0az8Q04ImS+sh2PrfTjjLQoVJ98A33yuNaD5laQZbDYD0m3K0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739186227; c=relaxed/simple;
-	bh=mSkiGXTqHGYYLjplMNYod7sGEW6e2weQZ7cjuOsZaz4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=f4emNCJ/lSaWLys9kpzF1upE2OyrSJmW1cTN/kIBJfVpYaoahp2sEB2Mvc9J1dfcKOTpm5WUwwxL8mv7egDDWNWvLIDpitiiOSCFrpJGimX0Uhlquw+l42ISRvuvZnFDqYd0q8KwymLen0ukCf8AeZOhECTsR/pLtSjlazR/aPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=mE9SnCYw; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1739186311; c=relaxed/simple;
+	bh=2HcDy5BNfv+9o3ehWem9KjVCh3qqQnf3GauidfHjWKM=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=gcq/5rRmZnxB3j3Ti4V2VlelydPrjxZoNuK6o15kqgZaHzjq2SQBL4s0+URYaqYC6pFyvCSfCM4eBeypL48+HJi9G7/PTV4hYQ4aKOyE2B1ZXpIS8i/UzLdEbpL6QGPcc6BdFRjI0LG5Wlf6oPq53KZv+tUbb/VKhSVVEgTc5qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=XguuVXkS; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="mE9SnCYw"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1739186219; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
-	bh=dmcnIETOkRmcLc2k59ZJrtg3E4RjzRzuJfuWKk05UZg=;
-	b=mE9SnCYwJRHxiEBu9mJNa6oBcFz+IoIFaDRytYWlITj1aAxOLGj4+gfGs4TZVQkmazzO0Zxl0dQylqlJ0kYDJLGqmqGzloAR6Z9hoVPIGl4WquKb7zVyrbo48xRlZuvTS3AEhEFPlnZ6xyxo8LedbLkOqVsdx+w4hJ4GHXOoxpQ=
-Received: from 30.221.98.157(mailfrom:guangguan.wang@linux.alibaba.com fp:SMTPD_---0WPAl8CS_1739186218 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 10 Feb 2025 19:16:59 +0800
-Message-ID: <4339aaa1-f2aa-4454-b5b1-6ffb6415f484@linux.alibaba.com>
-Date: Mon, 10 Feb 2025 19:16:57 +0800
+	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="XguuVXkS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
+	s=s31663417; t=1739186306; x=1739791106; i=frank-w@public-files.de;
+	bh=MRrN1tWDeaJ7i6/rFG0b6OeSwpoxIWxTneKR/1obUmU=;
+	h=X-UI-Sender-Class:Date:From:To:CC:Subject:Reply-to:In-Reply-To:
+	 References:Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=XguuVXkSas9wYqgCyI9iMyWsQzxDgGPrTbKwjzcin1hupG+abFu6t544hil5/CP6
+	 nRESHFK1bzQyZ3RMhLOQltk24EgsMhzx+7rFpWPsfZMdHpymg9cUpKL/FkkgRw6p4
+	 SH7IqxGRMVCPo/VshyKuhMVnzBnrQv9+EeKYx1+ksyM7mxSrYYK3g397SjOuESdnk
+	 6DjwWdEr2rcb4oLtSlYKRrzyTm2wMdbb5ZD6spLS6MHPs0NDkJGiBjRIouTM9DyNc
+	 idb7/sMzoUVHCXawVD7VVuS7cafFIvPJ+Q+Ii50tK0BZ6whlZxaoHPzIZv5q4bYV7
+	 gLag3KFkhdLV007frQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [IPv6:::1] ([80.187.69.174]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MPGRp-1u22AO2nNN-00UEAg; Mon, 10
+ Feb 2025 12:18:25 +0100
+Date: Mon, 10 Feb 2025 12:18:23 +0100
+From: Frank Wunderlich <frank-w@public-files.de>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Frank Wunderlich <linux@fw-web.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+CC: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_arm64=3A_dts=3A_mediatek=3A_mt79?=
+ =?US-ASCII?Q?88a-bpi-r4=3A_allow_hw_variants_of_bpi-r4?=
+User-Agent: K-9 Mail for Android
+Reply-to: frank-w@public-files.de
+In-Reply-To: <b56a7597-fa39-4e02-b601-db05bfa48472@collabora.com>
+References: <20250207135501.30741-1-linux@fw-web.de> <b56a7597-fa39-4e02-b601-db05bfa48472@collabora.com>
+Message-ID: <EADAC3BA-3D8C-4E04-B8E3-629CAFF0194F@public-files.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] net/smc: use the correct ndev to find pnetid by
- pnetid table
-From: Guangguan Wang <guangguan.wang@linux.alibaba.com>
-To: Halil Pasic <pasic@linux.ibm.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, wenjia@linux.ibm.com,
- jaka@linux.ibm.com, alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
- guwen@linux.alibaba.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, horms@kernel.org, linux-rdma@vger.kernel.org,
- linux-s390@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Alexandra Winter <wintera@linux.ibm.com>
-References: <20241227040455.91854-1-guangguan.wang@linux.alibaba.com>
- <1f4a721f-fa23-4f1d-97a9-1b27bdcd1e21@redhat.com>
- <20250107203218.5787acb4.pasic@linux.ibm.com>
- <908be351-b4f8-4c25-9171-4f033e11ffc4@linux.alibaba.com>
- <20250109040429.350fdd60.pasic@linux.ibm.com>
- <b1053a92-3a3f-4042-9be9-60b94b97747d@linux.alibaba.com>
- <20250114130747.77a56d9a.pasic@linux.ibm.com>
- <3dc68650-904c-4a1d-adc4-172e771f640c@linux.alibaba.com>
-Content-Language: en-US
-In-Reply-To: <3dc68650-904c-4a1d-adc4-172e771f640c@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Fh0DnkQD1cSAk3kEV8uLTJFU4fKtgHsxg3UVKYznYNF6N6PLYNL
+ ac+bVkUvkC2h9HHY5Ldd2XwBYdG0GLXfx3Uy4g0Gj9nFK69AnbPL1GoLCidiHyPuOqNoEt0
+ sJtGHaZRhXC9oKcT7KkdWqP9sLc+xlzrKi7422l6pbzRb3qbdnSSPyM0BV00dOjiUWxy8O3
+ uxLdxrlkLgFtC1ZPe0nkQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:P+2RQecfEzY=;FwCZ6grwvk3/b9RmcG92LoQkEY/
+ HiymK7VJhujTVnV8u3zUjqBwQmNUW3iahixTDK0CfgrJareC8poJqLPWqRRKodcythmv8RaRx
+ GjsXQW6d/5wJxUSnFh1MDjXG/P0Q3Miv6kyvogGHZCifeG9cmK1pCWoe1GA6sqMCbqur60HyB
+ HoPbc9QZAUlbPpt3v9UQfDWX34XwJSJ3zNYsLhxtKQifhxUrgXif7IYvOG3cfMXsrdb9O1+qW
+ p7GpJ02s33QXQiF+pQm0NNSe/SBqcCr0HVSRimyzgS8vSqm6366U/ECR+iU9iZ6aNiLqZEKj/
+ jOpZIu0z5XIuxOhgIlEDdwwyse3iakIitnUk/KZAwtSxvUkFQTwE+xQG115ZI2lo/HMjHycYy
+ ed9vf3cmlHtaO/kIE4ioxlTFJlNL6GQqAw8+uXTk/F3pw8h8/A96BsM3m6ExjtfDBuxB28kLY
+ 9svePqMVJ/MSSvBSyGAlT/HqbotRd5Ldc+idEE0/yoB1jTfAdyPeN+HT+fSsM5BZkMVRvXxar
+ 0og1jcjFIJtEEQNjAMMZnWK4KyL2FR5L6mE6kB/EMpl8LGMZguVM4S3DQwstWN6dLm1WS0wZe
+ yNTFVwh7giK7uYC3ZoRfiDmQREHpAR8I7L+30QRsDEY5fg6WO5w1i6YnTlJDMV6ih1xfGfHYI
+ ysxLrEFAKRc44140jQwP+/IlJmODfMiiPab+6PG7CkkIRssIO1mK04StcSKbMangctkfVjL9O
+ iGjK8dQ0PZIAizaKgWJBsFJ+B8MbanKiZ/Fge5fevoAak866mwiXXQj+Yrvh9jmrVnZFUjsGn
+ CbOXSP8fiUgNHDNn/fk7nDwZF2W0ZvlR0zDGc/e0SclS0qxK2l2OM4kYuP1kevqTCWvzXR5JP
+ w3ieCU/AKXfd1zBb9AYb8CFbDCe4uMh0p1hP+13fjgTiontYWJpdomRySKPxehFFm5JgCrW9c
+ U65VaTcxIxm7xrIgyRc7Mr/pw0FQUSHYLzA9uFxIifMtrD6CFDBaCtIvMWQ7WTMNjJ8OxPqFr
+ e/RygEEYssYugYHzVbM/EDWGPxjdPCXtcMvK8qD003k4PZz/eRWcFfz3wiu9oxt3ilXbYhlh+
+ zWOsNlW5N46ePOmioLvP9kp0tszKtZuf48vjSwyTf2Tl3hXO6+0oBU8a9AwrYAdBS2OPMnn6p
+ 0Tc+o2nmOZPzx4mDqKzZSei3DeoAmEeP6orfd6guK6llZuyfnNTil+4SfxKCCR9sb6ARvH6J7
+ OLmcq2ngkSuhAObRT0AtAqhWFUhotzaocOrqE12W6TTgKh5yHomoEgiH8MpuYFffOap9H2pA3
+ nqFw+DeCbVEdExwHyHHZv2YZsGE3aCf7nthH60n3damF05cP4OcW0ZuQOv5b5lIjUcpMiR2TY
+ x83Ks6KSA4ga5Dl7ylxfsFE2l5PSUjCgMrTRI=
 
+Am 10=2E Februar 2025 11:56:40 MEZ schrieb AngeloGioacchino Del Regno <ange=
+logioacchino=2Edelregno@collabora=2Ecom>:
+>Il 07/02/25 14:54, Frank Wunderlich ha scritto:
+>> From: Frank Wunderlich <frank-w@public-files=2Ede>
+>>=20
+>> Sinovoip has released other variants of Bananapi-R4 board=2E
+>> The known changes affecting only the LAN SFP+ slot which is replaced
+>> by a 2=2E5G phy with optional PoE=2E
+>>=20
+>> As the SFP-Ports are not upstreamed yet this patch simply renames the
+>> current board dts to dtsi, creating new dts for the board including
+>> the new dtsi and move i2c-mux channel for sfp lan to board dts=2E
+>>=20
+>> Signed-off-by: Frank Wunderlich <frank-w@public-files=2Ede>
+>
+>I understand what's going on, and I agree, but this change alone doesn't =
+make a lot
+>of sense, does it?
+>
+>If I were to see a commit that moves everything in a dtsi, and justifies =
+that by
+>adding two dts for the two variants, though, things would be different=2E=
+=2E=2E=2E :-)
+>
+>Cheers,
+>Angelo
+>
+>> ---
+>>   =2E=2E=2E/dts/mediatek/mt7988a-bananapi-bpi-r4=2Edts  | 404 +--------=
+---------
+>>   =2E=2E=2E/dts/mediatek/mt7988a-bananapi-bpi-r4=2Edtsi | 403 +++++++++=
+++++++++
+>>   2 files changed, 407 insertions(+), 400 deletions(-)
+>>   create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-=
+r4=2Edtsi
+>>=20
 
-
-On 2025/1/15 19:53, Guangguan Wang wrote:
-> 
-> 
-> On 2025/1/14 20:07, Halil Pasic wrote:
->> On Fri, 10 Jan 2025 13:43:44 +0800
->> Guangguan Wang <guangguan.wang@linux.alibaba.com> wrote:
->>
->>>> I think I showed a valid and practical setup that would break with your
->>>> patch as is. Do you agree with that statement?  
->>> Did you mean
->>> "
->>> Now for something like a bond of two OSA
->>> interfaces, I would expect the two legs of the bond to probably have a
->>> "HW PNETID", but the netdev representing the bond itself won't have one
->>> unless the Linux admin defines a software PNETID, which is work, and
->>> can't have a HW PNETID because it is a software construct within Linux.
->>> Breaking for example an active-backup bond setup where the legs have
->>> HW PNETIDs and the admin did not bother to specify a PNETID for the bond
->>> is not acceptable.
->>> " ?
->>> If the legs have HW pnetids, add pnetid to bond netdev will fail as
->>> smc_pnet_add_eth will check whether the base_ndev already have HW pnetid.
->>>
->>> If the legs without HW pnetids, and admin add pnetids to legs through smc_pnet.
->>> Yes, my patch will break the setup. What Paolo suggests(both checking ndev and
->>> base_ndev, and replace || by && )can help compatible with the setup.
->>
->> I'm glad we agree on that part. Things are much more acceptable if we
->> are doing both base and ndev. 
-> It is also acceptable for me.
-> 
->> Nevertheless I would like to understand
->> your problem better, and talk about it to my team. I will also ask some
->> questions in another email.
-> Questions are welcome.
-> 
->>
->> That said having things work differently if there is a HW PNETID on
->> the base, and different if there is none is IMHO wonky and again
->> asymmetric.
->>
->> Imagine the following you have your nice little setup with a PNETID on
->> a non-leaf and a base_ndev that has no PNETID. Then your HW admin
->> configures a PNETID to your base_ndev, a different one. Suddenly
->> your ndev PNETID is ignored for reasons not obvious to you. Yes it is
->> similar to having a software PNETID on the base_ndev and getting it
->> overruled by a HW PNETID, but much less obvious IMHO. I am wondering if there are any scenarios that require setting different
-> pnetids for different net devices in one netdev hierarchy. If no, maybe
-> we should limit that only one pnetid can be set to one netdev hierarchy.
-> 
->> I also think
->> a software PNETID of the base should probably take precedence over over
->> the software pnetid of ndev.
-> Agree!
-> 
-> Thanks,
-> Guangguan Wang
->>
->> Regards,
->> Halil
-
-Hi Halil,
-
-Are there any questions or further discussions about this patch? If no, I will
-send a v2 patch, in which software pnetid will be searched in both base_ndev and ndev,
-and base_ndev will take precedence over ndev.
-
-Thanks,
-Guangguan Wang
-
+It is preparation for adding additional nodes like sfp cages=2E I only hav=
+e the dual-sfp board so i can only add these based on schematic=2E The one =
+(wan-sfp) would go into dtsi and lan-sfp go into dts because other variants=
+ using a phy here as described=2E
+regards Frank
