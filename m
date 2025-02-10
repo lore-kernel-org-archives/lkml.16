@@ -1,222 +1,118 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4ACD130E58
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C69130E58;
+	Mon, 10 Feb 2025 07:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739171490; cv=none; b=aC8e5XKiozUsYfjhNLuIJOZqtYabAOZA0fmvkHhQkDcXj1xNNsM5BdxO8BON2IvNwThdKvM4OUyICqqCCodUsvLU92cCw4NIiXDvZC20nP+DBACZkDOmxK+ClZC/4h8JMSaAj86qpTIt+/hDCzhmuWNu4h+0fSyYpBelB7jIyeY=
+	t=1739171519; cv=none; b=W5H4CUXkddXNdenS/Wqn2n7irjQ6nj8GkJ+Bg3ialRpqWMU+xYVYNozs+cMe5wvv7PBSFOp5ftDIrzH8yt9vR5W8ct1UF4BxbDQbMSEL4lPkJaOYO8cAviWGHGZFrSXpvIlkBMo9upVvfiDW6iAkOC3ggjjAtB3KgCMMVxugQRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739171490; c=relaxed/simple;
-	bh=5o+wL5SmjRL0jubzmEd9mYGGELCtkhqC7XzWMClBHzg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gsjyxhCBRnqsTr1cCqfJxayZOrKu9MI7jEqzXip6oQ666svTCAWXarmH5U1LdHsXyJxWEcO6ViSI7NVziTXV9eaE6vCpKSwX5UbzjYTWfsRiXuWms8lP/yPF5A/jX0spIwOocwrRA2wzf0ZOkd6ljvTPTyIz3sEA1xIP+ZNLhl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4217A1BA8;
-	Sun,  9 Feb 2025 23:11:43 -0800 (PST)
-Received: from [10.163.35.99] (unknown [10.163.35.99])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3504B3F58B;
-	Sun,  9 Feb 2025 23:11:12 -0800 (PST)
-Message-ID: <7e184caf-2447-48d4-8d7c-1b63deb0f418@arm.com>
-Date: Mon, 10 Feb 2025 12:41:13 +0530
+	s=arc-20240116; t=1739171519; c=relaxed/simple;
+	bh=H3GEoIqEgWbPMNxEhTrT/w4m5WQ5UgLYo290XO3njYE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TuU9bEi3/TItaI8uH2UQ/WktjC4nj48XSudo+7deu/iI/9d43c8fn993LslF/+2K0EHYei55ajRmumv7xfx4nbYhOyso7Ksmv/ASuB6Mht9EA5LD5EDLXMjDss5pVuu/ItKOjzDmQuHN/YwXFDwjFRkoWOl9k+1RVDClVXo+ATM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cY6nSKwn; arc=none smtp.client-ip=209.85.217.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cY6nSKwn"
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4bb0e7e6cceso235901137.1;
+        Sun, 09 Feb 2025 23:11:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739171517; x=1739776317; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w9v7M60N7k/hqWmhBY/iyMoBnIb4DpUfGV8sZCADpqE=;
+        b=cY6nSKwnYoRfGTLq/4AzMbf6Y75LrhqKUK24p2SeXmNOgzhVj+uzOJSqNj/Isuc9ov
+         RU1wRgVpPEdk9STynOkrvIArZzcrPW6HyXfKP0NF3vuqsVGS39BuXNF0WNnE/wTzItAS
+         qJZA5icJlAIW3mNdF+cTwIrwCzaLaqs+IR1THzxXGTqycl1YTNsrORC6JuQWD5NFdnqX
+         Z9eg4GkmTGi/ArP3Np60/MKeMDXw/jN7V33MBl2rsUYsMgdkedZp1uuxceWpGi2PTykT
+         rE0XxRs5oV4Via1lxt1VjfqcFvPiY1LQrt9mYz1zBgeKpdiGl3JMLgvuCScuW2dlHkOm
+         fRHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739171517; x=1739776317;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=w9v7M60N7k/hqWmhBY/iyMoBnIb4DpUfGV8sZCADpqE=;
+        b=uW3LEwddByb9YbHWNk/81BJEKTmYSavAw/Cb0y8jWpY/3TBgEmOAMyZ6sew27q2Zit
+         umyw8+X6UqjkpvUaAZMryJXqwD+ENaxYbFLpB7cqnRSvvjdfT4ykGX7cLokipWgFBydL
+         CEMcnXCc7+Ma3fw1KtIn0MShyl2mfQGcF7flx0EMxWRpWUA3kJpeiQRE2nZ92Auw23Ro
+         DbzUUXHvHWx9ekhvf5n6aTIL58MiF4iZz193jiQ21M6W00Yix61avu2xBJ7QTXyeoJgj
+         g7ghCuq5eR9O2QNY3PmLtvBgW1r7wTypIeMCrCqNyIuOSDh6MGDsn24wkHDoRGfBDVSb
+         EMkw==
+X-Forwarded-Encrypted: i=1; AJvYcCUeabvITNpYBYGBiWiTUmGC5XRdR+S96sUIhR5HukRhpoYt/N2Zu6mOor2v6DfI9LpBAEFuqqmFqNg=@vger.kernel.org, AJvYcCUwky0kPj6aEhj9+Si8StrFbJOgsdHCF/uACsdR39qFK/2OEpO+oxJ76/BG0mn0Rrvyd3rcD9QLsHRQU3uk@vger.kernel.org, AJvYcCV07yvPngT5zj9KUB4LVUXUnuoKIUFgIHziZdV4jm9ZphtiWK7pqwjqlKtljNeA9r1AQUiUnvFPKGfY@vger.kernel.org, AJvYcCWavdpPlP98FkhtKssZGKBL/4LLaAL7JWRxJPM9m/dHXlNNbmzNzVP5RFP5u+fxTX7vZXKP9lAMpUgffrY=@vger.kernel.org, AJvYcCXPfhmqEuov6RjQLQWtoOVV0clX0ZtfNC5f0PnEBIgKAtFLYCinZ7fYRV98h3qzQF2NNnA2nlMT/1m1/Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEnX/K3ZWWE6UQHURnWS7qaDZhPI0jKl9GlnT9miIaALcQBnhq
+	DfT5OgSQ40TzsNfFyq9OtQwFN9E43RN0heG49TM7YV/TlE4jA7d3eX/Y4SAVOQq2fOaiePf4HWn
+	/qAou6vNlnbtSmGLu8Q/KTp6wkwQ=
+X-Gm-Gg: ASbGncsx57HvsOthy/SLBbdI/9rqIv+YL/HStsWPdF3WvAN3jFhSvSdBEWVsT78WSGm
+	04fn7jLJ/X4+/TAsjlwxh5Dpa9vJz1cQJFey1Pyaqf20a3sSjE5RgcvS0URbOKbEJHPGIbqk=
+X-Google-Smtp-Source: AGHT+IHL5q/jtji7+1Vd8bARh6p5DubUkwFmeTKo/+J2lD9ripmH8UXPhv8PlDl44fvPDSEJKmEQwMdR0u0m9ooKraQ=
+X-Received: by 2002:a05:6102:304a:b0:4bb:5d61:1288 with SMTP id
+ ada2fe7eead31-4bb5d611a73mr2792124137.23.1739171516931; Sun, 09 Feb 2025
+ 23:11:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 14/16] mm/vmalloc: Batch arch_sync_kernel_mappings()
- more efficiently
-To: Ryan Roberts <ryan.roberts@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Muchun Song <muchun.song@linux.dev>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
- Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
- Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250205151003.88959-1-ryan.roberts@arm.com>
- <20250205151003.88959-15-ryan.roberts@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250205151003.88959-15-ryan.roberts@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CABTCjFBx-QpCKFWs5MPCgLAjJWT6ygrvS_A0nJk2BBxmWAxF+Q@mail.gmail.com>
+ <e67c0375-1024-483b-aabf-6a11339ab9af@linaro.org>
+In-Reply-To: <e67c0375-1024-483b-aabf-6a11339ab9af@linaro.org>
+From: Dzmitry Sankouski <dsankouski@gmail.com>
+Date: Mon, 10 Feb 2025 10:11:45 +0300
+X-Gm-Features: AWEUYZk6CIEra92QKBlWA-4eq8zR0aFX3oxFj_GszgMw82sXZR5leVvr7QeEdtw
+Message-ID: <CABTCjFBvYkEG0WYhCt6tP_cO8Ct82t0=UhwBefZEJrUiFc7vAw@mail.gmail.com>
+Subject: Re: Patchset status - 'Add support for Maxim Integrated MAX77705 PMIC'
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Pavel Machek <pavel@ucw.cz>, Hans de Goede <hdegoede@redhat.com>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Sebastian Krzyszkowiak <sebastian.krzyszkowiak@puri.sm>, Purism Kernel Team <kernel@puri.sm>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-pm@vger.kernel.org, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-input@vger.kernel.org, 
+	linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/5/25 20:39, Ryan Roberts wrote:
-> When page_shift is greater than PAGE_SIZE, __vmap_pages_range_noflush()
-> will call vmap_range_noflush() for each individual huge page. But
-> vmap_range_noflush() would previously call arch_sync_kernel_mappings()
-> directly so this would end up being called for every huge page.
-> 
-> We can do better than this; refactor the call into the outer
-> __vmap_pages_range_noflush() so that it is only called once for the
-> entire batch operation.
+=D0=B2=D1=81, 9 =D1=84=D0=B5=D0=B2=D1=80. 2025=E2=80=AF=D0=B3. =D0=B2 22:38=
+, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org>:
+>
+> On 09/02/2025 15:13, Dzmitry Sankouski wrote:
+> > For the patchset I sent 2 weeks ago, [patchwork][1] shows status
+> > 'Handled Elsewhere, archived'. Is anything blocking it?
+> >
+> > [1]: https://patchwork.kernel.org/project/linux-pm/list/?series=3D92784=
+8&archive=3Dboth&state=3D*
+>
+> That's PM patchwork, not necessarily power supply. But anyway, what does
+> the cover letter say? Who do you expect to merge it? Above link does not
+> provide cover letter, unfortunately.
+>
 
-This makes sense.
+I didn't found anything related to power supply in the list of mail lists a=
+t
+https://subspace.kernel.org/vger.kernel.org.html.
 
-> 
-> This will benefit performance for arm64 which is about to opt-in to
-> using the hook.
-> 
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> ---
->  mm/vmalloc.c | 60 ++++++++++++++++++++++++++--------------------------
->  1 file changed, 30 insertions(+), 30 deletions(-)
-> 
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 68950b1824d0..50fd44439875 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -285,40 +285,38 @@ static int vmap_p4d_range(pgd_t *pgd, unsigned long addr, unsigned long end,
->  
->  static int vmap_range_noflush(unsigned long addr, unsigned long end,
->  			phys_addr_t phys_addr, pgprot_t prot,
-> -			unsigned int max_page_shift)
-> +			unsigned int max_page_shift, pgtbl_mod_mask *mask)
->  {
->  	pgd_t *pgd;
-> -	unsigned long start;
->  	unsigned long next;
->  	int err;
-> -	pgtbl_mod_mask mask = 0;
->  
->  	might_sleep();
->  	BUG_ON(addr >= end);
->  
-> -	start = addr;
->  	pgd = pgd_offset_k(addr);
->  	do {
->  		next = pgd_addr_end(addr, end);
->  		err = vmap_p4d_range(pgd, addr, next, phys_addr, prot,
-> -					max_page_shift, &mask);
-> +					max_page_shift, mask);
->  		if (err)
->  			break;
->  	} while (pgd++, phys_addr += (next - addr), addr = next, addr != end);
->  
-> -	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
-> -		arch_sync_kernel_mappings(start, end);
-> -
->  	return err;
->  }
+However I found my series in linux-input with New status.
 
-arch_sync_kernel_mappings() gets dropped here and moved to existing
-vmap_range_noflush() callers instead.
+Here is my cover letter:
+https://lore.kernel.org/all/20250123-starqltechn_integration_upstream-v17-0=
+-8b06685b6612@gmail.com/
 
->  
->  int vmap_page_range(unsigned long addr, unsigned long end,
->  		    phys_addr_t phys_addr, pgprot_t prot)
->  {
-> +	pgtbl_mod_mask mask = 0;
->  	int err;
->  
->  	err = vmap_range_noflush(addr, end, phys_addr, pgprot_nx(prot),
-> -				 ioremap_max_page_shift);
-> +				 ioremap_max_page_shift, &mask);
-> +	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
-> +		arch_sync_kernel_mappings(addr, end);
-> +
+I guess I would expect a person from the MAINTAINERS list to merge it?  In =
+that
+case it would be Chanwoo Choi <cw00.choi@samsung.com> and
+Krzysztof Kozlowski <krzk@kernel.org> from
+MAXIM PMIC AND MUIC DRIVERS FOR EXYNOS BASED BOARDS entry.
 
-arch_sync_kernel_mappings() gets moved here.
+--=20
 
->  	flush_cache_vmap(addr, end);
->  	if (!err)
->  		err = kmsan_ioremap_page_range(addr, end, phys_addr, prot,
-> @@ -587,29 +585,24 @@ static int vmap_pages_p4d_range(pgd_t *pgd, unsigned long addr,
->  }
->  
->  static int vmap_small_pages_range_noflush(unsigned long addr, unsigned long end,
-> -		pgprot_t prot, struct page **pages)
-> +		pgprot_t prot, struct page **pages, pgtbl_mod_mask *mask)
->  {
-> -	unsigned long start = addr;
->  	pgd_t *pgd;
->  	unsigned long next;
->  	int err = 0;
->  	int nr = 0;
-> -	pgtbl_mod_mask mask = 0;
->  
->  	BUG_ON(addr >= end);
->  	pgd = pgd_offset_k(addr);
->  	do {
->  		next = pgd_addr_end(addr, end);
->  		if (pgd_bad(*pgd))
-> -			mask |= PGTBL_PGD_MODIFIED;
-> -		err = vmap_pages_p4d_range(pgd, addr, next, prot, pages, &nr, &mask);
-> +			*mask |= PGTBL_PGD_MODIFIED;
-> +		err = vmap_pages_p4d_range(pgd, addr, next, prot, pages, &nr, mask);
->  		if (err)
->  			break;
->  	} while (pgd++, addr = next, addr != end);
->  
-> -	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
-> -		arch_sync_kernel_mappings(start, end);
-> -
->  	return err;
->  }
->  
-> @@ -626,26 +619,33 @@ int __vmap_pages_range_noflush(unsigned long addr, unsigned long end,
->  		pgprot_t prot, struct page **pages, unsigned int page_shift)
->  {
->  	unsigned int i, nr = (end - addr) >> PAGE_SHIFT;
-> +	unsigned long start = addr;
-> +	pgtbl_mod_mask mask = 0;
-> +	int err = 0;
->  
->  	WARN_ON(page_shift < PAGE_SHIFT);
->  
->  	if (!IS_ENABLED(CONFIG_HAVE_ARCH_HUGE_VMALLOC) ||
-> -			page_shift == PAGE_SHIFT)
-> -		return vmap_small_pages_range_noflush(addr, end, prot, pages);
-> -
-> -	for (i = 0; i < nr; i += 1U << (page_shift - PAGE_SHIFT)) {
-> -		int err;
-> -
-> -		err = vmap_range_noflush(addr, addr + (1UL << page_shift),
-> -					page_to_phys(pages[i]), prot,
-> -					page_shift);
-> -		if (err)
-> -			return err;
-> +			page_shift == PAGE_SHIFT) {
-> +		err = vmap_small_pages_range_noflush(addr, end, prot, pages,
-> +						&mask);
-
-Unlike earlier don't return here until arch_sync_kernel_mappings()
-gets covered later.
-
-> +	} else {
-> +		for (i = 0; i < nr; i += 1U << (page_shift - PAGE_SHIFT)) {
-> +			err = vmap_range_noflush(addr,
-> +						addr + (1UL << page_shift),
-> +						page_to_phys(pages[i]), prot,
-> +						page_shift, &mask);
-> +			if (err)
-> +				break;
->  
-> -		addr += 1UL << page_shift;
-> +			addr += 1UL << page_shift;
-> +		}
->  	}
->  
-> -	return 0;
-> +	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
-> +		arch_sync_kernel_mappings(start, end);
-
-arch_sync_kernel_mappings() gets moved here after getting dropped
-from both vmap_range_noflush() and vmap_small_pages_range_noflush().
-
-> +
-> +	return err;
->  }
->  
->  int vmap_pages_range_noflush(unsigned long addr, unsigned long end,
-
-LGTM, and this can stand on its own as well.
-
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Best regards,
+Dzmitry
