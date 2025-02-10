@@ -1,277 +1,134 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEF9235366
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EEA29422;
+	Mon, 10 Feb 2025 14:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739196918; cv=none; b=CkhqaWz2Ffee/ImnLuTC31Dr+Bw9neToX4lU6LJH9fBIOwOlxMAtQ7ZyLWEsbkO2WsN06eEnD7SLvsixrjQP4IUMWCuSre3UzYQbbi9D4a9O9K7DBBpICeF8ZnL7+za44VlQpo3fxZCbtWpvL0S7VDPqJ8SLbeQM70COnCqpaKc=
+	t=1739196926; cv=none; b=Ifu9N/YbF+HmE/qTM1k92tNaaKOXTnSrdOHSPdDInhYGy+jjj1qnDSPpsIZ38I5HrnnPKtnwgsA6MGNTS7RF2Rgdh88sJe9RxnyJDC/jQO1MdbJXgTdQTaeOBSL/jYAvanhsi7eMMaRGOgeMJ5jCq1y5BqLvtgobNtDlvFNsvt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739196918; c=relaxed/simple;
-	bh=Cx5YhTcE+YerAakYfU57yJvmi/8wcu5a0Fj80oUEpnI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ViM3VcoEvr0m2Y05gjj/mDvY/bJVIo8RhShPRbcOuARdhj9DFLBrNlsM3/3OEm0dBDnmc1Txc5EpJE8gFbkUPA8DuU4nD1KJ1sLboY9stU2Nfx5Mc38dCu99VkdiLmo8Pwis5IKsmfqAesueH49o6w2vxcmwuSeloL6AJAUVZOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=YD8DFmU5; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="YD8DFmU5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739196913;
-	bh=Cx5YhTcE+YerAakYfU57yJvmi/8wcu5a0Fj80oUEpnI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YD8DFmU5INtPw65n1U8GZvXvwbDE5aXSYJ8L3IL3gPA4L0oL/nE2ldcBGfMeu3lg1
-	 6CTmHMoqdyAw7efYeTXlPpGJgP0THDK21vwr5NODToew1KwdVJgfb7SXmX67cOCJhj
-	 oBHQGFAIr/EUrGC3JyeCko39QceE2/p1jJ+Nqv9bekZ/SIt4hUir2qjy21Z7FD7WRF
-	 EFmGJcvR64F9YTme0qHb6ggnUJEFpz4o4ZEn3844K08BkXREtQs25Tfl59PHSbzyJo
-	 TooweS7cfYVsSbFD/ZJOTlC2gLENI7blUy4f8xGs9+37bhBcCRBW5iHG3EpCSCwL4a
-	 V9GXfAogaNi7w==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id C307517E02BE;
-	Mon, 10 Feb 2025 15:15:12 +0100 (CET)
-Date: Mon, 10 Feb 2025 15:15:06 +0100
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Liviu Dudau <liviu.dudau@arm.com>
-Cc: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>, Steven
- Price <steven.price@arm.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Mihail Atanassov
- <mihail.atanassov@arm.com>, kernel@collabora.com,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] drm/panthor: Avoid sleep locking in the internal BO
- size path
-Message-ID: <20250210151506.65067134@collabora.com>
-In-Reply-To: <Z6oCdebq2ftGaZdq@e110455-lin.cambridge.arm.com>
-References: <20250210124203.124191-1-adrian.larumbe@collabora.com>
-	<20250210124203.124191-2-adrian.larumbe@collabora.com>
-	<20250210141807.064ccacf@collabora.com>
-	<Z6oCdebq2ftGaZdq@e110455-lin.cambridge.arm.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1739196926; c=relaxed/simple;
+	bh=A9PgrsXSRNKEPfOJomrogXIlnGOX5hrS1mbx+8uD1SE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bg8CJXOh49dGdbOZZu1aRHqER02GCyNhmBzxC77ZDwxgofBsZUE1XDXd9FGG9DJjJ7dSF1nf7F2bZePyt+Uedk4vI9LSWJWdfIgQw8VlkZIKYLueiDJODbnn35VIkqcqLkeh8Q80NeZaoGLntNJADItgBApPpOFypplgUvYQD1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4ba9680271fso1663168137.1;
+        Mon, 10 Feb 2025 06:15:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739196922; x=1739801722;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sxuehLgcBoD1P6oKVRxDFIHudAPxcjV73MhKrBH3pHs=;
+        b=vuN+qFLiL/KtaRO6tZUhw0MKaHP41z4DsdyTYAEVr1IJZR7ivM9HHGPHBlgH0DOry8
+         iXN/gAS5u5m1H7uvUAiJynuFBXnW1JvD72VW3hH/yYtmgKI/f+aHKwhtlv/JjMST9X01
+         xBZpQTtpPLCHGmA7BlRHCCSnVUhWCm9SDh1QUQLgqGM3lV0MeiPyyOfb9hfjYErwdU39
+         TE7EDvu9uPpeYC1LaIFnoGkHshqqILFGOYlgQmQq+W3CLHPPFWZEA6PLjCYCGUnyUnL3
+         2pBniHf4OS8TSTo4NU7cP5KjduGuHkP9p892AEwIWu9ZFhXSx2hCVBJRaLTJLJdaxXD5
+         C39g==
+X-Forwarded-Encrypted: i=1; AJvYcCUwpBuksD8H4iDUxZH1Phq2IKyc5OcLB7//6elhcwb/LUBKRn6oKI/hHALUtPKwrwTulrE/HwgmUtPBnw8s@vger.kernel.org, AJvYcCWCrVcMCrzbeJ/dwKw9Voj8LRG31yDvx/YRggWYHEIiE09oAYhNBITT3N1EXpQJgnqilTuvzukwJvIgnXSn@vger.kernel.org, AJvYcCXb+JealS6R+nWrvjsGNemt5HBRb6DY7rBpEwEOH+JLjfHsp9gpCY2ikmb2ZV7RvWku4YSt1gQZRSlS@vger.kernel.org, AJvYcCXqKe/6fZE7/eV7D/6oNNE7gA/IiVrn+1DIWi5KSCOcXorWrG4aT22ZBNs8g7dsTckpESvbHuJlXkHJ/07eqjE5OFQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOVlP66eJgKvi+sTtqqyDBy8ssHwRRrS4IC8+wNe/uhJ7ggihf
+	+529nJapYZ2/dhIwsCv0HDFIuzqjugzOOaEdgOHyiIBi4pcUtF6JdIVuJSBL
+X-Gm-Gg: ASbGncs0wbeVR1kmyT1vdhxblfGooTx5sW1LXoCh07TaUTmFPf1LqP/2C9IGjKHa/pP
+	2xwrpXrmURT4alY0vcpCAFmLoUuhw4xhHvgIjLH1eRISytWopDGcDEzyUHHmlB/jCRQn0pYOUWA
+	9iepVVF1aIhZoo69zWA+XiqdgqTzdxs/fGPglc3Bs2f0EYmgA2pgkhvgm7XAPCJ0Nj/yI8t/sDE
+	MUbuyt0q83inNJAe+QuJUGrkLS/X+GrMKS03znVudKXh77hH3ojyg7qChdB5Is78uOXusOutZNj
+	4p5FIdcs+GQY4xCtAoKcelurWY4uOYThkIZfggOj24h0jQdCfoC0bg==
+X-Google-Smtp-Source: AGHT+IFkZIv+UuNG5hhRVrPRHp164vpV1+c2pvI9OyfRBD/G8mDUCOOqEQY6hIZFZqrG6C3KaRIEHg==
+X-Received: by 2002:a05:6102:5490:b0:4bb:c670:7ef4 with SMTP id ada2fe7eead31-4bbc670837amr2438177137.3.1739196922628;
+        Mon, 10 Feb 2025 06:15:22 -0800 (PST)
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4bbdcf078ccsm63429137.3.2025.02.10.06.15.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 06:15:22 -0800 (PST)
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4b9486a15a0so2998715137.0;
+        Mon, 10 Feb 2025 06:15:22 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVYu8lEBXYrAOEkx8tLFD5NUe6orqc38kfeZk8iniM0JavXd4bRRIFjQjMWG9RqqIZlhvuN+9LTmPX1@vger.kernel.org, AJvYcCVf5utrZmQFto+T2Nh/GXq74sRIVBqJX94NzdtEZHH6Xk1T0NyYM5mm9PRwViJWFRFyxnyC0v+F7movrrpn@vger.kernel.org, AJvYcCVvtyzBD1r6QBXGZ2T+5ST/u0isDZx4D6RCFE4jP3BTWxdzgqii8JY4s7ID3gmvYSa2mBsLVs+opDFPJt4vZO+FELc=@vger.kernel.org, AJvYcCXho9SruSvC0N5gLc/BqxeMrbnZixjWjUY4q/xV7DjlEf7DVoUtq6EVzjTyB8fV3vOgGONamKbnedV7BGfT@vger.kernel.org
+X-Received: by 2002:a05:6102:162b:b0:4bb:c630:dcbe with SMTP id
+ ada2fe7eead31-4bbc6311774mr2601198137.11.1739196921936; Mon, 10 Feb 2025
+ 06:15:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com>
+ <20250129165122.2980-3-thierry.bultel.yh@bp.renesas.com> <CAMuHMdVB2W6R+xYeTUKSv_dMGruECSft-P19m6nZD61=ROngXw@mail.gmail.com>
+ <TY3PR01MB11346D5D895C190EBE8C8A84B86F22@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY3PR01MB11346D5D895C190EBE8C8A84B86F22@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 10 Feb 2025 15:15:10 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUpaV71Svyenq=hXMk3GfjgZvHn-0APkv_LKSzyytKzag@mail.gmail.com>
+X-Gm-Features: AWEUYZn4-yY_D8g0FNPB0KsKrTKyUuZA5A4EpCp9Dr-kxloDMrY4NFg8EU8hFMQ
+Message-ID: <CAMuHMdUpaV71Svyenq=hXMk3GfjgZvHn-0APkv_LKSzyytKzag@mail.gmail.com>
+Subject: Re: [PATCH 02/14] dt-bindings: serial: Document sci bindings for the
+ Renesas RZ/T2H (a.k.a r9a09g077) SoC
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 10 Feb 2025 13:43:17 +0000
-Liviu Dudau <liviu.dudau@arm.com> wrote:
+Hi Biju,
 
-> On Mon, Feb 10, 2025 at 02:18:07PM +0100, Boris Brezillon wrote:
-> > On Mon, 10 Feb 2025 12:42:00 +0000
-> > Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
-> >  =20
-> > > A previous commit dealt with a similar situation, whereby upon enabli=
-ng
-> > > some mutex debug features, a warning about sleep muteces being used i=
-n a =20
-> >=20
-> >                                                    ^ mutexes
-> >   =20
-> > > /proc file read atomic context was being triggered.
-> > >=20
-> > > Because in this case replacing the heap mutex with a spinlock isn't
-> > > feasible, the fdinfo handler no longer traverses the list of heaps for
-> > > every single VM associated with an open DRM file. Instad, when a new =
-heap
-> > > chunk is allocated, its size is accumulated into a VM-wide tally, whi=
-ch
-> > > also makes the atomic context code path somewhat faster.
-> > >=20
-> > > Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
-> > > Fixes: 3e2c8c718567 ("drm/panthor: Expose size of driver internal BO'=
-s over fdinfo")
-> > > ---
-> > >  drivers/gpu/drm/panthor/panthor_heap.c | 38 ++++++++----------------=
---
-> > >  drivers/gpu/drm/panthor/panthor_heap.h |  2 --
-> > >  drivers/gpu/drm/panthor/panthor_mmu.c  | 18 +++++++-----
-> > >  drivers/gpu/drm/panthor/panthor_mmu.h  |  1 +
-> > >  4 files changed, 23 insertions(+), 36 deletions(-)
-> > >=20
-> > > diff --git a/drivers/gpu/drm/panthor/panthor_heap.c b/drivers/gpu/drm=
-/panthor/panthor_heap.c
-> > > index db0285ce5812..686f209f5b09 100644
-> > > --- a/drivers/gpu/drm/panthor/panthor_heap.c
-> > > +++ b/drivers/gpu/drm/panthor/panthor_heap.c
-> > > @@ -127,6 +127,8 @@ static void panthor_free_heap_chunk(struct pantho=
-r_vm *vm,
-> > >  	heap->chunk_count--;
-> > >  	mutex_unlock(&heap->lock);
-> > > =20
-> > > +	panthor_vm_heaps_accumulate(vm, -heap->chunk_size);
-> > > +
-> > >  	panthor_kernel_bo_destroy(chunk->bo);
-> > >  	kfree(chunk);
-> > >  }
-> > > @@ -180,6 +182,8 @@ static int panthor_alloc_heap_chunk(struct pantho=
-r_device *ptdev,
-> > >  	heap->chunk_count++;
-> > >  	mutex_unlock(&heap->lock);
-> > > =20
-> > > +	panthor_vm_heaps_accumulate(vm, heap->chunk_size);
-> > > +
-> > >  	return 0;
-> > > =20
-> > >  err_destroy_bo:
-> > > @@ -389,6 +393,7 @@ int panthor_heap_return_chunk(struct panthor_heap=
-_pool *pool,
-> > >  			removed =3D chunk;
-> > >  			list_del(&chunk->node);
-> > >  			heap->chunk_count--;
-> > > +			panthor_vm_heaps_accumulate(chunk->bo->vm, -heap->chunk_size);
-> > >  			break;
-> > >  		}
-> > >  	}
-> > > @@ -560,6 +565,8 @@ panthor_heap_pool_create(struct panthor_device *p=
-tdev, struct panthor_vm *vm)
-> > >  	if (ret)
-> > >  		goto err_destroy_pool;
-> > > =20
-> > > +	panthor_vm_heaps_accumulate(vm, pool->gpu_contexts->obj->size);
-> > > +
-> > >  	return pool;
-> > > =20
-> > >  err_destroy_pool:
-> > > @@ -594,8 +601,11 @@ void panthor_heap_pool_destroy(struct panthor_he=
-ap_pool *pool)
-> > >  	xa_for_each(&pool->xa, i, heap)
-> > >  		drm_WARN_ON(&pool->ptdev->base, panthor_heap_destroy_locked(pool, =
-i));
-> > > =20
-> > > -	if (!IS_ERR_OR_NULL(pool->gpu_contexts))
-> > > +	if (!IS_ERR_OR_NULL(pool->gpu_contexts)) {
-> > > +		panthor_vm_heaps_accumulate(pool->gpu_contexts->vm,
-> > > +					    -pool->gpu_contexts->obj->size);
-> > >  		panthor_kernel_bo_destroy(pool->gpu_contexts);
-> > > +	}
-> > > =20
-> > >  	/* Reflects the fact the pool has been destroyed. */
-> > >  	pool->vm =3D NULL;
-> > > @@ -603,29 +613,3 @@ void panthor_heap_pool_destroy(struct panthor_he=
-ap_pool *pool)
-> > > =20
-> > >  	panthor_heap_pool_put(pool);
-> > >  }
-> > > -
-> > > -/**
-> > > - * panthor_heap_pool_size() - Calculate size of all chunks across al=
-l heaps in a pool
-> > > - * @pool: Pool whose total chunk size to calculate.
-> > > - *
-> > > - * This function adds the size of all heap chunks across all heaps i=
-n the
-> > > - * argument pool. It also adds the size of the gpu contexts kernel b=
-o.
-> > > - * It is meant to be used by fdinfo for displaying the size of inter=
-nal
-> > > - * driver BO's that aren't exposed to userspace through a GEM handle.
-> > > - *
-> > > - */
-> > > -size_t panthor_heap_pool_size(struct panthor_heap_pool *pool)
-> > > -{
-> > > -	struct panthor_heap *heap;
-> > > -	unsigned long i;
-> > > -	size_t size =3D 0;
-> > > -
-> > > -	down_read(&pool->lock);
-> > > -	xa_for_each(&pool->xa, i, heap)
-> > > -		size +=3D heap->chunk_size * heap->chunk_count;
-> > > -	up_read(&pool->lock);
-> > > -
-> > > -	size +=3D pool->gpu_contexts->obj->size;
-> > > -
-> > > -	return size;
-> > > -}
-> > > diff --git a/drivers/gpu/drm/panthor/panthor_heap.h b/drivers/gpu/drm=
-/panthor/panthor_heap.h
-> > > index e3358d4e8edb..25a5f2bba445 100644
-> > > --- a/drivers/gpu/drm/panthor/panthor_heap.h
-> > > +++ b/drivers/gpu/drm/panthor/panthor_heap.h
-> > > @@ -27,8 +27,6 @@ struct panthor_heap_pool *
-> > >  panthor_heap_pool_get(struct panthor_heap_pool *pool);
-> > >  void panthor_heap_pool_put(struct panthor_heap_pool *pool);
-> > > =20
-> > > -size_t panthor_heap_pool_size(struct panthor_heap_pool *pool);
-> > > -
-> > >  int panthor_heap_grow(struct panthor_heap_pool *pool,
-> > >  		      u64 heap_gpu_va,
-> > >  		      u32 renderpasses_in_flight,
-> > > diff --git a/drivers/gpu/drm/panthor/panthor_mmu.c b/drivers/gpu/drm/=
-panthor/panthor_mmu.c
-> > > index 0a4e352b5505..aaad1a560805 100644
-> > > --- a/drivers/gpu/drm/panthor/panthor_mmu.c
-> > > +++ b/drivers/gpu/drm/panthor/panthor_mmu.c
-> > > @@ -345,6 +345,10 @@ struct panthor_vm {
-> > > =20
-> > >  		/** @heaps.lock: Lock used to protect access to @pool. */
-> > >  		struct mutex lock;
-> > > +
-> > > +		/** @heaps.size: Size of all chunks across all heaps in the pool. =
-*/
-> > > +		ssize_t size; =20
-> >=20
-> > Let's put that into an fdinfo struct.
-> >  =20
-> > > + =20
-> >=20
-> > Drop the extra blank-line.
-> >  =20
-> > >  	} heaps;
-> > > =20
-> > >  	/** @node: Used to insert the VM in the panthor_mmu::vm::list. */
-> > > @@ -1539,6 +1543,7 @@ static void panthor_vm_destroy(struct panthor_v=
-m *vm)
-> > >  	mutex_lock(&vm->heaps.lock);
-> > >  	panthor_heap_pool_destroy(vm->heaps.pool);
-> > >  	vm->heaps.pool =3D NULL;
-> > > +	vm->heaps.size =3D 0;
-> > >  	mutex_unlock(&vm->heaps.lock);
-> > > =20
-> > >  	drm_WARN_ON(&vm->ptdev->base,
-> > > @@ -1963,13 +1968,7 @@ void panthor_vm_heaps_sizes(struct panthor_fil=
-e *pfile, struct drm_memory_stats
-> > > =20
-> > >  	xa_lock(&pfile->vms->xa);
-> > >  	xa_for_each(&pfile->vms->xa, i, vm) {
-> > > -		size_t size =3D 0;
-> > > -
-> > > -		mutex_lock(&vm->heaps.lock);
-> > > -		if (vm->heaps.pool)
-> > > -			size =3D panthor_heap_pool_size(vm->heaps.pool);
-> > > -		mutex_unlock(&vm->heaps.lock);
-> > > -
-> > > +		size_t size =3D vm->heaps.size;
-> > >  		stats->resident +=3D size;
-> > >  		if (vm->as.id >=3D 0)
-> > >  			stats->active +=3D size;
-> > > @@ -1977,6 +1976,11 @@ void panthor_vm_heaps_sizes(struct panthor_fil=
-e *pfile, struct drm_memory_stats
-> > >  	xa_unlock(&pfile->vms->xa);
-> > >  }
-> > > =20
-> > > +void panthor_vm_heaps_accumulate(struct panthor_vm *vm, ssize_t acc)
-> > > +{ =20
-> >=20
-> > Either there's some lock protecting this operation and we want a
-> > lockdep_assert_held(), or we need to make it an atomic operation (and
-> > make the size an atomic_t) to avoid races. =20
->=20
-> If Adri=C3=A1n moves the call site in panthor_{alloc,free}_heap_chunk() b=
-efore he drops the heap->lock,
-> would that be sufficient? Pool create and destroy are hopefully race-free=
- and
-> panthor_heap_return_chunk() should be also safe.
+On Mon, 10 Feb 2025 at 14:19, Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> > -----Original Message-----
+> > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Sent: 10 February 2025 13:15
+> > Subject: Re: [PATCH 02/14] dt-bindings: serial: Document sci bindings for the Renesas RZ/T2H (a.k.a
+> > r9a09g077) SoC
+> >
+> > On Wed, 29 Jan 2025 at 17:52, Thierry Bultel <thierry.bultel.yh@bp.renesas.com> wrote:
+> > > Document RZ/T2H (a.k.a r9a09g077) in SCI binding.
+> > >
+> > > Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> >
+> > Thanks for your patch!
+> >
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/serial/renesas,rzsci.yaml
+> > > @@ -0,0 +1,100 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) %YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/serial/renesas,rzsci.yaml#
+> >
+> > "rzsci" is IMHO a bad name, as SCI on RZ/T2 differs from the similar-named "SCI" (sometimes called
+> > "RSCI" or "SCIg") on RZ/A1H, RZ/A2M, RZ/G2L, RZ/V2L, and RZ/G3S (and most old SuperH SoCs).
+> >
+> > BTW, I believe the variant on RZ/T2 is also used on RZ/N2, RZ/V2H, and RZ/G3E?
+> >
+> > However, binding-wise, they all seem to be very similar.
+> > So perhaps you can just add this to the existing
+> > Documentation/devicetree/bindings/serial/renesas,sci.yaml?
+>
+> It is present in RZ/G3E as well.
+> RSCI supports sci, scif, i2c and spi that is the reason renesas,rzsci.yaml introduced.
 
-I'm not sure that's enough. The tiler_oom_work is per-group, and you
-can have multiple groups sharing the same VM. The workqueue we schedule
-these works on is also not single-threaded, so you can potentially have
-multiple threads updating the total VM tiler heap size at the same time.
+If you plan to add support for I2C and SPI, you will need different
+bindings under Documentation/devicetree/bindings/{i2c,spi}/.
+
+Note that we already have drivers/spi/spi-sh-sci.c (without DT support),
+but it's definitely sub-optimal for the fancy new variant in RZ/T2...
+
+> You mean add this in renesas,sci.yaml and then expand??
+
+Indeed. Differences seem to be minimal.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
