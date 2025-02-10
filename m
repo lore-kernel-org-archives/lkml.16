@@ -1,102 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896ED25E444;
-	Mon, 10 Feb 2025 18:59:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8E2179A7;
+	Mon, 10 Feb 2025 18:59:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739213947; cv=none; b=nSWdXWuww6sux7kb4UMxM0D8AWM+LsJyNbAbiZ3lbWo4x1Eo/EbLeGC/WoWfLeofZZ+9D0dFIcHlb3vux0vi583mAnveykqUZYhdRgpYhQmo0p+a2HI7VvhFCM07Y0k4K7ayZTI4JnCnghSOX2gbwBUSkJkt781EOgcdmC7An3Y=
+	t=1739213992; cv=none; b=cOcRNqdkY8cuxlWBBe2lG48USHDubjJXeHiYz+UhwF+fY+UHuC74EWZsrfIi6IxPqAiyuO43X/6RMDE4oYHNZ27s2cCsIN8srMq5IYlT7w2Gn7WGKcnWG8n9NEsA4nW32EY08bKZUlNOE3gdEvyIpawO2DDQuBb3pu+w4DSWms8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739213947; c=relaxed/simple;
-	bh=k0owo3IVCUR+CM41/5x/95F8+WLokMaFCe6y2riL7vI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D48X+krADUuoDVkUuCn/EUlug0GmCiJ8hOhy/FKHkdqvGPRTzilKRd5BRhsMyyzzTuwJh0VPVUh1BcR2nHgSh1ydcn6xZIMaiE8lk1qKmmWNcXnRP3yLhkCHOJZHOUmNETLievC9JoMTJSpcsDQcSCYQEvo5dSCTffL3her+UJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=acpTWoPM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739213992; c=relaxed/simple;
+	bh=0kby5yzJ82YbE3sKuDLWqLhBQL7R07TemAKHUgP/q9c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SQuDxXUGG1JEmCButs8w+jf8e2NNQ9G3TQQs8XUE3L6OAuC9P8gsuoDjwh6cVhdWDHHObxLDNyH0Be26Z8kN+jKbj2l0EeJVD4p4RflvWLswIkpd+V3bQlsH1p5TjN5Zf/+D+m66ZOsZcU67k1gUOUrG9BRd4siLJ9IPrCn9Gas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJ8Ren6E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="acpTWoPM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DAB6C4CED1;
-	Mon, 10 Feb 2025 18:59:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJ8Ren6E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5793EC4CED1;
+	Mon, 10 Feb 2025 18:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739213947;
-	bh=k0owo3IVCUR+CM41/5x/95F8+WLokMaFCe6y2riL7vI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=acpTWoPMT07fidOgjrlJ91T0A07XoVZ9J/g1AXwHtYUv4ZgLhlOH6quRDa2vPLApJ
-	 KOt3EdKpnw05GG8ohN0cl+jMsidWXpWfBxmwbtmECYX8oN4JV4x3Mym/UAmIG+U0xM
-	 5SM4o5GGsiZtrxeN2Ha/p7/msbKttGihoZmKh9E7T0gUuKov4Y7d6kW1Yo/6ONltlh
-	 sPcd1wgUkAjr+me2EqvpPBxNMXTC+SbSccya59L6t7k9AWXc4hiElG3mh4Z2H+VuxT
-	 hXomirscoZRQd0EBV2FQBRxUkck+uqu8jECzQfnFMf2yqhgf6WPqzzi/uLc6QhWRhQ
-	 Ay9fSQmjBZ4yA==
-From: cel@kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jeff Layton <jlayton@kernel.org>,
-	<linux-nfs@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] NFSD fixes for v6.14
-Date: Mon, 10 Feb 2025 13:59:05 -0500
-Message-ID: <20250210185905.116290-1-cel@kernel.org>
-X-Mailer: git-send-email 2.47.0
+	s=k20201202; t=1739213992;
+	bh=0kby5yzJ82YbE3sKuDLWqLhBQL7R07TemAKHUgP/q9c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kJ8Ren6Eb0rHZRUGgGe/ygbmSbsKib6UTxgaPeoLeQzDz+BCg2sSCFfrZoRik11gi
+	 CPWDrzTLAeohqWo8BX8xgiCqDiXdMlG4c0bsDxyHpeY9Gycwn8vomG1eLpjbUm2OqQ
+	 m63eYY1uA1E26Di7hXjDNe8Zyoch/sOWBDxy0TyVaZtvOOWZx2DLIRBZOw84Y6dIuO
+	 ofSW2r6aIqyQZ8nwdGlevx/8UtEAa79cHbSCJYcpY/9xp9ivEqgjRLFbTqaqa90Di/
+	 dgXMsGfr26Jq0O5yfkC8//nduDnhZX3lHKK8AABKM4CJjuFmj9bJBb5pTCL8wsKstG
+	 eWxlICOHaWvgA==
+Date: Mon, 10 Feb 2025 18:59:40 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Uwe
+ =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, David
+ Jander <david@protonic.nl>, Martin Sperl <kernel@martin.sperl.org>,
+ linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Axel Haslam <ahaslam@baylibre.com>
+Subject: Re: [PATCH v8 00/17] spi: axi-spi-engine: add offload support
+Message-ID: <20250210185940.441a0b8f@jic23-huawei>
+In-Reply-To: <544c0100-54a9-40e6-b9b7-b79555056237@sirena.org.uk>
+References: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
+	<544c0100-54a9-40e6-b9b7-b79555056237@sirena.org.uk>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Linus-
+On Mon, 10 Feb 2025 14:36:24 +0000
+Mark Brown <broonie@kernel.org> wrote:
 
-Note that my GPG key expired a few days ago. I renewed it with no
-expiry and pushed it to pgp.mit.edu earlier today.
+> On Fri, Feb 07, 2025 at 02:08:57PM -0600, David Lechner wrote:
+> > Only very minor fixes in this revision.
+> > 
+> > Also, now that trees are rebased on v6.14-rc1 we no longer have
+> > dependencies for the IIO patches. So Mark can pick up all of the
+> > patches if we want to go that way. In any case though, Jonathan will
+> > need an immutable branch since we have other IIO patches in-flight
+> > building on top of this series.  
+> 
+> The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
+> 
+>   Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+> 
+> are available in the Git repository at:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-offload
 
----
+Thanks. Merged into IIO and patches 8-17 applied on top with a few tweaks
+to the patch as mentioned in reply.
 
-The following changes since commit c92066e78600b058638785288274a1f1426fe268:
+Pushed out for now as testing to see if 0-day spots anything new
 
-  sunrpc: Remove gss_{de,en}crypt_xdr_buf deadcode (2025-01-21 15:30:01 -0500)
+Thanks,
 
-are available in the Git repository at:
+Jonathan
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.14-1
+> 
+> for you to fetch changes up to 700a281905f2a4ccf6f3b2d3cd6985e034b4b021:
+> 
+>   spi: add offload TX/RX streaming APIs (2025-02-07 20:17:11 +0000)
+> 
+> ----------------------------------------------------------------
+> spi: Add offload APIs
+> 
+> This series adds support for offloading complete SPI transactions,
+> including the initiation, to the hardware.
+> 
+> ----------------------------------------------------------------
+> David Lechner (5):
+>       spi: add basic support for SPI offloading
+>       spi: offload: add support for hardware triggers
+>       dt-bindings: trigger-source: add generic PWM trigger source
+>       spi: offload-trigger: add PWM trigger driver
+>       spi: add offload TX/RX streaming APIs
+> 
+>  .../bindings/trigger-source/pwm-trigger.yaml       |  37 ++
+>  MAINTAINERS                                        |  12 +
+>  drivers/spi/Kconfig                                |  15 +
+>  drivers/spi/Makefile                               |   4 +
+>  drivers/spi/spi-offload-trigger-pwm.c              | 162 +++++++
+>  drivers/spi/spi-offload.c                          | 465 +++++++++++++++++++++
+>  drivers/spi/spi.c                                  |  10 +
+>  include/linux/spi/offload/consumer.h               |  39 ++
+>  include/linux/spi/offload/provider.h               |  47 +++
+>  include/linux/spi/offload/types.h                  |  99 +++++
+>  include/linux/spi/spi.h                            |  20 +
+>  11 files changed, 910 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/trigger-source/pwm-trigger.yaml
+>  create mode 100644 drivers/spi/spi-offload-trigger-pwm.c
+>  create mode 100644 drivers/spi/spi-offload.c
+>  create mode 100644 include/linux/spi/offload/consumer.h
+>  create mode 100644 include/linux/spi/offload/provider.h
+>  create mode 100644 include/linux/spi/offload/types.h
 
-for you to fetch changes up to 4990d098433db18c854e75fb0f90d941eb7d479e:
-
-  NFSD: Fix CB_GETATTR status fix (2025-02-10 13:31:28 -0500)
-
-----------------------------------------------------------------
-nfsd-6.14 fixes:
-
-- Introduced during the v6.14 merge window:
-  - A fix for CB_GETATTR reply decoding was not quite correct
-  - Fix the NFSD connection limiting logic
-  - Fix a bug in the new session table resizing logic
-
-- Bugs that pre-date v6.14
-  - Support for courteous clients (5.19) introduced a shutdown hang
-  - Fix a crash in the filecache laundrette (6.9)
-  - Fix a zero-day crash in NFSD's NFSv3 ACL implementation
-
-----------------------------------------------------------------
-Chuck Lever (1):
-      NFSD: Fix CB_GETATTR status fix
-
-Dai Ngo (1):
-      NFSD: fix hang in nfsd4_shutdown_callback
-
-Jeff Layton (1):
-      nfsd: validate the nfsd_serv pointer before calling svc_wake_up
-
-Li Lingfeng (1):
-      nfsd: clear acl_access/acl_default after releasing them
-
-NeilBrown (1):
-      nfsd: fix uninitialised slot info when a request is retried
-
-Olga Kornievskaia (1):
-      nfsd: fix __fh_verify for localio
-
- fs/nfsd/filecache.c    | 11 ++++++++++-
- fs/nfsd/nfs2acl.c      |  2 ++
- fs/nfsd/nfs3acl.c      |  2 ++
- fs/nfsd/nfs4callback.c |  9 ++++++---
- fs/nfsd/nfs4state.c    |  3 ++-
- fs/nfsd/nfsfh.c        |  5 +++--
- 6 files changed, 25 insertions(+), 7 deletions(-)
