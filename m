@@ -1,103 +1,91 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D4E2586DA
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B47D2586D0
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739206245; cv=none; b=MhQkKoUz4rF/YgCNaNdAOpuRn7BRgkeOeehApRt+xB6xe3ZIanvAfUsa0wXHh0xqnA9tCsGhoABxTgQG1LHXwgoTezQUg6LOBABuFga7WSKhFlCnmV7ZG5jGSkUfoOXBT8vnyxsZzq1wS/TgLYPEdH442IryZWPHdFJT9Yo4uZ8=
+	t=1739206257; cv=none; b=fsF5IjSmR3Fqh6qS4c8uElt5qQ0MLfcSxSdYTzocOeNNerb/o/qag2b5N9RZupCUNMkvUt57R1XyX6xFQpd9Xvov0ZL2MU1tsNyAoz4rl9nH+NHehLs4ijFbePLgllU1PnpCN6Nq3yY/dasAt7Gx0Bgx1ElqAciVRPzkbeeoRFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739206245; c=relaxed/simple;
-	bh=v3wCsTZBan6FYeYTRiQ1xd9iCKIIXkCk2Zxb+qKk/UQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LZnMfozekswKR5BdW19yyg7QhkahxcnV1N+yXCVD5HUZoCeihypI2IcyNnzP82UwkJcJxCxPgr7kTV3hFer7Lz6+cCY4fejCrA6n2hgfJ+EqUErJHbrnZkNsOgphy3R5XZDilzD0GHBlnU0JWh/wRRg8KxyVjtNNGpnB8ICrDrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1thWxD-000000006Ob-32ZX;
-	Mon, 10 Feb 2025 11:48:15 -0500
-Message-ID: <281d6fd629a1965ee0065f99ac5d693bace9758b.camel@surriel.com>
-Subject: Re: [PATCH v9 04/12] x86/mm: get INVLPGB count max from CPUID
-From: Rik van Riel <riel@surriel.com>
-To: Vern Hao <haoxing990@gmail.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de, 
-	peterz@infradead.org, dave.hansen@linux.intel.com,
- zhengqi.arch@bytedance.com, 	nadav.amit@gmail.com, thomas.lendacky@amd.com,
- kernel-team@meta.com, 	linux-mm@kvack.org, akpm@linux-foundation.org,
- jannh@google.com, 	mhklinux@outlook.com, andrew.cooper3@citrix.com, Manali
- Shukla	 <Manali.Shukla@amd.com>
-Date: Mon, 10 Feb 2025 11:48:15 -0500
-In-Reply-To: <CAPguPOhWYV4dKZBm7-bFknDa2Ct5L1Bxc5K+Acox0FM1aAgiww@mail.gmail.com>
-References: <20250206044346.3810242-1-riel@surriel.com>
-	 <20250206044346.3810242-5-riel@surriel.com>
-	 <CAPguPOhWYV4dKZBm7-bFknDa2Ct5L1Bxc5K+Acox0FM1aAgiww@mail.gmail.com>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.1 (3.54.1-1.fc41) 
+	s=arc-20240116; t=1739206257; c=relaxed/simple;
+	bh=D0YAwfECM7hsAaYa3THgFCmryazkCnO7IAFjqVzzPEQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nJtBk6FurxOPnjDqu2xDzsfPYEBluPFAYeHOMoyEXcr3419YO2wWaefS2Iur9uz5L8Ztp6DZzg9Jn7X8EPnRMxGs45SR9ArO8xQKk7gVjtkX0oUZOlQJs4NI5iEY9gnvqooRHT8zrpxQEz32h9nJp+dmxoPJ7wK/19Dn0MT1dP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=MOjZd7/I; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="MOjZd7/I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1739206249;
+	bh=D0YAwfECM7hsAaYa3THgFCmryazkCnO7IAFjqVzzPEQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MOjZd7/IHzjAFnKDqpP9JTGVsz74qR2RQALktwwQcDZPNDvSY3JIYzo3mGOpDS4At
+	 5mw7shGLL/rdhieR3Z1fDAJmkq+4tvAptUlP1wqabCmREaUexIKd5+e0/eC4EiNkDz
+	 mh7T1ob5CfXlLuD4fSK0Ctaq5dV/jCCq8SgE5vhw=
+Date: Mon, 10 Feb 2025 17:50:48 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Qiang Yu <yuq825@gmail.com>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>, 
+	Alex Deucher <alexander.deucher@amd.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
+	Xinhui Pan <Xinhui.Pan@amd.com>, Harry Wentland <harry.wentland@amd.com>, 
+	Leo Li <sunpeng.li@amd.com>, Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	lima@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
+Subject: Re: [PATCH 0/5] drm: Constify 'struct bin_attribute'
+Message-ID: <58d8838c-1b22-4d24-bdce-89cfa1ede1ed@t-8ch.de>
+References: <20241216-sysfs-const-bin_attr-drm-v1-0-210f2b36b9bf@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: riel@surriel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241216-sysfs-const-bin_attr-drm-v1-0-210f2b36b9bf@weissschuh.net>
 
-On Mon, 2025-02-10 at 15:30 +0800, Vern Hao wrote:
-> I do some test=C2=A0on my=C2=A0=C2=A0Machine with=C2=A0AMD EPYC 7K83,=C2=
-=A0 these patches=C2=A0work
-> on my host,=C2=A0 but failed on my guest=C2=A0with qemu.
->=20
-> in host, use lscpu cmd, you can see=C2=A0=C2=A0invlpgb=C2=A0in flags,=C2=
-=A0 but in guest
-> no.
->=20
-> So are you plan=C2=A0to support it in guest?
+Hi,
 
-How exactly did it fail in the guest?
+On 2024-12-16 12:34:46+0100, Thomas Weißschuh wrote:
+> The sysfs core now allows instances of 'struct bin_attribute' to be
+> moved into read-only memory. Make use of that to protect them against
+> accidental or malicious modifications.
 
-Did the guest simply not use INVLPGB because that
-CPUID flag was not presented in the CPUID that
-qemu shows to the guest, or did things crash somehow?
+Can anybody pick up these patches?
+Except for lima they all have Acks.
+In my opinion they should go through drm-misc.
 
-My understanding is that while INVLPGB can work
-in guests, actually implementing that is a whole
-other can of worms, and definitely not something
-we should try to tackle at the same time as bare
-metal support.
+Thanks,
+Thomas
 
-A TLB flush hypercall, with IRQ-less flushing on
-the hypervisor side will probably get us 90% of
-the way there, potentially with less overall
-complexity than actually supporting INVLPGB in
-the guest.
-
---=20
-All Rights Reversed.
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> ---
+> Thomas Weißschuh (5):
+>       drm/sysfs: Constify 'struct bin_attribute'
+>       drm/lima: Constify 'struct bin_attribute'
+>       drm/i915: Constify 'struct bin_attribute'
+>       drm/amdgpu: Constify 'struct bin_attribute'
+>       drm/amd/display: Constify 'struct bin_attribute'
+> 
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c             |  6 +++---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c                | 14 +++++++-------
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c                | 13 ++++++-------
+>  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c |  8 ++++----
+>  drivers/gpu/drm/drm_sysfs.c                            | 10 +++++-----
+>  drivers/gpu/drm/i915/i915_gpu_error.c                  |  8 ++++----
+>  drivers/gpu/drm/i915/i915_sysfs.c                      | 12 ++++++------
+>  drivers/gpu/drm/lima/lima_drv.c                        |  8 ++++----
+>  8 files changed, 39 insertions(+), 40 deletions(-)
+> ---
+> base-commit: 78d4f34e2115b517bcbfe7ec0d018bbbb6f9b0b8
+> change-id: 20241215-sysfs-const-bin_attr-drm-9bf7700da886
+> 
+> Best regards,
+> -- 
+> Thomas Weißschuh <linux@weissschuh.net>
+> 
