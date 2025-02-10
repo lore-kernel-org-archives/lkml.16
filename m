@@ -1,15 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F371BD9DB
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:24:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B221C173C
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:24:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739175853; cv=none; b=jOsSZSH/sAl1DNiW4KpRFSfPpQAgpoEfFg9ksbTlp1PlS5lV5+iVrlvZHNvXSR7+fs8E5SX/v+xrIf7zxhKLbXQuXihUnNoYoqh6jrDtZWJqXvKOSV2QFrgShDH1gB4cp95cHMUwQ3LSCON321ocsYcJVXpqHVzg8/hgU1i/dvU=
+	t=1739175858; cv=none; b=nFltHhLb8rzbunx+Dgy/mUMo+yac83TTV1QdtslhQep9rQZK5g93NXsWnkHif/QXIKgpdMqk1tiG4M8jgkKrGAHPQ88f3IxlP7qqcTn+IIQCfPjsqrwX1N221136AHEXuJzk2pQN7nml7Utg5WOl7BwskKYlU+vWWf5PtnD1iOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739175853; c=relaxed/simple;
-	bh=4F3nvU/PACynY2wgko4Gm9+vXkERZ9uWaA48QMu8+PQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Cz9bVJ7d9IyJgw1ubGA8Cliua9byqjVdbPScCH4KqqJyMt1un/O0da0JicUI1UXAAgByUfYlZbM2f7R52uyTzTwfQHNTKs7hpkkkkLCuZG3kxumj0B0uJ9LuFwfbCIZs1yHxtUQN08eeAWXhennswJbG1QYiIPnm5Ghc+WhR/F4=
+	s=arc-20240116; t=1739175858; c=relaxed/simple;
+	bh=xmDLdrWNYYAVEMVE8+zv3SffMB43bp3a47V8JoaEVIc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=c2STyAdQ12YE5BKt6cZHFJ7uGnyGhibDuDAye5RMA/tEXhI0yj1MvehnduJvVH/FiabWQz8+ZBopnTAYEaR0e3yLfQI1XL6e1j5f0cfF0PmOavYAnZghgxWu9lDLTesrdQXF/Qvs3+jk0YercDrcqd7UFIph/sgWd8ePIBedExo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -17,16 +18,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1thP5E-0001zJ-SJ; Mon, 10 Feb 2025 09:24:00 +0100
+	id 1thP5E-0001zL-SH; Mon, 10 Feb 2025 09:24:00 +0100
 Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1thP5D-000DBk-11;
+	id 1thP5D-000DBm-1A;
 	Mon, 10 Feb 2025 09:23:59 +0100
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1thP5D-000qER-0n;
+	id 1thP5D-000qEl-0w;
 	Mon, 10 Feb 2025 09:23:59 +0100
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: Andrew Lunn <andrew@lunn.ch>,
@@ -40,10 +41,12 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	kernel@pengutronix.de,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
-Subject: [PATCH net-next v4 0/2] Use PHYlib for reset randomization and adjustable polling
-Date: Mon, 10 Feb 2025 09:23:56 +0100
-Message-Id: <20250210082358.200751-1-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v4 2/2] net: phy: dp83tg720: Add randomized polling intervals for link detection
+Date: Mon, 10 Feb 2025 09:23:58 +0100
+Message-Id: <20250210082358.200751-3-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250210082358.200751-1-o.rempel@pengutronix.de>
+References: <20250210082358.200751-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,32 +59,140 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hi all,
+Address the limitations of the DP83TG720 PHY, which cannot reliably
+detect or report a stable link state. To handle this, the PHY must be
+periodically reset when the link is down. However, synchronized reset
+intervals between the PHY and its link partner can result in a deadlock,
+preventing the link from re-establishing.
 
-This patch set tackles a DP83TG720 reset lock issue and improves PHY
-polling. Rather than adding a separate polling worker to randomize PHY
-resets, I chose to extend the PHYlib framework - which already handles
-most of the needed functionality - with adjustable polling. This
-approach not only addresses the DP83TG720-specific problem (where
-synchronized resets can lock the link) but also lays the groundwork for
-optimizing PHY stats polling across all PHY drivers. With generic PHY
-stats coming in, we can adjust the polling interval based on hardware
-characteristics, such as using longer intervals for PHYs with stable HW
-counters or shorter ones for high-speed links prone to counter
-overflows.
+This change introduces a randomized polling interval when the link is
+down to desynchronize resets between link partners.
 
-Patch version changes are tracked in separate patches.
-
-Oleksij Rempel (2):
-  net: phy: Add support for driver-specific next update time
-  net: phy: dp83tg720: Add randomized polling intervals for link
-    detection
-
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+changes v4:
+- s/dp83tg720_phy_get_next_update_time/dp83tg720_get_next_update_time/
+- wrap comments at max 80 chars
+---
  drivers/net/phy/dp83tg720.c | 78 +++++++++++++++++++++++++++++++++++++
- drivers/net/phy/phy.c       | 21 +++++++++-
- include/linux/phy.h         | 13 +++++++
- 3 files changed, 111 insertions(+), 1 deletion(-)
+ 1 file changed, 78 insertions(+)
 
---
+diff --git a/drivers/net/phy/dp83tg720.c b/drivers/net/phy/dp83tg720.c
+index 050f4537d140..7e76323409c4 100644
+--- a/drivers/net/phy/dp83tg720.c
++++ b/drivers/net/phy/dp83tg720.c
+@@ -4,12 +4,31 @@
+  */
+ #include <linux/bitfield.h>
+ #include <linux/ethtool_netlink.h>
++#include <linux/jiffies.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/phy.h>
++#include <linux/random.h>
+ 
+ #include "open_alliance_helpers.h"
+ 
++/*
++ * DP83TG720S_POLL_ACTIVE_LINK - Polling interval in milliseconds when the link
++ *				 is active.
++ * DP83TG720S_POLL_NO_LINK_MIN - Minimum polling interval in milliseconds when
++ *				 the link is down.
++ * DP83TG720S_POLL_NO_LINK_MAX - Maximum polling interval in milliseconds when
++ *				 the link is down.
++ *
++ * These values are not documented or officially recommended by the vendor but
++ * were determined through empirical testing. They achieve a good balance in
++ * minimizing the number of reset retries while ensuring reliable link recovery
++ * within a reasonable timeframe.
++ */
++#define DP83TG720S_POLL_ACTIVE_LINK		1000
++#define DP83TG720S_POLL_NO_LINK_MIN		100
++#define DP83TG720S_POLL_NO_LINK_MAX		1000
++
+ #define DP83TG720S_PHY_ID			0x2000a284
+ 
+ /* MDIO_MMD_VEND2 registers */
+@@ -371,6 +390,13 @@ static int dp83tg720_read_status(struct phy_device *phydev)
+ 		if (ret)
+ 			return ret;
+ 
++		/* Sleep 600ms for PHY stabilization post-reset.
++		 * Empirically chosen value (not documented).
++		 * Helps reduce reset bounces with link partners having similar
++		 * issues.
++		 */
++		msleep(600);
++
+ 		/* After HW reset we need to restore master/slave configuration.
+ 		 * genphy_c45_pma_baset1_read_master_slave() call will be done
+ 		 * by the dp83tg720_config_aneg() function.
+@@ -498,6 +524,57 @@ static int dp83tg720_probe(struct phy_device *phydev)
+ 	return 0;
+ }
+ 
++/**
++ * dp83tg720_get_next_update_time - Determine the next update time for PHY
++ *                                  state
++ * @phydev: Pointer to the phy_device structure
++ *
++ * This function addresses a limitation of the DP83TG720 PHY, which cannot
++ * reliably detect or report a stable link state. To recover from such
++ * scenarios, the PHY must be periodically reset when the link is down. However,
++ * if the link partner also runs Linux with the same driver, synchronized reset
++ * intervals can lead to a deadlock where the link never establishes due to
++ * simultaneous resets on both sides.
++ *
++ * To avoid this, the function implements randomized polling intervals when the
++ * link is down. It ensures that reset intervals are desynchronized by
++ * introducing a random delay between a configured minimum and maximum range.
++ * When the link is up, a fixed polling interval is used to minimize overhead.
++ *
++ * This mechanism guarantees that the link will reestablish within 10 seconds
++ * in the worst-case scenario.
++ *
++ * Return: Time (in jiffies) until the next update event for the PHY state
++ * machine.
++ */
++static unsigned int dp83tg720_get_next_update_time(struct phy_device *phydev)
++{
++	unsigned int next_time_jiffies;
++
++	if (phydev->link) {
++		/* When the link is up, use a fixed 1000ms interval
++		 * (in jiffies)
++		 */
++		next_time_jiffies =
++			msecs_to_jiffies(DP83TG720S_POLL_ACTIVE_LINK);
++	} else {
++		unsigned int min_jiffies, max_jiffies, rand_jiffies;
++
++		/* When the link is down, randomize interval between min/max
++		 * (in jiffies)
++		 */
++		min_jiffies = msecs_to_jiffies(DP83TG720S_POLL_NO_LINK_MIN);
++		max_jiffies = msecs_to_jiffies(DP83TG720S_POLL_NO_LINK_MAX);
++
++		rand_jiffies = min_jiffies +
++			get_random_u32_below(max_jiffies - min_jiffies + 1);
++		next_time_jiffies = rand_jiffies;
++	}
++
++	/* Ensure the polling time is at least one jiffy */
++	return max(next_time_jiffies, 1U);
++}
++
+ static struct phy_driver dp83tg720_driver[] = {
+ {
+ 	PHY_ID_MATCH_MODEL(DP83TG720S_PHY_ID),
+@@ -516,6 +593,7 @@ static struct phy_driver dp83tg720_driver[] = {
+ 	.get_link_stats	= dp83tg720_get_link_stats,
+ 	.get_phy_stats	= dp83tg720_get_phy_stats,
+ 	.update_stats	= dp83tg720_update_stats,
++	.get_next_update_time = dp83tg720_get_next_update_time,
+ 
+ 	.suspend	= genphy_suspend,
+ 	.resume		= genphy_resume,
+-- 
 2.39.5
 
