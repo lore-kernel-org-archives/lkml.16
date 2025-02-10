@@ -1,132 +1,105 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A456A2566C2;
-	Mon, 10 Feb 2025 18:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F962566D2
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739211455; cv=none; b=c443pIuwW/mmMvHrKTf2xg01yYr/FRr+BvcDQMs4V1hOo1F/Sq9fT+Dx/Hd7XoHBvlif3vbhP5xk/2VfzovG142F6iF0z+ZSCMrOZPPPVd5+2HrglHyd/duVt7TnPW0UqGbpKiP3sPoPJYxcLtlmS+3/qwZ0CHaKAEUteShdKpk=
+	t=1739211461; cv=none; b=KnS2dackeqB6fv64kUZOt++zFyjBDZVAih+0gziVfl6SNY4pPEnO8pxZbfgSHDWuRekIuHpEQOBZiL0F9dmKIvPRDsGGRS0l+VBQlPPXCQz7aOMfDqXMWko2jl1B+Fu2Hczn53/VdAQYDzIbpqGzbsgqqaeLEk3vwTP2rchPfGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739211455; c=relaxed/simple;
-	bh=u1ps5n03+FoaCgzrAwacz576dxFHVcurQ8nPSbZWBAU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZmbvUB2V1UZU5gEesdTX6fxZcVMhsPjbPh8YU5vUOPYkxWpLRHGUi0RfVaYlP1+vMX3IiTU9Lb76E6nVOs/zWLpipQpbo8hu6B9c4LC7BT/cOgpecLeEklbyaLQxjQFtHRCOKX9ILHxqtMwR07nGxJIDb0skEt7Mvyxu7/SV+18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KQSC78q6; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739211461; c=relaxed/simple;
+	bh=Wh5yx6BMUnphP2RVBhvJu+atXSSYBvxEAcLfKspktSE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XGJENo0Dlu9bQU8E1cfPUXBAcKtWZ6AcoOix1qWYZoxqM1sRKanyAiVX06AH3s5IaFWPBdPSGe4LKRzOUGAKMTJUWr+qwDOqAQdZ/gYNIq3BRFejc6guvetcvCym5+kv8/itsgIYC0p7rowoHeBTZdpKq6X0Kwodc7UzTKCEZM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PsQprjGz; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQSC78q6"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-308e9ff235bso14205881fa.2;
-        Mon, 10 Feb 2025 10:17:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PsQprjGz"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5de74599749so2315718a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:17:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739211452; x=1739816252; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MphtP13wqewLaIDYhmzym+mzMSk6usQLectNwb0w1vI=;
-        b=KQSC78q6rq1thggPRwI70AvnFfCPHPsjl4rNC543OhBGDtJ40rLxbuwl7Vu/kCDVrN
-         yBFWw5bkQk6qwPGaFoIVgywoA0eoLv9nI5/TeDvCU/1OVslrX4DulPd+S67+ntnUQvBL
-         djBiq/qn0oWm3cXZ/sfSu3DU0CQ5c/Zo73hflCGnx2hE2CuhhlL1heQxUjeIIqUu1Ylg
-         u/xaONVqVVJKuqPYFKlbE6qEHcSeIjOvCqrCTv0FI1DG9U41aDbNpisS6Hmf5PMTILv1
-         HPIxqO/WNqLLgpB0AYxsbUETNSSbzeKFy2rFl4mSgOTsKE0Ge/SIV/LUskY1T46RrLVx
-         nkDw==
+        d=linaro.org; s=google; t=1739211458; x=1739816258; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qHaDIsqj34B8usesjY16LwOg4JnnE1Cbsm7V9RJsdE4=;
+        b=PsQprjGz3ROFlSIQZf+hdQLGtFdi6zZZR9+GIGFv2lB6OQyU6mrcFoC60ODFSq74PW
+         oBSuTWodn50rcSzX/+F+W3s69hs66SENM9HFRmd3NHK2jdkimURKnlJ264OE9oHxRlB5
+         NutwbHN641OhEOxVfLRLLsoyI08JD7/IJNGrpd4/rufdwH+dTW08pdv4z1J5isqAuGcf
+         PNSbvRoKIxkht7ggH2D8JDtwmGDhK7nHZjwwpgunWIpqcoNodRIMZTsCiC0TJve6GQXr
+         7Fd4THN2slCEQdeOJHR+AkyOMtp+OCDxPhkdf4SKmA6IF3tfoIQbg1Db7uKS63oSjWqQ
+         dHhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739211452; x=1739816252;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MphtP13wqewLaIDYhmzym+mzMSk6usQLectNwb0w1vI=;
-        b=iJGqiqaVxFuiOcW55jl89ZjoECcywnX8AVM8rPixjSsnuK/bEc3grdi5Er/+QcN8om
-         KuuYRHANB3H943ibnaDpY+J+9kA2ahRtbPtOpa5IEbWhLk0MQDk5ya5u4OvbgWUGyqBN
-         S91emWqcHQ1dNORT7qJxaLSd/M7AJdGPulyVlE3ltWjQWthufJU3OpVqW32uyTttf1TS
-         48o6gplrtGaAweEIaQPQ6GTU6lwws5IWJZSBesgc3M/GNWFP6p4n3kA0x38YkXmfdNY+
-         dvMlb54c6XNFAAVsaH+ID/W9S0r2K+Q8IZHh9tKL0vdnftDPc1fOLUkcQsktBUsWo+xW
-         KLDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUzEo0yN3TDDRYib4jehE+dIFkCc/zz6iPg1gVmoODBYMMffKRFB/OD6wsJdE1yQVMij/ghefH7DLcUIZk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxkysWMQMcfGfMwgsNQovNs+yNNOesaLaa8PSUzC6iESL8Ytp/
-	9UsP3GPdA4k0ctba6N0diWsrrDZdBRqg9FnLx7v+I0nyxw8C2DRuTpz5YxumW/zmPQoRGYShF0X
-	8seRjFROCwbTMf9VreKWT0iFGBTs=
-X-Gm-Gg: ASbGncukxBNkRfmY5cIfY0/dlkfs2L88BaNNsZa2429FS8LgbL8//4HKpa1vEMaN5/f
-	D+VLlCcBKwtYsGaQUhtV9h+qZ+i3Jz4l3eVEuEfbuJaJJwrzY5gJ8XijfPE3gUFlxJhrkuTo=
-X-Google-Smtp-Source: AGHT+IFfav3fUMifuO5Ua/dpywtgPFO0cOLOQ01R70bEHL5Poh3QU/QQ7zCc/CMCs3ptmXFsNQI17c+HAa8MM5rl6N4=
-X-Received: by 2002:a2e:9fc6:0:b0:308:ec25:9004 with SMTP id
- 38308e7fff4ca-308ec2590femr23133251fa.35.1739211451405; Mon, 10 Feb 2025
- 10:17:31 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739211458; x=1739816258;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qHaDIsqj34B8usesjY16LwOg4JnnE1Cbsm7V9RJsdE4=;
+        b=KvAi2uCSGC2Z4CteuKh064zcehstWaI2eZmmHOcLS9TibhYgB1qmLeiCR1BXjzj7rw
+         3xR6MVS9omCioz53ZtszwMM2SlFz9d17znXukJshh+4S3aj8Z/sAYnh6FCPKHGJrm6Gm
+         zbWuZ/zxZMvRVULHmICyUWwHQL/2siEmN0si0wfzgrOLMSROch/oimLHa0X6SgQ3/wC2
+         kkFssm6GhKBDml9zztNqzOiZ6qfdNiYT8IaOtbo3p4qSfA24cwWadAzy3oZlWulE4cw0
+         8WP8zSoRbAnrwa7hwMU0T1VWunO4qoIjZeNZ5VgriEwNFgRl3T3g0XqFtMrRmnZgV8KF
+         PRKQ==
+X-Gm-Message-State: AOJu0YwlNro0xqrspSauvvjSvtDHzX8NqDmUBQ9Kpnih0kPhu3R6HUSm
+	WS/08+n5gAOniTznhMlceY5j7zVeUQxMQFCpyvTDic8FBaHoc+MeHY7joPY1qvw=
+X-Gm-Gg: ASbGncsWkm6bnP6RDWWaJcTiy8e+plpj8wklZ7exe1a2/bJpw4sbiPV36dWGONivxsY
+	x04O24v/zJHQatg7uC3QpU4iPjK5BjYdOiKVoDqivg8fMxz+itjxqLKTDwqdusXOkMnEpaW7RNT
+	p6n+2jf+8g12kZ0W7jaOlgcpgbRFdwnA/LrSsAeHgmYGO7KlJ97q0rTU0Y1bW0KFWGE2Ayqmbh+
+	tNvpjEDR55MU2qMyP5d8J/YEKdxXAJNpfkNNCdZ+p+h6BoVArRtQJFcGKKT+S5LDlykKNque8ei
+	BAT7WGM98AH1mkXLzWtunJJN
+X-Google-Smtp-Source: AGHT+IE17precGVn60p0mKS1K0f7v1etGQpp1R/N00rlHb4aVUugfxbIzoj2Q7spw41fxBN5V9dokA==
+X-Received: by 2002:a05:6402:5290:b0:5d9:a62:32b with SMTP id 4fb4d7f45d1cf-5de4503ff1emr15027701a12.7.1739211458355;
+        Mon, 10 Feb 2025 10:17:38 -0800 (PST)
+Received: from [192.168.0.14] ([79.115.63.124])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de4690311csm7037457a12.60.2025.02.10.10.17.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 10:17:37 -0800 (PST)
+Message-ID: <88c69965-ed8b-4895-ac99-11a6cddd1a42@linaro.org>
+Date: Mon, 10 Feb 2025 18:17:34 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210183224.v3.1.If6f14aa2512336173a53fc3552756cd8a332b0a3@changeid>
- <20250210103244.646150-1-chharry@google.com>
-In-Reply-To: <20250210103244.646150-1-chharry@google.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Mon, 10 Feb 2025 13:17:18 -0500
-X-Gm-Features: AWEUYZlQ2qVAj_CuTOecFBPz7pNVivVyzswO9D4QM2Ggfc8zoZIud3VUJ-Yvo8k
-Message-ID: <CABBYNZJ1LbN_3H1pJsZ6mH1nY7ijb9nbuPSJJwqyvJnC0=U6PQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] Bluetooth: Add ABI doc for sysfs isoc_alt
-To: Hsin-chen Chuang <chharry@google.com>
-Cc: linux-bluetooth@vger.kernel.org, 
-	chromeos-bluetooth-upstreaming@chromium.org, 
-	Hsin-chen Chuang <chharry@chromium.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
-	Marcel Holtmann <marcel@holtmann.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/4] arm64: exynos: gs101: add ACPM related nodes
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>,
+ daniel.lezcano@linaro.org, devicetree@vger.kernel.org,
+ Alim Akhtar <alim.akhtar@samsung.com>, peter.griffin@linaro.org,
+ vincent.guittot@linaro.org, Conor Dooley <conor+dt@kernel.org>,
+ linux-arm-kernel@lists.infradead.org,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, willmcvicker@google.com,
+ linux-samsung-soc@vger.kernel.org, andre.draszik@linaro.org,
+ Catalin Marinas <catalin.marinas@arm.com>, ulf.hansson@linaro.org,
+ Will Deacon <will@kernel.org>, arnd@arndb.de, kernel-team@android.com
+References: <20250207-gs101-acpm-dt-v4-0-230ba8663a2d@linaro.org>
+ <173920411592.476427.15574016492470186426.robh@kernel.org>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <173920411592.476427.15574016492470186426.robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Hsin-chen,
 
-On Mon, Feb 10, 2025 at 5:32=E2=80=AFAM Hsin-chen Chuang <chharry@google.co=
-m> wrote:
->
-> From: Hsin-chen Chuang <chharry@chromium.org>
->
-> The functionality was completed in commit 5e5c3898ef49 ("Bluetooth: Fix
-> possible race with userspace of sysfs isoc_alt")
->
-> Fixes: 5e5c3898ef49 ("Bluetooth: Fix possible race with userspace of sysf=
-s isoc_alt")
-> Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
-> ---
->
-> (no changes since v1)
->
->  Documentation/ABI/stable/sysfs-class-bluetooth | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/Documentation/ABI/stable/sysfs-class-bluetooth b/Documentati=
-on/ABI/stable/sysfs-class-bluetooth
-> index 36be02471174..1168e0318e35 100644
-> --- a/Documentation/ABI/stable/sysfs-class-bluetooth
-> +++ b/Documentation/ABI/stable/sysfs-class-bluetooth
-> @@ -7,3 +7,15 @@ Description:   This write-only attribute allows users to=
- trigger the vendor reset
->                 The reset may or may not be done through the device trans=
-port
->                 (e.g., UART/USB), and can also be done through an out-of-=
-band
->                 approach such as GPIO.
-> +
-> +What:          /sys/class/bluetooth/hci<index>/isoc_alt
-> +Date:          10-Feb-2025
-> +KernelVersion: 6.13
-> +Contact:       linux-bluetooth@vger.kernel.org
-> +Description:   This attribute allows users to configure the USB Alternat=
-e setting
-> +               for the specific HCI device. Reading this attribute retur=
-ns the
-> +               current setting, and writing any supported numbers would =
-change
-> +               the setting. See the USB Alternate setting definition in =
-Bluetooth
-> +               core spec 5, vol 4, part B, table 2.1.
-> +               If the data is not a valid number, the write fails with -=
-EINVAL.
-> +               The other failures are vendor specific.
 
-Still not really convinced this is the right way to expose it, it is
-not an HCI attribute to begin with, not sure if we couldn't perhaps
-add another node to control it or add via USB device?
+On 2/10/25 4:22 PM, Rob Herring (Arm) wrote:
 
---=20
-Luiz Augusto von Dentz
+cut
+
+>> Bindings for google,gs101-acpm-ipc are proposed at:
+>> Link: https://lore.kernel.org/linux-samsung-soc/20250207-gs101-acpm-v7-0-ffd7b2fb15ae@linaro.org/T/#mb557ee342de628b1a8e462d4fb7c3ac6eb8be4e4
+
+cut
+
+> New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/exynos/' for 20250207-gs101-acpm-dt-v4-0-230ba8663a2d@linaro.org:
+> 
+> arch/arm64/boot/dts/exynos/google/gs101-oriole.dtb: /firmware/power-management: failed to match any schema with compatible: ['google,gs101-acpm-ipc']
+
+Thanks for the report. The bindings are proposed at the link above.
+
+Cheers,
+ta
