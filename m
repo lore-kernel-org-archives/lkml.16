@@ -1,241 +1,408 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2089.outbound.protection.outlook.com [40.107.223.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5324B25B67D;
-	Mon, 10 Feb 2025 17:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739210200; cv=fail; b=Pv86L42xjRPOKw4p+38FiZdci1J9m/7fouTimywAShikD5um09lGO6yBQtgJkJbJmSAfy60ZDetwe+V4kH+sPl9AoJCu2XyaRVzy8BkuhMQQLUkTCqyWIVl5HCYbN00kmS/9c1d7heXGttR6jFDhckDSI0RGCKWyFPbnHAmyR+4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739210200; c=relaxed/simple;
-	bh=lhht+s7N+S78Qv37RLzrtxPNIQxFVNCCvoVaQ0of6lU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=sk3Ux5pC7/A4kSynIoktdeKg+nHUEe5uxi24mUthqvIxdidOjUluj5YJtin/l5Ibvx1kM28c3dwgpkQ5ShW3iLGn/Crkw6QAttupP6TiYtJTphC2mjQ/ui/FMqvmURcRFpey/oB7bTdQuuBGpfsf4b0xFUZDKndLKuyhiXGd/w4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=GFMW6vfU; arc=fail smtp.client-ip=40.107.223.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8B024FC17;
+	Mon, 10 Feb 2025 17:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739210215; cv=none; b=BFXI8gHR/HsAatM0R7b1YGBs9Y4SF6IC7ka7s30a5XVOvxLGvKBorPSteFMIgAIVtin617CjKrD/M4KTqcUynT1lIRahUrjuJTCQL57vAfsLe9n27pp01jPibnTRYXJ+7NN2Tslv3iv9AptLiuFj+ooJNACG0jCRuU8EDxUBm0Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739210215; c=relaxed/simple;
+	bh=lmHHe1arIIMYDmJLM4L/eVyGLxRypi94DMaDs7IsIgI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=WQSKrhgvKLkHLfslQgGuEYyFPvSCzrE0ZzknXAiBOnz0jFWCulmziQAC2NEM1CCd+/Qy9AK6GwAzpKpBCEaQvMkmEnElOY3CJW15Sv8WUsScPRKOdC8HFd1ZoKrXnAQGy5uFVRsDYs1Sg3W3y7Qna/tPsBskpyW7wBVQqKRl1pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F8wbKvGV; arc=none smtp.client-ip=209.85.217.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="GFMW6vfU"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qw347g3lokc2YnvFQtv3GXjU1aIpcQ8IxOnPLkw4XukjpTpTmpN0H+F3JdXr/IQ6XZPFw05Yl2li9r+9XulP2CeTsSI762LP2a19qI85KV9XyXpBgDf63PDz/bCyKENknZbsTGBF7ujlIzqectmLnpnOvUCjyLp5LDHWLzrfaR2GVLyjNGulvIh8YX3QBAk85SOn7UoNkTsJP7vkTZzWFzLhMoWME3S+WkNnHwVH+e6jpjieJ4gWS1vtQ6vSFzfH870qYSaXetct++gMypCktyb8LRF0RCWSl1MWcFV0zbO4BilwY6h80j1a6606y5yeZXuhg7/vJINPxBAm0qiU0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lhht+s7N+S78Qv37RLzrtxPNIQxFVNCCvoVaQ0of6lU=;
- b=tQSLsZIWlyxprYmAOIM3isIezg80SF9RqFQCBJ1fMaBgugdazAabbqKq62dbx/YKU59BNk7XX6DjuZkBXvhtqNNB1+/2ApCAh/vQi9BmCFg7DVzNKWJcf/MRsUGmtP4Wo4TCQUfbZQA5NjNM7TI101zHzuSKfPkPjGJLHOcwalJT6EdurI7rCgizIg5FeD47OGszTvZMjojc0wOxljgkBZUVQFu6jZ7LXPv3+FsvrXZZnKLuWngPfTpg+YNyyVo6Xgln6BThMJ5cp/GKi4PAQUvoHzBbHcGpKTINJGew8dHrndzN3V9cIooJukCLykUM+XXyEXBm+K4+PIRYyE4hXQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lhht+s7N+S78Qv37RLzrtxPNIQxFVNCCvoVaQ0of6lU=;
- b=GFMW6vfUVpygrgifChZnFPC4BtN6XS6jzRUkLBljm0sJvs5Pd8MTBhqP+Beysh9Af1feN/4ZPjUQBV6ugxQPglp1/ucYws7f/KPJprvrFMfRMNGux/5IHwZUiNPsezpCZuv09oZB92EJKPUhMuVobA55CMUVHzcdzn+qwHQeE/CxFGvOLczKW6feDxtfAZEw6K2z7ZP8DJFC2fRvwJFYnu+Il2+8N28eeF1hPV3/AN0NFzmZ2COJQkEu4fp0a1knWklIPpj7uvM9fDL+Nm+flNpKBWCisJHyYb9mdU1+b7epHcniHg31LSN73FLd7FC+H3D9dywd3TxPvFrqLmkjIg==
-Received: from BN9PR12MB5323.namprd12.prod.outlook.com (2603:10b6:408:104::19)
- by SJ2PR12MB9138.namprd12.prod.outlook.com (2603:10b6:a03:565::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Mon, 10 Feb
- 2025 17:56:35 +0000
-Received: from BN9PR12MB5323.namprd12.prod.outlook.com
- ([fe80::efb1:9741:c066:f01c]) by BN9PR12MB5323.namprd12.prod.outlook.com
- ([fe80::efb1:9741:c066:f01c%5]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
- 17:56:35 +0000
-From: Vidya Sagar <vidyas@nvidia.com>
-To: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
-CC: Niklas Cassel <cassel@kernel.org>, "lpieralisi@kernel.org"
-	<lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, "robh@kernel.org"
-	<robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>,
-	"quic_schintav@quicinc.com" <quic_schintav@quicinc.com>,
-	"johan+linaro@kernel.org" <johan+linaro@kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thierry Reding
-	<treding@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, Krishna Thota
-	<kthota@nvidia.com>, Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-	"sagar.tv@gmail.com" <sagar.tv@gmail.com>
-Subject: RE: [PATCH V1] PCI: tegra194: Add support for PCIe RC & EP in
- Tegra234 Platforms
-Thread-Topic: [PATCH V1] PCI: tegra194: Add support for PCIe RC & EP in
- Tegra234 Platforms
-Thread-Index: AQHbcT8nBepV4G+xqEWbd1qc6N38crMsFxYAgBSVZnOAADmqAIAAALNg
-Date: Mon, 10 Feb 2025 17:56:35 +0000
-Message-ID:
- <BN9PR12MB53239715E7131254B07CCAE9B8F22@BN9PR12MB5323.namprd12.prod.outlook.com>
-References: <20250128044244.2766334-1-vidyas@nvidia.com>
- <Z5jH0G3V7fPXk0BG@ryzen>
- <BN9PR12MB5323E59E530FA1F87DE3C7FCB8F22@BN9PR12MB5323.namprd12.prod.outlook.com>
- <20250210175050.5htfgtgkyrfcjtre@thinkpad>
-In-Reply-To: <20250210175050.5htfgtgkyrfcjtre@thinkpad>
-Accept-Language: en-US, en-IN
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR12MB5323:EE_|SJ2PR12MB9138:EE_
-x-ms-office365-filtering-correlation-id: 2d80513e-6352-4caa-de07-08dd49fc426d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018|7053199007;
-x-microsoft-antispam-message-info:
- =?utf-8?B?cktjZ2pUSFFxaUpyWEdkUndjeGdQclV0SU9NanlvaHMvYWFWLzJOMHNQWTlS?=
- =?utf-8?B?dGo2MjVGM1VoVUFwN3dreHZsUm81YXNiWW9xR1ErM3NibTE2WlpXa0lwaDBx?=
- =?utf-8?B?enkwSVo4elUvQzAwZmR6bVlRU09FZ1BXY0o1ZFFBVGFNU0YzenNLSUZSRm1q?=
- =?utf-8?B?VzV5UWNhWCtRVzR1ZVlrZzVwTE10bGhiTkVqSExZT2xYQUZiYzVHc2FRekE0?=
- =?utf-8?B?T1NCMlA0OXBOTGZHWnhvSmExZ3JXSVc4cjlHOXh5ZktHbmo0ajgxWjFuZFFs?=
- =?utf-8?B?bkZaSXYra0Y3RFhSNE93MlgrRVdhS2NzdzJ2cE9IMk5RNTlaOVVPTDFHMXhw?=
- =?utf-8?B?cy8wVXd4UElwR2d3MXdyWWtycXNqT2FsZWgzRkw3UndTVDh3dXI1UjRQcEhr?=
- =?utf-8?B?OFRMRjBmVTB0ZXVFMU5QWmZQU2lpU0dSaTk2TDM5NDdEODd2ZnpSaHNSdTBJ?=
- =?utf-8?B?S0V6b0dpc0dwMERxbGFNUkxKdUQ5RXpUOE15WEFCN0ZaWmdOYklGVGZwSUgw?=
- =?utf-8?B?N05tZ21NMTE3dkNQblhuZkUrY1p3TndLd1NJaStocDNNT2ZnbUcrcWFpamdR?=
- =?utf-8?B?dkl2ckZqYlluQzRtY2dKcHZKRllsdElmNnJmZEdNNHBXYWhQVGZIbVJnSjN3?=
- =?utf-8?B?QTBjVFc2NjUydUlKZzRVRnpFVTYxWTQzLzdnc3phRWhTTE1KTUNkQlhPNHdp?=
- =?utf-8?B?VlcyWmRzTWo3Y0tZWWduNjJoc256dVd3NmI4c2NkTW9scnluL2Rleldoemw5?=
- =?utf-8?B?Q2dvTFpFVE5GNjNTY3VleCtJTVl0T3JMa3VUU3p2VWE0ZWxtL0xsQzlFMVA1?=
- =?utf-8?B?bnVUbnBsS0p0cldyaXBFMFlaM1VQQk9Ha2N6K3IxODZNWFpacmNmbUZ3TTVv?=
- =?utf-8?B?RWY4UGt2Qk5FVTZxUHJyc2hMTVh0dnYvSFFieVJPWWszMlZWWTZsSEJEdFJw?=
- =?utf-8?B?SWprTG5HbmRtd1gzRWhDZnVld3ZvQkRWc20wMXFVZFhqbm53QkloQ2grbWQz?=
- =?utf-8?B?a1IyTHVGZ3YrNTFibjdKYThja21sTE5VYjFIY294dTBsY3dCMXhIQkllWlFW?=
- =?utf-8?B?QjRzRjNNcjBrbk1MZURDUXVjMURLNWJrbXdmVDVoL0VuTWo3cC9GN1ZHUktn?=
- =?utf-8?B?QnZubUNkWWpMNDRXNXdsQS9HTWVXZExEcTFONmQ0ZE9vY2xDVWNoRTJwcjZ1?=
- =?utf-8?B?VWo5NEx5Q0ZlQkpUQjgyYTlYTllHemZHTSs3ZXJmZnRYeUc1QnVhUVZBU3F5?=
- =?utf-8?B?WXlpbk04S1dMNFFuWUVlVlFOWjVrcmR3OGROeHM0Q055YTRPN0F4a1IxOUFW?=
- =?utf-8?B?cVJGSHRseVZJNUE3R2o0WG40SnRabGE3SkpkSDcyWmF6OHFnZUxBdk9xSXdn?=
- =?utf-8?B?aHdzL21KSGRObkRTSzRvQlE4QzRmWU1ReVo2V293bTRHUmttWnhMN0ZDRHF0?=
- =?utf-8?B?YUpJMXdpTlR2eTBHcVE2dE9SdWlibDhXZ3pJUWpicEsxVlA3VEwxTmEyQUph?=
- =?utf-8?B?YkJJN3VpbGRDajhVVWl1NVo4UEp0aW9VdWwwL05UNUI4emVnSG15dmhzNnhw?=
- =?utf-8?B?dkwvUTlrcUQrSFoweHJYVHB6WGRLZ3IrT3g4bGdiSlhxWFliR25ONk91QlJh?=
- =?utf-8?B?UXZBNDZ5WG45MEttK3grTm8wTWJ4b092Mmwrb3ZnUi9LZnBoejU5ZzBwWDNO?=
- =?utf-8?B?aWpVM3ZQNFl5YUl2eUsxR2tPWFJVVzNYUm9XSkZ3NExZUXY2dnYzc1M1S3hy?=
- =?utf-8?B?K29NR0pnM3JKMENMUHQ1Q1ZmRUdUNmlLN3pidVZKS0VoS1N4ZEdTZlI3UFlk?=
- =?utf-8?B?VXNKa1ZWSDJnZ1RIb0pVLzdsdmVURW5EeWIrTXNUeTJzWnhJdWt5aHJkcXkr?=
- =?utf-8?B?aDhQNUZRa3V3VlNuWDNOSXlCWHBONENncWo3K09IWUJERWxPRkRjUGFGRWhz?=
- =?utf-8?Q?hCrCTpCCClinlpaX9sJWI12R4/0Jxb5O?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5323.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018)(7053199007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?NDJ2eStNRG14VEpCRDJQcXAzMTBIalNLMGc0YzhiTC9wTWlOT1p3Yk95bk80?=
- =?utf-8?B?NWhXbGFVbUd3UDV3RFRtMzNXYitRUkFNWXVoVzhJVjk2cUVkUGk2UlVUTE5t?=
- =?utf-8?B?VFdHb0pMY0FnRGN3ZlQyQ3pTdEdGUWNiQmlaWjNhMWExbW11UzlIVTNxendO?=
- =?utf-8?B?ZkpRVjVHNUVObE1TZVcyQkNSQnJ3ZXBCWkJDN3N1SkFPVXFMY2Ird2NDM3Yv?=
- =?utf-8?B?SURibldXdndUTHRHbDdmRW9pQ0hHMjJ1RFd4ZUV3aGNCWlpINGhNU1k1QTRM?=
- =?utf-8?B?U2JOL1RkeFFrRlJ0TU1xMUlhcXc3d2x5NFFXTmsyVm9KeEtBMXIvd0IzTHJG?=
- =?utf-8?B?a2tweWFGaEdiN001UlpBMUJEQVJ4c0tiRldieUpuV2pTMnJQcTNsYzFBbGhS?=
- =?utf-8?B?RnY4Ym5NenRnWGxoQXBKRjkvNEh0UldHQ3loODRET3J5dWQvMW0xQjZUN04w?=
- =?utf-8?B?T2JVdTNtWWhUelNBY0VERGIxU0JpOXFSY09jMklmdkFBcGRsZUpXZU1ienhx?=
- =?utf-8?B?bEVTeDZtbzdOc1RHV2puUTRzaFBMbzVPREY2RjJJUnFDSXAvVFh3UGd0Z3kr?=
- =?utf-8?B?bzdHakpqNFVlbytHZ0FRYzNNUm5pN0c3Q0szWG9vRzBUVjg4ZFZvVmFZL1Jk?=
- =?utf-8?B?SjhoUVJ6QlZJbjVhTW5UUUZxNllPYnpkZ2JJWTVRRGJzZFBaVjRsSk5aM3Nj?=
- =?utf-8?B?VTNqa3lBT0xoSkdpK2FjSXdlVEtuSXhTd25zbCtjTHIxNzRsZzUxNElnbTdQ?=
- =?utf-8?B?OW1GWEFadCtSeTZQQUhXYnp4RW9LTGJkNGpiZktJaDBnV3dobHVabmp1aXh5?=
- =?utf-8?B?Ylg4Snd0UlJqKy9saFQycUVLWGY0MUxaSSsvMmhoQTVJem1yR0lUNnR1SUJv?=
- =?utf-8?B?ODNVdzlsUVZabmprS29odHVEaUdyY2ZSbkZYUEdGN2Exb255VWM3dmExaGQ0?=
- =?utf-8?B?d3pyWWR5R3JXMHA3NkNRRTRRMHE5dnV2eVMyRHBCZE5lZlliTG9HVHFibFBi?=
- =?utf-8?B?dis5ajdJbXhKZHVSWmxOOHpuaXo4Skp1a2lHbWJrTjhqZ1dnZ2J3Q0dYUzdt?=
- =?utf-8?B?RDRxbVBBNmsxb0M1ZEJuM2NyRlY5UU5DU2l0WHdOMDk1eit3cXl0VWdGWGpY?=
- =?utf-8?B?RDVWVWZDeWNyYkN5WXpFcnZGUUdvcVlHblBoWnlmeGgvOE45V1RrYXByeWU5?=
- =?utf-8?B?YVZpTHJTNmtkSUhObzlmc2s0MC9JRVIrUUVSdHdUcXl1clBTb3FnS3FrdjlG?=
- =?utf-8?B?RzFVS1RqUXJIL1VBTm1BbGx0RDV1a1JJOURWcnp2Sk02NzZaZmFhQ2ZFYXNn?=
- =?utf-8?B?ZC8xZm9lMHJSWkZHMTVubjlJalFwUDZQc0JlaGkwQjNPL3dJOHQvdEtRL3d3?=
- =?utf-8?B?NkllNEI1ZDMwdkU3UUwvMmNObkdHbUpZaU1qS09BTU9ZdDhkYWlyQXNOa2VV?=
- =?utf-8?B?VU9mUHozdHFzaG1OS0k5K3didWR6ZzRQU3BDcEJ4Y0VKblgyYU81N3RCTS9i?=
- =?utf-8?B?bXFpdGFKRnVtTWQ5ckVMREs4bkI5cjdFVTAyd3FESFRTVHBIUGdvN2ZiODZy?=
- =?utf-8?B?Sm84ZnIzNkVxMXZWRXFJRmFuWVVhZzFmK29mdTNZSjN1RjlJY0ZFOFk2K2pa?=
- =?utf-8?B?ZURXcUpSQ0o3U2NiWkJodzFrNGRCZ0NzZkUvbDM5M2d2eGpuVVBhMmF5cXVW?=
- =?utf-8?B?NkkvVEhQRi9LNWl6WEpGeFFkNVRYeWZINDhtUkZPMUprRkFyTytpQ1FQSUd4?=
- =?utf-8?B?Y1BBYVQ0TWNYZDlvZUg4WUJEMXhFbzI1RXdXb09zdHR5SWl4dlIrY3NoaUVu?=
- =?utf-8?B?TDA2ejQ5elM0U29rZlJOdVNvbWxNQjV0RW9lREExWFg3UEh1cVpWRmpQUUJJ?=
- =?utf-8?B?eVdmck0ySGszak9rNU5jWTRndk1YM04rbkEvZGZDcXdHbmd0OEp1U2RDUmp5?=
- =?utf-8?B?dDBDZksrUFVzRG9yY3BTUmpLVWFvRXJmVmRLbFdmVkM0aGpkcFJadGNIdHd6?=
- =?utf-8?B?MFp0WW1NajFySXdMVkhLTW5EQlhhK0xvU29tdDdCUlRscmFVVXdBWXNRbFBz?=
- =?utf-8?B?UlJRR20zaThjNzJuL1hzbnozUDAwbzJDR0wxMENmNm81TmtmQmJiL0wzNSti?=
- =?utf-8?Q?Zqu4=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F8wbKvGV"
+Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4ba88eaff7cso679674137.2;
+        Mon, 10 Feb 2025 09:56:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739210211; x=1739815011; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KY2WNLUYsTNBfsFIIw9vpoFwU+r9AEaqeNWCC6ktHOk=;
+        b=F8wbKvGVw28kAwpdKSG3vYZ57z4w4FD0RzJR2nCfPrK9yKOSMNw8gaP9/VOSt/7wCW
+         v3v0uzSEXuZka13yWwbnWNNK7azkNyJYizl/C3uGaWZ38tvlc1RoMHAA+nRe8x8I7nrV
+         foSnGbpPTlrAxV9BE35WhWHAIoXwFWuVgx7HFZJ+cQJhpSLDYqRrvFJHOnsA9JDEMMIA
+         ikdzJcp3snXckM12SpBWVY5qG8lXrrQW5XMJhvjAPUSthG6fLMj9TiXn0bfaRfsEDN3A
+         YYw3vlQSG+mK++sEt45fnclQyHJMx/STGNdGKbX08MgtOB0/ryaXvcJAmFxfvhuOthdJ
+         unhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739210211; x=1739815011;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KY2WNLUYsTNBfsFIIw9vpoFwU+r9AEaqeNWCC6ktHOk=;
+        b=U7rrJpNN+Sv6fMI2PV/1SORiGcImp21GIW2iZx7pPSwk4wjCRKDyVRkzD/ZES3vf9H
+         zXhG9p8MBTg4pkgYKgKHGKf1jxrO9THuCtP02yeBN1GpWYKIX3kDx4qt+yY9OYqNNm+Y
+         tXiFD54sHING4WF1GB9I+iVS+kREHvfZZJVxTz3y3oyT9NL1B7rme/eQjtOCEl6GAX9M
+         4/efUTTuraNCzFSC/0lSuGQC7QOiDp6Ig8Of1bTxw3BAGXAWcT03RGnNjA05GxILG6FF
+         ovQjPJqnLU/LZtrMA7jPLvR8vagowaJRGVUY8ro/egAYtGddCthr4nlGEz2urfHgIq26
+         AYuA==
+X-Forwarded-Encrypted: i=1; AJvYcCUF/yODFGNyNdLJ5uoXrKPwofuX2iPLf3+5iSuToaVMKjSokk3wY3Vgx7F5/K+R8MOdnLuj/BbE+iLD8pkIQEY=@vger.kernel.org, AJvYcCWLaaaxISdMZ/1Wus9t3U+JgaJdUMuTDbElXayQ2GdyJCbWVQYuOVAVhmlUOUOjN9+7F+f8lXYjuYagszY=@vger.kernel.org, AJvYcCX5SCEO9ldMuMRuKkzLZhSbO3TTCsY/6IZ1Aj4N9XWiPaZW3L/4ksy7m4UWE5H50tE0772c/J+zRuR/@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvyQfeVBS0VS49k/t+RSqhqeWosxJLQNjN0HDlLXP+SLSDebo5
+	rFEi6A4DhBNWm2XCKqZOqBmiLPCpgYrTC/UjKAXFuQ0PJsVUwv5m
+X-Gm-Gg: ASbGncvkyHXU6HlN0EkfMrSQvgCV1TLwv0RO8RnlsBnBUU5DBMXuk2VvovAS0IbrYrl
+	G35QqX2LnXC9nY62yi/jUrAoklDOcVrg5gNO61Vi1IkKSlaZOqa+ZAk8FLgBgFPD7XwaX0aE/A1
+	i3v+bOnOYogdfBnkInH3Pb5fwiuYApClJZD//KTzoNylh7HH3u0DpQ6E+CyEofQNhrERTxJX45K
+	e9Q0i6mOY134MYejw2ZfAg3/J1il4rpjcsB/GkNAIV0gn8PbaJgcdUYaV1EXTdOo/CGl62yG3zu
+	KLITxv0=
+X-Google-Smtp-Source: AGHT+IG0BI4aM66A/TPyak6a9qhZrDvmYo7AJFdxo6Z4ski7wCLFJeEUBLS2UC9lMaDU2/fDKYHBaQ==
+X-Received: by 2002:a05:6102:418b:b0:4bb:5d61:1252 with SMTP id ada2fe7eead31-4bb5d611970mr4911506137.23.1739210211202;
+        Mon, 10 Feb 2025 09:56:51 -0800 (PST)
+Received: from localhost ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4bbdcf078ccsm128055137.3.2025.02.10.09.56.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 09:56:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5323.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d80513e-6352-4caa-de07-08dd49fc426d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Feb 2025 17:56:35.0962
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HVI/ZnXwlU2Vbqbbni8k7eLgU+CoX8VXrCOteFEwx8PS3La+v+aeG9yhCT2egbqcMhSE5xzvtmkTTiw2yRhCmg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9138
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 10 Feb 2025 12:56:46 -0500
+Message-Id: <D7OYKAYV14AZ.2D8Q4XP557FSR@gmail.com>
+Cc: "Alexander Lobakin" <aleksander.lobakin@intel.com>, "Andy Shevchenko"
+ <andriy.shevchenko@linux.intel.com>, "Bjorn Helgaas" <bhelgaas@google.com>,
+ "Jonathan Cameron" <Jonathan.Cameron@huawei.com>, "Liam Girdwood"
+ <lgirdwood@gmail.com>, "Lukas Wunner" <lukas@wunner.de>, "Mark Brown"
+ <broonie@kernel.org>, =?utf-8?q?Ma=C3=ADra_Canal?= <mairacanal@riseup.net>,
+ "Robin Murphy" <robin.murphy@arm.com>, "Simona Vetter"
+ <simona.vetter@ffwll.ch>, "Zijun Hu" <quic_zijuhu@quicinc.com>,
+ <linux-usb@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Subject: Re: [PATCH v4 1/9] driver core: add a faux bus for use when a
+ simple device/bus is needed
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ <linux-kernel@vger.kernel.org>, "Lyude Paul" <lyude@redhat.com>, "Rafael J.
+ Wysocki" <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <2025021023-sandstorm-precise-9f5d@gregkh>
+ <2025021026-atlantic-gibberish-3f0c@gregkh>
+In-Reply-To: <2025021026-atlantic-gibberish-3f0c@gregkh>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbWFuaXZhbm5hbi5zYWRo
-YXNpdmFtQGxpbmFyby5vcmcgPG1hbml2YW5uYW4uc2FkaGFzaXZhbUBsaW5hcm8ub3JnPg0KPiBT
-ZW50OiAxMCBGZWJydWFyeSAyMDI1IDIzOjIxDQo+IFRvOiBWaWR5YSBTYWdhciA8dmlkeWFzQG52
-aWRpYS5jb20+DQo+IENjOiBOaWtsYXMgQ2Fzc2VsIDxjYXNzZWxAa2VybmVsLm9yZz47IGxwaWVy
-YWxpc2lAa2VybmVsLm9yZzsga3dAbGludXguY29tOw0KPiByb2JoQGtlcm5lbC5vcmc7IGJoZWxn
-YWFzQGdvb2dsZS5jb207IHF1aWNfc2NoaW50YXZAcXVpY2luYy5jb207DQo+IGpvaGFuK2xpbmFy
-b0BrZXJuZWwub3JnOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdl
-ci5rZXJuZWwub3JnOw0KPiBUaGllcnJ5IFJlZGluZyA8dHJlZGluZ0BudmlkaWEuY29tPjsgSm9u
-IEh1bnRlciA8am9uYXRoYW5oQG52aWRpYS5jb20+OyBLcmlzaG5hDQo+IFRob3RhIDxrdGhvdGFA
-bnZpZGlhLmNvbT47IE1hbmlrYW50YSBNYWRkaXJlZGR5IDxtbWFkZGlyZWRkeUBudmlkaWEuY29t
-PjsNCj4gc2FnYXIudHZAZ21haWwuY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjFdIFBDSTog
-dGVncmExOTQ6IEFkZCBzdXBwb3J0IGZvciBQQ0llIFJDICYgRVAgaW4gVGVncmEyMzQNCj4gUGxh
-dGZvcm1zDQo+IA0KPiBFeHRlcm5hbCBlbWFpbDogVXNlIGNhdXRpb24gb3BlbmluZyBsaW5rcyBv
-ciBhdHRhY2htZW50cw0KPiANCj4gDQo+IE9uIE1vbiwgRmViIDEwLCAyMDI1IGF0IDAyOjI1OjQz
-UE0gKzAwMDAsIFZpZHlhIFNhZ2FyIHdyb3RlOg0KPiA+IFRoYW5rcyBOaWtsYXMgZm9yIHRoZSBy
-ZXZpZXcuDQo+ID4gSSdsbCByZXdyaXRlIHRoZSBjb21taXQgbWVzc2FnZSBhZGQgdGhlIGZvbGxv
-d2luZyBsaW5lDQo+ID4gRml4ZXM6IGE1NGUxOTA3MzcxOCAoIlBDSTogdGVncmExOTQ6IEFkZCBU
-ZWdyYTIzNCBQQ0llIHN1cHBvcnQiKQ0KPiA+DQo+IA0KPiBObywgcGxlYXNlLiBUcnkgdG8gdXNl
-IHRoZSBnZW5lcmljIEFSQ0ggc3ltYm9sIGRlcGVuZGVuY3kgYXMgc3VnZ2VzdGVkLg0KV2Ugd2Fu
-dGVkIHRvIGhhdmUgbW9yZSBncmFudWxhcml0eSBpbiB0ZXJtcyBvZiBlbmFibGluZyB0aGUgZHJp
-dmVyDQpmb3Igb25seSB0aG9zZSBTb0NzIHdoZXJlIHRoZSByZXNwZWN0aXZlIGhhcmR3YXJlIGlz
-IGF2YWlsYWJsZS4NCkJ1dCwgaWYgdGhlIGNvbW11bml0eSBoYXMgc3Ryb25nIHByZWZlcmVuY2Ug
-dG93YXJkcyBlbmFibGluZw0KdGhlIGRyaXZlcnMgYXQgYSBoaWdoZXIgbGV2ZWwsIEknbGwgbW9k
-aWZ5IGFuZCBzZW5kIG5leHQgdmVyc2lvbg0Kb2YgdGhlIHBhdGNoIGFjY29yZGluZ2x5Lg0KDQot
-IFZpZHlhIFNhZ2FyDQoNCj4gDQo+IC0gTWFuaQ0KPiANCj4gPiBUaGFua3MNCj4gPiBWaWR5YSBT
-YWdhcg0KPiA+DQo+ID4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4gPiBGcm9t
-OiBOaWtsYXMgQ2Fzc2VsIDxjYXNzZWxAa2VybmVsLm9yZz4NCj4gPiBTZW50OiBUdWVzZGF5LCBK
-YW51YXJ5IDI4LCAyMDI1IDE3OjM0DQo+ID4gVG86IFZpZHlhIFNhZ2FyIDx2aWR5YXNAbnZpZGlh
-LmNvbT4NCj4gPiBDYzogbHBpZXJhbGlzaUBrZXJuZWwub3JnIDxscGllcmFsaXNpQGtlcm5lbC5v
-cmc+OyBrd0BsaW51eC5jb20NCj4gPiA8a3dAbGludXguY29tPjsgbWFuaXZhbm5hbi5zYWRoYXNp
-dmFtQGxpbmFyby5vcmcNCj4gPiA8bWFuaXZhbm5hbi5zYWRoYXNpdmFtQGxpbmFyby5vcmc+OyBy
-b2JoQGtlcm5lbC5vcmcgPHJvYmhAa2VybmVsLm9yZz47DQo+ID4gYmhlbGdhYXNAZ29vZ2xlLmNv
-bSA8YmhlbGdhYXNAZ29vZ2xlLmNvbT47IHF1aWNfc2NoaW50YXZAcXVpY2luYy5jb20NCj4gPiA8
-cXVpY19zY2hpbnRhdkBxdWljaW5jLmNvbT47IGpvaGFuK2xpbmFyb0BrZXJuZWwub3JnDQo+ID4g
-PGpvaGFuK2xpbmFyb0BrZXJuZWwub3JnPjsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZw0KPiA+
-IDxsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnPjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
-Zw0KPiA+IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgVGhpZXJyeSBSZWRpbmcgPHRy
-ZWRpbmdAbnZpZGlhLmNvbT47DQo+ID4gSm9uIEh1bnRlciA8am9uYXRoYW5oQG52aWRpYS5jb20+
-OyBLcmlzaG5hIFRob3RhIDxrdGhvdGFAbnZpZGlhLmNvbT47DQo+ID4gTWFuaWthbnRhIE1hZGRp
-cmVkZHkgPG1tYWRkaXJlZGR5QG52aWRpYS5jb20+OyBzYWdhci50dkBnbWFpbC5jb20NCj4gPiA8
-c2FnYXIudHZAZ21haWwuY29tPg0KPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjFdIFBDSTogdGVn
-cmExOTQ6IEFkZCBzdXBwb3J0IGZvciBQQ0llIFJDICYgRVAgaW4NCj4gPiBUZWdyYTIzNCBQbGF0
-Zm9ybXMNCj4gPg0KPiA+IEV4dGVybmFsIGVtYWlsOiBVc2UgY2F1dGlvbiBvcGVuaW5nIGxpbmtz
-IG9yIGF0dGFjaG1lbnRzDQo+ID4NCj4gPg0KPiA+IEhlbGxvIFZpZHlhLA0KPiA+DQo+ID4gT24g
-VHVlLCBKYW4gMjgsIDIwMjUgYXQgMTA6MTI6NDRBTSArMDUzMCwgVmlkeWEgU2FnYXIgd3JvdGU6
-DQo+ID4gPiBBZGQgUENJZSBSQyAmIEVQIHN1cHBvcnQgZm9yIFRlZ3JhMjM0IFBsYXRmb3Jtcy4N
-Cj4gPg0KPiA+IFRoZSBjb21taXQgbG9nIGRvZXMgbGVhdmUgcXVpdGUgYSBmZXcgcXVlc3Rpb25z
-IHVuYW5zd2VyZWQuDQo+ID4NCj4gPiBTaW5jZSB5b3UgYXJlIGp1c3QgdXBkYXRpbmcgdGhlIEtj
-b25maWcgYW5kIG5vdGhpbmcgZWxzZToNCj4gPiBEb2VzIHRoZSBEVCBiaW5kaW5nIGFscmVhZHkg
-aGF2ZSBzdXBwb3J0IGZvciB0aGUgVGVncmEyMzQgU29DPw0KPiA+IERvZXMgdGhlIGRyaXZlciBh
-bHJlYWR5IGhhdmUgc3VwcG9ydCBmb3IgdGhlIFRlZ3JhMjM0IFNvQz8NCj4gPg0KPiA+IExvb2tp
-bmcgYXQgdGhlIERUIGJpbmRpbmcgYW5kIGRyaXZlciwgdGhlIGFuc3dlciB0byBib3RoIHF1ZXN0
-aW9ucyBpcw0KPiA+IHllcy4gKFRoaXMgc2hvdWxkIGhhdmUgYmVlbiBpbiB0aGUgY29tbWl0IG1l
-c3NhZ2UgSU1PLikNCj4gPg0KPiA+DQo+ID4gQnV0IHRoYXQgbGVhZHMgbWUgdG8gdGhlIHF1ZXN0
-aW9uLCBzaW5jZSB0aGVyZSBpcyBzdXBwb3J0IGZvciBUZWdyYTIzNA0KPiA+IFNvQyBpbiB0aGUg
-ZHJpdmVyLCBkb2VzIHRoaXMgbWVhbnMgdGhhdCB0aGlzIGZpeGVzIGEgcmVncmVzc2lvbiwgZS5n
-Lg0KPiA+IHRoZSBLY29uZmlnIEFSQ0hfVEVHUkFfMjM0X1NPQyB3YXMgYWRkZWQgYWZ0ZXIgdGhl
-IGRyaXZlciBzdXBwb3J0IGluDQo+ID4gdGhpcyBkcml2ZXIgd2FzIGFkZGVkLiBJbiB0aGlzIGNh
-c2UsIHlvdSBzaG91bGQgaGF2ZSBhIEZpeGVzOiB0YWcgdGhhdA0KPiA+IHBvaW50cyB0byB0aGUg
-Y29tbWl0IHRoYXQgYWRkZWQgQVJDSF9URUdSQV8yMzRfU09DLg0KPiA+DQo+ID4gT3IgaGFzIHRo
-ZSB0aGUgZHJpdmVyIHN1cHBvcnQgZm9yIFRlZ3JhMjM0IGJlZW4gImRlYWQtY29kZSIgc2luY2Ug
-aXQNCj4gPiB3YXMgb3JpZ2luYWxseSBhZGRlZD8gKEJlY2F1c2Ugd2l0aG91dCB0aGlzIHBhdGNo
-LCBubyBvbmUgY2FuIGhhdmUNCj4gPiB0ZXN0ZWQgaXQsIGF0IGxlYXN0IG5vdCB3aXRob3V0IENP
-TVBJTEVfVEVTVC4pIEluIHRoaXMgY2FzZSwgeW91DQo+ID4gc2hvdWxkIGFkZDoNCj4gPiBGaXhl
-czogYTU0ZTE5MDczNzE4ICgiUENJOiB0ZWdyYTE5NDogQWRkIFRlZ3JhMjM0IFBDSWUgc3VwcG9y
-dCIpDQo+ID4NCj4gPg0KPiA+IEtpbmQgcmVnYXJkcywNCj4gPiBOaWtsYXMNCj4gDQo+IC0tDQo+
-IOCuruCuo+Cuv+CuteCuo+CvjeCuo+CuqeCvjSDgrprgrqTgrr7grprgrr/grrXgrq7gr40NCg==
+On Mon Feb 10, 2025 at 7:30 AM -05, Greg Kroah-Hartman wrote:
+> Many drivers abuse the platform driver/bus system as it provides a
+> simple way to create and bind a device to a driver-specific set of
+> probe/release functions.  Instead of doing that, and wasting all of the
+> memory associated with a platform device, here is a "faux" bus that
+> can be used instead.
+>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+> Reviewed-by: Lyude Paul <lyude@redhat.com>
+> Reviewed-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+> v4: - really removed the name logic
+>     - added #include <linux/container_of.h> to faux.h
+>     - added parent pointer to api call
+>     - minor documentation updates
+>     - made probe synchronous
+> v3: - loads of documentation updates and rewrites
+>     - added to the documentation build
+>     - removed name[] array as it's no longer needed
+>     - added faux_device_create_with_groups()
+>     - added functions to get/set devdata
+>     - renamed faux_driver_ops -> faux_device_ops
+>     - made faux_device_ops a const *
+>     - minor cleanups
+>     - tested it, again.
+>
+> v2: - renamed bus and root device to just "faux" thanks to Thomas
+>     - removed the one-driver-per-device and now just have one driver
+>       entirely thanks to Danilo
+>     - kerneldoc fixups and additions and string handling bounds checks
+>       thanks to Andy
+>     - coding style fix thanks to Jonathan
+>     - tested that the destroy path actually works
+>  Documentation/driver-api/infrastructure.rst |   6 +
+>  drivers/base/Makefile                       |   2 +-
+>  drivers/base/base.h                         |   1 +
+>  drivers/base/faux.c                         | 232 ++++++++++++++++++++
+>  drivers/base/init.c                         |   1 +
+>  include/linux/device/faux.h                 |  69 ++++++
+>  6 files changed, 310 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/base/faux.c
+>  create mode 100644 include/linux/device/faux.h
+>
+> diff --git a/Documentation/driver-api/infrastructure.rst b/Documentation/=
+driver-api/infrastructure.rst
+> index 3d52dfdfa9fd..35e36fee4238 100644
+> --- a/Documentation/driver-api/infrastructure.rst
+> +++ b/Documentation/driver-api/infrastructure.rst
+> @@ -41,6 +41,12 @@ Device Drivers Base
+>  .. kernel-doc:: drivers/base/class.c
+>     :export:
+> =20
+> +.. kernel-doc:: include/linux/device/faux.h
+> +   :internal:
+> +
+> +.. kernel-doc:: drivers/base/faux.c
+> +   :export:
+> +
+>  .. kernel-doc:: drivers/base/node.c
+>     :internal:
+> =20
+> diff --git a/drivers/base/Makefile b/drivers/base/Makefile
+> index 7fb21768ca36..8074a10183dc 100644
+> --- a/drivers/base/Makefile
+> +++ b/drivers/base/Makefile
+> @@ -6,7 +6,7 @@ obj-y			:=3D component.o core.o bus.o dd.o syscore.o \
+>  			   cpu.o firmware.o init.o map.o devres.o \
+>  			   attribute_container.o transport_class.o \
+>  			   topology.o container.o property.o cacheinfo.o \
+> -			   swnode.o
+> +			   swnode.o faux.o
+>  obj-$(CONFIG_AUXILIARY_BUS) +=3D auxiliary.o
+>  obj-$(CONFIG_DEVTMPFS)	+=3D devtmpfs.o
+>  obj-y			+=3D power/
+> diff --git a/drivers/base/base.h b/drivers/base/base.h
+> index 8cf04a557bdb..0042e4774b0c 100644
+> --- a/drivers/base/base.h
+> +++ b/drivers/base/base.h
+> @@ -137,6 +137,7 @@ int hypervisor_init(void);
+>  static inline int hypervisor_init(void) { return 0; }
+>  #endif
+>  int platform_bus_init(void);
+> +int faux_bus_init(void);
+>  void cpu_dev_init(void);
+>  void container_dev_init(void);
+>  #ifdef CONFIG_AUXILIARY_BUS
+> diff --git a/drivers/base/faux.c b/drivers/base/faux.c
+> new file mode 100644
+> index 000000000000..531e9d789ee0
+> --- /dev/null
+> +++ b/drivers/base/faux.c
+> @@ -0,0 +1,232 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2025 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> + * Copyright (c) 2025 The Linux Foundation
+> + *
+> + * A "simple" faux bus that allows devices to be created and added
+> + * automatically to it.  This is to be used whenever you need to create =
+a
+> + * device that is not associated with any "real" system resources, and d=
+o
+> + * not want to have to deal with a bus/driver binding logic.  It is
+> + * intended to be very simple, with only a create and a destroy function
+> + * available.
+> + */
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/slab.h>
+> +#include <linux/string.h>
+> +#include <linux/container_of.h>
+> +#include <linux/device/faux.h>
+> +#include "base.h"
+> +
+> +/*
+> + * Internal wrapper structure so we can hold a pointer to the
+> + * faux_device_ops for this device.
+> + */
+> +struct faux_object {
+> +	struct faux_device faux_dev;
+> +	const struct faux_device_ops *faux_ops;
+> +};
+> +#define to_faux_object(dev) container_of_const(dev, struct faux_object, =
+faux_dev.dev)
+> +
+> +static struct device faux_bus_root =3D {
+> +	.init_name	=3D "faux",
+> +};
+> +
+> +static int faux_match(struct device *dev, const struct device_driver *dr=
+v)
+> +{
+> +	/* Match always succeeds, we only have one driver */
+> +	return 1;
+> +}
+> +
+> +static int faux_probe(struct device *dev)
+> +{
+> +	struct faux_object *faux_obj =3D to_faux_object(dev);
+> +	struct faux_device *faux_dev =3D &faux_obj->faux_dev;
+> +	const struct faux_device_ops *faux_ops =3D faux_obj->faux_ops;
+> +	int ret =3D 0;
+> +
+> +	if (faux_ops && faux_ops->probe)
+> +		ret =3D faux_ops->probe(faux_dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static void faux_remove(struct device *dev)
+> +{
+> +	struct faux_object *faux_obj =3D to_faux_object(dev);
+> +	struct faux_device *faux_dev =3D &faux_obj->faux_dev;
+> +	const struct faux_device_ops *faux_ops =3D faux_obj->faux_ops;
+> +
+> +	if (faux_ops && faux_ops->remove)
+> +		faux_ops->remove(faux_dev);
+> +}
+> +
+> +static const struct bus_type faux_bus_type =3D {
+> +	.name		=3D "faux",
+> +	.match		=3D faux_match,
+> +	.probe		=3D faux_probe,
+> +	.remove		=3D faux_remove,
+> +};
+> +
+> +static struct device_driver faux_driver =3D {
+> +	.name		=3D "faux_driver",
+> +	.bus		=3D &faux_bus_type,
+> +	.probe_type	=3D PROBE_FORCE_SYNCHRONOUS,
+> +};
+> +
+> +static void faux_device_release(struct device *dev)
+> +{
+> +	struct faux_object *faux_obj =3D to_faux_object(dev);
+> +
+> +	kfree(faux_obj);
+> +}
+> +
+> +/**
+> + * faux_device_create_with_groups - Create and register with the driver
+> + *		core a faux device and populate the device with an initial
+> + *		set of sysfs attributes.
+> + * @name:	The name of the device we are adding, must be unique for
+> + *		all faux devices.
+> + * @parent:	Pointer to a potential parent struct device.  If set to
+> + *		NULL, the device will be created in the "root" of the faux
+> + *		device tree in sysfs.
+> + * @faux_ops:	struct faux_device_ops that the new device will call back
+> + *		into, can be NULL.
+> + * @groups:	The set of sysfs attributes that will be created for this
+> + *		device when it is registered with the driver core.
+> + *
+> + * Create a new faux device and register it in the driver core properly.
+> + * If present, callbacks in @faux_ops will be called with the device tha=
+t
+> + * for the caller to do something with at the proper time given the
+> + * device's lifecycle.
+> + *
+> + * Note, when this function is called, the functions specified in struct
+> + * faux_ops can be called before the function returns, so be prepared fo=
+r
+> + * everything to be properly initialized before that point in time.
+> + *
+> + * Return:
+> + * * NULL if an error happened with creating the device
+> + * * pointer to a valid struct faux_device that is registered with sysfs
+> + */
+> +struct faux_device *faux_device_create_with_groups(const char *name,
+> +						   struct device *parent,
+> +						   const struct faux_device_ops *faux_ops,
+> +						   const struct attribute_group **groups)
+> +{
+> +	struct faux_object *faux_obj;
+> +	struct faux_device *faux_dev;
+> +	struct device *dev;
+> +	int ret;
+> +
+> +	faux_obj =3D kzalloc(sizeof(*faux_obj), GFP_KERNEL);
+> +	if (!faux_obj)
+> +		return NULL;
+> +
+> +	/* Save off the callbacks so we can use them in the future */
+> +	faux_obj->faux_ops =3D faux_ops;
+> +
+> +	/* Initialize the device portion and register it with the driver core *=
+/
+> +	faux_dev =3D &faux_obj->faux_dev;
+> +	dev =3D &faux_dev->dev;
+> +
+> +	device_initialize(dev);
+> +	dev->release =3D faux_device_release;
+> +	if (parent)
+> +		dev->parent =3D parent;
+> +	else
+> +		dev->parent =3D &faux_bus_root;
+> +	dev->bus =3D &faux_bus_type;
+> +	dev->groups =3D groups;
+
+Just as I feared, adding groups this way is bug prone if we don't check
+if the device attached to the driver successfully. Consider the
+following example module:
+
+static attr1_show(...)
+{
+	struct priv *priv =3D dev_get_drvdata(dev);
+	...
+}
+DEVICE_ATTR_RO(attr1)
+
+...
+
+static const struct attribute_group faux_groups[] =3D {
+	...
+}
+
+/* It would be nice to have the probe in __init */
+static int __init faux_probe(struct faux_device *fdev)
+{
+	...
+	/* Probe may fail */
+	if (con)
+		return -EINVAL;
+	...
+	faux_device_set_drvdata(fdev, priv);
+	...
+}
+
+static struct faux_device_ops faux_ops =3D {
+	...
+}
+
+static int __init module_init()
+{
+	...
+	fdev =3D faux_device_create_with_groups("foo", NULL, &faux_ops,
+					      &faux_groups);
+	if (!fdev)
+		return -ENODEV;
+}
+
+In this example we have no way of knowing if the probe failed, so the
+module as well as the device will remain loaded. Furthermore, the sysfs
+groups WILL be added anyway, which is dangerous because we have no
+gurantee about drvdata's lifetime nor if it was even initialized
+correctly, which sysfs show/store methods may assume is the case.
+
+So we have two problems here. First, this module only cares about the
+probe succeeding so keeping the device alive after it fails wastes
+resources. Second, we don't have any gurantee about drvdata validity.
+
+> +	dev_set_name(dev, "%s", name);
+> +
+> +	ret =3D device_add(dev);
+> +	if (ret) {
+> +		pr_err("%s: device_add for faux device '%s' failed with %d\n",
+> +		       __func__, name, ret);
+> +		put_device(dev);
+> +		return NULL;
+> +	}
+
+To solve this, I suggest we do this here:
+
+	/* Check if the device attached correctly */
+	if (dev->driver !=3D &faux_driver)
+		return ERR_PTR(-ENODEV); /* or NULL */
+
+	/*=20
+	 * Add groups after the driver is attached, to avoid lifetime
+	 * issues=20
+	 */
+	device_add_groups(dev, groups);
+
+If I'm missing something, or I'm wrong about something let me know!
+
+--=20
+ ~ Kurt
