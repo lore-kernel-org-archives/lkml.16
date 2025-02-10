@@ -1,79 +1,73 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mail.kaechele.ca (mail.kaechele.ca [54.39.219.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D69D2F2A;
-	Mon, 10 Feb 2025 05:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FCD22F2A;
+	Mon, 10 Feb 2025 05:11:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.39.219.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739164076; cv=none; b=FJT2MoagWjIthzCwND+RtVIwpk1VHs9057+N0KEGUzCuDmscHF5EnAUYYRSfpget3l/vv5msAo5vgPS544LS7M3MvNyqsNtJPxzYfKHUkmcJxydd0gPIpho0ZJraQ7aVL8SfVvw0fZRofqA8V6x2xhqpy1IRkxkcsNYsCPFwhbc=
+	t=1739164309; cv=none; b=BcEfbIGGHi7ZKjDZZuKqVxhXNW59B6a0v0tDXXa0+3yXAy08MqjmuhLMXqVcS1s1vtcTn6+5LJeYWlfo8h2O679OGQjzH4vKhs6H8GmoH/w22vZ0K7pyvSLanCkJikMOaNMJBlUAmZR2R1DUyNY9dPevXok2uALJea5vUn8JJEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739164076; c=relaxed/simple;
-	bh=ANO9oMWAe9WVlezDq1z5oOTTNnIfIcxIryQuVjmqVX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gUTramfmB/gJxu+FdnP5eY2UIYsCxO8n7p1Xrff+KR9jvGiA3jYgXvN0Z/qWeff99kNaUqEfeuIn0MOO7EcrINHZ7EEpKW9IkY8bknDkNc2eChADomlkp+yHugsUbX8GN68xk+097YHWQhLJ2BB+EgrC1s2ioNMWctBjY8iwGXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=hPpKWy+e; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1739164309; c=relaxed/simple;
+	bh=RQuRbRVR4UVdNA2DTvombWmk52eOlM6uT7ww0MINmqk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hRUIXcZuLAhQ7QxCjXnJtgEPmBWeUHc4V2rjpHzm+RpE6ZyXPZzYUrfujRm+kC+rxBADv+UgA6MT3HiJZ9USkv9cFIX2GRlbB9Q4z+E604A+r9E4kPcGB6K2qd67rVSTn2udZYFBBpFZLKkuPGVspSYJylvZGWrog+vWOfOjP7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaechele.ca; spf=pass smtp.mailfrom=kaechele.ca; dkim=pass (1024-bit key) header.d=kaechele.ca header.i=@kaechele.ca header.b=PCeQxUKu; arc=none smtp.client-ip=54.39.219.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaechele.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaechele.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hPpKWy+e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1739164068;
-	bh=0DU1lW0OzqBKiYkfpzAiSmzVXvZR8o2Im4Sez63qh3g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hPpKWy+eYnHl1rehrAqFpQqwScYXLmjJ041HUn2dU9SUZ20gL4PJwIDPXlj9OtszF
-	 CyZ6DckAwybcvqA2FdGBURVgQH3GTY3mJgHhF80WKUyU2LjS0mSq0zrgErBKyQgKx8
-	 yZecBA/UWg+OWcKUerL+8rF8XY0z171jKjEd2soE9uCKFLxMzhvaW3LbbXm2YsOLLR
-	 b65yYih7qNY9+St/gGPoWVLBWmKmk3GXMWGGgfRUV1ZsMtF7/5troNqdR5T2N38z41
-	 +yL9H7rsvXPsTFKSC7lZzk2IhjAVQMZLZbz8j04Qur0aaaSermgfwLHArLLbqTlHZK
-	 JPGLfHkKW+D7w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Yrsyr1fByz4wbR;
-	Mon, 10 Feb 2025 16:07:48 +1100 (AEDT)
-Date: Mon, 10 Feb 2025 16:07:47 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Tree for Feb 10
-Message-ID: <20250210160747.4db5c984@canb.auug.org.au>
-In-Reply-To: <20250210152940.1bff8e43@canb.auug.org.au>
-References: <20250210152940.1bff8e43@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=kaechele.ca header.i=@kaechele.ca header.b="PCeQxUKu"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 01EDCC005F;
+	Mon, 10 Feb 2025 00:02:26 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kaechele.ca; s=201907;
+	t=1739163752;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=L1jlj0wPzzLrmKzJ7Nl7eXF/I+hE7k1lnyTM+YRlftM=;
+	b=PCeQxUKuG2V3pxhNEVpDmONBujXsehzzNkgZ44Ezw4gzCl20o04acNvJcuDLuLcWqLpx/q
+	D32EfmOzBHh2o83RTnO7bEu2OMqGF7ffeozdUIq0TyEQCfk6cK9PrslpSAtuI3qQLAtFCG
+	xSRg9OIySFFxMEjhWcaCjJdtQL41snY=
+From: Felix Kaechele <felix@kaechele.ca>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: =?UTF-8?q?Barnab=C3=A1s=20Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/1] Input: rmi_i2c: introduce reset GPIO handling
+Date: Mon, 10 Feb 2025 00:02:08 -0500
+Message-ID: <20250210050220.634497-1-felix@kaechele.ca>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/=M7vtFD.FdynQRZMxf.zzzM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
---Sig_/=M7vtFD.FdynQRZMxf.zzzM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This patch adds handling of the GPIO reset line on Synaptics hardware
+using the rmi4 driver.
 
-Hi all,
+The syna,reset-delay-ms device tree property is already documented in
+the bindings but was seemingly never implemented in the kernel driver.
+This property can be found being used in some downstream dts files,
+mostly for Qualcomm-based smartphones.
 
-There will be no linux-next release tomorrow.  Sorry for the short notice.
---=20
-Cheers,
-Stephen Rothwell
+Adding support to the mainline driver makes devices that require
+asserting the reset pin work properly.
 
---Sig_/=M7vtFD.FdynQRZMxf.zzzM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Cc: Barnabás Czémán <barnabas.czeman@mainlining.org>
 
------BEGIN PGP SIGNATURE-----
+Felix Kaechele (1):
+  Input: rmi_i2c: introduce reset GPIO handling
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmepiaMACgkQAVBC80lX
-0Gxw/ggAlHmC5Vz3DjHbPmqBR05MSm2ApE584JYAVqHKy4KFlW5SwLnvfjP3zRMc
-oWl3/4ePpFTWAI1jjH05lZAWo7+iH5i/VEK1R2dbwsMQsX5/soSVg3D/oIjFt0eO
-UTaq9sEibed/WzsRVGEEuyaXlbNBIZh4B/W7iyW3rcvJiiDh1KA15gP3zFAtLDfT
-tp2gfEakXinNLSf+d8im1W5ytkmDsq84f1/H96ufNFH2BSSiD4uapjHoW5DUuoes
-cVLwnfGWl3wUvjM3pInO+AzMiKDTDdzp7G/sl2KMd5LajY8SCuicpRw79UmfSWEj
-qg2RDYhdRd6o/i+SNGKvzD7RZLBwWw==
-=FMVI
------END PGP SIGNATURE-----
+ drivers/input/rmi4/rmi_driver.c |  1 -
+ drivers/input/rmi4/rmi_driver.h |  2 ++
+ drivers/input/rmi4/rmi_i2c.c    | 23 +++++++++++++++++++++++
+ 3 files changed, 25 insertions(+), 1 deletion(-)
 
---Sig_/=M7vtFD.FdynQRZMxf.zzzM--
+
+base-commit: a7550ff59edfc768a8600c1e5c24c304208696a5
+-- 
+2.48.1
+
