@@ -1,38 +1,71 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 246ED221D85
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 12:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2AD28E7;
+	Mon, 10 Feb 2025 12:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739191792; cv=none; b=mide7eaTbHG2pDcbnE7gCDHor9joTsFb3DadmTlutHKK94bmRmUJk7B7PkNqU51j04pNLF3Cq4SkdPnKkVP6ZwnnjuyVPiQEAEMHUcuMizv9sNBYbj9Qtna7MkVsoxVvoJqR38zujR2MNOKGwhbbrgqSVx0ggrq76VkWZJf1k5o=
+	t=1739191914; cv=none; b=Ze2GfV0sDxytNKcPqWS64GwdV50i70SpXmS19zLtw3jIuLF4YMn5a5aLq2I9bypVzhHVHFxAiEogefroKcL2i3pyiW7aMezFIZxqTdxymnGK2pUChJNL1heW0XWLlDrgD8vsFXs/iFbgRxQQn2q1ZFSFOG4EcPR82tV+vrJbsRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739191792; c=relaxed/simple;
-	bh=GreohPdha/XftwZ8COXTNKe34IZkEFRBPFBA6saR5kc=;
+	s=arc-20240116; t=1739191914; c=relaxed/simple;
+	bh=vp0pMaSI6e2A5Q2R8B6jf8Qb3Jo7d4cArjy38aOKFro=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fUkyFAPQPteqr1RHNgBpMmAjt/XGFwFgJNGxHKQfhQsAXYclaUjvnPcFfc/TNzKZBXoCp9UlrJb2YGJsyPYR3bmOUV2us0onl9qGRcJFHGbFk2Ie2PcT0/xGmYEcMdNizRIOdJvoRiVadwocWYLslhUq7UVcFUoLcG7z6iAQg8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 318B21007;
-	Mon, 10 Feb 2025 04:50:11 -0800 (PST)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F5213F58B;
-	Mon, 10 Feb 2025 04:49:47 -0800 (PST)
-Date: Mon, 10 Feb 2025 12:49:45 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-rt-devel@lists.linux.dev,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Mark Brown <broonie@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Joey Gouly <joey.gouly@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: BUG: debug_exception_enter() disables preemption and may call
- sleeping functions on aarch64 with RT
-Message-ID: <Z6n16cK85JMyowDq@J2N7QTR9R3>
-References: <Z6YW_Kx4S2tmj2BP@uudg.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=sjembDGmkS86NspkwWeQNRhu39VJf5SJcKx32kqN4ZHIH1jw3DF9fEDxtMySXvs2LqG/2YuYQqVVQC20djyUq7jxaiMZccttIMVmoY1cMjXWWG0BzTNMBbzQUCAnEKBIdljZYmJlo7Jf4EVXWwV+AkGkZX2+g+X9GqhKCuxaUdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lyJr8BIl; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lyJr8BIl"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21f48ebaadfso68182365ad.2;
+        Mon, 10 Feb 2025 04:51:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739191911; x=1739796711; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iG5F7J2BN/jUR5/s1mlfNl87nG5+zzPkRWq2E/D2h1s=;
+        b=lyJr8BIlGRnJl6SqFi9s+Sz3AlCc6nQu4b1aaIgRx9QkGRzB51AVCIE5mai5iQdfdV
+         PQNl+tvonuJne4TPernm+CvgULegxDC3dWAV1KMumNJ7yyvnTNvkRrdJCQKjdALoti+G
+         GSysNGr0Z2+9p8AcgUmewmWissMwRwqx9C/IYAVr8ls68qZnTSTHIxofDoL5Xxo5P0RQ
+         CF+AQ7HiTqssfvtMQroYbY6zjVBfc9RlH2rZK76EFbYYf6cOgrW6fnEys2RKHVQ6YLzp
+         vqur347xAFEq8iCK+nZvsnpekxEshUtq+BYOp6TGlcQo/4IxuEoX4nOtv4r5gcAbo7TK
+         3VgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739191911; x=1739796711;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iG5F7J2BN/jUR5/s1mlfNl87nG5+zzPkRWq2E/D2h1s=;
+        b=d2/V5UVma8BxT6Pc0VhHika7JgwPjgKJtweI0SppOxjhZx4hZOdfbVu6OfzAK1aE2p
+         dXZHoyNGX1F3/yCXr9fI/lYO0WtXdxrYXSKbQ/2/73hjKNjPnAsWyuj7xPO2ug0nUttp
+         7ROaMyBvdbioYWj8AqfeGx5te2WB86QGn4dImbhZPaNSeS2ccNgZJI/Kw4KtYInZS5aU
+         /gIGZGDDsLDXbcmqym3csFfmbaLP5x0TN6IGvCOGKCVzjCz9HVvY/03XnhvVLA451Vwx
+         ylnfxKIFXuyK5Gmv/iC0OhhXiwvJUOYHu0QHMehDJAcDbtMxvb8lwEKHXEYGqaGAaywj
+         /apg==
+X-Forwarded-Encrypted: i=1; AJvYcCUTBYYq6zV7AJtAjuNmTZ6ZRdSxuAsnZWbjN34ZVKGSbAHWbZ/xMviGZ7SZkuHpQiIZY336svBOiRroFA==@vger.kernel.org, AJvYcCW/r7eIGRHbr/sY6UASimvgwGnmY10L8F9+E3WjL5bl+P6Rhxvuf18e7X7Q6M79+FmdBdM1WDTG1qrnf8Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvmtjEEjbcP1BPu11C4JEHrRR6CH8GROuce8kiHFdSnMzag/ZG
+	hCC951IF31nPdXaJ+8l03IL3G6Pa6q3Nh7dpdEGUEGdMpEv1fvd2
+X-Gm-Gg: ASbGncvxK0ADa/HHUokvvpt3C7arHxhV+1Q4S13PEbqHj+LmR7aGX5XZ9FSYLLS4gS4
+	i3pFPsSkE/EJbN8aTlJKSAoKvGmd99djIkSvYBmcgvcjinmjDcWfRrClMhNreNej0rLM9+czDSv
+	LRi5+/V3dRQLL6JMQ0tMRBjrMrYWWv8ZadQQQDMjxHIjv6oZO8fwdmIJTmxjMfe4wWPo2g2aVHo
+	NjGCLYislp85SZkCiIjLEhbtW6XkFYgQvCOdJwGrPganVXMdaZkDggIDt6Lnlt3b/brYUsqKOyU
+	OidGYEqpO1vSFjF0vYJjnn5IFBBTnQ==
+X-Google-Smtp-Source: AGHT+IEGEKBUtc2eZz0jVHkhA2m7MP2cyzPJlPWCdNuCZ6MQO/5x2JBlDK7hFbxtoOBmFkt/91lKfw==
+X-Received: by 2002:a05:6a00:3492:b0:730:87b2:e839 with SMTP id d2e1a72fcca58-73087b2f0a3mr10228890b3a.21.1739191911423;
+        Mon, 10 Feb 2025 04:51:51 -0800 (PST)
+Received: from t14s.localdomain ([177.37.172.166])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048bf14ebsm7541908b3a.104.2025.02.10.04.51.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 04:51:51 -0800 (PST)
+Received: by t14s.localdomain (Postfix, from userid 1000)
+	id BEF8BE6F4F9; Mon, 10 Feb 2025 09:51:48 -0300 (-03)
+Date: Mon, 10 Feb 2025 09:51:48 -0300
+From: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Xin Long <lucien.xin@gmail.com>, linux-sctp@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] sctp: Remove commented out code
+Message-ID: <Z6n2ZOTs_fKx-w9z@t14s.localdomain>
+References: <20250209210024.5413-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,130 +74,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z6YW_Kx4S2tmj2BP@uudg.org>
+In-Reply-To: <20250209210024.5413-2-thorsten.blum@linux.dev>
 
-On Fri, Feb 07, 2025 at 11:22:57AM -0300, Luis Claudio R. Goncalves wrote:
-> Hello!
+On Sun, Feb 09, 2025 at 10:00:24PM +0100, Thorsten Blum wrote:
+> Remove commented out code.
+> 
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-Hi,
+Hi Thorsten,
 
-> While running ssdd[1] from rt-tests on an aarch64 kernel with PREEMPT_RT and
-> debug features enabled, this bug was triggered on every single run:
-> 
-> [1] https://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git/tree/src/ssdd/ssdd.c
-> 
-> # ssdd
-> 
-> [  273.115597] BUG: sleeping function called from invalid context at kernel/locking/spinlock_rt.c:48
-> [  273.115607] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 6077, name: ssdd
-> [  273.115611] preempt_count: 1, expected: 0
-> [  273.115614] RCU nest depth: 0, expected: 0
-> [  273.115617] 1 lock held by ssdd/6077:
-> [  273.115620]  #0: ffff07ffd77893e0 (&sighand->siglock){+.+.}-{3:3}, at: force_sig_info_to_task+0x58/0x200
-> [  273.115642] Preemption disabled at:
-> [  273.115644] [<ffffad24518bd1f4>] debug_exception_enter+0x1c/0x80
-> [  273.115653] CPU: 47 UID: 0 PID: 6077 Comm: ssdd Not tainted 6.13.0-rt3 #1 PREEMPT_RT
-> [  273.115659] Hardware name: GIGABYTE R152-P31-00/MP32-AR1-00, BIOS F31n (SCP: 2.10.20220810) 09/30/2022
-> [  273.115662] Call trace:
-> [  273.115664]  show_stack+0x34/0x98 (C)
-> [  273.115670]  dump_stack_lvl+0xa8/0xe8
-> [  273.115675]  dump_stack+0x1c/0x38
-> [  273.115680]  __might_resched+0x254/0x330
-> [  273.115686]  rt_spin_lock+0xcc/0x220
-> [  273.115692]  force_sig_info_to_task+0x58/0x200
-> [  273.115697]  force_sig_fault+0xd0/0x120
-> [  273.115702]  arm64_force_sig_fault+0x48/0x80
-> [  273.115707]  send_user_sigtrap+0x88/0xe8
-> [  273.115712]  single_step_handler+0x100/0x160
-> [  273.115717]  do_debug_exception+0x94/0x160
-> [  273.115722]  el0_dbg+0x54/0x150
-> [  273.115727]  el0t_64_sync_handler+0x134/0x138
-> [  273.115732]  el0t_64_sync+0x1ac/0x1b0
-> 
-> The ptrace usage in ssdd eventually exercises the code path that starts on
-> el0t_64_sync_handler() and may end up calling do_debug_exception(), which
-> calls debug_exception_enter() that disables preemption.
-> 
-> Looking at the backtrace, later in the call chain force_sig_info_to_task()
-> tries to take a spinlock, which on PREEMPT_RT becomes a rtmutex and could
-> sleep in case of contention. That triggers the "BUG: sleeping function
-> called from invalid context" warning.
-> 
-> It is also possible to reproduce the problem in an aarch64 kernel with
-> PREEMPT_RT enabled, no extra debug features, by running ssdd in a loop.
-> With that we can see not only the backtrace reported above but also other
-> instances where the process is scheduled out while preemption is disabled:
-> 
-> # while :; do ssdd; done
-> 
-> [  754.673678] BUG: scheduling while atomic: ssdd/7340/0x00000002
-> [  754.673682] Modules linked in: qrtr rfkill sunrpc vfat fat acpi_ipmi ipmi_ssif arm_spe_pmu igb ipmi_devintf ipmi_msghandler arm_dmc620_pmu arm_cmn cppc_cpufreq arm_dsu_pmu loop dm_multipath nfnetlink xfs nvme ghash_ce sha2_ce sha256_arm64 nvme_core sha1_ce nvme_auth sbsa_gwdt ast i2c_algo_bit i2c_designware_platform xgene_hwmon i2c_designware_core dm_mirror dm_region_hash dm_log dm_mod fuse
-> [  754.673703] Preemption disabled at:
-> [  754.673703] [<ffffa87a17ca470c>] do_debug_exception+0x54/0x100
-> [  754.673710] CPU: 102 UID: 0 PID: 7340 Comm: ssdd Kdump: loaded Not tainted 6.14.0-rc1 #1
-> [  754.673712] Hardware name: GIGABYTE R152-P31-00/MP32-AR1-00, BIOS F31n (SCP: 2.10.20220810) 09/30/2022
-> [  754.673713] Call trace:
-> [  754.673714]  show_stack+0x34/0x98 (C)
-> [  754.673718]  dump_stack_lvl+0x80/0xa8
-> [  754.673721]  dump_stack+0x18/0x2c
-> [  754.673722]  __schedule_bug+0x90/0xc0
-> [  754.673726]  schedule_debug.isra.0+0x128/0x158
-> [  754.673728]  __schedule+0x68/0x690
-> [  754.673731]  schedule_rtlock+0x24/0x50
-> [  754.673733]  rtlock_slowlock_locked+0x1c0/0x350
-> [  754.673735]  rt_spin_lock+0xcc/0x130
-> [  754.673737]  obj_cgroup_charge+0x54/0x138
-> [  754.673740]  __memcg_slab_post_alloc_hook+0xcc/0x300
-> [  754.673743]  kmem_cache_alloc_noprof+0x304/0x338
-> [  754.673745]  __send_signal_locked+0x90/0x428
-> [  754.673748]  send_signal_locked+0xe4/0x140
-> [  754.673750]  force_sig_info_to_task+0xd0/0x160
-> [  754.673753]  force_sig_fault+0x6c/0xa8
-> [  754.673755]  arm64_force_sig_fault+0x48/0x80
-> [  754.673757]  send_user_sigtrap+0x54/0xd0
-> [  754.673759]  single_step_handler+0xc4/0xe0
-> [  754.673761]  do_debug_exception+0x7c/0x100
-> [  754.673762]  el0_dbg+0x40/0x158
-> [  754.673766]  el0t_64_sync_handler+0x134/0x138
-> [  754.673768]  el0t_64_sync+0x1ac/0x1b0
-> 
-> In this case one of the local_lock_* calls in (the functions called by)
-> obj_cgroup_charge() seems to hit contention and, as it is dealing with
-> rtmutexes, be effectively scheduled out to sleep.
-> 
-> The scary comment on top of debug_exception_enter() provides a reason for
-> preemption being disabled at that point, but it seems to open a can of worms
-> for PREEMPT_RT usage:
-> 
->     /*
->      * In debug exception context, we explicitly disable preemption despite
->      * having interrupts disabled.
->      * This serves two purposes: it makes it much less likely that we would
->      * accidentally schedule in exception context and it will force a warning
->      * if we somehow manage to schedule by accident.
->      */
->
-> This is the data I gathered so far, using both v6.13.0-rt3 and 6.14.0-rc1
-> for testing. But due to my ignorance wrt the debug exception treatment in
-> aarch64 I can't devise a solution for the observed behavior.
-> 
-> Any suggestions or comments?
+SCTP patches are picked up on the generic networking mailing list.
+You need to send this patch towards netdev@vger.kernel.org.
+Thanks for your patch, but please post it over there.
 
-I don't have an immediate suggestion; I'll need to go think about this
-for a bit. Unfortunatealy, there are several nested cans of worms here.
-:/
-
-In theory, we can go split out the EL0 "debug exceptions" into separate
-handlers, and wouldn't generally need to disable preemption for things
-like BRK or single-step.
-
-However, it's not immediately clear to me how we could handle
-watchpoints or breakpoints, since for those preemption/interruption
-could change the HW state under our feet, and we rely on single-step to
-skip past the watchpoint/breakpoint after it is handled.
-
-That, and last I looked reworking this we'd need to do a larger rework
-to split out those "debug exceptions" because of that way that currently
-bounces through the fault handling ligic in arch/arm64/mm/.
-
-Mark.
+Best,
+Marcelo
