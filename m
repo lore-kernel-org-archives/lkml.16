@@ -1,128 +1,97 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE45B192B84
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B0E1F463E
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739212515; cv=none; b=NAgnLPPIJzgEqH37zz+/Wp4N2RmpKMnilzu1VNSCeiUr3PlaMK8q36j2quSgcPwfDa79svHigpmuqPz2cs52iomIxb1dTSVFmjc3U2bjttxrOkyEEL9SWF9HvqsVVFHyQzVAHXeXrRsMYrssJX+18/hzFcfqPFCp+AZgfRuYk10=
+	t=1739212521; cv=none; b=L0NblOf/RewP2nRD0VCWFuUD8ZQbGgjTmSHaglxaDa0Sw6P6TvDcMlFLv1j0bsuo3auzCkkGoLqQdgqM4zivWyhH2XQSpNPiXs7zvoedumE4dKGfs92bUoqiKiI/IxKJ2WBpSed0AgzaFfWFEnqxM2ncC6w9631K86Pvp7rpvOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739212515; c=relaxed/simple;
-	bh=zWuoo7ND2Cayr7LKqH469oOc4M8MkwV//oIaGZjQhm8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JOeDZJbNPNjMHFxKL/XMkwwfFnVM48T6koHoV0tUalbE5aVlJDyrhRBDruVpQgkuvg+cBnJ8nYeB5elGf04pWnUn3HmsXELRIL8jtSaUhEnjtizuE2CRxPzdX2fGwd0xuU7oxOFeqZb/jzLyvt3Ll5OCGbFePN/KgMdWNskC60c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Eqq0fv/E; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739212521; c=relaxed/simple;
+	bh=avqQSRJSEroG0tqAaJw09CSQdVwaSimS+bsqxI0CeJ0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fbI+oRoEu7G96tpE61SJolR/oYVx/G9SzQADFDBFqpUXrwVLR/9p/+1rqJsFHqgzeVZFjfO4QONAhi4BSFtoyCSMt/sVV01+UEpQhMmZMfGkWYPXbZF6WpM/jWofvPw/ydvy8jL1pM+wHXe6iWAweGZjhDWGXftAFDB/h8BKxkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NfnXgj4Z; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Eqq0fv/E"
-Date: Mon, 10 Feb 2025 10:34:54 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739212501;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Px6n4/iF3ATy1tkEKiiYXPtCS0uyJnLM3LWN0RZhHL8=;
-	b=Eqq0fv/EZqZxres6gXvwinFpZxvxoAbVnSYhy/hOzYIeULRrCalvzQY8wdrpNDLwQReVpz
-	qhKuOIIHVO/vQnzJEhcb+aYrzKJQC7n3mi2fMRb0VdpW4j3MLoC00YTmnAxqtyeHapkPwS
-	SrJNH6alGGJKnHKCG7ULeUTw9Xpdgxk=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: "T.J. Mercier" <tjmercier@google.com>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org, 
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH] memcg: add hierarchical effective limits for v2
-Message-ID: <j2qxkp3tjq7yenl3tkjisaxry7aqdwaxlpx7rn7mpkdi7fkf2c@xva7vgzspb2p>
-References: <20250205222029.2979048-1-shakeel.butt@linux.dev>
- <mshcu3puv5zjsnendao73nxnvb2yiprml7aqgndc37d7k4f2em@vqq2l6dj7pxh>
- <ctuqkowzqhxvpgij762dcuf24i57exuhjjhuh243qhngxi5ymg@lazsczjvy4yd>
- <5jwdklebrnbym6c7ynd5y53t3wq453lg2iup6rj4yux5i72own@ay52cqthg3hy>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NfnXgj4Z"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47190a013d4so13091cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:35:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739212518; x=1739817318; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bn3fvDD0KxaOtVhv2mPaCVEYyhy/9mxAXhWbYqpsYPA=;
+        b=NfnXgj4Z4J5SwH3TEatRrYWo+HHf/cnU/KEok8yI0VIWM7DDY3jI8yyP6oxQrt0C5k
+         4PV2sdFz6MtfUicJ/Uj/eQsX6rk0In3W+giJO6rZzcr0I1O+yFnnlyDfIt9y38NXIxSr
+         iJD/A2rfRIJxSpl5VBZI9mjpW9HmsCDOP91w9J8g+mDLMPz+rOvDnZG5FNVhyA1+Wu9c
+         5s7Gc+fTgaJJlrYlCRHV18+Te7+6cwbHG0MR9kLXdVbonrvTeYBwPGyAzyo7O8PnqKVf
+         F/KVWpJ2jIY+HDiEfkRu8dqz88ws51U7ul+IQt3Rvgt3d1LQwb+A8THme/CAa6PTjVCb
+         4saQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739212518; x=1739817318;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Bn3fvDD0KxaOtVhv2mPaCVEYyhy/9mxAXhWbYqpsYPA=;
+        b=N4PsxqRhIATnAValgdL6HxpzJhK9J2aCbYEG0k0rqpOrHsXKZBBlv+tH8oE2kB2rc2
+         u5azPM1Pt3TVF1mefcHzn5bD8/qgyOcQDJXUTSIPYmKXMzuPTXIos6fzdNSOLDWJUgNU
+         NeUhpo9/ly5nnVe86fvUhv7uEjWV5mGC6QGCet5wCxJGv8b/vbHXKks5sj/N+zPoPsrA
+         7/GOsilEnWeoAuFF4hMDCVGEF9fsxl9eAOHM0im9hlxyeC890u+hDna/xOHTsJKyVrMJ
+         1YwFvW1AjPju3k2oxcLQLlToWpABtIokBq/f1xcSs+XDMOZTu30YTZqeKgfKW8goocFJ
+         +EZg==
+X-Forwarded-Encrypted: i=1; AJvYcCWIzYbgQGZldBeVQTZTyjfowTxkVAX9kh54RU/WlUsDrQ01JIyO3G+3MdLUeojr24WqZa2t6Ii+ki3ADSs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSzvCtLYDt2tQaH5tImrzX4oVJ5VSBilx7/DRcIi0EwHWFEbzt
+	o5ufcATJiYEbaoySmPgRxyVRSWWvbfMWk5aLlFOXcKBevnnVowfpQ+hb4/B8pp0MZWNxxsvl8bf
+	86RpuOJg/s0XVOlb7FI2+o0tc/aKLZ/eOqh9b
+X-Gm-Gg: ASbGncu8IcopA00SWllpWMLSd+770NAblm0HrhF87/3MXt+DBium19lVNZ1E724AT7L
+	CrLvz+5T6xBlBN+mAOFr7GUMgYDMXSg4dt9a6HW4jj+WvEsvedPEJ8BKg5ZSX/2WvEzxdRvAIWH
+	PIfMgbYEYH7EEZc3VTfNmMFcljaRI=
+X-Google-Smtp-Source: AGHT+IFYTuZ5gMDfSRRThaiRe7sPk5kdq+JcDi/uR9332gTpXmzRLnViELOvZFwoksS3SXFrxEuYT4kFVNR4ugMVjMY=
+X-Received: by 2002:a05:622a:5792:b0:467:7c30:3446 with SMTP id
+ d75a77b69052e-47177eec877mr7497321cf.25.1739212518441; Mon, 10 Feb 2025
+ 10:35:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5jwdklebrnbym6c7ynd5y53t3wq453lg2iup6rj4yux5i72own@ay52cqthg3hy>
-X-Migadu-Flow: FLOW_OUT
+References: <20250108202515.385902-1-david.kaplan@amd.com> <20250108202515.385902-13-david.kaplan@amd.com>
+In-Reply-To: <20250108202515.385902-13-david.kaplan@amd.com>
+From: Brendan Jackman <jackmanb@google.com>
+Date: Mon, 10 Feb 2025 19:35:06 +0100
+X-Gm-Features: AWEUYZnA_ITQ8lH_DVafuiHdA7IzJ0QqiprWf0gvBbQbWm0TW3f_WIU58Mvi7L4
+Message-ID: <CA+i-1C0KpYA3BaPQb--AjRcZU5mi-Mk=kxpG3jy_TKufn+rk7A@mail.gmail.com>
+Subject: Re: [PATCH v3 12/35] x86/bugs: Restructure retbleed mitigation
+To: David Kaplan <david.kaplan@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Feb 10, 2025 at 05:24:17PM +0100, Michal Koutný wrote:
-> Hello.
-> 
-> On Thu, Feb 06, 2025 at 11:09:05AM -0800, Shakeel Butt <shakeel.butt@linux.dev> wrote:
-> > Oh I totally forgot about your series. In my use-case, it is not about
-> > dynamically knowning how much they can expand and adjust themselves but
-> > rather knowing statically upfront what resources they have been given.
-> 
-> From the memcg PoV, the effective value doesn't tell how much they were
-> given (because of sharing).
-> 
-> > More concretely, these are workloads which used to completely occupy a
-> > single machine, though within containers but without limits. These
-> > workloads used to look at machine level metrics at startup on how much
-> > resources are available.
-> 
-> I've been there but haven't found convincing mapping of global to memcg
-> limits.
-> 
-> The issue is that such a value won't guarantee no OOM when below because
-> it can be (generally) effectively shared.
-> 
-> (Alas, apps typically don't express their memory needs in units of
-> PSI. So it boils down to a system wide monitor like systemd-oomd and
-> cooperation with it.)
-> 
+On Wed, 8 Jan 2025 at 21:29, David Kaplan <david.kaplan@amd.com> wrote:
+> @@ -1827,16 +1821,6 @@ static void __init spectre_v2_select_mitigation(void)
+>                         break;
+>                 }
+>
+> -               if (IS_ENABLED(CONFIG_MITIGATION_IBRS_ENTRY) &&
+> -                   boot_cpu_has_bug(X86_BUG_RETBLEED) &&
+> -                   retbleed_cmd != RETBLEED_CMD_OFF &&
+> -                   retbleed_cmd != RETBLEED_CMD_STUFF &&
+> -                   boot_cpu_has(X86_FEATURE_IBRS) &&
+> -                   boot_cpu_data.x86_vendor == X86_VENDOR_INTEL) {
+> -                       mode = SPECTRE_V2_IBRS;
+> -                       break;
+> -               }
+> -
+>                 mode = spectre_v2_select_retpoline();
+>                 break;
 
-I think you missed the static partitioning of resources use-case I
-mentioned. The issue you are pointing exist for the system level metrics
-as well i.e. a worklod looking at system metrics can't say how much they
-are given but in my specific case, the workloads know they occupy the
-full machine. Now we want to move such workloads to multi-tenant
-environment but the resources are still statically partitioned and not
-overcommitted, so effective limit will tell how much they are given.
+It isn't quite clear why this gets removed here. Doesn't
+retbleed_update_mitigation() still depend on this?
 
-> > Now these workloads are being moved to multi-tenant environment but
-> > still the machine is partitioned statically between the workloads. So,
-> > these workloads need to know upfront how much resources are allocated to
-> > them upfront and the way the cgroup hierarchy is setup, that information
-> > is a bit above the tree.
-> 
-> FTR, e.g. in systemd setups, this can be partially overcome by exposed
-> EffectiveMemoryMax= (the service manager who configures the resources
-> also can do the ancestry traversal).
-> kubernetes has downward API where generic resource info is shared into
-> containers and I recall that lxcfs could mangle procfs
-> memory info wrt memory limits for legacy apps.
-> 
-> 
-> As I think about it, the cgroupns (in)visibility should be resolved by
-> assigning the proper limit to namespace's root group memory.max (read
-> only for contained user) and the traversal...
-> 
-
-I think here your point is why not have userspace based solution. I
-think it is possible but not convenient and adds an external dependency
-in the workload.
-
-> 
-> On Thu, Feb 06, 2025 at 11:37:31AM -0800, "T.J. Mercier" <tjmercier@google.com> wrote:
-> > but having a single file to read instead of walking up the
-> > tree with multiple reads to calculate an effective limit would be
-> > nice.
-> 
-> ...in kernel is nice but possible performance gain isn't worth hiding
-> the shareability of the effective limit.
-> 
-> 
-> So I wonder what is the current PoV of more MM people...
-
-Yup, let's see more opinion on this.
-
-Thanks Michal for your feedback.
+It gets added back in 15/35 so this would be at most a problem of git history.
