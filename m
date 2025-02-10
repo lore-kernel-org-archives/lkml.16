@@ -1,97 +1,141 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9708C0B;
-	Mon, 10 Feb 2025 05:15:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7943213FD86;
+	Mon, 10 Feb 2025 05:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739164558; cv=none; b=hgu7uQ5FmAU9LhxMZJI6G+CuVoxErLK799a64vZ83TNZTGqVDZRSyZGx0Tq7dd8zomYTHiZkZuGQaGSLhnq+EjF4K+QzzPM6pWn0JVMqk4NswJQlXuaqwSpQbClBJPQvZzGxqSNMlSpHvRx/6UTYoZ0j77Qxa6oPqq2jiFWsvRU=
+	t=1739164881; cv=none; b=dsB54G+vrze2JGtERp+1hsYZhB2vAOcLtFpMc31JHPgVKxXCi8AV7WxKiEVgzMq0kvhCU6AvKPI3BKIWvXgWb/RosI6MWjuZ+Gxk4N7LB/f/Nnec5s0StQytnGemrm5EdhQ0LM67pUBkkMVWNxJGXFJRh2svdSF1uJzLRHvkwAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739164558; c=relaxed/simple;
-	bh=OJu3BGyWsUK/tM3k/2c/DM4FetgxbYziS06WslKXQYg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gtv5Bb9DscJfP0OmQUNbBNSoK4iCAGJHLDzrK96xaSq4yHxVBax43ksHVRGG/8mzfyaUbBIWcW2CjxOlj+yLXCMJ1z1JV5w0B6E7QEmSjBx3FUHH0omO34bZ8MCf1iyVt9xh2r6NosPEv0pRyfkyolwy47KWJ5Ocx67J3DYkIhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=TMxNddSr; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1739164881; c=relaxed/simple;
+	bh=0KxQId9bTKtoK2s44heydkxZsinvfosJaAjLqTmIy8M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dC7aOEbiRpdp3asWZGxZ76FbSgyaoKE04X+rdYpl2afcCtEWjk1KVuAC5WFlmj/pQDj0mMq3NDt8DA3RXsMMr0MqaXXtN9oYi9iursdRuLxFy8VzFAdKXUjALOhA9tuWxNRxiNNfY75vwCv/fLevPWV74rDFuvxvt2uNAICiLj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidreaver.com; spf=pass smtp.mailfrom=davidreaver.com; dkim=pass (2048-bit key) header.d=davidreaver.com header.i=@davidreaver.com header.b=k6uHerG0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ujMgz1H9; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidreaver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=davidreaver.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="TMxNddSr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=9G9DHZZukJQ/6fkgrKhDxF23sIsnisr7SFtP9D2rEbI=; b=TMxNddSrJs6TvBpEM233D+uAOq
-	Ni9isBUBYmazrLcceu8RFo3N2IF1JbJbOW7Q0Ao/zJ3b5ibXA0GCaqztRwFMC5SOwsGnlyFn2rJW7
-	2rfsnvPgh1PWqKRvtMkmE+MH6lUhTTolT3bepAagGOJ5LXQcn0sVlQWFa4vK5Ic8b1XcIPhpLjfmh
-	qh4ApwDHOyBfItSVUwScU+FBaPXUKJIkdYmzCeHHKqUHf7DjLcy7Fy+2IAJExfTYjBfrJ2h2s9gpp
-	rgcb2HjgCjp/x5CuMbs+dBUcy+fRQL3rNZ0gDz9/2FlEoHeiKy82qVldgT2Mrh6LBM3uakwRnan0w
-	6MzC9LFg==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1thM9B-000000092oI-0ICR;
-	Mon, 10 Feb 2025 05:15:53 +0000
-Date: Mon, 10 Feb 2025 05:15:53 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: NeilBrown <neilb@suse.de>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=davidreaver.com header.i=@davidreaver.com header.b="k6uHerG0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ujMgz1H9"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfout.phl.internal (Postfix) with ESMTP id 56F94138014C;
+	Mon, 10 Feb 2025 00:21:18 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Mon, 10 Feb 2025 00:21:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=davidreaver.com;
+	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
+	:from:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1739164878; x=
+	1739251278; bh=GXDpGKMgcY+JAEBNv/Xlu0NnEc1xzI1Njjd5bVIHNog=; b=k
+	6uHerG0uAjXSLWOUKvYLIp15nyfW55xmLcgDs4VenhADqANihgDDofcaAxs2/An+
+	sybw63Ohs7W3j08QSOtzHonkFwXrtO6kMX9hI3D0Ishn+CRKW/VKso3T1c7O50WA
+	c5+UHq2X0f57qjfd8oYImQuofrSE9PgLDIWQydDwV5aRcTM1ZGzTdgYOAvxmjQCh
+	1YJKOgPjn8pDT6Ug//I3eXFzpBqM5QWmaUFfJbsC/boDjW3Co9KscoQHqD4gwkLO
+	IDW7cwpIzAhJdHLVwlu3VkkWlYai6l4MiwEMYPA9HiaOuf8YbQ0TkZgFZMsijuKc
+	9qypXnja74uMRwVaUAdsA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm3; t=1739164878; x=1739251278; bh=G
+	XDpGKMgcY+JAEBNv/Xlu0NnEc1xzI1Njjd5bVIHNog=; b=ujMgz1H9c9dR6nVwm
+	S/ULZTFRdroJX9QnzHpZ4GfMFwqhLbAI2ln8N6g4YhFb6Hp7EP5ZOlWeJYiEHbHR
+	BDh4DbK8zOftSORlXZR2HOc4c+7EQRD0YonkGBIpI7FPP2Fi1jv70gbJOrBFX9Q8
+	W4X0VPUSNoukzV1OW/5z04qhWpOnNyFFfs2vB9elNi0JPJhAeZIDEOBZKxPo+AQM
+	pjW+7e8qVqIbseDOoA0+BW/7daM4fcWCX3cWlnD9WwV9wyOYd8zAVI4hKr83CKFK
+	LDtugryCYfrbXp9V7KV1W2zqUUSQBNDnGV6PrB4VJl7odb5thFxKZEVoJTkuxb3C
+	RZ5Xg==
+X-ME-Sender: <xms:zoypZ5eOHdGqreM_SQWIdCRpG9QQqMCWcMVaYJz9Qc1-dH-nAeHDxw>
+    <xme:zoypZ3N820R1HpK-lXkfDYvWfrzXYwJ3EuRwBHwFGV91KBX-aQAHTaIiARVPMRJYv
+    6ohlzx1j-nEmo-V8GY>
+X-ME-Received: <xmr:zoypZyinp-79rcTu1V3qR8YUMIJKZfHWhVsQ1GcjrvZksDOFOFjR4kDjiq_1DTihvK2ySsvafhvfKKM6pwXsCJiReau3MlxETyzpQ7MYJlFY9Fk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefjedulecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddt
+    necuhfhrohhmpeffrghvihguucftvggrvhgvrhcuoehmvgesuggrvhhiughrvggrvhgvrh
+    drtghomheqnecuggftrfgrthhtvghrnhepudevteffveeuuddtkedtvedtteeutdefvdeg
+    hffhjeeiveegvdetvdejteejleeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepmhgvsegurghvihgurhgvrghvvghrrdgtohhmpdhnsggprhgt
+    phhtthhopedutddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepghhrvghgkhhhse
+    hlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehk
+    vghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtohepmhgvsegurghvihgurhgvrghvvghrrdgtohhmpdhrtghpthhtoheprhhoshht
+    vgguthesghhoohgumhhishdrohhrghdprhgtphhtthhopegsrhgruhhnvghrsehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdr
+    uhhkpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvghrnhgvlh
+    drohhrghdprhgtphhtthhopegtohgttghisehinhhrihgrrdhfrh
+X-ME-Proxy: <xmx:zoypZy-IU0u4T3DONKl-ZJYVzvb-9LzTzlXooDV6bm7ayDQ1SVixNw>
+    <xmx:zoypZ1v6gqhSVOednqTFibVOLiiVSYYh9hlHyggFacpRWz-03IOsSA>
+    <xmx:zoypZxH3fKNcsM2I7yAkaL-SKQNkorxUikpvCyvkc8FfuuVKTW9hIA>
+    <xmx:zoypZ8MJeNb1m44uStnF-8FsyqkZAciLkYChp6Bn02dB4txuFLbyxA>
+    <xmx:zoypZ2nZ2PD2GZlXKZJSiUCkFtc1uQaXitbeFcjDEowzomtw_JZ_iKnv>
+Feedback-ID: i67e946c9:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 10 Feb 2025 00:21:16 -0500 (EST)
+From: David Reaver <me@davidreaver.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>
+Cc: David Reaver <me@davidreaver.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	linux-fsdevel@vger.kernel.org,
+	cocci@inria.fr,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/19] VFS: use global wait-queue table for
- d_alloc_parallel()
-Message-ID: <20250210051553.GY1977892@ZenIV>
-References: <>
- <20250207193215.GD1977892@ZenIV>
- <173916348251.22054.1170999043107860979@noble.neil.brown.name>
+Subject: [RFC PATCH 1/6] debugfs: Add temporary "#define debugfs_node dentry" directives
+Date: Sun,  9 Feb 2025 21:20:21 -0800
+Message-ID: <20250210052039.144513-2-me@davidreaver.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250210052039.144513-1-me@davidreaver.com>
+References: <20250210052039.144513-1-me@davidreaver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <173916348251.22054.1170999043107860979@noble.neil.brown.name>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 10, 2025 at 03:58:02PM +1100, NeilBrown wrote:
-> On Sat, 08 Feb 2025, Al Viro wrote:
-> > 1) what's wrong with using middle bits of dentry as index?  What the hell
-> > is that thing about pid for?
-> 
-> That does "hell" have to do with it?
-> 
-> All we need here is a random number.  Preferably a cheap random number.
-> pid is cheap and quite random.
-> The dentry pointer would be even cheaper (no mem access) providing it
-> doesn't cost much to get the randomness out.  I considered hash_ptr()
-> but thought that was more code that it was worth.
-> 
-> Do you have a formula for selecting the "middle" bits in a way that is
-> expected to still give good randomness?
+Add some temporary "#define debugfs_node dentry" directives to facilitate
+migrating debugfs APIs from dentry to a new opaque descriptor,
+debugfs_node. Subsequent commits that replace dentry with debugfs_node rely
+on these #defines until the final commit in this series removes them.
 
-((unsigned long) dentry / L1_CACHE_BYTES) % <table size>
+This is also added to dcache.h, right below struct dentry, so it is
+available where dentry is transitively included.
 
-Bits just over the cacheline size should have uniform distribution...
+Signed-off-by: David Reaver <me@davidreaver.com>
+---
+ include/linux/dcache.h  | 2 ++
+ include/linux/debugfs.h | 2 ++
+ 2 files changed, 4 insertions(+)
 
-> > 2) part in d_add_ci() might be worth a comment re d_lookup_done() coming
-> > for the original dentry, no matter what.
-> 
-> I think the previous code deserved explanation more than the new, but
-> maybe I missed something.
-> In each case, d_wait_lookup() will wait for the given dentry to no
-> longer be d_in_lookup() which means waiting for DCACHE_PAR_LOOKUP to be
-> cleared.  The only place which clears DCACHE_PAR_LOOKUP is
-> __d_lookup_unhash_wake(). which always wakes the target.
-> In the previous code it would wake both the non-case-exact dentry and
-> the case-exact dentry waiters but they would go back to sleep if their
-> DCACHE_PAR_LOOKUP hadn't been cleared, so no interesting behaviour.
-> Reusing the wq from one to the other is a sensible simplification, but
-> not something we need any reminder of once it is no longer needed.
-
-It's not just about the wakeups; any in-lookup dentry should be taken
-out of in-lookup hash before it gets dropped.
+diff --git a/include/linux/dcache.h b/include/linux/dcache.h
+index 4afb60365675..4b0c11cd3d50 100644
+--- a/include/linux/dcache.h
++++ b/include/linux/dcache.h
+@@ -127,6 +127,8 @@ struct dentry {
+ 	} d_u;
+ };
  
-> > 3) the dance with conditional __wake_up() is worth a helper, IMO.
-
-I mean an inlined helper function.
++#define debugfs_node dentry
++
+ /*
+  * dentry->d_lock spinlock nesting subclasses:
+  *
+diff --git a/include/linux/debugfs.h b/include/linux/debugfs.h
+index fa2568b4380d..e6ee571e8c36 100644
+--- a/include/linux/debugfs.h
++++ b/include/linux/debugfs.h
+@@ -21,6 +21,8 @@
+ struct device;
+ struct file_operations;
+ 
++#define debugfs_node dentry
++
+ struct debugfs_blob_wrapper {
+ 	void *data;
+ 	unsigned long size;
