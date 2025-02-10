@@ -1,93 +1,108 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED15525B698
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812C825B698;
+	Mon, 10 Feb 2025 18:12:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739211148; cv=none; b=k1Cu2eLG0vSW8qdC8OLu5/3Be9OPyIGxHwfBmJV89O7uG4g5/p2uJ1J6YqPJLBoHZU4RD+Hcy3/zxeSH2DQU0cADbJfzHsA3v4TzUJ6KVRWBD9dh7+US0zlYu7swN98ibnPGc1CecZdocB2MhhWz1mbBiiq0SjlUbaRdSxmSn3U=
+	t=1739211157; cv=none; b=EiGCuV5fEl6WRVPGO+rpQXIkhsbL8VJI2GstHevsdh3bv0hcZ1ZT1W4mklXtSBCRBbQrdfBKUpaUQ5t5nElxCzqvA/rPQDlAr3QlvGGVt7dawbLMHFfSn4TCDmT2/OJVbAPymfpPFVmIiXXdCF9FtV8t4F9lBxrHwecn3dJmsn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739211148; c=relaxed/simple;
-	bh=KGU94NB2q4RwCucjukyrOb4T3rjEuQVWP0ukifA0Kxw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lYtkDGJiGIznMZReeilQmrNlYrnVxwVgxb5q5lZpNi7dqHAg/VVyerV1Ca9twxvvqGY+Tp+gMrJYS+wmx2ThRhrl7q8Cb7bl+8J3/GI3GTN6mi9UA77L+4g8+xTFNpTyKjxcQHY/cO0+e6nFSHpNqD8y23u1OvXuYRIv0nZwRmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TVf+uKDD; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739211157; c=relaxed/simple;
+	bh=1BaICnZIMZZYA4GVJPiSv2t5sFyRoKtIBGOBza+NOtM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=WPWKPAuB3R6H0ZCql7Q64QOFElR50qhigjBRlQ6w5kQ0cPHurZqAon/O8r7G8h/VsQU/c8bP9SWOm/ucRSTLWJpi09aASeAYRh9RnkyKhvkgAQFbuNghCZiAHQXD6twCPnt3qiAZ6N1lBKnq7cojFrZmxI5Ca35Ekyu8++T99pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=kmEcP/pe; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TVf+uKDD"
-Date: Mon, 10 Feb 2025 10:12:07 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739211143;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oLebe+jzGLux7DSpw2Ptd+bTvs2CJro4ymjhGMecT2s=;
-	b=TVf+uKDDvKnu/oeSc93C892wJYH60SLMrlWI3XwVY0HrADEZScMSzN8qkJz96sq1PHBhYk
-	UfaZKCjoDAr0sYpQKz9CChwj3KLaQZQKZMTvW6A2WVjgpmt/aGVdRvxcyp0er5maX+DqrJ
-	V+9T5NjYbngj+ESa2xauSK9bopNaUSk=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Sebastian Ott <sebott@redhat.com>
-Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Cornelia Huck <cohuck@redhat.com>,
-	Eric Auger <eric.auger@redhat.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] KVM: arm64: Allow userspace to change MIDR_EL1
-Message-ID: <Z6pBd0XgEvrMoLcS@linux.dev>
-References: <20250210154953.27002-1-sebott@redhat.com>
- <20250210154953.27002-2-sebott@redhat.com>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="kmEcP/pe"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net A06F5411A1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1739211154; bh=Sla1Tv9LQWbirw8afTo3m5hwu7soC846kdNCn4I82iQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=kmEcP/peMIXBD4I33JiGLMq5dlJbEdIpXD3Emg5Ab8R+ojwKefAR92aqkugY9ZAzk
+	 7yG2MCTpLNdeaYm3iG8a0pWdp8b4LpfpoxPqEG4NMZ7wpvPrqNTcVkE6LvHysBBdb7
+	 YfZU5rjWpY4AKXte/zULhO4oEeKWX7x4f/O66fH69EESK+r7Z9eiSxP6sBmZ6wxYZ6
+	 6Ipi168BtTEa0p5K1wjyfRCsJtMk6SD2AwvgSchFXSHmj3kCGocdnL2Gc3OrxFdRUD
+	 Dn6sengxbA8DCPTnpaT59M/Ecb3/SSu+LHpQVQDzUmmnbGOVXptf6/9xwiG39RxWEu
+	 PW4JUyhezrIMA==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id A06F5411A1;
+	Mon, 10 Feb 2025 18:12:34 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Laurent Pinchart
+ <laurent.pinchart@ideasonboard.com>, Simona Vetter
+ <simona.vetter@ffwll.ch>, Mauro Carvalho Chehab
+ <mchehab+huawei@kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH v4] docs: clarify rules wrt tagging other people
+In-Reply-To: <588cf2763baa8fea1f4825f4eaa7023fe88bb6c1.1738852082.git.linux@leemhuis.info>
+References: <588cf2763baa8fea1f4825f4eaa7023fe88bb6c1.1738852082.git.linux@leemhuis.info>
+Date: Mon, 10 Feb 2025 11:12:33 -0700
+Message-ID: <87y0ydzn1q.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210154953.27002-2-sebott@redhat.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
 
-Hi Sebastian,
+Thorsten Leemhuis <linux@leemhuis.info> writes:
 
-On Mon, Feb 10, 2025 at 04:49:50PM +0100, Sebastian Ott wrote:
-> Enable VMMs to write MIDR_EL1 by treating it as a VM ID register.
-> Since MIDR_EL1 is not handled as a proper arm64_ftr_reg apply only
-> a sanity check against the writable mask to ensure the reserved
-> bits are 0.
+> Point out that explicit permission is usually needed to tag other people
+> in changes, but mention that implicit permission can be sufficient in
+> certain cases. This fixes slight inconsistencies between Reported-by:
+> and Suggested-by: and makes the usage more intuitive.
+>
+> While at it, explicitly mention the dangers of our bugzilla instance, as
+> it makes it easy to forget that email addresses visible there are only
+> shown to logged-in users.
+>
+> The latter is not a theoretical issue, as one maintainer mentioned that
+> his employer received a EU GDPR (general data protection regulation)
+> complaint after exposing a email address used in bugzilla through a tag
+> in a patch description.
+>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Simona Vetter <simona.vetter@ffwll.ch>
+> Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
+> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
+> ---
+>
+> Jonathan, what do you think of this? I felt somewhat unsure about this a
+> few weeks ago, but I guess I was overly careful. If you think this
+> change is fine and shouldn't cause any trouble for anyone, feel free to
+> merge this. And if not, please speak up.
 
-How exactly does the VMM's MIDR_EL1 find its way to the guest? VPIDR_EL2
-is still set to the hardware value.
 
-> @@ -2021,7 +2037,11 @@ static int set_id_reg(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
->  		return ret;
->  	}
->  
-> -	ret = arm64_check_features(vcpu, rd, val);
-> +	if (skip_feature_check(id))
-> +		ret = arm64_check_mask(rd, val);
-> +	else
-> +		ret = arm64_check_features(vcpu, rd, val);
-> +
+I have a couple of thoughts, neither of which is sufficient for me to
+oppose the change if there is consensus for it:
 
-Can you add a new implementation of ->set_user() for MIDR/REVIDR/AIDR
-instead?
+- You're saying that people need to grep email addresses out of the git
+  history before crediting them in a tag; that's not a step we have
+  required of people before and seems like a bit much..?
 
-> @@ -2542,6 +2571,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
->  
->  	{ SYS_DESC(SYS_DBGVCR32_EL2), undef_access, reset_val, DBGVCR32_EL2, 0 },
->  
-> +	{ ID_DESC(MIDR_EL1), .set_user = set_id_reg, .visibility = id_visibility,
-> +	  .reset = reset_midr_el1, .val = (u32)-1 },
+- It would be awfully nice if we could provide this advice in exactly
+  one place in the document.  This is one of our most important docs,
+  and it is far too long to expect new contributors to read through and
+  absorb.  Avoiding making it longer and more repetitive would be
+  better, if we can.
 
-nit: GENMASK() instead of truncation by casting.
+- I wonder if it would make sense to say that, if an implicit-permission
+  tag has been added, the person named in it should get at least one
+  copy of the change before it is merged?
 
--- 
+OK, three thoughts, you know what they say about off-by-one errors :)
+
 Thanks,
-Oliver
+
+jon
