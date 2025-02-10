@@ -1,422 +1,140 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2040.outbound.protection.outlook.com [40.107.22.40])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122C524BCFD;
-	Mon, 10 Feb 2025 19:42:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739216556; cv=fail; b=CFnemfC5os3UrbBhVxlZivMa3prvyA+scONbYr9KxIlcif3ac+y51Uh+24FeJjyQLc3qZCbh3FzUZ/8RJAhNQ1x+e3sAf9ut6mYgf8C94Q5+90MRVo+FZ5WThogfuUY7AU1RGhCEpbZhD+d7+a77nQrGsaFiD65JcX2jAZcZoqQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739216556; c=relaxed/simple;
-	bh=qCD70buxVj44YbdimB2gQea0UVrF8wbpiBbfUqN3oOA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=n0MyA9eJiQolEutLZ2fBriHv1bv4EJxRV9g8L5qfCwI22S38VqUUsYf3V2rcqEvEYnerP4XPuuT7daGn6AV0uzeFwmgr/LMO4WIL+cLM8laEaHjTaWypYDNJ4riZuEX9Vcs8mihj0B5iBGDOTnjo0MffRiapMYA//abzKZUX50Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=fail (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=HQ2/sQrm reason="signature verification failed"; arc=fail smtp.client-ip=40.107.22.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0BB2505BE
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739216588; cv=none; b=ozc0zrV0l3vhYg4Eh8tPNS/RPmp0DHFGS5ibKzONJvOB3GfG6ZgOpnLNq479Fn+a5fJFl36MqXbuxHxjG9ToaAvqbWXnb4HojnfqcppGB5xEuNzLWcBTlLJKQUxAGrhG/10RZenFe5ehRtQ8Oj+SrcfVrRL8vuJQndyCivmSJAQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739216588; c=relaxed/simple;
+	bh=zDOdwrtEgqL5utC5zX/sNmBwQ2znbX6ktSuLXgQgpws=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 References; b=eYdNo2IB4/QgXS9eiV4/vwn3cUFad6LU31HECcuu7GLs2phWcsNUxiCST+uMIHEOb25gR9Vj8Q5Icd4iEPcqFGzqzWbM95K2ZdnEGNuATTrDNmQ43QzZxtqGQy7r1JHfEZh3VffBt3agPcllsV6FD0qhK90z70xul2BmNqw6OMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=cG3g2vHX; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="HQ2/sQrm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=B6iMQ4I80rh7uCF4tGO7brTR9YJUTelzMCM4SLxYrFj6sh0iO0z3qj+XeSxmhky78li21fhD5LumHUr45H8vBQPObjtiCvpRlt80O8tSl+85QK7qMAvSBOlRvY8K0gQYJYbK2B/GzAlNhjDCVdUA+bSxvTu3TFDaNMA4EhqJg4v9BDnlTYpO9t3+5VrTIpcKuSL5rMdwn3AnoLUECH38o2SkwtuHSGg5mkWDbgE+8McJ9BACBUtY4SltVhgraH//lFjYx3Msaq3shHpL2aFCBwWU4iaQi5hyTOteeAXmnmt1UMsrkdLZqKy6INRI6VMAFlwEKQTZLibuijHY9zbDjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=udSb9xLINvOJhmnDoW1lxQUMbKH/f0qmzN5/l77ni3s=;
- b=ha9fyI82YGH909dbubsMyUH+f76K9QYLqjL/n7ag/5JQdCzjMUB7mLElRGBgl71LR0LXbElN6vF5mocLDaovUK5Eul+tXn2MDEf/Xk4gzKCtRQ8qP04akoXJXOK3sPGZBB3Kf0Pu/PZr4iqpWRql0MPclOs+G8lZQdEamEJ3ZyPhkfPpw0fioDq3nkhZLOZNOj3vZ341KOhWBQtZ3XhyJawzA8iPBnQKFdjM8ELiw28yk4ONqe87Fj9P1zEyUn867BBFSFmA0MeGSnxxSrFM7nVC/XR1Hedsw2QtWK6usICFvTyDsDJZRgjlW0bSFLxy3diiaAuQPjVRr17xp3RpvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=udSb9xLINvOJhmnDoW1lxQUMbKH/f0qmzN5/l77ni3s=;
- b=HQ2/sQrm1wOEhOmui1nGtin5GgyC1Kaa+3Pr4QmTSvks1rLKRR016tND3aG2mtyRwQ8qoK7VmSPYmLIoigRhFA2VGs/L7Mm+x/mCANJZTYrxq2O0cBaPAwhftXmARFgrKSnDzyUBfLCQOcUaMRG7tFzoAuVNTQUDzKmkzCP84eXp7UHoCErgqWZLMCI0hhX7/t9pukLdVFNalAVTgglcimuB3P8dq+g2+xS0xmMxtInoNyw6E9G6zNDRZEu0V5pgWoqHR+nj0FPzR8ceu6JGSeHjSgd1bWZDtRMEsOQGv14o9IS5qJjZt7s/3a9yYv6F9qeGVOdhH9O4nM/ajcMdJA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DB9PR04MB8122.eurprd04.prod.outlook.com (2603:10a6:10:25d::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Mon, 10 Feb
- 2025 19:42:31 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8422.012; Mon, 10 Feb 2025
- 19:42:30 +0000
-Date: Mon, 10 Feb 2025 14:42:17 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: j.ne@posteo.net
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
-	Scott Wood <oss@buserror.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v2 08/12] dt-bindings: spi: Convert Freescale SPI
- bindings to YAML
-Message-ID: <Z6pWmSGmyv9+bG+m@lizhi-Precision-Tower-5810>
-References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
- <20250207-ppcyaml-v2-8-8137b0c42526@posteo.net>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250207-ppcyaml-v2-8-8137b0c42526@posteo.net>
-X-ClientProxiedBy: SJ0PR03CA0145.namprd03.prod.outlook.com
- (2603:10b6:a03:33c::30) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cG3g2vHX"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250210194303epoutp01a6aba78c743e5e95c820a4b0eaca8dc7~i8ESNgJRB1099410994epoutp017
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:43:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250210194303epoutp01a6aba78c743e5e95c820a4b0eaca8dc7~i8ESNgJRB1099410994epoutp017
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1739216583;
+	bh=Qrsvwbm83TIa/72fQltxAnMshkLGTHgkRYY1/Dx1x1g=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=cG3g2vHXZeNr3vRTI7qPxp094UfOoioi7+9R5n65bPh6mt2WJELuuEnwDdU0iYgD0
+	 npUPkmq4w0hb8bddgWlOcMyJxJkoXIwrpaD8L4kzGMIrgUf6WmcLzit4j6CP2sAnGR
+	 p4+Q6bei/PLEUE7iIhG6ZncSbv28LbHWna8TL5XQ=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20250210194302epcas5p3e69da3238905af70a86a3e58b7ef2b49~i8ERiHxZl2476124761epcas5p3b;
+	Mon, 10 Feb 2025 19:43:02 +0000 (GMT)
+Received: from epcpadp2new (unknown [182.195.40.142]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4YsFNk45Txz4x9Pr; Mon, 10 Feb
+	2025 19:43:02 +0000 (GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250210131144epcas5p4a0599050f5973b495db0371021c21e27~i2un9NPY-0918109181epcas5p4D;
+	Mon, 10 Feb 2025 13:11:44 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250210131144epsmtrp2efd616cee279f5e2c67f7838543d9d5d~i2un4wzLi1237012370epsmtrp2G;
+	Mon, 10 Feb 2025 13:11:44 +0000 (GMT)
+X-AuditID: b6c32a52-1f7ff700000083ab-83-67a9fb10fe47
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	81.B4.33707.01BF9A76; Mon, 10 Feb 2025 22:11:44 +0900 (KST)
+Received: from INBRO002811.samsungds.net (unknown [107.122.5.126]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250210131141epsmtip2d289bc772427d32592ed474915e32c75~i2ulW1MWr0730507305epsmtip28;
+	Mon, 10 Feb 2025 13:11:41 +0000 (GMT)
+From: Selvarasu Ganesan <selvarasu.g@samsung.com>
+To: mathias.nyman@intel.com, gregkh@linuxfoundation.org,
+	WeitaoWang-oc@zhaoxin.com, Thinh.Nguyen@synopsys.com,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: jh0801.jung@samsung.com, dh10.jung@samsung.com, naushad@samsung.com,
+	akash.m5@samsung.com, h10.kim@samsung.com, eomji.oh@samsung.com,
+	alim.akhtar@samsung.com, thiagu.r@samsung.com, muhammed.ali@samsung.com,
+	pritam.sutar@samsung.com, cpgs@samsung.com, Selvarasu Ganesan
+	<selvarasu.g@samsung.com>, stable@vger.kernel.org
+Subject: [PATCH] usb: xhci: Initialize unassigned variables to fix possible
+ errors
+Date: Mon, 10 Feb 2025 18:41:23 +0530
+Message-ID: <1891546521.01739216582564.JavaMail.epsvc@epcpadp2new>
+X-Mailer: git-send-email 2.46.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB9PR04MB8122:EE_
-X-MS-Office365-Filtering-Correlation-Id: 65a69546-eaa1-474c-f470-08dd4a0b0e9a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|52116014|1800799024|376014|13003099007|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?iso-8859-1?Q?9yA0vf4Qa0c3AOl48u2ihjiJfevwHEIByngKmCvxiQ1pzOKUKb0FyA5I/V?=
- =?iso-8859-1?Q?tpAm8FDokHvqKB/mekrRZyAIkoqVVo4Hic5Tz9Oqqf1kkx1UnjNj5Iz+B6?=
- =?iso-8859-1?Q?nDD+N511H59Y2M95+1wj2TeDUuGLXQv9r5S229MYIaYGFAV0CpNJfORL1b?=
- =?iso-8859-1?Q?9imm5mcOmUSK9buQnhJ4Pshn6URtbnxnuw0UMz3zGzEfJh0mpkp7ZdyoRK?=
- =?iso-8859-1?Q?EpxiDUS0hYUiPtK5bd6sg4S8GbV22bJi352g7S2REvibn7m15vKAAgOa61?=
- =?iso-8859-1?Q?Aju+zIc7OVviiWl1hENrznxBsN+H+7mxNccihI59KMxBatqMUhB6vDDP9F?=
- =?iso-8859-1?Q?fkBsdqCxF7LPlhGOYETGixrHhljtEjBndF91Ny4SPr3rAegTU9eA5cIDdi?=
- =?iso-8859-1?Q?WRcIEFhhafsma3r2vJz5PSYvGMztXsdyqszttPFJJkTvwYgHy34R5RyWOy?=
- =?iso-8859-1?Q?K6xEU9riYFXSgK3CWBU24pCq8c2OB/sgq/PQjcS7z6yNuiqvU3wnU+idwh?=
- =?iso-8859-1?Q?tzcNykir2MFGSl/v86ta/L8W05lwJf76NkrYnslj/zmeWIZW8UTMuoZpqo?=
- =?iso-8859-1?Q?R8XFM3zx7gsQAZe3jVjwn1evmIz9eq9Y5lOcAKjzRt1xZ/Nk/0+UcdNrGv?=
- =?iso-8859-1?Q?Qk2EifeNUMVHsiYYH+yKw+3awyuQrEUsc8bz44Xd2eCywyi0IFi01OEAns?=
- =?iso-8859-1?Q?AHBeVIAyEBiYv1X2+5uXMtEY+lxKqxGfN4ZOVctcfAIYfG/aRqEciBsyww?=
- =?iso-8859-1?Q?JYDISdEcP5Dw4BUNqEm4Rf6W/85HVlPr/LMvn+MmGBiUJFRdEYPB2TgxFx?=
- =?iso-8859-1?Q?afrce0etvO3+f88bfeZnCvY/qPnZ5EBH1yJM9TcR/cnxzFwMNxyoMHVUA1?=
- =?iso-8859-1?Q?Rg69JQGA1MnKhnAGwUUB17Yv/2iDDr9KxBK3JtmPsBHFtCTfjWdm9zW4M0?=
- =?iso-8859-1?Q?nMEvxRUMLR8YaWr11cvCmqm7EoQyJj7QehYp/0bH8jG1zq7WZRXGn0rZrU?=
- =?iso-8859-1?Q?gOCHScyM38X7liRj8AoNgFLPQe/IeTrRokxTB6Uughm6iMyCRU59ZbDrK+?=
- =?iso-8859-1?Q?Wi3ig0OIyxM/eYBYQmq7fcwhg+I94lyPq+M225AyxQ0sOz1PRukF7g+aFG?=
- =?iso-8859-1?Q?RND4vf6dT6bfuX76l291wOrlt+qjlzPl+QOpy16zW3orTKZ9SrTOudrifM?=
- =?iso-8859-1?Q?lazpGCQ3wIdppxCICoxZo+lt9PJIjKkk2piFcxd7G/XlMQZRI6j7EuRVjb?=
- =?iso-8859-1?Q?0p5IqKz5GO2YoElW7IAR6rpZ5WiO9TGM+iftEbV9JsAzsA6kZ2QUtpbzLU?=
- =?iso-8859-1?Q?An+K4fs0OJF2qdReT5b1xwiGnbe3UINQmEGW//iRDHZTPRlf9rhsx4vQKf?=
- =?iso-8859-1?Q?mrv3sgYRZ5+Hay7LMZvizDt5cs23R6mUQuuPbtfx7TTV5zyqPBCzcXdY/a?=
- =?iso-8859-1?Q?0sdosl+7y4t8ILTB?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(52116014)(1800799024)(376014)(13003099007)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?KLJ98DmBZgXzoZK+Bh5Dp793Ualmc6JP7pmNoT5zTDeMmqqwBAhyUSPaf4?=
- =?iso-8859-1?Q?XeC7NfoCuaMjBc2x5F/DjRjC/eH2+fwSQ1iD8jyhzN0/+dGCk26LSwf6eC?=
- =?iso-8859-1?Q?po8n6vHyBtUzdvhLke1avxxaSAto7R3D7EanhgK3TmOZlsCxcH/VZItbup?=
- =?iso-8859-1?Q?eilUHyoYfTxqwUZssKSTCq7fNhFgV1xA7rzVEXepY3spjJKpgeFKdNDWVg?=
- =?iso-8859-1?Q?FBqq59TzHvWqSEPa7rBkfTeXVwzXkg4pgQm/g4mzcQ+fOt+rZB//HslPsa?=
- =?iso-8859-1?Q?mEri+fkicKi84th4zy8ZdWoDGMkJhlivmila5XlVmXxncsxA2NOzQgLd/a?=
- =?iso-8859-1?Q?7TCgVOl+BY4hHNub5BjpoBO67x8jaFtcpU/HhcsF3uRZu1o63xS7HIxHek?=
- =?iso-8859-1?Q?qYnlvnwuRlYzbI9NHTGYivztPbadO8+NJTsVoaOWkiFXPdswwZblr4GMpd?=
- =?iso-8859-1?Q?S3kabct7aF3k62HAQKLnmRIndhvMP4GvG1B4K/DuR4A7pdbmpTdsqnrTFp?=
- =?iso-8859-1?Q?eM4bkWm7OPq2wDYNFfEYRb/xuV/O7AIaZ+aQs/Ek4tw/x8adZtPGAlEUzM?=
- =?iso-8859-1?Q?cavI1p2i7Y98D7D+KmXYniEyBhVV973d0Vz04w2HVr5GlE+ueiZzEPolPW?=
- =?iso-8859-1?Q?CnOTcQwsl53bQGEJOYYXicwrqeoNWgExKFxQczMEJYolM/UKwJWcvWSfin?=
- =?iso-8859-1?Q?fRMb1wEsiCpS0tCcL3hSsrMUTQSQ8h702JoHGLsWr2idKObAauWp3Hog07?=
- =?iso-8859-1?Q?ISCu4r12R0M6/k2KByHtv6MgcklFKFghg+nkajrc0OOqiYLAUcUqnHJcym?=
- =?iso-8859-1?Q?5DcQsCa5twej3ymjYWKhQhqoc8OES/xnPHBbUefQYEn8euuj4jdB1ykVw1?=
- =?iso-8859-1?Q?sm7A75rVgWySpwixUzGbJZ0nQ9EJtWeuNb17DAIv13/NkZQO8C6MJDOUKa?=
- =?iso-8859-1?Q?BVibvx0Xb/ADeg/SBcntbF8bX9PB4hM4BS+l6GU8bhpOti8HQlMvQ+H0WS?=
- =?iso-8859-1?Q?f0kSqgtOscYEweHsrp+iGhxMbkPA0tBZ5yL+1sWBgvFiQqy/fD7zYebv9f?=
- =?iso-8859-1?Q?gy0qMs33ed6gWY6Afd46IbWCVkMgc9jqMqEyJ+q9o1alWRoFNb79x6iA/p?=
- =?iso-8859-1?Q?PDKwfIITfYNV4r+G+9uFY1rZc7IF9ZVh19upPElSIeTFf49u2rjQzELIB4?=
- =?iso-8859-1?Q?Ko9GEb3tDF1ebzvgb5qlknVK9okOHM898sNnZaMiuQEn6qDM1G5sCo8iuN?=
- =?iso-8859-1?Q?zCZzkFSOu8i7P3byms4l0qL4yc+pJHNhBBJ9gwRqOsnxhTa6D9f6CCoe9P?=
- =?iso-8859-1?Q?mCeqzBqSq5NTuYQv6970djrn4jzfhWOvIIgDDgNBIFCxJpt6/YbRT4NlUj?=
- =?iso-8859-1?Q?/gxbso3UWGT4K0Nd65zo81611MNe9uRJzKA6TB88xNU4emH+1ReK1bElEU?=
- =?iso-8859-1?Q?iBdBVhDOtC+PLv51rVhv90nYeNG26MY+esR1S4vstdUaagf4Y4QUPwyH5w?=
- =?iso-8859-1?Q?E882GKThg1uWRDyRCeR5anSrrRRS3cxBvvYDappEKlrbGSuFLnscbwO+M2?=
- =?iso-8859-1?Q?faOQGhSNm1ZxdFHyjWzfs5Tau+zyqg2tSqxr/VwJIOChtGZ3afuRX8drbz?=
- =?iso-8859-1?Q?1X3o94NdRsBDTomVj/VHKCfGWIsZnav3wj?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65a69546-eaa1-474c-f470-08dd4a0b0e9a
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 19:42:30.9048
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qclN3jmrPcOO+vHarLyblmCzb7LhmIovYLe/KHkANJGyAbiSRjkZC0nf9f2poJCOpK1Euyj70COZBVVWWl4Hdw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8122
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDLMWRmVeSWpSXmKPExsWy7bCSvK7A75XpBusuyli8ubqK1eLBvG1s
+	Fi8PaVrcWTCNyeLU8oVMFs2L17NZ/L19kdXi7sMfLBaXd81hs1i0rJXZonnTFFaL8y+6WC0+
+	Hf3PavHs3go2iyPLPzJZLNj4iNFiRTNQyaoFB9gtHv2cy+Qg7LF4z0smj/1z17B79G1Zxeix
+	Zf9nRo/Pm+Q8ft26xRLAFsVlk5Kak1mWWqRvl8CV0bNwIXvBdN6K5avmsTUwzuPuYuTkkBAw
+	kXjbt52xi5GLQ0hgO6PEkcc7WSAS0hKvZ3UxQtjCEiv/PWeHKPrKKHH36HSgIg4ONgFDiWcn
+	bEDiIgIbGCWunpnNCuIwC9xikjj49wMzSLewQJDE1Sdr2UFsFgFVicM7VoBt4BWwkrj24BAT
+	xAZNibV79zBBxAUlTs58AlbDLCAv0bx1NvMERr5ZSFKzkKQWMDKtYhRNLSjOTc9NLjDUK07M
+	LS7NS9dLzs/dxAiOEK2gHYzL1v/VO8TIxMF4iFGCg1lJhNdk4Yp0Id6UxMqq1KL8+KLSnNTi
+	Q4zSHCxK4rzKOZ0pQgLpiSWp2ampBalFMFkmDk6pBib13qfhsvzJDyerf8zfw2Dl6MV8aukm
+	O+HG4gmrtzNZZVtsdPJ++4Dtq9Cdy4GLz/qz8GhfjHRlbgjkFm+ZHFYanrFauifl5KqanRun
+	bFqlFRb/6FXeejFehfgELa72VYHVy7/eSH3ZaBGc4jnhb07hr6d56rN5TfdtPrOg9pfHtdSJ
+	X/QsU78z1ZdK/8s7/s7J8OlaxRtBM0IcelKeF39ri3t/aDP/pvkR4rvji25fenvQXODCqQuT
+	1YQt9JPf/Dxo/fjWbOZHV2en686O5FFqaHs51TRkQa5kT9yc29pce1Z6rWctPGAf66S8KU2G
+	ayp7tu/NJ7m7l/+T/nv0vAc/1xWNPz8y14j1ywhkbVBiKc5INNRiLipOBABUBjE1/wIAAA==
+X-CMS-MailID: 20250210131144epcas5p4a0599050f5973b495db0371021c21e27
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20250210131144epcas5p4a0599050f5973b495db0371021c21e27
+References: <CGME20250210131144epcas5p4a0599050f5973b495db0371021c21e27@epcas5p4.samsung.com>
 
-On Fri, Feb 07, 2025 at 10:30:25PM +0100, J. Neuschäfer via B4 Relay wrote:
-> From: "J. Neuschäfer" <j.ne@posteo.net>
->
-> fsl-spi.txt contains the bindings for the fsl,spi and fsl,espi
-> contollers. Convert them to YAML.
->
-> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> ---
->
-> V2:
-> - add missing end-of-document ("...") markers
-> - add missing constraints to interrupts, fsl,espi-num-chipselects,
->   fsl,csbef and fsl,csaft properties
-> - remove unnecessary type from clock-frequency property
-> - fix property order to comply with dts coding style
-> ---
->  .../devicetree/bindings/spi/fsl,espi.yaml          | 64 +++++++++++++++++++
->  Documentation/devicetree/bindings/spi/fsl,spi.yaml | 73 ++++++++++++++++++++++
->  Documentation/devicetree/bindings/spi/fsl-spi.txt  | 62 ------------------
->  3 files changed, 137 insertions(+), 62 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/spi/fsl,espi.yaml b/Documentation/devicetree/bindings/spi/fsl,espi.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..c504b7957dde39086ef7d7a7550d6169cf5ec407
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/fsl,espi.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/spi/fsl,espi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale eSPI (Enhanced Serial Peripheral Interface) controller
-> +
-> +maintainers:
-> +  - J. Neuschäfer <j.ne@posteo.net>
-> +
-> +properties:
-> +  compatible:
-> +    const: fsl,mpc8536-espi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  fsl,espi-num-chipselects:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    enum: [ 1, 4 ]
-> +    description: The number of the chipselect signals.
-> +
-> +  fsl,csbef:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 0
-> +    maximum: 15
-> +    description: Chip select assertion time in bits before frame starts
-> +
-> +  fsl,csaft:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 0
-> +    maximum: 15
-> +    description: Chip select negation time in bits after frame ends
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - fsl,espi-num-chipselects
-> +
-> +allOf:
-> +  - $ref: spi-controller.yaml#
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    spi@110000 {
-> +        compatible = "fsl,mpc8536-espi";
-> +        reg = <0x110000 0x1000>;
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        interrupts = <53 0x2>;
+Fix the following smatch errors:
 
-Use predefine's irq type macro.
+drivers/usb/host/xhci-mem.c:2060 xhci_add_in_port() error: unassigned variable 'tmp_minor_revision'
+drivers/usb/host/xhci-hub.c:71 xhci_create_usb3x_bos_desc() error: unassigned variable 'bcdUSB'
 
-> +        interrupt-parent = <&mpic>;
-> +        fsl,espi-num-chipselects = <4>;
-> +        fsl,csbef = <1>;
-> +        fsl,csaft = <1>;
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/spi/fsl,spi.yaml b/Documentation/devicetree/bindings/spi/fsl,spi.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..db65c0560c32f32324a2aaaf53c0044a4b56f3d9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/fsl,spi.yaml
-> @@ -0,0 +1,73 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/spi/fsl,spi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale SPI (Serial Peripheral Interface) controller
-> +
-> +maintainers:
-> +  - J. Neuschäfer <j.ne@posteo.net>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - fsl,spi
-> +      - aeroflexgaisler,spictrl
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  cell-index:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      QE SPI subblock index.
-> +      0: QE subblock SPI1
-> +      1: QE subblock SPI2
-> +
-> +  mode:
-> +    description: SPI operation mode
-> +    enum:
-> +      - cpu
-> +      - cpu-qe
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clock-frequency:
-> +    description: input clock frequency to non FSL_SOC cores
-> +
-> +  cs-gpios: true
-> +
-> +  fsl,spisel_boot:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      For the MPC8306 and MPC8309, specifies that the SPISEL_BOOT signal is used
-> +      as chip select for a slave device. Use reg = <number of gpios> in the
-> +      corresponding child node, i.e. 0 if the cs-gpios property is not present.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - mode
-> +  - interrupts
-> +
-> +allOf:
-> +  - $ref: spi-controller.yaml#
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    spi@4c0 {
-> +        compatible = "fsl,spi";
-> +        reg = <0x4c0 0x40>;
-> +        cell-index = <0>;
-> +        interrupts = <82 0>;
-> +        interrupt-parent = <&intc>;
-> +        mode = "cpu";
-> +        cs-gpios = <&gpio 18 1          // device reg=<0>
-> +                    &gpio 19 1>;        // device reg=<1>
+Fixes: d9b0328d0b8b ("xhci: Show ZHAOXIN xHCI root hub speed correctly")
+Fixes: eb02aaf21f29 ("usb: xhci: Rewrite xhci_create_usb3_bos_desc()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Selvarasu Ganesan <selvarasu.g@samsung.com>
+---
+ drivers/usb/host/xhci-hub.c | 2 +-
+ drivers/usb/host/xhci-mem.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+index 9693464c0520..5715a8bdda7f 100644
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -39,7 +39,7 @@ static int xhci_create_usb3x_bos_desc(struct xhci_hcd *xhci, char *buf,
+ 	struct usb_ss_cap_descriptor	*ss_cap;
+ 	struct usb_ssp_cap_descriptor	*ssp_cap;
+ 	struct xhci_port_cap		*port_cap = NULL;
+-	u16				bcdUSB;
++	u16				bcdUSB = 0;
+ 	u32				reg;
+ 	u32				min_rate = 0;
+ 	u8				min_ssid;
+diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+index 92703efda1f7..8665893df894 100644
+--- a/drivers/usb/host/xhci-mem.c
++++ b/drivers/usb/host/xhci-mem.c
+@@ -1980,7 +1980,7 @@ static void xhci_add_in_port(struct xhci_hcd *xhci, unsigned int num_ports,
+ {
+ 	u32 temp, port_offset, port_count;
+ 	int i;
+-	u8 major_revision, minor_revision, tmp_minor_revision;
++	u8 major_revision, minor_revision, tmp_minor_revision = 0;
+ 	struct xhci_hub *rhub;
+ 	struct device *dev = xhci_to_hcd(xhci)->self.sysdev;
+ 	struct xhci_port_cap *port_cap;
+-- 
+2.17.1
 
 
-use predefine gpio level macro
-
-Frank
-
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/spi/fsl-spi.txt b/Documentation/devicetree/bindings/spi/fsl-spi.txt
-> deleted file mode 100644
-> index 0654380eb7515d8bda80eea1486e77b939ac38d8..0000000000000000000000000000000000000000
-> --- a/Documentation/devicetree/bindings/spi/fsl-spi.txt
-> +++ /dev/null
-> @@ -1,62 +0,0 @@
-> -* SPI (Serial Peripheral Interface)
-> -
-> -Required properties:
-> -- cell-index : QE SPI subblock index.
-> -		0: QE subblock SPI1
-> -		1: QE subblock SPI2
-> -- compatible : should be "fsl,spi" or "aeroflexgaisler,spictrl".
-> -- mode : the SPI operation mode, it can be "cpu" or "cpu-qe".
-> -- reg : Offset and length of the register set for the device
-> -- interrupts : <a b> where a is the interrupt number and b is a
-> -  field that represents an encoding of the sense and level
-> -  information for the interrupt.  This should be encoded based on
-> -  the information in section 2) depending on the type of interrupt
-> -  controller you have.
-> -- clock-frequency : input clock frequency to non FSL_SOC cores
-> -
-> -Optional properties:
-> -- cs-gpios : specifies the gpio pins to be used for chipselects.
-> -  The gpios will be referred to as reg = <index> in the SPI child nodes.
-> -  If unspecified, a single SPI device without a chip select can be used.
-> -- fsl,spisel_boot : for the MPC8306 and MPC8309, specifies that the
-> -  SPISEL_BOOT signal is used as chip select for a slave device. Use
-> -  reg = <number of gpios> in the corresponding child node, i.e. 0 if
-> -  the cs-gpios property is not present.
-> -
-> -Example:
-> -	spi@4c0 {
-> -		cell-index = <0>;
-> -		compatible = "fsl,spi";
-> -		reg = <4c0 40>;
-> -		interrupts = <82 0>;
-> -		interrupt-parent = <700>;
-> -		mode = "cpu";
-> -		cs-gpios = <&gpio 18 1		// device reg=<0>
-> -			    &gpio 19 1>;	// device reg=<1>
-> -	};
-> -
-> -
-> -* eSPI (Enhanced Serial Peripheral Interface)
-> -
-> -Required properties:
-> -- compatible : should be "fsl,mpc8536-espi".
-> -- reg : Offset and length of the register set for the device.
-> -- interrupts : should contain eSPI interrupt, the device has one interrupt.
-> -- fsl,espi-num-chipselects : the number of the chipselect signals.
-> -
-> -Optional properties:
-> -- fsl,csbef: chip select assertion time in bits before frame starts
-> -- fsl,csaft: chip select negation time in bits after frame ends
-> -
-> -Example:
-> -	spi@110000 {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -		compatible = "fsl,mpc8536-espi";
-> -		reg = <0x110000 0x1000>;
-> -		interrupts = <53 0x2>;
-> -		interrupt-parent = <&mpic>;
-> -		fsl,espi-num-chipselects = <4>;
-> -		fsl,csbef = <1>;
-> -		fsl,csaft = <1>;
-> -	};
->
-> --
-> 2.48.0.rc1.219.gb6b6757d772
->
->
