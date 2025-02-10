@@ -1,93 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FCD25A35F
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:28:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91EFE25A35F;
+	Mon, 10 Feb 2025 23:29:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739230139; cv=none; b=uCDfvOWej/80jcA0MsTQ8lezS9p0BEFVue2APD33UZI5p7fX1v9Cr78DByv9BoAk6ETsnUJPWPeK0sy9ImsxxUyrRdS7b8kaqg0WyjSWEZtPOScOU4ek/0Y5lPe9Kk5YACQ5LXG/N3pZjI3l9dyG78S3Yuvq+WYdtuI6vg4bLSQ=
+	t=1739230186; cv=none; b=sC0oFh8TU8wtj4UgKLBR8GnWi1feG79sj15ah9mbvcaiz2+Qm/kQC6oBMGSTa3CF9HzgLbXUNmOq9kmTu0562/PLQ8cMLyWUxhGVIkaFiC1pYeoM/BpBnbEBvifvzLX5Sr9khxJNglvLHesH5JOzu9B2K71wnSGSJ2EHdJh7W0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739230139; c=relaxed/simple;
-	bh=VWwKenO3pHoeNahD4JXaMTHRRxYv4FgRe0zy5LWl2TI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Hg99DgHXX5SB3Rtx//PICgcrLUFqU9nSDDCYwz5TIyeALdEjbfAdDKYEscABDwmOs+7kqtIakYxoyy9H8U3BS2+tsLFsdUyFx1oUdl76OWIivgFavCsq1hWt3aK6kBUmDGv0nEga7tiZTU43ob2+nKi8OE3DTkgLZAFxEz43ErM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=U6FpgS1h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739230186; c=relaxed/simple;
+	bh=UfArX+5faIlbV37jzYrR6suEime03V/svivPcDFy+jo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=AR3zqh3q0iH6kYkTtEZwh8Z/MysHObDpQrB/Ui+FN1g+83apWVhj+7B4ZjIAmmCB+nDPkd1G1xC+IDmf+VlgpeCdaHSGT/nfIiyqbnVmLDXE8Jd0eNjfmEk+Jl+NroiKFK518BVfKRxfcU2uQ81Ra+YihsRtokiNz5FGQWp7uew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F4fn23Go; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="U6FpgS1h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABB34C4CED1;
-	Mon, 10 Feb 2025 23:28:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1739230139;
-	bh=VWwKenO3pHoeNahD4JXaMTHRRxYv4FgRe0zy5LWl2TI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=U6FpgS1h8JWx6/e7lpOWx0bk4AAxwgyk5CQXyRU/412J5S2J9cMfDWBmNjqMAd3CH
-	 /LuxvmXfFZNsX0dp2Bc5+WXjD0pJ5zCHBZgCDJtN2fESjTIFb9Z0GevkysNM8dUany
-	 wH0Sza9cbH4H7Km7VsEjwA5q8nA5VptULEK6V/Fw=
-Date: Mon, 10 Feb 2025 15:28:58 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Frank van der Linden <fvdl@google.com>
-Cc: Oscar Salvador <osalvador@suse.de>, muchun.song@linux.dev,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, yuzhao@google.com,
- usamaarif642@gmail.com, joao.m.martins@oracle.com, roman.gushchin@linux.dev
-Subject: Re: [PATCH v3 00/28] hugetlb/CMA improvements for large systems
-Message-Id: <20250210152858.58e6ac26b9cd6e2a36aaac8f@linux-foundation.org>
-In-Reply-To: <CAPTztWYD09A5rJBPNtjDa07uMswxFHutYGwBR54ByfMchd6YKA@mail.gmail.com>
-References: <20250206185109.1210657-1-fvdl@google.com>
-	<Z6pH_9X-kFhwPz2-@localhost.localdomain>
-	<CAPTztWYD09A5rJBPNtjDa07uMswxFHutYGwBR54ByfMchd6YKA@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F4fn23Go"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 05EECC4CED1;
+	Mon, 10 Feb 2025 23:29:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739230186;
+	bh=UfArX+5faIlbV37jzYrR6suEime03V/svivPcDFy+jo=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=F4fn23GoGyTE2LUhbZLGHrqejOeNg0jDDo3cM5/ReioQrnh8U19ebI39YRSOijvid
+	 Bjc6dXLoc7aOY7Ka3kkeO8FxdWr7Dvc+xqa7+KHRYcIk5Rt9aFTlqQbIzQJ9G4ktBJ
+	 4HK2DrjlQW3is+Uw7oAXDTPoa8khtqimVrNFbZlO59S0Cm7TRIYclsXTdsC+FUA9bW
+	 E2sW1gpH6gOed3kkIWtAtclDqZgiazRfih/EXRELVh3bW4K/jxWWZELt7gG+9s6bQH
+	 hY/rCkNDqXp69gDJMYUgjWBCMv6408LsLpj5SN8XtLGXmiR9wUNWAuWf9AhY74uL2q
+	 8JTQcX5ZyVOCA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8040C02198;
+	Mon, 10 Feb 2025 23:29:45 +0000 (UTC)
+From: Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org>
+Date: Mon, 10 Feb 2025 17:29:11 -0600
+Subject: [PATCH] dmaengine: Remove device_prep_dma_imm_data from struct
+ dma_device
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250210-dmaengine-drop-imm-data-v1-1-e017766da2fa@amd.com>
+X-B4-Tracking: v=1; b=H4sIAMaLqmcC/x3MSwqEMBBF0a1IjbsgBsXPVqQHhXnRGiRKItIQ3
+ HsHh2dwb6GMpMg0N4USbs16xIr209C6S9zA6qrJGtsb2xp2QRA3jWCXjpM1BHZyCftBRgzd5Fd
+ 4qvWZ4PX3npfv8/wBAttvX2kAAAA=
+X-Change-ID: 20250210-dmaengine-drop-imm-data-f7a8e749fcef
+To: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Nathan Lynch <nathan.lynch@amd.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739230184; l=1774;
+ i=nathan.lynch@amd.com; s=20241010; h=from:subject:message-id;
+ bh=sXjE4x9Dbe9KQkwP5XNR830aZAR+1CIxnoSjbiiaAbk=;
+ b=XxCcMUYHxv5qITDImcQuJbWFVgkGchmfqg8g+UnTZ+n01bHul4r3+72ROxnXuy50Y+PFTsq2g
+ xhgZBPLLoMLA2zs83eJsaGaNy9ssNCyPOEhUMpgnv7mRGiXHVP+zG/d
+X-Developer-Key: i=nathan.lynch@amd.com; a=ed25519;
+ pk=ZR637UTGg5YLDj56cxFeHdYoUjPMMFbcijfOkAmAnbc=
+X-Endpoint-Received: by B4 Relay for nathan.lynch@amd.com/20241010 with
+ auth_id=241
+X-Original-From: Nathan Lynch <nathan.lynch@amd.com>
+Reply-To: nathan.lynch@amd.com
 
-On Mon, 10 Feb 2025 10:56:50 -0800 Frank van der Linden <fvdl@google.com> wrote:
+From: Nathan Lynch <nathan.lynch@amd.com>
 
-> > Hi Frank,
-> >
-> > While I plan to keep reviewing the series, I think it would make sense
-> > to split this patchset into two smaller ones.
-> > The way I see it, we are trying to deal with two different problems and their
-> > solutions.
-> >
-> > 1) pre-hvo at boot time
-> > 2) multi-range support of CMA (only used for hugetlb)
-> >
-> > I did not go through the entire patchset yet, so I ignore whether the
-> > respective patches to tackle these two problems are really dependent on
-> > each other, but I think that would be very interesting to consider a
-> > patchset per solution if that is not the case.
-> >
-> > IMHO, it would ease review quite a lot.
-> 
-> Hi Oskar,
-> 
-> Thanks a lot for reviewing this series.
-> 
-> I certainly could split it up, but here are the dependencies (it's
-> actually 3 parts):
-> 
-> 1. Multi-range CMA (used by hugetlb) (patches 1-4)
-> 2. Pre-HVO for hugetlb bootmem pages (patches 5-22)
-> 3. Enable hugepages= (and pre-HVO) for CMA (patches 23-28)
-> 
-> 1 and 2 are independent. 3 depends on 1 and 2.
-> 
-> So, I could post 1) and 2) simultaneously, and 3) would have to wait
-> until 1) and 2) are resolved.
-> 
-> Andrew, do you have any thoughts on splitting it up?
+The device_prep_dma_imm_data() method isn't implemented or invoked by
+any code since commit 80ade22c06ca ("misc: mic: remove the MIC drivers").
 
-I don't see much trouble with the above dependencies - we can consider
-the three series to be an all-or-nothing thing.
+Remove it, shrinking struct dma_device by a few bytes.
 
-Such a splitup would be the same patches, packaged slightly
-differently.  The main difference would be the presence of two more
-[0/n] cover letters, presumably also repackaging existing material.  I
-don't see a lot of benefit personally.
+Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
+---
+ include/linux/dmaengine.h | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index a360e0330436470bfea17f8df567ff785e4293ea..bb146c5ac3e4ccd7bc0afbf3b28e5b3d659ad62f 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -839,7 +839,6 @@ struct dma_filter {
+  *	The function takes a buffer of size buf_len. The callback function will
+  *	be called after period_len bytes have been transferred.
+  * @device_prep_interleaved_dma: Transfer expression in a generic way.
+- * @device_prep_dma_imm_data: DMA's 8 byte immediate data to the dst address
+  * @device_caps: May be used to override the generic DMA slave capabilities
+  *	with per-channel specific ones
+  * @device_config: Pushes a new configuration to a channel, return 0 or an error
+@@ -942,9 +941,6 @@ struct dma_device {
+ 	struct dma_async_tx_descriptor *(*device_prep_interleaved_dma)(
+ 		struct dma_chan *chan, struct dma_interleaved_template *xt,
+ 		unsigned long flags);
+-	struct dma_async_tx_descriptor *(*device_prep_dma_imm_data)(
+-		struct dma_chan *chan, dma_addr_t dst, u64 data,
+-		unsigned long flags);
+ 
+ 	void (*device_caps)(struct dma_chan *chan, struct dma_slave_caps *caps);
+ 	int (*device_config)(struct dma_chan *chan, struct dma_slave_config *config);
+
+---
+base-commit: 2c17e9ea0caa5555e31e154fa1b06260b816f5cc
+change-id: 20250210-dmaengine-drop-imm-data-f7a8e749fcef
+
+Best regards,
+-- 
+Nathan Lynch <nathan.lynch@amd.com>
 
 
