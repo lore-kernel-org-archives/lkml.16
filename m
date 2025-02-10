@@ -1,144 +1,149 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2E01E4A9;
-	Mon, 10 Feb 2025 08:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D101E4A9;
+	Mon, 10 Feb 2025 08:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739177175; cv=none; b=uNSPBC4kFjolFs9Znr9q3/yyrDqwd55WF4TE6h4VWCaUhQ6Hg2+DAB5WY6oK27akYsLjXrMEjdRSJI+2aJMb/hLYc10Q6tQWjOZXhTlaX2RNgFu8v0FX7YDvjbce217eosSWif97OLUJRQX0giwgpm8b+/TVMLmb3/KerCyJWrk=
+	t=1739177210; cv=none; b=gygXXzwTuelM8RWuuRhdHAYlAT61wm95qDnm/aFa4MZObaHL9m0v9hX6yU1Im+Nd/vCV92aIXHGckvZgXmLOrKC1nwsiGyQJ7yQTNiNS+dT7TziXL3POrsz8VohsTmhMps7L/bDRm9o8YVxyFgkgfv1W+geGF1Pj8roOXV7FzM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739177175; c=relaxed/simple;
-	bh=OsxMLLL2e2nkzcp3cDzzrbdfM0BoGFove7FXH5xh0kk=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EdYA+LxzhktHiKjGsFH7rCOxC3crCNObdKxj3uBfWj6/kqO9yu9x3J9UZd2x/Ra8y1larnxOeg41v5CPmVjziHlhTNP6v94PzNYkgjuN7WYS3l4afTsQLCkHcykI6WVp5b70Ja/0eaanpifdETwcMAI3PkErd6D5jWuJsG5W2Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Uw6Q2oI0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3D0aO8wV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Uw6Q2oI0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3D0aO8wV; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1739177210; c=relaxed/simple;
+	bh=/4kXHEmarSCX8A4NDBDloe4JNvYwH+zdYaV0aMf986U=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=G3FiEUgEZdiSZa+M32GLt5LVQHdcHTFJ2Br/JVerDcW3DE751zMu2Q5Y8ci+ozZ60M7j46Rtlw/fuSdFWYlTQYxFMPQj/G+saNFXJhpyI8dHVQ25Baw2Ha6iX85WSUnATEAmILY+ar7e4VkAv2XbE3poAdQJHaBXVSBRksMhZ4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=FT191uYw; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Uw6Q2oI0";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3D0aO8wV";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Uw6Q2oI0";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3D0aO8wV"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4CAAF1F37E;
-	Mon, 10 Feb 2025 08:46:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739177172; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wAPVEaffpGCm08tYC2XioZUvJ5qz4xbHnYO8+6yPhvE=;
-	b=Uw6Q2oI03xPOuZCtAxDcVyRjZouzqz6t74LVvxd41Ut9WQIqHLHg+lcMA3GQV2zRUkVl1G
-	zS0zKULHvDmnlhEhcc+J1d5in7xqYIS6ZPX7W4WG7CG87z4edh/JDaGWx/2eClRcfjPL35
-	MMiZJDXV4Dqk8zIkQ4ZZ6kVRqv/JL6w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739177172;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wAPVEaffpGCm08tYC2XioZUvJ5qz4xbHnYO8+6yPhvE=;
-	b=3D0aO8wVyoTbcZguVTWoxSpHzlqVUmZpynSkK+mGQ81yn7kEuO2AC7PsVHeHjVUrmRKpZk
-	yejS/EsX7CBNXgAA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739177172; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wAPVEaffpGCm08tYC2XioZUvJ5qz4xbHnYO8+6yPhvE=;
-	b=Uw6Q2oI03xPOuZCtAxDcVyRjZouzqz6t74LVvxd41Ut9WQIqHLHg+lcMA3GQV2zRUkVl1G
-	zS0zKULHvDmnlhEhcc+J1d5in7xqYIS6ZPX7W4WG7CG87z4edh/JDaGWx/2eClRcfjPL35
-	MMiZJDXV4Dqk8zIkQ4ZZ6kVRqv/JL6w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739177172;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wAPVEaffpGCm08tYC2XioZUvJ5qz4xbHnYO8+6yPhvE=;
-	b=3D0aO8wVyoTbcZguVTWoxSpHzlqVUmZpynSkK+mGQ81yn7kEuO2AC7PsVHeHjVUrmRKpZk
-	yejS/EsX7CBNXgAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 01EE913707;
-	Mon, 10 Feb 2025 08:46:11 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id wP/IOtO8qWdJKAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 10 Feb 2025 08:46:11 +0000
-Date: Mon, 10 Feb 2025 09:46:11 +0100
-Message-ID: <87frkmuqzw.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Maxim Mikityanskiy <maxtram95@gmail.com>
-Cc: Takashi Iwai <tiwai@suse.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	WangYuli <wangyuli@uniontech.com>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] Fix Optimus when GPU has no sound
-In-Reply-To: <20250208214602.39607-1-maxtram95@gmail.com>
-References: <20250208214602.39607-1-maxtram95@gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="FT191uYw"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Score: -3.30
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[suse.com,perex.cz,linux.intel.com,linux.dev,gmail.com,uniontech.com,vger.kernel.org];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
-X-Spam-Flag: NO
-X-Spam-Level: 
+MIME-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1739177206;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EbyDrglM88cnERsnPEsC1uH+yICet62b/Os+Sq28aDU=;
+	b=FT191uYwP/KCBqbxtSSCbsvFflWDIl/xKGmFRAFMLP6eu/VzM1JmnOQ12dNaONnmdu1i6C
+	Nqeqz6ASOXJzGJM+UHPA7GbsC7PUZwC5glC+28iIV1fdmpYH5rAqklBDM9l7dbPya125oD
+	Te+G1MfM7Fpsuv7AJco/Ow/jSwnsCMyHFOWeXeUVLh7JUa0dQqqfwBXqmsFhDiRXDSeI4M
+	LnRtQGV+R876whudS0qA37NElNcG3QeMgnhqr719kysGvj85XGRKc2Vvnot0cjhMTTjtuf
+	dG4ahi7DroA2teM7OGL/4275B4d390K0fJwls/6BmtY+VzeufXJ9aH97c8SvOQ==
+Date: Mon, 10 Feb 2025 09:46:46 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Quentin Schulz <foss+kernel@0leil.net>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Jagan
+ Teki <jagan@edgeble.ai>, Niklas Cassel <cassel@kernel.org>, Michael Riesch
+ <michael.riesch@wolfvision.net>, Jonas Karlman <jonas@kwiboo.se>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Quentin
+ Schulz <quentin.schulz@cherry.de>
+Subject: Re: [PATCH v5 1/4] arm64: dts: rockchip: add overlay test for
+ WolfVision PF5
+In-Reply-To: <20250207-pre-ict-jaguar-v5-1-a70819ea0692@cherry.de>
+References: <20250207-pre-ict-jaguar-v5-0-a70819ea0692@cherry.de>
+ <20250207-pre-ict-jaguar-v5-1-a70819ea0692@cherry.de>
+Message-ID: <ef9133d217bc35f611ef390da8042510@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On Sat, 08 Feb 2025 22:46:00 +0100,
-Maxim Mikityanskiy wrote:
+Hello Quentin,
+
+Please see a few comments below.
+
+On 2025-02-07 16:19, Quentin Schulz wrote:
+> From: Quentin Schulz <quentin.schulz@cherry.de>
 > 
-> See the commit descriptions.
+> The WolfVision PF5 can have a PF5 Visualizer display and PF5 IO 
+> Expander
+> board connected to it. Therefore, let's generate an overlay test so the
+> application of the two overlays are validated against the base DTB.
 > 
-> As agreed in the previous discussion [1], this series adds the
-> non-functional NVIDIA HDA controller on Lenovo IdeaPad Z570 to the
-> denylist, and includes the runtime PM workaround from v1, which now
-> prints a warning to dmesg asking the user to add the device to the
-> denylist if it's affected and not already there.
+> Suggested-by: Michael Riesch <michael.riesch@wolfvision.net>
+> Reviewed-by: Michael Riesch <michael.riesch@wolfvision.net>
+> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
 > 
-> [1]: https://lore.kernel.org/linux-sound/877catiffo.wl-tiwai@suse.de/
+> ---
+>  arch/arm64/boot/dts/rockchip/Makefile | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
 > 
-> Maxim Mikityanskiy (2):
->   ALSA: hda: intel: Fix Optimus when GPU has no sound
->   ALSA: hda: intel: Add Lenovo IdeaPad Z570 to probe denylist
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile
+> b/arch/arm64/boot/dts/rockchip/Makefile
+> index
+> def1222c1907eb16b23cff6d540174a4e897abc9..534e70a649eeada7f9b6f12596b83f5c47b184b4
+> 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -170,3 +170,25 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += 
+> rk3588s-orangepi-5.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-orangepi-5b.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-rock-5a.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-rock-5c.dtb
+> +
+> +# Overlay application tests
+> +#
+> +# A .dtbo must have its own
+> +#
+> +#  dtb-$(CONFIG_ARCH_ROCKCHIP) += <overlay>.dtbo
+> +#
+> +# entry, and at least one overlay application test - ideally 
+> reflecting how it
+> +# will be used in real life -:
 
-Applied both patches to for-next branch now.
+Hmm, what's "-:" actually doing in the line right above?  I mean,
+it's a minor nitpick, so might be worth addressing only if there
+will be the v6...  Also, "test - ideally" might be replaced by
+"test, ideally", because splicing sentences together using em/en
+dashes is generally frowned upon. :)
 
+> +#
+> +#  dtb-$(CONFIG_ARCH_ROCKCHIP) += <name of overlay application 
+> test>.dtb
+> +#  <name of overlay application test>-dtbs := <base>.dtb
+> <overlay-1>.dtbo [<overlay-2>.dtbo ...]
 
-thanks,
+As another minor nitpick, I'd suggest that
 
-Takashi
+     "<name of overlay application test>.dtb"
+
+is replaced with
+
+     "<name-of-overlay-application-test>.dtb"
+
+for the sake of consistency and, obviously, for clear indication of
+the space characters not being applicable.  Regarding using "-" or "_"
+characters there, perhaps we should follow what Git uses in its man
+pages, which is the "-" character (see e.g. git-switch(1)).
+
+> +#
+> +# This will make the <base>.dtb have symbols (like when DTC_FLAGS has
+> -@ passed)
+> +# and generate a new DTB (<name of overlay application test>.dtb) 
+> which is the
+> +# result of the application of <overlay-1>.dtbo and other listed
+> overlays on top
+> +# of <base>.dtb.
+> +
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-wolfvision-pf5-vz-2-uhd.dtb
+> +rk3568-wolfvision-pf5-vz-2-uhd-dtbs := rk3568-wolfvision-pf5.dtb \
+> +	rk3568-wolfvision-pf5-display-vz.dtbo \
+> +	rk3568-wolfvision-pf5-io-expander.dtbo
+
+Otherwise, it's looking good to me, thanks for the patch!  It was
+already discussed and commented in detail in the v4 of this series, [*]
+so please feel free to include:
+
+Reviewed-by: Dragan Simic <dsimic@manjaro.org>
+
+[*] 
+https://lore.kernel.org/linux-rockchip/a3b98e3d3a2571ee75e59418bb3b6960@manjaro.org/T/#u
