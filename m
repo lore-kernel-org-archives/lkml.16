@@ -1,134 +1,206 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FDA417BCE;
-	Mon, 10 Feb 2025 21:51:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA7417BCE;
+	Mon, 10 Feb 2025 21:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739224282; cv=none; b=ZEJacuc0cVRYHbL/GT3css7wBwUh8r76xU1O339k+0azCTApqd1y3BkZqs/DwWEZb9n/Ro+dpRf4xL5rCL03qSbzIhUiL5MCYeMhlvL2pTiIbSctiVqYlxxKAQM5yQ/Mx7caTgETz/xEEb7/jN33bnW1MOvEaC5qwI4S/PeK42Q=
+	t=1739224406; cv=none; b=riEQqsIRPrKyrMb3qefPJjA08rSGM+4VIpE5VnKQZiGivTSzUSu3YUF68Mn77vchD+LZov0EEs1p51aOItP0DwFlKko4OJih3H9iNq3RHtFFFj5A6I0c7ccdTBiKuEzDoEtOs2a2MW2xZOkxOXrUUWoJMHh9YlESmTnWvo3OEJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739224282; c=relaxed/simple;
-	bh=0jl3t4+o+UGkvnbEfIA+i0npya4uS3/U+IEPYvFH+PI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u10hDvmCWh1jRPPQu/X89HJHJOro11a/mI4G+h8MLFG6LehomKRqG6Rv6/tYf1rfAMBGSOxN9tyqMfpgoIZuEDy4ULKz/BAGgGqR75ed836N7HbaSwDCDNTPh+z4Dr6RVDSkrrLFH5FS3FwVPjMonNyWeBfh6Sd5ILhCJiXX6fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mNq6DrvA; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739224406; c=relaxed/simple;
+	bh=1xp9i23qLHopM7Es6GWfv9JVXjG6ubbsAUbJbN9kf34=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b+0hNS3gl1kXG6kzWSP+eQQaYPyW4Kxom43XKe47uNKv37HKGjCZT+XfoC16MSHYLgPTE+1Q9l/0G3CWSiRzW/Qwgngyn+CYfnNbpPrdOfoNU1D3uHe/VOeqfqEraNeAS7neE41xc35L3te70yYkkVkITSnGAGTzjnCTUDHfX8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NGcZXPMM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mNq6DrvA"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43934d6b155so13966965e9.1;
-        Mon, 10 Feb 2025 13:51:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739224278; x=1739829078; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2EciPgnW1KEiQXxKmPrpoHQSMJwYLHiBFdZkdooJcnM=;
-        b=mNq6DrvACiUd6eNNPItEZx7UXnO9nk6ERmLXxSyEmzo3A/wzAhgggoMO9MWWICER+i
-         fHoGkaNsJwPdp6LnLvOSw2HPcIgeoN2Lb30S5NA2X9+7vVSkx6RHqOxQeG6fXwxoJbC0
-         q0deH8B7zthVzQzHuUIt5VTUOSRVejw2ZEyKQIdLBtnf067nR+gzxAAwcDZcij+K7H5M
-         6DBS3DykeU7vIZpuAZ/p/nYokmcl32tuITq+UI2flUW8nDDCHcCiYEyxy0HRzW1PFRVa
-         CdOZtr6LjrNXWLvpNhN8wRxaVdNBy2PqWiymMtaRaiXK059diZlfVGEbSoluQNlqRFjd
-         QNcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739224278; x=1739829078;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2EciPgnW1KEiQXxKmPrpoHQSMJwYLHiBFdZkdooJcnM=;
-        b=HjC/KSXM5Tg2waIOg3MPjjznYvXACmAW7l71qH6wxQwsZvJiRtz50CLyPDbAIVm+F7
-         kqZHfaOG21ieRqY+/D/OlsYTaFUJNe5lAoW9TGodFHo5DwEBrXSTb0Zl1+GBLKGlksB6
-         vBE3hYqyuC1xrRCe3JK8MXV/bThMnQo2IvUH5Rr0qeG1wHVxsyHAqTX7VVdCwwqr2HHx
-         ywjoLtRAEc42ulLr09GPD3ypHAUFo1Scnc6nr+1p/EdcCSRy9bIo9HLp6xom9HeRMlhi
-         8+Q3UL/zOBxKIcdIr+c2jNW4iK3HTW8gYduMoR/t0D0P6lCg2pnL+3nu+FL6qBsdp4UJ
-         /vSg==
-X-Forwarded-Encrypted: i=1; AJvYcCVTv6pZ+L0/yxc2O3alSOr/ckFRFIxDG+HIZsHVRQpFCnkZvifhCIT1SIUmVOxbJTafP5Ov+EAj1mmR7kg=@vger.kernel.org, AJvYcCXLrxF9/vYZSNrLBg8T6MmqFnq7okBsIwzPmFOoXIi255RYVBYjreBtloMCiGH6w8ZGoQjc9JfXBTcmsOA+rJAIH69x@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPkQ09ycXaNZf4buss7rqVjoiqZncO22o/Eaomk6+s/jErDg3X
-	0FBKeF41Sdi9qA8AWXpZKEtA5+mQSSFMgkRZPn0Jdibpmksy8HH8
-X-Gm-Gg: ASbGncuzL9GuXSGcAtezDsWQWBH2gRXk+xC5eSpeonknIzTtGmySN1TqT464NDdLs2A
-	q5LHhUmuD86fGTnweIOu7iZrO7Cw+c2iaYXXHBDuGBlPS+lSM7msmlvWxisJ06Pau7ttLzpnBHI
-	9hKkKR7+EDrAEuIJJ/H5BiAgDD+qK0xjFw0SnZJu9umtXwaSInI/+Ihpfgm5veisj43hNWE1Ngv
-	rdSImHBLQiJX4AAp5y72rIqY3NXdTh4z2UfbcKWHDcUOaIPp82uGm9jqtHo851ZG2ntlFr5EL5j
-	+Td+WshzMyJrSAfM/iJKZbcqBl163oXBzSW5bPDKNplZ8NKNuBQN5A==
-X-Google-Smtp-Source: AGHT+IFrsqHcB+cYkNZ0Z8ZzR94Q5Jz+YybzaTOr4w16AUyE5Xi1pEvEMdGtDtTmFK1c6TJmIa6gXA==
-X-Received: by 2002:a05:600c:1987:b0:434:fe3c:c662 with SMTP id 5b1f17b1804b1-4394ced8c52mr6946305e9.12.1739224278337;
-        Mon, 10 Feb 2025 13:51:18 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390db11750sm196051665e9.40.2025.02.10.13.51.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 13:51:17 -0800 (PST)
-Date: Mon, 10 Feb 2025 21:51:16 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Joel Fernandes <joel@joelfernandes.org>, Prakash Sangappa
- <prakash.sangappa@oracle.com>, Peter Zijlstra <peterz@infradead.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Thomas
- Gleixner <tglx@linutronix.de>, Ankur Arora <ankur.a.arora@oracle.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
- x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>, luto@kernel.org,
- bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- juri.lelli@redhat.com, vincent.guittot@linaro.org, willy@infradead.org,
- mgorman@suse.de, jon.grimm@amd.com, bharata@amd.com,
- raghavendra.kt@amd.com, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- Konrad Wilk <konrad.wilk@oracle.com>, jgross@suse.com,
- Andrew.Cooper3@citrix.com, Vineeth Pillai <vineethrp@google.com>, Suleiman
- Souhlal <suleiman@google.com>, Ingo Molnar <mingo@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Clark Williams
- <clark.williams@gmail.com>, bigeasy@linutronix.de, daniel.wagner@suse.com,
- Joseph Salisbury <joseph.salisbury@oracle.com>, broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250210215116.4cbf240a@pumpkin>
-In-Reply-To: <20250210144432.14c50995@gandalf.local.home>
-References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
-	<9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
-	<20250204220418.35949317@gandalf.local.home>
-	<CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
-	<20250205081635.397eacb0@gandalf.local.home>
-	<CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
-	<20250206083039.0916ad24@gandalf.local.home>
-	<20250210172059.07cda916@pumpkin>
-	<20250210122700.3b963ff0@gandalf.local.home>
-	<20250210144432.14c50995@gandalf.local.home>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NGcZXPMM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68FBCC4CED1;
+	Mon, 10 Feb 2025 21:53:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739224405;
+	bh=1xp9i23qLHopM7Es6GWfv9JVXjG6ubbsAUbJbN9kf34=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NGcZXPMM/lK6UWM10B0N7PXv1VH61bn282fDCJTlPl1oAnx1M4a7L4gil8TfoFjsQ
+	 iVfcXcyQtxu0uYmeY1b7SYwB+M4sNZA503rNTLJu8v4CS96dewxQfEwpGoxonNE1UD
+	 oHexGvB6qDhY4uMQdSN2oSqoSJDEjKyxe/81ZFw57xUGZzbjaP+f27Ra/fasNu6OBb
+	 WM28ie1HwprSTWcdnAgLoyl2lMvOYLFB2elGFwtEXUHNIZWCqXRj1ljrMziS8e1ANG
+	 GZfkZqxF80cbxhl1M24mvpPioI6iktw7xFRqhgaZ6WZxkC8UdK2gEFDtGIp+74767j
+	 ZTsZsRWmZENHA==
+Date: Mon, 10 Feb 2025 15:53:24 -0600
+From: Rob Herring <robh@kernel.org>
+To: Crystal Wood <oss@buserror.net>
+Cc: j.ne@posteo.net, devicetree@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org, Li Yang <leoyang.li@nxp.com>,
+	John Ogness <john.ogness@linutronix.de>
+Subject: Re: [PATCH v2 09/12] dt-bindings: memory-controllers: Convert
+ fsl,elbc to YAML
+Message-ID: <20250210215324.GA1040564-robh@kernel.org>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <20250207-ppcyaml-v2-9-8137b0c42526@posteo.net>
+ <Z6kQpuQf5m-bXTyt@buserror.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z6kQpuQf5m-bXTyt@buserror.net>
 
-On Mon, 10 Feb 2025 14:44:32 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Mon, 10 Feb 2025 12:27:00 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > On Mon, 10 Feb 2025 17:20:59 +0000
-> > David Laight <david.laight.linux@gmail.com> wrote:
-> >   
-> > > Hmmm... you lose big-time anyway.
-> > > 
-> > > All you need is a lot of network traffic 'pinch' the process context until
-> > > the hardware interrupt, NAPI softint code and rcu softint code completes.
-> > > That can easily take several milliseconds.    
+On Sun, Feb 09, 2025 at 02:31:34PM -0600, Crystal Wood wrote:
+> On Fri, Feb 07, 2025 at 10:30:26PM +0100, J. Neuschäfer via B4 Relay wrote:
+> > From: "J. Neuschäfer" <j.ne@posteo.net>
 > > 
-> > Not on PREEMPT_RT. All that runs as threads.
+> > Convert the Freescale localbus controller bindings from text form to
+> > YAML. The updated list of compatible strings reflects current usage
+> > in arch/powerpc/boot/dts/, except that many existing device trees
+> > erroneously specify "simple-bus" in addition to fsl,*elbc.
 > > 
-> > And this is a feature that we would like on RT for non RT tasks.  
+> > Changes compared to the txt version:
+> >  - removed the board-control (fsl,mpc8272ads-bcsr) node because it only
+> >    appears in this example and nowhere else
+> >  - added a new example with NAND flash
+> >  - updated list of compatible strings
+> > 
+> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> > ---
+> > 
+> > V2:
+> > - fix order of properties in examples, according to dts coding style
+> > - move to Documentation/devicetree/bindings/memory-controllers
+> > - clarify the commit message a tiny bit
+> > - remove unnecessary multiline markers (|)
+> > - define address format in patternProperties
+> > - trim subject line (remove "binding")
+> > - remove use of "simple-bus", because it's technically incorrect
 > 
-> Actually, this doesn't even need PREEMPT_RT to not hit your example. You
-> can build and boot your system with interrupts as threads, and that also
-> includes softirqs.
+> While I admit I haven't been following recent developments in this area,
+> as someone who was involved when "simple-bus" was created (and was on the
+> ePAPR committee that standardized it) I'm surprised to hear simple-bus
+> being called "erroneous" or "technically incorrect" here.
 
-And then you lose lots of receive ethernet packets unless you change
-all the thread priorities.
-(I don't recall anything that makes them run at a low FIFO prioriry.)
+Erroneous because the binding did not say "simple-bus" was used. Not 
+uncommon with the old .txt bindings.
 
-And don't mention the mess that happens if you have hardware that is
-raising an interrupt ever 10ms and really needs the ISR to run within 10ms.
-Someone tried to do that into a VM, the interrupts turn up like busses.
-None come for ages and then three arrive together :-)
+Generally, if a bus has control registers or resources like clocks, then 
+we tend not to call them 'simple-bus'. And '"specific-bus", 
+"simple-bus"' gives some problems around what driver if any do you 
+bind to. 
 
-	David
+If you have chip selects, then you have config registers for those. 
+Not really "simple" if you ask me. That being said, you could keep 
+'simple-bus' here. I would tend to err on making the schema match the 
+actual .dts rather than updating the .dts files on older platforms like 
+these.
+
+> For non-NAND devices this bus generally meets the definition of "an
+> internal I/O bus that cannot be probed for devices" where "devices on the
+> bus can be accessed directly without additional configuration
+> required".  NAND flash is an exception, but those devices have
+> compatibles that are specific to the bus controller.
+
+NAND bindings have evolved quite a bit if you haven't been paying 
+attention.
+
+> The fact that the address encoding is non-linear is irrelevant; the
+> addresses can still be translated using the standard "ranges" mechanism. 
+> This seems to be a disconnect between the schema verification and the way
+> the compatible has previously been defined and used.
+> 
+> And as a practical matter, unless I'm missing something (which I might be
+> since I haven't been in devicetree-land for nearly a decade), Linux is
+> relying on simple-bus to probe these devices.  There is a driver that
+> binds to the bus itself but that is just for error interrupts and NAND.
+> 
+> You'd probably need something like commit 3e25f800afb82bd9e5f8 ("memory:
+> fsl_ifc: populate child devices without relying on simple-bus") and the 
+> subsequent fix in dd8adc713b1656 ("memory: fsl_ifc: populate child
+> nodes of buses and mfd devices")...
+> 
+> I'm curious what the reasoning was for removing simple-bus from IFC.  It
+> seems that the schema verification also played a role in that:
+> https://www.spinics.net/lists/devicetree/msg220418.html
+
+If a kernel change is needed to support changed .dts files, then we 
+shouldn't be doing that here (being mature platforms). That would mean 
+new DTB will not work with existing kernels.
+
+> 
+> ...but there's also the comment in 985ede63a045eabf3f9d ("dt-bindings:
+> memory: fsl: convert ifc binding to yaml schema") that "this will help to
+> enforce the correct probe order between parent device and child devices",
+> but was that really not already guaranteed by the parent/child
+> relationship (and again, it should only really matter for NAND except for
+> the possibility of missing error reports during early boot)?
+> 
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +          - enum:
+> > +              - fsl,mpc8313-elbc
+> > +              - fsl,mpc8315-elbc
+> > +              - fsl,mpc8377-elbc
+> > +              - fsl,mpc8378-elbc
+> > +              - fsl,mpc8379-elbc
+> > +              - fsl,mpc8536-elbc
+> > +              - fsl,mpc8569-elbc
+> > +              - fsl,mpc8572-elbc
+> > +              - fsl,p1020-elbc
+> > +              - fsl,p1021-elbc
+> > +              - fsl,p1023-elbc
+> > +              - fsl,p2020-elbc
+> > +              - fsl,p2041-elbc
+> > +              - fsl,p3041-elbc
+> > +              - fsl,p4080-elbc
+> > +              - fsl,p5020-elbc
+> > +              - fsl,p5040-elbc
+> > +          - const: fsl,elbc
+> 
+> Is it really necessary to list every single chip?
+
+Yes. If they exist, they have to be documented.
+
+> 
+> And then it would need to be updated when new ones came out?  I know this
+> particular line of chips is not going to see any new members at this
+> point, but as far as the general approach goes...
+> 
+> Does the schema validation complain if it sees an extra compatible it
+> doesn't recognize?  If so that's obnoxious.
+
+Yes.
+
+More annoying is having to boot and debug typos:
+
+compatible = "foo,bar", "simplebus";
+
+Rob
