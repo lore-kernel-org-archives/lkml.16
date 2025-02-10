@@ -1,72 +1,175 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A452F2E;
-	Mon, 10 Feb 2025 05:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F200318BB8E
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 05:58:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739167092; cv=none; b=RNlB4qdwT4M2GSOWbVVHiTl+LZ8MFiSRUH+OJPxUCBCXTmYbVTtbwkz2Mz2/tDV5AmQqIHIsiyOKOwcPOo300o1aF2V2/0uucc0LgqRO//xuIHbRtw+xZeeMvi/JKB4CSe5tI0fNzhneIP+JB+pvzSbf+dcsSIlirg8/u5U8pYQ=
+	t=1739167118; cv=none; b=GkzS04j62/0Wqb3Qe4UhHStdbBIIxn98a7iDj7XSwdl2hjIUm2cbhjgGTJ2qIiVHyCIQDu8dNA1/Gz6/YQmydImMaiAqyZu//QjapJou82n7dHDDju9Ftk/svVv6/eTw2F6pTGALjaqgyOYHGthDe20p93mMAHdGtVf4Ud9LW/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739167092; c=relaxed/simple;
-	bh=mYQpXpjd6kZrME3gOjeK3nOc934+7JaIwRMeHNF5irA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hBs+VgrrIXI2qfiFulB9fWiboCM18ymVIGF7tc75+PeHaeAL6gC4uhNAEfTBAKwciKAzAL4t/QVXn0zkdZN84M8fYAb/ULBuw36mF1IAorrsBbACJGaFpWaYE8MdTA7eRighLa7rjy84r0Bft5s4CJkQX73RDDbHxEkmkGWfoVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Yrv2x0TnMzrT3N;
-	Mon, 10 Feb 2025 13:56:25 +0800 (CST)
-Received: from dggemv704-chm.china.huawei.com (unknown [10.3.19.47])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5545818010B;
-	Mon, 10 Feb 2025 13:58:00 +0800 (CST)
-Received: from kwepemn100009.china.huawei.com (7.202.194.112) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 10 Feb 2025 13:58:00 +0800
-Received: from localhost.localdomain (10.28.79.22) by
- kwepemn100009.china.huawei.com (7.202.194.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 10 Feb 2025 13:57:59 +0800
-From: Huisong Li <lihuisong@huawei.com>
-To: <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <alexandre.belloni@bootlin.com>, <zhanjie9@hisilicon.com>,
-	<zhenglifeng1@huawei.com>, <liuyonglong@huawei.com>, <lihuisong@huawei.com>
-Subject: [PATCH v2 0/2] Use HWMON_CHANNEL_INFO macro to simplify code
-Date: Mon, 10 Feb 2025 13:45:44 +0800
-Message-ID: <20250210054546.10785-1-lihuisong@huawei.com>
-X-Mailer: git-send-email 2.22.0
+	s=arc-20240116; t=1739167118; c=relaxed/simple;
+	bh=P6ZIjOcrVGSddzFqkeN9Se9GTO1nq5yLuU1kZ4p08iM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Uz9OFmvPKws7RZ/hmqq88LbUc0hxMRnqZ66HNIcRKcUJVV8nR4UlhZyu4qlDeBf8opfqZRfpVjurtKkK2KFbhU9DWJjcAkmIrX29Md0pK7ST8HZT/Z9vtrYgTlGojl4MLHL8svtskJMfdbzaE5v63wakHbHG//ZPwCftQuqnclQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UzqmXGbN; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UzqmXGbN"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21f49f0bd8fso52047775ad.2
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 21:58:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739167114; x=1739771914; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2Dv5Ac6SPOdtGgS0tmgxnxoVXUMjLjqcjHEmAbg0F2U=;
+        b=UzqmXGbNZ48VqB06pUERCXZro4aYyIa7HUyltaILxa1BzdI1CLpElgllG70XL5RGKW
+         OYY2XflOG1FRjBzoPs36G2N7Mmi7n9Y2vCrwl8qU0dH0apRPnYDvYiv92v6DPJOZJCtn
+         M2mkgkJLVOk72PCSQWcdRJKS3x9+Re6PldzDxeMaZjENOHK/XXG8ldzFW/FxRTkhQnP+
+         coUo6X1w9LJ9UqQAy/7xr2nRuBN/MjQXWTtJRkm2npTGaGzhV1P3ijMjI+maulb+UMBr
+         8QjvpSvNDRF0UTdSBOZMxSlz+cGxeBYoSLu1Vvr0IseouxvIjr/QJX7lySAK3UUSNOjz
+         tEpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739167114; x=1739771914;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2Dv5Ac6SPOdtGgS0tmgxnxoVXUMjLjqcjHEmAbg0F2U=;
+        b=XfeLWCHe41YBieHy1jBLv8QuIYXCq29j1DauXfywxYzb9LJz6BPXHBkudE3+W0eB0p
+         qm0s+hfTJq+QPIhXQpygNrbjHfyu5HCzybRCI6MO8I64sfb2qirV74iT4zWqgBzMrT1h
+         +KtwH9WAGvTam81+CVjfQNgk1wQuhOfi3EJLAKstN6qwPllCO2YyCyBxC6MFdNU2M27/
+         ucTCwEKcTgGcusswQ78mlfqXmomSWacB7JXxgrQ1y1st6A8fW/JRZo+WRY4sacF3Xg4W
+         qXUaD13U5wDm/0uzshBCf3Ec3PqE1GTYiPiue7DRL9C7n/RwpSF86quNB/BcBBVlLRql
+         l9sA==
+X-Gm-Message-State: AOJu0YyJCFfQqTUbDsHc8PMW7bBY6ezw7ABySy56vLoVl1hqxFtt8s6n
+	Bd8FR+KqpgF3dWijkpqixR52any2PDqMeACAwiG/DaCpFFCw4ue7OYDzja+HbkH0JyvWlV08Csv
+	gFNLDc6SDxCkdj+EZNdOaQoper6Oc6w0pWn8yeH2u/70VaAs8fxXlb8KLFG1oT1i6j5guzwLFvU
+	YESka820IbDJNzJamTVV81VS+4ahCp4w==
+X-Google-Smtp-Source: AGHT+IG9+tJP7rcVhYR2srzYJXFwTOg0EBXRqoEhYIHwOJw5Kqc+b20iAmM0LQw/LoJ0TYVsQm3UCyyp
+X-Received: from plwh12.prod.google.com ([2002:a17:902:f7cc:b0:21f:314b:a317])
+ (user=keyz job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:40d0:b0:216:6769:9ed7
+ with SMTP id d9443c01a7336-21f4e73bca0mr220424795ad.40.1739167114209; Sun, 09
+ Feb 2025 21:58:34 -0800 (PST)
+Date: Mon, 10 Feb 2025 13:58:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemn100009.china.huawei.com (7.202.194.112)
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+Message-ID: <20250210055828.1875372-1-keyz@google.com>
+Subject: [PATCH v5 RESEND] cpuidle: psci: Add trace for PSCI domain idle
+From: Keita Morisaki <keyz@google.com>
+To: linux-kernel@vger.kernel.org, lpieralisi@kernel.org, sudeep.holla@arm.com, 
+	rafael@kernel.org, daniel.lezcano@linaro.org, linux-pm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	linux-trace-kernel@vger.kernel.org, aarontian@google.com, 
+	yimingtseng@google.com, Keita Morisaki <keyz@google.com>, Dhruva Gole <d-gole@ti.com>, 
+	Kevin Hilman <khilman@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The HWMON_CHANNEL_INFO macro is provided by hwmon.h and used widely by many
-other drivers. This series use HWMON_CHANNEL_INFO macro to simplify code
-for rtc subsystem.
+The trace event cpu_idle provides insufficient information for debugging
+PSCI requests due to lacking access to determined PSCI domain idle
+states. The cpu_idle usually only shows -1, 0, or 1 regardless how many
+idle states the power domain has.
 
-Note: These patches do not depend on each other. Put them togeter just for
-belonging to the same subsystem.
+Add new trace events namely psci_domain_idle_enter and
+psci_domain_idle_exit to trace enter and exit events with a determined
+idle state.
 
+These new trace events will help developers debug CPUidle issues on ARM
+systems using PSCI by providing more detailed information about the
+requested idle states.
+
+Signed-off-by: Keita Morisaki <keyz@google.com>
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
+Tested-by: Kevin Hilman <khilman@baylibre.com>
 ---
- -v2:
-  * detach these patches from the series[1]
+v1->v2: Split the ftrace event into two (psci_domain_idle_(enter|exit))
+        and rephrase the commit message accordingly. Rebased onto the latest.
+v2->v3: Add "Reviewed-by: Steven Rostedt"
+v3->v4: Add the Tested-by label
+v4->v5: Add "Reviewed-by: Dhruva Gole"
 
-[1] https://lore.kernel.org/lkml/20250124022635.16647-3-lihuisong@huawei.com/T/
+Hopefully this patch gets attention from maintainers of
+drivers/cpuidle/cpuidle-psci.c too.
 
-Huisong Li (2):
-  rtc: ab-eoz9: Use HWMON_CHANNEL_INFO macro to simplify code
-  rtc: ds3232: Use HWMON_CHANNEL_INFO macro to simplify code
+ drivers/cpuidle/cpuidle-psci.c |  3 +++
+ include/trace/events/power.h   | 37 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 40 insertions(+)
 
- drivers/rtc/rtc-ab-eoz9.c | 24 ++----------------------
- drivers/rtc/rtc-ds3232.c  | 24 ++----------------------
- 2 files changed, 4 insertions(+), 44 deletions(-)
+diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
+index 2562dc001fc1..dd8d776d6e39 100644
+--- a/drivers/cpuidle/cpuidle-psci.c
++++ b/drivers/cpuidle/cpuidle-psci.c
+@@ -25,6 +25,7 @@
+ #include <linux/syscore_ops.h>
 
--- 
-2.22.0
+ #include <asm/cpuidle.h>
++#include <trace/events/power.h>
 
+ #include "cpuidle-psci.h"
+ #include "dt_idle_states.h"
+@@ -74,7 +75,9 @@ static __cpuidle int __psci_enter_domain_idle_state(struct cpuidle_device *dev,
+ 	if (!state)
+ 		state = states[idx];
+
++	trace_psci_domain_idle_enter(dev->cpu, state, s2idle);
+ 	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
++	trace_psci_domain_idle_exit(dev->cpu, state, s2idle);
+
+ 	if (s2idle)
+ 		dev_pm_genpd_resume(pd_dev);
+diff --git a/include/trace/events/power.h b/include/trace/events/power.h
+index d2349b6b531a..9253e83b9bb4 100644
+--- a/include/trace/events/power.h
++++ b/include/trace/events/power.h
+@@ -62,6 +62,43 @@ TRACE_EVENT(cpu_idle_miss,
+ 		(unsigned long)__entry->state, (__entry->below)?"below":"above")
+ );
+
++DECLARE_EVENT_CLASS(psci_domain_idle,
++
++	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
++
++	TP_ARGS(cpu_id, state, s2idle),
++
++	TP_STRUCT__entry(
++		__field(u32,		cpu_id)
++		__field(u32,		state)
++		__field(bool,		s2idle)
++	),
++
++	TP_fast_assign(
++		__entry->cpu_id = cpu_id;
++		__entry->state = state;
++		__entry->s2idle = s2idle;
++	),
++
++	TP_printk("cpu_id=%lu state=0x%lx is_s2idle=%s",
++		  (unsigned long)__entry->cpu_id, (unsigned long)__entry->state,
++		  (__entry->s2idle)?"yes":"no")
++);
++
++DEFINE_EVENT(psci_domain_idle, psci_domain_idle_enter,
++
++	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
++
++	TP_ARGS(cpu_id, state, s2idle)
++);
++
++DEFINE_EVENT(psci_domain_idle, psci_domain_idle_exit,
++
++	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
++
++	TP_ARGS(cpu_id, state, s2idle)
++);
++
+ TRACE_EVENT(powernv_throttle,
+
+ 	TP_PROTO(int chip_id, const char *reason, int pmax),
+
+base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+--
+2.48.1.362.g079036d154-goog
