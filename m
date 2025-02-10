@@ -1,93 +1,202 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5290A24C666
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA0D264604;
+	Mon, 10 Feb 2025 22:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739224851; cv=none; b=s15YU2N602/GuO1EqVMgzb7lnAQQyhaAAK0B3+5/y5Lqhozq1TqiGex4V8Pb7GG4ps/eKdlBYnYmS7fE/vc7KglkH8qqcMpJSepdGob789mcjjMQII3mDJ248ftA25C0qhZe8lAqVpVWWFuGL/fSHkOiqc0qOYW7wyGKuY2c/2Y=
+	t=1739224950; cv=none; b=V2LlCHxUnHlEonDpd3p4sK0ZNxHiYxwvKphifr26992fwsQfCUr7xOi8wDqKpz4X5MsOPDBok0NL0awhOdsAeam4RWBwMrNhkB+xUdE6Sa2EQB4xlqytPChq7LF7xfFTc+gVkYObGaf8U/f3HMpzHJQ2D4kuDKYe2x4GCatxy/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739224851; c=relaxed/simple;
-	bh=+WluA0xnKuBmfhcAa0XR5IEiiJO6LVqmX2L4ngoGzwo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XBPPdoofv451hZ7y6NuCrcaDYNdlYAniCyC0bjniLtWTeZW7+ACnwRfCsxo55kzXPUtrLmI1hLxQ9lo5fwKhIJUASluB3saFc7vnBVp2KLX8+RVbrMHRsZAj9pE2J0EOl0wUyY7Ys0H3tl7MY8J6lt+Zjj6oIDGdeiqKh2ERRM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DTI/Ytmz; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739224950; c=relaxed/simple;
+	bh=IvwKPNJpJVwbUYvgwowiE2ATlTHTfHicL75MLIgFv14=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B+N1h3zEQLGI42AETc3/xXEYjRgQ4dpbiWWmsx92/1iOH9Nq9VHJqMB8FmQCNw5yi6IqOGd7LX0NUCCMXmhhZkOS9qvTGOqJ5WeHGzs/gNwtQ852n5qaoayZEBX3yNo3ina7IfCYni0mNDM8cif/EcCz0D7wfZCrruAD870w0+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LiRjGkxF; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DTI/Ytmz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739224849;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8WNMbBmkgrizNiFSxnkLHSnpFN7pJOa4G7ZThdR/z1w=;
-	b=DTI/Ytmzw1PXVQ9cQJ8H93OISVsowcCn0bpCDSVp1XSui76J07FgeKunmjTB8iSZMVWDRg
-	N0gW3b+z3m8XLjEAXUSEOevD0EKf9wnXCkPiZaUBk7QRqAjCbSakT6oHnT5m7NDyTcoP9d
-	TqTFyTBfnWTN9U8loiizNDgPQST8GEw=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-396-Qv7tLn07OPi66lCIFPpuwA-1; Mon,
- 10 Feb 2025 17:00:43 -0500
-X-MC-Unique: Qv7tLn07OPi66lCIFPpuwA-1
-X-Mimecast-MFC-AGG-ID: Qv7tLn07OPi66lCIFPpuwA
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5FD50180036F;
-	Mon, 10 Feb 2025 22:00:42 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.113])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 8F48830001AB;
-	Mon, 10 Feb 2025 22:00:39 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 10 Feb 2025 23:00:15 +0100 (CET)
-Date: Mon, 10 Feb 2025 23:00:11 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mitchell.augustin@canonical.com,
-	ilpo.jarvinen@linux.intel.com
-Subject: Re: [PATCH] PCI: Fix BUILD_BUG_ON usage for old gcc
-Message-ID: <20250210220010.GM32480@redhat.com>
-References: <20250210210109.3673582-1-alex.williamson@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LiRjGkxF"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5450abbdce0so1667238e87.3;
+        Mon, 10 Feb 2025 14:02:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739224947; x=1739829747; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gKBtxPY73vUN0je5NCWLQ8BOv+4GXPrXFhu2CsOugcw=;
+        b=LiRjGkxFD0TiFAZVXED2O6bezaasv0+o1hNOs2o9yJIw6y1BFVwU+vc9VqONjYzNRc
+         BeYL3UXOK4hTbC1/UkDW688WXHs7ZQLeJjqdy6Bc5pfKS+x0uCcmn3EqQeBdKBIZZmFd
+         GOOQZCx8TzHxvNQsNm32ZDWNFR5yWoA9IaZAlwYUQGfeZ6GmKfU1Jdq7INmcK98sDiYf
+         RyzQHuJESuBaNBWtiUE7wOcsG6JdTtEIx+ygFSt9xeCinaQXOq/EcSqjfVWwgFy9f0q5
+         0waEpibFe+NuMmsDqMPrHUPkepCRPmsEFAfcdWj5aR4d7Yntmjcd+18HdxuNFFqDhJbz
+         dQpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739224947; x=1739829747;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gKBtxPY73vUN0je5NCWLQ8BOv+4GXPrXFhu2CsOugcw=;
+        b=W8ouMTdq5mwP7ISa/WLO8+LGLwh2ACKPdGltW5p4u4BD0UdxP55lGTPxxaURgl8uSx
+         wyI4wpwtnOttVgyMxPulynxsva33Kv+LsqeQXSYR/Rd5ShopKMmughEzccM79OV/T9tm
+         RoBBS2XI6PDGHOf/FkQTD6L6vj1lAgWiXZtx86kZL/p/x6PsqYp9JmB+MFpF+J62kwpQ
+         qYAb9pnEU5Rnz/QJJaEGOhnWK9miOBFUAzvUplN3TEZlq+xO0WE87qoK0k0FlVKS77fu
+         AkIUm9ZH3t8QUZsNxR1X6omTPnBenTK08CNQrhWT5WEHwFuoGd9fXiGOR9MfVCo1mCqm
+         i7kQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQm317RA5IPHlC0M0njt0CNuXn8TENCUk2CvElKSjbCEN2k54M8hZe3FSfyMZoZufliHlRUe8J3grHEZSuI8Nk@vger.kernel.org, AJvYcCWRa2lwn83ISSN8JH7TB4HK5l9evqiaba8g7DwYo5dQNUdXIFAxCnm1epOSkc+UCiLgJwKNlfe3iPn1FxY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3a28VXq5wDp6Wpg271rT9v24Rtq0mytWYkuJLZLt3jQ7rH2En
+	PCRT4OPWzdkUmwacr6oO+upB05NSh2Pz++3wY69uKbNXtUkmXaJ/i+mKbO6xUsg0mYTJFnDt8m9
+	RwH+278aXrfFErW1RHe1MhRu4UqE=
+X-Gm-Gg: ASbGncsy64Tl6T7PuE5C4i650FsKhTT1N0dPIiyIpSLJd2f805Gf1VhfPmLP2rU24Jv
+	9VRhf2vhfMCba3ck8hhnqy9d0byl/AL2oYkofLLxum9pz9ZTO7lj11WEG9usi5bMNxU+ApM7K3l
+	/q72aAntqbmlV8
+X-Google-Smtp-Source: AGHT+IFXntGT+FjS//GtLsBee13n1feXxAcsDFdmGK/9Zc8xT57kBWrr/KSN97XqSWCXZ4WJpptogalCw+FV21qYtDM=
+X-Received: by 2002:a2e:a5c8:0:b0:307:e498:1269 with SMTP id
+ 38308e7fff4ca-308f83eafa5mr5428921fa.37.1739224946736; Mon, 10 Feb 2025
+ 14:02:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210210109.3673582-1-alex.williamson@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+References: <20250207-bitmap-kunit-convert-v1-0-c520675343b6@gmail.com>
+ <Z6eaDuXnT_rjVSNS@thinkpad> <CAMuHMdUsq_39kgBa8oanXeTzv44HuhS1e5MK7K2jxkVXQ7uWdw@mail.gmail.com>
+ <bd71c705-5f57-4067-b200-fd80b98ddbc9@nvidia.com> <Z6pfomw-3LuWoQQo@thinkpad>
+In-Reply-To: <Z6pfomw-3LuWoQQo@thinkpad>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Mon, 10 Feb 2025 17:01:50 -0500
+X-Gm-Features: AWEUYZkKe8CssbPTeBnqdSPds-hBj-nYrF2armsMtC2A_9bwIn2Ly57bR0J6s5k
+Message-ID: <CAJ-ks9nCsCfuayotpqgNytHAZ758w2oSU58dEDMXwQRU7vqisQ@mail.gmail.com>
+Subject: Re: distro support for CONFIG_KUNIT: [PATCH 0/3] bitmap: convert
+ self-test to KUnit
+To: Yury Norov <yury.norov@gmail.com>
+Cc: John Hubbard <jhubbard@nvidia.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	David Gow <davidgow@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Naveen N Rao <naveen@kernel.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Shuah Khan <shuah@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Muhammad Usama Anjum <usama.anjum@collabora.com>, linux-kernel@vger.kernel.org, 
+	linux-m68k@lists.linux-m68k.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-kselftest@vger.kernel.org, Brad Figg <bfigg@nvidia.com>, 
+	David Hildenbrand <david@redhat.com>, Michal Hocko <mhocko@suse.com>, Jason Gunthorpe <jgg@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 02/10, Alex Williamson wrote:
+On Mon, Feb 10, 2025 at 3:20=E2=80=AFPM Yury Norov <yury.norov@gmail.com> w=
+rote:
 >
-> As reported in the below link, it seems older versions of gcc cannot
-> determine that the howmany variable is known for all callers.  Include
-> a test so that newer compilers can still enforce this sanity check and
-> older compilers can still work.
+> On Mon, Feb 10, 2025 at 11:35:48AM -0800, John Hubbard wrote:
+> > On 2/9/25 11:54 PM, Geert Uytterhoeven wrote:
+> > > On Sat, 8 Feb 2025 at 18:53, Yury Norov <yury.norov@gmail.com> wrote:
+> > > > On Fri, Feb 07, 2025 at 03:14:01PM -0500, Tamir Duberstein wrote:
+> > > > > On 7/27/24 12:35 AM, Shuah Khan wrote:
+> > ...
+> > > > > The crux of the argument seems to be that the config help text is=
+ taken
+> > > > > to describe the author's intent with the fragment "at boot". I th=
+ink
+> > >
+> > > IMO, "at boot" is a misnomer, as most tests can be either builtin
+> > > or modular.
+> >
+> > Right.
+> >
+> > >
+> > > > KUNIT is disabled in defconfig, at least on x86_64. It is also disa=
+bled
+> > > > on my Ubuntu 24.04 machine. If I take your patches, I'll be unable =
+to
+> >
+> > OK so I just bought a shiny new test machine, and installed one of the
+> > big name distros on it, hoping they've moved ahead and bought into the =
+kunit
+> > story...
+> >
+> > $ grep KUNIT /boot/config-6.8.0-52-generic
+> > # CONFIG_KUNIT is not set
+> >
+> > ...gagghh! No such luck. One more data point, in support of Yuri's comp=
+laint. :)
+> >
+> > >
+> > > I think distros should start setting CONFIG_KUNIT=3Dm.
+> >
+> > Yes they should! kunit really does have important advantages for many u=
+se
+> > cases, including bitmaps here, and "CONFIG_KUNIT is not set" is the mai=
+n
+> > obstacle.
 >
-> Fixes: 4453f360862e ("PCI: Batch BAR sizing operations")
-> Link: https://lore.kernel.org/all/20250209154512.GA18688@redhat.com
-> Reported-by: Oleg Nesterov <oleg@redhat.com>
-> Suggested-by: Oleg Nesterov <oleg@redhat.com>
-  ^^^^^^^^^^^^
+> Hi John, Geert, Tamir,
+>
+> Can you please explain in details which advantages KUNIT brings to
+> the test_bitmap.c, find_bit_benchmark.c and other low-level tests?
 
-Well, thanks, but I didn't ;)
+I can try, but I'm not the expert, and David Gow can probably elaborate fur=
+ther.
 
-> @@ -345,7 +345,8 @@ static void pci_read_bases(struct pci_dev *dev, unsigned int howmany, int rom)
->  	unsigned int pos, reg;
->  	u16 orig_cmd;
->  
-> -	BUILD_BUG_ON(howmany > PCI_STD_NUM_BARS);
-> +	BUILD_BUG_ON(__builtin_constant_p(howmany) &&
-> +		     howmany > PCI_STD_NUM_BARS);
+As I understand it the main benefit of KUnit is standardization and
+speed (and standardization _is_ speed). KUnit makes it very easy for
+me, a person who has not previously contributed to any of the bitmap
+code, to run those tests, and it requires zero configuration, it all
+just works. It's basically just `tools/testing/kunit/kunit.py run
+bitmap`, and I get the test results in a human-readable format. The
+same benefit applies on the author side: test facilities are
+standardized, so once you get to know the tools, all the tests start
+to look the same: you can jump in and contribute without having to
+first learn the so-called local "testing framework".
 
-Thanks!
+The important part is that this all applies to ~all other tests
+written in KUnit. I can even run them *all* trivially:
+`tools/testing/kunit/kunit.py run`.
 
-Tested-by: Oleg Nesterov <oleg@redhat.com>
+Anecdotally I've also noticed there are bots running those KUnit tests
+e.g. see https://lore.kernel.org/all/20250207-blackholedev-kunit-convert-v1=
+-1-8ef0dc1ff881@gmail.com/
+where a test I converted was immediately flagged by a robot as having
+dubious type coercion.
 
+None of these are must-haves, they are just (to me) a nice way to make
+the kernel more approachable for new contributors.
+
+As for pure benchmarks like
+find_bit_benchmark.c and
+test_bitmap.c::`test_bitmap_{read,write}_perf` specifically: I believe
+the benefits are super limited or even negative: AFAIK KUnit is
+designed to generally suppress output (in the userspace reporter, not
+in the kernel) unless a test fails, so I wouldn't hurry to use it for
+these.
+
+> I'm not strongly against moving under KUNIT's hat, but I do:
+>  - respect commitment of my contributors, so I don't want to wipe git
+>    history for no serious reason;
+>  - respect time of my testers, so no extra dependencies;
+>  - respect time of reviewers.
+
+These are valid concerns. Certainly the testing case is the most
+compelling and folks are clearly interested in lowering those
+barriers. I don't have any influence in this area, but I am grateful
+to John for starting the conversation.
+
+As I mentioned in the previous thread: I think we could keep
+`test_bitmap_{read,write}_perf` in test_bitmap.c and get the best of
+both worlds. WDYT?
+
+> Tamir,
+>
+> If it comes to v2, can you please begin your series with an exhaustive
+> and clear answer to the following questions:
+>  - What do the tests miss now?
+>  - What do _you_ need from the tests? Describe your test scenario.
+>  - How exactly KUNIT helps you testing bitmaps and friends better?
+>  - Is there a way to meet your needs with a less invasive approach,
+>    particularly without run-time dependencies?
+
+Hopefully I've answered these above. I can include some of it in a v2,
+but perhaps the general pitch for KUnit is better placed in
+documentation or slides from a conference?
+
+Cheers.
+
+Tamir
