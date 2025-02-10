@@ -1,134 +1,216 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF4C2580C7
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:21:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06902580DB
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739204512; cv=none; b=g9FppnmCpYGz0l5H1IRBJrEn+lDFoBzDniigQa6BtjpsvBtx5aymE4yijRtgs+rwYBg7UufYCxlF4sUE0I575CScjcdpToSHSfM6+uy0XWvWZOUEDuA27CS/Xt0Y8NCehKqqbPCH6Q+wbrZeTOKkXOuPL9k32L/Zw9d9eJm3aS8=
+	t=1739204515; cv=none; b=McP2LqVzKWrn8ohsBNK8lkCudfwC5KZB0H4fPsC+BJUcOGRU/VNEDsBjcq+HHMerl8R9JvlDsJ7lqI7c8aqvxAfOiRZEZBdVQ2HFf0xUEjTYpMPSvpTZ+RJ3uF1ZXObkwUd1poQQWodgPn1+rN3K4dkZBrHJjAnBzgaipHByvrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739204512; c=relaxed/simple;
-	bh=KIqBkUSyhCVeVPELNP6ISV0HCnomhljLgtcM2pOAoUg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O1/bBYrLwqgWdG7cNSQNb78YXcSkHkr5IEL+kJXI7o+23ApQjZ+gbP/qJTKuOsUvtgOmVrnMUUqevUwt9el+BLxJ85dgXfGO6wTdj7h9J3dpb4KUF7UEHXl+B7ewb2D/muxPN6c45ULrPK92qVTMuzcSr1Inxo5SxDAiSHcwCE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=Spyl11ur; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+	s=arc-20240116; t=1739204515; c=relaxed/simple;
+	bh=F1uW5ma3fdeyn5aBjyxZoVhGgZVM2t/lrZtQqYD9Oew=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=IEL4NNMv1mFZOVyh5evfhzrEZxkr1nWRgKFpkcrf9q8Df6plGQGnvfUqchovAUo1eNOeeg6RzZOTDWtNXgJ4Q/HZ4fz6tlT271wstwK5cwbh8Zo4FvVmhPP4Qrr9CHdoyCWffEuKKHIYZSndBNxWSqO8fmZq4JfB7XiAbkLI8Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DAweY9oK; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Spyl11ur"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5de64873d18so3502606a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:21:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DAweY9oK"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fa6409c0baso4527789a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:21:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1739204509; x=1739809309; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KIqBkUSyhCVeVPELNP6ISV0HCnomhljLgtcM2pOAoUg=;
-        b=Spyl11urk48vjBb63Eiqe68b5dQQq6kwPba4Aww0qcYBhgagSi0EPHuHxnciOeTC5L
-         dzooTKDnsUyYYh04/vSp/9RjLK5ptplUHlvc+v5uctevsHfuinmlIkmnkD/uak4Elcjr
-         3oKPGFa2R4bt6cs033p786DCzVIJnM+JZfvSOG+GBBh+m1nG3bmNzGTSkw4H8fNDPg4n
-         61D42Wcxw4QV+x6/KEnodlLdXVtU3uv+8usJlMntfuUhdHBaXlKTL9d3YmYaHN/LTkJB
-         qUwuWRi6kEg5mJcxYBfvaVKsiUs5QYm+ckWfotS+yGiiQzUG1pF0c7EiqraFGyL/KPU5
-         0aAQ==
+        d=google.com; s=20230601; t=1739204511; x=1739809311; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gjevNOj/bkd1TGaPwATIjylcH4KclWeK6tRAdAb+PbI=;
+        b=DAweY9oKm0X6V5BdA4qUHKDuaxvppA/vSOTArPmYyUPbk9mZCxiT89ZWbDdoy2cMqx
+         BwsAownN44RLvXis0ZPtfsb0cmzJaLHbLtLOZ/wHER2fBuNk3ls5UiADioGdYE0D4S79
+         Xm8/ANiRbQ+B3/oIhY0mwR/AthzOG/SiXJXS8mjIIoSNsRlYqdg9Lg+G5v0jB4zR59cC
+         z47OX9WOAIf8q0hHMV2hspwIQtikf3TNlBwCOTBiGCbdAL/jbY+ag146lH9FracDeG1I
+         N+Tg1kTJT3okTK5V9bHosN/Ix7kD+KosDADpiUp40zW9KK5oxzcVzhCoTBiuauI2WrZ2
+         Bbkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739204509; x=1739809309;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KIqBkUSyhCVeVPELNP6ISV0HCnomhljLgtcM2pOAoUg=;
-        b=RQgA8ghfCGg8sqB9dv++alcMVVBGOju9b4VuWECje0AK48PPe8v5vBCpPKHST/OIvD
-         8Mnl3giSfM1jtcx9D2pdiF0hbCFE/HJ0jTkv4ivZtO2EcfWatXHwnVoywTS4qARv/YOA
-         fzymbt0hlb5GStHqjC43VWaaDMN5mQ3joKWy9QInppftTeHO/gChH9JuXwB++qPtDjht
-         S1o1sqZ0Ea+W6956vrLJKDQorLSvjCLQG63gZcQ38XYqZsJyVh5R0+zW/EM53fLtA6jd
-         3+0IRg0gR6FTFBPnzRNdlHPMAdXXL/LePF6COOs6ZUR+s6BONUB2/tpS+z3CFa1qQUt3
-         AEAw==
-X-Forwarded-Encrypted: i=1; AJvYcCXTnwlN0rRetUeTPEcAwt1D1vopfgaHSxja+KRVytZQ2uw/h8qG+RRsjYTROxQK1VtBmTyqLabD4CSnj/A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjnsyreQVLP5JrbLjjvjA9hh9eN2PjcIwLD0p4bomzLDAuZYwY
-	Z++tYEHU6f0OazQW9cOM1xKNEpPDlME5rQWgj2n1tQ7nJA192o86+ifOSRs3M93RtwqvUm60Zga
-	pwJLgCG5ucqUKqMLiX7z3jagL/At1gCC8z7ubJg==
-X-Gm-Gg: ASbGncsjpalFO+jDz+03gwSCzyTDqF1KuWKTOimOuGWrZf91I6Khvie7IIiSprumw5A
-	iqHAdXNgA3GA0AfMgQGtqH9SLeUgoJFJ5yiG8QvKZ0HGXzTbS1HxLpNrLH1Ltu689WvkHIS4mOS
-	5WwSjpFascDcKLU9I=
-X-Google-Smtp-Source: AGHT+IHy71NYgSP/cCvRFmJ3G6I8GQkkK8vW2MV7RYTmiEkeOtYPIG8dZEldxTbMHipBtrY+5n8UQFrBgYq2RkcMjZw=
-X-Received: by 2002:a05:6402:13c5:b0:5db:e7eb:1b4a with SMTP id
- 4fb4d7f45d1cf-5de45005a3bmr15164299a12.10.1739204509076; Mon, 10 Feb 2025
- 08:21:49 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739204511; x=1739809311;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gjevNOj/bkd1TGaPwATIjylcH4KclWeK6tRAdAb+PbI=;
+        b=uYZVse6ZTeH1FgHak7Qv1/z1dij3klLf8kOWFT2tNIGwbyROhUFF3bR7VTUvZlnB0+
+         nzf6CiHKagKUE5GeJ2ygfVJfRFn45x1skdBGep6ywsQ8Ebj4f+1fIjcMkLn751gFv6pW
+         3MxD7pQFe7VTDtMHD0E0+q+Sk5V1tAaRjWymp/beTUkeG9N2wpuLSXjKtZbtmEzGZX5a
+         ilnheO53K+uY0ZKnoHWNu7DjFM5UIvwk/4gjyMZz6/12CixjddVCeR5UmKqwLQ0ZQ+Vr
+         sVzhff+G6IxSK+dux4edLsU7m1WBJPiQhZTm8rqNSTN4rjilGpJzacZq1G3DDwoxCwMc
+         m7RA==
+X-Forwarded-Encrypted: i=1; AJvYcCUwqin1xN5QHrCvoZtJU3pDdhkCvPD/I6cguWkex/J4STAvsZjD4ieZhrBgOSms5asKVyDx1tmdLh08f9E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWm+QYrQ0Wv2B+mGIrrqVZhyESBNcgjomayBkx81fYLqFYMKFH
+	uor1lPsEL3BEsC0ET5sSaaHcxZLF4/BLj69/JCQ0bdyiRH19gDRyBD3YDHLHgE9XtUgDfo2lcig
+	ABw==
+X-Google-Smtp-Source: AGHT+IHvA6NXtBXVEFbtZeSWagFJPoake9uFGdSEz34GpfES659xPG5GoxHcGoeeTGEESr/Dcqf76t3tOTs=
+X-Received: from pjbsp15.prod.google.com ([2002:a17:90b:52cf:b0:2ee:53fe:d0fc])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4cd1:b0:2fa:b84:b304
+ with SMTP id 98e67ed59e1d1-2fa243db921mr18907344a91.22.1739204511253; Mon, 10
+ Feb 2025 08:21:51 -0800 (PST)
+Date: Mon, 10 Feb 2025 08:21:49 -0800
+In-Reply-To: <SN6PR02MB4157A85EC0B1B2D45CB611FAD4F02@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <cover.1739171594.git.yan@cloudflare.com> <85618439eea75930630685c467ccefeac0942e2b.1739171594.git.yan@cloudflare.com>
- <Z6nEsGSbWqCSaVp3@krava> <CAMzD94QZQjpwOA8Os3khG32d2zgH8i=Sy1VoudRCGqZudyHkag@mail.gmail.com>
-In-Reply-To: <CAMzD94QZQjpwOA8Os3khG32d2zgH8i=Sy1VoudRCGqZudyHkag@mail.gmail.com>
-From: Yan Zhai <yan@cloudflare.com>
-Date: Mon, 10 Feb 2025 10:21:38 -0600
-X-Gm-Features: AWEUYZlnLuiCJjRJtIJZwpaZNOpATxR3bl3tZuwbBXDssS0d0dx6XXBf-mXpTzk
-Message-ID: <CAO3-Pbqa_oOm-u318mTwqPfuRJ2_kdk+ou99BOu53A3O_wEyZg@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf 1/2] bpf: skip non exist keys in generic_map_lookup_batch
-To: Brian Vazquez <brianvv@google.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, bpf@vger.kernel.org, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Mykola Lysenko <mykolal@fb.com>, 
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kernel-team@cloudflare.com, 
-	Hou Tao <houtao@huaweicloud.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250201021718.699411-1-seanjc@google.com> <20250201021718.699411-17-seanjc@google.com>
+ <Z6ZBjNdoULymGgxz@google.com> <SN6PR02MB4157A85EC0B1B2D45CB611FAD4F02@SN6PR02MB4157.namprd02.prod.outlook.com>
+Message-ID: <Z6onnUthSBUVAklf@google.com>
+Subject: Re: [PATCH 16/16] x86/kvmclock: Use TSC for sched_clock if it's
+ constant and non-stop
+From: Sean Christopherson <seanjc@google.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Juergen Gross <jgross@suse.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+	Jan Kiszka <jan.kiszka@siemens.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, 
+	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>, 
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, Nikunj A Dadhania <nikunj@amd.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Brian, Jiri
+On Sat, Feb 08, 2025, Michael Kelley wrote:
+> From: Sean Christopherson <seanjc@google.com> Sent: Friday, February 7, 2025 9:23 AM
+> > 
+> > Dropping a few people/lists whose emails are bouncing.
+> > 
+> > On Fri, Jan 31, 2025, Sean Christopherson wrote:
+> > > @@ -369,6 +369,11 @@ void __init kvmclock_init(void)
+> > >  #ifdef CONFIG_X86_LOCAL_APIC
+> > >  	x86_cpuinit.early_percpu_clock_init = kvm_setup_secondary_clock;
+> > >  #endif
+> > > +	/*
+> > > +	 * Save/restore "sched" clock state even if kvmclock isn't being used
+> > > +	 * for sched_clock, as kvmclock is still used for wallclock and relies
+> > > +	 * on these hooks to re-enable kvmclock after suspend+resume.
+> > 
+> > This is wrong, wallclock is a different MSR entirely.
+> > 
+> > > +	 */
+> > >  	x86_platform.save_sched_clock_state = kvm_save_sched_clock_state;
+> > >  	x86_platform.restore_sched_clock_state = kvm_restore_sched_clock_state;
+> > 
+> > And usurping sched_clock save/restore is *really* wrong if kvmclock isn't being
+> > used as sched_clock, because when TSC is reset on suspend/hiberation, not doing
+> > tsc_{save,restore}_sched_clock_state() results in time going haywire.
+> > 
+> > Subtly, that issue goes all the way back to patch "x86/paravirt: Don't use a PV
+> > sched_clock in CoCo guests with trusted TSC" because pulling the rug out from
+> > under kvmclock leads to the same problem.
+> > 
+> > The whole PV sched_clock scheme is a disaster.
+> > 
+> > Hyper-V overrides the save/restore callbacks, but _also_ runs the old TSC callbacks,
+> > because Hyper-V doesn't ensure that it's actually using the Hyper-V clock for
+> > sched_clock.  And the code is all kinds of funky, because it tries to keep the
+> > x86 code isolated from the generic HV clock code, but (a) there's already x86 PV
+> > specific code in drivers/clocksource/hyperv_timer.c, and (b) splitting the code
+> > means that Hyper-V overides the sched_clock save/restore hooks even when
+> > PARAVIRT=n, i.e. when HV clock can't possibly be used as sched_clock.
+> 
+> Regarding (a), the one occurrence of x86 PV-specific code hyperv_timer.c is
+> the call to paravirt_set_sched_clock(), and it's under an #ifdef sequence so that
+> it's not built if targeting some other architecture. Or do you see something else
+> that is x86-specific?
+> 
+> Regarding (b), in drivers/hv/Kconfig, CONFIG_HYPERV always selects PARAVIRT.
+> So the #else clause (where PARAVIRT=n) in that #ifdef sequence could arguably
+> have a BUILD_BUG() added. If I recall correctly, other Hyper-V stuff breaks if
+> PARAVIRT is forced to "n". So I don't think there's a current problem with the
+> sched_clock save/restore hooks. i
 
-thanks for the comments.
+Oh, there are no build issues, and all of the x86 bits are nicely cordoned off.
+My complaint is essentially that they're _too_ isolated; putting the sched_clock
+save/restore setup in arch/x86/kernel/cpu/mshyperv.c is well-intentioned, but IMO
+it does more harm than good because the split makes it difficult to connect the
+dots to hv_setup_sched_clock() in drivers/clocksource/hyperv_timer.c.
 
-On Mon, Feb 10, 2025 at 8:47=E2=80=AFAM Brian Vazquez <brianvv@google.com> =
-wrote:
->
-> On Mon, Feb 10, 2025 at 4:19=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wr=
-ote:
-> >
-> > On Sun, Feb 09, 2025 at 11:22:35PM -0800, Yan Zhai wrote:
-> > > The generic_map_lookup_batch currently returns EINTR if it fails with
-> > > ENOENT and retries several times on bpf_map_copy_value. The next batc=
-h
-> > > would start from the same location, presuming it's a transient issue.
-> > > This is incorrect if a map can actually have "holes", i.e.
-> > > "get_next_key" can return a key that does not point to a valid value.=
- At
-> > > least the array of maps type may contain such holes legitly. Right no=
-w
-> > > these holes show up, generic batch lookup cannot proceed any more. It
-> > > will always fail with EINTR errors.
-> > >
-> > > Rather, do not retry in generic_map_lookup_batch. If it finds a non
-> > > existing element, skip to the next key. This simple solution comes wi=
-th
-> > > a price that transient errors may not be recovered, and the iteration
-> > > might cycle back to the first key under parallel deletion. For exampl=
-e,
-> >
-> > probably stupid question, but why not keep the retry logic and when
-> > it fails then instead of returning EINTR just jump to the next key
-> >
-> > jirka
->
-> +1, keeping the retry logic but moving to the next key on error sounds
-> like a sensible approach.
->
-I made the trade off since retry would consistently fail for the array
-of maps, so it is merely wasting cycles to ever do so. It is already
-pretty slow to read these maps today from userspace (for us we read
-them for accounting/monitoring purposes), so it is nice to save a few
-cycles especially for sparse maps. E.g. We use inner maps to store
-protocol specific actions in an array of maps with 256 slots, but
-usually only a few common protocols like TCP/UDP/ICMP are populated,
-leaving most "holes". On the other hand, I personally feel it is
-really "fragile" if users rely heavily on this logic to survive
-concurrent lookup and deletion. Would it make more sense to provide
-concurrency guarantee with map specific ops like hash map?
+> But I would be good with some restructuring so that setting the sched clock
+> save/restore hooks is more closely tied to the sched clock choice,
 
-best
-Yan
+Yeah, this is the intent of my ranting.  After the dust settles, the code can
+look like this.
+
+---
+#ifdef CONFIG_GENERIC_SCHED_CLOCK
+static __always_inline void hv_setup_sched_clock(void *sched_clock)
+{
+	/*
+	 * We're on an architecture with generic sched clock (not x86/x64).
+	 * The Hyper-V sched clock read function returns nanoseconds, not
+	 * the normal 100ns units of the Hyper-V synthetic clock.
+	 */
+	sched_clock_register(sched_clock, 64, NSEC_PER_SEC);
+}
+#elif defined CONFIG_PARAVIRT
+static u64 hv_ref_counter_at_suspend;
+/*
+ * Hyper-V clock counter resets during hibernation. Save and restore clock
+ * offset during suspend/resume, while also considering the time passed
+ * before suspend. This is to make sure that sched_clock using hv tsc page
+ * based clocksource, proceeds from where it left off during suspend and
+ * it shows correct time for the timestamps of kernel messages after resume.
+ */
+static void hv_save_sched_clock_state(void)
+{
+	hv_ref_counter_at_suspend = hv_read_reference_counter();
+}
+
+static void hv_restore_sched_clock_state(void)
+{
+	/*
+	 * Adjust the offsets used by hv tsc clocksource to
+	 * account for the time spent before hibernation.
+	 * adjusted value = reference counter (time) at suspend
+	 *                - reference counter (time) now.
+	 */
+	hv_sched_clock_offset -= (hv_ref_counter_at_suspend - hv_read_reference_counter());
+}
+
+static __always_inline void hv_setup_sched_clock(void *sched_clock)
+{
+	/* We're on x86/x64 *and* using PV ops */
+	paravirt_set_sched_clock(sched_clock, hv_save_sched_clock_state,
+				 hv_restore_sched_clock_state);
+}
+#else /* !CONFIG_GENERIC_SCHED_CLOCK && !CONFIG_PARAVIRT */
+static __always_inline void hv_setup_sched_clock(void *sched_clock) {}
+#endif /* CONFIG_GENERIC_SCHED_CLOCK */
+---
+
+> as long as the architecture independence of hyperv_timer.c is preserved.
+
+LOL, ah yes, the architecture independence of MSRs and TSC :-D
+
+Teasing aside, the code is firmly x86-only at the moment.  It's selectable only
+by x86:
+
+  config HYPERV_TIMER
+	def_bool HYPERV && X86
+ 
+and since at least commit e39acc37db34 ("clocksource: hyper-v: Provide noinstr
+sched_clock()") there are references to symbols/functions that are provided only
+by x86.
+
+I assume arm64 support is a WIP, but keeping the upstream code arch independent
+isn't very realistic if the code can't be at least compile-tested.  To help
+drive-by contributors like myself, maybe select HYPER_TIMER on arm64 for
+COMPILE_TEST=y builds?
+
+  config HYPERV_TIMER
+	def_bool HYPERV && (X86 || (COMPILE_TEST && ARM64))
+
+I have no plans to touch code outside of CONFIG_PARAVIRT, i.e. outside of code
+that is explicitly x86-only, but something along those lines would help people
+like me understand the goal/intent, and in theory would also help y'all maintain
+the code by detecting breakage.
