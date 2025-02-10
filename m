@@ -1,197 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10EC025742A;
-	Mon, 10 Feb 2025 18:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60043244E8C;
+	Mon, 10 Feb 2025 18:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739211463; cv=none; b=JN5MArl5Wvayea9zwzUcYrf2bHljeytzvLXIe+AVEoCRs6tZr8v04Qau3VCHQhS6dGQmThhetw77LPy2yvSQmoCYtJgiwePdi62ZpfJvoXunMJAg+i8JSiPEYkMXrGnZO1l5eFCPWToHmeLpU9TCbjAPbrJYs3pK6t4f5Vg4vGY=
+	t=1739211482; cv=none; b=u7uQGPyU2y0YxCIWfRxU32beW3bj6H1GZJr1CAkEtKuLN//EusA6+vcmIqyOc/owlXJN3tgT7/1b6/IrUoPzCQl3mlC5PdlbCokO4h0DdLKviCxYjcOZdBgFFFTwZ+8Bte5alHonR8XH9PovoPMZKti5i/KK/4t7DdrY2MIt54Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739211463; c=relaxed/simple;
-	bh=WiOKGuitaydzhswX/7JM6O1nTPijJq8eyPlKsuXqT/0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iywAW9+cos94xVC7hArxKDIvz50a4H2lPOQPm2Tv5jB073OtIzNA3eAArwjkxlDhgbIwE2Zz3vHExq9beM50ju+bQlLT+rusf1AOOrhc8tEzh2l+/Nm7n1Ygy2ZgGBLIm8eJqjdpwqIZQhuXE4ojctGoKrW07Q4GHYncafYl9GE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SYC5e8jA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739211482; c=relaxed/simple;
+	bh=UguPET4pHfk1EhUUOm2Xzv4gC7EqvxTKpd8UaOXRQd0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tUOKyuYs1pHKMLryWERHFyXitYvmwCSu3cToTu74UEo73DERveVGU/LTuCHdGQrSA6hh8kAs682iTHcP5eMX5T7w0lYLMztYdm0yTxsOFqpHGUSrVkELVYAhUt528bGNci7ir0u0y31ua4Pvfra2oE9OepZ9S4ral0giJcbNBeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=i/pKcKP8; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SYC5e8jA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02401C4CEE6;
-	Mon, 10 Feb 2025 18:17:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739211462;
-	bh=WiOKGuitaydzhswX/7JM6O1nTPijJq8eyPlKsuXqT/0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SYC5e8jAmnFQbgWzl7VBI9YMtbd7So6JvOfGkmZR4rPjBqZ4L77d44l+d00zp2aPK
-	 vdY2EDi971nV/mQePhMvYhghFcmArOCv3gVcP2lJiAK0FN3KPcy2bhUNSh+b8pbgMK
-	 jD+oZXJW6CRk1yRxk36qHlpWWwKFwyXuQ5iEPykue89vmpXr2X9MqFOqc2O0gBdD6a
-	 oCyBLJXpsqq0u00imJlBSuR+8Y6VTLMeycXL1n0SI8dszQCypYTkKHx4OGpFwOmEiT
-	 jYACq03l9RxT9tsx6qROQ4SbUcgSmnx8ymMVJUb1kGv2HGgKdi5gmL/d1Y97vRoS9w
-	 3uMgSSMariMfg==
-Date: Mon, 10 Feb 2025 19:17:39 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, 
-	Jagan Teki <jagan@amarulasolutions.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Paul Kocialkowski <contact@paulk.fr>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, =?utf-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH v6 14/26] drm/bridge: add support for refcounted DRM
- bridges
-Message-ID: <20250210-proficient-millipede-of-recreation-91da6c@houat>
-References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
- <20250206-hotplug-drm-bridge-v6-14-9d6f2c9c3058@bootlin.com>
- <20250207-ingenious-daffodil-dugong-51be57@houat>
- <ucttjaf3trkgtpvhnsj7xfsybhnoi4qqow5ucwghlggivbagy7@gngjhbtu73lb>
- <20250210-bold-steel-collie-cecbad@houat>
- <CAA8EJppyDiAeH8bm-rdCUsGoyVOrp=4AvrYLJ-=5BTLtmnP11g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="i/pKcKP8"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 5D119411A7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1739211480; bh=r1tBbKSVje12XQe+r2wNxIvvdpr4Ck7WodjBys+sE1E=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=i/pKcKP8radJ26HRi/QPxgYOoGtvLVyrOrUvMWrpmhMxqR6e7pkg1W5sSMTe7RbK3
+	 N30BtFXUR0WGtuP43I3MwM+1ceVayUaok8q3ViiBeG658JdVJXkmLwFKzXVRXvZTlc
+	 H6cbBWp2sYiW6y5w9hbU/5TH9R2rNHI6ayNwUdHmBr1rfRaQb4Qmy1MPwKDgwQH6ZB
+	 0kQ5pOu4j2EK8d8YXuLfk9aMqOv+7cjD9yTFEy3hAFcAgzs4BY5jluBscTvGabV0gP
+	 nHFkZ+M1lVr7M7Hu5hK/rs+jKSR2sn9WVo8Rn3kGts/SsnFXbzHNTVCRYrnFPp07eN
+	 jrqcEkCl9GJ8Q==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 5D119411A7;
+	Mon, 10 Feb 2025 18:18:00 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Jiayuan Chen <mrpre@163.com>, rdunlap@infradead.org, bagasdotme@gmail.com
+Cc: linux-doc@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ linux-kernel@vger.kernel.org, Jiayuan Chen <mrpre@163.com>
+Subject: Re: [PATCH v4] docs/arch: remove deprecated function name
+In-Reply-To: <20250208081832.121337-1-mrpre@163.com>
+References: <20250208081832.121337-1-mrpre@163.com>
+Date: Mon, 10 Feb 2025 11:17:59 -0700
+Message-ID: <87ldudzmso.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="ctkvotoob64tevup"
-Content-Disposition: inline
-In-Reply-To: <CAA8EJppyDiAeH8bm-rdCUsGoyVOrp=4AvrYLJ-=5BTLtmnP11g@mail.gmail.com>
+Content-Type: text/plain
 
+Jiayuan Chen <mrpre@163.com> writes:
 
---ctkvotoob64tevup
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v6 14/26] drm/bridge: add support for refcounted DRM
- bridges
-MIME-Version: 1.0
+> print_context_stack() was removed in 2016 by commit c8fe4609827ae
+> ("x86/dumpstack: Remove dump_trace() and related callbacks"). Remove
+> the now-inaccurate guide.
+>
+> While at it, also link to Ingo's explanatory message.
+>
+> Signed-off-by: Jiayuan Chen <mrpre@163.com>
+> Suggested-by: Randy Dunlap <rdunlap@infradead.org>
+> Suggested-by: Jonathan Corbet <corbet@lwn.net>
+> Suggested-by: Bagas Sanjaya <bagasdotme@gmail.com>
+>
+> ---
+> V3 -> V4: Made changes based on Bagas's suggestion.
+> V1 -> V3: Made changes based on suggestions from Randy and Jonathan.
+> ---
+>  Documentation/arch/x86/kernel-stacks.rst | 60 +++++++++---------------
+>  1 file changed, 22 insertions(+), 38 deletions(-)
 
-On Mon, Feb 10, 2025 at 04:23:44PM +0200, Dmitry Baryshkov wrote:
-> On Mon, 10 Feb 2025 at 14:31, Maxime Ripard <mripard@kernel.org> wrote:
-> >
-> > On Fri, Feb 07, 2025 at 09:54:06PM +0200, Dmitry Baryshkov wrote:
-> > > On Fri, Feb 07, 2025 at 12:47:51PM +0100, Maxime Ripard wrote:
-> > > > Hi,
-> > > >
-> > > > On Thu, Feb 06, 2025 at 07:14:29PM +0100, Luca Ceresoli wrote:
-> > > > > DRM bridges are currently considered as a fixed element of a DRM =
-card, and
-> > > > > thus their lifetime is assumed to extend for as long as the card
-> > > > > exists. New use cases, such as hot-pluggable hardware with video =
-bridges,
-> > > > > require DRM bridges to be added and removed to a DRM card without=
- tearing
-> > > > > the card down. This is possible for connectors already (used by D=
-P MST), so
-> > > > > add this possibility to DRM bridges as well.
-> > > > >
-> > > > > Implementation is based on drm_connector_init() as far as it make=
-s sense,
-> > > > > and differs when it doesn't. A difference is that bridges are not=
- exposed
-> > > > > to userspace, hence struct drm_bridge does not embed a struct
-> > > > > drm_mode_object which would provide the refcount. Instead we add =
-to struct
-> > > > > drm_bridge a refcount field (we don't need other struct drm_mode_=
-object
-> > > > > fields here) and instead of using the drm_mode_object_*() functio=
-ns we
-> > > > > reimplement from those functions the few lines that drm_bridge ne=
-eds for
-> > > > > refcounting.
-> > > > >
-> > > > > Also add a new devm_drm_bridge_alloc() macro to allocate a new re=
-fcounted
-> > > > > bridge.
-> > > > >
-> > > > > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> > > >
-> > > > So, a couple of general comments:
-> > > >
-> > > > - I've said it a couple of times already, but I really think you're
-> > > >   making it harder than necessary for you here. This (and only this=
-!)
-> > > >   should be the very first series you should be pushing. The rest c=
-an
-> > > >   only ever work if that work goes through, and it's already hard e=
-nough
-> > > >   as it is. So, split that patch into a series of its own, get that
-> > > >   merged, and then we will be able to deal with panels conversion a=
-nd
-> > > >   whatever. That's even more true with panels since there's ongoing=
- work
-> > > >   that will make it easier for you too. So the best thing here is
-> > > >   probably to wait.
-> > >
-> > > Luca and I had a quick chat on this during FOSDEM. I really think that
-> > > panel (part of the) series can go in first as it fixes a very well kn=
-own
-> > > bug _and_ allows a pretty good cleanup to a whole set of drivers.
-> >
-> > I don't necessarily disagree on principle, but if you state that it can
-> > get first, and fixes a known problem (which one?), then it should be a
-> > separate, standalone, series.
->=20
-> A problem of panel bridges having the wrong lifetime because of devm_
-> attachment to a wrong device and so either being kept for too long or
-> being destroyed too early.
+You didn't add Randy's Reviewed-by
 
-Yeah, and panels too. Which isn't solved there.
+This change is more than just removing a function name, though, so the
+subject line is a bit off.  There's enough changing here that I would
+really rather have an ack from the x86 folks before applying it.
 
-> > Ever-expanding features are bad for both the reviewers and the
-> > contributors, even more so when the discussion happens off-list.
-> >
-> > > With all those panel / bridge wrappers gone we should be able to see a
-> > > clearer picture of what individual drivers are doing. In other words,
-> > > which memory and which code actually hosts and uses internal
-> > > 'next_bridge' reference.
-> > >
-> > > > - This patch really needs to be split into several patches, somethi=
-ng
-> > > >   along the lines of:
-> > > >
-> > > >   + Creating devm_drm_bridge_alloc()
-> > > >   + Adding refcounting
-> > > >   + Taking the references in all the needed places
-> > > >   + Converting a bunch of drivers
-> > >
-> > > The last two parts seem troublematic to me, but, I must admit, I didn=
-'t
-> > > spend so much time reviewing all drm_bridge usage patterns.
-> >
-> > Why? the third one is already done by that patch, the fourth can
-> > relatively easily be done using coccinelle.
->=20
-> I have doubts about cocci. It doesn't have a way to know, what is the
-> lifetime of the references to the reference-holding memory. Maybe I'm
-> missing a point there.
+Thanks,
 
-It doesn't matter? Cocci doesn't (have to) understand the code, it
-generates a patch for you. It's up to the author to make a correct
-patch.
+jon
 
-Maxime
-
---ctkvotoob64tevup
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ6pCwwAKCRAnX84Zoj2+
-ds3DAYCmyuWWTQzL+uHFZsj4ooH84JF7ylfCHkygjk4bJCQXQisORfKKbJfiPywk
-z2E+5o0BgLSZ3mrnwgjna4TApCO5ujytoxWxMXYaZK8XX1nkPOV0t4H3yXXgLltd
-APIGGfkStg==
-=nbSx
------END PGP SIGNATURE-----
-
---ctkvotoob64tevup--
+> diff --git a/Documentation/arch/x86/kernel-stacks.rst b/Documentation/arch/x86/kernel-stacks.rst
+> index 738671a4070b..4cb68433272d 100644
+> --- a/Documentation/arch/x86/kernel-stacks.rst
+> +++ b/Documentation/arch/x86/kernel-stacks.rst
+> @@ -112,41 +112,25 @@ Printing backtraces on x86
+>  ==========================
+>  
+>  The question about the '?' preceding function names in an x86 stacktrace
+> -keeps popping up, here's an indepth explanation. It helps if the reader
+> -stares at print_context_stack() and the whole machinery in and around
+> -arch/x86/kernel/dumpstack.c.
+> -
+> -Adapted from Ingo's mail, Message-ID: <20150521101614.GA10889@gmail.com>:
+> -
+> -We always scan the full kernel stack for return addresses stored on
+> -the kernel stack(s) [1]_, from stack top to stack bottom, and print out
+> -anything that 'looks like' a kernel text address.
+> -
+> -If it fits into the frame pointer chain, we print it without a question
+> -mark, knowing that it's part of the real backtrace.
+> -
+> -If the address does not fit into our expected frame pointer chain we
+> -still print it, but we print a '?'. It can mean two things:
+> -
+> - - either the address is not part of the call chain: it's just stale
+> -   values on the kernel stack, from earlier function calls. This is
+> -   the common case.
+> -
+> - - or it is part of the call chain, but the frame pointer was not set
+> -   up properly within the function, so we don't recognize it.
+> -
+> -This way we will always print out the real call chain (plus a few more
+> -entries), regardless of whether the frame pointer was set up correctly
+> -or not - but in most cases we'll get the call chain right as well. The
+> -entries printed are strictly in stack order, so you can deduce more
+> -information from that as well.
+> -
+> -The most important property of this method is that we _never_ lose
+> -information: we always strive to print _all_ addresses on the stack(s)
+> -that look like kernel text addresses, so if debug information is wrong,
+> -we still print out the real call chain as well - just with more question
+> -marks than ideal.
+> -
+> -.. [1] For things like IRQ and IST stacks, we also scan those stacks, in
+> -       the right order, and try to cross from one stack into another
+> -       reconstructing the call chain. This works most of the time.
+> +keeps popping up. Here's the explanation, that helps when the reader
+> +stares at printk_stack_addressk() and its callers and pays special
+> +attention to the 'reliable' parameter ('?' basically means that the
+> +address is unreliable).
+> +
+> +The answer can be found in the comments within show_trace_log_lvl() body
+> +in arch/x86/kernel/dumpstack.c::
+> +
+> +    /*
+> +     * Scan the stack, printing any text addresses we find.  At the
+> +     * same time, follow proper stack frames with the unwinder.
+> +     *
+> +     * Addresses found during the scan which are not reported by
+> +     * the unwinder are considered to be additional clues which are
+> +     * sometimes useful for debugging and are prefixed with '?'.
+> +     * This also serves as a failsafe option in case the unwinder
+> +     * goes off in the weeds.
+> +     */
+> +
+> +For more information, see also Ingo's email. [1]_
+> +
+> +.. [1] https://lore.kernel.org/lkml/20150521101614.GA10889@gmail.com/
+> -- 
+> 2.43.5
