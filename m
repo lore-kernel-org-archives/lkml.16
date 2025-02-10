@@ -1,149 +1,190 @@
-Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98DBD23CB;
-	Mon, 10 Feb 2025 01:39:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.248.49.38
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA6489461;
+	Mon, 10 Feb 2025 01:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739151593; cv=none; b=oUHfvgunDLCjvXg6Rzyk5skCytPxJybT+Hh7vc1jPHTedU7oqPh+1DLefO4GOkZg+Q5M4DG3y2QCK5PSFuLLQvHepyImXLlmNi3RTHDFY57U+1NOu1zvsWmGtMOyRCeaaPMrG+1hRQnvHjqDt2E8HNtIh/iumIDZ6DT++W3fORg=
+	t=1739151742; cv=none; b=DX0o5aKgvDivOj0DOfbIcseHy6xuIf3hsleljaUBP2xraUpODL6ecjJMU8eZwKwteNYipMKBn39VQGZw749p5jO1ZNR6BDkTY4zXI089JSC/oZEpmffHn7cHodeY2rZ+ROA3N2yMmM1hIGDBjA27Kcmqt0+X83BLNjK9opwvzSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739151593; c=relaxed/simple;
-	bh=6tI7QAXib5VmS3pEdyl1MKQdUwVYq/ESMzWC+7SK860=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JA8gv4Yce2+F9fpl2H7QW42c/QiV2vzQ9jS75R0D6zxlldeBNodcXvRJrjjYxEKvwwHbjDtNV0WO7NNBn9jLxlv/VBHswQzIxLgJSlG116aoOc/MlonOTsmUKwCadqB6I82FZLsxi7FWePFAoeoR1n8iZ1riJfMa3RAERbbKYQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com; spf=pass smtp.mailfrom=socionext.com; arc=none smtp.client-ip=202.248.49.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=socionext.com
-Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 10 Feb 2025 10:39:43 +0900
-Received: from mail.mfilter.local (mail-arc01.css.socionext.com [10.213.46.36])
-	by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id 8D8232006EA4;
-	Mon, 10 Feb 2025 10:39:43 +0900 (JST)
-Received: from iyokan2.css.socionext.com ([172.31.9.53]) by m-FILTER with ESMTP; Mon, 10 Feb 2025 10:39:43 +0900
-Received: from [10.212.246.222] (unknown [10.212.246.222])
-	by iyokan2.css.socionext.com (Postfix) with ESMTP id 32C5CAB187;
-	Mon, 10 Feb 2025 10:39:43 +0900 (JST)
-Message-ID: <90c7077f-0e2e-4d9e-912d-913a51170acc@socionext.com>
-Date: Mon, 10 Feb 2025 10:39:42 +0900
+	s=arc-20240116; t=1739151742; c=relaxed/simple;
+	bh=asVXNS3/8IWV+3hHCrQkdDFRVC5LyZdIRIpXzO80+Is=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=dA484dIfQZU2+nq22TVWXYESRFAjMzmJhcyuHTR+Qhe3JJx/VwpdKDTgxqiO4HlonvA3AQMN36BF3r8ncNtyu68gdQxy2/x2+I4FWV1LNiJU9cWO2ZiFCvK2DOr/w/VksiHoQEUXVRzQ8mLq5b5NmM3Ig/AyhMpO/apXTZ5PPg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8DxGeF3Walng9pwAA--.21859S3;
+	Mon, 10 Feb 2025 09:42:15 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMCxLcVzWaln6nEJAA--.33606S3;
+	Mon, 10 Feb 2025 09:42:13 +0800 (CST)
+Subject: Re: [PATCH 1/3] LoongArch: KVM: Fix typo issue about GCFG feature
+ detection
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250207032634.2333300-1-maobibo@loongson.cn>
+ <20250207032634.2333300-2-maobibo@loongson.cn>
+ <CAAhV-H7p9G8At3Pz_o31u_Zpho2gfbe6WOxF6_WpebVfcfgaKQ@mail.gmail.com>
+From: bibo mao <maobibo@loongson.cn>
+Message-ID: <30caead6-5b12-638c-677d-dc1111aea43c@loongson.cn>
+Date: Mon, 10 Feb 2025 09:41:38 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] misc: pci_endpoint_test: Avoid issue of interrupts
- remaining after request_irq error
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
- Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250122022446.2898248-1-hayashi.kunihiko@socionext.com>
- <20250122022446.2898248-2-hayashi.kunihiko@socionext.com>
- <20250128141242.pog2tuorvqmobain@thinkpad>
- <2cdb5e43-47e0-43ba-ba17-87e8d5dc602d@socionext.com>
- <20250207180229.klwodx7m3rmmopnq@thinkpad>
+In-Reply-To: <CAAhV-H7p9G8At3Pz_o31u_Zpho2gfbe6WOxF6_WpebVfcfgaKQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-In-Reply-To: <20250207180229.klwodx7m3rmmopnq@thinkpad>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCxLcVzWaln6nEJAA--.33606S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Gr1rGF15KF1rtw15tF4xAFc_yoWxGFW7pr
+	98Ka43Gr40qr4fW3sxKrn8X3W5Xr1xJ3sI93WUGrWrtF1UWa1IkFn0qan5AFySqan3tFyU
+	trs29w17XF4DZ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-
+	e5UUUUU==
 
-Hi Manivannan,
 
-On 2025/02/08 3:02, Manivannan Sadhasivam wrote:
-> On Wed, Jan 29, 2025 at 04:54:46PM +0900, Kunihiko Hayashi wrote:
->> Hi Manivannan,
->>
->> On 2025/01/28 23:12, Manivannan Sadhasivam wrote:
->>> On Wed, Jan 22, 2025 at 11:24:44AM +0900, Kunihiko Hayashi wrote:
->>>> After devm_request_irq() fails with error,
->>>> pci_endpoint_test_free_irq_vectors() is called to free allocated
->>>> vectors
->>>> with pci_free_irq_vectors().
->>>>
->>>
->>> You should mention the function name which you are referring to. Here it
->>> is,
->>> pci_endpoint_test_request_irq().
->>
->> I see. I'll make the commit message more clear.
->>
->>>> However some requested IRQs are still allocated, so there are still
->>>
->>> This is confusing. Are you saying that the previously requested IRQs are
->>> not
->>> freed when an error happens during the for loop in
->>> pci_endpoint_test_request_irq()?
->>
->> Yes, after jumping to "fail:" label, it just prints an error message and
->> returns the function.
->>
->> The pci_endpoint_test_request_irq() is called from the following
->> functions:
->> - pci_endpoint_test_probe()
->> - pci_endpoint_test_set_irq()
->>
->> Both call pci_endpoint_test_free_irq_vectors() after the error, though,
->> requested IRQs are not freed anywhere.
->>
+
+On 2025/2/9 下午5:38, Huacai Chen wrote:
+> Hi, Bibo,
 > 
-> You should not use the word 'allocated' since that has a different meaning
-> and the source of confusion.
-
-Surely, 'allocated' means the vectors allocated with pci_irq_vectors(), not
-the interrupts requested with request_irq().
-
-I'll rewrite with a right description.
-
->>>> /proc/irq/* entries remaining and we encounters WARN() with the
->>>> following
->>>> message:
->>>>
->>>>       remove_proc_entry: removing non-empty directory 'irq/30', leaking
->>>> at
->>>>       least 'pci-endpoint-test.0'
->>>>       WARNING: CPU: 0 PID: 80 at fs/proc/generic.c:717
->>>> remove_proc_entry
->>>>       +0x190/0x19c
->>>
->>> When did you encounter this WARN?
+> On Fri, Feb 7, 2025 at 11:26 AM Bibo Mao <maobibo@loongson.cn> wrote:
 >>
->> Usually request_irq() can successfully get an interrupt.
->> If request_irq() returned an error, pci_endpoint_test_free_irq_vectors()
->> was
->> called and the following call-trace was obtained:
+>> This is typo issue about GCFG feature macro, comments is added for
+>> these macro and typo issue is fixed here.
 >>
->> [   18.772522] Call trace:
->> [   18.773743]  remove_proc_entry+0x190/0x19c
->> [   18.775789]  unregister_irq_proc+0xd0/0x104
->> [   18.777881]  free_desc+0x4c/0xcc
->> [   18.779495]  irq_free_descs+0x68/0x8c
->> [   18.781325]  irq_domain_free_irqs+0x15c/0x1bc
->> [   18.783502]  msi_domain_free_locked.part.0+0x184/0x1d4
->> [   18.786069]  msi_domain_free_irqs_all_locked+0x64/0x8c
->> [   18.788637]  pci_msi_teardown_msi_irqs+0x48/0x54
->> [   18.790947]  pci_free_msi_irqs+0x18/0x38
->> [   18.792907]  pci_free_irq_vectors+0x64/0x8c
->> [   18.794997]  pci_endpoint_test_ioctl+0x7e8/0xf40
->> [   18.797304]  __arm64_sys_ioctl+0xa4/0xe8
->> [   18.799265]  invoke_syscall+0x48/0x110
->> [   18.801139]  el0_svc_common.constprop.0+0x40/0xe8
->> [   18.803489]  do_el0_svc+0x20/0x2c
->> [   18.805145]  el0_svc+0x30/0xd0
->> [   18.806673]  el0t_64_sync_handler+0x13c/0x158
->> [   18.808850]  el0t_64_sync+0x190/0x194
->> [   18.810680] ---[ end trace 0000000000000000 ]---
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> ---
+>>   arch/loongarch/include/asm/loongarch.h | 26 ++++++++++++++++++++++++++
+>>   arch/loongarch/kvm/main.c              |  4 ++--
+>>   2 files changed, 28 insertions(+), 2 deletions(-)
 >>
+>> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+>> index 52651aa0e583..1a65b5a7d54a 100644
+>> --- a/arch/loongarch/include/asm/loongarch.h
+>> +++ b/arch/loongarch/include/asm/loongarch.h
+>> @@ -502,49 +502,75 @@
+>>   #define LOONGARCH_CSR_GCFG             0x51    /* Guest config */
+>>   #define  CSR_GCFG_GPERF_SHIFT          24
+>>   #define  CSR_GCFG_GPERF_WIDTH          3
+>> +/* Number PMU register started from PM0 passthrough to VM */
+>>   #define  CSR_GCFG_GPERF                        (_ULCAST_(0x7) << CSR_GCFG_GPERF_SHIFT)
+>> +#define  CSR_GCFG_GPERFP_SHIFT         23
+>> +/* Read-only bit: show PMU passthrough supported or not */
+>> +#define  CSR_GCFG_GPERFP               (_ULCAST_(0x1) << CSR_GCFG_GPERFP_SHIFT)
+>>   #define  CSR_GCFG_GCI_SHIFT            20
+>>   #define  CSR_GCFG_GCI_WIDTH            2
+>>   #define  CSR_GCFG_GCI                  (_ULCAST_(0x3) << CSR_GCFG_GCI_SHIFT)
+>> +/* All cacheop instructions will trap to host */
+>>   #define  CSR_GCFG_GCI_ALL              (_ULCAST_(0x0) << CSR_GCFG_GCI_SHIFT)
+>> +/* Cacheop instruction except hit invalidate will trap to host */
+>>   #define  CSR_GCFG_GCI_HIT              (_ULCAST_(0x1) << CSR_GCFG_GCI_SHIFT)
+>> +/* Cacheop instruction except hit and index invalidate will trap to host */
+>>   #define  CSR_GCFG_GCI_SECURE           (_ULCAST_(0x2) << CSR_GCFG_GCI_SHIFT)
+>>   #define  CSR_GCFG_GCIP_SHIFT           16
+>>   #define  CSR_GCFG_GCIP                 (_ULCAST_(0xf) << CSR_GCFG_GCIP_SHIFT)
+>> +/* Read-only bit: show feature CSR_GCFG_GCI_ALL supported or not */
+>>   #define  CSR_GCFG_GCIP_ALL             (_ULCAST_(0x1) << CSR_GCFG_GCIP_SHIFT)
+>> +/* Read-only bit: show feature CSR_GCFG_GCI_HIT supported or not */
+>>   #define  CSR_GCFG_GCIP_HIT             (_ULCAST_(0x1) << (CSR_GCFG_GCIP_SHIFT + 1))
+>> +/* Read-only bit: show feature CSR_GCFG_GCI_SECURE supported or not */
+>>   #define  CSR_GCFG_GCIP_SECURE          (_ULCAST_(0x1) << (CSR_GCFG_GCIP_SHIFT + 2))
+>>   #define  CSR_GCFG_TORU_SHIFT           15
+>> +/* Operation with CSR register unimplemented will trap to host */
+>>   #define  CSR_GCFG_TORU                 (_ULCAST_(0x1) << CSR_GCFG_TORU_SHIFT)
+>>   #define  CSR_GCFG_TORUP_SHIFT          14
+>> +/* Read-only bit: show feature CSR_GCFG_TORU supported or not */
+>>   #define  CSR_GCFG_TORUP                        (_ULCAST_(0x1) << CSR_GCFG_TORUP_SHIFT)
+>>   #define  CSR_GCFG_TOP_SHIFT            13
+>> +/* Modificattion with CRMD.PLV will trap to host */
+>>   #define  CSR_GCFG_TOP                  (_ULCAST_(0x1) << CSR_GCFG_TOP_SHIFT)
+>>   #define  CSR_GCFG_TOPP_SHIFT           12
+>> +/* Read-only bit: show feature CSR_GCFG_TOP supported or not */
+>>   #define  CSR_GCFG_TOPP                 (_ULCAST_(0x1) << CSR_GCFG_TOPP_SHIFT)
+>>   #define  CSR_GCFG_TOE_SHIFT            11
+>> +/* ertn instruction will trap to host */
+>>   #define  CSR_GCFG_TOE                  (_ULCAST_(0x1) << CSR_GCFG_TOE_SHIFT)
+>>   #define  CSR_GCFG_TOEP_SHIFT           10
+>> +/* Read-only bit: show feature CSR_GCFG_TOE supported or not */
+>>   #define  CSR_GCFG_TOEP                 (_ULCAST_(0x1) << CSR_GCFG_TOEP_SHIFT)
+>>   #define  CSR_GCFG_TIT_SHIFT            9
+>> +/* Timer instruction such as rdtime/TCFG/TVAL will trap to host */
+>>   #define  CSR_GCFG_TIT                  (_ULCAST_(0x1) << CSR_GCFG_TIT_SHIFT)
+>>   #define  CSR_GCFG_TITP_SHIFT           8
+>> +/* Read-only bit: show feature CSR_GCFG_TIT supported or not */
+>>   #define  CSR_GCFG_TITP                 (_ULCAST_(0x1) << CSR_GCFG_TITP_SHIFT)
+>>   #define  CSR_GCFG_SIT_SHIFT            7
+>> +/* All privilege instruction will trap to host */
+>>   #define  CSR_GCFG_SIT                  (_ULCAST_(0x1) << CSR_GCFG_SIT_SHIFT)
+>>   #define  CSR_GCFG_SITP_SHIFT           6
+>> +/* Read-only bit: show feature CSR_GCFG_SIT supported or not */
+>>   #define  CSR_GCFG_SITP                 (_ULCAST_(0x1) << CSR_GCFG_SITP_SHIFT)
+>>   #define  CSR_GCFG_MATC_SHITF           4
+>>   #define  CSR_GCFG_MATC_WIDTH           2
+>>   #define  CSR_GCFG_MATC_MASK            (_ULCAST_(0x3) << CSR_GCFG_MATC_SHITF)
+>> +/* Cache attribute comes from GVA->GPA mapping */
+>>   #define  CSR_GCFG_MATC_GUEST           (_ULCAST_(0x0) << CSR_GCFG_MATC_SHITF)
+>> +/* Cache attribute comes from GPA->HPA mapping */
+>>   #define  CSR_GCFG_MATC_ROOT            (_ULCAST_(0x1) << CSR_GCFG_MATC_SHITF)
+>> +/* Cache attribute comes from weaker one of GVA->GPA and GPA->HPA mapping */
+>>   #define  CSR_GCFG_MATC_NEST            (_ULCAST_(0x2) << CSR_GCFG_MATC_SHITF)
+>>   #define  CSR_GCFG_MATP_NEST_SHIFT      2
+>> +/* Read-only bit: show feature CSR_GCFG_MATC_NEST supported or not */
+>>   #define  CSR_GCFG_MATP_NEST            (_ULCAST_(0x1) << CSR_GCFG_MATP_NEST_SHIFT)
+>>   #define  CSR_GCFG_MATP_ROOT_SHIFT      1
+>> +/* Read-only bit: show feature CSR_GCFG_MATC_ROOT supported or not */
+>>   #define  CSR_GCFG_MATP_ROOT            (_ULCAST_(0x1) << CSR_GCFG_MATP_ROOT_SHIFT)
+>>   #define  CSR_GCFG_MATP_GUEST_SHIFT     0
+>> +/* Read-only bit: show feature CSR_GCFG_MATC_GUEST suppoorted or not */
+>>   #define  CSR_GCFG_MATP_GUEST           (_ULCAST_(0x1) << CSR_GCFG_MATP_GUEST_SHIFT)
+> Bugfix is the majority here, so it is better to remove the comments,
+> make this patch easier to be backported to stable branches.
+How about split the patch into two for better backporting? With comments 
+it is convinient to people to understand and provide LoongArch KVM 
+patches in future, after all it cannot depends on the few guys inside.
+
+Regards
+Bibo Mao
 > 
-> Please add this info to the patch description.
+> Huacai
+> 
+>>
+>>   #define LOONGARCH_CSR_GINTC            0x52    /* Guest interrupt control */
+>> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+>> index bf9268bf26d5..f6d3242b9234 100644
+>> --- a/arch/loongarch/kvm/main.c
+>> +++ b/arch/loongarch/kvm/main.c
+>> @@ -303,9 +303,9 @@ int kvm_arch_enable_virtualization_cpu(void)
+>>           * TOE=0:       Trap on Exception.
+>>           * TIT=0:       Trap on Timer.
+>>           */
+>> -       if (env & CSR_GCFG_GCIP_ALL)
+>> +       if (env & CSR_GCFG_GCIP_SECURE)
+>>                  gcfg |= CSR_GCFG_GCI_SECURE;
+>> -       if (env & CSR_GCFG_MATC_ROOT)
+>> +       if (env & CSR_GCFG_MATP_ROOT)
+>>                  gcfg |= CSR_GCFG_MATC_ROOT;
+>>
+>>          write_csr_gcfg(gcfg);
+>> --
+>> 2.39.3
+>>
 
-Okay, I'll add the call trace into the patch.
-
-Thank you,
-
----
-Best Regards
-Kunihiko Hayashi
