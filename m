@@ -1,72 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A178524C695;
-	Mon, 10 Feb 2025 21:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5290A24C666
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739224722; cv=none; b=cQDEmJjwW96RP7ZUlH9CbZ6AXqJJm2zdlmZIEOpJZAE7fgUgmBDkrt1s0pfzvuI7F8fUhqJf8MtgJ+DxYVtZZTlDGgRsHoa0G23UlmEg2L2ntixt+yGJJHpTrEsyjaxoIfKKy09zvEemEd1/vird3bEjBcwGvC9QCuueeZz2fwQ=
+	t=1739224851; cv=none; b=s15YU2N602/GuO1EqVMgzb7lnAQQyhaAAK0B3+5/y5Lqhozq1TqiGex4V8Pb7GG4ps/eKdlBYnYmS7fE/vc7KglkH8qqcMpJSepdGob789mcjjMQII3mDJ248ftA25C0qhZe8lAqVpVWWFuGL/fSHkOiqc0qOYW7wyGKuY2c/2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739224722; c=relaxed/simple;
-	bh=WPrzjCLFdXP3kYzy8YZCXRDMthhsz7PNkzj9rloRZlQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L+HXxtjoPst7W9wKZW8vgqZ77klmqt6G9szec+vHoMXBCN4O1YkFk4HVI8nBhlDiCwnb+H3UfnMJnH2y4i8RDoxStTlzPZelWe3TKbTvjW9IEkL8Zo+o134cKVZUUzPphI2n1m9kTiLjCPJUNwCRRqVxTOBQqvwpkKOKf/lLbJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6409CC4CED1;
-	Mon, 10 Feb 2025 21:58:37 +0000 (UTC)
-Date: Mon, 10 Feb 2025 16:58:40 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Joel Fernandes <joel@joelfernandes.org>, Prakash Sangappa
- <prakash.sangappa@oracle.com>, Peter Zijlstra <peterz@infradead.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Thomas
- Gleixner <tglx@linutronix.de>, Ankur Arora <ankur.a.arora@oracle.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
- x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>, luto@kernel.org,
- bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- juri.lelli@redhat.com, vincent.guittot@linaro.org, willy@infradead.org,
- mgorman@suse.de, jon.grimm@amd.com, bharata@amd.com,
- raghavendra.kt@amd.com, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- Konrad Wilk <konrad.wilk@oracle.com>, jgross@suse.com,
- Andrew.Cooper3@citrix.com, Vineeth Pillai <vineethrp@google.com>, Suleiman
- Souhlal <suleiman@google.com>, Ingo Molnar <mingo@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Clark Williams
- <clark.williams@gmail.com>, bigeasy@linutronix.de, daniel.wagner@suse.com,
- Joseph Salisbury <joseph.salisbury@oracle.com>, broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250210165840.7dd1dced@gandalf.local.home>
-In-Reply-To: <20250210215116.4cbf240a@pumpkin>
-References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
-	<9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
-	<20250204220418.35949317@gandalf.local.home>
-	<CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
-	<20250205081635.397eacb0@gandalf.local.home>
-	<CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
-	<20250206083039.0916ad24@gandalf.local.home>
-	<20250210172059.07cda916@pumpkin>
-	<20250210122700.3b963ff0@gandalf.local.home>
-	<20250210144432.14c50995@gandalf.local.home>
-	<20250210215116.4cbf240a@pumpkin>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1739224851; c=relaxed/simple;
+	bh=+WluA0xnKuBmfhcAa0XR5IEiiJO6LVqmX2L4ngoGzwo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XBPPdoofv451hZ7y6NuCrcaDYNdlYAniCyC0bjniLtWTeZW7+ACnwRfCsxo55kzXPUtrLmI1hLxQ9lo5fwKhIJUASluB3saFc7vnBVp2KLX8+RVbrMHRsZAj9pE2J0EOl0wUyY7Ys0H3tl7MY8J6lt+Zjj6oIDGdeiqKh2ERRM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DTI/Ytmz; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DTI/Ytmz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739224849;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8WNMbBmkgrizNiFSxnkLHSnpFN7pJOa4G7ZThdR/z1w=;
+	b=DTI/Ytmzw1PXVQ9cQJ8H93OISVsowcCn0bpCDSVp1XSui76J07FgeKunmjTB8iSZMVWDRg
+	N0gW3b+z3m8XLjEAXUSEOevD0EKf9wnXCkPiZaUBk7QRqAjCbSakT6oHnT5m7NDyTcoP9d
+	TqTFyTBfnWTN9U8loiizNDgPQST8GEw=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-396-Qv7tLn07OPi66lCIFPpuwA-1; Mon,
+ 10 Feb 2025 17:00:43 -0500
+X-MC-Unique: Qv7tLn07OPi66lCIFPpuwA-1
+X-Mimecast-MFC-AGG-ID: Qv7tLn07OPi66lCIFPpuwA
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5FD50180036F;
+	Mon, 10 Feb 2025 22:00:42 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.113])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 8F48830001AB;
+	Mon, 10 Feb 2025 22:00:39 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 10 Feb 2025 23:00:15 +0100 (CET)
+Date: Mon, 10 Feb 2025 23:00:11 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mitchell.augustin@canonical.com,
+	ilpo.jarvinen@linux.intel.com
+Subject: Re: [PATCH] PCI: Fix BUILD_BUG_ON usage for old gcc
+Message-ID: <20250210220010.GM32480@redhat.com>
+References: <20250210210109.3673582-1-alex.williamson@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210210109.3673582-1-alex.williamson@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Mon, 10 Feb 2025 21:51:16 +0000
-David Laight <david.laight.linux@gmail.com> wrote:
+On 02/10, Alex Williamson wrote:
+>
+> As reported in the below link, it seems older versions of gcc cannot
+> determine that the howmany variable is known for all callers.  Include
+> a test so that newer compilers can still enforce this sanity check and
+> older compilers can still work.
+>
+> Fixes: 4453f360862e ("PCI: Batch BAR sizing operations")
+> Link: https://lore.kernel.org/all/20250209154512.GA18688@redhat.com
+> Reported-by: Oleg Nesterov <oleg@redhat.com>
+> Suggested-by: Oleg Nesterov <oleg@redhat.com>
+  ^^^^^^^^^^^^
 
-> And then you lose lots of receive ethernet packets unless you change
-> all the thread priorities.
-> (I don't recall anything that makes them run at a low FIFO prioriry.)
+Well, thanks, but I didn't ;)
 
-Interrupt threads by default run at FIFO 50.
+> @@ -345,7 +345,8 @@ static void pci_read_bases(struct pci_dev *dev, unsigned int howmany, int rom)
+>  	unsigned int pos, reg;
+>  	u16 orig_cmd;
+>  
+> -	BUILD_BUG_ON(howmany > PCI_STD_NUM_BARS);
+> +	BUILD_BUG_ON(__builtin_constant_p(howmany) &&
+> +		     howmany > PCI_STD_NUM_BARS);
 
-The softirqs will run with the threads that raise them so at the same
-priority. See "sched_set_fifo()".
+Thanks!
 
--- Steve
+Tested-by: Oleg Nesterov <oleg@redhat.com>
+
