@@ -1,162 +1,88 @@
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.6])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5BFA43151
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:11:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.6
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CC91BBBF1
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739178720; cv=none; b=EHdtQ0BlBts5gUXQJD2bXLmX3DXez/8zAZW4mi0mjqB5/MFqeIOHUwHK51DSqTPlpl2Ltx92dFHbY9G2AiNyBdkklz99zzhvHN2nGRtPwFpksUP3VG75CC+pCOav5HxOHB4KZ1rVyzXpRPWlckK8f53Iot4ZLw/SOpPiiV7Rnek=
+	t=1739178763; cv=none; b=mRJ8l4PqXZhKKY58KWLoDUvngFnUux+98w1RLG34n5KJ1Z9FaUe01PE4j13zxLFWhPrOkOz8Nd/pUL1NVstbV6VHLkDaN2AXA6OweHchcagNrNocjbmAGMxIuJeDXIlAWXqiAlIlvqLelAK6Kvd0qq8FIDX35Xk52gUfevdpw7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739178720; c=relaxed/simple;
-	bh=sIGn5qtn7yGRNR9u/CPWDcRoGYGP30j1zfKvbK6uYuU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lmFEDq3CMTKPzhUpHslD1O1LrJ+P4HlM78CshBFZKfJk0QZxXDpMytSNvnLHBdbUdlZl4Sz5/NdVoFrx/MtXtPZvgywAvPIHxKJR7Bxsp++EBeSjIoj5rLaergb/xBxxwNhhgpf4MMlQk0PQimEFvZ3SMs6LruoY2uhsRzJP5aQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=C2t81RCu; arc=none smtp.client-ip=117.135.210.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1739178763; c=relaxed/simple;
+	bh=KpP0VauWezlZl9zLEnci186WAPTItH41JwByqjcT1Sg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nQG50BICS1WIBxKD0J9q+kFy4USwvM44091DAj+alqkn2BeWZ6Ki/eBfFF7qyvr/1hSMqJFy1CTOoLizGpfxvpgQ12O2TmbLq8vecjZSSQFsQey9ldIgo4oax3zrJbqmCROapS3dltiiMbpzunKPEyErQl7/LKLLMSSCYFPBSyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Hx+P1oTG; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="C2t81RCu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=j7ozK7S3jHPyjGgp2DQBnLMNQOAiWnt4fBinrs0WJAA=;
-	b=C2t81RCuRZk9imSBghwq3cONqrw4uTlS4f1fnpcF47aNBbPhoE727hMAIE9Mgh
-	L1Ptj+B757x3bDybqLbi3cGGCG2S9R/991eBvfhgr/dk4CkEv3Sk2vimM6x+4GF6
-	uPHwpBInZcCfXh8Cq4t+mf+A7qymmx41H95pVgvJhVn7c=
-Received: from [172.19.20.199] (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wD3P10xv6lna8IjAw--.4182S2;
-	Mon, 10 Feb 2025 16:56:17 +0800 (CST)
-Message-ID: <bf050059-546b-4e04-9bfa-d601d09b3852@126.com>
-Date: Mon, 10 Feb 2025 16:56:17 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hx+P1oTG"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e46ac799015so2947636276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 01:12:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739178761; x=1739783561; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KpP0VauWezlZl9zLEnci186WAPTItH41JwByqjcT1Sg=;
+        b=Hx+P1oTGKLCO6v/M+eJ7H3JyeiB1hcsM+tlDK7/oMd2/I/vf+QAxik82pF1PwInqd+
+         qNOH4VM9oshPuBCFABBWYuC6GvdK2+TKQvLUbEuSwlo69Xh+RFUoCPousUJE33X2sti/
+         0rKI8r83uLQRfw5rwD7X+3c4S7hZJciXIevSrQZqns+gp5xkBwzaVCCGaJN9w2pOr9q1
+         63KNDVsd0VM0D8WrOsH3A7BHRY+DxHkGEKMg8FKxPKkNqdZY6zo4+u+wxk2QAWG12bHK
+         OhEwyD0cEkKrihn1ULI3L74Nc/AfZgJQsxmPhUuoZ5R2Y3NXf6UiOpHjzriP6cTk/EOg
+         0mFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739178761; x=1739783561;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KpP0VauWezlZl9zLEnci186WAPTItH41JwByqjcT1Sg=;
+        b=sQf4g+MnMRs6VM02qBcZ/xLHYE6U08YsOhjAScZMyZJz8co1L9KjoBFaWiUaKM3jXy
+         hhZ4zTQ646MY598qA8WmbIxt5Ij9B0M4YWMrW56+d0u5zcji8b+ILcots550RiaRqMu3
+         MUM29fO3tP5izRGN0J+ea7+Od6kgG4jWP2iCnXZ6LuaIeLBaEam2B1u0r74jzFuxuvhm
+         xQ2tiGHiuVTjfpNfyDmVX6I2jBaYgkX/5KZC63inwB9Y3pgq4tlfX+Z2Og4DmdcGM3sK
+         XSjJiCSuVewBXS5kHYGXidl8BOPzLWzwmufx5XuecVNPQgjVWA9SyMoEs81RGkkmF4oD
+         6tFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVmltK/wKUIkL48BtzhlK7oTNnbhq9YqS6ofKiUGxeNgt5A+MFkICVlR6vW3xp9OeatoiPRTYAvQ9BK/KA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzdsz+DTV1Y2qBvAtdEWzdNj/xIa+xUOQSWkHJ0jXuKxH/XRsE8
+	KMAoPRWXQ+8LzffcPwQ8dpwmvm+izeVUhY2M7cAfKJBF6AbSyUOxqTQDWl+L4NPVJO+VcbjCTMw
+	uz7NNCqgucOPpDhT55Nnr4vZ17WkmAtV9yX0aP5Iu3JfzTV6Y
+X-Gm-Gg: ASbGncsQSTmQsc3d2mrNx6r039rg36ORI/jm8Eu97TaAEVWnmJKg6MiB4XoLa8SM3Gu
+	f9uVfvWgJ3Do9V8xU8T6kGLAykyOptKTMTjgD4Lq53pRvs3qVxVZmLMlBpCROHSY5c0hUFN+y
+X-Google-Smtp-Source: AGHT+IFAawMg2Nf7mqa5umT0YKscWEuVFFrDSBesMFIgDCoKmA9MK9WP2lFoyGsa/Z/8TYQ1P+7gsxVF6nzcDCRCG5E=
+X-Received: by 2002:a05:690c:6306:b0:6f9:4bb6:eb46 with SMTP id
+ 00721157ae682-6f9b2a21876mr119497097b3.31.1739178761099; Mon, 10 Feb 2025
+ 01:12:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] mm/cma: using per-CMA locks to improve concurrent
- allocation performance
-To: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 21cnbao@gmail.com,
- baolin.wang@linux.alibaba.com, aisheng.dong@nxp.com, liuzixing@hygon.cn
-References: <1739152566-744-1-git-send-email-yangge1116@126.com>
- <51514ffd-a1ca-4eb4-90ab-c6871ab92c95@redhat.com>
-From: Ge Yang <yangge1116@126.com>
-In-Reply-To: <51514ffd-a1ca-4eb4-90ab-c6871ab92c95@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3P10xv6lna8IjAw--.4182S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAF1xXF15XF47XFy8Kr1Utrb_yoWrXw15pr
-	W8GFWjyrWkJr13Aw42vw1DWFyF9wn7KFWUKr1Fva4fCasxCr93Ww48t3WY9rW8urZ7WFyI
-	vr1jqasxZ3WUZrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jYpB-UUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbifgbvG2epu8cumgAAsK
+References: <20250203121843.3183991-1-andriy.shevchenko@linux.intel.com> <20250203121843.3183991-3-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250203121843.3183991-3-andriy.shevchenko@linux.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 10 Feb 2025 10:12:27 +0100
+X-Gm-Features: AWEUYZnXwUXk95Ic6JXWl33Js0Fr1hk4GXmLDnCXzS64aYVBM9dHPxfnvm3rnoc
+Message-ID: <CACRpkdbwBB7aS=oRHCkUcZybigXabD6x_z9m_X7iveRakYxLxw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/7] gpio: 74x164: Simplify code with cleanup helpers
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Feb 3, 2025 at 1:18=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
+> Use macros defined in linux/cleanup.h to automate resource lifetime
+> control in the driver.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-在 2025/2/10 16:34, David Hildenbrand 写道:
-> On 10.02.25 02:56, yangge1116@126.com wrote:
->> From: yangge <yangge1116@126.com>
->>
->> For different CMAs, concurrent allocation of CMA memory ideally should 
->> not
->> require synchronization using locks. Currently, a global cma_mutex 
->> lock is
->> employed to synchronize all CMA allocations, which can impact the
->> performance of concurrent allocations across different CMAs.
->>
->> To test the performance impact, follow these steps:
->> 1. Boot the kernel with the command line argument hugetlb_cma=30G to
->>     allocate a 30GB CMA area specifically for huge page allocations. 
->> (note:
->>     on my machine, which has 3 nodes, each node is initialized with 
->> 10G of
->>     CMA)
->> 2. Use the dd command with parameters if=/dev/zero of=/dev/shm/file bs=1G
->>     count=30 to fully utilize the CMA area by writing zeroes to a file in
->>     /dev/shm.
->> 3. Open three terminals and execute the following commands 
->> simultaneously:
->>     (Note: Each of these commands attempts to allocate 10GB [2621440 * 
->> 4KB
->>     pages] of CMA memory.)
->>     On Terminal 1: time echo 2621440 > /sys/kernel/debug/cma/hugetlb1/ 
->> alloc
->>     On Terminal 2: time echo 2621440 > /sys/kernel/debug/cma/hugetlb2/ 
->> alloc
->>     On Terminal 3: time echo 2621440 > /sys/kernel/debug/cma/hugetlb3/ 
->> alloc
->>
-> 
-> Hi,
-> 
-> I'm curious, what is the real workload you are trying to optimize for? I 
-> assume this example here is just to have some measurement.
-> 
-Some of our drivers require this optimization, but they haven't been 
-merged into the mainline yet. Therefore, we optimize the debug code for 
-them.
-> Is concurrency within a single CMA area also a problem for your use case?
-> 
-Yes, we will first optimize the concurrent performance for multiple 
-CMAs, and then proceed to optimize the concurrent performance for a 
-single CMA later.
-> 
->> We attempt to allocate pages through the CMA debug interface and use the
->> time command to measure the duration of each allocation.
->> Performance comparison:
->>               Without this patch      With this patch
->> Terminal1        ~7s                     ~7s
->> Terminal2       ~14s                     ~8s
->> Terminal3       ~21s                     ~7s
->>
->> To slove problem above, we could use per-CMA locks to improve concurrent
->> allocation performance. This would allow each CMA to be managed
->> independently, reducing the need for a global lock and thus improving
->> scalability and performance.
->>
->> Signed-off-by: yangge <yangge1116@126.com>
->> ---
->>
->> V2:
->> - update code and message suggested by Barry.
->>
->>   mm/cma.c | 7 ++++---
->>   mm/cma.h | 1 +
->>   2 files changed, 5 insertions(+), 3 deletions(-)
->>
->> diff --git a/mm/cma.c b/mm/cma.c
->> index 34a4df2..a0d4d2f 100644
->> --- a/mm/cma.c
->> +++ b/mm/cma.c
->> @@ -34,7 +34,6 @@
->>   struct cma cma_areas[MAX_CMA_AREAS];
->>   unsigned int cma_area_count;
->> -static DEFINE_MUTEX(cma_mutex);
->>   static int __init __cma_declare_contiguous_nid(phys_addr_t base,
->>               phys_addr_t size, phys_addr_t limit,
->> @@ -175,6 +174,8 @@ static void __init cma_activate_area(struct cma *cma)
->>       spin_lock_init(&cma->lock);
->> +    mutex_init(&cma->alloc_mutex);
->> +
->>   #ifdef CONFIG_CMA_DEBUGFS
->>       INIT_HLIST_HEAD(&cma->mem_head);
->>       spin_lock_init(&cma->mem_head_lock);
->> @@ -813,9 +814,9 @@ static int cma_range_alloc(struct cma *cma, struct 
->> cma_memrange *cmr,
->>           spin_unlock_irq(&cma->lock);
->>           pfn = cmr->base_pfn + (bitmap_no << cma->order_per_bit);
->> -        mutex_lock(&cma_mutex);
->> +        mutex_lock(&cma->alloc_mutex);
->>           ret = alloc_contig_range(pfn, pfn + count, MIGRATE_CMA, gfp);
->> -        mutex_unlock(&cma_mutex);
->> +        mutex_unlock(&cma->alloc_mutex);
-> 
-> 
-> As raised, a better approach might be to return -EAGAIN  in case we hit 
-> an isolated pageblock and deal with that more gracefully here (e.g., try 
-> another block, or retry this one if there are not others left, ...)
-> 
-> In any case, this change here looks like an improvement.
-> 
-> Acked-by: David Hildenbrand <david@redhat.com>
-> 
+Clearly this is more readable and less prone to accidental bugs.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+Yours,
+Linus Walleij
