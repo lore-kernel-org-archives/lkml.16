@@ -1,71 +1,71 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173EF1B4149;
-	Mon, 10 Feb 2025 07:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9933C1B87EF;
+	Mon, 10 Feb 2025 07:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739173246; cv=none; b=DbJOSmi/tcSiro/737pc+Esx8kMX8PF+v5IOQ/LX8yWlkSdBmzYIMzBACwGJIYvj+60nuFbLhITmPYZ5x730U0/RH2a+79C3zTe5yN1DUcBycLVD3MwL/gIpfgw7cF4rHhKscIA16IwDiyzZWCdIrnFednRaCsQ1RjPyScgLrGE=
+	t=1739173304; cv=none; b=TPNo9j2CU8QN3SjFWZ19lmWCWscp7nwmpCsuw9fVkGyYaeiuGrm4QegNudAK67bIhFMRfoFaXKtao9c9A9v8amMY3pZQGtebZyZb+m+ZV+gC3UARDgMEq5uuvggOkAiDU4U/9i5JTA8JMxEPztjnIDZxD3dY/MOI7OEGoJxgm4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739173246; c=relaxed/simple;
-	bh=eTEG+gAtpDdSPJl6g8hkkdjOZgaHcJljzPV6r1bGj0g=;
+	s=arc-20240116; t=1739173304; c=relaxed/simple;
+	bh=4wZ2PXfur8egXNnwBo7N5ubOAev+hvve+Oxty/JG0Vk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PFF67ePI/6kFX9ULHxPwMX7HJPnY18CNG6IMAaw33lzxV/KgXaLFGfe75mvGXd9+Yfj1FKwP+u8MAmxJzGlIwz1hUi3orvNZ7/EX0JE5odBAeczrsZlfPG8KlSg1dew2MRdLwkgJ4iDipxzDWVeTeyH2jJoKdTqFkMF1j1Ec0IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dEk6dpLT; arc=none smtp.client-ip=209.85.208.46
+	 MIME-Version:Content-Type; b=DvaLlIZedFgsbPZZXPpUXrDEBXkCt/Bn+WPWXFeNKpVN12KY5ESnSW/puMunAk0YPSSaf4py0xMYwXs9nP/tkSAIfKYNXLYsnkDBPKBbpcH8luibU7cJaHq+bPVciePzXJMtdBN8sW+ySq6Py3sHO8Zl3n0HjT3c81TrEC8kOiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L3qnT9jl; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dEk6dpLT"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5dccaaca646so7899799a12.0;
-        Sun, 09 Feb 2025 23:40:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L3qnT9jl"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5de6e26db8eso1986744a12.2;
+        Sun, 09 Feb 2025 23:41:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739173243; x=1739778043; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1739173301; x=1739778101; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=++ovUUwJH/E3x9o9N2lcwDw3LK6MWwTzZJkWbZlRbW0=;
-        b=dEk6dpLTPp1xnzYa5B/b4hbzmwFRmWyNErUkB5hizzy/OfNDUezJ1hXE8SDO+sCFO2
-         uCu+W5g4jo62mG8a/n9UXijXXl89Ge/OciVxmkSNH2UjziIyhTozkN0be7hXUeNTBOm9
-         yct4X9eda62VROUl/3Ty+l7ZSmEDOwOSmKw6jopR3VO49cUF2LcdZiGFy43jJgtiudkl
-         mj7XhtRM9c4peebMEoP5cKUVLbSeHET8baR3rw3MxXyK1xOB9+1+QHR4SS3Y8MncMgfw
-         SK9HeEvEO5OgxmeE3R39b1PtGlP8pmlr3R6z25ykT4ClTzbtV/XUXBDxGspV5yNmBY0R
-         MrhQ==
+        bh=f2RcdX/GqwE9yRHPGubP2yGFF/DbcGETjEu0NPc+ZSE=;
+        b=L3qnT9jlIDGjf/NIQik6CZ+WpIKDAubpItUdRNKwZiYt9fW+WTFtZwGFHsUZe0dKOA
+         pLvLQ2lPsZjuyt61x+kH6RljoKpteZrSu49TmEf/56FyOlgxtcJAePBSOtN4CnzRGHgT
+         EiaWvTVtWUl6fqkpdZvSl0UGszYdnYRSNwyYhAcSTMuOMXoLpQHK/tv+DZH2hYequdWR
+         W1GFtFqUbARMKksAhe2f0i4Z1GC3YcpvIZeijnmUA8knrSSQjObn+91G8Fmre6YAiuI5
+         7/TAu0Lc4FDRWy6ifGpA2uvCnOocPxZDYH1vqIB3v5xC1wEyAsGvAhdga9r3cZxsdRGI
+         hBaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739173243; x=1739778043;
+        d=1e100.net; s=20230601; t=1739173301; x=1739778101;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=++ovUUwJH/E3x9o9N2lcwDw3LK6MWwTzZJkWbZlRbW0=;
-        b=RA48W/jL+oHJW92oADSjxBz6cm2tHPZpqUQNmKj4wHz+nYbUlkU+YOgHN3Gl2+2MRK
-         Vpx9b+NESCmcLRXrT+ptTxCT0jB8MwaeggGwMeDTiRc4/ZkGTTM4LFMOqRMqKEkHMoKn
-         mTgcvNDLDSM3b6tYYSo3dbmt4yxWXSCY/Jg+b/8MKEeZzHCkehcBUZq+BBa+dibaP+1L
-         xpu7OVjRWYCu1BQodH9aUSOZSChfdnXPYx5CSdhSiB4lFxo3KVRnOXuq0z6iOWVM0LAk
-         TIikK5K7w5u6ZIVm5ma3bvkzTvKqJFLcVXbG4RxSFGuWON6dl0kHZfGs9l5Zhmii/+1L
-         svCA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEinqA1JVpf677iMIKOYsuAc9our9D5EAHLTxu3u6apfeu3Aa2Slc4TJh4yjPTdo7kbpNoTEh0nfWQB3k=@vger.kernel.org, AJvYcCVClqYNFkU1dtNRgibZsPyEpQVmOufMCLzHw9KhHa+k/LLrkwpAbPxKk3fcl/4Xge9P5Jz02rM4GWl/@vger.kernel.org
-X-Gm-Message-State: AOJu0YznlwXS8s/AiL30b9eyVURJPPEjy+jpfzNTvI9KNSZjwiD6XIEQ
-	EMPhTYDkklvUalFxgh3p+U2fmfDhoM/aECHBFg4hEKExlg0JWK0u
-X-Gm-Gg: ASbGncu0Llf+EeSaVxSS6YkEr4ZhQvzLxolX3LwVkCDG6zX73jHIwgVi/jNrO+17+0O
-	LeQiHxzTM/KO+2rZ6Qo4kbo3GRqV0iaGYuDRVcy284daXt66PaaW24az01VLvLBnZYQHe8PvXPk
-	nAH8mwz1eCpA9A4Nvtg0JyTWYTXEQFJI5d42Poi0HCHxf25QekiOwPtlTowM4HE0k558VqAqCaN
-	jvbzqrN3BUZivZl5ZkJLD/HejDfTJaYKKhLhyIg+cCSXTMWhXatQ1MeyekB783eGfziJpr9FFyS
-	anGbiiiEWD/euXzp0HzOsTWV+E2UhzxP
-X-Google-Smtp-Source: AGHT+IFBJvUjWR/XSylcEftefCtQZBr2hODlucBtDqhpbK84II0TbhllwxJTleUn7E2m6zyXX80oTA==
-X-Received: by 2002:a05:6402:430c:b0:5db:68bd:ab78 with SMTP id 4fb4d7f45d1cf-5de46a1c14bmr14072221a12.10.1739173243118;
-        Sun, 09 Feb 2025 23:40:43 -0800 (PST)
+        bh=f2RcdX/GqwE9yRHPGubP2yGFF/DbcGETjEu0NPc+ZSE=;
+        b=bncHvzEBKh4WS2j++ErcKH4EAaywX+dXcHROXdhhtT+RqAcoU0yfzVwXDVDLNBioJ1
+         XkjNmH1kPoChMbEVoSeNDNod7irnqNKysMETYszcpysw/41a4xwWF5gKA6I+gGaJkGY7
+         UFe8qvBLTqPSfcExjdB7Lksc+0ezBMg/TslKBavT+IgR/Tj2bRXHZBpvGc4g0e0yIcCg
+         Cd6sc3YtBSdEjlkdcHkoamBzwqGrf5k3gyGB0bib/gaeBnkg1qON0xM0Ae/ZNNMR0KzV
+         AM57cbyVkiQoq4q84YNtdwIGYym6IWd90WVcBIm+v279fUPguyxR9el66AvC2j/41Hsg
+         b8Wg==
+X-Forwarded-Encrypted: i=1; AJvYcCUsv3cvntFN+QuplO7n3hJ5F7hPHitjmxLcINO513RPDFPs+cgNUVmX0pgVAohfzf9X3c31mqP+3eB0HXE=@vger.kernel.org, AJvYcCWLZ4enBCE+HxyDEtrjmXQujRQXoqFa2w3gyPW6WFvB4eaGYdReNPRJBssDXtqb2lPGYeOHQxa5qKVR@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuBax13wctG7vAMXeFd/LQJt3yiCuSec5sBEuxs8JqbwNkHJsW
+	Dg6lDzSviZ939Yp5Z32BHQEa3wni18dKrCRoYb8Bv8UQ5K3RHHfMuE6F2A==
+X-Gm-Gg: ASbGncsjCzH4R7SahBuxUG5yt926GtOZcbBPv84PA+5N4D1Xr5/WCt0YK31r3blS0aU
+	BnZIilJ6XousSTz4rD3K2tlCIK6iyl6dh6XtSXnM/SE7X6332Ywb4UBBC5dxeN0tO0dZ/2LTmKD
+	8U2TNcts2QzAfSivNJQxnVUKm+gbzoUNryeudPjKTkaAlTE1+LvpAllzsP0menZ6iTOBayLPTxw
+	hxmj/u74uHj2NZHr8SJCh0X9f6Tbf6OzT+o/dcKNl6QMXqjtiNg6noyIkOPu2ALV4mj0MxY9IEP
+	30SS9TzT1Kaf+Q4qeYjxmT5a3LjE219b
+X-Google-Smtp-Source: AGHT+IFmHEz01JMwmgTiCyvn2884m6vS3unuxdPrSqOcyaZhFaMbZz9SzHMSUQZjiq8nwJ320QX/GA==
+X-Received: by 2002:a05:6402:1ec5:b0:5dc:545:40a7 with SMTP id 4fb4d7f45d1cf-5de45005b92mr15481607a12.12.1739173300626;
+        Sun, 09 Feb 2025 23:41:40 -0800 (PST)
 Received: from foxbook (adtq181.neoplus.adsl.tpnet.pl. [79.185.228.181])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de45a92fa7sm6489176a12.23.2025.02.09.23.40.42
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de4ba95a32sm6086993a12.40.2025.02.09.23.41.39
         (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Sun, 09 Feb 2025 23:40:42 -0800 (PST)
-Date: Mon, 10 Feb 2025 08:40:39 +0100
+        Sun, 09 Feb 2025 23:41:40 -0800 (PST)
+Date: Mon, 10 Feb 2025 08:41:37 +0100
 From: Michal Pecio <michal.pecio@gmail.com>
 To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman 
  <gregkh@linuxfoundation.org>
 Cc: Niklas Neronin <niklas.neronin@linux.intel.com>,
  linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] usb: xhci: Fix isochronous Ring Underrun/Overrun event
- handling
-Message-ID: <20250210084039.734666bd@foxbook>
+Subject: [PATCH 4/5] usb: xhci: Expedite skipping missed isoch TDs on modern
+ HCs
+Message-ID: <20250210084137.5f4cc906@foxbook>
 In-Reply-To: <20250210083718.2dd337c3@foxbook>
 References: <20250210083718.2dd337c3@foxbook>
 Precedence: bulk
@@ -77,70 +77,71 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-The TRB pointer of these events points at enqueue at the time of error
-occurrence on xHCI 1.1+ HCs or it's NULL on older ones. By the time we
-are handling the event, a new TD may be queued at this ring position.
+xHCI spec rev. 1.0 allowed the TRB pointer of Missed Service events
+to be NULL. Having no idea which of the queued TDs were missed and
+which are waiting, we can only set a flag to skip missed TDs later.
 
-I can trigger this race by rising interrupt moderation to increase IRQ
-handling delay. Similar delay may occur naturally due to system load.
+But HCs are also allowed to give us pointer to the last missed TRB,
+and this became mandatory in spec rev. 1.1 and later.
 
-If this ever happens after a Missed Service Error, missed TDs will be
-skipped and the new TD processed as if it matched the event. It could
-be given back prematurely, risking data loss or buffer UAF by the xHC.
+Use this pointer, if available, to immediately skip all missed TDs.
+This reduces latency and risk of skipping-related bugs, because we
+can now leave the skip flag cleared for future events.
 
-Don't complete TDs on xrun events and don't warn if queued TDs don't
-match the event's TRB pointer, which can be NULL or a link/no-op TRB.
+Handle Missed Service Error events as 'error mid TD', if applicable,
+because rev. 1.0 spec excplicitly says so in notes to 4.10.3.2 and
+later revs in 4.10.3.2 and 4.11.2.5.2. Notes to 4.9.1 seem to apply.
 
-Now that it's safe, also handle xrun events if the skip flag is clear.
-This ensures completion of any TD stuck in 'error mid TD' state right
-before the xrun event, which could happen if a driver submits a finite
-number of URBs to a buggy HC and then an error occurs on the last TD.
+Tested on ASM1142 and ASM3142 v1.1 xHCs which provide TRB pointers.
+Tested on AMD, Etron, Renesas v1.0 xHCs which provide TRB pointers.
+Tested on NEC v0.96 and VIA v1.0 xHCs which send a NULL pointer.
 
+Change inspired by a discussion about realtime USB audio.
+
+Link: https://lore.kernel.org/linux-usb/76e1a191-020d-4a76-97f6-237f9bd0ede0@gmx.net/T/
 Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
 ---
- drivers/usb/host/xhci-ring.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/usb/host/xhci-ring.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index 9b06a911a16e..11a53e310826 100644
+index 11a53e310826..878abf5b745d 100644
 --- a/drivers/usb/host/xhci-ring.c
 +++ b/drivers/usb/host/xhci-ring.c
-@@ -2664,6 +2664,7 @@ static int handle_tx_event(struct xhci_hcd *xhci,
- 	int status = -EINPROGRESS;
- 	struct xhci_ep_ctx *ep_ctx;
- 	u32 trb_comp_code;
-+	bool ring_xrun_event = false;
- 
- 	slot_id = TRB_TO_SLOT_ID(le32_to_cpu(event->flags));
- 	ep_index = TRB_TO_EP_ID(le32_to_cpu(event->flags)) - 1;
-@@ -2770,14 +2771,12 @@ static int handle_tx_event(struct xhci_hcd *xhci,
- 		 * Underrun Event for OUT Isoch endpoint.
+@@ -2476,6 +2476,12 @@ static void process_isoc_td(struct xhci_hcd *xhci, struct xhci_virt_ep *ep,
+ 		if (ep_trb != td->end_trb)
+ 			td->error_mid_td = true;
+ 		break;
++	case COMP_MISSED_SERVICE_ERROR:
++		frame->status = -EXDEV;
++		sum_trbs_for_length = true;
++		if (ep_trb != td->end_trb)
++			td->error_mid_td = true;
++		break;
+ 	case COMP_INCOMPATIBLE_DEVICE_ERROR:
+ 	case COMP_STALL_ERROR:
+ 		frame->status = -EPROTO;
+@@ -2786,8 +2792,8 @@ static int handle_tx_event(struct xhci_hcd *xhci,
  		 */
- 		xhci_dbg(xhci, "Underrun event on slot %u ep %u\n", slot_id, ep_index);
--		if (ep->skip)
--			break;
--		return 0;
-+		ring_xrun_event = true;
-+		break;
- 	case COMP_RING_OVERRUN:
- 		xhci_dbg(xhci, "Overrun event on slot %u ep %u\n", slot_id, ep_index);
--		if (ep->skip)
--			break;
--		return 0;
-+		ring_xrun_event = true;
-+		break;
- 	case COMP_MISSED_SERVICE_ERROR:
- 		/*
- 		 * When encounter missed service error, one or more isoc tds
-@@ -2894,6 +2893,9 @@ static int handle_tx_event(struct xhci_hcd *xhci,
- 	 */
- 	} while (ep->skip);
+ 		ep->skip = true;
+ 		xhci_dbg(xhci,
+-			 "Miss service interval error for slot %u ep %u, set skip flag\n",
+-			 slot_id, ep_index);
++			 "Miss service interval error for slot %u ep %u, set skip flag%s\n",
++			 slot_id, ep_index, ep_trb_dma ? ", skip now" : "");
+ 		break;
+ 	case COMP_NO_PING_RESPONSE_ERROR:
+ 		ep->skip = true;
+@@ -2836,8 +2842,8 @@ static int handle_tx_event(struct xhci_hcd *xhci,
+ 		xhci_dequeue_td(xhci, td, ep_ring, td->status);
+ 	}
  
-+	if (ring_xrun_event)
-+		return 0;	/* don't warn or complete any TDs */
-+
- 	if (!ep_seg) {
- 		/*
- 		 * Skip the Force Stopped Event. The 'ep_trb' of FSE is not in the current
+-	/* Missed TDs will be skipped on the next event */
+-	if (trb_comp_code == COMP_MISSED_SERVICE_ERROR)
++	/* If the TRB pointer is NULL, missed TDs will be skipped on the next event */
++	if (trb_comp_code == COMP_MISSED_SERVICE_ERROR && !ep_trb_dma)
+ 		return 0;
+ 
+ 	if (list_empty(&ep_ring->td_list)) {
 -- 
 2.48.1
