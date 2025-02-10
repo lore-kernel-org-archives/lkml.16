@@ -1,271 +1,187 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05A217557
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:18:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DED717557
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739193500; cv=none; b=RBxrz/KLzC6VtA20KU0O6gnTc3DryhYq26kh8HnJXXh2gCmKw2IlZq7qCciBAvJK/3LRTeSer4bm+lsl/G6vYiRf/9XUrJKcGq9+D0ASSeS3xi3UF96LplpE4M/NoW7XgQA64sYiOExB9FhG2nGM53TG+kUqmdaI83NvEwNLG4Y=
+	t=1739193506; cv=none; b=t/zGNCjUahe9O1/oMEqxG+d+SIKr29MEzpvCeT4lwS7JGGOVooGE7K5NuRcz5hQ9JkLjvsZrjLOpGdNGPEnB0XiXzAMoC/rtiAeDmXOcbmS5fp+Q966Yf2ZOYiZlb5pKomNjHMB8ONL9V+/oi8irsEYZyDYBOEMSNCQmUOv2B30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739193500; c=relaxed/simple;
-	bh=DloKvxbxSfL+Efk0iq0/fks3+nhvwnrxNc4TYB83bYs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CH4MRZtdHcTzxM7eq/1WayyKoTTUGBedh/J7ZOroYyjxsaRaLtO66lW9UQnhg8MYWHtxlBy7RYR/CDOk8WDHIx8LPaGa6lage/eqN0yjKh2yx5SAb/BoUxT4mFIBV6f/sCZOVzXgv6uqRT+cNVw20YCR3RgSBnXvMpAyJbm5jfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=qz8glQyK; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1739193506; c=relaxed/simple;
+	bh=aaEKiW23plNWCqQayU6HDAr16q6whBnAcEruYcoYO5I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W80O7aQOqJ9Ii/pohSEwjgVQIFa4gp5VaS/CHLaclot74OmIp61PuT5L5i3H2bVR2jJgl7rodDKUqKJPk2qq/0pxdo0bJ6ro2lEEGxBZUIW0HbMTgWoyyPlDFjzGvhh8IJJeMRU+cVk08lMSiJX14tKgypdIpsrc7tq1sYY1EiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d36xJsQ0; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="qz8glQyK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739193496;
-	bh=DloKvxbxSfL+Efk0iq0/fks3+nhvwnrxNc4TYB83bYs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qz8glQyKOhMMmK59TKev8gLh2kiq0i64t6ENe9n7kVtZT2RfAszOqpysaCEJtnmfd
-	 0932Mg3LwU4WfRCUA50RQUJx17k2epTHp5c4P+P1u8XFswn0LKGsPcoELjJ70itHxb
-	 02m3jgs3P2+F19+wx/RK2FDODb1fR9Oh6PFaqfLP0uuq578Rt/O74yJGECQuJkPSC+
-	 TkIGlnhbF7uPIdDn+P5EVtEStNztAyZPMNNp3qlMa0/3TggCH+W7ZlxUKNvUOfVzP/
-	 Wn934nkT5jqH4R44oklpiMX5EPd62+7RGENx4x6PfVy734cPNtCA+214qZA4ofVBIO
-	 jW9FvFWHUNQ9Q==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8D45A17E0FCC;
-	Mon, 10 Feb 2025 14:18:15 +0100 (CET)
-Date: Mon, 10 Feb 2025 14:18:07 +0100
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
-Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Mihail Atanassov
- <mihail.atanassov@arm.com>, kernel@collabora.com,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] drm/panthor: Avoid sleep locking in the internal BO
- size path
-Message-ID: <20250210141807.064ccacf@collabora.com>
-In-Reply-To: <20250210124203.124191-2-adrian.larumbe@collabora.com>
-References: <20250210124203.124191-1-adrian.larumbe@collabora.com>
-	<20250210124203.124191-2-adrian.larumbe@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d36xJsQ0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739193503;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M0MPt0ycdUSMONDSu9mYoplPstvbsn9ikTgZv5+baQE=;
+	b=d36xJsQ0JUi/P0/a/SDU/rFcGPtLRODuhNR2yRT8vtx1/N9k475HT0eJfGBol1GCcnqhRs
+	UsMPlOk1772pkrU7AIBjdwuMEtw2vHu4xYJTLYQMBEIurUepnK96/Zvdx2VA4jt6dzvYqB
+	mRxcpemXjDSHwO5hFUmJpqVssv2FoP8=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-88-0GbY2TnBNsmYMQ8-xbOFcw-1; Mon, 10 Feb 2025 08:18:21 -0500
+X-MC-Unique: 0GbY2TnBNsmYMQ8-xbOFcw-1
+X-Mimecast-MFC-AGG-ID: 0GbY2TnBNsmYMQ8-xbOFcw
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4393ed818ccso8858015e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 05:18:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739193500; x=1739798300;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=M0MPt0ycdUSMONDSu9mYoplPstvbsn9ikTgZv5+baQE=;
+        b=lzs+Bfd8m3IUYk3w4h3HFREPIPGUqaz82dukgC8SYPSbPneyjZhi4+rF1Jn7bFWTNv
+         QLwnzyrjiKoq5vAe18MnIafn6CuzqJUBeFRhUDHJR0XpEH3xy+Na17JET0jH20lTQWJ8
+         Vp7StNPTWBv34Q0NKeQArIwEz3hxakuuFLoLdFNTjPFk9UdO0pjYzzAHdISm68RfQeYn
+         NvT6RKjkjo4j2Xi0hlZ+E+O7eoAAQJt6dJqOMS2mYCytuoZFnfkPM4A21JgWu4luQdan
+         e+Cemy4KbAyajp2NI+4qi04uIRL13JMptCwCFn76yiLs2EsJeZE278rnA8JuARE7TMXH
+         MiUg==
+X-Forwarded-Encrypted: i=1; AJvYcCVALxvRuBmH2J4JE2Lt40ghzkvJu7tXpDLYwtixWP/B1pzUi25JSFSf+RdZcvK52T1fur5RzOTAbHVQQw0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6hDudI4aoxUFG/0PlTkXACB+ekCpBijeQ1qz+9ORfXIE58rNE
+	SakMw1NluDRXGXLQcIOsfMD5yqBDETKJgowrUKMEgf6/8iC8D7Be+7dM9tXmaukOrcSOl0ZN3e4
+	Qo/req5GkHW4bgctwPmpbncNqCrRbFtOBY/j08AOiNIqJZS/NYMR5Lalgya6ftQ==
+X-Gm-Gg: ASbGncuTw1K6SKF4v/jhCOyv6DFUrKwZVvcDLq5Eor9f266MQQTb8OLCsRjWa5Zn5Nd
+	2JLIITfSGans+pGIPEARv5x5Wd/ztR52Jl/qjOtVH3AbPfWbIRLPUN0+xmbhT900E8kCEHpzQB7
+	ebk+hsxrqjkLwVm0RvXpQHAhCE2ZXJ8vnXBYbtwaKFfxFT15j6qhFLCWQV7DgqMZE3HMWy8gUe0
+	1rrT32r2XuqnI6icY1gPP1bKCbScdmd1MSD8ZF8JBZevdQcwxWYQpBzdW+ebSjgZ9ecQqhyC0+b
+	g9sONVTX/u57W2NhmBIaJVSE5Pv+oEB0FbKkmtS7WhSdjzk=
+X-Received: by 2002:a05:600c:3c84:b0:435:32e:8270 with SMTP id 5b1f17b1804b1-43924991e0cmr110864805e9.14.1739193500540;
+        Mon, 10 Feb 2025 05:18:20 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFoG9yP3/H9MVEK+qppHO2dXkw+Mes+rTTzfBqf9J7j6+TGHkenAflO96Xy+SJtMO0c9pi0Dg==
+X-Received: by 2002:a05:600c:3c84:b0:435:32e:8270 with SMTP id 5b1f17b1804b1-43924991e0cmr110864445e9.14.1739193500176;
+        Mon, 10 Feb 2025 05:18:20 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:59e:9d80:527b:9dff:feef:3874? ([2a01:e0a:59e:9d80:527b:9dff:feef:3874])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439492affe2sm13118155e9.28.2025.02.10.05.18.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 05:18:19 -0800 (PST)
+Message-ID: <16086d70-2371-47ab-8980-ffbf40971bcb@redhat.com>
+Date: Mon, 10 Feb 2025 14:18:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] KVM: arm64: nv: Set ISTATUS for emulated timers, If timer
+ expired
+Content-Language: en-US
+To: Marc Zyngier <maz@kernel.org>
+Cc: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ kvmarm <kvmarm@lists.linux.dev>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, oliver.upton@linux.dev,
+ christoffer.dall@arm.com, suzuki.poulose@arm.com, will@kernel.org,
+ catalin.marinas@arm.com, coltonlewis@google.com, joey.gouly@arm.com,
+ yuzenghui@huawei.com, darren@os.amperecomputing.com,
+ vishnu@os.amperecomputing.com
+References: <20241209053201.339939-1-gankulkarni@os.amperecomputing.com>
+ <867c89tc4q.wl-maz@kernel.org>
+ <c5b1c3d7-56ca-4afc-a831-045dba4beffa@os.amperecomputing.com>
+ <865xntt2kv.wl-maz@kernel.org>
+ <8be59ff3-6a68-48e1-8181-0ce4b2e7180f@os.amperecomputing.com>
+ <bcb4289b-507c-4ea1-afc7-6febd34d88db@redhat.com>
+ <86y10osr19.wl-maz@kernel.org>
+ <4d443db1-85b1-4071-acd5-3187deb9cb17@redhat.com>
+ <2f6b2cb1-3d32-480a-9801-9b993ae74e2d@os.amperecomputing.com>
+ <152d262e-641d-4bb1-9656-a13e049d62c4@redhat.com>
+ <86h661wje4.wl-maz@kernel.org>
+ <4a9fbdd9-ad23-44bc-8ba5-399f08068db4@redhat.com>
+ <86cygpwfy0.wl-maz@kernel.org>
+ <b22d5916-8b55-43bc-a256-2136d66ad25f@redhat.com>
+ <86frkptzr6.wl-maz@kernel.org>
+From: Eric Auger <eauger@redhat.com>
+In-Reply-To: <86frkptzr6.wl-maz@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Mon, 10 Feb 2025 12:42:00 +0000
-Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
+Hi Marc,
 
-> A previous commit dealt with a similar situation, whereby upon enabling
-> some mutex debug features, a warning about sleep muteces being used in a
+On 2/7/25 6:45 PM, Marc Zyngier wrote:
+> On Thu, 16 Jan 2025 17:52:10 +0000,
+> Eric Auger <eauger@redhat.com> wrote:
+>>
+>> Hi Marc,
+>>
+>> On 1/14/25 4:52 PM, Marc Zyngier wrote:
+>>> On Tue, 14 Jan 2025 14:57:43 +0000,
+>>> Eric Auger <eauger@redhat.com> wrote:
+>>>>
+>>>> Hi Marc,
+>>>>
+>>>> On 1/14/25 3:38 PM, Marc Zyngier wrote:
+>>>>> Hi Eric,
+>>>>>
+>>>>> On Tue, 14 Jan 2025 13:12:21 +0000,
+>>>>> Eric Auger <eauger@redhat.com> wrote:
+>>>>>>
+>>>>>> I also confirm that using a mailine edk2 fixed the issues I faced
+>>>>>> previously (fed/rhel L1 guest not booting).
+>>>>>>
+>>>>>> I used Marc's nv-next branch and qemu rebase.
+>>>>>
+>>>>> When did you sample this branch? It is almost daily rebased at the
+>>>>> moment, given that we keep piling up things in kvmarm/next.
+>>>> 5 days ago.
+>>>
+>>> OK, so probably before I reapplied everything on top of kvmarm/next.
+>>> Not necessarily a bad thing, just slightly older. The core NV code
+>>> isn't rapidly changing anymore, with the exception of the recursive
+>>> nesting stuff that I am currently rewriting.
+>>>
+>>>>
+>>>> If you want me to test a specific branch, please let me know, esp. in
+>>>> the context of latest series including
+>>>>
+>>>> [PATCH v2 00/17] KVM: arm64: Add NV GICv3 support
+>>>
+>>> That'd be the current nv-next then, which has all the series currently
+>>> on the list, and a few more.
+>>>
+>>>>>
+>>>>>> With a rhel L1 guest I can now boot buildroot, debian and rhel guest as
+>>>>>> L2 (feat mainline edk2). For rhel, I tested different kinds of page size
+>>>>>> combinations for L1/L2 (4k and 64kB) and it worked.
+>>>>>>
+>>>>>> I tested on AmpereOne and Grace-Hopper systems
+>>>>>
+>>>>> Thanks for the confirmation. I haven't had a chance to try QEMU yet,
+>>>>> but I expect that save/restore will not work. Something to look into,
+>>>> I have not tested this yet.I will give it a try.
+>>>
+>>> Thanks, that'd be super helpful.
+>>
+>> I confirm the migration fails when putting some registers on the dest
+>> side. I will further investigate.
+> 
+> I found at least one issue that could fail the migration. Before the
+> VM starts running, we limit the feature set to the subset we actually
+> support with NV.
+> 
+> By doing this, we also change the value of IDreg fields that are not
+> writable, because they describe features that we don't support.
+> Obviously, that fails on restore.
+At first sight the registers we fail to put are
+- ID_AA64PFR0_EL1
+- ID_AA64DFR0_EL1
+- ID_AA64MMFR1_EL1
 
-                                                   ^ mutexes
-=20
-> /proc file read atomic context was being triggered.
->=20
-> Because in this case replacing the heap mutex with a spinlock isn't
-> feasible, the fdinfo handler no longer traverses the list of heaps for
-> every single VM associated with an open DRM file. Instad, when a new heap
-> chunk is allocated, its size is accumulated into a VM-wide tally, which
-> also makes the atomic context code path somewhat faster.
->=20
-> Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
-> Fixes: 3e2c8c718567 ("drm/panthor: Expose size of driver internal BO's ov=
-er fdinfo")
-> ---
->  drivers/gpu/drm/panthor/panthor_heap.c | 38 ++++++++------------------
->  drivers/gpu/drm/panthor/panthor_heap.h |  2 --
->  drivers/gpu/drm/panthor/panthor_mmu.c  | 18 +++++++-----
->  drivers/gpu/drm/panthor/panthor_mmu.h  |  1 +
->  4 files changed, 23 insertions(+), 36 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/panthor/panthor_heap.c b/drivers/gpu/drm/pan=
-thor/panthor_heap.c
-> index db0285ce5812..686f209f5b09 100644
-> --- a/drivers/gpu/drm/panthor/panthor_heap.c
-> +++ b/drivers/gpu/drm/panthor/panthor_heap.c
-> @@ -127,6 +127,8 @@ static void panthor_free_heap_chunk(struct panthor_vm=
- *vm,
->  	heap->chunk_count--;
->  	mutex_unlock(&heap->lock);
-> =20
-> +	panthor_vm_heaps_accumulate(vm, -heap->chunk_size);
-> +
->  	panthor_kernel_bo_destroy(chunk->bo);
->  	kfree(chunk);
->  }
-> @@ -180,6 +182,8 @@ static int panthor_alloc_heap_chunk(struct panthor_de=
-vice *ptdev,
->  	heap->chunk_count++;
->  	mutex_unlock(&heap->lock);
-> =20
-> +	panthor_vm_heaps_accumulate(vm, heap->chunk_size);
-> +
->  	return 0;
-> =20
->  err_destroy_bo:
-> @@ -389,6 +393,7 @@ int panthor_heap_return_chunk(struct panthor_heap_poo=
-l *pool,
->  			removed =3D chunk;
->  			list_del(&chunk->node);
->  			heap->chunk_count--;
-> +			panthor_vm_heaps_accumulate(chunk->bo->vm, -heap->chunk_size);
->  			break;
->  		}
->  	}
-> @@ -560,6 +565,8 @@ panthor_heap_pool_create(struct panthor_device *ptdev=
-, struct panthor_vm *vm)
->  	if (ret)
->  		goto err_destroy_pool;
-> =20
-> +	panthor_vm_heaps_accumulate(vm, pool->gpu_contexts->obj->size);
-> +
->  	return pool;
-> =20
->  err_destroy_pool:
-> @@ -594,8 +601,11 @@ void panthor_heap_pool_destroy(struct panthor_heap_p=
-ool *pool)
->  	xa_for_each(&pool->xa, i, heap)
->  		drm_WARN_ON(&pool->ptdev->base, panthor_heap_destroy_locked(pool, i));
-> =20
-> -	if (!IS_ERR_OR_NULL(pool->gpu_contexts))
-> +	if (!IS_ERR_OR_NULL(pool->gpu_contexts)) {
-> +		panthor_vm_heaps_accumulate(pool->gpu_contexts->vm,
-> +					    -pool->gpu_contexts->obj->size);
->  		panthor_kernel_bo_destroy(pool->gpu_contexts);
-> +	}
-> =20
->  	/* Reflects the fact the pool has been destroyed. */
->  	pool->vm =3D NULL;
-> @@ -603,29 +613,3 @@ void panthor_heap_pool_destroy(struct panthor_heap_p=
-ool *pool)
-> =20
->  	panthor_heap_pool_put(pool);
->  }
-> -
-> -/**
-> - * panthor_heap_pool_size() - Calculate size of all chunks across all he=
-aps in a pool
-> - * @pool: Pool whose total chunk size to calculate.
-> - *
-> - * This function adds the size of all heap chunks across all heaps in the
-> - * argument pool. It also adds the size of the gpu contexts kernel bo.
-> - * It is meant to be used by fdinfo for displaying the size of internal
-> - * driver BO's that aren't exposed to userspace through a GEM handle.
-> - *
-> - */
-> -size_t panthor_heap_pool_size(struct panthor_heap_pool *pool)
-> -{
-> -	struct panthor_heap *heap;
-> -	unsigned long i;
-> -	size_t size =3D 0;
-> -
-> -	down_read(&pool->lock);
-> -	xa_for_each(&pool->xa, i, heap)
-> -		size +=3D heap->chunk_size * heap->chunk_count;
-> -	up_read(&pool->lock);
-> -
-> -	size +=3D pool->gpu_contexts->obj->size;
-> -
-> -	return size;
-> -}
-> diff --git a/drivers/gpu/drm/panthor/panthor_heap.h b/drivers/gpu/drm/pan=
-thor/panthor_heap.h
-> index e3358d4e8edb..25a5f2bba445 100644
-> --- a/drivers/gpu/drm/panthor/panthor_heap.h
-> +++ b/drivers/gpu/drm/panthor/panthor_heap.h
-> @@ -27,8 +27,6 @@ struct panthor_heap_pool *
->  panthor_heap_pool_get(struct panthor_heap_pool *pool);
->  void panthor_heap_pool_put(struct panthor_heap_pool *pool);
-> =20
-> -size_t panthor_heap_pool_size(struct panthor_heap_pool *pool);
-> -
->  int panthor_heap_grow(struct panthor_heap_pool *pool,
->  		      u64 heap_gpu_va,
->  		      u32 renderpasses_in_flight,
-> diff --git a/drivers/gpu/drm/panthor/panthor_mmu.c b/drivers/gpu/drm/pant=
-hor/panthor_mmu.c
-> index 0a4e352b5505..aaad1a560805 100644
-> --- a/drivers/gpu/drm/panthor/panthor_mmu.c
-> +++ b/drivers/gpu/drm/panthor/panthor_mmu.c
-> @@ -345,6 +345,10 @@ struct panthor_vm {
-> =20
->  		/** @heaps.lock: Lock used to protect access to @pool. */
->  		struct mutex lock;
-> +
-> +		/** @heaps.size: Size of all chunks across all heaps in the pool. */
-> +		ssize_t size;
+I will add some traces in the kernel to figure out which fields cause issues
 
-Let's put that into an fdinfo struct.
+Eric
 
-> +
-
-Drop the extra blank-line.
-
->  	} heaps;
-> =20
->  	/** @node: Used to insert the VM in the panthor_mmu::vm::list. */
-> @@ -1539,6 +1543,7 @@ static void panthor_vm_destroy(struct panthor_vm *v=
-m)
->  	mutex_lock(&vm->heaps.lock);
->  	panthor_heap_pool_destroy(vm->heaps.pool);
->  	vm->heaps.pool =3D NULL;
-> +	vm->heaps.size =3D 0;
->  	mutex_unlock(&vm->heaps.lock);
-> =20
->  	drm_WARN_ON(&vm->ptdev->base,
-> @@ -1963,13 +1968,7 @@ void panthor_vm_heaps_sizes(struct panthor_file *p=
-file, struct drm_memory_stats
-> =20
->  	xa_lock(&pfile->vms->xa);
->  	xa_for_each(&pfile->vms->xa, i, vm) {
-> -		size_t size =3D 0;
-> -
-> -		mutex_lock(&vm->heaps.lock);
-> -		if (vm->heaps.pool)
-> -			size =3D panthor_heap_pool_size(vm->heaps.pool);
-> -		mutex_unlock(&vm->heaps.lock);
-> -
-> +		size_t size =3D vm->heaps.size;
->  		stats->resident +=3D size;
->  		if (vm->as.id >=3D 0)
->  			stats->active +=3D size;
-> @@ -1977,6 +1976,11 @@ void panthor_vm_heaps_sizes(struct panthor_file *p=
-file, struct drm_memory_stats
->  	xa_unlock(&pfile->vms->xa);
->  }
-> =20
-> +void panthor_vm_heaps_accumulate(struct panthor_vm *vm, ssize_t acc)
-> +{
-
-Either there's some lock protecting this operation and we want a
-lockdep_assert_held(), or we need to make it an atomic operation (and
-make the size an atomic_t) to avoid races.
-
-> +	vm->heaps.size +=3D acc;
-> +}
-> +
->  static u64 mair_to_memattr(u64 mair, bool coherent)
->  {
->  	u64 memattr =3D 0;
-> diff --git a/drivers/gpu/drm/panthor/panthor_mmu.h b/drivers/gpu/drm/pant=
-hor/panthor_mmu.h
-> index fc274637114e..b6686896f8ef 100644
-> --- a/drivers/gpu/drm/panthor/panthor_mmu.h
-> +++ b/drivers/gpu/drm/panthor/panthor_mmu.h
-> @@ -39,6 +39,7 @@ struct panthor_heap_pool *
->  panthor_vm_get_heap_pool(struct panthor_vm *vm, bool create);
-> =20
->  void panthor_vm_heaps_sizes(struct panthor_file *pfile, struct drm_memor=
-y_stats *stats);
-> +void panthor_vm_heaps_accumulate(struct panthor_vm *vm, ssize_t acc);
-> =20
->  struct panthor_vm *panthor_vm_get(struct panthor_vm *vm);
->  void panthor_vm_put(struct panthor_vm *vm);
+> 
+> I need to have a think...
+> 
+> 	M.
+> 
 
