@@ -1,126 +1,160 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB0D24C69B;
-	Mon, 10 Feb 2025 22:26:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A7024C69B;
+	Mon, 10 Feb 2025 22:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739226381; cv=none; b=ht1lNHIJvhZCAkOgyQn1FSqVyZAevTFjkShbxY6v6hUBeMZruj8+DR0UaTM4QZKjqg6rs9tEFoXNtGpNsb+42NkTaqFQuziFgcF0Y6lP1gQSCLiFYSZ6t1ZljeBtdjXjQ3eRvN06Q5GUBIzmURtPoa/D6LPys+RgxcLuOf6VAZw=
+	t=1739226497; cv=none; b=sDkfnOLnX3uuCTuTvx1PFbjLl7bnr4OH/1QyVcWn7Rg49p2kISVLqUIs1+JAmGb8SvXGwV3INdeCyzbVpRD6tX+9B4VIvaoyS6yzWz2ACMxFC6dhsIKeJndYRQ0/zIS+Runc2dw1cJ+BI42c95HPcGt+qT+QDzyHo15nXGQfzSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739226381; c=relaxed/simple;
-	bh=SEahgPWmLPRATg2I7lBTH8xnCEX0VGLxvZpdMfaQ8bU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Hnur1sP0z0vUIvGxloH0Fcx0NBea/Ym/yYx0rqn6xyVq3EFQbBX/JvDRQGOfjkAjOg+bfjy4ChfvpVfNIw9iGfazqjdPfem/vQP+9IqRRwmU+wuvgJgMITR9M/bdhTxuOGaVEXeFrK3x9uUoiuAciD03DAe+bzgjTd1A4oEIJkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KSugTeet; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739226497; c=relaxed/simple;
+	bh=ndLubKwFBHWtlTDCPdx1r2RbDgFfGS3iAmUDE2AS1Vw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bKXA1OaXbhjq+JD3dYhGK24FidqAkQvtwxFP7NeZu2vwslz+0quOrwMVZmc10adrYvRnKzmsj8kH9+NGhSH5f9OSUWJ1fCiQY/ZU+xCxpDyhN7I0AH2Ucg9+FSAdyVgBF6YVSdN8G0+Dpnmlb2nxZ/E6Q9MnCNNDe+759wiTB64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZhoEDTaB; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KSugTeet"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AJopVQ008282;
-	Mon, 10 Feb 2025 22:26:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	3JkX4/9yze2RT6/wf9KzkDi8PmHo10GnvR6H2a/gySE=; b=KSugTeetGCDeoO2m
-	MmrLNMMuSa+NF7eMrImHptcSp7nZlIho3RkZ6Y5ZDFRK4uFIF/P2R7+H98xKKaF0
-	yPVNHQcGVfIziL6jtxMZ7rwrUfV5CkvoMl3bp3+6KLAScsefsSC4oN4wAXYzpp2S
-	btkXVhIEWyDSSUemrDzdDByeq7NJP2J2Z4JhnDHRxrAt3yRMU0p8TayjgXWtzu+L
-	vcFdl5l8GfUxur9w6CFSv1wcI/gc7pVJHpfqTch2IAXZNwOOShh62vgd4zA8C9af
-	m1F90qVHNEgFnpS559SLHZC3ENmb+/xnyMuNzMekLZ93URv7eFG2be8+5cZqHj10
-	TUy4DQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qewh20wp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 22:26:02 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51AMQ18r007693
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 22:26:01 GMT
-Received: from [10.71.110.136] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Feb
- 2025 14:26:00 -0800
-Message-ID: <a91da500-b575-4071-9c2b-e03c9c737144@quicinc.com>
-Date: Mon, 10 Feb 2025 14:26:00 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhoEDTaB"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-436345cc17bso33993285e9.0;
+        Mon, 10 Feb 2025 14:28:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739226494; x=1739831294; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qkWWMjBJ1/YRt3lwgOfr2tNA5D2acLgDBlTp/Ye7Oa8=;
+        b=ZhoEDTaBXqehH8mcLxQAJ+MlyetSpm6uDuUpb+RX7HFB7qOCdZZv4uvK6GPaDYCeQp
+         2mSEo/6ok3aDLG9+DuWNZQSHqFibw0N+HY/VlJco1VVnPcM5UFxuGbsXbUHTJz5EE0X4
+         eIlvskZCxsCzK4tOzWS7KmEjFVK2nTe9mx6hubyal4PqJVdZSEqVW7OSeKd9NyJT2ijZ
+         MzJRNOpepCZQ1868xWtE5rLFBrb6/8Wp/VlP5KaNDSRSECDrEKkcKNnFZjVNnOpor+kU
+         xOgiXYtRuhfmhC2vL0nMoHB18Jq9soqo8o4MC1YgUhzu6oES/+mByRdUIsGjOhAHSFWg
+         /tGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739226494; x=1739831294;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qkWWMjBJ1/YRt3lwgOfr2tNA5D2acLgDBlTp/Ye7Oa8=;
+        b=Q2RqAuTJTW7dRtu/fgwUJemHOZdePj6xVrI0k7GfyCh9SAgyHtVjFVFr2IT6Uuj6yH
+         h5kBbG5eZY0nbfLBQkfSeZDSieTjNJ2/pElMPYMczGDagiUfX/dUO8J2Fo3uMEDH3wzG
+         rZK/01uzQkVgXMQDrlbB3eszId+mKqbAJr7W62NRmYMJ0jgtmp4YaZD1NGJf4ykvkcQH
+         ziMYnBmoe4g7wxt/Xyrq4e9/mv7u98M4EWm2KptsjB4AVsL7wbHH777I6uTgDwgKZ4qr
+         VAxN/x6+s8JtlK5s/5a+3k/xBVmeDrLbn1w6gO3Y1951WKxIuYxKZKQ++tLy+CX+a85n
+         45pA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtHYv6+1ERM5iWfoFfGi5gru7V2dRbVoHuLNIiX+F3e70cg/I1SnEWEVh0P7bJ68z/JCQ=@vger.kernel.org, AJvYcCXeMhqmgulTOWQUxUcwSo9uf9CggIsyFQjpxf7zwVf8KuoMu5xNZlD/FExlFx75ZyhuWd9q1lYy@vger.kernel.org, AJvYcCXzC6vzdXgh1Q7szSLg6GiIg2HgjCvLqxq+qbw8bljMTb1J06nI7rVu395PNsLNpXnyjBexdeCb8NlrHMH6@vger.kernel.org
+X-Gm-Message-State: AOJu0YxE2nOOni+76oB1qFqns6f4pZ5N0nfK8JF9LFhn9TAn1+jT4wSk
+	H7w87V9fYJyLn0Ipe0C/UFapOU8VihU5jIRlkqhPsK22Mceskl2QUMrW/Q==
+X-Gm-Gg: ASbGncvNPdJXUAsQMMg4o1pZ0JdaWfCbL6SPyF51Bm92HltlDEHjAK68YmtMlWm+Wre
+	j02oye2vSG2H1brr2pNqVTfbckBR1X4ruOZOIIc9LhtiSXak7lsbj5sV9CEFRFL6o/BXVGc44T+
+	+WPBSO8w3KCsD6XyLgge0h/+kDGblioj3eA2vSOmgpkqY0QNZ5WiT12lVxNgRFqFzZodf5ab4Hi
+	6k8tYZdjc2FvlTIKiTIo2A4mWZTZ/l3oLn8lh5/uojv3Ei47jNSEJowbmt46jcvcFn2iJumX0xe
+	tbZZdVBQJ+J1sDyKnb6dtmtYYEJfb4J9RaSUjSuYuB0FA+WRQxa1/w==
+X-Google-Smtp-Source: AGHT+IHN7gLlSgITrNkUYlErBuW/66QbgQ6hSOX+j8FGt+/mR40pZI3bKrEQ0DY8izu56Um9ILmDrg==
+X-Received: by 2002:a05:600c:cce:b0:434:f131:1e64 with SMTP id 5b1f17b1804b1-4394c815898mr12942205e9.9.1739226493939;
+        Mon, 10 Feb 2025 14:28:13 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc0c5a894sm12940620f8f.95.2025.02.10.14.28.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 14:28:13 -0800 (PST)
+Date: Mon, 10 Feb 2025 22:28:12 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov
+ <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
+ <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, "Jose E.
+ Marchesi" <jose.marchesi@oracle.com>, Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdl?=
+ =?UTF-8?B?bnNlbg==?= <toke@redhat.com>, Magnus Karlsson
+ <magnus.karlsson@intel.com>, Maciej Fijalkowski
+ <maciej.fijalkowski@intel.com>, Przemek Kitszel
+ <przemyslaw.kitszel@intel.com>, Jason Baron <jbaron@akamai.com>, Casey
+ Schaufler <casey@schaufler-ca.com>, Nathan Chancellor <nathan@kernel.org>,
+ bpf@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 2/4] i40e: use generic unrolled_count() macro
+Message-ID: <20250210222812.1d0479a4@pumpkin>
+In-Reply-To: <20250206182630.3914318-3-aleksander.lobakin@intel.com>
+References: <20250206182630.3914318-1-aleksander.lobakin@intel.com>
+	<20250206182630.3914318-3-aleksander.lobakin@intel.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 7/7] drm/msm/hdmi: use DRM HDMI Audio framework
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Andrzej Hajda
-	<andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert
- Foss <rfoss@kernel.org>,
-        Laurent Pinchart
-	<Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej
- Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        Simona Vetter <simona@ffwll.ch>,
-        Simona
- Vetter <simona.vetter@ffwll.ch>
-CC: <dri-devel@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20250208-bridge-hdmi-connector-v7-0-0c3837f00258@linaro.org>
- <20250208-bridge-hdmi-connector-v7-7-0c3837f00258@linaro.org>
-Content-Language: en-US
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <20250208-bridge-hdmi-connector-v7-7-0c3837f00258@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: D3xspndLYeAmkruYqi0Uoz3kIT2YabVE
-X-Proofpoint-GUID: D3xspndLYeAmkruYqi0Uoz3kIT2YabVE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_11,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- impostorscore=0 mlxlogscore=869 phishscore=0 clxscore=1015 adultscore=0
- lowpriorityscore=0 malwarescore=0 bulkscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502100176
+
+On Thu,  6 Feb 2025 19:26:27 +0100
+Alexander Lobakin <aleksander.lobakin@intel.com> wrote:
+
+> i40e, as well as ice, has a custom loop unrolling macro for unrolling
+> Tx descriptors filling on XSk xmit.
+> Replace i40e defs with generic unrolled_count(), which is also more
+> convenient as it allows passing defines as its argument, not hardcoded
+> values, while the loop declaration will still be a usual for-loop.
+..
+>  #define PKTS_PER_BATCH 4
+>  
+> -#ifdef __clang__
+> -#define loop_unrolled_for _Pragma("clang loop unroll_count(4)") for
+> -#elif __GNUC__ >= 8
+> -#define loop_unrolled_for _Pragma("GCC unroll 4") for
+> -#else
+> -#define loop_unrolled_for for
+> -#endif
+...
+> @@ -529,7 +530,8 @@ static void i40e_xmit_pkt_batch(struct i40e_ring *xdp_ring, struct xdp_desc *des
+>  	dma_addr_t dma;
+>  	u32 i;
+>  
+> -	loop_unrolled_for(i = 0; i < PKTS_PER_BATCH; i++) {
+> +	unrolled_count(PKTS_PER_BATCH)
+> +	for (i = 0; i < PKTS_PER_BATCH; i++) {
+>  		u32 cmd = I40E_TX_DESC_CMD_ICRC | xsk_is_eop_desc(&desc[i]);
+>  
+>  		dma = xsk_buff_raw_get_dma(xdp_ring->xsk_pool, desc[i].addr);
+
+The rest of that code is:
 
 
+		tx_desc = I40E_TX_DESC(xdp_ring, ntu++);
+		tx_desc->buffer_addr = cpu_to_le64(dma);
+		tx_desc->cmd_type_offset_bsz = build_ctob(cmd, 0, desc[i].len, 0);
 
-On 2/7/2025 4:27 PM, Dmitry Baryshkov wrote:
-> In order to simplify the driver even further and to remove the
-> boilerplate code, rewrite the audio interface to use the DRM HDMI Audio
-> framework.
-> 
-> Audio InfoFames are controlled centrally via the DRM HDMI framework.
-> Correct InfoFrame data is programmed at the atomic_pre_enable() time (if
-> it was set before, drm_atomic_helper_connector_hdmi_update_infoframes()
-> takes care of writing all InfoFrames, including the Audio one.) or
-> during msm_hdmi_bridge_audio_prepare() when the new stream is started.
-> 
-> All audio data frame management is deferred to
-> msm_hdmi_bridge_audio_prepare() and msm_hdmi_bridge_audio_shutdown().
-> 
-> Reviewed-by: Maxime Ripard <mripard@kernel.org>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->   drivers/gpu/drm/msm/hdmi/hdmi.c        | 91 ----------------------------------
->   drivers/gpu/drm/msm/hdmi/hdmi.h        | 18 +++----
->   drivers/gpu/drm/msm/hdmi/hdmi_audio.c  | 68 +++++++++++++++++++++----
->   drivers/gpu/drm/msm/hdmi/hdmi_bridge.c |  5 ++
->   4 files changed, 71 insertions(+), 111 deletions(-)
-> 
+		*total_bytes += desc[i].len;
+	}
 
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+	xdp_ring->next_to_use = ntu;
+}
+
+static void i40e_fill_tx_hw_ring(struct i40e_ring *xdp_ring, struct xdp_desc *descs, u32 nb_pkts,
+				 unsigned int *total_bytes)
+{
+	u32 batched, leftover, i;
+
+	batched = nb_pkts & ~(PKTS_PER_BATCH - 1);
+	leftover = nb_pkts & (PKTS_PER_BATCH - 1);
+	for (i = 0; i < batched; i += PKTS_PER_BATCH)
+		i40e_xmit_pkt_batch(xdp_ring, &descs[i], total_bytes);
+	for (i = batched; i < batched + leftover; i++)
+		i40e_xmit_pkt(xdp_ring, &descs[i], total_bytes);
+}
+
+If it isn't a silly question why all the faffing with unrolling?
+It isn't as though the loop body is trivial - it contains real function calls.
+Unrolling loops is so 1980s - unless you are trying to get the absolute
+max performance from a very short loop and need to unroll once (maybe twice)
+to get enough spare instruction execution slots to run the loop control
+code in parallel with the body.
+
+In this case it looks like the 'batched' loop contains an inlined copy of
+the function called for the remainder.
+I can't see anything else.
+You'd probably gain more by getting rid of the 'int *total bytes' and using
+the function return value - that is what it is fot.
+
+	David
+
