@@ -1,94 +1,102 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E060F241C89
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:56:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F2A23645A
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739202969; cv=none; b=j3Ff9n9QJhi8LHBvDDE9cnyr7HsAau7bgy29lgD+fHs7sCkpthaKtarxzKy+xXdTOa0+QTzOmS3pla4FFTsU6ZEz3GKfjgZxD74dLRdHDtqMcY9kT3+a2UPIOzf7jJl/cPCpe6Rbp9iRNfRaJ1MrGkBACfaYqCP7RgJgat41FWw=
+	t=1739202982; cv=none; b=TgG+dJC0tk15YCm3mesP1a00GEYHeYPSWtJ0Z1kKxNDZ1St72Zzmoj8P+Zg3rw9lE5g2RIH9yujovRl6XxHuj0jpW69hBx3KetXu9LULWkXaeYD5aVhqn98IwiCP2MvT613C7uZ0f/k3AoRuZRMhpEjJHERucdrletDDefdOh4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739202969; c=relaxed/simple;
-	bh=JDWViGqshwCrE6Nlfvl8H3oqivCzwTY/iSH5UyaRT0Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lakc+3AVUyuNh8FB/nuvjbdF72wuyj+T1PcvEURa6eD7TBccv4shqLvDKMnaSabt2E+EOmY/jn5Uq31Ax/Q9l2qClnNysqD5Y7DVYtrCfpBLXDR6UCydQB5ezdIA4hRahrAAbo93LnXzktpxZusvM7s4K7ipGzRq0LOR/tvIR2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ebQ4jtTE; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739202982; c=relaxed/simple;
+	bh=QTK660jHPxvWpe4DiJjXjBt8c30/AClWzLEoYIE5ts8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=haJ15hOmCapiJnDNEZaKxJmnig/dJNjtsK4slLv0/Ga5rkcmzp/1HAz2SigRJIzC7Sm4nR00n+h97elGBeAhQ7RlrQbhhczCia0We3Y9+ACAluYL8hQf2/R84IOuAl0uJNanEsTHRCvMmwJRCRLCFStUTbJqmZqBbH3koN8P0PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=fOylWNBY; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ebQ4jtTE"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dccaaca646so8882150a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:56:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="fOylWNBY"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so9631895e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:56:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739202966; x=1739807766; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZLczrhEnX8LtCEBU9Vv2CXoUE7ZoNRAQSyYxfOfEIiA=;
-        b=ebQ4jtTEedXGuxf0z7KNZY78+Xyi6g61dhdjzgq9welP3Vq5GrPu+HRz5YIL43tb4L
-         WxF77ysbVUKW92rjAKEcyVTf/7hzuxjq8KRWB5ZE2ZuDzqEiaCjl1Zic4PZoI824Wnep
-         ZT0m0d1csbiwxW7XNdatsMBvncrLiRDiQc3SrrcpPPd5/EGZ9ZpM5wngC3nCOiFp0sXb
-         QIpBFHXFxNNkIWvZWalf5BdSBJUjqC8685MU1/aGbVFpdEzirBRzE6uM1hT0sthFew0E
-         Sw3KlZ0syRlyjTD44qcxp9LKdaPm6HinLdB7/pv+zILN8XOtGPp7mwTxPwWb62IPfoCV
-         K2XQ==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739202979; x=1739807779; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dwvpqgCc60HMle4gfhwGXC+m016RdUxEz0jvpf/EWvY=;
+        b=fOylWNBYfoHT/yFk6anVfTtx5AP1IvIre/moWFTQLtdS9YYmdpzTHYcPGoljSGdLWD
+         EhKj1F8v28jqcs2AY5yXxepeonNS8H47/neEYwkN0I1/R5UFux+V7oOMeJlgERRM8Lr6
+         pEp4c1TSHVbiGBWs4YQ+RI+WrJX5SMSWE3ibx47PkDYShKq6CF1wgn0bdOfFn95dQuXU
+         WYYKoT/6CVnHYB22Wnaba9Vo7aQA/xLHyEr8MS7a+0HmG3X6PswYj7mncxIrOBFSFCKD
+         GPvQptcg9zFqFFtE0flZc1WpjoiYZzh9i0bDp8lu5oj/asJn2kEH95xbxmx0LZbbqfr3
+         p3Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739202966; x=1739807766;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZLczrhEnX8LtCEBU9Vv2CXoUE7ZoNRAQSyYxfOfEIiA=;
-        b=oIU7np4hnWOnFOa3q7JVHN+K8Kp2kwfCo6bz0ugn4yn8nZK+P4A7ZS9gopg2VQxk5l
-         q8ahZUiKGfPrbp1/gTMsB761DXO0ciUTMBeBqOZ/EKoswRsFvWYV04d9rSO/DhQDopUu
-         XIakjZTik8qxYZ7ePJoGtbarnDI8oN9mM+wF3G4kcF6VB6hTw0rQStOMbM2oXczlS5At
-         Ty7IJacNRL1Krqebfnt8xXuYyDK/TnEW0KRdzoB0XvMk/MnFpxn5EE8aOI497nei++8F
-         0+y9slFHVXD6OL0dc7hrUqIcx2PwXhwa6ywJ1lzxGTFeqYxEs12Ntlz+5WodQbHpTt57
-         T7wA==
-X-Forwarded-Encrypted: i=1; AJvYcCWT+yufTYyaHQpDEAbVLd26i8k33bS34Uiyxad+FwZmaHP7l7kKpzEZNs6lqnS3KdRhc8JsZTBEg2CjCVg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9rP+Ta/cEpuhYARCsAKWNMiD94BNclZpmKwZbHkHXMz/pm8gF
-	99NBv05hMTE+uVFKBD+888XAueEgihJqfcxdRR21vEYMH9uOeHm4+TOWCO4QbBsgPi7F+81Pa4i
-	VrkOoX7wqH2DcEdjvW3hLJWMKpRc4x0l3JZRT
-X-Gm-Gg: ASbGncvftcgJavh81AK+gpPUGTUR/VGspaEaI9BbU39ItcGah4UGuoVdwCUGej68oQZ
-	69OUQPG88UinubSzzZNBJT7fQ8pCzMtaar8Poi1UkDinffyKXUwY3OvEFoLGLOo2rjIsblHY3
-X-Google-Smtp-Source: AGHT+IGFWmgDm7hq6A6RaKGSONbcvRkAhKV9Xeb1PjCXX4BOk5HcG3obgtj/7WN8cuWYEGak/5HR9K8/Btxge7jTVsc=
-X-Received: by 2002:a05:6402:26cd:b0:5de:50b4:b71f with SMTP id
- 4fb4d7f45d1cf-5de50b4b863mr12936313a12.12.1739202966081; Mon, 10 Feb 2025
- 07:56:06 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739202979; x=1739807779;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dwvpqgCc60HMle4gfhwGXC+m016RdUxEz0jvpf/EWvY=;
+        b=p+SW5ixp7a7eqng0QbZgB/llgPDY6lo5gvF51g6DnX1y+yEdeCVEJ/sYspnsUdZjZh
+         CR/wuseNNrOfENkFOse1Ajnyp8IDAeI15pEvl12p1/d1lEYSNrlrL9xXXZIO6hPzYsIc
+         Lo0CHn+Zzo2RPTnLT81otXWCEeXZBCyXEwERjNqEFutVy0cPSf/3Gg9hrHWq/EVubXJw
+         6UImHIFJO0LthPyHMmNM2s86egYjd4ILdsb5tsUVpaH0WyifqHMJGKrsgBQl3LL64/vK
+         hiWV939DewNAEddAx+Vbfhm4Pr6LUDMHeaTFCZTd81ZM15j31rKILLnOsX1B1IGmnO7b
+         yyJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV9dqOYjV0UP8mh+f1mWvnYjEv8M5s3YsnWstyPNWX7U6bXipf8N8w+mzf/TtLSNFFYlkiX1IVSVfAoVAo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycacD45mGD1igImOQ5FJbB07NCk7GVGz8HNpfzLNessbVF//IK
+	pMrrJRdpwelS4XxR7W4sLCcFZIQ/cggt96yHdTnZRz1wMASMMKIlY7vybdHn424=
+X-Gm-Gg: ASbGncvRPJSTDjDjQUbEcZaX35iX/d9qYVaxsK+CpokNCqrm7iIJfsuko0kYNt7pMid
+	oN5AgXYBEas+2ge0vWccEnkcJIZHZAkJXRrLoggSVJEv3TkKNPZPMFIbtaQ8Ys/Vsgkvgd78yij
+	wfhGmz4uRCzcYUSTpBD6dsKQpwE3BejsbBp8paWCvmOLhtRHhvAnlIkT2c3O08lLx1GG0JWygDZ
+	fduZO74bFFkFCshiH2YqeLjB+vQlUaGaiB8OVR/jkicspfOcX+ZZQGMjsyz1J3pw5M1lv1UHMgF
+	5hzwqvAxcWdUNSiC
+X-Google-Smtp-Source: AGHT+IF60Nrg56AuVmMzOdpuxKpb48uNb4fjvgwNZgYIhjdvOfRQGICperZSi1yz93HUq9t/Mg45tQ==
+X-Received: by 2002:a05:6000:154d:b0:385:e17a:ce61 with SMTP id ffacd0b85a97d-38de41c5b79mr78637f8f.53.1739202978665;
+        Mon, 10 Feb 2025 07:56:18 -0800 (PST)
+Received: from carbon-x1.. ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38ddbfbb4ffsm4521649f8f.94.2025.02.10.07.56.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 07:56:18 -0800 (PST)
+From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	linux-riscv@lists.infradead.org (open list:RISC-V ARCHITECTURE),
+	linux-kernel@vger.kernel.org (open list)
+Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Conor Dooley <conor@kernel.org>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH] riscv: cpufeature: use bitmap_equal() instead of memcmp()
+Date: Mon, 10 Feb 2025 16:56:14 +0100
+Message-ID: <20250210155615.1545738-1-cleger@rivosinc.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1739162392-6356-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1739162428-6679-1-git-send-email-shradhagupta@linux.microsoft.com>
-In-Reply-To: <1739162428-6679-1-git-send-email-shradhagupta@linux.microsoft.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 10 Feb 2025 16:55:54 +0100
-X-Gm-Features: AWEUYZkdqEH-yIxQt2RFVMSzqvty10M-Vo581AAm7JrrOC4vyHrnC1UN4Is4d6A
-Message-ID: <CANn89iJ3cT6BWLmFpdkxn6EeeLTM7rF0pwWGArq1gG8pk8orsg@mail.gmail.com>
-Subject: Re: [PATCH v2 net-next 1/2] net: mana: Allow tso_max_size to go up-to GSO_MAX_SIZE
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Long Li <longli@microsoft.com>, Konstantin Taranov <kotaranov@microsoft.com>, 
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>, Erick Archer <erick.archer@outlook.com>, 
-	Shradha Gupta <shradhagupta@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 10, 2025 at 5:40=E2=80=AFAM Shradha Gupta
-<shradhagupta@linux.microsoft.com> wrote:
->
-> Allow the max aggregated pkt size to go up-to GSO_MAX_SIZE for MANA NIC.
-> This patch only increases the max allowable gso/gro pkt size for MANA
-> devices and does not change the defaults.
-> Following are the perf benefits by increasing the pkt aggregate size from
-> legacy gso_max_size value(64K) to newer one(up-to 511K)
->
-> for i in {1..10}; do netperf -t TCP_RR  -H 10.0.0.5 -p50000 -- -r80000,80=
-000
-> -O MIN_LATENCY,P90_LATENCY,P99_LATENCY,THROUGHPUT|tail -1; done
+Comparison of bitmaps should be done using bitmap_equal(), not memcmp(),
+use the former one to compare isa bitmaps.
 
-Was this tested with IPv6 ?
+Signed-off-by: Clément Léger <cleger@rivosinc.com>
+---
+ arch/riscv/kernel/cpufeature.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+index c6ba750536c3..40ac72e407b6 100644
+--- a/arch/riscv/kernel/cpufeature.c
++++ b/arch/riscv/kernel/cpufeature.c
+@@ -479,7 +479,7 @@ static void __init riscv_resolve_isa(unsigned long *source_isa,
+ 			if (bit < RISCV_ISA_EXT_BASE)
+ 				*this_hwcap |= isa2hwcap[bit];
+ 		}
+-	} while (loop && memcmp(prev_resolved_isa, resolved_isa, sizeof(prev_resolved_isa)));
++	} while (loop && !bitmap_equal(prev_resolved_isa, resolved_isa, RISCV_ISA_EXT_MAX));
+ }
+ 
+ static void __init match_isa_ext(const char *name, const char *name_end, unsigned long *bitmap)
+-- 
+2.47.2
+
