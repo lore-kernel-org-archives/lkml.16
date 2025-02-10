@@ -1,64 +1,25 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B522F2A;
-	Mon, 10 Feb 2025 07:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85AF62F22
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739173518; cv=none; b=ZwSBK2ZxF7Z3ef+IXH+VJD7gprYNu1JAvjdZGaDQl4QrcxFHW+LgxnU5h7TPx8G1e4HiE1OunUvpgyW5bFE3bDhyB3QfeSXJtokNo8ctg3kqCGeTIVniDPTnU25VY5V9IgRjwDbXSu62owUdjQDI+CVV7Gl4B8Vmzl6tN55zqwc=
+	t=1739173559; cv=none; b=rEpgqk+jrU+DyuWxVxlxK+3K3gSZCTULqAPdYPQjIMRUxjfDZsHykdxLqTn9r1RwbGVtvbho9u/FrUMojU2tEaBEpyUTa0YEEr2gPiCmWWatwZfCxO0tqrtNh0GRJNnpCxKyDm1mcDm4CJU2xp34qmzN8KNv6ohfv43v/F5cEfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739173518; c=relaxed/simple;
-	bh=eOWONN5ZBbRv8aYl9s+6MqZgaY5tkVdbjSku/C+aepU=;
+	s=arc-20240116; t=1739173559; c=relaxed/simple;
+	bh=JqO5UFyeXSOtHei4rrj+cwhgqEDuQmGRfII396pM1/k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ILm2SBH+OPcVrItr/33JfjIkXBaNRIzNGiUVgecHC5v0uWQsLZV9YsJgbL3bKuL1qGS9N5V/jyXvQHoFWqM0FipYmBAMmIu8xQ0IArKKCSzCMPw7XFKyadcEJsiy+wCRATuSmqeJDrcUP5WfVCjpvSk7cxhdteKifzhGuHngAfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aCn3rOFW; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aCn3rOFW"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21f464b9a27so63021255ad.1;
-        Sun, 09 Feb 2025 23:45:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739173516; x=1739778316; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vgDFMMK78aNqKvQlYUZbaLj/duHE/jz0+XIQsm2yUik=;
-        b=aCn3rOFWlTpo+KqTkQRkjerzvIXhji6CmQT4wqPSCyLSenTw/oJNpcTI11GT87l0YT
-         F9Tp8FpjAVBa23kAI3mUzpVR5gbi4EBqYx4nS8mTblX7/RSkT/pVZPz6T9jx+8GcRPeK
-         xwhcJFvAGCCvcnnzLLdzsQ8SuLFH79XMAk4fGJlXK3xnPpmd2OiYtM5vrC20guzrn1GM
-         9XOqmgr18Fx4UbwKATzMtbvngHjr13tkspUHqXClWMqS5g/0yT05kYQ4VIs825joy2L/
-         5tWmABJyClkeRL5CfmnAGFDelWkANion2SQbiwiFEbhr7ZR4546iRxPj4DZPB53WU4SZ
-         q6cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739173516; x=1739778316;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vgDFMMK78aNqKvQlYUZbaLj/duHE/jz0+XIQsm2yUik=;
-        b=sdDEcpOzTSpMMSQrTBh7HTI8o8Ji/DtKdc6pspqus8GNG+D6OoqoTB4qohk//scqw9
-         sXSPKbx9qTzbChfFR6T16irq3kXps0uum0Hu3eQx3gnIDUBwId0EPFZ2BBDhJjpNy2o1
-         7wCeZVGvA8D/qV2WaQChGeufI1qJuACQo1vY9ZZpqLn+/v+pmz/Z0Kvm4NPcU8+waRGY
-         OMkeOlyJUwL3x/1UKrS6ms7AN2svixV10fr7A5fuSSNymPUyMVv+BpRKUh4jF8Ic3qSt
-         CD1zWOQse6WnUKZarj/beutS1W21Mz+nevxbeOKKxM0cJwhLHdArpOCUv5Hyb4fGKWKJ
-         BJ5w==
-X-Forwarded-Encrypted: i=1; AJvYcCUA5TjKIKqYE3tJabtOxaylb6Xg0YdBwDbXb1GAbER67Zn+3OwsmN+MRCHClk/RuL9Xr3uUfAqjgL4bL+8=@vger.kernel.org, AJvYcCUkiDOwcGQ1eS5dBNwVcUFxq2htObw0hRl03AFHNpzfRxSXRubjmC3K9clhlDtJKuwaWnRlgnpC@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlXEGGOoiYNS+PBPzSVBpFIjgqjgPQlRmUhmOpacpew1CvOA2G
-	MNijDIP+CBrz5vUbN6B8+BTpL4ySaARv5Q4PnxzaRBLxJ1xnEbfe6EUc/EZZ
-X-Gm-Gg: ASbGncvKJ/Ihzi0sOqGB62D9W3MUhAFcYMvzDwkGY3AUjk5cPysY/MyRckW2A9AkRq4
-	TGsgEEhgLqRJlwKIXPTXeKViE5lPWruXVBfIZAUMeglCyPjEf9BRKcn1d5CUC+dwdrRyRLGgRr8
-	wyPX7XR2MrBoXzrYiTy7Y8g7updvsBB5UwJn2v5vvXRPCugSBh2L6hAbph7f3qeRb0xP1ZaiMke
-	VujDz7c2bEnoSTTR0AZvGP7XZPnoOgF4nvWVmH5GRCMbwTWVNZLXbHiSSFlENh96sClff3NFB3i
-	OXKBdUcjYnTUSimcJNlznJdaVNsuvmZDk5heCNF13D8CHiG+M2DL0qTPdkOc2ThKSOeyRg==
-X-Google-Smtp-Source: AGHT+IGManpeAPu/DIgD3ta4N4Isd+1vrKJTnUpGzpbzCRvKzOHTytyM4P1+3VcsiTd9IxYQoPkvvA==
-X-Received: by 2002:a17:903:1a24:b0:215:bc30:c952 with SMTP id d9443c01a7336-21f4e1cbb20mr150675985ad.6.1739173516105;
-        Sun, 09 Feb 2025 23:45:16 -0800 (PST)
-Received: from ?IPV6:2409:40c0:101c:99b7:34e3:b424:c392:121c? ([2409:40c0:101c:99b7:34e3:b424:c392:121c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3687e68bsm71606245ad.169.2025.02.09.23.45.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Feb 2025 23:45:15 -0800 (PST)
-Message-ID: <089974d9-e9cd-4a46-889b-94dd595d8c13@gmail.com>
-Date: Mon, 10 Feb 2025 13:15:08 +0530
+	 In-Reply-To:Content-Type; b=e0/AiMl0sSVnOwOGKEFJJIz4jpgNX+Oo3ZXHC8n0mn2uN0/HNnvseLFxfo+kQX27y0nDvcsYJq/4R5v7qAtBG1RSTsPtZ4HRU3IbN1K5cRSIZvz/vsrmYOQWWArUZJ202TjFAC0wfl5sZQPazMcVzq81xeCQVvNOpJTw5qFMT7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A2761BA8;
+	Sun,  9 Feb 2025 23:46:17 -0800 (PST)
+Received: from [10.163.35.99] (unknown [10.163.35.99])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EF743F58B;
+	Sun,  9 Feb 2025 23:45:50 -0800 (PST)
+Message-ID: <43c256b6-7e44-41bb-b0c5-866fd4faab5c@arm.com>
+Date: Mon, 10 Feb 2025 13:15:50 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,80 +27,302 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: unix: Fix undefined 'other' error
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: davem@davemloft.net, edumazet@google.com, horms@kernel.org,
- kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- pabeni@redhat.com, skhan@linuxfoundation.org
-References: <20250209184355.16257-1-purvayeshi550@gmail.com>
- <20250210002632.48499-1-kuniyu@amazon.com>
+Subject: Re: [PATCH v1 15/16] mm: Generalize arch_sync_kernel_mappings()
+To: Ryan Roberts <ryan.roberts@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250205151003.88959-1-ryan.roberts@arm.com>
+ <20250205151003.88959-16-ryan.roberts@arm.com>
 Content-Language: en-US
-From: Purva Yeshi <purvayeshi550@gmail.com>
-In-Reply-To: <20250210002632.48499-1-kuniyu@amazon.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250205151003.88959-16-ryan.roberts@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 10/02/25 05:56, Kuniyuki Iwashima wrote:
-> 
->> [PATCH] net: unix: Fix undefined 'other' error
-> 
-> Please add net-next after PATCH and start with af_unix: as with
-> other commits when you post v2.
-> 
-> [PATCH net-next v2]: af_unix: ...
-> 
-> 
-> From: Purva Yeshi <purvayeshi550@gmail.com>
-> Date: Mon, 10 Feb 2025 00:13:55 +0530
->> Fix issue detected by smatch tool:
->> An "undefined 'other'" error occur in __releases() annotation.
->>
->> The issue occurs because __releases(&unix_sk(other)->lock) is placed
->> at the function signature level, where other is not yet in scope.
->>
->> Fix this by replacing it with __releases(&u->lock), using u, a local
->> variable, which is properly defined inside the function.
-> 
-> Tweaking an annotation with a comment for a static analyzer to fix
-> a warning for yet another static analyzer is too much.
-> 
-> Please remove sparse annotation instead.
-> 
-> Here's the only place where sparse is used in AF_UNIX code, and we
-> don't use sparse even for /proc/net/unix.
 
-Thank you for the feedback. As per your suggestion, I have removed the 
-Sparse annotation instead of modifying it. I have updated the patch 
-accordingly and will send v2 with the corrected subject line and commit 
-message.
 
-Best regards,
-Purva Yeshi
-
+On 2/5/25 20:39, Ryan Roberts wrote:
+> arch_sync_kernel_mappings() is an optional hook for arches to allow them
+> to synchonize certain levels of the kernel pgtables after modification.
+> But arm64 could benefit from a hook similar to this, paired with a call
+> prior to starting the batch of modifications.
 > 
+> So let's introduce arch_update_kernel_mappings_begin() and
+> arch_update_kernel_mappings_end(). Both have a default implementation
+> which can be overridden by the arch code. The default for the former is
+> a nop, and the default for the latter is to call
+> arch_sync_kernel_mappings(), so the latter replaces previous
+> arch_sync_kernel_mappings() callsites. So by default, the resulting
+> behaviour is unchanged.
 > 
->>
->> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
->> ---
->>   net/unix/af_unix.c | 5 ++++-
->>   1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
->> index 34945de1f..37b01605a 100644
->> --- a/net/unix/af_unix.c
->> +++ b/net/unix/af_unix.c
->> @@ -1508,7 +1508,10 @@ static int unix_dgram_connect(struct socket *sock, struct sockaddr *addr,
->>   }
->>   
->>   static long unix_wait_for_peer(struct sock *other, long timeo)
->> -	__releases(&unix_sk(other)->lock)
->> +	/*
->> +	 * Use local variable instead of function parameter
->> +	 */
->> +	__releases(&u->lock)
->>   {
->>   	struct unix_sock *u = unix_sk(other);
->>   	int sched;
->> -- 
->> 2.34.1
+> To avoid include hell, the pgtbl_mod_mask type and it's associated
+> macros are moved to their own header.
+> 
+> In a future patch, arm64 will opt-in to overriding both functions.
+> 
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> ---
+>  include/linux/pgtable.h         | 24 +----------------
+>  include/linux/pgtable_modmask.h | 32 ++++++++++++++++++++++
+>  include/linux/vmalloc.h         | 47 +++++++++++++++++++++++++++++++++
+>  mm/memory.c                     |  5 ++--
+>  mm/vmalloc.c                    | 15 ++++++-----
+>  5 files changed, 92 insertions(+), 31 deletions(-)
+>  create mode 100644 include/linux/pgtable_modmask.h
+> 
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index 94d267d02372..7f70786a73b3 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -4,6 +4,7 @@
+>  
+>  #include <linux/pfn.h>
+>  #include <asm/pgtable.h>
+> +#include <linux/pgtable_modmask.h>
+>  
+>  #define PMD_ORDER	(PMD_SHIFT - PAGE_SHIFT)
+>  #define PUD_ORDER	(PUD_SHIFT - PAGE_SHIFT)
+> @@ -1786,29 +1787,6 @@ static inline bool arch_has_pfn_modify_check(void)
+>  # define PAGE_KERNEL_EXEC PAGE_KERNEL
+>  #endif
+>  
+> -/*
+> - * Page Table Modification bits for pgtbl_mod_mask.
+> - *
+> - * These are used by the p?d_alloc_track*() set of functions an in the generic
+> - * vmalloc/ioremap code to track at which page-table levels entries have been
+> - * modified. Based on that the code can better decide when vmalloc and ioremap
+> - * mapping changes need to be synchronized to other page-tables in the system.
+> - */
+> -#define		__PGTBL_PGD_MODIFIED	0
+> -#define		__PGTBL_P4D_MODIFIED	1
+> -#define		__PGTBL_PUD_MODIFIED	2
+> -#define		__PGTBL_PMD_MODIFIED	3
+> -#define		__PGTBL_PTE_MODIFIED	4
+> -
+> -#define		PGTBL_PGD_MODIFIED	BIT(__PGTBL_PGD_MODIFIED)
+> -#define		PGTBL_P4D_MODIFIED	BIT(__PGTBL_P4D_MODIFIED)
+> -#define		PGTBL_PUD_MODIFIED	BIT(__PGTBL_PUD_MODIFIED)
+> -#define		PGTBL_PMD_MODIFIED	BIT(__PGTBL_PMD_MODIFIED)
+> -#define		PGTBL_PTE_MODIFIED	BIT(__PGTBL_PTE_MODIFIED)
+> -
+> -/* Page-Table Modification Mask */
+> -typedef unsigned int pgtbl_mod_mask;
+> -
+>  #endif /* !__ASSEMBLY__ */
+>  
+>  #if !defined(MAX_POSSIBLE_PHYSMEM_BITS) && !defined(CONFIG_64BIT)
+> diff --git a/include/linux/pgtable_modmask.h b/include/linux/pgtable_modmask.h
+> new file mode 100644
+> index 000000000000..5a21b1bb8df3
+> --- /dev/null
+> +++ b/include/linux/pgtable_modmask.h
+> @@ -0,0 +1,32 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_PGTABLE_MODMASK_H
+> +#define _LINUX_PGTABLE_MODMASK_H
+> +
+> +#ifndef __ASSEMBLY__
+> +
+> +/*
+> + * Page Table Modification bits for pgtbl_mod_mask.
+> + *
+> + * These are used by the p?d_alloc_track*() set of functions an in the generic
+> + * vmalloc/ioremap code to track at which page-table levels entries have been
+> + * modified. Based on that the code can better decide when vmalloc and ioremap
+> + * mapping changes need to be synchronized to other page-tables in the system.
+> + */
+> +#define		__PGTBL_PGD_MODIFIED	0
+> +#define		__PGTBL_P4D_MODIFIED	1
+> +#define		__PGTBL_PUD_MODIFIED	2
+> +#define		__PGTBL_PMD_MODIFIED	3
+> +#define		__PGTBL_PTE_MODIFIED	4
+> +
+> +#define		PGTBL_PGD_MODIFIED	BIT(__PGTBL_PGD_MODIFIED)
+> +#define		PGTBL_P4D_MODIFIED	BIT(__PGTBL_P4D_MODIFIED)
+> +#define		PGTBL_PUD_MODIFIED	BIT(__PGTBL_PUD_MODIFIED)
+> +#define		PGTBL_PMD_MODIFIED	BIT(__PGTBL_PMD_MODIFIED)
+> +#define		PGTBL_PTE_MODIFIED	BIT(__PGTBL_PTE_MODIFIED)
+> +
+> +/* Page-Table Modification Mask */
+> +typedef unsigned int pgtbl_mod_mask;
+> +
+> +#endif /* !__ASSEMBLY__ */
+> +
+> +#endif /* _LINUX_PGTABLE_MODMASK_H */
+> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+> index 16dd4cba64f2..cb5d8f1965a1 100644
+> --- a/include/linux/vmalloc.h
+> +++ b/include/linux/vmalloc.h
+> @@ -11,6 +11,7 @@
+>  #include <asm/page.h>		/* pgprot_t */
+>  #include <linux/rbtree.h>
+>  #include <linux/overflow.h>
+> +#include <linux/pgtable_modmask.h>
+>  
+>  #include <asm/vmalloc.h>
+>  
+> @@ -213,6 +214,26 @@ extern int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
+>  int vmap_pages_range(unsigned long addr, unsigned long end, pgprot_t prot,
+>  		     struct page **pages, unsigned int page_shift);
+>  
+> +#ifndef arch_update_kernel_mappings_begin
+> +/**
+> + * arch_update_kernel_mappings_begin - A batch of kernel pgtable mappings are
+> + * about to be updated.
+> + * @start: Virtual address of start of range to be updated.
+> + * @end: Virtual address of end of range to be updated.
+> + *
+> + * An optional hook to allow architecture code to prepare for a batch of kernel
+> + * pgtable mapping updates. An architecture may use this to enter a lazy mode
+> + * where some operations can be deferred until the end of the batch.
+> + *
+> + * Context: Called in task context and may be preemptible.
+> + */
+> +static inline void arch_update_kernel_mappings_begin(unsigned long start,
+> +						     unsigned long end)
+> +{
+> +}
+> +#endif
+> +
+> +#ifndef arch_update_kernel_mappings_end
+>  /*
+>   * Architectures can set this mask to a combination of PGTBL_P?D_MODIFIED values
+>   * and let generic vmalloc and ioremap code know when arch_sync_kernel_mappings()
+> @@ -229,6 +250,32 @@ int vmap_pages_range(unsigned long addr, unsigned long end, pgprot_t prot,
+>   */
+>  void arch_sync_kernel_mappings(unsigned long start, unsigned long end);
+>  
+> +/**
+> + * arch_update_kernel_mappings_end - A batch of kernel pgtable mappings have
+> + * been updated.
+> + * @start: Virtual address of start of range that was updated.
+> + * @end: Virtual address of end of range that was updated.
+> + *
+> + * An optional hook to inform architecture code that a batch update is complete.
+> + * This balances a previous call to arch_update_kernel_mappings_begin().
+> + *
+> + * An architecture may override this for any purpose, such as exiting a lazy
+> + * mode previously entered with arch_update_kernel_mappings_begin() or syncing
+> + * kernel mappings to a secondary pgtable. The default implementation calls an
+> + * arch-provided arch_sync_kernel_mappings() if any arch-defined pgtable level
+> + * was updated.
+> + *
+> + * Context: Called in task context and may be preemptible.
+> + */
+> +static inline void arch_update_kernel_mappings_end(unsigned long start,
+> +						   unsigned long end,
+> +						   pgtbl_mod_mask mask)
+> +{
+> +	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
+> +		arch_sync_kernel_mappings(start, end);
+> +}
 
+One arch call back calling yet another arch call back sounds bit odd. Also
+should not ARCH_PAGE_TABLE_SYNC_MASK be checked both for __begin and __end
+callbacks in case a platform subscribes into this framework. Instead the
+following changes sound more reasonable, but will also require some more
+updates for the current platforms using arch_sync_kernel_mappings().
+
+if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
+	arch_update_kernel_mappings_begin()
+
+if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
+	arch_update_kernel_mappings_end()
+
+Basically when any platform defines ARCH_PAGE_TABLE_SYNC_MASK and subscribes
+this framework, it will also provide arch_update_kernel_mappings_begin/end()
+callbacks as required.
+
+> +#endif
+> +
+>  /*
+>   *	Lowlevel-APIs (not for driver use!)
+>   */
+> diff --git a/mm/memory.c b/mm/memory.c
+> index a15f7dd500ea..f80930bc19f6 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -3035,6 +3035,8 @@ static int __apply_to_page_range(struct mm_struct *mm, unsigned long addr,
+>  	if (WARN_ON(addr >= end))
+>  		return -EINVAL;
+>  
+> +	arch_update_kernel_mappings_begin(start, end);
+> +
+>  	pgd = pgd_offset(mm, addr);
+>  	do {
+>  		next = pgd_addr_end(addr, end);
+> @@ -3055,8 +3057,7 @@ static int __apply_to_page_range(struct mm_struct *mm, unsigned long addr,
+>  			break;
+>  	} while (pgd++, addr = next, addr != end);
+>  
+> -	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
+> -		arch_sync_kernel_mappings(start, start + size);
+> +	arch_update_kernel_mappings_end(start, end, mask);
+>  
+>  	return err;
+>  }
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 50fd44439875..c5c51d86ef78 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -312,10 +312,10 @@ int vmap_page_range(unsigned long addr, unsigned long end,
+>  	pgtbl_mod_mask mask = 0;
+>  	int err;
+>  
+> +	arch_update_kernel_mappings_begin(addr, end);
+>  	err = vmap_range_noflush(addr, end, phys_addr, pgprot_nx(prot),
+>  				 ioremap_max_page_shift, &mask);
+> -	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
+> -		arch_sync_kernel_mappings(addr, end);
+> +	arch_update_kernel_mappings_end(addr, end, mask);
+>  
+>  	flush_cache_vmap(addr, end);
+>  	if (!err)
+> @@ -463,6 +463,9 @@ void __vunmap_range_noflush(unsigned long start, unsigned long end)
+>  	pgtbl_mod_mask mask = 0;
+>  
+>  	BUG_ON(addr >= end);
+> +
+> +	arch_update_kernel_mappings_begin(start, end);
+> +
+>  	pgd = pgd_offset_k(addr);
+>  	do {
+>  		next = pgd_addr_end(addr, end);
+> @@ -473,8 +476,7 @@ void __vunmap_range_noflush(unsigned long start, unsigned long end)
+>  		vunmap_p4d_range(pgd, addr, next, &mask);
+>  	} while (pgd++, addr = next, addr != end);
+>  
+> -	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
+> -		arch_sync_kernel_mappings(start, end);
+> +	arch_update_kernel_mappings_end(start, end, mask);
+>  }
+>  
+>  void vunmap_range_noflush(unsigned long start, unsigned long end)
+> @@ -625,6 +627,8 @@ int __vmap_pages_range_noflush(unsigned long addr, unsigned long end,
+>  
+>  	WARN_ON(page_shift < PAGE_SHIFT);
+>  
+> +	arch_update_kernel_mappings_begin(start, end);
+> +
+>  	if (!IS_ENABLED(CONFIG_HAVE_ARCH_HUGE_VMALLOC) ||
+>  			page_shift == PAGE_SHIFT) {
+>  		err = vmap_small_pages_range_noflush(addr, end, prot, pages,
+> @@ -642,8 +646,7 @@ int __vmap_pages_range_noflush(unsigned long addr, unsigned long end,
+>  		}
+>  	}
+>  
+> -	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
+> -		arch_sync_kernel_mappings(start, end);
+> +	arch_update_kernel_mappings_end(start, end, mask);
+>  
+>  	return err;
+>  }
