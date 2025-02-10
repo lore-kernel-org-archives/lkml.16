@@ -1,119 +1,110 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B46253F33;
-	Mon, 10 Feb 2025 22:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C317E1D432D
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:17:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739225756; cv=none; b=r05JWIDZEmcKrsinx7RuE/SEkpV1nvdid4pz40ruAFOXGuWp/2tHAd7B4qXf+7/fHyT3znW+7V2GhveFnDg3/qQpPcbcyc9BR48b9zARC3vOOzln48poMBjcUubdyLWwGpwGWKLGsr+TRNuGKRZf2iwU0tNjNmtL3T/ueyZLk2k=
+	t=1739225829; cv=none; b=uMlqVyXeh3xISjahkDLCPldzJwGvDQ2fDNg9s2fx1zbqsyu0y86IfNrpHXuGsNA5EStYz5drTlucfwi7HGdOtSIPRWvty99G6pK97yblo9VnZcvp1hjOdcjVj6yeC7JZz2Ea+CjbjFjCxvp50ehLw3/dagKdfBBUGj3M7Y8JPcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739225756; c=relaxed/simple;
-	bh=5+OFXBdE8mQCivP9ZfRQNdRIfE0jzn5uDBHl6kYM15o=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qdOd4N1ANJUJBxB54Gc6g9aWDPQeZ0UIP7ep/VNKoNV1COIDUfyObqlHpouhPU9L1wkGQSzEOUMXQfxC+PiAy/VD11augUiQipow19/vLg1oTMu3B7Um2oVL7uoRGhsE+Cq/ZptHq4Peksv3aILtmwNuwcJdb1g+QxhzoUMV1Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Z+vYO7AS; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1739225829; c=relaxed/simple;
+	bh=6lE5Mnx/T7Poj2YlCWXbpUyGGnjq5GAq+vZkbcngMo8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=rPIRgDZkpR/Wz5JFM8aoVsYqqn4vNj3zjRG70n8GXise5b7eeYimNQdfV1jwcD90NPjpiqMzppLu7uWtMUR/6w3MbcDSeY5K4d0VXn0u+1N8zkDkQ0Id9wCzF6jY8EiMOfPfBRVVUALFdM+c75hYsMSW7vB/9wDCk2L7u99ciyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SN105Hcd; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z+vYO7AS"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51AMFU7s121113
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 10 Feb 2025 16:15:30 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1739225731;
-	bh=xgd4lUDSFWZi+mMBEAIolQwUzvJ3Y9D9P+qJLoy3Uug=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=Z+vYO7ASgPj8j6p0hc6kYwd29ma26Uz6BNPdxRdmsiRGBT6+jmLY/cpsCSfIfECcg
-	 o4LUIKDxxmqbk0jzsWmZmlR1TEhn13uhIx74lbQKrQJsYPgxZFR7y6+JKOOMJMI7cv
-	 NzdG9OcsZfrt3dFrLcXwwbX4Hqo3aufeHULrC7Jc=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51AMFUXn001775;
-	Mon, 10 Feb 2025 16:15:30 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 10
- Feb 2025 16:15:30 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 10 Feb 2025 16:15:30 -0600
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51AMFUZ4112628;
-	Mon, 10 Feb 2025 16:15:30 -0600
-From: Judith Mendez <jm@ti.com>
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Andrew Davis
-	<afd@ti.com>,
-        Hari Nagalla <hnagalla@ti.com>, Judith Mendez <jm@ti.com>
-Subject: [PATCH v5 02/10] arm64: dts: ti: k3-am62a-mcu: Add R5F remote proc node
-Date: Mon, 10 Feb 2025 16:15:22 -0600
-Message-ID: <20250210221530.1234009-3-jm@ti.com>
-X-Mailer: git-send-email 2.48.0
-In-Reply-To: <20250210221530.1234009-1-jm@ti.com>
-References: <20250210221530.1234009-1-jm@ti.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SN105Hcd"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2f46b7851fcso14951309a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:17:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739225827; x=1739830627; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NiQktNxQxsAHB60qGvEjY4Wnpw2CpSJgOu9uKXQ/mCE=;
+        b=SN105HcdZqBq3UL/IWci7pYMJ4YGTrlwiVO39EfCsQ4Ng9nLBigcN7izudPSGLvcJC
+         hG16WI5bFgGoF7K3VyHsNQzlqrIBeX/qztOTWJDZzepY9fg31au59BW+4aKvsnxzISqh
+         OvHf+OUA15jYXW/EkspkVu6b0kLOslBisBGZFK5KZDiBcUSDng7cR0tvbAd4CrwI7If6
+         TRHPovVVvlVoxZYNtY3qI7LUnvQOaFL0fj7vUfXKQ5o8xSGd4AAVoiVHuVR2fnW0Ay56
+         S6LR/wt9hGbtC5dce7u5PH5orrqK4MksMSpLFbRfgyIMkCRpeYQLokRxlt2812C+T6fX
+         vKlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739225827; x=1739830627;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NiQktNxQxsAHB60qGvEjY4Wnpw2CpSJgOu9uKXQ/mCE=;
+        b=mgReOWrv8Ct8WGixdbcIHlruT7zbBt1a5b6TIAcKppxSWnGpfOtryorbZ8H+1DYa3A
+         uuEMzZjnm8IEXjf+Nl0vgaL+cJ1g8EsHgKSfbb+nYWtV5uVOBI+VhV6I0vTMRUviYuqq
+         OC10KmhQO00IxucJoqsKIWAVl2USsmd5xIE8EJ7IRSAPBUsJXhw/XHSBUO/ng6cKvjmE
+         D6UevjfbNdgkQ+JtaO2csxQDYSqnLBr6Oi2vLQZOqhOlhAjPy/93wAxTkDCjGPOP6Oda
+         lQBaScoMrevkukiWDjJGgpIBWSGciyIVTxhlGJhGfG/8Jb9SXkrb1aWf0Q1tK8eVamsy
+         qsRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWtvDw4gm9YrsiXMtnEzOqfj46Xwnt9o1uMtnaXrJlmbtg7JQAYqCeb/hgc6bDTMOWMjQq3GcIcaVWphZ8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0Xf5AVF7laVRFeqpymeGE6kIOao13SsTgisIGVAHc2rCJMGzE
+	wth+HAfd5k9NFPbwqZ4wloVHJDi2VkRkEuraEuz24rzaeK0hMY3usZX17L23wtEScan/dy3JY/p
+	egA==
+X-Google-Smtp-Source: AGHT+IFUr8B406UlqTbwQn8/a3DnwXEDSVRHSHvADMnY9/DAsyJd87DA1vBUl7os5VL41nbcjyiEKpkvFTw=
+X-Received: from pjbnc15.prod.google.com ([2002:a17:90b:37cf:b0:2ef:9b30:69d3])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3143:b0:2ee:b0b0:8e02
+ with SMTP id 98e67ed59e1d1-2fa243f0272mr23783490a91.28.1739225827007; Mon, 10
+ Feb 2025 14:17:07 -0800 (PST)
+Date: Mon, 10 Feb 2025 14:17:05 -0800
+In-Reply-To: <Z6bBoZOynhI3eV+Q@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Mime-Version: 1.0
+References: <20250207030640.1585-1-yan.y.zhao@intel.com> <20250207030810.1701-1-yan.y.zhao@intel.com>
+ <Z6Yg0pORbMyC-9xA@google.com> <Z6bBoZOynhI3eV+Q@yzhao56-desk.sh.intel.com>
+Message-ID: <Z6p64UaZnYg-qfNU@google.com>
+Subject: Re: [PATCH 2/4] KVM: x86/tdp_mmu: Merge the prefetch into the
+ is_access_allowed() check
+From: Sean Christopherson <seanjc@google.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: pbonzini@redhat.com, rick.p.edgecombe@intel.com, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-From: Hari Nagalla <hnagalla@ti.com>
+On Sat, Feb 08, 2025, Yan Zhao wrote:
+> On Fri, Feb 07, 2025 at 07:03:46AM -0800, Sean Christopherson wrote:
+> > On Fri, Feb 07, 2025, Yan Zhao wrote:
+> > > Merge the prefetch check into the is_access_allowed() check to determine a
+> > > spurious fault.
+> > > 
+> > > In the TDP MMU, a spurious prefetch fault should also pass the
+> > > is_access_allowed() check.
+> > 
+> > How so? 
+> > 
+> >   1. vCPU takes a write-fault on a swapped out page and queues an async #PF
+> >   2. A different task installs a writable SPTE
+> >   3. A third task write-protects the SPTE for dirty logging
+> >   4. Async #PF handler faults in the SPTE, encounters a read-only SPTE for its
+> >      write fault.
+> > 
+> > KVM shouldn't mark the gfn as dirty in this case.
+> Hmm, but when we prefetch an entry, if a gfn is not write-tracked, it allows to
+> mark the gfn as dirty, just like when there's no existing SPTE, a prefetch fault
+> also marks a gfn as dirty.
 
-AM62A SoCs have a single R5F core in the MCU voltage domain.
-Add the R5FSS node with the child node for core0 in MCU voltage
-domain .dtsi file.
+Yeah, but there's a difference between installing a SPTE and overwriting a SPTE.
 
-Signed-off-by: Hari Nagalla <hnagalla@ti.com>
-Signed-off-by: Judith Mendez <jm@ti.com>
----
-Changes since v4:
-- Drop SRAM node for am62ax MCU R5fSS0 core0
----
- arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi | 25 ++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+> If a gfn is write-tracked, make_spte() will not grant write-permission to make
+> the gfn dirty.
+> 
+> However, I admit that making the new SPTE as not-accessed again is not desired.
+> What about below?
+> 
+> @@ -983,7 +983,7 @@ static int tdp_mmu_map_handle_target_level(struct kvm_vcpu *vcpu,
+>                 return RET_PF_RETRY;
+> 
+>         if (is_shadow_present_pte(iter->old_spte) &&
+> -           is_access_allowed(fault, iter->old_spte) &&
+> +           (fault->prefetch || is_access_allowed(fault, iter->old_spte)) &&
+>             is_last_spte(iter->old_spte, iter->level))
+>                 return RET_PF_SPURIOUS;
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi
-index 0469c766b769e..1178cc6a9be8c 100644
---- a/arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi
-@@ -175,4 +175,29 @@ mcu_mcan1: can@4e18000 {
- 		bosch,mram-cfg = <0x0 128 64 64 64 64 32 32>;
- 		status = "disabled";
- 	};
-+
-+	mcu_r5fss0: r5fss@79000000 {
-+		compatible = "ti,am62-r5fss";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x79000000 0x00 0x79000000 0x8000>,
-+			 <0x79020000 0x00 0x79020000 0x8000>;
-+		power-domains = <&k3_pds 7 TI_SCI_PD_EXCLUSIVE>;
-+		status = "disabled";
-+
-+		mcu_r5fss0_core0: r5f@79000000 {
-+			compatible = "ti,am62-r5f";
-+			reg = <0x79000000 0x00008000>,
-+			      <0x79020000 0x00008000>;
-+			reg-names = "atcm", "btcm";
-+			ti,sci = <&dmsc>;
-+			ti,sci-dev-id = <9>;
-+			ti,sci-proc-ids = <0x03 0xff>;
-+			resets = <&k3_reset 9 1>;
-+			firmware-name = "am62a-mcu-r5f0_0-fw";
-+			ti,atcm-enable = <0>;
-+			ti,btcm-enable = <1>;
-+			ti,loczrama = <0>;
-+		};
-+	};
- };
--- 
-2.48.0
-
+Works for me.
