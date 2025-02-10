@@ -1,143 +1,155 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583991CAA8D
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193B024C671
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:52:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739227878; cv=none; b=JwfIwyAc5WfviXkeHtteCdwtz9gSg9B4hKuzWIXViKuvz6e+w98UbGqFOPzysLmzUiJe22UytwqioogaXrbsyW/Th0evVTHy61ZiGYJYIV5XOq6MQx5tFnbt7jxGRT6zjNxSQBV3I3DQT5i/cVL93+hX/oFaxLPSh0x7QVT1QDk=
+	t=1739227963; cv=none; b=RJbIurR4OTVl5Bp3bdEsTtXVFLh6L80fr5srzGdwgWzdON2LQtuw3Z3gbOqZNotdLnJ/2dMjvtW+cIQUNhvLGtOUANOKvczcjKoZhEt1A25XPvsV5vK3YtQzTmy5c9gUsREt2rBVk+bsreDq8CTUXLdj7IOQ9vk1CEhojRjB4TE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739227878; c=relaxed/simple;
-	bh=xfG4WeE7SjirZ5Mcv8UCshdnCtmJEh7KANnBAKvtBeA=;
+	s=arc-20240116; t=1739227963; c=relaxed/simple;
+	bh=u1A7hUp218r3DTCis5M2h9NuD/7RxkXbim97uOWF8B4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZTyCVUoJDRO3X05IwBIuoD6FIsICl4+8z5D90AjpwoTUh/Inf1QzJZmlnAa3posJDKgJH1zS88Pd5OMT/4T//K8i0abQOaPkxQ0POpuKi0GaEGuilLjjvORs3yCQA4nnup4sm7QaRzNpxzX2Y4J2IdHGa/DnRBpMCVBzGkaT0+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cXFaWDim; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=t8QP0ddTxZ+bLnArSw3KXXKWGMU24pDu88Ntr2zaBcVqGRQIWgl6CaciQ5Cb47RTk+xd2oH1H76i3rB8AC/GcvVciFJB4Nw8oifGsNR+wKS0wKsa+Vb0h232XBT7rTiBlspXu5EcT6zwqOQ0pLOToSU3TfhIpN+HyK3j6NFul6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=BRvr/uDR; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cXFaWDim"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f72fac367so47415ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:51:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="BRvr/uDR"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6e4487fce51so17300136d6.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:52:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739227876; x=1739832676; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kzD9w/10Tg/Dbaxqt0ZLJaS8jBU14ki/gg5wLfoid+o=;
-        b=cXFaWDim6jCcbo8VlT9Zn0BXncjw8vT0MECuwrmcsS+PzkbiVJ6R7HhTcsoWC1bGNV
-         MJwyq6av2ENSWDiEMU0cz29qkEWZjvgoGrwwYANwH/cOkKB43U5zB6zhPYKgpI7G4eFK
-         FzVxVt+1UtxPKXk9PhsfkPFgDkEYC3uUkptTE9KVIcFhla6H5GXGNJzfxXaTNZyIzbsy
-         kXW0Onk1ef+2yYkzvxKcb8EhrYFIjuDYkIeIng0odeFVOGRLKm2xygPx8S5q53hPHCHF
-         /gJNHTBvzDKSUKgyXDjafUxFMMpxVkCKqM+ToWo3QFuubFs9C8mZROWf1bYQBxC6jUIs
-         KsvQ==
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1739227959; x=1739832759; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hIqV3tfLe7RjPFG0CQCvGtroDIm7scu+4kUGANh/xuo=;
+        b=BRvr/uDRHkkuRpDYPsq9md3vA0jBBZqwpflEG1uNMsL0aNuxZqy2WhXqQgFXSqR4HL
+         n0vPRiLiLNuTbcxGvM+yomTx/pE+E0KGeRO1COvH02BV2nS4yPiUpx4TRf0SAnieBRAo
+         9mcLtB8JUvFYZ1sshY99gGDKl6xEaV+rb2EksyPIILP5ScYhAe3tiX5syW8X3qPU3Yia
+         v8fndVpt0S9HxolQgiy0CZEt6fuYcxfFyilqZVswhXSmuTuvoSS/TR6nfVEDFR/zm8eA
+         U5Kxilw6KW7SOHPUOyEwZnvVWZx6Gqm7FNn2RA2EV4Q9ZJxAXKBJlbVPqveqnRbSQCcg
+         N7Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739227876; x=1739832676;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kzD9w/10Tg/Dbaxqt0ZLJaS8jBU14ki/gg5wLfoid+o=;
-        b=vXMe7zqsLWrImiEFx+qJwLfQUO1d9BPBSW6HuCQdTa3IqEuPPw4IvBM+2Z525mJBay
-         RG35bSUi6Uoe/vd9UEBe7kQaxK78P7/W5EWyjKucBQ03YwH9+S+EisR1RTRp+oBoTcNW
-         +e/I+JG9EqrUm2qemk0yROkSYixO8Zj4G8gXwVq7fLpqZ+eeRos4so+rw+ScIm8QdW/D
-         uSL8zm9XD6bb041u1SN/cO8LzrSNGCvCOa1iWJ5E54PVHRzXhyKfIv7neHwt/Ax9wckX
-         RpCxvYIuPTGLVsXVm9qV3JfLuFeaZvlNdUxcY5a1s6grT/wz90ie8V3nZpWSKrQaqnjO
-         v8bg==
-X-Forwarded-Encrypted: i=1; AJvYcCWIUMEDVb3lFD19Zqm5Iph7N5rxYEgJgKBFXmxJKFegSDuITSXkp7mc1zyKcvgMeBJnyXHEJ7SrN66GmG0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEDVW+bPdHM2DU0rxwfyM2PQL3qhdl6YI9x5cqCzQVqX4UlES+
-	GBbw5isb3gVoM0suHiY9zNJ2hK64lAut/SZ2QznmwnDOGzZqqsDIhpEqNGbQEg==
-X-Gm-Gg: ASbGncvsl66c1q/rRJrsVOMbI8F5CCN8P/6W3BX5aIzT4vA1FJCUqrGM8H8OendJjZ5
-	I8iAGTEx/tjRjSINWd4J19sIsa/Uc1b6Au0TIKL/Us70Ifv+25VYpUxYldY3IB4NJp8r2H/d/1Z
-	bT3FXYBd+DNsZEoboc3zEmP6KNpQkeCgHoxuPVoksp2F1QgEutVwJu4z2R+8v3ar1bErsFEOKKS
-	ar82eJ05MfHUdJjeeE+HdpjDfFJxIIJZA41Nsc1wMYZu6pOJvNtJMyXiFYCQnJ2TdaFABBepO15
-	aTd5srgAwBCwZh/OU2/SnAFlTFISh4ptugC/XtcB1ubt28CW2m+GJQ==
-X-Google-Smtp-Source: AGHT+IF3MLc1SEMp/5ggqyCFt3vZ33zwtCZnr32F33srmpgWaKSJcp4xjwvbrjeQxnAK8XCWIX7FIA==
-X-Received: by 2002:a17:902:ce08:b0:212:26e:1b46 with SMTP id d9443c01a7336-21fbb511b0bmr260955ad.23.1739227876395;
-        Mon, 10 Feb 2025 14:51:16 -0800 (PST)
-Received: from google.com (147.141.16.34.bc.googleusercontent.com. [34.16.141.147])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f368d8ccbsm84732645ad.255.2025.02.10.14.51.14
+        d=1e100.net; s=20230601; t=1739227959; x=1739832759;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hIqV3tfLe7RjPFG0CQCvGtroDIm7scu+4kUGANh/xuo=;
+        b=k2C6kG/vJ5k/U4rgKwzDNztNM27/FegUJWpbttOiYdcRYEdDjwthbsZHJRNyVGs/fR
+         zTNxkOBh1euyztWSIX3UmQqDQ8JdWoKjtqkWOkxHald/9kV1z6S5YtgojdHHyTvDW554
+         1KaEeb0wINFwBjsc+j2Jzbv6K+BHg4qaU/JZE0Sp5R/LhGhJsh6keH2ysf/JJosRQTsS
+         pevaV3XvwPJGcFKQzDVtkr+fFRfphG7fxBEy8lLHcjcdSuKAlIZsjJykXigcCEflYJOg
+         3ZtvuYX60EAs0nsPHwoAjaqinus4JX2d24nW6mvx8bkDEW0xyTc5fYRhiO+v3f6bFFIO
+         hCcA==
+X-Forwarded-Encrypted: i=1; AJvYcCV0xUU2efNwRk9H/qXYsNvGpDiaFfJkW7PLL58JaW720s5+oEE81YfBVHreRROJ1qnuOlx6FtLI80izv6g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAfYJlzY1kKBYcpwnlWgSQXTKrTPrXyC8YekPbpgqy6Ju6646+
+	pyKsKcNRCOkNHFM8T9Rm9C96oIMFUNmumPiOJ5MgzWjjGSAqUEgdiUGKVS2yeeygejIdqmI/6qe
+	p
+X-Gm-Gg: ASbGncuJlebywluEB5TpATqxTS96ufVyxbQjMQRzs2KG5rs/n5+cvzpmwuw2o70REG7
+	J+op9HqHy+q0tVupnaW5tSLzFu/ExGNehc1XeZRCxTIHoZct7wuiQrXhZ08rgEWpU553IqlKWTF
+	LZRT+tmuW7p7jXxBvM+bczRlEVfWa+pP8S2lFPfAj334+SPMsNhNcROK30Ocf41ozUR5MkjRB4K
+	xG3e/WpXwVUXhCBJnrxCrwX8ZZQ6xY/EA2Pf1i8KlSJYsRGynzgAruoPwrfQfl6rdw2aGZJ4YHL
+	AbdociM/r9L1iA==
+X-Google-Smtp-Source: AGHT+IFCCtSpTxwzZJhFgQbTnEw4Hb6IM3CNmfFsUhwUhEqAD5ltagXJM+qe8uUcXCgdyfJayAr3pQ==
+X-Received: by 2002:a05:6214:1d0d:b0:6d8:9a85:5b44 with SMTP id 6a1803df08f44-6e4456c11ddmr220765156d6.29.1739227958757;
+        Mon, 10 Feb 2025 14:52:38 -0800 (PST)
+Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6e451e423cdsm32325906d6.125.2025.02.10.14.52.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 14:51:15 -0800 (PST)
-Date: Mon, 10 Feb 2025 22:51:11 +0000
-From: Peilin Ye <yepeilin@google.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: bpf <bpf@vger.kernel.org>,
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-	bpf@ietf.org, Xu Kuohai <xukuohai@huaweicloud.com>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	David Vernet <void@manifault.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Quentin Monnet <qmo@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	Yingchi Long <longyingchi24s@ict.ac.cn>,
-	Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>,
-	Neel Natu <neelnatu@google.com>,
-	Benjamin Segall <bsegall@google.com>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf-next v2 4/9] bpf: Introduce load-acquire and
- store-release instructions
-Message-ID: <Z6qC303CzfUMN8nV@google.com>
-References: <cover.1738888641.git.yepeilin@google.com>
- <d03d8c3305e311c6cb29924119b5eecae8370bbc.1738888641.git.yepeilin@google.com>
- <CAADnVQ+L0h8qXfYkC3+ORyQkXFJ2MgO8FDHr_Ha0QMAtS_ujag@mail.gmail.com>
- <Z6gRHDLfA7cjnlSn@google.com>
- <CAADnVQLkHA9LGv99k2TZOJEGUU=dw=q6nVurJ=aoh0v6cFS6zQ@mail.gmail.com>
+        Mon, 10 Feb 2025 14:52:38 -0800 (PST)
+Date: Mon, 10 Feb 2025 17:52:34 -0500
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>,
+	"T.J. Mercier" <tjmercier@google.com>, Tejun Heo <tj@kernel.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH] memcg: add hierarchical effective limits for v2
+Message-ID: <20250210225234.GB2484@cmpxchg.org>
+References: <20250205222029.2979048-1-shakeel.butt@linux.dev>
+ <mshcu3puv5zjsnendao73nxnvb2yiprml7aqgndc37d7k4f2em@vqq2l6dj7pxh>
+ <ctuqkowzqhxvpgij762dcuf24i57exuhjjhuh243qhngxi5ymg@lazsczjvy4yd>
+ <5jwdklebrnbym6c7ynd5y53t3wq453lg2iup6rj4yux5i72own@ay52cqthg3hy>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAADnVQLkHA9LGv99k2TZOJEGUU=dw=q6nVurJ=aoh0v6cFS6zQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5jwdklebrnbym6c7ynd5y53t3wq453lg2iup6rj4yux5i72own@ay52cqthg3hy>
 
-Hi Alexei,
-
-On Sat, Feb 08, 2025 at 07:46:54PM -0800, Alexei Starovoitov wrote:
-> > Got it!  In v3, I'll change it back to:
-> >
-> >   #define BPF_LOAD_ACQ   0x10
-> >   #define BPF_STORE_REL  0x20
+On Mon, Feb 10, 2025 at 05:24:17PM +0100, Michal Koutný wrote:
+> Hello.
 > 
-> why not 1 and 2 ?
-
-I just realized that we can't do 1 and 2 because BPF_ADD | BPF_FETCH
-also equals 1.
-
-> All other bits are reserved and the verifier will make sure they're zero
-
-IOW, we can't tell if imm<4-7> is reserved or BPF_ADD (0x00).  What
-would you suggest?  Maybe:
-
-  #define BPF_ATOMIC_LD_ST 0x10
-
-  #define BPF_LOAD_ACQ      0x1
-  #define BPF_STORE_REL     0x2
-
-?
-
-> , so when/if we need to extend it then it wouldn't matter whether
-> lower 4 bits are reserved or other bits.
-> Say, we decide to support cmpwait_relaxed as a new insn.
-> It can take the value 3 and arm64 JIT will map it to ldxr+wfe+...
+> On Thu, Feb 06, 2025 at 11:09:05AM -0800, Shakeel Butt <shakeel.butt@linux.dev> wrote:
+> > Oh I totally forgot about your series. In my use-case, it is not about
+> > dynamically knowning how much they can expand and adjust themselves but
+> > rather knowing statically upfront what resources they have been given.
 > 
-> Then with this new load_acq and cmpwait_relaxed we can efficiently
-> implement both smp_cond_load_relaxed and smp_cond_load_acquire.
+> From the memcg PoV, the effective value doesn't tell how much they were
+> given (because of sharing).
 
-Thanks,
-Peilin Ye
+It's definitely true that if you have an ancestral limit for several
+otherwise unlimited siblings, then interpreting this number as "this
+is how much memory I have available" will be completely misleading.
 
+I would also say that sharing a limit with several siblings requires a
+certain degree of awareness and cooperation between them. From that
+POV, IMO it would be fine to provide a metric with contextual caveats.
+
+The problem is, what do we do with canned, unaware, maybe untrusted
+applications? And they don't necessarily know which they are.
+
+It depends heavily on the judgement of the administrator of any given
+deployment. Some workloads might be completely untrusted and hard
+limited. Another deployment might consider the same workload
+reasonably predictable that it's configured only with a failsafe max
+limit that is much higher than where the workload is *expected* to
+operate. The allotment might happen altogether with min/low
+protections and no max limit. Or there could be a combination of
+protection slightly below and a limit slightly above the expected
+workload size.
+
+It seems basically impossible to write portable code against this
+without knowing the intent of the person setting it up.
+
+But how do we communicate intent down to the container? The two broad
+options are implicitly or explicitly:
+
+a) Provide a cgroup file that automatically derives intended target
+   size from how min/low/high/max are set up.
+
+   Right now those can be set up super loosely depending on what the
+   administrator thinks about the application. In order for this to
+   work, we'd likely have to define an idiomatic way of configuring
+   the controller. E.g. if you set max by itself, we assume this is
+   the target size. If you set low, with or without max, then low is
+   the target size. Or if you set both, target is in between.
+
+   I'm not completely convinced this is workable. It might require
+   settings beyond what's actually needed for the safe containment of
+   the workload, which carries the risk of excluding something useful.
+   I don't mean enforced configuration rules, but rather the case
+   where a configuration is reasonable and effective given the
+   workload and environment, but now the target file shows nonsense.
+
+b) Provide a cgroup file that is freely configurable by the
+   administrator with the target size of the container.
+
+   This has obvious drawbacks as well. What's the default value? Also,
+   a lot of setups are dead simple: set a hard limit and expect the
+   workload to adhere to that, period. Nobody is going to reliably set
+   another cgroup file that a workload may or may not consume.
+
+The third option is to wash our hands of all of this, provide the
+static hierarchy settings to the leaves (like this patch, plus do it
+for the other knobs as well) and let userspace figure it out.
+
+Thoughts?
