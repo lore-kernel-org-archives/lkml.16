@@ -1,126 +1,164 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46649185935;
-	Mon, 10 Feb 2025 09:38:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2E61C3C0A
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739180330; cv=none; b=Iw1HeFSX4kqSbeEw6AX9rr3ts6v0mxPpa330hKmRwa7i6fjsQ+rmX/Q6Coz9idQHBztH6F2xMZ7oHugs9uCN7Bmqclf5hZcTCfUcrFXlulrzRDLmNrSHvTdcnOQEIHzybylGiW+FLOLaqewg6Q58UWOoS9Ot+pjYA2drHP0bfd8=
+	t=1739180349; cv=none; b=bPUDwMVo63wPX8/g+3ygRUbMbWpRN3GEtOtA727cbcDJAA5UIVCsv3slEBzaGDerXLKGT8n+P0hAPskJcME1Hr5a+wPkA/MoogXLi2oWGR3WDRYGoHRYbjX+lNJ9d4jHYYV0mGH9Fn+obqDD2abN5fAm9zICwVrDsK5HzsiZJGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739180330; c=relaxed/simple;
-	bh=z52zvEobRJUlOWr9DFGCVpLkW9YsEo+4XFuz2bFnK7c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i7bdtwC3sUqU/m4Q48CWWUzE+JZkb9QbO3ACvAaoGkbUF8Mf9+sKDb/25ZklYT5QDvkSgykScwE4reE2gHTddlLuASENM98KXQxnNcbv1GHmxKJxqLLup8/REQRko7lvY0wdt6SKKWvZ5jbvVTwGHsPYD301WTxc3nZJyfEU/Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IKNsHnYk; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1739180349; c=relaxed/simple;
+	bh=Evggzw1mm78crygEZHz0M0KJuKx/SLpnc9JUY2lUjKA=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=itl2/TlSQHFqSKpoSvaf4vYTfk5+ex2zcH3DmRCZpSC+xmpWhdTjCLq7BxdU6DHvF/+u6XhGafwZ3Aq+ds4Ie65Tu8QyR8RLQFloAE7OMNh2c0Tqkj+aufpOiVwsj3LGUMpuJlClyFlpQrf0TrCzn+fBCsBIbU+cp7fKB/lLz58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n1A2PBwc; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IKNsHnYk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=aZNdFppSlq0cDLZO+YTLuS4/G5kJ54IvtSQ5XE5HyYA=; b=IKNsHnYk54bczXBjOiiK9KSuXo
-	AQCUEK5sXuRJHiCBU9ZDN3bT7ZDR+dwAYsH/ce5Wn008Y4hP5JZdWqZm18pUsmWDYomEWD1qJ5yJ5
-	vr7krXy/ofteyNpbO4iNynYF8zi5JMMSg3opptUM63fvNrYK1MpNQBPEhZRHbisGumtLLFqMCmO9f
-	OQAbwUTRRjXNaBrigqDwf0A7Xavhq2ReqjiGLIKFfUw4rfcN3bayXUgt4W8lfzcieKymyGAlwLoXT
-	8xTaupf92LzLGIudZ9imJzPV3NTtim5ESHKPdltnK/mrOpVex8nepOSmuXAEafCkzVUjXHroBWtUT
-	YrgrW/5g==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1thQFV-000000006oP-46d0;
-	Mon, 10 Feb 2025 09:38:42 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2424B300318; Mon, 10 Feb 2025 10:38:41 +0100 (CET)
-Date: Mon, 10 Feb 2025 10:38:40 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Will Deacon <will@kernel.org>, Waiman Long <llong@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Barret Rhoden <brho@google.com>, Josh Don <joshdon@google.com>,
-	Dohyun Kim <dohyunkim@google.com>,
-	linux-arm-kernel@lists.infradead.org, kernel-team@meta.com
-Subject: Re: [PATCH bpf-next v2 00/26] Resilient Queued Spin Lock
-Message-ID: <20250210093840.GE10324@noisy.programming.kicks-ass.net>
-References: <20250206105435.2159977-1-memxor@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n1A2PBwc"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38dcb97e8a3so2241274f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 01:39:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739180346; x=1739785146; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=srrij2tofXvckDkWsV9cjxYMgt/c8bcDWt6f2Pgk2Ho=;
+        b=n1A2PBwcA8wJwg5EFY1f62SjVUszsaSqFq6hRdrf91Qyi9wBlt3MftA5yEcL2p22JF
+         eTpknOcGBDMQdpoPkLi3kvpIMPfa0c1xyxOiGagUDQ+MTEmVgk96ttBWoMNpnKvZ9pJm
+         QFqtPPXERxHcKuFGUXk55OPGJ0nhIZ6WrPlN8Cs2sYyE8T7nBLpnx0yM0n2XoJicmGeM
+         ppvfqDnnhCi+VKq/n4TMdeYl8c8pRG2Fkd8AHRtc27RY+IvB47cxdXEIErzxhkdindGK
+         FsV4nzoXTmqZMhUk6/EalYUGJ1/gLurr1UWnx8ZU5imKfsD8GR8S2W4PLiTvB9WHb6AM
+         D2Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739180346; x=1739785146;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=srrij2tofXvckDkWsV9cjxYMgt/c8bcDWt6f2Pgk2Ho=;
+        b=Gp8/eCtreQGCNa1M/fBviS/6TiTcG0goHTu+Z9ZCuodCe2Boktp/TMy0ovb/973SRC
+         7beDZtBT/4Rlro22od6pnE0r1xbuzT3eM/cBuA0QWL3ApFGQuamT4O2syyRQisnDgDxB
+         gqsRUW5JMotR4YEg8OfTunFuq5iTpSndECoQNpcXzj78Z4TUHrlecAboOGlKdN6/58lR
+         s//Uei1vLz1xTKaK68gVPcsa1IVMYNABoHjMzy3Ae4vaQ2IVw4+HUwU9TDUE+nhzA6tY
+         L+PwesvCyae0BXUHIonvQdLgGi+V4XS5B3BjYZa6INLhSL/nB3XFAkyHzBLfb506xU6H
+         cjfg==
+X-Forwarded-Encrypted: i=1; AJvYcCWOYr9pl2c/4RCVP1DV1FRXLuFcResi5kGI5Jbgi5dpASm1WSWj2vnD49Gb0mh7j/sdy5qQUYjb3pt5kP0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy51ZG0TsQWgRAEoG7LywLGOKKWU01GlYrheyul53+MVO/7gRLG
+	BWAbV87TJpJy1Lzg6e5qUdd/6VvdtwIMZAnA2Fv9NciLHf9OBJ6P2/abmmERgVs=
+X-Gm-Gg: ASbGnctL2sggRhHJ2AARLgpayEzJL4c9PPxsZ7I7B03BMD1HB54N5LJ3HACr23OcT1p
+	N00i1wctz0nrCGcAOkvhaSl1jtdmi3FtdJaHURI8bZNsTUhJlh0QtSRTxbqxWkgr0vpDx+wwzo2
+	kc/EaGwhVVOQtDu0nudMbxtO9ifEdBvslSFNEH6pC3g0Jaz32PatBuO69dLTEleD8/DNLoan8cU
+	oDoj0aM55gLz+LEF/NxXKqMcZ12SSshFR+44B7TTKOjXPHgR5zSFHASeIf7Z+Cmz8KXFhTtGRLX
+	SVXxeQR2EW2Z/yC2UeONITeV1AFpS9MA8bsfGyMMT6As8Pp1/rr4czM1gWNR73D6AtSL
+X-Google-Smtp-Source: AGHT+IEHtY/xpnewLZHMrP5i7kiQ+idRtu5NbOM9k48vStwcKa1bF7nM6dGfWD5FqFw16XgafuQ3QA==
+X-Received: by 2002:a05:6000:1448:b0:38d:b2e4:6d97 with SMTP id ffacd0b85a97d-38dc9343d93mr10722664f8f.41.1739180345812;
+        Mon, 10 Feb 2025 01:39:05 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:8235:1ea0:1a75:c4d5? ([2a01:e0a:982:cbb0:8235:1ea0:1a75:c4d5])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d896d70sm174462705e9.0.2025.02.10.01.39.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 01:39:05 -0800 (PST)
+Message-ID: <ae9ba351-53c8-4389-b13b-7b23926a8390@linaro.org>
+Date: Mon, 10 Feb 2025 10:39:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250206105435.2159977-1-memxor@gmail.com>
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 0/5] Add UFS support for SM8750
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Melody Olvera <quic_molvera@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>,
+ Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
+ Trilok Soni <quic_tsoni@quicinc.com>, linux-arm-msm@vger.kernel.org,
+ linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+ Nitin Rawat <quic_nitirawa@quicinc.com>,
+ Manish Pandey <quic_mapa@quicinc.com>
+References: <20250113-sm8750_ufs_master-v1-0-b3774120eb8c@quicinc.com>
+ <c6352263-8329-4409-b769-a22f98978ac8@oss.qualcomm.com>
+ <20250209152140.cyry6g7ltccxcmyj@thinkpad>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250209152140.cyry6g7ltccxcmyj@thinkpad>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 06, 2025 at 02:54:08AM -0800, Kumar Kartikeya Dwivedi wrote:
+On 09/02/2025 16:21, Manivannan Sadhasivam wrote:
+> On Fri, Feb 07, 2025 at 11:47:12PM +0100, Konrad Dybcio wrote:
+>> On 13.01.2025 10:46 PM, Melody Olvera wrote:
+>>> Add UFS support for SM8750 SoCs.
+>>>
+>>> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+>>> ---
+>>> Nitin Rawat (5):
+>>>        dt-bindings: phy: qcom,sc8280xp-qmp-ufs-phy: Document the SM8750 QMP UFS PHY
+>>>        phy: qcom-qmp-ufs: Add PHY Configuration support for SM8750
+>>>        dt-bindings: ufs: qcom: Document the SM8750 UFS Controller
+>>>        arm64: dts: qcom: sm8750: Add UFS nodes for SM8750 SoC
+>>>        arm64: dts: qcom: sm8750: Add UFS nodes for SM8750 QRD and MTP boards
+>>
+>> You still need the same workaround 8550/8650 have in the UFS driver
+>> (UFSHCD_QUIRK_BROKEN_LSDBS_CAP) for it to work reliably, or at least
+>> that was the case for me on a 8750 QRD.
+>>
+>> Please check whether we can make that quirk apply based on ctrl
+>> version or so, so that we don't have to keep growing the compatible
+>> list in the driver.
+>>
+> 
+> That would be a bizarre. When I added the quirk, I was told that it would affect
+> only SM8550 and SM8650 (this one I learned later). I'm not against applying the
+> quirk based on UFSHC version if the bug is carried forward, but that would be an
+> indication of bad design.
 
+Isn't 8750 capable of using MCQ now ? because this is the whole issue behind
+this UFSHCD_QUIRK_BROKEN_LSDBS_CAP, it's supposed to use MCQ by default... but
+we don't.
 
-> Deadlock Detection
-> ~~~~~~~~~~~~~~~~~~
-> We handle two cases of deadlocks: AA deadlocks (attempts to acquire the
-> same lock again), and ABBA deadlocks (attempts to acquire two locks in
-> the opposite order from two distinct threads). Variants of ABBA
-> deadlocks may be encountered with more than two locks being held in the
-> incorrect order. These are not diagnosed explicitly, as they reduce to
-> ABBA deadlocks.
-> 
-> Deadlock detection is triggered immediately when beginning the waiting
-> loop of a lock slow path.
-> 
-> While timeouts ensure that any waiting loops in the locking slow path
-> terminate and return to the caller, it can be excessively long in some
-> situations. While the default timeout is short (0.5s), a stall for this
-> duration inside the kernel can set off alerts for latency-critical
-> services with strict SLOs.  Ideally, the kernel should recover from an
-> undesired state of the lock as soon as possible.
-> 
-> A multi-step strategy is used to recover the kernel from waiting loops
-> in the locking algorithm which may fail to terminate in a bounded amount
-> of time.
-> 
->  * Each CPU maintains a table of held locks. Entries are inserted and
->    removed upon entry into lock, and exit from unlock, respectively.
->  * Deadlock detection for AA locks is thus simple: we have an AA
->    deadlock if we find a held lock entry for the lock we’re attempting
->    to acquire on the same CPU.
->  * During deadlock detection for ABBA, we search through the tables of
->    all other CPUs to find situations where we are holding a lock the
->    remote CPU is attempting to acquire, and they are holding a lock we
->    are attempting to acquire. Upon encountering such a condition, we
->    report an ABBA deadlock.
->  * We divide the duration between entry time point into the waiting loop
->    and the timeout time point into intervals of 1 ms, and perform
->    deadlock detection until timeout happens. Upon entry into the slow
->    path, and then completion of each 1 ms interval, we perform detection
->    of both AA and ABBA deadlocks. In the event that deadlock detection
->    yields a positive result, the recovery happens sooner than the
->    timeout.  Otherwise, it happens as a last resort upon completion of
->    the timeout.
-> 
-> Timeouts
-> ~~~~~~~~
-> Timeouts act as final line of defense against stalls for waiting loops.
-> The ‘ktime_get_mono_fast_ns’ function is used to poll for the current
-> time, and it is compared to the timestamp indicating the end time in the
-> waiter loop. Each waiting loop is instrumented to check an extra
-> condition using a macro. Internally, the macro implementation amortizes
-> the checking of the timeout to avoid sampling the clock in every
-> iteration.  Precisely, the timeout checks are invoked every 64k
-> iterations.
-> 
-> Recovery
-> ~~~~~~~~
+Is there any news about that ? It's a clear regression against downstream, not
+having MCQ makes the UFS driver struggle to reach high bandwidth when the system
+is busy because we can't spread the load over all CPUs and we have only single
+queue to submit requests.
 
-I'm probably bad at reading, but I failed to find anything that
-explained how you recover from a deadlock.
+Neil
 
-Do you force unload the BPF program?
+> 
+> - Mani
+> 
+
