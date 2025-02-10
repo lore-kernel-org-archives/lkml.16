@@ -1,333 +1,232 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135F024337C
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 03:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F6C24337C;
+	Mon, 10 Feb 2025 03:58:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739159719; cv=none; b=Zqq4XcdUFSux6+iqH4BSJeVO7Crp7LpD/As49q/yqan298kgtYHECmSWDQEJqS8X/lxC1qvVr1lCqvvUUgrcUjkOdzHGxEPRmIx457V2M3J6KqDUksa1vRrtCfLlEigkojqkx3zARdys6QM0U89V4ip2vDRw1JQH9umHnwtjjM0=
+	t=1739159914; cv=none; b=mA07/N92TraQdj2+LBIlpQEYHOuafgIu6QuLhASkYOGzyLPcQ5atwPGdHnvX1lD2zVRifcn7h8SHuoIW9PiulVD6z0pPD+b/x0EmGxGJiZeSPF8RjJAk/cBmIE0boihjy6Llwnd0FTJnBLloCHOXY6oRgO2+f1X+idFEgh5L/dM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739159719; c=relaxed/simple;
-	bh=V49+CJUSNLrpmYD8ZRk+gNndRvOLj21x2YuAjt/jfwI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=IIa2tRuYZjuvpF7M1jgsc7Oe1huMQhbYEvZ0OitKfYATA6JDM3aA8fFtPv/y/Tg2QjbkIIb7OZT5Ar0MknJHgjoNbRydJ+9PudYpYuaRiDu88xg+qZ7OOoJOpyKVdtYyqSECGo+v71dRAIzF4qRBvfFKOllsstxDbZE7QWGDCTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=RMvW3fEM; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1739159914; c=relaxed/simple;
+	bh=eFEOFJW334jyZcovU+emYRencSopZhzN6Nl+8Tf89ro=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d7gA1GQtU4MK3fDe/OdnBAxqBsdSw23o2rfzrc+uQweQMMSEY3+MnYlD7jsy/cvgIrIE+lVzMKV8U3KDUKXd+gnoAYFdVyibIWVAGrqMUkJ6175wfcTH1GY7jhKrse7uHY5Zn10tETvbNxtMSB03m3fAo9Legr2r/OsLy+8Kujw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y3vdixJ9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RMvW3fEM"
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250210035507epoutp02a0d6763db6b12b5b1cb742f6acbf37e3~ivIoOUcQL1950119501epoutp02k
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 03:55:07 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250210035507epoutp02a0d6763db6b12b5b1cb742f6acbf37e3~ivIoOUcQL1950119501epoutp02k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1739159707;
-	bh=0wFRLSuDbuYGNnENHxJNVSB9NrjfAbmPgTwXEcNnYjw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RMvW3fEM2GKh3yEWx5qa3NdSeEBmUBQ4tZGmkRdIstfJZ3Qs8uGFYFZEfd8fXrpyM
-	 8l+cUjD9x18BL3H8ZZohOQDgBkM2DkAricF8AIWo4WYcXq2VZQybLHNo9VQ4q9JzPt
-	 DwCP4LP1/B26QHv2mqrh7BeAtSz/UZeId5qugdLw=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-	20250210035506epcas2p312bf0a7b499ed155fc5293dce2160632~ivInZhQsH0586805868epcas2p3a;
-	Mon, 10 Feb 2025 03:55:06 +0000 (GMT)
-Received: from epsmgec2p1-new.samsung.com (unknown [182.195.36.100]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4YrrLx5mNVz4x9Pw; Mon, 10 Feb
-	2025 03:55:05 +0000 (GMT)
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-	epsmgec2p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	23.94.32010.99879A76; Mon, 10 Feb 2025 12:55:05 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250210035505epcas2p45b97233c9099969088ae0f06e9074980~ivImdRwPQ1091310913epcas2p4D;
-	Mon, 10 Feb 2025 03:55:05 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250210035505epsmtrp2bb34b171eecdab98251b9015f73ec1e4~ivImckGYJ0783907839epsmtrp2y;
-	Mon, 10 Feb 2025 03:55:05 +0000 (GMT)
-X-AuditID: b6c32a4d-acffa70000007d0a-49-67a978996ef5
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	44.CA.33707.99879A76; Mon, 10 Feb 2025 12:55:05 +0900 (KST)
-Received: from tiffany (unknown [10.229.95.142]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250210035505epsmtip11b5d29e355b91cb1699f1a152dc713b5~ivImRKO4O0906709067epsmtip1e;
-	Mon, 10 Feb 2025 03:55:05 +0000 (GMT)
-Date: Mon, 10 Feb 2025 12:53:40 +0900
-From: Hyesoo Yu <hyesoo.yu@samsung.com>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: janghyuck.kim@samsung.com, Christoph Lameter <cl@linux.com>, Pekka
-	Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, Joonsoo
-	Kim <iamjoonsoo.kim@lge.com>, Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo
-	<42.hyeyoo@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm: slub: call WARN() instead of pr_err on slab_fix.
-Message-ID: <20250210035336.GA1868980@tiffany>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y3vdixJ9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B6C3C4CEE4;
+	Mon, 10 Feb 2025 03:58:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739159913;
+	bh=eFEOFJW334jyZcovU+emYRencSopZhzN6Nl+8Tf89ro=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Y3vdixJ9W0gCLIg6IdxkVfe+Inku1hv7CiKB4EAXwBNKtSFf7dzyqe3hrE+Iqcjsz
+	 ha+10+IjeSkm/qEiSbzwXQJZpKUeQCnacVNwUrxkGBfxa5Y3UOQTLsJqxMC8nCNgcy
+	 WeEM6fdaytUYAs4wCxfRR9OE8gUQFYFZd2IM9LXFdf/h8QmecT678cPAU7tchcUhHy
+	 yMki/b+En6orWGXv9CYuSKCoPzj8JCuGmRJeJrFIWeZOuINZxZXfdpoFaVK64wrr0l
+	 IGmJUmbBa1poS1IU0eR/LFKYjQ+w+/LSXkP6+oMXuTveEuLHVQqApRuVIow/y+sNQ0
+	 z+ncK7ViSpXdA==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab78d9c5542so446652266b.1;
+        Sun, 09 Feb 2025 19:58:33 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVmL0zTG5y8atXe8uP22AwtT2dQUvMau8dS0Xb+DXURUWaEQoNkhj0M3LAB8g3DHr+nBnw2D36x0nobjuAF@vger.kernel.org, AJvYcCXs0Lu/51iA6DAsp7tAjiNPNP1UiihIQo4qgtFc994UAawDTve/3ElKvnbx2/Hbz0X/MWQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIRE7E6WVixQp90d4+DswPxFSn4Brbo2q+Knkrw7QhVvPzqHfv
+	xffVp0QcAJQHzv2l4a70x3UcGWJLjYzwDVHUfoBjEnAIi/I6Lw/6VY4AMJEvOmCqcv9wLFZ3i4B
+	jJvFtX73dHl5rt5OuIKHyvyLEj6Q=
+X-Google-Smtp-Source: AGHT+IHsM2XDBBQpSKjFBxSpJSPgNNPJClqmpaAYB/PsC80+dF+8lDtI/MarpS97QsP6XrzNq75IXuraWPJfVtZLPu0=
+X-Received: by 2002:a17:907:9815:b0:aa6:6c46:7ca1 with SMTP id
+ a640c23a62f3a-ab789a688c0mr1158542966b.10.1739159912059; Sun, 09 Feb 2025
+ 19:58:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <4462a28e-b78d-4735-8aed-03cace80b24d@suse.cz>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLJsWRmVeSWpSXmKPExsWy7bCmhe7MipXpBgsOaFhM7DGwmLN+DZvF
-	9W9vGC1WdjezWWyeU2xxedccNot7a/6zWrR9/gcklmxkspi4RtRidmMfowO3x85Zd9k9Fmwq
-	9di0qpPNY9OnSeweXW+vMHmcmPGbxePJlelMHgsbpjJ79G1ZxehxZsERdo/Pm+QCuKOybTJS
-	E1NSixRS85LzUzLz0m2VvIPjneNNzQwMdQ0tLcyVFPISc1NtlVx8AnTdMnOAjlZSKEvMKQUK
-	BSQWFyvp29kU5ZeWpCpk5BeX2CqlFqTkFJgX6BUn5haX5qXr5aWWWBkaGBiZAhUmZGc0XnAt
-	OG1bsfXdN8YGxjO6XYwcHBICJhK7P6l2MXJxCAnsYZSYeWYlG4TziVFi9aP1jHDO0V13mLsY
-	OcE67i2cyApiCwnsZJT4toQDougpo8SeZVvAEiwCqhI/Xt8Cs9kE1CVObFnGCGKLCKhIPNpw
-	lBWkgVngMZPEi8fzwaYKC/hILLxwlAXE5hXQk/j8aTI7hC0ocXLmE7A4p4C1xLOHvWAnSQis
-	5JBY2/aGDeIkF4mXDfMYIWxhiVfHt7BD2FISn9/thaoplti2+DATRHMDo8TmjvtQ/xhLzHrW
-	DtbMLJAhsfzlPGZIyChLHLnFAhHmk+g4/JcdIswr0dEmBNGpLLF/2TwWCFtS4tHadlYI20Pi
-	yOxv0HCcxiTx5eRqxgmMcrOQ/DMLyTYIW0diwe5PbLOAVjALSEss/8cBYWpKrN+lv4CRdRWj
-	VGpBcW56arJRgaFuXmo5PJKT83M3MYLTsZbvDsbX6//qHWJk4mA8xCjBwawkwmuycEW6EG9K
-	YmVValF+fFFpTmrxIUZTYAxNZJYSTc4HZoS8knhDE0sDEzMzQ3MjUwNzJXHe6h0t6UIC6Ykl
-	qdmpqQWpRTB9TBycUg1MZdukVyqZTPp9KtLvUI3eg9CtNeW77zcfeHRWTeX166i/W17PuaNn
-	rtFms2e9/T7D925emXwT/4V/UAqRP7QwZcWD41HTikr4jJVVDQLWrOp1mPxFzKJpJausQZfI
-	9RsNW8T2eZasm2dYGaX1Q6MvrGPRiclsPKsvrZStM3jyYNXEOUvL9frYZ2TxbetYIKz0roc9
-	tu0Q19vF6nsnPE0uufJmRvZ71Z/d09c53jsufOWv7ZNMq01Suk7i217e0pP9xz+9e6fxP4MD
-	U569nJP5/r/ltgPrUx4aZD+Ubww3rJy0T3/tu9/x3x88k9to8cD5oNkKb95Ut89MDdk8sj+a
-	9n99tF1h4r6T1umN4Uv7hZVYijMSDbWYi4oTAcvkxfVQBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDLMWRmVeSWpSXmKPExsWy7bCSnO7MipXpBnNnClhM7DGwmLN+DZvF
-	9W9vGC1WdjezWWyeU2xxedccNot7a/6zWrR9/gcklmxkspi4RtRidmMfowO3x85Zd9k9Fmwq
-	9di0qpPNY9OnSeweXW+vMHmcmPGbxePJlelMHgsbpjJ79G1ZxehxZsERdo/Pm+QCuKO4bFJS
-	czLLUov07RK4Mtb+fctc0G1d8e3CJdYGxqXaXYycHBICJhL3Fk5kBbGFBLYzSvy8EQMRl5SY
-	9fkkE4QtLHG/5QhQDRdQzWNGiSvfNoA1sAioSvx4fQvMZhNQlzixZRkjiC0ioCLxaMNRsAZm
-	gZdMEqf3LGYGSQgL+EgsvHCUBcTmFdCT+PxpMjvE1GlMEg+uT4dKCEqcnPkEzGYW0JK48e8l
-	0BkcQLa0xPJ/HCBhTgFriWcPexknMArMQtIxC0nHLISOBYzMqxhFUwuKc9NzkwsM9YoTc4tL
-	89L1kvNzNzGCI0graAfjsvV/9Q4xMnEwHmKU4GBWEuE1WbgiXYg3JbGyKrUoP76oNCe1+BCj
-	NAeLkjivck5nipBAemJJanZqakFqEUyWiYNTqoFpkWaK/kSB/2em2Sc9lZd991RIannGp+hr
-	wa0Lj/I/frNcgulu+9HtF6IuMW+qc+B8mX/K4ur/9FA1aam4bT33ODNzZrPEJ12LDlxttiFr
-	h+5hNZY78zRNPwk8c5ONrNs4+3ifg0fzotm9GVo1QkaKFgaOaznvXtjN88DgZdg2+2WsEuIS
-	0+7EhnNtWsiS77T+9p58+0d2LM+m+ivkJPWZBL+IbomKi+pu2Gvb2rXM40TWiSxtHYHF625/
-	+mCUxcG0ef9fnkP3OQqO7uWb1O30ftoipvkphp8FXkgJz5lw00Y9pX/TbHUv68lzROZc7Du1
-	8Wi+2tIYprkBK6M/BSn+PTLl/Yus62s4NhnxWdorsRRnJBpqMRcVJwIA1ZrL6w8DAAA=
-X-CMS-MailID: 20250210035505epcas2p45b97233c9099969088ae0f06e9074980
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----m7PZ4BT1ldTQPVcONAqyTj2Zy1CXq_CO7oNb.DekQ57E.lpM=_9961e_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250205004741epcas2p3081bc2c97b7c1c27a9797cd498c4bc64
-References: <CGME20250205004741epcas2p3081bc2c97b7c1c27a9797cd498c4bc64@epcas2p3.samsung.com>
-	<20250205004615.1253389-1-hyesoo.yu@samsung.com>
-	<47de9f52-e66a-4ecd-b561-6b97d2eab671@suse.cz>
-	<20250207032828.GA491394@tiffany>
-	<4462a28e-b78d-4735-8aed-03cace80b24d@suse.cz>
+References: <20250207032634.2333300-1-maobibo@loongson.cn> <20250207032634.2333300-2-maobibo@loongson.cn>
+ <CAAhV-H7p9G8At3Pz_o31u_Zpho2gfbe6WOxF6_WpebVfcfgaKQ@mail.gmail.com> <30caead6-5b12-638c-677d-dc1111aea43c@loongson.cn>
+In-Reply-To: <30caead6-5b12-638c-677d-dc1111aea43c@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 10 Feb 2025 11:58:22 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H43Y4-oN9SVDWBhQ7nunYS08r5at+hVbtsdbWmKGDBMZw@mail.gmail.com>
+X-Gm-Features: AWEUYZkKen1ccP4U4UifU7lsJQI4UfvIramv-tzZg9dkEHhMx_3c6BGGJNyUOHA
+Message-ID: <CAAhV-H43Y4-oN9SVDWBhQ7nunYS08r5at+hVbtsdbWmKGDBMZw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] LoongArch: KVM: Fix typo issue about GCFG feature detection
+To: bibo mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-------m7PZ4BT1ldTQPVcONAqyTj2Zy1CXq_CO7oNb.DekQ57E.lpM=_9961e_
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-
-On Fri, Feb 07, 2025 at 10:08:20AM +0100, Vlastimil Babka wrote:
-> On 2/7/25 04:28, Hyesoo Yu wrote:
-> > On Thu, Feb 06, 2025 at 12:35:22PM +0100, Vlastimil Babka wrote:
-> >> On 2/5/25 01:46, Hyesoo Yu wrote:
-> >> > If a slab object is corrupted or an error occurs in its internal
-> >> > value, continuing after restoration may cause other side effects.
-> >> > At this point, it is difficult to debug because the problem occurred
-> >> > in the past. It is better to use WARN() instead of pr_err to catch
-> >> > errors at the point of issue because WARN() could trigger panic for
-> >> > system debugging when panic_on_warn is enabled. WARN() should be
-> >> > called prior to fixing the value because when a panic is triggered by WARN(),
-> >> > it allows us to check corrupted data.
-> >> > 
-> >> > Changes in v2:
-> >> > - Replace direct calling with BUG_ON with the use of WARN in slab_fix.
-> >> > 
-> >> > Signed-off-by: Hyesoo Yu <hyesoo.yu@samsung.com>
-> >> 
-> >> Hi and thanks for the patch,
-> >> 
-> >> I wonder if it would be better not to change slab_fix() but rather
-> >> slab_err() and object_err(). It wouldn't then require to rearrange the fixup
-> >> code. Also I think some error reporting paths don't go through slab_fix()
-> >> and we still would like them to become a WARN too.
-> >> 
-> >> Basically it would mean the last line in slab_err() would be a WARN and we'd
-> >> drop the dump_stack() as that's redundant. Same in object_err() (no
-> >> dump_stack() there). It would be a bit noisier as a result, but hopefully
-> >> acceptable. The slab specific debugging info would still be printed before
-> >> the WARN hits (and potentially results in a panic) so anyone investigating
-> >> the crash dump would have that information.
-> >> 
-> >> Hm but I see some places print stuff after slab_err(). slab_pad_check() and
-> >> list_slab_objects(). We could create slab_err_start() and slab_err_end() for
-> >> those, and slab_err() would just call both at once.
-> >> 
-> > 
-> > Thank you so much for your review.
-> > 
-> > That's a great suggestion. Following your suggestion, it seems possible to use
-> > WARN on all error reporting paths. For some places print stuff after slab_err,
-> > print them as follows,
-> > 
-> > +static void __slab_err(struct slab *slab)
-> > +{
-> > +       print_slab_info(slab);
-> > +       add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
-> > +
-> > +       WARN_ON(1);
-> > +}
-> > +
-> >  static __printf(3, 4) void slab_err(struct kmem_cache *s, struct slab *slab,
-> >                         const char *fmt, ...)
-> >  {
-> >         vsnprintf(buf, sizeof(buf), fmt, args);
-> >         va_end(args);
-> >         slab_bug(s, "%s", buf);
-> > -       print_slab_info(slab);
-> > -       dump_stack();
-> > -       add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
-> > +       __slab_err(slab);
-> >  }
-> > 
-> > @@ -1316,11 +1322,13 @@ slab_pad_check(struct kmem_cache *s, struct slab *slab)
-> >         while (end > fault && end[-1] == POISON_INUSE)
-> >                 end--;
-> > 
-> > -       slab_err(s, slab, "Padding overwritten. 0x%p-0x%p @offset=%tu",
-> > -                       fault, end - 1, fault - start);
-> > +       slab_bug(s, "Padding overwritten. 0x%p-0x%p @offset=%tu",
-> > +                fault, end - 1, fault - start);
-> >         print_section(KERN_ERR, "Padding ", pad, remainder);
-> > 
-> >         restore_bytes(s, "slab padding", POISON_INUSE, fault, end);
-> > +
-> > +       __slab_err(slab);
-> 
-> Yeah but move that above restore_bytes()?
+On Mon, Feb 10, 2025 at 9:42=E2=80=AFAM bibo mao <maobibo@loongson.cn> wrot=
+e:
 >
+>
+>
+> On 2025/2/9 =E4=B8=8B=E5=8D=885:38, Huacai Chen wrote:
+> > Hi, Bibo,
+> >
+> > On Fri, Feb 7, 2025 at 11:26=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> =
+wrote:
+> >>
+> >> This is typo issue about GCFG feature macro, comments is added for
+> >> these macro and typo issue is fixed here.
+> >>
+> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >> ---
+> >>   arch/loongarch/include/asm/loongarch.h | 26 ++++++++++++++++++++++++=
+++
+> >>   arch/loongarch/kvm/main.c              |  4 ++--
+> >>   2 files changed, 28 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/i=
+nclude/asm/loongarch.h
+> >> index 52651aa0e583..1a65b5a7d54a 100644
+> >> --- a/arch/loongarch/include/asm/loongarch.h
+> >> +++ b/arch/loongarch/include/asm/loongarch.h
+> >> @@ -502,49 +502,75 @@
+> >>   #define LOONGARCH_CSR_GCFG             0x51    /* Guest config */
+> >>   #define  CSR_GCFG_GPERF_SHIFT          24
+> >>   #define  CSR_GCFG_GPERF_WIDTH          3
+> >> +/* Number PMU register started from PM0 passthrough to VM */
+> >>   #define  CSR_GCFG_GPERF                        (_ULCAST_(0x7) << CSR=
+_GCFG_GPERF_SHIFT)
+> >> +#define  CSR_GCFG_GPERFP_SHIFT         23
+> >> +/* Read-only bit: show PMU passthrough supported or not */
+> >> +#define  CSR_GCFG_GPERFP               (_ULCAST_(0x1) << CSR_GCFG_GPE=
+RFP_SHIFT)
+> >>   #define  CSR_GCFG_GCI_SHIFT            20
+> >>   #define  CSR_GCFG_GCI_WIDTH            2
+> >>   #define  CSR_GCFG_GCI                  (_ULCAST_(0x3) << CSR_GCFG_GC=
+I_SHIFT)
+> >> +/* All cacheop instructions will trap to host */
+> >>   #define  CSR_GCFG_GCI_ALL              (_ULCAST_(0x0) << CSR_GCFG_GC=
+I_SHIFT)
+> >> +/* Cacheop instruction except hit invalidate will trap to host */
+> >>   #define  CSR_GCFG_GCI_HIT              (_ULCAST_(0x1) << CSR_GCFG_GC=
+I_SHIFT)
+> >> +/* Cacheop instruction except hit and index invalidate will trap to h=
+ost */
+> >>   #define  CSR_GCFG_GCI_SECURE           (_ULCAST_(0x2) << CSR_GCFG_GC=
+I_SHIFT)
+> >>   #define  CSR_GCFG_GCIP_SHIFT           16
+> >>   #define  CSR_GCFG_GCIP                 (_ULCAST_(0xf) << CSR_GCFG_GC=
+IP_SHIFT)
+> >> +/* Read-only bit: show feature CSR_GCFG_GCI_ALL supported or not */
+> >>   #define  CSR_GCFG_GCIP_ALL             (_ULCAST_(0x1) << CSR_GCFG_GC=
+IP_SHIFT)
+> >> +/* Read-only bit: show feature CSR_GCFG_GCI_HIT supported or not */
+> >>   #define  CSR_GCFG_GCIP_HIT             (_ULCAST_(0x1) << (CSR_GCFG_G=
+CIP_SHIFT + 1))
+> >> +/* Read-only bit: show feature CSR_GCFG_GCI_SECURE supported or not *=
+/
+> >>   #define  CSR_GCFG_GCIP_SECURE          (_ULCAST_(0x1) << (CSR_GCFG_G=
+CIP_SHIFT + 2))
+> >>   #define  CSR_GCFG_TORU_SHIFT           15
+> >> +/* Operation with CSR register unimplemented will trap to host */
+> >>   #define  CSR_GCFG_TORU                 (_ULCAST_(0x1) << CSR_GCFG_TO=
+RU_SHIFT)
+> >>   #define  CSR_GCFG_TORUP_SHIFT          14
+> >> +/* Read-only bit: show feature CSR_GCFG_TORU supported or not */
+> >>   #define  CSR_GCFG_TORUP                        (_ULCAST_(0x1) << CSR=
+_GCFG_TORUP_SHIFT)
+> >>   #define  CSR_GCFG_TOP_SHIFT            13
+> >> +/* Modificattion with CRMD.PLV will trap to host */
+> >>   #define  CSR_GCFG_TOP                  (_ULCAST_(0x1) << CSR_GCFG_TO=
+P_SHIFT)
+> >>   #define  CSR_GCFG_TOPP_SHIFT           12
+> >> +/* Read-only bit: show feature CSR_GCFG_TOP supported or not */
+> >>   #define  CSR_GCFG_TOPP                 (_ULCAST_(0x1) << CSR_GCFG_TO=
+PP_SHIFT)
+> >>   #define  CSR_GCFG_TOE_SHIFT            11
+> >> +/* ertn instruction will trap to host */
+> >>   #define  CSR_GCFG_TOE                  (_ULCAST_(0x1) << CSR_GCFG_TO=
+E_SHIFT)
+> >>   #define  CSR_GCFG_TOEP_SHIFT           10
+> >> +/* Read-only bit: show feature CSR_GCFG_TOE supported or not */
+> >>   #define  CSR_GCFG_TOEP                 (_ULCAST_(0x1) << CSR_GCFG_TO=
+EP_SHIFT)
+> >>   #define  CSR_GCFG_TIT_SHIFT            9
+> >> +/* Timer instruction such as rdtime/TCFG/TVAL will trap to host */
+> >>   #define  CSR_GCFG_TIT                  (_ULCAST_(0x1) << CSR_GCFG_TI=
+T_SHIFT)
+> >>   #define  CSR_GCFG_TITP_SHIFT           8
+> >> +/* Read-only bit: show feature CSR_GCFG_TIT supported or not */
+> >>   #define  CSR_GCFG_TITP                 (_ULCAST_(0x1) << CSR_GCFG_TI=
+TP_SHIFT)
+> >>   #define  CSR_GCFG_SIT_SHIFT            7
+> >> +/* All privilege instruction will trap to host */
+> >>   #define  CSR_GCFG_SIT                  (_ULCAST_(0x1) << CSR_GCFG_SI=
+T_SHIFT)
+> >>   #define  CSR_GCFG_SITP_SHIFT           6
+> >> +/* Read-only bit: show feature CSR_GCFG_SIT supported or not */
+> >>   #define  CSR_GCFG_SITP                 (_ULCAST_(0x1) << CSR_GCFG_SI=
+TP_SHIFT)
+> >>   #define  CSR_GCFG_MATC_SHITF           4
+> >>   #define  CSR_GCFG_MATC_WIDTH           2
+> >>   #define  CSR_GCFG_MATC_MASK            (_ULCAST_(0x3) << CSR_GCFG_MA=
+TC_SHITF)
+> >> +/* Cache attribute comes from GVA->GPA mapping */
+> >>   #define  CSR_GCFG_MATC_GUEST           (_ULCAST_(0x0) << CSR_GCFG_MA=
+TC_SHITF)
+> >> +/* Cache attribute comes from GPA->HPA mapping */
+> >>   #define  CSR_GCFG_MATC_ROOT            (_ULCAST_(0x1) << CSR_GCFG_MA=
+TC_SHITF)
+> >> +/* Cache attribute comes from weaker one of GVA->GPA and GPA->HPA map=
+ping */
+> >>   #define  CSR_GCFG_MATC_NEST            (_ULCAST_(0x2) << CSR_GCFG_MA=
+TC_SHITF)
+> >>   #define  CSR_GCFG_MATP_NEST_SHIFT      2
+> >> +/* Read-only bit: show feature CSR_GCFG_MATC_NEST supported or not */
+> >>   #define  CSR_GCFG_MATP_NEST            (_ULCAST_(0x1) << CSR_GCFG_MA=
+TP_NEST_SHIFT)
+> >>   #define  CSR_GCFG_MATP_ROOT_SHIFT      1
+> >> +/* Read-only bit: show feature CSR_GCFG_MATC_ROOT supported or not */
+> >>   #define  CSR_GCFG_MATP_ROOT            (_ULCAST_(0x1) << CSR_GCFG_MA=
+TP_ROOT_SHIFT)
+> >>   #define  CSR_GCFG_MATP_GUEST_SHIFT     0
+> >> +/* Read-only bit: show feature CSR_GCFG_MATC_GUEST suppoorted or not =
+*/
+> >>   #define  CSR_GCFG_MATP_GUEST           (_ULCAST_(0x1) << CSR_GCFG_MA=
+TP_GUEST_SHIFT)
+> > Bugfix is the majority here, so it is better to remove the comments,
+> > make this patch easier to be backported to stable branches.
+> How about split the patch into two for better backporting? With comments
+> it is convinient to people to understand and provide LoongArch KVM
+> patches in future, after all it cannot depends on the few guys inside.
+I don't suggest splitting, just removing it is better (developers
+still need to read the user manual even if there are such comments).
+But if you insist, then keep it as is (keep this version).
 
-Yes, I will.
-
-> BTW I think we could also do this?
-> 
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -1162,7 +1162,7 @@ void skip_orig_size_check(struct kmem_cache *s, const void *object)
->         set_orig_size(s, (void *)object, s->object_size);
->  }
->  
-> -static void slab_bug(struct kmem_cache *s, char *fmt, ...)
-> +static void slab_bug(struct kmem_cache *s, const char *fmt, ...)
->  {
->         struct va_format vaf;
->         va_list args;
-> @@ -1263,15 +1263,11 @@ static __printf(3, 4) void slab_err(struct kmem_cache *s, struct slab *slab,
->                         const char *fmt, ...)
->  {
->         va_list args;
-> -       char buf[100];
->  
->         if (slab_add_kunit_errors())
->                 return;
->  
-> -       va_start(args, fmt);
-> -       vsnprintf(buf, sizeof(buf), fmt, args);
-> -       va_end(args);
-> -       slab_bug(s, "%s", buf);
-> +       slab_bug(s, fmt, args);
-> 
-> 
-
-I guess the args is not initialized.
-
-Do you want it to be modified like this ?
-
-Thanks,
-Regards.
-
--static void slab_bug(struct kmem_cache *s, char *fmt, ...)
-+static void slab_bug(struct kmem_cache *s, const char *fmt, ...)
- {
-        struct va_format vaf;
-        va_list args;
-@@ -1137,15 +1137,14 @@ static __printf(3, 4) void slab_err(struct kmem_cache *s, struct slab *slab,
-                        const char *fmt, ...)
- {
-        va_list args;
--       char buf[100];
-
-        if (slab_add_kunit_errors())
-                return;
-
-        va_start(args, fmt);
--       vsnprintf(buf, sizeof(buf), fmt, args);
-+       slab_bug(s, fmt, args);
-        va_end(args);
--       slab_bug(s, "%s", buf);
 
 
-> >  }
-> > 
-> >> > ---
-> >> >  mm/slub.c | 10 +++++-----
-> >> >  1 file changed, 5 insertions(+), 5 deletions(-)
-> >> > 
-> >> > diff --git a/mm/slub.c b/mm/slub.c
-> >> > index 1f50129dcfb3..ea956cb4b8be 100644
-> >> > --- a/mm/slub.c
-> >> > +++ b/mm/slub.c
-> >> > @@ -1043,7 +1043,7 @@ static void slab_fix(struct kmem_cache *s, char *fmt, ...)
-> >> >  	va_start(args, fmt);
-> >> >  	vaf.fmt = fmt;
-> >> >  	vaf.va = &args;
-> >> > -	pr_err("FIX %s: %pV\n", s->name, &vaf);
-> >> > +	WARN(1, "FIX %s: %pV\n", s->name, &vaf);
-> >> >  	va_end(args);
-> >> >  }
-> >> >  
-> >> > @@ -1106,8 +1106,8 @@ static bool freelist_corrupted(struct kmem_cache *s, struct slab *slab,
-> >> >  	if ((s->flags & SLAB_CONSISTENCY_CHECKS) &&
-> >> >  	    !check_valid_pointer(s, slab, nextfree) && freelist) {
-> >> >  		object_err(s, slab, *freelist, "Freechain corrupt");
-> >> > -		*freelist = NULL;
-> >> >  		slab_fix(s, "Isolate corrupted freechain");
-> >> > +		*freelist = NULL;
-> >> >  		return true;
-> >> >  	}
-> >> >  
-> >> > @@ -1445,9 +1445,9 @@ static int on_freelist(struct kmem_cache *s, struct slab *slab, void *search)
-> >> >  				set_freepointer(s, object, NULL);
-> >> >  			} else {
-> >> >  				slab_err(s, slab, "Freepointer corrupt");
-> >> > +				slab_fix(s, "Freelist cleared");
-> >> >  				slab->freelist = NULL;
-> >> >  				slab->inuse = slab->objects;
-> >> > -				slab_fix(s, "Freelist cleared");
-> >> >  				return 0;
-> >> >  			}
-> >> >  			break;
-> >> > @@ -1464,14 +1464,14 @@ static int on_freelist(struct kmem_cache *s, struct slab *slab, void *search)
-> >> >  	if (slab->objects != max_objects) {
-> >> >  		slab_err(s, slab, "Wrong number of objects. Found %d but should be %d",
-> >> >  			 slab->objects, max_objects);
-> >> > -		slab->objects = max_objects;
-> >> >  		slab_fix(s, "Number of objects adjusted");
-> >> > +		slab->objects = max_objects;
-> >> >  	}
-> >> >  	if (slab->inuse != slab->objects - nr) {
-> >> >  		slab_err(s, slab, "Wrong object count. Counter is %d but counted were %d",
-> >> >  			 slab->inuse, slab->objects - nr);
-> >> > -		slab->inuse = slab->objects - nr;
-> >> >  		slab_fix(s, "Object count adjusted");
-> >> > +		slab->inuse = slab->objects - nr;
-> >> >  	}
-> >> >  	return search == NULL;
-> >> >  }
-> >> 
-> >> 
-> > 
-> > 
-> 
-> 
-
-------m7PZ4BT1ldTQPVcONAqyTj2Zy1CXq_CO7oNb.DekQ57E.lpM=_9961e_
-Content-Type: text/plain; charset="utf-8"
-
-
-------m7PZ4BT1ldTQPVcONAqyTj2Zy1CXq_CO7oNb.DekQ57E.lpM=_9961e_--
+Huacai
+>
+> Regards
+> Bibo Mao
+> >
+> > Huacai
+> >
+> >>
+> >>   #define LOONGARCH_CSR_GINTC            0x52    /* Guest interrupt co=
+ntrol */
+> >> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+> >> index bf9268bf26d5..f6d3242b9234 100644
+> >> --- a/arch/loongarch/kvm/main.c
+> >> +++ b/arch/loongarch/kvm/main.c
+> >> @@ -303,9 +303,9 @@ int kvm_arch_enable_virtualization_cpu(void)
+> >>           * TOE=3D0:       Trap on Exception.
+> >>           * TIT=3D0:       Trap on Timer.
+> >>           */
+> >> -       if (env & CSR_GCFG_GCIP_ALL)
+> >> +       if (env & CSR_GCFG_GCIP_SECURE)
+> >>                  gcfg |=3D CSR_GCFG_GCI_SECURE;
+> >> -       if (env & CSR_GCFG_MATC_ROOT)
+> >> +       if (env & CSR_GCFG_MATP_ROOT)
+> >>                  gcfg |=3D CSR_GCFG_MATC_ROOT;
+> >>
+> >>          write_csr_gcfg(gcfg);
+> >> --
+> >> 2.39.3
+> >>
+>
+>
