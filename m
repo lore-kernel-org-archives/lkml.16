@@ -1,212 +1,103 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96DF8F49
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 03:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261BAEAF9;
+	Mon, 10 Feb 2025 03:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739158372; cv=none; b=RkxV8bTht/X50XohKhlqPeMVJd0YZVk9ygItD5BNNUJMn5NK9zX6vcvwnPpcIQyGEZJMaHVXlHbD3/GToNUXtHXUOi1ZUxrRnf2NGIivzGqQtlfqjbXFsJiCSSiFMhZxOcIZ7IVF+AU86Ou5s5bps/Hox4XK82iV+c9yRqYLDL8=
+	t=1739158386; cv=none; b=dWQc1VZN7/Ct+6HC9M//UdkE/qyi9539D864MroxwaeWovkiQz2K8y/8wgq0V0di8gmg2+1gwfKIRKn+SLaIwZDAXrZIatLYhulgM83lYLcxj03JQk89YdMfFt3jcbTmuGdgVJAQLyf9VABpySr8IbmsNylkJtUpGhGFzjS/CoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739158372; c=relaxed/simple;
-	bh=jnnmj0WfzpeDrcbnj+h7NoyTOp/J35XvifKCDJfWDYA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GIRKC3Mb4Z2YxaTn4Og7uZLCgQMVOfKLW8aWYR20UyJxvwxx3Ce8bzc5Vn3vi7G+ZmqVqu9+t7chl7fH+e4OQn1bK7B5oXApH66uFdy1J1jjXqAoNRX2JZMWXbTil1kGrTfSb8fDhoply7x8s1Wn2l/VJU64/I/V/X0Au+CeCjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xKn1TGDS; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739158386; c=relaxed/simple;
+	bh=e6u4jgCux0UDketL1vecCE7NvY4pCwpsgSfqIahNaEs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pWdyUnlCYJR/nrXIijuXEcLWMcy/y4VBw7DNSTNPpgqjtM5kLZotUq75w2Q0A26oY0AV8yPBXXQ6oUKCrNuVQMhU7CJN0XDcx9GpzMINtPTqPCP1Zymq3Vbm88vI3uNEyGtd83uK0l+6dMrZJBTs4xzgp5AI0PSf74TClt6k4sU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=Zum5sqxM; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xKn1TGDS"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2fa19e1d027so4518429a91.0
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 19:32:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739158370; x=1739763170; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rDphYiBK6zaLhzzhuS11hijH34kWZBXLf6tNFNwk8Fo=;
-        b=xKn1TGDSGa3Y4X9H0nCrWEEnCn9w6ZpgoVjZATI9NyheLH3xESb5tLGtUpf9UAZ0aB
-         5LzyYTkT615x0LWGDWSuUKsw5yRJryJwIS4vaSy+6eV8bR7dnGFYFt79AN2xlbkCEWde
-         l8tyK8oZfru2cs+XH0G4x6CzxtOQEsWFAeanUeIH4rvsl8eqXeS6cH+fbv7ZKA3163hR
-         u9GPzbqYk55OejW0KSyCl4tfnv3OK+wCppqTnWvDnoDm3eVv3NLuIzacY/H2rF1khEqx
-         Wx1TMZipsXlzgWs1I0CXeNuG6KRjNl8pNkeFy+lJDAEcRuJoLKTxeJROPhPwPuSeOXp/
-         /dNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739158370; x=1739763170;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rDphYiBK6zaLhzzhuS11hijH34kWZBXLf6tNFNwk8Fo=;
-        b=tgWz/j+ZrDV1xrPV41T703hf+9ZQdv2vwOrYymbgVFXRX0ZsK8ndVVFDEEgYMQBkdu
-         RnLBsU2ot/SiRy+7OBCX1TahAZwk5Kvd+TEaR5un+U2CaXKQZwMyzPvfcBWevWnOeE65
-         U+ji/ofcR5kmWcyHyIojhHe+7sjNfr966hREta8rZ5RqK3G4QI9cXS3WVT/bj3rEN6I/
-         phpTpENO6+5i+FYucvWQkaFNt0zlGPSAD5YYqotqYF+qF9OcLgPM+JiNvHLlQthlyHVf
-         O4dS6vOMybsdHzKp70dipiuKtR1vYD933XMu3TP3hHi107UZDQyYYaK9kYV6EdhY6MQa
-         tYPA==
-X-Forwarded-Encrypted: i=1; AJvYcCXRnckl1w0rg/KJDtUpVEkIJAJU6sms15Vo5eZBQ5EqMKZ+mqsHVe4tt153YsrDEqMU5PHJR+xsivrk8Ts=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywq+kEhhUrDXza6mQolS8G57z0+DZlzRxtqFY5YX/sbVTkeKlfC
-	bHsIhRL2bHSPyirxRykIfKblXXPiwjSLrXS3CPyQguHQB4gXZnNg69cSCTUJGg==
-X-Gm-Gg: ASbGncvKTvS/hpqTrqLijDBQsexUFqJcPGq20wIZwaKdmlRm9HnwZcJRt/synAOEsSD
-	cm4z4WkOiakNg/B9R629JBMDETdAJryeeMrhPm2RFrJFh/ylOSb7f6yvi8WgbhYJINZvDN7wxEk
-	cUqfZhd2M+2GNZ/uWhX3h+QWux9HsOSmBNS8T6xScbFCV/QEuOB6BtY+frgXtDWBdfqCBWpx7ZG
-	6jjiqejbgy4BEMKhXSqvWQA0qz+uBYvf/gWsk1IERXIDckW6r5d3sNBh9b4IKUtYLpGPK2QgXwb
-	w9CTnd+T/FqueuCYAPnkbH+ZFGTnwz/uFPO9F1PqDa7AlNZ+XXMFfmROEQ==
-X-Google-Smtp-Source: AGHT+IFjZyZ3ezW0s75YhMjc+3RWhwDMlBTzyIdX4ehs3aMkTRN964Frh+KixLFvEGShcSqs5iHgnQ==
-X-Received: by 2002:a17:90b:1d52:b0:2fa:137f:5c5c with SMTP id 98e67ed59e1d1-2fa23f44beemr16953451a91.1.1739158369742;
-        Sun, 09 Feb 2025 19:32:49 -0800 (PST)
-Received: from google.com (49.156.143.34.bc.googleusercontent.com. [34.143.156.49])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa15ab5b26sm6767278a91.20.2025.02.09.19.32.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 19:32:49 -0800 (PST)
-Date: Mon, 10 Feb 2025 09:02:41 +0530
-From: Ajay Agarwal <ajayagarwal@google.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Oliver Neukum <oneukum@suse.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Vincent Whitchurch <vincent.whitchurch@axis.com>,
-	"jic23@kernel.org" <jic23@kernel.org>,
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-	Brian Norris <briannorris@chromium.org>
-Subject: Re: PM runtime_error handling missing in many drivers?
-Message-ID: <Z6lzWfGbpa7jN1QD@google.com>
-References: <20220620144231.GA23345@axis.com>
- <5caa944f-c841-6f74-8e43-a278b2b93b06@suse.com>
- <20220708110325.GA5307@axis.com>
- <4ca77763-53d0-965a-889e-be2eafadfd2f@intel.com>
- <1937b65c-36c0-5475-c745-d7285d1a6e25@suse.com>
- <CAJZ5v0j0mgOcfKXRzyx12EX8CYLzowXrM8DGCH9XvQGnRNv0iw@mail.gmail.com>
- <5c37ee19-fe2c-fb22-63a2-638e3dab8f7a@suse.com>
- <CAJZ5v0ijy4FG84xk_n8gxR_jS0xao246eVbnFj-dXzwz=8S9NQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="Zum5sqxM"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4YrqsS1XtTz9sl9;
+	Mon, 10 Feb 2025 04:33:00 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
+	s=MBO0001; t=1739158380;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=tRuwqs8KnCQigl941VXZN5uap3PzZB4mUUfaIPcppDI=;
+	b=Zum5sqxM4Q4JadLtlN8RsIZGAEmp2nXh+dQCsajjGuCym3uOA8jSwQKWrZRVLJ0+JGOLzv
+	fjv+l0WN++4bzhgvsdQQRpY0HSnuPZirOuAf3y7U5PLzJTHJkTFJePRDVZV4LitV3edu6e
+	LOkycJegE4InZ6YLD7evKic1IRHLiwltgMswn8KLVP6d7CrbBxui+2K/vWBQLa4Sdnhwnb
+	fdZeGbqMeWc4LnXQu0W1JeGaMtkdmwh/N9um/PnyYOyrw53Oypr/mfyCl8OTzXWkvvv45I
+	xmVSE1eQ6dwr1HXxmv5p0zwjqbihex40Gg+ncRBQp/n7tOV/3KtcFLUPRu3SVg==
+From: Ethan Carter Edwards <ethan@ethancedwards.com>
+Date: Sun, 09 Feb 2025 22:32:33 -0500
+Subject: [PATCH] drm/msm/dpu: Fix uninitialized variable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0ijy4FG84xk_n8gxR_jS0xao246eVbnFj-dXzwz=8S9NQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250209-dpu-v1-1-0db666884f70@ethancedwards.com>
+X-B4-Tracking: v=1; b=H4sIAFBzqWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDIwNL3ZSCUt1k47TEZHOLtGQzQ3MloMqCotS0zAqwKdGxtbUA4F3dx1U
+ AAAA=
+X-Change-ID: 20250209-dpu-c3fac78fc617
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ Simona Vetter <simona@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org, 
+ Ethan Carter Edwards <ethan@ethancedwards.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1184;
+ i=ethan@ethancedwards.com; h=from:subject:message-id;
+ bh=e6u4jgCux0UDketL1vecCE7NvY4pCwpsgSfqIahNaEs=;
+ b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
+ GhQcXlVeHBLOHNUdi9YbjVLaXljdFFLNTBiKyt4VDhoNXIzczNLCmg2M2M3NlUwT0xuc2Qvd2Vk
+ YmlqbElWQmpJdEJWa3lSNVgrT2N0cER6UmtLTy8rNk5NSE1ZV1VDR2NMQXhTa0EKRS9uZncvQ0g
+ zL0hRVkthdkxhK2xXWlFLanp4Y3ZQZmp6Vi9WTlNlYjdMd3F2ODJleGo3cEFzTWZ2dkRjU3FlVA
+ pIeHhXT0R3TlhyQ25xT0Z1ZW1YbDNYZmU5YW5Qekt3Q2p4V3lBZ0JpWFUrUgo9dDY3OQotLS0tL
+ UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
+X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
+ fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
 
-On Wed, Jul 27, 2022 at 06:31:48PM +0200, Rafael J. Wysocki wrote:
-> On Wed, Jul 27, 2022 at 10:08 AM Oliver Neukum <oneukum@suse.com> wrote:
-> >
-> >
-> >
-> > On 26.07.22 17:41, Rafael J. Wysocki wrote:
-> > > On Tue, Jul 26, 2022 at 11:05 AM Oliver Neukum <oneukum@suse.com> wrote:
-> >
-> > > I guess that depends on what is regarded as "the framework".  I mean
-> > > the PM-runtime code, excluding the bus type or equivalent.
-> >
-> > Yes, we have multiple candidates in the generic case. Easy to overengineer.
-> >
-> > >>> The idea was that drivers would clear these errors.
-> > >>
-> > >> I am afraid that is a deeply hidden layering violation. Yes, a driver's
-> > >> resume() method may have failed. In that case, if that is the same
-> > >> driver, it will obviously already know about the failure.
-> > >
-> > > So presumably it will do something to recover and avoid returning the
-> > > error in the first place.
-> >
-> > Yes, but that does not help us if they do return an error.
-> >
-> > > From the PM-runtime core code perspective, if an error is returned by
-> > > a suspend callback and it is not -EBUSY or -EAGAIN, the subsequent
-> > > suspend is also likely to fail.
-> >
-> > True.
-> >
-> > > If a resume callback returns an error, any subsequent suspend or
-> > > resume operations are likely to fail.
-> >
-> > Also true, but the consequences are different.
-> >
-> > > Storing the error effectively prevents subsequent operations from
-> > > being carried out in both cases and that's why it is done.
-> >
-> > I am afraid seeing these two operations as equivalent for this
-> > purpose is a problem for two reasons:
-> >
-> > 1. suspend can be initiated by the generic framework
-> 
-> Resume can be initiated by generic code too.
-> 
-> > 2. a failure to suspend leads to worse power consumption,
-> >    while a failure to resume is -EIO, at best
-> 
-> Yes, a failure to resume is a big deal.
-> 
-> > >> PM operations, however, are operating on a tree. A driver requesting
-> > >> a resume may get an error code. But it has no idea where this error
-> > >> comes from. The generic code knows at least that.
-> > >
-> > > Well, what do you mean by "the generic code"?
-> >
-> > In this case the device model, which has the tree and all dependencies.
-> > Error handling here is potentially very complicated because
-> >
-> > 1. a driver can experience an error from a node higher in the tree
-> 
-> Well, there can be an error coming from a parent or a supplier, but
-> the driver will not receive it directly.
-> 
-> > 2. a driver can trigger a failure in a sibling
-> > 3. a driver for a node can be less specific than the drivers higher up
-> 
-> I'm not sure I understand the above correctly.
-> 
-> > Reducing this to a single error condition is difficult.
-> 
-> Fair enough.
-> 
-> > Suppose you have a USB device with two interfaces. The driver for A
-> > initiates a resume. Interface A is resumed; B reports an error.
-> > Should this block further attempts to suspend the whole device?
-> 
-> It should IMV.
-> 
-> > >> Let's look at at a USB storage device. The request to resume comes
-> > >> from sd.c. sd.c is certainly not equipped to handle a PCI error
-> > >> condition that has prevented a USB host controller from resuming.
-> > >
-> > > Sure, but this doesn't mean that suspending or resuming the device is
-> > > a good idea until the error condition gets resolved.
-> >
-> > Suspending clearly yes. Resuming is another matter. It has to work
-> > if you want to operate without errors.
-> 
-> Well, it has to physically work in the first place.  If it doesn't,
-> the rest is a bit moot, because you end up with a non-functional
-> device that appears to be permanently suspended.
-> 
-> > >> I am afraid this part of the API has issues. And they keep growing
-> > >> the more we divorce the device driver from the bus driver, which
-> > >> actually does the PM operation.
-> > >
-> > > Well, in general suspending or resuming a device is a collaborative
-> > > effort and if one of the pieces falls over, making it work again
-> > > involves fixing up the failing piece and notifying the others that it
-> > > is ready again.  However, that part isn't covered and I'm not sure if
-> > > it can be covered in a sufficiently generic way.
-> >
-> > True. But that still cannot solve the question what is to be done
-> > if error handling fails. Hence my proposal:
-> > - record all failures
-> > - heed the record only when suspending
-> 
-> I guess that would boil down to moving the power.runtime_error update
-> from rpm_callback() to rpm_suspend()?
-Resuming this discussion. One of the ways the device drivers are
-clearing the runtime_error flag is by calling pm_runtime_set_suspended
-[1].
+There is a possibility for an uninitialized *ret* variable to be
+returned in some code paths.
 
-To me, it feels weird that a device driver calls pm_runtime_set_suspended
-if the runtime_resume() has failed. It should be implied that the device
-is in suspended state if the resume failed.
+Fix this by initializing *ret* to 0.
 
-So how really should the runtime_error flag be cleared? Should there be
-a new API exposed to device drivers for this? Or should we plan for it
-in the framework itself?
+Addresses-Coverity-ID: 1642546 ("Uninitialized scalar variable")
+Fixes: 774bcfb731765d ("drm/msm/dpu: add support for virtual planes")
+Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-1: https://lore.kernel.org/all/20250129124009.1039982-3-jacek.lawrynowicz@linux.intel.com/
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+index 098abc2c0003cde90ce6219c97ee18fa055a92a5..74edaa9ecee72111b70f32b832486aeebe545a28 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+@@ -1164,7 +1164,7 @@ int dpu_assign_plane_resources(struct dpu_global_state *global_state,
+ 			       unsigned int num_planes)
+ {
+ 	unsigned int i;
+-	int ret;
++	int ret = 0;
+ 
+ 	for (i = 0; i < num_planes; i++) {
+ 		struct drm_plane_state *plane_state = states[i];
+
+---
+base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+change-id: 20250209-dpu-c3fac78fc617
+
+Best regards,
+-- 
+Ethan Carter Edwards <ethan@ethancedwards.com>
+
