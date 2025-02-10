@@ -1,101 +1,79 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE35243374;
-	Mon, 10 Feb 2025 12:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B9B243374
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 12:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739189764; cv=none; b=G8rMV9d1aLgixOyNfvmUZHILAoJRmjPSSi9liT26KMMK9MGW2DZz6ErOTCDGspb8WmzWt2uHwghsM/la/4F/rbvuH0ozpGbhliumUnuQL/gfXgVm+U7OjS5PyhHz0xnD8JlhfpyDRawa2cBGN57/9S4tCFW3GTPE58Lz+yCsEIQ=
+	t=1739190166; cv=none; b=RiKCTOwo/44PPj91ei1m7Ti1hUcqsAYIRjb2xMdiG8lMMkQsNZPeR/pRuBQ0eVKdfM8TtwD2A710fPneuLp1uVUouI9FvRkoTWvknnO1QTLx2SuUiPXXhKWOmgFDQayyjbhOjWvO16O/lsQQBw+sRDj7DtWrwKHB8Wj55cas/D4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739189764; c=relaxed/simple;
-	bh=F/7W3Ji5wIGnVHt8kCsM4GPtFrsjZvbfdVUG9QY1Gfg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R/H9XX86tCMEMel5D1m/zsoEsOPE/qVPxDHfbjBAT3wEsEFPWEzmM8Qghm3tG0K6JxuLP7sHle3MvepwqMe6MnseQBXmcX29XyWJCJvrhEImSLRwtEt3KFiKC4ZVHCxuRoEMfipy1gyFDE8b0EmAhg4z46aSqKFVvHs6NW3CbAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dRKUtugI; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739190166; c=relaxed/simple;
+	bh=D5szCVESMN9ourmiO6CU01qZfUnW6l4QuLPfuu1uUuc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=sMzOJunYaPpjYLQU5vxqJd/gB091hSLl7A8JHVmAkd47hEhQMaZPZxWtNoR5mbqlhHSCFO0+NOh6RnF62kXOJWWIPbwkCOGaXaatO+bi8P9e+v77YjK6cM0OelIOFALs7zctlL50iBmzKAmIsvDsvtnllGY5z3IDqrwh04bkfWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KxX0wiXI; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dRKUtugI"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43934d6b155so9794745e9.1;
-        Mon, 10 Feb 2025 04:16:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739189761; x=1739794561; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GAXwPLt1kFbd7E0TfRGbt8eT4WvsRFZwEWl1hPo7ppA=;
-        b=dRKUtugIJbfhJieeNY9m64FoYBSz7OyTq97ZwF6/xoryyyfkH/KsD5/nxFv59yFu/L
-         bHQ3gSygFu2gLaxKo2wBDXXNH38YwR/Kw2Vhif1BhzM+JtMY5aCyZCrv/KMG5uECNyC6
-         ceccF6JvRJ0fF3fDPcbSCXWYx+yaLzyDPT0CDtY/SjWYYegkklGRNYAKxFYjwAle1qoc
-         GbR7nqbJMZQloTqc1fPzts+5g5uKLA1n0ECQfstJ/wmikpafi659J2vOeJZKoL1LcgRq
-         l3Pk/5oVKFlVidcIzHwOJZpjDd3/Hl3YCsyGQkjJaxNGkB3szYaVj3ER9Ad4mK+9Z30B
-         OiDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739189761; x=1739794561;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GAXwPLt1kFbd7E0TfRGbt8eT4WvsRFZwEWl1hPo7ppA=;
-        b=Z0FEgzNVSrvW4CSON9VC71FgesgZ6Bsr2kQ98T4jhnyBMPKysbenW0Kxq+A+8V5U4k
-         VXtkv2XI2PFcuHZoVsDbCf0D3SxOXvLV1QTzYDZYJU3AH2H3tKDxDWbUihYqeNz/LPQR
-         6l7mK/bL+THxfKTiNlQIKRdtj0+BDnA/0ud8d5wd6/ghU54R1c/NAXQwRglCjdWLj7WH
-         vZYwuyjf7GEcsmNBFao6b7B4h+AMVS6tVjGRukFMhiZukgX3MnZNi0UtJApPPnWP7hRU
-         h012o7tXX+I+rVxlBpGh7Z9mA51k6XeAZqzbrfBBX4cHvH9uy/MdOubeuDe9kd5wv3v9
-         SeVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVEMuGWEI6Bzv53m72WjspTi2IBI4m5I5EGrdzNFbCmsyc63753ugnaUwY8bRAoLrZTsO35IEoVjaAX92g7A9s=@vger.kernel.org, AJvYcCVVFy02nZ+96vPlk7J09oCEElWPYvVJzxha/Wl5foikR1dbtEWgeJMt2pkMCZpCdsgmy8HkxEps962R/IvT@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/IEiXK4K7IVYktiQecSiLNnx77n29iMSY+PmT8p+iFFDdHVtp
-	FsP2OZrLqlxLY2h5zpyEv+nnbMOVr3MIKEy1GgEPyBpe4aMLXqMJ
-X-Gm-Gg: ASbGnct7wJetJ0KP3C0dt+woy+P3qjMos2ulps6jaz0tT/ESJlhQKBiJe7dGNqvMwtp
-	GleEq32uLB3mi7AJ0oWlt4C19cOftrE2ysj/7K35/fC7q9kU89N6k6S9NyM7O16iaAK7RIdKZoO
-	KG1Mc6DadB1LSQqcyHN6Sa+lznX1UXjuMY4L7gLJKSHxeE74BORS4BglSTaoHGpUrHWP5GCMyWz
-	Y51u4XVfup4Q+hD9IkaGHRS181EJDnCE+l0p21XjUiMFgKT4P5E2slREpxf+gdDt8tsDpKBpXKL
-	AZfm2zpSPqbl
-X-Google-Smtp-Source: AGHT+IFFqjKPOWeR4uzaI/d56rTMNFQwNADYI+92fGS4ndChhBWmVDyZmS3pP6P5O2p8dpiIIPHwVA==
-X-Received: by 2002:a05:600c:5351:b0:439:3159:c33d with SMTP id 5b1f17b1804b1-4393159c5abmr65837825e9.13.1739189760962;
-        Mon, 10 Feb 2025 04:16:00 -0800 (PST)
-Received: from void.void ([141.226.169.178])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439377ba9c6sm68599335e9.36.2025.02.10.04.16.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 04:16:00 -0800 (PST)
-From: Andrew Kreimer <algonell@gmail.com>
-To: Dave Penkler <dpenkler@gmail.com>
-Cc: linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Andrew Kreimer <algonell@gmail.com>
-Subject: [PATCH] staging: gpib: Fix typo in TTY_LOG message
-Date: Mon, 10 Feb 2025 14:15:33 +0200
-Message-ID: <20250210121552.33455-1-algonell@gmail.com>
-X-Mailer: git-send-email 2.48.1.268.g9520f7d998
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KxX0wiXI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739190165; x=1770726165;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=D5szCVESMN9ourmiO6CU01qZfUnW6l4QuLPfuu1uUuc=;
+  b=KxX0wiXIcCBaKdfQyyi4cmEovmwFCtO95sMvebOBsJ69KYLFg80ZuMf+
+   AMeEtmrDtR0T6P7kKVuNI4IKFJWklfIjDdZlpyBHRXCUfwebWA71NY/Jd
+   tq+fzYJJX/hYDUF/ZR5dzu8+z/nhyExflG7qm3svX1SwofmFwZ5jdDpI1
+   d1vFKWOqxKQQyEbgtc9trAp5bKyD25B3T+du/UloTxGQjK6UG0us3Bgw9
+   DE00YiqN8fN+IIu4g58QPAPayzrkQuXFWlFo9p3vW8ugAC7c0Ap3a5Zbl
+   LwgiJTcP+BOseBlitQSQFf3at65zXJwqKkoPh3jXqFrqONC/cgiqV4dFu
+   A==;
+X-CSE-ConnectionGUID: AvsAE7b/RmWPHfudXg8C8A==
+X-CSE-MsgGUID: WNyROy5BR3OKNhWqFqui/A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="50752328"
+X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
+   d="scan'208";a="50752328"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 04:22:44 -0800
+X-CSE-ConnectionGUID: pliT4yuvRAG2cNeKqxyD/g==
+X-CSE-MsgGUID: VpMN6canQqaD3B0ni3pGCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="112616824"
+Received: from iklimasz-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.244])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 04:22:41 -0800
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Alex Lanzano <lanzano.alex@gmail.com>, airlied@gmail.com,
+ simona@ffwll.ch, tzimmermann@suse.de, noralf@tronnes.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc: lanzano.alex@gmail.com
+Subject: Re: Maintaining Repaper and MI0283QT
+In-Reply-To: <mubhrsqwsixflh5iagrtwsbup7nrnxkhwhn3nmqvmfhibwxauo@g3jvqxpo2fb7>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <mubhrsqwsixflh5iagrtwsbup7nrnxkhwhn3nmqvmfhibwxauo@g3jvqxpo2fb7>
+Date: Mon, 10 Feb 2025 14:22:37 +0200
+Message-ID: <87bjva3s6q.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-There is a typo in TTY_LOG message:
- - sucesfully -> successfully
+On Fri, 07 Feb 2025, Alex Lanzano <lanzano.alex@gmail.com> wrote:
+> I saw that Noralf has to unfortunately step down from maintaining the
+> repaper and mi0283qt drivers. I would be more than happy to maintain
+> these two if need be. The repaper device is very similar to the
+> sharp-memory display I currently maintain and I've worked with mi0283qt
+> displays before.
 
-Fix it via codespell.
+I think please just send a MAINTAINERS patch!
 
-Signed-off-by: Andrew Kreimer <algonell@gmail.com>
----
- drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+BR,
+Jani.
 
-diff --git a/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c b/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
-index 85322af62c23..1c3e5dfcc9ec 100644
---- a/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
-+++ b/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
-@@ -542,7 +542,7 @@ static int usb_gpib_attach(gpib_board_t *board, const gpib_board_config_t *confi
- 		return -EIO;
- 
- 	SHOW_STATUS(board);
--	TTY_LOG("Module '%s' has been sucesfully configured\n", NAME);
-+	TTY_LOG("Module '%s' has been successfully configured\n", NAME);
- 	return 0;
- }
- 
+
 -- 
-2.48.1.268.g9520f7d998
-
+Jani Nikula, Intel
