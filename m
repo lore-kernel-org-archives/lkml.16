@@ -1,98 +1,104 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B485625;
-	Mon, 10 Feb 2025 01:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA88182
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 01:14:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739149829; cv=none; b=hDGekIXMQRA0TweTJ8Khr8Mhutg+hyo/yN1bh8fwrf3sb900NuyG3B3bJ62YLBErQWwfkijB7DOH8d2x+jDmPhWqOK2DAkYF2/cqI/GIG8qx1Q2VdfItFX/cnf42yRZ2zoVimrOroPFtKJmCp+aOquOD2Cx/CflVsW7U1rfJr2Q=
+	t=1739150058; cv=none; b=D2QyfqAk8Xbshl1/eRW7UZHXtKo9yynZ5UYSIWp9z4sbrwMMaVvmqLcvZCttkfzmfg2GO6FP702R3NfZE7NYKG3ZXXNXlT5mv/+8tPfwKZAwW4cAm47aNKsxT5pKvdvXrv6l2wej9G3a3yaULjq5pQ6GrfkbSFNweW32B/+F1qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739149829; c=relaxed/simple;
-	bh=+W4hbUJf28Gl9qNEThEm55N/PJ9IbzHZk/DqSQ8Pvk4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=THyO0LMWddnMsFR1rBihoE9pgqaTuuYThCp8LYAaeepdcBk9UHCD6LaTQaLSNQpVdpxFwhwJrW5OzWLZFGNCqSW0whmZZbNlPptniVipGeVOreNBo/qhwUeyL+L+AmNJV83i3LHNNJz1+Rt7CH0cuNINUXWp49M2vAFFt9LtuIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1thIJ5-000000005Mx-0xoS;
-	Sun, 09 Feb 2025 20:09:51 -0500
-Message-ID: <15734b32cecddde7905d3a97005a0c883383cc74.camel@surriel.com>
-Subject: Re: [PATCH 1/1] x86: In x86-64 barrier_nospec can always be lfence
-From: Rik van Riel <riel@surriel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>, David Laight
-	 <david.laight.linux@gmail.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner	
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov	
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin"
-	 <hpa@zytor.com>, Catalin Marinas <catalin.marinas@arm.com>, Mathieu
- Desnoyers	 <mathieu.desnoyers@efficios.com>, Josh Poimboeuf
- <jpoimboe@redhat.com>, Andi Kleen <ak@linux.intel.com>, Dan Williams
- <dan.j.williams@intel.com>, 	linux-arch@vger.kernel.org, Kees Cook
- <keescook@chromium.org>, 	kernel-hardening@lists.openwall.com, "Paul
- E.McKenney" <paulmck@kernel.org>
-Date: Sun, 09 Feb 2025 20:09:51 -0500
-In-Reply-To: <CAHk-=wiSnNEWsvDariBQ4O-mz7Nc7LbkdKUQntREVCFWiMe9zw@mail.gmail.com>
-References: <20250209191008.142153-1-david.laight.linux@gmail.com>
-	 <CAHk-=wiQQQ9yo84KCk=Y_61siPsrH=dF9t5LPva0Sbh_RZ0-3Q@mail.gmail.com>
-	 <20250209214047.4552e806@pumpkin>
-	 <CAHk-=wiSnNEWsvDariBQ4O-mz7Nc7LbkdKUQntREVCFWiMe9zw@mail.gmail.com>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.1 (3.54.1-1.fc41) 
+	s=arc-20240116; t=1739150058; c=relaxed/simple;
+	bh=NyM8cio96fQnsdXx4Lz8TqGY2DxnEmYS27gscqVC6hw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pCnkyX20epQXVBA+3OYHIS1B+Kiv+5fpZrCP9B7vuFxVT9qtYc3j99n6e09sx6jh7+dL07zl9zrZ2zlSFH1Aojsg6s4qfeb1hN40nyAvaOOOUEQ2xW/4zaWCJA89mNGJElCerteL2TnjWAMvSkPt7bVu2LrFL7bWRIrzN3XRFmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=wdMg2MOB; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="wdMg2MOB"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-38dcc6bfbccso1254035f8f.0
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 17:14:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1739150055; x=1739754855; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NyM8cio96fQnsdXx4Lz8TqGY2DxnEmYS27gscqVC6hw=;
+        b=wdMg2MOB9EekyrusS8o+dhkOdj92KLLuNaI8cYHtVwEFNxfO7JcX80j7bxKA68gYik
+         I7x0AvpT6vPwj/d2YrdOxeIKDXGzQ67mOGzxO7zKffsWw7kdd5Xv4aWGGF1iNaSes8OX
+         RKK4RNF3K5k9WrNKf3CcshMKLhHjoSBXCBiMZsBxzoTyVn6SOj8V+obX2BTCk4JwxP1g
+         +jlhns7jrocoeYiRv5cYqyZZwx+qHF3ulcMTk3Ct0CcvX0xsMgwgJGySdMhlf1cZWL8k
+         YCQxF9MVpXnWvoFpH8rVNNLUh6w7S1FH4q5ZZ2sPE6bwZjEJR304q/R87imlU5XwsBbx
+         keOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739150055; x=1739754855;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NyM8cio96fQnsdXx4Lz8TqGY2DxnEmYS27gscqVC6hw=;
+        b=T6One5Gg2y/EcW8UvdS192PvYLAt1Jm5oEefRBx4SzetavKrHhHkQeM88UCjsWoDg5
+         9jd6IHNHUyfCl9taz2sacNJy0fFlgg5SwWnVaQsDWPnEh0/gj9pK1CVqw5TFw0pqJeKp
+         MUaI1IfgAnx/iyvHyeaAcvfb1zVGQw0qtY22TbFWUwPNyZuBkVX5c52quxlPl/naKFD3
+         DFS5fxQoxpgEEKFdaFxyAUrO/UaavplCk4ivK17v0gdwlG9Hyhqmm8dZIAN/A1N6HgWY
+         QHfx44v+OBs0Nm+s+/HEdnZk7k2UtoqJfx2hHtZUERK6fa1ZxqddqYP4xFbScslJc/tj
+         JvQA==
+X-Forwarded-Encrypted: i=1; AJvYcCX917ltnxSbseih/lQZYTsK2Mdz1JD17ZF5Ji0aKOa5fa6ldINtbhaMDsccyeoUbWtILbKSvL44OTNy+28=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3JSbO46DcsYIvXnNNvtcA4mpgpG5CfBJXHtFvTe9vkUcsdpgX
+	lXY8EpVsu0fpkaiAHBEz7AIBQltiUJTS50KapeeYdJjfc44yscZSx4BOCJ40t7M=
+X-Gm-Gg: ASbGncsbCRuUlHy1q4UZRXOUEyDoIvSEdedEC/17Bsmj864smZHpixXY6ucMCDu2z/U
+	01rEZRqwhJG0LNQI/dhvuQ9vvbhNT1M3E/5I4iR5Wg6hopEWpI09svHmv4wtfPjsWmj0Ds12HPQ
+	FPzwn+PweM/OLoXzH55Cfcp3kc8Lhu+V60z56msRf7ptRISdbduLaM8qgpJYVZNwycLIQOyhi/p
+	GYl37DNf9ICfLCG8S4lGnq4krM4ai78TzhuMRQmkYHCDhPa4p0yEp0XzlSBC4RrmbyxrBE2i4al
+	Am+uBSNGXqRw32i30JsfM0rPPB7szLAwnKJmN8OE0zVNbSFAVDenb2OdhPlpvBwIxLtl
+X-Google-Smtp-Source: AGHT+IFaxoG8PspfNQgs9ZrKhJsJGSassfH5vK7a8F6sxyQJOw7XlMy/r7h1UQkFOMzO2zGssbh4bg==
+X-Received: by 2002:a05:6000:1445:b0:38d:d387:166 with SMTP id ffacd0b85a97d-38dd38707a3mr3990985f8f.34.1739150054942;
+        Sun, 09 Feb 2025 17:14:14 -0800 (PST)
+Received: from airbuntu (host109-154-33-115.range109-154.btcentralplus.com. [109.154.33.115])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391da965b3sm133163775e9.5.2025.02.09.17.14.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2025 17:14:14 -0800 (PST)
+Date: Mon, 10 Feb 2025 01:14:13 +0000
+From: Qais Yousef <qyousef@layalina.io>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Stephen Boyd <sboyd@kernel.org>, Yury Norov <yury.norov@gmail.com>,
+	Bitao Hu <yaoma@linux.alibaba.com>,
+	Andrew Morton <akpm@linux-foundation.org>, kernel-team@android.com
+Subject: Re: [RFC][PATCH 0/3] DynamicHZ: Configuring the timer tick rate at
+ boot time
+Message-ID: <20250210011413.whnkxo4modrx6gbc@airbuntu>
+References: <20250128063301.3879317-1-jstultz@google.com>
+ <87cyg67up9.ffs@tglx>
+ <20250203111433.GF7145@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: riel@surriel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250203111433.GF7145@noisy.programming.kicks-ass.net>
 
-On Sun, 2025-02-09 at 13:57 -0800, Linus Torvalds wrote:
->=20
-> So on x86, both read and write barriers are complete no-ops, because
-> all reads are ordered, and all writes are ordered.
+On 02/03/25 12:14, Peter Zijlstra wrote:
 
-Given that this thread started with a reference
-to rdtsc, it may be worth keeping in mind that
-rdtsc reads themselves do not always appear to
-be ordered.
+> The whole preemption thing could probably be replaced with HRTICK (which
+> might be suffering from bitrot), but the problem has always been with
+> hrtimers being too expensive (on x86). But ideally we'd move away from
+> tick based preemption.
 
-Paul and I spotted some occasionaly "backwards
-TSC values" from the CSD lock instrumentation code,=C2=A0
-which went away when using ordered TSC reads:
+I do think HRTICK must be on by default. Precise time slices are important.
+Especially if your plans to attach changing of base_slice to
+sched_attr->runtime are still happening. People will find lots of surprises
+when they ask for 500us runtime but end up running (much) longer, especially
+with the default 4ms TICK value (which I just posted a patch to change it).
 
-https://lkml.iu.edu/hypermail/linux/kernel/2410.1/03202.html
-
-I guess maybe a TSC read does not follow all the same
-rules as a memory read, sometimes?
-
---=20
-All Rights Reversed.
+Can we re-evaluate the HRTICK impact?
