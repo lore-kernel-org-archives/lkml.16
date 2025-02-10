@@ -1,217 +1,130 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C70D61D14FF
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46871CEE8D;
+	Mon, 10 Feb 2025 11:04:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739185470; cv=none; b=ed/pY5ghOxBfYfxUhpcJhKWDRaiVUBAv21NHk4M2Q4RxxuJoDFeeU0hAxHax6clxIY9VRdA2oRltyjx740u0bZaXyExbHAlZTqp9B29kHf2JuSwOC2h3fttak9WMrCzjbhQ4RxBlC1ETX45TntN0QxRZa6vLiJnaQ6PlYL8h3/8=
+	t=1739185492; cv=none; b=GiOc+anqWtE/jVgj6+q0f0h6Ar73ThUTwLFdbGzRYyaVkE6/lbI0/h7QFUlJ195rKvfee5UV7APPi1vY/pdxaehtQPSv0etNzYhpuBkms5RxiTROIAoI606GgcrEonpf2KSD35yHQy5ovPyZqiTKPahSt51ViyJo4BWVSNMsNNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739185470; c=relaxed/simple;
-	bh=b8ttSuFEzrPc0Pz6POXgRHUg/UJ0IKOQD4MsCcikngQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oh/lv3BmZ9U4hTOnUpOL7DfNHa5gYrltk+eL9hmj4QBlxWDB4ch2sgyTpyvp43XYVM4ojiqyUZqDGA4sWRcbFxBt69L4wp0AoLSgKyRvIYy77vkqtyCKKfiJGyQ9HIcWPu4kvqmFCsr+tvhoU7mdwLDTVbEg33lysvoLEpu1TkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A58111007;
-	Mon, 10 Feb 2025 03:04:49 -0800 (PST)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 347353F5A1;
-	Mon, 10 Feb 2025 03:04:21 -0800 (PST)
-Date: Mon, 10 Feb 2025 11:04:15 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, oleg@redhat.com,
-	sstabellini@kernel.org, tglx@linutronix.de, peterz@infradead.org,
-	luto@kernel.org, mingo@redhat.com, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, kees@kernel.org, wad@chromium.org,
-	akpm@linux-foundation.org, samitolvanen@google.com,
-	masahiroy@kernel.org, hca@linux.ibm.com, aliceryhl@google.com,
-	rppt@kernel.org, xur@google.com, paulmck@kernel.org, arnd@arndb.de,
-	mbenes@suse.cz, puranjay@kernel.org, pcc@google.com,
-	ardb@kernel.org, sudeep.holla@arm.com, guohanjun@huawei.com,
-	rafael@kernel.org, liuwei09@cestc.cn, dwmw@amazon.co.uk,
-	Jonathan.Cameron@huawei.com, liaochang1@huawei.com,
-	kristina.martsenko@arm.com, ptosi@google.com, broonie@kernel.org,
-	thiago.bauermann@linaro.org, kevin.brodsky@arm.com,
-	joey.gouly@arm.com, liuyuntao12@huawei.com, leobras@redhat.com,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH -next v5 01/22] arm64: ptrace: Replace
- interrupts_enabled() with regs_irqs_disabled()
-Message-ID: <Z6nc_itA5KT1Gk2i@J2N7QTR9R3>
-References: <20241206101744.4161990-1-ruanjinjie@huawei.com>
- <20241206101744.4161990-2-ruanjinjie@huawei.com>
+	s=arc-20240116; t=1739185492; c=relaxed/simple;
+	bh=tqbI6QBfy3q1ea7YeVKdrraGM2oN3u8eQPI2advrBks=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EFBX7I7pznhg8zKmdOqewmZVTMdoS7eCklFLKe44+9RvrmrWu/pITKRF5Ykggj9SfM3DwKkSgZacQyHGwpmAc1pXktWHm4nzCCOztPnd7vtVu21K6qwGXM2rEa6ndDrUBrZHz7+XGIaLq5WxK/Wt2hxRsLbDCXn0R4sMhUHI6hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ssX2PE9x; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ssX2PE9x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 175D3C4CEEB;
+	Mon, 10 Feb 2025 11:04:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739185492;
+	bh=tqbI6QBfy3q1ea7YeVKdrraGM2oN3u8eQPI2advrBks=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ssX2PE9xxAD2aGyFQ55LNLGCthjiFKomYAax8JThtHGtgHQuN3CLv5W03BZkek4Az
+	 fFAnbssmG12RdQ4612QFfzsDEdxhN/jMeY8yaKkea9Iu1aCFE60wlkjS6RAITTMJZA
+	 I3KflS3wjQTltN/MMy55EColbgeK9QfBLP55fTsPBaT0KdX2U9zOd6eLFtl+JCGq8s
+	 ZSXuQj7DWVaFt3H7YOJE73AChQqHfCY7A6imZWNewgBaITfFoOCEwsXZmDZd+25s0c
+	 IIiWZZGx65O+3n8XasEXd/vvV0xrHFpy0GjB6rMqWYWStR1fVGebK59dAVK3mp4dk+
+	 HMObLSpZltAxw==
+Message-ID: <e6daacbf-2cfe-4489-942d-037b542143d4@kernel.org>
+Date: Mon, 10 Feb 2025 12:04:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241206101744.4161990-2-ruanjinjie@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] media: dt-bindings: i2c: add DW9719/DW9718S VCM
+ binding
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Val Packett <val@packett.cool>, Daniel Scally <djrscally@gmail.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250210082035.8670-1-val@packett.cool>
+ <20250210082035.8670-2-val@packett.cool>
+ <c2ff273a-bac5-4fa3-8339-ab722c9e63bf@kernel.org>
+ <Z6nWp3bpoiqpvpS-@kekkonen.localdomain>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <Z6nWp3bpoiqpvpS-@kekkonen.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Dec 06, 2024 at 06:17:23PM +0800, Jinjie Ruan wrote:
-> The generic entry code expects architecture code to provide
-> regs_irqs_disabled(regs) function, but arm64 does not have this and
-> provides inerrupts_enabled(regs), which has the opposite polarity.
+On 10/02/2025 11:36, Sakari Ailus wrote:
+> Hi Krzysztof,
 > 
-> In preparation for moving arm64 over to the generic entry code,
-> relace arm64's interrupts_enabled() with regs_irqs_disabled() and
-> update its callers under arch/arm64.
+> On Mon, Feb 10, 2025 at 09:29:25AM +0100, Krzysztof Kozlowski wrote:
+>>> +  dongwoon,vcm-freq:
+>>> +    description:
+>>> +      The switching frequency for the voice coil motor.
+>>
+>> Frequency is in Hertz, so use proper property unit suffix. BTW, you
+>> cannot add incorrect properties post-factum based on already accepted
+>> ACPI driver. This would be nice bypass of review, right?
 > 
-> For the moment, a definition of interrupts_enabled() is provided for
-> the GICv3 driver. Once arch/arm implement regs_irqs_disabled(), this
-> can be removed.
+> What's actually configured here is the divisor (10 MHz clock, divisor seems
+> to be value + 2). It's similar to existing
+> Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml . I prefer
+> this as it's much easier to use that in a driver (think of having values
+> like 1428571 in DT, too).
+
+
+Sure, but then this should be renamed to match purpose and description
+rephrased.
+
 > 
-> No functional changes.
-> 
-> Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> ---
->  arch/arm64/include/asm/daifflags.h  | 2 +-
->  arch/arm64/include/asm/ptrace.h     | 7 +++++++
->  arch/arm64/include/asm/xen/events.h | 2 +-
->  arch/arm64/kernel/acpi.c            | 2 +-
->  arch/arm64/kernel/debug-monitors.c  | 2 +-
->  arch/arm64/kernel/entry-common.c    | 4 ++--
->  arch/arm64/kernel/sdei.c            | 2 +-
->  7 files changed, 14 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/daifflags.h b/arch/arm64/include/asm/daifflags.h
-> index fbb5c99eb2f9..5fca48009043 100644
-> --- a/arch/arm64/include/asm/daifflags.h
-> +++ b/arch/arm64/include/asm/daifflags.h
-> @@ -128,7 +128,7 @@ static inline void local_daif_inherit(struct pt_regs *regs)
->  {
->  	unsigned long flags = regs->pstate & DAIF_MASK;
->  
-> -	if (interrupts_enabled(regs))
-> +	if (!regs_irqs_disabled(regs))
->  		trace_hardirqs_on();
->  
->  	if (system_uses_irq_prio_masking())
-> diff --git a/arch/arm64/include/asm/ptrace.h b/arch/arm64/include/asm/ptrace.h
-> index 47ff8654c5ec..bcfa96880377 100644
-> --- a/arch/arm64/include/asm/ptrace.h
-> +++ b/arch/arm64/include/asm/ptrace.h
-> @@ -214,9 +214,16 @@ static inline void forget_syscall(struct pt_regs *regs)
->  		(regs)->pmr == GIC_PRIO_IRQON :				\
->  		true)
->  
-> +/*
-> + * Used by the GICv3 driver, can be removed once arch/arm implements
-> + * regs_irqs_disabled() directly.
-> + */
->  #define interrupts_enabled(regs)			\
->  	(!((regs)->pstate & PSR_I_BIT) && irqs_priority_unmasked(regs))
->  
-> +#define regs_irqs_disabled(regs)			\
-> +	(((regs)->pstate & PSR_I_BIT) || (!irqs_priority_unmasked(regs)))
+>>
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
 
-Please make this:
 
-| static __always_inline bool regs_irqs_disabled(const struct pt_regs *regs)
-| {
-| 	return (regs->pstate & PSR_I_BIT) || !irqs_priority_unmasked(regs);
-| }
-| 
-| #define interrupts_enabled(regs)	(!regs_irqs_disabled(regs))
+And this would stay + constraints.
 
-That way this matches the style of x86 and s390, and with
-interrupts_enabled() defined in terms of regs_irqs_disabled(), the two
-cannot accidentaly diverge.
 
->  #define fast_interrupts_enabled(regs) \
->  	(!((regs)->pstate & PSR_F_BIT))
-
-We should probably delete this at the same time; it's unused and we
-don't want any new users to show up.
-
-With those changes:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Mark.
-
->  
-> diff --git a/arch/arm64/include/asm/xen/events.h b/arch/arm64/include/asm/xen/events.h
-> index 2788e95d0ff0..2977b5fe068d 100644
-> --- a/arch/arm64/include/asm/xen/events.h
-> +++ b/arch/arm64/include/asm/xen/events.h
-> @@ -14,7 +14,7 @@ enum ipi_vector {
->  
->  static inline int xen_irqs_disabled(struct pt_regs *regs)
->  {
-> -	return !interrupts_enabled(regs);
-> +	return regs_irqs_disabled(regs);
->  }
->  
->  #define xchg_xen_ulong(ptr, val) xchg((ptr), (val))
-> diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
-> index e6f66491fbe9..732f89daae23 100644
-> --- a/arch/arm64/kernel/acpi.c
-> +++ b/arch/arm64/kernel/acpi.c
-> @@ -403,7 +403,7 @@ int apei_claim_sea(struct pt_regs *regs)
->  	return_to_irqs_enabled = !irqs_disabled_flags(arch_local_save_flags());
->  
->  	if (regs)
-> -		return_to_irqs_enabled = interrupts_enabled(regs);
-> +		return_to_irqs_enabled = !regs_irqs_disabled(regs);
->  
->  	/*
->  	 * SEA can interrupt SError, mask it and describe this as an NMI so
-> diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
-> index 58f047de3e1c..460c09d03a73 100644
-> --- a/arch/arm64/kernel/debug-monitors.c
-> +++ b/arch/arm64/kernel/debug-monitors.c
-> @@ -231,7 +231,7 @@ static void send_user_sigtrap(int si_code)
->  	if (WARN_ON(!user_mode(regs)))
->  		return;
->  
-> -	if (interrupts_enabled(regs))
-> +	if (!regs_irqs_disabled(regs))
->  		local_irq_enable();
->  
->  	arm64_force_sig_fault(SIGTRAP, si_code, instruction_pointer(regs),
-> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
-> index b260ddc4d3e9..c547e70428d3 100644
-> --- a/arch/arm64/kernel/entry-common.c
-> +++ b/arch/arm64/kernel/entry-common.c
-> @@ -73,7 +73,7 @@ static __always_inline void __exit_to_kernel_mode(struct pt_regs *regs)
->  {
->  	lockdep_assert_irqs_disabled();
->  
-> -	if (interrupts_enabled(regs)) {
-> +	if (!regs_irqs_disabled(regs)) {
->  		if (regs->exit_rcu) {
->  			trace_hardirqs_on_prepare();
->  			lockdep_hardirqs_on_prepare();
-> @@ -569,7 +569,7 @@ static void noinstr el1_interrupt(struct pt_regs *regs,
->  {
->  	write_sysreg(DAIF_PROCCTX_NOIRQ, daif);
->  
-> -	if (IS_ENABLED(CONFIG_ARM64_PSEUDO_NMI) && !interrupts_enabled(regs))
-> +	if (IS_ENABLED(CONFIG_ARM64_PSEUDO_NMI) && regs_irqs_disabled(regs))
->  		__el1_pnmi(regs, handler);
->  	else
->  		__el1_irq(regs, handler);
-> diff --git a/arch/arm64/kernel/sdei.c b/arch/arm64/kernel/sdei.c
-> index 255d12f881c2..27a17da635d8 100644
-> --- a/arch/arm64/kernel/sdei.c
-> +++ b/arch/arm64/kernel/sdei.c
-> @@ -247,7 +247,7 @@ unsigned long __kprobes do_sdei_event(struct pt_regs *regs,
->  	 * If we interrupted the kernel with interrupts masked, we always go
->  	 * back to wherever we came from.
->  	 */
-> -	if (mode == kernel_mode && !interrupts_enabled(regs))
-> +	if (mode == kernel_mode && regs_irqs_disabled(regs))
->  		return SDEI_EV_HANDLED;
->  
->  	/*
-> -- 
-> 2.34.1
-> 
+Best regards,
+Krzysztof
