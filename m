@@ -1,124 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF09825C6E2;
-	Mon, 10 Feb 2025 19:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE7125C711;
+	Mon, 10 Feb 2025 20:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739217567; cv=none; b=ikVI7VAYtmXH5lnf6sRUeMlMq2v1fF0nPO0AaJYR4QC8+U5M0NthJpIwrKR2bgxoG4ZKrkuE0K1Tr4EXf6i6BEf0BhA4POFdIn8mbh6LQDulKJKMHUhH54VnOz/RHVQ3xsagzM+ulXZ17gU/Y9noszeRgNnBYOuV3R88+LYauzs=
+	t=1739217688; cv=none; b=byxu1UDhfRmfZdCQejG2FK7nl84qzv/9/9LuZ24RG5mlxamHuAhs472FAY/xxXSQOxkl4xUomlSV1DJx2Hn41kuInEdVltCX9IWRwUwT+gbkZX9I40CBNoomeC9FOFOs8G3ELMJYA0p2WRw14k1PgxsTZFBo3tBqX9ZxaODl9NQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739217567; c=relaxed/simple;
-	bh=fQTVaLBmxwzCQpGzYKkvesS9adJeVdXniYYtPc98sLc=;
+	s=arc-20240116; t=1739217688; c=relaxed/simple;
+	bh=+jrpp41z+YtDR/dn1tbp4CQyYs0XILLfyycd7ZxUoB8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C4orMExrg661SxBF8Smc/bvzULP/4//Ij7bknjhipBvYf57N2pcyTfiQRT0Rk2R+XOkotaeWvE2P3CIXFnaMJ+1GwfLFRNaE5uqGRifuLp06//Eay797MvdAL2Ac6Z/NUAKGrO5WGJDnnIlXRrodvU4PjbbHjyuCQ1UCMualAiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sudhREMJ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Igj6MDL9UeIZfWct+Ahl7yfb2O1lLWDh/3+eEZXqrStdrAerMUbwI5sNohf2IN6AWxtuYMKpI4a/rKTP8iPkbi0HBg1bbq2MYBfPzdFw5673jLh43C8fe99q9Mim1MP0mbufv0Y05c3POk+Sz7w5wsJbaKuFy+EM9Dp+lSS3QHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dFjzBAYR; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sudhREMJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EAE8C4CED1;
-	Mon, 10 Feb 2025 19:59:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739217567;
-	bh=fQTVaLBmxwzCQpGzYKkvesS9adJeVdXniYYtPc98sLc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sudhREMJT4WBnHYFJc/WPrg0ZoMxrcqEUCMOeexJmHaOiEZfimgGYSRjbJ/o5h9Wp
-	 RMF272+Jr++MBMkDIXhDPhOfTBJzTfW3N6EtK0Q4xug9A7lS9Ldk5fmad4Y/qnbnlV
-	 TYwg6c9W9o/IlgDyk6vNbpXsintBs/foNG+WFLPny1djDBPyO/FOYIH07+mFCc75o2
-	 VcekXrcZSmMK3f29jPeSpBQuOoTSzDSivhGVIIkxRPTkiGat9NKHlTqAKP/5h1t8oV
-	 c+/DsLO0XwjKfK0xWdhneNUIonZJyR5lQKO+KcNTtJhfWuH28qIEyolXKiHNLfVh9F
-	 k8zzaCZlVukqg==
-Date: Mon, 10 Feb 2025 11:59:24 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Hao Ge <gehao@kylinos.cn>,
-	James Clark <james.clark@linaro.org>,
-	Howard Chu <howardchu95@gmail.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Levi Yun <yeoreum.yun@arm.com>, Xu Yang <xu.yang_2@nxp.com>,
-	Tengda Wu <wutengda@huaweicloud.com>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 00/10] Move uid filtering to BPF filters
-Message-ID: <Z6panMzNSm1op8Di@google.com>
-References: <20250111190143.1029906-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dFjzBAYR"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-438a39e659cso33020885e9.2;
+        Mon, 10 Feb 2025 12:01:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739217685; x=1739822485; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YZ9Q82Rn5xAeR5ILneKt8HT+/+8kNs7Yx9TglAX5fLw=;
+        b=dFjzBAYRxip46xLSeP41ersQbcIxSG9x9ll8v92+PQl/k8pLHsMuM9g1aeIJ3mkVop
+         FS9MH/QF7xtqKDIseJBocNehOsAi0tsFAoWV39xFrkYiKFkGe5DrgstdcWuR5uX6dwLv
+         SYkRe1eir1ofuyoo6vQwCiBJytQj3waM3MUZu3uY1fNtX60OcCM8dyZacwjVYY+jr7z4
+         lUIFaxuWwv/suvOFdC2+8KlyAB0fv1rLzt1C2zBscruJ1bpDcu+Rz19JqkiMl9FD54RC
+         LxirnmxmKri1nNgELS/4jCvVvB2SYBx77yvqlBrINIs3QElLo50ebDAxqWt2l2tKQOTb
+         2wQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739217685; x=1739822485;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YZ9Q82Rn5xAeR5ILneKt8HT+/+8kNs7Yx9TglAX5fLw=;
+        b=V0cLRcOjxetlPlCQOIe4U2xOdElXMTVgSKliRZl0Oqdr8u05fwKy+kZvCuZveLivof
+         tAwoUY1ivWFtnywV8P4S82HbKF1X+UfxqXyg+4xE06yBoiaEF+1Z9kkae8Hu5bReaoUs
+         Tg0GH4ZsTy/csdYNPCHvFmgThgolVMF4RQcORvFu3FHsPIJRZJpYc3fI9+xpTU1202sJ
+         gxLAeXlLbL0hIuLzxv1V6+jsOlonJqONZxJhZ2KSQuxU1F9FzGQerkaRC7MYGRpiokt9
+         mQ2Yrmlht0au1Y56Boa9FY6R/rFiF1i7XDGfHsqinkvcWOShgSbSSe3kA69guvwBQiXb
+         DSJw==
+X-Forwarded-Encrypted: i=1; AJvYcCVA7WBxYOYnZoh6odt1Wxrk8muiMw5JoQPHVWZoLVFaraVc6whD7ZljEdJryo3VOjHvppWrzjEqlXAZ2UO9o7Y=@vger.kernel.org, AJvYcCWDO4V9ddYCpVzWOI9fwyK5nDo9OG3uFYQBQL3pCjDgMLA/IeT/78fuPmj9DAlCa8goDyMr0wKuOANSEzY+@vger.kernel.org, AJvYcCWKsjcrdbqpjUgNMtSz4m2C4pVxV37WnoaJ52G+I5A2u59alMxdQwuyKOpaASyeIFXufWr7fXelpAIAiK+TILA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzvO7xhPytRc3xjqK8H09HAtPtVncTAfckNIfCLAjHz07I+F5l
+	MP1xOxM2EgydI1uB+yLPKF2F1qHz0qeoWYJ8Zwx4dqfsxkDt56dh
+X-Gm-Gg: ASbGnctIdmmWwYjmLSgDT8Vvao3aE4kxa6tgMlXmswim7Uo2c57jxqyh6qSsA1Xsgsb
+	MKLvTyIT2wa7IDBKP7Dbo6UOQyJu/UxuRM32s1Zq6xg+P5qEE8CWbmyywS9P527IXJ62fM0Dr2/
+	RkkP5CoTYRC4Oe2V5kyH+DWfN2sLCkRccP/3KMlQuLepkb7VFccoQzi8+DdOzisUbV9VcIXOR8I
+	zQJFmx9kl05XDZ3Z+cfRphv4EYYHNPUxxxRSuRUtWS1APSoreAsU4+p4tWGROl1GJIVxSY3BYGx
+	UzVJCgJypw==
+X-Google-Smtp-Source: AGHT+IG+Gds7nLUN3pX8Qvyrwd0mTiclY92fHM9qKjkBliJDsIAfgsimAGqz5HMkoO5BEYxclKKy0Q==
+X-Received: by 2002:a5d:588d:0:b0:38d:da11:df22 with SMTP id ffacd0b85a97d-38dda11e141mr6124430f8f.37.1739217684961;
+        Mon, 10 Feb 2025 12:01:24 -0800 (PST)
+Received: from void.void ([141.226.13.80])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbde1dfaesm13244759f8f.90.2025.02.10.12.01.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 12:01:24 -0800 (PST)
+Date: Mon, 10 Feb 2025 22:01:21 +0200
+From: Andrew Kreimer <algonell@gmail.com>
+To: Ping-Ke Shih <pkshih@realtek.com>
+Cc: Kalle Valo <kvalo@kernel.org>,
+	Bitterblue Smith <rtl8821cerfe2@gmail.com>,
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH net-next] wifi: rtlwifi: rtl8192de: Fix typos
+Message-ID: <Z6pbEUQoJxtKmaG_@void.void>
+References: <20250206082457.9148-1-algonell@gmail.com>
+ <d525ed7b3b564238b25b0f3653f20067@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250111190143.1029906-1-irogers@google.com>
+In-Reply-To: <d525ed7b3b564238b25b0f3653f20067@realtek.com>
 
-On Sat, Jan 11, 2025 at 11:01:33AM -0800, Ian Rogers wrote:
-> Rather than scanning /proc and skipping PIDs based on their UIDs, use
-> BPF filters for uid filtering. The /proc scanning in thread_map is
-> racy as the PID may exit before the perf_event_open causing perf to
-> abort. BPF UID filters are more robust as they avoid the race. Add a
-> helper for commands that support UID filtering and wire up. Remove the
-> non-BPF UID filtering support.
-
-Hmm.. then non-BPF build cannot use the UID filtering anymore, right?
-Also non-root users will be limited unless it pinned the BPF program in
-advance.
-
-I think you can keep the original behavior and convert to BPF only when
-it's available.
-
-Thanks,
-Namhyung
-
+> To be unique subject, I will change it to 
+> " wifi: rtlwifi: rtl8192de: Fix debug message typos of phy setting"
 > 
-> Ian Rogers (10):
->   perf bench evlist-open-close: Reduce scope of 2 variables
->   perf parse-events filter: Use evsel__find_pmu
->   perf target: Separate parse_uid into its own function
->   perf parse-events: Add parse_uid_filter helper
->   perf record: Switch user option to use BPF filter
->   perf top: Switch user option to use BPF filter
->   perf trace: Switch user option to use BPF filter
->   perf bench evlist-open-close: Switch user option to use BPF filter
->   perf target: Remove uid from target
->   perf thread_map: Remove uid options
-> 
->  tools/perf/bench/evlist-open-close.c        | 76 ++++++++++++---------
->  tools/perf/builtin-ftrace.c                 |  1 -
->  tools/perf/builtin-kvm.c                    |  2 -
->  tools/perf/builtin-record.c                 | 26 +++----
->  tools/perf/builtin-stat.c                   |  4 +-
->  tools/perf/builtin-top.c                    | 22 +++---
->  tools/perf/builtin-trace.c                  | 25 ++++---
->  tools/perf/tests/backward-ring-buffer.c     |  1 -
->  tools/perf/tests/event-times.c              |  8 +--
->  tools/perf/tests/keep-tracking.c            |  2 +-
->  tools/perf/tests/mmap-basic.c               |  2 +-
->  tools/perf/tests/openat-syscall-all-cpus.c  |  2 +-
->  tools/perf/tests/openat-syscall-tp-fields.c |  1 -
->  tools/perf/tests/openat-syscall.c           |  2 +-
->  tools/perf/tests/perf-record.c              |  1 -
->  tools/perf/tests/perf-time-to-tsc.c         |  2 +-
->  tools/perf/tests/switch-tracking.c          |  2 +-
->  tools/perf/tests/task-exit.c                |  1 -
->  tools/perf/tests/thread-map.c               |  2 +-
->  tools/perf/util/bpf-filter.c                |  2 +-
->  tools/perf/util/evlist.c                    |  3 +-
->  tools/perf/util/parse-events.c              | 25 ++++---
->  tools/perf/util/parse-events.h              |  1 +
->  tools/perf/util/python.c                    | 10 +--
->  tools/perf/util/target.c                    | 54 ++-------------
->  tools/perf/util/target.h                    | 15 +---
->  tools/perf/util/thread_map.c                | 32 +--------
->  tools/perf/util/thread_map.h                |  6 +-
->  tools/perf/util/top.c                       |  4 +-
->  tools/perf/util/top.h                       |  1 +
->  30 files changed, 135 insertions(+), 200 deletions(-)
-> 
-> -- 
-> 2.47.1.613.gc27f4b7a9f-goog
-> 
+> By the way, patch goes to wireless-next instead. 
+
+Noted, thank you.
