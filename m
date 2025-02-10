@@ -1,96 +1,143 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90C22586E8
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583991CAA8D
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739227840; cv=none; b=CXjAJVMVSOMKubBVCSBZrOCOomSq0fu5YfY74b3Lq2We0j8rzhTU6ERatZDTqSfSDMFdNZNz1Yz3zzVEgPOxC36t+hV2yepDqwzpeoGf+d1oyWXIeVjapIL0HizEfrPK5LCeNjB00IiZbQBBYL4FSB7O8Z1gtywJtlW5JbZPPKs=
+	t=1739227878; cv=none; b=JwfIwyAc5WfviXkeHtteCdwtz9gSg9B4hKuzWIXViKuvz6e+w98UbGqFOPzysLmzUiJe22UytwqioogaXrbsyW/Th0evVTHy61ZiGYJYIV5XOq6MQx5tFnbt7jxGRT6zjNxSQBV3I3DQT5i/cVL93+hX/oFaxLPSh0x7QVT1QDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739227840; c=relaxed/simple;
-	bh=5zbZ0mjlc5mJspBqAdHsl+XIcsIzXXEkeeddcLU17Ww=;
-	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XdjbpvnKGLpMe//7okCLkaXO1qT+fy8Nhp4Kxa4MmX2TW+n8WksdBJRzOJVf+COXV3YpIDk79jGx+e/VKndlvpg44+vxFAnKMwwYXl8b546TJt9QM1BjXVgk8RMXG8FT5bRynlURBX8Hm66r/k9yAfKNzPisRO4+7HKHc9kmgHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Fn1WTRYx; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1739227878; c=relaxed/simple;
+	bh=xfG4WeE7SjirZ5Mcv8UCshdnCtmJEh7KANnBAKvtBeA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZTyCVUoJDRO3X05IwBIuoD6FIsICl4+8z5D90AjpwoTUh/Inf1QzJZmlnAa3posJDKgJH1zS88Pd5OMT/4T//K8i0abQOaPkxQ0POpuKi0GaEGuilLjjvORs3yCQA4nnup4sm7QaRzNpxzX2Y4J2IdHGa/DnRBpMCVBzGkaT0+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cXFaWDim; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Fn1WTRYx"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6dd420f82e2so63139356d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:50:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cXFaWDim"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f72fac367so47415ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:51:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1739227837; x=1739832637; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5zbZ0mjlc5mJspBqAdHsl+XIcsIzXXEkeeddcLU17Ww=;
-        b=Fn1WTRYxcY/IF+pLgssEdlj4HJBpjPUtmFK36ZDZGyP0aHwRFj22JO9P/0V4RjcdUb
-         nIlz+Z7/f892FtYCN26Fl4MB91dA/W6Gy5EtCxH1Wu2HepQ3jf5Tq9oo/RG2nz6qKQFL
-         eBbEcXJ8LqbRwhIU0xYjPIqCUekQ4MytyxNtw=
+        d=google.com; s=20230601; t=1739227876; x=1739832676; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kzD9w/10Tg/Dbaxqt0ZLJaS8jBU14ki/gg5wLfoid+o=;
+        b=cXFaWDim6jCcbo8VlT9Zn0BXncjw8vT0MECuwrmcsS+PzkbiVJ6R7HhTcsoWC1bGNV
+         MJwyq6av2ENSWDiEMU0cz29qkEWZjvgoGrwwYANwH/cOkKB43U5zB6zhPYKgpI7G4eFK
+         FzVxVt+1UtxPKXk9PhsfkPFgDkEYC3uUkptTE9KVIcFhla6H5GXGNJzfxXaTNZyIzbsy
+         kXW0Onk1ef+2yYkzvxKcb8EhrYFIjuDYkIeIng0odeFVOGRLKm2xygPx8S5q53hPHCHF
+         /gJNHTBvzDKSUKgyXDjafUxFMMpxVkCKqM+ToWo3QFuubFs9C8mZROWf1bYQBxC6jUIs
+         KsvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739227837; x=1739832637;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1739227876; x=1739832676;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5zbZ0mjlc5mJspBqAdHsl+XIcsIzXXEkeeddcLU17Ww=;
-        b=gpfR1XOx/aAGt2RqeMy/fsgk5gLVpjJ5RjD3+0TuTMoLj3rYfXPwqiq5mpZGzS3u7z
-         oqlSx2TB9gjpkBjD39twxs8NLwhUqgyrZAqzLxV4O8N9jpPLa3LQYsbQEN3wfxihnwFt
-         3aHPm9HIKcOFSC6R3dTcREQmn1ksB4plagLvOAXY4doABhvHvGt2cLIyvhtFXE/KMJj5
-         K6zn/sFyI+dnVDwkPhqMma7YeQLHeh8R3cV59wfB9BOK92FP36QByDWA490OrE7rY+vd
-         rmRnJfAdvKP8IZW741EvfzKDvozeSQHLHAmXcriFPysZLt5HCoDpoNY/B4ztcYtcZoPx
-         7YFA==
-X-Gm-Message-State: AOJu0YzOWg/X9bAru1i+mJOP8OmCd1wk5bkmp3tJZ7Ny3+3q2NYrVvzk
-	D+bKN3E5s8vKVQ0sCvPMW0SmwaA8L+8BC2rASG00J8xTv7Rw7kzf7GBGHKhqI2WGa27Ngvno1VS
-	jsuBicYqNWvPDLR8B7W55+UdMZOdweAv308z7
-X-Gm-Gg: ASbGnct2JJfNVyoMcyJKEMdOmbLyrozNgFscmaf5+FMddAOdmRNaAIgCAd8ZW3mDR4N
-	0nROBI1DqEAH5v1DyCDYzJzehzDOw/CEQBNh5ff+DR5ah8WtoE1xWOGf5jU9af/pulBXXKqOyXx
-	F5l5zNPvqr/iWT5CH6PEk23xBP
-X-Google-Smtp-Source: AGHT+IGL4SmQgIAC10xipCYbVaexIQbpQQDDIqhx2hGeOo7wq1KUJ/UwijMW6vgDIGzhCGOUFwEwrakNbbsm+km09q4=
-X-Received: by 2002:a05:6214:240f:b0:6df:99f7:a616 with SMTP id
- 6a1803df08f44-6e4455d2fdemr247845286d6.2.1739227837669; Mon, 10 Feb 2025
- 14:50:37 -0800 (PST)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 10 Feb 2025 16:50:37 -0600
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 10 Feb 2025 16:50:37 -0600
+        bh=kzD9w/10Tg/Dbaxqt0ZLJaS8jBU14ki/gg5wLfoid+o=;
+        b=vXMe7zqsLWrImiEFx+qJwLfQUO1d9BPBSW6HuCQdTa3IqEuPPw4IvBM+2Z525mJBay
+         RG35bSUi6Uoe/vd9UEBe7kQaxK78P7/W5EWyjKucBQ03YwH9+S+EisR1RTRp+oBoTcNW
+         +e/I+JG9EqrUm2qemk0yROkSYixO8Zj4G8gXwVq7fLpqZ+eeRos4so+rw+ScIm8QdW/D
+         uSL8zm9XD6bb041u1SN/cO8LzrSNGCvCOa1iWJ5E54PVHRzXhyKfIv7neHwt/Ax9wckX
+         RpCxvYIuPTGLVsXVm9qV3JfLuFeaZvlNdUxcY5a1s6grT/wz90ie8V3nZpWSKrQaqnjO
+         v8bg==
+X-Forwarded-Encrypted: i=1; AJvYcCWIUMEDVb3lFD19Zqm5Iph7N5rxYEgJgKBFXmxJKFegSDuITSXkp7mc1zyKcvgMeBJnyXHEJ7SrN66GmG0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEDVW+bPdHM2DU0rxwfyM2PQL3qhdl6YI9x5cqCzQVqX4UlES+
+	GBbw5isb3gVoM0suHiY9zNJ2hK64lAut/SZ2QznmwnDOGzZqqsDIhpEqNGbQEg==
+X-Gm-Gg: ASbGncvsl66c1q/rRJrsVOMbI8F5CCN8P/6W3BX5aIzT4vA1FJCUqrGM8H8OendJjZ5
+	I8iAGTEx/tjRjSINWd4J19sIsa/Uc1b6Au0TIKL/Us70Ifv+25VYpUxYldY3IB4NJp8r2H/d/1Z
+	bT3FXYBd+DNsZEoboc3zEmP6KNpQkeCgHoxuPVoksp2F1QgEutVwJu4z2R+8v3ar1bErsFEOKKS
+	ar82eJ05MfHUdJjeeE+HdpjDfFJxIIJZA41Nsc1wMYZu6pOJvNtJMyXiFYCQnJ2TdaFABBepO15
+	aTd5srgAwBCwZh/OU2/SnAFlTFISh4ptugC/XtcB1ubt28CW2m+GJQ==
+X-Google-Smtp-Source: AGHT+IF3MLc1SEMp/5ggqyCFt3vZ33zwtCZnr32F33srmpgWaKSJcp4xjwvbrjeQxnAK8XCWIX7FIA==
+X-Received: by 2002:a17:902:ce08:b0:212:26e:1b46 with SMTP id d9443c01a7336-21fbb511b0bmr260955ad.23.1739227876395;
+        Mon, 10 Feb 2025 14:51:16 -0800 (PST)
+Received: from google.com (147.141.16.34.bc.googleusercontent.com. [34.16.141.147])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f368d8ccbsm84732645ad.255.2025.02.10.14.51.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 14:51:15 -0800 (PST)
+Date: Mon, 10 Feb 2025 22:51:11 +0000
+From: Peilin Ye <yepeilin@google.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: bpf <bpf@vger.kernel.org>,
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+	bpf@ietf.org, Xu Kuohai <xukuohai@huaweicloud.com>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	David Vernet <void@manifault.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Ilya Leoshkevich <iii@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Quentin Monnet <qmo@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Yingchi Long <longyingchi24s@ict.ac.cn>,
+	Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>,
+	Neel Natu <neelnatu@google.com>,
+	Benjamin Segall <bsegall@google.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH bpf-next v2 4/9] bpf: Introduce load-acquire and
+ store-release instructions
+Message-ID: <Z6qC303CzfUMN8nV@google.com>
+References: <cover.1738888641.git.yepeilin@google.com>
+ <d03d8c3305e311c6cb29924119b5eecae8370bbc.1738888641.git.yepeilin@google.com>
+ <CAADnVQ+L0h8qXfYkC3+ORyQkXFJ2MgO8FDHr_Ha0QMAtS_ujag@mail.gmail.com>
+ <Z6gRHDLfA7cjnlSn@google.com>
+ <CAADnVQLkHA9LGv99k2TZOJEGUU=dw=q6nVurJ=aoh0v6cFS6zQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <87895166-659e-475f-99bf-5791a6e1ac3b@oss.qualcomm.com>
-References: <20250205233016.1600517-1-swboyd@chromium.org> <20250205233016.1600517-2-swboyd@chromium.org>
- <74527323-31ff-4ed0-b19f-e535f26abf2b@oss.qualcomm.com> <CAE-0n50DXcAXQMaLtsamvxHjUrkJVBz42G6gtgKgW9Rh=qd31Q@mail.gmail.com>
- <87895166-659e-475f-99bf-5791a6e1ac3b@oss.qualcomm.com>
-From: Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.12.dev1+gaa8c22fdeedb
-Date: Mon, 10 Feb 2025 16:50:37 -0600
-X-Gm-Features: AWEUYZmtYYT334_kTXnpfDawnzC3OarpU1PJNDWzV_jXYgahC0sPCiJwqwU3_-I
-Message-ID: <CAE-0n51zc65GSm5J9TbHe_g4reos2h_iv-ozMU6CCrAuOt3Kww@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: chrome: Add binding for ChromeOS Pogo
- pin connector
-To: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
-	Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	patches@lists.linux.dev, cros-qcom-dts-watchers@chromium.org, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Benson Leung <bleung@chromium.org>, devicetree@vger.kernel.org, 
-	chrome-platform@lists.linux.dev, Pin-yen Lin <treapking@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAADnVQLkHA9LGv99k2TZOJEGUU=dw=q6nVurJ=aoh0v6cFS6zQ@mail.gmail.com>
 
-Quoting Konrad Dybcio (2025-02-10 11:09:57)
-> On 6.02.2025 9:43 PM, Stephen Boyd wrote:
+Hi Alexei,
+
+On Sat, Feb 08, 2025 at 07:46:54PM -0800, Alexei Starovoitov wrote:
+> > Got it!  In v3, I'll change it back to:
 > >
-> > Do you have a device that could use such a generic binding? I can't
-> > really design something in the abstract without two or more concrete use
-> > cases. Coming up with something generic looks like a quagmire, because
-> > as you say the signals going through the pins could be anything: i2c,
-> > 1-wire, etc.
->
-> Right, we can't be overly generic either. FWIW I'm not standing in the way
-> of this patch getting merged.
->
+> >   #define BPF_LOAD_ACQ   0x10
+> >   #define BPF_STORE_REL  0x20
+> 
+> why not 1 and 2 ?
 
-Ok, got it. I've renamed this to google,usb-pogo-keyboard and made it
-keyboard specific. I'll send v3 shortly.
+I just realized that we can't do 1 and 2 because BPF_ADD | BPF_FETCH
+also equals 1.
+
+> All other bits are reserved and the verifier will make sure they're zero
+
+IOW, we can't tell if imm<4-7> is reserved or BPF_ADD (0x00).  What
+would you suggest?  Maybe:
+
+  #define BPF_ATOMIC_LD_ST 0x10
+
+  #define BPF_LOAD_ACQ      0x1
+  #define BPF_STORE_REL     0x2
+
+?
+
+> , so when/if we need to extend it then it wouldn't matter whether
+> lower 4 bits are reserved or other bits.
+> Say, we decide to support cmpwait_relaxed as a new insn.
+> It can take the value 3 and arm64 JIT will map it to ldxr+wfe+...
+> 
+> Then with this new load_acq and cmpwait_relaxed we can efficiently
+> implement both smp_cond_load_relaxed and smp_cond_load_acquire.
+
+Thanks,
+Peilin Ye
+
