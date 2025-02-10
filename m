@@ -1,116 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1C21C54AF;
-	Mon, 10 Feb 2025 10:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4271C549F
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739182021; cv=none; b=hNcLXTCep0qNZUlliWPQSZLys+v/E/EO7Zl2zPGOnT3IQx6nXkDBEctJAoW5pq89e4xsT5K4cnkt3S686WM2YOlAuMoCg2TY/D0bZdXmLYMU4Bq+OFdAy6Wo2B/DwBpnTuLXuB5fvttmOYeDpSVximpqodaHJpxXxDOo/KLh1Yc=
+	t=1739182041; cv=none; b=f+sfDJdRUIqDJhZAlo6twlzN4zr79WfexeVmzHGCSSeY/HutD07fQbtuud+hn5H3RjhrRsKT+ISmp2qT6MzYqF/vQmOSsZp7apMAIG3Woeil4bVDZeIcZ4hi9IMEe9HI1+8QLgUW4V378mSzVU+yVHDqtdj2wc00/JnliOVScto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739182021; c=relaxed/simple;
-	bh=5uoVeSj0QN4EeZcCrlskyNvROXSluRl4IF+26szp08I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NtVEttD/OsX2Af/yh5fOHPfEyoR2y0DF4dH4gtY+Z4nyXbs7/HQPVcsV55lXCSQxSYdoj/8IEq+FvoP1MsFeqYIX6+Kw+GeaDZB04nNoaAQODGtsiIGh2aLdXWbkEviP4JDi1BT6IIh5nkl59uE30sPhYaSmM0Q4l3WycDS24ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kcs5z9wH; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739182041; c=relaxed/simple;
+	bh=ny/2I4P8Qeno3VDTuyHtRGX8vHu9TzocogF/fmfxgy8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cHazdLwbVnYkl0C/W+04qQRSxy5K7SnIBfLaZ9cfVcHGIu/2K3kwIg/Yy4zO/47WMJrw5OvKeXONIRlBt1bpD9YdLq9zQXV07YXnDAwx2suFCANriMM1wGpmt62CMQNrOMyrKyuyrDxgf68iopp/KtU2EiZzyU/MkS701IzN0ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=c02SMLqg; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kcs5z9wH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739182020; x=1770718020;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=5uoVeSj0QN4EeZcCrlskyNvROXSluRl4IF+26szp08I=;
-  b=kcs5z9wHLHeh+oVGEtJrqvRYRRLDCb4vbj/upCCm8jyNEL8njo1TlLIP
-   rAZ2NumUDroMEQu9f9gYHYsmYcD+vy9/HIT4TdLQC7X7Kvtj9W/audGBH
-   rsds0lK5Fs7Sqj4NGsOG0uoSIIFRYrKT4gvVZzqzfJiorxBVoLEY37PQL
-   VKWysPLdCOmk50jk41IxZoECd/zfIULTuuOAgaKJTi63kkN80wkqyCB9T
-   d+yTLAe4F10Ng2oshXGza+QwNWy7uXep2Gmm+zy064+314vglGFLGGYF6
-   T+bI/NkndkbBWULNp2Qzf67yHIzxJh1HxNEUBhddDLuafrDsJUXSakWmn
-   Q==;
-X-CSE-ConnectionGUID: gTZZ8kYRRByoLnHb4lfNKg==
-X-CSE-MsgGUID: k3aytTCqT0ymGwYD4edwtA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="39441232"
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="39441232"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 02:06:59 -0800
-X-CSE-ConnectionGUID: 7wCeTMN+S+WsBMFPG+3Jsg==
-X-CSE-MsgGUID: Ag8YuZa0Q8K+IdhuN1X07A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="116214442"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 10 Feb 2025 02:06:55 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1thQgn-0012Yd-1S;
-	Mon, 10 Feb 2025 10:06:53 +0000
-Date: Mon, 10 Feb 2025 18:06:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: =?iso-8859-1?Q?Andr=E9?= Apitzsch via B4 Relay <devnull+git.apitzsch.eu@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
-Subject: Re: [PATCH v3 2/2] media: i2c: dw9719: Add of_match table
-Message-ID: <202502101730.OtKFel6n-lkp@intel.com>
-References: <20250209-dw9761dts-v3-2-14d3f00f0585@apitzsch.eu>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="c02SMLqg"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739182037;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=zzp1WaG1POUvvccWRbF+ncZqgOZGseBWxYU9NWcpXLs=;
+	b=c02SMLqgN1gpepKc/mxxuzLgp8mK9gTEhsw0r+h6m+9C5Khfrb1tengXQJT1ury1V0kCfV
+	iX3yWec4waM95BSGt5vw0CaejgZK/IFw95Q8JUgSSxPZSXQ8S62QLzfLOvGJD31v7nMzwB
+	2+h9Dfz78pYnbr9dLfA/D0K7tj/nRXs=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] powerpc/mm/fault: Use str_write_read() helper function
+Date: Mon, 10 Feb 2025 11:06:46 +0100
+Message-ID: <20250210100648.1440-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250209-dw9761dts-v3-2-14d3f00f0585@apitzsch.eu>
+X-Migadu-Flow: FLOW_OUT
 
-Hi André,
+Remove hard-coded strings by using the str_write_read() helper function.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ arch/powerpc/mm/fault.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-[auto build test WARNING on 8f6629c004b193d23612641c3607e785819e97ab]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Andr-Apitzsch-via-B4-Relay/dt-bindings-media-i2c-Add-DW9719-and-DW9761-VCM/20250210-055506
-base:   8f6629c004b193d23612641c3607e785819e97ab
-patch link:    https://lore.kernel.org/r/20250209-dw9761dts-v3-2-14d3f00f0585%40apitzsch.eu
-patch subject: [PATCH v3 2/2] media: i2c: dw9719: Add of_match table
-config: x86_64-randconfig-161-20250210 (https://download.01.org/0day-ci/archive/20250210/202502101730.OtKFel6n-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250210/202502101730.OtKFel6n-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502101730.OtKFel6n-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/media/i2c/dw9719.c:363:34: warning: 'dw9719_of_table' defined but not used [-Wunused-const-variable=]
-     363 | static const struct of_device_id dw9719_of_table[] = {
-         |                                  ^~~~~~~~~~~~~~~
-
-
-vim +/dw9719_of_table +363 drivers/media/i2c/dw9719.c
-
-   362	
- > 363	static const struct of_device_id dw9719_of_table[] = {
-   364		{ .compatible = "dongwoon,dw9719" },
-   365		{ .compatible = "dongwoon,dw9761" },
-   366		{ }
-   367	};
-   368	MODULE_DEVICE_TABLE(of, dw9719_of_table);
-   369	
-
+diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+index c156fe0d53c3..806c74e0d5ab 100644
+--- a/arch/powerpc/mm/fault.c
++++ b/arch/powerpc/mm/fault.c
+@@ -17,6 +17,7 @@
+ #include <linux/kernel.h>
+ #include <linux/errno.h>
+ #include <linux/string.h>
++#include <linux/string_choices.h>
+ #include <linux/types.h>
+ #include <linux/pagemap.h>
+ #include <linux/ptrace.h>
+@@ -218,7 +219,7 @@ static bool bad_kernel_fault(struct pt_regs *regs, unsigned long error_code,
+ 	// Read/write fault blocked by KUAP is bad, it can never succeed.
+ 	if (bad_kuap_fault(regs, address, is_write)) {
+ 		pr_crit_ratelimited("Kernel attempted to %s user page (%lx) - exploit attempt? (uid: %d)\n",
+-				    is_write ? "write" : "read", address,
++				    str_write_read(is_write), address,
+ 				    from_kuid(&init_user_ns, current_uid()));
+ 
+ 		// Fault on user outside of certain regions (eg. copy_tofrom_user()) is bad
+@@ -625,7 +626,7 @@ static void __bad_page_fault(struct pt_regs *regs, int sig)
+ 	case INTERRUPT_DATA_STORAGE:
+ 	case INTERRUPT_H_DATA_STORAGE:
+ 		pr_alert("BUG: %s on %s at 0x%08lx\n", msg,
+-			 is_write ? "write" : "read", regs->dar);
++			 str_write_read(is_write), regs->dar);
+ 		break;
+ 	case INTERRUPT_DATA_SEGMENT:
+ 		pr_alert("BUG: %s at 0x%08lx\n", msg, regs->dar);
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.48.0
+
