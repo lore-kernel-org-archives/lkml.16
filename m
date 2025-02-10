@@ -1,147 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2978D1BD00C;
-	Mon, 10 Feb 2025 08:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D3C2F2E
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739175130; cv=none; b=S66b4QUMuqVVZ+/2kR5/mjV0sUJ60HtTSQtpBscDr67G65cEFFWMrJ93H+z9OvEoaeSKfSa1nDW6S6lL2G5o8/iOjRd5kfvNAdqCFLvwXPYs3sVhm8LZ1IgEoQM+HbQ009Y6hO1ycGIEkWBdORCvi2zHBO5f/OyJrxVz9JgIqLg=
+	t=1739175349; cv=none; b=kmqKRBaVjV0VSolQ3oFXlm7qo5RWlmW/Ntsi/7hmrspGb+vNYDaIUMaRMZ+u3M+w8691caEMfbQ+cZ9fWsvmzCjcm7xPh+EcnDl3bqZ5e4o+nanMEtPWLy3uRSAP0Gqd8eh8zQ/raW6SgV+wKj8OrTviWqnLTOyTyM5GgOSptaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739175130; c=relaxed/simple;
-	bh=s/wEQHp9D4HLcuK43KrByU9JTfmtEf3h3muu17wBL+c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oX2MkmyWCXWtBQc1ird/4SJouVgVkOwp/BpZhIU86BIUjZv1HcirBLc8bxGGOEju+KTWHlYuvMO34BQBxEuA0Hu40mWWIZG9eANmOiliyFXT2SOvq7zXwU7gLR6ul8HunD54ZZVRFTg+m4XZ6T0OX86XiYh+Qpkd+P2BEvShTWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fx287jsE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739175349; c=relaxed/simple;
+	bh=nhBe7JI6RHHOjcxbUYkg7spziIQy6QIjVwXBPoW/sFc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EUzHS7G1p4jai4pRN4w9ayHW32RcGnZFwuygpB6vHX6ahe7KlUM6PGAGuk+yAH3tI3Ra6W5bhy4q1r+vfzJyoYMkXAankGxAtI3hPksYJsule6zuUa20o67Z5hVGjshkDVZ8g+//trdZuK/fr+MObW87o527hnLxvaNa6ZtinrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iomRLUpc; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fx287jsE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30DA8C4CED1;
-	Mon, 10 Feb 2025 08:12:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739175129;
-	bh=s/wEQHp9D4HLcuK43KrByU9JTfmtEf3h3muu17wBL+c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fx287jsEyQasQIyD4qa+rI97L+iVffHU9GlRG9zDZciMWXk2FiKEweFtBbFb7RrUe
-	 O5o4Zz9RPrKVFIRmtbkk3QXvTy9HkhKX8x20IfQRfw0xBoCuGg/BVSSRMa0aGzhk0m
-	 DGc1paLZ4xUh4N1ZSQayQ6wxWIHN+dW0RFgub6xPLl9V2rnxCuyUTHGoZnO1ShW4mE
-	 SqMHjT3oFwULCgZAHnQyOEv3aArnEqhaxv5C4C7ZS5pBmTuSoO/2P6cAJonjMh/OgD
-	 hpTMto5BG3SKKCIj/prGxIcSiH8COi8hohTcTWvVwBqBS7ihFMuQa1xB8gZLpsulI3
-	 NVqzN6Xn+B0Xg==
-Message-ID: <3e69dc53-cf05-479b-9707-eabc2eae9291@kernel.org>
-Date: Mon, 10 Feb 2025 09:12:01 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iomRLUpc"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2fa2c1ab145so4687088a91.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 00:15:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739175347; x=1739780147; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9Ml4rSKpiSvTQQDtnOz6xcoonf4YdYnP7/dhLitCjHE=;
+        b=iomRLUpcENx84iQC1XB+JbImwVoZbdeP7YTKWsLgjnfDCcPUnqtNyPq2UNBqPiWIDh
+         uzREu55RJgPLKfGUdRCt0ypQjPvSsW52GVUgaDA3dyT4r5RvDGlxyAk7ncidiRC7S4G0
+         t1TGn7W3ZreelKZsaKUbWZ9lpZFpX01ODW7DJEByjZmibJFNT6WQQWIV1mccuBrqfXJJ
+         vAcKXr0bHtZWevHZZ9QYl2ncoMQ9rG34l3wx9hfjcO4V6S/aprdYzZBbI8ByDTRuGi4a
+         8VmmCKjb0l5xCk0gy6RpD8QitbACRxfCq9e9GQwgT0t+2ZKWflBAqgB5v24Qg4rjQje+
+         RaGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739175347; x=1739780147;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9Ml4rSKpiSvTQQDtnOz6xcoonf4YdYnP7/dhLitCjHE=;
+        b=B2Wqo0OIXFBmZSBRmAS0onz+4xdrGL0MQBjqXIaqjDQJ+3ds5LsScGXziAhfv151b8
+         mS2oy++w/YX69EkGRhRGf56Kn0Od3Owo1mkLRUCRoY6QlmIfftezn0T1D+hbiX65cove
+         YQfDcSGCatNsdBkmS+HCYh8rDGHu7HNNVpvfz9aJ5u95+ik+JzcJWQvkhFZG2GT/LDQ6
+         IhTZNfJQiDYm8+GcZy8kyQ3cnfFitJjcZEGORKJjm9X2WxsaYFiaPhQj4KM6e6FISJnw
+         o8VC6OWjP+m9D1z7iUdKP9DcZhzTjtjBF5j9pLRh1YFcDj/VWU2lOeovHsQc0DrFZ/9a
+         AeIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU32qt5lqkMEKOol2XANmVArMJnGUVynjB8In7YTweJ7oH0a8qyRLrOW8gzxucCb1B/StA9U4NLWbfLcbc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPb71iIT6bM3Ieg0oTQwPau4jMKxVSCR2GLygMzi/j+K1tFSgu
+	D18c87pcy+EkkzSdBGcHNk5mEEkAw7a/FnR4gq16PS0ovy9IJ3qn
+X-Gm-Gg: ASbGncuPAafpzEIxBgcrKNSYBDK7zYrwhvTYdXa/Ql7DkjKrzFcVADaRXRgr8fqGbCe
+	VjnVpYjpcfjG+RgMfePvaupo2ETiI07E4j/8Qumuxj1cl7aYijkxVHoSgQC6mPer4aj0BPmMpQO
+	fI1gQpxbAonQrTmmpRco/GWcujpJ5Ah8V0EaUvu3RwYDlv76yXKdXLFitlNnrtTfEnZWc3FmhKB
+	o18bQegoacbthigEii0XKXlM71hCMD3ieuS0PMTCQRbUC7eNC5Kf70MK8SSkf7ffec3KFNtUauQ
+	+M9Jy5Hj4kMobT3Z5DM1Q9x89u55gy51
+X-Google-Smtp-Source: AGHT+IGoDbkTWPSTheqmeHSujVB/iFFj1uuZWFHQ5fFwT+0nDgJOHi3qnHnnI5ud8S3TbwU/4YE/Rg==
+X-Received: by 2002:a05:6a00:2308:b0:730:8d0c:1066 with SMTP id d2e1a72fcca58-7308d0c27ebmr5251641b3a.24.1739175346752;
+        Mon, 10 Feb 2025 00:15:46 -0800 (PST)
+Received: from vaxr-BM6660-BM6360 ([2001:288:7001:2703:83e6:5a50:60c5:d373])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7308aa3a1cfsm1799436b3a.137.2025.02.10.00.15.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 00:15:46 -0800 (PST)
+Date: Mon, 10 Feb 2025 16:15:38 +0800
+From: I Hsin Cheng <richard120310@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: pmladek@suse.com, rostedt@goodmis.org, linux@rasmusvillemoes.dk,
+	senozhatsky@chromium.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, jserv@ccns.ncku.edu.tw,
+	shuah@kernel.org
+Subject: Re: [PATCH] vsprintf: Drop unused assignment of fmt.state
+Message-ID: <Z6m1qtlyCece4e2g@vaxr-BM6660-BM6360>
+References: <20250205172508.55358-1-richard120310@gmail.com>
+ <Z6TWEHvBF0HOxKsY@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Patchset status - 'Add support for Maxim Integrated MAX77705
- PMIC'
-To: Dzmitry Sankouski <dsankouski@gmail.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>,
- Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>,
- Hans de Goede <hdegoede@redhat.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Sebastian Krzyszkowiak <sebastian.krzyszkowiak@puri.sm>,
- Purism Kernel Team <kernel@puri.sm>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, linux-pm@vger.kernel.org,
- open list <linux-kernel@vger.kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, linux-input@vger.kernel.org,
- linux-leds@vger.kernel.org
-References: <CABTCjFBx-QpCKFWs5MPCgLAjJWT6ygrvS_A0nJk2BBxmWAxF+Q@mail.gmail.com>
- <e67c0375-1024-483b-aabf-6a11339ab9af@linaro.org>
- <CABTCjFBvYkEG0WYhCt6tP_cO8Ct82t0=UhwBefZEJrUiFc7vAw@mail.gmail.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <CABTCjFBvYkEG0WYhCt6tP_cO8Ct82t0=UhwBefZEJrUiFc7vAw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6TWEHvBF0HOxKsY@smile.fi.intel.com>
 
-On 10/02/2025 08:11, Dzmitry Sankouski wrote:
-> вс, 9 февр. 2025 г. в 22:38, Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org>:
->>
->> On 09/02/2025 15:13, Dzmitry Sankouski wrote:
->>> For the patchset I sent 2 weeks ago, [patchwork][1] shows status
->>> 'Handled Elsewhere, archived'. Is anything blocking it?
->>>
->>> [1]: https://patchwork.kernel.org/project/linux-pm/list/?series=927848&archive=both&state=*
->>
->> That's PM patchwork, not necessarily power supply. But anyway, what does
->> the cover letter say? Who do you expect to merge it? Above link does not
->> provide cover letter, unfortunately.
->>
+On Thu, Feb 06, 2025 at 05:32:32PM +0200, Andy Shevchenko wrote:
+> On Thu, Feb 06, 2025 at 01:25:07AM +0800, I Hsin Cheng wrote:
+> > Remove unused assignment of "fmt.state", in both cases the value of
+> > "fmt.state" will be overwritten by either "FORMAT_STATE_PRECISION" or
+> > "FORMAT_STATE_NUM", the value "FORMAT_STATE_NONE" isn't going to be used
+> > after the assignment.
 > 
-> I didn't found anything related to power supply in the list of mail lists at
-> https://subspace.kernel.org/vger.kernel.org.html.
+> ...
 > 
-> However I found my series in linux-input with New status.
+> > struct fmt format_decode(struct fmt fmt, struct printf_spec *spec)
 > 
-> Here is my cover letter:
-> https://lore.kernel.org/all/20250123-starqltechn_integration_upstream-v17-0-8b06685b6612@gmail.com/
-
-
-Nothing in cover letter gives any expectations or directions of merging,
-so maybe that was a factor here?
-
-
+> >  			spec->field_width = -spec->field_width;
+> >  			spec->flags |= LEFT;
+> >  		}
+> > -		fmt.state = FORMAT_STATE_NONE;
+> > +
+> >  		goto precision;
+> >  	}
+> >  
 > 
-> I guess I would expect a person from the MAINTAINERS list to merge it?  In that
-> case it would be Chanwoo Choi <cw00.choi@samsung.com> and
-> Krzysztof Kozlowski <krzk@kernel.org> from
-> MAXIM PMIC AND MUIC DRIVERS FOR EXYNOS BASED BOARDS entry.
+> While both are kinda redundant, this is not obvious what's stated in the commit
+> message. Yes, `goto qualifier;` is straightforward, but not `goto precision;`.
+> Which makes me think that these assignments can make code robust against
+> potential future changes to allow to catch up the wrong code paths.
+> 
+> Whatever maintainers decide, technically the change looks correct to me.
+> 
+> ...
+> 
+> >  		if (spec->precision < 0)
+> >  			spec->precision = 0;
+> >  
+> > -		fmt.state = FORMAT_STATE_NONE;
+> > +
+> 
+> What's the reason to add an extra blank line? (We have already one here)
+> 
+> >  		goto qualifier;
+> >  	}
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+>
 
-Haha, nice! :) There is no such subsystem. This cannot be taken by these
-maintainers because there is nowhere they could put it and no one would
-take it from them even if they did find the place.
+Hi Andy,
 
+Thanks for your kindly review!
+
+> What's the reason to add an extra blank line? (We have already one here)
+
+Well I think I didn't intentionally add a blank line here, I simply
+delete the assigment but left the line there. I'll have it deleted as
+well if the maintainers decided to make any change.
 
 Best regards,
-Krzysztof
+I Hsin Cheng
