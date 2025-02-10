@@ -1,200 +1,379 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FEC17591
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6884917591
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739183449; cv=none; b=WZjTm0m9ato5kFy1/R4OmJ64gcBrvZ363SNbSIM2Yu6D3LPeAVzJgkJBqT+734xyU6sCf45iCsT/rNUNazhrnEztb8l6rBjem1V1yDEaDKIoG7N1nMZRPQSJTZ3BUPOxdb2AlznssRd9S/TEyge84B1Rm5+uH4rcAxOqlX/V5YQ=
+	t=1739183563; cv=none; b=Xzok/pOv5I+BzNhgo9Y7VfhpRp+vEHbZ9ib6bj3LCb/6BOfcYyS0Y/0E63fViv8TXyUvC1LHIvzlcDyl2Yrk6wZdrhOdj5mb2gK35KqSl+9kU+Cp2JG+cCNOhWnRMs9TdVsM1U7AWbpupQ+Rm21Rhe7JRACPcmpMs2k9dh0PxZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739183449; c=relaxed/simple;
-	bh=9pjUKJOuSDqVDp6p2I40//S0ECRAIlGzSwl0sztV2Q4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lQ31VhhRRVDRTZgBeOGOvfpTms5bLL4bcPy/Qmy0koQQrmkSexKVaeppLUqI1xLPzlMBxkWJpI2CnfM7vJiq9WYUtquOsT7NF4XcdmE9oZJ609AF0HZn9nzdFM/tv5SZXopmG/ht1Ypas/DHVafTWPf2WTiZIXSTIM+o38NWz9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=imDF4h7y; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739183563; c=relaxed/simple;
+	bh=k6S24Di5Cdwbbg6ULAifEixC4TcQWv4S89+Lx7d6IdA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=dfawrBHVhdo2zZhnWl6vqztQwnITj5WQaHCGA+5dKsISTtRJo8dQwlgMy1y6NU31xpiGCY0cpLAxPppI4fjtUrABky+kL7E+2yUqyfJuQ2iJ/M4TPvPCVAwo6q1P33TwxiwCYqXXlHqw2Z9Sxq2RwghW2oS8aksLIrYgP4tl/Gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--chharry.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pAcJdZXF; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--chharry.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="imDF4h7y"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f74c4e586so25831745ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 02:30:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pAcJdZXF"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-21f90aec0fdso17658565ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 02:32:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739183447; x=1739788247; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jK2z+3W93YJTqVLKR8QxqcKHwGpafs0J+lhmxl8g/Co=;
-        b=imDF4h7y3xTau15BMmlmrAzVrsWP1odJWs1/2BX36PUxGjdwmMI3pa45rqLUHSLeyR
-         yEdIJywtkV4BlNtZTy9XvxrdonAGchEl7zNEJRZP6iHJJcyztbSQvW0e16uCEH+xFVfs
-         wYO9f+ezfF/xyw/hl+zj4KQBpBYocDBXtm2orVFhtMWLs94tDVnExsuf5KgG9RcDDl6d
-         f1mV+p+8eymhm9YS/UBEEzKVlYOkGeMT11NIt6cegK9q0Bv/dVO6LIURX66Qvp+yfBEs
-         VxKePVCZ6XFLJnqLcd5iQaBxj5bhZ7Yl+MbsaRnV2SUPKiJlyDb4olUt5nVUZlB9u8TE
-         HOsQ==
+        d=google.com; s=20230601; t=1739183561; x=1739788361; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=cYJwxxQlwIyZkX+HoEtBlpfUCxgrdmdHLu1+dW+gUMk=;
+        b=pAcJdZXF3R/aNYbY9bEZxjR4tzoyeNI+a231dY+o5I6xBXHrQn7t+2oM4ea27z6HUG
+         FJuuU49q8vwFHQnLs54CWY1vWIAPKZL3Edl9OEYZeFN1Mdk+kCSpof1fxHBqEG9B5WJ7
+         PRDEVNSejYC5Jm/bkOt9RVS/1wtHPQCU/Hx2OxIioVApvFRtU3FoqVKVWeTHILDzJ466
+         cI3Ll04HrMuj8e0B9dQg99Pev+GNM+J28gzZdRtkQYjhGIC6o854LE62qvTwHbCdEK9F
+         uF3zcxmczRc0c/cmrIixV9yQzfRDzNZ+j/hj/oJ2lY/m/6KcgyGZ5EgvGzMRpHISumII
+         7Wwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739183447; x=1739788247;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jK2z+3W93YJTqVLKR8QxqcKHwGpafs0J+lhmxl8g/Co=;
-        b=RvjnNAA9vdemRlzQDtNyAs/HDhey19OFbEut2c+bVu+Nn/e+u70J+EJdoE49HTmPeG
-         eI8okmPo6kUUPd4Zma/94Voh74tWzg8BBxQfoqq33YRKICNy0ignESSptOmGzqpdhHbc
-         wu+8XsS64NLsj1NDv1XQsMe3rVQemgTR+EazIDg/PuQio0Om857vwFNmA7ncOoygT1KK
-         QmhRqDxHnxSMwUOG6daoEtx63O/7IlryRLLZLIotZ+LIzRwWqou9XncS7+ARfQlXffp9
-         /jIzg6LlkN1NrXNJMVbvJ+8su1hB1ZLl+3MOiWSXl2TYY3qtyz8igYBotvhtxOBjjoTT
-         hhuw==
-X-Forwarded-Encrypted: i=1; AJvYcCUpW1LKtPho3O7YNqF5rRkD3qEo2hLLD9abX3PSYecIAe3daxg1WqQd74DMF+mgvAz2wmx8djkn6+NOric=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCLcjNv5/Z1eVqvL5mEKXjg2AaA9+zVjSuwXqBovpUAJpuyIF+
-	AozHkHG5pTBYVa0YBs4pB04ErAyDvZJwl6dR7E/Yr3KXZeQzRabq
-X-Gm-Gg: ASbGncuWKJdtK+HOMzz/b1KHX3XZdXFr5p4U91YI9uI5pkHxHjt5Q6fXidrW1WnHrbt
-	HXu0bI1NJMLpPDd4ISfZer4m8ISMQixVCb/XRAwWVJmaicRz9mdf4WkjKdhFF5vwcX0fkU5AWIP
-	D7nXMRaSdaw6j72ZT+XoaLBvxEt45qvYtMP++XWj9sj+j/j9Cief14LAX4J9osqODQqrtpE6Y/E
-	DOOe2RrNwM92uv2lSYDgljZfoj/Qu054biiA4rUF/nk896rWSNgYEr/tdOdC9HKoO5++tQmihhu
-	45VNfqKjPAeAb1KrLEMwo8GQ1qd2V6v3jrE=
-X-Google-Smtp-Source: AGHT+IEn+BoKGykAvJNVQpRVzvJGhHbexDYEwxOwlMOHsnic1NQSpayoDxRXI6TxQXXkZV3KTx7Wew==
-X-Received: by 2002:a17:902:d4c6:b0:21f:53a5:19de with SMTP id d9443c01a7336-21f53a52947mr189925345ad.25.1739183447095;
-        Mon, 10 Feb 2025 02:30:47 -0800 (PST)
-Received: from vaxr-BM6660-BM6360.. ([2001:288:7001:2703:83e6:5a50:60c5:d373])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f36560ee5sm74783415ad.96.2025.02.10.02.30.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 02:30:46 -0800 (PST)
-From: I Hsin Cheng <richard120310@gmail.com>
-To: peterz@infradead.org
-Cc: mingo@redhat.com,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	linux-kernel@vger.kernel.org,
-	nysal@linux.ibm.com,
-	jserv@ccns.ncku.edu.tw,
-	I Hsin Cheng <richard120310@gmail.com>
-Subject: [RFC PATCH v2 RESEND] sched/fair: Refactor can_migrate_task() to elimate looping
-Date: Mon, 10 Feb 2025 18:30:18 +0800
-Message-ID: <20250210103019.283824-1-richard120310@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1739183561; x=1739788361;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cYJwxxQlwIyZkX+HoEtBlpfUCxgrdmdHLu1+dW+gUMk=;
+        b=ubUXpMX8JBqjY67hF5IJE743t101YC0jBAC2/CSkEY/tWqIyywZZJLPjcqbAkMLjVE
+         jq6hWkQzRJZIHVD7eHX+XjePqAgYrfF4YbRKjtY31xmWjw/Jgv4jFtET90CK6OoSnGKg
+         +R1O8IuvJqIRK3jmyhwpTDH0V56e110VWo8jK/OwmdIzzipY40OBqyJ5YGNsOOaBbEu2
+         ZE7w2tNV/YMW32YNTO8gWZaHI/CJtAhfKl4PyjGFlemXYOsKIMdzlj3t2fqlvHifbEA1
+         V2KY9dtR+L7CdAqPLh1BvgrjDwqc37EVS0VnugDXpmUtSP/wkq0n5c5BhuQddY4ULzZc
+         fFWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWZ/mPc0+JgwtILFZL7Zc2TLbjQYdkTpNn5iM7gVD2nvxZENWIuQmx8fQED+4WpVUBzIRGCriQUdliUX8w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEJK8wil044kNKxeeuY+o5Q3JbcThQBkXwgWKL9LKs88K0oNWS
+	Nbd9lhdkNO5boEDrSF7caoAtqMEsc73NPCAFik0kW9spaKeUJwZye5AdVdESZZ7RYu1ShL28hzx
+	C1ZxTqQ==
+X-Google-Smtp-Source: AGHT+IHr9Ul6LuFDhqG7/temf6lJOMuZo29msAazGLl3VQJ6PsAB+BlbP4aMj/SS+SnKlMb6S2LlRIK2wDw3
+X-Received: from plaq3.prod.google.com ([2002:a17:903:2043:b0:216:2234:bf3e])
+ (user=chharry job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d2d0:b0:21f:797f:9f45
+ with SMTP id d9443c01a7336-21f797fa86bmr103526125ad.29.1739183560662; Mon, 10
+ Feb 2025 02:32:40 -0800 (PST)
+Date: Mon, 10 Feb 2025 18:32:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+Message-ID: <20250210183224.v3.1.If6f14aa2512336173a53fc3552756cd8a332b0a3@changeid>
+Subject: [PATCH v3 1/3] Bluetooth: Fix possible race with userspace of sysfs isoc_alt
+From: Hsin-chen Chuang <chharry@google.com>
+To: linux-bluetooth@vger.kernel.org, luiz.dentz@gmail.com
+Cc: chromeos-bluetooth-upstreaming@chromium.org, 
+	Hsin-chen Chuang <chharry@chromium.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Johan Hedberg <johan.hedberg@gmail.com>, Marcel Holtmann <marcel@holtmann.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Ying Hsu <yinghsu@chromium.org>, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The function "can_migrate_task()" utilize "for_each_cpu_and" with a
-"if" statement inside to find the destination cpu. It's the same logic
-to find the first set bit of the result of the bitwise-AND of
-"env->dst_grpmask", "env->cpus" and "p->cpus_ptr".
+From: Hsin-chen Chuang <chharry@chromium.org>
 
-Refactor it by using "cpumask_first_and_and()" to perform bitwise-AND
-for "env->dst_grpmask", "env->cpus" and "p->cpus_ptr" and pick the first
-cpu within the intersection as the destination cpu, so we can elimate
-the need of looping and multiple times of branch.
+Use device group to avoid the racing. To reuse the group defined in
+hci_sysfs.c, defined 2 callbacks switch_usb_alt_setting and
+read_usb_alt_setting which are only registered in btusb.
 
-After the refactoring this part of the code can speed up from ~115ns to
-~54ns, according to the test below.
-
-Ran the test for 5 times and the result is showned in the following
-table, and the test script is paste in next section.
-
--------------------------------------------------------
-|Old method|  130|  118|  115|  109|  106|  avg ~115ns|
--------------------------------------------------------
-|New method|   58|   55|   54|   48|   55|  avg  ~54ns|
--------------------------------------------------------
-
-Also compare code generation before and after the change using
-script/bloat-o-meter, result shown below
-
-$ ./scripts/bloat-o-meter fair_old.o fair_new.o 
-add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-85 (-85)
-Function                                     old     new   delta
-can_migrate_task                             519     434     -85
-Total: Before=45778, After=45693, chg -0.19%
-
-
-Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+Fixes: b16b327edb4d ("Bluetooth: btusb: add sysfs attribute to control USB alt setting")
+Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
 ---
-v1 -> v2:
-- Use cpumask_first_and_and()
-- Remove additional cpumask
-- Compare code generation with bloat-o-meter
 
-Test is done on Linux 6.9.0-0-generic x86_64 with
-Intel(R) Core(TM) i7-2600 CPU @ 3.40GHz
+Changes in v3:
+- Make the attribute exported only when the isoc_alt is available.
+- In btusb_probe, determine data->isoc before calling hci_alloc_dev_priv
+  (which calls hci_init_sysfs).
+- Since hci_init_sysfs is called before btusb could modify the hdev,
+  add new argument add_isoc_alt_attr for btusb to inform hci_init_sysfs.
 
-Test is executed in the form of kernel module.
+ drivers/bluetooth/btintel_pcie.c |  3 +-
+ drivers/bluetooth/btusb.c        | 69 +++++++++++---------------------
+ drivers/bluetooth/hci_serdev.c   |  2 +-
+ include/net/bluetooth/hci_core.h |  8 ++--
+ net/bluetooth/hci_core.c         |  4 +-
+ net/bluetooth/hci_sysfs.c        | 52 +++++++++++++++++++++++-
+ 6 files changed, 84 insertions(+), 54 deletions(-)
 
-Test script:
-
-int init_module(void)
-{
-    struct cpumask cur_mask, custom_mask;
-    struct task_struct *p = current;
-    int cpu, cpu1 = nr_cpu_ids, cpu2 = nr_cpu_ids;
-    unsigned tmp = 0;
-
-    cpumask_copy(&cur_mask, cpu_online_mask);
-    /* Self-implemented function, didn't paste here because the length */
-    generate_random_cpumask(&custom_mask);
-
-    ktime_t start_1 = ktime_get();
-    for_each_cpu_and(cpu, &cur_mask, &custom_mask) {
-        if (cpumask_test_cpu(cpu, p->cpus_ptr)) {
-            /* imitate load balance operation */
-            tmp |= 0x01010101;
-            cpu1 = cpu;
-            break;
-        }
-    }
-    ktime_t end_1 = ktime_get();
-
-    ktime_t start_2 = ktime_get();
-    cpu = cpumask_first_and_and(&cur_mask, &custom_mask, p->cpus_ptr);
-
-    if (cpu < nr_cpu_ids) {
-        /* imitate load balance operation */
-        tmp |= 0x01010101;
-        cpu2 = cpu;
-    }
-    ktime_t end_2 = ktime_get();
-
-    if (cpu1 != cpu2) {
-        pr_err("Failed Assertion, cpu1 = %d, cpu2 = %d\n", cpu1, cpu2);
-        return 0;
-    }
-
-    pr_info("Old method spend time : %lld\n", ktime_to_ns(end_1 - start_1));
-    pr_info("New method spend time : %lld\n", ktime_to_ns(end_2 - start_2));
-
-    return 0;
-}
----
- kernel/sched/fair.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 2d16c8545..d49960d50 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -9404,12 +9404,11 @@ int can_migrate_task(struct task_struct *p, struct lb_env *env)
- 			return 0;
+diff --git a/drivers/bluetooth/btintel_pcie.c b/drivers/bluetooth/btintel_pcie.c
+index b8b241a92bf9..856de070b440 100644
+--- a/drivers/bluetooth/btintel_pcie.c
++++ b/drivers/bluetooth/btintel_pcie.c
+@@ -1514,7 +1514,8 @@ static int btintel_pcie_setup_hdev(struct btintel_pcie_data *data)
+ 	int err;
+ 	struct hci_dev *hdev;
  
- 		/* Prevent to re-select dst_cpu via env's CPUs: */
--		for_each_cpu_and(cpu, env->dst_grpmask, env->cpus) {
--			if (cpumask_test_cpu(cpu, p->cpus_ptr)) {
--				env->flags |= LBF_DST_PINNED;
--				env->new_dst_cpu = cpu;
--				break;
--			}
-+		cpu = cpumask_first_and_and(env->dst_grpmask, env->cpus, p->cpus_ptr);
+-	hdev = hci_alloc_dev_priv(sizeof(struct btintel_data));
++	hdev = hci_alloc_dev_priv(sizeof(struct btintel_data),
++				  /* add_isoc_alt_attr = */ false);
+ 	if (!hdev)
+ 		return -ENOMEM;
+ 
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 1caf7a071a73..a451403c62eb 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -2247,6 +2247,13 @@ static int btusb_switch_alt_setting(struct hci_dev *hdev, int new_alts)
+ 	return 0;
+ }
+ 
++static int btusb_read_alt_setting(struct hci_dev *hdev)
++{
++	struct btusb_data *data = hci_get_drvdata(hdev);
 +
-+		if (cpu < nr_cpu_ids) {
-+			env->flags |= LBF_DST_PINNED;
-+			env->new_dst_cpu = cpu;
- 		}
++	return data->isoc_altsetting;
++}
++
+ static struct usb_host_interface *btusb_find_altsetting(struct btusb_data *data,
+ 							int alt)
+ {
+@@ -3676,32 +3683,6 @@ static const struct file_operations force_poll_sync_fops = {
+ 	.llseek		= default_llseek,
+ };
  
- 		return 0;
+-static ssize_t isoc_alt_show(struct device *dev,
+-			     struct device_attribute *attr,
+-			     char *buf)
+-{
+-	struct btusb_data *data = dev_get_drvdata(dev);
+-
+-	return sysfs_emit(buf, "%d\n", data->isoc_altsetting);
+-}
+-
+-static ssize_t isoc_alt_store(struct device *dev,
+-			      struct device_attribute *attr,
+-			      const char *buf, size_t count)
+-{
+-	struct btusb_data *data = dev_get_drvdata(dev);
+-	int alt;
+-	int ret;
+-
+-	if (kstrtoint(buf, 10, &alt))
+-		return -EINVAL;
+-
+-	ret = btusb_switch_alt_setting(data->hdev, alt);
+-	return ret < 0 ? ret : count;
+-}
+-
+-static DEVICE_ATTR_RW(isoc_alt);
+-
+ static int btusb_probe(struct usb_interface *intf,
+ 		       const struct usb_device_id *id)
+ {
+@@ -3821,7 +3802,20 @@ static int btusb_probe(struct usb_interface *intf,
+ 
+ 	data->recv_acl = hci_recv_frame;
+ 
+-	hdev = hci_alloc_dev_priv(priv_size);
++	if (id->driver_info & BTUSB_AMP) {
++		/* AMP controllers do not support SCO packets */
++		data->isoc = NULL;
++	} else {
++		/* Interface orders are hardcoded in the specification */
++		data->isoc = usb_ifnum_to_if(data->udev, ifnum_base + 1);
++		data->isoc_ifnum = ifnum_base + 1;
++	}
++
++	if (id->driver_info & BTUSB_BROKEN_ISOC)
++		data->isoc = NULL;
++
++	hdev = hci_alloc_dev_priv(priv_size,
++				  /* add_isoc_alt_attr = */ data->isoc);
+ 	if (!hdev)
+ 		return -ENOMEM;
+ 
+@@ -3969,15 +3963,6 @@ static int btusb_probe(struct usb_interface *intf,
+ 		hci_set_msft_opcode(hdev, 0xFD70);
+ 	}
+ 
+-	if (id->driver_info & BTUSB_AMP) {
+-		/* AMP controllers do not support SCO packets */
+-		data->isoc = NULL;
+-	} else {
+-		/* Interface orders are hardcoded in the specification */
+-		data->isoc = usb_ifnum_to_if(data->udev, ifnum_base + 1);
+-		data->isoc_ifnum = ifnum_base + 1;
+-	}
+-
+ 	if (IS_ENABLED(CONFIG_BT_HCIBTUSB_RTL) &&
+ 	    (id->driver_info & BTUSB_REALTEK)) {
+ 		btrtl_set_driver_name(hdev, btusb_driver.name);
+@@ -4010,9 +3995,6 @@ static int btusb_probe(struct usb_interface *intf,
+ 			set_bit(HCI_QUIRK_FIXUP_BUFFER_SIZE, &hdev->quirks);
+ 	}
+ 
+-	if (id->driver_info & BTUSB_BROKEN_ISOC)
+-		data->isoc = NULL;
+-
+ 	if (id->driver_info & BTUSB_WIDEBAND_SPEECH)
+ 		set_bit(HCI_QUIRK_WIDEBAND_SPEECH_SUPPORTED, &hdev->quirks);
+ 
+@@ -4066,9 +4048,8 @@ static int btusb_probe(struct usb_interface *intf,
+ 		if (err < 0)
+ 			goto out_free_dev;
+ 
+-		err = device_create_file(&intf->dev, &dev_attr_isoc_alt);
+-		if (err)
+-			goto out_free_dev;
++		hdev->switch_usb_alt_setting = btusb_switch_alt_setting;
++		hdev->read_usb_alt_setting = btusb_read_alt_setting;
+ 	}
+ 
+ 	if (IS_ENABLED(CONFIG_BT_HCIBTUSB_BCM) && data->diag) {
+@@ -4115,10 +4096,8 @@ static void btusb_disconnect(struct usb_interface *intf)
+ 	hdev = data->hdev;
+ 	usb_set_intfdata(data->intf, NULL);
+ 
+-	if (data->isoc) {
+-		device_remove_file(&intf->dev, &dev_attr_isoc_alt);
++	if (data->isoc)
+ 		usb_set_intfdata(data->isoc, NULL);
+-	}
+ 
+ 	if (data->diag)
+ 		usb_set_intfdata(data->diag, NULL);
+diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
+index 89a22e9b3253..41a4a91be4b8 100644
+--- a/drivers/bluetooth/hci_serdev.c
++++ b/drivers/bluetooth/hci_serdev.c
+@@ -326,7 +326,7 @@ int hci_uart_register_device_priv(struct hci_uart *hu,
+ 	set_bit(HCI_UART_PROTO_READY, &hu->flags);
+ 
+ 	/* Initialize and register HCI device */
+-	hdev = hci_alloc_dev_priv(sizeof_priv);
++	hdev = hci_alloc_dev_priv(sizeof_priv, /* add_isoc_alt_attr = */ false);
+ 	if (!hdev) {
+ 		BT_ERR("Can't allocate HCI device");
+ 		err = -ENOMEM;
+diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+index 05919848ea95..2a596ea40308 100644
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -641,6 +641,8 @@ struct hci_dev {
+ 				     struct bt_codec *codec, __u8 *vnd_len,
+ 				     __u8 **vnd_data);
+ 	u8 (*classify_pkt_type)(struct hci_dev *hdev, struct sk_buff *skb);
++	int (*switch_usb_alt_setting)(struct hci_dev *hdev, int new_alts);
++	int (*read_usb_alt_setting)(struct hci_dev *hdev);
+ };
+ 
+ #define HCI_PHY_HANDLE(handle)	(handle & 0xff)
+@@ -1686,11 +1688,11 @@ static inline void *hci_get_priv(struct hci_dev *hdev)
+ struct hci_dev *hci_dev_get(int index);
+ struct hci_dev *hci_get_route(bdaddr_t *dst, bdaddr_t *src, u8 src_type);
+ 
+-struct hci_dev *hci_alloc_dev_priv(int sizeof_priv);
++struct hci_dev *hci_alloc_dev_priv(int sizeof_priv, bool add_isoc_alt_attr);
+ 
+ static inline struct hci_dev *hci_alloc_dev(void)
+ {
+-	return hci_alloc_dev_priv(0);
++	return hci_alloc_dev_priv(0, /* add_isoc_alt_attr = */ false);
+ }
+ 
+ void hci_free_dev(struct hci_dev *hdev);
+@@ -1843,7 +1845,7 @@ int hci_get_adv_monitor_offload_ext(struct hci_dev *hdev);
+ 
+ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb);
+ 
+-void hci_init_sysfs(struct hci_dev *hdev);
++void hci_init_sysfs(struct hci_dev *hdev, bool add_isoc_alt_attr);
+ void hci_conn_init_sysfs(struct hci_conn *conn);
+ void hci_conn_add_sysfs(struct hci_conn *conn);
+ void hci_conn_del_sysfs(struct hci_conn *conn);
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index e7ec12437c8b..7c90391721ba 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -2405,7 +2405,7 @@ static int hci_suspend_notifier(struct notifier_block *nb, unsigned long action,
+ }
+ 
+ /* Alloc HCI device */
+-struct hci_dev *hci_alloc_dev_priv(int sizeof_priv)
++struct hci_dev *hci_alloc_dev_priv(int sizeof_priv, bool add_isoc_alt_attr)
+ {
+ 	struct hci_dev *hdev;
+ 	unsigned int alloc_size;
+@@ -2530,7 +2530,7 @@ struct hci_dev *hci_alloc_dev_priv(int sizeof_priv)
+ 
+ 	hci_devcd_setup(hdev);
+ 
+-	hci_init_sysfs(hdev);
++	hci_init_sysfs(hdev, add_isoc_alt_attr);
+ 	discovery_init(hdev);
+ 
+ 	return hdev;
+diff --git a/net/bluetooth/hci_sysfs.c b/net/bluetooth/hci_sysfs.c
+index 041ce9adc378..3242f1ce00b2 100644
+--- a/net/bluetooth/hci_sysfs.c
++++ b/net/bluetooth/hci_sysfs.c
+@@ -102,6 +102,38 @@ static ssize_t reset_store(struct device *dev, struct device_attribute *attr,
+ }
+ static DEVICE_ATTR_WO(reset);
+ 
++static ssize_t isoc_alt_show(struct device *dev,
++			     struct device_attribute *attr,
++			     char *buf)
++{
++	struct hci_dev *hdev = to_hci_dev(dev);
++
++	if (hdev->read_usb_alt_setting)
++		return sysfs_emit(buf, "%d\n", hdev->read_usb_alt_setting(hdev));
++
++	return -ENODEV;
++}
++
++static ssize_t isoc_alt_store(struct device *dev,
++			      struct device_attribute *attr,
++			      const char *buf, size_t count)
++{
++	struct hci_dev *hdev = to_hci_dev(dev);
++	int alt;
++	int ret;
++
++	if (kstrtoint(buf, 10, &alt))
++		return -EINVAL;
++
++	if (hdev->switch_usb_alt_setting) {
++		ret = hdev->switch_usb_alt_setting(hdev, alt);
++		return ret < 0 ? ret : count;
++	}
++
++	return -ENODEV;
++}
++static DEVICE_ATTR_RW(isoc_alt);
++
+ static struct attribute *bt_host_attrs[] = {
+ 	&dev_attr_reset.attr,
+ 	NULL,
+@@ -114,11 +146,27 @@ static const struct device_type bt_host = {
+ 	.groups = bt_host_groups,
+ };
+ 
+-void hci_init_sysfs(struct hci_dev *hdev)
++static struct attribute *bt_host_isoc_alt_attrs[] = {
++	&dev_attr_reset.attr,
++	&dev_attr_isoc_alt.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(bt_host_isoc_alt);
++
++static const struct device_type bt_host_isoc_alt = {
++	.name    = "host",
++	.release = bt_host_release,
++	.groups  = bt_host_isoc_alt_groups,
++};
++
++void hci_init_sysfs(struct hci_dev *hdev, bool add_isoc_alt_attr)
+ {
+ 	struct device *dev = &hdev->dev;
+ 
+-	dev->type = &bt_host;
++	if (add_isoc_alt_attr)
++		dev->type = &bt_host_isoc_alt;
++	else
++		dev->type = &bt_host;
+ 	dev->class = &bt_class;
+ 
+ 	__module_get(THIS_MODULE);
 -- 
-2.43.0
+2.48.1.502.g6dc24dfdaf-goog
 
