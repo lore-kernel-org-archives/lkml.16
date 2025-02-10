@@ -1,101 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ACF318E764;
-	Mon, 10 Feb 2025 08:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2CA1B87E4
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739174995; cv=none; b=Ku/lgGhJvUguytIOhan7Il9F2NBrGVwHi9WoEbP4WjtWperB5uCuYXWFBm9WTfarwba5BHsFm8X/NhNqaTYhFVftgrY2pVtdBRv6YGm9XeQMXtgoekfAgjRSWLg8TqFWf7Vk2GD46e/daN5wztZzul4MsF/OqkcgH9c/svl5oLs=
+	t=1739175015; cv=none; b=jYNDcl6KxUVvsWEsEVmCtSpHkCLZDusjFfesz3yeKSrvSYW7sfui4czH+k/GMgvrxXIT7xVxL6pSiPZBhHRfClGUW4X0WS4xMfniuAoVlxuzKOZl+Q3S7vPoHUppHPRoqasPB3Gy4JTokrkJDj7L3WFlJ7g95sjy2G89PUh/UJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739174995; c=relaxed/simple;
-	bh=U0WYcS19MsIrktm50+bHvEQL/Euj82Fu7ea08jiBPOw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oEjfiLIq2QFL9bXe4H9A73Nz1i358081JBKqoF7RVl3yv8UEfrIwx7XcKxMl7tRtS2kzmlYRBMLqDo+PdtdHjqP6zGn37IomMP9LRrzqMRgzAU65s4/ZykW5RctcqJi5xaPPu3AY++bJ4FQc02Glr+Pa3jgcm/NZCNpT7HQt9QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HVtO7A3d; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739175015; c=relaxed/simple;
+	bh=KX7xfLEjv0lnM/MON0ngBJgBQpWsyI+USLV0lN/n/Y8=;
+	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=ajg7MI8X/l+kF6rTHWQOy70fVvUaPNduiZLPbhvwS9XdqwBQi8Jf/nAeUDNaIgp0A3HWwBzWpbIGx/zNikRIMtPfygjwwJMDzAcoErATOWF4g3potOF6FwufOmejXJ6GrTdXfSySIFU2L+Dd6FqLlZSL0xHdThs25kpp1A0ib4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kewhC9UC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HVtO7A3d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739174994; x=1770710994;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=U0WYcS19MsIrktm50+bHvEQL/Euj82Fu7ea08jiBPOw=;
-  b=HVtO7A3dgp1TYdZM5bW24bUsSpsiT9ky2MU5qt6HRglNl/byT/uwJyBV
-   AAZqjcUyHxey5IioI/gbl5tE/DySZkAyS/9lxkMIt2MUm83vpP1PC5Iz6
-   EoxE9IiOI9NNEEQi7jTW+Z+31WUkEIX+uic6/eA5Ujj2CWCouficZT2Oq
-   TIEyjS5ZWVO3Mt0jZXd+PCZy0rHFmCAMvYDSOVMT2ug475VuJas5atp3R
-   ujNKxRKO/8ylHWvjYIEzFLr39pdXxfLsKvUdnsEbDRTyYJMYq8OQ9bYyE
-   c2HLatjY2aK5h+/+KJSZx+6TNIbfLKjVfurRmri7/go1VGco4Of4ZyUmm
-   A==;
-X-CSE-ConnectionGUID: nvU0en+8TIuk0Pm6e8imbg==
-X-CSE-MsgGUID: AsUrcfv0SCmYfyMVSsJYlA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="57278509"
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="57278509"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 00:09:53 -0800
-X-CSE-ConnectionGUID: ILEs/rIXQKe8CLHpL8xoJA==
-X-CSE-MsgGUID: 7Q40UtIKTduMSkzoqk/cMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="112555207"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 00:09:51 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1thOrU-0000000A3oY-0oB4;
-	Mon, 10 Feb 2025 10:09:48 +0200
-Date: Mon, 10 Feb 2025 10:09:47 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v2 7/7] gpio: 74x164: Utilise temporary variable for
- struct device
-Message-ID: <Z6m0S0qnZVfyijWt@smile.fi.intel.com>
-References: <20250207151825.2122419-1-andriy.shevchenko@linux.intel.com>
- <20250207151825.2122419-8-andriy.shevchenko@linux.intel.com>
- <Z6Ypww-xXAvoCCq1@smile.fi.intel.com>
- <CAMRc=MeTgjHYCmZcDhvZGKCaKyHhxUU=3EF6OvsLW-H-Dv+Y6Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kewhC9UC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEBAFC4CED1;
+	Mon, 10 Feb 2025 08:10:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739175014;
+	bh=KX7xfLEjv0lnM/MON0ngBJgBQpWsyI+USLV0lN/n/Y8=;
+	h=Date:From:To:cc:Subject:From;
+	b=kewhC9UCGlHNCTACXTyACVCz19amkMAMGjjMOTrkpMh9F1fLukOPB5345+lMmQEZu
+	 c1YqyZnB+wyQBUdJ8DgpKSkii25ocC7AhXN8LoIKTXNxRnivIkxZ4re2xwgliDEnrz
+	 QB0s3xikdnFeCPDfK7YvLqowZNYOMFR4Uzu+Y9P5Tj+HS1E+Qe0E1/QC8lvN+MF8V6
+	 AwVxMpSxf6xeuU/Kyx1E2FaIWzisyO3DJh6oT+EYOybZjg43i/KTIevWFRjZlxR8yU
+	 kfZDjkhxOqwQo8JjCGkFTl8Aptw+nalW6ni0wSTgBBfC0KP7bzRwOmi9upz8jZAMGe
+	 RvT0nvlgLDrUw==
+Date: Mon, 10 Feb 2025 09:10:11 +0100 (CET)
+From: Jiri Kosina <jikos@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+cc: linux-kernel@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
+Subject: [GIT PULL] HID fixes for 6.14
+Message-ID: <p38o7633-64s6-8os0-p7or-2n96o2n97qq6@xreary.bet>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MeTgjHYCmZcDhvZGKCaKyHhxUU=3EF6OvsLW-H-Dv+Y6Q@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, Feb 07, 2025 at 08:56:45PM +0100, Bartosz Golaszewski wrote:
-> On Fri, Feb 7, 2025 at 4:42 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Fri, Feb 07, 2025 at 05:17:14PM +0200, Andy Shevchenko wrote:
-> > > We have a temporary variable to keep a pointer to struct device.
-> > > Utilise it where it makes sense.
-> >
-> > Urgh, this seems incomplete...
-> > There are more lines to convert, however they do not affect ą statistics.
-> >
-> > Tell me if I need to send full v3 or just this patch.
-> 
-> No worries, I may fix it when applying.
-> 
-> I'll still give this series a few more days on the list.
+Linus,
 
-Sure, thanks!
+please pull from
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git tags/hid-for-linus-2025021001
+
+to receive HID subsystem fixes, namely:
+
+=====
+- build/dependency fixes for hid-lenovo and hid-intel-thc (Arnd Bergmann)
+- functional fixes for hid-corsair-void (Stuart Hayhurst)
+- workqueue handling and ordering fix for hid-steam (Vicki Pfau)
+- Gamepad mode vs. Lizard mode fix for hid-steam (Vicki Pfau)
+- OOB read fix for hid-thrustmaster (Tulio Fernandes)
+- fix for very long timeout on certain firmware in intel-ish-hid (Zhang 
+  Lixu)
+- other assorted small code fixes and device ID additions
+=====
+
+Thanks.
+
+----------------------------------------------------------------
+Alex Henrie (1):
+      HID: apple: fix up the F6 key on the Omoton KB066 keyboard
+
+Arnd Bergmann (2):
+      HID: lenovo: select CONFIG_ACPI_PLATFORM_PROFILE
+      HID: intel-thc: fix CONFIG_HID dependency
+
+Charles Han (2):
+      HID: winwing: Add NULL check in winwing_init_led()
+      HID: multitouch: Add NULL check in mt_input_configured
+
+Chia-Lin Kao (AceLan) (1):
+      HID: ignore non-functional sensor in HP 5MP Camera
+
+Daniel Brackenbury (1):
+      HID: topre: Fix n-key rollover on Realforce R3S TKL boards
+
+Ievgen Vovk (1):
+      HID: hid-apple: Apple Magic Keyboard a3203 USB-C support
+
+Jinghao Jia (2):
+      samples/hid: remove unnecessary -I flags from libbpf EXTRA_CFLAGS
+      samples/hid: fix broken vmlinux path for VMLINUX_BTF
+
+Stuart Hayhurst (2):
+      HID: corsair-void: Add missing delayed work cancel for headset status
+      HID: corsair-void: Initialise memory for psy_cfg
+
+Tulio Fernandes (1):
+      HID: hid-thrustmaster: fix stack-out-of-bounds read in usb_check_int_endpoints()
+
+Vicki Pfau (3):
+      HID: hid-steam: Fix issues with disabling both gamepad mode and lizard mode
+      HID: hid-steam: Move hidraw input (un)registering to work
+      HID: hid-steam: Don't use cancel_delayed_work_sync in IRQ context
+
+Zhang Lixu (3):
+      HID: intel-ish-hid: fix the length of MNG_SYNC_FW_CLOCK in doorbell
+      HID: intel-ish-hid: Send clock sync message immediately after reset
+      HID: intel-ish-hid: ipc: Add Panther Lake PCI device IDs
+
+ drivers/hid/Kconfig                         | 15 ++++++----
+ drivers/hid/amd-sfh-hid/Kconfig             |  1 -
+ drivers/hid/hid-apple.c                     |  8 +++++
+ drivers/hid/hid-corsair-void.c              |  3 +-
+ drivers/hid/hid-ids.h                       |  3 ++
+ drivers/hid/hid-lenovo.c                    |  7 +----
+ drivers/hid/hid-multitouch.c                |  5 +++-
+ drivers/hid/hid-quirks.c                    |  1 +
+ drivers/hid/hid-steam.c                     | 46 ++++++++++++++++++++++-------
+ drivers/hid/hid-thrustmaster.c              |  2 +-
+ drivers/hid/hid-topre.c                     |  7 +++++
+ drivers/hid/hid-winwing.c                   |  2 ++
+ drivers/hid/i2c-hid/Kconfig                 |  2 +-
+ drivers/hid/intel-ish-hid/Kconfig           |  1 -
+ drivers/hid/intel-ish-hid/ipc/hw-ish.h      |  2 ++
+ drivers/hid/intel-ish-hid/ipc/ipc.c         | 15 ++++++----
+ drivers/hid/intel-ish-hid/ipc/pci-ish.c     |  7 +++++
+ drivers/hid/intel-ish-hid/ishtp/ishtp-dev.h |  2 ++
+ drivers/hid/intel-thc-hid/Kconfig           |  1 -
+ drivers/hid/surface-hid/Kconfig             |  2 --
+ drivers/hid/usbhid/Kconfig                  |  3 +-
+ net/bluetooth/hidp/Kconfig                  |  3 +-
+ samples/hid/Makefile                        | 13 ++++----
+ 23 files changed, 104 insertions(+), 47 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Jiri Kosina
+SUSE Labs
 
