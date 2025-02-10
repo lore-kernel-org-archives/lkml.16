@@ -1,122 +1,182 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87971BBBEA
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49DB625B661
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:06:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739210780; cv=none; b=p8Q1dXirx1734L2mf+pMSh3dj5SW95C0/wrysjYPQg+wAFEOIZdGmw4xW8Qdq2m4/wGT0hJUehQ0YXULWoKB+/ZBOItGYCm5trY8gGvWHzX3zmxZ30PlXvA3dTWNz4fOoOIkgupXH5r507Zy1VI5Cc19InZedThGF8EvSAcVxu0=
+	t=1739210809; cv=none; b=JO6YbeRNCsOsdql5mQrOpgppvz5DZXXLjChjk25zohBGIaWtDVH2hhLUpnB5Sh5bvwZQZqL8xZ6XXyo8WXViFaL7gcRrgUlVCS0arjI4hgtnJXSzoS4HBESw6O0HEVpSPX+kmmaVTEhbWCSF1xuMidWs4ueltS4AViav8YPYLKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739210780; c=relaxed/simple;
-	bh=fg3n0HiE40DlQQ7rUeZK0tnBLDTUz7qtNfDNbLXd14o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lV3CnnnZlm6nbZjKmhSAT3mwK3u42tV0S7r2OXJQRhcxVsd1XjAMY50gkNzikc99QN4CvcbOlMP6RkiKAoC3pknyHgKR3e7fDjxHn16nP6lQkvEUq0fjvNqHEOOnGYoQHNqmRUjZSmvIOukuISy3lw3VPP4fb5Gf1i6QT3C8TmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IZ8VZDR0; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1739210809; c=relaxed/simple;
+	bh=zWHQ/xQzS0SVky8j3UXIWdJ6YcNh5e0HYTnqYtA1fh4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IfWZxbzsG/hJPz6OJUudEscZ+SP9qvKeF++fNkPll2+cAmDViz28TPqfYnxdn4V4l0qk3U7Q/4ihfhkuhLS7hVr2FhKi+2yBhx+JLEBVy/RPjOUXWmMaHxh9ZP9YprMaAICk19hC71zFcZVd8Rj0XEU/j4lHcb9Nz3r2CJpVaaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OfVU4E1o; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IZ8VZDR0"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51A95KxR004359
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:06:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	vsjL/2KQY+Tev80gGOdQzFfbqYML6F7kNzyKYY9Wvfw=; b=IZ8VZDR0CIuH+dBG
-	IW5QDMs0sSSLlyg3ckN1hgm5l19f7ipfAdDgFGD34EfKqyleqLXH7dGl3bZSXw0U
-	Ll/CbvSVZQEPJq1ALTj4ylk58ww3uIikws0fxnubaZb982CIdJmipo5HEMXYkH3Z
-	h2aUOoH/kMBQ8hpFhB/XdqPDVDd9hm//2P6qrISnyRHGyzk3G2tp2FAuwDsmV5mA
-	cF4C/1JE5phAS8Iyle+c/HIOGb0GRd1SM0God3vmH3nOE2MBhvmDfVCWXAo4pPzw
-	v2UHe701mDGamnq5vVYNDCdQkBFVGytBOSP9Smi0ryares2PWKd1+qSaAuBtVqej
-	vG/QXg==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0guw68x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:06:17 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4717d747eb8so3138221cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:06:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OfVU4E1o"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3d146357fb2so1415ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:06:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739210806; x=1739815606; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SLOx8uZKOqbSMHNZbZfwBaDXMWD7wne+WuTTmhB+k4g=;
+        b=OfVU4E1oR4hQnex/JieEltu7IvU7gUTapbSfvu2Ebw7ecBxZKEUoBtUn7epx7jIjGP
+         CTrZuLu94MtWQsU5r7qorRZ4vBdTIVmTaR22uP7QbvzzVwnGUPRQhiO9rD4ye9KhMS7h
+         OhGyvDTWo5lNbGA/nWmq6TF+enmYvsFIx/THdx17ryRRSUHq3EXToI3IBQuiNmk45rTN
+         38cJrpkLIKAw2K8dDheAzTgmyc9IBnPyfumNqBeEWB9qqm51PasMFDbAtf7PNrS+G14y
+         r2QzqMJ9JpjcDzHjXTCX082sgZi2+fq/znR83yTJQS1c9CUUlgs9rRXy3pE7UO6xHAB8
+         +UlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739210776; x=1739815576;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vsjL/2KQY+Tev80gGOdQzFfbqYML6F7kNzyKYY9Wvfw=;
-        b=dXj+WKaDh/4YpgmoegplpMDzZ0BrTLCiv7NcKI6WHidHdQ2gdT/5gr4SEVqT/9JaRS
-         Gyh5+ZZ932FOAtO6BkyCSOZ2RV4PCyN0+qjWxMTYXf3ym90W906sodZYenZLCoW97SfS
-         7DHhH8BKf3CU+HzO7ayoV1RL5iSDQgz5z82cTon+O0RBxVvFWRZt2CYjctTWmTncKbe1
-         CSl26/fxWZg16df7Bi67mDsI7hYu9lGpepbmM9pA16uDWVKd8FFShrSIA9jLxpyU5mCm
-         dSN/mAnd6hJYEMRnchUEX2r2KMmO0USDLHuJjgjw0jfMXA615e7sYfn9JaPqYbIr63+0
-         EVew==
-X-Forwarded-Encrypted: i=1; AJvYcCVxSsq65gcGTw9YuRxXiF3G4M8S5q5BRapm7PDQg3Y0gZ7ryKhb6OuE4HavPOy0ox+yfFqh2+ef7ElgVWQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxag7CVkCPsMTPsV5qirhlacMQpbKtSE4M7Gf/9m4jrVTcZpbHd
-	fIwI7vDBnIYoSUYSgyCLV0t1HFrOXr5XiE4wPYurogL39wl+fHobl1cm36wda/H6YyIC5QfnP30
-	gIOJoKxr6EqacBrfjv9s4yxmug7+EaYxzvMmrU1cvIeOSGFzchL+LdpvoE18/n6o=
-X-Gm-Gg: ASbGncvf0OLmtbiaIfITrj5lo/9PteeqOyN7+xeFTfoAZIu59tet1QAI0SmDL4x8AQv
-	LihgZhP6UMmATaMb4M73GSAszQxCVLJCn7XuWz40nczb/wIBhA/VDeZnJYOaHDliul1zWsJL51C
-	jKUQ1CKPWMB6mYquucY6joOKww/KYm9hke9aEw/sT0pvwEUqf7j6ZQuIrw6Yi1CVSlKVs2HCZZG
-	r6Pfv3BCMA7Xyv1fa0Uoddf85bwcbAhKRhqwC0wRXqr98JzsXrnOUrFTaq32qe2HhRLB5Qu1iQU
-	PAJGPB/ltwIuBbPaQjGRpukEwQy3gDYuWHieIO8qUFoWoul2CmeMQNzG1a8=
-X-Received: by 2002:a05:622a:58cd:b0:471:8bb2:ed1c with SMTP id d75a77b69052e-4718bb2ee8dmr38878611cf.1.1739210776179;
-        Mon, 10 Feb 2025 10:06:16 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEQImmhmYCSQ+3nx9vW9Eev/sQYH6OwLcUExc6r6y7vYhFCtuQNRA2EBYx0mjRH4bAXUukGjA==
-X-Received: by 2002:a05:622a:58cd:b0:471:8bb2:ed1c with SMTP id d75a77b69052e-4718bb2ee8dmr38878371cf.1.1739210775838;
-        Mon, 10 Feb 2025 10:06:15 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7d7f0a47dsm35109166b.31.2025.02.10.10.06.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 10:06:15 -0800 (PST)
-Message-ID: <c21d1ea2-9116-4e7d-a1d6-2717d0e772bf@oss.qualcomm.com>
-Date: Mon, 10 Feb 2025 19:06:12 +0100
+        d=1e100.net; s=20230601; t=1739210806; x=1739815606;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SLOx8uZKOqbSMHNZbZfwBaDXMWD7wne+WuTTmhB+k4g=;
+        b=OPpdFioEBqVYYtEhWT1+2Ru0lzvDtcjc7WZJCSF4ZzNQv466OkU8dy/Jh1S0GojgS9
+         EWGyPMGNRskirIMdHsQ5AtcJWuh3LeiybnllBrf7+og22oyQEm5s9NDPrZ0+wFrT0u8R
+         PfYPB3fhggHJglNR8toqTDHqV+ScO774LiKfQS6ytvz0udrHdYBXY4SSrIYpNGSoTHUZ
+         aI4QvQnMnaQSlyhDHFvfPCqKAK9UJYM5thI2K1bE+fK6CUf9matjWggiuNPaga8ZZqGF
+         hZpYWPKEBs/cjIiUZ3GJV9VSfrxSciVFxJ5bbzVr8h0rYai3p4nmVpcjX+nH8ZQwAtdh
+         13rw==
+X-Forwarded-Encrypted: i=1; AJvYcCVt/aCq3/N5GGaFgodkL7WFJ+q/6WgLO9qwu2zFaOTPtENlj9j/QXacz+ff3kVyp0AUIWxpN+gxGo/WsMM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywx9ZPD90HgbVksfaroksYUjllFtEAkf3JQwlvkiZVMPLXXloKY
+	JEv0s3tT6V9rX7aX4Ckuoiww7xUFVmx3JEKhO2hgtElqepi3TqP/j/eUdDt7k2blz49++eLePMj
+	s9PmfORYm9oVbiMqd2mUVR37kqYnjH3ybGWiZ
+X-Gm-Gg: ASbGnctKyRixAkhqAeFAatKUp0rgGHIt9HTRnu/9tgbd7pXvU4LHywiLI7w5UFG0xIi
+	xdN7ioJqxmsJTQkWZwJ6+gQGaPxy6F0gHLCooaIhNn+jKZMEkyNH1wXLxA0U1G+yFhVVbC7VqOW
+	q94jOaGJwoKVNnDMCGP3uvIpsa
+X-Google-Smtp-Source: AGHT+IFQyFzL4toKjST54JeKC5iEPw/FRNhzC05ypK58dUkv8jG9yKJ7k/Rc5cXiBrhxLzre2Y5FkHw43ZhurdlnnSM=
+X-Received: by 2002:a05:6e02:2198:b0:3cf:fbc9:5c10 with SMTP id
+ e9e14a558f8ab-3d14cde2865mr7402415ab.26.1739210806086; Mon, 10 Feb 2025
+ 10:06:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 16/16] ARM: dts: qcom: apq8064-ifc6410: drop HDMI HPD
- GPIO
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Simona Vetter <simona.vetter@ffwll.ch>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20250209-fd-hdmi-hpd-v4-0-6224568ed87f@linaro.org>
- <20250209-fd-hdmi-hpd-v4-16-6224568ed87f@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250209-fd-hdmi-hpd-v4-16-6224568ed87f@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: Z3u8BqJb2dVqC5RI1uuBNCo1S-ZfsjYY
-X-Proofpoint-GUID: Z3u8BqJb2dVqC5RI1uuBNCo1S-ZfsjYY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_09,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 phishscore=0
- clxscore=1015 adultscore=0 bulkscore=0 mlxscore=0 spamscore=0
- mlxlogscore=682 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502100147
+References: <20250122062332.577009-1-irogers@google.com> <Z5K712McgLXkN6aR@google.com>
+ <CAP-5=fX2n4nCTcSXY9+jU--X010hS9Q-chBWcwEyDzEV05D=FQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fX2n4nCTcSXY9+jU--X010hS9Q-chBWcwEyDzEV05D=FQ@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 10 Feb 2025 10:06:34 -0800
+X-Gm-Features: AWEUYZmqaHEjcEf5hPT16AA9v5ALYmeBI5HqSnlIc7uBGpS_AVyNMa9dTNcQdl0
+Message-ID: <CAP-5=fUHLP-vtktodVuvMEbOd+TfQPPndkajT=WNf3Mc4VEZaA@mail.gmail.com>
+Subject: Re: [PATCH v2 00/17] Support dynamic opening of capstone/llvm remove BUILD_NONDISTRO
+To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Aditya Gupta <adityag@linux.ibm.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Changbin Du <changbin.du@huawei.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Li Huafei <lihuafei1@huawei.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Andi Kleen <ak@linux.intel.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	llvm@lists.linux.dev, Song Liu <song@kernel.org>, bpf@vger.kernel.org, 
+	Daniel Xu <dxu@dxuuu.xyz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 9.02.2025 6:05 AM, Dmitry Baryshkov wrote:
-> There is no need to specify separate HPD gpio for the HDMI block. Use
-> built-in HPD in order to detect if the monitor is plugged or not.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
+On Thu, Jan 23, 2025 at 3:36=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+> On Thu, Jan 23, 2025 at 1:59=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
+> wrote:
+> > I like changes up to this in general.  Let me take a look at the
+> > patches.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+So it would be nice to make progress with this series given some level
+of happiness, I don't see any actions currently on the patch series as
+is. If I may be so bold as to recap the issues that have come up:
 
-Konrad
+1) Andi Kleen mentions that dlopen is inferior to linking against
+libraries and those libraries aren't a memory overhead if unused.
+
+I agree but pointed-out the data center use case means that saving
+size on binaries can be important to some (me). We've also been trying
+to reduce perf's dependencies for distributions as perf dragging in
+say the whole of libLLVM can be annoying for making minimal
+distributions that contain perf. Perhaps somebody (Arnaldo?) more
+involved with distributions can confirm or deny the distribution
+problem, I'm hoping it is self-evident.
+
+2) Namhyung Kim was uncomfortable with the code defining
+types/constants that were in header files as the two may drift over
+time
+
+I agree but in the same way as a function name is an ABI for dlysym,
+the types/constants are too. Yes a header file may change, but in
+doing so the ABI has changed and so it would be an incompatible change
+and everything would be broken. We'd need to fix the code for this,
+say as we did when libbpf moved to version 1.0, but using a header
+file would only weakly guard against this problem. The problem with
+including the header files is that then the build either breaks
+without the header or we need to support a no linking against a
+library and not using dlopen case. I suspect a lot of distributions
+wouldn't understand the build subtlety in this, the necessary build
+options and things installed, and we'd end up not using things like
+libLLVM even when it is known to be a large performance win. I also
+hope one day we can move from parsing text out of forked commands, as
+it is slower and more brittle, to just directly using libraries.
+Making dlopen the fallback (probably with a warning on failure) seems
+like the right direction for this except we won't get it if we need to
+drag in extra dependency header files for the build to succeed (well
+we could have a no library or dlopen option, but then we'd probably
+find distributions packaging this and things like perf annotate
+getting broken as they don't even know how to dlopen a library).
+
+3) Namhyung Kim (and I) also raises that the libcapstone patch can be
+smaller by dropping the print_capstone_detail support on x86
+
+Note, given the similarity between capstone and libLLVM for
+disassembly, it is curious that only capstone gives the extra detail.
+
+I agree. Given the capstone disassembly output will be compromised we
+should warn for this, probably in Makefile.config to avoid running
+afoul of -Werror. It isn't clear that having a warning is a good move
+given the handful of structs needed to support print_capstone_detail.
+I'd prefer to keep the structs so that we haven't got a warning that
+looks like it needs cleaning up.
+
+4) Namhyung Kim raised concerns over #if placement
+
+Namhyung raised that he'd prefer:
+```
+#if HAVE_LIBCAPSTONE_SUPPORT
+// lots of code
+#else
+// lots of code
+#endif
+```
+rather than the #ifs being inside or around individual functions. I
+raised that the large #ifs is a problem in the current code as you
+lose context when trying to understand a function. You may look at a
+function but not realize it isn't being used because of a #if 10s or
+100s of lines above. Namhyung raised that the large #ifs is closer to
+kernel style, I disagreed as I think kernel style is only doing this
+when it stubs out a bunch of API functions, not when more context
+would be useful. Hopefully as the person writing the patches the style
+choice I've made can be respected.
+
+5) Daniel Xu raised issues with the removal of libbfd for Rust
+support, as the code implies libbfd C++ demangling is a pre-requisite
+of legacy rust symbol demangling
+
+A separate patch was posted adding Rust v0 symbol demangling with no
+libbfd dependency:
+https://lore.kernel.org/lkml/20250129193037.573431-1-irogers@google.com/
+The legacy support should work with the non-libbfd demanglers as
+that's what we have today. We should really clean up Rust demangling
+and have tests. This is blocked on the Rust community responding to:
+https://github.com/rust-lang/rust/issues/60705
+
+Thanks,
+Ian
