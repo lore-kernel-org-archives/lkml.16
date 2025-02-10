@@ -1,122 +1,112 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1992125E458;
-	Mon, 10 Feb 2025 19:23:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE9924BCFD
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739215414; cv=none; b=t/HiYVPGt8M9TCCr55rz8c3ZX3p2gpKRrQSUjbMz7onAiUGfHmoZdkvhT05WKIL3oXfMr05FxjYstYMSB9gAM0fZn29FphXb1Nc4TRhdXZU7Jf5AH+WF4sENdOz4g5K9+OoA7Ot1Edg/iGa2b8KMRTHtIAreDDJHtvRNhCZpWSA=
+	t=1739215415; cv=none; b=pFe/UUWYER2RymR00qPkGw5pTR50yUc6Hw5cOB5RFSjWpzSPv1hyTmVq9kq0m4Wd+K0R5YXoUTlgXSBejJsrwuFbAYRy87BBeUtr3Iy3xykPL5viz1NFEWpvbh3ZBR1/fzhpekBH4HIPS+6G5dxncnJuai50wPlPCh9Itv7Cam8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739215414; c=relaxed/simple;
-	bh=bo1L9Wj3LPfe66x6wir/aRh+fXOIVaFlc8qBuYVzyck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AUuWV7wk+GH5ouBV5KbbcHcZnu2gUB4PyblTx1jS2rhoi3+q9kOOZY9CaEXtgAvl2xle45L76D0+1vLjQ5xT3PdqFbcgGdbm5vSP/WzlIg5Dz9j0VOpVHkNxF9yXj4uthuIE8QhVqdeJEJ1fXsx1zdZ73VhcT6D8KA2qhZ3V/Vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RVyivWqB; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739215415; c=relaxed/simple;
+	bh=BS8wCFJbHRJqkYtqoIWTi+QgcaGE16H2XbnIZNA9VPY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=ZV5+4U4/CH3iFZ1/TaQ0IWIH1213SBVnjcFtleQ/zp9io1ohlWS5AThvzQLZha7P5vUxM+J0fQMRXkaUD8kZQQoBZekmGxBJpbCkOcB5NrRBDMSKAHcDoK8OQ9Jmh/SWyGm4yBFr0V7x4ta2iw94VAn2Jm6us8gULHJyEqwoVQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UrXJ+dHG; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RVyivWqB"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5de6e26d4e4so3653731a12.1;
-        Mon, 10 Feb 2025 11:23:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UrXJ+dHG"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3d147331fb5so16475ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:23:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739215411; x=1739820211; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QtZsigcbjvTm5j101KI4qSkvqwJPsHqrFWjZqJf7GgU=;
-        b=RVyivWqBzuZQRRUGyE/XruYP3mKh7YgCRZUoHfGS6x8CjkE2QsZ8HNh8ks4Q2H6UE8
-         HvqZCk9LNBjv6lhktFbymwAPf1UpvBp4YOTumi5n/XYAuNrl8Q2rspzlSX+rmKEUlQ05
-         6Uzfzwc3TIJ9Ff9QLOKV1VGMtes6vV8tV4iwgtiVT60rAelMeUtOif7i6qcm2kA5Sol6
-         YciDiaWZScVLWXeAQ/0QYynjnkdrDce2F9+vkNaWMFFtOat5KLoobZzMw3PcIaDQndPO
-         sBkw3lyDL4L+MY1FZ9WJz3NjAy+aNtLoZpxDoY5PHVoxX4vJ7sJKrOld1ZBuGogrx2i7
-         5X2A==
+        d=google.com; s=20230601; t=1739215413; x=1739820213; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BS8wCFJbHRJqkYtqoIWTi+QgcaGE16H2XbnIZNA9VPY=;
+        b=UrXJ+dHGsAc8iSShEW811toaiGt13hKz/q0okxskzv5gtbARvjK+fBrG1CQ8oJUUf4
+         pnyQuAedWpHVhdGFFc4J7k7tvgUbHW9rTSD28Im6ZSpj5zlF3q9dXF5oO+Aav/bmPJrC
+         hY+P7OcM8lBFQ8aX19pyg9Vpw9aRe3fQ3m1QXChSXiscBbFv0j401j6UoE7eSMK6cBdH
+         2oALClPF1qjFzZPLp6QKXpuz9tJoWoL59Ufo1QWla+2W5+KVTZ9d/Tj50mIohtjWj6Rj
+         kXljbcpn9o4FeCk3fGGvY5oLvG9NhXNEPGDREWbD8YNgWRbrZhqv8tCKftmyXocanUa2
+         mziw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739215411; x=1739820211;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QtZsigcbjvTm5j101KI4qSkvqwJPsHqrFWjZqJf7GgU=;
-        b=LPdNzwgLFF8O1Z2Qq5zp1JK+FSwFYSsUDL2RscR16tOei+HrU4Dpfa877uMa5o9Kdi
-         FE1uBrb2iE2U9xTcQjadunvkQlxeLQfsjpCOjMOW/mnEFapwWcHlkX8kiTtCsEnSyzTz
-         LUO8RpjrMSX7R8XwpLwy9F8+ttkiaY1/xgBcyWPiDGvace4JCaLZpVyALymZ3XHgIeOt
-         mZg6sctVOU43eh6goJ0feKLkMY9E/7KhWSVnaS9S61hhvJnmoFTxJ96E6aHc5gs8jhhv
-         UyvXZZ4T/rBK6e22NuQ4Pb2+wRHkt31ih+9vuMJxaJ1LEZH4F2xfR0iGXvBUFB5+MsoG
-         rPsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUK8OBrjk+SAsQ/wbDEynoeZC+8DvZtktQnA+rMgROyK7IL23safETqjpq7QeSD+/Vu5X0L/uDLedsW@vger.kernel.org, AJvYcCVilvF2MadqFWdgicxBlJ+iV+yGq4uEYOZt4e2bT+K2iOKsL9U23uQKZE1T2OxGl5/ibr7W8vn5sIRSvF0T@vger.kernel.org, AJvYcCX2h2XWAxrK7Jk9XpWPgygvKxcgyBbqp/sKEWz7Ngeoe05vjrIicoQYAQetuHEksLkiRXjmQ/w7Kq3P@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvhA0U3RCKLUypM/gnF+OrM5qXe2uzwsWhrj5LuakrSAGlYCTc
-	erig+GKCEpyfg8Wfz+fXvEtPqU8bj1YdWDLN8R+Q7NzP7lz3cYM+
-X-Gm-Gg: ASbGncsMsBllJhbe8I+gIRaKMZgjYHWUGWjpC7IayMHgEmNb1M0MBeeuI44iwu0OVHn
-	djTUPNQ1/G44BjN2x0sHSeFNdVi3NNpVzkqffzbZaWXmQGiTV+3cKDgwQKeyACrj317MOVa+F+v
-	MbDKxeRHOHltkAyecbhULpM4+8njVcamFtpCVa5tk8381hunfAvNOJnK1jpDITmdvZsrNvC8fKM
-	U4rmJyxQ8973cVgSt71Q/Yb/C4Q7TWPPEtsBGLLr4YKhjKN2RGjh4yFquJj5e5WwowSaQloV8Mw
-	oSc/KfST/Mi7IZNLnW47C0Z9k4EJEYt9MjZir8uAlA2l9mEJb1IkgFKlq9Pn2kVTuUu/Fl3zeM1
-	Ca0J1h6lZqkUv2Y73hKMWlqd6PbJCcc6tGRLh
-X-Google-Smtp-Source: AGHT+IF/23AcB67iWvajFyguUYo+hNf5d1vgNVCh3bKbxXjl5QTAQyB5gM51SgTWW/92t+M5Ayz2Nw==
-X-Received: by 2002:a05:6402:2388:b0:5de:45b4:6f9e with SMTP id 4fb4d7f45d1cf-5de45b4705cmr9921617a12.21.1739215411022;
-        Mon, 10 Feb 2025 11:23:31 -0800 (PST)
-Received: from ?IPV6:2a02:a466:68ed:1:2347:e8ed:bba7:b74a? (2a02-a466-68ed-1-2347-e8ed-bba7-b74a.fixed6.kpn.net. [2a02:a466:68ed:1:2347:e8ed:bba7:b74a])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de541fb84bsm6142738a12.54.2025.02.10.11.23.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 11:23:29 -0800 (PST)
-Message-ID: <795371f5-b11a-4348-a838-f56326d5ca2c@gmail.com>
-Date: Mon, 10 Feb 2025 20:23:28 +0100
+        d=1e100.net; s=20230601; t=1739215413; x=1739820213;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BS8wCFJbHRJqkYtqoIWTi+QgcaGE16H2XbnIZNA9VPY=;
+        b=ap0uIWrn3lLtZ/En9kKnOulerwQJHBzuBF9kPkbyb5pkuTsxhhK7oN/n5q3jcMyWur
+         SU3pTPT+Zw/eRnach3/MSV468n1xX57K3utFWQt6wmqQZNKWDYVHndlwzWgxmZ5klWZ3
+         esO/01F74cUtybvuKGkTCbSRsqAi2Su1Oim7TvTd+tuuteLR5M9sTEvz1kyMsuX/4DZI
+         z5rheGFoD0adf4TEndbCwA2Ny7oP4hEM4tf5cYJ+G6bVaL6hHKsuTYhH2eWqbFqmAHkB
+         XUDfygrjx4SAR/npWyJfa39YxjL50WE74NI0igDV86WB9k0Zk4tiBUO2oLWclLsJNFaB
+         Ewpg==
+X-Forwarded-Encrypted: i=1; AJvYcCWtlVCoZVV8V7PbA286Gayp+1bN32oENApPvp5ZE2GwTI2OJyxI55PnIT8FYb3XO0XrGppbZCC7+U6U4pQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7yyCMx1AXgbpggd4jfMPsz7d4tRZNERf2rV8pVTXZ2nr/bVBR
+	bftfITaWND0X+7P0OLh85fK9tDOVTHttHIKxkPC0wsd5NxOM+NZ96mYaGSqeM0jqeA6iq73sXrn
+	be14WwgPEv13KjmfPseIWdwqPrHD7opbZ+Oiz
+X-Gm-Gg: ASbGncvNbXLIFYL0bOKY0JaWfRAjSxL4ExNBP4cNzvKbl5PwJjXPhwie42V3bxm+6ir
+	+uaZIOgXL3XdgH7bZ48G3tOR4FIbIev9+3VsCxFlsntICd+q63ePnDxYRn7SYs90SnGsSDLt8Bs
+	fvn+tHJvkCOB4PGInVzDNi8/Yn
+X-Google-Smtp-Source: AGHT+IH4QBrvzOcxvPMkar/gP/Um8LH1FrS4euE+Vwj+OJmo1p88lMRgvpVy8FYhzyn31tVt4am1TiL3z0tt7Ey2iS0=
+X-Received: by 2002:a05:6e02:388e:b0:3cf:cb47:9963 with SMTP id
+ e9e14a558f8ab-3d17036d434mr169655ab.25.1739215413262; Mon, 10 Feb 2025
+ 11:23:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] usb: dwc3: Avoid using reserved EPs
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Felipe Balbi <balbi@kernel.org>,
- linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-References: <20250203191524.3730346-1-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
-From: Ferry Toth <fntoth@gmail.com>
-In-Reply-To: <20250203191524.3730346-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250109175401.161340-1-irogers@google.com>
+In-Reply-To: <20250109175401.161340-1-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 10 Feb 2025 11:23:22 -0800
+X-Gm-Features: AWEUYZlqVCZLMtiy5hrxvQ-Q5BOE5craO8pQO_xiEl86uzRcCMz1ou50_0XDo14
+Message-ID: <CAP-5=fWghT8+pBFVxn9JDbqHU9NPy9mgyT8Ee=pTdkCKxRoJgA@mail.gmail.com>
+Subject: Re: [PATCH v1] perf parse-events: Tidy name token matching
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
+	Dominique Martinet <asmadeus@codewreck.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Op 03-02-2025 om 20:10 schreef Andy Shevchenko:
-> 
-> On some platforms (Intel-based and AFAIK ARM-based) the EPs in the gadget
-> (USB Device Controller mode) may be reserved for some special means, such as
-> tracing. This series extends DT schema and driver to avoid using those.
-> Without this the USB gadget mode won't work properly (those devices that
-> "luckily" allocated the reserved EPs).
-> 
-> Ferry already tested the previous versions, but I ask him again to
-> re-test this version which is significantly rewritten. I have not
-> applied given tag just to be sure we got it carefully tested again.
-> 
-> Changelog v2:
-> - added minItems to the schema (Rob)
-> - revisited code and add NULL check to avoid crashes (Thinh)
-> - rewrote helper function to return error to the user if parsing fails
-> - elaborated in the commit message why we need this quirk (Thinh)
-> - addressed miscellaneous style issues (Thinh)
-> 
-> Andy Shevchenko (3):
->    dt-bindings: usb: dwc3: Add a property to reserve endpoints
->    usb: dwc3: gadget: Add support for snps,reserved-endpoints property
->    usb: dwc3: gadget: Avoid using reserved endpoints on Intel Merrifield
-> 
->   .../bindings/usb/snps,dwc3-common.yaml        | 11 ++++
->   drivers/usb/dwc3/dwc3-pci.c                   | 10 ++++
->   drivers/usb/dwc3/gadget.c                     | 60 +++++++++++++++++--
->   3 files changed, 76 insertions(+), 5 deletions(-)
-> 
-Retested this on v6.13.0 Intel Merrifield and found no problems due to 
-this patch. With simultaneous iperf3 on cdc eem, and a disk bench mark 
-on mass storage, it is possible to overload the gadgets causing no or 
-delayed responses (delayed until killing iperf3) on gser, eventually 
-causing the host side to need a reboot. So, nothing new there :-)
+On Thu, Jan 9, 2025 at 9:54=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> Prior to commit 70c90e4a6b2f ("perf parse-events: Avoid scanning PMUs
+> before parsing") names (generally event names) excluded hyphen (minus)
+> symbols as the formation of legacy names with hyphens was handled in
+> the yacc code. That commit allowed hyphens supposedly making
+> name_minus unnecessary. However, changing name_minus to name has
+> issues in the term config tokens as then name ends up having priority
+> over numbers and name allows matching numbers since commit
+> 5ceb57990bf4 ("perf parse: Allow tracepoint names to start with digits
+> "). It is also permissable for a name to match with a colon (':') in
+> it when its in a config term list. To address this rename name_minus
+> to term_name, make the pattern match name's except for the colon, add
+> number matching into the config term region with a higher priority
+> than name matching. This addresses an inconsistency and allows greater
+> matching for names inside of term lists, for example, they may start
+> with a number.
+>
+> Rename name_tag to quoted_name and update comments and helper
+> functions to avoid str detecting quoted strings which was already done
+> by the lexer.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Thanks!
+Ping. This patch addresses name parsing inconsistencies, in particular
+events may start with a number without a PMU, but not with. It also
+aims to give better names to patterns than name_minus and name_tag
+(with term_name and quoted_name respectively) that have drifted from
+their original meaning and become to me less than intention revealing.
 
-Tested-by: Ferry Toth <fntoth@gmail.com>
+Thanks,
+Ian
