@@ -1,51 +1,52 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B31B2206AB;
-	Mon, 10 Feb 2025 15:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5856223E238;
+	Mon, 10 Feb 2025 15:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739201086; cv=none; b=qI7cSyitdFx2d3POSAQ89OZ3Qh8rQXWoPWMzIqED3NK5yfI0k+sMtkfMXosssWxov9tKZIHlM3xEUuXDRi0HWyJotYiQMYHckKoLMQ4YUxkalSlIopWUbFJWntiFmnZXsMTH4uMRLxy5gziKVrasanW7EL3xT/DqbkFTVP5IWck=
+	t=1739201094; cv=none; b=nzaq4MKP26yQ6oW9/XrUpEVxePOs0XcrIQMQQIWCEP+jw1yRTFiqadVtw8pf818v+zeOSNw69KzyNg3CuBv5T5VMgnDtFIALKAI+SbXjjfExcjjjMbF7jD9rQUDLZekPwINF4wxJ4To7vwKPsgVH+lP9HPfYDJN8d45hcX2PZxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739201086; c=relaxed/simple;
-	bh=hFmyQtpz/n5ROdfdYufOnPSh9MQS+SMYjcVJSdNiqqY=;
+	s=arc-20240116; t=1739201094; c=relaxed/simple;
+	bh=itKc4JFN62L7eknbAIaoYJmyaznDChnyO0SaX8LpLS0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=NnWvVIvtnwrgPACbwZNswT0VnQT/plFmzL04XGtwq5lfdN1zeDzOGv7m2qQJgoRPip1DByMfkyUiT3QB+x3dqhpHIAgX8chCpumvX+vqiMpG/QtjxlehY9F9hReCg9sRBmcyu/W+Q4KAzQbGErxjAzyIW9s4K1B+xBdknefZcTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=aHcJuKTG; arc=none smtp.client-ip=91.207.212.93
+	 In-Reply-To:To:CC; b=iYBDiIt2v9tJGZRXNMv1gm4pUfFDe1pOy2lQMfbilIS3OjTBvMqnDkJ7y+Nszy403p5tc4xfq3RIDV0t1OZrDoOPq8vye7Im6mjuAPGyeWgf4n9y8aUtBe/aLdDNK/8qEniJgcCH+4+JeIPaaHV94ASrhu4126qaFAohsQkClhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=q5YjC4Ou; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="aHcJuKTG"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AF0nSf016159;
-	Mon, 10 Feb 2025 16:24:22 +0100
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="q5YjC4Ou"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AF0p8m016534;
+	Mon, 10 Feb 2025 16:24:41 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	1Go3cEI0mC21dT322U6W7X2f2mipAUUOhfZd3wNhVo8=; b=aHcJuKTGmgkEDxC6
-	8MBNH1AEpjDdM83IZePlUdW1qECx84OIJxPGfhl4G4BmOTAvZifISdo9kGWx5vhA
-	mAZqLP4iDUPPljBjBDAeG4R9WyZPLlls/RF4NijKTWQXLV8euvcQiDSZLeGjt+b0
-	FcxNQgDyeXFrkDYjAzySWnmn9nkXqbeNlTmmGW1USyDlCqvdiHMqGq6/yuhbAQnz
-	XTktLL/InDgI9ieV25D9BYwxsBg+YDpTaCs53MDFYs7V+MWkfL+h0WVLjpSTZn9y
-	MxFvLkGrCyK8pKYta7ShsKc0yhKUQOPeHW92/Bb1jHiTQiQjPk1D5zcdFG36pVoU
-	Mdq1eg==
+	b5Tvhn8A9wvlhyeA7dmIZaaAQOCoRp93WSAR9jXgEio=; b=q5YjC4OuiPEhaac7
+	9uW8Ge9s5oLc4le55343PJpmhflXPx4+udSe6AZF85fF2fFtBdVFDb4NhTSGjkzZ
+	clREgdqrFhpIrT7pHKxo89LXANbrqD35MUaPK5weRVw2Fj3tCU4a3aiyj3Db9CkB
+	dYtN9ycQmo3MFJgf2LjA31aNhtjCb68C1p2J3GF2hUzTVWwZXUTObejWUa1HTwP4
+	tioQyf8DK6lUBI5cBespV3RmpdyoO8k7cTdWmj6izF/2L9ei5opwDorpkhNCmmx+
+	gNgp3IXuxJ54SX3La5VxH0mCZRb8Ua3IZrJE1F9y0uyXI2VswIiIrGknAOmk73f3
+	/WnDnA==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44pk3mvxeb-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44p0rhy5sp-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 16:24:22 +0100 (CET)
+	Mon, 10 Feb 2025 16:24:41 +0100 (CET)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id B94F44004A;
-	Mon, 10 Feb 2025 16:23:13 +0100 (CET)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9065B40062;
+	Mon, 10 Feb 2025 16:23:25 +0100 (CET)
 Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5A4A4295236;
-	Mon, 10 Feb 2025 16:21:38 +0100 (CET)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D49E62957AD;
+	Mon, 10 Feb 2025 16:21:41 +0100 (CET)
 Received: from localhost (10.48.87.120) by SHFDAG1NODE3.st.com (10.75.129.71)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 10 Feb
- 2025 16:21:38 +0100
+ 2025 16:21:41 +0100
 From: Amelie Delaunay <amelie.delaunay@foss.st.com>
-Date: Mon, 10 Feb 2025 16:20:56 +0100
-Subject: [PATCH 02/10] arm64: dts: st: add stm32mp257f-dk board support
+Date: Mon, 10 Feb 2025 16:21:01 +0100
+Subject: [PATCH 07/10] arm64: Kconfig: expand STM32 Armv8 SoC with
+ STM32MP21 SoCs family
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,7 +55,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250210-b4-stm32mp2_new_dts-v1-2-e8ef1e666c5e@foss.st.com>
+Message-ID: <20250210-b4-stm32mp2_new_dts-v1-7-e8ef1e666c5e@foss.st.com>
 References: <20250210-b4-stm32mp2_new_dts-v1-0-e8ef1e666c5e@foss.st.com>
 In-Reply-To: <20250210-b4-stm32mp2_new_dts-v1-0-e8ef1e666c5e@foss.st.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -76,150 +77,27 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-10_08,2025-02-10_01,2024-11-22_01
 
-From: Alexandre Torgue <alexandre.torgue@foss.st.com>
+Expand config ARCH_STM32 with the new STM32MP21 SoCs family which is
+composed of STM32MP211, STM32MP213 and STM32MP215 SoCs.
 
-Add STM32MP257F Discovery board support. It embeds a STM32MP257FAL SoC,
-with 4GB of LPDDR4, 2*USB typeA, 1*USB3 typeC, 1*ETH, wifi/BT combo,
-DSI HDMI, LVDS connector ...
-
-Signed-off-by: Alexandre Torgue <alexandre.torgue@foss.st.com>
 Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
 ---
- arch/arm64/boot/dts/st/Makefile           |   4 +-
- arch/arm64/boot/dts/st/stm32mp257f-dk.dts | 115 ++++++++++++++++++++++++++++++
- 2 files changed, 118 insertions(+), 1 deletion(-)
+ arch/arm64/Kconfig.platforms | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/st/Makefile b/arch/arm64/boot/dts/st/Makefile
-index 881fe1296c581621f1219dbfbb4b1e03179e0f6f..0cc12f2b1dfeea6510793ea26f599f767df77749 100644
---- a/arch/arm64/boot/dts/st/Makefile
-+++ b/arch/arm64/boot/dts/st/Makefile
-@@ -1,2 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
--dtb-$(CONFIG_ARCH_STM32) += stm32mp257f-ev1.dtb
-+dtb-$(CONFIG_ARCH_STM32) += \
-+	stm32mp257f-dk.dtb \
-+	stm32mp257f-ev1.dtb
-diff --git a/arch/arm64/boot/dts/st/stm32mp257f-dk.dts b/arch/arm64/boot/dts/st/stm32mp257f-dk.dts
-new file mode 100644
-index 0000000000000000000000000000000000000000..314c99a76654992ca094db56291ab73602712327
---- /dev/null
-+++ b/arch/arm64/boot/dts/st/stm32mp257f-dk.dts
-@@ -0,0 +1,115 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
-+/*
-+ * Copyright (C) STMicroelectronics 2025 - All Rights Reserved
-+ * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/leds/common.h>
-+#include "stm32mp257.dtsi"
-+#include "stm32mp25xf.dtsi"
-+#include "stm32mp25-pinctrl.dtsi"
-+#include "stm32mp25xxak-pinctrl.dtsi"
-+
-+/ {
-+	model = "STMicroelectronics STM32MP257F-DK Discovery Board";
-+	compatible = "st,stm32mp257f-dk", "st,stm32mp257";
-+
-+	aliases {
-+		serial0 = &usart2;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		button-user-1 {
-+			label = "User-1";
-+			linux,code = <BTN_1>;
-+			gpios = <&gpioc 5 GPIO_ACTIVE_HIGH>;
-+			status = "okay";
-+		};
-+
-+		button-user-2 {
-+			label = "User-2";
-+			linux,code = <BTN_2>;
-+			gpios = <&gpioc 11 GPIO_ACTIVE_HIGH>;
-+			status = "okay";
-+		};
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+
-+		led-blue {
-+			function = LED_FUNCTION_HEARTBEAT;
-+			color = <LED_COLOR_ID_BLUE>;
-+			gpios = <&gpioh 7 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+			default-state = "off";
-+		};
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x1 0x0>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		fw@80000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x0 0x80000000 0x0 0x4000000>;
-+			no-map;
-+		};
-+	};
-+};
-+
-+&arm_wdt {
-+	timeout-sec = <32>;
-+	status = "okay";
-+};
-+
-+&scmi_regu {
-+	scmi_vddio1: regulator@0 {
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+	scmi_vdd_sdcard: regulator@23 {
-+		reg = <VOLTD_SCMI_STPMIC2_LDO7>;
-+		regulator-name = "vdd_sdcard";
-+	};
-+};
-+
-+&sdmmc1 {
-+	pinctrl-names = "default", "opendrain", "sleep";
-+	pinctrl-0 = <&sdmmc1_b4_pins_a>;
-+	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
-+	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
-+	cd-gpios = <&gpiod 3 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-+	disable-wp;
-+	st,neg-edge;
-+	bus-width = <4>;
-+	vmmc-supply = <&scmi_vdd_sdcard>;
-+	vqmmc-supply = <&scmi_vddio1>;
-+	status = "okay";
-+};
-+
-+&usart2 {
-+	pinctrl-names = "default", "idle", "sleep";
-+	pinctrl-0 = <&usart2_pins_a>;
-+	pinctrl-1 = <&usart2_idle_pins_a>;
-+	pinctrl-2 = <&usart2_sleep_pins_a>;
-+	/delete-property/dmas;
-+	/delete-property/dma-names;
-+	status = "okay";
-+};
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 844a39620cfea8bfc031a545d85e33894ef20994..f788dbc09c9eb6f5801758ccf6b0ffe50a96090e 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -325,6 +325,8 @@ config ARCH_STM32
+ 			- STM32MP251, STM32MP253, STM32MP255 and STM32MP257.
+ 		- STM32MP23:
+ 			- STM32MP231, STM32MP233, STM32MP235.
++		- STM32MP21:
++			- STM32MP211, STM32MP213, STM32MP215.
+ 
+ config ARCH_SYNQUACER
+ 	bool "Socionext SynQuacer SoC Family"
 
 -- 
 2.25.1
