@@ -1,167 +1,212 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E36D35950;
-	Mon, 10 Feb 2025 04:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038E5140E5F
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 04:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739162455; cv=none; b=h8IOidk1rZoJ6TM0hTwwb14LaL3jaynkUi8aJWTOpm4/+x3jTltjYx+1E2ctO90vBsosOaDDnTW3aJB2u8MDPXqf7/Eq+v1g8BHBttQyzisxJAXQMabgogC7Jfbv/PYzbQZX9VGMSIKE3QLOmlXyt5M+sx20TyfGPm6FCVjUPRs=
+	t=1739162693; cv=none; b=RlhlJAdpuimgzrmkKRDCgvay4AmBOlbw+tDJqHuFZmsEhz/UE3yNr4VMzd2G/1eTyKUUGs8rnSdc1soFKMGe2lwZ4WLHCPeFIxz8F36y5LsCxrGRN6wqN87a8WWY6h865sB63nfG9dobEUy7RPsUe+PX8FqA5KK8BimyyBn6kjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739162455; c=relaxed/simple;
-	bh=V+X++7IKWPkm4b0Uaz5A7ZFc+QChUiSngdaD/I5xPrY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=kq/75zCpkLQt9L35t6ZO2bAEngmKF4de4euVkLZaF2WYdySrQsbAlr3sGdFSWkSoPSLclRAehFYkfSRXkIIZFjvOn7cK9+M4wzquDpyaMm3UPdpNAhvGe/edbPsum1wHz+Eh65GHT0M+UVWFuMBg0WxyGuv4ZAJp+16S+q+bfts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=c1HeStwI; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1739162693; c=relaxed/simple;
+	bh=vTanPSj0WJSOQJ6VK+dSr4V6tineoC/hsdguGdxz6Ao=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Snp9r0eqy/NiJbb/AMMySiFKOf10ooP2qmJi3dIQR7HK5eoKSu2momisn7o9uMKW5//e6siZiLRFJ1m+beL8BKsLCKJCY+/ttZhsA+95J5YuRw0cXYQJD+qECLXIB6oB2mzvYH5DtkihpTnXSGbNny1MQ3yD5cjs5BBiPG3cb9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XareteWg; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="c1HeStwI"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 109E02107338; Sun,  9 Feb 2025 20:40:54 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 109E02107338
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1739162454;
-	bh=ADvNUhAK+77BU7r4HcsCMy90Jg91GnipLA00ytq30jU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=c1HeStwIGgSEItxs/tHEP94qtqHIjxZVGV+K4RsO9CkC1IszyepERRoUDre9o48ov
-	 KFrkqh657T/1b0VQKLbWMPRA838vwoftAnMQmbnWTC4mbwTg8TG1QqYUbIO5oyCBDZ
-	 Pn7/MeW4Jp+12C8+TA+jdSr2ozJnAc8DAMr5VhsU=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Long Li <longli@microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Erick Archer <erick.archer@outlook.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: [PATCH v2 net-next 2/2] hv_netvsc: Use VF's tso_max_size value when data path is VF
-Date: Sun,  9 Feb 2025 20:40:49 -0800
-Message-Id: <1739162449-6831-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1739162392-6356-1-git-send-email-shradhagupta@linux.microsoft.com>
-References: <1739162392-6356-1-git-send-email-shradhagupta@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XareteWg"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2fa286ea7e8so3610082a91.2
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 20:44:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739162691; x=1739767491; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=nF3QMZZh+uHZ+XUypTIOVnYHXZf3sl/wR22/LqBDNSc=;
+        b=XareteWg22SH0Jwhxaz2ViALmGAbvbFygvDRPm9MZUSIPSIcwOjCM+A0wXeZ8f9t1p
+         gDampvr0OUV8RZ7ZVNLc37aceoCvw+XrI6MfGKKJKwC95v/U3yBHwlDNE9pBxXmjjSEM
+         Aal+FesM1awuKFO5quF8KUzfFZ6eGR7Xs5afXKBpix19GLp4BlnhKLEYzLZ0FlG1OptU
+         FTSujHq6XpN7y/vozITYu4jj+g6zjs5DApAM5/pwRhhnWhhN903cgUJIEDSWJtFoaDlv
+         VANmO6yvc1FSQywTt+3oLAF0dnHZT1ST3NFIWqcUGoy9CYil5++0KG04BSveoISHbWwD
+         NIsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739162691; x=1739767491;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nF3QMZZh+uHZ+XUypTIOVnYHXZf3sl/wR22/LqBDNSc=;
+        b=OcqLWms/4I1JtSDv6cFWZXRE3m0A5389Jb8LqWQvXIIJ5hEGC4Y9pZKivmcmSQ7Xmi
+         xOwU40YZd0pv6Av8OZCKK4ikiTwnMyVPpefGLgqkBfBLdfH1UCGzDlSFgaEnqCGt3Az1
+         pUm0WdaBeHmRMTe4URnRJ9mIjgRfBsL4wNU3JRr3dlcuQ3ZvKvdck70qcGbxaD4TtZvv
+         DK9srpq7YEsojP/9QQrCJa/QOt+jRJrGUENY8xvbySONKiUT9aoeT2iwkPGgWoNAUAVg
+         KhSSecN5ZKuhlpT3FuZT8G5iuPkUvUlbNBvZ8wC69+4h07eyRwdyWH47xgWe44Kx7Qex
+         CSGw==
+X-Forwarded-Encrypted: i=1; AJvYcCUSSOpW6+wglpnPQ9nGCff1LuLM0r/IUWpaCaEDw2xIJcxqQ+5im7g+1uJ7qwjJX/eC5z7STt4OMYNQ8i8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3xCGBvgyizSOfCWVYJa5U0qhRHP4P6Vm4tLOTwevejr17cGHr
+	CkEEsEK42E1V+z95OkNmDxcsSO/EiySZCT56HE5TVdMG9UJXIUi2QLJt0cdH1Q==
+X-Gm-Gg: ASbGncvEG4b2bYjU72m6lCZ0pwPbF1YoB2m+k4PKS+7+XtFm+jEMsVvCIiFZNPJx61+
+	uLfSCSdTJMMw9P4TnjAZ+LLh2QETVFmiPV0U8kklvgGz6sgAl4yWoyiifa2qKzu7KkeY2yaEzzb
+	DeS+vWJayUjHyt3SZkT0KiFU7MPQG7CtRCnhnIrkZr4XVLe7wXZlh/monTay2HC+zEHNUfiAlRs
+	FFKysECY1GE1jSlpu6IJrhDTNxfHHnwZYNWK/YdmdXcCjZ851B26wRNm3FewZYnAFyI4NSzKANg
+	jRWTwX5/pp7hvDEOvcOd7+0SYW/g
+X-Google-Smtp-Source: AGHT+IEI8FeVLv0rFukXvhLSeUcosU07zHjT/arxCxm962h4GX5fHHBVasy2JjWBqSIvNTOBRXSSKQ==
+X-Received: by 2002:a17:90a:d443:b0:2ee:5111:a54b with SMTP id 98e67ed59e1d1-2fa243eb4dcmr16162251a91.31.1739162691261;
+        Sun, 09 Feb 2025 20:44:51 -0800 (PST)
+Received: from thinkpad ([220.158.156.173])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa09b3f803sm7611469a91.32.2025.02.09.20.44.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2025 20:44:50 -0800 (PST)
+Date: Mon, 10 Feb 2025 10:14:45 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Gaurav Kashyap <quic_gaurkash@quicinc.com>,
+	linux-fscrypt@vger.kernel.org, linux-mmc@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v11 7/7] ufs: qcom: add support for wrapped keys
+Message-ID: <20250210044445.vmtfhqjibonhi6j2@thinkpad>
+References: <20250204060041.409950-1-ebiggers@kernel.org>
+ <20250204060041.409950-8-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250204060041.409950-8-ebiggers@kernel.org>
 
-On Azure, increasing VF's gso/gro packet size to up-to GSO_MAX_SIZE
-is not possible without allowing the same for netvsc NIC
-(as the NICs are bonded together). For bonded NICs, the min of the max
-aggregated pkt size of the members is propagated in the stack.
+On Mon, Feb 03, 2025 at 10:00:41PM -0800, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> Wire up the wrapped key support for ufs-qcom by implementing the needed
+> methods in struct blk_crypto_ll_ops and setting the appropriate flag in
+> blk_crypto_profile::key_types_supported.
+> 
+> For more information about this feature and how to use it, refer to
+> the sections about hardware-wrapped keys in
+> Documentation/block/inline-encryption.rst and
+> Documentation/filesystems/fscrypt.rst.
+> 
+> Based on patches by Gaurav Kashyap <quic_gaurkash@quicinc.com>.
+> Reworked to use the custom crypto profile support.
+> 
 
-Therefore, we use netif_set_tso_max_size() to set max aggregated pkt size
-to VF's packet size for netvsc too, when the data path is switched over
-to the VF
-Tested on azure env with Accelerated Networking enabled and disabled.
+Instead of mentioning the contribution in description, you should use relevant
+tags IMO.
 
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- Changes in v2
- * Instead of using 'tcp segment' throughout the patch used used more accurate
-   term 'aggregated pkt size'
----
- drivers/net/hyperv/hyperv_net.h   |  2 ++
- drivers/net/hyperv/netvsc_drv.c   | 15 +++++++++++++++
- drivers/net/hyperv/rndis_filter.c | 13 +++++++------
- 3 files changed, 24 insertions(+), 6 deletions(-)
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
 
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index e690b95b1bbb..def41067ea3f 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -1166,6 +1166,8 @@ struct netvsc_device {
- 	u32 max_chn;
- 	u32 num_chn;
- 
-+	u32 netvsc_gso_max_size;
-+
- 	atomic_t open_chn;
- 	struct work_struct subchan_work;
- 	wait_queue_head_t subchan_open;
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index d6c4abfc3a28..cbb517aa59cf 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -2461,6 +2461,21 @@ static int netvsc_vf_changed(struct net_device *vf_netdev, unsigned long event)
- 	} else {
- 		netdev_info(ndev, "Data path switched %s VF: %s\n",
- 			    vf_is_up ? "to" : "from", vf_netdev->name);
-+
-+		/* In Azure, when accelerated networking in enabled, other NICs
-+		 * like MANA, MLX, are configured as a bonded nic with
-+		 * Netvsc(failover) NIC. For bonded NICs, the min of the max
-+		 * pkt aggregate size of the members is propagated in the stack.
-+		 * In order to allow these NICs (MANA/MLX) to use up to
-+		 * GSO_MAX_SIZE gso packet size, we need to allow Netvsc NIC to
-+		 * also support this in the guest.
-+		 * This value is only increased for netvsc NIC when datapath is
-+		 * switched over to the VF
-+		 */
-+		if (vf_is_up)
-+			netif_set_tso_max_size(ndev, vf_netdev->tso_max_size);
-+		else
-+			netif_set_tso_max_size(ndev, netvsc_dev->netvsc_gso_max_size);
- 	}
- 
- 	return NOTIFY_OK;
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index c0ceeef4fcd8..82747dfacd70 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -1356,9 +1356,10 @@ static int rndis_netdev_set_hwcaps(struct rndis_device *rndis_device,
- 	struct net_device_context *net_device_ctx = netdev_priv(net);
- 	struct ndis_offload hwcaps;
- 	struct ndis_offload_params offloads;
--	unsigned int gso_max_size = GSO_LEGACY_MAX_SIZE;
- 	int ret;
- 
-+	nvdev->netvsc_gso_max_size = GSO_LEGACY_MAX_SIZE;
-+
- 	/* Find HW offload capabilities */
- 	ret = rndis_query_hwcaps(rndis_device, nvdev, &hwcaps);
- 	if (ret != 0)
-@@ -1390,8 +1391,8 @@ static int rndis_netdev_set_hwcaps(struct rndis_device *rndis_device,
- 			offloads.lso_v2_ipv4 = NDIS_OFFLOAD_PARAMETERS_LSOV2_ENABLED;
- 			net->hw_features |= NETIF_F_TSO;
- 
--			if (hwcaps.lsov2.ip4_maxsz < gso_max_size)
--				gso_max_size = hwcaps.lsov2.ip4_maxsz;
-+			if (hwcaps.lsov2.ip4_maxsz < nvdev->netvsc_gso_max_size)
-+				nvdev->netvsc_gso_max_size = hwcaps.lsov2.ip4_maxsz;
- 		}
- 
- 		if (hwcaps.csum.ip4_txcsum & NDIS_TXCSUM_CAP_UDP4) {
-@@ -1411,8 +1412,8 @@ static int rndis_netdev_set_hwcaps(struct rndis_device *rndis_device,
- 			offloads.lso_v2_ipv6 = NDIS_OFFLOAD_PARAMETERS_LSOV2_ENABLED;
- 			net->hw_features |= NETIF_F_TSO6;
- 
--			if (hwcaps.lsov2.ip6_maxsz < gso_max_size)
--				gso_max_size = hwcaps.lsov2.ip6_maxsz;
-+			if (hwcaps.lsov2.ip6_maxsz < nvdev->netvsc_gso_max_size)
-+				nvdev->netvsc_gso_max_size = hwcaps.lsov2.ip6_maxsz;
- 		}
- 
- 		if (hwcaps.csum.ip6_txcsum & NDIS_TXCSUM_CAP_UDP6) {
-@@ -1438,7 +1439,7 @@ static int rndis_netdev_set_hwcaps(struct rndis_device *rndis_device,
- 	 */
- 	net->features &= ~NETVSC_SUPPORTED_HW_FEATURES | net->hw_features;
- 
--	netif_set_tso_max_size(net, gso_max_size);
-+	netif_set_tso_max_size(net, nvdev->netvsc_gso_max_size);
- 
- 	ret = rndis_filter_set_offload_params(net, nvdev, &offloads);
- 
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
+> ---
+>  drivers/ufs/host/ufs-qcom.c | 51 ++++++++++++++++++++++++++++++++-----
+>  1 file changed, 45 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+> index f34527fb02fb2..dc3eb6f29f5b2 100644
+> --- a/drivers/ufs/host/ufs-qcom.c
+> +++ b/drivers/ufs/host/ufs-qcom.c
+> @@ -132,15 +132,10 @@ static int ufs_qcom_ice_init(struct ufs_qcom_host *host)
+>  	}
+>  
+>  	if (IS_ERR_OR_NULL(ice))
+>  		return PTR_ERR_OR_ZERO(ice);
+>  
+> -	if (qcom_ice_get_supported_key_type(ice) != BLK_CRYPTO_KEY_TYPE_RAW) {
+> -		dev_warn(dev, "Wrapped keys not supported. Disabling inline encryption support.\n");
+> -		return 0;
+> -	}
+> -
+>  	host->ice = ice;
+>  
+>  	/* Initialize the blk_crypto_profile */
+>  
+>  	caps.reg_val = cpu_to_le32(ufshcd_readl(hba, REG_UFS_CCAP));
+> @@ -150,11 +145,11 @@ static int ufs_qcom_ice_init(struct ufs_qcom_host *host)
+>  	if (err)
+>  		return err;
+>  
+>  	profile->ll_ops = ufs_qcom_crypto_ops;
+>  	profile->max_dun_bytes_supported = 8;
+> -	profile->key_types_supported = BLK_CRYPTO_KEY_TYPE_RAW;
+> +	profile->key_types_supported = qcom_ice_get_supported_key_type(ice);
+>  	profile->dev = dev;
+>  
+>  	/*
+>  	 * Currently this driver only supports AES-256-XTS.  All known versions
+>  	 * of ICE support it, but to be safe make sure it is really declared in
+> @@ -218,13 +213,57 @@ static int ufs_qcom_ice_keyslot_evict(struct blk_crypto_profile *profile,
+>  	err = qcom_ice_evict_key(host->ice, slot);
+>  	ufshcd_release(hba);
+>  	return err;
+>  }
+>  
+> +static int ufs_qcom_ice_derive_sw_secret(struct blk_crypto_profile *profile,
+> +					 const u8 *eph_key, size_t eph_key_size,
+> +					 u8 sw_secret[BLK_CRYPTO_SW_SECRET_SIZE])
+> +{
+> +	struct ufs_hba *hba = ufs_hba_from_crypto_profile(profile);
+> +	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> +
+> +	return qcom_ice_derive_sw_secret(host->ice, eph_key, eph_key_size,
+> +					 sw_secret);
+> +}
+> +
+> +static int ufs_qcom_ice_import_key(struct blk_crypto_profile *profile,
+> +				   const u8 *raw_key, size_t raw_key_size,
+> +				   u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
+> +{
+> +	struct ufs_hba *hba = ufs_hba_from_crypto_profile(profile);
+> +	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> +
+> +	return qcom_ice_import_key(host->ice, raw_key, raw_key_size, lt_key);
+> +}
+> +
+> +static int ufs_qcom_ice_generate_key(struct blk_crypto_profile *profile,
+> +				     u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
+> +{
+> +	struct ufs_hba *hba = ufs_hba_from_crypto_profile(profile);
+> +	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> +
+> +	return qcom_ice_generate_key(host->ice, lt_key);
+> +}
+> +
+> +static int ufs_qcom_ice_prepare_key(struct blk_crypto_profile *profile,
+> +				    const u8 *lt_key, size_t lt_key_size,
+> +				    u8 eph_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
+> +{
+> +	struct ufs_hba *hba = ufs_hba_from_crypto_profile(profile);
+> +	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> +
+> +	return qcom_ice_prepare_key(host->ice, lt_key, lt_key_size, eph_key);
+> +}
+> +
+>  static const struct blk_crypto_ll_ops ufs_qcom_crypto_ops = {
+>  	.keyslot_program	= ufs_qcom_ice_keyslot_program,
+>  	.keyslot_evict		= ufs_qcom_ice_keyslot_evict,
+> +	.derive_sw_secret	= ufs_qcom_ice_derive_sw_secret,
+> +	.import_key		= ufs_qcom_ice_import_key,
+> +	.generate_key		= ufs_qcom_ice_generate_key,
+> +	.prepare_key		= ufs_qcom_ice_prepare_key,
+>  };
+>  
+>  #else
+>  
+>  static inline void ufs_qcom_ice_enable(struct ufs_qcom_host *host)
+> -- 
+> 2.48.1
+> 
+
 -- 
-2.34.1
-
+மணிவண்ணன் சதாசிவம்
