@@ -1,99 +1,285 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71215225D7
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 06:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0BC2F2E;
+	Mon, 10 Feb 2025 06:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739167672; cv=none; b=R9OXyu5+OXivNRQ2cbKDm1JJOfNu6RsDj6ttfAcFygIXWddqJKBCAw6JeyVNRpT9JgMcBmnizUjzcoOMHg5xmttBxZYDPHtvFH4wCds8xpx/iu191AA4CV/Dsn4z4YhJu3SJlDah6P+s+ORM1kJgPY9Ut7E6a1vw4qk9/UMiptE=
+	t=1739167749; cv=none; b=YLNXfwovZ8xEi29CG89nG5geOma8k2K5+paRYGSKHo/4dIoaMix5Wmzph+LmpDxWqBZ6gQ+HO/N36ymfGrZtpZc8GdXxpBfjnupuxVsV+jfextL0EznQeAwfTyv2XPhPXfRWzqbloywAG2HivBbcrtUDHMwtoOkEfIYSRpSTZSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739167672; c=relaxed/simple;
-	bh=2ckOBtZ0SayfkUiAGTScq7nP6Ree1sZ/P3eqOOPh5i4=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=U5INA2jwAsnoTZPHMNO1NJjpIIn+EUomml23CGYtdfNSmwUxvsTHKCcx92mI93kmoVrntoePfkeIg7g01ddtZUQg/mZOvBHt3gu+/FJZ5ue9zxKReIPd3MbZPRyQ5x7in1DQ+0biQXAVVkvvfoncktI4SRm0Zo8oJW79bKR5FeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxC+Kxl6ln3flwAA--.22073S3;
-	Mon, 10 Feb 2025 14:07:45 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMCxPsevl6lnzsAJAA--.38660S3;
-	Mon, 10 Feb 2025 14:07:44 +0800 (CST)
-Subject: Re: [PATCH v6 0/9] Add jump table support for objtool on LoongArch
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-References: <20241217010905.13054-1-yangtiezhu@loongson.cn>
- <ef1e3e7c-0117-175c-5a85-091382696748@loongson.cn>
- <20250115013444.anzoct6gvs56m225@jpoimboe>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, loongarch@lists.linux.dev,
- amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <4612bfd8-442e-fecb-240f-46e735b48540@loongson.cn>
-Date: Mon, 10 Feb 2025 14:07:43 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1739167749; c=relaxed/simple;
+	bh=GHhEz7KekUZhqj1NE8GNf8fisUtvXl+f+6/xeJmfw5w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lImnFMYPRFABjgztNgcnCG6RY3AzeERUthIlZCx3S/Ffu0lgr0Y+gy8nYbcX1weXVCohFeWjdHCoyWZqo/ZOxSHAbsXWLa03iyb8oS8tjVO9ikEh4mTfeblJ4SBAGKyu1+xaJncWFa739I5avpn+glCiA+zkoXqAlxKrTZ15xJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RWsisHhl; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWsisHhl"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6e440e64249so44078456d6.3;
+        Sun, 09 Feb 2025 22:09:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739167746; x=1739772546; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K5/9PqjEvYkQFd5yNKv2xYvNMa4Akp79ubfmMPlIv04=;
+        b=RWsisHhlasT4yQlY0nHFbF/3p76CtFR7tbMyl5cFAZY8QsuDMmpGqD+3UphzeSh0gL
+         tDwiWZ8wM7q2KhrpzUtVyU/L1qP//UwuG+f+8im3riY0hKeILvS7PJhYRJyTquf3V+mS
+         5ZTe25O+SbHVafaIk/hAWxN7gn1EPvaRu001VVmoH8fyoVCMz+bSp6jrVOR55ZB/ghC9
+         lZCuQU7b402YqrszDy17DqiUL5JNmQG2nhrmpmGCvWVhjja49x6fXQg3W5m60O7hpTGY
+         1NqAk6zBcvP5eEdwYjeJsSw/4WcN++2xFl09A3d17T9Ty+xExRMcSnt+7kwxrtpnsdGW
+         uwYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739167746; x=1739772546;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K5/9PqjEvYkQFd5yNKv2xYvNMa4Akp79ubfmMPlIv04=;
+        b=k0JEk8YyJ8VP9kNRqBLJdEVM2FoeF5u73/w59JEwZpbG2XS4UN8al0zB8ZTF+Exr+3
+         DutbysV+HxMkMvjMKcl8XR/RX6vh45ziPtPx9oikzrmXqVoUVKWYwY2AlpCvLUuTfH2e
+         pHjW2rBLoTt/qjpGdrFDmKq6b35SmPDHukspW4QoP/6bgbXRBg3tfJn3GxyWPAh4etSD
+         k+D2gVp9NCj0BO1M7MDf42bFXs3ub5H+h7tbS8pWEHpfvDv8snw+oA/ORam8x/B0ekW8
+         YS9Ghac1mbSk60N5ektggEOgfNMQK9d2fhi7dge13BiB9p86lEy8ZK+LUKvGbKzb8WHP
+         q5bg==
+X-Forwarded-Encrypted: i=1; AJvYcCVoO0xHhfdn0yye21TCWIdge0NZtLNGsUEZrRkwz/SwuJljOIEdYQwGzhBbwJrGDVUjQ5rgGEXCTchSNdw=@vger.kernel.org, AJvYcCVr6pXuq56GX1l+we3K0RhOssEqGrmCGB9D6GNww846rFGSULCrslG7+VmBSEZPSjEFAeXvnlpyqtWV+2AMdTA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTTSr/O84ffHSN+zQS9evdtJz/bCFTxlj2TYtqinnmiE1dI0sQ
+	TblpHrQ/Hd6T9SoKC++X93XSGQcOzf8B6GKJpRHzuY2NsYHDGm8U
+X-Gm-Gg: ASbGnctgpNmbvYbS4lDhfuMk8dEQzXQzOGXNjjBijMGYt1CHVE0fgol6E1v4maPZbs9
+	/0mQGvxLYYvQWJQ1Z3G8HN4vchwPmtogRo4lhwwzFTdv3u+P3pLejON6pqwOJkfatwPvuyIBigO
+	hfzS8qXBrLnuyE+98xQqd00oiXRvs592h3ORMbpu6yOwDCTuJw52vuiVnOnNt/IHVHWyO4wJ8Ji
+	Fw3j7ZyQ50g1nbwFwygwBsFEU8sq9cyuC6+16RHee8Q0bjwysCvwFEgOphl68hxx8h2pNERz7CH
+	pAYJTEugw2U/6IX4BRlcisPq04AP853R7RiBKvBkS3lceg8LF0WSBgUNVz8+AOkn/cKTsM9YZf9
+	KkLXjKw==
+X-Google-Smtp-Source: AGHT+IHTYjwgC6qS2wN2jYs6JjD4NiN18ZaeObf5dB9OD+vBRDFGbOJLoczEYVbbx2fjr4RUAeHopw==
+X-Received: by 2002:a05:6214:dc7:b0:6e2:4940:400b with SMTP id 6a1803df08f44-6e4455f5b0fmr221946346d6.16.1739167746086;
+        Sun, 09 Feb 2025 22:09:06 -0800 (PST)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43baacee1sm43614426d6.84.2025.02.09.22.09.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2025 22:09:05 -0800 (PST)
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 361211200043;
+	Mon, 10 Feb 2025 01:09:05 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Mon, 10 Feb 2025 01:09:05 -0500
+X-ME-Sender: <xms:AZipZ-d-ol4i5vfli2_OEF6Kj6KrW0TjoW1ExeaFB7-ghloUgXWdpw>
+    <xme:AZipZ4OuHeAnD8srvhURb6BF2IpgdrikM9TP_JDpqHzreA2o6hevjrlU0PeAjxXMl
+    xd2nO1g0BXklU-cMA>
+X-ME-Received: <xmr:AZipZ_hXkYmN1-uVK7EZ1awYrRRgKdvYBxcco2Vt4PLIzZXD2--WVQ0oYA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefjedvlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
+    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
+    drtghomheqnecuggftrfgrthhtvghrnhephfetvdfgtdeukedvkeeiteeiteejieehvdet
+    heduudejvdektdekfeegvddvhedtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhn
+    odhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejje
+    ekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhn
+    rghmvgdpnhgspghrtghpthhtohepudegpdhmohguvgepshhmthhpohhuthdprhgtphhtth
+    hopegrlhhitggvrhihhhhlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehojhgvuggr
+    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvth
+    dprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdprhgt
+    phhtthhopegsvghnnhhordhlohhsshhinhesphhrohhtohhnrdhmvgdprhgtphhtthhope
+    grrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhmghhrohhs
+    shesuhhmihgthhdrvgguuhdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrug
+    drohhrghdprhgtphhtthhopehmihhnghhosehrvgguhhgrthdrtghomh
+X-ME-Proxy: <xmx:AZipZ7-wbpV-bZvFG4RUVs7SF_tP9Y6qT8fXMA0Fs5_sPez6wmhMhQ>
+    <xmx:AZipZ6ufROFz-Umx_wKzBF3vvDoWX4brOGjwYjqA9RYl5rRBNLG-8Q>
+    <xmx:AZipZyE6No6frdqFXfpD_B3BacWz4EFOqJrN6SGcX3hZ7mFslKlf6Q>
+    <xmx:AZipZ5P3WeyOlYY_nE5fvM67QYidNoX-ksCDh1E9ClBXZvDwkaeISQ>
+    <xmx:AZipZ3NI8TQNzvDGrAszn4XOvxLTWhZrvNSpHs4GQdtxLgB4Zb16emE7>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 10 Feb 2025 01:09:04 -0500 (EST)
+Date: Sun, 9 Feb 2025 22:09:03 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] rust: sync: add wait_interruptible_freezable
+Message-ID: <Z6mX_29mUYcX0CFS@Mac.home>
+References: <20250204-condvar-freeze-v2-1-804483096260@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250115013444.anzoct6gvs56m225@jpoimboe>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMCxPsevl6lnzsAJAA--.38660S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ur4Uur45Zw4ktrW5uF4rZwc_yoW8GrykpF
-	W5GFW29F4kJrWUX3WkKw1agFySqw4ftr1xXr45WrW5Aa1qq3W5tr4fZw4YgFWqgr4YvFyI
-	ya1fJa4q9F4DArXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
-	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jepB-UUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250204-condvar-freeze-v2-1-804483096260@google.com>
 
-On 01/15/2025 09:34 AM, Josh Poimboeuf wrote:
-> On Sat, Jan 11, 2025 at 02:57:42PM +0800, Tiezhu Yang wrote:
->> Hi Josh and Peter,
->>
->> On 12/17/2024 09:08 AM, Tiezhu Yang wrote:
->>> This version is based on tip/tip.git objtool/core branch [1], add some weak
->>> and arch-specific functions to make the generic code more readable, tested
->>> with the latest upstream mainline Binutils, GCC and Clang.
->>
->> ...
->>
->>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=objtool/core
->>>
->>> Tiezhu Yang (9):
->>>   objtool: Handle various symbol types of rodata
->>>   objtool: Handle different entry size of rodata
->>>   objtool: Handle PC relative relocation type
->>>   objtool: Handle unreachable entry of rodata
->>>   objtool/LoongArch: Add support for switch table
->>>   objtool/LoongArch: Add support for goto table
->>>   LoongArch: Enable jump table for objtool
->>>   LoongArch: Convert unreachable() to BUG()
->>>   drm/amd/display: Mark dc_fixpt_from_fraction() noinline
->>
->> Are you OK with the first 8 patches?
->> What's the merge plan for this series?
->
-> Sorry, my inbox is still reeling from the holidays.  I will review this
-> soon.
+Hi,
 
-What are the status of the first 8 patches?
-What is the next step? Is there anything else to be done here?
-I would really appreciate any advice on how to get this merged.
+On Tue, Feb 04, 2025 at 01:43:25PM +0000, Alice Ryhl wrote:
+> Binder allows you to freeze a process where some of its threads are
+> blocked on the Binder driver. To make this work, we need to pass
+> TASK_FREEZABLE when going to sleep in the appropriate places. Thus, add
+> a new method wait_interruptible_freezable for the condition variable so
+> that sleeps where this is supported can be marked as such.
+> 
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> ---
+> Changes in v2:
+> - Document that you must not hold locks when you call the method.
+> - Link to v1: https://lore.kernel.org/r/20250130-condvar-freeze-v1-1-a91d5661d505@google.com
+> ---
+>  rust/kernel/sync/condvar.rs | 23 ++++++++++++++++++++++-
+>  rust/kernel/task.rs         |  2 ++
+>  2 files changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/rust/kernel/sync/condvar.rs b/rust/kernel/sync/condvar.rs
+> index 7df565038d7d..1859e011e322 100644
+> --- a/rust/kernel/sync/condvar.rs
+> +++ b/rust/kernel/sync/condvar.rs
+> @@ -11,7 +11,9 @@
+>      init::PinInit,
+>      pin_init,
+>      str::CStr,
+> -    task::{MAX_SCHEDULE_TIMEOUT, TASK_INTERRUPTIBLE, TASK_NORMAL, TASK_UNINTERRUPTIBLE},
+> +    task::{
+> +        MAX_SCHEDULE_TIMEOUT, TASK_FREEZABLE, TASK_INTERRUPTIBLE, TASK_NORMAL, TASK_UNINTERRUPTIBLE,
+> +    },
+>      time::Jiffies,
+>      types::Opaque,
+>  };
+> @@ -159,6 +161,25 @@ pub fn wait_interruptible<T: ?Sized, B: Backend>(&self, guard: &mut Guard<'_, T,
+>          crate::current!().signal_pending()
+>      }
+>  
+> +    /// Releases the lock and waits for a notification in interruptible and freezable mode.
+> +    ///
+> +    /// The process is allowed to be frozen during this sleep. You must not hold any locks while
+> +    /// this operation is ongoing, and there is a lockdep assertion for this. Freezing a task that
+> +    /// holds a lock can trivially deadlock vs another task that needs that lock to complete before
+> +    /// it too can hit freezable.
+> +    #[must_use = "wait returns if a signal is pending, so the caller must check the return value"]
+> +    pub fn wait_interruptible_freezable<T: ?Sized, B: Backend>(
+> +        &self,
+> +        guard: &mut Guard<'_, T, B>,
+> +    ) -> bool {
+> +        self.wait_internal(
+> +            TASK_INTERRUPTIBLE | TASK_FREEZABLE,
+> +            guard,
+> +            MAX_SCHEDULE_TIMEOUT,
+> +        );
+> +        crate::current!().signal_pending()
+> +    }
+> +
+>      /// Releases the lock and waits for a notification in interruptible mode.
+>      ///
+>      /// Atomically releases the given lock (whose ownership is proven by the guard) and puts the
+> diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
+> index 07bc22a7645c..ea43a3b8d9c5 100644
+> --- a/rust/kernel/task.rs
+> +++ b/rust/kernel/task.rs
+> @@ -23,6 +23,8 @@
+>  pub const TASK_INTERRUPTIBLE: c_int = bindings::TASK_INTERRUPTIBLE as c_int;
+>  /// Bitmask for tasks that are sleeping in an uninterruptible state.
+>  pub const TASK_UNINTERRUPTIBLE: c_int = bindings::TASK_UNINTERRUPTIBLE as c_int;
+> +/// Bitmask for tasks that are sleeping in a freezable state.
+> +pub const TASK_FREEZABLE: c_int = bindings::TASK_FREEZABLE as c_int;
+>  /// Convenience constant for waking up tasks regardless of whether they are in interruptible or
+>  /// uninterruptible sleep.
+>  pub const TASK_NORMAL: c_uint = bindings::TASK_NORMAL as c_uint;
+> 
+> ---
+> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+> change-id: 20250130-condvar-freeze-f2ea5b308405
+> 
+> Best regards,
+> -- 
+> Alice Ryhl <aliceryhl@google.com>
+> 
 
-Thanks,
-Tiezhu
+I queued this in my locking branch for upcoming PR to tip tree, since
+it's relatively small and it belongs to the scope of tip, if all goes
+well, it'll be in 6.15. I did some commit log changes while I'm at it,
+please see below. Thanks.
 
+Regards,
+Boqun
+
+------------->8
+Subject: [PATCH] rust: sync: condvar: Add wait_interruptible_freezable()
+
+To support waiting for a `CondVar` as a freezable process, add a
+wait_interruptible_freezable() function.
+
+Binder needs this function in the appropriate places to freeze a process
+where some of its threads are blocked on the Binder driver.
+
+[Boqun: Capitalize the title and reword the commit log]
+
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Link: https://lore.kernel.org/r/20250204-condvar-freeze-v2-1-804483096260@google.com
+---
+ rust/kernel/sync/condvar.rs | 23 ++++++++++++++++++++++-
+ rust/kernel/task.rs         |  2 ++
+ 2 files changed, 24 insertions(+), 1 deletion(-)
+
+diff --git a/rust/kernel/sync/condvar.rs b/rust/kernel/sync/condvar.rs
+index 7df565038d7d..1859e011e322 100644
+--- a/rust/kernel/sync/condvar.rs
++++ b/rust/kernel/sync/condvar.rs
+@@ -11,7 +11,9 @@
+     init::PinInit,
+     pin_init,
+     str::CStr,
+-    task::{MAX_SCHEDULE_TIMEOUT, TASK_INTERRUPTIBLE, TASK_NORMAL, TASK_UNINTERRUPTIBLE},
++    task::{
++        MAX_SCHEDULE_TIMEOUT, TASK_FREEZABLE, TASK_INTERRUPTIBLE, TASK_NORMAL, TASK_UNINTERRUPTIBLE,
++    },
+     time::Jiffies,
+     types::Opaque,
+ };
+@@ -159,6 +161,25 @@ pub fn wait_interruptible<T: ?Sized, B: Backend>(&self, guard: &mut Guard<'_, T,
+         crate::current!().signal_pending()
+     }
+ 
++    /// Releases the lock and waits for a notification in interruptible and freezable mode.
++    ///
++    /// The process is allowed to be frozen during this sleep. You must not hold any locks while
++    /// this operation is ongoing, and there is a lockdep assertion for this. Freezing a task that
++    /// holds a lock can trivially deadlock vs another task that needs that lock to complete before
++    /// it too can hit freezable.
++    #[must_use = "wait returns if a signal is pending, so the caller must check the return value"]
++    pub fn wait_interruptible_freezable<T: ?Sized, B: Backend>(
++        &self,
++        guard: &mut Guard<'_, T, B>,
++    ) -> bool {
++        self.wait_internal(
++            TASK_INTERRUPTIBLE | TASK_FREEZABLE,
++            guard,
++            MAX_SCHEDULE_TIMEOUT,
++        );
++        crate::current!().signal_pending()
++    }
++
+     /// Releases the lock and waits for a notification in interruptible mode.
+     ///
+     /// Atomically releases the given lock (whose ownership is proven by the guard) and puts the
+diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
+index 07bc22a7645c..ea43a3b8d9c5 100644
+--- a/rust/kernel/task.rs
++++ b/rust/kernel/task.rs
+@@ -23,6 +23,8 @@
+ pub const TASK_INTERRUPTIBLE: c_int = bindings::TASK_INTERRUPTIBLE as c_int;
+ /// Bitmask for tasks that are sleeping in an uninterruptible state.
+ pub const TASK_UNINTERRUPTIBLE: c_int = bindings::TASK_UNINTERRUPTIBLE as c_int;
++/// Bitmask for tasks that are sleeping in a freezable state.
++pub const TASK_FREEZABLE: c_int = bindings::TASK_FREEZABLE as c_int;
+ /// Convenience constant for waking up tasks regardless of whether they are in interruptible or
+ /// uninterruptible sleep.
+ pub const TASK_NORMAL: c_uint = bindings::TASK_NORMAL as c_uint;
+-- 
