@@ -1,138 +1,150 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC54D1C07D9;
-	Mon, 10 Feb 2025 22:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD7A26460A;
+	Mon, 10 Feb 2025 22:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739225472; cv=none; b=JsnXGrsvBZJ6Sgm8fMnqPMB9SPcuod+mo6pYTaw8/m7t1hach+96YWHc+L7oBB9+JuqJHMrhyWPM0arkzSR/Jj2MJwjMCTSh+o5ytqGK6xeuluSJo0Nda4+XqHwR+9zML+1xQYLubyHhKzXe/dU9v2GF+HbOjLQCLhSRtXKOjJU=
+	t=1739225675; cv=none; b=FbWwICmwKRRKA7Jmd0UA9eNMmXOSlOTP13R3Y3vJjTjCouwA4UKbhV6YzPiXC6Fqndi4r68ks3sYtL3lVDRo7xlmJ5bkJj0k5cXLzWH5ieV6G68N9zA8HaIsoKpxHt/6TFlgcnpBBJ/Mwfgl5QuJo07MTYlpMJkEluoVvDaGIvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739225472; c=relaxed/simple;
-	bh=fxlBqkkfGS9G0KmkfiGacPTftMamdDnTKm1+cbpRGcU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tz3P+px+3Zb5Mhq9cxXolp28QKEkVCkWnOZRUB1NvB5D2YgF0rEW36aqBRXYMjkJtv/AaQPjF3eDc7VT5Gl3BSKAEw+vH848MYM+1ZfAhTFeQCkJe5Lfou0u1i9vj0PJDKHQFiIjru9VBJH6QY1h94f/Z9khVL11uQKBHF9t6Qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lhq6jIKV; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739225675; c=relaxed/simple;
+	bh=wAlco3KgE3b5Zm2KxeQSUCDAHvlWIRWuWCxaZuyhKIA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=o/O0PzvduXHusGhsOk6OQN46nsQY50bwxoG9EIdADRt1L9wzyDLHI7slFCJ/HKCIAwHabz6J5QV60QxOJqvpmOAlI7hHR90c0QFRdQaWyLVXKu1dk2PIVSLNfaQT9O6DVoD6BmlYtHop5+UoEnaZ5vq/Qp/lXXYqSO8qJPez2n4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bKgYrG2O; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lhq6jIKV"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-388cae9eb9fso2560901f8f.3;
-        Mon, 10 Feb 2025 14:11:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739225469; x=1739830269; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WBnqMoe0ij4/z97GnIELIa4Xg29mNqaZDUnaHmVwXd0=;
-        b=Lhq6jIKVh77dhBzPnXYlynb6LVA/5IhnLlN1pDD/k+cUl8m1kjC/1K7oC5VDTtVZuo
-         FD9wTdqcZlyU+GtGyovGyAwoF0CJhFmJHpjIenrVBw71cvyFL8XegNIkIpkpqN5Fdaf2
-         EI4drSwg7+nJ/FLSp9IcHr0PoAosRaO7k6glwSj7zF1VZCFB+sxRmyWSxDNg7a6Q/agy
-         LavzWNWAffws32H3BJjwrJlNkftJHbhPUAgI9qjF2BPs5dJl/EAb8K3rc/ppmnbyt6x7
-         nio4KP37ESD5RKxdCFLQ3MhQsyTkrMn0HM/LRVoxEcR48kCYnNjGZ0NvoWeduamLE1FW
-         8+yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739225469; x=1739830269;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WBnqMoe0ij4/z97GnIELIa4Xg29mNqaZDUnaHmVwXd0=;
-        b=XlP0Uif5Ai/NBBSIrpWUOIVyIOuIolurL9MnWDW9nl6aA4X3Pmdbh+J7CECHlyAKXw
-         X7STnIggbTTZRxON45P2JFSkF2pGcP/rPKb/DNczkxT6qrp0dEyt05nnKu25/Z3UINq2
-         Xc2RPHJRFVLaA4+n2cNEVkJe1TZaZKHk+3Fq0ksUE41qEYhXafi6wPGp9GS6vMLfYYHW
-         ifN7mBFLn9eh2SbHMDdamEBVk6nYXWRDRq8baTEN05FqaobhElPmbHo33BO6ArqQNHwY
-         /1ocrJXhJdIzb8txw+RsX83EhxZAAYuWat6cUq1OXe4ezEibojDWARAd43ECnwjAJ6IS
-         VzgA==
-X-Forwarded-Encrypted: i=1; AJvYcCXE77YrNQUsQ0Lz5Fd0jHNfMtLZjNIkNNvU1uBUqBdxW2q90DxuWiMSjiAU9zBVTUnef25bLumuMsWr@vger.kernel.org, AJvYcCXJ+EFBIKhtjcl+oF4AwAxbxp1gEkty0Eq7ZUvZWfJlelGJtZUax0gJfL/OosjGHjHam/ozAwrEYPaXHYA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwG70p/I6mMUt3iBC1+av48wSDJSBFetRb36DOdS9NRWBgb5e+U
-	2oZppbjnT8K3ol010HboNn9MSbd8t0gDZz9Okkhm3dQ1Qu9PN78n
-X-Gm-Gg: ASbGnctWsucEDFID6DCd1QYJ3tg3Xi0xue2RmOozDJ4El4HWCR/w6rVTXSVaSlQkFyZ
-	0TlOTTwub4eAKX5qcdyMS3rHQNZGXQy/Z4rpBBIl8CeQSNO2L/7W/PpXoJ/dw2ujDXUVlx6ACJR
-	35AKHNktJv5zhSsDWc+POxZtx5mUB8xvtIcAqeQQDYA+3H8iEq53VFRKHjumyGqkkvYXhPIE9sx
-	IbciaMLLX2bM9fxrqHeg6Mx3QcVXKmTKDjiQrWlhVRot3/ljRu2R/GWYqvlSFZNS/fueYFkVDMu
-	Pp9hgkqvK01FvDYLutn13/SDhIQwEsSmWUX1Q/sG8rkMVkgP3OMuHQ==
-X-Google-Smtp-Source: AGHT+IH5FQdV2KOv/gbgcQCqZR0FYgwe8smObXUqh5iXmhfVX0k4hW3h0dtARWlMLxDGeGEW5k/EDA==
-X-Received: by 2002:a5d:6da9:0:b0:38d:e2c1:9749 with SMTP id ffacd0b85a97d-38de2c1995emr3032192f8f.35.1739225469117;
-        Mon, 10 Feb 2025 14:11:09 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbf2ed900sm13123689f8f.53.2025.02.10.14.11.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 14:11:08 -0800 (PST)
-Date: Mon, 10 Feb 2025 22:11:07 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, bhelgaas@google.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- mitchell.augustin@canonical.com, ilpo.jarvinen@linux.intel.com
-Subject: Re: [PATCH v2] PCI: Batch BAR sizing operations
-Message-ID: <20250210221107.60d608ba@pumpkin>
-In-Reply-To: <20250210134848.78a1ab4a.alex.williamson@redhat.com>
-References: <20250120182202.1878581-1-alex.williamson@redhat.com>
-	<20250209154512.GA18688@redhat.com>
-	<20250210093641.0be242ae.alex.williamson@redhat.com>
-	<20250210195658.GK32480@redhat.com>
-	<20250210200819.GL32480@redhat.com>
-	<20250210134848.78a1ab4a.alex.williamson@redhat.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bKgYrG2O"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AFWGNv010537;
+	Mon, 10 Feb 2025 22:14:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	vY50FlbYh4+8a/VdeObjeHxe9rwAB0wgSpExAfUGU9c=; b=bKgYrG2O14NkcbVZ
+	cGs/N0lLBDOJLBYcof8s/qxsUf1UpBGHpGGzfQEF+LFCdZIbZXQQ764YyGJoSx8E
+	n67QtCKeY8HVZgQPARVUQgUU0sk9YC+aOetSTfSh5BHIhHdvoCn7ysXEm1BH+3Bv
+	OwQWran9q1WadH1zhCv2LNtt61VZnansqLLHeXWBWJF/tAPGn7jKE+G8adTJU6kd
+	s52HcoX2UoAcGEZBnpPdMVTsXh0Mj0I3zlVzlbc6x4gRk4J57fHIJG7G58YUa4fY
+	bpT87AZVOoKSmvYVcXzUofi+NucLIqg15dAGS9Q2sSIkCfXyQL4rWdFPQMAdHjnG
+	/P/z1w==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qcs5actr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 22:14:17 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51AMEGmp031662
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 22:14:16 GMT
+Received: from [10.71.110.136] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Feb
+ 2025 14:14:15 -0800
+Message-ID: <8e40c1bf-6da7-46b1-925c-53d1fa25f3ce@quicinc.com>
+Date: Mon, 10 Feb 2025 14:14:14 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] drm/msm/dpu: Fix uninitialized variable
+To: Ethan Carter Edwards <ethan@ethancedwards.com>,
+        Rob Clark
+	<robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie
+	<airlied@gmail.com>
+CC: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        Simona Vetter <simona@ffwll.ch>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
+References: <20250209-dpu-v2-1-114dfd4ebefd@ethancedwards.com>
+Content-Language: en-US
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <20250209-dpu-v2-1-114dfd4ebefd@ethancedwards.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 6dQVsI2Oq7WzMD3NmrriezMEIldBAUks
+X-Proofpoint-GUID: 6dQVsI2Oq7WzMD3NmrriezMEIldBAUks
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_11,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ mlxlogscore=999 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ adultscore=0 clxscore=1011 mlxscore=0 priorityscore=1501 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502100175
 
-On Mon, 10 Feb 2025 13:48:48 -0700
-Alex Williamson <alex.williamson@redhat.com> wrote:
 
-> On Mon, 10 Feb 2025 21:08:19 +0100
-> Oleg Nesterov <oleg@redhat.com> wrote:
+
+On 2/9/2025 7:51 PM, Ethan Carter Edwards wrote:
+> There is a possibility for an uninitialized *ret* variable to be
+> returned in some code paths.
 > 
-> > On 02/10, Oleg Nesterov wrote:  
-> > >
-> > > On 02/10, Alex Williamson wrote:    
-> > > >
-> > > > --- a/drivers/pci/probe.c
-> > > > +++ b/drivers/pci/probe.c
-> > > > @@ -345,7 +345,8 @@ static void pci_read_bases(struct pci_dev *dev, unsigned int howmany, int rom)
-
-You probably need __always_inline to have any chance of a compile-time
-test of howmany.
-
-> > > >  	unsigned int pos, reg;
-> > > >  	u16 orig_cmd;
-> > > >
-> > > > -	BUILD_BUG_ON(howmany > PCI_STD_NUM_BARS);
-> > > > +	if (__builtin_constant_p(howmany))
-> > > > +		BUILD_BUG_ON(howmany > PCI_STD_NUM_BARS);    
-> > >
-> > > Or just
-> > >
-> > > 	BUILD_BUG_ON(__builtin_constant_p(howmany) && howmany > PCI_STD_NUM_BARS);
-
-	statically_true(howmany > PCI_STD_NUM_BARS)
-
-> > >
-> > > I dunno... Works for me in any case.
-> > >
-> > > I don't know if this is "right" solution though,    
-> > 
-> > I mean, atm I simply don't know if with the newer compiler
-> > __builtin_constant_p(howmany) will be true in this case.  
+> Fix this by initializing *ret* to 0.
 > 
-> That I can confirm.  With gcc 14.2.1, if I change the call in
-> pci_setup_device() to use 7 rather than 6 for howmany, the build fails.
-> If you confirm this resolves the build on older gcc, it seems like a
-> valid fix.  I installed a VM with Fedora 23, which uses gcc 3.5.1, but
-> I haven't yet been able to successfully build any kernel with it.  I'll
-> post a patch if you want to provide a Tested-by.  Thanks,
-
-Far too old a version to be supported.
-
-	David
-
+> Addresses-Coverity-ID: 1642546 ("Uninitialized scalar variable")
+> Fixes: 774bcfb731765d ("drm/msm/dpu: add support for virtual planes")
+> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+> ---
+> Changes in v2:
+> - Return explicit 0 when no error occurs
+> - Add hardening mailing lists
+> - Link to v1: https://lore.kernel.org/r/20250209-dpu-v1-1-0db666884f70@ethancedwards.com
+> ---
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 7 +++----
+>   1 file changed, 3 insertions(+), 4 deletions(-)
 > 
-> Alex
+
+Thanks for your patch, this was addressed with
+
+https://patchwork.freedesktop.org/patch/631567/ but since this is better 
+I am fine with this, will pick this one up
+
+Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+
+
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> index 098abc2c0003cde90ce6219c97ee18fa055a92a5..af3e541f60c303eb5212524e877129359b5ca98c 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> @@ -1164,7 +1164,6 @@ int dpu_assign_plane_resources(struct dpu_global_state *global_state,
+>   			       unsigned int num_planes)
+>   {
+>   	unsigned int i;
+> -	int ret;
+>   
+>   	for (i = 0; i < num_planes; i++) {
+>   		struct drm_plane_state *plane_state = states[i];
+> @@ -1173,13 +1172,13 @@ int dpu_assign_plane_resources(struct dpu_global_state *global_state,
+>   		    !plane_state->visible)
+>   			continue;
+>   
+> -		ret = dpu_plane_virtual_assign_resources(crtc, global_state,
+> +		int ret = dpu_plane_virtual_assign_resources(crtc, global_state,
+>   							 state, plane_state);
+>   		if (ret)
+> -			break;
+> +			return ret;
+>   	}
+>   
+> -	return ret;
+> +	return 0;
+>   }
+>   
+>   static void dpu_plane_flush_csc(struct dpu_plane *pdpu, struct dpu_sw_pipe *pipe)
 > 
+> ---
+> base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+> change-id: 20250209-dpu-c3fac78fc617
 > 
+> Best regards,
 
