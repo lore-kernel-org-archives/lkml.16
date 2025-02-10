@@ -1,385 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0D14690;
-	Mon, 10 Feb 2025 17:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E95B24FBFC
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739209070; cv=none; b=WIfJDTfO032G1wQJ7gyABaoQ7eq3vV/G29CIfZIZ9MKTcXpwtbxLko0pi1gNSQNavzKLuji6Bo7Vv1+DP2GiN7nhF5oiLWjAMc8rgKLEW7mQmHJIb6FQTU2EveJqtYi/kJ84r3tOdjFAbV9fSW0ZlNXfXuDIBnfB+dfpG11yiNU=
+	t=1739209089; cv=none; b=HQsOtfUmFtuLrbKZiUJ+hxYHtFZjBaDGewv0HMHXAhko2q3ZdPRvyN7CZqMA7vdLjKPdfktdt4E8WU9sU5Plngvw1O2EPNI2znSiVuetjnLLPt1a4B8yizdTzMxXUsoUqjn9p4yo+LCbiR2wbYoGmdsCnUSn2wsUlQC91YPfvKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739209070; c=relaxed/simple;
-	bh=ZHvhVHZPAWcr/LsvWZUEqNdGcfT0gR+ANC+5K9rR1hw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XDessc0BfoHecBITAsbP/4CCdIYLaG6E8akzUteOnDr05A/WGeGqrBRKpTiGqnT9idQFe/EXpzSdvnFSB3og0/simgeXkIwtyYXOYGL0ERF0u/4V50ghHsOnjJQrSncSWI3wK+Z0J/WWpF5Tv5rTGlk9K3CPY0w1smNeQGIdkLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yz/w29BX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739209089; c=relaxed/simple;
+	bh=KveOwdYLnyMvdHPkIhUVg6hHWpjgSHD3jdqobeFCKGg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XpszghuVgpOjsYabblzUJtozblmkhNK3gRNoogJKrc+qJQ43DHnYzKdr5z5rsA3kXf+EZs3x+11I+mNyl1MVQF4spjIfOU+Y7q2XDD/jJzt3Kcx0MaiJs1HcPfwQJxLMd84SNTndFfifjAJ3Iu2nZuC3kclH4f2m6X59COO4z+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=RBdcAMvz; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yz/w29BX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96D65C4CEE5;
-	Mon, 10 Feb 2025 17:37:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739209069;
-	bh=ZHvhVHZPAWcr/LsvWZUEqNdGcfT0gR+ANC+5K9rR1hw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Yz/w29BXqKtKuah7/Gjos0WKIWqiAHV0yuukQ3iqe/FkH3SLtH13QEYx0BUdfeTLx
-	 AkWBxH4zU1e6bLVmNB7A+ST4n7GncznRM5KVNMypj3gLlJGhamKLBDparWy96+AV9n
-	 ksYpIDyPxqfMCQN++J2Jumi0QXM8IswMEE/uj9g7Y3yxKlaM7mIuzW3LNJKKUnrFM3
-	 aV0lmCgGtQkkeztUYrvJLGvLVZJzrlJV3B5faPw0IOp4x6Qx3TjTYiBZ0LivWFWMD3
-	 Y8KYjnDwQ7k3ZTCgqI023P8pIJTIypqWgeKCDqI1Hkgao+/IcjIlGRePG6VroooPRV
-	 u4RQEQLZuCM7g==
-Message-ID: <2c3b9e21-06fc-4108-80d7-c4e2c4ceb2fa@kernel.org>
-Date: Mon, 10 Feb 2025 18:37:44 +0100
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="RBdcAMvz"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5de5a8a96abso3992491a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:38:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1739209085; x=1739813885; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qVjjNIhYDEU4EznaGkWhHigqbNvzcXCKCHwh1pZR13Y=;
+        b=RBdcAMvzAkdQJ/SrPJ0fpwG8DgCUMqA3DvRvaKs0cHTIuwtnI93NzKAmDCHXgape9H
+         ghAyXEEZgrasydMnr79JEw5d4KnUeM362wGyyS2zBo+9XICWyCIWWekTQ7b4zCFOg6AD
+         /cLALjQ0B9RddCCzo2S+CWCEfaeTt4Q/odDFo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739209085; x=1739813885;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qVjjNIhYDEU4EznaGkWhHigqbNvzcXCKCHwh1pZR13Y=;
+        b=WCYA48EhEioGa/s2bjB1ITYzunxxJNadoQ/xYbEwzpLmfECVrkBKQm7ReUnEP+wO9i
+         +LZqjXJ/LsDx4Ic3ibh49ahzjowv/BJOolpXYNjFf0nJ5IlXdNw1yFI2aGMbClcC2xdj
+         aqW3oOnD6OBzAgNl/Gqna+EALGJRZPXqV9QfFXVmC8jNywNxrXWxkXF/o7fEIUOP8/24
+         AAo26vi4kshUZJWDCFsLpB2lLeDMGQi87zQOtaxfAnxKmn9VReQUqytY+Jc2sFXelhwo
+         gZbiZqw/Bj7sK4dvA6L0nOPvlPp4Mt/9q23spporpgvI7rQQ60mTjjebW8//n9KLB1pB
+         L5UA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0JZd9cuJbXz+caPpKVS1LKebxFaEiME8DXmUCXmXfrjgPxrGsn2i5pSOMCCK/T0unzk92hJTtKKxNXWY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrRt5z0D9ZojAhFpms9JA57eev6MfJMAjt08DypkYJfmasKy1p
+	1ZeiWtVecX+gOwzgD9gzN6wP9Yqvwsv+s03ZWR54zMCwzmiOCsVEkQ0FkDvkgwt8jBakctbEcFo
+	/lB4=
+X-Gm-Gg: ASbGnctCXGTuK+xo6/Qx6v4Y1uagGLLEfeh8iJorBWGtvvdj9CADwf9SBLVqLaoju47
+	/j4905Ozw+CpCc4QEvFRq/THMIAUsMmwT6Re8qY3dem9RBlB966VllyBJCLjBB3H97evaDKf86d
+	svTlF0Gef4ESGooMGgFZl2JOnXVMEfA4W7C4mnnPfk9Yde30/nVZ/jjJ+vRQHJ1S+UDcSbhSe51
+	/uZRWnSVLr25oMvGbvP6UcOhzPwVY9Z4m7oiGGoxUyZovJdpX/Uo1avysq2HYDDI0ayPXDFmFsf
+	lHkfpcw8M/lRAOj7s6q+RUTo8lHSIJIFiNRBSbh+T4ScFiIPhtpO8YmkpfQvHx2brw==
+X-Google-Smtp-Source: AGHT+IHkfFFhYVV1gqUI9Fz37kzX+r2FhgOMGNuATAaob9CT8mDhpc8Ub3CSMjnMGMrK1lq25Hrc8g==
+X-Received: by 2002:a05:6402:3806:b0:5dc:80ba:dda1 with SMTP id 4fb4d7f45d1cf-5de450026acmr34771589a12.9.1739209085444;
+        Mon, 10 Feb 2025 09:38:05 -0800 (PST)
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de62512da4sm4544615a12.81.2025.02.10.09.38.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 09:38:05 -0800 (PST)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5de5a8a96abso3992417a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:38:03 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV5kE3iGKF/yqUdN4ugnJDt8o23eIe6mNMTgc4BVGCNursx/obO0yKD04mwCYV/vK2VGy//ZdQcu+N1aUg=@vger.kernel.org
+X-Received: by 2002:a05:6402:5386:b0:5dc:74fd:abf1 with SMTP id
+ 4fb4d7f45d1cf-5de45017b76mr38928096a12.15.1739209083436; Mon, 10 Feb 2025
+ 09:38:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/8] media: chips-media: wave6: Add Wave6 control driver
-To: Nas Chung <nas.chung@chipsnmedia.com>, mchehab@kernel.org,
- hverkuil@xs4all.nl, sebastian.fricke@collabora.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-imx@nxp.com,
- linux-arm-kernel@lists.infradead.org, jackson.lee@chipsnmedia.com,
- lafley.kim@chipsnmedia.com
-References: <20250210090725.4580-1-nas.chung@chipsnmedia.com>
- <20250210090725.4580-8-nas.chung@chipsnmedia.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250210090725.4580-8-nas.chung@chipsnmedia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250209150718.GA17013@redhat.com> <20250209150749.GA16999@redhat.com>
+ <CAHk-=wgYC-iAp4dw_wN3DBWUB=NzkjT42Dpr46efpKBuF4Nxkg@mail.gmail.com>
+ <20250209180214.GA23386@redhat.com> <CAHk-=whirZek1fZQ_gYGHZU71+UKDMa_MYWB5RzhP_owcjAopw@mail.gmail.com>
+ <20250209184427.GA27435@redhat.com> <CAHk-=wihBAcJLiC9dxj1M8AKHpdvrRneNk3=s-Rt-Hv5ikqo4g@mail.gmail.com>
+ <20250209191510.GB27435@redhat.com> <b050f92e-4117-4e93-8ec6-ec595fd8570a@amd.com>
+ <20250210172200.GA16955@redhat.com>
+In-Reply-To: <20250210172200.GA16955@redhat.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 10 Feb 2025 09:37:47 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wj8V1v6QmJ_8X6zznautRq29tXMYzxorOniFx4NtxRE1A@mail.gmail.com>
+X-Gm-Features: AWEUYZmJaL8TbJ7lk4Lr0c0O26PwdykcaxCrEyPDuubQIkvHJrL2OOK5W6KVmlM
+Message-ID: <CAHk-=wj8V1v6QmJ_8X6zznautRq29tXMYzxorOniFx4NtxRE1A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pipe: change pipe_write() to never add a zero-sized buffer
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>, Christian Brauner <brauner@kernel.org>, 
+	Jeff Layton <jlayton@kernel.org>, David Howells <dhowells@redhat.com>, 
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Mateusz Guzik <mjguzik@gmail.com>, 
+	Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>, Oliver Sang <oliver.sang@intel.com>, 
+	Swapnil Sapkal <swapnil.sapkal@amd.com>, WangYuli <wangyuli@uniontech.com>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 10/02/2025 10:07, Nas Chung wrote:
-> +
-> +int wave6_vpu_ctrl_resume_and_get(struct device *dev, struct wave6_vpu_entity *entity)
-> +{
-> +	struct vpu_ctrl *ctrl = dev_get_drvdata(dev);
-> +	bool boot;
-> +	int ret;
-> +
-> +	if (!ctrl)
-> +		return -EINVAL;
-> +
-> +	if (!entity || !entity->dev || !entity->read_reg || !entity->write_reg)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&ctrl->ctrl_lock);
-> +
-> +	ret = pm_runtime_resume_and_get(ctrl->dev);
-> +	if (ret) {
-> +		dev_err(dev, "pm runtime resume fail, ret = %d\n", ret);
-> +		mutex_unlock(&ctrl->ctrl_lock);
-> +		return ret;
-> +	}
-> +
-> +	entity->booted = false;
-> +
-> +	if (ctrl->current_entity)
-> +		boot = false;
-> +	else
-> +		boot = list_empty(&ctrl->entities) ? true : false;
-> +
-> +	list_add_tail(&entity->list, &ctrl->entities);
-> +	if (boot)
-> +		ret = wave6_vpu_ctrl_try_boot(ctrl, entity);
-> +
-> +	if (ctrl->state == WAVE6_VPU_STATE_ON)
-> +		wave6_vpu_ctrl_on_boot(entity);
-> +
-> +	if (ret)
-> +		pm_runtime_put_sync(ctrl->dev);
-> +
-> +	mutex_unlock(&ctrl->ctrl_lock);
-> +
-> +	return ret;
-> +}
+On Mon, 10 Feb 2025 at 09:22, Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> +               int avail = PAGE_SIZE - offset;
+>
+> -               if ((buf->flags & PIPE_BUF_FLAG_CAN_MERGE) &&
+> -                   offset + chars <= PAGE_SIZE) {
+> +               if (avail && (buf->flags & PIPE_BUF_FLAG_CAN_MERGE)) {
+>                         ret = pipe_buf_confirm(pipe, buf);
+>                         if (ret)
+>                                 goto out;
+>
+> +                       chars = min_t(ssize_t, chars, avail);
 
-Drop entire function.
+If I read this correctly, this patch is horribly broken.
 
-> +EXPORT_SYMBOL_GPL(wave6_vpu_ctrl_resume_and_get);
+You can't do partial writes. Pipes have one very core atomicity
+guarantee: from the man-pages:
 
-Drop.
+   PIPE_BUF
+       POSIX.1 says that writes of less than PIPE_BUF bytes must be
+       atomic: the output data is written to the pipe as a contiguous
+       sequence.  Writes of more than PIPE_BUF bytes may be nonatomic:
+       the kernel may interleave the data with data written by other
+       processes.  POSIX.1 requires PIPE_BUF to be at least 512 bytes.
+       (On Linux, PIPE_BUF is 4096 bytes.)
 
-> +
-> +void wave6_vpu_ctrl_put_sync(struct device *dev, struct wave6_vpu_entity *entity)
-> +{
-> +	struct vpu_ctrl *ctrl = dev_get_drvdata(dev);
-> +
-> +	if (!ctrl)
-> +		return;
-> +
-> +	if (entity == ctrl->current_entity)
-> +		wave6_vpu_ctrl_wait_done(dev);
-> +
-> +	mutex_lock(&ctrl->ctrl_lock);
-> +
-> +	if (!wave6_vpu_ctrl_find_entity(ctrl, entity))
-> +		goto exit;
-> +
-> +	list_del_init(&entity->list);
-> +	if (list_empty(&ctrl->entities)) {
-> +		if (!entity->read_reg(entity->dev, W6_VPU_VCPU_CUR_PC))
-> +			wave6_vpu_ctrl_set_state(ctrl, WAVE6_VPU_STATE_OFF);
-> +		else
-> +			wave6_vpu_ctrl_sleep(ctrl, entity);
-> +	}
-> +
-> +	if (!pm_runtime_suspended(ctrl->dev))
-> +		pm_runtime_put_sync(ctrl->dev);
-> +exit:
-> +	mutex_unlock(&ctrl->ctrl_lock);
-> +}
-> +EXPORT_SYMBOL_GPL(wave6_vpu_ctrl_put_sync);
+IOW, that whole "try to write as many chars as there is room" is very
+very broken. You have to write all or nothing.
 
-Drop entire function. Dead code.
+So you can't (say) first write just 50 bytes of a 100-byte pipe write
+because it fits in the last buffer, and then wait for another buffer
+to become free to write the rest. Not just because another writer
+might come in and start mixing in data, but because *readers* may well
+expect to get 100 bytes or nothing.
 
-... or you arranged your patches really incorrectly, but this I can't
-really judge.
+And to make matters worse, you'll never notice the bug until something
+breaks very subtly (unless we happen to have a good test-case for this
+somewhere - there might be a test for this in LTP).
 
+And yes, this is actually something I know for a fact that people
+depend on. Lots of traditional UNIX "send packet commands over pipes"
+programs around, which expect the packets to be atomic.
 
-> +
-> +int wave6_vpu_ctrl_wait_done(struct device *dev)
-> +{
-> +	struct vpu_ctrl *ctrl = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	if (!ctrl)
-> +		return -EINVAL;
-> +
-> +	if (ctrl->state == WAVE6_VPU_STATE_OFF)
-> +		return -EINVAL;
-> +
-> +	if (ctrl->state == WAVE6_VPU_STATE_ON)
-> +		return 0;
-> +
-> +	ret = wave6_wait_event_freezable_timeout(ctrl->load_fw_wq,
-> +						 wave6_vpu_ctrl_get_state(dev) ==
-> +						 WAVE6_VPU_STATE_ON,
-> +						 msecs_to_jiffies(W6_BOOT_WAIT_TIMEOUT));
-> +	if (ret == -ERESTARTSYS || !ret) {
-> +		dev_err(ctrl->dev, "fail to wait vcpu boot done,ret %d\n", ret);
-> +		mutex_lock(&ctrl->ctrl_lock);
-> +		wave6_vpu_ctrl_set_state(ctrl, WAVE6_VPU_STATE_OFF);
-> +		mutex_unlock(&ctrl->ctrl_lock);
-> +		return -EINVAL;
-> +	}
-> +
-> +	mutex_lock(&ctrl->ctrl_lock);
-> +	wave6_vpu_ctrl_boot_done(ctrl, 0);
-> +	mutex_unlock(&ctrl->ctrl_lock);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(wave6_vpu_ctrl_wait_done);
+So things *will* break, but it might take a while before you hit just
+the right race condition for things to go south, and the errors migth
+end up being very non-obvious indeed.
 
-There is no user of this outside. Drop.
+Note that the initial
 
+        chars = total_len & (PAGE_SIZE-1);
 
-> +
-> +int wave6_vpu_ctrl_get_state(struct device *dev)
-> +{
-> +	struct vpu_ctrl *ctrl = dev_get_drvdata(dev);
-> +
-> +	if (!ctrl)
-> +		return -EINVAL;
-> +
-> +	return ctrl->state;
-> +}
-> +EXPORT_SYMBOL_GPL(wave6_vpu_ctrl_get_state);
+before the whole test for "can we merge" is fine, because if total_len
+is larger than a page, it's no longer a write we need to worry about
+atomicity with.
 
-There is no user of this outside. Drop.
+Maybe we should add a comment somewhere about this.
 
-Whatever export stays, must be used by a following patch. You *must* add
-the kerneldoc for it.
-
-> +
-> +static void wave6_vpu_ctrl_init_reserved_boot_region(struct vpu_ctrl *ctrl)
-> +{
-> +	if (ctrl->boot_mem.size < WAVE6_CODE_BUF_SIZE) {
-> +		dev_warn(ctrl->dev, "boot memory size (%zu) is too small\n", ctrl->boot_mem.size);
-> +		ctrl->boot_mem.phys_addr = 0;
-> +		ctrl->boot_mem.size = 0;
-> +		memset(&ctrl->boot_mem, 0, sizeof(ctrl->boot_mem));
-> +		return;
-> +	}
-> +
-> +	ctrl->boot_mem.vaddr = devm_memremap(ctrl->dev,
-> +					     ctrl->boot_mem.phys_addr,
-> +					     ctrl->boot_mem.size,
-> +					     MEMREMAP_WC);
-> +	if (!ctrl->boot_mem.vaddr) {
-> +		memset(&ctrl->boot_mem, 0, sizeof(ctrl->boot_mem));
-> +		return;
-> +	}
-> +
-> +	ctrl->boot_mem.dma_addr = dma_map_resource(ctrl->dev,
-> +						   ctrl->boot_mem.phys_addr,
-> +						   ctrl->boot_mem.size,
-> +						   DMA_BIDIRECTIONAL,
-> +						   0);
-> +	if (!ctrl->boot_mem.dma_addr) {
-> +		memset(&ctrl->boot_mem, 0, sizeof(ctrl->boot_mem));
-> +		return;
-> +	}
-> +
-> +	dev_info(ctrl->dev, "boot phys_addr: %pad, dma_addr: %pad, size: 0x%zx\n",
-> +		 &ctrl->boot_mem.phys_addr,
-> +		 &ctrl->boot_mem.dma_addr,
-> +		 ctrl->boot_mem.size);
-
-No, drop. Reasoning further.
-
-> +}
-...
-
-> +
-> +	ctrl->num_clks = ret;
-> +
-> +	np = of_parse_phandle(pdev->dev.of_node, "boot", 0);
-> +	if (np) {
-> +		struct resource mem;
-> +
-> +		ret = of_address_to_resource(np, 0, &mem);
-> +		of_node_put(np);
-> +		if (!ret) {
-> +			ctrl->boot_mem.phys_addr = mem.start;
-> +			ctrl->boot_mem.size = resource_size(&mem);
-> +			wave6_vpu_ctrl_init_reserved_boot_region(ctrl);
-> +		} else {
-> +			dev_warn(&pdev->dev, "boot resource is not available.\n");
-> +		}
-> +	}
-> +
-> +	ctrl->sram_pool = of_gen_pool_get(pdev->dev.of_node, "sram", 0);
-> +	if (ctrl->sram_pool) {
-> +		ctrl->sram_buf.size = ctrl->res->sram_size;
-> +		ctrl->sram_buf.vaddr = gen_pool_dma_alloc(ctrl->sram_pool,
-> +							  ctrl->sram_buf.size,
-> +							  &ctrl->sram_buf.phys_addr);
-> +		if (!ctrl->sram_buf.vaddr)
-> +			ctrl->sram_buf.size = 0;
-> +		else
-> +			ctrl->sram_buf.dma_addr = dma_map_resource(&pdev->dev,
-> +								   ctrl->sram_buf.phys_addr,
-> +								   ctrl->sram_buf.size,
-> +								   DMA_BIDIRECTIONAL,
-> +								   0);
-> +
-> +		dev_info(&pdev->dev, "sram 0x%pad, 0x%pad, size 0x%lx\n",
-> +			 &ctrl->sram_buf.phys_addr, &ctrl->sram_buf.dma_addr, ctrl->sram_buf.size);
-
-You are not supposed to print addresses. This look like fixed hardware
-mappings, so probably harmless but dma_addr not. Drop entire dev_info,
-this is really discouraged practice.
-
-
-> +	}
-> +
-> +	if (of_find_property(pdev->dev.of_node, "support-follower", NULL))
-> +		ctrl->support_follower = true;
-> +
-> +	wave6_cooling_init(ctrl);
-> +
-> +	pm_runtime_enable(&pdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static void wave6_vpu_ctrl_remove(struct platform_device *pdev)
-> +{
-> +	struct vpu_ctrl *ctrl = dev_get_drvdata(&pdev->dev);
-> +
-> +	pm_runtime_disable(&pdev->dev);
-> +
-> +	wave6_vpu_ctrl_clear_buffers(ctrl);
-> +	wave6_cooling_remove(ctrl);
-> +	if (ctrl->sram_pool && ctrl->sram_buf.vaddr) {
-> +		dma_unmap_resource(&pdev->dev,
-> +				   ctrl->sram_buf.dma_addr,
-> +				   ctrl->sram_buf.size,
-> +				   DMA_BIDIRECTIONAL,
-> +				   0);
-> +		gen_pool_free(ctrl->sram_pool,
-> +			      (unsigned long)ctrl->sram_buf.vaddr,
-> +			      ctrl->sram_buf.size);
-> +	}
-> +	if (ctrl->boot_mem.dma_addr)
-> +		dma_unmap_resource(&pdev->dev,
-> +				   ctrl->boot_mem.dma_addr,
-> +				   ctrl->boot_mem.size,
-> +				   DMA_BIDIRECTIONAL,
-> +				   0);
-> +	mutex_destroy(&ctrl->ctrl_lock);
-> +}
-> +
-> +#ifdef CONFIG_PM
-> +static int wave6_vpu_ctrl_runtime_suspend(struct device *dev)
-> +{
-> +	struct vpu_ctrl *ctrl = dev_get_drvdata(dev);
-> +
-> +	clk_bulk_disable_unprepare(ctrl->num_clks, ctrl->clks);
-> +	return 0;
-> +}
-> +
-> +static int wave6_vpu_ctrl_runtime_resume(struct device *dev)
-> +{
-> +	struct vpu_ctrl *ctrl = dev_get_drvdata(dev);
-> +
-> +	return clk_bulk_prepare_enable(ctrl->num_clks, ctrl->clks);
-> +}
-> +#endif
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int wave6_vpu_ctrl_suspend(struct device *dev)
-> +{
-> +	return 0;
-
-Why do you need empty callbacks?
-
-Best regards,
-Krzysztof
+          Linus
