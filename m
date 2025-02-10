@@ -1,65 +1,66 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3D725EFBE
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A454926137E
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739229383; cv=none; b=kXvIZJaRpbd/914eGheWdLnp//otGGVFSDCLVuIxH/9+67TDLQgDQDXBmk/2khT81avk2tIh0Dv+o7tlTesKPHCvqzbkXspnlHSX5xMTIDbjmzlCBPkCpA+jQZW4IPfAjO10WEK4y2HqvXUDR2JNvxULoQA5e9CgyScLQvcDoGE=
+	t=1739229387; cv=none; b=GhLkDGokusOUIsMaDsfCBezDNMwV3W1a8xj6N617AkEuNo9pf0G22waXJ3BfunKx2G+J0Qd6RKTh3XagKcBxZq1PzQxIj2795GatSsXd0LAXmzRYWrtzyUvMSg+v48JvP8OOremC5S/axLt6cW1niX5N2OygtWO5v9WdxY40FHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739229383; c=relaxed/simple;
-	bh=fwM8qEu5h1zUp2oTAbXzdbLh9akj8f0+B5V6fLJkDyU=;
+	s=arc-20240116; t=1739229387; c=relaxed/simple;
+	bh=E64vimrA6sAQmqcb8D5CIBdvE/5/9FWh9JZxsOyC0Ro=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=e2MZuhl3IEMTl9rytxLEPPcwksX3tkWNdF1rmL4V05MAVRLmWz9eEiFPlDSC6tNW8/WjUzIKsUr283WRWayoAog8oJ7V5Ybd5Jh8u64LRy97wZlgk5Y/RuApPaQYSwtKbnc4FKMihVltyFVqoDvE8IBk5PmEcfP5gOi40ccM0x0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=bTvUyoJE; arc=none smtp.client-ip=209.85.161.50
+	 In-Reply-To:To:Cc; b=l5ofOHZL+Fhehb6+qQyVLWc62jT/eqPzr3fBj3CtSClVMniiZggOgr6hmYugT7nVNN3UrJcgXB73WHBhgIfi4Ufvj5+dX32KaVErpMrwSRZbc6vsaMJ/y2mHxnG/2+Fv9DqnOWO5j2kRh6HIlOwLRk2CYWoknyy3ggZ1g90VOOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=fI4uEXCG; arc=none smtp.client-ip=209.85.210.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="bTvUyoJE"
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5fc73d5786eso1092251eaf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:16:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="fI4uEXCG"
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-726e744c798so267028a34.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:16:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739229381; x=1739834181; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739229383; x=1739834183; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=lzozfC/C/CNZbOHWxAaIbKwLQXLSUBmVfwbt3QVV2pc=;
-        b=bTvUyoJEyZ6dNQ965hSuNKoOTOBwSeEV//4LX4ZDLL35WK47VxOlgr+wW+8xEozduh
-         CBnm3udwcSB+GrpPFir68/TwGQk80+Syrro3UxWY9taIcGuWwAMN9GrgMnhK5vWHodgH
-         q5TJ3ztsZ/k/MhVr3ITLPZ+Sa3SCfXVO+mLMyaOawiWMFmTHLPph51VtfvXo/vdHfdp9
-         eXQ+UonNudU/i9gkufoPVnKOQooGNWZl9VsW/36eu7jyoiFUVTj9i9RR/UO26GooNowI
-         +RdAC+kJdZzARnmGPmf+yj8WKcg7oHJ5CQf99DCNoSR6n6iu7+VhqupA/J2fiG3TlDwF
-         E/0A==
+        bh=rzovOp0gWLRUdwhwXTDu1YuijsWTRmR+OknRU/gsakM=;
+        b=fI4uEXCGoe3H52IQSfOQA1UQAp5UBhAoxoLolvcj9MaTGlT9XQPm3zSX2hqaW02D0V
+         jwy3sWbYvuxab5s5Vh55bgM7P6DqXVdEKt7Rpa1kuwU5oS3JJltpaFzBQmMPRMpQafe9
+         T5m3WzUgQNBZLP2cGaRjJR88OA7aYsLVFNTK8URHCLl7lI15i0yM3X7FUX2LzFNGG49t
+         LWokoGJRp3XwhoqzJ1DRfkJZJbKQEQlBaVoSqjT8EEHyz5FXe79Bo6YW1F62Z944xeaH
+         bTSWaaKRfZ9RXnt4LWpnTNYFwtyoZocCg87kYNaB+iT4o5YaM8uSFwD2VcSDF+7h3pGz
+         xvzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739229381; x=1739834181;
+        d=1e100.net; s=20230601; t=1739229383; x=1739834183;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lzozfC/C/CNZbOHWxAaIbKwLQXLSUBmVfwbt3QVV2pc=;
-        b=T4JrI186vG8jsanMLPb4uO0Rkgs0gMNmg+ABKjr2cFCCMQ+EpHSvuTDysf02wf1rck
-         NqIH2CTN1xuBRjbDdhUJP5UD10LSAEWmsEPcSi6Xz6C9gUGiZ703M2bCGuknE2V4M6oy
-         eKXH7Vdnjxfi6ri9YALDWZNwmaYjr5I+tIJMJxoEpvRnq9ODGkWxdPGFGnjL1lfR5nLX
-         OZZfZzY+rJfLXZa0BOh1EpmRGhLlrfO2ZnsFqpqt37duruiuKe4wefB7yh9jii+A8EJ6
-         eQY5PjqG7RLqeaNmlGwciTqkc3gx37G/GgNcfR5JRgQvkakt6rkNESXdCHoTUuTr6iHY
-         vcow==
-X-Forwarded-Encrypted: i=1; AJvYcCUXXdRjwa4Wegkvqh5Ca3bIpbkib9IOM4IfdKPkQH+LHdPcMihyKyXdO0pAT2Vz+2ZiN3p3WoZlrMKdYEM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxuO/RhDL4IPAcU8fKgYuXuLsE20qkUZRBqRz+gI35zuKuDpyc
-	gKyvGMbgbfZAeD8VMzUv5tm30jbjHHRLmfjZbR6F62kKkmcuv/WUFTSmfy9HKV0=
-X-Gm-Gg: ASbGncvE4oOw7Hl1fJewbOG+3azG1wV9RJ2xllmkeQp/vKO+u0JX9XPE1WqFvxQiGdy
-	jjnLQvBV/KAI6TKw3JWwVHZUs8nCur44viqzneAkctcNjNy0IWTAEyf+ks1YXnkK+M1i39+hTDA
-	EBjaBe+hTOdL3tYq19Y5KKG3jQMNRRTMznWNK8s8D0185eYkRCZ4u2JNqBD2jG/9ZDPtxq0gDAw
-	WAnxJtjAGmeA4Vb1kurdM3+vpRIhLjn7stryCS3q3hXY+KZ34du0eZxNTpg0NVhzXbHDiB7EOJt
-	nDktvxUkQMr52zDhI9Y4i33O28nxuADHDUPHA+O65qKb2V8=
-X-Google-Smtp-Source: AGHT+IGg5a+3PHs2A+mC/Xs4YrchdRMKPJfOeNphn3yRBkRtdQVXcqW2zbyQzWyk7tGY2CWhFieumA==
-X-Received: by 2002:a4a:ee82:0:b0:5fc:8f9f:5a2e with SMTP id 006d021491bc7-5fc8f9f5efamr2207464eaf.2.1739229381087;
-        Mon, 10 Feb 2025 15:16:21 -0800 (PST)
+        bh=rzovOp0gWLRUdwhwXTDu1YuijsWTRmR+OknRU/gsakM=;
+        b=WoZBrkLemt5YsrQMhK6QMsot3fLXtTa9hCho41IjKvCoIMTyIDy0MzU3Sx1FS+zn7j
+         CBUSIo/yaNXiRXG8HTrn//GJIDIKJi8EnkxTGlSCeHKoktvBcilj1pPJrArLK6Hjhv4z
+         ox42dei9+2K9V9l8kmb+sudeXAcpTJC7wKRt1rq+P84wGt8cB7yJW/pv6u6fX9KWwxVe
+         0/t7s0rb66/5c7c58pH0Jc8jnGL6peErq8G54n1uethwgInzgBLHjqkn7cB8pz19xmxt
+         MDegrQNkVdKtm/4U7D6sKW2ZDKL8N/oyOHIUO4js/AohMMYue7CBDBLKgui9fbp9UVpD
+         vyXw==
+X-Forwarded-Encrypted: i=1; AJvYcCWTd0/Sue3P3lR8fM3fRCHA8z0/Df0Xd3z9E8bC0I5+8fZq6bQk/+y8M0X9qGG3aq0GE2aXRRNvLZs0Dt8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFp/Zn6cs7sMrxK5qi7grzrHUV3MrNuQ9F44/bD/LGjf6XFyhI
+	OMcuNTb0tNH4tSyoxpwhezbR4tIs533n5LrwnTjmUBIOlpn5ld/bM/j/GkkkjSjgXXSLoijdqEq
+	U
+X-Gm-Gg: ASbGncvfebC5BcP0TqDTjtdrtCIee8SOb0W4Bbpd3pO5kn40aajtY/OvEREt1v7ZDyr
+	FJgS2qBjUwUGuCgdHw+W0+BpboEAKInjhI2/4WycresAcM4Prh48j9zQYGy8VOCqR+15gdFdKiz
+	oyTUt09VwqqXVggalnJ4gCKAuAGv5jRntYWp5l+XU7cSMDrTb1QRNCM+Ass/EicIYkeiuq4fFNh
+	Vg/DFGSH+T4Q9p+7QtrY5EgNoNq4a4EdZzK56hxwA7uH4oXwrizWakvdIpoW8WMpk2kLDiUWKMQ
+	0BSzTyRbspDCtcOZ1iD+NbEjenIDvEF72/9VttTuPqZlM9A=
+X-Google-Smtp-Source: AGHT+IEVJH69m3Tol6MXlyMkcLSWbCYFUgZIG3ickNDxavyuj3Qbw/ZqUcyoMFnpf3iYuY0BbllMXw==
+X-Received: by 2002:a05:6830:4988:b0:71d:eee3:fd19 with SMTP id 46e09a7af769-726b87b3d9emr9563503a34.6.1739229383654;
+        Mon, 10 Feb 2025 15:16:23 -0800 (PST)
 Received: from [127.0.1.1] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc545bc40esm2758043eaf.29.2025.02.10.15.16.18
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc545bc40esm2758043eaf.29.2025.02.10.15.16.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 15:16:19 -0800 (PST)
+        Mon, 10 Feb 2025 15:16:22 -0800 (PST)
 From: David Lechner <dlechner@baylibre.com>
-Date: Mon, 10 Feb 2025 17:16:14 -0600
-Subject: [PATCH 1/2] spi: offload: types: include linux/bits.h
+Date: Mon, 10 Feb 2025 17:16:15 -0600
+Subject: [PATCH 2/2] spi: spi-offload-trigger-pwm: add extra headers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250210-spi-offload-extra-headers-v1-1-0f3356362254@baylibre.com>
+Message-Id: <20250210-spi-offload-extra-headers-v1-2-0f3356362254@baylibre.com>
 References: <20250210-spi-offload-extra-headers-v1-0-0f3356362254@baylibre.com>
 In-Reply-To: <20250210-spi-offload-extra-headers-v1-0-0f3356362254@baylibre.com>
 To: Mark Brown <broonie@kernel.org>
@@ -77,27 +78,40 @@ Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
  Andy Shevchenko <andriy.shevchenko@intel.com>
 X-Mailer: b4 0.14.2
 
-Add #include <linux/bits.h> to linux/spi/offload/types.h since this
-file uses the BIT macro.
+Add additional headers used in this driver. This is better than relying
+on implicit includes via other unrelated headers.
+
+Also sort the existing includes while doing so.
 
 Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
- include/linux/spi/offload/types.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/spi/spi-offload-trigger-pwm.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/spi/offload/types.h b/include/linux/spi/offload/types.h
-index 86d0e8cb9495bb43e177378b2041067de8ea8786..6f78923478713aa3c4fc03d7d47b768ed1d52682 100644
---- a/include/linux/spi/offload/types.h
-+++ b/include/linux/spi/offload/types.h
-@@ -7,6 +7,7 @@
- #ifndef __LINUX_SPI_OFFLOAD_TYPES_H
- #define __LINUX_SPI_OFFLOAD_TYPES_H
+diff --git a/drivers/spi/spi-offload-trigger-pwm.c b/drivers/spi/spi-offload-trigger-pwm.c
+index b26d4437c589052709a8206f8314ffd08355870e..805ed41560df090d85a8547b59f122cf2e3941a2 100644
+--- a/drivers/spi/spi-offload-trigger-pwm.c
++++ b/drivers/spi/spi-offload-trigger-pwm.c
+@@ -6,10 +6,17 @@
+  * Generic PWM trigger for SPI offload.
+  */
  
-+#include <linux/bits.h>
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/math.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/property.h>
+ #include <linux/pwm.h>
+-#include <linux/mod_devicetable.h>
+ #include <linux/spi/offload/provider.h>
++#include <linux/spi/offload/types.h>
++#include <linux/time.h>
  #include <linux/types.h>
  
- struct device;
+ struct spi_offload_trigger_pwm_state {
 
 -- 
 2.43.0
