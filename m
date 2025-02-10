@@ -1,137 +1,166 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DAD7237177;
-	Mon, 10 Feb 2025 14:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6DD924F597
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739197173; cv=none; b=CY9btvKls66d+wfq44kAY6li3re/VSyxK1z0BUIySBHywLDz2bIjfIDonf3+JsVgklmhwv386jXoxTuQCUsngkUqEp0oU1BigpVkitfXIh5w4AGTOi7R0d2B18MW3gc8xi7FZrJ30ZgVVKIdFPQ7AmHHvSSf5Cq/qHDIuYDYobw=
+	t=1739197243; cv=none; b=KCPoEtCJJAb72lTByMXRO/bju2Hx3lP5pVeePFOAVcRc35H7LrkHJxBUlJ4AOkSLDsaD9ZgB3DXg7uKWGhZyzT/E2jpc0Qz0XbhC0XJMqSMzEZJ5cXJYIaL1WjSwMcFgc5OIJGOIaurEZG5pARSeGjiHOCCYzQPwZhWDFfXPdNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739197173; c=relaxed/simple;
-	bh=tc4eeJ6oXgsOFuV3/HtEN1P7ANINGxbJ8KhoSu06eTI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h06gzoyjnrrs6kxmfZVMFBW3by7GOV9cy9L2UeWFu3abHf52P/OKAkHiLCwF1n5w1XeydiUej63KcQEEpZu6pb/Il40tN5Wd2DpLIgLx5OBGJp7a+oCcTgXKvWioaG3xGHUO1lMSXZEzPojYbhTBwkPKLv11risHkgxd1+Mp0ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rmrzRNvo; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1739197243; c=relaxed/simple;
+	bh=snXgSgFdqsMqouHX+FEXJR3/7OW6oISDWHweXCSyk4I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MMLsfLw+jY6k4gVZk5ZqkqoUBFsjBnH/qjSjWi7v3GMdKfuPoe2cFdVe/HtkcEjwB4Ue7aLzHtgA6MU/Y893ArSHnstJow7lhP/sSKmJmFvUvvtI51fqoL6l1qdGgWkNrljlHKf6WI/pOorj4CjgtL8q8DgaStI5+YlGMnczQqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=iA+xuQmo; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rmrzRNvo"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AC7mLU016074;
-	Mon, 10 Feb 2025 14:19:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Tv4nL2
-	2TJCpg9Kk+KxUkvQiLf6XNSk6aI0GzIp72GAU=; b=rmrzRNvoKd6Wi2dKcFoB/L
-	BnYOj+M6lVhd84cNG8TkKVamiUFKuB1LUHjVtHqCeuWX060JI37eE/V3+zS0VFKx
-	ZR4iBHAzHdbe127qZdYpQIiRldDJrd2sR7b2ycTM7vpwRqLK9NcB7yHihmEtpDoF
-	fSPGk2WhQPAWDZUFyFhkEZFsko1c+rvyrnzAqhrLCJFffiRVqYRjiddfMWPteZdz
-	x+qQ8TPnBl6zqtDrDEvgot9aSj/IXGYTYxZvxonQyqc7T/7lTujVLmmTLF/69XDZ
-	v7D/n85OJ+QjCzWU6fruu4C2qmp2aFP5dsIYkmm3krgVoKxQdH7v5OjUGwxrPcfQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44q5gabq04-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 14:19:26 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51AED2YQ026980;
-	Mon, 10 Feb 2025 14:19:25 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44q5gabpyy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 14:19:25 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51ACK4Iv016743;
-	Mon, 10 Feb 2025 14:19:24 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44pk3jxm1r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 14:19:24 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51AEJKFD28574344
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Feb 2025 14:19:20 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 111FF2013F;
-	Mon, 10 Feb 2025 14:19:20 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CE04C2013B;
-	Mon, 10 Feb 2025 14:19:18 +0000 (GMT)
-Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.171.22.27])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Mon, 10 Feb 2025 14:19:18 +0000 (GMT)
-Date: Mon, 10 Feb 2025 15:19:17 +0100
-From: Halil Pasic <pasic@linux.ibm.com>
-To: Guangguan Wang <guangguan.wang@linux.alibaba.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, wenjia@linux.ibm.com, jaka@linux.ibm.com,
-        alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
-        guwen@linux.alibaba.com, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, horms@kernel.org, linux-rdma@vger.kernel.org,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alexandra Winter <wintera@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Subject: Re: [PATCH net] net/smc: use the correct ndev to find pnetid by
- pnetid table
-Message-ID: <20250210151917.394e8567.pasic@linux.ibm.com>
-In-Reply-To: <3dc68650-904c-4a1d-adc4-172e771f640c@linux.alibaba.com>
-References: <20241227040455.91854-1-guangguan.wang@linux.alibaba.com>
-	<1f4a721f-fa23-4f1d-97a9-1b27bdcd1e21@redhat.com>
-	<20250107203218.5787acb4.pasic@linux.ibm.com>
-	<908be351-b4f8-4c25-9171-4f033e11ffc4@linux.alibaba.com>
-	<20250109040429.350fdd60.pasic@linux.ibm.com>
-	<b1053a92-3a3f-4042-9be9-60b94b97747d@linux.alibaba.com>
-	<20250114130747.77a56d9a.pasic@linux.ibm.com>
-	<3dc68650-904c-4a1d-adc4-172e771f640c@linux.alibaba.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="iA+xuQmo"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4361b0ec57aso44220235e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 06:20:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739197238; x=1739802038; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LgszuVpBHpm7kgwMFZqetPdXB23RF5n9Jkx4SmORsb8=;
+        b=iA+xuQmo87q9X4gEevCI84c6VZzujpaHhxUbxzgSlB279tOK/MqKd1xE8yza4XOYp9
+         8ig1Vzt8JA7QHXdrD2ltWHN3UARXl8T3MqTjUo5d1Gd2xftducDpOJOCr3ou1A3b7FoK
+         Uww1bwPaBetjm7gwoEk0c/VtJukDWRGlmy6mTFzGjKTHUoBsefXbPbU5tL54gh0/Je/+
+         tsKQssZzYx69eqF1pNPGc0b5fZdba9Ry3x7tjHrgjXE0zATMicKSl/uYrkHqFb87r9eW
+         DIfHgtDdUzXmm/yWM/1S0TklWgHXkMndEV7frfjyXOkk4jM1jDfNj1DM99jxqexcbks+
+         NImw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739197238; x=1739802038;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LgszuVpBHpm7kgwMFZqetPdXB23RF5n9Jkx4SmORsb8=;
+        b=hC3toUkE3nsiNEl15XWgrnYb2s+1bSN1ux0wndvRy09BBC5b2t+cnI6BCk1EOZ+P66
+         GB5Quw032l4G2a/b75azmGvNcIj3xBSG0QeUPSnkIVfHWTziq/L63wzcwQAirSZvtXAU
+         piqch6MWGP9Jzi6Oqs1iMn+iLcHJ4brBL+icgW3VP1mwoN2OqfI2nW6366+ZwpD/FuvW
+         /kdueOd2WfIUOO8qBC5y7P4xMXOhwxWiKB5r+M36MtZ1dzsGwsgqA+F87IV8V5yWeoTw
+         skCZKOQOywukAgThBFyi/EUoKtNUHxZv/E9LKA5E9HIHd7wVtyVC9PlXZC2KePgarQCI
+         xZqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUIQUCZSCOnzmIgf2BXentahlNcygkBcXwGn6lMq9h72etE3jukAtK9o7YumYc+kvVxUVi27iKa12+0hyo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyF6CG5ta0aFjw6FkMtw9u9eEEa0h6RL1SNvxV5v9k6RbnqDWVc
+	T9h63U1z/ZVqY941z47QgjD1CNCrHx8VMU1nKedPsKkcCVcweNE9QUSgbD7Nc4M=
+X-Gm-Gg: ASbGnctEu2TjV/e8htiJd0pQ4JNWjqrK9ZYrdqjLlRwnJewaJmu01SDtgnkIpsoTePL
+	tozNiqRASEOEMq6LuAF7LQY7palsijVqWILWdNcv4UtmbLlI/Lq40AGTBS00D1H4WK8w3Lh+lr6
+	PZ9eD8pfKbn2vCJsh4SevBh3iM7kVIZjOVklwE2z4sgDjBpXDLW03mYFklzowbe/93uj7Qi+3lL
+	VoJui7hBM3psH2gRGK2xbL87xUavWMmHytgCSx75TiocGyywQC7TqG+u8WVOyo2CS4cDG5lJmWR
+	gxF9TG3bQXqIj/yPjZrRIHsamUqF2ZMF9sPN/LNDg0D0XFmMfnuhM/2L7PXN
+X-Google-Smtp-Source: AGHT+IGKStkLxD9udujUP1zu76uCLYtJOZTx3Zzwydhoh1KZeTcF+eyoEegxFpUsUPG4WioYRaf5+A==
+X-Received: by 2002:a05:600c:899:b0:439:3d5c:8bfb with SMTP id 5b1f17b1804b1-4393d5c8d77mr45714375e9.22.1739197237724;
+        Mon, 10 Feb 2025 06:20:37 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d93369fsm184114345e9.3.2025.02.10.06.20.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 06:20:37 -0800 (PST)
+Message-ID: <e1fae51d-3511-4bcf-afbf-4e690905ccda@rivosinc.com>
+Date: Mon, 10 Feb 2025 15:20:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 7/9] riscv: Prepare for unaligned access type table
+ lookups
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: Anup Patel <anup@brainfault.org>, Charlie Jenkins <charlie@rivosinc.com>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, jesse@rivosinc.com,
+ Anup Patel <apatel@ventanamicro.com>
+References: <20250207161939.46139-11-ajones@ventanamicro.com>
+ <20250207161939.46139-18-ajones@ventanamicro.com> <Z6ax7B45OsGerjfA@ghost>
+ <CAAhSdy2tjOE5aajzydFs8A_drHdBSbWrYTX3CX4e7B6Rm107Bw@mail.gmail.com>
+ <c6f98a70-b1c7-4955-bf5d-546e4563cf1c@rivosinc.com>
+ <20250210-e6a2dfcd7995ffc8a6d918e4@orel>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <20250210-e6a2dfcd7995ffc8a6d918e4@orel>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: yCIZ2RZbueuUY42KIuKe0GPL3TjLKFnv
-X-Proofpoint-ORIG-GUID: cLrpU6az_SIFJpqqb_HRqbnlL0GKtwWA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_08,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 clxscore=1015 suspectscore=0 mlxlogscore=957 spamscore=0
- lowpriorityscore=0 phishscore=0 malwarescore=0 bulkscore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502100117
 
-On Wed, 15 Jan 2025 19:53:15 +0800
-Guangguan Wang <guangguan.wang@linux.alibaba.com> wrote:
 
-> > Imagine the following you have your nice little setup with a PNETID on
-> > a non-leaf and a base_ndev that has no PNETID. Then your HW admin
-> > configures a PNETID to your base_ndev, a different one. Suddenly
-> > your ndev PNETID is ignored for reasons not obvious to you. Yes it is
-> > similar to having a software PNETID on the base_ndev and getting it
-> > overruled by a HW PNETID, but much less obvious IMHO. I am wondering if there are any scenarios that require setting different  
-> pnetids for different net devices in one netdev hierarchy. If no, maybe
-> we should limit that only one pnetid can be set to one netdev hierarchy.
 
-I wonder what topologies and changes to topologies are possible. If
-changes to a topology are possible then making sure there is only one
-PNETID within a netdev hierarchy can be difficult, as we would need
-to prevent changing the topology if a device has a not PNETID. (E.g.
-we first set a pnetid when the netdev is still not in a hierarchy
-and then try to put it into the hierarchy that already has a different
-PNETID within). Regarding allowable topologies, using your ASCII-art.
+On 10/02/2025 15:06, Andrew Jones wrote:
+> On Mon, Feb 10, 2025 at 12:07:40PM +0100, Clément Léger wrote:
+>>
+>>
+>> On 10/02/2025 11:16, Anup Patel wrote:
+>>> On Sat, Feb 8, 2025 at 6:53 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
+>>>>
+>>>> On Fri, Feb 07, 2025 at 05:19:47PM +0100, Andrew Jones wrote:
+>>>>> Probing unaligned accesses on boot is time consuming. Provide a
+>>>>> function which will be used to look up the access type in a table
+>>>>> by id registers. Vendors which provide table entries can then skip
+>>>>> the probing.
+>>>>
+>>>> The access checker in my experience is only time consuming on slow
+>>>> hardware. Hardware that supports fast unaligned accesses isn't really
+>>>> impacted by this? Avoiding a list of hardware that has slow/fast
+>>>> unaligned accesses in the kernel was the main reason for dynamically
+>>>> checking. We did introduce the config option to compile the kernel with
+>>>> assumed slow/fast accesses, which of course has the downside of
+>>>> recompiling the kernel and I assume that you already considered that.
+>>>
+>>> The kconfig option does not align with the vision of running the same
+>>> kernel image across platforms.
+>>
+>> I'd would be advocating to remove compile time options as well and use
+>> another way to skip the probe (see below).
+>>
+>>>
+>>>>
+>>>> Instead of having a table in the kernel, something that would be more
+>>>> platform agnostic would be to have an extension that signals this
+>>>> information. That seems like it would accomplish the same goal and
+>>>> leverage the existing infrastructure in the kernel, albeit with the need
+>>>> to make a new extension.
+>>>>
+>>>
+>>> IMO, expecting an ISA extension to be defined for all possible
+>>> microarchitectural choices is not going to scale so it is better
+>>> to have infrastructure in kernel itself to infer microarchitectural
+>>> choices based on RISC-V implementation ID.
+>>
+>> Since adding an extension seems quite unlikely, and that a device-tree
+>> property is likely DT centric and not applicable to ACPI as well, was a
+>> command line argument considered ?
+>>
+> 
+> I did consider adding a command line option in addition to the table,
+> allowing platforms which neither have a table entry [yet] nor want to do
+> the speed test, to set whatever they like. In the end, I dropped it, since
+> I don't have a use case at this time. However, if we really don't want a
+> table, then I can look into the command line option instead.
 
-I think you could add 2 Pods with an IPVLAN eth0 (Pod) on top of eth1
-(host) each. Those would be in a single hierarchy I guess, but I guess
-you would still want to be able to set (most likely the same) PNETID
-on each.
+Sorry if I wasn't clear, I wasn't considering this as a replacement for
+your table but rather as a replacement to Charlie's compile time define
+to skip misaligned speed probing since it is like "lpj=<x>". You can
+specify it on command line if you want to skip the loop time detection
+of loops per jiffies and have faster boot.
 
-Bottom line is, this approach looks tricky to me. Maybe with a crisper
-explanation on what are these upper-lower links for. Maybe I am
-overgeneralizing here.
+Regarding your table, it feels like a bit going back to old hardcoded
+platform description ;). I think some kind of auto-detection of speed
+(not builtin the kernel) for platforms could be good as well to skip
+probing.
 
-Regards,
-Halil
+A DT property also seems ok to me since the goal is to describe
+hardware. Would a common DT/ACPI property be appropriate ? The
+device_property API unified both so if we used some common property to
+describe the misaligned access speed (both in DT cpu node/ ACPI CPU
+device package), we could keep a single parsing method. But I'm no ACPI
+expert so I don't know if that really make sense.
+
+Thanks,
+
+Clément
+
+> 
+> Thanks,
+> drew
+
