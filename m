@@ -1,238 +1,157 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C85C24F59B;
-	Mon, 10 Feb 2025 16:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BCE724F59B
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739203937; cv=none; b=U2G8p87w3Svy99cxF4H625STDznEqlkUvYcJ6zk3NLSRYja1nqnK4Octh9tSB0Kz0bZdOusKNpbeJeDkhBkjaoD5ovml7jxfTsqdnhcBsIMezj2vxS+gi9RX8mvQncX9NCO44AzM3P9CkViC3FV6Kcro7MYYh8OEGSoGJ/TNkzY=
+	t=1739203968; cv=none; b=HaNEqmwVh4M7QUBFX1AGZhvI14v//3ljHwtRf+ZSTnBbhfyj4IWuD4t2ObK4LBEtBASZ+fSa16C+5k3egM/DYfnfz4hfhNoFJSf5mATsEJsZYwLcRZCuCJQElYHWO5xdS+mkZoxyNazRleYCAkgYwaYVQoyLmdyesuZgVFS4P78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739203937; c=relaxed/simple;
-	bh=GYmInjceN7LFjtSNgUaVCtpsrQAUPv9WqJpuXTNqIaQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=refvskXT+Hv6Ou3yBYKGGM6hu+SvjO2eS8w/368VEq4AuLh/wil3l1E/eozC2NgCnmsk7fZDPuqmIpXWXG0zN2WyIUbZ293I9Oh5hiCSoeR/jw8/r9fo0dUOIu/DwZpOcCOPHend9dxvTB8US04aVotLNwksgPHN3Q2M4xagu6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=a8st6Q1r; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739203968; c=relaxed/simple;
+	bh=uF8K59uhfTnsnHYF0QgQ3k7irpxn8tRe22ZZGYaVdYA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=A1y1LJz8rvkN5WMM4p0/VdvKSMw0HiLzt6LMz79hhqKM9SIdhXRO/axY3VycTH3F4rVM1VoCOSSY2Ew5OobDLL8feK3NrwQ1/uzVVjreczX5wJkg1E4ODiU5TDFQvWmmZ5ogywT543xQ4gAK7vT5Udz7bi/7a1HNurfHZLmrevM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=zTXxdqoV; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="a8st6Q1r"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51A9VnLO008240;
-	Mon, 10 Feb 2025 16:12:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	O5ZxRsXEL8Qchx184ZcGzMA0kX4PWaNwQG5mQFjUeoE=; b=a8st6Q1r25GWrnSc
-	xozoT11J4mP2J2Xi7C2YUr6BiYRIBePeuIvPBNuha7Atgwa3ZaxeHVO0gnEtRK8o
-	clL0VkaLrBB8qf4zMQ0kWtFvO8Ripsr0ah7+NF3FGRuoc9aZSdg13FmWp8fseVp9
-	XFNaRfIQxI+c67ew/Dz5m5L1ubYiGWA68b+sSqpUOji3ICd38sl07aBslyVODRMN
-	/Olc/45cpZUrVqnK+q0/X9F6z6IWVgieyjt/FiKOPAjP5vJ5YB5rkH2v4KkxvZ0l
-	Z6rlFbQbFiM4P/RswkmHYHJasLgWk2zidP1UTSQEe5uC8piMw8hB5OJlmPAPycnW
-	E9lLFA==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qewh125h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 16:12:08 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51AGC748027796
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 16:12:07 GMT
-Received: from [10.216.47.54] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Feb
- 2025 08:12:03 -0800
-Message-ID: <b7f2c973-e161-4b83-9b3a-415e84510bd2@quicinc.com>
-Date: Mon, 10 Feb 2025 21:42:03 +0530
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="zTXxdqoV"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43618283dedso45413875e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:12:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739203964; x=1739808764; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bui6a+u8nCr5hYL5RmyZzGBCPswahyVTcFp15Z0jabc=;
+        b=zTXxdqoVVOAp3MQhd5hS0lOThnAbaUsykLQlH4H1dszqE3qmMQrkPQrxvEk/428PsN
+         By7nfhnOMnwHcuv/RgMPgyqQTwVFtUvvFj8nEBEBqOUGKkWWdAK7mwqAm9Et2t/JYizU
+         tczZzp3NVhoDGW8NxztOHhHZq4C5JryFeJTrMe0aP/trXkAOXjcr9Tdj6vsPVPJh/YNA
+         o+/NfwI1SO07on/DUfxwaQYNY+hiKQ5Qw6AOExv3Jq9bh+5PpX/9NhvypGQYHoiRr68M
+         jt0saPN51/GygNobxld9S1M6Ek5EKYfiK5/AQo5WYBpO+DqnxZEhF1PjVcsZejl6KUJ1
+         U2zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739203964; x=1739808764;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Bui6a+u8nCr5hYL5RmyZzGBCPswahyVTcFp15Z0jabc=;
+        b=nkjb3b9JsHLDQ1TKziTHT1sdhq56g5bgANWTYU4jpJzeoxNeZmuZz/gk9dBn8KawIs
+         9iQ8tcTeMejJGiqLVPDylThc+aFzUtL6hIodwixwWM3NX7mhoGGHlFm9NQLwJdVEF74G
+         Sz26VIfQcyWcnXSNFbJ7sDYtikuq1T5FBJwHpo9kJFMsG1BzSWTBdLWARKlbMvFX0wpk
+         aq4VgXiQLrleCGcsWECKKaa3WFe2vZvcwkJW97j67cF0iIvlS/Vo0IfSwERzdTZhdjYe
+         h67HOW6RwmVb0MdDdUk0O4n2uKoG+VZU2WRseUYL3aVwr0LVSITkUxu4Jbfe3EQmtKaQ
+         X+xQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWsHaCDaCGYFuZqDKhnTT5PI3LzgbuVxkTNg6p1dUnyEasIPvJWssjQeH4NPdU2vRvdw8QQ8qR+sOThPhk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyn+0OrBgcxlG2khoH4cTHzIkrBv2i8eGqsvWnwCTv5YnM7fkJL
+	gSFul3s6KjgQpUZRo3D3KT+p8+a6OAnRglkm1MuM0DGS37cb5q4NeOUET+5f/To=
+X-Gm-Gg: ASbGncuF407AAqaVjbImrdwPG6j3nHwB4s4/9KjGTkCizq2qCricRkOhAfrnX2lHOXC
+	XE6xWLNgiiYrFNj85/5IsBZw6FC2yLFhjMAhn7f4Xa0/bTi5gQzZ2AwRWP8n5Z9zFcZjC8oTKk5
+	Zf9M3BAu4Arb+KzoJ6h0Xr1iSc7OqKzOUSdTFxgGo00WTwBPOHXDRxcLBqtsMhrqGbJjbeilDgi
+	CmyMkyiZY+TINi24nNCaf2sfjlXqtYUMFl88eXjUcS13v9dEVzJmsGGxbnsknZkeKfsap9xh/dp
+	/3sMSs2SJVcnMg1bxfW7ODgqIUxfxCOtfKGJu8kJhRVw67Kqtp7SyJ92sHGjiD0=
+X-Google-Smtp-Source: AGHT+IHUCCXzWViw53v2z70NsQLCy9biU20BiEN5hSZXLoMpP9jMFah5HdHZWC2wYRaW+ixAC4KYsQ==
+X-Received: by 2002:a05:6000:1a8f:b0:38d:e39e:ed14 with SMTP id ffacd0b85a97d-38de39ef19amr1133646f8f.25.1739203964485;
+        Mon, 10 Feb 2025 08:12:44 -0800 (PST)
+Received: from [127.0.1.1] (host-87-8-15-130.retail.telecomitalia.it. [87.8.15.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dc9ffcdsm146637945e9.15.2025.02.10.08.12.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 08:12:44 -0800 (PST)
+From: Angelo Dureghello <adureghello@baylibre.com>
+X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
+Subject: [PATCH v4 0/9] add support for Software mode on AD7606's iio
+ backend driver
+Date: Mon, 10 Feb 2025 17:10:50 +0100
+Message-Id: <20250210-wip-bl-ad7606_add_backend_sw_mode-v4-0-160df18b1da7@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/3] dt-bindings: i3c: Add Qualcomm I3C master
- controller bindings
-To: Krzysztof Kozlowski <krzk@kernel.org>, <alexandre.belloni@bootlin.com>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <jarkko.nikula@linux.intel.com>, <linux-i3c@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250205143109.2955321-1-quic_msavaliy@quicinc.com>
- <20250205143109.2955321-2-quic_msavaliy@quicinc.com>
- <248000f5-63db-492c-884d-ac72db337493@kernel.org>
- <0ae3f754-edcb-4b22-9d49-b20ef264554b@quicinc.com>
- <7c518972-75df-4c8a-8920-06d5aa2849ae@kernel.org>
-Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <7c518972-75df-4c8a-8920-06d5aa2849ae@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: gkd_6w2BDitqy_n_GmJ5g7ai6toF7e7X
-X-Proofpoint-GUID: gkd_6w2BDitqy_n_GmJ5g7ai6toF7e7X
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_09,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- impostorscore=0 mlxlogscore=999 phishscore=0 clxscore=1015 adultscore=0
- lowpriorityscore=0 malwarescore=0 bulkscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502100133
+X-B4-Tracking: v=1; b=H4sIAAolqmcC/5WNQQ7CIBAAv9JwFoNgIXryH6YhC2ztxrY0YFqbp
+ n8X/YHHmcPMxjImwsyu1cYSzpQpjgXOh4r5DsYHcgqFmRSyFid54QtN3PUcgtFCWwjBOvBPHIP
+ Nix1iQB6ClFALrVWrWOlMCVt6/x73pnBH+RXT+lvO6mv/qc+KC+4VoDfGC3Dm5mDtySU8+jiwZ
+ t/3D7gZvSzVAAAA
+To: Michael Hennerich <michael.hennerich@analog.com>, 
+ Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Alexandru Ardelean <aardelean@baylibre.com>, 
+ David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Guillaume Stols <gstols@baylibre.com>, 
+ Angelo Dureghello <adureghello@baylibre.com>
+X-Mailer: b4 0.14.1
 
-Thanks Krzysztof !
+The previous series added iio_backend mode, but the configuration for this
+mode was only possible through GPIOs (Hardware mode). Here, we add support
+for configuring the chip using its registers (Software mode).
 
-On 2/9/2025 5:15 PM, Krzysztof Kozlowski wrote:
-> On 06/02/2025 14:43, Mukesh Kumar Savaliya wrote:
->> Hi Krzysztof,  Thanks !
->>
->> On 2/5/2025 8:12 PM, Krzysztof Kozlowski wrote:
->>> On 05/02/2025 15:31, Mukesh Kumar Savaliya wrote:
->>>> Add device tree bindings for the Qualcomm I3C master controller. This
->>>> includes the necessary documentation and properties required to describe
->>>> the hardware in the device tree.
->>>
->>> A nit, subject: drop second/last, redundant "bindings". The
->>> "dt-bindings" prefix is already stating that these are bindings.
->> Sure
->>> See also:
->>> https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
->>>
->>> Use modern terminology, which means:
->>> s/master/whatever else or even nothing/
->>> See other recent bindings and discussions.
->>>
->> Sure
->>>
->>>>
->>>> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
->>>> ---
->>>>    .../bindings/i3c/qcom,i3c-master.yaml         | 57 +++++++++++++++++++
->>>>    1 file changed, 57 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/i3c/qcom,i3c-master.yaml
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/i3c/qcom,i3c-master.yaml b/Documentation/devicetree/bindings/i3c/qcom,i3c-master.yaml
->>>> new file mode 100644
->>>> index 000000000000..ad63ea779fd6
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/i3c/qcom,i3c-master.yaml
->>>
->>> Filename matching compatible.
->>>
->> Changed compatible to "qcom,i3c-master"
->>>> @@ -0,0 +1,57 @@
->>>> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/i3c/qcom,i3c-master.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: Qualcomm I3C master controller
->>>> +
->>>> +maintainers:
->>>> +  - Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
->>>> +
->>>> +allOf:
->>>> +  - $ref: i3c.yaml#
->>>> +
->>>> +properties:
->>>> +  compatible:
->>>> +    const: qcom,geni-i3c
->>>
->>> No SoC? So to be sure: you claim all future SoCs will be using exactly
->>> the same interface. No new compatibles, no new properties will be added.
->>>
->> I think i should remove const. kept it for now as no other compatible to
->> be added as of now.
->>
->> let me remove const.
-> 
-> No, it does not matter. Keep const.
-> 
-Sure. I reviewed other files and seems i should write as below. Please 
-help confirm.
+The bus access is based on Angelo's ad3552 implementation, that is we have
+a particular compatible for the backend (here axi-adc) version supporting
+the ad7606's register writing, and the ad7606 is defined as a child node
+of the backend in the devicetree. Small changes are added to make the code
+a bit more straightforward to understand, and more compact.
 
-   compatible:
-     items:
-       - enum:
-           - qcom,sm8550-i3c-master
-       - const: qcom,i3c-master
->>
->> SoC name is not required, as this compatible is generic to all the SOCs.
-> 
-> That's the statement you make. I accept it. I will bookmark this thread
-> and use it whenever you try to add any future property here (to be
-> clear: you agree you will not add new properties to fulfill *FUTURE* SoC
-> differences).
-> 
-Sorry, i am not saying there won't be any other compatible but i was 
-saying base driver will use "qcom,i3c-master".
-After checking other files i realized there can be const compatible but 
-other SOC specific can be added as enum.  Hope above given way is fine.
+Signed-off-by: Guillaume Stols <gstols@baylibre.com>
+Co-developed-by: Angelo Dureghello <adureghello@baylibre.com>
+Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+---
+Changes in v4:
+- some spaces / tabs fixes,
+- fix child nodes creation as done for dac,
+- change usleep_range into flseep,
+- use just a u32 as a value in bus access functions,
+- protect bus access from concurrent access,
+- Link to v3: https://lore.kernel.org/r/20250129-wip-bl-ad7606_add_backend_sw_mode-v3-0-c3aec77c0ab7@baylibre.com
 
+Changes in v3:
+- add some fixes found while testing,
+- general commit meessages fixes,
+- codying style fixes,
+- dt-bindings: add some properties as requirted,
+- use iio_device_claim_direct_mode (and release),
+- rename bus read/write functions with "bus" as done for ad3552r.
 
->>>> +
->>>> +  reg:
->>>> +    minItems: 1
->>>
->>> Drop
->>>
->> Not required ? I see other bindings are using it, so please confirm if i
->> can remove this.
->>>> +    maxItems: 2
->>>
->>> Drop and instead list and describe items
->>>
->> Okay, i can remove maxItems if not mandatory. Taken cdns,i3c-master.yaml
->> and added these.
->>
->>>
->>>> +
->>>> +  clocks:
->>>> +    minItems: 1
->>>
->>> Look at other bindings. There is never code like this.
->>>
->> cdns,i3c-master.yaml taken as reference.
->>>> +
->>>> +  clock-names:
->>>> +    items:
->>>> +      - const: se-clk
->>>
->>> Drop clock-names
->> Sure, took reference from cdns,i3c-master.yaml.
->>>
-To confirm, i should drop complete clock-names and items too right ?
+Changes in v2:
+- Improved descriptions.
+- dt-bindings: improved descriptions, added exemple and additional
+  property for the custom IP.
+- Reworked some macro commits to avoid changing order and associated
+  diff artifacts.
+- Various cleanups and formatting fixes.
+- Link to v1: https://lore.kernel.org/r/20241121-ad7606_add_iio_backend_software_mode-v1-0-8a693a5e3fa9@baylibre.com
 
->>>> +
->>>> +  interrupts-extended:
->>>> +    minItems: 1
->>>> +    maxItems: 3
->>>
->>> As well - there is never an interrupts-extended property. Just interrupts.
->>>
->> No, i see this property many places. Do you mean to say
->> interrupts-extended  can be there in examples but not only add
-> 
-> I already wrote what you should do:
-> 
-> "Just interrupts."
-> 
-Sure, Changed interrupts-extended to interrupts. Done.
+---
+Angelo Dureghello (3):
+      iio: adc: adi-axi-adc: add struct axi_adc_info
+      iio: adc: adi-axi-adc: add platform children support
+      iio: adc: ad7606: protect register access
 
->> "interrupts" property here ?
->> e.g timer/riscv,timer.yaml +41 lists it in yaml also.
-> 
-> 
-> Please do not take one file and create coding style out of it, but
-> instead look what ~2300 other YAML files do.
-> 
-> 
-I tried to look other many files including i2c and added. Please review 
-latest or correct me before v2.
+Guillaume Stols (6):
+      dt-bindings: iio: dac: adi-axi-adc: add ad7606 variant
+      iio: adc: ad7606: move the software mode configuration
+      iio: adc: ad7606: move software functions into common file
+      iio: adc: adi-axi-adc: add support for AD7606 register writing
+      iio: adc: ad7606: change channel macros parameters
+      iio: adc: ad7606: add support for writing registers when using backend
 
-> Best regards,
-> Krzysztof
+ .../devicetree/bindings/iio/adc/adi,axi-adc.yaml   |  70 +++++++-
+ drivers/iio/adc/ad7606.c                           | 159 +++++++++++++++++--
+ drivers/iio/adc/ad7606.h                           | 103 ++++++++----
+ drivers/iio/adc/ad7606_bus_iface.h                 |  16 ++
+ drivers/iio/adc/ad7606_par.c                       |  52 +++++-
+ drivers/iio/adc/ad7606_spi.c                       | 137 +---------------
+ drivers/iio/adc/adi-axi-adc.c                      | 176 +++++++++++++++++++--
+ 7 files changed, 516 insertions(+), 197 deletions(-)
+---
+base-commit: 4692f10bec7459a0baa95bdfa66a4ea740ec9e0a
+change-id: 20250129-wip-bl-ad7606_add_backend_sw_mode-dd22a50663f3
+
+Best regards,
+-- 
+Angelo Dureghello <adureghello@baylibre.com>
 
