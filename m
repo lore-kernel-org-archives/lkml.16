@@ -1,48 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C6224FC17;
-	Mon, 10 Feb 2025 17:21:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2FD82500B4;
+	Mon, 10 Feb 2025 17:21:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739208076; cv=none; b=CBSbTST9nZmCBgAZa00f5vnllC//cC0NDoJn836DA4+28GXc0BUOW+K9blLx/XuQxViHHiP+KLIySyI3CYQY87Ls9A0RYn9aZUOkmRVqilGatij1yv8AxLLJjzNaHniUPh4o/zSDgJ8nPHzBPXOdW+pEvQtWZ3E8W9na3oVO4hE=
+	t=1739208078; cv=none; b=ABIbesPwF07x3aIUSSJkxZccPZN0Mn+j/jkTGhbJQlAVGs1DyYYGXJlyM7bn50cxT5MMB+rZBdFYSeqeSXTBTzY7A4nHAY7TSIPuda8KiQlqKnOR7aF+6TO8pUqorHKV07Uw+2KjmAbyd6Iw9CeXpqmYZi67UH6de7Cw2nUxSlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739208076; c=relaxed/simple;
-	bh=nZQV1M8VioPGk0QM/byl7cQeGIZPLm10q9X0KPkc0mM=;
+	s=arc-20240116; t=1739208078; c=relaxed/simple;
+	bh=4dfjPhPpwR3tUG3LV/LuaU/Rp/qJ4AK81d8QI0QBwJo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=GqO3baF3pYLVC7mDaa6D9O3v8MSWcpuldJnuJPTJKdNtxjaGm8SCOPkL+hfURikTC1lkEmwxbopNFn7dWmrNSokgi48cttWtiOItCc6d7RC5j7mDBDaxx4fcmAtWRrFhKrQDKEsgciobyRUWL4qty6wQ555eoxAf8a/p6J3d1MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hatvvd7Z; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=HOS8iI99Xy9lhoxkF0Pq+f4ui8hokul23xVtG1YcqpGYtDZmJ6VX9E0yut7NtVj7Xls2RnnmFaCsWrApTkhXEpuB8A3nwInL7bFAe6/A8w0ynAYzpvv5AtYxFvf0HLqqjbENLdWAuvuhi6GzHzAk4ItCiE5zqJKQQyJ5fcv0PZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DH6Zbwwo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hatvvd7Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E1E7C4CED1;
-	Mon, 10 Feb 2025 17:21:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DH6Zbwwo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BEC6C4CEE5;
+	Mon, 10 Feb 2025 17:21:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739208075;
-	bh=nZQV1M8VioPGk0QM/byl7cQeGIZPLm10q9X0KPkc0mM=;
+	s=k20201202; t=1739208078;
+	bh=4dfjPhPpwR3tUG3LV/LuaU/Rp/qJ4AK81d8QI0QBwJo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=hatvvd7ZA2jhfAgyNWC5wYRlzenwFWVjyxBvHTFy1KqH8IKfKYI7eP+nEQM/l4aSW
-	 0hAnr7YRdK739JQLX3pDLQ606IwOP20vzJu3+zg6rxMC08IubpXlFIpGIzDPg/OKoo
-	 5WLrDSLBECYEPMrxn7hHGQJA9tC7bOBvLJid/NuMWC6j/wogokqTXXyukxBjgwbhNq
-	 sxAhnDKvO5WArkXO3qF6ENLOquTMBG/5UGVATs4ne/Pcg/Mzugp0Ei6cl1g6pdDOUl
-	 A726z1LofPT5jZuxR1J57FNm3MDTkI+yfwSJ3lrZoieLToD/thk4POXpKbUhZ9Knf9
-	 QK98S8z0NA59g==
+	b=DH6Zbwwo9rIA6asG82bQ7YALq4p8NbT/a4sRQZnAM5sGqJFAs9cpiJ9i1BDG1ah7k
+	 ufr1tXUPnGsN4o7OTiiVo07KkyhDZveBR5ASw9yENdACh9RTx7z0PFtGldTgCUmr1d
+	 vmRUAWg6cA3w3NaeyAnmDow48R8J3shmM1iIDV8YfhzkAx72kNMZGH0E8sUk9Jvsn+
+	 StF2YO8/s5pgKmJwQJuT7eujtnaERrzknEMeCbolJlE8Uu/Us8Z89xXQZMTu9h7a7V
+	 L5g6arvl26eL37/gyiQKfi8hSLy8cc1WxFBlRY0ldIMmCwt3R7ZrofVtvfDq6FRx0A
+	 0ixmpZRSbGDTA==
 From: Vinod Koul <vkoul@kernel.org>
-To: Kishon Vijay Abraham I <kishon@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-In-Reply-To: <20250203-topic-x1p4_dts-v2-0-72cd4cdc767b@oss.qualcomm.com>
-References: <20250203-topic-x1p4_dts-v2-0-72cd4cdc767b@oss.qualcomm.com>
-Subject: Re: (subset) [PATCH v2 0/6] X1P42100 DT and PCIe PHY bits
-Message-Id: <173920807069.103786.582122226183842202.b4-ty@kernel.org>
-Date: Mon, 10 Feb 2025 22:51:10 +0530
+To: Marc Kleine-Budde <mkl@pengutronix.de>, 
+ Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-can@vger.kernel.org, linux-phy@lists.infradead.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250203185421.3383805-2-robh@kernel.org>
+References: <20250203185421.3383805-2-robh@kernel.org>
+Subject: Re: [PATCH] phy: can-transceiver: Drop unnecessary "mux-states"
+ property presence check
+Message-Id: <173920807568.103786.8838731795889395787.b4-ty@kernel.org>
+Date: Mon, 10 Feb 2025 22:51:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,25 +50,17 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Mon, 03 Feb 2025 15:43:19 +0100, Konrad Dybcio wrote:
-> X1P42100 is a(n indirect) derivative of X1E80100 - the silicon is
-> actually different and it's not a fused down part.
+On Mon, 03 Feb 2025 12:54:21 -0600, Rob Herring (Arm) wrote:
+> It doesn't matter whether "mux-states" is not present or there is some
+> other issue parsing it causing an error. Drop the presence check and
+> rework the error handling to ignore anything other than deferred probe.
 > 
-> Introduce the DTS bits required to support it by mostly reusing the
-> X1E SoC and CRD DTSIs. The most notable differences from our software
-> PoV are a different GPU (support for which will be added later), 4
-> less CPUs and some nuances in the PCIe hardware.
 > 
-> [...]
 
 Applied, thanks!
 
-[1/6] dt-bindings: phy: qcom,qmp-pcie: Add X1P42100 PCIe Gen4x4 PHY
-      commit: 2e1ffd4c180591e6a46c7f94a6bb187a0661141e
-[2/6] dt-bindings: phy: qcom,qmp-pcie: Drop reset number constraints
-      commit: f67f8c61b7fd3f72cf716b3845211e69265d13bd
-[3/6] phy: qcom: qmp-pcie: Add X1P42100 Gen4x4 PHY
-      commit: 0d8db251dd15d2e284f5a6a53bc2b869f3eca711
+[1/1] phy: can-transceiver: Drop unnecessary "mux-states" property presence check
+      commit: d02dfd4ceb2e9f34caaaaf87105267e2f722f443
 
 Best regards,
 -- 
