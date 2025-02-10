@@ -1,104 +1,154 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA88182
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 01:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3768243370
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 01:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739150058; cv=none; b=D2QyfqAk8Xbshl1/eRW7UZHXtKo9yynZ5UYSIWp9z4sbrwMMaVvmqLcvZCttkfzmfg2GO6FP702R3NfZE7NYKG3ZXXNXlT5mv/+8tPfwKZAwW4cAm47aNKsxT5pKvdvXrv6l2wej9G3a3yaULjq5pQ6GrfkbSFNweW32B/+F1qM=
+	t=1739150195; cv=none; b=bqhdJJaXYv2vAK9+YZkou1GZNRHrBGo7rJ6ZTgO/vC4sf6AyxtaG2C+OVqZaviPcR4esKMXyTTvvfY9CYhLpRXgvzjiNp2fkRbed11UDMqLuh4JQxIHm8OhX168ohb4kaUCniRKDM0Tc12JzncM7J6muQFD3JSb59GqBUHHDnNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739150058; c=relaxed/simple;
-	bh=NyM8cio96fQnsdXx4Lz8TqGY2DxnEmYS27gscqVC6hw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pCnkyX20epQXVBA+3OYHIS1B+Kiv+5fpZrCP9B7vuFxVT9qtYc3j99n6e09sx6jh7+dL07zl9zrZ2zlSFH1Aojsg6s4qfeb1hN40nyAvaOOOUEQ2xW/4zaWCJA89mNGJElCerteL2TnjWAMvSkPt7bVu2LrFL7bWRIrzN3XRFmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=wdMg2MOB; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="wdMg2MOB"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-38dcc6bfbccso1254035f8f.0
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 17:14:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1739150055; x=1739754855; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NyM8cio96fQnsdXx4Lz8TqGY2DxnEmYS27gscqVC6hw=;
-        b=wdMg2MOB9EekyrusS8o+dhkOdj92KLLuNaI8cYHtVwEFNxfO7JcX80j7bxKA68gYik
-         I7x0AvpT6vPwj/d2YrdOxeIKDXGzQ67mOGzxO7zKffsWw7kdd5Xv4aWGGF1iNaSes8OX
-         RKK4RNF3K5k9WrNKf3CcshMKLhHjoSBXCBiMZsBxzoTyVn6SOj8V+obX2BTCk4JwxP1g
-         +jlhns7jrocoeYiRv5cYqyZZwx+qHF3ulcMTk3Ct0CcvX0xsMgwgJGySdMhlf1cZWL8k
-         YCQxF9MVpXnWvoFpH8rVNNLUh6w7S1FH4q5ZZ2sPE6bwZjEJR304q/R87imlU5XwsBbx
-         keOg==
+	s=arc-20240116; t=1739150195; c=relaxed/simple;
+	bh=DuZeMhp5oN+Ad1f/OM6YurV+/AuxnboY41McH/sNFxQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=NTO7rE7hiOfhG22fa1zTOS2ARFbbTLhlavn3UxrDf3/EQdNMFS7xwwHO14pmgGfDqAjs9c2zbuOb0U0gTKKyRPKc78JyPNdyrveJutCxyFmk5buN5lSjEPXQeLnxC2Mjpb+ahFIy46Fg1zfINjUZYPCuAoR34CI4I7B3m1rxnIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-84cb445557aso923932439f.3
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 17:16:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739150055; x=1739754855;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NyM8cio96fQnsdXx4Lz8TqGY2DxnEmYS27gscqVC6hw=;
-        b=T6One5Gg2y/EcW8UvdS192PvYLAt1Jm5oEefRBx4SzetavKrHhHkQeM88UCjsWoDg5
-         9jd6IHNHUyfCl9taz2sacNJy0fFlgg5SwWnVaQsDWPnEh0/gj9pK1CVqw5TFw0pqJeKp
-         MUaI1IfgAnx/iyvHyeaAcvfb1zVGQw0qtY22TbFWUwPNyZuBkVX5c52quxlPl/naKFD3
-         DFS5fxQoxpgEEKFdaFxyAUrO/UaavplCk4ivK17v0gdwlG9Hyhqmm8dZIAN/A1N6HgWY
-         QHfx44v+OBs0Nm+s+/HEdnZk7k2UtoqJfx2hHtZUERK6fa1ZxqddqYP4xFbScslJc/tj
-         JvQA==
-X-Forwarded-Encrypted: i=1; AJvYcCX917ltnxSbseih/lQZYTsK2Mdz1JD17ZF5Ji0aKOa5fa6ldINtbhaMDsccyeoUbWtILbKSvL44OTNy+28=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3JSbO46DcsYIvXnNNvtcA4mpgpG5CfBJXHtFvTe9vkUcsdpgX
-	lXY8EpVsu0fpkaiAHBEz7AIBQltiUJTS50KapeeYdJjfc44yscZSx4BOCJ40t7M=
-X-Gm-Gg: ASbGncsbCRuUlHy1q4UZRXOUEyDoIvSEdedEC/17Bsmj864smZHpixXY6ucMCDu2z/U
-	01rEZRqwhJG0LNQI/dhvuQ9vvbhNT1M3E/5I4iR5Wg6hopEWpI09svHmv4wtfPjsWmj0Ds12HPQ
-	FPzwn+PweM/OLoXzH55Cfcp3kc8Lhu+V60z56msRf7ptRISdbduLaM8qgpJYVZNwycLIQOyhi/p
-	GYl37DNf9ICfLCG8S4lGnq4krM4ai78TzhuMRQmkYHCDhPa4p0yEp0XzlSBC4RrmbyxrBE2i4al
-	Am+uBSNGXqRw32i30JsfM0rPPB7szLAwnKJmN8OE0zVNbSFAVDenb2OdhPlpvBwIxLtl
-X-Google-Smtp-Source: AGHT+IFaxoG8PspfNQgs9ZrKhJsJGSassfH5vK7a8F6sxyQJOw7XlMy/r7h1UQkFOMzO2zGssbh4bg==
-X-Received: by 2002:a05:6000:1445:b0:38d:d387:166 with SMTP id ffacd0b85a97d-38dd38707a3mr3990985f8f.34.1739150054942;
-        Sun, 09 Feb 2025 17:14:14 -0800 (PST)
-Received: from airbuntu (host109-154-33-115.range109-154.btcentralplus.com. [109.154.33.115])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391da965b3sm133163775e9.5.2025.02.09.17.14.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 17:14:14 -0800 (PST)
-Date: Mon, 10 Feb 2025 01:14:13 +0000
-From: Qais Yousef <qyousef@layalina.io>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Stephen Boyd <sboyd@kernel.org>, Yury Norov <yury.norov@gmail.com>,
-	Bitao Hu <yaoma@linux.alibaba.com>,
-	Andrew Morton <akpm@linux-foundation.org>, kernel-team@android.com
-Subject: Re: [RFC][PATCH 0/3] DynamicHZ: Configuring the timer tick rate at
- boot time
-Message-ID: <20250210011413.whnkxo4modrx6gbc@airbuntu>
-References: <20250128063301.3879317-1-jstultz@google.com>
- <87cyg67up9.ffs@tglx>
- <20250203111433.GF7145@noisy.programming.kicks-ass.net>
+        d=1e100.net; s=20230601; t=1739150193; x=1739754993;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4JQRilZSEsRfSdZVX7rLS980iHRw58YbaBBmRysg5RU=;
+        b=uIfoJ29/LqcFluKEaqzs9szae2T4OscvulOrB07hOX79qSnIbeINodNlTMvlEZ3ruP
+         ula0cEvNA2Owu6IZ5k9GVBmk9lS97QR+l8medLwagsApopt80Zd3lxbjnZnWpUp1P03s
+         aQQQ73P15OTJ7bHsnGoaegIh+/jHibCp1YAzKsAgKccBKap+Fikr+wCDv3P10FgkgKlH
+         pkMvDPrxGd5zsGkxFzCSiReBof6sn4xiDbu/cHavWbJrjF7W4SNFEuSRkGwQswF+WPbu
+         DH6D735v5Y3DhlLD9RkgoNJwk2FlHeUU1dUb0sEBOZh7rFfivIrWy6oK4vxLtcUlla42
+         BwXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVeRYHDTkhu898pAzqg9sGmhNKGYBSCWeeVTZkxlXTnBW+bP9UjscPKgXAqgZkh2+iSdYH09IKXv/3HHqE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBB7EYI+5nz43WxgVa1Z23AQQMUxLUgGLYMxSSeLfl5NvEbxSO
+	Bh2Z00OqVaCWnG9HgwMtxfFtBqPe6IpfAxsCOdmixvEl+spp5Y/FvEpCNB7eSpaT8FDTqMCiL9M
+	/j3Q9rH5XphRUa0YVu7VyVAmYauz8GgzMFfs7JgL2YdaIdXa78g/2Ggw=
+X-Google-Smtp-Source: AGHT+IHrk+lqCr+stsnTqDdO03qvfqYcXjhVDikHEeNHFyTDnJGFth3jufml1vwpOq0ECBSg246dxhputw7CKSOVjNq77hE2titY
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250203111433.GF7145@noisy.programming.kicks-ass.net>
+X-Received: by 2002:a92:c263:0:b0:3cf:c803:1295 with SMTP id
+ e9e14a558f8ab-3d13dcfcdeamr109250035ab.3.1739150192680; Sun, 09 Feb 2025
+ 17:16:32 -0800 (PST)
+Date: Sun, 09 Feb 2025 17:16:32 -0800
+In-Reply-To: <671ff85a.050a0220.11b624.04b3.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a95370.050a0220.3d72c.0046.GAE@google.com>
+Subject: Re: [syzbot] [ocfs2?] kernel BUG in ocfs2_journal_toggle_dirty
+From: syzbot <syzbot+ea8d1726e1e3367085ce@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, djwong@kernel.org, hch@lst.de, jack@suse.cz, 
+	jlbec@evilplan.org, joseph.qi@linux.alibaba.com, linux-kernel@vger.kernel.org, 
+	mark@fasheh.com, ocfs2-devel@lists.linux.dev, ocfs2-devel@oss.oracle.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 02/03/25 12:14, Peter Zijlstra wrote:
+syzbot has found a reproducer for the following issue on:
 
-> The whole preemption thing could probably be replaced with HRTICK (which
-> might be suffering from bitrot), but the problem has always been with
-> hrtimers being too expensive (on x86). But ideally we'd move away from
-> tick based preemption.
+HEAD commit:    69b54314c975 Merge tag 'kbuild-fixes-v6.14' of git://git.k..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=178742a4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1909f2f0d8e641ce
+dashboard link: https://syzkaller.appspot.com/bug?extid=ea8d1726e1e3367085ce
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=107a3b18580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10d86bdf980000
 
-I do think HRTICK must be on by default. Precise time slices are important.
-Especially if your plans to attach changing of base_slice to
-sched_attr->runtime are still happening. People will find lots of surprises
-when they ask for 500us runtime but end up running (much) longer, especially
-with the default 4ms TICK value (which I just posted a patch to change it).
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-69b54314.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/e32e396b49c9/vmlinux-69b54314.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/30d7fe7e4148/bzImage-69b54314.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/16cf04118a70/mount_0.gz
+  fsck result: OK (log: https://syzkaller.appspot.com/x/fsck.log?x=13586bdf980000)
 
-Can we re-evaluate the HRTICK impact?
+The issue was bisected to:
+
+commit 98ded54a33839e7b8f8bed772e01a544f48e33a7
+Author: Christoph Hellwig <hch@lst.de>
+Date:   Wed Mar 30 05:29:10 2022 +0000
+
+    loop: remove the racy bd_inode->i_mapping->nrpages asserts
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=144cf0b0580000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=164cf0b0580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=124cf0b0580000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+ea8d1726e1e3367085ce@syzkaller.appspotmail.com
+Fixes: 98ded54a3383 ("loop: remove the racy bd_inode->i_mapping->nrpages asserts")
+
+(syz-executor198,5726,0):ocfs2_inode_lock_full_nested:2512 ERROR: status = -30
+(syz-executor198,5726,0):ocfs2_shutdown_local_alloc:412 ERROR: status = -30
+------------[ cut here ]------------
+kernel BUG at fs/ocfs2/journal.c:1012!
+Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI
+CPU: 0 UID: 0 PID: 5726 Comm: syz-executor198 Not tainted 6.14.0-rc1-syzkaller-00276-g69b54314c975 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:ocfs2_journal_toggle_dirty+0x397/0x3a0 fs/ocfs2/journal.c:1012
+Code: 6f fe e9 f7 fd ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c 2a fe ff ff 48 89 df e8 d4 68 6f fe e9 1d fe ff ff e8 da cf 08 fe 90 <0f> 0b e8 92 58 3f 08 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0000:ffffc9000e2fefe0 EFLAGS: 00010293
+RAX: ffffffff83b67fc6 RBX: 00000000ffffffff RCX: ffff88801f368000
+RDX: 0000000000000000 RSI: 00000000ffffffff RDI: 0000000000000000
+RBP: ffffc9000e2ff0b0 R08: ffffffff83b67d30 R09: 1ffffffff285f32a
+R10: dffffc0000000000 R11: fffffbfff285f32b R12: dffffc0000000000
+R13: ffff88804121a740 R14: ffff8880449e9600 R15: 1ffff92001c5fe04
+FS:  00007f04682156c0(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f046066b000 CR3: 000000005005a000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ ocfs2_journal_shutdown+0x479/0xc10 fs/ocfs2/journal.c:1094
+ ocfs2_mount_volume fs/ocfs2/super.c:1785 [inline]
+ ocfs2_fill_super+0x668e/0x7200 fs/ocfs2/super.c:1083
+ get_tree_bdev_flags+0x48c/0x5c0 fs/super.c:1636
+ vfs_get_tree+0x90/0x2b0 fs/super.c:1814
+ do_new_mount+0x2be/0xb40 fs/namespace.c:3560
+ do_mount fs/namespace.c:3900 [inline]
+ __do_sys_mount fs/namespace.c:4111 [inline]
+ __se_sys_mount+0x2d6/0x3c0 fs/namespace.c:4088
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f0468a70faa
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 7e 09 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f0468214f88 EFLAGS: 00000282 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 0000400000004440 RCX: 00007f0468a70faa
+RDX: 0000400000004440 RSI: 0000400000000040 RDI: 00007f0468214fe0
+RBP: 00007f0468214fe0 R08: 00007f0468215020 R09: 000000000000441b
+R10: 00000000000008c0 R11: 0000000000000282 R12: 0000400000000040
+R13: 00007f0468215020 R14: 0000000000004421 R15: 0000400000000080
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:ocfs2_journal_toggle_dirty+0x397/0x3a0 fs/ocfs2/journal.c:1012
+Code: 6f fe e9 f7 fd ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c 2a fe ff ff 48 89 df e8 d4 68 6f fe e9 1d fe ff ff e8 da cf 08 fe 90 <0f> 0b e8 92 58 3f 08 66 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0000:ffffc9000e2fefe0 EFLAGS: 00010293
+RAX: ffffffff83b67fc6 RBX: 00000000ffffffff RCX: ffff88801f368000
+RDX: 0000000000000000 RSI: 00000000ffffffff RDI: 0000000000000000
+RBP: ffffc9000e2ff0b0 R08: ffffffff83b67d30 R09: 1ffffffff285f32a
+R10: dffffc0000000000 R11: fffffbfff285f32b R12: dffffc0000000000
+R13: ffff88804121a740 R14: ffff8880449e9600 R15: 1ffff92001c5fe04
+FS:  00007f04682156c0(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f0460bff000 CR3: 000000005005a000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
