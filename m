@@ -1,90 +1,80 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83FA632;
-	Mon, 10 Feb 2025 03:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B85E125B2;
+	Mon, 10 Feb 2025 03:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739159365; cv=none; b=ndnIpXNZTxTxoU5Nc5JOq61lWW+u8gCpZG5rPENU/1zTumpZgHSaN89jFMC1xRjbeKdOW3JGQ1ymS5jSo7MBSRwsu+/4LQL8JLvoZSB4gPEYkcSLU12nmc4JjN0qx5kdhvu4ikKyj6PFmjwUhH4nKqag4QWNsa4MzByxZzibvHU=
+	t=1739159425; cv=none; b=dtQamuTOqq9KHVauPPKloeIqiA1TtYI7+B6PwJLUFX15mCa1rq/+eU8WprKg1yyedtuzC3hmct2hlUBWNFwmJY/WOHvZnHt1bWu9elgxG0CyzcfstqUPN0yEEfFK3mJ/G6Tlwxn0PohMDVQX6zrIv4QDIdaUrtJEHWf23SWhkPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739159365; c=relaxed/simple;
-	bh=GJw9WF5Ut/+oo75+cEpXrreZMc/J9z2Rw+hagaDuipU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Dy5I/m93kbOQY/ODHFhvR+3JUSAAar7GZMC51Vb4QhwuFUsNcVMYZ03dvx93DsNOZtbU/9CWYm1KLnV4xyUtRwlARShEZ8hvQXfwr4SRJGx5A0j0tPhiz+8N6ZGl2jK6LCMQ8+C19YCojAfzF2WzuXcjl11NI/EWMp04C/hSw1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=AJkmZ+fq; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1739159425; c=relaxed/simple;
+	bh=AQbAd1v0Btbrh9m+EmG/+yuJT/dULSVEHMZ7L8h+lEY=;
+	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
+	 Content-Type:Message-ID:Date; b=E04uhfnxdXR3A6thfQPtiO9mj9UesWsumoeXuCRmu3fA8dL57FkHYTMk6UfcGMIg3auoFc3ENm5X0+0cpHSI6CAYVsBPnPgfZHS3ThiS8pHSm9riUK5P8E0I0uWCbDJhyhhe9QHUyIPGWzqnXpfJQSmy0fqMuKV6WmR3KP2LqnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=KKZQh2wH; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AJkmZ+fq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1739159359;
-	bh=Y43Bis08OqxQRefuffiWkrGjfO231KrPqJthseWCd0A=;
-	h=Date:From:To:Cc:Subject:From;
-	b=AJkmZ+fq8E/jczS3f4AfMy3lvc5doep35Jq+bMM76TA7cX9sOFoT1hJXGyBtVOoWW
-	 E1H8gEN2c3OGvIVTH4v4OUMTqISo85GWXNTfMpoun730Y/FP7iK34vTEA4zwj2taAD
-	 fpi7Qjtz2AiULsHdOM2ImZJfhbCohDqA0dm8KF2dofbAn5ximD/tzDGzGwTHK0IP9d
-	 GVi53FtdnD2r0/wf+OuTmiIbXL77Fm84EJoUH04HxUvh55KXhTOalO68nqZw0vU3g7
-	 3RzICKg13ylSjaOufxLuAJ6r3g70x7jqq0NFAWuR8jzpjEmxE3iezU7rEZW/2QQWdM
-	 5RLb1HqXAwrXw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YrrDH3hbvz4wbR;
-	Mon, 10 Feb 2025 14:49:19 +1100 (AEDT)
-Date: Mon, 10 Feb 2025 14:49:18 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Graf <graf@amazon.com>, "Mike Rapoport (Microsoft)"
- <rppt@kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build warnings after merge of the mm tree
-Message-ID: <20250210144918.4e0368ce@canb.auug.org.au>
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="KKZQh2wH"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 51A3oE9L11598199, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1739159414; bh=AQbAd1v0Btbrh9m+EmG/+yuJT/dULSVEHMZ7L8h+lEY=;
+	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
+	 Content-Type:Message-ID:Date;
+	b=KKZQh2wHUO9Xtvm4AhbenvhKV3WDN5iznjgGYCSt70pwnxWKcIfBgQ8JdOG0wMfsm
+	 KIHsJZsYGAN+eWyFXd/OzBrw082S97umzy0kP+7+wtD+5Mx0HOIjTN+TkGlAttOKzt
+	 5z53D31gT9qd5/GnuJ4TC7145bdmcoMC0rtJWkLmUZSD7kT5+1QZY1ZjxayjLMSV3A
+	 NjWKiS8JFMd88X/rN8xRxVTn9EptW0DZIvQfFc4mCG1KN2YhlvZEjEcKEVQ23o66VA
+	 tlI6h0arPMpd6572bjQWEr7VQ648clawIWplD4dZZFI5PYZs+r2ldAAze9f7QUtgDp
+	 W6p2W0vO1l8LA==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 51A3oE9L11598199
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Feb 2025 11:50:14 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 10 Feb 2025 11:50:15 +0800
+Received: from [127.0.1.1] (172.21.69.94) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 10 Feb
+ 2025 11:50:14 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Andrew Kreimer <algonell@gmail.com>, Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@kernel.org>,
+        Bitterblue Smith <rtl8821cerfe2@gmail.com>
+CC: <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Andrew Kreimer <algonell@gmail.com>
+Subject: Re: [PATCH net-next] wifi: rtlwifi: rtl8192de: Fix typos
+In-Reply-To: <20250206082457.9148-1-algonell@gmail.com>
+References: <20250206082457.9148-1-algonell@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Z=L9EPFRDENLIMTViaWUfwf";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+Message-ID: <3cb7598b-8e67-4ff8-aba1-e41df2fe0eed@RTEXMBS04.realtek.com.tw>
+Date: Mon, 10 Feb 2025 11:50:14 +0800
+X-ClientProxiedBy: RTEXMBS02.realtek.com.tw (172.21.6.95) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
---Sig_/Z=L9EPFRDENLIMTViaWUfwf
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Andrew Kreimer <algonell@gmail.com> wrote:
 
-Hi all,
+> There are some typos in comments/messages:
+>  - althougth -> although
+>  - asume -> assume
+> 
+> Fix them via codespell.
+> 
+> Signed-off-by: Andrew Kreimer <algonell@gmail.com>
+> Acked-by: Ping-Ke Shih <pkshih@realtek.com>
 
-After merging the mm tree, today's linux-next build (htmldocs) produced
-these warnings:
+1 patch(es) applied to rtw-next branch of rtw.git, thanks.
 
-Documentation/kho/usage.rst:10: WARNING: undefined label: 'concepts' [ref.r=
-ef]
-Documentation/kho/usage.rst:31: WARNING: undefined label: 'kho active phase=
-' [ref.ref]
+6b39cc01af66 wifi: rtlwifi: rtl8192de: Fix typos of debug message of phy setting
 
-Introduced by commit
+---
+https://github.com/pkshih/rtw.git
 
-  cf8eba2f58e1 ("kexec: add documentation for KHO")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Z=L9EPFRDENLIMTViaWUfwf
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmepdz4ACgkQAVBC80lX
-0Gxl9Qf9HkCe1DtNWPmBJVw/XdIaQXPHjyX+HL7oUSpOnp6iSR/nR5SJGHQTI6Cq
-wmbDAfoI1gD1e4wf/8KIaVeLuvl/W1aEBpaXoKBM/wGH69EXdtgrixndKUo8X4J+
-ZmmcsjBcz6tWA+RbQk2RHRGChdZsb+4pZIE2BxZkwRMZjbAyrdPyJ5FEEnYhxCS6
-NMCk03LL3nFsuvadfZt/O7jfltSnA01NVPZx+ojWyuqWq1hiHAVcJJ0U9+s4AxZa
-JPMA1d0Av2oyLvLZHuBa5GaslmvMnC3CUXkg2q8gqAYonqn33gsMiMA+StkpcilZ
-q/vE9fB6Fg/+V3E4cRUAEsbQme9Rhg==
-=4fAM
------END PGP SIGNATURE-----
-
---Sig_/Z=L9EPFRDENLIMTViaWUfwf--
