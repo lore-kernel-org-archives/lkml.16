@@ -1,128 +1,148 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF441A2622
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD352F22;
+	Mon, 10 Feb 2025 07:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739173923; cv=none; b=oUlPZvvKBYh8yQqvkFSqiqJg1f67G/tXrHABJL9euu4QGXW4B2xyjB97koLIghKNBK4OCCbObF2IjW50iDpMSdC6Exor+Y1gEBaLyj4tJXx259KGEnOrOeoD+4YgNlaIYw8nLBnZdIgSfBFnbk5ScX2P5jyXaYkF7em8uFMmH3g=
+	t=1739173973; cv=none; b=urRTii/EIDHnRFuBvOC1XS5EqeNXhTtvjuL2Db1KKc1rEBfrWCWF8kKsXcQuhabiZhvXTO1V4J5MDJU19/r3/OgCGKBgCKNJzkkILe5Oxm6lrqXbeU3HBsUDl17qlBVEJRkq7JE+8WMFMpsF70fPCG214yFhxLl8vZV8XXDhXuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739173923; c=relaxed/simple;
-	bh=SbiBsePgUUDw8ub83Bn9h4Z6Q+/Z2UG671GLzYjIXHI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OWUdjJfiPsd18+GQ7ESxWme3UDLMEt52jbT7cT25IqtfMw+Ac0b93HpMgtB8kt9yxY1B7R3i+l621oUWwUY65N5G3hvdb4/wh5l9n2WksB5Sq0LR1w2CGY/+pccf3Tm/vqXdpZl9NnG2/Qhpr8X+nz14htmWloMveSrxtDwStCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iSQjYFTE; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739173973; c=relaxed/simple;
+	bh=DJdItJntOY5OJ5hvUSmejJSmg9qkBKUePL2xVWDqlXI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HcALA1MtFTbdFT/a2wrQ2dGInJ2MLt2Q17fCKRDPggQo5wjfzyX+/mOXlTSmC3QtlLYXR1FWRr3D6piTJ7t/+kLRVHETFRiBPSnlc4vcD6OgmKykt8jQPWfC+ogsGGgj1eN3vynPmfxBohj4O1Nwk+hPyyteB+Bg95aeyKewpkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vWlhTkWl; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iSQjYFTE"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21f7f03d856so20456435ad.1
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 23:52:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739173921; x=1739778721; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=jRRm29wGMApxPz8FgRvy/J5UYrL30LQ9avtohjE2Q3o=;
-        b=iSQjYFTEgU3v8EvCcFO3B+QjnAAKJ1ZbmdtTVyoKGUzI7wXHD2OkIa36cAIaBumphT
-         jt4ogZKCR05t3a3mKZr0FWRfw9QC/IYdutS1NuSMKGgI6tJaOrFPDbE3IpNvsZdk+9cB
-         vREc+c1aCclli/Oxd1zZJN45E4f6G4HbKm6tMnqbVFVmvlOHkKFQvBthhhErTcX0iJFh
-         KOfRscX8Vxze3TcHl+C7CZYB4iKb/nOmTjvUnGJxxHy3iO+7iRCCKsn4HhBU0lRROw7R
-         bz3cXP1hcoS/aAYrhnHDhyK+vNR81R2dLeJ3r6++94FD5fxm8d1iMIW9ch1tFvcVasKi
-         dBCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739173921; x=1739778721;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jRRm29wGMApxPz8FgRvy/J5UYrL30LQ9avtohjE2Q3o=;
-        b=emznT4/xA9IDVnKAcnghExHc8tcGDRKdFpTXyAkoKhhBhE/5ie+Tui251NoGdr3YMD
-         9UklGkU5Ya/sDmmpHcZjbd6ORQxpud2rHzJgTDUrrScS0FHKvJkS5Et5vE0DzwyoiDF8
-         Ylk6t8P3k4cGKpGDuIeUjmp/8sTV3mOcbj1vvrENXWgnFHX07OQNdquQjkBc/E7nGfGh
-         yAR5Eov3LPofHGt/yvCJ7RBS6lfGi+4H/3jG0sL7fH6XuHE3t8puKJqIAEyJtZlHRJlR
-         WRwHQVrUxrv3F6k78+RXZ8yVLapP2Y68XBl2BkKWNNq+iQRBW9dIU59K7HqZG0+9mZJa
-         XChw==
-X-Forwarded-Encrypted: i=1; AJvYcCUcIyfgigIXnGcn6Y5MS7d1RmmO9Efmp8RwkmrxBAc4JHcMLzwOYMjO62bOiFVXh+YTpUoWLB9QluTZTiE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRBqyf+YXfmhIWQe+gtmRoOoW3f8rsdFRGSokkq6wAkklxT4bH
-	MgILOV21Bg3TY0VjIhHdkCsJUBJZsPzfTQvMz/ySC4P066wT/xddsAaSx2nBhw==
-X-Gm-Gg: ASbGncsCK5PHcbGKV5wJuEnVUv858ACcozJkNkR+tiVtNYOFiXSULp3nt3m5phqkI/u
-	b/QLwvi/49KDrjslxuwYE04mQAw9AaOk4iKkK44Wqr55BEkejI2nflIzGgyzHdKSo8eTFlkMkFX
-	T0aIFcvkB92SnmI8fHuVNhpHmvfODjwD+DZOFOr7HESN9z+kMlMDzV8NWB4RQD2g9+lW4NIGZ+f
-	1d9ZrAwBUtLw9/wq5juwx5odAuqJXfYHFxDikcT80sJPYeZen6LukeEuwcexmBHO5cZWlwf98qs
-	RlFgrkwRstmKptU2ylnLgFzMz0K/
-X-Google-Smtp-Source: AGHT+IFiBhqV22C5q8pOwc0SqHNUPt/CKAPUfMB5p7rCsPdXXm7wz9qVBmWTaac8lz1b+Tnnpgp3rQ==
-X-Received: by 2002:a17:902:f806:b0:21f:dc3:8901 with SMTP id d9443c01a7336-21f4e7985c6mr166681905ad.34.1739173921291;
-        Sun, 09 Feb 2025 23:52:01 -0800 (PST)
-Received: from thinkpad ([220.158.156.173])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3650e6cbsm72256895ad.40.2025.02.09.23.51.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 23:52:00 -0800 (PST)
-Date: Mon, 10 Feb 2025 13:21:55 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-Cc: Rob Herring <robh@kernel.org>, andersson@kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	cros-qcom-dts-watchers@chromium.org,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicinc.com,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/6] dt-bindings: PCI: Add binding for qps615
-Message-ID: <20250210075155.ka3fy3xiptyy3w6i@thinkpad>
-References: <20241112-qps615_pwr-v3-0-29a1e98aa2b0@quicinc.com>
- <20241112-qps615_pwr-v3-1-29a1e98aa2b0@quicinc.com>
- <20241115161848.GA2961450-robh@kernel.org>
- <74eaef67-18f2-c2a1-1b9c-ac97cefecc54@quicinc.com>
- <83337e51-6554-6543-059d-c71a50601b09@quicinc.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vWlhTkWl"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51A7qegJ002056
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Feb 2025 01:52:40 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1739173960;
+	bh=TIoUXv4bvfSaNynsaGquNVj1t+EosXITFmTzVsUQThE=;
+	h=From:To:CC:Subject:Date;
+	b=vWlhTkWl5lxtoELWTi9isUpA8xKgh0gf3gaj7NvrsfH/PTclYYkAL2vVCNtSApABX
+	 D3O+L6EN22FlXzOS4HotIpq3Srnx/8QwG9r+ywscCIX8XUFIiJezWy9uqbcmbwkDBP
+	 81UUPOH5bZBBvJZFkzdSN1zL7T7wGflglz+DhfA4=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51A7qemJ126469
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 10 Feb 2025 01:52:40 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 10
+ Feb 2025 01:52:40 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 10 Feb 2025 01:52:40 -0600
+Received: from lelvsmtp5.itg.ti.com ([10.250.165.138])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51A7qaDr063518;
+	Mon, 10 Feb 2025 01:52:37 -0600
+From: Baojun Xu <baojun.xu@ti.com>
+To: <jwboyer@kernel.org>
+CC: <shenghao-ding@ti.com>, <linux-firmware@kernel.org>, <13916275206@139.com>,
+        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <alexander@burningdaylight.io>, Baojun Xu
+	<baojun.xu@ti.com>
+Subject: [PATCH v1] ASoC: tas2781: Add regbin firmware by index for single device
+Date: Mon, 10 Feb 2025 15:52:11 +0800
+Message-ID: <20250210075211.5343-1-baojun.xu@ti.com>
+X-Mailer: git-send-email 2.43.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <83337e51-6554-6543-059d-c71a50601b09@quicinc.com>
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, Dec 04, 2024 at 02:19:56PM +0530, Krishna Chaitanya Chundru wrote:
+Add regbin firmware by index for single device.
+Add more symbolic link for Gemtree project.
 
-[...]
+Signed-off-by: Baojun Xu <baojun.xu@ti.com>
+---
+ WHENCE                      |  14 ++++++++++++++
+ ti/tas2781/TXNW2781RCA0.bin | Bin 0 -> 868 bytes
+ ti/tas2781/TXNW2781RCA1.bin | Bin 0 -> 868 bytes
+ 3 files changed, 14 insertions(+)
+ create mode 100644 ti/tas2781/TXNW2781RCA0.bin
+ create mode 100644 ti/tas2781/TXNW2781RCA1.bin
 
-> > > > +                pcie@3,0 {
-> > > > +                    reg = <0x21800 0x0 0x0 0x0 0x0>;
-> > > > +                    #address-cells = <3>;
-> > > > +                    #size-cells = <2>;
-> > > > +                    device_type = "pci";
-> > > > +                    ranges;
-> > > > +                    bus-range = <0x05 0xff>;
-> > > > +
-> > > > +                    qcom,tx-amplitude-millivolt = <10>;
-> > > > +                    pcie@0,0 {
-> > > > +                        reg = <0x50000 0x0 0x0 0x0 0x0>;
-> > > > +                        #address-cells = <3>;
-> > > > +                        #size-cells = <2>;
-> > > > +                        device_type = "pci";
-> > > 
-> > > There's a 2nd PCI-PCI bridge?
-> > This the embedded ethernet port which is as part of DSP3.
-> > 
-> Hi Rob,
-> 
-> Can you please check my response on your queries, if you need
-> any extra information, we can provide to sort this out.
-> 
+diff --git a/WHENCE b/WHENCE
+index d2ccfbb2..39b6de58 100644
+--- a/WHENCE
++++ b/WHENCE
+@@ -8010,12 +8010,18 @@ File: ti/tas2781/TAS2XXX3F300.bin
+ File: ti/tas2781/TAS2XXX3F301.bin
+ File: ti/tas2781/TAS2XXX8DE8.bin
+ File: ti/tas2781/TAS2XXX8DE9.bin
++File: ti/tas2781/TXNW2781RCA0.bin
++File: ti/tas2781/TXNW2781RCA1.bin
+ File: ti/tas2781/TIAS2781RCA2.bin
+ File: ti/tas2781/TIAS2781RCA4.bin
+ Link: TAS2XXX0C94.bin -> ti/tas2781/TAS2XXX0C94.bin
+ Link: TAS2XXX0C95.bin -> ti/tas2781/TAS2XXX0C95.bin
+ Link: TAS2XXX0C96.bin -> ti/tas2781/TAS2XXX0C96.bin
+ Link: TAS2XXX0C97.bin -> ti/tas2781/TAS2XXX0C97.bin
++Link: TAS2XXX103C8DE80.bin -> ti/tas2781/TAS2XXX8DE8.bin
++Link: TAS2XXX103C8DE81.bin -> ti/tas2781/TAS2XXX8DE8.bin
++Link: TAS2XXX103C8DE90.bin -> ti/tas2781/TAS2XXX8DE9.bin
++Link: TAS2XXX103C8DE91.bin -> ti/tas2781/TAS2XXX8DE9.bin
+ Link: TAS2XXX10A40.bin -> ti/tas2781/TAS2XXX10A40.bin
+ Link: TAS2XXX10A41.bin -> ti/tas2781/TAS2XXX10A41.bin
+ Link: TAS2XXX11540.bin -> ti/tas2781/TAS2XXX11540.bin
+@@ -8074,8 +8080,16 @@ Link: TAS2XXX3F300.bin -> ti/tas2781/TAS2XXX3F300.bin
+ Link: TAS2XXX3F301.bin -> ti/tas2781/TAS2XXX3F301.bin
+ Link: TAS2XXX8DE8.bin -> ti/tas2781/TAS2XXX8DE8.bin
+ Link: TAS2XXX8DE9.bin -> ti/tas2781/TAS2XXX8DE9.bin
++Link: TAS2XXX8DE80.bin -> ti/tas2781/TAS2XXX8DE8.bin
++Link: TAS2XXX8DE81.bin -> ti/tas2781/TAS2XXX8DE8.bin
++Link: TAS2XXX8DE90.bin -> ti/tas2781/TAS2XXX8DE9.bin
++Link: TAS2XXX8DE91.bin -> ti/tas2781/TAS2XXX8DE9.bin
+ Link: TIAS2781RCA2.bin -> ti/tas2781/TIAS2781RCA2.bin
+ Link: TIAS2781RCA4.bin -> ti/tas2781/TIAS2781RCA4.bin
++Link: TXNW2781RCA0.bin -> ti/tas2781/TXNW2781RCA0.bin
++Link: TXNW2781RCA1.bin -> ti/tas2781/TXNW2781RCA1.bin
++Link: TXNW2781RCA2.bin -> ti/tas2781/TIAS2781RCA2.bin
++Link: TXNW2781RCA4.bin -> ti/tas2781/TIAS2781RCA4.bin
+ 
+ Licence: Redistributable. See LICENCE.ti-tspa for details. Marked:
+ 	 Copyright (C) 2023 - 2024 Texas Instruments
+diff --git a/ti/tas2781/TXNW2781RCA0.bin b/ti/tas2781/TXNW2781RCA0.bin
+new file mode 100644
+index 0000000000000000000000000000000000000000..9718640b529e324bc5975d7d66bcfbdef8d4ad6e
+GIT binary patch
+literal 868
+zcmZQzU`{#U%krFofsqx68Pj~{%w_~J7~p^z$m#*&J3xE`E;@o3Da8f4hGt2bCA!5q
+z`6UMA_?(H6g>eB;qXrN&GcW=nL(EJD76y9;1}-Te4;c2mKrt}~1_nN$5`G|NVqj!u
+z1aUZk7^DLz&&1?u6byAsYH~(?QEFOhQEFatDk&}lxn&8^%nBgp0-6epU%n$iI~~y6
+z!~$`X0FVZ{i&6Xp&`B%|EMWgLg4rArKqG(v<Tef&kds*$I5Zd>Kw=;^mj{RiWk*27
+zA^yPXx1`E~#NuLz7BWeot&EjGy(K`*33eAKDKmrp2@FTLKW{QHBnSY#uLlozeEuWB
+JUkq5{3;=u;DgFQe
 
-I believe Rob was pointing the 'device_type' property which is not needed for
-PCI device nodes but only for nodes implementing PCI bus (like host bridge, PCI
-bridge).
+literal 0
+HcmV?d00001
 
-- Mani
+diff --git a/ti/tas2781/TXNW2781RCA1.bin b/ti/tas2781/TXNW2781RCA1.bin
+new file mode 100644
+index 0000000000000000000000000000000000000000..f92631f8477b78cd8714e9941fa57d8346323df8
+GIT binary patch
+literal 868
+zcmZQzU`}~`QE(3f10yRCGp6~@`OgSqFu(ybkaY)$dw}=`Tyz96JdJ{N4b74=OLS9{
+zGxCd4(^894^O93_i*xcz42TN{CI%M9B|xPWK+MI!$N&sez9S3_{0<BZF*6xh80>+<
+zT0n6Y1_oYW&<g-*F$V@l@e>R{oeV5sTNuG?4he{jj6l^KG7Jzg4F;e=5H^<wL>{D%
+zD*_@8QVUebz|6=8l;i+nkO)YODW$jo>NgU61F-={g8T+@pau{#L(B#H2`C2k6EIzY
+z`~>t51IT)QAja;Nq{@QC;$omQ`2ge=Pym$xF(<?=z@*F!4s)Qtk;0rIK>+AJE4bV6
+Mg*7NFImi!V0F@^x`v3p{
+
+literal 0
+HcmV?d00001
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.34.1
+
