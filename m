@@ -1,73 +1,42 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E545D2F85B
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:01:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361217E105;
+	Mon, 10 Feb 2025 19:01:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739214097; cv=none; b=UTThK0lZiOnIf4FJzKqvAUZUqOo0tZMpGA+TITHm4/MGunmaIEdRgZgWLgpMJSzpPM7vdvXlgOcKbMW20pf2kRoN7YvG1TVo42E+ilXtZ6ErNQJgWOxgcShZI5tediW5Alb/AfSKWliKgbKQBnrv34y/FF7ZJ+BJe7xaL73GgUE=
+	t=1739214115; cv=none; b=g8xlqJ5gIvdXUD8PFbP/jBLVLc1rdM+vqOA9j4yKmcwPVuALy9AjgQhH2mrnZt30Y5QEq477k/Sg7YR7fje8uwT47dcI7Yw0asSAPsS2li2Y8sbWHhDF+Fujp5jA1MCDqBwlrrr2Zbk/c+KR0xNBQvtFlxQdHIN0JQKZe9h6Qug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739214097; c=relaxed/simple;
-	bh=HCanVBKFOpmun47JOfujSAdBOhizy93bERI/UUMbepU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KEjwTrswh0Bzg/lMB7mzJMfXNuj2dX371Nmdch7YgKkWpNIaB/F6y+5VyI+GQLVCnE3wHMV3Jm+RuFoSZ6tUSOS3nmbDUF32Htr54L5N80HKEKrTW6t11jV3LxCSh0lzC82RSJDjzORqA/v91ohtGVRB+yVMdKY8bjchepFpHtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N/ca8gRx; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739214115; c=relaxed/simple;
+	bh=F9TNcoE8pCUSmMjWLOBOlXCKc+/DpC6SIhAeXtwFfq8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WMrbnN8mJMXEG2AGlWnCx/J8vWqemboXP83EeZXDFsLL7HVx1ug1S0RbkqHqWBIboVZ9vE+uwORZvUcKeLeQwpc0d1r7ISnZcqDraUZtMIny3kefGjRj/KV5J/71Nr6vDGRls7tSm3AlGphPfFVuk/kF6JIkxPd50DBV926RxSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=n6DMcIHO; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N/ca8gRx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739214094;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=wzsV/nHxroBNjLXhWoD5i0vnw07P5+Zp+zulUeyeNIU=;
-	b=N/ca8gRx5A+3HqwGD1/qCjoGe3DKwQSXMZyAJuX1tflVOtZywp+30F41v1szXZcxTVpn0p
-	7aJgMPGtJzTyZ8d4jjeB/7UmHJ/X/TRIDTri46a8R9m70G26GRyGQyCT8UceehmQK9AWbu
-	yPd6u0obaEI9zI3vaEmh6JKfuRS66tE=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-654--2tvEiD1M8WvAY9kTQIzpQ-1; Mon, 10 Feb 2025 14:01:33 -0500
-X-MC-Unique: -2tvEiD1M8WvAY9kTQIzpQ-1
-X-Mimecast-MFC-AGG-ID: -2tvEiD1M8WvAY9kTQIzpQ
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43933bdcce0so15826845e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:01:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739214092; x=1739818892;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=wzsV/nHxroBNjLXhWoD5i0vnw07P5+Zp+zulUeyeNIU=;
-        b=T4lE1zcPfpM1olSUg3hrZaeAzm6Xs1JECPbE0IQa/AmjHD0IVn66ML5L2aQ+iIgRpm
-         ar8BceBNeJFSNZzcIWJR6fIMcNWeWPd29IENJ6ESGsw/dG7X46AJ9Cz1GJMLqRFmA/lk
-         9UezNqrvbHGLA2Twflps9QFH5MxJMpMT7jLF5nV6F8rN2Xv11Mz7H7HAqWUx7ZdN0oeZ
-         N38owEwpGKOmCsmW9ldeUQ1RztCedoTWktR2cEbWVXbzOlvLO0kEvfVp8/0E8QACWXv8
-         ixkJNvlTH6y4xgWeRbOxfQbE3xXjIKJNbXF4TtcAE9LjFAqQTc64NjpVRDE4CZwmfgSL
-         rZdA==
-X-Forwarded-Encrypted: i=1; AJvYcCWSN3CN9FpHqud2ouEyCVTO4y5Q/U73Tp8sIoS8MxU14Uhrti81P1zDfRJCk3MGCNjP9kdyrbEFeWHPL4Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuBztpaNONtZoy4ibLCQc4vkHQjrGlYnIUtacrjeliqwDRbPdU
-	r4UNgR9ZHcOLLEX2j2TLeLJrfMKuYJP7afsBcSBRIea+iEABdgMsW2u5ozH9IgYIWbMAr7RL9Ov
-	/FHkbYMyXJbJkdBCLSEEAYKnMv/0EM8sdhESa9CCUckL6rWvMLTcy2GzyAyRdmQ==
-X-Gm-Gg: ASbGncux1Gxn/MSgk5olm7jmVRT8yE/LyYaV2UQtjPHhj6dCGRgXtPBzgHgFKMscbFg
-	r83wbSjsS+Vsrkf0fjqMpm+xhr/EkCkD4npHjLv2FeOxGXFpNi/uPDLzsWKIpc3t33gEAFGpBxa
-	Jna4c3n/a/gXRAuKUE04OchF2q3TalznLpFLuVVesfXPln/BwE3IxEQEYxMvbMK3VVWeTIqWXaj
-	yVNSIw2clSnO0dllBqIyEU8hJfc/GiTi+WbWoj2yR54pxYZgWt2OeoLVOfhoCAxq7P7KIUGE44J
-	S86R3flRREY9dN8RZ3PcWYKIk8k4fRELRrFXfpD7xdBdUkzphuoX//F6aIKPP+NYZ+8KqGpTi/c
-	feGTOeuZFwK5kVUZNogEC4TDb3hsSogjb
-X-Received: by 2002:a05:600c:190e:b0:438:a240:c55 with SMTP id 5b1f17b1804b1-4392497d5a2mr101320285e9.1.1739214092195;
-        Mon, 10 Feb 2025 11:01:32 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEqWvelv/EcWxqIdqqM8VMOUSW6z55PUGBNaBVsQSNr8P/MbW0xQgBUZTOgnOd6dY4d3UNnxA==
-X-Received: by 2002:a05:600c:190e:b0:438:a240:c55 with SMTP id 5b1f17b1804b1-4392497d5a2mr101319385e9.1.1739214091737;
-        Mon, 10 Feb 2025 11:01:31 -0800 (PST)
-Received: from ?IPV6:2003:cb:c734:b800:12c4:65cd:348a:aee6? (p200300cbc734b80012c465cd348aaee6.dip0.t-ipconnect.de. [2003:cb:c734:b800:12c4:65cd:348a:aee6])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc17e278bsm12112233f8f.48.2025.02.10.11.01.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 11:01:30 -0800 (PST)
-Message-ID: <6a6773ae-a21a-437c-be6f-d8e53267e534@redhat.com>
-Date: Mon, 10 Feb 2025 20:01:28 +0100
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="n6DMcIHO"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 7276FA037B;
+	Mon, 10 Feb 2025 20:01:51 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=umBDdA7MKFQI8t0RyJeE
+	BqV2fN8Tu7iXBtOUlukw9JM=; b=n6DMcIHOxd66k9cl8S0bzywqDmb/DjpZrdfm
+	2mXLpbj1bcPgSxzNJ0imMgf+pK3vt8JyHSMG4Tv0VzaVFC7C8i4Av4/XT0kP46Fc
+	5aHkMsai4EMNq6fTV+Kd84RhAK1fUa6ZKDkxSzb7HXzh+62sR6eqtZ0/ok8MM8Ku
+	epGWLuAMubOzYGma862PL8gz7ie0OgXrRjnAn82rccEkEtj0Bo8xXoTHUjAbbZsl
+	f+6e+BhfGuKmGdppsDWR5aJuCOrf3j7yP+zMsPVky0ZyDweJubkzgXh4R89q3dsf
+	g23ZbVwUE1Bkqg/g/thw7XZIpEYU/HYVlgO0Kd5zq55f3h9ERK7ed/b+6hKkNzLp
+	2PhphUx/QUyqkg5yNN8frvCZHygnsSjv1wHHAcV9QQDvXg81sLRRSD2bs5XT4t7x
+	NGThU73SnAPZ17GIZulT4ZhtWuMmclYdYn5g6BYBZ2UXxLvATpw+0zw/uQckYI1i
+	zVJumT1c432ScCZHkPxq1NKJ/zQczynDwS7kqThLEJD8J6yrRhT8oTZoTZw/LOMQ
+	1y7pgprxobeXMkuJzm8zjVWPpFHPfNMOJmrjfhhSIX6iuvbIMDeLjmF9RbSW3oQA
+	5NcS3K6TxRIXn6IQqP8LJO66/CD7WLKNZN/nRLLnLfSYYwWbe5z/OMcEH8iE7ufO
+	pzLdSCQ=
+Message-ID: <ee2afc4d-fe21-4ba9-8283-51a41f74937c@prolan.hu>
+Date: Mon, 10 Feb 2025 20:01:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,142 +44,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 19/20] fs/dax: Properly refcount fs dax pages
-To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
- dan.j.williams@intel.com, linux-mm@kvack.org
-Cc: Alison Schofield <alison.schofield@intel.com>, lina@asahilina.net,
- zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
- vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
- bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
- will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
- dave.hansen@linux.intel.com, ira.weiny@intel.com, willy@infradead.org,
- djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, peterx@redhat.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
- david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
- loongarch@lists.linux.dev
-References: <cover.472dfc700f28c65ecad7591096a1dc7878ff6172.1738709036.git-series.apopple@nvidia.com>
- <b5c33b201b9dc0131d8bb33b31661645c68bf398.1738709036.git-series.apopple@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH for-6.14 v3 2/4] pm: runtime: Add new devm functions
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Len Brown
+	<len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>
+References: <20250207124802.165408-1-csokas.bence@prolan.hu>
+ <20250207124802.165408-3-csokas.bence@prolan.hu>
+ <CAJZ5v0gEdo_BeZh2tnxJMzoosxL5zzJXyf6wi7SR9du7MoQmUw@mail.gmail.com>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <b5c33b201b9dc0131d8bb33b31661645c68bf398.1738709036.git-series.apopple@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <CAJZ5v0gEdo_BeZh2tnxJMzoosxL5zzJXyf6wi7SR9du7MoQmUw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94852617666
 
+Hi,
 
->   
-> -static inline unsigned long dax_page_share_put(struct page *page)
-> +static inline unsigned long dax_folio_put(struct folio *folio)
->   {
-> -	WARN_ON_ONCE(!page->share);
-> -	return --page->share;
-> +	unsigned long ref;
-> +
-> +	if (!dax_folio_is_shared(folio))
-> +		ref = 0;
-> +	else
-> +		ref = --folio->share;
-> +
-> +	WARN_ON_ONCE(ref < 0);
-> +	if (!ref) {
-> +		folio->mapping = NULL;
-> +		if (folio_order(folio)) {
+On 2025. 02. 08. 12:30, Rafael J. Wysocki wrote:
+> On Fri, Feb 7, 2025 at 1:48 PM Bence Csókás <csokas.bence@prolan.hu> wrote:
+>>
+>> Add `devm_pm_runtime_set_active()` and
+>> `devm_pm_runtime_get_noresume()` for
+>> simplifying common use cases in drivers.
+>>
+>> Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+> 
+> So I don't like this and it is not as straightforward as it looks, but
+> let me have a look at the entire series again and see why you think
+> this is useful.
 
+What exactly don't you like? And did you have a chance to look at the 
+rest of the series? I sent a cut-back version that should be easier to 
+review (I took out the DMA parts):
 
-I'd have made this easier to read by doing
+https://lore.kernel.org/linux-kernel/20250210111008.248929-1-csokas.bence@prolan.hu/
 
-if (ref)
-	return ref;
-folio->mapping = NULL;
-
-order = folio_order(folio)
-if (!order)
-	return 0;
-
-pgmap = page_pgmap(&folio->page);
-for (i = 0; i < (1UL << order); i++) {
-	// loop body see below
-}
-return 0;
-
-
-In the context of similar split users and related discussions in the 
-future with memdescs -- see 89a41a0263293856678189981e5407375261c4ff -- 
-I would further do within the loop (avoiding messing with page-> 
-completely):
-
-...
-	struct page *page = folio_page(folio, i);
-	/* Careful: see __split_huge_page_tail() */
-	struct folio *new_folio = (struct folio *)page;
-
-	ClearPageHead(page);
-	clear_compound_head(page);
-
-	new_folio->mapping = NULL;	
-	/*
-	 * Reset pgmap which was over-written by
-	 * prep_compound_page().
-	 */
-	new_folio->pgmap = pgmap;
-	new_folio->share = 0;
-	WARN_ON_ONCE(folio_ref_count(new_folio));
-...
-
-
-I scanned over the other stuff in here, but I'm not an expert on the 
-pfn_t etc thingies.
-
--- 
-Cheers,
-
-David / dhildenb
+Bence
 
