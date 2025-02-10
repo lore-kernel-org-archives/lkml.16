@@ -1,393 +1,164 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BACC425A2AD
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8C5257ACC
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739212705; cv=none; b=iFPhLSjCNkegJrhgSjnWlO6z3oa5J/xOi6BwqmqLkikWk/1auhtRpKqX3KpkACTcwCUtjHQB2rfC8GKr/V06U1DtCTeyPgvLLn7iNSxKEGkf3NpGLEZ+Mh/EGohtOPIjWTaM7DTk+UuSK2DD6XWTw1mmZjoWZJEKCqXDMdixRco=
+	t=1739212780; cv=none; b=s+9Ol4yv+6XTek3boH7l4GrmxN899jGNg1PXfNahzDEkrLWd8xzzj0G9MK3H3xT88nsr4Jrmil4KaKmKcCTvlp+EHxUGKQF8Llxt9l+we4WMWNFwKoONbh2VAv7XhXEvH9cryx/q6qWWdlXEedAG7Yn2/a4FSaUMreOfi7J7jbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739212705; c=relaxed/simple;
-	bh=5S/OIgcn2deCugxjNMcpYyQFGLB77gbyEPATklDG9+0=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=f1t0YzM9xMvBy5ufPX4tLsNqiGTq0knrz7KYlU37MK5n/2SfnSFGOVLuYCQgDv7tyctDr4SzTDC9w2F5mi1reLVl7z/Xe/ykyDdEMZfzsRqV18y6h3NFhHHFuofzqrHrEDjVcTO4OBv0nEl3RUCsJQ8MsDGRJcEsM1Z7RNcQUsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WiadKpBw; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1739212780; c=relaxed/simple;
+	bh=x/sZGvUzfxRrq9nYLFJINjPTLTHbf/GtI9WuU9nK5ys=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oQvtL2+gm41w+nTWguF7OH/aqb28pZrStSLceP4cYwiSwLcKAnIdzDoLd3sRbS4/B+/ZgK5pbk0iYq6BI6BgRFl5lKzmDLFu7alTSE4L/Emei1iaOFxVRxyRawyqyNFG8l/rWn/KtJfBcVCTFhPuee0p7R9OOT6Iy01uVszYEx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B2rs4NTG; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WiadKpBw"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6f97ec73df7so26452837b3.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:38:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739212702; x=1739817502; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EAybgbAyRjsxbSgnJKOdBfIjhewPK/g36HI/JOok4tU=;
-        b=WiadKpBwWRsau4iiXTAtnXdQ08yUkbHuJlKcmhU4NjCF6T0Ha16NBEGpwvO5IRXFbT
-         X+zYmtp+tJFUft7HT6UyY72jpjlHVwnuD96/PVw9jJMWBr+s4hgjg+M0ZPQVq6ZMyn9F
-         obN0ddFH1JySnDH7rHUPaw+Y0ZOyV2WTKTxwqdQt+pGth6Mh//Aw3xsu2UHUveL6yqVj
-         aGR+SLzjEOJQTFfOLjsVtGNPAA3dXw42mPxxulX0LvnhSxIFQQs6LXOC/GmVBhcpvKMQ
-         LwELTqHNlUOW0EUb1FG1Qp1aKRPPoFa34hlJLyO3MArK0MA13sVSIxE4rItpsi7oroNP
-         0WHw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B2rs4NTG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739212777;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=uYWKjcQduNIKs9dJZokUUBWiThkKPtNIV6gvjS6SD6Q=;
+	b=B2rs4NTGdHoIQkIY0EFl9QvgmvMgc85hLzyHtjTlmz+DTPBQEgVRW224WssO28UDhc0LNI
+	i/3Fz9WoBX1sN1A8LjjJ16UVTyL+sSWTYsdC+FwOy1aIy8eSOi8FWYXV6IxH0JTlDYv9dK
+	faj3/cVj0UqZPw0Gu7BzJ4i7ouEFJnA=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-636-1Cbc1dGeNNyKIUZZA39Kdw-1; Mon, 10 Feb 2025 13:39:36 -0500
+X-MC-Unique: 1Cbc1dGeNNyKIUZZA39Kdw-1
+X-Mimecast-MFC-AGG-ID: 1Cbc1dGeNNyKIUZZA39Kdw
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43626224274so27838915e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:39:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739212702; x=1739817502;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EAybgbAyRjsxbSgnJKOdBfIjhewPK/g36HI/JOok4tU=;
-        b=sggAF0CFA2vpQ1WvZNMdiRCfDXEIPk943w5vfFE+nLhgEjnJ/P1vbRgP0dgqT/H52w
-         5XWTlUdrXpJp38sm4Ryt5PMlf7dlKIHiIk4ZECQDwggpHXVV2fWZIFEK4ZojGgtroDdO
-         SaF4ygT0sfxUkyLGVvfoNjrTOIQ+PEOQbTkHTDTINhGkJ6wwXWJUlFMlTu7bNuqsiTDv
-         cfQs5uotFPtocJ69JtGb8PlchG5V7pUrOr+DAgovYTMQfx9NOPc0poc25a3zuyF1JC4Z
-         So7Lfg/95U/akPI9+9wQJTpRgJM+y78hl0dVol8L3rB87mclfRLtMbAq3NscJdxqyTI/
-         1Gvg==
-X-Forwarded-Encrypted: i=1; AJvYcCUCYvXcYwBNQYIi7ljFL53zbwH1hCYu7ut0JU7iz6LbdzlqoibxWEPEM7AhIMQLpDGQ2CWFG8zquli94hY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOeOJurk3kJgjxlEQ5sNZi4LBHvuL5hud2vYafkkf9Al9ZCcPC
-	4oq4gxR4l9TMqeyenL2h0Hg6jy1QuAwfvuiS8ds1CPnlkQj9yEy6YKzRNSf6+a4y0xRGL6RaTuw
-	dHkmxvQ==
-X-Google-Smtp-Source: AGHT+IGPswsl9mVUms6BzmbQlBMGBLvKfm3Zc2+LBruPfvqRDJ1/0exb9i8KzVaV/jVDKAUKh06GzBJR7xgs
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:c64e:af58:30d4:168d])
- (user=irogers job=sendgmr) by 2002:a05:690c:3703:b0:6f3:e216:9dd with SMTP id
- 00721157ae682-6fb0b5ce97emr68067b3.4.1739212701710; Mon, 10 Feb 2025 10:38:21
- -0800 (PST)
-Date: Mon, 10 Feb 2025 10:38:08 -0800
-In-Reply-To: <20250210183808.130522-1-irogers@google.com>
-Message-Id: <20250210183808.130522-5-irogers@google.com>
+        d=1e100.net; s=20230601; t=1739212775; x=1739817575;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=uYWKjcQduNIKs9dJZokUUBWiThkKPtNIV6gvjS6SD6Q=;
+        b=U39UjTVSVmnasU2RQuRuTNnR74VNnuAJobtNrV4CXidhcmKF9zPOZcpFj8djppNl0R
+         gb5wuf8NF5rh+4sBKd6W/Io7T+97zDoun7oD8nQnaFVg95wnZKl1dOp/U4OQICJlV2Ih
+         6ZOQ+bi7aCgIGGTElFzr4Rl0Q3lwAU2FrCV1xeXydQQsVAB6p3WwlDC5enmmG/hQDivT
+         0cLqJ7XvwUj0mB8QnVeh737HziMvTR0MrhkS/HPsPefNpVT4JONSNbe384yf07vpI+cA
+         lQ0gVtwMawGBnotVvR8ZgMR32c12pgMuinIdiBSOttErAjWBpKBt1QIaBxYWs8UQv4pj
+         bwTg==
+X-Forwarded-Encrypted: i=1; AJvYcCWyh+5NvkCImTak8L2lKUzc8U/2gOMcOFmik6CcepzqwlTmnHq7EyTnhruJ64GlneGJsoHzJhMCUdkwOSw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYZR0dHBm7ZOXljNtxjUg01sbM1Vp1f5Bx1Z1wSwPTjlNwrTZN
+	1oJlXLGPRetJUfT2PsHoceqTyZiPf8W25Js2j9RWjbUstC6hH0W/o8Zm5qABrHd71YgFuXWcPL4
+	EisTsLjnr42M4x3Dge/bH1/2wzPRwbxgrnztYJpdCyF9oBfHsYshzj5ewL4LlvQ==
+X-Gm-Gg: ASbGncvSIS79AzYO8aNyzmntfoBD6oRUx1YlY8ooOu1OgNSqWrQbC65rT5bOOyghNYD
+	aJOVDcxIRtfav1oH8xfI6N5cXADHyCVo7o2b3tbTZaZ+863NZkTSKMOY3tG4hyW2jLqDrnnio7b
+	DoCOuTkR6/vClTITgArPLNg1i6gem9AJVwd1bHNiAKgXyl8uqIX5jzIdn5SSLF3KJFEtHkXSRVO
+	ufbHDIT+qmmtopFK8WfGhVreQcWxE9HRgClIhIIaW4cHAphwQgBdXdpkacZbdAH04knqywl01yH
+	/3rPWoJkjocwqEvJa8ck0gvd0otcXuMtMqU=
+X-Received: by 2002:a05:6000:1fad:b0:38d:ce70:8bdf with SMTP id ffacd0b85a97d-38dce708d90mr10228193f8f.37.1739212774660;
+        Mon, 10 Feb 2025 10:39:34 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGvxARJ76HOuGFHzWjgTSgJca+XchsbC+N32+KUziB434soeJwYLOC+oL+ipLCoVO9VZXSzlQ==
+X-Received: by 2002:a05:6000:1fad:b0:38d:ce70:8bdf with SMTP id ffacd0b85a97d-38dce708d90mr10228169f8f.37.1739212774160;
+        Mon, 10 Feb 2025 10:39:34 -0800 (PST)
+Received: from [192.168.3.141] (p5b0c6c7f.dip0.t-ipconnect.de. [91.12.108.127])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd2e0765esm7764114f8f.82.2025.02.10.10.39.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 10:39:32 -0800 (PST)
+Message-ID: <48dec767-3e14-480e-a3df-1298315894f6@redhat.com>
+Date: Mon, 10 Feb 2025 19:39:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250210183808.130522-1-irogers@google.com>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Subject: [PATCH v5 4/4] perf parse-events: Add "cpu" term to set the CPU an
- event is recorded on
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Leo Yan <leo.yan@arm.com>, 
-	Yoshihiro Furudera <fj5100bi@fujitsu.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Andi Kleen <ak@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Yicong Yang <yangyicong@hisilicon.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 12/20] mm/memory: Enhance insert_page_into_pte_locked()
+ to create writable mappings
+To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
+ dan.j.williams@intel.com, linux-mm@kvack.org
+Cc: Alison Schofield <alison.schofield@intel.com>, lina@asahilina.net,
+ zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
+ vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
+ bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
+ will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
+ dave.hansen@linux.intel.com, ira.weiny@intel.com, willy@infradead.org,
+ djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, peterx@redhat.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+ david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ loongarch@lists.linux.dev
+References: <cover.472dfc700f28c65ecad7591096a1dc7878ff6172.1738709036.git-series.apopple@nvidia.com>
+ <7db953c8cc5a066b4aa23dbdf049c6f35cce7b99.1738709036.git-series.apopple@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <7db953c8cc5a066b4aa23dbdf049c6f35cce7b99.1738709036.git-series.apopple@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The -C option allows the CPUs for a list of events to be specified but
-its not possible to set the CPU for a single event. Add a term to
-allow this. The term isn't a general CPU list due to ',' already being
-a special character in event parsing instead multiple cpu= terms may
-be provided and they will be merged/unioned together.
+On 04.02.25 23:48, Alistair Popple wrote:
+> In preparation for using insert_page() for DAX, enhance
+> insert_page_into_pte_locked() to handle establishing writable
+> mappings.  Recall that DAX returns VM_FAULT_NOPAGE after installing a
+> PTE which bypasses the typical set_pte_range() in finish_fault.
+> 
+> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 
-An example of mixing different types of events counted on different CPUs:
-```
-$ perf stat -A -C 0,4-5,8 -e "instructions/cpu=0/,l1d-misses/cpu=4,cpu=5/,inst_retired.any/cpu=8/,cycles" -a sleep 0.1
+Acked-by: David Hildenbrand <david@redhat.com>
 
- Performance counter stats for 'system wide':
-
-CPU0            6,979,225      instructions/cpu=0/              #    0.89  insn per cycle
-CPU4               75,138      cpu/l1d-misses/
-CPU5            1,418,939      cpu/l1d-misses/
-CPU8              797,553      cpu/inst_retired.any,cpu=8/
-CPU0            7,845,302      cycles
-CPU4            6,546,859      cycles
-CPU5          185,915,438      cycles
-CPU8            2,065,668      cycles
-
-       0.112449242 seconds time elapsed
-```
-
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Documentation/perf-list.txt |  9 +++
- tools/perf/util/evsel_config.h         |  1 +
- tools/perf/util/parse-events.c         | 76 +++++++++++++++++++++-----
- tools/perf/util/parse-events.h         |  3 +-
- tools/perf/util/parse-events.l         |  1 +
- tools/perf/util/pmu.c                  |  3 +-
- 6 files changed, 76 insertions(+), 17 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index d0c65fad419a..d98de9adc515 100644
---- a/tools/perf/Documentation/perf-list.txt
-+++ b/tools/perf/Documentation/perf-list.txt
-@@ -289,6 +289,15 @@ Sums up the event counts for all hardware threads in a core, e.g.:
- 
-   perf stat -e cpu/event=0,umask=0x3,percore=1/
- 
-+cpu:
-+
-+Specifies the CPU to open the event upon. The value may be repeated to
-+specify opening the event on multiple CPUs:
-+
-+
-+  perf stat -e instructions/cpu=0,cpu=2/,cycles/cpu=1,cpu=2/ -a sleep 1
-+  perf stat -e data_read/cpu=0/,data_write/cpu=1/ -a sleep 1
-+
- 
- EVENT GROUPS
- ------------
-diff --git a/tools/perf/util/evsel_config.h b/tools/perf/util/evsel_config.h
-index af52a1516d0b..94a1e9cf73d6 100644
---- a/tools/perf/util/evsel_config.h
-+++ b/tools/perf/util/evsel_config.h
-@@ -48,6 +48,7 @@ struct evsel_config_term {
- 		u32	      aux_sample_size;
- 		u64	      cfg_chg;
- 		char	      *str;
-+		int	      cpu;
- 	} val;
- 	bool weak;
- };
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 8cccf1e22cdf..55aa35ffbb4a 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -7,6 +7,7 @@
- #include <errno.h>
- #include <sys/ioctl.h>
- #include <sys/param.h>
-+#include "cpumap.h"
- #include "term.h"
- #include "env.h"
- #include "evlist.h"
-@@ -178,6 +179,26 @@ static char *get_config_name(const struct parse_events_terms *head_terms)
- 	return get_config_str(head_terms, PARSE_EVENTS__TERM_TYPE_NAME);
- }
- 
-+static struct perf_cpu_map *get_config_cpu(const struct parse_events_terms *head_terms)
-+{
-+	struct parse_events_term *term;
-+	struct perf_cpu_map *cpus = NULL;
-+
-+	if (!head_terms)
-+		return NULL;
-+
-+	list_for_each_entry(term, &head_terms->terms, list) {
-+		if (term->type_term == PARSE_EVENTS__TERM_TYPE_CPU) {
-+			struct perf_cpu_map *cpu = perf_cpu_map__new_int(term->val.num);
-+
-+			perf_cpu_map__merge(&cpus, cpu);
-+			perf_cpu_map__put(cpu);
-+		}
-+	}
-+
-+	return cpus;
-+}
-+
- /**
-  * fix_raw - For each raw term see if there is an event (aka alias) in pmu that
-  *           matches the raw's string value. If the string value matches an
-@@ -441,11 +462,12 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
- 	bool found_supported = false;
- 	const char *config_name = get_config_name(parsed_terms);
- 	const char *metric_id = get_config_metric_id(parsed_terms);
-+	struct perf_cpu_map *cpus = get_config_cpu(parsed_terms);
-+	int ret = 0;
- 
- 	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
- 		LIST_HEAD(config_terms);
- 		struct perf_event_attr attr;
--		int ret;
- 
- 		if (parse_events__filter_pmu(parse_state, pmu))
- 			continue;
-@@ -460,7 +482,7 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
- 						   perf_pmu__auto_merge_stats(pmu),
- 						   /*alternate_hw_config=*/PERF_COUNT_HW_MAX);
- 			if (ret)
--				return ret;
-+				goto out_err;
- 			continue;
- 		}
- 
-@@ -480,21 +502,27 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
- 
- 		if (parsed_terms) {
- 			if (config_attr(&attr, parsed_terms, parse_state->error,
--					config_term_common))
--				return -EINVAL;
--
--			if (get_config_terms(parsed_terms, &config_terms))
--				return -ENOMEM;
-+					config_term_common)) {
-+				ret = -EINVAL;
-+				goto out_err;
-+			}
-+			if (get_config_terms(parsed_terms, &config_terms)) {
-+				ret = -ENOMEM;
-+				goto out_err;
-+			}
- 		}
- 
- 		if (__add_event(list, idx, &attr, /*init_attr*/true, config_name ?: name,
- 				metric_id, pmu, &config_terms, /*auto_merge_stats=*/false,
--				/*cpu_list=*/NULL,
--				/*alternate_hw_config=*/PERF_COUNT_HW_MAX) == NULL)
--			return -ENOMEM;
-+				cpus, /*alternate_hw_config=*/PERF_COUNT_HW_MAX) == NULL)
-+			ret = -ENOMEM;
- 
- 		free_config_terms(&config_terms);
-+		if (ret)
-+			goto out_err;
- 	}
-+out_err:
-+	perf_cpu_map__put(cpus);
- 	return found_supported ? 0 : -EINVAL;
- }
- 
-@@ -808,6 +836,7 @@ const char *parse_events__term_type_str(enum parse_events__term_type term_type)
- 		[PARSE_EVENTS__TERM_TYPE_RAW]                   = "raw",
- 		[PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE]          = "legacy-cache",
- 		[PARSE_EVENTS__TERM_TYPE_HARDWARE]              = "hardware",
-+		[PARSE_EVENTS__TERM_TYPE_CPU]			= "cpu",
- 	};
- 	if ((unsigned int)term_type >= __PARSE_EVENTS__TERM_TYPE_NR)
- 		return "unknown term";
-@@ -837,6 +866,7 @@ config_term_avail(enum parse_events__term_type term_type, struct parse_events_er
- 	case PARSE_EVENTS__TERM_TYPE_METRIC_ID:
- 	case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
- 	case PARSE_EVENTS__TERM_TYPE_PERCORE:
-+	case PARSE_EVENTS__TERM_TYPE_CPU:
- 		return true;
- 	case PARSE_EVENTS__TERM_TYPE_USER:
- 	case PARSE_EVENTS__TERM_TYPE_SAMPLE_FREQ:
-@@ -984,6 +1014,15 @@ do {									   \
- 			return -EINVAL;
- 		}
- 		break;
-+	case PARSE_EVENTS__TERM_TYPE_CPU:
-+		CHECK_TYPE_VAL(NUM);
-+		if (term->val.num >= (u64)cpu__max_present_cpu().cpu) {
-+			parse_events_error__handle(err, term->err_val,
-+						strdup("too big"),
-+						NULL);
-+			return -EINVAL;
-+		}
-+		break;
- 	case PARSE_EVENTS__TERM_TYPE_DRV_CFG:
- 	case PARSE_EVENTS__TERM_TYPE_USER:
- 	case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
-@@ -1111,6 +1150,7 @@ static int config_term_tracepoint(struct perf_event_attr *attr,
- 	case PARSE_EVENTS__TERM_TYPE_RAW:
- 	case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
- 	case PARSE_EVENTS__TERM_TYPE_HARDWARE:
-+	case PARSE_EVENTS__TERM_TYPE_CPU:
- 	default:
- 		if (err) {
- 			parse_events_error__handle(err, term->err_term,
-@@ -1245,6 +1285,7 @@ do {								\
- 		case PARSE_EVENTS__TERM_TYPE_RAW:
- 		case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
- 		case PARSE_EVENTS__TERM_TYPE_HARDWARE:
-+		case PARSE_EVENTS__TERM_TYPE_CPU:
- 		default:
- 			break;
- 		}
-@@ -1299,6 +1340,7 @@ static int get_config_chgs(struct perf_pmu *pmu, struct parse_events_terms *head
- 		case PARSE_EVENTS__TERM_TYPE_RAW:
- 		case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
- 		case PARSE_EVENTS__TERM_TYPE_HARDWARE:
-+		case PARSE_EVENTS__TERM_TYPE_CPU:
- 		default:
- 			break;
- 		}
-@@ -1343,6 +1385,7 @@ static int __parse_events_add_numeric(struct parse_events_state *parse_state,
- 	struct perf_event_attr attr;
- 	LIST_HEAD(config_terms);
- 	const char *name, *metric_id;
-+	struct perf_cpu_map *cpus;
- 	int ret;
- 
- 	memset(&attr, 0, sizeof(attr));
-@@ -1364,10 +1407,11 @@ static int __parse_events_add_numeric(struct parse_events_state *parse_state,
- 
- 	name = get_config_name(head_config);
- 	metric_id = get_config_metric_id(head_config);
-+	cpus = get_config_cpu(head_config);
- 	ret = __add_event(list, &parse_state->idx, &attr, /*init_attr*/true, name,
--			  metric_id, pmu, &config_terms, /*auto_merge_stats=*/false,
--			  /*cpu_list=*/NULL, /*alternate_hw_config=*/PERF_COUNT_HW_MAX
--		) == NULL ? -ENOMEM : 0;
-+			metric_id, pmu, &config_terms, /*auto_merge_stats=*/false,
-+			cpus, /*alternate_hw_config=*/PERF_COUNT_HW_MAX) ? 0 : -ENOMEM;
-+	perf_cpu_map__put(cpus);
- 	free_config_terms(&config_terms);
- 	return ret;
- }
-@@ -1427,6 +1471,7 @@ static int parse_events_add_pmu(struct parse_events_state *parse_state,
- 	LIST_HEAD(config_terms);
- 	struct parse_events_terms parsed_terms;
- 	bool alias_rewrote_terms = false;
-+	struct perf_cpu_map *term_cpu = NULL;
- 
- 	if (verbose > 1) {
- 		struct strbuf sb;
-@@ -1521,11 +1566,12 @@ static int parse_events_add_pmu(struct parse_events_state *parse_state,
- 		return -EINVAL;
- 	}
- 
-+	term_cpu = get_config_cpu(&parsed_terms);
- 	evsel = __add_event(list, &parse_state->idx, &attr, /*init_attr=*/true,
- 			    get_config_name(&parsed_terms),
- 			    get_config_metric_id(&parsed_terms), pmu,
--			    &config_terms, auto_merge_stats, /*cpu_list=*/NULL,
--			    alternate_hw_config);
-+			    &config_terms, auto_merge_stats, term_cpu, alternate_hw_config);
-+	perf_cpu_map__put(term_cpu);
- 	if (!evsel) {
- 		parse_events_terms__exit(&parsed_terms);
- 		return -ENOMEM;
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index e176a34ab088..ab242f671031 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -80,7 +80,8 @@ enum parse_events__term_type {
- 	PARSE_EVENTS__TERM_TYPE_RAW,
- 	PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE,
- 	PARSE_EVENTS__TERM_TYPE_HARDWARE,
--#define	__PARSE_EVENTS__TERM_TYPE_NR (PARSE_EVENTS__TERM_TYPE_HARDWARE + 1)
-+	PARSE_EVENTS__TERM_TYPE_CPU,
-+#define	__PARSE_EVENTS__TERM_TYPE_NR (PARSE_EVENTS__TERM_TYPE_CPU + 1)
- };
- 
- struct parse_events_term {
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index bf7f73548605..14bff6f9731c 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -324,6 +324,7 @@ aux-output		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT); }
- aux-action		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_ACTION); }
- aux-sample-size		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE); }
- metric-id		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_METRIC_ID); }
-+cpu			{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_CPU); }
- cpu-cycles|cycles				{ return hw_term(yyscanner, PERF_COUNT_HW_CPU_CYCLES); }
- stalled-cycles-frontend|idle-cycles-frontend	{ return hw_term(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_FRONTEND); }
- stalled-cycles-backend|idle-cycles-backend	{ return hw_term(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_BACKEND); }
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index c2a15b0259cf..f84a9bf810bb 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1433,7 +1433,7 @@ static int pmu_config_term(const struct perf_pmu *pmu,
- 			break;
- 		case PARSE_EVENTS__TERM_TYPE_USER: /* Not hardcoded. */
- 			return -EINVAL;
--		case PARSE_EVENTS__TERM_TYPE_NAME ... PARSE_EVENTS__TERM_TYPE_HARDWARE:
-+		case PARSE_EVENTS__TERM_TYPE_NAME ... PARSE_EVENTS__TERM_TYPE_CPU:
- 			/* Skip non-config terms. */
- 			break;
- 		default:
-@@ -1808,6 +1808,7 @@ int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_format_call
- 		"aux-output",
- 		"aux-action=(pause|resume|start-paused)",
- 		"aux-sample-size=number",
-+		"cpu=number",
- 	};
- 	struct perf_pmu_format *format;
- 	int ret;
 -- 
-2.48.1.502.g6dc24dfdaf-goog
+Cheers,
+
+David / dhildenb
 
