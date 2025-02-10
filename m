@@ -1,199 +1,97 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95FC6231C89
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79BE231CA1
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:08:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739196463; cv=none; b=Y6jEouSRGBvFX9c2sy/0aLoIiL33VvTR0sOBwkDRzK+Bi1b7s8CACCsWUvzosM3jTMQ0rAClwuyFmeNYkcYHy3TAQXt6cEFZi4Hye6mKbT7jMKCkOKW6imHa1dWhqqV2Ag88zF2wXAsCyVIb9m9FoiUJwMNeFlKHnjIN4KjQkss=
+	t=1739196486; cv=none; b=KECTc6EYoHAsPAcAEe7iwC3Ek/g6LR8kobz6zUQ9HWv0NPKg0qWzTofCU4QpoCCsEV3x/3Z5bqB+CHOH2KUFCHBNV11mmIvTXsAR1r65qfmOQuhVORi3OltYOo/fAD4+XJarvax7mnwygA1ctj29a2OM6VLtVW9YTObfhq6/mCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739196463; c=relaxed/simple;
-	bh=J7fJTbywPBvQzEHnTPoaWwICK6qAlEyeYpXhYZxKI2c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bpSxWGYBnd3wBfk6QD34TVb1mjarJmlrvfBrtBp1CfByfs/h3fJAKEBesRQTFB+YN4LVKpMOUCwONlRSWHHTzmw5p4gW66EsHsfoLhwDr+zT7ZA0HF+ViZ54MAm2hiSJd1IMlCik4H7FnK2lgDq2idjrq129WvcfJL4cVKcP+Uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=j6mnen1H; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
+	s=arc-20240116; t=1739196486; c=relaxed/simple;
+	bh=Qnyg4AhO7AlWzaAjgnfboS2ahykzojmyYz/dy7vhqn4=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=HcsaWTnD2e/kLsB3g79czqjS8v0cW/ArfPbXMNeznf1ueISdNniFkC31CzOf8utjBSuvHnBW9RzUG041r3mry+gF3xx1TshX+8v7NAzTo2nlx9rRBwk08JyWr6z4okpzJBCUzquyShsCIj2k5ihsSQMt6dHnLm6EPiWjlfwnlkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WilqNpZB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="j6mnen1H"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-439307d83f0so12169665e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 06:07:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1739196459; x=1739801259; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p0mkagQrLShZVdk5H2255n0SRNzKdf8QaJ4Fo2H5hYY=;
-        b=j6mnen1HwrdneAeZhSf0/+6Bd10V04jJ2+OIEov00TERceAY/P7KX2tQlfT6MHkPuJ
-         3WcxrDtUrQHjUblPB4SRqBGQLeueyrFHLKQOB0u7p/YTyXJSST+J/gZeOwnh52o+ga16
-         YXKfBdUMXIZJbbFncNhfPrj7Tq0jjv7hHDQKo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739196459; x=1739801259;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p0mkagQrLShZVdk5H2255n0SRNzKdf8QaJ4Fo2H5hYY=;
-        b=w0WM/b/ZfSwz98uPDGK3vvN45ZBg12byaIl7N1lcpnEv044N54om5nD/OiWD1jkKMb
-         BetY2dJnFaWpTTSXHgjCZbGdVI3bWJnCMoLpi+hsS7ksdCIrCCKGpl9iOzldGQfDbJH4
-         TX3rYobCmCjhh+8JOtlOiI0EEEwESrhdXbNh+NLYpALAjEl45PV3vH8DSneV8h+//KMI
-         0a9OQBUd9Ou+b+EZclAb4XFoYpucwtKJsJwiM6QRA63zDksYWE0TtFduCRrv4DbFxPqv
-         ARDH3H9eEQwN3gy3Z1+EIBg69hXbUBDjFB08OLVyqtZ5O3KUKSen2oqlkrlOiKgV1RrG
-         xV4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW8H7eSN57FrjjnvVyBqHZj/Bcldno1qejQL9x4t4iHgXUQPGz+e8YSlzVgwrwqkk60TgjovbD4NngoMns=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxql6b7SAbwhdypgHI6dGA9Wwf0IqcikXstvHaBnE4WC9Q/emRt
-	BKqp6b6aB1LswnnzWwHmDId/T18jj3xgrgRCw2I5xApA9CT8TyhLwKBuDHDecHZJjJhnez6kIhn
-	ErkFVvT1NTlDqP31qJOi0GnKrE1fbRb9HSe78AQ==
-X-Gm-Gg: ASbGncsnJes1t6o+afQ7vDddl6AMseYd4BGPiZjqDroXpe5a39UEhx632iqFts1Gl/Y
-	FEIbjEG0wpa5TsHjukefwNsUC1S5LJ23Cp41+ZnlNsjLqwFsmyMYPqdqvR2w0j4Pv+Da4Qf8x
-X-Google-Smtp-Source: AGHT+IGxIlrUl6KkSiVWsX9ssbEDQy6PoNPBsPKG4NuEx7YWW6vGApblEwLGUcefq/4kHgdnJjr16lfmTeY8Hcu8wsA=
-X-Received: by 2002:a05:600c:1909:b0:434:fafe:edb with SMTP id
- 5b1f17b1804b1-439249b04d2mr105436075e9.24.1739196458293; Mon, 10 Feb 2025
- 06:07:38 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WilqNpZB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739196483;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sNF2zPwPgiY6vDrjo37ivtvlQa7hoNvAO5mHqkBo7W0=;
+	b=WilqNpZBhpOk7PfJN7MXipmbSuNdozBt/np4rXUkcts44+ox4FSOl10ZuORHstpSLMDYaI
+	IoN8QjGZaQGL0hlTHfNgAEUrtzstXCzJUyU3qsE5fiTySfP6gRW1Ohbiid0cXbvwhi3FVD
+	U+SCW+hyZZLDazXSlBkJd5ZeDd+H8ck=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-198-SyPxNyfjPEedBtdoOq5Ryw-1; Mon,
+ 10 Feb 2025 09:07:58 -0500
+X-MC-Unique: SyPxNyfjPEedBtdoOq5Ryw-1
+X-Mimecast-MFC-AGG-ID: SyPxNyfjPEedBtdoOq5Ryw
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9FC581955D8E;
+	Mon, 10 Feb 2025 14:07:49 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.92])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 38B7B3001D19;
+	Mon, 10 Feb 2025 14:07:48 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <CAKPOu+_4mUwYgQtRTbXCmi+-k3PGvLysnPadkmHOyB7Gz0iSMA@mail.gmail.com>
+References: <CAKPOu+_4mUwYgQtRTbXCmi+-k3PGvLysnPadkmHOyB7Gz0iSMA@mail.gmail.com>
+To: Max Kellermann <max.kellermann@ionos.com>
+Cc: dhowells@redhat.com, netfs@lists.linux.dev,
+    LKML <linux-kernel@vger.kernel.org>, linux-nfs@vger.kernel.org
+Subject: Re: "netfs: Can't donate prior to front"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
- <9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org> <20250204220418.35949317@gandalf.local.home>
- <CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
- <20250205081635.397eacb0@gandalf.local.home> <CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
- <20250206083039.0916ad24@gandalf.local.home>
-In-Reply-To: <20250206083039.0916ad24@gandalf.local.home>
-From: Joel Fernandes <joel@joelfernandes.org>
-Date: Mon, 10 Feb 2025 09:07:27 -0500
-X-Gm-Features: AWEUYZnPqUrM38HMt3sXrxskO2VmAyr4EFBG6mWi16NIsKaWAigNoh4M4L1D3xA
-Message-ID: <CAEXW_YThrUgbbmje_1hRtWzNC5SozirDwhpccZiV=Trhe7HiHw@mail.gmail.com>
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Prakash Sangappa <prakash.sangappa@oracle.com>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ankur Arora <ankur.a.arora@oracle.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org, x86@kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, luto@kernel.org, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, juri.lelli@redhat.com, 
-	vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de, 
-	jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com, 
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>, Konrad Wilk <konrad.wilk@oracle.com>, jgross@suse.com, 
-	Andrew.Cooper3@citrix.com, Vineeth Pillai <vineethrp@google.com>, 
-	Suleiman Souhlal <suleiman@google.com>, Ingo Molnar <mingo@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Clark Williams <clark.williams@gmail.com>, 
-	bigeasy@linutronix.de, daniel.wagner@suse.com, 
-	Joseph Salisbury <joseph.salisbury@oracle.com>, broonie@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3052001.1739196466.1@warthog.procyon.org.uk>
 Content-Transfer-Encoding: quoted-printable
+Date: Mon, 10 Feb 2025 14:07:46 +0000
+Message-ID: <3052002.1739196466@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Thu, Feb 6, 2025 at 8:30=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> On Wed, 5 Feb 2025 22:07:12 -0500
-> Joel Fernandes <joel@joelfernandes.org> wrote:
-> > >
-> > > RT tasks don't have a time slice. They are affected by events. An ext=
-ernal
-> > > interrupt coming in, or a timer going off that states something is
-> > > happening. Perhaps we could use this for SCHED_RR or maybe even
-> > > SCHED_DEADLINE, as those do have time slices.
-> > >
-> > > But if it does get used, it should only be used when the task being
-> > > scheduled is the same SCHED_RR priority, or if SCHED_DEADLINE will no=
-t fail
-> > > its guarantees.
-> > >
-> >
-> > Right, it would apply still to RR/DL though...
->
-> But it would have to guarantee that the RR it is delaying is of the same
-> priority, and that delaying the DL is not going to cause something to mis=
-s
-> its deadline.
+Can you apply the attached patch to your kernel, and then run with:
 
-See Peter comment: "Then pick another number; RT too has a max
-scheduling latency number (on some random hardware). If you stay below
-that, all is fine.".
+   echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_read/enable
+   echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_rreq/enable
+   echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_sreq/enable
+   echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_failure/enable
+   echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_donate/enable
+   echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_progress/enable
 
-> > 3. Overloading the purpose of LAZY: My understanding is, the purpose
-> > of LAZY is to let the scheduler decide if it wants to preempt based on
-> > preemption mode. It is not based on any hint, just on the preemption
-> > mode. I guess you are overloading LAZY by making LAZY flag also extend
-> > userspace timeslice (versus say making the time-slice extension hint
-> > its own thing...).
->
-> I already replied about that. Note, LAZY was created in PREEMPT_RT for th=
-is
-> very purpose (but in the kernel), and ported to vanilla for a slightly
-> different purpose.
->
-> Here's the history:
->
->   PREEMPT_RT would convert spin_locks in the kernel to sleeping mutexes.
->
->   This made RT tasks respond much faster to events.
->
->   But non-RT (SCHED_OTHER) started suffering performance issues.
->
->   When looking at the performance issues, we found that it was due to tas=
-ks
->   holding these sleeping spin_locks and being preempted. That is, the
->   preemption of holding spin_locks was causing more contention and slowin=
-g
->   things down tremendously.
->
->   To first handle this, adaptive mutexes was introduced. These would spin
->   if the owner of the lock was still running, and would go to sleep if th=
-e
->   owner goes to sleep. This helped things quite a bit, but PREEMPT_RT was
->   still suffer a performance deficit compared to non-RT.
->
->   This was because of the timer tick on SCHED_OTHER tasks that could
->   preempt a task holding a spin lock.
->
->   NEED_RESCHED_LAZY was introduced to remedy this. It would be set for
->   SCHED_OTHER tasks and NEED_RESCHED for RT tasks. If the task was holdin=
-g
->   a sleeping spin lock, the NEED_RESCHED_LAZY would not preempt the runni=
-ng
->   task, but NEED_RESCHED would. If the SCHED_OTHER task was not holding a
->   sleeping spin_lock it would be preempted regardless.
->
-> This improved the performance of SCHED_OTHER tasks in PREEMPT_RT to be as
-> good as what was in vanilla.
->
-> You see, LAZY was *created* for this purpose. Of letting the scheduler kn=
-ow
-> that the running task is in a critical section and the timer tick should
-> not preempt a SCHED_OTHER task.
-> I just wanted to extend this to SCHED_OTHER in user space too.
+enabled.  If you can capture the trace output (and compress it!), that sho=
+uld
+hopefully help debug this.
 
-Currently it does not "let anyone know" it is running in a critical
-section though. Various paths (update_curr(), wake up) just do a
-'lazy' resched until the timer tick has elapsed, or the task returns
-to usermode/idle at which point schedule() is called. And it does this
-only for FAIR tasks. That can well happen even if the currently
-running task is not in a critical section in the kernel at all. Sure,
-it may benefit critical sections in the upstream kernel but where is
-that explicit?  I still feel we should not overload this in-kernel
-mechanism for userspace locking and complicate things.
+David
 
-> > Yes, I have worked on RT projects before --  you would know better
-> > than anyone. :-D. But admittedly, I haven't got to work much with
-> > PREEMPT_RT systems.
->
-> Just using RT policy to improve performance is not an RT project. I'm
-> talking about projects that if you miss a deadline things crash. Where th=
-e
-> project works very hard to make sure everything works as intended.
+diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
+index e8624f5c7fcc..8b78c1ec0677 100644
+--- a/fs/netfs/read_collect.c
++++ b/fs/netfs/read_collect.c
+@@ -312,6 +312,7 @@ static bool netfs_consume_read_data(struct netfs_io_su=
+brequest *subreq, bool was
+ 	printk("folio: %llx-%llx\n", fpos, fend - 1);
+ 	printk("donated: prev=3D%zx next=3D%zx\n", prev_donated, next_donated);
+ 	printk("s=3D%llx av=3D%zx part=3D%zx\n", start, avail, part);
++	tracing_off();
+ 	BUG();
+ }
+ =
 
-No no no, I have done way more than applying just the RT policy. So
-that means you do not know me that well;-).. I have worked on audio
-driver latency, low latency audio, latency issues in vmalloc code,
-preempt tracers, irq tracepoints , wake up latency tracers and various
-scheduler overhead debug =E2=80=94 many of those issues dealt with sub
-millisecond latency.. I also dealt with cpu idle issues in the
-hardware causing real time latency problems (see my past talks if
-interested).  I was partly a hardware engineer when I started my
-career and have built circuits. I have Electronics and Computer
-engineering degrees.
-
- - Joel
