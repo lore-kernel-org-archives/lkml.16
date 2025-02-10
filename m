@@ -1,72 +1,43 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D301F8BCC;
-	Mon, 10 Feb 2025 14:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE43222E3F8
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739199601; cv=none; b=Yz9kBmEG43PsoiefDJhz2j0wXftK6ogMlYsqw6lMYNC6LECWow3td0DzjqqMkknuxG/Dwq3TVz8x4qAmpcnGzZ+LXM+j7LK0B5hgDyCHqSmbSZ4cZ9QrB13G+KusAhqd1IQX7b9rnyWgFFw7zdOifwYwak77S6IcWl+xqQIPmdI=
+	t=1739199604; cv=none; b=Yl/zqczPKFghL+MULp2sUeFGH57/vQbWQn81Gg2kuuKKwmLqjj2tnOvBD28j8YeOhQhmSzRe0B9URvSkgePvQNSDYGWSbIbf549BrMQzWzW0NjIDoI66j1izH06Mp+7zgdd6QXYFemx5YsqJwdnUUkORGQo1QKkPidOizTSem5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739199601; c=relaxed/simple;
-	bh=LYrH3se2kevJ6TQFoVUgVI2VCj7nNFdqnPW3WO52Uq0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UYNigZMPd2hu1DmEil4fTbK3qEdy+nfPrRafF5dW5V4D/KNIeO5gR1Mt8/n5emaLUNLQFMK06eDeUxMi/XgaURA53w2v8BW/N/AvUacEv9wwNjf4KlYfkGTjyNKF1x+m7mk/0gc4M5QLL9fpJNuptisPufkmzPSFvptdyXplMjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=A2dLVEb6; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=XXp+iOkE reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1739199604; c=relaxed/simple;
+	bh=AuC2pbIDrgPcIILNDWzDkjvJlhTs7667wa7GfDgz5/o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RDCFNuOY4+4eV/KQqQpt2zMD+SbdOkQ3klEzsuXTWsrJNO/+Ce3zwrZDoLtEleXIIiP1hqnRVRy/zXy2jovOSgwMqayezr2LwWE9AUaWs//rZRSQA3cfnfcZ5VNUXzqlj6Qgi5B68D7ajqI/9QTDA2dF27Wonq3OqILYud/YYis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uilgTmXD; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="A2dLVEb6";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="XXp+iOkE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1739199597; x=1770735597;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=6ggFbkRi2BStIc9tcF8Z/DUHdg329kUgO/CuyG2Af4M=;
-  b=A2dLVEb6uMBzWTivUWuJA6/vFnYDRhIlUFPAiyn9yBE8qKvCRMvI63IB
-   H9fHiFipBvIwYkehBIRiim7NeTkno/ckvvUwL02Hkc6Q3GQQjt6O8ISwx
-   sNZU2wjnbTQkZrn5TofzGQc+E4Nk1ZWKp4+4+UPgLlZRUTyV2SUtRdlbc
-   6tuekoTexxXA2HyMOWjDdmiD++uBUq52iEKwq8k/y34VpjfVO9ekVFLHN
-   8b2DwSqmHVXFI8LnglaWiS3aoNUW2JWFtB5oRZ3PEg8dH5nnEh57KJmtY
-   Sbj2rMjP9YX/31ye5ZDS9uSvt+Hno+fkPvkf49MPM2tk3z90wjPgoPl+d
-   A==;
-X-CSE-ConnectionGUID: SzLJ4+o9RXuUQ8S6f4LzGQ==
-X-CSE-MsgGUID: /JoPe9/mQFCEUiob6FYXSw==
-X-IronPort-AV: E=Sophos;i="6.13,274,1732575600"; 
-   d="scan'208";a="41722345"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 10 Feb 2025 15:59:52 +0100
-X-CheckPoint: {67AA1468-2F-5D6E03B7-C5EC52AB}
-X-MAIL-CPID: 8713916ACD72828F9A942077269D2652_2
-X-Control-Analysis: str=0001.0A00636E.67AA1469.006D,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 97071166485;
-	Mon, 10 Feb 2025 15:59:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1739199588;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uilgTmXD"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739199599;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=6ggFbkRi2BStIc9tcF8Z/DUHdg329kUgO/CuyG2Af4M=;
-	b=XXp+iOkEwRaEuQ//xRjcnGsavQ7DhQStLLjXTJdknySx+7kQSCf7RJYVSNjjVcruXvQK1E
-	NRmhs/zZnNfNmSSnccQvKqkS2ZY/d9nsznZQGbc10igC87oOrxdLZaFjpjEcsDU+5oBKyW
-	ZGgr/uJeigFI/FOeCgxeABOh92e50+Wr+dxojZaht4VSfXqH/8rR1GPh8ZuQMOenSIny6h
-	SdGtXXybdPsaet53LNLiv3227csVQ7aY/KnyWwVDjsNuHZqIzLB2D0bCD+rxpCmszwKQ6t
-	BFlB6W7pmkhpXAFCiBUnvZAWgMN+o8any0d8Nl88cpd7w9QzuNJdgN8Y/jQAlg==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	linux-hwmon@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	bh=x8sCCa2YKkIDJYFULyVAbrsYRK6dAuQYm39tgqXv8zk=;
+	b=uilgTmXDFxkm32EtyBiJt1IGKej1PPQHsFIgSQFxuqVIQx+7HhBvTaUu1GT7rH4RFIOT6g
+	aHsjmXoiAy9D//lDCj00M9X8gPLi9y48uzV66u3OHVmpseemmBDe+/iaTUZKONklSipHIb
+	/luFRDgTDc5h6WTMlytkX43+CJPhCgk=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Geoff Levand <geoff@infradead.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linuxppc-dev@lists.ozlabs.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/5] gpio-fan: regulator support
-Date: Mon, 10 Feb 2025 15:59:28 +0100
-Message-Id: <20250210145934.761280-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.34.1
+Subject: [PATCH] powerpc/ps3: Use str_write_read() in ps3_notification_read_write()
+Date: Mon, 10 Feb 2025 15:59:18 +0100
+Message-ID: <20250210145918.138816-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,31 +45,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+X-Migadu-Flow: FLOW_OUT
 
-Hi,
+Remove hard-coded strings by using the str_write_read() helper function.
 
-this series adds support for regulator support for the use-case a GPIO
-controlled fan also has a switchable power supply.
-Patch 1 is the change for the binding, which is based on pwm-fan.
-Patch 2-4 is some small cleanup in preparation for regulator support.
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Suggested-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/platforms/ps3/device-init.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Note: Patch 4 can also be suqash into patch 3
-
-Patch 5 is the regulator support by adding RPM support which enabled/disables
-the regulator accordingly.
-
-Alexander Stein (5):
-  dt-bindings: hwmon: gpio-fan: Add optional regulator support
-  hwmon: (gpio-fan) Add missing mutex locks
-  hwmon: (gpio-fan) Ensure lock is held during set_fan_speed()
-  hwmon: (gpio-fan) Remove unnecessary comment
-  hwmon: (gpio-fan) Add regulator support
-
- .../devicetree/bindings/hwmon/gpio-fan.yaml   |   3 +
- drivers/hwmon/gpio-fan.c                      | 106 ++++++++++++++++--
- 2 files changed, 102 insertions(+), 7 deletions(-)
-
+diff --git a/arch/powerpc/platforms/ps3/device-init.c b/arch/powerpc/platforms/ps3/device-init.c
+index 61722133eb2d..22d91ac424dd 100644
+--- a/arch/powerpc/platforms/ps3/device-init.c
++++ b/arch/powerpc/platforms/ps3/device-init.c
+@@ -14,6 +14,7 @@
+ #include <linux/slab.h>
+ #include <linux/reboot.h>
+ #include <linux/rcuwait.h>
++#include <linux/string_choices.h>
+ 
+ #include <asm/firmware.h>
+ #include <asm/lv1call.h>
+@@ -724,7 +725,7 @@ static irqreturn_t ps3_notification_interrupt(int irq, void *data)
+ static int ps3_notification_read_write(struct ps3_notification_device *dev,
+ 				       u64 lpar, int write)
+ {
+-	const char *op = write ? "write" : "read";
++	const char *op = str_write_read(write);
+ 	unsigned long flags;
+ 	int res;
+ 
 -- 
-2.34.1
+2.48.1
 
