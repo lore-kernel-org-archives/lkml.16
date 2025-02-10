@@ -1,94 +1,110 @@
-Received: from relay08.th.seeweb.it (relay08.th.seeweb.it [5.144.164.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71DC253F16
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900C0264607;
+	Mon, 10 Feb 2025 23:25:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739229870; cv=none; b=iF/rL2+9ohz4ENewRCy8ApFXbuknGjWjWa58qBDvKqDVWHZ0KtPX9VEcnTqqGtSFgWM6o72Th7QUWSzEs420Z9hQgLeVg8iqzq7K29uoNZ+QHRXAPMFQIIedEPkLyC03Oot8qgY44BxzMhHqe4qGmb9xn5O2jOZ4FJKoqdw+Wec=
+	t=1739229959; cv=none; b=BFBvASqoan1LyQywdX6771Pz+L0ihHLgVQNpm7p05hByGz+DW+Pk8XYOyuH2fQ98okgfFYTEGtWfbeZ8szju+krLU0XIOqqVmG9RS3YOR1Oy0s8UoPzEvsbpdrneWRvM+WJo866WqTAVvWE89oIhiEnxRvxsex8NB8ZO1z3nrhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739229870; c=relaxed/simple;
-	bh=bJ5ESZYzG58v/d6J2EU3atpmIcpZBlSODiSwEgznITE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DDn+vQXpym+1mc12z0DNsujJWt3801QIc3iNvvw/DTVOn5al/lPLymzWEdopdbxn1JVJnsyLHIuVUvRGFIbnHkHudhPkcUz3eeDJD98PIGv4axy7yGGIE4EvTPlcjQPtvoBtnLZRsoNcFRTDFnomXu59ZgkJnUC3QNWg2O3JDzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
-Received: from SoMainline.org (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by m-r2.th.seeweb.it (Postfix) with ESMTPSA id 769443E8E6;
-	Tue, 11 Feb 2025 00:24:25 +0100 (CET)
-Date: Tue, 11 Feb 2025 00:24:24 +0100
-From: Marijn Suijten <marijn.suijten@somainline.org>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Danila Tikhonov <danila@jiaxyga.com>, neil.armstrong@linaro.org, 
-	quic_jesszhan@quicinc.com, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, andersson@kernel.org, 
-	konradybcio@kernel.org, robdclark@gmail.com, quic_abhinavk@quicinc.com, 
-	dmitry.baryshkov@linaro.org, sean@poorly.run, jonathan@marek.ca, jun.nie@linaro.org, 
-	fekz115@gmail.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
-	linux@mainlining.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 3/4] drm/msm/dsi: Allow all bpc values
-Message-ID: <oexunzihzwxux6aitpfpgpljhn2lndzqwnx5ruu3nzsahd7gzm@ttr6fuya5ncu>
-References: <20250203181436.87785-1-danila@jiaxyga.com>
- <20250203181436.87785-4-danila@jiaxyga.com>
- <rnuv4dieiy6s6c5s33hff7ntr6hkneemsq5qzk3u4ug2abwisd@6ahmijlayhhr>
- <bcba3d38-525e-43d8-936f-2ddc95d0cceb@oss.qualcomm.com>
- <e9ab55d7-bd2b-4241-bd40-322c2beb97d9@oss.qualcomm.com>
+	s=arc-20240116; t=1739229959; c=relaxed/simple;
+	bh=KN77nCqnFYHqWvJ1p3RHQD50VswFZvR6dd2EgrNJCnk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dTfQGzZ15lIEIzoztWXFSfe14sKKUYEFECnhseuemMFgbtMv1h338dHQobG8efY14eZN3byH+k8U2U5Tcv9/Ffb+LWUWLvaHWziClBzA70dhTe42DNnt7rInzeiGEzzrKSli4OG0w9e+sR4g/tEeykxw3/hDDX6aeIJvlIHHEoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y2zR/fy3; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y2zR/fy3"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c05aa6d3beso12126885a.0;
+        Mon, 10 Feb 2025 15:25:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739229956; x=1739834756; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/8XenbubIJUWheqMjhkn1jG61lOTP/K0WRD37kJpkcU=;
+        b=Y2zR/fy3E7wThIeD8n/g8OuAkmnxgX/0CmAIgH0mO0UfDL+X6ou3V7f+C95bqxrRdy
+         DFSpc7SUiK1L0NCfUsZHEmHHKWdQSXj088onQ78pBMefQ6Wp3Pn9LocXd0O6rvdngp04
+         XKPu+DN0WN+E9vrI/CipXLrctiG9ejO4h7U3ZfjtjBc7+UBe1ShAaNi1lk1q5sojWrN1
+         xikHBIcaZeND3tGllzqBSQxDSonlUws3FUdSaY4XNboR6Z8pat3vavNt0VZplXwUzvqN
+         YGuBuKCXjOyDYjxMtg8XD2XONHc3Oh8gf13HGS2uh8z6kQrS0ziZVAn0E41BFi2fi0mw
+         7cCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739229956; x=1739834756;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/8XenbubIJUWheqMjhkn1jG61lOTP/K0WRD37kJpkcU=;
+        b=IE+0jDC/hlxNzETiCbSqACAQx/fmqEXGPM0xnNT4x9uVFbgG0twUogocy6QANTmpaw
+         E0xcLr+Q7ThkhLYOoElOCQ9y6pOr8ru+eZfW6nITIa8bnvD86ab0ojyxu5PY/4WECdLu
+         0mxFrjUFZGE9ocDCo/7D77TdM5rEn/UVLfArWZPio8fNEOHF4wHvKFRoWVO0rDDyq1le
+         OAhxyGMtrw/x56Od9Pd6jo0DKR/udnFm9tiUuz+BsCuQx/iM2Z+Sgvn+KbSeB3K02DpO
+         ZNki3Rd5GbaWM3T4GaP0RV5Og7+Bv3qLhUxb5G119WQk2zEtFEgOvgxQKuhGYOgRvc9o
+         I09w==
+X-Forwarded-Encrypted: i=1; AJvYcCU/zqgzZAlD4W8ZHXHcgMd4ZJHvOF3OOuaRaw+R8Bj6VMnA9Sxiv3KC73Cp0B2TY4mTQJRM8/EXfuRL+yx8@vger.kernel.org, AJvYcCVyumoeeQaXOubIo8+xhrH03W8irCeydTTCmoOMjWA0EGO1PvNmbxdhl5fr/Ogg5JKHx8k161xz@vger.kernel.org, AJvYcCWq/AHSxTWvZsajqzdNO4lKUEv/LXQHs6mhV7W1YZH2kSoN/aVla0i385tSq0thv5vGDVGgqdmZ6DDR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/WWIlCh1FHYTml/EFu24CKHLOZpwiJcr7mvwDW3+3+06sG0BE
+	HuSKb1vEzUMZiJWU7K5qv2FIDxu8+HDG7nHhmysgfUSRIK6qktY=
+X-Gm-Gg: ASbGncunF97hHAbU4kfxun8VD2fP4fP4BUbU6PkXDO2hTXYDaKsLTuauqKjqX6NzDZ0
+	gfKHngdvaIxXq4FxCEORqnCjRWf4Hsnra+MelES+SBlrffu+24byu1QWEprby7CO+5BMBasCObr
+	AUlAUURgfI9EKaC97Yu5OYXUHMeKK/VdNQrr0fPLoIxuQyGkG02D6soy4HPNdnfX6MVQNbJJ358
+	gQtxA9KFC/2iu8C+/GFDs1ujwai5pzBjDVt6+gZ/stkyqyNTqIl20Tp1b3T92a4TsO5Vc9OAPUy
+	EyqEsSdIsUpe
+X-Google-Smtp-Source: AGHT+IHNYHue1/6onrrPc27NAv7Yzt2CgxTI9Tchg6QmJ/oQr90zAJuy/Fy1+6xVffMwmut1Bs5bxg==
+X-Received: by 2002:a05:6214:27c9:b0:6e4:67af:cc64 with SMTP id 6a1803df08f44-6e468dbbbc5mr2648146d6.9.1739229956435;
+        Mon, 10 Feb 2025 15:25:56 -0800 (PST)
+Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e44f4835e6sm36479346d6.111.2025.02.10.15.25.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 15:25:55 -0800 (PST)
+From: Chenyuan Yang <chenyuan0y@gmail.com>
+To: geert+renesas@glider.be,
+	linus.walleij@linaro.org,
+	richardcochran@gmail.com,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zzjas98@gmail.com,
+	Chenyuan Yang <chenyuan0y@gmail.com>
+Subject: [PATCH] pinctrl: Fix potential NULL pointer dereference
+Date: Mon, 10 Feb 2025 17:25:52 -0600
+Message-Id: <20250210232552.1545887-1-chenyuan0y@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e9ab55d7-bd2b-4241-bd40-322c2beb97d9@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
 
-On 2025-02-10 18:13:58, Konrad Dybcio wrote:
-> On 10.02.2025 6:10 PM, Konrad Dybcio wrote:
-> > On 8.02.2025 11:09 PM, Marijn Suijten wrote:
-> >> On 2025-02-03 21:14:26, Danila Tikhonov wrote:
-...
-> >>>  	dsc->simple_422 = 0;
-> >>>  	dsc->convert_rgb = 1;
-> >>>  	dsc->vbr_enable = 0;
-> >>
-> >> This seems supicous on the dpu1 side, in the original DSC 1.1 (not 1.2) block in
-> >> dpu_hw_dsc_config(), which has:
-> >>
-> >> 	data |= (dsc->line_buf_depth << 3);
-> >> 	data |= (dsc->simple_422 << 2);
-> >> 	data |= (dsc->convert_rgb << 1);
-> >> 	data |= dsc->bits_per_component;
-> >>
-> >> The original value of `8` would overlap with the lowest bit of line_buf_depth
-> >> (4th bit in `data`).  Now, the 2nd bit which will take the value from
-> >> convert_rgb, which is already set to 1 above, will overlap with the 2nd bit in
-> >> your new bpc value of 10.
-> >>
-> >> Can you double-check that this code in DPU1 is actually valid?  I assume you
-> >> have tested this panel at least and it is working (worthy mention in the cover
-> >> letter?), this just seems like yet another mistake in the original bindings
-> >> (though the register always had a matching value with downstream on 8 BPC panels
-> >> for me).
-> > 
-> > It seems like the lowest bit should be set iff the input is 10bpc, the
-> > current situation where our '8' bleeds into the following (correctly named
-> > fields) is bad.
-> 
-> See also
-> 
-> https://github.com/Wikidepia/kernel_xiaomi_santoni-4.9/blob/master/drivers/gpu/drm/msm/sde/sde_hw_dsc.c#L67-L80
+The `chip.label` could be NULL. Add missing check in the
+rza2_gpio_register().
+This is similar to commit 3027e7b15b02 
+("ice: Fix some null pointer dereference issues in ice_ptp.c").
+Besides, mediatek_gpio_bank_probe() in drivers/gpio/gpio-mt7621.c also
+has a very similar check.
 
-Correct, this is also what Dmitry already replied on Sunday and what I
-formulated into a patch earlier today (now sent), which I hope you can ack.
+Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+---
+ drivers/pinctrl/renesas/pinctrl-rza2.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-- Marijn
+diff --git a/drivers/pinctrl/renesas/pinctrl-rza2.c b/drivers/pinctrl/renesas/pinctrl-rza2.c
+index dd1f8c29d3e7..3da8b0d389c9 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rza2.c
++++ b/drivers/pinctrl/renesas/pinctrl-rza2.c
+@@ -246,6 +246,9 @@ static int rza2_gpio_register(struct rza2_pinctrl_priv *priv)
+ 	int ret;
+ 
+ 	chip.label = devm_kasprintf(priv->dev, GFP_KERNEL, "%pOFn", np);
++	if (!chip.label)
++		return -ENOMEM;
++
+ 	chip.parent = priv->dev;
+ 	chip.ngpio = priv->npins;
+ 
+-- 
+2.34.1
 
-> 
-> Konrad
