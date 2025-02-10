@@ -1,64 +1,40 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11840256C69
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417BB256C69;
+	Mon, 10 Feb 2025 17:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739207489; cv=none; b=RoyHn6uzdEKX5MMQ4WH7ujE3iAkiDQ3K92yXexNK2zHeyuV8SZLYjdPoC1yjw7Q5aSiIp8C4HJL5lHaTOaot4htK4dFBZyQErqUwSnaXov11Y82Le/vQFJPMS3YfjwEPOAVyJ+wPopp3w7cg1JAANk0ebUZaQRK0UeRoCceJk0A=
+	t=1739207511; cv=none; b=A3SmsN8bXKUWUTQCDWYYqNGKVvhinBFA5X0F1QzBrlgkNy1P8QLs4e//x3jFywfUxyD228AfMfUogCWU2Uq1RF1PwR1Yw/t5O7o3Vz3KANSp7lKC7aDYTSrxGynCSycuMr0s85sLceBrGgTarFtziRZoYtHzi52hHTqTwxvktEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739207489; c=relaxed/simple;
-	bh=l6ixI9ocsg5QZ16cvn2QkpaT8QZyQoyW5ibERsaeAMM=;
+	s=arc-20240116; t=1739207511; c=relaxed/simple;
+	bh=o0hGxA0NOgQ5LtRO7padQZ5PIO0xxvCaBJv4H++US4A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZkobXV0PbkigM6QW5jhqPDi4nwPcyk7ovd3/0w4FDAiJXerxSy2rh6nN5VGQiLb/0lu9V5ACt4OxqgLN5Swe5T8LO5h86mzyN/9j3kg+NJ7kMaQ0jh96nr/V0wq1bsYx9a8xIGD70q+ImFQog4HJjmkWRZicTHkw0SBAX2wf9fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=LrQG0WeQ; arc=none smtp.client-ip=209.85.160.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 In-Reply-To:Content-Type; b=n+o4CS3Z7wmRId8Bjb3PjMbO3PjKCjcFhiLkNumgt73YB8KwQmA4g21sYF3Bgq3JFfWPVEp+Ki1OlY6KyNBqM97Vlrll5SAy4sGPrb7Akg2HO+QEDrHHZ0M8T6YU0KpzN1E8Wn+0vlTRF3+ENEwASizKZwV7vzLgNS0aw1tK4Zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=U+lU5Sm4; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="LrQG0WeQ"
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2a8690dcb35so1392255fac.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:11:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739207486; x=1739812286; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=y62wEuUB23NjmeSDjcZkJZH4kkElpdd1L2B2fifJwGY=;
-        b=LrQG0WeQbLzRgqLVKAkVeAz4SHc4lcfp6bMBkIsb+jVM0E4FE7akiPx+EYM8VSC8/6
-         /hi/wJ0PgriVCqlPCNjJZFUrtwqqUVGgIi4GXI9a0102U1BIFzBKwpwIMXHry92rPydn
-         pfc4rAP11sr8VP2+t/+0EJT+rXtM7n+9pBGCaLcjEgrxGm9IVe6VfBH6F5R6FqPZvQg8
-         d2h2SpkL5260d3eMxyVDkYTHuzSzdeAej6e3e2WHBwcCMoqqyGrMJVqPvmb8I8rqv6ED
-         Y/buAZrg21luPF79Wne8GJY1Z8XSN0U0K7RFEsAUrOSca+YXCJeLsE+J5DggIitggNcS
-         v7WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739207486; x=1739812286;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y62wEuUB23NjmeSDjcZkJZH4kkElpdd1L2B2fifJwGY=;
-        b=vFh9BJIewzt2tlzeVTwvbn0/NETKRGDJnJkGRMWaroXRzvvSXJ6ztt7sBjiWfMSoFM
-         VHfqTUvLh95D0NJFczbZBMyNjbNtdmkjDgOdeJnVVIjgqDLer/7iIo47b/cxDDymuaNk
-         tLypda53omdQixSopSXgdhysCxgf/wuIRQdQ6h4AOeTNQFrFEUqeh6BqaPc0WmdZ3md9
-         IHsE8y2h1vV87bllhJxCZ71sMWAdHsq6PphzzjWaws9TUMqXjgQPg9u2c9e2hxKqQ/V6
-         4sc1XS5lkJu8PLVLA9EtKQaAW5jmqc2M+ap8jE1II0hpDb3pv8RJ/R1zhZ6nxshQEcuV
-         rZjA==
-X-Forwarded-Encrypted: i=1; AJvYcCXdfOatJLZsMC+OpiNtz8OxA65jHJezure1nht44jJlK6Ftl5lsgalPR1cvBOu/kP85vKGlrxSS8CIH0Ww=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIRf29LI3pvHsSM3LTwgdEps6NUbJ6ELkOM+rP8eOf9nizn4pE
-	v+yYYofu9gXh06FutlxvyfO8gn4EExBP7wSdeugnA4dj4C/dWut7VtU6HwC8y+k=
-X-Gm-Gg: ASbGncsMpyqlpftYIabYNceHfPGIrgVWpb2YKqEeCofU4m4ftvcak3pmaGndWhs/Dfw
-	8V12TiOCzmjjQisHzm1U2mq7MXiMjjGSdJOOqX+Kh/wt0ycsm8boVnbj4t4Tiy2+RMri+oHI66t
-	htqvb/eIUH8wVb23yWl401pNLAc/VaWWQlx7UIELi13mHa8Ur+aZUm2W8+WwLp3PeXcJW/dLrpL
-	cRH7ckHhP/3tCjabbuO+m4ODzvRK/VOg2LF8WntxlAsJweYJ2HDnJg56K1B2+1hsSLPnDtVIV58
-	vxrPrW6g1KUs6fMZOeQqT8m0ADwUcMXONh1axgOlNQQJTy6/gDwd
-X-Google-Smtp-Source: AGHT+IEo4eH2CuOA2OmnMHMRwgQDew3LfoTfoARBZw+mgbte0DXZ4AUD2tzn6839+X+KetyoPMS0Gw==
-X-Received: by 2002:a05:6871:6aa:b0:29d:ca24:c044 with SMTP id 586e51a60fabf-2b83eb4d220mr8661498fac.8.1739207486107;
-        Mon, 10 Feb 2025 09:11:26 -0800 (PST)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b8a8c46e7dsm251881fac.35.2025.02.10.09.11.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 09:11:25 -0800 (PST)
-Message-ID: <27d2a88c-b44a-4712-b066-b999e41774f0@baylibre.com>
-Date: Mon, 10 Feb 2025 11:11:23 -0600
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="U+lU5Sm4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739207507;
+	bh=o0hGxA0NOgQ5LtRO7padQZ5PIO0xxvCaBJv4H++US4A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=U+lU5Sm45JrbHGoZwGrg/5xCMw5y1ivPS6w6aZR6ogdC4Fd+WzQ/qvj4uul5GLk/K
+	 UrD+fz2LIpWcHhY3JBEcmswsDicSpCl3+gkogv+g5s0h1UWJsbr6piR4kJF9aRolxx
+	 bsANi9gVGx4V2kYsHFczZA2yjAzsohiHfjT8mZKpHZYyEzBKWg2tuWijcu8HMzLChn
+	 kSU723Z9VnD1iVyUaz8FI0F1ZWZYoGso/CSO1+3fd3B1U/FtbfcIuZHVUJiGWIBYD3
+	 w1c/96oALLNwtlQ75uU8k4QYjt3FdWEbgQ6ue3hXYFCRiKP4iw1sLVxq3zS9x1EwHx
+	 J0ZUxcDiaU/DA==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id C50CC17E0239;
+	Mon, 10 Feb 2025 18:11:45 +0100 (CET)
+Message-ID: <a5d6d63b-ae37-4cd6-94f7-50647c8b0a21@collabora.com>
+Date: Mon, 10 Feb 2025 18:11:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,79 +42,353 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 01/17] spi: add basic support for SPI offloading
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, Michael Hennerich <Michael.Hennerich@analog.com>,
- Lars-Peter Clausen <lars@metafoo.de>, David Jander <david@protonic.nl>,
- Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
- <20250207-dlech-mainline-spi-engine-offload-2-v8-1-e48a489be48c@baylibre.com>
- <Z6otFlsmEikIbI__@black.fi.intel.com>
-From: David Lechner <dlechner@baylibre.com>
+Subject: Re: [PATCH v5 29/34] drm/mediatek: mtk_hdmi: Split driver and add
+ common probe function
+To: =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
+ "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>
+Cc: "robh@kernel.org" <robh@kernel.org>,
+ "jie.qiu@mediatek.com" <jie.qiu@mediatek.com>,
+ "tzimmermann@suse.de" <tzimmermann@suse.de>,
+ "simona@ffwll.ch" <simona@ffwll.ch>, "mripard@kernel.org"
+ <mripard@kernel.org>, =?UTF-8?B?Sml0YW8gU2hpICjnn7PorrDmtpsp?=
+ <jitao.shi@mediatek.com>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "kernel@collabora.com" <kernel@collabora.com>,
+ "dmitry.baryshkov@linaro.org" <dmitry.baryshkov@linaro.org>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ =?UTF-8?B?TGV3aXMgTGlhbyAo5buW5p+P6YieKQ==?= <Lewis.Liao@mediatek.com>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ =?UTF-8?B?VG9tbXlZTCBDaGVuICjpmbPlvaXoia8p?= <TommyYL.Chen@mediatek.com>,
+ =?UTF-8?B?SXZlcyBDaGVuamggKOmZs+S/iuW8mCk=?= <Ives.Chenjh@mediatek.com>,
+ "airlied@gmail.com" <airlied@gmail.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ =?UTF-8?B?SmFzb24tSkggTGluICjmnpfnnb/npaUp?= <Jason-JH.Lin@mediatek.com>,
+ "junzhi.zhao@mediatek.com" <junzhi.zhao@mediatek.com>
+References: <20250113145232.227674-1-angelogioacchino.delregno@collabora.com>
+ <20250113145232.227674-30-angelogioacchino.delregno@collabora.com>
+ <8a4ba3fb6d953f1106d3a766208c4b86da1cfcb8.camel@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
-In-Reply-To: <Z6otFlsmEikIbI__@black.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <8a4ba3fb6d953f1106d3a766208c4b86da1cfcb8.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 2/10/25 10:45 AM, Andy Shevchenko wrote:
-> On Fri, Feb 07, 2025 at 02:08:58PM -0600, David Lechner wrote:
->> Add the basic infrastructure to support SPI offload providers and
->> consumers.
->>
->> SPI offloading is a feature that allows the SPI controller to perform
->> transfers without any CPU intervention. This is useful, e.g. for
->> high-speed data acquisition.
->>
->> SPI controllers with offload support need to implement the get_offload
->> and put_offload callbacks and can use the devm_spi_offload_alloc() to
->> allocate offload instances.
->>
->> SPI peripheral drivers will call devm_spi_offload_get() to get a
->> reference to the matching offload instance. This offload instance can
->> then be attached to a SPI message to request offloading that message.
->>
->> It is expected that SPI controllers with offload support will check for
->> the offload instance in the SPI message in the ctlr->optimize_message()
->> callback and handle it accordingly.
->>
->> CONFIG_SPI_OFFLOAD is intended to be a select-only option. Both
->> consumer and provider drivers should `select SPI_OFFLOAD` in their
->> Kconfig to ensure that the SPI core is built with offload support.
+Il 10/02/25 03:18, CK Hu (胡俊光) ha scritto:
+> Hi, Angelo:
 > 
-> (I know that this is now in SPI tree, but still we have time to address something)
-> 
->> +++ b/include/linux/spi/offload/consumer.h
-> 
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/*
->> + * Copyright (C) 2024 Analog Devices Inc.
->> + * Copyright (C) 2024 BayLibre, SAS
->> + */
+> On Mon, 2025-01-13 at 15:52 +0100, AngeloGioacchino Del Regno wrote:
+>> External email : Please do not click links or open attachments until you have verified the sender or the content.
+>>
+>>
+>> In preparation for adding a new driver for the HDMI TX v2 IP,
+>> split out the functions that will be common between the already
+>> present mtk_hdmi (v1) driver and the new one.
+>>
+>> Since the probe flow for both drivers is 90% similar, add a common
+>> probe function that will be called from each driver's .probe()
+>> callback, avoiding lots of code duplication.
+>>
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> ---
+>>   drivers/gpu/drm/mediatek/Kconfig           |  11 +-
+>>   drivers/gpu/drm/mediatek/Makefile          |   1 +
+>>   drivers/gpu/drm/mediatek/mtk_hdmi.c        | 553 +--------------------
+>>   drivers/gpu/drm/mediatek/mtk_hdmi_common.c | 426 ++++++++++++++++
+>>   drivers/gpu/drm/mediatek/mtk_hdmi_common.h | 188 +++++++
+>>   5 files changed, 648 insertions(+), 531 deletions(-)
+>>   create mode 100644 drivers/gpu/drm/mediatek/mtk_hdmi_common.c
+>>   create mode 100644 drivers/gpu/drm/mediatek/mtk_hdmi_common.h
+>>
+>> diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/mediatek/Kconfig
+>> index e47debd60619..994b48b82d44 100644
+>> --- a/drivers/gpu/drm/mediatek/Kconfig
+>> +++ b/drivers/gpu/drm/mediatek/Kconfig
+>> @@ -30,9 +30,18 @@ config DRM_MEDIATEK_DP
+>>          help
+>>            DRM/KMS Display Port driver for MediaTek SoCs.
+>>
+>> +config DRM_MEDIATEK_HDMI_COMMON
+>> +       tristate
+>> +       depends on DRM_MEDIATEK
+>> +       select DRM_DISPLAY_HDMI_HELPER
+>> +       select DRM_DISPLAY_HELPER
+>> +       select SND_SOC_HDMI_CODEC if SND_SOC
+>> +       help
+>> +         MediaTek SoC HDMI common library
 >> +
->> +#ifndef __LINUX_SPI_OFFLOAD_CONSUMER_H
->> +#define __LINUX_SPI_OFFLOAD_CONSUMER_H
->> +
->> +#include <linux/module.h>
->> +#include <linux/spi/offload/types.h>
->> +#include <linux/types.h>
+>>   config DRM_MEDIATEK_HDMI
+>>          tristate "DRM HDMI Support for Mediatek SoCs"
+>>          depends on DRM_MEDIATEK
+>> -       select SND_SOC_HDMI_CODEC if SND_SOC
+>> +       select DRM_MEDIATEK_HDMI_COMMON
+>>          help
+>>            DRM/KMS HDMI driver for Mediatek SoCs
+>> diff --git a/drivers/gpu/drm/mediatek/Makefile b/drivers/gpu/drm/mediatek/Makefile
+>> index 43afd0a26d14..78cf2d4fc85f 100644
+>> --- a/drivers/gpu/drm/mediatek/Makefile
+>> +++ b/drivers/gpu/drm/mediatek/Makefile
+>> @@ -21,6 +21,7 @@ mediatek-drm-y := mtk_crtc.o \
+>>
+>>   obj-$(CONFIG_DRM_MEDIATEK) += mediatek-drm.o
+>>
+>> +obj-$(CONFIG_DRM_MEDIATEK_HDMI_COMMON) += mtk_hdmi_common.o
 > 
->> +MODULE_IMPORT_NS("SPI_OFFLOAD");
+> It's not necessary to create CONFIG_DRM_MEDIATEK_HDMI_COMMON to build mtk_hdmi_common.o.
 > 
-> This diminishes the point of the namespaces. Anybody who includes a (dangling)
-> header gets namespace imported, which is not good. Same for other globally
-> visible headers.
+> obj-$(CONFIG_DRM_MEDIATEK_HDMI) += mtk_hdmi_common.o
+> obj-$(CONFIG_DRM_MEDIATEK_HDMI_V2) += mtk_hdmi_common.o
 > 
-> (This is the main concern of this patch).
 
-In this case, we specifically split up the headers so that the only time you
-would ever include this header is if you need to call functions in this
-namespace (i.e. struct definitions are in linux/spi/offload/types.h which
-doesn't import the namespace). So this doesn't actually seem like a problem
-to me.
+What you proposed would work - but it's not feasible: this is duplication, and
+duplication is bad. That's why CONFIG_DRM_MEDIATEK_HDMI_COMMON was created.
+
+I will not change that, sorry.
+
+>>   obj-$(CONFIG_DRM_MEDIATEK_HDMI) += mtk_cec.o
+>>   obj-$(CONFIG_DRM_MEDIATEK_HDMI) += mtk_hdmi.o
+>>   obj-$(CONFIG_DRM_MEDIATEK_HDMI) += mtk_hdmi_ddc.o
+>> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+>> index 138c6283c038..7940c9b598c1 100644
+>> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
+>> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+
+..snip..
+
+>> -
+>>   static int mtk_hdmi_probe(struct platform_device *pdev)
+>>   {
+>>          struct mtk_hdmi *hdmi;
+>> -       struct device *dev = &pdev->dev;
+>> -       const int num_clocks = MTK_HDMI_CLK_COUNT;
+>> -       int ret;
+>> -
+>> -       hdmi = devm_kzalloc(dev, sizeof(*hdmi), GFP_KERNEL);
+>> -       if (!hdmi)
+>> -               return -ENOMEM;
+>>
+>> -       hdmi->dev = dev;
+>> -       hdmi->conf = of_device_get_match_data(dev);
+>> +       hdmi = mtk_hdmi_common_probe(pdev);
+>> +       if (IS_ERR(hdmi))
+>> +               return PTR_ERR(hdmi);
+>>
+>> -       hdmi->clk = devm_kcalloc(dev, num_clocks, sizeof(*hdmi->clk), GFP_KERNEL);
+>> -       if (!hdmi->clk)
+>> -               return -ENOMEM;
+>> -
+>> -       ret = mtk_hdmi_dt_parse_pdata(hdmi, pdev, mtk_hdmi_clk_names, num_clocks);
+>> -       if (ret)
+>> -               return ret;
+>> -
+>> -       hdmi->phy = devm_phy_get(dev, "hdmi");
+>> -       if (IS_ERR(hdmi->phy))
+>> -               return dev_err_probe(dev, PTR_ERR(hdmi->phy),
+>> -                                    "Failed to get HDMI PHY\n");
+>> -
+>> -       mutex_init(&hdmi->update_plugged_status_lock);
+>> -       platform_set_drvdata(pdev, hdmi);
+>> -
+>> -       ret = mtk_hdmi_register_audio_driver(dev);
+>> -       if (ret)
+>> -               return dev_err_probe(dev, ret,
+>> -                                    "Failed to register audio driver\n");
+>> -
+>> -       hdmi->bridge.funcs = &mtk_hdmi_bridge_funcs;
+>> -       hdmi->bridge.of_node = pdev->dev.of_node;
+>> -       hdmi->bridge.ops = DRM_BRIDGE_OP_DETECT | DRM_BRIDGE_OP_EDID
+>> -                        | DRM_BRIDGE_OP_HPD;
+>> -       hdmi->bridge.type = DRM_MODE_CONNECTOR_HDMIA;
+>> -       hdmi->bridge.vendor = "MediaTek";
+>> -       hdmi->bridge.product = "On-Chip HDMI";
+>> -
+>> -       ret = devm_drm_bridge_add(dev, &hdmi->bridge);
+>> -       if (ret)
+>> -               return dev_err_probe(dev, ret, "Failed to add bridge\n");
+>> +       if (!hdmi->cec_dev)
+>> +               return dev_err_probe(hdmi->dev, -ENODEV, "CEC is required by HDMIv1\n");
+>>
+>> -       ret = mtk_hdmi_clk_enable_audio(hdmi);
+>> -       if (ret)
+>> -               return dev_err_probe(dev, ret,
+>> -                                    "Failed to enable audio clocks\n");
+> 
+> Originally, print error message for mtk_hdmi_clk_enable_audio() here.
+> In this patch, it does not print error message here.
+> If this modification is necessary, separate this to another patch.
+> 
+
+I'll separate that to a different patch. Ok.
+
+>> -
+>> -       return 0;
+>> +       return mtk_hdmi_clk_enable_audio(hdmi);
+>>   }
+>>
+>>   static void mtk_hdmi_remove(struct platform_device *pdev)
+
+..snip..
+
+>> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_common.c b/drivers/gpu/drm/mediatek/mtk_hdmi_common.c
+>> new file mode 100644
+>> index 000000000000..7dc7ba46f44d
+>> --- /dev/null
+>> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi_common.c
+
+..snip..
+
+>> +
+>> +static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi, struct platform_device *pdev,
+>> +                                  const char * const *clk_names, size_t num_clocks)
+>> +{
+>> +       struct device *dev = &pdev->dev;
+>> +       struct device_node *np = dev->of_node;
+>> +       struct device_node *remote, *i2c_np;
+>> +       int ret;
+>> +
+>> +       ret = mtk_hdmi_get_all_clk(hdmi, np, clk_names, num_clocks);
+>> +       if (ret)
+>> +               return dev_err_probe(dev, ret, "Failed to get clocks\n");
+>> +
+>> +       hdmi->regs = device_node_to_regmap(dev->of_node);
+>> +       if (IS_ERR(hdmi->regs))
+>> +               return PTR_ERR(hdmi->regs);
+>> +
+>> +       remote = of_graph_get_remote_node(np, 1, 0);
+>> +       if (!remote)
+>> +               return -EINVAL;
+>> +
+>> +       if (!of_device_is_compatible(remote, "hdmi-connector")) {
+>> +               hdmi->next_bridge = of_drm_find_bridge(remote);
+>> +               if (!hdmi->next_bridge) {
+>> +                       dev_err(dev, "Waiting for external bridge\n");
+>> +                       of_node_put(remote);
+>> +                       return -EPROBE_DEFER;
+>> +               }
+>> +       }
+>> +
+>> +       i2c_np = of_parse_phandle(remote, "ddc-i2c-bus", 0);
+>> +       of_node_put(remote);
+>> +       if (!i2c_np)
+>> +               return dev_err_probe(dev, -EINVAL, "No ddc-i2c-bus in connector\n");
+>> +
+>> +       hdmi->ddc_adpt = of_find_i2c_adapter_by_node(i2c_np);
+>> +       of_node_put(i2c_np);
+>> +       if (!hdmi->ddc_adpt)
+>> +               return dev_err_probe(dev, -EINVAL, "Failed to get ddc i2c adapter by node\n");
+>> +
+>> +       ret = mtk_hdmi_get_cec_dev(hdmi, dev, np);
+>> +       if (ret == -ENOTSUPP)
+>> +               dev_info(dev, "CEC support unavailable: node not found\n");
+> 
+> CEC is used only in v1 driver. So separate CEC related modification to another patch.
+> 
+
+Ok.
+
+>> +       else if (ret)
+>> +               return ret;
+>> +
+>> +       return 0;
+>> +}
+>> +
+
+..snip..
+
+>> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_common.h b/drivers/gpu/drm/mediatek/mtk_hdmi_common.h
+>> new file mode 100644
+>> index 000000000000..d3de8afff40f
+>> --- /dev/null
+>> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi_common.h
+>> @@ -0,0 +1,188 @@
+
+..snip..
+
+>> +struct mtk_hdmi_ver_conf {
+>> +       const struct drm_bridge_funcs *bridge_funcs;
+>> +       const struct hdmi_codec_ops *codec_ops;
+>> +       const char * const *mtk_hdmi_clock_names;
+>> +       int num_clocks;
+>> +};
+> 
+> This patch create something new for new hdmi driver.
+> And this patch also separate common function to common file.
+> I would like to separate these to two patches.
+> One for creating something new for new hdmi driver.
+> Another one for separating common function to common file.
+> 
+
+That makes sense, will do.
+
+Regards,
+Angelo
+
+> Regards,
+> CK
+> 
+>> +
+>> +struct mtk_hdmi_conf {
+>> +       const struct mtk_hdmi_ver_conf *ver_conf;
+>> +       bool tz_disabled;
+>> +       bool cea_modes_only;
+>> +       unsigned long max_mode_clock;
+>> +};
+>> +
+>> +struct mtk_hdmi {
+>> +       struct drm_bridge bridge;
+>> +       struct drm_bridge *next_bridge;
+>> +       struct drm_connector *curr_conn;/* current connector (only valid when 'enabled') */
+>> +       struct device *dev;
+>> +       const struct mtk_hdmi_conf *conf;
+>> +       struct phy *phy;
+>> +       struct device *cec_dev;
+>> +       struct i2c_adapter *ddc_adpt;
+>> +       struct clk **clk;
+>> +       struct drm_display_mode mode;
+>> +       bool dvi_mode;
+>> +       struct regmap *sys_regmap;
+>> +       unsigned int sys_offset;
+>> +       struct regmap *regs;
+>> +       struct platform_device *audio_pdev;
+>> +       struct hdmi_audio_param aud_param;
+>> +       bool audio_enable;
+>> +       bool powered;
+>> +       bool enabled;
+>> +       hdmi_codec_plugged_cb plugged_cb;
+>> +       struct device *codec_dev;
+>> +       struct mutex update_plugged_status_lock;
+>> +};
+>> +
+>> +static inline struct mtk_hdmi *hdmi_ctx_from_bridge(struct drm_bridge *b)
+>> +{
+>> +       return container_of(b, struct mtk_hdmi, bridge);
+>> +}
+>> +
+>> +
+>> +int mtk_hdmi_audio_get_eld(struct device *dev, void *data, uint8_t *buf, size_t len);
+>> +void mtk_hdmi_audio_set_plugged_cb(struct mtk_hdmi *hdmi, hdmi_codec_plugged_cb fn,
+>> +                                  struct device *codec_dev);
+>> +int mtk_hdmi_audio_params(struct mtk_hdmi *hdmi, struct hdmi_codec_daifmt *daifmt,
+>> +                         struct hdmi_codec_params *params);
+>> +void mtk_hdmi_get_ncts(unsigned int sample_rate, unsigned int clock,
+>> +                      unsigned int *n, unsigned int *cts);
+>> +bool mtk_hdmi_bridge_mode_fixup(struct drm_bridge *bridge,
+>> +                               const struct drm_display_mode *mode,
+>> +                               struct drm_display_mode *adjusted_mode);
+>> +void mtk_hdmi_bridge_mode_set(struct drm_bridge *bridge,
+>> +                             const struct drm_display_mode *mode,
+>> +                             const struct drm_display_mode *adjusted_mode);
+>> +struct mtk_hdmi *mtk_hdmi_common_probe(struct platform_device *pdev);
+>> +#endif /* _MTK_HDMI_COMMON_H */
+>> --
+>> 2.47.0
+>>
+> 
+
 
