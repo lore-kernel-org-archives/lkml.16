@@ -1,85 +1,150 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B380C1C3C0F;
-	Mon, 10 Feb 2025 09:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731B61C5799;
+	Mon, 10 Feb 2025 09:53:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739181214; cv=none; b=Wwpph1lPc9OEuElqZdu9fk8s1wvdjA7jQUp6n8tF0ahx/iTszOcPvdFbc/lZo4nEqVJHzJGxR93uO4KmQJ0sLo+yFIKUIFjzhug3UcdH+EqUa+F9KBGFEACGA66RfmCE5FyjL68xOUJ0nDl5fL9sZj8CcVyqCOKfJhpJSzFm5CI=
+	t=1739181222; cv=none; b=Q7i8QjZTv2azxowmqIwxunbEAtW8dcIUuDecbUsYnOcp1NtMewbVcea7w4NO6UR5jGeJTUWoIaShFCiPiTNtrNS0uxcip7ZdBDJJLXN9ktr1b593n84azvLWw4d230NV/iwt0JBSc7ym4FCtZWveQb5VnnISKKfhN0g+FaywN98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739181214; c=relaxed/simple;
-	bh=bOvDRrgXH6phjEcMFiDdEDrs3Vrvfib1N+WLCTV+ORk=;
+	s=arc-20240116; t=1739181222; c=relaxed/simple;
+	bh=WZ8gMumvatbxQoJVCd/ooEA0OvxyHGeaCxHBr2ZS50Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fDY8bdfCeUtDvaJcuUjina+ZA/9wmTg1co3kBKc/YfIHDYvfnwj3ZbXtQ4C1EDToyn9F/5olyDyuKp6cGErOUwc8K7zoo6eJJsNNZ4Bb+kxO6CAtQnbRJkKt5SbQPCKP/0wFQrb0KpTBNj0vbHferEqmmpgK9ZxJB1fNCNjJ+i8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CLZ+s75h; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=GS614fSINrczV0kvsrSfDp37tjHNljiTtDL5FpssPqJyM96liD1POSPj77oz+l4lpN4ZK+548ExHYoIHceWd87Nt5FyXNKE1/7Y+Vr93rgn08N2EOphgR3uSFXxAdXz4HaAckCPJJ4q8TEBSsUJvjDtw9SyJsHQitSDDZU5sSDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CAd2Xe4g; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CLZ+s75h"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=s8Mwq3rMEa8CkQmRNyS/s+cyYunNKj5Wlg7L/VvKRhc=; b=CLZ+s75h+0rfLi/5P96AEUisat
-	9NPxjkymmufjZFkx2Qg00zQQknhLs2i3RWzR0OV3cfSvk8UZ2iNO7RyvW3jRZv2JIIOz4lXzn3QVh
-	ZNrDBOu/UUC9HIStKK5n1QPCExb86xogvlwW1BxGRgYd29njnz1IoJ6qvC6jwIcptojfr7zGkCuiX
-	L5EYdA5eo6pvF+yymPngVl7yx2b7U2eKoTgvku7tnnRqvaO1ddnhBLxFDG7iT8bKgmu5hZO4FTkYz
-	223I67HaSLf8Qkq/NyJ+v5J74UdJE6Gb/S9K+gjdzNIWqBvmOs5h9xJyBCIgXvDIbYxNhafSsSAuU
-	UgJjc69g==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1thQTl-0000000FThV-2RSc;
-	Mon, 10 Feb 2025 09:53:25 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2DFFA300318; Mon, 10 Feb 2025 10:53:25 +0100 (CET)
-Date: Mon, 10 Feb 2025 10:53:24 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ankur Arora <ankur.a.arora@oracle.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Will Deacon <will@kernel.org>, Waiman Long <llong@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Barret Rhoden <brho@google.com>, Josh Don <joshdon@google.com>,
-	Dohyun Kim <dohyunkim@google.com>,
-	linux-arm-kernel@lists.infradead.org, kernel-team@meta.com
-Subject: Re: [PATCH bpf-next v2 17/26] rqspinlock: Hardcode cond_acquire
- loops to asm-generic implementation
-Message-ID: <20250210095324.GG10324@noisy.programming.kicks-ass.net>
-References: <20250206105435.2159977-1-memxor@gmail.com>
- <20250206105435.2159977-18-memxor@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CAd2Xe4g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739181221; x=1770717221;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=WZ8gMumvatbxQoJVCd/ooEA0OvxyHGeaCxHBr2ZS50Q=;
+  b=CAd2Xe4gG51vLARyF7Vu2+x2ULBPYDw9KREtIUxPgTlGFEEvGxJyYXnj
+   Lac1abg6RWnsxXeK5lwTo0F8fSuAoGXyi32At6+RLVr9bWRvcB7tX7U79
+   eUhh7gTH5LHBSnZM5ZnQLTn+s8zBGR7T1sfvWEneSw5P3b3zAEmKFJYs9
+   K+0tBOP+LrshkOdieeJM9kZnWY1xiT/hv0iqSpu3q1So0SM8fp2LAH+mf
+   dE4JHzYWaOfW16gTBfTmn39cnovhobSb1WDrY+m5r/7qf2KBt6dHROy21
+   rOZdIlfawioEIpRf4/lmyVlo4duoq9VbMG/yWCu/5zmL7OG4w5GpTBtg1
+   w==;
+X-CSE-ConnectionGUID: G0EaPDnERVmDYtvEGdVT3A==
+X-CSE-MsgGUID: DEo0TLV+RZKHs5Xiw7Ag4w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="39882175"
+X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
+   d="scan'208";a="39882175"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 01:53:33 -0800
+X-CSE-ConnectionGUID: UiTXYApJSAuWHRDkrOw3uw==
+X-CSE-MsgGUID: WgVEtldIQeKNrzhHKBt+5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="113026011"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 01:53:30 -0800
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 3E4F311F94F;
+	Mon, 10 Feb 2025 11:53:27 +0200 (EET)
+Date: Mon, 10 Feb 2025 09:53:27 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: git@apitzsch.eu
+Cc: Daniel Scally <djrscally@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: media: i2c: Add DW9719 and DW9761 VCM
+Message-ID: <Z6nMl7vXPkICysSJ@kekkonen.localdomain>
+References: <20250209-dw9761dts-v3-0-14d3f00f0585@apitzsch.eu>
+ <20250209-dw9761dts-v3-1-14d3f00f0585@apitzsch.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250206105435.2159977-18-memxor@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250209-dw9761dts-v3-1-14d3f00f0585@apitzsch.eu>
 
-On Thu, Feb 06, 2025 at 02:54:25AM -0800, Kumar Kartikeya Dwivedi wrote:
-> Currently, for rqspinlock usage, the implementation of
-> smp_cond_load_acquire (and thus, atomic_cond_read_acquire) are
-> susceptible to stalls on arm64, because they do not guarantee that the
-> conditional expression will be repeatedly invoked if the address being
-> loaded from is not written to by other CPUs. When support for
-> event-streams is absent (which unblocks stuck WFE-based loops every
-> ~100us), we may end up being stuck forever.
+Hi André,
+
+Thanks for the update.
+
+On Sun, Feb 09, 2025 at 10:51:57PM +0100, André Apitzsch via B4 Relay wrote:
+> From: André Apitzsch <git@apitzsch.eu>
 > 
-> This causes a problem for us, as we need to repeatedly invoke the
-> RES_CHECK_TIMEOUT in the spin loop to break out when the timeout
-> expires.
+> Document Dongwoon DW9719 and DW9761 VCM devicetree bindings.
 > 
-> Hardcode the implementation to the asm-generic version in rqspinlock.c
-> until support for smp_cond_load_acquire_timewait [0] lands upstream.
+> Signed-off-by: André Apitzsch <git@apitzsch.eu>
+> ---
+>  .../bindings/media/i2c/dongwoon,dw9719.yaml        | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9719.yaml b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9719.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..b38d22bf09713a7999e1f9ce6553de7587dbe5d2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9719.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/dongwoon,dw9719.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Dongwoon Anatech DW9719 Voice Coil Motor (VCM) Controller
+> +
+> +maintainers:
+> +  - devicetree@vger.kernel.org
+> +
+> +description:
+> +  The Dongwoon DW9719 is a 10-bit digital-to-analog (DAC) converter. The DAC
+> +  is controlled via a 2-wire (I2C-compatible) serial interface.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - dongwoon,dw9719
+> +      - dongwoon,dw9761
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  vdd-supply:
+> +    description: Regulator providing power to the "VDD" pin.
+
+The driver uses dongwoon,sac-mode and dongwoon,vcm-freq properties. Could
+you document them as well, please, including the defaults? Are the values
+the same for both chips?
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        camera-lens@c {
+> +            compatible = "dongwoon,dw9761";
+> +            reg = <0x0c>;
+> +            vdd-supply = <&pm8916_l10>;
+> +        };
+> +    };
 > 
 
-*sigh*.. this patch should go *before* patch 8. As is that's still
-horribly broken and I was WTF-ing because your 0/n changelog said you
-fixed it.
+-- 
+Regards,
+
+Sakari Ailus
