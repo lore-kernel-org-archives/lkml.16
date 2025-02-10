@@ -1,186 +1,142 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E15624BCFB;
-	Mon, 10 Feb 2025 15:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794CB24BCFB;
+	Mon, 10 Feb 2025 15:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739202514; cv=none; b=N/XPma9a/nfMfui1Z7TVIlzq7wXHpJqEKtCaNTvrDCHwof3Ws5kulqCEaQPFmEx7I4DEY2JEn98RsnXhumzB6PQj6RUDIexJ/n0dLMfNYZSbIY0aGIQXcYiGBntiz38RiZzUSt+2vVs4cNUUXWvPVwlyFRWgVDw/FlvCIEm7FCI=
+	t=1739202550; cv=none; b=GYwx7HObg3DsMW/dgPLQL0RidB+Do8oRl5T5XhJegb8Aak4Ya9pY2cNlq6TtIXRPWz49YXRKF3aytkkcAhw95NEhkbqbty8/RRdmqRm9nYQV/iqETLrl+AJ68c9ibapyci115wHKVnD1LTXmZrfXeib6fam/EfGIWmSz7rWx0i4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739202514; c=relaxed/simple;
-	bh=XRbgmbcCpwhcGuhyGTfVaQu7cnuve9h9DUd6LS4b0Xk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K0pkFWySXIUjJm7qrLkS39l3RjC0vNt7zlCVj+byU5Ov2OOfCs/8aj6bx+e4pfANErFcD1/wkYMU3IfUdP/R+L2unGdL8jx29LXrGWEY6LTN0bRQnftlsfpQoipLIQShlg5776j6nyk0KBCY4wEvYFl0BIscV+6iDdZgWtTWuxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-5205539e38cso84301e0c.0;
-        Mon, 10 Feb 2025 07:48:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739202511; x=1739807311;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=W0eRsoRzBIkH6thuFISXXPJYJ/VgMzRxeCVSBedmQw0=;
-        b=RnDCHJb3V7eO5kx6OX9XwEk9EEN4SSrpQoY/Cl7lX2Kv7ONDMdsq8V+rKPeRpv/+5L
-         sOzuCL8Ik9Lg3rOlSvCMNwSZxRRd3DHpRvaV+9efkvA+UyZMjTyFnWw/5Xu9h3LoIDJy
-         IOqz0kozGobKzw+9bdntea/ZSR5sRNeq2BcbhqpxDGGnWDiImZOTbTYpFNItKFpah9jT
-         HCM4kelLOkkjl6nn0NKi5GRTJI+jTCkTQc1dQaiqe/eC5PFgi7k51e1FhxWawLZFmozD
-         49XP0MdbWQlQZTjJ+8f3rO/THWURqCv8iqFvFTtaaXjCTzYliXr19Uuu/mRVzcauSUKw
-         y5Mg==
-X-Forwarded-Encrypted: i=1; AJvYcCVsgu4y9/9i37PrvdgX0TEjW3/lE5xLYNSBPHJjhtD9Sw1Q1gb4m4X3GrGUyylkeLuWTHraIZf4EGKhCR4=@vger.kernel.org, AJvYcCWMIY1QOB8/3sNpwPw0hrd9FHKeVrSsvHuhmmqwXgdf06eve8qM8REv7uwh7cgErDBIbARsq+522BtXkUW9@vger.kernel.org, AJvYcCXyPVPEQyhPWpUZTfFDJ5ObaKoZCppxjJ/jemSNxCfHYyQ/mfubdbMI/18u9pXcj3npfSPMX3XkJgKJpxAvr+KSRVo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2kpJSNFu+jUjIH2UKTXk4+zqkW02FNs05sYSSTUSttZN/l/qY
-	nZDfOXncjYw6c13xPROJQWKug1+Ct+V9MGwZD85Eu3w5Zl+goQcrYRr1efiW
-X-Gm-Gg: ASbGncupMB2WtJTCdrh8yaHLEfeGP63H0MZRC1hFAVaYNV1aUNtRxZj8SfOVxIGGv1x
-	7Lprw5rDEAdGVpt4I2eaqVr38Ar574yZaCtaBBDcoeTr4POwYpn/4ef3vpeUtMhAt4doZvmL9pN
-	HFbAU5yj8J/mjwvCTiTziqp83xs9zDZffsESLipRgQQre35RYmMb2HNG8LAal9lMnNbhH9D7Wjr
-	u7jJpiisqnrgYyEg3qvbuu9labNvpeyXKE/BHoZqOzcw+AGFfYE8tOqK6z3XMSo45VuTh+F1i8Q
-	b3/uX96tU3gRnCwYetQeRTjhARRFX4QDBdWAIxgF44iZxfai4Ex7EVhAkQ==
-X-Google-Smtp-Source: AGHT+IFGvWAEPy1qpQbZnDor9xOczAajmISrLfNshtuaAebwTk3x8qqzlowf4OzHx50APsqaKuzJnw==
-X-Received: by 2002:a05:6122:8c0e:b0:520:535e:89f2 with SMTP id 71dfb90a1353d-520571293e6mr331128e0c.3.1739202511534;
-        Mon, 10 Feb 2025 07:48:31 -0800 (PST)
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866f9688cb9sm1541441241.15.2025.02.10.07.48.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 07:48:31 -0800 (PST)
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-5205539e38cso84289e0c.0;
-        Mon, 10 Feb 2025 07:48:30 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWf+DUae0JYsKUg5I0peIXRV5pkOuz/E9j1OgFlMdSZv4UmkObD1nAXieWtjSnF+42dGZsq3aIX8C0rL0k=@vger.kernel.org, AJvYcCXX3ina1ZcCwBfoVsRzBRLW0/M+12/qLXDWk90rhh7ON3tzsBA9hFo0ON+6ujXZp2A5XRpkL2qBFWbGjKNO@vger.kernel.org, AJvYcCXcxxRS4ydGVX7uhQx304SbUzEdnhKuRDLzwosCk9Ib/Qnf/KyQ99/v1nwGiV0XDiUkVijT0XP0psKlw5vw/8N31F0=@vger.kernel.org
-X-Received: by 2002:a05:6122:3c89:b0:520:5185:1c77 with SMTP id
- 71dfb90a1353d-520571df82bmr327489e0c.7.1739202510671; Mon, 10 Feb 2025
- 07:48:30 -0800 (PST)
+	s=arc-20240116; t=1739202550; c=relaxed/simple;
+	bh=MfuMNL4ma4tuOTtb73c+SttAf3oWKFO53E2ZV9Y7vvA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XKsEMa6W0y7EjYISjsYUdpGOJMhXOUrTqHV142Kl14HI9a/FAn6zdEYzX1sP/wDcVA7Da97NPLjJPq6iOIsfSYuZcmL77BdHm0QTQG+QXex+AAu5+V+PRxn0WT5Syk535Frp9aN5omTdfMImCjSuk/EOHkw5PRhpwoZkHa9gaJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=KQZQ/iI+; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=W6jP25cU reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="KQZQ/iI+";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="W6jP25cU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1739202548; x=1770738548;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=pVDvbwIvnOZ4humPqCqO2awtBoUSnhumXMCo453Cge4=;
+  b=KQZQ/iI+0l8Dqx4mFSbMn9SkTvq7pFtNgAlAowQ6EOUyYguyYA5Xrtkb
+   qk51GB2FnpcsmmceU8IuYHCptLBnN2Kcd/EZ11LbBr8pfE+QBLXuiUKOu
+   3ntEuV8REQyxRmHfjt3Il2X8DJ4TGMr9WND0nJRl/Hh27esTlS9Qwrwy0
+   XKf8zMtUvRrN6f1gzzZn4MGVJ5ebkoeKFEQS3i7OTnV5rN6I5CXgGtk1+
+   Y8dGvrfUW30m9vL3aNnJAhh1myPM5NgQlUWbzxHoK4rkOx3s42Jmo7I8q
+   Jtj3IqksiyOV01i7LtL1f1Kx+JWSvnwn36utwFuTAJXLIIZcO/+WeQECE
+   w==;
+X-CSE-ConnectionGUID: H1xBE4XyRwqDrcXHSdTukA==
+X-CSE-MsgGUID: THM2mKF7RlequMHpcGeCOg==
+X-IronPort-AV: E=Sophos;i="6.13,274,1732575600"; 
+   d="scan'208";a="41723421"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 10 Feb 2025 16:49:02 +0100
+X-CheckPoint: {67AA1FEE-1B-B8541F8F-E50F9B0E}
+X-MAIL-CPID: 3596EAA376F14855D334F1E93CC1918F_2
+X-Control-Analysis: str=0001.0A00636F.67AA1FF1.0017,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 40786160ABD;
+	Mon, 10 Feb 2025 16:48:57 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1739202538;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pVDvbwIvnOZ4humPqCqO2awtBoUSnhumXMCo453Cge4=;
+	b=W6jP25cUKKQKO4dVA5Xu2nJmNQ5pXA8eVc1xaW2ifgRB1N51ZD9eXM8rz2bf4oOObaxU/m
+	D4U2/6Z98BNU5DLVe272MVsorHmmyJ775GgfWtTKHieZRiyqqBi7L63YIDYQgGIj1wJxHl
+	VX9HVC+/TdJqd8VRg+euR4jMk5F3ARbUtGWsu3QN5L3Zw+pUtKBk1nqpR/cnxHDmhkCNkb
+	3l3AsF+bJ93WMY1QFPTEMTYppCIZPfJvEtbkm0ygDUPuaL4sIchVLSy9HQnefyIrdz6ugh
+	DhaQ4/8oxxEGk+Vn/EJWvX1xINnXJ0Z1bz5xGWITg2p5t/3uK+jzigYck/1uxw==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Peng Fan <peng.fan@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 04/10] arm64: dts: imx8mn: Add access-controller references
+Date: Mon, 10 Feb 2025 16:48:56 +0100
+Message-ID: <2222299.irdbgypaU6@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <PAXPR04MB845912F48DC37B6BC599313888F22@PAXPR04MB8459.eurprd04.prod.outlook.com>
+References: <20250207083616.1442887-1-alexander.stein@ew.tq-group.com> <8037692.EvYhyI6sBW@steina-w> <PAXPR04MB845912F48DC37B6BC599313888F22@PAXPR04MB8459.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com> <20250129165122.2980-11-thierry.bultel.yh@bp.renesas.com>
-In-Reply-To: <20250129165122.2980-11-thierry.bultel.yh@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 10 Feb 2025 16:48:19 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUCY=PyfcJKMu=WGAzHWfGZVctL3-e=UdAd-tCOQTP-Mw@mail.gmail.com>
-X-Gm-Features: AWEUYZliuKwQC_t8rVe7nhn5Dl6HdfHxuxvGHE_HUJo--DyPL2dBFWMp-GfIoSs
-Message-ID: <CAMuHMdUCY=PyfcJKMu=WGAzHWfGZVctL3-e=UdAd-tCOQTP-Mw@mail.gmail.com>
-Subject: Re: [PATCH 10/14] serial: sh-sci: Introduced sci_of_data
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
 
-Hi Thierry,
+Am Montag, 10. Februar 2025, 03:36:48 CET schrieb Peng Fan:
+> ********************
+> Achtung externe E-Mail: =D6ffnen Sie Anh=E4nge und Links nur, wenn Sie wi=
+ssen, dass diese aus einer sicheren Quelle stammen und sicher sind. Leiten =
+Sie die E-Mail im Zweifelsfall zur Pr=FCfung an den IT-Helpdesk weiter.
+> Attention external email: Open attachments and links only if you know tha=
+t they are from a secure source and are safe. In doubt forward the email to=
+ the IT-Helpdesk to check it.
+> ********************
+>=20
+> > Subject: Re: [PATCH v2 04/10] arm64: dts: imx8mn: Add access-
+> > controller references
+> >=20
+> > Hi Peng,
+> >=20
+> > Am Freitag, 7. Februar 2025, 13:02:13 CET schrieb Peng Fan:
+> > > On Fri, Feb 07, 2025 at 09:36:09AM +0100, Alexander Stein wrote:
+> > > >Mark ocotp as a access-controller and add references on peripherals
+> > > >which can be disabled (fused).
+> > >
+> > > I am not sure whether gpcv2 changes should be included in this
+> > > patchset or not. Just add access-controller for fused IP will not wor=
+k.
+> >=20
+> > Well, I was able to successfully boot a i.MX8M Nano DualLite.
+> >=20
+> > > i.MX8M BLK-CTRL/GPC will hang if the related power domain is still
+> > > touched by kernel. The pgc can't power up/down because clock is
+> > gated.
+> >=20
+> > Well, with GPU node disabled, no one should enable the power domain.
+> > But to be on the safe side I would also add access-controllers to the
+> > corresponding power domains as well.
+> >=20
+> > > This comment also apply to i.MX8MM/P.
+> >=20
+> > Sure. Do you have any information what is actually disabled by those
+> > fused?
+> > It seems it's the IP and their power domains. Anything else?
+>=20
+> In NXP downstream there is a patch for  drivers/pmdomain/imx/imx8m-blk-ct=
+rl.c
+>=20
+> soc: imx8m-blk-ctrl: Support fused modules
+>    =20
+>     For fused module, its pgc can't power up/down and clock is gated.
+>     Because imx8m-blk-ctrl driver will pm_runtime_get_sync/pm_runtime_put
+>     all power domains during suspend/resume. So we have to remove the
+>     pgc and clock of fused module from blk-ctrl DTS node.
+>     Update the driver to support such case.
+>=20
+> But this patch also needs U-Boot to update device tree nodes,
+> I recalled that U-Boot will remove gpc nodes, but not update blk-ctrl nod=
+es.
 
-On Wed, 29 Jan 2025 at 17:56, Thierry Bultel
-<thierry.bultel.yh@bp.renesas.com> wrote:
-> The aim here is to provide an easier support to more different SCI
-> controllers, like the RZ/T2H one.
->
-> The existing .data field of_sci_match is changed to a structure containing
-> all what that can be statically initialized, and avoid a call to
-> 'sci_probe_regmap', in both 'sci_init_single', and 'early_console_setup'.
->
-> 'sci_probe_regmap' is now assumed to be called in the only case where the
-> device description is from a board file instead of a dts.
->
-> In this way, there is no need to patch 'sci_probe_regmap' for adding new
-> SCI type, and also, the specific sci_port_params for a new SCI type can be
-> provided by an external file.
->
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Does it work, if we add the access-controller as well for pgc_gpu3d
+on imx8mp? There is nothing in blk-ctrl AFAICS. But for VPU there is.
+Which clock needs to be removed there in case g1 is disabled?
 
-Thanks for your patch!
+Best regards,
+Alexander
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
 
-> --- a/drivers/tty/serial/sh-sci.c
-> +++ b/drivers/tty/serial/sh-sci.c
-> @@ -2968,9 +2968,7 @@ static int sci_init_single(struct platform_device *dev,
->         int ret;
->
->         sci_port->cfg   = p;
-> -       sci_port->ops   = &sci_port_ops;
->
-> -       port->ops       = &sci_uart_ops;
 
-This relies on sci_parse_dt() having filled in both ops, which is not
-done in the non-DT case (i.e. legacy SuperH).
-
->         port->iotype    = UPIO_MEM;
->         port->line      = index;
->         port->has_sysrq = IS_ENABLED(CONFIG_SERIAL_SH_SCI_CONSOLE);
-> @@ -3010,7 +3008,16 @@ static int sci_init_single(struct platform_device *dev,
->                 for (i = 1; i < ARRAY_SIZE(sci_port->irqs); i++)
->                         sci_port->irqs[i] = sci_port->irqs[0];
->
-> -       sci_port->params = sci_probe_regmap(p);
-> +       /*
-> +        * sci_port->params params can be NULL when using a board file instead
-> +        * of a dts.
-> +        */
-> +       if (sci_port->params == NULL) {
-> +               sci_port->params = sci_probe_regmap(p);
-
-... hence sci_probe_regmap() should fill in the ops.
-
-> +               if (unlikely(sci_port->params == NULL))
-> +                       return -EINVAL;
-
-This case is already handled below.
-
-> +       }
-> +
->         if (unlikely(sci_port->params == NULL))
->                 return -EINVAL;
->
-
-> @@ -3336,7 +3348,7 @@ static struct plat_sci_port *sci_parse_dt(struct platform_device *pdev,
->         struct reset_control *rstc;
->         struct plat_sci_port *p;
->         struct sci_port *sp;
-> -       const void *data;
-> +       const struct sci_of_data *data;
->         int id, ret;
->
->         if (!IS_ENABLED(CONFIG_OF) || !np)
-> @@ -3382,8 +3394,12 @@ static struct plat_sci_port *sci_parse_dt(struct platform_device *pdev,
->         sp = &sci_ports[id];
->         *dev_id = id;
->
-> -       p->type = SCI_OF_TYPE(data);
-> -       p->regtype = SCI_OF_REGTYPE(data);
-> +       p->type = data->type;
-> +       p->regtype = data->regtype;
-> +
-> +       sp->ops = data->ops;
-> +       sp->port.ops = data->uart_ops;
-> +       sp->params = data->params;
->
->         sp->has_rtscts = of_property_read_bool(np, "uart-has-rtscts");
->
-
-> --- a/drivers/tty/serial/sh-sci_common.h
-> +++ b/drivers/tty/serial/sh-sci_common.h
-
-"struct sci_of_data" should be introduced here, instead of in the
-previous patch.
-
-> @@ -172,7 +172,8 @@ extern void sci_flush_buffer(struct uart_port *port);
->  #define max_sr(_port)          fls((_port)->sampling_rate_mask)
->
->  #ifdef CONFIG_SERIAL_SH_SCI_EARLYCON
-> -extern int __init early_console_setup(struct earlycon_device *device, int);
-> +extern int __init early_console_setup(struct earlycon_device *device,
-> +                                     const struct sci_of_data *data);
->  #endif
->
->  #endif /* __SH_SCI_COMMON_H__ */
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
