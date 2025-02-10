@@ -1,91 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F023517557;
-	Mon, 10 Feb 2025 13:23:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCAB225384;
+	Mon, 10 Feb 2025 13:24:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739193831; cv=none; b=Upx0B9JbRoZcOomvVnf0VWGofGc4OaKXOQiOC8yNDEMCLZLGGtjfv0/ChfoiIHm53mVN1bSDRIFgglWk3PvVjpeiluT6VkkSJInz76TbOjit/IGLF9OoWraNnDjFeVrxTT4EytQKuOV0kLv6/nLldxoqULDukvGdEOkLoIar0Vk=
+	t=1739193877; cv=none; b=JhUcAjHQ/nFNOn/kt2HsR4bTHueW1iebTKschGv1qDrbMc88ky4ykoGYjELN6M9P6tuuTfnPIr6q+slFmvxKJWA+RL/YwnOfNZZp/dj/c0IR4EiT7O7+pTV6NQWhKpGfeMBa4jpMNs2iP2AXPVcJEBY+LEQb1IfKqEikW8BVEEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739193831; c=relaxed/simple;
-	bh=Y3VnAjPcpvtraPLxFVav8kpsZk6gHNCgxWi8l3iTFmE=;
+	s=arc-20240116; t=1739193877; c=relaxed/simple;
+	bh=3vTa1OmPa2IbVNIroF/LkJXvrC0UZYwWBhaau487Xxo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oC/R30OrjMElrg5VhJUhdGnqbFORqZt1vWCW42BjK38YgpgMm5a3wtGUrf6qvg6Q5rF6GvZIDn6rjzIo1qFsqFaQthjhxATKImhV0b83nhSc+B1nsuDYT7EFL9/znckdJ/0tnr1fTVw4Yrxq3r85bOVUJHrP/1VQh+roTls4Rx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=INz2Pkzd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LkqR0og1N2ZHU9fxO3+/CRBzsJCb1KFLE61AsLuGaH4S9LjxXZMP1CFVpq3Fyn/hLwGwemvIN3yyW78UZOGWYjP589XG+uXCHIjMzE43ckJF3PdZgtUqMjoIZ8NWDYCeILApSbn2KIIh4qMF8Dg4gSr8eWrgrLV4ByZwYTnUgYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=z5QisoNQ; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="INz2Pkzd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CCA0C4CED1;
-	Mon, 10 Feb 2025 13:23:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739193830;
-	bh=Y3VnAjPcpvtraPLxFVav8kpsZk6gHNCgxWi8l3iTFmE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=INz2PkzdF3dydAUsheI8aeft2xxJ+B7mQw9D0MLNqlf0zXGx26unNWV7PP+NQfzjG
-	 2L2sRIfK2BKLo86SxJmXSi8yNkzko2BHHIuYYeLg9EGE/McmwSXKPsMqg9n+VYhf2k
-	 Cg18HM8JVLu+SXg+7Umx7NTSLOx9TXuZ7UDzlV/TXQfVg9BclrzEWT9eve+FG4AG1p
-	 jo5cHjxM30wtfrvjRQiTf1oquOI8VmHjDp3+U8QNpFBCxY850z8g001ehO7nW1eIO6
-	 DX9FEsHVa5RFEoXF3/P+DCDvqJFM7THfv1lTEoAuj9v+LfNWff+kkc568hsbiHhemr
-	 bWalo2X5W3TdQ==
-Date: Mon, 10 Feb 2025 13:23:44 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Bence =?iso-8859-1?B?Q3Pza+Fz?= <csokas.bence@prolan.hu>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Varshini Rajendran <varshini.rajendran@microchip.com>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>, linux-spi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Alexander Dahl <ada@thorsis.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Subject: Re: [PATCH for-6.14 v4 0/2] Add more devm_ functions to fix PM
- imbalance in spi/atmel-quadspi.c
-Message-ID: <e0087d48-c8d2-45c5-ab28-78879a07eb22@sirena.org.uk>
-References: <20250210111008.248929-1-csokas.bence@prolan.hu>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="z5QisoNQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=Jt6pQHoQVd00iFlOT0zKR71VJA5KHbXP387LWjI2wQQ=; b=z5QisoNQ0/YrhBAPBpWuEN7Kad
+	nBuGUOEmIWDpWL4KSa+eVE00GHWoPktI4ietdBcYAILpJsvmQszRnQAX5ckDMqvC/8KmNhywc28Q7
+	JCvb5nUq5gUvERun7RIXKSzqFRaDoN6NhP3CtEUbaYSD7RXWHWc1mk2Hofu+BPRQ2Zuk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1thTlo-00CiYV-0K; Mon, 10 Feb 2025 14:24:16 +0100
+Date: Mon, 10 Feb 2025 14:24:15 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Ethan Carter Edwards <ethan@ethancedwards.com>
+Cc: Piotr Kwapulinski <piotr.kwapulinski@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jedrzej Jagielski <jedrzej.jagielski@intel.com>,
+	Simon Horman <horms@kernel.org>,
+	Stefan Wegrzyn <stefan.wegrzyn@intel.com>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ixgbe: remove self assignment
+Message-ID: <a9070724-b4b7-4a23-8ed4-b6464175b660@lunn.ch>
+References: <20250209-e610-self-v1-1-34c6c46ffe11@ethancedwards.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="JSVsPF+JhA2IRy98"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250210111008.248929-1-csokas.bence@prolan.hu>
-X-Cookie: A beer delayed is a beer denied.
+In-Reply-To: <20250209-e610-self-v1-1-34c6c46ffe11@ethancedwards.com>
 
+On Sun, Feb 09, 2025 at 11:47:24PM -0500, Ethan Carter Edwards wrote:
+> Variable self assignment does not have any effect.
 
---JSVsPF+JhA2IRy98
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Ethan
 
-On Mon, Feb 10, 2025 at 12:10:05PM +0100, Bence Cs=F3k=E1s wrote:
+As a general rule, it would be good to explain in the comment message
+what research you did to find out why there is a self assignment, and
+why just deleting it is the correct solution.
 
-> Bence Cs=F3k=E1s (2):
->   pm: runtime: Add new devm functions
->   spi: atmel-quadspi: Fix unbalanced pm_runtime by using devm_ API
+There are somewhat legitimate reasons to do a self assign, some older
+compilers would warn about variables which were set but then never
+used, for example. Or it could be a dumb copy/paste error when writing
+the code. But more likely than not, the developer had something in
+mind, got distracted, and never finished the code. Which appears to
+the issue here.
 
-Since you've not copied me on the PM patch I'm not sure what the story
-is with getting that merged.  I'd not expect new APIs to be merged as
-part of a fix, but perhaps the APIs are small enough?
+If you cannot figure out what the correct fix is, please just email to
+the list, Cc: the Maintainer of the file, pointing out the problem.
 
---JSVsPF+JhA2IRy98
-Content-Type: application/pgp-signature; name="signature.asc"
+    Andrew
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmep/eAACgkQJNaLcl1U
-h9C+PAf7BUluKVL8LhJBrCwdsziAE82+ORU8+jWviBfZfMhtV4lOsA5LDeq9L3rZ
-D4vzWJunEcCFBqVQRYRFUtQTN0BvpqG2ELaEgZzKkkaP9J7PY7aFuNu1YBMwVYhk
-BhkjzKr8RDcpkwaPLY2telDFB0Zb7N1/bzln1Q4QGWFl/f+xBj6W8k/7nQeGXmWb
-hxbsesr6VLxSI8DwKJXZCYQYh1vtd1N8b01WYXfwA8yEJTlQzT+6Qw74F9T3ZbbG
-OE0W8Ukd3VQHi+Z4XYdWrJM+CHqeApw34hR/whxnw9lhWUyVGX6q6CZJKKC01kRu
-1Xi51tdbGeQW10KUD13OJKo83xOTDA==
-=85Yu
------END PGP SIGNATURE-----
-
---JSVsPF+JhA2IRy98--
+---
+pw-bot: cr
