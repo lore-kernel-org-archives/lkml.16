@@ -1,128 +1,112 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1C325B698
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B59A25B66C;
+	Mon, 10 Feb 2025 17:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739210131; cv=none; b=nhlZiGXZDmoZQhoKq3ih1cd/UoyXIsIPjCRoxzWeVJah9WLPuSdrOZBW9A935lZTP1aO/Mf+lqL2+tz7GEsHgRtHwwnb//z3VCf7PKwTHps/W5enF8tzUF5udpeIfBkjFEgJYC6Sgbyl2Lpr0XMIaUYXyK72v1MDNytAeW74shk=
+	t=1739210160; cv=none; b=j3UWBfk0/ecsg5TYgQMOgiQJEQpS5eO7LJiVmByoL+FEdy9fQIDcj5MHN8IZOL4zBb9hR7jUu/H0BvQ7SG/zdO5U00B0+F7WQRegvS1kiJ7r/CtkMlpqEAjfQRP+luIcWts3sCBYDqABRXfBn2KqShbulFydTqnl9Ivg6r8NwrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739210131; c=relaxed/simple;
-	bh=Xtuj3LhBpTfDYY7N35r6nKZxVkwtKPfhFYvYKZx69zU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vx8Y7r/Oex1n+0lC6UqOJTGSL7Z0ukDNgxq3nozMwTmTFncCZINwzs1K/Q5ysNfeQ4bQTEO9kVjW35i0nScqKbtvVLvGmH96qHXvPHlQijD5yE2kzIR8d8hljFRhEZ/kyWf9mxJeUwgiH+6Q6mqM0vLflFR5kpceY3nJNosPadk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EW8jg51k; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1739210160; c=relaxed/simple;
+	bh=pa8c6RQoLLyXlxCLaRmxxhIKjVDozhcvcaDQotwr6Ao=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Y71OT5N9zSasG9jrZBa0Ov1XC4Wn8GcjLUNQ2IArvA5gcHsHotv6Al5LKDmPxFTpxF7lxeeuvX4ce48q/gnLWQEWty9Xwr772Ups0GMkXNsJXx0ajuUejbYT3ujYx8IVYC+TxO55tMgdvDrsgQeS907WsGR+iMWhjRGnWTPxMXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XIiCN4Ul; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EW8jg51k"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51A9lLef004958
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:55:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	vwmP+K49vLFoWTm1+BQsLhgb4jcUsR7Wv1P0YiFY6zM=; b=EW8jg51kZCQm/06f
-	g2LBdx7NdR7L7OV1GKmHFyEag4o2a0uTgf4ctuAWkB47fMZEtA9kJI/4iI9aRy28
-	fiX45OqVlyeDrMWjGWtc43Z8u8+NxQddZ0iFWHoR1eV1POutocxhPg6Mg1/CpXYf
-	HG1i8FtCaNhNG+KC8OROw3p7hxCC+Tc2BWtET/eHjXN/0y8G3R57xzDRuVD+ZAws
-	ppvne2fkf+nitpFVGmQCePEs1oU5gWWOYy6uGBqPRRteh1M4hvE+WZ/E4/hkTZhf
-	WdpOUudWlj4vGmU/qIh2/6N8HSytIBzaFDLLE2G3M/9yVX4fSNuLPtwzVxtJv9VB
-	j/1TVg==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0dxn7nj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:55:26 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e444e99f26so4606896d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:55:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XIiCN4Ul"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c04df48a5bso190160285a.2;
+        Mon, 10 Feb 2025 09:55:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739210158; x=1739814958; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LNp6jRGPNyLv5CD502EwF9CXCLhtEUzDxpx3t4dKjtA=;
+        b=XIiCN4Ulfrt+GqINLNHGUq0OMb2VD3cJXMMuF1tCu65p75ApQ5MvXll+ebkCfURNxq
+         qTBL8nO1ANlypLpxzZw035z/0x/B9asQUic0zDw5qvbKe80LWIg7EmPA4coB/VL6AmW+
+         ZjwESBk9ItrjRWKYObPmaQEEzg6dCze0Yhr4ZJnya+l7mpXc+l3jSecwVTsJpEA+tjqP
+         3ZfVx52/wJNLKJHpCL2vCFsy6f+a5wsYXrXgnPy+nAJQb4Eon9VUaonAFLVi2VPid52s
+         QY9tO7y2ospYZsoh2fx/EQBNjxVIGBLmaSUJYV476fQMhoAoKeUiJgA27tT0fhrGysu2
+         1k2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739210115; x=1739814915;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vwmP+K49vLFoWTm1+BQsLhgb4jcUsR7Wv1P0YiFY6zM=;
-        b=HgR23cR/a68Wi7CJo6kmPVKrzpuq+vkLTJZ1mbNE92YAuof9ir2BYgZ/21npWDjeoN
-         rpd7fqRtTTx+uSONFkWrdcIcf0/mfWTDPud4hTsoBTqTJ7cbKXhoplKkQACuobzPLFQB
-         1wNIdST1pREFsmGNecX5MQbnQTsm5V10d/o1Fy0InZGK4L1ISkaQd3CPBmfeZ4Is9qXT
-         PBn0wcJ3wo8XdelpNxO0yxkqFsMjpxWyYfve6sDvVjXQ0rvwFYj5p84pFPm3/3IjAw2l
-         ozbzSnoNyZNjuJyGmAYGqdwwWTylC2N4ewREvJx19fsByja0g4wtf30Yb/oor5zjTqyC
-         iabg==
-X-Forwarded-Encrypted: i=1; AJvYcCXvR4YkW72ErJyzXz7/Q9uZwvss2M6LbAo+WhPeMOIHU7uaSb81QmbNhCBfehey0xrywLwW6g/2ZCPBd2g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPcAe8PXKGcpYxkKzb4xDUnSfLQ7Io7Hmt+R/iN7bEMlQPYyQ4
-	N5Qq9O0iOSkXeRu2NYX6SmJgpI7kXz7g+y1eEAlqWn+AXGDUqOUc8QhsNzXEwBeyaVLUTfRlM4V
-	IWDSP1nsBTvZa5Ce1OC3SiqjYz6bjkefJTTrOzldRasozDa1b1CqKPFB2aQq1zsk=
-X-Gm-Gg: ASbGncuntJPh3pp4uikrDQmMcSqJtT1iXnDTPRK7mOQe6bcgiADhGc55EQIPLgfz1yR
-	EnkvjLSipYb9mq/Ny6hBXuXeKXM+6KXQG24W5f7a8pLfY3rtSHRLTuZNur8/6dYpc5ffiT+8kaY
-	m438CeJi17HBdOGoPHTxHGyyMk17AL+2r4MAB/Cbo/PlSJ5D4JcD9lumvKrL5xicI8Ol/tF6BDS
-	6rNwWBD3DPEEaeaBARxQNC4gyjcGtgvp0rHSJnT3Lt9LmmEpBOV0LoZ4KNoL68+dh0pgvRZZJAa
-	yiFLws5yxpP+xolwBM5CMyASIE4c7SrrQYfTV/pFxtUgPn+uzfkoYn7YQcE=
-X-Received: by 2002:a05:6214:57c1:b0:6e4:45ab:4de8 with SMTP id 6a1803df08f44-6e445ab4e5amr71563616d6.6.1739210115226;
-        Mon, 10 Feb 2025 09:55:15 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFcQI77AtK3XAfbwGcc1HufxPK/2pOXxHvbUx2968NuCHJKTTrF1581V6eIEUMTwI2i68TdlQ==
-X-Received: by 2002:a05:6214:57c1:b0:6e4:45ab:4de8 with SMTP id 6a1803df08f44-6e445ab4e5amr71563496d6.6.1739210114868;
-        Mon, 10 Feb 2025 09:55:14 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7b12d5f49sm415599866b.73.2025.02.10.09.55.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 09:55:14 -0800 (PST)
-Message-ID: <8d23002b-64af-47a8-8b41-e533e3c13223@oss.qualcomm.com>
-Date: Mon, 10 Feb 2025 18:55:12 +0100
+        d=1e100.net; s=20230601; t=1739210158; x=1739814958;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LNp6jRGPNyLv5CD502EwF9CXCLhtEUzDxpx3t4dKjtA=;
+        b=Toq9r296mCyBfEvx5tMvox+cyZdjNt6sP3Uz8LB1UkLFMR7UXvUK5d1ejIl2I4kQpM
+         2MHK3MBOyxU/I+9yQbmnAM6iNbFjM8LfC8iC+X9KynE9wQffOXZWIn9rp4PZfpoxK61F
+         WGRTx6ukax6nal/4TjyiQ+QLuzoUnGgz4PNhPW1yX3C75/6bpJ9j9J9E3rViaR9ORKNg
+         bdwf6PyLuy1j7pKhTZ4Tz2epjPYbQKdiY1Nl2FEIh8esbPrXCE8fspM1ZBPZFxKpTazh
+         PQ8ZCk9/zxC18fDgQxhdxZdlSrloag/yRucVvgfD+qFwk1CdRX6XKIjf1VgwGQ4j/YZt
+         goHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBCwWYpemDcFd5EZAvWeBF1yo0eqnT0qd+9LvuRjt46aOtUOzQbV/wleTRKp/iPKdR+Sy5ZkSJZ4N/jjE6ZjM=@vger.kernel.org, AJvYcCURi+C1XhQEumMN2V0EJosxw4/d7iQFMi7VrxnLOXfDyIcxz8efXTp2FK1XPjducdz8kjUWXBVKtM7Oouc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNCJEHQ10UzY2ZP1EDWeeybHhQGRJr3p6Ib0t+TW8QCMt09M0h
+	RmgYYf/f/4rcKsVv3upozkXenxRjltvd+MTDkcCrXOJ3LrXw5T1C
+X-Gm-Gg: ASbGncvqjGz/sIdx3BKqAqKl8T9ZLIV8u6ItcmyM9gxDvczMwS+z/gd2SC63e/rG6LB
+	TqR+G2iA5PuHwx+gmUKlbkJu6H9cZ9ArCzIXidvgeF7ZHBjukz4N5j7M1cOTFkj9edhDum+vfdE
+	3yu5U97MdRR96B6J2n96FJU5t8w17WM0B+JgN5T7oum8lrpd4FC4lcJcP/WbeGwoRQgzkoUfxxZ
+	qn44bZD5hc1ymtQoCMqTpoEqQUKfScUREKM4+9epwJFFKxEKgsPhDvLOtO666QKTOWcajv8gtb2
+	PExJKaAs3FHQS9q+rn851jayUMxtUuNYZ0tftvlj5MKBfJhCj5gfJ1Tz7z49RtLIEBeJNPgEOFK
+	faveKdL2NOWKC3z+oDMhQHXe4
+X-Google-Smtp-Source: AGHT+IHUEwWo4ozUI/K5IhcSuE1PQxELfUOYGSVHUS+Pc68tvthRAYIvfXZ73ff1EyUHKjHzPT54zA==
+X-Received: by 2002:a05:620a:430a:b0:7b6:da92:fcdd with SMTP id af79cd13be357-7c047bba8a3mr2101799385a.15.1739210158219;
+        Mon, 10 Feb 2025 09:55:58 -0800 (PST)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:cc94])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041e11d19sm548788885a.52.2025.02.10.09.55.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 09:55:57 -0800 (PST)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH 0/2] rust: fix rust-analyzer configuration for generated
+ files
+Date: Mon, 10 Feb 2025 12:55:52 -0500
+Message-Id: <20250210-rust-analyzer-bindings-include-v1-0-6cbf420e95b6@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: sa8775p: Add 'global' IRQ for PCIe
- controllers
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        "Rob Herring (Arm)" <robh@kernel.org>
-Cc: krzk+dt@kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, conor+dt@kernel.org,
-        andersson@kernel.org, konradybcio@kernel.org,
-        devicetree@vger.kernel.org
-References: <20250209153940.3489-1-manivannan.sadhasivam@linaro.org>
- <173920411963.477096.6458317590653327676.robh@kernel.org>
- <20250210165802.tbvzx4qjygzdsk2f@thinkpad>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250210165802.tbvzx4qjygzdsk2f@thinkpad>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: nJIS57a41AphEao0nJwBdfmz-s2NXM9v
-X-Proofpoint-ORIG-GUID: nJIS57a41AphEao0nJwBdfmz-s2NXM9v
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_09,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 bulkscore=0 clxscore=1015 adultscore=0
- lowpriorityscore=0 impostorscore=0 malwarescore=0 mlxscore=0 phishscore=0
- suspectscore=0 mlxlogscore=817 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502100146
+X-B4-Tracking: v=1; b=H4sIAKg9qmcC/x3NQQqDQAxA0atI1g3MjAjVq5QuppNUAxJLUqWte
+ HeHLt/m/x2cTdhhaHYw3sRl0Yp4aaBMWUdGoWpIIXUhxYC2+huz5vn7Y8OHKImOjqJlXomxayP
+ 3lAuXK0GNvIyf8vkPbvfjOAGtmkHDcAAAAA==
+X-Change-ID: 20250210-rust-analyzer-bindings-include-531e9dacec8d
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Kees Cook <kees@kernel.org>, 
+ Fiona Behrens <me@kloenk.dev>, 
+ Martin Rodriguez Reboredo <yakoyoku@gmail.com>, 
+ Asahi Lina <lina@asahilina.net>
+Cc: Boris-Chengbiao Zhou <bobo1239@web.de>, rust-for-linux@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-On 10.02.2025 5:58 PM, Manivannan Sadhasivam wrote:
-> On Mon, Feb 10, 2025 at 10:22:43AM -0600, Rob Herring (Arm) wrote:
->>
->> On Sun, 09 Feb 2025 21:09:40 +0530, Manivannan Sadhasivam wrote:
->>> 'global' IRQ is used to receive vendor specific events from the PCIe
->>> controller.
->>>
->>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->>> ---
->>>  arch/arm64/boot/dts/qcom/sa8775p.dtsi | 10 ++++++----
->>>  1 file changed, 6 insertions(+), 4 deletions(-)
->>>
->>
->>
->> My bot found new DTB warnings on the .dts files added or changed in this
->> series.
->>
-> 
-> Ah. I didn't run dtbs check. Please ignore this one, I'll post along with
-> bindings change.
+The individual patches should be descriptive on their own. They are
+included in a single series because the second patch uses a function
+introduced in the first.
 
-I'd be grateful if you turned interrupt-names into a vertical list in the
-next resend
+I've confirmed this allows me to navigate to symbols defined in
+generated files as well as to the generated files themselves. I am using
+an out-of-source build.
 
-Konrad
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+Tamir Duberstein (2):
+      scripts: generate_rust_analyzer.py: add missing include_dirs
+      scripts: generate_rust_analyzer.py: add uapi crate
+
+ scripts/generate_rust_analyzer.py | 41 ++++++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 20 deletions(-)
+---
+base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+change-id: 20250210-rust-analyzer-bindings-include-531e9dacec8d
+
+Best regards,
+-- 
+Tamir Duberstein <tamird@gmail.com>
+
