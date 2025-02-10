@@ -1,109 +1,98 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B49917557
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41FAF17557;
+	Mon, 10 Feb 2025 13:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739193609; cv=none; b=WiX3dAkZJ79ujG21F9CM/qD+5WDhZeJfg6lqsT45Z6SncHAqoKTJEEohzgqGGixAxyjB+LtPuOLp3eMV5CvvfmctXIjTgXpTOAgMa1eXHt4KVhlDThhHRXvLQnnbOkS9cCHCowgfs6bQTVHQQ/e0hTwfGi8xTipCOlMxVG8lp3g=
+	t=1739193664; cv=none; b=i6IECclQZAc8lUupuFp8YOQWqJHu48hbeL+G7mQ8ffrT1I+qQx3svmToF9bH5hyfcES/O0b6AgSA2ZJ1lsr/XgqWTww3IuIg0RPW8tNGcVvuhKztx1V3jiv5Ds+CHEwbcU3QC7zYnGqViO5K+muxaOxqveB3y3ZfSYjXX0h2x1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739193609; c=relaxed/simple;
-	bh=bDfNItufhj396XvhTXqhAR1YGvBhYOA8KeWvXiz9ISQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rRChAWRyPfxkqSfXHkPs1Thr9l86Wxav51Evjq5BZYkomERFPpLgfo3duQhhcebliXcMgjTPtgo32rNj7iHtU8oMfS5egTSy6TIN45p89tAFurT72X5YaMRTwB3BaeoZbfPfBB7sUB1Ve7q7aPvdGh3MK1TDfKyxIou1Pa4L+es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4Ys4Jb2024z9sPd;
-	Mon, 10 Feb 2025 13:53:51 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id GWWcMCNTIkz5; Mon, 10 Feb 2025 13:53:51 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4Ys4Jb1B4cz9rvV;
-	Mon, 10 Feb 2025 13:53:51 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 0DF058B768;
-	Mon, 10 Feb 2025 13:53:51 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id XRV61BvPDzm7; Mon, 10 Feb 2025 13:53:50 +0100 (CET)
-Received: from [10.25.207.138] (unknown [10.25.207.138])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id D06718B763;
-	Mon, 10 Feb 2025 13:53:50 +0100 (CET)
-Message-ID: <8ddc01a2-80b1-4283-a402-7f7c58c075c8@csgroup.eu>
-Date: Mon, 10 Feb 2025 13:53:48 +0100
+	s=arc-20240116; t=1739193664; c=relaxed/simple;
+	bh=lbvK+R1S0to4+sFyhCiUUSM/9FdVL8vJT6v3dpUi7Tw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LRJrSomC8pnLjwIk3ra20cBK/Rr55p2ruqRqCaZaw/6VIuSiO1HvLHahcpIJEa3muXWK83g4ROzhvevm1cqjGjkoj8xhq3iXAlqveVQfyJ5B9hvJUrYhxVptIa74WnhULQIkD5QQVjZC1QZEm6hjbr6vw3VJJ/NTnrMw6iaunBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j4AESBWg; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j4AESBWg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E68AC4CED1;
+	Mon, 10 Feb 2025 13:21:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739193663;
+	bh=lbvK+R1S0to4+sFyhCiUUSM/9FdVL8vJT6v3dpUi7Tw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=j4AESBWgPJM5RvSJTGIHU0D2oc2AIw6rs1zeVJykHsy5YANen2b1FheVdgalp7tNv
+	 6qZvfth7GK8vEabaQRhJM83TGlkw2klGjo3wm0NKdjRxyo5WTzDSKAQ2bwGgabUOX1
+	 tTC+I6tyWiqEnc3SaAoyLwOt7x5HAaBl879+fk1IwRmsz0qsz1jTeNNr2We3xkRtnr
+	 kpYw2VFkiB+e3EB0T9wRS4HEpQkkWbeL/hrizEDfFeLOl3PuXe6RR30yThrHvvGZBv
+	 R6KEpvmiyTUQYjyedx8LNofbDxbZCG2B0mqh09dE1kQ+PAJKvjZOmI9r5Rr7gIgqAb
+	 02RLkMRZ5kwfw==
+Date: Mon, 10 Feb 2025 13:20:58 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Alexey Charkov <alchark@gmail.com>, linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: ASoC: rockchip: Add compatible for
+ RK3588 SPDIF
+Message-ID: <56d128d7-c4bd-48de-b823-0b88147220e1@sirena.org.uk>
+References: <20250120-rk3588-spdif-v1-0-1415f5871dc7@gmail.com>
+ <20250120-rk3588-spdif-v1-1-1415f5871dc7@gmail.com>
+ <4315116.iIbC2pHGDl@diego>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] powerpc/mm/fault: Use str_write_read() helper function
-To: Thorsten Blum <thorsten.blum@linux.dev>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Naveen N Rao <naveen@kernel.org>,
- "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20250210100648.1440-2-thorsten.blum@linux.dev>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250210100648.1440-2-thorsten.blum@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="eAhunf2YJnuAvrBB"
+Content-Disposition: inline
+In-Reply-To: <4315116.iIbC2pHGDl@diego>
+X-Cookie: A beer delayed is a beer denied.
 
 
+--eAhunf2YJnuAvrBB
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Le 10/02/2025 à 11:06, Thorsten Blum a écrit :
-> Remove hard-coded strings by using the str_write_read() helper function.
-> 
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+On Sun, Feb 09, 2025 at 10:10:47PM +0100, Heiko St=FCbner wrote:
+> Am Montag, 20. Januar 2025, 10:01:27 MEZ schrieb Alexey Charkov:
+> > Add a compatible string for SPDIF on RK3588, which is similar to the
+> > one on RK3568.
 
-Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> as the binding is more in the driver-realm, is this patch still
+> somewhere on your radar?
 
+Please don't send content free pings and please allow a reasonable time
+for review.  People get busy, go on holiday, attend conferences and so=20
+on so unless there is some reason for urgency (like critical bug fixes)
+please allow at least a couple of weeks for review.  If there have been
+review comments then people may be waiting for those to be addressed.
 
-Not sure you saw it, there's also one in:
+Sending content free pings adds to the mail volume (if they are seen at
+all) which is often the problem and since they can't be reviewed
+directly if something has gone wrong you'll have to resend the patches
+anyway, so sending again is generally a better approach though there are
+some other maintainers who like them - if in doubt look at how patches
+for the subsystem are normally handled.
 
-linus/master:arch/powerpc/platforms/ps3/device-init.c:727:  const char 
-*op = write ? "write" : "read";
+--eAhunf2YJnuAvrBB
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> ---
->   arch/powerpc/mm/fault.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
-> index c156fe0d53c3..806c74e0d5ab 100644
-> --- a/arch/powerpc/mm/fault.c
-> +++ b/arch/powerpc/mm/fault.c
-> @@ -17,6 +17,7 @@
->   #include <linux/kernel.h>
->   #include <linux/errno.h>
->   #include <linux/string.h>
-> +#include <linux/string_choices.h>
->   #include <linux/types.h>
->   #include <linux/pagemap.h>
->   #include <linux/ptrace.h>
-> @@ -218,7 +219,7 @@ static bool bad_kernel_fault(struct pt_regs *regs, unsigned long error_code,
->   	// Read/write fault blocked by KUAP is bad, it can never succeed.
->   	if (bad_kuap_fault(regs, address, is_write)) {
->   		pr_crit_ratelimited("Kernel attempted to %s user page (%lx) - exploit attempt? (uid: %d)\n",
-> -				    is_write ? "write" : "read", address,
-> +				    str_write_read(is_write), address,
->   				    from_kuid(&init_user_ns, current_uid()));
->   
->   		// Fault on user outside of certain regions (eg. copy_tofrom_user()) is bad
-> @@ -625,7 +626,7 @@ static void __bad_page_fault(struct pt_regs *regs, int sig)
->   	case INTERRUPT_DATA_STORAGE:
->   	case INTERRUPT_H_DATA_STORAGE:
->   		pr_alert("BUG: %s on %s at 0x%08lx\n", msg,
-> -			 is_write ? "write" : "read", regs->dar);
-> +			 str_write_read(is_write), regs->dar);
->   		break;
->   	case INTERRUPT_DATA_SEGMENT:
->   		pr_alert("BUG: %s at 0x%08lx\n", msg, regs->dar);
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmep/TkACgkQJNaLcl1U
+h9AzqAf/T2ZOQi4K9XfreabaTdPLm81THw5/XTKa/58i7z3jL11ZII9/Ysaw3CiW
+YnuvbkR4j45WfM2AeD5BDn16fc9h+DDbNAqYefOwFO/tr98gejqkWblnx/rFpF9D
+fNI/hH0hv+8unMp08sB+jdTjf48MtQHASTCqR0+MO15cT1pdgIvsz/ylNbkXo/c5
+xrcpltcyDN/xa3QFa0WCIVcDQCRRUAdHuZt1dICCy7dRD7Jac+4PclQEYxMblt24
+GkCkLXIUE80m/HlOcLqS2lJAELD/hV/aGFCLeo3PCaxKovKT8vj/6JKdhPvweZik
+OOKsJg5hIinmNvYGZELSgMat3B6BbA==
+=h/Aj
+-----END PGP SIGNATURE-----
+
+--eAhunf2YJnuAvrBB--
