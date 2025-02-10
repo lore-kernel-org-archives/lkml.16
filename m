@@ -1,838 +1,266 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f195.google.com (mail-yw1-f195.google.com [209.85.128.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BAB319F47E;
-	Mon, 10 Feb 2025 20:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2EA264609
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739220716; cv=none; b=oT12nvGhvEro9hPC5SAQS8ScJ0sNMBdqqXPDnP2KEylMPMVV3DXap8cKoF4G+QWadvQZ9TxSaz0NXwZ/gJI8RioPQ+iz+d/6OrllbMKo/2UeiBgi8TGregqRb16e7GACbmSKiUKDL5yHdaHRzKx3Zirq9rncTIH42Bq9EZAuXjQ=
+	t=1739220818; cv=none; b=NfSqQWX9qma57Zx7ljjtZ0KLic/IumBG3mG9izcT2tBbYFnMR+DAITszEYQ0tGqRKn7Rgkrr1ioSKTxgFrBXSzIZ4sGBrIhfYyZt2oOeQkbtm8J5WuVD0aTnYD54WCKaDXTVgHsBHHXYReRo8ZK/bYUY+ydoDc8qIdzqeRbg5b4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739220716; c=relaxed/simple;
-	bh=LXsvfD5mc7Wizuvwvf9pVUtlF9a0f7XcquPPCujQ3Gs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qgKUUxwBs7hs7ReTkH+nRiw2DSQJgMK5LGrOVTyOY7ltPnFZluYBP0tdiW/pODmO68ybBPR34l1lSyg2TUa+X2RtUJBeqqfdCrrOK4BFASSjJM6KI7glBisr23DmoSNU1OX+/UuNuhA4aSkcvDVGOx0n5kyXidwuumYRAwpUpK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=zwB0Q3+5; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1739220818; c=relaxed/simple;
+	bh=vjFb2OcwdbIS0nUDKxfMHrclwkRrjemPrJi/ucR98xs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gy1Qdph5JctPGbdE9DJD4JqvtSYC9lMl9wZ4JGHWYdFHCi1dzY/VJOcbA2GYtBRMFiG7OkUhwzS5TjDBdLNjGAGvEzgOC1Ox7lo4vP6IbAGvcASQM3H+6F58Sc+e57UZznprEsXSsJEAnqfAdRKbgLBLg2aTqMAHjTNursEW8TM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=SMxzyk1g; arc=none smtp.client-ip=209.85.128.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="zwB0Q3+5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=HP99TPfaetNCkZV07oC9aV2u0QieAtsG1nh2mxOQbog=; b=zwB0Q3+5+2mD/Hp84iFr+rlkj7
-	NFH6YIit3COuM244YpzUMjgN6HoMzCyVBe6dmohJXYgAtEcPoyjQnWPUAaBnl/yG5L21lt0nHpa9U
-	Udq7KvHqgFuXXLbYDcesafKaUbj4iznGZzSrVhC3RvCPb0Usdpxf+Wi87XvZdfPureBbkPmDeT70K
-	TjPjc5tutEUTJlKKzkr8TpOHiUt1ixWK+uZID16n+CyRAt327WjLTMSRKUyuzT6P4YXBWrl++3xUC
-	UvjRFsxr0HXDNNUyfVtPD7fbg9zAEry/RGgQI40Buc1yW7kgnXSigMumgbSMLZ5lT1gUEw3ANOdat
-	o8L42xrg==;
-Received: from i53875bc0.versanet.de ([83.135.91.192] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1thakm-0007Ka-F5; Mon, 10 Feb 2025 21:51:40 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: heiko@sntech.de
-Cc: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	jonas@kwiboo.se
-Subject: [PATCH v2 2/2] arm64: dts: rockchip: Add devicetree for the ROC-RK3576-PC
-Date: Mon, 10 Feb 2025 21:51:26 +0100
-Message-ID: <20250210205126.1173631-3-heiko@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250210205126.1173631-1-heiko@sntech.de>
-References: <20250210205126.1173631-1-heiko@sntech.de>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="SMxzyk1g"
+Received: by mail-yw1-f195.google.com with SMTP id 00721157ae682-6f6ca1a8aa6so27273597b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 12:53:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739220815; x=1739825615; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=SLAa1BKEsAml/EQbXgNElXATdgTAKpFsheqm1ORqCrY=;
+        b=SMxzyk1gaetqmuAdFjWw8gJ2khIqA4sMDLzV1kOBhvY9As4ZP0xuADojXI31S8XPt7
+         FAyL3Yd/UCOeK0pNUaIUU5428EN3TvXOE3HZ0usjHhK1ya1Gy1bhTxNeBeRQA2kSyj7k
+         1ExqWjR6+uEga7sT3TvLe5sBdpKNPk+PGXFWXytRieiIhva8uk6hyifTtlEMB3O9p8Gb
+         6nBc/fC1D8hQtROijB1Fs0Q4poOqBcEK6lv+P19xQ0LHli4KK1vsj2tHE8FjjJbDz3ZI
+         hLlIXZO9jxEk7NP35JipBCir9YolfpT6hDHa5Y8lsIel948Xu3gvuxBvsXvp92owZy75
+         8HTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739220815; x=1739825615;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SLAa1BKEsAml/EQbXgNElXATdgTAKpFsheqm1ORqCrY=;
+        b=HX8je0h/0D+9Q/QH580NgvG6CltoflSbnfq3xPx2a+z970v/xAMn/jlXkX3WIukJT1
+         9L5tUHE1Cum4SsJtVWq1XEdI5aAI1S/RIJIp145CotVtpNo+Hz3J8ntuu3GPJWXRuLBq
+         nPrt/i97MydcZWbMSUnDKtiyo5zLnlOEwuxn2LmqMZ3lS8CTT9qdeqrImbEIeCDOx3EW
+         r1TaVWAiukC3kaBpt3UEN/Unz3avlN3Kk9OWNdhNsCns218YmdnWFngTC9Qe1FkZDagU
+         xCmAbuwMcuyWQdirdrUSbuIHpsc+A8kFqkunkNUt21stFGGmw4CA5bDd2x8fMb8emN5L
+         CV/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVeXOCOmgluRyTmx8dWGwNjlssxRPNCFPwZg73CmJDRrVnriBaLP/2gjtSi2XQ9m6E8SbQnu8tdpTYiM6o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyvvxs3mjz8RWfjJhDM4pWON/IR0aHAwHvqJhEvyATVjVG8vgAp
+	8FYY73rNKGyomFVyOfpc5ElESXl+LzRfUgwQb9gZWm2YvV3XrJgYkyCEtAZHniQ=
+X-Gm-Gg: ASbGncubAmdH8+mzNOCgWzxAjkQsT+WkrfHcbSEAKZx5NNQLtgPShomB+yTy43bUJkC
+	Wet8rFmGGEtog3mP8R+FUbarDgbqc4c7sxGxy7rBmUq74HhrB8hSpJxTJububO9cbbKWjCYmD6n
+	yrfWSyyVrqejvy92DJYkmR2eQ7Z4Uim5XmHTIdfb5IaGU8oMeFPv0/qM8cRrVxXaDifdRzuH6wu
+	6fsCPhOyBiYdi1EblBDfxFv8I6ldrxqA6h4MhJ/UTb+Zz8KPU0bXEP+dhZg3SIU3zdUKzZVmZpZ
+	oXY=
+X-Google-Smtp-Source: AGHT+IH0bbRLBOuosMUk1KWSGgc288AFzfJ4nEB6hFoRhqUOD7HEq12omD4VxMkgi+HrRIX9zaTKoA==
+X-Received: by 2002:a05:690c:4801:b0:6f9:8916:3b69 with SMTP id 00721157ae682-6f9b2844150mr129922107b3.5.1739220814933;
+        Mon, 10 Feb 2025 12:53:34 -0800 (PST)
+Received: from ghost ([50.146.0.9])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99fd39430sm18231937b3.48.2025.02.10.12.53.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 12:53:34 -0800 (PST)
+Date: Mon, 10 Feb 2025 12:53:32 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
+Cc: Andrew Jones <ajones@ventanamicro.com>,
+	Anup Patel <anup@brainfault.org>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, paul.walmsley@sifive.com,
+	"palmer@dabbelt.com Anup Patel" <apatel@ventanamicro.com>
+Subject: Re: [PATCH 7/9] riscv: Prepare for unaligned access type table
+ lookups
+Message-ID: <Z6pnTG7YoiDW_Gkq@ghost>
+References: <20250207161939.46139-11-ajones@ventanamicro.com>
+ <20250207161939.46139-18-ajones@ventanamicro.com>
+ <Z6ax7B45OsGerjfA@ghost>
+ <CAAhSdy2tjOE5aajzydFs8A_drHdBSbWrYTX3CX4e7B6Rm107Bw@mail.gmail.com>
+ <c6f98a70-b1c7-4955-bf5d-546e4563cf1c@rivosinc.com>
+ <20250210-e6a2dfcd7995ffc8a6d918e4@orel>
+ <e1fae51d-3511-4bcf-afbf-4e690905ccda@rivosinc.com>
+ <Z6o1bQLJ8aUyjvrQ@ghost>
+ <015a8a52-6a49-41b9-95b4-5e8260d45776@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <015a8a52-6a49-41b9-95b4-5e8260d45776@rivosinc.com>
 
-As the name implies, it is built around the RK3576 SoC with 4x Cortex-A72
-cores, four Cortex-A53 cores and Mali-G52 MC3 GPU.
+On Mon, Feb 10, 2025 at 09:42:25PM +0100, Clément Léger wrote:
+> 
+> 
+> On 10/02/2025 18:20, Charlie Jenkins wrote:
+> > On Mon, Feb 10, 2025 at 03:20:34PM +0100, Clément Léger wrote:
+> >>
+> >>
+> >> On 10/02/2025 15:06, Andrew Jones wrote:
+> >>> On Mon, Feb 10, 2025 at 12:07:40PM +0100, Clément Léger wrote:
+> >>>>
+> >>>>
+> >>>> On 10/02/2025 11:16, Anup Patel wrote:
+> >>>>> On Sat, Feb 8, 2025 at 6:53 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> >>>>>>
+> >>>>>> On Fri, Feb 07, 2025 at 05:19:47PM +0100, Andrew Jones wrote:
+> >>>>>>> Probing unaligned accesses on boot is time consuming. Provide a
+> >>>>>>> function which will be used to look up the access type in a table
+> >>>>>>> by id registers. Vendors which provide table entries can then skip
+> >>>>>>> the probing.
+> >>>>>>
+> >>>>>> The access checker in my experience is only time consuming on slow
+> >>>>>> hardware. Hardware that supports fast unaligned accesses isn't really
+> >>>>>> impacted by this? Avoiding a list of hardware that has slow/fast
+> >>>>>> unaligned accesses in the kernel was the main reason for dynamically
+> >>>>>> checking. We did introduce the config option to compile the kernel with
+> >>>>>> assumed slow/fast accesses, which of course has the downside of
+> >>>>>> recompiling the kernel and I assume that you already considered that.
+> >>>>>
+> >>>>> The kconfig option does not align with the vision of running the same
+> >>>>> kernel image across platforms.
+> >>>>
+> >>>> I'd would be advocating to remove compile time options as well and use
+> >>>> another way to skip the probe (see below).
+> >>>>
+> >>>>>
+> >>>>>>
+> >>>>>> Instead of having a table in the kernel, something that would be more
+> >>>>>> platform agnostic would be to have an extension that signals this
+> >>>>>> information. That seems like it would accomplish the same goal and
+> >>>>>> leverage the existing infrastructure in the kernel, albeit with the need
+> >>>>>> to make a new extension.
+> >>>>>>
+> >>>>>
+> >>>>> IMO, expecting an ISA extension to be defined for all possible
+> >>>>> microarchitectural choices is not going to scale so it is better
+> >>>>> to have infrastructure in kernel itself to infer microarchitectural
+> >>>>> choices based on RISC-V implementation ID.
+> >>>>
+> >>>> Since adding an extension seems quite unlikely, and that a device-tree
+> >>>> property is likely DT centric and not applicable to ACPI as well, was a
+> >>>> command line argument considered ?
+> >>>>
+> >>>
+> >>> I did consider adding a command line option in addition to the table,
+> >>> allowing platforms which neither have a table entry [yet] nor want to do
+> >>> the speed test, to set whatever they like. In the end, I dropped it, since
+> >>> I don't have a use case at this time. However, if we really don't want a
+> >>> table, then I can look into the command line option instead.
+> >>
+> >> Sorry if I wasn't clear, I wasn't considering this as a replacement for
+> >> your table but rather as a replacement to Charlie's compile time define
+> >> to skip misaligned speed probing since it is like "lpj=<x>". You can
+> >> specify it on command line if you want to skip the loop time detection
+> >> of loops per jiffies and have faster boot.
+> > 
+> > Jesse sent out a patch for a kernel parameter to set the access speed to
+> > whatever is desired [1].
+> 
+> Hey Charlie,
+> 
+> Thanks but it seems you forgot to add the link ?
 
-Storage options are EMMC, SD-Card, a 2242 M.2 slot and the possibility to
-use UFS 2.0 storage.
+Oops, I frequently do that...
 
-Video Output options are a HDMI port, a DSI connector as well as Display-
-Port via the TypeC connector (all of them not yet supported).
+https://lore.kernel.org/linux-riscv/20240805173816.3722002-1-jesse@rivosinc.com/
 
-Networking options are a Low-profile Gigabit Ethernet RJ45 port with
-Motorcomm YT8531 PHY as well as WiFi via an AMPAK AP6256 module.
+> 
+> Having configuration option + command line option seems like something
+> particularly heavy for such feature. The ifdefery/config options
+> involved in the misaligned probing code is already quite complicated. If
+> another mean to specify the misaligned speed access is added, I think
+> all configuration options to set the speed of accesses can then be
+> removed and just keep the command line. That will certainly simplify the
+> ifdef/config options.
 
-USB ports on the board are 1x USB 3.0 port, 1x USB 2.0 port, 1x USB Type-C
-and it comes with 40-pin GPIO header
+Yeah that's why it didn't get merged because it felt like overkill. I
+responded on the thread to Anup as why I would prefer config options. It
+just comes down to config options being required to enable compiler
+features. The kernel is only built with rv64gc and usage of all other
+extensions requires hand written assembly. There are easy performance
+gains when compiling the kernel with rv64gc_zba_zbb_zbkb etc.
+Performance focused kernels will need to be recompiled anyway so I am of
+the opinion that grouping in other performance features as config
+options like this is the easiest thing to do and reduces the amount of
+code in the kernel.
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
- arch/arm64/boot/dts/rockchip/Makefile         |   1 +
- .../arm64/boot/dts/rockchip/rk3576-roc-pc.dts | 736 ++++++++++++++++++
- 2 files changed, 737 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3576-roc-pc.dts
+- Charlie
 
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index e4646dbd18aa..fe789f80c9bd 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -137,6 +137,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-wolfvision-pf5-display-vz.dtbo
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-wolfvision-pf5-io-expander.dtbo
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3576-armsom-sige5.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3576-evb1-v10.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3576-roc-pc.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3582-radxa-e52c.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-armsom-sige7.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-armsom-w3.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/rk3576-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3576-roc-pc.dts
-new file mode 100644
-index 000000000000..612b7bb0b749
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3576-roc-pc.dts
-@@ -0,0 +1,736 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2024 Firefly Technology Co. Ltd
-+ * Copyright (c) 2024 Heiko Stuebner <heiko@sntech.de>
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/pinctrl/rockchip.h>
-+#include <dt-bindings/pwm/pwm.h>
-+#include <dt-bindings/usb/pd.h>
-+#include "rk3576.dtsi"
-+
-+/ {
-+	model = "Firefly ROC-RK3576-PC";
-+	compatible = "firefly,roc-rk3576-pc", "rockchip,rk3576";
-+
-+	aliases {
-+		mmc0 = &sdhci;
-+		mmc1 = &sdmmc;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:1500000n8";
-+	};
-+
-+	adc-keys-0 {
-+		compatible = "adc-keys";
-+		io-channels = <&saradc 0>;
-+		io-channel-names = "buttons";
-+		keyup-threshold-microvolt = <1800000>;
-+		poll-interval = <100>;
-+
-+		button-maskrom {
-+			label = "Maskrom";
-+			linux,code = <KEY_SETUP>;
-+			press-threshold-microvolt = <17000>;
-+		};
-+	};
-+
-+	adc-keys-1 {
-+		compatible = "adc-keys";
-+		io-channels = <&saradc 1>;
-+		io-channel-names = "buttons";
-+		keyup-threshold-microvolt = <1800000>;
-+		poll-interval = <100>;
-+
-+		button-recovery {
-+			label = "Recovery";
-+			linux,code = <KEY_VENDOR>;
-+			press-threshold-microvolt = <17000>;
-+		};
-+	};
-+
-+	vbus5v0_typec: regulator-vbus5v0-typec {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio0 RK_PD1 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&usb_otg0_pwren_h>;
-+		regulator-name = "vbus5v0_typec";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc5v0_device_s0>;
-+	};
-+
-+	vcc12v_dcin: regulator-vcc12v-dcin {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc12v_dcin";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+	};
-+
-+	vcc1v2_ufs_vccq_s0: regulator-vcc1v2-ufs-vccq-s0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc1v2_ufs_vccq_s0";
-+		regulator-boot-on;
-+		regulator-always-on;
-+		regulator-min-microvolt = <1200000>;
-+		regulator-max-microvolt = <1200000>;
-+		vin-supply = <&vcc5v0_sys_s5>;
-+	};
-+
-+	vcc1v8_ufs_vccq2_s0: regulator-vcc1v8-ufs-vccq2-s0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc1v8_ufs_vccq2_s0";
-+		regulator-boot-on;
-+		regulator-always-on;
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_1v8_s3>;
-+	};
-+
-+	vcc3v3_pcie: regulator-vcc3v3-pcie {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio2 RK_PB3 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pcie_pwren_h>;
-+		regulator-name = "vcc3v3_pcie";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <5000>;
-+		vin-supply = <&vcc12v_dcin>;
-+	};
-+
-+	vcc3v3_rtc_s5: regulator-vcc3v3-rtc-s5 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3_rtc_s5";
-+		regulator-boot-on;
-+		regulator-always-on;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vcc5v0_sys_s5>;
-+	};
-+
-+	vcc5v0_device_s0: regulator-vcc5v0-device-s0 {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio2 RK_PC0 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vcc5vd_en>;
-+		regulator-name = "vcc5v0_device";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc12v_dcin>;
-+	};
-+
-+	vcc5v0_sys_s5: regulator-vcc5v0-sys-s5 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_sys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc12v_dcin>;
-+	};
-+
-+	vcc5v0_usb20_host1: regulator-vcc5v0-usb20-host1 {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio0 RK_PC7 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&usb3_host_pwren_h>;
-+		regulator-name = "vcc5v0_host1";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc5v0_device_s0>;
-+	};
-+
-+	vcc_1v1_nldo_s3: regulator-vcc-1v1-nldo-s3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_1v1_nldo_s3";
-+		regulator-boot-on;
-+		regulator-always-on;
-+		regulator-min-microvolt = <1100000>;
-+		regulator-max-microvolt = <1100000>;
-+		vin-supply = <&vcc5v0_sys_s5>;
-+	};
-+
-+	vcc_1v8_s0: regulator-vcc-1v8-s0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_1v8_s0";
-+		regulator-boot-on;
-+		regulator-always-on;
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_1v8_s3>;
-+	};
-+
-+	vcc_2v0_pldo_s3: regulator-vcc-2v0-pldo-s3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_2v0_pldo_s3";
-+		regulator-boot-on;
-+		regulator-always-on;
-+		regulator-min-microvolt = <2000000>;
-+		regulator-max-microvolt = <2000000>;
-+		vin-supply = <&vcc5v0_sys_s5>;
-+	};
-+
-+	vcc_3v3_s0: regulator-vcc-3v3-s0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_3v3_s0";
-+		regulator-boot-on;
-+		regulator-always-on;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vcc_3v3_s3>;
-+	};
-+
-+	vcc_ufs_s0: regulator-vcc-ufs-s0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_ufs_s0";
-+		regulator-boot-on;
-+		regulator-always-on;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vcc5v0_sys_s5>;
-+	};
-+};
-+
-+&cpu_l0 {
-+	cpu-supply = <&vdd_cpu_lit_s0>;
-+};
-+
-+&cpu_l1 {
-+	cpu-supply = <&vdd_cpu_lit_s0>;
-+};
-+
-+&cpu_l2 {
-+	cpu-supply = <&vdd_cpu_lit_s0>;
-+};
-+
-+&cpu_l3 {
-+	cpu-supply = <&vdd_cpu_lit_s0>;
-+};
-+
-+&cpu_b0 {
-+	cpu-supply = <&vdd_cpu_big_s0>;
-+};
-+
-+&cpu_b1 {
-+	cpu-supply = <&vdd_cpu_big_s0>;
-+};
-+
-+&cpu_b2 {
-+	cpu-supply = <&vdd_cpu_big_s0>;
-+};
-+
-+&cpu_b3 {
-+	cpu-supply = <&vdd_cpu_big_s0>;
-+};
-+
-+&gpu {
-+	mali-supply = <&vdd_gpu_s0>;
-+	status = "okay";
-+};
-+
-+&gmac0 {
-+	clock_in_out = "output";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&eth0m0_miim
-+		     &eth0m0_tx_bus2
-+		     &eth0m0_rx_bus2
-+		     &eth0m0_rgmii_clk
-+		     &eth0m0_rgmii_bus
-+		     &ethm0_clk0_25m_out>;
-+	/* Use rgmii-rxid mode to disable rx delay inside Soc */
-+	phy-mode = "rgmii-rxid";
-+	phy-handle = <&rgmii_phy0>;
-+	tx_delay = <0x21>;
-+	status = "okay";
-+};
-+
-+&mdio0 {
-+	status = "okay";
-+
-+	rgmii_phy0: phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <0x1>;
-+		clocks = <&cru REFCLKO25M_GMAC0_OUT>;
-+		/* Reset time is 20ms, 100ms for rtl8211f */
-+		reset-delay-us = <20000>;
-+		reset-gpios = <&gpio2 RK_PB5 GPIO_ACTIVE_LOW>;
-+		reset-post-delay-us = <100000>;
-+	};
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+
-+	pmic@23 {
-+		compatible = "rockchip,rk806";
-+		reg = <0x23>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <6 IRQ_TYPE_LEVEL_LOW>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_pins>, <&rk806_dvs1_null>,
-+			    <&rk806_dvs2_null>, <&rk806_dvs3_null>;
-+		system-power-controller;
-+
-+		vcc1-supply = <&vcc5v0_sys_s5>;
-+		vcc2-supply = <&vcc5v0_sys_s5>;
-+		vcc3-supply = <&vcc5v0_sys_s5>;
-+		vcc4-supply = <&vcc5v0_sys_s5>;
-+		vcc5-supply = <&vcc5v0_sys_s5>;
-+		vcc6-supply = <&vcc5v0_sys_s5>;
-+		vcc7-supply = <&vcc5v0_sys_s5>;
-+		vcc8-supply = <&vcc5v0_sys_s5>;
-+		vcc9-supply = <&vcc5v0_sys_s5>;
-+		vcc10-supply = <&vcc5v0_sys_s5>;
-+		vcc11-supply = <&vcc_2v0_pldo_s3>;
-+		vcc12-supply = <&vcc5v0_sys_s5>;
-+		vcc13-supply = <&vcc_1v1_nldo_s3>;
-+		vcc14-supply = <&vcc_1v1_nldo_s3>;
-+		vcca-supply = <&vcc5v0_sys_s5>;
-+
-+		rk806_dvs1_null: dvs1-null-pins {
-+			pins = "gpio_pwrctrl1";
-+			function = "pin_fun0";
-+		};
-+
-+		rk806_dvs2_null: dvs2-null-pins {
-+			pins = "gpio_pwrctrl2";
-+			function = "pin_fun0";
-+		};
-+
-+		rk806_dvs3_null: dvs3-null-pins {
-+			pins = "gpio_pwrctrl3";
-+			function = "pin_fun0";
-+		};
-+
-+		rk806_dvs1_slp: dvs1-slp-pins {
-+			pins = "gpio_pwrctrl1";
-+			function = "pin_fun1";
-+		};
-+
-+		rk806_dvs1_pwrdn: dvs1-pwrdn-pins {
-+			pins = "gpio_pwrctrl1";
-+			function = "pin_fun2";
-+		};
-+
-+		rk806_dvs1_rst: dvs1-rst-pins {
-+			pins = "gpio_pwrctrl1";
-+			function = "pin_fun3";
-+		};
-+
-+		rk806_dvs2_slp: dvs2-slp-pins {
-+			pins = "gpio_pwrctrl2";
-+			function = "pin_fun1";
-+		};
-+
-+		rk806_dvs2_pwrdn: dvs2-pwrdn-pins {
-+			pins = "gpio_pwrctrl2";
-+			function = "pin_fun2";
-+		};
-+
-+		rk806_dvs2_rst: dvs2-rst-pins {
-+			pins = "gpio_pwrctrl2";
-+			function = "pin_fun3";
-+		};
-+
-+		rk806_dvs2_dvs: dvs2-dvs-pins {
-+			pins = "gpio_pwrctrl2";
-+			function = "pin_fun4";
-+		};
-+
-+		rk806_dvs2_gpio: dvs2-gpio-pins {
-+			pins = "gpio_pwrctrl2";
-+			function = "pin_fun5";
-+		};
-+
-+		rk806_dvs3_slp: dvs3-slp-pins {
-+			pins = "gpio_pwrctrl3";
-+			function = "pin_fun1";
-+		};
-+
-+		rk806_dvs3_pwrdn: dvs3-pwrdn-pins {
-+			pins = "gpio_pwrctrl3";
-+			function = "pin_fun2";
-+		};
-+
-+		rk806_dvs3_rst: dvs3-rst-pins {
-+			pins = "gpio_pwrctrl3";
-+			function = "pin_fun3";
-+		};
-+
-+		rk806_dvs3_dvs: dvs3-dvs-pins {
-+			pins = "gpio_pwrctrl3";
-+			function = "pin_fun4";
-+		};
-+
-+		rk806_dvs3_gpio: dvs3-gpio-pins {
-+			pins = "gpio_pwrctrl3";
-+			function = "pin_fun5";
-+		};
-+
-+		regulators {
-+			vdd_cpu_big_s0: dcdc-reg1 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <550000>;
-+				regulator-max-microvolt = <950000>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-name = "vdd_cpu_big_s0";
-+				regulator-enable-ramp-delay = <400>;
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdd_npu_s0: dcdc-reg2 {
-+				regulator-boot-on;
-+				regulator-min-microvolt = <550000>;
-+				regulator-max-microvolt = <950000>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-name = "vdd_npu_s0";
-+				regulator-enable-ramp-delay = <400>;
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdd_cpu_lit_s0: dcdc-reg3 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <550000>;
-+				regulator-max-microvolt = <950000>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-name = "vdd_cpu_lit_s0";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+					regulator-suspend-microvolt = <750000>;
-+				};
-+			};
-+
-+			vcc_3v3_s3: dcdc-reg4 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc_3v3_s3";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <3300000>;
-+				};
-+			};
-+
-+			vdd_gpu_s0: dcdc-reg5 {
-+				regulator-boot-on;
-+				regulator-min-microvolt = <550000>;
-+				regulator-max-microvolt = <900000>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-name = "vdd_gpu_s0";
-+				regulator-enable-ramp-delay = <400>;
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+					regulator-suspend-microvolt = <850000>;
-+				};
-+			};
-+
-+			vddq_ddr_s0: dcdc-reg6 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-name = "vddq_ddr_s0";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdd_logic_s0: dcdc-reg7 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <550000>;
-+				regulator-max-microvolt = <800000>;
-+				regulator-name = "vdd_logic_s0";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcc_1v8_s3: dcdc-reg8 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc_1v8_s3";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <1800000>;
-+				};
-+			};
-+
-+			vdd2_ddr_s3: dcdc-reg9 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-name = "vdd2_ddr_s3";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+				};
-+			};
-+
-+			vdd_ddr_s0: dcdc-reg10 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <550000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-name = "vdd_ddr_s0";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcca_1v8_s0: pldo-reg1 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcca_1v8_s0";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcca1v8_pldo2_s0: pldo-reg2 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcca1v8_pldo2_s0";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdda_1v2_s0: pldo-reg3 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-name = "vdda_1v2_s0";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcca_3v3_s0: pldo-reg4 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcca_3v3_s0";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vccio_sd_s0: pldo-reg5 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vccio_sd_s0";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vcca1v8_pldo6_s3: pldo-reg6 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcca1v8_pldo6_s3";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <1800000>;
-+				};
-+			};
-+
-+			vdd_0v75_s3: nldo-reg1 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <750000>;
-+				regulator-max-microvolt = <750000>;
-+				regulator-name = "vdd_0v75_s3";
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <750000>;
-+				};
-+			};
-+
-+			vdda_ddr_pll_s0: nldo-reg2 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <850000>;
-+				regulator-max-microvolt = <850000>;
-+				regulator-name = "vdda_ddr_pll_s0";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdda0v75_hdmi_s0: nldo-reg3 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <837500>;
-+				regulator-max-microvolt = <837500>;
-+				regulator-name = "vdda0v75_hdmi_s0";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdda_0v85_s0: nldo-reg4 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <850000>;
-+				regulator-max-microvolt = <850000>;
-+				regulator-name = "vdda_0v85_s0";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdda_0v75_s0: nldo-reg5 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <750000>;
-+				regulator-max-microvolt = <750000>;
-+				regulator-name = "vdda_0v75_s0";
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+
-+	/* pc9202 watchdog@3c with enable-gpio gpio0-c3 */
-+
-+	/* hnyetek,husb311 typec-portc@4e */
-+
-+	hym8563: rtc@51 {
-+		compatible = "haoyu,hym8563";
-+		reg = <0x51>;
-+		#clock-cells = <0>;
-+		clock-output-names = "hym8563";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&rtc_int_l>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <RK_PA0 IRQ_TYPE_LEVEL_LOW>;
-+		wakeup-source;
-+	};
-+};
-+
-+&saradc {
-+	vref-supply = <&vcca_1v8_s0>;
-+	status = "okay";
-+};
-+
-+&sdhci {
-+	bus-width = <8>;
-+	no-sdio;
-+	no-sd;
-+	non-removable;
-+	max-frequency = <200000000>;
-+	mmc-hs400-1_8v;
-+	mmc-hs400-enhanced-strobe;
-+	full-pwr-cycle-in-suspend;
-+	status = "okay";
-+};
-+
-+&sdmmc {
-+	max-frequency = <200000000>;
-+	no-sdio;
-+	no-mmc;
-+	bus-width = <4>;
-+	cap-mmc-highspeed;
-+	cap-sd-highspeed;
-+	disable-wp;
-+	sd-uhs-sdr104;
-+	vqmmc-supply = <&vccio_sd_s0>;
-+	status = "okay";
-+};
-+
-+&pinctrl {
-+	hym8563 {
-+		rtc_int_l: rtc-int-l {
-+			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+
-+	power {
-+		vcc5vd_en: vcc5vd-en {
-+			rockchip,pins = <2 RK_PC0 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		pcie_pwren_h: pcie-pwren-h {
-+			rockchip,pins = <2 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	usb {
-+		hub_reset_h: hub-reset-h {
-+			rockchip,pins = <2 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		usb3_host_pwren_h: usb3-host-pwren-h {
-+			rockchip,pins = <0 RK_PC7 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		usb_otg0_pwren_h: usb-otg0-pwren-h {
-+			rockchip,pins = <0 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		usbc0_int_l: usbc0-int-l {
-+			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+
-+	watchdog {
-+		wd_en: wd-en {
-+			rockchip,pins = <0 RK_PC3 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-0 = <&uart0m0_xfer>;
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart4m1_xfer &uart4m1_ctsn>;
-+	status = "okay";
-+};
-+
-+/* On the extension pin header */
-+&uart6 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart6m3_xfer>;
-+	status = "okay";
-+};
--- 
-2.47.2
-
+> 
+> Clément
+> 
+> > 
+> > - Charlie
+> > 
+> >> -}
+> >> -#else /* CONFIG_RISCV_PROBE_UNALIGNED_ACCESS */
+> >> -static void __init check_unaligned_access_speed_all_cpus(void)
+> >> -{
+> >> -}
+> >> -#endif
+> >> -
+> >>  #ifdef CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS
+> >>  static void check_vector_unaligned_access(struct work_struct *work __always_unused)
+> >>  {
+> >> @@ -370,6 +380,11 @@ static int __init vec_check_unaligned_access_speed_all_cpus(void *unused __alway
+> >>  }
+> >>  #endif
+> >>  
+> >> +static bool check_vector_unaligned_access_table(void)
+> >> +{
+> >> +	return false;
+> >> +}
+> >> +
+> >>  static int riscv_online_cpu_vec(unsigned int cpu)
+> >>  {
+> >>  	if (!has_vector()) {
+> >> @@ -377,6 +392,9 @@ static int riscv_online_cpu_vec(unsigned int cpu)
+> >>  		return 0;
+> >>  	}
+> >>  
+> >> +	if (check_vector_unaligned_access_table())
+> >> +		return 0;
+> >> +
+> >>  #ifdef CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS
+> >>  	if (per_cpu(vector_misaligned_access, cpu) != RISCV_HWPROBE_MISALIGNED_VECTOR_UNKNOWN)
+> >>  		return 0;
+> >> @@ -392,13 +410,15 @@ static int __init check_unaligned_access_all_cpus(void)
+> >>  {
+> >>  	int cpu;
+> >>  
+> >> -	if (!check_unaligned_access_emulated_all_cpus())
+> >> +	if (!check_unaligned_access_table() &&
+> >> +	    !check_unaligned_access_emulated_all_cpus())
+> >>  		check_unaligned_access_speed_all_cpus();
+> >>  
+> >>  	if (!has_vector()) {
+> >>  		for_each_online_cpu(cpu)
+> >>  			per_cpu(vector_misaligned_access, cpu) = RISCV_HWPROBE_MISALIGNED_VECTOR_UNSUPPORTED;
+> >> -	} else if (!check_vector_unaligned_access_emulated_all_cpus() &&
+> >> +	} else if (!check_vector_unaligned_access_table() &&
+> >> +		   !check_vector_unaligned_access_emulated_all_cpus() &&
+> >>  		   IS_ENABLED(CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS)) {
+> >>  		kthread_run(vec_check_unaligned_access_speed_all_cpus,
+> >>  			    NULL, "vec_check_unaligned_access_speed_all_cpus");
+> > 
+> >>
+> >> Regarding your table, it feels like a bit going back to old hardcoded
+> >> platform description ;). I think some kind of auto-detection of speed
+> >> (not builtin the kernel) for platforms could be good as well to skip
+> >> probing.
+> >>
+> >> A DT property also seems ok to me since the goal is to describe
+> >> hardware. Would a common DT/ACPI property be appropriate ? The
+> >> device_property API unified both so if we used some common property to
+> >> describe the misaligned access speed (both in DT cpu node/ ACPI CPU
+> >> device package), we could keep a single parsing method. But I'm no ACPI
+> >> expert so I don't know if that really make sense.
+> >>
+> >> Thanks,
+> >>
+> >> Clément
+> >>
+> >>>
+> >>> Thanks,
+> >>> drew
+> >>
+> 
