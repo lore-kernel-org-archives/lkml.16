@@ -1,72 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C66256C88;
-	Mon, 10 Feb 2025 17:00:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BED625757;
+	Mon, 10 Feb 2025 17:01:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739206850; cv=none; b=tIiuWcRnQmzrISkho8fEWJlFdt5TRbIIBhsEfP814r/KGFTkbUdcQ27PiAH4eLkD0YY3HlPz+lAY0uyQEVaouAudbzLHh3T1q5I5r+iBerilKd2aSwEz7pkoiL4jQ2qx0no9vl6DtKgGC788UBrPEvk11GwgOY+9fiUDTpsB5kU=
+	t=1739206901; cv=none; b=OUu82R86EBY1qs+uuPALTvQyFOv2iFS+eoJfRUk89q8HPOhA8vsQHlDJa3hhlg0rXXtdgTCea0QyMfjT1ZEuOT4HdCe/7HcQar2B49Rox/Re46njYoSh5Fsa9pfvsawyiC+hO46sy4EASWPwEaawaLrBWwsoZ1kuNGDdZ4ADDFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739206850; c=relaxed/simple;
-	bh=tpsTov6Qr/s5OOulL+UdOsWM2lAtGYCZxb/IGeVYfOQ=;
+	s=arc-20240116; t=1739206901; c=relaxed/simple;
+	bh=KbtE9EGAZOZs06gDPHy5xxqRxQd3wXKf75qbqvSeJg8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FvZ7B/lDcw9XxMpV+rnbSjLliDvbjB76CqdK4FTod6xUWgWB6IjkzIiaStCXyRjUwGcVbQ4PewvHK6wPIQm9FkhC3BuvawkHF9CyYAXfE1H0+DPHKnBoPktH16V9OJYBcNJA7rTjVJP/temi/HVqNtXOb8jy6Oq8DpUhqnQBOA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DLdwuFKf; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=PYByYfRiMVwcyFA0XX8CRwwim/qnX2091huLaW6aLgx0OpV69ikC2F+Hj8CXVtIJ7+8EQrgg1HdE4WSD1w/46jiRvc8MKId3MmYx3vHRaE/GCifkoBKl2hRqxc1GZj8aw8KbCivBjfBggogjDAtAQY8aJP9ROwXhQRsXYtRYqwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h6mdeN44; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DLdwuFKf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70775C4CEE5;
-	Mon, 10 Feb 2025 17:00:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h6mdeN44"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2CE1C4CED1;
+	Mon, 10 Feb 2025 17:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739206849;
-	bh=tpsTov6Qr/s5OOulL+UdOsWM2lAtGYCZxb/IGeVYfOQ=;
+	s=k20201202; t=1739206900;
+	bh=KbtE9EGAZOZs06gDPHy5xxqRxQd3wXKf75qbqvSeJg8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DLdwuFKfXyQYohVa5/G0tTRg6Koz6o8MJ0B3SPXOH3WjJTcE8wOX9ogcbysaONH6O
-	 NvIDNmOvJu+h7qhw7Shh/0hRivKcrP2ri4yhbXYEFLZHJlHmk5aRc9xmNNK6iD4UQv
-	 7SNBm27KcvwtFaVVePvTIx6eC7KX6c4QHKmIwRGRAU7sx4iXGdd5KD5ZvylYUkBbZ8
-	 K+M+5vmeXJeDuG/AdJAix0fhxM86Lga74z3pr4GmcGN0TH66qGwJdVm1WzwrvqF4ET
-	 gY6KtdW7Qm/jvO4kM7/0fI7HzYqigY+mHLyxheqOmz7uGXprnNyGtkQS2WCzl6jYis
-	 JpJKNhQaveRZw==
-Date: Mon, 10 Feb 2025 17:00:47 +0000
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 0/2 v6] add ioctl/sysfs to donate file-backed pages
-Message-ID: <Z6owv7koMsTWH1uM@google.com>
-References: <20250117164350.2419840-1-jaegeuk@kernel.org>
- <Z4qb9Pv-mEQZrrXc@casper.infradead.org>
- <Z4qmF2n2pzuHqad_@google.com>
- <Z4qpurL9YeCHk5v2@casper.infradead.org>
- <Z4q_cd5qNRjqSG8i@google.com>
- <Z6JAcsAOCCWp-y66@google.com>
+	b=h6mdeN44UWUPZmfVwusQDTyxuxC1AMXDReHetVO2TX3CJ7BjXJOMX69OltnXDCv9q
+	 rVjQ8z9jJaiBDmXkgNYzRGE4at5DouFoGSxriYu/t0Wo12DlCSBCbgWsyTq1f8jyJ2
+	 1j5stCtbPxgUec1p8InSTEkJhW3ItmgqOUYZ9nL9mOGQPWdGeSYYF4oFGTnTXdbRTC
+	 +uiwAVS8ylniZNSTpog/9LrVzSmXu0tB0+AjxKOtAHWnS/nfMkQOSKi2iSEOgH2XAF
+	 m9Pg3pzWbh47XAJUDTBluZ+gYdbLLUoF44ppJKmAg93p1ILCjswQbxcOZmaiKZ58R0
+	 L9mjsDEWtaJZw==
+Date: Mon, 10 Feb 2025 17:01:36 +0000
+From: Lee Jones <lee@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>
+Subject: Re: (subset) [PATCH v11 3/3] leds: Add LED1202 I2C driver
+Message-ID: <20250210170136.GD1868108@google.com>
+References: <20241218183401.41687-1-vicentiu.galanopulo@remote-tech.co.uk>
+ <20241218183401.41687-4-vicentiu.galanopulo@remote-tech.co.uk>
+ <173641864745.2570436.6359371577917683428.b4-ty@kernel.org>
+ <CAMuHMdXNOEXuEADeSGGHw88Tse+QjSkknKYGH-kk02jSpiuNiQ@mail.gmail.com>
+ <20250210165923.GC1868108@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z6JAcsAOCCWp-y66@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250210165923.GC1868108@google.com>
 
-On 02/04, Jaegeuk Kim wrote:
-> On 01/17, Jaegeuk Kim wrote:
-> > On 01/17, Matthew Wilcox wrote:
-> > > On Fri, Jan 17, 2025 at 06:48:55PM +0000, Jaegeuk Kim wrote:
-> > > > > I don't understand how this is different from MADV_COLD.  Please
-> > > > > explain.
-> > > > 
-> > > > MADV_COLD is a vma range, while this is a file range. So, it's more close to
-> > > > fadvise(POSIX_FADV_DONTNEED) which tries to reclaim the file-backed pages
-> > > > at the time when it's called. The idea is to keep the hints only, and try to
-> > > > reclaim all later when admin expects system memory pressure soon.
-> > > 
-> > > So you're saying you want POSIX_FADV_COLD?
-> > 
-> > Yeah, the intention looks similar like marking it cold and paging out later.
+On Mon, 10 Feb 2025, Lee Jones wrote:
+
+> On Tue, 21 Jan 2025, Geert Uytterhoeven wrote:
 > 
-> Kindly ping, for the feedback on the direction. If there's demand for something
-> generalized api, I'm happy to explore.
+> > Hi Lee,
+> > 
+> > On Thu, Jan 9, 2025 at 11:31 AM Lee Jones <lee@kernel.org> wrote:
+> > > On Wed, 18 Dec 2024 18:33:59 +0000, Vicentiu Galanopulo wrote:
+> > > > The output current can be adjusted separately for each channel by 8-bit
+> > > > analog (current sink input) and 12-bit digital (PWM) dimming control. The
+> > > > LED1202 implements 12 low-side current generators with independent dimming
+> > > > control.
+> > > > Internal volatile memory allows the user to store up to 8 different patterns,
+> > > > each pattern is a particular output configuration in terms of PWM
+> > > > duty-cycle (on 4096 steps). Analog dimming (on 256 steps) is per channel but
+> > > > common to all patterns. Each device tree LED node will have a corresponding
+> > > > entry in /sys/class/leds with the label name. The brightness property
+> > > > corresponds to the per channel analog dimming, while the patterns[1-8] to the
+> > > > PWM dimming control.
+> > > >
+> > > > [...]
+> > >
+> > > Applied, thanks!
+> > >
+> > > [3/3] leds: Add LED1202 I2C driver
+> > >       commit: 939757aafeb9c266dda37657ee5f7a73ffd35ae2
+> > 
+> > You also have commit 259230378c65ebb6 ("leds: Add LED1202 I2C driver")
+> > in mfd/for-mfd-next, which dropped the change to drivers/leds/Makefile,
+> > and changed the Link:-tag to point to the older version v10?
+> 
+> Interesting.  Not sure I noticed and if I did, I must have fixed it.
+> 
+> This is the commit that made it in:
+> 
+>   939757aafeb9 ("leds: Add LED1202 I2C driver")
 
-If there's no objection, let me push the change in f2fs and keep an eye on
-who more will need this in general.
+Scratch that - looks like:
+
+  259230378c65 ("leds: Add LED1202 I2C driver")
+
+... also made it in.  However the Makefile line survived:
+
+  drivers/leds/Makefile:obj-$(CONFIG_LEDS_ST1202)         += leds-st1202.o
+
+Did anything break or is all as expected?
+
+-- 
+Lee Jones [李琼斯]
