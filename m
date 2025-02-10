@@ -1,97 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544CC24E4D9;
-	Mon, 10 Feb 2025 19:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C50F24E4A2;
+	Mon, 10 Feb 2025 19:52:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739217160; cv=none; b=TYDKVeoagkEWdmtYPz949hr8cTCd5lvpL9XqulZvuj1trjmL6z3WXloCuyct22jcEnFU5tuHVU1p12lYeeSZZjz01nYHOxuAjDeUbSFUDrc3duhNyB3WSL00cWm5cjPrw1e42PZtGJfOhGavmv4QBtkf7hyXhcNdsbSEhsHiq0A=
+	t=1739217167; cv=none; b=jQIQizdLt/1N31ujbXf9gUEF9KRz0vvxXXx8Rr1HdErLgglU+PfrRxOYxJZADLSJQX7F4bpD0YGn1T1sTJII4mNfJuRhNXWflfilWnYIktE5XrK/ModP2gcvP8hlZ9p5LUzi0gkkHKGvwvEkKxNJOMTpfqTebEUpbYXflwUW2ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739217160; c=relaxed/simple;
-	bh=YKyCyz2ARHxjUjk7uzAEj6oAAwn39/A/3L0yak7dy9c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lRi6NxyobgTnVDgHWo0LouT/n+EJDXvGx+yHGhkTbczKY23WxGYPdqnaXMr41TNDED/s35ONo9/Dxqwv6y/lAmn3+7NJruiBLmOC2FShUerR5Q9xY2lR2AtKiglvkitY9J1QO0FTzqs8f0m1cXDlWANIjbMhskCtGqSh5n0Rr0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C3ixRV8K; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739217167; c=relaxed/simple;
+	bh=zbqmjJ/TxKX7U/m5+hgRgAGIrFw5+CmX9sFh4piK0QQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KCETnbD+ARqhxbWKJAm1GGkP3DEZ8Yb207et1+XcTxikKBh9aiXgLO3CywuwXMSJ/r0FCYCE8Lc579wA8terQb7EQvbJDNM58zDvOuiYGPJmcZ+RrJtoKGKGRVP/XCf6IXQvpH2Pp2dGR/4DpUExWGfq9dy8Wxga62iGpI3zMP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jq3/m16Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C3ixRV8K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739217158; x=1770753158;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=YKyCyz2ARHxjUjk7uzAEj6oAAwn39/A/3L0yak7dy9c=;
-  b=C3ixRV8K9H6oqYu3Zu26IqBcG4l3xGgeUQUuSpDiHrfGVgKdV3W/G/gW
-   AoieGisNNo3se4qi14bhTy3rbeHcYW52nmMmkGhd5AqoEHtV88TINmLRo
-   0oDSrnT89/7Aa+OxNvlGuayMsFizfxHWzOBoMcBV7asXetI/zeFPzYif8
-   J8zzsDLdaTM4nrhmKJbvKPpdNXDgSFpYd52fARNNYxlHfHEd2wDbBqLqE
-   gzTNpBRO4heov7NyXNGPjEAusOly2IMVKfZOrPUTua7d8L5yL35fFs1fh
-   rEE0TV8Ug2LlnQ6Rasotvb2Kj0q19/uliKGF5v8Rf4KZ5R8KThltAcl4G
-   g==;
-X-CSE-ConnectionGUID: DJzB1PLWSUCcA3/ApyJ5IQ==
-X-CSE-MsgGUID: DbtIjN7gSfGLmnpvHeDz1w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="40085024"
-X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
-   d="scan'208";a="40085024"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 11:52:36 -0800
-X-CSE-ConnectionGUID: Y8pPCPD5TcG5ULBuAwdcFQ==
-X-CSE-MsgGUID: rwU+klMkRi+6lMUC1uuI4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
-   d="scan'208";a="143148722"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa002.jf.intel.com with ESMTP; 10 Feb 2025 11:52:33 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id B7E492F2; Mon, 10 Feb 2025 21:52:31 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Alexis GUILLEMET <alexis.guillemet@dunasys.com>
-Subject: [PATCH v1 0/2] pinctrl: intel: Fix PWM initialisation
-Date: Mon, 10 Feb 2025 21:44:49 +0200
-Message-ID: <20250210195230.490904-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jq3/m16Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFAA1C4CED1;
+	Mon, 10 Feb 2025 19:52:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739217166;
+	bh=zbqmjJ/TxKX7U/m5+hgRgAGIrFw5+CmX9sFh4piK0QQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Jq3/m16YbpHRVW3WrViZSasayOPhOgS0RarkIDN/ckhjaXkLhhX27+jUBG205L/3/
+	 gVM/zdrGSjchlJpkubN3yy9tIwqpI2M7Vo0kcs3OmorAv/YioarMOCPIeXestE1LPS
+	 eD4evm8zr84wT1WLNb+nfwy5fp+2I8A/NQxA6Qr/hfwG/fREK5EJIym1KpqfnUHzQx
+	 rlfPYW8rwuEHLEj/1B65MlSvY/qIpKfbmzLo6dw0HzFzfOgRenCX+NX4xZ792ip2Yu
+	 QSV34ZX91SAADWwMO7m2Y/xf7UWdiT6K1qHzQl3fC7gxlAvPWq0q3W2MduKzBlNKsZ
+	 t3j3Y+yAxZXvA==
+Date: Mon, 10 Feb 2025 19:52:43 +0000
+From: Simon Horman <horms@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 14/15] mptcp: pm: change rem type of set_flags
+Message-ID: <20250210195243.GB554665@kernel.org>
+References: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-0-71753ed957de@kernel.org>
+ <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-14-71753ed957de@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-14-71753ed957de@kernel.org>
 
-It appears that PWM instantiated from pinctrl-intel is configured
-to a wrong flow. This mini-series to fix the issue. Note, patch 1
-is comprehensive documentation paragraph to explain what the difference
-in the programming flow and what the SoCs are affected.
+On Fri, Feb 07, 2025 at 02:59:32PM +0100, Matthieu Baerts (NGI0) wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> Generally, in the path manager interfaces, the local address is defined
+> as an mptcp_pm_addr_entry type address, while the remote address is
+> defined as an mptcp_addr_info type one:
+> 
+>     (struct mptcp_pm_addr_entry *local, struct mptcp_addr_info *remote)
+> 
+> But the set_flags() interface uses two mptcp_pm_addr_entry type
+> parameters.
+> 
+> This patch changes the second one to mptcp_addr_info type and use helper
+> mptcp_pm_parse_addr() to parse it instead of using mptcp_pm_parse_entry().
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-The issue had been reported privately, hence no Closes tag.
-I haven't added the Tested-by, so to make sure that it (still) works
-I ask Alexis to give the formal Tag here in a response to the series.
-
-The idea is to route this via pin control tree as there are already two patches
-against PWM handling in pinctrl-intel. There is no need to backport that, it's
-optional, because it wasn't worked from day 1, and hence no Cc: stable@.
-
-Cc: Alexis GUILLEMET<alexis.guillemet@dunasys.com>
-
-Andy Shevchenko (2):
-  pwm: lpss: Clarify the bypass member semantics in struct
-    pwm_lpss_boardinfo
-  pinctrl: intel: Fix wrong bypass assignment in
-    intel_pinctrl_probe_pwm()
-
- drivers/pinctrl/intel/pinctrl-intel.c      |  1 -
- include/linux/platform_data/x86/pwm-lpss.h | 33 ++++++++++++++++++++--
- 2 files changed, 30 insertions(+), 4 deletions(-)
-
--- 
-2.45.1.3035.g276e886db78b
+Reviewed-by: Simon Horman <horms@kernel.org>
 
