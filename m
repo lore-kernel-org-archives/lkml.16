@@ -1,79 +1,64 @@
-Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C504C2528E1;
-	Mon, 10 Feb 2025 15:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF732528E1;
+	Mon, 10 Feb 2025 15:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739200719; cv=none; b=sen9wh6zlOdpyEVg34cucyKmDb3Hm3xlZyUCQh8UnM68jNvWN8+0aCfozwgSpfJsxDh27LHqMmHBKQ0KbKC6H6NmMbWI0NADZ8MlIU1pM99Rvrhluh/F0UhEMzqVtX+M+qqvm+OUKLFKh719b2Bki4cDVmeZF6lDUX1exIwwaO0=
+	t=1739200763; cv=none; b=vEUbLfSif3c6tctzFo806MiZ96cBj007QYJSVIYg094PpMSA9aWDFFUUhqktJnDOCUHjIXZbS8keDOKcZ2BWEM2opti0lpfKZ1ARC0psgQuzNvsZXqUn7GSG8OTFU5pfwlnnCGbfBKw8F+IvuDEXGZ6fIyuo0Z92FYy814EGPzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739200719; c=relaxed/simple;
-	bh=HQXa2XZpLkFsDl+MGL2N9ezPt2El0y7jK/+k0k9ydJo=;
+	s=arc-20240116; t=1739200763; c=relaxed/simple;
+	bh=tlpzLO1OaFJr0EbryVPAKN5AO5zM0QtHGFJNz2HgE/U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gTCk6uzZIK6m5rqbOrrAhZWbPOTill/2h5F3iL25afnJH7HQ3qJy6luKrJsfKFuldhwnrTJQj4nmEnP5/hBLcPt3z2AG+m59wTxI0bontAr5PpjK6tUfJGefft1VgD/g/LvoIfFsEl//T54R73nFsLeLNm79uA4F0P1AA1iMgXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com; spf=pass smtp.mailfrom=bsbernd.com; dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b=ZvP4+NX9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=c2o8fP2V; arc=none smtp.client-ip=202.12.124.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsbernd.com
+	 In-Reply-To:Content-Type; b=jjQdKW+5zO95blP5lPFbEbngnqI4w0O967WhwCFc/xmsrA71osE7B/hUgzLquMuiDc0mF4DUrchWyoxOWDGlV+OLNyvuyRiMs6A/KoIQNc81kTWCxtJP2j081AqM0NV4wPU16XwjuYhJc2DhpH2pIl6vp2j1IwWwlk44Z8cmW48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N5ACWGFh; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b="ZvP4+NX9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="c2o8fP2V"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfout.stl.internal (Postfix) with ESMTP id 923AB11400A1;
-	Mon, 10 Feb 2025 10:18:34 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-09.internal (MEProxy); Mon, 10 Feb 2025 10:18:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bsbernd.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1739200714;
-	 x=1739287114; bh=l2o7Ctl/b1mebUuS5v7a27TgU4ZziO9MD5ZdLF//IwQ=; b=
-	ZvP4+NX9BZ71Pu1Tlh20l3SfUghq6zl/vx+CCbZ+ymwIzQb7olhr+/OxlwiKZBP6
-	yOYanjdOiiNGTPuCVAdsLwz+fgxe2faZ9h5KkpYM5cqdrJw9bh1un6ZfTcmGPNkO
-	TYB/gkYwIAlq+ybI83z3CLoBMMmfFk1IXSIIi1la4ydTNCWNGN4K3pnnysQRgS4m
-	SSKJQCWTVAZnCUogC5bv3gZfYnffeUWwjKhfpAc5zjDiu5xhNGtjQ+85fvVquG1R
-	kxuYgmqxKI64kObeVMB4sti/jsNyya0GTOwF/3gm/ZMJ+lzlRjQfHy2aEcxiuuaN
-	JVDHoC4gV0RCmUICHziOFQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739200714; x=
-	1739287114; bh=l2o7Ctl/b1mebUuS5v7a27TgU4ZziO9MD5ZdLF//IwQ=; b=c
-	2o8fP2VKkOVeJLvycq/uJNUGFjb7inbe1S6+rEE/w5D6Hj1osxK6rqhVLa4B4YlX
-	aXX2ps40Fk+1aus+LbG9TCTAPSXYZIp5ak7BHhbBp+0M5aEGSOVtdpZ8sKZWlsKw
-	GQN4tId/1cxBMpt6mCngMgrgwJ1X2JhvFn7IFegWsVRQyswN1j2+nfFf0lyavBy7
-	jKT09hnQY0LW3/sfpy9K2G+C2tDqMMqrIZUAX62qv91AwQtnV8O/0a0ejy0yuRJg
-	m1h0rfYFDKewSNsVbInuZ2MO+4Nvz5YjT216UX4I4z/plus3cnSDxtDT7DKnVWbG
-	EPRKZsqF22+IhhWiV+a+Q==
-X-ME-Sender: <xms:yRiqZ8VW9OfQDbvMGKE7lX6GNNmGDKR5KWv6wfrsmB6yFLiPbTTS2g>
-    <xme:yRiqZwkMkGS62Dj7PN6_OvDmDJJSYVb11H0MrIe8IqU7cBR4b9uioghUbQMQ78tRQ
-    8SFse3hHJM0jn3d>
-X-ME-Received: <xmr:yRiqZwaO0RlJU3QwdylFQV2XdC9MU_MIagDDY0meeylYHPB-ME70eIGZ5mwi1InJ6eE_X64LihrvtouJQPvSXrZqejOiaUSPyX9SwWmATktcNmkXUia_>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefkeegudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddv
-    jeenucfhrhhomhepuegvrhhnugcuufgthhhusggvrhhtuceosggvrhhnugessghssggvrh
-    hnugdrtghomheqnecuggftrfgrthhtvghrnhepjefgleejueffhefhueekvdduhfetteeh
-    tdehfeejhfevudethefhtdetvdekkeevnecuffhomhgrihhnpehkvghrnhgvlhdrohhrgh
-    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsvghr
-    nhgusegsshgsvghrnhgurdgtohhmpdhnsggprhgtphhtthhopeehpdhmohguvgepshhmth
-    hpohhuthdprhgtphhtthhopehluhhishesihhgrghlihgrrdgtohhmpdhrtghpthhtohep
-    sghstghhuhgsvghrthesuggunhdrtghomhdprhgtphhtthhopehmihhklhhoshesshiivg
-    hrvgguihdrhhhupdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrd
-    hkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:yRiqZ7VIPqqJ5WGAzmV1tocJWpadgUEJicjBc0VcgZq7WfebAAvEBw>
-    <xmx:yRiqZ2lX96rQyBUGCqPnQt4S_p60_hGiXyes0WHgwYv9EofCSgH6vg>
-    <xmx:yRiqZwcqiyfMng4kq46HVYUcdeRt-iwVeCpA-IydLAdSkKJhTUCupw>
-    <xmx:yRiqZ4HAFCEUJlv8k4WZSEp0K9KwhjwSR0Lgg2MdK2EA2GgqMpAQ1g>
-    <xmx:yhiqZ9trLqp3pMIYIsUXAq5R8svZB1emeK39A9kxOqfYBKDv4rO18lnX>
-Feedback-ID: i5c2e48a5:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 10 Feb 2025 10:18:32 -0500 (EST)
-Message-ID: <400ffcf9-9b98-4e94-81eb-3e33177ba334@bsbernd.com>
-Date: Mon, 10 Feb 2025 16:18:30 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N5ACWGFh"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2f9b91dff71so6929241a91.2;
+        Mon, 10 Feb 2025 07:19:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739200761; x=1739805561; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3xqRKY+q8PyHYDf3BVGRcr2KWDeTP/NWjkUy2+uT95c=;
+        b=N5ACWGFhuVdkKcn6f+UahD3gO8GIUxl7a7jgEvaafss8iupuUaZJcVMYEURBsflmcY
+         flkRIQGMICmbmU2DHMUNlBZALkaRTLbjdlbMnVA1BW2vNET+TnyXD/rtlZYU7FPdFIaH
+         a4cX5nHG8IFAHCgSGrFY1WwwSXBdWB4HY4fTArlXAUp0B7Qy2n1NDmp4ltOTo+hav4SK
+         dEd97baU1CU8ozj4QA2jy/d3714fx8fnmP9rUkzI0a4TI//zDlBapcGiMICz41+KZrEF
+         K/KQVTvIA90SiG+IkrgHuZ8hMzBWlbaH0E2PBNuMyHQ1OnKTJSWokdJzF+NSKNbw0EmL
+         SOqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739200761; x=1739805561;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3xqRKY+q8PyHYDf3BVGRcr2KWDeTP/NWjkUy2+uT95c=;
+        b=blDdcdRIhGgUieM9LAG25EsCjsWkZaKBhT4uN5QgY3KJMnaMGYmXXOh3X6T4QD3Eg+
+         s+9DohqAGe4yIqbNy+cCM1icf5MmamJMw5IOJOlv1jI4YSiY9EzAPKejhuXXuPNX3VQu
+         RaVqOwL+5801Eye2tCfj+cMgvHTHMyvyrDDEcDgkpiaDvhR1p7+sGuGlGGhp9gIJ+5Nu
+         LaGopHgwn5Mb98KGldhP8SP0vrmaQ+xT0/Q1C1Bzxf2vb0Mjz8d1ukwH4zAgY2zDoTPv
+         Bqvaxx0zxcWAPNixvgaanG7jToUkHmKLNfyR4vh8Ac3yqMI2i1kMrsZVSuzXu+bWeijK
+         cC7w==
+X-Forwarded-Encrypted: i=1; AJvYcCWRuA+N14zFj0r18EVFfa+4M7ZqdvvLAjSgmveFLVYkjED/lrmT7722Iox4KyOmLLFjWrJp9Tkb/0YxQD0w@vger.kernel.org, AJvYcCWpnenUxi+fV9HRkPyRLUoWEoaQXtQPkO6la+FasrQW2BKXEu0Cc/sqXpM88w+wQx6hkCM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzo62OcquZ05CtEIK25IMeCeQpfiXzVcND7PZOe+rN1w/+fVe+t
+	4Pws8y0R8Hc3tGUv1wxq651yUw77VssA8ji2jNcjuIbjD84VkhNw
+X-Gm-Gg: ASbGncsw5KtoNAsVtGO/J6vhnIf7W4Kyvi1riDyIU3WAZpj1i4u/kp8kp0y688D6nPN
+	pmbPWw2J2hb/sbJCPR8BW27I7iLpo0qZJI1FSPIW0/MLWRN94BS0ZUO2MxcWm7PJDJ744d/RjsN
+	I/1veUFYL2R1SYP4HjKvnsLYbZfTMduf87CMpFY1spMxAWvZnKq8xm0+rC3y4mz7NIa6X4WGFdA
+	gg0knjkyg2yx2VjesSewHiIEfDe2RodjIvZ/tXV0yDv4fGUNqy/x0EpI0z6HT8RGql43XyLXHfT
+	A5EC6a2Kg9/N
+X-Google-Smtp-Source: AGHT+IEtRndOAtN+hCziPX8YsAWGO9SxbjnZAcVJlej6cGL8luGVUZLenMphyNprKabdaxhTxc895A==
+X-Received: by 2002:a17:90b:1989:b0:2fa:200e:acd6 with SMTP id 98e67ed59e1d1-2fa242e5cb7mr20506233a91.28.1739200760081;
+        Mon, 10 Feb 2025 07:19:20 -0800 (PST)
+Received: from [0.0.0.0] ([5.34.218.148])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa099f4d6asm8882617a91.6.2025.02.10.07.19.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 07:19:19 -0800 (PST)
+Message-ID: <4914fa43-650c-403e-b2a5-b5ec66d02101@gmail.com>
+Date: Mon, 10 Feb 2025 23:19:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,95 +66,101 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2] fuse: add new function to invalidate cache for all
- inodes
-To: Luis Henriques <luis@igalia.com>, Bernd Schubert <bschubert@ddn.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250210094840.5627-1-luis@igalia.com>
- <b5db41a7-1b26-4d12-b99f-c630f3054585@ddn.com> <87pljqyt10.fsf@igalia.com>
-From: Bernd Schubert <bernd@bsbernd.com>
-Content-Language: en-US, de-DE, fr
-In-Reply-To: <87pljqyt10.fsf@igalia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH bpf-next v5 3/4] libbpf: Add libbpf_probe_bpf_kfunc API
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ eddyz87@gmail.com, haoluo@google.com, qmo@kernel.org, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Tao Chen <dylane.chen@didiglobal.com>
+References: <20250210055945.27192-1-chen.dylane@gmail.com>
+ <20250210055945.27192-4-chen.dylane@gmail.com> <Z6oDdiKkBy7McK-2@krava>
+From: Tao Chen <chen.dylane@gmail.com>
+In-Reply-To: <Z6oDdiKkBy7McK-2@krava>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-
-
-On 2/10/25 11:48, Luis Henriques wrote:
-> [re-sending -- for some reason I did a simple 'reply', not a 'reply-all'.]
+在 2025/2/10 21:47, Jiri Olsa 写道:
+> On Mon, Feb 10, 2025 at 01:59:44PM +0800, Tao Chen wrote:
 > 
-> On Mon, Feb 10 2025, Bernd Schubert wrote:
+> SNIP
 > 
->> On 2/10/25 10:48, Luis Henriques wrote:
->>> Currently userspace is able to notify the kernel to invalidate the cache for
->>> an inode.  This means that, if all the inodes in a filesystem need to be
->>> invalidated, then userspace needs to iterate through all of them and do this
->>> kernel notification separately.
->>>
->>> This patch adds a new option that allows userspace to invalidate all the
->>> inodes with a single notification operation.  In addition to invalidate all
->>> the inodes, it also shrinks the sb dcache.
->>>
->>> Signed-off-by: Luis Henriques <luis@igalia.com>
->>> ---
->>> Hi!
->>>
->>> As suggested by Bernd, this patch v2 simply adds an helper function that
->>> will make it easier to replace most of it's code by a call to function
->>> super_iter_inodes() when Dave Chinner's patch[1] eventually gets merged.
->>>
->>> [1] https://lore.kernel.org/r/20241002014017.3801899-3-david@fromorbit.com
->>>
->>>  fs/fuse/inode.c           | 59 +++++++++++++++++++++++++++++++++++++++
->>>  include/uapi/linux/fuse.h |  3 ++
->>>  2 files changed, 62 insertions(+)
->>>
->>> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
->>> index e9db2cb8c150..be51b53006d8 100644
->>> --- a/fs/fuse/inode.c
->>> +++ b/fs/fuse/inode.c
->>> @@ -547,6 +547,62 @@ struct inode *fuse_ilookup(struct fuse_conn *fc, u64 nodeid,
->>>  	return NULL;
->>>  }
->>>  
->>> +static void inval_single_inode(struct inode *inode, struct fuse_conn *fc)
->>> +{
->>> +	struct fuse_inode *fi;
->>> +
->>> +	fi = get_fuse_inode(inode);
->>> +	spin_lock(&fi->lock);
->>> +	fi->attr_version = atomic64_inc_return(&fc->attr_version);
->>> +	spin_unlock(&fi->lock);
->>> +	fuse_invalidate_attr(inode);
->>> +	forget_all_cached_acls(inode);
+>> diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
+>> index e142130cb83c..53f1196394bf 100644
+>> --- a/tools/lib/bpf/libbpf_probes.c
+>> +++ b/tools/lib/bpf/libbpf_probes.c
+>> @@ -433,6 +433,54 @@ static bool can_probe_prog_type(enum bpf_prog_type prog_type)
+>>   	return true;
+>>   }
+>>   
+>> +int libbpf_probe_bpf_kfunc(enum bpf_prog_type prog_type, int kfunc_id, int btf_fd,
+>> +			   const void *opts)
+>> +{
+>> +	struct bpf_insn insns[] = {
+>> +		BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, BPF_PSEUDO_KFUNC_CALL, 1, kfunc_id),
+>> +		BPF_EXIT_INSN(),
+>> +	};
+>> +	const size_t insn_cnt = ARRAY_SIZE(insns);
+>> +	char buf[4096];
+>> +	int fd_array[2] = {-1};
+>> +	int ret;
+>> +
+>> +	if (opts)
+>> +		return libbpf_err(-EINVAL);
+>> +
+>> +	if (!can_probe_prog_type(prog_type))
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	if (btf_fd >= 0) {
+>> +		fd_array[1] = btf_fd;
+>> +	} else if (btf_fd == -1) {
+>> +		/* insn.off = 0, means vmlinux btf */
+>> +		insns[0].off = 0;
+>> +	} else {
+>> +		return libbpf_err(-EINVAL);
+>> +	}
+>> +
+>> +	buf[0] = '\0';
+>> +	ret = probe_prog_load(prog_type, insns, insn_cnt, btf_fd >= 0 ? fd_array : NULL,
+>> +			      0, buf, sizeof(buf));
+> 
+> hum, you pass fd_array_cnt as 0, which IIUC will work properly
+> 
+> but I guess then we don't need to have fd_array_cnt argument in
+> probe_prog_load if all callers pass 0 ?
+> 
+> jirka
+> 
+
+Hi, jiri
+In fact, 0 is indeed used everywhere here. I was just thinking about 
+whether we might need it in the future. Anyway, it seems better to 
+remove it. I'll make the modifications in the next version.
+
+>> +	if (ret < 0)
+>> +		return libbpf_err(ret);
+>> +
+>> +	/* If BPF verifier recognizes BPF kfunc but it's not supported for
+>> +	 * given BPF program type, it will emit "calling kernel function
+>> +	 * bpf_cpumask_create is not allowed", if the kfunc id is invalid,
+>> +	 * it will emit "kernel btf_id 4294967295 is not a function". If btf fd
+>> +	 * invalid in module btf, it will emit "invalid module BTF fd specified" or
+>> +	 * "negative offset disallowed for kernel module function call"
+>> +	 */
+>> +	if (ret == 0 && (strstr(buf, "not allowed") || strstr(buf, "not a function") ||
+>> +			(strstr(buf, "invalid module BTF fd")) ||
+>> +			(strstr(buf, "negative offset disallowed"))))
+>> +		return 0;
+>> +
+>> +	return 1; /* assume supported */
+>> +}
+>> +
+>>   int libbpf_probe_bpf_helper(enum bpf_prog_type prog_type, enum bpf_func_id helper_id,
+>>   			    const void *opts)
+>>   {
+>> -- 
+>> 2.43.0
 >>
->>
->> Thank you, much easier to read.
->>
->> Could fuse_reverse_inval_inode() call into this?
-> 
-> Yep, it could indeed.  I'll do that in the next iteration, thanks!
-> 
->> What are the semantics 
->> for  invalidate_inode_pages2_range() in this case? Totally invalidate?
->> No page cache invalidation at all as right now? If so, why?
-> 
-> So, if I change fuse_reverse_inval_inode() to use this help, it will still
-> need to keep the call to invalidate_inode_pages2_range().  But in the new
-> function fuse_reverse_inval_all(), I'm not doing it explicitly.  Instead,
-> that function calls into shrink_dcache_sb().  I *think* that by doing so
-> the invalidation will eventually happen.  Or am I wrong assuming that?
-
-I think it will drop it, if the dentry cache is the last user/reference
-of the inode. My issue is that it changes semantics a bit - without
-FUSE_INVAL_ALL_INODES the page cache is invalidated based on the given
-offset. Obviously we cannot give the offset for all inodes, but we
-at least document the different semantics in a comment above
-FUSE_INVAL_ALL_INODES? Sorry, should have asked earlier for it, just
-busy with multiple things in parallel...
 
 
-Thanks,
-Bernd
+-- 
+Best Regards
+Dylane Chen
