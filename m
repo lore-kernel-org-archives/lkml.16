@@ -1,87 +1,74 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361217E105;
-	Mon, 10 Feb 2025 19:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E4E2528F9;
+	Mon, 10 Feb 2025 19:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739214115; cv=none; b=g8xlqJ5gIvdXUD8PFbP/jBLVLc1rdM+vqOA9j4yKmcwPVuALy9AjgQhH2mrnZt30Y5QEq477k/Sg7YR7fje8uwT47dcI7Yw0asSAPsS2li2Y8sbWHhDF+Fujp5jA1MCDqBwlrrr2Zbk/c+KR0xNBQvtFlxQdHIN0JQKZe9h6Qug=
+	t=1739214123; cv=none; b=baEh4wDl+iejZR2yjUC0d9nXX+jeZIENAjeIGgC7op1SsGlevd/43/Oji6i72mXo/fghjJDCbjsTDnDZDOJGacJAz1Ewa2i/8KoR5sohvabolMBon5NDMQnVvJCtLJe5oSsJjJ5q1B3nqdKimCAJwNjGGrYQRJsmneMz22CKFLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739214115; c=relaxed/simple;
-	bh=F9TNcoE8pCUSmMjWLOBOlXCKc+/DpC6SIhAeXtwFfq8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WMrbnN8mJMXEG2AGlWnCx/J8vWqemboXP83EeZXDFsLL7HVx1ug1S0RbkqHqWBIboVZ9vE+uwORZvUcKeLeQwpc0d1r7ISnZcqDraUZtMIny3kefGjRj/KV5J/71Nr6vDGRls7tSm3AlGphPfFVuk/kF6JIkxPd50DBV926RxSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=n6DMcIHO; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1739214123; c=relaxed/simple;
+	bh=sAZdVDmiaTRCmf0IkBkoDIET23qGjuT0YLtH52rbHCM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dNJ6E5SDjvzMkdAVpl3QsPwy2fq3S/XzmW4TuD5Ofu19GHsxDyGm5J/9GmTEf7BNJ60gVmg/31/Biwl7ifzcXISS0jyabeWVHpxhRrSc1A9sFomFyEmcLLC1en9kxKdNCD9F5jdYiQgfpi165KHT4jHDxUsY3V/ReXQ5BxR/FyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nAnUmeTF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="n6DMcIHO"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 7276FA037B;
-	Mon, 10 Feb 2025 20:01:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=umBDdA7MKFQI8t0RyJeE
-	BqV2fN8Tu7iXBtOUlukw9JM=; b=n6DMcIHOxd66k9cl8S0bzywqDmb/DjpZrdfm
-	2mXLpbj1bcPgSxzNJ0imMgf+pK3vt8JyHSMG4Tv0VzaVFC7C8i4Av4/XT0kP46Fc
-	5aHkMsai4EMNq6fTV+Kd84RhAK1fUa6ZKDkxSzb7HXzh+62sR6eqtZ0/ok8MM8Ku
-	epGWLuAMubOzYGma862PL8gz7ie0OgXrRjnAn82rccEkEtj0Bo8xXoTHUjAbbZsl
-	f+6e+BhfGuKmGdppsDWR5aJuCOrf3j7yP+zMsPVky0ZyDweJubkzgXh4R89q3dsf
-	g23ZbVwUE1Bkqg/g/thw7XZIpEYU/HYVlgO0Kd5zq55f3h9ERK7ed/b+6hKkNzLp
-	2PhphUx/QUyqkg5yNN8frvCZHygnsSjv1wHHAcV9QQDvXg81sLRRSD2bs5XT4t7x
-	NGThU73SnAPZ17GIZulT4ZhtWuMmclYdYn5g6BYBZ2UXxLvATpw+0zw/uQckYI1i
-	zVJumT1c432ScCZHkPxq1NKJ/zQczynDwS7kqThLEJD8J6yrRhT8oTZoTZw/LOMQ
-	1y7pgprxobeXMkuJzm8zjVWPpFHPfNMOJmrjfhhSIX6iuvbIMDeLjmF9RbSW3oQA
-	5NcS3K6TxRIXn6IQqP8LJO66/CD7WLKNZN/nRLLnLfSYYwWbe5z/OMcEH8iE7ufO
-	pzLdSCQ=
-Message-ID: <ee2afc4d-fe21-4ba9-8283-51a41f74937c@prolan.hu>
-Date: Mon, 10 Feb 2025 20:01:49 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nAnUmeTF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DC53C4CEE7;
+	Mon, 10 Feb 2025 19:02:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739214122;
+	bh=sAZdVDmiaTRCmf0IkBkoDIET23qGjuT0YLtH52rbHCM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=nAnUmeTFiU6ixy3ne98p3ltY8J67kZYDYf7GxxSUyxc9t/0tSHyb6kiSxFMsXnzjw
+	 NP3Eej3h8PdWIuJds+q/ZP9nULBtap26iAaDYAeuBKjhK5V9VUBkr2HBOfB6Fo86hv
+	 5P5baPok3mPbVHZpCuKICt5LFWmCopGtr2pJkGRN7bVxcIydl0ItxQKwPZNwXWf/U5
+	 IPqVGSfoEAgI4KBb+zNiHNeH38S7I57+9Fdxg6ryuUmskLaRqwXLcNpSkFBksKhFXd
+	 riDH+YNcdkbOW0KemAfzc9mcsPgXRIFd576eLkAgWNCgF4jLtV7c86qA2mm9RDjO6k
+	 u5daQHxPkMkVg==
+From: Conor Dooley <conor@kernel.org>
+To: conor@kernel.org,
+	kernel@esmil.dk,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Shengyu Qu <wiagn233@outlook.com>
+Cc: Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v1] riscv: dts: starfive: Unify regulator naming scheme
+Date: Mon, 10 Feb 2025 19:01:51 +0000
+Message-ID: <20250210-banish-eternity-b1168fe47047@spud>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To:  <TYCPR01MB8437F6FCD14E116B6CBBA09098F72@TYCPR01MB8437.jpnprd01.prod.outlook.com>
+References:  <TYCPR01MB8437F6FCD14E116B6CBBA09098F72@TYCPR01MB8437.jpnprd01.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH for-6.14 v3 2/4] pm: runtime: Add new devm functions
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Len Brown
-	<len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>
-References: <20250207124802.165408-1-csokas.bence@prolan.hu>
- <20250207124802.165408-3-csokas.bence@prolan.hu>
- <CAJZ5v0gEdo_BeZh2tnxJMzoosxL5zzJXyf6wi7SR9du7MoQmUw@mail.gmail.com>
-Content-Language: en-US
-From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-In-Reply-To: <CAJZ5v0gEdo_BeZh2tnxJMzoosxL5zzJXyf6wi7SR9du7MoQmUw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=439; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=UQw5Egv0d2/v0E8mm1dyXKsG5bGJ9j9WfOpRO6obpLo=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDOmrfOUPeSh9klCyOr246lWt37zkyQ5Vt/7M9xFb55GTM 0PfnPN8RykLgxgHg6yYIkvi7b4WqfV/XHY497yFmcPKBDKEgYtTACbSco3hn/2r7w88Km0FSxtf PavlUH32/0uk6pa6DA/GrXPP3zSp8mRkOPujT/o4D0NFzV197YUPS5Ni1lheKmqbVHe/pGjCB46 /nAA=
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
- ATLAS.intranet.prolan.hu (10.254.0.229)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D94852617666
 
-Hi,
+From: Conor Dooley <conor.dooley@microchip.com>
 
-On 2025. 02. 08. 12:30, Rafael J. Wysocki wrote:
-> On Fri, Feb 7, 2025 at 1:48 PM Bence Csókás <csokas.bence@prolan.hu> wrote:
->>
->> Add `devm_pm_runtime_set_active()` and
->> `devm_pm_runtime_get_noresume()` for
->> simplifying common use cases in drivers.
->>
->> Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+On Thu, 06 Feb 2025 01:16:35 +0800, Shengyu Qu wrote:
+> Currently, there are 3 regulators defined in JH7110's common device tree,
+> but regulator names are mixed with "-" and "_". So unify them to "_",
+> which is more often to be seen in other dts files.
 > 
-> So I don't like this and it is not as straightforward as it looks, but
-> let me have a look at the entire series again and see why you think
-> this is useful.
+> 
 
-What exactly don't you like? And did you have a chance to look at the 
-rest of the series? I sent a cut-back version that should be easier to 
-review (I took out the DMA parts):
+Applied to riscv-dt-for-next, thanks!
 
-https://lore.kernel.org/linux-kernel/20250210111008.248929-1-csokas.bence@prolan.hu/
+[1/1] riscv: dts: starfive: Unify regulator naming scheme
+      https://git.kernel.org/conor/c/6b47db27468c
 
-Bence
-
+Thanks,
+Conor.
