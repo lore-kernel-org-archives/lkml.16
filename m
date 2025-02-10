@@ -1,121 +1,78 @@
-Received: from mail-oi1-f202.google.com (mail-oi1-f202.google.com [209.85.167.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71FE524C67E
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B3E25C6E1;
+	Mon, 10 Feb 2025 19:51:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739217091; cv=none; b=Q/7olqm1QDuS7NuFSKXmz21T/wY38N0x0VGXzCANmkVORyCEzio02Bsj4PgXeV44pVnkhY+Pnu7N1ZmTTa64hSdq2G7nNP42u5fzB83/2CiyCXI8ztV1y2Vpsjkvy9hufap2KDtBnlykxdUyx7TtRMtyE67MkEEetIJG684wjDA=
+	t=1739217104; cv=none; b=a3ROb1T0bySczBcNrEk+xVtpQEMsQ717Z0mEx9KqClWzluQqJl3TZ8f/r8hytFKr2CEmsPx1AiSxC8MtXkzI34sEge1r6EbsTDXr4LCeOPV67b2Qr0JuOgVfAnIFBQIPCN+rtS+c8xr680sUeKxSM+mlE6ktB05g09qJRvNMao8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739217091; c=relaxed/simple;
-	bh=NL0LHcvrRTbFaurivkSLOZV3+ypMF8EEk4/wIyUuZsk=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=PUwcYGuTizC6u1Ko2b14+3wxxjhSuqsVJuFYpeatc+aUVKX5/AdEg126f4QJge68O1U/BcsXJchKJYvFmdTdyzrfrxhV0VB8nG+lIu10O2X6KlENS5ZdqQnnMuANcbyzevCMzbRpC5JuRDBD8bNXCGTqzwXso8DR1T64uPMtshk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--joshdon.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q1DE7aXB; arc=none smtp.client-ip=209.85.167.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--joshdon.bounces.google.com
+	s=arc-20240116; t=1739217104; c=relaxed/simple;
+	bh=/Lz9SdWmlOP5n1NM2uaK+bs9RSTIt5+jzROq4ANRSJY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i1tf3sIPsS6RZDeqPLV4txuWQSwUvCaCTjYMZI0d8TMqoD2UGK8gRbfKpatNaknFOMaYTOHBej8PyIEKlNvjzPY0YiYBSmUnZND8N4KVWzRvM3CWVHEvf0Pu1M8Uje7hg2k8gMv6dKCMFKAVO5j0FtX2zg4yvoxhk6ofVXMHf+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VtLPbktc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q1DE7aXB"
-Received: by mail-oi1-f202.google.com with SMTP id 5614622812f47-3f3ba246da1so275589b6e.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:51:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739217088; x=1739821888; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=tOXnxgBUA2lQMXUHGwH30+TGhSdaWlZ68DAVadzFkQA=;
-        b=q1DE7aXBwBr5nFTnwAUpod4x8ntDdH1FpIpICM5E6crhvrS/NHvM94jBHaCuV4BEHh
-         HOntm3KnvhJvYa0OsBkIqL2BPzfWpZfHsEipuJo1EhFWxP4nOgO/r3xHVw1Nd61du42O
-         XNym9Q/WLe20YGcbDUZ95HwPZwD0IPUPeQ5apHzHrgVMWxRT9BaWe/39BN1M60Xih3Op
-         5kvdSJRPDDxwzFoYuhpq87qMUOLg6GXZBbubZ4vVc1gcYLqa0MUoiDvWQYCy5O6RN2BT
-         gw4Tg+zOHTlUT73IjANRp65kKAd65HeA25Thz3YejaXCxd+5TwHH+Y6qXOfMBG89oCLt
-         S6aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739217088; x=1739821888;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tOXnxgBUA2lQMXUHGwH30+TGhSdaWlZ68DAVadzFkQA=;
-        b=JJG3VmHgCarYaNlSy8mvTH8XH26LvL7lkEmirwZWvf3yJRRrkgD+z5IUEdF4jEcE/N
-         XWLBtBj3rox+R1dqvieIEEaq5GQOn+EyUrUkEithnWFxVjIzh9omIZH5JJiffukhQUhI
-         h/ZMraADWxgwlvC6C14JzuXmhNXtixj+05dQi/olxM8lZ8IKeIFB2Sd2+Y5++Nuiai7u
-         PYcap7lQCx8ssm51ESeDHIHyOtFd8a+rXiGUnsKcDX9VVAntHbTDyBJJmvnVgIzTC+Xh
-         dZSXG9aiW+ElMNZpNGROjmX3IBpHWm3yQKJo56CZfsUbLm/5uk3mrpkA/WBrjmGwAcYb
-         tB0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUvXhaxEeISaPpbuEErfSJC8Glm1H1qpYRL1TVS37WQLPG95ailXAoNqVBrX7396ZP+idqZU4FLSBNuPqU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjKPKUGqAr+r0GjrA81Ztp11mwdu71qMvedh2UEZfU6NaLYyP2
-	ZfZelhBuFDhP8X68M/WvDV4B2HNhMntRn/c0Vaa1nscGwnBoQw1SeBjdIxM3F/VUiSCBYCZj7vf
-	Vy0uT0Q==
-X-Google-Smtp-Source: AGHT+IFgSDA7YZwETAkSQItXtMybQDCzv3AKO4IAwD3VBscyHky1oQMCOzajc3TfGclLzwGpVOFbdrSNKjDr
-X-Received: from oabhp16.prod.google.com ([2002:a05:6870:9a90:b0:2b7:fd7e:8001])
- (user=joshdon job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6871:8302:b0:296:dd1d:ce73
- with SMTP id 586e51a60fabf-2b83e795187mr9579392fac.0.1739217088424; Mon, 10
- Feb 2025 11:51:28 -0800 (PST)
-Date: Mon, 10 Feb 2025 11:51:17 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VtLPbktc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30A19C4CED1;
+	Mon, 10 Feb 2025 19:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739217103;
+	bh=/Lz9SdWmlOP5n1NM2uaK+bs9RSTIt5+jzROq4ANRSJY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VtLPbktcq1EzzRNUVqFgjo6C3PaZ0e7aZMo7uucM2Wkg0n0GFytPnBZrawt6WHnFq
+	 gbxbG0cIvbifUPEc6K3D8ZgkGPjK74HMIimcFxDNhQzuXM7X6Ub0nfT+6SPBao3eQO
+	 U607cySMZIw1ooz5XNzTUHxBiEmBhDWvV+NvnET4kYb8A9f6S4Dm6PMSZVlbGTUlSK
+	 SWb7smxD2+4Xr6MRLr3mpSCBkutevpMf5vfSaz31DRKsskBs5E7w5FvS0tnyAIvxkX
+	 5Er0wMN0uJXnAt1gjn4TVSzxbe0N9YMZ3FOSyUikuncbH3EOp2tH+AtJ77bJB/i95q
+	 W9hXEd8ujLoGw==
+Date: Mon, 10 Feb 2025 19:51:39 +0000
+From: Simon Horman <horms@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 09/15] mptcp: pm: make three pm wrappers
+ static
+Message-ID: <20250210195139.GW554665@kernel.org>
+References: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-0-71753ed957de@kernel.org>
+ <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-9-71753ed957de@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <20250210195117.1074569-1-joshdon@google.com>
-Subject: [PATCH] sched: fix potential use-after-free with cfs bandwidth
-From: Josh Don <joshdon@google.com>
-To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org, 
-	Josh Don <joshdon@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-9-71753ed957de@kernel.org>
 
-We remove the cfs_rq throttled_csd_list entry *before* doing the
-unthrottle. The problem with that is that destroy_bandwidth() does a
-lockless scan of the system for any non-empty CSD lists. As a result,
-it is possible that destroy_bandwidth() returns while we still have a
-cfs_rq from the task group about to be unthrottled.
+On Fri, Feb 07, 2025 at 02:59:27PM +0100, Matthieu Baerts (NGI0) wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> Three netlink functions:
+> 
+> 	mptcp_pm_nl_get_addr_doit()
+> 	mptcp_pm_nl_get_addr_dumpit()
+> 	mptcp_pm_nl_set_flags_doit()
+> 
+> are generic, implemented for each PM, in-kernel PM and userspace PM. It's
+> clearer to move them from pm_netlink.c to pm.c.
+> 
+> And the linked three path manager wrappers
+> 
+> 	mptcp_pm_get_addr()
+> 	mptcp_pm_dump_addr()
+> 	mptcp_pm_set_flags()
+> 
+> can be changed as static functions, no need to export them in protocol.h.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-For full correctness, we should avoid removal from the list until after
-we're done unthrottling in __cfsb_csd_unthrottle().
-
-For consistency, we make the same change to distribute_cfs_runtime(),
-even though this should already be safe due to destroy_bandwidth()
-cancelling the bandwidth hrtimers.
-
-Signed-off-by: Josh Don <joshdon@google.com>
----
- kernel/sched/fair.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 34fe6e9490c2..78f542ab03cf 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5917,10 +5917,10 @@ static void __cfsb_csd_unthrottle(void *arg)
- 
- 	list_for_each_entry_safe(cursor, tmp, &rq->cfsb_csd_list,
- 				 throttled_csd_list) {
--		list_del_init(&cursor->throttled_csd_list);
--
- 		if (cfs_rq_throttled(cursor))
- 			unthrottle_cfs_rq(cursor);
-+
-+		list_del_init(&cursor->throttled_csd_list);
- 	}
- 
- 	rcu_read_unlock();
-@@ -6034,11 +6034,11 @@ static bool distribute_cfs_runtime(struct cfs_bandwidth *cfs_b)
- 
- 		rq_lock_irqsave(rq, &rf);
- 
--		list_del_init(&cfs_rq->throttled_csd_list);
--
- 		if (cfs_rq_throttled(cfs_rq))
- 			unthrottle_cfs_rq(cfs_rq);
- 
-+		list_del_init(&cfs_rq->throttled_csd_list);
-+
- 		rq_unlock_irqrestore(rq, &rf);
- 	}
- 	SCHED_WARN_ON(!list_empty(&local_unthrottle));
--- 
-2.48.1.502.g6dc24dfdaf-goog
+Reviewed-by: Simon Horman <horms@kernel.org>
 
