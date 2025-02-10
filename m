@@ -1,452 +1,94 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 578D125A35F;
-	Mon, 10 Feb 2025 23:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay08.th.seeweb.it (relay08.th.seeweb.it [5.144.164.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71DC253F16
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:24:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739229762; cv=none; b=Ppv8CjP4im18nR6x+yKubTgL7eHkzwYb7yfEL+G/wPD6KsLCSRTmhQzLaExMU4D8KGz/j1erUE9U1dN4XIooI6Y8Oo8UQv7tP+ZQPFQk2xrdRQgBWQYND8uCHYt2zrf+kxUFWsq3YotKqOybthoL79Uvwp0L6zNjTRt9B1yWkmk=
+	t=1739229870; cv=none; b=iF/rL2+9ohz4ENewRCy8ApFXbuknGjWjWa58qBDvKqDVWHZ0KtPX9VEcnTqqGtSFgWM6o72Th7QUWSzEs420Z9hQgLeVg8iqzq7K29uoNZ+QHRXAPMFQIIedEPkLyC03Oot8qgY44BxzMhHqe4qGmb9xn5O2jOZ4FJKoqdw+Wec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739229762; c=relaxed/simple;
-	bh=Jri1Bit9GFJYEKQbcGESIvgFLxBoU1W44H0a6g5mDZw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IBj2TJrQtKFYdTq2bMH+hlvUa8z1H0GvKHDXy+o76f3G3gtdxblUB81ke3tJDTJyiLlCWwYP/hnrXGZh1Nb7vIJIZyHDNVdk4nw4dOVHOF6+G2COCQt+nuV4IPFDiJ583ZmT4k3tm96UZc/ogXpHXi4XYMgSw5Qhz/aT1eqzGy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D016165C;
-	Mon, 10 Feb 2025 15:23:01 -0800 (PST)
-Received: from beelzebub.ast.arm.com (unknown [10.118.29.240])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3261D3F6A8;
-	Mon, 10 Feb 2025 15:22:39 -0800 (PST)
-From: Stuart Yoder <stuart.yoder@arm.com>
-To: linux-integrity@vger.kernel.org,
-	jarkko@kernel.org,
-	peterhuewe@gmx.de,
-	jgg@ziepe.ca,
-	sudeep.holla@arm.com,
-	rafael@kernel.org,
-	lenb@kernel.org
-Cc: linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] tpm_crb: implement driver compliant to CRB over FF-A
-Date: Mon, 10 Feb 2025 17:22:24 -0600
-Message-Id: <20250210232227.97761-2-stuart.yoder@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250210232227.97761-1-stuart.yoder@arm.com>
-References: <20250210232227.97761-1-stuart.yoder@arm.com>
+	s=arc-20240116; t=1739229870; c=relaxed/simple;
+	bh=bJ5ESZYzG58v/d6J2EU3atpmIcpZBlSODiSwEgznITE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DDn+vQXpym+1mc12z0DNsujJWt3801QIc3iNvvw/DTVOn5al/lPLymzWEdopdbxn1JVJnsyLHIuVUvRGFIbnHkHudhPkcUz3eeDJD98PIGv4axy7yGGIE4EvTPlcjQPtvoBtnLZRsoNcFRTDFnomXu59ZgkJnUC3QNWg2O3JDzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
+Received: from SoMainline.org (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by m-r2.th.seeweb.it (Postfix) with ESMTPSA id 769443E8E6;
+	Tue, 11 Feb 2025 00:24:25 +0100 (CET)
+Date: Tue, 11 Feb 2025 00:24:24 +0100
+From: Marijn Suijten <marijn.suijten@somainline.org>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Danila Tikhonov <danila@jiaxyga.com>, neil.armstrong@linaro.org, 
+	quic_jesszhan@quicinc.com, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
+	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, andersson@kernel.org, 
+	konradybcio@kernel.org, robdclark@gmail.com, quic_abhinavk@quicinc.com, 
+	dmitry.baryshkov@linaro.org, sean@poorly.run, jonathan@marek.ca, jun.nie@linaro.org, 
+	fekz115@gmail.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
+	linux@mainlining.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 3/4] drm/msm/dsi: Allow all bpc values
+Message-ID: <oexunzihzwxux6aitpfpgpljhn2lndzqwnx5ruu3nzsahd7gzm@ttr6fuya5ncu>
+References: <20250203181436.87785-1-danila@jiaxyga.com>
+ <20250203181436.87785-4-danila@jiaxyga.com>
+ <rnuv4dieiy6s6c5s33hff7ntr6hkneemsq5qzk3u4ug2abwisd@6ahmijlayhhr>
+ <bcba3d38-525e-43d8-936f-2ddc95d0cceb@oss.qualcomm.com>
+ <e9ab55d7-bd2b-4241-bd40-322c2beb97d9@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e9ab55d7-bd2b-4241-bd40-322c2beb97d9@oss.qualcomm.com>
 
-The Arm specification TPM Service CRB over FF-A specification
-defines the FF-A messages to interact with a CRB-based TPM
-implemented as an FF-A secure partition.
+On 2025-02-10 18:13:58, Konrad Dybcio wrote:
+> On 10.02.2025 6:10 PM, Konrad Dybcio wrote:
+> > On 8.02.2025 11:09 PM, Marijn Suijten wrote:
+> >> On 2025-02-03 21:14:26, Danila Tikhonov wrote:
+...
+> >>>  	dsc->simple_422 = 0;
+> >>>  	dsc->convert_rgb = 1;
+> >>>  	dsc->vbr_enable = 0;
+> >>
+> >> This seems supicous on the dpu1 side, in the original DSC 1.1 (not 1.2) block in
+> >> dpu_hw_dsc_config(), which has:
+> >>
+> >> 	data |= (dsc->line_buf_depth << 3);
+> >> 	data |= (dsc->simple_422 << 2);
+> >> 	data |= (dsc->convert_rgb << 1);
+> >> 	data |= dsc->bits_per_component;
+> >>
+> >> The original value of `8` would overlap with the lowest bit of line_buf_depth
+> >> (4th bit in `data`).  Now, the 2nd bit which will take the value from
+> >> convert_rgb, which is already set to 1 above, will overlap with the 2nd bit in
+> >> your new bpc value of 10.
+> >>
+> >> Can you double-check that this code in DPU1 is actually valid?  I assume you
+> >> have tested this panel at least and it is working (worthy mention in the cover
+> >> letter?), this just seems like yet another mistake in the original bindings
+> >> (though the register always had a matching value with downstream on 8 BPC panels
+> >> for me).
+> > 
+> > It seems like the lowest bit should be set iff the input is 10bpc, the
+> > current situation where our '8' bleeds into the following (correctly named
+> > fields) is bad.
+> 
+> See also
+> 
+> https://github.com/Wikidepia/kernel_xiaomi_santoni-4.9/blob/master/drivers/gpu/drm/msm/sde/sde_hw_dsc.c#L67-L80
 
-Spec URL:
-https://developer.arm.com/documentation/den0138/latest/
+Correct, this is also what Dmitry already replied on Sunday and what I
+formulated into a patch earlier today (now sent), which I hope you can ack.
 
-This driver is probed when a TPM Secure Partition is
-discovered by the FF-A subsystem. It exposes APIs
-used by the TPM CRB driver to send notifications to
-the TPM.
+- Marijn
 
-Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
----
- drivers/char/tpm/Kconfig   |   9 ++
- drivers/char/tpm/Makefile  |   1 +
- drivers/char/tpm/ffa_crb.c | 310 +++++++++++++++++++++++++++++++++++++
- drivers/char/tpm/ffa_crb.h |  30 ++++
- 4 files changed, 350 insertions(+)
- create mode 100644 drivers/char/tpm/ffa_crb.c
- create mode 100644 drivers/char/tpm/ffa_crb.h
-
-diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-index 0fc9a510e059..f02af3925758 100644
---- a/drivers/char/tpm/Kconfig
-+++ b/drivers/char/tpm/Kconfig
-@@ -210,6 +210,15 @@ config TCG_CRB
- 	  from within Linux.  To compile this driver as a module, choose
- 	  M here; the module will be called tpm_crb.
- 
-+config TCG_ARM_FFA_CRB
-+	tristate "TPM CRB over Arm FF-A Transport"
-+	depends on ARM_FFA_TRANSPORT
-+	default y if (TCG_CRB && ARM_FFA_TRANSPORT)
-+	help
-+	  If the Arm FF-A transport is used to access the TPM say Yes.
-+	  To compile this driver as a module, choose M here; the module
-+	  will be called ffa_crb.
-+
- config TCG_VTPM_PROXY
- 	tristate "VTPM Proxy Interface"
- 	depends on TCG_TPM
-diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
-index 9bb142c75243..7c65368e18db 100644
---- a/drivers/char/tpm/Makefile
-+++ b/drivers/char/tpm/Makefile
-@@ -42,5 +42,6 @@ obj-$(CONFIG_TCG_IBMVTPM) += tpm_ibmvtpm.o
- obj-$(CONFIG_TCG_TIS_ST33ZP24) += st33zp24/
- obj-$(CONFIG_TCG_XEN) += xen-tpmfront.o
- obj-$(CONFIG_TCG_CRB) += tpm_crb.o
-+obj-$(CONFIG_TCG_ARM_FFA_CRB) += ffa_crb.o
- obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
- obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
-diff --git a/drivers/char/tpm/ffa_crb.c b/drivers/char/tpm/ffa_crb.c
-new file mode 100644
-index 000000000000..8f11e49956a8
---- /dev/null
-+++ b/drivers/char/tpm/ffa_crb.c
-@@ -0,0 +1,310 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2024 Arm Ltd.
-+ *
-+ * Maintained by: <tpmdd-devel@lists.sourceforge.net>
-+ *
-+ * This device driver implements the TPM CRB start method
-+ * as defined in the TPM Service Command Response Buffer
-+ * Interface Over FF-A (DEN0138).
-+ */
-+
-+#define pr_fmt(fmt) "FFA_CRB: " fmt
-+
-+#include <linux/arm_ffa.h>
-+#include "ffa_crb.h"
-+
-+/* TPM service function status codes */
-+#define FFA_CRB_OK			0x05000001
-+#define FFA_CRB_OK_RESULTS_RETURNED	0x05000002
-+#define FFA_CRB_NOFUNC			0x8e000001
-+#define FFA_CRB_NOTSUP			0x8e000002
-+#define FFA_CRB_INVARG			0x8e000005
-+#define FFA_CRB_INV_CRB_CTRL_DATA	0x8e000006
-+#define FFA_CRB_ALREADY			0x8e000009
-+#define FFA_CRB_DENIED			0x8e00000a
-+#define FFA_CRB_NOMEM			0x8e00000b
-+
-+#define FFA_CRB_VERSION_MAJOR	1
-+#define FFA_CRB_VERSION_MINOR	0
-+
-+/* version encoding */
-+#define FFA_CRB_MAJOR_VERSION_MASK  GENMASK(30, 16)
-+#define FFA_CRB_MINOR_VERSION_MASK  GENMASK(15, 0)
-+#define FFA_CRB_MAJOR_VERSION(x)    ((u16)(FIELD_GET(FFA_CRB_MAJOR_VERSION_MASK, (x))))
-+#define FFA_CRB_MINOR_VERSION(x)    ((u16)(FIELD_GET(FFA_CRB_MINOR_VERSION_MASK, (x))))
-+
-+/*
-+ * Normal world sends requests with FFA_MSG_SEND_DIRECT_REQ and
-+ * responses are returned with FFA_MSG_SEND_DIRECT_RESP for normal
-+ * messages.
-+ *
-+ * All requests with FFA_MSG_SEND_DIRECT_REQ and FFA_MSG_SEND_DIRECT_RESP
-+ * are using the AArch32 SMC calling convention with register usage as
-+ * defined in FF-A specification:
-+ * w0:    Function ID (0x8400006F or 0x84000070)
-+ * w1:    Source/Destination IDs
-+ * w2:    Reserved (MBZ)
-+ * w3-w7: Implementation defined, free to be used below
-+ */
-+
-+/*
-+ * Returns the version of the interface that is available
-+ * Call register usage:
-+ * w3:    Not used (MBZ)
-+ * w4:    TPM service function ID, FFA_CRB_GET_INTERFACE_VERSION
-+ * w5-w7: Reserved (MBZ)
-+ *
-+ * Return register usage:
-+ * w3:    Not used (MBZ)
-+ * w4:    TPM service function status
-+ * w5:    TPM service interface version
-+ *        Bits[31:16]: major version
-+ *        Bits[15:0]: minor version
-+ * w6-w7: Reserved (MBZ)
-+ *
-+ * Possible function status codes in register w4:
-+ *     CRB_FFA_OK_RESULTS_RETURNED: The version of the interface has been
-+ *                                  returned.
-+ */
-+#define FFA_CRB_GET_INTERFACE_VERSION 0x0f000001
-+
-+/*
-+ * Return information on a given feature of the TPM service
-+ * Call register usage:
-+ * w3:    Not used (MBZ)
-+ * w4:    TPM service function ID, FFA_CRB_START
-+ * w5:    Start function qualifier
-+ *            Bits[31:8] (MBZ)
-+ *            Bits[7:0]
-+ *              0: Notifies TPM that a command is ready to be processed
-+ *              1: Notifies TPM that a locality request is ready to be processed
-+ * w6:    TPM locality, one of 0..4
-+ *            -If the start function qualifier is 0, identifies the locality
-+ *             from where the command originated.
-+ *            -If the start function qualifier is 1, identifies the locality
-+ *             of the locality request
-+ * w6-w7: Reserved (MBZ)
-+ *
-+ * Return register usage:
-+ * w3:    Not used (MBZ)
-+ * w4:    TPM service function status
-+ * w5-w7: Reserved (MBZ)
-+ *
-+ * Possible function status codes in register w4:
-+ *     FFA_CRB_OK: the TPM service has been notified successfully
-+ *     FFA_CRB_INVARG: one or more arguments are not valid
-+ *     FFA_CRB_INV_CRB_CTRL_DATA: CRB control data or locality control
-+ *         data at the given TPM locality is not valid
-+ *     FFA_CRB_DENIED: the TPM has previously disabled locality requests and
-+ *         command processing at the given locality
-+ */
-+#define FFA_CRB_START 0x0f000201
-+
-+struct ffa_crb {
-+	struct ffa_device *ffa_dev;
-+	u16 major_version;
-+	u16 minor_version;
-+	struct mutex msg_data_lock;
-+	struct ffa_send_direct_data direct_msg_data;
-+};
-+
-+static struct ffa_crb *ffa_crb;
-+
-+static int ffa_crb_to_linux_errno(int errno)
-+{
-+	int rc;
-+
-+	switch (errno) {
-+	case FFA_CRB_OK:
-+		rc = 0;
-+		break;
-+	case FFA_CRB_OK_RESULTS_RETURNED:
-+		rc = 0;
-+		break;
-+	case FFA_CRB_NOFUNC:
-+		rc = -ENOENT;
-+		break;
-+	case FFA_CRB_NOTSUP:
-+		rc = -EPERM;
-+		break;
-+	case FFA_CRB_INVARG:
-+		rc = -EINVAL;
-+		break;
-+	case FFA_CRB_INV_CRB_CTRL_DATA:
-+		rc = -ENOEXEC;
-+		break;
-+	case FFA_CRB_ALREADY:
-+		rc = -EEXIST;
-+		break;
-+	case FFA_CRB_DENIED:
-+		rc = -EACCES;
-+		break;
-+	case FFA_CRB_NOMEM:
-+		rc = -ENOMEM;
-+		break;
-+	default:
-+		rc = -EINVAL;
-+	}
-+
-+	return rc;
-+}
-+
-+int ffa_crb_init(void)
-+{
-+	if (ffa_crb == NULL)
-+		return -ENOENT;
-+
-+	if (IS_ERR_VALUE(ffa_crb))
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(ffa_crb_init);
-+
-+static int __ffa_crb_send_recieve(unsigned long func_id,
-+		unsigned long a0, unsigned long a1, unsigned long a2)
-+{
-+	int ret;
-+	const struct ffa_msg_ops *msg_ops;
-+
-+	if (ffa_crb == NULL)
-+		return -ENOENT;
-+
-+	msg_ops = ffa_crb->ffa_dev->ops->msg_ops;
-+
-+	memset(&ffa_crb->direct_msg_data, 0x00,
-+			sizeof(struct ffa_send_direct_data));
-+
-+	ffa_crb->direct_msg_data.data1 = func_id;
-+	ffa_crb->direct_msg_data.data2 = a0;
-+	ffa_crb->direct_msg_data.data3 = a1;
-+	ffa_crb->direct_msg_data.data4 = a2;
-+
-+	ret = msg_ops->sync_send_receive(ffa_crb->ffa_dev,
-+			&ffa_crb->direct_msg_data);
-+	if (!ret)
-+		ret = ffa_crb_to_linux_errno(ffa_crb->direct_msg_data.data1);
-+
-+	return ret;
-+}
-+
-+int ffa_crb_get_interface_version(uint16_t *major, uint16_t *minor)
-+{
-+	int rc;
-+
-+	if (ffa_crb == NULL)
-+		return -ENOENT;
-+
-+	if (IS_ERR_VALUE(ffa_crb))
-+		return -ENODEV;
-+
-+	if (major == NULL || minor == NULL)
-+		return -EINVAL;
-+
-+	guard(mutex)(&ffa_crb->msg_data_lock);
-+
-+	rc = __ffa_crb_send_recieve(FFA_CRB_GET_INTERFACE_VERSION, 0x00, 0x00, 0x00);
-+	if (!rc) {
-+		*major = FFA_CRB_MAJOR_VERSION(ffa_crb->direct_msg_data.data2);
-+		*minor = FFA_CRB_MINOR_VERSION(ffa_crb->direct_msg_data.data2);
-+	}
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(ffa_crb_get_interface_version);
-+
-+int ffa_crb_start(int request_type, int locality)
-+{
-+	if (ffa_crb == NULL)
-+		return -ENOENT;
-+
-+	if (IS_ERR_VALUE(ffa_crb))
-+		return -ENODEV;
-+
-+	guard(mutex)(&ffa_crb->msg_data_lock);
-+
-+	return __ffa_crb_send_recieve(FFA_CRB_START, request_type, locality, 0x00);
-+}
-+EXPORT_SYMBOL_GPL(ffa_crb_start);
-+
-+static int ffa_crb_probe(struct ffa_device *ffa_dev)
-+{
-+	int rc;
-+	struct ffa_crb *p;
-+
-+	/* only one instance of a TPM partition is supported */
-+	if (ffa_crb && !IS_ERR_VALUE(ffa_crb))
-+		return -EEXIST;
-+
-+	ffa_crb = ERR_PTR(-ENODEV); // set ffa_crb so we can detect probe failure
-+
-+	if (!ffa_partition_supports_direct_recv(ffa_dev)) {
-+		pr_err("TPM partition doesn't support direct message receive.\n");
-+		return -EINVAL;
-+	}
-+
-+	p = kzalloc(sizeof(*ffa_crb), GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
-+	ffa_crb = p;
-+
-+	mutex_init(&ffa_crb->msg_data_lock);
-+	ffa_crb->ffa_dev = ffa_dev;
-+	ffa_dev_set_drvdata(ffa_dev, ffa_crb);
-+
-+	/* if TPM is aarch32 use 32-bit SMCs */
-+	if (!ffa_partition_check_property(ffa_dev, FFA_PARTITION_AARCH64_EXEC))
-+		ffa_dev->ops->msg_ops->mode_32bit_set(ffa_dev);
-+
-+	/* verify compatibility of TPM service version number */
-+	rc = ffa_crb_get_interface_version(&ffa_crb->major_version,
-+			&ffa_crb->minor_version);
-+	if (rc) {
-+		pr_err("failed to get crb interface version. rc:%d", rc);
-+		goto out;
-+	}
-+
-+	pr_info("ABI version %u.%u", ffa_crb->major_version,
-+		ffa_crb->minor_version);
-+
-+	if ((ffa_crb->major_version != FFA_CRB_VERSION_MAJOR) ||
-+	    (ffa_crb->minor_version < FFA_CRB_VERSION_MINOR)) {
-+		pr_err("Incompatible ABI version");
-+		goto out;
-+	}
-+
-+	return 0;
-+
-+out:
-+	kfree(ffa_crb);
-+	ffa_crb = ERR_PTR(-ENODEV);
-+	return -EINVAL;
-+}
-+
-+static void ffa_crb_remove(struct ffa_device *ffa_dev)
-+{
-+	kfree(ffa_crb);
-+	ffa_crb = NULL;
-+}
-+
-+static const struct ffa_device_id ffa_crb_device_id[] = {
-+	/* 17b862a4-1806-4faf-86b3-089a58353861 */
-+	{ UUID_INIT(0x17b862a4, 0x1806, 0x4faf,
-+		    0x86, 0xb3, 0x08, 0x9a, 0x58, 0x35, 0x38, 0x61) },
-+	{}
-+};
-+
-+static struct ffa_driver ffa_crb_driver = {
-+	.name = "ffa-crb",
-+	.probe = ffa_crb_probe,
-+	.remove = ffa_crb_remove,
-+	.id_table = ffa_crb_device_id,
-+};
-+
-+module_ffa_driver(ffa_crb_driver);
-+
-+MODULE_AUTHOR("Arm");
-+MODULE_DESCRIPTION("FFA CRB driver");
-+MODULE_VERSION("1.0");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/char/tpm/ffa_crb.h b/drivers/char/tpm/ffa_crb.h
-new file mode 100644
-index 000000000000..42327d285165
---- /dev/null
-+++ b/drivers/char/tpm/ffa_crb.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2024 Arm Ltd.
-+ *
-+ * Authors:
-+ * Stuart Yoder <stuart.yoder@arm.com>
-+ *
-+ * Maintained by: <tpmdd-devel@lists.sourceforge.net>
-+ *
-+ * This device driver implements the TPM CRB start method
-+ * as defined in the TPM Service Command Response Buffer
-+ * Interface Over FF-A (DEN0138).
-+ */
-+#ifndef _FFA_CRB_H
-+#define _FFA_CRB_H
-+
-+#if IS_ENABLED(CONFIG_TCG_ARM_FFA_CRB)
-+int ffa_crb_init(void);
-+int ffa_crb_get_interface_version(uint16_t *major, uint16_t *minor);
-+int ffa_crb_start(int request_type, int locality);
-+#else
-+static inline int ffa_crb_init(void) { return 0; }
-+static inline int ffa_crb_get_interface_version(uint16_t *major, uint16_t *minor) { return 0; }
-+static inline int ffa_crb_start(int request_type, int locality) { return 0; }
-+#endif
-+
-+#define FFA_CRB_START_TYPE_COMMAND 0
-+#define FFA_CRB_START_TYPE_LOCALITY_REQUEST 1
-+
-+#endif
--- 
-2.34.1
-
+> 
+> Konrad
