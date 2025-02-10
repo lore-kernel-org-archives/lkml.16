@@ -1,164 +1,115 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216282B2DA;
-	Mon, 10 Feb 2025 09:48:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0644B1C4604;
+	Mon, 10 Feb 2025 09:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739180935; cv=none; b=HrTf3J5yDt5kmL4//R5MEt9+juzVIMThdL6wXDr8fboZKuBSNVfmvp75He7nTLb60ycQXzJXlp8pjJZyaZVa1qbYz0BNGEO5nfccmXY2+DCQ2SeCnQKh3XCAZiv8qnLxvS7OEjGk7Yo8N23EsAj+EmY4acx4k04Ygr7TuR4FYDE=
+	t=1739180962; cv=none; b=H0EluJsEk8Si6nUCXkXjwiK/gd98M9V4sh5cppjFCSNIjePuFyvMs7RMoTKMvyfIgT9IvtPat5jyItjcIpi7K/gmgy07zVdS3cqia9nyX2B6gZkfWlXC6EnaW4yfjdMyXbtVuhkL+pTgJQz0+EsMLAQDG0fm29QkdAjt2pWZVwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739180935; c=relaxed/simple;
-	bh=Me0LwP5wzy/BkVBF94yzA0evXRqU+PvQ25S5vc4pyCo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h2M5hiuc11oyvvwNXDQ1YTSHyHmeQr5+JCWmAnOCllQ97NmrG/qAzWqjy+dvWOPB/TEhdle8D+6g6JdfJ6Tq20v7loYEL0MYezYMHWXorJM2m7C5mrms79SiTdqTG6BAR+hxmWqlMB1ta+cj6NYRFLzVfxoYj57TK01/VpY8pwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=sumqEfQN; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1739180962; c=relaxed/simple;
+	bh=nCVuBi8ZTrEmUADFZ2jR0DL8kYCKbpfdu66LMnXIQdE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QMw4lSu2YTMSqm+5yfUAbbd90dR3JFeDRfAc51i++B06keOOZooyvpgxYQR0SViRbmGG/7pbMcpng4qy2JCTSLHCwCnGvQEZIhF+rVH6DZ5QgEakCal+T22nvTVueF9icD0Do+1xINtz13lggADuvfWdyuoBhyLkf2ASMGT9Pbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=nMZz+fZC; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="sumqEfQN"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
-	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=C9BUP77uPSvxs2+mKdlHJf2qkWrE1J5DcyM2T4Vp+80=; b=sumqEfQNp8AaL65zL97+992C3p
-	Ru1OyShn1cdheLghTlSRytY8Cq7stQtXLam7mv70JfJXcNh5RMrP6t26Tn/BF7IWSGe8BEqIXS5C6
-	NemQ5KgyrGu12aePaHk2I9yt6E33NUVeeTrxC1ymLXBgWpdOpY/RkNHqKdE6rqfwe7rm4bn2AKAkg
-	QRE/zM8nPBLoHxVh61p1xKGaouXkhC/kpVK0Jb1AwmaAduUafoDY13hlLkzRi0YVK4vvzXs35SfDO
-	jxNWy2enLoe+e/WMsMUZMvLxYhffteNAuMPdy/WcakLxawmwEtP6zp5S9su2kTgu0hBJa7bwb8HNE
-	J8c08V1A==;
-Received: from bl23-10-177.dsl.telepac.pt ([144.64.10.177] helo=localhost)
-	by fanzine2.igalia.com with utf8esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1thQP5-0077WR-Jo; Mon, 10 Feb 2025 10:48:41 +0100
-From: Luis Henriques <luis@igalia.com>
-To: Miklos Szeredi <miklos@szeredi.hu>,
-	Bernd Schubert <bschubert@ddn.com>
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Luis Henriques <luis@igalia.com>
-Subject: [RFC PATCH v2] fuse: add new function to invalidate cache for all inodes
-Date: Mon, 10 Feb 2025 09:48:40 +0000
-Message-ID: <20250210094840.5627-1-luis@igalia.com>
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="nMZz+fZC"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 42831A008F;
+	Mon, 10 Feb 2025 10:49:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=E+04FxogYzi4sdZRzCbF
+	nxRd7zajIX6CS62l/K1+2oo=; b=nMZz+fZC8yZfoZ2XFlFzGQKyde72ueUik4Rk
+	xfYEy3jujdD0kFCCmjJ7SLfd4ILmlLfoMgF+Y7JEYkEFQ2vMUmuJ1VipMR1t6u44
+	OsnxF7W0G2j6fRjxET5pJ4kikMknR3x3pAYntsMSZSmFt5tiqj6k6K8N9FDbiy0r
+	C5LTg3rXfXkRNtDDOQwETcQIMzI28QIQBIHZdVJHpZL8ZiYa63wf/w19O6EBtM/o
+	Z0SwSlkDv36igAJQ2cCR9kzyguX9AbnXtB/Tev5f4KwMPSV36XqgBVUnEss+NGYe
+	YDI/rgNM8SxVYf7dRL63vPVX9MNJ40TsVtycvFK/vlSqpyWgqiBZxANgzShIW4dF
+	hCwd/U3uwUhVuy7DxVhY+DikCkhjseptCu4osvGV03GgBtvfREoeAGljzCMSEymr
+	QYm3IVpP6BQRtdBXlwedNQVaYhy6a6tJFX0RBaT5K3WHd72Oxwf1pDHCIJoNQrAD
+	III6dfpK9zcqKOqhKxAhRhmZyIJHJtu+MNJLn70JJXdzL3TZW4U2LskcNGRNu7uu
+	hn50p/lKX7LkOled0WXfvEBLGmuxwVQGBQSxuOKCaw2AxloBUl3kG16c5cfpqdgG
+	KGVNqqAXIm2pqVi2IAfsG+35/9MgEefL+fCcgwsjK5230ahdIoojtkZOe1H1+VMQ
+	Jmqw3SQ=
+Message-ID: <3f424600-33d3-403b-9df6-85f7cb97c9a6@prolan.hu>
+Date: Mon, 10 Feb 2025 10:49:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] counter: microchip-tcb-capture: Add IRQ handling
+To: <Dharma.B@microchip.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <kamel.bouhara@bootlin.com>, <wbg@kernel.org>
+References: <20250205104957.95236-1-csokas.bence@prolan.hu>
+ <20250205104957.95236-2-csokas.bence@prolan.hu>
+ <ed8b9d03-0f03-4872-b9e0-ab670e307450@microchip.com>
+Content-Language: en-US
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <ed8b9d03-0f03-4872-b9e0-ab670e307450@microchip.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D9485261776A
 
-Currently userspace is able to notify the kernel to invalidate the cache for
-an inode.  This means that, if all the inodes in a filesystem need to be
-invalidated, then userspace needs to iterate through all of them and do this
-kernel notification separately.
+Hi,
 
-This patch adds a new option that allows userspace to invalidate all the
-inodes with a single notification operation.  In addition to invalidate all
-the inodes, it also shrinks the sb dcache.
+On 2025. 02. 07. 9:12, Dharma.B@microchip.com wrote:
+> can we have macros for the channel (3rd argument) for better clarity?
 
-Signed-off-by: Luis Henriques <luis@igalia.com>
----
-Hi!
+I myself have also thought about that, even about adding an uapi header. 
+Thoughts?
 
-As suggested by Bernd, this patch v2 simply adds an helper function that
-will make it easier to replace most of it's code by a call to function
-super_iter_inodes() when Dave Chinner's patch[1] eventually gets merged.
+>> +static int mchp_tc_irq_enable(struct counter_device *const counter)
+> 
+> Can we have it as mchp_tc_irq_init ?
 
-[1] https://lore.kernel.org/r/20241002014017.3801899-3-david@fromorbit.com
+Why, what's wrong with the current name? It requests IRQ servicing from 
+Linux, then writes the peripheral's Interrupt Enable Register.
 
- fs/fuse/inode.c           | 59 +++++++++++++++++++++++++++++++++++++++
- include/uapi/linux/fuse.h |  3 ++
- 2 files changed, 62 insertions(+)
+>> +{
+>> +	struct mchp_tc_data *const priv = counter_priv(counter);
+>> +	int ret = devm_request_irq(counter->parent, priv->irq, mchp_tc_isr, 0,
+>> +				   dev_name(counter->parent), counter);
+>> +
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	ret = regmap_write(priv->regmap, ATMEL_TC_REG(priv->channel[0], IER), ATMEL_TC_DEF_IRQS);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	ret = devm_add_action_or_reset(counter->parent, mchp_tc_irq_remove, priv);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>    static void mchp_tc_clk_remove(void *ptr)
+>>    {
+>>    	clk_disable_unprepare((struct clk *)ptr);
+>> @@ -378,6 +438,13 @@ static int mchp_tc_probe(struct platform_device *pdev)
+>>    	counter->num_signals = ARRAY_SIZE(mchp_tc_count_signals);
+>>    	counter->signals = mchp_tc_count_signals;
+>>    
+>> +	priv->irq = of_irq_get(np->parent, 0);
+>> +	if (priv->irq > 0) {
+>> +		ret = mchp_tc_irq_enable(counter);
+> 
+> missing error handling in irq retrieval (check for -EPROBE_DEFER).
 
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index e9db2cb8c150..be51b53006d8 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -547,6 +547,62 @@ struct inode *fuse_ilookup(struct fuse_conn *fc, u64 nodeid,
- 	return NULL;
- }
- 
-+static void inval_single_inode(struct inode *inode, struct fuse_conn *fc)
-+{
-+	struct fuse_inode *fi;
-+
-+	fi = get_fuse_inode(inode);
-+	spin_lock(&fi->lock);
-+	fi->attr_version = atomic64_inc_return(&fc->attr_version);
-+	spin_unlock(&fi->lock);
-+	fuse_invalidate_attr(inode);
-+	forget_all_cached_acls(inode);
-+}
-+
-+static int fuse_reverse_inval_all(struct fuse_conn *fc)
-+{
-+	struct fuse_mount *fm;
-+	struct super_block *sb;
-+	struct inode *inode, *old_inode = NULL;
-+
-+	inode = fuse_ilookup(fc, FUSE_ROOT_ID, NULL);
-+	if (!inode)
-+		return -ENOENT;
-+
-+	fm = get_fuse_mount(inode);
-+	iput(inode);
-+	if (!fm)
-+		return -ENOENT;
-+	sb = fm->sb;
-+
-+	spin_lock(&sb->s_inode_list_lock);
-+	list_for_each_entry(inode, &sb->s_inodes, i_sb_list) {
-+		spin_lock(&inode->i_lock);
-+		if ((inode->i_state & (I_FREEING|I_WILL_FREE|I_NEW)) ||
-+		    !atomic_read(&inode->i_count)) {
-+			spin_unlock(&inode->i_lock);
-+			continue;
-+		}
-+
-+		__iget(inode);
-+		spin_unlock(&inode->i_lock);
-+		spin_unlock(&sb->s_inode_list_lock);
-+		iput(old_inode);
-+
-+		inval_single_inode(inode, fc);
-+
-+		old_inode = inode;
-+		cond_resched();
-+		spin_lock(&sb->s_inode_list_lock);
-+	}
-+	spin_unlock(&sb->s_inode_list_lock);
-+	iput(old_inode);
-+
-+	shrink_dcache_sb(sb);
-+
-+	return 0;
-+}
-+
- int fuse_reverse_inval_inode(struct fuse_conn *fc, u64 nodeid,
- 			     loff_t offset, loff_t len)
- {
-@@ -555,6 +611,9 @@ int fuse_reverse_inval_inode(struct fuse_conn *fc, u64 nodeid,
- 	pgoff_t pg_start;
- 	pgoff_t pg_end;
- 
-+	if (nodeid == FUSE_INVAL_ALL_INODES)
-+		return fuse_reverse_inval_all(fc);
-+
- 	inode = fuse_ilookup(fc, nodeid, NULL);
- 	if (!inode)
- 		return -ENOENT;
-diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-index 5e0eb41d967e..e5852b63f99f 100644
---- a/include/uapi/linux/fuse.h
-+++ b/include/uapi/linux/fuse.h
-@@ -669,6 +669,9 @@ enum fuse_notify_code {
- 	FUSE_NOTIFY_CODE_MAX,
- };
- 
-+/* The nodeid to request to invalidate all inodes */
-+#define FUSE_INVAL_ALL_INODES 0
-+
- /* The read buffer is required to be at least 8k, but may be much larger */
- #define FUSE_MIN_READ_BUFFER 8192
- 
+Hmm, what should happen on `priv->irq == -EPROBE_DEFER`? `return 
+-EPROBE_DEFER`?
+
+Bence
+
