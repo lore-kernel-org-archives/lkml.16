@@ -1,194 +1,222 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68EDB25A2A8
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5680D25A2AB
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739212813; cv=none; b=Bq0tLjwSUSkQENDba0jejiKtvfxPC2unHNo6GxnYdcONpsEEF2WDgy0pRIyKWGDMD1sqw1yzioGmopzumZvSVEp9BQ87cq4KAq3K3RnHCANN9gdmiSrersOX0qKqBPQxtBkjYfMxVM5ar1fAHih+xlgfoGYdDFNDTT/ZQHHiex8=
+	t=1739212865; cv=none; b=mRTssZzSApMfs/TBl0NzBzj0YEMiCpyobXY4Kau7qvS8hxHt5mZT1oEhPOj8UD3X/Qqnf/Y6H4RC8U8ZhSHasNipJqHH9tyNGSWB1OI2Lut13x42X+TvdwqAFcgCINe6ecLgh+2BHq8QrlXKCY4n/GK6LMXOKDMOlNb+QnOoE4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739212813; c=relaxed/simple;
-	bh=2yYuNM1YTmnSsn1F2bIIYLKQ3xz/hapXWsnnxWgQWL8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rEdWBcsOwyS237RGcrXNrWsniWjqlkeGDrstM5hoDSRXMXY8Uzq7tgexfkUZmlfIlU3sIAmXqQwvgwNuXEC9UYWGdhcyf/MTuMHWcbVbZSdui5vNPDH6XX9Q0upXDCofwqLsCWv4ARb7l04qDEXlnKxI5bKZF7P9kPS52ZKaAiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uvEA0Zz8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ItKVL2sb; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uvEA0Zz8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ItKVL2sb; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1739212865; c=relaxed/simple;
+	bh=RiumRp+8jT3r88kVofJLy7fpR5zAXNhnYTLlo61sQv0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H/mLuw94jd12A2E1GX97LYcjIaR6K3WLyvfs9qWt0KLCNyHgyN0/qUDSAqIzf4QzTbytyX65UsRfOxKQmtTWpQcJglbUXor+GLDZjCi6cRTsJgZ1Zi83ReG5/0R88c2usD6YVud8tZsEhwwQjpOrrqME4kUgNVvZ6J7LSrKNJKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SHqJlH/I; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uvEA0Zz8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ItKVL2sb";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uvEA0Zz8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ItKVL2sb"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 839872115B;
-	Mon, 10 Feb 2025 18:40:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739212809; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z8eYSpepY8YjZg8SCKQmC3dIrcsgT/TVzJjXlabji/U=;
-	b=uvEA0Zz8qz0omIOBwYQ2BVmYXXRaPGkbocvA7DblRQHo+1+1A2Cm/x08l2s76LbfcIKWvU
-	I+0zm7a/l5UHtREYFD02rIQH/m06k65ydJuK81OxI2dUYGtjt8qaLkxyHMOSwb9/9YAZTk
-	oUQ7xMnup1lsNyRXUW+MhhJ8LsNQnto=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739212809;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z8eYSpepY8YjZg8SCKQmC3dIrcsgT/TVzJjXlabji/U=;
-	b=ItKVL2sbwewxplSSQj4PyQullyaDeTSfSi3MP0NqpQ/5LMln3TH1ClAAERCNbSzsTCOWH1
-	3/UPcEclpmK64ACw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739212809; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z8eYSpepY8YjZg8SCKQmC3dIrcsgT/TVzJjXlabji/U=;
-	b=uvEA0Zz8qz0omIOBwYQ2BVmYXXRaPGkbocvA7DblRQHo+1+1A2Cm/x08l2s76LbfcIKWvU
-	I+0zm7a/l5UHtREYFD02rIQH/m06k65ydJuK81OxI2dUYGtjt8qaLkxyHMOSwb9/9YAZTk
-	oUQ7xMnup1lsNyRXUW+MhhJ8LsNQnto=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739212809;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z8eYSpepY8YjZg8SCKQmC3dIrcsgT/TVzJjXlabji/U=;
-	b=ItKVL2sbwewxplSSQj4PyQullyaDeTSfSi3MP0NqpQ/5LMln3TH1ClAAERCNbSzsTCOWH1
-	3/UPcEclpmK64ACw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 005A213707;
-	Mon, 10 Feb 2025 18:40:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ogCFOAhIqmf6dAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Mon, 10 Feb 2025 18:40:08 +0000
-Date: Mon, 10 Feb 2025 19:39:59 +0100
-From: Oscar Salvador <osalvador@suse.de>
-To: Frank van der Linden <fvdl@google.com>
-Cc: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, yuzhao@google.com,
-	usamaarif642@gmail.com, joao.m.martins@oracle.com,
-	roman.gushchin@linux.dev
-Subject: Re: [PATCH v3 00/28] hugetlb/CMA improvements for large systems
-Message-ID: <Z6pH_9X-kFhwPz2-@localhost.localdomain>
-References: <20250206185109.1210657-1-fvdl@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SHqJlH/I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739212862;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=g1KV9WSg/lyUU/31KD2wiBY4CVQnFn2Ocr7fjoXlBPA=;
+	b=SHqJlH/I0s93cqBdCHvhtWrVbcz8fAEv8Q3Uqcm6Kio6XlHaMrG/Lq4suM5Ey7TnMKpnDQ
+	fOvyNb8syIDiGjWsad+9ytXbgwSJL1uG65xiRqmmqRVK3fbXsxSvmNx54YsDxqSmtDV96m
+	rcC/UV3IpIHwfaNWGgwMy3M/VhIHTNI=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-88-4anK90SXNtS8cvQCi-K4Tg-1; Mon, 10 Feb 2025 13:41:01 -0500
+X-MC-Unique: 4anK90SXNtS8cvQCi-K4Tg-1
+X-Mimecast-MFC-AGG-ID: 4anK90SXNtS8cvQCi-K4Tg
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-38dd692b6d9so875644f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:41:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739212860; x=1739817660;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=g1KV9WSg/lyUU/31KD2wiBY4CVQnFn2Ocr7fjoXlBPA=;
+        b=imvNwuz83WGzNdo4dSpH6pOQ/2eSoD83TKVwrdHJzl3w36zBtG2Zn3y7G3HwG0llgd
+         TGpYRQ3Mci/9+TgGgX8lwVf8yfM2MTTERc7CEbnsQDrN0+J8kxsUPP3y6Y9Jtin+E6hm
+         kg/mfTnmuAnwfS9elT7nZwzbba2uM9KAy/CXLoI5WxEqGM595wIwMHtJcDP49kY0vyrM
+         wzHER6pOHHS3PE4UXE1cORvf+oV7kjvxdtxxGX9lGFZoQD4+Azfgng22P26bvHbBs5yh
+         33SlMuXZLynVWy13u48zmrTEAOU2kbJteh2s/Su4sUtr+VZkTeibhQyhnA7l8VEeOYaq
+         sWxw==
+X-Forwarded-Encrypted: i=1; AJvYcCWkzjaJzYY4oE3tkHcN2vYqP5tr6ad9onm4QEGdcjkXroyn/QizVTtRySXradZAS8rqPCUDj9MDCRT/CxA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHR5c9UA+xnT90fyiHFYk88gm8NSZIudWCU+X5HQ07cdt84BzE
+	f8B8+Q2cq295YufY5KOPPSKp42jRGWRzRTkAiqf4Q32e7J6FTh0hwf/fKVE2z8ZzzmlKN/hPPRY
+	pektSA9mMLuMA2JPp9+jirhBvTuNIc+GzK2Rv9uQmP3bQWR3F1HQ7j/BrdAYe2g==
+X-Gm-Gg: ASbGncvOHCatdeQopobdu1c16iYQQsIV8Lr+R2qxv/VMsSI7QiqMgFHoC9ffUNP1kIb
+	kJHRwcZjj+F0D9HeBakri8iFwn5hMkM/SVExbg3xvKeaNxJzXNh/i6eyve5AwK0HREEZVD934Oj
+	I5Le8AMkWJK1ipMlHO9c12Dn1I8S4ajCD6cGZ8a7ntvb4h4unPEmitI//Ja0hcQiJ+x2OhPTv+i
+	kGs8debzol9Poo3QPi6MClozhRAOwhKBPOhta92vUiKOR/kIonNYek2kmrYXgN1rFR+6/jnfskX
+	tgshAm6jkd7eDI5oTLPjL4tG8pbcFvLaZlEsgUMYRNp+pmeTs+HsgG350NLLvB5vuAxtaGZsalD
+	eNpTpUAZfhs2wijYlGRMZcLdlXZ3oSWOU
+X-Received: by 2002:a05:6000:4023:b0:38d:e420:3984 with SMTP id ffacd0b85a97d-38de4203c6fmr720434f8f.39.1739212859636;
+        Mon, 10 Feb 2025 10:40:59 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHGdyRFSrPW6CDaatY3A9b5Pbjiq+vqKKBwRSMaTLmNlwLMqalsMGCRptdeQalX+PBAO6tSww==
+X-Received: by 2002:a05:6000:4023:b0:38d:e420:3984 with SMTP id ffacd0b85a97d-38de4203c6fmr720406f8f.39.1739212859214;
+        Mon, 10 Feb 2025 10:40:59 -0800 (PST)
+Received: from ?IPV6:2003:cb:c734:b800:12c4:65cd:348a:aee6? (p200300cbc734b80012c465cd348aaee6.dip0.t-ipconnect.de. [2003:cb:c734:b800:12c4:65cd:348a:aee6])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439471bf782sm28276465e9.39.2025.02.10.10.40.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 10:40:58 -0800 (PST)
+Message-ID: <0c8640f5-2a80-45ff-a922-476a5fd5f82d@redhat.com>
+Date: Mon, 10 Feb 2025 19:40:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206185109.1210657-1-fvdl@google.com>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_TLS_ALL(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,linux.dev,kvack.org,vger.kernel.org,google.com,gmail.com,oracle.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 13/20] mm/memory: Add vmf_insert_page_mkwrite()
+To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
+ dan.j.williams@intel.com, linux-mm@kvack.org
+Cc: Alison Schofield <alison.schofield@intel.com>, lina@asahilina.net,
+ zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
+ vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
+ bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
+ will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
+ dave.hansen@linux.intel.com, ira.weiny@intel.com, willy@infradead.org,
+ djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, peterx@redhat.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+ david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ loongarch@lists.linux.dev
+References: <cover.472dfc700f28c65ecad7591096a1dc7878ff6172.1738709036.git-series.apopple@nvidia.com>
+ <e98b7e6bed4c1c63feac7b907439168388ecc9fd.1738709036.git-series.apopple@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <e98b7e6bed4c1c63feac7b907439168388ecc9fd.1738709036.git-series.apopple@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 06, 2025 at 06:50:40PM +0000, Frank van der Linden wrote:
-> v3:
-> * Fix SPDX comment include file format.
-> * Add new hugetlb_cma.* files to MAINTAINERS
-> * Document new ranges/ subdir in CMA debugfs.
-> * Fix powerpc compilation for config without HAVE_BOOTMEM_INFO_NODE
-> * Fix various other nits found by kernel test robot.
-> * Use a PFN value of -1 to indicate a non-mirrored mapping
->   in sparse-vmemmap.c, not 0.
-> * Fix incorrect if() statement that got mangled in cma.c
+On 04.02.25 23:48, Alistair Popple wrote:
+> Currently to map a DAX page the DAX driver calls vmf_insert_pfn. This
+> creates a special devmap PTE entry for the pfn but does not take a
+> reference on the underlying struct page for the mapping. This is
+> because DAX page refcounts are treated specially, as indicated by the
+> presence of a devmap entry.
 > 
-> v2:
-> * Add missing CMA debugfs code.
-> * Minor cleanups in hugetlb_cma changes.
-> * Move hugetlb_cma code to its own file to further clean
->   things up.
+> To allow DAX page refcounts to be managed the same as normal page
+> refcounts introduce vmf_insert_page_mkwrite(). This will take a
+> reference on the underlying page much the same as vmf_insert_page,
+> except it also permits upgrading an existing mapping to be writable if
+> requested/possible.
 > 
-> On large systems, we observed some issues with hugetlb and CMA:
+> Signed-off-by: Alistair Popple <apopple@nvidia.com>
 > 
-> 1) When specifying a large number of hugetlb boot pages (hugepages=
->    on the commandline), the kernel may run out of memory before it
->    even gets to HVO. For example, if you have a 3072G system, and
->    want to use 3024 1G hugetlb pages for VMs, that should leave
->    you plenty of space for the hypervisor, provided you have the
->    hugetlb vmemmap optimization (HVO) enabled. However, since
->    the vmemmap pages are always allocated first, and then later
->    in boot freed, you will actually run yourself out of memory
->    before you can do HVO. This means not getting all the hugetlb
->    pages you want, and worse, failure to boot if there is an
->    allocation failure in the system from which it can't recover.
+> ---
 > 
-> 2) There is a system setup where you might want to use hugetlb_cma
->    with a large value (say, again, 3024 out of 3072G like above),
->    and then lower that if system usage allows it, to make room
->    for non-hugetlb processes. For this, a variation of the problem
->    above applies: the kernel runs out of unmovable space to allocate
->    from before you finish boot, since your CMA area takes up all
->    the space.
+> Changes for v7:
+>   - Fix vmf_insert_page_mkwrite by removing pfn gunk as suggested by
+>     David.
 > 
-> 3) CMA wants to use one big contiguous area for allocations. Which
->    fails if you have the aforementioned 3T system with a gap in the
->    middle of physical memory (like the < 40bits BIOS DMA area seen on
->    some AMD systems). You then won't be able to set up a CMA area for
->    one of the NUMA nodes, leading to loss of half of your hugetlb
->    CMA area.
+> Updates from v2:
 > 
-> 4) Under the scenario mentioned in 2), when trying to grow the
->    number of hugetlb pages after dropping it for a while, new
->    CMA allocations may fail occasionally. This is not unexpected,
->    some transient references on pages may prevent cma_alloc
->    from succeeding under memory pressure. However, the hugetlb
->    code then falls back to a normal contiguous alloc, which may
->    end up succeeding. This is not always desired behavior. If
->    you have a large CMA area, then the kernel has a restricted
->    amount of memory it can do unmovable allocations from (a well
->    known issue). A normal contiguous alloc may eat further in to
->    this space.
+>   - Rename function to make not DAX specific
+> 
+>   - Split the insert_page_into_pte_locked() change into a separate
+>     patch.
+> 
+> Updates from v1:
+> 
+>   - Re-arrange code in insert_page_into_pte_locked() based on comments
+>     from Jan Kara.
+> 
+>   - Call mkdrity/mkyoung for the mkwrite case, also suggested by Jan.
+> ---
+>   include/linux/mm.h |  2 ++
+>   mm/memory.c        | 21 +++++++++++++++++++++
+>   2 files changed, 23 insertions(+)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 7b1068d..6567ece 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -3544,6 +3544,8 @@ int vm_map_pages(struct vm_area_struct *vma, struct page **pages,
+>   				unsigned long num);
+>   int vm_map_pages_zero(struct vm_area_struct *vma, struct page **pages,
+>   				unsigned long num);
+> +vm_fault_t vmf_insert_page_mkwrite(struct vm_fault *vmf, struct page *page,
+> +			bool write);
+>   vm_fault_t vmf_insert_pfn(struct vm_area_struct *vma, unsigned long addr,
+>   			unsigned long pfn);
+>   vm_fault_t vmf_insert_pfn_prot(struct vm_area_struct *vma, unsigned long addr,
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 41befd9..b88b488 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -2622,6 +2622,27 @@ static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
+>   	return VM_FAULT_NOPAGE;
+>   }
+>   
+> +vm_fault_t vmf_insert_page_mkwrite(struct vm_fault *vmf, struct page *page,
+> +			bool write)
+> +{
+> +	struct vm_area_struct *vma = vmf->vma;
+> +	pgprot_t pgprot = vma->vm_page_prot;
 
-Hi Frank,
+Probably could have avoided that temp without harming readability
 
-While I plan to keep reviewing the series, I think it would make sense
-to split this patchset into two smaller ones.
-The way I see it, we are trying to deal with two different problems and their
-solutions.
-
-1) pre-hvo at boot time
-2) multi-range support of CMA (only used for hugetlb)
-
-I did not go through the entire patchset yet, so I ignore whether the
-respective patches to tackle these two problems are really dependent on
-each other, but I think that would be very interesting to consider a
-patchset per solution if that is not the case.
-
-IMHO, it would ease review quite a lot.
-
+Acked-by: David Hildenbrand <david@redhat.com>
 
 -- 
-Oscar Salvador
-SUSE Labs
+Cheers,
+
+David / dhildenb
+
