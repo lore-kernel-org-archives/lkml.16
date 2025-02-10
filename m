@@ -1,203 +1,214 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F73233126;
-	Mon, 10 Feb 2025 14:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739196572; cv=none; b=Iv0tM/wKqOCqaAPvM6/Y1oJaAupnmoxXOenZcgwRep1hRLwlS+JPxG15GsfGDGWYTZ35RkX9McBeiC1prQeaMq6IEYcSB+MbR3laL1VipyoF6C6kqoIGaQof18lqCxzpwejC45cU3JEhKwoF0PuoFV+6+ZJP700ynwtCwb5rzYg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739196572; c=relaxed/simple;
-	bh=RSJHSeUykncMmWA9ukvup+xfsW+60QnBx5gLQnMN9s8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WITRGbv5uvTGZEv9tWyxNedGxBdikMw6NPRE8PPgzIx1Lh6cCFky8ZUVrWvYY4QoC2FBIGDf/PQgK5bn4iNEtM6q0GFq3yeSP30yS7BYrdjLs6hcM7nxi6p71wFAlARvjrjsPlXB8SWlY5mTtV3f3f2YMdHdohUsBg/hdPhb6WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nfH7h3o/; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBB82327A3;
+	Mon, 10 Feb 2025 14:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739196607; cv=fail; b=FirqevcmbTLQ4nq0QOv+Cgc5V6zWI2m3WYU1ZojyMqnod2gZ9e0WrqKfgd1UwHGZRr1IuxeDgBWUJvYW5HfUL7k52OwiZZYCJ4PZ64QgWCVa2WN0ATa9sLWR1TBQjIg8YL+7sWeiMLzYfRaoOBG0mBCj8AgVJ8LzQOu9Xm4ZTp8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739196607; c=relaxed/simple;
+	bh=TcLlsa7zdDLNXiXU5SUHbqNXqEOYMxwjmyplWFn80tg=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=r04Ri4YKDYvlDMPAEPBz8FR4CWkoT/TCkf62bwAjoBUKo4sTE+9fNQJFfzPm0QzBBM+v0jmOo9OQcPnGypT9M1dl9o5YDEoE3ClnMuqAgMlMGnmUvUqJd3EtJBteoEGX49oGiPZGuzSUsDBhndXRQmYr4VIJ1a7BNguI+vue2IY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e6IhQ4N+; arc=fail smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nfH7h3o/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e6IhQ4N+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739196571; x=1770732571;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RSJHSeUykncMmWA9ukvup+xfsW+60QnBx5gLQnMN9s8=;
-  b=nfH7h3o/it8x81p0PiR86bc0oaXV43ohYPo8SRcuOletF7TdYQGSbswY
-   rZryLF1i0VpXgY+LqSRT8hv5ebMYHZfbW9+I9d1Y4bAXW7mlcM/LUHCDH
-   8xuZAhBxLVa22YajRG3wMGrhIsH+meXiJpVb7lHgivZbQGv1Y8UWNTUqU
-   dkV5lGoJu4BglarK5t7UMMkuSVkf/EKFB7fD/eAIFLQjJg4V3F5DGCo3U
-   x8+6UKCI/hTgXj4WP+6OmxdXd+fBZExnBO390doXQpp3RZ6jnC/V83jpN
-   Hgf7A5W/ExwFh7BG90ayc6Ym+gbb54YzjV82UmWsanrqDAMG5rGhzY6t+
-   w==;
-X-CSE-ConnectionGUID: eO6MFeVQTPq66FHNDkn9oQ==
-X-CSE-MsgGUID: mO3JrCCkT0ODKjO1GqY4gg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="39012595"
+  t=1739196607; x=1770732607;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=TcLlsa7zdDLNXiXU5SUHbqNXqEOYMxwjmyplWFn80tg=;
+  b=e6IhQ4N+hNqRlWMf+Eqms69J8+3hXKNvR7uclMVA6MLJDEDyk6d1iAxW
+   UBu0mpX2TnuhjtbHfkhqmuO1VzbjJbVPqzBMk23ejwMXIzvVksOaupDT5
+   9K6Nw1tQJMm7boEWoSC1r0pinnyRLnOrbt3yQA6OodMKwvLyr/NCwuwCg
+   3i6sGdjqspW2Dcf2Pfi+LKvZZegy0Qbhj/Z/tKJ4uBTwG+eQcNzSONZLY
+   YJHKDqzl9uCz2Yf8DcuGNPYnPen/3v7xeVE9VO5x9elYYGlfBUBMjkJCH
+   6372lUqDorsqSycAeyjGKVAjKM4pHJuLQ5N433MJtl74+oXQCci6JQ1U/
+   Q==;
+X-CSE-ConnectionGUID: 5vKxBWI6T2CNml2580elPQ==
+X-CSE-MsgGUID: tLxb763eRiiCfuS+kKSmCg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="42617541"
 X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="39012595"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 06:09:30 -0800
-X-CSE-ConnectionGUID: O5WsGvLGTVGQ7i8p3P/9Aw==
-X-CSE-MsgGUID: wJB6oeoBTRyy3NjF1mo6DQ==
+   d="scan'208";a="42617541"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 06:10:05 -0800
+X-CSE-ConnectionGUID: VvrJUcyiS4izriSCqxm6ag==
+X-CSE-MsgGUID: TgFiEdSJQVK4SQsbUBuRww==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="143065127"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 10 Feb 2025 06:09:26 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1thUTS-0012rN-2A;
-	Mon, 10 Feb 2025 14:09:22 +0000
-Date: Mon, 10 Feb 2025 22:08:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: Raag Jadav <raag.jadav@intel.com>, gregkh@linuxfoundation.org,
-	rafael@kernel.org, linus.walleij@linaro.org,
-	mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
-	dmitry.torokhov@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-	sre@kernel.org, jic23@kernel.org, przemyslaw.kitszel@intel.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-sound@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-iio@vger.kernel.org, Raag Jadav <raag.jadav@intel.com>
-Subject: Re: [PATCH v4 01/20] driver core: Split devres APIs to
- device/devres.h
-Message-ID: <202502102137.SA3rtuTB-lkp@intel.com>
-References: <20250210064906.2181867-2-raag.jadav@intel.com>
+   d="scan'208";a="117265080"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Feb 2025 06:10:04 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Mon, 10 Feb 2025 06:10:04 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Mon, 10 Feb 2025 06:10:04 -0800
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.41) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Mon, 10 Feb 2025 06:10:03 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lR77eJAvdcDD6pbKQJsjonFUMS7axVW1RzF9H0KIhq+3QqxFw0+viCpS45nIcdXWhcWIW1cyP+Kh8udd0CT/+kKl70QJC264Jeuwv8TpspPJy45F6runQxuWzMmM3d7KfgDUlB+dUlXN9kM6q1HoT8f8EgOQRB/57XK+DwQjJt65fVq+Qc4nnX/0THRya4JhqKsBu8iOrVS+YN2JgVj/Nn/5ijua4fA/KX6eVLpOeKpbQWFJFHZVQajCqvwZQN9Xmc6FEOv+k72iKaqgvnxBLLfn11rVzTk8JUIwiCtL0UnANcniOkKd6lOQnCvrFGRuGoTNqRRudPeSrQIJV9LWew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TcLlsa7zdDLNXiXU5SUHbqNXqEOYMxwjmyplWFn80tg=;
+ b=s8bcbFwXYg72zT+hh45fZMae1wIq2Cdb8nOUDu1Qcy3pjkp2KWzhqMh42NXiVhgkR49bxBE51PbF8bfeEhYabj1/R3OsfhNh7Eyn10tj6UgBQ25lAB4BC+SwspBqmrLmjqinuvfolMejm+WuZY4q5d2hk+A+PnkMw/TpPMSEoj/ILtZ1ps6SdsWJaY1VGh81Du5xHQvKFrgWcPuwvEI10DCKjQtcxKyek2powq7zjaXOI+shi92hh3c4IChARj1F6w7gD9RjH6sNvRIhGxu8O7ZiUIvnDk9P3PoFjN0YeoouPM+5TBPeFSJ1T5UTOX5WYeeXM7zLN4jogDFUW/dF/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
+ by MN2PR11MB4760.namprd11.prod.outlook.com (2603:10b6:208:266::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Mon, 10 Feb
+ 2025 14:09:48 +0000
+Received: from DS0PR11MB8718.namprd11.prod.outlook.com
+ ([fe80::4b3b:9dbe:f68c:d808]) by DS0PR11MB8718.namprd11.prod.outlook.com
+ ([fe80::4b3b:9dbe:f68c:d808%4]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
+ 14:09:47 +0000
+Message-ID: <79d05c4b-bcfb-4dd3-84d9-b44e64eb4e66@intel.com>
+Date: Mon, 10 Feb 2025 15:05:53 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 0/8] bpf: cpumap: enable GRO for XDP_PASS
+ frames
+To: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+CC: Lorenzo Bianconi <lorenzo@kernel.org>, Daniel Xu <dxu@dxuuu.xyz>, "Alexei
+ Starovoitov" <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+	"Andrii Nakryiko" <andrii@kernel.org>, John Fastabend
+	<john.fastabend@gmail.com>, =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?=
+	<toke@kernel.org>, "Jesper Dangaard Brouer" <hawk@kernel.org>, Martin KaFai
+ Lau <martin.lau@linux.dev>, <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20250205163609.3208829-1-aleksander.lobakin@intel.com>
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+Content-Language: en-US
+In-Reply-To: <20250205163609.3208829-1-aleksander.lobakin@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: VI1PR0902CA0037.eurprd09.prod.outlook.com
+ (2603:10a6:802:1::26) To DS0PR11MB8718.namprd11.prod.outlook.com
+ (2603:10b6:8:1b9::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210064906.2181867-2-raag.jadav@intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|MN2PR11MB4760:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6eed9a15-9ed0-4734-33d0-08dd49dc939e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?UFdSdW5aVmhscUcrR3NjVHY3ZGhZUkxvcXltRU93Y1ZCMEFMZFNRZjRWWG1v?=
+ =?utf-8?B?ZGRjZ2QxN3hpV0Q3OThXUGRNL1o4MmpuVnhCTktaM3BxTFV1SExwU2pGZThR?=
+ =?utf-8?B?MFlkZEdISnRqTDVCR2dWd2JRYTBaNTdrYWRJL1NXN1RtaUdHSjRncGN1NDNp?=
+ =?utf-8?B?QlZPSGZmVWpyL2FVbml3bXZlY3dxSTB4aVBHUXZqaU5Ga0EwYnhVRU9xVzlX?=
+ =?utf-8?B?aEFQdW4xY1IwZzRYa1RqT09UN3JObGRaZlJTZ1gweW81VU16UXViSS9HMXA4?=
+ =?utf-8?B?bGQxOGFmZ1RGMm1QMnZHOUxpQ1h4T2hMSnREVGVUMVdHUEZLOCtyK0o1YnI0?=
+ =?utf-8?B?T3hGaUVsbVFqdGhzVEQ4V05IczhtUm9ka00zR0JiNTJnVmFkZzJ0cGdXbXZh?=
+ =?utf-8?B?eXo5NG1tN0d2SEhWOFpWNEZKTm8xM29kdkhjK2ZYd2g2Y3dMUjRtY1JuMHJs?=
+ =?utf-8?B?TWdLQUdwT1puOThFSlFISjRXV2krY0poc0hud2ozczRodVFXelgzc2Mxc1VT?=
+ =?utf-8?B?UnhPa0NYd3dGamxxS0Vmd2RQMGFqU3ZnRWNrSWJjUjh5RUhJbFlvNmFDQ0Zu?=
+ =?utf-8?B?V0g2cXhwbWRieFlEUzhKS01La2JXNUZic0tGbVQ1U08ydVI1SVRRSEgvKzFs?=
+ =?utf-8?B?aEtMck5xYkVsUFhmWWliNVBpamxGam1yaDIvWC9qcHdSRktha255ZFRodkYv?=
+ =?utf-8?B?OVQ3b3N2cHc3UldSdWFiVkxVWm5RWHZiY0llMHNTSSsrcFN2NEdhZzJuTU9T?=
+ =?utf-8?B?bUprVHFtMXo1MFdKSDRDYnE4bk1JbHF3RFJiaDdHTFliUlFqZ0xXbDNYR2Rx?=
+ =?utf-8?B?RXZLcWhzd1EyUEpnKzlUbFJoNzdpT1U1UFMvOXVLRzF0YVFqdW9qRUROemVx?=
+ =?utf-8?B?UUNEUnlUc2Z1TzQ4UkpHaWVhNzJzd3lFK01zNXFBaGNwQU5iaWwweHdjVU5F?=
+ =?utf-8?B?SzBtbC85a2JIY09kMUowNnBJaHoxS015NUVqUC8ySyszcDRnVkk0YW9vTHlD?=
+ =?utf-8?B?S3gyMkxDQloxZmE4NHpTVmpDb0ZlUDJ3N3ozcWV0bUpBVXJQMzFFUDlLYTVX?=
+ =?utf-8?B?bTZuM1F3Rkw0UCtvakdLR2FvaDBVK2RsZ2loRUY5RUJjRitIL1lVYzZoVjR1?=
+ =?utf-8?B?QVkzT1BzZVV6Mm1NaUc4dzVyTks2UjVmZWhVWVdRbmNaL21HK3o1b0RPN21k?=
+ =?utf-8?B?L1lLeXhhandNVTN2ZkxtYkdLa3hzamdBK3RaZkFjTDRBQmN5SXdHTit4aDJI?=
+ =?utf-8?B?Skc0dTc1WWxHUWJ3VFFieUhLZmtBT1hEMjFodmdIQkNSa0VVemJvMWtoSHlL?=
+ =?utf-8?B?Y0ptM2dwYkhsdU9EMXMrcldTdDN3dzdDemlNWW1taEtYeHRTbWVlaUlZVDBB?=
+ =?utf-8?B?S1NEQ0l3R1oxbGVDZmRNRHd4SEk5bXlNUnZhVXJJMXBsdzRER2ZXc2lSKzBu?=
+ =?utf-8?B?NENEUDgvTnZlMUx5cFQ0dlJDVGg1Y0tMbGU1ell0dFFmWEdkZFkxWnJ1dzg5?=
+ =?utf-8?B?RFJjNFdXTEQxS3oxc0Q3RUVRaU0zT1d5eUNwNEdMaXgwK2k4b2dhamJuc292?=
+ =?utf-8?B?RjlrK0t6NTR4S2R4T3NCU3k3d3d5b1JHVlBDeDl2bTZiK1JWQ2N6R3hoQ21s?=
+ =?utf-8?B?OXJVVlYvOHp5ZnB0ZlRNTjkzZlJGYkVjbExScnBTTXJsUHcwMklSeGdJQk9s?=
+ =?utf-8?B?ZmcrakQyUVNiMis0RDdMaDBiZnB4c0FPTDllK21PVzlvZ1QyWXE4clhlQytj?=
+ =?utf-8?B?aU52aDJON2lEejVkZ1hhVDBOay9RbDA3NmxaNWZrZ0diVjVjMFlEbFZVLzNQ?=
+ =?utf-8?B?Uy9ET3ZNdUxUdkgwTElnbk04UVBtcHozYm8yRzNOcUVMQk1wS3MzcTJsb1Mr?=
+ =?utf-8?Q?5mqgiquKFgzyz?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?N2ZZOG9hTGptdmxzQzFJa3ZRdGtLR3BpQmdiN0Z2cTZrMGdCUlFvZnVRVElh?=
+ =?utf-8?B?TW42UXMxLzFHQmZQMVZyZEdFZ2NBVktQWlAySEExVmhrUWpNSFNlNEJxZ09E?=
+ =?utf-8?B?anowK1VwbW41WHhRYVJPRzJtaWx1VFB2RXBQTERITkFWMHBoZkVKNUVjaVMw?=
+ =?utf-8?B?RytFblZDZ0lsN0gxNWRvNkhKaHV3MDBzcVJyRzI4bWxoN3FIRzdkRUtQUHdl?=
+ =?utf-8?B?MnArcjhiMkJkU29SRWJlak9xbFhIbTUvMXRDNHFLTm1JK2NXdlFhakMxdjlv?=
+ =?utf-8?B?TkZrVi91NTRtQUJpTndwN0YrWDFCTTdlV1lPYzJIYkxlamdrVTJNajNLYnpK?=
+ =?utf-8?B?cHo4NlBCU2lNT2U3L05JR1N0bTJYekZkNE1QdkcrMjJEVDh2TGdqeXkrbDFt?=
+ =?utf-8?B?YmxiMEVnVzdKVFlmOC9TWWxBY0JheUEyWUE2eXFFNjFkZ0xBaUxOSFVXY3g1?=
+ =?utf-8?B?QXNMVkNMOU5oR1dqYWlCRUtnRFNGSkNJRXpvOGJZL0JMeG9SOHRJYXJVODYy?=
+ =?utf-8?B?bDdYY1FKbXo2R2c2SXgrdGlscHJaZGpKWE5tbEthdDl4T0c4NFBIY3hGNGVP?=
+ =?utf-8?B?ZmwvVEhiVys3V2lGTFYrZCtHYnZ4MUtKb3djLzBBRU84SUhBa0ZLbFlJbGhH?=
+ =?utf-8?B?TzE3dXYzdEQ0bGpnVVpqQ09xOHBxOUhPckREaFFScXhqSkNkWjVoVTdzRVFE?=
+ =?utf-8?B?MWJvVFFZbFRKU2ZlQVpSKzR1aDc3Y2QreDd0UGRITzJibU9UR1dYM3BLVVhp?=
+ =?utf-8?B?cU1lNXJMYmRpV0EySUNVOUh6Zkl1V3NIMUF0eDh5SnNTV2grVWRlV044Rk5R?=
+ =?utf-8?B?d0xnek1DY3J6SHZJTjN4SGpPSzlhU0sxL3FLcU8yb0NBRktKajhhOFZ3WDhq?=
+ =?utf-8?B?MnpFdnd1ZFN6dnBHZ3hMWjNFalUrank5aGtKRS9XQ0lueFRsclhSQ0V4L0Z3?=
+ =?utf-8?B?ZzBaSHJLaHFDTXNuQUhuL3duMWtxZm5OM1dtS1ZZODdzT1ZNUkdzUDBJakhW?=
+ =?utf-8?B?c09hVERwZ0RYK3BrbUpTbExPRGhrWGk3OW9Hc1dOMXU4V3FEMENnRG9kV1g2?=
+ =?utf-8?B?MEtCckFvbURPNklCdmJxMzdJQXFyL1RYMUNkQkxxLzc2UWp5bEtnTXpkeGYz?=
+ =?utf-8?B?RXBQcHNndW9TUWp0LzIzTWZZeXVXeVdtSHkyMmFmQk5tam12ZHhlWkUyaDVD?=
+ =?utf-8?B?Vm9XWmtWWlRQaEF3VExsN2NoQ0Y2clNQMWZtZkRiL2JrOXkweUtveVVIWVA5?=
+ =?utf-8?B?endFcnc4cHM5NXhlNHpzY3NJVVVMTDZFNXdjRFh3dzVZN0ZIL3hCRVByWjJX?=
+ =?utf-8?B?cmFweWNMVmthckFtOCtkT1h6VURkaVhPalNNWjZweG94WWdsdEZPTjMraW1C?=
+ =?utf-8?B?SXM4dVE4b0diaDNoT1hLaXdkcllVcmFPQ0F0V1Z1TlcvVWNQNTdJOXIxcHJs?=
+ =?utf-8?B?dG94aWxSL3c3SjNqVHM1U2JuK1AvbzhsalBMcmM5YTM3YlpwUnIvMW82TUVO?=
+ =?utf-8?B?eGxBck1idHdyOCtBRGo2S0EvRXNWR3hFdU1YblhDUGx3bHpwa0crYVgveXhV?=
+ =?utf-8?B?K3dzM1FJSElSWlE3T3BTK2dieUdQYzQ3bUhmMGdOVWQ3RDYwVmREYWROSWt1?=
+ =?utf-8?B?TUllWnBhcVh3dU5iV0Q1dFJsSWJUV1BBU09rNTM5c3lGdSsrNUtETjN4RlV0?=
+ =?utf-8?B?SXBMTUE5Q1J1N0p4Rm1JRXg1MlpZM0JwR2J6UWs1NFJBMlpJRlF0eEdWcG9I?=
+ =?utf-8?B?aTBvdy96YlI2YnpuY0Z2dEZnZzB4QnB4UUhqNitGVm9Zc2FyS3pOcFQzSHMz?=
+ =?utf-8?B?eUxudThYejNYQzYxUWFqeVYxR1B2ZFpoNE1nSldGWFhZSWhEajdpQjdTd0tz?=
+ =?utf-8?B?YUtXN0ViTGFrZUlOS2NJNmVHNVVtQkY5czJ0RFdWUTdrdXVjeGFCTE1Jc05t?=
+ =?utf-8?B?MFlKYjU5djY4VUJqMmJ6UUI5ZklPb2FsNU9hT1JORGdLWU5oMzMxZ3luMUxO?=
+ =?utf-8?B?Rk5mUGtiRXZrckVjb0JLNWpHVGJibnJCOE9UNXFMS0lzU2NnY3FYQ205K3Q3?=
+ =?utf-8?B?cVBkZzhxUnJxT0wxbWV2L2ovS25RUm5DYWIvbWoyWG01Ly9rU2FuOUE4Y3ZJ?=
+ =?utf-8?B?WnBZYkpIVzdHS1NCSk9uYTc2SGY0QjF5MXRFTGZvamR2SGdnVWJLajc5eHBw?=
+ =?utf-8?B?anc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6eed9a15-9ed0-4734-33d0-08dd49dc939e
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 14:09:47.8000
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9mVcmwRxQOJkrOLepW5RBCNOstqxeeOQ8p68ue8XHL8ulzykQAcb0Xy8ZB3bztj4CeqrlnA3ffssuGooadyMxrjc50RSd+CilWMuYjV35aM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4760
+X-OriginatorOrg: intel.com
 
-Hi Raag,
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+Date: Wed, 5 Feb 2025 17:36:01 +0100
 
-kernel test robot noticed the following build errors:
+> Several months ago, I had been looking through my old XDP hints tree[0]
+> to check whether some patches not directly related to hints can be sent
+> standalone. Roughly at the same time, Daniel appeared and asked[1] about
+> GRO for cpumap from that tree.
 
-[auto build test ERROR on a1e062ab4a1f19bb0e94093ef90ab9a74f1f7744]
+I see "Changes requested" on Patchwork. Which ones?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Raag-Jadav/driver-core-Split-devres-APIs-to-device-devres-h/20250210-145732
-base:   a1e062ab4a1f19bb0e94093ef90ab9a74f1f7744
-patch link:    https://lore.kernel.org/r/20250210064906.2181867-2-raag.jadav%40intel.com
-patch subject: [PATCH v4 01/20] driver core: Split devres APIs to device/devres.h
-config: powerpc-randconfig-003-20250210 (https://download.01.org/0day-ci/archive/20250210/202502102137.SA3rtuTB-lkp@intel.com/config)
-compiler: powerpc-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250210/202502102137.SA3rtuTB-lkp@intel.com/reproduce)
+1/8 regarding gro_node? Nobody proposed a solution which would be as
+efficient, but avoid using struct_group(), I don't see such as well.
+I explain in the commitmsgs and cover letter everything. Jakub gave me
+Acked-by on struct_group() in the v3 thread.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502102137.SA3rtuTB-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from include/linux/device/devres.h:7,
-                    from include/linux/device.h:31,
-                    from arch/powerpc/include/asm/io.h:22,
-                    from drivers/video/fbdev/sis/init.h:64,
-                    from drivers/video/fbdev/sis/init.c:59:
-   include/linux/io.h: In function 'pci_remap_cfgspace':
->> include/linux/io.h:106:16: error: implicit declaration of function 'ioremap_np' [-Wimplicit-function-declaration]
-     106 |         return ioremap_np(offset, size) ?: ioremap(offset, size);
-         |                ^~~~~~~~~~
->> include/linux/io.h:106:44: error: implicit declaration of function 'ioremap' [-Wimplicit-function-declaration]
-     106 |         return ioremap_np(offset, size) ?: ioremap(offset, size);
-         |                                            ^~~~~~~
->> include/linux/io.h:106:42: error: returning 'int' from a function with return type 'void *' makes pointer from integer without a cast [-Wint-conversion]
-     106 |         return ioremap_np(offset, size) ?: ioremap(offset, size);
-         |                ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
-   arch/powerpc/include/asm/io.h: At top level:
->> arch/powerpc/include/asm/io.h:885:22: error: conflicting types for 'ioremap'; have 'void *(phys_addr_t,  long unsigned int)' {aka 'void *(unsigned int,  long unsigned int)'}
-     885 | extern void __iomem *ioremap(phys_addr_t address, unsigned long size);
-         |                      ^~~~~~~
-   include/linux/io.h:106:44: note: previous implicit declaration of 'ioremap' with type 'int()'
-     106 |         return ioremap_np(offset, size) ?: ioremap(offset, size);
-         |                                            ^~~~~~~
-   In file included from arch/powerpc/include/asm/io.h:1031:
->> include/asm-generic/io.h:1161:20: error: conflicting types for 'ioremap_np'; have 'void *(phys_addr_t,  size_t)' {aka 'void *(unsigned int,  unsigned int)'}
-    1161 | #define ioremap_np ioremap_np
-         |                    ^~~~~~~~~~
-   include/asm-generic/io.h:1162:29: note: in expansion of macro 'ioremap_np'
-    1162 | static inline void __iomem *ioremap_np(phys_addr_t offset, size_t size)
-         |                             ^~~~~~~~~~
-   include/linux/io.h:106:16: note: previous implicit declaration of 'ioremap_np' with type 'int()'
-     106 |         return ioremap_np(offset, size) ?: ioremap(offset, size);
-         |                ^~~~~~~~~~
---
-   In file included from include/linux/device/devres.h:7,
-                    from include/linux/device.h:31,
-                    from arch/powerpc/include/asm/io.h:22,
-                    from drivers/video/fbdev/sis/init301.h:64,
-                    from drivers/video/fbdev/sis/init301.c:72:
-   include/linux/io.h: In function 'pci_remap_cfgspace':
->> include/linux/io.h:106:16: error: implicit declaration of function 'ioremap_np' [-Wimplicit-function-declaration]
-     106 |         return ioremap_np(offset, size) ?: ioremap(offset, size);
-         |                ^~~~~~~~~~
->> include/linux/io.h:106:44: error: implicit declaration of function 'ioremap' [-Wimplicit-function-declaration]
-     106 |         return ioremap_np(offset, size) ?: ioremap(offset, size);
-         |                                            ^~~~~~~
->> include/linux/io.h:106:42: error: returning 'int' from a function with return type 'void *' makes pointer from integer without a cast [-Wint-conversion]
-     106 |         return ioremap_np(offset, size) ?: ioremap(offset, size);
-         |                ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
-   arch/powerpc/include/asm/io.h: At top level:
->> arch/powerpc/include/asm/io.h:885:22: error: conflicting types for 'ioremap'; have 'void *(phys_addr_t,  long unsigned int)' {aka 'void *(unsigned int,  long unsigned int)'}
-     885 | extern void __iomem *ioremap(phys_addr_t address, unsigned long size);
-         |                      ^~~~~~~
-   include/linux/io.h:106:44: note: previous implicit declaration of 'ioremap' with type 'int()'
-     106 |         return ioremap_np(offset, size) ?: ioremap(offset, size);
-         |                                            ^~~~~~~
-   In file included from arch/powerpc/include/asm/io.h:1031:
->> include/asm-generic/io.h:1161:20: error: conflicting types for 'ioremap_np'; have 'void *(phys_addr_t,  size_t)' {aka 'void *(unsigned int,  unsigned int)'}
-    1161 | #define ioremap_np ioremap_np
-         |                    ^~~~~~~~~~
-   include/asm-generic/io.h:1162:29: note: in expansion of macro 'ioremap_np'
-    1162 | static inline void __iomem *ioremap_np(phys_addr_t offset, size_t size)
-         |                             ^~~~~~~~~~
-   include/linux/io.h:106:16: note: previous implicit declaration of 'ioremap_np' with type 'int()'
-     106 |         return ioremap_np(offset, size) ?: ioremap(offset, size);
-         |                ^~~~~~~~~~
-   drivers/video/fbdev/sis/init301.c: In function 'SiS_SetCRT2ModeRegs':
-   drivers/video/fbdev/sis/init301.c:2687:24: warning: variable 'modeflag' set but not used [-Wunused-but-set-variable]
-    2687 |   unsigned short i, j, modeflag, tempah=0;
-         |                        ^~~~~~~~
-   drivers/video/fbdev/sis/init301.c: In function 'SiS_SetGroup1':
-   drivers/video/fbdev/sis/init301.c:6233:52: warning: variable 'resinfo' set but not used [-Wunused-but-set-variable]
-    6233 |   unsigned short  pushbx=0, CRT1Index=0, modeflag, resinfo=0;
-         |                                                    ^~~~~~~
-
-
-vim +/ioremap_np +106 include/linux/io.h
-
-7d3dcf26a6559f Christoph Hellwig 2015-08-10   84  
-4d312ac057da57 Arnd Bergmann     2023-05-16   85  /* architectures can override this */
-4d312ac057da57 Arnd Bergmann     2023-05-16   86  pgprot_t __init early_memremap_pgprot_adjust(resource_size_t phys_addr,
-4d312ac057da57 Arnd Bergmann     2023-05-16   87  					unsigned long size, pgprot_t prot);
-4d312ac057da57 Arnd Bergmann     2023-05-16   88  
-4d312ac057da57 Arnd Bergmann     2023-05-16   89  
-cf9ea8ca4a0bea Lorenzo Pieralisi 2017-04-19   90  #ifdef CONFIG_PCI
-cf9ea8ca4a0bea Lorenzo Pieralisi 2017-04-19   91  /*
-cf9ea8ca4a0bea Lorenzo Pieralisi 2017-04-19   92   * The PCI specifications (Rev 3.0, 3.2.5 "Transaction Ordering and
-b10eb2d50911f9 Hector Martin     2021-03-25   93   * Posting") mandate non-posted configuration transactions. This default
-b10eb2d50911f9 Hector Martin     2021-03-25   94   * implementation attempts to use the ioremap_np() API to provide this
-b10eb2d50911f9 Hector Martin     2021-03-25   95   * on arches that support it, and falls back to ioremap() on those that
-b10eb2d50911f9 Hector Martin     2021-03-25   96   * don't. Overriding this function is deprecated; arches that properly
-b10eb2d50911f9 Hector Martin     2021-03-25   97   * support non-posted accesses should implement ioremap_np() instead, which
-b10eb2d50911f9 Hector Martin     2021-03-25   98   * this default implementation can then use to return mappings compliant with
-b10eb2d50911f9 Hector Martin     2021-03-25   99   * the PCI specification.
-cf9ea8ca4a0bea Lorenzo Pieralisi 2017-04-19  100   */
-cf9ea8ca4a0bea Lorenzo Pieralisi 2017-04-19  101  #ifndef pci_remap_cfgspace
-cf9ea8ca4a0bea Lorenzo Pieralisi 2017-04-19  102  #define pci_remap_cfgspace pci_remap_cfgspace
-cf9ea8ca4a0bea Lorenzo Pieralisi 2017-04-19  103  static inline void __iomem *pci_remap_cfgspace(phys_addr_t offset,
-cf9ea8ca4a0bea Lorenzo Pieralisi 2017-04-19  104  					       size_t size)
-cf9ea8ca4a0bea Lorenzo Pieralisi 2017-04-19  105  {
-b10eb2d50911f9 Hector Martin     2021-03-25 @106  	return ioremap_np(offset, size) ?: ioremap(offset, size);
-cf9ea8ca4a0bea Lorenzo Pieralisi 2017-04-19  107  }
-cf9ea8ca4a0bea Lorenzo Pieralisi 2017-04-19  108  #endif
-cf9ea8ca4a0bea Lorenzo Pieralisi 2017-04-19  109  #endif
-cf9ea8ca4a0bea Lorenzo Pieralisi 2017-04-19  110  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Olek
