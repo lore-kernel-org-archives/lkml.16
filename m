@@ -1,203 +1,113 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2A51B0F00;
-	Mon, 10 Feb 2025 13:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A938C1F76A8;
+	Mon, 10 Feb 2025 13:14:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739193250; cv=none; b=GfI/zSoQt1dMtS3UHTu0TWt6pvgDB2z6Mwu1sbxCUGgO251PPnTWE+4zBg9bh5cKAVJW2tXCKYDozx9ovDqfnHnFwo+raDMNFIC38k2672z41HSpWpTjNArdmLTb+Y16GrKU5rjj82qfh4f/4iWhJvAEO/wCgnbq7C+9RMPx9vM=
+	t=1739193298; cv=none; b=pFhjszf2Z3cuWMPP5MVuoRSXMmDIp5a1/J9bzRPvzBQAlriTygMWoVu4PgJgmg0UlfrtS9th7nbQbn9YUrE5oo39rRT7lHzUEL+9BT36eVPh2yf9lRqL0J+slPwwH2AMR1X911CaosyUagRUfzwQtMb+Eyimk8a3r244XMiQlIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739193250; c=relaxed/simple;
-	bh=dgELg2wiAZA+JF3sDD2KDCqfReF5gcMgG9A4PFTS5z8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BrJ0tWOMXQCe3YgVdvUDcvQbCcOeK8tPDYdOLzbGBne84ZPVoO0FOMc7Gf929CDwEeLtkwnb8B7/yUNnxi1zvX5zQDghDQkw1SnAK667qIG/0YR3HeK4+nEJlLWrsAR+YV40RsWiHxArRTH0taT6DaPdLUSrmWYENq7bX3JmiE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=g01tbHpz; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="g01tbHpz"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AD7Cqf025053;
-	Mon, 10 Feb 2025 13:14:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=liKZUk
-	lKnfW7FSG+cP7kmEj5EI0edOcw73zB0BbhOAI=; b=g01tbHpzyd1ruka9vGzG1h
-	r11GUKZA+zME2x87ySz9sqluhuP5a6o1cuLbbEFX34TSVuJ9dwWw3PxWJUau1/YS
-	Qsqs9l2EJskpj6IxzS15iSnDUpIg9oKqa4VrHuWaNHnpxo33xBddlbCaB4qahbme
-	9FUy6HzGKAp8sMisMbuBX4zWPOkOgJe8ur7Tr3dOUT5lMgyMTvfrE5P+y3yL7pl7
-	DaAwvMdfr1BNrYKGBNcsJYhJrGiZ13A2fPFVCZdfbg1I84MI7bn09yeJXQn9ewNA
-	n1wHjW8n/PL1AfY3YRycp7Csz1RJKwqUp83/SdkRbHAVEZzgXpQYPg20jO01PzXA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44q7h9awrf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 13:14:03 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51ADAckm023201;
-	Mon, 10 Feb 2025 13:14:03 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44q7h9awrb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 13:14:03 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51A9s5Jc028716;
-	Mon, 10 Feb 2025 13:14:02 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44pma1e1qa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 13:14:02 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51ADE08729557486
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Feb 2025 13:14:00 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6135058052;
-	Mon, 10 Feb 2025 13:14:00 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 119295805D;
-	Mon, 10 Feb 2025 13:13:58 +0000 (GMT)
-Received: from [9.171.86.231] (unknown [9.171.86.231])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 10 Feb 2025 13:13:57 +0000 (GMT)
-Message-ID: <08cd6e15-3f8c-47a0-8490-103d59abf910@linux.ibm.com>
-Date: Mon, 10 Feb 2025 14:13:57 +0100
+	s=arc-20240116; t=1739193298; c=relaxed/simple;
+	bh=oe9YqlWHMEuQqzNAsLC/ymWcVw5v450bMingEO5+o/8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PsHV54UAX3Vo1GzBFg6AiS6tu0fsa+WKuCD0Snk2RXo8Lr5yKR2VAUz2F10yUhbOvtH8rrl/RQLKgXZPwIsy2ccS9/ve3uaTJDMfq9cz6/3AMUmrqaBVwQREAnWkCRJ/1e/zpeIqcjZd8v8gTzSX+bqx4zEJPRNFf7/LAQCHUqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4ba830cd6b8so1100373137.3;
+        Mon, 10 Feb 2025 05:14:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739193295; x=1739798095;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CGW9ojU7zn9GGWFOqqtTTDOtvjIst3sLIBkQ7z5/xo0=;
+        b=L3lT3Q1aPKt5pL51Abw2Ejusb7GyG8s++qnUyf7eFLD2YUiZS1k793/huq+OUX5g05
+         eCkSB1ALeE8dv0evar+G+fnC3Mod1BsA2VIXOXaBBgwFYiVi6S5YojTdXArbpLgVRRdm
+         Z+gwzvrXE25PgwcUUoa/OJJyD4/Zj5ciTsO7orIMjEaqj74MH/OEWynr9OyBRqKBAZ8M
+         zrCUBr+ZXUwT98Y7KJjWlixI2+w8rVXMlvPDCBXXLA2OLH0C0BozYhJfKfhXHdQ8Za+M
+         40XmW9Y2ye7jWPvsJ5NeIyYhraogRMncyXKnT1LdRPvRYulsXZXaTw9rmIxX1PQk7Ry4
+         WjNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+yCwvHXyUTirm5WczBTwJ5niAs2501rak/+P88ZdN5uK9iV21Z2L4MeRZg+nIpzV1nOuYPXSNXA1hng1x@vger.kernel.org, AJvYcCWctV/b8QPg4xPR0/vAK1Fp+2RoNJpv8EZ3tiT23cj4Z5Ihrx1f7yJTDeKsy7FM40va6qhfGAlUiqyIUbs8@vger.kernel.org, AJvYcCXMA/wJTX4hm4lAxoDBh0OKN2ItXKvMGxvsvP9uw3U9sOICUBq4iTVQuzs2Q/n1paYmlRojwgr/m69LMcNmLFi1u6Y=@vger.kernel.org, AJvYcCXYnvimHneZB3bp1AGx/ycjaAMLciyLG8K3TdM2gRoAEde4NjI7KFM70wycLjHbg0Pr57fG4XIgmMDK@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCfQvEbLAKLmBK/CXS3w5/CNgT4hWxATSpu+ugNsWf5rMfmPPd
+	y8ieXJB8qQikWYS9RJGKpa7ij40120QQ7tj+OI+TG1er+SBNQKHiJzFtpWMr
+X-Gm-Gg: ASbGncseS4T6AZ3QVnYwFAzFF0NW+KSRETjr0HIp+o4W50G5AJXsO+gxqDr2ydXrxFF
+	oBrItrYZvRzVwMaK9z7IF6bEH3+oD+q0plNEf/ajBJ/jYezyQY+sfQUEcuGwYFawtluSARYDR6T
+	z/mb2paH77KyPIo0hkCH6fur7CGFe+IBn5qatAJFKRJwutTsZmZPD4TzwSR0zme/Z2yJrfeSEoP
+	KHjPavTDhbRlVQl20s01jwr1Ukzs1cuHLgUDmHT1yjKUh+vFFCBirr9NJEOf7m3tPDsvzsbjj6i
+	ZdDP9IOytgh8uynG10YeW0kBFbJ65x+dFYWVjP3GnNsCv5LiEUK86g==
+X-Google-Smtp-Source: AGHT+IE/MTI003KZAzFEzT5D6R9YpB5TnCmJjKtw6Jr9BOv+i9SG00BX1RDpdIcUNUOA5wxu6Ei3Xw==
+X-Received: by 2002:a05:6102:31b3:b0:4ba:9689:8705 with SMTP id ada2fe7eead31-4ba968988famr4772692137.10.1739193294706;
+        Mon, 10 Feb 2025 05:14:54 -0800 (PST)
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866f96361d0sm1614988241.1.2025.02.10.05.14.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 05:14:54 -0800 (PST)
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4bbbaef28a5so402848137.0;
+        Mon, 10 Feb 2025 05:14:54 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVIIzFIqh+sbsX678kayUVzbCvZAGwALDQRqhqxkXcIIM0vSFe4iqHdBSM62hBCDgf0CTrbQq/r04dIE3orCB+r7Nk=@vger.kernel.org, AJvYcCVooTA2QKM2j4TV1xRxZg1sM2oiz4wcLFxtX6yXK3OcY3cFm6CVotTNzOsEN0W4VGZn7SD7FU+k0B0PkJnR@vger.kernel.org, AJvYcCWzqMf1xaLdpVuSvkGw6JVcgbCItkFTWjF90CSnk7hysJOXr070TReUKStkbx6gU2YzmrGirR9t9Fbs@vger.kernel.org, AJvYcCX0sRJ2n6DeRhDD+E/e9bf8ocA1wbCzHBADcQfArFshFvc8pC85/ha6aNEKMlAk2VWL6bEtZGQpeZ2kI/JB@vger.kernel.org
+X-Received: by 2002:a05:6102:f0f:b0:4af:c58f:4550 with SMTP id
+ ada2fe7eead31-4ba85de9d5fmr7943296137.7.1739193294128; Mon, 10 Feb 2025
+ 05:14:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] net/smc: use the correct ndev to find pnetid by
- pnetid table
-To: Guangguan Wang <guangguan.wang@linux.alibaba.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, jaka@linux.ibm.com,
-        alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
-        guwen@linux.alibaba.com, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, horms@kernel.org, linux-rdma@vger.kernel.org,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alexandra Winter <wintera@linux.ibm.com>
-References: <20241227040455.91854-1-guangguan.wang@linux.alibaba.com>
- <1f4a721f-fa23-4f1d-97a9-1b27bdcd1e21@redhat.com>
- <20250107203218.5787acb4.pasic@linux.ibm.com>
- <908be351-b4f8-4c25-9171-4f033e11ffc4@linux.alibaba.com>
- <20250109040429.350fdd60.pasic@linux.ibm.com>
- <b1053a92-3a3f-4042-9be9-60b94b97747d@linux.alibaba.com>
- <20250114130747.77a56d9a.pasic@linux.ibm.com>
- <3dc68650-904c-4a1d-adc4-172e771f640c@linux.alibaba.com>
- <4339aaa1-f2aa-4454-b5b1-6ffb6415f484@linux.alibaba.com>
-Content-Language: en-US
-From: Wenjia Zhang <wenjia@linux.ibm.com>
-In-Reply-To: <4339aaa1-f2aa-4454-b5b1-6ffb6415f484@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 15FTV8EPZQmyyWbTChmRah1YMwx5izSU
-X-Proofpoint-ORIG-GUID: -iSYw6egEIudQfx3bahwkPDXquKxr180
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_07,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 phishscore=0 mlxscore=0
- mlxlogscore=999 clxscore=1015 malwarescore=0 impostorscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502100109
+References: <20250129165122.2980-1-thierry.bultel.yh@bp.renesas.com> <20250129165122.2980-3-thierry.bultel.yh@bp.renesas.com>
+In-Reply-To: <20250129165122.2980-3-thierry.bultel.yh@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 10 Feb 2025 14:14:41 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVB2W6R+xYeTUKSv_dMGruECSft-P19m6nZD61=ROngXw@mail.gmail.com>
+X-Gm-Features: AWEUYZmV5A_tAWdzmeYWijF-JgTDqcElC5Rp8P-Tj2Jva5zv0N3bQ2AGf8RZsUA
+Message-ID: <CAMuHMdVB2W6R+xYeTUKSv_dMGruECSft-P19m6nZD61=ROngXw@mail.gmail.com>
+Subject: Re: [PATCH 02/14] dt-bindings: serial: Document sci bindings for the
+ Renesas RZ/T2H (a.k.a r9a09g077) SoC
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Thierry,
 
+On Wed, 29 Jan 2025 at 17:52, Thierry Bultel
+<thierry.bultel.yh@bp.renesas.com> wrote:
+> Document RZ/T2H (a.k.a r9a09g077) in SCI binding.
+>
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
 
-On 10.02.25 12:16, Guangguan Wang wrote:
-> 
-> 
-> On 2025/1/15 19:53, Guangguan Wang wrote:
->>
->>
->> On 2025/1/14 20:07, Halil Pasic wrote:
->>> On Fri, 10 Jan 2025 13:43:44 +0800
->>> Guangguan Wang <guangguan.wang@linux.alibaba.com> wrote:
->>>
->>>>> I think I showed a valid and practical setup that would break with your
->>>>> patch as is. Do you agree with that statement?
->>>> Did you mean
->>>> "
->>>> Now for something like a bond of two OSA
->>>> interfaces, I would expect the two legs of the bond to probably have a
->>>> "HW PNETID", but the netdev representing the bond itself won't have one
->>>> unless the Linux admin defines a software PNETID, which is work, and
->>>> can't have a HW PNETID because it is a software construct within Linux.
->>>> Breaking for example an active-backup bond setup where the legs have
->>>> HW PNETIDs and the admin did not bother to specify a PNETID for the bond
->>>> is not acceptable.
->>>> " ?
->>>> If the legs have HW pnetids, add pnetid to bond netdev will fail as
->>>> smc_pnet_add_eth will check whether the base_ndev already have HW pnetid.
->>>>
->>>> If the legs without HW pnetids, and admin add pnetids to legs through smc_pnet.
->>>> Yes, my patch will break the setup. What Paolo suggests(both checking ndev and
->>>> base_ndev, and replace || by && )can help compatible with the setup.
->>>
->>> I'm glad we agree on that part. Things are much more acceptable if we
->>> are doing both base and ndev.
->> It is also acceptable for me.
->>
->>> Nevertheless I would like to understand
->>> your problem better, and talk about it to my team. I will also ask some
->>> questions in another email.
->> Questions are welcome.
->>
->>>
->>> That said having things work differently if there is a HW PNETID on
->>> the base, and different if there is none is IMHO wonky and again
->>> asymmetric.
->>>
->>> Imagine the following you have your nice little setup with a PNETID on
->>> a non-leaf and a base_ndev that has no PNETID. Then your HW admin
->>> configures a PNETID to your base_ndev, a different one. Suddenly
->>> your ndev PNETID is ignored for reasons not obvious to you. Yes it is
->>> similar to having a software PNETID on the base_ndev and getting it
->>> overruled by a HW PNETID, but much less obvious IMHO. I am wondering if there are any scenarios that require setting different
->> pnetids for different net devices in one netdev hierarchy. If no, maybe
->> we should limit that only one pnetid can be set to one netdev hierarchy.
->>
->>> I also think
->>> a software PNETID of the base should probably take precedence over over
->>> the software pnetid of ndev.
->> Agree!
->>
->> Thanks,
->> Guangguan Wang
->>>
->>> Regards,
->>> Halil
-> 
-> Hi Halil,
-> 
-> Are there any questions or further discussions about this patch? If no, I will
-> send a v2 patch, in which software pnetid will be searched in both base_ndev and ndev,
-> and base_ndev will take precedence over ndev.
-> 
-> Thanks,
-> Guangguan Wang
-> 
-> 
+Thanks for your patch!
 
-Hi Guangguan,
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/renesas,rzsci.yaml
+> @@ -0,0 +1,100 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/serial/renesas,rzsci.yaml#
 
-Thank you for the detailed description and examples; I understand your 
-situation better now. Paolo's suggestions (checking both ndev and 
-base_ndev, and replacing || with &&) could indeed serve as a workaround 
-for certain setups like yours. However, they might also introduce 
-invalid topologies, one example is what Halil mentioned.
+"rzsci" is IMHO a bad name, as SCI on RZ/T2 differs from the
+similar-named "SCI" (sometimes called "RSCI" or "SCIg") on RZ/A1H,
+RZ/A2M, RZ/G2L, RZ/V2L, and RZ/G3S (and most old SuperH SoCs).
 
-Therefore, neither suggestion is fully acceptable, whether from you or 
-from Paolo. I agree that we should restrict it so that only one pnetid 
-can be assigned to a single netdev hierarchy, based on the base ndev.
+BTW, I believe the variant on RZ/T2 is also used on RZ/N2, RZ/V2H,
+and RZ/G3E?
 
-One preliminary idea I have is to enhance the smc_pnet -a -I <ethx> 
-<pnetid> command to analyze the entire hierarchy first, ensuring that 
-only one pnetid is assigned per netdev hierarchy.
+However, binding-wise, they all seem to be very similar.
+So perhaps you can just add this to the existing
+Documentation/devicetree/bindings/serial/renesas,sci.yaml?
 
-Thanks,
-Wenjia
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
