@@ -1,126 +1,128 @@
-Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC4C1F91E3;
-	Mon, 10 Feb 2025 12:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DC6226887;
+	Mon, 10 Feb 2025 12:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739190731; cv=none; b=BaLc73Ow68nBwErfpCf6qo5ZQkV1yt8OdTZVn+kv7kbsvSl4gZ9OcKMsC7kufwfgQ/SL9fQPwjG0VyuES5Hxit9pgnFGViCBH2h8eYJ2KSwWFZyevWJCjAyj5BIFiNohZKsrAND6cJqVMA7eNximZX/4cIzOH6LWbSZxuBBdJ24=
+	t=1739190738; cv=none; b=tL9d3pCYuz5uzDtdxXXV0sh5Aju+TPMgxrIcDse5bwODvizXMKb8w65q9HU/ms3Voqjr0weEV/2JcEHcg6nkt4g2CPxyd8nmmU9OFPzSQrK5OdligwBXXPkSkSknIdljvxet7O9Jmq95YuNqjNGv36KHvaHXk6OvLde13WSVDuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739190731; c=relaxed/simple;
-	bh=IEsbCFgROILrbDSaADKH0YKTsviSwI21TCaR17hgP54=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ayrTCqPqB9mV+eaRMi8dwY45wNWtBOXb8aMVWu7OIA1ePYvQWLBraYAg8whupbENIC2OkpTE8BUhP1ZUIeMOgu/UB7JL3ziEAJboZpcHvBsnS4Rz4cUhE8tTd1LOXwsrLbgqlMd7KMMrQnw9rl3+4KfIhfG7+d3TKHxHF933jAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=beims.me; spf=pass smtp.mailfrom=beims.me; dkim=pass (2048-bit key) header.d=beims.me header.i=@beims.me header.b=yJxl5Qlv; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=a2g21fzl; arc=none smtp.client-ip=202.12.124.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=beims.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=beims.me
+	s=arc-20240116; t=1739190738; c=relaxed/simple;
+	bh=EQSHTPcN/Uh4nElazvazKTJRZoJJU/bBqTejOMZvGkI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NFPK8haSCNogHq7/e/Yg6broZy6Y1sK3FEJvAlqyvOrsxzq+OTgaNlxvzfVzQLN/9E8L1UIS73TaVuI3wNAdVWI6tN/YirS0X9e0hastNvWHzIF22eErOM6vmgMXd4k5RV6d3z75NEyWb4MBLNLeD9WmK6Z0gx5teeZ883sTBtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C33SsuLl; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=beims.me header.i=@beims.me header.b="yJxl5Qlv";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="a2g21fzl"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.stl.internal (Postfix) with ESMTP id 24567114010D;
-	Mon, 10 Feb 2025 07:32:07 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Mon, 10 Feb 2025 07:32:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=beims.me; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm3; t=1739190726; x=1739277126; bh=BCAhY1yiejemwSW6GsSgy
-	gTIkhjWjlTqnboSBf1Neag=; b=yJxl5Qlv7HVphjeZ+GqVFIoL0RViBODDwai0u
-	cHXDx8uVPbM9c/l18RaKpgRaxfVcVX3dwpL3xWCg1syue8UGPWbWSwXDGCzuOvPM
-	MqCMm1I+oFvxO72qx95G9V5xEO9ngphuHWG7HVKoWNSwHMA1ZL+2sJc3KIIxkUMK
-	Dw6aRvNAUowRiHS8uYT3S+RA9gGnF19uBXyHTca3CrTCt1fdM6N05tBhiXj8G/cW
-	8Orf++ASv9HjZOQbIz6cn4ge4x2+D2qLldH5Q5bTIrscw1sLTf1fMH3KWNPxlAkx
-	G3FZTg3yL7AqarKYuDbWiLW6PFP0uLf/Gn+SPTOxTOwBUXfuw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1739190726; x=1739277126; bh=BCAhY1yiejemwSW6GsSgygTIkhjWjlTqnbo
-	SBf1Neag=; b=a2g21fzlFUhBoaJdFfkgcPF4yg/+rUn1Ubkqvr7FFSngvwhjoPg
-	0/rIwP3R65uWJpSbNSEybBxyM0e+GHnPw6CJqUi9oJd4YcXFjMa2qwtMFxZHznDe
-	3V9SRbXkHoMAPy6MWeV4oAO+OaGgK76wXw6gNV/lFFZT07h4tNSHJePIXYsDDgfo
-	EgoCQU+grKGV8SL2IpABZbMr3vKGyeLDUcvpDXgbxh1ccMY7EgT8WLnPUxBk1mC2
-	HWSLY5SlFfWZo32DWWQAJ6fdIOPZtFANzUa6j++w/2hLpECovjiPV/7/JQvl6ThT
-	s7JnpYVL0VB9pnEqTAZOWT4Xju30TWIFIcA==
-X-ME-Sender: <xms:xvGpZ2BFyywVJDj9F1-E573XV-lMQLFtM3r5mJ9s8pbuyDlH6FL3LQ>
-    <xme:xvGpZwjmVi-SQ6XgFHuCM8srfRHay6GO7oWXoDQkiyO4mXNZ3ygXwWGwMBp43wR5v
-    mS3AqSuh9CpQ7inIa0>
-X-ME-Received: <xmr:xvGpZ5l5azEMmjml4gCSUklyi655F6GzHbJdtACeu2gEBq8ZIbERkJ2jk9QfHVPiRTG2aIhtGOE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefkedtjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecu
-    hfhrohhmpehrrghfrggvlhessggvihhmshdrmhgvnecuggftrfgrthhtvghrnhepfeekke
-    fgvdehhfefgfeltefhudduueffjeevvdekhffghfeljeegleekhedttdeinecuvehluhhs
-    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprhgrfhgrvghlsegsvg
-    himhhsrdhmvgdpnhgspghrtghpthhtohepudefpdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodguth
-    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpth
-    htohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhgv
-    rhhnvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehfvghsthgvvhgrmh
-    esghhmrghilhdrtghomhdprhgtphhtthhopehrrghfrggvlhdrsggvihhmshesthhorhgr
-    uggvgidrtghomhdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnh
-    gvlhdrohhrgh
-X-ME-Proxy: <xmx:xvGpZ0yo8aUNVviiyyyb89vc0k4kZds1RsMbSG4mIxJVcPX4FHlFCw>
-    <xmx:xvGpZ7S0bA8HTG3FgvR125kUE4EyVGyTMD3gFjY0YVLbxBDrEgiGzA>
-    <xmx:xvGpZ_ZEeWoXoHSHf_unSxF-XC1D5rNHXaKHea5dRaBro0O6tHSs2g>
-    <xmx:xvGpZ0Ty_KKur6FQR4v1upwT1iID9H8lhxlqH_bfUZe_JLE1wOkssg>
-    <xmx:xvGpZ5D7w1zgVZcKanuoJnD3FQaymBW7fMiLO7dnrmb-C-IPK8OIlRoV>
-Feedback-ID: idc214666:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 10 Feb 2025 07:32:03 -0500 (EST)
-From: rafael@beims.me
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Rafael Beims <rafael.beims@toradex.com>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	rafael@beims.me
-Subject: [PATCH] arm64: dts: colibri-imx8x: Add missing gpio-line-names
-Date: Mon, 10 Feb 2025 09:30:50 -0300
-Message-ID: <20250210123134.1659719-1-rafael@beims.me>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C33SsuLl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739190737; x=1770726737;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=EQSHTPcN/Uh4nElazvazKTJRZoJJU/bBqTejOMZvGkI=;
+  b=C33SsuLlgkdSBXaaKkQX7/69H5RrgsNsW/LDHAm9TF4RCTnP+WR5zVyM
+   z9Ef2uy68O4WhW7/A683MyVuuZXmR4CpVhzMRsCPMDOBZOw/tGUYQ1Vzi
+   MBUJRSy/hIPx5g1M/48lhPea+qpCI8RGrLylDpBo7OIpw8mSePSpqFdl6
+   Ok/mVY/PxKMNWGwYcD7n5ZDUn4dXcAWGltN3dO6wuiqV+/V0v8W4UeerL
+   68EaNCcKYxruL5MPLbKWdi4k0MX+jm+S0JHgU8w8/8NnsklgVRkDSMaR9
+   c8OlykZ0krZo7qf5WjUKiyvWipcUQCx1rpUotYQ8sEevh7Gxnv6+G5U+Q
+   g==;
+X-CSE-ConnectionGUID: Pd/kFotYQs60ykA8I3zvNA==
+X-CSE-MsgGUID: zpjvM2IZQtGIRjc9Vvn/xA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="43428138"
+X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
+   d="scan'208";a="43428138"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 04:32:16 -0800
+X-CSE-ConnectionGUID: eyBVhNlWQM2C44UMCTkDzg==
+X-CSE-MsgGUID: FPKlJZLJRmiCct1WczRVKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
+   d="scan'208";a="112121351"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 10 Feb 2025 04:32:14 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1thSxP-0012k7-24;
+	Mon, 10 Feb 2025 12:32:11 +0000
+Date: Mon, 10 Feb 2025 20:31:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dima Volkovsk <s0ldw3ll@gmail.com>, marvin24@gmx.de,
+	gregkh@linuxfoundation.org, ac100@lists.launchpad.net,
+	linux-tegra@vger.kernel.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Dima Volkovsk <s0ldw3ll@gmail.com>
+Subject: Re: [PATCH] Staging: nvec: Fix pm_power_off reset condition in
+ tegra_nvec_remove
+Message-ID: <202502102056.z2poG8tW-lkp@intel.com>
+References: <20250209201752.66313-1-s0ldw3ll@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250209201752.66313-1-s0ldw3ll@gmail.com>
 
-From: Rafael Beims <rafael.beims@toradex.com>
+Hi Dima,
 
-Add missing gpio-line-names for SODIMM_79 and SODIMM_97
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Rafael Beims <rafael.beims@toradex.com>
----
- arch/arm64/boot/dts/freescale/imx8x-colibri.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+[auto build test WARNING on staging/staging-testing]
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8x-colibri.dtsi b/arch/arm64/boot/dts/freescale/imx8x-colibri.dtsi
-index d5abfdb8ede2..ecb35c6b67f5 100644
---- a/arch/arm64/boot/dts/freescale/imx8x-colibri.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8x-colibri.dtsi
-@@ -295,8 +295,8 @@ &lsio_gpio0 {
- 			  "",
- 			  "SODIMM_61",
- 			  "SODIMM_103",
--			  "",
--			  "",
-+			  "SODIMM_79",
-+			  "SODIMM_97",
- 			  "",
- 			  "SODIMM_25",
- 			  "SODIMM_27",
+url:    https://github.com/intel-lab-lkp/linux/commits/Dima-Volkovsk/Staging-nvec-Fix-pm_power_off-reset-condition-in-tegra_nvec_remove/20250210-041929
+base:   staging/staging-testing
+patch link:    https://lore.kernel.org/r/20250209201752.66313-1-s0ldw3ll%40gmail.com
+patch subject: [PATCH] Staging: nvec: Fix pm_power_off reset condition in tegra_nvec_remove
+config: arm-defconfig (https://download.01.org/0day-ci/archive/20250210/202502102056.z2poG8tW-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 6807164500e9920638e2ab0cdb4bf8321d24f8eb)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250210/202502102056.z2poG8tW-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502102056.z2poG8tW-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/staging/nvec/nvec.c:908:19: warning: using the result of an assignment as a condition without parentheses [-Wparentheses]
+     908 |         if (pm_power_off = nvec_power_off)
+         |             ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+   drivers/staging/nvec/nvec.c:908:19: note: place parentheses around the assignment to silence this warning
+     908 |         if (pm_power_off = nvec_power_off)
+         |                          ^               
+         |             (                            )
+   drivers/staging/nvec/nvec.c:908:19: note: use '==' to turn this assignment into an equality comparison
+     908 |         if (pm_power_off = nvec_power_off)
+         |                          ^
+         |                          ==
+   1 warning generated.
+
+
+vim +908 drivers/staging/nvec/nvec.c
+
+   896	
+   897	static void tegra_nvec_remove(struct platform_device *pdev)
+   898	{
+   899		struct nvec_chip *nvec = platform_get_drvdata(pdev);
+   900	
+   901		nvec_toggle_global_events(nvec, false);
+   902		mfd_remove_devices(nvec->dev);
+   903		nvec_unregister_notifier(nvec, &nvec->nvec_status_notifier);
+   904		cancel_work_sync(&nvec->rx_work);
+   905		cancel_work_sync(&nvec->tx_work);
+   906	
+   907		/* only reset pm_power_off if it's our handler */
+ > 908		if (pm_power_off = nvec_power_off)
+   909			pm_power_off = NULL;
+   910	}
+   911	
+
 -- 
-2.47.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
