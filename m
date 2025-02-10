@@ -1,122 +1,152 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3172586E4
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518002566CE
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739205997; cv=none; b=sMXhAXXqwXHQTYDFLi+bG0m7ahDE5AnSn+WcWChke+pRGaZy6orwADQbK4W5K4imnuvFWDkhbWU2oXfzD5UxCzZtFMd7kuaSZfyoYUf4UWzApL134KXq/n/x2iQ9AE3nFuAltnz1/xsBhSItcVx1jsmdrJvD0cA+nZrec3nASlA=
+	t=1739206003; cv=none; b=kzw4QcimGnic4n5WWhN9Q0u5+yDKdibahCwtojlDFjlMfoZHEJarl/ChTkq/AenQwcbU2DiBPb4QAqSjTlwbcvg2evCwAU73Y8ERi9ngawv+/vsgc/823sEngW6QS5+b5n7vjYNl07kZXsUxMxkNbuzZaty1giOufMlv6DcVZYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739205997; c=relaxed/simple;
-	bh=rKZw9/AKjfdQiq23x4NLYpX5kYPR93R2a5K51O1yLjg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BwINPnrftCIwbxr271EzDQtRLR0HsVN93XO1Jwdu6jcC+J6k1DKquqqXyP0/kGDTb/MUqerEn2mPnLKBPTa/PH5uexj3rUJ9XvctWsHCJ4EsppIxvx6oxCXvD03ujsTfIInSj/5fP0V5PUgBDyQ0uNVysfyYCBzgnj1w2NCHM6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=JWbBk9pb; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1739206003; c=relaxed/simple;
+	bh=1Uui0LP+dRy/nF/7kQOgRby59OEfk0bdqA8gUXuO9fI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=NJMlHuwuEZGfAObTLajjc49Jaq6A4oSobEBkoQWHrJQ7uylD25SO0JxQnfO28bqam8WH1488NTWeg3PoIMDKSIa2k2OzwXUlWAWKFfI0pxwBeHuULPb1qYh6PxMJml1ZzppkOvftTrGstzjO8pIeD4+Nu8gJfnD/KID4Rp8qT3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hA9Hdet0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="JWbBk9pb"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51A9tUcI032632
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:46:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Y02jPbtLlP48pca9Ds9PgtZCslYqg667QI/2JrWgP0M=; b=JWbBk9pbvszFDg0U
-	UJ82sgOtdmTdFLPJpoAyCry5hPN3ORtxq0IagFpOuZCxPiwKKrN/9IopwiZGPQ48
-	oxY85SmdYEbtlNq1ajb7ZoGq1Z9kRq2RYghxPXny/dyGITibFm3tyPsk4uGG5vbA
-	yzLP540xJCB4vXBvrzM2t6BktakjG+Reo6dhOufBDvTr4ZCpFVvh54Z7Qj6rKDR4
-	ymdNMxnc5523e+uLQio8ssmAizTJzBPbUFTYK/0SEPtkVaSErURwym9IfbcOmIRW
-	vKHf8mYDwrUgjEDCKy33HMFsn/WmA1x9oanKXSUlJoe1qdKMgz9D110owJ20Uo6X
-	Hua5oA==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0dxn0gk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:46:34 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-47195dd8af0so2382431cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:46:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739205993; x=1739810793;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y02jPbtLlP48pca9Ds9PgtZCslYqg667QI/2JrWgP0M=;
-        b=PkWihhCVWaukvWQc1oKtIRmYyc3xcW8xtAQsNgN1RuI3EFw7W7O8SZr5xXNn/qiolQ
-         xldRfTk740AKyMxtKwRdIu5aQ4NYW6Jal+a713KWYASN9PyshyfDpaCuMmv5e5W61bYN
-         vp9Kb8PrvO49h8CJy/rVBOQCtzEPRad2N+UoN+bmWNskRJJSBuim1IkYiqcpNGfsB2Ni
-         RsKO0QnY0BPPXkuDWGX+tEWBPGcfiTLjgpbsF6bJWhFr27aZhzpc17IlXCR6YDpnxFGh
-         +W3J/uLDlntjJnPmfYT+S+7vwt74xYQW2xMLmQr2ikrgTq/vJEhhsIIxKih3Y3ywN29Q
-         pRng==
-X-Forwarded-Encrypted: i=1; AJvYcCUyhgdtrLZVWfTaDvhupTeDZzIkXL+lpn+FhPatEhn8ZTg/TWlqeG+FCPaXZJLMStV2q9AZEp/j4ovf9QE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqVOtIbLaq67anzXmMBHNO3QzWJ2pOEpllEKSH6jBHdzJBS1vz
-	nfQdBrvDZRn5CHhoH+kaX7lcqzNTE3SZp8/OPPOygJe9PY3cg1hcx/uad9Gy/7AyUyN4NjpJrD6
-	VnuNqE91iUrc+VtjzPcm8R6FoJo84ujl0GNSAAf+kDHec6kCw6EiO/+/oA3/q93A=
-X-Gm-Gg: ASbGnctl/TxaMRZKYclcqGQOkC4lI2oI+QMt8rc7qYsui39qpW+Lx4vfZtKAlr4rioT
-	eEJS0/4jJneYYVxLRoNcStEpYGcBRUTWbEhUliaR3+uIpwDxZ2UfzJnXh4kN4wIVuD3dVEgmcyA
-	vwQNGvI83haesbvkvyrtp/2GuijTAUT1BgLr3Psfpzwe4yh+jB9D9GbNAbvXt0qyTeQBpaisXsx
-	tN1qcdisgLBi603FM+hXVoPX5dgKV8crF9Q9+Nj6AZruut//H8iJB0jTrl8oincH4lmK5q+UNTz
-	/iWIyShsOyRE96XiDRFRHW5jPhB2q949itXg3KOCBnVeUcz1nxeCtjF6aWg=
-X-Received: by 2002:a05:622a:60d:b0:471:98d7:6f47 with SMTP id d75a77b69052e-47198d77128mr15699851cf.13.1739205993249;
-        Mon, 10 Feb 2025 08:46:33 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGQv3ndFWNiqtnFsxi5Czn9IPWmkOJNsq8JxW9IbnF/jsyhP6VDiNCnxRnuxRJAlSvYtv5woQ==
-X-Received: by 2002:a05:622a:60d:b0:471:98d7:6f47 with SMTP id d75a77b69052e-47198d77128mr15699571cf.13.1739205992922;
-        Mon, 10 Feb 2025 08:46:32 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7809a2ec4sm829406966b.116.2025.02.10.08.46.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 08:46:32 -0800 (PST)
-Message-ID: <45a83048-24cd-4895-93b7-7f8b22841ccc@oss.qualcomm.com>
-Date: Mon, 10 Feb 2025 17:46:29 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hA9Hdet0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739206000;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9tKkdtm92j2d1e6fcm2f9ZD5mkyDaEahDExQkA7AKaA=;
+	b=hA9Hdet0d4nFD+7DvR6MauW4DCS6Pj+7+zcT3lPgOxZSu3bOfCovzaJ+9bwVD2kyZHfqpT
+	8bKowndeluAEzBgevu/4yaDSkDHXYmspjo3DKO5630OlLCKCaxGQ/vyNw9btaLvLcFmPG8
+	JJLubHLboNkYdAHda6Vrb26Zi2ZC1Ao=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-609-fbVD1i7LMmiof3r_x1bnJg-1; Mon,
+ 10 Feb 2025 11:46:35 -0500
+X-MC-Unique: fbVD1i7LMmiof3r_x1bnJg-1
+X-Mimecast-MFC-AGG-ID: fbVD1i7LMmiof3r_x1bnJg
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4C45C1955D5C;
+	Mon, 10 Feb 2025 16:46:34 +0000 (UTC)
+Received: from [10.45.225.131] (unknown [10.45.225.131])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 22C651800358;
+	Mon, 10 Feb 2025 16:46:30 +0000 (UTC)
+Date: Mon, 10 Feb 2025 17:46:26 +0100 (CET)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: Milan Broz <gmazyland@gmail.com>
+cc: Akilesh Kailash <akailash@google.com>, 
+    Sami Tolvanen <samitolvanen@google.com>, kernel-team@android.com, 
+    Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, 
+    dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dm-verity: do forward error correction on metadata
+ I/O errors
+In-Reply-To: <60c1acde-839d-4d23-8270-2acf032a4ef9@gmail.com>
+Message-ID: <4dc8f521-e6ca-b80c-eee8-060158a38407@redhat.com>
+References: <629167c1-9be0-6128-8605-eb02391e821d@redhat.com> <60c1acde-839d-4d23-8270-2acf032a4ef9@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/4] arm64: dts: qcom: x1e80100: Add PCIe lane
- equalization preset properties
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        quic_mrana@quicinc.com, quic_vbadigan@quicinc.com
-References: <20250210-preset_v6-v6-0-cbd837d0028d@oss.qualcomm.com>
- <20250210-preset_v6-v6-1-cbd837d0028d@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250210-preset_v6-v6-1-cbd837d0028d@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: negSfrIsA50zEsGR013nohrT6Hexy58c
-X-Proofpoint-ORIG-GUID: negSfrIsA50zEsGR013nohrT6Hexy58c
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_09,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 bulkscore=0 clxscore=1015 adultscore=0
- lowpriorityscore=0 impostorscore=0 malwarescore=0 mlxscore=0 phishscore=0
- suspectscore=0 mlxlogscore=745 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502100138
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On 10.02.2025 8:30 AM, Krishna Chaitanya Chundru wrote:
-> Add PCIe lane equalization preset properties for 8 GT/s and 16 GT/s data
-> rates used in lane equalization procedure.
+
+
+On Mon, 10 Feb 2025, Milan Broz wrote:
+
+> On 2/10/25 4:04 PM, Mikulas Patocka wrote:
+> > Do forward error correction if metadata I/O fails.
+> > 
+> > Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
 > 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
-> This patch depends on the this dt binding pull request which got recently
-> merged: https://github.com/devicetree-org/dt-schema/pull/146
-> ---
+> Not directly related to this patch, but...
+> please could you also increase the dm-verity version?
+> 
+> I just implemented support for the errors-as-corruption
+> dm-verity flags in veritysetup.
+> 
+> The version of dm-verity stayed at 1.10 for a very long, and
+> the IO error processing change was a functional change that we
+> would like to detect.
+> We cannot set version retrospectively, but at least now with other
+> changes.
+> 
+> (Veritysetup tries the requested flags; if activation fails,
+> it displays a better error message based on the detected
+> target version. That way it works even with backports.)
+> 
+> Thanks,
+> Milan
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+OK.
 
-Konrad
+
+From: Mikulas Patocka <mpatocka@redhat.com>
+
+Do forward error correction if metadata I/O fails.
+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+
+---
+ drivers/md/dm-verity-target.c |   21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
+
+Index: linux-2.6/drivers/md/dm-verity-target.c
+===================================================================
+--- linux-2.6.orig/drivers/md/dm-verity-target.c	2025-02-10 16:24:56.000000000 +0100
++++ linux-2.6/drivers/md/dm-verity-target.c	2025-02-10 17:43:50.000000000 +0100
+@@ -324,8 +324,22 @@ static int verity_verify_level(struct dm
+ 						&buf, bio->bi_ioprio);
+ 	}
+ 
+-	if (IS_ERR(data))
+-		return PTR_ERR(data);
++	if (IS_ERR(data)) {
++		r = PTR_ERR(data);
++		data = dm_bufio_new(v->bufio, hash_block, &buf);
++		if (IS_ERR(data))
++			return r;
++		if (verity_fec_decode(v, io, DM_VERITY_BLOCK_TYPE_METADATA,
++				      hash_block, data) == 0) {
++			aux = dm_bufio_get_aux_data(buf);
++			aux->hash_verified = 1;
++			goto release_ok;
++		} else {
++			dm_bufio_release(buf);
++			dm_bufio_forget(v->bufio, hash_block);
++			return r;
++		}
++	}
+ 
+ 	aux = dm_bufio_get_aux_data(buf);
+ 
+@@ -366,6 +380,7 @@ static int verity_verify_level(struct dm
+ 		}
+ 	}
+ 
++release_ok:
+ 	data += offset;
+ 	memcpy(want_digest, data, v->digest_size);
+ 	r = 0;
+@@ -1761,7 +1776,7 @@ static struct target_type verity_target
+ 	.name		= "verity",
+ /* Note: the LSMs depend on the singleton and immutable features */
+ 	.features	= DM_TARGET_SINGLETON | DM_TARGET_IMMUTABLE,
+-	.version	= {1, 10, 0},
++	.version	= {1, 11, 0},
+ 	.module		= THIS_MODULE,
+ 	.ctr		= verity_ctr,
+ 	.dtr		= verity_dtr,
+
