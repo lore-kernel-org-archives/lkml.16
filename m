@@ -1,80 +1,152 @@
-Received: from mail.w14.tutanota.de (mail.w14.tutanota.de [185.205.69.214])
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D928B1C07C6;
-	Mon, 10 Feb 2025 08:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.205.69.214
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFAA21C1F0C;
+	Mon, 10 Feb 2025 08:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739177409; cv=none; b=GPCMjQi2MvNgVZNYSCZgQ6fp4fWbQtiMke4Zb2FuJvCtAge5lvwzVGO6zmexlNIDHuyy5YAyAy/1r3sDkdPpByz6Zv8iWm7l24T4cxmxrOTBKo2TPnATV2CVcjWzMsXqN8MN1ycYyzqHhPVFHpgqdgbN9HWXFp1FIVZGBJUWpa8=
+	t=1739177414; cv=none; b=a9r8zwPKc7h66NOsr0wqS/8GDR2aiQpgn8ABzqGfYPoJLb8zRt55vHCBxDSy1zsU+geNJxPuQKKmmtdR+VONocCs944V8bIxRb89YMkM6gfewc8q9ojHabKxYUMxWbTb1g9yht4rhvWUgE0q3teJbX6+LhWPkNFJENO3wh6s2u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739177409; c=relaxed/simple;
-	bh=f6Ib0nJdVnJpt62FRnFEIZ8WmLp0uuE4R2JgmT6UFrw=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=GJDJr/tr+QyJSfrVyfhcsDLFUq8jCYkW8nXv9gfz2Xk6VuANzssBVILaHKsS7FMHJkq2WgzBCUgH5uPARZWvytILVZ0A0BjTuA47xmEqRZIdGd+KhVCRUuRHLCWVbVvIXsAX5oP4uq9PCd19MtCMnwBp/6OhKlkhjMC+oQ65z+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=well-founded.dev; spf=pass smtp.mailfrom=well-founded.dev; dkim=pass (2048-bit key) header.d=well-founded.dev header.i=@well-founded.dev header.b=FX1ZYoh9; arc=none smtp.client-ip=185.205.69.214
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=well-founded.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=well-founded.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=well-founded.dev header.i=@well-founded.dev header.b="FX1ZYoh9"
-Received: from tutadb.w10.tutanota.de (w10.api.tuta.com [IPv6:fd:ac::d:10])
-	by mail.w14.tutanota.de (Postfix) with ESMTP id 9ED925E314EA;
-	Mon, 10 Feb 2025 09:49:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739177397;
-	s=s1; d=well-founded.dev;
-	h=From:From:To:To:Subject:Subject:Content-Description:Content-ID:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Cc:Cc:Date:Date:In-Reply-To:In-Reply-To:MIME-Version:MIME-Version:Message-ID:Message-ID:Reply-To:References:References:Sender;
-	bh=f6Ib0nJdVnJpt62FRnFEIZ8WmLp0uuE4R2JgmT6UFrw=;
-	b=FX1ZYoh9Ws+REgp96LJAyTldp5E5J1dXpb0TY+l5tc4f9L1LT/LWvi05HZkJcry3
-	gDnqMiJzN7P810f0SvtdhDFlkzSo7AGbxz/K967m483Y7Yqqne/1jCaLG9DXIFftD7z
-	Qu8ET9ClTDU03sxLJBw6tUbA28hUxiHgYln1BoCR0wMs7+ka+GTmEWyaeaoeG7+IsLN
-	qDj7V9mH2wVZMfpLwMTS5ENzMhRtiXDu69RhDlYKdYKFaK6TJdGIkdPOAvb0fcSy0Qa
-	ziPMBgLlCd+0vMEhkb82e2ClugSJxAuw1/HY9j306b/nmXDuRe2IdGgU5nsZ+CmeMl4
-	UwVDWYL8Zg==
-Date: Mon, 10 Feb 2025 09:49:57 +0100 (CET)
-From: Ramses <ramses@well-founded.dev>
-To: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
-Cc: John <therealgraysky@proton.me>, Linux Edac <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Luck, Tony" <tony.luck@intel.com>
-Message-ID: <OIj2FiD--F-9@well-founded.dev>
-In-Reply-To: <CY8PR11MB7134358940D4625E5196349B89F22@CY8PR11MB7134.namprd11.prod.outlook.com>
-References: <OISL8Rv--F-9@well-founded.dev> <CY8PR11MB7134594FDBF7AED80E415AEC89F12@CY8PR11MB7134.namprd11.prod.outlook.com> <OIUifRt--F-9@well-founded.dev> <CY8PR11MB7134358940D4625E5196349B89F22@CY8PR11MB7134.namprd11.prod.outlook.com>
-Subject: RE: Flood of edac-related errors since 6.13
+	s=arc-20240116; t=1739177414; c=relaxed/simple;
+	bh=FI5wYJHqx1w0CXqWAIInGJmP2OKsv7iqJOj1cy7l4u8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HqHDTK74rYbQ1EHNpp6ZEwyOgPfqZ/QW/jVTsi2J7cpAPQHs4FDHzk6J6DWozmOeKW/9ZJ3aXhfiQeY40Of6rNbK1zf2vLVDwrmX+FR6ATBITE3+chy8U3elN1hgXOQotdVXdLEdt5SGwQJpyJrlTSXXSMqptXlTfSeuCYqUIEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Mon, 10 Feb
+ 2025 16:50:04 +0800
+Received: from twmbx02.aspeed.com (192.168.10.13) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
+ Transport; Mon, 10 Feb 2025 16:50:04 +0800
+From: Ryan Chen <ryan_chen@aspeedtech.com>
+To: ryan_chen <ryan_chen@aspeedtech.com>, Michael Turquette
+	<mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery
+	<andrew@aj.id.au>, <linux-clk@vger.kernel.org>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-aspeed@lists.ozlabs.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v8 0/3] Add support for AST2700 clk driver
+Date: Mon, 10 Feb 2025 16:50:01 +0800
+Message-ID: <20250210085004.1898895-1-ryan_chen@aspeedtech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Feb 10, 2025, 09:05 by qiuxu.zhuo@intel.com:
+This patch series is add clk driver for AST2700.
 
-> Hi Ramses,
->
->> From: Ramses <>> ramses@well-founded.dev>> >
->> [...]
->>
->> Thanks for your reply!
->>
->> I recompiled the kernel with that option enabled, and attached the dmesg
->> output to this email. Let me know if I can do anything else to help debug this.
->>
->
-> Thanks for helping debug the issue and taking the useful dmesg log.
-> From the dmesg log, the ECC error log register of this SoC contained the
-> invalid error value ~0, resulting in a flood of invalid error reports in polling mode.
->
-> @Ramses & @John,
-> Can you please apply the attached fix patch and see whether it fixes the issue?
-> Thanks!
->
-> -Qiuxu
->
+AST2700 is the 8th generation of Integrated Remote Management Processor
+introduced by ASPEED Technology Inc. Which is Board Management controller
+(BMC) SoC family. AST2700 have two SoC connected, one is SoC0, another
+is SoC1, it has it's own scu, this driver inlcude SCU0 and SCU1 driver.
 
-I just booted into a kernel with that patch applied and I'm not getting the errors anymore, so that seems to fix the issue for me indeed!
+v8:
+-aspeed,ast2700-scu.h: remove no use soc0 clock, add new clock
+-clk-ast2700.c: remove include <linux/auxiliary_bus.h>,
+include <linux/clk-provider.h>, include <linux/of_address.h>
+-clk-ast2700.c: add include <linux/mod_devicetable.h>
+-clk-ast2700.c: modify include <soc/aspeed/reset-aspeed.h> order before
+dt-bindings
+-clk-ast2700.c: modify define to be tabbed out space
+-clk-ast2700.c: add union struct for each clk type
+	union {
+		struct ast2700_clk_fixed_factor_data factor;
+		struct ast2700_clk_fixed_rate_data rate;
+		struct ast2700_clk_gate_data gate;
+		struct ast2700_clk_div_data div;
+		struct ast2700_clk_pll_data pll;
+		struct ast2700_clk_mux_data mux;
+	} data;
+-clk-ast2700.c: modify clk_data = device_get_match_data(dev);
+-clk-ast2700.c: modify builtin_platform_driver_probe to 
+arch_initcall(clk_ast2700_init)
+-clk-ast2700.c: ast2700_clk_hw_register_hpll explain: scu010[4:2],
+scu010[4:2] = 010, hpll force 1.8Ghz
+scu010[4:2] = 011, hpll force 1.7Ghz
+scu010[4:2] = 110, hpll force 1.2Ghz
+scu010[4:2] = 111, hpll force 800Mhz
+others depend on hpll parameter register setting.
 
-Thanks a bunch!
-Ramses
+v7:
+-reset-aspeed.h: fix declare static inline aspeed_reset_controller_register
+if the function is not used.
 
+v6:
+-patch-2: add reset-aspeed.h
+-reset-aspeed: add include cleanup.h for guard()
+-reset-aspeed: change ids name clk_aspeed to reset_aspeed
+-reset-aspeed: move aspeed_reset_controller_register,
+aspeed_reset_adev_release, aspeed_reset_unregister_adev from clk-ast2700.c
+-reset-aspeed: drop base check, since it check in clk-ast2700.c
+-clk-ast2700: sync each gate name from *clk to *clk-gate name.
+-clk-ast2700: add CLK_GATE_ASPEED to diff clk_hw_register_gate and
+ast2700_clk_hw_register_gate.
+
+v5:
+-patch-2 Kconfig: add select AUXILIARY_BUS
+-reset-aspeed: #define to_aspeed_reset(p) turn into static inline function.
+-reset-aspeed: modify spin_lock_irqsave to guard(spinlock_irqsave)
+-reset-aspeed: remove unnecessary parentheses.
+-clk-ast2700: use <linux/units.h> and refrain from define clk
+
+v4:
+-yaml: keep size-cells=<1>.
+-merge clk,reset dt binding header with yaml the same patch.
+-rename clk,reset dt binding header to aspeed,ast2700-scu.h
+-reset-aspeed: update tables tabs sapces to consistent spaces.
+-reset-aspeed: remove no use dev_set_drvdata.
+-clk-ast2700: modify reset_name to const int scu in struct clk_data.
+-clk-ast2700: use scu number in clk_data generate reset_name for reset
+ driver register.
+-clk-ast2700: fix pll number mix up scu0,scu1.
+-clk-ast2700: update dt-binding clock include file.
+
+v3:
+-yaml: v2 missing send yaml patch, v3 add.
+-yaml: drop 64bits address example.
+-yaml: add discription about soc0 and soc1
+-dt-bindings: remove (), *_NUMS, reserved.
+-dt-bindings: remove dulipated define number.
+-dt-bindings: merge clk and reset to be one patch.
+-reset-aspeed: add auxiliary device for reset driver.
+-clk-ast2700: modify reset to be auxiliary add.
+-clk-ast2700: modify to be platform driver.
+-clk-ast2700: modify each clk to const clk array.
+
+v2:
+-yaml: drop 64bits address example.
+-yaml: add discription about soc0 and soc1
+-dt-bindings: remove (), *_NUMS, reserved.
+-dt-bindings: remove dulipated define number
+-clk-ast2700: drop WARN_ON, weird comment.
+
+Ryan Chen (3):
+  dt-binding: clock: ast2700: modify soc0/1 clock define
+  reset: aspeed: register AST2700 reset auxiliary bus device
+  clk: aspeed: add AST2700 clock driver
+
+ drivers/clk/Kconfig                           |    8 +
+ drivers/clk/Makefile                          |    1 +
+ drivers/clk/clk-ast2700.c                     | 1153 +++++++++++++++++
+ drivers/reset/Kconfig                         |    7 +
+ drivers/reset/Makefile                        |    1 +
+ drivers/reset/reset-aspeed.c                  |  302 +++++
+ .../dt-bindings/clock/aspeed,ast2700-scu.h    |    7 +-
+ include/soc/aspeed/reset-aspeed.h             |   21 +
+ 8 files changed, 1497 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/clk/clk-ast2700.c
+ create mode 100644 drivers/reset/reset-aspeed.c
+ create mode 100644 include/soc/aspeed/reset-aspeed.h
+
+-- 
+2.34.1
 
