@@ -1,85 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7316F1C5D6A;
-	Mon, 10 Feb 2025 22:47:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E00254B16
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:50:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739227656; cv=none; b=fK6oEfPnk1oyEmd9miWmMt51Z07hIycuIfuIxzHGCCDWq3VhGldAVmtJDEJm0FtSaLVcSNWJ5h2mTqimjQfVImTK4ZcVxwhtY6hx/ir5KI3iWN/QaeA2xelxDdeuvAr6fumJN9elxwkiUO/Fgx7KNpwP8rfI0fAtkTkftfNgDgU=
+	t=1739227819; cv=none; b=HwDVNjnG5N+xKat/ZogbSiGJOUO4a8yErD5M3YQTqZA8S+UPIEWFMb2tLzJ9xaHzjsl5+IGPSKk99UU5oUnwpzbh7sp3lnQes8tRSdGKQav22ixwWRbHMD5HT0JArB8QQ6Jeyzd7Mh1pRStkJeYIQD1bKB60hDRP0ul0uReaipc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739227656; c=relaxed/simple;
-	bh=Ndp3Pvp3DkE/0UB6QNhcVOG9JupyDTKsubirAJ2gBLk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=olG1/uep6iHQdPB0EtaeGjD3GpaiHWU2v6pqUCI4ZcNO9CIbLlj1OkOB4OecDK8cUryy5yiPVfElRevzta4P3zAyd92FCANaUOdttdcFPagiAi6cqYnHXTWuhT7P2RSh5JuwCFzGd6QrY2dY05c5rUCfYe/vxAKjndndHjmJkrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TMVQzcdN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739227819; c=relaxed/simple;
+	bh=Wb+45gPEf/20Zpf4ACHISTZsESbTgHpFa70rqm2g/88=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dObEx3QLGQG3qIIrDt1mKIcXf0xNfbfIElSFkP5eCv8rsj+jnu+TlxIdP4PA7l18SkCoAjwR8sfSHwOmLl2nA8s3/b5xzl+T5Devy9TMwZ1ecREm43iJfyANh50Z3JlbrDD+Sys0PvTu+7D0d/3pUl6ScBoP91VRaco+Ob3MROs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cM5Ac2v/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TMVQzcdN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A8E3C4CED1;
-	Mon, 10 Feb 2025 22:47:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cM5Ac2v/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1332C4CED1;
+	Mon, 10 Feb 2025 22:50:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739227656;
-	bh=Ndp3Pvp3DkE/0UB6QNhcVOG9JupyDTKsubirAJ2gBLk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=TMVQzcdNARn6CFZTTS7lHpJpnJgAwo2YC4HPztAvQi8arGez9ZXimMT2LWdonx3uB
-	 2RDew0Zif3TbZ4zDlq5XBoaCjI/fK3bY73P6EmATUNxlkJN4gY2l4ZFaTb1gSxEiKF
-	 H70wihzHWoEAYNn435ZYGlEoC9eoEuB491oTYffrtQ8jrEY0xOzPWvySonKpGWwq93
-	 WVDNe/CZWsB7WXjw0MrmHwLiOVY/8oGjXorTiGYivaVmRGVvY2IZM18McDysz02cG4
-	 QfYntT2qxTjr/xFTFXXLf0Xks1kE+KCAx9fapKl3yfvxkm6iSDBfc6Mcka+dg4Madl
-	 B3/hJ8CFf6o+g==
-Date: Mon, 10 Feb 2025 16:47:34 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Purva Yeshi <purvayeshi550@gmail.com>
-Cc: bhelgaas@google.com, skhan@linuxfoundation.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers: pci: Fix flexible array usage
-Message-ID: <20250210224734.GA21793@bhelgaas>
+	s=k20201202; t=1739227818;
+	bh=Wb+45gPEf/20Zpf4ACHISTZsESbTgHpFa70rqm2g/88=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cM5Ac2v/Di5k05eaTYIpt1WoDN7XmbsMNK3Fw1M+zwvzzbLXm8Tf0nNdq2aM6ZyIO
+	 Drys65HWOvIDTmqDFu0ImFqdPVANi8gXItNI/3izjK4m4yek1lMSC9DI6UC5U4TMvr
+	 fA8AhNd264t5C2S97LCDxf89U/XXfqgBCIp5MV/46rwV6O9/l7p85TPtpbRE+xQqcD
+	 orrCZ7vnzIHGLeyCJrQn6MICRjTNrFrGIHeaJDNsnPNPC5OyuC/Qk4Jpe7p/XPUtCp
+	 CTliCPxUjZuPPZfi9io1P3HJNT76h4XYJYeOkWZkn3d/QrTnxcC4l8HdQlMnA6cudS
+	 RL/yy4v2KmkMA==
+Date: Mon, 10 Feb 2025 14:50:16 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: David Kaplan <david.kaplan@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 05/35] x86/bugs: Restructure taa mitigation
+Message-ID: <20250210225016.cosuartrzzuaftqf@jpoimboe>
+References: <20250108202515.385902-1-david.kaplan@amd.com>
+ <20250108202515.385902-6-david.kaplan@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250210132740.20068-1-purvayeshi550@gmail.com>
+In-Reply-To: <20250108202515.385902-6-david.kaplan@amd.com>
 
-On Mon, Feb 10, 2025 at 06:57:40PM +0530, Purva Yeshi wrote:
-> Fix warning detected by smatch tool:
-> Array of flexible structure occurs in 'pci_saved_state' struct
-> 
-> The warning occurs because struct pci_saved_state contains struct
-> pci_cap_saved_data cap[], where cap[] has a flexible array member (data[]).
-> Arrays of structures with flexible members are not allowed, leading to this
-> warning.
-> 
-> Replaced cap[] with a pointer (*cap), allowing dynamic memory allocation
-> instead of embedding an invalid array of flexible structures.
-> 
-> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
-
-Applied with subject:
-
-  PCI: Fix array of flexible structure usage in struct pci_saved_state
-
-to pci/enumeration for v6.15, thanks!
-
-> ---
->  drivers/pci/pci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 869d204a7..648a080ef 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1929,7 +1929,7 @@ EXPORT_SYMBOL(pci_restore_state);
+On Wed, Jan 08, 2025 at 02:24:45PM -0600, David Kaplan wrote:
+> @@ -400,48 +402,71 @@ static void __init taa_select_mitigation(void)
+>  		return;
+>  	}
 >  
->  struct pci_saved_state {
->  	u32 config_space[16];
-> -	struct pci_cap_saved_data cap[];
-> +	struct pci_cap_saved_data *cap;
->  };
+> -	if (cpu_mitigations_off()) {
+> +	if (cpu_mitigations_off())
+>  		taa_mitigation = TAA_MITIGATION_OFF;
+> -		return;
+> -	}
 >  
->  /**
-> -- 
-> 2.34.1
-> 
+>  	/*
+>  	 * TAA mitigation via VERW is turned off if both
+>  	 * tsx_async_abort=off and mds=off are specified.
+> +	 *
+> +	 * MDS mitigation will be checked in taa_update_mitigation().
+>  	 */
+> -	if (taa_mitigation == TAA_MITIGATION_OFF &&
+> -	    mds_mitigation == MDS_MITIGATION_OFF)
+> +	if (taa_mitigation == TAA_MITIGATION_OFF)
+>  		return;
+
+This check seems rather pointless, the only thing after this is the
+TAA_MITIGATION_AUTO check.
+
+>  
+> -	if (boot_cpu_has(X86_FEATURE_MD_CLEAR))
+> +	/* Microcode will be checked in taa_update_mitigation(). */
+> +	if (taa_mitigation == TAA_MITIGATION_AUTO)
+>  		taa_mitigation = TAA_MITIGATION_VERW;
+> -	else
+> -		taa_mitigation = TAA_MITIGATION_UCODE_NEEDED;
+
+In the previous patch, MDS checks for ucode in both select and update,
+which is overkill.  That should probably be done only in
+mds_update_mitigation() to be consistent with how TAA does it here?
+
+>  
+> -	/*
+> -	 * VERW doesn't clear the CPU buffers when MD_CLEAR=1 and MDS_NO=1.
+> -	 * A microcode update fixes this behavior to clear CPU buffers. It also
+> -	 * adds support for MSR_IA32_TSX_CTRL which is enumerated by the
+> -	 * ARCH_CAP_TSX_CTRL_MSR bit.
+> -	 *
+> -	 * On MDS_NO=1 CPUs if ARCH_CAP_TSX_CTRL_MSR is not set, microcode
+> -	 * update is required.
+> -	 */
+> -	if ( (x86_arch_cap_msr & ARCH_CAP_MDS_NO) &&
+> -	    !(x86_arch_cap_msr & ARCH_CAP_TSX_CTRL_MSR))
+> -		taa_mitigation = TAA_MITIGATION_UCODE_NEEDED;
+> +}
+
+Extra whitespace here at the end of the function.
+
+> +static void __init taa_update_mitigation(void)
+> +{
+> +	if (!boot_cpu_has_bug(X86_BUG_TAA) || cpu_mitigations_off())
+> +		return;
+> +
+> +	if (verw_mitigation_enabled())
+> +		taa_mitigation = TAA_MITIGATION_VERW;
+
+This overwrites TAA_MITIGATION_TSX_DISABLED?
+
+I think reporting TSX disabled here is more accurate than reporting
+VERW, since the VERW is only done to mitigate the other vulns.
+
+> +static void __init taa_apply_mitigation(void)
+> +{
+> +	if (taa_mitigation == TAA_MITIGATION_VERW ||
+> +	    taa_mitigation == TAA_MITIGATION_UCODE_NEEDED) {
+> +		/*
+> +		 * TSX is enabled, select alternate mitigation for TAA which is
+> +		 * the same as MDS. Enable MDS static branch to clear CPU buffers.
+> +		 *
+> +		 * For guests that can't determine whether the correct microcode is
+> +		 * present on host, enable the mitigation for UCODE_NEEDED as well.
+> +		 */
+> +		setup_force_cpu_cap(X86_FEATURE_CLEAR_CPU_BUF);
+> +
+> +		if (taa_nosmt || cpu_mitigations_auto_nosmt())
+> +			cpu_smt_disable(false);
+> +	}
+>  
+> -	if (taa_nosmt || cpu_mitigations_auto_nosmt())
+> -		cpu_smt_disable(false);
+>  }
+
+Another extra whitespace here at the end of the function.
+
+-- 
+Josh
