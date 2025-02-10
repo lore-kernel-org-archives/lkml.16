@@ -1,90 +1,140 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3E92F2E;
-	Mon, 10 Feb 2025 04:59:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA5A2F2A;
+	Mon, 10 Feb 2025 05:01:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739163558; cv=none; b=JMyVZKR9cCdxFK7n97rVgCpKIYSpJbpt2N1J4OqHHqVvOnEAb2nS7wJcq0LK/+OU3DPo1bcjL7M28HJ5fMRtBZyH+/H3ImeTEymy4l2tQ4NITvoxbILXT2jtpEWdT1A9/JTF4vWwgalH8uR+Ca0gjiiqtOU4N8Rq0KQJdvDN7kQ=
+	t=1739163690; cv=none; b=Hddc4h6H704YDVWqr1pDi7ntqja1NO50lOd1LdRQ+oNVjoBhgk3fF2Gi0UFpbVIjp2+9B1cM5zgSLhPZ0JmRUyhtUWXmz23Pw6F9LyqAX/rFZQVLOQYB0EvhHVBDYYeSRRrjAC927A7BNB+Pr9K0YWRVPgMqb+y2M398JogCTCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739163558; c=relaxed/simple;
-	bh=6pT7+dXsklLh1NRZnGillSRXOyCQqbrayjVnpgsbliM=;
-	h=Message-ID:Date:MIME-Version:To:CC:References:Subject:From:
-	 In-Reply-To:Content-Type; b=bEnRv9BmA1u/9TcsZ7oWou3ke6nClIVaTgyOAYFPAHBzGpgU1CeLnaq08IAt7ARBPryawd12hvE9prIfyBguhHl7skkwIEXIol63dwZPnFQHoAygsK7yGoXd/rBzj2EexOcGc7YmYAR81x2YCeAaKLpZDvbszls9qZMvbVkT+Ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eSpH/wKC; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739163690; c=relaxed/simple;
+	bh=W2w6E6ETmTeuVJUBa9j4VdBuubQqmp/igTJCtkIwjVM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BFwhKqTIFsTj20tEBYgELs2uU47+AVHf8ICE7g9irfTm9cO07lmQtjPGeGKMjaHYbCwexkzQ85FHRE4+TxzP8m2IHizZiKZWiaTi+zccrc3+iw8+3zclQv5uQf+SkBJXXCelBKGrM6Air7OdXp9lacX88Eq6BriCVzvVHDMiW4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BUIHntp4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eSpH/wKC"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 519MUw9E014239;
-	Mon, 10 Feb 2025 04:59:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	yVOD3v3Y0g5LF/Im4pbOfEYj3LcSGcmxUrJET2J/F/4=; b=eSpH/wKC2FyLBjfE
-	NsK0qLxuUccCudgQouHqdY8GhessNlA8Zb0EwGA08k9GMRnpOqZzMpvyXBluAuaC
-	XK1u4aaL5Gx+H8ey3o4y+O6X1P0et5/fq/c+44w7BnMkEDIVIp5B96+C0MGG9Tq+
-	+76XM1segOVGDxC+cAlBzsNwRVuef4zO6IT0GtyEW1tQfz/3ZvNaA6Bj+FjBWUYz
-	zgzmvsbc7BgCAUIveNEeW3WMkl/X9sZl+J69JswZh72UInj1a+SdIEXKLO+FWEeP
-	q/BK69d/mpu1JIi0eBvnoF7XRRjm6k49/fv11qZz4ylcLIPCVbmZJ64wS4NOIfzA
-	/4kylw==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0g8u3kp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 04:59:05 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51A4x5t6010009
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 04:59:05 GMT
-Received: from [10.219.57.57] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 9 Feb 2025
- 20:59:01 -0800
-Message-ID: <ed3cc71a-426e-4044-86dd-945751e282d5@quicinc.com>
-Date: Mon, 10 Feb 2025 10:28:52 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BUIHntp4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33B4CC4CED1;
+	Mon, 10 Feb 2025 05:01:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739163690;
+	bh=W2w6E6ETmTeuVJUBa9j4VdBuubQqmp/igTJCtkIwjVM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=BUIHntp4y1Kn+4uG1G4y9imPcbX5gkK6qDHFuVdkq8033fsfRQxMMSUVqL/MGYOZ3
+	 ILPo85v6SwFvXfPduBazBxQahCZcLpaOtC1y/XVv4UNEad2rdAUGd3fXRKNMKOHrdx
+	 TP4dAKjkJsmzPniIT5KUNuZS45N54eiI4VxHFhsntIF0DBydeZszHn0GeoyydEqJuh
+	 sXJf60UgHvq9SX6iuzIHNzgq+4xafN2zHgthJDJupp9+okQTr+FsgKe1ELc307Ay42
+	 wiWAAYDQPoxDueIJbwx6Q5MtTVFjkIgYUf7e8AAZ6i7XI89Pyfxk7tfNPfS9A1qSo7
+	 I/DEt3rGB+m1Q==
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-308e3bd8286so12145401fa.1;
+        Sun, 09 Feb 2025 21:01:30 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWPvSIunJlQkltFxwqqiRdcH/A2Olgq952F+nF0tRUvHlBZkraTcFNzNjbaXMXzI1+jUrSp4Gqzwf5i2EI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzo2AfoweHPhZAQ5S5Q3hY8Os0fsBHuo7ivA+4/cmeHFmgw2zJl
+	jeobikfo/P1PZedhMuXbxgtopDH8BEuVksAu7NaeBoDp8WfqY/G+ZtDY4rkKs9VEymv+z1KrhNr
+	uyoLxKRBrerPsC9qtFTv7zZpSoZI=
+X-Google-Smtp-Source: AGHT+IHLxJvAHmlELrlec1zDn9FnTVtXy3FIzCBROaw6n4XXX+y3xD2ESZoqMRHGKCbcBQXAa/7je/rBVVXVRZKj1mo=
+X-Received: by 2002:a2e:bccc:0:b0:307:e031:15a0 with SMTP id
+ 38308e7fff4ca-307e57ce0efmr42647781fa.13.1739163688887; Sun, 09 Feb 2025
+ 21:01:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: <quic_pbrahma@quicinc.com>
-CC: <andersson@kernel.org>, <conor+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <iommu@lists.linux.dev>,
-        <joro@8bytes.org>, <konradybcio@kernel.org>, <krzk+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <robh@kernel.org>, <robin.murphy@arm.com>, <will@kernel.org>
-References: <20250203-b4-branch-gfx-smmu-v4-2-eaa7aa762f48@quicinc.com>
-Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: qcs8300: Add device node for
- gfx_smmu
-Content-Language: en-US
-From: Pratyush Brahma <quic_pbrahma@quicinc.com>
-In-Reply-To: <20250203-b4-branch-gfx-smmu-v4-2-eaa7aa762f48@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 5gzjTQFf_GJj_MveMIDpprdBFE0l1iGm
-X-Proofpoint-ORIG-GUID: 5gzjTQFf_GJj_MveMIDpprdBFE0l1iGm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_02,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- adultscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 suspectscore=0
- bulkscore=0 priorityscore=1501 spamscore=0 impostorscore=0 mlxlogscore=727
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502100039
+References: <20250208163959.3973163-1-ole0811sch@gmail.com>
+In-Reply-To: <20250208163959.3973163-1-ole0811sch@gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Mon, 10 Feb 2025 14:00:52 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQBBKfSwQ=z3yBchg--gcrAykWz6xvpAYWKse9R9g8KVQ@mail.gmail.com>
+X-Gm-Features: AWEUYZn_X83jYxjHSq3f6Bj36yQxqx79BFj1f1IaiFuzsHlPGiLFIKV_k8nlAig
+Message-ID: <CAK7LNAQBBKfSwQ=z3yBchg--gcrAykWz6xvpAYWKse9R9g8KVQ@mail.gmail.com>
+Subject: Re: [PATCH v7 00/11] kconfig: Add support for conflict resolution
+To: Ole Schuerks <ole0811sch@gmail.com>
+Cc: linux-kbuild@vger.kernel.org, jude.gyimah@rub.de, thorsten.berger@rub.de, 
+	deltaone@debian.org, jan.sollmann@rub.de, mcgrof@kernel.org, 
+	linux-kernel@vger.kernel.org, nathan@kernel.org, nicolas@fjasle.eu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi
+On Sun, Feb 9, 2025 at 1:40=E2=80=AFAM Ole Schuerks <ole0811sch@gmail.com> =
+wrote:
+>
+> Hi,
+>
+> This patch series (for next-20250207) provides support to enable users
+> to express their desired target configuration and display possible
+> resolutions to their conflicts. This support is provided within xconfig.
+>
+> Conflict resolution is provided by translating kconfig's configuration
+> option tree to a propositional formula and allowing our resolution
+> algorithm and PicoSAT to calculate the possible fixes for an expressed
+> target kernel configuration. PicoSAT is the smallest and most robust C SA=
+T
+> solver we could find which is also GPL compatible. PicoSAT is used as a
+> dynamically loaded library. For Debian and Fedora, the apt and dnf packag=
+es
+> named "picosat" provide the library. For other distros, we provide
+> instructions on how PicoSAT needs to be compiled from the sources in the
+> documentation.
+>
+> New UI extensions are made to xconfig with panes and buttons to allow use=
+rs
+> to express new desired target options, calculate fixes, and apply any of
+> found solutions.
+>
+> You can see a YouTube video demonstrating this work [2]. This effort is
+> part of the kernelnewbies Kconfig-SAT project [3], the approach and effor=
+t
+> is also explained in detail in our paper [4]. The results from the
+> evaluation have significantly improved since then: Around 80 % of the
+> conflicts could be resolved, and 99.9 % of the generated fixes resolved t=
+he
+> conflict. It is also our attempt at contributing back to the kernel
+> community, whose configurator researchers studied a lot.
+>
+> Patches applicable to next-20250207.
+>
+> [0] https://gsd.uwaterloo.ca/sites/default/files/vamos12-survey.pdf
+> [1] https://www.linux-magazine.com/Issues/2021/244/Kconfig-Deep-Dive
+> [2] https://www.youtube.com/watch?v=3Dvn2JgK_PTbc
+> [3] https://kernelnewbies.org/KernelProjects/kconfig-sat
+> [4] http://www.cse.chalmers.se/~bergert/paper/2021-icseseip-configfix.pdf
+>
+> Thanks from the team! (and thanks to Luis Chamberlain for guiding us here=
+)
+>
+> Changelog v7:
+> * improve error handling when loading picosat symbols with dlsym(): use
+>   dlerror() instead of checking for NULL
+> * move list_at_index from scripts/include/list.h to
+>   scripts/kconfig/cf_utils.h
+> * change interface of list_for_each_entry_from and rename list_size to
+>   list_count_nodes to more closely match scripts/include/list.h
+> * change misleading name "rangefix" of fix generation algorithm to
+>   "fixgen"
 
-Can someone kindly review this patch?
 
--- 
-Thanks and Regards
-Pratyush Brahma
 
+Thanks for this, but I have no plans to merge the SAT solver.
+
+The reason is that my future plan is to move toolchain selection
+to the Kconfig stage instead of specifying it statically from the command l=
+ine.
+This approach was suggested by Linus [1], and to achieve that,
+the shell evaluation must be dynamically re-evaluated [2].
+
+The SAT solver would likely conflict with this plan. At least due to the
+significant amount of additional code, which would be an obstacle.
+
+
+[1] https://lore.kernel.org/lkml/CAHk-=3DwhdrvCkSWh=3DBRrwZwNo3=3DyLBXXM88N=
+Gx8VEpP1VTgmkyQ@mail.gmail.com/
+
+[2] https://lore.kernel.org/lkml/CAK7LNATe7Ah-ow9wYGrtL9i4z-VD=3DMCo=3DsJjb=
+C_S0ofEoH6CFQ@mail.gmail.com/
+
+
+--=20
+Best Regards
+Masahiro Yamada
