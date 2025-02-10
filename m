@@ -1,33 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4AB256C99;
-	Mon, 10 Feb 2025 17:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C001B256C99
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739208654; cv=none; b=ky5p0AdOiQlAcmoF7qIv7K7USu4e+mlg6Ft4G6unWZE5vSAvUyNOpb/W5yuXe5mbGngyvWAWbhm1hTGyGmPDXhPryjyC8ENWya/m6bczOijsvcUreub4psT34oKPfhFzy8ewC+wRTurWJ0QMhPlQff8LJ3pK1AKywIumWH8N7gk=
+	t=1739208793; cv=none; b=I/YnopUmVlVaoAW7sjJH72nSDATYL8D/gB+FgV7DdsEajAWvXq8dqGHJWnoi+5S0y9fkiSNWI6kNnYGfKnl9THW3rIuR+IUyBeYb58P/K5qEqNfe32Pm+3qd9OTq2a0IHGWCe5vi8SqE/8QN4mKAdcySWEYi7ilGwCkNCRiuUSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739208654; c=relaxed/simple;
-	bh=cuhpdyhkkWVMn0TdJKFTzm8ueRhCszb9PftEfM9AL+o=;
+	s=arc-20240116; t=1739208793; c=relaxed/simple;
+	bh=0OyYBLRDwLt/cJAndEW9LQGL1foRqsUDW/Fg+WVSk+w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WxyJLydkLJtJwqcTJNVxoqaGBz8dN63aAXwqOGGEWII/B5hAvnTHV6rNI/T6fUhD9MkAgQVm2guHlDr9ZioHZj/rhlU7azG3gW9360X5JPzi0x6W7XuXQwezBh4Kr4KRs1XRCoVpEsGjI6U7up2iqJwO65qAd1/AGaM3UzVOByY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KSSv4Bu9; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=m4uK8Je+Sp0C3sT24H1ZvO/ZU5mrVvIHsi7JzA7xk6xWYHBEcTJB/80NKCUIhcOgZszs37mj7xotKQHZRkKOkkpT8f7DudGPDxAfKP7sbh5/LfiSnH40uTo6cM24EwbJFdOPuJ2MIZJpKVGgasnYkRIrq/f+IFU8UVjkp6HLTgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tHiPL5Aw; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KSSv4Bu9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40BE5C4CEEA;
-	Mon, 10 Feb 2025 17:30:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739208654;
-	bh=cuhpdyhkkWVMn0TdJKFTzm8ueRhCszb9PftEfM9AL+o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KSSv4Bu9EESCqtNJkzLgnsE/b8nZ1V/E++ghduKr9A12nTGS9JC3E5ilCNbvNRYgx
-	 00tdswa8ojn/eL36nUTG3wOv3xYgReyqZ+uOs3j4pOXtvgdQlyCr1CO8pUGq0RtZ4+
-	 AYnChKjgQ0AAu+Ba2F/rfZAwcBKRkpEe+TcmlCbsBwDP6jo5WiTS3U5ew9LedWhaxO
-	 xeZOkJpo65uxVyIfIyOT56U25dE3EvAdwarfH5l8WeeUtp/6CC0IDVuAEpI6dFHIOt
-	 iyArW99WbbHKP0Lu7jFh4ZbI0bBagwVBAO9gycmPlU/PS1nybTEpLr8r+vFrq5XW64
-	 itWEaSxPpidrg==
-Message-ID: <cb7937f5-2045-4903-825c-71ed70097efb@kernel.org>
-Date: Mon, 10 Feb 2025 18:30:49 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tHiPL5Aw"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AB362O016388;
+	Mon, 10 Feb 2025 17:32:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=kYyrFW
+	YbzGdMrqABOt2hlSYtOyka49+cboKRHeEWiRU=; b=tHiPL5Awh120VosYGzER6Z
+	19B0U8TW48reM0F3f1hjCA80wk9fWTYJ/B01vbmi4Lo/D6mGAfmzVGKr4qT9wojt
+	OFgu3SWKBF84uFhp2zUW0V26LGvk/U4tIqtBwIa7NhvmlQ8EyK+/BU++Io0sTt9N
+	orN54TrDo+X5F/9g7F+ldj1iwXNabPfpMFJwZXJ3FzE4R1lgnjWzmfskP3yeuegH
+	78hUKxp+fZJJwAiZETDiJJ4oSkWstd+82V1aGE2OyAb2RYNCyu9u5qK79HZnlhCU
+	RykX4Lhx6Rg7QXJhOgXgXAa/ztCWVVAcrLKa3xw8OgKxYU26Zw1EkFppumemjDTg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44q5gacrt5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 17:32:22 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51AHGnjS027352;
+	Mon, 10 Feb 2025 17:32:22 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44q5gacrsx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 17:32:22 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51AHJE3A028735;
+	Mon, 10 Feb 2025 17:32:21 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44pma1f2dc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Feb 2025 17:32:21 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51AHWJiJ29295064
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Feb 2025 17:32:19 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5E16320043;
+	Mon, 10 Feb 2025 17:32:19 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4664520040;
+	Mon, 10 Feb 2025 17:32:15 +0000 (GMT)
+Received: from [9.39.21.225] (unknown [9.39.21.225])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 10 Feb 2025 17:32:15 +0000 (GMT)
+Message-ID: <f4d1805b-e28d-4371-a7bb-cca55efe4854@linux.ibm.com>
+Date: Mon, 10 Feb 2025 23:02:12 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,359 +69,99 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/8] dt-bindings: media: nxp: Add Wave6 video codec device
-To: Nas Chung <nas.chung@chipsnmedia.com>, mchehab@kernel.org,
- hverkuil@xs4all.nl, sebastian.fricke@collabora.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-imx@nxp.com,
- linux-arm-kernel@lists.infradead.org, jackson.lee@chipsnmedia.com,
- lafley.kim@chipsnmedia.com
-References: <20250210090725.4580-1-nas.chung@chipsnmedia.com>
- <20250210090725.4580-4-nas.chung@chipsnmedia.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 5/9] powerpc: Use preempt_model_str().
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+        linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+        Ben Segall <bsegall@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org
+References: <20250203141632.440554-1-bigeasy@linutronix.de>
+ <20250203141632.440554-6-bigeasy@linutronix.de>
+ <65c6f60d-bb52-48bd-a02c-87ffd2a915d4@csgroup.eu>
+ <20250203160103.9DikC9FJ@linutronix.de>
+ <51999b8e-61c0-48b7-b744-c83d39e7f311@csgroup.eu>
+ <20250204082223.6iNyq_KR@linutronix.de>
+ <7b51f7de-8e4b-4766-85ca-dee24832c693@linux.ibm.com>
+ <20250210105949.b9PKqiw7@linutronix.de>
+ <20250210142327.bCujH28L@linutronix.de>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250210090725.4580-4-nas.chung@chipsnmedia.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20250210142327.bCujH28L@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Ez6cL0fY6xcj2Nh_3tBWUALCegRkBZNy
+X-Proofpoint-ORIG-GUID: SJVbL5SwI_xYJLjBpcKAs46Hby7dReIy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_09,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 clxscore=1015 suspectscore=0 mlxlogscore=999 spamscore=0
+ lowpriorityscore=0 phishscore=0 malwarescore=0 bulkscore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502100143
 
-On 10/02/2025 10:07, Nas Chung wrote:
-> Add documents for the Wave6 video codec on NXP i.MX SoCs.
+
+
+On 2/10/25 19:53, Sebastian Andrzej Siewior wrote:
+> On 2025-02-10 11:59:50 [+0100], To Shrikanth Hegde wrote:
+>> Thank you for noticing. I did remove it on other architectures, I
+>> somehow missed it here. Will remove it from from the arch code.
 > 
-> Signed-off-by: Nas Chung <nas.chung@chipsnmedia.com>
+> This is what I have for powerpc now. I'm going to repost the series,
+> currently waiting for arm/x86.
+> 
+> -------->8-----------
+> 
+> Subject: [PATCH] powerpc: Rely on generic printing of preemption model.
+> 
+> After the first printk in __die() there is show_regs() ->
+> show_regs_print_info() which prints the current
+> preemption model.
+> 
+> Remove the preempion model from the arch code.
+> 
+> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: Naveen N Rao <naveen@kernel.org>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 > ---
->  .../bindings/media/nxp,wave633c.yaml          | 202 ++++++++++++++++++
->  MAINTAINERS                                   |   8 +
->  2 files changed, 210 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/nxp,wave633c.yaml
+>   arch/powerpc/kernel/traps.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/nxp,wave633c.yaml b/Documentation/devicetree/bindings/media/nxp,wave633c.yaml
-> new file mode 100644
-> index 000000000000..99c3008314c5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/nxp,wave633c.yaml
+> diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
+> index edf5cabe5dfdb..cb8e9357383e9 100644
+> --- a/arch/powerpc/kernel/traps.c
+> +++ b/arch/powerpc/kernel/traps.c
+> @@ -263,10 +263,9 @@ static int __die(const char *str, struct pt_regs *regs, long err)
+>   {
+>   	printk("Oops: %s, sig: %ld [#%d]\n", str, err, ++die_counter);
+>   
+> -	printk("%s PAGE_SIZE=%luK%s%s%s%s%s%s %s\n",
+> +	printk("%s PAGE_SIZE=%luK%s %s%s%s%s %s\n",
+>   	       IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
+>   	       PAGE_SIZE / 1024, get_mmu_str(),
+> -	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
+>   	       IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
+>   	       IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=" __stringify(NR_CPUS)) : "",
+>   	       debug_pagealloc_enabled() ? " DEBUG_PAGEALLOC" : "",
 
-Filename matching compatible.
+Looks good to me.
 
-> @@ -0,0 +1,202 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/nxp,wave633c.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Chips&Media Wave6 Series multi-standard codec IP on NXP i.MX SoCs.
-> +
-> +maintainers:
-> +  - Nas Chung <nas.chung@chipsnmedia.com>
-> +  - Jackson Lee <jackson.lee@chipsnmedia.com>
-> +
-> +description:
-> +  The Chips&Media Wave6 codec IP is a multi-standard video encoder/decoder.
-> +  On NXP i.MX SoCs, Wave6 codec IP functionality is split between the VPU control device
-> +  (vpu-ctrl) and the VPU device (vpu). The VPU control device manages shared resources
-> +  such as firmware access and power domains, while the VPU device provides encoding
-> +  and decoding capabilities. The VPU devie cannot operate independently
-
-Typo
-
-> +  without the VPU control device.
-> +
-
-Please wrap code according to the preferred limit expressed in Kernel
-coding style (checkpatch is not a coding style description, but only a
-tool).  Bindings use strict rule here.
-
-
-
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - nxp,imx95-wave633c-ctrl
-> +          - nxp,imx95-wave633c
-
-I don't understand why you duplicated compatibles. You split this for
-driver? That's a no. There are no two hardwares.
-
-These compatibles are anyway weird - why imx95 is in chipmedia product?
-Is this part of a SoC?
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: VPU clock
-> +      - description: VPU associated block clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: vpu
-> +      - const: vpublk_wave
-> +
-> +  power-domains:
-> +    minItems: 1
-> +    items:
-> +      - description: Main VPU power domain
-> +      - description: Performance power domain
-> +
-> +  power-domain-names:
-> +    items:
-> +      - const: vpumix
-> +      - const: vpuperf
-> +
-> +  cnm,ctrl:
-
-What is this prefix about? Is this nxp or something else?
-
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: phandle of the VPU control device node. Required for VPU operation.
-
-Explain - required for what. Operation is too generic.
-
-If this is phandle to second device, then it's proof your split is
-really wrong.
-
-> +
-> +  boot:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: phandle of the boot memory region node for the VPU control device.
-
-No clue what is this... if memory region then use existing bindings.
-
-Anyway, wrap your code correctly.
-
-> +
-> +  sram:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: phandle of the SRAM memory region node for the VPU control device.
-> +
-> +  '#cooling-cells':
-> +    const: 2
-> +
-> +  support-follower:
-> +    type: boolean
-> +    description: Indicates whether the VPU domain power always on.
-
-You cannot add new common properties in random way. Missing vendor
-prefix but more important: does not look at all as hardware property but
-OS policy.
-
-> +
-> +patternProperties:
-> +  "^vpu-ctrl@[0-9a-f]+$":
-> +    type: object
-> +    properties:
-> +      compatible:
-> +        items:
-> +          - enum:
-> +              - nxp,imx95-wave633c-ctrl
-
-Really, what? How nxp,imx95-wave633c-ctrl node can have a child with
-nxp,imx95-wave633c-ctrl compatible?
-
-NAK.
-
-
-> +      reg: true
-> +      clocks: true
-> +      clock-names: true
-> +      power-domains:
-> +        items:
-> +          - description: Main VPU power domain
-> +          - description: Performance power domain
-> +      power-domain-names:
-> +        items:
-> +          - const: vpumix
-> +          - const: vpuperf
-> +      sram: true
-> +      boot: true
-> +      '#cooling-cells': true
-> +      support-follower: true
-> +    required:
-> +      - compatible
-> +      - reg
-> +      - clocks
-> +      - clock-names
-> +      - power-domains
-> +      - power-domain-names
-> +      - sram
-> +      - boot
-> +
-> +    additionalProperties: false
-> +
-> +  "^vpu@[0-9a-f]+$":
-> +    type: object
-> +    properties:
-> +      compatible:
-> +        items:
-> +          - enum:
-> +              - nxp,imx95-wave633c
-> +      reg: true
-> +      interrupts: true
-> +      clocks: true
-> +      clock-names: true
-> +      power-domains:
-> +        maxItems: 1
-> +        description: Main VPU power domain
-> +      cnm,ctrl: true
-> +    required:
-> +      - compatible
-> +      - reg
-> +      - interrupts
-> +      - clocks
-> +      - clock-names
-> +      - power-domains
-> +      - cnm,ctrl
-
-All this is just incorrect.
-
-> +
-> +    additionalProperties: false
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/nxp,imx95-clock.h>
-> +
-> +    soc {
-> +      #address-cells = <2>;
-> +      #size-cells = <2>;
-> +
-> +      vpuctrl: vpu-ctrl@4c4c0000 {
-> +        compatible = "nxp,imx95-wave633c-ctrl";
-> +        reg = <0x0 0x4c4c0000 0x0 0x10000>;
-> +        clocks = <&scmi_clk 115>,
-> +            <&vpu_blk_ctrl IMX95_CLK_VPUBLK_WAVE>;
-> +        clock-names = "vpu", "vpublk_wave";
-> +        power-domains = <&scmi_devpd 21>, <&scmi_perf 10>;
-> +        power-domain-names = "vpumix", "vpuperf";
-> +        #cooling-cells = <2>;
-> +        boot = <&vpu_boot>;
-> +        sram = <&sram1>;
-> +      };
-> +
-> +      vpu0: vpu@4c480000 {
-
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-
-> +        compatible = "nxp,imx95-wave633c";
-> +        reg = <0x0 0x4c480000 0x0 0x10000>;
-> +        interrupts = <GIC_SPI 299 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&scmi_clk 115>,
-> +                <&vpu_blk_ctrl IMX95_CLK_VPUBLK_WAVE>;
-> +        clock-names = "vpu", "vpublk_wave";
-> +        power-domains = <&scmi_devpd 21>;
-> +        cnm,ctrl = <&vpuctrl>;
-> +      };
-> +
-> +      vpu1: vpu@4c490000 {
-> +        compatible = "nxp,imx95-wave633c";
-
-Drop all duplicated examples.
-
-
-> +        reg = <0x0 0x4c490000 0x0 0x10000>;
-> +        interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&scmi_clk 115>,
-> +                <&vpu_blk_ctrl IMX95_CLK_VPUBLK_WAVE>;
-> +        clock-names = "vpu", "vpublk_wave";
-> +        power-domains = <&scmi_devpd 21>;
-> +        cnm,ctrl = <&vpuctrl>;
-> +      };
-> +
-> +      vpu2: vpu@4c4a0000 {
-> +        compatible = "nxp,imx95-wave633c";
-> +        reg = <0x0 0x4c4a0000 0x0 0x10000>;
-> +        interrupts = <GIC_SPI 301 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&scmi_clk 115>,
-> +                <&vpu_blk_ctrl IMX95_CLK_VPUBLK_WAVE>;
-> +        clock-names = "vpu", "vpublk_wave";
-> +        power-domains = <&scmi_devpd 21>;
-> +        cnm,ctrl = <&vpuctrl>;
-> +      };
-> +
-> +      vpu3: vpu@4c4b0000 {
-> +        compatible = "nxp,imx95-wave633c";
-> +        reg = <0x0 0x4c4b0000 0x0 0x10000>;
-> +        interrupts = <GIC_SPI 302 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&scmi_clk 115>,
-> +                <&vpu_blk_ctrl IMX95_CLK_VPUBLK_WAVE>;
-> +        clock-names = "vpu", "vpublk_wave";
-> +        power-domains = <&scmi_devpd 21>;
-> +        cnm,ctrl = <&vpuctrl>;
-> +      };
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 896a307fa065..5ff5b1f1ced2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -25462,6 +25462,14 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/media/cnm,wave521c.yaml
->  F:	drivers/media/platform/chips-media/wave5/
->  
-> +WAVE6 VPU CODEC DRIVER
-> +M:	Nas Chung <nas.chung@chipsnmedia.com>
-> +M:	Jackson Lee <jackson.lee@chipsnmedia.com>
-> +L:	linux-media@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/media/nxp,wave633c.yaml
-> +F:	drivers/media/platform/chips-media/wave6/
-
-There is no such file/directory.
-
-Best regards,
-Krzysztof
+Reviewed-by: Shrikanth Hegde <sshegde@linux.ibm.com>
