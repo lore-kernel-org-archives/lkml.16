@@ -1,203 +1,367 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2048.outbound.protection.outlook.com [40.107.236.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FEE1C07CB
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739176107; cv=none; b=Iv6BepHtDxqq5T0V2/F2W9MBF577Xb22r2csAt3wcZJ41VEbT0ktmbHMuHjunXP6W2/SKKjkvjoJmjaki7wwQdY2FMSqI0cZTFR4nveQfoi9cTg9Bi2MRYkJl7FbyEU+HT0dZVNcLdoObbyw4zGRYoedQRu1V5VJtMO7UYytDhE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739176107; c=relaxed/simple;
-	bh=V5wU/29c7mNYE3/QefZiuSHFC/1Vw5d/10zz4ZCU6wU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N43TqdS9/SyAehxOttHBgK4Q5VVGBeOP8lhmiq75NqG9fpWJTC96qWmjnhHgps9hTWaokBtIiv2p40e1f/y4W234ML4CnJKXkvaoeBO2uBPjKmkEFxWplMNT8gqdO7xSWuz4zQQfaYRs6zUO6beZnpKrzBz9fr8+ehgWO9rDFb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M+YP1i4o; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85AAC1B85D6;
+	Mon, 10 Feb 2025 08:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739176130; cv=fail; b=ZuLS4QRkTsFk/diwDM0Hb40LoQhVTp14LBA6lC93mF8l937c9lBeHct6cCgSUu/34WNfDiH+VIoKFFOzjnQmY4RZ/bUjlDr9cknrJ3lHIthuDhKwn1OvkWprL2kA/Dy4qLFZ0NL+kE/PPB6qGQ9ri353UuN068kRH4X7mEVJ62I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739176130; c=relaxed/simple;
+	bh=Mx88ICnsjwYYZNwyDFsQPJz4Dgu6b8x925lBWJFOXPI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=HHZAqBzWX0o/pI2fp8ubkfGTF3cr6f2T19Y+rjfWV0d1alboK/ZQvqYsIYhe7Nh6s+peFNZnw7t0SrXbt9jI8wJQQSWH3HQYLuf982o4HqqGEfzR/RQ8539RU0LK8zwMV/adf7+Q5C1Wu+9h+udX7aYWCucQ2MeExXP3JtaTlPY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=MxJU0LU+; arc=fail smtp.client-ip=40.107.236.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M+YP1i4o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739176104;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=bicHG7zjx2UMOO4n8zha5UgWZ2e74X0E23kGVMNRanQ=;
-	b=M+YP1i4ov1YX7VO7QzVXrUeDafkSoLJJxts1lQqabdATlAc+sPwGUs1he2sfHX7lV71PNV
-	soeGAPSFKlD2tp18N94+lNkPNUVAWDSmyO9BdOS7MLWJuxHGV2I43tNp3YQHxyyiZYZyiP
-	PzhdqJCaCloavZCLxQxwmzlDPqzDedc=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-393-CIotmNI0Np-viCqFIUxe8Q-1; Mon, 10 Feb 2025 03:28:22 -0500
-X-MC-Unique: CIotmNI0Np-viCqFIUxe8Q-1
-X-Mimecast-MFC-AGG-ID: CIotmNI0Np-viCqFIUxe8Q
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4393e89e910so5396315e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 00:28:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739176101; x=1739780901;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bicHG7zjx2UMOO4n8zha5UgWZ2e74X0E23kGVMNRanQ=;
-        b=SVZFlU5vI0ABxPkv3mqYZuDqPWLf4Gp+NPVGs1yp5PTsKwk9CVcZTjuoVMoNRIi8es
-         8102P9fDjljL7jbXqzjVNWvfDINDexk4wV6dz/d6PoWMvJDVM3TyuDrDwgLGDgRzPq3C
-         nrp5hQo3SMQ2pm+4wGvez7Vv0JaOHzoXTNYrBY4kxLMvhjCaodxbCfnB16xMaXxHVnaE
-         J8U+ggZtyYgjk711GHhTl0me47OX90YUqeRAh82zhdTFF94VdNIrMqiPrLSdsy51oaPj
-         Qah1Gb3w/CSgW5ZH0Lm3GOsHOWxPM206rZcbuIZxjAVJlerTEVfe7gGE3QqYij6dXTdD
-         BnRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXytfW0PmvSMAcRLe/bOojTKB79wRswd9D9eisPPR03NA10HtEt/MTBHX9kAvcs+g+YyYV3W0X6FBEOmmk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzN1rixjcmvRKTWWdP45iUmnECsRd4hEE7j2XamGU18Cq6Dtexp
-	A1lZflEKB0lL2cmg74hJZ6X/YL5DRLFh35XfbQtkVdqDUqTn6RRtIBufajJvoXI6vD7k2FCVQCS
-	lllDys3tqkE98N+NQy6f4QNl8ph97S1VeNxqVCcaVqLUrbXMKRnNdDejjyJ8IWw==
-X-Gm-Gg: ASbGncs+kFUA92Fmz93RVV9LVRY33uldYulGr4KONXZEe+j1w/KfplA77cWSb1y33YV
-	NyU+U5LF5RgqTOLcn5RcXJp12W58fw8PEWIbQfkGRK1CqAw/gfh/rbMX5ogkABErjaL9SRd85hg
-	8RTcFX7tqM/O+iJfUNFncon2dRgZzbdO5JZsOqYlAYPAP64XzbYSscCjqjzdWNu+pFRT8bJdviR
-	/nqAIS4+EqUJPzvFWpS5O6UNQBOQstShqmixn8QfXfYIUHVpQPy6sV7WXt1fXY5hDD1l2j1xv/5
-	srPSyHiPgY22jJfpST6KWk+zxBtyo2bxMbGi/hWEGKN/OObiWNeAzxqVHy4lURS5UsVU2D52DfL
-	LIZtnubee7IUCjfNxDaXeBksuboZtTpRh
-X-Received: by 2002:a05:600c:3c8f:b0:439:3e90:c535 with SMTP id 5b1f17b1804b1-4393e90c71cmr40397965e9.0.1739176101210;
-        Mon, 10 Feb 2025 00:28:21 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGVe5xArCsukLiDpa1Z9D7uo1ruE78+ptabaMmnnCZmgUIOVJ8TIj/+l2P6inhlogLtasPzog==
-X-Received: by 2002:a05:600c:3c8f:b0:439:3e90:c535 with SMTP id 5b1f17b1804b1-4393e90c71cmr40397635e9.0.1739176100798;
-        Mon, 10 Feb 2025 00:28:20 -0800 (PST)
-Received: from ?IPV6:2003:cb:c734:b800:12c4:65cd:348a:aee6? (p200300cbc734b80012c465cd348aaee6.dip0.t-ipconnect.de. [2003:cb:c734:b800:12c4:65cd:348a:aee6])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd295200asm6517640f8f.44.2025.02.10.00.28.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 00:28:19 -0800 (PST)
-Message-ID: <bb2fbccc-f25b-4c31-98a3-e1699a86dbb5@redhat.com>
-Date: Mon, 10 Feb 2025 09:28:17 +0100
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="MxJU0LU+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WjAEdL6/Xu34EFlmv6NUGXK2PBJdXCnna1GDDAhQvEYDjVhQ4jc5BCrVJMbWyrKAccRACXLDcC7ImE1u5Ti5ikhVGMj8VicpcwDJTZLyKmS9m+nCXTIyhW4XMH9C9SAGaSJGAfqcrLB+jvNRzxt/y7a44gXGdP9D5cbc06RYLow8nua23gbmnp+nAKnBdiUg1v/IY59RqbH9j7ShiL+avgGxqQwoLxwv1k7W2vf5WuSPV7sQB5pXZQJZjx5wXOCjb5w5vPU2O08hPFth0TmjTx/2V21bcjTVnoGBFNeCJhXFfwhJECqjLLjMuisVj8bpNzDJ6tz7y+XF76M4UO0W9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VwbDY8y+RO2tORbpHCLf+c5uFqf/7UGboXG2RAxBdE4=;
+ b=y72QxRVuz+fuD1wKRu+oSCT+/ant2U1AzXjoA+ROlKcgDsAcG0p31ZnJfdS1YxrqFAZ4SSEt7sJ49/jGZU8B+MH8fOL9a6h892oZdeKTXzB1+Xv7MoyQZFOuKPO37cU0UZaE1gwSVCV8n7aqGfgLZ8ZEaNdypK1lWokf6WTnvDTjxijKoqFGtZM9cNczK65BtYw4mcTM6ZMbDfjJmG0shdE4tYR6ujP95Yzre1mumekXT1j/B4rymC3J6LBvvCNkcY1L7TvtJg7yqmcAAqmBc02bTTlrnd/O+UbdlNKWgLw2xkabcJQnenBX/LZra/DQj++wFhfnyB6NWv2Qn1xHSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VwbDY8y+RO2tORbpHCLf+c5uFqf/7UGboXG2RAxBdE4=;
+ b=MxJU0LU+yn5t9zhfAX9ndHNSlN65fkcEv1WyKPE7+jGkb7H9Pvp1DUbUEYachTvbxQ/7tNbXn/7D/QLjBghMQ+eMhOtUEfGTz14ybLFQMUE/ex4LM0h/ct5eH9nHFy9oiAyZS/DZLXGVB00b2ZZf8JatQWIzB6BVhXBO8+AicFIJDJ6bLb4PMU+4/DUxXResIwBKS6Q3uBaPpIscc5tqu7KM1J/5sTA5oixvolq5dk8c6vB2+podpiSeqRf1yBAyrreZd96gUSRj3G+JzniYe2TEtFGaJR/bVxLx/mY8ozb164MVvhwynclA1Kk1k0uo69rVnCOrqXvsc7WyP01oRg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
+ by IA0PR12MB8423.namprd12.prod.outlook.com (2603:10b6:208:3dc::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Mon, 10 Feb
+ 2025 08:28:45 +0000
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5%7]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
+ 08:28:45 +0000
+Date: Mon, 10 Feb 2025 09:28:36 +0100
+From: Andrea Righi <arighi@nvidia.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
+	Changwoo Min <changwoo@igalia.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>, Ian May <ianm@nvidia.com>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] mm/numa: Introduce numa_nearest_nodemask()
+Message-ID: <Z6m4tEoiUBNBmIjV@gpd3>
+References: <20250207211104.30009-1-arighi@nvidia.com>
+ <20250207211104.30009-2-arighi@nvidia.com>
+ <Z6joYmcjyT8eY32H@thinkpad>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6joYmcjyT8eY32H@thinkpad>
+X-ClientProxiedBy: FR4P281CA0001.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:c8::15) To CY5PR12MB6405.namprd12.prod.outlook.com
+ (2603:10b6:930:3e::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/cma: add an API to enable/disable concurrent memory
- allocation for the CMA
-To: Barry Song <21cnbao@gmail.com>, Ge Yang <yangge1116@126.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- baolin.wang@linux.alibaba.com, aisheng.dong@nxp.com, liuzixing@hygon.cn
-References: <1737717687-16744-1-git-send-email-yangge1116@126.com>
- <CAGsJ_4y2zjCzRUgxkx2GpspFBD9Yon=R3SLaGezk9drQz+ikrQ@mail.gmail.com>
- <28edc5df-eed5-45b8-ab6d-76e63ef635a9@126.com>
- <CAGsJ_4yC=950MCeLDc-8inT52zH6GSEGBBfk+A0dwWEDE5_CMg@mail.gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <CAGsJ_4yC=950MCeLDc-8inT52zH6GSEGBBfk+A0dwWEDE5_CMg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|IA0PR12MB8423:EE_
+X-MS-Office365-Filtering-Correlation-Id: d44b1757-6560-4df5-ca62-08dd49aceedd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?I4zJXzkS53alhm8fVC+/8bRja5Uqr1VubYfOLE/b7QSI3c4kq/ke+/D2Sl8e?=
+ =?us-ascii?Q?A/kZrwNocwhi5kLrKQBqailHchHDdJbA59kjI3z/m+rgvHoiHkh8q5Rzuqmv?=
+ =?us-ascii?Q?wlEKjHktbBKmvr92+gDwoQjwEIPG4AsX1pS2rzF/Twl0ljxxfFG97EBuz7j0?=
+ =?us-ascii?Q?2edR5CbLwLPmo8itvd5GUD8x7oydHBhenO/zx+nF7Ul0fJqbUhFTbu5ZnvDl?=
+ =?us-ascii?Q?kItBn5SfU2gUqgDE272TeSEYRoGngRDA8RDZX7RNs9cIfAMMzdDV3u6TkkvZ?=
+ =?us-ascii?Q?XDT2G/9w37IfQksmROtHnCj9mqVdFn1rbAfd6TG7mgz/DZ6pFReEO4cuUg/d?=
+ =?us-ascii?Q?g56XhTG0HvEpKCqy8Htygw46gbTLVJsvTGmZjRBG5MC6G1jV6kZGfv/kAz6B?=
+ =?us-ascii?Q?sO7mqaFyN9wBTBXhQKI/WCSCvgFubl7OObEM7JG3ClvhDu7keMb2OFrLKeOZ?=
+ =?us-ascii?Q?bfEUD+Q2t/b2kjJzsqUr6wXK/hhb8gVXZMKeHCEiJRfW9YaVdsQZrQzOwJPI?=
+ =?us-ascii?Q?lM/BHbF2Pz/sdFNzBaOzakLZT9t+fEVUPMjItocd1rptdHN2xkltovXCqICM?=
+ =?us-ascii?Q?Bw9G7RmJdv51k7CEgE5aVTUCAsNDhfiHOEVao7iTivjrqPa9skN2k6pUPvva?=
+ =?us-ascii?Q?OYWsV1B+xc8kNSivgitEvrZ2ANlZRa2tVkI8jY6ehSenRy2/t6ZnjCHHW1EY?=
+ =?us-ascii?Q?MWp79b6d1+nVrfzy1zGJXG0HQu/fBiDQNVU8EYcyAXRj81UnLTHTnVkfO190?=
+ =?us-ascii?Q?TtsVIVN1930qG8NnB/sPj7Dn9wtE9lz11v0szDlQGv3XQcU4M7z3n1GS7fjs?=
+ =?us-ascii?Q?Wx+p1r7P9yAOteBwTXQbnPeQYu03LWQu3fy9qv8r0E89DwBHIu/VktANe0fj?=
+ =?us-ascii?Q?7hJNnv5t/oJDAL6YrNQ+ntRDhw5p+HSHXDySVdYCk/L6HxkrtV+1a9O0jTJW?=
+ =?us-ascii?Q?1WMpbn2zzCgQ1+wmNgEkCIsNcVElVEyRPpFsFVLvV0K4H1DPxb9aJY049GY0?=
+ =?us-ascii?Q?o90yUaw08c8hhSlI4rp414CId/OifLqKPMECJOC8upgYuGHuaglfESivqxCr?=
+ =?us-ascii?Q?P2kiX1r6Sp7pcjnmLZTWHkYZPyglVUhJVqqmXpd6AJzFQntlKXWcK1nN5U2A?=
+ =?us-ascii?Q?ZdftisNAyiVEVkgROdvvrVoq2bOXFFusXs2XWU4RBAAJQwYCazzPSsy/QM9Z?=
+ =?us-ascii?Q?Vv5fN2FWAu7a+O/b/IF6Amuc+eJWs0NosFIxSnM4G1idhAmlunr8lqWvTA9Z?=
+ =?us-ascii?Q?QcIkHG/OB2XEG3Gnvk5dinsz4xO2r9UimjCe6JDoPe9tVoUsh2Vz6rdfHddX?=
+ =?us-ascii?Q?l/gXF3yaB/4lBIYalH6HyUBN7H2mghWiD1so9y2BiPqNLRhSWdTNSQc3UO6I?=
+ =?us-ascii?Q?ALArF1np1XCStkgIH0PpyWgc5Jg/?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?LowUXd9UJ3dBOE6XORnETVOjjHKMEEKHNUkH34XGSF+ENzh9ZlNiTWUZYW6T?=
+ =?us-ascii?Q?Z3wpX4qGkn5oyjfjTMfSr0azOMJy83QUNKGmGC+j5bcW6NXRyRDLSXXA+Nhs?=
+ =?us-ascii?Q?nWPYqCZQz3DA1LVg3XuAQIHVu8LHcOdgtrbEctKJHwhFck5TVsUW9UENnsv0?=
+ =?us-ascii?Q?WE7FQ3LyE4nVKXRxtYCYrd24WqkfeopqOBm1D/I1nqUoJ7GEKCwp1R9LNYRM?=
+ =?us-ascii?Q?MDVl/wOWu4hyitMToO8yzIUKeU4lTpuDHcVB//gP2VKYmK4SsakW1F8c4SrG?=
+ =?us-ascii?Q?eXn2nsNxzEDd572YxZ3KVO9uxMn+GAuel4ceMeZqH9Q6KZTNmCZw0ybq2dhh?=
+ =?us-ascii?Q?xPwO8b0b80MmYS58QR/H7vcRWgjmzd9ohR0ekhkCwb1wtCFElEqFu3e4Esyh?=
+ =?us-ascii?Q?/23sNMQuqjOaYei5KsVsYM/2ESBQ9ez05xPZL/tuF+3zWc/insj4oiW0n5kl?=
+ =?us-ascii?Q?bySVx4OKHI96678ejZGQd9oZ+XZ6JdXOVC7vgLDT2gsPiYn1EEt1QysXGbhQ?=
+ =?us-ascii?Q?ZkA0CefaXau821tj0m0wi3FDQfWjzMvNZP3ojBgKHLhHMNbyB+h99BGSnhyM?=
+ =?us-ascii?Q?ANnMOFmbfWJ0QimMh/BADdZlSShiW2aKJgKX1n8NY7Yy4eRp8AkvPb3B3vZW?=
+ =?us-ascii?Q?jzAzCpGT3CrfQVBYLpy/vr4O565Tiebe1BeuY3op8XsC2V3V/fSMYIU06q/w?=
+ =?us-ascii?Q?YQAK3v+7oR4zYGrr3lmMjzWeUM0DUmCzq7akaSMdQ6JPIQodWtOn09Wq6IkA?=
+ =?us-ascii?Q?OMOyLz5dc/Vq5EmYSJQC8ndf+OI3yjO1lEI9Bvm2lglR8R9J4Koi0Pj2QV8J?=
+ =?us-ascii?Q?og0Kq05aHFtU6iolevnUEgCXR63aojSxHhLyhz71VZs0nZm/uk0G/IjCr28z?=
+ =?us-ascii?Q?JeEArndEEcKHnEzcQUNURoM4OchGaEqeXwgwwgRtbhIYTFD/j4o8tvwiDeVT?=
+ =?us-ascii?Q?ncKVdY/i5JDa5wN56BwfSFQzqBenBfyxmvNmnC2CuJJZtRLrm8kwmSDXO7MA?=
+ =?us-ascii?Q?gvFgw2eBkUANmK1tyO3LZdDMZBs1LjGWBC1b3xTbWUE+2qT5P4O3FgaGSewB?=
+ =?us-ascii?Q?TtvLKbjk08J9suLemWor5eUODgq9xCoJl2CEQSLnhLf0BeiNVkCeXV8BMuUw?=
+ =?us-ascii?Q?K6HgnRtoxoYrm/YNFQFn0aEMmHJLzROssqJaD9V0rnWYqTnocWQ4kt8cEt5k?=
+ =?us-ascii?Q?H8BZTVTjLKfbTL+PMkgtqWz++pWMI0n9RHJSkHDmjPF8xiGFBC/v4HvWU1Gk?=
+ =?us-ascii?Q?n7wFJ32rxGCkpm/af22JB29l/hhLa/g3ji2WF8IkETMYV6TCQKIiDRiTZuba?=
+ =?us-ascii?Q?k/0JLsd6TtGIYct6OTGDp7I56wBcdsO1YhtpOuj0X7JG5qAxuvwJqZJN/4k8?=
+ =?us-ascii?Q?F1IBxvSn8iBzh8h05KoVTYw44D6EyqHF7Sykgfy4OdbeGceuLuPH3bjn+zlT?=
+ =?us-ascii?Q?DNQ8BD11SAZzjTWJ0WsQ2zYVfe5UjW1ZkspOPzFlRbehZEviar/Q6UxXTY6W?=
+ =?us-ascii?Q?Bm0I+pdeZpXyhh+PpWDr+QLBFluCQc810xCy2McmTdM1wPKAcD7PYxKGZuII?=
+ =?us-ascii?Q?/q9+KaJKa0MFw4c48C2h+xO6wpUmDbmPA6qdGdLK?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d44b1757-6560-4df5-ca62-08dd49aceedd
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 08:28:44.9763
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HSPQ5Yr0EmwkjcXrZeRPVtmqiETD4OYoJuROvWI/3oO5QwQFiAIuzOcgS633N0h6GEXn3O0he1xLuP9F9A4Xlw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8423
 
-On 08.02.25 22:34, Barry Song wrote:
-> On Sat, Feb 8, 2025 at 9:50 PM Ge Yang <yangge1116@126.com> wrote:
->>
->>
->>
->> 在 2025/1/28 17:58, Barry Song 写道:
->>> On Sat, Jan 25, 2025 at 12:21 AM <yangge1116@126.com> wrote:
->>>>
->>>> From: yangge <yangge1116@126.com>
->>>>
->>>> Commit 60a60e32cf91 ("Revert "mm/cma.c: remove redundant cma_mutex lock"")
->>>> simply reverts to the original method of using the cma_mutex to ensure
->>>> that alloc_contig_range() runs sequentially. This change was made to avoid
->>>> concurrency allocation failures. However, it can negatively impact
->>>> performance when concurrent allocation of CMA memory is required.
->>>
->>> Do we have some data?
->> Yes, I will add it in the next version, thanks.
->>>
->>>>
->>>> To address this issue, we could introduce an API for concurrency settings,
->>>> allowing users to decide whether their CMA can perform concurrent memory
->>>> allocations or not.
->>>
->>> Who is the intended user of cma_set_concurrency?
->> We have some drivers that use cma_set_concurrency(), but they have not
->> yet been merged into the mainline. The cma_alloc_mem() function in the
->> mainline also supports concurrent allocation of CMA memory. By applying
->> this patch, we can also achieve significant performance improvements in
->> certain scenarios. I will provide performance data in the next version.
->> I also feel it is somewhat
->>> unsafe since cma->concurr_alloc is not protected by any locks.
->> Ok, thanks.
->>>
->>> Will a user setting cma->concurr_alloc = 1 encounter the original issue that
->>> commit 60a60e32cf91 was attempting to fix?
->>>
->> Yes, if a user encounters the issue described in commit 60a60e32cf91,
->> they will not be able to set cma->concurr_alloc to 1.
+Hi Yury,
+
+On Sun, Feb 09, 2025 at 12:40:15PM -0500, Yury Norov wrote:
+> On Fri, Feb 07, 2025 at 09:40:48PM +0100, Andrea Righi wrote:
+> > Introduce the new helper numa_nearest_nodemask() to find the closest
+> > node, in a specified nodemask and state, from a given starting node.
+> > 
+> > Returns MAX_NUMNODES if no node is found.
+> > 
+> > Cc: Yury Norov <yury.norov@gmail.com>
+> > Signed-off-by: Andrea Righi <arighi@nvidia.com>
+> > ---
+> >  include/linux/nodemask_types.h |  6 +++++-
+> >  include/linux/numa.h           |  8 +++++++
+> >  mm/mempolicy.c                 | 38 ++++++++++++++++++++++++++++++++++
+> >  3 files changed, 51 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/include/linux/nodemask_types.h b/include/linux/nodemask_types.h
+> > index 6b28d97ea6ed0..8d0b7a66c3a49 100644
+> > --- a/include/linux/nodemask_types.h
+> > +++ b/include/linux/nodemask_types.h
+> > @@ -5,6 +5,10 @@
+> >  #include <linux/bitops.h>
+> >  #include <linux/numa.h>
+> >  
+> > -typedef struct { DECLARE_BITMAP(bits, MAX_NUMNODES); } nodemask_t;
+> > +struct nodemask {
+> > +	DECLARE_BITMAP(bits, MAX_NUMNODES);
+> > +};
+> > +
+> > +typedef struct nodemask nodemask_t;
+> >  
+> >  #endif /* __LINUX_NODEMASK_TYPES_H */
+> > diff --git a/include/linux/numa.h b/include/linux/numa.h
+> > index 3567e40329ebc..a549b87d1fca5 100644
+> > --- a/include/linux/numa.h
+> > +++ b/include/linux/numa.h
+> > @@ -27,6 +27,8 @@ static inline bool numa_valid_node(int nid)
+> >  #define __initdata_or_meminfo __initdata
+> >  #endif
+> >  
+> > +struct nodemask;
 > 
-> A user who hasn't encountered a problem yet doesn't mean they won't
-> encounter it; it most likely just means the testing time hasn't been long
-> enough.
+> Numa should include this via linux/nodemask_types.h, or maybe
+> nodemask.h.
+
+Hm... nodemask_types.h needs to include numa.h to resolve MAX_NUMNODES,
+Maybe we can move numa_nearest_nodemask() to linux/nodemask.h?
+
 > 
-> Is it possible to implement a per-CMA lock or range lock that simultaneously
-> improves performance and prevents the original issue that commit
-> 60a60e32cf91 aimed to fix?
+> > +
+> >  #ifdef CONFIG_NUMA
+> >  #include <asm/sparsemem.h>
+> >  
+> > @@ -38,6 +40,7 @@ void __init alloc_offline_node_data(int nid);
+> >  
+> >  /* Generic implementation available */
+> >  int numa_nearest_node(int node, unsigned int state);
+> > +int numa_nearest_nodemask(int node, unsigned int state, struct nodemask *mask);
+> >  
+> >  #ifndef memory_add_physaddr_to_nid
+> >  int memory_add_physaddr_to_nid(u64 start);
+> > @@ -55,6 +58,11 @@ static inline int numa_nearest_node(int node, unsigned int state)
+> >  	return NUMA_NO_NODE;
+> >  }
+> >  
+> > +static inline int numa_nearest_nodemask(int node, unsigned int state, struct nodemask *mask)
+> > +{
+> > +	return NUMA_NO_NODE;
+> > +}
+> > +
+> >  static inline int memory_add_physaddr_to_nid(u64 start)
+> >  {
+> >  	return 0;
+> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> > index 162407fbf2bc7..1cfee509c7229 100644
+> > --- a/mm/mempolicy.c
+> > +++ b/mm/mempolicy.c
+> > @@ -196,6 +196,44 @@ int numa_nearest_node(int node, unsigned int state)
+> >  }
+> >  EXPORT_SYMBOL_GPL(numa_nearest_node);
+> >  
+> > +/**
+> > + * numa_nearest_nodemask - Find the node in @mask at the nearest distance
+> > + *			   from @node.
+> > + *
 > 
-> I strongly believe that cma->concurr_alloc is not the right approach. Let's
-> not waste our time on this kind of hack or workaround.  Instead, we should
-> find a proper fix that remains transparent to users.
+> So, I have a feeling about this whole naming scheme. At first, this
+> function (and the existing numa_nearest_node()) searches for something,
+> but doesn't begin with find_, search_ or similar. Second, the naming
+> of existing numa_nearest_node() doesn't reflect that it searches
+> against the state. Should we always include some state for search? If
+> so, we can skip mentioning the state, otherwise it should be in the
+> name, I guess...
+> 
+> The problem is that I have no idea for better naming, and I have no
+> understanding about the future of this functions family. If it's just
+> numa_nearest_node() and numa_nearest_nodemask(), I'm OK to go this
+> way. If we'll add more flavors similarly to find_bit() family, we
+> could probably discuss a naming scheme.
+> 
+> Also, mm/mempolicy.c is a historical place for them, but maybe we need
+> to move it somewhere else?
+> 
+> Any thoughts appreciated.
 
-Fully agreed.
+Personally I think adding "find_" to the name would be a bit redundant, as
+it seems quite obvious that it's finding the nearest node. It sounds a bit
+like the get_something() discussion and we can just use something().
 
-IIUC, the problem is that we find a pageblock is already isolated. It 
-might be sufficient to return -EAGAIN in that case from 
-alloc_contig_range_noprof()->start_isolate_page_range() and retry in 
-CMA. ideally, we'd have a way to wait on some event (e.g., any pageblock 
-transitioning from isolated -> !isolated).
+About adding "_state" to the name, it'd make sense since we have
+for_each_node_state/for_each_node(), but we would need to change
+numa_nearest_node() -> numa_nearest_node_state((), that is beyond the scope
+of this patch set.
 
--- 
-Cheers,
+If I had to design this completely from scratch I'd probably propose
+something like this:
+ - nearest_node_state(node, state)
+ - nearest_node(node) -> nearest_node_state(node, N_POSSIBLE)
+ - nearest_node_nodemask(node, nodemask) -> here the state can be managed
+   with the nodemask (as you suggested below)
 
-David / dhildenb
+But again, this is probably a more generic discussion that can be addressed
+in a separate thread.
 
+> 
+> > + * @node: the node to start the search from.
+> > + * @state: the node state to filter nodes by.
+> > + * @mask: a pointer to a nodemask representing the allowed nodes.
+> > + *
+> > + * This function iterates over all nodes in the given state and calculates
+> > + * the distance to the starting node.
+> > + *
+> > + * Returns the node ID in @mask that is the closest in terms of distance
+> > + * from @node, or MAX_NUMNODES if no node is found.
+> > + */
+> > +int numa_nearest_nodemask(int node, unsigned int state, nodemask_t *mask)
+> 
+> Your only user calls the function with N_POSSIBLE:
+> 
+>   s32 scx_pick_idle_cpu(const struct cpumask *cpus_allowed, int node, u64 flags)
+>   {
+>         nodemask_t unvisited = NODE_MASK_ALL;
+> 
+>         if (!static_branch_maybe(CONFIG_NUMA, &scx_builtin_idle_per_node))
+>                return pick_idle_cpu_from_node(cpus_allowed, NUMA_NO_NODE, flags);
+> 
+> 
+>         for_each_numa_node(node, unvisited, N_POSSIBLE)
+>                 do_something();
+>   }
+> 
+> Which means you don't need the state at all. Even more, you don't
+> need to initialize the unvisited mask before checking the static
+> branch:
+> 
+>   s32 scx_pick_idle_cpu(const struct cpumask *cpus_allowed, int node, u64 flags)
+>   {
+>         nodemask_t unvisited;
+> 
+>         if (!static_branch_maybe(CONFIG_NUMA, &scx_builtin_idle_per_node))
+>                return pick_idle_cpu_from_node(cpus_allowed, NUMA_NO_NODE, flags);
+> 
+>         nodes_clear(unvisited);
+> 
+>         for_each_numa_node(node, unvisited)
+>                 do_something();
+>   }
+> 
+> 
+> If you need some state other than N_POSSIBLE, you can do it similarly:
+>         
+>         nodemask_complement(unvisited, N_CPU);
+> 
+>         /* Only N_CPU nodes iterated */
+>         for_each_numa_node(node, unvisited)
+>                 do_something();
+
+Good point. I think we can implicitly assume N_POSSIBLE and if we need to
+filter only a certain state in the future, we can enforce that via the
+nodemask.
+
+> 
+> 
+> > +{
+> > +	int dist, n, min_dist = INT_MAX, min_node = MAX_NUMNODES;
+> > +
+> > +	if (node == NUMA_NO_NODE)
+> > +		return MAX_NUMNODES;
+> > +
+> > +	if (node_state(node, state) && node_isset(node, *mask))
+> > +		return node;
+> 
+> This is correct, but why do we need this special case? If distance to
+> local node is always 0, and distance to remote node is always greater
+> than 0, the normal search will return local node, right? Is that a
+> performance trick? If so, can you put a comment please? Otherwise,
+> maybe just drop it? 
+
+Yeah we can probably just drop it, I don't it gives much benefit in terms
+of performance. And the special optimiation case of searching only in one
+node can be managed already by the caller via SCX_PICK_IDLE_IN_NODE.
+
+> 
+> > +
+> > +	for_each_node_state(n, state) {
+> > +		if (!node_isset(n, *mask))
+> > +			continue;
+> 
+> for_each_node_state_and_mask(n, state, mask)
+> 
+> Or if you take the above consideration, just
+>         for_each_node_mask(n, mask)       
+
+Ok, that's much better.
+
+Thanks,
+-Andrea
