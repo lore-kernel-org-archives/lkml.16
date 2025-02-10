@@ -1,174 +1,226 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045742E628;
-	Mon, 10 Feb 2025 09:51:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0051C4604
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739181067; cv=none; b=rJb4nmAbfekHXNOZf3CjBHniI77uAxDnAUDVvS5iqRpv1pIEKHkW8s/jr0qff09JHyMyEVf6V6pDVVkpoJUlNFkffNrN6YIIAhHeZJwaNp13DE/WLOAhKmaYTduiL7qv12C/S4RPMFOM3FfkfGCa0x5RoHQtvn+Ll/0n/PhLAak=
+	t=1739181110; cv=none; b=fWUN0Xnhpza17y0V2LxEFtlIuri0kmuLuqyYp704NDLXqbd/3yq76UEPNU48SRx81PAFXiV1fuMF7wQ7meSntmCyHy1DS05xh7RpOjkOUgjfjv8s9MGM18uKl3dvSLKN8D5nXMOXNR2m8i5IqCuy9RMBJoL97lyOPN6NqAj78i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739181067; c=relaxed/simple;
-	bh=L/47NT1D33AXwhb7bm+RpJCwbuPNbjYzSmLMznvjFWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ObhMYx9gh23jvTv45/YpdxSGr2aU2ol5nMFxujV6WbMHKUzo6is4MPofJFYc9iI9+ZXBJJC26NDmJpxV/RZpfqv7krDSGIbpvyEqW/omlL3flt1jgeFABNdqIBk9baDvMlgHA4QzvFm/9RP7G1tLZ20ut6NGfFtr94bc5CLvHas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QWMoJ5gO; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739181110; c=relaxed/simple;
+	bh=OTbzl0pPIRsh7XzBft5GDjqFlKsKgb7fO1CIYcnyWyI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=f/bT1NStBDTNH9GRQ9M5XRN/Egg6CJh7MnfiEWLk9u8lk4TezoEFM0Nz/+vmMVL6UabCFYl/HbCXw7Ue91RtLssjFwS5zY/EjlBXKKwfBMRXIkxgWAF/ejfBv+xCs6OEzsRZhYMW8nYjVtFri0JY7fWqxbOsr3UGE/dbwTFzFCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sWjVN4TL; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QWMoJ5gO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739181066; x=1770717066;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=L/47NT1D33AXwhb7bm+RpJCwbuPNbjYzSmLMznvjFWw=;
-  b=QWMoJ5gOmbr1ei3AfxJZ4WdPbw+/zj46qq2SJQzE77gqegORRziW9XSX
-   U9XsF4iJMNQ/DRQoiwzePgZenCMvdcub3rH0bZLmZ7JPwEaTYGNQz1l4T
-   QQrrLbiKfpd1VKfjnuEZf726n+5prXwYwiKOcHo0+JcYl5HeudUH0wPTI
-   brNxxrOksP7X1w/O9ggNNUlA5sBK3RmrVNosJfsZTZHOiAn+N3LSdGjVp
-   g7/CV9PbUqlND9uDLiq4nVT6NsaFEo3B45Z3c51YedstqJ2FmEiXLvpk2
-   kb7JkAqoe94c5qYXuRMM+YA0j6T51SfHeR0JPXBNWQJ6c4pggwmcknku0
-   Q==;
-X-CSE-ConnectionGUID: MykdgzrHTvirkLw2jCF5HQ==
-X-CSE-MsgGUID: B5JxyzdJTW2g8mTyNl9kEw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="42595860"
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="42595860"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 01:51:05 -0800
-X-CSE-ConnectionGUID: xmjUZU8AToy/ZXqkagaATg==
-X-CSE-MsgGUID: Q/eVqaqlQgO8mCvrCPpGMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="112777594"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 01:51:00 -0800
-Date: Mon, 10 Feb 2025 10:47:26 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Tariq Toukan <tariqt@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, netdev@vger.kernel.org,
-	Saeed Mahameed <saeedm@nvidia.com>, Gal Pressman <gal@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>,
-	Simon Horman <horms@kernel.org>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Jiri Pirko <jiri@resnulli.us>, Jonathan Corbet <corbet@lwn.net>,
-	Leon Romanovsky <leon@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-	William Tu <witu@nvidia.com>
-Subject: Re: [PATCH net-next 06/15] net/mlx5e: reduce the max log mpwrq sz
- for ECPF and reps
-Message-ID: <Z6nLLsMa4njyLrIV@mev-dev.igk.intel.com>
-References: <20250209101716.112774-1-tariqt@nvidia.com>
- <20250209101716.112774-7-tariqt@nvidia.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sWjVN4TL"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43675b1155bso46345565e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 01:51:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739181105; x=1739785905; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OyOzPnDD5nV6TA3iG57NOHGaY6BlLamnSYD7hNHtszo=;
+        b=sWjVN4TLgvQlVNYp23aqLpYqUxoQXta+pQtbNC017jsZdOXM9z49Bb21itAW76S1zU
+         pxFratJpZ4CwY3STznyVKaue71CA3WIqO/pBiIXr/zfB+GownFUUKcQ44jWwMJdsAGFU
+         4mnmNgNZGdrrA7slIPBhMxmb9XvctT+pyDOdDLF8Zxj3OGVCAe3ftHzGz6FGGY4vWa3x
+         xwNDYt/Bn1yfaBT4dczOkKL+1gaoBQGPAqaSlWfbBf7/32M3JLf8RofIb4rvjNV5VQin
+         13CrZV06BXV/KEN96HyTisBqqNsiLVewGrzPulmTwKiBEuzo6Yy/nHhobi/PbCSh4eYr
+         XKZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739181105; x=1739785905;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=OyOzPnDD5nV6TA3iG57NOHGaY6BlLamnSYD7hNHtszo=;
+        b=C0gWiolEnV64Y+FM96RYY+YcnD1JhbGeO3P++k4XU2R2sIGNZyL89Jw4RBAgXBeeeU
+         W0BviJd+c6aKCmR1dDxUT8ido6s4X9Mpk+Y+OOi3V9cLMPpGPP9vKlR+fzd93bB9QoWd
+         HAK8SMNVdy8GunJltDaVRUDJB3i2H7OI3AbCm7lpC3fkmUD//0RJy4DU3AmPCIR5lY04
+         Kct9rSAVnEibuFFxy6zdLgXvbeuJiZAwj25eJIv7NusU1Nxpmv6Kl8KydmsBwOHGgO5R
+         1/mMM/blOT7bn0RpYsKRjUX63+yd2cJiiKy9e2m7wYn+TV5QNu/SbTjr71SlZanDY4Yh
+         Ewjw==
+X-Forwarded-Encrypted: i=1; AJvYcCXkOYV2EuLQpeDI4tdlqwxoExNn0THfseBT9ZL3kh5QZTiVC6tONJW9ZeTu4iyKhmGD3xDBSiFj2T1ujZ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7MOQXPG2/SjoSmEaFpsk4ucG74hfWT6WnbqdcRGgrnP1H99rn
+	Nx5ybw4czY49ESNR806+4S5+gOdk7LcJMUGtZGfSFT3l74sTfjMCGy9wdH7Lq9U=
+X-Gm-Gg: ASbGncvdniIZsvrWvnhtlL/u1JSQn7eY5jnvuvX/V+GXf8x8K/BRUB2gFLX1pJHQTD9
+	yL/o1Hh51C9+CUBlWERz2xqM8uOhoXXJqJOOGjvtv+9dINr2YR+iuzJYQ4E8Z/Wpg8SC/6vjvB9
+	oCOwTQNXxSXfRReJixEGdckDzPY88dlaLQhjpP0+sh2rsAOGrVuervAwu0Fu66MTiO5lu6SQliv
+	DRPRBr1PWSmpf3xVF7nUJGOF4DvSX+H2bko5h4KUwOBf4CjRXlJuzPIiKN25fAgqonHnBqPZZNL
+	IjiXRvp+EDz7v1v7IcyF4NjZ4B3fSd/V8s5zCN6QBZKPrJeE2FgfXWJX/6buUw7rnC/R
+X-Google-Smtp-Source: AGHT+IG2G+0jkkCrFzcyOswfbkjejbMcC59iHCIyTbbyZg24kwvnpZM5H9uQkhpiqY1F6e5Q+1GToQ==
+X-Received: by 2002:a05:600c:511f:b0:434:e9ee:c3d with SMTP id 5b1f17b1804b1-439249a82dcmr96610705e9.20.1739181105553;
+        Mon, 10 Feb 2025 01:51:45 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:8235:1ea0:1a75:c4d5? ([2a01:e0a:982:cbb0:8235:1ea0:1a75:c4d5])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4394127afcbsm37731515e9.23.2025.02.10.01.51.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 01:51:45 -0800 (PST)
+Message-ID: <c0f9424a-664b-4d77-b8e9-1938e49746fc@linaro.org>
+Date: Mon, 10 Feb 2025 10:51:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250209101716.112774-7-tariqt@nvidia.com>
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH RFC v2] dt-bindings: mmc: mmc-slot: make compatible
+ property optional
+To: Dharma.B@microchip.com, ulf.hansson@linaro.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, khilman@baylibre.com,
+ jbrunet@baylibre.com, martin.blumenstingl@googlemail.com
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250205-mmc-slot-v2-1-da3c5f30e2d9@microchip.com>
+ <f6d7ffa0-6c08-45fb-9153-5e4aad1ca86a@linaro.org>
+ <003ffa44-c88a-4234-a54a-50cd1140982a@microchip.com>
+ <7180babd-302a-4f86-8770-bdd9f5c773cf@linaro.org>
+ <7de20917-3176-4e80-8ccd-9c01c037cc9a@microchip.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <7de20917-3176-4e80-8ccd-9c01c037cc9a@microchip.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, Feb 09, 2025 at 12:17:07PM +0200, Tariq Toukan wrote:
-> From: William Tu <witu@nvidia.com>
+On 10/02/2025 06:28, Dharma.B@microchip.com wrote:
+> On 07/02/25 2:47 pm, neil.armstrong@linaro.org wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you know
+>> the content is safe
+>>
+>> On 07/02/2025 10:02, Dharma.B@microchip.com wrote:
+>>> On 07/02/25 2:25 pm, Neil Armstrong wrote:
+>>>> EXTERNAL EMAIL: Do not click links or open attachments unless you know
+>>>> the content is safe
+>>>>
+>>>> On 05/02/2025 04:48, Dharma Balasubiramani wrote:
+>>>>> Remove the compatible property from the list of required properties and
+>>>>> mark it as optional.
+>>>>>
+>>>>> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+>>>>> ---
+>>>>> Changes in v2:
+>>>>> - Instead of moving the compatible string to the other binding, just
+>>>>> make it
+>>>>>      optional (remove from required list).
+>>>>> - Link to v1: https://lore.kernel.org/r/20241219-mmc-slot-v1-1-
+>>>>> dfc747a3d3fb@microchip.com
+>>>>> ---
+>>>>>     Documentation/devicetree/bindings/mmc/mmc-slot.yaml | 1 -
+>>>>>     1 file changed, 1 deletion(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/mmc/mmc-slot.yaml b/
+>>>>> Documentation/devicetree/bindings/mmc/mmc-slot.yaml
+>>>>> index 1f0667828063..ca3d0114bfc6 100644
+>>>>> --- a/Documentation/devicetree/bindings/mmc/mmc-slot.yaml
+>>>>> +++ b/Documentation/devicetree/bindings/mmc/mmc-slot.yaml
+>>>>> @@ -29,7 +29,6 @@ properties:
+>>>>>         maxItems: 1
+>>>>>
+>>>>>     required:
+>>>>> -  - compatible
+>>>>>       - reg
+>>>>
+>>>> If you remove it from here then it's still required in Documentation/
+>>>> devicetree/bindings/mmc/amlogic,meson-mx-sdio.yaml
+>>>> so please add it.
+>>>
+>>> If moving the compatible to its specific binding isn't appropriate (as
+>>> per Conor),
+>>> and if removing it from the required list here doesn’t seem reasonable
+>>> to you,
+>>> then adding an unnecessary compatible string in our DTS files doesn’t
+>>> make sense to me.
+>>>
+>>> What could be the solution then?
+>>
+>> The solution is right but you modify the meson-mx-sdio bindings, so
+>> simply add compatible in a required list for the slot node.
 > 
-> For the ECPF and representors, reduce the max MPWRQ size from 256KB (18)
-> to 128KB (17). This prepares the later patch for saving representor
-> memory.
+> Okay, we declare compatible as optional in the generic mmc-slot binding
+> but make it required in the meson-mx-sdio binding, which inherits from it.
 > 
-> With Striding RQ, there is a minimum of 4 MPWQEs. So with 128KB of max
-> MPWRQ size, the minimal memory is 4 * 128KB = 512KB. When creating page
-> pool, consider 1500 mtu, the minimal page pool size will be 512KB/4KB =
-> 128 pages = 256 rx ring entries (2 entries per page).
+> So why not define the property directly in the meson-mx-sdio binding
+> instead?
 > 
-> Before this patch, setting RX ringsize (ethtool -G rx) to 256 causes
-> driver to allocate page pool size more than it needs due to max MPWRQ
-> is 256KB (18). Ex: 4 * 256KB = 1MB, 1MB/4KB = 256 pages, but actually
-> 128 pages is good enough. Reducing the max MPWRQ to 128KB fixes the
-> limitation.
-> 
-> Signed-off-by: William Tu <witu@nvidia.com>
-> Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/en.h      |  2 --
->  .../net/ethernet/mellanox/mlx5/core/en/params.c   | 15 +++++++++++----
->  2 files changed, 11 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-> index 979fc56205e1..534fdd27c8de 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-> @@ -95,8 +95,6 @@ struct page_pool;
->  #define MLX5_MPWRQ_DEF_LOG_STRIDE_SZ(mdev) \
->  	MLX5_MPWRQ_LOG_STRIDE_SZ(mdev, order_base_2(MLX5E_RX_MAX_HEAD))
->  
-> -#define MLX5_MPWRQ_MAX_LOG_WQE_SZ 18
-> -
->  /* Keep in sync with mlx5e_mpwrq_log_wqe_sz.
->   * These are theoretical maximums, which can be further restricted by
->   * capabilities. These values are used for static resource allocations and
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/params.c b/drivers/net/ethernet/mellanox/mlx5/core/en/params.c
-> index 64b62ed17b07..e37d4c202bba 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en/params.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en/params.c
-> @@ -10,6 +10,9 @@
->  #include <net/page_pool/types.h>
->  #include <net/xdp_sock_drv.h>
->  
-> +#define MLX5_MPWRQ_MAX_LOG_WQE_SZ 18
-> +#define MLX5_REP_MPWRQ_MAX_LOG_WQE_SZ 17
-> +
->  static u8 mlx5e_mpwrq_min_page_shift(struct mlx5_core_dev *mdev)
->  {
->  	u8 min_page_shift = MLX5_CAP_GEN_2(mdev, log_min_mkey_entity_size);
-> @@ -103,18 +106,22 @@ u8 mlx5e_mpwrq_log_wqe_sz(struct mlx5_core_dev *mdev, u8 page_shift,
->  			  enum mlx5e_mpwrq_umr_mode umr_mode)
->  {
->  	u8 umr_entry_size = mlx5e_mpwrq_umr_entry_size(umr_mode);
-> -	u8 max_pages_per_wqe, max_log_mpwqe_size;
-> +	u8 max_pages_per_wqe, max_log_wqe_size_calc;
-> +	u8 max_log_wqe_size_cap;
->  	u16 max_wqe_size;
->  
->  	/* Keep in sync with MLX5_MPWRQ_MAX_PAGES_PER_WQE. */
->  	max_wqe_size = mlx5e_get_max_sq_aligned_wqebbs(mdev) * MLX5_SEND_WQE_BB;
->  	max_pages_per_wqe = ALIGN_DOWN(max_wqe_size - sizeof(struct mlx5e_umr_wqe),
->  				       MLX5_UMR_FLEX_ALIGNMENT) / umr_entry_size;
-> -	max_log_mpwqe_size = ilog2(max_pages_per_wqe) + page_shift;
-> +	max_log_wqe_size_calc = ilog2(max_pages_per_wqe) + page_shift;
-> +
-> +	WARN_ON_ONCE(max_log_wqe_size_calc < MLX5E_ORDER2_MAX_PACKET_MTU);
->  
-> -	WARN_ON_ONCE(max_log_mpwqe_size < MLX5E_ORDER2_MAX_PACKET_MTU);
-> +	max_log_wqe_size_cap = mlx5_core_is_ecpf(mdev) ?
-> +			   MLX5_REP_MPWRQ_MAX_LOG_WQE_SZ : MLX5_MPWRQ_MAX_LOG_WQE_SZ;
->  
-> -	return min_t(u8, max_log_mpwqe_size, MLX5_MPWRQ_MAX_LOG_WQE_SZ);
-> +	return min_t(u8, max_log_wqe_size_calc, max_log_wqe_size_cap);
+> It feels like the mmc-slot binding itself serves no real purpose.
 
-Changing the variable name looks like uneccessary complication, as it is
-still used for the same purpouse.
+It's designed to be reused, the goal was to facilitate migration of
+other mmc controllers bindings.
 
-I remember there were some patches to devlink for supporting changing
-the representor parameters. Is it sth different or you decided to only
-change the default value to fix the memory problem? (sorry, maybe I miss
-the devlink series).
+Neil
 
-Anyway, looks fine, thanks:
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+> 
+>>
+>> Something like:
+>> ========================================================================
+>> diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-
+>> sdio.yaml b/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-
+>> sdio.yaml
+>> index 022682a977c6..0d4d9ca6a8d9 100644
+>> --- a/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.yaml
+>> +++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.yaml
+>> @@ -60,6 +60,9 @@ patternProperties:
+>>          bus-width:
+>>            enum: [1, 4]
+>>
+>> +    required:
+>> +      - compatible
+>> +
+>>        unevaluatedProperties: false
+>>
+>> ========================================================================
+>>
+>> Conor, Is it right ?
+>>
+>> Neil
+>>
+>>>>
+>>>> Thanks,
+>>>> Neil
+>>>>
+>>>>>
+>>>>>     unevaluatedProperties: false
+>>>>>
+>>>>> ---
+>>>>> base-commit: 40b8e93e17bff4a4e0cc129e04f9fdf5daa5397e
+>>>>> change-id: 20241219-mmc-slot-0574889daea3
+>>>>>
+>>>>> Best regards,
+>>>>
+>>>
+>>>
+>>
+> 
+> 
 
->  }
->  
->  u8 mlx5e_mpwrq_pages_per_wqe(struct mlx5_core_dev *mdev, u8 page_shift,
-> -- 
-> 2.45.0
