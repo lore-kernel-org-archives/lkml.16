@@ -1,59 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA308264604;
-	Mon, 10 Feb 2025 22:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E7524E4B1
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739225272; cv=none; b=ml6FtKjqPSc20TaLvX+5RUPVUYoy4WrVnjDC4OnLJLKXqplJUHsGphiYe9hnLr/tjNtGCQP45JDCfvl8uSuRj9h6fQmaORbRZbBOTR6Y30TZg7QHTf9lYqVrfI2tSJBIHbr+PYfekQ4UXzHe09KSNYnua3kJYuk9nfOPTufxtmw=
+	t=1739225377; cv=none; b=Qesd/WJJVEBe84mE2QSPxk/gvowQsGGK39ZRLEf1CUw+nvucts4wLryJD4cIilR2AQhV1qCYPClK9Mmqutu9zzq4Aup5PEzhGtQZhk4NgWztCee6ZVr4a5Y8xJS0qj904iE4R0KVisaDdsh67cxVnjm33pJtpcNVOqAt6vb8HbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739225272; c=relaxed/simple;
-	bh=soGGYi5SZ7hfquIE86n6wxhLDKzRy/sjal53c1wfsY0=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=crzJh6qJ7dTnKaqz4b0yTJfeqazVRvyOMBXqSUp5erj8YueqfcbGl1WyWY3ZzUmGCC5zG//Nt6VJ/RXmiWaGL1csN7hPvbYL9V3dQjg4+cEt47EYnnGq9da3P99ZmHIr3AlDyhEl4ECTZjrrm/IaU+cqEIPseefQfNU7qr4tGAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kQIrr4TP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739225377; c=relaxed/simple;
+	bh=44AOn8KPG/5b/gwXWVMZM4o0cSu0C5gCOO/mytEsVzc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L6Nfu8VSCAlVE4W7gyi2cIVys0tfzsAr9MsL9DQgIF4J6EbULm12F9oZYXJQTqqi/2VZis6AFUXEhbPfZPV0z8C/8x54UV2TBG2vIaA1rNka2xYajvW1synGqxiY9NdUJPUAC/vuQlGsfik/p7dFM4VHDizLxG4HemJz1QfRsDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Er4k8Jgg; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kQIrr4TP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1F00C4CED1;
-	Mon, 10 Feb 2025 22:07:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739225272;
-	bh=soGGYi5SZ7hfquIE86n6wxhLDKzRy/sjal53c1wfsY0=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=kQIrr4TPbWfLCp09znKaOCMCRcXmAsnF6bsbBaRFkl9EQDQwQDEjMAA98sXrWr/hK
-	 t4al5X+2jM0+HVKP1cXr/YSu36GJ8IF0hF7BD7vKVPGVAoOFYNCUzn48K2uUz8ZWMV
-	 GueGQ6rWq8BEtYatNcVQ+GZntF6n+fdO8oKCcU9P54cmMIOqZflrfbD5LOpMCYx37L
-	 EXCE1bF4kdkfgo0/Yqmf0GWoQtyiRtTPcgHW7OEhUkW30U7abDpQWtVr/6jZCZ8E94
-	 fLOv3BG8kd2D7tdjy0CGyf+NrTWsAUn+5aG8d5urK8S5oo1io+ykfDu6Crn/e2ACuP
-	 Ge2Z+QtLTbRbQ==
-Message-ID: <a66c949345e9118b2ebbdca39e4962c5.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Er4k8Jgg"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5de6d412ee9so934a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:09:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739225374; x=1739830174; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=44AOn8KPG/5b/gwXWVMZM4o0cSu0C5gCOO/mytEsVzc=;
+        b=Er4k8Jggi+SM4CnJwm27bFFKeQkowgsaqOyOh89teRf+uRTV8W9l50Gr/9vDaBFO2l
+         DdtALmmisHwzd0PONwPMwil4vpdlJoTeTDFTI3ixQL7x7X8vLAV4839xH0GVspld/V+6
+         96JBHWoYyIJDLDlzGZC/6SyFOwuKXU6qjZY/YzEQ8WeXnGJ1AsmfW2qXHUaA2we5g0v/
+         ArIgVC/8Sq4RykAHj7LkOYAzsNPoLcj/bsq01O5TmO1a6pxI+7SI8q9/zDIrXXSR8D6Y
+         AZAXikH7tZA/LJrwUl9A5DHiVLl+THQrcU87unLFsk16627Gmr4dY3LrCGoj8FQzh2mc
+         KLnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739225374; x=1739830174;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=44AOn8KPG/5b/gwXWVMZM4o0cSu0C5gCOO/mytEsVzc=;
+        b=Z3VtAQYA+VCfHpKDb5SlkpfvAsKWkU0O28bvMExE8MPHuFKpTp+kaJGCmjcKugXPmR
+         2+HCrnvZ9nZNEXd8UGiZOWTV6mH2J4vZ929UQoLXiMnQBFbXXq5A7d+daoWHfiEhn77D
+         4JMo44x8cSTfhvvEJWRcLs6oN5VQdvrIsZDvHTtgdoyHjsNZUey/MMxmZA3PwEXaJ4vk
+         D/jM6lzdQ2au2GjndgrOEQR/TH01sSk4X1KCYxgQ5Gv8bk+GLb5M9V0C2ZiJNf8Gs9A9
+         gXsPHh0ZROFPWr/wTqUG7wE+zoqVtfoGSKZPdVtSkKotgVeHDNo6SI/HSzGsIF2ARKgI
+         hftQ==
+X-Gm-Message-State: AOJu0YyYA4qASzg5Z+7pCKtcYGEkcBAUwcMJQfXjDQi0a+fSvBND6oX2
+	xhdPH2AyLSBFEO2plQaB2Xq0DzOj1MYMRm3lH1AcPJOduWhd77TdZ136WjniZMkHhD+COwrSrwy
+	xWD/zn4F6DLPyJK8gemLc++Ohx+8+zkHlASq8
+X-Gm-Gg: ASbGncsfySo8gpCYlTbTC/YNSzBa8MC4OwaVUeSH+ztuxHYECNXtHBDpYuT3obGydqp
+	dCsklGhSFPA/foWkCSZIfHhUsO+0vtd3//D4h7jogw8FrcK6MuLG+MctqsTmL622AHGyLOEOVq1
+	JZJEdYbGl1UBwRFlKVG47tj78=
+X-Google-Smtp-Source: AGHT+IG6JmQxBrqAHiHQy9r7fd0aAn9Heiw/iaJpJbhcsh707Pq8kG+sl2h6STthD8Ujnt3Wdn5OEmJdDMQ5PMlBL9s=
+X-Received: by 2002:a50:aa93:0:b0:5dc:d08e:e128 with SMTP id
+ 4fb4d7f45d1cf-5dea05e7838mr1520a12.5.1739225373121; Mon, 10 Feb 2025 14:09:33
+ -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250114175143.81438-1-vschneid@redhat.com> <20250114175143.81438-30-vschneid@redhat.com>
+ <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
+ <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com> <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+In-Reply-To: <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+From: Jann Horn <jannh@google.com>
+Date: Mon, 10 Feb 2025 23:08:55 +0100
+X-Gm-Features: AWEUYZmtdNVDV_xq3vvo5TVQ7aaS79EFzdycTCfl72XGpztchND9QHjN9zcxWNo
+Message-ID: <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
+Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer flush_tlb_kernel_range()
+ targeting NOHZ_FULL CPUs
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
+	virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, 
+	bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>, 
+	Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov <alexey.amakhalov@broadcom.com>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	"Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Jason Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
+	Joel Fernandes <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>, 
+	Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>, 
+	Tomas Glozar <tglozar@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, 
+	Mel Gorman <mgorman@suse.de>, Kees Cook <kees@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@infradead.org>, 
+	Shuah Khan <shuah@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>, 
+	Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Yosry Ahmed <yosryahmed@google.com>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <Z6VBo51g54xAmelQ@cassiopeiae>
-References: <cover.1738832118.git.viresh.kumar@linaro.org> <c68081e18d939aefc7f6dac798df6b72e81bba4b.1738832118.git.viresh.kumar@linaro.org> <Z6ShsuLykigNscz8@pollux> <Z6SiiRubSXGInbgj@pollux> <0cd42d2d683ea057e6034978b02c7f84.sboyd@kernel.org> <Z6VBo51g54xAmelQ@cassiopeiae>
-Subject: Re: [PATCH V8 06/14] rust: Add bare minimal bindings for clk framework
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rafael J. Wysocki <rafael@kernel.org>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Michael Turquette <mturquette@baylibre.com>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Nishanth Menon <nm@ti.com>, rust-for-linux@vger.kernel.org, Manos Pitsidianakis <manos.pitsidianakis@linaro.org>, Erik Schilling <erik.schilling@linaro.org>, Alex =?utf-8?q?Benn=C3=A9e?= <alex.bennee@linaro.org>, Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-To: Danilo Krummrich <dakr@kernel.org>
-Date: Mon, 10 Feb 2025 14:07:49 -0800
-User-Agent: alot/0.12.dev1+gaa8c22fdeedb
 
-Quoting Danilo Krummrich (2025-02-06 15:11:31)
-> On Thu, Feb 06, 2025 at 12:05:59PM -0800, Stephen Boyd wrote:
->=20
-> > as most clk consumer operations bail out early in that case.
->=20
-> Most? Does that mean NULL isn't *always* valid?
+On Mon, Feb 10, 2025 at 7:36=E2=80=AFPM Valentin Schneider <vschneid@redhat=
+.com> wrote:
+> What if isolated CPUs unconditionally did a TLBi as late as possible in
+> the stack right before returning to userspace? This would mean that upon
+> re-entering the kernel, an isolated CPU's TLB wouldn't contain any kernel
+> range translation - with the exception of whatever lies between the
+> last-minute flush and the actual userspace entry, which should be feasibl=
+e
+> to vet? Then AFAICT there wouldn't be any work/flush to defer, the IPI
+> could be entirely silenced if it targets an isolated CPU.
 
-I'm hedging because the common clk framework is just one implementation
-of the clk.h API in the kernel. We still have a couple other
-implementations (sadly) where I haven't checked to see what they do if a
-NULL pointer is passed in. But NULL should always be a valid clk handle
-per the clk.h API documentation, so an implementation that fails at that
-is broken.
+Two issues with that:
+
+1. I think the "Common not Private" feature Will Deacon referred to is
+incompatible with this idea:
+<https://developer.arm.com/documentation/101811/0104/Address-spaces/Common-=
+not-Private>
+says "When the CnP bit is set, the software promises to use the ASIDs
+and VMIDs in the same way on all processors, which allows the TLB
+entries that are created by one processor to be used by another"
+
+2. It's wrong to assume that TLB entries are only populated for
+addresses you access - thanks to speculative execution, you have to
+assume that the CPU might be populating random TLB entries all over
+the place.
