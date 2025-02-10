@@ -1,125 +1,175 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84202528E9
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F982528E2
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739197413; cv=none; b=fydAX0srZoxVOAci0rXfaTf2A685tlbE/88FsVOX1fJnobPTlG6LysHrEvp0NS/U/ijJsaHNSVWQ3WHk3SuRz+j/u9JGivq1/bmm8zcj5tnsjptFitvK0ianJx0nb1bFjQQNZ0+W+Ft2rbQKgAwErzn+hiX3K5EXrVyeIUB0GFM=
+	t=1739197439; cv=none; b=A39enBv/C+7FXq12xpcplDEPvy0RrdFrdGzr9IweNiwC+dOWSBm5PRbYV7Lp1bbocMJNPXNuRCMTbwVMWG1cISbZWAcIxy0atQ7UIxezWbLuuIPmIXS8wx6EywdsoCYdJvcLSmQVo8urGo+InrpqSyU48XanxtAE6f4NWYZugRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739197413; c=relaxed/simple;
-	bh=FDKA7JM0WWX/iStFmB8HmoIikA4WkwllGlcdD0D6T7c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QPj3tVeIDPIO/ZFoHdkD2PjqzbtaZRxKSmCTHR6bnQ+fK8fVRGZ1Z1fXoCpdI4OKJfz7OZxTigB5IIvxen97wqphTywNSR8CszNgqRCNgQfY6dyUsgwmayoGKbtFAa1GhrO9HfKs+A4qrw/h9wZMFn4vseYlfg1jn0qeW8GhYKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UXwpM+UG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y31wsz+8; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1739197439; c=relaxed/simple;
+	bh=FOFUMpHzPOxV3uB+ByTnEVt/eFwYf3XxN/ebzOTG2G8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HqjMQCoQEiotsh3YjrxdcqkTz7oEQfaqVI3SiCCJcicfgVjHVnSsoZY3AF0R/PjoPqZUJSLPcwnILSs7JeFBEBnS86uiZP9bVnA2m1FJZuD95ThWpo1ZYmT8bg6EVV33Te3SDSSxF/HJPJc697ktUzJqkJQ39swG7+22E+0irdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EhbbfVEn; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UXwpM+UG";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y31wsz+8"
-Date: Mon, 10 Feb 2025 15:23:27 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739197409;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z9ihDNYI+zCbf0NSoNI9c/FdnZzk61DWASBxjVSt6UM=;
-	b=UXwpM+UGp5qjzqj1voR9MR6/yauR9Llt5V2fxsn/AkztJ7hHK4f3VMqPXIU/l8/1rq77yd
-	wOCKfd3fwE6jSZvxZyPJK0jvxUHyThQED6Sp9GHawBtU/AcYI+QaGXMjjZ8qy3KKKYcqEW
-	ZknWvJkTegstEEYOYYSlrh2JsguBBfdc0vC+wwF457yqYn+EfgZCW58ZYemyQrhFRXabxV
-	8Xxg3WhICEJi+gQaMmCakoUzTrWDUtnaxcXHYOAEvzAg8AcXlV5hVj4gN3FUVFwVRAjSX1
-	hTzC5cDetCLWBmgm8+EtGQsp2KjtUUlyO05Mi4Km/r9zb9GHkQuIvFfnaOcyTQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739197409;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z9ihDNYI+zCbf0NSoNI9c/FdnZzk61DWASBxjVSt6UM=;
-	b=Y31wsz+8FgMeY5YVZLiMPgwoBy7PbtqoeifYuoiMjBYb+lLwumRrX2ocY65RNcp34aZTjU
-	R304GRy80KbeWkBA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	Ben Segall <bsegall@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Will Deacon <will@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Naveen N Rao <naveen@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v3 5/9] powerpc: Use preempt_model_str().
-Message-ID: <20250210142327.bCujH28L@linutronix.de>
-References: <20250203141632.440554-1-bigeasy@linutronix.de>
- <20250203141632.440554-6-bigeasy@linutronix.de>
- <65c6f60d-bb52-48bd-a02c-87ffd2a915d4@csgroup.eu>
- <20250203160103.9DikC9FJ@linutronix.de>
- <51999b8e-61c0-48b7-b744-c83d39e7f311@csgroup.eu>
- <20250204082223.6iNyq_KR@linutronix.de>
- <7b51f7de-8e4b-4766-85ca-dee24832c693@linux.ibm.com>
- <20250210105949.b9PKqiw7@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EhbbfVEn"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6f4bc408e49so34403447b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 06:23:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739197436; x=1739802236; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ae3lwIG1bNMfgLcb9UOChi6PzxvbhnZHhBNXR+QOsdw=;
+        b=EhbbfVEn67+BLY6WS/mEpLXrReYZazQqASc1yrWnH57j9bYDYxMyDa1nEcB/AjZBt6
+         fQgqOuJCdMdr06CmwPptbR51s+fow+EqxzF+QYjuQq9hUxgKGxCnpiKrFQGFMjRCyEZH
+         eK04H5urIZpzoC7fPdrlxsobCzshD5Yb4sSlQU1jH0B0ZQWuSFnjk22fOdVPTDEWCpAc
+         FJT7NOOaPVvHZRzv9rmIeEanMN8MtWMqaSk/n8H+kzvzqf3KSxBnJXXGiMT8EZsCEuhq
+         lIoINpp4P9Z8z7ZNyZLBxKBJsSI2mMr8+jfrqwPOIRqaQD6y3B+qT2au1xGYpL39nbBl
+         TM8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739197436; x=1739802236;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ae3lwIG1bNMfgLcb9UOChi6PzxvbhnZHhBNXR+QOsdw=;
+        b=YSrJkKWZDD8xJGjKLnbl/3OQ+CfNFiBI+X88o0VykxqUFQQZ6uM/0oBx0wgyX2BynX
+         D+B6fg6+DORkzWytyI1HEZBxSoK3Fn2FIGJ8ThrHDtiMpcfgZ1DufoClI8poBwhJiUYQ
+         AMEUc6rskMVhfC4zbzfNwMCZtdWASTY7ro/hlaGMGpT0vtlzpH+9AY8deKtmMYT05uhm
+         7bqGudEyP3yzmagrhhTWQg/k+RgVc85L9yTEgTpPKVcylMnpBppkCzcaR/9QMofkTJMX
+         QmGgdmjuixzBqy0w2aCFahlrRTTskHeP4pBfORMNXHiSRypK67+lOISH7gK1VKNpk02w
+         iKNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSlCW066rUfEMXvUlwqTUj7l40Q/pA8ZTBkltrGb+UNlRIxxsn6y0e3gggACtCceXqVswfF/HSTC9Fb4U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwO8g0I9nBu0PebANKmmXcbw1UwaPKV8KW/ewoj+gGsUCCLUfER
+	o50mtlCp8s0cCVRRYeoUZJLgy2rYFQAtYYE7vB/rzyrooHr6gxdHiSSy/k2pN6lSiDbWw58RynU
+	1dBuVCmOLlol/KbpSVq2vZnpt75w4b4km/KDlEg==
+X-Gm-Gg: ASbGncvIWnbyAM0BUYKk7SocKudbrEbZgt1mPotas8J3CfMcxnuzy5sS83bO1M9tWqf
+	rLPmCHz46Xh23K7YvMC87QABXwYIlfK6T/7Y95rQXKonzL2c8isWDqyLd5rDwOZ5izWo9fKkswC
+	LjH/B22VJnu/Q=
+X-Google-Smtp-Source: AGHT+IE0g27FEGOeRAZwGb7S3MgR4LXpDdhrkSZoSOq5U1jJjfFXRfvfAEBsqb9Cm3IID24zNyOYw0dpb/wBuLQLVBA=
+X-Received: by 2002:a05:690c:4513:b0:6f7:598d:34a3 with SMTP id
+ 00721157ae682-6f9b2349b17mr123277977b3.0.1739197436560; Mon, 10 Feb 2025
+ 06:23:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250210105949.b9PKqiw7@linutronix.de>
+References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
+ <20250206-hotplug-drm-bridge-v6-14-9d6f2c9c3058@bootlin.com>
+ <20250207-ingenious-daffodil-dugong-51be57@houat> <ucttjaf3trkgtpvhnsj7xfsybhnoi4qqow5ucwghlggivbagy7@gngjhbtu73lb>
+ <20250210-bold-steel-collie-cecbad@houat>
+In-Reply-To: <20250210-bold-steel-collie-cecbad@houat>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 10 Feb 2025 16:23:44 +0200
+X-Gm-Features: AWEUYZl00UgPkDK5peSLElXsBxEbhr7D2kNasc0K5iG6VfIY6yez4cOHp2_9LzA
+Message-ID: <CAA8EJppyDiAeH8bm-rdCUsGoyVOrp=4AvrYLJ-=5BTLtmnP11g@mail.gmail.com>
+Subject: Re: [PATCH v6 14/26] drm/bridge: add support for refcounted DRM bridges
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>, Simona Vetter <simona@ffwll.ch>, 
+	Inki Dae <inki.dae@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Paul Kocialkowski <contact@paulk.fr>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, =?UTF-8?Q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, 
+	Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2025-02-10 11:59:50 [+0100], To Shrikanth Hegde wrote:
-> Thank you for noticing. I did remove it on other architectures, I
-> somehow missed it here. Will remove it from from the arch code.
+On Mon, 10 Feb 2025 at 14:31, Maxime Ripard <mripard@kernel.org> wrote:
+>
+> On Fri, Feb 07, 2025 at 09:54:06PM +0200, Dmitry Baryshkov wrote:
+> > On Fri, Feb 07, 2025 at 12:47:51PM +0100, Maxime Ripard wrote:
+> > > Hi,
+> > >
+> > > On Thu, Feb 06, 2025 at 07:14:29PM +0100, Luca Ceresoli wrote:
+> > > > DRM bridges are currently considered as a fixed element of a DRM card, and
+> > > > thus their lifetime is assumed to extend for as long as the card
+> > > > exists. New use cases, such as hot-pluggable hardware with video bridges,
+> > > > require DRM bridges to be added and removed to a DRM card without tearing
+> > > > the card down. This is possible for connectors already (used by DP MST), so
+> > > > add this possibility to DRM bridges as well.
+> > > >
+> > > > Implementation is based on drm_connector_init() as far as it makes sense,
+> > > > and differs when it doesn't. A difference is that bridges are not exposed
+> > > > to userspace, hence struct drm_bridge does not embed a struct
+> > > > drm_mode_object which would provide the refcount. Instead we add to struct
+> > > > drm_bridge a refcount field (we don't need other struct drm_mode_object
+> > > > fields here) and instead of using the drm_mode_object_*() functions we
+> > > > reimplement from those functions the few lines that drm_bridge needs for
+> > > > refcounting.
+> > > >
+> > > > Also add a new devm_drm_bridge_alloc() macro to allocate a new refcounted
+> > > > bridge.
+> > > >
+> > > > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> > >
+> > > So, a couple of general comments:
+> > >
+> > > - I've said it a couple of times already, but I really think you're
+> > >   making it harder than necessary for you here. This (and only this!)
+> > >   should be the very first series you should be pushing. The rest can
+> > >   only ever work if that work goes through, and it's already hard enough
+> > >   as it is. So, split that patch into a series of its own, get that
+> > >   merged, and then we will be able to deal with panels conversion and
+> > >   whatever. That's even more true with panels since there's ongoing work
+> > >   that will make it easier for you too. So the best thing here is
+> > >   probably to wait.
+> >
+> > Luca and I had a quick chat on this during FOSDEM. I really think that
+> > panel (part of the) series can go in first as it fixes a very well known
+> > bug _and_ allows a pretty good cleanup to a whole set of drivers.
+>
+> I don't necessarily disagree on principle, but if you state that it can
+> get first, and fixes a known problem (which one?), then it should be a
+> separate, standalone, series.
 
-This is what I have for powerpc now. I'm going to repost the series,
-currently waiting for arm/x86.
+A problem of panel bridges having the wrong lifetime because of devm_
+attachment to a wrong device and so either being kept for too long or
+being destroyed too early.
 
--------->8-----------
+>
+> Ever-expanding features are bad for both the reviewers and the
+> contributors, even more so when the discussion happens off-list.
+>
+> > With all those panel / bridge wrappers gone we should be able to see a
+> > clearer picture of what individual drivers are doing. In other words,
+> > which memory and which code actually hosts and uses internal
+> > 'next_bridge' reference.
+> >
+> > > - This patch really needs to be split into several patches, something
+> > >   along the lines of:
+> > >
+> > >   + Creating devm_drm_bridge_alloc()
+> > >   + Adding refcounting
+> > >   + Taking the references in all the needed places
+> > >   + Converting a bunch of drivers
+> >
+> > The last two parts seem troublematic to me, but, I must admit, I didn't
+> > spend so much time reviewing all drm_bridge usage patterns.
+>
+> Why? the third one is already done by that patch, the fourth can
+> relatively easily be done using coccinelle.
 
-Subject: [PATCH] powerpc: Rely on generic printing of preemption model.
+I have doubts about cocci. It doesn't have a way to know, what is the
+lifetime of the references to the reference-holding memory. Maybe I'm
+missing a point there.
 
-After the first printk in __die() there is show_regs() ->
-show_regs_print_info() which prints the current
-preemption model.
-
-Remove the preempion model from the arch code.
-
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Naveen N Rao <naveen@kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org
-Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- arch/powerpc/kernel/traps.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
-index edf5cabe5dfdb..cb8e9357383e9 100644
---- a/arch/powerpc/kernel/traps.c
-+++ b/arch/powerpc/kernel/traps.c
-@@ -263,10 +263,9 @@ static int __die(const char *str, struct pt_regs *regs, long err)
- {
- 	printk("Oops: %s, sig: %ld [#%d]\n", str, err, ++die_counter);
- 
--	printk("%s PAGE_SIZE=%luK%s%s%s%s%s%s %s\n",
-+	printk("%s PAGE_SIZE=%luK%s %s%s%s%s %s\n",
- 	       IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
- 	       PAGE_SIZE / 1024, get_mmu_str(),
--	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
- 	       IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
- 	       IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=" __stringify(NR_CPUS)) : "",
- 	       debug_pagealloc_enabled() ? " DEBUG_PAGEALLOC" : "",
 -- 
-2.47.2
-
+With best wishes
+Dmitry
