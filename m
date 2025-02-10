@@ -1,150 +1,261 @@
-Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E7922FF46;
-	Mon, 10 Feb 2025 13:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2458717BB6
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739194869; cv=none; b=a07kPEHxylAFwW0SN/6FDY6nG35+ezaoXbCHPVYwzsUEfIapDDIv1KXMA6VkFsNEUmKP6WHro+T4/FwxvPWgwHPmwBOOA42vRt1CfAYh7GRGQYzSresF/KjxOlkxPmWF/nYFx7vqYOmh+CUyZYUcNZXFzZKJJMF0ixDYfz3rJo4=
+	t=1739195013; cv=none; b=o4jakDqWBgpl0n5CSfgXxYyC3Pp03sc1aR1eFKyp6/WJcsYaO7iFA4wzNQ2teSl/rikWj8yWnIp+9QDLd9IKA+1Ua2II6RlJKMaxc6aujyjeO9atuSrs8ib/a3SWm+lVdsx1TjhNVtSTTRfThqcLlBZlZoENunlj2Neo4uGwJQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739194869; c=relaxed/simple;
-	bh=AFjHQoTaIvtANhU1liah60ozR1dUibI/E3nIVdzWrGs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XN3YMoy9qs/cyX6P8xGRkUK+fYpZmcapInSocuela+a4/ffiSUYp8W3lFFnlLzmi7pao/C+XKdNbLWcAE96uK3hR/JCxrzhFI4/RpKsFWh2lQCs2m6mXFX2FxznLkHpjsZAYyzCrh3imMTl/CbArV8+66xIsaWvz45a7dU5KhGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nO5FdiJ+; arc=none smtp.client-ip=217.70.178.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nO5FdiJ+"
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::228])
-	by mslow3.mail.gandi.net (Postfix) with ESMTP id DD2635827C9;
-	Mon, 10 Feb 2025 13:29:55 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9215F4444B;
-	Mon, 10 Feb 2025 13:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739194188;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1GF2t3R1YAxOaP/I6N9EoSBBP5RdZCf7+8UhwSbU9Uo=;
-	b=nO5FdiJ+j7KQHbJp1aky5COAJFt7gP2C+Qedw+ueIULuhDoIYq1CA8FNaLOmzbZyEVZW7y
-	oAYmY/yHyZ0BHimFRhSlqfDK2NCS/0lxEVQaZqNI5Y7k/FwiqTsVUOxuKs77lW1WCgBT/a
-	WFW2vqbZdEag8zfI6t1dstqschrKBVSyMgTtG1phsGEGsNsiIVRpf6kc7Y6LUv6aleDXqh
-	ZbaYfOU0lHjQiEnDQcKs6H4hX41J0bzgKEvWJjZIOQqOWFZCJYA3czVdkvML95Ozz6Wa8x
-	1B7hR1msLRWYufscJicTWBbPOrK5ixCZN5Ezt6aa/FGli1bnOcnFl7Eh3MKGMw==
-Date: Mon, 10 Feb 2025 14:29:43 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Dave Stevenson <dave.stevenson@raspberrypi.com>,
- =?UTF-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Raspberry Pi Kernel
- Maintenance <kernel-list@raspberrypi.com>, Marek Vasut <marex@denx.de>,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Louis Chauvet <louis.chauvet@bootlin.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v5 4/4] drm: bridge: ti-sn65dsi83: Add error recovery
- mechanism
-Message-ID: <20250210142943.478c3066@bootlin.com>
-In-Reply-To: <6136272.lOV4Wx5bFT@steina-w>
-References: <20250203161607.223731-1-herve.codina@bootlin.com>
-	<8756830.T7Z3S40VBb@steina-w>
-	<20250207190816.2002d313@bootlin.com>
-	<6136272.lOV4Wx5bFT@steina-w>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1739195013; c=relaxed/simple;
+	bh=B9RcPANSN+ctBiEjVkkRMrzvUOf3OkkUxX1JyFg5IZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I8pLazeTOF9F4KSIFza4+tTnZCQzi7u0Q7bHJgrV/diyFUqx2jKg9juPynT57AQ5KegIQoNyOYAE4f2jEpe3yejoKGRmBf8FRTMya9ffrY9b8elsWdQic0MStzx9dZZfAdtlQ1iWfiTGGNnrI0jSX8GL18kk8hkYTjspCngvu1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC0261BA8
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 05:43:51 -0800 (PST)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D64EA3F58B
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 05:43:29 -0800 (PST)
+Date: Mon, 10 Feb 2025 13:43:17 +0000
+From: Liviu Dudau <liviu.dudau@arm.com>
+To: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: =?utf-8?Q?Adri=C3=A1n?= Larumbe <adrian.larumbe@collabora.com>,
+	Steven Price <steven.price@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Mihail Atanassov <mihail.atanassov@arm.com>, kernel@collabora.com,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] drm/panthor: Avoid sleep locking in the internal BO
+ size path
+Message-ID: <Z6oCdebq2ftGaZdq@e110455-lin.cambridge.arm.com>
+References: <20250210124203.124191-1-adrian.larumbe@collabora.com>
+ <20250210124203.124191-2-adrian.larumbe@collabora.com>
+ <20250210141807.064ccacf@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefkedukecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvhfeljedtfedtjeevffegtddutdeghfettdduhfeuhfdttdffieeuiefgvdfhvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvhedprhgtphhtthhopegrlhgvgigrnhguvghrrdhsthgvihhnsegvfidrthhqqdhgrhhouhhprdgtohhmpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhto
- hepnfgruhhrvghnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehjohhnrghssehkfihisghoohdrshgvpdhrtghpthhtohepjhgvrhhnvghjrdhskhhrrggsvggtsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
-X-GND-Sasl: herve.codina@bootlin.com
+In-Reply-To: <20250210141807.064ccacf@collabora.com>
 
-Hi Alexander,
-
-On Mon, 10 Feb 2025 11:42:09 +0100
-Alexander Stein <alexander.stein@ew.tq-group.com> wrote:
-
-> Hi Herve,
+On Mon, Feb 10, 2025 at 02:18:07PM +0100, Boris Brezillon wrote:
+> On Mon, 10 Feb 2025 12:42:00 +0000
+> Adrián Larumbe <adrian.larumbe@collabora.com> wrote:
 > 
-> Am Freitag, 7. Februar 2025, 19:08:16 CET schrieb Herve Codina:
-> > Hi Alexander,
+> > A previous commit dealt with a similar situation, whereby upon enabling
+> > some mutex debug features, a warning about sleep muteces being used in a
+> 
+>                                                    ^ mutexes
+>  
+> > /proc file read atomic context was being triggered.
 > > 
-> > On Thu, 06 Feb 2025 16:39:09 +0100
-> > Alexander Stein <alexander.stein@ew.tq-group.com> wrote:
-> >   
-> > > Hi Herve,
-> > > 
-> > > Am Donnerstag, 6. Februar 2025, 16:20:48 CET schrieb Herve Codina:  
-> > > > Hi Alexander,
-> > > > 
-> > > > On Thu, 06 Feb 2025 15:38:42 +0100
-> > > > Alexander Stein <alexander.stein@ew.tq-group.com> wrote:
-> > > > 
-> > > > ...    
-> > > > > With interrupt configured I got the following stack trace upon
-> > > > > reboot/poweroff:
-> > > > > 
-> > > > > [   91.317264] sn65dsi83 2-002d: reset the pipe
-> > > > > [   91.344093] Unable to handle ke
-> > > > > ** replaying previous printk message **
-> > > > > [   91.344093] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000    
-> > > > ...
-> > > > 
-> > > > Ouch :(
-> > > > 
-> > > > One question to help me investigating:
-> > > > Do you have the issue at init/probe or when you start to display graphics?    
-> > > 
-> > > This is during shutdown/poweroff. I assume that regmap_reg() in
-> > > sn65dsi83_handle_errors() fails and because of that reset_work is scheduled.
-> > >   
+> > Because in this case replacing the heap mutex with a spinlock isn't
+> > feasible, the fdinfo handler no longer traverses the list of heaps for
+> > every single VM associated with an open DRM file. Instad, when a new heap
+> > chunk is allocated, its size is accumulated into a VM-wide tally, which
+> > also makes the atomic context code path somewhat faster.
 > > 
-> > Found the issue.
+> > Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+> > Fixes: 3e2c8c718567 ("drm/panthor: Expose size of driver internal BO's over fdinfo")
+> > ---
+> >  drivers/gpu/drm/panthor/panthor_heap.c | 38 ++++++++------------------
+> >  drivers/gpu/drm/panthor/panthor_heap.h |  2 --
+> >  drivers/gpu/drm/panthor/panthor_mmu.c  | 18 +++++++-----
+> >  drivers/gpu/drm/panthor/panthor_mmu.h  |  1 +
+> >  4 files changed, 23 insertions(+), 36 deletions(-)
 > > 
-> > Can you give me following information so that I can validate what I
-> > understood:
-> >   - Is your interrupt line connected directly to the SoC?  
+> > diff --git a/drivers/gpu/drm/panthor/panthor_heap.c b/drivers/gpu/drm/panthor/panthor_heap.c
+> > index db0285ce5812..686f209f5b09 100644
+> > --- a/drivers/gpu/drm/panthor/panthor_heap.c
+> > +++ b/drivers/gpu/drm/panthor/panthor_heap.c
+> > @@ -127,6 +127,8 @@ static void panthor_free_heap_chunk(struct panthor_vm *vm,
+> >  	heap->chunk_count--;
+> >  	mutex_unlock(&heap->lock);
+> >  
+> > +	panthor_vm_heaps_accumulate(vm, -heap->chunk_size);
+> > +
+> >  	panthor_kernel_bo_destroy(chunk->bo);
+> >  	kfree(chunk);
+> >  }
+> > @@ -180,6 +182,8 @@ static int panthor_alloc_heap_chunk(struct panthor_device *ptdev,
+> >  	heap->chunk_count++;
+> >  	mutex_unlock(&heap->lock);
+> >  
+> > +	panthor_vm_heaps_accumulate(vm, heap->chunk_size);
+> > +
+> >  	return 0;
+> >  
+> >  err_destroy_bo:
+> > @@ -389,6 +393,7 @@ int panthor_heap_return_chunk(struct panthor_heap_pool *pool,
+> >  			removed = chunk;
+> >  			list_del(&chunk->node);
+> >  			heap->chunk_count--;
+> > +			panthor_vm_heaps_accumulate(chunk->bo->vm, -heap->chunk_size);
+> >  			break;
+> >  		}
+> >  	}
+> > @@ -560,6 +565,8 @@ panthor_heap_pool_create(struct panthor_device *ptdev, struct panthor_vm *vm)
+> >  	if (ret)
+> >  		goto err_destroy_pool;
+> >  
+> > +	panthor_vm_heaps_accumulate(vm, pool->gpu_contexts->obj->size);
+> > +
+> >  	return pool;
+> >  
+> >  err_destroy_pool:
+> > @@ -594,8 +601,11 @@ void panthor_heap_pool_destroy(struct panthor_heap_pool *pool)
+> >  	xa_for_each(&pool->xa, i, heap)
+> >  		drm_WARN_ON(&pool->ptdev->base, panthor_heap_destroy_locked(pool, i));
+> >  
+> > -	if (!IS_ERR_OR_NULL(pool->gpu_contexts))
+> > +	if (!IS_ERR_OR_NULL(pool->gpu_contexts)) {
+> > +		panthor_vm_heaps_accumulate(pool->gpu_contexts->vm,
+> > +					    -pool->gpu_contexts->obj->size);
+> >  		panthor_kernel_bo_destroy(pool->gpu_contexts);
+> > +	}
+> >  
+> >  	/* Reflects the fact the pool has been destroyed. */
+> >  	pool->vm = NULL;
+> > @@ -603,29 +613,3 @@ void panthor_heap_pool_destroy(struct panthor_heap_pool *pool)
+> >  
+> >  	panthor_heap_pool_put(pool);
+> >  }
+> > -
+> > -/**
+> > - * panthor_heap_pool_size() - Calculate size of all chunks across all heaps in a pool
+> > - * @pool: Pool whose total chunk size to calculate.
+> > - *
+> > - * This function adds the size of all heap chunks across all heaps in the
+> > - * argument pool. It also adds the size of the gpu contexts kernel bo.
+> > - * It is meant to be used by fdinfo for displaying the size of internal
+> > - * driver BO's that aren't exposed to userspace through a GEM handle.
+> > - *
+> > - */
+> > -size_t panthor_heap_pool_size(struct panthor_heap_pool *pool)
+> > -{
+> > -	struct panthor_heap *heap;
+> > -	unsigned long i;
+> > -	size_t size = 0;
+> > -
+> > -	down_read(&pool->lock);
+> > -	xa_for_each(&pool->xa, i, heap)
+> > -		size += heap->chunk_size * heap->chunk_count;
+> > -	up_read(&pool->lock);
+> > -
+> > -	size += pool->gpu_contexts->obj->size;
+> > -
+> > -	return size;
+> > -}
+> > diff --git a/drivers/gpu/drm/panthor/panthor_heap.h b/drivers/gpu/drm/panthor/panthor_heap.h
+> > index e3358d4e8edb..25a5f2bba445 100644
+> > --- a/drivers/gpu/drm/panthor/panthor_heap.h
+> > +++ b/drivers/gpu/drm/panthor/panthor_heap.h
+> > @@ -27,8 +27,6 @@ struct panthor_heap_pool *
+> >  panthor_heap_pool_get(struct panthor_heap_pool *pool);
+> >  void panthor_heap_pool_put(struct panthor_heap_pool *pool);
+> >  
+> > -size_t panthor_heap_pool_size(struct panthor_heap_pool *pool);
+> > -
+> >  int panthor_heap_grow(struct panthor_heap_pool *pool,
+> >  		      u64 heap_gpu_va,
+> >  		      u32 renderpasses_in_flight,
+> > diff --git a/drivers/gpu/drm/panthor/panthor_mmu.c b/drivers/gpu/drm/panthor/panthor_mmu.c
+> > index 0a4e352b5505..aaad1a560805 100644
+> > --- a/drivers/gpu/drm/panthor/panthor_mmu.c
+> > +++ b/drivers/gpu/drm/panthor/panthor_mmu.c
+> > @@ -345,6 +345,10 @@ struct panthor_vm {
+> >  
+> >  		/** @heaps.lock: Lock used to protect access to @pool. */
+> >  		struct mutex lock;
+> > +
+> > +		/** @heaps.size: Size of all chunks across all heaps in the pool. */
+> > +		ssize_t size;
 > 
-> No, unfortunately not. It's connected to a GPIO expander, which in turn
-> delivers an IRQ to the SoC. In between the bridge and the expander is a
-> buffer for voltage switch (1V8 -> 3V3).
+> Let's put that into an fdinfo struct.
 > 
-> >   - Is there any pullup/pulldown on your interrupt line?  
+> > +
 > 
-> As far a I can tell, there is no pullup/pulldown on the IRQ line to
-> the buffer.
+> Drop the extra blank-line.
 > 
-> >   - In your devicetree what is the configuration used for this interrupt in
-> >     terms of level or edge.  
+> >  	} heaps;
+> >  
+> >  	/** @node: Used to insert the VM in the panthor_mmu::vm::list. */
+> > @@ -1539,6 +1543,7 @@ static void panthor_vm_destroy(struct panthor_vm *vm)
+> >  	mutex_lock(&vm->heaps.lock);
+> >  	panthor_heap_pool_destroy(vm->heaps.pool);
+> >  	vm->heaps.pool = NULL;
+> > +	vm->heaps.size = 0;
+> >  	mutex_unlock(&vm->heaps.lock);
+> >  
+> >  	drm_WARN_ON(&vm->ptdev->base,
+> > @@ -1963,13 +1968,7 @@ void panthor_vm_heaps_sizes(struct panthor_file *pfile, struct drm_memory_stats
+> >  
+> >  	xa_lock(&pfile->vms->xa);
+> >  	xa_for_each(&pfile->vms->xa, i, vm) {
+> > -		size_t size = 0;
+> > -
+> > -		mutex_lock(&vm->heaps.lock);
+> > -		if (vm->heaps.pool)
+> > -			size = panthor_heap_pool_size(vm->heaps.pool);
+> > -		mutex_unlock(&vm->heaps.lock);
+> > -
+> > +		size_t size = vm->heaps.size;
+> >  		stats->resident += size;
+> >  		if (vm->as.id >= 0)
+> >  			stats->active += size;
+> > @@ -1977,6 +1976,11 @@ void panthor_vm_heaps_sizes(struct panthor_file *pfile, struct drm_memory_stats
+> >  	xa_unlock(&pfile->vms->xa);
+> >  }
+> >  
+> > +void panthor_vm_heaps_accumulate(struct panthor_vm *vm, ssize_t acc)
+> > +{
 > 
-> As this line is connected to an expander (pca9555) only edge triggered
-> interrupts are supported.
-> 
-> > Anyway, I will send a fix in the next iteration.  
-> 
+> Either there's some lock protecting this operation and we want a
+> lockdep_assert_held(), or we need to make it an atomic operation (and
+> make the size an atomic_t) to avoid races.
 
-Thanks for all those details.
-
-I've just sent a new iteration:
-  https://lore.kernel.org/all/20250210132620.42263-1-herve.codina@bootlin.com/
-
-Can you test it on your side?
+If Adrián moves the call site in panthor_{alloc,free}_heap_chunk() before he drops the heap->lock,
+would that be sufficient? Pool create and destroy are hopefully race-free and panthor_heap_return_chunk()
+should be also safe.
 
 Best regards,
-Hervé
+Liviu
+
+> 
+> > +	vm->heaps.size += acc;
+> > +}
+> > +
+> >  static u64 mair_to_memattr(u64 mair, bool coherent)
+> >  {
+> >  	u64 memattr = 0;
+> > diff --git a/drivers/gpu/drm/panthor/panthor_mmu.h b/drivers/gpu/drm/panthor/panthor_mmu.h
+> > index fc274637114e..b6686896f8ef 100644
+> > --- a/drivers/gpu/drm/panthor/panthor_mmu.h
+> > +++ b/drivers/gpu/drm/panthor/panthor_mmu.h
+> > @@ -39,6 +39,7 @@ struct panthor_heap_pool *
+> >  panthor_vm_get_heap_pool(struct panthor_vm *vm, bool create);
+> >  
+> >  void panthor_vm_heaps_sizes(struct panthor_file *pfile, struct drm_memory_stats *stats);
+> > +void panthor_vm_heaps_accumulate(struct panthor_vm *vm, ssize_t acc);
+> >  
+> >  struct panthor_vm *panthor_vm_get(struct panthor_vm *vm);
+> >  void panthor_vm_put(struct panthor_vm *vm);
+> 
+
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
