@@ -1,64 +1,71 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C2B25E44F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDAD1A315A
 	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739214605; cv=none; b=mfeUDQ45DDEv4Jl6AA9LZ44JrMmc9+9+l6DCfmXPxwEaWpE8lgEahRFl/BNXTFJ6pzyIgUP5eFXenaCQlx3m5Qkfvrm2LmpElsQ7Ow3jcEdgpBJGuW3OHtHi/4AGUaDD6CsEYYGgnTJSTr8foxDYp2o0LVIJ2WdliWl/GAwadx8=
+	t=1739214605; cv=none; b=JdUkkgeJkn/uStltLHlJSq9u7xdpP1+p2scxNbTDGf2wWm0W8u8BuPvnlS8k//WeTkxTJkvfmyjx30MBr6DrUpOy2wHYof+Wj7lRQukDegCBLqO1eePnb5VUkE3QmY5F+U/lK+sTbHK5EJi0kQs5fOrp6zPBVA2k2wfVE/sjCEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739214605; c=relaxed/simple;
-	bh=CYo3UFbDzM8ZMZrElug1khaiQNjus0j78zyH9dROJUw=;
+	bh=WVIefuTmZsO3vnxnW8tGU+cfloC8eJKmUNwKMSIntII=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fYvFSRV96D1lSegZu6GET6nKwjQXsYhfmjV3sk996WoEfwTuZaJ2gnAo8EWORh9v5dpLaBC5xZvEasKEjGv/67D8AHsT7UL3XEkn6CIgGF7lI6vn9OBGWn/cvJsn81b+QT5KrfBJnJ4vMcG0ZX3OsRqZv/+c1S3+4TylbV86bVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=iuum56RK; arc=none smtp.client-ip=209.85.160.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 In-Reply-To:Content-Type; b=X1RcL7ryOmOxojjzDUppQc8fNbDADiP0G/1US9nlGjTGAHwWzZWMpInMQOKrTa1nCQHbprecxMW+scc5zskqwIj3Dx0ilFJjyU1/ZuEkJJe2i3KWJxGam5PQ7ejmj490lNFBd2NcXQufpMEZ9SLunAf4v8x9jBZXyEciEjGqmnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WFRBmUVh; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="iuum56RK"
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2b89114494aso662339fac.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:10:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739214602; x=1739819402; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9vsAtouGNhuNZjNhxNxCI7WHMHLo2qB21REbxiQgCzo=;
-        b=iuum56RK6V7l3nyAAZ/YZBbyPArS5UaCDXYrqlKcJULBMh80IxG9mD6QHvZSUnzLCc
-         AYbCFf73DttoMvhiOxGp1zNPodJ/Rurop7+J0A7wGg1TqjDTl/nlTJ2vwelbdrBc4vk5
-         UAIA6MxcBRQGm9nOkyOvL9elvIU7v9L6/z3DkBX3oSzA/KT8pil4WWeoVFRKvcr6BHbt
-         mLSvnoqYFnxMHVHOBrMuK0XR4IQxS/ISvlkzk232MPYDYOLRrodfmTLDFpbaR1anai/J
-         K/LX7OlTi2gbuEHgR+jbmJsRb8t6+GvTnP6Hftw563w2f6XUJLyvZ8A3WHvbMCYbxupW
-         M1Cg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WFRBmUVh"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AIH57M026431
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:10:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	TjMLD9p5F/cttkJ4cOStWe5w8h70dZJC5rq8uWL15pc=; b=WFRBmUVh2jI/FRuS
+	0ZHdDAmBpVta3L4prC9YoNmxxm+sLFrsirDH21c0ywidsJLrVHt5PUuXTc0EGsiI
+	pwrRqykVRDE1cr1I2qkMKVxh4BrPhcvaa+d9r69iTTKT3nTIXLWinuG+zRvUiaxx
+	Yre+vTyiK6xi9iOc+IQledXefACiBkZ437oQTiBCItxP6rh0JYpfA5UFhZmuSCG0
+	ivhp+ndHLCQYYO4UGnjOfjs8zef1T2zYThRzjQeOE9LJWLg+cm9OsRhADXCMdmUZ
+	5L7G9oYb93hrVFRAxZlKBdrfD502M50nCpiL6VMEZOcYG+a+rPnuJxyRmPa0PEJU
+	RFrJGw==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0esdduq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:10:02 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e448963aafso9941396d6.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:10:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739214602; x=1739819402;
-        h=content-transfer-encoding:in-reply-to:content-language:from
+        d=1e100.net; s=20230601; t=1739214601; x=1739819401;
+        h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9vsAtouGNhuNZjNhxNxCI7WHMHLo2qB21REbxiQgCzo=;
-        b=a6R7kVDZlpEiMG12EaoXe5nceBzblqwa0LhRf/S3aKVR2QyNCuw/aFmoXR1093P1oe
-         JcgGGCpMKRqMt7FturHqtkG5znDpTANbDNtnKc1RMz62C1efHu7wDOZIoolih4pIXheB
-         ry6V6nQYUc4rD9o2KqLpn99I9sGa5A2zeFBBxmOKxghyB3rQeQeqFfhM1xwtanlrXPZZ
-         j4HiSuoWj0FrW1IMnyGYe+u+pUSa9hBUuIAIzjlLIzCLkSadIQEgjIpzrdqD4BzMkX/y
-         zzDE5VJiifXESvIdn2YEJG/uZDm1fkmqYr5DKqNiQh4bPqJADXOYagE2tTZxxv4htQRw
-         G0fg==
-X-Forwarded-Encrypted: i=1; AJvYcCV28NyubD9YXWIExJuP5W50J9z8hKpzBaw3VnJpi5SK4tq6VLArMum2YZkvDamFpDbx4Z8LofN837apCHk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrpwFd9qkoKdsuV57wgoE3qCVU2WGutdh8wc1sfMx1TI9nbamc
-	iZr9skhoPYpomPE2ACTEmLh+KVZxJVq6eW7cfsyypaRSF9Mxs9oTF4+W5MaLYb8=
-X-Gm-Gg: ASbGncuRtWGUFNPrTYFtYM5cr87E9Bx8BxG7nUOkNKy3OB6DWWGg0xW14gsUI74J3A0
-	N08uRdbCdPpuEtB09/SCs3qkREboJdFc22rNIDQ3UA1rmVSf635E6EmUYSOhYR8xfi931Ek2bPi
-	1ZqfbMeCWJorm1wQtSUTTx0+gx+eG/dIn/+aknOPacz+grlxKpatW0plo9FHy1TlABwlWQISwGD
-	78+B0zvWdi0nGphyfh7UFoMPsQMd5v5U+I3+IA7i2fz9XGDXNBs8ZC+7EsTwZeKq09KhN1he9zP
-	czWlmxJzt6Zvo5O0qshVWlSXWqDdFPDlgJy4yAmvhE6jGzY7szQN
-X-Google-Smtp-Source: AGHT+IHER7vdDXVtlvelU+DDmdTY5CqQ89uA26Q9f+nFEBSkTZX9vzApNRcfKwxK+awhn+jiq0oREw==
-X-Received: by 2002:a05:6870:b250:b0:295:eb96:9fd4 with SMTP id 586e51a60fabf-2b8b57813camr542383fac.11.1739214602443;
-        Mon, 10 Feb 2025 11:10:02 -0800 (PST)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b8262be143sm2669307fac.48.2025.02.10.11.09.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        bh=TjMLD9p5F/cttkJ4cOStWe5w8h70dZJC5rq8uWL15pc=;
+        b=Sn63r5EUVNb9Q5/r/rxr8FEOs9LIO1JGqfCFsTZRujbbElIw/fL+93ZBL7hOWd2ncu
+         rMaUF+fUwVIYemMA7pBreLg10/m425aIXxgkwXaSenYzblj/KRiKrdvqr0xK+lTI8gky
+         j0qUy9CHch6wH5r0midzrwhfEy1Z0cLIT+EuFfaWKDyRqvHeQoWZINxhKB33BetmRFKA
+         EiL3BYW/G8dF3K4+PzcV8+Rwse93GbGFFVIy8oa8zwRLtI22PYHN4MDE18KukLHdDjKL
+         lO04vdTdQu+ABRfu/vTORirZL2ark1RINOX6rhomYwvKBxUBaaBS77BpJKKsfwSdb962
+         wqSA==
+X-Gm-Message-State: AOJu0Ywikb3yWnQfghk6s8CHYZ0Td9CvLkk9zpVBcjR+DkYXEz+iRjDp
+	69sR5FCbtLVOJa+k0yqF6wK8M87MvCOfgfGtwdbAwmheHIXRSRhFNTuINMsE1TzAFLgzxzpXONV
+	6VkOza2GvzHvE3ZotsEWBGUeVxpMRY4K2C6XItIhuiifOkf/aTnGwTF8qrx6m3WLdhhsXjnw=
+X-Gm-Gg: ASbGncvymks1vK2xddEy0GiTWJ+wRNYvlgM1TsqDa7t/rjGAOm50vxojF9FCVjDDDSn
+	Npo83ysi7vIVTZGVkE1Zm6ou8gfSxjJbPJxDDEXmkpdcW250t4x3RVJAYywstVjvETB7sWPH51H
+	qIZXW5zOgpjzVI/PD64poEZeLHoRdrkDnpeY8KSZ6kvdfg0J0mxGv9ehwysIlOds5cLMnh99s0V
+	UFRLJH0zxJQaV5/X+hbdwE5E2YWeZvZ1v6hl0eaX3zVwkpLVREBO01iQESzOHlxP86tKnbiQ6aG
+	dwUPEaNotHDjh5pbDQjD0ixsCWuIIKn922xEWpWIHXqeT4D+w2lhd1n+z1I=
+X-Received: by 2002:a05:622a:134a:b0:471:99c5:7fe3 with SMTP id d75a77b69052e-47199c584f5mr14100251cf.13.1739214601411;
         Mon, 10 Feb 2025 11:10:01 -0800 (PST)
-Message-ID: <f989c3d7-0fc0-40f0-8548-4d5dd1a336ac@baylibre.com>
-Date: Mon, 10 Feb 2025 13:09:59 -0600
+X-Google-Smtp-Source: AGHT+IEam98rwjeVs9UefoqfCbDligsRwENEcB+iEsgJUMbLpiVYx4zPGFHlFLKn8RelVyRxUGrGHA==
+X-Received: by 2002:a05:622a:134a:b0:471:99c5:7fe3 with SMTP id d75a77b69052e-47199c584f5mr14100061cf.13.1739214600903;
+        Mon, 10 Feb 2025 11:10:00 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab77efe3111sm867153966b.51.2025.02.10.11.09.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 11:10:00 -0800 (PST)
+Message-ID: <87895166-659e-475f-99bf-5791a6e1ac3b@oss.qualcomm.com>
+Date: Mon, 10 Feb 2025 20:09:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,55 +73,88 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 11/17] iio: adc: ad7944: add support for SPI offload
-To: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Lars-Peter Clausen <lars@metafoo.de>, David Jander <david@protonic.nl>,
- Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
- <20250207-dlech-mainline-spi-engine-offload-2-v8-11-e48a489be48c@baylibre.com>
-From: David Lechner <dlechner@baylibre.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: chrome: Add binding for ChromeOS Pogo
+ pin connector
+To: Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson
+ <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        patches@lists.linux.dev, cros-qcom-dts-watchers@chromium.org,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Benson Leung <bleung@chromium.org>,
+        devicetree@vger.kernel.org, chrome-platform@lists.linux.dev,
+        Pin-yen Lin <treapking@chromium.org>
+References: <20250205233016.1600517-1-swboyd@chromium.org>
+ <20250205233016.1600517-2-swboyd@chromium.org>
+ <74527323-31ff-4ed0-b19f-e535f26abf2b@oss.qualcomm.com>
+ <CAE-0n50DXcAXQMaLtsamvxHjUrkJVBz42G6gtgKgW9Rh=qd31Q@mail.gmail.com>
 Content-Language: en-US
-In-Reply-To: <20250207-dlech-mainline-spi-engine-offload-2-v8-11-e48a489be48c@baylibre.com>
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <CAE-0n50DXcAXQMaLtsamvxHjUrkJVBz42G6gtgKgW9Rh=qd31Q@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: 1No1DZCm-C3utHoC343ITFUxEew4-6QI
+X-Proofpoint-ORIG-GUID: 1No1DZCm-C3utHoC343ITFUxEew4-6QI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_10,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ suspectscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0
+ priorityscore=1501 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=999
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502100154
 
-On 2/7/25 2:09 PM, David Lechner wrote:
-> Add support for SPI offload to the ad7944 driver. This allows reading
-> data at the max sample rate of 2.5 MSPS.
+On 6.02.2025 9:43 PM, Stephen Boyd wrote:
+> Quoting Konrad Dybcio (2025-02-06 03:30:50)
+>> On 6.02.2025 12:30 AM, Stephen Boyd wrote:
+>>> diff --git a/Documentation/devicetree/bindings/chrome/google,pogo-pin-connector.yaml b/Documentation/devicetree/bindings/chrome/google,pogo-pin-connector.yaml
+>>> new file mode 100644
+>>> index 000000000000..622e171b6b08
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/chrome/google,pogo-pin-connector.yaml
+>>> @@ -0,0 +1,68 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/chrome/google,pogo-pin-connector.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Google Pogo Pin Connector
+>>
+>> This looks like a very generic piece of hw.. many boards (esp. convertibles)
+>> do the same thing, with 4 or 5 pins on the bottom of the device.
 > 
-
-...
-
-> ---
->  drivers/iio/adc/Kconfig  |   1 +
->  drivers/iio/adc/ad7944.c | 291 ++++++++++++++++++++++++++++++++++++++++++++---
->  2 files changed, 276 insertions(+), 16 deletions(-)
+> Yes, connectors are basically just pins :-)
 > 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index a3e8ac569ce4c6b6b30b48acb265d530aa98e89c..995b9cacbaa964d26424346120c139858f93cdcd 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -360,6 +360,7 @@ config AD7923
->  config AD7944
->  	tristate "Analog Devices AD7944 and similar ADCs driver"
->  	depends on SPI
-> +	select SPI_OFFLOAD
->  	select IIO_BUFFER
+>>
+>> But of course hw manufacturers being hw manufacturers, many different kinds
+>> of signals go through such connectors - if it's not USB then it's perhaps
+>> I2C or some variation thereof
+> 
+> Right, and I doubt they call them "pogo".
+> 
+>>
+>> IMO, we could perhaps add this to usb-connector.yaml as "usb-custom-connector"
+>> or so
+> 
+> Do you have a device that could use such a generic binding? I can't
+> really design something in the abstract without two or more concrete use
+> cases. Coming up with something generic looks like a quagmire, because
+> as you say the signals going through the pins could be anything: i2c,
+> 1-wire, etc.
 
-I missed adding
+Right, we can't be overly generic either. FWIW I'm not standing in the way
+of this patch getting merged.
 
-	select IIO_BUFFER_DMAENGINE
+Konrad
 
-Closes: https://lore.kernel.org/oe-kbuild-all/202502082251.NuHT15R7-lkp@intel.com/
-
->  	select IIO_TRIGGERED_BUFFER
->  	help
-
-
+> At least this is a vendor prefixed binding, meaning a generic binding
+> could supersede this one later. The risk of accepting this binding is
+> low because it can be replaced by a more generic one at a later date.
+> 
+> I will move the file to usb/ so that it is more likely to be seen, but
+> I'm hesitant to sign up to work on any sort of generic binding for USB2
+> plus an extra pin used for who knows what.
