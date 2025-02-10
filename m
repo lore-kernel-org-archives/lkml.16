@@ -1,134 +1,114 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00281C07E5
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 12:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B59E1C07E5;
+	Mon, 10 Feb 2025 12:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739192279; cv=none; b=D6pPdlui6nLCeRbzwCSFhMjyPm+ZddVlW7Ao+Ersf7SQKHCUNeI/QaU+tSLCy5uHLKz8TFCGh3xLeav1acCIbNYF+Xf+G48A8DJynpCdFGzqJqHL6rVaC0bRP1rS0TsPw5bSiePzWgAneY04w+Ztu1HE/fXdnWXGgg1VW2rV/eY=
+	t=1739192385; cv=none; b=VqJE0mLDM7KrigNTUXZUg9rqwbvh56UmuZYrGqHI5c51C2OsTKImxVANJglvaGxP4SX+GJ3YN/CBRN2v86jGvhbhwhdMWVSeSKzstaiKZOlo2fUa+XnM72YPeXCIt24dq3OAUFGtLAGuffbQotXBdGzzFf1JC5pjj0lsgAepp4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739192279; c=relaxed/simple;
-	bh=vES+R76zCFKvpCLBJjEw5I3JRgR4vUCD/ysxQSLOjV4=;
+	s=arc-20240116; t=1739192385; c=relaxed/simple;
+	bh=owpoSk7EuQEMFHDc/s6Anvm+qbdzkCtpH98wS+rR4qg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q8Ag2SecoTpHqVKlD7lM8jgy02LDpQrEV1o6yumKPGyhNUXjcbVrA64D7lE6/2LKh9UT5MaLoEgD/pHdlsJ75jpM1ufvUT8kXVx4+BMEMceXHWoTV14JR3gK28MNS74ZCQ5iIhcJUjZTHeidMr94+gEfN/9sreMP1p2Ri+fdv70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mQp4qLRw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iiWfmPrg; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mQp4qLRw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iiWfmPrg; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=ehiRnoBBL0Zy1owAgIH0u1Xpwngl6IQ0E7dStvRvOwhXiCBcFBfzDt5sf7Is2WGtQm6TcM5YXXQcAP2Rb34sxU88n9GIQeA/5dShQuoKkM8AFxLS3q1Gl+VrJxFiL98R8jf//WXmi8gxAxkN3/IRcOzvuF7pdeB3/1TY0eQ3jLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L47QptUn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mQp4qLRw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iiWfmPrg";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mQp4qLRw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iiWfmPrg"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id BBE28210F8;
-	Mon, 10 Feb 2025 12:57:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739192275; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G5N+29t5fdH1xZC+QmxN9ar41yJPhbeshQ+XzkWvaBk=;
-	b=mQp4qLRwGUOY+WhAxZIvylgKQUO+f2UaTjObrMRqMW4bt/S5EZwhe7FkrqlF1lL9jxDasP
-	HBqGp+abl459j/a5FkCDHNcQyoyP09o6UkmBCyCMI1s/SMLDCy58tIBUcvCQXL6pk3MxGp
-	Ag0ksCLOPrL6WetWc8rXSS76IalTTBg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739192275;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G5N+29t5fdH1xZC+QmxN9ar41yJPhbeshQ+XzkWvaBk=;
-	b=iiWfmPrgGKhq0yux6kMny3f9TcjnSH9pCKL15pKymgNQfPQOOBq+fCNWjEra5ktwISMRqs
-	tsEKBwgwEpfe6LDg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739192275; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G5N+29t5fdH1xZC+QmxN9ar41yJPhbeshQ+XzkWvaBk=;
-	b=mQp4qLRwGUOY+WhAxZIvylgKQUO+f2UaTjObrMRqMW4bt/S5EZwhe7FkrqlF1lL9jxDasP
-	HBqGp+abl459j/a5FkCDHNcQyoyP09o6UkmBCyCMI1s/SMLDCy58tIBUcvCQXL6pk3MxGp
-	Ag0ksCLOPrL6WetWc8rXSS76IalTTBg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739192275;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G5N+29t5fdH1xZC+QmxN9ar41yJPhbeshQ+XzkWvaBk=;
-	b=iiWfmPrgGKhq0yux6kMny3f9TcjnSH9pCKL15pKymgNQfPQOOBq+fCNWjEra5ktwISMRqs
-	tsEKBwgwEpfe6LDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2DB6F13707;
-	Mon, 10 Feb 2025 12:57:55 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id b/aGBtP3qWcvfwAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Mon, 10 Feb 2025 12:57:55 +0000
-Date: Mon, 10 Feb 2025 13:57:53 +0100
-From: Oscar Salvador <osalvador@suse.de>
-To: Frank van der Linden <fvdl@google.com>
-Cc: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, yuzhao@google.com,
-	usamaarif642@gmail.com, joao.m.martins@oracle.com,
-	roman.gushchin@linux.dev, Zhenguo Yao <yaozhenguo1@gmail.com>
-Subject: Re: [PATCH v3 05/28] mm/hugetlb: fix round-robin bootmem allocation
-Message-ID: <Z6n30QhWeAyFea40@localhost.localdomain>
-References: <20250206185109.1210657-1-fvdl@google.com>
- <20250206185109.1210657-6-fvdl@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L47QptUn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A013BC4CED1;
+	Mon, 10 Feb 2025 12:59:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739192385;
+	bh=owpoSk7EuQEMFHDc/s6Anvm+qbdzkCtpH98wS+rR4qg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L47QptUnYsLmPtLriLWk/mFFeLwNiicn+sgpWdC5JUSMTLZnSmIRzeQDhotnIur3r
+	 T2PuqbTS/9961JLV3JPPepnAz8kzwwutEm5mDhmRhSHxuZH4PQnHKMkrLwb3GPOjHA
+	 NpPVnElP0StXHHIoZj1w22xh56585gTSbrBY7+L57cEPFC6uCdNmrFC/MUkYw3SmRK
+	 n5/QSF7k6FBHTpUbZ67QqyzIKpLf4ytrKpPtTZ0N6INEXGzBtjbEYsgzZUuU7v7aIl
+	 JLWU2qWBoJkLmMZNXGQyO/SdAFBFganR7Bnr2lyPsoxWxMbx6VHV2JRJ0r/cgC/OB8
+	 ON23cJ8tHySjg==
+Date: Mon, 10 Feb 2025 12:59:35 +0000
+From: Mark Brown <broonie@kernel.org>
+To: =?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.ne@posteo.net>
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 00/12] YAML conversion of several Freescale/PowerPC DT
+ bindings
+Message-ID: <0fe3416c-c3f3-44c4-a1c0-7e8262c54d4b@sirena.org.uk>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <611e47da-ba87-4c21-a6b7-cf051dc88158@sirena.org.uk>
+ <Z6a_f03Ct9aB7Bbn@probook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Erlp5XHmWCbFSP4H"
 Content-Disposition: inline
-In-Reply-To: <20250206185109.1210657-6-fvdl@google.com>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.995];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,linux.dev,kvack.org,vger.kernel.org,google.com,gmail.com,oracle.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_DN_SOME(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
-
-On Thu, Feb 06, 2025 at 06:50:45PM +0000, Frank van der Linden wrote:
-> Commit b5389086ad7b ("hugetlbfs: extend the definition of hugepages parameter to support node allocation")
-> changed the NUMA_NO_NODE round-robin allocation behavior in case of a
-> failure to allocate from one NUMA node. The code originally moved on to
-> the next node to try again, but now it immediately breaks out of the loop.
-> 
-> Restore the original behavior.
-
-Did you stumble upon this?
-
-AFAICS, memblock_alloc_range_nid() will call memblock_find_in_range_node() with
-NUMA_NO_NODE for exact_nide = false, which would be our case.
-Meaning that if memblock_alloc_try_nid_raw() returns false here, it is because
-we could not allocate the page in any node, right?
+In-Reply-To: <Z6a_f03Ct9aB7Bbn@probook>
+X-Cookie: A beer delayed is a beer denied.
 
 
--- 
-Oscar Salvador
-SUSE Labs
+--Erlp5XHmWCbFSP4H
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, Feb 08, 2025 at 02:20:47AM +0000, J. Neusch=E4fer wrote:
+> On Fri, Feb 07, 2025 at 09:38:05PM +0000, Mark Brown wrote:
+
+> > What's the story with dependencies here - why is all this stuff in one
+> > series?
+
+> The patches are independent of each other, except for the four elbc/nand
+> patches. They are in the same series because they came up during the
+> same project and achieve similar goals, but it isn't necessary.
+
+Please don't do this, it just makes it harder to merge things since it
+makes it look like there's cross tree merges needed when that's not the
+case, complicating merging, and puts the entire series in everyone's
+inbox which makes things more noisy.
+
+--Erlp5XHmWCbFSP4H
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmep+DcACgkQJNaLcl1U
+h9CQGgf/VRshpAxNRM+4y4pK3dFBOw1Ky/VAXan0LIOgCUmAP8+L3qoihpm6VZoz
+o6W4ioH6XERLRHTxdkiieODuhDTDhXH7sNTVvzzLejKyo4DbHvQBsMo2X0+kEZ3X
+n3ZFgc8GgqMbmv9EIVATYRnbBCUhhcD7EEZlTvxDDbErDipAGaaYMYTPsbMOZ1qY
+WWHWlzndWagcVtYf4Qf5bx4FjpS97qnE+VS801C6WgxbmrOFcWrTga0hXVlhQeu/
+V+FDM+XojBDbeAKOvkXZkHAybyY9U37wa0h0kmq6cDBuherZ5XdAXyw0K5uvqA4W
+0ywZYqZ4Ucmy7mvcfUgmcUR9E3GnMg==
+=m2SC
+-----END PGP SIGNATURE-----
+
+--Erlp5XHmWCbFSP4H--
