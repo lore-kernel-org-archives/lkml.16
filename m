@@ -1,99 +1,244 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F0C2397B9;
-	Mon, 10 Feb 2025 14:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487C023AE60
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739199435; cv=none; b=pymYC1SLPb0zZ/OzA/75kCETjEAkUa6VK6yrvMe7Jaf/0be6i7zOHgZXaoJOKWMbwauRh7aVOSTsnvnCgvzbZExwA2fYaElSo9ToWe0JdzJpvscK2fahZe4k3h1a+g8H8VsX38a0vZILzkMB6VaSJDXcLFW/VcBJ/TxqsB9z9Ik=
+	t=1739199436; cv=none; b=dKIzTQ+uuzCkx9kXj2pZ4jY5bmXBhH1OyKeuvPssiom2zqEF9nK4IWqkqZ871CMi0jO5vYGlsTt8KFO/KtJJv08qIBC93CJ3GKJWH7eHu4Vi/FoFpg6Wk0eff5/noSHWzydmUoSpwtslWeBjp+ZObcNPesGA3njZ6J43TTtj088=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739199435; c=relaxed/simple;
-	bh=4ICcj8QdOWU1kXHtu8nmsMNpiM1O67Af20gHNKdHi/s=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=fWU5VDcHeJzZVyyNAXTxTcKhD2O0lZbpl6KpDFMdJ20U17pD1dzHw/CMmhyTr3tA/chOzn5wP+nLQN8G80SbnIy3M5VQwWqD1l6ZFwKOiYBCYGNyHqsNHCAcLOO7B2UuR+iDLy1cyXsiYa3l2EDZD2zR15EhRR4fB+fAWx1F9N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XTSh+rMO; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XTSh+rMO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739199434; x=1770735434;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=4ICcj8QdOWU1kXHtu8nmsMNpiM1O67Af20gHNKdHi/s=;
-  b=XTSh+rMOxRvOA8sdeEZ12wgvLaIO3zFVzvGbbuvZpBFfltGPw29YrFpw
-   oQWsd+ht2L7BwWGxeOk58xTZ7jyy8z1rRivpn+5LARINsgsISvs2MB4Pf
-   ycMLcNJqR4GDor23p+oQATaE981DPTpXaiLXnBqViTrVjlB/V1dNrUU3l
-   uwuzXCvL42FPGLvnefTfq5Mv9FWcSZviX+a9Qm9nl0Q6jrwTH2MSOS8yk
-   rRocHPeBFrstILAXBiHJMkpWVrzI9LhWI71YCv6eecflAcNILzW6SEs9U
-   5xCb+ATBPHOTSyizT57OrCnsAAr7KN881uWLe4H88xLGV9ScbqpIngI9a
-   A==;
-X-CSE-ConnectionGUID: LIONdeNYQjSyO6hhUNLwXg==
-X-CSE-MsgGUID: 2pt8J8FlQ6yonNGpnwRVug==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="65134915"
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="65134915"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 06:57:12 -0800
-X-CSE-ConnectionGUID: INQMVpnbSk2zCSi368zCmQ==
-X-CSE-MsgGUID: 0YminiqsT+euDpMsEd701w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113089551"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.72])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 06:57:06 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Sybil Isabel Dorsett <sybdorsett@proton.me>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
- Hans de Goede <hdegoede@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250203163255.5525-1-sybdorsett@proton.me>
-References: <20250131203854.6608-1-sybdorsett@proton.me>
- <69e279a3-7fd5-9dc3-680d-7415022dc5e4@linux.intel.com>
- <20250203130232.3481-1-sybdorsett@proton.me>
- <d20f933c-8041-bc8d-13c2-98d89ccfa524@linux.intel.com>
- <cc7c8e94-4340-3d1e-03b4-2f738067d24f@linux.intel.com>
- <20250203163255.5525-1-sybdorsett@proton.me>
-Subject: Re: [PATCH v3] platform/x86: thinkpad_acpi: Fix invalid fan speed
- on ThinkPad X120e
-Message-Id: <173919942123.8268.13577857743094201898.b4-ty@linux.intel.com>
-Date: Mon, 10 Feb 2025 16:57:01 +0200
+	s=arc-20240116; t=1739199436; c=relaxed/simple;
+	bh=yPDOVSvCwTTeGkyajdfv3OA7YEkFKbIRRUEe3Luktt0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z1QLHiegRgU2WHPARc8Aux4QDV+Q4VledtnESQNnMw/HC4/EczP7NRXo7f1t9ejOCyPCur2ldPB/bbELuO1BJDKcOgqWluU3s8W2iwmOIVEs3VWWqS1Do4tMkNSCE9JDpmAQcI9yo4/+t7zKyc3QegeVi6S2aH5D7V83Zqu37Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Ys6yb16LBz2FctR;
+	Mon, 10 Feb 2025 22:53:27 +0800 (CST)
+Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
+	by mail.maildlp.com (Postfix) with ESMTPS id AB3671A016C;
+	Mon, 10 Feb 2025 22:57:10 +0800 (CST)
+Received: from localhost.huawei.com (10.169.71.169) by
+ kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Mon, 10 Feb 2025 22:57:09 +0800
+From: Yongbang Shi <shiyongbang@huawei.com>
+To: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+	<kong.kongxinwei@hisilicon.com>
+CC: <liangjian010@huawei.com>, <chenjianmin@huawei.com>,
+	<lidongming5@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
+	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 drm-dp 6/7] drm/hisilicon/hibmc: Add drm debugfs functions
+Date: Mon, 10 Feb 2025 22:49:58 +0800
+Message-ID: <20250210144959.100551-7-shiyongbang@huawei.com>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20250210144959.100551-1-shiyongbang@huawei.com>
+References: <20250210144959.100551-1-shiyongbang@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemd500013.china.huawei.com (7.221.188.12)
 
-On Mon, 03 Feb 2025 16:33:15 +0000, Sybil Isabel Dorsett wrote:
+From: Baihan Li <libaihan@huawei.com>
 
-> On ThinkPad X120e, fan speed is reported in ticks per revolution
-> rather than RPM.
-> 
-> Recalculate the fan speed value reported for ThinkPad X120e
-> to RPM based on a 22.5 kHz clock.
-> 
-> Based on the information on
-> https://www.thinkwiki.org/wiki/How_to_control_fan_speed,
-> the same problem is highly likely to be relevant to at least Edge11,
-> but Edge11 is not addressed in this patch.
-> 
-> [...]
+We use the previous two patches as our debug functions and
+generate two files. "hibmc-dp" and "color-bar".
+hibmc-dp: read only, print the dp link status and dpcd version
+color-bar: read/write
+           write: cfg color bar and enable/disable it by your input
+           read: print your current cfg info of color-bar
 
+Signed-off-by: Baihan Li <libaihan@huawei.com>
+Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
+---
+ChangeLog:
+v1 -> v2:
+  - deleting edid decoder and its debugfs, suggested by Dmitry Baryshkov.
+  - using debugfs_init() callback, suggested by Dmitry Baryshkov.
+---
+ drivers/gpu/drm/hisilicon/hibmc/Makefile      |   3 +-
+ .../drm/hisilicon/hibmc/hibmc_drm_debugfs.c   | 124 ++++++++++++++++++
+ .../gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c    |   1 +
+ .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h   |   2 +
+ 4 files changed, 129 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs.c
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
-
-The list of commits applied:
-[1/1] platform/x86: thinkpad_acpi: Fix invalid fan speed on ThinkPad X120e
-      commit: 1046cac109225eda0973b898e053aeb3d6c10e1d
-
---
- i.
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/Makefile b/drivers/gpu/drm/hisilicon/hibmc/Makefile
+index 43de077d6769..1f65c683282f 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/Makefile
++++ b/drivers/gpu/drm/hisilicon/hibmc/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ hibmc-drm-y := hibmc_drm_drv.o hibmc_drm_de.o hibmc_drm_vdac.o hibmc_drm_i2c.o \
+-	       dp/dp_aux.o dp/dp_link.o dp/dp_hw.o dp/dp_serdes.o hibmc_drm_dp.o
++	       dp/dp_aux.o dp/dp_link.o dp/dp_hw.o dp/dp_serdes.o hibmc_drm_dp.o \
++	       hibmc_drm_debugfs.o
+ 
+ obj-$(CONFIG_DRM_HISI_HIBMC) += hibmc-drm.o
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs.c
+new file mode 100644
+index 000000000000..af2efb70d6ea
+--- /dev/null
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs.c
+@@ -0,0 +1,124 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// Copyright (c) 2024 Hisilicon Limited.
++
++#include <linux/debugfs.h>
++#include <linux/device.h>
++#include <linux/seq_file.h>
++#include <linux/pci.h>
++
++#include <drm/drm_drv.h>
++#include <drm/drm_file.h>
++#include <drm/drm_debugfs.h>
++#include <drm/drm_edid.h>
++
++#include "hibmc_drm_drv.h"
++
++static int hibmc_dp_show(struct seq_file *m, void *arg)
++{
++	struct drm_info_node *node = m->private;
++	struct drm_device *dev = node->minor->dev;
++	struct hibmc_drm_private *priv = to_hibmc_drm_private(dev);
++	int idx;
++
++	if (!drm_dev_enter(dev, &idx))
++		return -ENODEV;
++
++	seq_printf(m, "enable lanes: %u\n", hibmc_dp_get_lanes(&priv->dp));
++	seq_printf(m, "link rate: %d\n", hibmc_dp_get_link_rate(&priv->dp) * 27);
++	seq_printf(m, "dpcd version: 0x%x\n", hibmc_dp_get_dpcd(&priv->dp));
++
++	drm_dev_exit(idx);
++
++	return 0;
++}
++
++static ssize_t hibmc_control_write(struct file *file, const char __user *user_buf,
++				   size_t size, loff_t *ppos)
++{
++	struct hibmc_drm_private *priv = file_inode(file)->i_private;
++	struct hibmc_dp_cbar_cfg *cfg = &priv->dp.cfg;
++	u32 input = 0;
++	int ret, idx;
++	u8 val;
++
++	ret = kstrtou32_from_user(user_buf, size, 0, &input);
++	if (ret)
++		return ret;
++
++	val = FIELD_GET(GENMASK(13, 10), input);
++	if (val > 9)
++		return -EINVAL;
++	cfg->pattern = val;
++	cfg->enable = FIELD_GET(BIT(0), input);
++	cfg->self_timing = FIELD_GET(BIT(1), input);
++	cfg->dynamic_rate = FIELD_GET(GENMASK(9, 2), input);
++
++	ret = drm_dev_enter(&priv->dev, &idx);
++	if (!ret)
++		return -ENODEV;
++
++	hibmc_dp_set_cbar(&priv->dp, cfg);
++
++	drm_dev_exit(idx);
++
++	return size;
++}
++
++static int hibmc_dp_dbgfs_show(struct seq_file *m, void *arg)
++{
++	struct hibmc_drm_private *priv = m->private;
++	struct hibmc_dp_cbar_cfg *cfg = &priv->dp.cfg;
++	u32 output = 0;
++	int idx;
++
++	if (!drm_dev_enter(&priv->dev, &idx))
++		return -ENODEV;
++
++	/* bit[0]: 0: enable colorbar, 1: disable colorbar
++	 * bit[1]: 0: timing follows XDP, 1: internal self timing
++	 * bit[2,9]: 0: static colorbar image,
++	 *           1~255: right shifting a type of color per (1~255)frames
++	 * bit[10,13]: 0~9: color bar, white, red, orange,
++	 *             yellow, green, cyan, bule, pupper, black
++	 */
++	output = cfg->enable | (cfg->self_timing << 1) |
++		 (cfg->dynamic_rate << 2) | (cfg->pattern << 10);
++
++	drm_dev_exit(idx);
++
++	seq_printf(m, "hibmc dp colorbar cfg: %u\n", output);
++
++	return 0;
++}
++
++static int hibmc_open(struct inode *inode, struct file *filp)
++{
++	return single_open(filp, hibmc_dp_dbgfs_show, inode->i_private);
++}
++
++static const struct file_operations hibmc_dbg_fops = {
++	.owner   = THIS_MODULE,
++	.write   = hibmc_control_write,
++	.read    = seq_read,
++	.open    = hibmc_open,
++	.llseek  = seq_lseek,
++	.release = single_release,
++};
++
++static struct drm_info_list hibmc_debugfs_list[] = {
++	{ "hibmc-dp", hibmc_dp_show },
++};
++
++void hibmc_debugfs_init(struct drm_connector *connector, struct dentry *root)
++{
++	struct drm_device *dev = connector->dev;
++	struct hibmc_drm_private *priv = to_hibmc_drm_private(dev);
++	struct drm_minor *minor = dev->primary;
++
++	/* create the file in drm directory, so we don't need to remove manually */
++	debugfs_create_file("colorbar-cfg", 0200,
++			    root, priv, &hibmc_dbg_fops);
++
++	drm_debugfs_create_files(hibmc_debugfs_list, ARRAY_SIZE(hibmc_debugfs_list),
++				 root, minor);
++}
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
+index 795c5b1a6b99..1f8f7b74f5b4 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
+@@ -40,6 +40,7 @@ static const struct drm_connector_funcs hibmc_dp_conn_funcs = {
+ 	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+ 	.late_register = hibmc_dp_late_register,
+ 	.early_unregister = hibmc_dp_early_unregister,
++	.debugfs_init = hibmc_debugfs_init,
+ };
+ 
+ static inline int hibmc_dp_prepare(struct hibmc_dp *dp, struct drm_display_mode *mode)
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+index 3ddd71aada66..bc89e4b9f4e3 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+@@ -69,4 +69,6 @@ int hibmc_ddc_create(struct drm_device *drm_dev, struct hibmc_vdac *connector);
+ 
+ int hibmc_dp_init(struct hibmc_drm_private *priv);
+ 
++void hibmc_debugfs_init(struct drm_connector *connector, struct dentry *root);
++
+ #endif
+-- 
+2.33.0
 
