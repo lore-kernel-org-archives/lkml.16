@@ -1,41 +1,57 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9170924CEF6;
-	Mon, 10 Feb 2025 20:35:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB60B24E4D8;
+	Mon, 10 Feb 2025 20:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739219707; cv=none; b=upr9m2SlPdv/bmBdKgfZIIbHGDwXy6uzbT5Lci0kHeX0oezRlb1SxA01RfkLqdedtWL1SGIxBu82Q8tZvvUhsiK9jir7ELshkT+zD976mZ4M+EmL5U7rvZZXA+kFrS1xcJNLQp2c7KPmqHq+PM08ElZ4UHvM5NqwStQ1p+X5Gi4=
+	t=1739219792; cv=none; b=tadgirpa9vrz2i8rp1SrfX9Ha18tzb0VrsbHHcMFIB5sJ1lRyuZ2rlhQDCF41rKuHgP1hK97UwEhDBrfgbD/3dZv/bOB+d74VgGoY5qTaHcjZZewunlUUYTGGwLui6TlPm/8b1oN/nR7XgczIVWf+LpGlf+Hcl2WmTEKlGT2/Es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739219707; c=relaxed/simple;
-	bh=OECw0u7i4muZXytvNKEOLncdneDKdhOefhqMgPbmzfw=;
+	s=arc-20240116; t=1739219792; c=relaxed/simple;
+	bh=kG+TgB6S4wm9v0iuwdDvcIi4d4xowxqxXp22PZXJWcU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=puDRdCx4/d+1SyzLf44Xbj70li1dhCPZikdMaFKTOaKkS1KFut8/Jj/yr7fppsZ/0rZ77cHRTSIvLoFCMo43l+wds+iszAqQrMnI4vvTqc8iesS6EIDlw3jZVjR6fhETrjlZYfswTv4RVRNIaMREUmEUMnvJl/maIf8t7KM4m58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P4mnDFPS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=q1k210Ql0miJDTeujeJeHgMpuluJwlwRYfu2T/DiTFpZlkCMPClftePq+HbvOZLcDgIIh26Q4moA4thVUwj3Dhk7HIheOprGfolcnzp2p8Dj66O0NyxTncUPYknf7xzXZU8JSDQhX+O2IhAqRuDH9b/TeP6+eHOQLX243fd+I5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pW6SLPFq; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P4mnDFPS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF3C6C4CED1;
-	Mon, 10 Feb 2025 20:35:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739219707;
-	bh=OECw0u7i4muZXytvNKEOLncdneDKdhOefhqMgPbmzfw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P4mnDFPSEL1n4qJPB9cSa+/IjIgz2RtVcax8/3dL4uXpCEWZb0qlN881QV910ZBtJ
-	 f1cI854VMlvSv2hg2dIh7uOCtJGGEdHsE8p+t/qsOF8RkrBVQRxi4DGyAHCyj484gW
-	 fhXtEq5hKzPzc9IKtjBv16B8LbFMROnXsn+VJ8ZIs2JEEEWPah6Ny4yBA/4fI9DnPH
-	 JW0JVz+Kwdp2gGGQEzN72I17FWjXyk/NiC7wXEea+R3FC19nw1bjFj5L5NO/vPwlAf
-	 XZaK4Ycx5W9I9WjjtJ1uxL6M+1DjLOBYMiK7lOBci2ABQ0zrY7mY59QLEf9+hmWRGr
-	 oSUtyQkj9gH7A==
-Date: Mon, 10 Feb 2025 12:35:05 -0800
-From: Eric Biggers <ebiggers@kernel.org>
-To: Zhihang Shao <zhihang.shao.iscas@gmail.com>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, ardb@kernel.org
-Subject: Re: [PATCH v3] riscv: Optimize crct10dif with zbc extension
-Message-ID: <20250210203505.GA348261@sol.localdomain>
-References: <20250205065815.91132-1-zhihang.shao.iscas@gmail.com>
- <20250205163012.GB1474@sol.localdomain>
- <20250206201950.GB1237@sol.localdomain>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pW6SLPFq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=dsSgA6Yf377jp8GIbPPXV+rVGw28eQh48UxX6W9rqVE=; b=pW6SLPFqOelwpYrNGOFGvsaKxd
+	QKR8QBm80arRcVftyH8StJPacJE/G64qPiGExpOvNsYBWDZvTvkkpRxJj+4AaQiOsKt+IYbl23LGw
+	tJJG9vkf2cyDggw+A5tgoWQ7oFb4S67fTwbPuPzEbUQrFQHcfoga8YwG1Wr17CBrR6YTM4cSE8Bpt
+	6ZG8CgtTqg22DeMCq7iU/LPNOndTriqGQpsqvZobW2L8uEePA04hPAMSrEGKpszSDCOjD/H63bAGu
+	5rfDYa3vJyaD/c0Hl4/T8blKiUL7qaac+PKWSNXmt+Wi7Mzev4qy6kom2CNo1jDx9agfPt1YWxSQq
+	Av23hiQg==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1thaW1-0000000GjmU-2iop;
+	Mon, 10 Feb 2025 20:36:25 +0000
+Date: Mon, 10 Feb 2025 20:36:25 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Josef Bacik <josef@toxicpanda.com>
+Cc: Joanne Koong <joannelkoong@gmail.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Christian Heusel <christian@heusel.eu>,
+	Miklos Szeredi <mszeredi@redhat.com>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm <linux-mm@kvack.org>,
+	Mantas =?utf-8?Q?Mikul=C4=97nas?= <grawity@gmail.com>
+Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for
+ FUSE/Flatpak related applications since v6.13
+Message-ID: <Z6pjSYyzFJHaQo73@casper.infradead.org>
+References: <CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
+ <9cd88643-daa8-4379-be0a-bd31de277658@suse.cz>
+ <20250207172917.GA2072771@perftesting>
+ <8f7333f2-1ba9-4df4-bc54-44fd768b3d5b@suse.cz>
+ <CAJnrk1aNVMCfTjL0vo-Qki68-5t1W+6-bJHg+x67kHEo_-q0Eg@mail.gmail.com>
+ <Z6ct4bEdeZwmksxS@casper.infradead.org>
+ <CAJnrk1aY0ZFcS4JvmJL=icigencsCD8g4qmZiTuoPWj2S2Y_LQ@mail.gmail.com>
+ <81298bd1-e630-4940-ae5b-7882576b6bf4@suse.cz>
+ <CAJnrk1aBc5uvL78s3kdpXojH-B11wtOPSDUJ0XnCzmHH+eO2Nw@mail.gmail.com>
+ <20250210191235.GA2256827@perftesting>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,51 +60,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250206201950.GB1237@sol.localdomain>
+In-Reply-To: <20250210191235.GA2256827@perftesting>
 
-On Thu, Feb 06, 2025 at 12:19:50PM -0800, Eric Biggers wrote:
-> On Wed, Feb 05, 2025 at 08:30:12AM -0800, Eric Biggers wrote:
-> > On Wed, Feb 05, 2025 at 02:58:15PM +0800, Zhihang Shao wrote:
-> > > The current CRC-T10DIF algorithm on RISC-V platform is based on
-> > > table-lookup optimization.
-> > > Given the previous work on optimizing crc32 calculations with zbc
-> > > extension, it is believed that this will be equally effective for
-> > > accelerating crc-t10dif.
-> > > 
-> > > Therefore this patch offers an implementation of crc-t10dif using zbc
-> > > extension. This can detect whether the current runtime environment
-> > > supports zbc feature and, if so, uses it to accelerate crc-t10dif
-> > > calculations.
-> > > 
-> > > This patch is updated due to the patchset of updating kernel's
-> > > CRC-T10DIF library in 6.14, which is finished by Eric Biggers.
-> > > Also, I used crc_kunit.c to test the performance of crc-t10dif optimized
-> > > by crc extension.
-> > > 
-> > > Signed-off-by: Zhihang Shao <zhihang.shao.iscas@gmail.com>
-> > > ---
-> > >  arch/riscv/Kconfig                |   1 +
-> > >  arch/riscv/lib/Makefile           |   1 +
-> > >  arch/riscv/lib/crc-t10dif-riscv.c | 132 ++++++++++++++++++++++++++++++
-> > >  3 files changed, 134 insertions(+)
-> > >  create mode 100644 arch/riscv/lib/crc-t10dif-riscv.c
-> > 
-> > Acked-by: Eric Biggers <ebiggers@kernel.org>
-> > Tested-by: Eric Biggers <ebiggers@kernel.org>
-> > 
-> > This can go through the riscv tree.
-> > 
+On Mon, Feb 10, 2025 at 02:12:35PM -0500, Josef Bacik wrote:
+> From: Josef Bacik <josef@toxicpanda.com>
+> Date: Mon, 10 Feb 2025 14:06:40 -0500
+> Subject: [PATCH] fuse: drop extra put of folio when using pipe splice
 > 
-> Actually, if people don't mind I'd like to take this through the crc tree.  Due
-> to https://lore.kernel.org/r/20250206173857.39794-1-ebiggers@kernel.org the
-> function crc_t10dif_is_optimized() becomes unused and we should remove it, which
-> would conflict with this patch which adds another implementation of it.
+> In 3eab9d7bc2f4 ("fuse: convert readahead to use folios"), I converted
+> us to using the new folio readahead code, which drops the reference on
+> the folio once it is locked, using an inferred reference on the folio.
+> Previously we held a reference on the folio for the entire duration of
+> the readpages call.
 > 
+> This is fine, however I failed to catch the case for splice pipe
+> responses where we will remove the old folio and splice in the new
+> folio.  Here we assumed that there is a reference held on the folio for
+> ap->folios, which is no longer the case.
+> 
+> To fix this, simply drop the extra put to keep us consistent with the
+> non-splice variation.  This will fix the UAF bug that was reported.
+> 
+> Link: https://lore.kernel.org/linux-fsdevel/2f681f48-00f5-4e09-8431-2b3dbfaa881e@heusel.eu/
+> Fixes: 3eab9d7bc2f4 ("fuse: convert readahead to use folios")
+> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+> ---
+>  fs/fuse/dev.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+> index 5b5f789b37eb..5bd6e2e184c0 100644
+> --- a/fs/fuse/dev.c
+> +++ b/fs/fuse/dev.c
+> @@ -918,8 +918,6 @@ static int fuse_try_move_page(struct fuse_copy_state *cs, struct page **pagep)
+>  	}
+>  
+>  	folio_unlock(oldfolio);
+> -	/* Drop ref for ap->pages[] array */
+> -	folio_put(oldfolio);
+>  	cs->len = 0;
 
-FYI, I've removed crc_t10dif_is_optimized() in the crc-next tree via
-https://lore.kernel.org/r/20250208175647.12333-1-ebiggers@kernel.org
+But aren't we now leaking a reference to newfolio?  ie shouldn't
+we also:
 
-If you can rebase your patch again and address my comments, I'd be glad to apply
-it to the crc tree for 6.15.  Thanks!
+-	folio_get(newfolio);
 
-- Eric
+a few lines earlier?
