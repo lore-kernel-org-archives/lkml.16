@@ -1,187 +1,138 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA89A36C;
-	Mon, 10 Feb 2025 00:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D8E632;
+	Mon, 10 Feb 2025 00:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739147489; cv=none; b=DBxvCI5SzaO47eYs3BHZvrUj2+fiPqDBqzCus+ZAF52ro9UjOjzZv3VW75WKVGFwWWhdHhIJMaQdUBQUsyFs0ce+dOJrT2Bsil4mvIViji82FEmgmIb2YZkh21/WZxRZ9ZC1JQtBgixfo4l4ipQAm3i9Y/PEMy2dvtiPTVjSCzA=
+	t=1739147623; cv=none; b=oGMZJU4YUu23V+KRiKmJnSVITK7jCpiZxDVjrTUKP3h0wvs1k/WQx2ftyIQIZGGrrVe8cvLHkvPUcYLRiftorgfTM+i2Lb4TKb25IbeMU/oErzxc8HOUkDfQpHLfsuWEx57/o+ut7U0HbZ7Jl3BodDf3Nrz7eRzaH6tLwY4N/cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739147489; c=relaxed/simple;
-	bh=601x+SY++aJieuva0VRl0VoplR7wgszkWt++q96M3rM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=GFd0i9IBvCk/nZw5HZATRERw4NkY8cElE4R3W27WVQJqWSVOziHeL4IAECfhn4mUcP5Hp+mtVAYk7cO/56M/m+h7BCVSy6/GJRCPS8Y8VkSPPdD+keTRSvRUNJ3bossDFjum2pVS//XRimAn/3Gi1ZfOnsBPoJwMS/tIHWGh6+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=CQHibEeO; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1739147623; c=relaxed/simple;
+	bh=/igThWQZd1obWiTXszq65tIOC8QyzYqUXzxqyPjDKWs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ujsSQd+IcjXNdNa0Z7V+IPuNmw7/S/BlD20f8l+iRJdwxASKF++RrwdAyAACMHPG3+yyIRlU+CRW58IBYzDnHD/CpSY8KUCn99DrUPgedXuoEKNrhtc+BZohZ4KjJ4kIbjjeevq90iPS+y2cdGh0Qa/LMeuD0PSMY77CoBcAwKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cLlVVVPe; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="CQHibEeO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1739147474; x=1739752274; i=w_armin@gmx.de;
-	bh=Of5gT254PF8cdxR5Onf8LeOAzX4ESpG3fb6xMO+D2j8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=CQHibEeObtzlZOS0MAkKXbGRlkBCUK7yY70v+9ARZYBDnrLh9qZBa/Xvdt48liy3
-	 xJVJClu/C2dqk6M9qlpnzGrQXBV8T5sWFcV5Ni33zetzyvtyp7xGIyJLJQmM5Mli9
-	 f51qe3QJylmE8WIb4JrxeDkxWNVD0/CVwGT3dJTFSe7tD3AUUmLzPRk6sm/41KzvM
-	 zrWpbmdxx9XPLfoS62ry7zRfMG9loOLWt3X7Xvq5QctZ1ktgBSJgplVN6o2L6nLWm
-	 jAd72v+sZfCnY6sW+gE2AQ0caoXNlCH8Vf4CGSuyGorSsSujGskMTBGGn8QcMkmI4
-	 ReN8VuSMrlb+w5OeSg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MCsU6-1tYWHK1j1s-00G0Ba; Mon, 10
- Feb 2025 01:31:14 +0100
-Message-ID: <33eac2f8-b295-4716-a5f8-9f0bf7f6d349@gmx.de>
-Date: Mon, 10 Feb 2025 01:31:11 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cLlVVVPe"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5fc0c7b391fso1123018eaf.3;
+        Sun, 09 Feb 2025 16:33:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739147621; x=1739752421; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fzm9ukSWXeN4BhmkAYPVWf/4ojQPtcjcxM7QmAoeOIU=;
+        b=cLlVVVPetU8akzBIstCKj9fNyvki6/8ctIk7N2ta9mRizkrM3fG58Y8067kvioShjU
+         kUts6h/6Rlx4NF3yq9ibnz13b5WUWWZO65Ljf1AYxBF2ptD140u6QMJs6zJth0vuLVz9
+         5+Agdpjri7nNiHokUwG3rmBUq5iOii73NfqcEyxgGP1DY7eBMHd5OYbgTHGmHtZR+Tg6
+         shk+K0QYO+pDg9hXTJdfonQ2pwL8DPI62QGKgtAGEaLq0f6JadaXNZFVAZUvwBxl4gL+
+         Jh2gsGEHVzsjx4jsgmFZz7hIxIjgcsIx9Bfx5LSAqYUaqvwClXXwDWQWGcU8vnmK8/7b
+         sovw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739147621; x=1739752421;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fzm9ukSWXeN4BhmkAYPVWf/4ojQPtcjcxM7QmAoeOIU=;
+        b=SDNKkGBlQ/wKgQIhVJ83E4muVMjpodDuaZBKRwUvNvuKWJU/Ir97ZGrDPEDgVJptl6
+         N+mAFmWKw8YN/OD3vvCHlZSRFycJHO1ZFPjuUdppwII1cHOxyJeBuQ6V/y1c7NCntGwy
+         8y+d8H3jSMlWhDSfF6iRQtEXrtEXjQafSuEma9wHFg0fFBhTI/57L9u++NFSbuMyYqj2
+         hAykOFuJNC91N2zpqK8o+Zb4tvpKhaFtrZ8mqldZXdYIDMXUnTMjAGIo0H7TJWQsj9Xg
+         /QT7dKSLTQq8Q4EHZ8y7jMXE2JSx4J5dsRC9Vsc5KJEyFfclFiV6XanW2J8sHXQ14Tyg
+         FBVg==
+X-Forwarded-Encrypted: i=1; AJvYcCUCTYf34WzBa9mGhXc4ZURNIJjCrxwg/O9vLCkJX3j22akCNvKe/3discoNVkDMNiZUx81iMsGgft5vfTs=@vger.kernel.org, AJvYcCWpMmfAZ+H1A7zuuHdra0SiSoP9qLlMM6HHEK1NqbUyKXcAenEJiSey9wTSReTg/DUiFxip6Wmc@vger.kernel.org
+X-Gm-Message-State: AOJu0YxP2q/3FhYECx97WzouXjOgLQHXN1AlbCTRPGPDT9u93RyBEFbb
+	zVFvuLeqHQQ2AqQ7I/jo5mGmJg5oeaAsFX/fDOHyXqQueoHKKgVY
+X-Gm-Gg: ASbGncvWKC0mBPHbyElhSMWxQzYWgFi99KfdQPC855TCF9bqSBCfUtSYNNDdVwWdlO8
+	dYyCp12i56pfU1n3JYTEHVp5AAvRnPIxyYLtRUOb2vNcEfwelH3zffHmc83l3h9j4+pJz5wk59X
+	njd6v7ixSM/jrnbzI/lU9jAIYi4c85zwx0UwEXewmUP81IETQi/f5m0s8AHVD23yyle35cjQsO3
+	jQzZ2bybIqVNwY9pZ1+L4S8+VkA0qCZqm2u8tujDuIECa+jS0Jqmz+uLkbOo8xOntJsjp1o1QQX
+	+pUAXpf3U94sQ50i8SydsCTMAaQCf2laR2AizbAUn51VePUhp/bohifQKuVru9pibky7a+OMLI/
+	qbUBTPzXAQOxwxy69
+X-Google-Smtp-Source: AGHT+IFclqOhIoMzNRCRdvbrza/dG7hfwwDGnWsOZ5Xa2VJUYmlDQu9qeZF7/m09obrp0XPNPJSkcA==
+X-Received: by 2002:a05:6820:2208:b0:5f7:d455:16c4 with SMTP id 006d021491bc7-5fc5e70f35bmr7341630eaf.8.1739147621107;
+        Sun, 09 Feb 2025 16:33:41 -0800 (PST)
+Received: from rhel-developer-toolbox-latest.redhat.com (c-71-56-251-26.hsd1.co.comcast.net. [71.56.251.26])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc544b0560sm2157779eaf.6.2025.02.09.16.33.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2025 16:33:40 -0800 (PST)
+From: John J Coleman <jjcolemanx86@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Ben Hutchings <bhutchings@solarflare.com>,
+	David Decotigny <decot@googlers.com>
+Cc: John J Coleman <jjcolemanx86@gmail.com>,
+	Jamie Bainbridge <jamie.bainbridge@gmail.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net] ethtool: check device is present when getting ioctl settings
+Date: Sun,  9 Feb 2025 17:31:56 -0700
+Message-ID: <20250210003200.368428-1-jjcolemanx86@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/7] platform/x86: think-lmi: Use ACPI object when
- extracting strings
-From: Armin Wolf <W_Armin@gmx.de>
-To: james@equiv.tech, markpearson@lenovo.com, jorge.lopez2@hp.com
-Cc: jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org,
- linux-kernel@vger.kernel.org, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
- corbet@lwn.net, linux-doc@vger.kernel.org
-References: <20250203182322.384883-1-W_Armin@gmx.de>
- <20250203182322.384883-3-W_Armin@gmx.de>
-Content-Language: en-US
-In-Reply-To: <20250203182322.384883-3-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:snXJDC4yv8QlN48/mIQ2AOzpIKAgbYb3qPHf0pa4pteaShD9qzA
- HjHh0mz8lqcY/DOFAZjBgAx/ypergBFTKB9EYzDD+FTZZXbZgfpuJhq6ZiYEXHFZkd/aDxk
- H/SAbtySK2LupcjMHvlU9YOvo8RQ0Fd2yPMMzmXSlAhqU57gDECmrgmyaUW29HnUbCqaAEF
- fzGUcOhIuEi11BK79O+tg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:dQJbAEpsxa8=;DLkb0gxcb4MADX40d9AJBAHGtBs
- oXHiCg2ele+MTkdtjxcmfQriAtCqhowKbIxM9jAeVZ3YT0lLK/EHsxt2QgUKEMFhhMIsVZM2u
- YjJU4B7FANmaWq4ym4addJSgEp1smmRLURb7VLKUqrVddqnduQT+ALzqkFn62vKhWL0dHibP5
- d4fPrpsbADZEtGxn7++nbu9//2v+bhOfNv76IsKEXACgUa5BFGT8bqVjhwerhNf2wgSuEJfqo
- Dol/QXnjYcr7Nqp/yycgzfAEV4Ns0WCcYtguErW5ab+s5cFByogLU0P0Y+4nZCzlCi+JFYlrs
- 2lFu3J04D/VC7rKCTsl7ozloPQFZS3SceJIbaGNRAAtV26KnBrWLy24F4/5afCHRP5Q9DzjWn
- wsbOkLjWgjT1JmHU29fEW31VFBlq36XbGQcDeuk4J8gvkVxG54gwaAINQJ8DKHroXRw4MpJgI
- +GYV1v33UTgpuhLIEI2Zy38xo7g6ELLKF1SVpf/dsC8Ohpoz14H/ewrc8j9pE4YkMJYTmgbd6
- dXcPBtII+nxWZQy2GfHQ+tnYik4Vccbpg090pTmrDLSZAHsoiv2/MDwtOzFeKIl7HWaOPVa8+
- 0a2PmYEvzPUIN6qg/Rbx9FOFIJ4ETe54xsPZ79vv16IfhnaqLDOFvl0RdjmWqXntv48R7i0+2
- TiOZI6hVcO6afMjQmmpcmZgBMRVb7t1y/0buD2rBcSaIo/hEc9A2YhyH3RL/k8+8rp5UVOk/6
- AmdxAIpVmpy0w52lDbjgLZ/+DXRJ/fkftZ9tMT1rQnnIJ78KXw1cpvzSJaAn2axzSlzd19qHV
- 9pVV17r1OCVJg61+DtuHGjNzI3/9ePHlgh+GIU+mRbNk/CvrZG+gEHOmTlyKSBlb+ZviIVVVr
- n5bSdxOZFcx+DGwBszcJOmgjUgYKJBvu8PW+u+j7ACnIJ6CFwZXIykM8qdKeVv53zUE6hpdzw
- Ixc7SqgE0KH6i7HwUrAjh1/oWktcWvb/bJCdNb/cKyc9gEM6l4oWzQJL5vvWUknJ0W89qj7RF
- KbKkMkIPNP8TWSkOvTD/QDJarnWzjwdie+c/9q3zksdwZ9ejuhloti9g+VAvRJ5YbpDP82NSL
- Gd61dG94pDLRKroSYhMost2a1hEpW9sv34/Jb3OBp5CmQHWRQbomJnCFHIbDooeydTsDnjehp
- MJ5Z3kBb3HWHs1GpbbRMNlz7kUJi8OYC3+vsFl/rOwGP0pMbm2+BosNMX/ap3VpEvGWsOdquh
- 6A0vWe1Fo3329DCeF0yVI1uePlGlaUkq92cci3v2ENYCLJahZLtT2qQ0iKQuOM7dumHvKWzpu
- 1SwZX8Q2OO2180201t0gsTRLVFMayTeEJ16LeIWICI6jRBlukwIClPMWQiG/cO/HEyqHucHUY
- tDZ04Fxhcb4G0eFpsTz0qZdFWNEB0Gzae9ez2bnKzbFf5P1haAvobjkAuO
+Content-Transfer-Encoding: 8bit
 
-Am 03.02.25 um 19:23 schrieb Armin Wolf:
+An ioctl caller of SIOCETHTOOL ETHTOOL_GSET can provoke the legacy
+ethtool codepath on a non-present device, leading to kernel panic:
 
-> Move the ACPI buffer handling out of tlmi_extract_output_string()
-> and instead pass the unpacked ACPI object to prepare for future
-> changes.
+     [exception RIP: qed_get_current_link+0x11]
+  #8 [ffffa2021d70f948] qede_get_link_ksettings at ffffffffc07bfa9a [qede]
+  #9 [ffffa2021d70f9d0] __rh_call_get_link_ksettings at ffffffff9bad2723
+ #10 [ffffa2021d70fa30] ethtool_get_settings at ffffffff9bad29d0
+ #11 [ffffa2021d70fb18] __dev_ethtool at ffffffff9bad442b
+ #12 [ffffa2021d70fc28] dev_ethtool at ffffffff9bad6db8
+ #13 [ffffa2021d70fc60] dev_ioctl at ffffffff9ba7a55c
+ #14 [ffffa2021d70fc98] sock_do_ioctl at ffffffff9ba22a44
+ #15 [ffffa2021d70fd08] sock_ioctl at ffffffff9ba22d1c
+ #16 [ffffa2021d70fd78] do_vfs_ioctl at ffffffff9b584cf4
 
-Hi,
+Device is not present with no state bits set:
 
-i was hoping that maybe the driver maintainer could take a look at this patch
-and give some feedback.
+crash> net_device.state ffff8fff95240000
+  state = 0x0,
 
-Thanks,
-Armin Wolf
+Existing patch commit a699781c79ec ("ethtool: check device is present
+when getting link settings") fixes this in the modern sysfs reader's
+ksettings path.
 
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->   drivers/platform/x86/think-lmi.c | 38 +++++++++++++++++---------------
->   1 file changed, 20 insertions(+), 18 deletions(-)
->
-> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-> index 323316ac6783..2c94a4af9a1d 100644
-> --- a/drivers/platform/x86/think-lmi.c
-> +++ b/drivers/platform/x86/think-lmi.c
-> @@ -262,16 +262,11 @@ static int tlmi_simple_call(const char *guid, const char *arg)
->   	return 0;
->   }
->
-> -/* Extract output string from WMI return buffer */
-> -static int tlmi_extract_output_string(const struct acpi_buffer *output,
-> -				      char **string)
-> +/* Extract output string from WMI return value */
-> +static int tlmi_extract_output_string(union acpi_object *obj, char **string)
->   {
-> -	const union acpi_object *obj;
->   	char *s;
->
-> -	obj = output->pointer;
-> -	if (!obj)
-> -		return -ENOMEM;
->   	if (obj->type != ACPI_TYPE_STRING || !obj->string.pointer)
->   		return -EIO;
->
-> @@ -352,17 +347,21 @@ static int tlmi_opcode_setting(char *setting, const char *value)
->   static int tlmi_setting(int item, char **value, const char *guid_string)
->   {
->   	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-> +	union acpi_object *obj;
->   	acpi_status status;
->   	int ret;
->
->   	status = wmi_query_block(guid_string, item, &output);
-> -	if (ACPI_FAILURE(status)) {
-> -		kfree(output.pointer);
-> +	if (ACPI_FAILURE(status))
->   		return -EIO;
-> -	}
->
-> -	ret = tlmi_extract_output_string(&output, value);
-> -	kfree(output.pointer);
-> +	obj = output.pointer;
-> +	if (!obj)
-> +		return -ENODATA;
-> +
-> +	ret = tlmi_extract_output_string(obj, value);
-> +	kfree(obj);
-> +
->   	return ret;
->   }
->
-> @@ -370,19 +369,22 @@ static int tlmi_get_bios_selections(const char *item, char **value)
->   {
->   	const struct acpi_buffer input = { strlen(item), (char *)item };
->   	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-> +	union acpi_object *obj;
->   	acpi_status status;
->   	int ret;
->
->   	status = wmi_evaluate_method(LENOVO_GET_BIOS_SELECTIONS_GUID,
->   				     0, 0, &input, &output);
-> -
-> -	if (ACPI_FAILURE(status)) {
-> -		kfree(output.pointer);
-> +	if (ACPI_FAILURE(status))
->   		return -EIO;
-> -	}
->
-> -	ret = tlmi_extract_output_string(&output, value);
-> -	kfree(output.pointer);
-> +	obj = output.pointer;
-> +	if (!obj)
-> +		return -ENODATA;
-> +
-> +	ret = tlmi_extract_output_string(obj, value);
-> +	kfree(obj);
-> +
->   	return ret;
->   }
->
-> --
-> 2.39.5
->
->
+Fix this in the legacy ioctl path by checking for device presence as
+well.
+
+Fixes: 4bc71cb983fd2 ("net: consolidate and fix ethtool_ops->get_settings calling")
+Fixes: 3f1ac7a700d03 ("net: ethtool: add new ETHTOOL_xLINKSETTINGS API")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Tested-by: John J Coleman <jjcolemanx86@gmail.com>
+Co-developed-by: Jamie Bainbridge <jamie.bainbridge@gmail.com>
+Signed-off-by: Jamie Bainbridge <jamie.bainbridge@gmail.com>
+Signed-off-by: John J Coleman <jjcolemanx86@gmail.com>
+---
+ net/ethtool/ioctl.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
+index 7609ce2b2c5e2ead90aceab08b6610955914340b..1d7c72d7bb9a0fcbb8d47556ec3173440db32447 100644
+--- a/net/ethtool/ioctl.c
++++ b/net/ethtool/ioctl.c
+@@ -659,6 +659,9 @@ static int ethtool_get_settings(struct net_device *dev, void __user *useraddr)
+ 	int err;
+ 
+ 	ASSERT_RTNL();
++	if (!netif_device_present(dev))
++		return -ENODEV;
++
+ 	if (!dev->ethtool_ops->get_link_ksettings)
+ 		return -EOPNOTSUPP;
+ 
+-- 
+2.48.1
+
