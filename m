@@ -1,237 +1,92 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79D9919342F
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:26:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA99514A629;
+	Mon, 10 Feb 2025 11:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739186820; cv=none; b=ccPg0iHYol8ShFs4XRKAziNTRma7gLt54X8Dx6J+NYsGzbZwmoji7Juo5GN8j5+nFADtBJPHM7B9FKLeoZhgOxYQtSRGmH81l9oHlMMzKLISJRCWNfgu2oKHyisuA+HYoHqm0kU/+aQBBLD9l+DdlKsY6tmXLo8shgboVCAtOHY=
+	t=1739187069; cv=none; b=uTfqEBl+lBYU2wBUmMRT8vqObeL4STtOlM9uJFVfPM3sPM7yO8wkdsZvKD3B0M8OiFLCYVxL7RWhTCpOrN5ljUuyYzsNFHNoYIeEDSPFJ3tRybVpQE1ih9d4Qc3pFuBJgsXUILH92jH2rAul0Ed7yMLxF3AfX7rYEeSUz4pLT/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739186820; c=relaxed/simple;
-	bh=Hvmn/3CDvqGDbYrWg0oi4LWMw99rEVCWD3q6ez63EFo=;
+	s=arc-20240116; t=1739187069; c=relaxed/simple;
+	bh=Y1tq5fKI/fJJF6ykcusgVTeSMQSKtS+wP9vAzzlZ66Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iKcM7OWeGx7ERZa5FNGYwRiUhHA6Lq7NPXL1s+WvyRDyvm0I9YFIwcW6UkPzScA3i2rkTCbjWF9yhcGicgivDzoDgu2iRsMUjUDsE3gup7l/KeFKUoNVZzNJnT5+A4GO4c8z0Fcwiz1YlUJxFnynYkAAEnRP7uwvLANPHdd2Hz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 815791007;
-	Mon, 10 Feb 2025 03:27:19 -0800 (PST)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03A833F5A1;
-	Mon, 10 Feb 2025 03:26:50 -0800 (PST)
-Date: Mon, 10 Feb 2025 11:26:48 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Jinjie Ruan <ruanjinjie@huawei.com>, tglx@linutronix.de
-Cc: catalin.marinas@arm.com, will@kernel.org, oleg@redhat.com,
-	sstabellini@kernel.org, peterz@infradead.org, luto@kernel.org,
-	mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, kees@kernel.org,
-	wad@chromium.org, akpm@linux-foundation.org,
-	samitolvanen@google.com, masahiroy@kernel.org, hca@linux.ibm.com,
-	aliceryhl@google.com, rppt@kernel.org, xur@google.com,
-	paulmck@kernel.org, arnd@arndb.de, mbenes@suse.cz,
-	puranjay@kernel.org, pcc@google.com, ardb@kernel.org,
-	sudeep.holla@arm.com, guohanjun@huawei.com, rafael@kernel.org,
-	liuwei09@cestc.cn, dwmw@amazon.co.uk, Jonathan.Cameron@huawei.com,
-	liaochang1@huawei.com, kristina.martsenko@arm.com, ptosi@google.com,
-	broonie@kernel.org, thiago.bauermann@linaro.org,
-	kevin.brodsky@arm.com, joey.gouly@arm.com, liuyuntao12@huawei.com,
-	leobras@redhat.com, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH -next v5 03/22] arm64: entry: Move
- arm64_preempt_schedule_irq() into __exit_to_kernel_mode()
-Message-ID: <Z6nieJ2M6Ro7CeO_@J2N7QTR9R3>
-References: <20241206101744.4161990-1-ruanjinjie@huawei.com>
- <20241206101744.4161990-4-ruanjinjie@huawei.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=KwZEErfjpX8IJlFCcOHBbIhBPNe2MGXU4Z8L5T7LmgLYJcTmtdNBxYv03x/Siv5hYSe4I0GpZGGYlsqJPfb7v1LtfC8WKst9Klbs6V/cQ23LAfqPpAL8mc7RVC6TPqmg9UAx6+VLYkHV0mNwER1dTlbwTSHrNIFsGVy2kbds4/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0mesZROv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0mesZROv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57025C4CED1;
+	Mon, 10 Feb 2025 11:31:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739187069;
+	bh=Y1tq5fKI/fJJF6ykcusgVTeSMQSKtS+wP9vAzzlZ66Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=0mesZROvncLKDL1F3edNX5yJqHA6ngS0s0pELMMkZ9Qe7f8G2Zcwh5XDEMqhpAKDo
+	 C5N6tPIVZHTzKvAvUVXw99vk4KvpyzxH/MrabCbatOVy+iDy4gJujWSb7JGfN8jfI7
+	 bFPW/7bEp6fcgaNeMPMbvy567qEoDVUUYOVgISD4=
+Date: Mon, 10 Feb 2025 12:31:05 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Lyude Paul <lyude@redhat.com>
+Cc: rust-for-linux@vger.kernel.org,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] rust/kernel: Add faux device bindings
+Message-ID: <2025021030-glorified-pasture-e249@gregkh>
+References: <20250207234928.420693-1-lyude@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20241206101744.4161990-4-ruanjinjie@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250207234928.420693-1-lyude@redhat.com>
 
-On Fri, Dec 06, 2024 at 06:17:25PM +0800, Jinjie Ruan wrote:
-> The generic entry code try to reschedule every time when the kernel
-> mode non-NMI exception return. At the moment, arm64 only reschedule every
-> time when EL1 irq exception return;
-
-I think this is a bit unclear, and should say something like:
-  
-| The arm64 entry code only preempts a kernel context upon a return from
-| a regular IRQ exception. The generic entry code may preempt a kernel
-| context for any exception return where irqentry_exit() is used, and so
-| may preempt other exceptions such as faults.
-
-Thomas, can you confirm that's the *intent* of the generic entry code?
-
-> In preparation for moving arm64 over to the generic entry code, move
-> arm64_preempt_schedule_irq() into exit_to_kernel_mode(), so not
-> only EL1 irq but also all EL1 non-NMI exception return, there is a chance
-> to reschedule. And only if irqs are enabled when the exception trapped,
-> there may be a chance to reschedule after the exceptions have been handled,
-> so move arm64_preempt_schedule_irq() into regs_irqs_disabled()
-> check false block, but it will try to reschedule only when TINY_RCU is
-> enabled or current is not an idle task.
-
-I think the detail is confusing here, and it would be better to say:
-
-| In preparation for moving arm64 over to the generic entry code, align
-| arm64 with the generic behaviour by calling
-| arm64_preempt_schedule_irq() from exit_to_kernel_mode(). To make this
-| possible, arm64_preempt_schedule_irq() and need_irq_preemption() are
-| moved earlier in the file, with no changes.
-
-Mark.
-
-> As Mark pointed out, this change will have the following 2 key impact:
+On Fri, Feb 07, 2025 at 06:49:25PM -0500, Lyude Paul wrote:
+> This introduces a module for working with faux devices in rust, along with
+> adding sample code to show how the API is used. Unlike other types of
+> devices, we don't provide any hooks for device probe/removal - since these
+> are optional for the faux API and are unnecessary in rust.
 > 
-> - " We'll preempt even without taking a "real" interrupt. That
->     shouldn't result in preemption that wasn't possible before,
->     but it does change the probability of preempting at certain points,
->     and might have a performance impact, so probably warrants a
->     benchmark."
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Maíra Canal <mairacanal@riseup.net>
+> Cc: Danilo Krummrich <dakr@kernel.org>
+> Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 > 
-> - " We will not preempt when taking interrupts from a region of kernel
->     code where IRQs are enabled but RCU is not watching, matching the
->     behaviour of the generic entry code.
-> 
->     This has the potential to introduce livelock if we can ever have a
->     screaming interrupt in such a region, so we'll need to go figure out
->     whether that's actually a problem.
-> 
->     Having this as a separate patch will make it easier to test/bisect
->     for that specifically."
-> 
-> Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 > ---
->  arch/arm64/kernel/entry-common.c | 88 ++++++++++++++++----------------
->  1 file changed, 44 insertions(+), 44 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
-> index 1687627b2ecf..7a588515ee07 100644
-> --- a/arch/arm64/kernel/entry-common.c
-> +++ b/arch/arm64/kernel/entry-common.c
-> @@ -75,6 +75,48 @@ static noinstr irqentry_state_t enter_from_kernel_mode(struct pt_regs *regs)
->  	return state;
->  }
->  
-> +#ifdef CONFIG_PREEMPT_DYNAMIC
-> +DEFINE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
-> +#define need_irq_preemption() \
-> +	(static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
-> +#else
-> +#define need_irq_preemption()	(IS_ENABLED(CONFIG_PREEMPTION))
-> +#endif
-> +
-> +static void __sched arm64_preempt_schedule_irq(void)
-> +{
-> +	if (!need_irq_preemption())
-> +		return;
-> +
-> +	/*
-> +	 * Note: thread_info::preempt_count includes both thread_info::count
-> +	 * and thread_info::need_resched, and is not equivalent to
-> +	 * preempt_count().
-> +	 */
-> +	if (READ_ONCE(current_thread_info()->preempt_count) != 0)
-> +		return;
-> +
-> +	/*
-> +	 * DAIF.DA are cleared at the start of IRQ/FIQ handling, and when GIC
-> +	 * priority masking is used the GIC irqchip driver will clear DAIF.IF
-> +	 * using gic_arch_enable_irqs() for normal IRQs. If anything is set in
-> +	 * DAIF we must have handled an NMI, so skip preemption.
-> +	 */
-> +	if (system_uses_irq_prio_masking() && read_sysreg(daif))
-> +		return;
-> +
-> +	/*
-> +	 * Preempting a task from an IRQ means we leave copies of PSTATE
-> +	 * on the stack. cpufeature's enable calls may modify PSTATE, but
-> +	 * resuming one of these preempted tasks would undo those changes.
-> +	 *
-> +	 * Only allow a task to be preempted once cpufeatures have been
-> +	 * enabled.
-> +	 */
-> +	if (system_capabilities_finalized())
-> +		preempt_schedule_irq();
-> +}
-> +
->  /*
->   * Handle IRQ/context state management when exiting to kernel mode.
->   * After this function returns it is not safe to call regular kernel code,
-> @@ -97,6 +139,8 @@ static __always_inline void __exit_to_kernel_mode(struct pt_regs *regs,
->  			return;
->  		}
->  
-> +		arm64_preempt_schedule_irq();
-> +
->  		trace_hardirqs_on();
->  	} else {
->  		if (state.exit_rcu)
-> @@ -281,48 +325,6 @@ static void noinstr arm64_exit_el1_dbg(struct pt_regs *regs,
->  		lockdep_hardirqs_on(CALLER_ADDR0);
->  }
->  
-> -#ifdef CONFIG_PREEMPT_DYNAMIC
-> -DEFINE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
-> -#define need_irq_preemption() \
-> -	(static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
-> -#else
-> -#define need_irq_preemption()	(IS_ENABLED(CONFIG_PREEMPTION))
-> -#endif
-> -
-> -static void __sched arm64_preempt_schedule_irq(void)
-> -{
-> -	if (!need_irq_preemption())
-> -		return;
-> -
-> -	/*
-> -	 * Note: thread_info::preempt_count includes both thread_info::count
-> -	 * and thread_info::need_resched, and is not equivalent to
-> -	 * preempt_count().
-> -	 */
-> -	if (READ_ONCE(current_thread_info()->preempt_count) != 0)
-> -		return;
-> -
-> -	/*
-> -	 * DAIF.DA are cleared at the start of IRQ/FIQ handling, and when GIC
-> -	 * priority masking is used the GIC irqchip driver will clear DAIF.IF
-> -	 * using gic_arch_enable_irqs() for normal IRQs. If anything is set in
-> -	 * DAIF we must have handled an NMI, so skip preemption.
-> -	 */
-> -	if (system_uses_irq_prio_masking() && read_sysreg(daif))
-> -		return;
-> -
-> -	/*
-> -	 * Preempting a task from an IRQ means we leave copies of PSTATE
-> -	 * on the stack. cpufeature's enable calls may modify PSTATE, but
-> -	 * resuming one of these preempted tasks would undo those changes.
-> -	 *
-> -	 * Only allow a task to be preempted once cpufeatures have been
-> -	 * enabled.
-> -	 */
-> -	if (system_capabilities_finalized())
-> -		preempt_schedule_irq();
-> -}
-> -
->  static void do_interrupt_handler(struct pt_regs *regs,
->  				 void (*handler)(struct pt_regs *))
->  {
-> @@ -591,8 +593,6 @@ static __always_inline void __el1_irq(struct pt_regs *regs,
->  	do_interrupt_handler(regs, handler);
->  	irq_exit_rcu();
->  
-> -	arm64_preempt_schedule_irq();
-> -
->  	exit_to_kernel_mode(regs, state);
->  }
->  static void noinstr el1_interrupt(struct pt_regs *regs,
-> -- 
-> 2.34.1
-> 
+> V2:
+> * Check for NULL on return from device_create(), not a pointer error
+> * Rename Device to Registration to make its purpose more clear
+> * Drop platform device comment from crate docstring.
+> * Update MAINTAINERS
+> V3:
+> * Clarify safety comment around thread-safety
+> * Return ENODEV on failure from new()
+> * Add missing newline in faux driver sample
+> * s/crate/module/ in descriptions
+> * Add newline after faux module docstring
+> * Fix missing markdown in safety comments
+> * Add missing INVARIANT: comment in Registration
+> * s/Registration/faux::Registration/ in rust_driver_faux.rs
+
+Thanks, I've taken this into my series and fixed up the api where I
+added a "parent" pointer.  I'll send it out in a bit...
+
+thanks,
+
+greg k-h
