@@ -1,140 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.kaechele.ca (mail.kaechele.ca [54.39.219.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA5A2F2A;
-	Mon, 10 Feb 2025 05:01:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4D52F2A;
+	Mon, 10 Feb 2025 05:02:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.39.219.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739163690; cv=none; b=Hddc4h6H704YDVWqr1pDi7ntqja1NO50lOd1LdRQ+oNVjoBhgk3fF2Gi0UFpbVIjp2+9B1cM5zgSLhPZ0JmRUyhtUWXmz23Pw6F9LyqAX/rFZQVLOQYB0EvhHVBDYYeSRRrjAC927A7BNB+Pr9K0YWRVPgMqb+y2M398JogCTCM=
+	t=1739163766; cv=none; b=S0XF0mISCBMf9ZC4F8Cqd9Y3+Jym2z8bmsggauajCLbzC5nZMsLW/qIf8684+3xkGhYXmT7vhiRjpSKkV47eF5msX4dvYWFDrosTeUocXAaH9908G74EBmB7bihMRH+BYi2rIaorxjwf7LwCg1RgxmTTMByhsO3UUJxRwlJupXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739163690; c=relaxed/simple;
-	bh=W2w6E6ETmTeuVJUBa9j4VdBuubQqmp/igTJCtkIwjVM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BFwhKqTIFsTj20tEBYgELs2uU47+AVHf8ICE7g9irfTm9cO07lmQtjPGeGKMjaHYbCwexkzQ85FHRE4+TxzP8m2IHizZiKZWiaTi+zccrc3+iw8+3zclQv5uQf+SkBJXXCelBKGrM6Air7OdXp9lacX88Eq6BriCVzvVHDMiW4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BUIHntp4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739163766; c=relaxed/simple;
+	bh=dj0TKfk5lmdhnyy8yBqB3UF6wNeDh11HLS3XDxff4F8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JpYfhJ4A/J5ksFNaAJds2yjg5zc6H6RhBCidsP0uKurGqa72ghxrW+epzvNqkQr/9vUbiQvvtC2n0jSZwApk4Dmmv2ZSWIJml4+um+LpJ7MAd2kdfPttPax6KbXf3u9GL4ZgXTBNTh/SVv+RO0qWthFIPphdc2p0Xz0MyAKGN6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaechele.ca; spf=pass smtp.mailfrom=kaechele.ca; dkim=pass (1024-bit key) header.d=kaechele.ca header.i=@kaechele.ca header.b=SPZlCrJ8; arc=none smtp.client-ip=54.39.219.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kaechele.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaechele.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BUIHntp4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33B4CC4CED1;
-	Mon, 10 Feb 2025 05:01:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739163690;
-	bh=W2w6E6ETmTeuVJUBa9j4VdBuubQqmp/igTJCtkIwjVM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BUIHntp4y1Kn+4uG1G4y9imPcbX5gkK6qDHFuVdkq8033fsfRQxMMSUVqL/MGYOZ3
-	 ILPo85v6SwFvXfPduBazBxQahCZcLpaOtC1y/XVv4UNEad2rdAUGd3fXRKNMKOHrdx
-	 TP4dAKjkJsmzPniIT5KUNuZS45N54eiI4VxHFhsntIF0DBydeZszHn0GeoyydEqJuh
-	 sXJf60UgHvq9SX6iuzIHNzgq+4xafN2zHgthJDJupp9+okQTr+FsgKe1ELc307Ay42
-	 wiWAAYDQPoxDueIJbwx6Q5MtTVFjkIgYUf7e8AAZ6i7XI89Pyfxk7tfNPfS9A1qSo7
-	 I/DEt3rGB+m1Q==
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-308e3bd8286so12145401fa.1;
-        Sun, 09 Feb 2025 21:01:30 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWPvSIunJlQkltFxwqqiRdcH/A2Olgq952F+nF0tRUvHlBZkraTcFNzNjbaXMXzI1+jUrSp4Gqzwf5i2EI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzo2AfoweHPhZAQ5S5Q3hY8Os0fsBHuo7ivA+4/cmeHFmgw2zJl
-	jeobikfo/P1PZedhMuXbxgtopDH8BEuVksAu7NaeBoDp8WfqY/G+ZtDY4rkKs9VEymv+z1KrhNr
-	uyoLxKRBrerPsC9qtFTv7zZpSoZI=
-X-Google-Smtp-Source: AGHT+IHLxJvAHmlELrlec1zDn9FnTVtXy3FIzCBROaw6n4XXX+y3xD2ESZoqMRHGKCbcBQXAa/7je/rBVVXVRZKj1mo=
-X-Received: by 2002:a2e:bccc:0:b0:307:e031:15a0 with SMTP id
- 38308e7fff4ca-307e57ce0efmr42647781fa.13.1739163688887; Sun, 09 Feb 2025
- 21:01:28 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=kaechele.ca header.i=@kaechele.ca header.b="SPZlCrJ8"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2260EC006A;
+	Mon, 10 Feb 2025 00:02:34 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kaechele.ca; s=201907;
+	t=1739163759;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gGADIh97zIcbr/W+/NgjtXwdlW0zk4tHNG7sqPEye4E=;
+	b=SPZlCrJ8hy9EbwZ3jYdHeS3rWbdQweVq7R7N8irmm7y8Su9FN9jIjJXnMUlXHRhivBWEyE
+	InhqB9igKH/OV9IfKouI8QHaA0s4zawftEYbpGtuS/rkUkeK9Rkb/w4UQYE5pVY98kSAOy
+	z3IQ/tWPiKOrxn3itllYQigqLI+5AkI=
+From: Felix Kaechele <felix@kaechele.ca>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: =?UTF-8?q?Barnab=C3=A1s=20Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] Input: rmi_i2c: introduce reset GPIO handling
+Date: Mon, 10 Feb 2025 00:02:09 -0500
+Message-ID: <20250210050220.634497-2-felix@kaechele.ca>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250210050220.634497-1-felix@kaechele.ca>
+References: <20250210050220.634497-1-felix@kaechele.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250208163959.3973163-1-ole0811sch@gmail.com>
-In-Reply-To: <20250208163959.3973163-1-ole0811sch@gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 10 Feb 2025 14:00:52 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQBBKfSwQ=z3yBchg--gcrAykWz6xvpAYWKse9R9g8KVQ@mail.gmail.com>
-X-Gm-Features: AWEUYZn_X83jYxjHSq3f6Bj36yQxqx79BFj1f1IaiFuzsHlPGiLFIKV_k8nlAig
-Message-ID: <CAK7LNAQBBKfSwQ=z3yBchg--gcrAykWz6xvpAYWKse9R9g8KVQ@mail.gmail.com>
-Subject: Re: [PATCH v7 00/11] kconfig: Add support for conflict resolution
-To: Ole Schuerks <ole0811sch@gmail.com>
-Cc: linux-kbuild@vger.kernel.org, jude.gyimah@rub.de, thorsten.berger@rub.de, 
-	deltaone@debian.org, jan.sollmann@rub.de, mcgrof@kernel.org, 
-	linux-kernel@vger.kernel.org, nathan@kernel.org, nicolas@fjasle.eu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Sun, Feb 9, 2025 at 1:40=E2=80=AFAM Ole Schuerks <ole0811sch@gmail.com> =
-wrote:
->
-> Hi,
->
-> This patch series (for next-20250207) provides support to enable users
-> to express their desired target configuration and display possible
-> resolutions to their conflicts. This support is provided within xconfig.
->
-> Conflict resolution is provided by translating kconfig's configuration
-> option tree to a propositional formula and allowing our resolution
-> algorithm and PicoSAT to calculate the possible fixes for an expressed
-> target kernel configuration. PicoSAT is the smallest and most robust C SA=
-T
-> solver we could find which is also GPL compatible. PicoSAT is used as a
-> dynamically loaded library. For Debian and Fedora, the apt and dnf packag=
-es
-> named "picosat" provide the library. For other distros, we provide
-> instructions on how PicoSAT needs to be compiled from the sources in the
-> documentation.
->
-> New UI extensions are made to xconfig with panes and buttons to allow use=
-rs
-> to express new desired target options, calculate fixes, and apply any of
-> found solutions.
->
-> You can see a YouTube video demonstrating this work [2]. This effort is
-> part of the kernelnewbies Kconfig-SAT project [3], the approach and effor=
-t
-> is also explained in detail in our paper [4]. The results from the
-> evaluation have significantly improved since then: Around 80 % of the
-> conflicts could be resolved, and 99.9 % of the generated fixes resolved t=
-he
-> conflict. It is also our attempt at contributing back to the kernel
-> community, whose configurator researchers studied a lot.
->
-> Patches applicable to next-20250207.
->
-> [0] https://gsd.uwaterloo.ca/sites/default/files/vamos12-survey.pdf
-> [1] https://www.linux-magazine.com/Issues/2021/244/Kconfig-Deep-Dive
-> [2] https://www.youtube.com/watch?v=3Dvn2JgK_PTbc
-> [3] https://kernelnewbies.org/KernelProjects/kconfig-sat
-> [4] http://www.cse.chalmers.se/~bergert/paper/2021-icseseip-configfix.pdf
->
-> Thanks from the team! (and thanks to Luis Chamberlain for guiding us here=
-)
->
-> Changelog v7:
-> * improve error handling when loading picosat symbols with dlsym(): use
->   dlerror() instead of checking for NULL
-> * move list_at_index from scripts/include/list.h to
->   scripts/kconfig/cf_utils.h
-> * change interface of list_for_each_entry_from and rename list_size to
->   list_count_nodes to more closely match scripts/include/list.h
-> * change misleading name "rangefix" of fix generation algorithm to
->   "fixgen"
+Implement reset GPIO handling logic for the rmi_i2c driver. This logic
+is required for some mobile devices to successfully initialize the touch
+controller.
 
+The timings for the assertion of the reset GPIO were derived from the
+GPLv2+ licensed synaptics-dsx-v2.1 vendor driver release and research I
+conducted into downstream device tree sources. Values of 10ms to 20ms
+are commonly found.
 
+Tested-On: Motorola Moto G5 Plus (XT1685 "potter")
 
-Thanks for this, but I have no plans to merge the SAT solver.
+Signed-off-by: Felix Kaechele <felix@kaechele.ca>
+---
+ drivers/input/rmi4/rmi_driver.c |  1 -
+ drivers/input/rmi4/rmi_driver.h |  2 ++
+ drivers/input/rmi4/rmi_i2c.c    | 23 +++++++++++++++++++++++
+ 3 files changed, 25 insertions(+), 1 deletion(-)
 
-The reason is that my future plan is to move toolchain selection
-to the Kconfig stage instead of specifying it statically from the command l=
-ine.
-This approach was suggested by Linus [1], and to achieve that,
-the shell evaluation must be dynamically re-evaluated [2].
+diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
+index 2168b6cd7167..ff6aed6a11c1 100644
+--- a/drivers/input/rmi4/rmi_driver.c
++++ b/drivers/input/rmi4/rmi_driver.c
+@@ -30,7 +30,6 @@
+ #define RMI4_PAGE_MASK 0xFF00
+ 
+ #define RMI_DEVICE_RESET_CMD	0x01
+-#define DEFAULT_RESET_DELAY_MS	100
+ 
+ void rmi_free_function_list(struct rmi_device *rmi_dev)
+ {
+diff --git a/drivers/input/rmi4/rmi_driver.h b/drivers/input/rmi4/rmi_driver.h
+index 3bfe9013043e..e01453bd680f 100644
+--- a/drivers/input/rmi4/rmi_driver.h
++++ b/drivers/input/rmi4/rmi_driver.h
+@@ -16,6 +16,8 @@
+ #define SYNAPTICS_INPUT_DEVICE_NAME "Synaptics RMI4 Touch Sensor"
+ #define SYNAPTICS_VENDOR_ID 0x06cb
+ 
++#define DEFAULT_RESET_DELAY_MS	100
++
+ #define GROUP(_attrs) { \
+ 	.attrs = _attrs,  \
+ }
+diff --git a/drivers/input/rmi4/rmi_i2c.c b/drivers/input/rmi4/rmi_i2c.c
+index 3c0c5fd44702..beff566ca2c8 100644
+--- a/drivers/input/rmi4/rmi_i2c.c
++++ b/drivers/input/rmi4/rmi_i2c.c
+@@ -4,6 +4,7 @@
+  * Copyright (c) 2011 Unixphere
+  */
+ 
++#include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/rmi.h>
+ #include <linux/of.h>
+@@ -26,7 +27,9 @@
+  * @tx_buf_size: Size of the buffer
+  *
+  * @supplies: Array of voltage regulators
++ * @reset_gpio: Reference to the reset GPIO
+  * @startup_delay: Milliseconds to pause after powering up the regulators
++ * @reset_delay: Milliseconds to pause after resetting the device
+  */
+ struct rmi_i2c_xport {
+ 	struct rmi_transport_dev xport;
+@@ -39,7 +42,9 @@ struct rmi_i2c_xport {
+ 	size_t tx_buf_size;
+ 
+ 	struct regulator_bulk_data supplies[2];
++	struct gpio_desc *reset_gpio;
+ 	u32 startup_delay;
++	u32 reset_delay;
+ };
+ 
+ #define RMI_PAGE_SELECT_REGISTER 0xff
+@@ -227,6 +232,15 @@ static int rmi_i2c_probe(struct i2c_client *client)
+ 		return -ENODEV;
+ 	}
+ 
++	rmi_i2c->reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
++						      GPIOD_OUT_HIGH);
++	if (IS_ERR(rmi_i2c->reset_gpio)) {
++		error = PTR_ERR(rmi_i2c->reset_gpio);
++		dev_err(&client->dev, "failed to get reset GPIO: %d\n", error);
++		return error;
++	}
++	gpiod_set_consumer_name(rmi_i2c->reset_gpio, "rmi4 reset");
++
+ 	rmi_i2c->supplies[0].supply = "vdd";
+ 	rmi_i2c->supplies[1].supply = "vio";
+ 	error = devm_regulator_bulk_get(&client->dev,
+@@ -251,6 +265,15 @@ static int rmi_i2c_probe(struct i2c_client *client)
+ 
+ 	msleep(rmi_i2c->startup_delay);
+ 
++	if (rmi_i2c->reset_gpio) {
++		of_property_read_u32(client->dev.of_node, "syna,reset-delay-ms",
++				     &rmi_i2c->reset_delay);
++		gpiod_set_value_cansleep(rmi_i2c->reset_gpio, 1);
++		usleep_range(10000, 20000);
++		gpiod_set_value_cansleep(rmi_i2c->reset_gpio, 0);
++		msleep(rmi_i2c->reset_delay ?: DEFAULT_RESET_DELAY_MS);
++	}
++
+ 	rmi_i2c->client = client;
+ 	mutex_init(&rmi_i2c->page_mutex);
+ 
+-- 
+2.48.1
 
-The SAT solver would likely conflict with this plan. At least due to the
-significant amount of additional code, which would be an obstacle.
-
-
-[1] https://lore.kernel.org/lkml/CAHk-=3DwhdrvCkSWh=3DBRrwZwNo3=3DyLBXXM88N=
-Gx8VEpP1VTgmkyQ@mail.gmail.com/
-
-[2] https://lore.kernel.org/lkml/CAK7LNATe7Ah-ow9wYGrtL9i4z-VD=3DMCo=3DsJjb=
-C_S0ofEoH6CFQ@mail.gmail.com/
-
-
---=20
-Best Regards
-Masahiro Yamada
