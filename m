@@ -1,106 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from bsdbackstore.eu (128-116-240-228.dyn.eolo.it [128.116.240.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9BC2E628
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B0C14F70;
+	Mon, 10 Feb 2025 10:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.116.240.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739181594; cv=none; b=DLbBDlpNCiAjBvtdv4fkqvxaUDgeMHyQdKgkswANIkqsLjIrPeoYJU2Xuy3vIsTjER9lEer//kW2twsUcRtgStrfPQODvVpJWLHYBrIOCowWQLn+WhJKfz4VLMXrtkycJyq4SsuC2UghHIC98fDPYLRp8mdqMtVzqN4Zv8vnqek=
+	t=1739181710; cv=none; b=E9lySH0aeFH1iiHy0jlvZYm9F/mNuIFBfjNPQWsI3MEMbKoC5kEJXDL/YG8lvqUu9ljQUI5C0lV8lr6SQY3bXP8+Thk/icMcf78fdUgT3LfBYgdBwQl4Nn4cnr5rxMS6F4xcquXaEXwYiVdmwIKWc6rN2vsKrWlbI0GqeSkcwGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739181594; c=relaxed/simple;
-	bh=E+6G9ivPSVsgFELSOBAAWHbWTTLXkPSljJe47y9F14w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fVkQF4SX6eGvzDj0yi6mgqf1X2mUrEqsr4XDlGT/3FrQVOOBm7LpTcDvqOQxqTRFN0QQMiuNXiZhSFBny6GWsn3XUfE73/r2AG8uFGJ5hDg6UxQaA877VhAchiZkuON8JN6R88QP4kpgBRQAwzjcqijDGNWGI1o8i8vcY6aoru8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eQrJP15Q; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eQrJP15Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739181594; x=1770717594;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=E+6G9ivPSVsgFELSOBAAWHbWTTLXkPSljJe47y9F14w=;
-  b=eQrJP15Q29GeQ4vRyKtux3UJbNMAfSaJ35ldeNQ5p8kE846h3DGSxyVp
-   Qf0HO4/P9zJqg0EPe8YCuR3cYYbWs3YK/LHGPU9GBqCv/gw06xVxsqXwr
-   2Kv4ZYXkBn91/fP69bPvQEc8BzyBBNZDx32WetQx+2yCtAGHuYTRRGcMa
-   4LFILxCdXzvuuUZCfgAShDTnuVPvgF25xniUBY5e24I5rQ1QKo5RnykX4
-   lqHfFzqKnq6ljbORcd3U+DTiNxQQAFdXR9dsoMBLPmyahaUL+tP/0gRLh
-   A5QLdi7IQLAU069oQDTMdd4T3QItUCxgpkCpPiUydl3T0SOp8UCPZQ75E
-   w==;
-X-CSE-ConnectionGUID: BdXPOrBZSsGe6ppHEoJ4Ag==
-X-CSE-MsgGUID: KV4S6BCJQvK/rM5NIVGb8Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="39666638"
-X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="39666638"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 01:59:53 -0800
-X-CSE-ConnectionGUID: Lz+XmfaiRZuvKqZNFCS1sg==
-X-CSE-MsgGUID: T5+4AuQ0R7Sqoz3Biyq8rw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="112584355"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa007.jf.intel.com with ESMTP; 10 Feb 2025 01:59:51 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 7F6392F2; Mon, 10 Feb 2025 11:59:49 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: virtualization@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Amit Shah <amit@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] virtio_console: Get rid of unneeded temporary variable
-Date: Mon, 10 Feb 2025 11:59:45 +0200
-Message-ID: <20250210095946.4122771-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
+	s=arc-20240116; t=1739181710; c=relaxed/simple;
+	bh=96GvQM+rLNhGqu2cqM9zlmUkzr9OQptMOdGtCwz9Q4s=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=sHQndiV4m4WFz+tuRMV5JQjiYkHuzMaKMniSLXQwWOM0BoHXc3ToZBXez/E2VNSnfCBBUGREDWdttWodefBrmeUuS6hVszV0qGaMwGJlNF+KB8TC1MK2vzt8V7p7ZeEdyuOqQBTualsOBd9n/n/vswZJbWEIPIF4gSpGbyQ04Nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bsdbackstore.eu; spf=pass smtp.mailfrom=bsdbackstore.eu; arc=none smtp.client-ip=128.116.240.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bsdbackstore.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsdbackstore.eu
+Received: from localhost (128-116-240-228.dyn.eolo.it [128.116.240.228])
+	by bsdbackstore.eu (OpenSMTPD) with ESMTPSA id 95258b83 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Mon, 10 Feb 2025 11:01:39 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Date: Mon, 10 Feb 2025 11:01:39 +0100
+Message-Id: <D7OOGIOAJRUH.9LOJ3X4IUKQV@bsdbackstore.eu>
+Cc: "linux-kernel" <linux-kernel@vger.kernel.org>, "linux-nvme"
+ <linux-nvme@lists.infradead.org>, "linux-block"
+ <linux-block@vger.kernel.org>
+Subject: Re: nvme-tcp: fix a possible UAF when failing to send request
+From: "Maurizio Lombardi" <mlombard@bsdbackstore.eu>
+To: "zhang.guanghui@cestc.cn" <zhang.guanghui@cestc.cn>, "sagi"
+ <sagi@grimberg.me>, "mgurtovoy" <mgurtovoy@nvidia.com>, "kbusch"
+ <kbusch@kernel.org>, "sashal" <sashal@kernel.org>, "chunguang.xu"
+ <chunguang.xu@shopee.com>
+X-Mailer: aerc
+References: <2025021015413817916143@cestc.cn>
+In-Reply-To: <2025021015413817916143@cestc.cn>
 
-When compiling a kernel with GCC using `make W=1` with CONFIG_WERROR=y
-(which is default nowadays), the build fails:
+On Mon Feb 10, 2025 at 8:41 AM CET, zhang.guanghui@cestc.cn wrote:
+> Hello=20
+>
+>
 
-drivers/char/virtio_console.c:1427:9: note: ‘snprintf’ output between 9 and 27 bytes into a destination of size 16
+I guess you have to fix your mail client.
 
-Indeed, GCC can't see the limits of the variables that are in use.
-Fix this by using dev_name() of the newly created device that is
-luckily the same as the string used for the DebugFS node name.
+>
+> =C2=A0 =C2=A0=C2=A0When using the nvme-tcp driver in a storage cluster, t=
+he driver may trigger a null pointer causing the host to crash several time=
+s.
+> By analyzing the vmcore, we know the direct cause is that=C2=A0 the reque=
+st->mq_hctx was used after free.=20
+>
+>
+> CPU1=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0CPU2
+>
+> nvme_tcp_poll=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 nvme_=
+tcp_try_send=C2=A0 --failed to send reqrest 13
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/char/virtio_console.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+This simply looks like a race condition between nvme_tcp_poll() and nvme_tc=
+p_try_send()
+Personally, I would try to fix it inside the nvme-tcp driver without
+touching the core functions.
 
-diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
-index 24442485e73e..707464d2227c 100644
---- a/drivers/char/virtio_console.c
-+++ b/drivers/char/virtio_console.c
-@@ -1321,7 +1321,6 @@ static void send_sigio_to_port(struct port *port)
- 
- static int add_port(struct ports_device *portdev, u32 id)
- {
--	char debugfs_name[16];
- 	struct port *port;
- 	dev_t devt;
- 	int err;
-@@ -1424,9 +1423,7 @@ static int add_port(struct ports_device *portdev, u32 id)
- 	 * Finally, create the debugfs file that we can use to
- 	 * inspect a port's state at any time
- 	 */
--	snprintf(debugfs_name, sizeof(debugfs_name), "vport%up%u",
--		 port->portdev->vdev->index, id);
--	port->debugfs_file = debugfs_create_file(debugfs_name, 0444,
-+	port->debugfs_file = debugfs_create_file(dev_name(port->dev), 0444,
- 						 pdrvdata.debugfs_dir,
- 						 port, &port_debugfs_fops);
- 	return 0;
--- 
-2.45.1.3035.g276e886db78b
+Maybe nvme_tcp_poll should just ensure that io_work completes before
+calling nvme_tcp_try_recv(), the POLLING flag should then prevent io_work
+from getting rescheduled by the nvme_tcp_data_ready() callback.
+
+
+Maurizio
 
