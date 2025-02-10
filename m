@@ -1,195 +1,217 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from SEVP216CU002.outbound.protection.outlook.com (mail-koreacentralazon11022096.outbound.protection.outlook.com [40.107.43.96])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CEAB54782;
-	Mon, 10 Feb 2025 09:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739178362; cv=none; b=TP8Jk6/x//+M+G+yfuxhkmXtKedRlbnAahuRCiAk1gp+eaSXlmY/IMj3Vsn6+L6iRn7Jd1n8pOqrlXiiZGwY0U9+PlboVNReyupkJUEQNyiObuhyZ7G+MdQ+CVf2O8sZd1/RaDRV9JkjfLwvuvNoBtZ0gYWolaKHYfqWwo7TcRE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739178362; c=relaxed/simple;
-	bh=PinqgSQuIRiDyVmTEU8mxVCTFTknhzoXuBmbBYGLgXw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NMNUmO9X0JAZXFIlq6sZWW5k+wTa5dGjlq8OFolxMgDWcuP7A9ocJj4KntEirpFgpZ+6u6mYrYwWGL7jsZV5YJkGJvHYx13CgTsBTL37t30aRsC96zlpW0mYATCzPcM63r6Ag9M/sAF9A3DkI93u/mzh3a1ybITi0jEnzSN13PY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NDBKaEm1; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7633254782;
+	Mon, 10 Feb 2025 09:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.43.96
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739178460; cv=fail; b=HaoC+d1C0f7yQPf3tdDq9fJWC7GBpnhAKXifYEiywa6sQNY4PVTQgRpxGRqlP7LQNlNpzNb6FkyCr9wJH6GcH0HgxnbaBtVyNpnrTmo8md3CjCwz9hNa+MYomlg//jRyST45nWggFxARYVI3yr/T0LatXg2Xsp97WMloaNM6oXQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739178460; c=relaxed/simple;
+	bh=38YHO0ws86KoSyuI9T4FzVJNMaznDBO2GD1MFdDXzEk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=N8v5dZEFnelwM/kuB11QWuTo5h2bEAPxWu46lrymvjCULVOT9plWR5UmNjnuvgyDr3IBxFMvloNtx/TLLaDp15n157oUvUDdzhyzSxbEyYCEOSZs6jLlFwcotwFdh2CeO1ijSw/4IcnGiySoDHIL7HX8kYGdnmikHblNHXw1cvE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com; spf=fail smtp.mailfrom=chipsnmedia.com; dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b=XLQbkgmK; arc=fail smtp.client-ip=40.107.43.96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=chipsnmedia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NDBKaEm1"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 519MT7D8028239;
-	Mon, 10 Feb 2025 09:05:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	4w9NfthMBwEcRekiAvRsUrp4oCMwhq6AuwL24E80vlQ=; b=NDBKaEm1lXMQDp4b
-	7XqSHn35ANnA4KLZz5J0y6TbmP19WJW6X4wXd5E+qguR2RyKNtkdWFxnom9j/npO
-	rzrPFL4DY74UykyfEbH0AGibTeAwiUwM64gfyI0jDcxc0oyLoPY9EIapCVm0Qngm
-	sUK51OikUBQMsQWSFi+LxXzlCwUWyi7Wqq1mGQvX9Zutc0cKCAK1D9Io7nKQhZ71
-	m0bYxwrsfPZbv6uMBkpN72SqieCvu2U6CSWKDudQ/5TN0BCdzqJLuYp8RqFYNks1
-	w+w2IIgwKu7NH3gn7/xMZWHm1qGH8y07bV9ofMOCZGENOluboanVb9Z5wS1ohr/m
-	03Niag==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0dxkt0m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 09:05:54 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51A95rIF017711
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 09:05:53 GMT
-Received: from [10.204.65.49] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Feb
- 2025 01:05:50 -0800
-Message-ID: <053dd6d6-9ca2-4723-8c21-da4093f00e03@quicinc.com>
-Date: Mon, 10 Feb 2025 14:35:47 +0530
+	dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b="XLQbkgmK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xGtUEpigxLqgO9D9HYEIMwLi/EoCesf02wtCJOD9wD1g0NY6rjRSLErmVwYFI1JDdcHItXlYZNVU7RguS92YYWD4rOx0Xw1z/fKhCndMK639icnHZDeS93IPeUHKAZ0l+JSYwbiXrciAKMztcsvAo2pPGrwvyRguywvyO0+72KZZy6fVZcXYXWLbywESqAA4LdAYf0y2kOPoLUfmFLcAFbavvOtgtnEMVMi7dRDH5geTnhU9xhf4qiNtcm0+bkBCwH1OcBfpHtHCNcLFc0nAuAbVdRA8P4PGflV5f05QP92CvCUkyirA+cAhVb9beA7TwquyjW5luDWQS11/XmHelQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dK/BtXiEDvWm0pigTCDTnLxycfOnIYLDZ82rzRezuBE=;
+ b=ejd7R4v5XWgH4JKDTOIwulQ3+DzccAHjAZK7IfrsxRKsYhAGq8VIi8cX3IdKaOk+2Y18U36WjhK7mNTmaNSjtz/PixSMzZy+aIqj9hQtknI7Lx8n8smwoBmQy7mewasRYBCkY+CvVHLq45Lj4dVlG+Ct9SPr+fEgP5bBIFcgTYvMt5F0JFaaGZpdghQc96tJB2h1+F//u9vOl/42D2QBhMpiE6ab3McCYtyIJOop7tr5CMn8cpR40gxmXVfewNpnUciPjyH8Opkt5Ke6+U5WussijOWAoBpEo1HQxQ1Ij5CLSFWnp3vcUzVDY3NIISudPakhAeksFDrqOppjYM8C2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=chipsnmedia.com; dmarc=pass action=none
+ header.from=chipsnmedia.com; dkim=pass header.d=chipsnmedia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=chipsnmedia.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dK/BtXiEDvWm0pigTCDTnLxycfOnIYLDZ82rzRezuBE=;
+ b=XLQbkgmKQMAudsDDZdvRriT+Q/pVN9JsE7vFV8knyQ+wmfsYnebZID7ArZRykkp/ND/uisvbH2tOb7Nw2/KuP/pM426B2a6sCv1mxFeQ95o6crJTMkCXA6GI/HJ8muStx3gOLRg465L8BdmWrrx5QYjeVNft/k+LM0JEATA3bRs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=chipsnmedia.com;
+Received: from SL2P216MB1246.KORP216.PROD.OUTLOOK.COM (2603:1096:101:a::9) by
+ PU4P216MB1504.KORP216.PROD.OUTLOOK.COM (2603:1096:301:cf::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8422.18; Mon, 10 Feb 2025 09:07:34 +0000
+Received: from SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
+ ([fe80::9e3d:ee20:8cc7:3c07]) by SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
+ ([fe80::9e3d:ee20:8cc7:3c07%4]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
+ 09:07:34 +0000
+From: Nas Chung <nas.chung@chipsnmedia.com>
+To: mchehab@kernel.org,
+	hverkuil@xs4all.nl,
+	sebastian.fricke@collabora.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-imx@nxp.com,
+	linux-arm-kernel@lists.infradead.org,
+	jackson.lee@chipsnmedia.com,
+	lafley.kim@chipsnmedia.com,
+	Nas Chung <nas.chung@chipsnmedia.com>
+Subject: [PATCH 1/8] media: platform: chips-media: wave5: Rename Kconfig parameter
+Date: Mon, 10 Feb 2025 18:07:18 +0900
+Message-Id: <20250210090725.4580-2-nas.chung@chipsnmedia.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250210090725.4580-1-nas.chung@chipsnmedia.com>
+References: <20250210090725.4580-1-nas.chung@chipsnmedia.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SL2P216CA0178.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:101:1a::6) To SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:101:a::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] misc: fastrpc: Modify context id mask to support
- polling mode
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>, <quic_bkumar@quicinc.com>,
-        <linux-kernel@vger.kernel.org>, <quic_chennak@quicinc.com>,
-        <dri-devel@lists.freedesktop.org>, <arnd@arndb.de>
-References: <20250127044239.578540-1-quic_ekangupt@quicinc.com>
- <20250127044239.578540-6-quic_ekangupt@quicinc.com>
- <im7gi5ib7wnihu3ff4a2erqctne2pm2zf3wl4qmuejz4dfhf7e@z5au6vnm5por>
- <08b469b8-2339-4fde-9472-fcaadbb4ed87@quicinc.com>
- <jeixk4dmk53ubnujop3sp2lc6jffugjmzndmmqmyuft7uquibt@s2h2dgj7yj7h>
-Content-Language: en-US
-From: Ekansh Gupta <quic_ekangupt@quicinc.com>
-In-Reply-To: <jeixk4dmk53ubnujop3sp2lc6jffugjmzndmmqmyuft7uquibt@s2h2dgj7yj7h>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 6WC4wc8GZpK5xRxVYR34dXDyx3cdaxJk
-X-Proofpoint-ORIG-GUID: 6WC4wc8GZpK5xRxVYR34dXDyx3cdaxJk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_04,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 bulkscore=0 clxscore=1015 adultscore=0
- lowpriorityscore=0 impostorscore=0 malwarescore=0 mlxscore=0 phishscore=0
- suspectscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502100076
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SL2P216MB1246:EE_|PU4P216MB1504:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4a3ccc61-a884-4b0e-275d-08dd49b25b9a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|52116014|366016|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?BiCIi0uF72IaipvwkPt8mF3R220N9CXRnDSAGHNnqWYVvpOeEkWFtSzbNN+E?=
+ =?us-ascii?Q?1s0fmXpqnIp9tbvQAu3swNeNzc5t+MVcm8xhkHZFYriQsdA6mXCqoZAmL1zC?=
+ =?us-ascii?Q?VSNRCfshjlW9Di3dDYd7L89vW+wnaY15opJ/cyTqCEjywV5dQpJqtKDZbCoM?=
+ =?us-ascii?Q?mb+fMWORxbaGPmw8wxNeKMUiOiLPcq31l3j5ydTQQJakVYNDvVwWTuboxWff?=
+ =?us-ascii?Q?52gGBl7kV82GeixBn171Gh2hN0QaQIK9RDLXNk893qkt6z4IRJ1niLLBt5Cq?=
+ =?us-ascii?Q?eDOsCtyIu7NTceBz8eRE4vBmJPQD4jGYs5bhU8DrHhnszb2yZOjgqUGTT2tI?=
+ =?us-ascii?Q?I18ihZtVrsv7h6StdCdukuQEOcMOyiWq8eS4K0ME3t257otrJvjbZ3ShswH2?=
+ =?us-ascii?Q?6uNFDxRIgsw003srv0MewrrqiEEtB2hBQJvuAWAs2FNbSTjHJQYLBKfp0TOe?=
+ =?us-ascii?Q?fqYV+lsndBDbO7H0AgCPLX2rzpbGkrkGITQVkJaV7z1s60vPxPwMLMOvuSLZ?=
+ =?us-ascii?Q?QIftZnE6T7g4nYFk7+jflXVF6ygaOVOcfw1xxzCNWzvgqfj1qtX42smWoefo?=
+ =?us-ascii?Q?JdAcpzgj1dx/6UfRXZkChmx9og/TUexnUINKKxdZirZZ+zLNhWId0r4HTgsV?=
+ =?us-ascii?Q?McrmPZHddcV5hN/9ezUv3yiTJzq61yjJs92EU3pgAR2i5S6geiznGmylLq/m?=
+ =?us-ascii?Q?Zy+UbYGxxTv3iFlYgm54KwuAWR4QeJGXgK6IEsbjexf79znqr+NfMTWOfiA4?=
+ =?us-ascii?Q?lIHZ0xVeFMfOMYFmFDle4HzPCrrMnhewEqjUWdd6Rz8aS31X72wUT52z64Xc?=
+ =?us-ascii?Q?P6RXvgkyshZ7eruOlH38x2aKdVagtuwvYhP4HC6QWNGTZ6EAbosyWZTE+825?=
+ =?us-ascii?Q?E7y0sSXc2LDIt5+tboyGozu6UdP06mN1wswCeTH+iAsEpa3saa07Sab2xKHh?=
+ =?us-ascii?Q?hK4jeibxdk6fVnbOXbJBPhFDOdP4yCxw73ZnlNRGNlgCRmDm+xZjnv7sMBR3?=
+ =?us-ascii?Q?etShRQPWSNw/TfF9Flz+e09Qr8V5rpiTdSFd4qqyKA/V4vq8IYzI81aXjw7G?=
+ =?us-ascii?Q?WJjR6Nqdqm4Q4s9qodCxyXfa7RdxcbW1yGwfmc2B5TSExj+YqvtTjwZOj7xs?=
+ =?us-ascii?Q?JmHjsuD4Ivaz5d6Z0rLM0AO9cUan3tbnMMlGcOgH2QQEPeYYIaaBT+IbWckp?=
+ =?us-ascii?Q?MNxZe2xJ+DINAVszV4tnkEfswWNT1kh4qw3WqmJztQq9QXxssQvBKC7WoEce?=
+ =?us-ascii?Q?xJT72iaMd6uEs/4eJR0VN+//4l5g25QM0RG2o+onYx3PQ3aqGViQXkzbICxV?=
+ =?us-ascii?Q?UkxlkUpW89hDZu15QkKPIkmrelBc+q91Jef0u504k/JJWwBHekQWInak7uYO?=
+ =?us-ascii?Q?CRurBuB7XqLhRKzkRRmyIUgDMCnOdLkVIvoe5GSk5AfivEDftxB91VWBJNy6?=
+ =?us-ascii?Q?henmCeSQiSy9gWynDy7MCGHg5XETCgD3?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SL2P216MB1246.KORP216.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Sd3MNbeyE1+1YDj7BZBw1BB1W1VPeAgs82kO91gsvhuShDnBTHBPOvXyJIHr?=
+ =?us-ascii?Q?21h2UFtoUsrPtBjfey15PzX9m5RxKMyKmUlUZRjz0IS7Cs3YeqQVMBTjFEiA?=
+ =?us-ascii?Q?BhcxD+em3uM7VvMmK3YkOZEWasBMo9HmeswaDYTbOnApcSM4RxocX62sXH+F?=
+ =?us-ascii?Q?tcfeOOsvC+L/DwNtFvIOFjcKBLZBmM8lj20gUKYug9hogj17hsUscXMlNXGI?=
+ =?us-ascii?Q?dVi8AJzeDtgjBTAtCTpmE0qsRqKhZUr4FUaXFiTEhmCfIALQfYDj/YQKLwmb?=
+ =?us-ascii?Q?JUNmB8gawFSIls5bU7QNIl/8cJRh/kxiL/i1p7z9p2Gh7akMLHeu9p4ALXHD?=
+ =?us-ascii?Q?FTR6uEB9/LWIpRG81UQir/hGVSzg5PxwJspbEBERtdpSTGir7apbAozOjM9d?=
+ =?us-ascii?Q?ogeB5dWIgNo0BkB7wWFl6eVP0noBk6lQhysyeeo/qZ+2UPQnXtNhodSxYopR?=
+ =?us-ascii?Q?SbhDnN+xNHzS1xI95Mtyq21KW1m8aH0bF112+efzddDZdX+ij5pJvDdVvGYP?=
+ =?us-ascii?Q?MwndSSRL+ptxpk9Nq02PrgiIASeotQOrek5JPOu9U+FhkN1TYnMlNXo4mOzW?=
+ =?us-ascii?Q?ZqyVJvHCTpVe1hBT1Q/EyTAhnA2BnfOqMT/uK4egwC38ddK32zoGrWyyUuMs?=
+ =?us-ascii?Q?YJ732mcCbbj/Qve+Ome9sDzS1qH4h9iLcQHm61ybauZ5M2U0SeRNKCdfgPPR?=
+ =?us-ascii?Q?pCVHakM5+8aN2r/1anlPYHUsi60+COhfTVT2kVFWZbxkzp4YUoOQh35puYbs?=
+ =?us-ascii?Q?POjldQdbw2hq319KkluaT8mCnmcNqbLpw3rY7UAvnuZAFJ5tLzfxAq17Hzto?=
+ =?us-ascii?Q?/dcZaBTm7tYX9MQkWRtZyRGailUqncBdTgYocsd6zAi8MwcRKRU7SBHEu8wm?=
+ =?us-ascii?Q?PZYv9sLCSvAeZgTnhK86/uc2pvjxPcfKnC8TCC+gNdAXZB3FJLqv7KhoaWxY?=
+ =?us-ascii?Q?s0a0D+LGg+JlbXyoO60cxAZWnGf3YZE7r34RAXu1ukbf8lp0pP8hU3nPz0Ue?=
+ =?us-ascii?Q?UXXchpqJ4HxwTd0FongKO4flBv/zsKjNwwGIPiIsH3iZThzHmVSUKTRA3afR?=
+ =?us-ascii?Q?v6WBAafh1+bIPQalX9UTOozPvNcx8fxb6I0fjkgJA2qA6oFsfGTADtL1XJsJ?=
+ =?us-ascii?Q?s36F5dFFHpo5GvS0gnanVdbZZ16Crb2p6HdUOmhJPV9cIU64aw0BiH4uY2VD?=
+ =?us-ascii?Q?4UhmXuVD3daTnoW1TY17v5wKajR8xEROZu0ZTm3DiN8I0IM1JTUjnh/C9oS6?=
+ =?us-ascii?Q?CdsVWCRgYtz+1q/DcjHMMuthPfIvvspqr5HpzWGSCwUYajLN3dnHJ+caDb9c?=
+ =?us-ascii?Q?3hYtqM2QgapQ9G92XV2elicvm+VcMEEWUK5NvV2MIXNvmLQoKt4zWFwgep4p?=
+ =?us-ascii?Q?rNtzupbFlF6ApEefzdT9wEOfrAg22WRh4eMIQMeiTXO8la80hpYhUrpgFHxg?=
+ =?us-ascii?Q?fHyx+sQrzjcKM/MGvx7ABNVJs/kkS1XimViHq9QIA6JbXEwAhV+CWTFvTgFk?=
+ =?us-ascii?Q?4GdbO786/ojvFcCeRb4QwQEAxCDK6IC0k/VN9pJqt1BYfH9L3dLDzpjMPOHI?=
+ =?us-ascii?Q?01BtxUqMGrFqBI570caMMaWLf2oJ/5FVl9+LVbKqqfI/TXa8agphipkJy5wB?=
+ =?us-ascii?Q?pQ=3D=3D?=
+X-OriginatorOrg: chipsnmedia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a3ccc61-a884-4b0e-275d-08dd49b25b9a
+X-MS-Exchange-CrossTenant-AuthSource: SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 09:07:34.7737
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4d70c8e9-142b-4389-b7f2-fa8a3c68c467
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fH/zslY8cXNJDapQpWpKtgAT7wVFM3TSrhzrMH/zCIMPoR7aFjFHs1m7G8mr52KdSOq3Ent0sJJBLXLGKujo5ZguTog0Ic4Mh4/K5l7xbpU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU4P216MB1504
 
+The existing Kconfig parameter VIDEO_WAVE_VPU is ambiguous,
+as it does not clearly indicate that it is specific to the Wave5 IP.
 
+Rename VIDEO_WAVE_VPU to VIDEO_WAVE5_VPU to make it explicit
+that the parameter is specific to the Wave5 IP.
 
+No functional changes, only the parameter name is updated.
 
-On 1/29/2025 4:53 PM, Dmitry Baryshkov wrote:
-> On Wed, Jan 29, 2025 at 11:13:05AM +0530, Ekansh Gupta wrote:
->>
->>
->> On 1/29/2025 5:00 AM, Dmitry Baryshkov wrote:
->>> On Mon, Jan 27, 2025 at 10:12:39AM +0530, Ekansh Gupta wrote:
->>>> DSP needs last 4 bits of context id to be 0 for polling mode to be
->>>> supported as setting of last 8 is intended for async mode(not yet
->>>> supported on upstream driver) and setting these bits restrics
->>>> writing to poll memory from DSP. Modify context id mask to ensure
->>>> polling mode is supported.
->>> Shouldn't this commit come before the previous one?
->> Yes, I'll change the order in next series.
->>
->> Thanks for reviewing the changes.
-> Please consider asking somebody for the internal review before sending
-> patches. This should help you to catch such mistakes.
->
-> Next, I keep on asking for a sensible userspace and testing suite. No,
-> existing fastrpc doesn't pass that criteria. We have discussed that, but
-> I see no changes in the development. The PR that you've linked in the
-> cover letter contains a single commit, covering documentation, new
-> IOCTL, CRC support, poll mode support, etc. What if the discussion ends
-> up accepting the CRC support but declining the polling mode? Or vice
-> versa, accepting poll mode but declining the CRC support? There is no
-> easy way for us to review userspace impact, corresponding changes, etc.
+Signed-off-by: Nas Chung <nas.chung@chipsnmedia.com>
+---
+ arch/arm64/configs/defconfig                      | 2 +-
+ drivers/media/platform/chips-media/wave5/Kconfig  | 6 +++---
+ drivers/media/platform/chips-media/wave5/Makefile | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-We are working with our Legal team to push HexagonSDK publicly , that  will
-have sample apps for all features supported by upstream driver and can be used
-for testing.
-
-I'll break down the PR to multiple meaningful commits based on the features
-that are getting added.
-
->
-> Last, but not least: I want to bring up Sima's response in one of the
-> earlier discussions ([1]): "Yeah, if fastrpc just keeps growing the
-> story will completely different."
->
-> You are adding new IOCTL and new ivocation API. That totally sounds
-> like "keeps growing", which returns us back to the uAPI question,
-> drm_accel.h and the rest of the questions on the userspace, compiler,
-> etc.
->
-> [1] https://lore.kernel.org/dri-devel/Znk87-xCx8f3fIUL@phenom.ffwll.local/
-
-Currently, we are upstreaming the features supported on DSP for publicly
-available platforms. No features for future platforms are planned for FastRPC
-driver.
-
-We are also looking in having the driver under drivers/accel for any new features
-that are planned in future platforms.
-
---ekansh
-
->
->
->> --ekansh
->>
->>>> Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
->>>> ---
->>>>  drivers/misc/fastrpc.c | 8 ++++----
->>>>  1 file changed, 4 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
->>>> index 257a741af115..ef56c793c564 100644
->>>> --- a/drivers/misc/fastrpc.c
->>>> +++ b/drivers/misc/fastrpc.c
->>>> @@ -40,7 +40,7 @@
->>>>  #define FASTRPC_INIT_HANDLE	1
->>>>  #define FASTRPC_DSP_UTILITIES_HANDLE	2
->>>>  #define FASTRPC_MAX_STATIC_HANDLE (20)
->>>> -#define FASTRPC_CTXID_MASK (0xFF0)
->>>> +#define FASTRPC_CTXID_MASK (0xFF0000)
->>>>  #define INIT_FILELEN_MAX (2 * 1024 * 1024)
->>>>  #define INIT_FILE_NAMELEN_MAX (128)
->>>>  #define FASTRPC_DEVICE_NAME	"fastrpc"
->>>> @@ -524,7 +524,7 @@ static void fastrpc_context_free(struct kref *ref)
->>>>  		fastrpc_buf_free(ctx->buf);
->>>>  
->>>>  	spin_lock_irqsave(&cctx->lock, flags);
->>>> -	idr_remove(&cctx->ctx_idr, ctx->ctxid >> 4);
->>>> +	idr_remove(&cctx->ctx_idr, ctx->ctxid >> 16);
->>>>  	spin_unlock_irqrestore(&cctx->lock, flags);
->>>>  
->>>>  	kfree(ctx->maps);
->>>> @@ -664,7 +664,7 @@ static struct fastrpc_invoke_ctx *fastrpc_context_alloc(
->>>>  		spin_unlock_irqrestore(&cctx->lock, flags);
->>>>  		goto err_idr;
->>>>  	}
->>>> -	ctx->ctxid = ret << 4;
->>>> +	ctx->ctxid = ret << 16;
->>>>  	spin_unlock_irqrestore(&cctx->lock, flags);
->>>>  
->>>>  	kref_init(&ctx->refcount);
->>>> @@ -2675,7 +2675,7 @@ static int fastrpc_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
->>>>  	if (len < sizeof(*rsp))
->>>>  		return -EINVAL;
->>>>  
->>>> -	ctxid = ((rsp->ctx & FASTRPC_CTXID_MASK) >> 4);
->>>> +	ctxid = ((rsp->ctx & FASTRPC_CTXID_MASK) >> 16);
->>>>  
->>>>  	spin_lock_irqsave(&cctx->lock, flags);
->>>>  	ctx = idr_find(&cctx->ctx_idr, ctxid);
->>>> -- 
->>>> 2.34.1
->>>>
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index cb7da4415599..d904d4dc4f0d 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -837,7 +837,7 @@ CONFIG_VIDEO_AMPHION_VPU=m
+ CONFIG_VIDEO_CADENCE_CSI2RX=m
+ CONFIG_VIDEO_MEDIATEK_JPEG=m
+ CONFIG_VIDEO_MEDIATEK_VCODEC=m
+-CONFIG_VIDEO_WAVE_VPU=m
++CONFIG_VIDEO_WAVE5_VPU=m
+ CONFIG_VIDEO_E5010_JPEG_ENC=m
+ CONFIG_VIDEO_IMX7_CSI=m
+ CONFIG_VIDEO_IMX_MIPI_CSIS=m
+diff --git a/drivers/media/platform/chips-media/wave5/Kconfig b/drivers/media/platform/chips-media/wave5/Kconfig
+index f1bcef5177bd..914720a35de8 100644
+--- a/drivers/media/platform/chips-media/wave5/Kconfig
++++ b/drivers/media/platform/chips-media/wave5/Kconfig
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+-config VIDEO_WAVE_VPU
+-	tristate "Chips&Media Wave Codec Driver"
++config VIDEO_WAVE5_VPU
++	tristate "Chips&Media Wave5 Codec Driver"
+ 	depends on V4L_MEM2MEM_DRIVERS
+ 	depends on VIDEO_DEV && OF
+ 	depends on ARCH_K3 || COMPILE_TEST
+@@ -9,7 +9,7 @@ config VIDEO_WAVE_VPU
+ 	select V4L2_MEM2MEM_DEV
+ 	select GENERIC_ALLOCATOR
+ 	help
+-	  Chips&Media stateful encoder and decoder driver.
++	  Chips&Media Wave5 stateful encoder and decoder driver.
+ 	  The driver supports HEVC and H264 formats.
+ 	  To compile this driver as modules, choose M here: the
+ 	  modules will be called wave5.
+diff --git a/drivers/media/platform/chips-media/wave5/Makefile b/drivers/media/platform/chips-media/wave5/Makefile
+index 3d738a03bd8e..81be0e1dcebd 100644
+--- a/drivers/media/platform/chips-media/wave5/Makefile
++++ b/drivers/media/platform/chips-media/wave5/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-obj-$(CONFIG_VIDEO_WAVE_VPU) += wave5.o
++obj-$(CONFIG_VIDEO_WAVE5_VPU) += wave5.o
+ wave5-objs +=  	wave5-hw.o \
+ 		wave5-vpuapi.o \
+ 		wave5-vdi.o \
+-- 
+2.31.1
 
