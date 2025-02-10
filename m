@@ -1,87 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEEA255E53;
-	Mon, 10 Feb 2025 17:23:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4744690;
+	Mon, 10 Feb 2025 17:24:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739208194; cv=none; b=htp15rD7avtjoohBlQOtHAB3Uu4MmCy+bcwheAgewcso7NIuKcZOBP55c3UqQkoY8TpD/AjNo+ZKB8N7yKW8+aafY5FIJaS8BxsOFSMyBIc2CggJsP21ifvho1l3S2C/TUhe9okyu1e2MbB7q5YR4bMFMaDPneVGxALnRdo0l0M=
+	t=1739208260; cv=none; b=twp7SVb8jfJQdx9ECBekYmPKCmSJDQh46LH7i3JcwzzbrbBsbN1R+ugSmWrdJzBI3cZCYFcLmjyK2x+OwR21lsRGRFJ/z+VOWYd9p2p7q2Iydqyz52Rrvdzu1m5kd0slkS2hRz7AkKJdqC4K73iJOkieGZMAHfaCD6d66f7FKCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739208194; c=relaxed/simple;
-	bh=wVskpJ8GHQzPO2wg2ePTDW5/ZwDeHg2jB+/gb6+BpJs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=FEOMFIxWMT0smbHXnf3jYQrzpKrwg1UIIUWgjh+gIHPJpj+jQqMBhjNg/Cu+6WcjyCE8xZCOk52joB8Pgr6q/j4D8VIYHwNOUiFiKUg6UMmckacQiLhtfEhZGFZ0b3TWQXK0rZsj10mbpFnG1fboGoLbksdt79Hur9VZR68u1PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EQKiK0t5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739208260; c=relaxed/simple;
+	bh=oPZeU9iXrO3F1aIMkZmK/g/ewNsvCQf1LbpxIcT5iJw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KSzAsz3SI5lAn+wH7tZQqAal9t+r5gtFbthAJ70uBpDalxAg/gwSV0oOmY/CbBk6wgCrQSM4xQcZnmKpvZWsIuOl+60dS1oe4h+Uiz+i27jc96hcysm9lNbMn33nHd+g53i1KIF/VmtZ/SjQ675c2dV58QA7CP+0qkn6m7HLBHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=byX3S2qd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EQKiK0t5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F754C4CEE5;
-	Mon, 10 Feb 2025 17:23:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="byX3S2qd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73C94C4CEE5;
+	Mon, 10 Feb 2025 17:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739208194;
-	bh=wVskpJ8GHQzPO2wg2ePTDW5/ZwDeHg2jB+/gb6+BpJs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=EQKiK0t5UbtvtBWBKTSoMANLWs/NJPa0/PZwgY1e6FYyhOkYuu16PxK49Jqa7Ks/e
-	 baC6Bwfvu0RGasTA4LjcqJqMhFtv7QMqbpuw1c1Bku3P3+IV/WK2QQ540A7o1C47G9
-	 NW9As2A3NzOk+yAkdtm808nNTqGJHSXQWInqgNuxMqU9r6n++eQ714DocxiiFlxlBF
-	 +bu0g53n3qCcGaCwkTkgEkSy6b+aMJDyVd1LJNBqPe26p8/JCakNZJXpuZN8Ti6jnv
-	 ghshZDAPfIkHtGsC0mT86wX8P4i1oEzt3Qx5Kqur4VjzDtF69bWSvE0nEq/LllNMF/
-	 Fnk8FsmtoH+vw==
-From: Mark Brown <broonie@kernel.org>
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Rob Herring <robh@kernel.org>, 
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250210132128.7734-1-johan+linaro@kernel.org>
-References: <20250210132128.7734-1-johan+linaro@kernel.org>
-Subject: Re: [PATCH] ASoC: codecs: wcd93xx-sdw: fix of_property_read_bool()
- warnings
-Message-Id: <173920819281.83245.14686967088075283953.b4-ty@kernel.org>
-Date: Mon, 10 Feb 2025 17:23:12 +0000
+	s=k20201202; t=1739208260;
+	bh=oPZeU9iXrO3F1aIMkZmK/g/ewNsvCQf1LbpxIcT5iJw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=byX3S2qdl2XDlFGykncdx5SaCiWIsESEVghx/wlYJWwCqZEXxLvD7XoYwS4gId2rg
+	 YCZZ+1IMHux/zNjdxRcowrkgVAE4ykvldNd8A8OU5MYRGskLTGNrrF9M2ZAHa2DGl9
+	 BmUHITenV/6ze3tTxNoPzhjd0uYVetrJvtBtI/Q0OEu1BckQEgBNvGQSIQnbdwRP/m
+	 MwfDu/SR5+X/hSjrVa76LFUiGNxIliccwIcKlDisci12fJ/01c6oFWNdZcesN71q0z
+	 5HQAc+yHTgf2FIWrvlVqKCRmutGxYdAPasgUUASU8AbwIQnSwIB8PwgvRByceDhkBm
+	 7uGO4/aUNLdZg==
+Message-ID: <d657fa70-af35-415d-b0e7-3aaf2fd05276@kernel.org>
+Date: Mon, 10 Feb 2025 18:24:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/8] media: platform: chips-media: wave5: Rename Kconfig
+ parameter
+To: Nas Chung <nas.chung@chipsnmedia.com>, mchehab@kernel.org,
+ hverkuil@xs4all.nl, sebastian.fricke@collabora.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+ linux-arm-kernel@lists.infradead.org, jackson.lee@chipsnmedia.com,
+ lafley.kim@chipsnmedia.com
+References: <20250210090725.4580-1-nas.chung@chipsnmedia.com>
+ <20250210090725.4580-2-nas.chung@chipsnmedia.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250210090725.4580-2-nas.chung@chipsnmedia.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
 
-On Mon, 10 Feb 2025 14:21:28 +0100, Johan Hovold wrote:
-> Using of_property_read_bool() for non-boolean properties has been
-> deprecated in favour of of_property_present() and since commit
-> c141ecc3cecd ("of: Warn when of_property_read_bool() is used on
-> non-boolean properties") this also generates a warning:
+On 10/02/2025 10:07, Nas Chung wrote:
+> The existing Kconfig parameter VIDEO_WAVE_VPU is ambiguous,
+> as it does not clearly indicate that it is specific to the Wave5 IP.
 > 
-> 	OF: /soc@0/soundwire@3330000/wcd9380-tx@0,3: Read of boolean property 'qcom,tx-port-mapping' with a value.
+> Rename VIDEO_WAVE_VPU to VIDEO_WAVE5_VPU to make it explicit
+> that the parameter is specific to the Wave5 IP.
 > 
-> [...]
+> No functional changes, only the parameter name is updated.
 
-Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+That's unnecessary churn. Old name was fine. Kconfig does not match
+hardware 1-to-1 but represents only the driver name (or not even that...).
 
-Thanks!
+If you solve any particular problem, then explain it. Otherwise this is
+just unnecessarily affecting users and backports.
 
-[1/1] ASoC: codecs: wcd93xx-sdw: fix of_property_read_bool() warnings
-      commit: c5528214c7c0a753c908a7b353309ba665985fb4
+> 
+> Signed-off-by: Nas Chung <nas.chung@chipsnmedia.com>
+> ---
+>  arch/arm64/configs/defconfig                      | 2 +-
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+That's a SoC patch, don't mix up subsystems.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+Best regards,
+Krzysztof
