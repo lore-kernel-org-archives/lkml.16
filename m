@@ -1,288 +1,176 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623536F06B;
-	Mon, 10 Feb 2025 03:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E6D6F06B
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 03:29:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739158138; cv=none; b=EylXC8P+lgUGl9ut4wKjtF8/HrTyw8jZNSBUfwokG97+iRel+JFlTBKu8RP2e27zT+Ym2lYcIN3RjxLfZKV2gfuPrQeMtp0a1E5F0PSFojvPAsA5Kf6eBT03jfmDVj/BzDaZ1KuSJK29/z9Jq4upvzZ4XUDqffJfGW4SwflnxRY=
+	t=1739158177; cv=none; b=t+cZO7HCP9agAbOhk8R7v1xRzljqlJQkH+0mf9FbB+rFmDXoajDPekr1Ak2VLA8j+3JzfQjpfbHgS150wlaICrI86/WcOtyRvQ2iG1j/qa8xDEUJK+04JdSoOWXfZf4H8sCWR3ADOUBIZYDVDN8LWELGgCM5RH+Wfl7TJqd1zys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739158138; c=relaxed/simple;
-	bh=s8HIviLGBCxcnTXxbFiULMIXYMUSERiKD1iGALMJf7Y=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=mh+kMktsQqqbCBXs07DSebqU2y37lcotE45d+MhnmjIkuy83RCy5UZAjCxXkzd8gSr/5wG6+JFbf+EpJqA8og8gAZTw7xoPpoSYB0FLpXpoWT5ZypgrhpbRFikSbKEdxNEWiXANl5zs5SDX3muNDnOPBH5LzWVzUTqUPuSOxFSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L7DOnfOI; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739158177; c=relaxed/simple;
+	bh=FGe1i00oMMoyENbUPkT+/JG/6yjI7Mn9OUDh07mlOE0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E1yWAzSKrKlFNJVv8vcEGWIgEMkUiYuhyepCAaH4E2BVnPJhAeKd++3s0NDxnJBe++fpt5CUcC4t46V3ZylyCwURgwHl8BzFHEZNRSTrllJiZz726ZpVJEKQv3fYMRIEGlkpEeMqIvUGzKvXjl+AZDBHNkywwAam6TVf77DzsQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=KMZzOjvI; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L7DOnfOI"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e5b1c7c31b2so3132760276.1;
-        Sun, 09 Feb 2025 19:28:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739158134; x=1739762934; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KdOdxFHLUU3SPRuR7sHE08f1zBkDt0I0lCIZf1H7/SU=;
-        b=L7DOnfOIHE2e12D/NZoWvHlSWMplM9sJg8r4cBFijO8zr7tC5VfvxKDq12HHzTUvS1
-         if3XipcTQ6Sty/JvC4g2vvLAI1j+P+b15wYncISgIji/qsxgV0gZ+Xc0HpGNrY4jiZcF
-         X+dflO6VHDK0hwuZNRL2G+Q8escK1VIBZ4icTSTI8V/6igeKHm7CSDJdOLqnoTdm9B+z
-         uwZr8nQr7LYcIfibDWJoEyQgYYjr4TFsrnVT4QV/nRgq0Nu6wE0DiU/v3BUACg1DULE2
-         YwlHdHhZFe0x33VJkYDdBHEUlBSqVzhNEPT1CxKx20ozkUs9IVsLI9XqBKWtBJHNAafz
-         5BPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739158134; x=1739762934;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=KdOdxFHLUU3SPRuR7sHE08f1zBkDt0I0lCIZf1H7/SU=;
-        b=KbJKnef8oAQBtS7gh7SRwsUP8Tm9JjUqML+Iij7zQVV0rZum/X8huEJIqLCZlQQ179
-         x1s2MlASUnf+HHd0nDlyjCb6BaW+JDBBpi/Yl8qG3ajRYlF/HffBNhh1ehl2tfqAmYJH
-         J9EYz3RUxRqalNT9QPbUenjOkP9fAM1HIOSlQ2YS4oEm9ap+pS1/5FtMNFr611daNOcN
-         xPuGHIMBjRbM1VMOZ0yFPbEKkKf73hMKaBoOGJW4asF4I4o4QJyDTakAgb2bUVfQ70x0
-         YXI34X/me8Eu/AWJHUuPF0bzU1ewiP3VoEaTm/BsWq1pKKEnCEMvFLbbwzPiEIV1hutA
-         LaXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZ26P3eRIV92z2PYriEEPqPXJt2MzON9T6wYM/8MXqNuMiQ3z0N/t/fh5Yx2/baq09PBtds3qbGkd/tEc=@vger.kernel.org, AJvYcCXRzbSske1V07AGQ0ta3FJ3k60UQ4UtKsiwrVv8nfSGZTvomUMqmjrxngYT6CKHqnrkleYQtiGg/2oqZAthW7DBHvamtA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnOafHZvIBTfEh6U08s/D7j1irWw0GCm5VlYooul0v3kCswmR2
-	5S+Oy71CIBHOe0rX8QNLNs4SLz9ToyDkKovCR6X1VzKjDO+koGan
-X-Gm-Gg: ASbGncujcMylNCFwEWSLsZHPnBiVS8P7kr53YwsWCfefYjgou6eFT8xPtC/OhZ31nVE
-	qVFl2l6OW2nIM34R0J4GXWXTIwrpTd2AOcQNtu0NWBoNGXsa0d/EuuxWGQfacu1LbypFMII/ZMw
-	Xf5sjJRBa3rbIMQCUSTQPGdZ/8WzYF+0vpJWWT+WpUkL1UJT6JLdwMtC0zGY8wlQtxKKDwDDY0c
-	AyA5o5vUIKbaK4oYofqQCp5bVgpnJBtesGeHZdmHZXeUNsd20edYVXui/6wtJ1RF/LnsM2r+bKc
-	gZLeCOM=
-X-Google-Smtp-Source: AGHT+IHwfmmlWN9zLouV4XC8LZmM49HAFOpBoX/jFEjZZ/Gp4qeY/w/DRtEH6RBbobVCvjSqNjSLbQ==
-X-Received: by 2002:a05:6902:986:b0:e38:d040:eeed with SMTP id 3f1490d57ef6-e5b46c7f0e7mr9581082276.15.1739158134191;
-        Sun, 09 Feb 2025 19:28:54 -0800 (PST)
-Received: from localhost ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5b3a205e82sm2309913276.23.2025.02.09.19.28.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Feb 2025 19:28:53 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="KMZzOjvI"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1739158165; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=Qs9PUV3rYLxbnto2T61Zi+jRgEogtBhw2UcQ6K27XWw=;
+	b=KMZzOjvI7QGmdlnyoY3BcMvTybuWibo5CtHC9M4ThfzbmWXfBqWl+6+wYOQXPGWW4SVGcNuVLFXIDh/Qj3jE5FEqFLVYS87++dbt9TzkF0zch6s0Y5k/kGqzNOOR1fHF6yJM7Z2ntHcVnTUIz4GCFei9oOBdNwWrFn+/jcZ9kBM=
+Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WP4g7Xo_1739158164 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 10 Feb 2025 11:29:24 +0800
+From: Hongzhen Luo <hongzhen@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org,
+	Hongzhen Luo <hongzhen@linux.alibaba.com>
+Subject: [PATCH v5] erofs: use Z_EROFS_LCLUSTER_TYPE_MAX to simplify switches
+Date: Mon, 10 Feb 2025 11:29:23 +0800
+Message-ID: <20250210032923.3382136-1-hongzhen@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 09 Feb 2025 22:28:51 -0500
-Message-Id: <D7OG3RQ7HSH0.1V6FHLWMNC5BW@gmail.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, "Limonciello, Mario"
- <mario.limonciello@amd.com>, "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix registration of tpacpi
- platform driver
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <mpearson-lenovo@squebb.ca>
- <20250208091438.5972-1-mpearson-lenovo@squebb.ca>
- <D7MSPR52PB4E.N0X1UFVQOODZ@gmail.com>
- <aee5fbe6-4309-450f-bea3-c0842172b043@app.fastmail.com>
- <D7N45UX5LBMY.NCG1A7Y0SKXF@gmail.com>
- <be3804af-339a-4b5b-927a-06d98dfadc11@app.fastmail.com>
- <D7ODBVBQFOGF.BV2A80SGPAYK@gmail.com>
- <80307204-c401-4411-aa2a-3df7e11a45ce@app.fastmail.com>
- <D7OEFLKWR8VN.247WSBSGFSD2X@gmail.com>
- <f9047afd-d395-4733-a953-b7efa56e66c5@app.fastmail.com>
- <D7OFLD408BZP.OV2OTU16TAD8@gmail.com>
- <10339f70-f56c-4ea3-874e-765bc8d63340@app.fastmail.com>
-In-Reply-To: <10339f70-f56c-4ea3-874e-765bc8d63340@app.fastmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Sun Feb 9, 2025 at 10:14 PM -05, Mark Pearson wrote:
-> On Sun, Feb 9, 2025, at 10:04 PM, Kurt Borja wrote:
->> On Sun Feb 9, 2025 at 9:35 PM -05, Mark Pearson wrote:
->>> On Sun, Feb 9, 2025, at 9:10 PM, Kurt Borja wrote:
->>>> On Sun Feb 9, 2025 at 8:26 PM -05, Mark Pearson wrote:
->>>>> Hi,
->>>>>
->>>>> On Sun, Feb 9, 2025, at 8:18 PM, Kurt Borja wrote:
->>>>>> Hi Mark,
->>>>>>
->>>>>> On Sun Feb 9, 2025 at 7:54 PM -05, Mark Pearson wrote:
->>>>>>> Hi Kurt,
->>>>>>>
->>>>>>> On Sat, Feb 8, 2025, at 8:54 AM, Kurt Borja wrote:
->>>>>>>> On Sat Feb 8, 2025 at 11:26 AM -05, Mark Pearson wrote:
->>>>>>>>> Thanks Kurt,
->>>>>>>>>
->>>>>>>>> On Fri, Feb 7, 2025, at 11:56 PM, Kurt Borja wrote:
->>>>>>>>>> Hi Mark,
->>>>>>>>>>
->>>>>>>>>> On Sat Feb 8, 2025 at 4:14 AM -05, Mark Pearson wrote:
->>>>>>>>>>> When reviewing and testing the recent platform profile changes =
-I had
->>>>>>>>>>> missed that they prevent the tpacpi platform driver from regist=
-ering.
->>>>>>>>>>> This error is seen in the kernel logs, and the various tpacpi e=
-ntries
->>>>>>>>>>> are not created:
->>>>>>>>>>> [ 7550.642171] platform thinkpad_acpi: Resources present before=
- probing
->>>>>>>>>>
->>>>>>>>>> This happens because in thinkpad_acpi_module_init(), ibm_init() =
-is
->>>>>>>>>> called before platform_driver_register(&tpacpi_pdriver), therefo=
-re
->>>>>>>>>> devm_platform_profile_register() is called before tpacpi_pdev pr=
-obes.
->>>>>>>>>>
->>>>>>>>>> As you can verify in [1], in the probing sequence, the driver co=
-re
->>>>>>>>>> verifies the devres list is empty, which in this case is not bec=
-ause of
->>>>>>>>>> the devm_ call.
->>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> I believe this is because the platform_profile driver registers=
- the
->>>>>>>>>>> device as part of it's initialisation in devm_platform_profile_=
-register,
->>>>>>>>>>> and the thinkpad_acpi driver later fails as the resource is alr=
-eady used.
->>>>>>>>>>>
->>>>>>>>>>> Modified thinkpad_acpi so that it has a separate platform drive=
-r for the
->>>>>>>>>>> profile handling, leaving the existing tpacpi_pdev to register
->>>>>>>>>>> successfully.
->>>>>>>>>>
->>>>>>>>>> While this works, it does not address the problem directly. Also=
- it is
->>>>>>>>>> discouraged to create "fake" platform devices [2].
->>>>>>>>>>
->>>>>>>>>> May I suggest moving tpacpi_pdriver registration before ibm_init=
-()
->>>>>>>>>> instead, so ibm_init_struct's .init callbacks can use devres?
->>>>>>>>>>
->>>>>>>>>
->>>>>>>>> Yep - you're right. Moving it before the init does also fix it.
->>>>>>>>>
->>>>>>>>> I can't see any issues with this approach, but I'll test it out a=
- bit more carefully and do an updated version with this approach.
->>>>>>>>
->>>>>>>> Thinking about it a bit more. With this approach you should maybe =
-create
->>>>>>>> the tpacpi_pdev with platform_create_bundle() (I'm pretty sure you=
- can
->>>>>>>> pass a NULL (*probe) callback) to avoid races.
->>>>>>>>
->>>>>>>> platform_create_bundle() only returns after the device has been
->>>>>>>> successfully bound to the driver.
->>>>>>>>
->>>>>>> Unfortunately having a null probe callback doesn't work - you end u=
-p with an oops for a null pointer dereference.
->>>>>>
->>>>>> Are you sure? I just tested this on the for-next branch and it works
->>>>>> without issues. Also checked the code and (*probe) is only dereferen=
-ced
->>>>>> safely inside platform_bus_type's probe. Maybe another pointer is be=
-ing
->>>>>> deferenced? Keep in mind that platform_create_bundle() also register=
-s
->>>>>> the driver so maybe there is an issue there.
->>>>>>
->>>>> Possibly - I have to admit I didn't go dig too hard, as when I added =
-it I got:
->>>>>
->>>>> Feb 09 19:41:17 x1c12 kernel: BUG: kernel NULL pointer dereference, a=
-ddress: 0000000000000028
->>>>> Feb 09 19:41:17 x1c12 kernel: #PF: supervisor read access in kernel m=
-ode
->>>>> Feb 09 19:41:17 x1c12 kernel: #PF: error_code(0x0000) - not-present p=
-age
->>>>>
->>>>> With bus_probe_device in the backtrace - and went 'oh well'.
->>>>>
->>>>> Are there any significant advantages to the approach that make it wor=
-thwhile debugging further what is going on? Moving the platform_driver_regi=
-ster is working nicely :)
->>>>
->>>> Now that I think about it maybe there is no significant advantages, at
->>>> least in relation to
->>>>
->>>> 	[ 7550.642171] platform thinkpad_acpi: Resources present before probi=
-ng
->>>>
->>>> because list_empty(&dev->devres_head) is checked synchronously.
->>>>
->>>> However, now the null deref worries me, because some sysfs groups are
->>>> created on driver binding. Do you have the full backtrace? Just to be
->>>> sure moving driver registration doesn't mess with anything.
->>>
->>> Oooops...
->>> I didn't have the trace (at least that I could find) but I figured it w=
-ould be easy to recreate it.
->>> Went to make the change again...and realised what I had got wrong.
->>> I needed to replace:
->>>         tpacpi_pdev =3D platform_device_register_simple(TPACPI_DRVR_NAM=
-E, PLATFORM_DEVID_NONE,
->>>                                                         NULL, 0);
->>> with=20
->>>         tpacpi_pdev =3D platform_create_bundle(&tpacpi_pdriver, NULL, N=
-ULL, 0, NULL, 0);
->>>
->>> (previously I had replaced the platform_driver_register...sigh)
->>>
->>> With the change done, I think, correctly - no oops and everything is wo=
-rking.
->>
->> Good to know!
->>
->> I'm going through the sysfs groups attached to the platform device and I
->> noticed some attributes may depend on subdrivers being initialized
->> first. If this is the case, ibm_init() has to be called inside the
->> platform driver probe for this to work. Like this:
->>
->> static int tpacpi_probe(struct platform_device *pdev)
->> {
->> 	/* Input init */
->> 	...
->> 	/* Subdrivers init */
->> 	...
->> 		ret =3D ibm_init(&ibms_init[i]);
->> 	...
->> }
->>
->> static int __init thinkpad_acpi_module_init(void)
->> {
->> 	...
->> 	tpacpi_pdev =3D platform_create_bundle(&tpacpi_pdriver, tpacpi_probe,
->> 					     NULL, 0, NULL, 0);
->> 	...
->> }
->>
->> Of course this complicates things, so another approach is to just use
->>
->> 	platform_profile_register()
->>
->> instead of the devm_ version.
->>
->> Of course, the first approach has the advantage that devres is now
->> usable, so I'd go for that, but that's for you to decide.
->>
-> Hmmmm.
-> I'd like to get a fix in so anybody updating to 6.13 don't get hit (the F=
-edora users will be getting it soon and Arch users are likely seeing it alr=
-eady).
+There's no need to enumerate each type.  No logic changes.
 
-Thankfully Arch does not distribute rc versions.
+Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+---
+v5: Exit the loop and return EOPNOTSUPP when `!lookback_distance`.
+v4: https://lore.kernel.org/linux-erofs/20250207094515.2589242-1-hongzhen@linux.alibaba.com/
+v3: https://lore.kernel.org/all/20250207085056.2502010-1-hongzhen@linux.alibaba.com/
+v2: https://lore.kernel.org/all/20250207080829.2405528-1-hongzhen@linux.alibaba.com/
+v1: https://lore.kernel.org/all/20250207064135.2249529-1-hongzhen@linux.alibaba.com/
+---
+ fs/erofs/zmap.c | 63 +++++++++++++++++++------------------------------
+ 1 file changed, 24 insertions(+), 39 deletions(-)
 
->
-> I think I'll do a fix tomorrow using the non devm_ version as that's safe=
-st; and then take a bit more time with implementing a probe with the approp=
-riate pieces.
-
-I agree!
-
->
-> Thanks again
-
-Thanks for fixing it. This one is on me, I naively assumed the device
-was alread bound.
-
---
-~ Kurt
-
-> Mark
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index 689437e99a5a..d278ebd60281 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -265,26 +265,22 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
+ 		if (err)
+ 			return err;
+ 
+-		switch (m->type) {
+-		case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
++		if (m->type >= Z_EROFS_LCLUSTER_TYPE_MAX) {
++			erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
++				  m->type, lcn, vi->nid);
++			DBG_BUGON(1);
++			return -EOPNOTSUPP;
++		} else if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
+ 			lookback_distance = m->delta[0];
+ 			if (!lookback_distance)
+-				goto err_bogus;
++				break;
+ 			continue;
+-		case Z_EROFS_LCLUSTER_TYPE_PLAIN:
+-		case Z_EROFS_LCLUSTER_TYPE_HEAD1:
+-		case Z_EROFS_LCLUSTER_TYPE_HEAD2:
++		} else {
+ 			m->headtype = m->type;
+ 			m->map->m_la = (lcn << lclusterbits) | m->clusterofs;
+ 			return 0;
+-		default:
+-			erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
+-				  m->type, lcn, vi->nid);
+-			DBG_BUGON(1);
+-			return -EOPNOTSUPP;
+ 		}
+ 	}
+-err_bogus:
+ 	erofs_err(sb, "bogus lookback distance %u @ lcn %lu of nid %llu",
+ 		  lookback_distance, m->lcn, vi->nid);
+ 	DBG_BUGON(1);
+@@ -329,35 +325,28 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
+ 	DBG_BUGON(lcn == initial_lcn &&
+ 		  m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD);
+ 
+-	switch (m->type) {
+-	case Z_EROFS_LCLUSTER_TYPE_PLAIN:
+-	case Z_EROFS_LCLUSTER_TYPE_HEAD1:
+-	case Z_EROFS_LCLUSTER_TYPE_HEAD2:
++	if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
++		if (m->delta[0] != 1) {
++			erofs_err(sb, "bogus CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
++			DBG_BUGON(1);
++			return -EFSCORRUPTED;
++		}
++		if (m->compressedblks)
++			goto out;
++	} else if (m->type < Z_EROFS_LCLUSTER_TYPE_MAX) {
+ 		/*
+ 		 * if the 1st NONHEAD lcluster is actually PLAIN or HEAD type
+ 		 * rather than CBLKCNT, it's a 1 block-sized pcluster.
+ 		 */
+ 		m->compressedblks = 1;
+-		break;
+-	case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
+-		if (m->delta[0] != 1)
+-			goto err_bonus_cblkcnt;
+-		if (m->compressedblks)
+-			break;
+-		fallthrough;
+-	default:
+-		erofs_err(sb, "cannot found CBLKCNT @ lcn %lu of nid %llu", lcn,
+-			  vi->nid);
+-		DBG_BUGON(1);
+-		return -EFSCORRUPTED;
++		goto out;
+ 	}
++	erofs_err(sb, "cannot found CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
++	DBG_BUGON(1);
++	return -EFSCORRUPTED;
+ out:
+ 	m->map->m_plen = erofs_pos(sb, m->compressedblks);
+ 	return 0;
+-err_bonus_cblkcnt:
+-	erofs_err(sb, "bogus CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
+-	DBG_BUGON(1);
+-	return -EFSCORRUPTED;
+ }
+ 
+ static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
+@@ -386,9 +375,7 @@ static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
+ 				m->delta[1] = 1;
+ 				DBG_BUGON(1);
+ 			}
+-		} else if (m->type == Z_EROFS_LCLUSTER_TYPE_PLAIN ||
+-			   m->type == Z_EROFS_LCLUSTER_TYPE_HEAD1 ||
+-			   m->type == Z_EROFS_LCLUSTER_TYPE_HEAD2) {
++		} else if (m->type < Z_EROFS_LCLUSTER_TYPE_MAX) {
+ 			if (lcn != headlcn)
+ 				break;	/* ends at the next HEAD lcluster */
+ 			m->delta[1] = 1;
+@@ -452,8 +439,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
+ 		}
+ 		/* m.lcn should be >= 1 if endoff < m.clusterofs */
+ 		if (!m.lcn) {
+-			erofs_err(inode->i_sb,
+-				  "invalid logical cluster 0 at nid %llu",
++			erofs_err(inode->i_sb, "invalid logical cluster 0 at nid %llu",
+ 				  vi->nid);
+ 			err = -EFSCORRUPTED;
+ 			goto unmap_out;
+@@ -469,8 +455,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
+ 			goto unmap_out;
+ 		break;
+ 	default:
+-		erofs_err(inode->i_sb,
+-			  "unknown type %u @ offset %llu of nid %llu",
++		erofs_err(inode->i_sb, "unknown type %u @ offset %llu of nid %llu",
+ 			  m.type, ofs, vi->nid);
+ 		err = -EOPNOTSUPP;
+ 		goto unmap_out;
+-- 
+2.43.5
 
