@@ -1,99 +1,309 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56241C3F36;
-	Mon, 10 Feb 2025 10:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1751DE88C;
+	Mon, 10 Feb 2025 10:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739182705; cv=none; b=iuVkC3Yt8V7Kh1hqEYOuTUjRh1Q7DzqGZC0IJc8HNWo5k65lQFjkuRmg2/PbNZIVYREhtwdW4mDFWRBQ3UIyghwKwMos4Ki0R3+Qj/hdlOOOsInxKSoezADmApZxErZGTHKERHd29wgxvGZ95ZqRp8o/6cd3/OPh9NlTxg2L/Jo=
+	t=1739182705; cv=none; b=YIztloD1iAvrVfRRiMcGIbeZNXrH8WbtEXu7fL05KfIoMpLdTfqNX8IZOY7q/muK25ECUhbwjwhqXigbxRBF4si481v6S9ssKmxJg2+c4mJA5Ay37dU3WMFjaIttUuVumkN257ruAqFih5gXr0n2QVrvb8F3CCaCabwrAjZJxuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739182705; c=relaxed/simple;
-	bh=eSvTyMDnhmkmFcppWwSm3V3i6quSbs6CTcyP13KbZDw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=czofnmAwNng5Z/clVsz1PlRajBAVYGJ3i6l4LL8BOLk6gV7h4MXBnmZrHg+w0lkHL6FBXc8rqocwCe/fE7efFpmObAH5qsEb+PyNds0vBQuURakRk8BCwt0Pssd7YeBjxz6f6MuLspDOwsOZbhYEMjG1IlmomZeM/4N4PDRi7Rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JOlncvx5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lAJmG8ai; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	bh=AgZgjsWlXG6CLe0lkuaH95ZdpSYmb1IEeyegxlm7uno=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=J2hHHPu2NZa1dEqWohchMW2m4zd3NIhUIaCaswmAThIppcNxzUf8OCw6/erCruTYU3mKIr70H6MnAV7Mqem5Yj6mZYtu5IA1D+7LeRS9rZN2NholVmwXCn+VrvDSglSoZgAaEKktlNujRysJeAV+4v8cocezzrDGCRAODBS4WoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PSuyVYxs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JOlncvx5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lAJmG8ai"
-Date: Mon, 10 Feb 2025 11:18:20 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739182702;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oONuz56ffauYF3gP0eUnBA886a0FrJODrLFYvs7U1Ig=;
-	b=JOlncvx5rr2rWhQOyUyuJaQDJ3Kc87n9AxLdVgpg85mVVsRSuvpS18oo2i+EzhXDtx5o9l
-	X9BYY2sQ9Fn7pvLm4PrdapzT1iyTSzYibu4OxPE3oGPPRmiMfMJYe0Q8GRnW1jXojazg9Y
-	o51FlNl88dS/auoi7sRkIvkAICWEjzkNOeXAxdhuxeSAPIdhHu9CH/E/CP8jBDMXQw8uZm
-	e9tEDl5/eD5/mZgKz7ABSo2TjmNBIFm0hdzblu+XWo1gOxP4h1eOVmCWG4xPbH0cv/C78Y
-	4fuSsnusUk5Ofa6ftD/lOwAhnDM6AUt8ffPPvkb501Phtd2PpOYr2mYSFJQbZA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739182702;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oONuz56ffauYF3gP0eUnBA886a0FrJODrLFYvs7U1Ig=;
-	b=lAJmG8airbZW1/09009CVPUxyO1FpKLB8cXVjv4WV5CTiHr39O4f1zqwK4K3VqODHtQhY9
-	N69kUIM+hYWvZ2CA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: kazuhiro3.hayashi@toshiba.co.jp
-Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	cip-dev@lists.cip-project.org, tglx@linutronix.de,
-	rostedt@goodmis.org, linux-rt-users@vger.kernel.org, pavel@denx.de
-Subject: Re: RE: [PATCH 4.4 4.9 v1 2/2] mm: slub: allocate_slab() enables IRQ
- right after scheduler starts
-Message-ID: <20250210101820.lXceJi98@linutronix.de>
-References: <1738629964-11977-1-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
- <1738629964-11977-3-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
- <20250204081813.7qsvLFsU@linutronix.de>
- <TYCPR01MB11385E033624D2D9D93992A95E1F22@TYCPR01MB11385.jpnprd01.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PSuyVYxs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3569CC4CEFE;
+	Mon, 10 Feb 2025 10:18:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739182704;
+	bh=AgZgjsWlXG6CLe0lkuaH95ZdpSYmb1IEeyegxlm7uno=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PSuyVYxsCe57ajvGphKwFMfxv95i4EQhsqHxLKP3zMy8yBLV82VsvM4yK1V4snjcx
+	 VYZuf95Ts35b5AsFHbU19H7AIw1+Iqo8SJ8fwKG5cEJWEwmXYMCFJYfuGhETlZsj4c
+	 bpdYAg8QcMGqa2UWe1LuuFZyXuc76dmxLGEV8p9VtBUdRCOC5/dPYqgdz90tVmQ3lt
+	 LSHR6tNBKvNjHfIPb5J0EPinj7/niJ2TWqGYope2yzFgufCHWUjplfzMqoYkvQhMlc
+	 PGKy+W2cPSlxgDLLrbyrR7U/ImrvF4NuK602BetNeMNgWxf4YMsBmDcZav5i7xVZ3v
+	 ut1eMrE6LZa8g==
+Received: from mchehab by mail.kernel.org with local (Exim 4.98)
+	(envelope-from <mchehab+huawei@kernel.org>)
+	id 1thQru-00000006CjQ-1cfu;
+	Mon, 10 Feb 2025 11:18:22 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	"Jonathan Corbet" <corbet@lwn.net>,
+	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 20/27] docs: sphinx/kernel_abi: parse ABI files only once
+Date: Mon, 10 Feb 2025 11:18:09 +0100
+Message-ID: <5205c53838b6ea25f4cdd4cc1e3d17c0141e75a6.1739182025.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <cover.1739182025.git.mchehab+huawei@kernel.org>
+References: <cover.1739182025.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <TYCPR01MB11385E033624D2D9D93992A95E1F22@TYCPR01MB11385.jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-On 2025-02-10 07:20:35 [+0000], kazuhiro3.hayashi@toshiba.co.jp wrote:
-> Hello,
-Hi,
+Right now, the logic parses ABI files on 4 steps, one for each
+directory. While this is fine in principle, by doing that, not
+all symbol cross-references will be created.
 
-> The question here is whether to insert SYSTEM_SCHEDULING is acceptable
-> or not in LTS phase. This addition would change behavior of future fixes
-> or out-of-tree codes that check system_state, so adjustments similar to
-> the mainline series[2] (2/17 ~ 15/17) are needed for them.
-> Can I ask if it's recommended to introduce SYSTEM_SCHEDULING even in LTS?
-> It's v4.4-rt specific topic but I think similar discussion is regularly
-> happening in newer -rt branches and LTS branches where PREEMPT_RT is merged.
+Change the logic to do the parsing only once in order to get
+a global dictionary to be used when creating ABI cross-references.
 
-In general I try to have the same code if it is easily possible. A few
-examples where this was not the case:
-- The printk code, as work is in progress, was never fully backported.
-  The changes between kernel versions were small and there was little to
-  none user visible changes. However changes under the hood were usually
-  big so in general it was not worth the effort.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/admin-guide/abi-obsolete.rst |   2 +-
+ Documentation/admin-guide/abi-removed.rst  |   2 +-
+ Documentation/admin-guide/abi-stable.rst   |   2 +-
+ Documentation/admin-guide/abi-testing.rst  |   2 +-
+ Documentation/sphinx/kernel_abi.py         | 115 ++++++++++++---------
+ scripts/lib/abi/abi_parser.py              |  22 ++--
+ 6 files changed, 81 insertions(+), 64 deletions(-)
 
-- scheduling wise, we went from PREEMPT_LAZY to PREEMPT_AUTO to
-  LAZY_PREEMPT. Fixes within one implementation went all the way down
-  but the implementation as a whole was never backported. PREEMPT_AUTO
-  could be considered as half way done but nobody complained about
-  something in particular. It was "recently" discussed whether or not to
-  backport LAZY_PREEMPT to replace PREEMPT_AUTO in some of the lower
-  kernels but the changes required to backport it would be huge because
-  the scheduler in particular changed. So this is hard to justify.
+diff --git a/Documentation/admin-guide/abi-obsolete.rst b/Documentation/admin-guide/abi-obsolete.rst
+index 6d4d9ab7b8c3..bdef91d2cea4 100644
+--- a/Documentation/admin-guide/abi-obsolete.rst
++++ b/Documentation/admin-guide/abi-obsolete.rst
+@@ -9,4 +9,4 @@ marked to be removed at some later point in time.
+ The description of the interface will document the reason why it is
+ obsolete and when it can be expected to be removed.
+ 
+-.. kernel-abi:: ABI/obsolete
++.. kernel-abi:: obsolete
+diff --git a/Documentation/admin-guide/abi-removed.rst b/Documentation/admin-guide/abi-removed.rst
+index 9fc78af6f077..bea0608b8442 100644
+--- a/Documentation/admin-guide/abi-removed.rst
++++ b/Documentation/admin-guide/abi-removed.rst
+@@ -3,4 +3,4 @@
+ ABI removed symbols
+ ===================
+ 
+-.. kernel-abi:: ABI/removed
++.. kernel-abi:: removed
+diff --git a/Documentation/admin-guide/abi-stable.rst b/Documentation/admin-guide/abi-stable.rst
+index c47c2a295865..33637c0d4fd5 100644
+--- a/Documentation/admin-guide/abi-stable.rst
++++ b/Documentation/admin-guide/abi-stable.rst
+@@ -12,4 +12,4 @@ for at least 2 years.
+ Most interfaces (like syscalls) are expected to never change and always
+ be available.
+ 
+-.. kernel-abi:: ABI/stable
++.. kernel-abi:: stable
+diff --git a/Documentation/admin-guide/abi-testing.rst b/Documentation/admin-guide/abi-testing.rst
+index 40b31985e587..55054985a8ff 100644
+--- a/Documentation/admin-guide/abi-testing.rst
++++ b/Documentation/admin-guide/abi-testing.rst
+@@ -18,4 +18,4 @@ Programs that use these interfaces are strongly encouraged to add their
+ name to the description of these interfaces, so that the kernel
+ developers can easily notify them if any changes occur.
+ 
+-.. kernel-abi:: ABI/testing
++.. kernel-abi:: testing
+diff --git a/Documentation/sphinx/kernel_abi.py b/Documentation/sphinx/kernel_abi.py
+index 0a4057183208..964f586de171 100644
+--- a/Documentation/sphinx/kernel_abi.py
++++ b/Documentation/sphinx/kernel_abi.py
+@@ -49,6 +49,13 @@ from abi_parser import AbiParser
+ 
+ __version__ = "1.0"
+ 
++logger = logging.getLogger('kernel_abi')
++path = os.path.join(srctree, "Documentation/ABI")
++
++# Parse ABI symbols only once
++kernel_abi = AbiParser(path, logger=logger)
++kernel_abi.parse_abi()
++kernel_abi.check_issues()
+ 
+ def setup(app):
+ 
+@@ -64,14 +71,15 @@ class KernelCmd(Directive):
+     u"""KernelABI (``kernel-abi``) directive"""
+ 
+     required_arguments = 1
+-    optional_arguments = 2
++    optional_arguments = 3
+     has_content = False
+     final_argument_whitespace = True
+-    logger = logging.getLogger('kernel_abi')
+     parser = None
+ 
+     option_spec = {
+         "debug": directives.flag,
++        "no-symbols": directives.flag,
++        "no-files":  directives.flag,
+     }
+ 
+     def run(self):
+@@ -79,62 +87,67 @@ class KernelCmd(Directive):
+         if not doc.settings.file_insertion_enabled:
+             raise self.warning("docutils: file insertion disabled")
+ 
+-        path = os.path.join(srctree, "Documentation", self.arguments[0])
+-        self.parser = AbiParser(path, logger=self.logger)
+-        self.parser.parse_abi()
+-        self.parser.check_issues()
+-
+-        node = self.nested_parse(None, self.arguments[0])
+-        return node
+-
+-    def nested_parse(self, data, fname):
+         env = self.state.document.settings.env
+         content = ViewList()
+         node = nodes.section()
+ 
+-        if data is not None:
+-            # Handles the .rst file
+-            for line in data.split("\n"):
+-                content.append(line, fname, 0)
++        abi_type = self.arguments[0]
+ 
+-            self.do_parse(content, node)
++        if "no-symbols" in self.options:
++            show_symbols = False
++        else:
++            show_symbols = True
+ 
++        if "no-files" in self.options:
++            show_file = False
++        else:
++            show_file = True
++
++        tab_width = self.options.get('tab-width',
++                                     self.state.document.settings.tab_width)
++
++        old_f = None
++        n = 0
++        n_sym = 0
++        for msg, f, ln in kernel_abi.doc(show_file=show_file,
++                                            show_symbols=show_symbols,
++                                            filter_path=abi_type):
++            n_sym += 1
++            msg_list = statemachine.string2lines(msg, tab_width,
++                                                 convert_whitespace=True)
++            if "debug" in self.options:
++                lines = [
++                    "", "",  ".. code-block:: rst",
++                    "    :linenos:", ""
++                ]
++                for m in msg_list:
++                    lines.append("    " + m)
++            else:
++                lines = msg_list
++
++            for line in lines:
++                # sphinx counts lines from 0
++                content.append(line, f, ln - 1)
++                n += 1
++
++            if f != old_f:
++                # Add the file to Sphinx build dependencies
++                env.note_dependency(os.path.abspath(f))
++
++                old_f = f
++
++            # Sphinx doesn't like to parse big messages. So, let's
++            # add content symbol by symbol
++            if content:
++                self.do_parse(content, node)
++                content = ViewList()
++
++        if show_symbols and not show_file:
++            logger.verbose("%s ABI: %i symbols (%i ReST lines)" % (abi_type, n_sym, n))
++        elif not show_symbols and show_file:
++            logger.verbose("%s ABI: %i files (%i ReST lines)" % (abi_type, n_sym, n))
+         else:
+-            # Handles the ABI parser content, symbol by symbol
+-
+-            old_f = fname
+-            n = 0
+-            for msg, f, ln in self.parser.doc():
+-                msg_list = statemachine.string2lines(msg, tab_width,
+-                                                     convert_whitespace=True)
+-                if "debug" in self.options:
+-                    lines = [
+-                        "", "",  ".. code-block:: rst",
+-                        "    :linenos:", ""
+-                    ]
+-                    for m in msg_list:
+-                        lines.append("    " + m)
+-                else:
+-                    lines = msg_list
+-
+-                for line in lines:
+-                    # sphinx counts lines from 0
+-                    content.append(line, f, ln - 1)
+-                    n += 1
+-
+-                if f != old_f:
+-                    # Add the file to Sphinx build dependencies
+-                    env.note_dependency(os.path.abspath(f))
+-
+-                    old_f = f
+-
+-                # Sphinx doesn't like to parse big messages. So, let's
+-                # add content symbol by symbol
+-                if content:
+-                    self.do_parse(content, node)
+-                    content = ViewList()
+-
+-            self.logger.info("%s: parsed %i lines" % (fname, n))
++            logger.verbose("%s ABI: %i data (%i ReST lines)" % (abi_type, n_sym, n))
+ 
+         return node.children
+ 
+diff --git a/scripts/lib/abi/abi_parser.py b/scripts/lib/abi/abi_parser.py
+index 6fac461d794c..87d1b9e14bb3 100644
+--- a/scripts/lib/abi/abi_parser.py
++++ b/scripts/lib/abi/abi_parser.py
+@@ -266,12 +266,20 @@ class AbiParser:
+     def parse_readme(self, nametag, fname):
+         """Parse ABI README file"""
+ 
++        nametag["what"] = ["ABI file contents"]
++        nametag["path"] = "README"
+         with open(fname, "r", encoding="utf8", errors="backslashreplace") as fp:
+-            nametag["description"] = "```\n"
+             for line in fp:
+-                nametag["description"] += "  " + line
++                match = self.re_tag.match(line)
++                if match:
++                    new = match.group(1).lower()
+ 
+-            nametag["description"] += "```\n"
++                    match = self.re_valid.search(new)
++                    if match:
++                        nametag["description"] += "\n:" + line
++                        continue
++
++                nametag["description"] += line
+ 
+     def parse_file(self, fname, path, basename):
+         """Parse a single file"""
+@@ -459,12 +467,8 @@ class AbiParser:
+                     continue
+ 
+             if filter_path:
+-                if filter_path == "README":
+-                    if not names[0].endswith("README"):
+-                        continue
+-                else:
+-                    if v.get("path") != filter_path:
+-                        continue
++                if v.get("path") != filter_path:
++                    continue
+ 
+             msg = ""
+ 
+-- 
+2.48.1
 
-What questions can you ask?
-- Do you backport code that relies on `system_states' or did so in the
-  past?
-- Is more likely to backport code from before v4.13 or after? Either way
-  you need to look at this.
-
-> Best regards,
-> Kazu
-
-Sebastian
