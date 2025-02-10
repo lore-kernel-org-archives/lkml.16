@@ -1,72 +1,105 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.58.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F751F3D20
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:47:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F831F3D30
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.58.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739188029; cv=none; b=kJ7n0EQnJhy8BnRmswQLSeL8OUyxq4G46EzcW9rJPuOBUk9Z/tO+ObUErd2e0tZqRpFq4BWd93isitrWf/inBrgyxuBvNkAj4LzuOulY0eiIzbxmLcZ8MNSpb7J5UpmkG6OHA1npXLT4AAfcL6YAsYuDOBqbm1hJWQvDrG0Y+Qg=
+	t=1739188041; cv=none; b=rKxkhpP0Tk44lBP2ubCrB4bQPK48fFvUEWjw10JgBJV9AnB9GAXMgieX6wu2AC+GPDuBuGwjkvVCURItnz0AoBKQts/nEPRD2gkGJN5kBH5LlSwjW7b+O434eSqqMtizG2PC4+wry/OkCjAa1nlaPw/VrBcj07AnXzud2yGHLtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739188029; c=relaxed/simple;
-	bh=fDDNGm/SCzfV6XYo66DotUVoki6C2i/1naFSUGMQchk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=OkYFY9VfMH3S3I6mkFmBZXL9k0uX0F8ItiLTFeRNio3Qh+/N9i7SAVGHrzzJJxbNh8L5NGB+vJy7Bp7E4aAC/b2J3uiCsuTB3NzBa+4dunBSFSshXz+xjt16LDNflCSd2hKD0kOPPI9iK/jkW99x98V3uljwsxhjcXHCTuYEQs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d16acfdddaso1409265ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 03:47:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739188026; x=1739792826;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6+hiG3HsJUBLiVW9LNRn3dMbwNWLww3HlPxeJDoxixQ=;
-        b=Uzy/lPz4l8S7IAInxB9z3w7t6CJ8QBqJXH22LFn+c2LZEftzHOb08Vd4P/BkVQlLPX
-         piVvkeQRWdxWwpLI6dnOlV7LD4hypK0pt0EPhgkS7bDhN+LU3OUi9dIl2p9vxij49diq
-         FnhGkk0Iw2Qa0WM6wTZRwNsphtDldetfKK1uQS1zzeUujqFHVmAbJv6e8KWEzEstdoEv
-         GrJd7T024wcKNIzausWD6WK5KdW5yXUtapevgua87RxOk0pGESTb5sXKZRt5UVQij1Mk
-         zdoJX2YxZJDZU10bqg76kbSvl2U9N4wl10FnThD7V+yWAYIawF+NHK4MqwEP9uOcMNbh
-         n8ng==
-X-Forwarded-Encrypted: i=1; AJvYcCUp0QZfDAQgmyxEMGrj+tEZwFkvgd/XWZvgtWD1WHDbkFLfkiJlourlTSTElPlbzWxQ53EeKW1IOb4NYYY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqxjyC+WQ7xbTU9afEwYHALCDiecilfLsRUL4hnaVknnXcsQGj
-	EsnYOH3YtyABblECazucfSlW390yAP4nhS4gF+96vo0mMoUGG6Gh/KN8zSAWSAzNsyk41Ok3hiq
-	H+FVzeQBxHFSvKcQWSk6I+F7elWjKZsZwe1z2G2HDS3OX51Z9sN1YopQ=
-X-Google-Smtp-Source: AGHT+IF0QDxfQZSlF45gzdwxC2VNims7gDsFdtgLaMKwKj7/lS/Vqyj4snvMZGCzOZ7eGEgjy6iGWPVfAG0iHJhVKSwuItU2c6zw
+	s=arc-20240116; t=1739188041; c=relaxed/simple;
+	bh=GzG9/JewF2R9hgWMnABUvCORIphwvk2NHpyoL5fvoz8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LfR9oft8sFejAo4txmc+xoXjUU5fzcYMnJeqjEk9LQijspLAcAx/1XAafgeiFcFnyx9ZL5KQ/oP5Q0vC40fDbQKGRejq0GNqYxmBijgYzaDqNRp1/h0zsW683cersx6i2qO1Uh5SZlKTcmcOXmQX/t8cjZYnozn4NruE6HyYSZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=I0UPZrP8; arc=none smtp.client-ip=114.132.58.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="I0UPZrP8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1739187987;
+	bh=m1grcYhOjtkQFfMg+6V4yipR+q7gHGrp5uZpxwpcixI=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=I0UPZrP8mxiWc1HxUM1BRkCF2v1yXjzb6vS09JAtgh4+lxBS1a+MSHNDLxxREA+a2
+	 QNij34cZ7qbzkUGhe9Ja+ZZlCoc0UCcK7rnu5Kf6VY/WqXXxuyWLYbJd8Z8FFmYIte
+	 hloVlm8kweg+mYlAsUAdM5uAUBlhcwqsu4YPwl7w=
+X-QQ-mid: bizesmtpip2t1739187948tanchur
+X-QQ-Originating-IP: YjZyhasVfxTRnsGik3pptVUnM9gplCpsHZpfchVxcbY=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 10 Feb 2025 19:45:46 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 10396166132984000817
+From: WangYuli <wangyuli@uniontech.com>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	wangyuli@uniontech.com,
+	guanwentao@uniontech.com
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	maobibo@loongson.cn,
+	zhanjun@uniontech.com,
+	chenlinxuan@uniontech.com
+Subject: [PATCH] LoongArch: csum: Fix OoB access in IP checksum code for negative lengths
+Date: Mon, 10 Feb 2025 19:45:43 +0800
+Message-ID: <D4E490BD8F1E672B+20250210114543.1090146-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c0e:b0:3d0:28d3:e4ba with SMTP id
- e9e14a558f8ab-3d13dfa700amr125457465ab.18.1739188026701; Mon, 10 Feb 2025
- 03:47:06 -0800 (PST)
-Date: Mon, 10 Feb 2025 03:47:06 -0800
-In-Reply-To: <20250210110322.2157-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a9e73a.050a0220.3d72c.0051.GAE@google.com>
-Subject: Re: [syzbot] [bluetooth?] general protection fault in h5_recv
-From: syzbot <syzbot+b5691bb559396b262064@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NiFdmnmiW14nC9wbGKWXWlrdR2n6UrhxDQwi9XvCzhqvQw1ruDwRMa93
+	9uOXFYF6BIpF4Z+byJDx6gPJ5dT9RZjyzarcS1GUDPKRMaR4uERozEpxTfm4SLnu52rh1R7
+	pEaNMuTWBdnQo2gKaxHOeF+PaY8uFRvwEwym7EoWWD1WTF/ARDDgmxZpvxopWniACOFzEVI
+	q3hqnPxcfJ5lrLNYePWtQP8QTz8jmVhMwpiTAJKHgXjn2WX3bJmktt4FercfDtP6D++61xr
+	QBplUfaYFCOZZLTNF+inYTYCkSNS4NBV7AlL5JreHfen0gbXA7j3top5wQqt6KEzyHvEpxh
+	PQy2f57/sBqwJTR6cxBBYnWmyU1KLtdziK2eGNUzF2XP53QbzwZAvL1GFfsp0sq21pMwbjx
+	ABwyCnwdG6gK+C2iO+Jn55IfXI5rSTLxAW6U6U6LV1lbavbkN/ccrHYyEQmBd/hJ1D8pGxk
+	MjC8fwQkeaR6RQduZRk81LHH5h0hJChZL69/aIf/HjGePk68CLkDmdPYcuoQIYtUyH0/ibo
+	g9Pn1ObT3UKAqSH7A41gSlovd+PFEieBXYJ2N+Tb2565klX5OXl6giDQaWU8m9KrTBAtKxw
+	pAdFQr6qvxG3TC1AwaO5hnm0j34/bD3UJvRTbnjiolqWFtWcpFqQ1pGrUXTbLg34zOa075/
+	Wv8P9wGA7MS7F33FCjmc7O0I/UBD7YuHrUVwvwFdH5e4ol/k84oVyG2TbDRQCABx+ikh7nP
+	mfTtRKvm7SSiKJmKXmik8JpdggWGt4tF0jQQqNXtglLJ3eqWIIw8BSw6xC0dAKzRlPBQbnF
+	OGdCmpBcer63LANayBEBLD/usP3Pi7V4bTjiS+KFZeQLE+xBFpOtsZ6Ue/GfNF1AHMIGl0l
+	iH2C1dN5ly8CMBpkqWQ2hICp7ye9phCRNCWDp/bhUdkaR/cwuIdZamlBawuBT9WXsczILc6
+	GtPhMZtBzpQdD0vFKlcXdjgD8avJMi6H9dRbPQVcy+L/ryxsc16/ZT0aT6f7xpeT0hRZm++
+	RracZIp+AvtaLMV4e6
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 
-Hello,
+Commit 69e3a6aa6be2 ("LoongArch: Add checksum optimization for
+64-bit system") would cause an undefined shift and an out-of-bounds
+read.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Commit 8bd795fedb84 ("arm64: csum: Fix OoB access in IP checksum
+code for negative lengths") fixes the same issue on ARM64.
 
-Reported-by: syzbot+b5691bb559396b262064@syzkaller.appspotmail.com
-Tested-by: syzbot+b5691bb559396b262064@syzkaller.appspotmail.com
+Fixes: 69e3a6aa6be2 ("LoongArch: Add checksum optimization for 64-bit system")
+Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+---
+ arch/loongarch/lib/csum.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Tested on:
+diff --git a/arch/loongarch/lib/csum.c b/arch/loongarch/lib/csum.c
+index a5e84b403c3b..df309ae4045d 100644
+--- a/arch/loongarch/lib/csum.c
++++ b/arch/loongarch/lib/csum.c
+@@ -25,7 +25,7 @@ unsigned int __no_sanitize_address do_csum(const unsigned char *buff, int len)
+ 	const u64 *ptr;
+ 	u64 data, sum64 = 0;
+ 
+-	if (unlikely(len == 0))
++	if (unlikely(len <= 0))
+ 		return 0;
+ 
+ 	offset = (unsigned long)buff & 7;
+-- 
+2.47.2
 
-commit:         df5d6180 Add linux-next specific files for 20250210
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=12b3c2a4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2cd616b6e736ca7
-dashboard link: https://syzkaller.appspot.com/bug?extid=b5691bb559396b262064
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=117dc2a4580000
-
-Note: testing is done by a robot and is best-effort only.
