@@ -1,92 +1,177 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBE824BD00;
-	Mon, 10 Feb 2025 15:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00F62397B9
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739201225; cv=none; b=sn6QAbu0j27JWqQihJgNuGAjyNSYXJ5XBap8g54T8cg9TljUgq63NIRH7PoMY4aYa1QlnoP7EM/HnKkPPKQIFqy/5xbYOx3XSgHiC+LfycTFzZiowlz1gTZFIlZfLN1WQtE3q9yrGruTIRLZZ06Vw0bLfzRiTgiqegkL28euCi0=
+	t=1739201243; cv=none; b=O+i5bQKq8DBGhv5RMmOUO0EO0mFe9nPdVtG4/NF/TlCPBpxVPNjDzaG5isLj2xTU0B6a+B9Qq32IdbXKLYDr5YvDjAk8BEzZSYnBnCpbfSPd8YUIcGh0gz2GFDpJdY3Obaf7YsgRQVWxGABT732EqoIEycLNT1gpxh1EbHm3RLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739201225; c=relaxed/simple;
-	bh=8nO+xL0xvAUxQXLyv8lbUUhQKgTEHzCCFPQaA3a+aUE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KGHV0AZ6mCH/fpevbPdLoRlcZqOeUr0jY43QnIHLNi20TCpQw0OOSY9EegFQJyPggbofER8GMdI1hWVM5H1rqKZwSN87XuaXwyrOwXYkqtxJPoVrKtAEavmBAaGST3/CbisSkreN1X8A5/rZku8SUMRCsoKmaUqbSUqnOFobbj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GBziaNKF; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1739201243; c=relaxed/simple;
+	bh=U1/rZF6zOJAqI8OY8Ce4AadGuLZuCkbuu66ZHSutObo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PAQDM9QdSkx2a+tgaplT7uw+l3CRDDkvpps0YEtJlM+J+92RZ3onzabOi8i5Wkxmsgeci/HxW4Px01jvszw2UpYpcihBqJ68YOfucZtg8YbN7QX+culS/xPV8g73DHngW1EHnCoMLm2PzY5JyZDEMdcoHOz0pe1LLDgdbzmrS2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jlFG+Z61; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GBziaNKF"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id EF459204A1;
-	Mon, 10 Feb 2025 15:26:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739201221;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NfteH80PM3ST7bvqhv9G7FOT+Y/mpIyoF6NjchenmzY=;
-	b=GBziaNKFwVWu+pN3NcdtktbCzUqKd/a2TjDy7/Y0bwj6Qj8RVV25qG74q1Yef/oo3wNPUX
-	lmBtuKV3O/vjATJvuwo30PFzKTbxX68Ctwn4s4efgfoLQyRDyhukIn0lYHD930GFFd5DZS
-	Wgq1kw/pI4CIw5HVPALE/xb/0VFT4nWTUD3DHbq6j1aiEREr9KFtg22LhIy2bx+DVCnwr/
-	qNz1Pi+OExJ6Jq5Y8IiUBb8204pLhpRrmQrCdsYNOGyfu/tfbuwomMun0GpVKyja9hL6yV
-	R4a5RnNEg1W0qLgOk7cjWrVmiOyIwQ2PPhCfCBefNH+vhWkEo0HxCScv1lT6NQ==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	linux@treblig.org,
-	Shen Lichuan <shenlichuan@vivo.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	u.kleine-koenig@baylibre.com,
-	nirav.rabara@altera.com,
-	linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	niravkumar.l.rabara@intel.com
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] mtd: rawnand: cadence: improvement and fixes
-Date: Mon, 10 Feb 2025 16:26:53 +0100
-Message-ID: <173920118908.61047.14353398163992295945.b4-ty@bootlin.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250210053551.2399716-1-niravkumar.l.rabara@intel.com>
-References: <20250210053551.2399716-1-niravkumar.l.rabara@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jlFG+Z61"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-47180c199ebso393021cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:27:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739201238; x=1739806038; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=yZ316OTEKAnaWAw3ip6jFLMYmi3bAEAv/lpBYPcdN08=;
+        b=jlFG+Z61RHsyMOxGEhmWkVg3QTreW+CFEGsOS0ic9daD5/szjRF5Hxxgo0UTD9X4uZ
+         URskS4JHIQhtuogsVKiZr6WwW0cKj29CxMfYM4GbCx2slytcE/LfRWsDT7Us/NL+AXU+
+         JyZE8mtl/nYjCi89g4Q54gepu4X8uIESyV8HHpJRsCGycQ1RLAoaS+8JXMu0A0Pa4JzT
+         /BJ8ykfHgwrPn4YkBlCUg8BtKmZUTgMN8KRChFzd9ihn+eHzKzKVnwDQt8OJN3ShhfT1
+         E8VHFrGTyLWTzv5HQm2+WGGcz5beNI9Msl1HZZ53yZapaRJ72pp5J1d8linqqbHAxqeQ
+         cVqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739201238; x=1739806038;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yZ316OTEKAnaWAw3ip6jFLMYmi3bAEAv/lpBYPcdN08=;
+        b=avhUTzpkCucGxnNQU/DdqY6AtFzYdNLcabRz7+M+3l7WropR0Q29vicX9Sv6RLAWo3
+         ZoHSHwwcf+tMxUu9w8QdMzdfNOqtMpciR5QXKn9zn1Uq2+ISy0fx3HVSzWBeQbZdghH6
+         WLL/IM3ajEClQNGe11sqyqtjbqrCKB6OqPEKXckdx7044NdoUaZzV2RUFv/gwBNmgqmQ
+         2+5moBksSoD+yTgRBczDkSl0aZcL0OwLt9LyvR9CVFXZQFJPS7Tf0LLr9xw0wevJEADs
+         PUAnyz1PWKOE3/AdK6n2QfsHCVcdqlUFAeId8awqpail9+iluYrytaSiVB0BYEDUrPac
+         ocCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWzh34pKs5ap1zJvuMTUe36E5I+FyTEFEb/4NOE0039YBN/h1k9aiGdYVqSwv8/09M58qwMqo3Bmk1M/QY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFrjRLHdBJXflFszOOLrAkpFY3h9/dMsnNsCKJCyvnV0x1rC2k
+	thmFvxVHztt47eupthYR9SpUqaxKMLcCaQ5pGFgbs04XXOJX+wrfng/8xk3BVxa5XKywlP95TQY
+	RNi10J0yeN1tymWkwbAQ1fp1u1NtwQD9DuQpd
+X-Gm-Gg: ASbGncvS8rm2rPsEPQo5UhYv0qOSCYwfa7S56jGgB6kOjhsK7eD/CYDsLD+84MIfXhO
+	BjWI2YSpAusWuVz3oaCX5A84GYB2iJHL+arYziqhhIbdsH+IibL4Aeo9Ji1NjcSAxWRqoqOSEGR
+	D7KczI5fgAUlkaXvAUtgHaahOFdfc=
+X-Google-Smtp-Source: AGHT+IGMC9rpyokyquYS20i+q+ma7qGGS+XM/pl59dYsC1sgzfA9pzyKGEeQgh9YV3MTbqORXSHO8DmjEdKJ7ZFsWzg=
+X-Received: by 2002:a05:622a:1829:b0:466:8c7c:3663 with SMTP id
+ d75a77b69052e-47177e0c91fmr6467531cf.5.1739201238266; Mon, 10 Feb 2025
+ 07:27:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefkeegfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhggtgfgsehtkeertdertdejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepfeeugfdvffefhfduhfetfffgieeiudeugeffvdehvddvledujeejvedvgfdtvefgnecukfhppeelvddrudekgedrleekrdekgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeelvddrudekgedrleekrdekgedphhgvlhhopehlohgtrghlhhhoshhtrdhlohgtrghlughomhgrihhnpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehlihhnuhigsehtrhgvsghlihhgrdhorhhgpdhrtghpthhtohepshhhvghnlhhitghhuhgrnhesvhhivhhordgtohhmpdhrtghpthhtoheprhhurghnjhhinhhjihgvsehhuhgrfigvihdrtghomhdprhgtphhtthhopehurdhklhgvi
- hhnvgdqkhhovghnihhgsegsrgihlhhisghrvgdrtghomhdprhgtphhtthhopehnihhrrghvrdhrrggsrghrrgesrghlthgvrhgrrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrgh
-X-GND-Sasl: miquel.raynal@bootlin.com
+References: <20250206044346.3810242-1-riel@surriel.com> <20250206044346.3810242-11-riel@surriel.com>
+In-Reply-To: <20250206044346.3810242-11-riel@surriel.com>
+From: Brendan Jackman <jackmanb@google.com>
+Date: Mon, 10 Feb 2025 16:27:06 +0100
+X-Gm-Features: AWEUYZnA61IuaO7K52ByypDfx9F-3cd0JBhr6z4LbJwawKvTYqUz-OtEqws_R8s
+Message-ID: <CA+i-1C2zuctxx6oPVVu0zBJ=Q=Hs73mgrWs5jsp8obARNcUS9g@mail.gmail.com>
+Subject: Re: [PATCH v9 10/12] x86/mm: do targeted broadcast flushing from
+ tlbbatch code
+To: Rik van Riel <riel@surriel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de, 
+	peterz@infradead.org, dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com, 
+	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com, 
+	linux-mm@kvack.org, akpm@linux-foundation.org, jannh@google.com, 
+	mhklinux@outlook.com, andrew.cooper3@citrix.com, 
+	Manali Shukla <Manali.Shukla@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 10 Feb 2025 13:35:48 +0800, niravkumar.l.rabara@intel.com wrote:
-> From: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
-> 
-> This patchset introduces improvements and fixes for cadence nand driver.
-> The changes include:
-> 
-> 1. Replace dma_request_channel() with dma_request_chan_by_mask() and use
->    helper functions to return proper error code instead of fixed -EBUSY.
-> 2. Remap the slave DMA I/O resources to enhance driver portability.
-> 3. Fixed dma_unmap_single to use correct physical/bus device.
-> 
-> [...]
+On Thu, 6 Feb 2025 at 05:46, Rik van Riel <riel@surriel.com> wrote:
+>  /* Wait for INVLPGB originated by this CPU to complete. */
+> -static inline void tlbsync(void)
+> +static inline void __tlbsync(void)
+>  {
+> -       cant_migrate();
 
-Applied to mtd/fixes, thanks!
+Why does this have to go away?
 
-[1/3] mtd: rawnand: cadence: fix error code in cadence_nand_init()
-      commit: 2b9df00cded911e2ca2cfae5c45082166b24f8aa
-[2/3] mtd: rawnand: cadence: use dma_map_resource for sdma address
-      commit: d76d22b5096c5b05208fd982b153b3f182350b19
-[3/3] mtd: rawnand: cadence: fix incorrect device in dma_unmap_single
-      commit: f37d135b42cb484bdecee93f56b9f483214ede78
+> diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+> index 234277a5ef89..bf167e215e8e 100644
+> --- a/arch/x86/include/asm/tlbflush.h
+> +++ b/arch/x86/include/asm/tlbflush.h
+> @@ -106,6 +106,7 @@ struct tlb_state {
+>          * need to be invalidated.
+>          */
+>         bool invalidate_other;
+> +       bool need_tlbsync;
 
-Patche(s) should be available on mtd/linux.git and will be
-part of the next PR (provided that no robot complains by then).
+The ifdeffery is missing here.
 
-Kind regards,
-Miquèl
+> +static inline void invlpgb_flush_user_nr_nosync(unsigned long pcid,
+> +                                               unsigned long addr,
+> +                                               u16 nr, bool pmd_stride)
+> +{
+> +       __invlpgb_flush_user_nr_nosync(pcid, addr, nr, pmd_stride);
+> +       if (!this_cpu_read(cpu_tlbstate.need_tlbsync))
+> +               this_cpu_write(cpu_tlbstate.need_tlbsync, true);
+
+ Why do we need the conditional here?
+
+I always thought code like this was about avoiding cacheline
+contention, but given this is a percpu and it's really only of
+interest to the present CPU, is this worthwhile?
+
+I guess it might be sharing a cacheline with some other percpu that is
+more shared?
+
+Anyway, not a big deal, I'm mostly asking for my own education.
+
+> @@ -794,6 +825,8 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
+>         if (IS_ENABLED(CONFIG_PROVE_LOCKING))
+>                 WARN_ON_ONCE(!irqs_disabled());
+>
+> +       tlbsync();
+> +
+>         /*
+>          * Verify that CR3 is what we think it is.  This will catch
+>          * hypothetical buggy code that directly switches to swapper_pg_dir
+> @@ -973,6 +1006,8 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
+>   */
+>  void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+>  {
+> +       tlbsync();
+> +
+
+I have a feeling I'll look stupid for asking this, but why do we need
+this and the one in switch_mm_irqs_off()?
+
+> @@ -1661,12 +1694,53 @@ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
+>                 local_irq_enable();
+>         }
+>
+> +       /*
+> +        * If we issued (asynchronous) INVLPGB flushes, wait for them here.
+> +        * The cpumask above contains only CPUs that were running tasks
+> +        * not using broadcast TLB flushing.
+> +        */
+> +       if (cpu_feature_enabled(X86_FEATURE_INVLPGB))
+
+It feels wrong that we check the cpufeature here but not in e.g.
+enter_lazy_tlb().
+
+> +               tlbsync();
+> +
+>         cpumask_clear(&batch->cpumask);
+>
+>         put_flush_tlb_info();
+>         put_cpu();
+>  }
+>
+> +void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
+> +                                            struct mm_struct *mm,
+> +                                            unsigned long uaddr)
+> +{
+> +       u16 asid = mm_global_asid(mm);
+> +
+> +       if (asid) {
+> +               invlpgb_flush_user_nr_nosync(kern_pcid(asid), uaddr, 1, false);
+> +               /* Do any CPUs supporting INVLPGB need PTI? */
+
+Not today, but
+
+1. I don't think avoiding static_cpu_has() is worth the cost of making
+the reader take that logical step.
+
+2.  AFAIK a new CPU bug never led to enabling KPTI on a CPU that
+didn't have it before, and I think that would be a pretty dystopian
+future (and hopefully by then we'll have ASI instead...). But we can't
+really rule it out.
