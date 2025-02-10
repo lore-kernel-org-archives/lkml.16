@@ -1,315 +1,194 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928581C07C6;
-	Mon, 10 Feb 2025 08:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC181C07C6;
+	Mon, 10 Feb 2025 08:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739177706; cv=none; b=po7fdFGi/jT2dyhj3mF6GMBMiUYwMTqmBCyEZICUETY6pjhd942aR82oJGgqosP+xYcTD8QcCee7vNcZhqdtH8b9+OWUvFy4mVJ2wpXp+4OecMXp3+cQ2uTcB0K+yGuMMmwuZc4iXzfvJ2hoHrXGIpwpflOWNFHW2T4U6cAOqrk=
+	t=1739177757; cv=none; b=Gi4GRaEVmtSpXMAd0ljLbCftDgSWzUnOUckwDvu3eUdi2YysupErpXo4ey6GPtD5TiZ8ExWt/mfVI70UbeUe5/l5oT+DxPGb09qZVoX1aSa9lRO0I8C30dfczrixmilaEaW2cOCyPCa2nMGvvEOf8KtQtWue8QnFyftAIxp+Hds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739177706; c=relaxed/simple;
-	bh=1wEXGJKcurF+XfisQ5qSR9bzpi4fUcawaiSk2FPYeVc=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=snLt3K3zh/9eMRXG/nPMoWFuHqtBOF3/Zfj57faDuyPU0JER5bZy7R/zg5g3EZ/qI8B9QIKT59IS7Ar8TsEG0rZCTTjt9BqkLOCu4DXwkNPWYOn4tKzxHUDYbk5Ks7DdXpeF5wLd9QI2FpdBgKzl0eFTVxQKVjxBlswSe05dLnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=v0J0YdnD; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	s=arc-20240116; t=1739177757; c=relaxed/simple;
+	bh=s9JN02o5t9RCKpyA40HtclFOmmyHLhidAsVTcAxGwww=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=grWkYAQUGRYwSzuusKBnpnm75rZdG5JWceSrL/YZp80WyBTBdk0dNr+TMDsws5LwyJCcD1LqgRRobQBwi4o6d7ozrfq9ZXYhRR402TfpVmQCyEjkZ6IkTFaEkeJtjwPdGaQQ37dtM/ZqKHOWOHmww9ahSUVjpijIgJ5U0Q7lFM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=o95JPqWv; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="v0J0YdnD"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="o95JPqWv"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3F07B42CCD;
+	Mon, 10 Feb 2025 08:55:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739177746;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1H+Ir3hzjFy5kvh3ZHOggs0A8zRpB/qKteU8q68oXLw=;
+	b=o95JPqWvhZ/aFf3L1LdM6mNc5/6sUr8ZjPYQyKCtXkRxeXZI6mG6PsAn2U/P17fRwv3lY8
+	fmFVMAz0Xc3xwF2gIrqvokXwtRnKsM4DaXs1UtadUYGahgI1LiQJ2zDI3iUqClbV8yMGDs
+	APXlmCSmYxom/m5suGnd/DSXEKCxEtbSHCEymobtQ+/4HpUQTL7xs1Q5NrYcLcmp65NFxV
+	47U6Bkk2fjsRh9if58lr4DHo7gJVwsTrMSZQziMuB16BY/dcWADU7RmHSCtdZuJ6fWAox3
+	c41sUjfgH1SJ8gj1uIZyC33e+AxKBUZ3t1JWCpZIPfABB0zPVW4ggqm2u2oeqg==
+Date: Mon, 10 Feb 2025 09:55:42 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Sean Anderson <seanga2@gmail.com>
+Cc: davem@davemloft.net, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
+ linux-arm-kernel@lists.infradead.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
+ =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Marek
+ =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Oleksij Rempel
+ <o.rempel@pengutronix.de>, =?UTF-8?B?Tmljb2zDsg==?= Veronese
+ <nicveronese@gmail.com>, Simon Horman <horms@kernel.org>,
+ mwojtas@chromium.org, Antoine Tenart <atenart@kernel.org>,
+ devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, Romain
+ Gantois <romain.gantois@bootlin.com>
+Subject: Re: [PATCH net-next 00/13] Introduce an ethernet port
+ representation
+Message-ID: <20250210095542.721bf967@fedora-1.home>
+In-Reply-To: <8349c217-f0ef-3629-6a70-f35d36636635@gmail.com>
+References: <20250207223634.600218-1-maxime.chevallier@bootlin.com>
+	<8349c217-f0ef-3629-6a70-f35d36636635@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1739177702;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LJDsXEUj7b3zFzIa56IlFMlf0KA++lbCdlBM2nqsilY=;
-	b=v0J0YdnDhV2JdIPnHjExKgY7f+g62uivJWpRaaDng8nXi8FVRlv/E4cVWE6BdMbojTJv9H
-	LcIIphbc1mib1Pa7dFu5slwoLl6s99GENLAGqEknDpxL1R7Yt9in2+KYvm+wxiJY0jG4GU
-	yDPYzG9lou4DhNIHVpe1Db6ugDR8feK1wRyHmm0w8seXgwK5aPuWAPmB5Vu0s2bA0Zyrqy
-	80ZmOfa7vSbS8aGY/At+mDKaPCOp7IbnyJCT/zFb4vRdVc3mB67m6mR6rRp9db/oQBM4gM
-	BZg55pmuEN4f0LICXuwvoT4k+4Lo0gb5PykDZ/yRNbkNKV8RH5JYjBxUt5Wpyw==
-Date: Mon, 10 Feb 2025 09:55:02 +0100
-From: Dragan Simic <dsimic@manjaro.org>
-To: Quentin Schulz <foss+kernel@0leil.net>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Jagan
- Teki <jagan@edgeble.ai>, Niklas Cassel <cassel@kernel.org>, Michael Riesch
- <michael.riesch@wolfvision.net>, Jonas Karlman <jonas@kwiboo.se>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Quentin
- Schulz <quentin.schulz@cherry.de>, Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v5 4/4] arm64: dts: rockchip: minimal support for Pre-ICT
- tester adapter for RK3588 Jaguar
-In-Reply-To: <20250207-pre-ict-jaguar-v5-4-a70819ea0692@cherry.de>
-References: <20250207-pre-ict-jaguar-v5-0-a70819ea0692@cherry.de>
- <20250207-pre-ict-jaguar-v5-4-a70819ea0692@cherry.de>
-Message-ID: <eca58eff9c22a96ea03507b7a8a015dc@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefjeeifecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedugfelledvtdffvdekudeijeduueevvdevffehudehvdeuudetheekheeigfetheenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgdphhgvlhhopehfvgguohhrrgdquddrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdelpdhrtghpthhtohepshgvrghnghgrvdesghhmrghilhdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepnhgvt
+ hguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqmhhsmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On 2025-02-07 16:20, Quentin Schulz wrote:
-> From: Quentin Schulz <quentin.schulz@cherry.de>
-> 
-> The Pre-ICT tester adapter connects to RK3588 Jaguar SBC through its
-> proprietary Mezzanine connector.
-> 
-> It exposes a PCIe Gen2 1x M.2 connector and two proprietary camera
-> connectors. Support for the latter will come once the rest of the 
-> camera
-> stack is supported.
-> 
-> Additionally, the adapter loops some GPIOs together as well as route
-> some GPIOs to power rails.
-> 
-> This adapter is used for manufacturing RK3588 Jaguar to be able to test
-> the Mezzanine connector is properly soldered.
-> 
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
-> ---
->  arch/arm64/boot/dts/rockchip/Makefile              |   5 +
->  .../dts/rockchip/rk3588-jaguar-pre-ict-tester.dtso | 171 
-> +++++++++++++++++++++
->  2 files changed, 176 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/Makefile
-> b/arch/arm64/boot/dts/rockchip/Makefile
-> index
-> 8f93e0c4d6032d0ca2d93f44384c027e53aa5efb..58664453e019496420dfec7b781cc313fab04185
-> 100644
-> --- a/arch/arm64/boot/dts/rockchip/Makefile
-> +++ b/arch/arm64/boot/dts/rockchip/Makefile
-> @@ -145,6 +145,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += 
-> rk3588-firefly-itx-3588j.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-friendlyelec-cm3588-nas.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-h96-max-v58.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-jaguar.dtb
-> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-jaguar-pre-ict-tester.dtbo
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-nanopc-t6.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-nanopc-t6-lts.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-ok3588-c.dtb
-> @@ -197,6 +198,10 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) +=
-> rk3588-edgeble-neu6a-wifi.dtb
->  rk3588-edgeble-neu6a-wifi-dtbs := rk3588-edgeble-neu6a-io.dtb \
->  	rk3588-edgeble-neu6a-wifi.dtbo
-> 
-> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-jaguar-pre-ict-tester.dtb
-> +rk3588-jaguar-pre-ict-tester-dtbs := rk3588-jaguar.dtb \
-> +	rk3588-jaguar-pre-ict-tester.dtbo
-> +
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-rock-5b-pcie-ep.dtb
->  rk3588-rock-5b-pcie-ep-dtbs := rk3588-rock-5b.dtb \
->  	rk3588-rock-5b-pcie-ep.dtbo
+Hi Sean,
 
-Looking good to me, thanks for the patch!  The employed approach
-was already discussed and commented in detail in the v4 of this
-series, [*] so please feel free to include:
+On Fri, 7 Feb 2025 21:14:32 -0500
+Sean Anderson <seanga2@gmail.com> wrote:
 
-Reviewed-by: Dragan Simic <dsimic@manjaro.org>
+> Hi Maxime,
+> 
+> On 2/7/25 17:36, Maxime Chevallier wrote:
+> > Hello everyone,
+> > 
+> > This series follows the 2 RFC that were sent a few weeks ago :
+> > RFC V2: https://lore.kernel.org/netdev/20250122174252.82730-1-maxime.chevallier@bootlin.com/
+> > RFC V1: https://lore.kernel.org/netdev/20241220201506.2791940-1-maxime.chevallier@bootlin.com/
+> > 
+> > The goal of this series is to introduce an internal way of representing
+> > the "outputs" of ethernet devices, for now only focusing on PHYs.
+> > 
+> > This allows laying the groundwork for multi-port devices support (both 1
+> > PHY 2 ports, or more exotic setups with 2 PHYs in parallel, or MII
+> > multiplexers).
+> > 
+> > Compared to the RFCs, this series tries to properly support SFP,
+> > especially PHY-driven SFPs through special phy_ports named "serdes"
+> > ports. They have the particularity of outputing a generic interface,
+> > that feeds into another component (usually, an SFP cage and therefore an
+> > SFP module).
+> > 
+> > This allows getting a fairly generic PHY-driven SFP support (MAC-driven
+> > SFP is handled by phylink).
+> > 
+> > This series doesn't address PHY-less interfaces (bare MAC devices, MACs
+> > with embedded PHYs not driven by phylink, or MAC connected to optical
+> > SFPs) to stay within the 15 patches limit, nor does it include the uAPI
+> > part that exposes these ports to userspace.
+> > 
+> > I've kept the cover short, much more details can be found in the RFC
+> > covers.
+> > 
+> > Thanks everyone,
+> > 
+> > Maxime  
+> 
+> Forgive me for my ignorance, but why have a new ethtool interface instead of
+> extending ethtool_link_settings.port? It's a rather ancient interface, but it
+> seems to be tackling the exact same problem as you are trying to address. Older
+> NICs used to have several physical connectors (e.g. BNC, MII, twisted-pair) but
+> only one could be used at once. This seems directly analogous to a PHY that
+> supports multiple "port"s but not all at once. In fact, the only missing
+> connector type seems to be PORT_BACKPLANE.
+> 
+> I can think of a few reasons why you wouldn't use PORT_*:
+> 
+> - It describes the NIC and not the PHY, and perhaps there is too much impedance
+>    mismatch?
+> - There is too much legacy in userspace (or in the kernel) to use that API in
+>    this way?
+> - You need more flexibility?
 
-Please note that my tag applies to the changes introduced to the
-Makefile only, because I have no clue about the actual hardware
-design and don't have access to the schematic of the ICT tester
-described in the new .dtso file below.
+So there are multiple reasons that make the PORT_* field limited :
 
-[*] 
-https://lore.kernel.org/linux-rockchip/a3b98e3d3a2571ee75e59418bb3b6960@manjaro.org/T/#u
+ - We can't gracefully handle multi-port PHYs for complex scenarios
+where we could say "I'm currently using the Copper port, but does the
+Fiber port has link ?"
 
+ - As you mention in your first argument, what I'd like to try to do is
+come-up with a "generic" representation of outgoing NIC interfaces. The
+final use-cases I'd like to cover are multi-port NICs, allowing
+userspace to control which physical interfaces are available, and which
+t use. Looking at the hardware, this can be implemented in multiple
+ways :
 
-> diff --git
-> a/arch/arm64/boot/dts/rockchip/rk3588-jaguar-pre-ict-tester.dtso
-> b/arch/arm64/boot/dts/rockchip/rk3588-jaguar-pre-ict-tester.dtso
-> new file mode 100644
-> index
-> 0000000000000000000000000000000000000000..9d44dfe2f30d793accb994a230c58038f0c3daad
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588-jaguar-pre-ict-tester.dtso
-> @@ -0,0 +1,171 @@
-> +// SPDX-License-Identifier: (GPL-2.0-or-later OR MIT)
-> +/*
-> + * Copyright (c) 2024 Cherry Embedded Solutions GmbH
-> + *
-> + * Device Tree Overlay for the Pre-ICT tester adapter for the 
-> Mezzanine
-> + * connector on RK3588 Jaguar.
-> + *
-> + * This adapter has a PCIe Gen2 x1 M.2 M-Key connector and two 
-> proprietary
-> + * camera connectors (each their own I2C bus, clock, reset and PWM
-> lines as well
-> + * as 2-lane CSI).
-> + *
-> + * This adapter routes some GPIOs to power rails and loops together 
-> some other
-> + * GPIOs.
-> + *
-> + * This adapter is used during manufacturing for validating proper 
-> soldering of
-> + * the mezzanine connector.
-> + */
-> +
-> +/dts-v1/;
-> +/plugin/;
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/pinctrl/rockchip.h>
-> +
-> +&{/} {
-> +	pre_ict_tester_vcc_1v2: regulator-pre-ict-tester-vcc-1v2 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "pre_ict_tester_vcc_1v2";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-min-microvolt = <1200000>;
-> +		regulator-max-microvolt = <1200000>;
-> +		vin-supply = <&vcc_3v3_s3>;
-> +	};
-> +
-> +	pre_ict_tester_vcc_2v8: regulator-pre-ict-tester-vcc-2v8 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "pre_ict_tester_vcc_2v8";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-min-microvolt = <2800000>;
-> +		regulator-max-microvolt = <2800000>;
-> +		vin-supply = <&vcc_3v3_s3>;
-> +	};
-> +};
-> +
-> +&combphy0_ps {
-> +	status = "okay";
-> +};
-> +
-> +&gpio3 {
-> +	pinctrl-0 = <&pre_ict_pwr2gpio>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +&pcie2x1l2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie2x1l2_perstn_m0>;
-> +	reset-gpios = <&gpio3 RK_PD1 GPIO_ACTIVE_HIGH>; /* 
-> PCIE20X1_2_PERSTN_M0 */
-> +	vpcie3v3-supply = <&vcc_3v3_s3>;
-> +	status = "okay";
-> +};
-> +
-> +&pinctrl {
-> +	pcie2x1l2 {
-> +		pcie2x1l2_perstn_m0: pcie2x1l2-perstn-m0 {
-> +			rockchip,pins = <3 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	pre-ict-tester {
-> +		pre_ict_pwr2gpio: pre-ict-pwr2gpio-pins {
-> +			rockchip,pins =
-> +			/*
-> +			 * GPIO3_A3 requires two power rails to be properly
-> +			 * routed to the mezzanine connector to report a proper
-> +			 * value: VCC_1V8_S0_1 and VCC_IN_2. It may report an
-> +			 * incorrect value if VCC_1V8_S0_1 isn't properly routed,
-> +			 * but GPIO3_C6 would catch this HW soldering issue.
-> +			 * If VCC_IN_2 is properly routed, GPIO3_A3 should be
-> +			 * LOW. The signal shall not read HIGH in the event
-> +			 * GPIO3_A3 isn't properly routed due to soldering
-> +			 * issue. Therefore, let's enforce a pull-up (which is
-> +			 * the SoC default for this pin).
-> +			 */
-> +				<3 RK_PA3 RK_FUNC_GPIO &pcfg_pull_up>,
-> +			/*
-> +			 * GPIO3_A4 is directly routed to VCC_1V8_S0_2 power
-> +			 * rail. It should be HIGH if all is properly soldered.
-> +			 * To guarantee that, a pull-down is enforced (which is
-> +			 * the SoC default for this pin) so that LOW is read if
-> +			 * the loop doesn't exist on HW (soldering issue on
-> +			 * either signals).
-> +			 */
-> +				<3 RK_PA4 RK_FUNC_GPIO &pcfg_pull_down>,
-> +			/*
-> +			 * GPIO3_B2 requires two power rails to be properly
-> +			 * routed to the mezzanine connector to report a proper
-> +			 * value: VCC_1V8_S0_1 and VCC_IN_1. It may report an
-> +			 * incorrect value if VCC_1V8_S0_1 isn't properly routed,
-> +			 * but GPIO3_C6 would catch this HW soldering issue.
-> +			 * If VCC_IN_1 is properly routed, GPIO3_B2 should be
-> +			 * LOW. This is an issue if GPIO3_B2 isn't properly
-> +			 * routed due to soldering issue, because GPIO3_B2
-> +			 * default bias is pull-down therefore being LOW. So
-> +			 * the worst case scenario and the pass scenario expect
-> +			 * the same value. Make GPIO3_B2 a pull-up so that a
-> +			 * soldering issue on GPIO3_B2 reports HIGH but proper
-> +			 * soldering reports LOW.
-> +			 */
-> +				<3 RK_PB2 RK_FUNC_GPIO &pcfg_pull_up>,
-> +			/*
-> +			 * GPIO3_C6 is directly routed to VCC_1V8_S0_1 power
-> +			 * rail. It should be HIGH if all is properly soldered.
-> +			 * This is an issue if GPIO3_C6 or VCC_1V8_S0_1 isn't
-> +			 * properly routed due to soldering issue, because
-> +			 * GPIO3_C6 default bias is pull-up therefore being HIGH
-> +			 * in all cases:
-> +			 *  - GPIO3_C6 is floating (so HIGH) if GPIO3_C6 is not
-> +			 *    routed properly,
-> +			 *  - GPIO3_C6 is floating (so HIGH) if VCC_1V8_S0_1 is
-> +			 *    not routed properly,
-> +			 *  - GPIO3_C6 is HIGH if everything is proper,
-> +			 * Make GPIO3_C6 a pull-down so that a soldering issue
-> +			 * on GPIO3_C6 or VCC_1V8_S0_1 reports LOW but proper
-> +			 * soldering reports HIGH.
-> +			 */
-> +				<3 RK_PC6 RK_FUNC_GPIO &pcfg_pull_down>,
-> +			/*
-> +			 * GPIO3_D2 is routed to VCC_5V0_1 power rail through a
-> +			 * voltage divider on the adapter.
-> +			 * It should be HIGH if all is properly soldered.
-> +			 * To guarantee that, a pull-down is enforced (which is
-> +			 * the SoC default for this pin) so that LOW is read if
-> +			 * the loop doesn't exist on HW (soldering issue on
-> +			 * either signals).
-> +			 */
-> +				<3 RK_PD2 RK_FUNC_GPIO &pcfg_pull_down>,
-> +			/*
-> +			 * GPIO3_D3 is routed to VCC_5V0_2 power rail through a
-> +			 * voltage divider on the adapter.
-> +			 * It should be HIGH if all is properly soldered.
-> +			 * To guarantee that, a pull-down is enforced (which is
-> +			 * the SoC default for this pin) so that LOW is read if
-> +			 * the loop doesn't exist on HW (soldering issue on
-> +			 * either signals).
-> +			 */
-> +				<3 RK_PD3 RK_FUNC_GPIO &pcfg_pull_down>,
-> +			/*
-> +			 * GPIO3_D4 is routed to VCC_3V3_S3_1 power rail through
-> +			 * a voltage divider on the adapter.
-> +			 * It should be HIGH if all is properly soldered.
-> +			 * To guarantee that, a pull-down is enforced (which is
-> +			 * the SoC default for this pin) so that LOW is read if
-> +			 * the loop doesn't exist on HW (soldering issue on
-> +			 * either signals).
-> +			 */
-> +				<3 RK_PD4 RK_FUNC_GPIO &pcfg_pull_down>,
-> +			/*
-> +			 * GPIO3_D5 is routed to VCC_3V3_S3_2 power rail through
-> +			 * a voltage divider on the adapter.
-> +			 * It should be HIGH if all is properly soldered.
-> +			 * To guarantee that, a pull-down is enforced (which is
-> +			 * the SoC default for this pin) so that LOW is read if
-> +			 * the loop doesn't exist on HW (soldering issue on
-> +			 * either signals).
-> +			 */
-> +				<3 RK_PD5 RK_FUNC_GPIO &pcfg_pull_down>;
-> +		};
-> +	};
-> +};
+           ___ Copper
+          /
+ MAC - PHY
+          \__ SFP
+
+Here, a single PHY has 2 media-side interfaces, and we'd like to select
+the one to use. That's fairly common now, there are quite a number of
+PHYs that support this : mv33x3310, VSC8552, mv88x2222 only to name a
+few. But there are other, more uncommon topologies that exist :
+
+                           ____ SGMII PHY -- Copper
+                          /
+ MAC - SGMII/1000BaseX MUX
+                          \____ SFP
+
+Here, we also have 2 media-side ports, but they are driver through
+different entities : The Copper port sits behind a single-port PHY,
+that is itself behind a *MII MUX, that's also connected to an SFP. Here
+the port selection is done at the MUX level
+
+Finally, I've been working on supporting devices whith another topology
+(actually, what started this whole work) :
+
+            ___ PHY
+           /
+ MAC --MUX |
+           \__ PHY
+
+Here both PHYs are on the same *MII bus, with some physical,
+gpio-driven MUX, and we have 2 PORT_TP on the same NIC. That design is
+used for link redundancy, if one PHY loses the link, we switch to the
+other one (that hopefully has link).
+
+All these cases have different drivers involved in the MUX'ing (phy
+driver itself, intermediate MUX in-between...), so the end-goal would
+be to expose to userspace info about the media interfaces themselves.
+
+This phy_port object would be what we expose to userspace. One missing
+step in this series is adding control on the ports (netlink API,
+enabling/disabling logic for ports) but that far exceeds the 15 patches
+limitation :)
+
+Sorry if all of that was blurry, I did make so good of a job linking to
+all previous discussions on the topic, I'll address that for the next
+round.
+
+Thanks,
+
+Maxime
