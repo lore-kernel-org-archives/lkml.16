@@ -1,119 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB0C1B6D15;
-	Mon, 10 Feb 2025 09:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317961BBBEA
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:31:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739179871; cv=none; b=Cc+goNSeu56UP0rF8u1kqmQQPHj2rvx+WL8ctWnhUCf0ftwpugJ3Qd7HwIkzkevER22RN0CvRQiQlHtaEwNo0h4X5B8YzTdnubz/9H2PIGzXOSMGRegmjZtX4dau580UkyIMFQN2Nm5vnKg5VeogZwKy52EuXQJWJddpqeQ+X4k=
+	t=1739179882; cv=none; b=eLAQTMSE4mxpyRT71nqf0xRZ476P0z71gP2Wag+Uk0C3w62Zlg85MPy76NdnrQ0bKKuB2I0jwNikQzb+/3B83a0qe2Uk+OCwOYUtM5xEi8J5fybmG1dPdLLtemWE9FIPutL2JOcvrmY/I8198R+TC6Mkvecwf/+hLdFOs1Z9ROw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739179871; c=relaxed/simple;
-	bh=O/Apf2r3Dy0nYmcAbhSbZKz87qTC9QnkOtulYjPqpjw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ad2z+qqatV7yR7XuukZri0/6ajzVkGDvlsMzCfk09O+WGipJNHUFM3f+kkJmT8L+xPNxktfXZkk/LLz36K6xPFzoTuUBNoZd9HdmNGfEez70cq5azbK6KsV15YyZLKVRQti57O7X3Y+VUnxr1GFbix4LI4pxyhHk5ty9F3xDcro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YKXs6sGU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739179882; c=relaxed/simple;
+	bh=PbZVAwdPt648lZ/TneEvg00BNbg8dqUm4qDKQj9ymcY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QirmYrQr0Om4ZnLHKBT6Iu7Lhi6IFMBpMdJkJC+U2nOCTCPMPBFurG8mKpPphvkodTDB6DdgrW7NdQG5MKtlmN1pXyl6ky8y3+qpwLAMF6PU0j8epvHqWXYouvGrbcoAkZ+OM0ZGgLDCI0vqGCYxDyfE+jtXrleLKD+z0tzK1WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MvAWtK7G; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YKXs6sGU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF28AC4CED1;
-	Mon, 10 Feb 2025 09:31:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739179869;
-	bh=O/Apf2r3Dy0nYmcAbhSbZKz87qTC9QnkOtulYjPqpjw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YKXs6sGUHrULwmqHoUwS4vYo/Os0O0RVFK58K1VJeDelwkSI+RhNo89tkGDdNVPr7
-	 il1Shjfv2n2KhaGGDpmpZJovb2fXTy9sa1wnkYNygwkCXW773jke42l50BBFePQv2j
-	 /Uaf1pCDWmd/Rpu7oOztstkjDLxvQ9iHIBWt91y3yWJ7/YwMROpdU5iv3l62mPRhWi
-	 Gc/Xn0F+PQi8zxhAYfHDum8gN6CpdbiV8E6NdkGGlg+X63GjSJZXN5AuYFcbhRzMb3
-	 WA7z0kFnKBXz3g0bEYUYc+VJDVHTM1wOx5NWgrj/IAX45Zf4wiWn4WQb26+f4hk8uz
-	 oRT4kOCLbL7kw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1thQ8I-000000002H4-3Riw;
-	Mon, 10 Feb 2025 10:31:15 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MvAWtK7G"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-308dfea77e4so19287591fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 01:31:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739179879; x=1739784679; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=t2hoVQYicuZ2m33t81d8plIbjrw9+RjXqm/sMzy0VP4=;
+        b=MvAWtK7GwxfR4i6bpjzMk2v+KMyMzg3A1p975YkvtGLAvPFo5YqJSBP1C77KJYLEOv
+         f30sV+wbCoBtTp7paoAmV/Zrly8kUrQIpytgpCdQJaHRTuLdJQBYMzgkcJFCtWB0MMS4
+         He0w/hjsngmI28IzbRCjSr8d0vCgyGS0eGcOoBmtzkH3r1RKOv8oo8gvo68qkTS3slnS
+         rt1AdbbnD3khMZfpj3Yy2UlrYChdbVqCKnwguNnp+BRv/dBE/4AksH61fmT6BXt78EfI
+         Dy4Pm2UuLUdI5Tr7lSP/Ds1BT1xDO4Yj/Mu4DCpdkfRHmq6BPAgBlAi5l3nuyY2u6+uV
+         YSCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739179879; x=1739784679;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t2hoVQYicuZ2m33t81d8plIbjrw9+RjXqm/sMzy0VP4=;
+        b=kwbVzKi/z9Iei6JllYHG1yBL40vmT1e7F2ZdjRA72P22pbegjDmEVTBtelPQwqI38D
+         F6tWNnVaauA3OioFC5PoQSno1Reqb0xvVxcEc9LXm+bucdNAX4pfSzqOFIzv1mNSmj82
+         ebhsNiu84H1s48lqSCQGF7mkiKss0Zg6zRFg0kqf5z578fqcFGf9tnnUgltmSK3WcyiO
+         mHJnfILaAeGiQofsuclRBfnb3brOV77giyYx/oNRgJC7yGq0pvtJuxPDyx367boVwtX2
+         pqMrI4MZZqljD5/gZWFQkPgLz1SgvnPo2iQsju+igwArFau/BbBnYhRN8bPsFPm9Kbhg
+         SrNw==
+X-Forwarded-Encrypted: i=1; AJvYcCWjpHF84si5wQY2xh5yW9/sQRo/wIyFQbH85TwOMAB6myssDlnM7W7JBYkiybBSmaI6UghEb6mX6a2nUJY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqFNkWhhe7USxS4Jrpecaigk/R9osJzBM7OuNZ9gecMFSYG6Zm
+	gue+c9s+bRCVMge69T/W76821Y8y+A+uU/VTObWu0TgUehYrZyWurdL2K3nEf84=
+X-Gm-Gg: ASbGncuQmFz9dddxsFVGc+mn6jCKBkgRSNavnvcYC7Yf/n/M1iGuX5+3HynXMfIhyY/
+	aYQdig1wkwhXCujw3msTNhYD4yp8t9Su0uhMFZtiAFJIkEYFMVX4+AZ+P1z2lYJci5ZmKxA/sMQ
+	6Lu3m8H+Q20kmZRmdcLJ93Ddv/DFgEUgSXMqI+NKUxMO7/UX/GPJVJN+EJWU8+WTkohVKlv79w/
+	5QYVRS4MAQ80qz61Xd3pUNaiZuk0/Kbrr9Czr37MNn+GC8wm37RuT1a5tmUT+qalRxOhG6hA5HK
+	aO51/jECcT64lLGLidWQhHPs1g==
+X-Google-Smtp-Source: AGHT+IHX0bcCH12vfaXXnoTFQKZGthtl9t6b19AdB1KITvJcWAHBCcPDJAHJV9sCs/EYFlx8O/JUOQ==
+X-Received: by 2002:a2e:3a11:0:b0:308:ebd1:ff6d with SMTP id 38308e7fff4ca-308ebd20288mr11721631fa.17.1739179879224;
+        Mon, 10 Feb 2025 01:31:19 -0800 (PST)
+Received: from [192.168.1.140] ([85.235.12.238])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307e09a1df7sm11645321fa.23.2025.02.10.01.31.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 01:31:18 -0800 (PST)
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 0/3] ARM: dts: ixp4xx: Updates
 Date: Mon, 10 Feb 2025 10:31:14 +0100
-From: Johan Hovold <johan@kernel.org>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Linux PM <linux-pm@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Linux PCI <linux-pci@vger.kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Kevin Xie <kevin.xie@starfivetech.com>,
-	Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v1] PM: sleep: core: Restrict power.set_active propagation
-Message-ID: <Z6nHYtn5TEJlTQZs@hovoldconsulting.com>
-References: <6137505.lOV4Wx5bFT@rjwysocki.net>
+Message-Id: <20250210-ixp4xx-dts-v1-0-6b752d745e04@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6137505.lOV4Wx5bFT@rjwysocki.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGLHqWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDI0MD3cyKApOKCt2UkmLdFAPjZHNjy6QUk8REJaCGgqLUtMwKsGHRsbW
+ 1AJcAMtpcAAAA
+X-Change-ID: 20250210-ixp4xx-dts-d03c739bd4aa
+To: Linus Walleij <linusw@kernel.org>, Imre Kaloz <kaloz@openwrt.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+X-Mailer: b4 0.14.2
 
-On Sat, Feb 08, 2025 at 06:54:28PM +0100, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> Commit 3775fc538f53 ("PM: sleep: core: Synchronize runtime PM status of
-> parents and children") exposed an issue related to simple_pm_bus_pm_ops
-> that uses pm_runtime_force_suspend() and pm_runtime_force_resume() as
-> bus type PM callbacks for the noirq phases of system-wide suspend and
+Some DTS updates for IXP4xx:
 
-Despite the name of the driver these are plain device driver PM
-callbacks (not bus PM ops).
+- Provide the NPE handle for the ethA ethernet controller
+  using the proper DT property.
 
-> resume.
-> 
-> The problem is that pm_runtime_force_suspend() does not distinguish
-> runtime-suspended devices from devices for which runtime PM has never
-> been enabled, so if it sees a device with runtime PM status set to
-> RPM_ACTIVE, it will assume that runtime PM is enabled for that device
-> and so it will attempt to suspend it with the help of its runtime PM
-> callbacks which may not be ready for that.  As it turns out, this 
-> causes simple_pm_bus_runtime_suspend() to crash due to a NULL pointer
-> dereference.
-> 
-> Another problem related to the above commit and simple_pm_bus_pm_ops is
-> that setting runtime PM status of a device handled by the latter to
-> RPM_ACTIVE will actually prevent it from being resumed because
-> pm_runtime_force_resume() only resumes devices with runtime PM status
-> set to RPM_SUSPENDED.
-> 
-> To mitigate these issues, do not allow power.set_active to propagate
-> beyond the parent of the device with DPM_FLAG_SMART_SUSPEND set that
-> will need to be resumed, which should be a sufficient stop-gap for the
-> time being, but they will need to be properly addressed in the future
-> because in general during system-wide resume it is necessary to resume
-> all devices in a dependency chain in which at least one device is going
-> to be resumed.
+- Fix up the erronoeus PCI IRQs on WG302.
 
-So this works as long as no parent of a device with
-DPM_FLAG_SMART_SUSPEND set is using pm_runtime_force_resume().
+- Wire up the GPIOs for LEDs and keys on WG302.
 
-This is the case in the systems I work on, but have you
-verified that this is currently generally true? Not many drivers use
-this flag, but it all depends on what their devices' parents' drivers
-do:
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+Linus Walleij (3):
+      ARM: dts: Properly assign NPE to ethA
+      ARM: dts: ixp4xx: Fix up PCI on WG302
+      ARM: dts: ixp4xx: Add Netgear WG302 v1 GPIOs
 
-	drivers/acpi/acpi_tad.c
-	drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-	drivers/i2c/busses/i2c-designware-platdrv.c
-	drivers/mfd/intel-lpss.c
-	drivers/pci/pcie/portdrv.c
-	drivers/pwm/pwm-lpss-platform.c
-	drivers/soundwire/intel_auxdevice.c
+ .../dts/intel/ixp/intel-ixp42x-netgear-wg302v1.dts | 40 +++++++++++++++++++---
+ arch/arm/boot/dts/intel/ixp/intel-ixp4xx.dtsi      |  2 +-
+ 2 files changed, 36 insertions(+), 6 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250210-ixp4xx-dts-d03c739bd4aa
 
-Most of these look like ACPI drivers so nothing that would sit directly
-on a simple-pm-bus at least.
+Best regards,
+-- 
+Linus Walleij <linus.walleij@linaro.org>
 
-> Fixes: 3775fc538f53 ("PM: sleep: core: Synchronize runtime PM status of parents and children")
-> Closes: https://lore.kernel.org/linux-pm/1c2433d4-7e0f-4395-b841-b8eac7c25651@nvidia.com/
-> Reported-by: Jon Hunter <jonathanh@nvidia.com>
-> Tested-by: Johan Hovold <johan+linaro@kernel.org>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-Johan
