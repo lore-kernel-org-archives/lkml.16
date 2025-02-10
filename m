@@ -1,142 +1,385 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AFD9256C99
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0D14690;
+	Mon, 10 Feb 2025 17:37:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739209047; cv=none; b=Wo9ge8LpAxVjznA+9AuzgL0hQbZqjhk8LaBpmGVZc6XQGwSV+4CQhF1MmvrkL16ZiMCasai4jeTyDDCG5yTV+4Kg+1nm5w+MuZ9+mkVcBCbq//jOS4quOQzdBcPymGrZbF6N62acnn3dx30ICgGmmAR9lG9jYklvSkWpZfWDH28=
+	t=1739209070; cv=none; b=WIfJDTfO032G1wQJ7gyABaoQ7eq3vV/G29CIfZIZ9MKTcXpwtbxLko0pi1gNSQNavzKLuji6Bo7Vv1+DP2GiN7nhF5oiLWjAMc8rgKLEW7mQmHJIb6FQTU2EveJqtYi/kJ84r3tOdjFAbV9fSW0ZlNXfXuDIBnfB+dfpG11yiNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739209047; c=relaxed/simple;
-	bh=EZToKP83bY++M1VJibKB1vrHZqLfrQaDGx2+eX1tpZc=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=a5U98Wqth+ZwCgQMscsEVZWuTTD4ZSvEaDaXNfJ7bY+bM8SChjd/e1g3pNfTfJzkK1gOr5sZo68ZuD943CH1PeI/r6T9uporpzoBnXLy4TgcaDNLVHIv9OLbRLH0encYWnWPE3Ii+dmSXgw3wXQXoEP8eIcT4MPYhyTbME2krT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d14950ac9fso64158765ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 09:37:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739209045; x=1739813845;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xrFPlL95YK8qLTiydeaVc1oNNjyzOtj3yWZSUg2CbXQ=;
-        b=PMj1iCIL2e5DUFaspZxXIg/16rRugbzzKfeKOhTilV1aw/p9O3o2JJfNbiZY7OkeHH
-         W5q/4yXZWpm0nTJ1hITaCy9g6sw3isQlVRE0guOqB9Eg9/i617AdHGsYNeyy+UUt7Rr7
-         nxjQScsr844Nn9R5xCXs8QHqm+5Gu/SpTaQLGbBAeB2MYHzSJPZPZmF7ZiiMtBz7aYOn
-         EFR45qkIsXXPwMspl6lxjhDiuoYRZhFPFIXBQGRDuY133EKvPUvMPghGm9gn2DGW1FMy
-         1IYsNF2nhLsNnUmtOyCaP4aRXL3OoZrs61S7NITJa/BgREX3vmKWUMvbVnrhtdK2j3nO
-         CLdA==
-X-Forwarded-Encrypted: i=1; AJvYcCV/xr2PZbRb79JExDLO9DAhutSSbvaaVgBvBYCQLioPQ6tu6eyQLfm2xNj2lEdfWWVhb0czn2vCuTf6VsU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4Ga6/SPtFZUFIA5/PkMpgoX9QTTGDalV/UNnoeURQwDoluS2q
-	9jvM3OG5uQT0JpLCDe+wxxdZXUMwGRiAKvZlWOAbI17VFJjFJKYGl1gCeHwHzaDcTpqxDwZKxfl
-	W9nhU9ZEtwGRoj3czxBL5W6vl3l8uFlShAg42rs+hCxumtRlFCmQprSE=
-X-Google-Smtp-Source: AGHT+IHgVJnIvh3tKPHNfBf22Xct4NEZ2Kc5lS8+vDl4WNTnxXmjbrpdMY3AWNV+GTK4gdtsQvOksW4r7SZU/XO3pcmchh9dRZ2b
+	s=arc-20240116; t=1739209070; c=relaxed/simple;
+	bh=ZHvhVHZPAWcr/LsvWZUEqNdGcfT0gR+ANC+5K9rR1hw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XDessc0BfoHecBITAsbP/4CCdIYLaG6E8akzUteOnDr05A/WGeGqrBRKpTiGqnT9idQFe/EXpzSdvnFSB3og0/simgeXkIwtyYXOYGL0ERF0u/4V50ghHsOnjJQrSncSWI3wK+Z0J/WWpF5Tv5rTGlk9K3CPY0w1smNeQGIdkLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yz/w29BX; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yz/w29BX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96D65C4CEE5;
+	Mon, 10 Feb 2025 17:37:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739209069;
+	bh=ZHvhVHZPAWcr/LsvWZUEqNdGcfT0gR+ANC+5K9rR1hw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Yz/w29BXqKtKuah7/Gjos0WKIWqiAHV0yuukQ3iqe/FkH3SLtH13QEYx0BUdfeTLx
+	 AkWBxH4zU1e6bLVmNB7A+ST4n7GncznRM5KVNMypj3gLlJGhamKLBDparWy96+AV9n
+	 ksYpIDyPxqfMCQN++J2Jumi0QXM8IswMEE/uj9g7Y3yxKlaM7mIuzW3LNJKKUnrFM3
+	 aV0lmCgGtQkkeztUYrvJLGvLVZJzrlJV3B5faPw0IOp4x6Qx3TjTYiBZ0LivWFWMD3
+	 Y8KYjnDwQ7k3ZTCgqI023P8pIJTIypqWgeKCDqI1Hkgao+/IcjIlGRePG6VroooPRV
+	 u4RQEQLZuCM7g==
+Message-ID: <2c3b9e21-06fc-4108-80d7-c4e2c4ceb2fa@kernel.org>
+Date: Mon, 10 Feb 2025 18:37:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d91:b0:3cf:b365:dcf8 with SMTP id
- e9e14a558f8ab-3d13df546a1mr145443075ab.21.1739209045206; Mon, 10 Feb 2025
- 09:37:25 -0800 (PST)
-Date: Mon, 10 Feb 2025 09:37:25 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67aa3955.050a0220.110943.0031.GAE@google.com>
-Subject: [syzbot] [fs?] WARNING: refcount bug in io_submit_one
-From: syzbot <syzbot+fbb8bdfedfaab15a3895@syzkaller.appspotmail.com>
-To: bcrl@kvack.org, brauner@kernel.org, jack@suse.cz, linux-aio@kvack.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 7/8] media: chips-media: wave6: Add Wave6 control driver
+To: Nas Chung <nas.chung@chipsnmedia.com>, mchehab@kernel.org,
+ hverkuil@xs4all.nl, sebastian.fricke@collabora.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+ linux-arm-kernel@lists.infradead.org, jackson.lee@chipsnmedia.com,
+ lafley.kim@chipsnmedia.com
+References: <20250210090725.4580-1-nas.chung@chipsnmedia.com>
+ <20250210090725.4580-8-nas.chung@chipsnmedia.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250210090725.4580-8-nas.chung@chipsnmedia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 10/02/2025 10:07, Nas Chung wrote:
+> +
+> +int wave6_vpu_ctrl_resume_and_get(struct device *dev, struct wave6_vpu_entity *entity)
+> +{
+> +	struct vpu_ctrl *ctrl = dev_get_drvdata(dev);
+> +	bool boot;
+> +	int ret;
+> +
+> +	if (!ctrl)
+> +		return -EINVAL;
+> +
+> +	if (!entity || !entity->dev || !entity->read_reg || !entity->write_reg)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&ctrl->ctrl_lock);
+> +
+> +	ret = pm_runtime_resume_and_get(ctrl->dev);
+> +	if (ret) {
+> +		dev_err(dev, "pm runtime resume fail, ret = %d\n", ret);
+> +		mutex_unlock(&ctrl->ctrl_lock);
+> +		return ret;
+> +	}
+> +
+> +	entity->booted = false;
+> +
+> +	if (ctrl->current_entity)
+> +		boot = false;
+> +	else
+> +		boot = list_empty(&ctrl->entities) ? true : false;
+> +
+> +	list_add_tail(&entity->list, &ctrl->entities);
+> +	if (boot)
+> +		ret = wave6_vpu_ctrl_try_boot(ctrl, entity);
+> +
+> +	if (ctrl->state == WAVE6_VPU_STATE_ON)
+> +		wave6_vpu_ctrl_on_boot(entity);
+> +
+> +	if (ret)
+> +		pm_runtime_put_sync(ctrl->dev);
+> +
+> +	mutex_unlock(&ctrl->ctrl_lock);
+> +
+> +	return ret;
+> +}
 
-syzbot found the following issue on:
+Drop entire function.
 
-HEAD commit:    69b54314c975 Merge tag 'kbuild-fixes-v6.14' of git://git.k..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1508bb18580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a7ddf49cf33ba213
-dashboard link: https://syzkaller.appspot.com/bug?extid=fbb8bdfedfaab15a3895
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=168cd1b0580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=134698e4580000
+> +EXPORT_SYMBOL_GPL(wave6_vpu_ctrl_resume_and_get);
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-69b54314.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/2d0a58d1d655/vmlinux-69b54314.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b99949b40299/bzImage-69b54314.xz
+Drop.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+fbb8bdfedfaab15a3895@syzkaller.appspotmail.com
+> +
+> +void wave6_vpu_ctrl_put_sync(struct device *dev, struct wave6_vpu_entity *entity)
+> +{
+> +	struct vpu_ctrl *ctrl = dev_get_drvdata(dev);
+> +
+> +	if (!ctrl)
+> +		return;
+> +
+> +	if (entity == ctrl->current_entity)
+> +		wave6_vpu_ctrl_wait_done(dev);
+> +
+> +	mutex_lock(&ctrl->ctrl_lock);
+> +
+> +	if (!wave6_vpu_ctrl_find_entity(ctrl, entity))
+> +		goto exit;
+> +
+> +	list_del_init(&entity->list);
+> +	if (list_empty(&ctrl->entities)) {
+> +		if (!entity->read_reg(entity->dev, W6_VPU_VCPU_CUR_PC))
+> +			wave6_vpu_ctrl_set_state(ctrl, WAVE6_VPU_STATE_OFF);
+> +		else
+> +			wave6_vpu_ctrl_sleep(ctrl, entity);
+> +	}
+> +
+> +	if (!pm_runtime_suspended(ctrl->dev))
+> +		pm_runtime_put_sync(ctrl->dev);
+> +exit:
+> +	mutex_unlock(&ctrl->ctrl_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(wave6_vpu_ctrl_put_sync);
 
-netfs: Couldn't get user pages (rc=-14)
-------------[ cut here ]------------
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 3 PID: 6084 at lib/refcount.c:28 refcount_warn_saturate+0x14a/0x210 lib/refcount.c:28
-Modules linked in:
-CPU: 3 UID: 0 PID: 6084 Comm: syz-executor338 Not tainted 6.14.0-rc1-syzkaller-00276-g69b54314c975 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:refcount_warn_saturate+0x14a/0x210 lib/refcount.c:28
-Code: ff 89 de e8 78 71 f5 fc 84 db 0f 85 66 ff ff ff e8 cb 76 f5 fc c6 05 e5 68 86 0b 01 90 48 c7 c7 00 fb d2 8b e8 97 b2 b5 fc 90 <0f> 0b 90 90 e9 43 ff ff ff e8 a8 76 f5 fc 0f b6 1d c0 68 86 0b 31
-RSP: 0018:ffffc9000435fc68 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff817a1159
-RDX: ffff888030b44880 RSI: ffffffff817a1166 RDI: 0000000000000001
-RBP: ffff888031bf8488 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000000
-R13: ffff88802cd8f700 R14: ffff888031bf83c0 R15: ffff888031bf8478
-FS:  00005555830ae380(0000) GS:ffff88806a900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f51c9f3f000 CR3: 0000000028d22000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __refcount_sub_and_test include/linux/refcount.h:275 [inline]
- __refcount_dec_and_test include/linux/refcount.h:307 [inline]
- refcount_dec_and_test include/linux/refcount.h:325 [inline]
- iocb_put fs/aio.c:1208 [inline]
- io_submit_one+0x103f/0x1da0 fs/aio.c:2055
- __do_sys_io_submit fs/aio.c:2111 [inline]
- __se_sys_io_submit fs/aio.c:2081 [inline]
- __x64_sys_io_submit+0x1b2/0x340 fs/aio.c:2081
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f51c9f80ee9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffdfc54a368 EFLAGS: 00000246 ORIG_RAX: 00000000000000d1
-RAX: ffffffffffffffda RBX: 00004000000004c0 RCX: 00007f51c9f80ee9
-RDX: 00004000000002c0 RSI: 0000000000000001 RDI: 00007f51c9f3f000
-RBP: 00000000000f4240 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffdfc54a380
-R13: 00007ffdfc54a3a0 R14: 000000000000bf9c R15: 00007ffdfc54a37c
- </TASK>
+Drop entire function. Dead code.
+
+... or you arranged your patches really incorrectly, but this I can't
+really judge.
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> +
+> +int wave6_vpu_ctrl_wait_done(struct device *dev)
+> +{
+> +	struct vpu_ctrl *ctrl = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	if (!ctrl)
+> +		return -EINVAL;
+> +
+> +	if (ctrl->state == WAVE6_VPU_STATE_OFF)
+> +		return -EINVAL;
+> +
+> +	if (ctrl->state == WAVE6_VPU_STATE_ON)
+> +		return 0;
+> +
+> +	ret = wave6_wait_event_freezable_timeout(ctrl->load_fw_wq,
+> +						 wave6_vpu_ctrl_get_state(dev) ==
+> +						 WAVE6_VPU_STATE_ON,
+> +						 msecs_to_jiffies(W6_BOOT_WAIT_TIMEOUT));
+> +	if (ret == -ERESTARTSYS || !ret) {
+> +		dev_err(ctrl->dev, "fail to wait vcpu boot done,ret %d\n", ret);
+> +		mutex_lock(&ctrl->ctrl_lock);
+> +		wave6_vpu_ctrl_set_state(ctrl, WAVE6_VPU_STATE_OFF);
+> +		mutex_unlock(&ctrl->ctrl_lock);
+> +		return -EINVAL;
+> +	}
+> +
+> +	mutex_lock(&ctrl->ctrl_lock);
+> +	wave6_vpu_ctrl_boot_done(ctrl, 0);
+> +	mutex_unlock(&ctrl->ctrl_lock);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(wave6_vpu_ctrl_wait_done);
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+There is no user of this outside. Drop.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+> +
+> +int wave6_vpu_ctrl_get_state(struct device *dev)
+> +{
+> +	struct vpu_ctrl *ctrl = dev_get_drvdata(dev);
+> +
+> +	if (!ctrl)
+> +		return -EINVAL;
+> +
+> +	return ctrl->state;
+> +}
+> +EXPORT_SYMBOL_GPL(wave6_vpu_ctrl_get_state);
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+There is no user of this outside. Drop.
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+Whatever export stays, must be used by a following patch. You *must* add
+the kerneldoc for it.
 
-If you want to undo deduplication, reply with:
-#syz undup
+> +
+> +static void wave6_vpu_ctrl_init_reserved_boot_region(struct vpu_ctrl *ctrl)
+> +{
+> +	if (ctrl->boot_mem.size < WAVE6_CODE_BUF_SIZE) {
+> +		dev_warn(ctrl->dev, "boot memory size (%zu) is too small\n", ctrl->boot_mem.size);
+> +		ctrl->boot_mem.phys_addr = 0;
+> +		ctrl->boot_mem.size = 0;
+> +		memset(&ctrl->boot_mem, 0, sizeof(ctrl->boot_mem));
+> +		return;
+> +	}
+> +
+> +	ctrl->boot_mem.vaddr = devm_memremap(ctrl->dev,
+> +					     ctrl->boot_mem.phys_addr,
+> +					     ctrl->boot_mem.size,
+> +					     MEMREMAP_WC);
+> +	if (!ctrl->boot_mem.vaddr) {
+> +		memset(&ctrl->boot_mem, 0, sizeof(ctrl->boot_mem));
+> +		return;
+> +	}
+> +
+> +	ctrl->boot_mem.dma_addr = dma_map_resource(ctrl->dev,
+> +						   ctrl->boot_mem.phys_addr,
+> +						   ctrl->boot_mem.size,
+> +						   DMA_BIDIRECTIONAL,
+> +						   0);
+> +	if (!ctrl->boot_mem.dma_addr) {
+> +		memset(&ctrl->boot_mem, 0, sizeof(ctrl->boot_mem));
+> +		return;
+> +	}
+> +
+> +	dev_info(ctrl->dev, "boot phys_addr: %pad, dma_addr: %pad, size: 0x%zx\n",
+> +		 &ctrl->boot_mem.phys_addr,
+> +		 &ctrl->boot_mem.dma_addr,
+> +		 ctrl->boot_mem.size);
+
+No, drop. Reasoning further.
+
+> +}
+...
+
+> +
+> +	ctrl->num_clks = ret;
+> +
+> +	np = of_parse_phandle(pdev->dev.of_node, "boot", 0);
+> +	if (np) {
+> +		struct resource mem;
+> +
+> +		ret = of_address_to_resource(np, 0, &mem);
+> +		of_node_put(np);
+> +		if (!ret) {
+> +			ctrl->boot_mem.phys_addr = mem.start;
+> +			ctrl->boot_mem.size = resource_size(&mem);
+> +			wave6_vpu_ctrl_init_reserved_boot_region(ctrl);
+> +		} else {
+> +			dev_warn(&pdev->dev, "boot resource is not available.\n");
+> +		}
+> +	}
+> +
+> +	ctrl->sram_pool = of_gen_pool_get(pdev->dev.of_node, "sram", 0);
+> +	if (ctrl->sram_pool) {
+> +		ctrl->sram_buf.size = ctrl->res->sram_size;
+> +		ctrl->sram_buf.vaddr = gen_pool_dma_alloc(ctrl->sram_pool,
+> +							  ctrl->sram_buf.size,
+> +							  &ctrl->sram_buf.phys_addr);
+> +		if (!ctrl->sram_buf.vaddr)
+> +			ctrl->sram_buf.size = 0;
+> +		else
+> +			ctrl->sram_buf.dma_addr = dma_map_resource(&pdev->dev,
+> +								   ctrl->sram_buf.phys_addr,
+> +								   ctrl->sram_buf.size,
+> +								   DMA_BIDIRECTIONAL,
+> +								   0);
+> +
+> +		dev_info(&pdev->dev, "sram 0x%pad, 0x%pad, size 0x%lx\n",
+> +			 &ctrl->sram_buf.phys_addr, &ctrl->sram_buf.dma_addr, ctrl->sram_buf.size);
+
+You are not supposed to print addresses. This look like fixed hardware
+mappings, so probably harmless but dma_addr not. Drop entire dev_info,
+this is really discouraged practice.
+
+
+> +	}
+> +
+> +	if (of_find_property(pdev->dev.of_node, "support-follower", NULL))
+> +		ctrl->support_follower = true;
+> +
+> +	wave6_cooling_init(ctrl);
+> +
+> +	pm_runtime_enable(&pdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static void wave6_vpu_ctrl_remove(struct platform_device *pdev)
+> +{
+> +	struct vpu_ctrl *ctrl = dev_get_drvdata(&pdev->dev);
+> +
+> +	pm_runtime_disable(&pdev->dev);
+> +
+> +	wave6_vpu_ctrl_clear_buffers(ctrl);
+> +	wave6_cooling_remove(ctrl);
+> +	if (ctrl->sram_pool && ctrl->sram_buf.vaddr) {
+> +		dma_unmap_resource(&pdev->dev,
+> +				   ctrl->sram_buf.dma_addr,
+> +				   ctrl->sram_buf.size,
+> +				   DMA_BIDIRECTIONAL,
+> +				   0);
+> +		gen_pool_free(ctrl->sram_pool,
+> +			      (unsigned long)ctrl->sram_buf.vaddr,
+> +			      ctrl->sram_buf.size);
+> +	}
+> +	if (ctrl->boot_mem.dma_addr)
+> +		dma_unmap_resource(&pdev->dev,
+> +				   ctrl->boot_mem.dma_addr,
+> +				   ctrl->boot_mem.size,
+> +				   DMA_BIDIRECTIONAL,
+> +				   0);
+> +	mutex_destroy(&ctrl->ctrl_lock);
+> +}
+> +
+> +#ifdef CONFIG_PM
+> +static int wave6_vpu_ctrl_runtime_suspend(struct device *dev)
+> +{
+> +	struct vpu_ctrl *ctrl = dev_get_drvdata(dev);
+> +
+> +	clk_bulk_disable_unprepare(ctrl->num_clks, ctrl->clks);
+> +	return 0;
+> +}
+> +
+> +static int wave6_vpu_ctrl_runtime_resume(struct device *dev)
+> +{
+> +	struct vpu_ctrl *ctrl = dev_get_drvdata(dev);
+> +
+> +	return clk_bulk_prepare_enable(ctrl->num_clks, ctrl->clks);
+> +}
+> +#endif
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int wave6_vpu_ctrl_suspend(struct device *dev)
+> +{
+> +	return 0;
+
+Why do you need empty callbacks?
+
+Best regards,
+Krzysztof
