@@ -1,107 +1,79 @@
-Received: from out-179.mta0.migadu.com (unknown [91.218.175.179])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E903E14B08C
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 12:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB831F8922
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 12:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739188946; cv=none; b=nU/Q+JWKa2nTPug8dOr5/fUe1u8jWlOm0QiwvgCVObhXnpD24Mvb/OgC9SLy5Top4akr+FbCGGeQcAYtQm96PpN66ko16KJ5Rk0WcrSUqPsZqCgxiitSyLWs0rrSOc9TUySMqc9qjTgHb7XWlRFWyr63JQoZ/TcRb9PIjRefvCo=
+	t=1739189074; cv=none; b=jbZMtnfy+pLhDeVZQU7dO7o3rQhdk5Tu+1dzX+8F3ryl4q9g/u2lut2a+LznKRw6rARabfsrFOpzAbU6F98KOVZ6WZGHdM7jLdrFslAZJ1BiNAuDd6dz2EdPMH7drt8oLgWQiyCDnSXd0lt6O/U+DeQOxmb2pi2LCwyC9HnV9Rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739188946; c=relaxed/simple;
-	bh=qEWjjv1OKr0nsfOSK7KFSHDmp/DaHTep6guXolJn2YI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rp1H4qnCjPN4KHfzjdpkFkFihYFn1ChMV8oTFa/c7ivYeKZRPFh722PZ39XmGHcFIgz2bWk3srgt9RNBcRGU0Pea8zyUFwpHNMfnRnW00wHsZWmm0XOHQV2jnv7Kg4vKFOm/eh5YoCNWaQZWvN4wBsnVZCBsYSWOCHrD/cmd67U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BP/5BsSv; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739189074; c=relaxed/simple;
+	bh=wg9VxpOpxoZHxEagghNlmD/wQTz74yim1SXm0sPtzfQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SJbflbLCDPzzhJMRpzR2Ykjw1goodL6vjFEZZbVsbwqHBrhYeqLZyzs/zv+l4jhCkGpo/MQSPvB0/WgREOPrdA/+k1y4H0/zVNzmyIY5CHmfd6vu28tYyKdT9FV3DEVEnbTEOr2V+nA5s1gEyTYFSvCDeVN8qXIpXzqBPP0EkZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eRxBpw6t; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k9jYSm56; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BP/5BsSv"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739188935;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eRxBpw6t";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k9jYSm56"
+Date: Mon, 10 Feb 2025 13:04:29 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739189070;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=pA/6WNfJ1BYe+CfJ9cK2duSfXSVvygT2LUvTsOk8I0Q=;
-	b=BP/5BsSvEhpXqfQg/VHI0dP7cpL9dIWZY2KLwLYXMGbwpE0b3UeF1t7Rqphz41xeS+YUBS
-	n61iZpMPQE4synPfhTr9LbVCDw4jcFjvEAvnKMvLHq3jRzQjwpKaHCXOp023Be+/GQTHMH
-	Q2PtR+tG0gQJtpQNJk6nP0ASC8bhXZc=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Rander Wang <rander.wang@intel.com>,
-	Fred Oh <fred.oh@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	sound-open-firmware@alsa-project.org,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: SOF: Intel: Use str_enable_disable() helper
-Date: Mon, 10 Feb 2025 13:01:30 +0100
-Message-ID: <20250210120132.53831-2-thorsten.blum@linux.dev>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s/76Ws4ERHAARzCBmx64U4hnYZV3XD1o/uZgQrN85Wk=;
+	b=eRxBpw6tTNK+3wdWCDDXRd/r/TMjr/nC/Cl5NEiPTnG6nse+s4Gq4CZoZjEzkUTv8OHZLq
+	LWfx1iwUY5ZnLI0eMuSkzeCjoVXHUoDUTzNQYGR0IDW9YI3BpGsfaM0Issm8OV65TvOhiM
+	KHni0YhZgZq4ulcElRNirluZ/Bf1JGBbf0N73fJWs+e4Bq1X5S1kGdEDa6tkunKvMPYSk6
+	vTsI0/hRG46duY8L0hYUd6Sn9WbBFThQIEHXKVH7PXzeXGmfnf7ytOdNj0EGwiEpOiPnsa
+	wDPBzZTluKowBHJt7OGMh63dIRkLtfyvUjQJIQ3M84zqix23mcz36+zHJLjNEg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739189070;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s/76Ws4ERHAARzCBmx64U4hnYZV3XD1o/uZgQrN85Wk=;
+	b=k9jYSm56kYwwgyUEJOl82G5qVa0iKZBIItuPJdvfx6wfac2vZ8L/6bQpq+SAEmKRrMJGm8
+	Oxp7Ql/3EAcwPTCA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Russell King <linux@armlinux.org.uk>
+Cc: Ben Segall <bsegall@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 3/9] arm: Rely on generic printing of preemption model.
+Message-ID: <20250210120429.iFfBClW1@linutronix.de>
+References: <20250203141632.440554-1-bigeasy@linutronix.de>
+ <20250203141632.440554-4-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250203141632.440554-4-bigeasy@linutronix.de>
 
-Remove hard-coded strings by using the str_enable_disable() helper
-function.
+On 2025-02-03 15:16:26 [+0100], To linux-kernel@vger.kernel.org wrote:
+> __die() invokes later __show_regs() -> show_regs_print_info() which
+> prints the current preemption model.
+> Remove it from the initial line.
+> 
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- sound/soc/sof/intel/mtl.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Is it okay, to route this via the sched tree?
 
-diff --git a/sound/soc/sof/intel/mtl.c b/sound/soc/sof/intel/mtl.c
-index d07c68f431ba..4a6b1d56171e 100644
---- a/sound/soc/sof/intel/mtl.c
-+++ b/sound/soc/sof/intel/mtl.c
-@@ -11,6 +11,7 @@
- 
- #include <linux/debugfs.h>
- #include <linux/firmware.h>
-+#include <linux/string_choices.h>
- #include <sound/sof/ipc4/header.h>
- #include <trace/events/sof_intel.h>
- #include "../ipc4-priv.h"
-@@ -176,7 +177,7 @@ static void mtl_enable_sdw_irq(struct snd_sof_dev *sdev, bool enable)
- 					    HDA_DSP_REG_POLL_INTERVAL_US, HDA_DSP_RESET_TIMEOUT_US);
- 	if (ret < 0)
- 		dev_err(sdev->dev, "failed to set SoundWire IPC interrupt %s\n",
--			enable ? "enable" : "disable");
-+			str_enable_disable(enable));
- }
- 
- int mtl_enable_interrupts(struct snd_sof_dev *sdev, bool enable)
-@@ -209,7 +210,7 @@ int mtl_enable_interrupts(struct snd_sof_dev *sdev, bool enable)
- 					    HDA_DSP_REG_POLL_INTERVAL_US, HDA_DSP_RESET_TIMEOUT_US);
- 	if (ret < 0) {
- 		dev_err(sdev->dev, "failed to %s Host IPC and/or SOUNDWIRE\n",
--			enable ? "enable" : "disable");
-+			str_enable_disable(enable));
- 		return ret;
- 	}
- 
-@@ -228,7 +229,7 @@ int mtl_enable_interrupts(struct snd_sof_dev *sdev, bool enable)
- 					    HDA_DSP_REG_POLL_INTERVAL_US, HDA_DSP_RESET_TIMEOUT_US);
- 	if (ret < 0) {
- 		dev_err(sdev->dev, "failed to set Host IPC interrupt %s\n",
--			enable ? "enable" : "disable");
-+			str_enable_disable(enable));
- 		return ret;
- 	}
- 
--- 
-2.48.1
-
+Sebastian
