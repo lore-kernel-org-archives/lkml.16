@@ -1,46 +1,46 @@
 Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FD42505AE;
-	Mon, 10 Feb 2025 22:15:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEA2250BE8;
+	Mon, 10 Feb 2025 22:15:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739225754; cv=none; b=NGO+2tmW7trwYGdSid7L91b0i8R23AhklP5ftwn5aYqvVWDJUle7FHnYkPBB//qdJhlWKjFSkhRDamk9Eg2rn3TAX24RqCcqu+h7HkC7OYUbqXlrYrmWevjDvODkESysl0xTfvmrZN+FimORGhKL+u53yTno1Z6A1crmOP/PKlk=
+	t=1739225755; cv=none; b=MOrYPLCU0Aeihe2Hcv4WiePe163DPo+f3utYpF3ZiXnYupz9OSo87EJKFJtoPxFkE8dly9/eoerv5BFqTVYd4VuoiQ8pCqwwx68MSCO+gjeAa8fdJhNtQd/7jzvW8qeWIEaycdBAel1S+bzK5aBHjf+kwHiFk2MjJ3HkTyQxb0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739225754; c=relaxed/simple;
-	bh=XHKHFrm9UxTUJdQBjYVXSvTXfPPnzqfzuZ8iAYsIsfo=;
+	s=arc-20240116; t=1739225755; c=relaxed/simple;
+	bh=AuaBOvXXgv3uC8cV1e0064fK5LNOp0uvZ+8Px3GBuvg=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gcwl3yzOoUjGiv8Y26M2cud2abdKV9j2c+JpzJPdPVrcH/No75KXOW6DmBNyCNyIPi2HGjc9ltLHlopVMl+QpGlPYscUHTjJeDPmsZ2IrGj29xNVU4F8k5w6xNo8cp4rv/63DgpveuYoogCQ6KWk62qi4VV+pRFV/u0as4S1hYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=idJMETfm; arc=none smtp.client-ip=198.47.19.245
+	 MIME-Version:Content-Type; b=Wxz0hT+Da3viTKdTXlwXLhqHtPIeRT30ZPhoOtBce83/WVg7VgZQC1pDa4XgshuZdFOhi/o1hTlCzB17hAuEcy2x9v5aSrfrMUbD9opYXK12GKSRyktb/FxSNpUQ94C/deWhdtm1bVSTHaimqVBwFwuNeMB3YHIsUMDWe3LcVdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Gg2PL2f5; arc=none smtp.client-ip=198.47.19.245
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="idJMETfm"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Gg2PL2f5"
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51AMFVtX121121
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51AMFVoB121123
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Mon, 10 Feb 2025 16:15:31 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
 	s=ti-com-17Q1; t=1739225731;
-	bh=csK+TxlNwuyVouIbzQNjNZY+df/jqdZq/HmfKuxiiTo=;
+	bh=rtwooEUXJqbc+gp6GlVVSdw12M9QnNlfkv2N7dQ+dOw=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=idJMETfmuE/GeG6KXF69qTXQCDIK2WETGYfo3s8IPjvt2JA+yT1CraT3qewRLFxDU
-	 vdQ4difxOBttZRL0RjrDnu0qCdpRkOwf3ZIikUobqgKNiMqdGskix7PPPG8ReH+5fB
-	 bcSzug0cUypTTa/ysIuSRMgw16dPtRtZqSkVt0fk=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51AMFVC9016609
+	b=Gg2PL2f5wODScub8A9bFewGw/TW/jHrolRFjgp4fSwcXiNdNA7eEtiLuF1VhxjYxZ
+	 xrTh/o5Il+gosn6WnpxSOuYzpvSrBn9oVGqTKB7q1CyUUhn00GZg1206XJIrJOUyLe
+	 +6L9bRYYM/OpNrJrFJzmVzVar1MwUYL5PJdvvtYA=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51AMFVqJ016612
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
 	Mon, 10 Feb 2025 16:15:31 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 10
- Feb 2025 16:15:30 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2025 16:15:31 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
  Frontend Transport; Mon, 10 Feb 2025 16:15:30 -0600
 Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51AMFUZB112628;
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51AMFUZC112628;
 	Mon, 10 Feb 2025 16:15:30 -0600
 From: Judith Mendez <jm@ti.com>
 To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
@@ -50,9 +50,9 @@ CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
         <linux-kernel@vger.kernel.org>, Andrew Davis
 	<afd@ti.com>,
         Hari Nagalla <hnagalla@ti.com>, Judith Mendez <jm@ti.com>
-Subject: [PATCH v5 09/10] arm64: dts: ti: k3-am62a7-sk: Reserve main_rti4 for C7x DSP
-Date: Mon, 10 Feb 2025 16:15:29 -0600
-Message-ID: <20250210221530.1234009-10-jm@ti.com>
+Subject: [PATCH v5 10/10] arm64: dts: ti: k3-am64: Reserve timers used by MCU FW
+Date: Mon, 10 Feb 2025 16:15:30 -0600
+Message-ID: <20250210221530.1234009-11-jm@ti.com>
 X-Mailer: git-send-email 2.48.0
 In-Reply-To: <20250210221530.1234009-1-jm@ti.com>
 References: <20250210221530.1234009-1-jm@ti.com>
@@ -68,31 +68,76 @@ X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
 From: Hari Nagalla <hnagalla@ti.com>
 
-The main rti4 watchdog timer is used by the C7x DSP, so reserve the
-timer in the linux device tree.
+AM64x device has 4 R5F cores in the main domain. TI MCU firmware uses
+main domain timers as tick timers in these firmwares. Hence keep them
+as reserved in the Linux device tree.
 
 Signed-off-by: Hari Nagalla <hnagalla@ti.com>
 Signed-off-by: Judith Mendez <jm@ti.com>
 ---
 Changes since v4:
-- No change
+- Reserve timers for AM64 MCU FW, patch 10/10
 ---
- arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/boot/dts/ti/k3-am642-evm.dts | 17 +++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-am642-sk.dts  | 17 +++++++++++++++++
+ 2 files changed, 34 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-index 11390a8742453..07f21abd03c12 100644
---- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-@@ -826,3 +826,8 @@ &c7x_0 {
- 			<&c7x_0_memory_region>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm.dts b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+index f8ec40523254b..68bd6b806f8f0 100644
+--- a/arch/arm64/boot/dts/ti/k3-am642-evm.dts
++++ b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+@@ -796,6 +796,23 @@ &mcu_m4fss {
  	status = "okay";
  };
-+
-+/* main_rti4 is used by C7x DSP */
-+&main_rti4 {
+ 
++/* main_timers 8-11 are used by TI MCU FW */
++&main_timer8 {
 +	status = "reserved";
 +};
++
++&main_timer9 {
++	status = "reserved";
++};
++
++&main_timer10 {
++	status = "reserved";
++};
++
++&main_timer11 {
++	status = "reserved";
++};
++
+ &serdes_ln_ctrl {
+ 	idle-states = <AM64_SERDES0_LANE0_PCIE0>;
+ };
+diff --git a/arch/arm64/boot/dts/ti/k3-am642-sk.dts b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
+index 33e421ec18abb..07fbdf2400d23 100644
+--- a/arch/arm64/boot/dts/ti/k3-am642-sk.dts
++++ b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
+@@ -710,6 +710,23 @@ &mcu_m4fss {
+ 	status = "okay";
+ };
+ 
++/* main_timers 8-11 are used by TI MCU FW */
++&main_timer8 {
++	status = "reserved";
++};
++
++&main_timer9 {
++	status = "reserved";
++};
++
++&main_timer10 {
++	status = "reserved";
++};
++
++&main_timer11 {
++	status = "reserved";
++};
++
+ &ecap0 {
+ 	status = "okay";
+ 	/* PWM is available on Pin 1 of header J3 */
 -- 
 2.48.0
 
