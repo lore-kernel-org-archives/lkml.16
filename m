@@ -1,99 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EDF264602
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:41:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7C5264604
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739220105; cv=none; b=NmEjRye+KsfcxfMkxTOLqFMO4vhA8r8pDVu/JO/0cb3v0Np7p56hr9sL9mdux6vu1CgW1V82KEVeMXj5dbo8o2ZkTMfrOy4ZOmmFfk/5Zhwlx/hqcf8PAX8Au/BLhGWNSJyDo1SMk/cPRqcI30GFgD9Yo4Qv1FfSQnFN6NVI9GI=
+	t=1739220125; cv=none; b=sn9PFN69jy9ENBu3I1IlbRBAMTHFdH4adyfP7ZuEvSMT17H63zTh2BaVwFCrFqKgnNFbcRq/qnqj5q9+yiHgMQFgaablP6qpvigY5f2/N2rbk0iEqRKxkevR0fnsRHUnMaoa3ye5fjnwB5jc01Dk3Xg4DwrOb9gFU0JWkALgOOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739220105; c=relaxed/simple;
-	bh=PUckf2U3CHMxTk6tMfGiAGmUTY4Vf40pOMBHyCATOU8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qg3RCVHZqb9mle9HwyNa3CRh9QNNTPNGPbT5RHHEl4Hdq72GgZdzwupJbnuLUD7pllJ5Zl/dvjBR9ChVoPuUE6ZugEKShxWuBu0LgRTBevna+ArrTPp9DR/H0Zk2+wrVgM/KMh9QBMESckVi5r2gdCnySfIxjY8Cj6HjyNAadoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/Zy3YAV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739220125; c=relaxed/simple;
+	bh=LZK52sN6xKz5e0cxi1jyEskOoHVCK0oOXBq8lcjmYI0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k0XxLjSt4SJFaYOxQ1jIXsQ7VTfBHEN4qE/ICBw+6Yfzr0VUi+RReOH6eV0FDQr/+J2oPHJwZUp1lQvA65NJugOrHKx4NSzGKQzANqJej/++V62NN93BprL1q1Cn2dwshsBa1U3nh0RCPI6SK8KFIZSUVkvPccPx76dRtei0lIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=yjrkPaox; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/Zy3YAV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D64E1C4CED1;
-	Mon, 10 Feb 2025 20:41:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739220105;
-	bh=PUckf2U3CHMxTk6tMfGiAGmUTY4Vf40pOMBHyCATOU8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m/Zy3YAVW/RaENM63F9vqDKSVN/2O5LpQZqBj5iNCeVvd8gWxaVqZR9d6xXgdAuae
-	 Xcwrm5THNfVv+ZT0LyYW4iRJYiqq6OkXP1bZ60LdrJqHSFIe9jNyX5li5BqRAmOldZ
-	 yi3tJQ65O3bGiik98yZRMXn5ih0jPTiUWIAB0bnjp6z5N93M9n27xtfQFrdLM6yF6e
-	 +PKFyaLfuBBwII7jVnbyfgm1wGcvl2a6wbhDpJ9+gMpR8EiJrYM9UKke7wy2pZADxM
-	 GqSFNzaFbqCSIZ8B+mcSUQxYPqT1lUBfx4ZJYs4bS8lDUE3S1dmPZuJCft0nihuMdg
-	 w0K9hWoW0FacQ==
-Date: Mon, 10 Feb 2025 10:41:43 -1000
-From: Tejun Heo <tj@kernel.org>
-To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>
-Cc: linux-kernel@vger.kernel.org, sched-ext@meta.com,
-	Jake Hillion <jakehillion@meta.com>
-Subject: Re: [PATCH sched_ext/for-6.14-fixes] sched_ext: Fix incorrect
- assumption about migration disabled tasks in task_can_run_on_remote_rq()
-Message-ID: <Z6pkh-OC_gnBHyfn@slm.duckdns.org>
-References: <Z6pTDc_TfujiHW5v@slm.duckdns.org>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="yjrkPaox"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c05049e67aso123231285a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 12:42:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739220122; x=1739824922; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aWIqkfiAlllX+sdfSqusAXqRIO/gfWorBPQNzhmxr6s=;
+        b=yjrkPaoxjWtBxU61ItyKHkOOh5F2hQafUXVfxx8Hp+aPzWfdqxrHcLNxTs64FK9fgz
+         7Gc7p2GjoCg5pxP8vSOGaCJ8FerF4v3cF5cFS08OOJ5M5wQEk28ZS0tV3+FOL+xj3Jv5
+         XCt07GBPCzII700EU8jptDhrLD3gSzwAE2VlKkHXhVMkbFTzca78SsqUyyzuc8WWQjUX
+         2Rn+oUZNL6Fe4p3dWY3QiMZFnddT04f1AQ54lT/7p7Pi8LNrUVHiX/RQsJEugPS/9MFQ
+         Y3+Hi5zVB7E8FRo8iINtJAUMPcce2Qfzj3xeLC/9LR+Fh3NbEOdddwor0CUsSHr43r8W
+         AcrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739220122; x=1739824922;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aWIqkfiAlllX+sdfSqusAXqRIO/gfWorBPQNzhmxr6s=;
+        b=GrRHxkxbkCjDIFha7EUkF3K4nIkNCjQzfilMiwVxuVmhJxZcUSS8f/yWgFWFrgimSi
+         mx956rgie7s7RIPvKGtoyQB9sPMIJcgyB3+nhn7MpP9OsCexzIXmWnJjNnpzleHt//Bd
+         dKB2UtQMQb3x/ET+rQa5g1MhZLn5yRpMkhxfvnUhdU0vvf0BkA3RCcPKIx1xe0LeQUKS
+         vnmaMNt+boXGOz5iSVsQhX/7PMK9/deTkm1s1bbuUTACQMmWWwQ+YgeNgC45wS07TGAn
+         PDa+IfyIY3U4N0hcWBVSmOpoYJ8UkIZBYEQb+oWtNG52NvcJTbaKYJwTZY+ZzKNSIJA3
+         uxcg==
+X-Forwarded-Encrypted: i=1; AJvYcCXmdnSNR7S3SN0lacJC7QGAnVlRlCRQu4LgGQubySWxHK+YEQo7TH/P90fNBYKOcPQRmgpVTnLU88rXsOY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXQqG5UyqJbkbO0cc/rYt1LrWLwuMNzEBsZFYMA9yOwl5QX+ns
+	EEQT7mqSC/sAcgVh0Io5G+aLKDgU2aipfeC/239EhBfH311+ExdNvY8W9O3tj20=
+X-Gm-Gg: ASbGnctFl5CiCOu9jJemNlBr/W04Lw4OrOrlZ5TbkwrrKB3E16/6J3gt59Yt1IJ57Ea
+	q+9v6McUnbsirU0zd8s0VBJM/4DYu0coCWlEVVsrQ7UXYAf4nkk5lGrkPG8PcHdjxJ15pG59/2a
+	rX0QPEr9G5yG0fY7EI+UoVUrJzuZbgTyA6u23C5C+qch/XYowyHKOkKzuiUp74tbfujd/8JXHVv
+	+FEkIf80UvXKzn1/u7vk53iMBDallqcl8ZZntgqavcZR1pdGlSlYIVUW/tQD24SW/HD1OnSM2fa
+	B6F+oioLSXsLzI8YdUSHgXvMqiMT9+XjBstXlXMVmQPWbXe2+IlkVZPqizk=
+X-Google-Smtp-Source: AGHT+IEMjXJvDef9P4rap26kwWYFjE5BNIyxGYznn1+Pr0PfR68QMcTrO7XUW+fLRJcbcMtrdSheew==
+X-Received: by 2002:a05:620a:25c9:b0:7b6:dc74:82ac with SMTP id af79cd13be357-7c047ba6246mr1979567385a.1.1739220121869;
+        Mon, 10 Feb 2025 12:42:01 -0800 (PST)
+Received: from [192.168.40.12] (d24-150-219-207.home.cgocable.net. [24.150.219.207])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041decf43sm574544985a.7.2025.02.10.12.42.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 12:42:01 -0800 (PST)
+Message-ID: <c03ec6fb-8cde-47b6-82e5-e91723dd7af3@baylibre.com>
+Date: Mon, 10 Feb 2025 15:41:59 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6pTDc_TfujiHW5v@slm.duckdns.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] iio: adc: ad4695: add offload-based oversampling
+ support
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
+ Michael Hennerich <michael.hennerich@analog.com>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ David Lechner <dlechner@baylibre.com>, Lars-Peter Clausen <lars@metafoo.de>,
+ Jonathan Corbet <corbet@lwn.net>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20250109-ad4695-oversampling-v2-0-a46ac487082c@baylibre.com>
+ <20250109-ad4695-oversampling-v2-1-a46ac487082c@baylibre.com>
+ <e3fd7f56675908a60d8ce6bcb6ad4f05b828e132.camel@gmail.com>
+ <efba6746-47a6-484f-ade5-f1e17246ac68@baylibre.com>
+ <20250210190338.484c463e@jic23-huawei>
+Content-Language: en-US
+From: Trevor Gamblin <tgamblin@baylibre.com>
+In-Reply-To: <20250210190338.484c463e@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 10, 2025 at 09:27:09AM -1000, Tejun Heo wrote:
-> While fixing migration disabled task handling, 32966821574c ("sched_ext: Fix
-> migration disabled handling in targeted dispatches") assumed that a
-> migration disabled task's ->cpus_ptr would only have the pinned CPU. While
-> this is eventually true for migration disabled tasks that are switched out,
-> ->cpus_ptr update is performed by migrate_disable_switch() which is called
-> right before context_switch() in __scheduler(). However, the task is
-> enqueued earlier during pick_next_task() via put_prev_task_scx(), so there
-> is a race window where another CPU can see the task on a DSQ.
-> 
-> If the CPU tries to dispatch the migration disabled task while in that
-> window, task_allowed_on_cpu() will succeed and task_can_run_on_remote_rq()
-> will subsequently trigger SCHED_WARN(is_migration_disabled()).
-> 
->   WARNING: CPU: 8 PID: 1837 at kernel/sched/ext.c:2466 task_can_run_on_remote_rq+0x12e/0x140
->   Sched_ext: layered (enabled+all), task: runnable_at=-10ms
->   RIP: 0010:task_can_run_on_remote_rq+0x12e/0x140
->   ...
->    <TASK>
->    consume_dispatch_q+0xab/0x220
->    scx_bpf_dsq_move_to_local+0x58/0xd0
->    bpf_prog_84dd17b0654b6cf0_layered_dispatch+0x290/0x1cfa
->    bpf__sched_ext_ops_dispatch+0x4b/0xab
->    balance_one+0x1fe/0x3b0
->    balance_scx+0x61/0x1d0
->    prev_balance+0x46/0xc0
->    __pick_next_task+0x73/0x1c0
->    __schedule+0x206/0x1730
->    schedule+0x3a/0x160
->    __do_sys_sched_yield+0xe/0x20
->    do_syscall_64+0xbb/0x1e0
->    entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> 
-> Fix it by converting the SCHED_WARN() back to a regular failure path. Also,
-> perform the migration disabled test before task_allowed_on_cpu() test so
-> that BPF schedulers which fail to handle migration disabled tasks can be
-> noticed easily.
-> 
-> While at it, adjust scx_ops_error() message for !task_allowed_on_cpu() case
-> for brevity and consistency.
-> 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Fixes: 32966821574c ("sched_ext: Fix migration disabled handling in targeted dispatches")
-> Reported-by: Jake Hillion <jakehillion@meta.com>
 
-Applied to sched_ext/for-6.14-fixes.
+On 2025-02-10 14:03, Jonathan Cameron wrote:
+> On Mon, 13 Jan 2025 11:49:49 -0500
+> Trevor Gamblin <tgamblin@baylibre.com> wrote:
+>
+>> On 2025-01-13 09:35, Nuno Sá wrote:
+>>> On Thu, 2025-01-09 at 13:47 -0500, Trevor Gamblin wrote:
+>>>> Add support for the ad4695's oversampling feature when SPI offload is
+>>>> available. This allows the ad4695 to set oversampling ratios on a
+>>>> per-channel basis, raising the effective-number-of-bits from 16
+>>>> (OSR == 1) to 17 (4), 18 (16), or 19 (64) for a given sample (i.e. one
+>>>> full cycle through the auto-sequencer). The logic for reading and
+>>>> writing sampling frequency for a given channel is also adjusted based on
+>>>> the current oversampling ratio.
+>>>>
+>>>> The non-offload case isn't supported as there isn't a good way to
+>>>> trigger the CNV pin in this mode. Support could be added in the future
+>>>> if a use-case arises.
+>>>>
+>>>> Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
+>>>> ---
+>>> LGTM, just one small thing inline... Either way:
+>>>
+>>> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+>>>   
+>>>>    drivers/iio/adc/ad4695.c | 333 ++++++++++++++++++++++++++++++++++++++++++----
+>>>> -
+>>>>    1 file changed, 303 insertions(+), 30 deletions(-)
+>>>>
+>>>> diff --git a/drivers/iio/adc/ad4695.c b/drivers/iio/adc/ad4695.c
+>>>> index c8cd73d19e86..0caaeaa310ed 100644
+>>>> --- a/drivers/iio/adc/ad4695.c
+>>>> +++ b/drivers/iio/adc/ad4695.c
+>>>> @@ -79,6 +79,7 @@
+>>>>    #define   AD4695_REG_CONFIG_IN_MODE			  BIT(6)
+>>>>    #define   AD4695_REG_CONFIG_IN_PAIR			  GENMASK(5, 4)
+>>>>    #define   AD4695_REG_CONFIG_IN_AINHIGHZ_EN		  BIT(3)
+>>>> +#define   AD4695_REG_CONFIG_IN_OSR_SET			  GENMASK(1, 0)
+>>>>    #define AD4695_REG_UPPER_IN(n)				(0x0040 | (2 * (n)))
+>>>>    #define AD4695_REG_LOWER_IN(n)				(0x0060 | (2 * (n)))
+>>>>    #define AD4695_REG_HYST_IN(n)				(0x0080 | (2 * (n)))
+>>>> @@ -127,6 +128,7 @@ struct ad4695_channel_config {
+>>>>    	bool bipolar;
+>>>>    	enum ad4695_in_pair pin_pairing;
+>>>>    	unsigned int common_mode_mv;
+>>>> +	unsigned int oversampling_ratio;
+>>>>    };
+>>>>      
+>>> ...
+>>>   
+>>>> +
+>>>> +static unsigned int ad4695_get_calibbias(int val, int val2, int osr)
+>>>> +{
+>>>> +	int val_calc, scale;
+>>>> +
+>>>> +	switch (osr) {
+>>>> +	case 4:
+>>>> +		scale = 4;
+>>>> +		break;
+>>>> +	case 16:
+>>>> +		scale = 2;
+>>>> +		break;
+>>>> +	case 64:
+>>>> +		scale = 1;
+>>>> +		break;
+>>>> +	default:
+>>>> +		scale = 8;
+>>>> +		break;
+>>>> +	}
+>>>> +
+>>>> +	val = clamp_t(int, val, S32_MIN / 8, S32_MAX / 8);
+>>>> +
+>>> Why not clamp()? AFAICS, we have the same type on all the arguments. I also
+>>> think clamp*() macros got the same improvements as min/max() ones which means
+>>> that using the ones with explicit casts are not so often needed anymore. My
+>>> understanding is also that those macros are not that encouraged as it's easy to
+>>> go wrong with the casts.
+>> I have no preference, this is just a recent habitual use of clamp_t(). If
+>> clamp() is preferred I can send a v3. Or maybe Jonathan can tweak it
+>> when it is
+> I've left it as clamp_T for now.  We can always follow up with a series
+> to tidy these up general.
+>
+> Series applied though a bit provisionally as the SPI offload set needed
+> a few tweaks that might get changed.
+>
+> Pushed out as testing for now.
+>
+> Thanks,
+>
+> Jonathan
+Thank you!
 
-Thanks.
-
--- 
-tejun
