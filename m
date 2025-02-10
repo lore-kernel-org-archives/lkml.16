@@ -1,133 +1,84 @@
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E72C25B66C;
-	Mon, 10 Feb 2025 17:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 189F025B683;
+	Mon, 10 Feb 2025 17:59:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739210370; cv=none; b=Qh/pnw7VZG35KcVTqoNUjMVEVgxys4T5tOyVo8G2+Gu2DVhdI6d0phFlo6ruvyNrhuoYaH/sxuY4pLijOZOQCdczq9gdcjFeu42qUmi0Tl0UNIwM2JRpQZd6y5j5CPiEDJAW0pwqMcKxlq0TfW1EL/Y9dSbCf2tsBV/U/GwB7uw=
+	t=1739210373; cv=none; b=uSL9tNYN1qpHCM1TjZsFicRQRRopZNdISXWxf2HWMWZyXai1paBjUWE0qQ/C23SjCZmPpEbUXMPbVXVox6g4xkXkGzk56QfUcg1juM8v9YCv+CpzUKGtIoqIb0D/NyGegG6Dlld5ETCRUn+aKj55dogSltuUkzWmS7ob+Ou/euw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739210370; c=relaxed/simple;
-	bh=4P6/1dURFqAqbcScPagqy0vCCJUhFevL4Gk1hMohsY8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=qcCY8pC61Jxz5hbTnFgylzZNecLYDwehUzmQ5yYqOdCM0dQGoKYk7ryY+TTv/RMEpiLWC780jp1T6cxnp63NhcuY9ZFTg1QA/g3cC75XFyhgHFbWr2nWvbD+YvH8Hztc3Y9f/WUpJuJN7q5jKxfCQW5iHxPyrhCpVdygeiN5+fA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidreaver.com; spf=pass smtp.mailfrom=davidreaver.com; dkim=pass (2048-bit key) header.d=davidreaver.com header.i=@davidreaver.com header.b=EMoPI71J; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mjlzsF6u; arc=none smtp.client-ip=202.12.124.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidreaver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=davidreaver.com
+	s=arc-20240116; t=1739210373; c=relaxed/simple;
+	bh=r+nZwoc8DznFjgy/dTbOCqlQ7KMSfy+0N+izBrPJHCs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HAzOILimWR1R61WjaiVJulH6rlX6LEQQ3/8IjEUakyniHO0wVl4P9NFsxnnJnkHMb/ExBX18DcM1Loh8yxe3LomfEJxy0Jim+BPDOLEN+tOEUYISmTisDpyp+1ZiUK6MuurT48SqylylpJ7tfeIW3VrIGkx6LOKmFnOGtv9ae+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Bgp1w5ri; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=davidreaver.com header.i=@davidreaver.com header.b="EMoPI71J";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mjlzsF6u"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfout.stl.internal (Postfix) with ESMTP id 5F43F1140181;
-	Mon, 10 Feb 2025 12:59:27 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Mon, 10 Feb 2025 12:59:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=davidreaver.com;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1739210367; x=
-	1739296767; bh=4P6/1dURFqAqbcScPagqy0vCCJUhFevL4Gk1hMohsY8=; b=E
-	MoPI71JsKi0L0suLHYCwmMPyfFF5vT+tA+zdNDm1DI1MgXtqjYzNsFZfbcbXRmys
-	Xh4QD9SKGWgXuGpZJsZY5IsEowIq5UDw8PYrdPT6aWBV6jajvmesfZ6ApM0ugq9H
-	a7shKWw1+L0qCjsolEb+1LcKX+AuGbHgfSjUB/b9yngdScR8qp+SGmlrQOASvcWL
-	WqvJTuHRF2xx1VcgnZ33yFcnY2a7f8fy3SMtB5zTu+gzXu8owAi++z02vSECF+rw
-	bde32Juk6RWYDlZZGqynkpuZD7OG18tuaaqnJa503elLqtTS/+H3xm6sC9umSL/Q
-	QdI/oDyjOKUK7060BP/6Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1739210367; x=1739296767; bh=4P6/1dURFqAqbcScPagqy0vCCJUhFevL4Gk
-	1hMohsY8=; b=mjlzsF6uF9om03EU2kE3gtAG20uUa2vHnl+XbFOHmGjQi7XgV3r
-	KFIj7QbWeIIGVlT6lpuZtxfzcgkIe6AI19lgGNBmKNcqfW7w7JTMZrLj9Bg+7FAc
-	000Qmcen6FGwE891/Uz/gLR/YBivQzicGZbeX41Brmpx+Uk0ER/z3Yr6SuU6r0ti
-	TbKdGtDeV5lz7SdiLZmqyjjl3CaFGmSJV038SeOwMGx8qA36KegvXT18zzKox9R1
-	I8YVE/XMtGOlgKukuPi8ipEIEXrVOHCnzC2JqMy4m0QLPrNT6lDBLee3UxS5W+ae
-	CvnLfITbMF2FVyzX6nI8EYiJjrT95Th5XSQ==
-X-ME-Sender: <xms:fj6qZ7WhUp9AMc2RQkPVa6I8IF-BvPyIf4mjoqGAqXta6wabyJyvnQ>
-    <xme:fj6qZzmUSWROoyF_LEEIUIJ4lHWmJoKqtw87p8_I_Q-5vrOoGAXG6qRDS-qFIdQXp
-    6LpFAWrOtJgqDTNXwQ>
-X-ME-Received: <xmr:fj6qZ3aqa9i1ASu55emdnHRiybA6hy99e8PdShDphZ9uJj_4sLS5KGxd6XD7KOPFfG3pBPOu9r_tOmAAay2xrrzy63AJ_Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefkeejfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtsehttdertddtredt
-    necuhfhrohhmpeffrghvihguucftvggrvhgvrhcuoehmvgesuggrvhhiughrvggrvhgvrh
-    drtghomheqnecuggftrfgrthhtvghrnhepudetjefhvdeujefhkefhteelffelheevtddu
-    ueelkeeludevteekteekjeevvddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepmhgvsegurghvihgurhgvrghvvghrrdgtohhmpdhnsggprhgt
-    phhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigqdhkvg
-    hrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohgttghisehi
-    nhhrihgrrdhfrhdprhgtphhtthhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtohepvhhirhhoseiivghnihhvrdhlihhnuhigrdho
-    rhhgrdhukhdprhgtphhtthhopegsrhgruhhnvghrsehkvghrnhgvlhdrohhrghdprhgtph
-    htthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurg
-    htihhonhdrohhrghdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhg
-X-ME-Proxy: <xmx:fj6qZ2UEqZ5MJ3eutGBKyJ2riIHJsf_mjtkNJS6raicpGP5VV6Bncg>
-    <xmx:fj6qZ1lhSUevRqU24X2knacWjm4hQgVWUf8ikeuR9bsPiSnUf6LGYw>
-    <xmx:fj6qZzcFp7Rx5PuFeKYtuWa1xdjjZR7JH54aYNC_gPkPNAP1GuHUvw>
-    <xmx:fj6qZ_EzHu3RoeHgoHOC9h3V0-TZdiB3sFuD5BWqfbC9LYFBn8Cs2Q>
-    <xmx:fz6qZ2gIzJWL_zVP73DvZEBMBzzGhWmS1JmHRIt5VHJBib0gZMOb6QFD>
-Feedback-ID: i67e946c9:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 10 Feb 2025 12:59:25 -0500 (EST)
-From: David Reaver <me@davidreaver.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,  "Rafael J . Wysocki"
- <rafael@kernel.org>,  Danilo Krummrich <dakr@kernel.org>,  Christian
- Brauner <brauner@kernel.org>,  Alexander Viro <viro@zeniv.linux.org.uk>,
-  linux-fsdevel@vger.kernel.org,  cocci@inria.fr,
-  linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/6] debugfs: Replace dentry with an opaque handle
- in debugfs API
-In-Reply-To: <20250210115313.69299472@gandalf.local.home> (Steven Rostedt's
-	message of "Mon, 10 Feb 2025 11:53:13 -0500")
-References: <20250210052039.144513-1-me@davidreaver.com>
-	<2025021048-thieving-failing-7831@gregkh>
-	<86ldud3hqe.fsf@davidreaver.com>
-	<20250210115313.69299472@gandalf.local.home>
-User-Agent: mu4e 1.12.8; emacs 29.4
-Date: Mon, 10 Feb 2025 09:59:24 -0800
-Message-ID: <867c5x3clf.fsf@davidreaver.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Bgp1w5ri"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id B33C42053680; Mon, 10 Feb 2025 09:59:31 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B33C42053680
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1739210371;
+	bh=7oxVU9z7LmtD31jnoqMb1VBGVzB/peaBuGcPzFmyIKE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Bgp1w5riQmFzhWcIc2AZ6XzukiyUoghwjljDoOb7G1RElHuLaE2CUYsYL9MHGT5ay
+	 Xs3Eq0NMaY3DKgcTk29sSN1RwRHoiPtzPO79ybW6lDr1J1Zz3LwCvf0exrD8kth4fI
+	 yMmutd/vCgWReiNksZ7UEZKAW+iuiTu0iWUZ8pEw=
+Date: Mon, 10 Feb 2025 09:59:31 -0800
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Eric Dumazet <edumazet@google.com>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Long Li <longli@microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Erick Archer <erick.archer@outlook.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v2 net-next 1/2] net: mana: Allow tso_max_size to go
+ up-to GSO_MAX_SIZE
+Message-ID: <20250210175931.GA18891@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1739162392-6356-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <1739162428-6679-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <CANn89iJ3cT6BWLmFpdkxn6EeeLTM7rF0pwWGArq1gG8pk8orsg@mail.gmail.com>
+ <20250210175753.GA17857@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210175753.GA17857@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-Steven Rostedt <rostedt@goodmis.org> writes:
+On Mon, Feb 10, 2025 at 09:57:53AM -0800, Shradha Gupta wrote:
+> On Mon, Feb 10, 2025 at 04:55:54PM +0100, Eric Dumazet wrote:
+> > On Mon, Feb 10, 2025 at 5:40???AM Shradha Gupta
+> > <shradhagupta@linux.microsoft.com> wrote:
+> > >
+> > > Allow the max aggregated pkt size to go up-to GSO_MAX_SIZE for MANA NIC.
+> > > This patch only increases the max allowable gso/gro pkt size for MANA
+> > > devices and does not change the defaults.
+> > > Following are the perf benefits by increasing the pkt aggregate size from
+> > > legacy gso_max_size value(64K) to newer one(up-to 511K)
+> > >
+> > > for i in {1..10}; do netperf -t TCP_RR  -H 10.0.0.5 -p50000 -- -r80000,80000
+> > > -O MIN_LATENCY,P90_LATENCY,P99_LATENCY,THROUGHPUT|tail -1; done
+> > 
+> > Was this tested with IPv6 ?
+> 
+> Hi Eric,
+> yes, sanity and functional testing where performed(manually) and passed on azure
+> VMs with IPv6.
+Forgot to mention that the tests were performed on both IPv4 and IPv6
+and these numbers are from IPv4 testing
 
->
-> No it will not be fine. You should not be using dentry at all. I thought
-> this was going to convert debugfs over to kernfs. The debugfs_node should
-> be using kernfs and completely eliminate the use of dentry.
->
-> <snip>
->
-> What caller should ever touch a dentry? What I got from my "conversation"
-> with Linus, is that dentry is an internal caching descriptor of the VFS
-> layer, and should only be used by the VFS layer. Nothing outside of VFS
-> should ever need a dentry.
->
-> -- Steve
-
-I agree that just wrapping a dentry shouldn't be the final state for
-debugfs_node, but this patch series is _only_ trying to introduce
-debugfs_node as an opaque wrapper/handle.
-
-It isn't clear to me that there is consensus on even using kernfs for
-debugfs. Even if there was consensus, a full conversion to kernfs would
-take 10x as much code and be extremely difficult to automate. For
-example, using kernfs would require migrating all of the debugfs users'
-file_operations to use the kernfs equivalent.
-
-I figure any change away from persistent dentry handles for debugfs
-requires introducing something akin to debugfs_node, so we could get
-that out of the way first.
-
-Thanks,
-David Reaver
+regards,
+Shradha.
