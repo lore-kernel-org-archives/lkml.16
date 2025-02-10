@@ -1,364 +1,98 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2057.outbound.protection.outlook.com [40.107.20.57])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC1D257AD7;
-	Mon, 10 Feb 2025 19:39:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739216372; cv=fail; b=W0jZi3Afz4S2/CvEtjLaaargKVhFvI0QH8+6ED14S3CNDjs5PKLCRSr1NckcRz+H1q6hUSlOnIqrX/79sDNYLdchYp7Fr7B3dJMyOxNSgxId9UFtAH5jdGwVo9Rxba09/bh28HS6YgjZOofRNPOaJKHEzn3ncrIKEPWP8eF+POo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739216372; c=relaxed/simple;
-	bh=O5UQJ6m0QegWod86GYvv4WRCexXGiOFdyfSV//pq8xQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=FKLfbnATbmjoVfoXabAKH6EUFdpgGbzab0GV7QYVpVn/LXdDe55632ybYH4s7zM0H2hnameOAbnNa3DjGRM0L3tYn9eUv9kBQK+lYSSUzHzBkUey9cOuZeAMa19yN8LbrnRhfJGtXw8x0uk0jQPfUG3m28qhLMKqGBBcZCIV4d8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=fail (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=cVWl0KC+ reason="signature verification failed"; arc=fail smtp.client-ip=40.107.20.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626EC25C6EF
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739216424; cv=none; b=nFCC2Nji+NBufFPTexT2I71za871nlzSxev7mkNGofKQXX84NjSfNkovUdndE94Fac1+vR+Eo8P5tErwiyNfgfKuZTHGNEQzEqwRCrJdT79eCkv3fAjA9Esl563d1KYKtg2Yzs1DUTpA0bz5OCmXl5gr43KqErqjHhdiuPQ0yT8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739216424; c=relaxed/simple;
+	bh=4m41YzXmjKupOvgxXvACISwj81PDpF3Wa8u8owr0LLQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=k5S2L5Gjw+Br/LvvntJQo7mKAYaSji+02fxYUXiDGkGSbtEX5fs6ozXg7WPBP5mzj0pGZvqVqP2Cq5r4HHdcSZbfhqNcvRBMxxqZqqFTQdfvLG/ZhhN7rgAnXM+rGiaLiYlKaXjKsiQhJ6ji1sxf4kNhGz2IG65TbEmtlQWKevQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=FObrw5BQ; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="cVWl0KC+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iAJpQ+2GjJJj0n1zqNUXSkOkUennzMxS6gF5iOgSLELEo2dDA+GqCsWyKBUBbvmjA+FosGF/mWshuMWARIIMpy+suK4MD6ZrB0+uABMy3ivSRVqZQ+3H+HVxS4GtrkleUel7puJ6/sIG7rOZYw4zqAuEWcrTp9zludI54JPuYMkeS5l9XSZy1dSK6ohqokcl9jvlV62A/7scoRkuGeEyGQgzzeF0PDcBXM0rHJWPZheG3sA0fsF9i1HFFy6GwfobHV4jUnqj4R7/Thc5Z95vAHXYUxOWJR5ytnzIFJZVkwS7awZMii1LeDNV6m6cXomKSnVEb6nv4WikPJ801rJHrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UAmwXK8s2ViFQmlIUMzFtDUrgM6KezMlhSGOuLiVbQE=;
- b=pBKWSGke4Rez57EuVexYl14f/335/OO3qBheGPirbDVRC0zjI/eZvSUCjdeVJtNnIcLKbdXPMra8hNyWenWbp2Hl/fs0c5Gatnf+ucbt+cth7Y8D4Gq86w5pWlZ2jDCuAA2XeuH/8BIGc3l8TwRY17naw6kKq3JZK3R+c2CVHs23rsTRss4K3pAynutIytBz8C+GgKdez2LMAtko+GORTwBo2ol8NW55q6aQCxM6DhxmGr4PMOc+pkYrmY6YoVLg1yyJ//hGe3ySUTZZBQAWkhXnuN+rSyPYcmh2irG3trfcnQk1JuT2Qt1czCEFHFhmNjq2mb20j8NG2T8wI1AUnw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UAmwXK8s2ViFQmlIUMzFtDUrgM6KezMlhSGOuLiVbQE=;
- b=cVWl0KC+MxY1/HfspmyAtzgqj+yRGWu+dLLmZl3v/glIHoov1ulS8hjgD1UEA7APf2jxMuIbTcCKY42m5/Z5Wji72y3TwSWhvsg700iyqKKoH6VgtwFdZETvYAtelhNjds2wSu2yyCXnY3PL1JBQUcX2W6qm3F1SMBPXLTWDHxk5tsXMy02eCYXGcfm60ZfNgig5QrMUpMTaodQyuHY5uAIc8LUGtiZpA55aERFKVszIZQ49XvPlAe6CI5XPuYSMvAbbevXOG0/IQg6y6EN2D5k5i4Yjq4mFdI1WW52p/2yutSW8o7S3WkzKwAgwq4jrEHqORHMOOVgRrQBgMo9FnA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DB9PR04MB8122.eurprd04.prod.outlook.com (2603:10a6:10:25d::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Mon, 10 Feb
- 2025 19:39:27 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8422.012; Mon, 10 Feb 2025
- 19:39:27 +0000
-Date: Mon, 10 Feb 2025 14:39:13 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: j.ne@posteo.net
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
-	Scott Wood <oss@buserror.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v2 05/12] dt-bindings: dma: Convert fsl,elo*-dma to YAML
-Message-ID: <Z6pV4eauZj75+911@lizhi-Precision-Tower-5810>
-References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
- <20250207-ppcyaml-v2-5-8137b0c42526@posteo.net>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250207-ppcyaml-v2-5-8137b0c42526@posteo.net>
-X-ClientProxiedBy: BY3PR05CA0048.namprd05.prod.outlook.com
- (2603:10b6:a03:39b::23) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="FObrw5BQ"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
+	s=key1; t=1739216416;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=YJ5yRhEXoyr3qFo0UosrAK3gyLR08Z9zFBUtrpqidkc=;
+	b=FObrw5BQoektcwRD88CI4sswFGdzZKPAOG391abd55vqBDZJxnnDee2bVCWPpYaLHUDBks
+	UAllmQ2NXPaYPQwNMIumDDSrVLmdTqCZVqKwhn3rzuJUgCU6cyuIj7LIP7weEmBvft2DG7
+	VWXoxkQX32srM4IWjHs0QEtTxOwIskiJpUhgsDTya2xriGAcmIJMsbXk8IPJjTZGI0h8Uz
+	K2qbj91EoW+cxbnK2zRxWFJ8isAbwb1JIMiF6jFOBX2jo94xbT2sLy49Tmh3i2+g/zLpUk
+	Zc9CA5IAYO+uGA+O343unSKe6xHW3HPJnQ0Vi1I42UaWchB0U61Njcj5Ib8H2g==
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Subject: [PATCH 0/5] iommu: apple-dart: Support locked DARTs
+Date: Mon, 10 Feb 2025 14:39:52 -0500
+Message-Id: <20250210-locked-dart-v1-0-5d97fe247f35@rosenzweig.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB9PR04MB8122:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8a9a187b-6804-4a4d-74cc-08dd4a0aa174
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|52116014|1800799024|376014|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?iso-8859-1?Q?Z13eRVXqqrGBb+B2ovc8EN0jGjelZdXbNvTd3IgA2CMlD8AYbXJByqwOVJ?=
- =?iso-8859-1?Q?RamfIeWgVCZTUreTLloUYwEECqlnZ9Y6Ww6uRNJEf2FgjVZw6NCaKjYPcO?=
- =?iso-8859-1?Q?HUf7yPNdSaGhsb2OxYA6UIFw8mF5c5RX5cAMEatUkICzpiKvW1OgXvW8T8?=
- =?iso-8859-1?Q?aM2wEvFJkBQiVHZHanzD0T/IDhX8A0P86HFhT/a7Vlj/kHTPqN1lEgBeYs?=
- =?iso-8859-1?Q?4rRasMFATgO8DedovYkDW8HoMhdTH6Zb2kJu/W/TCr5wGWpqJbIofLBcwy?=
- =?iso-8859-1?Q?UHqrJ1TE72zbyGJoIvv+y278a+Chc5hqtOhVL158haHGLXNXMffghimhZF?=
- =?iso-8859-1?Q?0q/Oo65O4ymQ78lFMnsxlNjwj+p2Q8GNJBdNpDJGOPfE4UaZzU/T4sV3DO?=
- =?iso-8859-1?Q?LGwna3THjdu+Zw62Im2tjio6xED0jZaTJ5jfnr6hJmpsP2I3Bv2sYQy1uB?=
- =?iso-8859-1?Q?VofFUYMhAJlPnnRAXLJO20ZxyjNyBBIjwQ7echfaURVCtqwONL38VyRijD?=
- =?iso-8859-1?Q?xUS13lGa1veA13mmj35d1FVw77Itk/thrlZGx4udG2qIYeTy52xOg0FGfi?=
- =?iso-8859-1?Q?ZCJblRTMJe086NrjF0mkHXdE2hVRe4CM0Nn179jxz9QUYfzwebIaqZaJXu?=
- =?iso-8859-1?Q?5C2LI4gSbXX5tzQFOOyKzjgKw7HfSurLZr6YpauH1J121UiFxdDuGmK7ka?=
- =?iso-8859-1?Q?FRjg4sSokGJ8AQKFroLWIKRkOJt6iYgDCdkmeLuIP2zeLY6QRAh2XJuvbC?=
- =?iso-8859-1?Q?uXv/1nGwyp4DInmmourPFyutcOZOEO8UoTvA+0PbZNt3zK2+Q6lkCLztpi?=
- =?iso-8859-1?Q?8o9wRlpm9giH5u/TvJlN+6+StBhZJIk7unTC4w45QP+Qfn/UUhCvLo9H4U?=
- =?iso-8859-1?Q?1x2q3FyzdoQfqug2QGMEinX5veHDHkSImBV92reNAh/p8HqzNkePSS/Oeo?=
- =?iso-8859-1?Q?o2bmJronNk8d+dbEO3kDTewa8wMJ0CugtNgWkigwTD/2BgnKgyMpyESmM5?=
- =?iso-8859-1?Q?W/bodeuy+R1Lq++Yf8S33CQetkdDTgDbKn26DXXmDJRocTmOty166MXV2f?=
- =?iso-8859-1?Q?4f/Tk26kp6Dd5xS1et0qZUN963y7Zd+OqbHzb1bdjd0OUe7Lr+uDJzuuhI?=
- =?iso-8859-1?Q?cR6hcXEBX2jUPR2uU/XE8L0A/Q/DeIbqDEZZP6bHs1sIeiWcKUVeWmk4vJ?=
- =?iso-8859-1?Q?Lhri6VM7OKfw4LJJcp5JTu7jxMyiAFdTKnu0d0EFJ3vBYtNWyGWBtV630V?=
- =?iso-8859-1?Q?RYH18Z2P/iM45dWu63R7mBGZlg9OgTd95Icrrr5p2IUJs0kEER/oJcu86L?=
- =?iso-8859-1?Q?eVvRxiaYqOVLShXTHjPE74Hz69Z2PXkovRyhMKYGGeUgmPVxEgW1qQ4Pli?=
- =?iso-8859-1?Q?aA3wBmKczUwgnUIY6xim2PKEd9JnAu/GJpxgJVE697ZzTYMnEsuJIN7u4N?=
- =?iso-8859-1?Q?WlnPX39oKeWynIRs?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(52116014)(1800799024)(376014)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?TiK1F3ZA+N7z3JvoR1KuSdRVEXOvU/UJMDIy/TP0gzVJ6g/1uKKNXQpk3r?=
- =?iso-8859-1?Q?AV8fM12AO/cmTdNl3DXf6CAhoGaNvx+RrQQAdN12CTKo/rwkJTO9m34aPR?=
- =?iso-8859-1?Q?AUCbYD/NVo+Bc8ftDkBuRKyPMANUtpH3FkQK1VMiycvAwRt1H0vMl13Rt8?=
- =?iso-8859-1?Q?bNWGmOKbJJSXIKY0Twj3fL5P7/u8IECvZSy6ixafcDLDoW31ka3hkfRdfV?=
- =?iso-8859-1?Q?qGvFYcWFeOQvlh2i8kcQrcY5KkFRpmNTc8Jfa3G7si34fbJIU7nfpSm8Xt?=
- =?iso-8859-1?Q?GplVeavAw5ws3Fyvt39hVj8cirbX46E6vnI1I4ZW5SVC3QLubkCEPn4jQh?=
- =?iso-8859-1?Q?v9IS0sFqGjv+23gtVn70YaRj9vN0h2jqN3UhwuDUASAxtwKIzGZsnzkmbw?=
- =?iso-8859-1?Q?gkws5rSe4dTluUggq39NoY8LNrgx3nonV0pwnox10Ce1vf2hRA/spEqgAD?=
- =?iso-8859-1?Q?w+Qh5UYkSCi1MHds4nub10JucRyHGXXsHRErgg0oKaDtevmW/NxZQ7PzxT?=
- =?iso-8859-1?Q?sFGJuIHbnx+OvvlbaliuIAelrvtJ2PaUV9EqXzfeZGnCTCJDy/iZHHTmsT?=
- =?iso-8859-1?Q?jSin9VHqqUgJZPBcaj0EQ5ACcwbKfzIemb0av8UphJIbNgLE6rNKRoid7I?=
- =?iso-8859-1?Q?0xVl6U0QA3BSttFG0yPF+FVl6Z+XZLArVxnlVdF3srMNfn6gvmwG+lwQHs?=
- =?iso-8859-1?Q?1CUynWnGTasB87TPvV39dj2bjWlsTzICgVvwwDpo06ekgxshcpF2fIdLKs?=
- =?iso-8859-1?Q?mVg2m1f4AAZPpxGwtO7aJZ/GaCgmb6bxxd/BjNjwHr0dzZZQcu2UUgjuPX?=
- =?iso-8859-1?Q?EsPNlT0OzRV8kCGcIAww1PGiVV17F+PvjlWTuJZqNDW2tDb1GXcXwYhAL+?=
- =?iso-8859-1?Q?Dk6o3jBWv8WqdCbCV3o5DgZ/6pL+8GldB+Q7qs6lgWeMmSK4kWjroKQ05E?=
- =?iso-8859-1?Q?/hPh/vGvceaXbodHPCucwR9bKwCNCcYqzRAhy6RdKP7rfZV0ICv1xX6ghq?=
- =?iso-8859-1?Q?/4Z14WXW3y3meRQ2wTw/5JtlQamzCpSNpNPOXbH7wsd3fTlxlZrRd7Bp+u?=
- =?iso-8859-1?Q?mvgV3+5R5vQle0oNGyFSF12I8AgfLsn8f/Zy041ITEgbNQgtRNCuGHgztr?=
- =?iso-8859-1?Q?xUnFTMls7ZU2T/o/ZaNixaabcSGiZR5U5l4cO/po9mM/TEWa6U5iKiOKEg?=
- =?iso-8859-1?Q?53xBgIOaN9IZ0ZT8ff1xKD41EQ7J0iByMzo4FRTCt7H3sGO6MZPfACrRHl?=
- =?iso-8859-1?Q?/aHdz4a2pIhQgveEOdfp7D+kNfwOJKw4Bg+bO6hjV5jq1bCuhcdOXo27H7?=
- =?iso-8859-1?Q?EEoQ6eWX3iF57L/k7BgniYVIotRgDeV3bpkdwZHVxX81h8bEs7hnhGnWIj?=
- =?iso-8859-1?Q?sL+PeKpUjYSDiAWHMWFTnBvqtqWOGLiREW4sIyh84uJsMntgnimzTuDkCg?=
- =?iso-8859-1?Q?6HUGNBqhdP8GREq/gRYt62fhjJHA5aAejaVv3c/e95fSPb89nM882I+yrG?=
- =?iso-8859-1?Q?FJYwajMLWHPPVlZMYC5MhD9ttoxA4vk+fiIzIH8fqmaeMsxEshSZ9g7CFP?=
- =?iso-8859-1?Q?gWa+N9NkvYkMJJNXqneRfat/m2hd8YSdBpp9gv+u08QqaNerLiOv7tdCQ2?=
- =?iso-8859-1?Q?rIQCGAYInqqUVKQTUfTXd3ryrWgpZDOqYZ?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a9a187b-6804-4a4d-74cc-08dd4a0aa174
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 19:39:27.6968
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xDbOgUH1H2xht5eGoiMgguOU8McRyV34gRLpnvirib3HBnmLpZiZdB0dythALSMWC8oYrbMuh8ZsBgeCGfR04w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8122
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAhWqmcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDI0MD3Zz85OzUFN2UxKIS3RTz1ORUA9M0Q8tECyWgjoKi1LTMCrBp0bG
+ 1tQCmRutuXQAAAA==
+X-Change-ID: 20250210-locked-dart-d7ece05f19a8
+To: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+ Robin Murphy <robin.murphy@arm.com>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Hector Martin <marcan@marcan.st>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1202; i=alyssa@rosenzweig.io;
+ h=from:subject:message-id; bh=4m41YzXmjKupOvgxXvACISwj81PDpF3Wa8u8owr0LLQ=;
+ b=owEBbQKS/ZANAwAIAf7+UFoK9VgNAcsmYgBnqlYRCsvA2TKU35TcwcTeHEjZDfJWZAbzoZMTu
+ mDScW8XTe6JAjMEAAEIAB0WIQRDXuCbsK8A0B2q9jj+/lBaCvVYDQUCZ6pWEQAKCRD+/lBaCvVY
+ DZvkD/wNBKHL8Sj5ae3cTzcgtwP45qQujSUaDxn1qQgJsm5YqbVs7R3C4ieWiZE/eTMaGUvBG41
+ zCGYUAPMHoknvwcZYAVH1Fz5i2VNgzjebqbKM6YP6ahwftq5IyApgx8kJ9xoY3L5mrqmcFmTe4R
+ dhpKffn9nKce2cxh/pM5hnGom9PsLY0xytF41tMWMooEt4o+CCgW0HVtgCSLgy7Oj8zlJIfGJQj
+ 1IJyc6o2GgnfWAdk8SMurRfy4onuacWbrgmaw+9QRHZxQaVGpISjXR5QnmPROPvpq+Ig6xwBLti
+ Aitm1g6tj1uLHNZfTvuGuj0GUFww4EwVYsjl9NI4y1MzABqxPWVn9qE/aI5SkYB16AXdpmBuVhv
+ Dca0fBpPxEq7DY71fdbKkRXlzNj5YxrMxjDhK29FImvPZpBpH/I/4xGGHhqpSaxQSu3pH2xlUj+
+ 076kKmBWzOGCQkFY+HASbdZMUpI5e9mzPGL899jQ4pjjBVsNutF3GHeQtIztEKTuL4XivNjLLxW
+ 2Auqlc9wa/fmhHHbHLVsZtTyrkF1uvU0ZdxF32JBjWNK2NjuMjyRDVRR5fkR+cmhxs9MzwF4LnI
+ PjZQt3YVlM4vznT39QoOx9iunn84/ib5QoA3GsR5YKyDPM/gluIu2wLVIbbGYnLL/qE4951esln
+ UmyvEHb6RWXN3Zg==
+X-Developer-Key: i=alyssa@rosenzweig.io; a=openpgp;
+ fpr=435EE09BB0AF00D01DAAF638FEFE505A0AF5580D
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Feb 07, 2025 at 10:30:22PM +0100, J. Neuschäfer via B4 Relay wrote:
-> From: "J. Neuschäfer" <j.ne@posteo.net>
->
-> The devicetree bindings for Freescale DMA engines have so far existed as
-> a text file. This patch converts them to YAML, and specifies all the
-> compatible strings currently in use in arch/powerpc/boot/dts.
->
-> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> ---
->
-> V2:
-> - remove unnecessary multiline markers
-> - fix additionalProperties to always be false
-> - add description/maxItems to interrupts
-> - add missing #address-cells/#size-cells properties
-> - convert "Note on DMA channel compatible properties" to YAML by listing
->   fsl,ssi-dma-channel as a valid compatible value
-> - fix property ordering in examples: compatible and reg come first
-> - add missing newlines in examples
-> - trim subject line (remove "bindings")
-> ---
->  .../devicetree/bindings/dma/fsl,elo-dma.yaml       | 140 ++++++++++++++
->  .../devicetree/bindings/dma/fsl,elo3-dma.yaml      | 123 +++++++++++++
->  .../devicetree/bindings/dma/fsl,eloplus-dma.yaml   | 134 ++++++++++++++
->  .../devicetree/bindings/powerpc/fsl/dma.txt        | 204 ---------------------
->  4 files changed, 397 insertions(+), 204 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml b/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..3d8be9973fb98891a73cb701c1f983a63f444837
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml
-> @@ -0,0 +1,140 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/fsl,elo-dma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale Elo DMA Controller
-> +
-> +maintainers:
-> +  - J. Neuschäfer <j.ne@posteo.net>
-> +
-> +description:
-> +  This is a little-endian 4-channel DMA controller, used in Freescale mpc83xx
-> +  series chips such as mpc8315, mpc8349, mpc8379 etc.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - fsl,mpc8313-dma
-> +          - fsl,mpc8315-dma
-> +          - fsl,mpc8323-dma
-> +          - fsl,mpc8347-dma
-> +          - fsl,mpc8349-dma
-> +          - fsl,mpc8360-dma
-> +          - fsl,mpc8377-dma
-> +          - fsl,mpc8378-dma
-> +          - fsl,mpc8379-dma
-> +      - const: fsl,elo-dma
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description:
-> +      DMA General Status Register, i.e. DGSR which contains status for
-> +      all the 4 DMA channels.
+Some DARTs on Apple SoCs are "locked" at boot time, meaning we cannot
+write most of their configuration registers. Currently, we refuse to
+probe locked DARTs and do not include any in the upstream device trees.
+However, the DARTs used for the display controller are locked, so we
+need to handle locked DARTs as a prerequisite for a KMS driver.
 
-needn't maxItems
-items:
-  - description: DMA ...
+This series teaches the iommu/apple-dart driver about locked DARTs,
+preparing for a future upstream display driver. It has been extensively
+tested downstream with our work-in-progress display driver.
 
-> +
-> +  cell-index:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Controller index. 0 for controller @ 0x8100.
-> +
-> +  ranges: true
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: Controller interrupt.
+Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+---
+Alyssa Rosenzweig (5):
+      iommu/dart: Track if the DART is locked
+      iommu/dart: Skip reset for locked DARTs
+      iommu/dart: Set DMA domain for locked DARTs
+      iommu/dart: Reject identity domain for locked DARTs
+      iommu/dart: Assert !locked when configuring
 
-Needn't description because no any additional informaiton.
+ drivers/iommu/apple-dart.c | 47 +++++++++++++++++++++++++++++++---------------
+ 1 file changed, 32 insertions(+), 15 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250210-locked-dart-d7ece05f19a8
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +patternProperties:
-> +  "^dma-channel@.*$":
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    properties:
-> +      compatible:
-> +        oneOf:
-> +          # native DMA channel
-> +          - items:
-> +              - enum:
-> +                  - fsl,mpc8315-dma-channel
-> +                  - fsl,mpc8323-dma-channel
-> +                  - fsl,mpc8347-dma-channel
-> +                  - fsl,mpc8349-dma-channel
-> +                  - fsl,mpc8360-dma-channel
-> +                  - fsl,mpc8377-dma-channel
-> +                  - fsl,mpc8378-dma-channel
-> +                  - fsl,mpc8379-dma-channel
-> +              - const: fsl,elo-dma-channel
-> +
-> +          # audio DMA channel, see fsl,ssi.yaml
-> +          - const: fsl,ssi-dma-channel
-> +
-> +      reg:
-> +        maxItems: 1
-> +
-> +      cell-index:
-> +        description: DMA channel index starts at 0.
-> +
-> +      interrupts:
-> +        maxItems: 1
-> +        description:
-> +          Per-channel interrupt. Only necessary if no controller interrupt has
-> +          been provided.
-> +
-> +additionalProperties: false
+Best regards,
+-- 
+Alyssa Rosenzweig <alyssa@rosenzweig.io>
 
-Need ref to dma-common.yaml?
-
-> +
-> +examples:
-> +  - |
-> +    dma@82a8 {
-> +        compatible = "fsl,mpc8349-dma", "fsl,elo-dma";
-> +        reg = <0x82a8 4>;
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        ranges = <0 0x8100 0x1a4>;
-> +        interrupt-parent = <&ipic>;
-> +        interrupts = <71 8>;
-> +        cell-index = <0>;
-> +
-> +        dma-channel@0 {
-> +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
-> +            reg = <0 0x80>;
-> +            cell-index = <0>;
-> +            interrupt-parent = <&ipic>;
-> +            interrupts = <71 8>;
-
-'8',  use predefine MACRO for irq type.
-
-Frank
-
-> +        };
-> +
-> +        dma-channel@80 {
-> +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
-> +            reg = <0x80 0x80>;
-> +            cell-index = <1>;
-> +            interrupt-parent = <&ipic>;
-> +            interrupts = <71 8>;
-> +        };
-> +
-> +        dma-channel@100 {
-> +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
-> +            reg = <0x100 0x80>;
-> +            cell-index = <2>;
-> +            interrupt-parent = <&ipic>;
-> +            interrupts = <71 8>;
-> +        };
-> +
-> +        dma-channel@180 {
-> +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
-> +            reg = <0x180 0x80>;
-> +            cell-index = <3>;
-> +            interrupt-parent = <&ipic>;
-> +            interrupts = <71 8>;
-> +        };
-> +    };
-> +
-
-...
-
-> --
-> 2.48.0.rc1.219.gb6b6757d772
->
->
