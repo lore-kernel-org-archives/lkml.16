@@ -1,115 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7561DFE0A;
-	Mon, 10 Feb 2025 11:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE77F1DDC14;
+	Mon, 10 Feb 2025 11:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739185341; cv=none; b=LbV7u3Zv+bg7ROKw+JsRFoIJKP4Cm5ClglK+0CT9I0CTqP2ggg1YbglcLB8YDWgqBPjKgn9J+GEQiZBcox5LHudrPouiougQxIFeJSMfDbpIq/OYGenZaed8LqVVVPhHPJyNfiit+9QhK5pDhmGx+FyAFbhymDsKdMU0auMRWsA=
+	t=1739185360; cv=none; b=hZ2pgIwUA/e8fk1kUHeVJUaG9AloOa3xzCrmxNLVAHWj4bSeLd4chG6iZ0SDdddh3rVIRd7tZm1e6DeptcS8iMKbl5jvTvBJaOEqCIX9Ke9FN/uuoF5B9ZZG1wtYYGGc2iE8JTB2XPGDqrWnYkhhaP93LW8boSKggq5QqnJtzNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739185341; c=relaxed/simple;
-	bh=+bQSTsB4Vv/HxWV6R2rogqlCT+gRGmi76Ize4bLvKOQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dq45tyHmK+7RstHfyoaQ7qjYvSj7hHkPb5oAa54oZWYfinkiYX7Yu2u2Ykd7eTX2KKXgqkVJ9ydy6F6A1bbxyBnZXwf1ORmKOosm6tXthritZly4FBsc+cRQPRqV6uJxsyyNOlFKQ6JmBv0sFwaeJgKU89GjKQ9oxHNH0P2nZl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NFi9RzOL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739185360; c=relaxed/simple;
+	bh=FpSi2ATJbEDX8RqHOEft6rzjmMktVXtGigKUzZHWI/w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mKIUI2AZwhVsBEPIVMPijRdBwvnsBa/a3zlQLJ92ov1eFUy+bQ/5pnvEEZZXSBnAncm5C3J6sPUoQpd66h8alHhYnFbjhEGrS65BuPY9JcA78IPMKEGQa7DQHFhaFswtLCyUH/TaR8DbCK0BaCvudvDLCMFpRh+qlYnmJq1mN8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Mw3VgIuE; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NFi9RzOL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1768C4CED1;
-	Mon, 10 Feb 2025 11:02:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739185340;
-	bh=+bQSTsB4Vv/HxWV6R2rogqlCT+gRGmi76Ize4bLvKOQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NFi9RzOL1k+ov+pc74A7K5ye6mCYgMOvRO8KUzA6AkGEMjzA9wG90kVDi/DfMWNdO
-	 gQnsEv6rir1+/d9fl7HS04QqUN4coTk7t6aQMqWInRzJLB8yC6JHfXAhSanHHotMm8
-	 kDSdJd5wfz5PRBaAmWaUOXyUaQeL2sUq2ZWunma8XlYFdl2xoVVATSiHALipP8CT7Y
-	 JJ5AI7Sgk9IecQfVKi/LO4r5oArqXnj1ypTUBp2JG1SyqN6jOC3NPENe/sbK5ZBaLa
-	 yCsb4PqMvUztQFfbhBZxONxMD9GQ5AMHU5wVaIoUG1m0YmQ39MJre4+XPgpllvihTR
-	 0r2zZU+mrsXGA==
-Date: Mon, 10 Feb 2025 16:32:16 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Mohan Kumar D <mkumard@nvidia.com>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com,
-	dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v4 1/2] dmaengine: tegra210-adma: Fix build error due to
- 64-by-32 division
-Message-ID: <Z6ncuLHotCAw61b5@vaman>
-References: <20250205033131.3920801-1-mkumard@nvidia.com>
- <20250205033131.3920801-2-mkumard@nvidia.com>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Mw3VgIuE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=NrDBOPbcZ+135BBVenarKoAQjyTOjCUsDzFGx/AdVUo=; b=Mw3VgIuELoF2iFJh7R0UwDQ8/v
+	Zwa1Qs/zIjMlPjacRyseLQaAc5ToAuDS2We5wQwb8gkTXoFvpLbtj4QhqRgwd7OxMYMSKdYVfouea
+	49wyiBtSXfK/8bBkFCuSA5ltn66s5JnMLTlIcu9TJxMlJRnm6Kphn2Qslc3sjWp/KEgV91BhgRQFj
+	7QfuhZ/1XhZqCFhx1K6P7SGnkTxO/7as+CHBcZI+F2EAXn/O6FRTuFx4eLMU7TJu30B8/TzsS5ghv
+	6wZlSDE3f17eR6p8PiTvhYmK/sY3nYFMy3NxGJJWCPqkFBddM23FhAyWP2QzUgld04hVJz6KZULo5
+	I4cSKvig==;
+Received: from i53875bc0.versanet.de ([83.135.91.192] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1thRYd-00016K-4U; Mon, 10 Feb 2025 12:02:31 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: Val Packett <val@packett.cool>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: clock: rk3188-common: add PCLK_CIF0/PCLK_CIF1
+Date: Mon, 10 Feb 2025 12:02:20 +0100
+Message-ID: <173918533250.1059791.14073641145045801256.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20241205182954.5346-1-val@packett.cool>
+References: <20241205182954.5346-1-val@packett.cool>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205033131.3920801-2-mkumard@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Mohan,
 
-On 05-02-25, 09:01, Mohan Kumar D wrote:
-> Kernel test robot reported the build errors on 32-bit platforms due to
-> plain 64-by-32 division. Following build erros were reported.
-
-Patch should describe the change! Please revise subject to describe that
-and not fix build error... This can come in changelog and below para is
-apt
-
+On Thu, 05 Dec 2024 15:29:35 -0300, Val Packett wrote:
+> Add missing clock IDs for the CIF (Camera InterFace) blocks
+> on the RK3188/RK3066.
 > 
->    "ERROR: modpost: "__udivdi3" [drivers/dma/tegra210-adma.ko] undefined!
->     ld: drivers/dma/tegra210-adma.o: in function `tegra_adma_probe':
->     tegra210-adma.c:(.text+0x12cf): undefined reference to `__udivdi3'"
 > 
-> This can be fixed by using div_u64() for the adma address space
-> 
-> Fixes: 68811c928f88 ("dmaengine: tegra210-adma: Support channel page")
-> Cc: stable@vger.kernel.org
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202412250204.GCQhdKe3-lkp@intel.com/
-> Signed-off-by: Mohan Kumar D <mkumard@nvidia.com>
-> ---
->  drivers/dma/tegra210-adma.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-> index 6896da8ac7ef..a0bd4822ed80 100644
-> --- a/drivers/dma/tegra210-adma.c
-> +++ b/drivers/dma/tegra210-adma.c
-> @@ -887,7 +887,8 @@ static int tegra_adma_probe(struct platform_device *pdev)
->  	const struct tegra_adma_chip_data *cdata;
->  	struct tegra_adma *tdma;
->  	struct resource *res_page, *res_base;
-> -	int ret, i, page_no;
-> +	u64 page_no, page_offset;
-> +	int ret, i;
->  
->  	cdata = of_device_get_match_data(&pdev->dev);
->  	if (!cdata) {
-> @@ -914,10 +915,16 @@ static int tegra_adma_probe(struct platform_device *pdev)
->  
->  		res_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "global");
->  		if (res_base) {
-> -			page_no = (res_page->start - res_base->start) / cdata->ch_base_offset;
-> -			if (page_no <= 0)
-> +			if (WARN_ON(res_page->start <= res_base->start))
->  				return -EINVAL;
-> -			tdma->ch_page_no = page_no - 1;
-> +
-> +			page_offset = res_page->start - res_base->start;
-> +			page_no = div_u64(page_offset, cdata->ch_base_offset);
-> +
-> +			if (WARN_ON(page_no == 0))
-> +				return -EINVAL;
-> +
-> +			tdma->ch_page_no = lower_32_bits(page_no) - 1;
->  			tdma->base_addr = devm_ioremap_resource(&pdev->dev, res_base);
->  			if (IS_ERR(tdma->base_addr))
->  				return PTR_ERR(tdma->base_addr);
-> -- 
-> 2.25.1
 
+Applied, thanks!
+
+[1/2] dt-bindings: clock: rk3188-common: add PCLK_CIF0/PCLK_CIF1
+      commit: 7c9804031626c51d4ddbc8c6e82bbd8496cf6e56
+[2/2] clk: rockchip: use PCLK_CIF0/1 clock IDs on RK3066
+      commit: 4a918309d53f800dd07b94c4a4b1fcdb6289eca5
+
+Best regards,
 -- 
-~Vinod
+Heiko Stuebner <heiko@sntech.de>
