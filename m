@@ -1,116 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF661F540F;
-	Mon, 10 Feb 2025 11:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C841F55E0;
+	Mon, 10 Feb 2025 11:54:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739188441; cv=none; b=O6+3+Kjwl5iH5S+Vd6sWao49OszYAYQwQO8kkMEIyYHKSgtbW0gWB02wr3f9D1KOEKIHHeNMMadDBVz1rA0rejCA3VC8XOoSCGLVPweGtudMLrq8efzFXd9e5o/VLVLWEE2nEcvXzX2tNNdyG9UrZm98egnXqWZe8bO/k0KY4J0=
+	t=1739188443; cv=none; b=VNJvNwu6r9u65VlRsVmYss8GUk5Mx5gYpXY4WRzjJPKTh2P8pv+QJG+eq6TrJ2Lis3XKiEBEpjRRob54lzGyWYDYnbONZn2UfjMtebXZnVoPtqXiSYRdqVeoh7Xpq0yLJMPZDvd5OZRG94yU2a5vmfmiz3pPB/Ibl3LsGyLJUZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739188441; c=relaxed/simple;
-	bh=fwBsOwRN1A/Jp7S+cgWPSpot60MFhxTObVWy6wVXaWY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=PXPu0xqcYtF2QTW0mLXP84wmJeB/yp1Mou66zj40w9RO1h9KyyX9ez+hnN5pwXORJE5s2R7Z69XoBkyDrvnjq8JlUizGCM4S0pYKQ9j0ScJiNCkUKdB5omzNNSIPoIiM5n+FeV2dyCeKP1+dZIPvMdoXiB7d2scS1uR7q9WOa6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P3QKSvvP; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1739188443; c=relaxed/simple;
+	bh=loxoA323gRWBeaQUvoZMWbW5ojYtcSo6KsEv28mcQj8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LoYr1YjykAD2Xj4tenj2Ius+2v1DgwaZIKBUdo+pU5dLURNihYNsrXO/Q7uQ1LSvMAM2GQnKmkzcC/+FIt8pnFUR48p7+pFqzumAR+v+XucIq0he81dl7qO3OmFpcMu9rDv4WSl2XJo9YlGTT2rtBNOSOTdUP8MGlPG2e/D4pco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OmpfbarN; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P3QKSvvP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OmpfbarN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739188440; x=1770724440;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=fwBsOwRN1A/Jp7S+cgWPSpot60MFhxTObVWy6wVXaWY=;
-  b=P3QKSvvPSTE7vHbbLPll4gsnEQMxlMiV/jwdasDJqH+uW5eSxTbRi6Da
-   oir3b79zEYEFTpribBseRMl3JHPSGSoMv68jyWRbezdxQr3R4KsobEMTn
-   /UlpsE6iYiWpug8YzYbfrj5JePdWpyV2jms4Om0XZQUVWucWdmx1tTxXO
-   gCLNFkfYZfvdG+bMF4sQfCgTqyfxOkfNt/nArvv1YrSqZoGHz7pCZiOBs
-   mT+IE+EVBnT+/eySNUbdlrnENcfB/UbOFxtcVjrPAShyrhNCdjldHY3GB
-   UDD4o9vxpYnhayVOAraBEfa12ScvSP3QUZRla3PgCFhnOHUYL1qjBs7Pe
-   Q==;
-X-CSE-ConnectionGUID: Fm5Ke0DgQkeTprdrYyzznA==
-X-CSE-MsgGUID: xs8tzpQ+RumJ4t6+5auusw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="39000496"
+  t=1739188441; x=1770724441;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=loxoA323gRWBeaQUvoZMWbW5ojYtcSo6KsEv28mcQj8=;
+  b=OmpfbarNhY8FCk8K/8wsEhffez5A43Tpz/5X5oSyCG9FWyqNDCCH+kU0
+   x85xvARUh7zFJZ6OVHfiPRRhISmsCHNgC3JpWaXgy57Ak5OO9ELp7NSaS
+   QZGKDbFFeD7f6w0d4d+BwyZxscUNuI1rn1tfXuCXtrOB7u17+IF697s8x
+   9uRDhebRLGO0s4cLTFNS6iHgaz9Opp1rqL6wV1P4hArxWMKGsqlRlXIKB
+   p+hwIn8Onyj8/Oa3yoKR3FkHWCBujbbdlm7xlj6ochxsXkl5DzwLlNtzy
+   vOr2+rieCvxSfh5zVp65m5l3NS1lPPnVlf3N3Y3IJSU26Q6jf4XaAXCNF
+   w==;
+X-CSE-ConnectionGUID: HWu7h9CVTyi50/lV/5tZvQ==
+X-CSE-MsgGUID: BN95nTWMSfK7mhBKF+Tzjw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11340"; a="39452931"
 X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="39000496"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 03:53:59 -0800
-X-CSE-ConnectionGUID: FiJr0id7RuC+tG52n0RUwA==
-X-CSE-MsgGUID: XcnpHrcASLSf1HV2vEzS+Q==
+   d="scan'208";a="39452931"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 03:54:01 -0800
+X-CSE-ConnectionGUID: 4yBIGGmTTJKeFkTSu2aGfg==
+X-CSE-MsgGUID: YlQ0Osd7TNamNRpU7CxyBw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
-   d="scan'208";a="143036069"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.72])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 03:53:57 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 10 Feb 2025 13:53:53 +0200 (EET)
-To: Kurt Borja <kuurtb@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>, 
-    Mario Limonciello <mario.limonciello@amd.com>, 
-    Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10 00/14] platform/x86: alienware-wmi driver rework
-In-Reply-To: <20250207154610.13675-1-kuurtb@gmail.com>
-Message-ID: <fd4524a6-0b1f-d929-61a5-b1ad188c938a@linux.intel.com>
-References: <20250207154610.13675-1-kuurtb@gmail.com>
+   d="scan'208";a="112122342"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa006.jf.intel.com with ESMTP; 10 Feb 2025 03:53:52 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 965CB2F2; Mon, 10 Feb 2025 13:53:50 +0200 (EET)
+Date: Mon, 10 Feb 2025 13:53:50 +0200
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Dave Hansen <dave.hansen@intel.com>, Andy Shevchenko <andy@kernel.org>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, linux-coco@lists.linux.dev, 
+	Sathya Prakash <sathya.prakash@broadcom.com>, Sreekanth Reddy <sreekanth.reddy@broadcom.com>, 
+	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>, Kashyap Desai <kashyap.desai@broadcom.com>, 
+	Sumit Saxena <sumit.saxena@broadcom.com>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Nilesh Javali <njavali@marvell.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Alexey Dobriyan <adobriyan@gmail.com>, 
+	Sven Eckelmann <sven@narfation.org>, Tadeusz Struk <tadeusz.struk@linaro.org>, 
+	kernel test robot <lkp@intel.com>, Erick Archer <erick.archer@outlook.com>, 
+	Dmitry Antipov <dmantipov@yandex.ru>, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
+	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, linux-kernel@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com, 
+	linux-scsi@vger.kernel.org, mpi3mr-linuxdrv.pdl@broadcom.com, 
+	GR-QLogic-Storage-Upstream@marvell.com, linux-hardening@vger.kernel.org, linux-nilfs@vger.kernel.org
+Subject: Re: [PATCH 06/10] x86/tdx: Mark message.str as nonstring
+Message-ID: <75r5wrrxaxlw4ksb4gxpt2njusmr4cyohdut4iyxqxkziv6r54@uf22so3ics4c>
+References: <20250207005832.work.324-kees@kernel.org>
+ <20250207010022.749952-6-kees@kernel.org>
+ <b4f08d43-c421-4e8d-9bbb-c954c4472f8a@intel.com>
+ <202502061835.F57547B@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202502061835.F57547B@keescook>
 
-On Fri, 7 Feb 2025, Kurt Borja wrote:
+On Thu, Feb 06, 2025 at 06:37:27PM -0800, Kees Cook wrote:
+> On Thu, Feb 06, 2025 at 05:12:11PM -0800, Dave Hansen wrote:
+> > On 2/6/25 17:00, Kees Cook wrote:
+> > > +++ b/arch/x86/coco/tdx/tdx.c
+> > > @@ -170,7 +170,7 @@ static void __noreturn tdx_panic(const char *msg)
+> > >  		/* Define register order according to the GHCI */
+> > >  		struct { u64 r14, r15, rbx, rdi, rsi, r8, r9, rdx; };
+> > >  
+> > > -		char str[64];
+> > > +		char str[64] __nonstring;
+> > >  	} message;
+> > 
+> > So, the patch itself makes sense. But it does end up looking kinda
+> > funky. We call it a "str"ing and then annotate it as not a string.
+> 
+> Yeah, this is true all over the place. It's a string, just not a
+> NUL-terminated string: *sob*
+> 
+> > It doesn't have to be done in this patch, but it does seem like we
+> > should probably not be using 'char' and also shouldn't call it anything
+> > close to "string". Maybe:
+> > 
+> >	 	u8 message[64] __nonstring;
+> > 	} message;
+> 
+> message.message ;)
+> 
+> message.chars?
+> message.bytes?
 
-> One more correction. I apologize for the noise!
+.bytes sounds good to me.
 
-Applied to review-ilpo-next. Thanks.
+Anyway:
+
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
 -- 
- i.
-
-> ~ Kurt
-> ---
-> [11/14]
->   - Fix .driver_data of Alienware m16 R1 AMD
-> 
-> v9: https://lore.kernel.org/platform-driver-x86/20250207140743.16822-1-kuurtb@gmail.com/
-> 
-> Kurt Borja (14):
->   platform/x86: alienware-wmi: Add a state container for LED control
->     feature
->   platform/x86: alienware-wmi: Add WMI Drivers
->   platform/x86: alienware-wmi: Add a state container for thermal control
->     methods
->   platform/x86: alienware-wmi: Refactor LED control methods
->   platform/x86: alienware-wmi: Refactor hdmi, amplifier, deepslp methods
->   platform/x86: alienware-wmi: Refactor thermal control methods
->   platform/x86: alienware-wmi: Split DMI table
->   MAINTAINERS: Update ALIENWARE WMI DRIVER entry
->   platform/x86: Rename alienware-wmi.c
->   platform/x86: Add alienware-wmi.h
->   platform/x86: Split the alienware-wmi driver
->   platform/x86: dell: Modify Makefile alignment
->   platform/x86: Update alienware-wmi config entries
->   platform/x86: alienware-wmi: Update header and module information
-> 
->  MAINTAINERS                                   |    4 +-
->  drivers/platform/x86/dell/Kconfig             |   30 +-
->  drivers/platform/x86/dell/Makefile            |   45 +-
->  .../platform/x86/dell/alienware-wmi-base.c    |  491 +++++++
->  .../platform/x86/dell/alienware-wmi-legacy.c  |   95 ++
->  .../platform/x86/dell/alienware-wmi-wmax.c    |  768 ++++++++++
->  drivers/platform/x86/dell/alienware-wmi.c     | 1249 -----------------
->  drivers/platform/x86/dell/alienware-wmi.h     |  117 ++
->  8 files changed, 1523 insertions(+), 1276 deletions(-)
->  create mode 100644 drivers/platform/x86/dell/alienware-wmi-base.c
->  create mode 100644 drivers/platform/x86/dell/alienware-wmi-legacy.c
->  create mode 100644 drivers/platform/x86/dell/alienware-wmi-wmax.c
->  delete mode 100644 drivers/platform/x86/dell/alienware-wmi.c
->  create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
-> 
-> 
-> base-commit: e75394bbf4838857f57b6c5d00f1e56c46cd6c11
-> 
+  Kiryl Shutsemau / Kirill A. Shutemov
