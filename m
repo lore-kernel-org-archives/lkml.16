@@ -1,105 +1,91 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 710FD221DA9
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F023517557;
+	Mon, 10 Feb 2025 13:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739193753; cv=none; b=X9RItJg6weWxtBsM6YSGUULFFuW6+wJvpQG+WXM8vGEdVrKvXvOHctEFN9vO0cF2DKHXdHA1acR60oDLvI1YfptLFD7bCgVwbvxeVpO8xscCGVitkideCaMJAx/mq8Gxq7J3G+vKtZk8ha/G9+aoIagYNzyyNBtFf6A6j45bvvQ=
+	t=1739193831; cv=none; b=Upx0B9JbRoZcOomvVnf0VWGofGc4OaKXOQiOC8yNDEMCLZLGGtjfv0/ChfoiIHm53mVN1bSDRIFgglWk3PvVjpeiluT6VkkSJInz76TbOjit/IGLF9OoWraNnDjFeVrxTT4EytQKuOV0kLv6/nLldxoqULDukvGdEOkLoIar0Vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739193753; c=relaxed/simple;
-	bh=/maDo5bWD+jijserh85sAAmI+TFHqLooi38X/dy4bko=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n4DiQS0JVLb0A5NHdQDYeF/RQHtkHGwe7W8FmlQzWNMGkD/Nxh0oHfKPdJLlK4RgZCKqCv2S8hr7oohyB+/fIqjFfDXF96It5JiVHA6vtnA2QQc3NfZC4N7m9UKiIeCnshWFcYlELgZlUvUAKT8fAdv7rDQmu51cAtr/000aaIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C6761BA8;
-	Mon, 10 Feb 2025 05:22:52 -0800 (PST)
-Received: from [10.1.196.57] (eglon.cambridge.arm.com [10.1.196.57])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 976AB3F58B;
-	Mon, 10 Feb 2025 05:22:27 -0800 (PST)
-Message-ID: <ea62c5fc-0022-40fd-a565-de6d6e8d72da@arm.com>
-Date: Mon, 10 Feb 2025 13:22:26 +0000
+	s=arc-20240116; t=1739193831; c=relaxed/simple;
+	bh=Y3VnAjPcpvtraPLxFVav8kpsZk6gHNCgxWi8l3iTFmE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oC/R30OrjMElrg5VhJUhdGnqbFORqZt1vWCW42BjK38YgpgMm5a3wtGUrf6qvg6Q5rF6GvZIDn6rjzIo1qFsqFaQthjhxATKImhV0b83nhSc+B1nsuDYT7EFL9/znckdJ/0tnr1fTVw4Yrxq3r85bOVUJHrP/1VQh+roTls4Rx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=INz2Pkzd; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="INz2Pkzd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CCA0C4CED1;
+	Mon, 10 Feb 2025 13:23:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739193830;
+	bh=Y3VnAjPcpvtraPLxFVav8kpsZk6gHNCgxWi8l3iTFmE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=INz2PkzdF3dydAUsheI8aeft2xxJ+B7mQw9D0MLNqlf0zXGx26unNWV7PP+NQfzjG
+	 2L2sRIfK2BKLo86SxJmXSi8yNkzko2BHHIuYYeLg9EGE/McmwSXKPsMqg9n+VYhf2k
+	 Cg18HM8JVLu+SXg+7Umx7NTSLOx9TXuZ7UDzlV/TXQfVg9BclrzEWT9eve+FG4AG1p
+	 jo5cHjxM30wtfrvjRQiTf1oquOI8VmHjDp3+U8QNpFBCxY850z8g001ehO7nW1eIO6
+	 DX9FEsHVa5RFEoXF3/P+DCDvqJFM7THfv1lTEoAuj9v+LfNWff+kkc568hsbiHhemr
+	 bWalo2X5W3TdQ==
+Date: Mon, 10 Feb 2025 13:23:44 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Bence =?iso-8859-1?B?Q3Pza+Fz?= <csokas.bence@prolan.hu>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Varshini Rajendran <varshini.rajendran@microchip.com>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>, linux-spi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Alexander Dahl <ada@thorsis.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Subject: Re: [PATCH for-6.14 v4 0/2] Add more devm_ functions to fix PM
+ imbalance in spi/atmel-quadspi.c
+Message-ID: <e0087d48-c8d2-45c5-ab28-78879a07eb22@sirena.org.uk>
+References: <20250210111008.248929-1-csokas.bence@prolan.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 27/40] x86/resctrl: Move thread_throttle_mode_init() to
- be managed by resctrl
-To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Fenghua Yu <fenghua.yu@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
- shameerali.kolothum.thodi@huawei.com,
- D Scott Phillips OS <scott@os.amperecomputing.com>,
- carl@os.amperecomputing.com, lcherian@marvell.com,
- bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
- baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
- Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
- dfustini@baylibre.com, amitsinght@marvell.com,
- David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
- Dave Martin <dave.martin@arm.com>, Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-References: <20241004180347.19985-1-james.morse@arm.com>
- <20241004180347.19985-28-james.morse@arm.com>
- <9ef7e709-7bc8-4bf5-b5b6-960e2eed5cfc@intel.com>
-Content-Language: en-GB
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <9ef7e709-7bc8-4bf5-b5b6-960e2eed5cfc@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-Hi Reinette,
-
-On 23/10/2024 23:59, Reinette Chatre wrote:
-> On 10/4/24 11:03 AM, James Morse wrote:
->> thread_throttle_mode_init() is called from the architecture specific code
->> to make the 'thread_throttle_mode' file visible. The architecture specific
->> code has already set the membw.throttle_mode in the rdt_resource.
->>
->> This doesn't need to be specific to the architecture, the throttle_mode
->> can be used by resctrl to determine if the 'thread_throttle_mode' file
->> should be visible.
->>
->> Call thread_throttle_mode_init() from resctrl_setup(), check the
->> membw.throttle_mode on the MBA resource. This avoids publishing an
->> extra function between the architecture and filesystem code.
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="JSVsPF+JhA2IRy98"
+Content-Disposition: inline
+In-Reply-To: <20250210111008.248929-1-csokas.bence@prolan.hu>
+X-Cookie: A beer delayed is a beer denied.
 
 
->> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> index 3f10e6897daa..596f5f087834 100644
->> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> @@ -2048,10 +2048,15 @@ static struct rftype *rdtgroup_get_rftype_by_name(const char *name)
->>  	return NULL;
->>  }
->>  
->> -void __init thread_throttle_mode_init(void)
->> +static void __init thread_throttle_mode_init(void)
->>  {
->> +	struct rdt_resource *r = resctrl_arch_get_resource(RDT_RESOURCE_MBA);
->>  	struct rftype *rft;
->>  
->> +	if (!r->alloc_capable ||
->> +	    r->membw.throttle_mode == THREAD_THROTTLE_UNDEFINED)
->> +		return;
->> +
-> 
-> The goal from the changelog is to make "thread_throttle_mode_init()" not be specific
-> to an architecture. It does so by checking the value of rdt_resource->resctrl_membw->membw_throttle_mode.
-> I thus expect that as part of being non-architectural it should check this for all
-> resources that initialize resctrl_membw, this includes RDT_RESOURCE_SMBA.
+--JSVsPF+JhA2IRy98
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sure.
+On Mon, Feb 10, 2025 at 12:10:05PM +0100, Bence Cs=F3k=E1s wrote:
 
-Adding this creates the new corner-case where MBA has a throttle_mode but SMBA does not.
-I'll add the corresponding logic to rdt_thread_throttle_mode_show() to print 'undefined'
-to user-space if that ever happens.
+> Bence Cs=F3k=E1s (2):
+>   pm: runtime: Add new devm functions
+>   spi: atmel-quadspi: Fix unbalanced pm_runtime by using devm_ API
 
+Since you've not copied me on the PM patch I'm not sure what the story
+is with getting that merged.  I'd not expect new APIs to be merged as
+part of a fix, but perhaps the APIs are small enough?
 
-Thanks,
+--JSVsPF+JhA2IRy98
+Content-Type: application/pgp-signature; name="signature.asc"
 
-James
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmep/eAACgkQJNaLcl1U
+h9C+PAf7BUluKVL8LhJBrCwdsziAE82+ORU8+jWviBfZfMhtV4lOsA5LDeq9L3rZ
+D4vzWJunEcCFBqVQRYRFUtQTN0BvpqG2ELaEgZzKkkaP9J7PY7aFuNu1YBMwVYhk
+BhkjzKr8RDcpkwaPLY2telDFB0Zb7N1/bzln1Q4QGWFl/f+xBj6W8k/7nQeGXmWb
+hxbsesr6VLxSI8DwKJXZCYQYh1vtd1N8b01WYXfwA8yEJTlQzT+6Qw74F9T3ZbbG
+OE0W8Ukd3VQHi+Z4XYdWrJM+CHqeApw34hR/whxnw9lhWUyVGX6q6CZJKKC01kRu
+1Xi51tdbGeQW10KUD13OJKo83xOTDA==
+=85Yu
+-----END PGP SIGNATURE-----
+
+--JSVsPF+JhA2IRy98--
