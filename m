@@ -1,160 +1,64 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4247025B690
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB1625B668;
+	Mon, 10 Feb 2025 18:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739212017; cv=none; b=r8jrjiJgKfMNAy512YHNhhNPeiuAnBFCBGH99eM9gMHB52eUcRgeI2O6Rd2vs8B7NyPbmhLlJwgMo5N/w+DDyM8wrwAwLEwMzsdDw3fcIYLAM80JtbobBbOBCTtMr11NwgVg0BiQpUb9mrYnv+SmWi/6OOTH3wxHXDgq4hZNV0c=
+	t=1739212062; cv=none; b=Iy1NOLI0Sx1WDv/3lE4UuRmFUGTzCuL9dzYpSkD5OnZTEeBBXoNYplggwulqzQATg8ju0idl8zSAGmFmlME3UXHFoQRNY/khUoFCzgsHgFR3jZ8QFjJA8aStZ6RN4qBpTCpMCj16mKIY6wWaMVPCe5VobJixUiDRn73UEN9LK/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739212017; c=relaxed/simple;
-	bh=ZiUyHi8wpWmhV6mgwoY+8th0sFIVE7wkfNkxP+TA/oE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lbSg98Ht1Yod9/CwEy+k+FLg1bAUC9qCkmZdlqdKdr+sMptrlwR5xxRIT8IlzXqMQ/PkISw06yKGh6B3nfc5ET5uYm5wReMEXn75VpJhqLB8Dyoz5EGqBKbdfYFfspKjijIaZW4gm64SS60gKR82pRE1ediGGCcB8HxZ6pjdZ1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QYaGCe3K; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739212062; c=relaxed/simple;
+	bh=DNhnbZeZrcLJS2dBivfialkE7TBJDfbl3Jv2fvjlxW0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iSWXfsvEVqCa3btqJPC3lff0rkidNuaNZ7jE0GEKpR0bBt31zjkaQGNUPbfrqClPJD/uALS5sGzoV7tWjjv9GF8+PGFGfAAVrfQgsctooA8MtDSrtTglHHqcVIV4G0VkcmE2z+SSgRjXmxZocO20nG3bFGS1YrCVev1dNir6pyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2lr12IR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QYaGCe3K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739212015;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HA223N7bzpD0iurwVL/uuRnSBdx4Qsn+l1XE/28dqsc=;
-	b=QYaGCe3KHCHPdjGUXwysgdJH1/ZqN8bshLTrwFOD+YGhqTlVWFb7N52N/HzM66vkoAgFlY
-	J19tNzEB8d3rnpehZFJdi80G0xTwNLpws+r1srLXAI1aCQYUoqC+0d1WfUBFEpoPertUT8
-	AY4aSJ9u+/qWM6JO6pYvve+1SJWqMWU=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-241-5MuToVNkNWeYh2y3PvzLvg-1; Mon, 10 Feb 2025 13:26:53 -0500
-X-MC-Unique: 5MuToVNkNWeYh2y3PvzLvg-1
-X-Mimecast-MFC-AGG-ID: 5MuToVNkNWeYh2y3PvzLvg
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-438e4e9a53fso35071915e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:26:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739212012; x=1739816812;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HA223N7bzpD0iurwVL/uuRnSBdx4Qsn+l1XE/28dqsc=;
-        b=dYb7k2hOJXNO+nfQNEwNay1maaUO92lWShV04WEyX6BdAOWIkwlq2FCfGN0Xodczhb
-         LKYsqXP/sR8VrZ5P6wGR0jneqRzCphFx1VRWtcTZjTeR1iup+LedAzGjQviidDHyeeZy
-         LL8UCiUe+7BjUqCbTVVtr2Hlf3L5FOTO2jrf+gyfRyECLkRssMO3CL4nAgfW1mbjCg2J
-         rwXZqX3VDXOYW+6HICboRo6HlZGE4Q9dW8OAolapNOhRPgjPkj/aL/Upi4RhS6S0NOrf
-         V3V+QTaQO7IZnT9gPUlprygP2Du0mlKyS41jDBhxxagAIlx0iwDG8EdAE9Xwt3TYm0a+
-         VhPA==
-X-Forwarded-Encrypted: i=1; AJvYcCUj+fT6ODOMAH+7dBqZ7KXmBQPSXV7FzTkCGqBqZBfEEbWUf6v/LiOoGX/b3UQVns7MItRLqhiMfy2SuCg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywsj8oRPXhLmeOYPAod8+3OdrPdNpXGAWQ5aGdZe25jOi0hCS7g
-	7GzQS9h7fgs6NG6+U+/xAPhNsyPLqgw9E0UDMrpTgHHfEFaCHmunwTKe9xAXiFXKIU3IpO0jO0e
-	48LIZAzx3WplSFUlKDYNnV92eNnl+P88ggJhSWr+cC85NwZsnXAaLn+3KTn8ufg==
-X-Gm-Gg: ASbGncsxxOVEghcC935DP0jdN3+LnrTac3FsEix6V2Ab+x2rT3xJonp+w9M0f59JEWu
-	4X4A75/bh7D0YJXUT5IGrodYLB21fl2KnfEcgNdZxqCPyolCPJHcvtX4YcudhRxV0eXXL0veYLZ
-	KB7aSdgWWzqxGa1PYGOZM5CB/Y+bQtXeBfnDHbA8hHG3MnRaw49JWEgNXPPez0TD6Bqk3MZwq6j
-	LUvxnVG7LOqbNHDb7oye/7BEdkxb5VTTZkZHc+5YLUvRoONh0aDU5fmx0wuU4ZTLyWXXxYmnL9k
-	fy+MiPYZ7axeFMDeaI7dsncI79nV7nBodLglziuQPHL7pf8=
-X-Received: by 2002:a05:600c:5026:b0:434:e9ee:c2d with SMTP id 5b1f17b1804b1-439249c6eeamr102512935e9.26.1739212012023;
-        Mon, 10 Feb 2025 10:26:52 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFdXSicXWsQFBmaEUffk1qaLUEnTABUYO99W2RiA4VYZWZefOzltKbNAoDI4virz7wvcWBw1g==
-X-Received: by 2002:a05:600c:5026:b0:434:e9ee:c2d with SMTP id 5b1f17b1804b1-439249c6eeamr102512675e9.26.1739212011660;
-        Mon, 10 Feb 2025 10:26:51 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:59e:9d80:527b:9dff:feef:3874? ([2a01:e0a:59e:9d80:527b:9dff:feef:3874])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd1093bb2sm8205458f8f.40.2025.02.10.10.26.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 10:26:50 -0800 (PST)
-Message-ID: <8da22249-eedb-477b-98d8-f50dee56f1f7@redhat.com>
-Date: Mon, 10 Feb 2025 19:26:48 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2lr12IR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2203C4CED1;
+	Mon, 10 Feb 2025 18:27:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739212062;
+	bh=DNhnbZeZrcLJS2dBivfialkE7TBJDfbl3Jv2fvjlxW0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=N2lr12IRMtEjZj232SFYG9sqavlUsvirg1GVhPU/Pe98pfTOS37zlpoyMcApC91Nn
+	 T+K32oQmGKREwKO5417x4MuKPGT0EZdf02EAt+bkrJdtdhROvsOuiA8igLLQ3Wcr9n
+	 oOSnjW6QDFE4QGUSjkUZ0Xdf9Y4CjzUilUHKTDO8l7oMF7AeTK6NqytQx9ZCZt4ttw
+	 DaHq6ZemviGjRA8nqD2NtfgCphDJ9wLEicFzI/UNIErdk/LEJa7lU9DLY19zEeQcOJ
+	 GLBns0nqEllPIBXiZmFtuXyor/EtltmmZ/siGCHBY+M9zeObfcWwF/CC+i2AXcVX++
+	 nI97ZOmUalvDw==
+From: SeongJae Park <sj@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	damon@lists.linux.dev,
+	kernel-team@meta.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH 0/3] mm/damon/core: fix wrong and/or useless damos_walk() behaviors
+Date: Mon, 10 Feb 2025 10:27:33 -0800
+Message-Id: <20250210182737.134994-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] KVM: arm64: nv: Set ISTATUS for emulated timers, If timer
- expired
-Content-Language: en-US
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>
-Cc: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- kvmarm <kvmarm@lists.linux.dev>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, christoffer.dall@arm.com,
- suzuki.poulose@arm.com, will@kernel.org, catalin.marinas@arm.com,
- coltonlewis@google.com, joey.gouly@arm.com, yuzenghui@huawei.com,
- darren@os.amperecomputing.com, vishnu@os.amperecomputing.com
-References: <bcb4289b-507c-4ea1-afc7-6febd34d88db@redhat.com>
- <86y10osr19.wl-maz@kernel.org>
- <4d443db1-85b1-4071-acd5-3187deb9cb17@redhat.com>
- <2f6b2cb1-3d32-480a-9801-9b993ae74e2d@os.amperecomputing.com>
- <152d262e-641d-4bb1-9656-a13e049d62c4@redhat.com>
- <86h661wje4.wl-maz@kernel.org>
- <4a9fbdd9-ad23-44bc-8ba5-399f08068db4@redhat.com>
- <86cygpwfy0.wl-maz@kernel.org>
- <b22d5916-8b55-43bc-a256-2136d66ad25f@redhat.com>
- <86frkptzr6.wl-maz@kernel.org> <Z6ZMdv8jJUvYwQzT@linux.dev>
- <86bjvdtxb5.wl-maz@kernel.org>
-From: Eric Auger <eauger@redhat.com>
-In-Reply-To: <86bjvdtxb5.wl-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Marc,
+damos_walk() can finish working earlier or later than expected, and
+start earlier than practical.  First two behaviors are clearly wrong
+behavior (doesn't follow the documentation) and all three behaviors are
+only making the feature useless.  Fix those.
 
-On 2/7/25 7:38 PM, Marc Zyngier wrote:
-> On Fri, 07 Feb 2025 18:09:58 +0000,
-> Oliver Upton <oliver.upton@linux.dev> wrote:
->>
->> Hey,
->>
->> On Fri, Feb 07, 2025 at 05:45:33PM +0000, Marc Zyngier wrote:
->>> I found at least one issue that could fail the migration. Before the
->>> VM starts running, we limit the feature set to the subset we actually
->>> support with NV.
->>>
->>> By doing this, we also change the value of IDreg fields that are not
->>> writable, because they describe features that we don't support.
->>> Obviously, that fails on restore.
->>>
->>> I need to have a think...
->>
->> We spoke about this a while ago (and I forgot til now), but I was
->> wondering if we could use vCPU feature flags to describe NV, including
->> the selection between FEAT_E2H0 and FEAT_VHE.
->>
->> I think this might match userspace expectations a bit more closely where
->> the state of the ID registers after init gives the actual feature set
->> supported by the VM.
-> 
-> I'm not sure that's enough. Let me give you an example:
-> 
-> My host has FEAT_XNX, described in ID_AA64MMFR1_EL1.XNX. For whatever
-> reason, we don't allow this field to be written to, even out of NV
-> context. This is odd, because for an EL1 VM, this field means nothing
-> at all.
-So the curprit fields for me look like
+SeongJae Park (3):
+  mm/damon/core: unset damos->walk_completed after confimed set
+  mm/damon/core: do not call damos_walk_control->walk() if walk is
+    completed
+  mm/damon/core: do damos walking in entire regions granularity
 
-- ID_AA64MMFR1_EL1.XNX
-- ID_AA64DFR0_EL1.DoubleLock
-- ID_AA64PFR0_EL1.RAS
+ mm/damon/core.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-This is still based on your nv-next branch from Jan 9
-https://github.com/eauger/linux/tree/nv_next_jan9_2025
 
-Eric
-> 
-> However, we don't yet support FEAT_XNX with NV (it requires some extra
-> surgery in the S2 walker, in the S2 shadowing code and in AT).
-> 
-> How would you manage this field if you had a vcpu flag saying E2H0 or
-> not? I don't think it helps, at least not in that particular case. It
-> may help for some things, but not all.
-> 
-> It feels that we need to define the field limit (and what is writable
-> or not) based on the NV/!NV support, and maybe E2H0/VHE as well.
-> 
-> This is getting complicated...
-> 
-> 	M.
-> 
-
+base-commit: 920155d8318aaec9f7c227e617bc7b399dec502e
+-- 
+2.39.5
