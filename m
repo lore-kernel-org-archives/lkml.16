@@ -1,192 +1,154 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B621F3BA8;
-	Mon, 10 Feb 2025 11:48:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EFB01F3BA8
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739188104; cv=none; b=CnifUVPmZT9K+poJnib97LH3Zx4OyZIuwVZu+9zqov/SEulWjN0Sc399FcTK8bko8eSmmX3G8zNzLhCyFEGJd/0O1KDfrbAbkE6TRMtarbnDsqkZdUJ0qa5GIwOk6MKu9RB+3wEEkqcg5qYFLlVzVAHbaC2QV36HqJjHPGwFqiU=
+	t=1739188143; cv=none; b=amKH+LDMG+mEz87CcR6LbNJGxoQg0mgkvRl7my1VDL/eyXv5zXu7Pc795LNdoiud3B5/2iaLl8KhoeI0QamsnqBRQfsQVdzexjztP+eJl18WFB/PT0c08u+iqlMWkDqn20JyiY7Vl0JVSqjffoSOomDNbRReNtS9JZfDxG8IMH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739188104; c=relaxed/simple;
-	bh=H8zuGLErLeAAhpDEAvecFpXqYtOdttIFW4IPa0zwnA4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FdrlaoqjiEzJyEzHhckvmqYqykzf4cfrew5dZkkhVySGfVa8SEIDOxU+hcfAZ/6hpTttVFyUIGwK0ni6vji5FQhF0mlEOKwOCslwKhxBUnBU47J0SpzuxjLefiNSb+NGLMcdgSCl/Zyg7K2BHVtGapvN5EZxzwXUYf5sYe2pXmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GNhTTGYZ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GNhTTGYZ"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51A8wtIs024312;
-	Mon, 10 Feb 2025 11:48:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	G6RYGd5+0vaN5MIhswtJQEfS1LTYnDS9+Lc/lQmvCk4=; b=GNhTTGYZb2RpBKXi
-	jtdRVf2XzA6N9JYIy/h5ZyeSBc8KZjUMZ6438UDE7/CX7zOA8F1REpV1TuyQboe6
-	vh9Ht7sDMc7x0c0zQa61+qF6Le1KHJlL9VfPgus1pjyC8dPnHKK58b76tUqIP1na
-	TJIQlxuapy7Jpo5Vtz8anfin8DT5RaY3L18qPM8Z6f02A7jkhjyac7Bg52sBuTLL
-	p58fRqhIS2Lq7HzWHxZLQ0EAtQ5wZmL/SoSUZWZJGW4NRnyqPLMMMo7RwfLpfzvY
-	fZdTMDO4Z3zcO4I2zI054+znsTqFwMS0N+nWtrRd8LDgOfMrApodMB+RBRzGg4Y6
-	FYWF/A==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0dxm7w5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 11:48:17 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51ABmHUm004454
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 11:48:17 GMT
-Received: from [10.152.201.53] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Feb
- 2025 03:48:13 -0800
-Message-ID: <7995fc50-b13a-85ab-cb3a-782720cb1353@quicinc.com>
-Date: Mon, 10 Feb 2025 17:18:01 +0530
+	s=arc-20240116; t=1739188143; c=relaxed/simple;
+	bh=agNU50GObrX2tseacOlJ8ke2fRnXg5Qt4qTZibWZMys=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TP7pUoP5M0vRzo5bhVd0FOZlNkOg8l4TDZ4Ba94SBvayTXjzJ58nMuI73Eu8yOE4Iw0ums6BrtANTGNTprfBGUziJZ8ERM/Ak3aHm9ADF1lHRDLhfLpXERSJ+HKDH5aWh5ywIg/opo1stI0FgCA9jt8tUOBmmWDclIUw4Fdxz40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D1B41424;
+	Mon, 10 Feb 2025 03:49:22 -0800 (PST)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C4A63F5A1;
+	Mon, 10 Feb 2025 03:48:53 -0800 (PST)
+Date: Mon, 10 Feb 2025 11:48:51 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oleg@redhat.com,
+	sstabellini@kernel.org, tglx@linutronix.de, peterz@infradead.org,
+	luto@kernel.org, mingo@redhat.com, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	vschneid@redhat.com, kees@kernel.org, wad@chromium.org,
+	akpm@linux-foundation.org, samitolvanen@google.com,
+	masahiroy@kernel.org, hca@linux.ibm.com, aliceryhl@google.com,
+	rppt@kernel.org, xur@google.com, paulmck@kernel.org, arnd@arndb.de,
+	mbenes@suse.cz, puranjay@kernel.org, pcc@google.com,
+	ardb@kernel.org, sudeep.holla@arm.com, guohanjun@huawei.com,
+	rafael@kernel.org, liuwei09@cestc.cn, dwmw@amazon.co.uk,
+	Jonathan.Cameron@huawei.com, liaochang1@huawei.com,
+	kristina.martsenko@arm.com, ptosi@google.com, broonie@kernel.org,
+	thiago.bauermann@linaro.org, kevin.brodsky@arm.com,
+	joey.gouly@arm.com, liuyuntao12@huawei.com, leobras@redhat.com,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	xen-devel@lists.xenproject.org
+Subject: Re: [PATCH -next v5 06/22] arm64: entry: Expand the
+ need_irq_preemption() macro ahead
+Message-ID: <Z6nno7db_6iOYkT2@J2N7QTR9R3>
+References: <20241206101744.4161990-1-ruanjinjie@huawei.com>
+ <20241206101744.4161990-7-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] dmaengine: qcom: bam_dma: Avoid accessing BAM_REVISION on
- remote BAM
-To: Stephan Gerhold <stephan.gerhold@linaro.org>,
-        Bjorn Andersson
-	<bjorn.andersson@oss.qualcomm.com>
-CC: Vinod Koul <vkoul@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>,
-        Georgi Djakov <djakov@kernel.org>
-References: <20250207-bam-read-fix-v1-1-027975cf1a04@oss.qualcomm.com>
- <Z6m8btwhJ9q4RjB6@linaro.org>
-Content-Language: en-US
-From: Md Sadre Alam <quic_mdalam@quicinc.com>
-In-Reply-To: <Z6m8btwhJ9q4RjB6@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: HuPL1iLivtZ5sLyWZ4N900-XbCN7Il4j
-X-Proofpoint-ORIG-GUID: HuPL1iLivtZ5sLyWZ4N900-XbCN7Il4j
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_07,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 bulkscore=0 clxscore=1015 adultscore=0
- lowpriorityscore=0 impostorscore=0 malwarescore=0 mlxscore=0 phishscore=0
- suspectscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502100099
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241206101744.4161990-7-ruanjinjie@huawei.com>
 
-
-
-On 2/10/2025 2:14 PM, Stephan Gerhold wrote:
-> On Fri, Feb 07, 2025 at 12:17:33PM -0800, Bjorn Andersson wrote:
->> Commit '57a7138d0627 ("dmaengine: qcom: bam_dma: Avoid writing
->> unavailable register")' made this read unconditional, in order to
->> identify if the instance is BAM-NDP or BAM-Lite.
->> But the BAM_REVISION register is not accessible on remotely managed BAM
->> instances and attempts to access it causes the system to crash.
->>
->> Move the access back to be conditional and expand the checks that was
->> introduced to restore the old behavior when no revision information is
->> available.
->>
->> Fixes: 57a7138d0627 ("dmaengine: qcom: bam_dma: Avoid writing unavailable register")
->> Reported-by: Georgi Djakov <djakov@kernel.org>
->> Closes: https://lore.kernel.org/lkml/9ef3daa8-cdb1-49f2-8d19-a72d6210ff3a@kernel.org/
->> Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+On Fri, Dec 06, 2024 at 06:17:28PM +0800, Jinjie Ruan wrote:
+> The generic entry has the same logic as need_irq_preemption()
+> macro and use a helper function to check other resched condition.
 > 
-> This patch fixes the most critical regression (the bus hang), but the
-> in_range(..., BAM_NDP) checks are also wrong. They do not consider the
-> plain "BAM" type where the register is apparently also available. The
-> check should be !in_range(..., BAM_LITE) instead to fix this.
-> 
-> I mentioned this twice to Md Sadre Alam [1, 2], but a fix was
-> unfortunately never sent for that part of the regression.
+> In preparation for moving arm64 over to the generic entry code,
+> check and expand need_irq_preemption() ahead and extract arm64 resched
+> check code to a helper function.
 
-I apologize for the delay. I was attending to a family member's medical 
-emergency and couldn't address this sooner. I will test and post a new 
-revision as soon as possible.
+I think this is just saying that the goal is to align the structure of
+the code with raw_irqentry_exit_cond_resched() from the generic entry
+code.
 
-Thanks
-Alam
+It'd be a bit clearer to say that, and to do this *before* moving the
+call into __exit_to_kernel_mode().
+
+Mark.
 
 > 
-> I think we should take Caleb's patch and revert the entire patch for the
-> 6.14 cycle. There are several incorrect assumptions in the original
-> patch, it will be easier to review a fixed version with the full diff,
-> rather than looking at incremental fixups.
+> No functional changes.
 > 
-> On a somewhat related note, I'm working on a patch series for bam_dma to
-> clean up the handling of remotely controlled BAMs. It will make it more
-> clear when it's safe to access BAM registers and when not, and should
-> allow reading the revision also for remotely controlled BAMs. This would
-> avoid the need for all these if (!bdev->bam_revision) checks.
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>  arch/arm64/include/asm/preempt.h |  1 +
+>  arch/arm64/kernel/entry-common.c | 28 +++++++++++++++++-----------
+>  2 files changed, 18 insertions(+), 11 deletions(-)
 > 
-> Thanks,
-> Stephan
+> diff --git a/arch/arm64/include/asm/preempt.h b/arch/arm64/include/asm/preempt.h
+> index 0159b625cc7f..d0f93385bd85 100644
+> --- a/arch/arm64/include/asm/preempt.h
+> +++ b/arch/arm64/include/asm/preempt.h
+> @@ -85,6 +85,7 @@ static inline bool should_resched(int preempt_offset)
+>  void preempt_schedule(void);
+>  void preempt_schedule_notrace(void);
+>  
+> +void raw_irqentry_exit_cond_resched(void);
+>  #ifdef CONFIG_PREEMPT_DYNAMIC
+>  
+>  DECLARE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
+> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
+> index efd1a990d138..80b47ca02db2 100644
+> --- a/arch/arm64/kernel/entry-common.c
+> +++ b/arch/arm64/kernel/entry-common.c
+> @@ -77,17 +77,10 @@ static noinstr irqentry_state_t enter_from_kernel_mode(struct pt_regs *regs)
+>  
+>  #ifdef CONFIG_PREEMPT_DYNAMIC
+>  DEFINE_STATIC_KEY_TRUE(sk_dynamic_irqentry_exit_cond_resched);
+> -#define need_irq_preemption() \
+> -	(static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
+> -#else
+> -#define need_irq_preemption()	(IS_ENABLED(CONFIG_PREEMPTION))
+>  #endif
+>  
+>  static inline bool arm64_need_resched(void)
+>  {
+> -	if (!need_irq_preemption())
+> -		return false;
+> -
+>  	/*
+>  	 * DAIF.DA are cleared at the start of IRQ/FIQ handling, and when GIC
+>  	 * priority masking is used the GIC irqchip driver will clear DAIF.IF
+> @@ -111,6 +104,22 @@ static inline bool arm64_need_resched(void)
+>  	return true;
+>  }
+>  
+> +void raw_irqentry_exit_cond_resched(void)
+> +{
+> +#ifdef CONFIG_PREEMPT_DYNAMIC
+> +	if (!static_branch_unlikely(&sk_dynamic_irqentry_exit_cond_resched))
+> +		return;
+> +#else
+> +	if (!IS_ENABLED(CONFIG_PREEMPTION))
+> +		return;
+> +#endif
+> +
+> +	if (!preempt_count()) {
+> +		if (need_resched() && arm64_need_resched())
+> +			preempt_schedule_irq();
+> +	}
+> +}
+> +
+>  /*
+>   * Handle IRQ/context state management when exiting to kernel mode.
+>   * After this function returns it is not safe to call regular kernel code,
+> @@ -133,10 +142,7 @@ static __always_inline void __exit_to_kernel_mode(struct pt_regs *regs,
+>  			return;
+>  		}
+>  
+> -		if (!preempt_count() && need_resched()) {
+> -			if (arm64_need_resched())
+> -				preempt_schedule_irq();
+> -		}
+> +		raw_irqentry_exit_cond_resched();
+>  
+>  		trace_hardirqs_on();
+>  	} else {
+> -- 
+> 2.34.1
 > 
-> [1]: https://lore.kernel.org/linux-arm-msm/Z4D2jQNNW94qGIlv@linaro.org/
-> [2]: https://lore.kernel.org/linux-arm-msm/Z4_U19_QyH2RJvKW@linaro.org/
-> 
->> ---
->>   drivers/dma/qcom/bam_dma.c | 15 ++++++++-------
->>   1 file changed, 8 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
->> index c14557efd577..d42d913492a8 100644
->> --- a/drivers/dma/qcom/bam_dma.c
->> +++ b/drivers/dma/qcom/bam_dma.c
->> @@ -445,8 +445,8 @@ static void bam_reset(struct bam_device *bdev)
->>   	writel_relaxed(val, bam_addr(bdev, 0, BAM_CTRL));
->>   
->>   	/* set descriptor threshold, start with 4 bytes */
->> -	if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
->> -		     BAM_NDP_REVISION_END))
->> +	if (!bdev->bam_revision ||
->> +	    in_range(bdev->bam_revision, BAM_NDP_REVISION_START, BAM_NDP_REVISION_END))
->>   		writel_relaxed(DEFAULT_CNT_THRSHLD,
->>   			       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
->>   
->> @@ -1006,8 +1006,8 @@ static void bam_apply_new_config(struct bam_chan *bchan,
->>   			maxburst = bchan->slave.src_maxburst;
->>   		else
->>   			maxburst = bchan->slave.dst_maxburst;
->> -		if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
->> -			     BAM_NDP_REVISION_END))
->> +		if (!bdev->bam_revision ||
->> +		    in_range(bdev->bam_revision, BAM_NDP_REVISION_START, BAM_NDP_REVISION_END))
->>   			writel_relaxed(maxburst,
->>   				       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
->>   	}
->> @@ -1199,11 +1199,12 @@ static int bam_init(struct bam_device *bdev)
->>   	u32 val;
->>   
->>   	/* read revision and configuration information */
->> -	val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
->> -	if (!bdev->num_ees)
->> +	if (!bdev->num_ees) {
->> +		val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
->>   		bdev->num_ees = (val >> NUM_EES_SHIFT) & NUM_EES_MASK;
->>   
->> -	bdev->bam_revision = val & REVISION_MASK;
->> +		bdev->bam_revision = val & REVISION_MASK;
->> +	}
->>   
->>   	/* check that configured EE is within range */
->>   	if (bdev->ee >= bdev->num_ees)
->>
->> ---
->> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
->> change-id: 20250207-bam-read-fix-2b31297d3fa1
->>
->> Best regards,
->> -- 
->> Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
->>
