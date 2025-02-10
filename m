@@ -1,104 +1,111 @@
-Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA50325B668;
-	Mon, 10 Feb 2025 18:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E52625B668;
+	Mon, 10 Feb 2025 18:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739212243; cv=none; b=VpGchlwxDG8eQCLxLGg2qya8kSBsbNqPeya8JOCjRi8/jGdgOKFJEaxjmFAEX2y+pIkS7boMSPn8zHSMzTMwLFu+FfOev0d4pVbk0MSzo8jK0MWQmtPDB+f4X0N8ahof85f39RBA3NQE47u4lsonJV4e8K5Wwa3D8dN7SaKBP/I=
+	t=1739212249; cv=none; b=ICbZJaJZKOTKwPBnvm557xT1Uij+e/8xohTFORwZ/JM4lZMEjh8sH2aBxcSbQLP3yWDNI/BX9poLGFPbswr9nu9x0rQJjHiYezuNdYXUyPwFS2z5qZlwf59X1tu5k5mP5WcqsvPliCrNH6Mz429v382yoDJqsnqEVRsAl/1Rx0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739212243; c=relaxed/simple;
-	bh=NpUbqGXrMouY2GQCefFrHJh2xQhsDigKdnZDZh70UiQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LfAsVI/8q47CRGMFvAh+0qxrxMyfDF+JBmqmp5tde/y0/MMpbV+pC+z2Pehy6DBy4udElvtjdS/XdaJONPaqO4QTAyhsUN3xdMEi3z1L810nqTpUs9AYvSI4dbvUuZFNAX4eagU3OgB4+HC5brLR6WH3YcF78x0t7M3PAZhBk/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=Rj/CP3px; arc=none smtp.client-ip=199.89.1.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1739212249; c=relaxed/simple;
+	bh=vlbv0FSFlLbSmcwi0qSd9c4OoNOyoJGUgwl16y4Fj8k=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=F2cZDSOqy5UrMrWngEG1BnwAANdue9+ivOJQcFxUMAVS9vgSB02FS0sRPIY5jJ9+nk4ComR/KLws1zi9YZiGvrv+JmBRGB2yZA486H0qYNwaGZyDCIWsz8zZym+3Ur/oByuiQVoKmrb+NC4Xxfsy05xvx5XzaHQNKIdIqvtvn9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=PxFnHkEK; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="Rj/CP3px"
-Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4YsCn70DPQzlgTxL;
-	Mon, 10 Feb 2025 18:30:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1739212232; x=1741804233; bh=rvjXTLcQM3fw49GIJv8Wb69W
-	nr2JbJyCdGw5e7OGk9g=; b=Rj/CP3pxeFjJyhOywyYi0inr0oyXYvb1xlmTUyDZ
-	o5ZjJ6UgzpiaFTE952nBVcB9IH0LSHlOmUdppFyUAVnZH0BTOIfDnR6mvQh5WzOK
-	6TxfiUKnUrpZSjIFlzYVL0twZLlGKBpPdJIc4uGIh5xzqmTDameZQaQnRzUuQjj6
-	ClibSEwY6zXy/Y3qGE6KkAFihrm9FbkiOboLt/XSUIoXCFNL5sYFnVrAk3eh7uOe
-	T6jLGrv/+XcF6YxfINOarbyHMbxm5bzGL5zoqTld2VrctDZLp+aTrx1m0NeofDcu
-	X6C39ImuQkD1dyv+miL0yVH8S03iaLEwX9z1y+OjVrGntQ==
-X-Virus-Scanned: by MailRoute
-Received: from 009.lax.mailroute.net ([127.0.0.1])
- by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id pbDLEYCiXs9e; Mon, 10 Feb 2025 18:30:32 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="PxFnHkEK"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 0D1D5411A1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1739212247; bh=vlbv0FSFlLbSmcwi0qSd9c4OoNOyoJGUgwl16y4Fj8k=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=PxFnHkEKSZrBYbzFpew/UljRdQUkTOX+qKIpKomAZlWSWpxide9l4c2bxkwdMwNWF
+	 sWHrza4QeD17HbEJ1GVDgKEHsQ4J5fGszAooe0rUMV8SpHN2AnJh5s+msApTtSueTq
+	 kldvsJD8z29V82iGnnNsIvc0IpF/n5AUf1V7EwE15mOEBZuS5tkWNvoYAelEzc0LtF
+	 9A/zQoFU1JnwlyetVPR6L3frzztdtk0XDVlSCAuejySkEp8NEq0ylr0UsJ5g1a1OZE
+	 Vo03pIkLZ7JlMiGrr1nPdfsokPnHNxFSVgl0KcZB06VxFdKHkJg6ydIZAOvztgFrBm
+	 SzjyXR5yVqF2g==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4YsCn412T9zlgTwM;
-	Mon, 10 Feb 2025 18:30:31 +0000 (UTC)
-Message-ID: <01d47263-50a1-4626-ad34-446996ac970e@acm.org>
-Date: Mon, 10 Feb 2025 10:30:31 -0800
+	by ms.lwn.net (Postfix) with ESMTPSA id 0D1D5411A1;
+	Mon, 10 Feb 2025 18:30:46 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Linux Doc Mailing
+ List <linux-doc@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Mauro Carvalho Chehab
+ <mchehab+huawei@kernel.org>, linux-kernel@vger.kernel.org, "Guilherme G.
+ Piccoli" <gpiccoli@igalia.com>, Chao Yu <mchehab+huawei@kernel.org>,
+ Jaegeuk Kim <mchehab+huawei@kernel.org>, James Clark
+ <james.clark@linaro.org>, Johannes Berg <johannes@sipsolutions.net>, Mike
+ Leach <mike.leach@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Tony Luck <tony.luck@intel.com>, bpf@vger.kernel.org,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-hardening@vger.kernel.org,
+ linux-wireless@vger.kernel.org
+Subject: Re: [PATCH 00/27] Improve ABI documentation generation
+In-Reply-To: <cover.1739182025.git.mchehab+huawei@kernel.org>
+References: <cover.1739182025.git.mchehab+huawei@kernel.org>
+Date: Mon, 10 Feb 2025 11:30:46 -0700
+Message-ID: <87h651zm7d.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] scsi: ufs: critical health condition
-To: Avri Altman <avri.altman@wdc.com>,
- "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250210135814.50783-1-avri.altman@wdc.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250210135814.50783-1-avri.altman@wdc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 2/10/25 5:58 AM, Avri Altman wrote:
-> To handle this new `sysfs` entry, either `udev` rules or some other
-> polling code can be configured to monitor changes in the
-> `critical_health` attribute.
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-Hmm ... I'm not aware of any support in udevd to poll on sysfs
-attributes? I think that calling select(), poll() or epoll() is required
-to wait for a sysfs_notify() call.
+> Hi Jon/Greg,
+>
+> This series replace get_abi.pl with a Python version.
+>
+> I originally started it due to some issues I noticed when searching for
+> ABI symbols. While I could just go ahead and fix the already existing
+> script, I noticed that the script maintainance didn't have much care over
+> all those years, probably because it is easier to find Python programmers
+> those days.
+>
+> Also, the code is complex and was not using modules or classes and
+> were using lots of global variables.
+>
+> So, I decided to rewrite it in Python. I started with a manual conversion
+> for each function. Yet, to avoid future maintainership issues, I opted to
+> divide the main code on three classes, each on a sepaparate file.
+>
+> Just like the original RFC, I opted to keep the Sphinx kernel-abi module
+> on three different phases:
+>
+> - call get_abi.py as an exec file;
+> - import AbiParser on a minimal integration scenario;
+> - cleanup the code to avoid needing to parse line numbers from the text.
+>
+> This way, if something goes wrong, it would be easier to just revert any
+> offending patches, It also provides a better rationale about what each
+> logical change is doing.
+>
+> The initial patches on this series do some preparation work and
+> cleans some ABI symbol bugs that lack ":" delimiter.
+>
+> I opted to place on this series the Sphinx and Python version updates.
+>
+> I still have ~10 patches here with additional cleanups, from the original
+> series I sent as RFC but let's get the main changes merged first.
 
-> +Description:	Report the number of times a critical health event has been
-> +		reported by a UFS device. further insight into the specific
+OK, I have applied this set - it seems to work for me, though it does
+lead to some changes in the organization of
+Documentation/admin-guide/abi.html in the output.
 
-further -> Further?
+It would be nice if, eventually, we could put the README link up at the
+top rather than under "ABI file", or even just include its contents
+there directly.
 
-> +static ssize_t critical_health_show(struct device *dev,
-> +				    struct device_attribute *attr, char *buf)
-> +{
-> +	struct ufs_hba *hba = dev_get_drvdata(dev);
-> +
-> +	return sysfs_emit(buf, "%d\n", hba->critical_health);
-> +}
-
-Now that the data type of hba->critical_health has been changed from
-boolean into integer, should its name perhaps be changed into
-hba->critical_health_count?
-
-> @@ -1130,6 +1131,9 @@ struct ufs_hba {
->   	struct delayed_work ufs_rtc_update_work;
->   	struct pm_qos_request pm_qos_req;
->   	bool pm_qos_enabled;
-> +
-> +	/* HEALTH_CRITICAL exception reported */
-> +	int critical_health;
->   };
-
-Please leave out the inline comment since @critical_health already
-has a kernel-doc comment.
+Anyway, let's see how this goes :)
 
 Thanks,
 
-Bart.
+jon
