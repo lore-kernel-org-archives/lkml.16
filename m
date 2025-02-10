@@ -1,167 +1,83 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C001B256C99
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:33:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F78256C99
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739208793; cv=none; b=I/YnopUmVlVaoAW7sjJH72nSDATYL8D/gB+FgV7DdsEajAWvXq8dqGHJWnoi+5S0y9fkiSNWI6kNnYGfKnl9THW3rIuR+IUyBeYb58P/K5qEqNfe32Pm+3qd9OTq2a0IHGWCe5vi8SqE/8QN4mKAdcySWEYi7ilGwCkNCRiuUSk=
+	t=1739208842; cv=none; b=dAT7fNXWArldsQnZhwkWxzhil52sFDbNrUw4JpI4w87B1uvBVFz3A5vYZkaTAwi38tbpFSY1G2XdD5At3VzqJyDOvISZye4K18nmwL+jg7LarNDpHMyGseNZfL3h4tghziU0YEuwjfiHA851LtH5lNPK49ZBfIHagXoHO0Yp6FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739208793; c=relaxed/simple;
-	bh=0OyYBLRDwLt/cJAndEW9LQGL1foRqsUDW/Fg+WVSk+w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m4uK8Je+Sp0C3sT24H1ZvO/ZU5mrVvIHsi7JzA7xk6xWYHBEcTJB/80NKCUIhcOgZszs37mj7xotKQHZRkKOkkpT8f7DudGPDxAfKP7sbh5/LfiSnH40uTo6cM24EwbJFdOPuJ2MIZJpKVGgasnYkRIrq/f+IFU8UVjkp6HLTgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tHiPL5Aw; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1739208842; c=relaxed/simple;
+	bh=Dwz4xCakIkAuh4e1iV5qPtqFU/VlMOx4YqQ1IKXKAQw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wt9a9Iqpel60bmZk6h+yT6z8WE2qzqxEuEsk8fpwNsKR3Od9MydhPuWpo+6R7mEBG6pIRgCIcENeB+loANoUXC2B6ckM4x15m3GP9YBXC30UYTl4jhvWZ4TrHufGjgkJf8nSIlEKXpVBVTjk5GFFDnsY9VN8qx+MmCghlxilFN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=phEDPBmu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tHiPL5Aw"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AB362O016388;
-	Mon, 10 Feb 2025 17:32:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=kYyrFW
-	YbzGdMrqABOt2hlSYtOyka49+cboKRHeEWiRU=; b=tHiPL5Awh120VosYGzER6Z
-	19B0U8TW48reM0F3f1hjCA80wk9fWTYJ/B01vbmi4Lo/D6mGAfmzVGKr4qT9wojt
-	OFgu3SWKBF84uFhp2zUW0V26LGvk/U4tIqtBwIa7NhvmlQ8EyK+/BU++Io0sTt9N
-	orN54TrDo+X5F/9g7F+ldj1iwXNabPfpMFJwZXJ3FzE4R1lgnjWzmfskP3yeuegH
-	78hUKxp+fZJJwAiZETDiJJ4oSkWstd+82V1aGE2OyAb2RYNCyu9u5qK79HZnlhCU
-	RykX4Lhx6Rg7QXJhOgXgXAa/ztCWVVAcrLKa3xw8OgKxYU26Zw1EkFppumemjDTg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44q5gacrt5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 17:32:22 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51AHGnjS027352;
-	Mon, 10 Feb 2025 17:32:22 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44q5gacrsx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 17:32:22 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51AHJE3A028735;
-	Mon, 10 Feb 2025 17:32:21 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44pma1f2dc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 17:32:21 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51AHWJiJ29295064
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Feb 2025 17:32:19 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5E16320043;
-	Mon, 10 Feb 2025 17:32:19 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4664520040;
-	Mon, 10 Feb 2025 17:32:15 +0000 (GMT)
-Received: from [9.39.21.225] (unknown [9.39.21.225])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 10 Feb 2025 17:32:15 +0000 (GMT)
-Message-ID: <f4d1805b-e28d-4371-a7bb-cca55efe4854@linux.ibm.com>
-Date: Mon, 10 Feb 2025 23:02:12 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="phEDPBmu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0377DC4CED1;
+	Mon, 10 Feb 2025 17:34:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739208842;
+	bh=Dwz4xCakIkAuh4e1iV5qPtqFU/VlMOx4YqQ1IKXKAQw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=phEDPBmuq0dZLsodIoSpvEck6PCcnG4upanoXbIuwvJLbYu1v+hlJvSQU0WlHzB3z
+	 yBwahYAMZGFEqnNVr+9h4PMaIkSNPSy9UfNSGDSSrrnAQz1XSFxwEVaYCO2KAohH0+
+	 mP8cPTPOZxPkQcgnFMn17Tg3/eFeK/ma6bmUtGTJwCELQ8cJ3AsxLivC4LwFrfiY2y
+	 KzUcpeBEr2+Osy2xeE+XoThqEp7AIlTjC3DHcMcvB/qE7rlV/yaXj8GRsem09kucIH
+	 3i75EruPXQe12eDUwgTyF+7iy+GjGfkGezV8X7mH2F3bV//dXWX295PwrNwdiFdOTT
+	 h9EiOKmnGnvAA==
+Date: Mon, 10 Feb 2025 17:33:58 +0000
+From: Lee Jones <lee@kernel.org>
+To: Chenyuan Yang <chenyuan0y@gmail.com>
+Cc: lkundrak@v3.sk, linux-kernel@vger.kernel.org, zijie98@gmail.com
+Subject: Re: [PATCH] mfd: ene-kb3930: Fix potential NULL pointer dereference
+Message-ID: <20250210173358.GI1868108@google.com>
+References: <20250120190720.322926-1-chenyuan0y@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/9] powerpc: Use preempt_model_str().
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-        linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-        Ben Segall <bsegall@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-        Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <vschneid@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20250203141632.440554-1-bigeasy@linutronix.de>
- <20250203141632.440554-6-bigeasy@linutronix.de>
- <65c6f60d-bb52-48bd-a02c-87ffd2a915d4@csgroup.eu>
- <20250203160103.9DikC9FJ@linutronix.de>
- <51999b8e-61c0-48b7-b744-c83d39e7f311@csgroup.eu>
- <20250204082223.6iNyq_KR@linutronix.de>
- <7b51f7de-8e4b-4766-85ca-dee24832c693@linux.ibm.com>
- <20250210105949.b9PKqiw7@linutronix.de>
- <20250210142327.bCujH28L@linutronix.de>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <20250210142327.bCujH28L@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Ez6cL0fY6xcj2Nh_3tBWUALCegRkBZNy
-X-Proofpoint-ORIG-GUID: SJVbL5SwI_xYJLjBpcKAs46Hby7dReIy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_09,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 clxscore=1015 suspectscore=0 mlxlogscore=999 spamscore=0
- lowpriorityscore=0 phishscore=0 malwarescore=0 bulkscore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502100143
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250120190720.322926-1-chenyuan0y@gmail.com>
 
+On Mon, 20 Jan 2025, Chenyuan Yang wrote:
 
-
-On 2/10/25 19:53, Sebastian Andrzej Siewior wrote:
-> On 2025-02-10 11:59:50 [+0100], To Shrikanth Hegde wrote:
->> Thank you for noticing. I did remove it on other architectures, I
->> somehow missed it here. Will remove it from from the arch code.
+> The off_gpios could be NULL. Add missing check in the kb3930_probe().
+> This is similar to the issue fixed in commit
+> b1ba8bcb2d1ffce11b308ce166c9cc28d989e3b9 ("backlight: hx8357:Fix potential NULL pointer dereference").
 > 
-> This is what I have for powerpc now. I'm going to repost the series,
-> currently waiting for arm/x86.
-> 
-> -------->8-----------
-> 
-> Subject: [PATCH] powerpc: Rely on generic printing of preemption model.
-> 
-> After the first printk in __die() there is show_regs() ->
-> show_regs_print_info() which prints the current
-> preemption model.
-> 
-> Remove the preempion model from the arch code.
-> 
-> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Cc: Naveen N Rao <naveen@kernel.org>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Fixes: ede6b2d1dfc0 ("mfd: ene-kb3930: Add driver for ENE KB3930 Embedded Controller")
+> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
 > ---
->   arch/powerpc/kernel/traps.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/mfd/ene-kb3930.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
-> index edf5cabe5dfdb..cb8e9357383e9 100644
-> --- a/arch/powerpc/kernel/traps.c
-> +++ b/arch/powerpc/kernel/traps.c
-> @@ -263,10 +263,9 @@ static int __die(const char *str, struct pt_regs *regs, long err)
->   {
->   	printk("Oops: %s, sig: %ld [#%d]\n", str, err, ++die_counter);
->   
-> -	printk("%s PAGE_SIZE=%luK%s%s%s%s%s%s %s\n",
-> +	printk("%s PAGE_SIZE=%luK%s %s%s%s%s %s\n",
->   	       IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
->   	       PAGE_SIZE / 1024, get_mmu_str(),
-> -	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
->   	       IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
->   	       IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=" __stringify(NR_CPUS)) : "",
->   	       debug_pagealloc_enabled() ? " DEBUG_PAGEALLOC" : "",
+> diff --git a/drivers/mfd/ene-kb3930.c b/drivers/mfd/ene-kb3930.c
+> index fa0ad2f14a39..60824d847bf0 100644
+> --- a/drivers/mfd/ene-kb3930.c
+> +++ b/drivers/mfd/ene-kb3930.c
+> @@ -162,6 +162,8 @@ static int kb3930_probe(struct i2c_client *client)
+>  			devm_gpiod_get_array_optional(dev, "off", GPIOD_IN);
+>  		if (IS_ERR(ddata->off_gpios))
+>  			return PTR_ERR(ddata->off_gpios);
+> +		if (!ddata->off_gpios)
+> +			return -ENOMEM;
 
-Looks good to me.
+I don't see many other call sites checking for NULL - why is this
+different?
 
-Reviewed-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+What about IS_ERR_OR_NULL() instead?
+
+>  		if (ddata->off_gpios->ndescs < 2) {
+>  			dev_err(dev, "invalid off-gpios property\n");
+>  			return -EINVAL;
+> -- 
+> 2.34.1
+> 
+
+-- 
+Lee Jones [李琼斯]
