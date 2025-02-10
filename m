@@ -1,174 +1,79 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2046.outbound.protection.outlook.com [40.107.220.46])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768BF2586DE;
-	Mon, 10 Feb 2025 22:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739228059; cv=fail; b=QeKsU3ojF+NbsJSqBLqqs/2PAf0e3eq7pKauQS5qn0AxWp/oBZ/TIdxhe6A4HNAv/xtxWajQvfZJc9lQKIo3ZaydActg7NxchvFgD5iHCG/fGs1PNguWZwV503+Yn+/wey45OjF56lOuKe1o2uUePTMPZ3ELDhSYIyu2D1P8VsU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739228059; c=relaxed/simple;
-	bh=gVeO3gJAHftMMLylj9jB7IO3TwAHnGDEnqulCtADPso=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZVbrgaHXFZe5InyaiyQ8kdzKAaBrr3dF622VIuqmHDlZI/jykpMickO7ROXQGGaCo1SfGoUANhoQif42KmTxRio2kT1OzH6d1XMl4Nx4aWBzQaZ45KLci9RetDWJaiofmZAZ1Az5lKRWNYviGD7eq53tqETxyMNaY2b9v0HpGPw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pNgqVZ4X; arc=fail smtp.client-ip=40.107.220.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0994F2586DC;
+	Mon, 10 Feb 2025 22:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739228074; cv=none; b=UtH7OZYz5hZTUGToFnQgSvanad8NKM7oHyFviUZl9raMw4B3T0aZcJ7uiQ/Oa0QdDHk9IH9I+BMXgW3F11a6RavAin9siPMOMGuz8RjNUF8PzviJfA30B2n0gBY7jJh/rnuUT9yHDuAqoi8+s7XollRlzTBQwM8/Na8JcNEKhxc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739228074; c=relaxed/simple;
+	bh=Q8RgZGfu6/4fLSoxxxA7fP+5VfBEWk/q/XN4oDjBeUM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=pTuUAAJN7Z/Dg1baItVaDyhrETIpLNLLJrUAzw5ecZ5cEcXNT9FKmcdkowxDKWfr2AcIWCcDDEus+us72fBfzZy3ln/PxLeqI7sJXy8dLQhNNX6tLkxp/WVt21Jj93b37AkU+D634aF1stqjgUe+a92KdLjkUKg5+VmlexoItV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GyRI67Ln; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pNgqVZ4X"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Qujy4xQ6DWm/vVmyZOIIJMFCiwHJ9108TEVPzUychTbb2DPtytOtsGKl1vuMLMOB6Z52R8xn0PYgZsgCitAgByjfY4EZo8rCx+YUUydKVdEwGQ1zjUi8MAEvYzmMju/OfPY4gpaAUXHgAg15r49wBhKQd4psuGWclnEXNcDkN6b3XjTyO2lP8zFBYjkVge4gzc3QCnHg2fWJFtm1LKjfCVqmmIoKn6s36oDt+v7bfF5bo9cssoI2HKX5pFqULEPPf6s2F3WcOovwfplb8NGWTsZKkhPllb+kkZTS/ovDxiftPlvVtq7keBwgeybai2YUe53EebXOIlBAJG0V+iUN1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8OUtDsoxi1l32N8JJ4wfFMXlbzClj4sCYDy2iJqhnLA=;
- b=mJ955lDiOLy45owvuR6kjdVjxeWmBhTZHdpJCkR9VQG6q6pVnMg9fzpIgY+lVCkqt5Zql+S7u5M/M54YWMoEtW4FZIHi//tmSU664/G/CWCY96CfTdzQHKr6UQ6jZpGnuLtfIXE7nZArtHMKE5CgiJCtfh9xrhmMRhcgitkS1/cyNKTjwJ5u+XtqtB/7wAjsMNvW2j6OOabFBRr7RAa64Ne4fdI/jkQhF5/BgFS850qW0qpDO/NmgJmVSKDSH4Ec6IoE1V+CexgJIiMi06J8Seisr+35ZgZRHPPiqXsUFros8zvabCj+aVS0tz7/kWPCxp/eBmR9ai0t8bHsxkGk+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8OUtDsoxi1l32N8JJ4wfFMXlbzClj4sCYDy2iJqhnLA=;
- b=pNgqVZ4XEA54w7sNKDJSzs661H2pTMv7wzOQGKBxusTHuxxY4ZZdEogrzfBAG2FKRQ98OlqlwckSKYNZtFw/W0A7oC0pDZzsL9P/quLZ4dvkzxTN7HQjVepoFQiIVEPaUG4/1gfDCkv3P4XRMuHhxNo/HbXa/iu82TvPtc/1QFE=
-Received: from DS0PR17CA0004.namprd17.prod.outlook.com (2603:10b6:8:191::12)
- by SJ0PR12MB7066.namprd12.prod.outlook.com (2603:10b6:a03:4ae::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Mon, 10 Feb
- 2025 22:54:14 +0000
-Received: from DS1PEPF00017090.namprd03.prod.outlook.com
- (2603:10b6:8:191:cafe::ab) by DS0PR17CA0004.outlook.office365.com
- (2603:10b6:8:191::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.31 via Frontend Transport; Mon,
- 10 Feb 2025 22:54:14 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS1PEPF00017090.mail.protection.outlook.com (10.167.17.132) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8445.10 via Frontend Transport; Mon, 10 Feb 2025 22:54:13 +0000
-Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 10 Feb
- 2025 16:54:12 -0600
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-To: <seanjc@google.com>, <pbonzini@redhat.com>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <thomas.lendacky@amd.com>,
-	<john.allen@amd.com>, <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-	<joro@8bytes.org>, <suravee.suthikulpanit@amd.com>, <will@kernel.org>,
-	<robin.murphy@arm.com>
-CC: <michael.roth@amd.com>, <dionnaglaze@google.com>, <nikunj@amd.com>,
-	<ardb@kernel.org>, <kevinloughlin@google.com>, <Neeraj.Upadhyay@amd.com>,
-	<vasant.hegde@amd.com>, <Stable@vger.kernel.org>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-	<linux-coco@lists.linux.dev>, <iommu@lists.linux.dev>
-Subject: [PATCH v4 2/3] KVM: SVM: Ensure PSP module is initialized if KVM module is built-in
-Date: Mon, 10 Feb 2025 22:54:02 +0000
-Message-ID: <f78ddb64087df27e7bcb1ae0ab53f55aa0804fab.1739226950.git.ashish.kalra@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1739226950.git.ashish.kalra@amd.com>
-References: <cover.1739226950.git.ashish.kalra@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GyRI67Ln"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40726C4CED1;
+	Mon, 10 Feb 2025 22:54:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739228073;
+	bh=Q8RgZGfu6/4fLSoxxxA7fP+5VfBEWk/q/XN4oDjBeUM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=GyRI67Ln2Dzs/4iqHaa2+qLV2lwLd+ycNlXoprGS2D7x75zoWVqAZINFrL2cUxuLJ
+	 0uMH2SEcWV1rIPBLg+6dUi/i1rPfqIbTuolR2qrxzih7nGDXXsV/1EsMwbA3wp2q3U
+	 IdRIRBqzE96rklMThPyc3h73wun7BOrqcQZjPVbAJyPbrhgDL2YIunKdQ+hC9ji44c
+	 QwKJMB6JuXurHcu4JeNKX1gMEIs4zMxC7EGW6vuWHkYCMRkG/7oXdxyyo5ZoxHQxpH
+	 ZXylddAQVs1Z7PhAEH+xS9h+Lu82wJBw8FAj32bpNpD5yL5k7Fq4kAyeNUk5pLafQN
+	 h455LvLZsRCwg==
+Date: Mon, 10 Feb 2025 16:54:31 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: cros-qcom-dts-watchers@chromium.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com,
+	quic_mrana@quicinc.com, quic_vpernami@quicinc.com,
+	mmareddy@quicinc.com
+Subject: Re: [PATCH v4 4/4] PCI: qcom: Enable ECAM feature
+Message-ID: <20250210225431.GA21989@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF00017090:EE_|SJ0PR12MB7066:EE_
-X-MS-Office365-Filtering-Correlation-Id: e5cac247-8543-4bcc-0e7a-08dd4a25d714
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|36860700013|7416014|82310400026|921020|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?IzKa6+cMUKaqz0WgH4HFWeuyyoDcuIOgI85l30ZdQ8dYCyDLg0ysdvTB7wRM?=
- =?us-ascii?Q?SDWEtUCbnAEEjR2TgteosIoTbGv7bTSiz99peyoTZSbiR+yvQ6rMfjcQU/WL?=
- =?us-ascii?Q?GG0MxUs91WrOOY8ak8oVHiQ/eyM7WiN/zEL7QvjskcTeNbNDoDBZD7i8t23w?=
- =?us-ascii?Q?DgJA8J2s2/WgbJBK6ij1tgmgbRS6Hjs8jFSZF1qpPb5wqRzYcF3FjTSlv8aO?=
- =?us-ascii?Q?rzw2ybAhP8WoQcmmp5YEvMPYkwj6aQbGuSfMi0EgTXTwFk7XnGhEdt8Em6pQ?=
- =?us-ascii?Q?AAcISUeg/ftY8vMn9RWh3hwb2msZagSYAp4/i4O8zKQaW2cpPmkcx8QdXS5c?=
- =?us-ascii?Q?6TriJ1loH4Po6EUwy1PyLfQZXCsFM/RZJ5VIvEMG1M7O/aVgNia5c18Szd0U?=
- =?us-ascii?Q?2s3jB7BwkjwrAhO5eii+Hdgizj8pDhFfxQnenkVIoo5rsy3BKola74hs6yvf?=
- =?us-ascii?Q?9Z8lHIryVNWD1pEK1is/WV5oIpt0tfPeZg65AHeGadvMxpO6OhVz7mWcXORg?=
- =?us-ascii?Q?Fbw50CnmD8rF4NKet/mdqtPpHEA0+xhs2l/P6zB7aC1emhER0eQYGpQc9/z7?=
- =?us-ascii?Q?Yp7CHgvWTN3c0pud/wqmdlBK8yS3rviecW3qfJAgnZF8HFyEbw7+Q/MrILON?=
- =?us-ascii?Q?y/H1vns2cnULhtvkXUwgZeMWLzyK7pY3aGF7wWOWb9DfVrF8ku62G4ckHnr4?=
- =?us-ascii?Q?P85kQpSclXve8njetP1mm6LeQTLltQOTjc8ybt09til94wb0GGhTdofhUq0n?=
- =?us-ascii?Q?IqwS0MqqEoIE3pSAXYRy7y36uofphLaKkKUC6FtdtyBZ/77bB4U6LddttyNp?=
- =?us-ascii?Q?Sx92qrsaH3M+1eB+UZO9ymI8chJWNrSNkbNEHRDCOlbGz2389ke4aKb+/4Y/?=
- =?us-ascii?Q?XG7tHMWoqRGRElP2FxzTZ8fxLH0KUHChjHy+r9KJ6M65CINiu+WACpRwjfbt?=
- =?us-ascii?Q?JCNCYC+B6je2XiLMFRLDo7BLY2h+cxJz8Mzw6HcgTd9YQ8AWs3UcIzSiieiv?=
- =?us-ascii?Q?jFXShb7Sox1HFmH4Z9iCE6piv+3OvRI26/xJEI1mo2yHGIX1SFXakFPNeU38?=
- =?us-ascii?Q?21eYwU1wieWFBCwoj9kWZ48CcLN3hNj2YRSBpJclYHeFpMCCH7Na4kKYOh+i?=
- =?us-ascii?Q?0nY9LhisiSDO0WVFSKFpTTEUtZ6TqXJCF2yzMAzBZQSjInlVWLkZasKbfRyg?=
- =?us-ascii?Q?yqOTgMAxOGy+4jm5wxdYWIsyEMK5Anj1juTyMvOMU9ScnJEp5IA/sEOkJh6r?=
- =?us-ascii?Q?cdtkzGKBM2u5rEbcFt2cJ9iNY2A6U9MPCIH8mUIr5rIeHEPxRKl2Y0+hEBgv?=
- =?us-ascii?Q?meMhSslurYhxKdDG6MNW5WiS1SK3bylw14z5GtvqaEYxoRVAbU3mldxFRcq+?=
- =?us-ascii?Q?DzNzIO3rCslJm/rzEMSj2vn33mxlOhFAKoK6s83ti4pWtWIAdBJ3Wnn1URC5?=
- =?us-ascii?Q?TTYahEWgrflxXHjGLpT7vX03HHehaj5EREFztc+rIoZCemkXfhKApXEEptfo?=
- =?us-ascii?Q?Ckhe3FukS7SC3w15y5PdJYRTKCMHOMolY0X6?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(7416014)(82310400026)(921020)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 22:54:13.8045
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5cac247-8543-4bcc-0e7a-08dd4a25d714
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF00017090.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7066
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207-ecam_v4-v4-4-94b5d5ec5017@oss.qualcomm.com>
 
-From: Sean Christopherson <seanjc@google.com>
+On Fri, Feb 07, 2025 at 04:58:59AM +0530, Krishna Chaitanya Chundru wrote:
+> The ELBI registers falls after the DBI space, PARF_SLV_DBI_ELBI register
+> gives us the offset from which ELBI starts. so use this offset and cfg
+> win to map these regions instead of doing the ioremap again.
 
-The kernel's initcall infrastructure lacks the ability to express
-dependencies between initcalls, whereas the modules infrastructure
-automatically handles dependencies via symbol loading.  Ensure the
-PSP SEV driver is initialized before proceeding in sev_hardware_setup()
-if KVM is built-in as the dependency isn't handled by the initcall
-infrastructure.
+> +	/* Set the ECAM base */
+> +	writel_relaxed(lower_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE);
+> +	writel_relaxed(upper_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE_HI);
+> +
+> +	/*
+> +	 * The only device on root bus is the Root Port. Any access other than that
+> +	 * should not go out of the link and should return all F's. Since the iATU
+> +	 * is configured for the buses which starts after root bus, block the transactions
+> +	 * starting from function 1 of the root bus to the end of the root bus (i.e from
+> +	 * dbi_base + 4kb to dbi_base + 1MB) from going outside the link.
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- arch/x86/kvm/svm/sev.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+99% of this file fits in 80 columns.  Wrap comments to do the same.
 
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index a2a794c32050..0dbb25442ec1 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -2972,6 +2972,16 @@ void __init sev_hardware_setup(void)
- 	    WARN_ON_ONCE(!boot_cpu_has(X86_FEATURE_FLUSHBYASID)))
- 		goto out;
- 
-+	/*
-+	 * The kernel's initcall infrastructure lacks the ability to express
-+	 * dependencies between initcalls, whereas the modules infrastructure
-+	 * automatically handles dependencies via symbol loading.  Ensure the
-+	 * PSP SEV driver is initialized before proceeding if KVM is built-in,
-+	 * as the dependency isn't handled by the initcall infrastructure.
-+	 */
-+	if (IS_BUILTIN(CONFIG_KVM_AMD) && sev_module_init())
-+		goto out;
-+
- 	/* Retrieve SEV CPUID information */
- 	cpuid(0x8000001f, &eax, &ebx, &ecx, &edx);
- 
--- 
-2.34.1
-
+The text doesn't quite make sense because accesses to devices on the
+root bus *never* involve a link.  Only Root Ports have links and the
+links all lead to buses other than the root bus.
