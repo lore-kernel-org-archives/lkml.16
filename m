@@ -1,204 +1,216 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA2CC125;
-	Mon, 10 Feb 2025 01:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A24C125;
+	Mon, 10 Feb 2025 01:20:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739150428; cv=none; b=VLzZMzsfkdP+PAV7fLf88jx91oPhXaD9B9awUi8do18ctYrzCcjm2VZLSr20xbDgaLjOtGqLcZ+YECJHNMdgXvUJqftgpJ6WURDcRDMPSBkgK9hzFU4Y9ckc5fKoEuqf1xScEms0i4bSmBWKSezJJTViePCv91USBjLdqpHB+54=
+	t=1739150453; cv=none; b=cAr73iM8bIuXGY3ypI1zDcri5VgGeoSdzr6fQApu6zKptb0HJx8zFKC+GLrDK2X+QVFq37STQao8LzF8crTqjzXFkaql1P9guNFbVCwhJiuyZfsrOUGQEodtVVmCbPpoS2KXe5RbBqa6MplXFBTxTg435P2JM2ST65+X8kHpzXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739150428; c=relaxed/simple;
-	bh=6vm4jw6wg9RdZqCVO4c/MR5vasxo/EaDKybb5J4L5A0=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=ErxwaYqR5tt2wVL0MTQnCrGEIgt7P7S9LFbYz3+/RxZioKigOCTnn1Uq/Tofa3QYkFFal0CiQBbKCXq3JRlyDG1XcBJS94kZ3n7yiZ8TARzeMm7Zfx49J9Mskk4RyJXS1AtF8wnfLGI3fsPumEkslyRWRoNnVUCwberXIR8J3Q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GVvg4m6O; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RbVKTVRS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GVvg4m6O; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RbVKTVRS; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GVvg4m6O";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RbVKTVRS";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GVvg4m6O";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RbVKTVRS"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	s=arc-20240116; t=1739150453; c=relaxed/simple;
+	bh=HauamiRseX3S+D21Kz6KhuAZxJpvWIxawOXeyRR6tLY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qCoiGkgFxKAXLvbM+6vwEx5gkY0ZTjXGy0/GAJWthGhg3FaiM+BZzj3YshCgE/5iKwzUfkUc/sdigBWd+XU+KOqLxkJ6+bphRgQeWNLUjVi14QlNpD1XxY52y4dAH40/oot7DoHHOvzgm2UVhibHtsgdUMIRz8adALXD6SbpQU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [180.172.76.141])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2B82921102;
-	Mon, 10 Feb 2025 01:20:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739150425; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kNHkLWb8LhlVxwfN71tab7fM7Ihwg66qglqKNi6jmFg=;
-	b=GVvg4m6Oi+5Nf73A3l4nea6uMla+aAQMPpYPlG8SWuZ7oRQepMR8R9VmmtKyM73xUIh4X8
-	470qmg9kUKy1tnAru1Wrl9o4Tv+dVCprIlazwc2A4YvAKbYdNOP86tNqxDPENlx58ONqeW
-	oPeqOtzaGLovzCA95Uyfv78PZECyg7k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739150425;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kNHkLWb8LhlVxwfN71tab7fM7Ihwg66qglqKNi6jmFg=;
-	b=RbVKTVRSav7aiYPr8v8nupZZlw+Bdw+DsmKbdWDU8HAdGceAvEXvrFVD8+hjZxcIymRl2T
-	CXfKlMNq8eRzBqDQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739150425; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kNHkLWb8LhlVxwfN71tab7fM7Ihwg66qglqKNi6jmFg=;
-	b=GVvg4m6Oi+5Nf73A3l4nea6uMla+aAQMPpYPlG8SWuZ7oRQepMR8R9VmmtKyM73xUIh4X8
-	470qmg9kUKy1tnAru1Wrl9o4Tv+dVCprIlazwc2A4YvAKbYdNOP86tNqxDPENlx58ONqeW
-	oPeqOtzaGLovzCA95Uyfv78PZECyg7k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739150425;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kNHkLWb8LhlVxwfN71tab7fM7Ihwg66qglqKNi6jmFg=;
-	b=RbVKTVRSav7aiYPr8v8nupZZlw+Bdw+DsmKbdWDU8HAdGceAvEXvrFVD8+hjZxcIymRl2T
-	CXfKlMNq8eRzBqDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7B2BF13AA4;
-	Mon, 10 Feb 2025 01:20:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gKKtC1JUqWcyNgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 10 Feb 2025 01:20:18 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 51582343115;
+	Mon, 10 Feb 2025 01:20:50 +0000 (UTC)
+Date: Mon, 10 Feb 2025 01:20:45 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Chen Wang <unicorn_wang@outlook.com>
+Cc: Inochi Amaoto <inochiama@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+	Jisheng Zhang <jszhang@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH 3/4] riscv: dts: sophgo: add reset generator for Sophgo
+ CV1800 series SoC
+Message-ID: <20250210012045-GYA12775@gentoo>
+References: <20250209122936.2338821-1-inochiama@gmail.com>
+ <20250209122936.2338821-4-inochiama@gmail.com>
+ <BMXPR01MB24406BB0EA039CEBDEEBBDC8FEF22@BMXPR01MB2440.INDPRD01.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Kent Overstreet" <kent.overstreet@linux.dev>
-Cc: "Christian Brauner" <brauner@kernel.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "Namjae Jeon" <linkinjeon@kernel.org>, "Steve French" <sfrench@samba.org>,
- "Sergey Senozhatsky" <senozhatsky@chromium.org>,
- "Tom Talpey" <tom@talpey.com>, "Paul Moore" <paul@paul-moore.com>,
- "Eric Paris" <eparis@redhat.com>, linux-kernel@vger.kernel.org,
- linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, audit@vger.kernel.org
-Subject: Re: [PATCH 1/2] VFS: change kern_path_locked() and
- user_path_locked_at() to never return negative dentry
-In-reply-to: <4bxqnnpfau5sq2h7oexvrvazqqpn55e7vsjlj44epdcas2clzf@424354eeo6dl>
-References:
- <>, <4bxqnnpfau5sq2h7oexvrvazqqpn55e7vsjlj44epdcas2clzf@424354eeo6dl>
-Date: Mon, 10 Feb 2025 12:20:15 +1100
-Message-id: <173915041509.22054.12649815796390080222@noble.neil.brown.name>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BMXPR01MB24406BB0EA039CEBDEEBBDC8FEF22@BMXPR01MB2440.INDPRD01.PROD.OUTLOOK.COM>
 
-On Sat, 08 Feb 2025, Kent Overstreet wrote:
-> On Fri, Feb 07, 2025 at 06:30:00PM +1100, NeilBrown wrote:
-> > On Fri, 07 Feb 2025, Kent Overstreet wrote:
-> > > On Fri, Feb 07, 2025 at 05:34:23PM +1100, NeilBrown wrote:
-> > > > On Fri, 07 Feb 2025, Kent Overstreet wrote:
-> > > > > On Fri, Feb 07, 2025 at 03:53:52PM +1100, NeilBrown wrote:
-> > > > > > Do you think there could be a problem with changing the error ret=
-urned
-> > > > > > in this circumstance? i.e. if you try to destroy a subvolume with=
- a
-> > > > > > non-existant name on a different filesystem could getting -ENOENT
-> > > > > > instead of -EXDEV be noticed?
-> > > > >=20
-> > > > > -EXDEV is the standard error code for "we're crossing a filesystem
-> > > > > boundary and we can't or aren't supposed to be", so no, let's not c=
-hange
-> > > > > that.
-> > > > >=20
-> > > >=20
-> > > > OK.  As bcachefs is the only user of user_path_locked_at() it shouldn=
-'t
-> > > > be too hard.
-> > >=20
-> > > Hang on, why does that require keeping user_path_locked_at()? Just
-> > > compare i_sb...
-> > >=20
-> >=20
-> > I changed user_path_locked_at() to not return a dentry at all when the
-> > full path couldn't be found.  If there is no dentry, then there is no
-> > ->d_sb.
-> > (if there was an ->i_sb, there would be an inode and this all wouldn't
-> > be an issue).
-> >=20
-> > To recap: the difference happens if the path DOESN'T exist but the
-> > parent DOES exist on a DIFFERENT filesystem.  It is very much a corner
-> > case and the error code shouldn't matter.  But I had to ask...
->=20
-> Ahh...
->=20
-> Well, if I've scanned the series correctly (sorry, we're on different
-> timezones and I haven't had much caffeine yet) I hope you don't have to
-> keep that function just for bcachefs - but I do think the error code is
-> important.
->=20
-> Userspace getting -ENOENT and reporting -ENOENT to the user will
-> inevitably lead to head banging frustration by someone, somewhere, when
-> they're trying to delete something and the system is tell them it
-> doesn't exist when they can see it very much does exist, right there :)
-> the more precise error code is a very helpful cue...
->=20
+Hi Chen:
 
-???
-You will only get -ENOENT if there is no ent.  There is no question of a
-confusing error message.
-If you ask for a non-exist name on the correct filesystem, you get -ENOENT
-If you ask for an existing name of the wrong filesystem, you get -EXDEV
-That all works as expected and always has.
+On 08:55 Mon 10 Feb     , Chen Wang wrote:
+> 
+> On 2025/2/9 20:29, Inochi Amaoto wrote:
+> > Add reset generator node for all CV18XX series SoC.
+> >
+> > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> > ---
+> >   arch/riscv/boot/dts/sophgo/cv18xx-reset.h | 98 +++++++++++++++++++++++
+> 
+> Why it's not include/dt-bindings/reset/sophgo,cv18xx-reset.h?
+> 
+then first need to answer if it's really a binding, there are some disucssions
+I personally favor Inochi's way here
 
-But what if you ask for a non-existing name in a directory on the
-wrong filesystem? =20
-The code you originally wrote in 42d237320e9817a9 would return
--ENOENT because that it what user_path_at() would return.
-But using user_path_at() is "wrong" because it doesn't lock the directory
-so ->d_parent is not guaranteed to be stable.
-Al fixed that in bbe6a7c899e7f265c using user_path_locked_at(), but
-that doesn't check for a negative dentry so Al added a check to return
--ENOENT, but that was added *after* the test that returns -EXDEV.
+https://lore.kernel.org/linux-devicetree/c7e243e3-3f61-4d63-8727-3837838bdfcc@linaro.org
+https://lore.kernel.org/linux-devicetree/c088e01c-0714-82be-8347-6140daf56640@linaro.org/
 
-So now if you call subvolume_destroy on a non-existing name in a
-directory on the wrong filesystem, you get -EXDEV.  I think that is
-a bit weird but not a lot weird.
-My patch will change it back to -ENOENT - the way you originally wrote
-it.
+> Regards,
+> 
+> Chen
+> 
+> >   arch/riscv/boot/dts/sophgo/cv18xx.dtsi    |  7 ++
+> >   2 files changed, 105 insertions(+)
+> >   create mode 100644 arch/riscv/boot/dts/sophgo/cv18xx-reset.h
+> >
+> > diff --git a/arch/riscv/boot/dts/sophgo/cv18xx-reset.h b/arch/riscv/boot/dts/sophgo/cv18xx-reset.h
+> > new file mode 100644
+> > index 000000000000..3d9aa9ec7e90
+> > --- /dev/null
+> > +++ b/arch/riscv/boot/dts/sophgo/cv18xx-reset.h
+> > @@ -0,0 +1,98 @@
+> > +/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
+> > +/*
+> > + * Copyright (C) 2025 Inochi Amaoto <inochiama@outlook.com>
+> > + */
+> > +
+> > +#ifndef _SOPHGO_CV18XX_RESET
+> > +#define _SOPHGO_CV18XX_RESET
+> > +
+> > +#define RST_DDR				2
+> > +#define RST_H264C			3
+> > +#define RST_JPEG			4
+> > +#define RST_H265C			5
+> > +#define RST_VIPSYS			6
+> > +#define RST_TDMA			7
+> > +#define RST_TPU				8
+> > +#define RST_TPUSYS			9
+> > +#define RST_USB				11
+> > +#define RST_ETH0			12
+> > +#define RST_ETH1			13
+> > +#define RST_NAND			14
+> > +#define RST_EMMC			15
+> > +#define RST_SD0				16
+> > +#define RST_SDMA			18
+> > +#define RST_I2S0			19
+> > +#define RST_I2S1			20
+> > +#define RST_I2S2			21
+> > +#define RST_I2S3			22
+> > +#define RST_UART0			23
+> > +#define RST_UART1			24
+> > +#define RST_UART2			25
+> > +#define RST_UART3			26
+> > +#define RST_I2C0			27
+> > +#define RST_I2C1			28
+> > +#define RST_I2C2			29
+> > +#define RST_I2C3			30
+> > +#define RST_I2C4			31
+> > +#define RST_PWM0			32
+> > +#define RST_PWM1			33
+> > +#define RST_PWM2			34
+> > +#define RST_PWM3			35
+> > +#define RST_SPI0			40
+> > +#define RST_SPI1			41
+> > +#define RST_SPI2			42
+> > +#define RST_SPI3			43
+> > +#define RST_GPIO0			44
+> > +#define RST_GPIO1			45
+> > +#define RST_GPIO2			46
+> > +#define RST_EFUSE			47
+> > +#define RST_WDT				48
+> > +#define RST_AHB_ROM			49
+> > +#define RST_SPIC			50
+> > +#define RST_TEMPSEN			51
+> > +#define RST_SARADC			52
+> > +#define RST_COMBO_PHY0			58
+> > +#define RST_SPI_NAND			61
+> > +#define RST_SE				62
+> > +#define RST_UART4			74
+> > +#define RST_GPIO3			75
+> > +#define RST_SYSTEM			76
+> > +#define RST_TIMER			77
+> > +#define RST_TIMER0			78
+> > +#define RST_TIMER1			79
+> > +#define RST_TIMER2			80
+> > +#define RST_TIMER3			81
+> > +#define RST_TIMER4			82
+> > +#define RST_TIMER5			83
+> > +#define RST_TIMER6			84
+> > +#define RST_TIMER7			85
+> > +#define RST_WGN0			86
+> > +#define RST_WGN1			87
+> > +#define RST_WGN2			88
+> > +#define RST_KEYSCAN			89
+> > +#define RST_AUDDAC			91
+> > +#define RST_AUDDAC_APB			92
+> > +#define RST_AUDADC			93
+> > +#define RST_VCSYS			95
+> > +#define RST_ETHPHY			96
+> > +#define RST_ETHPHY_APB			97
+> > +#define RST_AUDSRC			98
+> > +#define RST_VIP_CAM0			99
+> > +#define RST_WDT1			100
+> > +#define RST_WDT2			101
+> > +#define RST_AUTOCLEAR_CPUCORE0		128
+> > +#define RST_AUTOCLEAR_CPUCORE1		129
+> > +#define RST_AUTOCLEAR_CPUCORE2		130
+> > +#define RST_AUTOCLEAR_CPUCORE3		131
+> > +#define RST_AUTOCLEAR_CPUSYS0		132
+> > +#define RST_AUTOCLEAR_CPUSYS1		133
+> > +#define RST_AUTOCLEAR_CPUSYS2		134
+> > +#define RST_CPUCORE0			160
+> > +#define RST_CPUCORE1			161
+> > +#define RST_CPUCORE2			162
+> > +#define RST_CPUCORE3			163
+> > +#define RST_CPUSYS0			164
+> > +#define RST_CPUSYS1			165
+> > +#define RST_CPUSYS2			166
+> > +
+> > +#endif /* _SOPHGO_CV18XX_RESET */
+> > diff --git a/arch/riscv/boot/dts/sophgo/cv18xx.dtsi b/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
+> > index c18822ec849f..9aa28ade73a4 100644
+> > --- a/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
+> > +++ b/arch/riscv/boot/dts/sophgo/cv18xx.dtsi
+> > @@ -7,6 +7,7 @@
+> >   #include <dt-bindings/clock/sophgo,cv1800.h>
+> >   #include <dt-bindings/gpio/gpio.h>
+> >   #include <dt-bindings/interrupt-controller/irq.h>
+> > +#include "cv18xx-reset.h"
+> >   
+> >   / {
+> >   	#address-cells = <1>;
+> > @@ -61,6 +62,12 @@ clk: clock-controller@3002000 {
+> >   			#clock-cells = <1>;
+> >   		};
+> >   
+> > +		rst: reset-controller@3003000 {
+> > +			compatible = "sophgo,cv1800b-reset";
+> > +			reg = <0x3003000 0x1000>;
+> > +			#reset-cells = <1>;
+> > +		};
+> > +
+> >   		gpio0: gpio@3020000 {
+> >   			compatible = "snps,dw-apb-gpio";
+> >   			reg = <0x3020000 0x1000>;
 
-I hope you are ok with that.
-
-NeilBrown
-
+-- 
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
