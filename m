@@ -1,148 +1,151 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD352F22;
-	Mon, 10 Feb 2025 07:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26DD2F22
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:52:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739173973; cv=none; b=urRTii/EIDHnRFuBvOC1XS5EqeNXhTtvjuL2Db1KKc1rEBfrWCWF8kKsXcQuhabiZhvXTO1V4J5MDJU19/r3/OgCGKBgCKNJzkkILe5Oxm6lrqXbeU3HBsUDl17qlBVEJRkq7JE+8WMFMpsF70fPCG214yFhxLl8vZV8XXDhXuM=
+	t=1739173978; cv=none; b=omyXIePVgbGTaF8tdVl/PifFbKcwwHoJqG7XbyRi6/Gma55Fo5ugomkSaXC8Ix1cWTKdLPD2rTlItdKr6pAh2DfRjrziEZEb2o/HBkwdMXHk09nXuuboW+YOH8mCso3afEdsHgN/5MR+7c5EuS1UX/hdNmKAVCvRaZ0YqQKGr/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739173973; c=relaxed/simple;
-	bh=DJdItJntOY5OJ5hvUSmejJSmg9qkBKUePL2xVWDqlXI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HcALA1MtFTbdFT/a2wrQ2dGInJ2MLt2Q17fCKRDPggQo5wjfzyX+/mOXlTSmC3QtlLYXR1FWRr3D6piTJ7t/+kLRVHETFRiBPSnlc4vcD6OgmKykt8jQPWfC+ogsGGgj1eN3vynPmfxBohj4O1Nwk+hPyyteB+Bg95aeyKewpkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vWlhTkWl; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1739173978; c=relaxed/simple;
+	bh=W8zdIY1rYsE45zOuPrzevizg1Izts5KX52qEocX1Sco=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fhkCK8cjjIJ++HFUGaFPl74dZC8F7QcQX6G8eNnc6OwwEg6usmHLVhbjSUerkPT853mV4gbEu4iZJCHTr0NYCkiHiF83hgOzEHSF453HrAhcAYgwxtn1i6N51dJzf7aqVbHR/dNWhyUWjVpRgzZCisL2toeLqbc0vHW+EGmXnyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=g9alD5FC; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vWlhTkWl"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51A7qegJ002056
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Feb 2025 01:52:40 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1739173960;
-	bh=TIoUXv4bvfSaNynsaGquNVj1t+EosXITFmTzVsUQThE=;
-	h=From:To:CC:Subject:Date;
-	b=vWlhTkWl5lxtoELWTi9isUpA8xKgh0gf3gaj7NvrsfH/PTclYYkAL2vVCNtSApABX
-	 D3O+L6EN22FlXzOS4HotIpq3Srnx/8QwG9r+ywscCIX8XUFIiJezWy9uqbcmbwkDBP
-	 81UUPOH5bZBBvJZFkzdSN1zL7T7wGflglz+DhfA4=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51A7qemJ126469
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 10 Feb 2025 01:52:40 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 10
- Feb 2025 01:52:40 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 10 Feb 2025 01:52:40 -0600
-Received: from lelvsmtp5.itg.ti.com ([10.250.165.138])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51A7qaDr063518;
-	Mon, 10 Feb 2025 01:52:37 -0600
-From: Baojun Xu <baojun.xu@ti.com>
-To: <jwboyer@kernel.org>
-CC: <shenghao-ding@ti.com>, <linux-firmware@kernel.org>, <13916275206@139.com>,
-        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <alexander@burningdaylight.io>, Baojun Xu
-	<baojun.xu@ti.com>
-Subject: [PATCH v1] ASoC: tas2781: Add regbin firmware by index for single device
-Date: Mon, 10 Feb 2025 15:52:11 +0800
-Message-ID: <20250210075211.5343-1-baojun.xu@ti.com>
-X-Mailer: git-send-email 2.43.0.windows.1
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="g9alD5FC"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43675b1155bso45067205e9.2
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 23:52:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1739173974; x=1739778774; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qkfv43O1g5zvAJXOqIcSrZ8ndK2BrDyyauC15WFvoaQ=;
+        b=g9alD5FCVL0Ag+3KY7hlP6GzVwTNT1zd8fRru50sDnF3J+wWjJXMdJTncklnrPrD9e
+         5t9f3AeC2TECoU16lU92mutiM3TYOREd7Jt5EeIlRZr3AZvvG8Tj6Qquy487ErgiGOu7
+         25PxjTc0c6hQGY1oQN36xzToGtxKhtgEUHNz4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739173974; x=1739778774;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qkfv43O1g5zvAJXOqIcSrZ8ndK2BrDyyauC15WFvoaQ=;
+        b=pYueaSr1z+4Cz0ZuSsgwrCbfVQFBsM+HJTEFobuanqzImn+7egHWO27mbw06AsbSGF
+         bZBO78BTVmwe6ufkzxGrmLB5PS+alzonGlY8scu7JXYhStW4zU5jShkigAcMFqsZZ41N
+         B56ndYQOoGHd0vdCQzh5go4q6MFHknlySVjENd0UtkHG3oynl3qgCaLFdV75TyxlfAfM
+         TwVipDa92R2H95EJ0FSd54Rr3C9fpNSbBg6+rWhqYXuASg5qajEeOUIR+uicChf0yPAj
+         ncXHkHbsp7/wKlip0zM0ecH5KcZdUtrq2GjhKUa+C26uwxnUwb/xKoijGr84Hy7LJfBt
+         +Cbw==
+X-Forwarded-Encrypted: i=1; AJvYcCWO6aDLY6fhty+oOebEQnb4eBc5L/gvU40ydm3zmXQzoJgWK7TH/fDapef/s1sqKGdjyubs5m2YPhgntC4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6Pq3YqVAXbtWiQA7kp9dVxPB2CDWd8alnPq5+M/SCZwi4MIVg
+	hbCKHNq0j6dmsH3oXOLv0bDFUauE73MZK/yL3cgq4FyIaoe9pBerJYPadz5i9Q0=
+X-Gm-Gg: ASbGncs8zHN56+dZJp23RQV9WMyiujRt3IzqZb7o18s8H3/eDK68T3U0PWBt3iE2KO3
+	4sjKOvQjsXG8GF46SkIapFSXapTGtqCQYaAmsca0BOPnBfXfY+cYpVTB8oOh655DOLWVOPhToc5
+	t7Nbg4a/Do8Iy3yViK0mFo1UidSZ65pOrIUZYUiipVAbSZvMZgIHVxaNTsbxQ4zhx5ZdUsD0xAx
+	VpdqOszwrzfBDnTtbLdl24wFyDBwl2R9THmE06AOSWWwC03q8OaryllFEJHoCxa2SUSm8iSjVWL
+	AN20q2dOEp2ctb631o6UyH5hqDQ=
+X-Google-Smtp-Source: AGHT+IFDgbl8wGVpble5Zv0abCqTht8o2Ov+/uOG64czyzOx5fpcCwEyGABd1B3TPwQLwmivIDhgfQ==
+X-Received: by 2002:a05:600c:4f8e:b0:434:a7e3:db5c with SMTP id 5b1f17b1804b1-43924989dbbmr123507065e9.11.1739173973845;
+        Sun, 09 Feb 2025 23:52:53 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc565d62dsm10287702f8f.93.2025.02.09.23.52.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2025 23:52:53 -0800 (PST)
+Date: Mon, 10 Feb 2025 08:52:51 +0100
+From: Simona Vetter <simona.vetter@ffwll.ch>
+To: Hector Martin <marcan@marcan.st>, Simona Vetter <simona@ffwll.ch>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>, phasta@kernel.org,
+	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	daniel.almeida@collabora.com, aliceryhl@google.com,
+	robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Valentin Obst <kernel@valentinobst.de>,
+	open list <linux-kernel@vger.kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
+	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
+	DRI Development <dri-devel@lists.freedesktop.org>
+Subject: Re: On community influencing (was Re: [PATCH v8 2/2] rust: add dma
+ coherent allocator abstraction.)
+Message-ID: <Z6mwU1Yiy-PQ4lXb@phenom.ffwll.local>
+Mail-Followup-To: Hector Martin <marcan@marcan.st>,
+	Simona Vetter <simona@ffwll.ch>, Jason Gunthorpe <jgg@nvidia.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>, phasta@kernel.org,
+	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	daniel.almeida@collabora.com, aliceryhl@google.com,
+	robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Valentin Obst <kernel@valentinobst.de>,
+	open list <linux-kernel@vger.kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
+	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
+	DRI Development <dri-devel@lists.freedesktop.org>
+References: <20250130154646.GA2298732@nvidia.com>
+ <2025013030-gummy-cosmic-7927@gregkh>
+ <20250130172437.GN5556@nvidia.com>
+ <2025013148-reversal-pessimism-1515@gregkh>
+ <20250131135421.GO5556@nvidia.com>
+ <2b9b75d1-eb8e-494a-b05f-59f75c92e6ae@marcan.st>
+ <Z6OzgBYZNJPr_ZD1@phenom.ffwll.local>
+ <4c143b85-063a-4413-a6ca-e9d80e26da96@marcan.st>
+ <c5a49bcb-45cf-4295-80e0-c4b07083df00@marcan.st>
+ <Z6YPfsDSNdRUskvp@phenom.ffwll.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6YPfsDSNdRUskvp@phenom.ffwll.local>
+X-Operating-System: Linux phenom 6.12.11-amd64
 
-Add regbin firmware by index for single device.
-Add more symbolic link for Gemtree project.
+On Fri, Feb 07, 2025 at 02:49:50PM +0100, Simona Vetter wrote:
+> When you're that harmful with your calling out, eventually I'm going to be
+> fed up, and you get a live round shot across your bow. And if that then
+> causes you to ragequit, because you can't actually deal with the heat
+> you've been dishing out coming back around the corner:
+> 
+> Fuck off.
 
-Signed-off-by: Baojun Xu <baojun.xu@ti.com>
----
- WHENCE                      |  14 ++++++++++++++
- ti/tas2781/TXNW2781RCA0.bin | Bin 0 -> 868 bytes
- ti/tas2781/TXNW2781RCA1.bin | Bin 0 -> 868 bytes
- 3 files changed, 14 insertions(+)
- create mode 100644 ti/tas2781/TXNW2781RCA0.bin
- create mode 100644 ti/tas2781/TXNW2781RCA1.bin
+With some sleep, a w/e and slightly less ill temper: As I'd say in Swiss
+German, this was suboptimal wording. Or in plain English, a disaster, I
+screwed up.
 
-diff --git a/WHENCE b/WHENCE
-index d2ccfbb2..39b6de58 100644
---- a/WHENCE
-+++ b/WHENCE
-@@ -8010,12 +8010,18 @@ File: ti/tas2781/TAS2XXX3F300.bin
- File: ti/tas2781/TAS2XXX3F301.bin
- File: ti/tas2781/TAS2XXX8DE8.bin
- File: ti/tas2781/TAS2XXX8DE9.bin
-+File: ti/tas2781/TXNW2781RCA0.bin
-+File: ti/tas2781/TXNW2781RCA1.bin
- File: ti/tas2781/TIAS2781RCA2.bin
- File: ti/tas2781/TIAS2781RCA4.bin
- Link: TAS2XXX0C94.bin -> ti/tas2781/TAS2XXX0C94.bin
- Link: TAS2XXX0C95.bin -> ti/tas2781/TAS2XXX0C95.bin
- Link: TAS2XXX0C96.bin -> ti/tas2781/TAS2XXX0C96.bin
- Link: TAS2XXX0C97.bin -> ti/tas2781/TAS2XXX0C97.bin
-+Link: TAS2XXX103C8DE80.bin -> ti/tas2781/TAS2XXX8DE8.bin
-+Link: TAS2XXX103C8DE81.bin -> ti/tas2781/TAS2XXX8DE8.bin
-+Link: TAS2XXX103C8DE90.bin -> ti/tas2781/TAS2XXX8DE9.bin
-+Link: TAS2XXX103C8DE91.bin -> ti/tas2781/TAS2XXX8DE9.bin
- Link: TAS2XXX10A40.bin -> ti/tas2781/TAS2XXX10A40.bin
- Link: TAS2XXX10A41.bin -> ti/tas2781/TAS2XXX10A41.bin
- Link: TAS2XXX11540.bin -> ti/tas2781/TAS2XXX11540.bin
-@@ -8074,8 +8080,16 @@ Link: TAS2XXX3F300.bin -> ti/tas2781/TAS2XXX3F300.bin
- Link: TAS2XXX3F301.bin -> ti/tas2781/TAS2XXX3F301.bin
- Link: TAS2XXX8DE8.bin -> ti/tas2781/TAS2XXX8DE8.bin
- Link: TAS2XXX8DE9.bin -> ti/tas2781/TAS2XXX8DE9.bin
-+Link: TAS2XXX8DE80.bin -> ti/tas2781/TAS2XXX8DE8.bin
-+Link: TAS2XXX8DE81.bin -> ti/tas2781/TAS2XXX8DE8.bin
-+Link: TAS2XXX8DE90.bin -> ti/tas2781/TAS2XXX8DE9.bin
-+Link: TAS2XXX8DE91.bin -> ti/tas2781/TAS2XXX8DE9.bin
- Link: TIAS2781RCA2.bin -> ti/tas2781/TIAS2781RCA2.bin
- Link: TIAS2781RCA4.bin -> ti/tas2781/TIAS2781RCA4.bin
-+Link: TXNW2781RCA0.bin -> ti/tas2781/TXNW2781RCA0.bin
-+Link: TXNW2781RCA1.bin -> ti/tas2781/TXNW2781RCA1.bin
-+Link: TXNW2781RCA2.bin -> ti/tas2781/TIAS2781RCA2.bin
-+Link: TXNW2781RCA4.bin -> ti/tas2781/TIAS2781RCA4.bin
- 
- Licence: Redistributable. See LICENCE.ti-tspa for details. Marked:
- 	 Copyright (C) 2023 - 2024 Texas Instruments
-diff --git a/ti/tas2781/TXNW2781RCA0.bin b/ti/tas2781/TXNW2781RCA0.bin
-new file mode 100644
-index 0000000000000000000000000000000000000000..9718640b529e324bc5975d7d66bcfbdef8d4ad6e
-GIT binary patch
-literal 868
-zcmZQzU`{#U%krFofsqx68Pj~{%w_~J7~p^z$m#*&J3xE`E;@o3Da8f4hGt2bCA!5q
-z`6UMA_?(H6g>eB;qXrN&GcW=nL(EJD76y9;1}-Te4;c2mKrt}~1_nN$5`G|NVqj!u
-z1aUZk7^DLz&&1?u6byAsYH~(?QEFOhQEFatDk&}lxn&8^%nBgp0-6epU%n$iI~~y6
-z!~$`X0FVZ{i&6Xp&`B%|EMWgLg4rArKqG(v<Tef&kds*$I5Zd>Kw=;^mj{RiWk*27
-zA^yPXx1`E~#NuLz7BWeot&EjGy(K`*33eAKDKmrp2@FTLKW{QHBnSY#uLlozeEuWB
-JUkq5{3;=u;DgFQe
+I do not rescind the sentiment I expressed though. I cannot stand people
+who punch where they're stronger, and eschew conflict and fold the moment
+someone hits back.
 
-literal 0
-HcmV?d00001
+> Or as Dave Airlie put it upthread in this conversation:
+> 
+> "Being toxic on the right side of an argument is still toxic, [...]"
 
-diff --git a/ti/tas2781/TXNW2781RCA1.bin b/ti/tas2781/TXNW2781RCA1.bin
-new file mode 100644
-index 0000000000000000000000000000000000000000..f92631f8477b78cd8714e9941fa57d8346323df8
-GIT binary patch
-literal 868
-zcmZQzU`}~`QE(3f10yRCGp6~@`OgSqFu(ybkaY)$dw}=`Tyz96JdJ{N4b74=OLS9{
-zGxCd4(^894^O93_i*xcz42TN{CI%M9B|xPWK+MI!$N&sez9S3_{0<BZF*6xh80>+<
-zT0n6Y1_oYW&<g-*F$V@l@e>R{oeV5sTNuG?4he{jj6l^KG7Jzg4F;e=5H^<wL>{D%
-zD*_@8QVUebz|6=8l;i+nkO)YODW$jo>NgU61F-={g8T+@pau{#L(B#H2`C2k6EIzY
-z`~>t51IT)QAja;Nq{@QC;$omQ`2ge=Pym$xF(<?=z@*F!4s)Qtk;0rIK>+AJE4bV6
-Mg*7NFImi!V0F@^x`v3p{
+The irony has not entirely escaped me. Oh well.
 
-literal 0
-HcmV?d00001
-
+Remorsefully, Sima
 -- 
-2.34.1
-
+Simona Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
