@@ -1,72 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994441CD208;
-	Mon, 10 Feb 2025 11:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 197F2288A2;
+	Mon, 10 Feb 2025 11:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739186618; cv=none; b=K4HmyCmpPfosFBee0EmFMD2F6HswYtP3ST+POpEB86uW7PJTEcT8ZozKeWz/6dKpUS+P7SAsO+cZa3g9gsqIjX7+ojxUpVFshDEgKnbl5N9S7mhsd42KYp55Nce0BRnxwWcwDCPaCJ7sfBCCcyxJFwbXeV9QZzcuHWU+Z8WmUyU=
+	t=1739186712; cv=none; b=FQpQiOYl5uzvdqQKvSQRq7vp217TLZi8Erqedy8cUZfCFOabnixCcONr4rqXnO4Lv95ci7cMBo0p+wfnRxG//4hAX2ron+cwHTj7S9Z0VexEz5EigvQAB1x5l6oYEfhBowklnKMVBns6IaMB25qQRgR0aM+xOJJGT+3qdqfukSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739186618; c=relaxed/simple;
-	bh=Ss0VZ01xT2A7uKNNNMGNFZ3kAt/J7/1E6lUcUsfMt1I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D2IxL/wPPXz4MPlVX6j7Fn/+s92htJYmPZ9oly12VoRXV1Pv5aioFiTgRnayRXGejL8aFQITuPanQaiGRAgAoY8tf6IaEZwu6GK4QDli1usA3hKiGqrquQo6bSliweMyMARvdHoVQWoDwwJ6b2HnYmE6tNhEwFFP7IsiydvJUlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nUwg/hZ4; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nUwg/hZ4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82E4EC4CED1;
-	Mon, 10 Feb 2025 11:23:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739186618;
-	bh=Ss0VZ01xT2A7uKNNNMGNFZ3kAt/J7/1E6lUcUsfMt1I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nUwg/hZ4j4VqfkdW2z+DzOsoGadv71DLbwv2LOXYSMyBdgvs0sge884QBXc+8RGaV
-	 l45UumlTyfuS6iVNdjHeRk9aPdJiSuLWZBbup37aQLUiulotHVlSQee8C4f9z6vldL
-	 fJIplFTNqPDtGSoTy8jBuSM5JLYvA8AH4K/RfymXV7seneBh9I01qrTQ5CreS6BvLS
-	 N3zovYs+S8nBpkzI+xEKhuPpo6kJ/Jozhe0/2hzZAGgGm54IYvAWIZDVazn0qccnJt
-	 u/FeTICzwEDfYHQB120f6oJK9veIqDP8UUEAmn2vAEYdZMh5F8hs7Id0afHY3so1R/
-	 kam7p/dX0U/+A==
-Date: Mon, 10 Feb 2025 16:53:34 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Mohan Kumar D <mkumard@nvidia.com>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com,
-	dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v4 1/2] dmaengine: tegra210-adma: Fix build error due to
- 64-by-32 division
-Message-ID: <Z6nhtrs1rYXcQOBl@vaman>
-References: <20250205033131.3920801-1-mkumard@nvidia.com>
- <20250205033131.3920801-2-mkumard@nvidia.com>
- <Z6ncuLHotCAw61b5@vaman>
- <2d190825-5284-4ac6-9735-051849bc9bb6@nvidia.com>
+	s=arc-20240116; t=1739186712; c=relaxed/simple;
+	bh=AevJJ+A4/vl0rMnJXDp7MPqelhzo4B16VM0ILy0ZqZc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jxmhqzJ2nHHYWGR7EInbowz9JLt8jENHBzj+Mcx2r5/qhSipqdJ5CG1Fnp1LsbXX2t1ZfqJrS6UH/ya/REXknRD9bxH6ljqAPwLS3/Bz5R7WL57CHkFrriDz2uvMET4Lfl1lTuzaM84vZv4udmOkiGQ+Hy3pKyyHyQpocfJ4FGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 13F0B1007;
+	Mon, 10 Feb 2025 03:25:32 -0800 (PST)
+Received: from [10.57.77.229] (unknown [10.57.77.229])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34C6D3F5A1;
+	Mon, 10 Feb 2025 03:25:09 -0800 (PST)
+Message-ID: <764b2869-8023-45b2-bae9-5a24be1ea519@arm.com>
+Date: Mon, 10 Feb 2025 11:25:07 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2d190825-5284-4ac6-9735-051849bc9bb6@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] PM: EM: Drop unused parameter from
+ em_adjust_new_capacity()
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+References: <6137833.lOV4Wx5bFT@rjwysocki.net>
+ <2369979.ElGaqSPkdT@rjwysocki.net>
+Content-Language: en-US
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <2369979.ElGaqSPkdT@rjwysocki.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 10-02-25, 16:45, Mohan Kumar D wrote:
+
+
+On 1/27/25 13:37, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> On 10-02-2025 16:32, Vinod Koul wrote:
-> > External email: Use caution opening links or attachments
-> > 
-> > 
-> > Hi Mohan,
-> > 
-> > On 05-02-25, 09:01, Mohan Kumar D wrote:
-> > > Kernel test robot reported the build errors on 32-bit platforms due to
-> > > plain 64-by-32 division. Following build erros were reported.
-> > Patch should describe the change! Please revise subject to describe that
-> > and not fix build error... This can come in changelog and below para is
-> > apt
-> Sure, Will update the subject and resend the updated patch
+> The max_cap parameter is never used in em_adjust_new_capacity(), so
+> drop it.
+> 
+> No functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>   kernel/power/energy_model.c |    5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> --- a/kernel/power/energy_model.c
+> +++ b/kernel/power/energy_model.c
+> @@ -728,8 +728,7 @@
+>    * are correctly calculated.
+>    */
+>   static void em_adjust_new_capacity(struct device *dev,
+> -				   struct em_perf_domain *pd,
+> -				   u64 max_cap)
+> +				   struct em_perf_domain *pd)
+>   {
+>   	struct em_perf_table __rcu *em_table;
+>   
+> @@ -800,7 +799,7 @@
+>   			 cpu, cpu_capacity, em_max_perf);
+>   
+>   		dev = get_cpu_device(cpu);
+> -		em_adjust_new_capacity(dev, pd, cpu_capacity);
+> +		em_adjust_new_capacity(dev, pd);
+>   	}
+>   
+>   	free_cpumask_var(cpu_done_mask);
+> 
+> 
+> 
 
-Please collect the acks as well
+LGTM
 
--- 
-~Vinod
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
