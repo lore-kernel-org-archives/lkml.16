@@ -1,244 +1,243 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3C6257AD8;
-	Mon, 10 Feb 2025 19:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38541253F0A
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739216365; cv=none; b=CjpIs1lSx2w2K2yQeP39/Tjo8goHLvHlla4kwoAT2K7LhALYP4O2gjXZx6ZvVsNc1HnMLWo8J56559d74tyD5Lpcq+19ckuzkYesg3me3/LG9qcvHhu60Vntv1BySW3DG7SAM59lpcJnsTlm7E6YmPaZX+9AEnhRc2Cmsyy7Mvw=
+	t=1739216367; cv=none; b=pQVJImxTsTF6+KxcUlnsCxN950ZHJECNgrpt7L3L1RLZofkxn3GPQNzz62prKCRphsVABzjCW3C9yM2rVDNpli5FHmrw+DoR/TjaOcxayflHVV7XDYrUoJZBkQNJGbYHzxO27HLWVyIgfItZ1Z+nGjAdKD0NUvPdXz4BADhg1PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739216365; c=relaxed/simple;
-	bh=BgdNhKDXz/no7DglHpg1Pb5zNJDUriBtVyzHzDAG2Q8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iQOANu6LbZIGPRCNKGrrohUUacooCdP2mdw7YICll8K7do4HajkPvoZQvWm7pidpBSRckHOsGqX9MMrDUAS8Mt/wEeq4zRvm6zpwIriIZ3sbZPEVe1ErCdLbr9kuS0l89e+iV2IowOxqBT0zafyXHXP71QhDh6pnXaavcVSFZDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZMBbGDjA; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739216367; c=relaxed/simple;
+	bh=hMmqLC7rYBOTSWKloyLAMgjzYZ7GVSeG1WEosbA+PJ8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mavbglAqTVS42XYEa4JzsAcmoJBFnUS5Hb1HuhzzH5NjsGUaVE0Jux/4Izl9K1llfT7vjiUcqiFlcReVgmpDpsgqwaxpcthp1R4ja2yqMXYOQ97RLdj8W9kVXR1zpKlKij6iHjKQKqGOPfNH6sLyMHk7gZEFHga86PD2wgv4TuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=abmVMmn/; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZMBbGDjA"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-aaeec07b705so755171766b.2;
-        Mon, 10 Feb 2025 11:39:23 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="abmVMmn/"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2fa4493a695so3484585a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:39:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739216362; x=1739821162; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=fastly.com; s=google; t=1739216365; x=1739821165; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1UGevfOpAUPjzC/KiI8YLKFnVe3l8iDORylTqnw5Vwk=;
-        b=ZMBbGDjAnjbONph0O5EGnIgQCG1J0M0/C+swNfZDcEIqac60fq66nigcguMaq0S91R
-         atHeSM6DGJOrf+CwSFrGoy3Ffwsf2scQM9cO4XgWIEIQlkKdAGs/MkmsNR2fTSbz5WaU
-         00y+GvdOv84VxzpbzfzHrV/upAPPrOU31HMlJ9D692Mler+WE/EapwFQe5qo0tNPgN3W
-         6ILu9cJ1ZT97xI0u06DGfx/m3LNghcWqEJdAOP/imT4ZrDQH30GuaoHfqh0eRw/kHb6o
-         Rnl2ie3H7HfKXlqsWerdvlenmRrlQ+jSkW31CTJffC43WNgndZS5rrBQUWhDhIU/tQQ0
-         QGKw==
+        bh=XjSm8SciJzh3IllyDU052OHbkLq8PHE5L98omSDGOLg=;
+        b=abmVMmn/NbJp1ZOshLZu90Vm5VGiUOixYZmY90VuYcXbs6/poT4/YqmCvutDOgC/7Q
+         EMpg5vXqs5NQKAQ6sUSo6U/RFaFANHj12UsPs9xrvs9WV8Hx/YrAXblwYIDo4E6pjATP
+         3nhqri1zRRDcDBmwcjofT3DNDJMvs2Mggy6EY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739216362; x=1739821162;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739216365; x=1739821165;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1UGevfOpAUPjzC/KiI8YLKFnVe3l8iDORylTqnw5Vwk=;
-        b=PrRh0sTDJiiAlP+ujV9ipgiET/6r4qxplz65S94sg40KRK07tAiSYykMZodUPqxUHg
-         FY5RyXs3FTDdtgLz3FNrnUEGAv6ekv1jOfy3VFcca6RqabQUuUNvQ5RS67QQIBpaZlWQ
-         Fh6ernjpUzteBlgiX7Wg41Wzkc3KdyYY54g12NVlxqD42X4v+9SdgW1DHGCflKzpbBhp
-         Q0hjrTHHcvuRR5vNMBIu+fEaoIyfc4lVwdtJ5slPQLU4f9w4b5eeQ2CjOA9ciiCiYzYd
-         AS+8dA1lDUD50mvlUl+5xLFXp0UqNcoGrOc7MNtOvSQM8kbHN59FLQAlC4QEgit5Dpeh
-         e4PA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDDkX/RXYmT83/n/3pAuyjupaMvaMLX/uJbnLPO2I3/mBkuNaaDQTzWfoygUUPo0bKtFP8y+yJTr7nkmI=@vger.kernel.org, AJvYcCXZmSS0YDPVm/kia4k9ReYaW72Rbynmlrp3olTsfxpEZKmdHrfyMyEpDEGQDZK3+XY6MJDVKTA6q9cL@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjpxfZ+j4JLBMlljKlNJGr56VUmTNbg8UlvhiuE+tL4tr4gfru
-	+NCzAjBrlGcuQtq5wmz/DpNUhdTL84ed6aQPB7Mcs+KJD8ZLT6i8XG2bTcgF4RBZwWwc73cLeY+
-	Z9EreJDj/r2a7+ikKqk2rFwHLlt4=
-X-Gm-Gg: ASbGnctuRO9520dVXm546bx2fY1UsGCAzfuHFRBBcGVbEVzGnjILqss0Nwm0Td/vKUv
-	CrXdPPhxffJ1SdLUYWW0MKpsicLXUA4X7gfF18EHO+ejbczxV3JMHKs8A1Ie17U5k7jUKhPcd
-X-Google-Smtp-Source: AGHT+IHkH1T+CuWeIT0XKMZ6C94TIWLCg4ypBx01FMwdD/FhknfWIjYmY5tPWTGl4EGOg28RVj85qmiAFX2QsLtQwbc=
-X-Received: by 2002:a17:907:6d1e:b0:ab2:faed:f180 with SMTP id
- a640c23a62f3a-ab789aef85amr1823164866b.33.1739216361832; Mon, 10 Feb 2025
- 11:39:21 -0800 (PST)
+        bh=XjSm8SciJzh3IllyDU052OHbkLq8PHE5L98omSDGOLg=;
+        b=SW9fGKIW1mkkAZD8K52wTPn9z6OFg5g7xrrs6P0Urte90ihWbCCUBWUmTXlrXM+sFV
+         9qI/3azGeAb59rhM2JK4K5fW7wYdkYBEHX7NVVOtX0+eMxfOO2zUVcscroVwrfDupd5b
+         gxB8ghCiPAh1YIepEj6DsGtuGYMuhksKcoIou5wSX0uH3aWIn7WzlbJgoRqLDqjZAx/v
+         tmMClmsTRecv7bHSyLXduIAtCHOVCFFkchFHOfJo5DzH81lTM3z2GAzqNCh8BGOStoUq
+         lWccTx9u8h5sZSxU1D+h1kFxgad/NjulhocqxlFRTi59Ld0WvcoG1LMnWUeAXLF0hlQi
+         KEhg==
+X-Forwarded-Encrypted: i=1; AJvYcCVcAljqLAtaX024PiQblduQkeIr6SvIS2oyqMcHm3Ddb7eQB3Q69AempcdN+XKq+iZuPDdihcla0PYsNg8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEyYMC7rmRZPqnkR+KSYK16PRVKrMaBezgOIK2wQ9F2zw7df35
+	yWK0CBIUAIm2/gl/SriCStnnCtgzq183sX0dGkzzoTX8c70vlYbutY//4Yvnsao=
+X-Gm-Gg: ASbGnctkbbZP8BY+yFFAj7kbCmNuapwZxNgDMj5Vqe5KzyakHzDhUlgb/M+8ZF1Yjlh
+	upj3IANI4ZMCR/+fkijjRn8SUYJ67z7SQzEtZCT6XbdYs68MX2g1l5GaotBE+ZjAgTiHgTJ0B5G
+	n4qq2v/+gTAIjnaSkveLGMxAN5eNbapgTVwWxjTfTn4APg4PA0DVNF0LZf+xpmRolnqwVgRRU1J
+	KT8XcfzSVKG2nN8xH4YZyeW6jTj5jsFbIm/YCKsLivSoR85pbmBcCLzhuaCRU7F9CZ7VOsSwPDM
+	AU6TnzwqZlrqAr5yUaCXgl4=
+X-Google-Smtp-Source: AGHT+IH/yLGsQ5ai7U7Bkr2H+eeSCW+22PccYgnQz5Obbw7zdbZ6IeR4y1tv0W+bzubZOpOmWCy85w==
+X-Received: by 2002:a17:90b:4aca:b0:2ee:f80c:6889 with SMTP id 98e67ed59e1d1-2fa243ef19cmr26320757a91.33.1739216365432;
+        Mon, 10 Feb 2025 11:39:25 -0800 (PST)
+Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa2ecbca6dsm4226510a91.0.2025.02.10.11.39.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 11:39:25 -0800 (PST)
+From: Joe Damato <jdamato@fastly.com>
+To: netdev@vger.kernel.org
+Cc: stfomichev@gmail.com,
+	horms@kernel.org,
+	kuba@kernel.org,
+	Joe Damato <jdamato@fastly.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Mina Almasry <almasrymina@google.com>,
+	David Wei <dw@davidwei.uk>,
+	Amritha Nambiar <amritha.nambiar@intel.com>,
+	Daniel Jurgens <danielj@nvidia.com>,
+	Martin Karsten <mkarsten@uwaterloo.ca>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next v6 2/3] netdev-genl: Add an XSK attribute to queues
+Date: Mon, 10 Feb 2025 19:38:40 +0000
+Message-ID: <20250210193903.16235-3-jdamato@fastly.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250210193903.16235-1-jdamato@fastly.com>
+References: <20250210193903.16235-1-jdamato@fastly.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250208140110.2389-1-linux.amoon@gmail.com> <20250210174400.b63bhmtkuqhktb57@thinkpad>
-In-Reply-To: <20250210174400.b63bhmtkuqhktb57@thinkpad>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Tue, 11 Feb 2025 01:09:04 +0530
-X-Gm-Features: AWEUYZkHVuEkkPy1KSE2EKLXcjM9zVRd3pbM5-SmxlzbW8tM9XT1xK4MY0lSdG4
-Message-ID: <CANAwSgQ20ANRh9wJ3E-T9yNi=g1g129mXq3cZYvPnK1bMx+w7g@mail.gmail.com>
-Subject: Re: [PATCH v1] PCI: starfive: Fix kmemleak in StarFive PCIe driver's
- IRQ handling
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Kevin Xie <kevin.xie@starfivetech.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, Minda Chen <minda.chen@starfivetech.com>, 
-	"open list:PCIE DRIVER FOR STARFIVE JH71x0" <linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Manivannan
+Expose a new per-queue nest attribute, xsk, which will be present for
+queues that are being used for AF_XDP. If the queue is not being used for
+AF_XDP, the nest will not be present.
 
-On Mon, 10 Feb 2025 at 23:14, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> On Sat, Feb 08, 2025 at 07:31:08PM +0530, Anand Moon wrote:
-> > kmemleak reported following debug log
-> >
-> > $ sudo cat /sys/kernel/debug/kmemleak
-> > unreferenced object 0xffffffd6c47c2600 (size 128):
-> >   comm "kworker/u16:2", pid 38, jiffies 4294942263
-> >   hex dump (first 32 bytes):
-> >     cc 7c 5a 8d ff ff ff ff 40 b0 47 c8 d6 ff ff ff  .|Z.....@.G.....
-> >     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> >   backtrace (crc 4f07ff07):
-> >     __create_object+0x2a/0xfc
-> >     kmemleak_alloc+0x38/0x98
-> >     __kmalloc_cache_noprof+0x296/0x444
-> >     request_threaded_irq+0x168/0x284
-> >     devm_request_threaded_irq+0xa8/0x13c
-> >     plda_init_interrupts+0x46e/0x858
-> >     plda_pcie_host_init+0x356/0x468
-> >     starfive_pcie_probe+0x2f6/0x398
-> >     platform_probe+0x106/0x150
-> >     really_probe+0x30e/0x746
-> >     __driver_probe_device+0x11c/0x2c2
-> >     driver_probe_device+0x5e/0x316
-> >     __device_attach_driver+0x296/0x3a4
-> >     bus_for_each_drv+0x1d0/0x260
-> >     __device_attach+0x1fa/0x2d6
-> >     device_initial_probe+0x14/0x28
-> > unreferenced object 0xffffffd6c47c2900 (size 128):
-> >   comm "kworker/u16:2", pid 38, jiffies 4294942281
-> >
-> > This patch addresses a kmemleak reported during StarFive PCIe driver
-> > initialization. The leak was observed with kmemleak reporting
-> > unreferenced objects related to IRQ handling. The backtrace pointed
-> > to the `request_threaded_irq` and related functions within the
-> > `plda_init_interrupts` path, indicating that some allocated memory
-> > related to IRQs was not being properly freed.
-> >
-> > The issue was that while the driver requested IRQs, it wasn't
-> > correctly handling the lifecycle of the associated resources.
->
-> What resources?
->
-The Microchip PCIe host driver [1] handles  PCI, SEC, DEBUG, and LOCAL
-hardware events
-through a dedicated framework [2]. This framework allows the core driver [3=
-]
-to monitor and wait for these specific events.
+In the future, this attribute can be extended to include more data about
+XSK as it is needed.
 
-[1]: https://github.com/torvalds/linux/blob/master/drivers/pci/controller/p=
-lda/pcie-microchip-host.c#L90-L292
-[2]: https://github.com/torvalds/linux/blob/master/drivers/pci/controller/p=
-lda/pcie-microchip-host.c#L374-L499
-[3]: https://github.com/torvalds/linux/blob/master/drivers/pci/controller/p=
-lda/pcie-plda-host.c#L448-L466
+Signed-off-by: Joe Damato <jdamato@fastly.com>
+Suggested-by: Jakub Kicinski <kuba@kernel.org>
+---
+ v6:
+   - Added ifdefs to netdev_nl_queue_fill_one for CONFIG_XDP_SOCKETS.
 
-StarFive PCIe driver currently lacks the necessary `request_event_irq`
-implementation
-to integrate with this event-handling mechanism, which prevents the core dr=
-iver
-from properly responding to these events on StarFive platforms.
+ v5:
+   - Removed unused variable, ret, from netdev_nl_queue_fill_one.
 
-static const struct plda_event mc_event =3D {
-.  request_event_irq =3D mc_request_event_irq,
-  .intx_event        =3D EVENT_LOCAL_PM_MSI_INT_INTX,
-  .msi_event         =3D EVENT_LOCAL_PM_MSI_INT_MSI,
-};
+ v4:
+   - Updated netdev_nl_queue_fill_one to use the empty nest helper added
+     in patch 1.
 
-This patch implements dummy `request_event_irq` for the StarFive PCIe drive=
-r,
-Since the core [3] driver is monitoring for these events
+ v2:
+   - Patch adjusted to include an attribute, xsk, which is an empty nest
+     and exposed for queues which have a pool.
 
-> > This patch introduces an event IRQ handler and the necessary
-> > infrastructure to manage these IRQs, preventing the memory leak.
-> >
->
-> These handles appear pointless to me. What purpose are they serving?
->
-Yes, you are correct, the core event monitoring framework [3] triggered a
-kernel memory leak. This patch adds a dummy IRQ callback as a
-placeholder for proper event handling, which can be implemented in a
-future patch.
+ Documentation/netlink/specs/netdev.yaml | 13 ++++++++++++-
+ include/uapi/linux/netdev.h             |  6 ++++++
+ net/core/netdev-genl.c                  | 12 ++++++++++++
+ tools/include/uapi/linux/netdev.h       |  6 ++++++
+ 4 files changed, 36 insertions(+), 1 deletion(-)
 
-> - Mani
->
-Thanks
--Anand
+diff --git a/Documentation/netlink/specs/netdev.yaml b/Documentation/netlink/specs/netdev.yaml
+index 288923e965ae..85402a2e289c 100644
+--- a/Documentation/netlink/specs/netdev.yaml
++++ b/Documentation/netlink/specs/netdev.yaml
+@@ -276,6 +276,9 @@ attribute-sets:
+         doc: The timeout, in nanoseconds, of how long to suspend irq
+              processing, if event polling finds events
+         type: uint
++  -
++    name: xsk-info
++    attributes: []
+   -
+     name: queue
+     attributes:
+@@ -294,6 +297,9 @@ attribute-sets:
+       -
+         name: type
+         doc: Queue type as rx, tx. Each queue type defines a separate ID space.
++             XDP TX queues allocated in the kernel are not linked to NAPIs and
++             thus not listed. AF_XDP queues will have more information set in
++             the xsk attribute.
+         type: u32
+         enum: queue-type
+       -
+@@ -309,7 +315,11 @@ attribute-sets:
+         doc: io_uring memory provider information.
+         type: nest
+         nested-attributes: io-uring-provider-info
+-
++      -
++        name: xsk
++        doc: XSK information for this queue, if any.
++        type: nest
++        nested-attributes: xsk-info
+   -
+     name: qstats
+     doc: |
+@@ -652,6 +662,7 @@ operations:
+             - ifindex
+             - dmabuf
+             - io-uring
++            - xsk
+       dump:
+         request:
+           attributes:
+diff --git a/include/uapi/linux/netdev.h b/include/uapi/linux/netdev.h
+index 6c6ee183802d..4e82f3871473 100644
+--- a/include/uapi/linux/netdev.h
++++ b/include/uapi/linux/netdev.h
+@@ -136,6 +136,11 @@ enum {
+ 	NETDEV_A_NAPI_MAX = (__NETDEV_A_NAPI_MAX - 1)
+ };
+ 
++enum {
++	__NETDEV_A_XSK_INFO_MAX,
++	NETDEV_A_XSK_INFO_MAX = (__NETDEV_A_XSK_INFO_MAX - 1)
++};
++
+ enum {
+ 	NETDEV_A_QUEUE_ID = 1,
+ 	NETDEV_A_QUEUE_IFINDEX,
+@@ -143,6 +148,7 @@ enum {
+ 	NETDEV_A_QUEUE_NAPI_ID,
+ 	NETDEV_A_QUEUE_DMABUF,
+ 	NETDEV_A_QUEUE_IO_URING,
++	NETDEV_A_QUEUE_XSK,
+ 
+ 	__NETDEV_A_QUEUE_MAX,
+ 	NETDEV_A_QUEUE_MAX = (__NETDEV_A_QUEUE_MAX - 1)
+diff --git a/net/core/netdev-genl.c b/net/core/netdev-genl.c
+index 0dcd4faefd8d..49b2b2248821 100644
+--- a/net/core/netdev-genl.c
++++ b/net/core/netdev-genl.c
+@@ -400,11 +400,23 @@ netdev_nl_queue_fill_one(struct sk_buff *rsp, struct net_device *netdev,
+ 		if (params->mp_ops &&
+ 		    params->mp_ops->nl_fill(params->mp_priv, rsp, rxq))
+ 			goto nla_put_failure;
++#ifdef CONFIG_XDP_SOCKETS
++		if (rxq->pool)
++			if (nla_put_empty_nest(rsp, NETDEV_A_QUEUE_XSK))
++				goto nla_put_failure;
++#endif
++
+ 		break;
+ 	case NETDEV_QUEUE_TYPE_TX:
+ 		txq = netdev_get_tx_queue(netdev, q_idx);
+ 		if (nla_put_napi_id(rsp, txq->napi))
+ 			goto nla_put_failure;
++#ifdef CONFIG_XDP_SOCKETS
++		if (txq->pool)
++			if (nla_put_empty_nest(rsp, NETDEV_A_QUEUE_XSK))
++				goto nla_put_failure;
++#endif
++		break;
+ 	}
+ 
+ 	genlmsg_end(rsp, hdr);
+diff --git a/tools/include/uapi/linux/netdev.h b/tools/include/uapi/linux/netdev.h
+index 6c6ee183802d..4e82f3871473 100644
+--- a/tools/include/uapi/linux/netdev.h
++++ b/tools/include/uapi/linux/netdev.h
+@@ -136,6 +136,11 @@ enum {
+ 	NETDEV_A_NAPI_MAX = (__NETDEV_A_NAPI_MAX - 1)
+ };
+ 
++enum {
++	__NETDEV_A_XSK_INFO_MAX,
++	NETDEV_A_XSK_INFO_MAX = (__NETDEV_A_XSK_INFO_MAX - 1)
++};
++
+ enum {
+ 	NETDEV_A_QUEUE_ID = 1,
+ 	NETDEV_A_QUEUE_IFINDEX,
+@@ -143,6 +148,7 @@ enum {
+ 	NETDEV_A_QUEUE_NAPI_ID,
+ 	NETDEV_A_QUEUE_DMABUF,
+ 	NETDEV_A_QUEUE_IO_URING,
++	NETDEV_A_QUEUE_XSK,
+ 
+ 	__NETDEV_A_QUEUE_MAX,
+ 	NETDEV_A_QUEUE_MAX = (__NETDEV_A_QUEUE_MAX - 1)
+-- 
+2.43.0
 
-> > Fixes: 647690479660 ("PCI: microchip: Add request_event_irq() callback =
-function")
-> > Cc: Minda Chen <minda.chen@starfivetech.com>
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> >  drivers/pci/controller/plda/pcie-starfive.c | 39 +++++++++++++++++++++
-> >  1 file changed, 39 insertions(+)
-> >
-> > diff --git a/drivers/pci/controller/plda/pcie-starfive.c b/drivers/pci/=
-controller/plda/pcie-starfive.c
-> > index e73c1b7bc8ef..a57177a8be8a 100644
-> > --- a/drivers/pci/controller/plda/pcie-starfive.c
-> > +++ b/drivers/pci/controller/plda/pcie-starfive.c
-> > @@ -381,7 +381,46 @@ static const struct plda_pcie_host_ops sf_host_ops=
- =3D {
-> >       .host_deinit =3D starfive_pcie_host_deinit,
-> >  };
-> >
-> > +/* IRQ handler for PCIe events */
-> > +static irqreturn_t starfive_event_handler(int irq, void *dev_id)
-> > +{
-> > +     struct plda_pcie_rp *port =3D dev_id;
-> > +     struct irq_data *data;
-> > +
-> > +     /* Retrieve IRQ data */
-> > +     data =3D irq_domain_get_irq_data(port->event_domain, irq);
-> > +
-> > +     if (data) {
-> > +             dev_err_ratelimited(port->dev, "Event IRQ %ld triggered\n=
-",
-> > +                                 data->hwirq);
-> > +     } else {
-> > +             dev_err_ratelimited(port->dev, "Invalid event IRQ %d\n", =
-irq);
-> > +     }
-> > +
-> > +     return IRQ_HANDLED;
-> > +}
-> > +
-> > +/* Request an IRQ for a specific event */
-> > +static int starfive_request_event_irq(struct plda_pcie_rp *plda, int e=
-vent_irq,
-> > +                                   int event)
-> > +{
-> > +     int ret;
-> > +
-> > +     /* Request the IRQ and associate it with the handler */
-> > +     ret =3D devm_request_irq(plda->dev, event_irq, starfive_event_han=
-dler,
-> > +                            IRQF_SHARED, "starfivepcie", plda);
-> > +
-> > +     if (ret) {
-> > +             dev_err(plda->dev, "Failed to request IRQ %d: %d\n", even=
-t_irq,
-> > +                     ret);
-> > +             return ret;
-> > +     }
-> > +
-> > +     return ret;
-> > +}
-> > +
-> >  static const struct plda_event stf_pcie_event =3D {
-> > +     .request_event_irq =3D starfive_request_event_irq,
-> >       .intx_event =3D EVENT_PM_MSI_INT_INTX,
-> >       .msi_event  =3D EVENT_PM_MSI_INT_MSI
-> >  };
-> >
-> > base-commit: bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b
-> > --
-> > 2.48.1
-> >
->
-> --
-> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
-=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
-=E0=AF=8D
