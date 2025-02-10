@@ -1,176 +1,153 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED463243378
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:08:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C03243378
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:09:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739192940; cv=none; b=RaecZmJpbdfd/dNkRiq4IJ1UbzHkmbBWbD5AA10mMzZxkGqQkdMZPFCt8X03akWD0fUR6eKy+zlLSj6QUHTfUR9Jg2NLZn+ZEP/yij21ow6+pbchVgoeq7kaO6/b0rps7TgpXnFMX5ICJ1tD5+LuWHqMr9hvSS7YVQ2fwibMRXM=
+	t=1739192999; cv=none; b=ebo6vF32qmaKLh4RsbB0W6DyJqZGOvaYhbc9Spp1eVdviW6KrfZX0iVFaIGh1IFdp82TZ3eCkxohFXPZ2w/W5tKK+ylY2p36UnqGOaCszrLXCga4aSyDu6LM4mQOLKGQe2EHy4hOvrhZnvdfEy+do/mb4gXKpV2sen+lz1Gxzzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739192940; c=relaxed/simple;
-	bh=MfQty2qrQTi8a54QC8J/NxJbBWw8bzpg0pVBDnJN5eM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pw/j/wAR3A5K9EM3x1hLfDAadHtIciUg4dG4kRDCZx5zjPWx1/lWuuSMqCGnpu5tpGJZZaPCsKrIc3dsU9pPRIY3gCE3MQ0iWu+DkCnSJmCzJQ70Ioh6DURL2nRr6PapIAJGxgr6Qnx1FR2/wLLtk7cKEv5ChQbq+B4A6hw0gI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=nZ3bRND1; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1739192999; c=relaxed/simple;
+	bh=Jl2cDYaEC/8KYXJ6+YjEpKKhYtfmG5b+7PhvZl+Ph04=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fPO7ZLOAReCHyePvwS2oYKTW2W+kYhhonRzFbGSlxDA8w4+9wWTuzJt9+a2/ziFCBGsymqmvTIyHoxsWEA9bth0VbL4+wAkNjYpvXTcd+579G1DSQjTYTlzG7TOuWdX/68HTK4fqO0V4wm4PALOR9C8OsEMVB6cty8ZUCO8T28o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Tk9oIRI5; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="nZ3bRND1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739192935;
-	bh=MfQty2qrQTi8a54QC8J/NxJbBWw8bzpg0pVBDnJN5eM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nZ3bRND1I4+3/opv27tOoYFzJ/VoXv8B+J1p3TITK51fcAdH3IconFNtyHIbpE7jG
-	 mgoiMD5oV1ElaudEze7939XauKfbkvDMEJNiJ1zgTY1s6czlu8Pdkl+38mBI7PT+V/
-	 7nsiPn+dUKKDpaYsWeOGS5IacK1RyUr60a9hwvVNPOLLvUNxUL8fWnkjdORKswFa1U
-	 JoAe+PmTIEjCwAZCVud2TFMnmu7cipdqL337Do0lTl9pq65itzjZgcXB5lPutn4ikW
-	 ZoOQ3csYPCMthYcg1Uy4ALv8z8t8U9GOfrvkjyaqhvuu9LW+xeezLcI6/0gLy6tVvh
-	 5k6WGzoZnRvVA==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 7873917E014F;
-	Mon, 10 Feb 2025 14:08:54 +0100 (CET)
-Date: Mon, 10 Feb 2025 14:08:49 +0100
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
-Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, kernel@collabora.com,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] drm/panthor: Replace sleep locks with spinlocks in
- fdinfo path
-Message-ID: <20250210140849.77232318@collabora.com>
-In-Reply-To: <20250210124203.124191-1-adrian.larumbe@collabora.com>
-References: <20250210124203.124191-1-adrian.larumbe@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Tk9oIRI5"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5de727f7f05so1892313a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 05:09:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1739192996; x=1739797796; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8iDjitnePveiMkv0iAQCbmoij7UIH9xbSCqXpO1GKK4=;
+        b=Tk9oIRI5cs3v5QR+Ty+mC/CDTGaxIfOyq9wp5qbBWSx47b7ubvExcedkyT0lxKx8i2
+         glToHgHKhS7AX+HyymH8rykWE84IRCbO4NCQFZPm7DO1zMVqSdSn0RcODi5fzL/IQY9k
+         CKO2SVW2TmiijrxwAlF6DgUYRsjGinogDWhB8yjJYJSsYwLvIkFL9L27GLvew9MGdrL2
+         Ba8517CRruQU7PArcPloQG72bxQG6ePfbJP+C6Y8UyJosAldTKdV45bmj1sPjE8fstFd
+         BStUFqVYEiP5SMTFht94H/xPCY6bRspPIp/I23V2eaReoxViY0kG4jwL3KuQwAgA5+3q
+         eUQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739192996; x=1739797796;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8iDjitnePveiMkv0iAQCbmoij7UIH9xbSCqXpO1GKK4=;
+        b=To2SONTBlQSwqmBqwdZ6Z1w6HtfuGWVP3PHYDtnhXDubcLCTlIn1aWSVK1YnwfGLL2
+         CDWqfyxjL1+wNwaeGAuArhCRSNroea0jhBQMCWIMKae6xo3hn08sBATKsA0uWeYIl46+
+         eFLlmhhVBcXBpmaUg9tCgEQwOwln1dnrBuiiL8F3nbKssmRSoNd8XUj6ZUgQhNpNbnj/
+         8oDtxe49g8yfEVerIi/PKQG18CFP+sovpcSI7FPXRiAzOuuBiIPVBzLFZraKoHDGActq
+         PG3MDqT3i53GaGojnQ/90QYMGT84wckBI+pk3M+8l4AKpFBnkF8R6hv5KwJxe5RyAu7e
+         btMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVmvXmM29+zdi/lpHFYOY8149+YUgyXE32oWOaq3Ah9ivqUDQ25fl5pnXJD/O8wOkSCAn7+FoJ87q4IajQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnsIou1Ve7lxczL4/x7S6mDlKtJo2aMbUZOGnaUVWdd+Dpa3ji
+	9+4bQKCd2/mxvKPnV5MieUGt58uZmFnzxeqRxc2ZzY2L3r0o4egSIGC82/sSSpg=
+X-Gm-Gg: ASbGncvb0rZVwTVMwLhGbirqyHOCC89q4AE4feqVuuNpGFGeNooNhaaiiF7K/ifvDyx
+	ZVWlCOu+bRTMh0uTb8oyBoGo24fvVoNWwzrYFyB5nE0bnndwIiXnWF7vsgx1rv7KViVmhPi1jSG
+	TLJe6w49tmZ1tz6QOeB0FJ76ZsDuXw59Uk6jwbKifkHMvS6UWetKbI/AnuCfN1L0yhY0F5/aT6k
+	kfMBZXYvcZfjqpGBKYca8ts59t6ua21mXE05AUmzuNRoEZGs9PIrpG5dcoU20GpANRc4AJ1xuxn
+	s31BsuArpeujxu+4cg==
+X-Google-Smtp-Source: AGHT+IFsPXNm0VN4fhz9j1YlISnSLTnhxSksqXJSZH2pF4LIrrD49Yd5+0t4LxBW7zYNbwlROSfHIw==
+X-Received: by 2002:a05:6402:1ec2:b0:5dc:cc90:a390 with SMTP id 4fb4d7f45d1cf-5de4508fbebmr15214488a12.32.1739192995658;
+        Mon, 10 Feb 2025 05:09:55 -0800 (PST)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de4ba95a32sm6561228a12.40.2025.02.10.05.09.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 05:09:55 -0800 (PST)
+Date: Mon, 10 Feb 2025 14:09:53 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: I Hsin Cheng <richard120310@gmail.com>, rostedt@goodmis.org,
+	linux@rasmusvillemoes.dk, senozhatsky@chromium.org,
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	jserv@ccns.ncku.edu.tw, shuah@kernel.org
+Subject: Re: [PATCH] vsprintf: Drop unused assignment of fmt.state
+Message-ID: <Z6n6iWwnpA6wuUMD@pathway.suse.cz>
+References: <20250205172508.55358-1-richard120310@gmail.com>
+ <Z6TWEHvBF0HOxKsY@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6TWEHvBF0HOxKsY@smile.fi.intel.com>
 
-On Mon, 10 Feb 2025 12:41:59 +0000
-Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
+On Thu 2025-02-06 17:32:32, Andy Shevchenko wrote:
+> On Thu, Feb 06, 2025 at 01:25:07AM +0800, I Hsin Cheng wrote:
+> > Remove unused assignment of "fmt.state", in both cases the value of
+> > "fmt.state" will be overwritten by either "FORMAT_STATE_PRECISION" or
+> > "FORMAT_STATE_NUM", the value "FORMAT_STATE_NONE" isn't going to be used
+> > after the assignment.
+> 
+> ...
+> 
+> > struct fmt format_decode(struct fmt fmt, struct printf_spec *spec)
+> 
+> >  			spec->field_width = -spec->field_width;
+> >  			spec->flags |= LEFT;
+> >  		}
+> > -		fmt.state = FORMAT_STATE_NONE;
+> > +
+> >  		goto precision;
+> >  	}
+> >  
+> 
+> While both are kinda redundant, this is not obvious what's stated in the commit
+> message. Yes, `goto qualifier;` is straightforward, but not `goto precision;`.
+> Which makes me think that these assignments can make code robust against
+> potential future changes to allow to catch up the wrong code paths.
 
-> Panthor's fdinfo handler is routed through the /proc file system, which
-> executes in an atomic context. That means we cannot use mutexes because
-> they might sleep.
->=20
-> This bug was uncovered by enabling some of the kernel's mutex-debugging
-> features:
->=20
-> CONFIG_DEBUG_RT_MUTEXES=3Dy
-> CONFIG_DEBUG_MUTEXES=3Dy
->=20
-> Replace Panthor's group fdinfo data mutex with a guarded spinlock.
->=20
-> Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
-> Fixes: e16635d88fa0 ("drm/panthor: add DRM fdinfo support")
+I fully agree with Andy here.
 
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+That said, I see the following right below the two conditions modified
+in this patch:
 
-> ---
->  drivers/gpu/drm/panthor/panthor_sched.c | 26 ++++++++++++-------------
->  1 file changed, 12 insertions(+), 14 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/pa=
-nthor/panthor_sched.c
-> index 0b93bf83a9b2..7a267d1efeb6 100644
-> --- a/drivers/gpu/drm/panthor/panthor_sched.c
-> +++ b/drivers/gpu/drm/panthor/panthor_sched.c
-> @@ -9,6 +9,7 @@
->  #include <drm/panthor_drm.h>
-> =20
->  #include <linux/build_bug.h>
-> +#include <linux/cleanup.h>
->  #include <linux/clk.h>
->  #include <linux/delay.h>
->  #include <linux/dma-mapping.h>
-> @@ -631,10 +632,10 @@ struct panthor_group {
->  		struct panthor_gpu_usage data;
-> =20
->  		/**
-> -		 * @lock: Mutex to govern concurrent access from drm file's fdinfo cal=
-lback
-> -		 * and job post-completion processing function
-> +		 * @fdinfo.lock: Spinlock to govern concurrent access from drm file's =
-fdinfo
-> +		 * callback and job post-completion processing function
->  		 */
-> -		struct mutex lock;
-> +		spinlock_t lock;
-> =20
->  		/** @fdinfo.kbo_sizes: Aggregate size of private kernel BO's held by t=
-he group. */
->  		size_t kbo_sizes;
-> @@ -910,8 +911,6 @@ static void group_release_work(struct work_struct *wo=
-rk)
->  						   release_work);
->  	u32 i;
-> =20
-> -	mutex_destroy(&group->fdinfo.lock);
-> -
->  	for (i =3D 0; i < group->queue_count; i++)
->  		group_free_queue(group, group->queues[i]);
-> =20
-> @@ -2861,12 +2860,12 @@ static void update_fdinfo_stats(struct panthor_jo=
-b *job)
->  	struct panthor_job_profiling_data *slots =3D queue->profiling.slots->km=
-ap;
->  	struct panthor_job_profiling_data *data =3D &slots[job->profiling.slot];
-> =20
-> -	mutex_lock(&group->fdinfo.lock);
-> -	if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_CYCLES)
-> -		fdinfo->cycles +=3D data->cycles.after - data->cycles.before;
-> -	if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_TIMESTAMP)
-> -		fdinfo->time +=3D data->time.after - data->time.before;
-> -	mutex_unlock(&group->fdinfo.lock);
-> +	scoped_guard(spinlock, &group->fdinfo.lock) {
-> +		if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_CYCLES)
-> +			fdinfo->cycles +=3D data->cycles.after - data->cycles.before;
-> +		if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_TIMESTAMP)
-> +			fdinfo->time +=3D data->time.after - data->time.before;
-> +	}
->  }
-> =20
->  void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
-> @@ -2880,12 +2879,11 @@ void panthor_fdinfo_gather_group_samples(struct p=
-anthor_file *pfile)
-> =20
->  	xa_lock(&gpool->xa);
->  	xa_for_each(&gpool->xa, i, group) {
-> -		mutex_lock(&group->fdinfo.lock);
-> +		guard(spinlock)(&group->fdinfo.lock);
->  		pfile->stats.cycles +=3D group->fdinfo.data.cycles;
->  		pfile->stats.time +=3D group->fdinfo.data.time;
->  		group->fdinfo.data.cycles =3D 0;
->  		group->fdinfo.data.time =3D 0;
-> -		mutex_unlock(&group->fdinfo.lock);
->  	}
->  	xa_unlock(&gpool->xa);
->  }
-> @@ -3531,7 +3529,7 @@ int panthor_group_create(struct panthor_file *pfile,
->  	mutex_unlock(&sched->reset.lock);
-> =20
->  	add_group_kbo_sizes(group->ptdev, group);
-> -	mutex_init(&group->fdinfo.lock);
-> +	spin_lock_init(&group->fdinfo.lock);
-> =20
->  	return gid;
-> =20
->=20
-> base-commit: 2eca617f12586abff62038db1c14cb3aa60a15aa
-> prerequisite-patch-id: 7e787ce5973b5fc7e9f69f26aa4d7e5ec03d5caa
-> prerequisite-patch-id: 03a619b8c741444b28435850e23d9ec463171c13
-> prerequisite-patch-id: 290e1053f8bf4a8b80fb037a87cae7e096b5aa96
-> prerequisite-patch-id: bc49bb8c29905650fb4788acc528bb44013c0240
-> prerequisite-patch-id: 46cab4c980824c03e5164afc43085fec23e1cba5
+	/* By default */
+	fmt.state = FORMAT_STATE_NONE;
 
+A good solution would be to move it up. It will be then obvious
+that we could remove these two initializations. I mean
+to do the following:
+
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -2563,13 +2563,15 @@ struct fmt format_decode(struct fmt fmt, struct printf_spec *spec)
+ 	const char *start = fmt.str;
+ 	char flag;
+ 
++	/* By default */
++	fmt.state = FORMAT_STATE_NONE;
++
+ 	/* we finished early by reading the field width */
+ 	if (unlikely(fmt.state == FORMAT_STATE_WIDTH)) {
+ 		if (spec->field_width < 0) {
+ 			spec->field_width = -spec->field_width;
+ 			spec->flags |= LEFT;
+ 		}
+-		fmt.state = FORMAT_STATE_NONE;
+ 		goto precision;
+ 	}
+ 
+@@ -2578,13 +2580,9 @@ struct fmt format_decode(struct fmt fmt, struct printf_spec *spec)
+ 		if (spec->precision < 0)
+ 			spec->precision = 0;
+ 
+-		fmt.state = FORMAT_STATE_NONE;
+ 		goto qualifier;
+ 	}
+ 
+-	/* By default */
+-	fmt.state = FORMAT_STATE_NONE;
+-
+ 	for (; *fmt.str ; fmt.str++) {
+ 		if (*fmt.str == '%')
+ 			break;
+
+
+Best Regards,
+Petr
