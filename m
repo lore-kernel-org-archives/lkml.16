@@ -1,115 +1,119 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1926425B66C;
-	Mon, 10 Feb 2025 18:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E986F1BBBEA;
+	Mon, 10 Feb 2025 18:04:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739210615; cv=none; b=E125Z5Wp7WQUNSs2v5liAfemxPUwMrIxXPZJNSXnlQDqfu8p1/c0UgqX4BoWoHcKW1HbJ+uLqasv9ERJdbzzTe5hwQB73SHnmRa9mz0buWuKheIxGVRS4IPdQz34JpOp1ByeGar0ilpuXCza3Y0fXzEH0zyO0/6ea7n+k8D28f4=
+	t=1739210661; cv=none; b=daBXJwmBkthGdauAdtPOdzBgsw/ES6QMRgTV9FgtPHK/I/1F+q/0hE32spCypDkGOFanvMnivrvmzpvz55uOIIgRjoXmdYSHBodOCUDOHVMd9Cl9UVZ8Qne4ZIuIi10VmaLc0EA4bvkcspBS2b1EfrwPLFhPLHOSTvDHbCYpxM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739210615; c=relaxed/simple;
-	bh=Y9CvhGBkqE5kchtDnWlKjun5X2Fr3ixqtyPBWawWBlI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VcCw80zloOWqEm2yW35rfZCvWHl89cuf26ANk7teZIhZ1pQtyac+9LUJpO7OQSsMV1MTbViTzeVyrrQj5NDRfCu9KVexeQhl3Y80742rXZXns3cxx2BEeMT8Oxpkcd5+8lemP51PmTtCYvqv7n67nR33oNusgFwqd0vE6ewKRwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fToalVlZ; arc=none smtp.client-ip=209.85.208.182
+	s=arc-20240116; t=1739210661; c=relaxed/simple;
+	bh=SoRH/nPWFkeEUsSCVv1czg7FINQofZ6/jU8RngWhuhA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=sACdNnBLJCDbHaM7F9x/TG27B00jiJtU0CghOxp+YG0cLlJPpETxr1Owh7Vhs+M7mlYEvmUtCLsvkfu00LH1+Z9RW6AhmoHIoAxtLANZ8CTME5X4yp+7WUw3as12wYZfi6XbQDPPHAflM9BrpTeuMQORo/hapFrz9vmAE4d5Ksg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OqmQewij; arc=none smtp.client-ip=209.85.219.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fToalVlZ"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-308f141518cso11063961fa.2;
-        Mon, 10 Feb 2025 10:03:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OqmQewij"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6dd43aa1558so35841146d6.0;
+        Mon, 10 Feb 2025 10:04:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739210612; x=1739815412; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qBLHo62695TAfDbTkgx3lEPh4Gg3lJHpNTfxC+NS4sA=;
-        b=fToalVlZhqHh7JILh3Juds7G61koBR7/rqTsHgxKe1GkN9+C6mASHeUkUsGidaUuPR
-         zClb9yDsuG86bs2xtqDOkvoUM+qupXu2CF8nUDT3ChMEbrrcQJz1VaC8r+nhd1srlXaW
-         Abhp5JM4mAZ0mAAnZ+D0Ssm8tvrTu/TfMuRTvU3jG6mBcknh7cFo09Xst6pyST72u9A+
-         guTodGhwKqxH/5l4KCP6sCbGmtJdPJ5RwanrhXlnw1Bw9f6TysV/f8MtnM1LxnR5kpsp
-         wMbGv1rKkAGv+JAIqYWomCsWFCKN5Cq5wJ7GIOdilwPYt1d9oq91xMIBk8IHOEMbU+DC
-         RaxQ==
+        d=gmail.com; s=20230601; t=1739210658; x=1739815458; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=maSza0ymzP8/Fo7wVw77yTEckZpoR9TKor6Glc7MNzs=;
+        b=OqmQewijOmo9KQ5g7cLAb0Y5D1s5d7vb+LtmbOakofbBDicTYEwEhcVFsDPavoQKfe
+         T/i+gCXpcXjzeoFCov3L3Io+1ZYzjwjEOUzJmqkP7koXVmJ6JyHdpexhjb/qJLhb7nTZ
+         jrs2zCHblC0234PQJiTJdBhQbbI9+xpkSENg68fu9VgZvE0///eKQ3IufhwZvY7IHsz6
+         Ob9t27qShHWe5Rz4uIzIZe4mhMYATGHrzAlrqhKGEaCM+ltnAX22JVY5p75PxKo/rCCy
+         cXRZ1Jo4N5bgXQ2B7539quqt/z59tDnU1Q8Su2ab1GCwIqL9nPbsGY7ggyIvA+yhJMfm
+         W3xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739210612; x=1739815412;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qBLHo62695TAfDbTkgx3lEPh4Gg3lJHpNTfxC+NS4sA=;
-        b=aqZphQ4Ga8KCTbOCXyQj4ie5To1rkBGS3Hhf68x+MuV2PvdgayByedhdY+nHqh4atk
-         m2F8A5jLBQ+qJIPF1FLj/T5mGNLaU72LBzbFWxGlnuY6vHFZbPlQKWQT/3hkBc5h4V9G
-         YZfs10ShxfqplZHOdrnXROoEuEbcH6L4vn3UY3F6HK3Mrk+C5w/v7f22Vw8jVniy6I6P
-         htCHVesMXb93lw8PBfs8clMRxeCbTC2fxMt9Y+zRg3FZEYH5QGmP+3BkxIuuou9VtwL4
-         wZfxsyCIAM8izwYOox2ufNNdDSuV5FN0K5QcFUWcfKN0wJ/xsQChEMLsD9xvDSM85j4B
-         Ef3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVLwJxfsJ+qDJT7efIwHhulyQAA7DFeEbF99heKGEtA6ygQfl7Glr9OpyO0p7P0Jw7Za2WpUX1T6Oic7G+4ToA=@vger.kernel.org, AJvYcCVXWGsDRxnsAP6YenMJDEDX2YB3GLpee++XoqrjKKmDut1MSl3OLtaM4Gu+IWGS/zAkdT7UU0lateDU60g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhTn97+zve2F+vDe008PetRgbUduSjcltXuOF9K4BuyWY09tXi
-	l88A9Umac6b7yWEFY+L5nXgz4H2N28mn7Mf1vNtz6ztcEwmdrhtnQZPyuo6VKbrmqOsZl76256o
-	OOu23crwYFza76kwH7M2pTlXqZZ0=
-X-Gm-Gg: ASbGnctWT77uCB/oPO53sM0XQjfrkKmdAqnxLTDI52IAQoQ3mtmXvpk/k2S7lxCiFHA
-	SwLb7ZrzdfcQGD5nzwr8lR8JGRN1fiuNlf2WPWARlhl3xoAKGN3IL1NmPPlY8NKgyXxCItv+8st
-	3sBmRedJn3d7I6
-X-Google-Smtp-Source: AGHT+IEfNTwaYcTw825LAOFkxCktmowxOemqg4m/4glVdznuZpneN6tK8ExE+puS4IaGG6P/Y7W0Pq2b6NH8HKFwsJI=
-X-Received: by 2002:a2e:bea0:0:b0:308:f479:56b3 with SMTP id
- 38308e7fff4ca-308f8352fc7mr3599781fa.9.1739210610331; Mon, 10 Feb 2025
- 10:03:30 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739210658; x=1739815458;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=maSza0ymzP8/Fo7wVw77yTEckZpoR9TKor6Glc7MNzs=;
+        b=aRD0v9Ym3vRdDi8j7esD3BfTcxaMFSprbdjACBK5RJzSKC5ZdSh1aRYtV4+QUbhVXe
+         RHAgtu2SGc8Kp00oVjT93MiAE16HmmxNpXttXFQ/3YQGlPj+3iSwrqATW4pi8CLtUX/0
+         GdToBzPF0SfRkP6eKna8YqZFLuLWQ/gD6jevi7IP2BpVTp1sr5hp8EncW6dplu2z/fqx
+         7H1kuRhus1B/edL9B2aNSqISDl3t83ODkN2F9x8cXjzldLpJjka76SaM5tOhNFAyeNZb
+         txrqFPFgRqJX81gF2l/tjxVU9S39Z16vOR8yKOFY7lIfz5ODeRZdLy8WL01afBofTzKN
+         huDw==
+X-Forwarded-Encrypted: i=1; AJvYcCURJo2wlGAyeFPEDwi9lMstyixP7w/9My0Xl3ICzl60PGGZMAsHSquXS2Yc8Q1opN2SxOi/drjJTtWxxE8=@vger.kernel.org, AJvYcCXb4Vkl6xWsxdmRHjV1BOpUHA8JXbVGQiH0bknsU7P8Ch5Qi79+XdIiN73vk6KWd5+DmfeuucMU1RQ6wYOJxnU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaNcKzfmaXSQRxwYIIhwiW5S5oDYaLMz4X4D7xtxUvWrfl2P2v
+	IGwv4V3VLOrNh+l/JBUOFYRx8v2nEXJMdggJNqr9KmHurN7Zpt9Y4EX7q5c2
+X-Gm-Gg: ASbGnctjsIP709Me0skX66yJh/Hm/1WFqLLMYG5WRPdSsq2q1s+XtVllva6ixMpBFLY
+	LuFPeOWRyCwVeOOxLkZNrApCtyaxSkQFf7hET5hfI0CqJMHk0vDtO24ORPBOVzrRWCxlwlDWCml
+	iz8z7ZEyRP9noigaQo5kKgm8ZmM077gs6vJvF5Vtkbg9JV+WYFZmfEVZAJHjFhVz3lS1rOpq9a+
+	1cTr2lh1RMW8efuA9U4K46B52iJ+ViObxpB2tOhgA6EryDraPdC9R54CwPt2LJ9QVTv9P8vq+fL
+	JjyWnw120rJCC48WcQLqhOD7+zsqhbn05EkT/WwF1THGiY2qMBr+tkwC0EvAzD+jG0reOe98PZ/
+	u1QAwEIBIJZ+8NTl8g//7jLKl
+X-Google-Smtp-Source: AGHT+IE+pEQj4YUADOP22JHCS7hpqQRk1URb9IxIh4573GE4bUofjqFBZ9ngBTUaFeniPofJYCAySA==
+X-Received: by 2002:ad4:5d4e:0:b0:6d8:7ed4:336a with SMTP id 6a1803df08f44-6e46788825fmr10925946d6.31.1739210657813;
+        Mon, 10 Feb 2025 10:04:17 -0800 (PST)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:cc94])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e449c271b2sm37713226d6.36.2025.02.10.10.04.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 10:04:17 -0800 (PST)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH v2 0/2] rust: fix rust-analyzer configuration for generated
+ files
+Date: Mon, 10 Feb 2025 13:04:15 -0500
+Message-Id: <20250210-rust-analyzer-bindings-include-v2-0-23dff845edc3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210-rust-analyzer-bindings-include-v1-0-6cbf420e95b6@gmail.com>
- <20250210-rust-analyzer-bindings-include-v1-2-6cbf420e95b6@gmail.com>
-In-Reply-To: <20250210-rust-analyzer-bindings-include-v1-2-6cbf420e95b6@gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 10 Feb 2025 13:02:54 -0500
-X-Gm-Features: AWEUYZlG2jxh-TA0rxRlTkVHHOTeiSDwax3JSp3gO9KYpuQ4Xzp_Z0ead36hmJQ
-Message-ID: <CAJ-ks9mK1uma-xN-=z6Y8OkrJB6=rppcx5njyCGGsz2MkNLr2g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] scripts: generate_rust_analyzer.py: add uapi crate
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJ8/qmcC/42NSw6CMBQAr0Le2mfaKkRceQ/Dop8HvKQU0wIRC
+ Xe3cgKXM4uZDRJFpgT3YoNICyceQwZ1KsD2OnSE7DKDEqoUSgqMc5pQB+3XD0U0HByHLiEH62d
+ HWF4k1U5bsjcHOfKK1PL7GDybzD2naYzr8Vvkz/6dXiQKrKxpr0pQXZrq0Q2a/dmOAzT7vn8Bk
+ MTGY8wAAAA=
+X-Change-ID: 20250210-rust-analyzer-bindings-include-531e9dacec8d
 To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Kees Cook <kees@kernel.org>, 
-	Fiona Behrens <me@kloenk.dev>, Martin Rodriguez Reboredo <yakoyoku@gmail.com>, Asahi Lina <lina@asahilina.net>
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Kees Cook <kees@kernel.org>, 
+ Fiona Behrens <me@kloenk.dev>, 
+ Martin Rodriguez Reboredo <yakoyoku@gmail.com>, 
+ Asahi Lina <lina@asahilina.net>
 Cc: Boris-Chengbiao Zhou <bobo1239@web.de>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ linux-kernel@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-On Mon, Feb 10, 2025 at 12:56=E2=80=AFPM Tamir Duberstein <tamird@gmail.com=
-> wrote:
->
-> Commit 4e1746656839 ("rust: uapi: Add UAPI crate") did not update
-> rust-analyzer to include the new crate.
->
-> Add the missing definition to improve the developer experience.
->
-> Fixes: 4e1746656839 ("rust: uapi: Add UAPI crate")
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
->  scripts/generate_rust_analyzer.py | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/scripts/generate_rust_analyzer.py b/scripts/generate_rust_an=
-alyzer.py
-> index 1f573d19cd99..ee4f01ada277 100755
-> --- a/scripts/generate_rust_analyzer.py
-> +++ b/scripts/generate_rust_analyzer.py
-> @@ -105,6 +105,7 @@ def generate_crates(srctree, objtree, sysroot_src, ex=
-ternal_src, cfgs):
->          }
->
->      append_crate_with_generated("bindings", ["core"])
-> +    append_crate_with_generated("uapi", ["core"])
->      append_crate_with_generated("kernel", ["core", "macros", "build_erro=
-r", "bindings"])
->
->      def is_root_crate(build_file, target):
->
-> --
-> 2.48.1
->
+The individual patches should be descriptive on their own. They are
+included in a single series because the second patch uses a function
+introduced in the first.
 
-Oops, missing core dependency on uapi.
+I've confirmed this allows me to navigate to symbols defined in
+generated files as well as to the generated files themselves. I am using
+an out-of-source build.
+
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+Changes in v2:
+- Add missing core dependency on uapi. Fixes navigation in
+  rust/kernel/ioctl.rs.
+- Link to v1: https://lore.kernel.org/r/20250210-rust-analyzer-bindings-include-v1-0-6cbf420e95b6@gmail.com
+
+---
+Tamir Duberstein (2):
+      scripts: generate_rust_analyzer.py: add missing include_dirs
+      scripts: generate_rust_analyzer.py: add uapi crate
+
+ scripts/generate_rust_analyzer.py | 41 ++++++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 20 deletions(-)
+---
+base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+change-id: 20250210-rust-analyzer-bindings-include-531e9dacec8d
+
+Best regards,
+-- 
+Tamir Duberstein <tamird@gmail.com>
+
