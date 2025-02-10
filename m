@@ -1,354 +1,99 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A7320487F
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 14:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F0C2397B9;
+	Mon, 10 Feb 2025 14:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739199434; cv=none; b=ocau1WF92EaPIGePEDe6P9hiNmUmCxIr48brcoorSjoOHtEsTTazd6hIaGIMFVC62qnsZINShC7dmncG2deMkW3AsZ1FWjNKunJVX7+lmOAF3qN9KXhD0ZxLTFjU4Or07bskNJaT3TRdwwdXwW7yrNJHEZnVQ/csQSa7TjdYdoM=
+	t=1739199435; cv=none; b=pymYC1SLPb0zZ/OzA/75kCETjEAkUa6VK6yrvMe7Jaf/0be6i7zOHgZXaoJOKWMbwauRh7aVOSTsnvnCgvzbZExwA2fYaElSo9ToWe0JdzJpvscK2fahZe4k3h1a+g8H8VsX38a0vZILzkMB6VaSJDXcLFW/VcBJ/TxqsB9z9Ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739199434; c=relaxed/simple;
-	bh=YKG6Z29MpBVK//KZKgRKZ45I33/PdBTV91zo9s6fkic=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z/vevTavOvtjX7FLh4boOB4YNwGbOdREiCvufMBpughAs4OV3zYK/FVOoKT441y92uEw1hoAImBnZIuqzXaJnyCsTiJObRFVNuV1lD3pl3U+43154oW3aTdL1rnGeTbw+9p12XCPzpEGcchbx9EJ77N3uvRW7x9O7ALTfKkFc0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Ys6yW4HSzz2FcV3;
-	Mon, 10 Feb 2025 22:53:23 +0800 (CST)
-Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
-	by mail.maildlp.com (Postfix) with ESMTPS id 237EE1A0188;
-	Mon, 10 Feb 2025 22:57:07 +0800 (CST)
-Received: from localhost.huawei.com (10.169.71.169) by
- kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Mon, 10 Feb 2025 22:57:05 +0800
-From: Yongbang Shi <shiyongbang@huawei.com>
-To: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-	<kong.kongxinwei@hisilicon.com>
-CC: <liangjian010@huawei.com>, <chenjianmin@huawei.com>,
-	<lidongming5@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
-	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 drm-dp 3/7] drm/hisilicon/hibmc: Getting connector info and edid by using aux channel
-Date: Mon, 10 Feb 2025 22:49:55 +0800
-Message-ID: <20250210144959.100551-4-shiyongbang@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20250210144959.100551-1-shiyongbang@huawei.com>
-References: <20250210144959.100551-1-shiyongbang@huawei.com>
+	s=arc-20240116; t=1739199435; c=relaxed/simple;
+	bh=4ICcj8QdOWU1kXHtu8nmsMNpiM1O67Af20gHNKdHi/s=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=fWU5VDcHeJzZVyyNAXTxTcKhD2O0lZbpl6KpDFMdJ20U17pD1dzHw/CMmhyTr3tA/chOzn5wP+nLQN8G80SbnIy3M5VQwWqD1l6ZFwKOiYBCYGNyHqsNHCAcLOO7B2UuR+iDLy1cyXsiYa3l2EDZD2zR15EhRR4fB+fAWx1F9N0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XTSh+rMO; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XTSh+rMO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739199434; x=1770735434;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=4ICcj8QdOWU1kXHtu8nmsMNpiM1O67Af20gHNKdHi/s=;
+  b=XTSh+rMOxRvOA8sdeEZ12wgvLaIO3zFVzvGbbuvZpBFfltGPw29YrFpw
+   oQWsd+ht2L7BwWGxeOk58xTZ7jyy8z1rRivpn+5LARINsgsISvs2MB4Pf
+   ycMLcNJqR4GDor23p+oQATaE981DPTpXaiLXnBqViTrVjlB/V1dNrUU3l
+   uwuzXCvL42FPGLvnefTfq5Mv9FWcSZviX+a9Qm9nl0Q6jrwTH2MSOS8yk
+   rRocHPeBFrstILAXBiHJMkpWVrzI9LhWI71YCv6eecflAcNILzW6SEs9U
+   5xCb+ATBPHOTSyizT57OrCnsAAr7KN881uWLe4H88xLGV9ScbqpIngI9a
+   A==;
+X-CSE-ConnectionGUID: LIONdeNYQjSyO6hhUNLwXg==
+X-CSE-MsgGUID: 2pt8J8FlQ6yonNGpnwRVug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="65134915"
+X-IronPort-AV: E=Sophos;i="6.13,274,1732608000"; 
+   d="scan'208";a="65134915"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 06:57:12 -0800
+X-CSE-ConnectionGUID: INQMVpnbSk2zCSi368zCmQ==
+X-CSE-MsgGUID: 0YminiqsT+euDpMsEd701w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="113089551"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.72])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 06:57:06 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Sybil Isabel Dorsett <sybdorsett@proton.me>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+ Hans de Goede <hdegoede@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250203163255.5525-1-sybdorsett@proton.me>
+References: <20250131203854.6608-1-sybdorsett@proton.me>
+ <69e279a3-7fd5-9dc3-680d-7415022dc5e4@linux.intel.com>
+ <20250203130232.3481-1-sybdorsett@proton.me>
+ <d20f933c-8041-bc8d-13c2-98d89ccfa524@linux.intel.com>
+ <cc7c8e94-4340-3d1e-03b4-2f738067d24f@linux.intel.com>
+ <20250203163255.5525-1-sybdorsett@proton.me>
+Subject: Re: [PATCH v3] platform/x86: thinkpad_acpi: Fix invalid fan speed
+ on ThinkPad X120e
+Message-Id: <173919942123.8268.13577857743094201898.b4-ty@linux.intel.com>
+Date: Mon, 10 Feb 2025 16:57:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemd500013.china.huawei.com (7.221.188.12)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-From: Baihan Li <libaihan@huawei.com>
+On Mon, 03 Feb 2025 16:33:15 +0000, Sybil Isabel Dorsett wrote:
 
-Registering drm_aux and using it to get connector edid with drm functions.
-Refactoring some structs to fit aux's register framework. We need change
-a lot about getting member of drm_aux, because we change it's postions from
-struct hibmc_dp_dev to struct hibmc_dp.
+> On ThinkPad X120e, fan speed is reported in ticks per revolution
+> rather than RPM.
+> 
+> Recalculate the fan speed value reported for ThinkPad X120e
+> to RPM based on a 22.5 kHz clock.
+> 
+> Based on the information on
+> https://www.thinkwiki.org/wiki/How_to_control_fan_speed,
+> the same problem is highly likely to be relevant to at least Edge11,
+> but Edge11 is not addressed in this patch.
+> 
+> [...]
 
-Signed-off-by: Baihan Li <libaihan@huawei.com>
-Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
----
-ChangeLog:
-v1 -> v2:
-  - deleting type conversion, suggested by Dmitry Baryshkov.
-  - deleting hibmc_dp_connector_get_modes() and using drm_connector_helper_get_modes(), suggested by Dmitry Baryshkov.
----
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c   | 16 ++++++----
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h  |  7 +++--
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c    |  2 +-
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h    |  2 ++
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c  | 22 +++++++-------
- .../gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c    | 30 +++++++++++--------
- .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h   |  5 ++++
- 7 files changed, 52 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c
-index 0a903cce1fa9..e0bb9b14d9d8 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c
-@@ -8,6 +8,7 @@
- #include <drm/drm_print.h>
- #include "dp_comm.h"
- #include "dp_reg.h"
-+#include "dp_hw.h"
- 
- #define HIBMC_AUX_CMD_REQ_LEN		GENMASK(7, 4)
- #define HIBMC_AUX_CMD_ADDR		GENMASK(27, 8)
-@@ -124,7 +125,8 @@ static int hibmc_dp_aux_parse_xfer(struct hibmc_dp_dev *dp, struct drm_dp_aux_ms
- /* ret >= 0 ,ret is size; ret < 0, ret is err code */
- static ssize_t hibmc_dp_aux_xfer(struct drm_dp_aux *aux, struct drm_dp_aux_msg *msg)
- {
--	struct hibmc_dp_dev *dp = container_of(aux, struct hibmc_dp_dev, aux);
-+	struct hibmc_dp *dp_priv = container_of(aux, struct hibmc_dp, aux);
-+	struct hibmc_dp_dev *dp = dp_priv->dp_dev;
- 	u32 aux_cmd;
- 	int ret;
- 	u32 val; /* val will be assigned at the beginning of readl_poll_timeout function */
-@@ -151,14 +153,16 @@ static ssize_t hibmc_dp_aux_xfer(struct drm_dp_aux *aux, struct drm_dp_aux_msg *
- 	return hibmc_dp_aux_parse_xfer(dp, msg);
- }
- 
--void hibmc_dp_aux_init(struct hibmc_dp_dev *dp)
-+void hibmc_dp_aux_init(struct hibmc_dp *dp)
- {
--	hibmc_dp_reg_write_field(dp, HIBMC_DP_AUX_REQ, HIBMC_DP_CFG_AUX_SYNC_LEN_SEL, 0x0);
--	hibmc_dp_reg_write_field(dp, HIBMC_DP_AUX_REQ, HIBMC_DP_CFG_AUX_TIMER_TIMEOUT, 0x1);
--	hibmc_dp_reg_write_field(dp, HIBMC_DP_AUX_REQ, HIBMC_DP_CFG_AUX_MIN_PULSE_NUM,
-+	hibmc_dp_reg_write_field(dp->dp_dev, HIBMC_DP_AUX_REQ, HIBMC_DP_CFG_AUX_SYNC_LEN_SEL, 0x0);
-+	hibmc_dp_reg_write_field(dp->dp_dev, HIBMC_DP_AUX_REQ, HIBMC_DP_CFG_AUX_TIMER_TIMEOUT, 0x1);
-+	hibmc_dp_reg_write_field(dp->dp_dev, HIBMC_DP_AUX_REQ, HIBMC_DP_CFG_AUX_MIN_PULSE_NUM,
- 				 HIBMC_DP_MIN_PULSE_NUM);
- 
- 	dp->aux.transfer = hibmc_dp_aux_xfer;
--	dp->aux.is_remote = 0;
-+	dp->aux.name = kasprintf(GFP_KERNEL, "HIBMC DRM dp aux");
-+	dp->aux.drm_dev = dp->drm_dev;
- 	drm_dp_aux_init(&dp->aux);
-+	dp->dp_dev->aux = &dp->aux;
- }
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h
-index e7746bc4b592..d613da8b544c 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h
-+++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h
-@@ -11,8 +11,11 @@
- #include <linux/kernel.h>
- #include <linux/bitfield.h>
- #include <linux/io.h>
-+
- #include <drm/display/drm_dp_helper.h>
- 
-+#include "dp_hw.h"
-+
- #define HIBMC_DP_LANE_NUM_MAX 2
- 
- struct hibmc_link_status {
-@@ -32,7 +35,7 @@ struct hibmc_dp_link {
- };
- 
- struct hibmc_dp_dev {
--	struct drm_dp_aux aux;
-+	struct drm_dp_aux *aux;
- 	struct drm_device *dev;
- 	void __iomem *base;
- 	struct mutex lock; /* protects concurrent RW in hibmc_dp_reg_write_field() */
-@@ -58,7 +61,7 @@ struct hibmc_dp_dev {
- 		mutex_unlock(&_dp->lock);				\
- 	} while (0)
- 
--void hibmc_dp_aux_init(struct hibmc_dp_dev *dp);
-+void hibmc_dp_aux_init(struct hibmc_dp *dp);
- int hibmc_dp_link_training(struct hibmc_dp_dev *dp);
- 
- #endif
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
-index ee1ff205ff56..77f02d5151f7 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
-@@ -168,7 +168,7 @@ int hibmc_dp_hw_init(struct hibmc_dp *dp)
- 	dp_dev->dev = drm_dev;
- 	dp_dev->base = dp->mmio + HIBMC_DP_OFFSET;
- 
--	hibmc_dp_aux_init(dp_dev);
-+	hibmc_dp_aux_init(dp);
- 
- 	if (hibmc_dp_serdes_init(dp_dev))
- 		return -EAGAIN;
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h
-index 4dc13b3d9875..53b6d0beecea 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h
-+++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h
-@@ -10,6 +10,7 @@
- #include <drm/drm_encoder.h>
- #include <drm/drm_connector.h>
- #include <drm/drm_print.h>
-+#include <drm/display/drm_dp_helper.h>
- 
- struct hibmc_dp_dev;
- 
-@@ -19,6 +20,7 @@ struct hibmc_dp {
- 	struct drm_encoder encoder;
- 	struct drm_connector connector;
- 	void __iomem *mmio;
-+	struct drm_dp_aux aux;
- };
- 
- int hibmc_dp_hw_init(struct hibmc_dp *dp);
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
-index 43a4b656493f..4a99a9b7e3c4 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
-@@ -27,7 +27,7 @@ static int hibmc_dp_link_training_configure(struct hibmc_dp_dev *dp)
- 	/* set rate and lane count */
- 	buf[0] = dp->link.cap.link_rate;
- 	buf[1] = DP_LANE_COUNT_ENHANCED_FRAME_EN | dp->link.cap.lanes;
--	ret = drm_dp_dpcd_write(&dp->aux, DP_LINK_BW_SET, buf, sizeof(buf));
-+	ret = drm_dp_dpcd_write(dp->aux, DP_LINK_BW_SET, buf, sizeof(buf));
- 	if (ret != sizeof(buf)) {
- 		drm_dbg_dp(dp->dev, "dp aux write link rate and lanes failed, ret: %d\n", ret);
- 		return ret >= 0 ? -EIO : ret;
-@@ -36,13 +36,13 @@ static int hibmc_dp_link_training_configure(struct hibmc_dp_dev *dp)
- 	/* set 8b/10b and downspread */
- 	buf[0] = DP_SPREAD_AMP_0_5;
- 	buf[1] = DP_SET_ANSI_8B10B;
--	ret = drm_dp_dpcd_write(&dp->aux, DP_DOWNSPREAD_CTRL, buf, sizeof(buf));
-+	ret = drm_dp_dpcd_write(dp->aux, DP_DOWNSPREAD_CTRL, buf, sizeof(buf));
- 	if (ret != sizeof(buf)) {
- 		drm_dbg_dp(dp->dev, "dp aux write 8b/10b and downspread failed, ret: %d\n", ret);
- 		return ret >= 0 ? -EIO : ret;
- 	}
- 
--	ret = drm_dp_read_dpcd_caps(&dp->aux, dp->dpcd);
-+	ret = drm_dp_read_dpcd_caps(dp->aux, dp->dpcd);
- 	if (ret)
- 		drm_err(dp->dev, "dp aux read dpcd failed, ret: %d\n", ret);
- 
-@@ -85,7 +85,7 @@ static int hibmc_dp_link_set_pattern(struct hibmc_dp_dev *dp, int pattern)
- 
- 	hibmc_dp_reg_write_field(dp, HIBMC_DP_PHYIF_CTRL0, HIBMC_DP_CFG_PAT_SEL, val);
- 
--	ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_PATTERN_SET, &buf, sizeof(buf));
-+	ret = drm_dp_dpcd_write(dp->aux, DP_TRAINING_PATTERN_SET, &buf, sizeof(buf));
- 	if (ret != sizeof(buf)) {
- 		drm_dbg_dp(dp->dev, "dp aux write training pattern set failed\n");
- 		return ret >= 0 ? -EIO : ret;
-@@ -115,7 +115,7 @@ static int hibmc_dp_link_training_cr_pre(struct hibmc_dp_dev *dp)
- 	if (ret)
- 		return ret;
- 
--	ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_LANE0_SET, train_set, dp->link.cap.lanes);
-+	ret = drm_dp_dpcd_write(dp->aux, DP_TRAINING_LANE0_SET, train_set, dp->link.cap.lanes);
- 	if (ret != dp->link.cap.lanes) {
- 		drm_dbg_dp(dp->dev, "dp aux write training lane set failed\n");
- 		return ret >= 0 ? -EIO : ret;
-@@ -198,9 +198,9 @@ static int hibmc_dp_link_training_cr(struct hibmc_dp_dev *dp)
- 
- 	voltage_tries = 1;
- 	for (cr_tries = 0; cr_tries < 80; cr_tries++) {
--		drm_dp_link_train_clock_recovery_delay(&dp->aux, dp->dpcd);
-+		drm_dp_link_train_clock_recovery_delay(dp->aux, dp->dpcd);
- 
--		ret = drm_dp_dpcd_read_link_status(&dp->aux, lane_status);
-+		ret = drm_dp_dpcd_read_link_status(dp->aux, lane_status);
- 		if (ret != DP_LINK_STATUS_SIZE) {
- 			drm_err(dp->dev, "Get lane status failed\n");
- 			return ret;
-@@ -224,7 +224,7 @@ static int hibmc_dp_link_training_cr(struct hibmc_dp_dev *dp)
- 		if (ret)
- 			return ret;
- 
--		ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_LANE0_SET, dp->link.train_set,
-+		ret = drm_dp_dpcd_write(dp->aux, DP_TRAINING_LANE0_SET, dp->link.train_set,
- 					dp->link.cap.lanes);
- 		if (ret != dp->link.cap.lanes) {
- 			drm_dbg_dp(dp->dev, "Update link training failed\n");
-@@ -251,9 +251,9 @@ static int hibmc_dp_link_training_channel_eq(struct hibmc_dp_dev *dp)
- 		return ret;
- 
- 	for (eq_tries = 0; eq_tries < HIBMC_EQ_MAX_RETRY; eq_tries++) {
--		drm_dp_link_train_channel_eq_delay(&dp->aux, dp->dpcd);
-+		drm_dp_link_train_channel_eq_delay(dp->aux, dp->dpcd);
- 
--		ret = drm_dp_dpcd_read_link_status(&dp->aux, lane_status);
-+		ret = drm_dp_dpcd_read_link_status(dp->aux, lane_status);
- 		if (ret != DP_LINK_STATUS_SIZE) {
- 			drm_err(dp->dev, "get lane status failed\n");
- 			break;
-@@ -278,7 +278,7 @@ static int hibmc_dp_link_training_channel_eq(struct hibmc_dp_dev *dp)
- 		if (ret)
- 			return ret;
- 
--		ret = drm_dp_dpcd_write(&dp->aux, DP_TRAINING_LANE0_SET,
-+		ret = drm_dp_dpcd_write(dp->aux, DP_TRAINING_LANE0_SET,
- 					dp->link.train_set, dp->link.cap.lanes);
- 		if (ret != dp->link.cap.lanes) {
- 			drm_dbg_dp(dp->dev, "Update link training failed\n");
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
-index 603d6b198a54..795c5b1a6b99 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
-@@ -13,20 +13,24 @@
- #include "hibmc_drm_drv.h"
- #include "dp/dp_hw.h"
- 
--static int hibmc_dp_connector_get_modes(struct drm_connector *connector)
--{
--	int count;
-+static const struct drm_connector_helper_funcs hibmc_dp_conn_helper_funcs = {
-+	.get_modes = drm_connector_helper_get_modes,
-+	.detect_ctx = drm_connector_helper_detect_from_ddc,
-+};
- 
--	count = drm_add_modes_noedid(connector, connector->dev->mode_config.max_width,
--				     connector->dev->mode_config.max_height);
--	drm_set_preferred_mode(connector, 1024, 768); // temporary implementation
-+static int hibmc_dp_late_register(struct drm_connector *connector)
-+{
-+	struct hibmc_dp *dp = to_hibmc_dp(connector);
- 
--	return count;
-+	return drm_dp_aux_register(&dp->aux);
- }
- 
--static const struct drm_connector_helper_funcs hibmc_dp_conn_helper_funcs = {
--	.get_modes = hibmc_dp_connector_get_modes,
--};
-+static void hibmc_dp_early_unregister(struct drm_connector *connector)
-+{
-+	struct hibmc_dp *dp = to_hibmc_dp(connector);
-+
-+	drm_dp_aux_unregister(&dp->aux);
-+}
- 
- static const struct drm_connector_funcs hibmc_dp_conn_funcs = {
- 	.reset = drm_atomic_helper_connector_reset,
-@@ -34,6 +38,8 @@ static const struct drm_connector_funcs hibmc_dp_conn_funcs = {
- 	.destroy = drm_connector_cleanup,
- 	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
- 	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-+	.late_register = hibmc_dp_late_register,
-+	.early_unregister = hibmc_dp_early_unregister,
- };
- 
- static inline int hibmc_dp_prepare(struct hibmc_dp *dp, struct drm_display_mode *mode)
-@@ -103,8 +109,8 @@ int hibmc_dp_init(struct hibmc_drm_private *priv)
- 
- 	drm_encoder_helper_add(encoder, &hibmc_dp_encoder_helper_funcs);
- 
--	ret = drm_connector_init(dev, connector, &hibmc_dp_conn_funcs,
--				 DRM_MODE_CONNECTOR_DisplayPort);
-+	ret = drm_connector_init_with_ddc(dev, connector, &hibmc_dp_conn_funcs,
-+					  DRM_MODE_CONNECTOR_DisplayPort, &dp->aux.ddc);
- 	if (ret) {
- 		drm_err(dev, "init dp connector failed: %d\n", ret);
- 		return ret;
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-index d982f1e4b958..3ddd71aada66 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-@@ -47,6 +47,11 @@ static inline struct hibmc_vdac *to_hibmc_vdac(struct drm_connector *connector)
- 	return container_of(connector, struct hibmc_vdac, connector);
- }
- 
-+static inline struct hibmc_dp *to_hibmc_dp(struct drm_connector *connector)
-+{
-+	return container_of(connector, struct hibmc_dp, connector);
-+}
-+
- static inline struct hibmc_drm_private *to_hibmc_drm_private(struct drm_device *dev)
- {
- 	return container_of(dev, struct hibmc_drm_private, dev);
--- 
-2.33.0
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/1] platform/x86: thinkpad_acpi: Fix invalid fan speed on ThinkPad X120e
+      commit: 1046cac109225eda0973b898e053aeb3d6c10e1d
+
+--
+ i.
 
