@@ -1,142 +1,113 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794CB24BCFB;
-	Mon, 10 Feb 2025 15:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0041F8BC6
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 15:49:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739202550; cv=none; b=GYwx7HObg3DsMW/dgPLQL0RidB+Do8oRl5T5XhJegb8Aak4Ya9pY2cNlq6TtIXRPWz49YXRKF3aytkkcAhw95NEhkbqbty8/RRdmqRm9nYQV/iqETLrl+AJ68c9ibapyci115wHKVnD1LTXmZrfXeib6fam/EfGIWmSz7rWx0i4=
+	t=1739202601; cv=none; b=mRDwIx0iPDFphlkpKSKi84m9Jvqygq3sDiRmYNxqrQV6snIIS4Y8utnFbESx0YIR64Sr5Y9mKJqyshfohSIYTJkALqOh7XoVwpDJUyxsG33Z0Dg4zOWc9r4JIv8rZqzZwZREoBz6WXA1oRAZZQldBlQ+u4ho1JdE2ntrZKPvD8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739202550; c=relaxed/simple;
-	bh=MfuMNL4ma4tuOTtb73c+SttAf3oWKFO53E2ZV9Y7vvA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XKsEMa6W0y7EjYISjsYUdpGOJMhXOUrTqHV142Kl14HI9a/FAn6zdEYzX1sP/wDcVA7Da97NPLjJPq6iOIsfSYuZcmL77BdHm0QTQG+QXex+AAu5+V+PRxn0WT5Syk535Frp9aN5omTdfMImCjSuk/EOHkw5PRhpwoZkHa9gaJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=KQZQ/iI+; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=W6jP25cU reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1739202601; c=relaxed/simple;
+	bh=hTF9BBpSp14sdvnM3Qbav0GMODhgNlVIj19eZpklVHo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H18wyPLoKxzyw44immumPVC4v9A7acasNtHJmWL+h3DFa63S+45Sm7NQ3m6Ry+PrjdJlOqqsdanrdlgFV9o+/wpHfjehKpln6cDoFmYSI+36k+doF4ioO0SundJtzXgMMDjaQHwHs7QVDrX4jRVPsxPpZWm0edtQqDlo88GLm1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=inJbW/zF; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="KQZQ/iI+";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="W6jP25cU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1739202548; x=1770738548;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=pVDvbwIvnOZ4humPqCqO2awtBoUSnhumXMCo453Cge4=;
-  b=KQZQ/iI+0l8Dqx4mFSbMn9SkTvq7pFtNgAlAowQ6EOUyYguyYA5Xrtkb
-   qk51GB2FnpcsmmceU8IuYHCptLBnN2Kcd/EZ11LbBr8pfE+QBLXuiUKOu
-   3ntEuV8REQyxRmHfjt3Il2X8DJ4TGMr9WND0nJRl/Hh27esTlS9Qwrwy0
-   XKf8zMtUvRrN6f1gzzZn4MGVJ5ebkoeKFEQS3i7OTnV5rN6I5CXgGtk1+
-   Y8dGvrfUW30m9vL3aNnJAhh1myPM5NgQlUWbzxHoK4rkOx3s42Jmo7I8q
-   Jtj3IqksiyOV01i7LtL1f1Kx+JWSvnwn36utwFuTAJXLIIZcO/+WeQECE
-   w==;
-X-CSE-ConnectionGUID: H1xBE4XyRwqDrcXHSdTukA==
-X-CSE-MsgGUID: THM2mKF7RlequMHpcGeCOg==
-X-IronPort-AV: E=Sophos;i="6.13,274,1732575600"; 
-   d="scan'208";a="41723421"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 10 Feb 2025 16:49:02 +0100
-X-CheckPoint: {67AA1FEE-1B-B8541F8F-E50F9B0E}
-X-MAIL-CPID: 3596EAA376F14855D334F1E93CC1918F_2
-X-Control-Analysis: str=0001.0A00636F.67AA1FF1.0017,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 40786160ABD;
-	Mon, 10 Feb 2025 16:48:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1739202538;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="inJbW/zF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739202598;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pVDvbwIvnOZ4humPqCqO2awtBoUSnhumXMCo453Cge4=;
-	b=W6jP25cUKKQKO4dVA5Xu2nJmNQ5pXA8eVc1xaW2ifgRB1N51ZD9eXM8rz2bf4oOObaxU/m
-	D4U2/6Z98BNU5DLVe272MVsorHmmyJ775GgfWtTKHieZRiyqqBi7L63YIDYQgGIj1wJxHl
-	VX9HVC+/TdJqd8VRg+euR4jMk5F3ARbUtGWsu3QN5L3Zw+pUtKBk1nqpR/cnxHDmhkCNkb
-	3l3AsF+bJ93WMY1QFPTEMTYppCIZPfJvEtbkm0ygDUPuaL4sIchVLSy9HQnefyIrdz6ugh
-	DhaQ4/8oxxEGk+Vn/EJWvX1xINnXJ0Z1bz5xGWITg2p5t/3uK+jzigYck/1uxw==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Peng Fan <peng.fan@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 04/10] arm64: dts: imx8mn: Add access-controller references
-Date: Mon, 10 Feb 2025 16:48:56 +0100
-Message-ID: <2222299.irdbgypaU6@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <PAXPR04MB845912F48DC37B6BC599313888F22@PAXPR04MB8459.eurprd04.prod.outlook.com>
-References: <20250207083616.1442887-1-alexander.stein@ew.tq-group.com> <8037692.EvYhyI6sBW@steina-w> <PAXPR04MB845912F48DC37B6BC599313888F22@PAXPR04MB8459.eurprd04.prod.outlook.com>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=XD0KIaPZUowHnH+rhCFRqX97yTDIYw3TwTQ1B3wDB2g=;
+	b=inJbW/zFWhU4bLiruB7UlcbzrqU4nZVSjf5T3G55gTIuUAcdkhw/ulZIctLMYFStoInqem
+	8ggHu81VifL40D3btGFTjEXCJ5/fnElY8obVaOwhnR2PBK2hhYhsoYdP7NQZCWv8XdfhAN
+	S88Bbdh/KtpdQ+8QgkvB7xDLBK1Pkmo=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-157-KT6BKx5xPkmw3n20QNpk6A-1; Mon, 10 Feb 2025 10:49:56 -0500
+X-MC-Unique: KT6BKx5xPkmw3n20QNpk6A-1
+X-Mimecast-MFC-AGG-ID: KT6BKx5xPkmw3n20QNpk6A
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43942e82719so8499735e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:49:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739202595; x=1739807395;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XD0KIaPZUowHnH+rhCFRqX97yTDIYw3TwTQ1B3wDB2g=;
+        b=tMkCCssaWhpP4WEXwItsHgTG06TQuQjvXAAS9WJzBJZ2VPgPfcuiF8hqRyNye0bnAg
+         /PsWeKKjBQWy+v7nVpb2eX/q99Gssn2Qtx/iYXXZsmmTaAmXDg4gYgQ1Ku0fZl44jZXq
+         cqXfgtjUl5p5+n24yLav2qZ5ZumVPOa9IDnuOGPAd98SgWdoCUCv62to9J12hl+brgtD
+         8LsuAgEGSpES2DtMYfltC/To/QvG/d0nbEQO84nTuuHD6fVHyj6GHraN2Gas09LI/zou
+         Dpi8GlrzDPUXojUARXhEZ20y20CkcukFdKpHVzRJTb73ck6uw5AHdLcGuI6TfZ4eYYOp
+         12WA==
+X-Forwarded-Encrypted: i=1; AJvYcCU86IhI7YRgYg90zQEOXk2gMOXuXnAsEc5d2lLRwcdpMyPYoGh0VErDMb0WBYYd+31YYZ42R6A7n/L3MSs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3HxJ060q2KAVJ6jwxSEN/1GroqRD9xPymXEUcd2JAV/g6qpdg
+	MYkMcbX/0pSoE4HLUwC6pjM6sfgA4ZHnRh8OilKXNRx34IamWfwCCW6JhQALnZ7JhYrp6t+xDUf
+	XvY6x456/yWh+iKUbubloHB8tX/2WthbXIjHvn6Q+AcfLyAtuzV6iK6E03IZM/Q==
+X-Gm-Gg: ASbGncsSLGnIFH4aAE/Ke6gFyLxgvY2vVYzUycNnOMEnkd893ZZKOfps9/OJCeTD8bA
+	d6CBPJkglW5DU0kqUV+ub76PE7OR85mXq8W926XAOIiOCJIrRx0mb2zwUPk1qvCdye2xk6yjldq
+	UrDi5MJWL2umuaQZHoXQko1QSONsuL4jzhoz5oWvwc9rh4aonpxWZPkiRZj2U6LPIGIt7TQBUPS
+	LKl/SQ0qOMdemNToJ+GiQQWRWtqZP/VHOVlyPRbj1rokCIJ+qXIMsrnxOmDcPIIR3zSwkSUfD11
+	lBaWTS+IP24aB8SUlhBtQoOkRaXlyAzo/byajt6ag8fVCxoMuVdE4GhaDDK7J4I2Pcw=
+X-Received: by 2002:a05:600c:1e25:b0:436:17e4:ad4c with SMTP id 5b1f17b1804b1-43924972ce9mr110358935e9.6.1739202595726;
+        Mon, 10 Feb 2025 07:49:55 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEOvLjTF4S/WYvn3O6o65yj9aqhnQ/dCaqnHrrF3Js86fWc5irhrJ2sZiow1ffrtpyp0aYWnQ==
+X-Received: by 2002:a05:600c:1e25:b0:436:17e4:ad4c with SMTP id 5b1f17b1804b1-43924972ce9mr110358615e9.6.1739202595321;
+        Mon, 10 Feb 2025 07:49:55 -0800 (PST)
+Received: from rh.fritz.box (p200300f6af0e4d00dda53016e366575f.dip0.t-ipconnect.de. [2003:f6:af0e:4d00:dda5:3016:e366:575f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391da96502sm153559395e9.1.2025.02.10.07.49.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 07:49:55 -0800 (PST)
+From: Sebastian Ott <sebott@redhat.com>
+To: Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+Cc: Cornelia Huck <cohuck@redhat.com>,
+	Eric Auger <eric.auger@redhat.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] KVM: arm64: writable MIDR/REVIDR
+Date: Mon, 10 Feb 2025 16:49:49 +0100
+Message-ID: <20250210154953.27002-1-sebott@redhat.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
 
-Am Montag, 10. Februar 2025, 03:36:48 CET schrieb Peng Fan:
-> ********************
-> Achtung externe E-Mail: =D6ffnen Sie Anh=E4nge und Links nur, wenn Sie wi=
-ssen, dass diese aus einer sicheren Quelle stammen und sicher sind. Leiten =
-Sie die E-Mail im Zweifelsfall zur Pr=FCfung an den IT-Helpdesk weiter.
-> Attention external email: Open attachments and links only if you know tha=
-t they are from a secure source and are safe. In doubt forward the email to=
- the IT-Helpdesk to check it.
-> ********************
->=20
-> > Subject: Re: [PATCH v2 04/10] arm64: dts: imx8mn: Add access-
-> > controller references
-> >=20
-> > Hi Peng,
-> >=20
-> > Am Freitag, 7. Februar 2025, 13:02:13 CET schrieb Peng Fan:
-> > > On Fri, Feb 07, 2025 at 09:36:09AM +0100, Alexander Stein wrote:
-> > > >Mark ocotp as a access-controller and add references on peripherals
-> > > >which can be disabled (fused).
-> > >
-> > > I am not sure whether gpcv2 changes should be included in this
-> > > patchset or not. Just add access-controller for fused IP will not wor=
-k.
-> >=20
-> > Well, I was able to successfully boot a i.MX8M Nano DualLite.
-> >=20
-> > > i.MX8M BLK-CTRL/GPC will hang if the related power domain is still
-> > > touched by kernel. The pgc can't power up/down because clock is
-> > gated.
-> >=20
-> > Well, with GPU node disabled, no one should enable the power domain.
-> > But to be on the safe side I would also add access-controllers to the
-> > corresponding power domains as well.
-> >=20
-> > > This comment also apply to i.MX8MM/P.
-> >=20
-> > Sure. Do you have any information what is actually disabled by those
-> > fused?
-> > It seems it's the IP and their power domains. Anything else?
->=20
-> In NXP downstream there is a patch for  drivers/pmdomain/imx/imx8m-blk-ct=
-rl.c
->=20
-> soc: imx8m-blk-ctrl: Support fused modules
->    =20
->     For fused module, its pgc can't power up/down and clock is gated.
->     Because imx8m-blk-ctrl driver will pm_runtime_get_sync/pm_runtime_put
->     all power domains during suspend/resume. So we have to remove the
->     pgc and clock of fused module from blk-ctrl DTS node.
->     Update the driver to support such case.
->=20
-> But this patch also needs U-Boot to update device tree nodes,
-> I recalled that U-Boot will remove gpc nodes, but not update blk-ctrl nod=
-es.
+Based on prior discussion [1] this series allows VMMs to change
+MIDR/REVIDR to enable migration between machines that differ in
+these registers. Since these are used for errata handling the
+errata management series [2] is a prerequisite for this one.
 
-Does it work, if we add the access-controller as well for pgc_gpu3d
-on imx8mp? There is nothing in blk-ctrl AFAICS. But for VPU there is.
-Which clock needs to be removed there in case g1 is disabled?
+Note that guest access to MIDR_EL1 is not trapped.
 
-Best regards,
-Alexander
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
+[1] https://lore.kernel.org/kvmarm/20250124151732.6072-1-shameerali.kolothum.thodi@huawei.com/T/#mb855bc51714095a164a7b26bb8bead1606e4b753
+[2] https://lore.kernel.org/kvmarm/20250205132222.55816-1-shameerali.kolothum.thodi@huawei.com/T/
 
+Sebastian Ott (4):
+  KVM: arm64: Allow userspace to change MIDR_EL1
+  KVM: arm64: Allow userspace to change REVIDR_EL1
+  KVM: arm64: Allow userspace to change AIDR_EL1
+  KVM: arm64: trap guest access for REVIDR_EL1 and AIDR_EL1
+
+ arch/arm64/include/asm/kvm_host.h |   9 ++
+ arch/arm64/kvm/sys_regs.c         | 134 +++++++++++-------------------
+ 2 files changed, 56 insertions(+), 87 deletions(-)
+
+-- 
+2.42.0
 
