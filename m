@@ -1,148 +1,153 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B506B264609
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 21:05:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1AC264609;
+	Mon, 10 Feb 2025 21:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739221553; cv=none; b=PqBgiaDSYHscAcLoE7oARz3EyjLSR7GQPiuF/DnjL1D1FAoagvxj3x56z+6Q4MTzRJ9L09Rwf2BSreT8N8fR/UwuX60RWozs10BoWN4y4NkdfzmjLETSzsBCMjQmTqLPzQ529HpH5DKYWXGVv7tPgv5NBbSZiZQELZ5kJhYHrGs=
+	t=1739221611; cv=none; b=fffj1BhHBXH9yBYh2z6ysDj+vUOHMXD+ABuOJJd+6Ts91U4Tu8vAlviVd+zQQssOMNWhIaCGh1XYE7H8b+CLiKNIVhobFAMoK9owWimrgE9kT4QZEMM2wKWc0X4DjPjAF06V5w6hKTw/qpWie1nnqrHm+742zfgdIrGmXW1ijEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739221553; c=relaxed/simple;
-	bh=aeLMu63AaX0zDTcKET6zr61yPiW61Ut4P2Xn82kYvpE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uBc280UuPSK/eQcsl06ifIuWvmiV1Lkackd2wf6EIGot7OxZzP2XpMF0qTmF6f0rMzpBArT2JABmJa03f88Nj/SnAwlf+3r5CoJRm02CHEy/Z9tdDlGCBYEE3caEg5ZOWYlSHIMOdOPoDMcK3SB3Nt6feF12WinWIHDcGFQWAxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KQt1WdcV; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739221611; c=relaxed/simple;
+	bh=x9CElAtQ0gtGOwR03vTgP1lvYWMnrMShZxXLOLMsbVI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e1Q2TrQd8PZgzzDkRnROgInet6q9Yglk+glibQIwB5zORDOSf77L1NfFx51xTwbhmDEVqej/reUtxDI2kgcsUkciOJTg/FhVqeQBg3blHfkqNFeh+8jtnZJ2DIWa1S9H54pHLzfE8vCqZyUipwAHtwmells1Usz2scfVQvKkXYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IavPoqK0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQt1WdcV"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5de4a8b4f86so5387948a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 13:05:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739221550; x=1739826350; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pJt3g3FcMy/shHNHpxjZN7o0n8OkVp8j3W33PvCdaZ4=;
-        b=KQt1WdcV8nI1Jr/SgbuaPYmaNgdEli6VQwceWLT+WtmGl6xFCeUvyd3t+IstSPhyYf
-         UUFIjEonRv1wEqbvXAxAFLXfwjGVCyfu9g6AbtNiepJ31UzeCOMhFgXUbrptqpfwHYl3
-         egNbmS++VoruX84M6Z5SSgLm2j+a9emCS1cCQsM2vjuoQ0XBo5dMMu5kFC/GtQWRDuJC
-         XZw3Qq6NTzVnB/KGpRhTWz46yL3TzjbI88e+MH4QRMKFKF2RFH9Qt35pKC5iBf7vEIS/
-         H8vRPiO9OJBXe/qfQHPEaf3NPIBi+yNWPDGgR4w8zLxbxLv8Km55VK42qOoQ0BBpkN/4
-         Atrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739221550; x=1739826350;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pJt3g3FcMy/shHNHpxjZN7o0n8OkVp8j3W33PvCdaZ4=;
-        b=U99UBNYvDusw8OlPgeKcJwXFbpSjZkg2gaWZLJ0pSYNBsd6AMOSkcPeK1w7hRkfmSR
-         ikYjuJ0CJdEFdPJqIyIokCUl5cy8O0X8y7ntblP0dK6Ow0K5EXp0mhPA9ZYVWMW7RfBm
-         xpQ1KxzdNWOkw+cGBDSaXSXFPNoGct2LK0SDinZn/Aiug01SMjYvFiXCJ20RtHMPeYV0
-         2bT7q1+LG5hXGA4vMOV4M4CgW6XOEtBV9hOO4QBTmDguGlRoQ7KyMOcQYcVR3Zi9qRFv
-         N2fHpLyQaxSc8fJCGUjlT+w1vvPLPlSWWkd/XvbQrZB9+ixG40DcNMEse63+sQNM/pXV
-         h5Yg==
-X-Gm-Message-State: AOJu0YzwEY9aW3SGlcdgcWEtd7FwkiS3iLzADbJMGBbMPzzqgHfJLJe0
-	wTHSsb/kf7RZrh9Y4J5z2WHOX0USirYUwT9AVmeD+5rZW4NrhP6u
-X-Gm-Gg: ASbGnct0MM8QPXiOGzyPp6s1d9m6iYi7u1weWdrH9YibXHRQtfMRRCmuGPkOhP133fk
-	XUF/gIqFwe2jqgNsjBTO4p2FAqqLaeakezYeKE8OPzu6hb6oqvNLexv40kAVU4d2L+oOTr6x/rT
-	cE8wVozKiyTwiJpc/qH/WK9ZLRF2qRd/CgewwksfHcujA3qlQSvNK9afvs1l0Qskn9HaPYb1hPm
-	4gx/ykrlhCGKXr+TXbMar1h2LeldJiyTpKiSKjNF3fM2nbx4hPLMynJq3IJcWIA2zOvj3hHtcFr
-	/LAEDo3RDKvrrWpLBgxBN5VNDuu5hswPgQ==
-X-Google-Smtp-Source: AGHT+IE/8iTwEZeYIL1zRK2NXyILwRelcUdNGmCFOZu6HI1meOC7C5tWlVty9cOfvOq/a7sQSKHzqg==
-X-Received: by 2002:a05:6402:2383:b0:5dc:7fbe:7313 with SMTP id 4fb4d7f45d1cf-5de44feb7bfmr17113030a12.6.1739221549705;
-        Mon, 10 Feb 2025 13:05:49 -0800 (PST)
-Received: from f.. (cst-prg-84-201.cust.vodafone.cz. [46.135.84.201])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de4c9b890dsm6887267a12.56.2025.02.10.13.05.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 13:05:48 -0800 (PST)
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: kees@kernel.org,
-	luto@amacapital.net,
-	wad@chromium.org
-Cc: linux-kernel@vger.kernel.org,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH] seccomp: avoid the lock trip in seccomp_filter_release in common case
-Date: Mon, 10 Feb 2025 22:05:41 +0100
-Message-ID: <20250210210541.867037-1-mjguzik@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IavPoqK0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70CBFC4CED1;
+	Mon, 10 Feb 2025 21:06:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739221611;
+	bh=x9CElAtQ0gtGOwR03vTgP1lvYWMnrMShZxXLOLMsbVI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IavPoqK0pDgL9Ui5Pm91IuBLE1O7qd1FyAfNPwiWPsJjdLuvRZhHRUIT/1ORJE6eN
+	 SAYCABsLn+Aqu/onar5XaL9opalKnnFpjharmlGjhTvRo0dCwHoQI+Y/mYYQwC9Lbx
+	 /aX1IDfEqkIhAgaXC8/7CcWWI9muQODdm0VUCFkkEWpVJFuynxBT+a9hWn/ZLeaSmg
+	 3jzyYea3EzEDzKRciC/V2uesgiQLVsqKPPFtJ4OTUQRrKsCvlb0k1Iz25psOtzKy1+
+	 iSPUFSu91sl6sX/y6qXG5bBa2dJPe+Ik2HSJXr+aeHK2AJrqZPsR3uDTQCDN5boBL7
+	 8XN/bwsKhAjmg==
+Date: Mon, 10 Feb 2025 21:06:45 +0000
+From: Simon Horman <horms@kernel.org>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	"Jose E. Marchesi" <jose.marchesi@oracle.com>,
+	Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+	Magnus Karlsson <magnus.karlsson@intel.com>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Jason Baron <jbaron@akamai.com>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Nathan Chancellor <nathan@kernel.org>, bpf@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 4/4] xsk: add helper to get &xdp_desc's DMA and
+ meta pointer in one go
+Message-ID: <20250210210645.GE554665@kernel.org>
+References: <20250206182630.3914318-1-aleksander.lobakin@intel.com>
+ <20250206182630.3914318-5-aleksander.lobakin@intel.com>
+ <20250209110344.GA554665@kernel.org>
+ <6d247107-5a9a-4ac7-8364-2619fce0c310@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6d247107-5a9a-4ac7-8364-2619fce0c310@intel.com>
 
-Vast majority of threads don't have any seccomp filters, all while the
-lock taken here is shared between all threads in given process and
-frequently used.
+On Mon, Feb 10, 2025 at 05:00:36PM +0100, Alexander Lobakin wrote:
+> From: Simon Horman <horms@kernel.org>
+> Date: Sun, 9 Feb 2025 11:03:44 +0000
+> 
+> > On Thu, Feb 06, 2025 at 07:26:29PM +0100, Alexander Lobakin wrote:
+> >> Currently, when your driver supports XSk Tx metadata and you want to
+> >> send an XSk frame, you need to do the following:
+> >>
+> >> * call external xsk_buff_raw_get_dma();
+> >> * call inline xsk_buff_get_metadata(), which calls external
+> >>   xsk_buff_raw_get_data() and then do some inline checks.
+> >>
+> >> This effectively means that the following piece:
+> >>
+> >> addr = pool->unaligned ? xp_unaligned_add_offset_to_addr(addr) : addr;
+> >>
+> >> is done twice per frame, plus you have 2 external calls per frame, plus
+> >> this:
+> >>
+> >> 	meta = pool->addrs + addr - pool->tx_metadata_len;
+> >> 	if (unlikely(!xsk_buff_valid_tx_metadata(meta)))
+> >>
+> >> is always inlined, even if there's no meta or it's invalid.
+> >>
+> >> Add xsk_buff_raw_get_ctx() (xp_raw_get_ctx() to be precise) to do that
+> >> in one go. It returns a small structure with 2 fields: DMA address,
+> >> filled unconditionally, and metadata pointer, non-NULL only if it's
+> >> present and valid. The address correction is performed only once and
+> >> you also have only 1 external call per XSk frame, which does all the
+> >> calculations and checks outside of your hotpath. You only need to
+> >> check `if (ctx.meta)` for the metadata presence.
+> >> To not copy any existing code, derive address correction and getting
+> >> virtual and DMA address into small helpers. bloat-o-meter reports no
+> >> object code changes for the existing functionality.
+> >>
+> >> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+> > 
+> > Hi Alexander,
+> > 
+> > I think that this patch needs to be accompanied by at least one
+> > patch that uses xsk_buff_raw_get_ctx() in a driver.
+> 
+> This mini-series is the final part of my Chapter III, which was all
+> about prereqs in order to add libeth_xdp and then XDP for idpf.
+> This helper will be used in the next series (Chapter IV) I'll send once
+> this lands.
 
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
----
+Understood. If it's going to be used in chapter IV then, given
+that we've made it to chapter II, that is fine by me.
 
-Here is a splat from parallel thread creation/destruction within onep
-rocess:
+> > Also, as this seems to be an optimisation, some performance data would
+> > be nice too.
+> 
+> -1 Kb of object code which has an unrolled-by-8 loop which used this
+> function each iteration. I don't remember the perf numbers since it was
+> a year ago and since then I've been using this helper only, but it was
+> something around a couple procent (which is several hundred Kpps when it
+> comes to XSk).
 
-bpftrace -e 'kprobe:__pv_queued_spin_lock_slowpath { @[kstack()] = count(); }'
+Thanks. It might be worth including some of that information in the commit
+message, but I don't feel strongly about it.
 
-[snip]
-@[
-    __pv_queued_spin_lock_slowpath+5
-    _raw_spin_lock_irq+42
-    seccomp_filter_release+32
-    do_exit+286
-    __x64_sys_exit+27
-    x64_sys_call+4703
-    do_syscall_64+82
-    entry_SYSCALL_64_after_hwframe+118
-]: 475601
-@[
-    __pv_queued_spin_lock_slowpath+5
-    _raw_spin_lock_irq+42
-    acct_collect+77
-    do_exit+1380
-    __x64_sys_exit+27
-    x64_sys_call+4703
-    do_syscall_64+82
-    entry_SYSCALL_64_after_hwframe+118
-]: 478335
-@[
-    __pv_queued_spin_lock_slowpath+5
-    _raw_spin_lock_irq+42
-    sigprocmask+106
-    __x64_sys_rt_sigprocmask+121
-    do_syscall_64+82
-    entry_SYSCALL_64_after_hwframe+118
-]: 1825572
+> 
+> > 
+> > Which brings me to my last point. I'd always understood that
+> > returning a struct was discouraged due to performance implications.
+> 
+> Rather stack usage, not perf implications. Compound returns are used
+> heavily throughout the kernel code when sizeof(result) <= 16 bytes.
+> Here it's also 16 bytes. Just the same as one __u128. Plus this function
+> doesn't recurse, so the stack won't blow up.
 
-There are more spots which take the same lock, with seccomp being top 3.
+Also understood. It seems my assumptions were somewhat wrong.
+So I have no objections to this approach.
 
-I could not be bothered to bench before/after, but I can do it if you
-insist. The fact that this codepath is a factor can be seen above.
-
-This is a minor patch, I'm not going to insist on it.
-
-To my reading seccomp only ever gets populated for current, so this
-should be perfectly safe to test on exit without any synchronisation.
-
-This may need a data_race annotation if some tooling decides to protest.
-
- kernel/seccomp.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index 7bbb408431eb..c839674966e2 100644
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -576,6 +576,9 @@ void seccomp_filter_release(struct task_struct *tsk)
- 	if (WARN_ON((tsk->flags & PF_EXITING) == 0))
- 		return;
- 
-+	if (tsk->seccomp.filter == NULL)
-+		return;
-+
- 	spin_lock_irq(&tsk->sighand->siglock);
- 	orig = tsk->seccomp.filter;
- 	/* Detach task from its filter tree. */
--- 
-2.43.0
-
+> > Perhaps that information is out of date, doesn't apply because
+> > the returned struct is so small in this case, or just plain wrong.
+> > But I'd appreciate it if you could add some colour to this.
+> 
+> Moreover, the function is global, not inline, so passing a pointer here
+> instead of returning a struct may even behave worse in this case.
+> 
+> (and we'll save basically only 8 bytes on the stack, which I don't
+>  believe is worth it).
+> 
+> Thanks,
+> Olek
+> 
