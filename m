@@ -1,122 +1,95 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44810243370;
-	Mon, 10 Feb 2025 01:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6746619BBC;
+	Mon, 10 Feb 2025 01:18:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739150263; cv=none; b=jLpn9j9DTCcmnV4NNKqt6SdmsST39ynhdsOEreT+qmTadbDI/eu8/edihMAd+5p0lZk0COKRMCUVRbMBoMcxJzpjQGSwL4xtp+oI+gf2zikSs7KV0DLr24MWJwoEVwRQp0z2SYSFv/pEmbdMtdX55febTnUlQP0GnxAFAtxqZe8=
+	t=1739150303; cv=none; b=GIO7E6utYkS8MSucTXUSLayaexibWdgqOYsa9mK/u3sdMOd3fleMfqOpxeecIOL0aEnEUW3jiRo/ElReyGhpiNZoYJi6izMg1CKsoVAPVrYUhia3wmlNjAwU2sfd7qL41X41oXCG35gq7eKYKYO/dUO9kLyiCTWNJwo1pbIaFBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739150263; c=relaxed/simple;
-	bh=bKlpFT6PrHym8PX4uf7rFAciKgOW9Ca8NPYUAwletjc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Id3v0URHxxtsEI8wtujR+IKF9cBzmFAQc5xnocefDp6M+9TXIpppTLyM/lgGDnQx3v1ItTSl9ViBv8vmimCepRvkKGpGO8s6etCLBs+MjA1SBHzCJInfQ+n/qLQQoS+Lnzw7o2SMD0VEz3BIo+KxzdaX45REKFXchoFh0+rxSzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NSyFwvfL; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739150303; c=relaxed/simple;
+	bh=cIRf0LOlovzOH2gPHudBM2UDl5by4bppCeGovNhM8WY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=PetcZOY2qFgxl2T6VHL158IE68z5H3duYyl6IRK62mSFsdtSwdKGSX782aoI2EnOkuHxSDrIp4YM107ciLIn1gDvEvmkIWjSSzZ2uHvZYeLzUlyrsRH3JbQYY5lvt3pXPkKmXnPF4p6/4yrR43b1UjRsicht4Ois7MRC0zRG2zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=f719+Kkl; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NSyFwvfL"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5de7519e5a7so719605a12.2;
-        Sun, 09 Feb 2025 17:17:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739150260; x=1739755060; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ks9udvKd96mPLbUFD9boqSQ9LwZ8UE6lqZxDKa9Cl+8=;
-        b=NSyFwvfL0vKvWW/PkYkPPt/I+bnjn+jv6tsQNik86ygu3KYNjeIoMhuhLXWfAo/Tik
-         76PIT/+t2V13Az64RolKkJAyMy+N0RbMcCP0uF0EaNEHN74cK2cSWS1PJ9x3++plZ7DL
-         uVth1cszV9dXuXeWDFMDleBA0oUVxtHIVE1IlaxKkZy8YvL3+MiN+oeXZB17xzIasV7n
-         dpsBVA8yoEQwScCE8upayP8n+hmL41iGr2Hp8tZ1N9YNYvOMqC1HsjnaDT+B/UiUjS57
-         ZixdYMyHaD86w1IK/GXN8zsBThjSIlpzQ8Y94C/KAFvlvBIu8xWsyA3bKB5Wpw2t9QCJ
-         jCsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739150260; x=1739755060;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ks9udvKd96mPLbUFD9boqSQ9LwZ8UE6lqZxDKa9Cl+8=;
-        b=sYwlJrHcHnBa9y0T/QCIt+cvgYAp5SrtbEUSpH7OQEICkPxoCyMtisUDkoQJYykO40
-         9+CsuFr+ehbhEioLUna9bFTEDK/0ZrwGJg3vuOG14h0zqCtfYvBMvowikkFKJyWAIW9p
-         7l6WI+F59Scp6pz0d9ehG2y9vobRNxrTdrJUocMwHfRNi1FTOgc4S03Pb5QhtcgcZdeF
-         vgswMlwMTG53ox2Vnx5l9ieC3GOcRQpNQ4PLjHfSSzOG0/7OhIoUX0f2IlHAuwzpBuNT
-         v74BD9gixWxTza91+ZRpvHTVlBC34EIL1Oxjj7x4XhpDfskHUVjU8+KYpAI4LGH69hTv
-         FJIA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0DARg8ItyeaGB1mIpOm/VPPPyPEzA8CO9iu4JbETyKcpf5dHITuK2NbI0kdCSx5Mu5VwT7mcb@vger.kernel.org, AJvYcCXl2XwIR0SiyzvXzEVr16yzBV7zDmMxHk8zQmaK9E615sUTWVqdDCiC62UeUP6j0Ez0ZrnmDcei8qyAA88=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+1GWCAgbE8/w0ImYbR6VayUn5LpTl0f4Cyep7igNqHG161XCs
-	wgmC7igqocVZsbiZdftu2JHivE7VGa0EKJbP6u96JakjTMeEJbuzgEnTMSnePSK/ct/4WSiWA9G
-	t4JipPPcrn51Hi2hOtyY17cZONwk=
-X-Gm-Gg: ASbGncvBU8GO+apYRQ0S/VdEWKoZUpeN47RHOlUqEMQiUzOVOTYD/D0UxwydJPkgW4q
-	TdpZgU7YC13SxmwAf/YG0T7y45gjTtAkCW+rkYrfEwFcCiOpddZLohGjBpa2enB7g/jVEqCyY8w
-	==
-X-Google-Smtp-Source: AGHT+IHqdWdyJGHhDPdk2qUdT/YSoJ8MN8YkmKFvF4vWVU1IkrrYjnOolSTtN45eIsb0W8v10/Wt8QLl78LGUCKKdOM=
-X-Received: by 2002:a17:907:3d91:b0:ab7:c426:f33 with SMTP id
- a640c23a62f3a-ab7c426114dmr146360766b.56.1739150260350; Sun, 09 Feb 2025
- 17:17:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="f719+Kkl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1739150294;
+	bh=VOs20nCV8RtszMWIyCq6/be2j8oJKv8ofzzRpmqMVC4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=f719+KklFX/7e62mRACjSRlFlIdf967AguNdJxnCYeIRIRUaBZejVjGdjmZd1OrS8
+	 pu23yr/oqclzOTrZnt7tHM+7ow5jy2ltg1L29rOiT+M35Ceqtd2oljXza8YVlKXrML
+	 NRTGQAVzaH5m97Rv1QN+VZSowfsnfU0KGPLitLMCLmXE1tWnRy/b9D4YtoarDCqvhf
+	 nHaq8wXuEZQyCexQJzWYHDFO6sPtQaEl7+xLf6BX7np3zifL+M0ZQcCpm/gSLXxBDS
+	 4gkQAhcX6tGzJJxBQ057B2eXVLI3f+JtM0+lDZw2dBZmeCF9qHyJwYs7uNvBiaMExM
+	 rRVTBIAcjY/VA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Yrmsy4Hm0z4wby;
+	Mon, 10 Feb 2025 12:18:14 +1100 (AEDT)
+Date: Mon, 10 Feb 2025 12:18:13 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>, Linux Kernel Mailing
+ List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the security tree
+Message-ID: <20250210121813.3e24cdaa@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210003200.368428-1-jjcolemanx86@gmail.com> <db722f47-0b61-4905-a4a8-c0770fbf8945@lunn.ch>
-In-Reply-To: <db722f47-0b61-4905-a4a8-c0770fbf8945@lunn.ch>
-From: Jamie Bainbridge <jamie.bainbridge@gmail.com>
-Date: Mon, 10 Feb 2025 11:17:28 +1000
-X-Gm-Features: AWEUYZkznMg4o2_S5g5_DWiaL3CmXwiLukTqn5lWww_rfG9VfcoPcjnZBz7igZs
-Message-ID: <CAAvyFNiTgZyVX79FztAB-4LGrq6ygKNXYYkOdLF0AY5TGF58ug@mail.gmail.com>
-Subject: Re: [PATCH net] ethtool: check device is present when getting ioctl settings
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: John J Coleman <jjcolemanx86@gmail.com>, Jakub Kicinski <kuba@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Jiri Pirko <jiri@resnulli.us>, 
-	Ben Hutchings <bhutchings@solarflare.com>, David Decotigny <decot@googlers.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/IXFrnqvNTJXE1st=d/lR4UV";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Mon, 10 Feb 2025 at 10:51, Andrew Lunn <andrew@lunn.ch> wrote:
->
-> On Sun, Feb 09, 2025 at 05:31:56PM -0700, John J Coleman wrote:
-> > An ioctl caller of SIOCETHTOOL ETHTOOL_GSET can provoke the legacy
-> > ethtool codepath on a non-present device, leading to kernel panic:
-> >
-> >      [exception RIP: qed_get_current_link+0x11]
-> >   #8 [ffffa2021d70f948] qede_get_link_ksettings at ffffffffc07bfa9a [qede]
-> >   #9 [ffffa2021d70f9d0] __rh_call_get_link_ksettings at ffffffff9bad2723
-> >  #10 [ffffa2021d70fa30] ethtool_get_settings at ffffffff9bad29d0
-> >  #11 [ffffa2021d70fb18] __dev_ethtool at ffffffff9bad442b
-> >  #12 [ffffa2021d70fc28] dev_ethtool at ffffffff9bad6db8
-> >  #13 [ffffa2021d70fc60] dev_ioctl at ffffffff9ba7a55c
-> >  #14 [ffffa2021d70fc98] sock_do_ioctl at ffffffff9ba22a44
-> >  #15 [ffffa2021d70fd08] sock_ioctl at ffffffff9ba22d1c
-> >  #16 [ffffa2021d70fd78] do_vfs_ioctl at ffffffff9b584cf4
-> >
-> > Device is not present with no state bits set:
-> >
-> > crash> net_device.state ffff8fff95240000
-> >   state = 0x0,
-> >
-> > Existing patch commit a699781c79ec ("ethtool: check device is present
-> > when getting link settings") fixes this in the modern sysfs reader's
-> > ksettings path.
-> >
-> > Fix this in the legacy ioctl path by checking for device presence as
-> > well.
->
-> What is not clear to my is why ethtool_get_settings() is special. Why
-> does ethtool_set_settings() not suffer from the same problem, or any
-> of the other ioctls?
+--Sig_/IXFrnqvNTJXE1st=d/lR4UV
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-ethtool_set_settings() would suffer the same problem. Last time I did
-this (with what became a699781c79ec) I was discouraged from fixing
-additional theoretical problems which weren't the actual problem I
-faced.
+Hi all,
 
-We did not review other ioctls. Looking now, I see commit
-f32a213765739 ("ethtool: runtime-resume netdev parent before ethtool
-ioctl ops") would have protected against this as it adds the
-netif_device_present() check one function back in dev_ethtool(). We do
-not yet have that commit in our kernel.
+After merging the security tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
-It seems we can forget this. Many thanks for the review Andrew.
+In file included from include/linux/perf_event.h:62,
+                 from arch/arm/vfp/vfpmodule.c:21:
+include/linux/security.h:2379:12: warning: no previous prototype for 'secur=
+ity_uring_allowed' [-Wmissing-prototypes]
+ 2379 | extern int security_uring_allowed(void)
+      |            ^~~~~~~~~~~~~~~~~~~~~~
 
-Jamie
+(and many more)
+
+Caused by commit
+
+  c6ad9fdbd44b ("io_uring,lsm,selinux: add LSM hooks for io_uring_setup()")
+
+I have used the security tree from next-20250207 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/IXFrnqvNTJXE1st=d/lR4UV
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmepU9UACgkQAVBC80lX
+0GyHsgf+LO9mZEaNl3EE6SIEM0k/Ik74jLz1kkzgfIRRIWHV9udVo/QlcZ8QlbVx
+GqsyUt6L/2gS+hcCoLGxlInYMzaSipTrv7zULCQGOnjsnbYxaSwgEWM/AcErvDG6
+nipkMBznxU5VfLACF4Kl5Vm9aF4rhfGtQOG4TQiEXZKo+jPp+94DUxtOIdKX08hJ
+5h4jpblCicZpk9V0Qs8Z3C+7SNW5p20tS9D7e1W9P4QOJzV6DrFlmEnw5W6sklmh
+O/MGxYXbq9cIG3LKiKAeZUcyUYSER4BoIyecQ/Dnsao8vMHH4mrB0GgJApVINsP+
+spfow/11bI61vq1fksE1Xo6LiaLFxw==
+=ICwa
+-----END PGP SIGNATURE-----
+
+--Sig_/IXFrnqvNTJXE1st=d/lR4UV--
