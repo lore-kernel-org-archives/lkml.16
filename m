@@ -1,255 +1,255 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1D31B85D6;
-	Mon, 10 Feb 2025 08:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C581BDA95
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 08:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739176056; cv=none; b=d3FmQLe0zRnYGUip2iKjMC0j4jvZLFuIkPNHG+4mttbl4DcoH7qrI+9kdGyzRlYETJh+UBzpcDeaZc2ckpCfucyoz72D27hFvG2z0pgMfuAy7kGtoYG2NnKGekD2cR3zl3Vc266zZ03ODKHgYnrhqi98EYN04K3BltLsyyu7NZk=
+	t=1739176068; cv=none; b=ExrKsiCQwXwf9noJh1RXHhjZXSZh9I+Sa5ls6SNrJfhJjFXvJiT5w9Vj8MqPTML8xeUw3FS6PGBehTlAzRXAAV44xKBvwsuSyDUl5d+oQA72E3qeSA0Yie34TFl43N+Uyp4HE5q6vdDa3d7HnOSw9aCkFAjFZm3k0ZbztThXc8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739176056; c=relaxed/simple;
-	bh=FTdL7sctDOxRcrBb0oZ2biT5vSzSQRjnYgP28GSiWkI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pZQ6/NrUDYVKWXoM/D4uy4UQk4UEUe6ery5MT4rF/kjKqsGOnmtXs3zT5pir9jRr8inCemTMk8733UcHd/PD53KAbAiLR7jEp7EHKtoYFu5vhGOZGo3O71GoDkc6DdfcUT96WAvbVjeE9+fgv41sq0XSvZZGiBVGnBLAfQiqHQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=TzyQ0rT0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=PNwgz+o5; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=CZ/6gXlp; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=KUIj5cQS; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1739176068; c=relaxed/simple;
+	bh=IaOr5bedYQgMNNlZUOXvoRUmYoPlluOQtv5G15Pp0wc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oCT1YTK6J5SmPhfFygMjadgTINPt10FhpDQwc4nD1joyGFU1loDWyz8iplh4fCflHePj+JlCYfc0P2TxHm1jcSZHr/4ni+Zd1l1Fvskz1bXNFByyxu9JSTX32qb9JtTRPKjikOt/+5k7sHD0VJ0OtiHfO9WchYWWMJM+1ynJNf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=YLWOxAS+; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="TzyQ0rT0";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="PNwgz+o5";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="CZ/6gXlp";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="KUIj5cQS"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D715221109;
-	Mon, 10 Feb 2025 08:27:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1739176053; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=YcF4untn6noy1BENHYGy14SUwNDSxJ/1RtuCfKAWOys=;
-	b=TzyQ0rT0C7H76CYNALXR817sGRgtoNy2a5UfFajR0OHCpPQbntfWmhkK7znRtDhu4RMY7S
-	Rf16CHHoPsjjdZONzWivoK2cHUtb4nMFbB1vfpM7d9hed9wNW1dXYewA4hb/LgTmIQ7kla
-	jSItw3gsVRZ3tCpycVbw3u9HQXdADIY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1739176053;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=YcF4untn6noy1BENHYGy14SUwNDSxJ/1RtuCfKAWOys=;
-	b=PNwgz+o5DXD9Rrlilyh0YvC5KsD47+yPBweDKJ0tXEa4PDO6TQ3s76TYkxaNZbbwrS8sMx
-	o4ch4yn+lKe6eaAQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="CZ/6gXlp";
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=KUIj5cQS
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1739176052; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=YcF4untn6noy1BENHYGy14SUwNDSxJ/1RtuCfKAWOys=;
-	b=CZ/6gXlprzUtNko0sDUyNN4xwzCzy0ffKeQJzQhL/Jx+GgR/HDXc21DMnThgdkSh9vZTQz
-	84A61qcyFZEfwBshgDnFgwUWzIqgS4oghayU4n90KK+PbvizgQLY7IPtxKhbJRjvfslX0i
-	il0/8xYr0MTy8TxwUqRx6E1BP5gwtxw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1739176052;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=YcF4untn6noy1BENHYGy14SUwNDSxJ/1RtuCfKAWOys=;
-	b=KUIj5cQSoxB56L3SoXovFtnfKg9P/K6Ac0c76Jw5zPnj6ECbL1557jb6SqEPkwJzYNCnQt
-	TvpuBGQddUfc+nAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B582913707;
-	Mon, 10 Feb 2025 08:27:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id p7/9K3S4qWfmIQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 10 Feb 2025 08:27:32 +0000
-Message-ID: <81298bd1-e630-4940-ae5b-7882576b6bf4@suse.cz>
-Date: Mon, 10 Feb 2025 09:27:32 +0100
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="YLWOxAS+"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5450cf0cb07so502566e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 00:27:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1739176064; x=1739780864; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Hb4BM+tSx2c+eJTEN+p0pQDTmd6yZJ90PbqP4rasAIM=;
+        b=YLWOxAS+Ao44DpeajsR1vwW+8t+hHUkWqkanh841ge1EpxRw8frXhhTsxnfy73V8Ri
+         kpUrl56w7DAyQd0jaGTATtKfk4LayjnPqIkmkJ86oTuR0coIC8XcJKsrVQA062ojUWdr
+         WIcLXVIg68fjUU+CIy206YuflAPLh7lqfXWTjZMfmMS6Yuv/XaX+A7GiYrxFsbxzmplH
+         aMyWRUDg++OzDHrU/ylEQAGq+YxwjeVRNZGxpx3W7VsEgkERjpHzTSZCw2/YlSOyXF1Q
+         O/e+1XF9wJMgordY+A/z2FiKWBWSYjkxdMjppJt0EDEXxbnLxpSePQhMxsBf7djW08P5
+         iROw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739176064; x=1739780864;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Hb4BM+tSx2c+eJTEN+p0pQDTmd6yZJ90PbqP4rasAIM=;
+        b=Ac0u15lipg5g5WKtfjk1FxkumKBUqGINo1YyVwoqEgpWzyEwc+e6wrZ8Moci6bSUlY
+         wpcttRpG14RA2rcQbbwzbVobVANBFg4ye2YzOdYpYEgD0aJgqOK+78dtscYo/phxou8b
+         nqLeMsXWb3iinr76hxOyWSb2xPHcQMxfAFFclcm0K8EM8VhSpQZYvb1Y0/RwsN4CEPFz
+         N6X4MNwAqrSdtRRLhQqvveU2NKQmRdbuaFotdI2IMcIH0d1TJvsDatbf41isz7pu+4HR
+         0ENwnRu/m84y1p4UTPkKLjngGa7GoHo9OrbTs/yiuMLVauMcsnbRLePlGO3LsHePOvtk
+         s/XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXGiOucEiwWQBIxJSzVgNTyelBYRMnbybAT5/Ae3Gnz7x04kl/LSZqgnww3gwySIHkjNHvPcJj/X3Q9lhY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj1Nt9anKBZGTOrbBSRfT+XDVtnt/ZcH3PEdd8MTmuT9ukcgMA
+	nGDOYkZVJWPiuGxfJz8h7fjy/rkiWAXLbJ7Hm+UFCPjla8WmwM5GZByDS2IaX+D0oeMxta24fi8
+	SA3MKfKJUdb0GHPeUKOB1Tj21hMN2LM8Hb93LsQ==
+X-Gm-Gg: ASbGncudyRKXlliGngvM2y2RCTRfNfnqo59Yn9HbrQEolsLPxQDMaVO0kyV/4jHGYZ5
+	6T9Xu3eYLbHDslREqnseZpchghXg/YDRxemg0AvoupFd3SxCLazFxn1VrXcLGQ24ie2JVMLYfjx
+	JPDjuE+Y906H5ITJglYOLy0rX29z3tdw==
+X-Google-Smtp-Source: AGHT+IE8cYL2zF0A4KCFzug6oMHNBtPUSgAUflqnO5DT1coWJLi/G9/5eREaaEeI+Eg0IYHuX9b1F1IP76VMNyledfo=
+X-Received: by 2002:ac2:4ec9:0:b0:540:3561:969d with SMTP id
+ 2adb3069b0e04-54414b0bd9fmr3257716e87.49.1739176064443; Mon, 10 Feb 2025
+ 00:27:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for FUSE/Flatpak
- related applications since v6.13
-To: Joanne Koong <joannelkoong@gmail.com>,
- Matthew Wilcox <willy@infradead.org>
-Cc: Josef Bacik <josef@toxicpanda.com>, Miklos Szeredi <miklos@szeredi.hu>,
- Christian Heusel <christian@heusel.eu>, Miklos Szeredi
- <mszeredi@redhat.com>, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm <linux-mm@kvack.org>, =?UTF-8?Q?Mantas_Mikul=C4=97nas?=
- <grawity@gmail.com>
-References: <2f681f48-00f5-4e09-8431-2b3dbfaa881e@heusel.eu>
- <CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
- <9cd88643-daa8-4379-be0a-bd31de277658@suse.cz>
- <20250207172917.GA2072771@perftesting>
- <8f7333f2-1ba9-4df4-bc54-44fd768b3d5b@suse.cz>
- <CAJnrk1aNVMCfTjL0vo-Qki68-5t1W+6-bJHg+x67kHEo_-q0Eg@mail.gmail.com>
- <Z6ct4bEdeZwmksxS@casper.infradead.org>
- <CAJnrk1aY0ZFcS4JvmJL=icigencsCD8g4qmZiTuoPWj2S2Y_LQ@mail.gmail.com>
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <CAJnrk1aY0ZFcS4JvmJL=icigencsCD8g4qmZiTuoPWj2S2Y_LQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: D715221109
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_TO(0.00)[gmail.com,infradead.org];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[toxicpanda.com,szeredi.hu,heusel.eu,redhat.com,lists.linux.dev,vger.kernel.org,kvack.org,gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+References: <20250208101924.20743-1-marco.crivellari@suse.com>
+ <20250208101924.20743-2-marco.crivellari@suse.com> <CAAhV-H4hdCXwZ=x2_8d1dMZmO8c7XBnzovuVDhrSQ_cW0abmEg@mail.gmail.com>
+In-Reply-To: <CAAhV-H4hdCXwZ=x2_8d1dMZmO8c7XBnzovuVDhrSQ_cW0abmEg@mail.gmail.com>
+From: Marco Crivellari <marco.crivellari@suse.com>
+Date: Mon, 10 Feb 2025 09:27:33 +0100
+X-Gm-Features: AWEUYZkvEnCTRjjaYK4yhff_In76zvIldvAJe2W4qEQQ6TT8dRVnGaqe_bVe7j4
+Message-ID: <CAAofZF5J2H8Qn2Axky0dXVJe4oQtkZOGBm_j8Kgk5Cvz6jibHQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] [PATCH] loongson: Fix idle VS timer enqueue
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	WANG Xuerui <kernel@xen0n.name>, Frederic Weisbecker <frederic@kernel.org>, 
+	Jinyang He <hejinyang@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Bibo Mao <maobibo@loongson.cn>, 
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/8/25 16:46, Joanne Koong wrote:
-> On Sat, Feb 8, 2025 at 2:11 AM Matthew Wilcox <willy@infradead.org> wrote:
->>
->> On Fri, Feb 07, 2025 at 04:22:56PM -0800, Joanne Koong wrote:
->> > > Thanks, Josef. I guess we can at least try to confirm we're on the right track.
->> > > Can anyone affected see if this (only compile tested) patch fixes the issue?
->> > > Created on top of 6.13.1.
->> >
->> > This fixes the crash for me on 6.14.0-rc1. I ran the repro using
->> > Mantas's instructions for Obfuscate. I was able to trigger the crash
->> > on a clean build and then with this patch, I'm not seeing the crash
->> > anymore.
->>
->> Since this patch fixes the bug, we're looking for one call to folio_put()
->> too many.  Is it possibly in fuse_try_move_page()?  In particular, this
->> one:
->>
->>         /* Drop ref for ap->pages[] array */
->>         folio_put(oldfolio);
->>
->> I don't know fuse very well.  Maybe this isn't it.
-> 
-> Yeah, this looks it to me. We don't grab a folio reference for the
-> ap->pages[] array for readahead and it tracks with Mantas's
-> fuse_dev_splice_write() dmesg. this patch fixed the crash for me when
-> I tested it yesterday:
-> 
-> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> index 7d92a5479998..172cab8e2caf 100644
-> --- a/fs/fuse/file.c
-> +++ b/fs/fuse/file.c
-> @@ -955,8 +955,10 @@ static void fuse_readpages_end(struct fuse_mount
-> *fm, struct fuse_args *args,
->                 fuse_invalidate_atime(inode);
->         }
-> 
-> -       for (i = 0; i < ap->num_folios; i++)
-> +       for (i = 0; i < ap->num_folios; i++) {
->                 folio_end_read(ap->folios[i], !err);
-> +               folio_put(ap->folios[i]);
-> +       }
->         if (ia->ff)
->                 fuse_file_put(ia->ff, false);
-> 
-> @@ -1049,6 +1051,7 @@ static void fuse_readahead(struct readahead_control *rac)
-> 
->                 while (ap->num_folios < cur_pages) {
->                         folio = readahead_folio(rac);
-> +                       folio_get(folio);
+Hi Huacai,
 
-This is almost the same as my patch, but balances the folio_put() in
-readahead_folio() with another folio_get(), while mine uses
-__readahead_folio() that does not do folio_put() in the first place.
+Thanks a lot, I will keep that in mind!
+That's very kind of you, sorry for the trouble.
 
-But I think neither patch proves the extraneous folio_put() comes from
-fuse_try_move_page().
+Marco
 
->                         ap->folios[ap->num_folios] = folio;
->                         ap->descs[ap->num_folios].length = folio_size(folio);
->                         ap->num_folios++;
-> 
-> 
-> I reran it just now with a printk by that ref drop in
-> fuse_try_move_page() and I'm indeed seeing that path get hit.
 
-It might get hit, but is it hit in the readahead paths? One way to test
-would be to instead of yours above or mine change, to stop doing the
-foio_put() in fuse_try_move_page(). But maybe it's called also from other
-contexts that do expect it, and will leak memory otherwise.
+On Mon, Feb 10, 2025 at 3:19=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org>=
+ wrote:
+>
+> Hi, Marco,
+>
+> Don't care about the lkp robot, I have queued this patch with some
+> small modifications.
+> https://github.com/chenhuacai/linux/commit/a8aa673ea46c03b3f62992ffa4ffe8=
+10ac84f6e3
+>
+> Huacai
+>
+> On Sat, Feb 8, 2025 at 6:19=E2=80=AFPM Marco Crivellari
+> <marco.crivellari@suse.com> wrote:
+> >
+> > Loongson re-enables interrupts on its idle routine and performs a
+> > TIF_NEED_RESCHED check afterwards before putting the CPU to sleep.
+> >
+> > The IRQs firing between the check and the idling instruction may set th=
+e
+> > TIF_NEED_RESCHED flag. In order to deal with the such a race, IRQs
+> > interrupting __arch_cpu_idle() rollback their return address to the
+> > beginning of __arch_cpu_idle() so that TIF_NEED_RESCHED is checked
+> > again before going back to sleep.
+> >
+> > However idle IRQs can also queue timers that may require a tick
+> > reprogramming through a new generic idle loop iteration but those timer=
+s
+> > would go unnoticed here because __arch_cpu_idle() only checks
+> > TIF_NEED_RESCHED. It doesn't check for pending timers.
+> >
+> > Fix this with fast-forwarding idle IRQs return value to the end of the
+> > idle routine instead of the beginning, so that the generic idle loop
+> > handles both TIF_NEED_RESCHED and pending timers.
+> >
+> > Fixes: 0603839b18f4 ("LoongArch: Add exception/interrupt handling")
+> > Cc: WANG Xuerui <kernel@xen0n.name>
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> > Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
+> > ---
+> >  arch/loongarch/kernel/genex.S | 31 +++++++++++++++++--------------
+> >  arch/loongarch/kernel/idle.c  |  3 +--
+> >  arch/loongarch/kernel/reset.c | 18 +++++++++---------
+> >  3 files changed, 27 insertions(+), 25 deletions(-)
+> >
+> > diff --git a/arch/loongarch/kernel/genex.S b/arch/loongarch/kernel/gene=
+x.S
+> > index 86d5d90ebefe..9623298a5cf1 100644
+> > --- a/arch/loongarch/kernel/genex.S
+> > +++ b/arch/loongarch/kernel/genex.S
+> > @@ -18,28 +18,31 @@
+> >
+> >         .align  5
+> >  SYM_FUNC_START(__arch_cpu_idle)
+> > -       /* start of rollback region */
+> > -       LONG_L  t0, tp, TI_FLAGS
+> > -       nop
+> > -       andi    t0, t0, _TIF_NEED_RESCHED
+> > -       bnez    t0, 1f
+> > -       nop
+> > -       nop
+> > -       nop
+> > +       /* start of idle interrupt region */
+> > +       ori             t0, zero, CSR_CRMD_IE
+> > +       /* idle instruction needs irq enabled */
+> > +       csrxchg t0, t0, LOONGARCH_CSR_CRMD
+> > +       /*
+> > +        * If an interrupt lands here; between enabling interrupts abov=
+e and
+> > +        * going idle on the next instruction, we must *NOT* go idle si=
+nce the
+> > +        * interrupt could have set TIF_NEED_RESCHED or caused an timer=
+ to need
+> > +        * reprogramming. Fall through -- see handle_vint() below -- an=
+d have
+> > +        * the idle loop take care of things.
+> > +        */
+> >         idle    0
+> > -       /* end of rollback region */
+> > -1:     jr      ra
+> > +       /* end of idle interrupt region */
+> > +SYM_INNER_LABEL(__arch_cpu_idle_exit, SYM_L_LOCAL)
+> > +       jr      ra
+> >  SYM_FUNC_END(__arch_cpu_idle)
+> >
+> >  SYM_CODE_START(handle_vint)
+> >         UNWIND_HINT_UNDEFINED
+> >         BACKUP_T0T1
+> >         SAVE_ALL
+> > -       la_abs  t1, __arch_cpu_idle
+> > +       la_abs  t1, __arch_cpu_idle_exit
+> >         LONG_L  t0, sp, PT_ERA
+> > -       /* 32 byte rollback region */
+> > -       ori     t0, t0, 0x1f
+> > -       xori    t0, t0, 0x1f
+> > +       /* 3 instructions idle interrupt region */
+> > +       ori     t0, t0, 0x0c
+> >         bne     t0, t1, 1f
+> >         LONG_S  t0, sp, PT_ERA
+> >  1:     move    a0, sp
+> > diff --git a/arch/loongarch/kernel/idle.c b/arch/loongarch/kernel/idle.=
+c
+> > index 0b5dd2faeb90..54b247d8cdb6 100644
+> > --- a/arch/loongarch/kernel/idle.c
+> > +++ b/arch/loongarch/kernel/idle.c
+> > @@ -11,7 +11,6 @@
+> >
+> >  void __cpuidle arch_cpu_idle(void)
+> >  {
+> > -       raw_local_irq_enable();
+> > -       __arch_cpu_idle(); /* idle instruction needs irq enabled */
+> > +       __arch_cpu_idle();
+> >         raw_local_irq_disable();
+> >  }
+> > diff --git a/arch/loongarch/kernel/reset.c b/arch/loongarch/kernel/rese=
+t.c
+> > index 1ef8c6383535..8fd8c44b02cb 100644
+> > --- a/arch/loongarch/kernel/reset.c
+> > +++ b/arch/loongarch/kernel/reset.c
+> > @@ -32,9 +32,9 @@ void machine_halt(void)
+> >         pr_notice("\n\n** You can safely turn off the power now **\n\n"=
+);
+> >         console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+> >
+> > -       while (true) {
+> > -               __arch_cpu_idle();
+> > -       }
+> > +       while (1) {
+> > +               asm volatile("idle 0" : : : "memory");
+> > +       };
+> >  }
+> >
+> >  void machine_power_off(void)
+> > @@ -52,9 +52,9 @@ void machine_power_off(void)
+> >         efi.reset_system(EFI_RESET_SHUTDOWN, EFI_SUCCESS, 0, NULL);
+> >  #endif
+> >
+> > -       while (true) {
+> > -               __arch_cpu_idle();
+> > -       }
+> > +       while (1) {
+> > +               asm volatile("idle 0" : : : "memory");
+> > +       };
+> >  }
+> >
+> >  void machine_restart(char *command)
+> > @@ -73,7 +73,7 @@ void machine_restart(char *command)
+> >         if (!acpi_disabled)
+> >                 acpi_reboot();
+> >
+> > -       while (true) {
+> > -               __arch_cpu_idle();
+> > -       }
+> > +       while (1) {
+> > +               asm volatile("idle 0" : : : "memory");
+> > +       };
+> >  }
+> > --
+> > 2.48.1
+> >
 
-> Not sure why fstests didn't pick this up though since splice is
-> enabled by default in passthrough_hp, i'll look into this next week.
-> 
 
+
+--=20
+
+Marco Crivellari
+
+L3 Support Engineer
