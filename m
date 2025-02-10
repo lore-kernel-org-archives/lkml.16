@@ -1,434 +1,128 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EF8192B84
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE45B192B84
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739212508; cv=none; b=KyC6G3ATEKqJiCjD+ulNkwsuVh6Pi76OGK7L5pv7vlDGPJKBDKep4nH8JELY0aUyK76hCc8DC7ShOWcJMc19V53a3mR5/9UttMcuvOwviw6DInDpBvZBfPOTwrWrgzDh0cmXXmEO0D9lJCd6Ug6zKT3mfK1YZ+lb2bzquE82NA0=
+	t=1739212515; cv=none; b=NAgnLPPIJzgEqH37zz+/Wp4N2RmpKMnilzu1VNSCeiUr3PlaMK8q36j2quSgcPwfDa79svHigpmuqPz2cs52iomIxb1dTSVFmjc3U2bjttxrOkyEEL9SWF9HvqsVVFHyQzVAHXeXrRsMYrssJX+18/hzFcfqPFCp+AZgfRuYk10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739212508; c=relaxed/simple;
-	bh=afFbwZhPvABw9QtnhyLoeWFZ1DAKvScTsQg8dH8fITI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mRbanpgTLH8ahK00+0Rd1R0xzU/rpEDaNzYCWPF6l51HLG7TngYQ39e+nhAW2ckKrE01N86sg/qrDidDaLLUHn9cigGbDlXpk+oN4AK/C/IIxh9GjDfdtOeoAkS9FG8YON7zdhy6zrqKmusCO2+Mm4MXawr0SLtYA2LSVNhJC4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=wajH00IG; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1739212515; c=relaxed/simple;
+	bh=zWuoo7ND2Cayr7LKqH469oOc4M8MkwV//oIaGZjQhm8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JOeDZJbNPNjMHFxKL/XMkwwfFnVM48T6koHoV0tUalbE5aVlJDyrhRBDruVpQgkuvg+cBnJ8nYeB5elGf04pWnUn3HmsXELRIL8jtSaUhEnjtizuE2CRxPzdX2fGwd0xuU7oxOFeqZb/jzLyvt3Ll5OCGbFePN/KgMdWNskC60c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Eqq0fv/E; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="wajH00IG"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f50895565so49651825ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:35:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739212505; x=1739817305; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IZC6hwdmsqFUIUOrfafnyuVDJQQmUYi4erRt9zplJew=;
-        b=wajH00IGPM8LMRdwak4iQ5X/8GVVgAsmyAPewes8oPNsjQM3bjOlOUA9YtHBV1c7U/
-         A67oPMctVoL53ZcoiBDMuELYSzwst2w1W5RU+QFjc7sVOS5Kz/bJxFQ1RbibRH3QruxP
-         tjXL48K9hCUN+r1rVPx15W5KwyXxZlmvkn9s5UYiSfMhULPzlNVTmfKNxECE6fWLhvF7
-         odMY2Mfe9PosoCZ431uGchljvlbZUDD4RLQfCpoMCWJNnjqB5CCn6K2Ge/PKRGq4qwqs
-         7WlAKScmbbPtfJVxv6pCt0Y7k1f9ZfIq/DrH70zuQbwmSSIxVja0irQ4MGEGSVquYXYk
-         krlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739212505; x=1739817305;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IZC6hwdmsqFUIUOrfafnyuVDJQQmUYi4erRt9zplJew=;
-        b=bcQYJ+p/J0dfxakkt4kMHIS5xqJSFK4sYL8GBZio5GRGe/2z35CF9YvZQbZwUVdiHK
-         xqDrehYWj5fHAi9r48MIdC3IsEL3JVYT/7gWCAVNB7Lc63wkZqTSmT01Uy1gcFbQnCbl
-         h52kDnOXnk216AS6XldvxswhScUiowNA61EV6xO690lqZS2p/1vAj8mDpvIJ7YeWE6Nv
-         W0DU+gcLriL01RzzXnlu6wrdiPsrDbhCtVfoGepnbuD08oIXmzICVnZNOpO6c5i/uhNh
-         uL0LUE/S5ChVCQ3MWvsWsO0SmfbaAB2KtFe18hTs9v2u/NfTMY7a7SKLFuSHxVA3qIbi
-         3Z3g==
-X-Forwarded-Encrypted: i=1; AJvYcCWyeV+y1+BjPS8Zg3X9EfeCfqkvTTN5UUh+94PsrhrBxhKu3szx01BDTaoCEWmfYBDjFT0ePO/cyidBD0A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjjhH6vDHeIVW5pbJg1tw8X6wDu0TGzxiF9e8WgeUIdnVrIWM3
-	pZ/31wqrFouu+GgLqE/SwowSRZoBMXU2w3WxIYSyGDGY/cftJ5cogV5DQs21RHw=
-X-Gm-Gg: ASbGncsT2QvRRuUY63kKntfb6gB+75n8ukOgGcGjwmHi1xIiSU5/QlNAZ4B3oGezn/F
-	24TGNXITkfULFbLdPd0wPxGNq5vMoJG7eabEgREjZsolCjvFj3e1ebjkBQlUBTbcR0Q7k7in733
-	XTuloIuaE8vuTG01IPpneXGELRdwIz7KRSoNZ22RSD3CbH2ZFAFPtwfmBkOXeWiGzkJKeeh1AWV
-	o4Rta6n0BMM+rwEW5Wa/Z08BHE33C7g/sSkH0xKjEomaL86XIfeolrTyihQt5cvBfjZhPu9DPSO
-	iIgCKjhy5yoXifVFSV11FJPI8k6q6TE=
-X-Google-Smtp-Source: AGHT+IHtp08VQuun5C1yu46ll/uFsvIp/+Quz02mNlB+fHEav3tysjyfH3BKOpexgQ5joBYuNTCv8A==
-X-Received: by 2002:a17:903:2f83:b0:215:89a0:416f with SMTP id d9443c01a7336-21fb64460e9mr7223045ad.30.1739212505447;
-        Mon, 10 Feb 2025 10:35:05 -0800 (PST)
-Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3650e6b5sm82534815ad.46.2025.02.10.10.35.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 10:35:04 -0800 (PST)
-From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Mon, 10 Feb 2025 10:34:43 -0800
-Subject: [PATCH v2 2/2] tools: Remove redundant quiet setup
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Eqq0fv/E"
+Date: Mon, 10 Feb 2025 10:34:54 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739212501;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Px6n4/iF3ATy1tkEKiiYXPtCS0uyJnLM3LWN0RZhHL8=;
+	b=Eqq0fv/EZqZxres6gXvwinFpZxvxoAbVnSYhy/hOzYIeULRrCalvzQY8wdrpNDLwQReVpz
+	qhKuOIIHVO/vQnzJEhcb+aYrzKJQC7n3mi2fMRb0VdpW4j3MLoC00YTmnAxqtyeHapkPwS
+	SrJNH6alGGJKnHKCG7ULeUTw9Xpdgxk=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+Cc: "T.J. Mercier" <tjmercier@google.com>, Tejun Heo <tj@kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org, 
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH] memcg: add hierarchical effective limits for v2
+Message-ID: <j2qxkp3tjq7yenl3tkjisaxry7aqdwaxlpx7rn7mpkdi7fkf2c@xva7vgzspb2p>
+References: <20250205222029.2979048-1-shakeel.butt@linux.dev>
+ <mshcu3puv5zjsnendao73nxnvb2yiprml7aqgndc37d7k4f2em@vqq2l6dj7pxh>
+ <ctuqkowzqhxvpgij762dcuf24i57exuhjjhuh243qhngxi5ymg@lazsczjvy4yd>
+ <5jwdklebrnbym6c7ynd5y53t3wq453lg2iup6rj4yux5i72own@ay52cqthg3hy>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250210-quiet_tools-v2-2-b2f18cbf72af@rivosinc.com>
-References: <20250210-quiet_tools-v2-0-b2f18cbf72af@rivosinc.com>
-In-Reply-To: <20250210-quiet_tools-v2-0-b2f18cbf72af@rivosinc.com>
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
- Quentin Monnet <qmo@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
- Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
- Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
- Steven Rostedt <rostedt@goodmis.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10090; i=charlie@rivosinc.com;
- h=from:subject:message-id; bh=afFbwZhPvABw9QtnhyLoeWFZ1DAKvScTsQg8dH8fITI=;
- b=owGbwMvMwCXWx5hUnlvL8Y3xtFoSQ/oqt0u/FxybH+p4mC9Zx/PRSWbdmew734Zp/dy93/bY9
- p6Fp/eWdpSyMIhxMciKKbLwXGtgbr2jX3ZUtGwCzBxWJpAhDFycAjCRehtGhl1F0efO6NpNY9/B
- rPv9RaPrVk75XSdeKIvcjDnmKnts6gWG/0l3TM5cu5r8r35nrNzheXeO5/UUalspTHr6qfh6fGf
- zbn4A
-X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
- fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5jwdklebrnbym6c7ynd5y53t3wq453lg2iup6rj4yux5i72own@ay52cqthg3hy>
+X-Migadu-Flow: FLOW_OUT
 
-Q is exported from Makefile.include so it is not necessary to manually
-set it.
+On Mon, Feb 10, 2025 at 05:24:17PM +0100, Michal Koutný wrote:
+> Hello.
+> 
+> On Thu, Feb 06, 2025 at 11:09:05AM -0800, Shakeel Butt <shakeel.butt@linux.dev> wrote:
+> > Oh I totally forgot about your series. In my use-case, it is not about
+> > dynamically knowning how much they can expand and adjust themselves but
+> > rather knowing statically upfront what resources they have been given.
+> 
+> From the memcg PoV, the effective value doesn't tell how much they were
+> given (because of sharing).
+> 
+> > More concretely, these are workloads which used to completely occupy a
+> > single machine, though within containers but without limits. These
+> > workloads used to look at machine level metrics at startup on how much
+> > resources are available.
+> 
+> I've been there but haven't found convincing mapping of global to memcg
+> limits.
+> 
+> The issue is that such a value won't guarantee no OOM when below because
+> it can be (generally) effectively shared.
+> 
+> (Alas, apps typically don't express their memory needs in units of
+> PSI. So it boils down to a system wide monitor like systemd-oomd and
+> cooperation with it.)
+> 
 
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
----
- tools/arch/arm64/tools/Makefile           |  6 ------
- tools/bpf/Makefile                        |  6 ------
- tools/bpf/bpftool/Documentation/Makefile  |  6 ------
- tools/bpf/bpftool/Makefile                |  6 ------
- tools/bpf/resolve_btfids/Makefile         |  2 --
- tools/bpf/runqslower/Makefile             |  5 +----
- tools/lib/bpf/Makefile                    | 13 -------------
- tools/lib/perf/Makefile                   | 13 -------------
- tools/lib/thermal/Makefile                | 13 -------------
- tools/objtool/Makefile                    |  6 ------
- tools/testing/selftests/bpf/Makefile.docs |  6 ------
- tools/testing/selftests/hid/Makefile      |  2 --
- tools/thermal/lib/Makefile                | 13 -------------
- tools/tracing/latency/Makefile            |  6 ------
- tools/tracing/rtla/Makefile               |  6 ------
- tools/verification/rv/Makefile            |  6 ------
- 16 files changed, 1 insertion(+), 114 deletions(-)
+I think you missed the static partitioning of resources use-case I
+mentioned. The issue you are pointing exist for the system level metrics
+as well i.e. a worklod looking at system metrics can't say how much they
+are given but in my specific case, the workloads know they occupy the
+full machine. Now we want to move such workloads to multi-tenant
+environment but the resources are still statically partitioned and not
+overcommitted, so effective limit will tell how much they are given.
 
-diff --git a/tools/arch/arm64/tools/Makefile b/tools/arch/arm64/tools/Makefile
-index 7b42feedf647190ad498de0937e8fb557e40f39c..de4f1b66ef0148b7bfd0fd16655ad854c7542240 100644
---- a/tools/arch/arm64/tools/Makefile
-+++ b/tools/arch/arm64/tools/Makefile
-@@ -13,12 +13,6 @@ AWK	?= awk
- MKDIR	?= mkdir
- RM	?= rm
- 
--ifeq ($(V),1)
--Q =
--else
--Q = @
--endif
--
- arm64_tools_dir = $(top_srcdir)/arch/arm64/tools
- arm64_sysreg_tbl = $(arm64_tools_dir)/sysreg
- arm64_gen_sysreg = $(arm64_tools_dir)/gen-sysreg.awk
-diff --git a/tools/bpf/Makefile b/tools/bpf/Makefile
-index 243b79f2b451e52ca196f79dc46befd1b3dab458..062bbd6cd048e9e42f9bc8f9972ec96594f3dbd2 100644
---- a/tools/bpf/Makefile
-+++ b/tools/bpf/Makefile
-@@ -27,12 +27,6 @@ srctree := $(patsubst %/,%,$(dir $(CURDIR)))
- srctree := $(patsubst %/,%,$(dir $(srctree)))
- endif
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- FEATURE_USER = .bpf
- FEATURE_TESTS = libbfd disassembler-four-args disassembler-init-styled
- FEATURE_DISPLAY = libbfd
-diff --git a/tools/bpf/bpftool/Documentation/Makefile b/tools/bpf/bpftool/Documentation/Makefile
-index 4315652678b9f2e27e48b7815f3b9ddc70a57165..bf843f328812e10dd65a73f355f74e6825ad95b9 100644
---- a/tools/bpf/bpftool/Documentation/Makefile
-+++ b/tools/bpf/bpftool/Documentation/Makefile
-@@ -5,12 +5,6 @@ INSTALL ?= install
- RM ?= rm -f
- RMDIR ?= rmdir --ignore-fail-on-non-empty
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- prefix ?= /usr/local
- mandir ?= $(prefix)/man
- man8dir = $(mandir)/man8
-diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-index dd9f3ec842017f1dd24054bf3a0986d546811dc4..6ea4823b770cbbe7fd9eb7da79956cc1dae1f204 100644
---- a/tools/bpf/bpftool/Makefile
-+++ b/tools/bpf/bpftool/Makefile
-@@ -7,12 +7,6 @@ srctree := $(patsubst %/,%,$(dir $(srctree)))
- srctree := $(patsubst %/,%,$(dir $(srctree)))
- endif
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- BPF_DIR = $(srctree)/tools/lib/bpf
- 
- ifneq ($(OUTPUT),)
-diff --git a/tools/bpf/resolve_btfids/Makefile b/tools/bpf/resolve_btfids/Makefile
-index 4b8079f294f65b284481e9a2bf6ff52594a4669a..afbddea3a39c64ffb2efc874a3637b6401791c5b 100644
---- a/tools/bpf/resolve_btfids/Makefile
-+++ b/tools/bpf/resolve_btfids/Makefile
-@@ -5,10 +5,8 @@ include ../../scripts/Makefile.arch
- srctree := $(abspath $(CURDIR)/../../../)
- 
- ifeq ($(V),1)
--  Q =
-   msg =
- else
--  Q = @
-   ifeq ($(silent),1)
-     msg =
-   else
-diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Makefile
-index c4f1f1735af659c2e660a322dbf6912d9a5724bc..e49203ebd48c18607a6136a9e805ccf16ee960d3 100644
---- a/tools/bpf/runqslower/Makefile
-+++ b/tools/bpf/runqslower/Makefile
-@@ -26,10 +26,7 @@ VMLINUX_BTF_PATHS := $(if $(O),$(O)/vmlinux)		\
- VMLINUX_BTF_PATH := $(or $(VMLINUX_BTF),$(firstword			       \
- 					  $(wildcard $(VMLINUX_BTF_PATHS))))
- 
--ifeq ($(V),1)
--Q =
--else
--Q = @
-+ifneq ($(V),1)
- MAKEFLAGS += --no-print-directory
- submake_extras := feature_display=0
- endif
-diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-index 857a5f7b413d6dc4cbe7bc4167496674dd08d875..168140f8e6461bd06db40e23d21a3fb8847ccbf4 100644
---- a/tools/lib/bpf/Makefile
-+++ b/tools/lib/bpf/Makefile
-@@ -53,13 +53,6 @@ include $(srctree)/tools/scripts/Makefile.include
- 
- # copy a bit from Linux kbuild
- 
--ifeq ("$(origin V)", "command line")
--  VERBOSE = $(V)
--endif
--ifndef VERBOSE
--  VERBOSE = 0
--endif
--
- INCLUDES = -I$(or $(OUTPUT),.) \
- 	   -I$(srctree)/tools/include -I$(srctree)/tools/include/uapi \
- 	   -I$(srctree)/tools/arch/$(SRCARCH)/include
-@@ -96,12 +89,6 @@ override CFLAGS += $(CLANG_CROSS_FLAGS)
- # flags specific for shared library
- SHLIB_FLAGS := -DSHARED -fPIC
- 
--ifeq ($(VERBOSE),1)
--  Q =
--else
--  Q = @
--endif
--
- # Disable command line variables (CFLAGS) override from top
- # level Makefile (perf), otherwise build Makefile will get
- # the same command line setup.
-diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
-index 3a9b2140aa048ea919c69ed2240bf0ea444dbf21..e9a7ac2c062e2b398c2f22af41907b62815ca07e 100644
---- a/tools/lib/perf/Makefile
-+++ b/tools/lib/perf/Makefile
-@@ -39,19 +39,6 @@ libdir = $(prefix)/$(libdir_relative)
- libdir_SQ = $(subst ','\'',$(libdir))
- libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
- 
--ifeq ("$(origin V)", "command line")
--  VERBOSE = $(V)
--endif
--ifndef VERBOSE
--  VERBOSE = 0
--endif
--
--ifeq ($(VERBOSE),1)
--  Q =
--else
--  Q = @
--endif
--
- TEST_ARGS := $(if $(V),-v)
- 
- # Set compile option CFLAGS
-diff --git a/tools/lib/thermal/Makefile b/tools/lib/thermal/Makefile
-index 8890fd57b110ccc1a837d37624a5dead00f18656..a1f5e388644d31d36f973d3ddce48d036ee0a083 100644
---- a/tools/lib/thermal/Makefile
-+++ b/tools/lib/thermal/Makefile
-@@ -39,19 +39,6 @@ libdir = $(prefix)/$(libdir_relative)
- libdir_SQ = $(subst ','\'',$(libdir))
- libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
- 
--ifeq ("$(origin V)", "command line")
--  VERBOSE = $(V)
--endif
--ifndef VERBOSE
--  VERBOSE = 0
--endif
--
--ifeq ($(VERBOSE),1)
--  Q =
--else
--  Q = @
--endif
--
- # Set compile option CFLAGS
- ifdef EXTRA_CFLAGS
-   CFLAGS := $(EXTRA_CFLAGS)
-diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-index f56e2772753414ff8d3462bdebbc8e95e7667fcd..7a65948892e569cbe1d6e5a78db68bb35102cd26 100644
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -46,12 +46,6 @@ HOST_OVERRIDES := CC="$(HOSTCC)" LD="$(HOSTLD)" AR="$(HOSTAR)"
- AWK = awk
- MKDIR = mkdir
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- BUILD_ORC := n
- 
- ifeq ($(SRCARCH),x86)
-diff --git a/tools/testing/selftests/bpf/Makefile.docs b/tools/testing/selftests/bpf/Makefile.docs
-index eb6a4fea8c794d8354363ac8daa0baac3e3bd060..f7f9e7088bb38c7507282990fb62921ca7a636d2 100644
---- a/tools/testing/selftests/bpf/Makefile.docs
-+++ b/tools/testing/selftests/bpf/Makefile.docs
-@@ -7,12 +7,6 @@ INSTALL ?= install
- RM ?= rm -f
- RMDIR ?= rmdir --ignore-fail-on-non-empty
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- prefix ?= /usr/local
- mandir ?= $(prefix)/man
- man2dir = $(mandir)/man2
-diff --git a/tools/testing/selftests/hid/Makefile b/tools/testing/selftests/hid/Makefile
-index 0336353bd15f0d56dbed6c8fa02f53c234f949e1..2839d2612ce3a70f4332f8e886586e9cca6f03cb 100644
---- a/tools/testing/selftests/hid/Makefile
-+++ b/tools/testing/selftests/hid/Makefile
-@@ -43,10 +43,8 @@ TEST_GEN_PROGS = hid_bpf hidraw
- # $3 - target (assumed to be file); only file name will be emitted;
- # $4 - optional extra arg, emitted as-is, if provided.
- ifeq ($(V),1)
--Q =
- msg =
- else
--Q = @
- msg = @printf '  %-8s%s %s%s\n' "$(1)" "$(if $(2), [$(2)])" "$(notdir $(3))" "$(if $(4), $(4))";
- MAKEFLAGS += --no-print-directory
- submake_extras := feature_display=0
-diff --git a/tools/thermal/lib/Makefile b/tools/thermal/lib/Makefile
-index f2552f73a64c7eb1be24c27b3a1414617391315b..056d212f25cf51cd8c02260fbe2ef28dda5e4acb 100644
---- a/tools/thermal/lib/Makefile
-+++ b/tools/thermal/lib/Makefile
-@@ -39,19 +39,6 @@ libdir = $(prefix)/$(libdir_relative)
- libdir_SQ = $(subst ','\'',$(libdir))
- libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
- 
--ifeq ("$(origin V)", "command line")
--  VERBOSE = $(V)
--endif
--ifndef VERBOSE
--  VERBOSE = 0
--endif
--
--ifeq ($(VERBOSE),1)
--  Q =
--else
--  Q = @
--endif
--
- # Set compile option CFLAGS
- ifdef EXTRA_CFLAGS
-   CFLAGS := $(EXTRA_CFLAGS)
-diff --git a/tools/tracing/latency/Makefile b/tools/tracing/latency/Makefile
-index 6518b03e05c71b4fa84498f9628adf81a38c9f56..257a56b1899f23837de533353e9c2cebdb6035bd 100644
---- a/tools/tracing/latency/Makefile
-+++ b/tools/tracing/latency/Makefile
-@@ -37,12 +37,6 @@ FEATURE_TESTS	+= libtracefs
- FEATURE_DISPLAY	:= libtraceevent
- FEATURE_DISPLAY	+= libtracefs
- 
--ifeq ($(V),1)
--  Q 		=
--else
--  Q 		= @
--endif
--
- all: $(LATENCY-COLLECTOR)
- 
- include $(srctree)/tools/build/Makefile.include
-diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
-index 8b5101457c70b48e9c720f1ba53293f1307c15a2..0b61208db604ec0754024c3007db6b2fe74a613c 100644
---- a/tools/tracing/rtla/Makefile
-+++ b/tools/tracing/rtla/Makefile
-@@ -37,12 +37,6 @@ FEATURE_DISPLAY	:= libtraceevent
- FEATURE_DISPLAY	+= libtracefs
- FEATURE_DISPLAY	+= libcpupower
- 
--ifeq ($(V),1)
--  Q		=
--else
--  Q		= @
--endif
--
- all: $(RTLA)
- 
- include $(srctree)/tools/build/Makefile.include
-diff --git a/tools/verification/rv/Makefile b/tools/verification/rv/Makefile
-index 411d62b3d8eb93abf85526ad33cafd783df86bc1..5b898360ba4818b12e8a16c27bd88c75d0076fb9 100644
---- a/tools/verification/rv/Makefile
-+++ b/tools/verification/rv/Makefile
-@@ -35,12 +35,6 @@ FEATURE_TESTS	+= libtracefs
- FEATURE_DISPLAY	:= libtraceevent
- FEATURE_DISPLAY	+= libtracefs
- 
--ifeq ($(V),1)
--  Q		=
--else
--  Q		= @
--endif
--
- all: $(RV)
- 
- include $(srctree)/tools/build/Makefile.include
+> > Now these workloads are being moved to multi-tenant environment but
+> > still the machine is partitioned statically between the workloads. So,
+> > these workloads need to know upfront how much resources are allocated to
+> > them upfront and the way the cgroup hierarchy is setup, that information
+> > is a bit above the tree.
+> 
+> FTR, e.g. in systemd setups, this can be partially overcome by exposed
+> EffectiveMemoryMax= (the service manager who configures the resources
+> also can do the ancestry traversal).
+> kubernetes has downward API where generic resource info is shared into
+> containers and I recall that lxcfs could mangle procfs
+> memory info wrt memory limits for legacy apps.
+> 
+> 
+> As I think about it, the cgroupns (in)visibility should be resolved by
+> assigning the proper limit to namespace's root group memory.max (read
+> only for contained user) and the traversal...
+> 
 
--- 
-2.43.0
+I think here your point is why not have userspace based solution. I
+think it is possible but not convenient and adds an external dependency
+in the workload.
 
+> 
+> On Thu, Feb 06, 2025 at 11:37:31AM -0800, "T.J. Mercier" <tjmercier@google.com> wrote:
+> > but having a single file to read instead of walking up the
+> > tree with multiple reads to calculate an effective limit would be
+> > nice.
+> 
+> ...in kernel is nice but possible performance gain isn't worth hiding
+> the shareability of the effective limit.
+> 
+> 
+> So I wonder what is the current PoV of more MM people...
+
+Yup, let's see more opinion on this.
+
+Thanks Michal for your feedback.
