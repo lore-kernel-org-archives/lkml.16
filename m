@@ -1,111 +1,217 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A572F1B0F00;
-	Mon, 10 Feb 2025 07:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC481B414A
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739173834; cv=none; b=D99JLB1pMMf0OX65un4rvezOX8YxBklaFwy4W/6IUKZ6D7R7v60FcXcwETpytiboL7+qd0Kkswk/lttxG9Htr5pZujmybPuo7k9v0PR8v9wNUrvN70Jn0Md3etq+0L2nJAOR7i+V+FPqgB7lYYMUYeikJidE5tt4UEpPooC/GSQ=
+	t=1739173852; cv=none; b=VngNCAnMfa1Jp78qwW9A708bkQJCUewlJmINNAS9ER68I1k4rBuVgKbz2qSzlIq7Oq5bgomE76GGrM+dNiVgkpEcGPgdzeX3w4ZJMHHiR1YOWlNz5Sk/BbW4mAvXTUaNX6kpqbu7Wu5LA22uK4dSnqgIgtb6a9k7GzdMYQtNVp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739173834; c=relaxed/simple;
-	bh=KcLkOdKpnk1CJoSNTQMgCGG1hRd+E7Qg89aooupMW4A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DcNKWa6xsuM3FpaSCiEbSKAOGPfYbF3WsgwoaIp7aI/0ab6Oxt5XmCKNDnDa8Jw88q5V9JgqN3Z2ibu0LkzkAQhRVFfjbH1fjT6vHD72iRvy3X0VdGvLBc91o+SBmUPww1CzDgzxB9QkTtj1SvfXKu/tuTIoMT7mhHf8ChG3u38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lRbyjq/4; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739173852; c=relaxed/simple;
+	bh=E5XTfvzNYj9B9esyrKaB5uJKrEnXpsM9La4z8KB03sQ=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=B25Stn705j+OG85GxuKkbjCLH+Mrljmu+3/su1n1rcFRigzcwpMM/+GPXttTvJD3LNmS2vvOTsOm4Xep10jO/JYyeHhoNLGpuFxHpHVocTiqCH2zOIXB4CxV1YOiN2RoQnmo+txfLuwtIAw39e0puUshiphe8T4wXf7V3qDjUQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=MWkJxIeJ; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRbyjq/4"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2fa1d9fb990so6029821a91.2;
-        Sun, 09 Feb 2025 23:50:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739173831; x=1739778631; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yH1eZR8Z4tfbwC4sdMJnrsadw3QkNTq9pA/sDaio2h4=;
-        b=lRbyjq/4YBOvjOR0R1ucOna8+7wIoRhsfhRH2nwnpkNH/j2+9s5ENZ76MLJcTqBXUA
-         TSovRS3zOVKGRz5C0Gu3ijpgj6FGO29WghoSmStHugp5w24JGlkosmMEDjvaBYMRFIqb
-         VBvqpzqSKmn24EmuTAyqjgOcclYlCBSxmcNzE0cuuRSFQKBYA9Kpb3nF3gpIgpmc3/pX
-         X3Z47BZB2qfIhJNpZ/4gnbJVWnzzRmVwjiHi4BPbGw3ReJ+1QwCBCneehZFAwQLXESIk
-         TA+BFueVp5zQQofM1YYNk7Z5bBFebCNUvuSxHHect+KNJxcf8vPfICTUd+Gbf+is4IVl
-         tnVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739173831; x=1739778631;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yH1eZR8Z4tfbwC4sdMJnrsadw3QkNTq9pA/sDaio2h4=;
-        b=j1fWDuHSWMcM7lPPN5Cynbgl3yH1b46wypUuUT952SAN53tJ+eJyAYSdrCi4S5tYcZ
-         e7qn/pSWW+bFqYYyHX5+FRpqeGr+lQ8K9jtWtfOlAzRubNt9WMEO+FgbX+VK5en+gEIz
-         pFZzzlQCwpFVl/XxkOKwIo5Pe5Tq2xOoOmEKq6Udc2mty0Ak+FhWNbcvLd9SClZvSNii
-         yt9GMvhBgDU1LNs/00Q5wtCOUmEK7nshr4xJw8tu8APQO6XHiGcBzRr1IHg8U7IZcQfz
-         xEe+AQuS7ihMOs/iUcL+14Aiqo7PnmtvpDTsfr0YiVoIrCpSvvO1qB38LQzH8x1lPR4W
-         6Fow==
-X-Forwarded-Encrypted: i=1; AJvYcCWb+wVTK1Ry6mtfHrAt3BeW5T9WbRWuM7ez0ptrcSciDEKJPkBW6BvvyFbLWWgCnWf6ydJ/+oc1@vger.kernel.org, AJvYcCXekWP1SJNDvhlvTkeEWRlzPs5Pd7uqPf65ufEc5YLncKdaagGvA/54krLxPUT+JEOB7UADCL8Sw856rXY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+djdPC/oG4NksWuM6173U8B40eDIpgo85t/ypjAhjq2ZzLFjh
-	ytFavnMjE7+6xzoUV+PV6Vm+IS1SxHhPT0YLxjqJSMYiLLahLaka
-X-Gm-Gg: ASbGncvN7NiBe96j2UnGkTSmwM8cgR5z9JtW5chlBEXJFTOatUOIt2cE+IrfuDZaI1N
-	NrytMkkKXk0xf45tC5rRD6QoAGDq8K9CMvKgtZLI0Yn454l5WW2y9vaxc0TITz4En6i2I5GTOne
-	hfZBuqB+CQSUEaM42ykxgqsk+6cmu/GQupEzN2ClJhdGoZUZB0MXVZAOBBENuct2yoYJKODDrZi
-	3vX7keOH/q8qRBYkbvbOFyujrRhYqgrErQyv85gq42CjrNU5eOmxCqQV7hY2ehb/BGXQ7yYV8ZJ
-	u8nZXeGH0/P5n8VbajlMWcUYADKz0m3hDZ9m23J1Dcq3GRQOow==
-X-Google-Smtp-Source: AGHT+IH9ZEbEouCLt6NuoakuYdcUnELKqrJuy+RTbWTtRy+8lev6j+fv/HSLVCV9hcgXMelfHzw/XA==
-X-Received: by 2002:a17:90a:f94e:b0:2f6:d266:f45c with SMTP id 98e67ed59e1d1-2fa23f5abcemr21436969a91.2.1739173830745;
-        Sun, 09 Feb 2025 23:50:30 -0800 (PST)
-Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([2409:40c0:101c:99b7:34e3:b424:c392:121c])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa09a46a89sm7877027a91.23.2025.02.09.23.50.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 23:50:30 -0800 (PST)
-From: Purva Yeshi <purvayeshi550@gmail.com>
-To: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: skhan@linuxfoundation.org,
-	Simon Horman <horms@kernel.org>,
-	Purva Yeshi <purvayeshi550@gmail.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2] af_unix: Fix undefined 'other' error
-Date: Mon, 10 Feb 2025 13:20:06 +0530
-Message-Id: <20250210075006.9126-1-purvayeshi550@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="MWkJxIeJ"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250210075046epoutp0437bc953916cea8c76ae3ec9a4e8d2f69~iyWYu_5wj2056420564epoutp044
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 07:50:46 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250210075046epoutp0437bc953916cea8c76ae3ec9a4e8d2f69~iyWYu_5wj2056420564epoutp044
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1739173846;
+	bh=uOIG1kBwa375IjDxvtTpcivrXTy/E8ot3zCUgn0FhOM=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=MWkJxIeJ9YSvC9A1DPP9f5IjE5VDaJbscOcq9KXB7aYUhuSP2V/sUN08C6TmmIhuV
+	 zeJlOo6XiyOieS1A08lNuG2dxQh/8+zzb1QHO7Nq0MHhZ7wOnBcHuErg6MK5ntE0ty
+	 JMVKX89APvsAfP7B2SKkidxB322VCMFuvvsYFSVU=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20250210075046epcas5p2388005a7545725c07c52c4b36d9e4bde~iyWYQ94lB1911619116epcas5p2-;
+	Mon, 10 Feb 2025 07:50:46 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.182]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4YrxZq6BqWz4x9Pt; Mon, 10 Feb
+	2025 07:50:43 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	70.89.19956.3DFA9A76; Mon, 10 Feb 2025 16:50:43 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250210075043epcas5p4a56834e40a986fd7d8d720f0af456fc6~iyWVgPQTI1423614236epcas5p43;
+	Mon, 10 Feb 2025 07:50:43 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250210075043epsmtrp11404969101ef7002b8420388cc7a29ff~iyWVfsydk2946729467epsmtrp1U;
+	Mon, 10 Feb 2025 07:50:43 +0000 (GMT)
+X-AuditID: b6c32a4b-fe9f470000004df4-83-67a9afd35e6c
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	E1.77.18949.3DFA9A76; Mon, 10 Feb 2025 16:50:43 +0900 (KST)
+Received: from INBRO001561 (unknown [107.122.12.6]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250210075042epsmtip210702a549534698b569cabe34e80868f~iyWUmr-sK0313903139epsmtip2f;
+	Mon, 10 Feb 2025 07:50:42 +0000 (GMT)
+From: "Pankaj Dubey" <pankaj.dubey@samsung.com>
+To: "'Aatif Mushtaq'" <aatif4.m@samsung.com>, <vkoul@kernel.org>,
+	<dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Cc: <aswani.reddy@samsung.com>
+In-Reply-To: <20250210061915.26218-2-aatif4.m@samsung.com>
+Subject: RE: [PATCH 1/3] dmaengine: Add support for 2D DMA operation
+Date: Mon, 10 Feb 2025 13:20:41 +0530
+Message-ID: <05c601db7b90$7c662e60$75328b20$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFsIHTrWqAe9Pu9L3iNOvGTrR8WTgG4P+QRAcvczKW0Ar1QAA==
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplk+LIzCtJLcpLzFFi42LZdlhTQ/fy+pXpBvu6DS2OzfjIaHFo81Z2
+	i9VT/7JaXN41h81i550TzA6sHptWdbJ59G1ZxejxeZNcAHNUtk1GamJKapFCal5yfkpmXrqt
+	kndwvHO8qZmBoa6hpYW5kkJeYm6qrZKLT4CuW2YO0EolhbLEnFKgUEBicbGSvp1NUX5pSapC
+	Rn5xia1SakFKToFJgV5xYm5xaV66Xl5qiZWhgYGRKVBhQnbG/h1/2As6ZCsaj2k2MN4S72Lk
+	5JAQMJH4umk5UxcjF4eQwG5Gif8TdrNDOJ8YJRb/fcEC4XxjlLjSfZAdpuXc2i9Qib2MEq+f
+	t0M5Lxgl7r6aC1bFJqAvce7HPFYQW0SgXqKp/SELiM0sICfRtKuFEcTmFLCSeHTvBhOILSzg
+	InHy3B82EJtFQFXiyaKNzCA2r4ClxNJX/UwQtqDEyZlPoOZoSyxb+JoZ4iIFiZ9Pl0HtcpKY
+	dbePHaJGXOLl0SNg/0gI/GSXaHg6nwWiwUXiy+G7UM3CEq+Ob4F6TUriZX8bkM0BZPtILN3t
+	AREukdjQsxSq1V7iwJU5LCAlzAKaEut36UOs4pPo/f2ECaKTV6KjTQiiWk3i+/MzUItkJB42
+	L2WCsD0kDj/5yzaBUXEWksdmIXlsFpIHZiEsW8DIsopRMrWgODc9tdi0wDgvtRwe3cn5uZsY
+	welRy3sH46MHH/QOMTJxMB5ilOBgVhLhNVm4Il2INyWxsiq1KD++qDQntfgQoykwtCcyS4km
+	5wMTdF5JvKGJpYGJmZmZiaWxmaGSOG/zzpZ0IYH0xJLU7NTUgtQimD4mDk6pBqaQVuZME70f
+	2+Un5HiHd7k6buzV0YpqtOBaPL3158/DK56s0I2+1PvNXqRymt/lt5v9jXI0uDU6p18+xsLK
+	ut3r8Grey+fzZj65u3DGmiPnZk7mZ7x+SN/qSeW2mOSG85yZTXKr/YLWLFt2ZnL+xev9IVMu
+	pDMwXp7ouCaxfZJVa2XPvuStWw0Z8rOjznUf3+8akhqR8yzAvGGjn4R5/m335xGf3k7wk3mR
+	xVHltrX3xZsrSZ+rebs3udse2u+kYrbq/iq2Rsn+/JMTrXmeMJaL7Ug7MvfWBdNIG5YznsJs
+	AazrG7e4HV70JbXzQ4nL0madgM9XL93L2h914WjQe3UGP4frUnN2Xhe4/iGyvl2JpTgj0VCL
+	uag4EQDGP8uJGAQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrALMWRmVeSWpSXmKPExsWy7bCSvO7l9SvTDe595bM4NuMjo8WhzVvZ
+	LVZP/ctqcXnXHDaLnXdOMDuwemxa1cnm0bdlFaPH501yAcxRXDYpqTmZZalF+nYJXBmd608w
+	FqyTqfjVb9TA+Eesi5GTQ0LAROLc2i8sXYxcHEICuxklbiybwgSRkJGYvHoFK4QtLLHy33N2
+	iKJnjBKHN/1nBEmwCehLnPsxjxUkISLQzChxcucVsA5mATmJpl0tjBAdOxklzr9ZxwKS4BSw
+	knh07wbYCmEBF4mT5/6wgdgsAqoSTxZtZAaxeQUsJZa+6meCsAUlTs58wgIxVFui92ErI4y9
+	bOFrZojzFCR+Pl0GtlhEwEli1t0+dogacYmXR4+wT2AUnoVk1Cwko2YhGTULScsCRpZVjJKp
+	BcW56bnFhgVGeanlesWJucWleel6yfm5mxjBkaKltYNxz6oPeocYmTgYDzFKcDArifCaLFyR
+	LsSbklhZlVqUH19UmpNafIhRmoNFSZz32+veFCGB9MSS1OzU1ILUIpgsEwenVANTdrTSE4ng
+	GIWtbstOzbeMeBEQVc49+076vuDOO0tfysdf01iX33y7uC3kHiP74jfbmMwP9UhdyVwVUV7t
+	dLJLhFO69Mf9yWeDWs3+Gyp5uR29IT5f/dfbVPt9nnYrXtUaCCeaeMvnmi5J3mxcn/xbxHf/
+	H9b5VavOnLKtvXW/9Ii1+O0jZvuM961bn3IwsXGu8/fWrYJ7g99ft5WRzhA/GD1N8NKMLtkZ
+	GomFHaYH2J6/PaxZf6Gj9JaWVafPkUVbDmS+Xyrk6XBYWyVidvW7E/k3K847yC+f7LAk88Gc
+	pcXn98/T5Z+davLkRdmWj1vdZ33NWj3zkscBXbmff72XnvLlfKhS6NlodcZf1f62EktxRqKh
+	FnNRcSIANU6lxAMDAAA=
+X-CMS-MailID: 20250210075043epcas5p4a56834e40a986fd7d8d720f0af456fc6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250210062247epcas5p4ce208ba2806454c48a68ef25d0a326cc
+References: <20250210061915.26218-1-aatif4.m@samsung.com>
+	<CGME20250210062247epcas5p4ce208ba2806454c48a68ef25d0a326cc@epcas5p4.samsung.com>
+	<20250210061915.26218-2-aatif4.m@samsung.com>
 
-Fix issue detected by smatch tool:
-An "undefined 'other'" error occur in __releases() annotation.
 
-Fix an undefined 'other' error in unix_wait_for_peer() caused by  
-__releases(&unix_sk(other)->lock) being placed before 'other' is in  
-scope. Since AF_UNIX does not use Sparse annotations, remove it to fix  
-the issue.  
 
-Eliminate the error without affecting functionality.  
+> -----Original Message-----
+> From: Aatif Mushtaq <aatif4.m=40samsung.com>
+> Sent: Monday, February 10, 2025 11:49 AM
+> To: vkoul=40kernel.org; dmaengine=40vger.kernel.org; linux-
+> kernel=40vger.kernel.org
+> Cc: pankaj.dubey=40samsung.com; aswani.reddy=40samsung.com; Aatif Mushtaq
+> <aatif4.m=40samsung.com>
+> Subject: =5BPATCH 1/3=5D dmaengine: Add support for 2D DMA operation
+>=20
+> Add a new dma engine API to support 2D DMA operations.
+> The API will be used to get the descriptor for 2D transfer based on
+> the 16-bit immediate to define the stride length between consecuitive
+16-bit immediate (what? Data?)
+Run spell check consecuitive -> consecutive
+> source address or destination address after every DMA load and
+> store instruction is processed.
+>=20
+> Signed-off-by: Aatif Mushtaq <aatif4.m=40samsung.com>
+> ---
+>  include/linux/dmaengine.h =7C 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>=20
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index b137fdb56093..8a73b2147983 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> =40=40 -833,6 +833,7 =40=40 struct dma_filter =7B
+>   *	be called after period_len bytes have been transferred.
+>   * =40device_prep_interleaved_dma: Transfer expression in a generic way.
+>   * =40device_prep_dma_imm_data: DMA's 8 byte immediate data to the dst
+> address
+> + * =40device_prep_2d_dma_memcpy: prepares a 2D memcpy operation
 
-Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
----
-V1 - https://lore.kernel.org/lkml/20250209184355.16257-1-purvayeshi550@gmail.com/
-V2 - Remove __releases() annotation as AF_UNIX does not use Sparse annotations.
- net/unix/af_unix.c | 1 -
- 1 file changed, 1 deletion(-)
+prepares -> Prepares (P should be in CAPS)
 
-diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
-index 34945de1f..319153850 100644
---- a/net/unix/af_unix.c
-+++ b/net/unix/af_unix.c
-@@ -1508,7 +1508,6 @@ static int unix_dgram_connect(struct socket *sock, struct sockaddr *addr,
- }
- 
- static long unix_wait_for_peer(struct sock *other, long timeo)
--	__releases(&unix_sk(other)->lock)
- {
- 	struct unix_sock *u = unix_sk(other);
- 	int sched;
--- 
-2.34.1
+>   * =40device_caps: May be used to override the generic DMA slave capabil=
+ities
+>   *	with per-channel specific ones
+>   * =40device_config: Pushes a new configuration to a channel, return 0 o=
+r an
+> error
+> =40=40 -938,6 +939,9 =40=40 struct dma_device =7B
+>  	struct dma_async_tx_descriptor *(*device_prep_dma_imm_data)(
+>  		struct dma_chan *chan, dma_addr_t dst, u64 data,
+>  		unsigned long flags);
+> +	struct dma_async_tx_descriptor *(*device_prep_2d_dma_memcpy)(
+> +		struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
+> +		size_t len, u16 src_imm, u16 dest_imm, unsigned long flags);
+>=20
+>  	void (*device_caps)(struct dma_chan *chan, struct dma_slave_caps
+> *caps);
+>  	int (*device_config)(struct dma_chan *chan, struct dma_slave_config
+> *config);
+> =40=40 -1087,6 +1091,27 =40=40 static inline struct dma_async_tx_descript=
+or
+> *dmaengine_prep_dma_memcpy(
+>  						    len, flags);
+>  =7D
+>=20
+> +/**
+> + * device_prep_2d_dma_memcpy() - Prepare a DMA 2D memcpy descriptor.
+> + * =40chan: The channel to be used for this descriptor
+> + * =40dest: Address of the destination data for a DMA channel
+> + * =40src: Address of the source data for a DMA channel
+> + * =40len: The total size of data
+> + * =40src_imm: The immediate value to be added to the src address regist=
+er
+
+src -> source
+
+> + * =40dest_imm: The immediate value to be added to the dst address regis=
+ter
+
+dst -> destination=20
+avoid using non-standard short forms in comment except variable names.
+
+> + * =40flags: DMA engine flags
+> + */
+> +static inline struct dma_async_tx_descriptor *device_prep_2d_dma_memcpy(
+> +		struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
+> +		size_t len, u16 src_imm, u16 dest_imm, unsigned long flags)
+> +=7B
+> +	if (=21chan =7C=7C =21chan->device =7C=7C =21chan->device-
+> >device_prep_2d_dma_memcpy)
+> +		return NULL;
+> +
+> +	return chan->device->device_prep_2d_dma_memcpy(chan, dest, src,
+> len,
+> +						       src_imm, dest_imm, flags);
+> +=7D
+> +
+>  static inline bool dmaengine_is_metadata_mode_supported(struct dma_chan
+> *chan,
+>  		enum dma_desc_metadata_mode mode)
+>  =7B
+> --
+> 2.17.1
+
 
