@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D4B1CAA89;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CC31CAA88;
 	Mon, 10 Feb 2025 10:18:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739182704; cv=none; b=baJrTDTBnAL+HAD1ZlGYVJE0apy3PQAImf6+tKWw1DceKxPf1qtGIPtip0vhSYpXsMzZJby1gzY5dDQLujO3w7uqQn8Sx5eRJyw4cwNz5bNZdODMeb/uKXTuP24O786V560ON432VhRDhqPluUiATXZnVdP84F0UIruXl4Yo1mg=
+	t=1739182704; cv=none; b=I+E3mZDdUOsvTGUKiUcN1aopOeOCebq2dNlF90kU+V3FQUOWYiv1aBXlaxn2imAabO9wpxe40ndvzkWCTY/2pvCL+Q6vbNJ169PuXzFhMeoOkX5iuDpSAiM5Oa+fPpPm65jYINpZN3wpR8kHRtPPzahSD4xK6k77NvbbOsiDw3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739182704; c=relaxed/simple;
-	bh=fVsQktr66AfeetC6nV7WwKf2PIcVVQSSKpg1lW8+WR4=;
+	bh=FlLRiN2V72fQvc3QqtN/JA2r//R7FqyHjc0oxGoo5k8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Afpe5d/+Vxyrn2BKkfpgxjiu6JaYQy21M8b628NYoqqTITVyXqigT2nNfoJLW/980pF5gHcZi1PfiVL5jl9AqaEzG2xfellYf7/baOcZdlUT5LlzORtJAPsi8tVLBzzTy8/E8CqGTF6q4SRx5SbzmX18M1TUQBTJjgrob9A4lmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LSpR8XzD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=sUgF29wqVOXMaXqnK3NSGaT+D1UQqFhQ7YHqLeU7Ld1NkerKnN0vNEFjXP6fC1y/keo7owAh6e3KyS8nyJGWUSTwEEmbm4Op3U0ev61RXB4mDScAUlJnVX6ddQ6UZv1TrKuwtEmW1n2gc1v+dOyaEKFw1P4A6MCqCMN65H/wglg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GtPt9cUZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LSpR8XzD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 178C0C4CEF6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GtPt9cUZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12661C4CEF4;
 	Mon, 10 Feb 2025 10:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1739182704;
-	bh=fVsQktr66AfeetC6nV7WwKf2PIcVVQSSKpg1lW8+WR4=;
+	bh=FlLRiN2V72fQvc3QqtN/JA2r//R7FqyHjc0oxGoo5k8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LSpR8XzDKI/9YW/6Qu9AhPc9P1fgfSg9wB1i7yyKWMY1NSQdOwdq2PLCmanqAx+1Q
-	 c/hB3+Y0E/pqF2zGum4RybakxWINpBu7XxkdZBPSju3ch6qzR+wp1ZIDFRhwICRX/8
-	 D1Qza7mz5Wut0yP7gXoM+A/GbTD9dMx6E4530YVBzsCRMV60ZLZwfB1UdLU8wcZH3G
-	 ZljBFkyh0lPpRqsZTdpCnqQXMq5EqEsl2EBBtBxSRWrAPM1n8cyd3w4eD8HJrOzg6X
-	 9ZDmfhWmYQxRa1zrc70fdMgkX744xgskrtkFJCFm9GwzN0vQwHpEKu7klyVL5h8a+z
-	 UCfAaCbmgSSxA==
+	b=GtPt9cUZeeRoYRN9XgG9wxoeSfdUzhPKM6mumAhz0FEpSb5IPDEXo7cguOAwMvEGf
+	 k+cT9WPhQjoXQarwQbs/5qOsk1bD3YJwWkd2frsFZ1pLCYSsWJHWmDUhY2gY9h5qef
+	 UhHgN3he0WmEajOrsNcEME/GWIbdhbz/OFuk7SZapEZ7+CDmkhlxWQevdB0JoXKBGJ
+	 IYmpnqlPSDK1LfvjfI8zSKJQB4CNvTRIJ6JQefVbOAkJ+MtlsIYfpesTYK98gSz+4G
+	 VaMV0niyA5Fv9J3edCQX1nVLVRYxOh1FDSNpRbv3vHcfSm9mEDo0RNeoRJM4Yqm9Fp
+	 D6cCElc+Ay/wg==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1thQru-00000006Ciu-0kiM;
+	id 1thQru-00000006Ciq-0dv0;
 	Mon, 10 Feb 2025 11:18:22 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
@@ -36,9 +36,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Jonathan Corbet" <corbet@lwn.net>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 12/27] docs: use get_abi.py for ABI generation
-Date: Mon, 10 Feb 2025 11:18:01 +0100
-Message-ID: <e7fcb121c0612c94f6f54f0d742cd3a26a46cd7d.1739182025.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 11/27] scripts/get_abi.py: add support for symbol search
+Date: Mon, 10 Feb 2025 11:18:00 +0100
+Message-ID: <21b2c48657dde112d5417dcd7e0aa7cd383b9a0a.1739182025.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1739182025.git.mchehab+huawei@kernel.org>
 References: <cover.1739182025.git.mchehab+huawei@kernel.org>
@@ -51,95 +51,117 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Use the new script instead of the old one when generating ABI docs.
-
-For now, execute it via exec. Future changes will better integrate it
-by using the class defined there directly.
+Add support for searching symbols from Documentation/ABI using
+regular expressions to match the symbols' names.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/admin-guide/abi-obsolete.rst |  1 -
- Documentation/admin-guide/abi-removed.rst  |  1 -
- Documentation/admin-guide/abi-stable.rst   |  1 -
- Documentation/admin-guide/abi-testing.rst  |  1 -
- Documentation/sphinx/kernel_abi.py         | 10 +++-------
- 5 files changed, 3 insertions(+), 11 deletions(-)
+ scripts/get_abi.py            | 24 ++++++++++++++++
+ scripts/lib/abi/abi_parser.py | 52 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 76 insertions(+)
 
-diff --git a/Documentation/admin-guide/abi-obsolete.rst b/Documentation/admin-guide/abi-obsolete.rst
-index b655615917f1..6d4d9ab7b8c3 100644
---- a/Documentation/admin-guide/abi-obsolete.rst
-+++ b/Documentation/admin-guide/abi-obsolete.rst
-@@ -10,4 +10,3 @@ The description of the interface will document the reason why it is
- obsolete and when it can be expected to be removed.
+diff --git a/scripts/get_abi.py b/scripts/get_abi.py
+index bb17c54feeff..30439f21fdd0 100755
+--- a/scripts/get_abi.py
++++ b/scripts/get_abi.py
+@@ -85,6 +85,29 @@ class AbiValidate:
+         parser.check_issues()
  
- .. kernel-abi:: ABI/obsolete
--   :rst:
-diff --git a/Documentation/admin-guide/abi-removed.rst b/Documentation/admin-guide/abi-removed.rst
-index ba941c1af178..9fc78af6f077 100644
---- a/Documentation/admin-guide/abi-removed.rst
-+++ b/Documentation/admin-guide/abi-removed.rst
-@@ -4,4 +4,3 @@ ABI removed symbols
- ===================
  
- .. kernel-abi:: ABI/removed
--   :rst:
-diff --git a/Documentation/admin-guide/abi-stable.rst b/Documentation/admin-guide/abi-stable.rst
-index 5d738f345333..c47c2a295865 100644
---- a/Documentation/admin-guide/abi-stable.rst
-+++ b/Documentation/admin-guide/abi-stable.rst
-@@ -13,4 +13,3 @@ Most interfaces (like syscalls) are expected to never change and always
- be available.
++class AbiSearch:
++    """Initialize an argparse subparser for ABI search"""
++
++    def __init__(self, subparsers):
++        """Initialize argparse subparsers"""
++
++        parser = subparsers.add_parser("search",
++                                       formatter_class=argparse.ArgumentDefaultsHelpFormatter,
++                                       description="Search ABI using a regular expression")
++
++        parser.add_argument("expression",
++                            help="Case-insensitive search pattern for the ABI symbol")
++
++        parser.set_defaults(func=self.run)
++
++    def run(self, args):
++        """Run subparser"""
++
++        parser = AbiParser(args.dir, debug=args.debug)
++        parser.parse_abi()
++        parser.search_symbols(args.expression)
++
++
+ def main():
+     """Main program"""
  
- .. kernel-abi:: ABI/stable
--   :rst:
-diff --git a/Documentation/admin-guide/abi-testing.rst b/Documentation/admin-guide/abi-testing.rst
-index a867e6578bf7..40b31985e587 100644
---- a/Documentation/admin-guide/abi-testing.rst
-+++ b/Documentation/admin-guide/abi-testing.rst
-@@ -19,4 +19,3 @@ name to the description of these interfaces, so that the kernel
- developers can easily notify them if any changes occur.
+@@ -97,6 +120,7 @@ def main():
  
- .. kernel-abi:: ABI/testing
--   :rst:
-diff --git a/Documentation/sphinx/kernel_abi.py b/Documentation/sphinx/kernel_abi.py
-index 38653f5706c0..f314b888d3de 100644
---- a/Documentation/sphinx/kernel_abi.py
-+++ b/Documentation/sphinx/kernel_abi.py
-@@ -14,7 +14,7 @@ u"""
-     :license:    GPL Version 2, June 1991 see Linux/COPYING for details.
+     AbiRest(subparsers)
+     AbiValidate(subparsers)
++    AbiSearch(subparsers)
  
-     The ``kernel-abi`` (:py:class:`KernelCmd`) directive calls the
--    scripts/get_abi.pl script to parse the Kernel ABI files.
-+    scripts/get_abi.py script to parse the Kernel ABI files.
+     args = parser.parse_args()
  
-     Overview of directive's argument and options.
+diff --git a/scripts/lib/abi/abi_parser.py b/scripts/lib/abi/abi_parser.py
+index b3fa70eee412..bea7f1a76165 100644
+--- a/scripts/lib/abi/abi_parser.py
++++ b/scripts/lib/abi/abi_parser.py
+@@ -510,3 +510,55 @@ class AbiParser:
+                     f.append(f"{fname} lines {", ".join(str(x) for x in lines)}")
  
-@@ -67,7 +67,6 @@ class KernelCmd(Directive):
- 
-     option_spec = {
-         "debug"     : directives.flag,
--        "rst"       : directives.unchanged
-     }
- 
-     def run(self):
-@@ -78,15 +77,12 @@ class KernelCmd(Directive):
-         srctree = os.path.abspath(os.environ["srctree"])
- 
-         args = [
--            os.path.join(srctree, 'scripts/get_abi.pl'),
-+            os.path.join(srctree, 'scripts/get_abi.py'),
-+            '-D', os.path.join(srctree, 'Documentation', self.arguments[0]),
-             'rest',
-             '--enable-lineno',
--            '--dir', os.path.join(srctree, 'Documentation', self.arguments[0]),
-         ]
- 
--        if 'rst' in self.options:
--            args.append('--rst-source')
--
-         lines = subprocess.check_output(args, cwd=os.path.dirname(doc.current_source)).decode('utf-8')
-         nodeList = self.nestedParse(lines, self.arguments[0])
-         return nodeList
+             self.log.warning("%s is defined %d times: %s", what, len(f), "; ".join(f))
++
++    def search_symbols(self, expr):
++        """ Searches for ABI symbols """
++
++        regex = re.compile(expr, re.I)
++
++        found_keys = 0
++        for t in sorted(self.data.items(), key=lambda x: [0]):
++            v = t[1]
++
++            wtype = v.get("type", "")
++            if wtype == "File":
++                continue
++
++            for what in v.get("what", [""]):
++                if regex.search(what):
++                    found_keys += 1
++
++                    kernelversion = v.get("kernelversion", "").strip(" \t\n")
++                    date = v.get("date", "").strip(" \t\n")
++                    contact = v.get("contact", "").strip(" \t\n")
++                    users = v.get("users", "").strip(" \t\n")
++                    desc = v.get("description", "").strip(" \t\n")
++
++                    files = []
++                    for f in v.get("file", ()):
++                        files.append(f[0])
++
++                    what = str(found_keys) + ". " + what
++                    title_tag = "-" * len(what)
++
++                    print(f"\n{what}\n{title_tag}\n")
++
++                    if kernelversion:
++                        print(f"Kernel version:\t\t{kernelversion}")
++
++                    if date:
++                        print(f"Date:\t\t\t{date}")
++
++                    if contact:
++                        print(f"Contact:\t\t{contact}")
++
++                    if users:
++                        print(f"Users:\t\t\t{users}")
++
++                    print(f"Defined on file{'s'[:len(files) ^ 1]}:\t{", ".join(files)}")
++
++                    if desc:
++                        print(f"\n{desc.strip("\n")}\n")
++
++        if not found_keys:
++            print(f"Regular expression /{expr}/ not found.")
 -- 
 2.48.1
 
