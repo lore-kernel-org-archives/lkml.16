@@ -1,183 +1,84 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mail.namei.org (namei.org [65.99.196.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4D8158874;
-	Mon, 10 Feb 2025 21:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B12F1F4611;
+	Mon, 10 Feb 2025 21:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.99.196.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739221834; cv=none; b=PzTmqu+NxQ+nrCB49/4Z1DN0BreJ1aD4bt2OqexxcrmF1QI2DqRYn7pgPFr5STryGXxR0GGeVrdzeFdMxJHqHWQNbwOxpbUKdEemOVT/G63WqBPJUjEx589Z12zi/l/GsLAYdh1eB6E9hhbqZ/gYBT358juMbkPu3RVnpDLEs6U=
+	t=1739221927; cv=none; b=VAG5N2IEH5mBBj5RWBbp2Y2dmnYg/ifmAiiggy8r0EfXiTySGR9EQAWV5aBgrvqmQCVXN+osnRtwEd2Ks0G9hXivGE/rgMdM3mW5D/cpV/iu1pZHnqho1Q8hv3nXLDh08No+9PRy5QtRLFQn71OPdWOo5DWjW5D13ry44HU+EUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739221834; c=relaxed/simple;
-	bh=Xw/n/fhvGJtKoKxwkCvpi9wRhgHCNTm2ytQqwLDJyPk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nN0KjxmYH9Tj9/iEs+IwcIx3J5wlsfo5xUZsQklPyo9mju8zmoA8sLuOz+AbikZBMuEe83NH9c4CCih2NGifJ0l5K/lYwDzg6EsiGsv9pJ7aLsSlgKnAeM58RQOm5uby69qzw0972cPq2LtsVd9LjDjZqt6dc0zYZYT6sT71Shc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=uLZwKAqL; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1739221927; c=relaxed/simple;
+	bh=UBCe9p8sj/JNzRoVoJtwDN+Lk8MaBoj1Z2Y1UU8mEbI=;
+	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=BKhwXwFG0OLan0KTy/a7dZVyq+9LfSClAodj1rPZZBiIHj53WbaSGYFF54jSROIT0cr4IVi8vUrQpHk+1rzX8FgCl2zcsrhr7BxBGjL/av/AeeT7h6vI4772nVTEAwvi4nmolVzpBDA3KtLFtm6kN0IRlRWSVoyO8jA53unoBdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=namei.org; spf=pass smtp.mailfrom=namei.org; dkim=pass (1024-bit key) header.d=namei.org header.i=@namei.org header.b=ZyGYKtxX; arc=none smtp.client-ip=65.99.196.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=namei.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=namei.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="uLZwKAqL"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 708D38D4;
-	Mon, 10 Feb 2025 22:09:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1739221747;
-	bh=Xw/n/fhvGJtKoKxwkCvpi9wRhgHCNTm2ytQqwLDJyPk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uLZwKAqLznzE4O+j5HJaOCx4n7eS6kxE1QMhPgmpU044zFRG372VM+A9TrfMW41DL
-	 Nt+83SQrHjdFKUWhNOV40ps3d9zB0H3UuSEHdwFPI6/SxYNRR5M1lzLewd4YLrRYoK
-	 b0dbvz9QlVA5qN0wz0QPw+ocKLcdzHMgxMkomjs8=
-Date: Mon, 10 Feb 2025 23:10:13 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rui Miguel Silva <rmfrfs@gmail.com>,
-	Martin Kepplinger <martink@posteo.de>,
-	Purism Kernel Team <kernel@puri.sm>, linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, "Guoniu.zhou" <guoniu.zhou@nxp.com>,
-	Robby Cai <robby.cai@nxp.com>,
-	Robert Chiras <robert.chiras@nxp.com>
-Subject: Re: [PATCH v2 01/14] dt-bindings: phy: Add MIPI CSI PHY for i.MX8Q
-Message-ID: <20250210211013.GC8531@pendragon.ideasonboard.com>
-References: <20250205-8qxp_camera-v2-0-731a3edf2744@nxp.com>
- <20250205-8qxp_camera-v2-1-731a3edf2744@nxp.com>
- <20250206211808.GA24886@pendragon.ideasonboard.com>
- <Z6UuR9mHhQUdnBEc@lizhi-Precision-Tower-5810>
+	dkim=pass (1024-bit key) header.d=namei.org header.i=@namei.org header.b="ZyGYKtxX"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.namei.org (Postfix) with ESMTPS id 6B6F6C9;
+	Mon, 10 Feb 2025 21:03:02 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.namei.org 6B6F6C9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=namei.org; s=2;
+	t=1739221382; bh=h3x3P3W8K+9OlCaN6BjlODAjJulvwo/lejT6q6M/Los=;
+	h=Date:From:To:cc:Subject:From;
+	b=ZyGYKtxXADc7f/1Rh/aC10cIngjwj16ltm/q3MfCt8DpEmDiqR+PtyGUWVSR0kvRz
+	 WXzo9JxxhLYZGiDmsn7pRtZqTKtOIt2S8lftxNWQi+yDOhiUqDdhK6GX2dF3J+WjHA
+	 woDtfm+66JQFoacJ2svGVd5rL0o5ADlT7Wh/OkFs=
+Date: Mon, 10 Feb 2025 13:03:02 -0800 (PST)
+From: James Morris <jmorris@namei.org>
+To: linux-security-module@vger.kernel.org
+cc: Linux Security Summit Program Committee <lss-pc@lists.linuxfoundation.org>, 
+    linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com, 
+    linux-integrity@vger.kernel.org, lwn@lwn.net
+Subject: [Announce] Linux Security Summit North America 2025 CfP
+Message-ID: <35b17495-427f-549f-6e46-619c56545b34@namei.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z6UuR9mHhQUdnBEc@lizhi-Precision-Tower-5810>
+Content-Type: multipart/mixed; BOUNDARY="1665246916-1759655948-1739221181=:1918214"
+Content-ID: <1eebfa2-83a-d771-38e3-a986f4542214@namei.org>
 
-On Thu, Feb 06, 2025 at 04:48:55PM -0500, Frank Li wrote:
-> On Thu, Feb 06, 2025 at 11:18:08PM +0200, Laurent Pinchart wrote:
-> > On Wed, Feb 05, 2025 at 12:18:10PM -0500, Frank Li wrote:
-> > > Add MIPI CSI phy binding doc for i.MX8QXP, i.MX8QM and i.MX8ULP.
-> >
-> > s/CSI/CSI-2/ in the subject line, here and below.
-> > s/phy/PHY/
-> >
-> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > ---
-> > > change from v1 to v2
-> > > - Add missed fsl,imx8qm-mipi-cphy, which failback to fsl,imx8qxp-mipi-cphy
-> > > - Move reg to required. Previous 8ulp use fsl,offset in downstream version.
-> > > which should be reg. So move it to required
-> > > ---
-> > >  .../bindings/phy/fsl,imx8qxp-mipi-cphy.yaml        | 57 ++++++++++++++++++++++
-> > >  1 file changed, 57 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/phy/fsl,imx8qxp-mipi-cphy.yaml b/Documentation/devicetree/bindings/phy/fsl,imx8qxp-mipi-cphy.yaml
-> > > new file mode 100644
-> > > index 0000000000000..7335b9262d0e7
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/phy/fsl,imx8qxp-mipi-cphy.yaml
-> > > @@ -0,0 +1,57 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/phy/fsl,imx8qxp-mipi-cphy.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Freescale i.MX8 SoC MIPI CSI PHY
-> > > +
-> > > +maintainers:
-> > > +  - Frank Li <Frank.Li@nxp.com>
-> > > +
-> > > +properties:
-> > > +  "#phy-cells":
-> > > +    const: 0
-> > > +
-> > > +  compatible:
-> > > +    oneOf:
-> > > +      - enum:
-> > > +          - fsl,imx8qxp-mipi-cphy
-> > > +          - fsl,imx8ulp-mipi-cphy
-> > > +      - items:
-> > > +          - const: fsl,imx8qm-mipi-cphy
-> > > +          - const: fsl,imx8qxp-mipi-cphy
-> >
-> > Why are those called cphy when, as far as I can tell from the
-> > documentation, they are D-PHYs ? Does that stand for *C*SI PHY ?
-> 
-> There are already have D-PHYS for MIPI display phy binding. cphy just means
-> for camera PHY.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Ah OK. I would probably have gone for *-mipi-dphy-rx then, but I'm OK
-with the proposed "cphy". Explaining this in the description would be
-useful.
+--1665246916-1759655948-1739221181=:1918214
+Content-Type: text/plain; CHARSET=UTF-8
+Content-Transfer-Encoding: 8BIT
+Content-ID: <30fe1e86-d93-3681-6dff-9a32f4d6df6@namei.org>
 
-> > I find
-> > it slightly confusing, but not so much that I'd ask for a change. It's
-> > just a name at the end of the day.
-> >
-> > Apart from that the binding looks fairly OK. Except maybe from the fact
-> > that this device is not a PHY :-( It has two PHY control registers, but
-> > the rest seems related to the glue logic at the output of the CSI-2
-> > receiver. I wonder if we should go the syscon route.
-> 
-> Do you means use phandle to syscon node in csi-2 driver? Actually this
-> ways is not perferred by device tree team because it should be exported
-> as what actual function, such as PHY or RESET by use standard interface.
-> 
-> We met similar case at other substream.
+The Call for Participation for the 2025 Linux Security Summit North 
+America (LSS-NA) is now open.
 
-I don't like syscon much either, but in this specific case I'm not sure
-what else we could do. This device really aggregates some control over
-the PHY and over the glue logic at the output of the CSI-2 controller.
-Modelling it as "just a PHY" will cause problem as soon as you'll want
-to configure the other parameters.
+LSS-NA 2025 is a technical forum for collaboration between Linux 
+developers, researchers, and end-users. Its primary aim is to foster 
+community efforts in deeply analyzing and solving Linux operating system 
+security challenges, including those in the Linux kernel. Presentations 
+are expected to focus deeply on new or improved technology and how it 
+advances the state of practice for addressing these challenges.
 
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  power-domains:
-> > > +    maxItems: 1
-> > > +
-> > > +required:
-> > > +  - "#phy-cells"
-> > > +  - compatible
-> > > +  - reg
-> > > +
-> > > +allOf:
-> > > +  - if:
-> > > +      properties:
-> > > +        compatible:
-> > > +          contains:
-> > > +            enum:
-> > > +              - fsl,imx8qxp-mipi-cphy
-> > > +    then:
-> > > +      required:
-> > > +        - power-domains
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    phy@58221000 {
-> > > +            compatible = "fsl,imx8qxp-mipi-cphy";
-> > > +            reg = <0x58221000 0x10000>;
-> > > +            #phy-cells = <0>;
-> > > +            power-domains = <&pd 0>;
-> > > +    };
-> > > +
+Key dates:
+
+    - CFP Closes:  Monday, March 10 at 11:59 PM MDT / 10:59 PM PDT
+    - CFP Notifications: Monday, March 31
+    - Schedule Announcement: Wednesday, April 2
+    - Presentation Slide Due Date: Tuesday, June 24
+    - Event Dates: Thursday, June 26 – Friday, June 27
+
+Location: Denver, Colorado, USA (co-located with OSS).
+
+Full details may be found here: 
+https://events.linuxfoundation.org/linux-security-summit-north-america/
+
+Follow LSS event updates here:
+https://social.kernel.org/LinuxSecSummit
+
+
 
 -- 
-Regards,
-
-Laurent Pinchart
+James Morris
+<jmorris@namei.org>
+--1665246916-1759655948-1739221181=:1918214--
