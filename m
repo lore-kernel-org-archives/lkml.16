@@ -1,161 +1,137 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CDC425EFAA;
-	Tue, 11 Feb 2025 16:51:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6890F25EFAA
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739292704; cv=none; b=lGKPdkWaLVRxVvHRZ4ClaO4kKisuZBnpWZhk50sVFscq6C4Q+tsVrw+vggvnM0NRCiNy5++k4c1OlEZGAypcRYeEIEq/gQXgbtPmXqdTmxSDXpkRSbSU8DiE9lLguljVvXPENa5fx+5rn6fMXV+AQpJtPZvnIhBbsdCtHQBTiWk=
+	t=1739292753; cv=none; b=QRckDFvz9Xfjoxd4VU1tDIJGCt+V0YouGZ4FJ/tI1FVQ7E/8BpsQc6APvuQ8BjpbJSfRUCTD3oRIozavEBIyUNVe2yq6OqeRGGMxiS8oISMbeCsbqt2eOt9/mkkupyEjbli6++sS3XqOxKXmI3MSafsnoMEzmfLWgRTHUpErojY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739292704; c=relaxed/simple;
-	bh=+CoLKqzIpAjLzHU4xXUAo7HbGHenab1WftcLUv9xDdw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aErs/cgk1eoepDQR8MtNWO1pCrrkloaC4Lo98KGjPjoehKV32gKK2mSESb8u7l28Qs2xVtHZSOspwbs7SkDlDQIz0oipHX2kFTRzIcakkB+SlPD4iWDb5AhZ3Dka9SAl276DhNb7j6/+y2rDI1oAOHogyTBEU6SQcG237MDYIsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iFY3HSta; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739292753; c=relaxed/simple;
+	bh=gRo3G5m5Ukoont1Qsvcp35qa8dNR7KZETpu+sXWIZJg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X0Bc0lydcJN8ZIg2hjrbut9ooTHErzlC6WoOucv2baXTd+4p6+uEpCqMUPAYx6X9TchWmta/CByTLCdTrRdqep6rmus1G+30j1LjlOf+F+IowF6cHN8HdYKN3kdTMgrtcqJVrocDWmMD0OrfjX35CAsyCtrbpP02D4XRhl1wTFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B8wwIxY/; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iFY3HSta"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-3072f8dc069so60549621fa.3;
-        Tue, 11 Feb 2025 08:51:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B8wwIxY/"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21f92258aa6so66129595ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:52:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739292701; x=1739897501; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AYyS/Pce8IHd969E8US60tVG7+nHlOWBylQ9OLMgeBg=;
-        b=iFY3HStaAYs6FePGJXSXcwpFgp7nUIH1pFsvL/ZszrHMdurfkFt+hkTVrUkT7WMQLf
-         oEan56u+fgXuK2Yr1+qV1iDlcaPgH7+mz9RnCkXaV5YVNdEXA7gw9g/cy5ZpiSRr/dSp
-         8WGrsn6+UHpGQDFVigZpZ7gDVKEUVKrdUyqTSBlEGRzsniu8lwTHmPlZuvWUqixDHpqy
-         1rrVF9q6ItCC8GV21SqWvCk7JxTQqfpzy/QI8ptHxAWtdcKL5Vf7ZL1pjPIE4qnSFfJB
-         Xg0eHNJc4gS3+mukdP3m6AWLXpHgbK4sGSFfthOmM8a62kXeMNf2PjF+Yku4+6ftiT+A
-         bcLg==
+        d=linaro.org; s=google; t=1739292751; x=1739897551; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6sNX3j45BuYX0jqFY0bgET5KHTO0uCeEEB9Pem3dY6c=;
+        b=B8wwIxY/YKmZJtr6UculWh2VeAs0XBlW4ZJ5aWznZAN5rIUPHD/+wS5GNA21xz89iu
+         nagTc3FdIMYPMksxnc+hRyfFoKcZSO6xG81Tm0jFBY8jMKmhCx4LfFOcP9uMFcbO+D+p
+         NKO8XecguS6UlkWelKZ66urx6gB7YaROx0Xogjrc4+8pW22ZFkfRAY7m3gQYxWdIlaXP
+         j+dMG38cal+XTIX7LMiWwhCsnxnIRs8iYHifjErqRGTESc8UJ4kAatQ0Pyy4VRszF1Ud
+         kbFOFsBbaTWoO2Y4NkfbwCIfj1qH1SYQXBZQMpInn+xbmbdxwyXOvLwjl7HmWxRrwsCd
+         76xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739292701; x=1739897501;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AYyS/Pce8IHd969E8US60tVG7+nHlOWBylQ9OLMgeBg=;
-        b=Vg+WPerFd7Y9ZeYWTL8xSXrLdoTDLAYsw7O66EtYXt5pbhSJKsZyZEHmZRNV+yiy/u
-         IEuZNJsxxPu41wxnjEWn11y+xlhmg3XBu5KhVSbV3BszNiQiOJ6BUIxI7hnbsrwmLPmt
-         DZUZAiXHi7LHtTQsWSDE+5l0E4ihv2dQP3FQQ0PDYfZGr52y4jpJaX3FBzfUXtNQoxOO
-         r1JCgc5o4BL8viwWChXXKoCv2ONuxyOEB/ENLp6pLcX13CefLskIoq89sf0clpqgxhSz
-         GHTbv/SaNkcqp1sr/w0SdBOZaW2XIkEr2x53kNHgFKaokzYIq8OdCsSKnuyRvGYm79nW
-         OSnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUdVUJaoeBb7WPQ0Ad3cmGln9HG5pbgcwcIanf/23M2TGk5VEPc41JimATeu2ix+d55upa0WsVjKlKk1Wv1@vger.kernel.org, AJvYcCUw51Bx6jjbrmg1xtRo8BJOuvUhdLBzT5dMYiCNv/JPcu6W8DTOgxwfHEqshryODmqM9CqlUASbcHAPrnEDxPU=@vger.kernel.org, AJvYcCWuAx7lbGVTGcun0AIdvm3RgvG6W8poDv7BmZFTGOq2QBC/tLMdBuAXNbrYGyJn9JUPhPAnE1jB@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAp2gN+Kx3sOEgx4cH9AfM0g5yZLjGMnJloQJr2xtahtvCOt5x
-	kWCQXuJPFJPr1+ZoEY46q+ZV5tYv+ucfN/d5jjBpVe/+y05wSqHm+vDPDcFpQH4CwB3WP4GTvN1
-	X1cX1/D6a3+E7csZjT1jwS+4YlRk=
-X-Gm-Gg: ASbGnctKuo21XT0rtvLZhfPVYqWVvwUN2qUxPQuvSVQ2mKULK8cog/mSrioSy1MFlK+
-	fhr3ACX8MjTIrkoccwv0PUUrp0O7o9lDi2hBVu6Q0pdk0ix1mPa+t7mddAoyiJGDdWnbhp9Z/8g
-	==
-X-Google-Smtp-Source: AGHT+IHSZfnRJv3VnbZmMe4zjtYIYfjA5FEQzWtS4zH+xXm76ZeJAi/00pACubYEqC1hhdeSlW1h8rqMDTlH+VgZbPc=
-X-Received: by 2002:a2e:a595:0:b0:308:df1e:24c5 with SMTP id
- 38308e7fff4ca-309036430d2mr1194791fa.9.1739292700405; Tue, 11 Feb 2025
- 08:51:40 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739292751; x=1739897551;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6sNX3j45BuYX0jqFY0bgET5KHTO0uCeEEB9Pem3dY6c=;
+        b=wo/6RYdQ2FAP3yQ3x6FkoTI40AQqL4rO/dc+gbQmk9u+PJG52HVVSy+L3Ewd3/G7CK
+         OchDvdgx+LNewyzX7PBmMNbUGpb2Aua5xgZ8AF/pGKgllDW1f5+pNRjp8mHcmh0fMuE5
+         ST0qBTxBmyU4oJO9XMftKU+faDSrPlFqsxqjXkh9oKrj3IsFd++r50/reJxuuP8iLTAC
+         8SGS3dA668uWSfuTu5iXRWPkmry23xjwwmYnfPBJfutEGbcNrXC6LO4itR1iqT7hBVTY
+         xJmJlCeBYSzGE+cdCDsXCL4xtlxIMKWrnTOH3Hc/Jn9FltqblHNaj8/ZzkH8rsu7/9xn
+         /Wbg==
+X-Forwarded-Encrypted: i=1; AJvYcCVq04y+55FUZDHyYJ8AOm6ui+XVqW7nqRlmRAyghKODPBc9C3u+4l9mWAcGysIze5NNfjHuHxuaXSlpnhQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJjHFNjCUdeNpZweaQ8T3xtQxCsifCTfohVhjEh26kCYVwB17o
+	WYKp23BYIK63ovSNmHbCGCxo5ov6ifDcpL4KW7JVeEoyzXbtOYbePIgb3aorV54=
+X-Gm-Gg: ASbGncsHGCACYT08e0crVS73eFkSiyImiDmwJFrVTl8MhkRI4zwpoQBfxVjFngjFIF3
+	k1sBQg2jKxC/vpDjyPXQxoQa3oZdQxulkMjEW+W3UdUWfJQQq/hxzeWmgUxOul+kzuTByPSGG7d
+	eKRg4Jwl/Io0r2X4YvCbAAAKnClkzVNCyKD5Rm5LbVApT42/DWDDEimWu/xmLxAsZujAqReJKqs
+	AZvySLtt8KS6qzUzx/Uz9Yq5Xn4HVqPalMvasvcEx4Fzi6IdBQyQFmb67kkpM8EtK8F97VuW+hW
+	GNkPlSyPhdWvdbypF2+JTYfaWwJDCZiOv1X4y5l7GlR8Qlzr28m4o+U=
+X-Google-Smtp-Source: AGHT+IGwAQZHSvMn3LFzLELKwxJYuB/UImaOPmixiwxZOIOHILOslZ5QYNsoJGgex4CGSOLd3rMkpw==
+X-Received: by 2002:a05:6a21:9184:b0:1ed:75f4:d290 with SMTP id adf61e73a8af0-1ee03b41778mr35357775637.29.1739292750665;
+        Tue, 11 Feb 2025 08:52:30 -0800 (PST)
+Received: from [192.168.0.4] (71-212-39-66.tukw.qwest.net. [71.212.39.66])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048a9d7aesm9610968b3a.33.2025.02.11.08.52.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 08:52:30 -0800 (PST)
+Message-ID: <a1803d33-c92a-4294-acd0-a2152fb0c163@linaro.org>
+Date: Tue, 11 Feb 2025 08:52:28 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67a9e24a.050a0220.3d72c.0050.GAE@google.com> <e8b8686f-8de1-aa25-9707-fcad4ffa5710@salutedevices.com>
- <c2d99ec3-d69e-b47d-45cc-0ad39893afd7@salutedevices.com>
-In-Reply-To: <c2d99ec3-d69e-b47d-45cc-0ad39893afd7@salutedevices.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Tue, 11 Feb 2025 11:51:26 -0500
-X-Gm-Features: AWEUYZkO3selwcJDC-g860TX_e4qYzoQBTRXvcQh9XLjmcc28cukeOUo2NTWki4
-Message-ID: <CABBYNZJqmayOhPtWpmj8PwK5uyzUemCEUz9eN+h26wH9ix91Kg@mail.gmail.com>
-Subject: Re: [DMARC error] Re: [syzbot] [bluetooth?] KASAN:
- slab-use-after-free Read in skb_queue_purge_reason (2)
-To: Arseniy Krasnov <avkrasnov@salutedevices.com>
-Cc: hdanton@sina.com, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, luiz.von.dentz@intel.com, marcel@holtmann.org, 
-	netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arch/alpha: optimize virt_to_phys with compiler automatic
+ sign extension
+To: Zhou Stephen Eta <stephen.eta.zhou@outlook.com>,
+ "mattst88@gmail.com" <mattst88@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>,
+ "paulmck@kernel.org" <paulmck@kernel.org>,
+ "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+Cc: "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <BYAPR12MB32057EF854A36230B5BC7E1AD5FD2@BYAPR12MB3205.namprd12.prod.outlook.com>
+Content-Language: en-US
+From: Richard Henderson <richard.henderson@linaro.org>
+In-Reply-To: <BYAPR12MB32057EF854A36230B5BC7E1AD5FD2@BYAPR12MB3205.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Arseniy,
+On 2/11/25 01:32, Zhou Stephen Eta wrote:
+>  From 0bf2dd816c8369e2c690869b5f6c671f28c2b196 Mon Sep 17 00:00:00 2001
+> From: "stephen.eta.zhou" <stephen.eta.zhou@outlook.com>
+> Date: Tue, 11 Feb 2025 16:48:14 +0800
+> Subject: [PATCH] arch/alpha: optimize virt_to_phys with compiler automatic
+>   sign extension
+> 
+> In the `virt_to_phys` function, the following changes have been made:
+> 1. **Automatic Sign Extension**:
+>     - The manual sign extension code has been replaced with the
+>       compiler's automatic sign extension.
+>     - This simplifies the code and leverages the
+>       compiler's optimization.
+> 
+> 2. **Fix for 64-bit Address Overflow**:
+>     - Previously, when the input was a 64-bit address with a
+>       negative high bit (sign bit), the sign extension caused an
+>       overflow, resulting in an incorrect conversion to 0.
+>     - This issue has been addressed by using the compiler's
+>       automatic sign extension,
+>       which ensures proper handling of negative addresses.
+> 
+> 3. **NULL Pointer Check**:
+>     - A NULL pointer check has been added at the
+>       beginning of the function.
+>     - If the address is NULL, the function now
+>       returns 0 to prevent potential crashes.
+> 
+> Signed-off-by: stephen.eta.zhou <stephen.eta.zhou@outlook.com>
+> ---
+>   arch/alpha/include/asm/io.h | 8 +++++---
+>   1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/alpha/include/asm/io.h b/arch/alpha/include/asm/io.h
+> index 65fe1e54c6da..4d7cd7486b7d 100644
+> --- a/arch/alpha/include/asm/io.h
+> +++ b/arch/alpha/include/asm/io.h
+> @@ -70,9 +70,11 @@ static inline unsigned long virt_to_phys(volatile void *address)
+>   {
+>           unsigned long phys = (unsigned long)address;
+>   
+> -	/* Sign-extend from bit 41.  */
+> -	phys <<= (64 - 41);
+> -	phys = (long)phys >> (64 - 41);
+> +	if (!address)
+> +		return 0;
+> +
+> +	/* Automatic Sign-extend  */
+> +	phys = (long)phys;
 
-On Tue, Feb 11, 2025 at 11:22=E2=80=AFAM Arseniy Krasnov
-<avkrasnov@salutedevices.com> wrote:
->
-> May be my previous version was free of this problem ?
->
-> https://lore.kernel.org/linux-bluetooth/a1db0c90-1803-e01c-3e23-d18e4343a=
-4eb@salutedevices.com/
-
-You can try sending it to
-syzbot+683f8cb11b94b1824c77@syzkaller.appspotmail.com to check if that
-works.
-
-> Thanks
->
-> On 11.02.2025 17:16, Arseniy Krasnov wrote:
-> > Hi, I guess problem here is that, if hci_uart_tty_close() will be calle=
-d between
-> > setting HCI_UART_PROTO_READY and skb_queue_head_init(), in that case mr=
-vl_close()
-> > will access uninitialized data.
-> >
-> > hci_uart_set_proto() {
-> >         ...
-> >         set_bit(HCI_UART_PROTO_READY, &hu->flags);
-> >
-> >         err =3D hci_uart_register_dev(hu);
-> >                 mrvl_open()
-> >                     skb_queue_head_init();
-
-Or we follow what the likes of hci_uart_register_device_priv, in fact
-we may want to take the time to clean this up, afaik the ldisc is
-deprecated and serdev shall be used instead, in any case if we can't
-just remove ldisc version then at very least they shall be using the
-same flow when it comes to hci_register_dev since the share the same
-struct hci_uart.
-
-> >         if (err) {
-> >                 return err;
-> >         }
-> >         ...
-> > }
-> >
-> > Thanks
-> >
-> > On 10.02.2025 14:26, syzbot wrote:
-> >> syzbot has bisected this issue to:
-> >>
-> >> commit c411c62cc13319533b1861e00cedc4883c3bc1bb
-> >> Author: Arseniy Krasnov <avkrasnov@salutedevices.com>
-> >> Date:   Thu Jan 30 18:43:26 2025 +0000
-> >>
-> >>     Bluetooth: hci_uart: fix race during initialization
-> >>
-> >> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D116cebd=
-f980000
-> >> start commit:   40b8e93e17bf Add linux-next specific files for 2025020=
-4
-> >> git tree:       linux-next
-> >> final oops:     https://syzkaller.appspot.com/x/report.txt?x=3D136cebd=
-f980000
-> >> console output: https://syzkaller.appspot.com/x/log.txt?x=3D156cebdf98=
-0000
-> >> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dec880188a8=
-7c6aad
-> >> dashboard link: https://syzkaller.appspot.com/bug?extid=3D683f8cb11b94=
-b1824c77
-> >> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D10b7eeb0=
-580000
-> >> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D12f74f6458=
-0000
-> >>
-> >> Reported-by: syzbot+683f8cb11b94b1824c77@syzkaller.appspotmail.com
-> >> Fixes: c411c62cc133 ("Bluetooth: hci_uart: fix race during initializat=
-ion")
-> >>
-> >> For information about bisection process see: https://goo.gl/tpsmEJ#bis=
-ection
+NACK.  What do you think this does?  What it doesn't do is sign-extend from bit 41.
 
 
-
---=20
-Luiz Augusto von Dentz
+r~
