@@ -1,43 +1,50 @@
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE3C1E9B0A
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 06:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62E9433BE
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 06:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739255833; cv=none; b=QrHTl1Ivj/nyfzppIO5sWfEMjKwTWDJ08tQMDER65qUEbOmWjHrHRbpDurmXr+6JwWRPMmA9t1BF//Wl5wUUt1b9INsfbQWFslt91pytb8KUtvVtxyZ2DYdaKR1l9TPPiJ3mGCdyUdDyOZYXpwt2kVEea+6C+bNTSbDzKfaUUG0=
+	t=1739255879; cv=none; b=cjdcEQXtIO3c9/nYUu+0YqCtXAcrFlZ0TLWv7NwYA6N6Wwp7aItOSPORB95OWqimJDN9CsNO3ddgRI/4d+9nGcZ1PYTunRUFMJGYDFmFVhhziuOikK3CZVa05PIrBwjZa2l+Nf7ysBIG43xFtrgJ0Ukru9HSAxtBf/IyxXzyVq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739255833; c=relaxed/simple;
-	bh=USsgt3nAVhZ0Zv/kBH3ZmhJWyVIQLdUJM+hRIBl9Ht4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YsMReylNVtS0k4tqPqQGyu1ZcZfikD/7zjAgpR1MMof1oNQAOJQNl+ZJDXSnNWZLST9ic4ef5hcqSeP7bTALlL2Z3kJ29+0EzKmHlE97CEd9ilz0MXhp1C7BomwsD+vVWW2ZkYJWaF9nL6mzpWtkAgVNDpHeanyYMSfn79tNx5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ByHbg+cC; arc=none smtp.client-ip=115.124.30.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1739255879; c=relaxed/simple;
+	bh=6uZQgoR0uA6VEsip3oI4LwHkKy77TFCniPhoImzlKOc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=a8uk8mIZ3M3Ta4eX7awkUAR0ROSJzQ5qOBBRw/W3rEHXpnEJDNiTrLZIAyIzCUkyAat1TafK3oq8t7VcJYUpwOt8JzdLCEQaJ2eyARjoS4wke92V0h138ywZME03RCDDpsHj/Ub6X38un/Nt+rSBlz6azb5ZwrQJqvQA+58sd68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UCekxHfR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ByHbg+cC"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1739255826; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=dqAyo2ReN2P0QJoWH2gGeQPluWKTOZLcnIOz78ef+dc=;
-	b=ByHbg+cCfZK0VoADyHFH7RHYt2gXj4NCaunVBRLxZojvYih6iLO9EmNrqkoS2UqbNWKgHY27ErUPsa6nc+5BUlM7uEy1NtYNrFUs8WhBto7DUc8EX1fVEq77eMlTOtWdYZPyuHx6zInzQyyw9cy8ZpQh9vZ6GbnKrM4Ijzdmo/4=
-Received: from localhost.localdomain(mailfrom:dtcccc@linux.alibaba.com fp:SMTPD_---0WPFmM14_1739255819 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 11 Feb 2025 14:37:05 +0800
-From: Tianchen Ding <dtcccc@linux.alibaba.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] sched/eevdf: Force propagating min_slice of cfs_rq when {en,de}queue tasks
-Date: Tue, 11 Feb 2025 14:36:59 +0800
-Message-Id: <20250211063659.7180-1-dtcccc@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UCekxHfR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E975C4CEDD;
+	Tue, 11 Feb 2025 06:37:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739255879;
+	bh=6uZQgoR0uA6VEsip3oI4LwHkKy77TFCniPhoImzlKOc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=UCekxHfR3Vwbv3V8w51eiJPq01SQgFoFy6WDbLi5JFN0sQymjeUpfZiz0r51D06Vg
+	 ztCTiCn/L5pMHlrdhh/gJbPeN84HGuJEMNDsaw/buy3N/nWpwEvnhJ59CtAP+F29VV
+	 WH44U/WtrWjXkx2vygzOG2vGkuL1gvRFhV0I6QXbHoulSihJmlQopL8BJCbQ++l8WP
+	 ilicZ9uBPek5stvyD6Snk0Wdr/G3AczCJv1Ai/z7stMpyWSHAHFeE2pgh4TyRD0Phw
+	 1ekVM1AkRk+uK1YmYgRjEkoeZcz/XBlQCOTczDhjnMTeg6P/4kXN/E4Hka6Tvk/qP3
+	 JMGFAnJtOv5jQ==
+From: SeongJae Park <sj@kernel.org>
+To: "Lai, Yi" <yi1.lai@linux.intel.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	David Hildenbrand <david@redhat.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	yi1.lai@intel.com
+Subject: Re: [PATCH 4/4] mm/madvise: remove redundant mmap_lock operations from process_madvise()
+Date: Mon, 10 Feb 2025 22:37:55 -0800
+Message-Id: <20250211063756.5195-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <Z6rgiVp7221r4JZ5@ly-workstation>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,55 +53,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When a task is enqueued and its parent cgroup se is already on_rq, this
-parent cgroup se will not be enqueued again, and hence the root->min_slice
-leaves unchanged. The same issue happens when a task is dequeued and its
-parent cgroup se has other runnable entities, and the parent cgroup se
-will not be dequeued.
+Hello Lai,
 
-Force propagating min_slice when se doesn't need to be enqueued or
-dequeued. Ensure the se hierarchy always get the latest min_slice.
+On Tue, 11 Feb 2025 13:30:49 +0800 "Lai, Yi" <yi1.lai@linux.intel.com> wrote:
 
-Fixes: aef6987d8954 ("sched/eevdf: Propagate min_slice up the cgroup hierarchy")
-Signed-off-by: Tianchen Ding <dtcccc@linux.alibaba.com>
----
-v3:
-I modified some descriptions in commit log, and rebased to the latest
-tip branch. The old version of patch can be found in [1].
+[...]
+> Hi SeongJae Park,
+> 
+> Greetings!
+> 
+> I used Syzkaller and found that there is WARNING in madvise_unlock in linux-next tag - next-20250210.
 
-The original patchset wants to add a feature. As the 2nd patch may be
-hard to be accepted, I think at least the bugfix should be applied.
+Thank you so much for this nice report!  I just sent a fix:
+https://lore.kernel.org/20250211063201.5106-1-sj@kernel.org
 
-The issue about this patch was described detailly in [2].
+> 
+> After bisection and the first bad commit is:
+> "
+> ec68fbd9e99f mm/madvise: remove redundant mmap_lock operations from process_madvise()
+> "
 
-[1]https://lore.kernel.org/all/20241031094822.30531-1-dtcccc@linux.alibaba.com/
-[2]https://lore.kernel.org/all/a903d0dc-1d88-4ae7-ac81-3eed0445654d@linux.alibaba.com/
----
- kernel/sched/fair.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Nonetheless, I think the real first bad commit is f19c9d7b57cf ("mm/madvise:
+split out madvise() behavior execution").  I confirmed I can reproduce the
+issue using your reproducer on the commit.  And I think the fix may better to
+be squashed into an earlier commit, 948a0a9ea070 ("mm/madvise: split out mmap
+locking operations for madvise()").  Please refer to the fix for details about
+why I think so, and let me know if anything seems wrong.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 1e78caa21436..0d479b92633a 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6970,6 +6970,8 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 		update_cfs_group(se);
- 
- 		se->slice = slice;
-+		if (se != cfs_rq->curr)
-+			min_vruntime_cb_propagate(&se->run_node, NULL);
- 		slice = cfs_rq_min_slice(cfs_rq);
- 
- 		cfs_rq->h_nr_runnable += h_nr_runnable;
-@@ -7099,6 +7101,8 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
- 		update_cfs_group(se);
- 
- 		se->slice = slice;
-+		if (se != cfs_rq->curr)
-+			min_vruntime_cb_propagate(&se->run_node, NULL);
- 		slice = cfs_rq_min_slice(cfs_rq);
- 
- 		cfs_rq->h_nr_runnable -= h_nr_runnable;
--- 
-2.39.3
 
+Thanks,
+SJ
+
+[...]
