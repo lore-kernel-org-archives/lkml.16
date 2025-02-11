@@ -1,71 +1,184 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37ED01E98FF
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138CB1E98FF;
+	Tue, 11 Feb 2025 13:42:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739281314; cv=none; b=alBds4J5Fg6mrSIVEVKl+Zx9dzA/F+X1M1n0C7wIGpWGk+7RKLOP/UyPeDKcpxVDWga6pNi71gvyOSPJMhnSMHOlf5DDoqNuL9uO9Htuwu58zVGM7FckbDPKIv1oAyhFh9w+hE3tYOagy/070+0zmyd5Yp6KN4xPcoBnaC5Xock=
+	t=1739281370; cv=none; b=U1E9iMeY7r4WXiGO2qtb1WLUPJgKjgG2R0ABACoAKBhnCk+A0/YHhymSQwatRiXiSwEy/vAmXUFIEUSsyESyLUh9zxo7MDMNdeelgHotsQTCLDrqmcOf/0ZQFUUc/37tevSB1Dezu21P+n9izXUQzogOmoxc/fCcy/nSjPIHV/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739281314; c=relaxed/simple;
-	bh=ghBuBHrXPApwqD4Vr/OOoK8WX+YbnKsw/dcOz/k6VFs=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=APBoXgBXISqS88VeBrTfxWlW2OX/obznDsLxSGeUATK1PdaFEaxB3Ci6eZU/1VM9cl1eH/UhPu9dKVB218QKv1vD26qj1hCrTAYnmWE0pxJhb5J5djz+aZrx7ccE0BA3BAQg+SNZqLOpSz0bKcRUrnOnOhEC/UtTo6puvnxShVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 51BD1Tu7013069;
-	Tue, 11 Feb 2025 22:01:29 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 51BD1SiA013060
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Tue, 11 Feb 2025 22:01:28 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <48a5c8af-c447-496c-a4cd-85a5698e5a1a@I-love.SAKURA.ne.jp>
-Date: Tue, 11 Feb 2025 22:01:28 +0900
+	s=arc-20240116; t=1739281370; c=relaxed/simple;
+	bh=oHuDO3N4q9UjuMcLC43ArFeLt76GZz0x5DN1qES+05g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZSGv53TD8Q7ZVmV0GNIEi3fN4o4vf3xTTZ1sCl3RBoMeJI3jDsNZKmIY5Xuf53LlDQ5xo7Sqm2ZtGoUC7A63DPmJF/Tr49pu27ZZZ/Oh2ZwzWlUsZXLwwF7M3jolb9aTFzmPMLzrZF5V/huAp6rZV3NBtRVjeqU+Ppptl78gjz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ECCqwy/D; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ECCqwy/D"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 822C24440A;
+	Tue, 11 Feb 2025 13:42:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739281366;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hrHnzHJAMdU5BZfDvmzt4qs+iwkv60fAwvb2ZrcJS+c=;
+	b=ECCqwy/DNUw3wcnf/Ivjx9007nU9yaQ0WJZuo/r4u9qXasAmhpDTVk8FWK4ekbY3ZFeko8
+	1F0I+za35DHHF6XKtEypOL++WIhG6inzSPILNeBZE9JI07WNd22zMQkj/Uw2IGfApKBUxa
+	OPgBV1bA6ArIdtkVLjOxI0segWvn+UzdsMvH2XN0CgnLjogzbFNsj33K63CeqU5C9K0chv
+	3Y1uVBZrCg//xsO43mjMcuG5cfEx2bgB3bIMYISm2fZwrBb+qUrEDeNZ5QKzGzkquDzeX9
+	Hgp+DbzFCsjlKcRT1uIe5Q7FhF+cZfNLIxLSDQhvfcl1Jp1WPI7aCUJszsYOrQ==
+Date: Tue, 11 Feb 2025 14:42:43 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: davem@davemloft.net, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
+ linux-arm-kernel@lists.infradead.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>, Marek
+ =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Oleksij Rempel
+ <o.rempel@pengutronix.de>, =?UTF-8?B?Tmljb2zDsg==?= Veronese
+ <nicveronese@gmail.com>, Simon Horman <horms@kernel.org>,
+ mwojtas@chromium.org, Antoine Tenart <atenart@kernel.org>,
+ devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, Romain
+ Gantois <romain.gantois@bootlin.com>
+Subject: Re: [PATCH net-next 03/13] net: phy: Introduce PHY ports
+ representation
+Message-ID: <20250211144243.6190005a@fedora.home>
+In-Reply-To: <20250211143209.74f84a10@kmaincent-XPS-13-7390>
+References: <20250207223634.600218-1-maxime.chevallier@bootlin.com>
+	<20250207223634.600218-4-maxime.chevallier@bootlin.com>
+	<20250211143209.74f84a10@kmaincent-XPS-13-7390>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Subject: [GIT PULL] tomoyo update for v6.14-rc3
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Anti-Virus-Server: fsav403.rs.sakura.ne.jp
-X-Virus-Status: clean
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegudduhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeuhfefgffgtdfhgffhvdfhhffhteeutdektefghfetveehheejjefgudeiudehudenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvkedprhgtphhtthhopehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrn
+ hgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhmshhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-The following changes since commit bdc35f164b0f60480b2f5e098bb8f3c0cea05cd2:
+Hi K=C3=B6ry,
 
-  tomoyo: use better patterns for procfs in learning mode (2025-01-31 00:27:44 +0900)
+On Tue, 11 Feb 2025 14:32:09 +0100
+Kory Maincent <kory.maincent@bootlin.com> wrote:
 
-are available in the Git repository at:
+> On Fri,  7 Feb 2025 23:36:22 +0100
+> Maxime Chevallier <maxime.chevallier@bootlin.com> wrote:
+>=20
+> > Ethernet provides a wide variety of layer 1 protocols and standards for
+> > data transmission. The front-facing ports of an interface have their own
+> > complexity and configurability.
+> >=20
+> > Introduce a representation of these front-facing ports. The current code
+> > is minimalistic and only support ports controlled by PHY devices, but
+> > the plan is to extend that to SFP as well as raw Ethernet MACs that
+> > don't use PHY devices.
+> >=20
+> > This minimal port representation allows describing the media and number
+> > of lanes of a port. From that information, we can derive the linkmodes
+> > usable on the port, which can be used to limit the capabilities of an
+> > interface.
+> >=20
+> > For now, the port lanes and medium is derived from devicetree, defined
+> > by the PHY driver, or populated with default values (as we assume that
+> > all PHYs expose at least one port).
+> >=20
+> > The typical example is 100M ethernet. 100BaseT can work using only 2
+> > lanes on a Cat 5 cables. However, in the situation where a 10/100/1000
+> > capable PHY is wired to its RJ45 port through 2 lanes only, we have no
+> > way of detecting that. The "max-speed" DT property can be used, but a
+> > more accurate representation can be used :
+> >=20
+> > mdi {
+> > 	port@0 {
+> > 		media =3D "BaseT";
+> > 		lanes =3D <2>;
+> > 	};
+> > };
+> >=20
+> > From that information, we can derive the max speed reachable on the
+> > port.
+> >=20
+> > Another benefit of having that is to avoid vendor-specific DT properties
+> > (micrel,fiber-mode or ti,fiber-mode).
+> >=20
+> > This basic representation is meant to be expanded, by the introduction
+> > of port ops, userspace listing of ports, and support for multi-port
+> > devices. =20
+>=20
+> This patch is tackling the support of ports only for the PHY API. Keeping=
+ in
+> mind that this port abstraction support will also be of interest to the N=
+ICs.
+> Isn't it preferable to handle port in a standalone API?
 
-  git://git.code.sf.net/p/tomoyo/tomoyo.git tags/tomoyo-pr-20250211
+The way I see it, nothing prevents from using the port definition in
+ethernet-port.yml in DSA/raw nics.
 
-for you to fetch changes up to bdc35f164b0f60480b2f5e098bb8f3c0cea05cd2:
+> With net drivers having PHY managed by the firmware or DSA, there is no l=
+inux
+> description of their PHYs. On that case, if we want to use port abstracti=
+on,
+> what is the best? Register a virtual phy_device to use the abstraction po=
+rt or
+> use the port abstraction API directly which meant that it is not related =
+to any
+> PHY?
 
-  tomoyo: use better patterns for procfs in learning mode (2025-01-31 00:27:44 +0900)
+I think the next steps will be to have net_device have a list of ports
+(maintained in the phy_link_topology) that aggregates ports from all
+its PHYs/SFPs/raw interfaces. in that case net_device will be the
+direct parent. I haven't worked on the bindings for that though,
+especially for DSA :'(
 
-----------------------------------------------------------------
-Redo of pathname patternization and fix spelling errors.
+I don't think the virtual phydev is going to be helpful. I'm hitting
+the 15 patches limit, but a possible extension is to make so that
+phylink also creates a port when it finds an SFP (hence, when upstream
+is a MAC).
 
-Tetsuo Handa (3):
-  tomoyo: use better patterns for procfs in learning mode
-  tomoyo: fix spelling errors
+This is why phy_port has these fields :
 
-Tanya Agarwal (1):
-  tomoyo: fix spelling error
 
- security/tomoyo/common.c        |  145 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------
- security/tomoyo/domain.c        |    2 -
- security/tomoyo/securityfs_if.c |    6 +--
- security/tomoyo/tomoyo.c        |    5 --
- 4 files changed, 117 insertions(+), 41 deletions(-)
+enum phy_port_parent {
+	PHY_PORT_PHY,
+};
+
+struct phy_port {
+	...
+	enum phy_port_parent parent_type;
+	union {
+		struct phy_device *phy;
+	};
+
+};
+
+The parent type may (will) be extended with PORT_PHY_MAC, and that's
+also why the parent pointer is in a union :)
+
+I'm trying hard to make so that phy_port doesn't depend on phylib
+(altough, phylib depends on phy_port). There's a dependency on some
+core stuff (converting from medium =3D> linkmodes) and phylink
+(converting the interfaces list to linkmodes), but we can extract these
+fairly easily.
+
+You're correct in that for now, the integration is with phylib only
+though, but let's make sure this will also work for phy-less devices.
+
+Thanks a lot for your input,
+
+Maxime
