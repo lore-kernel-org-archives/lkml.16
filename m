@@ -1,189 +1,164 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 273EB1E570A;
-	Tue, 11 Feb 2025 18:22:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57FDB1E231F;
+	Tue, 11 Feb 2025 18:22:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739298132; cv=none; b=doqCgRmr0rNPLGuaS+yvSXBjkKcuOmrtGScHK8yBk8DY0tcG5xgKezKD8IT44QCKlV2J5CnBmBJOU5F5pq7u8jp9roUeexX0ObOzDU7PO+XH18v4I6YkjbIpOpBddmYNplNlr1nR/Lp3C9HdAfYATvykfbIqt7yppu/L6JRsY0o=
+	t=1739298161; cv=none; b=sNoil1LNL+eztQfr286x9xrR0Qz3gRx2+Cl93vH+JzG9+3I9PjPeAlmSyyOEaJVuSAPMH427UfygxSHyTWjc9skP1qIf4xfaKl0nXBtJQJQwbP3Knyr2l/TrECF1W3CKFnLR99GQ0lR8o4w7gFfpS4la0H+nL2KmNaYIq9vpzws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739298132; c=relaxed/simple;
-	bh=drUWznsqYzBFdTs6zoqRvfCReDqxS5DHjVUce0N9hiY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JmpEO5WQ0pEvMVQgI7KBj+XJoo0sev7Rv/bT79Q49SlsKqVvNxquvxpsvonyqYxvToA9yfqs3QviHLvFxQcfDJFM6wQQ8BMqnVcqK9OBbfIggBfLB1tcqAt4OcIBl3HCZbBEahm5fpbPvPHr0W5YmPyBWWBn/9sbQuyA7bzB6BI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Zb7wc66X; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Zb7wc66X"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51BILd70285081
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 11 Feb 2025 12:21:40 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1739298100;
-	bh=+l74RiUBFzia65G6oVdyvmIiQ3qIBktj4F8GrgBJkLo=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=Zb7wc66Xd6MJotBsxlf/tI+1xyMfnl/QhLcNtIuXHyq+04S4cVaZodRFkHx20sKP0
-	 SebjMvO0wCHQg0gFYA0mGQlYegM0hWhrDijz3BLNHQQ4IDYWDvc0yPVk1JfyJEJATu
-	 CEjmtwrO590p8EmEtsPDmq0Bb538fWZqS9jgLyHE=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51BILdIe013681
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 11 Feb 2025 12:21:39 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 11
- Feb 2025 12:21:39 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 11 Feb 2025 12:21:39 -0600
-Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51BILcKO122968;
-	Tue, 11 Feb 2025 12:21:39 -0600
-From: Chintan Vankar <c-vankar@ti.com>
-To: Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>, Tero Kristo
-	<kristo@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon
-	<nm@ti.com>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <s-vadapalli@ti.com>,
-        <srk@ti.com>, <c-vankar@ti.com>, Chintan Vankar <c-vankar@tii.com>,
-        Ravi Gunasekaran
-	<r-gunasekaran@ti.com>
-Subject: [PATCH v4 2/2] arm64: dts: ti: k3-am62a7: Add overlay for second CPSW3G Port
-Date: Tue, 11 Feb 2025 23:51:34 +0530
-Message-ID: <20250211182134.1500867-3-c-vankar@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250211182134.1500867-1-c-vankar@ti.com>
-References: <20250211182134.1500867-1-c-vankar@ti.com>
+	s=arc-20240116; t=1739298161; c=relaxed/simple;
+	bh=7dkQibdUy+NOc+u9G1470iGJGOPpU8BL2cSrqAQbM30=;
+	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=TGG/75aIYVHqIpcJASfVKgDK/WdLHUSXgGI114soiIuuCu0qxiLGlIknDRAHNvdLnOQEv/pvhH+RvnDV6104+xrPNx/10xBD9+KDpAQ1TT/hMtqleD9qB7xKSTMCXYGEHNy8dKR9hLpAGB1bsgMr+iUf6yXEArcKgaAkXw+Yg/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id EF5F492009C; Tue, 11 Feb 2025 19:22:30 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id EAABA92009B;
+	Tue, 11 Feb 2025 18:22:30 +0000 (GMT)
+Date: Tue, 11 Feb 2025 18:22:30 +0000 (GMT)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+    Oleg Nesterov <oleg@redhat.com>, "Dmitry V. Levin" <ldv@strace.io>
+cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: [PATCH] MIPS: Export syscall stack arguments properly for remote
+ use
+Message-ID: <alpine.DEB.2.21.2502101732120.65342@angie.orcam.me.uk>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=US-ASCII
 
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
+We have several places across the kernel where we want to access another 
+task's syscall arguments, such as ptrace(2), seccomp(2), etc., by making 
+a call to syscall_get_arguments().
 
-The SK-Ethernet-DC01 Add-On Ethernet Card for AM62A7-SK board supports
-RGMII mode.
+This works for register arguments right away by accessing the task's 
+`regs' member of `struct pt_regs', however for stack arguments seen with 
+32-bit/o32 kernels things are more complicated.  Technically they ought 
+to be obtained from the user stack with calls to an access_remote_vm(), 
+but we have an easier way available already.
 
-Add overlay to enable the second CPSW3G port in RGMII-RXID mode with the
-Add-On Ethernet Card.
+So as to be able to access syscall stack arguments as regular function 
+arguments following the MIPS calling convention we copy them over from 
+the user stack to the kernel stack in arch/mips/kernel/scall32-o32.S, in 
+handle_sys(), to the current stack frame's outgoing argument space at 
+the top of the stack, which is where the handler called expects to see 
+its incoming arguments.  This area is also pointed at by the `pt_regs'
+pointer obtained by task_pt_regs().
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-Signed-off-by: Chintan Vankar <c-vankar@tii.com>
-Reviewed-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
+Make the o32 stack argument space a proper member of `struct pt_regs' 
+then, by renaming the existing member from `pad0' to `args' and using 
+generated offsets to access the space.  No functional change though.
+
+With the change in place the o32 kernel stack frame layout at the entry 
+to a syscall handler invoked by handle_sys() is therefore as follows:
+
+$sp + 68 -> |         ...         | <- pt_regs.regs[9]
+            +---------------------+
+$sp + 64 -> |         $t0         | <- pt_regs.regs[8]
+            +---------------------+
+$sp + 60 -> |   $a3/argument #4   | <- pt_regs.regs[7]
+            +---------------------+
+$sp + 56 -> |   $a2/argument #3   | <- pt_regs.regs[6]
+            +---------------------+
+$sp + 52 -> |   $a1/argument #2   | <- pt_regs.regs[5]
+            +---------------------+
+$sp + 48 -> |   $a0/argument #1   | <- pt_regs.regs[4]
+            +---------------------+
+$sp + 44 -> |         $v1         | <- pt_regs.regs[3]
+            +---------------------+
+$sp + 40 -> |         $v0         | <- pt_regs.regs[2]
+            +---------------------+
+$sp + 36 -> |         $at         | <- pt_regs.regs[1]
+            +---------------------+
+$sp + 32 -> |        $zero        | <- pt_regs.regs[0]
+            +---------------------+
+$sp + 28 -> |  stack argument #8  | <- pt_regs.args[7]
+            +---------------------+
+$sp + 24 -> |  stack argument #7  | <- pt_regs.args[6]
+            +---------------------+
+$sp + 20 -> |  stack argument #6  | <- pt_regs.args[5]
+            +---------------------+
+$sp + 16 -> |  stack argument #5  | <- pt_regs.args[4]
+            +---------------------+
+$sp + 12 -> | psABI space for $a3 | <- pt_regs.args[3]
+            +---------------------+
+$sp +  8 -> | psABI space for $a2 | <- pt_regs.args[2]
+            +---------------------+
+$sp +  4 -> | psABI space for $a1 | <- pt_regs.args[1]
+            +---------------------+
+$sp +  0 -> | psABI space for $a0 | <- pt_regs.args[0]
+            +---------------------+
+
+holding user data received and with the first 4 frame slots reserved by 
+the psABI for the compiler to spill the incoming arguments from $a0-$a3 
+registers (which it sometimes does according to its needs) and the next 
+4 frame slots designated by the psABI for any stack function arguments 
+that follow.  This data is also available for other tasks to peek/poke 
+at as reqired and where permitted.
+
+Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
 ---
+ arch/mips/include/asm/ptrace.h |    4 ++--
+ arch/mips/kernel/asm-offsets.c |    6 ++++++
+ arch/mips/kernel/scall32-o32.S |    8 ++++----
+ 3 files changed, 12 insertions(+), 6 deletions(-)
 
-Link to v3:
-https://lore.kernel.org/r/20240429101739.2770090-3-c-vankar@ti.com/
-
-Changes from v3 to v4:
-- No changes.
-
- arch/arm64/boot/dts/ti/Makefile               |  3 +
- .../dts/ti/k3-am62a7-sk-ethernet-dc01.dtso    | 62 +++++++++++++++++++
- 2 files changed, 65 insertions(+)
- create mode 100644 arch/arm64/boot/dts/ti/k3-am62a7-sk-ethernet-dc01.dtso
-
-diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-index 8a4bdf87e2d4..7f9f0d3b9362 100644
---- a/arch/arm64/boot/dts/ti/Makefile
-+++ b/arch/arm64/boot/dts/ti/Makefile
-@@ -31,6 +31,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-am62-lp-sk-nand.dtbo
- # Boards with AM62Ax SoC
- dtb-$(CONFIG_ARCH_K3) += k3-am62a7-sk.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-am62a7-phyboard-lyra-rdk.dtb
-+dtb-$(CONFIG_ARCH_K3) += k3-am62a7-sk-ethernet-dc01.dtbo
+linux-mips-scall32-o32-pt-regs-args.diff
+Index: linux-malta/arch/mips/include/asm/ptrace.h
+===================================================================
+--- linux-malta.orig/arch/mips/include/asm/ptrace.h
++++ linux-malta/arch/mips/include/asm/ptrace.h
+@@ -27,8 +27,8 @@
+  */
+ struct pt_regs {
+ #ifdef CONFIG_32BIT
+-	/* Pad bytes for argument save space on the stack. */
+-	unsigned long pad0[8];
++	/* Saved syscall stack arguments; entries 0-3 unused. */
++	unsigned long args[8];
+ #endif
  
- # Boards with AM62Px SoC
- dtb-$(CONFIG_ARCH_K3) += k3-am62p5-sk.dtb
-@@ -160,6 +161,8 @@ k3-am62a7-sk-csi2-ov5640-dtbs := k3-am62a7-sk.dtb \
- 	k3-am62x-sk-csi2-ov5640.dtbo
- k3-am62a7-sk-csi2-tevi-ov5640-dtbs := k3-am62a7-sk.dtb \
- 	k3-am62x-sk-csi2-tevi-ov5640.dtbo
-+k3-am62a7-sk-ethernet-dc01-dtbs := k3-am62a7-sk.dtb \
-+	k3-am62a7-sk-ethernet-dc01.dtbo
- k3-am62a7-sk-hdmi-audio-dtbs := k3-am62a7-sk.dtb k3-am62x-sk-hdmi-audio.dtbo
- k3-am62p5-sk-csi2-imx219-dtbs := k3-am62p5-sk.dtb \
- 	k3-am62x-sk-csi2-imx219.dtbo
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk-ethernet-dc01.dtso b/arch/arm64/boot/dts/ti/k3-am62a7-sk-ethernet-dc01.dtso
-new file mode 100644
-index 000000000000..b06362de6642
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk-ethernet-dc01.dtso
-@@ -0,0 +1,62 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
-+/**
-+ * DT Overlay for second CPSW3G port in RGMII mode using SK-ETHERNET-DC01
-+ * Add-On Daughtercard with AM62A7-SK.
-+ *
-+ * Copyright (C) 2024-2025 Texas Instruments Incorporated - https://www.ti.com/
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/net/ti-dp83867.h>
-+#include "k3-pinctrl.h"
-+
-+&{/} {
-+	aliases {
-+		ethernet1 = "/bus@f0000/ethernet@8000000/ethernet-ports/port@2";
-+	};
-+};
-+
-+&cpsw3g {
-+	pinctrl-0 = <&main_rgmii1_pins_default>,
-+		    <&main_rgmii2_pins_default>;
-+};
-+
-+&cpsw_port2 {
-+	status = "okay";
-+	phy-mode = "rgmii-rxid";
-+	phy-handle = <&cpsw3g_phy1>;
-+};
-+
-+&cpsw3g_mdio {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	cpsw3g_phy1: ethernet-phy@1 {
-+		reg = <1>;
-+		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
-+		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-+		ti,min-output-impedance;
-+	};
-+};
-+
-+&main_pmx0 {
-+	main_rgmii2_pins_default: main-rgmii2-default-pins {
-+		pinctrl-single,pins = <
-+			AM62AX_IOPAD(0x0184, PIN_INPUT, 0) /* (AA21) RGMII2_RD0 */
-+			AM62AX_IOPAD(0x0188, PIN_INPUT, 0) /* (Y20) RGMII2_RD1 */
-+			AM62AX_IOPAD(0x018c, PIN_INPUT, 0) /* (AB21) RGMII2_RD2 */
-+			AM62AX_IOPAD(0x0190, PIN_INPUT, 0) /* (AB20) RGMII2_RD3 */
-+			AM62AX_IOPAD(0x0180, PIN_INPUT, 0) /* (AA20) RGMII2_RXC */
-+			AM62AX_IOPAD(0x017c, PIN_INPUT, 0) /* (W18) RGMII2_RX_CTL */
-+			AM62AX_IOPAD(0x016c, PIN_INPUT, 0) /* (AA19) RGMII2_TD0 */
-+			AM62AX_IOPAD(0x0170, PIN_INPUT, 0) /* (Y18) RGMII2_TD1 */
-+			AM62AX_IOPAD(0x0174, PIN_INPUT, 0) /* (AA18) RGMII2_TD2 */
-+			AM62AX_IOPAD(0x0178, PIN_INPUT, 0) /* (W17) RGMII2_TD3 */
-+			AM62AX_IOPAD(0x0168, PIN_INPUT, 0) /* (AB19) RGMII2_TXC */
-+			AM62AX_IOPAD(0x0164, PIN_INPUT, 0) /* (Y19) RGMII2_TX_CTL */
-+		>;
-+	};
-+};
--- 
-2.34.1
-
+ 	/* Saved main processor registers. */
+Index: linux-malta/arch/mips/kernel/asm-offsets.c
+===================================================================
+--- linux-malta.orig/arch/mips/kernel/asm-offsets.c
++++ linux-malta/arch/mips/kernel/asm-offsets.c
+@@ -27,6 +27,12 @@
+ void output_ptreg_defines(void)
+ {
+ 	COMMENT("MIPS pt_regs offsets.");
++#ifdef CONFIG_32BIT
++	OFFSET(PT_ARG4, pt_regs, args[4]);
++	OFFSET(PT_ARG5, pt_regs, args[5]);
++	OFFSET(PT_ARG6, pt_regs, args[6]);
++	OFFSET(PT_ARG7, pt_regs, args[7]);
++#endif
+ 	OFFSET(PT_R0, pt_regs, regs[0]);
+ 	OFFSET(PT_R1, pt_regs, regs[1]);
+ 	OFFSET(PT_R2, pt_regs, regs[2]);
+Index: linux-malta/arch/mips/kernel/scall32-o32.S
+===================================================================
+--- linux-malta.orig/arch/mips/kernel/scall32-o32.S
++++ linux-malta/arch/mips/kernel/scall32-o32.S
+@@ -64,10 +64,10 @@ load_a6: user_lw(t7, 24(t0))		# argument
+ load_a7: user_lw(t8, 28(t0))		# argument #8 from usp
+ loads_done:
+ 
+-	sw	t5, 16(sp)		# argument #5 to ksp
+-	sw	t6, 20(sp)		# argument #6 to ksp
+-	sw	t7, 24(sp)		# argument #7 to ksp
+-	sw	t8, 28(sp)		# argument #8 to ksp
++	sw	t5, PT_ARG4(sp)		# argument #5 to ksp
++	sw	t6, PT_ARG5(sp)		# argument #6 to ksp
++	sw	t7, PT_ARG6(sp)		# argument #7 to ksp
++	sw	t8, PT_ARG7(sp)		# argument #8 to ksp
+ 	.set	pop
+ 
+ 	.section __ex_table,"a"
