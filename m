@@ -1,88 +1,109 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE5F320F;
-	Tue, 11 Feb 2025 13:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3124221DAE
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739280557; cv=none; b=jqMy6Y6SLWXLZe/cl3q4t2Bpazj1WySwTOrjTMq3h3sxbR5rsbnnK7zVUTvmnWmAPT6YX1BZ49XBrvxzYe07/F1+NVs9Am0jdfkXUipOL3MlaLTsONw0SOpvS2hJOsxVZAZkSpuaAHIjS173X5BcNyefBSLvvxJwtFTgovnVUQM=
+	t=1739280584; cv=none; b=AJ4/4ESLMej3aRMSzYZKsnpGxQNon1rncbZ1Wm6lzoT6mfBSPpHpLXKsQySa4GdFyveNPpB7ehPGz6QBC3cA82UIvIT1/Oz5Aht/iV5FFWhR2tFA2+l/zciCLhWsauSr0xu6gB5a88yibPr8JgGZGO0mTXcEcq4oxXeEObA5uVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739280557; c=relaxed/simple;
-	bh=AFVZAd/ddvUjCgHFZxtyxRNV27S+PVT95AasPOAKy7g=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rNAyx1nL8oBT/kXCZ7G6mr6obb1NcEnzfzJcO52/8aObFrb7uJhbZeTTSKnvF//m07eDfwclYfka5mFskHW3JR7NJBfTNuGm/2L6ADSw3DR+zYTMWtWjLImRzhFCOl792m7BIpMakAKAK/+NtH/bNQNkZa0Ss5SY1UBaE5v7jhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=LxuX1XTC; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1739280584; c=relaxed/simple;
+	bh=mjpIa2XgFmm6zQMA4pXnY2mees84ECC2FENB0WxODPI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=YzKP6ICP33TtAiFxu6NlBgsUeD3pWGlV6kCSOS4Y2G03rXooyPTNbPuO2icvFMsU1F3LDIgUMKPaqNRrh6eTNmgGvK1E+tTKmtfZ61+AeUoG5X5OsDiWQn+GZBcxdsYsgCOJqFsDytzpcc6eJ2WVfCrlHK0F+XZFmeOppeFdxE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=F76PrS/S; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="LxuX1XTC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=6+yOY2Zcd5H8ImhxXn/x0q0FyqvbZA4MovSW5t3XSPg=;
-	t=1739280555; x=1740490155; b=LxuX1XTCNF9bGbr6qYHAEaGQOkkptNSTxm5l6qgQsXq/D3q
-	pgDzQvXyZtDxl1sbwYPPF5tx++OJ/biuXdrg9vETzYN1wW2hievlL8NQs54FRw3RFXVlsddKJR7bb
-	m2MIAGn75WFqr6AyDGuJNbaBIUDD1n6IGOVbSRRLGFPG13KXuMpFezj2ytEEWHeXm3fNLKHF7YTqU
-	J9psdN4cDdgI0cY/RIUvZzj0FAjsAWKYHpeWNCU6BsOBQoPZXON2Fdmf8sE4aGftaSZ67MDbqmH0w
-	FG81hLazokIm8fM1x7dUj1vBqezDkKIWSMYiZNKFFBc1sAzSo6+wmE6ufzOXLIxQ==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1thqK8-0000000B0iC-0njg;
-	Tue, 11 Feb 2025 14:29:12 +0100
-Message-ID: <56a9253a801757c03320cfe0000c5ac68dacac14.camel@sipsolutions.net>
-Subject: Re: [PATCH v3] wifi: mac80211: fix integer overflow in
- hwmp_route_info_get()
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
-Cc: Julan Hsu <julanhsu@google.com>, "linux-wireless@vger.kernel.org"
-	 <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	 <linux-kernel@vger.kernel.org>, "lvc-project@linuxtesting.org"
-	 <lvc-project@linuxtesting.org>, "stable@vger.kernel.org"
-	 <stable@vger.kernel.org>
-Date: Tue, 11 Feb 2025 14:29:11 +0100
-In-Reply-To: <20250116084948.3933834-1-Ilia.Gavrilov@infotecs.ru>
-References: <20250116084948.3933834-1-Ilia.Gavrilov@infotecs.ru>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="F76PrS/S"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1739280569;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mjpIa2XgFmm6zQMA4pXnY2mees84ECC2FENB0WxODPI=;
+	b=F76PrS/Srf+TRRk4IpALolWISlQCHaKg2b1va2BOB6rNkQcsP1j2VWNnabRLhH+dz3q0gJ
+	CXcMXeItjojp36cU3MVppUnZPhrnenfB5ABnwjugZZpa4xAaYr7Bs/mtM+bMyeUOAArSzg
+	kT0mBGGTr4yHcAPRvb7sTImS2xszkZvUCqRIe33uc8lqBh2Nxa+AaftUYu89Ez4ZSFsNR1
+	4q2Qy2Rq5po7/cY6G68tPzhOanFUwjAyqdHBamjx0VayA75QmjMBNMctRAW4AvznsidD2Q
+	OW1uRE1SbELrVvXINRCoO+wlPKP+YBQ71S0s28xgjC0Mh7nsBkVRqcFdAlSQGw==
+Content-Type: multipart/signed;
+ boundary=7740a347bdd2a901409a1a992506960e6d5f504e0ca01f0028a982de32c2;
+ micalg=pgp-sha256; protocol="application/pgp-signature"
+Date: Tue, 11 Feb 2025 14:29:14 +0100
+Message-Id: <D7PNI0953LQN.2PZC72166IWZI@cknow.org>
+Cc: <linux-kernel@vger.kernel.org>, <linux-samsung-soc@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <kernel-team@android.com>, <willmcvicker@google.com>,
+ <peter.griffin@linaro.org>, <daniel.lezcano@linaro.org>,
+ <vincent.guittot@linaro.org>, <ulf.hansson@linaro.org>, <arnd@arndb.de>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v8 1/3] dt-bindings: firmware: add google,gs101-acpm-ipc
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Krzysztof Kozlowski" <krzk@kernel.org>, =?utf-8?q?Andr=C3=A9_Draszik?=
+ <andre.draszik@linaro.org>, "Tudor Ambarus" <tudor.ambarus@linaro.org>,
+ "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Alim Akhtar"
+ <alim.akhtar@samsung.com>, "Jassi Brar" <jassisinghbrar@gmail.com>
+References: <20250211-gs101-acpm-v8-0-01d01f522da6@linaro.org>
+ <20250211-gs101-acpm-v8-1-01d01f522da6@linaro.org>
+ <D7PJTD3PSP78.27N2S94J2CNZG@cknow.org>
+ <bad87f30-0483-48c1-b263-02cc752c77e6@linaro.org>
+ <a740a0211c82aaaa55940e2f07e1d1b53c23ddd8.camel@linaro.org>
+ <e2bdc9aa-2cbb-4fcc-8c73-5fcdad6e18a7@kernel.org>
+In-Reply-To: <e2bdc9aa-2cbb-4fcc-8c73-5fcdad6e18a7@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, 2025-01-16 at 08:49 +0000, Gavrilov Ilia wrote:
-> Since the new_metric and last_hop_metric variables can reach
-> the MAX_METRIC(0xffffffff) value, an integer overflow may occur
-> when multiplying them by 10/9. It can lead to incorrect behavior.
->=20
-> Found by InfoTeCS on behalf of Linux Verification Center
-> (linuxtesting.org) with SVACE.
->=20
-> Fixes: a8d418d9ac25 ("mac80211: mesh: only switch path when new metric is=
- at least 10% better")
-> Cc: stable@vger.kernel.org
+--7740a347bdd2a901409a1a992506960e6d5f504e0ca01f0028a982de32c2
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Seems a bit overblown for stable, but also don't really care...
+On Tue Feb 11, 2025 at 1:05 PM CET, Krzysztof Kozlowski wrote:
+> On 11/02/2025 13:02, Andr=C3=A9 Draszik wrote:
+>> On Tue, 2025-02-11 at 11:57 +0000, Tudor Ambarus wrote:
+>>> And then I shall s/MODULE_LICENSE("GPL");/MODULE_LICENSE("GPL v2");/
+>>> everywhere as "GPL" indicates [GNU Public License v2 or later].
+>>=20
+>> No, please don't, see Documentation/process/license-rules.rst.
+> For the rest of suggestions here I also recommend rereading docs. I
+> don't get why we need to change "GPL-2.0 OR BSD-2-Clause", but maybe I
+> miss some docs. Whatever SPDX recommends is irrelevant if kernel
+> recommends for example something else, so be sure you make it aligned
+> with actual kernel preference.
 
-> +static inline bool is_metric_better(u32 x, u32 y, u32 percent)
-> +{
+Unfortunately, ``Documentation/process/license-rules.rst`` and
+``LICENSES/preferred/GPL-2.0`` are not in 'sync', but I guess that's
+(potentially) a discussion for another ML.
 
-You shouldn't put inline here, in general.
+TL;DR: ``license-rules.rst`` says "GPL-2.0" while the license file
+allows both.
 
-Also that function probably wants a comment, and the 'percent' argument
-is hardcoded to 10, so you don't need it. Let's keep this stuff simple,
-*especially* if it's for stable too ...
+References:
+9376ff9ba298 ("LICENSES/GPL2.0: Add GPL-2.0-only/or-later as valid identifi=
+ers")
 
-> +	if (check_add_overflow(x, a, &e)) {
-> +		if (x > y - a)
-> +			return false;
+https://lore.kernel.org/all/20180422220833.078058446@linutronix.de/
+(which mentions specifying the SPDX version, but that didn't get
+implemented)
 
-seems simpler as "return x > y - a;" or so?
+*sigh*
 
-johannes
+--7740a347bdd2a901409a1a992506960e6d5f504e0ca01f0028a982de32c2
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCZ6tQsgAKCRDXblvOeH7b
+bkINAP4+7weuoA3/bh9F/SLY1BknW+ahnGc5zXCYKj9qsFSqnwD/cZ/OQbjuOQv2
+9Mh1NVnF7KOLhSoOL6Rt+VNblLWmiwE=
+=N8XC
+-----END PGP SIGNATURE-----
+
+--7740a347bdd2a901409a1a992506960e6d5f504e0ca01f0028a982de32c2--
