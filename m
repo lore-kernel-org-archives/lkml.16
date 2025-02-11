@@ -1,153 +1,115 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F5C1E3DF7;
-	Tue, 11 Feb 2025 07:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E1C1D5178
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739259879; cv=none; b=Gtbpu1bGe+Zbrfkc/TCQOoLUHh0kxdZI1r8Ps+FpYzULi9qgsMAMBKVUlB0Snu5n67dQhsxSMFxYud2qorMtls8rMXsuPxncJLy/X25tSfH4x4h4HdLB+PPvx3vPiVPR41jL1Ra3h3vSIsVedPnkzVQRmyakaO4HAnsBSCYH8vI=
+	t=1739259961; cv=none; b=BgVQ9fC162b6T0t2Pg4IQp5nbzewpOitODXfSgc14jZ3OUJ/AGGOG21g73WRkHErmtLRGxYz9wJre/hVVInGRyy29X3hC0QJ5RMb0mn0zHAW1fEXCKpcgNGHlgMK8xJtqNB93cUvPn3yghHp/I9mtQBp8pKG//pfw8Xkv8V6WIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739259879; c=relaxed/simple;
-	bh=cm9PDeObe5p5RSqkrtZnN39LVuPDAZMxEFWvY/jtciQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YQkXFhWyKg1IgduBg2wWfZB8woINN6HsT6wOzhKtj9BcuPh4t2Jdg4tM8cYCwLKXlJvXH0rT9ORNb+EIe3iq1/0eWKdcgZDSVLmV41l0BTEf6qLLu51oHw0rP99KcH3h3HWxX3sXchu2UOlYdv893VlcsW4kmj06OVEA0WAXvKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Tj5GbFS6; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1739259961; c=relaxed/simple;
+	bh=l70dV0fwM/MtX+SOVxSPnUeUqygN+N4OhUJhmrXWyjI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=psFOV4au5K5Z8fIqQKptdkE5lzDEx+34Zuliv+53Pd4bc3hOp7vCcUTDE43IqBY7SLvHY3lF70J+8q32GxwA7Ry5B1N/aWmd80l3uw9dHXxt0Flxtj+DJgS/A4q+dTn8Ejd7xRp9IoIUlikvthiiPHy9SYc+Z5DnbSs+rToHy/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=EPZyjApe; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Tj5GbFS6"
-Received: from mail.ideasonboard.com (unknown [223.190.86.242])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id EF65122E;
-	Tue, 11 Feb 2025 08:43:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1739259798;
-	bh=cm9PDeObe5p5RSqkrtZnN39LVuPDAZMxEFWvY/jtciQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Tj5GbFS6qOaeLXyn7zOkwk4Lsb/HG6EyvM0spC5AmhUvQGH6SVvxtFukj4TNO24tS
-	 X+NJvIxAl4yn+29s02/FEuTCGAF2jyIUPf1Loa/dSUih0cvIaZXCxRo132TT2SsVnq
-	 S2dnABEebvKosZEK67GBjk0EsorqvZnXda2hZKOA=
-Date: Tue, 11 Feb 2025 13:14:12 +0530
-From: Jai Luthra <jai.luthra@ideasonboard.com>
-To: Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
-	Naushir Patuck <naush@raspberrypi.com>
-Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Vinay Varma <varmavinaym@gmail.com>
-Subject: Re: [PATCH v6 5/5] media: i2c: imx219: Scale the pixel rate for
- analog binning
-Message-ID: <n544346jf6wbzvrewfqs53fi6vlilw2kqirm4rh6fg7pfexkss@gynbikwrhmdh>
-X-PGP-Key: http://jailuthra.in/files/public-key.asc
-References: <20250204-imx219_fixes-v6-0-84ffa5030972@ideasonboard.com>
- <20250204-imx219_fixes-v6-5-84ffa5030972@ideasonboard.com>
- <ubuuob7mb3o5bxoumrxv4rufutgk3lvdmdery6d3bfc6rytfti@tcchhlechzzp>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="EPZyjApe"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21f49837d36so58802745ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:45:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1739259959; x=1739864759; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YSAKHucokt7qfKmNQyIV/wNLM0zYjyzDQ14qjRlnafk=;
+        b=EPZyjApegUiwm3h2g4unNYgGWm/CDnZB20PFcXYDRXx3pSMgeA/XXwxyEqtGdaX0p6
+         zeIpqM9b9pMi6m31h0UZDVWrwPVUyURDIimub/pH9bauAsfqjJawedXoRxacuVJFoROT
+         tyBlnu9JJ9PYPxTyrbAjf4dsm5IRrVcwXl33XSWO+9gohBv2rwi3PB1DqyQJHT+iYPzC
+         7kqd807i50GHOxnZOH9pFPEmJNuh+SWnIvZXhJNS8dvETyblvAsTOKrU+tss8xo8M8eY
+         5rUS+QlPYzG8yxrTwJw9Y6H1sMUfGsTxruEWfORGAPd5g/gXeFd/rYEyIiHcVvISz2+t
+         UMYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739259959; x=1739864759;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YSAKHucokt7qfKmNQyIV/wNLM0zYjyzDQ14qjRlnafk=;
+        b=g5047zuAoq+g9UDDArsoO/gU0eZ3nn8KyuSf7M3aiKyXMs7+w4XAtXaPV67gHSo6ob
+         anFcvMdoxjuWMNyek+50GHPKhOFJsD8ThWy1rDnZBcULxIN80kXvZEtGj97Au7ivrUfC
+         NvBSXvgRtyAkq0d5qn2uNA8EAAoIPzG82bLDjhKadrTY+RyUWU5/c+u6tj87wrKd0uql
+         GAUtB2QK67GS/abB51GdTp2rXaMyvg87gHi0YY+dmAjv5heL+7OtQdX2bHdVoooEgh/8
+         lvtkfxzlBAMoVaAqzxp0U7pG85plSZeN8gh4J0JLy7YRdGwTE9hqT9dXPr1532u3LViX
+         /RGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXkNZi5NW+5J4NFr75nmOEWB/hENzmeJCYJC8LH1ZuSNOM21nazugep265cGJ5neB4YflWeaWC8/bS2XuA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMK3FYGuips6KolVUMvRKdX5SnutvQTpZBA49004vdrfSbBMhc
+	zqzV5cuIk/tgRBw7mA85b5NKSMGjLJPxl41VmqJHydMXzy/QXVrujsVUSI01Yws=
+X-Gm-Gg: ASbGnctsxudxcR2B5+BKUGLoTV5mPdVw/z+PH750nJqeOvxB6nOsMgevdX3NT0A9US1
+	GbTyXtbI/oz6No9DJTxlSp3chhvHksYiwvbz0QvdZvOpFHXQvqT/q/uOYNmOpjzvjqISgrYkilV
+	BcTM3LGLsjeDrVUbqCceGwD5pwrAI/GY+1WZM8h6N8eaMBrsauDhxKo/fbhVjA3eTV7SleSu9Vz
+	2SZJZk0UKjvi+YNXpgshXr3VBo9l44nJ22ZkbQA2BW6gfA2ySHe1VbACraw7tNQ/TBYgmJ8Chkc
+	lphWuilcNHg500t+/DVg/ocpZHr+FGHNOCVKCQxD/A==
+X-Google-Smtp-Source: AGHT+IFW6xSaUDrAWCZSPou2nD+/XK4bxqsbZZDruwD3E7NNexOes8n+tG2fP46G3dcaSbDR2HAwGA==
+X-Received: by 2002:a17:902:ea0d:b0:21d:dae6:d956 with SMTP id d9443c01a7336-21f4e6e1eb8mr275512905ad.24.1739259959260;
+        Mon, 10 Feb 2025 23:45:59 -0800 (PST)
+Received: from [10.84.150.121] ([203.208.167.150])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f36510e58sm90654975ad.10.2025.02.10.23.45.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 23:45:58 -0800 (PST)
+Message-ID: <616b5fdd-0f15-485a-b5fd-cdd6d7fc9d45@bytedance.com>
+Date: Tue, 11 Feb 2025 15:45:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ubuuob7mb3o5bxoumrxv4rufutgk3lvdmdery6d3bfc6rytfti@tcchhlechzzp>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] mm/mmu_gather: remove unused __tlb_remove_page()
+Content-Language: en-US
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, will@kernel.org,
+ aneesh.kumar@kernel.org, npiggin@gmail.com, peterz@infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250211034348.39531-1-bhe@redhat.com>
+From: Qi Zheng <zhengqi.arch@bytedance.com>
+In-Reply-To: <20250211034348.39531-1-bhe@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Jacopo, Naush,
 
-On Feb 07, 2025 at 17:49:19 +0100, Jacopo Mondi wrote:
-> Hi Jai
+
+On 2025/2/11 11:43, Baoquan He wrote:
+> Nobody is using __tlb_remove_page() now, clean it up.
 > 
-> On Tue, Feb 04, 2025 at 12:34:40PM +0530, Jai Luthra wrote:
-> > When the analog binning mode is used for high framerate operation, the
-> > pixel rate is effectively doubled. Account for this when setting up the
-> > pixel clock rate, and applying the vblank and exposure controls.
-> >
-> > The previous logic only used analog binning for RAW8, but normal binning
-> > limits the framerate on RAW10 480p [1]. So with this patch we switch to
-> > using special binning (with 2x pixel rate) wherever possible.
-> >
-> > [1]: https://github.com/raspberrypi/linux/issues/5493
-> >
-> > Co-developed-by: Naushir Patuck <naush@raspberrypi.com>
-> > Signed-off-by: Naushir Patuck <naush@raspberrypi.com>
-> > Co-developed-by: Vinay Varma <varmavinaym@gmail.com>
-> > Signed-off-by: Vinay Varma <varmavinaym@gmail.com>
-> > Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
-> > ---
-
-[snip]
-
-> > @@ -367,10 +426,12 @@ static int imx219_set_ctrl(struct v4l2_ctrl 
-> > *ctrl)
-> >  	struct i2c_client *client = v4l2_get_subdevdata(&imx219->sd);
-> >  	const struct v4l2_mbus_framefmt *format;
-> >  	struct v4l2_subdev_state *state;
-> > +	u32 rate_factor;
-> >  	int ret = 0;
-> >
-> >  	state = v4l2_subdev_get_locked_active_state(&imx219->sd);
-> >  	format = v4l2_subdev_state_get_format(state, 0);
-> > +	rate_factor = imx219_get_rate_factor(imx219);
-> >
-> >  	if (ctrl->id == V4L2_CID_VBLANK) {
-> >  		int exposure_max, exposure_def;
-> > @@ -399,7 +460,7 @@ static int imx219_set_ctrl(struct v4l2_ctrl *ctrl)
-> >  		break;
-> >  	case V4L2_CID_EXPOSURE:
-> >  		cci_write(imx219->regmap, IMX219_REG_EXPOSURE,
-> > -			  ctrl->val, &ret);
-> > +			  ctrl->val / rate_factor, &ret);
-> >  		break;
-> >  	case V4L2_CID_DIGITAL_GAIN:
-> >  		cci_write(imx219->regmap, IMX219_REG_DIGITAL_GAIN,
-> > @@ -416,7 +477,7 @@ static int imx219_set_ctrl(struct v4l2_ctrl *ctrl)
-> >  		break;
-> >  	case V4L2_CID_VBLANK:
-> >  		cci_write(imx219->regmap, IMX219_REG_FRM_LENGTH_A,
-> > -			  format->height + ctrl->val, &ret);
-> > +			  (format->height + ctrl->val) / rate_factor, &ret);
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>   include/asm-generic/tlb.h | 6 ------
+>   1 file changed, 6 deletions(-)
 > 
-> 
-> Isn't this (and exposure) compensatd by the doubled pixel rate ?
-> 
+> diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+> index e402aef79c93..9ae4ca02f29f 100644
+> --- a/include/asm-generic/tlb.h
+> +++ b/include/asm-generic/tlb.h
+> @@ -489,12 +489,6 @@ static inline void tlb_remove_page_size(struct mmu_gather *tlb,
+>   		tlb_flush_mmu(tlb);
+>   }
+>   
+> -static __always_inline bool __tlb_remove_page(struct mmu_gather *tlb,
+> -		struct page *page, bool delay_rmap)
+> -{
+> -	return __tlb_remove_page_size(tlb, page, delay_rmap, PAGE_SIZE);
+> -}
+> -
+>   /* tlb_remove_page
+>    *	Similar to __tlb_remove_page but will call tlb_flush_mmu() itself when
 
-The datasheet mentions that FRM_LENGTH_A register is in units of 2xLines 
-when analog binning mode is selected. And the exposure is also usually 
-in unit of lines, so I assume that is why the same division was made in 
-the original commit by Naush [1]
+                    ^
+                    please update this too
 
-[1] https://github.com/raspberrypi/linux/commit/caebe4fe817b5079
+Otherwise:
 
-> Applications use the pixel rate to compute the line duration and from
-> there transform the frame duration and the exposure in lines, don't
-> they ?
+Reviewed-by: Qi Zheng <zhengqi.arch@bytedance.com>
 
-While this change doesn't update the user-side of the control values, 
-only the register values, I wonder if there is a clean way to handle 
-this without updating some assumptions in the application.
-
-The IMX219 pixel clock behaves differently with analog binning compared 
-to (most of our) intuitions, where rather than doubling the horizontal 
-pixel clock, each line is still read-out in the same time but the number 
-of lines read are halved.. at least that's the best explanation I have 
-from these results:
-https://lore.kernel.org/linux-media/zla2sogd7ov3yz2k2je6zrgh3uzeermowlaixt3qkcioturppo@tswbw354tpdk/
-
-And that is why the total pixel rate is doubled, but the actual line 
-duration should be the same as a digitally binned or cropped format.
-
-> 
-> Overall, very nice to be able to double the achievable frame rate
-> without any artifacts! Good job!
-> 
-> Thanks
->   j
-> 
-
-Thanks,
-Jai
-
-> >  		break;
-> >  	case V4L2_CID_HBLANK:
-> >  		cci_write(imx219->regmap, IMX219_REG_LINE_LENGTH_A,
-
-[snip]
+>    *	required.
