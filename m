@@ -1,117 +1,132 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96F828F5;
-	Tue, 11 Feb 2025 00:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA5B28F5
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739233578; cv=none; b=DKIREyciyqOEBj89yMe+u5QbnTGtYd3gyPRF+CrmVvCNBbPTrQOiHtlxnTzHW4wqKpsepwM2wrw5ALUtrrTbrxTydaYEf+XyIsGl/ZhEwg2vItmFOzz+Aajd6YKdp3sVs6akU/Ohnlt6kY3X61H6Pi+/Lp9PYuXfE4CcScR0Ayw=
+	t=1739233646; cv=none; b=IpillZe6E/Xs1w//wlzhej+4Pd4W9d089J+4ZcVgccEcbRScvo0VtQUoZOkygfRFC+62PJJInD5oEPmHsXP7HWRXQD85lnm6n9YoRKMMsjcluq4Wv99tDk/+2UDn+TlPKSNstVEf/WDg0U7nLxuHqv4zbsg6cGaSFQ6HMlvccWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739233578; c=relaxed/simple;
-	bh=z2OeqFCBfb8QsgdfefgfDDetS3DZRmFPDxCvjSpTvjk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=O32SjVyqji5CJR5bXqrUguRmFC/b8cYl3VsuK9CoqtfNO8ITWPzX2ZsOR/rm7rwhhKDK9pNZFMxt0hbNNeOuWIwMLtA66poRqFxlc14zUTt0Jvc/JcZYIboP2VnHewFScqWVt6SzB3pUKfaAkUW/GM+dg1la7LxOpLVbUWcv0Yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Ls10v3uy; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Ls10v3uy"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AI3ceE006115;
-	Tue, 11 Feb 2025 00:26:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	fykXzZ7ZNKsI71mE5Dgav629B7mqYSKgM2IeldXiYSg=; b=Ls10v3uyko+xs6Mr
-	ARcQuVmqaRga+rr2ycPq7iNUveiSiMwRLZf920AUxsVl6+iPgPQyomrMfsy1gt3H
-	Af9t+KJiARJFhTv0Z/A6PWPeEPN115ET1pzoefUHDVl/67v8BwIySyaOKSwDd0H1
-	t+wwovahK+LcjEEv60T31VNtxXikK01Nqy/iOibUi8SFbco+AyIGoFHKMPaDJyWU
-	EoQ5hjW6DOg/pSjgaG1Q1j7JJLSKBMQ5QpzUN7TrdQFWc033G4m0oqBC2MVJZTQd
-	6Qx6nOXHGXeZNmz1GvC3JEO/NQBR4faH3KVun7r1rV5SBxDN5S7jnUfNQqNitRNq
-	7QyiHA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qe5mtar1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 00:26:09 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51B0Q8h4029026
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 00:26:08 GMT
-Received: from [10.71.110.136] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Feb
- 2025 16:26:07 -0800
-Message-ID: <ef6b4d5c-df4c-478f-8544-7dacd90b88bf@quicinc.com>
-Date: Mon, 10 Feb 2025 16:26:06 -0800
+	s=arc-20240116; t=1739233646; c=relaxed/simple;
+	bh=/YeEb0tef1pagaycgJWtt7V7ZFXRS2ZvTb2YLOs0fP4=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=lQ/ah0AMWmHnYDuA2QMJ7f5SKhkaRSwWJugCTUdiQL0X2FBVqkFzJFKm275E3M6Pj/QOyWvSs2OMyVLvnNuxMApqKV3FOrRSK/yW33i4D3w2+iJ+LWZZOcOAS4j/QejVsTrvRmqEshAzYy3ngnqJUp9wb5E9sdXq7u7wMC+bW2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d1466cbaddso24858285ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:27:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739233643; x=1739838443;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QwdoP5xDKeiD3xhc6dIZ6hGByqbJddUcA5ugMI1BuaI=;
+        b=EDerHhOUctbUTrqCYHu7LGkFs4jVtog+wzrYT2HTY7TdgQb9xClf7424R4AxsTbDlJ
+         zxZrIVM9dmtDyTGzKayub/eLJNn4FFnaIFaDq6RgOYoS3ByWVFxssnDTJoIsuBLjVbAe
+         SuNU8rwMZhn1miDVYNBm8cv8/TOcQQ+QecKKxOvkygjoJMzxVJQd14EO2QbPfNVgd5tu
+         9dUwE/9QLkt33JP8UuNyTiQJkzADCyTijch3LeGYn98gwEqWay241Cdop2obU+4ELQ8+
+         5sScSXTyrXSqzm6BB6/YVVI4C/ZYHvXi7qYvlrEX0tzC9UPR/domUMEAcOMCeZ+8c02C
+         X5OQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXIavO5aYumNyj5OM7LK6uC2MqooZdf3A7Qa9S/eUb+MQHKdpTiC6T0CeO+sxLo3vUynpronutKoTdAeeY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUNdorsJ2mLBc/3ekxSl21iLFLSw2XHkl4LtFKDDcOT4xr/eR/
+	xxtf6waoq61gR+PHcW2LEr6MEfYGoCawIyQ50rf/EdI4hBvevoV3KmqHWDiZm1TJAoVSYkRt+DV
+	5dhuwAlXc7VAHHaCRzu4UBZbGwsD6pi4D4u+SpYfCh6GKFBVW2VYB8Ic=
+X-Google-Smtp-Source: AGHT+IGTGS7ia3PYzneaQLW+nT8/+EH1b+SsvE35s5ycLUV2tAF3AHXI2UGn1JWiY2226OEcvXE+jX+tqsksT2LZKLbizKvxS5Vx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] drm/msm/dsi/phy: Protect PHY_CMN_CLK_CFG0 updated
- from driver side
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Rob Clark
-	<robdclark@gmail.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Sean
- Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David
- Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20250203-drm-msm-phy-pll-cfg-reg-v2-0-862b136c5d22@linaro.org>
- <20250203-drm-msm-phy-pll-cfg-reg-v2-1-862b136c5d22@linaro.org>
-Content-Language: en-US
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <20250203-drm-msm-phy-pll-cfg-reg-v2-1-862b136c5d22@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Ux8XyDGsldKWABFEwHyztXvO7Qac-Ged
-X-Proofpoint-ORIG-GUID: Ux8XyDGsldKWABFEwHyztXvO7Qac-Ged
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_12,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 clxscore=1015 suspectscore=0 mlxscore=0
- lowpriorityscore=0 phishscore=0 impostorscore=0 malwarescore=0 spamscore=0
- mlxlogscore=985 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502100180
+X-Received: by 2002:a05:6e02:1282:b0:3d1:54ce:a8f9 with SMTP id
+ e9e14a558f8ab-3d16f53eefamr11565025ab.10.1739233643578; Mon, 10 Feb 2025
+ 16:27:23 -0800 (PST)
+Date: Mon, 10 Feb 2025 16:27:23 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67aa996b.050a0220.3d72c.0057.GAE@google.com>
+Subject: [syzbot] [jfs?] kernel BUG in lbmIODone (2)
+From: syzbot <syzbot+856d1897cd91a6a435c9@syzkaller.appspotmail.com>
+To: jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	shaggy@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    2014c95afece Linux 6.14-rc1
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=10e40b18580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b8a65ac161350c5e
+dashboard link: https://syzkaller.appspot.com/bug?extid=856d1897cd91a6a435c9
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/c767824b323f/disk-2014c95a.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/81289e194973/vmlinux-2014c95a.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/4a33d49982f5/Image-2014c95a.gz.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+856d1897cd91a6a435c9@syzkaller.appspotmail.com
+
+BUG at fs/jfs/jfs_logmgr.c:2303 assert(bp->l_flag & lbmRELEASE)
+------------[ cut here ]------------
+kernel BUG at fs/jfs/jfs_logmgr.c:2303!
+Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 0 UID: 0 PID: 16 Comm: ksoftirqd/0 Not tainted 6.14.0-rc1-syzkaller-g2014c95afece #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : lbmIODone+0x12c4/0x1318 fs/jfs/jfs_logmgr.c:2303
+lr : lbmIODone+0x12c4/0x1318 fs/jfs/jfs_logmgr.c:2303
+sp : ffff800097d778f0
+x29: ffff800097d77980 x28: 1fffe0001b405141 x27: 1ffff00012037934
+x26: 1fffe0001e20724f x25: dfff800000000000 x24: 0000000000000000
+x23: ffff0000da028a08 x22: 0000000000000000 x21: 0000000000000000
+x20: 0000000000000020 x19: ffff0000da028a00 x18: 0000000000000008
+x17: 0000000000000000 x16: ffff8000832d977c x15: 0000000000000001
+x14: 1ffff00012faee78 x13: 0000000000000000 x12: 0000000000000000
+x11: 0000000000000102 x10: 0000000000ff0100 x9 : ac6013805dc83c00
+x8 : ac6013805dc83c00 x7 : 0000000000000001 x6 : 0000000000000001
+x5 : ffff800097d770b8 x4 : ffff80008fcbefc0 x3 : ffff800083275f78
+x2 : 0000000000000001 x1 : 0000000100000101 x0 : 000000000000003f
+Call trace:
+ lbmIODone+0x12c4/0x1318 fs/jfs/jfs_logmgr.c:2303 (P)
+ bio_endio+0x840/0x87c block/bio.c:1548
+ blk_update_request+0x4ac/0xda0 block/blk-mq.c:983
+ blk_mq_end_request+0x54/0x88 block/blk-mq.c:1145
+ lo_complete_rq+0x188/0x2f4 drivers/block/loop.c:395
+ blk_complete_reqs block/blk-mq.c:1220 [inline]
+ blk_done_softirq+0x11c/0x168 block/blk-mq.c:1225
+ handle_softirqs+0x320/0xd34 kernel/softirq.c:561
+ run_ksoftirqd+0x70/0xc0 kernel/softirq.c:950
+ smpboot_thread_fn+0x4b0/0x90c kernel/smpboot.c:164
+ kthread+0x65c/0x7b0 kernel/kthread.c:464
+ ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:862
+Code: d004fd63 91188063 52811fe2 979153a6 (d4210000) 
+---[ end trace 0000000000000000 ]---
 
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-On 2/3/2025 9:29 AM, Krzysztof Kozlowski wrote:
-> PHY_CMN_CLK_CFG0 register is updated by the PHY driver and by two
-> divider clocks from Common Clock Framework:
-> devm_clk_hw_register_divider_parent_hw().  Concurrent access by the
-> clocks side is protected with spinlock, however driver's side in
-> restoring state is not.  Restoring state is called from
-> msm_dsi_phy_enable(), so there could be a path leading to concurrent and
-> conflicting updates with clock framework.
-> 
-> Add missing lock usage on the PHY driver side, encapsulated in its own
-> function so the code will be still readable.
-> 
-> Fixes: 1ef7c99d145c ("drm/msm/dsi: add support for 7nm DSI PHY/PLL")
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->   drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c | 13 +++++++++++--
->   1 file changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-> index 031446c87daec0af3f81df324158311f5a80014e..c164f845653816291ad96c863257f75462ef58e7 100644
-> --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-> +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-> @@ -372,6 +372,15 @@ static void dsi_pll_enable_pll_bias(struct dsi_pll_7nm *pll)
->   	ndelay(250);
->   }
->   
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
