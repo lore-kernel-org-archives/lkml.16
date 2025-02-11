@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9912638B2;
-	Tue, 11 Feb 2025 01:32:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1861253B74;
+	Tue, 11 Feb 2025 01:32:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739237572; cv=none; b=a2bYgFnJc4IMz8KvBOpJd1xMOsM0oc00fnMGqrROhA7+wI5jqu5gaPjjk7OEbZ3EjV8Ste3FVDc6uUa8LkXu0TvFIb+JYKgLlZL+R0VJCskMGfKiFaV0gpgARkyMW6iWTAw0NQV1NCZf8nNxBzhXpr27GkhVlairBMECjlQkOI8=
+	t=1739237575; cv=none; b=VfCM6N1jy0xzA55pptfAuwa15ivBNelyv+3ifkYnTcJ84vHqiSHoXJxFmCjpa88M+QMkWNe3J2WUvXK2w22HrQ5nmi3WzJB/NnqG8Hnclx1dkh44Zei2TFFaaKFDSVWdwrgEy78CGzq/GTbV6OZNGVjKkVAljz8qltathX9AOzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739237572; c=relaxed/simple;
-	bh=cLtRJnDZFOfI/+RVHSMPiXwMeY16TknHn0hFWvnDLjI=;
+	s=arc-20240116; t=1739237575; c=relaxed/simple;
+	bh=KufTdAMR8pZA9otpNfJUJB9G7SALCvrPjOzcgNOR4RA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nLxGKESVMaPyCTDA//cvsjKNTYmH9+uNz4X8Bi14GOaSOaIzsD8iIL2eyA/DgsQ1KvlohRg5DJArvDL72kc0tc5YNixqhrHZ6KqqFhIrHLS8Ynd7ShDZp3i+BCuf4N371M3/5vsSz7WSwLFhHkRix4ByjKo2fk86aq1WAAeoBDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HuXggJYH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=C/ViI7322yrkMA2RVBI32FrFN/APmhgPx9lanYasA0YFio6LFbx5k/rSBCc0N3BepG1sfog1Pwvk9T0e7HYurpFt0RUpQdfoGfBrKyOPqxOIUVhmfRbm5ZZOT/zr1L2ItASsJ0Cc16cwF0smUOl4UpGCN9o6gbyN1kM5H4S7FCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MD6GRDKd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HuXggJYH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B30C4C4CEDF;
-	Tue, 11 Feb 2025 01:32:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MD6GRDKd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A0A8C4CEE7;
+	Tue, 11 Feb 2025 01:32:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739237572;
-	bh=cLtRJnDZFOfI/+RVHSMPiXwMeY16TknHn0hFWvnDLjI=;
+	s=k20201202; t=1739237575;
+	bh=KufTdAMR8pZA9otpNfJUJB9G7SALCvrPjOzcgNOR4RA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HuXggJYHnmGgIQjrHXgjzpKNgXHBM5ZlCmy7uyd61ck9BJWWKWycb2hsJwKU7VotE
-	 b9Mfn4hIfQRC4h9EGDY3Rw1wvh0QD6cnYy5w7piUyuj2wSL/71RFHfVw2Z9DofrsdR
-	 vAYpYAZbUJxikOQneYbry2H2lBqptJIEh4x9maeSvN3Jqzktmr0BK8iHEARO/4jWrI
-	 ERxPgVBSepadDERcQKi7wE2D+qAQcTQiMa3HBNB/snLN9UEKrYLL9FXVi0Eu1G6GHG
-	 KGj1LraNZm+DosEyQ31zPlcIsUV6VfnwVckNmKtg8p2WWG5bql++fGmkDAY9oPuo0z
-	 OLQ7LkII9tRMQ==
+	b=MD6GRDKdH6SmddAeIfvHEcJH/i52nFJX906idXj5Bys7Fo4DQmEy6pEnktmTzVx3W
+	 kLynXFka86e/63M6Td/1QNNf4pkXZCTWBQypXXAoCdjpisSTdBDti5sZ7tMeUVksSu
+	 yFNkC1/SGXcNhdf/xnognwrg4Zu+zEpm+/QouLiUwIp9iMxm/X1hRTlZGR4uXVRJIm
+	 XINnLANGhiUWrIe+WoF7joB87O3Hj3bL47/6HVnxiJZhXhiovPRBNcKFx1eSs5Ajxe
+	 hT+L6Oxa9lihMer9vpnQNRnD2Lm2QkereydYMQ51v+WTDda9WryLevfT+SXyu+HoXA
+	 ANSmGgoakDBgA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
+Cc: Chengen Du <chengen.du@canonical.com>,
+	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	anna-maria@linutronix.de,
-	frederic@kernel.org,
-	nathan@kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH AUTOSEL 5.10 2/8] hrtimers: Mark is_migration_base() with __always_inline
-Date: Mon, 10 Feb 2025 20:32:42 -0500
-Message-Id: <20250211013248.4098848-2-sashal@kernel.org>
+	pjones@redhat.com,
+	konrad@kernel.org
+Subject: [PATCH AUTOSEL 5.10 4/8] iscsi_ibft: Fix UBSAN shift-out-of-bounds warning in ibft_attr_show_nic()
+Date: Mon, 10 Feb 2025 20:32:44 -0500
+Message-Id: <20250211013248.4098848-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250211013248.4098848-1-sashal@kernel.org>
 References: <20250211013248.4098848-1-sashal@kernel.org>
@@ -53,77 +51,39 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.234
 Content-Transfer-Encoding: 8bit
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Chengen Du <chengen.du@canonical.com>
 
-[ Upstream commit 27af31e44949fa85550176520ef7086a0d00fd7b ]
+[ Upstream commit 07e0d99a2f701123ad3104c0f1a1e66bce74d6e5 ]
 
-When is_migration_base() is unused, it prevents kernel builds
-with clang, `make W=1` and CONFIG_WERROR=y:
+When performing an iSCSI boot using IPv6, iscsistart still reads the
+/sys/firmware/ibft/ethernetX/subnet-mask entry. Since the IPv6 prefix
+length is 64, this causes the shift exponent to become negative,
+triggering a UBSAN warning. As the concept of a subnet mask does not
+apply to IPv6, the value is set to ~0 to suppress the warning message.
 
-kernel/time/hrtimer.c:156:20: error: unused function 'is_migration_base' [-Werror,-Wunused-function]
-  156 | static inline bool is_migration_base(struct hrtimer_clock_base *base)
-      |                    ^~~~~~~~~~~~~~~~~
-
-Fix this by marking it with __always_inline.
-
-[ tglx: Use __always_inline instead of __maybe_unused and move it into the
-  	usage sites conditional ]
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250116160745.243358-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Chengen Du <chengen.du@canonical.com>
+Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/hrtimer.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ drivers/firmware/iscsi_ibft.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index 7f9f2fc183fe3..c202488695c46 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -144,11 +144,6 @@ static struct hrtimer_cpu_base migration_cpu_base = {
- 
- #define migration_base	migration_cpu_base.clock_base[0]
- 
--static inline bool is_migration_base(struct hrtimer_clock_base *base)
--{
--	return base == &migration_base;
--}
--
- /*
-  * We are using hashed locking: holding per_cpu(hrtimer_bases)[n].lock
-  * means that all timers which are tied to this base via timer->base are
-@@ -273,11 +268,6 @@ switch_hrtimer_base(struct hrtimer *timer, struct hrtimer_clock_base *base,
- 
- #else /* CONFIG_SMP */
- 
--static inline bool is_migration_base(struct hrtimer_clock_base *base)
--{
--	return false;
--}
--
- static inline struct hrtimer_clock_base *
- lock_hrtimer_base(const struct hrtimer *timer, unsigned long *flags)
- {
-@@ -1275,6 +1265,18 @@ static void hrtimer_sync_wait_running(struct hrtimer_cpu_base *cpu_base,
- 	}
- }
- 
-+#ifdef CONFIG_SMP
-+static __always_inline bool is_migration_base(struct hrtimer_clock_base *base)
-+{
-+	return base == &migration_base;
-+}
-+#else
-+static __always_inline bool is_migration_base(struct hrtimer_clock_base *base)
-+{
-+	return false;
-+}
-+#endif
-+
- /*
-  * This function is called on PREEMPT_RT kernels when the fast path
-  * deletion of a timer failed because the timer callback function was
+diff --git a/drivers/firmware/iscsi_ibft.c b/drivers/firmware/iscsi_ibft.c
+index 7127a04bca195..0d96dbbba74e6 100644
+--- a/drivers/firmware/iscsi_ibft.c
++++ b/drivers/firmware/iscsi_ibft.c
+@@ -312,7 +312,10 @@ static ssize_t ibft_attr_show_nic(void *data, int type, char *buf)
+ 		str += sprintf_ipaddr(str, nic->ip_addr);
+ 		break;
+ 	case ISCSI_BOOT_ETH_SUBNET_MASK:
+-		val = cpu_to_be32(~((1 << (32-nic->subnet_mask_prefix))-1));
++		if (nic->subnet_mask_prefix > 32)
++			val = cpu_to_be32(~0);
++		else
++			val = cpu_to_be32(~((1 << (32-nic->subnet_mask_prefix))-1));
+ 		str += sprintf(str, "%pI4", &val);
+ 		break;
+ 	case ISCSI_BOOT_ETH_PREFIX_LEN:
 -- 
 2.39.5
 
