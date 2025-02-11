@@ -1,116 +1,133 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.avm.de (mail.avm.de [212.42.244.119])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298F81F193C;
-	Tue, 11 Feb 2025 10:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457251F193C;
+	Tue, 11 Feb 2025 10:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739271379; cv=none; b=fUUFCu2UqOaEwLosfEFFeZbk4oir8LVRp32mnF7R6lvBtr103ywfdeWwPtepwCtkx8kVOXOfqOXzHihye+YJQpukrjGXfZZx58oLZe/MJn3hw9vQKnrzhRmwVBbir1/y8ba4K26TQLmtpR1LT01kJNH+/qE7APeAc4t+ErQtOto=
+	t=1739271398; cv=none; b=eXF1tYMTXFzFBwchsqRJtQKjG4QpoJ8tNYtIN1b/ciz2EiKpVlME3eb+yh+gfS0DeMwya0Ej4MtI0EVu0T49I1fY9PpBgcA4+6Dxrp+ZH3LjBtsEcmR51BEMn68OG4wHSByZIfYcebl22MK7fZ/arc2V+MCuFx1IjuRgYIeUmGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739271379; c=relaxed/simple;
-	bh=Y1XrKCOtv9qxBYR3Su1pCe6JZ2L33Fio3MEaQAqVVOE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bSRz1r1ZX7cgQGI7pDsDBSFjzsnCMpxz1FgZrr0lB2NV+wk9XqLjEbCc0C/jbrOx3rVR+WDWSEqjuQME3bfLy4yQTmdyrtwS5uLoCosY8OV8nYuFAa6eMGYJw638yhcQZ29Qhwo+X3/pCcvFpW5in/Z1Q5tlG3YgthS+xPTNFU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=biTSKRBV; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="biTSKRBV"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43618283d48so37228155e9.1;
-        Tue, 11 Feb 2025 02:56:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739271376; x=1739876176; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jnLzczR9h9GUGbhBy5Ok+9WYUKgSFnCQkNKMm74353I=;
-        b=biTSKRBVWIAssgi74uPlDPjrUrYh+f1F3KX41nU67RiW0I2mS60I16LpBmrs+4+xRY
-         cSXI8BCfRncv3yUohpOYY4ao1xejYFi6aT5rgwcMsTkM25MudKak5FtwL4GQ4veWAgOl
-         qk5ynP88CECEivkT0rkXt5pXefMaW1ghG7ASEIIyRalm+gszRjL1VD4N8tOvWhbJaYzF
-         CM4igs1fhsCkz1MdzNX4gtdSBDAny2MFdumSchLHTByuv5jhxRHTQXhOBlmzR14vEGZV
-         fH4jOWsm4v/b5+nDMgclQxwyDox4ELjuQVpwaoMZc6ch94hP42YdT5QtU6l28BrDqbzb
-         VpRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739271376; x=1739876176;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jnLzczR9h9GUGbhBy5Ok+9WYUKgSFnCQkNKMm74353I=;
-        b=ZGPo9lHyKTvEVffQiQQZX3NusTFOtYxeR6Lnptrrp7R7j9/fE/87wN6ClhV3QpH00C
-         Q9o9G7/dZ3l0NLCo6TwrIf9xfLMAc08DhZmCkwP7azWnOhxoIg3Ntb4VLBLJGqdGjyja
-         lxPzGLAglLbYVSioRcj4PZPJJ+hhmR7MTF46ePYf6fjdHIU9jdS6ZZ0LUAAcQF7SKHVs
-         9Top0sN7va6ib2AT1qDych2rWifRfm+puKqdVXosJVpzXjUmawBUNCjmoPc8LFibjGLw
-         jpWb2nzqxELVZK31NgFbGR0hz2VMggvAkgGUFpOwxlS2FhXnNn1QJOE1ZKb+jKzfo5Vn
-         Jkyw==
-X-Forwarded-Encrypted: i=1; AJvYcCUK92R2Hud1II8GOm+TWXdzEVc4a91iXKkb2sBQybLo5ONNxsX0KAUKIHh2hekCQ09k+JwIgKnMWf8=@vger.kernel.org, AJvYcCWNqNcgDKuYSq5/gT9vBnSgcu0OQpcLfpCqnxGzTtaZsOxWvVi2maMnWzYv0hPk9m0INTTThJYQ4Tg1Auuy@vger.kernel.org
-X-Gm-Message-State: AOJu0YwofMZiBgAkdQpyQS6FLIhMInrquFHj6iHqOLEISLCaAyX03T9W
-	Y5QguR7hwae1ajVxfvhHgUHB1pB2OZOyG+71vBz+GaHC4QT3RTI9
-X-Gm-Gg: ASbGnctwiwgnEhcE3D7ZiT2WAIQ8Rl3HiMjYy9YJ/wyouwwxKovmIH6Fas1L3pMFG8p
-	XljMha72fxJtLjSbAeV9bMTZuZg8HB8qbjuxeXzj+VlN032PdLqRwd+E+JOvXTz7S4h1NOVvP67
-	A1MtCI6O2YXhwCNxFD+0CGWfN9MHxgWHkiy3f3++/w32DoVdD7WPeLpDtcDZtR5NvSTcYoZiVSg
-	psRJiXr8tCMH2J0KlHLZD6YnlqgjrqFWZlceKgM3IXPrGVcESNfeHVdfZZP+RnmPaFzNXjBzAnS
-	TOzpOEsIzacQSNzS25PiBJseCVAtbjliYcUI5Jozwn1X
-X-Google-Smtp-Source: AGHT+IHwCi9jaCgG3lTclzF6uZLYafji1VSP1+CRBm1b+aI3RIZ/Hk32x4rxvZSCxm8+fr6gEvBlwA==
-X-Received: by 2002:a05:600c:1d19:b0:434:a711:ace4 with SMTP id 5b1f17b1804b1-4394c8213d6mr33966545e9.17.1739271376099;
-        Tue, 11 Feb 2025 02:56:16 -0800 (PST)
-Received: from prasmi.Home ([2a06:5906:61b:2d00:cfdc:8258:1d0b:42be])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4394376118esm64088655e9.40.2025.02.11.02.56.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 02:56:15 -0800 (PST)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] clk: renesas: rzv2h-cpg: Update error message
-Date: Tue, 11 Feb 2025 10:56:03 +0000
-Message-ID: <20250211105603.195905-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250211105603.195905-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250211105603.195905-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	s=arc-20240116; t=1739271398; c=relaxed/simple;
+	bh=3rEaIwGr0IJXL2qhfiPf6ofu0wVASditL9M/DYf/cr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=fzGslzcuY+4+yzzs1K1ha2bra41SI7KnIvP9CiAhRL05bIa5rTaVbuvsxvcf1yz1ReJ6ZQkyH8Nnj/V2E278RvE3x3UmBEKXBiF5bUcb0GHOPxTnwMZEoB8pHuKNxrmFb+HCer8IRTWvq6Jd7wpi+m4gAoWGoonVg+pp0Rw5SZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=avm.de; arc=none smtp.client-ip=212.42.244.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=fjasle.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
+Received: from [212.42.244.71] (helo=mail.avm.de)
+	by mail.avm.de with ESMTP (eXpurgate 4.52.1)
+	(envelope-from <n.schier@avm.de>)
+	id 67ab2b6b-72a9-7f0000032729-7f00000191e0-1
+	for <multiple-recipients>; Tue, 11 Feb 2025 11:50:19 +0100
+Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
+	by mail.avm.de (Postfix) with ESMTPS;
+	Tue, 11 Feb 2025 11:50:19 +0100 (CET)
+Received: from buildd.core.avm.de (buildd-sv-01.avm.de [172.16.0.225])
+	by mail-auth.avm.de (Postfix) with ESMTPA id 22A86807B2;
+	Tue, 11 Feb 2025 11:50:19 +0100 (CET)
+Received: from l-nschier-z2.ads.avm.de (unknown [IPv6:fde4:4c1b:acd5:7792::1])
+	by buildd.core.avm.de (Postfix) with ESMTP id 130D418B43E;
+	Tue, 11 Feb 2025 11:50:19 +0100 (CET)
+Received: from nicolas by l-nschier-z2.ads.avm.de with local (Exim 4.98)
+	(envelope-from <n.schier@avm.de>)
+	id 1thnqM-000000058pF-29Ha;
+	Tue, 11 Feb 2025 11:50:18 +0100
+Date: Tue, 11 Feb 2025 11:50:18 +0100
+From: Nicolas Schier <nicolas@fjasle.eu>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Richard Weinberger <richard@nod.at>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+Subject: Re: [PATCH v1] kbuild: Allow building of samples with UML
+Message-ID: <20250211-efficient-pink-dolphin-dcfd4d@l-nschier-z2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK7LNATuekKKAtp7W+vzwEmaPW52YzPzqTfrJNKpXPV1kGhR8g@mail.gmail.com>
+X-purgate-ID: 149429::1739271019-CC7B9F3E-2FB39A69/0/0
+X-purgate-type: clean
+X-purgate-size: 2663
+X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
+X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
+X-purgate: clean
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Tue, Feb 11, 2025 at 06:44:30PM +0900, Masahiro Yamada wrote:
+> On Wed, Dec 18, 2024 at 8:51 PM Mickaël Salaün <mic@digikod.net> wrote:
+> >
+> > It's useful to build samples/* with UML and the only blocker is the
+> > artificial incompatibility with CONFIG_HEADERS_INSTALL.
+> >
+> > Allow the headers_install target with ARCH=um, which then allow building
+> > samples (and tests using them) with UML too:
+> >
+> >   printf 'CONFIG_SAMPLES=y\nCONFIG_HEADERS_INSTALL=y\nCONFIG_SAMPLE_LANDLOCK=y\n' >.config
+> >   make ARCH=um olddefconfig headers_install
+> >   make ARCH=um samples/landlock/
+> >
+> > Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+> > Cc: Johannes Berg <johannes@sipsolutions.net>
+> > Cc: Masahiro Yamada <masahiroy@kernel.org>
+> > Cc: Nathan Chancellor <nathan@kernel.org>
+> > Cc: Nicolas Schier <nicolas@fjasle.eu>
+> > Cc: Richard Weinberger <richard@nod.at>
+> > Fixes: 1b620d539ccc ("kbuild: disable header exports for UML in a straightforward way")
+> > Signed-off-by: Mickaël Salaün <mic@digikod.net>
+> > ---
+> >  Makefile          | 1 -
+> >  lib/Kconfig.debug | 1 -
+> >  2 files changed, 2 deletions(-)
+> >
+> > diff --git a/Makefile b/Makefile
+> > index e5b8a8832c0c..6e2cce16a2a3 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -1355,7 +1355,6 @@ hdr-inst := -f $(srctree)/scripts/Makefile.headersinst obj
+> >
+> >  PHONY += headers
+> >  headers: $(version_h) scripts_unifdef uapi-asm-generic archheaders archscripts
+> > -       $(if $(filter um, $(SRCARCH)), $(error Headers not exportable for UML))
+> >         $(Q)$(MAKE) $(hdr-inst)=include/uapi
+> >         $(Q)$(MAKE) $(hdr-inst)=arch/$(SRCARCH)/include/uapi
+> >
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index f3d723705879..fac1208f48e4 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -473,7 +473,6 @@ config READABLE_ASM
+> >
+> >  config HEADERS_INSTALL
+> >         bool "Install uapi headers to usr/include"
+> > -       depends on !UML
+> >         help
+> >           This option will install uapi headers (headers exported to user-space)
+> >           into the usr/include directory for use during the kernel build.
+> > --
+> > 2.47.1
+> >
+> 
+> This patch was not even compile-tested.
+> 
+> Apply this patch.
+> Enable CONFIG_HEADERS_INSTALL and CONFIG_UAPI_HEADERS_TEST.
+> "make ARCH=um" and see the errors.
+> 
+> The reason is obvious, UML is a kernel. No such userspace.
 
-Update the error message in `rzv2h_mod_clock_endisable()` to provide
-clearer debugging information. Instead of printing only the register
-address, include both the `GET_CLK_ON_OFFSET(reg)` offset and the
-corresponding `clk` name (`%pC`). This enhances readability and aids
-in debugging clock enable failures.
+oh, I sorry.  I should have seen that when reviewing, but confused
+myself as I missed the UAPI_HEADERS_TEST and just looked at a
+"successful" run of 'make headers_install'.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/clk/renesas/rzv2h-cpg.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clk/renesas/rzv2h-cpg.c b/drivers/clk/renesas/rzv2h-cpg.c
-index a4c1e92e1fd7..419dc8cd2766 100644
---- a/drivers/clk/renesas/rzv2h-cpg.c
-+++ b/drivers/clk/renesas/rzv2h-cpg.c
-@@ -541,8 +541,8 @@ static int rzv2h_mod_clock_endisable(struct clk_hw *hw, bool enable)
- 	error = readl_poll_timeout_atomic(priv->base + reg, value,
- 					  value & bitmask, 0, 10);
- 	if (error)
--		dev_err(dev, "Failed to enable CLK_ON %p\n",
--			priv->base + reg);
-+		dev_err(dev, "Failed to enable CLK_ON 0x%x/%pC\n",
-+			GET_CLK_ON_OFFSET(clock->on_index), hw->clk);
- 
- 	return error;
- }
--- 
-2.43.0
-
+Kind regards,
+Nicolas
