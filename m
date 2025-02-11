@@ -1,73 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F03261594
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 19:03:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128D426215C
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 19:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739300595; cv=none; b=QJO4aniXqrtulwqaXvH2cMb6G8xt4r0KwpnpLthO73+yOOcI9WhninQ2/Hw+P01nSs9I214hnrwglPr2TosedC2Q4KR95dUa2HDA9VfLPKqKoz3a5fCxmCfD0CkSi0nqTFpCM/dd8BA3C7z5XRzkZOUFpru+QjEKOMVVla5lF8w=
+	t=1739300615; cv=none; b=jXhMnuOSxDb5SaZ99RM7nJLuHxFLRRP6olTWAWH2H05vStlwoHVDRVHxKm8NNUhKNgNJ3KOh2hWw7pWRrldyCVoLA4/ns2FpPYeiBJYhblKwpnLTPC/05Apbnyvw3/YNwnFdAggxxyjSY94GjnXP3GhbeuLryKJLPj8kXRx9eZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739300595; c=relaxed/simple;
-	bh=InLr37aMSRGpQcwIYcHkaraKipAuhUz5WKTz8aS7SD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S+z3cyPderU/G1vt7CL0bXpQDUGuGsZQBQ3EJB6TPIdjnaVvXo5Qshvri3ZPOtWgOrnR9Iv9yEKiBlZt8QVn5JpWwrMag0NSQ84suH8L7TExpKDYj52lvBVrQ2a2mK0B2uWzM6wLL7+7MV8kQNx/cBwGsmqbARJ7HXbX9peLe60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ivxqh+q0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739300615; c=relaxed/simple;
+	bh=aFRbjSre0n/PpbhfPdOu1q5jYzsALXfM3ldTnjaDe4k=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Y4rrr53aFYfHPWOc8+53iLtYdjuSYnz3Lf1zQ6ZK3F6GqqHoLWWCIZ4ZyH+tyY7RMXg0/2O9XSupZixQTy4ZqIYoKYlqc/KQTfEYITatIqXrjC/A+h8+aAfbNYopohRphrcMhDTOz/HZgZ3B0ckPg76govdrb2h+ZD9m6jUd41A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q+9jUF1d; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ivxqh+q0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA3DCC4CEDD;
-	Tue, 11 Feb 2025 19:03:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739300593;
-	bh=InLr37aMSRGpQcwIYcHkaraKipAuhUz5WKTz8aS7SD4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ivxqh+q0B+P8c7dYnZ0cWbo8Gb+1119uXbfjnSKRklGYfcGQihTTwEYgy/rEr78Li
-	 I/iF1sOXlV9vHRzDqQqnJ4UDa+uiysgPfc+TuLd/vFOKt/g6CE4ByPfvRN9oyZDZAR
-	 GohmEIteMiaZondmL/inqubyKUXN/Yjcona2jONcFCDIbgWNK1VkK8RtixqQF9rAYY
-	 rBjzLS0kkW4oA5ntNRLELmxrln3K3v5WjBe4P0tTpitTxS5Dg5acbMAeb/TB07khpG
-	 qjmkMX5+QMhMz0ERV6q6rWPwJn15sr6V/e1EaDjoXCO3Zaci/j+G8bb1KKFTZpcTQQ
-	 Dq8sCjcIdiiqQ==
-Date: Tue, 11 Feb 2025 11:03:07 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: David Kaplan <david.kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 30/35] x86/bugs: Add attack vector controls for
- spectre_v2_user
-Message-ID: <20250211190307.g36lotfyi6dmc3cx@jpoimboe>
-References: <20250108202515.385902-1-david.kaplan@amd.com>
- <20250108202515.385902-31-david.kaplan@amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q+9jUF1d"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-21f68852b7bso128774945ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:03:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739300613; x=1739905413; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=X6RZHwu8fSUx1PRlASdGoMqhsw6pMz1JSKazfVdmFy0=;
+        b=q+9jUF1dp8fOhBh0u/9JltV1yPnW1ywnhgEDOTJFIe1TtXi+JNS56XKxP3IhbTSKcM
+         MN7HL26FTuOzviCSghyORszxraETEmkLudxSBdFPFni3qpqXJCU8wMtqTHb8i+kEmsnE
+         Nyv7CjaJPqZg4akjmcXLBTCGiutIJ63iLfLNhNGGhycg8y5ZCBtn5+ZZDKo6CoJ0VvFD
+         e8ZCSh1lQcHJ1pFvodN/qzGB4Wo9LsxI/z/ltuDmnloTCCVCTQBhbotAmwNoClrinkqt
+         1PYP5SVRqyOoSD3wN6A4lUx+VBD2Mar58hlZCMbIenvgRNgloUHjl2klp9fW6fRJmgjt
+         fhMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739300613; x=1739905413;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=X6RZHwu8fSUx1PRlASdGoMqhsw6pMz1JSKazfVdmFy0=;
+        b=KKUL70QQJIklPusosyWMU+Jc0MDI8EfdgIdkKbumi4t1NaoVUHA1dF25yPWQ9f/lNB
+         n6hlMkfNjq+0EtdFCUg82IQAtdiTs0nzgzFfsIOzrEpQECbzRuu4TUFIl/SPxIUUmr2y
+         SOHRQynexX3VaklC7dqY0ibcFmoSZ91lHn5+RsneWshavzqrrgPMcs0pwGGRFnCVPRlK
+         vze0VqWFXjgpqEQ73Y6gY7mvfKws+PAndfh047j4+y9rWux64xZgxx8NF6Kygbwjs1uR
+         6FUk680Ujvzdy11Dj02AgEbYB6Q7LbMfMCBFCrLHpvJN8Plds8a+yIoIV7mS5et5UBCE
+         YSUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWW2N3ROEE5uM0UvXNWGK8DNVoi+TEhgrUr57WStX62eaoe2ciPIpxH7dbvOxFLP4Qj+zEoEPpcHd+suEs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRUpoBxk29Hd74vFoDiBdXhGCmFZg2j7e6HKSgU1slXOlPLWr0
+	Jz7jGfyFkdLLvCb73JsSz3rAFvdVVLW22a6wJM4FBBNyP8AOnxcsDDwdVxI+elQ3JsOzZfwxzdw
+	CLw==
+X-Google-Smtp-Source: AGHT+IF83FAVS6JbAJzhSAAsNQR7sGHkfYmlENylg6JcCsQBTAIdcwm5DyQRH0pv2Gc0GyUcz7M5iSbKK64=
+X-Received: from pfbbh7.prod.google.com ([2002:a05:6a00:3087:b0:730:7b6c:d5d1])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:258e:b0:1e0:d6ef:521a
+ with SMTP id adf61e73a8af0-1ee5c732f01mr650938637.1.1739300613311; Tue, 11
+ Feb 2025 11:03:33 -0800 (PST)
+Date: Tue, 11 Feb 2025 11:03:32 -0800
+In-Reply-To: <20250211184021.GFZ6uZlZWPVTI5qO1_@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250108202515.385902-31-david.kaplan@amd.com>
+Mime-Version: 1.0
+References: <20250201021718.699411-1-seanjc@google.com> <20250201021718.699411-2-seanjc@google.com>
+ <20250211150114.GCZ6tmOqV4rI04HVuY@fat_crate.local> <Z6uIGwxx9HzZQ-N7@google.com>
+ <20250211184021.GFZ6uZlZWPVTI5qO1_@fat_crate.local>
+Message-ID: <Z6ufBMy4u0jcmIl0@google.com>
+Subject: Re: [PATCH 01/16] x86/tsc: Add a standalone helpers for getting TSC
+ info from CPUID.0x15
+From: Sean Christopherson <seanjc@google.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Juergen Gross <jgross@suse.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
+	linux-coco@lists.linux.dev, virtualization@lists.linux.dev, 
+	linux-hyperv@vger.kernel.org, jailhouse-dev@googlegroups.com, 
+	kvm@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	Nikunj A Dadhania <nikunj@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, Jan 08, 2025 at 02:25:10PM -0600, David Kaplan wrote:
-> @@ -1614,6 +1614,13 @@ spectre_v2_user_select_mitigation(void)
->  		spectre_v2_user_stibp = SPECTRE_V2_USER_STRICT;
->  		break;
->  	case SPECTRE_V2_USER_CMD_AUTO:
-> +		if (should_mitigate_vuln(X86_BUG_SPECTRE_V2_USER)) {
-> +			spectre_v2_user_ibpb = SPECTRE_V2_USER_PRCTL;
-> +			spectre_v2_user_stibp = SPECTRE_V2_USER_PRCTL;
-> +		} else {
-> +			return;
-> +		}
-> +		break;
+On Tue, Feb 11, 2025, Borislav Petkov wrote:
+> On Tue, Feb 11, 2025 at 09:25:47AM -0800, Sean Christopherson wrote:
+> > Because obviously optimizing code that's called once during boot is super
+> > critical?
+> 
+> Because let's stick 'em where they belong and keep headers containing only
+> small, trivial and inlineable functions.
 
-Can just fallthrough in the should_mitigate_vuln() case?
-
->  	case SPECTRE_V2_USER_CMD_PRCTL:
->  		spectre_v2_user_ibpb = SPECTRE_V2_USER_PRCTL;
->  		spectre_v2_user_stibp = SPECTRE_V2_USER_PRCTL;
-
--- 
-Josh
+LOL, sorry, I was being sarcastic and poking fun at myself.  I completely agree
+there's no reason to make them inline.
