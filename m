@@ -1,88 +1,525 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9366F215793
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 12:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AC39214804
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 12:58:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739278694; cv=none; b=XlvcTD+kv7m/BRjGQ6zMXLtFLICYMvRqKawTc8EPDMwSWJSe+S3C6BSacAomalc/VKzDLYIJpxNSHZphl0ha5qh0pAk5n5eykKofNdswXLNV1FtQk6zSA5b5K/WMx3lbqE27U32fbJgpoYhn+ZQTmfhiYlp10qe92rgmuzFGwm4=
+	t=1739278723; cv=none; b=YxDM3zt+1mSLgIm3Fsl6heFnkvBmT5AVc76Sl/AgNQRYaRi3/Nm6nL/P8pPT+65rUapenL1qdTs1RGnqCVRnhpqwwIIQ6XYKRcWmEUbrhN5m+SjRUJDbhAbo+zamX2FWp9V0GuLJ6WxZN8M+YsrvoJTkN6DfD+2ymYOacHv277Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739278694; c=relaxed/simple;
-	bh=+towMT1nCuVs7DFgHgZTIfGgiiKqozkce+4klGi0s9E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fFXhS8oE0lYmVpgeLPP2U8HPDbMV/SRGQp9p9+P7MZe+6Xn5ibyqhXoBo6BpECVhoCm5U7xLGGDWnExSkejJ6g1u28hUmluGyeSxcktjNAp0V551dVfPCAiw+OGRs83kr4l0B/Z91qpi0l543H9erp/T2wGOb1DNGc2nFqCE+f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DMUZ3WZj; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DMUZ3WZj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3E10C4CEDD;
-	Tue, 11 Feb 2025 12:58:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739278694;
-	bh=+towMT1nCuVs7DFgHgZTIfGgiiKqozkce+4klGi0s9E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DMUZ3WZj6egUmoREWZ/i5BecZ/SF//YWj68XqzGu1zV+XnFL5IV5tfvKBJR2h8fIG
-	 kleJ/Oddvmj1TDVbAFCb/eUl7+QgprOX2NQsNDecwBHjUTJL7QG1LynoofzU4fWRcl
-	 rhaqVrGBzAy3BA2tzGYOkabptSUcxl7qneA7RCbIwYZhyS47ZVh9ER25wHEZeB2gu3
-	 mgnyKlv9XPn3btcLrlGNuy9ivTzXc5i+rrNqI4g4UJ22Cpuvtk7u3EA1OUWO26+Eg2
-	 mxK9OT+OJxs0c3UKdgrfGSGahhZOIqFdTEOO8RHMG5f34YkBYGxxIr/IgmVFlTYFVD
-	 ZlffazOPxk9Sw==
-Date: Tue, 11 Feb 2025 12:58:10 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: Add missing registrations of SF8MMx hwcaps
-Message-ID: <bec2a37a-1797-41d2-a44a-a34a54a96f89@sirena.org.uk>
-References: <20250210-arm64-fix-2024-dpisa-v1-1-d77f43c7b253@kernel.org>
- <Z6pHPKXXnQ1whg57@J2N7QTR9R3>
- <dae7f7b2-f066-4adc-974b-54649ba69306@sirena.org.uk>
- <Z6s2iMP1LbdsYX12@J2N7QTR9R3>
+	s=arc-20240116; t=1739278723; c=relaxed/simple;
+	bh=k42XxdbrBhQ0KOPiUSduWO7bYO/lKC9EiS6sDXmzkQE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mhCNzxsuAb6qaAx1MHwopxTooS+ixQVoHg6DPu2jl+rSanSEeIBF+xcKTPwZqOwbGZnlbaERx5vDDvOsG61P5O897mxcQuZ6U3+OMsGnQHTJHoQ0M1ddcAqtgLRc+IZNoPi3B6o1tMdbkIG/bzuCKUZw+NFQX9TufNDnf0TlrSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D54FF1424;
+	Tue, 11 Feb 2025 04:59:01 -0800 (PST)
+Received: from [10.57.81.93] (unknown [10.57.81.93])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2CB053F5A1;
+	Tue, 11 Feb 2025 04:58:39 -0800 (PST)
+Message-ID: <caf29133-a24f-47e4-ba38-d1f99e998d27@arm.com>
+Date: Tue, 11 Feb 2025 12:58:37 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rD0p0luEF5BMl3yP"
-Content-Disposition: inline
-In-Reply-To: <Z6s2iMP1LbdsYX12@J2N7QTR9R3>
-X-Cookie: Printed on recycled paper.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v2 PATCH 2/2] arm64: mm: support large block mapping when
+ rodata=full
+Content-Language: en-GB
+To: Yang Shi <yang@os.amperecomputing.com>, catalin.marinas@arm.com,
+ will@kernel.org
+Cc: cl@gentwo.org, scott@os.amperecomputing.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250103011822.1257189-1-yang@os.amperecomputing.com>
+ <20250103011822.1257189-3-yang@os.amperecomputing.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250103011822.1257189-3-yang@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 03/01/2025 01:17, Yang Shi wrote:
+> When rodata=full is specified, kernel linear mapping has to be mapped at
+> PTE level since large page table can't be split due to break-before-make
+> rule on ARM64.
+> 
+> This resulted in a couple of problems:
+>   - performance degradation
+>   - more TLB pressure
+>   - memory waste for kernel page table
+> 
+> With FEAT_BBM level 2 support, splitting large block page table to
+> smaller ones doesn't need to make the page table entry invalid anymore.
+> This allows kernel split large block mapping on the fly.
+> 
+> Add kernel page table split support and use large block mapping by
+> default when FEAT_BBM level 2 is supported for rodata=full.  When
+> changing permissions for kernel linear mapping, the page table will be
+> split to PTE level.
+> 
+> The machine without FEAT_BBM level 2 will fallback to have kernel linear
+> mapping PTE-mapped when rodata=full.
+> 
+> With this we saw significant performance boost with some benchmarks and
+> much less memory consumption on my AmpereOne machine (192 cores, 1P) with
+> 256GB memory.
+> 
+> * Memory use after boot
+> Before:
+> MemTotal:       258988984 kB
+> MemFree:        254821700 kB
+> 
+> After:
+> MemTotal:       259505132 kB
+> MemFree:        255410264 kB
+> 
+> Around 500MB more memory are free to use.  The larger the machine, the
+> more memory saved.
+> 
+> * Memcached
+> We saw performance degradation when running Memcached benchmark with
+> rodata=full vs rodata=on.  Our profiling pointed to kernel TLB pressure.
+> With this patchset we saw ops/sec is increased by around 3.5%, P99
+> latency is reduced by around 9.6%.
+> The gain mainly came from reduced kernel TLB misses.  The kernel TLB
+> MPKI is reduced by 28.5%.
+> 
+> The benchmark data is now on par with rodata=on too.
+> 
+> * Disk encryption (dm-crypt) benchmark
+> Ran fio benchmark with the below command on a 128G ramdisk (ext4) with disk
+> encryption (by dm-crypt).
+> fio --directory=/data --random_generator=lfsr --norandommap --randrepeat 1 \
+>     --status-interval=999 --rw=write --bs=4k --loops=1 --ioengine=sync \
+>     --iodepth=1 --numjobs=1 --fsync_on_close=1 --group_reporting --thread \
+>     --name=iops-test-job --eta-newline=1 --size 100G
+> 
+> The IOPS is increased by 90% - 150% (the variance is high, but the worst
+> number of good case is around 90% more than the best number of bad case).
+> The bandwidth is increased and the avg clat is reduced proportionally.
+> 
+> * Sequential file read
+> Read 100G file sequentially on XFS (xfs_io read with page cache populated).
+> The bandwidth is increased by 150%.
+> 
+> Keep using PTE mapping when pagealloc debug is enabled.  It is not worth
+> the complexity.
+> 
+> Kfence can be converted to use page block mapping later.
+> 
+> Signed-off-by: Yang Shi <yang@os.amperecomputing.com>
+> ---
+>  arch/arm64/include/asm/pgtable.h |   7 +-
+>  arch/arm64/mm/mmu.c              |  32 +++++-
+>  arch/arm64/mm/pageattr.c         | 173 +++++++++++++++++++++++++++++--
+>  3 files changed, 203 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index 6986345b537a..2927f59ae9e2 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -749,7 +749,7 @@ static inline bool in_swapper_pgdir(void *addr)
+>  	        ((unsigned long)swapper_pg_dir & PAGE_MASK);
+>  }
+>  
+> -static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
+> +static inline void __set_pmd_nosync(pmd_t *pmdp, pmd_t pmd)
+>  {
+>  #ifdef __PAGETABLE_PMD_FOLDED
+>  	if (in_swapper_pgdir(pmdp)) {
+> @@ -759,6 +759,11 @@ static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
+>  #endif /* __PAGETABLE_PMD_FOLDED */
+>  
+>  	WRITE_ONCE(*pmdp, pmd);
+> +}
+> +
+> +static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
+> +{
+> +	__set_pmd_nosync(pmdp, pmd);
+
+I have a series at [1] which enables batching/deferring these barriers. I reckon
+it would be udeful to ultimately apply that same technique for painting the
+linear map if/when that series goes upstream. The benefit is that we wouldn't
+need to expose the _nosync helpers. But that's something to cleanup later. This
+looks fine for now.
+
+>  
+>  	if (pmd_valid(pmd)) {
+>  		dsb(ishst);
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index e2739b69e11b..65b5b1ba48a7 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -620,6 +620,19 @@ static inline void arm64_kfence_map_pool(phys_addr_t kfence_pool, pgd_t *pgdp) {
+>  
+>  #endif /* CONFIG_KFENCE */
+>  
+> +static inline bool force_pte_mapping(void)
+> +{
+> +	/*
+> +	 * Can't use cpufeature API to determine whether BBM level 2
+> +	 * is supported or not since cpufeature have not been
+> +	 * finalized yet.
+> +	 */
+
+I think assuming the system has BMML2 just because the boot CPU has it is going
+to be problematic. I think you are going to continue to need to initially paint
+the linear map with ptes then later, once the system cap is finalized, repaint
+with blocks.
+
+> +	return (rodata_full && !bbmlv2_available()) ||
+> +		debug_pagealloc_enabled() ||
+> +		arm64_kfence_can_set_direct_map() ||
+> +		is_realm_world();
+> +}
+
+Previously the decision was determined by:
+
+bool can_set_direct_map(void)
+{
+	/*
+	 * rodata_full, DEBUG_PAGEALLOC and a Realm guest all require linear
+	 * map to be mapped at page granularity, so that it is possible to
+	 * protect/unprotect single pages.
+	 *
+	 * KFENCE pool requires page-granular mapping if initialized late.
+	 *
+	 * Realms need to make pages shared/protected at page granularity.
+	 */
+	return rodata_full || debug_pagealloc_enabled() ||
+		arm64_kfence_can_set_direct_map() || is_realm_world();
+}
+
+But now that you can safely split block mappings to page mappings when needed
+doesn't that cover some of these requirements? So perhaps you can do block
+mappings even when some (all?) of these things are active?
 
 
---rD0p0luEF5BMl3yP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> +
+>  static void __init map_mem(pgd_t *pgdp)
+>  {
+>  	static const u64 direct_map_end = _PAGE_END(VA_BITS_MIN);
+> @@ -645,9 +658,21 @@ static void __init map_mem(pgd_t *pgdp)
+>  
+>  	early_kfence_pool = arm64_kfence_alloc_pool();
+>  
+> -	if (can_set_direct_map())
+> +	if (force_pte_mapping())
+>  		flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+>  
+> +	/*
+> +	 * With FEAT_BBM level 2 we can split large block mapping without
+> +	 * making it invalid.  So kernel linear mapping can be mapped with
+> +	 * large block instead of PTE level.
+> +	 *
+> +	 * Need to break cont for CONT_MAPPINGS when changing permission,
+> +	 * and need to inspect the adjacent page table entries to make
+> +	 * them cont again later.  It sounds not worth the complexity.
 
-On Tue, Feb 11, 2025 at 11:37:44AM +0000, Mark Rutland wrote:
-> On Mon, Feb 10, 2025 at 07:14:58PM +0000, Mark Brown wrote:
-> > On Mon, Feb 10, 2025 at 06:41:09PM +0000, Mark Rutland wrote:
+I'm not sure I follow the argument? As far as I can tell, you only ever split
+mappings. You never collapse. So I don't think it's too complex to check for
+CONT bits and if set, clear the CONT bit from the block? That's a safe operation
+with BBML2. It means you need to iterate over the ptes which you don't currently
+do, but you only need to check a 1 PTE in every CONT_PTES.
 
-> > > Looking again, it looks like KERNEL_HWCAP_FPRCVT also isn't wired up?
+> +	 */
+> +	if (rodata_full)
+> +		flags |= NO_CONT_MAPPINGS;
+> +
+>  	/*
+>  	 * Take care not to create a writable alias for the
+>  	 * read-only text and rodata sections of the kernel image.
+> @@ -1342,9 +1367,12 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>  
+>  	VM_BUG_ON(!mhp_range_allowed(start, size, true));
+>  
+> -	if (can_set_direct_map())
+> +	if (force_pte_mapping())
+>  		flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+>  
+> +	if (rodata_full)
+> +		flags |= NO_CONT_MAPPINGS;
+> +
+>  	__create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
+>  			     size, params->pgprot, __pgd_pgtable_alloc,
+>  			     flags);
+> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+> index 39fd1f7ff02a..ba2360ecb030 100644
+> --- a/arch/arm64/mm/pageattr.c
+> +++ b/arch/arm64/mm/pageattr.c
+> @@ -49,6 +49,145 @@ static int change_page_range(pte_t *ptep, unsigned long addr, void *data)
+>  	return 0;
+>  }
+>  
+> +static int __split_linear_mapping_pmd(pud_t *pudp,
+> +				      unsigned long vaddr, unsigned long end)
 
-> > Indeed.  I'll add that separately.
+nit: are the double really underscores needed?
 
-> Given that KERNEL_HWCAP_FPRCVT was also added by commit 819935464cb2,
-> I assume you mean you'll send a v2 of this patch doing that.
+> +{
+> +	pmd_t *pmdp;
+> +	unsigned long next;
+> +
+> +	pmdp = pmd_offset(pudp, vaddr);
+> +
+> +	do {
+> +		next = pmd_addr_end(vaddr, end);
+> +
+> +		if (pmd_leaf(pmdp_get(pmdp))) {
+> +			struct page *pte_page;
+> +			unsigned long pfn = pmd_pfn(pmdp_get(pmdp));
+> +			pgprot_t prot = pmd_pgprot(pmdp_get(pmdp));
+> +			pte_t *ptep_new;
+> +			int i;
+> +
+> +			pte_page = alloc_page(GFP_KERNEL);
+> +			if (!pte_page)
+> +				return -ENOMEM;
+> +
+> +			prot = __pgprot(pgprot_val(prot) | PTE_TYPE_PAGE);
+> +			ptep_new = (pte_t *)page_address(pte_page);
+> +			for (i = 0; i < PTRS_PER_PTE; ++i, ++ptep_new)
+> +				__set_pte_nosync(ptep_new,
+> +						 pfn_pte(pfn + i, prot));
+> +
+> +			dsb(ishst);
+> +			isb();
+> +
+> +			set_pmd(pmdp, pfn_pmd(page_to_pfn(pte_page),
+> +				__pgprot(PMD_TYPE_TABLE)));
 
-Well, I was actually intending to send a separate patch given that
-otherwise it ends up looking like two different changelogs in the same
-patch and the diffs shouldn't overlap.
+All the same comments that I made below for __split_linear_mapping_pud() apply here.
 
---rD0p0luEF5BMl3yP
-Content-Type: application/pgp-signature; name="signature.asc"
+> +		}
+> +	} while (pmdp++, vaddr = next, vaddr != end);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __split_linear_mapping_pud(p4d_t *p4dp,
+> +				      unsigned long vaddr, unsigned long end)
+> +{
+> +	pud_t *pudp;
+> +	unsigned long next;
+> +	int ret;
+> +
+> +	pudp = pud_offset(p4dp, vaddr);
+> +
+> +	do {
+> +		next = pud_addr_end(vaddr, end);
+> +
+> +		if (pud_leaf(pudp_get(pudp))) {
 
------BEGIN PGP SIGNATURE-----
+Just do the pudp_get() once and cache the result. It's implemented by
+READ_ONCE() so your 3 invocations are actually doing 3 separate loads.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmerSWEACgkQJNaLcl1U
-h9BKtwf/XoPWbuG6MzQSQ1e31PolrljHwu4itDeKvhdyeP8GcDCDRi33tSf+K2ja
-KauZo++0ZKaq1Ja+MFAToO/len+b3BgCOzm0rCuiFhhtTV0ClkFun8hZ1B0FbHbC
-53X8vn00Agvf7SEmOPtsmTM/FJTOMn421x9FYgM7xunf1YKj9wGnt/V7/VrBZTAm
-LEPUDKO6uPEQk4xl4m3LRBMHrqignAXy4ScZ9YgaIyT84cks0zI+m4UcLtIpnHsC
-wZ2o6Zfx0wu/DMUvESijSvUjiLeIhbk5YINhitBmKUYHV9ECgkBOonZ5XDmrrZmc
-c+8oJAemdZYCU0ngIvowVZ/ecC9EVg==
-=/UnQ
------END PGP SIGNATURE-----
+> +			struct page *pmd_page;
+> +			unsigned long pfn = pud_pfn(pudp_get(pudp));
+> +			pgprot_t prot = pud_pgprot(pudp_get(pudp));
+> +			pmd_t *pmdp_new;
+> +			int i;
+> +			unsigned int step;
+> +
+> +			pmd_page = alloc_page(GFP_KERNEL);
+> +			if (!pmd_page)
+> +				return -ENOMEM;
 
---rD0p0luEF5BMl3yP--
+Is this really how we allocate pgtable pages for kernel space? For user space we
+have quite a lot of machinery for this.
+
+> +
+> +			pmdp_new = (pmd_t *)page_address(pmd_page);
+> +			for (i = 0; i < PTRS_PER_PMD; ++i, ++pmdp_new) {
+> +				step = (i * PMD_SIZE) >> PAGE_SHIFT;
+
+Suggest hoisting this out of the loop, then just increment pfn by step every
+iteration.
+
+> +				__set_pmd_nosync(pmdp_new,
+> +						 pfn_pmd(pfn + step, prot));
+> +			}
+> +
+> +			dsb(ishst);
+> +			isb();
+
+I'm not convinced by the need for this isb(). The dsb ensures that the table is
+visible to the table walker; that's needed. The isb() present in set_pmd() and
+friends to remove any "cached" speculative invalid translation marker from the
+pipeline, if I understand things correctly. I don't think we need to solve that
+problem here because you weren't working on a live table. The isb() in set_pud()
+is sufficient, I think.
+
+> +
+> +			set_pud(pudp, pfn_pud(page_to_pfn(pmd_page),
+> +				__pgprot(PUD_TYPE_TABLE)));
+> +		}
+> +
+> +		ret = __split_linear_mapping_pmd(pudp, vaddr, next);
+> +		if (ret)
+> +			return ret;
+> +	} while (pudp++, vaddr = next, vaddr != end);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __split_linear_mapping_p4d(pgd_t *pgdp,
+> +				      unsigned long vaddr, unsigned long end)
+> +{
+> +	p4d_t *p4dp;
+> +	unsigned long next;
+> +	int ret;
+> +
+> +	p4dp = p4d_offset(pgdp, vaddr);
+> +
+> +	do {
+> +		next = p4d_addr_end(vaddr, end);
+> +
+> +		ret = __split_linear_mapping_pud(p4dp, vaddr, next);
+> +		if (ret)
+> +			return ret;
+
+nit: personally I would make this break. Then have single "return ret", like you
+have for __split_linear_mapping_pgd(). Then all levels follow the same template.
+
+> +	} while (p4dp++, vaddr = next, vaddr != end);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __split_linear_mapping_pgd(pgd_t *pgdp,
+> +				      unsigned long vaddr,
+> +				      unsigned long end)
+> +{> +	unsigned long next;
+> +	int ret = 0;
+> +
+> +	mmap_write_lock(&init_mm);
+
+nit: I think the locking would be more natural in split_linear_mapping().
+
+> +
+> +	do {
+> +		next = pgd_addr_end(vaddr, end);
+> +		ret = __split_linear_mapping_p4d(pgdp, vaddr, next);
+> +		if (ret)
+> +			break;
+> +	} while (pgdp++, vaddr = next, vaddr != end);
+> +
+> +	mmap_write_unlock(&init_mm);
+> +
+> +	return ret;
+> +}
+> +
+> +static int split_linear_mapping(unsigned long start, unsigned long end)
+
+As far as I can tell, you only ever split the linear mapping. You never collapse
+it. In that case, won't it just degrade to pte-mappings over time? I suspect you
+should aim to detect collapse opportunities.
+
+> +{
+> +	int ret;
+> +
+> +	if (!system_supports_bbmlv2())
+> +		return 0;
+> +
+> +	ret = __split_linear_mapping_pgd(pgd_offset_k(start), start, end);
+
+nit: personally I would put pgd_offset_k() into __split_linear_mapping_pgd() so
+that it takes the exact same form as the other levels. Or mege
+__split_linear_mapping_pgd() into split_linear_mapping().
+
+> +	flush_tlb_kernel_range(start, end);
+> +
+> +	return ret;
+> +}
+> +
+>  /*
+>   * This function assumes that the range is mapped with PAGE_SIZE pages.
+>   */
+> @@ -80,8 +219,9 @@ static int change_memory_common(unsigned long addr, int numpages,
+>  	unsigned long start = addr;
+>  	unsigned long size = PAGE_SIZE * numpages;
+>  	unsigned long end = start + size;
+> +	unsigned long l_start;
+>  	struct vm_struct *area;
+> -	int i;
+> +	int i, ret;
+>  
+>  	if (!PAGE_ALIGNED(addr)) {
+>  		start &= PAGE_MASK;
+> @@ -118,7 +258,12 @@ static int change_memory_common(unsigned long addr, int numpages,
+>  	if (rodata_full && (pgprot_val(set_mask) == PTE_RDONLY ||
+>  			    pgprot_val(clear_mask) == PTE_RDONLY)) {
+>  		for (i = 0; i < area->nr_pages; i++) {
+> -			__change_memory_common((u64)page_address(area->pages[i]),
+> +			l_start = (u64)page_address(area->pages[i]);
+> +			ret = split_linear_mapping(l_start, l_start + PAGE_SIZE);
+> +			if (WARN_ON_ONCE(ret))
+> +				return ret;
+> +
+> +			__change_memory_common(l_start,
+>  					       PAGE_SIZE, set_mask, clear_mask);
+>  		}
+>  	}
+> @@ -174,6 +319,9 @@ int set_memory_valid(unsigned long addr, int numpages, int enable)
+
+set_memory_valid() actually calls __change_memory_common() directly (so it
+bypassed the split logic in change_memory_common()). Is it possible that it gets
+called for a non-split region? I guess you'll need to handle that case too?
+
+Thanks,
+Ryan
+
+>  
+>  int set_direct_map_invalid_noflush(struct page *page)
+>  {
+> +	unsigned long l_start;
+> +	int ret;
+> +
+>  	struct page_change_data data = {
+>  		.set_mask = __pgprot(0),
+>  		.clear_mask = __pgprot(PTE_VALID),
+> @@ -182,13 +330,21 @@ int set_direct_map_invalid_noflush(struct page *page)
+>  	if (!can_set_direct_map())
+>  		return 0;
+>  
+> +	l_start = (unsigned long)page_address(page);
+> +	ret = split_linear_mapping(l_start, l_start + PAGE_SIZE);
+> +	if (WARN_ON_ONCE(ret))
+> +		return ret;
+> +
+>  	return apply_to_page_range(&init_mm,
+> -				   (unsigned long)page_address(page),
+> -				   PAGE_SIZE, change_page_range, &data);
+> +				   l_start, PAGE_SIZE, change_page_range,
+> +				   &data);
+>  }
+>  
+>  int set_direct_map_default_noflush(struct page *page)
+>  {
+> +	unsigned long l_start;
+> +	int ret;
+> +
+>  	struct page_change_data data = {
+>  		.set_mask = __pgprot(PTE_VALID | PTE_WRITE),
+>  		.clear_mask = __pgprot(PTE_RDONLY),
+> @@ -197,9 +353,14 @@ int set_direct_map_default_noflush(struct page *page)
+>  	if (!can_set_direct_map())
+>  		return 0;
+>  
+> +	l_start = (unsigned long)page_address(page);
+> +	ret = split_linear_mapping(l_start, l_start + PAGE_SIZE);
+> +	if (WARN_ON_ONCE(ret))
+> +		return ret;
+> +
+>  	return apply_to_page_range(&init_mm,
+> -				   (unsigned long)page_address(page),
+> -				   PAGE_SIZE, change_page_range, &data);
+> +				   l_start, PAGE_SIZE, change_page_range,
+> +				   &data);
+>  }
+>  
+>  static int __set_memory_enc_dec(unsigned long addr,
+
