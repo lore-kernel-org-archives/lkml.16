@@ -1,156 +1,217 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA5120B81B
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C00250BF4
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739285551; cv=none; b=O42vwU7Dc7cdbXgqhNAKkyXN55qTvVZIwsA3tIf7p8c4yP51fuqUfWaPtDmBb6cky4PBFrIYaua4IqYrDsENCLuzGmGjkN0ucuZczI1JFWEJn10B6Mk6PcDMwX47YC2fLB/NvyJz4AHDZ6GZOTVBfrtYzyaHa0rTyFjYrxFReN8=
+	t=1739285574; cv=none; b=JpPgoRnT0liKQs6BMXPRUiucSET6QZ6AIiGIpfSNyJ/uAf9gpVZNvwXTQiTnsrEIiy08Hai6/+QHKNgrE7JPRbhZL5L18skSE7VWhHNlJ43aAteJfM8LgDWbwHEt9hGBxp+csmUp1zwodjym1yK3QVmfUKdl6RByDFqFEmugszQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739285551; c=relaxed/simple;
-	bh=4f2RPjkKMrQdU8CIu7/TYnPjKMJMN4diVcnjJd4Iq9o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=roPhXSvzXtc/rYZhRpIRI5RTAVStIqI7kgljKCt9ugpAC/4wwJfzpcjsci00ruAtQzSg0E1pljkC+NYJPMKwam3MVEM1+jyfYfjb1UezK9Lxh23XGTL+nmKPCkmtMEgAad1X1YMuM3i4jO7IRYgi2CHWVKScizvEUSMb9pkGa70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=f9RAXwt2; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1739285574; c=relaxed/simple;
+	bh=lTuqE1uLqDU4/vLbG2lGa6heQommDeS+cVngcjjbUTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mMLemTh7fbxqEqrRpYjjAiMKaSdB5MtXGffTXIZSGQO1duBpYrEiPNOaUudQG5UYoxADP+kDI3IC6i7kwUGiMG9C/xZdZkRJzRJucSyU0otWo8HK3QLYu0Lv8bCErrigU1KPADAPYmLYXvv6xV6Ef5qzBBWK5h1o+PPwnC/bCnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ySxqJFJg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3e8B9RZG; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="f9RAXwt2"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BCawrb030244
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:52:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	NC7RrDr3j1bwssRFR4cOJwlJoeFxFDUdcGNi4kyOmRk=; b=f9RAXwt2/20tFmKp
-	J6IpOWIkFbQ0GqaNR3K81wgebppeNscJFDEbSm0oIKv5iis74TtPyl3uE28a3wQK
-	hqsofHPYwB6Zj0J16E2UQC7lY3FSNTVTBCLIjUmqVoP8EGjZGurrSFNslrlksBB2
-	LuqdSn4O1uDkRFAzg6no7NfuJpcz4GtZc0y/34jRTQuZD9P+qErW7FmMErMpx7fs
-	QschVHFPBPJ1XSBT7JjTp7njWUbf6Qqoopg+HQFLAsgipxjzKvSyNlaNEuEjlC0a
-	o84XDEBl4MMjhK1Y8m7A4gFh4n9A7NnBj9uX+FraM0zHXqYCP/cV9wkJzmXB6Snk
-	OXObCQ==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qxg9htcm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:52:29 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-47181a14d8bso9718781cf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 06:52:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739285548; x=1739890348;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NC7RrDr3j1bwssRFR4cOJwlJoeFxFDUdcGNi4kyOmRk=;
-        b=Ogl1kGEX8B6/aLrnuXZBo6fuDo7ooOd3PktWpBW2D133pnnLDK6I77KfLWVXz+psWn
-         L+ZUJ0iNnFhTq60cCJCn/cMfyskY8GCE3Gh07RbFUBlFwb4hAfiOXiqVco+XDbt/Ljw2
-         0VcOrrSnXhQYO57miYdc7ggUIn2AXLas5TADcfWrI4ZzyYZ7xjxXIuG8FNcNYW3d9Hak
-         xD0SJBJw5nhwcOZMqR8qScXUZP6z2jkl0tk/nlPWjs33+MMF8BQUkB8D8yXsD8BMpNKY
-         AgGvtXkorrA6eAcl6K6owlaussB89w4nM2WtafZITTtytr/qxnyeumQCE3T56puKPFbt
-         w5IQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNsTrlmRQT9Fe/KhAegFfwudrChVi4ay5qZRaD/rWKsLUa7mQFiPCRkIUUaVtdfvU1pYWpMgwlFhwU+eQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6tLMkiaVJUypd6YL33aieAhXaMy17N3qFLyUPz46UhdrktEL4
-	YA6E3z0A/vw6hrrAtN0d8RrIzn7z2/tBl+mrdPLQgIi3Q5sS/8RGWhPfnDx/wkx2tkfPXnNvw81
-	zewqcsTnjHD9e/ryYr6AiThOsYsOyYrPHYokvtz+Itzdf9XuvcU43KjfPQqzUP7c=
-X-Gm-Gg: ASbGnct/GzSltqinRo5OYTc7LvReefbvrt5FCH2wUNNbL8I/CBb4fweIliIigSlCCcU
-	Y0ra96fUMfRHsQNVECGc/+U4Dr6UxkkMXJHYyHW5unKoRpOMJ9i4sd8MSM4wM15ollyRPXTIrgk
-	HCPLEF46qKsC4B+7o1lDv4BnIFMsgZrMvEqLpayoCfLyjTvurtjeYNrprDXfUe1MvuyzeEPt+2b
-	vbI3Lw8swYfLB9M4/+BIYbSm+F976trHiJYNvWGtSQczeYwru0QrfBSyyRmio7sfNDF+Gta6T57
-	EenybcW85nI1bl3c0yhxag5oJH3ESuV+t9s0rFrpr5IbLiVBRor4ilf1iWs=
-X-Received: by 2002:a05:622a:1a97:b0:467:825e:133b with SMTP id d75a77b69052e-471a3e2907fmr14233241cf.13.1739285548692;
-        Tue, 11 Feb 2025 06:52:28 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHav7y9g4ni7KetZuMNmffZvEwd5f5Ju42LekRxMQSmqvzhR0eBVHkt1YH9fcYdH+kxrFsIdA==
-X-Received: by 2002:a05:622a:1a97:b0:467:825e:133b with SMTP id d75a77b69052e-471a3e2907fmr14232981cf.13.1739285548280;
-        Tue, 11 Feb 2025 06:52:28 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7dbfb2c41sm168391866b.13.2025.02.11.06.52.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 06:52:27 -0800 (PST)
-Message-ID: <6e5bb2f7-a23b-4fab-914b-e67911eaf408@oss.qualcomm.com>
-Date: Tue, 11 Feb 2025 15:52:24 +0100
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ySxqJFJg";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3e8B9RZG"
+Date: Tue, 11 Feb 2025 15:52:49 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739285571;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x/WSAFYTr1r5PgwAwK6qtJ6MnRejIEWvXAXuKCccZfg=;
+	b=ySxqJFJgJsU3HuzLJUpcSeX/TNEej8+Ah9YRinYms+E4qZOXJEFt63CTy0NGDiQ+8/AORm
+	32u8uoPjUhvWpIHJk3wHRB3xHdKYfYYJVN/agBZ8bx8ZAQrFHEfwK1HOojCDBhlcAwNaks
+	5qvg0G2EQc6pPWJMCDIZr0dloYvUUqHsZPuB4ZYCvo5b32JgOqaPK1dpfnsqYiVN5Gw9zh
+	IPg7omZ3BNsBBVr8oO8D7Zr1X4MfErhoky7CG9bw2yCYi5xuVSyFSDc9yulciAQjNqCsui
+	Lw4sEWm8wxu0S6nJaphSjZnd/H1G+coJG5KI5HjuQOQQ4egE3UOw2mw7gh3zVQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739285571;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x/WSAFYTr1r5PgwAwK6qtJ6MnRejIEWvXAXuKCccZfg=;
+	b=3e8B9RZG9nbA5FRiLra16h2Z9aRiJX11vmzIi5P1yxgM5kpJlNjKKmMzoHfUi47gXcGfA/
+	8vQ34MNRGrSomYBQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Ben Segall <bsegall@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 3/9] arm: Rely on generic printing of preemption model.
+Message-ID: <20250211145249.StI6tEZv@linutronix.de>
+References: <20250203141632.440554-1-bigeasy@linutronix.de>
+ <20250203141632.440554-4-bigeasy@linutronix.de>
+ <20250210120429.iFfBClW1@linutronix.de>
+ <Z6oYO5uKlEJ8C8Ne@shell.armlinux.org.uk>
+ <20250210153902.06VTSS6d@linutronix.de>
+ <Z6oo0MExaEy5J55_@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 6/6] arm64: dts: qcom: qrb2210-rb1: add Bluetooth
- support
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Rob Herring
- <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Balakrishna Godavarthi <quic_bgodavar@quicinc.com>,
-        Rocky Liao <quic_rjliao@quicinc.com>,
-        Bjorn Andersson
- <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250207-rb1-bt-v4-0-d810fc8c94a9@linaro.org>
- <20250207-rb1-bt-v4-6-d810fc8c94a9@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250207-rb1-bt-v4-6-d810fc8c94a9@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: oxQBUcFxxuUvqKqF6lWxuzYJcwuMjeNw
-X-Proofpoint-GUID: oxQBUcFxxuUvqKqF6lWxuzYJcwuMjeNw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_06,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- mlxscore=0 priorityscore=1501 malwarescore=0 spamscore=0 impostorscore=0
- mlxlogscore=999 lowpriorityscore=0 phishscore=0 clxscore=1015
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502110099
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <Z6oo0MExaEy5J55_@shell.armlinux.org.uk>
 
-On 7.02.2025 9:41 PM, Dmitry Baryshkov wrote:
-> Add support for the onboard WCN3950 BT/WiFi chip. Corresponding firmware
-> has been merged to linux-firmware and should be available in the next
-> release.
-> 
-> Bluetooth: hci0: setting up wcn399x
-> Bluetooth: hci0: QCA Product ID   :0x0000000f
-> Bluetooth: hci0: QCA SOC Version  :0x40070120
-> Bluetooth: hci0: QCA ROM Version  :0x00000102
-> Bluetooth: hci0: QCA Patch Version:0x00000001
-> Bluetooth: hci0: QCA controller version 0x01200102
-> Bluetooth: hci0: QCA Downloading qca/cmbtfw12.tlv
-> Bluetooth: hci0: QCA Downloading qca/cmnv12.bin
-> Bluetooth: hci0: QCA setup on UART is completed
-> 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
+On 2025-02-10 16:26:56 [+0000], Russell King (Oracle) wrote:
+> > Patch 2/9 adds this. [ https://lore.kernel.org/all/20250203141632.44055=
+4-3-bigeasy@linutronix.de/ ]
+>=20
+> That explains it - patch 2 is only sent to a very restricted subset
+> and not even to mailing lists that would be relevant in the absence
+> of a direct Cc. Ditto patch 1. All I received were patches 3 and 4.
+>=20
+> In patch 1:
+>=20
+> +	static char buf[128];
+> ...
+> +		seq_buf_init(&s, buf, 128);
+>=20
+> Why not sizeof(buf) ?
 
-[...]
+Indeed, why not. Updated.
 
-> +&uart3 {
-> +	/delete-property/ interrupts;
-> +	interrupts-extended = <&intc GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
-> +			      <&tlmm 11 IRQ_TYPE_LEVEL_HIGH>;
-> +	pinctrl-0 = <&uart3_default>;
-> +	pinctrl-1 = <&uart3_sleep>;
-> +	pinctrl-names = "default", "sleep";
-> +
-> +	status = "okay";
-> +
-> +	bluetooth {
-> +		compatible = "qcom,wcn3950-bt";
-> +
-> +		vddio-supply = <&pm4125_l15>;
-> +		vddxo-supply = <&pm4125_l13>;
-> +		vddrf-supply = <&pm4125_l10>;
-> +		vddch0-supply = <&pm4125_l22>;
-> +		enable-gpios = <&tlmm 87 GPIO_ACTIVE_HIGH>;
-> +		max-speed = <3200000>;
+> For patch 2:
+>=20
+> "Use
+> pr_warn() instead of printk() to pass a loglevel. This makes it part of
+> generic WARN/ BUG traces.
+> "
 
-I suppose we don't need a power sequencer for this smaller,
-tightly-integrated-via-snoc chip?
+> How about cases which use dump_stack_lvl() to dump the output at a more
+> severe level than warning? Should the message be printed at a less
+> severe level than the other messages?
 
-Konrad
+This is bad indeed. I reverted that piece.
+
+> > This this applied, die("test") on ARM ends as:
+> >=20
+> > [    1.595106] Kernel panic - not syncing: test
+> > [    1.596044] CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W=
+ 6.14.0-rc2-00009-gb80a798df08c-dirty #13 PREEMPT
+> > [    1.596768] Tainted: [W]=3DWARN
+> > [    1.596946] Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 0=
+2/02/2022
+>=20
+> Hmm. I've no idea what you're testing, what you've quoted makes zero
+> sense to me.
+>=20
+> First...
+>=20
+> void die(const char *str, struct pt_regs *regs, int err)
+>=20
+> is the die function prototype, so it takes a bit more than what you've
+> indicated.
+>=20
+> Second, "Kernel panic" suggests that panic() has been called. However,
+> this only happens when die() is called (or more specifically
+> oops_end()) from either interrupt context (in which case we get
+> "Kernel panic - Fatal exception in interrupt") or if panic_on_oops
+> is set ("Kernel panic - Fatal exception").
+>=20
+> I don't see a path which would result in
+> "Kernel panic - not syncing: test" to be printed from this path.
+>=20
+> Since __die() does not call dump_stack(), we're not going to call
+> dump_stack_print_info() from __die(), so I don't think it's appropriate
+> to remove this information.
+
+Okay. Let me try again with a stack overflow during boot. With the
+series:
+
+| Freeing unused kernel image (initmem) memory: 2048K
+| 8<--- cut here ---
+| Unable to handle kernel paging request at virtual address df82a000 when w=
+rite
+| [df82a000] *pgd=3D80000040007003, *pmd=3D41487003, *pte=3D00000000
+| Internal error: Oops: a07 [#1] SMP ARM
+| Modules linked in:
+| CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W          6.14.0-=
+rc2-00009-gdca8d546a8a3-dirty #16 PREEMPT
+| Tainted: [W]=3DWARN
+| Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 02/02/2022
+| PC is at mmioset+0x38/0xac
+| LR is at 0x34343434
+| pc : [<c0a07a58>]    lr : [<34343434>]    psr: 20000013
+| sp : df829c88  ip : df829ff4  fp : 00000000
+| r10: 00000000  r9 : 00000000  r8 : 34343434
+| r7 : 00000000  r6 : 00000000  r5 : c0a33278  r4 : c1207bd4
+| r3 : 34343434  r2 : 00000080  r1 : 34343434  r0 : df829ea4
+| Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+| Control: 30c5387d  Table: 40003000  DAC: 00000001
+| Register r0 information: 2-page vmalloc region starting at 0xdf828000 all=
+ocated at kernel_clone+0x58/0x3b8
+=E2=80=A6
+| Process swapper/0 (pid: 1, stack limit =3D 0x4c737b1e)
+| Stack: (0xdf829c88 to 0xdf82a000)
+=E2=80=A6
+| Call trace:
+|  mmioset from func+0x24/0x50
+|  func from kernel_init+0x7c/0x168
+|  kernel_init from 0x34343434
+| Code: e1a08001 e1a0e003 e2522040 a8ac410a (a8ac410a)
+| ---[ end trace 0000000000000000 ]---
+| Kernel panic - not syncing: Attempted to kill init! exitcode=3D0x0000000b
+| ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=3D0=
+x0000000b ]---
+
+Without:
+
+| Freeing unused kernel image (initmem) memory: 2048K
+| 8<--- cut here ---
+| Unable to handle kernel paging request at virtual address df82a000 when w=
+rite
+| [df82a000] *pgd=3D80000040007003, *pmd=3D41487003, *pte=3D00000000
+| Internal error: Oops: a07 [#1] PREEMPT SMP ARM
+| Modules linked in:
+| CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W          6.14.0-=
+rc2-00010-ged8f7288c355-dirty #17
+| Tainted: [W]=3DWARN
+| Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 02/02/2022
+| PC is at mmioset+0x38/0xac
+| LR is at 0x34343434
+| pc : [<c0a079d8>]    lr : [<34343434>]    psr: 20000113
+| sp : df829c88  ip : df829ff4  fp : 00000000
+| r10: 00000000  r9 : 00000000  r8 : 34343434
+| r7 : 00000000  r6 : 00000000  r5 : c0a331ec  r4 : c1207bd4
+| r3 : 34343434  r2 : 00000080  r1 : 34343434  r0 : df829ea4
+| Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+| Control: 30c5387d  Table: 40003000  DAC: 00000001
+| Register r0 information: 2-page vmalloc region starting at 0xdf828000 all=
+ocated at kernel_clone+0x58/0x3b8
+=E2=80=A6
+| Process swapper/0 (pid: 1, stack limit =3D 0x7d941701)
+| Stack: (0xdf829c88 to 0xdf82a000)
+=E2=80=A6
+| Call trace:
+|  mmioset from func+0x24/0x50
+|  func from kernel_init+0x7c/0x168
+|  kernel_init from 0x34343434
+| Code: e1a08001 e1a0e003 e2522040 a8ac410a (a8ac410a)
+| ---[ end trace 0000000000000000 ]---
+| Kernel panic - not syncing: Attempted to kill init! exitcode=3D0x0000000b
+| ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=3D0=
+x0000000b ]---
+
+As you see, the PREEMPT string moved and is still existing.
+
+Sebastian
