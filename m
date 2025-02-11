@@ -1,223 +1,315 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2054.outbound.protection.outlook.com [40.107.220.54])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B89250BE2;
-	Tue, 11 Feb 2025 14:31:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739284319; cv=fail; b=f9lmSpx5sI7eql9eR73dcJEFSnXp0317oCIpy4uqroYflVkbInv73zCfHJnxJ9W31jQHUaqn0AtDZY+JTN6HYQQU/G+sekBKqQMFMauglfC6GkpHpgp1ui7w3GYUvHbj1GvhlIEtN1ewBaoXq6NeYqFa0Y+6GTu4h5tjjTITzD0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739284319; c=relaxed/simple;
-	bh=4jKZCsKYUcPSFN+YNUQI+MbG81dznFurjwVZJbShZo8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ngYTJdwD9QZ8weJTzet7RI+Ii+rsjQ+r1+IUpRh2q5JrXLWATlP2mT1YoelXSzTD5FWAbu9DQQq16QkKnmtNkJ8q+vkGTAKOvrJC7vla8FDGJn/Vbyq+eHlqtneMIEcVQ1Uy2SA6lmn8g92mELaHHhrNUymEbxIk08f3ImYUchs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Qqhb7t4s; arc=fail smtp.client-ip=40.107.220.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E9922066;
+	Tue, 11 Feb 2025 14:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739284382; cv=none; b=KsfRrQsB+WSo4qVWnLM9oaC4wOjrBDXy8IOAotJ6uy5GuQDKfowIWrIpBLgEDFqJBqpXKNzbPI4sS9Iu7bvO3kWaWMUuqySOaoa5HQILcA8BHWG++2/Upa+3m/iLQHnSDvhoBFMF3i2z4DDGXoVaHFkXbVd9XMFS6UK6sPbtyW0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739284382; c=relaxed/simple;
+	bh=5JVAcHZB86+pVWEGFwPFIykP9cblLWBOqZZC8zSnfwI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aAAstIfz86UpgTU2MDrVXjN8ZWy6Nz7l7L/D3U0/oLJZQ5en720N2cQnfcfdCrVXQqaeWhOPETUwtHCH5N8Mq2EkgUYx9QtzFLG/M4qPEEaqKgOCzocu81gVYHXesbswwfXeO1FFd5/hDmp7pQylEXYekBetO8fzsjcDEivciJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=L8CYMUFs; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Qqhb7t4s"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aViAPLDau+t0FQjnbKBpfpNnBxCVNpyUxwNz5+3dx3ZRxbiZqklaElGMZYhLdjrv6gl5I9qbEFGLLhGRgjK4a7r8/+c+xL0oksmgQJQxtfgKaix7aktmcY0XXVB8EfrkxUk1Jq490m7YTZ20VR8+wEfSZxCVOE+ibJY5n0tlvRP654VuINF0XT3WEe7JT/5iBI2tZHkRju1iQS60a76taKHx5pkThTmSjONTZt5C6x6omZKkIik0X0EKcg1FQpPkKkGzQx/6ga6Rksbe5GKL0wzK76spxwfbHbeRtR8YaRYgvmyxBCjv1UQI3lnEKLAEtRjig3X5pKNKeg7TP1UozQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CjC/5zG7L42JSoWsNtkE7MFgxj9zEKBIA3UEzKwyoCA=;
- b=BECBgAfN2/+jKD/XEBWwXUGT8kOQxDXeXkLsGD4xooxSEtEFTJcw2v10grjkyGU0GyZUanaw39PMuCs4xC8a6wQG8gO6o6q+BXYMJu4l/LUCEMGiO5uYGmJ3y1L6/QDSV5/ya/DSEBDs/suM5ag+L7UPLLjLJMnG/GTlsCKO6gzSFXDv69+0bNte1Tx69U8JHNno4DEk39KqPVn24GEYnmQrLbt02bt9bxfTf0U2JC9lAok1Nvquga1IyBSyl6TwGbDzN33ZB34cAIbQwWz0PypBZhUI9vZyXDcA+uc7H1kecJXUuTKIBZfc9NrOBr57a2k4lRk+ADf1U2wJEknHww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CjC/5zG7L42JSoWsNtkE7MFgxj9zEKBIA3UEzKwyoCA=;
- b=Qqhb7t4sEey9bOvR1Uk6GIcizt/FOz2dcHLMU3LCJzblZl+Ih8XUU8EjAHwo1wJVFdrvbwPrjnKDgxdvM9PhJ8Wj5jEiPFK3Q1pFDb0BOtm5WjFVdzNHskHj78EXYYBFUReqht+03ReexXTFwMYUlqIxA/3AILGiSCz0qBYeYQKIPXyHISMFdaeKEyvBUsvruPutu0ai+ChWfua4zA0Kswe0ENqrs0cNLWggD9ExChHmf589HYnL2gMiE5QnKlqmM0IGXtIFRMICxcJHdL54GVw8/9t1pB0Bm0RrwqT/XlPMruHE8fYR7hWVAwQDylADLKRYdP1O3cwQFtn6dO6a1g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SA3PR12MB7901.namprd12.prod.outlook.com (2603:10b6:806:306::12)
- by DS0PR12MB9059.namprd12.prod.outlook.com (2603:10b6:8:c5::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Tue, 11 Feb
- 2025 14:31:54 +0000
-Received: from SA3PR12MB7901.namprd12.prod.outlook.com
- ([fe80::66fc:f8a2:1bfb:6de8]) by SA3PR12MB7901.namprd12.prod.outlook.com
- ([fe80::66fc:f8a2:1bfb:6de8%7]) with mapi id 15.20.8422.015; Tue, 11 Feb 2025
- 14:31:54 +0000
-Date: Tue, 11 Feb 2025 16:31:43 +0200
-From: Ido Schimmel <idosch@nvidia.com>
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: Eric Woudstra <ericwouds@gmail.com>, Petr Machata <petrm@nvidia.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, amcohen@nvidia.com
-Subject: Re: [RFC PATCH v1 net-next] net: mlxsw_sp: Use
- switchdev_handle_port_obj_add_foreign() for vxlan
-Message-ID: <Z6tfT6r2NjLQJkrw@shredder>
-References: <20250208141518.191782-1-ericwouds@gmail.com>
- <Z6mhQL-b58L5xkK4@shredder>
- <20250210152246.4ajumdchwhvbarik@skbuf>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210152246.4ajumdchwhvbarik@skbuf>
-X-ClientProxiedBy: FR0P281CA0185.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:ab::10) To SA3PR12MB7901.namprd12.prod.outlook.com
- (2603:10b6:806:306::12)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="L8CYMUFs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739284378;
+	bh=5JVAcHZB86+pVWEGFwPFIykP9cblLWBOqZZC8zSnfwI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=L8CYMUFsJHR50OMeOIPoGM5HH7t6o79OW+/FKF5Roh+9Rqj4EAmEWC0BOKtQbvHrF
+	 p9kCnKgosn+B6fPs0rXUknFCMtQ+0LhWqxpDvaZdC6iTBN3L33at7QVBwtrgPxHfTJ
+	 pJXKztmROdZH4FX8ITDYkKR/QXuvQynjNXMBo8xU4ZElaQjubheQUIxclfVfjyVU2X
+	 539A9fzUZzRRC+WvoXdTSzlv1yodcUXMsvYWtZhPvxxXtBYuDJkgv301ChShP1CF6z
+	 GXe2aLniGbNEvc+8VWS5jizPDHxvKu+8uBn3+XD7sN7DwuRgb74LJGc4kSIDbPWWf+
+	 Gz6c2XmJR8W0A==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6E78F17E0CA2;
+	Tue, 11 Feb 2025 15:32:57 +0100 (CET)
+Date: Tue, 11 Feb 2025 15:32:23 +0100
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Nicolas Dufresne <nicolas@ndufresne.ca>, Florent Tomasin
+ <florent.tomasin@arm.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Steven Price <steven.price@arm.com>, Liviu Dudau
+ <liviu.dudau@arm.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>, Benjamin
+ Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey
+ <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, "T . J .
+ Mercier" <tjmercier@google.com>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Yong
+ Wu <yong.wu@mediatek.com>, dmaengine@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, nd@arm.com, Akash Goel
+ <akash.goel@arm.com>
+Subject: Re: [RFC PATCH 0/5] drm/panthor: Protected mode support for Mali
+ CSF GPUs
+Message-ID: <20250211153223.2fef2316@collabora.com>
+In-Reply-To: <20250211-robust-lush-skink-0dcc5b@houat>
+References: <cover.1738228114.git.florent.tomasin@arm.com>
+	<3ykaewmjjwkp3y2f3gf5jvqketicd4p2xqyajqtfnsxci36qlm@twidtyj2kgbw>
+	<1a73c3acee34a86010ecd25d76958bca4f16d164.camel@ndufresne.ca>
+	<ppznh3xnfuqrozhrc7juyi3enxc4v3meu4wadkwwzecj7oxex7@moln2fiibbxo>
+	<9d0e381758c0e83882b57102fb09c5d3a36fbf57.camel@ndufresne.ca>
+	<1f436caa-1c27-4bbd-9b43-a94dad0d89d0@arm.com>
+	<20250205-amorphous-nano-agouti-b5baba@houat>
+	<2085fb785095dc5abdac2352adfb3e1e1c8ae549.camel@ndufresne.ca>
+	<20250207160253.42551fb1@collabora.com>
+	<20250211-robust-lush-skink-0dcc5b@houat>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA3PR12MB7901:EE_|DS0PR12MB9059:EE_
-X-MS-Office365-Filtering-Correlation-Id: 494922bf-71e2-46f2-f0de-08dd4aa8d48f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?fybf1moQrCNkiC+a8PQS7JDILMwmyrbwNGD0W9oagOnpBYJt6/ueq9uNSqTV?=
- =?us-ascii?Q?DCweTdaXPo62D0SPQe/wIxSgHR99+I+WZlWMmbNo5iPT8tIRNGHxWHKkykme?=
- =?us-ascii?Q?50eoWu+pq0fhDjnddmjK+gLWX4IcBmST/k9iIoqKnWc9GKNPTOBJq0cedPdS?=
- =?us-ascii?Q?4+gEXrV0VK/sIO3QRb8wz/hnTA82pJzCn3VnxB/34s6t6jnQLmLQansjybL/?=
- =?us-ascii?Q?hQy9oaWwtrAViOtvBjN/Iuz/mhA5yIb2iCJZUcbDASLALtn0VkNWqPU6V+Av?=
- =?us-ascii?Q?njPCPSt5GpTawXUd+QaqunGDDhOC8QELR/bBvBNADh0e8gy12IYREt8oi3uW?=
- =?us-ascii?Q?5HxcKi3ORAtnsp8Z65i1Fmcw1LB4oUZp0P9nDp8SsAEMcvm7KYId3SVwKjsc?=
- =?us-ascii?Q?JNIz78dAs19Scc7cpAqgtOyOpFu6lqAgLSEN2LzlOS26yf0TW1V3Ff+4A8Bn?=
- =?us-ascii?Q?Vj93bXOmuLKIBsF7/YN2t/VmfeQyozgC0Ul2TkbMvUc0oAmu7O9tISlsRByh?=
- =?us-ascii?Q?mQjGLLf2+06PdCgLB5to0hNPrc0tu+KkZOt/z2WWQZkQ5OiDoLAPWJq0By5Z?=
- =?us-ascii?Q?C2aXBPua+AHLJWsqsBfTZYBb2th917Q4bubkAZJ52tf4L04++ZhsfWFICAGB?=
- =?us-ascii?Q?AzhBeXCvgtiiyimxIP3/Pnjgje+BzhSweZQCk7ooM9DPvdAtHOxdR8/0LjMO?=
- =?us-ascii?Q?mDdszc8X1Yb1PYqi7dF90DsmnplDWCjggKylHNP1VzzqB45VNn82uXJO4t3/?=
- =?us-ascii?Q?uYBRPvF00Q0LXy65He4A66jn8S/AlcW6WKHSP8yKcuyblxeINLJqeDfdWmej?=
- =?us-ascii?Q?qB2luHWsyXFl975U4RSM1H1uTIPFuFVsBZqG6B9zy8XfKamc+InzwlXWwpOt?=
- =?us-ascii?Q?HEwZQgHkAQ9aQdukKOagX6xq1vsPuFeuunnOZ1NZvPbyKJhctL0lRRw/Qh1G?=
- =?us-ascii?Q?Mv+pk57L/M2ViB4De47H6cSZSKf6est0QoBaGYVfQHhiMrlx7drNgW5J3lSr?=
- =?us-ascii?Q?Dg3UCmUJq2z08eMd4x+riUmt3gsvXzjTvAuR7IjOVK2eaeOpXqrFNf2gaduv?=
- =?us-ascii?Q?Fil0uchrasUWTQZhb1q05RA/dnGmOWtFestDzcU3UrOKx92YiCmP3PT9+MSF?=
- =?us-ascii?Q?7eJqgNgMod7ANZPObN7perVX2R4JQiN3gTbjTHkYDcYwISxuADkA2gc32685?=
- =?us-ascii?Q?wzcqlqWLg/uEKCQ51Dsas/qdd6FhQiJLp4cCLpvP2ZoSb5+DnGkdmySRxqpp?=
- =?us-ascii?Q?UsqguxWqOTR7acWgSxWzn/OdcB7Da7ztVFN7UaNqe3nw4L3pqwfokWmDRSEb?=
- =?us-ascii?Q?CLh3ERHWbR8BJLRXaSYOTkh6KvXfkFJYh3GI4levae0ApsBijxzwLbqqC227?=
- =?us-ascii?Q?N45Kmq6ylbYJCQKTocHmFURMxZXs?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR12MB7901.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?s5vL+UVp7qnl5Sja+YMXarqdXYwguZx7hTz5sbsv+QmvYbAPxxVUijIuVM8H?=
- =?us-ascii?Q?zQNxharZn8f0FtbVSzrt577PGS4lVgLU1Ls4lq2+2tBpT5mMmy/dZ3EbK+P3?=
- =?us-ascii?Q?PQvcz5FXkO6L+kdUV9Z3Wu0vTaQ5GxtuBcuOUiIFibxmaCCTwGHjHC3rgsrK?=
- =?us-ascii?Q?p+Ra0QXMEEkD68y3WUl2D6RKWC4Okpu9xw4fZk8x68a4jGce0WfBU/s83H2C?=
- =?us-ascii?Q?t8A1DMbegod81Q9wwDJXgcPrw/SPgLBXxFVpQj2mL8s8A/IqXNK3COzkCjpS?=
- =?us-ascii?Q?GCZ+h9UdpDhn8IsEr3X47LAkZ+djKzGaL12FBakpMKl2Qi1X4SsCfpRGbwFx?=
- =?us-ascii?Q?zR18gn2F8IJYU4lIDissQLNln0e5p1XDFgbZIMADTNzN2zJmmOnH5OXAF9Fa?=
- =?us-ascii?Q?9WlJG6yXr3hQAhKLWzsXAOBF/yC6HAeN77Xa2d8psrXLr0N3IW9DRxGpJTPk?=
- =?us-ascii?Q?3YVEuM+uE7tRoebVjwT5ud6GsJudcYkfspuYf8DgrHCQGjAhKSKgob9teHYF?=
- =?us-ascii?Q?9t7hLKHFnrMbPVfmFlSD8Skxklk9Wo0yo1qlw2R4oSnUTZ8/MUPQzK855508?=
- =?us-ascii?Q?NixtG4nRv+Xiy/2lahZaccjNE2HNy9bkPB6NySStqh2LNO/FElbzdeQrFK5k?=
- =?us-ascii?Q?nHzimqMwcWNBLxua+zJjtE3wwwlZvcbNO1io5h7z4/dYl1Fl/2TFr88YiDs4?=
- =?us-ascii?Q?PVlXRwbYlD259lR4DM/gx5ykx+YDeHkUmJ86GJRcR/1KqwFuALRdY88K3qvy?=
- =?us-ascii?Q?LqFo6iuoSi0wqNv1rYYha12xnec5ym7oBH9MWWu6gjPm8xesGep2xqWLJ/Ui?=
- =?us-ascii?Q?Gd/mTAdd95hXhiz8S6FaUSPMg+G84HJzv3lxa0VT/ELOqeKkEq+Q3UkgxMk7?=
- =?us-ascii?Q?2OJGHxeMuidrXx8ATQgYMkazjRFhjIuEzxTTgWRkqPh72guwd39yQ8YgXtrj?=
- =?us-ascii?Q?o6ZsmAKcCsybdP1ZIhPM+TwklxANhb9117YPiNHNOQZs8PbR9/eKJTtsKjIl?=
- =?us-ascii?Q?NttfD0XdxcAfXOZnpNNI0PZGmyprm8SoD6uQvEmJ9ww8mUXwVFf0It+22ZO0?=
- =?us-ascii?Q?w0Ip32wS3wvrMXZbT7qYdm/3nDIiMcLMnbFjqIi2DtxPgPeA3Z3wJhZ8kdkf?=
- =?us-ascii?Q?ICry4iwpjMVOga06qYmrOEGJ+3JG9yhdbCCEgS2FzuDKsm7L54OTUYL0JVQo?=
- =?us-ascii?Q?FHCEjh86DmnFjw8Kz/LUyOYrVsBOhblPONRfRtoHOvB750kJFtyVARl+c0Cj?=
- =?us-ascii?Q?T0buurlo32osTI47MABd+igmZQB2W8nc2D60hUMhUQRRwmWEsndkG2kWgFA0?=
- =?us-ascii?Q?HbCaa0s8dNhLIupG5nCP1KYuH5WUd7GxoX9eWA7J0j8oTepRRe056tUG4oyP?=
- =?us-ascii?Q?tbLhU70oSPYDubCF0grttn6dv5Q5xJyXSe+G7aC+rGcR2r8AItrowR7zhI2H?=
- =?us-ascii?Q?wKQRT+f6i4fZHkph68dn6kOnZlxNQATvoFdkNICK8Z635xH3wkwvVUJ0QBCd?=
- =?us-ascii?Q?VJj3qrP88FU/Ria05+LCpQMff9SXf1hYTuh9FQWdOCIVZErixbmPwl16RpLz?=
- =?us-ascii?Q?8xxCxVXJdAnuZcbi8FDDi/yj3gP2ew8dJhRpsVLX?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 494922bf-71e2-46f2-f0de-08dd4aa8d48f
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR12MB7901.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 14:31:53.9724
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ijt51X0l0yKWGGjRmk/f/6T3XzVC1G76/6dFeJHNrpFIdYh4Zmwd/V15+zDWO2NoNspXXEOEDVkJKNjHPqi28g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9059
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 10, 2025 at 05:22:46PM +0200, Vladimir Oltean wrote:
-> On Mon, Feb 10, 2025 at 08:48:32AM +0200, Ido Schimmel wrote:
-> > On Sat, Feb 08, 2025 at 03:15:18PM +0100, Eric Woudstra wrote:
-> > > Sending as RFC as I do not own this hardware. This code is not tested.
-> > > 
-> > > Vladimir found this part of the spectrum switchdev, while looking at
-> > > another issue here:
-> > > 
-> > > https://lore.kernel.org/all/20250207220408.zipucrmm2yafj4wu@skbuf/
-> > > 
-> > > As vxlan seems a foreign port, wouldn't it be better to use
-> > > switchdev_handle_port_obj_add_foreign() ?
-> > 
-> > Thanks for the patch, but the VXLAN port is not foreign to the other
-> > switch ports. That is, forwarding between these ports and VXLAN happens
-> > in hardware. And yes, switchdev_bridge_port_offload() does need to be
-> > called for the VXLAN port so that it's assigned the same hardware domain
-> > as the other ports.
-> 
-> Thanks, this is useful. I'm not providing a patch yet because there are
-> still things I don't understand.
-> 
-> Have you seen any of the typical problems associated with the software
-> bridge thinking vxlan isn't part of the same hwdom as the ingress
-> physical port, and, say, flooding packets twice to vxlan, when the
-> switch had already forwarded a copy of the packet? In almost 4 years
-> since commit 2f5dc00f7a3e ("net: bridge: switchdev: let drivers inform
-> which bridge ports are offloaded"), I would have expected such issues
-> would have been noticed?
+On Tue, 11 Feb 2025 14:46:56 +0100
+Maxime Ripard <mripard@kernel.org> wrote:
 
-I'm aware of one report from QA that is on my list. They configured a
-VXLAN tunnel that floods packets to two remote VTEPs:
+> Hi Boris,
+>=20
+> On Fri, Feb 07, 2025 at 04:02:53PM +0100, Boris Brezillon wrote:
+> > Sorry for joining the party late, a couple of comments to back Akash
+> > and Nicolas' concerns.
+> >=20
+> > On Wed, 05 Feb 2025 13:14:14 -0500
+> > Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
+> >  =20
+> > > Le mercredi 05 f=C3=A9vrier 2025 =C3=A0 15:52 +0100, Maxime Ripard a =
+=C3=A9crit=C2=A0: =20
+> > > > On Mon, Feb 03, 2025 at 04:43:23PM +0000, Florent Tomasin wrote:   =
+=20
+> > > > > Hi Maxime, Nicolas
+> > > > >=20
+> > > > > On 30/01/2025 17:47, Nicolas Dufresne wrote:   =20
+> > > > > > Le jeudi 30 janvier 2025 =C3=A0 17:38 +0100, Maxime Ripard a =
+=C3=A9crit=C2=A0:   =20
+> > > > > > > Hi Nicolas,
+> > > > > > >=20
+> > > > > > > On Thu, Jan 30, 2025 at 10:59:56AM -0500, Nicolas Dufresne wr=
+ote:   =20
+> > > > > > > > Le jeudi 30 janvier 2025 =C3=A0 14:46 +0100, Maxime Ripard =
+a =C3=A9crit=C2=A0:   =20
+> > > > > > > > > Hi,
+> > > > > > > > >=20
+> > > > > > > > > I started to review it, but it's probably best to discuss=
+ it here.
+> > > > > > > > >=20
+> > > > > > > > > On Thu, Jan 30, 2025 at 01:08:56PM +0000, Florent Tomasin=
+ wrote:   =20
+> > > > > > > > > > Hi,
+> > > > > > > > > >=20
+> > > > > > > > > > This is a patch series covering the support for protect=
+ed mode execution in
+> > > > > > > > > > Mali Panthor CSF kernel driver.
+> > > > > > > > > >=20
+> > > > > > > > > > The Mali CSF GPUs come with the support for protected m=
+ode execution at the
+> > > > > > > > > > HW level. This feature requires two main changes in the=
+ kernel driver:
+> > > > > > > > > >=20
+> > > > > > > > > > 1) Configure the GPU with a protected buffer. The syste=
+m must provide a DMA
+> > > > > > > > > >    heap from which the driver can allocate a protected =
+buffer.
+> > > > > > > > > >    It can be a carved-out memory or dynamically allocat=
+ed protected memory region.
+> > > > > > > > > >    Some system includes a trusted FW which is in charge=
+ of the protected memory.
+> > > > > > > > > >    Since this problem is integration specific, the Mali=
+ Panthor CSF kernel
+> > > > > > > > > >    driver must import the protected memory from a devic=
+e specific exporter.   =20
+> > > > > > > > >=20
+> > > > > > > > > Why do you need a heap for it in the first place? My unde=
+rstanding of
+> > > > > > > > > your series is that you have a carved out memory region s=
+omewhere, and
+> > > > > > > > > you want to allocate from that carved out memory region y=
+our buffers.
+> > > > > > > > >=20
+> > > > > > > > > How is that any different from using a reserved-memory re=
+gion, adding
+> > > > > > > > > the reserved-memory property to the GPU device and doing =
+all your
+> > > > > > > > > allocation through the usual dma_alloc_* API?   =20
+> > > > > > > >=20
+> > > > > > > > How do you then multiplex this region so it can be shared b=
+etween
+> > > > > > > > GPU/Camera/Display/Codec drivers and also userspace ?   =20
+> > > > > > >=20
+> > > > > > > You could point all the devices to the same reserved memory r=
+egion, and
+> > > > > > > they would all allocate from there, including for their users=
+pace-facing
+> > > > > > > allocations.   =20
+> > > > > >=20
+> > > > > > I get that using memory region is somewhat more of an HW descri=
+ption, and
+> > > > > > aligned with what a DT is supposed to describe. One of the chal=
+lenge is that
+> > > > > > Mediatek heap proposal endup calling into their TEE, meaning kn=
+owing the region
+> > > > > > is not that useful. You actually need the TEE APP guid and its =
+IPC protocol. If
+> > > > > > we can dell drivers to use a head instead, we can abstract that=
+ SoC specific
+> > > > > > complexity. I believe each allocated addressed has to be mapped=
+ to a zone, and
+> > > > > > that can only be done in the secure application. I can imagine =
+similar needs
+> > > > > > when the protection is done using some sort of a VM / hyperviso=
+r.
+> > > > > >=20
+> > > > > > Nicolas
+> > > > > >    =20
+> > > > >=20
+> > > > > The idea in this design is to abstract the heap management from t=
+he
+> > > > > Panthor kernel driver (which consumes a DMA buffer from it).
+> > > > >=20
+> > > > > In a system, an integrator would have implemented a secure heap d=
+river,
+> > > > > and could be based on TEE or a carved-out memory with restricted =
+access,
+> > > > > or else. This heap driver would be responsible of implementing the
+> > > > > logic to: allocate, free, refcount, etc.
+> > > > >=20
+> > > > > The heap would be retrieved by the Panthor kernel driver in order=
+ to
+> > > > > allocate protected memory to load the FW and allow the GPU to ent=
+er/exit
+> > > > > protected mode. This memory would not belong to a user space proc=
+ess.
+> > > > > The driver allocates it at the time of loading the FW and initial=
+ization
+> > > > > of the GPU HW. This is a device globally owned protected memory. =
+  =20
+> > > >=20
+> > > > The thing is, it's really not clear why you absolutely need to have=
+ the
+> > > > Panthor driver involved there. It won't be transparent to userspace,
+> > > > since you'd need an extra flag at allocation time, and the buffers
+> > > > behave differently. If userspace has to be aware of it, what's the
+> > > > advantage to your approach compared to just exposing a heap for tho=
+se
+> > > > secure buffers, and letting userspace allocate its buffers from the=
+re?   =20
+> > >=20
+> > > Unless I'm mistaken, the Panthor driver loads its own firmware. Since=
+ loading
+> > > the firmware requires placing the data in a protected memory region, =
+and that
+> > > this aspect has no exposure to userspace, how can Panthor not be impl=
+icated ? =20
+> >=20
+> > Right, the very reason we need protected memory early is because some
+> > FW sections need to be allocated from the protected pool, otherwise the
+> > TEE will fault as soon at the FW enters the so-called 'protected mode'.=
+ =20
+>=20
+> How does that work if you don't have some way to allocate the protected
+> memory? You can still submit jobs to the GPU, but you can't submit /
+> execute "protected jobs"?
 
-00:00:00:00:00:00 dev vx100 dst 1.1.1.2
-00:00:00:00:00:00 dev vx100 dst 1.1.1.3
+Exactly.
 
-The underlay routes used to forward the VXLAN encapsulated traffic are:
+>=20
+> > Now, it's not impossible to work around this limitation. For instance,
+> > we could load the FW without this protected section by default (what we
+> > do right now), and then provide a DRM_PANTHOR_ENABLE_FW_PROT_MODE
+> > ioctl that would take a GEM object imported from a dmabuf allocated
+> > from the protected dma-heap by userspace. We can then reset the FW and
+> > allow it to operate in protected mode after that point. =20
+>=20
+> Urgh, I'd rather avoid that dance if possible :)
 
-1.1.1.2 via 10.0.0.2 dev swp13
-1.1.1.3 via 10.0.0.6 dev swp15
+Me too.
 
-But they made sure not to configure 10.0.0.6 at the other end. What
-happens is that traffic for 1.1.1.2 is correctly forwarded in hardware,
-but traffic for 1.1.1.3 encounters a neighbour miss and trapped to
-the CPU which then forwards it again to 1.1.1.2.
+>=20
+> > This approach has two downsides though:
+> >=20
+> > 1. We have no way of checking that the memory we're passed is actually
+> > suitable for FW execution in a protected context. If we're passed
+> > random memory, this will likely hang the platform as soon as we enter
+> > protected mode. =20
+>=20
+> It's a current limitation of dma-buf in general, and you'd have the same
+> issue right now if someone imports a buffer, or misconfigure the heap
+> for a !protected heap.
+>=20
+> I'd really like to have some way to store some metadata in dma_buf, if
+> only to tell that the buffer is protected.
 
-Putting the VXLAN device in the same hardware domain as the other switch
-ports should solve this "double forwarding" scenario.
+The dma_buf has a pointer to its ops, so it should be relatively easy
+to add an is_dma_buf_coming_from_this_heap() helper. Of course this
+implies linking the consumer driver to the heap it's supposed to take
+protected buffers from, which is basically the thing being discussed
+here :-).
 
-> Do we require a Fixes: tag for this?
+>=20
+> I suspect you'd also need that if you do things like do protected video
+> playback through a codec, get a protected frame, and want to import that
+> into the GPU. Depending on how you allocate it, either the codec or the
+> GPU or both will want to make sure it's protected.
 
-It's not strictly a regression (never worked) and it's not that critical
-IMO, so I prefer targeting net-next.
+If it's all allocated from a central "protected" heap (even if that
+goes through the driver calling the dma_heap_alloc_buffer()), it
+shouldn't be an issue.
 
-> And then, switchdev_bridge_port_offload() has a brport_dev argument,
-> which would pretty clearly be passed as vxlan_dev by
-> mlxsw_sp_bridge_8021d_vxlan_join() and
-> mlxsw_sp_bridge_vlan_aware_vxlan_join(), but it also has one other
-> "struct net_device *dev" argument, on which br_switchdev_port_offload()
-> wants to call dev_get_port_parent_id(), to see what hwdom (what other
-> bridge ports) to associate it to.
+>=20
+> > 2. If the driver already boot the FW and exposed a DRI node, we might
+> > have GPU workloads running, and doing a FW reset might incur a slight
+> > delay in GPU jobs execution.
+> >=20
+> > I think #1 is a more general issue that applies to suspend buffers
+> > allocated for GPU contexts too. If we expose ioctls where we take
+> > protected memory buffers that can possibly lead to crashes if they are
+> > not real protected memory regions, and we have no way to ensure the
+> > memory is protected, we probably want to restrict these ioctls/modes to
+> > some high-privilege CAP_SYS_.
+> >=20
+> > For #2, that's probably something we can live with, since it's a
+> > one-shot thing. If it becomes an issue, we can even make sure we enable
+> > the FW protected-mode before the GPU starts being used for real.
+> >=20
+> > This being said, I think the problem applies outside Panthor, and it
+> > might be that the video codec can't reset the FW/HW block to switch to
+> > protected mode as easily as Panthor.
+> >
+> > Note that there's also downsides to the reserved-memory node approach,
+> > where some bootloader stage would ask the secure FW to reserve a
+> > portion of mem and pass this through the DT. This sort of things tend to
+> > be an integration mess, where you need all the pieces of the stack (TEE,
+> > u-boot, MTK dma-heap driver, gbm, ...) to be at a certain version to
+> > work properly. If we go the ioctl() way, we restrict the scope to the
+> > TEE, gbm/mesa and the protected-dma-heap driver, which is still a lot,
+> > but we've ripped the bootloader out of the equation at least. =20
+>=20
+> Yeah. I also think there's two discussions in parallel here:
+>=20
+>  1) Being able to allocate protected buffers from the driver
+>  2) Exposing an interface to allocate those to userspace
+>=20
+> I'm not really convinced we need 2, but 1 is obviously needed from what
+> you're saying.
 
-Right.
-
-> Usually we use the mlxsw_sp_port->dev as the second argument, but which
-> port to use here? Any random port that's under the bridge, or is there a
-> specific one for the vxlan that should be used?
-
-Any random port is fine as they all share the same parent ID.
-
-BTW, I asked Amit (Cced) to look into this as there might be some issues
-with ARP suppression that will make it a bit more complicated to patch.
-Are you OK with that or do you want the authorship? We can put any tag
-you choose. I am asking so that it won't appear like I am trying to
-discredit you.
-
-Thanks!
+I suspect we need #2 for GBM, still. But that's what dma-heaps are for,
+so I don't think that's a problem.
