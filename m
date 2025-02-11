@@ -1,159 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E7926BD9E;
-	Tue, 11 Feb 2025 03:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DF31D5147
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 03:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739243553; cv=none; b=VwmHjdsS1VFqaZy2t4ZVW0cF0nhwWLzF+eQoFP4Ou22mqKNj7qAiqq1i/d4QHTzdkhkq2grW2oi0Ju5KBJVh3RIIz1zo62gGkCavS6ZeeTNFiSjfRPOTbzdoXRU6A2S4ljMX8tn2umemTsX514CIdkWu/7iongfxjU3ekVq860c=
+	t=1739243724; cv=none; b=Gov4IAsxdaDuYFavwhvNBJydcv8YYobpKooCjlTPy5rSTmEB+lHfpGRHG7wVbzalR+NbUThfQkKucRZ/9jCao8e1sY3WfN1XEXm6KJ850TmjXmA3Crsi7FMiY8t/fzr6AQagZ6rR6eSbylWFhq8r+avxmr+9yx8/PqMReEUSFvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739243553; c=relaxed/simple;
-	bh=agqD0Yze5c898D+WEqsD+8h3qYtyaHwztDSiAkXNzDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UWck1HSyk7k/3HghQgfJ4XJgdzZoLrJAGMh63H7/B6TtRQHrBgUu8vSaw19P5Qm4ky8aGwDhi20LhAfRuJfaB8IlJjF4fUr5gZfmx8FEhlfoq5P6fQfr8eLsMGnvU7/Nb/OhvIT9hDKxts5c/oSjHIUlnJwnOU0s9zo4ctVocYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VU96MbxS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739243724; c=relaxed/simple;
+	bh=HA0eEC7kOG1cHWJvDtJcCnKolNpI4DxYE1BApqVuX5g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z2g1zbF8Nzoi/It5IlKWo28BqvtduVRjEELzLgtVQ8nLQDECooLz72e8CxJVFUXdjy6hmeLzbfcc0cgF7kEP34EoMNOma0yDh1Vhe91DZLSG5ysDYF3WwY9rT3HRbsfofsLsQ5HdbR9OKR4liJnjjADyzlWPeHl3M4efZ2XWdDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PEI8wR8G; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VU96MbxS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C3F7C4CED1;
-	Tue, 11 Feb 2025 03:12:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739243552;
-	bh=agqD0Yze5c898D+WEqsD+8h3qYtyaHwztDSiAkXNzDM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VU96MbxS2YnMFE5Ad3eEFcmnSkUafRG/k0/NNrfEBjQi9Z0CQsmFUq4nuwnSCn/Tt
-	 Pn5NdOjGqtOhKVhPeKfg1QsSwCQPkSDS0CJxeaDuSWmyf6xLYV8WWfYirxTTA59xjr
-	 5bZixJWguHhPxQ1F7Z1e0SDO/1D4Abt5AHxIL/6movGIlDJnxG5X4kjvYy/LYoDmM1
-	 p/xyPWFjUf1gu9vF98v79Iy+J+GxarL/eQY8fDLEiAYjw57w8jS6sOnvdmC3lJqXVj
-	 fN8CO+OiMMRJF1aDAISImuwJltQ/wP0IEcpCZQzKWbYxW77sWF1dQgKvx5C8hY2F9n
-	 TQpn98TgWCCzA==
-Date: Mon, 10 Feb 2025 19:12:30 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Hao Ge <gehao@kylinos.cn>,
-	James Clark <james.clark@linaro.org>,
-	Howard Chu <howardchu95@gmail.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Levi Yun <yeoreum.yun@arm.com>, Xu Yang <xu.yang_2@nxp.com>,
-	Tengda Wu <wutengda@huaweicloud.com>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 00/10] Move uid filtering to BPF filters
-Message-ID: <Z6rAHhAIdlkAryGJ@google.com>
-References: <20250111190143.1029906-1-irogers@google.com>
- <Z6panMzNSm1op8Di@google.com>
- <CAP-5=fUY83gifsMZA0Q45kiQQbAKp2uJxkuwrwGtHK2hiUFRDA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PEI8wR8G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739243721;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r0Ivl2hUzrsAFBlV631jaucRgQ8R5hnE19aUzjr9fLE=;
+	b=PEI8wR8G15UFArbKY2Gs/762kvU7jGM5UB0Is/Dyu5VyzcQ3LBp95iWm6Zdptf4eUrToHP
+	1QpJSVdl5OlbnzGc8LXztO4iBQJz3hHHIAL5+jYiGAcgFgpNQa49yd1XeRGTCGkpqAi4pc
+	PXwTJU7HwEPbP83Bp9qyEv5i1dnzcGM=
+Received: from mail-oa1-f71.google.com (mail-oa1-f71.google.com
+ [209.85.160.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-660-YSkZ5FfIPsK0AEjjCMeUIQ-1; Mon, 10 Feb 2025 22:15:17 -0500
+X-MC-Unique: YSkZ5FfIPsK0AEjjCMeUIQ-1
+X-Mimecast-MFC-AGG-ID: YSkZ5FfIPsK0AEjjCMeUIQ
+Received: by mail-oa1-f71.google.com with SMTP id 586e51a60fabf-2b1aa0c87daso1660492fac.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:15:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739243717; x=1739848517;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r0Ivl2hUzrsAFBlV631jaucRgQ8R5hnE19aUzjr9fLE=;
+        b=I2f1HT1pVZHMmLsvctUd1gdZru6RDKGICQpTrr7ZFbCkt7Z9iTRh4qHzqMrwIuHKuQ
+         V52KygsAhB7g80iw80YmuQkHsBEzvstcrSWP8UQ4b2e436DeIzQKFYmaWl20wHgVmFBn
+         CuWVkW6Dj+16UtFCSYwa2pR5NbZHsZAoIeD3ctpJX1nnZ4ZlYMzWZZy9g+jZjnYgDTRn
+         KxyajqKImd5c7IAoJlwd5Zc1HJ6cgpXgGdkTjFQL4oP8Zv1Evr7ZPR5zBud7WcWVRSW1
+         r5744+20JI/4FWBwWfHdN0bB9qir+Jz7rXpmb3ep0nvNfvuQdK+2dmbs6siEuPCpA+Ki
+         iM9g==
+X-Forwarded-Encrypted: i=1; AJvYcCUN+3NpNPDtO9msIVLlktDUuimAM2uZ2qhpBpar+49IXdJqwCIHSlE/lcqAXs/JLzUYKg1MAg25TNPu00k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyv0QEm377S/66wIRgOYxZ3GE/LAgthgXB815KyCl0A5884Y31y
+	n+BpB8Bj3ZYj6aotlKn5yOBDTZNFAX9Ze44bzIyzURFyZvc3lVIGFh3bAZxsLxI2YjUqiI71e66
+	56Y/5RwOrE456ug+MXk9zYNztUVbnGfGoFh/AQj+u/YMpi7lUSZ380Llwroxt+bvhsN7A6wxTZC
+	2Jz2fi/w1pESpWH/5EHpLnMc31Ac+V8kla8gyj
+X-Gm-Gg: ASbGncuPHa4J61stT0q9bfiupvYHREPhA1+0Cm2jSqj85Jx9cr0HVKbs37bC1J1egsE
+	T45B1ZhETKa4X7XZfiZcWkaxlqKBManOKOkUxTnSinNiK4GgZnkIEyVXpsBzvZw==
+X-Received: by 2002:a05:6870:80d1:b0:29d:c6ef:cf1d with SMTP id 586e51a60fabf-2b83eba549amr9756677fac.7.1739243716922;
+        Mon, 10 Feb 2025 19:15:16 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEpeDE1nUfGm5pbX9Bj+ov+VzBebcDC/RED+dVFXtD78QPFmYvAX5E7sdpCS+436MdM2PtX5bHZ2CPhlreAWgw=
+X-Received: by 2002:a05:6870:80d1:b0:29d:c6ef:cf1d with SMTP id
+ 586e51a60fabf-2b83eba549amr9756668fac.7.1739243716705; Mon, 10 Feb 2025
+ 19:15:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUY83gifsMZA0Q45kiQQbAKp2uJxkuwrwGtHK2hiUFRDA@mail.gmail.com>
+References: <20250210104347.3d291afb@canb.auug.org.au> <64504o9q-5os6-79p3-o18s-5pn6q9s0q6n7@xreary.bet>
+In-Reply-To: <64504o9q-5os6-79p3-o18s-5pn6q9s0q6n7@xreary.bet>
+From: Kate Hsuan <hpa@redhat.com>
+Date: Tue, 11 Feb 2025 11:15:05 +0800
+X-Gm-Features: AWEUYZnXY_mke1ik49Wr00glsp46UMJhPBgjYvzoEDy_WKISPe8kRoWnawcarDk
+Message-ID: <CAEth8oGPimtR8TmQrODtExedLdvpCYzgynOiynBUU1jC4B4jvg@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the hid tree
+To: Jiri Kosina <jikos@kernel.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 10, 2025 at 02:06:18PM -0800, Ian Rogers wrote:
-> On Mon, Feb 10, 2025 at 11:59 AM Namhyung Kim <namhyung@kernel.org> wrote:
+Hi Jiri,
+
+On Tue, Feb 11, 2025 at 6:07=E2=80=AFAM Jiri Kosina <jikos@kernel.org> wrot=
+e:
+>
+> On Mon, 10 Feb 2025, Stephen Rothwell wrote:
+>
+> > Hi all,
 > >
-> > On Sat, Jan 11, 2025 at 11:01:33AM -0800, Ian Rogers wrote:
-> > > Rather than scanning /proc and skipping PIDs based on their UIDs, use
-> > > BPF filters for uid filtering. The /proc scanning in thread_map is
-> > > racy as the PID may exit before the perf_event_open causing perf to
-> > > abort. BPF UID filters are more robust as they avoid the race. Add a
-> > > helper for commands that support UID filtering and wire up. Remove the
-> > > non-BPF UID filtering support.
+> > After merging the hid tree, today's linux-next build (powerpc
+> > ppc64_defconfig) failed like this:
 > >
-> > Hmm.. then non-BPF build cannot use the UID filtering anymore, right?
-> > Also non-root users will be limited unless it pinned the BPF program in
-> > advance.
+> > ERROR: modpost: "led_mc_calc_color_components" [drivers/hid/hid-lg-g15.=
+ko] undefined!
+> > ERROR: modpost: "devm_led_classdev_multicolor_register_ext" [drivers/hi=
+d/hid-lg-g15.ko] undefined!
 > >
-> > I think you can keep the original behavior and convert to BPF only when
-> > it's available.
-> 
-> Using BPF when available would be limited progress. The issues I have
-> with not removing the existing approach are:
-> 
-> 1) It is broken
-> Scanning /proc for pids and then doing perf_event_open means that any
-> time a process exits the perf_event_open fails.
-> Steps to reproduce:
-> This bug reproduces easily but if your machine is lightly loaded in
-> one terminal run `perf test`, in another terminal run `sudo perf top
-> -u $(id -u)` the perf top command will exit with:
-> ```
-> Error:
-> The sys_perf_event_open() syscall returned with 3 (No such process)
-> for event (cycles:P).
-> /bin/dmesg | grep -i perf may provide additional information.
-> ```
-> 
-> 2) It is a work in progress that isn't progressing. Scanning /proc
-> will only tell you about started processes; it won't tell you about
-> processes that start during the profiling run, whether it be perf top
-> or perf record. Extra work would be necessary to make this most basic
-> of use-cases work, perhaps you could use tracepoints to capture
-> starting processes and then enable user profiling on those processes.
-> It would be horribly complicated, suffer from delays between observing
-> things happen and doing the perf_event_open, biases in the samples,
-> etc. I don't expect anyone to do it, especially when BPF filtering
-> already solves the problem better. There have been 13 years that
-> someone could have fixed it.
-> 
-> 3) it adds significant useless complexity to the code base. Having
-> 'user' in the target makes it look like perf_event_open can work on a
-> pid, system wide or user basis. The user basis doesn't exist so the
-> majority of the code base is just ignoring it - search for users of
-> uid_str on target. Those that do run into problems (1) and (2).
-> 
-> 4) It is redundant and leads to confusion with BPF filtering. Having
-> the BPF filter on evsels is non-zero cost in terms of the code base
-> complexity, but it is something broadly useful. As user filtering has
-> never worked (see above) it isn't broadly used but is adding
-> complexity. If both approaches were wanted then it is unclear what the
-> code should be doing, presumably the mish-mash of BPF filtering and
-> /proc scanning that happens today and will be broken due to (1) and
-> (2). Putting everything into the BPF filter makes sense as you can
-> combine a BPF filter with an additional BPF filter on user.
-> 
-> 5) It is untested and adding a test leads to an always broken test due
-> to testing being an example of where things break, see point 1 and its
-> example.
-> 
-> 6) Nobody wants the non-BPF approach. As it was broken nobody used the
-> previous feature, maintaining it for no users is overhead. Let me know
-> if someone is using this option (I doubt it given points 1 and 2) and
-> they wouldn't be better served by BPF. People building perf today have
-> to explicitly opt-out of wanting BPF in their tooling. I posted this
-> change a month ago and nobody has jumped up saying please don't remove
-> the old approach.
-> 
-> 7) The interaction with this feature and changes in behavior, say
-> ignoring events that fail to open, is non-obvious and not testable as
-> testing would be broken as the functionality itself is broken. Having
-> the broken feature hanging around and being untestable means that we
-> slow progress on new features, testing and other improvements.
-> 
-> Yes, we could try to fix all of that but why? Nobody has cared or
-> tried in 13 years and I would like the tech debt off our plate with a
-> better approach in its place.
+> > Caused by commit
+> >
+> >   a3a064146c50 ("HID: hid-lg-g15: Use standard multicolor LED API")
+> >
+> > # CONFIG_LEDS_CLASS_MULTICOLOR is not set
+> >
+> > I have used the hid tree from next-20250207 for today.
+>
+> Indeed, this was reported by 0day bot as well.
+>
+> Kate, are you planning to send a fix please?
 
-Thanks for writing this up.  I agree BPF approach is better but it has
-its own limitation - basically it requires root.  And I know a few of
-people who don't use BPF. :)  And maybe we need to check if user passes
-filters to the event already.
+Yes.
+It is a dependency issue in Kconfig.
+Since the LED multicolour APIs are used, I'll add an
+LEDS_CLASS_MULTICOLOR dependency to HID_LOGITECH.
 
-Also, I admit that I don't know who actually uses this.  But I can say
-sometimes people uses tools in a creative way.  Anyway, I can imagine
-an use case that system is in a steady state and each user has dedicated
-jobs.  Then scanning /proc would work well.
+Thank you :)
 
-Thanks,
-Namhyung
+>
+> Thanks,
+>
+> --
+> Jiri Kosina
+> SUSE Labs
+>
+
+
+--=20
+BR,
+Kate
 
