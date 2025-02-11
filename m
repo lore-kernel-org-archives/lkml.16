@@ -1,133 +1,156 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED47626BD8C;
-	Tue, 11 Feb 2025 15:11:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9DC250C0F
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 15:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739286668; cv=none; b=iResZLq+hyfLrAnOnCSh8zET/k9BgO9ju5Imc8kivpl/Vp8gL/Eb6uH9p61x57M5XH+8r+R0UT6eUpPnC21hAzsG0kAnJh9OHihz3Rp/c4tgYjVMdYscsXNQe5lxc0flKZwS7d63YDvoewGflDeO+N8YTJLx/4iA3jqF+piHe+U=
+	t=1739286694; cv=none; b=jDLZdQrU+iSNPPH8rPajDA9d4s2uNMQE0QNKcsdvz37RBGG2xqjtlh5GOScjLtRcFUVbwD3Ujoz3W1YFkli2RWUNRM8pXInVKd1ozXv+OGpnMFgJXFhUVjz20WMxsF5Eiox6PwwNW+WQ00yPrHplunIhPaUoUeULlWBf5sJs07s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739286668; c=relaxed/simple;
-	bh=obWpRWXFO0BmcJk5O5meIK0OX3KFC/pPcUicI/GFgBM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=iyN+O/Q2IxUafcbOn4m9iomcm3K6u9Dk58Vhl1iWMd+7kc+rabJ5uYHFhjQHZsVwZ2Huq8lKhU2oZ5/+ynuPzkpI4v01hbd3EHA9SbJeLGg+NymvjjNRMNkT7TAfUTRI5eOhJTn/KyW5geigC8GYpDNeKd+9eMnIzNTxMbIiNL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=T8pnfREc; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="T8pnfREc"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51B4vo2q003866;
-	Tue, 11 Feb 2025 09:10:40 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=yUrdzzly1HlXlFqlA9rB3BgFsAXXPpFRmV9em8w60ko=; b=
-	T8pnfREcqgY9R2pNNte3IR4Dyegn4xNWjjV3UAVgdJ9C2uObMEiBI+NmQ25IE23j
-	zmektAA5QnYXNb+hB2twdNvhhi0MtdefJUgcI19EcWobw5Q2qNRVkQXXJBN5j/iZ
-	briN4aiaB4KAYSCYedJ+OLPdMRBXwBK+CePGn9x3PaiJg5ym58gEePeuZBKWEeQ7
-	lOHpDzhuVUgS7Rso+ULVx0o2xqodKEeqHlo2WLC1ZKjK9kpm/Yatdut6gU96OkcN
-	xCL/hzsrn54yWQQWexI/9r2c4/2MgPhJH5w1EOB1397ilz6CXYowCUfp/hzuOl/G
-	jJm+ISVDjL5eFxM6v0y9LA==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 44p4jmvwn3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 09:10:39 -0600 (CST)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 11 Feb
- 2025 15:10:38 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.14 via Frontend Transport; Tue, 11 Feb 2025 15:10:38 +0000
-Received: from [198.90.208.18] (ediswws06.ad.cirrus.com [198.90.208.18])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 3838C820248;
-	Tue, 11 Feb 2025 15:10:38 +0000 (UTC)
-Message-ID: <d1c9a0f3-5bc5-4b78-abfa-d17e90c36f48@opensource.cirrus.com>
-Date: Tue, 11 Feb 2025 15:10:38 +0000
+	s=arc-20240116; t=1739286694; c=relaxed/simple;
+	bh=Dwv8AXypjyV15mEqTw7+Z2TU6waZ45Sm9b1S6bFR/Fc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UC/JGjMFr5MWQd1uSV3hnLTIO/7nb/YPsKbAc7Dxqs4W1ARUqO1yT4LqQAgMq7Ek4gxMXEGyiRUC6lgFwU8h83dJezVAfaUWTC4qYNyyPe6l7dQ3hn+Bt7dj8fXzK1fyoK1cItExmoh3WBkz7mNeR3EXgI/LU9OFf2WQqMSWypg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2786BC4CEE5;
+	Tue, 11 Feb 2025 15:11:32 +0000 (UTC)
+Date: Tue, 11 Feb 2025 10:11:37 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Harshit Agarwal <harshit@nutanix.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin
+ Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org, Jon Kohler
+ <jon@nutanix.com>, Gauri Patwardhan <gauri.patwardhan@nutanix.com>, Rahul
+ Chunduru <rahul.chunduru@nutanix.com>, Will Ton <william.ton@nutanix.com>
+Subject: Re: [PATCH] sched/rt: Fix race in push_rt_task
+Message-ID: <20250211101137.5824285d@gandalf.local.home>
+In-Reply-To: <20250211054646.23987-1-harshit@nutanix.com>
+References: <20250211054646.23987-1-harshit@nutanix.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] firmware: cs_dsp: test_control_parse: null-terminate test
- strings
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-        "Simon Trimmer" <simont@opensource.cirrus.com>,
-        Charles Keepax
-	<ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>
-CC: <patches@opensource.cirrus.com>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <20250211-cs_dsp-kunit-strings-v1-1-d9bc2035d154@linutronix.de>
-Content-Language: en-GB
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-In-Reply-To: <20250211-cs_dsp-kunit-strings-v1-1-d9bc2035d154@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=PNv1+eqC c=1 sm=1 tr=0 ts=67ab686f cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=VwQbUJbxAAAA:8 a=hVoct8NOfsc9t3BWKfUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: _GsbeqKrF1tAwPzizDm-TvKdxzzwjbuT
-X-Proofpoint-ORIG-GUID: _GsbeqKrF1tAwPzizDm-TvKdxzzwjbuT
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 11/02/2025 3:00 pm, Thomas Weißschuh wrote:
-> The char pointers in 'struct cs_dsp_mock_coeff_def' are expected to
-> point to C strings. They need to be terminated by a null byte.
-> However the code does not allocate that trailing null byte and only
-> works if by chance the allocation is followed by such a null byte.
-> 
-> Refactor the repeated string allocation logic into a new helper which
-> makes sure the terminating null is always present.
-> It also makes the code more readable.
-> 
-> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> Fixes: 83baecd92e7c ("firmware: cs_dsp: Add KUnit testing of control parsing")
-> Cc: stable@vger.kernel.org
-> ---
->   .../cirrus/test/cs_dsp_test_control_parse.c        | 51 ++++++++--------------
->   1 file changed, 19 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c b/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c
-> index cb90964740ea351113dac274f0366de7cedfd3d1..942ba1af5e7c1e47e8a2fbe548a7993b94f96515 100644
-> --- a/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c
-> +++ b/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c
-> @@ -73,6 +73,18 @@ static const struct cs_dsp_mock_coeff_def mock_coeff_template = {
->   	.length_bytes = 4,
->   };
->   
-> +static char *cs_dsp_ctl_alloc_test_string(struct kunit *test, char c, size_t len)
+On Tue, 11 Feb 2025 05:46:45 +0000
+Harshit Agarwal <harshit@nutanix.com> wrote:
+
+> Overview
+> ========
+> When a CPU chooses to call push_rt_task and picks a task to push to
+> another CPU's runqueue then it will call find_lock_lowest_rq method
+> which would take a double lock on both CPUs' runqueues. If one of the
+> locks aren't readily available, it may lead to dropping the current
+> runqueue lock and reacquiring both the locks at once. During this window
+> it is possible that the task is already migrated and is running on some
+> other CPU. These cases are already handled. However, if the task is
+> migrated and has already been executed and another CPU is now trying to
+> wake it up (ttwu) such that it is queued again on the runqeue
+> (on_rq is 1) and also if the task was run by the same CPU, then the
+> current checks will pass even though the task was migrated out and is no
+> longer in the pushable tasks list.
+
+Nice catch! And nice analysis.
+
+> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> index 4b8e33c615b1..d48a9cb9ac92 100644
+> --- a/kernel/sched/rt.c
+> +++ b/kernel/sched/rt.c
+> @@ -1885,6 +1885,27 @@ static int find_lowest_rq(struct task_struct *task)
+>  	return -1;
+>  }
+>  
+> +static struct task_struct *pick_next_pushable_task(struct rq *rq)
 > +{
-> +	char *str;
+> +	struct task_struct *p;
 > +
-> +	str = kunit_kmalloc(test, len + 1, GFP_KERNEL);
-> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, str);
-> +	memset(str, c, len);
-> +	str[len] = '\0';
+> +	if (!has_pushable_tasks(rq))
+> +		return NULL;
 > +
-> +	return str;
+> +	p = plist_first_entry(&rq->rt.pushable_tasks,
+> +			      struct task_struct, pushable_tasks);
+> +
+> +	BUG_ON(rq->cpu != task_cpu(p));
+> +	BUG_ON(task_current(rq, p));
+> +	BUG_ON(task_current_donor(rq, p));
+> +	BUG_ON(p->nr_cpus_allowed <= 1);
+> +
+> +	BUG_ON(!task_on_rq_queued(p));
+> +	BUG_ON(!rt_task(p));
+> +
+> +	return p;
 > +}
 > +
->   /* Algorithm info block without controls should load */
->   static void cs_dsp_ctl_parse_no_coeffs(struct kunit *test)
->   {
-> @@ -160,12 +172,8 @@ static void cs_dsp_ctl_parse_max_v1_name(struct kunit *test)
->   	struct cs_dsp_mock_coeff_def def = mock_coeff_template;
->   	struct cs_dsp_coeff_ctl *ctl;
->   	struct firmware *wmfw;
-> -	char *name;
->   
-> -	name = kunit_kzalloc(test, 256, GFP_KERNEL);
+>  /* Will lock the rq it finds */
+>  static struct rq *find_lock_lowest_rq(struct task_struct *task, struct rq *rq)
+>  {
+> @@ -1920,13 +1941,18 @@ static struct rq *find_lock_lowest_rq(struct task_struct *task, struct rq *rq)
+>  			 * It is possible the task was scheduled, set
+>  			 * "migrate_disabled" and then got preempted, so we must
+>  			 * check the task migration disable flag here too.
+> +			 * Also, the task may have been dequeued and completed
+> +			 * execution on the same CPU during this time, therefore
+> +			 * check if the task is still at the head of the
+> +			 * pushable tasks list.
+>  			 */
+>  			if (unlikely(task_rq(task) != rq ||
+>  				     !cpumask_test_cpu(lowest_rq->cpu, &task->cpus_mask) ||
+>  				     task_on_cpu(rq, task) ||
+>  				     !rt_task(task) ||
+>  				     is_migration_disabled(task) ||
+> -				     !task_on_rq_queued(task))) {
+> +				     !task_on_rq_queued(task) ||
+> +				     task != pick_next_pushable_task(rq))) {
 
-This allocates 256 bytes of zero-filled memory...
+I'm wondering? Could we replace all of these checks with just:
 
-> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, name);
-> -	memset(name, 'A', 255);
+				task != pick_next_pushable_task(rq)
+?
 
-... and this fills the first 255 bytes, leaving the last byte still as
-zero. So the string is zero-terminated. I don't see a problem here.
+I mean, what check above would fail and not cause that one to fail?
 
-Just fix the other allocs to be kzalloc with the correct length?
+Maybe the is_migration_disabled(), but I'd like to remove any of those
+checks that would be covered with the "pick_next_pushable_task()".
 
+-- Steve
+
+
+
+>  
+>  				double_unlock_balance(rq, lowest_rq);
+>  				lowest_rq = NULL;
+> @@ -1946,27 +1972,6 @@ static struct rq *find_lock_lowest_rq(struct task_struct *task, struct rq *rq)
+>  	return lowest_rq;
+>  }
+>  
+> -static struct task_struct *pick_next_pushable_task(struct rq *rq)
+> -{
+> -	struct task_struct *p;
+> -
+> -	if (!has_pushable_tasks(rq))
+> -		return NULL;
+> -
+> -	p = plist_first_entry(&rq->rt.pushable_tasks,
+> -			      struct task_struct, pushable_tasks);
+> -
+> -	BUG_ON(rq->cpu != task_cpu(p));
+> -	BUG_ON(task_current(rq, p));
+> -	BUG_ON(task_current_donor(rq, p));
+> -	BUG_ON(p->nr_cpus_allowed <= 1);
+> -
+> -	BUG_ON(!task_on_rq_queued(p));
+> -	BUG_ON(!rt_task(p));
+> -
+> -	return p;
+> -}
+> -
+>  /*
+>   * If the current CPU has more than one RT task, see if the non
+>   * running task can migrate over to a CPU that is running a task
 
