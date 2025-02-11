@@ -1,155 +1,105 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE691EB9F9
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D48128819;
+	Tue, 11 Feb 2025 07:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739258894; cv=none; b=B18+JdimrmWi9Ka5nJ4oWhLeQljI2cxj8v3VQ9l2lijB7pmk15GVBh89hNpeeT+GvjFzoaMketA7x3BwYAIUmurA3eH0xE9XnE08gyw3zSjNkhmKeKVXY8CGGd91413jrKlN3cweXVW9rzzAFqFletKZ8UeLWihIHQjJnjD0bRQ=
+	t=1739259094; cv=none; b=AKfhVBG+iEER95zwnTGy2oFPtYZ/JNDf0e3WkLJOm2AO7AN071kiDGOnM8JI1StvxkwpTCRdwu8vt4HsDHyuBWAVUnQCMsrVN/iNsBbOPo5JKlu5z2kqGBnnPBn84fLkNwBQp2RQQzFYxqs7YuFXmO4RFO4ung76kzz7UEvFeJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739258894; c=relaxed/simple;
-	bh=xDphkzp7YOwassCx3klJnQSoSwa0N8eY8DjCLu7euf4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tkAr9iUNQKx93uG2Wz3mhJiPl/SQTtVMUNJcAKy49xDMfDMwHmtnqBSjK/TB4C14LKXkxAiCdt9/jigTX/pYRyaMZ/bSld8uqKORpHMUC1Mr/ewI7hzxBkJuLNdL56PXghdwWEb5DQkxJTJoaB7b1dq+8xjZA9xOsNuAvWO+KoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=KAVy5F4q; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1739259094; c=relaxed/simple;
+	bh=fNXHZD0w81zVXb5WMwE53i1fejXnfLGbij1wF8RDOLY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wttk61aKgwNvgpElNfy2n130mvgmkfmDeDx+ILKRvjf+jGPOgETdulLUGa3sWFe1Nl4E89cqA+01UmdDcdqQbKuCnv4OXK26kw2L97DY7L+ahyTcDnpRPB55M7daf1kL3nXkW7heSlMf6VYpfc1PLbXaUizI0f8E8EkhgrJ3JZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Eqomc+Ec; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="KAVy5F4q"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2fa21145217so8220116a91.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:28:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eqomc+Ec"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-21f6a47d617so45973025ad.2;
+        Mon, 10 Feb 2025 23:31:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1739258892; x=1739863692; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=u8JvwZe222+nCD5D0NlDaqFgopE4s8QEJ665TCjR17Q=;
-        b=KAVy5F4qSoiLjA+7OYEDq7MqwzJY7gIB72ynzU1CY1DcFkTAYzC/kX8KGPZ4GVjiFW
-         7z5mYuPFyWdKsTLBD4pVsBrC/+0GvFUMq043BmjnaBPwuMrDzm23jsqQQo2eBj3LvhEi
-         WRL39VjNnuXSErih5638WF0lFM/CWPj4h2sMCI4cFMEzYVLhyNNAUpYm6uVDou36ZZmx
-         uy4myemNHB1NzCjeH5oxHorWvbUE8Y6iiaNgUJfYdcvq22d/6MwpxDAZcrZ6+PQZJXCP
-         UcSNLgat75JZ3zPkTmFa46XKnkSui333Tiw1vy/epquGXZPYreHjQOsTNWB9Lr+TjD9i
-         0uRQ==
+        d=gmail.com; s=20230601; t=1739259092; x=1739863892; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hTH7Pm5uOLfD5YPyyOM3Aj+5Tf2V89zBjuGRtkm1M5Q=;
+        b=Eqomc+Ec4f8HzCKQSOY8u4l+px0Wwu4fov2gr5J5FyXOpZjdV1hcurW9gRxYcn6i+U
+         Y7gT/rX4RdIjEPbZUX+OZ++tGN6BotVN33ljT/mSXxL9VUFAKtSEFJUu33dATCdLSdzl
+         /fQuYVqAw6ro7tvbz/CtilCn5k8PA4czy4QiaE08UMKQluxaCVW6zZLV0QLjOm9zVcau
+         ECw44SZmFvdcLA+W6CG4lTlTeQKvsQP6zzIx43YjIiW79CSvvlyli+hSzAeqRN8Rkd83
+         t2ypM7HQT8WSyXww4ysdSefCOEtWO1uSp/3adXwl23wPZc++kv4fvveM/Gua+BsULS5s
+         EkRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739258892; x=1739863692;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=u8JvwZe222+nCD5D0NlDaqFgopE4s8QEJ665TCjR17Q=;
-        b=E+fOa6sPxF3/qsO29yReE7b3JYHuTzaqL1yEsDNKg/tgSgVaHXATFaDT278Sz0iQof
-         yC6mxWHdDzxKT9HbOahJfdZ/R5HA2910NaUiutjhB7kvGDdMbPzzFm89w4ba9MxRf+u7
-         WPo96GjYrQOMtstx7Yr9I897wEH25W90iIP6P0Z2ad7EndXS9Hvm16p8ehV1DDF+WaNN
-         O5z73LTn3cMYRjG4xwCwWHwkgt3YCBelwZ1ZhTACo7eZptvtBMouh8ZWf/Vwjjy8EMAr
-         IiJmqtRNSpt8e8PToCahKcN7G3Zq6oZWOB74SsLvjol78DM37SpIzckZljWVOGc04CsR
-         udZw==
-X-Gm-Message-State: AOJu0YyNf+h5kPo9CTPzXj2yj1bQlJkTmsBF4N+OPK8DON7lg8c3WHbq
-	PRB6VSri5cJ8YDDYpco6RHwACmJ268VB2ReFW5bdOVzrCqqb26vdSbvCT31c6dyRYrh37/NT9HS
-	q
-X-Gm-Gg: ASbGncvzSiLxCaNl6AbhTDGiAAPV4GrcnEjeHBKZesdLYT8fb6VXe/Dg6Xx9ep8UQi6
-	gj5SJSqYWSPu8yAAuKfEIc79hwak3+RvTNSqWhFieRfFyNvbaY6tfkAwyMhg/fUf/Z86od9/2vj
-	xmMDFoz1u9qLTBL8Mco5MzpCGb637EVMOgYK3FEE4/TxJ04rRZWU/RhcDfcn+kkCrYRQp6wKMWP
-	0uS6kaDDw+VrT4XmoG6Z6AI0VxQzfVC4ICKStpEwkLssWCWsAMHPunn2D2BipQItUZfr1FTIatW
-	YhY7sDpbiWk1sVKJ+i3PDAsQeRmRimVIjd/M/OfrYMv+dNxewEuuXP5g
-X-Google-Smtp-Source: AGHT+IEGFQNt5sPJaZzJIBOUWjXNir7ONpzC/zGumrQumqkRxYesmObQGhXHsFIIUFr5ys2Z+8JnCg==
-X-Received: by 2002:a05:6a21:350d:b0:1ed:9e58:5195 with SMTP id adf61e73a8af0-1ee03a45ccdmr32137005637.13.1739258891851;
-        Mon, 10 Feb 2025 23:28:11 -0800 (PST)
-Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.150])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad54a066811sm3946778a12.8.2025.02.10.23.28.06
+        d=1e100.net; s=20230601; t=1739259092; x=1739863892;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hTH7Pm5uOLfD5YPyyOM3Aj+5Tf2V89zBjuGRtkm1M5Q=;
+        b=EJfMfM0eBYB98D53Ncx0/+sR1Bt66k53STmuvRl5hKaIB0LIw510TgYaHDz4Ae2wOd
+         0gUpVKvm7d2BdrPQca30Y2n6JwF+N6vjGsi6Di0FDRfgb2AY6AAMJfUmgdOfnybbcjPY
+         1lzYxZoo+2KjzH1rQzA0LdWzPeR1bb8YmVn5X6RW98xKIMdg6ts5i0R2MOj87v9bpkvV
+         m6TeQ0RLyYu+QXwtO65xNptlw9dTq0O0CcMpTEs6PTSprJRpV1CkTBEyAgG3Ud4QSryh
+         dhG9Jdtr5l8ImUGQJVjEs5EjcyXDkbr+doOF8C37q4NbWhDskMHgbMyLK5todE72RIiU
+         lTtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU9xa/k+gaKGa6DNkFAfSfRM04lTlgCrKJopkl0Ped2GSgj/WtgQWSkpkACwNuNWPctwN2CwZoJBHaM2/WFfdBB@vger.kernel.org, AJvYcCX+l3XX/3/uJs3SO4xxIacAbJRp+VELcgv8n7rniPxNu1Y+dtTFQBVUrP/I9tv4NarPRWyXLq4U/GgJg6c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEsAXhBDooK6ywbeLqRVy6bV/K2NRHWMUa+CWXoiaj6N3Kh+l0
+	E05VM310/AJPsTFDREhxm50KsEP2QO4YWh3XwKPWkRlg8eDdNoEzzaZE/oWff14=
+X-Gm-Gg: ASbGncs1vDO56IGWigpPbEcHRMuCYDp7vG+QnuPE0VO/AHMP3geG9MhVckl+6oMuY+Y
+	l6PbFrzQk6dmKmriKFD/2otzPbZX2vkZYRr3Rx3zSDS0C9jUs6hvOTjUJyPjjyB8ch4Mf4TWM3h
+	D1gnPsh5tVMjkNMonv4YiA9GtrYEqlxwSdBdsFlXQjYTTYwdrWSncIbYCH71T0anvAPOcyXjzxW
+	wsb1EpP1XrOesU/1ZDblXuXSTy56K6uvrewedADmaL8s4yjo9zd4Q87FlcMCyFq0uHMOPZ8Lm/d
+	4QbgfIBytuvGcgG4odKI
+X-Google-Smtp-Source: AGHT+IGs30M56X5gAKQnZAxB9fHIUoYBdvgrpgSZIn7PFxqdfYyq2SNPZej4vAjy56zlwVX1mmBcEw==
+X-Received: by 2002:a17:902:c94c:b0:21f:4c65:6290 with SMTP id d9443c01a7336-21f4e6a0641mr305340305ad.1.1739259092134;
+        Mon, 10 Feb 2025 23:31:32 -0800 (PST)
+Received: from fedora ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3687e68bsm89975435ad.169.2025.02.10.23.31.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 23:28:11 -0800 (PST)
-From: Qi Zheng <zhengqi.arch@bytedance.com>
-To: brauner@kernel.org,
-	willy@infradead.org,
-	ziy@nvidia.com,
-	quwenruo.btrfs@gmx.com,
-	david@redhat.com,
-	jannh@google.com,
-	akpm@linux-foundation.org,
-	david@fromorbit.com,
-	djwong@kernel.org,
-	muchun.song@linux.dev
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] mm: pgtable: fix incorrect reclaim of non-empty PTE pages
-Date: Tue, 11 Feb 2025 15:26:25 +0800
-Message-Id: <20250211072625.89188-1-zhengqi.arch@bytedance.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
+        Mon, 10 Feb 2025 23:31:30 -0800 (PST)
+Date: Tue, 11 Feb 2025 07:31:23 +0000
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: Jay Vosburgh <jv@jvosburgh.net>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Simon Horman <horms@kernel.org>, Jianbo Liu <jianbol@nvidia.com>,
+	Boris Pismenny <borisp@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>, Shuah Khan <shuah@kernel.org>,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 net 0/2] bonding: fix incorrect mac address setting
+Message-ID: <Z6r8y1U4C_s1-3jV@fedora>
+References: <20250207092920.543458-1-liuhangbin@gmail.com>
+ <Z6b67YBbERi5v9gt@fedora>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6b67YBbERi5v9gt@fedora>
 
-In zap_pte_range(), if the pte lock was released midway, the pte entries
-may be refilled with physical pages by another thread, which may cause a
-non-empty PTE page to be reclaimed and eventually cause the system to
-crash.
+Hi Jay,
+On Sat, Feb 08, 2025 at 06:34:21AM +0000, Hangbin Liu wrote:
+> Please hold on this patch. Our QE reported that with bare NIC, the
+> backup NIC can't receive the NS messages even after joining the multicast
+> MAC group. But after remove the backup NIC from bond, the NIC interface
+> could receive the NS message.
+> 
+> This is weird, it looks the backup NIC dropped the NS message somewhere,
+> even using tcpdump (the NIC will be in promisc mode) I can't capture the
+> NS message on backup slave.
+> 
+> I need to debug more.
 
-To fix it, fall back to the slow path in this case to recheck if all pte
-entries are still none.
+After debug, I find it's a driver issue. The issue exists with ice dirver NIC.
+I tried with a mlx5 NIC and the patch works good for me.
 
-Fixes: 6375e95f381e ("mm: pgtable: reclaim empty PTE page in madvise(MADV_DONTNEED)")
-Reported-by: Christian Brauner <brauner@kernel.org>
-Closes: https://lore.kernel.org/all/20250207-anbot-bankfilialen-acce9d79a2c7@brauner/
-Reported-by: Qu Wenruo <quwenruo.btrfs@gmx.com>
-Closes: https://lore.kernel.org/all/152296f3-5c81-4a94-97f3-004108fba7be@gmx.com/
-Tested-by: Zi Yan <ziy@nvidia.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
----
- mm/memory.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+So I think you can start review this patch when you have time. I will debug
+the ice driver later.
 
-diff --git a/mm/memory.c b/mm/memory.c
-index a8196ae72e9ae..7c7193cb21248 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -1721,7 +1721,7 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
- 	pmd_t pmdval;
- 	unsigned long start = addr;
- 	bool can_reclaim_pt = reclaim_pt_is_enabled(start, end, details);
--	bool direct_reclaim = false;
-+	bool direct_reclaim = true;
- 	int nr;
- 
- retry:
-@@ -1736,8 +1736,10 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
- 	do {
- 		bool any_skipped = false;
- 
--		if (need_resched())
-+		if (need_resched()) {
-+			direct_reclaim = false;
- 			break;
-+		}
- 
- 		nr = do_zap_pte_range(tlb, vma, pte, addr, end, details, rss,
- 				      &force_flush, &force_break, &any_skipped);
-@@ -1745,11 +1747,20 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
- 			can_reclaim_pt = false;
- 		if (unlikely(force_break)) {
- 			addr += nr * PAGE_SIZE;
-+			direct_reclaim = false;
- 			break;
- 		}
- 	} while (pte += nr, addr += PAGE_SIZE * nr, addr != end);
- 
--	if (can_reclaim_pt && addr == end)
-+	/*
-+	 * Fast path: try to hold the pmd lock and unmap the PTE page.
-+	 *
-+	 * If the pte lock was released midway (retry case), or if the attempt
-+	 * to hold the pmd lock failed, then we need to recheck all pte entries
-+	 * to ensure they are still none, thereby preventing the pte entries
-+	 * from being repopulated by another thread.
-+	 */
-+	if (can_reclaim_pt && direct_reclaim && addr == end)
- 		direct_reclaim = try_get_and_clear_pmd(mm, pmd, &pmdval);
- 
- 	add_mm_rss_vec(mm, rss);
--- 
-2.20.1
-
+Thanks
+Hangbin
