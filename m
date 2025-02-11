@@ -1,141 +1,171 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CF902586DD
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32542586F7;
+	Tue, 11 Feb 2025 11:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739273713; cv=none; b=Gs/PdWPau/simXlMrPBs3UA7yb+EKzsaP4zm/MxN8njqNOLIfviWPS9zRp3twBNoKxKHFg2afFSiC+gBiJtiAEaljKo6zGwfSggbDQxUS3Heqbh+KqAUCCMZ1UQCknC2YclZN5gBubhKNWQdjJtOTcPvQllWYAUHQ9usN0bodEg=
+	t=1739273712; cv=none; b=FBE5fG4KSLQZcr3/9dDehCaNxK+zSwO4TwVgDdjtyYAZx+NXoFZIjEPohxaS7OkK+7ca1Y8Go/1nUGMIfseNw4/Derd0F2b3XWuY7zpfCTno7JYeBkljjSRn+Fth8nA7dGoX+WMd5QdWgRUx50efew14TWBwOQJPxpohquZFaIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739273713; c=relaxed/simple;
-	bh=xcBYWHeQFRNWxiLoR5K9RpPqhW8/hq4zAlf+CCKVN6I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=otV79nrL9WG3auMhZVnyXeEPjGT8Zh8SjouYU+vjKS8IjERDoRLs2x9DpR7mF7FX+Uo2hf6mTEX7Fx6AG719YPNk860xF/1GrCf3gGM5HSVv+OqXiuJnAKXDewmQpJCK0umgBuxvALyX4TwwGhcxZP0ncgZxNF9T40sqcH61as0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 770D21424;
-	Tue, 11 Feb 2025 03:35:31 -0800 (PST)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 546A73F5A1;
-	Tue, 11 Feb 2025 03:35:08 -0800 (PST)
-Date: Tue, 11 Feb 2025 11:34:57 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Fuad Tabba <tabba@google.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v6] KVM: arm64: Fix confusion in documentation for pKVM
- SME assert
-Message-ID: <Z6s14V_4LzD3dATB@J2N7QTR9R3>
-References: <20250210-kvm-arm64-sme-assert-v6-1-cc26c46d1b43@kernel.org>
+	s=arc-20240116; t=1739273712; c=relaxed/simple;
+	bh=u5+ZwcIjehHnqUyEOZ+FYsBNbFTsieKGtO4nn5PfgcM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cOqiB1fdRkgOJxQ+koNhN9DWDZtFBH6KtZ0R81l7/Y6qnouncqekv+O+CwetboulgTx9+Os0rnq6IrRg9eMIjYPKLPXW32cmA0OF7G6w9u8llmPQa9pz/v2mPaeVMJebKADcJAZ9e59M4KyvWVDQMis1gErsek7BwkW3DlunJSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=XawYh13G; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="XawYh13G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739273709;
+	bh=u5+ZwcIjehHnqUyEOZ+FYsBNbFTsieKGtO4nn5PfgcM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=XawYh13G3xxxdz1MJ29aAF4aoIylgvfOyTeIxOZjzk8MHRuAUcE54NjT4Ps+y+7BN
+	 36q/u0R4sBNkjYMFxOro7Lrrhog3BNVir9ZKKa0567zaKpLlDnDANLV9X0sPx6aX6y
+	 3zXuM/bhF88EoTRIWMviiB7cbMrFah4W3VbPKmcv0tkk48+GEXfm/N51f0kqM57sI3
+	 pHL8VYbh19h/pHiELL1PeuE31qonBrU9CtXHxM/oBDNThhwDjkKybPstxWBKsccirt
+	 0VpKx8ZH0uUbR8sF8A5OxCEqleqn+vUIr8fRM+iVhzhGTSABDbOFu4WF6Hy1WLgGKq
+	 ULgJOo1rGb2bA==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1F32E17E1249;
+	Tue, 11 Feb 2025 12:35:08 +0100 (CET)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: chunkuang.hu@kernel.org
+Cc: p.zabel@pengutronix.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	ck.hu@mediatek.com,
+	jitao.shi@mediatek.com,
+	jie.qiu@mediatek.com,
+	junzhi.zhao@mediatek.com,
+	dri-devel@lists.freedesktop.org,
+	linux-mediatek@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kernel@collabora.com,
+	dmitry.baryshkov@linaro.org,
+	lewis.liao@mediatek.com,
+	ives.chenjh@mediatek.com,
+	tommyyl.chen@mediatek.com,
+	jason-jh.lin@mediatek.com
+Subject: [PATCH v6 33/42] drm/mediatek: mtk_hdmi: Improve mtk_hdmi_get_all_clk() flexibility
+Date: Tue, 11 Feb 2025 12:34:00 +0100
+Message-ID: <20250211113409.1517534-34-angelogioacchino.delregno@collabora.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250211113409.1517534-1-angelogioacchino.delregno@collabora.com>
+References: <20250211113409.1517534-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210-kvm-arm64-sme-assert-v6-1-cc26c46d1b43@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 10, 2025 at 09:33:32PM +0000, Mark Brown wrote:
-> As raised in the review comments for the original patch the assert and
-> comment added in afb91f5f8ad7 ("KVM: arm64: Ensure that SME controls are
-> disabled in protected mode") are bogus. The comments says that we check
-> that we do not have SME enabled for a pKVM guest but the assert actually
-> checks to see if the host has anything set in SVCR which is unrelated to
-> the guest features or state, regardless of if those guests are protected
-> or not. This check is also made in the hypervisor, it will refuse to run
-> a guest if the check fails, so it appears that the assert here is
-> intended to improve diagnostics.
-> 
-> Update the comment to reflect the check in the code, and to clarify that
-> we do actually enforce this in the hypervisor. While we're here also
-> update to use a WARN_ON_ONCE() to avoid log spam if this triggers.
-> 
-> Fixes: afb91f5f8ad7 ("KVM: arm64: Ensure that SME controls are disabled in protected mode")
-> Reviewed-by: Fuad Tabba <tabba@google.com>
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
-> This has been sent with v6.10 with only positive review comments after
-> the first revision, if there is some issue with the change please share
-> it.
-> 
-> To: Marc Zyngier <maz@kernel.org>
-> To: Oliver Upton <oliver.upton@linux.dev>
-> To: James Morse <james.morse@arm.com>
-> To: Suzuki K Poulose <suzuki.poulose@arm.com>
-> To: Catalin Marinas <catalin.marinas@arm.com>
-> To: Will Deacon <will@kernel.org>
-> To: Fuad Tabba <tabba@google.com>
-> ---
-> Changes in v6:
-> - Rebase onto v6.14-rc1.
-> - Link to v5: https://lore.kernel.org/r/20241210-kvm-arm64-sme-assert-v5-1-995c8dd1025b@kernel.org
-> 
-> Changes in v5:
-> - Rebase onto v6.13-rc1.
-> - Link to v4: https://lore.kernel.org/r/20240930-kvm-arm64-sme-assert-v4-1-3c9df71db688@kernel.org
-> 
-> Changes in v4:
-> - Rebase onto v6.12-rc1
-> - Link to v3: https://lore.kernel.org/r/20240730-kvm-arm64-sme-assert-v3-1-8699454e5cb8@kernel.org
-> 
-> Changes in v3:
-> - Rebase onto v6.11-rc1.
-> - Link to v2: https://lore.kernel.org/r/20240605-kvm-arm64-sme-assert-v2-1-54391b0032f4@kernel.org
-> 
-> Changes in v2:
-> - Commit message tweaks.
-> - Change the assert to WARN_ON_ONCE().
-> - Link to v1: https://lore.kernel.org/r/20240604-kvm-arm64-sme-assert-v1-1-5d98348d00f8@kernel.org
-> ---
->  arch/arm64/kvm/fpsimd.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/fpsimd.c b/arch/arm64/kvm/fpsimd.c
-> index 4d3d1a2eb157047b4b2488e9c4ffaabc6f5a0818..f3455641e9c8a65470cdeb9d7daba7d59d78748e 100644
-> --- a/arch/arm64/kvm/fpsimd.c
-> +++ b/arch/arm64/kvm/fpsimd.c
-> @@ -93,11 +93,14 @@ void kvm_arch_vcpu_load_fp(struct kvm_vcpu *vcpu)
->  	}
->  
->  	/*
-> -	 * If normal guests gain SME support, maintain this behavior for pKVM
-> -	 * guests, which don't support SME.
-> +	 * The pKVM hypervisor does not yet understand how to save or
-> +	 * restore SME state for the host so double check that if we
-> +	 * are running with pKVM we have disabled SME.  The hypervisor
-> +	 * enforces this when the guest is run, this check is for
-> +	 * clearer diagnostics.
->  	 */
-> -	WARN_ON(is_protected_kvm_enabled() && system_supports_sme() &&
-> -		read_sysreg_s(SYS_SVCR));
-> +	WARN_ON_ONCE(is_protected_kvm_enabled() && system_supports_sme() &&
-> +		     read_sysreg_s(SYS_SVCR));
+In preparation for splitting common bits of this driver and for
+introducing a new version of the MediaTek HDMI Encoder IP, improve
+the flexibility	of function mtk_hdmi_get_all_clk() by adding a
+pointer to the clock names array and size of it to its parameters.
 
-This implies that non-protected modes do understand how to save/restore
-SME state, and the wording is somewhat clunky.
+Also change the array of struct clock pointers in the mtk_hdmi
+structure to be dynamically allocated, and allocate it in probe.
 
-Given we've just queued up patches requiring that the host has saved
-away the FPSIMD/SVE/SME state, I reckon it'd make more sense to simplify
-this to:
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
+ drivers/gpu/drm/mediatek/mtk_hdmi.c | 26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
-	/*
-	 * Protected and non-protected KVM modes require that
-	 * SVCR.{SM,ZA} == {0,0} when entering a guest so that no
-	 * host/guest SME state needs to be saved/restored by hyp code.
-	 *
-	 * In protected mode, hyp code will verify this later.
-	 */
-	WARN_ON_ONCE(system_supports-sme() && read_sysreg_s(SYS_SVCR));
+diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+index 8f31363c5522..d3bfae2f1842 100644
+--- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
++++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+@@ -159,7 +159,7 @@ struct mtk_hdmi {
+ 	struct phy *phy;
+ 	struct device *cec_dev;
+ 	struct i2c_adapter *ddc_adpt;
+-	struct clk *clk[MTK_HDMI_CLK_COUNT];
++	struct clk **clk;
+ 	struct drm_display_mode mode;
+ 	bool dvi_mode;
+ 	struct regmap *sys_regmap;
+@@ -1072,17 +1072,18 @@ static const char * const mtk_hdmi_clk_names[MTK_HDMI_CLK_COUNT] = {
+ 	[MTK_HDMI_CLK_AUD_SPDIF] = "spdif",
+ };
+ 
+-static int mtk_hdmi_get_all_clk(struct mtk_hdmi *hdmi,
+-				struct device_node *np)
++static int mtk_hdmi_get_all_clk(struct mtk_hdmi *hdmi, struct device_node *np,
++				const char * const *clock_names, size_t num_clocks)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < ARRAY_SIZE(mtk_hdmi_clk_names); i++) {
+-		hdmi->clk[i] = of_clk_get_by_name(np,
+-						  mtk_hdmi_clk_names[i]);
++	for (i = 0; i < num_clocks; i++) {
++		hdmi->clk[i] = of_clk_get_by_name(np, clock_names[i]);
++
+ 		if (IS_ERR(hdmi->clk[i]))
+ 			return PTR_ERR(hdmi->clk[i]);
+ 	}
++
+ 	return 0;
+ }
+ 
+@@ -1382,15 +1383,15 @@ static int mtk_hdmi_get_cec_dev(struct mtk_hdmi *hdmi, struct device *dev, struc
+ 	return 0;
+ }
+ 
+-static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
+-				   struct platform_device *pdev)
++static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi, struct platform_device *pdev,
++				   const char * const *clk_names, size_t num_clocks)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node;
+ 	struct device_node *remote, *i2c_np;
+ 	int ret;
+ 
+-	ret = mtk_hdmi_get_all_clk(hdmi, np);
++	ret = mtk_hdmi_get_all_clk(hdmi, np, clk_names, num_clocks);
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "Failed to get clocks\n");
+ 
+@@ -1639,6 +1640,7 @@ static int mtk_hdmi_probe(struct platform_device *pdev)
+ {
+ 	struct mtk_hdmi *hdmi;
+ 	struct device *dev = &pdev->dev;
++	const int num_clocks = MTK_HDMI_CLK_COUNT;
+ 	int ret;
+ 
+ 	hdmi = devm_kzalloc(dev, sizeof(*hdmi), GFP_KERNEL);
+@@ -1648,7 +1650,11 @@ static int mtk_hdmi_probe(struct platform_device *pdev)
+ 	hdmi->dev = dev;
+ 	hdmi->conf = of_device_get_match_data(dev);
+ 
+-	ret = mtk_hdmi_dt_parse_pdata(hdmi, pdev);
++	hdmi->clk = devm_kcalloc(dev, num_clocks, sizeof(*hdmi->clk), GFP_KERNEL);
++	if (!hdmi->clk)
++		return -ENOMEM;
++
++	ret = mtk_hdmi_dt_parse_pdata(hdmi, pdev, mtk_hdmi_clk_names, num_clocks);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.48.1
 
-... and then if/when we enable SME for non-protected modes we can
-constrain that further.
-
-Mark.
