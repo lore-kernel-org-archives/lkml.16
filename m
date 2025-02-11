@@ -1,160 +1,184 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F304726BDA6
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:07:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBDF1F03D2;
+	Tue, 11 Feb 2025 09:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739264832; cv=none; b=plqfDBBXf0/fMtLh1nBSsmcfMuECq6OGPeSarfh5l/q8E36WfahTzJ34HOVshrUzfxDcz3nkgw5PkplbpjGx52e6GyT4Vox2Pebju+zqs55ORW+M7tbRimsmfL5l7KaCBVLpe3ZiRucWExZJsCCYZLP7toB+SFV3+a8kGW1Ccgk=
+	t=1739264867; cv=none; b=VwCcxqVOR5+zfaGB4Hsb18GPOYuYe4f+MxjPQHgo2XLUcDA2Wz+Kf/6kB7xGn3v8fp426g9ln6qoGHF7GvpgfULaCm09EOK2+acBbcBTNQLdB86uyk/cqnRGPouC5/I2Zdi20q+PFVA3askvBchf+/zj7stMSgUvFc/jsyrQC2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739264832; c=relaxed/simple;
-	bh=y1f2KOqUZV55ZpZgy+bBqBRTPS30GRYUD0zVrY86E58=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=tSvIiL4f3+NGTNX6MTEN0ga6GkV2i8IexklBoWaRbmCwyOSyKMsvTBcGdtDDKxCFYDvuflPJrmrDo3nFCUKtraPrhsUHxD99FyCd54RPojJkzAEC+ZnLF82OroHdFDHFsjLsiy7JMbW9DWgyuuTzHHyZVOJIv7BeNDRQmN+kWG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nMZyb7jy; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739264867; c=relaxed/simple;
+	bh=hFx79QumT2efvDIu9SQG+KhJyUcuw+IZ0OY2d/uT+og=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K8KLf8G0DcSbkJ8kxhlabyRaRpX/43uIvTlnybzTN7xJeeC4dDRYdbZLRHjoVEeIyipdtoiz217oS1MomEcl11l1UKJum5XktG1SEOxuFXUVt9ycltXIzhjz6z49vtkJDDyt1HuaPHTzpi+LHolrh+MIQrR2MriWBqVoVeF2x3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X5xgcR2j; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nMZyb7jy"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4361e89b6daso36238945e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:07:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739264829; x=1739869629; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fEkw8mZ9lpxD+Y89tTOOotL+Ya0/so0WoVdJiViSyms=;
-        b=nMZyb7jycqiZyCFx/awZHJf13C2WaZNnH72LzG1QtoRdJ8oouhVyRVpL/oC6vBJHUh
-         Zbfbf4TaDzqsoTccl0oZpRxl4AWRNqDTYR3X7c+622ovoKJFh4uFpl3egk1jiQ+yF+09
-         /Wq8l/Vs76a/2NWnqYGfNOccK6Jce8QRksEeCTWH2T3qZXkNHi5sq+RKRp257FlhOecj
-         rhejUJLZVkZl4HBXd6Ay2gNkaMGQo30+PzqcRiLXcKM0URWZ4aBAeJJZy3rIYHugsdxJ
-         9p3gVEfNFmTmibsTyLzZCXKey4pAIzNGuw3lEnXYgqmhzh4BfGwXmstPuZlX8ZchleMJ
-         O2sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739264829; x=1739869629;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=fEkw8mZ9lpxD+Y89tTOOotL+Ya0/so0WoVdJiViSyms=;
-        b=TfaylZs5B2uB8xbxbr9HyOW7j1DcKhr+6CQW9yZ0Y6A3YjoDVppIlnMoZqbAMsEPBX
-         VPsIVgLxZ3I2JAlHWTwc1VBiAH1Hj7G1Krr6kfkwAFSA/9rxoAf292/N4fJ+KWfcqFZg
-         +9klJUJ6Ubl19/H7iQQQZhm9Tdlsdzq/9oxFxV1NIv+XsJYktRZV7cOffI/crv4TLnGT
-         xIq7HAxpIf9LEehJvM/eVWanwIPDv+VrGrbJU2UdgVFIzlREr9c2dFHyjCGidWzXIG9P
-         PXhQmzSxxuzpUFBmZV2VM1JSgrgJUoRS6zI0hUDV+EHkT6zmI7r3/OQBZXLUrwkCbKz7
-         LNBg==
-X-Forwarded-Encrypted: i=1; AJvYcCVuxZB32oXNtqZB/MqW0ceQFqZbPL/fGGV2tlxWGQ1vR9/CWY/OpEIQYTprLV3GaX2E7gDPKQTJk3C0FtI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywd7EVgNgBWKdbtKz2WRurNZRrpbWZrNIFvx2LpFuWwpdEV9U0f
-	loy6ZWiI9/LXdCkwdt7YRGNSaqKCx8OeXyIvZ8figsthHquUHKupLMCpNAjHFKc=
-X-Gm-Gg: ASbGncs7HmwHHckVa25fZ2vu1hLmwQ8wnfhYWpRcErdY1+3hRTEnVoJPqq8XofSKsZf
-	QW8zfdalJgKrC752td1i+8an1plxqYzlkpXoaG7EkWffQjkCOmoUbVRoWRGzmkrczWHRydPyfGz
-	Ai1/B8Y3ujtcktXx4sPzREza36cS34aYPVYzcB/cwMEW5Zp3BzKxVRt7TMdnKcDQOpBxyaU94As
-	jjTykVcSUysVTmUEi8vR3MTSPPZu3lNnNvv+btXmKbw2ZVSxfnKPJTZMKpRGdx07gucXjLU33+t
-	zKAf1u4s9AFtvvCmKqRELSEmUCjA9AZvygKRI3IGEpInPe8Ew8I10QrbeCjU++zNol3W
-X-Google-Smtp-Source: AGHT+IGHVpSlPQyU0cjYdq4UHMFuNEQDdRE6G+6jYmgVYfWj+t1f7CCzyuHhzxKg1Gx+7it/eNAXag==
-X-Received: by 2002:a05:600c:1e11:b0:436:5fc9:309d with SMTP id 5b1f17b1804b1-439249b2bafmr161317725e9.30.1739264829255;
-        Tue, 11 Feb 2025 01:07:09 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:5b96:57e9:d7dc:bc01? ([2a01:e0a:982:cbb0:5b96:57e9:d7dc:bc01])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dce18d6f9sm10698324f8f.29.2025.02.11.01.07.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 01:07:08 -0800 (PST)
-Message-ID: <fcde9fab-b28a-4e09-b77b-f7c6c3840710@linaro.org>
-Date: Tue, 11 Feb 2025 10:07:07 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X5xgcR2j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739264866; x=1770800866;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hFx79QumT2efvDIu9SQG+KhJyUcuw+IZ0OY2d/uT+og=;
+  b=X5xgcR2jSLNt89s/67ieR8yzJN1T+7/bPWJsXx7aT4thNw9Fkgs2nVaI
+   f0hdP9qApM+UReHx07eahi+LNSLiBLG9h65aZyBciNU4I8McMXhTbZ1jC
+   cSkq479Gp4tE+GDcnnI/qEgT5tQUZUCt1/9GVkE7nK0BIJzespdvRTcPq
+   nmkoSv7glLVxBOz4dFhwCnblxXstMYSXdY+MF52dE69sueEVyF2N7J+ms
+   IRooQLEpjnXK01Q9u5YXSEOU00vL41invI6ZNRUDgaSYPCMmBcArowMUg
+   DVVq4MAcRikY+VTimfbaNUBjydXBTDujjobn/fQi3hnEKnahqEoEZeKBF
+   g==;
+X-CSE-ConnectionGUID: KQQKYG4EThSTzOgzXc34gg==
+X-CSE-MsgGUID: 8qxQp64eReOzFlXWRcAkug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="39758893"
+X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
+   d="scan'208";a="39758893"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 01:07:45 -0800
+X-CSE-ConnectionGUID: Wlse3+4DSkGTXxDkvf01tQ==
+X-CSE-MsgGUID: nbHe+6jIRwa8BdCdBKGWcg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="135702696"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 11 Feb 2025 01:07:42 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1thmF2-0013wj-0a;
+	Tue, 11 Feb 2025 09:07:40 +0000
+Date: Tue, 11 Feb 2025 17:07:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	linux-s390@vger.kernel.org
+Subject: Re: [PATCH] arm64: scripts/sorttable: Implement sorting mcount_loc
+ at boot for arm64
+Message-ID: <202502111626.K7CTghCR-lkp@intel.com>
+References: <20250210142647.083ff456@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v3 3/4] arm64: dts: qcom: sm8550: add missing cpu-cfg
- interconnect path in the mdss node
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250210-topic-sm8x50-mdss-interconnect-bindings-fix-v3-0-54c96a9d2b7f@linaro.org>
- <20250210-topic-sm8x50-mdss-interconnect-bindings-fix-v3-3-54c96a9d2b7f@linaro.org>
- <a3f7bef6-bfc8-4a2e-b979-4aac7908306f@oss.qualcomm.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <a3f7bef6-bfc8-4a2e-b979-4aac7908306f@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210142647.083ff456@gandalf.local.home>
 
-On 10/02/2025 17:32, Konrad Dybcio wrote:
-> On 10.02.2025 10:32 AM, Neil Armstrong wrote:
->> The bindings requires the mdp0-mem and the cpu-cfg interconnect path,
->> add the missing cpu-cfg path to fix the dtbs check error.
->>
->> Fixes: b8591df49cde ("arm64: dts: qcom: sm8550: correct MDSS interconnects")
->> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
->> ---
->>   arch/arm64/boot/dts/qcom/sm8550.dtsi | 5 +++--
->>   1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
->> index eac8de4005d82f246bc50f64f09515631d895c99..702b55296b18ff2f8ea62a3391b7de2804aa9f65 100644
->> --- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
->> @@ -3020,8 +3020,9 @@ mdss: display-subsystem@ae00000 {
->>   
->>   			power-domains = <&dispcc MDSS_GDSC>;
->>   
->> -			interconnects = <&mmss_noc MASTER_MDP 0 &mc_virt SLAVE_EBI1 0>;
->> -			interconnect-names = "mdp0-mem";
->> +			interconnects = <&mmss_noc MASTER_MDP 0 &mc_virt SLAVE_EBI1 0>,
-> 
-> QCOM_ICC_TAG_ALWAYS
-> 
->> +					<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_DISPLAY_CFG 0>;
-> 
-> QCOM_ICC_TAG_ACTIVE_ONLY
-> 
-> w that
+Hi Steven,
 
-So it depends how it articulates with https://lore.kernel.org/all/20250115-topic-sm8x50-upstream-dt-icc-update-v1-0-eaa8b10e2af7@linaro.org/
+kernel test robot noticed the following build warnings:
 
-I can rebase on top of it, it would be simpler, but then the Fixes tag won't work anymore.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.14-rc2 next-20250210]
+[cannot apply to arm64/for-next/core arm-perf/for-next/perf kvmarm/next soc/for-next arm/for-next arm/fixes]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> 
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> 
-> Konrad
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/arm64-scripts-sorttable-Implement-sorting-mcount_loc-at-boot-for-arm64/20250211-032956
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250210142647.083ff456%40gandalf.local.home
+patch subject: [PATCH] arm64: scripts/sorttable: Implement sorting mcount_loc at boot for arm64
+config: riscv-randconfig-001-20250211 (https://download.01.org/0day-ci/archive/20250211/202502111626.K7CTghCR-lkp@intel.com/config)
+compiler: riscv64-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250211/202502111626.K7CTghCR-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502111626.K7CTghCR-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> scripts/sorttable.c:306:13: warning: 'rela_write_addend' defined but not used [-Wunused-function]
+     306 | static void rela_write_addend(Elf_Rela *rela, uint64_t val)
+         |             ^~~~~~~~~~~~~~~~~
+>> scripts/sorttable.c:287:17: warning: 'rela_addend' defined but not used [-Wunused-function]
+     287 | static uint64_t rela_##fn_name(Elf_Rela *rela)          \
+         |                 ^~~~~
+   scripts/sorttable.c:294:1: note: in expansion of macro 'RELA_ADDR'
+     294 | RELA_ADDR(addend)
+         | ^~~~~~~~~
+>> scripts/sorttable.c:287:17: warning: 'rela_info' defined but not used [-Wunused-function]
+     287 | static uint64_t rela_##fn_name(Elf_Rela *rela)          \
+         |                 ^~~~~
+   scripts/sorttable.c:293:1: note: in expansion of macro 'RELA_ADDR'
+     293 | RELA_ADDR(info)
+         | ^~~~~~~~~
+>> scripts/sorttable.c:287:17: warning: 'rela_offset' defined but not used [-Wunused-function]
+     287 | static uint64_t rela_##fn_name(Elf_Rela *rela)          \
+         |                 ^~~~~
+   scripts/sorttable.c:292:1: note: in expansion of macro 'RELA_ADDR'
+     292 | RELA_ADDR(offset)
+         | ^~~~~~~~~
+   In file included from arch/riscv/kernel/asm-offsets.c:10:
+   include/linux/ftrace.h: In function 'ftrace_get_regs':
+   include/linux/ftrace.h:190:16: error: implicit declaration of function 'arch_ftrace_get_regs'; did you mean 'arch_ftrace_regs'? [-Wimplicit-function-declaration]
+     190 |         return arch_ftrace_get_regs(fregs);
+         |                ^~~~~~~~~~~~~~~~~~~~
+         |                arch_ftrace_regs
+   include/linux/ftrace.h:190:16: error: returning 'int' from a function with return type 'struct pt_regs *' makes pointer from integer without a cast [-Wint-conversion]
+     190 |         return arch_ftrace_get_regs(fregs);
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   make[3]: *** [scripts/Makefile.build:102: arch/riscv/kernel/asm-offsets.s] Error 1 shuffle=1925395641
+   make[3]: Target 'prepare' not remade because of errors.
+   make[2]: *** [Makefile:1264: prepare0] Error 2 shuffle=1925395641
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:251: __sub-make] Error 2 shuffle=1925395641
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:251: __sub-make] Error 2 shuffle=1925395641
+   make: Target 'prepare' not remade because of errors.
+
+
+vim +/rela_write_addend +306 scripts/sorttable.c
+
+   275	
+   276	#define RELA_ADDR(fn_name)				\
+   277	static uint64_t rela64_##fn_name(Elf_Rela *rela)	\
+   278	{							\
+   279		return r8((uint64_t *)&rela->e64.r_##fn_name);	\
+   280	}							\
+   281								\
+   282	static uint64_t rela32_##fn_name(Elf_Rela *rela)	\
+   283	{							\
+   284		return r((uint32_t *)&rela->e32.r_##fn_name);	\
+   285	}							\
+   286								\
+ > 287	static uint64_t rela_##fn_name(Elf_Rela *rela)		\
+   288	{							\
+   289		return e.rela_##fn_name(rela);			\
+   290	}
+   291	
+   292	RELA_ADDR(offset)
+   293	RELA_ADDR(info)
+   294	RELA_ADDR(addend)
+   295	
+   296	static void rela64_write_addend(Elf_Rela *rela, uint64_t val)
+   297	{
+   298		w8(val, (uint64_t *)&rela->e64.r_addend);
+   299	}
+   300	
+   301	static void rela32_write_addend(Elf_Rela *rela, uint64_t val)
+   302	{
+   303		w(val, (uint32_t *)&rela->e32.r_addend);
+   304	}
+   305	
+ > 306	static void rela_write_addend(Elf_Rela *rela, uint64_t val)
+   307	{
+   308		e.rela_write_addend(rela, val);
+   309	}
+   310	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
