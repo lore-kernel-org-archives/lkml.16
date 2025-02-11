@@ -1,123 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DFEEEC5;
-	Tue, 11 Feb 2025 00:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB99801;
+	Tue, 11 Feb 2025 00:17:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739232828; cv=none; b=dd57JpASqTvuZD+Vi8aryw+CQIV7sy5fuR12DjSzzeOq3rfFqNYW91WeqklVacvklrWSNcNkwObdvEgbDygP+Fv4a2ElDkfT+MjkgMYnyAj9LjU/1Z7lIqcYLUnpbYKHbnUeA64Yav8f3of9dl/SjR7+NAcEsgrMTWTZ7VtXTrE=
+	t=1739233064; cv=none; b=o3UCeL6T9fK3nf16vmHHHoZxy+zaIUE9r5sKn95a+xuprtPAPMbKAy+5TuS4q3ewJG0nKl7baLJy4++ac2Au5aGNt+mAL+g4B9NCQ8k4+4b5nwZWwBZWlEyAR62HHRVWj7R1DSzxoU9faCz9FIcgj5w7byw5Rb/je78h3aK5dWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739232828; c=relaxed/simple;
-	bh=9N2X9agV+TOafFIntwyTURPwUVdB+NYg7pHwb7Rwwfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Itva/pq5XvEED0m1zbD2RVnjVd/ggv2oGJdJBiE1eEvBFqaJn4ob9aQivvs5Het3wd+VQnyYUDCz+QbBUEQeDwoND+NvtXSzKAIwb/EsjS59QTfIDlo2xLVHGo3Y2ASZ1AXWBvJ4WPgbB921zmSH43Ajx6bSAYAR0gxA9IZcw7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3707FC4CED1;
-	Tue, 11 Feb 2025 00:13:47 +0000 (UTC)
-Date: Mon, 10 Feb 2025 19:13:50 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>
-Subject: Re: [RFC PATCH v2 3/3] tracing: Freeable reserved ring buffer
-Message-ID: <20250210191350.79dfa2a2@gandalf.local.home>
-In-Reply-To: <173920225773.826592.6428338529686044470.stgit@devnote2>
-References: <173920222697.826592.3726270716809214055.stgit@devnote2>
-	<173920225773.826592.6428338529686044470.stgit@devnote2>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1739233064; c=relaxed/simple;
+	bh=JGsSogXLmPqgVPrNJ4sogLYXwU0yOw3MgKlrk8D8D7M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=I4pum0itAoFhh9F0TOy0OJumYS/1GXeurVnM3s3v7wdYMePhLDs0D9+nQ89fQi9LO0PSMDeW0lDGS9L2XFERlCAQslqwEge6nQT3AnDjYI4b0B6AIpKMmNE6MhuATeoMxrZroyMtLU44rs8fzPRRweggQwOcSH3QTrsnwT5ekcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=DxfVDDOG; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="DxfVDDOG"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51ABgO10000355;
+	Tue, 11 Feb 2025 00:17:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	JXLA7xIkHuZLbkBc9dKJ7utAYTqNsvjNQLuR8ehqS94=; b=DxfVDDOG9LyRuEFM
+	/Fo1qQiwfpMCAI/UEcMJbFiPn4Wd9FPHoO/M6Yq8DhnFaX9pA9I7XeffBGkZZw/k
+	rvLmg/8ALSyfdEqWJ4iE2QIwFr5n963fICEJCzgdiaS3DakgTsqOcMoKGvD7eN36
+	WfUhL5kBIdyG+YZCvWLiDQNbn+m5z+/On2+Vnh0mvdhU9YCFFagho5KJQKOPwRVb
+	nN+tIV+dUEcMCP76DiFkeken5RWH36mn5eMcX/a7i0CTBQ/S/8HSYMExUp2pQEW/
+	e4vnsInfAMX6d5vir/QCg1hDVj9VS23KRZPPum1Gqva6zafv6/cDj6t2Biq28FoR
+	fr3QTg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qgtk1tbj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 00:17:27 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51B0HRH5026820
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 00:17:27 GMT
+Received: from [10.71.110.136] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Feb
+ 2025 16:17:26 -0800
+Message-ID: <4eb08a1a-b862-4295-98d9-005f12015527@quicinc.com>
+Date: Mon, 10 Feb 2025 16:17:25 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/msm/dpu: Don't leak bits_per_component into random
+ DSC_ENC fields
+To: Marijn Suijten <marijn.suijten@somainline.org>,
+        Rob Clark
+	<robdclark@gmail.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        "Sean
+ Paul" <sean@poorly.run>, David Airlie <airlied@gmail.com>,
+        Simona Vetter
+	<simona@ffwll.ch>, Vinod Koul <vkoul@kernel.org>
+CC: <~postmarketos/upstreaming@lists.sr.ht>,
+        AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>,
+        Konrad Dybcio
+	<konrad.dybcio@oss.qualcomm.com>,
+        Martin Botka <martin.botka@somainline.org>,
+        Jami Kettunen <jami.kettunen@somainline.org>,
+        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20250211-dsc-10-bit-v1-1-1c85a9430d9a@somainline.org>
+Content-Language: en-US
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <20250211-dsc-10-bit-v1-1-1c85a9430d9a@somainline.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Yu7-Uzeq8W7oQjVQLunZwf53yOzqwdPJ
+X-Proofpoint-ORIG-GUID: Yu7-Uzeq8W7oQjVQLunZwf53yOzqwdPJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-10_12,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 suspectscore=0 phishscore=0 impostorscore=0
+ adultscore=0 clxscore=1015 mlxscore=0 malwarescore=0 bulkscore=0
+ lowpriorityscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2502100180
 
-On Tue, 11 Feb 2025 00:44:17 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> @@ -9857,8 +9861,10 @@ static int __remove_instance(struct trace_array *tr)
->  	int i;
->  
->  	/* Reference counter for a newly created trace array = 1. */
-> -	if (tr->ref > 1 || (tr->current_trace && tr->trace_ref))
-> +	if (tr->ref > 1 || (tr->current_trace && tr->trace_ref)) {
-> +		pr_info("Instance is busy: ref %d trace_ref %d\n", tr->ref, tr->trace_ref);
 
-I don't think we need the print. The function will error with -EBUSY
-letting the user know that it is busy. This is a very common error, where I
-found that I had a program that didn't completely die, and still had a file
-descriptor open on an instance, and when I go to remove it, I get:
+On 2/10/2025 3:19 PM, Marijn Suijten wrote:
+> What used to be the input_10_bits boolean - feeding into the lowest
+> bit of DSC_ENC - on MSM downstream turned into an accidental OR with
+> the full bits_per_component number when it was ported to the upstream
+> kernel.
+> 
+> On typical bpc=8 setups we don't notice this because line_buf_depth is
+> always an odd value (it contains bpc+1) and will also set the 4th bit
+> after left-shifting by 3 (hence this |= bits_per_component is a no-op).
+> 
+> Now that guards are being removed to allow more bits_per_component
+> values besides 8 (possible since commit 49fd30a7153b ("drm/msm/dsi: use
+> DRM DSC helpers for DSC setup")), a bpc of 10 will instead clash with
+> the 5th bit which is convert_rgb.  This is "fortunately" also always set
+> to true by MSM's dsi_populate_dsc_params() already, but once a bpc of 12
+> starts being used it'll write into simple_422 which is normally false.
+> 
+> To solve all these overlaps, simply replicate downstream code and only
+> set this lowest bit if bits_per_component is equal to 10.  It is unclear
+> why DSC requires this only for bpc=10 but not bpc=12, and also notice
+> that this lowest bit wasn't set previously despite having a panel and
+> patch on the list using it without any mentioned issues.
+> 
+> Fixes: c110cfd1753e ("drm/msm/disp/dpu1: Add support for DSC")
+> Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
+> ---
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
 
-  # cd /sys/kernel/tracing/
-  # mkdir instances/foo
-  # bash 5< instances/foo/events/enable
-  # rmdir instances/foo
-  rmdir: failed to remove 'instances/foo': Device or resource busy
-  # exit
-  # rmdir instances/foo
-  #
+Good catch !
 
-If you only have it for debugging that is fine, but we should remove it
-before we accept it.
-
--- Steve
-
->  		return -EBUSY;
-> +	}
->  
->  	list_del(&tr->list);
->  
-> @@ -9881,6 +9887,11 @@ static int __remove_instance(struct trace_array *tr)
->  	free_trace_buffers(tr);
->  	clear_tracing_err_log(tr);
->  
-> +	if (tr->range_name) {
-> +		reserved_mem_release_by_name(tr->range_name);
-> +		kfree(tr->range_name);
-> +	}
-> +
->  	for (i = 0; i < tr->nr_topts; i++) {
->  		kfree(tr->topts[i].topts);
->  	}
-> @@ -10740,6 +10751,7 @@ __init static void enable_instances(void)
->  		bool traceoff = false;
->  		char *flag_delim;
->  		char *addr_delim;
-> +		char *rname __free(kfree) = NULL;
->  
->  		tok = strsep(&curr_str, ",");
->  
-> @@ -10796,6 +10808,7 @@ __init static void enable_instances(void)
->  				pr_warn("Failed to map boot instance %s to %s\n", name, tok);
->  				continue;
->  			}
-> +			rname = kstrdup(tok, GFP_KERNEL);
->  		}
->  
->  		if (start) {
-> @@ -10832,7 +10845,7 @@ __init static void enable_instances(void)
->  		 */
->  		if (start) {
->  			tr->flags |= TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT;
-> -			tr->ref++;
-> +			tr->range_name = no_free_ptr(rname);
->  		}
->  
->  		while ((tok = strsep(&curr_str, ","))) {
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index 47c0742fe9ec..ae8f7fac6592 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -348,6 +348,7 @@ struct trace_array {
->  	unsigned int		mapped;
->  	unsigned long		range_addr_start;
->  	unsigned long		range_addr_size;
-> +	char			*range_name;
->  	long			text_delta;
->  	int			nr_modules;
->  	long			*module_delta;
-
+Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
