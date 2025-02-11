@@ -1,210 +1,159 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3C526BD9E
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 03:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E7926BD9E;
+	Tue, 11 Feb 2025 03:12:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739243431; cv=none; b=iMHHVGVbyg2OwjLa7ewef9jkecxfIKUwQftPm10FAJcTu/+snNT3wp1featiwh6+cKnoKG+Zul9QcUKo76FLpSCpNlkFQ5V0R8eBFGcDrcsnOzH3oBafZ5L0Y034uRyKay1tnCnb6iwcXLZbz8wL2a4hDReJ7gZZ5KP6qq07SqI=
+	t=1739243553; cv=none; b=VwmHjdsS1VFqaZy2t4ZVW0cF0nhwWLzF+eQoFP4Ou22mqKNj7qAiqq1i/d4QHTzdkhkq2grW2oi0Ju5KBJVh3RIIz1zo62gGkCavS6ZeeTNFiSjfRPOTbzdoXRU6A2S4ljMX8tn2umemTsX514CIdkWu/7iongfxjU3ekVq860c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739243431; c=relaxed/simple;
-	bh=ORjZ2/dz+75Ekxi41wKNjMt5Q8tHMQVLqmlaAaO9tIs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BfIZ/+9Azq1W3tTVnKXPVIWl0wq6vOdPZ9Pc9OortRdLOkXX8gShtpD1I8f95Abs9zeQGqNASKyEe7M6H9YHWRYqG7E10Naazh7BU/luw9SGhDgR3idTNOZcuirSmdJ6PetevCnY+fKhFC7/+1bTiSsx6vQfH72RiYIWlPo26Bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1thgcE-000000001kS-1u3h;
-	Mon, 10 Feb 2025 22:07:14 -0500
-Message-ID: <c8068d0c8042e8f4e5de0e8af9cb3457ee795211.camel@surriel.com>
-Subject: Re: [PATCH v9 09/12] x86/mm: enable broadcast TLB invalidation for
- multi-threaded processes
-From: Rik van Riel <riel@surriel.com>
-To: Brendan Jackman <jackmanb@google.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de, 
-	peterz@infradead.org, dave.hansen@linux.intel.com,
- zhengqi.arch@bytedance.com, 	nadav.amit@gmail.com, thomas.lendacky@amd.com,
- kernel-team@meta.com, 	linux-mm@kvack.org, akpm@linux-foundation.org,
- jannh@google.com, 	mhklinux@outlook.com, andrew.cooper3@citrix.com, Manali
- Shukla	 <Manali.Shukla@amd.com>
-Date: Mon, 10 Feb 2025 22:07:14 -0500
-In-Reply-To: <CA+i-1C37LM62cvM33rNCfejA4fSumh_OSVkuuDU91iur_ZxCtQ@mail.gmail.com>
-References: <20250206044346.3810242-1-riel@surriel.com>
-	 <20250206044346.3810242-10-riel@surriel.com>
-	 <CA+i-1C37LM62cvM33rNCfejA4fSumh_OSVkuuDU91iur_ZxCtQ@mail.gmail.com>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.1 (3.54.1-1.fc41) 
+	s=arc-20240116; t=1739243553; c=relaxed/simple;
+	bh=agqD0Yze5c898D+WEqsD+8h3qYtyaHwztDSiAkXNzDM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UWck1HSyk7k/3HghQgfJ4XJgdzZoLrJAGMh63H7/B6TtRQHrBgUu8vSaw19P5Qm4ky8aGwDhi20LhAfRuJfaB8IlJjF4fUr5gZfmx8FEhlfoq5P6fQfr8eLsMGnvU7/Nb/OhvIT9hDKxts5c/oSjHIUlnJwnOU0s9zo4ctVocYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VU96MbxS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VU96MbxS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C3F7C4CED1;
+	Tue, 11 Feb 2025 03:12:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739243552;
+	bh=agqD0Yze5c898D+WEqsD+8h3qYtyaHwztDSiAkXNzDM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VU96MbxS2YnMFE5Ad3eEFcmnSkUafRG/k0/NNrfEBjQi9Z0CQsmFUq4nuwnSCn/Tt
+	 Pn5NdOjGqtOhKVhPeKfg1QsSwCQPkSDS0CJxeaDuSWmyf6xLYV8WWfYirxTTA59xjr
+	 5bZixJWguHhPxQ1F7Z1e0SDO/1D4Abt5AHxIL/6movGIlDJnxG5X4kjvYy/LYoDmM1
+	 p/xyPWFjUf1gu9vF98v79Iy+J+GxarL/eQY8fDLEiAYjw57w8jS6sOnvdmC3lJqXVj
+	 fN8CO+OiMMRJF1aDAISImuwJltQ/wP0IEcpCZQzKWbYxW77sWF1dQgKvx5C8hY2F9n
+	 TQpn98TgWCCzA==
+Date: Mon, 10 Feb 2025 19:12:30 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Hao Ge <gehao@kylinos.cn>,
+	James Clark <james.clark@linaro.org>,
+	Howard Chu <howardchu95@gmail.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Levi Yun <yeoreum.yun@arm.com>, Xu Yang <xu.yang_2@nxp.com>,
+	Tengda Wu <wutengda@huaweicloud.com>,
+	Yang Jihong <yangjihong1@huawei.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 00/10] Move uid filtering to BPF filters
+Message-ID: <Z6rAHhAIdlkAryGJ@google.com>
+References: <20250111190143.1029906-1-irogers@google.com>
+ <Z6panMzNSm1op8Di@google.com>
+ <CAP-5=fUY83gifsMZA0Q45kiQQbAKp2uJxkuwrwGtHK2hiUFRDA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: riel@surriel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUY83gifsMZA0Q45kiQQbAKp2uJxkuwrwGtHK2hiUFRDA@mail.gmail.com>
 
-On Mon, 2025-02-10 at 15:15 +0100, Brendan Jackman wrote:
-> On Thu, 6 Feb 2025 at 05:47, Rik van Riel <riel@surriel.com> wrote:
-> >=20
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (asid >=3D MAX_ASID_AVAILABLE)=
- {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 /* This should never happen. */
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 VM_WARN_ONCE(1, "Unable to allocate global ASID
-> > despite %d available\n", global_asid_available);
->=20
-> If you'll forgive the nitpicking, please put the last arg on a new
-> line or otherwise break this up, the rest of this file keeps below
-> 100
-> chars (this is 113).
->=20
+On Mon, Feb 10, 2025 at 02:06:18PM -0800, Ian Rogers wrote:
+> On Mon, Feb 10, 2025 at 11:59 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Sat, Jan 11, 2025 at 11:01:33AM -0800, Ian Rogers wrote:
+> > > Rather than scanning /proc and skipping PIDs based on their UIDs, use
+> > > BPF filters for uid filtering. The /proc scanning in thread_map is
+> > > racy as the PID may exit before the perf_event_open causing perf to
+> > > abort. BPF UID filters are more robust as they avoid the race. Add a
+> > > helper for commands that support UID filtering and wire up. Remove the
+> > > non-BPF UID filtering support.
+> >
+> > Hmm.. then non-BPF build cannot use the UID filtering anymore, right?
+> > Also non-root users will be limited unless it pinned the BPF program in
+> > advance.
+> >
+> > I think you can keep the original behavior and convert to BPF only when
+> > it's available.
+> 
+> Using BPF when available would be limited progress. The issues I have
+> with not removing the existing approach are:
+> 
+> 1) It is broken
+> Scanning /proc for pids and then doing perf_event_open means that any
+> time a process exits the perf_event_open fails.
+> Steps to reproduce:
+> This bug reproduces easily but if your machine is lightly loaded in
+> one terminal run `perf test`, in another terminal run `sudo perf top
+> -u $(id -u)` the perf top command will exit with:
+> ```
+> Error:
+> The sys_perf_event_open() syscall returned with 3 (No such process)
+> for event (cycles:P).
+> /bin/dmesg | grep -i perf may provide additional information.
+> ```
+> 
+> 2) It is a work in progress that isn't progressing. Scanning /proc
+> will only tell you about started processes; it won't tell you about
+> processes that start during the profiling run, whether it be perf top
+> or perf record. Extra work would be necessary to make this most basic
+> of use-cases work, perhaps you could use tracepoints to capture
+> starting processes and then enable user profiling on those processes.
+> It would be horribly complicated, suffer from delays between observing
+> things happen and doing the perf_event_open, biases in the samples,
+> etc. I don't expect anyone to do it, especially when BPF filtering
+> already solves the problem better. There have been 13 years that
+> someone could have fixed it.
+> 
+> 3) it adds significant useless complexity to the code base. Having
+> 'user' in the target makes it look like perf_event_open can work on a
+> pid, system wide or user basis. The user basis doesn't exist so the
+> majority of the code base is just ignoring it - search for users of
+> uid_str on target. Those that do run into problems (1) and (2).
+> 
+> 4) It is redundant and leads to confusion with BPF filtering. Having
+> the BPF filter on evsels is non-zero cost in terms of the code base
+> complexity, but it is something broadly useful. As user filtering has
+> never worked (see above) it isn't broadly used but is adding
+> complexity. If both approaches were wanted then it is unclear what the
+> code should be doing, presumably the mish-mash of BPF filtering and
+> /proc scanning that happens today and will be broken due to (1) and
+> (2). Putting everything into the BPF filter makes sense as you can
+> combine a BPF filter with an additional BPF filter on user.
+> 
+> 5) It is untested and adding a test leads to an always broken test due
+> to testing being an example of where things break, see point 1 and its
+> example.
+> 
+> 6) Nobody wants the non-BPF approach. As it was broken nobody used the
+> previous feature, maintaining it for no users is overhead. Let me know
+> if someone is using this option (I doubt it given points 1 and 2) and
+> they wouldn't be better served by BPF. People building perf today have
+> to explicitly opt-out of wanting BPF in their tooling. I posted this
+> change a month ago and nobody has jumped up saying please don't remove
+> the old approach.
+> 
+> 7) The interaction with this feature and changes in behavior, say
+> ignoring events that fail to open, is non-obvious and not testable as
+> testing would be broken as the functionality itself is broken. Having
+> the broken feature hanging around and being untestable means that we
+> slow progress on new features, testing and other improvements.
+> 
+> Yes, we could try to fix all of that but why? Nobody has cared or
+> tried in 13 years and I would like the tech debt off our plate with a
+> better approach in its place.
 
-Nitpicks are great! Chances are I'll have to look at
-this code again several times over the coming years,
-so getting it in the best possible shape is in my
-interest as much as anybody else's ;)
+Thanks for writing this up.  I agree BPF approach is better but it has
+its own limitation - basically it requires root.  And I know a few of
+people who don't use BPF. :)  And maybe we need to check if user passes
+filters to the event already.
 
-> >=20
-> > +static bool needs_global_asid_reload(struct mm_struct *next, u16
-> > prev_asid)
-> > +{
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u16 global_asid =3D mm_global_asi=
-d(next);
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (global_asid && prev_asid !=3D=
- global_asid)
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return true;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!global_asid && is_global_asi=
-d(prev_asid))
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return true;
->=20
-> I think this needs clarification around when switches from
-> global->nonglobal happen. Maybe commentary or maybe there's a way to
-> just express the code that makes it obvious. Here's what I currently
-> understand, please correct me if I'm wrong:
->=20
-> - Once a process gets a global ASID it keeps it forever. So within a
-> process we never switch global->nonglobal.
->=20
-> - In flush_tlb_func() we are just calling this to check if the
-> process
-> has just been given a global ASID - there's no way loaded_mm_asid can
-> be global yet !mm_global_asid(loaded_mm).
->=20
-> - When we call this from switch_mm_irqs_off() we are in the
-> prev=3D=3Dnext
-> case. Is there something about lazy TLB that can cause the case above
-> to happen here?
->=20
-In the current implementation, we never transition
-from global->local ASID.
+Also, I admit that I don't know who actually uses this.  But I can say
+sometimes people uses tools in a creative way.  Anyway, I can imagine
+an use case that system is in a steady state and each user has dedicated
+jobs.  Then scanning /proc would work well.
 
-In a previous implementation, the code did do those
-transitions, and they appeared to survive the testing
-thrown at it.
+Thanks,
+Namhyung
 
-If we implement more aggressive ASID reuse (which we
-may need to), we may need to support that transition
-again.
-
-In short, while we do not need to support that
-transition right now, I don't really want to remove
-the two lines of code that make it work :)
-
-I'll add comments.
-
-> > +static bool meets_global_asid_threshold(struct mm_struct *mm)
-> > +{
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!global_asid_available)
->=20
-> I think we need READ_ONCE here.
->=20
-> Also - this doesn't really make sense in this function as it's
-> currently named.
->=20
-> I think we could just inline this whole function into
-> consider_global_asid(), it would still be nice and readable IMO.
->=20
-Done and done.
-
-> >=20
-> > @@ -1058,9 +1375,12 @@ void flush_tlb_mm_range(struct mm_struct
-> > *mm, unsigned long start,
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * a local TLB flush is=
- needed. Optimize this use-case by
-> > calling
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * flush_tlb_func_local=
-() directly in this case.
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (cpumask_any_but(mm_cpumask(mm=
-), cpu) < nr_cpu_ids) {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (mm_global_asid(mm)) {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 broadcast_tlb_flush(info);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } else if (cpumask_any_but(mm_cpu=
-mask(mm), cpu) <
-> > nr_cpu_ids) {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 info->trim_cpumask =3D should_trim_cpumask(mm);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 flush_tlb_multi(mm_cpumask(mm), info);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 consider_global_asid(mm);
->=20
-> Why do we do this here instead of when the CPU enters the mm? Is the
-> idea that in combination with the jiffies thing in
-> consider_global_asid() we get a probability of getting a global ASID
-> (within some time period) that scales with the amount of TLB flushing
-> the process does? So then we avoid using up ASID space on processes
-> that are multithreaded but just sit around with stable VMAs etc?
->=20
-You guessed right.
-
-In the current x86 hardware, a global ASID is a scarce
-resource, with about 4k available ASIDs (2k in a kernel
-compiled with support for the KPTI mitigation), while
-the largest available x86 systems have at least 8k CPUs.
-
-We can either implement the much more aggressive ASID
-reuse that ARM64 and RISC-V implement, though it is not
-clear how to scale that to thousands of CPUs, or reserve
-global ASIDs for the processes that are most likely to
-benefit from them, continuing to use IPI-based flushing
-for the processes that need it less.
-
-I've added a comment to document that.
-
---=20
-All Rights Reversed.
