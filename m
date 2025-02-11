@@ -1,180 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D6C1E22E6;
-	Tue, 11 Feb 2025 17:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20CD91E2838;
+	Tue, 11 Feb 2025 17:52:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739296284; cv=none; b=F9ZvaZZFMvFLL8uCXh8br5jTP3Y79RsIs1HGe6QaVzDXHOH/UOdgIFjePmcBCCqDaaqaR7nOQS+/CoLEXPGkArkK3oUMXbQIjhsjoIyWBLV2GJFmVb6t3HLmPW+bsBPKZH1jdG1lsKrXBHbhgOS9k6/RkBm04RQfMum4Tuf97pA=
+	t=1739296323; cv=none; b=NVx1CIhQQsvY9HJNn6TPVY25Y6/3i2Ni4vP7pvvmiYmKUj2rgu2yBhHu6CiYIYyFnEaKj12QGlhlN2+FbaIxr4gbMnfmp6mkevmEacDH/Dp+YGberKqBx3Jg0JErSwp54CzpkwN06INskUVmbDrdB+X2cE6lPgApLvYO2CxXMng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739296284; c=relaxed/simple;
-	bh=pOmYe+CzKZBKLzOG405L6ieNnxry6wJDC3YnqgayBh4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kc2v1csOZXsCLhQxgp0zPtSEer3IQE2gCpg0FOjth8dRMOeeZfjgKmfcrwajxNWG7FbQu9Bhbsll5F+niciy22HMbWAFGV7CCJGsbDBJAwbyN/PH0OgMocal0XKGDStfvbxh9u+pAsY1wFLPgnNaLJY5is4A8sUBNh6PsapiXAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YbFXRVog; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739296323; c=relaxed/simple;
+	bh=LIkAy4ET0bdltWGfkdDtlEuheEJbDlRUHW/Bb2K4/wI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=ux8lLyuHd9XtTut6MDzYbEf6VldFOazE+a3ASdj6MhuTn7+tcd3dSuMUdrzVlrJRXG3fsNF/gAVKEoHtEI7tCJu6SteQfcyL6Xcaf1iSMTSX2iDli85vQQmkC3FXy01SZZZHvOPRBuCCFQNdBuSLrpg55Fy4dQRPJetEmAUCbg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MRkNlHxE; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YbFXRVog"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69BA5C4CEDD;
-	Tue, 11 Feb 2025 17:51:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739296283;
-	bh=pOmYe+CzKZBKLzOG405L6ieNnxry6wJDC3YnqgayBh4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YbFXRVogRNaFHzI0n1livDh5s/I9s0iwrHPQvU0h9KJihLz/ZffZurV+E9rYOPy+H
-	 MuBoDNNAvM91AgiLWFfVPMtl+Hi4802P9HQKwnlJiCHpZVnHqni7TUs6ROKD3Ss4ca
-	 ijyxH4ngpKOT9+OPUyN+PK9WVuwlfYyOIE1bHcsUikg7ljI1HOUt4nYlmG+bimvxJn
-	 Clj/oD/MvPqjt7UHxjwXrjsssqdpRer6+5UYLgyMyXO5LJCIvC5ShXTyupvmhbN5mk
-	 IDIX+k+ltDUMXnBKa6f94V8XjzMfu0g4HZno1GFDOiPBwbwPd0aGwfnKSv5SuA69Z3
-	 XkKOvKucyZzqQ==
-Date: Tue, 11 Feb 2025 09:51:20 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Hao Ge <gehao@kylinos.cn>,
-	James Clark <james.clark@linaro.org>,
-	Howard Chu <howardchu95@gmail.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Levi Yun <yeoreum.yun@arm.com>, Xu Yang <xu.yang_2@nxp.com>,
-	Tengda Wu <wutengda@huaweicloud.com>,
-	Yang Jihong <yangjihong1@huawei.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 00/10] Move uid filtering to BPF filters
-Message-ID: <Z6uOGNO6p7i9Fese@google.com>
-References: <20250111190143.1029906-1-irogers@google.com>
- <Z6panMzNSm1op8Di@google.com>
- <CAP-5=fUY83gifsMZA0Q45kiQQbAKp2uJxkuwrwGtHK2hiUFRDA@mail.gmail.com>
- <Z6rAHhAIdlkAryGJ@google.com>
- <CAP-5=fXjmJ+Rr7ejL6fCMeu6PZSit7n84hQkjh=0jQhkr1on3Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MRkNlHxE"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6f8c58229f1so54327b3.0;
+        Tue, 11 Feb 2025 09:52:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739296321; x=1739901121; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5qwXQA675KH9nLYOUbW2kE+0rvscD1TwrOIlUfISHVo=;
+        b=MRkNlHxEWsjn4uFhhxNEiwBffZfqy/eAeugxt1fA/jU3WPIssmM5QrzTa3vqfi8BfZ
+         PU8lQ/rcLxPzD89n1zRbYxzoKPHL5xYWMkfS+Gt8E6UpV9Uz7bwlUe2GmcXqyFN78J+p
+         aeCjxEmKSnLvmW/vCl35+LEt6VfhAo/fUQIkKuHFitbMian6rb3KIFu3X3m2cxqbRPPo
+         S4a+O+yriNZIfAVprcRDI8XgtwW54nQIEiIf0LFmIQysFuad69z2CJsefFb8+1zJwHNe
+         c53R3MRMYEWLjerCOvYqwo55hpgMaYgD9uHahl4GIwJSHiK8SyiIsqthLsUx/5UEPD3k
+         bz2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739296321; x=1739901121;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5qwXQA675KH9nLYOUbW2kE+0rvscD1TwrOIlUfISHVo=;
+        b=qKsKupd4GqZbvw8z7ilvGe+Y9ePZwH0M3uu4OYPme5i8itctAPAjNywmlPZrXi8O1V
+         wiyKXwy3UYFTyKkIy2VMtPqPovHY5vm8lGQ8/0q9dqmGbE92jr9i0pqBiFq2kRlj75+J
+         A7RVvWiasGE8yryPse5Aa80cn2APC9H83gjh8wSBXLoya+W5SaVtc0WpJzSW+QA/l1U4
+         YvfX9zgF8vNcbxFXt6RL0So9i2oEYqsu/NwZVbgyJogFTH078tK8pRu2/gf/1NHkwAZj
+         04OXuQNTm5B9rGMF06y3KGwl6EjPNR7sxdY6oQwc1eTUsVqMwpJpg/Qn+00Mj922L5sF
+         ct1g==
+X-Forwarded-Encrypted: i=1; AJvYcCVvHJeB1VhSYMPpNcN4wcH7ncNC73sOFjSzJz7xZjAACM8Az/95KjkzxVjgMY7Gs/LuW3yn5HqIctn50xs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWxWBceQk460T/VWiDEo1GeQLMD21TDL31f4uQh3tS7Uqhe0vQ
+	2YmsAQPouaBoVnu3pcbZ1rMwzvPmRRa+Axk+cZO/yrT+lwCXCBtI
+X-Gm-Gg: ASbGncurAAcOOWb2+AniyauOe2itLADQPVPInvYzxJzmuyAPlix+Vs/MhMZl4/8+A88
+	U5aGtSourVYoK4alLzx7TEcp4dXJ0jX3EnZNRTHnAXQEDrDdYrGoggS5HnAzis7Ew9nCaLWp4Mi
+	fQvID4goizYQpXWpsYTq4HVuOnpQULmOUsKuRhQP16urqH4uOyIf1ay2cqrQWal6fhDYrjiaELK
+	Lfek77ZOkxTUI5ktJ5UOJQHnkbqPw6WaZBX6QWgGYU1OPw5QK9h7UHID0+cdi1zlLy+eooFe+D1
+	bA0ejyxC
+X-Google-Smtp-Source: AGHT+IEGB4LloUYbMjYTmnK3fbUs2QwDyFmUwfUIA/kw8Ul8N8ZJt9fz+hiyupyhTwnSgFgGRPgcQQ==
+X-Received: by 2002:a05:690c:6887:b0:6f7:9f95:d916 with SMTP id 00721157ae682-6fb0c53aca2mr55400847b3.16.1739296321007;
+        Tue, 11 Feb 2025 09:52:01 -0800 (PST)
+Received: from localhost ([2800:bf0:61:1288:72d5:e7e1:d832:2e3d])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99ffc0aeasm22128447b3.96.2025.02.11.09.51.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 09:52:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXjmJ+Rr7ejL6fCMeu6PZSit7n84hQkjh=0jQhkr1on3Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 11 Feb 2025 12:51:59 -0500
+Message-Id: <D7PT36DCB1P5.2YE8H1MHFAE15@gmail.com>
+Cc: <platform-driver-x86@vger.kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Armin Wolf" <W_Armin@gmx.de>, "Mario
+ Limonciello" <mario.limonciello@amd.com>, "Hans de Goede"
+ <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 05/14] platform/x86: alienware-wmi: Refactor hdmi,
+ amplifier, deepslp methods
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250207154610.13675-1-kuurtb@gmail.com>
+ <20250207154610.13675-6-kuurtb@gmail.com>
+ <Z6t8y7VvZL6UDEck@black.fi.intel.com>
+In-Reply-To: <Z6t8y7VvZL6UDEck@black.fi.intel.com>
 
-On Mon, Feb 10, 2025 at 08:40:01PM -0800, Ian Rogers wrote:
-> On Mon, Feb 10, 2025 at 7:12 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Mon, Feb 10, 2025 at 02:06:18PM -0800, Ian Rogers wrote:
-> > > On Mon, Feb 10, 2025 at 11:59 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > >
-> > > > On Sat, Jan 11, 2025 at 11:01:33AM -0800, Ian Rogers wrote:
-> > > > > Rather than scanning /proc and skipping PIDs based on their UIDs, use
-> > > > > BPF filters for uid filtering. The /proc scanning in thread_map is
-> > > > > racy as the PID may exit before the perf_event_open causing perf to
-> > > > > abort. BPF UID filters are more robust as they avoid the race. Add a
-> > > > > helper for commands that support UID filtering and wire up. Remove the
-> > > > > non-BPF UID filtering support.
-> > > >
-> > > > Hmm.. then non-BPF build cannot use the UID filtering anymore, right?
-> > > > Also non-root users will be limited unless it pinned the BPF program in
-> > > > advance.
-> > > >
-> > > > I think you can keep the original behavior and convert to BPF only when
-> > > > it's available.
-> > >
-> > > Using BPF when available would be limited progress. The issues I have
-> > > with not removing the existing approach are:
-> > >
-> > > 1) It is broken
-> > > Scanning /proc for pids and then doing perf_event_open means that any
-> > > time a process exits the perf_event_open fails.
-> > > Steps to reproduce:
-> > > This bug reproduces easily but if your machine is lightly loaded in
-> > > one terminal run `perf test`, in another terminal run `sudo perf top
-> > > -u $(id -u)` the perf top command will exit with:
-> > > ```
-> > > Error:
-> > > The sys_perf_event_open() syscall returned with 3 (No such process)
-> > > for event (cycles:P).
-> > > /bin/dmesg | grep -i perf may provide additional information.
-> > > ```
-> > >
-> > > 2) It is a work in progress that isn't progressing. Scanning /proc
-> > > will only tell you about started processes; it won't tell you about
-> > > processes that start during the profiling run, whether it be perf top
-> > > or perf record. Extra work would be necessary to make this most basic
-> > > of use-cases work, perhaps you could use tracepoints to capture
-> > > starting processes and then enable user profiling on those processes.
-> > > It would be horribly complicated, suffer from delays between observing
-> > > things happen and doing the perf_event_open, biases in the samples,
-> > > etc. I don't expect anyone to do it, especially when BPF filtering
-> > > already solves the problem better. There have been 13 years that
-> > > someone could have fixed it.
-> > >
-> > > 3) it adds significant useless complexity to the code base. Having
-> > > 'user' in the target makes it look like perf_event_open can work on a
-> > > pid, system wide or user basis. The user basis doesn't exist so the
-> > > majority of the code base is just ignoring it - search for users of
-> > > uid_str on target. Those that do run into problems (1) and (2).
-> > >
-> > > 4) It is redundant and leads to confusion with BPF filtering. Having
-> > > the BPF filter on evsels is non-zero cost in terms of the code base
-> > > complexity, but it is something broadly useful. As user filtering has
-> > > never worked (see above) it isn't broadly used but is adding
-> > > complexity. If both approaches were wanted then it is unclear what the
-> > > code should be doing, presumably the mish-mash of BPF filtering and
-> > > /proc scanning that happens today and will be broken due to (1) and
-> > > (2). Putting everything into the BPF filter makes sense as you can
-> > > combine a BPF filter with an additional BPF filter on user.
-> > >
-> > > 5) It is untested and adding a test leads to an always broken test due
-> > > to testing being an example of where things break, see point 1 and its
-> > > example.
-> > >
-> > > 6) Nobody wants the non-BPF approach. As it was broken nobody used the
-> > > previous feature, maintaining it for no users is overhead. Let me know
-> > > if someone is using this option (I doubt it given points 1 and 2) and
-> > > they wouldn't be better served by BPF. People building perf today have
-> > > to explicitly opt-out of wanting BPF in their tooling. I posted this
-> > > change a month ago and nobody has jumped up saying please don't remove
-> > > the old approach.
-> > >
-> > > 7) The interaction with this feature and changes in behavior, say
-> > > ignoring events that fail to open, is non-obvious and not testable as
-> > > testing would be broken as the functionality itself is broken. Having
-> > > the broken feature hanging around and being untestable means that we
-> > > slow progress on new features, testing and other improvements.
-> > >
-> > > Yes, we could try to fix all of that but why? Nobody has cared or
-> > > tried in 13 years and I would like the tech debt off our plate with a
-> > > better approach in its place.
-> >
-> > Thanks for writing this up.  I agree BPF approach is better but it has
-> > its own limitation - basically it requires root.  And I know a few of
-> > people who don't use BPF. :)  And maybe we need to check if user passes
-> > filters to the event already.
-> 
-> I thought you were working on making the BPF filters pin-able? So root
-> could enable the filter but then users have access to it.
+On Tue Feb 11, 2025 at 11:37 AM -05, Andy Shevchenko wrote:
+> On Fri, Feb 07, 2025 at 10:46:01AM -0500, Kurt Borja wrote:
+>> Refactor show/store methods for hdmi, amplifier, deepslp sysfs groups to
+>> use alienware_wmi_command() instead of alienware_wmax_command() which
+>> uses deprecated WMI methods.
+>
+> ...
+>
+>> +	pr_err("alienware-wmi: unknown HDMI cable status: %d\n", ret);
+>
+> Rather introduce pr_fmt() and drop all these prefixes.
 
-Right, 'perf record --setup-filter pin' would do the job.  But it has to
-be run in advance.
+This was not introduced by me so it probably requires a different patch.
 
-> You have to be root to be looking at other users in any case.
+>
+>> +	if (!ret) {
+>
+> Traditional patter is to check for errors:
 
-That's true.  But at least you can profile your processes. :)
+I wanted to change as little as possible the original function, as in my
+opinion this would require a different patch.
 
-> 
-> > Also, I admit that I don't know who actually uses this.  But I can say
-> > sometimes people uses tools in a creative way.  Anyway, I can imagine
-> > an use case that system is in a steady state and each user has dedicated
-> > jobs.  Then scanning /proc would work well.
-> 
-> Another one for Google's tree then.
+>
+> 	if (ret) {
+> 		...do error handling...
+> 	}
+>
+>>  		if (out_data =3D=3D 1)
+>>  			return sysfs_emit(buf, "[input] gpu unknown\n");
+>
+>>  		else if (out_data =3D=3D 2)
+>
+> Redundant 'else'.
+>
+>>  			return sysfs_emit(buf, "input [gpu] unknown\n");
+>>  	}
+>> -	pr_err("alienware-wmi: unknown HDMI source status: %u\n", status);
+>> +
+>> +	pr_err("alienware-wmi: unknown HDMI source status: %u\n", ret);
+>>  	return sysfs_emit(buf, "input gpu [unknown]\n");
+>
+>
+> ...
+>
+>>  	if (strcmp(buf, "gpu\n") =3D=3D 0)
+>
+> Wow! This should be fixed to use sysfs_streq()
+>
+> ...
+>
+>> +		pr_err("alienware-wmi: HDMI toggle failed: results: %u\n", ret);
+>
+> pr_fmt()
+>
+> ...
+>
+>> +	pr_err("alienware-wmi: unknown amplifier cable status: %d\n", ret);
+>
+> Ditto.
+>
+> Also note, if you have a struct device available, use the respective dev_=
+*()
+> macros instead.
 
-Any chance you update the patchset to retain the old behavior and use
-BPF only if available?
+Same as above, this was not my line to begin with so I left it as is.
 
-Thanks,
-Namhyung
+>
+> ...
+>
+>>  	if (strcmp(buf, "disabled\n") =3D=3D 0)
+>
+> sysfs_streq() / sysfs_match_string() =E2=80=94 whatever suits better.
 
+I can send fixes for these tho. IMO this requiere different patches.
+
+--=20
+ ~ Kurt
