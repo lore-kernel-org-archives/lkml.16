@@ -1,127 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76AE8250C11;
-	Tue, 11 Feb 2025 19:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE63262D13
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 19:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739301124; cv=none; b=n7ERjSXNvMMPzxfkEGbobW5nzaR8Fhv4xpjbVhHgNiIbNTVcLW69ZLEkdwSDGDIPCe2Vpdy7MN/I+bgEn6q2gJoh/iulSmYiP9Zs7zt83z7SU56ZM7k9KppZyUPibADheB986TIt4wxgT0rVApp7njZjq1TccTwX6CzomRbti7Y=
+	t=1739301144; cv=none; b=dZue+i1cIn+gr4CrFpJJugjO+trLd5lLbQQVXtr8tmNN2IEHtedn16DNVLo9eaYQSgc+L7kd4FkqSuXrSk/sGAyPWN7GmCUmOPdsIKLVHWdvbCzPBbWhPCTgnSls1vbnQXZhQ0PxUa+gvWQJTmoMCFY+HUfENzGPbiaDt0MuHZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739301124; c=relaxed/simple;
-	bh=p80x++a6EVVT6tvJDMFWYIeh0mwBg0pkUXEKpJCo07M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZRIY1SEf0z9EYp54tvtuJFqgd0AJ0XBOEDUgFw9gm4vBLgsUlcaB0SBcgnif/NLX2ESBHCO+CQ3K7A/h0Byro/Yf07JcPxKEMmB2szshe7Uz7RBH4VP6GNULGhF9zss3hrPT/Jh8twKp3K192sO1NX0U5NCZwblvmsWgLdWgT3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AQJZR3Fi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739301144; c=relaxed/simple;
+	bh=X2lHVeiQCvgsTWG4ldShMFudcwDEqu2vU7n95Bksp1g=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=KYh50xuId/BZemRti59QfBY212exB5lFQp4VBLvhYt/LOTPGySqkYbD9IgonWoe29lnEFj0b4qE7vHEGMXi0rPqKQeo4KsaXSVhLj1g2UsD6j7PAq1QzwuVmw6f96kOMbBI5EONjUyafyj3Hk4F6jL/SilS4w1HI0f7tI3HF2W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hMruvI1F; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AQJZR3Fi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B5DAC4CEDD;
-	Tue, 11 Feb 2025 19:12:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739301123;
-	bh=p80x++a6EVVT6tvJDMFWYIeh0mwBg0pkUXEKpJCo07M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AQJZR3FihvkScnajHbQ2W1uu9c2nm4MJVwbxjp/foYqgxlszhw7bZ+NH79XIR7nO0
-	 LuWfatCN6Kvvk+8UxPfnadZkFS4hb/I0NNDd2tACQzG1tN2BoDaoVRT6JVpUYgu0DB
-	 jRMOSxQVkKqFBdFhAdXZ27DooRHSVqUEw5UhoUVv2xnzqIkXLC2a327OSdc2d+FjFc
-	 pbRWFU3K+tkadDYvNF/05HOT9Au0ZBRcTtFwWRbkJyIn3Z8KhuFsmNFQWEpYi6kVS3
-	 8RscySPiwGGqB530lKruBYw085wDteOhQSUieMhWvjVu3s38OFm+GCm0PlRyBntJgO
-	 euR94IKLi80UQ==
-Message-ID: <9b9bb222-7545-4dd7-9233-fe5122b44d40@kernel.org>
-Date: Tue, 11 Feb 2025 20:11:58 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hMruvI1F"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fa514fa6c7so6966615a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:12:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739301143; x=1739905943; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PTpX8vb40IrRH8tThk8Xp9PbVo3Mo5gqnSvnja00T+A=;
+        b=hMruvI1FW0GCKBP2RLY0+6xuhau0c40Edo2TduE+nPuco9zAnVLytuvhmcDdSW7r+P
+         a1DU++OIrY45CiKzMOHA8Wta4Zk/Mgn4VghV6U6Y3Lvc6Q89v3xYJr7OqfOPIQthredV
+         wfs5GM7Nxsqp0GV+DcYZ/SsMnbm+RuK8Gmx3y5NRo3RaX5/4A8JkNQ65YiSKmBB7Z3CF
+         5YwS6jX+QzyohXQz7lHrPvi8L36RKmUt8aamgUGAzIEYZHLJ8m4ry4AEVghKBSNrNaNW
+         yRA7Rqp5nUEzwRaBKuCDBrh9KjXklKLNDxfheMEloCCvYAfUt/7cLKKlXViC5hxIIzRf
+         ZLAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739301143; x=1739905943;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PTpX8vb40IrRH8tThk8Xp9PbVo3Mo5gqnSvnja00T+A=;
+        b=KQ/GKK/2VhlDUQJbssCfPo4S3HdjnIOJj48mqgXsJ47BfShEkYi+arck7gKiA1Fiqi
+         FOIJpC2RrrdcFKFaRxeduUFO+nAyWLo7tjXzAe1Xpra18rs44A5UTHwhu2GTfpwV7+P2
+         LCUxtqOSodqBW4BGXvf1kNU26P3kmn2vEflt5XI9ZS+x2yVxgn2AksjJAIxIvu8scHF1
+         zenGmgrKj9bXLzbxkqn0UeOlyGJ4guIsjlO8EKcjpr6x2OHtKCO+houq5Qs0G96a9aqY
+         P+gjJq0B5thLwC+wdyXBFST4XCizGvVwtD1M4wTLV07hDB7K6yWyjZcaiTER3pClTmPz
+         PcJg==
+X-Forwarded-Encrypted: i=1; AJvYcCXB+I8ymWdPmrVq8xV0p2+PFNRBQK7hqCHP5J6aDNOo3pMxpXN66syASoUy2r4pFDRuQslbZQPQ51VSTPk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxBktDHi8XdXMRqpnpE/op2kXXAa2yUwReNOE8BkXsQaYorFu0
+	nJ0rGLTGuWVs7DJzVd0nNzDTBmtmnBLKoP80DIAwUBYQAC/3U6Ay0sry5dKyhNLO2RMuewhk87A
+	3Cw==
+X-Google-Smtp-Source: AGHT+IGv8249oY83CM/3P+pInwQEw8t8wmWjTUc5E08ZmLN+aIBTlVARTrjh2oczuif83iwhrztL+xZK9vk=
+X-Received: from pjbpm7.prod.google.com ([2002:a17:90b:3c47:b0:2ef:95f4:4619])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5485:b0:2f7:7680:51a6
+ with SMTP id 98e67ed59e1d1-2fbf5bb578emr314150a91.6.1739301142742; Tue, 11
+ Feb 2025 11:12:22 -0800 (PST)
+Date: Tue, 11 Feb 2025 11:12:21 -0800
+In-Reply-To: <20241127172654.1024-3-kalyazin@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: leds: Allow differently named multicolor
- leds
-To: j.ne@posteo.net, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250209-multi-led-v1-1-5aebccbd2db7@posteo.net>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250209-multi-led-v1-1-5aebccbd2db7@posteo.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20241127172654.1024-1-kalyazin@amazon.com> <20241127172654.1024-3-kalyazin@amazon.com>
+Message-ID: <Z6uhFYGdmcq_EWCU@google.com>
+Subject: Re: [PATCH 2/2] KVM: x86: async_pf: determine x86 user as cpl == 3
+From: Sean Christopherson <seanjc@google.com>
+To: Nikita Kalyazin <kalyazin@amazon.com>
+Cc: pbonzini@redhat.com, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	vkuznets@redhat.com, xiaoyao.li@intel.com, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, roypat@amazon.co.uk, 
+	xmarcalx@amazon.com
+Content-Type: text/plain; charset="us-ascii"
 
-On 09/02/2025 23:06, J. Neuschäfer via B4 Relay wrote:
-> From: "J. Neuschäfer" <j.ne@posteo.net>
-> 
-> In some cases, a board may have multiple multi-leds, which can't be
-> distinguished by unit address. In such cases it should be possible to
-> name them differently, for example multi-led-a and multi-led-b.
-> This patch adds another node name pattern to leds-class-multicolor.yaml
-> to allow such names.
-> 
-> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+On Wed, Nov 27, 2024, Nikita Kalyazin wrote:
+> Suggested-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>
 > ---
->  Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  arch/x86/kvm/x86.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> index bb40bb9e036ee00e06d21e2321ecd5a7d471c408..c22af25b6430be71300c0e37f696cd61112ea190 100644
-> --- a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> @@ -21,7 +21,9 @@ description: |
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 8f784f07d423..168dcf1d4625 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -13360,7 +13360,7 @@ static bool kvm_can_deliver_async_pf(struct kvm_vcpu *vcpu)
+>  	if (!kvm_pv_async_pf_enabled(vcpu))
+>  		return false;
 >  
->  properties:
->    $nodename:
-> -    pattern: "^multi-led(@[0-9a-f])?$"
-> +    oneOf:
-> +      - pattern: "^multi-led(@[0-9a-f])?$"
-> +      - pattern: "^multi-led-.*$"
+> -	if (kvm_x86_call(get_cpl)(vcpu) == 0)
+> +	if (kvm_x86_call(get_cpl)(vcpu) != 3)
 
-I don't see any bindings using this or allowing this. If this is because
-of some new binding, it is supposed to be part of that patchset.
-Otherwise please provide reference which binding needs this.
+Ugh, looking at the documentation (explicitly says "vcpu is in cpl == 0"), and
+what KVM consideres "in kernel" in other flows, e.g. kvm_arch_vcpu_in_kernel(),
+I think the existing code is working as intended.  The only thing that's "wrong"
+is the name of KVM's internal variable.  Paolo will probably complain about
+checking for a negative, but I think the below is actually what we want.  I'll
+post a patch.
 
-Best regards,
-Krzysztof
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index b15cde0a9b5c..528057105c26 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -996,8 +996,8 @@ struct kvm_vcpu_arch {
+                u64 msr_int_val; /* MSR_KVM_ASYNC_PF_INT */
+                u16 vec;
+                u32 id;
+-               bool send_user_only;
+                u32 host_apf_flags;
++               bool send_always;
+                bool delivery_as_pf_vmexit;
+                bool pageready_pending;
+        } apf;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 8e77e61d4fbd..c47cdccc7c5c 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3544,7 +3544,7 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
+                                        sizeof(u64)))
+                return 1;
+ 
+-       vcpu->arch.apf.send_user_only = !(data & KVM_ASYNC_PF_SEND_ALWAYS);
++       vcpu->arch.apf.send_always = (data & KVM_ASYNC_PF_SEND_ALWAYS);
+        vcpu->arch.apf.delivery_as_pf_vmexit = data & KVM_ASYNC_PF_DELIVERY_AS_PF_VMEXIT;
+ 
+        kvm_async_pf_wakeup_all(vcpu);
+@@ -13378,8 +13378,7 @@ static bool kvm_can_deliver_async_pf(struct kvm_vcpu *vcpu)
+        if (!kvm_pv_async_pf_enabled(vcpu))
+                return false;
+ 
+-       if (vcpu->arch.apf.send_user_only &&
+-           kvm_x86_call(get_cpl)(vcpu) == 0)
++       if (!vcpu->arch.apf.send_always && kvm_x86_call(get_cpl)(vcpu) == 0)
+                return false;
+ 
+        if (is_guest_mode(vcpu)) {
