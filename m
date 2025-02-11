@@ -1,121 +1,163 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2AD261564;
-	Tue, 11 Feb 2025 17:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 641F1261564
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 17:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739296433; cv=none; b=aZati1S3Dj30Nt83j6mp0vA1HdgISS2bBbYpzLwFPoc6hXj3A7D7sbrYFtoqgwj6a0gl1ZpvLUbsX7dbsTH8b32Vpi449NrgQ91zJIIU9Oqn4EzwA9yh5rCbSn7lhlJaT6/9rnnGRv66jPYF6vhSFu84zK8oYLAL3g2VNT2qVfs=
+	t=1739296471; cv=none; b=Uq5X+YdAQUWWyMa51YaC36Z8Zab5knt1VLVcbUUHGHeVc28oQqtTsrBwYBdx/Q2xrNI7de5d3GyqCG6HlwHYqneFSZtKGEafOJD8xPke74S0PcZgp0Y646swyYpu7vnkwsgDUpckAsWXQ+QrWV0DsrknF2E0TbpHi4gCeeJNnXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739296433; c=relaxed/simple;
-	bh=rt0Gef4TnDtQk7JAlFpOz9to8HGKq0GwmS+KV8x9Hrs=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=Wd2tEg06Wh//yAdKtE3xGzQXyaC4WuNU4ase7ug3bZktBQJD+6oxEG41dVHs0qTfj1qURImWZUatXkuGtMPJ/WTod7B/YmZkv+NfO+rfklNU55co5adEGBvPvhlXADyInv0C5uBrRVAb5lDYprBfTzrnTYiiN4qczqVP9Naykxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H8Fr9V7G; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739296471; c=relaxed/simple;
+	bh=5rmXpuduF/u7vqhQmmIvfQ9KEO3o9/3YAw2HM+4dEfY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pWWIq5UEu3Pd/zcZwPA4z85SH9ORMI6mXQmgZKhLA86l/D69yeUjZp+OT3nsJFhCMdgGZ/nqz8Vas4Fib4FUbRIIAOLFE8JEU2Oafs/PBhKGqqgQ/w1fTCN8mJPbw+FES4oy9DD8iE7JwRTOI+YWoF3bkO1PFQh2cieTc/ntY1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ORhJUFZu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H8Fr9V7G"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-6f9c6d147edso31555597b3.3;
-        Tue, 11 Feb 2025 09:53:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739296431; x=1739901231; darn=vger.kernel.org;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vbOCYeStl6BHQvZou7tuoNC9oWGGMmKxWp+c7w+iGIo=;
-        b=H8Fr9V7G8nZEk37WYDRRepxhR8EyvuxXJflS0WG0ESHvFsLt97oPTCQCMdepmkEGUG
-         PAjABVkfe/QCq8qsXr7t0QR40ex1eOSxfmCTmMB18HKzHQPXAA9FJoTpkxvw01VMiPoH
-         nvrrlaGEhDWsSauyDnILW/cKx8I6cVXk0MD6slyrob3Ic9q84+qWQTzz6XzUKgiXg1Si
-         HsNdPIXkM5o6wN5EwS8TqW4qZtrIDTBWUFn86ApMsHGgPbWOTkU4M+lJ2WYqVlAsQ3F6
-         1sZ6lAMUMBVp0r8YTLgU1PjGRxKyI0tXnXDWToJxju2MHGqngka5CYPDVtct2FRtVEFJ
-         nuaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739296431; x=1739901231;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=vbOCYeStl6BHQvZou7tuoNC9oWGGMmKxWp+c7w+iGIo=;
-        b=S1t5+RBAKk7PZ1JcWPa9PZP/POnsojewklrtXIdVqlef0Zmy15cLRBHdapLrKa9lQe
-         5uStCa/tae0HkL3icQhFwKzkc6UMypcPb4uqt8BN3sXGwnI8toufUh5MJoPTgnHKM4+I
-         TsfyFYwGKiMb1fTqrHBDoFUPlvVkULtoJC4efbG7EWqA7tDhMNYpfsDUjHOYYOD5uTG2
-         pu2nHt7VNR3VJtqOafKnIdznUfoG+1WsPle53zkeiWsDie9Jqd/jBoRf0lensX9R66hN
-         FJPWmdSUgpgX7g7XIZ7cH7udLmLPl4ju16a9CATX3/2Gt4zB6bk8m1LA0J0zMl4zoGHN
-         zAiw==
-X-Forwarded-Encrypted: i=1; AJvYcCXgRc/we/8wswvS6rkadNrDEnwLpZfAjp6e8JPWEtc7U2H+WH8pWvXPZ2h+XBd7TknljruHma4Oo4wcFbE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yykwj2gWEMbrRS099gVUHiwKZdG8IxYhV33f87YhngwirI4CqgO
-	ZK76aDgkcgWmcSiB2IPlgtqUupFEK6cLLhs2Hbi1KCQmgDOyW+G8
-X-Gm-Gg: ASbGncuwFml6tOhrd7WIYSVOPUs1rHzK16m/1icuMYTarT80H6MSk7xmdEYYM702YyA
-	I6wCXd0ksCMDoMgFrGb9g4PUzeoLpVsvCf+DnAowEgrLSFDoBL8a2UuyJVaQjSwIg0UdRyibDN7
-	R0qth/aaxEkRDUvhueDoW0to59I0+v68mib8bcpGcW1FDHmKIYiIP0ejj/zgyGRo6+751lFLrse
-	H6QWDz4ehYgq684MmpWXFhAJdkUAgcmM2/aKohnoQXKcB3wcbGfJYfHWdWvHMdfTkZIp15d5l40
-	+5FaSiq0
-X-Google-Smtp-Source: AGHT+IGDSoVNRbQPz007PS0sRL4EVQ5MKfKukYuKpRw1EvyR+A+fYaI8q6AJb+UQgT9Yo+15wFX5Vw==
-X-Received: by 2002:a05:690c:a86:b0:6ef:8122:282f with SMTP id 00721157ae682-6fb1f286688mr4779367b3.24.1739296430640;
-        Tue, 11 Feb 2025 09:53:50 -0800 (PST)
-Received: from localhost ([2800:bf0:61:1288:72d5:e7e1:d832:2e3d])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99fd1bb65sm22530837b3.29.2025.02.11.09.53.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 09:53:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ORhJUFZu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C9EFC4CEDD;
+	Tue, 11 Feb 2025 17:54:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739296470;
+	bh=5rmXpuduF/u7vqhQmmIvfQ9KEO3o9/3YAw2HM+4dEfY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ORhJUFZuBi0N/fPSErbN9tgZDcMqiiMEWc8jMASSf5bjnb+MMeuds7a6jGNEcLpk1
+	 4ZZy56likvWzUXQrRuDm7xfiDnlgPPPjlMe5H/2/3j0bUv5Jtkjbg1Fa9MS/JSPKEj
+	 C+hjYgi5+su6mDQ2CYkSJesdNFN6voFWjzB2g/aIeRE+OfNyoKIR+i/ott4QcWqv+6
+	 izjSSQsj3zf7GkboFlt9TAvozOz28BCmvnNtzQkOO06V2yBxy67pEhHLpYdGl9mrMP
+	 hAOF3m/bjUY/FprmIAWE9ca/FCFORT7c7UDSqnjsmEygzMwl685ICS+pnFvLRdiM2N
+	 aPBYMjgXHTRxg==
+Date: Tue, 11 Feb 2025 17:54:25 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Sunny Shen <sunny.shen@mediatek.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Fei Shao <fshao@chromium.org>, Pin-yen Lin <treapking@chromium.org>,
+	"Jason-JH . Lin" <jason-jh.lin@mediatek.com>,
+	Nancy Lin <nancy.lin@mediatek.com>,
+	Singo Chang <singo.chang@mediatek.com>,
+	"Paul Chen --cc=devicetree @ vger . kernel . org" <paul-pl.chen@mediatek.com>,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	Project_Global_Chrome_Upstream_Group@mediatek.com
+Subject: Re: [PATCH 1/5] dt-bindings: display: mediatek: mdp-rsz: Add rules
+ for MT8196
+Message-ID: <20250211-feed-shed-4b32f146cc54@spud>
+References: <20250211025317.399534-1-sunny.shen@mediatek.com>
+ <20250211025317.399534-2-sunny.shen@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="TeColmbo9d48spU6"
+Content-Disposition: inline
+In-Reply-To: <20250211025317.399534-2-sunny.shen@mediatek.com>
+
+
+--TeColmbo9d48spU6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 11 Feb 2025 12:53:48 -0500
-Message-Id: <D7PT4KOCJTP4.2LJWH5X14M2D3@gmail.com>
-Subject: Re: [PATCH v10 10/14] platform/x86: Add alienware-wmi.h
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
-Cc: <platform-driver-x86@vger.kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, "Armin Wolf" <W_Armin@gmx.de>, "Mario
- Limonciello" <mario.limonciello@amd.com>, "Hans de Goede"
- <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>,
- <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250207154610.13675-1-kuurtb@gmail.com>
- <20250207154610.13675-11-kuurtb@gmail.com>
- <Z6t-msAAi1lVHzN9@black.fi.intel.com>
-In-Reply-To: <Z6t-msAAi1lVHzN9@black.fi.intel.com>
 
-On Tue Feb 11, 2025 at 11:45 AM -05, Andy Shevchenko wrote:
-> On Fri, Feb 07, 2025 at 10:46:06AM -0500, Kurt Borja wrote:
->> Add a header file for alienware-wmi with shared resources to support the
->> upcoming file split.
->
-> ...
->
->>  static const struct attribute_group *alienfx_groups[] =3D {
->>  	&zone_attribute_group,
->> -	&hdmi_attribute_group,
->> -	&amplifier_attribute_group,
->> -	&deepsleep_attribute_group,
->> +	WMAX_DEV_GROUPS
->>  	NULL
->
-> I don't like this change as it makes code harder to understand (at one gl=
-ance
-> you can't answer the question "what are the groups that being listed here=
-?".
->
->>  };
->
-> ...
->
->> +#include <linux/leds.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/wmi.h>
->
-> This should follow IWYU principle, now it looks like random stuff which t=
-his
-> header does *not* use.
+On Tue, Feb 11, 2025 at 10:52:50AM +0800, Sunny Shen wrote:
+> Add MDP-RSZ hardware description for MediaTek MT8196 SoC
+>=20
+> Signed-off-by: Sunny Shen <sunny.shen@mediatek.com>
+> ---
+>  .../display/mediatek/mediatek,mdp-rsz.yaml    | 46 +++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/mediatek/me=
+diatek,mdp-rsz.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
+mdp-rsz.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,=
+mdp-rsz.yaml
+> new file mode 100644
+> index 000000000000..6642b9aa651a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,mdp-rsz=
+=2Eyaml
+> @@ -0,0 +1,46 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/mediatek/mediatek,mdp-rsz.yam=
+l#
 
-I will check these.
+Filename matching compatible please
 
---=20
- ~ Kurt
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MediaTek display multimedia data path resizer
+> +
+> +maintainers:
+> +  - Chun-Kuang Hu <chunkuang.hu@kernel.org>
+> +  - Philipp Zabel <p.zabel@pengutronix.de>
+> +
+> +description: |
+> +  MediaTek display multimedia data path resizer, namely MDP-RSZ,
+> +  can do scaling up/down to the picture.
+> +
+> +properties:
+> +  compatible:
+> +    const: mediatek,mt8196-disp-mdp-rsz
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: MDP-RSZ Clock
 
+This can just be "maxItems: 1"
 
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    soc {
+> +        #address-cells =3D <2>;
+> +        #size-cells =3D <2>;
+> +
+> +        disp_mdp_rsz0: disp-mdp-rsz0@321a0000 {
+
+And "disp-mdp-rsz0" isn't anything close to a generic node name.
+
+> +            compatible =3D "mediatek,mt8196-disp-mdp-rsz";
+> +            reg =3D <0 0x321a0000 0 0x1000>;
+> +            clocks =3D <&dispsys_config_clk 101>;
+
+Surprised there are so few properties, no ports link or anything like
+that?
+
+> +        };
+> +    };
+> --=20
+> 2.34.1
+>=20
+
+--TeColmbo9d48spU6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6uO0AAKCRB4tDGHoIJi
+0sY+AQC0Vco77whZIp3/tgk1bNN+9gXooiLJUhwGAHf4Gg/oTwD+OPXyvK0GT0dj
+g+jzc91WFWTOwC/l9B6XKr8nX2rgSQI=
+=EAWO
+-----END PGP SIGNATURE-----
+
+--TeColmbo9d48spU6--
