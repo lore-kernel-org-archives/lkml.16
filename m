@@ -1,144 +1,185 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73EDD1F03F2
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E76B1F0E5C;
+	Tue, 11 Feb 2025 09:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739266209; cv=none; b=fDuyj99iso/B7hSNZ3nl+9XA4TMKo00vq8nC9/jaXDkV/vy1cJn4MzS8GFfnZj69yc4pW9JUtC/kYtGGVtYguPFzrl4BXadXl7afMoMIztguSX6czDN4bNjJlPgCN/PorgdLO4ALaHBHrjL0ClukoFShSu5yf3ykGKNKG6Td9Hc=
+	t=1739266211; cv=none; b=i37u2eVegp3lzUdLpUQjhCmujGCy5EuoA29RCwsvc/1lh1eGorllebBUxGKEPugv/D/HUhWYSj2O9Ez0+tdjYaLDvqBCEtQ0Il0f1VmNf4CI7rx2HYHNqVim1Zu8Z97DRH7BavXt3I3rgAZ3m/ODOnw7HWK3aAY5P9BtgFO0wso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739266209; c=relaxed/simple;
-	bh=kvI1JvN/B+SmcLWMmN8uvPZDaEURl3dCfrUg5PfFmFI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MRUTKonsBnEjvRja1SvKAuqq7jqZtG8vedcfWcBfdxJnRr5L4L/lQMz+19T9mVQ/PNj4dHfKrY49s8MbwWX/va5/G5PWJGqv2Dh2sEobTzXi9qqVwshE7oLXPeTNnzB1eWlJP0mwLqGmD8l463rBkk4XLWgoI+S1WAlXIeJ5IPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=GhBoebNV; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1739266211; c=relaxed/simple;
+	bh=kh1RoAOMTmHyrqSjIKrarn+yEalDE2KGW1HPIU+MCRc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SppA0u1u2OMgZAWOai51Wsd59yXVHEt6BMCbyBdhjnQIoIVnHdB1zhX0AZHRH9fDMwbYEdecs8CtruBeUYY9BwS8zvL6LDUhbkT7da2GOsWsZCphG2Y1gP4Yn7LQhwuNqFc85yz3iK087poqqfmSeAL4k1I4ZNiJtkDLwVIFu7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b=alM7hX1q; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="GhBoebNV"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21f6022c2c3so50463305ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:30:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1739266206; x=1739871006; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sZGf0xi/4b8W9mpMXk16WtP1In4vsvOrm+YoAOgFYnY=;
-        b=GhBoebNVRVBfvSSMZ8P3/lIvigaRS7DMa5kLK5sp0JLnJm16mr+ZmBtYyTfaPDmqnk
-         dKB4zojoMbUL13KHEGofta2pwFBVFNrgnPON/+lSXR+48xQKynRuJWscA+zA5fEMlCq8
-         FzQg1LW5mIh6c62rhi6aX9FCDSooru0einK2yvAGYPFXBT3jHpAMmbdgcKdVeJGYK2TV
-         ndJfU8k4juiHA4q+XTIfPxrM+rTfBG2HgCLEFjTIOkjVQfaB/ggTwiXWoS1zn+VhlfVH
-         FsKAZakMfbz0PscBODdIhO64F38Lhfh6M5HUv8t+npgt430qNOuUKt/8uv5d2NifRX50
-         y+qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739266206; x=1739871006;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sZGf0xi/4b8W9mpMXk16WtP1In4vsvOrm+YoAOgFYnY=;
-        b=XyvTzvsYwwulB6pb0RO8yIrdnRAphZnZSMf6ju0B8HmWpalExCIZPtrWFcC48WSXH3
-         nZ3xATayvYQYD0QFIkpNbgiD7uhDsf3NiazYxSCxCXlqTKkTnCV6Npne4IUs/2MqRBs+
-         J14ZZ8vosHrhcoF64lOyaACczDtAbUurjtZk2p/G2eTGUKs5iBN2nQzwCc52s9aGs5Z4
-         PA/QK14doyzOXBQ2FQIzJA8VE//icdtCjhxFWzfmJWDFhYlVYoy1I+oKPWAijJknhB7J
-         OitxFtYCaebu9ROPoYzoehXn2KEFTKShFR75EQF6MPam5JtEu0Z82BUizN4MX5436QbZ
-         XqLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHVo6rA3+U5zy5FUkJCkzI1Km6V4F0nSF36LFiOPxmLaJTVQGWJLpfRpHZxgDIzwuQmftKF71JLM/8ySg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHttjs0gIrPwfk1V9xWJtv85TPnzr7BsWr9uXwZJtNzAF6aiDA
-	braBvSYfSXN2pbqxPsrj7E9sjWjrJYleGFjBYKt4YmUUXvGM2w4dVic2Es4lNSI=
-X-Gm-Gg: ASbGnctIV0lKtOKD1p3wshZE8YPrzyoArdwg1yvMmI9lg97z0W3+/M3xqXFncqvJQ53
-	TETzDKaskVGHjfj+OGJuESsPD43o4fhi8qa1plAplk4XJ6yDQJXaK/flDPOmoFM+qcCyJDxDx6c
-	oVyuAdnYxZVMvB044kdSRTa/qk66WxrcGEw8BFzOApyiBp9WSssL7yiugC3pm9a9RJgwA6cEVYi
-	3v+j206CcYkcIBf/mGDEynPbVJUxcdZcy9jkLh6XZnpxITTKpfBsElkIeICYZExYm+eCRM4JS26
-	v+dqQdU7lr7dnzvjtRDlklv8J7Ao/H51njEkjWdNaw==
-X-Google-Smtp-Source: AGHT+IHz2wraFOMYkQVidUPLFFmnf8k8K12BClWjhTy636Rw37Ve8wP0uUjF/xA18SklE94GG5V2SA==
-X-Received: by 2002:a05:6a00:194e:b0:724:db17:f975 with SMTP id d2e1a72fcca58-73218ca2438mr4671628b3a.12.1739266206470;
-        Tue, 11 Feb 2025 01:30:06 -0800 (PST)
-Received: from [10.84.150.121] ([203.208.167.153])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-730932871f1sm2921625b3a.151.2025.02.11.01.29.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 01:30:06 -0800 (PST)
-Message-ID: <3f7babee-b232-4e6b-a896-947150dcd1ef@bytedance.com>
-Date: Tue, 11 Feb 2025 17:29:57 +0800
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b="alM7hX1q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1739266201; x=1739871001; i=ps.report@gmx.net;
+	bh=wPhcP0ysWo8kiC7tYIfKR/lpoPsbi4VO9OoHCHU8r3c=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=alM7hX1qBVd6fvxF8urV62Jd6EGPbq9RvKsYyZMZvHtNf1PYTsrrAKVlchb06krh
+	 /nGOn9fME7qG1t+jqZ3p+us9kGVK5bkuuSc8UttDjezv8KNqpkerKcXu/apnoabra
+	 ZlrzBZAIqQLLeOae+HTJiDyAzMFLPMDn9dnJ9lMepVn3LNl2V/PJtK+I1ggEwgW/G
+	 YPRJmy8rFJHMNTmkML4JBPJ+NX3107ChRl779ADi9YrvWOwShjGpcFXLDPP2zGQJ8
+	 G7boVTsCAq5HDgfmbwSDmjAKaOpH9Wmqk/WYpGGBRX+X15TQg/OZmYNyzbNN9+/Vr
+	 XAloG4cQET9BHwC1Pg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost ([82.135.81.30]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MyKHm-1tTfTo3Nq0-00sfdw; Tue, 11
+ Feb 2025 10:30:00 +0100
+Date: Tue, 11 Feb 2025 10:29:59 +0100
+From: Peter Seiderer <ps.report@gmx.net>
+To: Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH net-next v4 09/17] net: pktgen: align some variable
+ declarations to the most common pattern
+Message-ID: <20250211102959.4aeeb806@gmx.net>
+In-Reply-To: <20250206132538.GU554665@kernel.org>
+References: <20250205131153.476278-1-ps.report@gmx.net>
+	<20250205131153.476278-10-ps.report@gmx.net>
+	<20250206132538.GU554665@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] NULL pointer dereference on ARM (AT91SAM9G25) during
- compaction
-Content-Language: en-US
-To: David Hildenbrand <david@redhat.com>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
- Ezra Buehler <ezra@easyb.ch>, linux-mm@kvack.org,
- Andrew Morton <akpm@linux-foundation.org>,
- "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Muchun Song <muchun.song@linux.dev>, Vlastimil Babka <vbabka@suse.cz>,
- Ryan Roberts <ryan.roberts@arm.com>,
- "Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
- Hugh Dickins <hughd@google.com>, Matthew Wilcox <willy@infradead.org>,
- Peter Xu <peterx@redhat.com>, Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- open list <linux-kernel@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org
-References: <CAM1KZSmZ2T_riHvay+7cKEFxoPgeVpHkVFTzVVEQ1BO0cLkHEQ@mail.gmail.com>
- <Z6oxUdrVBPd5ZTEu@shell.armlinux.org.uk>
- <5d50d714-197f-44c0-94e0-ff70ee51e866@bytedance.com>
- <34bcf011-b4ac-479c-92ce-852623e73039@redhat.com>
-From: Qi Zheng <zhengqi.arch@bytedance.com>
-In-Reply-To: <34bcf011-b4ac-479c-92ce-852623e73039@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:q80QNBi+mJdxRVtoALQDPCsn0ntljixSQm1+/52vqpAYjyfu5H+
+ rC0XAmxfBPETOon9BrIi85OQR80Q2h056GPCQ9d8o6+Nskz+BLtxrx5H5lhKh6Md3hTQcKs
+ OAua78GFQhmNlNAJKs2kMex4rt07d9ILIboGs29ePvDELSMDiGpvz0aBYXrvZa+6QUJbiNK
+ YE79Men49QssJA0OOQBGg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:4lyfgqOCAV0=;raGpbA+rgF/FhrQImWdd3OWWvx1
+ +Oo8jrA9hNP92lgMFIPStEkyFC/IJxIX2GPTKeJ4iJrLA6mB3YZOubq4BYcdhRFEKitt00iJ3
+ sVzWUOSRquZCP5s8ZCP4Wi+VmemdxDvNmKBuG1FeDI6MwziyaJhyyJdgQRrqPNhKsXXIIzYkM
+ ZMafGzwp1PxYFl8wgBnw2PkW3o0gbrhFbxQvyvie3B4RMXCfi5HvEm+DA3SVCsS7NpWCl9ZUa
+ bzG3gvGPPFJso1gJA5xIg9KG0l1g5ZKMgQ1DOHJnaGDyXOsFfJPoglE4iOJJfCt5CWkxyyVEi
+ r2D7XsE9gq8YPhST+D4cLWJtSn4yJN/nvv7Almpz1DN1orEgrjODyRlzyK+/0PIvcHy4bOIuq
+ ESric4Eem+zxNOFK4vQBtrx75fjdR21nkygnLzTkXl9TSZuYSTYHXXhu3qyWugxtHTOenEKKw
+ HiF5XaGGhMwYZZvsUte7/HGlFt8+huQgB9Z+bWKsVOg0G8d0Z9huXD2lbEXC0p4YSCPwjPbek
+ mwCv7OcSdwnfOPYvv8NFuwHV/9Sp2cUGMvEisWM3vGGV+B4ZfVyunpCs4rwexjeGFL788cbWw
+ J0+KqZhD4OeTUxv0lxdEEPi8URHuwRNXgZK9vtehnTTB5tEee4Ap3pGvtwhQ6worxaccvGiRT
+ p362BpzP+rtZLdmwSe6YF2JUrmgy6D1KFn+3na+GCYXQqbUnUByycMZoZ+7MkA2E8w8517yam
+ zS8isVAF+puXK8L55M734xdV0EgcQeCCqrcLJXkfiPSl8kXR558VtFWsL6mGZSr0waMvaLAFr
+ kuZTxWWUg3QOYpai8A7j/U4ZHppTUC7Fd8ltOS8Apkmrc94w3Acf2MJXgFsloRoj2vokj2N61
+ gu8ocEvUH06KW5lm+sb+sr7Fsn7+N6kUqkysgeqS29lPwoS8WugjX7NouTMpA74pWZ9KKObsY
+ NtH/GdhB9HNdOKzoD7NPXn4SYrE5o7wnEYt3I1m0ZIsoazC6XW5tezFY9H2Q2qs+b1fjsrJL7
+ ih7jlDJCh2rgprVJrTItX9rnlhV73hv850A4Hh+5C3J/YR2/6IuuHmS8Vej9zCHdK6r7qoOzi
+ msqgF/+uhKRMbiajBEgr9CoSRR8KVx+EIhCq7Pyj576h96RasPEDJNnMjRgIzsK5SAY9oHbbU
+ wE6OgZCNBKuYbUSCi+S7MPIV6ttz26d0j3cHmXBNvbs7FK+Co4rD0qtsJ1j3eFremrGGGEBXu
+ Qmhy/+U99tALuyL/aHB0IpgEUhaMCMtIDmR0q6ZCNux2Qp7n03tEhmJgbKv+Unp4bmJtAFxwo
+ HZRncB4suxHo1zHmLt5FvNab95gWMgSeqgg0BUdEPdpit+If15J1jQrn4+dn5M8XnVhZnYzZ+
+ UXO9OZOBNKu8CMq7QqrYRqqTTQ7sQEdE3Q3ISi4xtTK5yPBB9RE2yD6SYrcR1zbUSzuFeV936
+ braH0K8XJ6MIMqfNT7Ds3jUboQu8=
+
+Hello Simon,
+
+On Thu, 6 Feb 2025 13:25:38 +0000, Simon Horman <horms@kernel.org> wrote:
+
+> On Wed, Feb 05, 2025 at 02:11:45PM +0100, Peter Seiderer wrote:
+> > Align some variable declarations (in get_imix_entries and get_labels) =
+to
+> > the most common pattern (int instead of ssize_t/long) and adjust funct=
+ion
+> > return value accordingly.
+> >
+> > Signed-off-by: Peter Seiderer <ps.report@gmx.net>
+>
+> Hi Peter,
+>
+> These comments are is true in general of this patchset, but particularly=
+ so
+> in the case of this patch:
+>
+> * I think a more succinct subject would be nice.
+> * I think the patch description should provide some reason
+>   _why_ the change is being made.
+
+Yep, will improve...
+
+>
+> Also, specifically relating to this patch, I wonder if it's scope ought =
+to
+> be extended. For example, the two callers of num_arg(), get_imix_entries=
+() and
+> pktgen_if_write() assign the return value of num_arg() to len, which is =
+now
+> an int in both functions. But num_args() returns a long.
+
+Aim was to get rid of the int/long mixture in the code (which works flawle=
+ss
+because no one writes to proc with more than a few bytes AND count is limi=
+ted
+to INT_MAX - PAGE_SIZE in vfs_write (see [1], [2])...
+
+I believe the clean way is to use
+
+  size_t i, max;
+  ssize_t len;
+
+consequently through out the code and adjust the function signatures
+accordingly...., will re-spin...
+
+>
+> > ---
+> > Changes v3 -> v4
+> >   - new patch (factored out of patch 'net: pktgen: fix access outside =
+of user
+> >     given buffer in pktgen_if_write()')
+> > ---
+> >  net/core/pktgen.c | 14 ++++++--------
+> >  1 file changed, 6 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/net/core/pktgen.c b/net/core/pktgen.c
+> > index 4f201a2db2dc..279910367ad4 100644
+> > --- a/net/core/pktgen.c
+> > +++ b/net/core/pktgen.c
+> > @@ -850,12 +850,11 @@ static int strn_len(const char __user * user_buf=
+fer, unsigned int maxlen)
+> >   * where each entry consists of size and weight delimited by commas.
+> >   * "size1,weight_1 size2,weight_2 ... size_n,weight_n" for example.
+> >   */
+> > -static ssize_t get_imix_entries(const char __user *buffer,
+> > -				struct pktgen_dev *pkt_dev)
+> > +static int get_imix_entries(const char __user *buffer,
+> > +			    struct pktgen_dev *pkt_dev)
+> >  {
+> > -	int i =3D 0;
+> > -	long len;
+> >  	char c;
+> > +	int i =3D 0, len;
+>
+> Given it can be achieved with exactly the same lines changed, just in a
+> different order, please arrange the local variable declarations in rever=
+se
+> xmas tree order - longest line to shortest.
+>
+> Likewise for the other hunk of this patch.  And I believe there are also
+> other cases in this patchset where this comment applied.
+>
+> The following tool can be useful:
+> https://github.com/ecree-solarflare/xmastree
+
+O.k. will take a look at it...
+
+Thanks for review!
+
+Regards,
+Peter
 
 
-
-On 2025/2/11 17:14, David Hildenbrand wrote:
-> On 11.02.25 04:45, Qi Zheng wrote:
->> Hi Russell,
->>
->> On 2025/2/11 01:03, Russell King (Oracle) wrote:
->>> On Mon, Feb 10, 2025 at 05:49:38PM +0100, Ezra Buehler wrote:
->>>> When running vanilla Linux 6.13 or newer (6.14-rc2) on the
->>>> AT91SAM9G25-based GARDENA smart Gateway, we are seeing a NULL pointer
->>>> dereference resulting in a kernel panic. The culprit seems to be commit
->>>> fc9c45b71f43 ("arm: adjust_pte() usepte_offset_map_rw_nolock()").
->>>> Reverting the commit apparently fixes the issue.
->>>
->>> The blamed commit is buggy:
->>>
->>> arch/arm/include/asm/tlbflush.h:
->>> #define update_mmu_cache(vma, addr, ptep) \
->>>           update_mmu_cache_range(NULL, vma, addr, ptep, 1)
->>>
->>> So vmf can be NULL. This didn't used to matter before this commit,
->>> because vmf was not used by ARM's update_mmu_cache_range(). However,
->>> the commit introduced a dereference of it, which now causes a NULL
->>> point dereference.
->>>
->>> Not sure what the correct solution is, but at a guess, both:
->>>
->>>     if (ptl != vmf->ptl)
->>>
->>> need to become:
->>>
->>>     if (!vmf || ptl != vmf->ptl)
->>
->> No, we can't do that, because without using split PTE locks, we would
->> use shared mm->page_table_lock, which would create a deadlock.
-> 
-> Maybe we can simply special-case on CONFIG_SPLIT_PTE_PTLOCKS ?
-> 
-> if (IS_ENABLED(CONFIG_SPLIT_PTE_PTLOCKS)) {
-
-In this case, if two vmas map the same PTE page, then the same PTE lock
-will be held repeatedly. Right?
-
-This seems to be a problem that existed before commit fc9c45b71f43
-("arm: adjust_pte() use pte_offset_map_rw_nolock()").
-
-> 
-> ...
-> }
-> 
+[1] https://elixir.bootlin.com/linux/v6.13.1/source/fs/read_write.c#L673
+[2] https://elixir.bootlin.com/linux/v6.13.1/source/include/linux/fs.h#L27=
+04
