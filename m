@@ -1,131 +1,41 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4185C1F192E
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A6624C66D;
+	Tue, 11 Feb 2025 13:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739280842; cv=none; b=mmzYyAhbD+y1nnkdzBaIhgqYvsyQvIdnpGfGsziUVC9wDbVdd+YwFcSIMokEfT+/MXhnsv/UVWGMMU569WLfs4Je4EoZMLFm/Xec7/j+2dmagCrS2/ClH9OSFNst+UG1mnT7bjaycVgQcMOTge1GnP01U6hpFQsNPeB9OycLlaw=
+	t=1739280845; cv=none; b=QJEd8lV6MkumjaE2yAaOcOUj0JABAzGOF2xMXMrJMjxNNIKry3/a9CNbFEWFqiKk1EDiRe4v3JsQTOJ03jgclGOy6SDSvj/KU/RbDyd57E0L/cfnvP28OjJGVHRsZFyXpbCd4IL65JCYzH1FounOJf25ozofDFW/G2A7lJWn0D0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739280842; c=relaxed/simple;
-	bh=I6rYC3Ttea935cxDKXU7eGhmr1cWrMQ3SYanZpPc/20=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=VbZrsqRAg+LcAy7JMJSyNCKvgmNn6vcUTGgYc/h9UyHywSpm1psm8F0xK7ACa8o3mkSXspRReRkVqCJiOlTvk+hQrhhvXoLr2dMWnf5hWay5wA7XQi0y/Tys78b3755jJTNBJ3ni60Z4EBqqwPZyldMtXQ/9di39iwdWLqeYUNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T/Js0VBS; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739280845; c=relaxed/simple;
+	bh=djD99HPyZZd9QRERrXAoAsVzHxEs9BeU4e59sUigE28=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pf9GCTnCE/bQkuhI03KBjn0ysYZEnZKtFTNO62dITpumfbUO9frQipox0srofwvZAWUs4iP3hCWrjcNRSNivpM6xlnZkXQK3bMAhlepIH+RYL7mYc9iHVxZ5bSjbzN4cdAVZkbTZi8hzNVpPWeWHGYhSNG5CWsrr/HuA+rKvK4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E4Ce1ukP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T/Js0VBS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739280839;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I6rYC3Ttea935cxDKXU7eGhmr1cWrMQ3SYanZpPc/20=;
-	b=T/Js0VBSgcT6OPC9QBAR3bPxcbq++c6NvaMipXAJRtNbNGASO5G6biem94diU5OhXk47TG
-	5v7ocv40R45gLCS4rUMuZXHyDY7a6nm4Oh0TCURykHAIUkpwtzHhsjp9lkfOy+t1d3yRm7
-	fJQ7o3ROgRkU4iXfXLWdED7qbyBj94E=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-518-RJwPMTU8OPCcbhT16nSZYA-1; Tue, 11 Feb 2025 08:33:57 -0500
-X-MC-Unique: RJwPMTU8OPCcbhT16nSZYA-1
-X-Mimecast-MFC-AGG-ID: RJwPMTU8OPCcbhT16nSZYA
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43935bcec0aso23303595e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 05:33:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739280836; x=1739885636;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I6rYC3Ttea935cxDKXU7eGhmr1cWrMQ3SYanZpPc/20=;
-        b=tIZIZctoGQrI/ds5ETBrXvGYOytwF0p1GPPzkaEOQZrcXEHUoKljKcgecFsWDsYXLV
-         goAFApcvWHtphBwoH/ZRz536dfZpEGWjINn1XSJ4ZQv05beEvN51OSiMB7F2HjA75boQ
-         S1QudjhN+u8qhwDJJAzZnk3cStYGL7p0uZHZMGSuvDP15QfjIFFERf4RhSFIHQ5p+L/H
-         nntTl3eS8+/Vjym94QSk5GXEBgqTCfjcYkybrGsZW62+zef2Oc99iBONWYHbycIAYlv0
-         MnuyZE4g3qy/7JuvsQJUV4TV2VvBkGp5V5tpoDnOzA8DJCHECT3pZO7uvVsJsP+MmGg/
-         LcMQ==
-X-Gm-Message-State: AOJu0YyR67ldcF2rwJMpww0ubUZ75OCx9K9KS2CwCT59REyOtoX2fRHh
-	ArCrGRLWh/kRRAS06Owys9WBbFvjtdTWGHo1r75WzZ6l2dsa6N9uC7W9MCX+1K7EbvHaWe/8y9x
-	Zu9TvxE6eJZgrd01Sh7ThMaLl3bS+C+t9tGsPaiOmUxZUzZh1foA1cg26K86nNg==
-X-Gm-Gg: ASbGncv9qkJwdUqX4dt5NLtmIlIfXuF9aMHPe2iQGddrUVxYMccZ3dTcGJV/dgfpL/F
-	AvVg6n4++aefuEUDakSPr9+fl4NZ245XOgk/dAXG5aaeXt5dJWcJ9y269ipc74tM3dQWDO83wpb
-	IA5egf5T6+1wgIwfJoNY9lOBTQymSTDYHnay7K9WpExzbw2yHnGXOOBoi0EydbK1suuTKtQQnt7
-	FrYqUqyaWvoL76eOTpoVcrCNJO4fnlzfUkpaYyTGS8ePYLoDYdfr40jkkQT2upMr7S0PXmcF3UC
-	FO61GAi5uK8aChKOkxQQ31Xe1w1CvrHlJugzPVpS9oDu/iTkrIivUx1J+Szsm2JibQ==
-X-Received: by 2002:a05:600c:384c:b0:439:554f:f64f with SMTP id 5b1f17b1804b1-439554ffb3bmr21891905e9.0.1739280836481;
-        Tue, 11 Feb 2025 05:33:56 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHLaJ199QatUt+F367q7Ky9NspQydjwYuxDlEpx56Dm3c1ApLy01ntC7qxuc1s/8cawIiMmnw==
-X-Received: by 2002:a05:600c:384c:b0:439:554f:f64f with SMTP id 5b1f17b1804b1-439554ffb3bmr21890805e9.0.1739280836017;
-        Tue, 11 Feb 2025 05:33:56 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcb88d5e6sm11688621f8f.1.2025.02.11.05.33.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 05:33:55 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Jann Horn <jannh@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
- bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
- Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
- <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
- <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
- <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
- <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
- Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
- Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
- Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
- Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
- <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
- Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
- <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
- <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
- Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
- flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
-In-Reply-To: <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-30-vschneid@redhat.com>
- <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
- <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
- <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
-Date: Tue, 11 Feb 2025 14:33:51 +0100
-Message-ID: <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E4Ce1ukP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DBFDC4AF12;
+	Tue, 11 Feb 2025 13:34:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739280844;
+	bh=djD99HPyZZd9QRERrXAoAsVzHxEs9BeU4e59sUigE28=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=E4Ce1ukPxSWDbbnPVotdFjJKt4O64Rffn6857iPgZ4V0BNLlYaNGHp7wOujUbtvne
+	 hPVQPJfQvcQzUg5hYGcRu+ktsa5jfT4u0upXdAMdw/cPpV3hADiWh3wVM7X3HvAVeg
+	 DK+zqI7tFkqfb7PlYq9z8cTbbBmQj1G9DaU+GpVaemt0oNSIGUpX3trcEI4U+iODpi
+	 0jZpNIPHaQdpGv2gzthKbo+2m0ddZlkeq6KgkZe5+b6lr+D0qUGnhbIljuVbHYqGTZ
+	 jhQKmkwQqjUOWpkRDTFuuxvO9uuOhFMsYAvN69+V+Zq/NiAB6V1nOSxGZaIY+lJ7Fw
+	 hzAQKC2fvKs5Q==
+Date: Tue, 11 Feb 2025 13:34:00 +0000
+From: Lee Jones <lee@kernel.org>
+To: Manuel Fombuena <fombuena@outlook.com>
+Cc: pavel@ucw.cz, corbet@lwn.net, linux-leds@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND 3/5] leds: leds-st1202: spacing and proofreading
+ editing
+Message-ID: <20250211133400.GP1868108@google.com>
+References: <CWLP123MB5473933B9B97137828ACC6A6C5EB2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
+ <CWLP123MB5473057725D7E085EF6091C2C5EB2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -133,54 +43,101 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CWLP123MB5473057725D7E085EF6091C2C5EB2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
 
-On 10/02/25 23:08, Jann Horn wrote:
-> On Mon, Feb 10, 2025 at 7:36=E2=80=AFPM Valentin Schneider <vschneid@redh=
-at.com> wrote:
->> What if isolated CPUs unconditionally did a TLBi as late as possible in
->> the stack right before returning to userspace? This would mean that upon
->> re-entering the kernel, an isolated CPU's TLB wouldn't contain any kernel
->> range translation - with the exception of whatever lies between the
->> last-minute flush and the actual userspace entry, which should be feasib=
-le
->> to vet? Then AFAICT there wouldn't be any work/flush to defer, the IPI
->> could be entirely silenced if it targets an isolated CPU.
->
-> Two issues with that:
->
+On Sat, 01 Feb 2025, Manuel Fombuena wrote:
 
-Firstly, thank you for entertaining the idea :-)
+> Minor edits regarding use of spacing and proofreading.
+> 
+> Signed-off-by: Manuel Fombuena <fombuena@outlook.com>
+> ---
+>  drivers/leds/leds-st1202.c | 48 +++++++++++++++++++-------------------
+>  1 file changed, 24 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/leds/leds-st1202.c b/drivers/leds/leds-st1202.c
+> index 927874f20839..cb4797ea8f3a 100644
+> --- a/drivers/leds/leds-st1202.c
+> +++ b/drivers/leds/leds-st1202.c
+> @@ -16,27 +16,27 @@
+>  #include <linux/slab.h>
+>  #include <linux/string.h>
+>  
+> -#define ST1202_CHAN_DISABLE_ALL            0x00
+> -#define ST1202_CHAN_ENABLE_HIGH            0x03
+> -#define ST1202_CHAN_ENABLE_LOW             0x02
+> -#define ST1202_CONFIG_REG                  0x04
+> +#define ST1202_CHAN_DISABLE_ALL				0x00
+> +#define ST1202_CHAN_ENABLE_HIGH				0x03
+> +#define ST1202_CHAN_ENABLE_LOW				0x02
+> +#define ST1202_CONFIG_REG					0x04
+>  /* PATS: Pattern sequence feature enable */
+> -#define ST1202_CONFIG_REG_PATS             BIT(7)
+> +#define ST1202_CONFIG_REG_PATS				BIT(7)
+>  /* PATSR: Pattern sequence runs (self-clear when sequence is finished) */
+> -#define ST1202_CONFIG_REG_PATSR            BIT(6)
+> -#define ST1202_CONFIG_REG_SHFT             BIT(3)
+> -#define ST1202_DEV_ENABLE                  0x01
+> -#define ST1202_DEV_ENABLE_ON               BIT(0)
+> -#define ST1202_DEV_ENABLE_RESET            BIT(7)
+> -#define ST1202_DEVICE_ID                   0x00
+> -#define ST1202_ILED_REG0                   0x09
+> -#define ST1202_MAX_LEDS                    12
+> -#define ST1202_MAX_PATTERNS                8
+> -#define ST1202_MILLIS_PATTERN_DUR_MAX      5660
+> -#define ST1202_MILLIS_PATTERN_DUR_MIN      22
+> -#define ST1202_PATTERN_DUR                 0x16
+> -#define ST1202_PATTERN_PWM                 0x1E
+> -#define ST1202_PATTERN_REP                 0x15
+> +#define ST1202_CONFIG_REG_PATSR				BIT(6)
+> +#define ST1202_CONFIG_REG_SHFT				BIT(3)
+> +#define ST1202_DEV_ENABLE					0x01
+> +#define ST1202_DEV_ENABLE_ON				BIT(0)
+> +#define ST1202_DEV_ENABLE_RESET				BIT(7)
+> +#define ST1202_DEVICE_ID					0x00
+> +#define ST1202_ILED_REG0					0x09
+> +#define ST1202_MAX_LEDS						12
+> +#define ST1202_MAX_PATTERNS					8
+> +#define ST1202_MILLIS_PATTERN_DUR_MAX		5660
+> +#define ST1202_MILLIS_PATTERN_DUR_MIN		22
+> +#define ST1202_PATTERN_DUR					0x16
+> +#define ST1202_PATTERN_PWM					0x1E
+> +#define ST1202_PATTERN_REP					0x15
 
-> 1. I think the "Common not Private" feature Will Deacon referred to is
-> incompatible with this idea:
-> <https://developer.arm.com/documentation/101811/0104/Address-spaces/Commo=
-n-not-Private>
-> says "When the CnP bit is set, the software promises to use the ASIDs
-> and VMIDs in the same way on all processors, which allows the TLB
-> entries that are created by one processor to be used by another"
->
+Why are you making this change?
 
+The spacings went from being okay to too large.
 
-Sorry for being obtuse - I can understand inconsistent TLB states (old vs
-new translations being present in separate TLBs) due to not sending the
-flush IPI causing an issue with that, but not "flushing early". Even if TLB
-entries can be shared/accessed between CPUs, a CPU should be allowed not to
-have a shared entry in its TLB - what am I missing?
+>  struct st1202_led {
+>  	struct fwnode_handle *fwnode;
+> @@ -99,9 +99,9 @@ static int st1202_pwm_pattern_write(struct st1202_chip *chip, int led_num,
+>  	value_h = (u8)(value >> 8);
+>  
+>  	/*
+> -	 *  Datasheet: Register address low = 1Eh + 2*(xh) + 18h*(yh),
+> -	 *  where x is the channel number (led number) in hexadecimal (x = 00h .. 0Bh)
+> -	 *  and y is the pattern number in hexadecimal (y = 00h .. 07h)
+> +	 * Datasheet: Register address low = 1Eh + 2*(xh) + 18h*(yh),
+> +	 * where x is the channel number (led number) in hexadecimal (x = 00h .. 0Bh)
+> +	 * and y is the pattern number in hexadecimal (y = 00h .. 07h)
+>  	 */
+>  	ret = st1202_write_reg(chip, (ST1202_PATTERN_PWM + (led_num * 2) + 0x18 * pattern),
+>  				value_l);
+> @@ -288,8 +288,8 @@ static int st1202_setup(struct st1202_chip *chip)
+>  	guard(mutex)(&chip->lock);
+>  
+>  	/*
+> -	 * Once the supply voltage is applied, the LED1202 executes some internal checks,
+> -	 * afterwords it stops the oscillator and puts the internal LDO in quiescent mode.
+> +	 * Once the supply voltage is applied, the LED1202 executes some internal checks.
+> +	 * Afterwards, it stops the oscillator and puts the internal LDO in quiescent mode.
+>  	 * To start the device, EN bit must be set inside the “Device Enable” register at
+>  	 * address 01h. As soon as EN is set, the LED1202 loads the adjustment parameters
+>  	 * from the internal non-volatile memory and performs an auto-calibration procedure
+> -- 
+> 2.48.1
+> 
 
-> 2. It's wrong to assume that TLB entries are only populated for
-> addresses you access - thanks to speculative execution, you have to
-> assume that the CPU might be populating random TLB entries all over
-> the place.
-
-Gotta love speculation. Now it is supposed to be limited to genuinely
-accessible data & code, right? Say theoretically we have a full TLBi as
-literally the last thing before doing the return-to-userspace, speculation
-should be limited to executing maybe bits of the return-from-userspace
-code?
-
-Furthermore, I would hope that once a CPU is executing in userspace, it's
-not going to populate the TLB with kernel address translations - AIUI the
-whole vulnerability mitigation debacle was about preventing this sort of
-thing.
-
+-- 
+Lee Jones [李琼斯]
