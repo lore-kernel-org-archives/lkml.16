@@ -1,244 +1,107 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D0C1F473A
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA031F473A;
+	Tue, 11 Feb 2025 10:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739270683; cv=none; b=kEECq6SIfKvb1e48twWA9nchaInsRmuLXaE39wDIX63B4rVoTbj1xFrBW740pKtW6BRV3wxeS1oTPKCR6kLn09/87VsbTYxqheat/u4WQCZ6V1aLJbS/wtW7pUajUHwdeGwmdMDwA2ELiYnzIoe5chGBAf19GTa1+kl18e8eZjA=
+	t=1739270690; cv=none; b=PO1Lr9XxhD7HsgTMQAOGzfIhH6rSY37fP2OIzs+YHcr5ux2mOizVghBkvo717t9BwOu1I52sbRUK7mIRfkLBOYiXG7D3npS61VmOmXBBTbclnXdnCd7g7b+W/5yAuLFLky5JGjcPCl4w7EPd+kW0QBwTTh13pueZ/XGvWUgzeHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739270683; c=relaxed/simple;
-	bh=ZSYX5J+kB/QWD1n9ivRYM0GHXtsmbJF5T35MTJn55UQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KBUC/QiK7Sp7BccWGQwwTXCBcR+rRC/92W2mYpb5OXp7m/wRwvjr7yVC62Ea78jj8scSrxHJsQ7oef/zpKucV8UcieV3cO20vUnUQOxISw4zc/CVmJMXzz8qVszcMuUr+9SEQYA8owJaqptyjyHOLOweiHtn5peiWFboWaM1sYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IJD7G4ib; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739270690; c=relaxed/simple;
+	bh=lU53bagZCpbF7NgOcmW1llZ/0ZmBIbZBkQ0DIHSWzc0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MkIfM3/88C1l+N9o/cKK0rVarjTtDXzWNXe9C73SqeSl3YiVWv4ZYEjEmn4myUF4bDG1kkH8bx9yMX0COucjU5aTpKsurWw/cDW4NhDJvSl3F+CURcbWn7xXPBs+nhK5u75HbmGFvTtSln/QhbFvt5zMUrKpu+jYnvETEvrBk/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=S3Ay4wq1; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJD7G4ib"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43618283d48so37100725e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:44:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739270679; x=1739875479; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=kJcFMQJvlRYWjrCqI8QX/Ukpl5nZX3icPZpoJRtpLMo=;
-        b=IJD7G4ib47a6Kz0JEdfEpM59wy2QfROgjCHA4EMAnkZw4JNbwtbYykQ6xuoRjI/6te
-         8z0rV/odNYBCeg6QNXwTBVUSuAO8GPInMzWRQ12FsnU0amMf/DR+WUZD4vDRo8OGjNf+
-         yhWMbRGvBnM9OyHtituK4t6sZiCgkaYLyLLiH0TLcmnM4f6jPh2bmdlrSmjXsKa+i6DA
-         MfJv1fQPSKBX449/ZMLg7gk73UuIHtSUwYCrmBaCcDfeRIz3veWPCMIip4LmbyhLg8RY
-         e+368qBWo+f6idJUuoiqGSpMj0ZCNGbp+XWObzmCwbSsdQDoIxEKzHQAzt8Q8P4t1mcz
-         UxVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739270679; x=1739875479;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kJcFMQJvlRYWjrCqI8QX/Ukpl5nZX3icPZpoJRtpLMo=;
-        b=p9cfZYV0N7kktqhtZbf/PR/DsCE9N55Aac3RxKN2nHa97fS76/FySFNgqVDtLsP7Au
-         EzTe1skqxlbd42uy0paGlT99FZ+ndRcilegkv1rHQuEeU3ELZOrBaNAbOboy8R6MUWqq
-         dT69G4Z57awM6PhKqg1PZCIKvA5HN+JE2qirOMUiRJuEH7S9/4jOds+KWWuS0weNuhIt
-         pJp19CLb3YXpzakAikgUQLA7vj4Ns9dP1CeEBvccjXft+mKVgzgBXgK89hF8szCNYABE
-         OIpX1YHTMq0SrxKFCssbOpVKpq/0ezCb9AshAD6XIpz9lkIfiXPmLIQAjeb8xqVf7t/u
-         dXyg==
-X-Forwarded-Encrypted: i=1; AJvYcCUy9IivIVEDVZy8gGgC+JaSBzmi2gHYqpBO9PvuwThH1bUqbvKnrpOYvAbm2vpbM4FiAfj+upwYVpjkzUU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxR9lfTAXCtl+2R+E/WzTgnD8JYxsv9JyKmPugJ5Zv16/n6hHuk
-	yv7LZASka4AzdLD5gtmY9RZJ+FbmZZNf8Msgt2HFUlMxkS8KOmOp
-X-Gm-Gg: ASbGncsiK9DLJ5PU0F4ILtyb+rpEw0V/sRy/FzEXfBbG2ErtpB8NXyT+kk8YB49Zswg
-	8iQI9ZXBHXBHE65Lxh+7CIOoIP/z8MA+GkCvyeVMdGt7lH0/z2+utDzml02SBQJOZNpxT4EADkg
-	dcQ/7RfuW9dbLaMkzFJiju8PDCmbrnU9Nd1cNfmQI0MeU8eIX91B9In9B6aIxq7meQIC98sY49V
-	SmA+orN/6jSbwu+GNKkmz3l1X1E0Errm18j1IoQ+IDV54eOZSUCbXBPBCaOvLuRDDZi0kIq9xNb
-	sHd9QrsrDTCkIQ==
-X-Google-Smtp-Source: AGHT+IG+NM23xq1Gg1pDDKGgZB+1gTyiM2grB+zK5t5NeWTG07g3GKXCcgUgvelC4ZDkV8YcysruPg==
-X-Received: by 2002:a05:600c:4e13:b0:434:9499:9e87 with SMTP id 5b1f17b1804b1-4394c8538fdmr25448345e9.25.1739270679131;
-        Tue, 11 Feb 2025 02:44:39 -0800 (PST)
-Received: from fedora ([94.73.37.161])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391da965b3sm178045935e9.5.2025.02.11.02.44.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 02:44:38 -0800 (PST)
-Date: Tue, 11 Feb 2025 11:44:37 +0100
-From: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
-To: Louis Chauvet <louis.chauvet@bootlin.com>
-Cc: hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/13] drm/vkms: Allow to configure multiple CRTCs
-Message-ID: <Z6sqFdvtwSxHD-FO@fedora>
-References: <20250129110059.12199-1-jose.exposito89@gmail.com>
- <20250129110059.12199-9-jose.exposito89@gmail.com>
- <Z5uDJFHnn1HzWOz4@louis-chauvet-laptop>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="S3Ay4wq1"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51B4Y8R7010537;
+	Tue, 11 Feb 2025 10:44:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=pop8DLAgHzsfRcjlvrS32YU1xV691RtVt0X
+	bPcHrQJ4=; b=S3Ay4wq1HExmhOFofKWV/YyaTsP45pwjLZeGO4Y0Fgh2bQ+MZ3p
+	rYOy+kA6SmJV4FxHaG+Gk+Mm3l6XNYP8VQXTz8CoFCDaEZn6luKraO/hDfGO/pP3
+	5gLCix3ZLwbrI9HC9+0ot+5kMydtrgoD6QAgj+yn+s/dRkC//rb+OqwMxyZggEsF
+	yRa9NjyOnwg3udJkqJIJKBTfmc/7fRQzd0NL8AYxrrDu9TCrhpHH/7+Nv9WcYwDP
+	b/4HiVqZJLjauvkE77DOIFsCWzkpdob/48EXfTheZjl/+ZVgsKW5Ux/UulmyXUFN
+	fXvBb3I/V8eEh2E/dh1XjqThOMPPmAFzeQg==
+Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qcs5c2fa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 10:44:45 +0000 (GMT)
+Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 51BAigkd002161;
+	Tue, 11 Feb 2025 10:44:42 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 44p0bkpjte-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 10:44:42 +0000
+Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 51BAifrG002154;
+	Tue, 11 Feb 2025 10:44:41 GMT
+Received: from chejiang-gv.ap.qualcomm.com (chejiang-gv.qualcomm.com [10.233.43.239])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 51BAifj2002152
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 10:44:41 +0000
+Received: by chejiang-gv.ap.qualcomm.com (Postfix, from userid 37913)
+	id 830B814F1; Tue, 11 Feb 2025 18:44:40 +0800 (CST)
+From: Cheng Jiang <quic_chejiang@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_chejiang@quicinc.com,
+        quic_jiaymao@quicinc.com, quic_shuaz@quicinc.com,
+        quic_zijuhu@quicinc.com, quic_mohamull@quicinc.com
+Subject: [PATCH v1 0/1] Enable BT for qcs8300-ride
+Date: Tue, 11 Feb 2025 18:44:20 +0800
+Message-Id: <20250211104421.1172892-1-quic_chejiang@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z5uDJFHnn1HzWOz4@louis-chauvet-laptop>
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: TC6-Ab8FCOYS-33P3CW_RyBDvZRqB0zv
+X-Proofpoint-GUID: TC6-Ab8FCOYS-33P3CW_RyBDvZRqB0zv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_04,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ mlxlogscore=672 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ adultscore=0 clxscore=1015 mlxscore=0 priorityscore=1501 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502110067
 
-On Thu, Jan 30, 2025 at 02:48:20PM +0100, Louis Chauvet wrote:
-> On 29/01/25 - 12:00, José Expósito wrote:
-> > Add a list of CRTCs to vkms_config and helper functions to add and
-> > remove as many CRTCs as wanted.
-> > 
-> > For backwards compatibility, add one CRTC to the default configuration.
-> > 
-> > A future patch will allow to attach planes and CRTCs, but for the
-> > moment there are no changes in the way the output is configured.
-> > 
-> > Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
-> > Signed-off-by: José Expósito <jose.exposito89@gmail.com>
-> 
-> Co-developped-by: Louis Chauvet <louis.chauvet@bootlin.com>
-> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
-> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
-> 
-> [...]
-> 
-> > diff --git a/drivers/gpu/drm/vkms/tests/vkms_config_test.c b/drivers/gpu/drm/vkms/tests/vkms_config_test.c
-> 
-> [...]
-> 
-> > +static void vkms_config_test_valid_crtc_number(struct kunit *test)
-> > +{
-> > +	struct vkms_config *config;
-> > +	struct vkms_config_crtc *crtc_cfg;
-> > +	int n;
-> > +
-> > +	config = vkms_config_default_create(false, false, false);
-> > +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
-> > +
-> > +	/* Invalid: No CRTCs */
-> > +	crtc_cfg = list_first_entry(&config->crtcs, typeof(*crtc_cfg), link);
-> > +	vkms_config_destroy_crtc(config, crtc_cfg);
-> > +	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
-> > +
-> > +	/* Invalid: Too many CRTCs */
-> > +	for (n = 0; n <= 32; n++)
-> > +		vkms_config_add_crtc(config);
-> > +
-> > +	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
-> > +
-> > +	vkms_config_destroy(config);
-> > +}
-> 
-> Same as before, can you rename the fonction to 
-> vkms_config_test_invalid_crtc_number
-> 
-> [...]
-> 
-> > diff --git a/drivers/gpu/drm/vkms/vkms_config.c b/drivers/gpu/drm/vkms/vkms_config.c
-> 
-> [...]
-> 
-> > +struct vkms_config_crtc **vkms_config_get_crtcs(const struct vkms_config *config,
-> > +						size_t *out_length)
-> > +{
-> > +	struct vkms_config_crtc **array;
-> > +	struct vkms_config_crtc *crtc_cfg;
-> > +	size_t length;
-> > +	int n = 0;
-> > +
-> > +	length = list_count_nodes((struct list_head *)&config->crtcs);
-> > +	if (length == 0) {
-> > +		*out_length = length;
-> > +		return NULL;
-> > +	}
-> > +
-> > +	array = kmalloc_array(length, sizeof(*array), GFP_KERNEL);
-> > +	if (!array)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	list_for_each_entry(crtc_cfg, &config->crtcs, link) {
-> > +		array[n] = crtc_cfg;
-> > +		n++;
-> > +	}
-> > +
-> > +	*out_length = length;
-> > +	return array;
-> > +}
-> 
-> Same as before, can't we use an iterator?
-> 
-> [...]
-> 
-> > +static bool valid_crtc_number(struct vkms_config *config)
-> > +{
-> > +	size_t n_crtcs;
-> > +
-> > +	n_crtcs = list_count_nodes(&config->crtcs);
-> > +	if (n_crtcs <= 0 || n_crtcs >= 32) {
-> > +		pr_err("The number of CRTCs must be between 1 and 31\n");
-> 
-> I agree we need some logs, but I think pr_err is too agressive (i.e may 
-> be considered as an error by some test tools).
-> 
-> I think we should at least:
-> - lower to warn/notice/info
-> - use drm variants of the macro
-> 
-> > +		return false;
-> > +	}
-> > +
-> > +	return true;
-> > +}
-> > +
-> 
-> [...]
-> 
-> > +struct vkms_config_crtc *vkms_config_add_crtc(struct vkms_config *config)
-> > +{
-> > +	struct vkms_config_crtc *crtc_cfg;
-> > +
-> > +	crtc_cfg = kzalloc(sizeof(*crtc_cfg), GFP_KERNEL);
-> > +	if (!crtc_cfg)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	vkms_config_crtc_set_writeback(crtc_cfg, false);
-> > +
-> > +	list_add_tail(&crtc_cfg->link, &config->crtcs);
-> > +
-> > +	return crtc_cfg;
-> > +}
-> > +
-> > +void vkms_config_destroy_crtc(struct vkms_config *config,
-> > +			      struct vkms_config_crtc *crtc_cfg)
-> > +{
-> > +	list_del(&crtc_cfg->link);
-> > +	kfree(crtc_cfg);
-> > +}
-> 
-> Same as before, the pair add/destroy seems strange.
-> 
-> > +++ b/drivers/gpu/drm/vkms/vkms_drv.c
-> > @@ -181,7 +181,8 @@ static int vkms_create(struct vkms_config *config)
-> >  		goto out_devres;
-> >  	}
-> >  
-> > -	ret = drm_vblank_init(&vkms_device->drm, 1);
-> > +	ret = drm_vblank_init(&vkms_device->drm,
-> > +			      vkms_config_get_num_crtcs(config));
-> 
-> At this point we only create one crtc, can you move this change in the 
-> commit where you create multiple crtc?
+Enable the BT subsystem of the qcs8300 ride board.
 
-Since the code to add more than one CRTCs is unused but technically present, I
-think that this is the right patch to use this function.
+Cheng Jiang (1):
+  arm64: dts: qcom: qcs8300-ride: enable BT on qcs8300-ride
 
-Anyway, at the moment it'll always return 1, so it is a no-op.
+ arch/arm64/boot/dts/qcom/qcs8300-ride.dts | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-I didn't change it in v2, let me know if it works for you.
 
-Thanks,
-Jose
+base-commit: df5d6180169ae06a2eac57e33b077ad6f6252440
+prerequisite-patch-id: 7777ec69b5f2389a2efdb0bda561b067da72abfb
+prerequisite-patch-id: e6140f9abf38172e77875f126da90bde6e1829cb
+prerequisite-patch-id: c4e0283b4bce4c4e0566d7783f8ccd7fcaaebd3f
+prerequisite-patch-id: c87e5f1cb29568c24566e8a960d6c8dd0be5969d
+prerequisite-patch-id: f80a486c6e34dfb62f09faf0eb3fae586cda85ec
+prerequisite-patch-id: 0e2cb7a4d8779539a58261111deea6bd6b750f6f
+prerequisite-patch-id: edd904882daa9ed31340710e36905c82c4552c8e
+prerequisite-patch-id: 28493e0ec65dc01bd8f8e2e82beea6295944e6e6
+prerequisite-patch-id: 29da1304862005c0fbe32230b47ce6d270518b04
+prerequisite-patch-id: a796c820ab0b76a1b56b32480a83dbf5cb1cdab7
+-- 
+2.34.1
 
-> >  	if (ret) {
-> >  		DRM_ERROR("Failed to vblank\n");
-> >  		goto out_devres;
-> > -- 
-> > 2.48.1
-> > 
