@@ -1,212 +1,100 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8419A1C9EAA;
-	Tue, 11 Feb 2025 11:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6435670807;
+	Tue, 11 Feb 2025 11:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739272759; cv=none; b=MuIacikkVKUNZHJX4PFKSc+ChLRuSg7CRSQQjRMjCTvRtpBFRLytBlF7F6J0ks+6ikJX42gBy7UoZXI3A04SZ+/sO2JxTzYCWSV4+y0lKmpHDHcyDHQ+T7jdvK84VqhM1uFslOFRvkgmM0xxGjazUtxPc3wsp4ELXpgHCNPXg1Y=
+	t=1739272865; cv=none; b=iWNzxTFTegwmEh5yyixVK0TeMe/KzP7PS4UpakeZ6ytw7kc3JMXaXWrFGVF5wHHqvhQ5fR7eg7zcvNCfjQ5O1LUqj6YjbuF+myC0frtv4XyBq5FzJy2xINA+RyH5cCgM3HqryEi40osTKIIi+CXaxttK0OHxzITD8PJSKtEAqMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739272759; c=relaxed/simple;
-	bh=E7SZXQq5YlFZ6fUQ6IuGV0KL/zucE+o2sgmwFMcqVpM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=BcbyaZ7DHs3W57wlPqnWpVlTxlEs63hiE1l+/QBkuRTT8dwp/JFk9otgAkt1qSrbjQB1BKMId8tdRzMxdnob+wb5cxos6qybCWeZGq+T5nndyFJBMK7RAjHGy0m8m5boDpteu9+uSt3MFT0/2ZZMOjh67GG464esbCWNaXBcmkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YtZ1w82h; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739272865; c=relaxed/simple;
+	bh=uoP1nCCvDBGx8Z7jqAGdTm1hPsk3dkyFnV2/E09V82I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=r6xCWcSlXckiZTLw8VYOZmjbJRmiwVxVXC+sOiKikeOmWYTK3MqaL54zCi33t3qk/ODp9DT0qYuPbiynopixgatapuGX/XZzh7Jfgfmiz/jjl/luFQQ+jlICC8DorXM9s9My95WPVP3BXUpYQWRP8dogymdjWW1dfbG/aeFMAa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=hMrujhFc; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YtZ1w82h"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21f7f1e1194so63881275ad.2;
-        Tue, 11 Feb 2025 03:19:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739272757; x=1739877557; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tU3r4r0E6nNNQO3DTHrSmmHGy21FgVrpejWGxdhhNPo=;
-        b=YtZ1w82hgN9nJzyO/1fEMBmJ5o+c5/+0Y0JNKbawpigM09Kbl7gksWypT3YU8fdFOK
-         RBGbN6nAFbpkrjFxDGyfvK3O1ag/pl5GR9hvgN/QPIkWwLL+g/cYmmns+VjMRgIF9Tn1
-         A0gE/WFJaSIKuFGjbikEQuSQaK1jRck37X0Sp8fmrDQ4gXtubtJoedCcGqSgdIufTYNy
-         JrXDxhpINYtQGwq+lkOuNxCPfTYxow7v1xQl58ktcl9ryaed6SL+cEj9TmKslzLX65o3
-         jDq3dcve2GpSdJTbJaPoqSIoEzOLMy6aiU4jOlLhM5nUmI8pl26FYgaQw66w45kBmyJ6
-         JNmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739272757; x=1739877557;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tU3r4r0E6nNNQO3DTHrSmmHGy21FgVrpejWGxdhhNPo=;
-        b=inhn1Vx5cl3kvPNj04/EOdRn9SDLrRYF4etK6q3DreC1cMXM0SW6h6vMw9dt0GMRxW
-         m6NoTGscaW2t74PAjuJCeWw/IyaXVBT7r+WeJHYav+49Lz/GHazag5gMKgGVwFTZi0q5
-         7kwPYHDgx+Zjd64TKSjmfrL1/LVUvW9IQ7qrOeUn0LcKNzN31aFvAMGSJJwS4si8ih1I
-         BWbl6mufQAAjyJmArEyrKIRrfzXwXuN8pPQeKRmp6fzMYLRJV3TYiE31u+7PbNVSBYb3
-         EpGjSjn0uxhkJ7dJ/J3cXu+mm/hfDZ2td6dVzkveOb+NEspZfkxI6AFcDnkT5p7PYjEo
-         ih+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUVrEWaAm/YAqVruihxhk3lXew/IjKrYNEtE7yAIvY91QGCfDvUpk7aAC4/VQ62mbR35y0yPTMvpXuMMTw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yza2Mt6G7GM1pismtkE+zP/KBLGFjL4IxL0W8c0/6U7Axhfqai+
-	rxNnvJbw5llzu8TEhN130dN/te3UM80YnkbiTU7JG1p5Qjt9kfgF7GiH6Q==
-X-Gm-Gg: ASbGncsdyni0lgN5gznoLPFCUtCIKM1EaIQh3Dkv/M81yPRoYo/pFFnm/X9Mq47XDei
-	8aPglQAQOGMbUv/vyPLrthM/L4Evuxg5TkhZRjU3EnONE02ngJbjrpn+QpU4jb1M/eZ+K4vuLvR
-	a6/LeHPPj2km/EX02ipGWykywKldipl54jqoxJOkkIYfppELyOquUGEWYJFewdZn3y3hEWBAdfR
-	cNl2cVA4ULwRxr4TtechtFHdpsuK4puUIB9102ZeB9/jX1QlrsQMf9Fy0u+hj7PaDA0tKKZCaO5
-	zWJEuLZCHozSnTcF
-X-Google-Smtp-Source: AGHT+IFhOki/rd+yezkWNKwxrO2Edf/DThIs4v+8qzJy3UrvtlKb6441PGHb71zPDlZiAJRtzlnI5g==
-X-Received: by 2002:a05:6a00:2916:b0:732:1eb2:7bf3 with SMTP id d2e1a72fcca58-7321eb27dcbmr3005173b3a.21.1739272756735;
-        Tue, 11 Feb 2025 03:19:16 -0800 (PST)
-Received: from localhost ([111.229.209.227])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048adb158sm9411906b3a.65.2025.02.11.03.19.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 11 Feb 2025 03:19:16 -0800 (PST)
-From: Tao Chen <chen.dylane@gmail.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	qmo@kernel.org
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	chen.dylane@gmail.com
-Subject: [PATCH bpf-next v6 4/4] selftests/bpf: Add libbpf_probe_bpf_kfunc API selftests
-Date: Tue, 11 Feb 2025 19:18:59 +0800
-Message-Id: <20250211111859.6029-5-chen.dylane@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250211111859.6029-1-chen.dylane@gmail.com>
-References: <20250211111859.6029-1-chen.dylane@gmail.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="hMrujhFc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1739272861;
+	bh=uoP1nCCvDBGx8Z7jqAGdTm1hPsk3dkyFnV2/E09V82I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hMrujhFcOZq/4f66dL7dk+b6M2gxuegP3AwaTO8f1n9aKVEgZtlMNnY4Bhx/ejzMo
+	 pGydGWXFHnA9dpurrQF5alPZvAbxpAYPoU8StnnR1TnOtC2kRfP0P0HWRkql/TO0D/
+	 AO/IjMCit3Ob3tK2swaYdx2cFbxh+ddFXuYpgwwwBd/TLPrl0etaxbXsqx1rZMR+4S
+	 qW2a+K82BrOMXpC4modD0gLaLNGAhu1FPLTJcT5saZWCgOb/A7j6w2vZofUsFr1CLV
+	 5FdHFaAPaZrnZNYD5X11VJbi2Nzamdxrpz3mFC12cUu6rMtJJ8VrGRjTBAVvRBuD+w
+	 85thIsVMvH2Jw==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 77FD117E0657;
+	Tue, 11 Feb 2025 12:21:00 +0100 (CET)
+Date: Tue, 11 Feb 2025 12:20:52 +0100
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: Florent Tomasin <florent.tomasin@arm.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Steven
+ Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Sumit Semwal
+ <sumit.semwal@linaro.org>, Benjamin Gaignard
+ <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>,
+ John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>,
+ Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>, Matthias Brugger
+ <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, Yong Wu <yong.wu@mediatek.com>,
+ <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+ <linux-media@vger.kernel.org>, <linaro-mm-sig@lists.linaro.org>,
+ <linux-arm-kernel@lists.infradead.org>,
+ <linux-mediatek@lists.infradead.org>, <nd@arm.com>, Akash Goel
+ <akash.goel@arm.com>
+Subject: Re: [RFC PATCH 4/5] drm/panthor: Add support for protected memory
+ allocation in panthor
+Message-ID: <20250211122052.3f550650@collabora.com>
+In-Reply-To: <20250211120448.3e89e75f@collabora.com>
+References: <cover.1738228114.git.florent.tomasin@arm.com>
+	<821252c96ab2ab3e2d8ef211a09f8b171719baaa.1738228114.git.florent.tomasin@arm.com>
+	<20250211120448.3e89e75f@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add selftests for prog_kfunc feature probing.
+On Tue, 11 Feb 2025 12:04:48 +0100
+Boris Brezillon <boris.brezillon@collabora.com> wrote:
 
- ./test_progs -t libbpf_probe_kfuncs
- #153     libbpf_probe_kfuncs:OK
- Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
+> > --- a/drivers/gpu/drm/panthor/panthor_gem.c
+> > +++ b/drivers/gpu/drm/panthor/panthor_gem.c
+> > @@ -9,10 +9,14 @@
+> >  
+> >  #include <drm/panthor_drm.h>
+> >  
+> > +#include <uapi/linux/dma-heap.h>
+> > +
+> >  #include "panthor_device.h"
+> >  #include "panthor_gem.h"
+> >  #include "panthor_mmu.h"
+> >  
+> > +MODULE_IMPORT_NS(DMA_BUF);  
+> 
+> Uh, that's ugly. If the consensus is to let panthor allocate
+> its protected buffers from a heap, let's just add a dependency on
+> DMABUF_HEAPS instead.
 
-Signed-off-by: Tao Chen <chen.dylane@gmail.com>
----
- .../selftests/bpf/prog_tests/libbpf_probes.c  | 111 ++++++++++++++++++
- 1 file changed, 111 insertions(+)
+My bad, that one is required for dma_buf_put(). Should be
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c b/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c
-index 4ed46ed58a7b..96352fb657e5 100644
---- a/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c
-+++ b/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c
-@@ -126,3 +126,114 @@ void test_libbpf_probe_helpers(void)
- 		ASSERT_EQ(res, d->supported, buf);
- 	}
- }
-+
-+static int module_btf_fd(char *module)
-+{
-+	int fd, err;
-+	__u32 id = 0, len;
-+	struct bpf_btf_info info;
-+	char name[64];
-+
-+	while (true) {
-+		err = bpf_btf_get_next_id(id, &id);
-+		if (err)
-+			return -1;
-+
-+		fd = bpf_btf_get_fd_by_id(id);
-+		if (fd < 0) {
-+			if (errno == ENOENT)
-+				continue;
-+			return -1;
-+		}
-+		len = sizeof(info);
-+		memset(&info, 0, sizeof(info));
-+		info.name = ptr_to_u64(name);
-+		info.name_len = sizeof(name);
-+		err = bpf_btf_get_info_by_fd(fd, &info, &len);
-+		if (err) {
-+			close(fd);
-+			return -1;
-+		}
-+		/* find target module btf */
-+		if (!strcmp(name, module))
-+			break;
-+
-+		close(fd);
-+	}
-+
-+	return fd;
-+}
-+
-+void test_libbpf_probe_kfuncs(void)
-+{
-+	int ret, kfunc_id, fd;
-+	char *kfunc = "bpf_cpumask_create";
-+	struct btf *vmlinux_btf = NULL;
-+	struct btf *module_btf = NULL;
-+
-+	vmlinux_btf = btf__parse("/sys/kernel/btf/vmlinux", NULL);
-+	if (!ASSERT_OK_PTR(vmlinux_btf, "btf_parse"))
-+		return;
-+
-+	kfunc_id = btf__find_by_name_kind(vmlinux_btf, kfunc, BTF_KIND_FUNC);
-+	if (!ASSERT_GT(kfunc_id, 0, kfunc))
-+		goto cleanup;
-+
-+	/* prog BPF_PROG_TYPE_SYSCALL supports kfunc bpf_cpumask_create */
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_SYSCALL, kfunc_id, -1, NULL);
-+	if (!ASSERT_EQ(ret, 1, "kfunc in vmlinux support"))
-+		goto cleanup;
-+
-+	/* prog BPF_PROG_TYPE_KPROBE does not support kfunc bpf_cpumask_create */
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_KPROBE, kfunc_id, -1, NULL);
-+	if (!ASSERT_EQ(ret, 0, "kfunc in vmlinux not suuport"))
-+		goto cleanup;
-+
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_KPROBE, -1, -1, NULL);
-+	if (!ASSERT_EQ(ret, 0, "invalid kfunc id:-1"))
-+		goto cleanup;
-+
-+	ret = libbpf_probe_bpf_kfunc(100000, kfunc_id, -1, NULL);
-+	if (!ASSERT_ERR(ret, "invalid prog type:100000"))
-+		goto cleanup;
-+
-+	if (!env.has_testmod)
-+		goto cleanup;
-+
-+	module_btf = btf__load_module_btf("bpf_testmod", vmlinux_btf);
-+	if (!ASSERT_OK_PTR(module_btf, "load module BTF"))
-+		goto cleanup;
-+
-+	kfunc_id = btf__find_by_name(module_btf, "bpf_kfunc_call_test1");
-+	if (!ASSERT_GT(kfunc_id, 0, "func not found"))
-+		goto cleanup;
-+
-+	fd = module_btf_fd("bpf_testmod");
-+	if (!ASSERT_GE(fd, 0, "module btf fd"))
-+		goto cleanup;
-+
-+	/* prog BPF_PROG_TYPE_SYSCALL supports kfunc bpf_kfunc_call_test1 in bpf_testmod */
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_SYSCALL, kfunc_id, fd, NULL);
-+	if (!ASSERT_EQ(ret, 1, "kfunc in module btf support"))
-+		goto cleanup_fd;
-+
-+	/* prog BPF_PROG_TYPE_KPROBE does not support kfunc bpf_kfunc_call_test1
-+	 * in bpf_testmod
-+	 */
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_KPROBE, kfunc_id, fd, NULL);
-+	if (!ASSERT_EQ(ret, 0, "kfunc in module btf not support"))
-+		goto cleanup_fd;
-+
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_SYSCALL, -1, fd, NULL);
-+	if (!ASSERT_EQ(ret, 0, "invalid kfunc id in module btf"))
-+		goto cleanup_fd;
-+
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_SYSCALL, kfunc_id, 100, NULL);
-+	ASSERT_EQ(ret, 0, "invalid btf fd in module btf");
-+
-+cleanup_fd:
-+	close(fd);
-+cleanup:
-+	btf__free(vmlinux_btf);
-+	btf__free(module_btf);
-+}
--- 
-2.43.0
+  MODULE_IMPORT_NS("DMA_BUF");
 
+though.
