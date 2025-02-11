@@ -1,33 +1,47 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C29161F1539;
-	Tue, 11 Feb 2025 10:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A511F3D58;
+	Tue, 11 Feb 2025 10:13:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739268772; cv=none; b=kZr4Az3DJTwuuzrAtDbYqQ9Es6ZcHajyjhvuhHsoNSVVkPTNT8Wo/h2deqBfuUMEyrTq7lhTT1FIr3a4ooI4FwKKHepcWVrB/fC0wteZo3PkShAUq7KtyRRuU9s0CDEaeZ8enGhI0ue//N73YYQBSuOf5DUZsWuFkxqLjJ8/tFE=
+	t=1739268800; cv=none; b=AmcBhwDt+m6TzGn4g55tQAOaipE0M5ssBmaj6zD0cN5+s1B5sfAQ4UfqMD3S6ZQNFIqKlo5WKOCNcdpMy+/yuR6dw9W5aR463F/3v6XUd2yX0EGQCIGNBebFGOrnP5Ol9eOHBx3rrUz9UJYQ0Tw27waxKI8U6SCosjkjWgYa5h0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739268772; c=relaxed/simple;
-	bh=P17VEwpgggij5gPEXvR2lpCC6Mi4IMgXTN/cZV3KLT0=;
+	s=arc-20240116; t=1739268800; c=relaxed/simple;
+	bh=sm4skQ+mO9VC7awqXxoeC25LOx7AwYD9TdfUq0VZlqs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fYt/0xN79YmpJryVabGgFPN3cFnn9Io3AeB6YVbararRyrVVwNBFexekWxOhMxjnrrIPZiVrtE3w9teFgIvF5Ryd/mLynT5vYYzCt2LglnOx57Hmg0K2hhhxWiDieh7yYHWVfwlPXJAphmzFxcRuBh+3AAcnLiRnA/c7YIQ6HoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79F941477;
-	Tue, 11 Feb 2025 02:13:11 -0800 (PST)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 473743F6A8;
-	Tue, 11 Feb 2025 02:12:48 -0800 (PST)
-Date: Tue, 11 Feb 2025 10:12:45 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Stuart Yoder <stuart.yoder@arm.com>
-Cc: <linux-integrity@vger.kernel.org>, <jarkko@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>, <peterhuewe@gmx.de>,
-	<jgg@ziepe.ca>, <rafael@kernel.org>, <lenb@kernel.org>,
-	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/4] Add support for the TPM FF-A start method
-Message-ID: <Z6sinfNeBynQH0zs@bogus>
-References: <20250210232227.97761-1-stuart.yoder@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=CT32od7XJHjcspS7U8t++sCCfWFAcJuNzZat1aE8Cugg8RUeMYxrpLHIwZClu19ZFhgT8Aq//0dFaXBXDax++msJCxg+pq+V73RFMhTXyrsgtq3bBbdgQ8yOCakfKtFOROkKCdpGLFTx/si2zaOAKLCEl6q98q3hj5HoFBxXLGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UBx1PLQu; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UBx1PLQu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD355C4CEDD;
+	Tue, 11 Feb 2025 10:13:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739268799;
+	bh=sm4skQ+mO9VC7awqXxoeC25LOx7AwYD9TdfUq0VZlqs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UBx1PLQuxNPKi/oT1Ts/ntJyplhxCc98q55l3PoP9uaRlsjehcBK4IzT+JEoB/x7/
+	 ArE047ks0HTzU0W9LMeRwjEzPh+18JHXZHWVD8ve5YGFuC2jmRgubfa/BJaqUI6Usp
+	 bNErgid2lgRrRu0jJQNsSWy0qpVhyyPShuNYsm+fQjSbCwApXwcJave7IGn0skdoQa
+	 w2BFG3vho8o/mqhN9KypYVjuPEfe12sbsv4dN3NWT54BzWuweSdODm2d3c8BtoJcfT
+	 Cy+ErFCRa8GsnW7VODpOEjEGUNV74yfwakjmTdNjw2ahvot6tcnq+Xg6eEz9l+PtZi
+	 LuQHpfDQRrAjg==
+Date: Tue, 11 Feb 2025 10:13:15 +0000
+From: Simon Horman <horms@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 01/15] mptcp: pm: drop info of
+ userspace_pm_remove_id_zero_address
+Message-ID: <20250211101315.GJ554665@kernel.org>
+References: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-0-71753ed957de@kernel.org>
+ <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-1-71753ed957de@kernel.org>
+ <20250210194934.GO554665@kernel.org>
+ <adeff1d6-f80b-4a2c-b4bb-da44ecd5b747@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,29 +50,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250210232227.97761-1-stuart.yoder@arm.com>
+In-Reply-To: <adeff1d6-f80b-4a2c-b4bb-da44ecd5b747@kernel.org>
 
-On Mon, Feb 10, 2025 at 05:22:23PM -0600, Stuart Yoder wrote:
-> These patches add support for the CRB FF-A start method defined
-> in the TCG ACPI specification v1.4 and the FF-A ABI defined
-> in the Arm TPM Service CRB over FF-A (DEN0138) specification. 
-> (https://developer.arm.com/documentation/den0138/latest/)
+On Tue, Feb 11, 2025 at 10:31:05AM +0100, Matthieu Baerts wrote:
+> Hi Simon,
 > 
-> FF-A is a messaging framework for Arm-based systems and in the
-> context of the TPM driver is used to signal 'start' to a CRB-based
-> TPM service which is hosted in an FF-A secure partition running in
-> TrustZone.
+> On 10/02/2025 20:49, Simon Horman wrote:
+> > On Fri, Feb 07, 2025 at 02:59:19PM +0100, Matthieu Baerts (NGI0) wrote:
+> >> From: Geliang Tang <tanggeliang@kylinos.cn>
+> >>
+> >> The only use of 'info' parameter of userspace_pm_remove_id_zero_address()
+> >> is to set an error message into it.
+> >>
+> >> Plus, this helper will only fail when it cannot find any subflows with a
+> >> local address ID 0.
+> >>
+> >> This patch drops this parameter and sets the error message where this
+> >> function is called in mptcp_pm_nl_remove_doit().
+> >>
+> >> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> >> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> > 
+> > Reviewed-by: Simon Horman <horms@kernel.org>
 > 
-> The first patch adds an FF-A driver to handle the FF-A messaging when
-> communicating with a CRB-based TPM secure partition built on FF-A.
-> The driver is probed when the TPM secure partition is discovered by
-> the Linux FF-A infrastructure.
->
+> Thank you for the review, and this message!
+> 
+> > A minor nit, perhaps it has been discussed before:
+> > 
+> > I'm not sure that your Reviewed-by is needed if you also provide
+> > your Signed-off-by. Because it I think that the latter implies the former.
+> 
+> This has been discussed a while ago, but only on the MPTCP list I think.
+> To be honest, we didn't find a precise answer in the doc [1], and maybe
+> we are doing it wrong for all this time :)
+> 
+> Technically, when someone shares a patch on the MPTCP ML, someone else
+> does the review, sent the "Reviewed-by" tag, then the patch is queued,
+> and the one sending the patch to the netdev ML adds a "Signed-off-by"
+> tag. With this patch here, I did both.
+> 
+> Before, we were removing the RvB tag when it was the same as the SoB
+> one, but we stopped doing that because we thought that was not correct
+> and / or not needed. We can re-introduce this if preferred. My
+> understanding is that the SoB tag is for the authors and the
+> intermediate maintainers -- who might have not done a full review --
+> while the RvB one seems to indicate that a "proper" review has been
+> done. If someone else does a review on a patch, I can add my SoB tag
+> when "forwarding" the patch, trusting the review done by someone else.
+> 
+> Do you think it is better to remove the RvB tag if there is a SoB one
+> for the same person?
+> 
+> [1] https://docs.kernel.org/process/submitting-patches.html
 
-All the FF-A related changes look good to me.
+Hi Mat,
 
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+Thanks for the explanation. I see that in your process the Reviewed-by
+and Signed-off-by have distinct meanings. Which does make sense.
 
--- 
-Regards,
-Sudeep
+I'm ambivalent regarding which way to go (sorry that isn't very helpful).
+But I do suspect I won't be the last person to ask about this.
+
