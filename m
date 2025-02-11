@@ -1,181 +1,121 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E1626BD81;
-	Tue, 11 Feb 2025 14:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9ADD24E4AB;
+	Tue, 11 Feb 2025 14:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739283771; cv=none; b=fd34rmy1BXaSglRk26EvlJBqODUWd/vUqnT7WdSlvmtDmFcagMgF7+lObFBcvf8LWUCLWwvW0b48OGF1D2ccKwuLngJWmOZTtgS7MT9FWZQutzs2wLnlXZY372bK3YBqqaSsOyvcI5dxLZ0vK0lt8Ekf1kof9P6XW8wE2rC81CY=
+	t=1739283784; cv=none; b=NVl/EBm988UZ/nleCOJpAgWueMU2mT2CIRo+qj3esPxTOdUrf9Fajd7aMI6UA+QQAVL3W+QNtzcPedM+YYUxShYxCPLCIXkqFns8LjvrQfapSXR9acM0aGTUex9KAIrYjXqpjJnkyU/F0PNz0XVWyH9hqRrUzxoyEAg/FK9kGD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739283771; c=relaxed/simple;
-	bh=OUhgdP9vJ7yBpdmvGUWXWCSwPdO7QzKG6dIbWGIzX7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=au3K0K/pzk5lFxR8gPAZEdLL349mfmnXtSpI5DrTwaBXOW0gWdL+qjahwW3WMlEFoKxHAekuy9aOOBvG5oEG67ke+zWoG6RYoLFhKgYPFude4s22cOTXZryZ3ML0HVtzMKT+qs/KJutrraD+AeiD9GAO3kBjNv8t0kTxMpLRXNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UD/OWmqW; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739283784; c=relaxed/simple;
+	bh=tEFiFKnKGtvJHhnZ+Z9MAfG3eTneciF2Rj7ELcFgcAU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LFCvBVSfC2Wv/Ccn0dZE4yLCnBe3DSAalyYxwctS3kjEuIy9Kpx9/DqQE82QRgRn6OdNw3RD8HmArR0p6cm3Sut/t3VqSiKCOD+CbKhKNZrKH0deVpns1GylxAEhb8okMMOi5K5lcnTFZJAGhiM6RKuxZLWMKvLy7rH5bDnKCfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oABa6pkf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UD/OWmqW"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38ddfee3ba9so1832597f8f.2;
-        Tue, 11 Feb 2025 06:22:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739283768; x=1739888568; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z4joTWDJrseyEaJ20/Gmy5iaLoJYodzT47fHE8eiEpk=;
-        b=UD/OWmqWnE2nz7wmqwn7m7X/Qtpdrg9IklzzchtyafzBwvIanamO7+iwUobhmMDpuy
-         IEfuuW9y09x+OIOz9iT4XlBYnf61g0dF2rPi3uHcJ3Kh7BIeuUB94kh4pC92UDEZxudv
-         iQMuBTbaEISjERZ8o7APGCIaula6RSSkCHqTWM7wnkzaGVGEIGbQ6Z/kjKXAb0J3hytf
-         NP08jn1DiQLBdUnwdvFQiyWMTW9tEF2QydzuNTKC7/XdYNxYluKr90aQuEDgC9sONN7x
-         9sySekC9gTeQj55QwkWg5fgnjkdpUbBzf6zK+bjsa6DM+pfKSygOsccx9m/shgz538Iu
-         qhSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739283768; x=1739888568;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z4joTWDJrseyEaJ20/Gmy5iaLoJYodzT47fHE8eiEpk=;
-        b=H9aBEn3ipFyT17iGQHgn0+i/VAx9OH+KhmRH7vBTruqjUiKsF+xyjiKtcDeZbaGJTj
-         rJvdlMOp02jnSTLOjbDZqSv1AfKjz7e7VXmYHQq//i/WIhJ5SHGfzRGzgqvbNE31bAd2
-         lqzfiZQJTqP10V9qWvVPTpWIL8PkH5qSzcFfvgp59bUmrKINDw9F7MHDWDa8KQT8Cl3U
-         mlidgwDXMgHdD3qQT8tDSv+6CyvlhZWoVBah+Qx5HQhM4Ug+tFj9KFCOzSa2IKmB3YJb
-         GOiK7x/6WmUVgMNzW89kR8b6ktMfh5yXWFY8mv6IIWLtKyIVslzVUbbaG0EIi8ILbbsa
-         CsHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUtdD8DjzVnOuXwWjuFMecTSVX/qy1gP80hCmRxsGtLT2OwkeWJ+gODmNfgXj/k3VebBAeL0rP3ApeUNDSelGI=@vger.kernel.org, AJvYcCWqsAM746DnISF3PQvKiqkg1cEE1gG4H+HrK70sqAe2yK/yIsr18czT92jGh97+oL4Ig/Ai4FjLA/61Qw==@vger.kernel.org, AJvYcCWrqU9MSNr6hOfXNlOp32SkJMYwl6wOubpX406jIrppqrYa4JnBR9KDPa5uwJFQC4u9xw5mtO3qBBxyG6EH@vger.kernel.org, AJvYcCXOqkdvjv7JmErSEeAlyAoYVDQsjmvz0dibKxxMIfOnPGSzPzRdqqoU9uEA0ZPefDG7IRZ4pthU@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOpGjQic7V6rjxQcIQCY9MAmwGlkjcSjPlmeSVqcTkn/jMZYtW
-	NPJ82+VjS/vhje/yx3mSehCMh1xpN6WxWjYgkfIGXIumsNMY491w
-X-Gm-Gg: ASbGncur3SFy7E/mfPQL7FJsWL8pS4BWcFjwz8a8o26pd2G6R3kYh/2+JBcZltl/I3m
-	7jkjjYIgBqnbkrY5Gjr/AGMRKKh3c2OtEZSs0gKMCAwXwwaY2ILTycEDt46Ua0bDx9Peiui6dna
-	/JqVmgVaBv3J2I52jMM5xn8ohFUsO0VV7wF7OdE2c2zPBilY1tqE4LvBw/mNWZijfnhlersxnGl
-	1/01Ygc+KBkwN0T91ALs08CYuIykOoJrIsWjF9qlmlPht7WRTbK7BegYwNMMnDGvWwvNQJ7DkBx
-	w8TN7JD356zeMSVd8VV5WhGfN5w/C1Hft/8V
-X-Google-Smtp-Source: AGHT+IE7tyYKAi0vc3JqfyNdKdx4L2EKdtttgjNbGxEtmPQcKD0wJzFlZI1yvIEAqo8r4WCaylqWDQ==
-X-Received: by 2002:a05:6000:1569:b0:38d:dce7:86cd with SMTP id ffacd0b85a97d-38ddce78744mr7958245f8f.24.1739283767750;
-        Tue, 11 Feb 2025 06:22:47 -0800 (PST)
-Received: from [172.27.54.124] ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d94d753sm212084155e9.11.2025.02.11.06.22.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 06:22:47 -0800 (PST)
-Message-ID: <d11de4d4-1205-43d0-8a7d-a43d55a4f3eb@gmail.com>
-Date: Tue, 11 Feb 2025 16:22:43 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oABa6pkf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 661ABC4CEE8;
+	Tue, 11 Feb 2025 14:23:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739283783;
+	bh=tEFiFKnKGtvJHhnZ+Z9MAfG3eTneciF2Rj7ELcFgcAU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=oABa6pkf8LLDQZ16qEUrttJD/f7oGW1lk2vKYrlkszlcqe/BOna0BRlBf+5ppsKPw
+	 xxciR9GYzR/0TRktPT3/ru6w1MWZP80BEciur0JWmfsadtHXiEb+yjxu8gl9+HPwc8
+	 0njgRcoxl1YqDl+GpfBn598syxHoyPPenfJCEMOrJ9W9PpXEL4yaRSKgJXrM2QH6PC
+	 64hHeSPeWe1CBKOSRcNsBZqArKLAZvsaptCFHUJqzxFORri2+PkAeOHl9AbWd+GjH5
+	 i1bBSUjzRl/yzrRk7Q8e9RT3lvNHhySPzSuaZIir0WQXo13SMU5jIkAX9G6WTQLh6T
+	 G4WvXbgblqtzQ==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5de7531434fso4433632a12.0;
+        Tue, 11 Feb 2025 06:23:03 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUrshAwZ1F3xz7Q4CmC1OGg9hw7AdMER6EkGQM82XqBTO12/WuoO/j4SxLomptT2LqejKPsFBflrybn@vger.kernel.org, AJvYcCW6LESS2UZA5VobTJCPGPqSyOluea1QwwRDp9H2KWOU4joN6tJ6/9aK5xGq2Ks6PFSQk7qS9tkfE5Ee98QK@vger.kernel.org, AJvYcCWUMXF91Tml0j9R16A4SU4dUm9XvgoME9OE9gYkzWY34uK/DM0SX0XceUjEQtpczSH8p8Mb3T1JIYPS7g==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmRL5QSBlb0wP4KerBLNwEMQei+TC8tLatLXczRcr+ySbNFSLr
+	200P8ZfdWlXtxlc+gyKrtSkP6JQ2wkewkRgXdiLLlJCmho6T2jsUsAgmyXbc2Vk2nABU1fq/lFU
+	uYNHCMioKin2gQ/yZ9zTCiz5CyQ==
+X-Google-Smtp-Source: AGHT+IEWjrN1dE5d5DShQ1yB2Zb6ZZNItUV8btIUpQeAAg4iby05aXF7qHbY0NoPrSJgrbi/2Q3svphGQx22vrPLJf0=
+X-Received: by 2002:a05:6402:90f:b0:5cf:43c1:6ba7 with SMTP id
+ 4fb4d7f45d1cf-5de458cd983mr19678331a12.30.1739283781948; Tue, 11 Feb 2025
+ 06:23:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net/mlx4_core: Avoid impossible mlx4_db_alloc() order
- value
-To: Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>
-Cc: Tariq Toukan <tariqt@nvidia.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Yishai Hadas <yishaih@nvidia.com>, netdev@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250210174504.work.075-kees@kernel.org>
- <3biiqfwwvlbkvo5tx56nmcl4rzbq5w7u3kxn5f5ctwsolxpubo@isskxigmypwz>
-Content-Language: en-US
-From: Tariq Toukan <ttoukan.linux@gmail.com>
-In-Reply-To: <3biiqfwwvlbkvo5tx56nmcl4rzbq5w7u3kxn5f5ctwsolxpubo@isskxigmypwz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250210-fix_arg_count-v3-1-a084a5013008@quicinc.com>
+ <Z6oclML_DC1Vnf6z@smile.fi.intel.com> <73eb84f3-8b9d-41f4-9b59-d059111a3d03@icloud.com>
+ <Z6tBlfmTFu9916LA@smile.fi.intel.com> <a682824a-1b65-4b05-9e42-3edc167600a8@icloud.com>
+In-Reply-To: <a682824a-1b65-4b05-9e42-3edc167600a8@icloud.com>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 11 Feb 2025 08:22:48 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ6wg3Q9FxKOzrnRo_s1ZznLurfsDuWJ+XVQzA5YS6Rsw@mail.gmail.com>
+X-Gm-Features: AWEUYZkm5aMd5__6uxxCRufUsNgJ0BUSAa1JYPsM0qydqkvJGXC5VeHibCcGjkA
+Message-ID: <CAL_JsqJ6wg3Q9FxKOzrnRo_s1ZznLurfsDuWJ+XVQzA5YS6Rsw@mail.gmail.com>
+Subject: Re: [PATCH v3] of: property: Increase NR_FWNODE_REFERENCE_ARGS
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Len Brown <lenb@kernel.org>, 
+	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, linux-acpi@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Zijun Hu <quic_zijuhu@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Feb 11, 2025 at 7:40=E2=80=AFAM Zijun Hu <zijun_hu@icloud.com> wrot=
+e:
+>
+> On 2025/2/11 20:24, Andy Shevchenko wrote:
+> >>>> -#define NR_FWNODE_REFERENCE_ARGS  8
+> >>>> +#define NR_FWNODE_REFERENCE_ARGS  16
+> >>> Thinking of the case, perhaps you also want
+> >>>
+> >>> static_assert(NR_FWNODE_REFERENCE_ARGS =3D=3D MAX_PHANDLE_ARGS);
+> >>>
+> >>> to be put somewhere, but I don't think we can do it in this header fi=
+le.
+> >> thank you Andy for code review.
+> >>
+> >> yes. it seems there are good location to place the static_assert().
+> >>
+> >> is it okay to associate two macros by
+> >> #define MAX_PHANDLE_ARGS NR_FWNODE_REFERENCE_ARGS
+> > I was thinking about this and I don't see how it can be done without
+> > introducing more chaos (dependency hell) into the headers. So, I won't
+> > take this path or even consider it deeper.
+> >
+>
+> i have confirmed that:
+>
+> of.h includes fwnode.h indirectly
+> fwnode.h does not include of.h directly or indirectly
 
+Only for struct fwnode_handle. I don't think we want to add to that.
+For the most part, fwnode is a layer above DT and the DT code should
+know nothing about fwnode.
 
-On 11/02/2025 2:01, Justin Stitt wrote:
-> On Mon, Feb 10, 2025 at 09:45:05AM -0800, Kees Cook wrote:
->> GCC can see that the value range for "order" is capped, but this leads
->> it to consider that it might be negative, leading to a false positive
->> warning (with GCC 15 with -Warray-bounds -fdiagnostics-details):
->>
->> ../drivers/net/ethernet/mellanox/mlx4/alloc.c:691:47: error: array subscript -1 is below array bounds of 'long unsigned int *[2]' [-Werror=array-bounds=]
->>    691 |                 i = find_first_bit(pgdir->bits[o], MLX4_DB_PER_PAGE >> o);
->>        |                                    ~~~~~~~~~~~^~~
->>    'mlx4_alloc_db_from_pgdir': events 1-2
->>    691 |                 i = find_first_bit(pgdir->bits[o], MLX4_DB_PER_PAGE >> o);                        |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>        |                     |                         |                                                   |                     |                         (2) out of array bounds here
->>        |                     (1) when the condition is evaluated to true                             In file included from ../drivers/net/ethernet/mellanox/mlx4/mlx4.h:53,
->>                   from ../drivers/net/ethernet/mellanox/mlx4/alloc.c:42:
->> ../include/linux/mlx4/device.h:664:33: note: while referencing 'bits'
->>    664 |         unsigned long          *bits[2];
->>        |                                 ^~~~
->>
->> Switch the argument to unsigned int, which removes the compiler needing
->> to consider negative values.
->>
->> Signed-off-by: Kees Cook <kees@kernel.org>
->> ---
->> Cc: Tariq Toukan <tariqt@nvidia.com>
->> Cc: Andrew Lunn <andrew+netdev@lunn.ch>
->> Cc: "David S. Miller" <davem@davemloft.net>
->> Cc: Eric Dumazet <edumazet@google.com>
->> Cc: Jakub Kicinski <kuba@kernel.org>
->> Cc: Paolo Abeni <pabeni@redhat.com>
->> Cc: Yishai Hadas <yishaih@nvidia.com>
->> Cc: netdev@vger.kernel.org
->> Cc: linux-rdma@vger.kernel.org
->> ---
->>   drivers/net/ethernet/mellanox/mlx4/alloc.c | 6 +++---
->>   include/linux/mlx4/device.h                | 2 +-
->>   2 files changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/mellanox/mlx4/alloc.c b/drivers/net/ethernet/mellanox/mlx4/alloc.c
->> index b330020dc0d6..f2bded847e61 100644
->> --- a/drivers/net/ethernet/mellanox/mlx4/alloc.c
->> +++ b/drivers/net/ethernet/mellanox/mlx4/alloc.c
->> @@ -682,9 +682,9 @@ static struct mlx4_db_pgdir *mlx4_alloc_db_pgdir(struct device *dma_device)
->>   }
->>   
->>   static int mlx4_alloc_db_from_pgdir(struct mlx4_db_pgdir *pgdir,
->> -				    struct mlx4_db *db, int order)
->> +				    struct mlx4_db *db, unsigned int order)
->>   {
->> -	int o;
->> +	unsigned int o;
->>   	int i;
->>   
->>   	for (o = order; o <= 1; ++o) {
-> 
->    ^ Knowing now that @order can only be 0 or 1 can this for loop (and
->    goto) be dropped entirely?
-> 
+> in theory, dependency between both headers should also be like this.
+>
+> So, it is simple to use below define in of.h
+> #define MAX_PHANDLE_ARGS NR_FWNODE_REFERENCE_ARGS
+>
+> >> OR
+> >> replace all MAX_PHANDLE_ARGS instances with NR_FWNODE_REFERENCE_ARGS
+> >> ?
+> > This sounds plausible to me, but you need a blessing from OF people as
+> > the naming may be a bit confusing (for them) as "phandle" is well estab=
+lished
+> > term in OF realm.
+>
+> phandle is a type of DT firmware node reference. so this solution
+> seems suitable as well.
+>
+> struct software_node_ref_args also uses NR_FWNODE_REFERENCE_ARGS directly=
+.
+>
+> let us wait for more comments.
 
-Maybe I'm missing something...
-Can you please explain why you think this can be dropped?
+I prefer what you have here with the static_assert() added.
 
-
->    The code is already short and sweet so I don't feel strongly either
->    way.
-> 
->> @@ -712,7 +712,7 @@ static int mlx4_alloc_db_from_pgdir(struct mlx4_db_pgdir *pgdir,
->>   	return 0;
->>   }
->>   
->> -int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, int order)
->> +int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, unsigned int order)
->>   {
->>   	struct mlx4_priv *priv = mlx4_priv(dev);
->>   	struct mlx4_db_pgdir *pgdir;
->> diff --git a/include/linux/mlx4/device.h b/include/linux/mlx4/device.h
->> index 27f42f713c89..86f0f2a25a3d 100644
->> --- a/include/linux/mlx4/device.h
->> +++ b/include/linux/mlx4/device.h
->> @@ -1135,7 +1135,7 @@ int mlx4_write_mtt(struct mlx4_dev *dev, struct mlx4_mtt *mtt,
->>   int mlx4_buf_write_mtt(struct mlx4_dev *dev, struct mlx4_mtt *mtt,
->>   		       struct mlx4_buf *buf);
->>   
->> -int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, int order);
->> +int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, unsigned int order);
->>   void mlx4_db_free(struct mlx4_dev *dev, struct mlx4_db *db);
->>   
->>   int mlx4_alloc_hwq_res(struct mlx4_dev *dev, struct mlx4_hwq_resources *wqres,
->> -- 
->> 2.34.1
->>
-> 
-> Justin
-> 
-
+Rob
