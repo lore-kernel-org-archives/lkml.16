@@ -1,139 +1,165 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07FE1CD15
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53932147F8
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739278835; cv=none; b=Y0vCZ3N4mKgXPVZh8iq2wihr837AWWWgyGp9x1EcDydD3mfjIpddMeQqeDsYuuvwAZtbjFGtMt/Sq/2bclwHkOdKLIMO7+TzQkMO0L7empQi5wkVydaCVZ2geeo0djCDNpbNiSlJg0Yg51Ux7hm9yoDQzPUtQPHPUm29yvXGvZA=
+	t=1739278837; cv=none; b=VMDxDXUQrArbUzjCm3FVq3oJpwkdnFsk8KL2vM2xbTO1Q4WBjV5sb+HKAF8xSscvK3IIo2K6LXQywuRwZ4ZcLC8Nd5tC9yA4g/o0ROyhullMTy3b93ZlfdzYpAn6EBGm+4vgGb2HB7ieEZEdOGub2VXjDILACiIjEl0Lq/uYdNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739278835; c=relaxed/simple;
-	bh=RB5D6um8BkEYPtBDD00tcZIzsKoAR5fwT/hd27yWS3s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hSooh03cSFeCy73wclJGwa5RGBJpu/J92VODL6NVVxj+qiCwRpgVPhlUKRdIqc7zJwo/rTCpCMlPeHgfEALF9qY62mYjVMmlI+KQt73e3kf15iiEsUA3QtxPny4LPHQudK1n6i5D6ZjvzwD3lbgxpOqCL0kZDZkkztv0N2f/v24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=kMkRfajT; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1739278837; c=relaxed/simple;
+	bh=/aMiQ3ZNfwhbBf5f1lgUUnJouB+XgZQzCmgT7j7ornw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=uZMESKTHPJ+MqdWQYb0Cok56OsrblPz6asiS6ktmyOzCCZVVz/zj6THimCJZvGLB+LlGpXlVyZyyO3eTDFoMhCHUfky6D7tantvy38uFEdoZ0jvVstHBc+ON/RYRiJMM8WxX6fDl27GdhLbmDTSDxBRP3hB6kGgHfJmysbbVdrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KkgLzWy5; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="kMkRfajT"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id F271A6DF;
-	Tue, 11 Feb 2025 13:59:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1739278754;
-	bh=RB5D6um8BkEYPtBDD00tcZIzsKoAR5fwT/hd27yWS3s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kMkRfajT/xV1DEuNFX//a0GdnSSZYNTrxmj5D3RodMs6r6FxF09SKUY41wTddbwsJ
-	 4kO4Pr8D5PGuLOUba1+DFL+unljep86gd+mqgf/tH6tXwt56AsYU4ovD/KrhwIgfOW
-	 G3hB+wvHE6UPa+Do53mZoVqvW4ypo1YBfFaNeu6g=
-Message-ID: <78d22bdf-8a0c-4881-b648-3afe2b02d158@ideasonboard.com>
-Date: Tue, 11 Feb 2025 15:00:28 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KkgLzWy5"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43935bcec79so13005415e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 05:00:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739278834; x=1739883634; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=W7gYg59+sDZQNRnefhKDnqvbzcvbYlsLc2LHTucHdDo=;
+        b=KkgLzWy5VzzY6XvtG/G1kNjhK5KLd5g7nXrTzuylpuTTtvaH6uj7yTlGK26aMECEQX
+         Rps8HrNWj6NSKBahtnv/uOSMMstiAESmSBXFRWXdw0K9f5VGIhTnMdkfdm08fLIvBBNV
+         Pba6x8PWviEB/KWJWhhtM6XodICeqPjlLmSVU9SSgm5y74wD0OP4BaCtCkiUGhJAuS2u
+         3DC0IGUmXAGKib0kMGaC2kOCU4KaBAQR7zbumR6igUoXGL4fWpvB/j/Yp1aT0wr0l38+
+         SBwaTQ83msb+Dy/JeKGyIARkLw06V66epiSui6DK1/O2ogukF8SfSHXF4rloXIGp4dfI
+         gRbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739278834; x=1739883634;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=W7gYg59+sDZQNRnefhKDnqvbzcvbYlsLc2LHTucHdDo=;
+        b=uHIi/BNTg2xmrbnQh/IAvso3hvkwjxYQMpcz72xrTBA12SPsguK61AWfWzvckdOw6X
+         EIscjYXVi4Eu2un2Hvh/me7uuRdl40DXQfQ+O9eh+NmbG+G9SIt7iiaWWimZX0XK/vSd
+         rYVM2ZPHN8edXtAL9d/SaIzyrfzscCQw1/LAXbVcPGwpZhSoeBg9yeYOupssvZs2E58u
+         FH6ZH0kKrNOyIipbXQMwqfKnDgwiT7WVmrHv0kReDRM6nH6ydWxnPq/nZwubw0lSFU5c
+         Xf/1ZzuqRde0N6MWVRswYzvWd4qE9rPr2GbUEx3sTbiCJsZD/SoYTBJ4m7GcvMtRt8Vw
+         4wXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVDCsRV8Fcq75bsKxPq92ISpBQvXf6zsF5BxoCYEiV3CBKvQ1uDUcsScGE0POJFBLiGQnYn9CBAGb8+boM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6Q8YY3+keJBK1SZ3YusN9XdjNbszwEH3gyOM10auP5GGZ4uOR
+	t39N7VeDkzAOpOGA7ZipeJqS+88+OCWIqx3v2qDWA60zI64Flcc7oERkPdZUuYwJcJvSerAMz10
+	HbqKwfHi6/A==
+X-Google-Smtp-Source: AGHT+IHwr3r+Gl9rsjjNjLPgMI6GwOLR7Cj0VDO2gN5+9hWA4l0IXZ1OmyM9sLdTtfqcOymt28f8pEh85VJfxw==
+X-Received: from wmsp2.prod.google.com ([2002:a05:600c:1d82:b0:439:4a82:6746])
+ (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1f09:b0:439:4d37:7f49 with SMTP id 5b1f17b1804b1-4394d37819emr25173465e9.28.1739278834302;
+ Tue, 11 Feb 2025 05:00:34 -0800 (PST)
+Date: Tue, 11 Feb 2025 13:00:23 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 10/10] drm: xlnx: zynqmp: Fix max dma segment size
-To: Sean Anderson <sean.anderson@linux.dev>,
- Vishal Sagar <vishal.sagar@amd.com>,
- Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Michal Simek <michal.simek@amd.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250115-xilinx-formats-v2-0-160327ca652a@ideasonboard.com>
- <20250115-xilinx-formats-v2-10-160327ca652a@ideasonboard.com>
- <487916d8-da54-4932-81dd-f139870a734a@linux.dev>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <487916d8-da54-4932-81dd-f139870a734a@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAOdJq2cC/x3MQQqAIBBA0avErBPUEqKrRAuZJp2FGmoRRHdPW
+ r7F/w8UykwF5u6BTBcXTrFB9R2gt9GR4K0ZtNRGaqVECKez1VMWmEKgWMWA1uyjmqQhhNYdmXa +/+eyvu8H7kVt+GMAAAA=
+X-Change-Id: 20250211-mmugather-comment-3ca5f41805ec
+X-Mailer: b4 0.15-dev
+Message-ID: <20250211-mmugather-comment-v1-1-1ac1e0c765d2@google.com>
+Subject: [PATCH] mm/mmu_gather: Update comment on RCU freeing
+From: Brendan Jackman <jackmanb@google.com>
+To: Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Nick Piggin <npiggin@gmail.com>, 
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>, linux-arch@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Brendan Jackman <jackmanb@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-Hi,
+Some recent discussion on LMKL [0] brought up some interesting and
+useful additional context on RCU-freeing for pagetables.
 
-On 06/02/2025 21:48, Sean Anderson wrote:
-> Hi Tomi,
-> 
-> On 1/15/25 04:03, Tomi Valkeinen wrote:
->> Fix "mapping sg segment longer than device claims to support" warning by
->> setting the max segment size.
->>
->> Fixes: d76271d22694 ("drm: xlnx: DRM/KMS driver for Xilinx ZynqMP DisplayPort Subsystem")
->> Reviewed-by: Sean Anderson <sean.anderson@linux.dev>
->> Tested-by: Sean Anderson <sean.anderson@linux.dev>
->> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
->> ---
->>   drivers/gpu/drm/xlnx/zynqmp_dpsub.c | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/xlnx/zynqmp_dpsub.c b/drivers/gpu/drm/xlnx/zynqmp_dpsub.c
->> index f5781939de9c..a25b22238e3d 100644
->> --- a/drivers/gpu/drm/xlnx/zynqmp_dpsub.c
->> +++ b/drivers/gpu/drm/xlnx/zynqmp_dpsub.c
->> @@ -231,6 +231,8 @@ static int zynqmp_dpsub_probe(struct platform_device *pdev)
->>   	if (ret)
->>   		return ret;
->>   
->> +	dma_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(32));
->> +
->>   	/* Try the reserved memory. Proceed if there's none. */
->>   	of_reserved_mem_device_init(&pdev->dev);
->>   
->>
-> 
-> Can you apply this patch? I ran into this warning again today and I think this change
-> is independent from the rest of the series.
+Note down some extra info in here, in particular a) be concrete about
+the reason why an arch might not have an IPI and b) add the interesting
+paravirt details.
 
-Yes, I'll push this.
+[0] https://lore.kernel.org/linux-kernel/20250206044346.3810242-2-riel@surriel.com/
 
-  Tomi
+---
+Note the Lore link in here is referring to the base of the thread. The
+mail I wanted to actually refer to is not yet on Lore as it's not
+currently updating.
+
+Here's what I have in my mailbox:
+
+On Tue, 11 Feb 2025 at 12:07, Peter Zijlstra <peterz@infradead.org> wrote:
+> > It would be nice to update the CONFIG_MMU_GATHER_RCU_TABLE_FREE
+> > comment in mm/mmu_gather.c to mention INVLPG alongside "Architectures
+> > that do not have this (PPC)"
+>
+> Why? This is just one more architecture that does broadcast.
+
+Hmm yeah, I didn't really make the leap from "doesn't do an IPI" to
+"that just means it uses broadcast TLB flush". In that light I can see
+how it's "just another architecture".
+
+I do think it would make sense to be more explicit about that, even
+though it seems obvious now you point it out. But it's not really
+relevant to this patchset.
+
+> - and while that's being updated it would
+> > also be useful to note down the paravirt thing you explained above,
+> > IMO it's pretty helpful to have more examples of the concrete usecases
+> > for this logic.
+>
+> Look at kvm_flush_tlb_multi() if you're interested. The notable detail
+> is that is avoids flushing TLB for vCPUs that are preempted, and instead
+> lets the vCPU resume code do the invalidate.
+
+Oh that actually looks like a slightly different case from what Rik mentioned?
+
+> some paravirt TLB flush implementations
+> handle the TLB flush in the hypervisor, and will do the flush
+> even when the target CPU has interrupts disabled.
+
+Do we have
+
+a) Systems where the flush gets completely pushed into the hypervisor
+- xen_flush_tlb_multi()?
+
+b) Systems where the guest coordinates with the hypervisor to avoid
+IPI-ing preempted vCPUs?
+
+Maybe I can send a separate patch to note this in the commentary, it's
+interesting and useful to know.
+
+Signed-off-by: Brendan Jackman <jackmanb@google.com>
+---
+ mm/mmu_gather.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+index 7aa6f18c500b2d292621ec308f575ed4ddbdcd3e..db7ba4a725d6ad445eb7f35f0b34e0d4364eb693 100644
+--- a/mm/mmu_gather.c
++++ b/mm/mmu_gather.c
+@@ -246,8 +246,16 @@ static void __tlb_remove_table_free(struct mmu_table_batch *batch)
+  * IRQs delays the completion of the TLB flush we can never observe an already
+  * freed page.
+  *
+- * Architectures that do not have this (PPC) need to delay the freeing by some
+- * other means, this is that means.
++ * Not all systems IPI every CPU for this purpose:
++ *
++ * - Some architectures have HW support for cross-CPU synchronisation of TLB
++ *   flushes, so there's no IPI at all.
++ *
++ * - Paravirt guests can do this TLB flushing in the hypervisor, or coordinate
++ *   with the hypervisor to defer flushing on preempted vCPUs.
++ *
++ * Such systems need to delay the freeing by some other means, this is that
++ * means.
+  *
+  * What we do is batch the freed directory pages (tables) and RCU free them.
+  * We use the sched RCU variant, as that guarantees that IRQ/preempt disabling
+
+---
+base-commit: 266a5a879d40554630c7e485cb5576227759c7a0
+change-id: 20250211-mmugather-comment-3ca5f41805ec
+
+Best regards,
+-- 
+Brendan Jackman <jackmanb@google.com>
 
