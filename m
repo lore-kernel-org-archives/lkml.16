@@ -1,82 +1,75 @@
-Received: from mail.nfschina.com (unknown [42.101.60.213])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id D6D4226BD8B;
-	Tue, 11 Feb 2025 02:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2FAB14A629;
+	Tue, 11 Feb 2025 02:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739239287; cv=none; b=O8J/qhhdKGDdNRdTMGfWwckmSzLeT6ijfWK43EIn548BRqD6YJXWSjf9rP+tP2KE1DrW/H77KO6inUd9RhAx3wjuxtPQHOASNHUkUoQqXej8idXypNUqlqZX6zAVl/xncZobn63fEbnN3GTN+W94haQIA3iKwhqDkw7I8iZc0DQ=
+	t=1739239290; cv=none; b=MephMoivqMHXosxDrmHZCgEby3PwBMr+UkbGmtVp7a4ZWgzpOInEGjI5Rm9ms8Scb+llFc3i6ldRWN13WCKgmBo06GTVswqr+WQQKVu+Da8mbTrYkY7EHL2HovHDqVtb9laYFc2uqA6QPDDm6wdJPzbllEa6F27PiikG/rwsKdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739239287; c=relaxed/simple;
-	bh=3ax8vtqSe9pTLglNHy6vFAddA/Wf6iiGjIJ5CuYXdik=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=tgFHA6vc8hc94OYMbEJPHJRVlU6gAKVjqD36tJGNC/Gp5ssSsmOvIZ+nGH+nQ0eTwL7wUrancb9GHRsJc5o+cxc0XIJXCSt107CTZPNFfBZ+4k697ilMzCh7WhSCSFGwvy2FgThg4QbOEpQrPZ7hI2JCUSxmWSHs2iCGz7XIImg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from localhost.localdomain (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id A0DBA602A7271;
+	s=arc-20240116; t=1739239290; c=relaxed/simple;
+	bh=Blz7EHW5cCaDL+sdgoXm7KdhnUxuoljlTGlluE0hMuY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=n2MPVULB9ZaB91uaQEesKdBhWejh4SjgVoFY727XhfkVsncJZcFnVAzPJJ1ta6TiEFLGaNhFDgDhapQ8Wy++vATAfNsUNrPylWZ9KFR3rtn8kitTbMAdMsgiw4788Op90Y/cvbJVMTOjZSEb7vPmj0dlb2vIbQIovgrSMcjPCF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8AxDGtvr6pnqc5xAA--.1495S3;
 	Tue, 11 Feb 2025 10:01:19 +0800 (CST)
-X-MD-Sfrom: suhui@nfschina.com
-X-MD-SrcIP: 180.167.10.98
-From: Su Hui <suhui@nfschina.com>
-To: jacek.lawrynowicz@linux.intel.com,
-	min.ma@amd.com,
-	lizhi.hou@amd.com,
-	ogabbay@kernel.org
-Cc: Su Hui <suhui@nfschina.com>,
-	quic_jhugo@quicinc.com,
-	George.Yang@amd.com,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH v2] accel/amdxdna: Add missing include linux/slab.h
-Date: Tue, 11 Feb 2025 09:53:55 +0800
-Message-Id: <20250211015354.3388171-1-suhui@nfschina.com>
-X-Mailer: git-send-email 2.30.2
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMBxLsdur6pnLz8LAA--.44545S3;
+	Tue, 11 Feb 2025 10:01:19 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] LoongArch: KVM: Fix typo issue about GCFG feature detection
+Date: Tue, 11 Feb 2025 10:01:16 +0800
+Message-Id: <20250211020118.3275874-2-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20250211020118.3275874-1-maobibo@loongson.cn>
+References: <20250211020118.3275874-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxLsdur6pnLz8LAA--.44545S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-When compiling without CONFIG_IA32_EMULATION, there can be some errors:
+This is typo issue and misusage about GCFG feature macro. The
+code is wrong, only that It does not cause obvious problem since
+GCFG is set again on vCPU context switch.
 
-drivers/accel/amdxdna/amdxdna_mailbox.c: In function ‘mailbox_release_msg’:
-drivers/accel/amdxdna/amdxdna_mailbox.c:197:2: error: implicit declaration
-of function ‘kfree’.
-  197 |  kfree(mb_msg);
-      |  ^~~~~
-drivers/accel/amdxdna/amdxdna_mailbox.c: In function ‘xdna_mailbox_send_msg’:
-drivers/accel/amdxdna/amdxdna_mailbox.c:418:11: error:implicit declaration
-of function ‘kzalloc’.
-  418 |  mb_msg = kzalloc(sizeof(*mb_msg) + pkg_size, GFP_KERNEL);
-      |           ^~~~~~~
-
-Add the missing include.
-
-Fixes: b87f920b9344 ("accel/amdxdna: Support hardware mailbox")
-Signed-off-by: Su Hui <suhui@nfschina.com>
-Reviewed-by: Lizhi Hou <lizhi.hou@amd.com>
+Fixes: 0d0df3c99d4f ("LoongArch: KVM: Implement kvm hardware enable, disable interface")
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
-v2:
- - move the header to the include block above and keep it sorted(Jacek Lawrynowicz).
+ arch/loongarch/kvm/main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- drivers/accel/amdxdna/amdxdna_mailbox.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/accel/amdxdna/amdxdna_mailbox.c b/drivers/accel/amdxdna/amdxdna_mailbox.c
-index 814b16bb1953..e5301fac1397 100644
---- a/drivers/accel/amdxdna/amdxdna_mailbox.c
-+++ b/drivers/accel/amdxdna/amdxdna_mailbox.c
-@@ -8,6 +8,7 @@
- #include <linux/bitfield.h>
- #include <linux/interrupt.h>
- #include <linux/iopoll.h>
-+#include <linux/slab.h>
- #include <linux/xarray.h>
+diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+index bf9268bf26d5..f6d3242b9234 100644
+--- a/arch/loongarch/kvm/main.c
++++ b/arch/loongarch/kvm/main.c
+@@ -303,9 +303,9 @@ int kvm_arch_enable_virtualization_cpu(void)
+ 	 * TOE=0:       Trap on Exception.
+ 	 * TIT=0:       Trap on Timer.
+ 	 */
+-	if (env & CSR_GCFG_GCIP_ALL)
++	if (env & CSR_GCFG_GCIP_SECURE)
+ 		gcfg |= CSR_GCFG_GCI_SECURE;
+-	if (env & CSR_GCFG_MATC_ROOT)
++	if (env & CSR_GCFG_MATP_ROOT)
+ 		gcfg |= CSR_GCFG_MATC_ROOT;
  
- #define CREATE_TRACE_POINTS
+ 	write_csr_gcfg(gcfg);
 -- 
-2.30.2
+2.39.3
 
