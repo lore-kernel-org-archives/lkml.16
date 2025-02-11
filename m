@@ -1,49 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2066.outbound.protection.outlook.com [40.107.236.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C211B1E9B06;
-	Tue, 11 Feb 2025 06:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739254777; cv=none; b=nrgRgr28HdgpsyDzWFkEER8UEvuhNdxi0Xp3RyytPQPL4gSQPFltJDabD1bnsbRPL5mDCVrseJtPup0HMZJXOYtmnJtKdR59oe21cIOtE8Ojhsw6fz/+jWeQe1tXR2XEjxKlN8afPfMY2FAu8N5suKLwUdcZIw+OXE6TMa6o3lo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739254777; c=relaxed/simple;
-	bh=p/Z2Ab/2lyYQoWXm0SaYttyW5aZICXXJG85lswoPWzo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ELyfpNd0ltzRxZJGWp1cEhH2ypCx9ygjG7FLAPGmwQW5Yyw266BNUiJNF5IE3NOmlbO0i16SY/yuZIVxtJPJwLr1Emzg8F2Afw4f4+LD9ZmgUEjIYR/Hg5bAIU+Dck/lTkl0r4UkS2TEphR3N4hWx94SqHP3wYxN+ZKySzy13r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DD9772i5; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2871026BDB9;
+	Tue, 11 Feb 2025 06:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739254825; cv=fail; b=DA2gis+5aXc99ypVcHMbxhwRZGSZCXUraHUQNZLvIfw+LuWzRkLm4ADMdLrw/p9S4NS7276goJAcY+ggbwvOHeiJv4I82aBbt6k1ewBMjDvOsCZyv1R4nyZrSzmeU27BDNwIeFzSNdiEqWnFtzh39+3VwUXYshxnRv+5fk0Azps=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739254825; c=relaxed/simple;
+	bh=IcQIFwLaNbaDyebpicyPbnfRdaTtEXHc5w3VRbc0J+o=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ccnjsTgZrvb7UrVolerv+KbCmQDwMIUNC2pIMwgvTiHo3qnqKzXWeoWxgnNsUYNHTeeTnSq1FWlprCJ0/eoc+wwir97MWV93hSYZCz8b4u3NCkwmTMARHvG2VPA+k0GT4Rz2LAhT2lQhWbZ7FqCxxQKd8Vad/MAL1oKS8y05hsk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=WTZqMji7; arc=fail smtp.client-ip=40.107.236.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DD9772i5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CC26C4AF09;
-	Tue, 11 Feb 2025 06:19:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739254777;
-	bh=p/Z2Ab/2lyYQoWXm0SaYttyW5aZICXXJG85lswoPWzo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DD9772i5e81KhyKNMc8XBSZXjBl5TVAk2U6RhD491ygXQaApAvsZq8rhla9j/ihRD
-	 6JR4wlt5HhMn/STVYnD0ozwhKIkvjBiaziFpI2athuEsEpv+NKn8QoQJxIFfmUasYU
-	 /P9+L3iGfOBxbt92bggXDWVxE1tNNuFsWljdw3P3fQ/l8GEjDX1vocE885P/BQXeR/
-	 m9GyWIxy+PihOKuEX0NZ1QGOMHz6ZYtchyToPw7XZi66cnfrNoSMA3j/EOOF8tb0ei
-	 N1FBmN8oO0fe0xbEcY2ailwmdv+prnHRK3zmCOkql1Tj6+mHeDLA+0SBuuBrxYEaRW
-	 Me6E76P0iE3XQ==
-Received: from mchehab by mail.kernel.org with local (Exim 4.98)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1thjcN-00000008Y6e-1KMf;
-	Tue, 11 Feb 2025 07:19:35 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	Akira Yokosawa <akiyks@gmail.com>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] docs: extensions: don't use utf-8 syntax for descriptions
-Date: Tue, 11 Feb 2025 07:19:03 +0100
-Message-ID: <8a42f6be53464af4b866492a7e9ddf29c0429997.1739254187.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1739254187.git.mchehab+huawei@kernel.org>
-References: <cover.1739254187.git.mchehab+huawei@kernel.org>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="WTZqMji7"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UdAj1t0m5yppPGhDgGq0zNqfFBSg2OX4X6dKtatxhGxafPJBUlRB2FWcNGFMWhcFKsCJYDnWQB4ynuG5TY/DIarsgzATUPX5HHbW4GMl1OuslR3mlj/yL7NJ1UXMkq8JHUJjwnvAPo9zSnXXn3nZVQXzNutS8DcdKWsawPMgxwrsfw3BZWq5LY0oog+mLoncYjV5IQs1cKb7YmviLmz9TbirdlxdMtC7QdaMmZTwzySmcRuvTknYw+Ou4WKHAkH+eMmpKf0Efxypa47dAMNO1KK1eTZ2HydVx4Ag9r4ryT2RmfoHYAALfkpAfNAcH4F3it33twNqpaZWE9NSEXHxpw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pSjb4RV15p8hLhIZgv8iMIG5Fj6gXzt5L6oUu3p4q60=;
+ b=ktS8VWIw9nmmBhsYAnYpOY5g9EIZs/r7rOMcrm+1RO2VLbWMuy5l2l5kZ5XL7ja3x44cH/8FQ49QWOIaVNvGojMz48BWxtQR2ER1pOLNr2ep3xzX/KI6om5sGqnFwNnsZ/YS8NlGw4xu4C/ZQ2IHGmypoe/PcdxFKaJ0ZihnP7uZ/dMJ7f6/KekIpkhAjPD8ce51xVW4CDMtdqTIpglhYdbNDI+pmJvSFt6AmAaoGfaPuY5Ds5KdIHCc9JDr6ZZSggujMEH5/EVWol2S8qGMmNqZ6v2MHgCIfQMn8r7Ni9YaiAatrsERcK7ODHRU70ogTZ/nfnqaahL0cqmwnYPVmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=linuxfoundation.org
+ smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
+ header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pSjb4RV15p8hLhIZgv8iMIG5Fj6gXzt5L6oUu3p4q60=;
+ b=WTZqMji7oGuCF09mnfGa+a9KQmAtWNAp/sv6XztKaGBd3CtMX0h27QNDfLKG9gw3dMS5Y45nOocAUva4comeRcQdppfyoj8tuc+1C7NKEOR4FvODZ+MvToQzmSTpwOMfHKw9hIY7gj3b8GjlQR8TaRTm+X/bdBd8xqTix7Nic/XJBMDc/prSCUtv3QWtDxlIRlSnkD6d5O1lbgL6R6hILtY8FooCP9ErWnV+pevvoETCmTzHeD4+ykHcVWgHRvEYm5yvhKTxoiDNfYKlw6jc0tRDHnj9bfP+NUybX1ujarEp4r6CZ9zlsNeQN2ebuLvadZzRBadMWM/Xod8Ga00mYA==
+Received: from MW4PR03CA0199.namprd03.prod.outlook.com (2603:10b6:303:b8::24)
+ by DM4PR12MB5916.namprd12.prod.outlook.com (2603:10b6:8:69::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Tue, 11 Feb
+ 2025 06:20:16 +0000
+Received: from SJ1PEPF000023CE.namprd02.prod.outlook.com
+ (2603:10b6:303:b8:cafe::23) by MW4PR03CA0199.outlook.office365.com
+ (2603:10b6:303:b8::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.31 via Frontend Transport; Tue,
+ 11 Feb 2025 06:20:16 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SJ1PEPF000023CE.mail.protection.outlook.com (10.167.244.10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8445.10 via Frontend Transport; Tue, 11 Feb 2025 06:20:16 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 10 Feb
+ 2025 22:20:06 -0800
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail205.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 10 Feb
+ 2025 22:20:05 -0800
+Received: from NV-2XGVVG3.nvidia.com (10.127.8.12) by mail.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Mon, 10 Feb 2025 22:20:01 -0800
+From: Kartik Rajput <kkartik@nvidia.com>
+To: <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <thierry.reding@gmail.com>,
+	<jonathanh@nvidia.com>, <hvilleneuve@dimonoff.com>, <arnd@kernel.org>,
+	<geert+renesas@glider.be>, <robert.marko@sartura.hr>,
+	<schnelle@linux.ibm.com>, <andriy.shevchenko@linux.intel.com>,
+	<linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>
+Subject: [PATCH v2 0/2] Add support for Tegra UART Trace Controller (UTC) client
+Date: Tue, 11 Feb 2025 11:49:43 +0530
+Message-ID: <20250211061945.18836-1-kkartik@nvidia.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,259 +81,78 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000023CE:EE_|DM4PR12MB5916:EE_
+X-MS-Office365-Filtering-Correlation-Id: d857861d-602b-4450-048a-08dd4a6426c3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|1800799024|36860700013|376014|82310400026|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?7D1NNzadxT2k81jcw6oViB4o8LKjuunrEgTLk085LZCR16xhk5SxTHhqKIEI?=
+ =?us-ascii?Q?ZQQysajqzS6Z5gZo66GMhKHBB515u29kfZUhV5K41Aj+OgdBhCTA+F+qV0cn?=
+ =?us-ascii?Q?w9HuP6i3ndOakOCjRiOxxMbZp6UwVd4YTrRfl6D99nz4XvKwnnVaf07dnOSS?=
+ =?us-ascii?Q?qOSjQTlVcijioJQ+bLFt+U2Zv9Th+pxWfT8Qgwr/mYabOKplLHnWFXGIh9tp?=
+ =?us-ascii?Q?MQeCDNGP2J+lOdEqjABeRysAyH0vqa590qUvEmT/lwBwlNifPGG1oajZlrae?=
+ =?us-ascii?Q?yRR4CT7aHCur78EJCNP3chDSQPvW+DW++F544VOAxQ412s8re5c8MT1igznC?=
+ =?us-ascii?Q?Us64d0sRlbQ2ZyFwJAD7DTn6NQR7jU8fahA9eEqRTZlwaMGE9sqbXrRpthNL?=
+ =?us-ascii?Q?3EsjDFiLNG2I7AwLGvoz0+sH+Ro3her+xnPv7QK/BK8nw9/ADWQ7Pu+4bbeD?=
+ =?us-ascii?Q?m5BlYP0qc0l5WrTrHAFGv94bvecEMa5fJebFfgYk1V+vErZWCzy3d98R5Cud?=
+ =?us-ascii?Q?eB7blIpESldaOKZ0oyK3edrJVM36mNfpOCIeI87uMlZPDEfhk2kj6q0yeF9+?=
+ =?us-ascii?Q?Vbhc4iOS/j2iU04qXd+N+PxtJeb1/K7g8Wq7Tdx3wKBTzRLy2OrEKnzba/4W?=
+ =?us-ascii?Q?lqcHonjFYit1Nec/sok/f0hYLGv3HwQ70vJVrJPPY0Vdj4TsQAVqWYyTWVdf?=
+ =?us-ascii?Q?h2bv2BiVQDjtuODynNyeaKqO3AywDsTYMo1IsySUgIDwEBuQQazECHTcmNFp?=
+ =?us-ascii?Q?zmEvS8o3R0N5wT72PCOPkshPLUAptvD3eE1T+mwiX5mnGzlCMXi9uGS9vm3I?=
+ =?us-ascii?Q?nqFjFrIN931PGXI7/MJYzXOwFOKWn/H6Y7Zp0+NuOZNyJLVSCtPzbW+y4fMN?=
+ =?us-ascii?Q?ifyZvRAnFDEeZBQG/AHhF8V8kpQ9j0VRtanQEMXUsF7Sm7KIuqoFvab00lq2?=
+ =?us-ascii?Q?P0sH6O69/0CGut8M2DmJqj5pD1nHkAsozkc/aH0vhKHLNthU1FxIg5yxHtDJ?=
+ =?us-ascii?Q?d2ui15j7uoGUXaw4Svy6z+HC4h4wpXP/mJXYwdj+dFlwH9k3bi5wf5gocnTC?=
+ =?us-ascii?Q?di+m3JpZse8qDvouWAlcBDYmsSTQLzpQ+bQnrE+GXEiDTyGziP9dbGh3+aO7?=
+ =?us-ascii?Q?49oejgWh5O2kMUWCZak2nzUAR4aKgKgHJHt1ZQAWyFSttObV8J07z6bZrHVd?=
+ =?us-ascii?Q?NJ0O+VqUHgM+0YKzEAmmiPscY3JAmrXS+s8Hu6VtCr91j17WSdbIk+7JY4ty?=
+ =?us-ascii?Q?EeCtOq/eguYHgaDyewTUOkp/hxm2GEuFdVrbHpm+mQnyzYb5pSHIey9Hjo61?=
+ =?us-ascii?Q?v1hu0ZgCzEq2SVjWU72EjGq+6QQibwbaMtq80wHD1J1bjjPQA1rQ63JWPkee?=
+ =?us-ascii?Q?/fb84IPno+qS2NcO/cDmZ4SZFNG6Llu9b6EjSPw6FZfoh+PZ6BlZTjc5ZZ9k?=
+ =?us-ascii?Q?yfHIzUIYZaX4T3DxfnM8TrvNRtpMnFULcn3aqyuar6sT8XBwgABN50ZrNOuh?=
+ =?us-ascii?Q?KgG2x/DSxykGSHY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(36860700013)(376014)(82310400026)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 06:20:16.3665
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d857861d-602b-4450-048a-08dd4a6426c3
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF000023CE.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5916
 
-None of the descriptions at the Sphinx extensions are using
-non-ascii characters, so no need to place them under u"""
-notation.
+The Tegra UTC (UART Trace Controller) is a hardware controller that allows
+multiple systems within the Tegra SoC to share a hardware UART interface.
+It supports up to 16 clients, with each client having its own interrupt and a
+FIFO buffer for both RX (receive) and TX (transmit), each capable of holding
+128 characters.
 
-Also, according with:
-	https://docs.python.org/3/deprecations/pending-removal-in-3.16.html
+The Tegra UTC uses 8-N-1 configuration and operates on a pre-configured
+baudrate, which is configured by the bootloader.
 
-the 'u' format code is scheduled to be removed in Python 3.16.
+Kartik Rajput (2):
+  dt-bindings: serial: Add bindings for nvidia,tegra264-utc
+  serial: tegra-utc: Add driver for Tegra UART Trace Controller (UTC)
 
-So, let's just use """.
+ .../bindings/serial/nvidia,tegra264-utc.yaml  |  73 ++
+ drivers/tty/serial/Kconfig                    |  23 +
+ drivers/tty/serial/Makefile                   |   1 +
+ drivers/tty/serial/tegra-utc.c                | 622 ++++++++++++++++++
+ 4 files changed, 719 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/nvidia,tegra264-utc.yaml
+ create mode 100644 drivers/tty/serial/tegra-utc.c
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/sphinx/cdomain.py             |  4 ++--
- Documentation/sphinx/kernel_abi.py          |  6 +++---
- Documentation/sphinx/kernel_feat.py         |  4 ++--
- Documentation/sphinx/kernel_include.py      |  4 ++--
- Documentation/sphinx/kfigure.py             | 10 +++++-----
- Documentation/sphinx/load_config.py         |  2 +-
- Documentation/sphinx/maintainers_include.py |  4 ++--
- Documentation/sphinx/rstFlatTable.py        | 10 +++++-----
- 8 files changed, 22 insertions(+), 22 deletions(-)
-
-diff --git a/Documentation/sphinx/cdomain.py b/Documentation/sphinx/cdomain.py
-index e6959af25402..6596fd00663f 100644
---- a/Documentation/sphinx/cdomain.py
-+++ b/Documentation/sphinx/cdomain.py
-@@ -1,6 +1,6 @@
- # -*- coding: utf-8; mode: python -*-
- # pylint: disable=W0141,C0113,C0103,C0325
--u"""
-+"""
-     cdomain
-     ~~~~~~~
- 
-@@ -145,7 +145,7 @@ class CObject(Base_CObject):
-     }
- 
-     def handle_func_like_macro(self, sig, signode):
--        u"""Handles signatures of function-like macros.
-+        """Handles signatures of function-like macros.
- 
-         If the objtype is 'function' and the signature ``sig`` is a
-         function-like macro, the name of the macro is returned. Otherwise
-diff --git a/Documentation/sphinx/kernel_abi.py b/Documentation/sphinx/kernel_abi.py
-index e017b0299953..db6f0380de94 100644
---- a/Documentation/sphinx/kernel_abi.py
-+++ b/Documentation/sphinx/kernel_abi.py
-@@ -2,7 +2,7 @@
- # coding=utf-8
- # SPDX-License-Identifier: GPL-2.0
- #
--u"""
-+"""
-     kernel-abi
-     ~~~~~~~~~~
- 
-@@ -55,7 +55,7 @@ path = os.path.join(srctree, "Documentation/ABI")
- _kernel_abi = None
- 
- def get_kernel_abi():
--    u"""
-+    """
-     Initialize kernel_abi global var, if not initialized yet.
- 
-     This is needed to avoid warnings during Sphinx module initialization.
-@@ -81,7 +81,7 @@ def setup(app):
- 
- 
- class KernelCmd(Directive):
--    u"""KernelABI (``kernel-abi``) directive"""
-+    """KernelABI (``kernel-abi``) directive"""
- 
-     required_arguments = 1
-     optional_arguments = 3
-diff --git a/Documentation/sphinx/kernel_feat.py b/Documentation/sphinx/kernel_feat.py
-index 03ace5f01b5c..e3a51867f27b 100644
---- a/Documentation/sphinx/kernel_feat.py
-+++ b/Documentation/sphinx/kernel_feat.py
-@@ -1,7 +1,7 @@
- # coding=utf-8
- # SPDX-License-Identifier: GPL-2.0
- #
--u"""
-+"""
-     kernel-feat
-     ~~~~~~~~~~~
- 
-@@ -56,7 +56,7 @@ def setup(app):
- 
- class KernelFeat(Directive):
- 
--    u"""KernelFeat (``kernel-feat``) directive"""
-+    """KernelFeat (``kernel-feat``) directive"""
- 
-     required_arguments = 1
-     optional_arguments = 2
-diff --git a/Documentation/sphinx/kernel_include.py b/Documentation/sphinx/kernel_include.py
-index 638762442336..8db176045bc5 100755
---- a/Documentation/sphinx/kernel_include.py
-+++ b/Documentation/sphinx/kernel_include.py
-@@ -2,7 +2,7 @@
- # -*- coding: utf-8; mode: python -*-
- # pylint: disable=R0903, C0330, R0914, R0912, E0401
- 
--u"""
-+"""
-     kernel-include
-     ~~~~~~~~~~~~~~
- 
-@@ -56,7 +56,7 @@ def setup(app):
- class KernelInclude(Include):
- # ==============================================================================
- 
--    u"""KernelInclude (``kernel-include``) directive"""
-+    """KernelInclude (``kernel-include``) directive"""
- 
-     def run(self):
-         env = self.state.document.settings.env
-diff --git a/Documentation/sphinx/kfigure.py b/Documentation/sphinx/kfigure.py
-index 383f9a695b08..f1a7f13c9c60 100644
---- a/Documentation/sphinx/kfigure.py
-+++ b/Documentation/sphinx/kfigure.py
-@@ -1,6 +1,6 @@
- # -*- coding: utf-8; mode: python -*-
- # pylint: disable=C0103, R0903, R0912, R0915
--u"""
-+"""
-     scalable figure and image handling
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
-@@ -165,7 +165,7 @@ def setup(app):
- 
- 
- def setupTools(app):
--    u"""
-+    """
-     Check available build tools and log some *verbose* messages.
- 
-     This function is called once, when the builder is initiated.
-@@ -445,7 +445,7 @@ class kernel_image(nodes.image):
-     pass
- 
- class KernelImage(images.Image):
--    u"""KernelImage directive
-+    """KernelImage directive
- 
-     Earns everything from ``.. image::`` directive, except *remote URI* and
-     *glob* pattern. The KernelImage wraps a image node into a
-@@ -481,7 +481,7 @@ class kernel_figure(nodes.figure):
-     """Node for ``kernel-figure`` directive."""
- 
- class KernelFigure(Figure):
--    u"""KernelImage directive
-+    """KernelImage directive
- 
-     Earns everything from ``.. figure::`` directive, except *remote URI* and
-     *glob* pattern.  The KernelFigure wraps a figure node into a kernel_figure
-@@ -557,7 +557,7 @@ class kernel_render(nodes.General, nodes.Inline, nodes.Element):
-     pass
- 
- class KernelRender(Figure):
--    u"""KernelRender directive
-+    """KernelRender directive
- 
-     Render content by external tool.  Has all the options known from the
-     *figure*  directive, plus option ``caption``.  If ``caption`` has a
-diff --git a/Documentation/sphinx/load_config.py b/Documentation/sphinx/load_config.py
-index 8b416bfd75ac..ec50e1ee5223 100644
---- a/Documentation/sphinx/load_config.py
-+++ b/Documentation/sphinx/load_config.py
-@@ -9,7 +9,7 @@ from sphinx.util.osutil import fs_encoding
- def loadConfig(namespace):
- # ------------------------------------------------------------------------------
- 
--    u"""Load an additional configuration file into *namespace*.
-+    """Load an additional configuration file into *namespace*.
- 
-     The name of the configuration file is taken from the environment
-     ``SPHINX_CONF``. The external configuration file extends (or overwrites) the
-diff --git a/Documentation/sphinx/maintainers_include.py b/Documentation/sphinx/maintainers_include.py
-index dcad0fff4723..d31cff867436 100755
---- a/Documentation/sphinx/maintainers_include.py
-+++ b/Documentation/sphinx/maintainers_include.py
-@@ -3,7 +3,7 @@
- # -*- coding: utf-8; mode: python -*-
- # pylint: disable=R0903, C0330, R0914, R0912, E0401
- 
--u"""
-+"""
-     maintainers-include
-     ~~~~~~~~~~~~~~~~~~~
- 
-@@ -37,7 +37,7 @@ def setup(app):
-     )
- 
- class MaintainersInclude(Include):
--    u"""MaintainersInclude (``maintainers-include``) directive"""
-+    """MaintainersInclude (``maintainers-include``) directive"""
-     required_arguments = 0
- 
-     def parse_maintainers(self, path):
-diff --git a/Documentation/sphinx/rstFlatTable.py b/Documentation/sphinx/rstFlatTable.py
-index 16bea0632555..180fbb50c337 100755
---- a/Documentation/sphinx/rstFlatTable.py
-+++ b/Documentation/sphinx/rstFlatTable.py
-@@ -2,7 +2,7 @@
- # -*- coding: utf-8; mode: python -*-
- # pylint: disable=C0330, R0903, R0912
- 
--u"""
-+"""
-     flat-table
-     ~~~~~~~~~~
- 
-@@ -99,7 +99,7 @@ class colSpan(nodes.General, nodes.Element): pass # pylint: disable=C0103,C0321
- class FlatTable(Table):
- # ==============================================================================
- 
--    u"""FlatTable (``flat-table``) directive"""
-+    """FlatTable (``flat-table``) directive"""
- 
-     option_spec = {
-         'name': directives.unchanged
-@@ -135,7 +135,7 @@ class FlatTable(Table):
- class ListTableBuilder(object):
- # ==============================================================================
- 
--    u"""Builds a table from a double-stage list"""
-+    """Builds a table from a double-stage list"""
- 
-     def __init__(self, directive):
-         self.directive = directive
-@@ -212,7 +212,7 @@ class ListTableBuilder(object):
-         raise SystemMessagePropagation(error)
- 
-     def parseFlatTableNode(self, node):
--        u"""parses the node from a :py:class:`FlatTable` directive's body"""
-+        """parses the node from a :py:class:`FlatTable` directive's body"""
- 
-         if len(node) != 1 or not isinstance(node[0], nodes.bullet_list):
-             self.raiseError(
-@@ -225,7 +225,7 @@ class ListTableBuilder(object):
-         self.roundOffTableDefinition()
- 
-     def roundOffTableDefinition(self):
--        u"""Round off the table definition.
-+        """Round off the table definition.
- 
-         This method rounds off the table definition in :py:member:`rows`.
- 
 -- 
-2.48.1
+2.43.0
 
