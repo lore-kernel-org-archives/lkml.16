@@ -1,107 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B52230D0E;
-	Tue, 11 Feb 2025 15:42:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F1D253328;
+	Tue, 11 Feb 2025 15:42:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739288535; cv=none; b=iEkYspodDhUvMptVK4hY2y3MOy3/GMRYhRL3o6igcwNecmgYxhXUUY33WJAGAYerLudEhuCwysflX5xsO0O2ZWllXdJCTG7Ss/72kz6jmU+TJlxXvaMZIZSLsKwAX/Z8JIUZVt1+PD7Zwr0MNhAO3RJF+gTZafe1sOoYZhSBmL0=
+	t=1739288567; cv=none; b=Uzo1g4a+Nz6p6odc4YLLvxcuiYpxJyl+twkTkN/xVVlgzrAyJQ1yPGt8l89V6W10W2AgZnxTPQY8M8zeobp80VzDrrvx0RTS0bMeKyo30oqgdy99KQnzZKIRQQPqyKRWEs++RwjbwOe4WUo8w/ghkVL2Ci1mKqoTBp4fntdCkdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739288535; c=relaxed/simple;
-	bh=9TMlr7BDRa9X8bwB/EnlEyJkFUxUUsfy13K+M3cI3+s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FSRUEoBJKinqlW3UKqn427PXeLev1OzSEr2CA1iHtgIkSkPfB7IWDCBLQuQhXC3y9Vmto7FrAaetOyWsVNZB2GkoP7SSR8F8Lu6Ms6Y1BKajLpHjTwpGZ+h8qMCNEDo9TYW3WE8RUZK2bWK1vEKLy6DIa044aqQzBEamIdB1oes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i97Tuk5C; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739288567; c=relaxed/simple;
+	bh=EKygjR6jy2VKy3BaVqpi3MnTL07JCgyNxMFMlmAnETo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=MFbE8Xfm+i7fYJo38XkNiUySQk0iaMGuS/W+OtAYCEZLuw6HLkU6edslSbnio8K9SFtHIzCRq4BOFUnBQu9W+Ia/mq4h4FfnyihjQ/TfyRcTMlTdIq3z88kgwKF+T3tE05/+SQ+jEMvcZqWArjKAZjLononVtooCW4sNktQD7I4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u6a5jyMR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i97Tuk5C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739288534; x=1770824534;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9TMlr7BDRa9X8bwB/EnlEyJkFUxUUsfy13K+M3cI3+s=;
-  b=i97Tuk5Cd2JRogk7jiQniWqHj8HkrqJlOD6sdYLGWY5oUBG6hsvsl4Go
-   tUDGtiiGKra2Cz+I3vUP7NXFqBC/kX2mEIBE9hwP04EPj99MO5Z4DWj4u
-   ZviB9kaHQzZOL1R98g1scUTjiapA7O6/MlSNVEf7YXdMCtUktlN7rn+ny
-   ukW3qOsZxg1JMBaPuZnmHqqyEtQQ1BUnckvb36/q+l3NNdvRtxfTFInsT
-   ynu2l8JhHzBpXWt3tGrjvKVnuMNWQXuNn298fBTcilgQQmspM3cb7J7hC
-   lQf0GQUQRnw2uyyMIgjz4EDFDL2YGo1JVgu28vC7oQOXrlTsMUZTMSE5u
-   A==;
-X-CSE-ConnectionGUID: vNWKZU5sRi+ttl5txmlI8A==
-X-CSE-MsgGUID: OvkyS+AnQ1mC9mdFmU5/YA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="39935238"
-X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="39935238"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 07:42:13 -0800
-X-CSE-ConnectionGUID: Rf6D9W7CTk2qlj27jpQ6nQ==
-X-CSE-MsgGUID: uWqb9XeSR32GYcFRldVD9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="113060555"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 07:42:10 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1thsOl-0000000AY5N-0W7b;
-	Tue, 11 Feb 2025 17:42:07 +0200
-Date: Tue, 11 Feb 2025 17:42:06 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v7 1/3] scanf: remove redundant debug logs
-Message-ID: <Z6tvzhZIMVKWH8kK@smile.fi.intel.com>
-References: <20250211-scanf-kunit-convert-v7-0-c057f0a3d9d8@gmail.com>
- <20250211-scanf-kunit-convert-v7-1-c057f0a3d9d8@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u6a5jyMR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83E49C4CEDD;
+	Tue, 11 Feb 2025 15:42:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739288566;
+	bh=EKygjR6jy2VKy3BaVqpi3MnTL07JCgyNxMFMlmAnETo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=u6a5jyMRVl8jqaXnE8UuWqU9bSX6uGte98LQxys4lzz7JAqaX0gBDnYKa4d2Vduoj
+	 jmhGTThs0SzyPbKiOpZHM2+qRMUrXLZ1gPio4nJDcZHRlx0bb/t33SZ4aMjULNeGvg
+	 tjK+KCrp5t+nIEVaR0Mr6x6cYqBWjS1kM9bKLmxs9wFlAzrk7zMm5Nqru2e7lU1vy4
+	 jn+Eomblmxa58sFK5dEfS6IiEAsUXeR5oeAInDnIHVv4xM1dWT0c7V9sQgl/XTCxdM
+	 L2EI0oGAJs+9mVLV5wsHF8x51Y1zZSANBmCXml74h/av7/bjmRcHxqs27aVQXtbanX
+	 qcSSv4/FgkpUg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: <jens.korinth@tuta.io>
+Cc: "Jens Korinth via B4 Relay" <devnull+jens.korinth.tuta.io@kernel.org>,
+  "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
+  "Trevor Gross" <tmgross@umich.edu>,  "Rust For Linux"
+ <rust-for-linux@vger.kernel.org>,  "FUJITA Tomonori"
+ <fujita.tomonori@gmail.com>,  "Dirk Behme" <dirk.behme@gmail.com>,  "Linux
+ Kernel" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 0/3] rust: Add pr_*_once macros
+In-Reply-To: <OIpcOXB--F-9@tuta.io> (jens korinth's message of "Tue, 11 Feb
+	2025 16:29:56 +0100")
+References: <20241126-pr_once_macros-v4-0-410b8ca9643e@tuta.io>
+	<87zfish69f.fsf@kernel.org>
+	<XyUDgEm-do6Hd7zeR0J2gte301dYC_LTbQqJ85HUnf0DKGZoH4V9G9dgvmEw4fEadnu8CAZ4j4XWqLdn2YzkAw==@protonmail.internalid>
+	<OIpcOXB--F-9@tuta.io>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Tue, 11 Feb 2025 16:42:25 +0100
+Message-ID: <87o6z8h4im.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250211-scanf-kunit-convert-v7-1-c057f0a3d9d8@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 11, 2025 at 10:13:37AM -0500, Tamir Duberstein wrote:
-> The test already prints the same information on failure; remove
-> redundant pr_debug() logs.
+<jens.korinth@tuta.io> writes:
 
-...
+> Hi!
+>
+>>=C2=A0Thanks for the patch! Do you plan on sending a new version?=C2=A0If=
+ not, do you mind if I send v5?
+>
+> I think there is currently no consensus on how exactly it should be done =
+(or at least I was confused about that). If you=E2=80=99re actively using t=
+he patch please go ahead! Active usage is always the best argument in such =
+cases.
 
->  #define _check_numbers_template(arg_fmt, expect, str, fmt, n_args, ap)		\
->  do {										\
-> -	pr_debug("\"%s\", \"%s\" ->\n", str, fmt);				\
+I was informed this patch set is the correct way to emit a warning in
+the module_params patch set [1].
 
-What *if* the n_args == 0 here?
+I did not follow all the discussion so I am not sure either. But I'll
+look into the discussion then.
 
->  	for (; n_args > 0; n_args--, expect++) {				\
->  		typeof(*expect) got = *va_arg(ap, typeof(expect));		\
-> -		pr_debug("\t" arg_fmt "\n", got);				\
->  		if (got != *expect) {						\
->  			pr_warn("vsscanf(\"%s\", \"%s\", ...) expected " arg_fmt " got " arg_fmt "\n", \
->  				str, fmt, *expect, got);			\
-> @@ -689,7 +687,6 @@ do {										\
->  	total_tests++;								\
->  	len = snprintf(test_buffer, BUF_SIZE, gen_fmt, expect);			\
->  	got = (fn)(test_buffer, &endp, base);					\
-> -	pr_debug(#fn "(\"%s\", %d) -> " gen_fmt "\n", test_buffer, base, got);	\
->  	if (got != (expect)) {							\
->  		fail = true;							\
->  		pr_warn(#fn "(\"%s\", %d): got " gen_fmt " expected " gen_fmt "\n", \
 
--- 
-With Best Regards,
-Andy Shevchenko
+Best regards,
+Andreas Hindborg
+
+
+
+[1] https://lore.kernel.org/rust-for-linux/20250204-module-params-v3-v5-0-b=
+f5ec2041625@kernel.org/
 
 
