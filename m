@@ -1,114 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B2779CD;
-	Tue, 11 Feb 2025 15:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEE81F8AE2;
+	Tue, 11 Feb 2025 15:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739287014; cv=none; b=k/cwenZchjfmCsRp35amq1CGLM+c5JFQTvDm9aJoRFcLlD2d0raJmTsS8GTVyWmK5XLZUm5mekC+nOSF2K04GKLcUHVR7vLe9XMl5io/hZeBBY/t7RZqvyzX+iavY3qKhdaMcxZjOhYYDIgt0ic0zctwbVpfOKS2XM/7mocz3Vs=
+	t=1739287130; cv=none; b=ME4awv6HNQfTuTDQQZw943Cgu6clKvDBmx8GUIEPHExDT71TDemxPY/elTZ2Tl2YjMJmBaFdTLKctBlc7in9IbFn5w2j2JE07u8rXBFY/sKGyluLW0qK4Kc4Pzsi1Ts4eTAJc2xVYdHBe56+3IXoLpAN383ts+YFHz4VL0Ztn5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739287014; c=relaxed/simple;
-	bh=RTGxW5AvzVSz8elarxvdv1y9lwLwzv8O6K/rF3m8CcQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=pLkiatQYAa7akK7ZM8cBBi22X3YcR0tYjllSNCioSMOmdO9cjPXDkwK1gP+i4CjhGYNpaWD3eiS+zmMRM6gS/zNCwfnsryEjiSqmVFohowWJl1xx8GR+A05TcNeFpr1uYhsHXbdP7S118KjG71zNugjidn383xKA4Iw4Cm7oyg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QwTlTUoD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739287130; c=relaxed/simple;
+	bh=WvJeLkplpOnW2HwevNTVcMQld9wJtdh1MKgRLdFMZDI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m3n8ep+6HSVWD+SLisJND/5N2JKuYPd+pXMvyG1LeKWawG2koTl9aDQRxSV2xlEVdeZPJi/mVTslnPAOByHNCgISW5s1Esz1MFDMov6zFIJ0UA4qDiF5Sx0+N7TixrfkyOA1w511UKTJQYuNfsNcZbZoh+/6BV5W8ztJ39BX/g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LbSo3RE6; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QwTlTUoD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFB6DC4CEDD;
-	Tue, 11 Feb 2025 15:16:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739287013;
-	bh=RTGxW5AvzVSz8elarxvdv1y9lwLwzv8O6K/rF3m8CcQ=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=QwTlTUoDPVBAmL6PatKWXdCQ+QVMTTRPm9XC2f6TrGQxaLAbtHdiLmSBWDFMJ0CtQ
-	 3sVWMc4uTCL+nvZ2LJrHadWa7vifrkgIwtCdO+rJ7urAFUC8dmGftSFWNaXZHWZ1Sa
-	 GgDS6umkL954588wZifcJ9c53s/bP10Brj0CEntMYkTRZW/cfChvlkV1QXTZWffVJD
-	 zqK793f2gVtSADLw2hf7ZQC0/1LbNW5aM+uq5w1cWQVdg65bmLMyBrbA2yoheQkOPC
-	 CWn3Iwlk/8xZbAR5vnVawqCecy5YFFSkDmiFwrNW+ySzf9dIsSSOfeHa3dbziu7Nop
-	 Fh/hvm7qilg2g==
-Message-ID: <f2dc2e86-efa3-488f-bb0a-33bc681525c5@kernel.org>
-Date: Tue, 11 Feb 2025 16:16:47 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LbSo3RE6"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2f2f5e91393so1498425a91.0;
+        Tue, 11 Feb 2025 07:18:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739287129; x=1739891929; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WvJeLkplpOnW2HwevNTVcMQld9wJtdh1MKgRLdFMZDI=;
+        b=LbSo3RE6tjSAc8GCCKtEvzIDUIkzfTSXsC5A1f8W6XAmYV3A3nQRY55xaPYeEa84Qx
+         2ap/OFJVVJD4hCaAyDPv7yZK//bIqhDBoGbg9tSiKNJdd/DSCrpiknRBu9t75jeZ+k3f
+         Tn2vbl8z4QO5feZ3124VXdoxxEmR/PlttMPWANyrgXgQR8h1yrkK3ySm8OWzqRQ0Vnuu
+         Xp+UMGBDV9fSXhoJba0SyOaT3ERK2zp/N8le+qfb2yka3anV533JoYwK0r/Mw89rH56h
+         nv9GFPEiiQrkHcJCG75uWFTb6XhsMemRDregKhoTwAii9gX0+Dr3IY+AwKNviLn8nR3I
+         7J2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739287129; x=1739891929;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WvJeLkplpOnW2HwevNTVcMQld9wJtdh1MKgRLdFMZDI=;
+        b=ivm2us3Dwp/mDAglGB1XSqPjtb8jJP1Op48SMmVV5UI69wtvJodVjMOsz2XaxafUa7
+         J8tCTWuv4gMejw0w7vba4Lo5Jxb5B7PqqPMnnMZX1eVRYun7fRB0wRCJHDNKfSlSaMnE
+         GmngEEM7e3ig6esVSP4bghhzhVSYsxqt7tjJ+MUI0TGdZAlNArBpsnMZr3YzEXOhfAgM
+         cRWXwSZd9amPCI4ZluOqNo/P8Z0c+H+dHBHmTcVNHLKdyqtXTdpykyXFhU9LLO7NZGoF
+         ZvmawNBtYqJjgYqh+ThxsozXRv3P1qOZtwOI2LbbuGpsonkgIa6I/hcxgaB+S5XYcSQW
+         ehwA==
+X-Forwarded-Encrypted: i=1; AJvYcCUmdcBHogrkq6ureBQQ9GojX+PDmuThB45QD9RPgDd6RBPogWIFM64q1PtPv/blSmtyfv8+hhrrXzebYlE=@vger.kernel.org, AJvYcCXDStBn3SbJC0ynMMj29cDWY37Etbji52j5NMx2Mgdy+L4w1A/Hb/p9O1r/Nidok2FO9pGbvzpGi/HaTpTveNE=@vger.kernel.org, AJvYcCXfUDvBRlaD36YpEbT8RVyrDRB8QcAFI7y4Q9sfY+G8UTIZGu+6+KVtx5N6gcl/8qf0jo+g352jW3xK@vger.kernel.org
+X-Gm-Message-State: AOJu0YziuligqRD0nKmY+uCos61kQO2MObkj2idNRR/dc5p5neazezV0
+	hZ175NwfXrl5G2FGdr0ErXsQKx5z6/zUHD15BZ27mKia+0qAVF6v39SFxcPK9c+lCjSR8jassNd
+	ghmH1hvp8XILdhL3N/6u/ugBnIZ4=
+X-Gm-Gg: ASbGncvAXBJWAE1sGVw6+oJn/Cam99XLcLb7E+0YbShghKyeHpSZbsKiNQruV2bJCU4
+	4297t1jKLh81/ZAyASKlsqKiamphA+dca4IQ7Ng3DEAaJs1ONunA5EXt+E0VtKo6BiIwcnvlq
+X-Google-Smtp-Source: AGHT+IGzJkzVrpMALwsxqLHKqev6ECJUX+YW82mjcNjNCg8Wu8nBA+8vD/kiTP2MhGhH35rWwsHBxm0QfPgIBCcXiK0=
+X-Received: by 2002:a17:90b:3891:b0:2fa:17d2:158 with SMTP id
+ 98e67ed59e1d1-2faa490a9c4mr1792843a91.0.1739287128622; Tue, 11 Feb 2025
+ 07:18:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: qcs8300: Add device node for
- gfx_smmu
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Pratyush Brahma <quic_pbrahma@quicinc.com>
-Cc: andersson@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
- iommu@lists.linux.dev, joro@8bytes.org, konradybcio@kernel.org,
- krzk+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- robh@kernel.org, robin.murphy@arm.com, will@kernel.org
-References: <20250203-b4-branch-gfx-smmu-v4-2-eaa7aa762f48@quicinc.com>
- <ed3cc71a-426e-4044-86dd-945751e282d5@quicinc.com>
- <990bb621-5056-4460-82db-9805699d8a8d@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <990bb621-5056-4460-82db-9805699d8a8d@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250210-aligned-alloc-v4-1-609c3a6fe139@gmail.com>
+In-Reply-To: <20250210-aligned-alloc-v4-1-609c3a6fe139@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 11 Feb 2025 16:18:35 +0100
+X-Gm-Features: AWEUYZnC3aCDrPsPnwgIWLOJD4mf_4uv6coex7poBSP5UJ65YitdeiLOgh1U4bU
+Message-ID: <CANiq72n2J5N1c=-PV+-2n71WsmzWy+HH6K_YdobyWK2wYx0A-g@mail.gmail.com>
+Subject: Re: [PATCH v4] rust: alloc: satisfy POSIX alignment requirement
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, DJ Delorie <dj@redhat.com>, 
+	Eric Blake <eblake@redhat.com>, Will Newton <will.newton@linaro.org>, 
+	Paul Eggert <eggert@cs.ucla.edu>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-man@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/02/2025 12:41, Krzysztof Kozlowski wrote:
-> On 10/02/2025 05:58, Pratyush Brahma wrote:
->> Hi
->>
->> Can someone kindly review this patch?
->>
-> 
-> After 7 days? Community is not working for you to make such demands.
-> Observe standard waiting time. Or better: Please relax, and help out by
-> reviewing other patches on the mailing lists in order to relieve the
-> burden of maintainers and move your patches higher up the list.
+On Mon, Feb 10, 2025 at 3:55=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
+>
+> Fixes: dd09538fb409 ("rust: alloc: implement `Cmalloc` in module allocato=
+r_test")
+>
 
-Before you start pinging us, test your patches. That's one of the
-easiest steps to get your patches reviewed or applied fast.
+Hmm... The newline issue is still present in newer series you are
+sending. Maintainers need to fix this manually, so please fix it on
+your side.
 
-Best regards,
-Krzysztof
+> Acked-by: Danilo Krummrich <dakr@kernel.org>
+
+I understand that you re-picked the v2 ack, since it is (at least the
+code) similar again now, right?
+
+Thanks!
+
+Cheers,
+Miguel
