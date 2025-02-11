@@ -1,299 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A391EE7D2;
-	Tue, 11 Feb 2025 08:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275421EA7F1;
+	Tue, 11 Feb 2025 08:45:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739263511; cv=none; b=CzcCBiFLWdzsjfMLAZLMhyRU2s2PlxTGKDo6gAJnJcKxBOmvex5sNhUEFT0PN4/zX4Yoz5J9Z/Afygo3fJtZ5tTWzO4H8zex86GCL4doqRmCw78S3ZLaCyawaeJeqeRfW6rdDGVenZT1hGbSkGLeZdnQfSlLK9PB7bdahzjPfCc=
+	t=1739263531; cv=none; b=ft73wtVoqcbR3mS1k1YXXuBVnx6P2FDEJmaTG7+aOJgyqOChxBF0BBEgmBbvuPo89Y0RLMOPZrTiqRlqCKDCoqUHm93rfNtkAFdSF8W+dkpv9YzZiqSn63SaHRWfZbjFKhAxnPRfpBrEPPuMTgguGOBrQueYPNG07DvrOO1i/50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739263511; c=relaxed/simple;
-	bh=lykx5EWzw+9XqeTPJI1ls5uYpIwKGRHJsE11lnC47BU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bxblG1LpmqCVQf+ckA1kT3RR/6MQ5a9QVodeVkYW9hctsNwIUvHEc28WIzeeQHNt9A2yzL0oLctByCdxkRqycuA1xfQXzi+RTI1vDlf2NqQzcFsJdHxLznCQGwdnM4c7JEF3wwJXLRY7nHlGOL8qKDSDQ793NUjtTTnQZuJkUVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=PUEUZRqK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739263531; c=relaxed/simple;
+	bh=r7i5OIfvpHIuCNrkrP5o+cryO3m3MlIt3NKg50L9zZ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k3EKDc00pNK2sUsUuSAD4NfDUNeana/iinnNn9ZfX5pDnFmwcs9/UcYzu3OproGveGD89OmI0dFxTuL6H1sEgW+hjNOmwNCWrQ1EhiMj4mbqr2KcxiMo4uhbIDIuJeBI01WgBVP5brM2xJXqsN3PU+TRPxl0Zs/8URhJJX0ICZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=oY0RyXno; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PUEUZRqK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8BF1C4CEDD;
-	Tue, 11 Feb 2025 08:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1739263511;
-	bh=lykx5EWzw+9XqeTPJI1ls5uYpIwKGRHJsE11lnC47BU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PUEUZRqKCp7kILvi+k6ByeNIpqewDMLRQ1UD7V7oFqcEFA8J8YCP/gburTIaHLa7Q
-	 me/6pvaFfkZbrxQO93qKXGvyjl06GaV/zf1qRQc9089t5WjqhCSuWlOtTPmgvivi/r
-	 7A0dqQ5ORyT1UyWijFNmte0snV/col62c0JHFWEk=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	torvalds@linux-foundation.org,
-	stable@vger.kernel.org
-Cc: lwn@lwn.net,
-	jslaby@suse.cz,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: Linux 6.6.77
-Date: Tue, 11 Feb 2025 09:44:58 +0100
-Message-ID: <2025021111-unrelated-immodest-318c@gregkh>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <2025021111-senate-unburned-9456@gregkh>
-References: <2025021111-senate-unburned-9456@gregkh>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="oY0RyXno"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=5LUJh4mH74sc3fYsMDckuN3SVRfckVBlLGA6/IRgs3M=; t=1739263529;
+	x=1739695529; b=oY0RyXnovFVhX2cuignDMNcmTvuk4+6JvyqxlGvj0FiIamxDt9xDYTAWOyKQt
+	KUkokHcWqzKDZtpglRJGWmWLGY/8/JqsbvBrvibnfoi9XMIb7WJGLW9BRfCVJssM4OjgOmVFue6N1
+	1A+bA6IPtqzcWcGW+Uos+UNIH+htFXnFgC3vzaWk5b4xyQqbncyyw94mOM30kfkCpCkZzn9icNP6V
+	+UvgoW3P+JOsHqEy3eKgc8ejlTP1TASA5/nJ1TJJVhw9XqCXuKlUVKAryDQZ3CzlcO0+RcTyHEtnR
+	i0kZqvnckIAWwFKFn0gJcaAkUrSbAW0Zi7KNhDyADz6NZwF2TA==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1thltU-00AzLL-0U;
+	Tue, 11 Feb 2025 09:45:24 +0100
+Message-ID: <e56d7767-d222-43d9-be2c-4ab5135ccacd@leemhuis.info>
+Date: Tue, 11 Feb 2025 09:45:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] docs: clarify rules wrt tagging other people
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+ workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <588cf2763baa8fea1f4825f4eaa7023fe88bb6c1.1738852082.git.linux@leemhuis.info>
+ <Z6Vk-7OgDB3DM7Yb@archie.me>
+ <559e84cc-4da3-45a5-9ff0-2283d2c53d0a@leemhuis.info>
+ <20250210171658.5eb4dc2e@sal.lan>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Content-Language: de-DE, en-US
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+In-Reply-To: <20250210171658.5eb4dc2e@sal.lan>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1739263529;fd106dbe;
+X-HE-SMSGID: 1thltU-00AzLL-0U
 
-diff --git a/Makefile b/Makefile
-index d679a3dd5a58..1391d545aee9 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- VERSION = 6
- PATCHLEVEL = 6
--SUBLEVEL = 76
-+SUBLEVEL = 77
- EXTRAVERSION =
- NAME = Pinguïn Aangedreven
- 
-diff --git a/fs/hostfs/hostfs_kern.c b/fs/hostfs/hostfs_kern.c
-index 9cddd78b11d4..ff201753fd18 100644
---- a/fs/hostfs/hostfs_kern.c
-+++ b/fs/hostfs/hostfs_kern.c
-@@ -16,17 +16,11 @@
- #include <linux/seq_file.h>
- #include <linux/writeback.h>
- #include <linux/mount.h>
--#include <linux/fs_context.h>
--#include <linux/fs_parser.h>
- #include <linux/namei.h>
- #include "hostfs.h"
- #include <init.h>
- #include <kern.h>
- 
--struct hostfs_fs_info {
--	char *host_root_path;
--};
--
- struct hostfs_inode_info {
- 	int fd;
- 	fmode_t mode;
-@@ -94,17 +88,30 @@ __uml_setup("hostfs=", hostfs_args,
- static char *__dentry_name(struct dentry *dentry, char *name)
- {
- 	char *p = dentry_path_raw(dentry, name, PATH_MAX);
--	struct hostfs_fs_info *fsi = dentry->d_sb->s_fs_info;
--	char *root = fsi->host_root_path;
--	size_t len = strlen(root);
-+	char *root;
-+	size_t len;
-+
-+	root = dentry->d_sb->s_fs_info;
-+	len = strlen(root);
-+	if (IS_ERR(p)) {
-+		__putname(name);
-+		return NULL;
-+	}
- 
--	if (IS_ERR(p) || len > p - name) {
-+	/*
-+	 * This function relies on the fact that dentry_path_raw() will place
-+	 * the path name at the end of the provided buffer.
-+	 */
-+	BUG_ON(p + strlen(p) + 1 != name + PATH_MAX);
-+
-+	strscpy(name, root, PATH_MAX);
-+	if (len > p - name) {
- 		__putname(name);
- 		return NULL;
- 	}
- 
--	memcpy(name, root, len);
--	memmove(name + len, p, name + PATH_MAX - p);
-+	if (p > name + len)
-+		strcpy(name + len, p);
- 
- 	return name;
- }
-@@ -189,10 +196,8 @@ static int hostfs_statfs(struct dentry *dentry, struct kstatfs *sf)
- 	long long f_bavail;
- 	long long f_files;
- 	long long f_ffree;
--	struct hostfs_fs_info *fsi;
- 
--	fsi = dentry->d_sb->s_fs_info;
--	err = do_statfs(fsi->host_root_path,
-+	err = do_statfs(dentry->d_sb->s_fs_info,
- 			&sf->f_bsize, &f_blocks, &f_bfree, &f_bavail, &f_files,
- 			&f_ffree, &sf->f_fsid, sizeof(sf->f_fsid),
- 			&sf->f_namelen);
-@@ -240,11 +245,7 @@ static void hostfs_free_inode(struct inode *inode)
- 
- static int hostfs_show_options(struct seq_file *seq, struct dentry *root)
- {
--	struct hostfs_fs_info *fsi;
--	const char *root_path;
--
--	fsi = root->d_sb->s_fs_info;
--	root_path = fsi->host_root_path;
-+	const char *root_path = root->d_sb->s_fs_info;
- 	size_t offset = strlen(root_ino) + 1;
- 
- 	if (strlen(root_path) > offset)
-@@ -923,10 +924,10 @@ static const struct inode_operations hostfs_link_iops = {
- 	.get_link	= hostfs_get_link,
- };
- 
--static int hostfs_fill_super(struct super_block *sb, struct fs_context *fc)
-+static int hostfs_fill_sb_common(struct super_block *sb, void *d, int silent)
- {
--	struct hostfs_fs_info *fsi = sb->s_fs_info;
- 	struct inode *root_inode;
-+	char *host_root_path, *req_root = d;
- 	int err;
- 
- 	sb->s_blocksize = 1024;
-@@ -939,7 +940,16 @@ static int hostfs_fill_super(struct super_block *sb, struct fs_context *fc)
- 	if (err)
- 		return err;
- 
--	root_inode = hostfs_iget(sb, fsi->host_root_path);
-+	/* NULL is printed as '(null)' by printf(): avoid that. */
-+	if (req_root == NULL)
-+		req_root = "";
-+
-+	sb->s_fs_info = host_root_path =
-+		kasprintf(GFP_KERNEL, "%s/%s", root_ino, req_root);
-+	if (host_root_path == NULL)
-+		return -ENOMEM;
-+
-+	root_inode = hostfs_iget(sb, host_root_path);
- 	if (IS_ERR(root_inode))
- 		return PTR_ERR(root_inode);
- 
-@@ -947,7 +957,7 @@ static int hostfs_fill_super(struct super_block *sb, struct fs_context *fc)
- 		char *name;
- 
- 		iput(root_inode);
--		name = follow_link(fsi->host_root_path);
-+		name = follow_link(host_root_path);
- 		if (IS_ERR(name))
- 			return PTR_ERR(name);
- 
-@@ -964,92 +974,11 @@ static int hostfs_fill_super(struct super_block *sb, struct fs_context *fc)
- 	return 0;
- }
- 
--enum hostfs_parma {
--	Opt_hostfs,
--};
--
--static const struct fs_parameter_spec hostfs_param_specs[] = {
--	fsparam_string_empty("hostfs",		Opt_hostfs),
--	{}
--};
--
--static int hostfs_parse_param(struct fs_context *fc, struct fs_parameter *param)
--{
--	struct hostfs_fs_info *fsi = fc->s_fs_info;
--	struct fs_parse_result result;
--	char *host_root;
--	int opt;
--
--	opt = fs_parse(fc, hostfs_param_specs, param, &result);
--	if (opt < 0)
--		return opt;
--
--	switch (opt) {
--	case Opt_hostfs:
--		host_root = param->string;
--		if (!*host_root)
--			host_root = "";
--		fsi->host_root_path =
--			kasprintf(GFP_KERNEL, "%s/%s", root_ino, host_root);
--		if (fsi->host_root_path == NULL)
--			return -ENOMEM;
--		break;
--	}
--
--	return 0;
--}
--
--static int hostfs_parse_monolithic(struct fs_context *fc, void *data)
--{
--	struct hostfs_fs_info *fsi = fc->s_fs_info;
--	char *host_root = (char *)data;
--
--	/* NULL is printed as '(null)' by printf(): avoid that. */
--	if (host_root == NULL)
--		host_root = "";
--
--	fsi->host_root_path =
--		kasprintf(GFP_KERNEL, "%s/%s", root_ino, host_root);
--	if (fsi->host_root_path == NULL)
--		return -ENOMEM;
--
--	return 0;
--}
--
--static int hostfs_fc_get_tree(struct fs_context *fc)
--{
--	return get_tree_nodev(fc, hostfs_fill_super);
--}
--
--static void hostfs_fc_free(struct fs_context *fc)
--{
--	struct hostfs_fs_info *fsi = fc->s_fs_info;
--
--	if (!fsi)
--		return;
--
--	kfree(fsi->host_root_path);
--	kfree(fsi);
--}
--
--static const struct fs_context_operations hostfs_context_ops = {
--	.parse_monolithic = hostfs_parse_monolithic,
--	.parse_param	= hostfs_parse_param,
--	.get_tree	= hostfs_fc_get_tree,
--	.free		= hostfs_fc_free,
--};
--
--static int hostfs_init_fs_context(struct fs_context *fc)
-+static struct dentry *hostfs_read_sb(struct file_system_type *type,
-+			  int flags, const char *dev_name,
-+			  void *data)
- {
--	struct hostfs_fs_info *fsi;
--
--	fsi = kzalloc(sizeof(*fsi), GFP_KERNEL);
--	if (!fsi)
--		return -ENOMEM;
--
--	fc->s_fs_info = fsi;
--	fc->ops = &hostfs_context_ops;
--	return 0;
-+	return mount_nodev(type, flags, data, hostfs_fill_sb_common);
- }
- 
- static void hostfs_kill_sb(struct super_block *s)
-@@ -1059,11 +988,11 @@ static void hostfs_kill_sb(struct super_block *s)
- }
- 
- static struct file_system_type hostfs_type = {
--	.owner			= THIS_MODULE,
--	.name			= "hostfs",
--	.init_fs_context	= hostfs_init_fs_context,
--	.kill_sb		= hostfs_kill_sb,
--	.fs_flags		= 0,
-+	.owner 		= THIS_MODULE,
-+	.name 		= "hostfs",
-+	.mount	 	= hostfs_read_sb,
-+	.kill_sb	= hostfs_kill_sb,
-+	.fs_flags 	= 0,
- };
- MODULE_ALIAS_FS("hostfs");
- 
+On 10.02.25 17:16, Mauro Carvalho Chehab wrote:
+> Em Fri, 7 Feb 2025 09:24:56 +0100
+> Thorsten Leemhuis <linux@leemhuis.info> escreveu:
+> 
+>> On 07.02.25 02:42, Bagas Sanjaya wrote:
+>>> On Thu, Feb 06, 2025 at 03:30:10PM +0100, Thorsten Leemhuis wrote:  
+>>>> diff --git a/Documentation/process/5.Posting.rst b/Documentation/process/5.Posting.rst
+>>>> index dbb763a8de901d..22fa925353cf54 100644
+>>>> --- a/Documentation/process/5.Posting.rst
+>>>> +++ b/Documentation/process/5.Posting.rst
+>>>> @@ -268,10 +268,15 @@ The tags in common use are:
+>>>>   - Cc: the named person received a copy of the patch and had the
+>>>>     opportunity to comment on it.
+>>>>  
+>>>> -Be careful in the addition of tags to your patches, as only Cc: is appropriate
+>>>> -for addition without the explicit permission of the person named; using
+>>>> -Reported-by: is fine most of the time as well, but ask for permission if
+>>>> -the bug was reported in private.
+>>>> +Be careful in the addition of the aforementioned tags to your patches, as all
+>>>> +except for Cc:, Reported-by:, and Suggested-by: need explicit permission of the
+>>>> +person named. For those three implicit permission is sufficient if the person
+>>>> +contributed to the Linux kernel using that name and email address according
+>>>> +to the lore archives or the commit history -- and in case of Reported-by:
+>>>> +and Suggested-by: did the reporting or suggestion in public. Note,
+>>>> +bugzilla.kernel.org is a public place in this sense, but email addresses
+>>>> +used there are private; so do not expose them in tags, unless the person
+>>>> +used them in earlier contributions.  
+>>>
+>>> So for example I can only include Tested-by: when a contributor who tested
+>>> my patch explicitly offer the tag by replying to it i.e. with the tag, right?  
+>> At some point a text must leave the interpretation up to the reader. I
+>> would say a "yes, that's okay" to the question "is it okay to add a
+>> 'tested-by' tag in the patch description; note, your name and email
+>> address will then end up in the commit history and can not be removed
+>> there" is sufficient "permission" as well.
+> 
+> For me, it sounds reasonable to accept a public reply about someone
+> testing a patch as a reason to add a tested-by tag. Yet, I don't add 
+> tested-by myself based on replies. What I do when someone sends 
+> a reply saying that the patch was tested is to request the tester to 
+> reply with a tested-by with a short description about the test scenario.
+> 
+> IMO it is important to ask it to the tester, not only to have an explicit
+> tag, but also because as a simple tested-by without a test scenario is 
+> usually not very useful. 
+
+I see your point, but I'd say it is useful enough: if that patch causes
+a regression you immediately know whom to CC to test a fix for that
+regression.
+
+But maybe my view is just biased here. ;-)
+
+Ciao, Thorsten
