@@ -1,403 +1,187 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9265926A0A3;
-	Tue, 11 Feb 2025 23:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850B9268FE8;
+	Tue, 11 Feb 2025 23:47:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739317633; cv=none; b=Av6Huw5djMiEHcT8hmaUyV3ExOlaHrCut1F4YT+ucT+iznqOH+W6caqBFpm1JvG2DAJKzNd5PCkHJmonVvJ4vSNfQWoeMQySvSupPR/w+kGggwMohGW4cKNAudW/75RVPJ1GzUaa7HbQ/g4P3dn0UtOcG9KGzNUaXTfqmtySX9U=
+	t=1739317641; cv=none; b=C/TUN8XgcHg/cI5aTutHv3ogxvK5CQ/vT7cgqt4w+0xw+kpJgzKSvivSuS+1q4yHgsqAIZX/BADH8VoRK4AH5pMhLQag/VPvdRz6uVLX0pTkuTUGD+WTYNv6mnsd5k7RtxDqowRSzgI3aBUINiXIXEotX2HJU93+LqIHJ23KYfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739317633; c=relaxed/simple;
-	bh=LHHTUGJZo0Wyr1bAC1NbIJTWvVpqp2n5mqdPWyzf8zw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ebGUjFIz+b84omWtXgU17mQ5irb/TIM0NQ1KmaX+oqQBq80kd6GODfUPgiB8NX0RdMq76Dd+wCBMdpRyYlGPe0X+TENiW4FIMu9P7+D0ckV13HyZ4d4t7HodS1v2U4eMFed27BPtpgWhQjuLtbZOzZjukxM85NNSAGltkwHhwBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a5lVe+HU; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739317641; c=relaxed/simple;
+	bh=cUdo0hR1SxFvHRflLbtijd5qk5QC/Bd354r6plb6MyY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QG968nxBpORxUmZFAQ1xTJidUemaEW8eVmHP7dYjaviS4ZMqXXLcztd3q1ikqIP702hC/IIKujcamoggLTeRRmjaWkFcHygG1uLAjX5Nqg78OmSj9oGd5sXSxejUFoo/GGTfwENJ2r97f9MwB8vUdmJbkBIheXxDX972Us9u4i4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=A0uG0YU9; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a5lVe+HU"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ab7d58aa674so290907866b.0;
-        Tue, 11 Feb 2025 15:47:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739317630; x=1739922430; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7cc/bmhw46t99D9MCXz5PtDHnb3kGfZJPYW+IvIGz4c=;
-        b=a5lVe+HUkHGn6RtEsS+AmDUv0GTaWtPL9URECSQVdr4/vrAMwkgSahZt4OOZ2GrQFD
-         mnvwYG7/vk0dK9TrtQSidDrcvJKaI2gkk70mF7SI5N5396HJmKH8dX/rmPGZGVuOKL7g
-         B8URXQkn+6PiqwB3VLlhvdLodSwTSQmFOuNIBJNhaaOMHqs0EIASlmPPcbR5PC3OUfOM
-         UM628hUP09ZYBIR4J6Bd9VgmPULHUaQIG6c9ew95vGnwpTfrmh1Pk5p/uDzM8K1LpoE+
-         vflVsqNzfLWDPcWqNpjtwkXdxrJhMvvPJDedhNThT1MFu9wKTr1BI4nbHbk4Wl++1K2u
-         6gMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739317630; x=1739922430;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7cc/bmhw46t99D9MCXz5PtDHnb3kGfZJPYW+IvIGz4c=;
-        b=t4WqufURWHJhI9Xz1J2HlELLeemmIZ2R+wmgYvvN5fYVTzcWSbygLGdmXIJie3sACj
-         hkLm9YJmIh99/FusUTdoxBEcxJhIBygvt3nGA4zmzownXKdrk3bkUZqjYx/bdbMBeSXK
-         ay2QNO8csP+ypN8ZOodfqJtq1tpGGiXzrctgK3/NeGdqlouljE7CPLvmku9nNH0RwFDz
-         Nk/X2HHoxy3ztZ7EheHfLZdBso0cjl2N/w6ltWDy1HzHo5eH+tzpIkuco1sYl0K8jqHf
-         bbS+hxmKtuDNdELklY8mYW4D4A5JB5UO7wMw4/SW4SK8VJrv39d+4wSSLp1oPgvK7fVs
-         Pw+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWC2lVtH+1entoeg/li9xf+rlLpbVulJFJlgPkUYWAR0e1kuTr6hRwji/MmGrZEw6GGBxwiiGpN/nqi@vger.kernel.org, AJvYcCWGI6oDI3xseUXnIK81p2kb08J5TUTYQmmDg4BFZJaEZdGvMdPvXYruprfh/WQGJkJgARW9O4uT9A/y@vger.kernel.org, AJvYcCXGS4ubwky6Lo/NtoFGNbPPD9Uj74rSkdqMMnw2AoO5nKj1A4pPno0RUCQtHJLga5GvrYlhvflCRhziPdxl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy05AmA16egt4QBpn6MK9G5NxWRwxY8LEwZDr26jD6KejUVS6+1
-	NkfWDjMf2vhnTAkn4qZqpfNHvvxwvlhCjgDL1XmjKs6O1NbdBtkI
-X-Gm-Gg: ASbGncuaL5zKUc8ApMtVvVCYf9/U6t3yEeG3qq57YXxOu/aRrjtgmokgVLlWHJtaXbE
-	oNHqcuOZGeEBnVVyAiUraeNrYI6X/KAQeXz2ao2dp2LdLTgJAqOJqRdfTOuPHMLCdmDiqVLYOlK
-	PizNyT9ND+JOnwEg4Dpuf99+e5HS1ZxyywQrC5vkPJmm1H8P6I0pjSa8xqdUg0K9N19t9yUrYUH
-	lUoRsMwVZ3rJRFcCv8vg1QTIm6ZxOb3nzXMAH49OXf35DeAq/H7Ad6dE2n5H2fS9M9HhBKg4YbZ
-	mDAlonIw1LFSfTF2Jnkt6KNP7JCD6bKn
-X-Google-Smtp-Source: AGHT+IGRgxa28yONVo9R4TtNIsLXQnXM9lhkBde8vdOO8gAZtxIxGySQslZtp6sZGTHBN3cW9q3ucw==
-X-Received: by 2002:a17:907:7254:b0:ab3:9923:ef4e with SMTP id a640c23a62f3a-ab7f33c1813mr57735866b.22.1739317629587;
-        Tue, 11 Feb 2025 15:47:09 -0800 (PST)
-Received: from giga-mm.home ([2a02:1210:861b:6f00:82ee:73ff:feb8:99e3])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7b35b0d2csm624684566b.122.2025.02.11.15.47.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 15:47:09 -0800 (PST)
-Message-ID: <15a4d019ede6ad8be56832a3b215dfc6ce029bc2.camel@gmail.com>
-Subject: Re: [PATCH v9 2/2] rtc: sophgo: add rtc support for Sophgo CV1800
- SoC
-From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-To: Jingbao Qiu <qiujingbao.dlmu@gmail.com>, alexandre.belloni@bootlin.com, 
-	robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	unicorn_wang@outlook.com, inochiama@outlook.com, paul.walmsley@sifive.com, 
-	palmer@dabbelt.com, aou@eecs.berkeley.edu
-Cc: dlan@gentoo.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	linux-riscv@lists.infradead.org,
- linux-rtc@vger.kernel.org
-Date: Wed, 12 Feb 2025 00:47:05 +0100
-In-Reply-To: <20240428060848.706573-3-qiujingbao.dlmu@gmail.com>
-References: <20240428060848.706573-1-qiujingbao.dlmu@gmail.com>
-	 <20240428060848.706573-3-qiujingbao.dlmu@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="A0uG0YU9"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BIvZum028455;
+	Tue, 11 Feb 2025 18:47:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=sRP87Qul6HtZYSdW8p/OVdXuHIn
+	Pi/VjRFG8cNBDNmE=; b=A0uG0YU9vJPHlmkEzB1d68QoZ8TpYTKe7q54rBmD6qp
+	0ozXR3XyICORoWkgv0fYahUH8jGqeqd3fPJ3CW9tr8JIAPyXE83abi0MJXPmDqBT
+	0uEouuYf3trU9MOYxlzKO6fW/g3111xouriE7STIEtx9CGCatf7Ni9unbI5sO/BV
+	lBRNyVMSKECXliNdo60OBINc+lUDObm8r592CeI5b0A5TVSastjrqtaagqEzA+2f
+	4OGFbvferCJwyGnlXjrJ7M41IMOaVIn28JLY2px/vvvISt5PwaYqeaddX+R22dQK
+	1EQ/YRf4BAVNdaNcG4XBvNCf3QaZK5cXpqCqNI+8+4A==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 44p209ysmn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 18:47:05 -0500 (EST)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 51BNl4YR016993
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 11 Feb 2025 18:47:04 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Tue, 11 Feb
+ 2025 18:47:04 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Tue, 11 Feb 2025 18:47:04 -0500
+Received: from JSANTO12-L01.ad.analog.com ([10.65.60.206])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 51BNkoLV009870;
+	Tue, 11 Feb 2025 18:46:53 -0500
+From: Jonathan Santos <Jonathan.Santos@analog.com>
+To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: Jonathan Santos <Jonathan.Santos@analog.com>, <lars@metafoo.de>,
+        <Michael.Hennerich@analog.com>, <marcelo.schmitt@analog.com>,
+        <jic23@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <jonath4nns@gmail.com>,
+        <marcelo.schmitt1@gmail.com>
+Subject: [PATCH v3 03/17] dt-bindings: iio: adc: ad7768-1: add trigger-sources property
+Date: Tue, 11 Feb 2025 20:46:50 -0300
+Message-ID: <20250211234650.1008125-1-Jonathan.Santos@analog.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: YQfT9nIMELGKTt8woRl2Wj4sI6FFfAty
+X-Proofpoint-GUID: YQfT9nIMELGKTt8woRl2Wj4sI6FFfAty
+X-Authority-Analysis: v=2.4 cv=VPInn8PX c=1 sm=1 tr=0 ts=67abe179 cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=T2h4t0Lz3GQA:10 a=gAnH3GRIAAAA:8 a=1BXouof-NqooHmoyBnsA:9 a=ll8Ng6K2x5dEghGH17xW:22 a=oVHKYsEdi7-vN-J5QA_j:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_10,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 malwarescore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 mlxlogscore=999 phishscore=0 adultscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502110158
 
-Thanks for you patch Jingbao!
+In addition to GPIO synchronization, The AD7768-1 also supports
+synchronization over SPI, which use is recommended when the GPIO
+cannot provide a pulse synchronous with the base MCLK signal. It
+consists of looping back the SYNC_OUT to the SYNC_IN pin and send
+a command via SPI to trigger the synchronization.
 
-On Sun, 2024-04-28 at 14:08 +0800, Jingbao Qiu wrote:
-> Implement the RTC driver for CV1800, which able to provide time alarm.
->=20
-> Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+Add a new trigger-sources property to enable synchronization over SPI
+and future multiple devices support. This property references the
+main device (or trigger provider) responsible for generating the
+SYNC_OUT pulse to drive the SYNC_IN of device.
 
-I've tried time read/set on SG2000 SoC (Milk-V Duo Module 01 EVB), however
-the time set remains unchanged. Milk-V Duo Module 01 schematics shows
-32768Hz oscillator present.
+While at it, add description to the interrupts property.
 
-What HW have you tested the driver on? Do you have an idea what could be
-the problem on SG2000?
+Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+---
+v3 Changes:
+* Fixed dt-bindings errors.
+* Trigger-source is set as an alternative to sync-in-gpios, so we
+  don't break the previous ABI.
+* increased maxItems from trigger-sources to 2.
 
-> ---
-> =C2=A0drivers/rtc/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 10 ++
-> =C2=A0drivers/rtc/Makefile=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
-> =C2=A0drivers/rtc/rtc-cv1800.c | 240 ++++++++++++++++++++++++++++++++++++=
-+++
-> =C2=A03 files changed, 251 insertions(+)
-> =C2=A0create mode 100644 drivers/rtc/rtc-cv1800.c
->=20
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index 2a95b05982ad..b7746ca22b94 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -1138,6 +1138,16 @@ config RTC_DRV_DS2404
-> =C2=A0	=C2=A0 This driver can also be built as a module. If so, the modul=
-e
-> =C2=A0	=C2=A0 will be called rtc-ds2404.
-> =C2=A0
-> +config RTC_DRV_CV1800
-> +	tristate "Sophgo CV1800 RTC"
-> +	depends on ARCH_SOPHGO || COMPILE_TEST
-> +	help
-> +	=C2=A0 If you say yes here you get support the RTC driver
-> +	=C2=A0 for Sophgo CV1800 chip.
-> +
-> +	=C2=A0 This driver can also be built as a module.If so, the
-> +	=C2=A0 module will be called rtc-cv1800.
-> +
-> =C2=A0config RTC_DRV_DA9052
-> =C2=A0	tristate "Dialog DA9052/DA9053 RTC"
-> =C2=A0	depends on PMIC_DA9052
-> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-> index 3004e372f25f..a0861c0f3c89 100644
-> --- a/drivers/rtc/Makefile
-> +++ b/drivers/rtc/Makefile
-> @@ -42,6 +42,7 @@ obj-$(CONFIG_RTC_DRV_CADENCE)	+=3D rtc-cadence.o
-> =C2=A0obj-$(CONFIG_RTC_DRV_CMOS)	+=3D rtc-cmos.o
-> =C2=A0obj-$(CONFIG_RTC_DRV_CPCAP)	+=3D rtc-cpcap.o
-> =C2=A0obj-$(CONFIG_RTC_DRV_CROS_EC)	+=3D rtc-cros-ec.o
-> +obj-$(CONFIG_RTC_DRV_CV1800)	+=3D rtc-cv1800.o
-> =C2=A0obj-$(CONFIG_RTC_DRV_DA9052)	+=3D rtc-da9052.o
-> =C2=A0obj-$(CONFIG_RTC_DRV_DA9055)	+=3D rtc-da9055.o
-> =C2=A0obj-$(CONFIG_RTC_DRV_DA9063)	+=3D rtc-da9063.o
-> diff --git a/drivers/rtc/rtc-cv1800.c b/drivers/rtc/rtc-cv1800.c
-> new file mode 100644
-> index 000000000000..f975b169077a
-> --- /dev/null
-> +++ b/drivers/rtc/rtc-cv1800.c
-> @@ -0,0 +1,240 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * rtc-cv1800.c: RTC driver for Sophgo cv1800 RTC
-> + *
-> + * Author: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/irq.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/rtc.h>
-> +
-> +#define CTRL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x08
-> +#define ANA_CALIB=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 0x1000
-> +#define SEC_PULSE_GEN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 0x1004
-> +#define ALARM_TIME=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 0x1008
-> +#define ALARM_ENABLE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 0x100C
-> +#define SET_SEC_CNTR_VAL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1010
-> +#define SET_SEC_CNTR_TRIG=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1014
-> +#define SEC_CNTR_VAL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 0x1018
-> +
-> +/*
-> + * When in VDDBKUP domain, this MACRO register
-> + * does not power down
-> + */
-> +#define MACRO_RO_T=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 0x14A8
-> +#define MACRO_RG_SET_T=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=
-x1498
-> +
-> +#define CTRL_MODE_MASK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 B=
-IT(10)
-> +#define CTRL_MODE_OSC32K=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x00UL
-> +#define ALARM_ENABLE_MASK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(0)
-> +#define SET_SEC_CNTR_VAL_INIT=C2=A0 GENMASK(29, 28)
-> +#define SEC_PULSE_SEL_INNER=C2=A0=C2=A0=C2=A0 BIT(31)
-> +#define SEC_PULSE_GEN_SEL_MASK GENMASK(30, 0)
-> +#define CALIB_SEL_FTUNE_MASK=C2=A0=C2=A0 GENMASK(30, 0)
-> +#define CALIB_SEL_FTUNE_INNER=C2=A0 0x00UL
-> +
-> +struct cv1800_rtc_priv {
-> +	struct rtc_device *rtc_dev;
-> +	struct regmap *rtc_map;
-> +	struct clk *clk;
-> +	int irq;
-> +};
-> +
-> +static const struct regmap_config cv1800_rtc_regmap_config =3D {
-> +	.reg_bits =3D 32,
-> +	.val_bits =3D 32,
-> +	.reg_stride =3D 4,
-> +};
-> +
-> +static int cv1800_rtc_alarm_irq_enable(struct device *dev, unsigned int =
-enabled)
-> +{
-> +	struct cv1800_rtc_priv *info =3D dev_get_drvdata(dev);
-> +
-> +	regmap_write(info->rtc_map, ALARM_ENABLE, enabled);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cv1800_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *a=
-lrm)
-> +{
-> +	struct cv1800_rtc_priv *info =3D dev_get_drvdata(dev);
-> +	unsigned long alarm_time;
-> +
-> +	alarm_time =3D rtc_tm_to_time64(&alrm->time);
-> +
-> +	cv1800_rtc_alarm_irq_enable(dev, 0);
-> +
-> +	regmap_write(info->rtc_map, ALARM_TIME, alarm_time);
-> +
-> +	cv1800_rtc_alarm_irq_enable(dev, alrm->enabled);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cv1800_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *=
-alarm)
-> +{
-> +	struct cv1800_rtc_priv *info =3D dev_get_drvdata(dev);
-> +	u32 enabled;
-> +	u32 time;
-> +
-> +	regmap_read(info->rtc_map, ALARM_ENABLE, &enabled);
-> +
-> +	alarm->enabled =3D enabled & ALARM_ENABLE_MASK;
-> +
-> +	regmap_read(info->rtc_map, ALARM_TIME, &time);
-> +
-> +	rtc_time64_to_tm(time, &alarm->time);
-> +
-> +	return 0;
-> +}
-> +
-> +static void rtc_enable_sec_counter(struct cv1800_rtc_priv *info)
-> +{
-> +	u32 sec_ro_t;
-> +	u32 sec;
-> +
-> +	/* select inner sec pulse */
-> +	regmap_update_bits(info->rtc_map, SEC_PULSE_GEN,
-> +			=C2=A0=C2=A0 (u32)(~SEC_PULSE_GEN_SEL_MASK),
-> +			=C2=A0=C2=A0 (u32)(~SEC_PULSE_SEL_INNER));
-> +
-> +	regmap_update_bits(info->rtc_map, ANA_CALIB,
-> +			=C2=A0=C2=A0 (u32)(~CALIB_SEL_FTUNE_MASK),
-> +			=C2=A0=C2=A0 CALIB_SEL_FTUNE_INNER);
-> +
-> +	sec =3D SET_SEC_CNTR_VAL_INIT;
-> +
-> +	/* load from MACRO register */
-> +	regmap_read(info->rtc_map, MACRO_RO_T, &sec_ro_t);
-> +	if (sec_ro_t > (SET_SEC_CNTR_VAL_INIT))
-> +		sec =3D sec_ro_t;
-> +
-> +	regmap_write(info->rtc_map, SET_SEC_CNTR_VAL, sec);
-> +	regmap_write(info->rtc_map, SET_SEC_CNTR_TRIG, 1);
-> +}
-> +
-> +static int cv1800_rtc_read_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct cv1800_rtc_priv *info =3D dev_get_drvdata(dev);
-> +	u32 sec;
-> +
-> +	regmap_read(info->rtc_map, SEC_CNTR_VAL, &sec);
-> +
-> +	rtc_time64_to_tm(sec, tm);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cv1800_rtc_set_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct cv1800_rtc_priv *info =3D dev_get_drvdata(dev);
-> +	unsigned long sec;
-> +
-> +	sec =3D rtc_tm_to_time64(tm);
-> +
-> +	regmap_write(info->rtc_map, SET_SEC_CNTR_VAL, sec);
-> +	regmap_write(info->rtc_map, SET_SEC_CNTR_TRIG, 1);
-> +
-> +	regmap_write(info->rtc_map, MACRO_RG_SET_T, sec);
-> +
-> +	return 0;
-> +}
-> +
-> +static irqreturn_t cv1800_rtc_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct cv1800_rtc_priv *info =3D dev_id;
-> +
-> +	rtc_update_irq(info->rtc_dev, 1, RTC_IRQF | RTC_AF);
-> +
-> +	regmap_write(info->rtc_map, ALARM_ENABLE, 0);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static const struct rtc_class_ops cv1800_rtc_ops =3D {
-> +	.read_time =3D cv1800_rtc_read_time,
-> +	.set_time =3D cv1800_rtc_set_time,
-> +	.read_alarm =3D cv1800_rtc_read_alarm,
-> +	.set_alarm =3D cv1800_rtc_set_alarm,
-> +	.alarm_irq_enable =3D cv1800_rtc_alarm_irq_enable,
-> +};
-> +
-> +static int cv1800_rtc_probe(struct platform_device *pdev)
-> +{
-> +	struct cv1800_rtc_priv *rtc;
-> +	u32 ctrl_val;
-> +	void __iomem *base;
-> +	int ret;
-> +
-> +	rtc =3D devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
-> +	if (!rtc)
-> +		return -ENOMEM;
-> +
-> +	base =3D devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	rtc->rtc_map =3D devm_regmap_init_mmio(&pdev->dev, base,
-> +					=C2=A0=C2=A0=C2=A0=C2=A0 &cv1800_rtc_regmap_config);
-> +	if (IS_ERR(rtc->rtc_map))
-> +		return PTR_ERR(rtc->rtc_map);
-> +
-> +	rtc->irq =3D platform_get_irq(pdev, 0);
-> +	if (rtc->irq < 0)
-> +		return rtc->irq;
-> +
-> +	rtc->clk =3D devm_clk_get_enabled(&pdev->dev, NULL);
-> +	if (IS_ERR(rtc->clk))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(rtc->clk),
-> +				=C2=A0=C2=A0=C2=A0=C2=A0 "clk not found\n");
-> +
-> +	platform_set_drvdata(pdev, rtc);
-> +
-> +	device_init_wakeup(&pdev->dev, 1);
-> +
-> +	rtc->rtc_dev =3D devm_rtc_allocate_device(&pdev->dev);
-> +	if (IS_ERR(rtc->rtc_dev))
-> +		return PTR_ERR(rtc->rtc_dev);
-> +
-> +	rtc->rtc_dev->ops =3D &cv1800_rtc_ops;
-> +	rtc->rtc_dev->range_max =3D U32_MAX;
-> +
-> +	ret =3D devm_request_irq(&pdev->dev, rtc->irq, cv1800_rtc_irq_handler,
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 IRQF_TRIGGER_HIGH, "rtc alarm", =
-rtc);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret,
-> +				=C2=A0=C2=A0=C2=A0=C2=A0 "cannot register interrupt handler\n");
-> +
-> +	regmap_read(rtc->rtc_map, CTRL, &ctrl_val);
-> +	ctrl_val &=3D CTRL_MODE_MASK;
-> +
-> +	if (ctrl_val =3D=3D CTRL_MODE_OSC32K)
-> +		rtc_enable_sec_counter(rtc);
-> +
-> +	return devm_rtc_register_device(rtc->rtc_dev);
-> +}
-> +
-> +static const struct of_device_id cv1800_dt_ids[] =3D {
-> +	{ .compatible =3D "sophgo,cv1800-rtc" },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, cv1800_dt_ids);
-> +
-> +static struct platform_driver cv1800_rtc_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "sophgo-cv1800-rtc",
-> +		.of_match_table =3D cv1800_dt_ids,
-> +	},
-> +	.probe =3D cv1800_rtc_probe,
-> +};
-> +
-> +module_platform_driver(cv1800_rtc_driver);
-> +MODULE_AUTHOR("Jingbao Qiu");
-> +MODULE_DESCRIPTION("Sophgo cv1800 RTC Driver");
-> +MODULE_LICENSE("GPL");
+v2 Changes:
+* Patch added as replacement for adi,sync-in-spi patch.
+* addressed the request for a description to interrupts property.
+---
+ .../bindings/iio/adc/adi,ad7768-1.yaml        | 28 +++++++++++++++++--
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
---=20
-Alexander Sverdlin.
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+index 3ce59d4d065f..4bcc9e20fab9 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+@@ -26,7 +26,19 @@ properties:
+   clock-names:
+     const: mclk
+ 
++  trigger-sources:
++    description:
++      Specifies the device responsible for driving the synchronization pin,
++      as an alternative to adi,sync-in-gpios. If the own device node is
++      referenced, The synchronization over SPI is enabled and the SYNC_OUT
++      output will drive the SYNC_IN pin.
++    maxItems: 2
++
+   interrupts:
++    description:
++      Specifies the interrupt line associated with the ADC. This refers
++      to the DRDY (Data Ready) pin, which signals when conversion results are
++      available.
+     maxItems: 1
+ 
+   '#address-cells':
+@@ -57,6 +69,9 @@ properties:
+   "#io-channel-cells":
+     const: 1
+ 
++  "#trigger-source-cells":
++    const: 0
++
+ required:
+   - compatible
+   - reg
+@@ -65,7 +80,6 @@ required:
+   - vref-supply
+   - spi-cpol
+   - spi-cpha
+-  - adi,sync-in-gpios
+ 
+ patternProperties:
+   "^channel@([0-9]|1[0-5])$":
+@@ -89,6 +103,13 @@ patternProperties:
+ allOf:
+   - $ref: /schemas/spi/spi-peripheral-props.yaml#
+ 
++  - oneOf:
++      - required:
++          - trigger-sources
++          - "#trigger-source-cells"
++      - required:
++          - adi,sync-in-gpios
++
+ unevaluatedProperties: false
+ 
+ examples:
+@@ -99,7 +120,7 @@ examples:
+         #address-cells = <1>;
+         #size-cells = <0>;
+ 
+-        adc@0 {
++        adc0: adc@0 {
+             compatible = "adi,ad7768-1";
+             reg = <0>;
+             spi-max-frequency = <2000000>;
+@@ -108,7 +129,8 @@ examples:
+             vref-supply = <&adc_vref>;
+             interrupts = <25 IRQ_TYPE_EDGE_RISING>;
+             interrupt-parent = <&gpio>;
+-            adi,sync-in-gpios = <&gpio 22 GPIO_ACTIVE_LOW>;
++            trigger-sources = <&adc0 0>;
++            #trigger-source-cells = <0>;
+             reset-gpios = <&gpio 27 GPIO_ACTIVE_LOW>;
+             clocks = <&ad7768_mclk>;
+             clock-names = "mclk";
+-- 
+2.34.1
 
