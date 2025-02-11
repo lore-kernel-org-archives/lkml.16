@@ -1,297 +1,464 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827F526BD9A;
-	Tue, 11 Feb 2025 13:46:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236D12309AF;
+	Tue, 11 Feb 2025 13:47:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739281619; cv=none; b=TBYLlj1h/FZ0gP/3oWAEQhM8APkOlRU4F90NxqHZLs4EYE86GaTtyBhkeZjIWvJWm9inCjw9JzMBzlOOIk4zQZmRzrMq1fbxOPlaYhAE3umYEd2/BfkxdPPHBnIvuSRZNe+RWSierSo4ysQaInU7xB5OfTE9binshov+oW+seek=
+	t=1739281644; cv=none; b=Hh+oTMeGRR4YGEbL/psMAzvj5ae3hvUaTrmSuC/Yze58swvq4cBvfY01fXVk8OiGI+RViK+/wm36qN2JKayFEbw9oc6Mluow+QALrIWyhUnsVxlL+lGb9XQY/ISv9kL8MXVCjpr8lt2+huVCYwd1h16yN71s7vtGNcECOFXDDtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739281619; c=relaxed/simple;
-	bh=r0ToB49ByRRzoTR0oX73//wrpRH+Zm+uP9UF3X+7p9g=;
+	s=arc-20240116; t=1739281644; c=relaxed/simple;
+	bh=jXmLqj0DxlD/iMefHrX+sErtbRk5BzuKl+If9B+aing=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XQQZxiL3CSuiMi/Vd9nrCadEGj5hsts8rTyyKOQa/AIJwG7Pfn8HQdAReF72S2IWwDQbKSTaJMRi3AuuyclbVnESZvMbgfi/iyo/55LgJtVQBnaCTONNUwAw2oJo6/Qh7sbqer4F1pDcKhndlOFrtOwqCyHXH00YFiEZEQxhbJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sBPzhl2N; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ky4ySyrFPKOP08Xl+eEdBBoMom1ku/Q9gRJgPDuskH7IkpVfnYQ6Oi2e0XBS7T4LjSbr3JJFOw5VIDNM6BcxFVglk4152IcBFev1hL5wjS9hRoEOoSmUIUBGrHkr8wRA6mtTspCROx8oosL0+YH95oE89QCkECkNDmyz5nEGoKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cN5aU4iQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sBPzhl2N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE831C4CEDD;
-	Tue, 11 Feb 2025 13:46:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cN5aU4iQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1959C4CEDD;
+	Tue, 11 Feb 2025 13:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739281619;
-	bh=r0ToB49ByRRzoTR0oX73//wrpRH+Zm+uP9UF3X+7p9g=;
+	s=k20201202; t=1739281643;
+	bh=jXmLqj0DxlD/iMefHrX+sErtbRk5BzuKl+If9B+aing=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sBPzhl2NVuEMaafcbYRqdMQbyiA1V2OZVr1xOgSfAQtvZm8x3mBLBwzbWBZSAiDp4
-	 4ykKhDfiwsyS+z+iwnEaxVvVlgn+PZPJvF9wDFNlKuY/Fk703/6puft0Etaj7ypLT1
-	 UzeGGg2ennTLcuirZqEl1GClmJiqL+uY8bWL3Yzzhee9NvAza24wMn5OIt/fEbRuz0
-	 MyDBsDZgLDr9CYHOC1Za+6+Z3Or/Mr6WY7TEqyEdIV8WVKLpA8Cl58EIbR/9nCURKI
-	 UssICMNVI1nU1TqMcHm1p4m+ylj10qyYAD2eJS2dN8FV/mBWIAGagj3kQNS9Xg8KyG
-	 1jTCIRwEzIufQ==
-Date: Tue, 11 Feb 2025 14:46:56 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: Nicolas Dufresne <nicolas@ndufresne.ca>, 
-	Florent Tomasin <florent.tomasin@arm.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
-	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
-	"T . J . Mercier" <tjmercier@google.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Yong Wu <yong.wu@mediatek.com>, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, nd@arm.com, 
-	Akash Goel <akash.goel@arm.com>
-Subject: Re: [RFC PATCH 0/5] drm/panthor: Protected mode support for Mali CSF
- GPUs
-Message-ID: <20250211-robust-lush-skink-0dcc5b@houat>
-References: <cover.1738228114.git.florent.tomasin@arm.com>
- <3ykaewmjjwkp3y2f3gf5jvqketicd4p2xqyajqtfnsxci36qlm@twidtyj2kgbw>
- <1a73c3acee34a86010ecd25d76958bca4f16d164.camel@ndufresne.ca>
- <ppznh3xnfuqrozhrc7juyi3enxc4v3meu4wadkwwzecj7oxex7@moln2fiibbxo>
- <9d0e381758c0e83882b57102fb09c5d3a36fbf57.camel@ndufresne.ca>
- <1f436caa-1c27-4bbd-9b43-a94dad0d89d0@arm.com>
- <20250205-amorphous-nano-agouti-b5baba@houat>
- <2085fb785095dc5abdac2352adfb3e1e1c8ae549.camel@ndufresne.ca>
- <20250207160253.42551fb1@collabora.com>
+	b=cN5aU4iQUGMj2aUlfan0MlZ4uY04GF5imbJi2Tsdg0cms9iVDKZxOgdZTshey8YKt
+	 hZZt0qqj+8E8gtlhowfAJw8PM+kw8MtRyxca0ZOURhkI9SB2MHQZ89M/d9DZmpMKFb
+	 c1eq0Ke2dOGp2xWBS+9LVrLtkbnX82xF4v3SmMMV+5kZGiJNQTkVbNyV2w6vhWk3/m
+	 z63IxzTPpRuewxbWlSacp+h0EFuKKt9WCrMQ62lsj4yQeVBRxEbzs0wHgNwQaK2W8C
+	 O+ILzVUoFLg4fdneWfrN2EIVGYjtMuWPEVzBon8e9iwP5lD3nxKuPHWPvTurZFVgWP
+	 8pCTHJdk3QvVg==
+Date: Tue, 11 Feb 2025 13:47:19 +0000
+From: Lee Jones <lee@kernel.org>
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor@kernel.org>,
+	Sergey Lisov <sleirsgoevy@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 3/4] mfd: sec: add support for S2MPU05 PMIC
+Message-ID: <20250211134719.GS1868108@google.com>
+References: <20250204-exynos7870-pmic-regulators-v1-0-05adad38102c@disroot.org>
+ <20250204-exynos7870-pmic-regulators-v1-3-05adad38102c@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="htbc2pgomj3vttd2"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250207160253.42551fb1@collabora.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250204-exynos7870-pmic-regulators-v1-3-05adad38102c@disroot.org>
 
+On Tue, 04 Feb 2025, Kaustabh Chakraborty wrote:
 
---htbc2pgomj3vttd2
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [RFC PATCH 0/5] drm/panthor: Protected mode support for Mali CSF
- GPUs
-MIME-Version: 1.0
+> From: Sergey Lisov <sleirsgoevy@gmail.com>
+> 
+> Add support for Samsung's S2MPU05 PMIC. It's the primary PMIC used by
+> Exynos7870 devices. It houses regulators (21 LDOs and 5 BUCKs) and a RTC
+> clock device.
+> 
+> Signed-off-by: Sergey Lisov <sleirsgoevy@gmail.com>
+> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+> ---
+>  drivers/mfd/sec-core.c              |  12 +++
+>  drivers/mfd/sec-irq.c               |  85 ++++++++++++++++++++
+>  include/linux/mfd/samsung/core.h    |   1 +
+>  include/linux/mfd/samsung/irq.h     |  44 +++++++++++
+>  include/linux/mfd/samsung/s2mpu05.h | 152 ++++++++++++++++++++++++++++++++++++
+>  5 files changed, 294 insertions(+)
+> 
+> diff --git a/drivers/mfd/sec-core.c b/drivers/mfd/sec-core.c
+> index cdfe738e1d76e63145e5888da1cecc122fbc3737..3e9b65c988a7f08bf16d3703004a3d60cfcb1c75 100644
+> --- a/drivers/mfd/sec-core.c
+> +++ b/drivers/mfd/sec-core.c
+> @@ -83,6 +83,11 @@ static const struct mfd_cell s2mpu02_devs[] = {
+>  	{ .name = "s2mpu02-regulator", },
+>  };
+>  
+> +static const struct mfd_cell s2mpu05_devs[] = {
+> +	{ .name = "s2mpu05-regulator", },
+> +	{ .name = "s2mps15-rtc", },
+> +};
+> +
+>  static const struct of_device_id sec_dt_match[] = {
+>  	{
+>  		.compatible = "samsung,s5m8767-pmic",
+> @@ -108,6 +113,9 @@ static const struct of_device_id sec_dt_match[] = {
+>  	}, {
+>  		.compatible = "samsung,s2mpu02-pmic",
+>  		.data = (void *)S2MPU02,
+> +	}, {
+> +		.compatible = "samsung,s2mpu05-pmic",
+> +		.data = (void *)S2MPU05,
+>  	}, {
+>  		/* Sentinel */
+>  	},
+> @@ -374,6 +382,10 @@ static int sec_pmic_probe(struct i2c_client *i2c)
+>  		sec_devs = s2mpu02_devs;
+>  		num_sec_devs = ARRAY_SIZE(s2mpu02_devs);
+>  		break;
+> +	case S2MPU05:
+> +		sec_devs = s2mpu05_devs;
+> +		num_sec_devs = ARRAY_SIZE(s2mpu05_devs);
+> +		break;
+>  	default:
+>  		dev_err(&i2c->dev, "Unsupported device type (%lu)\n",
+>  			sec_pmic->device_type);
+> diff --git a/drivers/mfd/sec-irq.c b/drivers/mfd/sec-irq.c
+> index e191aeb0c07c58a3bc4850d94af39dfe085a33e5..9ba8268fef01366d6b6dc88113e6d9b1e1701c39 100644
+> --- a/drivers/mfd/sec-irq.c
+> +++ b/drivers/mfd/sec-irq.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/mfd/samsung/s2mps11.h>
+>  #include <linux/mfd/samsung/s2mps14.h>
+>  #include <linux/mfd/samsung/s2mpu02.h>
+> +#include <linux/mfd/samsung/s2mpu05.h>
+>  #include <linux/mfd/samsung/s5m8767.h>
+>  
+>  static const struct regmap_irq s2mps11_irqs[] = {
+> @@ -225,6 +226,77 @@ static const struct regmap_irq s2mpu02_irqs[] = {
+>  	},
+>  };
+>  
+> +static const struct regmap_irq s2mpu05_irqs[] = {
+> +	[S2MPU05_IRQ_PWRONF] = {
+> +		.reg_offset = 0,
+> +		.mask = S2MPU05_IRQ_PWRONF_MASK,
+> +	},
 
-Hi Boris,
+Please make use of REGMAP_IRQ_REG().
 
-On Fri, Feb 07, 2025 at 04:02:53PM +0100, Boris Brezillon wrote:
-> Sorry for joining the party late, a couple of comments to back Akash
-> and Nicolas' concerns.
->=20
-> On Wed, 05 Feb 2025 13:14:14 -0500
-> Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
->=20
-> > Le mercredi 05 f=E9vrier 2025 =E0 15:52 +0100, Maxime Ripard a =E9crit=
-=A0:
-> > > On Mon, Feb 03, 2025 at 04:43:23PM +0000, Florent Tomasin wrote: =20
-> > > > Hi Maxime, Nicolas
-> > > >=20
-> > > > On 30/01/2025 17:47, Nicolas Dufresne wrote: =20
-> > > > > Le jeudi 30 janvier 2025 =E0 17:38 +0100, Maxime Ripard a =E9crit=
-=A0: =20
-> > > > > > Hi Nicolas,
-> > > > > >=20
-> > > > > > On Thu, Jan 30, 2025 at 10:59:56AM -0500, Nicolas Dufresne wrot=
-e: =20
-> > > > > > > Le jeudi 30 janvier 2025 =E0 14:46 +0100, Maxime Ripard a =E9=
-crit=A0: =20
-> > > > > > > > Hi,
-> > > > > > > >=20
-> > > > > > > > I started to review it, but it's probably best to discuss i=
-t here.
-> > > > > > > >=20
-> > > > > > > > On Thu, Jan 30, 2025 at 01:08:56PM +0000, Florent Tomasin w=
-rote: =20
-> > > > > > > > > Hi,
-> > > > > > > > >=20
-> > > > > > > > > This is a patch series covering the support for protected=
- mode execution in
-> > > > > > > > > Mali Panthor CSF kernel driver.
-> > > > > > > > >=20
-> > > > > > > > > The Mali CSF GPUs come with the support for protected mod=
-e execution at the
-> > > > > > > > > HW level. This feature requires two main changes in the k=
-ernel driver:
-> > > > > > > > >=20
-> > > > > > > > > 1) Configure the GPU with a protected buffer. The system =
-must provide a DMA
-> > > > > > > > >    heap from which the driver can allocate a protected bu=
-ffer.
-> > > > > > > > >    It can be a carved-out memory or dynamically allocated=
- protected memory region.
-> > > > > > > > >    Some system includes a trusted FW which is in charge o=
-f the protected memory.
-> > > > > > > > >    Since this problem is integration specific, the Mali P=
-anthor CSF kernel
-> > > > > > > > >    driver must import the protected memory from a device =
-specific exporter. =20
-> > > > > > > >=20
-> > > > > > > > Why do you need a heap for it in the first place? My unders=
-tanding of
-> > > > > > > > your series is that you have a carved out memory region som=
-ewhere, and
-> > > > > > > > you want to allocate from that carved out memory region you=
-r buffers.
-> > > > > > > >=20
-> > > > > > > > How is that any different from using a reserved-memory regi=
-on, adding
-> > > > > > > > the reserved-memory property to the GPU device and doing al=
-l your
-> > > > > > > > allocation through the usual dma_alloc_* API? =20
-> > > > > > >=20
-> > > > > > > How do you then multiplex this region so it can be shared bet=
-ween
-> > > > > > > GPU/Camera/Display/Codec drivers and also userspace ? =20
-> > > > > >=20
-> > > > > > You could point all the devices to the same reserved memory reg=
-ion, and
-> > > > > > they would all allocate from there, including for their userspa=
-ce-facing
-> > > > > > allocations. =20
-> > > > >=20
-> > > > > I get that using memory region is somewhat more of an HW descript=
-ion, and
-> > > > > aligned with what a DT is supposed to describe. One of the challe=
-nge is that
-> > > > > Mediatek heap proposal endup calling into their TEE, meaning know=
-ing the region
-> > > > > is not that useful. You actually need the TEE APP guid and its IP=
-C protocol. If
-> > > > > we can dell drivers to use a head instead, we can abstract that S=
-oC specific
-> > > > > complexity. I believe each allocated addressed has to be mapped t=
-o a zone, and
-> > > > > that can only be done in the secure application. I can imagine si=
-milar needs
-> > > > > when the protection is done using some sort of a VM / hypervisor.
-> > > > >=20
-> > > > > Nicolas
-> > > > >  =20
-> > > >=20
-> > > > The idea in this design is to abstract the heap management from the
-> > > > Panthor kernel driver (which consumes a DMA buffer from it).
-> > > >=20
-> > > > In a system, an integrator would have implemented a secure heap dri=
-ver,
-> > > > and could be based on TEE or a carved-out memory with restricted ac=
-cess,
-> > > > or else. This heap driver would be responsible of implementing the
-> > > > logic to: allocate, free, refcount, etc.
-> > > >=20
-> > > > The heap would be retrieved by the Panthor kernel driver in order to
-> > > > allocate protected memory to load the FW and allow the GPU to enter=
-/exit
-> > > > protected mode. This memory would not belong to a user space proces=
-s.
-> > > > The driver allocates it at the time of loading the FW and initializ=
-ation
-> > > > of the GPU HW. This is a device globally owned protected memory. =
-=20
-> > >=20
-> > > The thing is, it's really not clear why you absolutely need to have t=
-he
-> > > Panthor driver involved there. It won't be transparent to userspace,
-> > > since you'd need an extra flag at allocation time, and the buffers
-> > > behave differently. If userspace has to be aware of it, what's the
-> > > advantage to your approach compared to just exposing a heap for those
-> > > secure buffers, and letting userspace allocate its buffers from there=
-? =20
-> >=20
-> > Unless I'm mistaken, the Panthor driver loads its own firmware. Since l=
-oading
-> > the firmware requires placing the data in a protected memory region, an=
-d that
-> > this aspect has no exposure to userspace, how can Panthor not be implic=
-ated ?
->=20
-> Right, the very reason we need protected memory early is because some
-> FW sections need to be allocated from the protected pool, otherwise the
-> TEE will fault as soon at the FW enters the so-called 'protected mode'.
+> +	[S2MPU05_IRQ_PWRONR] = {
+> +		.reg_offset = 0,
+> +		.mask = S2MPU05_IRQ_PWRONR_MASK,
+> +	},
+> +	[S2MPU05_IRQ_JIGONBF] = {
+> +		.reg_offset = 0,
+> +		.mask = S2MPU05_IRQ_JIGONBF_MASK,
+> +	},
+> +	[S2MPU05_IRQ_JIGONBR] = {
+> +		.reg_offset = 0,
+> +		.mask = S2MPU05_IRQ_JIGONBR_MASK,
+> +	},
+> +	[S2MPU05_IRQ_ACOKF] = {
+> +		.reg_offset = 0,
+> +		.mask = S2MPU05_IRQ_ACOKF_MASK,
+> +	},
+> +	[S2MPU05_IRQ_ACOKR] = {
+> +		.reg_offset = 0,
+> +		.mask = S2MPU05_IRQ_ACOKR_MASK,
+> +	},
+> +	[S2MPU05_IRQ_PWRON1S] = {
+> +		.reg_offset = 0,
+> +		.mask = S2MPU05_IRQ_PWRON1S_MASK,
+> +	},
+> +	[S2MPU05_IRQ_MRB] = {
+> +		.reg_offset = 0,
+> +		.mask = S2MPU05_IRQ_MRB_MASK,
+> +	},
+> +	[S2MPU05_IRQ_RTC60S] = {
+> +		.reg_offset = 1,
+> +		.mask = S2MPU05_IRQ_RTC60S_MASK,
+> +	},
+> +	[S2MPU05_IRQ_RTCA1] = {
+> +		.reg_offset = 1,
+> +		.mask = S2MPU05_IRQ_RTCA1_MASK,
+> +	},
+> +	[S2MPU05_IRQ_RTCA0] = {
+> +		.reg_offset = 1,
+> +		.mask = S2MPU05_IRQ_RTCA0_MASK,
+> +	},
+> +	[S2MPU05_IRQ_SMPL] = {
+> +		.reg_offset = 1,
+> +		.mask = S2MPU05_IRQ_SMPL_MASK,
+> +	},
+> +	[S2MPU05_IRQ_RTC1S] = {
+> +		.reg_offset = 1,
+> +		.mask = S2MPU05_IRQ_RTC1S_MASK,
+> +	},
+> +	[S2MPU05_IRQ_WTSR] = {
+> +		.reg_offset = 1,
+> +		.mask = S2MPU05_IRQ_WTSR_MASK,
+> +	},
+> +	[S2MPU05_IRQ_INT120C] = {
+> +		.reg_offset = 2,
+> +		.mask = S2MPU05_IRQ_INT120C_MASK,
+> +	},
+> +	[S2MPU05_IRQ_INT140C] = {
+> +		.reg_offset = 2,
+> +		.mask = S2MPU05_IRQ_INT140C_MASK,
+> +	},
+> +	[S2MPU05_IRQ_TSD] = {
+> +		.reg_offset = 2,
+> +		.mask = S2MPU05_IRQ_TSD_MASK,
+> +	},
+> +};
+> +
+>  static const struct regmap_irq s5m8767_irqs[] = {
+>  	[S5M8767_IRQ_PWRR] = {
+>  		.reg_offset = 0,
+> @@ -339,6 +411,16 @@ static const struct regmap_irq_chip s2mpu02_irq_chip = {
+>  	.ack_base = S2MPU02_REG_INT1,
+>  };
+>  
+> +static const struct regmap_irq_chip s2mpu05_irq_chip = {
+> +	.name = "s2mpu05",
+> +	.irqs = s2mpu05_irqs,
+> +	.num_irqs = ARRAY_SIZE(s2mpu05_irqs),
+> +	.num_regs = 3,
+> +	.status_base = S2MPU05_REG_INT1,
+> +	.mask_base = S2MPU05_REG_INT1M,
+> +	.ack_base = S2MPU05_REG_INT1,
+> +};
+> +
+>  static const struct regmap_irq_chip s5m8767_irq_chip = {
+>  	.name = "s5m8767",
+>  	.irqs = s5m8767_irqs,
+> @@ -383,6 +465,9 @@ int sec_irq_init(struct sec_pmic_dev *sec_pmic)
+>  	case S2MPU02:
+>  		sec_irq_chip = &s2mpu02_irq_chip;
+>  		break;
+> +	case S2MPU05:
+> +		sec_irq_chip = &s2mpu05_irq_chip;
+> +		break;
+>  	default:
+>  		dev_err(sec_pmic->dev, "Unknown device type %lu\n",
+>  			sec_pmic->device_type);
+> diff --git a/include/linux/mfd/samsung/core.h b/include/linux/mfd/samsung/core.h
+> index 750274d41fc06b0411dbfea6d5efa6092214100d..f35314458fd22e43fa13034439406bea17a155c9 100644
+> --- a/include/linux/mfd/samsung/core.h
+> +++ b/include/linux/mfd/samsung/core.h
+> @@ -44,6 +44,7 @@ enum sec_device_type {
+>  	S2MPS14X,
+>  	S2MPS15X,
+>  	S2MPU02,
+> +	S2MPU05,
+>  };
+>  
+>  /**
+> diff --git a/include/linux/mfd/samsung/irq.h b/include/linux/mfd/samsung/irq.h
+> index 3fd2775eb9bbf86ac227810f49d24ae815bb3fcb..f8559e2198a53d28910e0f431f7b8b7cccec6289 100644
+> --- a/include/linux/mfd/samsung/irq.h
+> +++ b/include/linux/mfd/samsung/irq.h
+> @@ -150,6 +150,50 @@ enum s2mpu02_irq {
+>  /* Masks for interrupts are the same as in s2mps11 */
+>  #define S2MPS14_IRQ_TSD_MASK		(1 << 2)
+>  
+> +enum s2mpu05_irq {
+> +	S2MPU05_IRQ_PWRONF,
+> +	S2MPU05_IRQ_PWRONR,
+> +	S2MPU05_IRQ_JIGONBF,
+> +	S2MPU05_IRQ_JIGONBR,
+> +	S2MPU05_IRQ_ACOKF,
+> +	S2MPU05_IRQ_ACOKR,
+> +	S2MPU05_IRQ_PWRON1S,
+> +	S2MPU05_IRQ_MRB,
+> +
+> +	S2MPU05_IRQ_RTC60S,
+> +	S2MPU05_IRQ_RTCA1,
+> +	S2MPU05_IRQ_RTCA0,
+> +	S2MPU05_IRQ_SMPL,
+> +	S2MPU05_IRQ_RTC1S,
+> +	S2MPU05_IRQ_WTSR,
+> +
+> +	S2MPU05_IRQ_INT120C,
+> +	S2MPU05_IRQ_INT140C,
+> +	S2MPU05_IRQ_TSD,
+> +
+> +	S2MPU05_IRQ_NR,
+> +};
+> +
+> +#define S2MPU05_IRQ_PWRONF_MASK		(1 << 0)
+> +#define S2MPU05_IRQ_PWRONR_MASK		(1 << 1)
+> +#define S2MPU05_IRQ_JIGONBF_MASK	(1 << 2)
+> +#define S2MPU05_IRQ_JIGONBR_MASK	(1 << 3)
+> +#define S2MPU05_IRQ_ACOKF_MASK		(1 << 4)
+> +#define S2MPU05_IRQ_ACOKR_MASK		(1 << 5)
+> +#define S2MPU05_IRQ_PWRON1S_MASK	(1 << 6)
+> +#define S2MPU05_IRQ_MRB_MASK		(1 << 7)
+> +
+> +#define S2MPU05_IRQ_RTC60S_MASK		(1 << 0)
+> +#define S2MPU05_IRQ_RTCA1_MASK		(1 << 1)
+> +#define S2MPU05_IRQ_RTCA0_MASK		(1 << 2)
+> +#define S2MPU05_IRQ_SMPL_MASK		(1 << 3)
+> +#define S2MPU05_IRQ_RTC1S_MASK		(1 << 4)
+> +#define S2MPU05_IRQ_WTSR_MASK		(1 << 5)
+> +
+> +#define S2MPU05_IRQ_INT120C_MASK	(1 << 0)
+> +#define S2MPU05_IRQ_INT140C_MASK	(1 << 1)
+> +#define S2MPU05_IRQ_TSD_MASK		(1 << 2)
 
-How does that work if you don't have some way to allocate the protected
-memory? You can still submit jobs to the GPU, but you can't submit /
-execute "protected jobs"?
+BIT()?
 
-> Now, it's not impossible to work around this limitation. For instance,
-> we could load the FW without this protected section by default (what we
-> do right now), and then provide a DRM_PANTHOR_ENABLE_FW_PROT_MODE
-> ioctl that would take a GEM object imported from a dmabuf allocated
-> from the protected dma-heap by userspace. We can then reset the FW and
-> allow it to operate in protected mode after that point.
+>  enum s5m8767_irq {
+>  	S5M8767_IRQ_PWRR,
+>  	S5M8767_IRQ_PWRF,
+> diff --git a/include/linux/mfd/samsung/s2mpu05.h b/include/linux/mfd/samsung/s2mpu05.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..fa450e4352a178a6a996bbd723f1fc1fa827c167
+> --- /dev/null
+> +++ b/include/linux/mfd/samsung/s2mpu05.h
+> @@ -0,0 +1,152 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Copyright (c) 2015 Samsung Electronics Co., Ltd
 
-Urgh, I'd rather avoid that dance if possible :)
+No changes have happened in 10 years?
 
-> This approach has two downsides though:
->=20
-> 1. We have no way of checking that the memory we're passed is actually
-> suitable for FW execution in a protected context. If we're passed
-> random memory, this will likely hang the platform as soon as we enter
-> protected mode.
+> + *              http://www.samsung.com
+> + */
+> +
+> +#ifndef __LINUX_MFD_S2MPU05_H
+> +#define __LINUX_MFD_S2MPU05_H
+> +
+> +/* S2MPU05 registers */
+> +enum S2MPU05_reg {
+> +	S2MPU05_REG_ID,
+> +	S2MPU05_REG_INT1,
+> +	S2MPU05_REG_INT2,
+> +	S2MPU05_REG_INT3,
+> +	S2MPU05_REG_INT1M,
+> +	S2MPU05_REG_INT2M,
+> +	S2MPU05_REG_INT3M,
+> +	S2MPU05_REG_ST1,
+> +	S2MPU05_REG_ST2,
+> +	S2MPU05_REG_PWRONSRC,
+> +	S2MPU05_REG_OFFSRC,
+> +	S2MPU05_REG_BU_CHG,
+> +	S2MPU05_REG_RTC_BUF,
+> +	S2MPU05_REG_CTRL1,
+> +	S2MPU05_REG_CTRL2,
+> +	S2MPU05_REG_ETC_TEST,
+> +	S2MPU05_REG_OTP_ADRL,
+> +	S2MPU05_REG_OTP_ADRH,
+> +	S2MPU05_REG_OTP_DATA,
+> +	S2MPU05_REG_MON1SEL,
+> +	S2MPU05_REG_MON2SEL,
+> +	S2MPU05_REG_CTRL3,
+> +	S2MPU05_REG_ETC_OTP,
+> +	S2MPU05_REG_UVLO,
+> +	S2MPU05_REG_TIME_CTRL1,
+> +	S2MPU05_REG_TIME_CTRL2,
+> +	S2MPU05_REG_B1CTRL1,
+> +	S2MPU05_REG_B1CTRL2,
+> +	S2MPU05_REG_B2CTRL1,
+> +	S2MPU05_REG_B2CTRL2,
+> +	S2MPU05_REG_B2CTRL3,
+> +	S2MPU05_REG_B2CTRL4,
+> +	S2MPU05_REG_B3CTRL1,
+> +	S2MPU05_REG_B3CTRL2,
+> +	S2MPU05_REG_B3CTRL3,
+> +	S2MPU05_REG_B4CTRL1,
+> +	S2MPU05_REG_B4CTRL2,
+> +	S2MPU05_REG_B5CTRL1,
+> +	S2MPU05_REG_B5CTRL2,
+> +	S2MPU05_REG_BUCK_RAMP,
+> +	S2MPU05_REG_LDO_DVS1,
+> +	S2MPU05_REG_LDO_DVS9,
+> +	S2MPU05_REG_LDO_DVS10,
+> +	S2MPU05_REG_L1CTRL,
+> +	S2MPU05_REG_L2CTRL,
+> +	S2MPU05_REG_L3CTRL,
+> +	S2MPU05_REG_L4CTRL,
+> +	S2MPU05_REG_L5CTRL,
+> +	S2MPU05_REG_L6CTRL,
+> +	S2MPU05_REG_L7CTRL,
+> +	S2MPU05_REG_L8CTRL,
+> +	S2MPU05_REG_L9CTRL1,
+> +	S2MPU05_REG_L9CTRL2,
+> +	S2MPU05_REG_L10CTRL, /* LDO11~24 for CP */
+> +	S2MPU05_REG_L25CTRL = 0x47,
+> +	S2MPU05_REG_L26CTRL,
+> +	S2MPU05_REG_L27CTRL,
+> +	S2MPU05_REG_L28CTRL,
+> +	S2MPU05_REG_L29CTRL,
+> +	S2MPU05_REG_L30CTRL,
+> +	S2MPU05_REG_L31CTRL,
+> +	S2MPU05_REG_L32CTRL,
+> +	S2MPU05_REG_L33CTRL,
+> +	S2MPU05_REG_L34CTRL,
+> +	S2MPU05_REG_L35CTRL,
+> +	S2MPU05_REG_LDO_DSCH1,
+> +	S2MPU05_REG_LDO_DSCH2,
+> +	S2MPU05_REG_LDO_DSCH3,
+> +	S2MPU05_REG_LDO_DSCH4,
+> +	S2MPU05_REG_LDO_DSCH5,
+> +	S2MPU05_REG_LDO_CTRL1,
+> +	S2MPU05_REG_LDO_CTRL2,
+> +	S2MPU05_REG_TCXO_CTRL,
+> +	S2MPU05_REG_SELMIF,
+> +};
+> +
+> +/* S2MPU05 regulator ids */
+> +enum S2MPU05_regulators {
+> +	S2MPU05_LDO1,
+> +	S2MPU05_LDO2,
+> +	S2MPU05_LDO3,
+> +	S2MPU05_LDO4,
+> +	S2MPU05_LDO5,
+> +	S2MPU05_LDO6,
+> +	S2MPU05_LDO7,
+> +	S2MPU05_LDO8,
+> +	S2MPU05_LDO9,
+> +	S2MPU05_LDO10, /* LDO11~24 for CP */
+> +	S2MPU05_LDO25,
+> +	S2MPU05_LDO26,
+> +	S2MPU05_LDO27,
+> +	S2MPU05_LDO28,
+> +	S2MPU05_LDO29,
+> +	S2MPU05_LDO30,
+> +	S2MPU05_LDO31,
+> +	S2MPU05_LDO32,
+> +	S2MPU05_LDO33,
+> +	S2MPU05_LDO34,
+> +	S2MPU05_LDO35,
+> +	S2MPU05_BUCK1,
+> +	S2MPU05_BUCK2,
+> +	S2MPU05_BUCK3,
+> +	S2MPU05_BUCK4,
+> +	S2MPU05_BUCK5,
+> +
+> +	S2MPU05_REGULATOR_MAX,
+> +};
+> +
+> +#define S2MPU05_SW_ENABLE_MASK	0x03
+> +
+> +#define S2MPU05_ENABLE_TIME_LDO		128
+> +#define S2MPU05_ENABLE_TIME_BUCK1	110
+> +#define S2MPU05_ENABLE_TIME_BUCK2	110
+> +#define S2MPU05_ENABLE_TIME_BUCK3	110
+> +#define S2MPU05_ENABLE_TIME_BUCK4	150
+> +#define S2MPU05_ENABLE_TIME_BUCK5	150
+> +
+> +#define S2MPU05_LDO_MIN1	800000
+> +#define S2MPU05_LDO_STEP1	12500
+> +#define S2MPU05_LDO_MIN2	1800000
+> +#define S2MPU05_LDO_STEP2	25000
+> +#define S2MPU05_LDO_MIN3	400000
+> +
+> +#define S2MPU05_BUCK_MIN1	400000
+> +#define S2MPU05_BUCK_STEP1	6250
+> +#define S2MPU05_BUCK_MIN2	600000
+> +#define S2MPU05_BUCK_STEP2	12500
+> +
+> +#define S2MPU05_RAMP_DELAY	12000	/* uV/uS */
+> +
+> +#define S2MPU05_ENABLE_SHIFT	6
+> +#define S2MPU05_ENABLE_MASK	(0x03 << S2MPU05_ENABLE_SHIFT)
+> +
+> +#define S2MPU05_LDO_VSEL_MASK	0x3F
+> +#define S2MPU05_BUCK_VSEL_MASK	0xFF
+> +#define S2MPU05_LDO_N_VOLTAGES	(S2MPU05_LDO_VSEL_MASK + 1)
+> +#define S2MPU05_BUCK_N_VOLTAGES (S2MPU05_BUCK_VSEL_MASK + 1)
+> +
+> +#define S2MPU05_PMIC_EN_SHIFT	6
+> +
+> +#endif /*  __LINUX_MFD_S2MPU05_H */
+> 
+> -- 
+> 2.48.1
+> 
 
-It's a current limitation of dma-buf in general, and you'd have the same
-issue right now if someone imports a buffer, or misconfigure the heap
-for a !protected heap.
-
-I'd really like to have some way to store some metadata in dma_buf, if
-only to tell that the buffer is protected.
-
-I suspect you'd also need that if you do things like do protected video
-playback through a codec, get a protected frame, and want to import that
-into the GPU. Depending on how you allocate it, either the codec or the
-GPU or both will want to make sure it's protected.
-
-> 2. If the driver already boot the FW and exposed a DRI node, we might
-> have GPU workloads running, and doing a FW reset might incur a slight
-> delay in GPU jobs execution.
->=20
-> I think #1 is a more general issue that applies to suspend buffers
-> allocated for GPU contexts too. If we expose ioctls where we take
-> protected memory buffers that can possibly lead to crashes if they are
-> not real protected memory regions, and we have no way to ensure the
-> memory is protected, we probably want to restrict these ioctls/modes to
-> some high-privilege CAP_SYS_.
->=20
-> For #2, that's probably something we can live with, since it's a
-> one-shot thing. If it becomes an issue, we can even make sure we enable
-> the FW protected-mode before the GPU starts being used for real.
->=20
-> This being said, I think the problem applies outside Panthor, and it
-> might be that the video codec can't reset the FW/HW block to switch to
-> protected mode as easily as Panthor.
->
-> Note that there's also downsides to the reserved-memory node approach,
-> where some bootloader stage would ask the secure FW to reserve a
-> portion of mem and pass this through the DT. This sort of things tend to
-> be an integration mess, where you need all the pieces of the stack (TEE,
-> u-boot, MTK dma-heap driver, gbm, ...) to be at a certain version to
-> work properly. If we go the ioctl() way, we restrict the scope to the
-> TEE, gbm/mesa and the protected-dma-heap driver, which is still a lot,
-> but we've ripped the bootloader out of the equation at least.
-
-Yeah. I also think there's two discussions in parallel here:
-
- 1) Being able to allocate protected buffers from the driver
- 2) Exposing an interface to allocate those to userspace
-
-I'm not really convinced we need 2, but 1 is obviously needed from what
-you're saying.
-
-Maxime
-
---htbc2pgomj3vttd2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ6tUzwAKCRAnX84Zoj2+
-dgyXAX9Mpc+TjVfAcyCQN/n7q9zZ5lmbptADZW4LEBnXwTWDkkiDiB1S1nzvFyd0
-xywePzABgNQe/OpXr+aMBUmIbrbXc0/Yc/5KJdkXmAf8AsGGC198Qo6AbnZL4M8x
-oYxodaBcBA==
-=GufS
------END PGP SIGNATURE-----
-
---htbc2pgomj3vttd2--
+-- 
+Lee Jones [李琼斯]
