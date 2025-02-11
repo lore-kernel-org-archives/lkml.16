@@ -1,98 +1,219 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DFB61E4106
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280921E4106;
+	Tue, 11 Feb 2025 10:14:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739268840; cv=none; b=e5tPryBx33DcOsAb/0bRt4KEqj9wtgk+oz4/uxqpLPXRP903tueK/FQq3AvuLbAxXIEag5qG5NBmHDOoPlf/fQiqXqP/3c8cxTUUWOZK5Ol+66sBXIw52gGQ154NOPbUIur9K+5rrn9haFsNqhmRd/k5hIQ8/9Ctylfx6xzWkmU=
+	t=1739268883; cv=none; b=OAO0oCUB+o6mtFovi0YLHysnumpCh8k/NBHxVbn1KpapNvSbGHA793hdz/Q27BUoBraEPdGRtIAyr3Bs9OTaJRGOmbYWL6nA6TvLVol8vbwTeIHUf8ewj0E3lCpynEIASUaysSc8g5Xr51u6GFE+f254zxTyQewlZuI8TSrlzXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739268840; c=relaxed/simple;
-	bh=MwifYhRFjX6dmrk5l//mHMHztSYbGhMPPU2hSFx03ns=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CdBSZ0/eO1ASVXDArSLM5okTWmjMAzq/M1LVhhCT7tr0o0yrF5+FlF5YEbhcl3IZ13X6ZhvfcOodpFFG+NnlNLxvfr6QEf7Bq6JkcxbPQnwbAAjCPk0JybxqZ4wJ5A9XWe5Ft9aD/05jTeeYg9wV2WMX/U4WTcGXS1LtRefIrpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PtF27raa; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739268883; c=relaxed/simple;
+	bh=FdlKOc8KBQzo2vzoUlO3ARAx1VI01bXrJQ9aJ5HAfVs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=FTsI/UMgFXwdLD/RE/T8AbVx6YUCFK7t3M7RoIu7JForOmC4nyVmN30a1ZTlFxOANhLloSYl2rdgkSg5EaYUlkPjSEiEKs//xOMNoPGwFVrMgAf4kokHn0XE/cACIJbgu9eSkNr1JX/Bk7PSFa9/V2LQPUlRZTrxiW0yrHtCtlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oZ94Bng3; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PtF27raa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739268838;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bTn51ccyqcJIHtGLutjpOXSf+X7YNIbdnxCcfHL1d9I=;
-	b=PtF27raamm26UkMW//nJJD0xgNS/i1x44wz8CBBxJ5+iKO01MdcCPc+70YyAvG7ynQxyfs
-	vucvEyjzDtNAdt3k4Kr5NS2aJ/7mG5NfVjUwJG+AP+Y2QdGMuVLlzmQy6UqvHirXv2rhF9
-	qufMa67Ek65NDNYmnyb4PP64NgFl/GY=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-318-vzu7K-NGOaO8fBeNHh45wg-1; Tue,
- 11 Feb 2025 05:13:54 -0500
-X-MC-Unique: vzu7K-NGOaO8fBeNHh45wg-1
-X-Mimecast-MFC-AGG-ID: vzu7K-NGOaO8fBeNHh45wg
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9C5CA1AD2E7B;
-	Tue, 11 Feb 2025 10:13:46 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.8])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 742511801771;
-	Tue, 11 Feb 2025 10:13:43 +0000 (UTC)
-Date: Tue, 11 Feb 2025 18:13:39 +0800
-From: Baoquan He <bhe@redhat.com>
-To: linux-mm@kvack.org
-Cc: akpm@linux-foundation.org, will@kernel.org, aneesh.kumar@kernel.org,
-	npiggin@gmail.com, peterz@infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] mm/mmu_gather: remove unused __tlb_remove_page()
-Message-ID: <Z6si0/A/zzEF/bFJ@MiWiFi-R3L-srv>
-References: <20250211034348.39531-1-bhe@redhat.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oZ94Bng3"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51B8vDth001448;
+	Tue, 11 Feb 2025 10:14:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	hvearNOGES36ne3L//usoK4/zvPHiBAzHvBkYWI1NSE=; b=oZ94Bng387yK7UzO
+	4x5sAat/VWCliV7aLFvq8/ywV8Cb+Bu73pxzTIHW2HYGIyApOT4e7tDY44INj3ax
+	K346rxry25lLdgA6MtXfhMpcy1tMd+lv8aaKSfwuyDGMH59lngcCJLsBdH6wjnn8
+	y5CILiReIZ9hrQs1/+vyXEkmcpBzU3bP2G0aHY891W7RtrV7tPdQXW4VyTrTL+qw
+	CylVJvdTYs17PuscYBTf/wxAcxjzwyqVxuIGVab+Yj+5IGJQHga4ffU53tpjo0nf
+	xGeCGae31ipSAi2qjcgGLLsR6wKmUwtMCj0n0+yiqDA0S6blqWqV55ZSL36ioieM
+	2oiG6Q==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qepxkj8s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 10:14:24 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51BAENPo015150
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 10:14:23 GMT
+Received: from [10.239.155.136] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Feb
+ 2025 02:14:16 -0800
+Message-ID: <c20ff2ea-5546-4e4a-b813-f5736696b042@quicinc.com>
+Date: Tue, 11 Feb 2025 18:14:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250211034348.39531-1-bhe@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/8] scsi: ufs: core: Add a vop to map clock frequency
+ to gear speed
+To: =?UTF-8?B?UGV0ZXIgV2FuZyAo546L5L+h5Y+LKQ==?= <peter.wang@mediatek.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "avri.altman@wdc.com"
+	<avri.altman@wdc.com>,
+        "quic_rampraka@quicinc.com"
+	<quic_rampraka@quicinc.com>,
+        "quic_cang@quicinc.com" <quic_cang@quicinc.com>,
+        "quic_nguyenb@quicinc.com" <quic_nguyenb@quicinc.com>,
+        "quic_nitirawa@quicinc.com" <quic_nitirawa@quicinc.com>,
+        "bvanassche@acm.org"
+	<bvanassche@acm.org>,
+        "junwoo80.lee@samsung.com" <junwoo80.lee@samsung.com>,
+        "mani@kernel.org" <mani@kernel.org>,
+        "martin.petersen@oracle.com"
+	<martin.petersen@oracle.com>
+CC: "ebiggers@google.com" <ebiggers@google.com>,
+        "neil.armstrong@linaro.org"
+	<neil.armstrong@linaro.org>,
+        "linux-scsi@vger.kernel.org"
+	<linux-scsi@vger.kernel.org>,
+        "manivannan.sadhasivam@linaro.org"
+	<manivannan.sadhasivam@linaro.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "alim.akhtar@samsung.com"
+	<alim.akhtar@samsung.com>,
+        "linux-arm-msm@vger.kernel.org"
+	<linux-arm-msm@vger.kernel.org>,
+        "minwoo.im@samsung.com"
+	<minwoo.im@samsung.com>,
+        "James.Bottomley@HansenPartnership.com"
+	<James.Bottomley@HansenPartnership.com>
+References: <20250210100212.855127-1-quic_ziqichen@quicinc.com>
+ <20250210100212.855127-4-quic_ziqichen@quicinc.com>
+ <cb88b16e4207c649da8eba66f976c5039df7c77c.camel@mediatek.com>
+Content-Language: en-US
+From: Ziqi Chen <quic_ziqichen@quicinc.com>
+In-Reply-To: <cb88b16e4207c649da8eba66f976c5039df7c77c.camel@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: LN0kZQBdk9jqH1K5WUf7gOy93Bp8v9NC
+X-Proofpoint-ORIG-GUID: LN0kZQBdk9jqH1K5WUf7gOy93Bp8v9NC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_04,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ phishscore=0 priorityscore=1501 mlxscore=0 suspectscore=0 impostorscore=0
+ mlxlogscore=999 clxscore=1015 lowpriorityscore=0 malwarescore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502110064
 
-Nobody is using __tlb_remove_page() now, clean it up.
 
-And also remove the code comment above tlb_remove_page() because
-it's not meaningful any more.
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Reviewed-by: Qi Zheng <zhengqi.arch@bytedance.com>
----
- include/asm-generic/tlb.h | 10 ----------
- 1 file changed, 10 deletions(-)
+On 2/11/2025 2:02 PM, Peter Wang (王信友) wrote:
+> On Mon, 2025-02-10 at 18:02 +0800, Ziqi Chen wrote:
+>>
+>> External email : Please do not click links or open attachments until
+>> you have verified the sender or the content.
+>>
+>>
+>> From: Can Guo <quic_cang@quicinc.com>
+>>
+>> Add a vop to map UFS host controller clock frequencies to the
+>> corresponding
+>> maximum supported UFS high speed gear speeds. During clock scaling,
+>> we can
+>> map the target clock frequency, demanded by devfreq, to the maximum
+>> supported gear speed, so that devfreq can scale the gear to the
+>> highest
+>> gear speed supported at the target clock frequency, instead of just
+>> scaling
+>> up/down the gear between the min and max gear speeds.
+>>
+>> Co-developed-by: Ziqi Chen <quic_ziqichen@quicinc.com>
+>> Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
+>> Signed-off-by: Can Guo <quic_cang@quicinc.com>
+>> Reviewed-by: Bean Huo <beanhuo@micron.com>
+>> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+>> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
+>> ---
+>> v2 ->v3:
+>> 1. Remove the parameter 'gear' and use it as function return result.
+>> 2. Change "vops" into "vop" in commit message.
+>> ---
+>>   drivers/ufs/core/ufshcd-priv.h | 8 ++++++++
+>>   include/ufs/ufshcd.h           | 2 ++
+>>   2 files changed, 10 insertions(+)
+>>
+>> diff --git a/drivers/ufs/core/ufshcd-priv.h
+>> b/drivers/ufs/core/ufshcd-priv.h
+>> index 0549b65f71ed..4da3e65c6735 100644
+>> --- a/drivers/ufs/core/ufshcd-priv.h
+>> +++ b/drivers/ufs/core/ufshcd-priv.h
+>> @@ -277,6 +277,14 @@ static inline int
+>> ufshcd_mcq_vops_config_esi(struct ufs_hba *hba)
+>>          return -EOPNOTSUPP;
+>>   }
+>>
+>> +static inline int ufshcd_vops_freq_to_gear_speed(struct ufs_hba
+> 
+> Hi Ziqi,
+> 
+> Gear speed type in struct ufs_pa_layer_attr is u32.
+> I think it would be better to unify the type here.
+> 
+> 
+Hi Peter,
 
-diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
-index e402aef79c93..1fac1985127d 100644
---- a/include/asm-generic/tlb.h
-+++ b/include/asm-generic/tlb.h
-@@ -489,16 +489,6 @@ static inline void tlb_remove_page_size(struct mmu_gather *tlb,
- 		tlb_flush_mmu(tlb);
- }
- 
--static __always_inline bool __tlb_remove_page(struct mmu_gather *tlb,
--		struct page *page, bool delay_rmap)
--{
--	return __tlb_remove_page_size(tlb, page, delay_rmap, PAGE_SIZE);
--}
--
--/* tlb_remove_page
-- *	Similar to __tlb_remove_page but will call tlb_flush_mmu() itself when
-- *	required.
-- */
- static inline void tlb_remove_page(struct mmu_gather *tlb, struct page *page)
- {
- 	return tlb_remove_page_size(tlb, page, PAGE_SIZE);
--- 
-2.41.0
+I changed the type of new_gear since V3 sue to I use it as return result 
+of vop ufshcd_vops_freq_to_gear_speed(). I think you already find the 
+reason in patch 4/8 and 5/8. I think your suggestion in patch 5/8 is 
+make sense. Let me discuss more with you in the patch 5/8.
+
+-Ziqi
+
+> 
+>> *hba, unsigned long freq)
+>> +{
+>> +       if (hba->vops && hba->vops->freq_to_gear_speed)
+>> +               return hba->vops->freq_to_gear_speed(hba, freq);
+>> +
+>> +       return -EOPNOTSUPP;
+>> +}
+>> +
+>>   extern const struct ufs_pm_lvl_states ufs_pm_lvl_states[];
+>>
+>>   /**
+>> diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
+>> index f51d425696e7..cdb853f5b871 100644
+>> --- a/include/ufs/ufshcd.h
+>> +++ b/include/ufs/ufshcd.h
+>> @@ -336,6 +336,7 @@ struct ufs_pwr_mode_info {
+>>    * @get_outstanding_cqs: called to get outstanding completion queues
+>>    * @config_esi: called to config Event Specific Interrupt
+>>    * @config_scsi_dev: called to configure SCSI device parameters
+>> + * @freq_to_gear_speed: called to map clock frequency to the max
+>> supported gear speed
+>>    */
+>>   struct ufs_hba_variant_ops {
+>>          const char *name;
+>> @@ -387,6 +388,7 @@ struct ufs_hba_variant_ops {
+>>                                         unsigned long *ocqs);
+>>          int     (*config_esi)(struct ufs_hba *hba);
+>>          void    (*config_scsi_dev)(struct scsi_device *sdev);
+>> +       int (*freq_to_gear_speed)(struct ufs_hba *hba, unsigned long
+>> freq);
+>>
+> 
+> Please keep the indentation consistent too.
+> 
+> Thanks
+> Peter
+> 
+>>   };
+>>
+>>   /* clock gating state  */
+>> --
+>> 2.34.1
+>>
+> 
 
