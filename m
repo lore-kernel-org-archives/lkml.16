@@ -1,154 +1,307 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A45D1FCFE3
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:07:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB426206F02;
+	Tue, 11 Feb 2025 13:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739279267; cv=none; b=kzPEIVt9JLtBOIfM/7mnVR2T5ej4w5BFPSrjopSuD3faW90fnT/w5IGJUzVgk5WRtZgrTS9HNRxDRsj6riScjnJCrXwHq8kXbQcBT/gY8qD5Kmq2IcqB9TxlWWcRI1ixHj1q0D9T2fl2p64vV3VlVr+qsushu0e4YcIOY0T3sis=
+	t=1739279284; cv=none; b=D4zHX5oEE0zUluuJ6XvYXu327Zq8lZAGaJ7DzoobfBvPHRch91Zzxe2H3Po9N/Q6P5Zwuq4Iaf+9pLyj/har9YABI3AhMKpkYnISdc1rRdc1P7F11RkTXrMlo2Bjb5c6m+DptFmaOJVFncV5Z1qVxP5TwwdUULCqZEDewWSvp1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739279267; c=relaxed/simple;
-	bh=ugClV3eeqzKYRN5PsMUBkSZ3OrzpNqr4jdCip1GqpLY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qcurT6jAmjgUCqn6pI4ls/bK2qL0eWwNDAYa2ORb5c1EpEA8u18vL0Vg0n7YXSj2YZbc507jTjOX/3Xttx/ZgGzlkWHd1cTrJXPzA0HgvBAYkD1ON2biBJibQ6JqbH1pFYYCoe6xlRzZ7QpNfvG8tLtcEth8/6CLxLomiq/wKj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=oi5FWt4R; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1739279284; c=relaxed/simple;
+	bh=KPYi1A3O/sh8s8numOmFmpRAC1Ro6cWCm+dP4Ba7dvA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zv5XphQ7BJDECjsKMaVs56bKEmkGPXJ24Aj3+1Jzpd6L7Sq02RrDsa0fiD7qvpsimLk9WrJV16geY7VkaeHP4UYAIVx4lCd9MFkxgDG0/7fJtVnROUi2ijDUXZ3FPjx1bUeNYiDCza2kcJ5N1a3kYcN6veMvTATeSSRGyx/mvP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MkYLkKb9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="oi5FWt4R"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BD4Ifh010356
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:07:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	bsqyhUimndYfhqr19Fi/0ypW4Gx9BRnINfl1VKPK4yk=; b=oi5FWt4Rjsn56DnX
-	p7COLY6W2VIycp1i6bqXzsdKObkrzE3Lj6qRF66LeyRBj/QvSs+ZrXUuuuVqULmR
-	sdHKFQzch/SkzsOCx+YwhgdF+Qn8f4qK39aBToV3qmTbdNZkqNlKhCWVbJPEvZoA
-	kBANVCNwWaF2lL6ri3VnNBf1v/GcMqbTy+DKuIfUrZNqgKzlzy769VfYahCbe52B
-	aimCTA7eKQxSO86PyuFJOpi+zc7jC0J3Fx/GRLvN2wMeSYmnib5i3kKI+bKRj7G9
-	EK76X0dfgW87SCAzE6Gub3Xx0ZEslhz0zGydgsnY50LweGi3WV1efqeGPF08qqSK
-	bBxKvg==
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qcs5cgja-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:07:42 +0000 (GMT)
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-46e78a271d3so8110411cf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 05:07:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739279262; x=1739884062;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bsqyhUimndYfhqr19Fi/0ypW4Gx9BRnINfl1VKPK4yk=;
-        b=taXBTvy2EcBOna7SzF1aLnxV0m296N+gq2yA838H6L3yjiTcWhP4qFgCa4zR2r7SGc
-         u1REXKMiO8hCNNxv9LXovWXUqO4JvCagNHcYCbUmCDrbh1Ox7pPeTWgeqXPwU5nj7Hvr
-         EIm+/mMHyn89GbR/ozPjAhUf8RE8u/BDzRAGVI3nLpQYdG1P9NIxzNGnJHu03Dfxlg1W
-         sw2IZ5kow/X7cemRi+pO0wywtggPDekbzvPdLJJY2AB2Ky4KyWa9vxUvUWa/WTSX0RX7
-         PzYM59353ovJ9HLXTGuJOj3kQr5yTR0fB0btcw57gUQWzsZMnhPnsnAvqq7lpLhYVuL3
-         1K8w==
-X-Forwarded-Encrypted: i=1; AJvYcCUnAhog4Lw7GXegf/sIDD2I4DcbA85JY1Kf29VJSOwLi8F6zqBae5YKnhB2JhYyCD3ZqixJ4rfRPfYMNfo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPtZ/4GuPFKYs3j9ZKLsPHsHfTTY/IzHoI/wDVQ2cgO0mrJOBr
-	B2uncUhUQnKZbY7f6ImaHev/frtSZYT1gX479eKmZooGAioO248DhXpdFSGQcfuWIxOSYv2IsMx
-	S5q9eX/+ZtneikgXZsYriCFFV7DZaNTC/1FsUn4FumsTmj+XZbtEL61euy1DH9RI=
-X-Gm-Gg: ASbGncvMBaT6lNsaDr5up19yKiL0fa2OMyKbu+A9+hseMQGJy1o5HRMEbI0qVAVEpQK
-	QT+vwPj6nDTTZlxGh6B1JRBqJTWe+wmGBuv0DdwFwiiGdWSvgFiV6Ww7yKoedYmkQ0Qa2qj/jFb
-	QwzPsgI7EckbGMQzG6cmyU3rq3b03XPV2tYlj+zLqj7iu6FvHr38Nm2VxOdylr8DuogOXlvMF8R
-	5YfwUAE/cihHg4NEPuhR3rNg2B5Jc9fZ8peT8Vax6+QytP0SMw/jgtc3qTxrOn0Ax427xg4QXWX
-	BTdNBqiNRfMohDSfwcU222+fqlGjXqOqLB4eR067yYltqyrkz+t5StMFBko=
-X-Received: by 2002:ac8:7e95:0:b0:46e:12fc:6c83 with SMTP id d75a77b69052e-471a38cd930mr11392321cf.0.1739279261999;
-        Tue, 11 Feb 2025 05:07:41 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFf17TQcGeLggmbsVGrZz0dN+r0rFljR1fT9i8V4oZgVqeg6eTmzd49LgDFHMPdGNR01MCE3A==
-X-Received: by 2002:ac8:7e95:0:b0:46e:12fc:6c83 with SMTP id d75a77b69052e-471a38cd930mr11392051cf.0.1739279261615;
-        Tue, 11 Feb 2025 05:07:41 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de58404347sm7153814a12.9.2025.02.11.05.07.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 05:07:41 -0800 (PST)
-Message-ID: <dad5bf75-d8ae-478e-8215-7d89db793dd7@oss.qualcomm.com>
-Date: Tue, 11 Feb 2025 14:07:36 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MkYLkKb9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 327B7C4CEDD;
+	Tue, 11 Feb 2025 13:08:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739279283;
+	bh=KPYi1A3O/sh8s8numOmFmpRAC1Ro6cWCm+dP4Ba7dvA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MkYLkKb9BZZyO58GPRBkBIpVW0ejN2pewkAe1+uEtw/P/+EY0zVXKxyHCLeMdGgU+
+	 VxyKqGlphdSDmfkmMDO424aNvPz+7oLe3lbfw1D7wO/EzEFPg3nieywXdcQkdO9WiU
+	 ira2IcVN61+g8PeNMc1T0D9QlH6xDcb9N9E//6q+X79Lj1XZg1FLSDil+sV0c/6hOC
+	 VqDlHUI4Cy2wCSQWSFQ5MllQiAe6MoaD6uW5+1DLluWkuRSXtttVh9PqthVccDwpYk
+	 YzSYpMuUnuXkq+V5Za4ZXjeawpW3f1FkmjApe9++SSE0JR5190yDne0TWkdIL1VWDk
+	 Pom+JlQ/MyvBg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1thpzm-000000006n6-0Qvz;
+	Tue, 11 Feb 2025 14:08:10 +0100
+Date: Tue, 11 Feb 2025 14:08:10 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Tony Chung <tony467913@gmail.com>
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH 3/3] driver: usb: serial: mos7840: add more baudrate
+ options
+Message-ID: <Z6tLuiw7eK5s4Agq@hovoldconsulting.com>
+References: <20241024100901.69883-1-tony467913@gmail.com>
+ <20241024100901.69883-4-tony467913@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] arm64: dts: qcom: sm8550: add missing cpu-cfg
- interconnect path in the mdss node
-To: neil.armstrong@linaro.org, Konrad Dybcio
- <konrad.dybcio@oss.qualcomm.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250210-topic-sm8x50-mdss-interconnect-bindings-fix-v3-0-54c96a9d2b7f@linaro.org>
- <20250210-topic-sm8x50-mdss-interconnect-bindings-fix-v3-3-54c96a9d2b7f@linaro.org>
- <a3f7bef6-bfc8-4a2e-b979-4aac7908306f@oss.qualcomm.com>
- <fcde9fab-b28a-4e09-b77b-f7c6c3840710@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <fcde9fab-b28a-4e09-b77b-f7c6c3840710@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: _W4z94OLU-CtRG4X4aoSWGGYmBE8CFiH
-X-Proofpoint-GUID: _W4z94OLU-CtRG4X4aoSWGGYmBE8CFiH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_05,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- mlxlogscore=999 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
- adultscore=0 clxscore=1015 mlxscore=0 priorityscore=1501 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502110086
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241024100901.69883-4-tony467913@gmail.com>
 
-On 11.02.2025 10:07 AM, Neil Armstrong wrote:
-> On 10/02/2025 17:32, Konrad Dybcio wrote:
->> On 10.02.2025 10:32 AM, Neil Armstrong wrote:
->>> The bindings requires the mdp0-mem and the cpu-cfg interconnect path,
->>> add the missing cpu-cfg path to fix the dtbs check error.
->>>
->>> Fixes: b8591df49cde ("arm64: dts: qcom: sm8550: correct MDSS interconnects")
->>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
->>> ---
->>>   arch/arm64/boot/dts/qcom/sm8550.dtsi | 5 +++--
->>>   1 file changed, 3 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
->>> index eac8de4005d82f246bc50f64f09515631d895c99..702b55296b18ff2f8ea62a3391b7de2804aa9f65 100644
->>> --- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
->>> @@ -3020,8 +3020,9 @@ mdss: display-subsystem@ae00000 {
->>>                 power-domains = <&dispcc MDSS_GDSC>;
->>>   -            interconnects = <&mmss_noc MASTER_MDP 0 &mc_virt SLAVE_EBI1 0>;
->>> -            interconnect-names = "mdp0-mem";
->>> +            interconnects = <&mmss_noc MASTER_MDP 0 &mc_virt SLAVE_EBI1 0>,
->>
->> QCOM_ICC_TAG_ALWAYS
->>
->>> +                    <&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_DISPLAY_CFG 0>;
->>
->> QCOM_ICC_TAG_ACTIVE_ONLY
->>
->> w that
+On Thu, Oct 24, 2024 at 06:09:05PM +0800, Tony Chung wrote:
+> Adds more baud rate options using 96M/30M/External clock sources.
+> To use these clock sources,
+> set through Clk_Select_Reg1 and Clk_Select_Reg2.
 > 
-> So it depends how it articulates with https://lore.kernel.org/all/20250115-topic-sm8x50-upstream-dt-icc-update-v1-0-eaa8b10e2af7@linaro.org/
+> Signed-off-by: Tony Chung <tony467913@gmail.com>
+> ---
+>  drivers/usb/serial/mos7840.c | 156 ++++++++++++++++++++++++++++++++++-
+>  1 file changed, 155 insertions(+), 1 deletion(-)
 > 
-> I can rebase on top of it, it would be simpler, but then the Fixes tag won't work anymore.
+> diff --git a/drivers/usb/serial/mos7840.c b/drivers/usb/serial/mos7840.c
+> index acc16737b..70ee4a638 100644
+> --- a/drivers/usb/serial/mos7840.c
+> +++ b/drivers/usb/serial/mos7840.c
+> @@ -1169,6 +1169,37 @@ static int mos7840_calc_baud_rate_divisor(struct usb_serial_port *port,
+>  		*divisor = 0x01;		// DLM=0, DLL=0x01
+>  		*clk_sel_val = 0x60;	// clock source=24M
+>  
+> +	/* below are using 96M or 30M clock source
+> +	 * will determine the clock source later
+> +	 * in function mos7840_send_cmd_write_baud_rate
+> +	 */
 
-The fixes tag is there for human eyes, autoselection for backports has
-always been iffy with DT
+Block comment style, also try to follow style of driver and capitalise
+"Below".
 
-Konrad
+That said, this one should not be needed after you add proper
+abstractions for this. For example, instead of returning a raw
+clk_sel_val you return an enum which you handle in the caller.
+
+> +	} else if (baudRate == 6000000) {
+> +		*divisor = 0x01;		// DLM=0, DLL=0x01
+> +		*clk_sel_val = 0x80;	// DUMMY val, clock source = 96M
+> +	} else if (baudRate == 2000000) {
+> +		*divisor = 0x03;		// DLM=0, DLL=0x03
+> +		*clk_sel_val = 0x80;	// DUMMY val, clock source = 96M
+
+The above looks useful.
+
+> +	} else if (baudRate == 403200) {
+> +		*divisor = 0x0f;		// DLM=0, DLL=0x0f
+> +		*clk_sel_val = 0x80;	// DUMMY val, clock source = 96M
+> +	} else if (baudRate == 225000) {
+> +		*divisor = 0x1b;		// DLM=0, DLL=0x1b
+> +		*clk_sel_val = 0x80;	// DUMMY val, clock source = 96M
+> +	} else if (baudRate == 153600) {
+> +		*divisor = 0x27;		// DLM=0, DLL=0x27
+> +		*clk_sel_val = 0x80;	// DUMMY val, clock source = 96M
+
+But why would anyone use these?
+
+> +	} else if (baudRate == 10000) {
+> +		*divisor = 0xbb;		// DLM=0, DLL=0xbb
+> +		*clk_sel_val = 0x80;	// DUMMY val, clock source = 30M
+> +	} else if (baudRate == 125000) {
+> +		*divisor = 0x0f;		// DLM=0, DLL=0x0f
+> +		*clk_sel_val = 0x80;	// DUMMY val, clock source = 30M
+> +	} else if (baudRate == 625000) {
+> +		*divisor = 0x03;		// DLM=0, DLL=0x03
+> +		*clk_sel_val = 0x80;	// DUMMY val, clock source = 30M
+
+Or these?
+
+In any case, these would probably also need to go in a lookup table.
+
+> +
+> +
+>  	} else if (baudRate <= 115200) {
+>  		*divisor = 115200 / baudRate;
+>  		*clk_sel_val = 0x0;
+> @@ -1246,11 +1277,134 @@ static int mos7840_send_cmd_write_baud_rate(struct moschip_port *mos7840_port,
+>  
+>  	}
+>  
+> -	if (1) {		/* baudRate <= 115200) */
+> +	if (1) {
+
+Probably a good time to get rid of this in a preparatory patch to reduce
+the indentation.
+
+>  		clk_sel_val = 0x0;
+>  		Data = 0x0;
+>  		status = mos7840_calc_baud_rate_divisor(port, baudRate, &divisor,
+>  						   &clk_sel_val);
+> +		if (status < 0) {
+> +			dev_dbg(&port->dev, "%s failed in set_serial_baud\n", __func__);
+> +			return -1;
+> +		}
+
+Ok, here you add the error handling. But as I mentioned it's better to
+fix the caller so that it does not pass in a speed that too high for the
+driver. Just keep the old rate and update the termios to reflect that
+that requested rate was rejected.
+
+> +
+> +		/* Write clk_sel_val to SP_Reg or Clk_Select_Reg*/
+
+Space before */
+
+> +		// check clk_sel_val before setting the clk_sel_val
+
+No c99 comments, please.
+
+> +		if (clk_sel_val == 0x80) {
+> +		// clk_sel_val is DUMMY value -> Write the corresponding value to Clk_Select_Reg
+
+Odd indentation.
+
+> +			// 0x01:30M, 0x02:96M, 0x05:External Clock
+
+Ok, so here's the comment I asked for earlier. That should probably go
+above the clock register defines, and/or with defines for these
+constants added as well.
+
+> +			if (baudRate == 125000 || baudRate == 625000 || baudRate == 10000) {
+> +				clk_sel_val = 0x01;
+> +			} else if (baudRate == 153600 || baudRate == 225000 || baudRate == 403200 ||
+> +					baudRate == 2000000 || baudRate == 6000000) {
+> +				clk_sel_val = 0x02;
+> +			} else {
+> +				clk_sel_val = 0x05; // externel clk for custom case.
+> +			}
+
+This needs to be cleaned up using a lookup table and a clk_sel enum.
+
+If there are product that would benefit from using the external clock
+input, this would need to be handled on a per-device basis so that we
+know its frequency.
+
+> +			// needs to set clock source through
+> +			// Clk_Select_Reg1(offset 0x13) & Clk_Select_Reg2(offset 0x14)
+> +			// Clk_Select_Reg1 for port1,2		Clk_Select_Reg2 for port3,4
+> +			if (mos7840_port->port_num <= 2) {
+> +				status = mos7840_get_reg_sync(port, CLOCK_SELECT_REG1, &Data);
+> +				if (status < 0) {
+> +					dev_dbg(&port->dev, "reading Clk_Select_Reg failed in set_serial_baud\n");
+
+Looks like the driver is currently using dev_dbg() for errors, but this
+should most likely be dev_err() throughout. No need to say in which
+function it fails, just 
+	
+	failed to read clock select register: %d\n
+
+or similar should do.
+
+> +					return -1;
+> +				}
+> +				if (mos7840_port->port_num == 1) {
+> +					Data = (Data & 0xf8) | clk_sel_val;
+> +					status =
+> +						mos7840_set_reg_sync(port, CLOCK_SELECT_REG1, Data);
+> +				} else if (mos7840_port->port_num == 2) {
+> +					Data = (Data & 0xc7) | (clk_sel_val<<3);
+
+Spaces around binary operator throughout.
+
+> +					status =
+> +						mos7840_set_reg_sync(port, CLOCK_SELECT_REG1, Data);
+> +				}
+> +				if (status < 0) {
+> +					dev_dbg(&port->dev, "setting Clk_Select_Reg failed\n");
+> +					return -1;
+> +				}
+> +			} else if (mos7840_port->port_num <= 4) {
+> +				status = mos7840_get_reg_sync(port, CLOCK_SELECT_REG2, &Data);
+> +				if (status < 0) {
+> +					dev_dbg(&port->dev, "reading Clk_Select_Reg failed in set_serial_baud\n");
+> +					return -1;
+> +				}
+> +				if (mos7840_port->port_num == 3) {
+> +					Data = (Data & 0xf8) | clk_sel_val;
+> +					status =
+> +						mos7840_set_reg_sync(port, CLOCK_SELECT_REG2, Data);
+> +				} else if (mos7840_port->port_num == 4) {
+> +					Data = (Data & 0xc7) | (clk_sel_val<<3);
+> +					status =
+> +						mos7840_set_reg_sync(port, CLOCK_SELECT_REG2, Data);
+> +				}
+> +				if (status < 0) {
+> +					dev_dbg(&port->dev, "setting Clk_Select_Reg failed\n");
+> +					return -1;
+> +				}
+> +			}
+
+The above needs to be cleaned up and abstracted better too. It's hardly
+readable currently and the patterns looks too similar to be repeated
+like this (i.e. a helper function may be the right choice).
+
+> +		} else {
+> +		// clk_sel_val is not DUMMY value -> Write the corresponding value to SP_Reg
+> +
+> +			/* First, needs to write default value to
+> +			 * Clk_Select_Reg1(offset 0x13) & Clk_Select_Reg2(offset 0x14)
+> +			 * Clk_Select_Reg1 for port1,2		Clk_Select_Reg2 for port3,4
+> +			 */
+> +			if (mos7840_port->port_num <= 2) {
+> +				status = mos7840_get_reg_sync(port, CLOCK_SELECT_REG1, &Data);
+> +				if (status < 0) {
+> +					dev_dbg(&port->dev, "reading Clk_Select_Reg failed in set_serial_baud\n");
+> +					return -1;
+> +				}
+> +				if (mos7840_port->port_num == 1) {
+> +					Data = (Data & 0xf8) | 0x00;
+> +					status =
+> +						mos7840_set_reg_sync(port, CLOCK_SELECT_REG1, Data);
+> +				} else if (mos7840_port->port_num == 2) {
+> +					Data = (Data & 0xc7) | (0x00<<3);
+> +					status =
+> +						mos7840_set_reg_sync(port, CLOCK_SELECT_REG1, Data);
+> +				}
+> +				if (status < 0) {
+> +					dev_dbg(&port->dev, "setting Clk_Select_Reg failed\n");
+> +					return -1;
+> +				}
+> +			} else if (mos7840_port->port_num <= 4) {
+> +				status = mos7840_get_reg_sync(port, CLOCK_SELECT_REG2, &Data);
+> +				if (status < 0) {
+> +					dev_dbg(&port->dev, "reading Clk_Select_Reg failed in set_serial_baud\n");
+> +					return -1;
+> +				}
+> +				if (mos7840_port->port_num == 3) {
+> +					Data = (Data & 0xf8) | 0x00;
+> +					status =
+> +						mos7840_set_reg_sync(port, CLOCK_SELECT_REG2, Data);
+> +				} else if (mos7840_port->port_num == 4) {
+> +					Data = (Data & 0xc7) | (0x00<<3);
+> +					status =
+> +						mos7840_set_reg_sync(port, CLOCK_SELECT_REG2, Data);
+> +				}
+> +				if (status < 0) {
+> +					dev_dbg(&port->dev, "setting Clk_Select_Reg failed\n");
+> +					return -1;
+> +				}
+> +			}
+
+This is the same code as above, just writing the default value. This
+obviously needs to be refactored.
+
+> +			// select clock source by writing clk_sel_val to SPx_Reg
+> +			status = mos7840_get_reg_sync(port, mos7840_port->SpRegOffset,
+> +									 &Data);
+> +			if (status < 0) {
+> +				dev_dbg(&port->dev, "reading spreg failed in set_serial_baud\n");
+> +				return -1;
+> +			}
+> +			Data = (Data & 0x8f) | clk_sel_val;
+> +			status = mos7840_set_reg_sync(port, mos7840_port->SpRegOffset,
+> +									Data);
+> +			if (status < 0) {
+> +				dev_dbg(&port->dev, "Writing spreg failed in set_serial_baud\n");
+> +				return -1;
+> +			}
+> +		}
+
+Johan
