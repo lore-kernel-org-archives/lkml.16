@@ -1,68 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FEE91DEFFC;
-	Tue, 11 Feb 2025 07:00:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9654726BDB6;
+	Tue, 11 Feb 2025 07:00:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739257206; cv=none; b=TDMe/0mI1PbxKhydBsluLX2t/wxuBVzfzolf0zUkqKzHpXPibhDkOk6pUNYYSCAfaEMV0/NbVrxJ7bqpZon/2GDLhv/tVUOk1nicwyxNtxB1CaC9fbJNmZsG23AisWIqVy+Cr/WEIST0yuTNuIdCUE/gXdto5eywvcPV6isY0Xg=
+	t=1739257258; cv=none; b=SDax0E76ijQDv0LiEiMytqYLMN/Ni6jYHtqHRVB9UHDSizjymOPRW9ZP+qpJNkCn7BvlVxBEB/Rnakf78Ypd8frgo4yribx8ZgFAj0qfLq+SjeUFr/URKQy/CbxL1z7xcDZyYq2TJb1K18oMJwGPWRRuRsoaRhBUOMg4A/jQYeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739257206; c=relaxed/simple;
-	bh=2Of0rA5FoGn4ZTHvRWUGZwrrx3D8metj3Q4juNaw1eM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YzrkYROf7joycALfUXI7DFVDK7sBAq0Ce0l0C6oi/M+M9/FtLNj/DK2rxs3nrI862PcqnudO6rIJA5v46UMKdswrAAGI4N1wg91LDsdZbUrcd1UxvasVs/ZKvlOMw24mJZQwg8Odk73l9Cd9kfpfnuDS7GOPrFF8YZmz8ytMYbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GI2gfjNc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739257258; c=relaxed/simple;
+	bh=31QWdnjJ3Q7WNte0pNALik3EiaOkqFc9f2Wf++QpPF8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dKbVuhpWu0YaXFWsswd8ELDM5FhC/r4LeRk9AOq9dmr7w1DBGfvYFAz4bbtV1wEO6EuJ5bgl/vmv3YDr7xKlnfhnEsG1qRvT5u7ok9Xf8mvtFabKqq+f+1pS8cemOiIIeLRmceez8e7pEaWZxx+9cJK5gZ7Dgb1Vpc2oAklz9+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQ74n4sF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GI2gfjNc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E770C4CEDD;
-	Tue, 11 Feb 2025 07:00:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQ74n4sF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 130C3C4CEDD;
+	Tue, 11 Feb 2025 07:00:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739257205;
-	bh=2Of0rA5FoGn4ZTHvRWUGZwrrx3D8metj3Q4juNaw1eM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GI2gfjNcDnwg7GzDatzEEZWfdJYDwAQFrC79MEvER1PMZLr7IEBISVpIOBY+WVS/O
-	 Gv8Lp5iEfvSod7fn0czmeJmEGHThHHxD6wpiXBFV1nkPXHa9njgo6XN2sS6Rx4U67S
-	 sK63mMvK5ma/GUUgHThjzPIYwzhBUYy6KcmWJ2zWLBgCMb0O+5DZpMFv0OzEoV4Kmt
-	 B5434/VJqwbdrTCswBVUb0QbiYOXhnKk4JdWUR5CiSq6lfFLOFAyW6GydavzlbWW19
-	 6gVh1UsyCquTPBGSNfLBRtN9/TduDjrWCgMDEVYeiuiF24cPFXuKgba7glsc/7wRYn
-	 KUj/R737RmeTQ==
-From: SeongJae Park <sj@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-mm@kvack.org,
-	nouveau@lists.freedesktop.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	damon@lists.linux.dev,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Alex Shi <alexs@kernel.org>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Karol Herbst <kherbst@redhat.com>,
-	Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jann Horn <jannh@google.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Peter Xu <peterx@redhat.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v2 15/17] mm/damon: handle device-exclusive entries correctly in damon_folio_mkold_one()
-Date: Mon, 10 Feb 2025 23:00:02 -0800
-Message-Id: <20250211070002.6005-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250210193801.781278-16-david@redhat.com>
-References: 
+	s=k20201202; t=1739257258;
+	bh=31QWdnjJ3Q7WNte0pNALik3EiaOkqFc9f2Wf++QpPF8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KQ74n4sFxhlL0HwATB55Z1PNtVgs22A9iD2hHFn1M2Dv0SmYX2xo3T1Xt8hzXHjZO
+	 QW6G5DJqLSsz/1DrO6tiMjvN1liui/jGFYiiRlUZOGpfEzdoQWHOjhxMEck+PutzCy
+	 +287U5wRb5mwxXNX6JlXwAyQjSumrMVUbP+Nh5egfNecd/wL/AzvbCFHvTitmRGqMA
+	 YDvLxmsZuz2TNFG2XXOZ1VDxHImV0yXbfwaTJteRX+Lboc3CXVAYj2EuviCCH0tSmr
+	 Ehj67aoI1wXX9YLPZbjpU6fOUFEO/kQHZllZlPCL0V61myTxH96SoM2bUpdDC10i0d
+	 zLiwJ4qFJ7+pQ==
+Received: from mchehab by mail.kernel.org with local (Exim 4.98)
+	(envelope-from <mchehab+huawei@kernel.org>)
+	id 1thkGO-00000008ZVQ-0S8s;
+	Tue, 11 Feb 2025 08:00:56 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] docs: trace: decode_msr.py: make it compatible with python 3
+Date: Tue, 11 Feb 2025 08:00:46 +0100
+Message-ID: <88bb0d47100feaa3cda215e68bf6500dc67da7b3.1739257245.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,35 +46,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-On Mon, 10 Feb 2025 20:37:57 +0100 David Hildenbrand <david@redhat.com> wrote:
+This script uses print <foo> instead of print(foo), which is
+incompatible with Python 3.
 
-> Ever since commit b756a3b5e7ea ("mm: device exclusive memory access")
-> we can return with a device-exclusive entry from page_vma_mapped_walk().
-> 
-> damon_folio_mkold_one() is not prepared for that and calls
-> damon_ptep_mkold() with PFN swap PTEs. Teach damon_ptep_mkold() to deal
-> with these PFN swap PTEs. Note that device-private entries are so far not
-> applicable on that path, as damon_get_folio() filters out non-lru
-> folios.
-> 
-> Should we just skip PFN swap PTEs completely? Possible, but it seems
-> straight forward to just handle it correctly.
-> 
-> Note that we could currently only run into this case with
-> device-exclusive entries on THPs. We still adjust the mapcount on
-> conversion to device-exclusive; this makes the rmap walk
-> abort early for small folios, because we'll always have
-> !folio_mapped() with a single device-exclusive entry. We'll adjust the
-> mapcount logic once all page_vma_mapped_walk() users can properly
-> handle device-exclusive entries.
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+Fix it.
 
-Reviewed-by: SeongJae Park <sj@kernel.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/trace/postprocess/decode_msr.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/Documentation/trace/postprocess/decode_msr.py b/Documentation/trace/postprocess/decode_msr.py
+index aa9cc7abd5c2..f5609b16f589 100644
+--- a/Documentation/trace/postprocess/decode_msr.py
++++ b/Documentation/trace/postprocess/decode_msr.py
+@@ -32,6 +32,6 @@ for j in sys.stdin:
+ 					break
+ 		if r:
+ 			j = j.replace(" " + m.group(2), " " + r + "(" + m.group(2) + ")")
+-	print j,
++	print(j)
+ 
+ 
+-- 
+2.48.1
 
-Thanks,
-SJ
-
-[...]
