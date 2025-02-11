@@ -1,79 +1,83 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A4F264623;
-	Tue, 11 Feb 2025 20:35:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44A70265626
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 20:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739306156; cv=none; b=rpXp5o1maVa4ymMlE1quchidpwzr7bMk+Jk3ALoeJhNg3d3NCRrCa2JHUiItx0we/WxF6Q2ArdnztJIr2MGir+ybEpja/SenixZLvFVIxMs0OiP50lFzKsYL1gIj6WbOYKZqFkxMiD84q0WksIv6Xygc0pkLcYNel7Igy42MZv4=
+	t=1739306236; cv=none; b=UYmVgL/GPLYSg2GQNB2k8jvw9VAZsXI721WrD7Y/7L86leMwr+RXsKZlyHKciAyFPVdB34jDITtduFwfqoBltpyMWftSPm02UiajPZUHrGXf2ae1K3BZReml8Pnr972FfDuwfrR/YDiVbnf+qPJoj57G4Ejap+bVjQSfVRnP1yQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739306156; c=relaxed/simple;
-	bh=f+qTEFYcWW8cwpuLgQjGWT+veeES6rNjhCJGEP+uXmg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AAUigpQecRO4tSdO+0S45jzow6lp4NS/I30HDRlcKt5kbh6NZe802IBO6s2VES0qq8YnP2279FCgClbW6TNx7tTRUUMUeVY+eBqkKVZFqwLQIxNRu6Juu/M66KWRIlGS/oFZpaBo3KJAfxVEvM8IFVWeqMuzT2cPh2rixdcOEMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=NsYHkrYT; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="NsYHkrYT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=qrR+2zWNpEZwV3iTqp2xAc/x4CQZ8LH6NthsoKKPaFk=; b=NsYHkrYTBZ9GMfCvJ5EELeLw7P
-	yeU593GVZSjLLwDBWcV5oih5VCinlpUxDjlJDmaJxoYhv1N4dzUoVdUYII7SQ23SV5Rz5jCBOLFue
-	olm2HO4Yy9vaTzPpqR6hVHFavbettwuiWa6WGE8Tm2Dm+JTUeeOQ8cQiThQNCnACXIHCS+A3fHDh/
-	nZCRrL8JoTaWu7ZucvoOeZwVPFBwko2sf3l9azgxfb2LK1YOnaXb6nS3MsjP5G0O8mo0hnwEXCem5
-	A6LAr86MHKDPnvYo/qwvF85sJFMbD/8CgXSozAug1Y88JGkK7eK4mUr60lTSdHn4kpWoiOVcCnGwT
-	3/WH0NBQ==;
-Received: from i53875bc0.versanet.de ([83.135.91.192] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1thwz0-0003OL-PH; Tue, 11 Feb 2025 21:35:50 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: linux-rockchip@lists.infradead.org,
-	Dragan Simic <dsimic@manjaro.org>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Subject: Re: [PATCH] arm64: dts: rockchip: Reflow Quartz64 Model A/B board dts files a bit
-Date: Tue, 11 Feb 2025 21:35:37 +0100
-Message-ID: <173930613282.1358259.15016931391448973048.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <7eea4ebdb19d5f43d24074a166e6c46bb5424d46.1739218324.git.dsimic@manjaro.org>
-References: <7eea4ebdb19d5f43d24074a166e6c46bb5424d46.1739218324.git.dsimic@manjaro.org>
+	s=arc-20240116; t=1739306236; c=relaxed/simple;
+	bh=EGMrDk2bhCdtV8HADA1cGzyp9kGWh2DKKQLh8djgqMw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hK7Ru4/OWiFWnGVSFo3yeHeLu4tFg4N6wcTqgk6CO4TMZCC6yVMThmYyou0pfuTqR0F2jivdUMj5VtC18XOtqYCqIEyMs3TlBlCz8QHKMR/seBc9jzYk/NHh7RYE7AWkORlV848EKuIVMRpmItNhxLBYgRDTbO0NSRaMr4pbw3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAEEF1D14;
+	Tue, 11 Feb 2025 12:37:34 -0800 (PST)
+Received: from [10.57.35.63] (unknown [10.57.35.63])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 27A223F5A1;
+	Tue, 11 Feb 2025 12:37:10 -0800 (PST)
+Message-ID: <c4c54243-d25b-45d7-97d5-837d02cfa2dd@arm.com>
+Date: Tue, 11 Feb 2025 20:37:08 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/5] iommu/dart: Set DMA domain for locked DARTs
+To: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Cc: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250210-locked-dart-v1-0-5d97fe247f35@rosenzweig.io>
+ <20250210-locked-dart-v1-3-5d97fe247f35@rosenzweig.io>
+ <1d6b3fe7-9376-422b-a2e6-ebaed7b6cd75@arm.com> <Z6uZhQtPAE8Ck_b0@blossom>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <Z6uZhQtPAE8Ck_b0@blossom>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-On Mon, 10 Feb 2025 21:17:00 +0100, Dragan Simic wrote:
-> Going over the 80-column width limit, and using all 100 columns, is intended
-> for improving code readability.  This wasn't the case in a few places in the
-> Quartz64 Model A/B board dts files, so let's reflow them a bit, to both obey
-> the 80-column limit and make them a bit more readable.
+On 2025-02-11 6:40 pm, Alyssa Rosenzweig wrote:
+> Hi Robin,
 > 
-> No intended functional changes are introduced by these changes.
+>>> This is required.
+>>
+>> Now that we can, I'd really rather do this properly and not offer an
+>> identity domain in the first place when it's not available.
 > 
-> [...]
+> I'm reading through iommu.c but I don't see a way to avoid offering an
+> identity domain without the DMA override here, just reading through the
+> logic of iommu_get_default_domain_type. Could you point me to what you
+> have in mind?
 
-Applied, thanks!
+Since we finished cleaning up the domain allocation paths, it's finally 
+safe to have per-instance ops, so you can mix and match some with an 
+identity domain and some without, as s390 will be doing[1].
 
-[1/1] arm64: dts: rockchip: Reflow Quartz64 Model A/B board dts files a bit
-      commit: e857cdedbe1f9aedad4e307188c55ccba28a3e76
+Cheers,
+Robin.
 
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+[1] 
+https://lore.kernel.org/linux-iommu/20250207205335.473946-5-mjrosato@linux.ibm.com/
+
+> Thanks,
+> Alyssa
+> 
+>>> --- a/drivers/iommu/apple-dart.c
+>>> +++ b/drivers/iommu/apple-dart.c
+>>> @@ -941,6 +941,8 @@ static int apple_dart_def_domain_type(struct device *dev)
+>>>    		return IOMMU_DOMAIN_IDENTITY;
+>>>    	if (!cfg->stream_maps[0].dart->supports_bypass)
+>>>    		return IOMMU_DOMAIN_DMA;
+>>> +	if (cfg->stream_maps[0].dart->locked)
+>>> +		return IOMMU_DOMAIN_DMA;
+>>>    	return 0;
+>>>    }
+>>>
+>>
+
