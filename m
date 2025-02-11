@@ -1,64 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA561F4262
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8DE11F3FD1
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739269289; cv=none; b=tfB350D5holDj12CrLlqKRbhq3vgAFSzbF6FLlzXvSLH7p9wSL8vDGBsdVeB9WVg3C6759DHz9nK6kjhIOtdz38JMHnJ1MJOqwKlC09dsHKzmsvIxbe1HmD8c4Q4ZYL5+5qlL5l6Vmj717Z5H2AZf1zFDrQevDEAkUJ7lNkEjdQ=
+	t=1739269290; cv=none; b=B2EnXiBX51k2lcMqtHgQiYFRyloHLy9rc9o+O8PISC2F0P7DNZtcdI0rcP5p9cJIwiftxI1mt2fFOT/pmB8HkRYK0Oe+1hAZkrQYXSJtdZOxe7GiB4cJQywzMLRSB7XiGOaLD1Ekmcub23ad5iO3DuVGZT9Dk2rgy9RCykNANac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739269289; c=relaxed/simple;
-	bh=5x60nY8sN9m85bsl7snncFeqJyHzcSnNTeHckXMLF1w=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qXBpV1n9D7PyOxIQK9XISKE4I+iDtWm8R8JVAslgyksAw+CNvDz61uPl97mMFIaD0NKnDu6Kx6GUYlrw84HfSlBqsJ8l4GTG9oFwMqYnaCEBA8NDgS5JucAQff7vdBUsNkxmjG8It2Z1KSplaMhoJSAkK/0k+2cOsCHEzpA2mhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NlER+ZpB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739269290; c=relaxed/simple;
+	bh=NHnejRiD4F+bD2f1fFm4I4nrdOgw35XCjt6JvGxyuYo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QOBs5OXUakQd8wl1VQqkCSjMIhALXPjbM0GvwJuf+hIQHNgHc8RjWM71gORtDrVMzzUeRfXWHXPSxQk26g/n/UjKTbyfg3qclymAOmKQwvg9rgCUvPA7vPQMzGDtGtMhjwIqjSh5Dr0C+bj8eSpa60nnbtcHk7Xnb9+g1PvKmbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rE/utMIO; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NlER+ZpB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF148C4CEDD;
-	Tue, 11 Feb 2025 10:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739269288;
-	bh=5x60nY8sN9m85bsl7snncFeqJyHzcSnNTeHckXMLF1w=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=NlER+ZpBIywV2hH4NLYcyQqtdA2ZIWMZZYQDbRwYH53hyWe3tMs1io+rHfUdOCu0c
-	 rpALDU5pNw+xGeOgXRHto4Aj/PnWVDxdSu1pyBFgyKVpMZFA+G1Zn8VMY3SLM/4d5S
-	 VNOiuqvZ8wvmTXl5O2ABqSYvS6yCLmLP4E+ySudTr4GrtQnfNP8zXcJal6I0z/Lxd4
-	 NQLHxX7HRvaJiICWvCkbJFAbuQHV+etv1HfELOGjfuG33Vjdc02QoslRC1hTJZl8XI
-	 AzMtXKzEaFFNfhHhyWRxgWDDI5vUbSEv2Vt9wEhC6SXPmGepCDOJBHclNYsO9cR3p8
-	 IjdtD+rnJ4C6Q==
-From: Lee Jones <lee@kernel.org>
-To: catalin.marinas@arm.com, will@kernel.org, lee@kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- arnd@arndb.de, Robert Marko <robert.marko@sartura.hr>
-Cc: luka.perkov@sartura.hr, daniel.machon@microchip.com, 
- Nicolas Ferre <nicolas.ferre@microchip.com>
-In-Reply-To: <20250131171739.1044701-2-robert.marko@sartura.hr>
-References: <20250131171739.1044701-1-robert.marko@sartura.hr>
- <20250131171739.1044701-2-robert.marko@sartura.hr>
-Subject: Re: (subset) [PATCH v5 2/2] mfd: at91-usart: make it selectable
- for ARCH_LAN969X
-Message-Id: <173926928672.2065569.7282528185747912475.b4-ty@kernel.org>
-Date: Tue, 11 Feb 2025 10:21:26 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rE/utMIO"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739269285;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qIkHZdlJgBI8XSQLEeTxcPGCocchQWHaTTHt7yTbJBA=;
+	b=rE/utMIO7b9owZb9QOZwh7pufDBBrE3qOSRPfoEosHyZhr0IDm4F8Qunl7KZs/GalQOOYl
+	scLJyj099CN+VtLjjrPdbmRM/CusfJPfYAxfpbPFNBh5y66N57I0xulmBsjN6qYCzVLx8g
+	EGwKAcqgPONLzq7diegTlGua3ehpAAE=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-sctp@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] sctp: Remove commented out code
+Date: Tue, 11 Feb 2025 11:20:56 +0100
+Message-ID: <20250211102057.587182-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.13.0
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 31 Jan 2025 18:14:10 +0100, Robert Marko wrote:
-> LAN969x uses the AT91 USART IP so make it selectable for ARCH_LAN969X.
-> 
-> 
+Remove commented out code.
 
-Applied, thanks!
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ include/linux/sctp.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-[2/2] mfd: at91-usart: make it selectable for ARCH_LAN969X
-      commit: d075bed61594009df64055630af2e8754fc95b78
-
---
-Lee Jones [李琼斯]
+diff --git a/include/linux/sctp.h b/include/linux/sctp.h
+index 836a7e200f39..812011d8b67e 100644
+--- a/include/linux/sctp.h
++++ b/include/linux/sctp.h
+@@ -222,7 +222,6 @@ struct sctp_datahdr {
+ 	__be16 stream;
+ 	__be16 ssn;
+ 	__u32 ppid;
+-	/* __u8  payload[]; */
+ };
+ 
+ struct sctp_data_chunk {
+-- 
+2.48.1
 
