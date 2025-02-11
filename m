@@ -1,132 +1,501 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAEAA256C65;
-	Tue, 11 Feb 2025 15:21:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112E1256C74;
+	Tue, 11 Feb 2025 15:21:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739287289; cv=none; b=BPZjHqzG63bPtUzwPqXK/ZsHnudt4RoFHXX5H8HasrnmDpVM1VegdKDo+6IiaobdsDN/6zDNKM0kO03r1Fzi+ELoy5qiJjnN9NNHpCgeVBPSWHNuporgORsuthEIM8U1HTtJ9MVYLScojUX3ZtMIRlGBu3Ox5WF/m771/+3Zl7o=
+	t=1739287290; cv=none; b=nC9xtjCbtWmmEyzl4P7rHbLXKyEoAHuxo+nlHa09KHIdLv4KRv/3cDcEm0ToyiwA2wRMiMZ/6xqtOtRE8JlBEFIWfnlmW8kXDN9gYUiwjgRVbYWUEiqTyjqOcptokio8DTb8c+wBLU4qBLFK5f0woCKwofd1FpQQOGCmUeAZSd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739287289; c=relaxed/simple;
-	bh=b6PgNLkPScF9l7086At1232ATken8hsBuvwb5T7rW8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gp6fw2Af00R1LtD7syf/xIEMGjDqsYvNPvUw0pTgNL64AdzqnXCHGSxVFxM0DrQOxPbFaaCJ7TU/cmQLLgkXY14huCfQQowKSOFBIz3NBem+4x0UYhfr6yM3yy29dnzkvxVXaQwhqrjGP+jh4dgb91PSyak2YyUCgS01hCWBNrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zlXt9jOq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YPmhN0+g; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1739287290; c=relaxed/simple;
+	bh=mDKm0/HxHYS0Stl4nlWAD4C/9um26bolMF15XJYAh5k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=cZvjOOwcYcZRs1zJNBt4WHhAA82GfhAH+wS0QiC8bPaE/Xsn5nWi03KHXFSiX+3hESEmT9sOuanBT4j525RmU+Xhzg7wESmbrXOXdq4RPzlVzPRIkdi4Aq7sXXJCGHZimTcP7/ex+j/Dmji9ugZXy6Z+Fc/ofufi1IQEZflquNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ndg3ewiD; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zlXt9jOq";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YPmhN0+g"
-Date: Tue, 11 Feb 2025 16:21:25 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739287286;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FR0dpvCelCBgD2VFUIgBkNkzP2YkExLCV7qs5XzhJeY=;
-	b=zlXt9jOq+UwwVXoSyIisxF0og6D3Xq0Mzt4kgf+cTaR6ojZVPn+mk79XMvjfos9k9tD0hq
-	dBJt5P4PKtcWSuqwwzLsIAuPVzmkU+QiN/p9wCR2A1PBRAzBAPqqS68k6mmvrVT7smvsbb
-	MIUJoRF16TIW5diNaOmpDNCYQMFASVNryoPUWbsm4or+IYHuyzMzxUiYbF6MrDKsjV/rdz
-	jrl8ympWk/u+ahwuRLZRv/+CDSEO3n48SXfYvKgdDxmXfEeXWKy1qdSxtDOyrh1Qa/TwUR
-	JUL6HtUzAjZ8b1WOsEYS7o/N03BNcxLKmMkscwPPGMUgjdGxk5hvZUecUeOq1w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739287286;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FR0dpvCelCBgD2VFUIgBkNkzP2YkExLCV7qs5XzhJeY=;
-	b=YPmhN0+g7brpEcRNPA+/mBG5IIjNH6tTC0uH5d16+5wp6SHOHWKapZrPdgxoFH3fCRV7ou
-	sRCuAchSMLv8WTBw==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: Simon Trimmer <simont@opensource.cirrus.com>, 
-	Charles Keepax <ckeepax@opensource.cirrus.com>, Mark Brown <broonie@kernel.org>, patches@opensource.cirrus.com, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] firmware: cs_dsp: test_control_parse: null-terminate
- test strings
-Message-ID: <20250211161448-c6560879-7bc9-4fe1-a9cf-713f029c1ee7@linutronix.de>
-References: <20250211-cs_dsp-kunit-strings-v1-1-d9bc2035d154@linutronix.de>
- <d1c9a0f3-5bc5-4b78-abfa-d17e90c36f48@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ndg3ewiD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739287288; x=1770823288;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=mDKm0/HxHYS0Stl4nlWAD4C/9um26bolMF15XJYAh5k=;
+  b=ndg3ewiDgnKqJVmGkZnQSpZK3fRqGKN6S6Wsep6L+Q9CpSJEFoRTyhmT
+   jCjqjEkSae5lsNGeEp78N/3DG9xyiMwgMqkITKWiVQ/9beeLR9QBdw7pT
+   ZA+vSGM6O4teIsWAhH7tgbdSM5fT/bLEee1MXgHgx625hxKdzi9macVHs
+   BtUGy/M9yk9rRmFfnrJfV/Zu8kLEf5QLPorX4kHpiV7y4EnvpsUM3Vd7k
+   qUqmZFvjft9pUOEWG5FZJwA6QZv7Igy4DtVz1lmjjVhPo++rxpBlbk3vM
+   IGQQQRRGBCEH+H6MXesgu4T45eHKbtLQSF/ViOBR/kEYA5/Bhhz2n4o0V
+   w==;
+X-CSE-ConnectionGUID: C4B8KyR6RQKrCNsF1Frc5A==
+X-CSE-MsgGUID: Y/GL9VmDSZy+Qwl+q/ZUvg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="50548338"
+X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
+   d="scan'208";a="50548338"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 07:21:28 -0800
+X-CSE-ConnectionGUID: gUvWHY0HRQ6tIZgoMYzxQQ==
+X-CSE-MsgGUID: uhOHyC4qRd+d3zrr+gu1rQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="112392618"
+Received: from test2-linux-lab.an.altera.com ([10.244.157.115])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 07:21:26 -0800
+From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	dinguyen@kernel.org,
+	joyce.ooi@intel.com,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: matthew.gerlach@altera.com,
+	peter.colberg@altera.com,
+	"D M, Sharath Kumar" <sharath.kumar.d.m@intel.com>,
+	D,
+	M,
+	Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Subject: [PATCH v6 7/7] PCI: altera: Add Agilex support
+Date: Tue, 11 Feb 2025 09:17:25 -0600
+Message-Id: <20250211151725.4133582-8-matthew.gerlach@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250211151725.4133582-1-matthew.gerlach@linux.intel.com>
+References: <20250211151725.4133582-1-matthew.gerlach@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d1c9a0f3-5bc5-4b78-abfa-d17e90c36f48@opensource.cirrus.com>
 
-On Tue, Feb 11, 2025 at 03:10:38PM +0000, Richard Fitzgerald wrote:
-> On 11/02/2025 3:00 pm, Thomas Weiﬂschuh wrote:
-> > The char pointers in 'struct cs_dsp_mock_coeff_def' are expected to
-> > point to C strings. They need to be terminated by a null byte.
-> > However the code does not allocate that trailing null byte and only
-> > works if by chance the allocation is followed by such a null byte.
-> > 
-> > Refactor the repeated string allocation logic into a new helper which
-> > makes sure the terminating null is always present.
-> > It also makes the code more readable.
-> > 
-> > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> > Fixes: 83baecd92e7c ("firmware: cs_dsp: Add KUnit testing of control parsing")
-> > Cc: stable@vger.kernel.org
-> > ---
-> >   .../cirrus/test/cs_dsp_test_control_parse.c        | 51 ++++++++--------------
-> >   1 file changed, 19 insertions(+), 32 deletions(-)
-> > 
-> > diff --git a/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c b/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c
-> > index cb90964740ea351113dac274f0366de7cedfd3d1..942ba1af5e7c1e47e8a2fbe548a7993b94f96515 100644
-> > --- a/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c
-> > +++ b/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c
-> > @@ -73,6 +73,18 @@ static const struct cs_dsp_mock_coeff_def mock_coeff_template = {
-> >   	.length_bytes = 4,
-> >   };
-> > +static char *cs_dsp_ctl_alloc_test_string(struct kunit *test, char c, size_t len)
-> > +{
-> > +	char *str;
-> > +
-> > +	str = kunit_kmalloc(test, len + 1, GFP_KERNEL);
-> > +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, str);
-> > +	memset(str, c, len);
-> > +	str[len] = '\0';
-> > +
-> > +	return str;
-> > +}
-> > +
-> >   /* Algorithm info block without controls should load */
-> >   static void cs_dsp_ctl_parse_no_coeffs(struct kunit *test)
-> >   {
-> > @@ -160,12 +172,8 @@ static void cs_dsp_ctl_parse_max_v1_name(struct kunit *test)
-> >   	struct cs_dsp_mock_coeff_def def = mock_coeff_template;
-> >   	struct cs_dsp_coeff_ctl *ctl;
-> >   	struct firmware *wmfw;
-> > -	char *name;
-> > -	name = kunit_kzalloc(test, 256, GFP_KERNEL);
-> 
-> This allocates 256 bytes of zero-filled memory...
-> 
-> > -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, name);
-> > -	memset(name, 'A', 255);
-> 
-> ... and this fills the first 255 bytes, leaving the last byte still as
-> zero. So the string is zero-terminated. I don't see a problem here.
+From: "D M, Sharath Kumar" <sharath.kumar.d.m@intel.com>
 
-This single instance it is indeed correct.
-In all other five it's broken.
+Add PCIe root port controller support for the Agilex family of chips.
+The Agilex PCIe IP has three variants that are mostly sw compatible,
+except for a couple register offsets. The P-Tile variant supports
+Gen3/Gen4 1x16. The F-Tile variant supports Gen3/Gen4 4x4, 4x8, and 4x16.
+The R-Tile variant improves on the F-Tile variant by adding Gen5 support.
 
-> Just fix the other allocs to be kzalloc with the correct length?
+To simplify the implementation of pci_ops read/write functions,
+ep_{read/write}_cfg() callbacks were added to struct altera_pci_ops
+to easily distinguish between hardware variants.
 
-If you prefer that, sure I can change it.
+Signed-off-by: D M, Sharath Kumar <sharath.kumar.d.m@intel.com>
+Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+v6:
+ - Removed duplicate Signed-off-by:
+ - Add Reviewed-by: Manivannan Sadhasivam.
 
-Personally I like the helper much better. One does not have to look at a
-dense block of code to see what the actual intention is.
-Assuming the location in cs_dsp_ctl_parse_max_v1_name() was fixed when
-some breakage was observed, with a helper it would have been fixed for
-all locations and not crept into upstream code.
+v5:
+ - remove unnecessary !!
+ - Improve macro usage to make comment unnecessary.
 
+v4:
+ - Add info to commit message.
+ - Use {read/write}?_relaxed where appropriate.
+ - Use BIT(12) instead of (1 << 12).
+ - Clear IRQ before handling it.
+ - add interrupt number to unexpected IRQ messge.
 
-Thomas
+v3:
+ - Remove accepted patches from patch set.
+
+v2:
+ - Match historical style of subject.
+ - Remove unrelated changes.
+ - Fix indentation.
+---
+ drivers/pci/controller/pcie-altera.c | 253 ++++++++++++++++++++++++++-
+ 1 file changed, 244 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+index eb55a7f8573a..42ea9960b9da 100644
+--- a/drivers/pci/controller/pcie-altera.c
++++ b/drivers/pci/controller/pcie-altera.c
+@@ -6,6 +6,7 @@
+  * Description: Altera PCIe host controller driver
+  */
+ 
++#include <linux/bitfield.h>
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
+ #include <linux/irqchip/chained_irq.h>
+@@ -77,9 +78,25 @@
+ #define S10_TLP_FMTTYPE_CFGWR0		0x45
+ #define S10_TLP_FMTTYPE_CFGWR1		0x44
+ 
++#define AGLX_RP_CFG_ADDR(pcie, reg)	(((pcie)->hip_base) + (reg))
++#define AGLX_RP_SECONDARY(pcie)		\
++	readb(AGLX_RP_CFG_ADDR(pcie, PCI_SECONDARY_BUS))
++
++#define AGLX_BDF_REG			0x00002004
++#define AGLX_ROOT_PORT_IRQ_STATUS	0x14c
++#define AGLX_ROOT_PORT_IRQ_ENABLE	0x150
++#define CFG_AER				BIT(4)
++
++#define AGLX_CFG_TARGET			GENMASK(13, 12)
++#define AGLX_CFG_TARGET_TYPE0		0
++#define AGLX_CFG_TARGET_TYPE1		1
++#define AGLX_CFG_TARGET_LOCAL_2000	2
++#define AGLX_CFG_TARGET_LOCAL_3000	3
++
+ enum altera_pcie_version {
+ 	ALTERA_PCIE_V1 = 0,
+ 	ALTERA_PCIE_V2,
++	ALTERA_PCIE_V3,
+ };
+ 
+ struct altera_pcie {
+@@ -102,6 +119,11 @@ struct altera_pcie_ops {
+ 			   int size, u32 *value);
+ 	int (*rp_write_cfg)(struct altera_pcie *pcie, u8 busno,
+ 			    int where, int size, u32 value);
++	int (*ep_read_cfg)(struct altera_pcie *pcie, u8 busno,
++			   unsigned int devfn, int where, int size, u32 *value);
++	int (*ep_write_cfg)(struct altera_pcie *pcie, u8 busno,
++			    unsigned int devfn, int where, int size, u32 value);
++	void (*rp_isr)(struct irq_desc *desc);
+ };
+ 
+ struct altera_pcie_data {
+@@ -112,6 +134,9 @@ struct altera_pcie_data {
+ 	u32 cfgrd1;
+ 	u32 cfgwr0;
+ 	u32 cfgwr1;
++	u32 port_conf_offset;
++	u32 port_irq_status_offset;
++	u32 port_irq_enable_offset;
+ };
+ 
+ struct tlp_rp_regpair_t {
+@@ -131,6 +156,28 @@ static inline u32 cra_readl(struct altera_pcie *pcie, const u32 reg)
+ 	return readl_relaxed(pcie->cra_base + reg);
+ }
+ 
++static inline void cra_writew(struct altera_pcie *pcie, const u32 value,
++			      const u32 reg)
++{
++	writew_relaxed(value, pcie->cra_base + reg);
++}
++
++static inline u32 cra_readw(struct altera_pcie *pcie, const u32 reg)
++{
++	return readw_relaxed(pcie->cra_base + reg);
++}
++
++static inline void cra_writeb(struct altera_pcie *pcie, const u32 value,
++			      const u32 reg)
++{
++	writeb_relaxed(value, pcie->cra_base + reg);
++}
++
++static inline u32 cra_readb(struct altera_pcie *pcie, const u32 reg)
++{
++	return readb_relaxed(pcie->cra_base + reg);
++}
++
+ static bool altera_pcie_link_up(struct altera_pcie *pcie)
+ {
+ 	return !!((cra_readl(pcie, RP_LTSSM) & RP_LTSSM_MASK) == LTSSM_L0);
+@@ -145,6 +192,15 @@ static bool s10_altera_pcie_link_up(struct altera_pcie *pcie)
+ 	return !!(readw(addr) & PCI_EXP_LNKSTA_DLLLA);
+ }
+ 
++static bool aglx_altera_pcie_link_up(struct altera_pcie *pcie)
++{
++	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie,
++				   pcie->pcie_data->cap_offset +
++				   PCI_EXP_LNKSTA);
++
++	return (readw_relaxed(addr) & PCI_EXP_LNKSTA_DLLLA);
++}
++
+ /*
+  * Altera PCIe port uses BAR0 of RC's configuration space as the translation
+  * from PCI bus to native BUS.  Entire DDR region is mapped into PCIe space
+@@ -425,6 +481,103 @@ static int s10_rp_write_cfg(struct altera_pcie *pcie, u8 busno,
+ 	return PCIBIOS_SUCCESSFUL;
+ }
+ 
++static int aglx_rp_read_cfg(struct altera_pcie *pcie, int where,
++			    int size, u32 *value)
++{
++	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie, where);
++
++	switch (size) {
++	case 1:
++		*value = readb_relaxed(addr);
++		break;
++	case 2:
++		*value = readw_relaxed(addr);
++		break;
++	default:
++		*value = readl_relaxed(addr);
++		break;
++	}
++
++	/* interrupt pin not programmed in hardware, set to INTA */
++	if (where == PCI_INTERRUPT_PIN && size == 1 && !(*value))
++		*value = 0x01;
++	else if (where == PCI_INTERRUPT_LINE && !(*value & 0xff00))
++		*value |= 0x0100;
++
++	return PCIBIOS_SUCCESSFUL;
++}
++
++static int aglx_rp_write_cfg(struct altera_pcie *pcie, u8 busno,
++			     int where, int size, u32 value)
++{
++	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie, where);
++
++	switch (size) {
++	case 1:
++		writeb_relaxed(value, addr);
++		break;
++	case 2:
++		writew_relaxed(value, addr);
++		break;
++	default:
++		writel_relaxed(value, addr);
++		break;
++	}
++
++	/*
++	 * Monitor changes to PCI_PRIMARY_BUS register on root port
++	 * and update local copy of root bus number accordingly.
++	 */
++	if (busno == pcie->root_bus_nr && where == PCI_PRIMARY_BUS)
++		pcie->root_bus_nr = value & 0xff;
++
++	return PCIBIOS_SUCCESSFUL;
++}
++
++static int aglx_ep_write_cfg(struct altera_pcie *pcie, u8 busno,
++			     unsigned int devfn, int where, int size, u32 value)
++{
++	cra_writel(pcie, ((busno << 8) | devfn), AGLX_BDF_REG);
++	if (busno > AGLX_RP_SECONDARY(pcie))
++		where |= FIELD_PREP(AGLX_CFG_TARGET, AGLX_CFG_TARGET_TYPE1);
++
++	switch (size) {
++	case 1:
++		cra_writeb(pcie, value, where);
++		break;
++	case 2:
++		cra_writew(pcie, value, where);
++		break;
++	default:
++		cra_writel(pcie, value, where);
++			break;
++	}
++
++	return PCIBIOS_SUCCESSFUL;
++}
++
++static int aglx_ep_read_cfg(struct altera_pcie *pcie, u8 busno,
++			    unsigned int devfn, int where, int size, u32 *value)
++{
++	cra_writel(pcie, ((busno << 8) | devfn), AGLX_BDF_REG);
++	if (busno > AGLX_RP_SECONDARY(pcie))
++		where |= FIELD_PREP(AGLX_CFG_TARGET, AGLX_CFG_TARGET_TYPE1);
++
++	switch (size) {
++	case 1:
++		*value = cra_readb(pcie, where);
++		break;
++	case 2:
++		*value = cra_readw(pcie, where);
++		break;
++	default:
++		*value = cra_readl(pcie, where);
++		break;
++	}
++
++	return PCIBIOS_SUCCESSFUL;
++}
++
+ static int _altera_pcie_cfg_read(struct altera_pcie *pcie, u8 busno,
+ 				 unsigned int devfn, int where, int size,
+ 				 u32 *value)
+@@ -437,6 +590,10 @@ static int _altera_pcie_cfg_read(struct altera_pcie *pcie, u8 busno,
+ 		return pcie->pcie_data->ops->rp_read_cfg(pcie, where,
+ 							 size, value);
+ 
++	if (pcie->pcie_data->ops->ep_read_cfg)
++		return pcie->pcie_data->ops->ep_read_cfg(pcie, busno, devfn,
++							where, size, value);
++
+ 	switch (size) {
+ 	case 1:
+ 		byte_en = 1 << (where & 3);
+@@ -481,6 +638,10 @@ static int _altera_pcie_cfg_write(struct altera_pcie *pcie, u8 busno,
+ 		return pcie->pcie_data->ops->rp_write_cfg(pcie, busno,
+ 						     where, size, value);
+ 
++	if (pcie->pcie_data->ops->ep_write_cfg)
++		return pcie->pcie_data->ops->ep_write_cfg(pcie, busno, devfn,
++						     where, size, value);
++
+ 	switch (size) {
+ 	case 1:
+ 		data32 = (value & 0xff) << shift;
+@@ -659,7 +820,30 @@ static void altera_pcie_isr(struct irq_desc *desc)
+ 				dev_err_ratelimited(dev, "unexpected IRQ, INT%d\n", bit);
+ 		}
+ 	}
++	chained_irq_exit(chip, desc);
++}
++
++static void aglx_isr(struct irq_desc *desc)
++{
++	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct altera_pcie *pcie;
++	struct device *dev;
++	u32 status;
++	int ret;
++
++	chained_irq_enter(chip, desc);
++	pcie = irq_desc_get_handler_data(desc);
++	dev = &pcie->pdev->dev;
+ 
++	status = readl(pcie->hip_base + pcie->pcie_data->port_conf_offset +
++		       pcie->pcie_data->port_irq_status_offset);
++	if (status & CFG_AER) {
++		writel(CFG_AER, (pcie->hip_base + pcie->pcie_data->port_conf_offset +
++				 pcie->pcie_data->port_irq_status_offset));
++		ret = generic_handle_domain_irq(pcie->irq_domain, 0);
++		if (ret)
++			dev_err_ratelimited(dev, "unexpected IRQ %d\n", pcie->irq);
++	}
+ 	chained_irq_exit(chip, desc);
+ }
+ 
+@@ -694,9 +878,9 @@ static int altera_pcie_parse_dt(struct altera_pcie *pcie)
+ 	if (IS_ERR(pcie->cra_base))
+ 		return PTR_ERR(pcie->cra_base);
+ 
+-	if (pcie->pcie_data->version == ALTERA_PCIE_V2) {
+-		pcie->hip_base =
+-			devm_platform_ioremap_resource_byname(pdev, "Hip");
++	if (pcie->pcie_data->version == ALTERA_PCIE_V2 ||
++	    pcie->pcie_data->version == ALTERA_PCIE_V3) {
++		pcie->hip_base = devm_platform_ioremap_resource_byname(pdev, "Hip");
+ 		if (IS_ERR(pcie->hip_base))
+ 			return PTR_ERR(pcie->hip_base);
+ 	}
+@@ -706,7 +890,7 @@ static int altera_pcie_parse_dt(struct altera_pcie *pcie)
+ 	if (pcie->irq < 0)
+ 		return pcie->irq;
+ 
+-	irq_set_chained_handler_and_data(pcie->irq, altera_pcie_isr, pcie);
++	irq_set_chained_handler_and_data(pcie->irq, pcie->pcie_data->ops->rp_isr, pcie);
+ 	return 0;
+ }
+ 
+@@ -719,6 +903,7 @@ static const struct altera_pcie_ops altera_pcie_ops_1_0 = {
+ 	.tlp_read_pkt = tlp_read_packet,
+ 	.tlp_write_pkt = tlp_write_packet,
+ 	.get_link_status = altera_pcie_link_up,
++	.rp_isr = altera_pcie_isr,
+ };
+ 
+ static const struct altera_pcie_ops altera_pcie_ops_2_0 = {
+@@ -727,6 +912,16 @@ static const struct altera_pcie_ops altera_pcie_ops_2_0 = {
+ 	.get_link_status = s10_altera_pcie_link_up,
+ 	.rp_read_cfg = s10_rp_read_cfg,
+ 	.rp_write_cfg = s10_rp_write_cfg,
++	.rp_isr = altera_pcie_isr,
++};
++
++static const struct altera_pcie_ops altera_pcie_ops_3_0 = {
++	.rp_read_cfg = aglx_rp_read_cfg,
++	.rp_write_cfg = aglx_rp_write_cfg,
++	.get_link_status = aglx_altera_pcie_link_up,
++	.ep_read_cfg = aglx_ep_read_cfg,
++	.ep_write_cfg = aglx_ep_write_cfg,
++	.rp_isr = aglx_isr,
+ };
+ 
+ static const struct altera_pcie_data altera_pcie_1_0_data = {
+@@ -749,11 +944,44 @@ static const struct altera_pcie_data altera_pcie_2_0_data = {
+ 	.cfgwr1 = S10_TLP_FMTTYPE_CFGWR1,
+ };
+ 
++static const struct altera_pcie_data altera_pcie_3_0_f_tile_data = {
++	.ops = &altera_pcie_ops_3_0,
++	.version = ALTERA_PCIE_V3,
++	.cap_offset = 0x70,
++	.port_conf_offset = 0x14000,
++	.port_irq_status_offset = AGLX_ROOT_PORT_IRQ_STATUS,
++	.port_irq_enable_offset = AGLX_ROOT_PORT_IRQ_ENABLE,
++};
++
++static const struct altera_pcie_data altera_pcie_3_0_p_tile_data = {
++	.ops = &altera_pcie_ops_3_0,
++	.version = ALTERA_PCIE_V3,
++	.cap_offset = 0x70,
++	.port_conf_offset = 0x104000,
++	.port_irq_status_offset = AGLX_ROOT_PORT_IRQ_STATUS,
++	.port_irq_enable_offset = AGLX_ROOT_PORT_IRQ_ENABLE,
++};
++
++static const struct altera_pcie_data altera_pcie_3_0_r_tile_data = {
++	.ops = &altera_pcie_ops_3_0,
++	.version = ALTERA_PCIE_V3,
++	.cap_offset = 0x70,
++	.port_conf_offset = 0x1300,
++	.port_irq_status_offset = 0x0,
++	.port_irq_enable_offset = 0x4,
++};
++
+ static const struct of_device_id altera_pcie_of_match[] = {
+ 	{.compatible = "altr,pcie-root-port-1.0",
+ 	 .data = &altera_pcie_1_0_data },
+ 	{.compatible = "altr,pcie-root-port-2.0",
+ 	 .data = &altera_pcie_2_0_data },
++	{.compatible = "altr,pcie-root-port-3.0-f-tile",
++	 .data = &altera_pcie_3_0_f_tile_data },
++	{.compatible = "altr,pcie-root-port-3.0-p-tile",
++	 .data = &altera_pcie_3_0_p_tile_data },
++	{.compatible = "altr,pcie-root-port-3.0-r-tile",
++	 .data = &altera_pcie_3_0_r_tile_data },
+ 	{},
+ };
+ 
+@@ -791,11 +1019,18 @@ static int altera_pcie_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	/* clear all interrupts */
+-	cra_writel(pcie, P2A_INT_STS_ALL, P2A_INT_STATUS);
+-	/* enable all interrupts */
+-	cra_writel(pcie, P2A_INT_ENA_ALL, P2A_INT_ENABLE);
+-	altera_pcie_host_init(pcie);
++	if (pcie->pcie_data->version == ALTERA_PCIE_V1 ||
++	    pcie->pcie_data->version == ALTERA_PCIE_V2) {
++		/* clear all interrupts */
++		cra_writel(pcie, P2A_INT_STS_ALL, P2A_INT_STATUS);
++		/* enable all interrupts */
++		cra_writel(pcie, P2A_INT_ENA_ALL, P2A_INT_ENABLE);
++		altera_pcie_host_init(pcie);
++	} else if (pcie->pcie_data->version == ALTERA_PCIE_V3) {
++		writel(CFG_AER,
++		       pcie->hip_base + pcie->pcie_data->port_conf_offset +
++		       pcie->pcie_data->port_irq_enable_offset);
++	}
+ 
+ 	bridge->sysdata = pcie;
+ 	bridge->busnr = pcie->root_bus_nr;
+-- 
+2.34.1
+
