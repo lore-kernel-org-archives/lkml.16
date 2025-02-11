@@ -1,307 +1,310 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87D325291B;
-	Tue, 11 Feb 2025 16:55:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D8025EFB7;
+	Tue, 11 Feb 2025 16:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739292961; cv=none; b=OmA9L7b6gaWNrjm3XZFw/32vGSfEXqEg+mKkKGSNmoWh0j+2GM3xtXIjIL2qj8y8BDCX1sNkYURTDOP3kPQhAp5BOTKIhztScDZzBd85o/YU/iMkMXQdk2m2sPjscDJxcBMRrD5F0+Rc7v1vnEuoUGlJux1U/HUyzyA/cs5MpGk=
+	t=1739292973; cv=none; b=WQvJvCqKT92kOAHU7mkv0H1xDEMvL27dQazXgU+aypldqiBH7Ia/9IBhZqBgOuhsVRuEbuVbZxj66n7uVzeOKWSbaXtVEMs32CpotLIEDQQUci19gfog6aM/XQYIQbuE6ez46lQ3OI3Ghi/Vr7s3QKoNpwZzJo4vRxoTsH5JHYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739292961; c=relaxed/simple;
-	bh=yyn719VaAyIMcUMTWTNmPXbCFPVkN+95ZQVcRv+ZUfM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=j1CWIq4qXKtn1ymwPwlteaP7qWgoPfAIo88iDn/16ZP8Qzi1fJx5AULQ+athkONRBtJgEnZpeGZU1SNoBPxJbuUiYxNeMakieXo7ZzDecd9T1NmZ5krhuRlwAScMyZ6L+yvc0vK/9F7K72nY2/rqUO5JWfB0cd1+RMYSkcdaK74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YsnYw2HZNz6L54D;
-	Wed, 12 Feb 2025 00:52:52 +0800 (CST)
-Received: from frapeml100006.china.huawei.com (unknown [7.182.85.201])
-	by mail.maildlp.com (Postfix) with ESMTPS id BB3081400DD;
-	Wed, 12 Feb 2025 00:55:49 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml100006.china.huawei.com (7.182.85.201) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 11 Feb 2025 17:55:49 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Tue, 11 Feb 2025 17:55:49 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Fan Ni <nifan.cxl@gmail.com>
-CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
-	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
-	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
-	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
-	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
-	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>, tanxiaofei
-	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
- Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>, "a.manzanares@samsung.com"
-	<a.manzanares@samsung.com>, "nmtadam.samsung@gmail.com"
-	<nmtadam.samsung@gmail.com>, "anisa.su887@gmail.com" <anisa.su887@gmail.com>
-Subject: RE: [PATCH v19 00/15] EDAC: Scrub: introduce generic EDAC RAS control
- feature driver + CXL/ACPI-RAS2 drivers
-Thread-Topic: [PATCH v19 00/15] EDAC: Scrub: introduce generic EDAC RAS
- control feature driver + CXL/ACPI-RAS2 drivers
-Thread-Index: AQHbeW7q+yAlb0l8b0m3xpFA4TlX9rNAxY6AgAF8IfA=
-Date: Tue, 11 Feb 2025 16:55:49 +0000
-Message-ID: <c2fe65c81ab4484f977f5938a3278036@huawei.com>
-References: <20250207144445.1879-1-shiju.jose@huawei.com>
- <Z6o87wa-tabDy34V@fan>
-In-Reply-To: <Z6o87wa-tabDy34V@fan>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1739292973; c=relaxed/simple;
+	bh=Ya5fERreyqjJpMNsfWgSRJlESwIvy7KB9yPMXe/VSRs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z6jObh4vtchTmrcNeoyRenTyhLt4nrRgh9m5sIGHV0GxvaEyCdyirM/dFwo2vJTN62/cc3d3218FwyeyWx4YCZe6GORKtSccUyPXUc54YOn8clCfreYpvfmZObyVeBEhqwJLSzcvXIqszqdrMHSdkUV3/HKHJVaZ6TaR0OXkvkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RwfKAFwm; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RwfKAFwm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739292972; x=1770828972;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ya5fERreyqjJpMNsfWgSRJlESwIvy7KB9yPMXe/VSRs=;
+  b=RwfKAFwm7Z2mB212hjSwNKOx+1DRiGTWi4f/DudgbOkEoc2attSBu94f
+   Asi9MuZ1Pyu8iv+Iv6IpghgZjw/JoZkanOriYQZz8zy63WSi4A6/A4FMa
+   1oO4yXW51tYWBvRk1zBlD+hMDtr4fa3+c0OEij+t19i8nWcalG5xl/CyL
+   RZhLNPov98+TL4HnVrNe6Q0RaobW9rCDm7STxekF7KCTnLavdGvEK+VJn
+   cDqnZ+Ql/vtcnTzCeN5yok/L8rYPWuRrejiAKPGNi1UxHsTS7QDPuw0/Z
+   jOJovUTq8DJbgt3hbO75JgoNSiev0/wh2aB/mXM4EGkEsq0/gcMsUPWj1
+   A==;
+X-CSE-ConnectionGUID: YB2Q3YYOTIOqFkwM4qL2fg==
+X-CSE-MsgGUID: fyrE0uOTSFWehdMI6APFGA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="40042259"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="40042259"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 08:56:11 -0800
+X-CSE-ConnectionGUID: L3T3ck/jRMW8V05RHsb7bg==
+X-CSE-MsgGUID: GXstCuFJT2OkJsIcN+1+fA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="149754557"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa001.jf.intel.com with ESMTP; 11 Feb 2025 08:56:09 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id C0D048F; Tue, 11 Feb 2025 18:56:07 +0200 (EET)
+Date: Tue, 11 Feb 2025 18:56:07 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 11/14] platform/x86: Split the alienware-wmi driver
+Message-ID: <Z6uBJ9AC5XgZTlJG@black.fi.intel.com>
+References: <20250207154610.13675-1-kuurtb@gmail.com>
+ <20250207154610.13675-12-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207154610.13675-12-kuurtb@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
->-----Original Message-----
->From: Fan Ni <nifan.cxl@gmail.com>
->Sent: 10 February 2025 17:53
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: linux-edac@vger.kernel.org; linux-cxl@vger.kernel.org; linux-
->acpi@vger.kernel.org; linux-mm@kvack.org; linux-kernel@vger.kernel.org;
->linux-doc@vger.kernel.org; bp@alien8.de; tony.luck@intel.com;
->rafael@kernel.org; lenb@kernel.org; mchehab@kernel.org;
->dan.j.williams@intel.com; dave@stgolabs.net; Jonathan Cameron
-><jonathan.cameron@huawei.com>; dave.jiang@intel.com;
->alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
->david@redhat.com; Vilas.Sridharan@amd.com; leo.duran@amd.com;
->Yazen.Ghannam@amd.com; rientjes@google.com; jiaqiyan@google.com;
->Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
->naoya.horiguchi@nec.com; james.morse@arm.com; jthoughton@google.com;
->somasundaram.a@hpe.com; erdemaktas@google.com; pgonda@google.com;
->duenwen@google.com; gthelen@google.com;
->wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
->wbs@os.amperecomputing.com; nifan.cxl@gmail.com; tanxiaofei
-><tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; Roberto
->Sassu <roberto.sassu@huawei.com>; kangkang.shen@futurewei.com;
->wanghuiqiang <wanghuiqiang@huawei.com>; Linuxarm
-><linuxarm@huawei.com>; a.manzanares@samsung.com;
->nmtadam.samsung@gmail.com; anisa.su887@gmail.com
->Subject: Re: [PATCH v19 00/15] EDAC: Scrub: introduce generic EDAC RAS
->control feature driver + CXL/ACPI-RAS2 drivers
->
->On Fri, Feb 07, 2025 at 02:44:29PM +0000, shiju.jose@huawei.com wrote:
->> From: Shiju Jose <shiju.jose@huawei.com>
->>
->> The CXL patches of this series has dependency on Dave's CXL fwctl
->> series [1].
->>
->> The code is based on v3 of CXL fwctl series [1] posted by Dave and
->> v3 of FWCTL series [2] posted by Jason and rebased on top of
->> v6.14-rc1.
->>
->> [1]:
->> https://lore.kernel.org/linux-cxl/20250204220430.4146187-1-dave.jiang@
->> intel.com/
->> [2]:
->> https://lore.kernel.org/linux-cxl/0-v3-960f17f90f17+516-fwctl_jgg@nvid
->> ia.com/#r
->>
->>
->> Userspace code for CXL memory repair features [3] and sample
->> boot-script for CXL memory repair [4].
->>
->> [3]:
->> https://lore.kernel.org/lkml/20250207143028.1865-1-shiju.jose@huawei.c
->> om/
->> [4]:
->> https://lore.kernel.org/lkml/20250207143028.1865-5-shiju.jose@huawei.c
->> om/
->>
->
->Hi Shiju,
->Is this series the same as in branch
->https://github.com/shijujose4/linux/tree/edac-enhancement-ras-features_v19=
-?
->
->I hit some compile errors wen trying to test with the above branch directl=
-y.
->
->Here are two cases where I found the code cannot compile. Please check if =
-it is a
->false alarm.
->
->Case 1: CONFIG_CXL_RAS_FEATURES=3Dm
->
->fan:~/cxl/linux-edac$ cat .config | egrep -i "edac|cxl|ras" | grep -v "^#"
->CONFIG_ACPI_RAS2=3Dy
->CONFIG_ACPI_APEI_EINJ_CXL=3Dy
->CONFIG_PCIEAER_CXL=3Dy
->CONFIG_CXL_BUS=3Dy
->CONFIG_CXL_PCI=3Dy
->CONFIG_CXL_MEM_RAW_COMMANDS=3Dy
->CONFIG_CXL_ACPI=3Dy
->CONFIG_CXL_PMEM=3Dy
->CONFIG_CXL_MEM=3Dy
->CONFIG_CXL_FWCTL=3Dy
->CONFIG_CXL_PORT=3Dy
->CONFIG_CXL_SUSPEND=3Dy
->CONFIG_CXL_REGION=3Dy
->CONFIG_CXL_REGION_INVALIDATION_TEST=3Dy
->CONFIG_CXL_RAS_FEATURES=3Dm
->CONFIG_MMC_SDHCI_OF_ARASAN=3Dy
->CONFIG_EDAC_ATOMIC_SCRUB=3Dy
->CONFIG_EDAC_SUPPORT=3Dy
->CONFIG_EDAC=3Dy
->CONFIG_EDAC_LEGACY_SYSFS=3Dy
->CONFIG_EDAC_DEBUG=3Dy
->CONFIG_EDAC_DECODE_MCE=3Dm
->CONFIG_EDAC_GHES=3Dm
->CONFIG_EDAC_SCRUB=3Dy
->CONFIG_EDAC_ECS=3Dy
->CONFIG_EDAC_MEM_REPAIR=3Dy
->CONFIG_EDAC_IGEN6=3Dm
->CONFIG_RAS=3Dy
->CONFIG_MEM_ACPI_RAS2=3Dy
->CONFIG_DEV_DAX_CXL=3Dm
->fan:~/cxl/linux-edac$
->
->
->fan:~/cxl/linux-edac$ make -j16
->mkdir -p /home/fan/cxl/linux-edac/tools/objtool && make
->O=3D/home/fan/cxl/linux-edac subdir=3Dtools/objtool --no-print-directory -=
-C objtool
->  CALL    scripts/checksyscalls.sh
->  INSTALL libsubcmd_headers
->  UPD     include/generated/utsversion.h
->  CC      init/version-timestamp.o
->  KSYMS   .tmp_vmlinux0.kallsyms.S
->  AS      .tmp_vmlinux0.kallsyms.o
->  LD      .tmp_vmlinux1
->ld: vmlinux.o: in function `cxl_region_probe':
->/home/fan/cxl/linux-edac/drivers/cxl/core/region.c:3456:(.text+0x7b296f):
->undefined reference to `devm_cxl_region_edac_register'
->ld: vmlinux.o: in function `cxl_mem_probe':
->/home/fan/cxl/linux-edac/drivers/cxl/mem.c:188:(.text+0x7b8ad1): undefined
->reference to `devm_cxl_memdev_edac_register'
->make[2]: *** [scripts/Makefile.vmlinux:77: vmlinux] Error 1
->make[1]: *** [/home/fan/cxl/linux-edac/Makefile:1226: vmlinux] Error 2
->make: *** [Makefile:251: __sub-make] Error 2
->
->When compile with CONFIG_CXL_RAS_FEATURES=3Dy,  it can compile.
->
-Hi Fan,
+On Fri, Feb 07, 2025 at 10:46:07AM -0500, Kurt Borja wrote:
+> Split alienware-wmi WMI drivers into different files. This is done
+> seamlessly by copying and pasting, however some blocks are reordered.
 
-Thanks for checking this and reporting.
+...
 
-This error is with CONFIG_CXL_RAS_FEATURES=3Dm and CONFIG_CXL_BUS=3Dy and C=
-ONFIG_CXL_MEM=3Dy.
-Now changed  CONFIG_CXL_RAS_FEATURES  for tristate -> boolean as this imple=
-mented only interface functions
-for the CXL RAS features.
->
->CASE 2: CONFIG_EDAC=3Dm
->
->fan:~/cxl/linux-edac$ cat .config | egrep -i "edac|cxl|ras" | grep -v "^#"
->CONFIG_CRASH_RESERVE=3Dy
->CONFIG_CRASH_DUMP=3Dy
->CONFIG_CRASH_HOTPLUG=3Dy
->CONFIG_CRASH_MAX_MEMORY_RANGES=3D8192
->CONFIG_ARCH_SUPPORTS_CRASH_DUMP=3Dy
->CONFIG_ARCH_DEFAULT_CRASH_DUMP=3Dy
->CONFIG_ARCH_SUPPORTS_CRASH_HOTPLUG=3Dy
->CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION=3Dy
->CONFIG_ACPI_RAS2=3Dy
->CONFIG_ACPI_APEI_EINJ_CXL=3Dy
->CONFIG_PCIEAER_CXL=3Dy
->CONFIG_CXL_BUS=3Dy
->CONFIG_CXL_PCI=3Dy
->CONFIG_CXL_MEM_RAW_COMMANDS=3Dy
->CONFIG_CXL_ACPI=3Dy
->CONFIG_CXL_PMEM=3Dy
->CONFIG_CXL_MEM=3Dy
->CONFIG_CXL_FWCTL=3Dy
->CONFIG_CXL_PORT=3Dy
->CONFIG_CXL_SUSPEND=3Dy
->CONFIG_CXL_REGION=3Dy
->CONFIG_CXL_REGION_INVALIDATION_TEST=3Dy
->CONFIG_CXL_RAS_FEATURES=3Dy
->CONFIG_MMC_SDHCI_OF_ARASAN=3Dy
->CONFIG_EDAC_ATOMIC_SCRUB=3Dy
->CONFIG_EDAC_SUPPORT=3Dy
->CONFIG_EDAC=3Dm
->CONFIG_EDAC_LEGACY_SYSFS=3Dy
->CONFIG_EDAC_DEBUG=3Dy
->CONFIG_EDAC_DECODE_MCE=3Dm
->CONFIG_EDAC_GHES=3Dm
->CONFIG_EDAC_SCRUB=3Dy
->CONFIG_EDAC_ECS=3Dy
->CONFIG_EDAC_MEM_REPAIR=3Dy
->CONFIG_EDAC_IGEN6=3Dm
->CONFIG_RAS=3Dy
->CONFIG_MEM_ACPI_RAS2=3Dy
->CONFIG_DEV_DAX_CXL=3Dm
->fan:~/cxl/linux-edac$
->
->fan:~/cxl/linux-edac$ make -j16
->mkdir -p /home/fan/cxl/linux-edac/tools/objtool && make
->O=3D/home/fan/cxl/linux-edac subdir=3Dtools/objtool --no-print-directory -=
-C objtool
->  CALL    scripts/checksyscalls.sh
->  INSTALL libsubcmd_headers
->  UPD     include/generated/utsversion.h
->  CC      init/version-timestamp.o
->  KSYMS   .tmp_vmlinux0.kallsyms.S
->  AS      .tmp_vmlinux0.kallsyms.o
->  LD      .tmp_vmlinux1
->ld: vmlinux.o: in function `devm_cxl_region_edac_register':
->/home/fan/cxl/linux-
->edac/drivers/cxl/core/memfeature.c:1720:(.text+0x7b665d): undefined
->reference to `edac_dev_register'
->ld: vmlinux.o: in function `devm_cxl_memdev_edac_register':
->/home/fan/cxl/linux-
->edac/drivers/cxl/core/memfeature.c:1697:(.text+0x7b7241): undefined
->reference to `edac_dev_register'
->ld: vmlinux.o: in function `ras2_probe':
->/home/fan/cxl/linux-edac/drivers/ras/acpi_ras2.c:363:(.text+0xb0ecc8):
->undefined reference to `edac_dev_register'
->make[2]: *** [scripts/Makefile.vmlinux:77: vmlinux] Error 1
->make[1]: *** [/home/fan/cxl/linux-edac/Makefile:1226: vmlinux] Error 2
->make: *** [Makefile:251: __sub-make] Error 2
->
+>  obj-$(CONFIG_ALIENWARE_WMI)		+= alienware-wmi.o
+>  alienware-wmi-objs			:= alienware-wmi-base.o
+> +alienware-wmi-y				+= alienware-wmi-legacy.o
+> +alienware-wmi-y				+= alienware-wmi-wmax.o
 
-Here the symbol 'edac_dev_register' can't find with CONFIG_CXL_BUS=3Dy  CON=
-FIG_CXL_RAS_FEATURES=3Dy and=20
-CONFIG_EDAC=3Dm.
-Modified CXL_RAS_FEATURES depends on EDAC=3Dy || (CXL_BUS=3Dm && EDAC=3Dm)
-to fix this.
->
->
->Fan
->
->
-Thanks,
-Shiju
+Oh my... it's even inconsistent!
+
+...
+
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/wmi.h>
+
+Too little headers are being included. At very quick glance a dozen
+or so is missing...
+
+> +#include "alienware-wmi.h"
+
+...
+
+> +static struct attribute *hdmi_attrs[] = {
+> +	&dev_attr_cable.attr,
+> +	&dev_attr_source.attr,
+> +	NULL,
+
+No comma in the terminator entry.
+
+> +};
+
+...
+
+> +static struct attribute *amplifier_attrs[] = {
+> +	&dev_attr_status.attr,
+> +	NULL,
+> +};
+
+Ditto.
+
+...
+
+> +{
+> +	struct alienfx_platdata *pdata = dev_get_platdata(dev);
+> +	struct wmax_basic_args in_args = {
+> +		.arg = 0,
+> +	};
+> +	u32 out_data;
+> +	int ret;
+> +
+> +	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_DEEP_SLEEP_STATUS,
+> +				    &in_args, sizeof(in_args), &out_data);
+> +	if (!ret) {
+> +		if (out_data == 0)
+> +			return sysfs_emit(buf, "[disabled] s5 s5_s4\n");
+> +		else if (out_data == 1)
+> +			return sysfs_emit(buf, "disabled [s5] s5_s4\n");
+> +		else if (out_data == 2)
+> +			return sysfs_emit(buf, "disabled s5 [s5_s4]\n");
+
+The whole code inherited same issues like redundant 'else'. Please, refactor.
+
+> +	}
+> +
+> +	pr_err("alienware-wmi: unknown deep sleep status: %d\n", ret);
+> +	return sysfs_emit(buf, "disabled s5 s5_s4 [unknown]\n");
+> +}
+
+...
+
+> +static ssize_t deepsleep_store(struct device *dev, struct device_attribute *attr,
+> +			       const char *buf, size_t count)
+> +{
+> +	struct alienfx_platdata *pdata = dev_get_platdata(dev);
+> +	struct wmax_basic_args args;
+> +	int ret;
+> +
+> +	if (strcmp(buf, "disabled\n") == 0)
+> +		args.arg = 0;
+> +	else if (strcmp(buf, "s5\n") == 0)
+> +		args.arg = 1;
+> +	else
+> +		args.arg = 2;
+
+sysfs_match_string()
+
+> +	pr_debug("alienware-wmi: setting deep sleep to %d : %s", args.arg, buf);
+> +
+> +	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_DEEP_SLEEP_CONTROL,
+> +				    &args, sizeof(args), NULL);
+> +	if (!ret)
+> +		pr_err("alienware-wmi: deep sleep control failed: results: %u\n", ret);
+> +
+> +	return count;
+> +}
+
+> +
+
+Redundant blank line.
+
+> +static DEVICE_ATTR_RW(deepsleep);
+
+...
+
+> +static struct attribute *deepsleep_attrs[] = {
+> +	&dev_attr_deepsleep.attr,
+> +	NULL,
+
+No comma.
+
+> +};
+
+...
+
+> +	if ((code & WMAX_THERMAL_TABLE_MASK) == WMAX_THERMAL_TABLE_USTT &&
+> +	    (code & WMAX_THERMAL_MODE_MASK) <= THERMAL_MODE_USTT_LOW_POWER)
+> +		return true;
+> +
+> +	return false;
+
+	return ...
+
+but if you wish, this one is okay.
+
+...
+
+> +static int thermal_profile_probe(void *drvdata, unsigned long *choices)
+> +{
+> +	enum platform_profile_option profile;
+> +	struct awcc_priv *priv = drvdata;
+> +	enum wmax_thermal_mode mode;
+> +	u8 sys_desc[4];
+> +	u32 first_mode;
+> +	u32 out_data;
+> +	int ret;
+> +
+> +	ret = wmax_thermal_information(priv->wdev, WMAX_OPERATION_SYS_DESCRIPTION,
+> +				       0, (u32 *) &sys_desc);
+
+How do you guarantee an alignment? Yes, it might be good for the specific
+hardware, but in general this is broken code.
+
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	first_mode = sys_desc[0] + sys_desc[1];
+
+> +	for (u32 i = 0; i < sys_desc[3]; i++) {
+
+Why u32? unsigned int looks more natural here.
+
+> +		ret = wmax_thermal_information(priv->wdev, WMAX_OPERATION_LIST_IDS,
+> +					       i + first_mode, &out_data);
+> +
+> +		if (ret == -EIO)
+> +			return ret;
+> +
+> +		if (ret == -EBADRQC)
+> +			break;
+> +
+> +		if (!is_wmax_thermal_code(out_data))
+> +			continue;
+> +
+> +		mode = out_data & WMAX_THERMAL_MODE_MASK;
+> +		profile = wmax_mode_to_platform_profile[mode];
+> +		priv->supported_thermal_profiles[profile] = out_data;
+
+> +		set_bit(profile, choices);
+
+Do you need it to be atomic?
+
+> +	}
+> +
+> +	if (bitmap_empty(choices, PLATFORM_PROFILE_LAST))
+> +		return -ENODEV;
+> +
+> +	if (awcc->gmode) {
+> +		priv->supported_thermal_profiles[PLATFORM_PROFILE_PERFORMANCE] =
+> +			WMAX_THERMAL_MODE_GMODE;
+> +
+> +		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
+> +	}
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static const struct wmi_device_id alienware_wmax_device_id_table[] = {
+> +	{ WMAX_CONTROL_GUID, NULL },
+> +	{ },
+
+No comma.
+
+> +};
+
+...
+
+> +int __init alienware_wmax_wmi_init(void)
+> +{
+> +	const struct dmi_system_id *id;
+> +
+> +	id = dmi_first_match(awcc_dmi_table);
+> +	if (id)
+> +		awcc = id->driver_data;
+> +
+> +	if (force_platform_profile) {
+> +		if (!awcc)
+> +			awcc = &empty_quirks;
+> +
+> +		awcc->pprof = true;
+> +	}
+> +
+> +	if (force_gmode) {
+> +		if (awcc)
+> +			awcc->gmode = true;
+> +		else
+> +			pr_warn("force_gmode requires platform profile support\n");
+> +	}
+> +
+> +	return wmi_driver_register(&alienware_wmax_wmi_driver);
+> +}
+> +
+> +void __exit alienware_wmax_wmi_exit(void)
+> +{
+> +	wmi_driver_unregister(&alienware_wmax_wmi_driver);
+> +}
+
+Why not moving these boilerplate to ->probe() and use module_wmi_driver()?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
