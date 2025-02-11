@@ -1,74 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D49826BDAB;
-	Tue, 11 Feb 2025 16:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5461E26BDAB
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739291050; cv=none; b=W6s0M1MAUx8fTe8XS7CWdn4fyks/eSwxWwkePmVwcA8NxMhwPPRehiQ/Q61HViEZAu8brf+LQW1Q+otwsy6ohCmaGPTbzinqGrBz0kshqo/2ViGxsqytNq1MK3QZP7ykWxzq5ffGxtwIHBTrz7oxSNabn2UxMvt/FrS6BiGo+oI=
+	t=1739291059; cv=none; b=rJQZOY5zVwqoHNPjuN1DN3T54UUt4EyrYNjcjf3wDf17687KcZEBN1jKZOSi0F7BASv/9GO7MLrVNWvdMA3Wlj/yG3RfKXbMvDBAVFrnyh5lC0rRqiPUvS55SWyWlsxYowY1ryDck/gzxigZ9U7svm+egmKb3z+j/dNgME2+Sc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739291050; c=relaxed/simple;
-	bh=fOJNLFXheFs3t97+oDIWKPx50/a6xFugJurvSYY4P0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nbk3zBE/z4wDcQW+I4Bt5zv4GCSkWMKVDR0nMy89yrqVTWZGtC60ZwoyHplZw6W/rcyGkGQgXeqFBpL6P/sK5Utvx2G5rst6yJWemGmUVduQ3IZBDrGt0diDvkZm7Wkff5KhzzRmTQso4jgx1DIf/CXWuYQxCU11/qj4bRlPP4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FD20C4CEDD;
-	Tue, 11 Feb 2025 16:24:08 +0000 (UTC)
-Date: Tue, 11 Feb 2025 11:24:13 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Menglong Dong <menglong8.dong@gmail.com>
-Cc: alexei.starovoitov@gmail.com, x86@kernel.org, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- dongml2@chinatelecom.cn, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [RFC PATCH] x86: add function metadata support
-Message-ID: <20250211112413.4c43a9ca@gandalf.local.home>
-In-Reply-To: <CADxym3YzTc8wyAndNP4OpK8JSLWkpCAMgJox49ioUBXrov1h=w@mail.gmail.com>
-References: <20250210104034.146273-1-dongml2@chinatelecom.cn>
-	<20250210180528.01118537@gandalf.local.home>
-	<CADxym3YzTc8wyAndNP4OpK8JSLWkpCAMgJox49ioUBXrov1h=w@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1739291059; c=relaxed/simple;
+	bh=OyOPFVp/Nt6RR4/5BdrueE9wCXeRre5brIic17c0cUA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rr5Chs8iHfMKUxVEbORuKxktDWuc5v/VSxP2kh2b/GLpHlHh7zKNq1XpEnRC6Rls3llE/4pkwV8PKvX7baA0OjFXC/iC3U7bjdeNtHVlR6SpmgHMr8P9LB3qsUCEkY0PRihXl1CgEcOAhA1mT7pA35ZJ8R4yEFlCswABXpDSZYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OIy1XOxB; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OIy1XOxB"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21f0444b478so82325125ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:24:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739291057; x=1739895857; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aMGuYuQ0Y+vam6Iz2PYQ4HaOw2lXym2EDG2tN0GCNkc=;
+        b=OIy1XOxBN/M+ZR4mchd/MjpqHDbRo5Ew/4TKeFn35P8ucd9dKVv9XnoypHNRL9i9qH
+         w3JgG8N3AOaGnp1YgKTVYje/oC4YAv/gEq4DCPcMtk5/D9hdQ8vBpDWX+fbbtVWdZwO7
+         W+hYIXF2KXwqKeirgKa++7ep8/RUlSDrHDf61kVte/4ROBcqo4Mj2DQ6nwMrAYTldwJ5
+         TGzKgmhGZTjDFCM2c+ErAN78m0CQydjkivxVX0ThdWAdc/eHIMg+9XUy6Vk3xYeu4DS2
+         inrrSjcgCZwOTz0RY0dzSiBQBlrQVIqUOyfgzABkxxJFnLcKVOuC23shpRfotoXvmo5o
+         MWUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739291057; x=1739895857;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aMGuYuQ0Y+vam6Iz2PYQ4HaOw2lXym2EDG2tN0GCNkc=;
+        b=PztOvXz5A8vYRVp/M8flahnyaPAzA+WJpwQ1f/kTn6B5CkuE72vHnnsR+WU07yqSg8
+         QkkhqV8yyMJYb3oWfmU2mliwQuSs+Rjcm2h+e9YfClUti+eRgqqUDU5QZDvuKfZqlYAv
+         LPuBAnnDxOoqsu+vaHjIdwUfaytWCBr2aHxZGfKYaKitbVtvHsxkj5NOGEfkjhHON5+v
+         urrRqIGKUSNpPj8TRbkQELoOr5wKarbOl6OmqbQ77xph+hIQrlgNsfqGxEy1IsKDY4aN
+         hMvkc/vhvAgojl0YvABt6tWPKmFV4dkeXI6yEOcTut+XHih5e59ReDmmJNkpvQaGLTz+
+         hdbA==
+X-Forwarded-Encrypted: i=1; AJvYcCXwkIVmcEsOVKW/214aQUgbqp4gK6qOts077LWFTRx4NGF2EGC7hlzk6nl+V5+szyUWJ3ofYCv3BeW99Sg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwU3EoHgUb5b/LeTv+EljbQurtcYVoy6j8LZk4gLLsPO8HWKus1
+	RPocz0torpHhJS9DdVAM0L6UIIs8EnCRWyOs/qqrQm3iIfkmMjTIZKf/aiJa
+X-Gm-Gg: ASbGncsbSnK8ToFcSeUwwVnXXP2LFoRZ9f7oQbPia5EJ9d9lgQDYYzgwBCqMoNSiUp0
+	erW1z96b+r6VapjTmEA+PxvGSc8rJvQWL4HQkLOwg0QlGf04jm7ecHPz0INz+/18p49vtFds3Se
+	4/jPf3g3097F+6mFghYPny9kbgOs9Bq/UUjJ8xCXDd4k1ga1lcPhoe82TB5Kfcs99mxcPnJPQf1
+	mcG1TGPCwxubTjk4tK41Bn4gx2GD0JLoVg6krxrwR6GbyT5pGpxLqnR0f458FsutL7OpAxXvqYg
+	LgukIR8acR/gQO2eTMcUlBaaAV8I7Tl6k54kqbQ5gamu
+X-Google-Smtp-Source: AGHT+IF8/SZkwkHULreTwIkrrhsne6AFKASijffVAvsDuEJZxMagh3mUi28qJJZlqKx4S2XIpHUSPA==
+X-Received: by 2002:a17:902:da86:b0:21f:4144:a071 with SMTP id d9443c01a7336-21f4e759f4cmr328161895ad.40.1739291057463;
+        Tue, 11 Feb 2025 08:24:17 -0800 (PST)
+Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:e985:a3e9:17ea:8af])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3683d5b0sm98212385ad.109.2025.02.11.08.24.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 08:24:16 -0800 (PST)
+From: I Hsin Cheng <richard120310@gmail.com>
+To: yury.norov@gmail.com
+Cc: anshuman.khandual@arm.com,
+	arnd@arndb.de,
+	linux-kernel@vger.kernel.org,
+	jserv@ccns.ncku.edu.tw,
+	skhan@linuxfoundation.org,
+	I Hsin Cheng <richard120310@gmail.com>
+Subject: [PATCH 0/2] uapi: Refactor __GENMASK() and __GENMASK_ULL() for
+Date: Wed, 12 Feb 2025 00:24:10 +0800
+Message-ID: <20250211162412.477655-1-richard120310@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 11 Feb 2025 20:03:38 +0800
-Menglong Dong <menglong8.dong@gmail.com> wrote:
+This patch series refactor the implementation of the macros
+__GENMASK() and __GENMASK_ULL() in order to speed up the operation by
+reducing the number of instructions.
 
+All the changes pass the unit tests and have used bloat-o-meter to test
+the size shrink for vmlinux. Performance tests comparison are list in
+each patches.
 
-> 
-> Another beneficiary can be ftrace. For now, all the kernel functions that
-> are enabled by dynamic ftrace will be added to a filter hash. And hash
-> lookup will happen when then traced functions are called, which has an
-> impact on the performance, see
-> __ftrace_ops_list_func() -> ftrace_ops_test(). With the per-function metadata
-> support, we can store the information that if the ftrace ops is enabled on the
-> kernel function to the metadata.
+$ ./scripts/bloat-o-meter vmlinux_old vmlinux_new 
+add/remove: 0/2 grow/shrink: 46/510 up/down: 464/-1733 (-1269)
+...
+Total: Before=22438085, After=22436816, chg -0.01%
 
-Note, ftrace only uses ftrace_ops_list if there's more than one callback
-attached to the same function. Otherwise it calls directly to a single
-trampoline, and is rather efficient. No meta data needed.
+Patch 1:
+	Refactor __GENMASK()
+Patch 2:
+	Refactor __GENMASK_ULL()
 
-> > Arm64 and other archs add meta data before the functions too. Can we have
-> > an effort to perhaps share these methods?  
-> 
-> I have not done research on arm64 yet. AFAIK, arm64 insn is 16-bytes aligned,
-> so the way we process can be a little different here, as making kernel function
-> non 16-bytes aligned can have a huge influence.
+I Hsin Cheng (2):
+  uapi: Refactor __GENMASK() for speed-up
+  uapi: Refactor __GENMASK_ULL() for speed-up
 
-Arm64 already uses the meta data before every function. That's where it
-stores a pointer to the ftrace_ops. So in ftrace, when there's a single
-callback attached to a function in arm64, it jumps to a ftrace trampoline,
-that will reference the function's meta data to find the ftrace_ops to use
-for that callback.
+ include/uapi/linux/bits.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-If more than one callback is attached to the same function, then it acts
-just like x86 and does the loop.
+-- 
+2.43.0
 
--- Steve
