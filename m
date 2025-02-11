@@ -1,127 +1,505 @@
-Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14782264607
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 19:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F7626389C
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 19:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739301718; cv=none; b=B/4FOI21NxbrwhOQTM3dbQ4mW+ySvlkTwCp4S/T+tYXiFOTyRpcKL5+QpYcZPFP3zWSTEt8tK00/bCh4MAsnpOiBZM4mtKetzrXHYj++J21/JZdQZprjc8xNExmJp0GxqImJ2bY7lM5mkKMJM2fW3uz7Uwvta7ch3eXT8R3BSw0=
+	t=1739301718; cv=none; b=es9wZL7p/IGa3AAJxDnNWKvoqGZWBl7FE/DZ9wdXSkqF/tK8LOJt2yE/Cg354kz6okKaCsVKMASCcw4rCbR9k/hgaLCOj/xjJWJJCZP20ddKn+Tfccqgzq3rNFPDW/bVAI3eXueL9g1aH3PYfAuzFGhKlSFJQe1RETmHw53cLDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739301718; c=relaxed/simple;
-	bh=i0rjrv5Hw6uQyXJ5j8UYn+6uNdJPs4y5WflA+/CxlGA=;
+	bh=an+OqzvJ659CbgGiWfy2HCJIq9L7yPkSs+VThOVR1Po=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kw3tVpwY/b2AVbjf3ZHaARanrNaspxLsRUIOUN1b8n5VuzQjvc4231CB9twqKZbz9hKp3A8tmH6VRhaVsBt7T8O5aRqtMTm8GX0i1ZTNqM/PFflhBEmBgRNs1bp85qshdV/ddLTq4+GC0oXOljhuggWjo4sDnYj7TyQmrKOXcEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=p6Lng5ZC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=M95Iwyi6; arc=none smtp.client-ip=202.12.124.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=K4tL86KVgDuVtZ/XPMiKpQmw3w/COFSDRXoevvi4o2JMwSJDqHifz3ae+0jZR3nFkBSm/9CVmEaw16sAA4NoRjib1vAWBpnf9Hk+QqSMZ8xJKf3nHwgQDMaqum7i6uQSkj0G5ReoLfoHrT1JHo6/IGoz4jPKouy+tlc6kh8AgOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZAoS19jk; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="p6Lng5ZC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="M95Iwyi6"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 082C92540113;
-	Tue, 11 Feb 2025 14:21:56 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Tue, 11 Feb 2025 14:21:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1739301715; x=1739388115; bh=4CMMII7gg+
-	S8ZOua/g5opUsXHaf674ZZLjjOpdOjwqM=; b=p6Lng5ZCX20mDzQNjqo+bbgI9M
-	npPT8FklqciXwLGjqcT8Au3W5BJI/lfFBHCsx3UZ41Fkp6M5gU2f9WIZIOO4IfLz
-	eHNEABYblCeOEjtnbpydn8zc0VTyiRzm9iQ4qofAp9wVD8UAk3agXPiOwekZJrXz
-	MvT6b8fJXFN5kyiXff4fO4L/oHCGySvOGR/gddZU1pOPYxzRRSNvKtrgjJmac6Td
-	ciFEHYYJojcv/0BNV1Lzde7dicQ6r/SYjMTRI0BGvYeZ77lwA535KlomsZaNVfc2
-	TA/wK7WxQlNtSm2jKC9nklyzpSeG4seTsb7N858T0Got3o/pU/SijgS9TWmg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1739301715; x=1739388115; bh=4CMMII7gg+S8ZOua/g5opUsXHaf674ZZLjj
-	OpdOjwqM=; b=M95Iwyi6FtMUh7KPJgK56Wce/ol4WOjqun99tTLR3eZjBJ1KvCG
-	/iqKQsfU7sGOuerb6/qDJg6j88pFxwSRG+GHAQ8B0iaFyA9pxM0mq8yMgdak5C4k
-	SpQsVAx4GQ3yXT918CeeU4ozH4WjhUOoEM/1XYz/mh8sdKhF+Ns6Tibrko24g9Gj
-	KEw/7ugiEuAacIkqxI+UOgkgrRKKjYH4bWSK4bgeZpc1B+xEjxe8Bkx91gXHV/cj
-	5KVs76A9L37pziRP7TOmg0QTKfvBn/GcvxifPVkChPosFMPl4jfFYcYokxxjfn5f
-	lBvsAdaZ4DIXEs6yAo63CXTjpgXYorJnSPQ==
-X-ME-Sender: <xms:U6OrZ59UBYN-cFuUVAg1HUTC2A-KvdIGR5abqEbWIcEDnO70U8Vunw>
-    <xme:U6OrZ9v91b_sCtxu66wg1qC57Prxo9R2ELtqAbe8Si0fkcxSNUQCSBoZ_sTWfQJnV
-    mya6vod980qYXA-xkE>
-X-ME-Received: <xmr:U6OrZ3AwdNfjAI-szRwK1zvGJ4MkQaoMkDJ_lRNg9DR2R34TVispYQ0gqlJsbN0_mVmRGJylH5NuUtAxgDH8338W6syNm-8Y5hs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegudekvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttdej
-    necuhfhrohhmpeflrghnnhgvucfirhhunhgruhcuoehjsehjrghnnhgruhdrnhgvtheqne
-    cuggftrfgrthhtvghrnhepudefhfehudetjeeutdfhvefhtdeltdfgheefkeefleegveev
-    tedtveelfffhiedtnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucevlhhushhtvg
-    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjsehjrghnnhgruhdrnhgv
-    thdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprh
-    hosghinhdrmhhurhhphhihsegrrhhmrdgtohhmpdhrtghpthhtoheprghlhihsshgrsehr
-    ohhsvghniiifvghighdrihhopdhrtghpthhtohepshhvvghnsehsvhgvnhhpvghtvghrrd
-    guvghvpdhrtghpthhtohepjhhorhhoseeksgihthgvshdrohhrghdprhgtphhtthhopeif
-    ihhllheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghsrghhiheslhhishhtshdrlh
-    hinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhi
-    shhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehiohhmmhhusehlihhsth
-    hsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgv
-    rhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:U6OrZ9erICxeLKtv6LRcbSWf_u5GLNZ9i4lTMgfqxre8ndwsGs8jTQ>
-    <xmx:U6OrZ-MYxDweROPJ9p79fDIf7AD8irrFJGtIkDHdI8ztD3q1iIzbiA>
-    <xmx:U6OrZ_kmBVpDMbmoe4CARgdr7aXORa4zf45F6JPMOeAw3CuYclXYqA>
-    <xmx:U6OrZ4vfXkODZch2zGpMRRxixhJGTtKwlqSfNW8UflKv_hk17rYx3g>
-    <xmx:U6OrZ1pwJBCZX0WeuuCRjO1xQVKskjEe_pnW_ebS2OFBRQqfVc4qhonm>
-Feedback-ID: i47b949f6:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 11 Feb 2025 14:21:54 -0500 (EST)
-Date: Tue, 11 Feb 2025 20:21:52 +0100
-From: Janne Grunau <j@jannau.net>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Sven Peter <sven@svenpeter.dev>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] iommu/dart: Assert !locked when configuring
-Message-ID: <20250211192152.GA810942@robin.jannau.net>
-References: <20250210-locked-dart-v1-0-5d97fe247f35@rosenzweig.io>
- <20250210-locked-dart-v1-5-5d97fe247f35@rosenzweig.io>
- <756ba6d7-b18e-4139-851b-496b1820117a@arm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZAoS19jk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739301717; x=1770837717;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=an+OqzvJ659CbgGiWfy2HCJIq9L7yPkSs+VThOVR1Po=;
+  b=ZAoS19jkZa8suUCYxrHB13fKulIV8sKglKWSCFiTKOi0nQP6X2ZVcMvQ
+   XYAVOtdEEkerVoYE9QwlcSNT40CvHppixG06x6vN72zE3boqYx6YGIfzu
+   /rPBL8k//7ssfZ9J9I7zYD4FpTaHS9SWtyGAWO8/Dtm+T/OhJB50xcUhg
+   ayd4Sln9re06GcvCJi52gajzOcPC8XrdZj8CzAiO51sgQpOFxhGjIlfVg
+   NWCd3yEUVq/t6Qg5z2X1tPbwmE8sVk/pcAsaz7mb9PQADeT4LlFAE9O41
+   kijDePapfTf9xyNTVoCzDFdMLuodYmOXshcee1gCVU3cJ4oOdG69m9Kx/
+   Q==;
+X-CSE-ConnectionGUID: Hk1tIaNwQZiBAyqhiP/4Cg==
+X-CSE-MsgGUID: g0JzzECvQgugAzUxYc7w0A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="62405288"
+X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
+   d="scan'208";a="62405288"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 11:21:56 -0800
+X-CSE-ConnectionGUID: xgB4JW0MS+yIC75aTORLvg==
+X-CSE-MsgGUID: u36XP4KPQwCDg3aE0WG8uA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
+   d="scan'208";a="113112836"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 11 Feb 2025 11:21:51 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1thvpN-0014b7-0W;
+	Tue, 11 Feb 2025 19:21:49 +0000
+Date: Wed, 12 Feb 2025 03:21:07 +0800
+From: kernel test robot <lkp@intel.com>
+To: Charlie Jenkins <charlie@rivosinc.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ben Dooks <ben.dooks@codethink.co.uk>,
+	Pasha Bouzarjomehri <pasha@rivosinc.com>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Charlie Jenkins <charlie@rivosinc.com>
+Subject: Re: [PATCH v5] riscv: Add runtime constant support
+Message-ID: <202502120355.WlAf0wvw-lkp@intel.com>
+References: <20250203-runtime_const_riscv-v5-1-bc61736a3229@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <756ba6d7-b18e-4139-851b-496b1820117a@arm.com>
+In-Reply-To: <20250203-runtime_const_riscv-v5-1-bc61736a3229@rivosinc.com>
 
-On Tue, Feb 11, 2025 at 06:41:00PM +0000, Robin Murphy wrote:
-> On 2025-02-10 7:39 pm, Alyssa Rosenzweig wrote:
-> > Configuration is only possible and needed for non-locked DARTs and will
-> > fail for locked DARTs. We cannot try -- assert that we do not.
-> 
-> Except now we absolutely will - if a locked DART and its client device 
-> are advertised to Linux, instead of gracefully refusing to touch it, 
-> we'll now attach the client to a DMA domain, firing a barrage of 
-> multiple WARNs in the process, and give it DMA ops which still cannot 
-> work. I'm not really convinced this series on its own leaves us in a 
-> better position than we're already in now... :/
-> 
-> How hideous is the rest of what's required to actually make this usable?
+Hi Charlie,
 
-The TTBR can not be changed but the preset first level table can
-modified at will. The driver keeps a shadow first label table and syncs
-that to the preset 1st level table on flush_tbl().
-It gets more complicated by the fact that the iommu for the display
-coprocessor is locked and mappings for its firmware and boot framebuffer
-are preinstalled and have to be maintained or restored on
-initialization.
-This is handled via reserved memory with translation.
+kernel test robot noticed the following build errors:
 
-Downstream change to handle this is in
-https://github.com/AsahiLinux/linux/commit/d90cc3590ea460e1c574b4b7c47fdafb2794af6a
-not including the change to parse / handle reserved memory with
-translation in iommu core.
+[auto build test ERROR on ffd294d346d185b70e28b1a28abe367bbfe53c04]
 
-Janne
+url:    https://github.com/intel-lab-lkp/linux/commits/Charlie-Jenkins/riscv-Add-runtime-constant-support/20250204-044527
+base:   ffd294d346d185b70e28b1a28abe367bbfe53c04
+patch link:    https://lore.kernel.org/r/20250203-runtime_const_riscv-v5-1-bc61736a3229%40rivosinc.com
+patch subject: [PATCH v5] riscv: Add runtime constant support
+config: riscv-randconfig-r072-20250212 (https://download.01.org/0day-ci/archive/20250212/202502120355.WlAf0wvw-lkp@intel.com/config)
+compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250212/202502120355.WlAf0wvw-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502120355.WlAf0wvw-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+>> fs/dcache.c:112:9: warning: unknown option, expected 'push', 'pop', 'rvc', 'norvc', 'relax' or 'norelax' [-Winline-asm]
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:52:19: note: expanded from macro 'runtime_const_ptr'
+                           ".option push\n\t"                              \
+                                          ^
+   <inline asm>:32:10: note: instantiated into assembly here
+           .option arch,+zba
+                   ^
+>> fs/dcache.c:112:9: error: instruction requires the following: 'Zba' (Address Generation Instructions)
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:54:32: note: expanded from macro 'runtime_const_ptr'
+                           "slli   %[__tmp],%[__tmp],32\n\t"               \
+                                                         ^
+   <inline asm>:34:2: note: instantiated into assembly here
+           add.uw a1,a1,a3
+           ^
+>> fs/dcache.c:112:9: warning: unknown option, expected 'push', 'pop', 'rvc', 'norvc', 'relax' or 'norelax' [-Winline-asm]
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:60:19: note: expanded from macro 'runtime_const_ptr'
+                           ".option push\n\t"                              \
+                                          ^
+   <inline asm>:59:10: note: instantiated into assembly here
+           .option arch,+zbkb
+                   ^
+>> fs/dcache.c:112:9: error: instruction requires the following: 'Zbp' (Permutation 'Zb' Instructions) or 'Zbkb' (Bitmanip instructions for Cryptography)
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:61:25: note: expanded from macro 'runtime_const_ptr'
+                           ".option arch,+zbkb\n\t"                        \
+                                                ^
+   <inline asm>:60:2: note: instantiated into assembly here
+           pack    a1,a1,a3
+           ^
+>> fs/dcache.c:112:9: warning: unknown option, expected 'push', 'pop', 'rvc', 'norvc', 'relax' or 'norelax' [-Winline-asm]
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:52:19: note: expanded from macro 'runtime_const_ptr'
+                           ".option push\n\t"                              \
+                                          ^
+   <inline asm>:32:10: note: instantiated into assembly here
+           .option arch,+zba
+                   ^
+>> fs/dcache.c:112:9: error: instruction requires the following: 'Zba' (Address Generation Instructions)
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:54:32: note: expanded from macro 'runtime_const_ptr'
+                           "slli   %[__tmp],%[__tmp],32\n\t"               \
+                                                         ^
+   <inline asm>:34:2: note: instantiated into assembly here
+           add.uw a3,a3,a4
+           ^
+>> fs/dcache.c:112:9: warning: unknown option, expected 'push', 'pop', 'rvc', 'norvc', 'relax' or 'norelax' [-Winline-asm]
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:60:19: note: expanded from macro 'runtime_const_ptr'
+                           ".option push\n\t"                              \
+                                          ^
+   <inline asm>:59:10: note: instantiated into assembly here
+           .option arch,+zbkb
+                   ^
+>> fs/dcache.c:112:9: error: instruction requires the following: 'Zbp' (Permutation 'Zb' Instructions) or 'Zbkb' (Bitmanip instructions for Cryptography)
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:61:25: note: expanded from macro 'runtime_const_ptr'
+                           ".option arch,+zbkb\n\t"                        \
+                                                ^
+   <inline asm>:60:2: note: instantiated into assembly here
+           pack    a3,a3,a4
+           ^
+>> fs/dcache.c:112:9: warning: unknown option, expected 'push', 'pop', 'rvc', 'norvc', 'relax' or 'norelax' [-Winline-asm]
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:52:19: note: expanded from macro 'runtime_const_ptr'
+                           ".option push\n\t"                              \
+                                          ^
+   <inline asm>:32:10: note: instantiated into assembly here
+           .option arch,+zba
+                   ^
+>> fs/dcache.c:112:9: error: instruction requires the following: 'Zba' (Address Generation Instructions)
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:54:32: note: expanded from macro 'runtime_const_ptr'
+                           "slli   %[__tmp],%[__tmp],32\n\t"               \
+                                                         ^
+   <inline asm>:34:2: note: instantiated into assembly here
+           add.uw a0,a0,a1
+           ^
+>> fs/dcache.c:112:9: warning: unknown option, expected 'push', 'pop', 'rvc', 'norvc', 'relax' or 'norelax' [-Winline-asm]
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:60:19: note: expanded from macro 'runtime_const_ptr'
+                           ".option push\n\t"                              \
+                                          ^
+   <inline asm>:59:10: note: instantiated into assembly here
+           .option arch,+zbkb
+                   ^
+>> fs/dcache.c:112:9: error: instruction requires the following: 'Zbp' (Permutation 'Zb' Instructions) or 'Zbkb' (Bitmanip instructions for Cryptography)
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:61:25: note: expanded from macro 'runtime_const_ptr'
+                           ".option arch,+zbkb\n\t"                        \
+                                                ^
+   <inline asm>:60:2: note: instantiated into assembly here
+           pack    a0,a0,a1
+           ^
+>> fs/dcache.c:112:9: warning: unknown option, expected 'push', 'pop', 'rvc', 'norvc', 'relax' or 'norelax' [-Winline-asm]
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:52:19: note: expanded from macro 'runtime_const_ptr'
+                           ".option push\n\t"                              \
+                                          ^
+   <inline asm>:32:10: note: instantiated into assembly here
+           .option arch,+zba
+                   ^
+>> fs/dcache.c:112:9: error: instruction requires the following: 'Zba' (Address Generation Instructions)
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:54:32: note: expanded from macro 'runtime_const_ptr'
+                           "slli   %[__tmp],%[__tmp],32\n\t"               \
+                                                         ^
+   <inline asm>:34:2: note: instantiated into assembly here
+           add.uw a1,a1,a2
+           ^
+>> fs/dcache.c:112:9: warning: unknown option, expected 'push', 'pop', 'rvc', 'norvc', 'relax' or 'norelax' [-Winline-asm]
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:60:19: note: expanded from macro 'runtime_const_ptr'
+                           ".option push\n\t"                              \
+                                          ^
+   <inline asm>:59:10: note: instantiated into assembly here
+           .option arch,+zbkb
+                   ^
+>> fs/dcache.c:112:9: error: instruction requires the following: 'Zbp' (Permutation 'Zb' Instructions) or 'Zbkb' (Bitmanip instructions for Cryptography)
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:61:25: note: expanded from macro 'runtime_const_ptr'
+                           ".option arch,+zbkb\n\t"                        \
+                                                ^
+   <inline asm>:60:2: note: instantiated into assembly here
+           pack    a1,a1,a2
+           ^
+>> fs/dcache.c:112:9: error: invalid .org offset '21034' (at offset '21038')
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:47:3: note: expanded from macro 'runtime_const_ptr'
+                   ALTERNATIVE_2(                                          \
+                   ^
+   arch/riscv/include/asm/alternative-macros.h:163:2: note: expanded from macro 'ALTERNATIVE_2'
+           _ALTERNATIVE_CFG_2(old_content, new_content_1, vendor_id_1, patch_id_1, CONFIG_k_1,     \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:108:2: note: expanded from macro '_ALTERNATIVE_CFG_2'
+           __ALTERNATIVE_CFG_2(old_c, new_c_1, vendor_id_1, patch_id_1, IS_ENABLED(CONFIG_k_1),    \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:98:2: note: expanded from macro '__ALTERNATIVE_CFG_2'
+           __ALTERNATIVE_CFG(old_c, new_c_1, vendor_id_1, patch_id_1, enable_1)    \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:94:2: note: expanded from macro '__ALTERNATIVE_CFG'
+           ALT_NEW_CONTENT(vendor_id, patch_id, enable, new_c)
+           ^
+   arch/riscv/include/asm/alternative-macros.h:81:3: note: expanded from macro 'ALT_NEW_CONTENT'
+           ".org   . - (887b - 886b) + (889b - 888b)\n"                    \
+            ^
+   <inline asm>:41:6: note: instantiated into assembly here
+   .org    . - (887b - 886b) + (889b - 888b)
+           ^
+   fs/dcache.c:112:9: error: invalid .org offset '21050' (at offset '21054')
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:47:3: note: expanded from macro 'runtime_const_ptr'
+                   ALTERNATIVE_2(                                          \
+                   ^
+   arch/riscv/include/asm/alternative-macros.h:163:2: note: expanded from macro 'ALTERNATIVE_2'
+           _ALTERNATIVE_CFG_2(old_content, new_content_1, vendor_id_1, patch_id_1, CONFIG_k_1,     \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:108:2: note: expanded from macro '_ALTERNATIVE_CFG_2'
+           __ALTERNATIVE_CFG_2(old_c, new_c_1, vendor_id_1, patch_id_1, IS_ENABLED(CONFIG_k_1),    \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:99:2: note: expanded from macro '__ALTERNATIVE_CFG_2'
+           ALT_NEW_CONTENT(vendor_id_2, patch_id_2, enable_2, new_c_2)
+           ^
+   arch/riscv/include/asm/alternative-macros.h:81:3: note: expanded from macro 'ALT_NEW_CONTENT'
+           ".org   . - (887b - 886b) + (889b - 888b)\n"                    \
+            ^
+   <inline asm>:68:6: note: instantiated into assembly here
+   .org    . - (887b - 886b) + (889b - 888b)
+           ^
+   fs/dcache.c:112:9: error: invalid .org offset '21066' (at offset '21070')
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:47:3: note: expanded from macro 'runtime_const_ptr'
+                   ALTERNATIVE_2(                                          \
+                   ^
+   arch/riscv/include/asm/alternative-macros.h:163:2: note: expanded from macro 'ALTERNATIVE_2'
+           _ALTERNATIVE_CFG_2(old_content, new_content_1, vendor_id_1, patch_id_1, CONFIG_k_1,     \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:108:2: note: expanded from macro '_ALTERNATIVE_CFG_2'
+           __ALTERNATIVE_CFG_2(old_c, new_c_1, vendor_id_1, patch_id_1, IS_ENABLED(CONFIG_k_1),    \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:98:2: note: expanded from macro '__ALTERNATIVE_CFG_2'
+           __ALTERNATIVE_CFG(old_c, new_c_1, vendor_id_1, patch_id_1, enable_1)    \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:94:2: note: expanded from macro '__ALTERNATIVE_CFG'
+           ALT_NEW_CONTENT(vendor_id, patch_id, enable, new_c)
+           ^
+   arch/riscv/include/asm/alternative-macros.h:81:3: note: expanded from macro 'ALT_NEW_CONTENT'
+           ".org   . - (887b - 886b) + (889b - 888b)\n"                    \
+            ^
+   <inline asm>:41:6: note: instantiated into assembly here
+   .org    . - (887b - 886b) + (889b - 888b)
+           ^
+   fs/dcache.c:112:9: error: invalid .org offset '21082' (at offset '21086')
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:47:3: note: expanded from macro 'runtime_const_ptr'
+                   ALTERNATIVE_2(                                          \
+                   ^
+   arch/riscv/include/asm/alternative-macros.h:163:2: note: expanded from macro 'ALTERNATIVE_2'
+           _ALTERNATIVE_CFG_2(old_content, new_content_1, vendor_id_1, patch_id_1, CONFIG_k_1,     \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:108:2: note: expanded from macro '_ALTERNATIVE_CFG_2'
+           __ALTERNATIVE_CFG_2(old_c, new_c_1, vendor_id_1, patch_id_1, IS_ENABLED(CONFIG_k_1),    \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:99:2: note: expanded from macro '__ALTERNATIVE_CFG_2'
+           ALT_NEW_CONTENT(vendor_id_2, patch_id_2, enable_2, new_c_2)
+           ^
+   arch/riscv/include/asm/alternative-macros.h:81:3: note: expanded from macro 'ALT_NEW_CONTENT'
+           ".org   . - (887b - 886b) + (889b - 888b)\n"                    \
+            ^
+   <inline asm>:68:6: note: instantiated into assembly here
+   .org    . - (887b - 886b) + (889b - 888b)
+           ^
+   fs/dcache.c:112:9: error: invalid .org offset '21098' (at offset '21102')
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:47:3: note: expanded from macro 'runtime_const_ptr'
+                   ALTERNATIVE_2(                                          \
+                   ^
+   arch/riscv/include/asm/alternative-macros.h:163:2: note: expanded from macro 'ALTERNATIVE_2'
+           _ALTERNATIVE_CFG_2(old_content, new_content_1, vendor_id_1, patch_id_1, CONFIG_k_1,     \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:108:2: note: expanded from macro '_ALTERNATIVE_CFG_2'
+           __ALTERNATIVE_CFG_2(old_c, new_c_1, vendor_id_1, patch_id_1, IS_ENABLED(CONFIG_k_1),    \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:98:2: note: expanded from macro '__ALTERNATIVE_CFG_2'
+           __ALTERNATIVE_CFG(old_c, new_c_1, vendor_id_1, patch_id_1, enable_1)    \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:94:2: note: expanded from macro '__ALTERNATIVE_CFG'
+           ALT_NEW_CONTENT(vendor_id, patch_id, enable, new_c)
+           ^
+   arch/riscv/include/asm/alternative-macros.h:81:3: note: expanded from macro 'ALT_NEW_CONTENT'
+           ".org   . - (887b - 886b) + (889b - 888b)\n"                    \
+            ^
+   <inline asm>:41:6: note: instantiated into assembly here
+   .org    . - (887b - 886b) + (889b - 888b)
+           ^
+   fs/dcache.c:112:9: error: invalid .org offset '21114' (at offset '21118')
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:47:3: note: expanded from macro 'runtime_const_ptr'
+                   ALTERNATIVE_2(                                          \
+                   ^
+   arch/riscv/include/asm/alternative-macros.h:163:2: note: expanded from macro 'ALTERNATIVE_2'
+           _ALTERNATIVE_CFG_2(old_content, new_content_1, vendor_id_1, patch_id_1, CONFIG_k_1,     \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:108:2: note: expanded from macro '_ALTERNATIVE_CFG_2'
+           __ALTERNATIVE_CFG_2(old_c, new_c_1, vendor_id_1, patch_id_1, IS_ENABLED(CONFIG_k_1),    \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:99:2: note: expanded from macro '__ALTERNATIVE_CFG_2'
+           ALT_NEW_CONTENT(vendor_id_2, patch_id_2, enable_2, new_c_2)
+           ^
+   arch/riscv/include/asm/alternative-macros.h:81:3: note: expanded from macro 'ALT_NEW_CONTENT'
+           ".org   . - (887b - 886b) + (889b - 888b)\n"                    \
+            ^
+   <inline asm>:68:6: note: instantiated into assembly here
+   .org    . - (887b - 886b) + (889b - 888b)
+           ^
+   fs/dcache.c:112:9: error: invalid .org offset '21130' (at offset '21134')
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:47:3: note: expanded from macro 'runtime_const_ptr'
+                   ALTERNATIVE_2(                                          \
+                   ^
+   arch/riscv/include/asm/alternative-macros.h:163:2: note: expanded from macro 'ALTERNATIVE_2'
+           _ALTERNATIVE_CFG_2(old_content, new_content_1, vendor_id_1, patch_id_1, CONFIG_k_1,     \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:108:2: note: expanded from macro '_ALTERNATIVE_CFG_2'
+           __ALTERNATIVE_CFG_2(old_c, new_c_1, vendor_id_1, patch_id_1, IS_ENABLED(CONFIG_k_1),    \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:98:2: note: expanded from macro '__ALTERNATIVE_CFG_2'
+           __ALTERNATIVE_CFG(old_c, new_c_1, vendor_id_1, patch_id_1, enable_1)    \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:94:2: note: expanded from macro '__ALTERNATIVE_CFG'
+           ALT_NEW_CONTENT(vendor_id, patch_id, enable, new_c)
+           ^
+   arch/riscv/include/asm/alternative-macros.h:81:3: note: expanded from macro 'ALT_NEW_CONTENT'
+           ".org   . - (887b - 886b) + (889b - 888b)\n"                    \
+            ^
+   <inline asm>:41:6: note: instantiated into assembly here
+   .org    . - (887b - 886b) + (889b - 888b)
+           ^
+   fs/dcache.c:112:9: error: invalid .org offset '21146' (at offset '21150')
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:47:3: note: expanded from macro 'runtime_const_ptr'
+                   ALTERNATIVE_2(                                          \
+                   ^
+   arch/riscv/include/asm/alternative-macros.h:163:2: note: expanded from macro 'ALTERNATIVE_2'
+           _ALTERNATIVE_CFG_2(old_content, new_content_1, vendor_id_1, patch_id_1, CONFIG_k_1,     \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:108:2: note: expanded from macro '_ALTERNATIVE_CFG_2'
+           __ALTERNATIVE_CFG_2(old_c, new_c_1, vendor_id_1, patch_id_1, IS_ENABLED(CONFIG_k_1),    \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:99:2: note: expanded from macro '__ALTERNATIVE_CFG_2'
+           ALT_NEW_CONTENT(vendor_id_2, patch_id_2, enable_2, new_c_2)
+           ^
+   arch/riscv/include/asm/alternative-macros.h:81:3: note: expanded from macro 'ALT_NEW_CONTENT'
+           ".org   . - (887b - 886b) + (889b - 888b)\n"                    \
+            ^
+   <inline asm>:68:6: note: instantiated into assembly here
+   .org    . - (887b - 886b) + (889b - 888b)
+           ^
+>> fs/dcache.c:112:9: error: invalid .org offset '21034' (at offset '21038')
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:47:3: note: expanded from macro 'runtime_const_ptr'
+                   ALTERNATIVE_2(                                          \
+                   ^
+   arch/riscv/include/asm/alternative-macros.h:163:2: note: expanded from macro 'ALTERNATIVE_2'
+           _ALTERNATIVE_CFG_2(old_content, new_content_1, vendor_id_1, patch_id_1, CONFIG_k_1,     \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:108:2: note: expanded from macro '_ALTERNATIVE_CFG_2'
+           __ALTERNATIVE_CFG_2(old_c, new_c_1, vendor_id_1, patch_id_1, IS_ENABLED(CONFIG_k_1),    \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:98:2: note: expanded from macro '__ALTERNATIVE_CFG_2'
+           __ALTERNATIVE_CFG(old_c, new_c_1, vendor_id_1, patch_id_1, enable_1)    \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:94:2: note: expanded from macro '__ALTERNATIVE_CFG'
+           ALT_NEW_CONTENT(vendor_id, patch_id, enable, new_c)
+           ^
+   arch/riscv/include/asm/alternative-macros.h:81:3: note: expanded from macro 'ALT_NEW_CONTENT'
+           ".org   . - (887b - 886b) + (889b - 888b)\n"                    \
+            ^
+   <inline asm>:41:6: note: instantiated into assembly here
+   .org    . - (887b - 886b) + (889b - 888b)
+           ^
+   fs/dcache.c:112:9: error: invalid .org offset '21050' (at offset '21054')
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:47:3: note: expanded from macro 'runtime_const_ptr'
+                   ALTERNATIVE_2(                                          \
+                   ^
+   arch/riscv/include/asm/alternative-macros.h:163:2: note: expanded from macro 'ALTERNATIVE_2'
+           _ALTERNATIVE_CFG_2(old_content, new_content_1, vendor_id_1, patch_id_1, CONFIG_k_1,     \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:108:2: note: expanded from macro '_ALTERNATIVE_CFG_2'
+           __ALTERNATIVE_CFG_2(old_c, new_c_1, vendor_id_1, patch_id_1, IS_ENABLED(CONFIG_k_1),    \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:99:2: note: expanded from macro '__ALTERNATIVE_CFG_2'
+           ALT_NEW_CONTENT(vendor_id_2, patch_id_2, enable_2, new_c_2)
+           ^
+   arch/riscv/include/asm/alternative-macros.h:81:3: note: expanded from macro 'ALT_NEW_CONTENT'
+           ".org   . - (887b - 886b) + (889b - 888b)\n"                    \
+            ^
+   <inline asm>:68:6: note: instantiated into assembly here
+   .org    . - (887b - 886b) + (889b - 888b)
+           ^
+   fs/dcache.c:112:9: error: invalid .org offset '21066' (at offset '21070')
+           return runtime_const_ptr(dentry_hashtable) +
+                  ^
+   arch/riscv/include/asm/runtime-const.h:47:3: note: expanded from macro 'runtime_const_ptr'
+                   ALTERNATIVE_2(                                          \
+                   ^
+   arch/riscv/include/asm/alternative-macros.h:163:2: note: expanded from macro 'ALTERNATIVE_2'
+           _ALTERNATIVE_CFG_2(old_content, new_content_1, vendor_id_1, patch_id_1, CONFIG_k_1,     \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:108:2: note: expanded from macro '_ALTERNATIVE_CFG_2'
+           __ALTERNATIVE_CFG_2(old_c, new_c_1, vendor_id_1, patch_id_1, IS_ENABLED(CONFIG_k_1),    \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:98:2: note: expanded from macro '__ALTERNATIVE_CFG_2'
+           __ALTERNATIVE_CFG(old_c, new_c_1, vendor_id_1, patch_id_1, enable_1)    \
+           ^
+   arch/riscv/include/asm/alternative-macros.h:94:2: note: expanded from macro '__ALTERNATIVE_CFG'
+           ALT_NEW_CONTENT(vendor_id, patch_id, enable, new_c)
+           ^
+   arch/riscv/include/asm/alternative-macros.h:81:3: note: expanded from macro 'ALT_NEW_CONTENT'
+           ".org   . - (887b - 886b) + (889b - 888b)\n"                    \
+            ^
+   <inline asm>:41:6: note: instantiated into assembly here
+   .org    . - (887b - 886b) + (889b - 888b)
+           ^
+   fatal error: too many errors emitted, stopping now [-ferror-limit=]
+   8 warnings and 20 errors generated.
+
+
+vim +/Zba +112 fs/dcache.c
+
+ceb5bdc2d246f6 Nicholas Piggin 2011-01-07  109  
+e60cc61153e61e Linus Torvalds  2024-06-10  110  static inline struct hlist_bl_head *d_hash(unsigned long hashlen)
+ceb5bdc2d246f6 Nicholas Piggin 2011-01-07  111  {
+e78298556ee5d8 Linus Torvalds  2024-06-04 @112  	return runtime_const_ptr(dentry_hashtable) +
+e78298556ee5d8 Linus Torvalds  2024-06-04  113  		runtime_const_shift_right_32(hashlen, d_hash_shift);
+ceb5bdc2d246f6 Nicholas Piggin 2011-01-07  114  }
+ceb5bdc2d246f6 Nicholas Piggin 2011-01-07  115  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
