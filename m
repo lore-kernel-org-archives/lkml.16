@@ -1,71 +1,72 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3280726BDA6
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90551D63FC
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:06:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739264711; cv=none; b=hUkct6C2ThvOJLvxhGInn31Aj7UEAUfHKN+SSha2O7dhaMOv7lxc6oKoQyZD9Px/2jfG1Ij4Dzo7w5owpLVtTD9IPIOElnApy2gvgF5g7PHvJFHPp99fFkwFViBnNc3dzAJ4ZY9vKW1psXpSoVS3+c0kKLuoRKKW9mZAQsGPR8Y=
+	t=1739264774; cv=none; b=fAVx3LNjAwTaQpV6TTkKoEzkDwyKpEKKWFicUkZLFAPQfnUc7AM1dSka9AJbnRwKRMX46+7lg7URcFqQXqIdJbtfIImpJvEWeUQq3BSyiT20tqL2QUywQ5+urjdgJwCw8rCYY7RAby9wTaGoE0KsJXzXy6BGIz+fKOyeRNF9+8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739264711; c=relaxed/simple;
-	bh=MC0xDxE3zxsnBUT6vWQCyFh+aE4Oe2A3mRkbvvdEADs=;
+	s=arc-20240116; t=1739264774; c=relaxed/simple;
+	bh=yDIeTeSA5W0Cm2abZ4x6XIe6w2yeaTZLEk32jiF5/mo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j74Br0zALcL2s2Bb4dNV/YX9axs7RcJZq3kgteelMHlahx7nk8343zpgx9OknoOxqWXPJ98hY3tXHSIH2nY/ZYvkDhfvXsNqv/aIIid1osXJtHvVkZRK4U6iSC23NpYjoIOgUY3I4dmjNH6xcobc5sdSOxujbhpovg9XxzSrMoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gbjWGL+B; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=OjS9X1Y3bFIRB/Eo7iURIrz792qh2YByVKQbveLrzOXHgUNW8ZVhAgu3Jw8dZpPGG66WF7BJ8p4bxLVStM+xencYLYCDPqHX0E9VMaOUAcHdZ2Fzjd12J4zi/l3amzmhxxGPQJ6q7y4W3cbZjC0XIDsQNjOIDXG9mybBvcUGh6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FCNytzNL; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gbjWGL+B"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FCNytzNL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739264708;
+	s=mimecast20190719; t=1739264771;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=R52S0pM56ji3OUzPg669DDE8ybmrvxfzODSRXp5vTsU=;
-	b=gbjWGL+BzWZzIvUYb7echdxm7srjA3FVLEP2LQllpq873Gdecv73lJoNG0Jcay3UrlL6d5
-	23o1TZ/2ibG8O7H/8I4Px2gkef5Hlk6jR/lNbVWI87KGNz7Rebq+ArdSNUQ0TH48ixL41/
-	BNZeqId2zCo6VGc9MkDy1Mxkq/Strio=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=8YgKJ/gyFf/DhGZNEgQKtaAiD5gUVgqU2qFrIj9BRFM=;
+	b=FCNytzNLYHKIGnuW3tkqWnWTbZf1hFU7dQkadDolw3YGlDba0YIetTmezKZWWkkssprtCl
+	w5r+YCG2D1WmLGdxvhvZ37GT+sTo1zLXVEbzxeGiZT/X2w9OsBVlWMeNFQqvmGdVEicZ+q
+	UEKX6NliJF16xGRTOLNOmt7N3prV3zQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-479-WjpHED7wNCqcjHuvxE-E3A-1; Tue, 11 Feb 2025 04:05:06 -0500
-X-MC-Unique: WjpHED7wNCqcjHuvxE-E3A-1
-X-Mimecast-MFC-AGG-ID: WjpHED7wNCqcjHuvxE-E3A
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4392fc6bd21so12150415e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:05:05 -0800 (PST)
+ us-mta-662-WDTAWgnCPGChXsuXmUn4pg-1; Tue, 11 Feb 2025 04:06:10 -0500
+X-MC-Unique: WDTAWgnCPGChXsuXmUn4pg-1
+X-Mimecast-MFC-AGG-ID: WDTAWgnCPGChXsuXmUn4pg
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-38dc32f753dso1933148f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:06:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739264705; x=1739869505;
+        d=1e100.net; s=20230601; t=1739264769; x=1739869569;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=R52S0pM56ji3OUzPg669DDE8ybmrvxfzODSRXp5vTsU=;
-        b=eOFGRGkg+Fn/ZPwYA4bJFbTLpgalCSbBxVtWRTDwSDGlhKDw6/M+GAub40T9ojeCau
-         eJCFztgn2eosDSM1BJ+LeMY+eRPTXqL7BWqeMsULmqOh6xap8IJN6YCNPTLZe35sqR7n
-         YUIlyLKhRl9/rJ2Znu2AdBSnQpaqf1r9yutKM1xYmOfrbdXnRujP9ZxW0EYwIR4J/rx4
-         ssAkmRTLQ/+F2mYyD0Sa34KLk4wxI/hGKxxOwNKNW3bOSnzb/e3wxz0MWlPRdNvuWd8V
-         ZyoVA9Z0gx9PJxlEtGp2XIOX5gf0kaDXansMAI5bd5NVcCyhhcY5UooTfVydjiwCtC5z
-         p2AQ==
-X-Gm-Message-State: AOJu0YyUN1/s4CMk8n5LyjLbEqtOCHfIjR197tIcrLDZjQ0wOTA55Zlp
-	SdhI3pGglcF8VMpYVGzJlz5cPSqZBTlj5813nlRc2zSscGKD7sxAPa3daMeyf9bzG/NAlZz/Q4T
-	dPwD9Bp5ZnUsfji8DSogug1ctqjySmXwGNLwS9qWWLydikBgztmyt3fvQ4VM07g==
-X-Gm-Gg: ASbGncvq/tbMjTtbWwjT5NvVtBEefq5SHpf3NGETDN5wITy/ahmEa/0bns5TJQdoW7p
-	6VIAuEmYO6qHFhQtVGaHgA8sml/EN+73MkRJrKtKI3ZcQF823tCAPh+xnQscRr6dcZ3LtQ7Ocwy
-	2Z+exFsZIwuMMSrVpQRuOucZ5zu+0otxvL6x0Hoc+9jcU/CKjCIoviJTvhN9tP0yo//QfymuBiq
-	RFLEm45Yfr8tA6c3yiqn6rwFbzOc9HZzezXr4OXJc5CpFLq86hHmCNC63HXBvCH8ag6vTFr+0dk
-	FcvzSFSRQIRrBXdvIXt9op207jxr0oMIWoaufEQ=
-X-Received: by 2002:a5d:6d0a:0:b0:38d:d79a:f82a with SMTP id ffacd0b85a97d-38dd79afae6mr6666472f8f.7.1739264704819;
-        Tue, 11 Feb 2025 01:05:04 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHPJ2MbS2TKPOm/lo1+0vOk/6bqxeYZP9/VSyGTG0w/hi9zGjyG499COIoZ2brGrQT2ceAtfw==
-X-Received: by 2002:a5d:6d0a:0:b0:38d:d79a:f82a with SMTP id ffacd0b85a97d-38dd79afae6mr6666444f8f.7.1739264704416;
-        Tue, 11 Feb 2025 01:05:04 -0800 (PST)
+        bh=8YgKJ/gyFf/DhGZNEgQKtaAiD5gUVgqU2qFrIj9BRFM=;
+        b=kiEtNZA9YLg2M7oBDG1wTRPQi9ZbooDoY6woVo03a9nZdPKqNta1BXO7js7i1lEpxz
+         RteKuYPSbMuatodld5AObviGaNbh85MHeWqo7aj2+06Wf5GtnySb/WimRwKCpdwhE0sH
+         Uuq5dJv3/wTLA3nvFTeUTh5jgDpij58DwPEenvSihvL2r7tacj+DvgJD/1i12oicA7NW
+         xvd0mzpJ1wGyitEXAKVJ3Sta/ebogKP9K55egBP0th64J695FBFWn1Bv9GCrAvu6c4Du
+         a4yjdmw3SGKah21KF1A9kojuuNVP5YxLZMiGIOWCZ/1jBoM9sCFEePTPI57jMv7/MN23
+         sQEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVBDN7ksYtlBQO0q5hG/fQxIjH1wsv65nvQnob1ozE7YCL0QZed2dwfuyhBBufOdAQLQgTZcSW0aeJDh3c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxerF5+oz+zB66SrZjcDoiBrEYDqIOp7/w/cEy67N8ne1a6xbyA
+	9uq/srJHtI9RqLoiA5c/YC2Ftxlw5ABkoj3J4a1Y3z0zVPjipLbyaoi2GfuN+MWsRpOdlQyr0AU
+	uKU8xIICR3maMv20PSWFt5JpYmFjbAK1hHfEwn+zEbGvwBxMpzfXjuCCdEZusUQ==
+X-Gm-Gg: ASbGncvAc7XW931kEUFU9QnG0PSisZOOikPCimVutnulh1i0rHsTG5CLB5t25XAq9xD
+	Glnw2lBhf2FHNZ0JDOak2f8Z0cxaiIJ7nRz1GPQAgU6j0dgAhnqA8PmzKgV4s5XCRfzDNhTSK5B
+	uKCJN0xFyyiPeOd3VZo6YymVfpv8n+oO9JfSPxwbnjEfwlt5Omryh2MJ9kTN6hvGbZpwm9kZCuE
+	o+B8AP7LJpfhHRuGu7CA2Boq5w/+kVLsdkpAbbLZ3f73smFOsG0T79mTBfCF+skC8e43Sl6+y5B
+	W3u1nv2QLoNMTd3QpkZeBOwbQ0VQh+iSXy20/Us=
+X-Received: by 2002:a5d:5f91:0:b0:38d:df05:4d9 with SMTP id ffacd0b85a97d-38de41bdfb5mr2324379f8f.43.1739264769154;
+        Tue, 11 Feb 2025 01:06:09 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHcdWl9nKSULAYSil1vGNN0U5ZrLrbZ/EWJVc0ggtfwYSoFAFAf2Cs1oAf6I146TcRMTYngmA==
+X-Received: by 2002:a5d:5f91:0:b0:38d:df05:4d9 with SMTP id ffacd0b85a97d-38de41bdfb5mr2324345f8f.43.1739264768821;
+        Tue, 11 Feb 2025 01:06:08 -0800 (PST)
 Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcf35b15bsm10762186f8f.64.2025.02.11.01.05.01
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390daf3c70sm204994695e9.26.2025.02.11.01.06.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 01:05:03 -0800 (PST)
-Message-ID: <a38f547a-355f-4050-83bf-ddfb4af5f71b@redhat.com>
-Date: Tue, 11 Feb 2025 10:05:01 +0100
+        Tue, 11 Feb 2025 01:06:07 -0800 (PST)
+Message-ID: <897102c0-7b5e-4495-9f21-573beb338925@redhat.com>
+Date: Tue, 11 Feb 2025 10:06:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,14 +74,12 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] mm/migrate_device: don't add folio to be freed to LRU
- in migrate_device_finalize()
-To: Alistair Popple <apopple@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?=
- <jglisse@redhat.com>, John Hubbard <jhubbard@nvidia.com>
-References: <20250210161317.717936-1-david@redhat.com>
- <snlfl6ewz6u4fqdjjfo7nlqjemdcl3snk3vxt6ta4wee23bxps@nmdwftkjijsa>
+Subject: Re: [PATCH V4] KVM: SEV: fix wrong pinning of pages
+To: yangge1116@126.com, pbonzini@redhat.com
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, seanjc@google.com,
+ 21cnbao@gmail.com, baolin.wang@linux.alibaba.com, thomas.lendacky@amd.com,
+ liuzixing@hygon.cn
+References: <1739241423-14326-1-git-send-email-yangge1116@126.com>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -128,100 +127,29 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <snlfl6ewz6u4fqdjjfo7nlqjemdcl3snk3vxt6ta4wee23bxps@nmdwftkjijsa>
+In-Reply-To: <1739241423-14326-1-git-send-email-yangge1116@126.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 11.02.25 06:23, Alistair Popple wrote:
-> On Mon, Feb 10, 2025 at 05:13:17PM +0100, David Hildenbrand wrote:
->> If migration succeeded, we called
->> folio_migrate_flags()->mem_cgroup_migrate() to migrate the memcg from
->> the old to the new folio. This will set memcg_data of the old folio to
->> 0.
->>
->> Similarly, if migration failed, memcg_data of the dst folio is left
->> unset.
->>
->> If we call folio_putback_lru() on such folios (memcg_data == 0), we will
->> add the folio to be freed to the LRU, making memcg code unhappy. Running
->> the hmm selftests:
->>
->>    # ./hmm-tests
->>    ...
->>    #  RUN           hmm.hmm_device_private.migrate ...
->>    [  102.078007][T14893] page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x7ff27d200 pfn:0x13cc00
->>    [  102.079974][T14893] anon flags: 0x17ff00000020018(uptodate|dirty|swapbacked|node=0|zone=2|lastcpupid=0x7ff)
->>    [  102.082037][T14893] raw: 017ff00000020018 dead000000000100 dead000000000122 ffff8881353896c9
->>    [  102.083687][T14893] raw: 00000007ff27d200 0000000000000000 00000001ffffffff 0000000000000000
->>    [  102.085331][T14893] page dumped because: VM_WARN_ON_ONCE_FOLIO(!memcg && !mem_cgroup_disabled())
->>    [  102.087230][T14893] ------------[ cut here ]------------
->>    [  102.088279][T14893] WARNING: CPU: 0 PID: 14893 at ./include/linux/memcontrol.h:726 folio_lruvec_lock_irqsave+0x10e/0x170
->>    [  102.090478][T14893] Modules linked in:
->>    [  102.091244][T14893] CPU: 0 UID: 0 PID: 14893 Comm: hmm-tests Not tainted 6.13.0-09623-g6c216bc522fd #151
->>    [  102.093089][T14893] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-2.fc40 04/01/2014
->>    [  102.094848][T14893] RIP: 0010:folio_lruvec_lock_irqsave+0x10e/0x170
->>    [  102.096104][T14893] Code: ...
->>    [  102.099908][T14893] RSP: 0018:ffffc900236c37b0 EFLAGS: 00010293
->>    [  102.101152][T14893] RAX: 0000000000000000 RBX: ffffea0004f30000 RCX: ffffffff8183f426
->>    [  102.102684][T14893] RDX: ffff8881063cb880 RSI: ffffffff81b8117f RDI: ffff8881063cb880
->>    [  102.104227][T14893] RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000000
->>    [  102.105757][T14893] R10: 0000000000000001 R11: 0000000000000002 R12: ffffc900236c37d8
->>    [  102.107296][T14893] R13: ffff888277a2bcb0 R14: 000000000000001f R15: 0000000000000000
->>    [  102.108830][T14893] FS:  00007ff27dbdd740(0000) GS:ffff888277a00000(0000) knlGS:0000000000000000
->>    [  102.110643][T14893] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>    [  102.111924][T14893] CR2: 00007ff27d400000 CR3: 000000010866e000 CR4: 0000000000750ef0
->>    [  102.113478][T14893] PKRU: 55555554
->>    [  102.114172][T14893] Call Trace:
->>    [  102.114805][T14893]  <TASK>
->>    [  102.115397][T14893]  ? folio_lruvec_lock_irqsave+0x10e/0x170
->>    [  102.116547][T14893]  ? __warn.cold+0x110/0x210
->>    [  102.117461][T14893]  ? folio_lruvec_lock_irqsave+0x10e/0x170
->>    [  102.118667][T14893]  ? report_bug+0x1b9/0x320
->>    [  102.119571][T14893]  ? handle_bug+0x54/0x90
->>    [  102.120494][T14893]  ? exc_invalid_op+0x17/0x50
->>    [  102.121433][T14893]  ? asm_exc_invalid_op+0x1a/0x20
->>    [  102.122435][T14893]  ? __wake_up_klogd.part.0+0x76/0xd0
->>    [  102.123506][T14893]  ? dump_page+0x4f/0x60
->>    [  102.124352][T14893]  ? folio_lruvec_lock_irqsave+0x10e/0x170
->>    [  102.125500][T14893]  folio_batch_move_lru+0xd4/0x200
->>    [  102.126577][T14893]  ? __pfx_lru_add+0x10/0x10
->>    [  102.127505][T14893]  __folio_batch_add_and_move+0x391/0x720
->>    [  102.128633][T14893]  ? __pfx_lru_add+0x10/0x10
->>    [  102.129550][T14893]  folio_putback_lru+0x16/0x80
->>    [  102.130564][T14893]  migrate_device_finalize+0x9b/0x530
->>    [  102.131640][T14893]  dmirror_migrate_to_device.constprop.0+0x7c5/0xad0
->>    [  102.133047][T14893]  dmirror_fops_unlocked_ioctl+0x89b/0xc80
->>
->> Likely, nothing else goes wrong: putting the last folio reference will
->> remove the folio from the LRU again. So besides memcg complaining,
->> adding the folio to be freed to the LRU is just an unnecessary step.
+On 11.02.25 03:37, yangge1116@126.com wrote:
+> From: Ge Yang <yangge1116@126.com>
 > 
-> Agreed - I had always wondered why we did that instead of just dropping the
-> reference but figured it was something to do with the LRU batching and never
-> looked too closely.
+> In the sev_mem_enc_register_region() function, we need to call
+> sev_pin_memory() to pin memory for the long term. However, when
+> calling sev_pin_memory(), the FOLL_LONGTERM flag is not passed, causing
+> the allocated pages not to be migrated out of MIGRATE_CMA/ZONE_MOVABLE,
+> violating these mechanisms to avoid fragmentation with unmovable pages,
+> for example making CMA allocations fail.
 > 
->> The new flow resembles what we have in migrate_folio_move(): add the
->> dst to the lru, remove migration ptes, unlock and unref dst.
->>
->> Fixes: 8763cb45ab96 ("mm/migrate: new memory migration helper for use with device memory")
+> To address the aforementioned problem, we should add the FOLL_LONGTERM
+> flag when calling sev_pin_memory() within the sev_mem_enc_register_region()
+> function.
 > 
-> If this was introduced by the above I was trying to figure out why I hadn't
-> seen it, because whilst I don't religiously run hmm-tests and similar users
-> with CONFIG_DEBUG_VM I do run them often enough that I'd expect to have seen
-> the above. It turns out that prior to 85ce2c517ade ("memcontrol: only transfer
-> the memcg data for migration") you can't hit this, probably because pages were
-> double charged during migration so old->memcg_data remained set. So perhaps the
-> fixes tag should point at that, but maybe it was always wrong, I'm not familiar
-> enough with memcg to comment.
+> Signed-off-by: Ge Yang <yangge1116@126.com>
+> Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+> ---
 
-That would likely explain why we haven't sen it on the "migration 
-succeeded" case when dropping src.
-
-However, not so sure on the "migration failed" case, when we would drop 
-dst. I would assume that the new folio (dst) would not be charged until 
-we reached mem_cgroup_migrate() -- IOW, migration succeeded?
-
-Thanks for the review!
+Acked-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Cheers,
