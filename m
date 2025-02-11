@@ -1,133 +1,88 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB63B221DBA
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE5F320F;
+	Tue, 11 Feb 2025 13:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739280555; cv=none; b=gg2jrxo3TKa0HJIrgrue6O5esdhHxf5u47L4ARjNT8hR3zn1rcQEgNgU8iPibRsK7Ho1WGFJXqUVMwuY2ZNUnIY9Dq2fGmIz1xYLSfK/52V5yhunKOxXQQEesfUUcMVS2o/arEJJN7T6CYUxhpAFKnz7o95hh0mzZcB3nSSh7Hc=
+	t=1739280557; cv=none; b=jqMy6Y6SLWXLZe/cl3q4t2Bpazj1WySwTOrjTMq3h3sxbR5rsbnnK7zVUTvmnWmAPT6YX1BZ49XBrvxzYe07/F1+NVs9Am0jdfkXUipOL3MlaLTsONw0SOpvS2hJOsxVZAZkSpuaAHIjS173X5BcNyefBSLvvxJwtFTgovnVUQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739280555; c=relaxed/simple;
-	bh=28EQhIzZAloABY6KVc5e16b/zn7F87v2s/rBZKJ7pYE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AH1P98yQazDUQtM7HMrsYUPjvJmJSEjUE1cQRUdZ57OsVrPltr5d4H3Ujb9UzBBFPknniXo3me+lwx3q3X9jxlXfXPJaOi4cVnuHsE50IaVSyW3hYcw6O2WyffoRs8jpH7WVOuW9XfjWq/glb7oz51h/q1eA/kMV4r9oId/MDXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RARkHDC0; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739280557; c=relaxed/simple;
+	bh=AFVZAd/ddvUjCgHFZxtyxRNV27S+PVT95AasPOAKy7g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rNAyx1nL8oBT/kXCZ7G6mr6obb1NcEnzfzJcO52/8aObFrb7uJhbZeTTSKnvF//m07eDfwclYfka5mFskHW3JR7NJBfTNuGm/2L6ADSw3DR+zYTMWtWjLImRzhFCOl792m7BIpMakAKAK/+NtH/bNQNkZa0Ss5SY1UBaE5v7jhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=LxuX1XTC; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RARkHDC0"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ab7c07e8b9bso368629766b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 05:29:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739280552; x=1739885352; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kpvPLOOINv/frxyxwmysjCgFErFPhWO/M9fCpiOC1SQ=;
-        b=RARkHDC0ZJ5Zdf43iZjE8DKJ4yoZb1pliPPqDOcCTaQqAvWnSpRdMRbr19N9D7aUkL
-         UYC2oorwIgZwlvTCuePTFzU+D5JMFP+/IEDdwCUF6MMskFLgr/6s+Jmx7iJeE+BVwvD3
-         mZBcLl2mog5aiKYjHHoqF+c6ODCqUlbt4xKLQlAyMa4Y81gocup9V4vKP4hXM7f8WQHd
-         IN0lR1pFhJs60pQQJcCepGr7R3z82NGLzfZuQ/HVzrh6tKzDS/j321CGungTFb0fooNn
-         nr1lIYzH3YY83tEm7tvox+YPh48U8pMwjXCs0rYDmHbfY3SACymRJj6iybLsw+cqyln9
-         IGZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739280552; x=1739885352;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kpvPLOOINv/frxyxwmysjCgFErFPhWO/M9fCpiOC1SQ=;
-        b=gF7Lzbb+j1hQR6erXA03omjOo+/fbj+IyVPJW8KsSVaWXfqSCIRf/EaelxDcc51fkj
-         gX0ewlNvhY+zo+bLyZuvdL/GJNajI8xptvxPjnxJOe6zBI384Ur7n3L6iUMzTRUx+BGQ
-         9lCJB5s8BR5lvkZ5cwD1Oyy7rLF/gz9bqHC7VJPjsp8ueVRiglSCOzWf6bVFsM1hL17E
-         GJZ7x/CZecsjV+vZnIUZdyLJYZHa8Yd72VxVcxRtYkoKvLaoBPtsyXtvt8FtK9NBjcox
-         P7a+JlAADtJY85/7EA7owUthwlVzYESKm249hMOcQfd2Wl+P3u4zGx0GjsYAlYYTT9us
-         YYRw==
-X-Gm-Message-State: AOJu0Yzo1iSQS+TT5QItSOsPm2HIYk01mFGqryqrmad09yN7ZyN9OStw
-	XHMhtMvoUT4HcGTk5TJOKko1fDeHTPwQkTw3h4Vg4KRx+KERk6M3uH9z1ZSs0eE=
-X-Gm-Gg: ASbGncvPnZQB11yGjGclDdfeoPNTnkBfKTyNfUmC1hsW9yD8mAVdjgUgdtXQQg4ZFuX
-	TSs8DwAeRHZajCcGCtQhHj3iNgEJF1AHXA6sR+8bWCpfjhMfs24iZPXhCt2lA1XUZlsbqIhm+QB
-	F87iAd6+uVYC/RdtoRTJHPKma2S1rRN2LfB+CraXLqDkSe91n/3pruQAri/N6zbyJBdpjHbtBO8
-	zTmbGc5kUsqY67HgwzhGJ+Hl0XBgy2yWkHr2rrPeGWoADq6vxC5TJHOhl440jCsY/Ky3qR6l3cY
-	W1ZU6HxM4xHcvUkKVO5vqA43
-X-Google-Smtp-Source: AGHT+IH2uOyoJcA50C+YALBKh/r20YQ1PlbDUm5tBy6s+a85ihdbDttjIy36Ad5qWXPkClRkh/FA4Q==
-X-Received: by 2002:a17:906:4fd1:b0:ab7:6369:83fc with SMTP id a640c23a62f3a-ab789c3dcd0mr1900912066b.38.1739280552096;
-        Tue, 11 Feb 2025 05:29:12 -0800 (PST)
-Received: from [192.168.0.14] ([79.115.63.124])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7832a02fcsm970546366b.94.2025.02.11.05.29.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 05:29:11 -0800 (PST)
-Message-ID: <1daff001-4769-4aeb-83a6-dafbe84fb39b@linaro.org>
-Date: Tue, 11 Feb 2025 13:29:09 +0000
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="LxuX1XTC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=6+yOY2Zcd5H8ImhxXn/x0q0FyqvbZA4MovSW5t3XSPg=;
+	t=1739280555; x=1740490155; b=LxuX1XTCNF9bGbr6qYHAEaGQOkkptNSTxm5l6qgQsXq/D3q
+	pgDzQvXyZtDxl1sbwYPPF5tx++OJ/biuXdrg9vETzYN1wW2hievlL8NQs54FRw3RFXVlsddKJR7bb
+	m2MIAGn75WFqr6AyDGuJNbaBIUDD1n6IGOVbSRRLGFPG13KXuMpFezj2ytEEWHeXm3fNLKHF7YTqU
+	J9psdN4cDdgI0cY/RIUvZzj0FAjsAWKYHpeWNCU6BsOBQoPZXON2Fdmf8sE4aGftaSZ67MDbqmH0w
+	FG81hLazokIm8fM1x7dUj1vBqezDkKIWSMYiZNKFFBc1sAzSo6+wmE6ufzOXLIxQ==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1thqK8-0000000B0iC-0njg;
+	Tue, 11 Feb 2025 14:29:12 +0100
+Message-ID: <56a9253a801757c03320cfe0000c5ac68dacac14.camel@sipsolutions.net>
+Subject: Re: [PATCH v3] wifi: mac80211: fix integer overflow in
+ hwmp_route_info_get()
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
+Cc: Julan Hsu <julanhsu@google.com>, "linux-wireless@vger.kernel.org"
+	 <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>, "lvc-project@linuxtesting.org"
+	 <lvc-project@linuxtesting.org>, "stable@vger.kernel.org"
+	 <stable@vger.kernel.org>
+Date: Tue, 11 Feb 2025 14:29:11 +0100
+In-Reply-To: <20250116084948.3933834-1-Ilia.Gavrilov@infotecs.ru>
+References: <20250116084948.3933834-1-Ilia.Gavrilov@infotecs.ru>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 1/3] dt-bindings: firmware: add google,gs101-acpm-ipc
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Diederik de Haas <didi.debian@cknow.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Jassi Brar <jassisinghbrar@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kernel-team@android.com, willmcvicker@google.com, peter.griffin@linaro.org,
- daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
- ulf.hansson@linaro.org, arnd@arndb.de,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250211-gs101-acpm-v8-0-01d01f522da6@linaro.org>
- <20250211-gs101-acpm-v8-1-01d01f522da6@linaro.org>
- <D7PJTD3PSP78.27N2S94J2CNZG@cknow.org>
- <bad87f30-0483-48c1-b263-02cc752c77e6@linaro.org>
- <a740a0211c82aaaa55940e2f07e1d1b53c23ddd8.camel@linaro.org>
- <e2bdc9aa-2cbb-4fcc-8c73-5fcdad6e18a7@kernel.org>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <e2bdc9aa-2cbb-4fcc-8c73-5fcdad6e18a7@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-malware-bazaar: not-scanned
 
+On Thu, 2025-01-16 at 08:49 +0000, Gavrilov Ilia wrote:
+> Since the new_metric and last_hop_metric variables can reach
+> the MAX_METRIC(0xffffffff) value, an integer overflow may occur
+> when multiplying them by 10/9. It can lead to incorrect behavior.
+>=20
+> Found by InfoTeCS on behalf of Linux Verification Center
+> (linuxtesting.org) with SVACE.
+>=20
+> Fixes: a8d418d9ac25 ("mac80211: mesh: only switch path when new metric is=
+ at least 10% better")
+> Cc: stable@vger.kernel.org
 
+Seems a bit overblown for stable, but also don't really care...
 
-On 2/11/25 12:05 PM, Krzysztof Kozlowski wrote:
-> On 11/02/2025 13:02, André Draszik wrote:
->> Hi Tudor,
->>
->> On Tue, 2025-02-11 at 11:57 +0000, Tudor Ambarus wrote:
->>> And then I shall s/MODULE_LICENSE("GPL");/MODULE_LICENSE("GPL v2");/
->>> everywhere as "GPL" indicates [GNU Public License v2 or later].
->>
->> No, please don't, see Documentation/process/license-rules.rst.
+> +static inline bool is_metric_better(u32 x, u32 y, u32 percent)
+> +{
 
-Indeed, thanks, Andre'! The tag shouldn't convey the detailed license
-information, as the only decision to be made is whether the module is
-free software or not. I'll keep MODULE_LICENSE("GPL");
+You shouldn't put inline here, in general.
 
-> For the rest of suggestions here I also recommend rereading docs. I
+Also that function probably wants a comment, and the 'percent' argument
+is hardcoded to 10, so you don't need it. Let's keep this stuff simple,
+*especially* if it's for stable too ...
 
-always a good suggestion :)
+> +	if (check_add_overflow(x, a, &e)) {
+> +		if (x > y - a)
+> +			return false;
 
-> don't get why we need to change "GPL-2.0 OR BSD-2-Clause", but maybe I
+seems simpler as "return x > y - a;" or so?
 
-I reread the docs, LICENSES/preferred/GPL-2.0 says that:
-'''
-  For 'GNU General Public License (GPL) version 2 only' use:
-    SPDX-License-Identifier: GPL-2.0
-  or
-    SPDX-License-Identifier: GPL-2.0-only
-```
+johannes
 
-the two are equivalent. The downstream driver uses "GPL-2.0-only". I
-think it'd be good that everything that I derived from it to have the
-same SPDX value, for consistency reasons.
-
-Thus I'll amend the license on the bindings file and on
-include/linux/firmware/samsung/exynos-acpm-protocol.h only.
-I'm not thrilled about a new version for such a small change, but I
-think it's worth it.
-
-Thanks,
-ta
