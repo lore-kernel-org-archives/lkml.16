@@ -1,84 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E90524F;
-	Tue, 11 Feb 2025 00:38:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2DD524F;
+	Tue, 11 Feb 2025 00:39:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739234312; cv=none; b=MJU+lFgkBpkWSsU9XuMxLtNGEqTETgO+4AIN/e7aXXGfA/2RKGtkjyoW3oESmnWVE6x9M2iF+AkHNwFwh83a6yp2TTiMZ8QhkruQ4iYCEwTRNIh7Oxnw+U+eOtDKYGOr/iqDPTnhYbHkW48jj0F6v2xHdWC7m85S48W+zvak8dA=
+	t=1739234361; cv=none; b=twjRde47JFh05Cv5PlT2/WjCB4zxhg+Xb7GnOBX2NY9plyth71DOgXureUvVpfQyYN9FU2iX9goaj0P2AH3nJS0G7WxUSyMiLoPSLOPX3dNNEkw0KT1KA2OYo1OkAM5pI+xAYuZ6rRGxldjfY5idTBMKBmobjJGtXqRV1wSzkCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739234312; c=relaxed/simple;
-	bh=l5h5228hacHyEf2k3kEM82BJkSixoxhycvWdQFU7XB0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ewo3n1S3eCRf9r/envDVvUdJ36tr2pEGN8fLBZgmaTUmoedP3+Gq7OBVyOMmlkI6+VagglEwzmtxSMO0wnENsVOfUBtGSs1tYl7tFFUkd1gxZ6Kafp+p+bnotcMvJM54ecWGezhf+s6UDwpazYZ2fwV8Fx17UP+Lf3zfN73vsHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DJ2O00M9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739234361; c=relaxed/simple;
+	bh=TMgXkr3cTJRM3MaW/W4X97Rj0sxwJzv7gAxKX00QO1Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UgmBh+G9KekBgvf2p/dkw5zxwakG3KQHtTDBfwD0HGOPwDAG8IXh6pQQNk5GRczLFUvk+/MQ9B2xVx5TCm/TOs3zQf3bqeI1DwPo+CfKV0N8EWqqlP6Ih9kplJdbVPMUyzC/WJ61p6i2QsvjidXioCsogNYzBCNVn1sPU/ixhTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sxfIxgxv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DJ2O00M9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 852E2C4CED1;
-	Tue, 11 Feb 2025 00:38:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sxfIxgxv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73B1FC4CED1;
+	Tue, 11 Feb 2025 00:39:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739234312;
-	bh=l5h5228hacHyEf2k3kEM82BJkSixoxhycvWdQFU7XB0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DJ2O00M9co3/uXOI5zCyPdrE6h3KRMoK+tjGhbudhd/0jfxol2tJ6c+s2U5XVXWs4
-	 EHgkiNCFc6otfWTejUk+42Ie5y8jke8J/S3a3rHn9IkLbUzq0spJaDI0/eaOffx4lO
-	 /y7BnrvgP5RQaWRx6tUI/qgXqUFY6CvxvdQJ3RiRigX4iQmby2qn9nTBBwQ6F88Q6p
-	 k7lz5jSMxNZJo3tNsPXNlXzi/9BtIO5rmcQp3USUELzrtAzCpvGSfk/+AxspcjgoWG
-	 doqIV5+dCWf6XNXiCBnJMuVta6jKw4qSXH3MDatdajmmRX4dPSQOrGqHTtH5upsLUE
-	 tP9t1Ql3HPeag==
-Date: Mon, 10 Feb 2025 16:38:32 -0800
-From: Kees Cook <kees@kernel.org>
-To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Ricardo B. Marliere" <rbm@suse.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Subject: Re: [PATCH 2/2] LoadPin: Make sysctl table const
-Message-ID: <202502101638.BE56669918@keescook>
-References: <20250123-sysctl-kees-v1-0-533359e74d66@suse.com>
- <20250123-sysctl-kees-v1-2-533359e74d66@suse.com>
+	s=k20201202; t=1739234361;
+	bh=TMgXkr3cTJRM3MaW/W4X97Rj0sxwJzv7gAxKX00QO1Y=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sxfIxgxvhA8w8i81tp/pr+hr3QM2+JGG1brPpQ3oP5nMA2sqjuo8hQ4wpvw2GX3tq
+	 p98c5dLO6f6cU0SCIsTWPckGZP3IiMbgrK90cpaL7gBYbfdmfTR0paX+uYBUAJote3
+	 HOhzFZVfMaVhUYtAukx7TCojSWQcrq87DyrYIUMQvT3wSDYtYdPVI//j1pdIkTlgOs
+	 gSnYGyFegbt5T3nI2Tp37BsPCtN1BrIk734CSdNzOKKO+cxp6FpceAMfVeiNx8ZrUe
+	 JAPdw/5qf29tzhSP1e7eXdM/exH/G/yu7x9D5iIAkal3V89MONweyyD7dG5eZFj3Nq
+	 CY0ls6jhoNw7w==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Borislav Petkov <bp@suse.de>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	bpf@vger.kernel.org
+Subject: [PATCH] tools: fix annoying "mkdir -p ..." logs when building tools in parallel
+Date: Tue, 11 Feb 2025 09:39:12 +0900
+Message-ID: <20250211003914.1866689-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250123-sysctl-kees-v1-2-533359e74d66@suse.com>
 
-On Thu, Jan 23, 2025 at 04:33:35PM -0300, Ricardo B. Marliere wrote:
-> Since commit 7abc9b53bd51 ("sysctl: allow registration of const struct
-> ctl_table"), the sysctl registration API allows for struct ctl_table to be
-> in read-only memory. Move loadpin_sysctl_table to be declared at build
-> time, instead of having to be dynamically allocated at boot time.
-> 
-> Cc: Thomas Weiﬂschuh <linux@weissschuh.net>
-> Suggested-by: Thomas Weiﬂschuh <linux@weissschuh.net>
-> Signed-off-by: Ricardo B. Marliere <rbm@suse.com>
-> ---
->  security/loadpin/loadpin.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/security/loadpin/loadpin.c b/security/loadpin/loadpin.c
-> index 68252452b66cb913638abbca2adea26219e77d37..e2d664b7602629c08c86d6d02158a4e9dd189b1a 100644
-> --- a/security/loadpin/loadpin.c
-> +++ b/security/loadpin/loadpin.c
-> @@ -53,7 +53,7 @@ static bool deny_reading_verity_digests;
->  #endif
->  
->  #ifdef CONFIG_SYSCTL
-> -static struct ctl_table loadpin_sysctl_table[] = {
-> +static const struct ctl_table loadpin_sysctl_table[] = {
->  	{
->  		.procname       = "enforce",
->  		.data           = &enforce,
+When CONFIG_OBJTOOL=y or CONFIG_DEBUG_INFO_BTF=y, parallel builds
+show awkward "mkdir -p ..." logs.
 
-This can't be done since the table is modified during set_sysctl().
+  $ make -j16
+    [ snip ]
+  mkdir -p /home/masahiro/ref/linux/tools/objtool && make O=/home/masahiro/ref/linux subdir=tools/objtool --no-print-directory -C objtool
+  mkdir -p /home/masahiro/ref/linux/tools/bpf/resolve_btfids && make O=/home/masahiro/ref/linux subdir=tools/bpf/resolve_btfids --no-print-directory -C bpf/resolve_btfids
 
--Kees
+Defining MAKEFLAGS=<value> on the command line wipes out command line
+switches from the resultant MAKEFLAGS definition, even though the command
+line switches are active. [1]
 
+The first word of $(MAKEFLAGS) is a possibly empty group of characters
+representing single-letter options that take no argument. However, this
+breaks if MAKEFLAGS=<value> is given on the command line.
+
+The tools/ and tools/% targets set MAKEFLAGS=<value> on the command
+line, which breaks the following code in tools/scripts/Makefile.include:
+
+    short-opts := $(firstword -$(MAKEFLAGS))
+
+If MAKEFLAGS really needs modification, it should be done through the
+environment variable, as follows:
+
+    MAKEFLAGS=<value> $(MAKE) ...
+
+That said, I question whether modifying MAKEFLAGS is necessary here.
+The only flag we might want to exclude is --no-print-directory, as the
+tools build system changes the working directory. However, people might
+find the "Entering/Leaving directory" logs annoying.
+
+I simply removed the offending MAKEFLAGS=.
+
+[1]: https://savannah.gnu.org/bugs/?62469
+
+Fixes: a50e43332756 ("perf tools: Honor parallel jobs")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ Makefile | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 89628e354ca7..52207bcb1a9d 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1421,18 +1421,13 @@ ifneq ($(wildcard $(resolve_btfids_O)),)
+ 	$(Q)$(MAKE) -sC $(srctree)/tools/bpf/resolve_btfids O=$(resolve_btfids_O) clean
+ endif
+ 
+-# Clear a bunch of variables before executing the submake
+-ifeq ($(quiet),silent_)
+-tools_silent=s
+-endif
+-
+ tools/: FORCE
+ 	$(Q)mkdir -p $(objtree)/tools
+-	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(tools_silent) $(filter --j% -j,$(MAKEFLAGS))" O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/
++	$(Q)$(MAKE) LDFLAGS= O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/
+ 
+ tools/%: FORCE
+ 	$(Q)mkdir -p $(objtree)/tools
+-	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(tools_silent) $(filter --j% -j,$(MAKEFLAGS))" O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/ $*
++	$(Q)$(MAKE) LDFLAGS= O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/ $*
+ 
+ # ---------------------------------------------------------------------------
+ # Kernel selftest
 -- 
-Kees Cook
+2.43.0
+
