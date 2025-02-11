@@ -1,117 +1,91 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB91257D
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 03:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DC626BD96
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 03:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739245334; cv=none; b=uHHJpYBUfV9I5X72oELC5YMcoeiUG5iyA2CvDj7ZL+OucWJCMH01ea0MuJ3X244oDGNnk4LUfRI3aYcTooujPUq35Ljgk6bnPkhfgMnZfbEiGUq/pVu07v1XrD99yKu+9AS/TuUZaiVFtqoulJQNPwmur6uqOQaI1lK+1Go2PGw=
+	t=1739245444; cv=none; b=OC+Sdy0cnDsMaL9ZlvDobEawcq1nWuH9lgAhCGmBGuG7Ctyfi1tPizV8zaH7A72SMkBER0hFU9h04bDFrE54GpOLPqurkiULes3wqPn8oF5Lv4OnYyQFnU69/j9QRYmTEM6M6WOKNUGOVGd8X8ExZ0ngqBOFlbk/LY52I9mSgYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739245334; c=relaxed/simple;
-	bh=At3K5LoGd5Hsgsobr0KdSR29/r3gJ/ms6gfVxf6rgOU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SFXuWlAugx0I6z6jDQA/uvl8qO5xiT1Xd/C4mL3R4GfAJXgXjpm5GQAjyCcysqx6W1eOe6Oe4WbIVC8rJAx9W2DyEsijWhA7BHKwvH9V6d5C/EkRns6LeZAu+j5lt3hLZUZfSTK7C0meA1QweFeJu4tq9zML4mHCNVY2IAqAC/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zARZDcN3; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739245444; c=relaxed/simple;
+	bh=CA+MnVmLKOrIDrfPUQnE738SsovChTUPP02hZK+XVac=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-type; b=e2vmkb9RTafPa7yb3wEvxxlqUpB2HVZszr3uYOMvJGRlAooEko8q6tHEuI1PhFsaRa2Po0Z/jvBUZ8T5LUyLh0mvA7+Rg2vql4uY9R//R2kL8gt6WfX2g7bS153JaXTWwEv3MVdwR6gU4c/bqDp435Wy998QLIscGFV/9Ei4q4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KwmNcs2W; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zARZDcN3"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54504bf07cdso3033142e87.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:42:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739245330; x=1739850130; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3h3R+b42z3JbozwtWpuKCcLFhvPQJ2gwAjSjK5sbxtE=;
-        b=zARZDcN35/qQlGgATBfQ/X137Zy2HvKI/7NaQJ7avDA0OOblyI2HTditdpjk98vREI
-         AYmDNZOE1/YwjyAUXx/eiHLq12YKTq/CdueQq9N/dUT93LfMWYuBNx0+5wOq+4xBRMJZ
-         rPA/aBohFxDobMOfcNndL4HrtV3OO84XVLQX9tueXFysB72/sfJXsAgfWsJ8Oc6KJR2F
-         fnDReafleZO/DsWHf0DvbIkaiUp60irSEirFdKW2pNVfYZKZkCp7gX8ZyFBJwphGC1If
-         yBT42JNZLqQZfTMUczybe2tCzXXaVhepARwl1cUV69IvMoJT8zt7dlWpmpxYSADloLhi
-         zCqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739245330; x=1739850130;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3h3R+b42z3JbozwtWpuKCcLFhvPQJ2gwAjSjK5sbxtE=;
-        b=ltHUkbnrk8ja62hEj77cCCNoSeFarRjLPRZkqvNxGo4Y5lDcXKp6+K+4uHCpunBxl2
-         QMhT+LragmdopU6WaRoqC3x7qMQJ7jCXJWmx3yWpZz5v9zqvem3CMNm/eUwAvIFhlRG6
-         zkxsPkGXfZubxWtiHJpBBcRql7X+Oo1hCl6+zrwmO/vPwJj+WJir0uou9KHdJRwrakjR
-         ivv7Odqs1BfPT3ybfCinCaolVG8MEi2THw5/YHqWmb7h2V4MA3oyPRFjoLJGwPy3BfI6
-         FJwkVFdWmVPN3r/9h7FOaMcyr6WggAFDljFExHdL+fO8GxccrkRSKOIT7mPkqXbCWjcl
-         AxeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWH+ittxz53OiNp9mFI33FhY2pa5EZWa/70jppqGNOkt35Mvjm9Qy/6EoC+SPlLVuyjbf1bmukOh7di+nw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwteLsLzDUbq/UyePwB1Cs7anjp83oWObZrT9GR1esu7ymBw9Vy
-	3o1XChBUTf+U9bAjlAa1c/QgyYqCQKKK0yyKSD3tQB9FwHQbTVwfKQ+av1qUH1Q=
-X-Gm-Gg: ASbGncv2M6tQ9ZNNElJt8Mn/KsRcXxEGNDhnJ5pH5ZQbwjQ48oDKfKe9kW1n9Ybu+pi
-	65kyQqP4/1OL+/WEOo/wuv6RfacxT9gdgOTYPuSOj5zXwtMndSgW0+ks7a/Pe8yu66Ahlm0Ef6F
-	5BiXnMWKrWV5KyYhI0m6cyHpExhtR7F5gPwdIiJLIVCrDHQ7w0Dgg7Zn+O2ci1t43/A3yW63gzw
-	S2pSzxmhnQXtxPf6kHvJVMT3LoV+/GyS4/EdwMHGgwcHr7EkyVcFH49/zUcjGzA+VO/2mSPTo0r
-	XDEOP0N/BrqDVz9u/yp2Z0dieN5qnAfyiPJ5xSM+bHvorBWTSgCRsQ3SDs9T+verhySH/v4=
-X-Google-Smtp-Source: AGHT+IEpuTZOAkvVDyVOUqFsqHiob4PAIXyJxs6eBLCg9MdHYmCorlqmyE3GpuhdGXaaTLkizjdVqQ==
-X-Received: by 2002:ac2:5f6a:0:b0:545:95b:a333 with SMTP id 2adb3069b0e04-545095ba432mr2186571e87.16.1739245330219;
-        Mon, 10 Feb 2025 19:42:10 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5450608a74fsm804870e87.179.2025.02.10.19.42.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 19:42:08 -0800 (PST)
-Date: Tue, 11 Feb 2025 05:42:06 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Marijn Suijten <marijn.suijten@somainline.org>
-Cc: Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>, 
-	Vinod Koul <vkoul@kernel.org>, Simona Vetter <simona@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Jordan Crouse <jordan@cosmicpenguin.net>, ~postmarketos/upstreaming@lists.sr.ht, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Martin Botka <martin.botka@somainline.org>, 
-	Jami Kettunen <jami.kettunen@somainline.org>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v2 1/3] drm/msm/dsi: Use existing per-interface slice
- count in DSC timing
-Message-ID: <guhjhtm54xttaech3jpnsqqzfevadure6clecb5elruxxd6trd@sunww3caiial>
-References: <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-0-9a60184fdc36@somainline.org>
- <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-1-9a60184fdc36@somainline.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KwmNcs2W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739245441;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=7JNAr76j5oLqWNY70OtkymHMDejckVUiY1yR0byy3Ew=;
+	b=KwmNcs2WGrMqh42/0+USB5vqWfEHJjve2h1T0SyTQlr49A68KXiq5M51xfV4sY2cxUV/YU
+	97WzNkwRhKT+bPFVIG3OVfLT/VyA3K5elou0Vng2JYIqbrZbGmafs/13L7jeji1E/4wSJt
+	msXDuLkdywiUMxYU5kAcyPS7HnchZnc=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-465-bqau5SIvNhu0LLv9Y9QOZQ-1; Mon,
+ 10 Feb 2025 22:43:59 -0500
+X-MC-Unique: bqau5SIvNhu0LLv9Y9QOZQ-1
+X-Mimecast-MFC-AGG-ID: bqau5SIvNhu0LLv9Y9QOZQ
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 580EE1800877;
+	Tue, 11 Feb 2025 03:43:58 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.8])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A9442195608D;
+	Tue, 11 Feb 2025 03:43:52 +0000 (UTC)
+From: Baoquan He <bhe@redhat.com>
+To: linux-mm@kvack.org
+Cc: akpm@linux-foundation.org,
+	will@kernel.org,
+	aneesh.kumar@kernel.org,
+	npiggin@gmail.com,
+	peterz@infradead.org,
+	linux-kernel@vger.kernel.org,
+	Baoquan He <bhe@redhat.com>
+Subject: [PATCH 1/2] mm/mmu_gather: remove unused __tlb_remove_page()
+Date: Tue, 11 Feb 2025 11:43:47 +0800
+Message-ID: <20250211034348.39531-1-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-1-9a60184fdc36@somainline.org>
+Content-type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Sun, Feb 09, 2025 at 10:42:52PM +0100, Marijn Suijten wrote:
-> When configuring the timing of DSI hosts (interfaces) in
-> dsi_timing_setup() all values written to registers are taking
-> bonded-mode into account by dividing the original mode width by 2
-> (half the data is sent over each of the two DSI hosts), but the full
-> width instead of the interface width is passed as hdisplay parameter to
-> dsi_update_dsc_timing().
-> 
-> Currently only msm_dsc_get_slices_per_intf() is called within
-> dsi_update_dsc_timing() with the `hdisplay` argument which clearly
-> documents that it wants the width of a single interface (which, again,
-> in bonded DSI mode is half the total width of the mode) resulting in all
-> subsequent values to be completely off.
-> 
-> However, as soon as we start to pass the halved hdisplay
-> into dsi_update_dsc_timing() we might as well discard
-> msm_dsc_get_slices_per_intf() since the value it calculates is already
-> available in dsc->slice_count which is per-interface by the current
-> design of MSM DPU/DSI implementations and their use of the DRM DSC
-> helpers.
-> 
-> Fixes: 08802f515c3c ("drm/msm/dsi: Add support for DSC configuration")
-> Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
-> ---
->  drivers/gpu/drm/msm/dsi/dsi_host.c   |  8 ++++----
->  drivers/gpu/drm/msm/msm_dsc_helper.h | 11 -----------
->  2 files changed, 4 insertions(+), 15 deletions(-)
-> 
+Nobody is using __tlb_remove_page() now, clean it up.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ include/asm-generic/tlb.h | 6 ------
+ 1 file changed, 6 deletions(-)
 
+diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+index e402aef79c93..9ae4ca02f29f 100644
+--- a/include/asm-generic/tlb.h
++++ b/include/asm-generic/tlb.h
+@@ -489,12 +489,6 @@ static inline void tlb_remove_page_size(struct mmu_gather *tlb,
+ 		tlb_flush_mmu(tlb);
+ }
+ 
+-static __always_inline bool __tlb_remove_page(struct mmu_gather *tlb,
+-		struct page *page, bool delay_rmap)
+-{
+-	return __tlb_remove_page_size(tlb, page, delay_rmap, PAGE_SIZE);
+-}
+-
+ /* tlb_remove_page
+  *	Similar to __tlb_remove_page but will call tlb_flush_mmu() itself when
+  *	required.
 -- 
-With best wishes
-Dmitry
+2.41.0
+
