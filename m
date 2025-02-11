@@ -1,80 +1,64 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68C3253F33;
-	Tue, 11 Feb 2025 16:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 651BE25E45A;
+	Tue, 11 Feb 2025 16:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739290176; cv=none; b=VYcrdLMvsMkImdJpijLUdSAtIDn2ZEdMJjH11tyYVMUSsF238rLZut5nqVGNni7D2SpB9geEgCgDj6kRIUHC6J6F6qbh/g0ez2lg+Hh2pNUR66leHZhAB2rnO1WAOk4NKfrc92cLCBId2Z52kgKuwcYqf11xdx/+SNH2hkoRiyE=
+	t=1739290184; cv=none; b=LfTQOh8XGHTVIhcZVoAhqWyCzTN0VaeesmUdeOINeBByqwW8cmAe7aPGJPdQu9ZDH8GdGozbosIbVQ+8Yn54kIRwCeI/Y9QPaVtjc/Q5rcoPo8Uq08XJZ5JRqELdtZTv439zndkD/Bbujt95dK0vmLu6CIDoa4FVEtwNeDcJPNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739290176; c=relaxed/simple;
-	bh=qQApPjpim+loQ4ajMtz3MpE/ppKjJkgfuOadEo25WrY=;
+	s=arc-20240116; t=1739290184; c=relaxed/simple;
+	bh=TVjvnqZdrvC87M+KukkWMSEzPQvjWUj8ceSMgn0mBWg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RFORFpf35LbBrL8uPHYZea/X/p+oMm1NbRyaYTlWmDrDpINGrYNymK2AiGfSuTn6/Qs95Ypigp0AGJLEqzT7usx4aNYBm5YZY9dLD2qPvrBBc/HiyM8VeeWv3HKvLm2qz0V4WupSJeHFnJTK0SQm1lUsOFIAz77Lio3Akgm2mBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mPBO4lte; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=0bMk4k/O; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mPBO4lte; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=0bMk4k/O; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 In-Reply-To:Content-Type; b=b+WEqUOYhSb6phRpRiVVgWPtstndk/5dTO1jF0AKIKc15CwcXxuRrG2+rvzM7cSy4DyzcoBr2OH3u0PYQtp193KkC206fCYEMU1Ax741ikUB6E+vcjWcVxMassRnEYIUsAjIcOYXutyiNvLoMnhl1T+moNM5tI+syxgbtnkQyZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UW3jD+H2; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mPBO4lte";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="0bMk4k/O";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mPBO4lte";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="0bMk4k/O"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6B4A776B78;
-	Tue, 11 Feb 2025 15:30:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1739287849; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=QDGaOekLhsQFykr8hC2w5GOY7TQaiNC6cID1fErX2eI=;
-	b=mPBO4lteNcruHEYyFiNZeG+yaUMWIHs0q1jrK4nTy+/QP+8V4ZhxUbp4FwpXQYEHPavDB8
-	Wim7SQv5lb1aN5ygBUU6HGkTOdlEwnphNf2vX+1wHMPn8bYhCauTIpXFydRutWs+jkmnv/
-	8NI4x6rStLCPG1P3ZGDgqvPevrXu7iw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1739287849;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=QDGaOekLhsQFykr8hC2w5GOY7TQaiNC6cID1fErX2eI=;
-	b=0bMk4k/OvxdV6FHkWm7Gy/vTxMJr3PwS4zfz4hg2OJyy3OOlo/3xAU3UglKruSmh0IZgM/
-	eywnk9vlYd/+fsBw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1739287849; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=QDGaOekLhsQFykr8hC2w5GOY7TQaiNC6cID1fErX2eI=;
-	b=mPBO4lteNcruHEYyFiNZeG+yaUMWIHs0q1jrK4nTy+/QP+8V4ZhxUbp4FwpXQYEHPavDB8
-	Wim7SQv5lb1aN5ygBUU6HGkTOdlEwnphNf2vX+1wHMPn8bYhCauTIpXFydRutWs+jkmnv/
-	8NI4x6rStLCPG1P3ZGDgqvPevrXu7iw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1739287849;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=QDGaOekLhsQFykr8hC2w5GOY7TQaiNC6cID1fErX2eI=;
-	b=0bMk4k/OvxdV6FHkWm7Gy/vTxMJr3PwS4zfz4hg2OJyy3OOlo/3xAU3UglKruSmh0IZgM/
-	eywnk9vlYd/+fsBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3F83913715;
-	Tue, 11 Feb 2025 15:30:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id B801Dyltq2fEZAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 11 Feb 2025 15:30:49 +0000
-Message-ID: <68bb307a-26ad-46ac-a9de-bec9b808506a@suse.cz>
-Date: Tue, 11 Feb 2025 16:30:48 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UW3jD+H2"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21f464b9a27so97103435ad.1;
+        Tue, 11 Feb 2025 08:09:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739290183; x=1739894983; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aAyB62GSWdISzPRmuuHh8pA6uRco0XW7ojEAUSp9X+Y=;
+        b=UW3jD+H2rndpUZYiHWeqzX8PEaOrpZyHtEMXySuUGsTCZ5YrdsPMLpfT0Ns+NYWEcx
+         qkpyf5ZmeTYGiRKEvV06uerLPOdRzXw3F1KjhqeuBc/g4ts5hz39tOXgKNPFY7qxpWeh
+         a3lOAwFprS2unnX+OhqPm9kbWsHmw4iSYIcnrrc3UoYDh3mt/sVCFPNq4rE/NJ6QoRhP
+         W4IGYE8N1MFf5hZfnUgWd8fWj9/IpBVeiQOL6bxnNTYRy5FmRpFlQzZpl3AxyDJEB89V
+         ltjMsIcYOAhrZvFQJ/75fVexJCTRJ3ZdNst3IvxfdfQyV6gJM3hlbEax05w5BvZ5b1du
+         0Ovw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739290183; x=1739894983;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=aAyB62GSWdISzPRmuuHh8pA6uRco0XW7ojEAUSp9X+Y=;
+        b=PGcCZGxu86E+BP2OtJIeob0O05pxyTb9ePXKqRE8KwjWnYLdyKg6wno4rdsgXr5sg8
+         fkkXtLqB2xttMrMqhKfwBf66DaKYcVfEmF6aqPkfkxFL2+CxQ6Ct2O7I3kWbKdyNkHJM
+         PGOQc7JNck6ilBOOhU+RceulotNUneN++9I9zOJ+bj2px8idPZcd0nGfNy+EV0RSS6yU
+         Myk14LNzAPHIRtf7KWepEfnLD8p0NZvPEr2cpvWe6w9wHsUHte/I+Nm70qSCYgBG+6OB
+         qdQYdJnX75dvOAJx7Gd5gQV0eU+uE1kALfUqScb5PqQEf3uS19FAskzH8bVY/mf34nNe
+         56mQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWEsdyg+4frpBg0j9Xu6Ym0KdDBGA00eVHeX9OYNKQz9LCFUIfFzFnBi80RPRKHOh0IKU36cYll1yZV2uUZ@vger.kernel.org, AJvYcCX7zousZMOzKRK9f/vX/wzPiezZc2MM+5uhzuidwyTs+C6O3HhJ4wn1BMoGzhcjz2QpLLk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+qplZQStG4h+uTobnObVOpeUNx+7QVqLpEXU/6cNG2mTnAQ8m
+	oWqFrcf5R4lIHZtU2vUzcSHgPUjpm79uO+0CbahsshcaXfExMWSt
+X-Gm-Gg: ASbGncvyLRff9QiMg7hiF/XQ8cJWecx5IYtG1w0fz0c7Gv1YevxBxGORBY0rFw1eu3i
+	BaL89PDBAbxWEK/gS56mIEtNUyFoE//KTCdehcfAd3cFD6lDa9pCRQrJMcKR2jEx25QdYjuElrQ
+	kzB6Mjeyor3HCm8DsXZAvPCW9OPyyqk36BHh6xjunlc1IybXIyJqpVedv6LF2DWYs0hDzvCBt4P
+	3JrLgzpMD/cv67+dTL5uhh8yIxyzwEI/wSfQstEwAMCegT2/N931HzYpESN8KFLzfXRvxh3Aks3
+	f2fM3saYin/j
+X-Google-Smtp-Source: AGHT+IEdXqYKfOJ6fL00vANGxoSeUhWt5V0zAdWJNJZsdX407WjuvWPLIER0NrnWM+bjiiIOqJzYRg==
+X-Received: by 2002:a17:90b:4a48:b0:2ea:a9ac:eee1 with SMTP id 98e67ed59e1d1-2fb63d1accbmr540485a91.10.1739290182504;
+        Tue, 11 Feb 2025 08:09:42 -0800 (PST)
+Received: from [0.0.0.0] ([5.34.218.148])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa09a16e53sm10613538a91.11.2025.02.11.08.09.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 08:09:42 -0800 (PST)
+Message-ID: <ad6421b2-10b4-4ac0-8a37-e49d1cdff712@gmail.com>
+Date: Wed, 12 Feb 2025 00:09:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,144 +66,101 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] get_maintainer: add --substatus for reporting
- subsystem status
-Content-Language: en-US
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>,
- workflows@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Thorsten Leemhuis <linux@leemhuis.info>, Kees Cook <kees@kernel.org>,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <20250203-b4-get_maintainer-v2-0-83ba008b491f@suse.cz>
- <20250203-b4-get_maintainer-v2-1-83ba008b491f@suse.cz>
- <7aodxv46lj6rthjo4i5zhhx2lybrhb4uknpej2dyz3e7im5w3w@w23bz6fx3jnn>
- <CAMuHMdVeMe++0_hOx7ug0eRXD2cOWMRZsuHUee3KPjBE5FxjNQ@mail.gmail.com>
- <6ff32b12-7113-41dc-80d3-e729cc15a5ce@suse.cz>
- <CAMuHMdXNaNPiVXMrqf4YqM-PRC6ZrTgmHtOP1S9PPCP2HqvGWA@mail.gmail.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <CAMuHMdXNaNPiVXMrqf4YqM-PRC6ZrTgmHtOP1S9PPCP2HqvGWA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.995];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,suse.cz:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Subject: Re: [PATCH bpf-next v6 3/4] libbpf: Add libbpf_probe_bpf_kfunc API
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ eddyz87@gmail.com, haoluo@google.com, qmo@kernel.org, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Tao Chen <dylane.chen@didiglobal.com>
+References: <20250211111859.6029-1-chen.dylane@gmail.com>
+ <20250211111859.6029-4-chen.dylane@gmail.com> <Z6tgfKgUdCRaQJ9c@krava>
+From: Tao Chen <chen.dylane@gmail.com>
+In-Reply-To: <Z6tgfKgUdCRaQJ9c@krava>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 2/11/25 16:19, Geert Uytterhoeven wrote:
-> Hi Vlastimil,
+在 2025/2/11 22:36, Jiri Olsa 写道:
+> On Tue, Feb 11, 2025 at 07:18:58PM +0800, Tao Chen wrote:
 > 
-> On Tue, 11 Feb 2025 at 15:58, Vlastimil Babka <vbabka@suse.cz> wrote:
->> On 2/11/25 11:48, Geert Uytterhoeven wrote:
->> I've tried to do that in v1 in the form of reporting e.g. as
->> John Doe <jd@example.com> (maintainer:SUBSYSTEM [supported])
+> SNIP
+> 
+>> diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
+>> index 8ed92ea922b3..ab5591c385de 100644
+>> --- a/tools/lib/bpf/libbpf_probes.c
+>> +++ b/tools/lib/bpf/libbpf_probes.c
+>> @@ -431,6 +431,54 @@ static bool can_probe_prog_type(enum bpf_prog_type prog_type)
+>>   	return true;
+>>   }
+>>   
+>> +int libbpf_probe_bpf_kfunc(enum bpf_prog_type prog_type, int kfunc_id, int btf_fd,
+>> +			   const void *opts)
+>> +{
+>> +	struct bpf_insn insns[] = {
+>> +		BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, BPF_PSEUDO_KFUNC_CALL, 1, kfunc_id),
+>> +		BPF_EXIT_INSN(),
+>> +	};
+>> +	const size_t insn_cnt = ARRAY_SIZE(insns);
+>> +	char buf[4096];
+>> +	int fd_array[2] = {-1};
+>> +	int ret;
+>> +
+>> +	if (opts)
+>> +		return libbpf_err(-EINVAL);
+>> +
+>> +	if (!can_probe_prog_type(prog_type))
+>> +		return -EOPNOTSUPP;
+> 
+> we could use libbpf_err(-EOPNOTSUPP) in here and in libbpf_probe_bpf_helper
+> sry for not spoting it earlier
+> 
+> other than that the patchset looks good to me
+> 
+> Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+> 
+> thanks,
+> jirka
+> 
+
+Ack. will change it. Thanks for your review!
+
+>> +
+>> +	if (btf_fd >= 0) {
+>> +		fd_array[1] = btf_fd;
+>> +	} else if (btf_fd == -1) {
+>> +		/* insn.off = 0, means vmlinux btf */
+>> +		insns[0].off = 0;
+>> +	} else {
+>> +		return libbpf_err(-EINVAL);
+>> +	}
+>> +
+>> +	buf[0] = '\0';
+>> +	ret = probe_prog_load(prog_type, insns, insn_cnt, btf_fd >= 0 ? fd_array : NULL,
+>> +			      buf, sizeof(buf));
+>> +	if (ret < 0)
+>> +		return libbpf_err(ret);
+>> +
+>> +	/* If BPF verifier recognizes BPF kfunc but it's not supported for
+>> +	 * given BPF program type, it will emit "calling kernel function
+>> +	 * bpf_cpumask_create is not allowed", if the kfunc id is invalid,
+>> +	 * it will emit "kernel btf_id 4294967295 is not a function". If btf fd
+>> +	 * invalid in module btf, it will emit "invalid module BTF fd specified" or
+>> +	 * "negative offset disallowed for kernel module function call"
+>> +	 */
+>> +	if (ret == 0 && (strstr(buf, "not allowed") || strstr(buf, "not a function") ||
+>> +			(strstr(buf, "invalid module BTF fd")) ||
+>> +			(strstr(buf, "negative offset disallowed"))))
+>> +		return 0;
+>> +
+>> +	return 1; /* assume supported */
+>> +}
+>> +
+>>   int libbpf_probe_bpf_helper(enum bpf_prog_type prog_type, enum bpf_func_id helper_id,
+>>   			    const void *opts)
+>>   {
+>> -- 
+>> 2.43.0
 >>
->> But it seemed noisy to repeat that on every line involving the subsystem.
-> 
-> Yeah, it could be considered noisy... (more below)
-> 
->> When you say comment, what kind of separation for the comment would work
->> regardless of what's used for postprocessing?
-> 
-> I don't mind much. Perhaps just a comma?
 
-Hm comma where exactly? Sorry I might not get it, could you provide a full
-example? Thanks.
 
->> > Now, as both Uwe and I edit our generated scripts before running them,
->> > we can delete the unwanted lines, but it's more work...
->> > Thanks!
->>
->> I guess technically your scripts could detect first if --no-substatus is
->> supported by grepping --help or testing if passing the option results in an
->> error? But yeah it's not ideal, looks like I've hit the limits of automagic
->> heuristics here.
->> Or we make it fully opt-in but then most non-scripting users will not learn
->> the status at all because it won't occur to them to enable it...
-> 
-> I still seem to miss the real story behind this patch (so perhaps
-> that's why I would consider all of it noisy ;-). When I create a patch,
-
-The cover letter tells the story. It comes back to the way the script
-reports maintainers as "supporter"s (or other roles according to the status,
-however some status means there is most likely no maintainer). Joe objected
-to that status reporting would be simply removed in [1]. I also think it's
-useful information for the submitters, so I try to provide it differently.
-
-> what am I gonna do with this extra information?
-> E.g. decide not to send the patch, because the driver is orphaned?
-
-Well for example you can know that you might not get a timely reply, or
-might need to step up as a maintainer. Or you're trying to add a feature and
-the driver is "odd fixes". I think we do document the status in MAINTAINERS
-for a reason, and one could expect the tool to provide it and not require
-you to go look into MAINTAINERS yourself.
-
-[1]
-https://lore.kernel.org/all/30776fe75061951777da8fa6618ae89bea7a8ce4.camel@perches.com/
-
-> Thanks!
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-
+-- 
+Best Regards
+Dylane Chen
