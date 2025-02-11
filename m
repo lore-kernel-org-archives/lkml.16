@@ -1,55 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE45165F13;
-	Tue, 11 Feb 2025 00:31:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03431C3F36;
+	Tue, 11 Feb 2025 00:31:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739233897; cv=none; b=fi1Ujhsu2E/Enwv1mjYZ3FajsAZp7UqC+CYifARoSEuWFaAwnW3qObc1k7W0+qzrRBVcKPxuHzPT1L8usbpOdYge/2wEgWv5tbJvuGz3YsaSUgvn7Nol89tTGAXS/4maKuLYVStH9/suh3U/USeBmQ5qXfD9ImD447Yylwsp9es=
+	t=1739233897; cv=none; b=Fw5HRUv/QqgGiBSdZhyRsmSituRXbjqMyswXhKuuSrPaHmHM9UpnCM/71tsUQlPPLPJJ4CmLXThRHTta2C4o0Q+rWTteluHXiZd4HhDF7Aa4EK701CpFQ5zHSKvMVSVulh5BrMTrxMCUQrb6nR+UI4S3psm/JrLt/e7cDAgsb7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739233897; c=relaxed/simple;
-	bh=2aBcGYde6FqKkGz9SbdnoeL7YJGk9ss6Wg4DyxvPqHs=;
+	bh=/PR9AB+QpWzqEeX3zFKe7QITS4cHv803/0AieWg4tIY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SqLTCAJ8m0XTNMqPEnOYvwYuYA6akHcdQZtsIrdMhWzBCVDG2CLphay1VEjDrrCEEHLmuevJuE2mnK83UG1OvhbNMA9g2SmeizgSV1ULG4iUj4cqPQuUjaMRrxwwNQwQ9YjsXViVhEpXhz6cPp7cbGxeKmRueS/9oWix46DzEzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ax9sibUj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=g1SUg/D9TPAm0L6yVFyQPDy0OuFnCnbdEk4hDvkxKDA8/YwHMcMMzqbDi646HctKWnrBfz+XrRjJ5IDNucIqQZbd77aOuyqDMk82qMozi2YC9ew9nhPnEzmB/Za6Y1nh2VXFfR+wh2N9OkxxjoGek2bohmUIalM4UUwyeaEzrJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qimTdQHk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ax9sibUj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E85DC4CEE7;
-	Tue, 11 Feb 2025 00:31:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qimTdQHk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 067CBC4CEF5;
+	Tue, 11 Feb 2025 00:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739233896;
-	bh=2aBcGYde6FqKkGz9SbdnoeL7YJGk9ss6Wg4DyxvPqHs=;
+	s=k20201202; t=1739233897;
+	bh=/PR9AB+QpWzqEeX3zFKe7QITS4cHv803/0AieWg4tIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ax9sibUjQwEcsIGBlYJjiUPyBGuyF29oZsfqj1TOtTNWh8H3rcbVmzM4eBySOQS1F
-	 1+Fb+QqVHViQWzw0fJYKw4CHDyoCelcEybUtQjoUUfpSfrJMj4EOlqve6uOg+nOKxD
-	 eM0w8kU37EvIXUZCUTANqTMGM2mwSIej33il51RnJ+EMlM0eIOhelSyiXyyDPQUuii
-	 Rg7tPkWyR9urmYMw86u8+tkNcwu8FnLD3Wt8jZf4nITcIMjUzYm9F3aLeedfefUkSQ
-	 fF7bgzUogZeDiFf4NIGVXiodB1wcuhvmm0byHBl5kGzh6iA08iwEk5kzrGbixGmGTY
-	 kIdKZAyZhHMbw==
+	b=qimTdQHkHrV7M7T/TX+bmLorH+5rf7VHKUGtE5rIQj3LRSvKlkoojVxxG0xEEkhBR
+	 jkSF7aT2xcjR1fiTCftT0OV9FG2TsS9HjYnCyVpVQ3gbn0jSL52wI7pvONxjcEIHfD
+	 69fQtpKqbWbNVyoqflAt5ub96jO7FCjcvGhuqNrUMaCGGqt1ekisPidbuKFhar5bds
+	 WqhHqBciwHvQMsIp3pIugIrZSsyEZZF8e1V+xNJo0AuOYID+0xQC0slx+k9sD1Iw/O
+	 P4uZV9iN7CgfobCGkdnbK2DVBzFBfXm8F39oE0JWNhGKzjg4UMsr9ggOg+q51xdj7x
+	 hmCmdiQCTzZFA==
 From: Kees Cook <kees@kernel.org>
 To: David Gow <davidgow@google.com>
 Cc: Kees Cook <kees@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
+	Gabriela Bittencourt <gbittencourt@lkcamp.dev>,
+	Pedro Orlando <porlando@lkcamp.dev>,
+	Danilo Pereira <dpereira@lkcamp.dev>,
+	Gabriel Krisman Bertazi <krisman@suse.de>,
 	Rae Moar <rmoar@google.com>,
 	Luis Felipe Hernandez <luis.hernandez093@gmail.com>,
 	Nicolas Pitre <npitre@baylibre.com>,
-	Pedro Orlando <porlando@lkcamp.dev>,
-	Danilo Pereira <dpereira@lkcamp.dev>,
-	Gabriela Bittencourt <gbittencourt@lkcamp.dev>,
-	Gabriel Krisman Bertazi <krisman@suse.de>,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Diego Vieira <diego.daniel.professional@gmail.com>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
 	=?UTF-8?q?Bruno=20Sobreira=20Fran=C3=A7a?= <brunofrancadevsec@gmail.com>,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	kunit-dev@googlegroups.com
-Subject: [PATCH v2 3/6] lib: Move KUnit tests into tests/ subdirectory
-Date: Mon, 10 Feb 2025 16:31:31 -0800
-Message-Id: <20250211003136.2860503-3-kees@kernel.org>
+Subject: [PATCH v2 5/6] unicode: kunit: refactor selftest to kunit tests
+Date: Mon, 10 Feb 2025 16:31:33 -0800
+Message-Id: <20250211003136.2860503-5-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250211002600.it.339-kees@kernel.org>
 References: <20250211002600.it.339-kees@kernel.org>
@@ -59,405 +59,343 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=16536; i=kees@kernel.org; h=from:subject; bh=2aBcGYde6FqKkGz9SbdnoeL7YJGk9ss6Wg4DyxvPqHs=; b=owGbwMvMwCVmps19z/KJym7G02pJDOmrZqVqL/+ysfRDUWC2/j2B1rPlh/eIbI1LiBVddd/zd tn2ffcmdJSyMIhxMciKKbIE2bnHuXi8bQ93n6sIM4eVCWQIAxenAEzE+jfDHy4OvT1TfHdt9XZe 9Z7Bc8KyFW3yRlYZH3v4fU8tiK4vy2P4Z87wIJX7KmOi+/kWfWunayZvJusW2/YIiSbdeLC9Kii QFQA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=11462; i=kees@kernel.org; h=from:subject; bh=qneY3+E6WQflVJ8FUJLVj8OKpCtnR1WKhTjP+Ezmn4M=; b=owGbwMvMwCVmps19z/KJym7G02pJDOmrZqUda+t6s7pcz37vjKLlXT7aYXt3L7Q9Yndx0bL/5 jde//qQ0FHKwiDGxSArpsgSZOce5+Lxtj3cfa4izBxWJpAhDFycAjCRa7cY/lk0sv9unah/gOvV w5A1l2u0qkpfL5giGSiyWMPVsftuBTMjw5mXO/wmKN258no1+36DhckChiFBDLE7bHf4J93gFtB 4xAoA
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Following from the recent KUnit file naming discussion[1], move all
-KUnit tests in lib/ into lib/tests/.
+From: Gabriela Bittencourt <gbittencourt@lkcamp.dev>
 
-Link: https://lore.kernel.org/lkml/20240720165441.it.320-kees@kernel.org/ [1]
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Acked-by: Jakub Kicinski <kuba@kernel.org>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Refactoring 'test' functions into kunit tests, to test utf-8 support in
+unicode subsystem.
+
+This allows the utf8 tests to be run alongside the KUnit test suite
+using kunit-tool, quickly compiling and running all desired tests as
+part of the KUnit test suite, instead of compiling the selftest module
+and loading it.
+
+The refactoring kept the original testing logic intact, while adopting a
+testing pattern across different kernel modules and leveraging KUnit's
+benefits.
+
+Co-developed-by: Pedro Orlando <porlando@lkcamp.dev>
+Signed-off-by: Pedro Orlando <porlando@lkcamp.dev>
+Co-developed-by: Danilo Pereira <dpereira@lkcamp.dev>
+Signed-off-by: Danilo Pereira <dpereira@lkcamp.dev>
+Signed-off-by: Gabriela Bittencourt <gbittencourt@lkcamp.dev>
 Reviewed-by: David Gow <davidgow@google.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: Gabriel Krisman Bertazi <krisman@suse.de>
 Reviewed-by: Rae Moar <rmoar@google.com>
-Link: https://lore.kernel.org/r/20241202075545.3648096-4-davidgow@google.com
+Link: https://lore.kernel.org/r/20241202075545.3648096-6-davidgow@google.com
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- MAINTAINERS                            | 19 ++++++------
- lib/Makefile                           | 39 +------------------------
- lib/tests/Makefile                     | 40 ++++++++++++++++++++++++++
- lib/{ => tests}/bitfield_kunit.c       |  0
- lib/{ => tests}/checksum_kunit.c       |  0
- lib/{ => tests}/cmdline_kunit.c        |  0
- lib/{ => tests}/cpumask_kunit.c        |  0
- lib/{ => tests}/crc_kunit.c            |  0
- lib/{ => tests}/fortify_kunit.c        |  0
- lib/{ => tests}/hashtable_test.c       |  0
- lib/{ => tests}/is_signed_type_kunit.c |  0
- lib/{ => tests}/kunit_iov_iter.c       |  0
- lib/{ => tests}/list-test.c            |  0
- lib/{ => tests}/memcpy_kunit.c         |  0
- lib/{ => tests}/overflow_kunit.c       |  0
- lib/{ => tests}/siphash_kunit.c        |  0
- lib/{ => tests}/slub_kunit.c           |  0
- lib/{ => tests}/stackinit_kunit.c      |  0
- lib/{ => tests}/string_helpers_kunit.c |  0
- lib/{ => tests}/string_kunit.c         |  0
- lib/{ => tests}/test_bits.c            |  0
- lib/{ => tests}/test_fprobe.c          |  0
- lib/{ => tests}/test_hash.c            |  0
- lib/{ => tests}/test_kprobes.c         |  0
- lib/{ => tests}/test_linear_ranges.c   |  0
- lib/{ => tests}/test_list_sort.c       |  0
- lib/{ => tests}/test_sort.c            |  0
- lib/{ => tests}/usercopy_kunit.c       |  0
- lib/{ => tests}/util_macros_kunit.c    |  0
- 29 files changed, 51 insertions(+), 47 deletions(-)
- rename lib/{ => tests}/bitfield_kunit.c (100%)
- rename lib/{ => tests}/checksum_kunit.c (100%)
- rename lib/{ => tests}/cmdline_kunit.c (100%)
- rename lib/{ => tests}/cpumask_kunit.c (100%)
- rename lib/{ => tests}/crc_kunit.c (100%)
- rename lib/{ => tests}/fortify_kunit.c (100%)
- rename lib/{ => tests}/hashtable_test.c (100%)
- rename lib/{ => tests}/is_signed_type_kunit.c (100%)
- rename lib/{ => tests}/kunit_iov_iter.c (100%)
- rename lib/{ => tests}/list-test.c (100%)
- rename lib/{ => tests}/memcpy_kunit.c (100%)
- rename lib/{ => tests}/overflow_kunit.c (100%)
- rename lib/{ => tests}/siphash_kunit.c (100%)
- rename lib/{ => tests}/slub_kunit.c (100%)
- rename lib/{ => tests}/stackinit_kunit.c (100%)
- rename lib/{ => tests}/string_helpers_kunit.c (100%)
- rename lib/{ => tests}/string_kunit.c (100%)
- rename lib/{ => tests}/test_bits.c (100%)
- rename lib/{ => tests}/test_fprobe.c (100%)
- rename lib/{ => tests}/test_hash.c (100%)
- rename lib/{ => tests}/test_kprobes.c (100%)
- rename lib/{ => tests}/test_linear_ranges.c (100%)
- rename lib/{ => tests}/test_list_sort.c (100%)
- rename lib/{ => tests}/test_sort.c (100%)
- rename lib/{ => tests}/usercopy_kunit.c (100%)
- rename lib/{ => tests}/util_macros_kunit.c (100%)
+ fs/unicode/.kunitconfig    |   3 +
+ fs/unicode/Kconfig         |   5 +-
+ fs/unicode/Makefile        |   2 +-
+ fs/unicode/utf8-norm.c     |   2 +-
+ fs/unicode/utf8-selftest.c | 149 +++++++++++++++++--------------------
+ 5 files changed, 77 insertions(+), 84 deletions(-)
+ create mode 100644 fs/unicode/.kunitconfig
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 25c86f47353d..78be36fb1a74 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4017,10 +4017,10 @@ F:	include/vdso/bits.h
- F:	lib/bitmap-str.c
- F:	lib/bitmap.c
- F:	lib/cpumask.c
--F:	lib/cpumask_kunit.c
- F:	lib/find_bit.c
- F:	lib/find_bit_benchmark.c
- F:	lib/test_bitmap.c
-+F:	lib/tests/cpumask_kunit.c
- F:	tools/include/linux/bitfield.h
- F:	tools/include/linux/bitmap.h
- F:	tools/include/linux/bits.h
-@@ -9065,9 +9065,10 @@ L:	linux-hardening@vger.kernel.org
- S:	Supported
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
- F:	include/linux/fortify-string.h
--F:	lib/fortify_kunit.c
--F:	lib/memcpy_kunit.c
- F:	lib/test_fortify/*
-+F:	lib/tests/fortify_kunit.c
-+F:	lib/tests/memcpy_kunit.c
-+F:	scripts/test_fortify.sh
- K:	\bunsafe_memcpy\b
- K:	\b__NO_FORTIFY\b
+diff --git a/fs/unicode/.kunitconfig b/fs/unicode/.kunitconfig
+new file mode 100644
+index 000000000000..62dd5c171f9c
+--- /dev/null
++++ b/fs/unicode/.kunitconfig
+@@ -0,0 +1,3 @@
++CONFIG_KUNIT=y
++CONFIG_UNICODE=y
++CONFIG_UNICODE_NORMALIZATION_KUNIT_TEST=y
+diff --git a/fs/unicode/Kconfig b/fs/unicode/Kconfig
+index da786a687fdc..4ad2c36550f1 100644
+--- a/fs/unicode/Kconfig
++++ b/fs/unicode/Kconfig
+@@ -10,6 +10,7 @@ config UNICODE
+ 	  be a separate loadable module that gets requested only when a file
+ 	  system actually use it.
  
-@@ -9755,9 +9756,9 @@ F:	include/linux/string.h
- F:	include/linux/string_choices.h
- F:	include/linux/string_helpers.h
- F:	lib/string.c
--F:	lib/string_kunit.c
- F:	lib/string_helpers.c
--F:	lib/string_helpers_kunit.c
-+F:	lib/tests/string_helpers_kunit.c
-+F:	lib/tests/string_kunit.c
- F:	scripts/coccinelle/api/string_choices.cocci
+-config UNICODE_NORMALIZATION_SELFTEST
++config UNICODE_NORMALIZATION_KUNIT_TEST
+ 	tristate "Test UTF-8 normalization support"
+-	depends on UNICODE
++	depends on UNICODE && KUNIT
++	default KUNIT_ALL_TESTS
+diff --git a/fs/unicode/Makefile b/fs/unicode/Makefile
+index e309afe2b2bb..37bbcbc628a1 100644
+--- a/fs/unicode/Makefile
++++ b/fs/unicode/Makefile
+@@ -4,7 +4,7 @@ ifneq ($(CONFIG_UNICODE),)
+ obj-y			+= unicode.o
+ endif
+ obj-$(CONFIG_UNICODE)	+= utf8data.o
+-obj-$(CONFIG_UNICODE_NORMALIZATION_SELFTEST) += utf8-selftest.o
++obj-$(CONFIG_UNICODE_NORMALIZATION_KUNIT_TEST) += utf8-selftest.o
  
- GENERIC UIO DRIVER FOR PCI DEVICES
-@@ -12985,7 +12986,7 @@ F:	Documentation/trace/kprobes.rst
- F:	include/asm-generic/kprobes.h
- F:	include/linux/kprobes.h
- F:	kernel/kprobes.c
--F:	lib/test_kprobes.c
-+F:	lib/tests/test_kprobes.c
- F:	samples/kprobes
+ unicode-y := utf8-norm.o utf8-core.o
  
- KS0108 LCD CONTROLLER DRIVER
-@@ -13315,7 +13316,7 @@ M:	Mark Brown <broonie@kernel.org>
- R:	Matti Vaittinen <mazziesaccount@gmail.com>
- F:	include/linux/linear_range.h
- F:	lib/linear_ranges.c
--F:	lib/test_linear_ranges.c
-+F:	lib/tests/test_linear_ranges.c
+diff --git a/fs/unicode/utf8-norm.c b/fs/unicode/utf8-norm.c
+index 768f8ab448b8..7b998c99c88d 100644
+--- a/fs/unicode/utf8-norm.c
++++ b/fs/unicode/utf8-norm.c
+@@ -586,7 +586,7 @@ int utf8byte(struct utf8cursor *u8c)
+ 	}
+ }
  
- LINUX FOR POWER MACINTOSH
- L:	linuxppc-dev@lists.ozlabs.org
-@@ -13443,7 +13444,7 @@ M:	David Gow <davidgow@google.com>
- L:	linux-kselftest@vger.kernel.org
- L:	kunit-dev@googlegroups.com
- S:	Maintained
--F:	lib/list-test.c
-+F:	lib/tests/list-test.c
+-#ifdef CONFIG_UNICODE_NORMALIZATION_SELFTEST_MODULE
++#if IS_MODULE(CONFIG_UNICODE_NORMALIZATION_KUNIT_TEST)
+ EXPORT_SYMBOL_GPL(utf8version_is_supported);
+ EXPORT_SYMBOL_GPL(utf8nlen);
+ EXPORT_SYMBOL_GPL(utf8ncursor);
+diff --git a/fs/unicode/utf8-selftest.c b/fs/unicode/utf8-selftest.c
+index 5ddaf27b21a6..9476ab012baa 100644
+--- a/fs/unicode/utf8-selftest.c
++++ b/fs/unicode/utf8-selftest.c
+@@ -1,35 +1,15 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Kernel module for testing utf-8 support.
++ * KUnit tests for utf-8 support.
+  *
+  * Copyright 2017 Collabora Ltd.
+  */
  
- LITEX PLATFORM
- M:	Karol Gugala <kgugala@antmicro.com>
-@@ -21732,7 +21733,7 @@ M:	Jason A. Donenfeld <Jason@zx2c4.com>
- S:	Maintained
- F:	include/linux/siphash.h
- F:	lib/siphash.c
--F:	lib/siphash_kunit.c
-+F:	lib/tests/siphash_kunit.c
- 
- SIS 190 ETHERNET DRIVER
- M:	Francois Romieu <romieu@fr.zoreil.com>
-diff --git a/lib/Makefile b/lib/Makefile
-index d5cfc7afbbb8..1e886482a6a3 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -52,9 +52,7 @@ obj-y += bcd.o sort.o parser.o debug_locks.o random32.o \
- 	 percpu-refcount.o rhashtable.o base64.o \
- 	 once.o refcount.o rcuref.o usercopy.o errseq.o bucket_locks.o \
- 	 generic-radix-tree.o bitmap-str.o
--obj-$(CONFIG_STRING_KUNIT_TEST) += string_kunit.o
- obj-y += string_helpers.o
--obj-$(CONFIG_STRING_HELPERS_KUNIT_TEST) += string_helpers_kunit.o
- obj-y += hexdump.o
- obj-$(CONFIG_TEST_HEXDUMP) += test_hexdump.o
- obj-y += kstrtox.o
-@@ -65,22 +63,17 @@ obj-$(CONFIG_TEST_DHRY) += test_dhry.o
- obj-$(CONFIG_TEST_FIRMWARE) += test_firmware.o
- obj-$(CONFIG_TEST_BITOPS) += test_bitops.o
- CFLAGS_test_bitops.o += -Werror
--obj-$(CONFIG_CPUMASK_KUNIT_TEST) += cpumask_kunit.o
- obj-$(CONFIG_TEST_SYSCTL) += test_sysctl.o
--obj-$(CONFIG_TEST_IOV_ITER) += kunit_iov_iter.o
--obj-$(CONFIG_HASH_KUNIT_TEST) += test_hash.o
- obj-$(CONFIG_TEST_IDA) += test_ida.o
- obj-$(CONFIG_TEST_UBSAN) += test_ubsan.o
- CFLAGS_test_ubsan.o += $(call cc-disable-warning, vla)
- CFLAGS_test_ubsan.o += $(call cc-disable-warning, unused-but-set-variable)
- UBSAN_SANITIZE_test_ubsan.o := y
- obj-$(CONFIG_TEST_KSTRTOX) += test-kstrtox.o
--obj-$(CONFIG_TEST_LIST_SORT) += test_list_sort.o
- obj-$(CONFIG_TEST_MIN_HEAP) += test_min_heap.o
- obj-$(CONFIG_TEST_LKM) += test_module.o
- obj-$(CONFIG_TEST_VMALLOC) += test_vmalloc.o
- obj-$(CONFIG_TEST_RHASHTABLE) += test_rhashtable.o
--obj-$(CONFIG_TEST_SORT) += test_sort.o
- obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_keys.o
- obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_key_base.o
- obj-$(CONFIG_TEST_DYNAMIC_DEBUG) += test_dynamic_debug.o
-@@ -98,7 +91,6 @@ obj-$(CONFIG_TEST_XARRAY) += test_xarray.o
- obj-$(CONFIG_TEST_MAPLE_TREE) += test_maple_tree.o
- obj-$(CONFIG_TEST_PARMAN) += test_parman.o
- obj-$(CONFIG_TEST_KMOD) += test_kmod.o
--obj-$(CONFIG_TEST_RUNTIME) += tests/
- obj-$(CONFIG_TEST_DEBUG_VIRTUAL) += test_debug_virtual.o
- obj-$(CONFIG_TEST_MEMCAT_P) += test_memcat_p.o
- obj-$(CONFIG_TEST_OBJAGG) += test_objagg.o
-@@ -107,10 +99,7 @@ obj-$(CONFIG_TEST_MEMINIT) += test_meminit.o
- obj-$(CONFIG_TEST_LOCKUP) += test_lockup.o
- obj-$(CONFIG_TEST_HMM) += test_hmm.o
- obj-$(CONFIG_TEST_FREE_PAGES) += test_free_pages.o
--obj-$(CONFIG_KPROBES_SANITY_TEST) += test_kprobes.o
- obj-$(CONFIG_TEST_REF_TRACKER) += test_ref_tracker.o
--CFLAGS_test_fprobe.o += $(CC_FLAGS_FTRACE)
--obj-$(CONFIG_FPROBE_SANITY_TEST) += test_fprobe.o
- obj-$(CONFIG_TEST_OBJPOOL) += test_objpool.o
- 
- obj-$(CONFIG_TEST_FPU) += test_fpu.o
-@@ -132,7 +121,7 @@ endif
- obj-$(CONFIG_DEBUG_INFO_REDUCED) += debug_info.o
- CFLAGS_debug_info.o += $(call cc-option, -femit-struct-debug-detailed=any)
- 
--obj-y += math/ crypto/
-+obj-y += math/ crypto/ tests/
- 
- obj-$(CONFIG_GENERIC_IOMAP) += iomap.o
- obj-$(CONFIG_HAS_IOMEM) += iomap_copy.o devres.o
-@@ -368,32 +357,6 @@ obj-$(CONFIG_OBJAGG) += objagg.o
- # pldmfw library
- obj-$(CONFIG_PLDMFW) += pldmfw/
- 
--# KUnit tests
--CFLAGS_bitfield_kunit.o := $(DISABLE_STRUCTLEAK_PLUGIN)
--obj-$(CONFIG_BITFIELD_KUNIT) += bitfield_kunit.o
--obj-$(CONFIG_CHECKSUM_KUNIT) += checksum_kunit.o
--obj-$(CONFIG_UTIL_MACROS_KUNIT) += util_macros_kunit.o
--obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
--obj-$(CONFIG_HASHTABLE_KUNIT_TEST) += hashtable_test.o
--obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
--obj-$(CONFIG_BITS_TEST) += test_bits.o
--obj-$(CONFIG_CMDLINE_KUNIT_TEST) += cmdline_kunit.o
--obj-$(CONFIG_SLUB_KUNIT_TEST) += slub_kunit.o
--obj-$(CONFIG_MEMCPY_KUNIT_TEST) += memcpy_kunit.o
--obj-$(CONFIG_IS_SIGNED_TYPE_KUNIT_TEST) += is_signed_type_kunit.o
--CFLAGS_overflow_kunit.o = $(call cc-disable-warning, tautological-constant-out-of-range-compare)
--obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += overflow_kunit.o
--CFLAGS_stackinit_kunit.o += $(call cc-disable-warning, switch-unreachable)
--obj-$(CONFIG_STACKINIT_KUNIT_TEST) += stackinit_kunit.o
--CFLAGS_fortify_kunit.o += $(call cc-disable-warning, unsequenced)
--CFLAGS_fortify_kunit.o += $(call cc-disable-warning, stringop-overread)
--CFLAGS_fortify_kunit.o += $(call cc-disable-warning, stringop-truncation)
--CFLAGS_fortify_kunit.o += $(DISABLE_STRUCTLEAK_PLUGIN)
--obj-$(CONFIG_FORTIFY_KUNIT_TEST) += fortify_kunit.o
--obj-$(CONFIG_CRC_KUNIT_TEST) += crc_kunit.o
--obj-$(CONFIG_SIPHASH_KUNIT_TEST) += siphash_kunit.o
--obj-$(CONFIG_USERCOPY_KUNIT_TEST) += usercopy_kunit.o
+-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 -
- obj-$(CONFIG_GENERIC_LIB_DEVMEM_IS_ALLOWED) += devmem_is_allowed.o
+-#include <linux/module.h>
+-#include <linux/printk.h>
+ #include <linux/unicode.h>
+-#include <linux/dcache.h>
++#include <kunit/test.h>
  
- obj-$(CONFIG_FIRMWARE_TABLE) += fw_table.o
-diff --git a/lib/tests/Makefile b/lib/tests/Makefile
-index 8e4f42cb9c54..c7b5170359c1 100644
---- a/lib/tests/Makefile
-+++ b/lib/tests/Makefile
-@@ -1 +1,41 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile for tests of kernel library functions.
+ #include "utf8n.h"
+ 
+-static unsigned int failed_tests;
+-static unsigned int total_tests;
+-
+-#define _test(cond, func, line, fmt, ...) do {				\
+-		total_tests++;						\
+-		if (!cond) {						\
+-			failed_tests++;					\
+-			pr_err("test %s:%d Failed: %s%s",		\
+-			       func, line, #cond, (fmt?":":"."));	\
+-			if (fmt)					\
+-				pr_err(fmt, ##__VA_ARGS__);		\
+-		}							\
+-	} while (0)
+-#define test_f(cond, fmt, ...) _test(cond, __func__, __LINE__, fmt, ##__VA_ARGS__)
+-#define test(cond) _test(cond, __func__, __LINE__, "")
+-
+ static const struct {
+ 	/* UTF-8 strings in this vector _must_ be NULL-terminated. */
+ 	unsigned char str[10];
+@@ -167,69 +147,74 @@ static int utf8cursor(struct utf8cursor *u8c, const struct unicode_map *um,
+ 	return utf8ncursor(u8c, um, n, s, (unsigned int)-1);
+ }
+ 
+-static void check_utf8_nfdi(struct unicode_map *um)
++static void check_utf8_nfdi(struct kunit *test)
+ {
+ 	int i;
+ 	struct utf8cursor u8c;
++	struct unicode_map *um = test->priv;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(nfdi_test_data); i++) {
+ 		int len = strlen(nfdi_test_data[i].str);
+ 		int nlen = strlen(nfdi_test_data[i].dec);
+ 		int j = 0;
+ 		unsigned char c;
++		int ret;
 +
-+# KUnit tests
-+CFLAGS_bitfield_kunit.o := $(DISABLE_STRUCTLEAK_PLUGIN)
-+obj-$(CONFIG_BITFIELD_KUNIT) += bitfield_kunit.o
-+obj-$(CONFIG_BITS_TEST) += test_bits.o
-+obj-$(CONFIG_CHECKSUM_KUNIT) += checksum_kunit.o
-+obj-$(CONFIG_CMDLINE_KUNIT_TEST) += cmdline_kunit.o
-+obj-$(CONFIG_CPUMASK_KUNIT_TEST) += cpumask_kunit.o
-+obj-$(CONFIG_CRC_KUNIT_TEST) += crc_kunit.o
-+CFLAGS_fortify_kunit.o += $(call cc-disable-warning, unsequenced)
-+CFLAGS_fortify_kunit.o += $(call cc-disable-warning, stringop-overread)
-+CFLAGS_fortify_kunit.o += $(call cc-disable-warning, stringop-truncation)
-+CFLAGS_fortify_kunit.o += $(DISABLE_STRUCTLEAK_PLUGIN)
-+obj-$(CONFIG_FORTIFY_KUNIT_TEST) += fortify_kunit.o
-+CFLAGS_test_fprobe.o += $(CC_FLAGS_FTRACE)
-+obj-$(CONFIG_FPROBE_SANITY_TEST) += test_fprobe.o
-+obj-$(CONFIG_HASHTABLE_KUNIT_TEST) += hashtable_test.o
-+obj-$(CONFIG_HASH_KUNIT_TEST) += test_hash.o
-+obj-$(CONFIG_TEST_IOV_ITER) += kunit_iov_iter.o
-+obj-$(CONFIG_IS_SIGNED_TYPE_KUNIT_TEST) += is_signed_type_kunit.o
-+obj-$(CONFIG_KPROBES_SANITY_TEST) += test_kprobes.o
-+obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
-+obj-$(CONFIG_TEST_LIST_SORT) += test_list_sort.o
-+obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
-+obj-$(CONFIG_MEMCPY_KUNIT_TEST) += memcpy_kunit.o
-+CFLAGS_overflow_kunit.o = $(call cc-disable-warning, tautological-constant-out-of-range-compare)
-+obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += overflow_kunit.o
-+obj-$(CONFIG_SIPHASH_KUNIT_TEST) += siphash_kunit.o
-+obj-$(CONFIG_SLUB_KUNIT_TEST) += slub_kunit.o
-+obj-$(CONFIG_TEST_SORT) += test_sort.o
-+CFLAGS_stackinit_kunit.o += $(call cc-disable-warning, switch-unreachable)
-+obj-$(CONFIG_STACKINIT_KUNIT_TEST) += stackinit_kunit.o
-+obj-$(CONFIG_STRING_KUNIT_TEST) += string_kunit.o
-+obj-$(CONFIG_STRING_HELPERS_KUNIT_TEST) += string_helpers_kunit.o
-+obj-$(CONFIG_USERCOPY_KUNIT_TEST) += usercopy_kunit.o
-+obj-$(CONFIG_UTIL_MACROS_KUNIT) += util_macros_kunit.o
++		KUNIT_EXPECT_EQ(test, utf8len(um, UTF8_NFDI, nfdi_test_data[i].str), nlen);
++		KUNIT_EXPECT_EQ(test, utf8nlen(um, UTF8_NFDI, nfdi_test_data[i].str, len),
++				nlen);
+ 
+-		test((utf8len(um, UTF8_NFDI, nfdi_test_data[i].str) == nlen));
+-		test((utf8nlen(um, UTF8_NFDI, nfdi_test_data[i].str, len) ==
+-			nlen));
+ 
+-		if (utf8cursor(&u8c, um, UTF8_NFDI, nfdi_test_data[i].str) < 0)
+-			pr_err("can't create cursor\n");
++		ret = utf8cursor(&u8c, um, UTF8_NFDI, nfdi_test_data[i].str);
++		KUNIT_EXPECT_TRUE_MSG(test, ret >= 0, "Can't create cursor\n");
+ 
+ 		while ((c = utf8byte(&u8c)) > 0) {
+-			test_f((c == nfdi_test_data[i].dec[j]),
+-			       "Unexpected byte 0x%x should be 0x%x\n",
+-			       c, nfdi_test_data[i].dec[j]);
++			KUNIT_EXPECT_EQ_MSG(test, c, nfdi_test_data[i].dec[j],
++					    "Unexpected byte 0x%x should be 0x%x\n",
++					    c, nfdi_test_data[i].dec[j]);
+ 			j++;
+ 		}
+ 
+-		test((j == nlen));
++		KUNIT_EXPECT_EQ(test, j, nlen);
+ 	}
+ }
+ 
+-static void check_utf8_nfdicf(struct unicode_map *um)
++static void check_utf8_nfdicf(struct kunit *test)
+ {
+ 	int i;
+ 	struct utf8cursor u8c;
++	struct unicode_map *um = test->priv;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(nfdicf_test_data); i++) {
+ 		int len = strlen(nfdicf_test_data[i].str);
+ 		int nlen = strlen(nfdicf_test_data[i].ncf);
+ 		int j = 0;
++		int ret;
+ 		unsigned char c;
+ 
+-		test((utf8len(um, UTF8_NFDICF, nfdicf_test_data[i].str) ==
+-				nlen));
+-		test((utf8nlen(um, UTF8_NFDICF, nfdicf_test_data[i].str, len) ==
+-				nlen));
++		KUNIT_EXPECT_EQ(test, utf8len(um, UTF8_NFDICF, nfdicf_test_data[i].str),
++				nlen);
++		KUNIT_EXPECT_EQ(test, utf8nlen(um, UTF8_NFDICF, nfdicf_test_data[i].str, len),
++				nlen);
+ 
+-		if (utf8cursor(&u8c, um, UTF8_NFDICF,
+-				nfdicf_test_data[i].str) < 0)
+-			pr_err("can't create cursor\n");
++		ret = utf8cursor(&u8c, um, UTF8_NFDICF, nfdicf_test_data[i].str);
++		KUNIT_EXPECT_TRUE_MSG(test, ret >= 0, "Can't create cursor\n");
+ 
+ 		while ((c = utf8byte(&u8c)) > 0) {
+-			test_f((c == nfdicf_test_data[i].ncf[j]),
+-			       "Unexpected byte 0x%x should be 0x%x\n",
+-			       c, nfdicf_test_data[i].ncf[j]);
++			KUNIT_EXPECT_EQ_MSG(test, c, nfdicf_test_data[i].ncf[j],
++					    "Unexpected byte 0x%x should be 0x%x\n",
++					    c, nfdicf_test_data[i].ncf[j]);
+ 			j++;
+ 		}
+ 
+-		test((j == nlen));
++		KUNIT_EXPECT_EQ(test, j, nlen);
+ 	}
+ }
+ 
+-static void check_utf8_comparisons(struct unicode_map *table)
++static void check_utf8_comparisons(struct kunit *test)
+ {
+ 	int i;
++	struct unicode_map *um = test->priv;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(nfdi_test_data); i++) {
+ 		const struct qstr s1 = {.name = nfdi_test_data[i].str,
+@@ -237,8 +222,9 @@ static void check_utf8_comparisons(struct unicode_map *table)
+ 		const struct qstr s2 = {.name = nfdi_test_data[i].dec,
+ 					.len = sizeof(nfdi_test_data[i].dec)};
+ 
+-		test_f(!utf8_strncmp(table, &s1, &s2),
+-		       "%s %s comparison mismatch\n", s1.name, s2.name);
++		/* strncmp returns 0 when strings are equal */
++		KUNIT_EXPECT_TRUE_MSG(test, utf8_strncmp(um, &s1, &s2) == 0,
++				    "%s %s comparison mismatch\n", s1.name, s2.name);
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(nfdicf_test_data); i++) {
+@@ -247,62 +233,65 @@ static void check_utf8_comparisons(struct unicode_map *table)
+ 		const struct qstr s2 = {.name = nfdicf_test_data[i].ncf,
+ 					.len = sizeof(nfdicf_test_data[i].ncf)};
+ 
+-		test_f(!utf8_strncasecmp(table, &s1, &s2),
+-		       "%s %s comparison mismatch\n", s1.name, s2.name);
++		/* strncasecmp returns 0 when strings are equal */
++		KUNIT_EXPECT_TRUE_MSG(test, utf8_strncasecmp(um, &s1, &s2) == 0,
++				    "%s %s comparison mismatch\n", s1.name, s2.name);
+ 	}
+ }
+ 
+-static void check_supported_versions(struct unicode_map *um)
++static void check_supported_versions(struct kunit *test)
+ {
++	struct unicode_map *um = test->priv;
+ 	/* Unicode 7.0.0 should be supported. */
+-	test(utf8version_is_supported(um, UNICODE_AGE(7, 0, 0)));
++	KUNIT_EXPECT_TRUE(test, utf8version_is_supported(um, UNICODE_AGE(7, 0, 0)));
+ 
+ 	/* Unicode 9.0.0 should be supported. */
+-	test(utf8version_is_supported(um, UNICODE_AGE(9, 0, 0)));
++	KUNIT_EXPECT_TRUE(test, utf8version_is_supported(um, UNICODE_AGE(9, 0, 0)));
+ 
+ 	/* Unicode 1x.0.0 (the latest version) should be supported. */
+-	test(utf8version_is_supported(um, UTF8_LATEST));
++	KUNIT_EXPECT_TRUE(test, utf8version_is_supported(um, UTF8_LATEST));
+ 
+ 	/* Next versions don't exist. */
+-	test(!utf8version_is_supported(um, UNICODE_AGE(13, 0, 0)));
+-	test(!utf8version_is_supported(um, UNICODE_AGE(0, 0, 0)));
+-	test(!utf8version_is_supported(um, UNICODE_AGE(-1, -1, -1)));
++	KUNIT_EXPECT_FALSE(test, utf8version_is_supported(um, UNICODE_AGE(13, 0, 0)));
++	KUNIT_EXPECT_FALSE(test, utf8version_is_supported(um, UNICODE_AGE(0, 0, 0)));
++	KUNIT_EXPECT_FALSE(test, utf8version_is_supported(um, UNICODE_AGE(-1, -1, -1)));
+ }
+ 
+-static int __init init_test_ucd(void)
++static struct kunit_case unicode_normalization_test_cases[] = {
++	KUNIT_CASE(check_supported_versions),
++	KUNIT_CASE(check_utf8_comparisons),
++	KUNIT_CASE(check_utf8_nfdicf),
++	KUNIT_CASE(check_utf8_nfdi),
++	{}
++};
 +
- obj-$(CONFIG_TEST_RUNTIME_MODULE)		+= module/
-diff --git a/lib/bitfield_kunit.c b/lib/tests/bitfield_kunit.c
-similarity index 100%
-rename from lib/bitfield_kunit.c
-rename to lib/tests/bitfield_kunit.c
-diff --git a/lib/checksum_kunit.c b/lib/tests/checksum_kunit.c
-similarity index 100%
-rename from lib/checksum_kunit.c
-rename to lib/tests/checksum_kunit.c
-diff --git a/lib/cmdline_kunit.c b/lib/tests/cmdline_kunit.c
-similarity index 100%
-rename from lib/cmdline_kunit.c
-rename to lib/tests/cmdline_kunit.c
-diff --git a/lib/cpumask_kunit.c b/lib/tests/cpumask_kunit.c
-similarity index 100%
-rename from lib/cpumask_kunit.c
-rename to lib/tests/cpumask_kunit.c
-diff --git a/lib/crc_kunit.c b/lib/tests/crc_kunit.c
-similarity index 100%
-rename from lib/crc_kunit.c
-rename to lib/tests/crc_kunit.c
-diff --git a/lib/fortify_kunit.c b/lib/tests/fortify_kunit.c
-similarity index 100%
-rename from lib/fortify_kunit.c
-rename to lib/tests/fortify_kunit.c
-diff --git a/lib/hashtable_test.c b/lib/tests/hashtable_test.c
-similarity index 100%
-rename from lib/hashtable_test.c
-rename to lib/tests/hashtable_test.c
-diff --git a/lib/is_signed_type_kunit.c b/lib/tests/is_signed_type_kunit.c
-similarity index 100%
-rename from lib/is_signed_type_kunit.c
-rename to lib/tests/is_signed_type_kunit.c
-diff --git a/lib/kunit_iov_iter.c b/lib/tests/kunit_iov_iter.c
-similarity index 100%
-rename from lib/kunit_iov_iter.c
-rename to lib/tests/kunit_iov_iter.c
-diff --git a/lib/list-test.c b/lib/tests/list-test.c
-similarity index 100%
-rename from lib/list-test.c
-rename to lib/tests/list-test.c
-diff --git a/lib/memcpy_kunit.c b/lib/tests/memcpy_kunit.c
-similarity index 100%
-rename from lib/memcpy_kunit.c
-rename to lib/tests/memcpy_kunit.c
-diff --git a/lib/overflow_kunit.c b/lib/tests/overflow_kunit.c
-similarity index 100%
-rename from lib/overflow_kunit.c
-rename to lib/tests/overflow_kunit.c
-diff --git a/lib/siphash_kunit.c b/lib/tests/siphash_kunit.c
-similarity index 100%
-rename from lib/siphash_kunit.c
-rename to lib/tests/siphash_kunit.c
-diff --git a/lib/slub_kunit.c b/lib/tests/slub_kunit.c
-similarity index 100%
-rename from lib/slub_kunit.c
-rename to lib/tests/slub_kunit.c
-diff --git a/lib/stackinit_kunit.c b/lib/tests/stackinit_kunit.c
-similarity index 100%
-rename from lib/stackinit_kunit.c
-rename to lib/tests/stackinit_kunit.c
-diff --git a/lib/string_helpers_kunit.c b/lib/tests/string_helpers_kunit.c
-similarity index 100%
-rename from lib/string_helpers_kunit.c
-rename to lib/tests/string_helpers_kunit.c
-diff --git a/lib/string_kunit.c b/lib/tests/string_kunit.c
-similarity index 100%
-rename from lib/string_kunit.c
-rename to lib/tests/string_kunit.c
-diff --git a/lib/test_bits.c b/lib/tests/test_bits.c
-similarity index 100%
-rename from lib/test_bits.c
-rename to lib/tests/test_bits.c
-diff --git a/lib/test_fprobe.c b/lib/tests/test_fprobe.c
-similarity index 100%
-rename from lib/test_fprobe.c
-rename to lib/tests/test_fprobe.c
-diff --git a/lib/test_hash.c b/lib/tests/test_hash.c
-similarity index 100%
-rename from lib/test_hash.c
-rename to lib/tests/test_hash.c
-diff --git a/lib/test_kprobes.c b/lib/tests/test_kprobes.c
-similarity index 100%
-rename from lib/test_kprobes.c
-rename to lib/tests/test_kprobes.c
-diff --git a/lib/test_linear_ranges.c b/lib/tests/test_linear_ranges.c
-similarity index 100%
-rename from lib/test_linear_ranges.c
-rename to lib/tests/test_linear_ranges.c
-diff --git a/lib/test_list_sort.c b/lib/tests/test_list_sort.c
-similarity index 100%
-rename from lib/test_list_sort.c
-rename to lib/tests/test_list_sort.c
-diff --git a/lib/test_sort.c b/lib/tests/test_sort.c
-similarity index 100%
-rename from lib/test_sort.c
-rename to lib/tests/test_sort.c
-diff --git a/lib/usercopy_kunit.c b/lib/tests/usercopy_kunit.c
-similarity index 100%
-rename from lib/usercopy_kunit.c
-rename to lib/tests/usercopy_kunit.c
-diff --git a/lib/util_macros_kunit.c b/lib/tests/util_macros_kunit.c
-similarity index 100%
-rename from lib/util_macros_kunit.c
-rename to lib/tests/util_macros_kunit.c
++static int init_test_ucd(struct kunit *test)
+ {
+-	struct unicode_map *um;
++	struct unicode_map *um = utf8_load(UTF8_LATEST);
+ 
+-	failed_tests = 0;
+-	total_tests = 0;
++	test->priv = um;
+ 
+-	um = utf8_load(UTF8_LATEST);
+-	if (IS_ERR(um)) {
+-		pr_err("%s: Unable to load utf8 table.\n", __func__);
+-		return PTR_ERR(um);
+-	}
++	KUNIT_EXPECT_EQ_MSG(test, IS_ERR(um), 0,
++			    "%s: Unable to load utf8 table.\n", __func__);
+ 
+-	check_supported_versions(um);
+-	check_utf8_nfdi(um);
+-	check_utf8_nfdicf(um);
+-	check_utf8_comparisons(um);
+-
+-	if (!failed_tests)
+-		pr_info("All %u tests passed\n", total_tests);
+-	else
+-		pr_err("%u out of %u tests failed\n", failed_tests,
+-		       total_tests);
+-	utf8_unload(um);
+ 	return 0;
+ }
+ 
+-static void __exit exit_test_ucd(void)
++static void exit_test_ucd(struct kunit *test)
+ {
++	utf8_unload(test->priv);
+ }
+ 
+-module_init(init_test_ucd);
+-module_exit(exit_test_ucd);
++static struct kunit_suite unicode_normalization_test_suite = {
++	.name = "unicode_normalization",
++	.test_cases = unicode_normalization_test_cases,
++	.init = init_test_ucd,
++	.exit = exit_test_ucd,
++};
++
++kunit_test_suite(unicode_normalization_test_suite);
++
+ 
+ MODULE_AUTHOR("Gabriel Krisman Bertazi <krisman@collabora.co.uk>");
+-MODULE_DESCRIPTION("Kernel module for testing utf-8 support");
++MODULE_DESCRIPTION("KUnit tests for utf-8 support.");
+ MODULE_LICENSE("GPL");
 -- 
 2.34.1
 
