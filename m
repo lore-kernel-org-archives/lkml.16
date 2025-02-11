@@ -1,103 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30C326217B;
-	Tue, 11 Feb 2025 18:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DF125A323
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 18:53:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739299919; cv=none; b=DHOzY1OaWoZuriMK/WrDzoqXDwAoD3ImOSLQoEZclxcCETtFpnIL6CQ0/2rEptGqv5Ee3T1EaHcSAltAT7j6Nf7NWosBuMN/43I8KdF3f6IBK6kVcgl2L/7UIU43uQ7egbxWlAB/4XdCQ8b6J10IiOPnFWyrCB1D/WNFdBvTNYA=
+	t=1739299995; cv=none; b=ph+qX2hPiIOmwifluFhnzkhh2iXAOMEvRrWwSqFMvwH7UG1NI15Xck6oNGfpUjar7bw52MmO5DHhfK8F2+CoXaquDsdVw05fAyHTqB/PgcXoUpW7Y2eu9DBdC83L3JKM8uVKh7iXuJ7OP/cK/fAtj8Pj2Xi7mwdsN/Dh8Yx3+l4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739299919; c=relaxed/simple;
-	bh=bxT1tWVjX3teQxTb0Yb7Jl+Lusk2wJeca1F1uRhrbgk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DBLBffVgVvfzzuSPFEjwBo0SwKuipfCDntD2tb6cGU1VkRVXLdQSWVo18LjDJ/4tvI/4mqIRqKuUNTNZ8XCMNbus0DTthEvhZLIFPjUkgvI5ur52CYQSVyMnApgSzzqIOsvgX4N2bQYgXDzUIV656wbLWA1gJHOcBlD597Dmdd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QBWl+d2A; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739299995; c=relaxed/simple;
+	bh=yYcU2JZAoQo0PdjybSDTkRZ6mPUenfDV1ftO6rPg5Uc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Ea9TPfgKBtrUHrnVnZJlJjX3MhzwzDayKhiq4JvA2Tao/mHOZtTu+TVf7zRzY7167imL5R6pvz9oPiJ2JW2/yoa7IJ3fSbc5V03FqaJNnwvrTSjjVRyojk2b5ZgpegEZTxjpvn723p/ybCy2tVRo3MWwGUOgFvQ1RJ2D4/eQ/I4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wVfmklPW; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QBWl+d2A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739299919; x=1770835919;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bxT1tWVjX3teQxTb0Yb7Jl+Lusk2wJeca1F1uRhrbgk=;
-  b=QBWl+d2Addz2EToTdMzks5ma8K3MaI7O/nTE4Of/jjJO/JW+0Of98+vE
-   Dv5GcQ1c/Y8DEo3JV1SGUTdW7gSWskzmPbzdilHouWM07VffZ8D8e+nlf
-   +gXIBiR3WMgrBKwMhUZrZYGAVgoyvqZfsHSVbt3IRD+DM5TcWYiY4A4wC
-   PaQiFwfIbMiSBCvxmcv4jxo1xhdE2LAqI2asEZbwI48QSlIT0z0W6pigm
-   LveK3wjpUFDVKIDuQqWdM88/sktJOEqLskc9AzAk+zddnWsym6w4sOyKH
-   /u7s2h7IaU/1goMMK2TF+ZGJqCMtu7YToUDFMqqmBKRaooDiA39L5P+gf
-   A==;
-X-CSE-ConnectionGUID: JRx/ZoB0SIuxBO4uLLpSIw==
-X-CSE-MsgGUID: p5y+IaaPQlOvuC89j00IFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="50919561"
-X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
-   d="scan'208";a="50919561"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 10:51:58 -0800
-X-CSE-ConnectionGUID: +SjOkiDnRwy402D5n7fMVQ==
-X-CSE-MsgGUID: jxbJMoCRTbGMqH6ahf8OcQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
-   d="scan'208";a="112812292"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 10:51:55 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1thvMO-0000000AbD4-1QDd;
-	Tue, 11 Feb 2025 20:51:52 +0200
-Date: Tue, 11 Feb 2025 20:51:52 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Kurt Borja <kuurtb@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 02/14] platform/x86: alienware-wmi: Add WMI Drivers
-Message-ID: <Z6ucSMw8oRJpaMHy@smile.fi.intel.com>
-References: <20250207154610.13675-1-kuurtb@gmail.com>
- <20250207154610.13675-3-kuurtb@gmail.com>
- <Z6t7IjcOFuAbztfn@black.fi.intel.com>
- <D7PSZ410LJW6.3VNZ4VU0H5VUC@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wVfmklPW"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21f61a983ddso146146205ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:53:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739299993; x=1739904793; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hSdXzw5i+XGLoyBoJnanrigNUDo0sEg9JmDuJ0DaxPQ=;
+        b=wVfmklPWmdKqL1wwIhnKrVwNMDsl8ft9pm3I3k5WtiVdqR1raSyrxwFcTtogrLTCWl
+         IZXbLBjggkMZ/2owg48P+BHLt5hAS6vcWE6q4s+3mMwOtBue6PzJUGbFCojkbcId9pl/
+         MrIqm49u17Jh27PIZuO66G3rLKFZH0Hr0wOPBj5jwZ8WSLBkAycysuegAZwX65rFtXVj
+         CPnkpIRc4Nl+k1NvOmIkUaKSEXXSGcOkGyyIxpAou1ahisovocJKRiM252/E+xDUo3oo
+         unrQxnMO4zqR0gTNwmnBxa/kaqjKMGmcpUi+QpyZOu6ZWZmLYWyjYzV8FMMefpEhZICI
+         lZhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739299993; x=1739904793;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hSdXzw5i+XGLoyBoJnanrigNUDo0sEg9JmDuJ0DaxPQ=;
+        b=Ss2iz4lPS8TSi0J8EFIfzYvPXjlJ5GLK5u0U6dNvsyiUYC3vkcgDTq9+sokijK59rQ
+         7KNMeZuPBl3hUZX6ykQc/rto1zlI1q6iyRosrtc1m+Y16BVTeUivlGozZ2Oa3yuHzEby
+         ehQ4GZZ88EYq/RwWEcgKer3x1Dcc00gx0AbNnqAsUV9osQxcY1b0yWsUgxejKYUTFz7c
+         FHt2bMtidZqZ45nobEeSXAhWV6PcCIcT5OLuO+t/SGrP+/GOa6u6cxnlJYzVKOaST5s2
+         42BHmTOa9xI/qcuk6f0HJKWwQ51OK64SpujmJfneOCMj5l/IV+TZ/vGRKqyAuJDvKjsO
+         n3tw==
+X-Forwarded-Encrypted: i=1; AJvYcCU9JXbkPVOZQfVEdYrkQ3ydD4GCibkGXmWEk7cj5bgAEZ+VAy7kmmfowZ3K0hmDpYmveJ4GJ7n8K9O7ro8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPx9W4XWEJYNH/CIDXLSSeBvNtRa/mtKyratcBeDPlTVfTbFY6
+	DGrNK+NWNWaXyuqM516Ykh9OfZ/9ohSJCCzkKx60XzN4BrPG/FjY8uW9h7JUkCKHbjmM7aAs1Ye
+	SZA==
+X-Google-Smtp-Source: AGHT+IFX8Gb8h6J+XoaDUIOL0BfhgtQAHFbQcWrM3kh7lUuCjN0+4w5jTeoVicZi2AD+wRaXv1IpPGRPdQY=
+X-Received: from pgc1.prod.google.com ([2002:a05:6a02:2f81:b0:ad8:6337:811d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:7314:b0:1ed:7540:45d5
+ with SMTP id adf61e73a8af0-1ee5c74ccf3mr617940637.17.1739299992823; Tue, 11
+ Feb 2025 10:53:12 -0800 (PST)
+Date: Tue, 11 Feb 2025 10:53:11 -0800
+In-Reply-To: <20241127172654.1024-2-kalyazin@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D7PSZ410LJW6.3VNZ4VU0H5VUC@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Mime-Version: 1.0
+References: <20241127172654.1024-1-kalyazin@amazon.com> <20241127172654.1024-2-kalyazin@amazon.com>
+Message-ID: <Z6ucl7U79RuBsYJt@google.com>
+Subject: Re: [PATCH 1/2] KVM: x86: async_pf: remove support for KVM_ASYNC_PF_SEND_ALWAYS
+From: Sean Christopherson <seanjc@google.com>
+To: Nikita Kalyazin <kalyazin@amazon.com>
+Cc: pbonzini@redhat.com, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	vkuznets@redhat.com, xiaoyao.li@intel.com, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, roypat@amazon.co.uk, 
+	xmarcalx@amazon.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Feb 11, 2025 at 12:46:40PM -0500, Kurt Borja wrote:
-> On Tue Feb 11, 2025 at 11:30 AM -05, Andy Shevchenko wrote:
-> > On Fri, Feb 07, 2025 at 10:45:58AM -0500, Kurt Borja wrote:
+On Wed, Nov 27, 2024, Nikita Kalyazin wrote:
+> 3a7c8fafd1b42adea229fd204132f6a2fb3cd2d9 ("x86/kvm: Restrict
+> ASYNC_PF to user space") stopped setting KVM_ASYNC_PF_SEND_ALWAYS in
+> Linux guests.  While the flag can still be used by legacy guests, the
+> mechanism is best effort so KVM is not obliged to use it.
 
-...
+What's the actual motivation to remove it from KVM?  I agreed KVM isn't required
+to honor KVM_ASYNC_PF_SEND_ALWAYS from a guest/host ABI perspective, but that
+doesn't mean that dropping a feature has no impact.  E.g. it's entirely possible
+removing this support could negatively affect a workload running on an old kernel.
 
-> >> +static int __init alienware_wmax_wmi_init(void)
-> >> +{
-> >> +	return wmi_driver_register(&alienware_wmax_wmi_driver);
-> >> +}
-> >> +
-> >> +static void __exit alienware_wmax_wmi_exit(void)
-> >> +{
-> >> +	wmi_driver_unregister(&alienware_wmax_wmi_driver);
-> >> +}
-> >
-> > I believe we have module_wmi_driver() which can be used after the split
-> > (haven't checked those patches yet).
-> 
-> This module has two WMI drivers, so I believe this can't be used.
+Looking back at the discussion[*] where Vitaly made this suggestion, I don't see
+anything that justifies dropping this code.  It costs KVM practically nothing to
+maintain this code.
 
-Even after the split?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+[*] https://lore.kernel.org/all/20241118130403.23184-1-kalyazin@amazon.com
