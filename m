@@ -1,299 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752E8253B61;
-	Tue, 11 Feb 2025 17:28:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1892E26216B
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 17:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739294899; cv=none; b=A/PnUN+qY59AEdKkJUce5kX1YhpBMFdmvVudROo+9DBPtFPBbD9nj1B7s88p9L5fkVm6Va+iAArnaHPlf3Uk2ifvnm3YMP/cUZAHvP3a9MJMsMLbfNJGw/Lo/WCU4g/6UZzpw1x6uEmm6BV3DKmQhfD2l0tseQAbPfZaJMs3WDs=
+	t=1739294908; cv=none; b=goVPRje9rpSA4Kpa38sziCLuqqB9kgub3HMQmRpnQSAhZ+9A3eS4jF1zIp7XwFJCPDxVEXjsbcR/0oJBl2wZvuEvg2gSW8MRCVIUdineEtfdYCGfd1lFyr3JN8BFlXhekrHiz/aC9cihCQUTpJf1tNZvEaBEUFlFiGL4gvjMA14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739294899; c=relaxed/simple;
-	bh=LD/O1EBHcgMEITUbuApU66HPZd2hSaN6Qz+lpvhgYLk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sHG6GxyPkEtghFaF2nhLWKG/EnLPYfrCnT1TMl28lrbIKlGL94GG1h2pGo1G8PyuD+cc8w69EE/HhLaeCcsa/EM/Y/539SaYWX4U5zeTNMGJzwmkS6BF5ethdl69QlfRpyCksH2r1torTcSZISz+qEwyFyQs0L39odRRXvMM5yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=meqzADNx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739294908; c=relaxed/simple;
+	bh=a5cIVDB/XqIyZLdjQfX2dKjmeJTuroJeXtpvtv2BIfo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kYJ7mzbnaWioVCZdtEju3e02duFZjdxDEnuPM5bamDSGVZcKR3DM6BE+IhOZTfBmcC8yyrs2pGJLRrV3mjgl22Ra6y1DL09Ei+JftlXzbNO71s5XEkeU2wlfwI6EusmmmRvbonSLAaYLZ+b9rlD04e3C8kxIS9Mv3ZwAVnREGvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=JqFhPF+Y; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="meqzADNx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08833C4CEDD;
-	Tue, 11 Feb 2025 17:28:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739294898;
-	bh=LD/O1EBHcgMEITUbuApU66HPZd2hSaN6Qz+lpvhgYLk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=meqzADNxPyy8lDrn5qHUVqcRkkz99t3Vk0zXCnSBCgpLq011eZ/z/SGkvFSSCu34C
-	 WbsSKgXWHsgj3xRbkQq3Q5TTPxoinT+5CkjT2v3gHoWCtWP9EoI7fOsYXMPELm7Qz3
-	 nFlynvCmFqFHwzc2PKQQeoyb6J2BAByPGvl4TTbMUEa0nZyuavi6Zp8AzcV8p65CfW
-	 UdGiLhenehDi4+QkNAKjyBmXgUcsQ05mKGaCAPkyp+zy2aU3W0XPGWiQxhfsUImREB
-	 t5sRluJ0A5zrRkuEiiaSzwa6Jwaw+J8oejSbQTEEmzdF7TFTgDNN+AjsmF9QIllesY
-	 GNXnvTKyNStxg==
-Date: Tue, 11 Feb 2025 18:28:15 +0100
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v14 04/10] perf record --off-cpu: Dump off-cpu samples in
- BPF
-Message-ID: <Z6uIr8cRZBllFKt4@x1>
-References: <20241215181220.754822-1-howardchu95@gmail.com>
- <20241215181220.754822-5-howardchu95@gmail.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="JqFhPF+Y"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-38dcb97e8a3so3738221f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:28:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739294904; x=1739899704; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XGuymloIkb07DBUsJm0q376VtiZsOgNoZNsnmfiTCVw=;
+        b=JqFhPF+YTp9EKbAI0fLE7o+zo0Msj8mJ27PsaU7Btwn7Jzs0SDConc4d1c/wtt/IWW
+         Kq4Kj6oUfQeQQuleQ3/b8+PSpRL07Cvfn9j+c6YtqAaOVqn7CQFw31pRuj+BZcX3sgLC
+         3PdBMkrkEnCVvNmEtCj1mZz9IqoMLr4c1dT9/ZayUJzSy7ePILtWc1V1D/sfDHFLPtgt
+         FBGLQjY96Vw+I1GYcMTsz2C9vxBqXYnkUcZHO+vvF+C39iqok0DEpUrXoVHWjsw8hGzT
+         kVBcPWZ9qci6b2G+Vov2M9p7+pCP5bmsTZGWwia9LDuGitD3uBf33TCfmo6C3/FTJvyX
+         kg9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739294904; x=1739899704;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XGuymloIkb07DBUsJm0q376VtiZsOgNoZNsnmfiTCVw=;
+        b=NYIOK/wmwJZooGgCA/XYrTJGVmNY+rykMIMBzy/cdFapaiQ61cEzYhKxjXGTLKOovc
+         m1m/RSy54P4vLOLj2ozOAl+wsVyKPBizrQa4YQltpYwtpTzj9DzWtLzWcylTlJ7CUdqT
+         fqai4tDYym+xtiylHoGfiVjh7owhC98Nj6imCMSfHSORtypgr09p4ZhtZKg1um/D48aD
+         jg5TfMwPy2iWD3hI0OQAD0EAPRrDJ2rTYhU4vkdimwu6ukCQxw5QuQQkhDuoxecVZIEV
+         f/oqLCtwgRGSwbaDdrBiqSb3u0wataEfppXgRn+9iqi4tdrq3ihed9a98i2zHMVeImdu
+         syyw==
+X-Forwarded-Encrypted: i=1; AJvYcCW9dJPmnkd3ZSckiv7qtnFJUU0GLHEcgAEkYXRFtPSsxH98UvT565V+CtmNIFH5y0/TP67mvC3ufqJAFhE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNS0YYckHqFnXCzaWXMYvzbyrS8ExrAOkgOXAebtwBGc6LalVz
+	20iF5si2JvYUxi7FLmKMp5V6plkgBebhU7a97J0ZHY0GvNkVnscG4f8CkjD3xtw=
+X-Gm-Gg: ASbGncsq8SKY1ZRKDResjUQCH1GllWq3wLzA3oAiw8qvjrU0X9Xa6I8zIrqFi5XX+Eg
+	hSV+hbtwb/LQ03viucGWMjQvzBAGSz18/VCreXy5WpHKIAYcZwAP/ZNxFUwwcyaljpRz2MLF36q
+	Gv7Cme1HkglTSgONo23i6gbIs5/XoGBJ5RRWYAWVzanY9CTzpuIfNLfTQ9agjuWSEK1eOm9zItQ
+	bwKywceWGmGRiP/4MPBPw2VvXIDSnkwpQDjvgjBqW+Id9ozs5jL42zjTaBefdW3zGuJeo2xBgJd
+	+rGDQCSukNaIT869qg==
+X-Google-Smtp-Source: AGHT+IEnLhYUowYHE0yKYJiPhnWPf3ZeYK7gEVcdnt/kejC8y5qrfPO/D7z6hU8xWCz/RTS9lenTeg==
+X-Received: by 2002:a5d:6d8d:0:b0:38d:dac3:482f with SMTP id ffacd0b85a97d-38ddac34a13mr9552027f8f.20.1739294904276;
+        Tue, 11 Feb 2025 09:28:24 -0800 (PST)
+Received: from toaster.lan ([2a01:e0a:3c5:5fb1:fc0c:6c04:7ae0:c5c2])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-38dc6c80df2sm13691082f8f.18.2025.02.11.09.28.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 09:28:23 -0800 (PST)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Douglas Anderson <dianders@chromium.org>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	=?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Abel Vesa <abelvesa@kernel.org>,
+	Peng Fan <peng.fan@nxp.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org
+Subject: [PATCH v3 0/7] driver core: auxiliary bus: add device creation helper
+Date: Tue, 11 Feb 2025 18:27:56 +0100
+Message-ID: <20250211-aux-device-create-helper-v3-0-7edb50524909@baylibre.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+X-Change-ID: 20241210-aux-device-create-helper-93141524e523
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2783; i=jbrunet@baylibre.com;
+ h=from:subject:message-id; bh=a5cIVDB/XqIyZLdjQfX2dKjmeJTuroJeXtpvtv2BIfo=;
+ b=owEBbQKS/ZANAwAKAeb8Dxw38tqFAcsmYgBnq4g1Pe4IH0OZxqD2nUyrcAQNxBIXu0/k/eK1P
+ eeZU0tDtUuJAjMEAAEKAB0WIQT04VmuGPP1bV8btxvm/A8cN/LahQUCZ6uINQAKCRDm/A8cN/La
+ hTwuEAC0yRgoF5+sh3729QlMMArb49bUXPCcRfPXuGX9LfhICUU4rDzmeyhZ73ixiud2HTj/cU+
+ CD1JkxcQMgGt91XivcxSZaa/O8J0yiPY7XsyumB7lZztf3UOMsCyUYTcKtXq5nqIs4XCbEhpJBv
+ wWROK3l7aHwYaq86foxHXPKLBnOdGvO9tG4Cd9dFUqvfkunsU8f1EiHoxbmp+8AixeZ8JpI2h4m
+ RjfqKlyTgw1YwDSy8gvB5ZPIPfJVWyTKmC1Scwl9vPX/7HwArcDqpjHRlq9wCWsX1X+dYHwP114
+ skbcxvzytfFkqEWc/m9N/YUNN2dmQQm9p2R1+J86uloEWI4o5KzhTYOpepjT2AkP1fIujSUKYHZ
+ /rh/PrI+zpIhqvRdlvWTgCLIc/16EpKDNCBjZm6Uvr97KnbucwB0DCt3VCIVrzNe0IS/YeK6OhJ
+ lildtlGnvUpl2dz96XT3fC5LwwQchqy+/WWifjqotaNI+P2EF+piohEbV+BE1YCqkl75qvhErq5
+ jYQ83+S4Fv3kZTw+9RDwCRDGX4prBwuMRTKuurwvRjXy3rrJdHr0VSfiRqXP+ZsEqCTGpkiLz/9
+ aR1gap1Zu3kcgRpqyt4RTF3xD8Ji6TpRGWpayTg2eFIl/D+xovgQKgGFBvkXIlBF5K3AjkP5YO/ 5n/HysQTp88OoaA==
+X-Developer-Key: i=jbrunet@baylibre.com; a=openpgp; fpr=F29F26CF27BAE1A9719AE6BDC3C92AAF3E60AED9
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241215181220.754822-5-howardchu95@gmail.com>
 
-On Sun, Dec 15, 2024 at 10:12:14AM -0800, Howard Chu wrote:
-> Collect tid, period, callchain, and cgroup id and dump them when off-cpu
-> time threshold is reached.
-> 
-> We don't collect the off-cpu time twice (the delta), it's either in
-> direct samples, or accumulated samples that are dumped at the end of
-> perf.data.
-> 
-> Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Link: https://lore.kernel.org/r/20241108204137.2444151-6-howardchu95@gmail.com
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/util/bpf_skel/off_cpu.bpf.c | 88 ++++++++++++++++++++++++--
->  1 file changed, 83 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> index 1cdd4d63ea92..77fdc9e81db3 100644
-> --- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> @@ -19,11 +19,17 @@
->  #define MAX_ENTRIES  102400
->  
->  #define MAX_CPUS  4096
-> +#define MAX_OFFCPU_LEN 37
-> +
-> +struct stack {
-> +	u64 array[MAX_STACKS];
-> +};
+The suggestion for this change was initially discussed here: [1]
 
-So I needed to rename the above as it fails 'make -C tools/perf
-build-test', the direct make command line to hit that:
+This patchset adds and use a helper to create a simple auxiliary device.
+The goal is to remove boilerplate code that tends to get repeated for
+simple cases.
 
-⬢ [acme@toolbox perf-tools-next]$ rm -rf /tmp/build/$(basename $PWD)/ ; mkdir -p /tmp/build/$(basename $PWD)/  
-⬢ [acme@toolbox perf-tools-next]$ alias m='rm -rf ~/libexec/perf-core/ ; make -k GEN_VMLINUX_H=1 CORESIGHT=1 O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin && perf test python && cat /tmp/build/perf-tools-next/feature/test-all.output'
-⬢ [acme@toolbox perf-tools-next]$ m 
-  GENSKEL /tmp/build/perf-tools-next/util/bpf_skel/sample_filter.skel.h
-util/bpf_skel/off_cpu.bpf.c:24:8: error: redefinition of 'stack'
-   24 | struct stack {
-      |        ^
-/tmp/build/perf-tools-next/util/bpf_skel/.tmp/../vmlinux.h:128096:8: note: previous definition is here
- 128096 | struct stack {
-        |        ^
-util/bpf_skel/off_cpu.bpf.c:218:42: error: no member named 'array' in 'struct stack'
-  218 |         for (int i = 0; i < MAX_STACKS && from->array[i]; ++i, ++len)
-      |                                           ~~~~  ^
-util/bpf_skel/off_cpu.bpf.c:219:32: error: no member named 'array' in 'struct stack'
-  219 |                 to->array[n + 2 + i] = from->array[i];
-      |                                        ~~~~  ^
-3 errors generated.
-make[2]: *** [Makefile.perf:1276: /tmp/build/perf-tools-next/util/bpf_skel/.tmp/off_cpu.bpf.o] Error 1
+Only the last change was tested on actual HW. The other usage of the helper
+have only been compile tested with x64_64 allmodconfig. There are many other
+simple cases of auxiliary device creation but those tend to use the
+'container_of' trick to allocate the auxiliary device. It is possible to
+convert these drivers to use the provided helper but the conversion is
+slightly more complex.
 
-So for now I'm adding the patch below to get it going.
+[1]: https://lore.kernel.org/linux-clk/df0a53ee859e450d84e81547099f5f36.sboyd@kernel.org
 
-IIRC there was some discussion about ditching GEN_VMLINUX_H=1, we can
-remove this hack later if/when we progress on that.
+Changes in v3:
+- Implement Ira's suggestion to use KBUILD_MODNAME by default, same as
+  auxiliary_driver_register()
+- Link to v2: https://lore.kernel.org/r/20250206-aux-device-create-helper-v2-0-fa6a0f326527@baylibre.com
 
-- Arnaldo
+Changes in v2:
+- Add usage examples, as requested.
+- Add 'id' as function parameter:  Adding the example usage showed that
+  handling IDA allocation was not appropriate and making the usage more
+  complex for simple use case.
+- Also add 'modname' as parameter: Most driver have been using
+  KBUILD_MODNAME and this actually rarely align with the driver name.
+- Link to v1: https://lore.kernel.org/r/20241210-aux-device-create-helper-v1-1-5887f4d89308@baylibre.com
 
-diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-index 77fdc9e81db395d1..848a123e5610f17b 100644
---- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
-+++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-@@ -21,7 +21,8 @@
- #define MAX_CPUS  4096
- #define MAX_OFFCPU_LEN 37
- 
--struct stack {
-+// We have a 'struct stack' in vmlinux.h when building with GEN_VMLINUX_H=1
-+struct __stack {
- 	u64 array[MAX_STACKS];
- };
- 
-@@ -29,7 +30,7 @@ struct tstamp_data {
- 	__u32 stack_id;
- 	__u32 state;
- 	__u64 timestamp;
--	struct stack stack;
-+	struct __stack stack;
- };
- 
- struct offcpu_key {
-@@ -211,7 +212,7 @@ static inline int can_record(struct task_struct *t, int state)
- 	return 1;
- }
- 
--static inline int copy_stack(struct stack *from, struct offcpu_data *to, int n)
-+static inline int copy_stack(struct __stack *from, struct offcpu_data *to, int n)
- {
- 	int len = 0;
- 
-@@ -231,7 +232,7 @@ static inline int copy_stack(struct stack *from, struct offcpu_data *to, int n)
-  * information of the task, and dump it as a raw sample to perf ring buffer
-  */
- static int off_cpu_dump(void *ctx, struct offcpu_data *data, struct offcpu_key *key,
--			struct stack *stack, __u64 delta)
-+			struct __stack *stack, __u64 delta)
- {
- 	int n = 0, len = 0;
- 
-  
->  struct tstamp_data {
->  	__u32 stack_id;
->  	__u32 state;
->  	__u64 timestamp;
-> +	struct stack stack;
->  };
->  
->  struct offcpu_key {
-> @@ -41,6 +47,10 @@ struct {
->  	__uint(max_entries, MAX_ENTRIES);
->  } stacks SEC(".maps");
->  
-> +struct offcpu_data {
-> +	u64 array[MAX_OFFCPU_LEN];
-> +};
-> +
->  struct {
->  	__uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
->  	__uint(key_size, sizeof(__u32));
-> @@ -48,6 +58,13 @@ struct {
->  	__uint(max_entries, MAX_CPUS);
->  } offcpu_output SEC(".maps");
->  
-> +struct {
-> +	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
-> +	__uint(key_size, sizeof(__u32));
-> +	__uint(value_size, sizeof(struct offcpu_data));
-> +	__uint(max_entries, 1);
-> +} offcpu_payload SEC(".maps");
-> +
->  struct {
->  	__uint(type, BPF_MAP_TYPE_TASK_STORAGE);
->  	__uint(map_flags, BPF_F_NO_PREALLOC);
-> @@ -106,6 +123,8 @@ const volatile bool uses_cgroup_v1 = false;
->  
->  int perf_subsys_id = -1;
->  
-> +__u64 offcpu_thresh_ns = 500000000ull;
-> +
->  /*
->   * Old kernel used to call it task_struct->state and now it's '__state'.
->   * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
-> @@ -192,6 +211,47 @@ static inline int can_record(struct task_struct *t, int state)
->  	return 1;
->  }
->  
-> +static inline int copy_stack(struct stack *from, struct offcpu_data *to, int n)
-> +{
-> +	int len = 0;
-> +
-> +	for (int i = 0; i < MAX_STACKS && from->array[i]; ++i, ++len)
-> +		to->array[n + 2 + i] = from->array[i];
-> +
-> +	return len;
-> +}
-> +
-> +/**
-> + * off_cpu_dump - dump off-cpu samples to ring buffer
-> + * @data: payload for dumping off-cpu samples
-> + * @key: off-cpu data
-> + * @stack: stack trace of the task before being scheduled out
-> + *
-> + * If the threshold of off-cpu time is reached, acquire tid, period, callchain, and cgroup id
-> + * information of the task, and dump it as a raw sample to perf ring buffer
-> + */
-> +static int off_cpu_dump(void *ctx, struct offcpu_data *data, struct offcpu_key *key,
-> +			struct stack *stack, __u64 delta)
-> +{
-> +	int n = 0, len = 0;
-> +
-> +	data->array[n++] = (u64)key->tgid << 32 | key->pid;
-> +	data->array[n++] = delta;
-> +
-> +	/* data->array[n] is callchain->nr (updated later) */
-> +	data->array[n + 1] = PERF_CONTEXT_USER;
-> +	data->array[n + 2] = 0;
-> +	len = copy_stack(stack, data, n);
-> +
-> +	/* update length of callchain */
-> +	data->array[n] = len + 1;
-> +	n += len + 2;
-> +
-> +	data->array[n++] = key->cgroup_id;
-> +
-> +	return bpf_perf_event_output(ctx, &offcpu_output, BPF_F_CURRENT_CPU, data, n * sizeof(u64));
-> +}
-> +
->  static int off_cpu_stat(u64 *ctx, struct task_struct *prev,
->  			struct task_struct *next, int state)
->  {
-> @@ -216,6 +276,16 @@ static int off_cpu_stat(u64 *ctx, struct task_struct *prev,
->  	pelem->state = state;
->  	pelem->stack_id = stack_id;
->  
-> +	/*
-> +	 * If stacks are successfully collected by bpf_get_stackid(), collect them once more
-> +	 * in task_storage for direct off-cpu sample dumping
-> +	 */
-> +	if (stack_id > 0 && bpf_get_stack(ctx, &pelem->stack, MAX_STACKS * sizeof(u64), BPF_F_USER_STACK)) {
-> +		/*
-> +		 * This empty if block is used to avoid 'result unused warning' from bpf_get_stack().
-> +		 * If the collection fails, continue with the logic for the next task.
-> +		 */
-> +	}
->  next:
->  	pelem = bpf_task_storage_get(&tstamp, next, NULL, 0);
->  
-> @@ -230,11 +300,19 @@ static int off_cpu_stat(u64 *ctx, struct task_struct *prev,
->  		__u64 delta = ts - pelem->timestamp;
->  		__u64 *total;
->  
-> -		total = bpf_map_lookup_elem(&off_cpu, &key);
-> -		if (total)
-> -			*total += delta;
-> -		else
-> -			bpf_map_update_elem(&off_cpu, &key, &delta, BPF_ANY);
-> +		if (delta >= offcpu_thresh_ns) {
-> +			int zero = 0;
-> +			struct offcpu_data *data = bpf_map_lookup_elem(&offcpu_payload, &zero);
-> +
-> +			if (data)
-> +				off_cpu_dump(ctx, data, &key, &pelem->stack, delta);
-> +		} else {
-> +			total = bpf_map_lookup_elem(&off_cpu, &key);
-> +			if (total)
-> +				*total += delta;
-> +			else
-> +				bpf_map_update_elem(&off_cpu, &key, &delta, BPF_ANY);
-> +		}
->  
->  		/* prevent to reuse the timestamp later */
->  		pelem->timestamp = 0;
-> -- 
-> 2.43.0
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+Jerome Brunet (7):
+      driver core: auxiliary bus: add device creation helpers
+      reset: mpfs: use the auxiliary device creation helper
+      drm/bridge: ti-sn65dsi86: use the auxiliary device creation helper
+      platform: arm64: lenovo-yoga-c630: use the auxiliary device creation helper
+      clk: eyeq: use the auxiliary device creation helper
+      clk: clk-imx8mp-audiomix: use the auxiliary device creation helper
+      clk: amlogic: axg-audio: use the auxiliary reset driver - take 2
+
+ drivers/base/auxiliary.c                  |  88 +++++++++++++++++++++++
+ drivers/clk/clk-eyeq.c                    |  57 ++++-----------
+ drivers/clk/imx/clk-imx8mp-audiomix.c     |  56 ++-------------
+ drivers/clk/meson/Kconfig                 |   2 +-
+ drivers/clk/meson/axg-audio.c             | 114 ++++--------------------------
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c     |  84 ++++++----------------
+ drivers/platform/arm64/lenovo-yoga-c630.c |  42 ++---------
+ drivers/reset/reset-mpfs.c                |  52 +-------------
+ include/linux/auxiliary_bus.h             |  10 +++
+ 9 files changed, 157 insertions(+), 348 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20241210-aux-device-create-helper-93141524e523
+
+Best regards,
+-- 
+Jerome
+
