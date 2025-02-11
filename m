@@ -1,50 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7811E990A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749331E9B3D;
 	Tue, 11 Feb 2025 06:23:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739254995; cv=none; b=F7BYt4fEsMAKm6eNYP9jPrZdPOagTXcy/QJF65XISqrfKlIUZ2PSwCs1Db14e0Hkyp/zbAguNp9UJEBOjN6dlaK0S/NQYrSgP6zku4+4yGX9TWNWBkfGuCOZWj3qlBursp9SPJGdDj6IrsuirQT32VpCkiMC+pXq98vdRbtmFfA=
+	t=1739254995; cv=none; b=Duw1G+5s/AVRRbxoEmh4pl6zEP0ktQjEhFRIsUnXgMT0KU06iSWAdkRfU2DQHicbaz2muC3yo7AsIv0Pxd57rEN5ZGZN6YRa+uPyUexjLsePFoBa1DYnHENIMZwvAZfEGwE0bwclkUCH0Lw+7cRxSb4pY3hPggvpO+FABxRg+qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739254995; c=relaxed/simple;
-	bh=mcoeXqisQ9cCp+d9XJhL6+xR7Bjlo3DbBhHTGHu6E1M=;
+	bh=QXk/JHBxUK/Ths9qSQMqY9AnKVsl6SgMJq6d9H2BT/U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nNLE44K8NbCdjcdNnLt9h15Bz4A1eQ4sKTBxfZRuoYiqHs/nmDFVFNAuFdksYIowhIxiIy6Yu5Z+Uj9g8VNqSlOPEfdTxMBwuG0/qB4Mr7TQTukL/EZfioqkd7TnrsvjoyGH5KuuU64KIBPMc654MJgCh9wEZSXCD9y1gyWtMPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sVN5nM0t; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YflDUGS+ILXCbJ7uWZCwtY8eEmEvOStCDydZL5Bp4w0mlh16khkw3MdwAmhSmRt0AAGvNE9zS+SdUsjZ/HVbpgtPrLe4b2QHE9eh59wlcUr+EJSmE3MPMGL7YfHu06HShTOx7avuJoj0OAU8LyLFlVozuduUzjpRmP8fff6dXYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KOUv8xbi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sVN5nM0t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7668C4CEEC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KOUv8xbi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94BA6C4AF09;
 	Tue, 11 Feb 2025 06:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1739254994;
-	bh=mcoeXqisQ9cCp+d9XJhL6+xR7Bjlo3DbBhHTGHu6E1M=;
+	bh=QXk/JHBxUK/Ths9qSQMqY9AnKVsl6SgMJq6d9H2BT/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sVN5nM0tdhhy/eqByyC8XuNz3jFo4Gp+LWSGqFAzvzn93ltbUAis/axNGLDYhLCLP
-	 Nx7PcgBa7tXmIS4bC7MZp+jyAzj79R33cbLDxxsRxQ3KWuN5to3sU8dIuZWajsxuQa
-	 pbUfRU1uSbr3tN6Ozl7U8glhoKpLHOKJlCBek50XSwrqR9kB9J9CW4HOEdBAnwgYBX
-	 b1CBjgywTTR9/QQC5jzmgyEsksAz6Cs+8sv+My6iwWqUoHxq7/Brd4IH1CE7U52xrx
-	 0ggOHmJcmidyCfbWDACfeFpIaCS/DTxEWXjSJhoFIpTa9SgUG1gvEaYrahmrQ5yH2J
-	 /8oJzsOXNQaWQ==
+	b=KOUv8xbi9st74/o9+AtogiTH40aS0q0hLloHaZz1sRq0DuFfWVK6OEkHJ0YMRWqmh
+	 tdTAAyL2pHaiBMzpTNF7kmcuACYWZH/8EwqX4IOLF5ydzhEuzVINSRZfxm/jwzJAwX
+	 Y2TgNR9A5fQhIEN0rKhEWxt62lMyAfswm7KTMAmK1O6t6yFa24HARZK0Ca4/fnRWJg
+	 6QfX5g8mF7V4SsCc8pzg7vWgO4ykROcaHQKTR8IfiSBkafucV0Eb6fHxCnSMLlxHy0
+	 S3x+5UYu+kdFn1kfX3yMcpb9s7fiX/bmshKsezlmZqyYpzI0uW19bo/hPmEqQFHGsF
+	 QN7Y+3FxthBUw==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1thjfs-00000008YBf-3lxF;
+	id 1thjfs-00000008YBX-3XNq;
 	Tue, 11 Feb 2025 07:23:12 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <mchehab+huawei@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <mchehab+huawei@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH 7/9] docs: networking: Allow creating cross-references statistics ABI
-Date: Tue, 11 Feb 2025 07:23:01 +0100
-Message-ID: <a34ab9bef8f4e6b89dcb15098557fd3a7a9aa353.1739254867.git.mchehab+huawei@kernel.org>
+	William Breathitt Gray <mchehab+huawei@kernel.org>,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 5/9] docs: arm: generic-counter: Allow creating cross-references for ABI
+Date: Tue, 11 Feb 2025 07:22:59 +0100
+Message-ID: <5faafb98c331e0c99433f36dd72badcc540a1baa.1739254867.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1739254867.git.mchehab+huawei@kernel.org>
 References: <cover.1739254867.git.mchehab+huawei@kernel.org>
@@ -62,22 +58,31 @@ generate cross-references for the corresponding ABI file.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/networking/statistics.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/driver-api/generic-counter.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/networking/statistics.rst b/Documentation/networking/statistics.rst
-index 75e017dfa825..518284e287b0 100644
---- a/Documentation/networking/statistics.rst
-+++ b/Documentation/networking/statistics.rst
-@@ -143,7 +143,7 @@ reading multiple stats as it internally performs a full dump of
- and reports only the stat corresponding to the accessed file.
+diff --git a/Documentation/driver-api/generic-counter.rst b/Documentation/driver-api/generic-counter.rst
+index 71ccc30e586b..e826f16ea43d 100644
+--- a/Documentation/driver-api/generic-counter.rst
++++ b/Documentation/driver-api/generic-counter.rst
+@@ -467,7 +467,7 @@ Counter sysfs
+ Translates counter data to the standard Counter sysfs interface format
+ and vice versa.
  
- Sysfs files are documented in
--`Documentation/ABI/testing/sysfs-class-net-statistics`.
-+Documentation/ABI/testing/sysfs-class-net-statistics.
+-Please refer to the ``Documentation/ABI/testing/sysfs-bus-counter`` file
++Please refer to the Documentation/ABI/testing/sysfs-bus-counter file
+ for a detailed breakdown of the available Generic Counter interface
+ sysfs attributes.
  
+@@ -483,7 +483,7 @@ Sysfs Interface
+ Several sysfs attributes are generated by the Generic Counter interface,
+ and reside under the ``/sys/bus/counter/devices/counterX`` directory,
+ where ``X`` is to the respective counter device id. Please see
+-``Documentation/ABI/testing/sysfs-bus-counter`` for detailed information
++Documentation/ABI/testing/sysfs-bus-counter for detailed information
+ on each Generic Counter interface sysfs attribute.
  
- netlink
+ Through these sysfs attributes, programs and scripts may interact with
 -- 
 2.48.1
 
