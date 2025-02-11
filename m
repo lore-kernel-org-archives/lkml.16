@@ -1,78 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74665635
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:12:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DFEEEC5;
+	Tue, 11 Feb 2025 00:13:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739232767; cv=none; b=jPdDsRgKYjwklTP/8owtCYZV/1b1qLlGtoTzqggl5a6Li9g7cJlFh7KPPTghEzPOS44SAjiI5xdrQ3NhjI826WdeAP5ozMuLjg3/AyR6d1tQ3lVALnshOI3UFkxAg9WPOT9rZuV2BQIF7SIOOM4qfmFnmkwsUbvbWUgYEVDaMAI=
+	t=1739232828; cv=none; b=dd57JpASqTvuZD+Vi8aryw+CQIV7sy5fuR12DjSzzeOq3rfFqNYW91WeqklVacvklrWSNcNkwObdvEgbDygP+Fv4a2ElDkfT+MjkgMYnyAj9LjU/1Z7lIqcYLUnpbYKHbnUeA64Yav8f3of9dl/SjR7+NAcEsgrMTWTZ7VtXTrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739232767; c=relaxed/simple;
-	bh=kFyeARekzk0d+r5TwXdMW/SeR8wSDtOE831En4B0SS4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OpXEXUIQmEK+0LFBDUE4xzPKAWQI3NtC6cPXCQ23dgTO43JkuADeiiWzCHI50yVtylT5lwAh5OmclEw3CgQ6aPAUtEb2gQ0KfC0xghAbIgWeEp9q/WJcy18mW8Q+oxszaNeWxerD/7Wkxyjo0RBfq3b6yxlPgD/qlFOS/6J32nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n1lqoKo2; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n1lqoKo2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739232765; x=1770768765;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kFyeARekzk0d+r5TwXdMW/SeR8wSDtOE831En4B0SS4=;
-  b=n1lqoKo2jgRHwLO9s4qP/mNyOeYVhdKD1SeC3lx8BPMBtCItoBQYvpNk
-   cn8JmsVy/Xv7zJVJDR+AMLSdQsuHCRTva3otswR+KvBpYwZtF7CB4gsxl
-   ZJc4VKgYW4/yWwHoFJ/Iu1zoy3VQeBsLJ5L7LDpZebDTCiXI2x1+Z++8e
-   iOJa7xrWPhIXaUGOg3Qm66p3GM2dbYFV9yyfDhYB/S+4+rBJukp2cnyFT
-   zpk18BBA/WRhRFxd16JqN6KrOiGbA1UdjSyG/viQwv+F75ArunW6zC3bD
-   gcodndkrLup/v85ZUgH9uN3ft6OYOH4JDoZV4kReUnYHdKAE/+HJhq3C6
-   Q==;
-X-CSE-ConnectionGUID: FlsZK9g5QeaJnaS3VL4zMw==
-X-CSE-MsgGUID: MANY3qaYTZyRRaUfM5rv5g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="50823398"
-X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
-   d="scan'208";a="50823398"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 16:12:45 -0800
-X-CSE-ConnectionGUID: iBmG2yC/R0enfok+5et0HQ==
-X-CSE-MsgGUID: mxxSCQF9SPiwJJnr1fv/2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="135606501"
-Received: from bergbenj-mobl1.ger.corp.intel.com (HELO intel.com) ([10.245.246.18])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 16:12:42 -0800
-Date: Tue, 11 Feb 2025 01:12:38 +0100
-From: Andi Shyti <andi.shyti@linux.intel.com>
-To: l1138897701@163.com
-Cc: jani.nikula@linux.intel.com, luoqing@kylinos.cn,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests: i915: Use struct_size() helper in kmalloc()
-Message-ID: <Z6qV9s-rVjcnOKnL@ashyti-mobl2.lan>
-References: <20250208013539.3586855-1-l1138897701@163.com>
+	s=arc-20240116; t=1739232828; c=relaxed/simple;
+	bh=9N2X9agV+TOafFIntwyTURPwUVdB+NYg7pHwb7Rwwfo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Itva/pq5XvEED0m1zbD2RVnjVd/ggv2oGJdJBiE1eEvBFqaJn4ob9aQivvs5Het3wd+VQnyYUDCz+QbBUEQeDwoND+NvtXSzKAIwb/EsjS59QTfIDlo2xLVHGo3Y2ASZ1AXWBvJ4WPgbB921zmSH43Ajx6bSAYAR0gxA9IZcw7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3707FC4CED1;
+	Tue, 11 Feb 2025 00:13:47 +0000 (UTC)
+Date: Mon, 10 Feb 2025 19:13:50 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>
+Subject: Re: [RFC PATCH v2 3/3] tracing: Freeable reserved ring buffer
+Message-ID: <20250210191350.79dfa2a2@gandalf.local.home>
+In-Reply-To: <173920225773.826592.6428338529686044470.stgit@devnote2>
+References: <173920222697.826592.3726270716809214055.stgit@devnote2>
+	<173920225773.826592.6428338529686044470.stgit@devnote2>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250208013539.3586855-1-l1138897701@163.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Tue, 11 Feb 2025 00:44:17 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-On Sat, Feb 08, 2025 at 09:35:39AM +0800, l1138897701@163.com wrote:
-> From: luoqing <luoqing@kylinos.cn>
-> 
-> Make use of the struct_size() helper instead of an open-coded version,
-> in order to avoid any potential type mistakes or integer overflows that,
-> in the worst scenario, could lead to heap overflows.
-> 
-> Signed-off-by: luoqing <luoqing@kylinos.cn>
+> @@ -9857,8 +9861,10 @@ static int __remove_instance(struct trace_array *tr)
+>  	int i;
+>  
+>  	/* Reference counter for a newly created trace array = 1. */
+> -	if (tr->ref > 1 || (tr->current_trace && tr->trace_ref))
+> +	if (tr->ref > 1 || (tr->current_trace && tr->trace_ref)) {
+> +		pr_info("Instance is busy: ref %d trace_ref %d\n", tr->ref, tr->trace_ref);
 
-merged to drm-intel-gt-next.
+I don't think we need the print. The function will error with -EBUSY
+letting the user know that it is busy. This is a very common error, where I
+found that I had a program that didn't completely die, and still had a file
+descriptor open on an instance, and when I go to remove it, I get:
 
-Thanks,
-Andi
+  # cd /sys/kernel/tracing/
+  # mkdir instances/foo
+  # bash 5< instances/foo/events/enable
+  # rmdir instances/foo
+  rmdir: failed to remove 'instances/foo': Device or resource busy
+  # exit
+  # rmdir instances/foo
+  #
+
+If you only have it for debugging that is fine, but we should remove it
+before we accept it.
+
+-- Steve
+
+>  		return -EBUSY;
+> +	}
+>  
+>  	list_del(&tr->list);
+>  
+> @@ -9881,6 +9887,11 @@ static int __remove_instance(struct trace_array *tr)
+>  	free_trace_buffers(tr);
+>  	clear_tracing_err_log(tr);
+>  
+> +	if (tr->range_name) {
+> +		reserved_mem_release_by_name(tr->range_name);
+> +		kfree(tr->range_name);
+> +	}
+> +
+>  	for (i = 0; i < tr->nr_topts; i++) {
+>  		kfree(tr->topts[i].topts);
+>  	}
+> @@ -10740,6 +10751,7 @@ __init static void enable_instances(void)
+>  		bool traceoff = false;
+>  		char *flag_delim;
+>  		char *addr_delim;
+> +		char *rname __free(kfree) = NULL;
+>  
+>  		tok = strsep(&curr_str, ",");
+>  
+> @@ -10796,6 +10808,7 @@ __init static void enable_instances(void)
+>  				pr_warn("Failed to map boot instance %s to %s\n", name, tok);
+>  				continue;
+>  			}
+> +			rname = kstrdup(tok, GFP_KERNEL);
+>  		}
+>  
+>  		if (start) {
+> @@ -10832,7 +10845,7 @@ __init static void enable_instances(void)
+>  		 */
+>  		if (start) {
+>  			tr->flags |= TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT;
+> -			tr->ref++;
+> +			tr->range_name = no_free_ptr(rname);
+>  		}
+>  
+>  		while ((tok = strsep(&curr_str, ","))) {
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index 47c0742fe9ec..ae8f7fac6592 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -348,6 +348,7 @@ struct trace_array {
+>  	unsigned int		mapped;
+>  	unsigned long		range_addr_start;
+>  	unsigned long		range_addr_size;
+> +	char			*range_name;
+>  	long			text_delta;
+>  	int			nr_modules;
+>  	long			*module_delta;
+
