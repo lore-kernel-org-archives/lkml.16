@@ -1,94 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161801EC006;
-	Tue, 11 Feb 2025 16:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739289806; cv=none; b=Ualbqk9yNOpsld5fezi5kjmYITy1tyvf/XgH8p+uFJ4kDqVy2t51NxHXiU27lwOiDHM351Ras4E66ZPBK80j3dnW7ej0agigvUKVjBCvtpx1GdCFzEOhcrejS0DpI0pXloqeH4is8Wad2x/xRkExiYB78BRqFiZO3w53lToPUrM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739289806; c=relaxed/simple;
-	bh=kxsQpoTjlLuo+6/EAnaIsucfdhVApFWZkHMOYayispo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p4PnZvTFCGMyYJ6L/GXg+qDr8jCA+I8wxvLChnt0P0iMxi45MAYL5uZ99qSx0ukixdkz9CKfrw95yMZG2pEmggA3BILhwunBkswXZZ4hbwOLPRbh55gomjxeKSHXBphjky8r0mGWwoiJ2Kc0UQDYPZ3Uyt3dROp0jERIoR+KyGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jsboMWEK; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B00E253B5A;
+	Tue, 11 Feb 2025 16:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739289821; cv=pass; b=AAhp0kggMtpSnrzdfq89AGglQAENqBblvRGnXCQpUA/NLxka2HT9A5ZA0aWAtGT1Bi5IdOgMUDwVsm4FcNRWMyBXECRV4hQsv1BhdkllYKonBkCVXEYY9BBmue2wJEAeX53Pq9pBfr4f+PkvCPBNZdLJg5WNnPb1Fs+OSl85Jcw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739289821; c=relaxed/simple;
+	bh=tpoPNHnNCy+zTkxRlA3RTyTSyZS8bccCMEDfupDRbuU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EwvE5AacSsGchXaPturMH5Eak7gQ7MEa6PzqztZMiAALUQjbzk9fsgg9u6HgJTBS6pwrWCffIK6663B3eZuODv+nqBgzccotKcDeMTkGtDOSR/xrE2YhuNHd3RBXv8XPIq7kHYnmmbzNE5O86s6WT8PRGOwUdne1ShVvCOtEdgk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=iQxBb7tC; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jsboMWEK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2475CC4CEDD;
-	Tue, 11 Feb 2025 16:03:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739289805;
-	bh=kxsQpoTjlLuo+6/EAnaIsucfdhVApFWZkHMOYayispo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jsboMWEKxcBqWSFSXuyBDASztly9n6g9HZFzVedkONqJ/LTS7KtxduERL6VZCsaU8
-	 xWYLjH2gjbSfZSCjAG44Ew9qAbrO8br6kLkRDuqylqTDju/RC2hpVfgtMdhrIYaoZr
-	 14HTmal0YOxMazPUM9bCN+GJkg9Qpfdp6sqS69Ln2TRY6VeQA8pXpbWmK6XQOJqGud
-	 YZiXqN/r2VhYgE6qtnXCoKXTjG3RbTL5xlBOcfKD7p2ztXOabrtcYtM+eLU45iemQI
-	 ZBQh/VV8q+aw8IcIEl68Xhz/cVEgpprOS2DdhIzfrOMvhGU7UJTuDe6ajVIG5EFT/v
-	 JyzYELfDmLllw==
-Date: Tue, 11 Feb 2025 16:03:21 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Alex Elder <elder@kernel.org>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, spacemit@lists.linux.dev
-Subject: Re: [PATCH] pinctrl: spacemit: enable config option
-Message-ID: <20250211-nature-kilt-9882e53e5a3f@spud>
-References: <20250207-k1-pinctrl-option-v1-1-e8a7e4d8404f@gentoo.org>
- <20250207-promenade-hazily-d7900cbc127e@spud>
- <20250207223705-GYA7567@gentoo>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="iQxBb7tC"
+ARC-Seal: i=1; a=rsa-sha256; t=1739289784; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=QSjSAVX2EjM0Zkd4t3XxNiDwxfY5+9s3grENOIXcAKKTLAAxTSULL7cYBGYfuyA++2l/A6ei0G3wEAi2TARhCscUM8HGLD0zz0bM5g8U2fohtTwiUeqdUKUAisprotOTwjl0Vz/PCHmI+tZWhXfiIKXsocXABnSZBYp2v6/puKM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1739289784; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=681ubr2yNewIQqxC054xPg8+eBAOGYYdn+NBIKKdGdE=; 
+	b=CxXWXC+2+CoQDHM1+VTzIrn1O48zJzrD1fTy+um0LKvljz6PnSsQnF0xh4RP+m/SxuGWo2ZvGoP1mH2ux/6jf2ZGCQHAALMShnu1sB0PpP2v0KmmHWUpGdMWV8DmK5dEkJkEp/6Cz0Nnezcb2tREb9tFudIOlN58e6dPv8LHQBs=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739289784;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=681ubr2yNewIQqxC054xPg8+eBAOGYYdn+NBIKKdGdE=;
+	b=iQxBb7tCOEFCGiOuMrO42BS2uKeduRpsKygpLIiaenhuke650/Qi/ZWm7c5LX7jU
+	2WQ01zzgqpxtNFAiGZYptUkqrcriCKHetHsE4xX07j+hg+W9RQCfE0nq/H2GcKd2Guu
+	bxYbJBVrawrKFxk2nyBLcobTb0yW++773DNvtIlU=
+Received: by mx.zohomail.com with SMTPS id 1739289781881942.8989499803911;
+	Tue, 11 Feb 2025 08:03:01 -0800 (PST)
+Message-ID: <dd41b33d-e73a-4ff8-803f-00a3ab7c9c4b@collabora.com>
+Date: Tue, 11 Feb 2025 19:02:55 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="h4BMHotDS+6K3/CI"
-Content-Disposition: inline
-In-Reply-To: <20250207223705-GYA7567@gentoo>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH v5 4/4] media: platform: synopsys: Add support for
+ HDMI input driver
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ Shreeya Patel <shreeya.patel@collabora.com>, heiko@sntech.de,
+ mchehab@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+ p.zabel@pengutronix.de, jose.abreu@synopsys.com, nelson.costa@synopsys.com,
+ shawn.wen@rock-chips.com, nicolas.dufresne@collabora.com,
+ hverkuil-cisco@xs4all.nl
+References: <20241210193904.883225-1-shreeya.patel@collabora.com>
+ <20241210193904.883225-5-shreeya.patel@collabora.com>
+ <b6ee761c-6941-473b-aa5e-2dadb69767f2@xs4all.nl>
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+Content-Language: en-US
+In-Reply-To: <b6ee761c-6941-473b-aa5e-2dadb69767f2@xs4all.nl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
+On 2/10/25 16:46, Hans Verkuil wrote:
+...
+>> +static bool hdmirx_check_timing_valid(struct v4l2_bt_timings *bt)
+>> +{
+>> +	if (bt->width < 100 || bt->width > 5000 ||
+>> +	    bt->height < 100 || bt->height > 5000)
+>> +		return false;
+>> +
+>> +	if (!bt->hsync || bt->hsync > 200 ||
+>> +	    !bt->vsync || bt->vsync > 100)
+>> +		return false;
+>> +
+>> +	if (!bt->hbackporch || bt->hbackporch > 2000 ||
+>> +	    !bt->vbackporch || bt->vbackporch > 2000)
+>> +		return false;
+>> +
+>> +	if (!bt->hfrontporch || bt->hfrontporch > 2000 ||
+>> +	    !bt->vfrontporch || bt->vfrontporch > 2000)
+>> +		return false;
+> 
+> I asked before, but are these hardware limitations or just sanity checks?
+> Please document.
 
---h4BMHotDS+6K3/CI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+These should be sanity checks. We added comment explaining what this
+code does, telling that we need to repeat checking the timing values
+until they become valid. This is borrowed from downstream driver,
+whether these values are tied to hw limits is unknown, we couldn't find
+the exact limits documented in TRM.
 
-On Fri, Feb 07, 2025 at 10:37:05PM +0000, Yixun Lan wrote:
-> On 16:49 Fri 07 Feb     , Conor Dooley wrote:
-> > On Fri, Feb 07, 2025 at 08:11:42PM +0800, Yixun Lan wrote:
-> > > diff --git a/drivers/pinctrl/spacemit/Kconfig b/drivers/pinctrl/space=
-mit/Kconfig
-> > > index 168f8a5ffbb952cbeae3e3401c11149558e0a84b..aa3dea535def87ed75d86=
-bc555b2b90643adbdea 100644
-> > > --- a/drivers/pinctrl/spacemit/Kconfig
-> > > +++ b/drivers/pinctrl/spacemit/Kconfig
-> > > @@ -7,6 +7,7 @@ config PINCTRL_SPACEMIT_K1
-> > >  	tristate "SpacemiT K1 SoC Pinctrl driver"
-> > >  	depends on ARCH_SPACEMIT || COMPILE_TEST
-> > >  	depends on OF
-> > > +	default ARCH_SPACEMIT
-> >=20
-> > This is effectively just "default y", since ARCH_SPACEMIT is a
-> > dependency.
-> >=20
-> right, this is the plan, it make sense to bundle this config to ARCH_SPAC=
-EMIT
+...
+>> +static int hdmirx_set_edid(struct file *file, void *fh, struct v4l2_edid *edid)
+>> +{
+>> +	struct hdmirx_stream *stream = video_drvdata(file);
+>> +	struct snps_hdmirx_dev *hdmirx_dev = stream->hdmirx_dev;
+>> +	u16 phys_addr;
+>> +	int ret;
+>> +
+>> +	if (edid->pad)
+>> +		return -EINVAL;
+>> +
+>> +	if (edid->start_block)
+>> +		return -EINVAL;
+>> +
+>> +	if (edid->blocks > EDID_NUM_BLOCKS_MAX) {
+>> +		edid->blocks = EDID_NUM_BLOCKS_MAX;
+>> +		return -E2BIG;
+>> +	}
+>> +
+>> +	if (!edid->blocks) {
+>> +		cec_phys_addr_invalidate(hdmirx_dev->cec->adap);
+>> +		hdmirx_dev->edid_blocks_written = 0;
+> 
+> This must pull the HPD low, but that doesn't happen.
 
-I don't think I was clear, I was trying to say that you should do
-s/ARCH_SPACEMIT/y/ on this line.
+Good catch, will fix.
 
---h4BMHotDS+6K3/CI
-Content-Type: application/pgp-signature; name="signature.asc"
+...
+>> +static void hdmirx_get_avi_infoframe(struct snps_hdmirx_dev *hdmirx_dev)
+>> +{
+>> +	struct v4l2_device *v4l2_dev = &hdmirx_dev->v4l2_dev;
+>> +	union hdmi_infoframe frame = {};
+>> +	int err, i, b, itr = 0;
+>> +	u8 aviif[3 + 7 * 4];
+>> +	u32 val;
+>> +
+>> +	aviif[itr++] = HDMI_INFOFRAME_TYPE_AVI;
+>> +	val = hdmirx_readl(hdmirx_dev, PKTDEC_AVIIF_PH2_1);
+>> +	aviif[itr++] = val & 0xff;
+>> +	aviif[itr++] = (val >> 8) & 0xff;
+>> +
+>> +	for (i = 0; i < 7; i++) {
+>> +		val = hdmirx_readl(hdmirx_dev, PKTDEC_AVIIF_PB3_0 + 4 * i);
+>> +
+>> +		for (b = 0; b < 4; b++)
+>> +			aviif[itr++] = (val >> (8 * b)) & 0xff;
+>> +	}
+>> +
+>> +	err = hdmi_infoframe_unpack(&frame, aviif, sizeof(aviif));
+>> +	if (err) {
+>> +		v4l2_err(v4l2_dev, "failed to unpack AVI infoframe\n");
+>> +		return;
+>> +	}
+>> +
+>> +	v4l2_ctrl_s_ctrl(hdmirx_dev->rgb_range, frame.avi.quantization_range);
+>> +
+>> +	if (frame.avi.itc)
+>> +		v4l2_ctrl_s_ctrl(hdmirx_dev->content_type,
+>> +				 frame.avi.content_type);
+>> +	else
+>> +		v4l2_ctrl_s_ctrl(hdmirx_dev->content_type,
+>> +				 V4L2_DV_IT_CONTENT_TYPE_NO_ITC);
+> 
+> InfoFrames must now also be exported to debugfs. See e.g. drivers/media/i2c/tc358743.c
+> and include/media/v4l2-dv-timings.h (search for V4L2_DEBUGFS_IF_MAX_LEN).
+> 
+> This is a recent change: both drm and v4l2 can now export InfoFrames to debugfs,
+> and this is handy for debugging issues.
+> 
+> The edid-decode utility (part of v4l-utils) can parse these InfoFrames.
 
------BEGIN PGP SIGNATURE-----
+Ack, will add the InfoFrame debugfs.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6t0yQAKCRB4tDGHoIJi
-0ttiAQDhOzm3TQQpYRWDC95izVfWpwHd1wIcfyQIYKv5Il1fiwD/aVhzIBicKSq1
-x84qPJr6FO+I8bqpCddzB7pysdOBHAc=
-=8t5s
------END PGP SIGNATURE-----
+...
+>> +static void hdmirx_load_default_edid(struct snps_hdmirx_dev *hdmirx_dev)
+>> +{
+>> +	struct v4l2_edid def_edid;
+>> +
+>> +	hdmirx_hpd_ctrl(hdmirx_dev, false);
+>> +
+>> +	/* disable hpd and write edid */
+>> +	def_edid.pad = 0;
+>> +	def_edid.start_block = 0;
+>> +	def_edid.blocks = EDID_NUM_BLOCKS_MAX;
+>> +
+>> +	if (IS_ENABLED(CONFIG_VIDEO_SYNOPSYS_HDMIRX_LOAD_DEFAULT_EDID))
+>> +		def_edid.edid = edid_default;
+>> +	else
+>> +		def_edid.edid = hdmirx_dev->edid;
+> 
+> So if you are not loading the default EDID, then you load a zeroed EDID?
+> 
+> This is much too complicated: if there is no default EDID, then just
+> pull the HPD low (you do that already at the start) and return.
+> 
+> BTW, please check with CONFIG_VIDEO_SYNOPSYS_HDMIRX_LOAD_DEFAULT_EDID set
+> and unset and make sure there are no compile warnings/errors relating to that.
 
---h4BMHotDS+6K3/CI--
+Now I see what you meant previously. Keeping HPD pulled low if there is
+no valid EDID will work. Will change it in the next iteration.
+
+Thanks for the review!
+
+-- 
+Best regards,
+Dmitry
