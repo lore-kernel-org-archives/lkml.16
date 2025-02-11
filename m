@@ -1,38 +1,40 @@
 Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B212641CE;
-	Tue, 11 Feb 2025 22:38:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F6326A08B;
+	Tue, 11 Feb 2025 22:38:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739313498; cv=none; b=nTLmdbcDAucWWXCEBJwfPLfPcp8n4uY88NEYS5E4dxdKOUu/zN5CaDiFX48vSxhtcB/4MeUjd2l7lG6qfE4/V66vBeohErz3Qq6V7vPIU8t/ixFkDk6Uger1hPvozvAz75jCt5u4s1gwU6dPbVukETfXWeiT365M0PZ7p7VK4fU=
+	t=1739313499; cv=none; b=XvmABXRMbnbk1CbSAuV979E64BQ7++KPTFjpsoi7qNMuxXOjcjb2SnpbB1F01XKGiaqVVYyPwywmtrTwr0TlZpScKwpar1zLD5NBfj/KgJNwBfv5W5nr0XrscUVgWCZ6WiPhFB722JSQt15jBM6SHKpk6cMLstBxCENBBoS8aIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739313498; c=relaxed/simple;
-	bh=5/bBkjGSiUyr0eyYTgTn6gVjdqK5S7jACaykAWc9lMg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NhqYyCwZbirgKqplA91kq28EeO8ImJJY2+2oBbQjj8Upj5ata+avbWbPd1SHNOe2YcxFWc09yPoNTjovTA3CVMreZq/F6p7Q8q62ZM1VDSkdCSjuUnkjA7Cq2oDP0gue8hZuEMQdWmH1gDqVl0Bseol2zP4vrG1suiQ4FWAqCcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=HMRhqZW2; arc=none smtp.client-ip=5.75.144.95
+	s=arc-20240116; t=1739313499; c=relaxed/simple;
+	bh=kTovJs3a0UNCe/c9EpjLatpkIpZCGVIT/AOKQ3UWCOE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=cnxYud/auEWOsGNge3yhCRvpSCWWEPogv+D8n8pAyScRySGHZqqkwVxgE7OZwSuFABaYRvG/6b0sXAc54jVPRjnb+hCAo2/FNOJ/9aU2WYOKxSMMNpA51K5KrUsZk+6hnndrKSrJ98Ks24tbVjLWcAXkBQsrqZ1RO/s4jHUucmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=lkDcU1R1; arc=none smtp.client-ip=5.75.144.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="HMRhqZW2"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="lkDcU1R1"
 Received: from [192.168.244.162] (254C21CD.nat.pool.telekom.hu [37.76.33.205])
-	by mail.mainlining.org (Postfix) with ESMTPSA id E83CEE4533;
-	Tue, 11 Feb 2025 22:38:04 +0000 (UTC)
+	by mail.mainlining.org (Postfix) with ESMTPSA id 82AE1E453B;
+	Tue, 11 Feb 2025 22:38:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
-	s=psm; t=1739313486;
+	s=psm; t=1739313489;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=iRA0rHhLejRTEHRY4py3J1wkqXCHBw6TYqdVvKcsqOc=;
-	b=HMRhqZW2bFbB3Q+a+V7tlkp1a8wbScExvcJGnyHov6/S0HdY6D63TUne51JjmrO5xBPZLi
-	VOGNEZ0f1Kjqbh1HPo2N+SVkt9IRVCNdMx9S7+NbxamVitYTRqV4dJFgyrronZsxowuaI4
-	WKShPEIBmKZiiTYxag2CmZ6KtJ0kzJ58o3N9hP08+ZbWtoZ6c1trHWCLmWk02wvZQhb5HR
-	ZGLMi1tY1bIgD6ssTid+XIqppegzmOlcU1YTNhtdFdE7Pq4sA+rrauDuTS+QAked6USmkD
-	RITJtymkN+HNIU4Q+zzMF4AP7dkCaJUxyuJJn31hkrcSLSFrG+2vkQKRJ3llTg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E8/ajVjMHyCO8T9Hq+plvxZcT5GFd9UYD9UL7qcPwfY=;
+	b=lkDcU1R1RPH4LwvEF6jTh8oYqu7Qyz6OGPXB++1vsuPu5EYmWq4Yfx8u4B3PnNYpwOy0HW
+	yia94aZPYIexLjMdEumPwiwf7mn5/EHvKI/DnS5v3If0JByPC4rbPKBZX85Uu8xksKSOEa
+	eZTxePgiL3XHHe2McCjYvGpFbdDO4ujjsyA0fHZ/YiYLydA7Pk/Bqpw/EwKZl3wYN7O2kh
+	xAqqF3eMi7OUROinXNzaclhgOi3ekZDDLvz7cpe4UXoxFcjtkITGm8zVkPU/4OUA52SwCV
+	A5B+p7+pTcOm22ZJ+Xxsb2JDCXV+8/fbmgmCoFAP0yKYNaLaaDrUy2lojUGYBQ==
 From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-Subject: [PATCH 00/10] Initial support of MSM8937 and Xiaomi Redmi 3S
-Date: Tue, 11 Feb 2025 23:37:44 +0100
-Message-Id: <20250211-msm8937-v1-0-7d27ed67f708@mainlining.org>
+Date: Tue, 11 Feb 2025 23:37:46 +0100
+Subject: [PATCH 02/10] dt-bindings: clock: Add MSM8937 Global Clock
+ controller compatible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,10 +43,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIADnRq2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDI0MD3dziXAtLY3NdIyOL1DSDlGTj1GRLJaDqgqLUtMwKsEnRsbW1ABk
- AALlZAAAA
-X-Change-ID: 20250210-msm8937-228ef0dc3ec9
+Message-Id: <20250211-msm8937-v1-2-7d27ed67f708@mainlining.org>
+References: <20250211-msm8937-v1-0-7d27ed67f708@mainlining.org>
+In-Reply-To: <20250211-msm8937-v1-0-7d27ed67f708@mainlining.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Michael Turquette <mturquette@baylibre.com>, 
  Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -59,63 +60,129 @@ Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-gpio@vger.kernel.org, iommu@lists.linux.dev, 
  =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, 
- Daniil Titov <daniilt971@gmail.com>, Dang Huynh <danct12@riseup.net>
+ Daniil Titov <daniilt971@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739313484; l=2210;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739313484; l=3960;
  i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
- bh=5/bBkjGSiUyr0eyYTgTn6gVjdqK5S7jACaykAWc9lMg=;
- b=mWTVmtj6I7bjnCl5io/j6l8G4RjSRRckn3ZyBcZbZoaR/xKWQU56znHHgQPNTJdKVM8aYV3Ve
- o4dp4lyKed6Btxv5UAMSn2GmHfsYbmmWEBG5+TxOR6T+0bKWIYSYDMe
+ bh=tMkGJGxDIeGByyVrfX+6woLjEpGaWkEndc230QD+arY=;
+ b=zMBOHa8FKmVRlT19Kzal0uTME3fxFcs0Xg3Bq2yUqSMhiKgHfDxxV+glaclJ8qdY3h4GFDSei
+ tyOlHv2S2TSDagd6GEL8gaPRr4Y7mRoKCxvM6QjL5USij3QwnsnyGM4
 X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
  pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
 
-This patch series add initial support for MSM8937 SoC
-and Xiaomi Redmi 3S (land).
+From: Daniil Titov <daniilt971@gmail.com>
 
-The series is extending the MSM8917 gcc and pinctrl drivers
-because they are sibling SoCs.
-MSM8937 have 4 more A53 cores and have one more dsi port then
-MSM8917.
-It implements little-big architecture and uses Adreno 505.
+Document the qcom,gcc-msm8937 compatible and add new input clocks.
 
+Signed-off-by: Daniil Titov <daniilt971@gmail.com>
 Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
 ---
-Barnabás Czémán (5):
-      dt-bindings: mfd: qcom,tcsr: Add compatible for MSM8937
-      dt-bindings: nvmem: Add compatible for MS8937
-      dt-bindings: iommu: qcom,iommu: Add MSM8937 IOMMU to SMMUv1 compatibles
-      dt-bindings: arm: qcom: Add Xiaomi Redmi 3S
-      arm64: dts: qcom: Add Xiaomi Redmi 3S
+ .../bindings/clock/qcom,gcc-msm8917.yaml           | 23 ++++++++++++++++++----
+ include/dt-bindings/clock/qcom,gcc-msm8917.h       | 17 ++++++++++++++++
+ 2 files changed, 36 insertions(+), 4 deletions(-)
 
-Dang Huynh (2):
-      pinctrl: qcom: msm8917: Add MSM8937 wsa_reset pin
-      arm64: dts: qcom: Add initial support for MSM8937
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc-msm8917.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc-msm8917.yaml
+index 6e567b2a5153af9bb32958154633d6da5fd1cd50..689c5760d9cd1fc96d97e5705cd1fcd48324433a 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,gcc-msm8917.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,gcc-msm8917.yaml
+@@ -4,14 +4,14 @@
+ $id: http://devicetree.org/schemas/clock/qcom,gcc-msm8917.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+-title: Qualcomm Global Clock & Reset Controller on MSM8917 and QM215
++title: Qualcomm Global Clock & Reset Controller on MSM8917, MSM8937 and QM215
+ 
+ maintainers:
+   - Otto Pflüger <otto.pflueger@abscue.de>
+ 
+ description: |
+   Qualcomm global clock control module provides the clocks, resets and power
+-  domains on MSM8917 or QM215.
++  domains on MSM8917, MSM8937 or QM215.
+ 
+   See also:: include/dt-bindings/clock/qcom,gcc-msm8917.h
+ 
+@@ -20,6 +20,7 @@ properties:
+     enum:
+       - qcom,gcc-msm8917
+       - qcom,gcc-qm215
++      - qcom,gcc-msm8937
+ 
+   clocks:
+     items:
+@@ -27,6 +28,8 @@ properties:
+       - description: Sleep clock source
+       - description: DSI phy instance 0 dsi clock
+       - description: DSI phy instance 0 byte clock
++      - description: DSI phy instance 1 dsi clock
++      - description: DSI phy instance 1 byte clock
+ 
+   clock-names:
+     items:
+@@ -34,6 +37,8 @@ properties:
+       - const: sleep_clk
+       - const: dsi0pll
+       - const: dsi0pllbyte
++      - const: dsi1pll
++      - const: dsi1pllbyte
+ 
+ required:
+   - compatible
+@@ -53,7 +58,17 @@ examples:
+       #clock-cells = <1>;
+       #reset-cells = <1>;
+       #power-domain-cells = <1>;
+-      clocks = <&xo_board>, <&sleep_clk>, <&dsi0_phy 1>, <&dsi0_phy 0>;
+-      clock-names = "xo", "sleep_clk", "dsi0pll", "dsi0pllbyte";
++      clocks = <&xo_board>,
++               <&sleep_clk>,
++               <&dsi0_phy 1>,
++               <&dsi0_phy 0>,
++               <&dsi1_phy 1>,
++               <&dsi1_phy 0>;
++      clock-names = "xo",
++                    "sleep",
++                    "dsi0pll",
++                    "dsi0pllbyte",
++                    "dsi1pll",
++                    "dsi1pllbyte";
+     };
+ ...
+diff --git a/include/dt-bindings/clock/qcom,gcc-msm8917.h b/include/dt-bindings/clock/qcom,gcc-msm8917.h
+index 4b421e7414b50bef2e2400f868ae5b7212a427bb..ec1f0b261dd5ccfe4896a00ffa9cf86de98b9cb3 100644
+--- a/include/dt-bindings/clock/qcom,gcc-msm8917.h
++++ b/include/dt-bindings/clock/qcom,gcc-msm8917.h
+@@ -170,6 +170,22 @@
+ #define VFE1_CLK_SRC				163
+ #define VSYNC_CLK_SRC				164
+ #define GPLL0_SLEEP_CLK_SRC			165
++#define BLSP1_QUP1_I2C_APPS_CLK_SRC		166
++#define BLSP1_QUP1_SPI_APPS_CLK_SRC		167
++#define BLSP2_QUP4_I2C_APPS_CLK_SRC		168
++#define BLSP2_QUP4_SPI_APPS_CLK_SRC		169
++#define BYTE1_CLK_SRC				170
++#define ESC1_CLK_SRC				171
++#define PCLK1_CLK_SRC				172
++#define GCC_BLSP1_QUP1_I2C_APPS_CLK		173
++#define GCC_BLSP1_QUP1_SPI_APPS_CLK		174
++#define GCC_BLSP2_QUP4_I2C_APPS_CLK		175
++#define GCC_BLSP2_QUP4_SPI_APPS_CLK		176
++#define GCC_MDSS_BYTE1_CLK			177
++#define GCC_MDSS_ESC1_CLK			178
++#define GCC_MDSS_PCLK1_CLK			179
++#define GCC_OXILI_AON_CLK			180
++#define GCC_OXILI_TIMER_CLK			181
+ 
+ /* GCC block resets */
+ #define GCC_CAMSS_MICRO_BCR			0
+@@ -187,5 +203,6 @@
+ #define VENUS_GDSC				5
+ #define VFE0_GDSC				6
+ #define VFE1_GDSC				7
++#define OXILI_CX_GDSC				8
+ 
+ #endif
 
-Daniil Titov (3):
-      dt-bindings: clock: gcc-msm8917: Split to separate schema
-      dt-bindings: clock: Add MSM8937 Global Clock controller compatible
-      clk: qcom: gcc: Add support for Global Clock controller found on MSM8937
-
- Documentation/devicetree/bindings/arm/qcom.yaml    |    7 +
- .../bindings/clock/qcom,gcc-msm8909.yaml           |   10 +-
- .../bindings/clock/qcom,gcc-msm8917.yaml           |   74 +
- .../devicetree/bindings/iommu/qcom,iommu.yaml      |    1 +
- .../devicetree/bindings/mfd/qcom,tcsr.yaml         |    1 +
- .../devicetree/bindings/nvmem/qcom,qfprom.yaml     |    1 +
- arch/arm64/boot/dts/qcom/Makefile                  |    1 +
- arch/arm64/boot/dts/qcom/msm8937-xiaomi-land.dts   |  402 ++++
- arch/arm64/boot/dts/qcom/msm8937.dtsi              | 2145 ++++++++++++++++++++
- drivers/clk/qcom/Kconfig                           |    6 +-
- drivers/clk/qcom/gcc-msm8917.c                     |  617 +++++-
- drivers/pinctrl/qcom/Kconfig.msm                   |    4 +-
- drivers/pinctrl/qcom/pinctrl-msm8917.c             |    8 +-
- include/dt-bindings/clock/qcom,gcc-msm8917.h       |   17 +
- 14 files changed, 3277 insertions(+), 17 deletions(-)
----
-base-commit: df5d6180169ae06a2eac57e33b077ad6f6252440
-change-id: 20250210-msm8937-228ef0dc3ec9
-
-Best regards,
 -- 
-Barnabás Czémán <barnabas.czeman@mainlining.org>
+2.48.1
 
