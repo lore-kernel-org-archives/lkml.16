@@ -1,82 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253341EA7F1
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5392A1BD9D2;
+	Tue, 11 Feb 2025 09:38:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739266700; cv=none; b=mpV9NDZCs7hY8E8OsWMAEoEd6LhS8f2E4y7K6XZu+vUW0KNmm5az96wXOmdLpoYH93T+8kibaMdI6/zjAsVvuLIWMTQ2eYLgIAo6MEzF+xVTNse5YgnnOvBmF4+WOOQA+EcjR+WEWNUeuMkl9A/6d/6DpCkeKMxRHa3VtEt5UD4=
+	t=1739266713; cv=none; b=UFW8XNC9vI3EWsx9ISRAyxgkcrYvkJhGBuYmnbYSKgjy9OAk5rzismBdqMK0F1sBQfyQpVaScfaqv9blazow9/HHZICEtiagNOTUvdWmlVkfdAiRwGEbXjT2juDdJeNVNTVRJuB+bGftBktQkdUVPxXv3hdnvPtLdnktFG/AZiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739266700; c=relaxed/simple;
-	bh=UMEmLFxSzGCX0x4TAPfHL2GDmSKTHafVFyL78eN5EOQ=;
+	s=arc-20240116; t=1739266713; c=relaxed/simple;
+	bh=L6DJj97sTP9FMTBli3K7axoJAYLa4k2vsVXW8nIylpM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BaA2+H4LkeVAlJFzxGQT1TQo+QxRZwQW1AdwA9O/tfHeTN2kMW9K5khHWOl5fDz66b7NsbMa2nbmWKKpMmbEhfYQpbxtWgKKqevqUinoFSkHlVroY72sYOeq+W3d97NH/SXebLzLFsFayqCcwI1VEzVVC7Tjq2v0q9gihkb+2a0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZaGP4up+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=mpsqAnqeFi3Ie8K8VZvThlWpGfKTzfoMP8CijS7Jp3sZTpZ2TCucwzXuHpONO6YegD+JWLE1HVQquFinB0JouTa6oVPRYc2rvF/cRrmYvV7I1/e0ilfEMROI1/vzj8dTjzeADRH0rt+i9vAvIYCT27MmjBaIfXUd78OH7I7G0pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ArzjbDIX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZaGP4up+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739266698;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JEBn5BDD0bivGeX0sWRFJtyk8zRNMnBY8R9geVV2WJw=;
-	b=ZaGP4up+qJ1LMK3LDCKJhLvYrhnq4r4TAP3SeRLBAm7XyaooLKOAUXIeWa5GIP2ITFLLcI
-	n6UTNA7OxLK0+gX2rK1Iz4/W6Q+F+avwbC7ozlLfBtz2Ku/e8U0Lpd7D8QsYMXLveD9ksm
-	gKPje7i/FwligONLtPtf35dyLgDxvkg=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-424-DaC2ZRrGMTCR8RS1_hQjvw-1; Tue, 11 Feb 2025 04:38:16 -0500
-X-MC-Unique: DaC2ZRrGMTCR8RS1_hQjvw-1
-X-Mimecast-MFC-AGG-ID: DaC2ZRrGMTCR8RS1_hQjvw
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38de0923dbaso772051f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:38:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739266695; x=1739871495;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JEBn5BDD0bivGeX0sWRFJtyk8zRNMnBY8R9geVV2WJw=;
-        b=c7O9hbFWRbM9URTBa9rb1xs/4o5mVbgXONulvMUSdJ1W7Z4U/vQ1rAW57oHlgYT/Kv
-         0l/w190arAF1GqTn77ljIkGUBn02d0fwr+FZ/9NcAmIWtbnjfNXBbgH5iZEy+rpCJyBX
-         Azdivu+e7iO94d5pV+TUCbkv/eZrcG6cQagyu+LwI0nhDz8wJNONq954yMNiJi/w0TxO
-         4onj9kjE0RfGFWUOuJlEuHV7hK6wW98bEjac/w1zQzKr7DpVvB4Sgv4CaBCiNRQQmAAY
-         ZpXBC3u+BHawDJn/W1eUAmIJ0MwnM/d3apxuCqSSq5o/cYs7Ue/P7+fMVtBuvi3kVE1q
-         21eQ==
-X-Gm-Message-State: AOJu0YwynbSPX2Pdw7ePZfC6WyqJCl7fUQsJKVdk4zjToNE8mqhs0j23
-	z9IGwXlVrEGbvOL6QTSD/+Djkw9p1Pfo3nfQhwV0g99MXjsGmrC2Wrok4Ie94wYMIJj+PVvva95
-	5jqvh+MQ+FQOsVKTkr1iaTxKmuElC2bTD5P6EWABsrCjgmaa9onAxlAhu4ryOuA==
-X-Gm-Gg: ASbGncuqj1N/gMWlDq3nOg6buvO5QQlywEL7cb7uSuBQrMJdWSkZWw9OyNXrJYZDo5p
-	QpETh/Re7HHN2k2BPmixk61qOsw/+teHsQUv6jtnOAZAoavLgflqUZ3BADULMivCjLb44cJHYY2
-	bi+4rct0T/GVy/N6KXQuXpFiW/bNMGpkbchYvez0nAjC5QEGwWBU/9+7NBE9w58SPthGeiTPcU1
-	J8u1iP3LqpByUVheMYZ1RK2B1PhJ1ApVVwrmR3RfE8RBN1YZVhqrQfS2BF7otL8yIxsby3Jn50+
-	aP0OHqz9xeT7K5zGcHBXuhR2sppr8DUMLQ==
-X-Received: by 2002:a5d:648c:0:b0:38d:d221:701d with SMTP id ffacd0b85a97d-38de41be949mr2385521f8f.42.1739266695211;
-        Tue, 11 Feb 2025 01:38:15 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEi1zF8zGCXf3u5BZowhS/tIHfp/myPqRuYfehgLlAWbaD5VlSQIEDbgi0akDT9Mtd2ryGMOQ==
-X-Received: by 2002:a5d:648c:0:b0:38d:d221:701d with SMTP id ffacd0b85a97d-38de41be949mr2385504f8f.42.1739266694894;
-        Tue, 11 Feb 2025 01:38:14 -0800 (PST)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.34.42])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc53ae9c0sm12923656f8f.101.2025.02.11.01.38.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 01:38:14 -0800 (PST)
-Date: Tue, 11 Feb 2025 10:38:12 +0100
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-trace-kernel@vger.kernel.org, John Kacur <jkacur@redhat.com>,
-	Clark Williams <williams@redhat.com>
-Subject: Re: [RFC PATCH 00/11] rv: Add scheduler specification monitors
-Message-ID: <Z6sahFdh9uVhrRhA@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250206080952.98478-1-gmonaco@redhat.com>
- <czykavxpz46nwnelml6yorg3tvmyjvczqogeuqzji6qrfd2peu@qxr6wucv6mrj>
- <847c962745ef5bce757b9ae257ae279913ac711c.camel@redhat.com>
- <Z6YYPAiM0itlIVAH@jlelli-thinkpadt14gen4.remote.csb>
- <59ad26ac442aef340f819ed080684d72b50e1c57.camel@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ArzjbDIX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C78BAC4CEE4;
+	Tue, 11 Feb 2025 09:38:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739266712;
+	bh=L6DJj97sTP9FMTBli3K7axoJAYLa4k2vsVXW8nIylpM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ArzjbDIXNKPburqOPiQP8pvczQTaPQgbQtlIOklYY7vn0B3BqMtZDfhr7Y2iRDa6q
+	 6opbofGpdFNO6bgV4/Ibdx9pl8FYAxlI1zQdgtNuktn0b+fdE3nxr2ahwilOpAVFp+
+	 lh4nnVTFs1q3hLZC0uEoaKqE1t8E0PIFFKebd794+hQUoKHfrX/NtTPI1e82ImdVK2
+	 LDyAwwVbgbB/6979J3zEYK6B2hJ5ytzI7BWF39Wj+eRaR+DkM5dY4nQIGYPLM++bfk
+	 h2GQUDu4+F4V6vIS3qkCP6t3tkiC0jkXgf/o6ykoR6Qoguclmu57NNGawChY/pcTXV
+	 sXfrjMLv/Zh5w==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1thmj2-000000007QL-0FEx;
+	Tue, 11 Feb 2025 10:38:40 +0100
+Date: Tue, 11 Feb 2025 10:38:40 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Tony Chung <tony467913@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH v2 4/6] drivers: usb: serial: mos7840: using '__func__'
+ to replace function name in dbg message
+Message-ID: <Z6saoGpHtGial-Jw@hovoldconsulting.com>
+References: <202410250141.AEkzzW60-lkp@intel.com>
+ <20241025061711.198933-5-tony467913@gmail.com>
+ <Z6sYclmvaAQ93bEI@hovoldconsulting.com>
+ <2025021133-smooth-villain-bed8@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,28 +50,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <59ad26ac442aef340f819ed080684d72b50e1c57.camel@redhat.com>
+In-Reply-To: <2025021133-smooth-villain-bed8@gregkh>
 
-On 10/02/25 13:56, Gabriele Monaco wrote:
-> On Fri, 2025-02-07 at 15:27 +0100, Juri Lelli wrote:
+On Tue, Feb 11, 2025 at 10:32:14AM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Feb 11, 2025 at 10:29:22AM +0100, Johan Hovold wrote:
+> > On Fri, Oct 25, 2024 at 02:17:14PM +0800, Tony Chung wrote:
+> > > fix warning of Prefer '"%s...",__func__' to using 'function name'.
+> > > 
+> > > Signed-off-by: Tony Chung <tony467913@gmail.com>
+> > > ---
+> > >  drivers/usb/serial/mos7840.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/usb/serial/mos7840.c b/drivers/usb/serial/mos7840.c
+> > > index b48a26468..31ec2cf1b 100644
+> > > --- a/drivers/usb/serial/mos7840.c
+> > > +++ b/drivers/usb/serial/mos7840.c
+> > > @@ -230,7 +230,7 @@ static int mos7840_set_reg_sync(struct usb_serial_port *port, __u16 reg,
+> > >  	struct usb_device *dev = port->serial->dev;
+> > >  
+> > >  	val = val & 0x00ff;
+> > > -	dev_dbg(&port->dev, "mos7840_set_reg_sync offset is %x, value %x\n", reg, val);
+> > > +	dev_dbg(&port->dev, "%s offset is %x, value %x\n", __func__, reg, val);
 > > 
-> > Right. I guess I wonder if we can find a way to inject kernel
-> > problems
-> > somehow, so that model(s) can be further tested explicitly thus
-> > making
-> > us confident that they will be able to identify real problems when
-> > they
-> > occur.
-> > 
+> > I suggest you just leave this as is.
 > 
-> I sketched it quickly and I wouldn't include it in this series not to
-> make it heavier, but if you want to play with it I wrote a patch
-> exporting a function to inject events and building a kernel module
-> calling the function periodically.
+> __func__ should NEVER be added to dev_dbg() lines as it is already
+> available if the user want it.  Adding it explicitly to the string is
+> just redundant.
 
-Ah, this is cool. Thanks for working on it!
+It can sometimes be useful to allow for compact but self-contained debug
+messages that makes sense also when the generic function prefix is not
+printed (I tend not to enable those myself).
 
-Yeah, agree, we can leave it for later.
+But in general, try to follow the style of the driver you're changing.
 
-Thanks!
-
+Johan
