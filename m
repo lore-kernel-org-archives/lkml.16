@@ -1,128 +1,130 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671EC250C15
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 15:05:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B3426BD8C;
+	Tue, 11 Feb 2025 15:06:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739286349; cv=none; b=KD3qvwOlyJKGUsfchu8BvKLrQqR401oXI/xr7K3f5uHCJ4QjtZ4ynY2kUHdOyuMu7zsrn+3Cc7Aq46U4f4xzIi9sdWYzz73tFbewp5MWNX3C1MqE3agGla4oQrQlTuEeULD95ckpcguZpgkC/GGhp49ByPPWguMPGUGAUqTStQ4=
+	t=1739286370; cv=none; b=TWWyUYMHZ36UIgFm7IzmClEDewIC+aMGmkqjaTDloc1JA1pAQ1w3W3meVqEXBhweGggGlxGlVdZjMdNyhDWBRInfl1chBIIvZLCjCH5crDEvlbFbTwrhxXxzuhlnn9qTbeLv2Loa+kqVJr+HtQXFAFyvrACITUvMRoHPFaNSXj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739286349; c=relaxed/simple;
-	bh=gILxc1vlFfC7Cd9Gfzulte7qbvFGDw5/GEDFFZYIvxc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NAUkBZhY+qxswmekQjO8GEUjfD3Ih9VxmtLDrzFwAYo7p/BA5wTDmg61r2dlzzJVQokX7FrsWHPbcpWH3wxGEaN0caUIZbGUipJ14x92va9DFX2nO10t9DzDw6mLdehGDHU6lyHCTNjMIFngdblUh8v3VlDecghd1Qg/TnlCZy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=da6tO3St; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1739286370; c=relaxed/simple;
+	bh=Ctc36I2G+HwmYH0NsEN1NHNI4mtgY8vS6LWogAuJ5pc=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=CdcAmP4E4xVWbx0bxJ4ShNo0WRMXNw6MtD3v99MG9UAWXCqP5y6z0C8AHkbSOZ1S2Vhl+/MRcB1APobtB7WKnO4GTFOU232gxMgrfM4f0RrMDOvKRM5NVQKMXEZqv0UvfVqzAaVypFxGJqRw2U0djvMH6IcyblY6Ryp4AyN+K+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pBNeLvg+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D1Os2vR1; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="da6tO3St"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=wMch1HIVZL0GsRqZJwBamjdSUtwIeuUTfLpGso7d8Mc=; b=da6tO3St4QZjVO9rW5F4uw5AHD
-	FKKdPane4YRfDJt9BuaW78I6ABcPLDGY9pB2W9mebXiwCvIrkcJ6MYsl0ck6XjJrA7Hvq3F8D8/Gk
-	2p6aS/oHO5W3vxSwSZO8d52Tceo0y+QVrfstynyfMd3Fer0pexVHmRnB/JeC1cKR5u8CaPaxt6tmG
-	RMGSjhW7oY6BSTKK/Etjg1oitWjybsNRHf7qNvvhZqiz10sGQM/PSsA7T3LFQInUbUHUgQGxG7xh/
-	FPxwbYS7OUqo53l7IkdQne4GIwwQSli6lFvWL+cK1InoT2pakLgxpGldWVToqhIde+fAAtJSZqURN
-	KvoCpPWg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51408)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1thrpV-0002fz-25;
-	Tue, 11 Feb 2025 15:05:41 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1thrpS-0000AA-0g;
-	Tue, 11 Feb 2025 15:05:38 +0000
-Date: Tue, 11 Feb 2025 15:05:38 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	Ben Segall <bsegall@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/9] arm: Rely on generic printing of preemption model.
-Message-ID: <Z6tnQvIBlGnoGRN_@shell.armlinux.org.uk>
-References: <20250203141632.440554-1-bigeasy@linutronix.de>
- <20250203141632.440554-4-bigeasy@linutronix.de>
- <20250210120429.iFfBClW1@linutronix.de>
- <Z6oYO5uKlEJ8C8Ne@shell.armlinux.org.uk>
- <20250210153902.06VTSS6d@linutronix.de>
- <Z6oo0MExaEy5J55_@shell.armlinux.org.uk>
- <20250211145249.StI6tEZv@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pBNeLvg+";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D1Os2vR1"
+Date: Tue, 11 Feb 2025 15:05:55 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739286366;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XU0MPZBXA06mO+hPRk0RRhTnQO+/+tcbh8VCOkhO1T0=;
+	b=pBNeLvg+H3N/dOLOh1Gls4gpNF7Yt2Iw4RQTfthNO1plKzFWp1cQPviKjj1HlWSQ0uclCo
+	4EqO6WqhOockeRFhnINb0lLp/7a3y1/cB6egu8wcqROuxoP6A5Ubg8BuBoqCv+LsAePGY5
+	YvMYasrsLPYBYeuC6V+iJj606QVI+LnQgZ8R0lUUbzA5MeNzZ1nszmKnPtmjCnlWK5bRLR
+	6qdCd6ylB1Ev/FDKrq7tZbLU8H9wR6/UPZCdLZmcSMA+33+XZU7bPBAuEneuDs+4uEIwyv
+	7vGa/kLAeQ8iaUxSeKAo1OwZ5aabDYpHBaAIbTdzteMMjgF+2R165daBEkebbw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739286366;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XU0MPZBXA06mO+hPRk0RRhTnQO+/+tcbh8VCOkhO1T0=;
+	b=D1Os2vR1RwWuei05q7XsJPkzpCQ3GvrcfVxj4bGHlMNJLcM/kJUkzI+C1NAhbQbcPWs82x
+	s/URBA+PMzExYMCQ==
+From: "tip-bot2 for Sean Christopherson" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf/x86/intel: Ensure LBRs are disabled when a
+ CPU is starting
+Cc: Maxim Levitsky <mlevitsk@redhat.com>,
+ Sean Christopherson <seanjc@google.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>, stable@vger.kernel.org,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250131010721.470503-1-seanjc@google.com>
+References: <20250131010721.470503-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250211145249.StI6tEZv@linutronix.de>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Message-ID: <173928635756.10177.2615441983621971003.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 11, 2025 at 03:52:49PM +0100, Sebastian Andrzej Siewior wrote:
-> On 2025-02-10 16:26:56 [+0000], Russell King (Oracle) wrote:
-> > > This this applied, die("test") on ARM ends as:
-> > > 
-> > > [    1.595106] Kernel panic - not syncing: test
-> > > [    1.596044] CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W 6.14.0-rc2-00009-gb80a798df08c-dirty #13 PREEMPT
-> > > [    1.596768] Tainted: [W]=WARN
-> > > [    1.596946] Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 02/02/2022
-> > 
-> > Hmm. I've no idea what you're testing, what you've quoted makes zero
-> > sense to me.
-> > 
-> > First...
-> > 
-> > void die(const char *str, struct pt_regs *regs, int err)
-> > 
-> > is the die function prototype, so it takes a bit more than what you've
-> > indicated.
-> > 
-> > Second, "Kernel panic" suggests that panic() has been called. However,
-> > this only happens when die() is called (or more specifically
-> > oops_end()) from either interrupt context (in which case we get
-> > "Kernel panic - Fatal exception in interrupt") or if panic_on_oops
-> > is set ("Kernel panic - Fatal exception").
-> > 
-> > I don't see a path which would result in
-> > "Kernel panic - not syncing: test" to be printed from this path.
-> > 
-> > Since __die() does not call dump_stack(), we're not going to call
-> > dump_stack_print_info() from __die(), so I don't think it's appropriate
-> > to remove this information.
-> 
-> Okay. Let me try again with a stack overflow during boot. With the
-> series:
-> 
-> | Freeing unused kernel image (initmem) memory: 2048K
-> | 8<--- cut here ---
-> | Unable to handle kernel paging request at virtual address df82a000 when write
-> | [df82a000] *pgd=80000040007003, *pmd=41487003, *pte=00000000
-> | Internal error: Oops: a07 [#1] SMP ARM
-> | Modules linked in:
-> | CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W          6.14.0-rc2-00009-gdca8d546a8a3-dirty #16 PREEMPT
+The following commit has been merged into the perf/urgent branch of tip:
 
-Got it. Printed from __die() -> __show_regs() -> show_regs_print_info()
--> dump_stack_print_info().
+Commit-ID:     c631a2de7ae48d50434bdc205d901423f8577c65
+Gitweb:        https://git.kernel.org/tip/c631a2de7ae48d50434bdc205d901423f8577c65
+Author:        Sean Christopherson <seanjc@google.com>
+AuthorDate:    Thu, 30 Jan 2025 17:07:21 -08:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Sat, 08 Feb 2025 15:47:26 +01:00
 
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+perf/x86/intel: Ensure LBRs are disabled when a CPU is starting
 
-Thanks!
+Explicitly clear DEBUGCTL.LBR when a CPU is starting, prior to purging the
+LBR MSRs themselves, as at least one system has been found to transfer
+control to the kernel with LBRs enabled (it's unclear whether it's a BIOS
+flaw or a CPU goof).  Because the kernel preserves the original DEBUGCTL,
+even when toggling LBRs, leaving DEBUGCTL.LBR as is results in running
+with LBRs enabled at all times.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Closes: https://lore.kernel.org/all/c9d8269bff69f6359731d758e3b1135dedd7cc61.camel@redhat.com
+Reported-by: Maxim Levitsky <mlevitsk@redhat.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20250131010721.470503-1-seanjc@google.com
+---
+ arch/x86/events/intel/core.c     | 5 ++++-
+ arch/x86/include/asm/msr-index.h | 3 ++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index f3d5b71..e86333e 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -5042,8 +5042,11 @@ static void intel_pmu_cpu_starting(int cpu)
+ 
+ 	init_debug_store_on_cpu(cpu);
+ 	/*
+-	 * Deal with CPUs that don't clear their LBRs on power-up.
++	 * Deal with CPUs that don't clear their LBRs on power-up, and that may
++	 * even boot with LBRs enabled.
+ 	 */
++	if (!static_cpu_has(X86_FEATURE_ARCH_LBR) && x86_pmu.lbr_nr)
++		msr_clear_bit(MSR_IA32_DEBUGCTLMSR, DEBUGCTLMSR_LBR_BIT);
+ 	intel_pmu_lbr_reset();
+ 
+ 	cpuc->lbr_sel = NULL;
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 9a71880..72765b2 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -395,7 +395,8 @@
+ #define MSR_IA32_PASID_VALID		BIT_ULL(31)
+ 
+ /* DEBUGCTLMSR bits (others vary by model): */
+-#define DEBUGCTLMSR_LBR			(1UL <<  0) /* last branch recording */
++#define DEBUGCTLMSR_LBR_BIT		0	     /* last branch recording */
++#define DEBUGCTLMSR_LBR			(1UL <<  DEBUGCTLMSR_LBR_BIT)
+ #define DEBUGCTLMSR_BTF_SHIFT		1
+ #define DEBUGCTLMSR_BTF			(1UL <<  1) /* single-step on branches */
+ #define DEBUGCTLMSR_BUS_LOCK_DETECT	(1UL <<  2)
