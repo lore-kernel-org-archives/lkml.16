@@ -1,95 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2B4192B86;
-	Tue, 11 Feb 2025 08:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815B7192B86;
+	Tue, 11 Feb 2025 08:32:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739262704; cv=none; b=R+ynlhOjLo+4cixsHJqJ/D02DSRH3lrB9G6ftbmtxyyZLn+hnPF4948jDki5MPfKp05Fy5tAm5Nf1S5Bk96FxSKS/Zft1MHx7rj8/e5klh+83YAQtIB7DOujzecR++qQsziZKaMYKKBttFVnsvivFenoIQgjTimZwTKuLMDPbOo=
+	t=1739262768; cv=none; b=EZ/p1TFu4TTXzCVM+XCnNyvQQA5Ef5ac6jUAjN5ymWhU1XYT+Kw796FrKkIC44b0ViRsd2b972V6BefFXD++DCOgORQfL+CyA3E/GDdIushHq/ZxEZ0Igkm48ymUNu4O6TZTiFRz0fJRYix9Y1SmiIc0mBvxuj/z01gBHyB/d6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739262704; c=relaxed/simple;
-	bh=dl4uLU/iQ9rF6gTfpw7fZJVHUwDfPTBp/2QbqtbcdMU=;
+	s=arc-20240116; t=1739262768; c=relaxed/simple;
+	bh=3HUp0iLtp5lEEMyD1HDsvb7Mi/lw64moNCaiNwR77eI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KspHVZwpGEoOpKotwQ8eSwSajQlH2llLSAD3T7pro9Eiopg5m6FsCI6xHahCzV+AMk+vu6tY5FbQU734xVjiCwvKgEdCnGyYZ+sSTwsO9tPQ5BsTX7OioJ0vgeTASaP5bKkBKM1QJkqn0Xxaw0Hg750AfiHb85oidHPyUj/2n4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uW3bFcrk; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=V0I1g5NpFbRvPzhioyBqFzHG8nIHVj3qhNAau3JlezMrGEz5EfDdAMJZts710jalFO3JeZu7Liac/LGTmL99MQ3En5XaPGx2AmiDBUo+y8d3dp4Oqd+KvnpToCIH570jQeXPfAllIOUjqTDnVbQvX4RZYTpA+ewQ6ZFac9MnkWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SNxyxJWM; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uW3bFcrk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9A9EC4CEE4;
-	Tue, 11 Feb 2025 08:31:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739262704;
-	bh=dl4uLU/iQ9rF6gTfpw7fZJVHUwDfPTBp/2QbqtbcdMU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uW3bFcrkqwYvblTFtITmlt7YgN6TQjfuDtO7NcfQLqANFXCSeoow4sAmntrkPX7iy
-	 Kqzx2sAfCnjHst5aKcYZCH29j82/TGmS8xCwf6VIsY5pDdbq8rq5Z/kd/RC1MFVYqh
-	 3GrkNQpVhidgSRHGM3JolbQXqbQ/ETWnnZD97MrnQAyimp5UoLE4J6yl+RqeYo/Tet
-	 bZf4vDyqkRSaLS4kfDjUMqk8fjgwSBEybDGo5Ax6PiY5ssufmGoKmUtwFicoV0VQvF
-	 yjbqmU0Vd6S3Iif/zW6nFW0tlSJpjUxETSKuwmbX84fhas40cyonZArnEJLF/DfhC6
-	 0N7iwWY7Cy4CA==
-Date: Tue, 11 Feb 2025 09:31:40 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Boris Brezillon <boris.brezillon@collabora.com>, 
-	Steven Price <steven.price@arm.com>, kernel@collabora.com, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v3 3/3] arm64: dts: mediatek: mt8370: Enable gpu support
-Message-ID: <20250211-nice-boar-of-abracadabra-f696ec@krzk-bin>
-References: <20250207-mt8370-enable-gpu-v3-0-75e9b902f9c1@collabora.com>
- <20250207-mt8370-enable-gpu-v3-3-75e9b902f9c1@collabora.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SNxyxJWM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739262766; x=1770798766;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3HUp0iLtp5lEEMyD1HDsvb7Mi/lw64moNCaiNwR77eI=;
+  b=SNxyxJWMM23/Dwhj0meMosX99GtL7SYw6Hf+LDsn+yujY4yFAyKuHQxO
+   Q771HjafWAySBo4GSIg0BHqx2RnBNJIpxcXF3EYdiviDwajaV6ZS/C6Fg
+   naHRQwAtIR0oNrlFkTcE/kZMMxv7bn735NEyYhIggQDcVzo0aM/O6B2+5
+   CgLX43NwQTrwv15b2sm8a/JtRL73F3+F7eqwFEbN+CZ8QYVqnYxTos2zk
+   V7W+2PbG+fQ9BPc6yAmMDOiEkw4hflQV5F7AXCoRfICElO9wnsEjVWSko
+   Fv20QZzXZxDnPZ5nfmLO0FUadvamXPiRIO8HYjogtfII9+pfGAcO/42e7
+   A==;
+X-CSE-ConnectionGUID: NkLUK/MrTWOU/VkA5Oaw/Q==
+X-CSE-MsgGUID: aKHg5V3JQ2+Gj3CU9+kekg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="40015888"
+X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
+   d="scan'208";a="40015888"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 00:32:45 -0800
+X-CSE-ConnectionGUID: kHJ2xn4rRc2XCuRjxkElzQ==
+X-CSE-MsgGUID: E0HBB7nTSwu9tWF5JA2CIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="135697221"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa002.fm.intel.com with ESMTP; 11 Feb 2025 00:32:42 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id F24E1311; Tue, 11 Feb 2025 10:32:40 +0200 (EET)
+Date: Tue, 11 Feb 2025 10:32:40 +0200
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Vishal Annapurve <vannapurve@google.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, 
+	seanjc@google.com, erdemaktas@google.com, ackerleytng@google.com, jxgao@google.com, 
+	sagis@google.com, oupton@google.com, pgonda@google.com, kirill@shutemov.name, 
+	dave.hansen@linux.intel.com, linux-coco@lists.linux.dev, chao.p.peng@linux.intel.com, 
+	isaku.yamahata@gmail.com, stable@vger.kernel.org
+Subject: Re: [PATCH V3 1/2] x86/tdx: Route safe halt execution via
+ tdx_safe_halt()
+Message-ID: <wra363f7ye6mwv2papahmpgmybi45yqyzeohunbqju3zsf22td@zcutpjluiury>
+References: <20250206222714.1079059-1-vannapurve@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250207-mt8370-enable-gpu-v3-3-75e9b902f9c1@collabora.com>
+In-Reply-To: <20250206222714.1079059-1-vannapurve@google.com>
 
-On Fri, Feb 07, 2025 at 04:18:32PM +0100, Louis-Alexis Eyraud wrote:
-> Add a new gpu node in mt8370.dtsi to enable support for the
-> ARM Mali G57 MC2 GPU (Valhall-JM) found on the MT8370 SoC, using the
-> Panfrost driver.
+On Thu, Feb 06, 2025 at 10:27:12PM +0000, Vishal Annapurve wrote:
+> Direct HLT instruction execution causes #VEs for TDX VMs which is routed
+> to hypervisor via TDCALL. safe_halt() routines execute HLT in STI-shadow
+> so IRQs need to remain disabled until the TDCALL to ensure that pending
+> IRQs are correctly treated as wake events. So "sti;hlt" sequence needs to
+> be replaced with "TDCALL; raw_local_irq_enable()" for TDX VMs.
 > 
-> On a Mediatek Genio 510 EVK board, the panfrost driver probed with the
-> following message:
-> ```
-> panfrost 13000000.gpu: clock rate = 390000000
-> panfrost 13000000.gpu: mali-g57 id 0x9093 major 0x0 minor 0x0 status 0x0
-> panfrost 13000000.gpu: features: 00000000,000019f7, issues: 00000003,
->    80000400
-> panfrost 13000000.gpu: Features: L2:0x08130206 Shader:0x00000000
->    Tiler:0x00000809 Mem:0x1 MMU:0x00002830 AS:0xff JS:0x7
-> panfrost 13000000.gpu: shader_present=0x5 l2_present=0x1
-> [drm] Initialized panfrost 1.3.0 for 13000000.gpu on minor 0
-> ```
+> Commit bfe6ed0c6727 ("x86/tdx: Add HLT support for TDX guests")
+> prevented the idle routines from using "sti;hlt". But it missed the
+> paravirt routine which can be reached like this as an example:
+>         acpi_safe_halt() =>
+>         raw_safe_halt()  =>
+>         arch_safe_halt() =>
+>         irq.safe_halt()  =>
+>         pv_native_safe_halt()
 > 
-> Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8370.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> Modify tdx_safe_halt() to implement the sequence "TDCALL;
+> raw_local_irq_enable()" and invoke tdx_halt() from idle routine which just
+> executes TDCALL without changing state of interrupts.
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8370.dtsi b/arch/arm64/boot/dts/mediatek/mt8370.dtsi
-> index cf1a3759451ff899ce9e63e5a00f192fb483f6e5..2f27f7e7ab813b97f869297ae360f69854e966e1 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8370.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8370.dtsi
-> @@ -59,6 +59,15 @@ &cpu_little3_cooling_map0 {
->  				<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->  };
->  
-> +&gpu {
-> +	compatible = "mediatek,mt8370-mali", "arm,mali-valhall-jm";
+> If CONFIG_PARAVIRT_XXL is disabled, "sti;hlt" sequences can still get
+> executed from TDX VMs via paths like:
+>         acpi_safe_halt() =>
+>         raw_safe_halt()  =>
+>         arch_safe_halt() =>
+> 	native_safe_halt()
+> There is a long term plan to fix these paths by carving out
+> irq.safe_halt() outside paravirt framework.
 
-It's up to platform maintainers, but IMHO this is discouraged practice.
-If you ever need to override compatible, this means the node is not
-really shared between this and base SoC (base DTSI).
+I don't think it is acceptable to keep !PARAVIRT_XXL (read no-Xen) config
+broken.
 
-Best regards,
-Krzysztof
+We need either move irq.safe_halt() out of PARAVIRT_XXL now or make
+non-paravirt arch_safe_halt() to use TDCALL. Or if we don't care about
+performance of !PARAVIRT_XXL config, special-case HLT in
+exc_virtualization_exception().
 
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
