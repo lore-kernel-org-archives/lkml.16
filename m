@@ -1,62 +1,62 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952871FCFF2
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0701FF1BA
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739272173; cv=none; b=H0UWO8yR43J0O33U+3DL3MNa6XBrSvoTlDOZoYM3NIANpTEofUv2TQbrnziqd6iFYzaLn8JHwSG4zgsBb1/pmyTlDFSsd/c0GGjqT4qJroDsQcwK/rtlQ1I3aDClzBgdvAFKqWPJIs+gr8wL95QrYACyVllFAWM/3su4UqOtzUA=
+	t=1739272174; cv=none; b=k+T+pnCmBwmIplEKYxeDrtWTKlQWjF8Z6fpyxsqbkwPPL8fMCjSdCZmECLUodg7l4YOmDmOE006AuPi6tw2Q2oxPL5W4pxJG7KCHuwvyVevHmpcvIynX2XsVnyIlKSOf4iGHbU6aV1QMr+d93j01aeJd+KvJsvGAX9QdI9h0wOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739272173; c=relaxed/simple;
-	bh=jQiqimLgyL3YXSrLRLX/jOpP0x47NTsxc3XafwDHLTI=;
+	s=arc-20240116; t=1739272174; c=relaxed/simple;
+	bh=UtdSsLwNlsOpdMqCJmdovWvAqjSML4M3b3j6x5TAsmc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZJupfS0ZbMZN9akQ5hITsfVZe1nWjERVJTI0oPL3q2xk3vTgq0ZCSeYArtik24ry4VXUInxJdkm86eKi6hls0vR+3ZhXE7OdsCgzWLkEFGEi76/HbJSE8KVJhXTocipHQuSCR31AKhoipZqupe3s0Qup9eOYUBy/haRF2tgr0Do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IDbwiJRe; arc=none smtp.client-ip=209.85.221.41
+	 MIME-Version:Content-Type; b=lOOwoF6TdQoLY0LEmwuPEoh3/DeBioPHWdF0+4J34JxU7S+ZWZjY+w0F1V4O6U+90bI4mcjn9RoOqA6YPImSY6w4gKmLDSzUaraHAal9OLajFF8cX4tllqXPMm5SDKhNP8/EanpV3HwlLCoBFQly5U6KyGoBBSCBpILpmANIErg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QhcPNuLb; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IDbwiJRe"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38dc962f1b9so2388419f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 03:09:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QhcPNuLb"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38dc660b56cso4163790f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 03:09:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739272169; x=1739876969; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1739272171; x=1739876971; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=B2kmfXhT9BzoK/pB6AuaP8lD3p6L3Xv05Wido6gdYTs=;
-        b=IDbwiJRebXY1umnbLSwXgb/5et6OOvlZClaPc+xP5cYmtk3CtfyOvDOsep03uMb+d7
-         wW59rpz6pgTWzjUwbgAcUF/EbzVDOS3knmk9EwSYT42qwHD4ThCxHwNyfLA2zJ0f6Prg
-         QGXEUcJ9Ap6tT4uccy3RHVrCRbRBbbtGyht1WEKGmLJnt+dqeRzAvM0w9NXmxdHmBT6H
-         WFtpNJknSC8qaFsbqaMmYU+uvBXQtzeLr9XC2aX1RiXO78wVmy1FwR0lDb8kKlUAUeeI
-         eZQnJ2X9RoDjHsSaXxa23iCZExc6TyipIrAUys9elVm1ib2lIr7hAM2uh3TnVRfMFNiz
-         lcsw==
+        bh=rgZhQ6dAZnQsQ/pSlZ4d6v7fEVat7OWRX1o/03NiEX0=;
+        b=QhcPNuLb6rwVVvoeYbS/pt7wYcrQby+gEv0CbJxOqJZ67MX7taWYVkk8ty6dKPW5gU
+         CfVRfiLMgfa3SYgg/lMqfh3DEGgynslCEmQnQDQ8qu1sy1YTpCXVCwEOxmDf/lVBcSH3
+         6jt8kvX5+JJxSU67YcsQG0IhFk4I8JABmDkIjgaa2TuiqLHpMmfBQD3E79hMZDRFWbXv
+         P4xoFgtwi1R/0d6QZMVYm+FjABLWBVaIdATsFpvooIpuWG3AFjW3aWZ+330ANrqCntlK
+         2Qv4lop/juCFBj7dzxUrEbrmUF2bqSx+RzCUh10dYnzVr8jg5ztVf/pweN6sYc6WjWje
+         W8Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739272169; x=1739876969;
+        d=1e100.net; s=20230601; t=1739272171; x=1739876971;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=B2kmfXhT9BzoK/pB6AuaP8lD3p6L3Xv05Wido6gdYTs=;
-        b=wxm3MgIniTFOrUh14tP3FFIMva8tCdSc4D5+vTh3nEkDM24iB6faMC5PGYhHOJNlhL
-         2e1MeuxCASKEAOhMslzI5tYXK0lVNh1ZrEgNEYo7LX4HELV3inBz3eoa2bUWfYZGrgfO
-         HpoV2DWzhp25f7VPpMF4zOQh/ZUQC5DgFdyMASXZMUMzDYpx+9ZEDCzDxXQVvUMm3elT
-         c6GnLLotoa90gomsQTFzoWUZpmUL7ZDHm+Ngxv/c9lCSHWSWmDV4JIL28Rao7aBjZpSP
-         3RJiF5OTiF8v6npgrPPwLDuy63fAJQyGOHj4Be6XTWfgEB+1ri0r/cTRMkymTvXaEj4f
-         yNNg==
-X-Forwarded-Encrypted: i=1; AJvYcCX+9kqbmyqFMDPq1c2M9OW1a91eA7ftpZ66IVMbHir8aLt24/REcdNtqAHqJcD6RSBYvdds2pArJ4uNx2s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDYkLG0PLi6lWCvqAbXFlxs/N8nOLZzeexlmScC1pTVCuNTBBG
-	W47imFQCh3jb+zyowtXfhLzsvgpIzyph3swQx9mGAeSnWFwPxMfs
-X-Gm-Gg: ASbGnctV2JOtTlDAI+Fxt9krWiR4PUzCoqOczZjvm6D8xh5e23Cm9nTofMBoIEZqshO
-	5+9ODjkNEZn0GomgfazmM6a9TpUWFWGw70IHlY4DwmCFwv1UztqXjGI5JC3mSHNDfj/+A4SUhde
-	rWiUzo3GhSlHsgSrS76axwLyKw78L0UMSvSsbPBTgo1VU9iG7aj93kaHhc3FfuYCS7+vZ3Mo+Sn
-	CITnLuk1sh0MFyetreWTrvQf8xoEAF773Ap50GBSEqS232shWE2bYJhIjEjh8C5go+yGLyfJHHP
-	Ha1v13OkNigHTyYe
-X-Google-Smtp-Source: AGHT+IEzl7v9Ctoqur7uCVRnL8fUQKBIvhoP1P3h6FkEuOOmER8stFwB4z2yi1f8X0XCRNCSRLIZzQ==
-X-Received: by 2002:a05:6000:156f:b0:38d:d9e7:54a8 with SMTP id ffacd0b85a97d-38dd9e756f9mr7286984f8f.19.1739272168677;
-        Tue, 11 Feb 2025 03:09:28 -0800 (PST)
+        bh=rgZhQ6dAZnQsQ/pSlZ4d6v7fEVat7OWRX1o/03NiEX0=;
+        b=ZKNEA0szmpLBufpjpF1mRG8MiqO/KbEy6qaeWLU8gkhnox8QdmDXOT1F72xOrc1w3W
+         ggJU1YvDYxbsPNc9BY9Znn912nZB8/HUXsh0xaNMgYERk/Zv6ouYrDNZJdDngjy1DGG/
+         Fvy0BGiRrlfz+rQQEAX0yKvEkOoN3ZVmFUa7tMoD3/ddqjjDSlI/NaP4VkbJmqlkl7a9
+         zSTEgUPzqTwz5w69upgGyBRPtzGx8lLEGXk3+/1TBAFtZ/YN/Z1EiTR5W0kt3UWUOkrj
+         UZGUR/iimy9c+KfwqY2Sm7yN0trkeL0TodSvFeR6FnS6jAPUBkkPrcsVb5+D9E3WWbnP
+         Jkww==
+X-Forwarded-Encrypted: i=1; AJvYcCWfRgLRD2MxQE44N13mab9snm11cu/UXHwef3bP8PCY0MZwmncdhOx9tgqRkDSH54zFYchE+IYVTyiDti8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4Uk76UZ7cSIfCxghYS2kPN/4tCUh7X6kT7JQw0ARlpe8rx0JO
+	uZhuaXauFUYHTqy55qn6o/RVgt9WGG1pN9zV8dRhjnga/m9DktH6
+X-Gm-Gg: ASbGnctThbG2DByVEIfPdNAr75Pph8U04NoP81Bw8wm3cVF7W5jO5bi0aWbsb89jujf
+	deHjZ2uuRC+ylDLPqxo8dBN1OZpG2ESPidMrx1SO3Vmsta6hM/eNtA04bWZLxKG9GVMaWTe97ES
+	ScN7/M5r7z95+KllI3i79Ak31SzFMi7DXiSh1RvvIlSDvHD/i+X1QGz9Jh0qrkNd8rHOXThip3w
+	l64C4aOH5J9lLwNtOH8OR+/A6XwbX4J+1E2SIRCJzdyFCrQr+K2lVRkK6fs4YbhKxS99a5Gponv
+	whV+xLSRTgHlZL2b
+X-Google-Smtp-Source: AGHT+IHo0BwESJDewoMMey9zJvK+1wnRQd0wPoASeUmmYx4QQnfH41fvqdbpqf8kLDCS1DoqMl7hSQ==
+X-Received: by 2002:a05:6000:1f81:b0:38d:e3d4:4468 with SMTP id ffacd0b85a97d-38de3d4464cmr4288184f8f.51.1739272170397;
+        Tue, 11 Feb 2025 03:09:30 -0800 (PST)
 Received: from fedora.. ([94.73.37.161])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcb55b7a5sm11814417f8f.14.2025.02.11.03.09.27
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcb55b7a5sm11814417f8f.14.2025.02.11.03.09.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 03:09:28 -0800 (PST)
+        Tue, 11 Feb 2025 03:09:29 -0800 (PST)
 From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
 To: louis.chauvet@bootlin.com
 Cc: hamohammed.sa@gmail.com,
@@ -69,9 +69,9 @@ Cc: hamohammed.sa@gmail.com,
 	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	=?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-Subject: [PATCH v2 09/15] drm/vkms: Allow to configure multiple planes
-Date: Tue, 11 Feb 2025 12:09:06 +0100
-Message-ID: <20250211110912.15409-10-jose.exposito89@gmail.com>
+Subject: [PATCH v2 10/15] drm/vkms: Allow to configure multiple CRTCs
+Date: Tue, 11 Feb 2025 12:09:07 +0100
+Message-ID: <20250211110912.15409-11-jose.exposito89@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250211110912.15409-1-jose.exposito89@gmail.com>
 References: <20250211110912.15409-1-jose.exposito89@gmail.com>
@@ -84,322 +84,228 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add a list of planes to vkms_config and create as many planes as
-configured during output initialization.
+Add a list of CRTCs to vkms_config and helper functions to add and
+remove as many CRTCs as wanted.
 
-For backwards compatibility, add one primary plane and, if configured,
-one cursor plane and NUM_OVERLAY_PLANES planes to the default
-configuration.
+For backwards compatibility, add one CRTC to the default configuration.
+
+A future patch will allow to attach planes and CRTCs, but for the
+moment there are no changes in the way the output is configured.
 
 Co-developed-by: Louis Chauvet <louis.chauvet@bootlin.com>
 Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 Signed-off-by: José Expósito <jose.exposito89@gmail.com>
 ---
- .clang-format                                 |   1 +
- drivers/gpu/drm/vkms/tests/vkms_config_test.c | 140 +++++++++++++++++-
- drivers/gpu/drm/vkms/vkms_config.c            | 124 +++++++++++++++-
- drivers/gpu/drm/vkms/vkms_config.h            |  73 ++++++++-
- drivers/gpu/drm/vkms/vkms_output.c            |  42 ++----
- 5 files changed, 344 insertions(+), 36 deletions(-)
+ .clang-format                                 |  1 +
+ drivers/gpu/drm/vkms/tests/vkms_config_test.c | 73 ++++++++++++++++-
+ drivers/gpu/drm/vkms/vkms_config.c            | 60 +++++++++++++-
+ drivers/gpu/drm/vkms/vkms_config.h            | 78 +++++++++++++++++++
+ drivers/gpu/drm/vkms/vkms_drv.c               |  3 +-
+ 5 files changed, 209 insertions(+), 6 deletions(-)
 
 diff --git a/.clang-format b/.clang-format
-index fe1aa1a30d40..c585d2a5b395 100644
+index c585d2a5b395..e7a901c3617d 100644
 --- a/.clang-format
 +++ b/.clang-format
 @@ -690,6 +690,7 @@ ForEachMacros:
    - 'v4l2_m2m_for_each_src_buf'
    - 'v4l2_m2m_for_each_src_buf_safe'
    - 'virtio_device_for_each_vq'
-+  - 'vkms_config_for_each_plane'
++  - 'vkms_config_for_each_crtc'
+   - 'vkms_config_for_each_plane'
    - 'while_for_each_ftrace_op'
    - 'xa_for_each'
-   - 'xa_for_each_marked'
 diff --git a/drivers/gpu/drm/vkms/tests/vkms_config_test.c b/drivers/gpu/drm/vkms/tests/vkms_config_test.c
-index 6e07139d261c..38ec456d9610 100644
+index 38ec456d9610..59bd7baea923 100644
 --- a/drivers/gpu/drm/vkms/tests/vkms_config_test.c
 +++ b/drivers/gpu/drm/vkms/tests/vkms_config_test.c
-@@ -24,6 +24,10 @@ static void vkms_config_test_empty_config(struct kunit *test)
- 	dev_name = NULL;
+@@ -25,6 +25,7 @@ static void vkms_config_test_empty_config(struct kunit *test)
  	KUNIT_EXPECT_STREQ(test, vkms_config_get_device_name(config), "test");
  
-+	KUNIT_EXPECT_TRUE(test, list_empty(&config->planes));
-+
-+	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
-+
- 	vkms_config_destroy(config);
- }
+ 	KUNIT_EXPECT_TRUE(test, list_empty(&config->planes));
++	KUNIT_EXPECT_TRUE(test, list_empty(&config->crtcs));
  
-@@ -44,16 +48,145 @@ static void vkms_config_test_default_config(struct kunit *test)
- {
+ 	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
+ 
+@@ -49,6 +50,7 @@ static void vkms_config_test_default_config(struct kunit *test)
  	const struct default_config_case *params = test->param_value;
  	struct vkms_config *config;
-+	struct vkms_config_plane *plane_cfg;
-+	int n_primaries = 0;
-+	int n_cursors = 0;
-+	int n_overlays = 0;
- 
- 	config = vkms_config_default_create(params->enable_cursor,
- 					    params->enable_writeback,
+ 	struct vkms_config_plane *plane_cfg;
++	struct vkms_config_crtc *crtc_cfg;
+ 	int n_primaries = 0;
+ 	int n_cursors = 0;
+ 	int n_overlays = 0;
+@@ -58,8 +60,6 @@ static void vkms_config_test_default_config(struct kunit *test)
  					    params->enable_overlay);
  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
  
--	KUNIT_EXPECT_EQ(test, config->cursor, params->enable_cursor);
- 	KUNIT_EXPECT_EQ(test, config->writeback, params->enable_writeback);
--	KUNIT_EXPECT_EQ(test, config->overlay, params->enable_overlay);
+-	KUNIT_EXPECT_EQ(test, config->writeback, params->enable_writeback);
+-
+ 	/* Planes */
+ 	list_for_each_entry(plane_cfg, &config->planes, link) {
+ 		switch (vkms_config_plane_get_type(plane_cfg)) {
+@@ -80,6 +80,13 @@ static void vkms_config_test_default_config(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, n_cursors, params->enable_cursor ? 1 : 0);
+ 	KUNIT_EXPECT_EQ(test, n_overlays, params->enable_overlay ? 8 : 0);
  
-+	/* Planes */
-+	list_for_each_entry(plane_cfg, &config->planes, link) {
-+		switch (vkms_config_plane_get_type(plane_cfg)) {
-+		case DRM_PLANE_TYPE_PRIMARY:
-+			n_primaries++;
-+			break;
-+		case DRM_PLANE_TYPE_CURSOR:
-+			n_cursors++;
-+			break;
-+		case DRM_PLANE_TYPE_OVERLAY:
-+			n_overlays++;
-+			break;
-+		default:
-+			KUNIT_FAIL_AND_ABORT(test, "Unknown plane type");
-+		}
-+	}
-+	KUNIT_EXPECT_EQ(test, n_primaries, 1);
-+	KUNIT_EXPECT_EQ(test, n_cursors, params->enable_cursor ? 1 : 0);
-+	KUNIT_EXPECT_EQ(test, n_overlays, params->enable_overlay ? 8 : 0);
++	/* CRTCs */
++	crtc_cfg = list_first_entry(&config->crtcs, typeof(*crtc_cfg), link);
 +
-+	KUNIT_EXPECT_TRUE(test, vkms_config_is_valid(config));
++	KUNIT_EXPECT_EQ(test, list_count_nodes(&config->crtcs), 1);
++	KUNIT_EXPECT_EQ(test, vkms_config_crtc_get_writeback(crtc_cfg),
++			params->enable_writeback);
 +
-+	vkms_config_destroy(config);
-+}
-+
-+static void vkms_config_test_get_planes(struct kunit *test)
+ 	KUNIT_EXPECT_TRUE(test, vkms_config_is_valid(config));
+ 
+ 	vkms_config_destroy(config);
+@@ -128,6 +135,43 @@ static void vkms_config_test_get_planes(struct kunit *test)
+ 	vkms_config_destroy(config);
+ }
+ 
++static void vkms_config_test_get_crtcs(struct kunit *test)
 +{
 +	struct vkms_config *config;
-+	struct vkms_config_plane *plane_cfg;
-+	struct vkms_config_plane *plane_cfg1, *plane_cfg2;
-+	int n_planes = 0;
++	struct vkms_config_crtc *crtc_cfg;
++	struct vkms_config_crtc *crtc_cfg1, *crtc_cfg2;
 +
 +	config = vkms_config_create("test");
 +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
 +
-+	vkms_config_for_each_plane(config, plane_cfg)
-+		n_planes++;
-+	KUNIT_ASSERT_EQ(test, n_planes, 0);
++	KUNIT_ASSERT_EQ(test, vkms_config_get_num_crtcs(config), 0);
++	vkms_config_for_each_crtc(config, crtc_cfg)
++		KUNIT_FAIL(test, "Unexpected CRTC");
 +
-+	plane_cfg1 = vkms_config_create_plane(config);
-+	vkms_config_for_each_plane(config, plane_cfg) {
-+		n_planes++;
-+		if (plane_cfg != plane_cfg1)
-+			KUNIT_FAIL(test, "Unexpected plane");
++	crtc_cfg1 = vkms_config_create_crtc(config);
++	KUNIT_ASSERT_EQ(test, vkms_config_get_num_crtcs(config), 1);
++	vkms_config_for_each_crtc(config, crtc_cfg) {
++		if (crtc_cfg != crtc_cfg1)
++			KUNIT_FAIL(test, "Unexpected CRTC");
 +	}
-+	KUNIT_ASSERT_EQ(test, n_planes, 1);
-+	n_planes = 0;
 +
-+	plane_cfg2 = vkms_config_create_plane(config);
-+	vkms_config_for_each_plane(config, plane_cfg) {
-+		n_planes++;
-+		if (plane_cfg != plane_cfg1 && plane_cfg != plane_cfg2)
-+			KUNIT_FAIL(test, "Unexpected plane");
++	crtc_cfg2 = vkms_config_create_crtc(config);
++	KUNIT_ASSERT_EQ(test, vkms_config_get_num_crtcs(config), 2);
++	vkms_config_for_each_crtc(config, crtc_cfg) {
++		if (crtc_cfg != crtc_cfg1 && crtc_cfg != crtc_cfg2)
++			KUNIT_FAIL(test, "Unexpected CRTC");
 +	}
-+	KUNIT_ASSERT_EQ(test, n_planes, 2);
-+	n_planes = 0;
 +
-+	vkms_config_destroy_plane(plane_cfg1);
-+	vkms_config_for_each_plane(config, plane_cfg) {
-+		n_planes++;
-+		if (plane_cfg != plane_cfg2)
-+			KUNIT_FAIL(test, "Unexpected plane");
++	vkms_config_destroy_crtc(config, crtc_cfg2);
++	KUNIT_ASSERT_EQ(test, vkms_config_get_num_crtcs(config), 1);
++	vkms_config_for_each_crtc(config, crtc_cfg) {
++		if (crtc_cfg != crtc_cfg1)
++			KUNIT_FAIL(test, "Unexpected CRTC");
 +	}
-+	KUNIT_ASSERT_EQ(test, n_planes, 1);
 +
 +	vkms_config_destroy(config);
 +}
 +
-+static void vkms_config_test_invalid_plane_number(struct kunit *test)
+ static void vkms_config_test_invalid_plane_number(struct kunit *test)
+ {
+ 	struct vkms_config *config;
+@@ -192,13 +236,38 @@ static void vkms_config_test_valid_plane_type(struct kunit *test)
+ 	vkms_config_destroy(config);
+ }
+ 
++static void vkms_config_test_invalid_crtc_number(struct kunit *test)
 +{
 +	struct vkms_config *config;
-+	struct vkms_config_plane *plane_cfg;
++	struct vkms_config_crtc *crtc_cfg;
 +	int n;
 +
 +	config = vkms_config_default_create(false, false, false);
 +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
 +
-+	/* Invalid: No planes */
-+	plane_cfg = list_first_entry(&config->planes, typeof(*plane_cfg), link);
-+	vkms_config_destroy_plane(plane_cfg);
++	/* Invalid: No CRTCs */
++	crtc_cfg = list_first_entry(&config->crtcs, typeof(*crtc_cfg), link);
++	vkms_config_destroy_crtc(config, crtc_cfg);
 +	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
 +
-+	/* Invalid: Too many planes */
++	/* Invalid: Too many CRTCs */
 +	for (n = 0; n <= 32; n++)
-+		vkms_config_create_plane(config);
++		vkms_config_create_crtc(config);
 +
 +	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
 +
 +	vkms_config_destroy(config);
 +}
 +
-+static void vkms_config_test_valid_plane_type(struct kunit *test)
-+{
-+	struct vkms_config *config;
-+	struct vkms_config_plane *plane_cfg;
-+
-+	config = vkms_config_default_create(false, false, false);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, config);
-+
-+	plane_cfg = list_first_entry(&config->planes, typeof(*plane_cfg), link);
-+	vkms_config_destroy_plane(plane_cfg);
-+
-+	/* Invalid: No primary plane */
-+	plane_cfg = vkms_config_create_plane(config);
-+	vkms_config_plane_set_type(plane_cfg, DRM_PLANE_TYPE_OVERLAY);
-+	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
-+
-+	/* Invalid: Multiple primary planes */
-+	plane_cfg = vkms_config_create_plane(config);
-+	vkms_config_plane_set_type(plane_cfg, DRM_PLANE_TYPE_PRIMARY);
-+	plane_cfg = vkms_config_create_plane(config);
-+	vkms_config_plane_set_type(plane_cfg, DRM_PLANE_TYPE_PRIMARY);
-+	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
-+
-+	/* Valid: One primary plane */
-+	vkms_config_destroy_plane(plane_cfg);
-+	KUNIT_EXPECT_TRUE(test, vkms_config_is_valid(config));
-+
-+	/* Invalid: Multiple cursor planes */
-+	plane_cfg = vkms_config_create_plane(config);
-+	vkms_config_plane_set_type(plane_cfg, DRM_PLANE_TYPE_CURSOR);
-+	plane_cfg = vkms_config_create_plane(config);
-+	vkms_config_plane_set_type(plane_cfg, DRM_PLANE_TYPE_CURSOR);
-+	KUNIT_EXPECT_FALSE(test, vkms_config_is_valid(config));
-+
-+	/* Valid: One primary and one cursor plane */
-+	vkms_config_destroy_plane(plane_cfg);
- 	KUNIT_EXPECT_TRUE(test, vkms_config_is_valid(config));
- 
- 	vkms_config_destroy(config);
-@@ -63,6 +196,9 @@ static struct kunit_case vkms_config_test_cases[] = {
+ static struct kunit_case vkms_config_test_cases[] = {
  	KUNIT_CASE(vkms_config_test_empty_config),
  	KUNIT_CASE_PARAM(vkms_config_test_default_config,
  			 default_config_gen_params),
-+	KUNIT_CASE(vkms_config_test_get_planes),
-+	KUNIT_CASE(vkms_config_test_invalid_plane_number),
-+	KUNIT_CASE(vkms_config_test_valid_plane_type),
+ 	KUNIT_CASE(vkms_config_test_get_planes),
++	KUNIT_CASE(vkms_config_test_get_crtcs),
+ 	KUNIT_CASE(vkms_config_test_invalid_plane_number),
+ 	KUNIT_CASE(vkms_config_test_valid_plane_type),
++	KUNIT_CASE(vkms_config_test_invalid_crtc_number),
  	{}
  };
  
 diff --git a/drivers/gpu/drm/vkms/vkms_config.c b/drivers/gpu/drm/vkms/vkms_config.c
-index 67f71d29596e..8feacfc155be 100644
+index 8feacfc155be..b08021e62c9f 100644
 --- a/drivers/gpu/drm/vkms/vkms_config.c
 +++ b/drivers/gpu/drm/vkms/vkms_config.c
-@@ -21,6 +21,8 @@ struct vkms_config *vkms_config_create(const char *dev_name)
- 		return ERR_PTR(-ENOMEM);
+@@ -22,6 +22,7 @@ struct vkms_config *vkms_config_create(const char *dev_name)
  	}
  
-+	INIT_LIST_HEAD(&config->planes);
-+
+ 	INIT_LIST_HEAD(&config->planes);
++	INIT_LIST_HEAD(&config->crtcs);
+ 
  	return config;
  }
- 
-@@ -29,26 +31,114 @@ struct vkms_config *vkms_config_default_create(bool enable_cursor,
- 					       bool enable_overlay)
+@@ -32,19 +33,23 @@ struct vkms_config *vkms_config_default_create(bool enable_cursor,
  {
  	struct vkms_config *config;
-+	struct vkms_config_plane *plane_cfg;
-+	int n;
+ 	struct vkms_config_plane *plane_cfg;
++	struct vkms_config_crtc *crtc_cfg;
+ 	int n;
  
  	config = vkms_config_create(DEFAULT_DEVICE_NAME);
  	if (IS_ERR(config))
  		return config;
  
--	config->cursor = enable_cursor;
- 	config->writeback = enable_writeback;
--	config->overlay = enable_overlay;
-+
-+	plane_cfg = vkms_config_create_plane(config);
-+	if (IS_ERR(plane_cfg))
+-	config->writeback = enable_writeback;
+-
+ 	plane_cfg = vkms_config_create_plane(config);
+ 	if (IS_ERR(plane_cfg))
+ 		goto err_alloc;
+ 	vkms_config_plane_set_type(plane_cfg, DRM_PLANE_TYPE_PRIMARY);
+ 
++	crtc_cfg = vkms_config_create_crtc(config);
++	if (IS_ERR(crtc_cfg))
 +		goto err_alloc;
-+	vkms_config_plane_set_type(plane_cfg, DRM_PLANE_TYPE_PRIMARY);
++	vkms_config_crtc_set_writeback(crtc_cfg, enable_writeback);
 +
-+	if (enable_overlay) {
-+		for (n = 0; n < NUM_OVERLAY_PLANES; n++) {
-+			plane_cfg = vkms_config_create_plane(config);
-+			if (IS_ERR(plane_cfg))
-+				goto err_alloc;
-+			vkms_config_plane_set_type(plane_cfg,
-+						   DRM_PLANE_TYPE_OVERLAY);
-+		}
-+	}
-+
-+	if (enable_cursor) {
-+		plane_cfg = vkms_config_create_plane(config);
-+		if (IS_ERR(plane_cfg))
-+			goto err_alloc;
-+		vkms_config_plane_set_type(plane_cfg, DRM_PLANE_TYPE_CURSOR);
-+	}
- 
- 	return config;
-+
-+err_alloc:
-+	vkms_config_destroy(config);
-+	return ERR_PTR(-ENOMEM);
- }
- 
+ 	if (enable_overlay) {
+ 		for (n = 0; n < NUM_OVERLAY_PLANES; n++) {
+ 			plane_cfg = vkms_config_create_plane(config);
+@@ -72,10 +77,14 @@ struct vkms_config *vkms_config_default_create(bool enable_cursor,
  void vkms_config_destroy(struct vkms_config *config)
  {
-+	struct vkms_config_plane *plane_cfg, *plane_tmp;
-+
-+	list_for_each_entry_safe(plane_cfg, plane_tmp, &config->planes, link)
-+		vkms_config_destroy_plane(plane_cfg);
+ 	struct vkms_config_plane *plane_cfg, *plane_tmp;
++	struct vkms_config_crtc *crtc_cfg, *crtc_tmp;
+ 
+ 	list_for_each_entry_safe(plane_cfg, plane_tmp, &config->planes, link)
+ 		vkms_config_destroy_plane(plane_cfg);
+ 
++	list_for_each_entry_safe(crtc_cfg, crtc_tmp, &config->crtcs, link)
++		vkms_config_destroy_crtc(config, crtc_cfg);
 +
  	kfree_const(config->dev_name);
  	kfree(config);
  }
+@@ -131,11 +140,28 @@ static bool valid_plane_type(struct vkms_config *config)
+ 	return true;
+ }
  
-+static bool valid_plane_number(struct vkms_config *config)
++static bool valid_crtc_number(struct vkms_config *config)
 +{
 +	struct drm_device *dev = &config->dev->drm;
-+	size_t n_planes;
++	size_t n_crtcs;
 +
-+	n_planes = list_count_nodes(&config->planes);
-+	if (n_planes <= 0 || n_planes >= 32) {
-+		drm_info(dev, "The number of planes must be between 1 and 31\n");
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+static bool valid_plane_type(struct vkms_config *config)
-+{
-+	struct drm_device *dev = &config->dev->drm;
-+	struct vkms_config_plane *plane_cfg;
-+	bool has_primary_plane = false;
-+	bool has_cursor_plane = false;
-+
-+	vkms_config_for_each_plane(config, plane_cfg) {
-+		enum drm_plane_type type;
-+
-+		type = vkms_config_plane_get_type(plane_cfg);
-+
-+		if (type == DRM_PLANE_TYPE_PRIMARY) {
-+			if (has_primary_plane) {
-+				drm_info(dev, "Multiple primary planes\n");
-+				return false;
-+			}
-+
-+			has_primary_plane = true;
-+		} else if (type == DRM_PLANE_TYPE_CURSOR) {
-+			if (has_cursor_plane) {
-+				drm_info(dev, "Multiple cursor planes\n");
-+				return false;
-+			}
-+
-+			has_cursor_plane = true;
-+		}
-+	}
-+
-+	if (!has_primary_plane) {
-+		drm_info(dev, "Primary plane not found\n");
++	n_crtcs = list_count_nodes(&config->crtcs);
++	if (n_crtcs <= 0 || n_crtcs >= 32) {
++		drm_info(dev, "The number of CRTCs must be between 1 and 31\n");
 +		return false;
 +	}
 +
@@ -408,231 +314,201 @@ index 67f71d29596e..8feacfc155be 100644
 +
  bool vkms_config_is_valid(struct vkms_config *config)
  {
-+	if (!valid_plane_number(config))
-+		return false;
-+
-+	if (!valid_plane_type(config))
-+		return false;
-+
- 	return true;
- }
+ 	if (!valid_plane_number(config))
+ 		return false;
  
-@@ -58,12 +148,17 @@ static int vkms_config_show(struct seq_file *m, void *data)
- 	struct drm_device *dev = entry->dev;
++	if (!valid_crtc_number(config))
++		return false;
++
+ 	if (!valid_plane_type(config))
+ 		return false;
+ 
+@@ -149,10 +175,10 @@ static int vkms_config_show(struct seq_file *m, void *data)
  	struct vkms_device *vkmsdev = drm_device_to_vkms_device(dev);
  	const char *dev_name;
-+	struct vkms_config_plane *plane_cfg;
+ 	struct vkms_config_plane *plane_cfg;
++	struct vkms_config_crtc *crtc_cfg;
  
  	dev_name = vkms_config_get_device_name((struct vkms_config *)vkmsdev->config);
  	seq_printf(m, "dev_name=%s\n", dev_name);
- 	seq_printf(m, "writeback=%d\n", vkmsdev->config->writeback);
--	seq_printf(m, "cursor=%d\n", vkmsdev->config->cursor);
--	seq_printf(m, "overlay=%d\n", vkmsdev->config->overlay);
-+
-+	vkms_config_for_each_plane(vkmsdev->config, plane_cfg) {
-+		seq_puts(m, "plane:\n");
-+		seq_printf(m, "\ttype=%d\n",
-+			   vkms_config_plane_get_type(plane_cfg));
-+	}
+-	seq_printf(m, "writeback=%d\n", vkmsdev->config->writeback);
  
+ 	vkms_config_for_each_plane(vkmsdev->config, plane_cfg) {
+ 		seq_puts(m, "plane:\n");
+@@ -160,6 +186,12 @@ static int vkms_config_show(struct seq_file *m, void *data)
+ 			   vkms_config_plane_get_type(plane_cfg));
+ 	}
+ 
++	vkms_config_for_each_crtc(vkmsdev->config, crtc_cfg) {
++		seq_puts(m, "crtc:\n");
++		seq_printf(m, "\twriteback=%d\n",
++			   vkms_config_crtc_get_writeback(crtc_cfg));
++	}
++
  	return 0;
  }
-@@ -77,3 +172,24 @@ void vkms_config_register_debugfs(struct vkms_device *vkms_device)
- 	drm_debugfs_add_files(&vkms_device->drm, vkms_config_debugfs_list,
- 			      ARRAY_SIZE(vkms_config_debugfs_list));
+ 
+@@ -193,3 +225,25 @@ void vkms_config_destroy_plane(struct vkms_config_plane *plane_cfg)
+ 	list_del(&plane_cfg->link);
+ 	kfree(plane_cfg);
  }
 +
-+struct vkms_config_plane *vkms_config_create_plane(struct vkms_config *config)
++struct vkms_config_crtc *vkms_config_create_crtc(struct vkms_config *config)
 +{
-+	struct vkms_config_plane *plane_cfg;
++	struct vkms_config_crtc *crtc_cfg;
 +
-+	plane_cfg = kzalloc(sizeof(*plane_cfg), GFP_KERNEL);
-+	if (!plane_cfg)
++	crtc_cfg = kzalloc(sizeof(*crtc_cfg), GFP_KERNEL);
++	if (!crtc_cfg)
 +		return ERR_PTR(-ENOMEM);
 +
-+	vkms_config_plane_set_type(plane_cfg, DRM_PLANE_TYPE_OVERLAY);
++	vkms_config_crtc_set_writeback(crtc_cfg, false);
 +
-+	list_add_tail(&plane_cfg->link, &config->planes);
++	list_add_tail(&crtc_cfg->link, &config->crtcs);
 +
-+	return plane_cfg;
++	return crtc_cfg;
 +}
 +
-+void vkms_config_destroy_plane(struct vkms_config_plane *plane_cfg)
++void vkms_config_destroy_crtc(struct vkms_config *config,
++			      struct vkms_config_crtc *crtc_cfg)
 +{
-+	list_del(&plane_cfg->link);
-+	kfree(plane_cfg);
++	list_del(&crtc_cfg->link);
++	kfree(crtc_cfg);
 +}
 diff --git a/drivers/gpu/drm/vkms/vkms_config.h b/drivers/gpu/drm/vkms/vkms_config.h
-index 0376dceaf6be..1c7ffc27f2a8 100644
+index 1c7ffc27f2a8..0f5937b44948 100644
 --- a/drivers/gpu/drm/vkms/vkms_config.h
 +++ b/drivers/gpu/drm/vkms/vkms_config.h
-@@ -3,6 +3,7 @@
- #ifndef _VKMS_CONFIG_H_
- #define _VKMS_CONFIG_H_
- 
-+#include <linux/list.h>
- #include <linux/types.h>
- 
- #include "vkms_drv.h"
-@@ -12,18 +13,44 @@
-  *
+@@ -14,12 +14,14 @@
   * @dev_name: Name of the device
   * @writeback: If true, a writeback buffer can be attached to the CRTC
-- * @cursor: If true, a cursor plane is created in the VKMS device
-- * @overlay: If true, NUM_OVERLAY_PLANES will be created for the VKMS device
-+ * @planes: List of planes configured for the device
+  * @planes: List of planes configured for the device
++ * @crtcs: List of CRTCs configured for the device
   * @dev: Used to store the current VKMS device. Only set when the device is instantiated.
   */
  struct vkms_config {
  	const char *dev_name;
  	bool writeback;
--	bool cursor;
--	bool overlay;
-+	struct list_head planes;
+ 	struct list_head planes;
++	struct list_head crtcs;
  	struct vkms_device *dev;
  };
  
+@@ -43,6 +45,25 @@ struct vkms_config_plane {
+ 	struct vkms_plane *plane;
+ };
+ 
 +/**
-+ * struct vkms_config_plane
++ * struct vkms_config_crtc
 + *
-+ * @link: Link to the others planes in vkms_config
-+ * @type: Type of the plane. The creator of configuration needs to ensures that
-+ *        at least one primary plane is present.
-+ * @plane: Internal usage. This pointer should never be considered as valid.
-+ *         It can be used to store a temporary reference to a VKMS plane during
-+ *         device creation. This pointer is not managed by the configuration and
-+ *         must be managed by other means.
++ * @link: Link to the others CRTCs in vkms_config
++ * @writeback: If true, a writeback buffer can be attached to the CRTC
++ * @crtc: Internal usage. This pointer should never be considered as valid.
++ *        It can be used to store a temporary reference to a VKMS CRTC during
++ *        device creation. This pointer is not managed by the configuration and
++ *        must be managed by other means.
 + */
-+struct vkms_config_plane {
++struct vkms_config_crtc {
 +	struct list_head link;
 +
-+	enum drm_plane_type type;
++	bool writeback;
 +
 +	/* Internal usage */
-+	struct vkms_plane *plane;
++	struct vkms_output *crtc;
 +};
 +
+ /**
+  * vkms_config_for_each_plane - Iterate over the vkms_config planes
+  * @config: &struct vkms_config pointer
+@@ -51,6 +72,14 @@ struct vkms_config_plane {
+ #define vkms_config_for_each_plane(config, plane_cfg) \
+ 	list_for_each_entry((plane_cfg), &(config)->planes, link)
+ 
 +/**
-+ * vkms_config_for_each_plane - Iterate over the vkms_config planes
++ * vkms_config_for_each_crtc - Iterate over the vkms_config CRTCs
 + * @config: &struct vkms_config pointer
-+ * @plane_cfg: &struct vkms_config_plane pointer used as cursor
++ * @crtc_cfg: &struct vkms_config_crtc pointer used as cursor
 + */
-+#define vkms_config_for_each_plane(config, plane_cfg) \
-+	list_for_each_entry((plane_cfg), &(config)->planes, link)
++#define vkms_config_for_each_crtc(config, crtc_cfg) \
++	list_for_each_entry((crtc_cfg), &(config)->crtcs, link)
 +
  /**
   * vkms_config_create() - Create a new VKMS configuration
   * @dev_name: Name of the device
-@@ -84,4 +111,42 @@ bool vkms_config_is_valid(struct vkms_config *config);
-  */
- void vkms_config_register_debugfs(struct vkms_device *vkms_device);
+@@ -94,6 +123,15 @@ vkms_config_get_device_name(struct vkms_config *config)
+ 	return config->dev_name;
+ }
  
 +/**
-+ * vkms_config_create_plane() - Add a new plane configuration
-+ * @config: Configuration to add the plane to
++ * vkms_config_get_num_crtcs() - Return the number of CRTCs in the configuration
++ * @config: Configuration to get the number of CRTCs from
++ */
++static inline size_t vkms_config_get_num_crtcs(struct vkms_config *config)
++{
++	return list_count_nodes(&config->crtcs);
++}
++
+ /**
+  * vkms_config_is_valid() - Validate a configuration
+  * @config: Configuration to validate
+@@ -149,4 +187,44 @@ vkms_config_plane_set_type(struct vkms_config_plane *plane_cfg,
+ 	plane_cfg->type = type;
+ }
+ 
++/**
++ * vkms_config_create_crtc() - Add a new CRTC configuration
++ * @config: Configuration to add the CRTC to
 + *
 + * Returns:
-+ * The new plane configuration or an error. Call vkms_config_destroy_plane() to
-+ * free the returned plane configuration.
++ * The new CRTC configuration or an error. Call vkms_config_destroy_crtc() to
++ * free the returned CRTC configuration.
 + */
-+struct vkms_config_plane *vkms_config_create_plane(struct vkms_config *config);
++struct vkms_config_crtc *vkms_config_create_crtc(struct vkms_config *config);
 +
 +/**
-+ * vkms_config_destroy_plane() - Remove and free a plane configuration
-+ * @plane_cfg: Plane configuration to destroy
++ * vkms_config_destroy_crtc() - Remove and free a CRTC configuration
++ * @config: Configuration to remove the CRTC from
++ * @crtc_cfg: CRTC configuration to destroy
 + */
-+void vkms_config_destroy_plane(struct vkms_config_plane *plane_cfg);
++void vkms_config_destroy_crtc(struct vkms_config *config,
++			      struct vkms_config_crtc *crtc_cfg);
 +
 +/**
-+ * vkms_config_plane_type() - Return the plane type
-+ * @plane_cfg: Plane to get the type from
++ * vkms_config_crtc_get_writeback() - If a writeback connector will be created
++ * @crtc_cfg: CRTC with or without a writeback connector
 + */
-+static inline enum drm_plane_type
-+vkms_config_plane_get_type(struct vkms_config_plane *plane_cfg)
++static inline bool
++vkms_config_crtc_get_writeback(struct vkms_config_crtc *crtc_cfg)
 +{
-+	return plane_cfg->type;
++	return crtc_cfg->writeback;
 +}
 +
 +/**
-+ * vkms_config_plane_set_type() - Set the plane type
-+ * @plane_cfg: Plane to set the type to
-+ * @type: New plane type
++ * vkms_config_crtc_set_writeback() - If a writeback connector will be created
++ * @crtc_cfg: Target CRTC
++ * @writeback: Enable or disable the writeback connector
 + */
 +static inline void
-+vkms_config_plane_set_type(struct vkms_config_plane *plane_cfg,
-+			   enum drm_plane_type type)
++vkms_config_crtc_set_writeback(struct vkms_config_crtc *crtc_cfg,
++			       bool writeback)
 +{
-+	plane_cfg->type = type;
++	crtc_cfg->writeback = writeback;
 +}
 +
  #endif /* _VKMS_CONFIG_H_ */
-diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms_output.c
-index 414cc933af41..08ea691db299 100644
---- a/drivers/gpu/drm/vkms/vkms_output.c
-+++ b/drivers/gpu/drm/vkms/vkms_output.c
-@@ -11,28 +11,29 @@ int vkms_output_init(struct vkms_device *vkmsdev)
- 	struct vkms_connector *connector;
- 	struct drm_encoder *encoder;
- 	struct vkms_output *output;
--	struct vkms_plane *primary, *overlay, *cursor = NULL;
-+	struct vkms_plane *primary = NULL, *cursor = NULL;
-+	struct vkms_config_plane *plane_cfg;
- 	int ret;
- 	int writeback;
--	unsigned int n;
- 
- 	if (!vkms_config_is_valid(vkmsdev->config))
- 		return -EINVAL;
- 
--	/*
--	 * Initialize used plane. One primary plane is required to perform the composition.
--	 *
--	 * The overlay and cursor planes are not mandatory, but can be used to perform complex
--	 * composition.
--	 */
--	primary = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_PRIMARY);
--	if (IS_ERR(primary))
--		return PTR_ERR(primary);
-+	vkms_config_for_each_plane(vkmsdev->config, plane_cfg) {
-+		enum drm_plane_type type;
- 
--	if (vkmsdev->config->cursor) {
--		cursor = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_CURSOR);
--		if (IS_ERR(cursor))
--			return PTR_ERR(cursor);
-+		type = vkms_config_plane_get_type(plane_cfg);
-+
-+		plane_cfg->plane = vkms_plane_init(vkmsdev, type);
-+		if (IS_ERR(plane_cfg->plane)) {
-+			DRM_DEV_ERROR(dev->dev, "Failed to init vkms plane\n");
-+			return PTR_ERR(plane_cfg->plane);
-+		}
-+
-+		if (type == DRM_PLANE_TYPE_PRIMARY)
-+			primary = plane_cfg->plane;
-+		else if (type == DRM_PLANE_TYPE_CURSOR)
-+			cursor = plane_cfg->plane;
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
+index ba977ef09b2b..a24d1655f7b8 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.c
++++ b/drivers/gpu/drm/vkms/vkms_drv.c
+@@ -181,7 +181,8 @@ static int vkms_create(struct vkms_config *config)
+ 		goto out_devres;
  	}
  
- 	output = vkms_crtc_init(dev, &primary->base,
-@@ -42,17 +43,6 @@ int vkms_output_init(struct vkms_device *vkmsdev)
- 		return PTR_ERR(output);
- 	}
- 
--	if (vkmsdev->config->overlay) {
--		for (n = 0; n < NUM_OVERLAY_PLANES; n++) {
--			overlay = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_OVERLAY);
--			if (IS_ERR(overlay)) {
--				DRM_DEV_ERROR(dev->dev, "Failed to init vkms plane\n");
--				return PTR_ERR(overlay);
--			}
--			overlay->base.possible_crtcs = drm_crtc_mask(&output->crtc);
--		}
--	}
--
- 	connector = vkms_connector_init(vkmsdev);
- 	if (IS_ERR(connector)) {
- 		DRM_ERROR("Failed to init connector\n");
+-	ret = drm_vblank_init(&vkms_device->drm, 1);
++	ret = drm_vblank_init(&vkms_device->drm,
++			      vkms_config_get_num_crtcs(config));
+ 	if (ret) {
+ 		DRM_ERROR("Failed to vblank\n");
+ 		goto out_devres;
 -- 
 2.48.1
 
