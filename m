@@ -1,80 +1,161 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B812505DF
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 19:21:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5001DDC14;
+	Tue, 11 Feb 2025 19:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739301674; cv=none; b=lDUSZ3oqxtMEdQ2dxb7rivXZ1N5HwwYiIgUXJptN4R1lWu+DOOQpsRo+010Q/fgE5yHyr5Ap+Kdx4rjQTUm26okzQY+8Hyelf7AdLE4r/dqg1NgOMG33ebJVC5OU0uSN0MshQK4FTHUkvzEspwRJJIF4L9xFf/GEx+MZpy3m9CE=
+	t=1739301710; cv=none; b=J++FFalIpu2czSXzVYCstRvpmNLJnQA3RowqXWNL1zU7h9HJzWsXFXaOucJNOgQqOCX0qcpAGYXK4+ycsJHDgOMQG3YSDEN9hJqVH3ny9NajVt5hAzkQbOyTgeg4f1wW45FfoymRD1eyWVFmbz7f2sbSkPV7Q6AKKnCAqXMgpyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739301674; c=relaxed/simple;
-	bh=9f8NwOeHOHhxcpJKA8SlKQgQxAg5JH1bD2pn51uqAzo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fqYFpmFYWJgl20tGyTkSXxdLyjAWYW88ZaIQQ6Ys7qqjQNRD02CL7GE6BxEA/5FL3+dJmToT2+XDr8L6lEZ6pj0qDhwTsabt91sx3f7DLS+Om7ZN1dwY9Npq0lKxnLnPZA3bn07EbYOHNTdOkLOZrMPu/ftSzhA6k5w6gxbAuZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=NIg+s4yJ; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
+	s=arc-20240116; t=1739301710; c=relaxed/simple;
+	bh=029kYh0sxoljCJSf8XQnMO3yhFLYENu21fgjjNO4zf0=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=j6s+jOaw5FL0d7j47d9IUAZD8h4p51uhXqGWsZ8PQmwdsJ7PXXdUvytqZ7SUI8mDYFh1OLq53xHoiZbbJHIsJaMrqdHrR5xvW/aW2eeS6+jH7cGDn1cv1PZkrO8VxmOPKwN6KLv5inP+oaIm0tdy3nAO2UkjvT9SVskBNAaaiLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IE4TZFG8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="NIg+s4yJ"
-Date: Tue, 11 Feb 2025 14:20:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
-	s=key1; t=1739301658;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8mNRV1XLqXF4FA7V0dC+d4pFd/k0iKqQgScUbDF9pVA=;
-	b=NIg+s4yJTADX9Ou20CmtLuX/odZ6Ag8iohjaieOJUj6ZkCBp3PFYrg+T2VljxOmdMHRaY7
-	6eEciAukGKMdz1PnOgkbW07M8pDAOUQjkihPCUqm8GO2/VLUgXCfv8wAg0RSBHMmH1kVDW
-	ft4zRgQCEr5BI5npQfzpyFnJAmGKqUYoCH1C9UCAwGVd3+8xU8qVEPOKK2UGN10WKogzd7
-	w5iuP37wgfaOr9FaRNcWUYblzMMiaLP8nfH5HyBktcwNa5HFjrRY26x6GjaxHD4B3Wz2gL
-	gXtyBUw0LO6jqOppiMSlbm4/yeXYv2hzARkPnFRWag6uuwQtb1nqzLvmk6LOCg==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] iommu/dart: Assert !locked when configuring
-Message-ID: <Z6ujFKvD7hCYzymO@blossom>
-References: <20250210-locked-dart-v1-0-5d97fe247f35@rosenzweig.io>
- <20250210-locked-dart-v1-5-5d97fe247f35@rosenzweig.io>
- <756ba6d7-b18e-4139-851b-496b1820117a@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IE4TZFG8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54DD2C4CEDD;
+	Tue, 11 Feb 2025 19:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739301709;
+	bh=029kYh0sxoljCJSf8XQnMO3yhFLYENu21fgjjNO4zf0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IE4TZFG8VCwqTprVR79rBXrlMEuWQojFSus87EDhrToPQka/oDW5ezwxFLFYgkFG7
+	 qypTFgYStG0DzenivTrY07/k6FYqA0DI5N6PZHBedQENPdL7F8OCP1rgwRogrU6t42
+	 sGpjLZc9Wyh0IzXokBlMJ/WXNNxWvh9oKUrxgO330taUJrh8BgBIkzPscybK/27nYY
+	 aWjfQeNOtxBhVnCDA7+2pHvsEzZpdLIIk8PtZ4VSLZMcIlbEXpF0i8OL8weLGOQAYI
+	 7mLrtIaxG2uC0iAg3uOgy9sMzVOB7nj//LYRrmLOTnU86kDaNXWLMV+KZASjI+vLM5
+	 7/RmD+PGbbV/w==
+Received: from [82.132.185.192] (helo=wait-a-minute.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1thvpK-0036zW-8k;
+	Tue, 11 Feb 2025 19:21:46 +0000
+Date: Tue, 11 Feb 2025 19:20:08 +0000
+Message-ID: <87r0441e6v.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Eric Auger <eauger@redhat.com>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+	kvmarm <kvmarm@lists.linux.dev>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	christoffer.dall@arm.com,
+	suzuki.poulose@arm.com,
+	will@kernel.org,
+	catalin.marinas@arm.com,
+	coltonlewis@google.com,
+	joey.gouly@arm.com,
+	yuzenghui@huawei.com,
+	darren@os.amperecomputing.com,
+	vishnu@os.amperecomputing.com
+Subject: Re: [PATCH] KVM: arm64: nv: Set ISTATUS for emulated timers, If timer expired
+In-Reply-To: <8da22249-eedb-477b-98d8-f50dee56f1f7@redhat.com>
+References: <bcb4289b-507c-4ea1-afc7-6febd34d88db@redhat.com>
+	<86y10osr19.wl-maz@kernel.org>
+	<4d443db1-85b1-4071-acd5-3187deb9cb17@redhat.com>
+	<2f6b2cb1-3d32-480a-9801-9b993ae74e2d@os.amperecomputing.com>
+	<152d262e-641d-4bb1-9656-a13e049d62c4@redhat.com>
+	<86h661wje4.wl-maz@kernel.org>
+	<4a9fbdd9-ad23-44bc-8ba5-399f08068db4@redhat.com>
+	<86cygpwfy0.wl-maz@kernel.org>
+	<b22d5916-8b55-43bc-a256-2136d66ad25f@redhat.com>
+	<86frkptzr6.wl-maz@kernel.org>
+	<Z6ZMdv8jJUvYwQzT@linux.dev>
+	<86bjvdtxb5.wl-maz@kernel.org>
+	<8da22249-eedb-477b-98d8-f50dee56f1f7@redhat.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <756ba6d7-b18e-4139-851b-496b1820117a@arm.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 82.132.185.192
+X-SA-Exim-Rcpt-To: eauger@redhat.com, oliver.upton@linux.dev, gankulkarni@os.amperecomputing.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, christoffer.dall@arm.com, suzuki.poulose@arm.com, will@kernel.org, catalin.marinas@arm.com, coltonlewis@google.com, joey.gouly@arm.com, yuzenghui@huawei.com, darren@os.amperecomputing.com, vishnu@os.amperecomputing.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-> > Configuration is only possible and needed for non-locked DARTs and will
-> > fail for locked DARTs. We cannot try -- assert that we do not.
+On Mon, 10 Feb 2025 18:26:48 +0000,
+Eric Auger <eauger@redhat.com> wrote:
 > 
-> Except now we absolutely will - if a locked DART and its client device are
-> advertised to Linux, instead of gracefully refusing to touch it, we'll now
-> attach the client to a DMA domain, firing a barrage of multiple WARNs in the
-> process, and give it DMA ops which still cannot work. I'm not really
-> convinced this series on its own leaves us in a better position than we're
-> already in now... :/
+> Hi Marc,
+> 
+> On 2/7/25 7:38 PM, Marc Zyngier wrote:
+> > On Fri, 07 Feb 2025 18:09:58 +0000,
+> > Oliver Upton <oliver.upton@linux.dev> wrote:
+> >>
+> >> Hey,
+> >>
+> >> On Fri, Feb 07, 2025 at 05:45:33PM +0000, Marc Zyngier wrote:
+> >>> I found at least one issue that could fail the migration. Before the
+> >>> VM starts running, we limit the feature set to the subset we actually
+> >>> support with NV.
+> >>>
+> >>> By doing this, we also change the value of IDreg fields that are not
+> >>> writable, because they describe features that we don't support.
+> >>> Obviously, that fails on restore.
+> >>>
+> >>> I need to have a think...
+> >>
+> >> We spoke about this a while ago (and I forgot til now), but I was
+> >> wondering if we could use vCPU feature flags to describe NV, including
+> >> the selection between FEAT_E2H0 and FEAT_VHE.
+> >>
+> >> I think this might match userspace expectations a bit more closely where
+> >> the state of the ID registers after init gives the actual feature set
+> >> supported by the VM.
+> > 
+> > I'm not sure that's enough. Let me give you an example:
+> > 
+> > My host has FEAT_XNX, described in ID_AA64MMFR1_EL1.XNX. For whatever
+> > reason, we don't allow this field to be written to, even out of NV
+> > context. This is odd, because for an EL1 VM, this field means nothing
+> > at all.
+> So the curprit fields for me look like
+> 
+> - ID_AA64MMFR1_EL1.XNX
+> - ID_AA64DFR0_EL1.DoubleLock
+> - ID_AA64PFR0_EL1.RAS
 
-Fair point, thanks for raising that. "Fortunately" the upstream DTs
-don't describe any locked DARTs yet.
+Right, that more or less matches what I see locally.
 
-> How hideous is the rest of what's required to actually make this usable?
+I adopted the following scheme:
 
-It isn't... pretty, and it's going to be ugly no matter how we slice it.
-Unfortunately the display controller DARTs really are locked so our
-hands are tied here.
+- On top of the existing KVM_ARM_VCPU_HAS_EL2, we have a new
+  KVM_ARM_VCPU_HAS_EL2_E2H0, which is only valid when the former is
+  also set, and force the whole VM in E2H==0 mode (that's Oliver's
+  idea above)
 
-When I originally wrote these patches I had some hideous hack in the
-shared page table code. I'm thrilled to see that Janne rewrote that code
-to be local to apple-dart.c, at least:
-https://github.com/AsahiLinux/linux/commit/d90cc3590ea460e1c574b4b7c47fdafb2794af6a
+- The NV view of the ID registers is enforced at the point where we
+  compute the limit values via the ID reg reset helper, instead of the
+  post-init repainting
 
-I'll include that patch with v2, which makes the locked DARTs actually
-usable, and restructure the series so we only probe after that commit is
-there.
+- Neither of ID_AA64MMFR1_EL1.VH or ID_AA64MMFR4_EL1.E2H0 are writable
+  at all
+
+- Only ID_AA64MMFR4_EL1.NV_frac is writable
+
+The result is fairly small, but is of course quite an ABI breakage,
+and I'm more than happy not to have merged it sooner. Maybe I should
+wait another couple of years! ;-)
+
+> This is still based on your nv-next branch from Jan 9
+> https://github.com/eauger/linux/tree/nv_next_jan9_2025
+
+Yeah, that's getting old now, specially given the nature of the bug
+fixes that have been added.
+
+I'll try to rebase everything on -rc2 with the latest fixes and the
+new ABI by the end of the week, and we will take it from there.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
