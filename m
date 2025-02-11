@@ -1,217 +1,189 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A87253F3B
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52BE625C70E
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:15:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739290522; cv=none; b=bp/1Ooy2zdy809ktBZhq8fS/7BVXEYxzpgCV2pj5xwp+BpZM6EvF0jtI9IsqDNISco66sC+meFVUfLkCN4PdCNESt8OQXgIuUkw4Hji66ISuKM4lGJLkscBnz0uGOD1TULAPYQ8VKiuIlfD5sSAN7xRJpsGEEbOvxGOMm7pGEIU=
+	t=1739290526; cv=none; b=eMxecWay7KfYB7mF9xlGbz/5JoJ3YTHxqm39I8X4d230ka7XF1PvsKzp4x27YHaOR6TauDSaaJPPHhFC4xSnyPtrPkh/TDu+061gfzUUxqwEObke2azPb/IRzfD8W1bjOLzrxkLrgcKa2AIn00EZnPDJnN2T+0UsBo3qmK0Pk08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739290522; c=relaxed/simple;
-	bh=KokNwFJrsqVMbKs7nTMNH27Ae9iVM5Yfw1FYbHABrKA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Dn9Pew2Gp8yIQvL9hS9Ubv77PZV9v1EVTt26Ghmf7KZqqTpup/da/MbRAHMWNyCTCv8jFjDk0B+QYIBweWNXfDFcawZ5oyTkDxK4J1CvEZTdYDCnYKUnlIzd/h8ZJwKrsX5BxT5x9HFiR5aE+K2pV2G8rmM9sbY7Zne84tUh1Jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iCI+86Qa; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iCI+86Qa"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BE4SOY023533;
-	Tue, 11 Feb 2025 16:15:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=r4OZfx8Ch6jO+R8i/
-	FyGZDWFbeHt/ASFZW5600pQVo4=; b=iCI+86Qark3N09/Vjm0UoI7/7MU+o7P2J
-	8zGhz2fnUtRxeH1ALcGWwTXLZJVcXECMz2n17igAXI9qYV/7nEdyeElAvn32X4dA
-	7t8eKUhK43TiIw4wF95O/PL0QwkInSD+kZs39X8zfBj40WeRB8zXaEfoh+4QsMCG
-	mmRvwNu8RNba4AXoDD/cxArDt+neJw2DrOtIizTX9cUKK9IRCCu9WTM6pFIlCUoc
-	B3PTrjnXCoIJMS6wiuXn96lklKZJeJZ8wfYifULcQz5/x/Tw3GjvsGBOi8b8mhqC
-	nwdbuQUGDj8mYtp+vT+3htz/AZJx9qMltCedCyl3EpiuqyMOTSvdg==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44qtkac2ds-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 16:15:08 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51BDBSV3001358;
-	Tue, 11 Feb 2025 16:15:07 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44pjkn43k2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 16:15:06 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51BGF4av37552530
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 11 Feb 2025 16:15:04 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CF5FB2004D;
-	Tue, 11 Feb 2025 16:15:04 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EA0E820043;
-	Tue, 11 Feb 2025 16:15:03 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.63.197.14])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 11 Feb 2025 16:15:03 +0000 (GMT)
-Received: from jarvis.ozlabs.ibm.com.com (unknown [9.150.7.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ozlabs.au.ibm.com (Postfix) with ESMTPSA id AFCCC6013D;
-	Wed, 12 Feb 2025 03:14:59 +1100 (AEDT)
-From: Andrew Donnellan <ajd@linux.ibm.com>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: x86@kernel.org, linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        pasha.tatashin@soleen.com, sweettea-kernel@dorminy.me
-Subject: [PATCH v13 10/11] powerpc: mm: Use set_pte_at_unchecked() for internal usages
-Date: Wed, 12 Feb 2025 03:14:03 +1100
-Message-ID: <20250211161404.850215-11-ajd@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250211161404.850215-1-ajd@linux.ibm.com>
-References: <20250211161404.850215-1-ajd@linux.ibm.com>
+	s=arc-20240116; t=1739290526; c=relaxed/simple;
+	bh=e1pk72SxKOhapoX8qJ+Uk/spfCY696+SmOkoPWZo678=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=K/m5SlPy76a/Ynf4W1+MuActnPgxGBr+oMyXfDkTAMxeScw++dV43zQXbS8lInC0YPhu6J+IZdaZvrLLtyY3uFxujz5gMtuiTDsEANffN2hGR8QnPGQL3ixK6IbGzVQ72b0QaA+y91tF8FnwLAgTH3zkksJezbF3EmSXTbbJ66o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3ce7a0ec1easo40325885ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:15:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739290523; x=1739895323;
+        h=content-transfer-encoding:to:from:subject:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gPRawepaneW3X1fdtYnCTmIOgGgCVUpC1k1hSEscb48=;
+        b=i6ZfZ/nm2bMnHLgnh4dhxZrEcoZxg/qpN8hSHk493keM7H/FhS24DoTIPYQPuK0iUq
+         7tjiRjME509OoBppfnGxGtZupmtXYSA8LydAC922SGCszWu4/CbpzJw5924oSzD64Uvk
+         bXjo8vD44Qyic3JAar9kIdGESm8UJb8WDWJFXtKNWqTLLHlR7jVovpWo3/Ntp6QDzfrh
+         DVqao/PuNQNDIj3EvSglDpZm38XN5cOXkdlNr2sPRVBsB8yLer9dOsAzUP/NNJ3GeCYa
+         Rfz3g4Dp3upX87KsJIj9cpxeg8cvcXNUXO8S+VnXTNQ1qBmL5FtGVrzXs5pNqjQqXGLS
+         KxJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXPXSUjMdy3TjSC1sddEGDNcu07SNf/j/xv6yidZO0psRdlapaPLHEKs8Yr/dzLRWIn/mDSpyzFVmvpQEc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywg/bNg4nQWCexjjs6ZL/TavZwqvqJkBsW1tG2yd7c51LS+QbAE
+	o+jTeSeVR2Zhs7h6F5khrXostkTBR78euBgvu+HTVFjRoDXV+ZXPt6cLDJeVH+QryROMIvCCbIP
+	D70pTMd3U6L4QjK30qT6tbrQ8bQ5aipMZqIpaAk2TsROKYDuo+zYrr+s=
+X-Google-Smtp-Source: AGHT+IGNOcLK1hiNTmGN9BF7BHdWpcIdWRdXMMQQjqLZ1fThahAXIofvpivf1mYHPwMvzMLubNxt7G5FocZqfPW5k417h4Gxs3we
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: SA9oqZPbdfv-FJNFi_bHJSqLbghGZnbK
-X-Proofpoint-ORIG-GUID: SA9oqZPbdfv-FJNFi_bHJSqLbghGZnbK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_07,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- phishscore=0 lowpriorityscore=0 clxscore=1015 malwarescore=0 spamscore=0
- mlxlogscore=674 impostorscore=0 bulkscore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502110106
+X-Received: by 2002:a05:6e02:214a:b0:3d0:124d:99e8 with SMTP id
+ e9e14a558f8ab-3d13dd5ebaamr131887695ab.13.1739290523341; Tue, 11 Feb 2025
+ 08:15:23 -0800 (PST)
+Date: Tue, 11 Feb 2025 08:15:23 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ab779b.050a0220.3d72c.0064.GAE@google.com>
+Subject: [syzbot] [ext4?] WARNING in __ext4_iget
+From: syzbot <syzbot+2ff67872645e5b5ebdd5@syzkaller.appspotmail.com>
+To: adilger.kernel@dilger.ca, brauner@kernel.org, jack@suse.cz, 
+	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mjguzik@gmail.com, 
+	syzkaller-bugs@googlegroups.com, tytso@mit.edu, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Rohan McLure <rmclure@linux.ibm.com>
+Hello,
 
-In the new set_ptes() API, set_pte_at() (a special case of set_ptes())
-is intended to be instrumented by the page table check facility. There
-are however several other routines that constitute the API for setting
-page table entries, including set_pmd_at() among others. Such routines
-are themselves implemented in terms of set_ptes_at().
+syzbot found the following issue on:
 
-A future patch providing support for page table checking on powerpc
-must take care to avoid duplicate calls to
-page_table_check_p{te,md,ud}_set(). Allow for assignment of pte entries
-without instrumentation through the set_pte_at_unchecked() routine
-introduced in this patch.
+HEAD commit:    7ee983c850b4 Merge tag 'drm-fixes-2025-02-08' of https://g.=
+.
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D107e4bdf980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dec3c160c5cabe70=
+b
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D2ff67872645e5b5eb=
+dd5
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Deb=
+ian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D12d1e1b058000=
+0
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D14f1ddf8580000
 
-Cause API-facing routines that call set_pte_at() to instead call
-set_pte_at_unchecked(), which will remain uninstrumented by page
-table check. set_ptes() is itself implemented by calls to
-__set_pte_at(), so this eliminates redundant code.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/52091eb5b16c/disk-=
+7ee983c8.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/4aa605b3aa80/vmlinux-=
+7ee983c8.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/af16dc4bb19a/bzI=
+mage-7ee983c8.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/115f05fb40e2=
+/mount_0.gz
+  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=3D10=
+f1ddf8580000)
 
-Signed-off-by: Rohan McLure <rmclure@linux.ibm.com>
-[ajd: don't change to unchecked for early boot/kernel mappings]
-Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
+The issue was bisected to:
+
+commit 37d11cfc63604b3886308e2111d845d148ced8bc
+Author: Mateusz Guzik <mjguzik@gmail.com>
+Date:   Tue Feb 4 21:32:07 2025 +0000
+
+    vfs: sanity check the length passed to inode_set_cached_link()
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D12073df85800=
+00
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=3D11073df85800=
+00
+console output: https://syzkaller.appspot.com/x/log.txt?x=3D16073df8580000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit=
+:
+Reported-by: syzbot+2ff67872645e5b5ebdd5@syzkaller.appspotmail.com
+Fixes: 37d11cfc6360 ("vfs: sanity check the length passed to inode_set_cach=
+ed_link()")
+
+------------[ cut here ]------------
+bad length passed for symlink [/tmp/syz-imagegen2884317625/=08] (got 39, ex=
+pected 29)
+WARNING: CPU: 0 PID: 5828 at ./include/linux/fs.h:802 inode_set_cached_link=
+ include/linux/fs.h:802 [inline]
+WARNING: CPU: 0 PID: 5828 at ./include/linux/fs.h:802 __ext4_iget+0x3aa2/0x=
+4310 fs/ext4/inode.c:5012
+Modules linked in:
+CPU: 0 UID: 0 PID: 5828 Comm: syz-executor385 Not tainted 6.14.0-rc1-syzkal=
+ler-00181-g7ee983c850b4 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
+gle 12/27/2024
+RIP: 0010:inode_set_cached_link include/linux/fs.h:802 [inline]
+RIP: 0010:__ext4_iget+0x3aa2/0x4310 fs/ext4/inode.c:5012
+Code: e8 63 19 49 ff c6 05 e9 1a da 0d 01 90 8b 95 10 ff ff ff 44 89 e1 48 =
+c7 c7 40 4b 85 8b 48 8b b5 f8 fe ff ff e8 8f 57 09 ff 90 <0f> 0b 90 90 e9 2=
+d fd ff ff e8 30 57 ab ff e9 f6 e6 ff ff e8 06 56
+RSP: 0018:ffffc90003ca7810 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: ffff888077bd8ca4 RCX: ffffffff817a1159
+RDX: ffff888034e01e00 RSI: ffffffff817a1166 RDI: 0000000000000001
+RBP: ffffc90003ca7960 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000001 R12: 000000000000001d
+R13: 0000000000000000 R14: 0000000000002000 R15: ffff888077bd8c98
+FS:  00005555696a5380(0000) GS:ffff8880b8600000(0000) knlGS:000000000000000=
+0
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005555696be778 CR3: 00000000743ae000 CR4: 0000000000350ef0
+Call Trace:
+ <TASK>
+ ext4_lookup+0x37e/0x730 fs/ext4/namei.c:1813
+ __lookup_slow+0x252/0x470 fs/namei.c:1793
+ lookup_slow fs/namei.c:1810 [inline]
+ walk_component+0x350/0x5b0 fs/namei.c:2114
+ lookup_last fs/namei.c:2612 [inline]
+ path_lookupat+0x17f/0x770 fs/namei.c:2636
+ filename_lookup+0x221/0x5f0 fs/namei.c:2665
+ user_path_at+0x3a/0x60 fs/namei.c:3072
+ ksys_umount fs/namespace.c:2071 [inline]
+ __do_sys_umount fs/namespace.c:2079 [inline]
+ __se_sys_umount fs/namespace.c:2077 [inline]
+ __x64_sys_umount+0x10b/0x1a0 fs/namespace.c:2077
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fd6ca0f8487
+Code: 07 00 48 83 c4 08 5b 5d c3 66 2e 0f 1f 84 00 00 00 00 00 c3 66 2e 0f =
+1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 a6 00 00 00 0f 05 <48> 3d 00 f0 ff f=
+f 77 01 c3 48 c7 c2 b8 ff ff ff f7 d8 64 89 02 b8
+RSP: 002b:00007ffd3ce25b68 EFLAGS: 00000202 ORIG_RAX: 00000000000000a6
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fd6ca0f8487
+RDX: 0000000000000000 RSI: 0000000000000009 RDI: 00007ffd3ce25c20
+RBP: 00007ffd3ce25c20 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000ffffffff R11: 0000000000000202 R12: 00007ffd3ce26d10
+R13: 00005555696b6740 R14: 0000000000000001 R15: 431bde82d7b634db
+ </TASK>
+
+
 ---
-v13: don't use the unchecked version for early-boot kernel mappings (Pasha)
----
- arch/powerpc/include/asm/pgtable.h       | 2 ++
- arch/powerpc/mm/book3s64/pgtable.c       | 6 +++---
- arch/powerpc/mm/book3s64/radix_pgtable.c | 6 +++---
- arch/powerpc/mm/pgtable.c                | 8 ++++++++
- 4 files changed, 16 insertions(+), 6 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/powerpc/include/asm/pgtable.h b/arch/powerpc/include/asm/pgtable.h
-index 3cae32c74fed..221cae4873b9 100644
---- a/arch/powerpc/include/asm/pgtable.h
-+++ b/arch/powerpc/include/asm/pgtable.h
-@@ -46,6 +46,8 @@ struct mm_struct;
- void set_ptes(struct mm_struct *mm, unsigned long addr, pte_t *ptep,
- 		pte_t pte, unsigned int nr);
- #define set_ptes set_ptes
-+void set_pte_at_unchecked(struct mm_struct *mm, unsigned long addr,
-+			  pte_t *ptep, pte_t pte);
- #define update_mmu_cache(vma, addr, ptep) \
- 	update_mmu_cache_range(NULL, vma, addr, ptep, 1)
- 
-diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3s64/pgtable.c
-index ce64abea9e3e..b4708b2cabba 100644
---- a/arch/powerpc/mm/book3s64/pgtable.c
-+++ b/arch/powerpc/mm/book3s64/pgtable.c
-@@ -129,7 +129,7 @@ void set_pmd_at(struct mm_struct *mm, unsigned long addr,
- 	WARN_ON(!(pmd_leaf(pmd)));
- #endif
- 	trace_hugepage_set_pmd(addr, pmd_val(pmd));
--	return set_pte_at(mm, addr, pmdp_ptep(pmdp), pmd_pte(pmd));
-+	return set_pte_at_unchecked(mm, addr, pmdp_ptep(pmdp), pmd_pte(pmd));
- }
- 
- void set_pud_at(struct mm_struct *mm, unsigned long addr,
-@@ -146,7 +146,7 @@ void set_pud_at(struct mm_struct *mm, unsigned long addr,
- 	WARN_ON(!(pud_leaf(pud)));
- #endif
- 	trace_hugepage_set_pud(addr, pud_val(pud));
--	return set_pte_at(mm, addr, pudp_ptep(pudp), pud_pte(pud));
-+	return set_pte_at_unchecked(mm, addr, pudp_ptep(pudp), pud_pte(pud));
- }
- 
- static void do_serialize(void *arg)
-@@ -557,7 +557,7 @@ void ptep_modify_prot_commit(struct vm_area_struct *vma, unsigned long addr,
- 	if (radix_enabled())
- 		return radix__ptep_modify_prot_commit(vma, addr,
- 						      ptep, old_pte, pte);
--	set_pte_at(vma->vm_mm, addr, ptep, pte);
-+	set_pte_at_unchecked(vma->vm_mm, addr, ptep, pte);
- }
- 
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
-index 311e2112d782..1704381f5c3c 100644
---- a/arch/powerpc/mm/book3s64/radix_pgtable.c
-+++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
-@@ -1586,7 +1586,7 @@ void radix__ptep_modify_prot_commit(struct vm_area_struct *vma,
- 	    (atomic_read(&mm->context.copros) > 0))
- 		radix__flush_tlb_page(vma, addr);
- 
--	set_pte_at(mm, addr, ptep, pte);
-+	set_pte_at_unchecked(mm, addr, ptep, pte);
- }
- 
- int pud_set_huge(pud_t *pud, phys_addr_t addr, pgprot_t prot)
-@@ -1597,7 +1597,7 @@ int pud_set_huge(pud_t *pud, phys_addr_t addr, pgprot_t prot)
- 	if (!radix_enabled())
- 		return 0;
- 
--	set_pte_at(&init_mm, 0 /* radix unused */, ptep, new_pud);
-+	set_pte_at_unchecked(&init_mm, 0 /* radix unused */, ptep, new_pud);
- 
- 	return 1;
- }
-@@ -1644,7 +1644,7 @@ int pmd_set_huge(pmd_t *pmd, phys_addr_t addr, pgprot_t prot)
- 	if (!radix_enabled())
- 		return 0;
- 
--	set_pte_at(&init_mm, 0 /* radix unused */, ptep, new_pmd);
-+	set_pte_at_unchecked(&init_mm, 0 /* radix unused */, ptep, new_pmd);
- 
- 	return 1;
- }
-diff --git a/arch/powerpc/mm/pgtable.c b/arch/powerpc/mm/pgtable.c
-index 61df5aed7989..4cc9af7961ca 100644
---- a/arch/powerpc/mm/pgtable.c
-+++ b/arch/powerpc/mm/pgtable.c
-@@ -224,6 +224,14 @@ void set_ptes(struct mm_struct *mm, unsigned long addr, pte_t *ptep,
- 	}
- }
- 
-+void set_pte_at_unchecked(struct mm_struct *mm, unsigned long addr,
-+			  pte_t *ptep, pte_t pte)
-+{
-+	VM_WARN_ON(pte_hw_valid(*ptep) && !pte_protnone(*ptep));
-+	pte = set_pte_filter(pte, addr);
-+	__set_pte_at(mm, addr, ptep, pte, 0);
-+}
-+
- void unmap_kernel_page(unsigned long va)
- {
- 	pmd_t *pmdp = pmd_off_k(va);
--- 
-2.48.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisectio=
+n
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
