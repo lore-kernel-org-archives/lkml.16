@@ -1,146 +1,117 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B06E24CEFF
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 12:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B041FDA94
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 12:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739275819; cv=none; b=QgDN3gh43Ibc6zCXYuJPbGCuEfvbkyZBwFlYSW6gUIBplYbFVndTQ5CcKe/lR6bEmj2QR826WNwMy/1oh++dqgCkYSacqM0BmMsLACHowDKfY4166PDVtm6OM+7UaY2ocGqkj6nNDg+4yhj5Zc97Hh9zQxkd4h1n7NalmOMrPyM=
+	t=1739275839; cv=none; b=oiVl0BjESWMB86Y+d5bolmrDhI/24zJO8GrkLXC0GLhzsfDWw7pUSsBJi5AVvtb2ggEZYCxoafQgBbpKYe2S9/UYedrOKbjdsKXq/9uT4WpKDirFfNSnCHYJTEMAwfimEh9++YVTPB6x1bFtd0oaBsKExFFbqPXA2506QiFpiks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739275819; c=relaxed/simple;
-	bh=bHBkkQ3gwrzmNpAMzNtD02RKPcIOd8kTW4JbUoyfFV0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hSM8rSTeKviOQsNeqXtryb4VcMrzy/C9mj0WQya61kRMB3ktSzddiD6bs7TCrxx5Glk+HwRG/l5wRM2qXf9KsJwpALgbvrWa+l7jsda1zuGmFKpgif+S9vQEfe1Vv5XQkgWTttZ91qWYgM/8toYBtEoG2QR6DotSoicxa3uBahA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=HkuweSds; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1739275839; c=relaxed/simple;
+	bh=1N4BjHm0w2ueghlCuqmC8WLv26kWSsqWLwCdcxZhQnM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i6NXUZ8aSniKWcAOiwRZILzrRnho5r8kXFjxZ60RgdyaymWwcngfAe3Fs3SiT+iFXHFUpMyK23DQVvvfvSmlspHi7YV/3/D/HGg6zLUX9Qqn+lQoRyNb/bakWVUbO/nd/OaurmbKsvM6r9xNd6ROoUd69P7y5P3BCVbT7HFxcqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y8gHaBpr; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="HkuweSds"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so16215875e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 04:10:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y8gHaBpr"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-47190a013d4so176431cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 04:10:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739275814; x=1739880614; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wWAYSRpQyGW1MmOUzWp6CZEaNkYKfy89Gcg/wUWpW38=;
-        b=HkuweSds/bfFj2FDg3cU3m1gb8cFRnaraTsQOD5hIO/eHrgvTQr+gY0ngKYT+F4pbd
-         9YzSl4fkpW15VVoGFmUcoWTSh5EmRC1CsP46JNph+r//SEE/8dAqxTLX/qzUZFzj4MA4
-         0PXZ/R3YtrnVnpHBXlkHyf/CR4NNtEMMBVuu7XLNqnZ0rd1ShrC6JR2eY7wBMpY6dwEl
-         qzeV3wdvZb7+Cdf6OWCB0SVHy475bM0vMykcdWinXxCjl/5Q25Yaweq1zDy/PEW3morn
-         8gcDHebakzyEuYjAfSmH8NHrbczuNhX1tF6Uw1VZgUDX82jiHS8ip2/ht1bv4Zc3kZT4
-         HEIg==
+        d=google.com; s=20230601; t=1739275837; x=1739880637; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1N4BjHm0w2ueghlCuqmC8WLv26kWSsqWLwCdcxZhQnM=;
+        b=y8gHaBpr87+HP2qjoZiAkXlYx1soVOqNR73Jk5YGsLv2LR9HgbjXFQ4FRGCQhe5wgL
+         hlJ0Nr6fq3YY0oc26CqNDbKKSqpYZzc8XlntVg21JqDK22yywkf5HgmWXh0gM2Pl6PNn
+         KQT7JcXMhu5kJFstfrWc7utkBPK03dp4kwoV+EMa3AuYyDqjQso9vb+UDE1nSB5IAg1x
+         cs0L0qfbWifTUldObn0uvnKw22JzBUZv4tUmHk1WLUoXqQHOpZ63VQBMB5o9WiyzR81j
+         cTimS6dn4Wzveyq5b9pRAT619lRxvRylpkWZIEYh6UhoPNV0AZGXor5W2JWWclT5lPi/
+         r84g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739275814; x=1739880614;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wWAYSRpQyGW1MmOUzWp6CZEaNkYKfy89Gcg/wUWpW38=;
-        b=onyvZzJnMJlcnfKF415cpQ8tbWIubQYDV3PpVvfYqq97MnEeitlo221GvDqEypyNru
-         jQ00ehVs6g8Kd9sFv0yQr1MPAuIvnFmXEwzKOSw4ogLyf4KI2d91Zq3haCkhta2tYYDy
-         D/Vlm/50EasbePTpFuneRGmZghSyijjYDQ81uBp8z1w+QF/yG27HrAHBUur78Erb8Q+A
-         Sr0bP48fpwRL+dNzMtKwynibdv6uEw7cqg6mm7X5/QRi5zLozeVR7CcEL06X5247eVR8
-         f0NKDYCzfHAIWZaLqL+0LUSTb7dhQSRBqMthEVG2V3LjxtlShPe5xqdRA/HqJ+T92GmF
-         mbfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVG7c4RJ9rorRxQwaC9vFTwCx7obFkLxugCF9sIqDSGx7Q1VV3F0txJoa+eNRtnygeVU9bKFjhHQObYbPI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSrX52CRBC3zzeJxFnArTM75lFQW4zrLt4KemzNu5CfnMDPAbR
-	f0Ou+OOWICM9zzYko0jrkha8JVU+FCYYv2zzk92tfjsOJz4DBqiousf4Fv4mBMM=
-X-Gm-Gg: ASbGncufkZ1Eh2EAOzl4kxPcH0wEuYfzmiqOvG7gRIyqQD8tAZFkqBRs5E/4fj/GSxs
-	lFWCmcnve6yTpsUPoJHV3e0LKdAURCXhrxKM3DsnVAsG4h4kNmfFHL+CiBkDL37rrdro35UABtQ
-	ygDYkIIZxxN9I8x8mIGdlkOwr2shNzWI3+VPn13+E1pIW/V10GxUY95neHlKgKCrUw6FeejE4hf
-	HUGUdxmfm/V5H3eV4OWNvcDLyrgiAD1c0oj9Zfu0M8aD91T0D7zRX8iKPsZwHlSq5yqR3m6kinv
-	WWeBIjk=
-X-Google-Smtp-Source: AGHT+IHYgYYOaXEpCdGY3z7Bd2VkYJBXiycDpU53N+TlhIMT/SWdj99wXGUXUo6mOipeYCRicV9nKg==
-X-Received: by 2002:a05:600c:1ca8:b0:439:3d5c:a028 with SMTP id 5b1f17b1804b1-4394c81a33amr38392455e9.12.1739275814586;
-        Tue, 11 Feb 2025 04:10:14 -0800 (PST)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:561:8978:1d41:636a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd4342502sm9152327f8f.26.2025.02.11.04.10.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 04:10:14 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 11 Feb 2025 13:09:47 +0100
-Subject: [PATCH 13/14] gpio: davinci: use value returning setters
+        d=1e100.net; s=20230601; t=1739275837; x=1739880637;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1N4BjHm0w2ueghlCuqmC8WLv26kWSsqWLwCdcxZhQnM=;
+        b=JtG+n+xAqZcAql9kvmAIP0YZHdvjRJYRJJkm+jHZ3TLEzso5cYk7bDGqtZX1ry3cLH
+         Raa11ZGTSSztIXkhSP/3Evn0q2vrUaVfP7IsKhOYuaZq18TOqYKaB+dqemETov91snYm
+         DaHGKUfAhhd+oFoMNn6hb+sIp078DrafI2XBVn0PR5LHA6PrJuK00A/62Vv+INua+b8q
+         tYTDSapwL55uPRu4mrUhiKyTnkRLqxBZzLimoEo8a3hirqBF4Fz/ihQ+DRz0jKOTmz60
+         rY179pSoQohB1WYTPsVckwV+HNYQION6OxP47t74VnYw02k26e/wzqOX3QI+VYI3z8NH
+         gixA==
+X-Forwarded-Encrypted: i=1; AJvYcCWn9Lsud6mQ8AsKqUCs6S6UMmifW+lfkcC3YlfrpCGKYXN4sERsarpx8KcKGxl9wdAhr4HwbfGkgSZ3zuE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4fuTCgsbN01KP/UAKqQ4I3+Qe3Ocqp0X4wVMnyKGmu2llkCux
+	fK1U8NBGNgugTHqrcNfyC4pOvLYASH672BNKa/e65XTFS2xiKQYYHnouX4KxEymnB5sU+0ackwU
+	o6leW2Ry89b8tVWiv4a2i5M87xYcCFbHzx31l
+X-Gm-Gg: ASbGncss99rHBtL3mmu6TlJXLAIxStl9jL3oGvXAAc+9jgc2jm4QTecxAh4TDZcKah8
+	C99SUaN3Jt6WXOB3b8aFVE+iveWUIVomghIwo/e2jeH0ephFqCewy6QltltVk14gNPHYBfsZaJG
+	nGzHZQasLuFiZRkRVZqVOhB/zCJI8=
+X-Google-Smtp-Source: AGHT+IEQwEibAWc+RRxuuCdpPikFutJWVyXCzGKs+LngcPsqCNYBwJbz+eXEOrOLxm9bhPvIWlaknhQUeYYoGDpRBGw=
+X-Received: by 2002:a05:622a:24e:b0:471:92af:bf73 with SMTP id
+ d75a77b69052e-471a24015b0mr3512441cf.22.1739275836415; Tue, 11 Feb 2025
+ 04:10:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250211-gpio-set-retval-v1-13-52d3d613d7d3@linaro.org>
-References: <20250211-gpio-set-retval-v1-0-52d3d613d7d3@linaro.org>
-In-Reply-To: <20250211-gpio-set-retval-v1-0-52d3d613d7d3@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Michael Walle <mwalle@kernel.org>, 
- Bamvor Jian Zhang <bamv2005@gmail.com>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, Keerthy <j-keerthy@ti.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pwm@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1519;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=yf93BY6UtZ3z9CvJxszbP+L4YyMx5+aznul9fLO8j0Q=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnqz4YjmuswHK/ySgxs6vkxh9UOnLtF49m+HYhw
- kEk7Bki8iKJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ6s+GAAKCRARpy6gFHHX
- chwlD/9zW+lnpiPgLXbElhrE9+pbLjQ2E4wbziINynawEf9Y1rEgv29XTE28fO9Om5SdY6yvMzi
- bQbAf9MA0YtwVvH2NhyDNMIicUx/lECPglW0WtDX806YERgydsNPcowpxzwpV86Rq4kDdJy6X5/
- AyYtg8ucPcQBP7AXgKsI6YLfqImcjahAc+c7FkN7RJvTMNQtQqMvX7dk0Q+iYIYhY4z2QQZUH0C
- bQFfqBme6mvn3FDLOSALr//ITeFg8zX98CRPFaN+Jkjtz+QEshMe6t0N/5gCZQRFF19O0SGaWWT
- 7yYmtdo+01jdh7eOtUFsFLTORsIa11wtKiBbmoZb6xjPc0n0cnWsDm2iogGJ4WnIXPbN0RZxqJZ
- aNE2fywbdg6PSUgreOKplFn77Sn+uMletLUpQbJMXaeVM0liZ/3hixVLdc9cXgYbdQG2LPREQYN
- EhMy713GOGXoWh66FCQH4CdKtvkc/KwRo9SHj9kwDY77vn25G77vplG9BAlU0+HJ9ldg6d1jjLp
- 8CTlUEBle6etiWuPIh/vJEab9TgwvrTW04j1UrkE47R2f/q6kd2g260X9hs/W25H4wGWiXTVVgn
- hhwM87DBACNCKWp8MuZo077opF/SlR/MkrKLdI+FSOTmbXwYF8Ov1RUgsvk09W9Gp4EDAzjWznq
- zUMwfdpHgDO41/g==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+References: <20250206044346.3810242-1-riel@surriel.com> <20250206044346.3810242-2-riel@surriel.com>
+ <CA+i-1C2QgSTq4gbGZqjyzGcuscsFZvymHvXnfJYuT-CNjPPuMQ@mail.gmail.com> <20250211110721.GF29593@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250211110721.GF29593@noisy.programming.kicks-ass.net>
+From: Brendan Jackman <jackmanb@google.com>
+Date: Tue, 11 Feb 2025 13:10:25 +0100
+X-Gm-Features: AWEUYZl1qEIZlSom7v3otMg44tgV0viN6Er_o6RhnpuRLrgH7vOxr6PrKq5XL4Q
+Message-ID: <CA+i-1C1fP+Lk4FGO+-sLMq+LmjVjm-1r-wG15oKtDDu0=gi+Gg@mail.gmail.com>
+Subject: Re: [PATCH v9 01/12] x86/mm: make MMU_GATHER_RCU_TABLE_FREE unconditional
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	bp@alien8.de, dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com, 
+	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com, 
+	linux-mm@kvack.org, akpm@linux-foundation.org, jannh@google.com, 
+	mhklinux@outlook.com, andrew.cooper3@citrix.com, 
+	Manali Shukla <Manali.Shukla@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, 11 Feb 2025 at 12:07, Peter Zijlstra <peterz@infradead.org> wrote:
+> > It would be nice to update the CONFIG_MMU_GATHER_RCU_TABLE_FREE
+> > comment in mm/mmu_gather.c to mention INVLPG alongside "Architectures
+> > that do not have this (PPC)"
+>
+> Why? This is just one more architecture that does broadcast.
 
-struct gpio_chip now has additional variants of the set(_multiple)
-driver callbacks that return an integer to indicate success or failure.
-Convert the driver to using them.
+Hmm yeah, I didn't really make the leap from "doesn't do an IPI" to
+"that just means it uses broadcast TLB flush". In that light I can see
+how it's "just another architecture".
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-davinci.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+I do think it would make sense to be more explicit about that, even
+though it seems obvious now you point it out. But it's not really
+relevant to this patchset.
 
-diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-index 8c033e8cf3c9..63fc7888c1d4 100644
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -139,7 +139,7 @@ static int davinci_gpio_get(struct gpio_chip *chip, unsigned offset)
- /*
-  * Assuming the pin is muxed as a gpio output, set its output value.
-  */
--static void
-+static int
- davinci_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
- {
- 	struct davinci_gpio_controller *d = gpiochip_get_data(chip);
-@@ -150,6 +150,8 @@ davinci_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
- 
- 	writel_relaxed(__gpio_mask(offset),
- 		       value ? &g->set_data : &g->clr_data);
-+
-+	return 0;
- }
- 
- static int davinci_gpio_probe(struct platform_device *pdev)
-@@ -209,7 +211,7 @@ static int davinci_gpio_probe(struct platform_device *pdev)
- 	chips->chip.direction_input = davinci_direction_in;
- 	chips->chip.get = davinci_gpio_get;
- 	chips->chip.direction_output = davinci_direction_out;
--	chips->chip.set = davinci_gpio_set;
-+	chips->chip.set_rv = davinci_gpio_set;
- 
- 	chips->chip.ngpio = ngpio;
- 	chips->chip.base = -1;
+> - and while that's being updated it would
+> > also be useful to note down the paravirt thing you explained above,
+> > IMO it's pretty helpful to have more examples of the concrete usecases
+> > for this logic.
+>
+> Look at kvm_flush_tlb_multi() if you're interested. The notable detail
+> is that is avoids flushing TLB for vCPUs that are preempted, and instead
+> lets the vCPU resume code do the invalidate.
 
--- 
-2.45.2
+Oh that actually looks like a slightly different case from what Rik mentioned?
 
+> some paravirt TLB flush implementations
+> handle the TLB flush in the hypervisor, and will do the flush
+> even when the target CPU has interrupts disabled.
+
+Do we have
+
+a) Systems where the flush gets completely pushed into the hypervisor
+- xen_flush_tlb_multi()?
+
+b) Systems where the guest coordinates with the hypervisor to avoid
+IPI-ing preempted vCPUs?
+
+Maybe I can send a separate patch to note this in the commentary, it's
+interesting and useful to know.
