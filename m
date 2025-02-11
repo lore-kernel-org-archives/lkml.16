@@ -1,82 +1,111 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC1426156B;
-	Tue, 11 Feb 2025 17:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19AC253B6E
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 17:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739295877; cv=none; b=P2+3HqAE8vgOtgYqnXMiWXIWQix8+lO9uE6ZBstnHdQnboZAPMt078K6e/yy+bIn22/RsZPk9nMdQqj/3B/5/6ai4AaHWf/QnV64veWbXQL1r5JgxBRRhPHBm4MosIsRRL/RWUSftnVewsJKpbx7sJSccqa4m+fO9XnBpAtM3TQ=
+	t=1739295903; cv=none; b=BBcpBcJmb4Xy6AMJ/Ymf3tW9ZpdW/22jFz97QklZuZCO/c7p156/gH0LbZ2FiGvAzH+TJ09RCAzJYfa15xxnWXg7fZymGpmuKEsQtso1s3cGKEuj4H89aAnkwmTXC8EBS3EqiRBE9eBiXtHRehJ5gFiHkt2cooa5a/Fd6y7ngxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739295877; c=relaxed/simple;
-	bh=TE+kovlyWSTMFM9fyPUJLXEeOTtyEapgcVPRKbpjzOg=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=m8YyRjVpfh7YkKmZFNzmdjLgmNT7wEfdoJeGEkEkXkKXA5h6KtajuXCr9+6CKV5kzFrD1/TkOWrAnL2wWWtMMVDp64a7WaejzUq1auWEPU19MiCZL7qVNVHDgECSqH+zwGtteWB9OlkDtBAjWS/6Iew0cDMNoomHrN6NewxiVrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=VFxg8sGN; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1739295903; c=relaxed/simple;
+	bh=IYEdhM4+0ThJA5HBQ6fog3jXewUj4csh1viDFDkpai0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qPVc+gMyjIjuICYp0pjyOAh5anqqUB41LC0YgAugbpA9gxkRLx8474gImgQ+AoW7l6nyXqDNzM83OsjlYoAuL1iwgvGKVS3wKB+9PlJShctTkSKQJ9J8xRd2WyH01Js6lhh9nCjrxx6zEKVvehGXNKOw9CZ+eR7wccp6B4IjhwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E9k3qkjg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="VFxg8sGN"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id DED51259FE;
-	Tue, 11 Feb 2025 18:44:33 +0100 (CET)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 3hiQgxbp8APx; Tue, 11 Feb 2025 18:44:29 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1739295869; bh=TE+kovlyWSTMFM9fyPUJLXEeOTtyEapgcVPRKbpjzOg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=VFxg8sGN0IUU3XQ5USJmAQHM6145IqrndAx5eElqea0kDetT2HI2qeb2kml2fCCP7
-	 hyZg2F7CA2f/biN4WSDWG0Zmev29CfJSicVllTSFU5OFlnULRqqLF40hhUMjycBSaR
-	 vXZeDIzvtSadeJbMHiZh7UnKxsYUo2MBFh6/r7HMzh1ixNG30n2q7GhldYyizIufyr
-	 cfninSgKMS5tmGlNZ1H0kpxtR7tMbGJ58T5ja3IC6BrSh2Mx7iZoHGDEF7zNLUX9tr
-	 v9WY1R+bQLXGZLuV4N8IGiYvAAfCwJxEHto71LHdBaB5ZmDJ9DVv/PpFvGW5k53HXz
-	 wAbpomHFU4K1Q==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E9k3qkjg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03AA6C4CEDD;
+	Tue, 11 Feb 2025 17:44:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739295902;
+	bh=IYEdhM4+0ThJA5HBQ6fog3jXewUj4csh1viDFDkpai0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=E9k3qkjgL6pH80ogRArHzdsx5uXVtG3u0YUqpr9Ctdj8+/NLeRJVtC5aWh0pv7SvB
+	 APDjgEdJa1asJr+n64E1KRS82QrLsBOg7I7gWcqBKST5xUPZTywIQWHpEazNJP+rXP
+	 SKyFInhbhBCQAv0NGotAeReU9GsYfF8ehoC7j7gh6mJ9RIfaMJ6qWR0aXnrQUo3VRX
+	 OP2yNSSM575zXmwMDf7zWU9HICS1E8X2R1bNrXMiAPrIiyguUQZ1p4Djdojc1Bljwp
+	 qvfECtxwWS2LzSLesxKSpzS/kunHUNnQ2trVkqP7xU6ByRY95YsKOT9yGqfvCwCmaD
+	 kBDXUVqY2dOlg==
+Date: Tue, 11 Feb 2025 17:44:56 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Sunny Shen <sunny.shen@mediatek.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Fei Shao <fshao@chromium.org>, Pin-yen Lin <treapking@chromium.org>,
+	"Jason-JH . Lin" <jason-jh.lin@mediatek.com>,
+	Nancy Lin <nancy.lin@mediatek.com>,
+	Singo Chang <singo.chang@mediatek.com>,
+	"Paul Chen --cc=devicetree @ vger . kernel . org" <paul-pl.chen@mediatek.com>,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	Project_Global_Chrome_Upstream_Group@mediatek.com
+Subject: Re: [PATCH 2/5] dt-bindings: display: mediatek: postmask: Modify
+ rules for MT8196
+Message-ID: <20250211-darkened-justify-f559a0bf2a81@spud>
+References: <20250211025317.399534-1-sunny.shen@mediatek.com>
+ <20250211025317.399534-3-sunny.shen@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 11 Feb 2025 17:44:28 +0000
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor@kernel.org>, Alim
- Akhtar <alim.akhtar@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>
-Cc: Sergey Lisov <sleirsgoevy@gmail.com>, linux-mmc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Kaustabh
- Chakraborty <kauschluss@disroot.org>
-Subject: Re: [PATCH 0/3] Introduce DW MMC support for Exynos7870
-In-Reply-To: <20250204-exynos7870-mmc-v1-0-c87cfc72be4a@disroot.org>
-References: <20250204-exynos7870-mmc-v1-0-c87cfc72be4a@disroot.org>
-Message-ID: <b37f41ddf7d16fa1150f25891a7603e5@disroot.org>
-X-Sender: kauschluss@disroot.org
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="AN5oWCXPj8Gvwucf"
+Content-Disposition: inline
+In-Reply-To: <20250211025317.399534-3-sunny.shen@mediatek.com>
 
-On 2025-02-03 20:34, Kaustabh Chakraborty wrote:
-> This series adds support for SMU and non-SMU variants of Exynos7870 DW
-> MMC controllers.
-> 
-> Some DW MMC controllers require two 32-bit r/w from a 64-bit FIFO,
-> the series implements that feature as well.
-> 
-> This patch series is a part of Exynos7870 upstreaming.
-> 
-> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+
+--AN5oWCXPj8Gvwucf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Feb 11, 2025 at 10:52:51AM +0800, Sunny Shen wrote:
+> Add a compatible string for MediaTek MT8196 SoC
+
+$subject and $body don't match here.
+
+>=20
+> Signed-off-by: Sunny Shen <sunny.shen@mediatek.com>
 > ---
-> Kaustabh Chakraborty (1):
->       dt-bindings: mmc: samsung,exynos-dw-mshc: add exynos7870 support
-> 
-> Sergey Lisov (2):
->       mmc: dw_mmc: add a quirk for accessing 64-bit FIFOs in two halves
->       mmc: dw_mmc: add exynos7870 DW MMC support
-> 
+>  .../devicetree/bindings/display/mediatek/mediatek,postmask.yaml  | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
+postmask.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek=
+,postmask.yaml
+> index fb6fe4742624..29624ac191e1 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,postmas=
+k.yaml
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,postmas=
+k.yaml
+> @@ -27,6 +27,7 @@ properties:
+>            - enum:
+>                - mediatek,mt8186-disp-postmask
+>                - mediatek,mt8188-disp-postmask
+> +              - mediatek,mt8196-disp-postmask
+>            - const: mediatek,mt8192-disp-postmask
+> =20
+>    reg:
+> --=20
+> 2.34.1
+>=20
 
-Please refrain from merging the following, wait for the next revision.
-[PATCH 2/3]
-    mmc: dw_mmc: add a quirk for accessing 64-bit FIFOs in two halves
-[PATCH 3/3]
-    mmc: dw_mmc: add exynos7870 DW MMC support
-Thank you.
+--AN5oWCXPj8Gvwucf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6uMmAAKCRB4tDGHoIJi
+0q/GAQCeCuVWfWkn+7Uog5I98DkIcobNbcbPvlOVI5tiUcEtDAD6Amsq2F0zICow
+GXQ53Xxni3csTCSSopUVF4waDJeG3QA=
+=UYkB
+-----END PGP SIGNATURE-----
+
+--AN5oWCXPj8Gvwucf--
