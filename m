@@ -1,172 +1,150 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2070.outbound.protection.outlook.com [40.107.92.70])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7483E260A52;
-	Tue, 11 Feb 2025 17:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739294277; cv=fail; b=o4S+4MPgnH7pJ86UW/1NQvo5RuK4o0CY2ur306FPZ+898JYod/47IriPtpDi+LlJknIjJlYMgQTOJopc6w6Yvg8TOv9yIOFblcagtXrrKLYUcirVg6n6dJQFE1IS4tm1NRltv6lBxBFBsdYNEeqJbnaJ3r1ey9ZH440h1B/UCYQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739294277; c=relaxed/simple;
-	bh=Nfvsn4O0uNlx4qOPWKwCyduO0YVopYVwJQ1GcQvQcSI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NnDNEUnrdMN94aYX8hbh9xAX6SlbpQIH+TrFSvW9zRdBBmEaHKTNnOaQxuIVH7T8KFwu6bl2H6sJuu0EwouHc74Shd4ikevOGLfun+565xNHqwMkGbmQGI8JFGgrlHs9mpMp1sqxkTFHkmmuGhygTYGVyl0WBPSZKr390WbzqyE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=aun563zN; arc=fail smtp.client-ip=40.107.92.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E1D0262166;
+	Tue, 11 Feb 2025 17:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739294280; cv=none; b=OuGOGbt5GJDhxzfEbd6Vlzo3nLCHVy9hz7dgl/f/qTO/U7ZbEC805C7HPuvwtboL5NOtNuE9X5VW/WQjawSiHlhJpfoxHveoTDuVzjiWi7sK/C8wxK3h7CF+Rqa6PIXk6QBGRWdc69PUptjtIB40yu+1Zs/BiiSkFj4IHkBSP18=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739294280; c=relaxed/simple;
+	bh=hI2ir19ttm1JZmOsgx3iqdeaROzEgDL5gBVWGc06Umk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XQxzPkDIxBwF/eYuKEvgp+jawRxwSFLCbNHuntc8Yoj0pN1m4zvqSJFDiQdkibQ2FLMUar5+e6NuZTBdow2RJ4BuuJmAYGHQmLJ4oQZQ80Ip9R3ZBmN85PCnjO5K0EGfeei6LuCCbS7AXjxzm6y71Hmc4LdReRgFnp9ZOHOEnuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m2S4FqWo; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aun563zN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wsyxDBl2MskNI9O5OZcqO7eDp1/M9J4APpuMNYdEv68qWVPozz8DEepvtLCZGgNeARHCKvqDIDD46/UcLLchnjNYVoumd9EN6yOI9Ny4yxM3nO2TCCA8FGaphHnqM1FbEOQFt9lVkPp+RhId71HpMysikXGCvQafjHKdoPOYKIVrESI1pcCCt5df5VxUMBiUgSbD8bF8UbXHCDYRV/19rKaFRH2UixqF1kCs4YzLneB7QgEbM8DSL9IkikkbjvjlVO5om0uWPpKB4mktFM+3EQnphb106+zAw6JAoqYEoFr9/bYj4HRpuGpSbmdZX/cZ+/T/yLXPg8WV+3xuO3o7bA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dFJ57cpcIFe6VrArxeRPgI6dzH2Ih/MbnsGHfgY+Ja8=;
- b=C/nOspy0eeagqz+29FWWiyGYTQ3TzJ4TQtm+3yy4r5d1+Y+/OWsNX1piQti3pNMmBHyOMuwbYyHlHu4WSBIabjizC6SU0f8czN+H6qwLwuQVCqHi1x4WFrEWzwN3S6mInpRjSSgvXWcV8GVL4tLXOq+9s9sTEPqktyMmXQ60Mk7SNr6VEBHQY8xRZLIOiBEMETwtJjgINgfCiq8XpyDgXoGIoj3yyIqXl5ivakLwf/QLJPQNiWtD1zeeJI+Wt5Vw6SY7pjW3e9nS5riivjPPwM/3BV2YkpENhRhyqm6pDGhobglV8pxPhJ8s3j5UBwv8fIvQXg14rBUhrXCY0VmRkA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=gondor.apana.org.au
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dFJ57cpcIFe6VrArxeRPgI6dzH2Ih/MbnsGHfgY+Ja8=;
- b=aun563zNnykOVeq3g9BUp8ZT/XE78+kRBgeOKEQQKdFXpa/nybyQ5Gs9RX6BBiel8QvzKZMLBC63JHzsf7/3xKLKvxEn2A9tuyjK5xOyj9Ivmr4aGkdQyJdBoq3pYm1ftynzNG4+n4LIWf6hJNz24OcOuTazmvj+giG2NLs2lZ4xjkFYcuGxAn2ek4fq9/V+9Hsh34rmxKvSlHGU8uvAThEYLoZ6DtaS+25l3hFDSq1G2TCdkgqGhEZKODg6HIkcDe2beHtwTCM4c9M2pzX3+sPlfto44YdczC5eXHR+Hd8gISpmuCdBi6TthjOGTZjT0ECqUMbkT/c+6bqvyX3dcA==
-Received: from DM6PR03CA0039.namprd03.prod.outlook.com (2603:10b6:5:100::16)
- by PH0PR12MB5605.namprd12.prod.outlook.com (2603:10b6:510:129::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.16; Tue, 11 Feb
- 2025 17:17:47 +0000
-Received: from DS1PEPF00017093.namprd03.prod.outlook.com
- (2603:10b6:5:100:cafe::67) by DM6PR03CA0039.outlook.office365.com
- (2603:10b6:5:100::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.31 via Frontend Transport; Tue,
- 11 Feb 2025 17:17:46 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- DS1PEPF00017093.mail.protection.outlook.com (10.167.17.136) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8445.10 via Frontend Transport; Tue, 11 Feb 2025 17:17:45 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 11 Feb
- 2025 09:17:31 -0800
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 11 Feb
- 2025 09:17:31 -0800
-Received: from BUILDSERVER-IO-L4T.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
- Transport; Tue, 11 Feb 2025 09:17:28 -0800
-From: Akhil R <akhilrajeev@nvidia.com>
-To: <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-	<thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-	<linux-crypto@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: Akhil R <akhilrajeev@nvidia.com>
-Subject: [PATCH v2 00/10] Tegra Security Engine driver improvements
-Date: Tue, 11 Feb 2025 22:47:03 +0530
-Message-ID: <20250211171713.65770-1-akhilrajeev@nvidia.com>
-X-Mailer: git-send-email 2.43.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m2S4FqWo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739294278; x=1770830278;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=hI2ir19ttm1JZmOsgx3iqdeaROzEgDL5gBVWGc06Umk=;
+  b=m2S4FqWoqQIWWd2zzPJrYzXSqFHmLRxmxMicrp68WHiQsJh/RlrDuZEW
+   QiBFO1Ea4xdyU7D6VQDptVCsJcPeml9WIs6wRjq4PKLKXVuLQs+SZS4BL
+   suAdVBuC+4kLK5HtrfA0b1yrS0jZ08NGdpwkjkuDFVGPzeJeFbZwPWnmi
+   wLWUsJ+9QvpZaqHkwrYT6YWQF57HIN4bGC1Y/3vso4GXeMWwISfccrD+W
+   s6z3IoAsmJnCsnqI87hN/g7p4vrDB2rYGR8uu9hJ25q+EjnuGYfGx/O6Z
+   fZFBEK6iaP9ItuwLgporju6jvBu2CsBvMdZXj/6DiSoOIIr9dt1fdfGfQ
+   Q==;
+X-CSE-ConnectionGUID: t5SjeLjnTC6ysMdc3MC25Q==
+X-CSE-MsgGUID: j+cGfTEaTPiX4tRZ7Wc7kg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="39838936"
+X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
+   d="scan'208";a="39838936"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 09:17:55 -0800
+X-CSE-ConnectionGUID: su7XAvgHSSyc3ZJvavy+nA==
+X-CSE-MsgGUID: y9YDWbK0QWeGNN6f2EzWLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
+   d="scan'208";a="112405691"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 09:17:52 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1thttN-0000000AZuR-1hgu;
+	Tue, 11 Feb 2025 19:17:49 +0200
+Date: Tue, 11 Feb 2025 19:17:49 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v7 0/3] scanf: convert self-test to KUnit
+Message-ID: <Z6uGPZZ7LioJmekz@smile.fi.intel.com>
+References: <20250211-scanf-kunit-convert-v7-0-c057f0a3d9d8@gmail.com>
+ <Z6tvciJpQgTwYpGx@smile.fi.intel.com>
+ <CAJ-ks9mcxW7zY33FPB+mZ75dQ2Xqo-viM9CpbL=0i0WXUPJRhw@mail.gmail.com>
+ <Z6tytjvT1A-5TOrq@smile.fi.intel.com>
+ <CAJ-ks9kSBMh0=dgPC-NiOhibnK_LhBjBdZ_AQ91h-DBZfYR1sw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-NVConfidentiality: public
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF00017093:EE_|PH0PR12MB5605:EE_
-X-MS-Office365-Filtering-Correlation-Id: 46f104e7-f3e9-4bd5-f43a-08dd4ac00092
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?EfoI6e7rBRra6gzhuzsh6C2tbOR4gmiUjaA0VOk2lNVl/W53DaGwAFGIpXcs?=
- =?us-ascii?Q?XOf1jQjgFyYQQC3k0NGUMXn7Tl8J0J8gMQW+hRw04VscGfjBvmQwjLHnFN/5?=
- =?us-ascii?Q?Da04PLGhsglNdoFfVcyW7oWt1aNgnqpQhrFoLodSweeD9RwjjQJTpoYaxnH0?=
- =?us-ascii?Q?on6YayP/Uq0dz7op+lPMT7+hjh4+fYQC1CBRBNq9TGk5qW0OU++WX+lP9S9j?=
- =?us-ascii?Q?PfV2Iysx0Efd/24lcoMEr7H9+u1v5nbAy/HWOsSudqZL8Og3ItA0CkFvICvE?=
- =?us-ascii?Q?FEsOABrXZKy6g2dzg4//8NmswQxYNbAt6PZZPnWQiblFK/8XfmopvGR3KGZP?=
- =?us-ascii?Q?FOv9AxURsvCaTfdvd4Cc4bYRQ7cAqhHj7YdOJd4XnHJiwvET9wpCqf4a2JgE?=
- =?us-ascii?Q?eB+gm4zpsOX9LC8GH1tEhUB18vdQ7U0J+435ToYMiUxEwF2/iP76EJC0S/yF?=
- =?us-ascii?Q?Xrup1CCFNLOEoxOZrRPbhT3jJy8YAVPmEk5Aw6aJMnwBFvewp8mm5wLidSX+?=
- =?us-ascii?Q?vlvuSzRIMXHudl1IY8R4mwk6ooDQEQrKLKRaAqSL/QuuGgJFmf99AouhBT7c?=
- =?us-ascii?Q?bJIO5lyQ7ts0AmW/L0EJrrSqD9ScKV75XPKskIvl1N5kgRDMHQsnFfjqRKxh?=
- =?us-ascii?Q?zgBkPIKpAEhYDB6VDw/rADQJNCH/buvoU9oLl4wqAgMGR0kAJPnrWIPJDFBn?=
- =?us-ascii?Q?iKugaJ7D1RYnDiSwv4sUttkDLVpGAGv/CbWtW0zw2DmdeFDuqZ7hBN9Ap75c?=
- =?us-ascii?Q?myqn/RkmKRCXW8VNB7m64YZUdtC6zn5xLDkimOOoRz0Fg3v983W5lMtjzbmc?=
- =?us-ascii?Q?EtjM6zuQmpiWiLFrcUhZFBTcxwuI1lTwLeMCInHlpLcc3l/PfFTFmV9aSxWI?=
- =?us-ascii?Q?7sXBZASYysU7N1IwjeZpV0g/mBzxYrYnPsx4npRINbhBzc0xU5F2TqzKerFr?=
- =?us-ascii?Q?hhW4iQ3enyNkrW3oRk9Bm98tHqRmlVB2+bGFudWU0+D1ctKldL58Kg7yLOkf?=
- =?us-ascii?Q?qRy2X0+7qddDMrIFVirexBwGZTF4GXrsE7G2SgdMy0g2quloabcskcBf7WDN?=
- =?us-ascii?Q?68/NVuARKT7HCcrrimiVxUQ6YfmeaemV3GdLHx/DJ1cvkNE7USXUIHzZuuo7?=
- =?us-ascii?Q?44+HTQ1N9K2hF8aVUFgrBYCEhQGmFD0m/gvddYKv5Z86xT3ojOTQCZIEa/1l?=
- =?us-ascii?Q?nesBgqkpZh36rNGdMR8cq3OJpPMtqDYm0cES7hXrZbb7VrfQwwktMEvCAagO?=
- =?us-ascii?Q?2REGWfJS6ZPzuGeFGHnUuL8vxMQzJpA5eCi/kDI1OJVVCY5o4wO0Hrfvkr8k?=
- =?us-ascii?Q?4PUSdJCSumc6Be9XsxFw5s5yLsQosa8/g8x5CiktrdUilC2wlg8d05Y8L0de?=
- =?us-ascii?Q?288dS0kc3Gtvw1o3TkBZHKUoUQZR+SDcaM1JbB+aR1A+NJmVUL1T88IYg88d?=
- =?us-ascii?Q?2wQ4i3oPbBPNxZ92RTuSAd3zqZwC2/PVY+nhEDmt6IF6tFnqC1NZzC6lxAFG?=
- =?us-ascii?Q?klOuZH2lzHFjJns=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 17:17:45.8723
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 46f104e7-f3e9-4bd5-f43a-08dd4ac00092
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF00017093.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB5605
+In-Reply-To: <CAJ-ks9kSBMh0=dgPC-NiOhibnK_LhBjBdZ_AQ91h-DBZfYR1sw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-With the CRYPTO_TEST now being run asynchronously unveiled some
-concurrency issues in the Security Engine driver. These were not
-caught during functional or fuzz testing as all the tests were run
-synchronously.
+On Tue, Feb 11, 2025 at 10:57:11AM -0500, Tamir Duberstein wrote:
+> On Tue, Feb 11, 2025 at 10:54 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Tue, Feb 11, 2025 at 10:47:03AM -0500, Tamir Duberstein wrote:
+> > > On Tue, Feb 11, 2025 at 10:40 AM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Tue, Feb 11, 2025 at 10:13:36AM -0500, Tamir Duberstein wrote:
 
-This patchset contains the fixes for the concurrency issues and few
-other improvements identified during the stress-ng and cryptsetup tests.
+...
 
----
+> > > > > - Use original test assertions as KUNIT_*_EQ_MSG produces hard-to-parse
+> > > > >   messages. The new failure output is:
+> > > >
+> > > > It would be good if you put into cover letter, or even in the respectful patch
+> > > > the example of the error report for the old code and new code that it will be
+> > > > clear how it changes.
+> > > >
+> > > > >     vsscanf("0 1e 3e43 31f0 0 0 5797 9c70", "%1hx %2hx %4hx %4hx %1hx %1hx %4hx %4hx", ...) expected 837828163 got 1044578334
+> > > > >             not ok 1 " "
+> > > > >         # numbers_list_field_width_val_width: ASSERTION FAILED at lib/scanf_kunit.c:92
+> > > > >     vsscanf("dc2:1c:0:3531:2621:5172:1:7", "%3hx:%2hx:%1hx:%4hx:%4hx:%4hx:%1hx:%1hx", ...) expected 892403712 got 28
+> > > > >             not ok 2 ":"
+> > > > >         # numbers_list_field_width_val_width: ASSERTION FAILED at lib/scanf_kunit.c:92
+> > > > >     vsscanf("e083,8f6e,b,70ca,1,1,aab1,10e4", "%4hx,%4hx,%1hx,%4hx,%1hx,%1hx,%4hx,%4hx", ...) expected 1892286475 got 757614
+> > > > >             not ok 3 ","
+> > > > >         # numbers_list_field_width_val_width: ASSERTION FAILED at lib/scanf_kunit.c:92
+> > > > >     vsscanf("2e72-8435-1-2fc-7cbd-c2f1-7158-2b41", "%4hx-%4hx-%1hx-%3hx-%4hx-%4hx-%4hx-%4hx", ...) expected 50069505 got 99381
+> > > > >             not ok 4 "-"
+> > > > >         # numbers_list_field_width_val_width: ASSERTION FAILED at lib/scanf_kunit.c:92
+> > > > >     vsscanf("403/0/17/1/11e7/1/1fe8/34ba", "%3hx/%1hx/%2hx/%1hx/%4hx/%1hx/%4hx/%4hx", ...) expected 65559 got 1507328
+> > > > >             not ok 5 "/"
+> > > > >         # numbers_list_field_width_val_width: pass:0 fail:5 skip:0 total:5
+> > > > >         not ok 4 numbers_list_field_width_val_width
+> > > > >         # numbers_slice: ASSERTION FAILED at lib/scanf_kunit.c:92
+> > > > >     vsscanf("3c87eac0f4afa1f9231da52", "%1hx%4hx%4hx%4hx%1hx%4hx%4hx%1hx", ...) expected 1257942031 got 2886715518
+> > >
+> > > Makes sense. As you can see the error report for the new code is
+> > > included here. I'll add the old code's error report if I have to
+> > > respin v8.
+> >
+> > At a bare minimum. can you add in the reply to this email?
+> 
+> Oh, sure:
+> 
+> On Tue, Feb 11, 2025 at 6:54 AM Petr Mladek <pmladek@suse.com> wrote:
+> >
+> > [...]
+> >
+> > [  383.100048] test_scanf: vsscanf("1574 9 64ca 935b 7 142d ff58 0", "%4hx %1hx %4hx %4hx %1hx %4hx %4hx %1hx", ...) expected 2472240330 got 1690959881
+> > [  383.102843] test_scanf: vsscanf("f12:2:d:2:c166:1:36b:1906", "%3hx:%1hx:%1hx:%1hx:%4hx:%1hx:%3hx:%4hx", ...) expected 131085 got 851970
+> > [  383.105376] test_scanf: vsscanf("4,b2fe,3,593,6,0,3bde,0", "%1hx,%4hx,%1hx,%3hx,%1hx,%1hx,%4hx,%1hx", ...) expected 93519875 got 242430
+> > [  383.105659] test_scanf: vsscanf("6-1-2-1-d9e6-f-93e-e567", "%1hx-%1hx-%1hx-%1hx-%4hx-%1hx-%3hx-%4hx", ...) expected 65538 got 131073
+> > [  383.106127] test_scanf: vsscanf("72d6/35/e88d/1/0/6c8c/7/1", "%4hx/%2hx/%4hx/%1hx/%1hx/%4hx/%1hx/%1hx", ...) expected 125069 got 3901554741
+> > [  383.106235] test_scanf: vsscanf("c9bea1b8122113e9a168df573", "%4hx%4hx%1hx%4hx%4hx%1hx%4hx%3hx", ...) expected 571539457 got 106936
 
-v1->v2:
- * Added patch to handle the scenario when keyslots are full
- * Added patch to finalize crypto request which was not called in some
-   error cases.
+> > [  383.106398] test_scanf: failed 6 out of 2545 tests
 
-v1: https://lore.kernel.org/lkml/20241217161207.72921-1-akhilrajeev@nvidia.com/
+Is it me who cut something or the above missing this information (total tests)?
+If the latter, how are we supposed to answer to the question if the failed test
+is from new bunch of cases I hypothetically added or regression of the existing
+ones? Without this it seems like I need to go through all failures. OTOH it may
+be needed anyway as failing test case needs an investigation.
 
-Akhil R (10):
-  crypto: tegra: Use separate buffer for setkey
-  crypto: tegra: Do not use fixed size buffers
-  crypto: tegra: finalize crypto req on error
-  crypto: tegra: check return value for hash do_one_req
-  crypto: tegra: Transfer HASH init function to crypto engine
-  crypto: tegra: Fix HASH intermediate result handling
-  crypto: tegra: Fix CMAC intermediate result handling
-  crypto: tegra: Set IV to NULL explicitly for AES ECB
-  crypto: tegra: Reserve keyslots to allocate dynamically
-  crypto: tegra: Use HMAC fallback when keyslots are full
-
- drivers/crypto/tegra/tegra-se-aes.c  | 400 ++++++++++++++++++---------
- drivers/crypto/tegra/tegra-se-hash.c | 285 ++++++++++++-------
- drivers/crypto/tegra/tegra-se-key.c  |  27 +-
- drivers/crypto/tegra/tegra-se-main.c |  16 +-
- drivers/crypto/tegra/tegra-se.h      |  39 ++-
- 5 files changed, 522 insertions(+), 245 deletions(-)
+> This is from https://lore.kernel.org/all/Z6s6WsIw3VCGys6K@pathway.suse.cz/
+> (doesn't load for me, seems lore is having problems).
 
 -- 
-2.43.2
+With Best Regards,
+Andy Shevchenko
+
 
