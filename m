@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAB051F4E3B
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:13:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6B9A1E5B87
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:14:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739272438; cv=none; b=jnyyva8U5C3bsee7LSaspOdVgMiSdIpTlQFMKsLmm9QX1z9mBvOI7qqf11JO3OThNQwCy5yZGFYD3lml4/RKtAX9nvsdL/cqLft3OH2cXzqBEbMh4pSdWjUflceVOStw1s7cnnEJP1uRfspGeCk03l+OCK/Rm0DsPZnTeNBTRtU=
+	t=1739272447; cv=none; b=LuFdNZZ2rbvKxu04Mhko1sSG3w/FoR9vo4wj/I/OuNI5Gj20pg7AoDErDtc5QLAB6u10V6AxSWkQB2tuIFlBKd7FBJnxlXKb29ogM+ykb/lGaTd8xMmqMg40X2DyReLjG9pFwG2LlhvzEtNoPv6ccZMldZB+bIXqWKT+9/752ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739272438; c=relaxed/simple;
-	bh=HLjhzBSmShA4XHz7qpUIHs9ADaPPYAqufvdB6r/6nts=;
+	s=arc-20240116; t=1739272447; c=relaxed/simple;
+	bh=/65vJoihApvUgvDROmmUZvN0G6FgIuNpyCBBsJDqLos=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LEevWzg615q26HsAYaS7MGak4Jsma2/qvCtToLgD9VGbMb8O40030ytywV6RMpSOjqbNCvbhDvc0AbUlEMNN1jpQdUyyBBnT3aNkHj/NCvff1XrrPrwiKdbdvXjQUW3IUw8k5fMIAIGbMcUN21ASTrQ9hanye75sQ7J6JKz1RkE=
+	 MIME-Version; b=l5GflIH4fhKKj7SFvPvI2K4NKfLU6bZerQMrQdpJTlfd7YyuYpATQv+Gq1JKNxV9lewDeXsnewaH/AqwmQbtod9PLxby4YGhuGFT/ANYT4RnbES8vYT54Hcqxmk6obfu9GUuo/s0ezGJixksq6dMU4KkGFLRtMw0EGzRAd4ZWzk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B3321477;
-	Tue, 11 Feb 2025 03:14:16 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 556BF13D5;
+	Tue, 11 Feb 2025 03:14:26 -0800 (PST)
 Received: from K4MQJ0H1H2.emea.arm.com (K4MQJ0H1H2.blr.arm.com [10.162.40.80])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 24D5F3F5A1;
-	Tue, 11 Feb 2025 03:13:44 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A73603F5A1;
+	Tue, 11 Feb 2025 03:13:55 -0800 (PST)
 From: Dev Jain <dev.jain@arm.com>
 To: akpm@linux-foundation.org,
 	david@redhat.com,
@@ -54,9 +54,9 @@ Cc: npache@redhat.com,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH v2 01/17] khugepaged: Generalize alloc_charge_folio()
-Date: Tue, 11 Feb 2025 16:43:10 +0530
-Message-Id: <20250211111326.14295-2-dev.jain@arm.com>
+Subject: [PATCH v2 02/17] khugepaged: Generalize hugepage_vma_revalidate()
+Date: Tue, 11 Feb 2025 16:43:11 +0530
+Message-Id: <20250211111326.14295-3-dev.jain@arm.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 In-Reply-To: <20250211111326.14295-1-dev.jain@arm.com>
 References: <20250211111326.14295-1-dev.jain@arm.com>
@@ -68,103 +68,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Pass order to alloc_charge_folio() and update mTHP statistics.
+Post retaking the lock, it must be checked that the VMA is suitable for our
+scan order. Hence, generalize hugepage_vma_revalidate().
 
 Signed-off-by: Dev Jain <dev.jain@arm.com>
 ---
- include/linux/huge_mm.h |  2 ++
- mm/huge_memory.c        |  4 ++++
- mm/khugepaged.c         | 17 +++++++++++------
- 3 files changed, 17 insertions(+), 6 deletions(-)
+ mm/khugepaged.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 93e509b6c00e..ffe47785854a 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -119,6 +119,8 @@ enum mthp_stat_item {
- 	MTHP_STAT_ANON_FAULT_ALLOC,
- 	MTHP_STAT_ANON_FAULT_FALLBACK,
- 	MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE,
-+	MTHP_STAT_COLLAPSE_ALLOC,
-+	MTHP_STAT_COLLAPSE_ALLOC_FAILED,
- 	MTHP_STAT_ZSWPOUT,
- 	MTHP_STAT_SWPIN,
- 	MTHP_STAT_SWPIN_FALLBACK,
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 3d3ebdc002d5..996e802543f1 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -615,6 +615,8 @@ static struct kobj_attribute _name##_attr = __ATTR_RO(_name)
- DEFINE_MTHP_STAT_ATTR(anon_fault_alloc, MTHP_STAT_ANON_FAULT_ALLOC);
- DEFINE_MTHP_STAT_ATTR(anon_fault_fallback, MTHP_STAT_ANON_FAULT_FALLBACK);
- DEFINE_MTHP_STAT_ATTR(anon_fault_fallback_charge, MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE);
-+DEFINE_MTHP_STAT_ATTR(collapse_alloc, MTHP_STAT_COLLAPSE_ALLOC);
-+DEFINE_MTHP_STAT_ATTR(collapse_alloc_failed, MTHP_STAT_COLLAPSE_ALLOC_FAILED);
- DEFINE_MTHP_STAT_ATTR(zswpout, MTHP_STAT_ZSWPOUT);
- DEFINE_MTHP_STAT_ATTR(swpin, MTHP_STAT_SWPIN);
- DEFINE_MTHP_STAT_ATTR(swpin_fallback, MTHP_STAT_SWPIN_FALLBACK);
-@@ -680,6 +682,8 @@ static struct attribute *any_stats_attrs[] = {
- #endif
- 	&split_attr.attr,
- 	&split_failed_attr.attr,
-+	&collapse_alloc_attr.attr,
-+	&collapse_alloc_failed_attr.attr,
- 	NULL,
- };
- 
 diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 5f0be134141e..4342003b1c33 100644
+index 4342003b1c33..3d105cacf855 100644
 --- a/mm/khugepaged.c
 +++ b/mm/khugepaged.c
-@@ -1074,21 +1074,26 @@ static int __collapse_huge_page_swapin(struct mm_struct *mm,
- }
+@@ -919,7 +919,7 @@ static int hpage_collapse_find_target_node(struct collapse_control *cc)
  
- static int alloc_charge_folio(struct folio **foliop, struct mm_struct *mm,
--			      struct collapse_control *cc)
-+			      int order, struct collapse_control *cc)
+ static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
+ 				   bool expect_anon,
+-				   struct vm_area_struct **vmap,
++				   struct vm_area_struct **vmap, int order,
+ 				   struct collapse_control *cc)
  {
- 	gfp_t gfp = (cc->is_khugepaged ? alloc_hugepage_khugepaged_gfpmask() :
- 		     GFP_TRANSHUGE);
- 	int node = hpage_collapse_find_target_node(cc);
- 	struct folio *folio;
+ 	struct vm_area_struct *vma;
+@@ -932,9 +932,9 @@ static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
+ 	if (!vma)
+ 		return SCAN_VMA_NULL;
  
--	folio = __folio_alloc(gfp, HPAGE_PMD_ORDER, node, &cc->alloc_nmask);
-+	folio = __folio_alloc(gfp, order, node, &cc->alloc_nmask);
- 	if (!folio) {
- 		*foliop = NULL;
--		count_vm_event(THP_COLLAPSE_ALLOC_FAILED);
-+		if (order == HPAGE_PMD_ORDER)
-+			count_vm_event(THP_COLLAPSE_ALLOC_FAILED);
-+		count_mthp_stat(order, MTHP_STAT_COLLAPSE_ALLOC_FAILED);
- 		return SCAN_ALLOC_HUGE_PAGE_FAIL;
- 	}
- 
--	count_vm_event(THP_COLLAPSE_ALLOC);
-+	if (order == HPAGE_PMD_ORDER)
-+		count_vm_event(THP_COLLAPSE_ALLOC);
-+	count_mthp_stat(order, MTHP_STAT_COLLAPSE_ALLOC);
-+
- 	if (unlikely(mem_cgroup_charge(folio, mm, gfp))) {
- 		folio_put(folio);
- 		*foliop = NULL;
-@@ -1125,7 +1130,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
- 	 */
- 	mmap_read_unlock(mm);
- 
--	result = alloc_charge_folio(&folio, mm, cc);
-+	result = alloc_charge_folio(&folio, mm, HPAGE_PMD_ORDER, cc);
- 	if (result != SCAN_SUCCEED)
+-	if (!thp_vma_suitable_order(vma, address, PMD_ORDER))
++	if (!thp_vma_suitable_order(vma, address, order))
+ 		return SCAN_ADDRESS_RANGE;
+-	if (!thp_vma_allowable_order(vma, vma->vm_flags, tva_flags, PMD_ORDER))
++	if (!thp_vma_allowable_order(vma, vma->vm_flags, tva_flags, order))
+ 		return SCAN_VMA_CHECK;
+ 	/*
+ 	 * Anon VMA expected, the address may be unmapped then
+@@ -1135,7 +1135,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
  		goto out_nolock;
  
-@@ -1851,7 +1856,7 @@ static int collapse_file(struct mm_struct *mm, unsigned long addr,
- 	VM_BUG_ON(!IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS) && !is_shmem);
- 	VM_BUG_ON(start & (HPAGE_PMD_NR - 1));
- 
--	result = alloc_charge_folio(&new_folio, mm, cc);
-+	result = alloc_charge_folio(&new_folio, mm, HPAGE_PMD_ORDER, cc);
+ 	mmap_read_lock(mm);
+-	result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
++	result = hugepage_vma_revalidate(mm, address, true, &vma, HPAGE_PMD_ORDER, cc);
+ 	if (result != SCAN_SUCCEED) {
+ 		mmap_read_unlock(mm);
+ 		goto out_nolock;
+@@ -1169,7 +1169,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+ 	 * mmap_lock.
+ 	 */
+ 	mmap_write_lock(mm);
+-	result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
++	result = hugepage_vma_revalidate(mm, address, true, &vma, HPAGE_PMD_ORDER, cc);
  	if (result != SCAN_SUCCEED)
- 		goto out;
- 
+ 		goto out_up_write;
+ 	/* check if the pmd is still valid */
+@@ -2779,7 +2779,7 @@ int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
+ 			mmap_read_lock(mm);
+ 			mmap_locked = true;
+ 			result = hugepage_vma_revalidate(mm, addr, false, &vma,
+-							 cc);
++							 HPAGE_PMD_ORDER, cc);
+ 			if (result  != SCAN_SUCCEED) {
+ 				last_fail = result;
+ 				goto out_nolock;
 -- 
 2.30.2
 
