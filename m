@@ -1,188 +1,159 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFC61D63D2
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD6E26BDAB;
+	Tue, 11 Feb 2025 16:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739290754; cv=none; b=RDIhflQz+Vgwp+f9qRdtTHIVX5p55UXlRwO/rYY6fjlxZL45xIQUa465pEr9/OtYD+BVTNVaELCLUTg+nCkQafi8V1lZ/pYMO6WHRVOIV9MPBX3ZRAou9cwSeKCKz90yhb8f0H2sRrv1IH90RsP4k362szqh+1YR/WiHDTS3h6g=
+	t=1739290932; cv=none; b=oHzvL3pEAjEPsO5lmB1W7vLp649QZDUw+i2vYPy67fpb7n1QHSR3FIejy5Hczpwt1ozl3fGC0shwGu0sgM5/p8wk+LgMlmqQcx37R4mGlxAAhXlCQz0EwktLSPDneopHsmhAzDonyzuUNblGCuDZhXFuJF6zlNlYpDiO5gwaLHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739290754; c=relaxed/simple;
-	bh=ClIVXb1x+2dZfzmgI0PvHc3Nl/BWDi3XQGQRYx+Me5Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P6m2c2FOIl71DX4S1sZkB+jDOFSv8L2lh6x1tnNj3GKPUWYgfFBqmPIY3k5W5XqSlyOphxQNcqScCiEsz2BweGyNu5Pjnthnl5H4bf2alom7R9PGiqJZATHRxZiD0GceeOYyLM1kCunrpvg6evalPXzeAVI9o/NWoPRn4P3B3qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xSTOn3xI; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739290932; c=relaxed/simple;
+	bh=JSxBHagSzB9B0z9YXPH5Ke79A63Pz+yK2fGp70M/YX0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=H4tGVhB3ThUKLds8311PZMicyiCaRM8HUwAhLq1rKx+gHQ6t9Qnmhfqj/anqbhoniBG77fs+vRTajzSFuZeL0UrLtr+pT7ya2o1x+KHNvDiIf+gW82ugnoLxFpyHzS8RXUMyMFjl63y1xt01/6Gv15XEiw1DB35ZpS9w+ujPeSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=BteTbhp9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Em3RpVec; arc=none smtp.client-ip=202.12.124.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xSTOn3xI"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3d146357fb2so184945ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:19:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739290751; x=1739895551; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wPuoFgyUqShqiHXq7m4WJY26nDOJr72a7sYiaqDAkZ8=;
-        b=xSTOn3xIX7GvMNL0Zbt9Qtp/606EKK7Qm8powWd2z5kO7oVpkze7ikKNuHRpka8qbU
-         PTWICXZLhnP2NGTLTIZELSosb5TdZtFNhezPRwUj52eMYsUxzifd3xj994DtBWAG/FD4
-         6vuRKf5LENTUEVQQIW8FpkCpSJW6rupzLJLdMOWUsRHOLkjSJ9hjIPOVosTDLH40V+yG
-         dw5g3ohkd6IdZPEcp/cEbe9BBOzIXz4E4HfRSCXM/h3Qij+Ar8hEjpWFljdnb4hRFD+r
-         eGBtv0/D7UeonfI3d6MlFN1G+0kHz7Sa51TxqmSUQ6R9pQS7r7HPRek+Gxyk8J1TtSJA
-         klEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739290751; x=1739895551;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wPuoFgyUqShqiHXq7m4WJY26nDOJr72a7sYiaqDAkZ8=;
-        b=Sx6FJjOj2REnVIU6TxcQBQ0sG4YVPEovzVpvWrAeK2wnodQHJXoXttF8J80gZTY5SL
-         TuXavUSOxVeJ9/4UNs7oVrzrux7inUGBzhBQ967iYv4Y658nbXyGSrctIiAwheN8HXkJ
-         iPkVmWW0B+70SqIm9umdGu9+sjNZEcQMzEZpMbw/PkAHVUM5T/ZIsf/c5WPYU+fLER/l
-         b5hpAy1kc1/ag3kEdVJ0Gyz6LRNh3kTeA8WxUkXLHbKDligi3NgETmdW+PfLLFM9k+uO
-         oN6OpeLuQqX0FB93l7CPKQp0TnNXM9FtPPHTWKqxp/kdH9yT7g1zAtImZ/G5qrf1IY6+
-         jisw==
-X-Forwarded-Encrypted: i=1; AJvYcCXx7dzwa9vVS/YXIdsjEMc+FEm4uy7Gj/qK2VlAUq8xQdtY1CqgFvdteijVk5B8toqbwfxLPhj3/b3WShI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsPHeZ4q7/uWwqi4JGez1Y2k/YGCgpRxkAgtSI8kiaNuOUpqNa
-	1iANURF1t6fCMosERY7QOvPqzpMaOY4c7CSChsQyKLznjt1gJ0YYtzfTUBOqrstBdUHk6YbInXk
-	/jtRgAqn9yvr8fgiSo4fpWIoAPPH8XX+jnP3S
-X-Gm-Gg: ASbGncvujupPoe6x4deCTcalJEw1eQX1GoHE3hKzlf0ymx2Z7yMcrj8SSh7Kke7CZ+N
-	Uajjq1e6QtvvbqWaUxBgoy14XzgSt8FjpsdGNoaL9YfY8a3kZabBNkoEjkplEX4TTxdpPUFdYHy
-	+1mYxAq2QfZs/CRz6SL4YdMju1
-X-Google-Smtp-Source: AGHT+IGBRJUYM7eB7GRcv7zbcCLNqRmCzTZKJzAh5FAel3+2vWVb9N+g6mOuPoRoTCDTrgVk0gX8MyeGCqZ63HpU/Co=
-X-Received: by 2002:a05:6e02:1848:b0:3a7:df79:71b3 with SMTP id
- e9e14a558f8ab-3d171e30ba1mr3350285ab.19.1739290746485; Tue, 11 Feb 2025
- 08:19:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="BteTbhp9";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Em3RpVec"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id CC9C325401AD;
+	Tue, 11 Feb 2025 11:22:08 -0500 (EST)
+Received: from phl-imap-10 ([10.202.2.85])
+  by phl-compute-02.internal (MEProxy); Tue, 11 Feb 2025 11:22:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1739290928;
+	 x=1739377328; bh=Rt556EkNhVf+ojQDmMoE1+XCec7AG5GACYdUBY5RicY=; b=
+	BteTbhp94WyWiRJtSm8BS+71xk3Xn7LCgMkQ3F/pAVRLiZvhC5UBl4/aekQYghe4
+	r1iG/v0S7DMscbxXRbEUE8tA6XPXOXdMwF/rcM75Ouxy2gciT0xpoCJkTpgQ/8Cn
+	e3woTSmWTdIYb3JBYA/3sQilifc48SfIS+bCzE0wT8pKk77fSOE4PoXWp4ahpRCY
+	Z4Iomku6aVnSdKgsRrt9MZTiOhx4WjGTEgrXDFend1vcBHCtFSmE7a/Fwu3DNyrK
+	d3ADpUYp5U+2owmbIOOQcujr/TAN6kMNzWNVaBzN+1/wXsZUkG/UWDq5krF4pHuW
+	61AHBUylllJHvI3N0E3ebQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739290928; x=
+	1739377328; bh=Rt556EkNhVf+ojQDmMoE1+XCec7AG5GACYdUBY5RicY=; b=E
+	m3RpVect8P1ekmCJbI+uq9q7r8XrDf4wp8Rpq9PoAG0npnhWIRzStZXuDQgkLpW6
+	Wj+jRNjh/aOecFJppKwYQMmo8bQ5VsN6VkK7dp+OTh0ZyvK1Ole73h/Y8+kroRQb
+	kWZJUdLd2A9MyyxT7TxcUTI8mJ1wSB4zqcJhYBiVg5ZXkAk5QR/PXp47z24+Jl5T
+	BNsd5j98Cm/n/pxXiU9Mv8U50cHoVniuM/Bu88jjmpPVD+zCw6hT9nRs9cOne28e
+	ACTB54hUq9slsvKLO1PYVcgCbCwzYo5AzrG5vNSdR2NBwY4Dvcp4AF977VYQUWbp
+	QyVkFBWaWCB7WsmHXsuEA==
+X-ME-Sender: <xms:MHmrZ6xCDUwVzJ-XN8gumtuMRSan6qmlu0s_Hzz5Sv1sZ4YzzSgX_g>
+    <xme:MHmrZ2QHEjL_77cZOehb2N7BYhPOKjcyODRSo8prqqVsukRDc5DHsrib9vxDqPI1E
+    3dn1K2EqLn_gCD0ofA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegudegiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
+    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhephfeuvdehteeghedt
+    hedtveehuddvjeejgffgieejvdegkefhfeelheekhedvffehnecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhv
+    ohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouh
+    htpdhrtghpthhtohepkhhuuhhrthgssehgmhgrihhlrdgtohhmpdhrtghpthhtohepihhl
+    phhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhope
+    hhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgv
+    rhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphhlrghtfhhorh
+    hmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:MHmrZ8VV4QMBs4AKQEgRSiNjKqWevtO_n329_HlXvDjpgkqgdXAXvQ>
+    <xmx:MHmrZwjvf0Zgwj4diIFpjJF2eVxFfwAMdXaEuYxf2tZNS2J0pFIv_A>
+    <xmx:MHmrZ8C63Xx9kM4xD-ASP2ra7NWmoRrJXae-SUHOGnIdNw5B62OzkQ>
+    <xmx:MHmrZxKgF4qHtf62feNY4Noui5GN_aQ5-cF0Q8XI8WFynfmgUWbyyA>
+    <xmx:MHmrZ__p64bpHfIN8ONmtKyWJIH_FTOg7UP57CjPa4EsYZubZUFl8uD9>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 2A34A3C0066; Tue, 11 Feb 2025 11:22:08 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210165108.95894-1-irogers@google.com> <20250210165108.95894-4-irogers@google.com>
- <07c5c3ad-5a6d-4eda-95f2-ed16e7504d4c@app.fastmail.com>
-In-Reply-To: <07c5c3ad-5a6d-4eda-95f2-ed16e7504d4c@app.fastmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 11 Feb 2025 08:18:54 -0800
-X-Gm-Features: AWEUYZnsI21FqO05tMc19ZFoLQwRQjxl2-W2xUAqGcaU1HeGa3Km7KpVudfKIf8
-Message-ID: <CAP-5=fV0AVEp1uEtKjAqOmwqKSRuUzTwrXnBiqc=Lopfj4hBSA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/7] perf syscalltbl: Remove struct syscalltbl
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, guoren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
-	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Tue, 11 Feb 2025 11:21:46 -0500
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Kurt Borja" <kuurtb@gmail.com>
+Cc: "Hans de Goede" <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <12c1ce59-d58f-4a05-831b-cd75efee84ba@app.fastmail.com>
+In-Reply-To: <D7PD2KZCQJ4Z.BXO2PAN86IKH@gmail.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20250210201656.4165-1-mpearson-lenovo@squebb.ca>
+ <D7PD2KZCQJ4Z.BXO2PAN86IKH@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Fix registration of tpacpi
+ platform driver
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 10, 2025 at 11:48=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrot=
-e:
->
-> On Mon, Feb 10, 2025, at 17:51, Ian Rogers wrote:
-> > The syscalltbl held entries of system call name and number pairs,
-> > generated from a native syscalltbl at start up. As there are gaps in
-> > the system call number there is a notion of index into the
-> > table. Going forward we want the system call table to be identifiable
-> > by a machine type, for example, i386 vs x86-64. Change the interface
-> > to the syscalltbl so (1) a (currently unused machine type of EM_HOST)
-> > is passed (2) the index to syscall number and system call name mapping
-> > is computed at build time.
-> >
-> > Two tables are used for this, an array of system call number to name,
-> > an array of system call numbers sorted by the system call name. The
-> > sorted array doesn't store strings in part to save memory and
-> > relocations. The index notion is carried forward and is an index into
-> > the sorted array of system call numbers, the data structures are
-> > opaque (held only in syscalltbl.c), and so the number of indices for a
-> > machine type is exposed as a new API.
-> >
-> > The arrays are computed in the syscalltbl.sh script and so no start-up
-> > time computation and storage is necessary.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > Reviewed-by: Howard Chu <howardchu95@gmail.com>
->
-> Your changes look fine to me, but I noticed one part that may
-> be wrong before and after your patch:
->
-> >
-> > -const int syscalltbl_native_max_id =3D SYSCALLTBL_MAX_ID;
-> > -static const char *const *syscalltbl_native =3D syscalltbl;
-> > +const char *syscalltbl__name(int e_machine __maybe_unused, int id)
-> > +{
-> > +     if (id >=3D 0 && id <=3D (int)ARRAY_SIZE(syscall_num_to_name))
-> > +             return syscall_num_to_name[id];
-> > +     return NULL;
-> > +}
->
-> The syscall numbers on mips (and previously on ia64) are offset by
-> a large number depending on the ABI (o32/n32/n64). I assume what
-> we want here is to have the small numbers without the offset in
-> syscall_num_to_name[], but that requires adding the offset during
-> the lookup. Can you check if this is handled correctly?
+Hi Kurt
 
-Thanks Arnd! I agree the tables are large and can be sparse, they'll
-also be full of relocations. MIPS doesn't look like an outlier to me
-here:
-```
-#if defined(ALL_SYSCALLTBL) || defined(__mips__)
-static const char *const syscall_num_to_name_EM_MIPS[] =3D {
-       [0] =3D "read",
-       [1] =3D "write",
-       [2] =3D "open",
-...
-        [465] =3D "listxattrat",
-        [466] =3D "removexattrat",
-};
-```
-For contrast x86:
-```
-#if defined(ALL_SYSCALLTBL) || defined(__i386__) || defined(__x86_64__)
-static const char *const syscall_num_to_name_EM_386[] =3D {
-        [0] =3D "restart_syscall",
-        [1] =3D "exit",
-        [2] =3D "fork",
-...
-        [464] =3D "getxattrat",
-        [465] =3D "listxattrat",
-        [466] =3D "removexattrat",
-};
-```
-Looking through the tables I see alpha having the highest number
-syscall with 572 being mseal.
+On Tue, Feb 11, 2025, at 12:18 AM, Kurt Borja wrote:
+> On Mon Feb 10, 2025 at 3:16 PM -05, Mark Pearson wrote:
+>> When reviewing and testing the recent platform profile changes I had
+>> missed that they prevent the tpacpi platform driver from registering.
+>> This error is seen in the kernel logs, and the various tpacpi entries
+>> are not created:
+>> [ 7550.642171] platform thinkpad_acpi: Resources present before probing
+>>
+>> This happens because devm_platform_profile_register() is called before
+>> tpacpi_pdev probes (thanks to Kurt Borja for identifying root cause)
+>>
+>> For now revert back to the old platform_profile_register to fix the
+>> issue. Will work on re-implementing this later as more testing is needed
+>> for full solution.
+>>
+>> Tested on X1 Carbon G12.
+>>
+>> Fixes: 31658c916fa6 ("platform/x86: thinkpad_acpi: Use devm_platform_profile_register()")
+>>
+>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> ---
+>> Changes in v2:
+>>   Modified approach to instead revert to old platform_profile_register
+>> method. Will revisit using devm_ version in the future as more testing
+>> needed.
+>>
+>>  drivers/platform/x86/thinkpad_acpi.c | 10 ++++++++--
+>>  1 file changed, 8 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+>> index 1fcb0f99695a..85d01bd5dc31 100644
+>> --- a/drivers/platform/x86/thinkpad_acpi.c
+>> +++ b/drivers/platform/x86/thinkpad_acpi.c
+>> @@ -10646,8 +10646,8 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+>>  			"DYTC version %d: thermal mode available\n", dytc_version);
+>>  
+>>  	/* Create platform_profile structure and register */
+>> -	tpacpi_pprof = devm_platform_profile_register(&tpacpi_pdev->dev, "thinkpad-acpi",
+>> -						      NULL, &dytc_profile_ops);
+>> +	tpacpi_pprof = platform_profile_register(&tpacpi_pdev->dev, "thinkpad-acpi-profile",
+>> +						 NULL, &dytc_profile_ops);
+>>  	/*
+>>  	 * If for some reason platform_profiles aren't enabled
+>>  	 * don't quit terminally.
+>> @@ -10665,8 +10665,14 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+>>  	return 0;
+>>  }
+>>  
+>> +static void dytc_profile_exit(void)
+>> +{
+>> +	platform_profile_remove(tpacpi_pprof);
+>
+> I just noticed this will be called even if platform_profile_register()
+> fails, as the comment suggests.
+>
+> We need to check for IS_ERR_OR_NULL() before unregistering.
 
-I don't think this is great but in the current code (on x86-64) we
-have in arch/x86/include/generated/asm/syscalls_64.h:
-```
-static const char *const syscalltbl[] =3D {
-       [0] =3D "read",
-       [1] =3D "write",
-       [2] =3D "open",
-...
-        [465] =3D "listxattrat",
-        [466] =3D "removexattrat",
-};
-#define SYSCALLTBL_MAX_ID 466
-```
-So the change is carrying forward a bad behavior, the table is still
-only around 4kb. We could be more aggressive in compressing the
-strings and pointers, for example how we compress the perf events and
-metrics. I think it is getting out-of-scope here as that logic is
-written in python, with the aid of lots of dictionaries, whilst this
-code is currently a shell script. It becomes more of an issue if we
-enable all of the tables in the build at once.
-
-Thanks,
-Ian
+Agreed - will add.
+Thanks
+Mark
