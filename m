@@ -1,173 +1,225 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-ej1-f67.google.com (mail-ej1-f67.google.com [209.85.218.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFE01DF967
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:31:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6741F190F
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739269892; cv=none; b=rZRoKYDtrHV4GNWkxEZWE1WdIQLcQmtBIZrsQxr5niWizSj8TSkkC1PH+o3PMmnj6QVeuPA2y2eLih87gjRiUZYnssH0x6BKECke+ko4U8sCZYcpvl5FqLr5Tg8PaldLRZggpAC75f+a+E+q+I6fgaxp7+oPBcHgy+juoazzEIs=
+	t=1739269948; cv=none; b=h6RJshkoFh8lUEUrJTp7XuSMTswhMuaF0CPN4KKWUf+Tv6af6Az0mNUCDVgTD4OyvqithsThm/NO7uLIYwrclqHjuJgmwMrmzCkLXGlreoTNC/QcJQR3VKQ8x8no6p2HIUajav7CN0RsYD9DqYsCTpC0h/Oy53XcK7BtRCNCt9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739269892; c=relaxed/simple;
-	bh=3UHxA/qdoAY3MebmP1PqzZZYiy2zYfWAOCI1X57hn6g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KEMi6OwW35SBOTdocYcErdyPPoHguFH3XikUhKjCq7f7VegHkHm1FNGxVMjBl9NqdhADaCXlzzMuhNqv0qbrpV/zBOI6FGoFunnVNZQEZ0mKCgO6wVIM8OD10g26xdfoGM4Y+qGZX0oSuMjUE+QP2nFytMqWlPo6lkHY3NWBi3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=pkaMqdaX; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1739269948; c=relaxed/simple;
+	bh=w63Y7CdySXiNEBrlXLpVDv44ltZ/eunR/96BkjIzWl8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EXHiuBmauLf/NSw+FTMdoNQk/m7cjhsCkuh2Rg8hRcJTYGROMKGLKueumb5pSXbCZxsrPF0qr46P+jZakUBnrzQut39uYvQmSJLImsiejV0G2jwMpo/RUEhqP3b6xparUFvmgejwHmg0lNS0vPfQxCCEsKzigxtgiS5GtO1QyyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=E5gZY1Os; arc=none smtp.client-ip=209.85.218.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="pkaMqdaX"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-38dc660b56cso4122838f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:31:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="E5gZY1Os"
+Received: by mail-ej1-f67.google.com with SMTP id a640c23a62f3a-ab7cc0c1a37so275269966b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:32:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739269889; x=1739874689; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/a6P8MPGQ0avVAV5Cfpz5Ib9WVUVZW41mP8caOrUgAQ=;
-        b=pkaMqdaXgaH8QmNXCo5B47pnLdVS4Skgx+AokX/Evv4YmPRQCOTYWmIVQxQpf8Ex5d
-         OsVKM262Hg94W0XE3ZlIQUS7Ze5609rOSMjvyKh6d0BhEJzyQjzozs2XfBRqNQzayBRq
-         CCJPjUn/In+zVVEQoRoZEAtTJf4G3oykcdD+e/aYSf9e/0oNnCHpJO2tOfJrQu/fvhxN
-         9WnRwzQI4Mx7U5sKEWEugBgSVYMOHK0iw6TzBYNM5x7l0W4M6E6vCBOMxR/jBhlhqhHb
-         A9xjyEnaFuiFYD9tGaIIexPq/7xzK13iCyNBVSRSey66RQmDXiJXzoydgqgJzu4/p+sG
-         rhcA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739269944; x=1739874744; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=M0yLasoamk0iZKc/1URT52HRA1WbzmjHTzzeFRUfCcY=;
+        b=E5gZY1Os651frAidogXScvoRhhTseaSx2LrGW0fpt/NQ4Nti02Z/NoGBOkzcMr4vw+
+         6ficVC1kPpCVlhvVtVMfDjG2SO8WqyQzS2v1662kMJhO3tmXXHApXnCHNuCJ6ToY6l+i
+         0wkXvTP3CZ6eSRao+57FfxxzUW2mkKxu1FJez2Uti0Sg1L8dD6w5di1FnR5kKuwD6IwW
+         e5ogPFwKPTHrVLBeMKX0WZqeEqJdA+osC9yrh2nGptwTLgXOFpgbAk9egyr8ITfmG4eM
+         3tTdBoSHYA1POZ4V0Vr22Bxs7iGdsONAzfUlNUCJTOOsbhtVtWwK96LT3xuqvPboJLVK
+         gjwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739269889; x=1739874689;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/a6P8MPGQ0avVAV5Cfpz5Ib9WVUVZW41mP8caOrUgAQ=;
-        b=EfkV+SN3JIiInWfF5Ozx2aUCPaMCRRmfFn4ZQy+H0T5QDgIn0goPtqaOw6XAZQbPV3
-         zg/L7w+pm2V2JwetWh1SZ6uKMIo7AAL2YA4Ed76xBRw6U5zNloLtGDmmA6ae8ncIaLfE
-         x9Snhh03wnPmlkeP7Wk2+L3WAlCT+Q1pGCcyLG2qAu0QRMJqpT52lPW1ZSJUBDoQHNum
-         bUj1KXxVx37HdvE5la7AW5wbYDwVOpmrWUrGXfrbGiU35DW+nL9LGBJOqQ43k8loBo3y
-         NuNf70xfLO/lz0zUJMD60OD9J48P1elalA4dGE9Gfq2XgJlH1q/9kzS+HRHvHjdlnrwo
-         dCcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVRJrU/vfcTkeae1AEPh3kLIrOYUED4+T/qoFBh044RC5+6xol1QcaAN4DbK3Zvr1Dees4jGH23u2EQKR8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWQ2Eu9Wk0JGHsYNxQfAeQkHyn/sYf+vC/Upg6japIHVrfVTAe
-	lFKEOuSaSS27ljmF1yJkS6gpYYhryZjZITiF6AzomcA2u646q82G2bW1m+NZ9mY=
-X-Gm-Gg: ASbGncv2Tvmje6Exxpuon2pLEwQU08yJrdIsUA5ShkJaJYXFZOPEfmecP4AHxIVOrzJ
-	d+NN/ue6KE1rCvNSeWjaJBOZOGKC/YYQUKnk4r76nRpElvn5gFgCHtV0E2Z+rPIhMnu+V47LqCE
-	ivPjxYyaheRVVg40q5FLU1OBF8rxSctQ4sf3o1sRyzM6vElDT3RDymi3B/F6uITv52qySIug9kM
-	zi3hcaGl3VgkqeBhuayGHOSI70U3ZupG/vYo2oofokZ0XXo5Y/72nP5XcmkVFw6bnCFWkl9R7qn
-	h0rkLYHoPceEjFFB6bDalMxpPR3vWgcHx4KCX117Gg/MOim6hVST/vDcRAar
-X-Google-Smtp-Source: AGHT+IGrgjPSoOFkF4U85XDHHGJCIZJGQtRmyI8bFutmDHy81O7VBQ3XMYuog+hqAiQegwH4kGE9Dg==
-X-Received: by 2002:a5d:588f:0:b0:38d:d613:9bb1 with SMTP id ffacd0b85a97d-38dd6139eacmr6656232f8f.12.1739269889329;
-        Tue, 11 Feb 2025 02:31:29 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc3a10fffsm13606012f8f.12.2025.02.11.02.31.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 02:31:28 -0800 (PST)
-Message-ID: <a8af5d3a-e739-4f65-9e2d-d92978be9a3d@rivosinc.com>
-Date: Tue, 11 Feb 2025 11:31:28 +0100
+        d=1e100.net; s=20230601; t=1739269944; x=1739874744;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M0yLasoamk0iZKc/1URT52HRA1WbzmjHTzzeFRUfCcY=;
+        b=NwXm99oW9ccchR6VcRYKYWyfWKLodUdB2IwkiSxbiaNCXCUs031ONM09Y/BUwGCYlI
+         fa6JFhpxbVg0Al9fnYlbvmINkgrhsNN5hWJL8du7Drcffv/3Du8UXl83L53s1m4CAxgG
+         hZlTbBbBoD+/j+lx7mQgQInhUiTOq3qDGYmGgHoYY62sJtmSwDabV7jgejtA+Acuya9X
+         c96HQqJu0dlE78az9ct2O+2qFD287CbY+RlBwVrcnUQqg1fqCjLnsKuHx14ERD7kEsu1
+         Pgadd8YTnisqJbHXaFqTZjDXpCi94FM54pdYDlwIoncm6m7/njCgbwDFisR0iB9bs6G6
+         mQVA==
+X-Forwarded-Encrypted: i=1; AJvYcCUw8wzzkwekGtEPaqtACTOsd0Ng53XH0D+9KuFGUgfV2KPnDu/dw9JTxlFKlxD8VFUGqbtsduEgZcTmLqA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPhVez6DUbmywNSvh0ZP2tdwYzpAcX7imNxa/nMG/8Wxdg5viK
+	ZuFlXCJgrfDn7Ae9vA7p1I18YLCUXrypVtrYME6dPu49SVyleQdz90un/qz80pw=
+X-Gm-Gg: ASbGncsNz0g4nt8lUrPRG4Htu9L78xFySVxQwCY6maozitMvSyvpPU+CDY9bMr5fg/i
+	jsN3aVanoWfAH0LP+fpB2J/L0Oh2xThwqVsPaySYVv43PfsvR7QRZkUnOYY2mYJEJhwhgMVgrUH
+	m2vf87IsruIz5NHF6yfCbpxWVWjcYRnVH2B7Jwbhy1sVtQYnAEpTbiOx6Y2aCgq91SzEl0PUG0P
+	+Ze73ZSh8a0ueMCSWMbqDTHZgnpUM8ZVHBdkt/jGJ4VDg5w+tn21KkpnUG/+iej+n4nKjRMZp3k
+	6OxbzmV1D+fmtKpX5eizGO3gFkhbBoT/DKL2svzndc07mGNsGiWBmfTfPw==
+X-Google-Smtp-Source: AGHT+IGMf65w2KZ71XB7DG3+IsqQbafXRMHudaXgA2XcbRe3nKeXX4+v4pxIqUh75A9POaOb6Z8Wvg==
+X-Received: by 2002:a17:907:3da7:b0:ab3:a18f:fe7f with SMTP id a640c23a62f3a-ab789aeacd7mr1759262266b.28.1739269943684;
+        Tue, 11 Feb 2025 02:32:23 -0800 (PST)
+Received: from localhost (p200300f65f018b0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f01:8b04::1b9])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7ced6fe0dsm254720166b.179.2025.02.11.02.32.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 02:32:23 -0800 (PST)
+Date: Tue, 11 Feb 2025 11:32:21 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Joe Perches <joe@perches.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, workflows@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>, 
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Thorsten Leemhuis <linux@leemhuis.info>, 
+	Kees Cook <kees@kernel.org>, linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v2 1/2] get_maintainer: add --substatus for reporting
+ subsystem status
+Message-ID: <7aodxv46lj6rthjo4i5zhhx2lybrhb4uknpej2dyz3e7im5w3w@w23bz6fx3jnn>
+References: <20250203-b4-get_maintainer-v2-0-83ba008b491f@suse.cz>
+ <20250203-b4-get_maintainer-v2-1-83ba008b491f@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 14/15] RISC-V: KVM: add support for FWFT SBI extension
-To: Deepak Gupta <debug@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>,
- Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-kselftest@vger.kernel.org, Samuel Holland <samuel.holland@sifive.com>
-References: <20250210213549.1867704-1-cleger@rivosinc.com>
- <20250210213549.1867704-15-cleger@rivosinc.com>
- <Z6rjkk5JlMlqbl2j@debug.ba.rivosinc.com>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <Z6rjkk5JlMlqbl2j@debug.ba.rivosinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="oui4r6js4wl7mw6b"
+Content-Disposition: inline
+In-Reply-To: <20250203-b4-get_maintainer-v2-1-83ba008b491f@suse.cz>
 
 
+--oui4r6js4wl7mw6b
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 1/2] get_maintainer: add --substatus for reporting
+ subsystem status
+MIME-Version: 1.0
 
-On 11/02/2025 06:43, Deepak Gupta wrote:
->> +static int kvm_sbi_fwft_get(struct kvm_vcpu *vcpu, unsigned long
->> feature,
->> +                unsigned long *value)
->> +{
->> +    int ret;
->> +    struct kvm_sbi_fwft_config *conf;
->> +
->> +    ret = kvm_fwft_get_feature(vcpu, feature, &conf);
->> +    if (ret)
->> +        return ret;
->> +
->> +    return conf->feature->get(vcpu, conf, value);
->> +}
->> +
->> +static int kvm_sbi_ext_fwft_handler(struct kvm_vcpu *vcpu, struct
->> kvm_run *run,
->> +                    struct kvm_vcpu_sbi_return *retdata)
->> +{
->> +    int ret = 0;
->> +    struct kvm_cpu_context *cp = &vcpu->arch.guest_context;
->> +    unsigned long funcid = cp->a6;
->> +
->> +    switch (funcid) {
->> +    case SBI_EXT_FWFT_SET:
->> +        ret = kvm_sbi_fwft_set(vcpu, cp->a0, cp->a1, cp->a2);
->> +        break;
->> +    case SBI_EXT_FWFT_GET:
->> +        ret = kvm_sbi_fwft_get(vcpu, cp->a0, &retdata->out_val);
->> +        break;
->> +    default:
->> +        ret = SBI_ERR_NOT_SUPPORTED;
->> +        break;
->> +    }
->> +
->> +    retdata->err_val = ret;
->> +
->> +    return 0;
->> +}
->> +
->> +static int kvm_sbi_ext_fwft_init(struct kvm_vcpu *vcpu)
->> +{
->> +    struct kvm_sbi_fwft *fwft = vcpu_to_fwft(vcpu);
->> +    const struct kvm_sbi_fwft_feature *feature;
->> +    struct kvm_sbi_fwft_config *conf;
->> +    int i;
->> +
->> +    fwft->configs = kcalloc(ARRAY_SIZE(features), sizeof(struct
->> kvm_sbi_fwft_config),
->> +                GFP_KERNEL);
-> nit:
-> 
-> I understand that in next patch you grow the static array`features`. But
-> in this patch
-> `ARRAY_SIZE(features)` evaluates to 0, thus kcalloc will be returning a
-> pointer
-> to some slab block (IIRC, kcalloc will not return NULL if size
-> eventually evals to 0)
-> 
-> This probably won't result in some bad stuff. But still there is a
-> pointer in
-> fwft->configs which is pointing to some random stuff if `features` turns
-> out to be
-> empty.
-> 
-> Let me know if I got that right or missing something.
+Hello,
 
-So I actually searched into the kmalloc code to see what hapopens with a
-zero size allocation and it actually return ZERO_SIZE_PTR:
+On Mon, Feb 03, 2025 at 12:13:16PM +0100, Vlastimil Babka wrote:
+> The subsystem status is currently reported with --role(stats) by
+> adjusting the maintainer role for any status different from Maintained.
+> This has two downsides:
+>=20
+> - if a subsystem has only reviewers or mailing lists and no maintainers,
+>   the status is not reported (i.e. typically, Orphan subsystems have no
+>   maintainers)
+>=20
+> - the Supported status means that someone is paid for maintaining, but
+>   it is reported as "supporter" for all the maintainers, which can be
+>   incorrect. People have been also confused about what "supporter"
+>   means.
+>=20
+> This patch introduces a new --substatus option and functionality aimed
+> to report the subsystem status separately, without adjusting the
+> reported maintainer role. After the e-mails are output, the status of
+> subsystems will follow, for example:
+>=20
+> ...
+> linux-kernel@vger.kernel.org (open list:LIBRARY CODE)
+> LIBRARY CODE status: Supported
+>=20
+> In order to allow replacing the role rewriting seamlessly, the new
+> option works as follows:
+>=20
+> - it is automatically enabled when --email and --role are enabled
+>   (the defaults include --email and --rolestats which implies --role)
+>=20
+> - usages with --norolestats e.g. for git's --cc-cmd will thus need no
+>   adjustments
+>=20
+> - the most common Maintained status is not reported at all, to reduce
+>   unnecessary noise
+>=20
+> - THE REST catch-all section (contains lkml) status is not reported
+>=20
+> - the existing --subsystem and --status options are unaffected so their
+>   users will need no adjustments
+>=20
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 
-/*
- * ZERO_SIZE_PTR will be returned for zero sized kmalloc requests.
- *
- * Dereferencing ZERO_SIZE_PTR will lead to a distinct access fault.
- *
- * ZERO_SIZE_PTR can be passed to kfree though in the same way that NULL
-can.
- * Both make kfree a no-op.
- */
+This patch is in next as c1565b6f7b53ea1ea3e757538832e12d7d13d949. It
+breaks one of my scripts that I use to semi-automatically determine
+recipents for patch series.
 
-Which seems like it's not really random and will fault if accessed. I
-think that's enough for that commit (which will be bisectable if needed
-then).
+It works as follows:
 
-Clément
+	$ batch-add-recipents audin-patch-v1/0001-ASoC-meson-HACK-let-AIU-export-i=
+ts-clocks-through-cl.patch
+	#!/bin/sh
+
+	addrecipent \
+	-t "Rob Herring <robh@kernel.org>" $(: maintainer:OPEN FIRMWARE AND FLATTE=
+NED DEVICE TREE BINDINGS) \
+	-t "Krzysztof Kozlowski <krzk+dt@kernel.org>" $(: maintainer:OPEN FIRMWARE=
+ AND FLATTENED DEVICE TREE BINDINGS) \
+	-t "Conor Dooley <conor+dt@kernel.org>" $(: maintainer:OPEN FIRMWARE AND F=
+LATTENED DEVICE TREE BINDINGS) \
+	-t "Neil Armstrong <neil.armstrong@linaro.org>" $(: maintainer:ARM/Amlogic=
+ Meson SoC support) \
+	-t "Kevin Hilman <khilman@baylibre.com>" $(: maintainer:ARM/Amlogic Meson =
+SoC support) \
+	-c "Jerome Brunet <jbrunet@baylibre.com>" $(: reviewer:ARM/Amlogic Meson S=
+oC support) \
+	-c "Martin Blumenstingl <martin.blumenstingl@googlemail.com>" $(: reviewer=
+:ARM/Amlogic Meson SoC support) \
+	-t "Liam Girdwood <lgirdwood@gmail.com>" $(: supporter:SOUND - SOC LAYER /=
+ DYNAMIC AUDIO POWER MANAGEM...) \
+	-t "Mark Brown <broonie@kernel.org>" $(: supporter:SOUND - SOC LAYER / DYN=
+AMIC AUDIO POWER MANAGEM...) \
+	-t "Jaroslav Kysela <perex@perex.cz>" $(: maintainer:SOUND) \
+	-t "Takashi Iwai <tiwai@suse.com>" $(: maintainer:SOUND) \
+	-c "devicetree@vger.kernel.org" $(: open list:OPEN FIRMWARE AND FLATTENED =
+DEVICE TREE BINDINGS) \
+	-c "linux-arm-kernel@lists.infradead.org" $(: moderated list:ARM/Amlogic M=
+eson SoC support) \
+	-c "linux-amlogic@lists.infradead.org" $(: open list:ARM/Amlogic Meson SoC=
+ support) \
+	-c "linux-kernel@vger.kernel.org" $(: open list) \
+	-c "linux-sound@vger.kernel.org" $(: open list:SOUND - SOC LAYER / DYNAMIC=
+ AUDIO POWER MANAGEM...) \
+	audin-patch-v1/0001-ASoC-meson-HACK-let-AIU-export-its-clocks-through-cl.p=
+atch
+
+the output is usually redirected to a file that I edit before running
+it. The additional line in the output of
+
+	scripts/get_maintainer.pl audin-patch-v1/0001-ASoC-meson-HACK-let-AIU-expo=
+rt-its-clocks-through-cl.patch
+
+with your change breaks that script.
+
+#regzbot introduced: c1565b6f7b53ea1ea3e757538832e12d7d13d949
+#regzbot title: get_maintainer's subsystem status output breaks custom scri=
+pt
+
+I can cope with it, but still wanted to let you know that people use
+get_maintainers for `git --cc-cmd`-like usages without --norolestats.
+
+Given that I use scripts/get_maintainer.pl from the tree I currently
+work at and sometimes that is based on next, sometimes on linus/master
+or -rc1 and sometimes even older trees (e.g. stable), the introduced
+`--no-substatus` option doesn't help me because when run from a tree
+without your change I get:
+
+	$ scripts/get_maintainer.pl --no-substatus audin-patch-v1/0001-ASoC-meson-=
+HACK-let-AIU-export-its-clocks-through-cl.patch
+	Unknown option: no-substatus
+	scripts/get_maintainer.pl: invalid argument - use --help if necessary
+
+so I cannot use that option easily until all the trees I care about get
+your change. :-\
+
+Best regards
+Uwe
+
+--oui4r6js4wl7mw6b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmerJzIACgkQj4D7WH0S
+/k5YVQf7BAdWhLgXujonyzFFsaUOISFGzCkJyJvs50VgUIBiTkZ5JbdWlS1L7qmB
+N7/9b+VwK0Kl2lDY29kaVk7VmzfcragO919FOrNdHBXl3oWArj164euH0v4lNo1S
+8K3jL3QbFxcqzih2MlBzZh8kzwYhs6A8C9sfbh7XVsb1KmFddS5v3+CbUsZXYiUl
+dDDID96hhkyXN3Vbfray7mYCfHbRcdEUSTLEYhOFjNf0/opHNYVnqGA4zGJq01n1
+opI/4grFdZ+hHKQbFhT/e9cqRNg5UO71bE14kmGCJsJS/NKKTQjSdv4Y68Zv+taS
+IZRag81HuVa6dcm3OnFUf6Q4P5bA1A==
+=/Bv0
+-----END PGP SIGNATURE-----
+
+--oui4r6js4wl7mw6b--
