@@ -1,161 +1,143 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C5A21EEA38
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E821F8AF8;
+	Tue, 11 Feb 2025 11:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739274928; cv=none; b=pZl9zvyGojEg07+W1FLtWU07/NvZEv34RrvVWU67L1PKrYS149ghd9pucMoWfnLzV3SFVJ7Ql8lnVcnQCil9huwW08uiQAi041u8Yw+uR/FGenTPH+wrI8aUaK9IuwRmSCUH1MNXkGo7BhfAjGpHrE+ro96bBwgBSzo6BqRbbEM=
+	t=1739274995; cv=none; b=CzT0s0xNSM6o5XqbidNkIoYvhFgZJ58Ruv9itg/uLTeXFaDLTsAJVYyk1Nv27e4m7B2pvcqEX98y3drb9zVCCM9v6gXcppvmdTZZyAhMpD4I2x6vKfY1QPKvlzcZyrFU+bY8e6DNAVtHEnqI0gZki6rOmQA8ZaKSRzSbD6E7zuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739274928; c=relaxed/simple;
-	bh=wX6RltD5iJJBNucHE1PcR3qksm/yqG/pYIQJ3cV9eMQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ke3JlA1QKeBni5o0G6b0Cfscnjj3W2Wi7+gq1z6oPQthOOlE/611ySycmkFULKz1LbC5NpCks521KzwBQlSXjRaij31yqUYZN711jwgYlZhqX3cPKhc1mfyRO+K66htQDG8YM0p3UM/S2/+u9cU3hLcy8cqkgkfnyAOAweHecfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA14D1424;
-	Tue, 11 Feb 2025 03:55:47 -0800 (PST)
-Received: from [10.57.81.93] (unknown [10.57.81.93])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 333E43F6A8;
-	Tue, 11 Feb 2025 03:55:25 -0800 (PST)
-Message-ID: <eef5fba9-da21-4131-a8a3-ae9a735869b1@arm.com>
-Date: Tue, 11 Feb 2025 11:55:23 +0000
+	s=arc-20240116; t=1739274995; c=relaxed/simple;
+	bh=rd29cpkgIwrU7/mh++kq6VmSBZdKxSQR4Rl/ZCGILEM=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Iuym5OYRipWyXXmSgGCHinWia+9CZGpdt3vEx3wEZ6f4/9Btssv4rrAgyNtaUHuvjQpgrio2c9tucVWUegfRgs4tgIjjnkPuc1FK6Yc23+ff8fn/KGaIlT2XyINxbC6piHbTRGwSh4lqmKIsV6KQCOrd1srHDLa4TYLA7fcfMiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=BOdRE3La; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Dj0NE2f9; arc=none smtp.client-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="BOdRE3La";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Dj0NE2f9"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfout.phl.internal (Postfix) with ESMTP id ABA8413808C3;
+	Tue, 11 Feb 2025 06:56:32 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Tue, 11 Feb 2025 06:56:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1739274992;
+	 x=1739361392; bh=SCgFKCz0WVFlk+/nGWCfvkfQS3PqNaxn3RNPH9+mh7c=; b=
+	BOdRE3LaNTDlQADqs5Hkyc0y7uE6jlOpYdk72QHjqA3KEpUXPc2790a5yTzTGEc6
+	Zr/+8Xe0dhc/Tz9MgNlp5wbRMfY0BoAmdOZfzxg0X28OgC2tEKax9a4DT7SYy8mO
+	EoIy5GrlU4/8xaKMG6eqEAICm7+QGvHvY8Z8ex8czbEA0yn+/Rv4eQ6Y9xojZlyO
+	YXP5i0OdOHdsehprYT2+ksC4ICkW6eXshnB8Qur2hNp5uj54i6m8u5t9+01Yzhbv
+	CKAjOOJOqjy37PZNTUBXoFaPEtwlcvrjY/KQj9m4I/q9nl9+YtKAXr1rqynz4GhG
+	IkHIl/nUcchALoUnvdMoOw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739274992; x=
+	1739361392; bh=SCgFKCz0WVFlk+/nGWCfvkfQS3PqNaxn3RNPH9+mh7c=; b=D
+	j0NE2f9eUybBDBypcXB0Gfr24ZHt7WcVOxeVohAZmLBADkM5pDpBpntNC5/NeGrM
+	TZn1DQNz83Gjw1Dcc1YKO9CmBigcqKE1JGyC3a3iH/OtRjbVqpLhtDLvUsJEvJky
+	td6QB3+QvNo4KYCFsHA3+OJdrk6dXm1mJx/YYLd1orbS3aCszO6URTp6dWSx+rVa
+	CXReLM09E+r4bbyvkEtfdv/dVAr70XnVU9BlMV+BKDQCMHc08CJOl4r3mb2fMLUm
+	u2zObocPX+AwbuoxCRk9SmAzm1TYr9u5TtxYXSyt1Uo7d98bD45Yv9Lbpmd2VrpY
+	BVTGugO0qHLamCmIB5A3A==
+X-ME-Sender: <xms:8DqrZyI6N5j27bQ0fsKkQT0JRPOSxt0UVyH-NRT8Eo80-VEvcrxX7g>
+    <xme:8DqrZ6JoDMm2ZDrHAl7RRE8bOM1rKWHM08TNqLleu3CQS8jBhEP8BSxTdbiUJq071
+    FFGa5Xh84tsIYVzCDw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegtdelgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
+    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedv
+    tddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepughmihhtrhihrdhtohhrohhkhh
+    hovhesghhmrghilhdrtghomhdprhgtphhtthhopehlghhirhgufihoohgusehgmhgrihhl
+    rdgtohhmpdhrtghpthhtoheplhhkphesihhnthgvlhdrtghomhdprhgtphhtthhopehprh
+    iivghmhihslhgrfidrkhhithhsiigvlhesihhnthgvlhdrtghomhdprhgtphhtthhopehr
+    rggrghdrjhgruggrvhesihhnthgvlhdrtghomhdprhgtphhtthhopegsrhhoohhnihgvse
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehjihgtvdefsehkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhrvg
+    eskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:8DqrZytxAqlN6V9ootafxgtKy8n_5mIlmoC3PP1rtvg5YyxKtr832A>
+    <xmx:8DqrZ3Y9Pgo2Ue7-eGtuG9QM9Mxj_xw2jfwWHmRP4Uv-rHAGtD47HQ>
+    <xmx:8DqrZ5bzw4AXGhO8JrtwHxoRRRT4nJi83FYFnP31nMsJps87YOgfcg>
+    <xmx:8DqrZzAXdgPM9jr1Ft_sAe1Mn_YlatD3ZiSQMCFfUd0Zh3D98dvROA>
+    <xmx:8DqrZ1P1831GY0oWJVBAkqiyOEjQYHiHgePr2JAYS3uj3q6SN0AL5Irz>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 4443E2220072; Tue, 11 Feb 2025 06:56:32 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v2 PATCH 1/2] arm64: cpufeature: detect FEAT_BBM level 2
-Content-Language: en-GB
-To: Yang Shi <yang@os.amperecomputing.com>, catalin.marinas@arm.com,
- will@kernel.org
-Cc: cl@gentwo.org, scott@os.amperecomputing.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250103011822.1257189-1-yang@os.amperecomputing.com>
- <20250103011822.1257189-2-yang@os.amperecomputing.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250103011822.1257189-2-yang@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
+Date: Tue, 11 Feb 2025 12:56:11 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
+Cc: "kernel test robot" <lkp@intel.com>, "Raag Jadav" <raag.jadav@intel.com>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>,
+ "Linus Walleij" <linus.walleij@linaro.org>,
+ "Mika Westerberg" <mika.westerberg@linux.intel.com>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>, lgirdwood@gmail.com,
+ "Mark Brown" <broonie@kernel.org>, "Sebastian Reichel" <sre@kernel.org>,
+ "Jonathan Cameron" <jic23@kernel.org>,
+ "Przemek Kitszel" <przemyslaw.kitszel@intel.com>,
+ oe-kbuild-all@lists.linux.dev,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-sound@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-iio@vger.kernel.org
+Message-Id: <49396042-31f0-4d8e-aa54-d89093ab5709@app.fastmail.com>
+In-Reply-To: <Z6s2cGMM9R6SZ9Le@smile.fi.intel.com>
+References: <20250210064906.2181867-2-raag.jadav@intel.com>
+ <202502102201.zLWaJC6V-lkp@intel.com> <Z6oZ9dnYrlp5djiQ@smile.fi.intel.com>
+ <7c42e438-22f9-40d9-bb8e-24feb7d58e64@app.fastmail.com>
+ <Z6sYAxRIeCzw12nY@smile.fi.intel.com>
+ <c1184a91-e216-423d-b956-d4b22116a171@app.fastmail.com>
+ <Z6siYlWfvfUvNLpX@smile.fi.intel.com>
+ <279d9f32-a1c9-41aa-b15a-e1485877b2d5@app.fastmail.com>
+ <Z6s2cGMM9R6SZ9Le@smile.fi.intel.com>
+Subject: Re: [PATCH v4 01/20] driver core: Split devres APIs to device/devres.h
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-On 03/01/2025 01:17, Yang Shi wrote:
-> FEAT_BBM level 2 allow changing block size of a translation with relaxed
-> TLB flushing.  But it may incur TLB conflict abort.  We can handle the
-> abort in kernel, however it is hard to guarantee the recuesive TLB
+On Tue, Feb 11, 2025, at 12:37, Andy Shevchenko wrote:
+>
+> The problem this series solves at the beginning is that not all the consumers
+> of device.h needs it, in many cases the device/devres.h (or subset of
+> device/*.h) is enough to include. While solving this, it appears that
+> the current code uses ERR_PTR() instead of IOMEM_ERR_PTR() in devm_*io*() APIs
+> and kernel test robot found this and complained about. While solving
+> this new issue, LKP found another issue that is circular dependency.
+> But the original code only wants to have an access to IOMEM_ERR_PTR() which
+> is in io.h and can be moved to err.h AFAICS. Does this sound reasonable?
 
-nit: recuesive -> recursive ?
+Yes, that sounds fine to me. I agree that not including linux/io.h
+from device/devres.h is a good idea, same as no longer including
+linux/device.h from asm/io.h. Moving IOMEM_ERR_PTR() as you
+describe is the right idea.
 
-> conflct will never happen in the handling itself.
-> 
-> Some implementations can handle TLB conflict gracefully without fault
-> handler in kernel so FEAT_BBM level 2 can be enabled on those
-> implementations safely.
-> 
-> Look up MIDR to filter out those CPUs.  AmpereOne is one of them.
-> 
-> Suggested-by: Will Deacon <will@kernel.org>
-> Signed-off-by: Yang Shi <yang@os.amperecomputing.com>
-> ---
->  arch/arm64/include/asm/cpufeature.h | 19 +++++++++++++++++++
->  arch/arm64/kernel/cpufeature.c      | 11 +++++++++++
->  arch/arm64/tools/cpucaps            |  1 +
->  3 files changed, 31 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
-> index 8b4e5a3cd24c..33ca9db42741 100644
-> --- a/arch/arm64/include/asm/cpufeature.h
-> +++ b/arch/arm64/include/asm/cpufeature.h
-> @@ -866,6 +866,25 @@ static __always_inline bool system_supports_mpam_hcr(void)
->  	return alternative_has_cap_unlikely(ARM64_MPAM_HCR);
->  }
->  
-> +static inline bool system_supports_bbmlv2(void)
+Side note: I looked at large-scale header file cleanups in the past,
+and in general the result of that was that the best way to reduce the
+indirect inclusions is by splitting data structure definitions from
+inline functions that use those data structures. The definition of
+"struct device" clearly has too many dependencies, and to make
+this one better. There has actually been some good preparatory work
+done by Kent Overstreet a while ago that moves structures out
+(e.g. work_struct and mutex), but not yet struct device and
+struct kobject, which are needed in many other headers. The tricky
+part that needs to happen to actually make it useful later on is
+to replace all the unnecessary indirect includes with the minimal
+ones, and that is a huge amount of work.
 
-nit: Arm language internally is starting to refer to FEAT_BBML1 / FEAT_BBML2 and
-I believe this will soon make it's way to the Arm ARM. So probably better to
-refer to bbml2 rather than bbmlv2 throughout.
-
-> +{
-> +	return cpus_have_final_boot_cap(ARM64_HAS_BBMLV2);
-> +}
-> +
-> +static inline bool bbmlv2_available(void)
-
-This function has no need to be in the header. system_supports_bbmlv2() is what
-users should use. Suggest moving to has_bbmlv2() in cpufeature.c.
-
-> +{
-> +	static const struct midr_range support_bbmlv2[] = {
-> +		MIDR_ALL_VERSIONS(MIDR_AMPERE1),
-> +		MIDR_ALL_VERSIONS(MIDR_AMPERE1A),
-> +		{}
-> +	};
-> +
-> +	if (is_midr_in_range_list(read_cpuid_id(), support_bbmlv2))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
->  int do_emulate_mrs(struct pt_regs *regs, u32 sys_reg, u32 rt);
->  bool try_emulate_mrs(struct pt_regs *regs, u32 isn);
->  
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index 6ce71f444ed8..a60d5fa04828 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -1889,6 +1889,11 @@ static bool has_lpa2(const struct arm64_cpu_capabilities *entry, int scope)
->  }
->  #endif
->  
-> +static bool has_bbmlv2(const struct arm64_cpu_capabilities *entry, int scope)
-> +{
-> +	return bbmlv2_available();
-> +}
-> +
->  #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
->  #define KPTI_NG_TEMP_VA		(-(1UL << PMD_SHIFT))
->  
-> @@ -2990,6 +2995,12 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
->  		ARM64_CPUID_FIELDS(ID_AA64PFR1_EL1, GCS, IMP)
->  	},
->  #endif
-> +	{
-> +		.desc = "BBM Level 2",
-> +		.capability = ARM64_HAS_BBMLV2,
-> +		.type = ARM64_CPUCAP_BOOT_CPU_FEATURE,
-
-I'm wondering if this will potentially lead to problems for assymetric
-collections of CPUs (e.g. big.LITTLE)? I can imagine that little CPUs might not
-support BBML2. In this case if you boot on a big CPU that does have BBML2, you
-will require the feature and refuse to online the secondary little CPUs.
-
-Perhaps this really needs to be a system feature, where it is only enabled if
-all CPUs in the system support it? I'm guessing that will make painting the
-linear map harder; I guess you will need to initially set it up with PTE
-mappings, then repaint as block mappings if BBML2 is determined to be supported
-if that's not already what you are doing.
-
-Thanks,
-Ryan
-
-> +		.matches = has_bbmlv2,
-> +	},
->  	{},
->  };
->  
-> diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
-> index eb17f59e543c..287bdede53f5 100644
-> --- a/arch/arm64/tools/cpucaps
-> +++ b/arch/arm64/tools/cpucaps
-> @@ -14,6 +14,7 @@ HAS_ADDRESS_AUTH_ARCH_QARMA5
->  HAS_ADDRESS_AUTH_IMP_DEF
->  HAS_AMU_EXTN
->  HAS_ARMv8_4_TTL
-> +HAS_BBMLV2
->  HAS_CACHE_DIC
->  HAS_CACHE_IDC
->  HAS_CNP
-
+     Arnd
