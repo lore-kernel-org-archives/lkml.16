@@ -1,63 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A5D1D54C2;
-	Tue, 11 Feb 2025 02:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4389C374EA;
+	Tue, 11 Feb 2025 03:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739242788; cv=none; b=V5kCrc7dqfxjLLaSzFHTauIYP2d1g04Lxf/kA7VXN1uZTHpWzyHbhh/30kf7dqZCGMXAySJOJlPR3vpSycIKKjmQWvb3++JBevLddRozFtpuHg7aZe3Vm3v1mFkIAkRFm9e83CNTMfTcL+GSbBdO/UZNRx389pw2dEn5Vque/Do=
+	t=1739242865; cv=none; b=lPP0tWM+7+B6rrC1aBOjoyXmP+/c20LTodHRqIpXlCFoLvHw+Lfdi4XC0rUe5J/Yr6IMsH7UFgNkpnGKwXwGoie++AJPbGxY7uylu4nqt0fCyr/QTggG4JflRpwAimm9ppliM5YowLlGN8ewKbXntgdNh2uS74z3+dIky4cLGsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739242788; c=relaxed/simple;
-	bh=Y+L7T+dFCAOOTacW/Q/+ULcCCojr0GjtwRfpqS1+yQQ=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=oJdiaub8cRf/s6fgyiILiEu1BHhyZoqNLaREbq5ewr3jcw9qIDY9a2ptVQi14UF2xnOnT4On/YWau7nXyTt9rHp7bZa4jAAo37st3444GPCNxuHHY+znDf1DqD9Xj4R/gl784oZ6FVS3rwMh2Q8Pc914fCP6ZIRM26yQ8g9RWus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=felBCsX2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739242865; c=relaxed/simple;
+	bh=cZRSGsPr5NDIpPaoHCeAoLx/Cg6l0wSrIJIyEW42Puc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=mOVaxeC0O5xXo6RbsHNi0CJbH5zJlZ41rEARLfR6VhDAwpNmdS4h3Jt5M7WX4YvK0DMwFbcmh2MtwbNevB+lfyPwv+cmZplzFs7n+OMd5741Ioto8QpBUHxGJnFO3Wufs/HcuLuNcMzj2Ncf6GxEmyHY5mOSEVkFE1FGPD/WUD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MjItOrxd; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="felBCsX2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CC9DC4CED1;
-	Tue, 11 Feb 2025 02:59:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739242787;
-	bh=Y+L7T+dFCAOOTacW/Q/+ULcCCojr0GjtwRfpqS1+yQQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=felBCsX2BsFdhI0JIUG+1nRTxUYaueiCqzFixUVbIsWdgmhqsB7Ws3Lyp3cgakBTB
-	 6j2blVQKhD/NO/9i9UqyaYa9y4JBV9cTu/EJdVGkuWGNAk1KZk1lGmsxCdO81CCSod
-	 p9XoUIG0ZwgTucJljg1Pyy198r3rl0+u41fIOqEbCOsfLgTE5++fZvK35yw2rZhGFh
-	 jfRRFdkERmYxIY8Rb5zgE4vXFPhiYBvC/+eRjnV/KD1Sb/FHc4reccJ8YHJLhIW9GJ
-	 ozGI4TJGoqJpJagnmJWHdd0zrRe0TGt5Jjd5Sz6d30E003Joa3R1v+9VbP1rs5XZds
-	 iuuaFjJozpRww==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 0F842380AA7A;
-	Tue, 11 Feb 2025 03:00:17 +0000 (UTC)
-Subject: Re: [GIT PULL] NFSD fixes for v6.14
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250210185905.116290-1-cel@kernel.org>
-References: <20250210185905.116290-1-cel@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250210185905.116290-1-cel@kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.14-1
-X-PR-Tracked-Commit-Id: 4990d098433db18c854e75fb0f90d941eb7d479e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: febbc555cf0fff895546ddb8ba2c9a523692fb55
-Message-Id: <173924281574.3934815.3832938738018337391.pr-tracker-bot@kernel.org>
-Date: Tue, 11 Feb 2025 03:00:15 +0000
-To: cel@kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MjItOrxd"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so12964565e9.3;
+        Mon, 10 Feb 2025 19:01:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739242862; x=1739847662; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=I0+Ftmctz1tHLKGjM2SvsvtPNyMgN+i6G6rr2ncjwYw=;
+        b=MjItOrxdIpK9Beqn0GLeYGdPvTYTn6rSyfdBEB++5bPg19oPBSXTPFext8gMkWpykE
+         5K++coT/zGq6cxCtcN51VNAX49sjcR5sL4dHqCFtX0UfEkqVdOc6awnAY+cE5VZzKmww
+         1M2NLpb/1u3V8flavez9oJetoBSJxbUdJIjKDYE1Ob99FOtmspUTVX+fM80ynafUwpIB
+         1Nk1WCNQ08h7kffR6lfPDuJDSf+o4hyYK+DjKQldnmFh6JYKKbB1wT+/XypG4vS86NJ/
+         lLsYLEhejK/javnUh8EuJMEg6mqW4Sc+ZMD88JlfRX5kmXGGapP+RSRD9qV95unuASIN
+         hACg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739242862; x=1739847662;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=I0+Ftmctz1tHLKGjM2SvsvtPNyMgN+i6G6rr2ncjwYw=;
+        b=DIqzlAz76c5jzko1VVCwVzBiUuuNmugXbc8f16SDc821u8Bo6bHtscTjUzIQvl5Zpw
+         bMkDBNizm1+GvkMz0qM2edsnj016PudKf0RLpWyjEmPs3i4v+D/D/jk9Ix3Zo067Ghtz
+         Dpgp2fRq2kX+96ohWWuTxuAMAsDMZM2ScwsfiSJRgXTelxSWWRjj5e7QBRCjqOl6DTr2
+         TOMZR5ndoRZWdrN6VNd6uJOs4MYKbqLEkGLh12vTks1o3HLgjF0kn4sNq2zDYZ2a26OC
+         1gnwAvrdXl+JZxbFypijbzEu/jikBzqDSwzeIlyKQbZWKwWtfHhiKyPXpI7I3Cr8Wnc1
+         3EaA==
+X-Forwarded-Encrypted: i=1; AJvYcCUgy8COySLBYU08ESORVbeJVbX2xu49AQIdAv//pK4soNe6ju0MiRo6PZivl1I8y77F7icu/CqlfuvD9/yaHS78@vger.kernel.org, AJvYcCVqbEsMk1Zg1oHSF2hxHQ65Jv78NZr69TFH8ycy6mCVJ68W3UgthpU6CXGcvrgzLFuVIjKBoRHR4o/GvYg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz84ITrCEtPM1dsEfKM8LBgUDL8pXMTtEEDBfp8BOcDCMOjBezI
+	xg2GTjAlgO06MEjL9d6a5iCMEe70hnVTwuo/LMyz0ingY1l3u3pM
+X-Gm-Gg: ASbGncurzILuWgToRjcvQZoUl3rA+TRg3sWovt9bHxpUs+nY6a4wAagabFjhbqevHfK
+	x1P2T4fIikol0T6Z1ZwdCuU7hIRKCaFxapxieCUJucYJUGgvVfQpf3yuu9ZJKUoQIzoGTGAyDQ6
+	QEJZpsuBF1BqQxCKD/jsd63fZIHbKirVBECp0N3NtU5dCnUekQCCl4cRa4ERC6ukHnQt2RXQuaH
+	Oof62ASxv2kytzU4Wwmv0VVeMpa4Q8W8FXWE7+TlF0Xznb3zGk7yhIpY83Y36qQHjFPqMLEeLLS
+	TlKSGb/9MmRkZ6KbJjpcP0waShD0VYwCLRooNw4=
+X-Google-Smtp-Source: AGHT+IFQ5ct/eLOgfDv7Qw2gj1n3vazuwUHtEoARoYyP42j6t/7paFBG0Ke21LcKUs+x9M67T3tGLQ==
+X-Received: by 2002:a5d:6d0b:0:b0:38d:bd41:2f8b with SMTP id ffacd0b85a97d-38de41bdfe9mr1852527f8f.44.1739242862468;
+        Mon, 10 Feb 2025 19:01:02 -0800 (PST)
+Received: from localhost (tor-exit-9.zbau.f3netze.de. [185.220.100.248])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38dd4342502sm8153548f8f.26.2025.02.10.19.00.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 19:01:01 -0800 (PST)
+Date: Tue, 11 Feb 2025 05:00:22 +0200
+From: Ahmed Salem <x0rw3ll@gmail.com>
+To: peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, shuah@kernel.org, 
+	skhan@linuxfoundation.org
+Cc: linux-integrity@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
+Subject: [PATCH v3] selftests: tpm2: test_smoke: use POSIX-conformant
+ expression operator
+Message-ID: <nyskb7mbqk2dvlwhez4sua7ryz5gyi73yker6y3qhd4chyyeaw@x6nhqgtxcyvl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The pull request you sent on Mon, 10 Feb 2025 13:59:05 -0500:
+Use POSIX-conformant operator symbol '='.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.14-1
+Signed-off-by: Ahmed Salem <x0rw3ll@gmail.com>
+---
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/febbc555cf0fff895546ddb8ba2c9a523692fb55
+Apologies for my previous mistakes.
 
-Thank you!
+Changes in v3:
+ - Reword mistaken commit message
 
+Changes in v2:
+ - Remove snippets pinpointing the issue 
+   from commit message
+
+ tools/testing/selftests/tpm2/test_smoke.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
+index 168f4b166234..3a60e6c6f5c9 100755
+--- a/tools/testing/selftests/tpm2/test_smoke.sh
++++ b/tools/testing/selftests/tpm2/test_smoke.sh
+@@ -6,6 +6,6 @@ ksft_skip=4
+ 
+ [ -e /dev/tpm0 ] || exit $ksft_skip
+ read tpm_version < /sys/class/tpm/tpm0/tpm_version_major
+-[ "$tpm_version" == 2 ] || exit $ksft_skip
++[ "$tpm_version" = 2 ] || exit $ksft_skip
+ 
+ python3 -m unittest -v tpm2_tests.SmokeTest 2>&1
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.47.2
+
