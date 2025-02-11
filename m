@@ -1,251 +1,92 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C254250BE1;
-	Tue, 11 Feb 2025 14:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9EF250BE5
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:41:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739284829; cv=none; b=EfoaTVcioH6CxSCJocKe+KsibAPF4ZXokygEbZ/oPVM8kq9dovyhjhZjb55o9PuUTdn8ppKyDXmI8P7eiioEqZnuIRlomOI5XvKBMbiHHKSO7kiDA0Ihz7jztNAztoPXgr0RhCwmnV1njk9eRSFVX9/V2dFpFyNrQLSop43TpEY=
+	t=1739284863; cv=none; b=Dauxny1AfQFg5TsGOpSEdfx2CSPWv3lSWcVWRNn8VWj4kNuIQYaHW/9Hk4hC5Lg3WvyYFkbqDDudXrBfZIEfJegOIxOUAW8B2Y2maQjWEeh/mfz588U/aR7d/WIZtGgtgfwNu7KO0U/x6Xq3GNaVknX0d7yOY9dly5NubSErxPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739284829; c=relaxed/simple;
-	bh=QR1Zd8YkXW2iqSrY4dhM1u3r5b6lX8Wm5ql/0QNBu7I=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TvkAW0EgsPEyKZYVPsXAXVe1y8dwIYDGA4HuRzkgPvpJU0Zuk5VB88qlbk/hzWv86hTWqr6DWD71HFn28tkMdaKGUVmgmt6/oXKtodgqPu96l0WS9KU1s8nHNrQwuB4NW30VbdYPs16zTOn5J0MCKd8D0bZw3HWbcNWxdCb0Ssk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=hHU24o2H; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1739284863; c=relaxed/simple;
+	bh=w0lyzC9h5R8V3+kyWa+MnzNnFg+o9k0r+J84W+0jAl4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h6c4P1lPYsyNzTjFf8hWPj+H7r/DZnySR1x5EBwhaOAAVhu8jC1oROq0+9NxbO7uEgAsuMPZi+RgUWK3j7KUtaRGdC+T9RuNKyQ/wWrDSPCHCn+50Wb9gh+/LV7DekPKyBLQyx4xbbmU4adajA7xW0pQXpaqk5eW43Q4Teg67Zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KqFrYVIe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hHU24o2H"
-X-UUID: 1e9d35aee88611efb8f9918b5fc74e19-20250211
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=OO2knjmuBvtucptzxUGQqaC73/LOtARP3qDbozdomLc=;
-	b=hHU24o2HiWCChrQymAnA8751pyWaJLrF86/Yh/W1d4NjjuL1+nWgV3JtpS8xFKesh4lCx8SFilOSWbyBxRS+8Q7u897SXGBs9EKplv7WQHitTLgI9O7KGJNp/PEImh7tg2+of8mxGQ22BW9kPvNphRkVqddaVb8VzDykuG2AA/U=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.46,REQID:20ad16f1-933a-4370-8525-7530a1d1b178,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:-25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-50
-X-CID-META: VersionHash:60aa074,CLOUDID:054a2e9c-f55b-41e7-a712-ffbe7a973280,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:1,IP:nil
-	,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:
-	1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 1e9d35aee88611efb8f9918b5fc74e19-20250211
-Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw01.mediatek.com
-	(envelope-from <zoie.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 182231165; Tue, 11 Feb 2025 22:40:20 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 11 Feb 2025 22:40:19 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Tue, 11 Feb 2025 22:40:19 +0800
-From: Zoie Lin <zoie.lin@mediatek.com>
-To: Qii Wang <qii.wang@mediatek.com>, Andi Shyti <andi.shyti@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: <Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	<linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	<teddy.chen@mediatek.com>, <joseph-cc.chang@mediatek.com>,
-	<leilk.liu@mediatek.com>, Zoie Lin <zoie.lin@mediatek.com>
-Subject: [PATCH v4 0/1] i2c: mediatek: add runtime PM operations and bus regulator control
-Date: Tue, 11 Feb 2025 22:39:37 +0800
-Message-ID: <20250211144016.488001-1-zoie.lin@mediatek.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KqFrYVIe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80AA8C4CEDD
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:41:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739284862;
+	bh=w0lyzC9h5R8V3+kyWa+MnzNnFg+o9k0r+J84W+0jAl4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KqFrYVIeBJY888x30TbJOJOYydl0tZAjuja88DEx6wVIKo3ewv+RlEiK87fAigrfc
+	 RoKZ1jh+f7PTaOFv/TeTY71Vs1XFAEyYi3minjNz8e+AusU2c6R6nXT2KEk0LSTdVN
+	 G5EwS0omEEwefDUJTr/tz3x4x+BkJihtVgauhqDB2pKXH+7LtNmgSiYTqEnb99EBj9
+	 CUgT/xYdO/JLvx0faH2G2/DUEd6ez/2E0Hlf3+RzkGljKl5XWj9ujUdVj+PzlOo4k/
+	 m7PKXNUzv4x5xGo80ip/6TQQ9jdeGwwrZqTCGwxUDuuOSf6Lsf39EnDe6AAQWnUCOv
+	 OOz9yaM/INlfQ==
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ab7e1286126so135843066b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 06:41:02 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUCi7CTK0ZGzNpD3pP4/LMpGPpGyji4yS9H0ffDmTetC0KuEQuUFG2/tAAzUr9HjSwqVV5shgI5CaF3GuA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwXbHTQLEsv4V5eeh8mXBC3WzHwcx+7XTtLgBRar4Lt0fMav/I
+	XnhWlIcaBKVdUQ2VYK16vspKQcWNYFPkNU3MhIGjuCPihiipHhay8sCbvdLhAWZ5jdnttcrhEu6
+	EQF4BO9ciKiHtCMNWl5OOspa/dl4=
+X-Google-Smtp-Source: AGHT+IGyJFeDacMApSGBnHU+O8pN/JIZNAMewpemCieh7bU+sklp5zcAxELy+FoKwQaiqydCwRZ8K2vcvWn0PWZ01oA=
+X-Received: by 2002:a17:906:4fcf:b0:ab6:6018:df18 with SMTP id
+ a640c23a62f3a-ab789aed838mr1774678966b.6.1739284861137; Tue, 11 Feb 2025
+ 06:41:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <10CEA19AD9D3FA2A+20250206063820.30558-1-wangyuli@uniontech.com>
+In-Reply-To: <10CEA19AD9D3FA2A+20250206063820.30558-1-wangyuli@uniontech.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 11 Feb 2025 22:40:50 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4oqe-15jpHUe2yXchYogNyNdFHt=WfsoCF_AmX1e6v=Q@mail.gmail.com>
+X-Gm-Features: AWEUYZlCFbxcf6ewsvYQYHCtt1ipUlOln3vwERFG09K9xSZ6_3FEEVM58-Xm7C4
+Message-ID: <CAAhV-H4oqe-15jpHUe2yXchYogNyNdFHt=WfsoCF_AmX1e6v=Q@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Enable Undefined Behavior Sanitizer UBSAN
+To: WangYuli <wangyuli@uniontech.com>
+Cc: kernel@xen0n.name, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	zhanjun@uniontech.com, guanwentao@uniontech.com, chenlinxuan@uniontech.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Introduce support for runtime PM operations in
-the I2C driver, enabling runtime suspend and resume functionality.
+Queued for 6.15, thanks.
 
-Although in most platforms, the bus power of i2c is always
-on, some platforms disable the i2c bus power in order to meet
-low power request.
+Huacai
 
-This implementation includes bus regulator control to facilitate
-proper handling of the bus power based on platform requirements.
-
-Signed-off-by: Zoie Lin <zoie.lin@mediatek.com>
----
- drivers/i2c/busses/i2c-mt65xx.c | 73 +++++++++++++++++++++++++++------
- 1 file changed, 61 insertions(+), 12 deletions(-)
-
-This series is based on linux-next, tag: next-20250210
-
-Changes in v4:
-- Removed unnecessary variable initialization.
-- Removed unnecessary brackets.
-- Corrected grammar issues in the commit message.
-- Confirmed autosuspend delay is not necessary.
-
-diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-index 5bd342047d59..1979b46d75f0 100644
---- a/drivers/i2c/busses/i2c-mt65xx.c
-+++ b/drivers/i2c/busses/i2c-mt65xx.c
-@@ -21,6 +21,7 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
- #include <linux/scatterlist.h>
- #include <linux/sched.h>
- #include <linux/slab.h>
-@@ -1245,8 +1246,8 @@ static int mtk_i2c_transfer(struct i2c_adapter *adap,
- 	int left_num = num;
- 	struct mtk_i2c *i2c = i2c_get_adapdata(adap);
- 
--	ret = clk_bulk_enable(I2C_MT65XX_CLK_MAX, i2c->clocks);
--	if (ret)
-+	ret = pm_runtime_resume_and_get(i2c->dev);
-+	if (ret < 0)
- 		return ret;
- 
- 	i2c->auto_restart = i2c->dev_comp->auto_restart;
-@@ -1299,7 +1300,9 @@ static int mtk_i2c_transfer(struct i2c_adapter *adap,
- 	ret = num;
- 
- err_exit:
--	clk_bulk_disable(I2C_MT65XX_CLK_MAX, i2c->clocks);
-+	pm_runtime_mark_last_busy(i2c->dev);
-+	pm_runtime_put_sync(i2c->dev);
-+
- 	return ret;
- }
- 
-@@ -1370,6 +1373,38 @@ static int mtk_i2c_parse_dt(struct device_node *np, struct mtk_i2c *i2c)
- 	return 0;
- }
- 
-+static int mtk_i2c_runtime_suspend(struct device *dev)
-+{
-+	struct mtk_i2c *i2c = dev_get_drvdata(dev);
-+
-+	clk_bulk_disable(I2C_MT65XX_CLK_MAX, i2c->clocks);
-+	if (i2c->adap.bus_regulator)
-+		regulator_disable(i2c->adap.bus_regulator);
-+
-+	return 0;
-+}
-+
-+static int mtk_i2c_runtime_resume(struct device *dev)
-+{
-+	int ret;
-+	struct mtk_i2c *i2c = dev_get_drvdata(dev);
-+
-+	if (i2c->adap.bus_regulator) {
-+		ret = regulator_enable(i2c->adap.bus_regulator);
-+		if (ret) {
-+			dev_err(dev, "enable regulator failed!\n");
-+			return ret;
-+		}
-+	}
-+
-+	ret = clk_bulk_enable(I2C_MT65XX_CLK_MAX, i2c->clocks);
-+	if (ret)
-+		if (i2c->adap.bus_regulator)
-+			regulator_disable(i2c->adap.bus_regulator);
-+
-+	return ret;
-+}
-+
- static int mtk_i2c_probe(struct platform_device *pdev)
- {
- 	int ret = 0;
-@@ -1472,13 +1507,18 @@ static int mtk_i2c_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	ret = clk_bulk_prepare_enable(I2C_MT65XX_CLK_MAX, i2c->clocks);
-+	ret = clk_bulk_prepare(I2C_MT65XX_CLK_MAX, i2c->clocks);
- 	if (ret) {
--		dev_err(&pdev->dev, "clock enable failed!\n");
- 		return ret;
- 	}
-+
-+	platform_set_drvdata(pdev, i2c);
-+
-+	ret = mtk_i2c_runtime_resume(i2c->dev);
-+	if (ret < 0)
-+		goto err_clk_bulk_unprepare;
- 	mtk_i2c_init_hw(i2c);
--	clk_bulk_disable(I2C_MT65XX_CLK_MAX, i2c->clocks);
-+	mtk_i2c_runtime_suspend(i2c->dev);
- 
- 	ret = devm_request_irq(&pdev->dev, irq, mtk_i2c_irq,
- 			       IRQF_NO_SUSPEND | IRQF_TRIGGER_NONE,
-@@ -1486,19 +1526,20 @@ static int mtk_i2c_probe(struct platform_device *pdev)
- 	if (ret < 0) {
- 		dev_err(&pdev->dev,
- 			"Request I2C IRQ %d fail\n", irq);
--		goto err_bulk_unprepare;
-+		goto err_clk_bulk_unprepare;
- 	}
-+	pm_runtime_enable(&pdev->dev);
- 
- 	i2c_set_adapdata(&i2c->adap, i2c);
- 	ret = i2c_add_adapter(&i2c->adap);
- 	if (ret)
--		goto err_bulk_unprepare;
--
--	platform_set_drvdata(pdev, i2c);
-+		goto err_pm_runtime_disable;
- 
- 	return 0;
- 
--err_bulk_unprepare:
-+err_pm_runtime_disable:
-+	pm_runtime_disable(&pdev->dev);
-+err_clk_bulk_unprepare:
- 	clk_bulk_unprepare(I2C_MT65XX_CLK_MAX, i2c->clocks);
- 
- 	return ret;
-@@ -1510,6 +1551,7 @@ static void mtk_i2c_remove(struct platform_device *pdev)
- 
- 	i2c_del_adapter(&i2c->adap);
- 
-+	pm_runtime_disable(&pdev->dev);
- 	clk_bulk_unprepare(I2C_MT65XX_CLK_MAX, i2c->clocks);
- }
- 
-@@ -1518,6 +1560,10 @@ static int mtk_i2c_suspend_noirq(struct device *dev)
- 	struct mtk_i2c *i2c = dev_get_drvdata(dev);
- 
- 	i2c_mark_adapter_suspended(&i2c->adap);
-+
-+	if (!pm_runtime_status_suspended(dev))
-+		mtk_i2c_runtime_suspend(dev);
-+
- 	clk_bulk_unprepare(I2C_MT65XX_CLK_MAX, i2c->clocks);
- 
- 	return 0;
-@@ -1536,7 +1582,8 @@ static int mtk_i2c_resume_noirq(struct device *dev)
- 
- 	mtk_i2c_init_hw(i2c);
- 
--	clk_bulk_disable(I2C_MT65XX_CLK_MAX, i2c->clocks);
-+	if (pm_runtime_status_suspended(dev))
-+		mtk_i2c_runtime_resume(dev);
- 
- 	i2c_mark_adapter_resumed(&i2c->adap);
- 
-@@ -1546,6 +1593,8 @@ static int mtk_i2c_resume_noirq(struct device *dev)
- static const struct dev_pm_ops mtk_i2c_pm = {
- 	NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_i2c_suspend_noirq,
- 				  mtk_i2c_resume_noirq)
-+	SET_RUNTIME_PM_OPS(mtk_i2c_runtime_suspend, mtk_i2c_runtime_resume,
-+			   NULL)
- };
- 
- static struct platform_driver mtk_i2c_driver = {
--- 
-2.45.2
-
+On Thu, Feb 6, 2025 at 2:39=E2=80=AFPM WangYuli <wangyuli@uniontech.com> wr=
+ote:
+>
+> Select ARCH_HAS_UBSAN_SANITIZE_ALL in order to allow the user to
+> enable CONFIG_UBSAN_SANITIZE_ALL and instrument the entire kernel for
+> ubsan checks.
+>
+> Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
+> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+> Tested-by: Yuli Wang <wangyuli@uniontech.com>
+> Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+> ---
+>  arch/loongarch/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 2b8bd27a852f..9d20aac7bc14 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -30,6 +30,7 @@ config LOONGARCH
+>         select ARCH_HAS_SET_MEMORY
+>         select ARCH_HAS_SET_DIRECT_MAP
+>         select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+> +       select ARCH_HAS_UBSAN
+>         select ARCH_INLINE_READ_LOCK if !PREEMPTION
+>         select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
+>         select ARCH_INLINE_READ_LOCK_IRQ if !PREEMPTION
+> --
+> 2.47.2
+>
