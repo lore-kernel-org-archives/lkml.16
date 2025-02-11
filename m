@@ -1,72 +1,33 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B1E1FCFE3
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A36213240
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:08:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739279299; cv=none; b=KmO7Yvt4ZzgFOvcfl4+/qEsYrkHnsu/cxTcpKiNJUrNrdMIUbPzAj2IQjzIG3ehf1XNq47PvLQRPs5p2awj/F3ab2x2ecbv3sg34FqDYT50mZSBELEmqYesbFg6ClB0DCc6Hf4KECr7a0WiVpOHGkAVt52R/ev2BWlhwmHB5w1Q=
+	t=1739279315; cv=none; b=hn3+GUInD9b3zeIHlUW1CVJpzcbi+VkcahyMq56eRhfU73XCiCAlTS+qCI7shC/nYEgEO/r8JX6Ke/pBCugVJ91Eq27RtedsbWeXAqavOBLar8ZnWR6DBzkaZP0HZ7uZqPNDlSWfy17e/GcAaLz3gQ9nc5f+QPolpS0TcTm5ADI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739279299; c=relaxed/simple;
-	bh=/RWwDCgWIvfRxCBNDmFnORoLKXqc+sVPbPIATI7AWBo=;
+	s=arc-20240116; t=1739279315; c=relaxed/simple;
+	bh=tCS5mEqz1MLGLorJ57dRMcqfb8BehI8Xy+WBXcLem40=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UWLbDkNvCQOBWCVdKaZZx3ExQ93i7Fwy+CvO7sP229pEs6pOKGS2pFIxFCnKNNIl0FCCWThOAdsRoS83bqrz2EFoavSKWxtb/WULAVk9HulQvSNbMtFmGOFD9a7q+o5bk/DXz4s70Kbprvi0S7iKbbhK5af5kQZ+tw/HylMProU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hbrvKE0N; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=Vpsu+BZSvZUf1mlBp07aMRCFu8dEFbWCSvAH7V27NACmtSR4hhcVt1i9gv2Y9wS54m7IIt8NzyDqU19bbiKd7/nXgns8GznBfYcvwO3jUI+JRsWcPuV2BCyItgZWDMAcCF5agD908WMfwofzJcG3qfKiktQ7XrSqiMHvRwHAa8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=GwsNRaEL; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hbrvKE0N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739279296;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=KTxPyDdb2wxiihdhjpasEWTWWdsjHn10mmqL0GFzWvs=;
-	b=hbrvKE0NjMT8OYu5zFJw99+3QAqbJEeS2lVOiBwz7GEeIiPYzuct/LjJ3f9bPgpUknELBG
-	9lmbeB12nYEwV1G+TFLFI2rje2OFf3TY2f5Q66sxeF6oRO+FPrIbux2uDRO7Rw5OeTX4Bd
-	8dzRWw3WhrIqYhdGD6T6C1qlSee+9hM=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-626-uRp8Y--LO7-kykev9ygL3w-1; Tue, 11 Feb 2025 08:08:15 -0500
-X-MC-Unique: uRp8Y--LO7-kykev9ygL3w-1
-X-Mimecast-MFC-AGG-ID: uRp8Y--LO7-kykev9ygL3w
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43941ad86d4so11250925e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 05:08:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739279294; x=1739884094;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KTxPyDdb2wxiihdhjpasEWTWWdsjHn10mmqL0GFzWvs=;
-        b=Ms6L8WIvSb1XIWu/rUzblLxAdbAcGOJJ5NpI4kGG8eSg7ZjEtRbKtdkM8dxtRbBoNs
-         kZDLYpDewN1WtHcmd+az2gVLxF3FpG2tnqwTOWte2oeX/yDYnoimeLJFkmFXAMSm70jk
-         H7ooUSzEtn/B0mn2McWdbv7YYLPvXdnbJM8Aaq5JoAGsOF/qvyoub/PIT3EwEdurOAbj
-         9LYqXO/8JlzHZ3xbwCaitTRbC+PLed1KsudSmPQbfiuWm2YZHSGzebmTOw9GnWGL0NVI
-         r6NJW7HgG5xEgOz8tiRa4y1+m4df7/BsEUEDk2GZaRk97dQkpvxIDi9YU5PzWht4gGed
-         gKgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1eCNuE6O8JGspSdQS9toOATwZ8Gc7zF+EFJKsZMrZrjBXLg117UXlDMf3VtU8rVTvea/ii/cXXeQOsbI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzO4K/eajxq+dI06JnFWBLM7HmVcE8Pz1Y+gfkA4VuiKmqaDpK7
-	0et3rCjdx6ifqN9WixCnRD8NfnQLQFkwvqIVU+7wFsuO1Tf1D8ZMBlB6nUgitnRS4QoavQPWer1
-	UqLIDX2hJ6gMt7912zn+lVHs3c44StA7LRdEBqQUjU8HDrZ/utw92UIRy1RTwsA==
-X-Gm-Gg: ASbGncsMnwwzRzSajW42djKIGmNAWG1GwRBJ7cneoVnIbsMBnD8fVuL6pPmWWWtYXS3
-	3XlmxIoFPScLqht06HNUTSXMcfXR+9hcWso1nAKX8BOQeFTNVli+SmFxa/OVIlclKs5l2Za4Psp
-	cFAuQ3Wr4VzMhX3pdDO7BOYri7PB/82Y0YEpVTh7z7VcNoFLR4fjaXfDYox8JLyzTa4rzkMN/q1
-	fZ71DDMftWOyDcXacUGAtI4WWg0+i2OgjBaQyeHfL4Cykyu+vpAwubf6pP549bd7yRBu3yYjrtE
-	/zngNSsHqNbJaMu7laR7YLKKpGd56Rqvb1E5OYw=
-X-Received: by 2002:a05:600c:3b1c:b0:439:488b:985d with SMTP id 5b1f17b1804b1-439488b9a27mr60819805e9.4.1739279293918;
-        Tue, 11 Feb 2025 05:08:13 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHf/drif5hPNe2I0N6R4vROc+jEbwvVIvaQdzsYekSKWtj0FR4Mu+MdWbvn9S9v4+doZaSkgA==
-X-Received: by 2002:a05:600c:3b1c:b0:439:488b:985d with SMTP id 5b1f17b1804b1-439488b9a27mr60819475e9.4.1739279293603;
-        Tue, 11 Feb 2025 05:08:13 -0800 (PST)
-Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391da96502sm180879475e9.1.2025.02.11.05.08.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 05:08:12 -0800 (PST)
-Message-ID: <f26fd867-d348-40cf-ac55-023ac814cc50@redhat.com>
-Date: Tue, 11 Feb 2025 14:08:11 +0100
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GwsNRaEL"
+Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C2D9E2B3;
+	Tue, 11 Feb 2025 14:07:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1739279233;
+	bh=tCS5mEqz1MLGLorJ57dRMcqfb8BehI8Xy+WBXcLem40=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GwsNRaELSvgupHQyX5kZM8MDUGfz/iELOECZInWzF+cAsdmZ8qO+ZChPMik0ewsgs
+	 kNPTPQ9BgrX/flZqZbHU0qOjv/cUSQEW++ZWkEHFPysrldcHV0LZHOjq6eBXyQGuN6
+	 JgRciK9L6rt19xC63NW+G4T9cVKaBeX4RRepbb1I=
+Message-ID: <b8c4dabc-c9a9-407a-94a1-4a59a67e0440@ideasonboard.com>
+Date: Tue, 11 Feb 2025 15:08:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,87 +35,102 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] ACPI/MRRM: Create /sys/devices/system/memory/rangeX
- ABI
-To: Tony Luck <tony.luck@intel.com>, Robert Moore <robert.moore@intel.com>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Len Brown <lenb@kernel.org>
-Cc: linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Oscar Salvador <osalvador@suse.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Danilo Krummrich <dakr@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
-References: <20250210211223.6139-1-tony.luck@intel.com>
- <20250210211223.6139-3-tony.luck@intel.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH V3] drm: xlnx: zynqmp_dpsub: Add NULL check in
+ zynqmp_audio_init
+To: Charles Han <hanchunchao@inspur.com>, laurent.pinchart@ideasonboard.com
+Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Markus.Elfring@web.de,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, simona@ffwll.ch, michal.simek@amd.com,
+ vishal.sagar@amd.com
+References: <20250211102049.6468-1-hanchunchao@inspur.com>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250210211223.6139-3-tony.luck@intel.com>
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <20250211102049.6468-1-hanchunchao@inspur.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 10.02.25 22:12, Tony Luck wrote:
-> Perf and resctrl users need an enumeration of which memory addresses
-> are bound to which "region" tag.
+Hi,
+
+On 11/02/2025 12:20, Charles Han wrote:
+> devm_kasprintf() calls can return null pointers on failure.
+> But some return values were not checked in zynqmp_audio_init().
 > 
-> Parse the ACPI MRRM table and add /sys entries for each memory range
-> describing base address, length, and which region tags apply for
-> same-socket and cross-socket access.
+> Add NULL check in zynqmp_audio_init(), avoid referencing null
+> pointers in the subsequent code.
+> 
+> Signed-off-by: Charles Han <hanchunchao@inspur.com>
+> ---
+>   drivers/gpu/drm/xlnx/zynqmp_dp_audio.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c b/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c
+> index fa5f0ace6084..f07ff4eb3a6d 100644
+> --- a/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c
+> +++ b/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c
+> @@ -323,12 +323,16 @@ int zynqmp_audio_init(struct zynqmp_dpsub *dpsub)
+>   
+>   	audio->dai_name = devm_kasprintf(dev, GFP_KERNEL,
+>   					 "%s-dai", dev_name(dev));
+> +	if (!audio->dai_name)
+> +		return -ENOMEM;
+>   
+>   	for (unsigned int i = 0; i < ZYNQMP_NUM_PCMS; ++i) {
+>   		audio->link_names[i] = devm_kasprintf(dev, GFP_KERNEL,
+>   						      "%s-dp-%u", dev_name(dev), i);
+>   		audio->pcm_names[i] = devm_kasprintf(dev, GFP_KERNEL,
+>   						     "%s-pcm-%u", dev_name(dev), i);
+> +		if (!audio->link_names[i] || !audio->pcm_names[i])
+> +			return -ENOMEM;
+>   	}
+>   
+>   	audio->base = devm_platform_ioremap_resource_byname(pdev, "aud");
 
-How does an example in /sys/devices/system/memory/ look like later?
+Thanks, looks good to me. I'll apply with Laurent's RB, which he gave 
+for v1.
 
- From a quick glimpse, I am not sure if this really belongs into 
-/sys/devices/system/memory/, but I am missing some information in cover 
-letter / patch.
-
--- 
-Cheers,
-
-David / dhildenb
+  Tomi
 
