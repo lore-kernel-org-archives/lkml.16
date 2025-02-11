@@ -1,88 +1,71 @@
-Received: from mail.nfschina.com (unknown [42.101.60.213])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 135F51D63FC;
-	Tue, 11 Feb 2025 01:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC74426BD85
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739238310; cv=none; b=dkOaKaFDutC16bY4q3DsaO8/I910nsFBbTLZ4boiZtcSKxQtKGpo5egXYZpQTlVb/cQVwmjB8eoAp9oArhEbHEzCCOujIRG+stK+uiwm6rZ2nu16j7C4Su+Y3cf+hzT6vo+rqoToi2eZ6cnW9xYCzjZiZBoiEeTzXS9nLrwNle8=
+	t=1739238544; cv=none; b=EEBYvzjONwzxe/nOxOVVN2QruMlctliCyto0peyuegt8u0G7P4T0tbgac2MLb90v1Aibz1drXbSq3oNZ/Mf9ygVUVNPLbMx4ttBlKnJM2SX6fFB51UOVwdHHdaKvQXv+IKBfOCG8KOW5AEuttmZ3LE8pZep9TwQLWRHZL5uSheQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739238310; c=relaxed/simple;
-	bh=pUI1YZOKUr94bO9aS3sQdXKZsCWEZPq757t6+bTTyFc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type; b=INXWVbjF3YOkE8fTacnE/uCvUFsXs2fQmHgXk7AIdvdEMyRBcYAn9B4ogNkXTeHFXTAZ4Itd9u1XfX+OU+DPTg1KFGtY1NYlGLc6xDlnHfuDtMcEaZF94VkO2tG1AMiifwhzxujs3o/xv9XZV7ARRaD6r52R8xP1mMdQY5iNTN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from [172.30.20.101] (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id BFB24602A71E9;
-	Tue, 11 Feb 2025 09:44:58 +0800 (CST)
-Message-ID: <23763bba-5524-fe6d-4b6c-53ed2af12e82@nfschina.com>
-Date: Tue, 11 Feb 2025 09:44:58 +0800
+	s=arc-20240116; t=1739238544; c=relaxed/simple;
+	bh=SsnG9T5lCnLpM/h2BMCue4tlHmHUfag1ncnQCShJZSk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=am2HnQWIxcyS2iD19+vSu3dVA013lFo/WshfbxqvoPLAw8y/LvkiTQS+tO3z0Ob6vA4aFM6HXa57guSwhVtnZvdXV/1fvpL3bD9OHBQLtX218BLggj7Qnk+aRbkkjN/ujsFWAkgigiFJB3jOSWZFpa2SAbd2axlcmkwiMk8Z7wE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d13fb2256fso25828285ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:49:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739238542; x=1739843342;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WLhYcKiBe24Tl9YiIDD6yldfDa+nM+2pELGQ1R5P+q4=;
+        b=DQM/MFg4a7Kr48qcJwJDbE7PaKKUPCNquq/qo+Zv8C4Dg9/JdZcpTesUp1ts0uALJ3
+         cadVfUTm1psw/sW35j850Ou+rhnjG6fCNYns30AU8E61tyNHIanZsQENINI0zMvMAuwx
+         XGkYLgvtuY28bgCUYu3+PKZz8INp2iQopRvA9v9AHkNxNHc8VDvm7ld05EyiYbra9dl4
+         yS4BiZvBI7qZw/AQLiynnzpX3LNWKhuA1bxNkZkQEKqRYOf01Ec7ztc9X+OOecEcPjDo
+         ttFy/+f38HvClo0hMd6K+FhBDQWnfBsypR+2I66Bpgj7+1aTs78wxgM/T0RIfccIAU+c
+         38dQ==
+X-Gm-Message-State: AOJu0Yw9nxWeOF6hFflrISyHXvEY1LozIzI4qYyWtbkweyUon6zAW6sy
+	Yc+V5U59PiILFJZyX0MlvaLJmpTW/ckjzzTaR3R+oEbBLGeV2X9qTDIBE1Mnx5wlBRuvmvhyrRa
+	lJ9bvUY44QRnmIltwySeS8tU+kFk//MdFIX0GHqQZd+gP7Wp1RcHxe0c=
+X-Google-Smtp-Source: AGHT+IEEZ1+4oxDrm2h3eVXMZVGOl96zWyh2aEkOe6MLh4nVn5HqZknIaWZcG7P4dAFmHl+LkXNYVqAlelo+Kya2peDfSxxrYUlB
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.1
-Subject: Re: [PATCH] accel/amdxdna: Add missing include linux/slab.h
-To: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>, min.ma@amd.com,
- lizhi.hou@amd.com, ogabbay@kernel.org
-Cc: quic_jhugo@quicinc.com, George.Yang@amd.com,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Content-Language: en-US
-X-MD-Sfrom: suhui@nfschina.com
-X-MD-SrcIP: 180.167.10.98
-From: Su Hui <suhui@nfschina.com>
-In-Reply-To: <43eb87f7-0d47-43a7-b34a-9180f50de3b2@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:12c5:b0:3d0:17d2:a02c with SMTP id
+ e9e14a558f8ab-3d13df7927amr109862835ab.20.1739238542083; Mon, 10 Feb 2025
+ 17:49:02 -0800 (PST)
+Date: Mon, 10 Feb 2025 17:49:02 -0800
+In-Reply-To: <Z6qg-424enAcBWZl@qasdev.system>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67aaac8e.050a0220.3d72c.005a.GAE@google.com>
+Subject: Re: [syzbot] [isofs?] KMSAN: uninit-value in isofs_readdir
+From: syzbot <syzbot+812641c6c3d7586a1613@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, qasdev00@gmail.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 2025/2/10 17:43, Jacek Lawrynowicz wrote:
+Hello,
 
-> Hi,
->
-> please move the header to the include block above an keep it sorted:
-> #include <linux/iopoll.h>
-> -->#include <linux/slab.h><--
-> #include <linux/xarray.h>
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Ok, I will send a v2 patch for this.
+Reported-by: syzbot+812641c6c3d7586a1613@syzkaller.appspotmail.com
+Tested-by: syzbot+812641c6c3d7586a1613@syzkaller.appspotmail.com
 
-Su Hui
+Tested on:
 
-> On 2/8/2025 9:05 AM, Su Hui wrote:
->> When compiling without CONFIG_IA32_EMULATION, there are some errors:
->>
->> drivers/accel/amdxdna/amdxdna_mailbox.c: In function ‘mailbox_release_msg’:
->> drivers/accel/amdxdna/amdxdna_mailbox.c:197:2: error: implicit declaration
->> of function ‘kfree’.
->>    197 |  kfree(mb_msg);
->>        |  ^~~~~
->> drivers/accel/amdxdna/amdxdna_mailbox.c: In function ‘xdna_mailbox_send_msg’:
->> drivers/accel/amdxdna/amdxdna_mailbox.c:418:11: error:implicit declaration
->> of function ‘kzalloc’.
->>    418 |  mb_msg = kzalloc(sizeof(*mb_msg) + pkg_size, GFP_KERNEL);
->>        |           ^~~~~~~
->>
->> Add the missing include.
->>
->> Fixes: b87f920b9344 ("accel/amdxdna: Support hardware mailbox")
->> Signed-off-by: Su Hui <suhui@nfschina.com>
->> ---
->>   drivers/accel/amdxdna/amdxdna_mailbox.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/accel/amdxdna/amdxdna_mailbox.c b/drivers/accel/amdxdna/amdxdna_mailbox.c
->> index 814b16bb1953..80b4b20addd6 100644
->> --- a/drivers/accel/amdxdna/amdxdna_mailbox.c
->> +++ b/drivers/accel/amdxdna/amdxdna_mailbox.c
->> @@ -12,6 +12,7 @@
->>   
->>   #define CREATE_TRACE_POINTS
->>   #include <trace/events/amdxdna.h>
->> +#include <linux/slab.h>
->>   
->>   #include "amdxdna_mailbox.h"
->>   
+commit:         febbc555 Merge tag 'nfsd-6.14-1' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1710c3f8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=48f90cac5eea091a
+dashboard link: https://syzkaller.appspot.com/bug?extid=812641c6c3d7586a1613
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=10bf7b18580000
+
+Note: testing is done by a robot and is best-effort only.
