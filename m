@@ -1,80 +1,102 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B8E194C6A
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC81194C6A
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739270770; cv=none; b=LyWoHyXQU702LcgQ5+XuZ5VB2DCeIhCp6poPap3gx0L36Dj37nlGUtyyVIYfe/TBuTwy+BfKPrLAIb6lyphKxRyUeksp9ER9WiQpfr/Zj6egnSd/92mYGznDNV0oPWOregRrz5MMXYklZQgOZrZTiTKDNo/x77TWNk0G9FS672g=
+	t=1739270867; cv=none; b=BRZHPIw6ac6HW3q4NLXs/tVRQ4B668mN/aQ1cvWh1/elyTutWnINNQxMr7HuL730k/7gjnCwHf1iJNSX4pXv7WgeKhrIQVAAEDiCvwrUNkSL8TZ5sOws2S2G09q1vIFyGyA30YbHzfSN4hLvOLvQEbm7hz2TDNKpBmK1WqYwPeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739270770; c=relaxed/simple;
-	bh=PKhgCI0Zy0bjDtG6fmMXd/y+VHyTFHTVxbURGIl+GJg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AYGboCdxiIQlO9l2/uglEzvz4H8tz+5wHJZpNuSUrmTibhdXWbRmfRkt5zmlVIxqzcoXCi8UByYuhfkR7yXEI+cAb72AHuwa1L/VJbam+WWQpZbjdaWOWuZNhQbcUI6/dlb/ALl7YKm0Kdo9tI0QobdpXCos99F7iPVojBL+SWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=frEap/S9; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739270867; c=relaxed/simple;
+	bh=ERXBDq1Mcg0/vJ8uPXsn3dZsnhiLhJpZ9eph+R3ZJ+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PDbZkDm4owNDndrLRK3gO4pRgP7EoJrw9KCmjVQOePgGGd2ilfgXoR45MGx+XPQYfWyYYPeDx27SHXDGh0RNFT7oZylGQVnkXDRerGdGgLZbAN2XyilD3qtopSqDPsl37wgiMBG2Nfq+9qyKefGzmMh9SZ/U22/6qtfZwUZHOb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=leV6LFQ4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="frEap/S9"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739270751;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=rjgh0NHIE24t3tM5YBjaxn3uiX5S8lp37xeGpZmhvUY=;
-	b=frEap/S9qKMVVv7cClslXsAh7Itfk/OND9x/ftHtv5rlIB5zt0R1hXYMD5aDcqaaEPS0WR
-	hIKw2E/9pAE7K/NzlAz/6s7DfpB8sZ9zc6hNbY4/7mPxb540Q4EpgZEJB8LSNb51EnjfBt
-	9vij7ycKiRvSnwyFSMe4X/+JYfxolu8=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH] ACPI: video: Use str_yes_no() helper in acpi_video_bus_add()
-Date: Tue, 11 Feb 2025 11:45:32 +0100
-Message-ID: <20250211104532.699124-1-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="leV6LFQ4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D107C4CEDD;
+	Tue, 11 Feb 2025 10:47:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739270866;
+	bh=ERXBDq1Mcg0/vJ8uPXsn3dZsnhiLhJpZ9eph+R3ZJ+M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=leV6LFQ4x/pIfK6HBG/IVuvHxPOPi/8//nz54cKTVifNhf2wYXLyzhja5G3CpYRJB
+	 d9o5ZwClZxkKyp7Rg0HPhlZuduqeoico2z0wuC0jYGNgX33GBnbL4e9S/Kbkx6MxLT
+	 xIKm4X9ZnxV4k0QiekDYi0bVc9kqJZGMmOt3GJwNfo8tITel04/8PnGLX4nagmphnv
+	 KeJII12YtAx0ML+EHOFTX83MEFLmYrnXq3LD8TnEQp0++nP8W1lPKhP3J2KChZ5wyz
+	 nQG16srREgPnZRqK0l7VkLbGFb/UIkXGbLoJ71N4N1tpqaN11ZbjkxOUzA+WwX191U
+	 pQ8MhEVmPEx0w==
+Date: Tue, 11 Feb 2025 16:17:42 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Pei Xiao <xiaopei01@kylinos.cn>
+Cc: xiaopeitux@foxmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V5] phy: freescale: fsl-samsung-hdmi: fix build error in
+ fsl_samsung_hdmi_phy_configure_pll_lock_det
+Message-ID: <Z6sqzpqvsumX+VOP@vaman>
+References: <tencent_195F1119DC8F547C905D5ED127D173EFAE08@qq.com>
+ <CAHCN7xL7eMV2f04nURp3jCCmNZ0GSTY=uaOwoiht38AC4Oz0EQ@mail.gmail.com>
+ <476dace4-92fb-4d92-a342-cffd6f77b8f1@kylinos.cn>
+ <Z6oxJEvABw780+DZ@vaman>
+ <dc881f9a-37ab-466f-b6fd-2142f25eac4b@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <dc881f9a-37ab-466f-b6fd-2142f25eac4b@kylinos.cn>
 
-Remove hard-coded strings by using the str_yes_no() helper function.
+On 11-02-25, 10:10, Pei Xiao wrote:
+> 
+> 在 2025/2/11 01:02, Vinod Koul 写道:
+> > On 17-01-25, 10:15, Pei Xiao wrote:
+> >> 在 2025/1/17 09:59, Adam Ford 写道:
+> >>> On Mon, Jan 13, 2025 at 2:41 AM <xiaopeitux@foxmail.com> wrote:
+> >>>> From: Pei Xiao <xiaopei01@kylinos.cn>
+> >>>>
+> >>>> FIELD_PREP() checks that a value fits into the available bitfield,
+> >>>> but the index div equals to 4,is out of range.
+> >>>>
+> >>>> which gcc complains about:
+> >>>> In function ‘fsl_samsung_hdmi_phy_configure_pll_lock_det’,
+> >>>> inlined from ‘fsl_samsung_hdmi_phy_configure’ at
+> >>>> drivers/phy/freescale/phy-fsl-samsung-hdmi.c :470:2:
+> >>>> ././include/linux/compiler_types.h:542:38: error: call to ‘__compiletime_assert_538’
+> >>>> declared with attribute error: FIELD_PREP: value too large for the field
+> >>>>   542 |  _compiletime_assert(condition, msg, __compiletime_assert_,
+> >>>> __COUNTER__)
+> >>>>       |                                      ^
+> >>>> ././include/linux/compiler_types.h:523:4: note: in definition of
+> >>>> macro ‘__compiletime_assert’ 523 |    prefix ## suffix();
+> >>>>       |    ^~~~~~
+> >>>> ././include/linux/compiler_types.h:542:2: note: in expansion of macro
+> >>>> ‘_compiletime_assert’
+> >>>>   542 |  _compiletime_assert(condition, msg, __compiletime_assert_,
+> >>>>  __COUNTER__)
+> >>>>
+> >>>> REG12_CK_DIV_MASK only two bit, limit div to range 0~3,
+> >>>> so build error will fix.
+> >>>>
+> >>> LGTM.
+> >>>
+> >>> Reviewed-by:  Adam Ford <aford173@gmail.com>
+> >> loop Vkoul for email address was written incorrectly.
+> > Thanks for looping in!
+> >
+> > Change looks good to me. Can you please revise the patch title. A patch
+> > title should describe the change we are making. Fix build error is not
+> > an apt title
+> 
+> there so many  "Fix build error" : https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/?qt=grep&q=fix+build+error
+> 
+> what we should revise?
+> 
+> Like:*phy: freescale: fsl-samsung-hdmi: Limit PLL lock detection clock divider to valid range*
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- drivers/acpi/acpi_video.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+That sounds better
 
-diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-index a972831dbd66..efdadc74e3f4 100644
---- a/drivers/acpi/acpi_video.c
-+++ b/drivers/acpi/acpi_video.c
-@@ -27,6 +27,7 @@
- #include <linux/acpi.h>
- #include <acpi/video.h>
- #include <linux/uaccess.h>
-+#include <linux/string_choices.h>
- 
- #define ACPI_VIDEO_BUS_NAME		"Video Bus"
- #define ACPI_VIDEO_DEVICE_NAME		"Video Device"
-@@ -2039,9 +2040,9 @@ static int acpi_video_bus_add(struct acpi_device *device)
- 
- 	pr_info("%s [%s] (multi-head: %s  rom: %s  post: %s)\n",
- 	       ACPI_VIDEO_DEVICE_NAME, acpi_device_bid(device),
--	       video->flags.multihead ? "yes" : "no",
--	       video->flags.rom ? "yes" : "no",
--	       video->flags.post ? "yes" : "no");
-+	       str_yes_no(video->flags.multihead),
-+	       str_yes_no(video->flags.rom),
-+	       str_yes_no(video->flags.post));
- 	mutex_lock(&video_list_lock);
- 	list_add_tail(&video->entry, &video_bus_head);
- 	mutex_unlock(&video_list_lock);
 -- 
-2.48.1
-
+~Vinod
