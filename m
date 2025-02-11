@@ -1,78 +1,80 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2066.outbound.protection.outlook.com [40.107.236.66])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2871026BDB9;
-	Tue, 11 Feb 2025 06:20:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739254825; cv=fail; b=DA2gis+5aXc99ypVcHMbxhwRZGSZCXUraHUQNZLvIfw+LuWzRkLm4ADMdLrw/p9S4NS7276goJAcY+ggbwvOHeiJv4I82aBbt6k1ewBMjDvOsCZyv1R4nyZrSzmeU27BDNwIeFzSNdiEqWnFtzh39+3VwUXYshxnRv+5fk0Azps=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739254825; c=relaxed/simple;
-	bh=IcQIFwLaNbaDyebpicyPbnfRdaTtEXHc5w3VRbc0J+o=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ccnjsTgZrvb7UrVolerv+KbCmQDwMIUNC2pIMwgvTiHo3qnqKzXWeoWxgnNsUYNHTeeTnSq1FWlprCJ0/eoc+wwir97MWV93hSYZCz8b4u3NCkwmTMARHvG2VPA+k0GT4Rz2LAhT2lQhWbZ7FqCxxQKd8Vad/MAL1oKS8y05hsk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=WTZqMji7; arc=fail smtp.client-ip=40.107.236.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DF91E9912
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 06:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739254832; cv=none; b=kQK9zHEe8EOh1mcJKsBYwidXJAq3p+1LKk3rhmf51hfx7FcA1eOefE7kovllW9bvGt/01bC1fvNVUV0QEygExcez87AV7H2PSN80LwSSSJs/5NTSucJHh9nLJVwl36UVA+vTPAyE0ERlyjBCX4ywTblOr40EzNZAfTg5E0E5UHM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739254832; c=relaxed/simple;
+	bh=h0hJF4T3/oSEYNKk/aj1H9voaMafKE7snd34cEzv3xg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ib3Fu2N+aF7Pu7xStTqlezpRva1K8WTCHatDge2fAUtK1yVZVzT4pk1iq1KPhruI8hbHZSL/cQHOmojA+SFBpQKNT8kVN1U7Bn2O/6m3mrY/9DX7ch+Q23xgKvEJuCswQR2NZayXOX322k70GqDvB3K53RKreKUM5l81pZKSczM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=eigp1VWp; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="WTZqMji7"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UdAj1t0m5yppPGhDgGq0zNqfFBSg2OX4X6dKtatxhGxafPJBUlRB2FWcNGFMWhcFKsCJYDnWQB4ynuG5TY/DIarsgzATUPX5HHbW4GMl1OuslR3mlj/yL7NJ1UXMkq8JHUJjwnvAPo9zSnXXn3nZVQXzNutS8DcdKWsawPMgxwrsfw3BZWq5LY0oog+mLoncYjV5IQs1cKb7YmviLmz9TbirdlxdMtC7QdaMmZTwzySmcRuvTknYw+Ou4WKHAkH+eMmpKf0Efxypa47dAMNO1KK1eTZ2HydVx4Ag9r4ryT2RmfoHYAALfkpAfNAcH4F3it33twNqpaZWE9NSEXHxpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pSjb4RV15p8hLhIZgv8iMIG5Fj6gXzt5L6oUu3p4q60=;
- b=ktS8VWIw9nmmBhsYAnYpOY5g9EIZs/r7rOMcrm+1RO2VLbWMuy5l2l5kZ5XL7ja3x44cH/8FQ49QWOIaVNvGojMz48BWxtQR2ER1pOLNr2ep3xzX/KI6om5sGqnFwNnsZ/YS8NlGw4xu4C/ZQ2IHGmypoe/PcdxFKaJ0ZihnP7uZ/dMJ7f6/KekIpkhAjPD8ce51xVW4CDMtdqTIpglhYdbNDI+pmJvSFt6AmAaoGfaPuY5Ds5KdIHCc9JDr6ZZSggujMEH5/EVWol2S8qGMmNqZ6v2MHgCIfQMn8r7Ni9YaiAatrsERcK7ODHRU70ogTZ/nfnqaahL0cqmwnYPVmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pSjb4RV15p8hLhIZgv8iMIG5Fj6gXzt5L6oUu3p4q60=;
- b=WTZqMji7oGuCF09mnfGa+a9KQmAtWNAp/sv6XztKaGBd3CtMX0h27QNDfLKG9gw3dMS5Y45nOocAUva4comeRcQdppfyoj8tuc+1C7NKEOR4FvODZ+MvToQzmSTpwOMfHKw9hIY7gj3b8GjlQR8TaRTm+X/bdBd8xqTix7Nic/XJBMDc/prSCUtv3QWtDxlIRlSnkD6d5O1lbgL6R6hILtY8FooCP9ErWnV+pevvoETCmTzHeD4+ykHcVWgHRvEYm5yvhKTxoiDNfYKlw6jc0tRDHnj9bfP+NUybX1ujarEp4r6CZ9zlsNeQN2ebuLvadZzRBadMWM/Xod8Ga00mYA==
-Received: from MW4PR03CA0199.namprd03.prod.outlook.com (2603:10b6:303:b8::24)
- by DM4PR12MB5916.namprd12.prod.outlook.com (2603:10b6:8:69::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Tue, 11 Feb
- 2025 06:20:16 +0000
-Received: from SJ1PEPF000023CE.namprd02.prod.outlook.com
- (2603:10b6:303:b8:cafe::23) by MW4PR03CA0199.outlook.office365.com
- (2603:10b6:303:b8::24) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.31 via Frontend Transport; Tue,
- 11 Feb 2025 06:20:16 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SJ1PEPF000023CE.mail.protection.outlook.com (10.167.244.10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8445.10 via Frontend Transport; Tue, 11 Feb 2025 06:20:16 +0000
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 10 Feb
- 2025 22:20:06 -0800
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail205.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 10 Feb
- 2025 22:20:05 -0800
-Received: from NV-2XGVVG3.nvidia.com (10.127.8.12) by mail.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
- Transport; Mon, 10 Feb 2025 22:20:01 -0800
-From: Kartik Rajput <kkartik@nvidia.com>
-To: <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <thierry.reding@gmail.com>,
-	<jonathanh@nvidia.com>, <hvilleneuve@dimonoff.com>, <arnd@kernel.org>,
-	<geert+renesas@glider.be>, <robert.marko@sartura.hr>,
-	<schnelle@linux.ibm.com>, <andriy.shevchenko@linux.intel.com>,
-	<linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>
-Subject: [PATCH v2 0/2] Add support for Tegra UART Trace Controller (UTC) client
-Date: Tue, 11 Feb 2025 11:49:43 +0530
-Message-ID: <20250211061945.18836-1-kkartik@nvidia.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="eigp1VWp"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AKKnGR017425
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 06:20:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=PmfoLsnHoO6ugPoCT2FbLQfUxlVhokGzSc2
+	sK0KEJls=; b=eigp1VWp5nVTf0KQP6yjFDkyyX5X5U06pT4TJeXqO5lv+B6HlpR
+	uJfHxALBL9C7eR/WArTvQBXcPmQHPMswTtJQrBFJfQ8GXTyl675ZwCzI9fKqHj57
+	wIO28zez1tv8OytZY+vmk0o1do9qARFop098Df2qFHwmmnEFpR+e4wYZV8QBxf3p
+	xbKkxgziB+diQC4h14QZW2/NO/ry+Vy3XTG2p3YTRgeDdVKZR2/nRhebMrAbLMpx
+	ht6PLEclxIPtb+4ZIgxh/V2zFK8IKfgM6wT+ryTFigx2sklbO263uzrflAl9oE+l
+	4Asm2zIbyj+Jx9mZr+VLlf5757Hw4eeLTUw==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0guxpr1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 06:20:28 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-21f40f40788so121186235ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:20:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739254827; x=1739859627;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PmfoLsnHoO6ugPoCT2FbLQfUxlVhokGzSc2sK0KEJls=;
+        b=VSP317l0na79EJeG4LY2J2lq0m3zGa1qoTX2ALkDTEbs21HzG9WWgOw5GPRxkTp6CK
+         h12G9nJ1C9o1NGr7ny6BOKK/pqUT1SVuh1571CeA48SEcyyFddY/nNPbhx/SajzWBsOB
+         gBOCvlG73HcQzxf0rkEea2MajS5Gc2hilqwlSVCfkANDWMHD5hmHnOsSpw7mclYSUztW
+         tyVRuHH1/g5C7LycXXjGSWDk4tHG8ATteLF4hxxcNRTF3FvIcXB6Eik660nib0XyDGhp
+         Ckz5RM3ISuZxGcfVuqZOuECQm5KCbGcv2XcDUPUVmfvyViH1JCSN31OO4XuYXzLhKM1T
+         SnKg==
+X-Forwarded-Encrypted: i=1; AJvYcCX2O8XoZOEOin1RgfQKiKTBgn/xl8qY1+WGILatocWg5RhAwXwrz+icrQk1S/CnbWp3gKZ2mDajzaRyvEA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzv3AKIu+wO10cX8l68BIaztvZaQY9LTtDNPk/EkYyAkm7lJ4Kg
+	eGN6NUnPdhUJGWuTwZsJFv0/pkQMSD2Blq07Arm0Wix4OXLYbkh/CTxq9coQ27nZqifUOk2pOTk
+	OFto7OsJijpEBlqN4QaDBI39QEop6WRjYwWy1xyIWnE2wRjcyunlRkHid3GimdlQ=
+X-Gm-Gg: ASbGnct7I7x3frHj4k2pDoQSNNxwON26vl+4wC/WXKU4QPjwJk4N17aqa75jbOOIM/O
+	7pJ0tcNShJXO7RCFpVLoHNZ0kvnBdKoKCijm5OQpJWGEcIF/ElS5wWA5jyFkuSa5RZnMwy4c6pU
+	nQnHb+6C/duAvEsNThPv37BbJffzsFiAOgu/d+FX6L18UUmfxF4GQG5EL0Ib90QHiwHqkBO40iR
+	Fhcp81zGRyCcz0aX85ufve7xZxQxwHdK4eJ8URY2uDabyZ/kQZ06buhmawxBDFmD01pN+vZwW04
+	4GJn75L+KBcQReHCOzjG3ThtK+mzMHaYkWxu9PUfcLx54F4IDGgk2iSc/ILB
+X-Received: by 2002:a17:902:c94a:b0:21f:8099:72d9 with SMTP id d9443c01a7336-21f8099743emr141631525ad.27.1739254827008;
+        Mon, 10 Feb 2025 22:20:27 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG8R2QdzknMDBUU94uiL8esTvNXjuwN7R3CfQRpNwhxgCNE7bLwMl3dtL8F/4NjvQMUdhd4iw==
+X-Received: by 2002:a17:902:c94a:b0:21f:8099:72d9 with SMTP id d9443c01a7336-21f8099743emr141631165ad.27.1739254826545;
+        Mon, 10 Feb 2025 22:20:26 -0800 (PST)
+Received: from jiegan.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f368cf7fcsm88738405ad.249.2025.02.10.22.20.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 22:20:25 -0800 (PST)
+From: Jie Gan <jie.gan@oss.qualcomm.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        James Clark <james.clark@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Tingwei Zhang <quic_tingweiz@quicinc.com>,
+        Jinlong Mao <quic_jinlmao@quicinc.com>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH] Coresight: Improve the method for passing through perf handle
+Date: Tue, 11 Feb 2025 14:20:21 +0800
+Message-Id: <20250211062021.7013-1-jie.gan@oss.qualcomm.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -81,78 +83,313 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000023CE:EE_|DM4PR12MB5916:EE_
-X-MS-Office365-Filtering-Correlation-Id: d857861d-602b-4450-048a-08dd4a6426c3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|1800799024|36860700013|376014|82310400026|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?7D1NNzadxT2k81jcw6oViB4o8LKjuunrEgTLk085LZCR16xhk5SxTHhqKIEI?=
- =?us-ascii?Q?ZQQysajqzS6Z5gZo66GMhKHBB515u29kfZUhV5K41Aj+OgdBhCTA+F+qV0cn?=
- =?us-ascii?Q?w9HuP6i3ndOakOCjRiOxxMbZp6UwVd4YTrRfl6D99nz4XvKwnnVaf07dnOSS?=
- =?us-ascii?Q?qOSjQTlVcijioJQ+bLFt+U2Zv9Th+pxWfT8Qgwr/mYabOKplLHnWFXGIh9tp?=
- =?us-ascii?Q?MQeCDNGP2J+lOdEqjABeRysAyH0vqa590qUvEmT/lwBwlNifPGG1oajZlrae?=
- =?us-ascii?Q?yRR4CT7aHCur78EJCNP3chDSQPvW+DW++F544VOAxQ412s8re5c8MT1igznC?=
- =?us-ascii?Q?Us64d0sRlbQ2ZyFwJAD7DTn6NQR7jU8fahA9eEqRTZlwaMGE9sqbXrRpthNL?=
- =?us-ascii?Q?3EsjDFiLNG2I7AwLGvoz0+sH+Ro3her+xnPv7QK/BK8nw9/ADWQ7Pu+4bbeD?=
- =?us-ascii?Q?m5BlYP0qc0l5WrTrHAFGv94bvecEMa5fJebFfgYk1V+vErZWCzy3d98R5Cud?=
- =?us-ascii?Q?eB7blIpESldaOKZ0oyK3edrJVM36mNfpOCIeI87uMlZPDEfhk2kj6q0yeF9+?=
- =?us-ascii?Q?Vbhc4iOS/j2iU04qXd+N+PxtJeb1/K7g8Wq7Tdx3wKBTzRLy2OrEKnzba/4W?=
- =?us-ascii?Q?lqcHonjFYit1Nec/sok/f0hYLGv3HwQ70vJVrJPPY0Vdj4TsQAVqWYyTWVdf?=
- =?us-ascii?Q?h2bv2BiVQDjtuODynNyeaKqO3AywDsTYMo1IsySUgIDwEBuQQazECHTcmNFp?=
- =?us-ascii?Q?zmEvS8o3R0N5wT72PCOPkshPLUAptvD3eE1T+mwiX5mnGzlCMXi9uGS9vm3I?=
- =?us-ascii?Q?nqFjFrIN931PGXI7/MJYzXOwFOKWn/H6Y7Zp0+NuOZNyJLVSCtPzbW+y4fMN?=
- =?us-ascii?Q?ifyZvRAnFDEeZBQG/AHhF8V8kpQ9j0VRtanQEMXUsF7Sm7KIuqoFvab00lq2?=
- =?us-ascii?Q?P0sH6O69/0CGut8M2DmJqj5pD1nHkAsozkc/aH0vhKHLNthU1FxIg5yxHtDJ?=
- =?us-ascii?Q?d2ui15j7uoGUXaw4Svy6z+HC4h4wpXP/mJXYwdj+dFlwH9k3bi5wf5gocnTC?=
- =?us-ascii?Q?di+m3JpZse8qDvouWAlcBDYmsSTQLzpQ+bQnrE+GXEiDTyGziP9dbGh3+aO7?=
- =?us-ascii?Q?49oejgWh5O2kMUWCZak2nzUAR4aKgKgHJHt1ZQAWyFSttObV8J07z6bZrHVd?=
- =?us-ascii?Q?NJ0O+VqUHgM+0YKzEAmmiPscY3JAmrXS+s8Hu6VtCr91j17WSdbIk+7JY4ty?=
- =?us-ascii?Q?EeCtOq/eguYHgaDyewTUOkp/hxm2GEuFdVrbHpm+mQnyzYb5pSHIey9Hjo61?=
- =?us-ascii?Q?v1hu0ZgCzEq2SVjWU72EjGq+6QQibwbaMtq80wHD1J1bjjPQA1rQ63JWPkee?=
- =?us-ascii?Q?/fb84IPno+qS2NcO/cDmZ4SZFNG6Llu9b6EjSPw6FZfoh+PZ6BlZTjc5ZZ9k?=
- =?us-ascii?Q?yfHIzUIYZaX4T3DxfnM8TrvNRtpMnFULcn3aqyuar6sT8XBwgABN50ZrNOuh?=
- =?us-ascii?Q?KgG2x/DSxykGSHY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(36860700013)(376014)(82310400026)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 06:20:16.3665
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d857861d-602b-4450-048a-08dd4a6426c3
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000023CE.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5916
+X-Proofpoint-ORIG-GUID: 00x8zWgmMkoc5p6Kb5U9z-2grA4e_gjk
+X-Proofpoint-GUID: 00x8zWgmMkoc5p6Kb5U9z-2grA4e_gjk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_02,2025-02-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 phishscore=0
+ clxscore=1015 adultscore=0 bulkscore=0 mlxscore=0 spamscore=0
+ mlxlogscore=862 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2502110036
 
-The Tegra UTC (UART Trace Controller) is a hardware controller that allows
-multiple systems within the Tegra SoC to share a hardware UART interface.
-It supports up to 16 clients, with each client having its own interrupt and a
-FIFO buffer for both RX (receive) and TX (transmit), each capable of holding
-128 characters.
+From: James Clark <james.clark@linaro.org>
 
-The Tegra UTC uses 8-N-1 configuration and operates on a pre-configured
-baudrate, which is configured by the bootloader.
+Currently, the perf handle is being passed to the sink device as a void
+parameter with additional type conversion. Improve the method for
+passing perf handle parameter to make the code more readable.
 
-Kartik Rajput (2):
-  dt-bindings: serial: Add bindings for nvidia,tegra264-utc
-  serial: tegra-utc: Add driver for Tegra UART Trace Controller (UTC)
+Signed-off-by: James Clark <james.clark@linaro.org>
+Signed-off-by: Jie Gan <jie.gan@oss.qualcomm.com>
+---
+prerequisite-message-id: <20250207064213.2314482-5-quic_jiegan@quicinc.com>
+---
+ drivers/hwtracing/coresight/coresight-core.c    |  8 ++++----
+ drivers/hwtracing/coresight/coresight-dummy.c   |  2 +-
+ drivers/hwtracing/coresight/coresight-etb10.c   |  7 +++----
+ drivers/hwtracing/coresight/coresight-priv.h    |  2 +-
+ drivers/hwtracing/coresight/coresight-tmc-etf.c |  8 ++++----
+ drivers/hwtracing/coresight/coresight-tmc-etr.c | 11 +++++------
+ drivers/hwtracing/coresight/coresight-tmc.h     |  2 +-
+ drivers/hwtracing/coresight/coresight-tpiu.c    |  2 +-
+ drivers/hwtracing/coresight/coresight-trbe.c    |  3 +--
+ drivers/hwtracing/coresight/ultrasoc-smb.c      |  7 +++----
+ include/linux/coresight.h                       |  2 +-
+ 11 files changed, 25 insertions(+), 29 deletions(-)
 
- .../bindings/serial/nvidia,tegra264-utc.yaml  |  73 ++
- drivers/tty/serial/Kconfig                    |  23 +
- drivers/tty/serial/Makefile                   |   1 +
- drivers/tty/serial/tegra-utc.c                | 622 ++++++++++++++++++
- 4 files changed, 719 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/nvidia,tegra264-utc.yaml
- create mode 100644 drivers/tty/serial/tegra-utc.c
-
+diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
+index 3bdd6ebd4b6e..9246b46bdc3b 100644
+--- a/drivers/hwtracing/coresight/coresight-core.c
++++ b/drivers/hwtracing/coresight/coresight-core.c
+@@ -272,9 +272,9 @@ void coresight_add_helper(struct coresight_device *csdev,
+ EXPORT_SYMBOL_GPL(coresight_add_helper);
+ 
+ static int coresight_enable_sink(struct coresight_device *csdev,
+-				 enum cs_mode mode, void *data)
++				 enum cs_mode mode, struct perf_output_handle *handle)
+ {
+-	return sink_ops(csdev)->enable(csdev, mode, data);
++	return sink_ops(csdev)->enable(csdev, mode, handle);
+ }
+ 
+ static void coresight_disable_sink(struct coresight_device *csdev)
+@@ -448,7 +448,7 @@ static int coresight_enable_helpers(struct coresight_device *csdev,
+ }
+ 
+ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
+-			  void *sink_data)
++			  struct perf_output_handle *handle)
+ {
+ 	int ret = 0;
+ 	u32 type;
+@@ -478,7 +478,7 @@ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
+ 
+ 		switch (type) {
+ 		case CORESIGHT_DEV_TYPE_SINK:
+-			ret = coresight_enable_sink(csdev, mode, sink_data);
++			ret = coresight_enable_sink(csdev, mode, handle);
+ 			/*
+ 			 * Sink is the first component turned on. If we
+ 			 * failed to enable the sink, there are no components
+diff --git a/drivers/hwtracing/coresight/coresight-dummy.c b/drivers/hwtracing/coresight/coresight-dummy.c
+index d9a811d44885..42de46949d73 100644
+--- a/drivers/hwtracing/coresight/coresight-dummy.c
++++ b/drivers/hwtracing/coresight/coresight-dummy.c
+@@ -51,7 +51,7 @@ static int dummy_source_trace_id(struct coresight_device *csdev, __maybe_unused
+ }
+ 
+ static int dummy_sink_enable(struct coresight_device *csdev, enum cs_mode mode,
+-				void *data)
++				struct perf_output_handle *handle)
+ {
+ 	dev_dbg(csdev->dev.parent, "Dummy sink enabled\n");
+ 
+diff --git a/drivers/hwtracing/coresight/coresight-etb10.c b/drivers/hwtracing/coresight/coresight-etb10.c
+index aea9ac9c4bd0..e373b0f590bf 100644
+--- a/drivers/hwtracing/coresight/coresight-etb10.c
++++ b/drivers/hwtracing/coresight/coresight-etb10.c
+@@ -167,13 +167,12 @@ static int etb_enable_sysfs(struct coresight_device *csdev)
+ 	return ret;
+ }
+ 
+-static int etb_enable_perf(struct coresight_device *csdev, void *data)
++static int etb_enable_perf(struct coresight_device *csdev, struct perf_output_handle *handle)
+ {
+ 	int ret = 0;
+ 	pid_t pid;
+ 	unsigned long flags;
+ 	struct etb_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+-	struct perf_output_handle *handle = data;
+ 	struct cs_buffers *buf = etm_perf_sink_config(handle);
+ 
+ 	spin_lock_irqsave(&drvdata->spinlock, flags);
+@@ -224,7 +223,7 @@ static int etb_enable_perf(struct coresight_device *csdev, void *data)
+ }
+ 
+ static int etb_enable(struct coresight_device *csdev, enum cs_mode mode,
+-		      void *data)
++		      struct perf_output_handle *handle)
+ {
+ 	int ret;
+ 
+@@ -233,7 +232,7 @@ static int etb_enable(struct coresight_device *csdev, enum cs_mode mode,
+ 		ret = etb_enable_sysfs(csdev);
+ 		break;
+ 	case CS_MODE_PERF:
+-		ret = etb_enable_perf(csdev, data);
++		ret = etb_enable_perf(csdev, handle);
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
+index c10dd3643854..eca06a89843f 100644
+--- a/drivers/hwtracing/coresight/coresight-priv.h
++++ b/drivers/hwtracing/coresight/coresight-priv.h
+@@ -134,7 +134,7 @@ static inline void CS_UNLOCK(void __iomem *addr)
+ 
+ void coresight_disable_path(struct coresight_path *path);
+ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
+-			  void *sink_data);
++			  struct perf_output_handle *handle);
+ struct coresight_device *coresight_get_sink(struct coresight_path *path);
+ struct coresight_device *coresight_get_sink_by_id(u32 id);
+ struct coresight_device *
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+index d4f641cd9de6..fdf1c2511d67 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+@@ -244,13 +244,13 @@ static int tmc_enable_etf_sink_sysfs(struct coresight_device *csdev)
+ 	return ret;
+ }
+ 
+-static int tmc_enable_etf_sink_perf(struct coresight_device *csdev, void *data)
++static int tmc_enable_etf_sink_perf(struct coresight_device *csdev,
++				    struct perf_output_handle *handle)
+ {
+ 	int ret = 0;
+ 	pid_t pid;
+ 	unsigned long flags;
+ 	struct tmc_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+-	struct perf_output_handle *handle = data;
+ 	struct cs_buffers *buf = etm_perf_sink_config(handle);
+ 
+ 	spin_lock_irqsave(&drvdata->spinlock, flags);
+@@ -302,7 +302,7 @@ static int tmc_enable_etf_sink_perf(struct coresight_device *csdev, void *data)
+ }
+ 
+ static int tmc_enable_etf_sink(struct coresight_device *csdev,
+-			       enum cs_mode mode, void *data)
++			       enum cs_mode mode, struct perf_output_handle *handle)
+ {
+ 	int ret;
+ 
+@@ -311,7 +311,7 @@ static int tmc_enable_etf_sink(struct coresight_device *csdev,
+ 		ret = tmc_enable_etf_sink_sysfs(csdev);
+ 		break;
+ 	case CS_MODE_PERF:
+-		ret = tmc_enable_etf_sink_perf(csdev, data);
++		ret = tmc_enable_etf_sink_perf(csdev, handle);
+ 		break;
+ 	/* We shouldn't be here */
+ 	default:
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index a48bb85d0e7f..2d0bd06bab2a 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -1252,9 +1252,8 @@ static int tmc_enable_etr_sink_sysfs(struct coresight_device *csdev)
+ }
+ 
+ struct etr_buf *tmc_etr_get_buffer(struct coresight_device *csdev,
+-				   enum cs_mode mode, void *data)
++				   enum cs_mode mode, struct perf_output_handle *handle)
+ {
+-	struct perf_output_handle *handle = data;
+ 	struct etr_perf_buffer *etr_perf;
+ 
+ 	switch (mode) {
+@@ -1642,13 +1641,13 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+ 	return size;
+ }
+ 
+-static int tmc_enable_etr_sink_perf(struct coresight_device *csdev, void *data)
++static int tmc_enable_etr_sink_perf(struct coresight_device *csdev,
++				    struct perf_output_handle *handle)
+ {
+ 	int rc = 0;
+ 	pid_t pid;
+ 	unsigned long flags;
+ 	struct tmc_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+-	struct perf_output_handle *handle = data;
+ 	struct etr_perf_buffer *etr_perf = etm_perf_sink_config(handle);
+ 
+ 	spin_lock_irqsave(&drvdata->spinlock, flags);
+@@ -1696,13 +1695,13 @@ static int tmc_enable_etr_sink_perf(struct coresight_device *csdev, void *data)
+ }
+ 
+ static int tmc_enable_etr_sink(struct coresight_device *csdev,
+-			       enum cs_mode mode, void *data)
++			       enum cs_mode mode, struct perf_output_handle *handle)
+ {
+ 	switch (mode) {
+ 	case CS_MODE_SYSFS:
+ 		return tmc_enable_etr_sink_sysfs(csdev);
+ 	case CS_MODE_PERF:
+-		return tmc_enable_etr_sink_perf(csdev, data);
++		return tmc_enable_etr_sink_perf(csdev, handle);
+ 	default:
+ 		return -EINVAL;
+ 	}
+diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
+index 2671926be62a..e991afd43742 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc.h
++++ b/drivers/hwtracing/coresight/coresight-tmc.h
+@@ -336,7 +336,7 @@ struct coresight_device *tmc_etr_get_catu_device(struct tmc_drvdata *drvdata);
+ void tmc_etr_set_catu_ops(const struct etr_buf_operations *catu);
+ void tmc_etr_remove_catu_ops(void);
+ struct etr_buf *tmc_etr_get_buffer(struct coresight_device *csdev,
+-				   enum cs_mode mode, void *data);
++				   enum cs_mode mode, struct perf_output_handle *handle);
+ extern const struct attribute_group coresight_etr_group;
+ 
+ #endif
+diff --git a/drivers/hwtracing/coresight/coresight-tpiu.c b/drivers/hwtracing/coresight/coresight-tpiu.c
+index 97ef36f03ec2..ccf463ac7bf5 100644
+--- a/drivers/hwtracing/coresight/coresight-tpiu.c
++++ b/drivers/hwtracing/coresight/coresight-tpiu.c
+@@ -75,7 +75,7 @@ static void tpiu_enable_hw(struct csdev_access *csa)
+ }
+ 
+ static int tpiu_enable(struct coresight_device *csdev, enum cs_mode mode,
+-		       void *__unused)
++		       struct perf_output_handle *__unused)
+ {
+ 	struct tpiu_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+ 
+diff --git a/drivers/hwtracing/coresight/coresight-trbe.c b/drivers/hwtracing/coresight/coresight-trbe.c
+index fff67aac8418..a0914d10ed47 100644
+--- a/drivers/hwtracing/coresight/coresight-trbe.c
++++ b/drivers/hwtracing/coresight/coresight-trbe.c
+@@ -1011,11 +1011,10 @@ static int __arm_trbe_enable(struct trbe_buf *buf,
+ }
+ 
+ static int arm_trbe_enable(struct coresight_device *csdev, enum cs_mode mode,
+-			   void *data)
++			   struct perf_output_handle *handle)
+ {
+ 	struct trbe_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+ 	struct trbe_cpudata *cpudata = dev_get_drvdata(&csdev->dev);
+-	struct perf_output_handle *handle = data;
+ 	struct trbe_buf *buf = etm_perf_sink_config(handle);
+ 
+ 	WARN_ON(cpudata->cpu != smp_processor_id());
+diff --git a/drivers/hwtracing/coresight/ultrasoc-smb.c b/drivers/hwtracing/coresight/ultrasoc-smb.c
+index dc3c9504dd7c..1574b5067206 100644
+--- a/drivers/hwtracing/coresight/ultrasoc-smb.c
++++ b/drivers/hwtracing/coresight/ultrasoc-smb.c
+@@ -213,10 +213,9 @@ static void smb_enable_sysfs(struct coresight_device *csdev)
+ 	coresight_set_mode(csdev, CS_MODE_SYSFS);
+ }
+ 
+-static int smb_enable_perf(struct coresight_device *csdev, void *data)
++static int smb_enable_perf(struct coresight_device *csdev, struct perf_output_handle *handle)
+ {
+ 	struct smb_drv_data *drvdata = dev_get_drvdata(csdev->dev.parent);
+-	struct perf_output_handle *handle = data;
+ 	struct cs_buffers *buf = etm_perf_sink_config(handle);
+ 	pid_t pid;
+ 
+@@ -240,7 +239,7 @@ static int smb_enable_perf(struct coresight_device *csdev, void *data)
+ }
+ 
+ static int smb_enable(struct coresight_device *csdev, enum cs_mode mode,
+-		      void *data)
++		      struct perf_output_handle *handle)
+ {
+ 	struct smb_drv_data *drvdata = dev_get_drvdata(csdev->dev.parent);
+ 	int ret = 0;
+@@ -261,7 +260,7 @@ static int smb_enable(struct coresight_device *csdev, enum cs_mode mode,
+ 		smb_enable_sysfs(csdev);
+ 		break;
+ 	case CS_MODE_PERF:
+-		ret = smb_enable_perf(csdev, data);
++		ret = smb_enable_perf(csdev, handle);
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index 55bb825d509e..937a8d4f815b 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -363,7 +363,7 @@ enum cs_mode {
+  */
+ struct coresight_ops_sink {
+ 	int (*enable)(struct coresight_device *csdev, enum cs_mode mode,
+-		      void *data);
++		      struct perf_output_handle *handle);
+ 	int (*disable)(struct coresight_device *csdev);
+ 	void *(*alloc_buffer)(struct coresight_device *csdev,
+ 			      struct perf_event *event, void **pages,
 -- 
-2.43.0
+2.34.1
 
