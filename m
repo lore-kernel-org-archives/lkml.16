@@ -1,143 +1,277 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7921D230D0E;
-	Tue, 11 Feb 2025 15:57:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5A3230D0E;
+	Tue, 11 Feb 2025 15:57:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739289442; cv=none; b=Q0SZH8sGzc6YpMV+lmr/59J/j1oaRMJ6yfK5IZ4v4u73tReT5peO1eS4z0ZMrpv0Ngyfa+iya4PLgq1C1U4GSp0MbTvyLbW8o5JHRYnzw9KaPQrBh8TwHUShU/OYDh92wp/hPew3AcwyAIqQ/jJRCd/ik+Tn8ERpif+2DINnu40=
+	t=1739289465; cv=none; b=NXL9PpGJ/IvJycfW2Y++CYvsh14N93SdmFVi44+uZm7r3bH+LU5HPLs+gpsCBVdtPa80O339Nxad5CjTS+QFqAh8IGPNcKQQLNEZ/LM4WzNmmW7jVe0iOPoqjh12nZ4HwUNn9xynLNAaSOYKwl8ESn8JmL9Ukx6lyxTicT8HL/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739289442; c=relaxed/simple;
-	bh=WL4yb8TzQokrIcbPfo32apG+WVVXgfXqLitLpkHD+zY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a+3PAjjDYbj1yIRF1QPx0rSaw7ZpYNriWlJnHvx2r6qV4rWL5WNZ1ZUDwRbTKhZfw8KS6UCc4fnLru61VBqIC85fjoCLLWSbywnPOR/WInRd4l/qxm4gUKewwrDvH81WsbUn1jcTeuc0n5OG3DeyJSOjIjb4jAFV75JB5SgBxXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hE6O552n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739289465; c=relaxed/simple;
+	bh=uIApT9eZfOkjxW+tghEwB5jzwb0KkhHL4LwhuptkIlE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ohVSKgHCnXdY/wTzziDC0WgvBRJzxCUfdamVJfGC0qC/fa04C/m7JMG0R1V3dHqJcfimduGK7zpg7opcJkoaIPT5HiuO9r95eoY3OHJdyvAoOhS+2M08z58FP01U0PdLOSMbyu/sNDKeAlkz/ETFSgo22nCDbvR8e19nvmuWnIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t6kUUSbY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hE6O552n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11679C4CEDD;
-	Tue, 11 Feb 2025 15:57:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t6kUUSbY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AA9FC4CEDD;
+	Tue, 11 Feb 2025 15:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739289442;
-	bh=WL4yb8TzQokrIcbPfo32apG+WVVXgfXqLitLpkHD+zY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hE6O552nrqJ+8koCW8qM/uiosx4tFiuFmnwFgiJFKW50fQWrn2OZubJgQO4iFnl/Y
-	 PuvvbHDyF4Z1uuu79KnbsHbdVRxjaPLc4lts930dvS7qW2iPcKrj83j4N8LX8Xco5f
-	 MfsYLBn9QrGwBh90js/Vz3NiDFqpzksUh1ASGlFAve5BQpT3D/BwoY/VPEVgGtd8Mi
-	 be5/GmOdqKd1HSSSxR6FmVY1dOnR9Ol3CCM5T9OWTOchRUQDSFs24XD4wII2vPoZDU
-	 5jaUTc3ZTfqxb9yxPe4vLFlvgY4fxNUXfiAgsr4bz055+SsBYATteA5E7UCRD1TeO3
-	 7+60ILTj1WB3g==
-Message-ID: <57c789ba-1f61-4966-96ea-7a374094173a@kernel.org>
-Date: Tue, 11 Feb 2025 16:57:15 +0100
+	s=k20201202; t=1739289465;
+	bh=uIApT9eZfOkjxW+tghEwB5jzwb0KkhHL4LwhuptkIlE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=t6kUUSbY89Kvrb40wajktPBL05ZzvUvJZLV7qFJ+OtsEteDSCcMgLeDavagEfDQyF
+	 rlwQsbbNWHW2JBmxh1e3L91SiMWTqKKevlyu5izk7cBzutktT4jA1NDS2CK7cqHbCe
+	 nBaYQwQBj18NoG1oOHvvkn/eMzOka4Z1iDyIzjU/n79BWITFki3b9ygIx9johilaL8
+	 lcZKJwM+tcHsjhiLn/NbPWDUCQPR1rYK2AvNyowN0RwR9DkZws/Nykc+TnypdWk366
+	 ic7JQFV6TqKNx9mWOTKcr48uSSFJKKy2r08pWCVTE1/C4x82xHjMYoUFKX1TGYFexu
+	 4cotrWL7YEGKg==
+Date: Tue, 11 Feb 2025 21:27:14 +0530
+From: Naveen N Rao <naveen@kernel.org>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>, 
+	Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH 3/3] KVM: x86: Decouple APICv activation state from
+ apicv_inhibit_reasons
+Message-ID: <yrxhngndj37edud6tj5y3vunaf7nirwor4n63yf4275wdocnd3@c77ujgialc6r>
+References: <cover.1738595289.git.naveen@kernel.org>
+ <405a98c2f21b9fe73eddbc35c80b60d6523db70c.1738595289.git.naveen@kernel.org>
+ <Z6EOxxZA9XLdXvrA@google.com>
+ <60cef3e4-8e94-4cf1-92ae-34089e78a82d@redhat.com>
+ <Z6FVaLOsPqmAPNWu@google.com>
+ <0e4bd3004d97b145037c36c785c19e97b6995d42.camel@redhat.com>
+ <Z6JoInXNntIoHLQ8@google.com>
+ <604c0d57-ed91-44d2-80d7-4d3710b04142@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dt-bindings: memory-controllers: Add mediatek
- common-dramc dt-bindings
-To: =?UTF-8?B?Q3J5c3RhbCBHdW8gKOmDreaZtik=?= <Crystal.Guo@mediatek.com>,
- "robh@kernel.org" <robh@kernel.org>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- Project_Global_Chrome_Upstream_Group
- <Project_Global_Chrome_Upstream_Group@mediatek.com>
-References: <20241212090029.13692-1-crystal.guo@mediatek.com>
- <20241212090029.13692-3-crystal.guo@mediatek.com>
- <c978937a-e589-4e9a-ba37-265dbfc1b252@kernel.org>
- <82cf93733dd14abfbcd17b100d1b3c40c6aed916.camel@mediatek.com>
- <9302b338-9905-4720-ae41-c1e2713528f2@kernel.org>
- <d54b010491c1c77a5be92920f8da4ba98722b180.camel@mediatek.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <d54b010491c1c77a5be92920f8da4ba98722b180.camel@mediatek.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <604c0d57-ed91-44d2-80d7-4d3710b04142@redhat.com>
 
-On 11/02/2025 13:59, Crystal Guo (郭晶) wrote:
-> On Sun, 2025-02-09 at 11:52 +0100, Krzysztof Kozlowski wrote:
->> External email : Please do not click links or open attachments until
->> you have verified the sender or the content.
->>
->>
->> On 08/02/2025 05:40, Crystal Guo (郭晶) wrote:
->>> On Thu, 2024-12-12 at 11:58 +0100, Krzysztof Kozlowski wrote:
->>>> External email : Please do not click links or open attachments
->>>> until
->>>> you have verified the sender or the content.
->>>>
->>>>
->>>> On 12/12/2024 09:59, Crystal Guo wrote:
->>>>> Add devicetree binding for mediatek common-dramc driver.
->>>>>
->>>>> The DRAM controller of MediaTek SoC provides an interface to
->>>>> get the current data rate of DRAM.
->>>>
->>>> Bindings are before users.
->>
->> Do not ignore comments but implement them or keep discussing.
->>
->> Best regards,
->> Krzysztof
+On Wed, Feb 05, 2025 at 12:36:21PM +0100, Paolo Bonzini wrote:
+> On 2/4/25 20:18, Sean Christopherson wrote:
+> > On Mon, Feb 03, 2025, Maxim Levitsky wrote:
+> > > On Mon, 2025-02-03 at 15:46 -0800, Sean Christopherson wrote:
+> > > > On Mon, Feb 03, 2025, Paolo Bonzini wrote:
+> > > > > On 2/3/25 19:45, Sean Christopherson wrote:
+
+<snip>
+
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index b2d9a16fd4d3..7388f4cfe468 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -10604,7 +10604,11 @@ void __kvm_set_or_clear_apicv_inhibit(struct kvm *kvm,
+> >   	old = new = kvm->arch.apicv_inhibit_reasons;
+> > -	set_or_clear_apicv_inhibit(&new, reason, set);
+> > +	if (reason != APICV_INHIBIT_REASON_IRQWIN)
+> > +		set_or_clear_apicv_inhibit(&new, reason, set);
+> > +
+> > +	set_or_clear_apicv_inhibit(&new, APICV_INHIBIT_REASON_IRQWIN,
+> > +				   atomic_read(&kvm->arch.apicv_irq_window));
+> >   	if (!!old != !!new) {
+> >   		/*
+> > @@ -10645,6 +10649,36 @@ void kvm_set_or_clear_apicv_inhibit(struct kvm *kvm,
+> >   }
+> >   EXPORT_SYMBOL_GPL(kvm_set_or_clear_apicv_inhibit);
+> > +void kvm_inc_or_dec_irq_window_inhibit(struct kvm *kvm, bool inc)
+> > +{
+> > +	bool toggle;
+> > +
+> > +	/*
+> > +	 * The IRQ window inhibit has a cyclical dependency of sorts, as KVM
+> > +	 * needs to manually inject IRQs and thus detect interrupt windows if
+> > +	 * APICv is disabled/inhibitied.  To avoid thrashing if the IRQ window
+> > +	 * is being requested because APICv is already inhibited, toggle the
+> > +	 * actual inhibit (and take the lock for write) if and only if there's
+> > +	 * no other inhibit.  KVM evaluates the IRQ window count when _any_
+> > +	 * inhibit changes, i.e. the IRQ window inhibit can be lazily updated
+> > +	 * on the next inhibit change (if one ever occurs).
+> > +	 */
+> > +	down_read(&kvm->arch.apicv_update_lock);
+> > +
+> > +	if (inc)
+> > +		toggle = atomic_inc_return(&kvm->arch.apicv_irq_window) == 1;
+> > +	else
+> > +		toggle = atomic_dec_return(&kvm->arch.apicv_irq_window) == 0;
+> > +
+> > +	toggle = toggle && !(kvm->arch.apicv_inhibit_reasons & ~BIT(APICV_INHIBIT_REASON_IRQWIN));
+> > +
+> > +	up_read(&kvm->arch.apicv_update_lock);
+> > +
+> > +	if (toggle)
+> > +		kvm_set_or_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_IRQWIN, inc);
 > 
-> Got it, I have replied to the previous comments. Thanks for the
-> reminder.
+> I'm not super confident in breaking the critical section...  Another possibility:
+> 
+> void kvm_inc_or_dec_irq_window_inhibit(struct kvm *kvm, bool inc)
+> {
+>         int add = inc ? 1 : -1;
+> 
+> 	if (!enable_apicv)
+> 		return;
+> 
+>         /*
+>         * IRQ windows happen either because of ExtINT injections, or because
+> 	* APICv is already disabled/inhibited for another reason.  While ExtINT
+> 	* injections are rare and should not happen while the vCPU is running
+> 	* its actual workload, it's worth avoiding thrashing if the IRQ window
+>         * is being requested because APICv is already inhibited.  So, toggle the
+>         * the actual inhibit (which requires taking the lock forwrite) if and
+> 	* only if there's no other inhibit.  kvm_set_or_clear_apicv_inhibit()
+>         * always evaluates the IRQ window count; thus the IRQ window inhibit
+>         * call _will_ be lazily updated on the next call, if it ever happens.
+>         */
+>         if (READ_ONCE(kvm->arch.apicv_inhibit_reasons) & ~BIT(APICV_INHIBIT_REASON_IRQWIN)) {
+>                 guard(rwsem_read)(&kvm->arch.apicv_update_lock);
+>                 if (READ_ONCE(kvm->arch.apicv_inhibit_reasons) & ~BIT(APICV_INHIBIT_REASON_IRQWIN)) {
+>                         atomic_add(add, &kvm->arch.apicv_irq_window);
+>                         return;
+>                 }
+>         }
+> 
+> 	/*
+> 	 * Strictly speaking the lock is only needed if going 0->1 or 1->0,
+> 	 * a la atomic_dec_and_mutex_lock.  However, ExtINTs are rare and
+> 	 * only target a single CPU, so that is the common case; do not
+> 	 * bother eliding the down_write()/up_write() pair.
+> 	 */
+>         guard(rwsem_write)(&kvm->arch.apicv_update_lock);
+>         if (atomic_add_return(add, &kvm->arch.apicv_irq_window) == inc)
+>                 __kvm_set_or_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_IRQWIN, inc);
+> }
+> EXPORT_SYMBOL_GPL(kvm_inc_or_dec_irq_window_inhibit);
+
+I haven't analyzed this yet, but moving apicv_irq_window into a separate 
+cacheline is improving the performance in my tests by ~7 to 8%:
+
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 9e3465e70a0a..d8a40ac49226 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1355,6 +1355,9 @@ struct kvm_arch {
+        struct kvm_ioapic *vioapic;
+        struct kvm_pit *vpit;
+        atomic_t vapics_in_nmi_mode;
++
++       atomic_t apicv_irq_window;
++
+        struct mutex apic_map_lock;
+        struct kvm_apic_map __rcu *apic_map;
+        atomic_t apic_map_dirty;
+@@ -1365,7 +1368,6 @@ struct kvm_arch {
+        /* Protects apicv_inhibit_reasons */
+        struct rw_semaphore apicv_update_lock;
+        unsigned long apicv_inhibit_reasons;
+-       atomic_t apicv_irq_window;
+
+        gpa_t wall_clock;
 
 
-Ah, so these replies were because of this. Thanks, that makes sense,
-although still two months after initial review, so I am out of the context.
+I chose that spot before apic_map_lock simply because there was a 4 byte 
+hole there. This happens to also help performance in the AVIC disabled 
+case by a few percentage points (rather, restores the performance in the 
+AVIC disabled case).
 
-I assume above also means you implement the feedback :)
+Before this change, I was trying to see if we could entirely elide the 
+rwsem read lock in the specific scenario we are seeing the bottleneck.  
+That is, instead of checking for any other inhibit being set, can we 
+specifically test for PIT_REINJ while setting the IRQWIN inhibit? Then, 
+update the inhibit change logic if PIT_REINJ is cleared to re-check the 
+irq window count.
 
-Best regards,
-Krzysztof
+There's probably a race here somewhere, but FWIW, along with the above 
+change to 'struct kvm_arch', this helps improve performance by a few 
+more percentage points helping close the gap to within 2% of the AVIC 
+disabled case.
+
+
+- Naveen
+
+
+
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 274eb99aa97b..bd861342b949 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -10596,6 +10596,7 @@ void __kvm_set_or_clear_apicv_inhibit(struct kvm *kvm,
+                                      enum kvm_apicv_inhibit reason, bool set)
+ {
+        unsigned long old, new;
++       bool retried = false;
+ 
+        lockdep_assert_held_write(&kvm->arch.apicv_update_lock);
+ 
+@@ -10607,6 +10608,7 @@ void __kvm_set_or_clear_apicv_inhibit(struct kvm *kvm,
+        if (reason != APICV_INHIBIT_REASON_IRQWIN)
+                set_or_clear_apicv_inhibit(&new, reason, set);
+ 
++again:
+        set_or_clear_apicv_inhibit(&new, APICV_INHIBIT_REASON_IRQWIN,
+                                   atomic_read(&kvm->arch.apicv_irq_window));
+ 
+@@ -10635,6 +10637,14 @@ void __kvm_set_or_clear_apicv_inhibit(struct kvm *kvm,
+        } else {
+                kvm->arch.apicv_inhibit_reasons = new;
+        }
++
++       /* If PIT_REINJ inhibit is being cleared, ensure we have updated copy of apicv_irq_window */
++       if (reason == APICV_INHIBIT_REASON_PIT_REINJ && !set && !retried) {
++               smp_mb();
++               retried = true;
++               old = new = kvm->arch.apicv_inhibit_reasons;
++               goto again;
++       }
+ }
+ 
+ void kvm_set_or_clear_apicv_inhibit(struct kvm *kvm,
+@@ -10656,34 +10666,10 @@ void kvm_inc_or_dec_irq_window_inhibit(struct kvm *kvm, bool inc)
+        if (!enable_apicv)
+                return;
+ 
+-       /*
+-        * IRQ windows happen either because of ExtINT injections, or because
+-        * APICv is already disabled/inhibited for another reason.  While ExtINT
+-        * injections are rare and should not happen while the vCPU is running
+-        * its actual workload, it's worth avoiding thrashing if the IRQ window
+-        * is being requested because APICv is already inhibited.  So, toggle the
+-        * the actual inhibit (which requires taking the lock forwrite) if and
+-        * only if there's no other inhibit.  kvm_set_or_clear_apicv_inhibit()
+-        * always evaluates the IRQ window count; thus the IRQ window inhibit
+-        * call _will_ be lazily updated on the next call, if it ever happens.
+-        */
+-       if (READ_ONCE(kvm->arch.apicv_inhibit_reasons) & ~BIT(APICV_INHIBIT_REASON_IRQWIN)) {
+-               guard(rwsem_read)(&kvm->arch.apicv_update_lock);
+-               if (READ_ONCE(kvm->arch.apicv_inhibit_reasons) & ~BIT(APICV_INHIBIT_REASON_IRQWIN)) {
+-                       atomic_add(add, &kvm->arch.apicv_irq_window);
+-                       return;
+-               }
+-       }
+-
+-       /*
+-        * Strictly speaking the lock is only needed if going 0->1 or 1->0,
+-        * a la atomic_dec_and_mutex_lock.  However, ExtINTs are rare and
+-        * only target a single CPU, so that is the common case; do not
+-        * bother eliding the down_write()/up_write() pair.
+-        */
+-       guard(rwsem_write)(&kvm->arch.apicv_update_lock);
+-       if (atomic_add_return(add, &kvm->arch.apicv_irq_window) == inc)
+-               __kvm_set_or_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_IRQWIN, inc);
++       atomic_add(add, &kvm->arch.apicv_irq_window);
++       smp_mb();
++       if (!(READ_ONCE(kvm->arch.apicv_inhibit_reasons) & BIT(APICV_INHIBIT_REASON_PIT_REINJ)))
++               kvm_set_or_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_IRQWIN, inc);
+ }
+ EXPORT_SYMBOL_GPL(kvm_inc_or_dec_irq_window_inhibit);
+
+
+
+
+
