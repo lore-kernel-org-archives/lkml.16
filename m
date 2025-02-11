@@ -1,83 +1,166 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668ED24CEF8
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B43214811
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739280748; cv=none; b=WKOopNthy/omZNb+Y6SV9T/mssURK0uGyJM4/df2E1Sew6YZV/sEdRzXrRq6DGBMxFDOrtFY4mpYL+snOOur1GvuHKexKgJ/Prfu6nNtaGfpK2nnXAu1Y+6MMSUoVEn0AyIA8QNgmgff1NPwFrriozBmzlKZGAJOZzdL0Q9DKrI=
+	t=1739280788; cv=none; b=sIlFYusiImnf+k8YCOt128obnmOcJDI1JV6yKdxeye2TCIYzUaCWW2wvuYZL87U3yzXdo2m0A9PB3yUHW1tHfrBr50G32lWqXQ5DDJ225UMZ7aY85MHlh6VpafVCUFxtDlXaxHQnOgL3kVfXx4gx7hVJrGrG5Ez05k9c5HKYD7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739280748; c=relaxed/simple;
-	bh=9p2nBK45yC0kBtiR9JflsXngBVCnbuGhsfR3KrP4+Rw=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=duvQlF8aSZAeaodF97l+PawNM3yVHJZpASREIOeHuoWZ6nEevuC5eVGOEmE6q1j8aum2Cgm1FcLnVnq3THBpMrFiRoyxAf8J0g7jfgn9QpiR6So4gYfaMDMVS5A5XQNyCHIlCVXu//aZMXw4yE/mSaSVZHXei+82ReSPoBmISho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d058142573so41092445ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 05:32:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739280746; x=1739885546;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+	s=arc-20240116; t=1739280788; c=relaxed/simple;
+	bh=F/uVM4urhQmPU67aNljV30BzNnXlmck7yA4IpjXNK8Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BJpRvgmpEbG491R6aS9N+OQZd8PGkR+L96H4cmYq+PAb1sBVLRLNANlf8HYNHWuAtC9ZL71/pjd3fZj3fuFGvyAhhzGef/mxZEB3CVCw74nozIq9iKoC3X3HVl8s9GSBpmrivDg8h7XhJXsLAGC74ipggrNVTrqEFxp6DC+ET5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=iTeYHwbr; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="iTeYHwbr"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-439350f1a0bso18254935e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 05:33:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739280784; x=1739885584; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=evizQsq3nnwBs0+D8L3GWY6Q7PjanGj/b/RM8+YJTyE=;
-        b=X0z2bN5Yi16eYNiucdGen4crF3ffVwqMwo5Tywk+lkSuAB1M5OgRdApcv8S5o9zfRJ
-         1JJwosrOncQU1gmeitjlh6MGZNulV+94910wcAOkkg3881WyJYIH/ssatU+FPOe792lL
-         6z4lhfwMoWtT9tahoVPEtOqaP2a3x1VUwcVzowDGGv0c3qTfZM8BGTdGFMS33oiL9eHy
-         2s/hRmGFakKq3ksZBgqY5Q9rEQwJEb0VmJ32J4tdHnFHyExcb9W5tXhzYAGaNuu6V0fj
-         n0URmMDx9dkCHrh807BfsPZPwfeKcIicR7eF9qNRgQUbE/efikpzFNVurJKv2KOrvazl
-         2spw==
-X-Forwarded-Encrypted: i=1; AJvYcCVTtmYtH3lfXUBKegbqwv5bqgX+h2MkksC+WYtyYUopPMdqfE5hJUfVFA5ZFaBw1Ev9Ph4WVB/zBMIkis0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5+qRYiR1Hem1jXBIjYDc7eZk2fSO5huZiH198HR2MWoya3QQ3
-	vcn1V/S3aWdHsDK2sxnJJkKxrY7PnWTrji94sLvntHzb+zX5AKIqnskVI6olDJ2metBZxFgooUg
-	6Zlpgy5pk+mjg1/0eoebmrOashlZBzTiEMKwsSzwpDPemT+PDnAnn21o=
-X-Google-Smtp-Source: AGHT+IG0OkctezPm/Jtvc4JlTMMPiWAtA7MsSbaWgMj7NY/n/1W9N3UtCWGff+aXyjQDHZJo6bCWvY+9G2T11b7T+EKdyzu5QjUW
+        bh=0wrmDUq/HHsKw+sefoEbxInuEgbCMl1q15xZjalPz7Q=;
+        b=iTeYHwbrE3I/skGQErBc6mKDGWpUjWEGaITlke9puMzAKpoABdBckyxkW9yav3Em6n
+         k6Vh2tWMU0veNz03SKWBQWUCjSN5nJzGgzx+yjk0LwEDN5ndW3kdv46mQoaGMkkiGZ1k
+         EUls8eBiUBfadhnSbrr6mLkmGuiAozBtJKVoEly+pUSEA81i4tZVJhFfxov/cF78dc/c
+         X87eqQeQdL7kRIA0dbl3gXEGbgDI2gx757INHJAJwN+cSX/rp2ywP4CVf7e8ZMvKITDw
+         Z+j9RUmgLhV9LqVLKiTf/UA4DtmnpFqhQo0F9VUcyLxNqlyDJ0f/NxMJR74fgoFKuQJ5
+         x+0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739280784; x=1739885584;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0wrmDUq/HHsKw+sefoEbxInuEgbCMl1q15xZjalPz7Q=;
+        b=Yxu6uLKJcvVAYXkXymMvAARgvqlfdUdjZQqSFiFYkXlb8SQK93p0LrXEM/Kqk/RW6+
+         cXgX69RkICL3QkhtISYFkjSVtxglTMgvPqBsGX26l9uFuFDQsS3sTPb4RHLdTcTTVlhs
+         4bVqzrk/o9XOLoGGTTwlx7fBDQsCD72vB4bfoYp+zjfBtnQrLXj1scLa7xvVCOEwXeoL
+         TxY9hzTMfqxYggmk9EKy4Wu85776b6Y/OZ7RMmAXfSUbDe7oLCBXkA+/AhAUqUKxU+hZ
+         ts4JKCuZ4fKzXR7YlZnugDVBCgh9a/5g4cjPi02JA9NqZfGY/G/BBq6wcEQ0CYd6W+2b
+         cRpA==
+X-Forwarded-Encrypted: i=1; AJvYcCVi5HnnpR294u+2J0Nfz5dVO5dkibsd787sYQnbpczGTYjkezrXwjv6PGQaDWDANTV/lIPU+8HzusyAQm0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8HuiHqjizaA0GfC/q5Eh5iwMyBmNRpOqgkVHiBon4zFnm0g2G
+	WvCSRyNPZ9pbX6oSkIkZyfHEUUIOrSWDdHXA71C57Wx//AWlHBnwDXnOL+NRTno=
+X-Gm-Gg: ASbGncsSwIcd0WLme+eheyoMnWgxPHmhEwbkZHSoT5Xjy/QBXe1JzC89IM2jR/PLXbH
+	Y94p8khITzNJ2/IgsQ/0yin1O8Ui1Q9QafPH5GCt8BwDEuH24uCoJs5lVt60QicJPsxLq/clGjL
+	yKwZkk++BxwiRUP6+FlDXwDXgJ1xZRyfWtyovU7uAgwMm7anMAYPO2+b7cEw39kgLh3N0ed0GFo
+	/56PByvYJ93ybPlqkyI8NJE/HlN2H4RSkqGvA5fKbjNiFsnriePgORo8v07NNntdLcYSfNDTwVC
+	stUbQLvk9SSL4+WptSuzUK04UeDFepvp3iFvTW7SZqEbD/90nqDtyuNuG1F+
+X-Google-Smtp-Source: AGHT+IEqlc/lpTpwK9yYW79C3YmHjyqoHdYU9IFEmIVHONYafZyXfrM25WF2Citl+iuABPW8/Dn2HA==
+X-Received: by 2002:a05:600c:1987:b0:434:fe3c:c662 with SMTP id 5b1f17b1804b1-4394ced8c52mr27059525e9.12.1739280784044;
+        Tue, 11 Feb 2025 05:33:04 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43935d4bd5csm104208905e9.6.2025.02.11.05.33.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 05:33:03 -0800 (PST)
+Message-ID: <e0225e44-b86f-4935-b524-86a28131fe7d@rivosinc.com>
+Date: Tue, 11 Feb 2025 14:33:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a24:b0:3cf:b2ca:39b7 with SMTP id
- e9e14a558f8ab-3d16f40ac30mr27560865ab.3.1739280746542; Tue, 11 Feb 2025
- 05:32:26 -0800 (PST)
-Date: Tue, 11 Feb 2025 05:32:26 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67ab516a.050a0220.110943.003f.GAE@google.com>
-Subject: [syzbot] Monthly kvm report (Feb 2025)
-From: syzbot <syzbot+list2039ca2416c8ea9fe8ef@syzkaller.appspotmail.com>
-To: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/6] RISC-V: add vector crypto extension validation
+ checks
+To: Conor Dooley <conor@kernel.org>
+Cc: linux-riscv@lists.infradead.org, Conor Dooley
+ <conor.dooley@microchip.com>, Eric Biggers <ebiggers@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Andy Chiu <andybnac@gmail.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250205-cobbler-unpadded-5580c1f5d946@spud>
+ <20250205-quench-entrench-09bed8c8c823@spud>
+ <f1ce7aa9-63e3-41bd-9bb0-a54ebc714dff@rivosinc.com>
+ <20250211-implode-mute-8ff31f44bdf9@spud>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <20250211-implode-mute-8ff31f44bdf9@spud>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello kvm maintainers/developers,
 
-This is a 31-day syzbot report for the kvm subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/kvm
 
-During the period, 1 new issues were detected and 0 were fixed.
-In total, 7 issues are still open and 125 have already been fixed.
+On 11/02/2025 13:34, Conor Dooley wrote:
+> On Tue, Feb 11, 2025 at 09:45:44AM +0100, Clément Léger wrote:
+>>
+>>
+>> On 05/02/2025 17:05, Conor Dooley wrote:
+>>> From: Conor Dooley <conor.dooley@microchip.com>
+>>>
+>>> Using Clement's new validation callbacks, support checking that
+>>> dependencies have been satisfied for the vector crpyto extensions.
+>>> Currently riscv_isa_extension_available(<vector crypto>) will return
+>>> true on systems that support the extensions but vector itself has been
+>>> disabled by the kernel, adding validation callbacks will prevent such a
+>>> scenario from occuring and make the behaviour of the extension detection
+>>> functions more consistent with user expectations - it's not expected to
+>>> have to check for vector AND the specific crypto extension.
+>>>
+>>> The 1.0.0 Vector crypto spec states:
+>>> 	The Zvknhb and Zvbc Vector Crypto Extensions --and accordingly
+>>> 	the composite extensions Zvkn and Zvks-- require a Zve64x base,
+>>> 	or application ("V") base Vector Extension. All of the other
+>>> 	Vector Crypto Extensions can be built on any embedded (Zve*) or
+>>> 	application ("V") base Vector Extension.
+>>> and this could be used as the basis for checking that the correct base
+>>> for individual crypto extensions, but that's not really the kernel's job
+>>> in my opinion and it is sufficient to leave that sort of precision to
+>>> the dt-bindings. The kernel only needs to make sure that vector, in some
+>>> form, is available.
+>>>
+>>> Since vector will now be disabled proactively, there's no need to clear
+>>> the bit in elf_hwcap in riscv_fill_hwcap() any longer.
+>>>
+>>> Link: https://github.com/riscv/riscv-crypto/releases/tag/v1.0.0
+>>> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+>>> ---
+>>>  arch/riscv/kernel/cpufeature.c | 49 +++++++++++++++++++++++-----------
+>>>  1 file changed, 33 insertions(+), 16 deletions(-)
+>>>
+>>> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+>>> index 40a24b08d905..1c148ecea612 100644
+>>> --- a/arch/riscv/kernel/cpufeature.c
+>>> +++ b/arch/riscv/kernel/cpufeature.c
+>>> @@ -138,6 +138,23 @@ static int riscv_ext_vector_float_validate(const struct riscv_isa_ext_data *data
+>>>  	return 0;
+>>>  }
+>>>  
+>>> +static int riscv_ext_vector_crypto_validate(const struct riscv_isa_ext_data *data,
+>>> +					    const unsigned long *isa_bitmap)
+>>> +{
+>>> +	if (!IS_ENABLED(CONFIG_RISCV_ISA_V))
+>>> +		return -EINVAL;
+>>> +
+>>> +	/*
+>>> +	 * It isn't the kernel's job to check that the binding is correct, so
+>>> +	 * it should be enough to check that any of the vector extensions are
+>>> +	 * enabled, which in-turn means that vector is usable in this kernel
+>>> +	 */
+>>> +	if (!__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZVE32X))
+>>> +		return -EINVAL;
+>>
+>> After a second thought, I think it should be this:
+>>
+>> if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZVE32X))
+>> 	return 0;
+>>
+>> return -EPROBEDEFER;
+>>
+>> Extensions can be enabled later (but can not be "reverted") so check for
+>> the extension to be present (in which case it's ok), or wait for it to
+>> be (potentially) enabled.
+> 
+> Ah, of course it is operating on the /resolved/ isa, not the source one.
+> Makes me thing the parameter of all the validate callbacks should be
+> "resolved_isa_bitmap" instead of "isa_bitmap" to make things clearer?
 
-Some of the still happening issues:
+Yeah that would be helpful I guess.
 
-Ref Crashes Repro Title
-<1> 274     Yes   WARNING: locking bug in kvm_xen_set_evtchn_fast
-                  https://syzkaller.appspot.com/bug?extid=919877893c9d28162dc2
-<2> 147     Yes   WARNING in handle_exception_nmi (2)
-                  https://syzkaller.appspot.com/bug?extid=4688c50a9c8e68e7aaa1
-<3> 6       Yes   WARNING in vcpu_run
-                  https://syzkaller.appspot.com/bug?extid=1522459a74d26b0ac33a
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
+Clément
