@@ -1,209 +1,297 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687041F4281
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:45:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827F526BD9A;
+	Tue, 11 Feb 2025 13:46:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739281560; cv=none; b=GCsePltN6LI9hjEcoJWH//ZHZWJl0Y7NiDvEEH9BN/ar26DL35Bq41x0qj2F9vIBODxVuvxImtfzJgNE2lBHHruhaS8xb20B7rBQLfItwkdVIlaABLrLpNR2c3C11Z90XbEg5VBcH1/5GSAqX/SeSlOliH4fOaSjmPq5P+7b2L0=
+	t=1739281619; cv=none; b=TBYLlj1h/FZ0gP/3oWAEQhM8APkOlRU4F90NxqHZLs4EYE86GaTtyBhkeZjIWvJWm9inCjw9JzMBzlOOIk4zQZmRzrMq1fbxOPlaYhAE3umYEd2/BfkxdPPHBnIvuSRZNe+RWSierSo4ysQaInU7xB5OfTE9binshov+oW+seek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739281560; c=relaxed/simple;
-	bh=5Ls6ehrFuNfDtokxDzaR2J5p2+P5rZ6x9GJCMdIdOXU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WwV0ZydM7vLchuaYJMxgtixVKNxcqS8zmt4C/kf2tF/huGydiHpD1KmyCHW5IeNKhTt7FuT07MJIhTjAeQrSg1tW+u2GsmmFV80OJQesrvi+WtIpwLJCTX7X9V6Hghjv2TJCIyiZoxT5kw7A66ITy8Wb4pDfdyUsEG/87Wv92ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=A2DLbn6D; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1739281619; c=relaxed/simple;
+	bh=r0ToB49ByRRzoTR0oX73//wrpRH+Zm+uP9UF3X+7p9g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XQQZxiL3CSuiMi/Vd9nrCadEGj5hsts8rTyyKOQa/AIJwG7Pfn8HQdAReF72S2IWwDQbKSTaJMRi3AuuyclbVnESZvMbgfi/iyo/55LgJtVQBnaCTONNUwAw2oJo6/Qh7sbqer4F1pDcKhndlOFrtOwqCyHXH00YFiEZEQxhbJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sBPzhl2N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="A2DLbn6D"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ab771575040so1074272766b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 05:45:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1739281555; x=1739886355; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RkP+VyXyd2LDTq1dE/e/+i0gFwY3obdySQr3wdtK8hs=;
-        b=A2DLbn6D3yiNZvfFC/1uJgUHenzjcoi+hkZfcq814JXPSlSOlPs/Qet+GZmi+76MTV
-         Lu5xGnRkPKsiG0VsG7jiM6C/1ChBjq3mvshyHDa83MCd4FQ+B05gIaSQ1p7K0uM+ltxN
-         NNuARlr/LY7RPhAcItmlQxmAp8qXpsVH5kEHTrBzBXGqMxkL/NwWNBz7p2bWAuC9iciq
-         fK8W/yz6buao4PKvhXcSHihHdoLjidcAndLA7Xxw0tTAt2hFq6Oyl+UPDmJwF9FrLw2c
-         ueckiz/HoRw6zAoLvKxraQp4js/qXehAsdcQyn1D4JMR8LshNiT0VzQsUKV0Lr2ONejI
-         vY/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739281555; x=1739886355;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RkP+VyXyd2LDTq1dE/e/+i0gFwY3obdySQr3wdtK8hs=;
-        b=cMRqRvKbCwOUUok4+/7ncRSOrbTpp5m/yWbSO6O1Y9ixIhbN6oCz3Z8urW/S/Uj6mG
-         CkjpPV/6d156qI/q4sXyyXORXJsjzwVOrWZA/+UKj4B5qJxMUl28jkvsLUcMY4xpBNPQ
-         +0b/4Eqz+DF8CB2uMOofHTn3S5PItYi3v2cbgoajldt3IDEhweHq/B3pRw3Ta7/RfFKO
-         hLYcs9ocShNqQBZUkB95XYg0RVpYQHsKRc2cXutQAsd7KJ8MYZaZGievQGSkCFv+Oxl6
-         xJsAgfz6Qzel9ZEBoxRI67bF6odXbN3dAZ/UkUXireUt8xTeZ+NgLRjefsRtniXoFSzh
-         VWSg==
-X-Forwarded-Encrypted: i=1; AJvYcCUxK2g60jubiG0wubiLbNmAlPPcuVPKcAxbwaJB1uy9C+mgmCsemJCnLgvdxVQ4W/0jQiEWoRij8nk+fcE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyfyk7mmlwXZpmyMo2Q8uBuFoq0W3hZl+GYqDpdXul5iXCCeaYs
-	R8rbztHZAiJB3s4b8vrFbhN4fVi0YqUshHM9TSMqp4HrFdl4aidGIU9UDnOS//Q=
-X-Gm-Gg: ASbGncvmj/NugNa8yHjyOcqjZ9pFJ+l3L0WEnKij4/CcC5dY9wnti6uiqujJkdkNYUb
-	JPIXTZ9+NPu+blVxU1wnFYngp2grwIFVHqjjsQzHRziF1s3odL5AaVTHurp8Zs9Ob9xoTuF7x59
-	YdqqToTyK/9g6gXTqhiR0ibqQQ8uo6CgsShNl3bWOlfkJwuEKX+x1n6bPj9RitQXcE/OsWUBZIW
-	DLbZRfElWj/fAfMIap1Sc8yru7NSexSP2jd4BP34ylIcyqBfnblwPWZjotxTo/LchZJQiOng3l6
-	j3TcTiK6315SF88ZcnV2O0TRjFwdYwdutP9x4HCACR58KidIm/q70ec44ao=
-X-Google-Smtp-Source: AGHT+IG51KR7uQClui5T80GFu03wGjZtCbiNcOn2c2quAcoJxfpyu2MvcnnQYDV8Nd/6UX7Ol8OjhA==
-X-Received: by 2002:a17:907:6ea0:b0:ab7:c11:a980 with SMTP id a640c23a62f3a-ab7db544773mr282512766b.17.1739281554584;
-        Tue, 11 Feb 2025 05:45:54 -0800 (PST)
-Received: from localhost (host-79-41-239-37.retail.telecomitalia.it. [79.41.239.37])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7b43ee08asm522714066b.88.2025.02.11.05.45.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 05:45:54 -0800 (PST)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Tue, 11 Feb 2025 14:46:53 +0100
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v7 06/11] pinctrl: rp1: Implement RaspberryPi RP1 gpio
- support
-Message-ID: <Z6tUzcCqI2xdKSQ5@apocalypse>
-References: <cover.1738963156.git.andrea.porta@suse.com>
- <c4b60fda4b9c87a5efaf5103507fb568413c841a.1738963156.git.andrea.porta@suse.com>
- <8e2b0e05-cd60-4b79-8763-005c3f72a64d@gmx.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sBPzhl2N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE831C4CEDD;
+	Tue, 11 Feb 2025 13:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739281619;
+	bh=r0ToB49ByRRzoTR0oX73//wrpRH+Zm+uP9UF3X+7p9g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sBPzhl2NVuEMaafcbYRqdMQbyiA1V2OZVr1xOgSfAQtvZm8x3mBLBwzbWBZSAiDp4
+	 4ykKhDfiwsyS+z+iwnEaxVvVlgn+PZPJvF9wDFNlKuY/Fk703/6puft0Etaj7ypLT1
+	 UzeGGg2ennTLcuirZqEl1GClmJiqL+uY8bWL3Yzzhee9NvAza24wMn5OIt/fEbRuz0
+	 MyDBsDZgLDr9CYHOC1Za+6+Z3Or/Mr6WY7TEqyEdIV8WVKLpA8Cl58EIbR/9nCURKI
+	 UssICMNVI1nU1TqMcHm1p4m+ylj10qyYAD2eJS2dN8FV/mBWIAGagj3kQNS9Xg8KyG
+	 1jTCIRwEzIufQ==
+Date: Tue, 11 Feb 2025 14:46:56 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: Nicolas Dufresne <nicolas@ndufresne.ca>, 
+	Florent Tomasin <florent.tomasin@arm.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
+	"T . J . Mercier" <tjmercier@google.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Yong Wu <yong.wu@mediatek.com>, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, nd@arm.com, 
+	Akash Goel <akash.goel@arm.com>
+Subject: Re: [RFC PATCH 0/5] drm/panthor: Protected mode support for Mali CSF
+ GPUs
+Message-ID: <20250211-robust-lush-skink-0dcc5b@houat>
+References: <cover.1738228114.git.florent.tomasin@arm.com>
+ <3ykaewmjjwkp3y2f3gf5jvqketicd4p2xqyajqtfnsxci36qlm@twidtyj2kgbw>
+ <1a73c3acee34a86010ecd25d76958bca4f16d164.camel@ndufresne.ca>
+ <ppznh3xnfuqrozhrc7juyi3enxc4v3meu4wadkwwzecj7oxex7@moln2fiibbxo>
+ <9d0e381758c0e83882b57102fb09c5d3a36fbf57.camel@ndufresne.ca>
+ <1f436caa-1c27-4bbd-9b43-a94dad0d89d0@arm.com>
+ <20250205-amorphous-nano-agouti-b5baba@houat>
+ <2085fb785095dc5abdac2352adfb3e1e1c8ae549.camel@ndufresne.ca>
+ <20250207160253.42551fb1@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="htbc2pgomj3vttd2"
 Content-Disposition: inline
-In-Reply-To: <8e2b0e05-cd60-4b79-8763-005c3f72a64d@gmx.net>
+In-Reply-To: <20250207160253.42551fb1@collabora.com>
 
-Hi Stefan,
 
-On 15:36 Sat 08 Feb     , Stefan Wahren wrote:
-> Hi Andrea,
-> 
-> Am 07.02.25 um 22:31 schrieb Andrea della Porta:
-> > The RP1 is an MFD supporting a gpio controller and /pinmux/pinctrl.
-> > Add minimum support for the gpio only portion. The driver is in
-> > pinctrl folder since upcoming patches will add the pinmux/pinctrl
-> > support where the gpio part can be seen as an addition.
-> > 
-> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
-> > ---
-> >   MAINTAINERS                   |   1 +
-> >   drivers/pinctrl/Kconfig       |  11 +
-> >   drivers/pinctrl/Makefile      |   1 +
-> >   drivers/pinctrl/pinctrl-rp1.c | 789 ++++++++++++++++++++++++++++++++++
-> >   4 files changed, 802 insertions(+)
-> >   create mode 100644 drivers/pinctrl/pinctrl-rp1.c
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index a4a9555c07c5..f2ba6f565d30 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -19756,6 +19756,7 @@ F:	Documentation/devicetree/bindings/misc/pci1de4,1.yaml
-> >   F:	Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
-> >   F:	Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
-> >   F:	drivers/clk/clk-rp1.c
-> > +F:	drivers/pinctrl/pinctrl-rp1.c
-> >   F:	include/dt-bindings/clock/rp1.h
-> >   F:	include/dt-bindings/misc/rp1.h
-> > 
-> > diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> > index 95a8e2b9a614..53b265cabc26 100644
-> > --- a/drivers/pinctrl/Kconfig
-> > +++ b/drivers/pinctrl/Kconfig
-> > @@ -612,6 +612,17 @@ config PINCTRL_MLXBF3
-> >   	  each pin. This driver can also be built as a module called
-> >   	  pinctrl-mlxbf3.
-> > 
-> > +config PINCTRL_RP1
-> > +	tristate "Pinctrl driver for RP1"
-> > +	depends on MISC_RP1
-> > +	default MISC_RP1
-> > +	select PINMUX
-> > +	select PINCONF
-> > +	select GENERIC_PINCONF
-> > +	help
-> > +	  Enable the gpio and pinctrl/mux driver for RaspberryPi RP1
-> > +	  multi function device.
-> > +
-> >   source "drivers/pinctrl/actions/Kconfig"
-> >   source "drivers/pinctrl/aspeed/Kconfig"
-> >   source "drivers/pinctrl/bcm/Kconfig"
-> > diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-> > index fba1c56624c0..6fb77de58545 100644
-> > --- a/drivers/pinctrl/Makefile
-> > +++ b/drivers/pinctrl/Makefile
-> > @@ -48,6 +48,7 @@ obj-$(CONFIG_PINCTRL_PIC32)	+= pinctrl-pic32.o
-> >   obj-$(CONFIG_PINCTRL_PISTACHIO)	+= pinctrl-pistachio.o
-> >   obj-$(CONFIG_PINCTRL_RK805)	+= pinctrl-rk805.o
-> >   obj-$(CONFIG_PINCTRL_ROCKCHIP)	+= pinctrl-rockchip.o
-> > +obj-$(CONFIG_PINCTRL_RP1)       += pinctrl-rp1.o
-> >   obj-$(CONFIG_PINCTRL_SCMI)	+= pinctrl-scmi.o
-> >   obj-$(CONFIG_PINCTRL_SINGLE)	+= pinctrl-single.o
-> >   obj-$(CONFIG_PINCTRL_ST) 	+= pinctrl-st.o
-> > diff --git a/drivers/pinctrl/pinctrl-rp1.c b/drivers/pinctrl/pinctrl-rp1.c
-> > new file mode 100644
-> > index 000000000000..0d081f75d2ec
-> > --- /dev/null
-> > +++ b/drivers/pinctrl/pinctrl-rp1.c
-> > @@ -0,0 +1,789 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Driver for Raspberry Pi RP1 GPIO unit
-> > + *
-> > + * Copyright (C) 2023 Raspberry Pi Ltd.
-> > + *
-> > + * This driver is inspired by:
-> > + * pinctrl-bcm2835.c, please see original file for copyright information
-> > + */
-> > +
-> ...
-> > +
-> > +static struct irq_chip rp1_gpio_irq_chip = {
-> > +	.name = MODULE_NAME,
-> > +	.irq_enable = rp1_gpio_irq_enable,
-> > +	.irq_disable = rp1_gpio_irq_disable,
-> > +	.irq_set_type = rp1_gpio_irq_set_type,
-> > +	.irq_ack = rp1_gpio_irq_ack,
-> > +	.irq_mask = rp1_gpio_irq_disable,
-> > +	.irq_unmask = rp1_gpio_irq_enable,
-> > +	.flags = IRQCHIP_IMMUTABLE,
-> Sorry not sure, but doesn't this miss GPIOCHIP_IRQ_RESOURCE_HELPERS here?
+--htbc2pgomj3vttd2
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC PATCH 0/5] drm/panthor: Protected mode support for Mali CSF
+ GPUs
+MIME-Version: 1.0
 
-Right. Added.
+Hi Boris,
 
-Thanks,
-Andrea
+On Fri, Feb 07, 2025 at 04:02:53PM +0100, Boris Brezillon wrote:
+> Sorry for joining the party late, a couple of comments to back Akash
+> and Nicolas' concerns.
+>=20
+> On Wed, 05 Feb 2025 13:14:14 -0500
+> Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
+>=20
+> > Le mercredi 05 f=E9vrier 2025 =E0 15:52 +0100, Maxime Ripard a =E9crit=
+=A0:
+> > > On Mon, Feb 03, 2025 at 04:43:23PM +0000, Florent Tomasin wrote: =20
+> > > > Hi Maxime, Nicolas
+> > > >=20
+> > > > On 30/01/2025 17:47, Nicolas Dufresne wrote: =20
+> > > > > Le jeudi 30 janvier 2025 =E0 17:38 +0100, Maxime Ripard a =E9crit=
+=A0: =20
+> > > > > > Hi Nicolas,
+> > > > > >=20
+> > > > > > On Thu, Jan 30, 2025 at 10:59:56AM -0500, Nicolas Dufresne wrot=
+e: =20
+> > > > > > > Le jeudi 30 janvier 2025 =E0 14:46 +0100, Maxime Ripard a =E9=
+crit=A0: =20
+> > > > > > > > Hi,
+> > > > > > > >=20
+> > > > > > > > I started to review it, but it's probably best to discuss i=
+t here.
+> > > > > > > >=20
+> > > > > > > > On Thu, Jan 30, 2025 at 01:08:56PM +0000, Florent Tomasin w=
+rote: =20
+> > > > > > > > > Hi,
+> > > > > > > > >=20
+> > > > > > > > > This is a patch series covering the support for protected=
+ mode execution in
+> > > > > > > > > Mali Panthor CSF kernel driver.
+> > > > > > > > >=20
+> > > > > > > > > The Mali CSF GPUs come with the support for protected mod=
+e execution at the
+> > > > > > > > > HW level. This feature requires two main changes in the k=
+ernel driver:
+> > > > > > > > >=20
+> > > > > > > > > 1) Configure the GPU with a protected buffer. The system =
+must provide a DMA
+> > > > > > > > >    heap from which the driver can allocate a protected bu=
+ffer.
+> > > > > > > > >    It can be a carved-out memory or dynamically allocated=
+ protected memory region.
+> > > > > > > > >    Some system includes a trusted FW which is in charge o=
+f the protected memory.
+> > > > > > > > >    Since this problem is integration specific, the Mali P=
+anthor CSF kernel
+> > > > > > > > >    driver must import the protected memory from a device =
+specific exporter. =20
+> > > > > > > >=20
+> > > > > > > > Why do you need a heap for it in the first place? My unders=
+tanding of
+> > > > > > > > your series is that you have a carved out memory region som=
+ewhere, and
+> > > > > > > > you want to allocate from that carved out memory region you=
+r buffers.
+> > > > > > > >=20
+> > > > > > > > How is that any different from using a reserved-memory regi=
+on, adding
+> > > > > > > > the reserved-memory property to the GPU device and doing al=
+l your
+> > > > > > > > allocation through the usual dma_alloc_* API? =20
+> > > > > > >=20
+> > > > > > > How do you then multiplex this region so it can be shared bet=
+ween
+> > > > > > > GPU/Camera/Display/Codec drivers and also userspace ? =20
+> > > > > >=20
+> > > > > > You could point all the devices to the same reserved memory reg=
+ion, and
+> > > > > > they would all allocate from there, including for their userspa=
+ce-facing
+> > > > > > allocations. =20
+> > > > >=20
+> > > > > I get that using memory region is somewhat more of an HW descript=
+ion, and
+> > > > > aligned with what a DT is supposed to describe. One of the challe=
+nge is that
+> > > > > Mediatek heap proposal endup calling into their TEE, meaning know=
+ing the region
+> > > > > is not that useful. You actually need the TEE APP guid and its IP=
+C protocol. If
+> > > > > we can dell drivers to use a head instead, we can abstract that S=
+oC specific
+> > > > > complexity. I believe each allocated addressed has to be mapped t=
+o a zone, and
+> > > > > that can only be done in the secure application. I can imagine si=
+milar needs
+> > > > > when the protection is done using some sort of a VM / hypervisor.
+> > > > >=20
+> > > > > Nicolas
+> > > > >  =20
+> > > >=20
+> > > > The idea in this design is to abstract the heap management from the
+> > > > Panthor kernel driver (which consumes a DMA buffer from it).
+> > > >=20
+> > > > In a system, an integrator would have implemented a secure heap dri=
+ver,
+> > > > and could be based on TEE or a carved-out memory with restricted ac=
+cess,
+> > > > or else. This heap driver would be responsible of implementing the
+> > > > logic to: allocate, free, refcount, etc.
+> > > >=20
+> > > > The heap would be retrieved by the Panthor kernel driver in order to
+> > > > allocate protected memory to load the FW and allow the GPU to enter=
+/exit
+> > > > protected mode. This memory would not belong to a user space proces=
+s.
+> > > > The driver allocates it at the time of loading the FW and initializ=
+ation
+> > > > of the GPU HW. This is a device globally owned protected memory. =
+=20
+> > >=20
+> > > The thing is, it's really not clear why you absolutely need to have t=
+he
+> > > Panthor driver involved there. It won't be transparent to userspace,
+> > > since you'd need an extra flag at allocation time, and the buffers
+> > > behave differently. If userspace has to be aware of it, what's the
+> > > advantage to your approach compared to just exposing a heap for those
+> > > secure buffers, and letting userspace allocate its buffers from there=
+? =20
+> >=20
+> > Unless I'm mistaken, the Panthor driver loads its own firmware. Since l=
+oading
+> > the firmware requires placing the data in a protected memory region, an=
+d that
+> > this aspect has no exposure to userspace, how can Panthor not be implic=
+ated ?
+>=20
+> Right, the very reason we need protected memory early is because some
+> FW sections need to be allocated from the protected pool, otherwise the
+> TEE will fault as soon at the FW enters the so-called 'protected mode'.
 
-> 
-> Thanks
+How does that work if you don't have some way to allocate the protected
+memory? You can still submit jobs to the GPU, but you can't submit /
+execute "protected jobs"?
+
+> Now, it's not impossible to work around this limitation. For instance,
+> we could load the FW without this protected section by default (what we
+> do right now), and then provide a DRM_PANTHOR_ENABLE_FW_PROT_MODE
+> ioctl that would take a GEM object imported from a dmabuf allocated
+> from the protected dma-heap by userspace. We can then reset the FW and
+> allow it to operate in protected mode after that point.
+
+Urgh, I'd rather avoid that dance if possible :)
+
+> This approach has two downsides though:
+>=20
+> 1. We have no way of checking that the memory we're passed is actually
+> suitable for FW execution in a protected context. If we're passed
+> random memory, this will likely hang the platform as soon as we enter
+> protected mode.
+
+It's a current limitation of dma-buf in general, and you'd have the same
+issue right now if someone imports a buffer, or misconfigure the heap
+for a !protected heap.
+
+I'd really like to have some way to store some metadata in dma_buf, if
+only to tell that the buffer is protected.
+
+I suspect you'd also need that if you do things like do protected video
+playback through a codec, get a protected frame, and want to import that
+into the GPU. Depending on how you allocate it, either the codec or the
+GPU or both will want to make sure it's protected.
+
+> 2. If the driver already boot the FW and exposed a DRI node, we might
+> have GPU workloads running, and doing a FW reset might incur a slight
+> delay in GPU jobs execution.
+>=20
+> I think #1 is a more general issue that applies to suspend buffers
+> allocated for GPU contexts too. If we expose ioctls where we take
+> protected memory buffers that can possibly lead to crashes if they are
+> not real protected memory regions, and we have no way to ensure the
+> memory is protected, we probably want to restrict these ioctls/modes to
+> some high-privilege CAP_SYS_.
+>=20
+> For #2, that's probably something we can live with, since it's a
+> one-shot thing. If it becomes an issue, we can even make sure we enable
+> the FW protected-mode before the GPU starts being used for real.
+>=20
+> This being said, I think the problem applies outside Panthor, and it
+> might be that the video codec can't reset the FW/HW block to switch to
+> protected mode as easily as Panthor.
+>
+> Note that there's also downsides to the reserved-memory node approach,
+> where some bootloader stage would ask the secure FW to reserve a
+> portion of mem and pass this through the DT. This sort of things tend to
+> be an integration mess, where you need all the pieces of the stack (TEE,
+> u-boot, MTK dma-heap driver, gbm, ...) to be at a certain version to
+> work properly. If we go the ioctl() way, we restrict the scope to the
+> TEE, gbm/mesa and the protected-dma-heap driver, which is still a lot,
+> but we've ripped the bootloader out of the equation at least.
+
+Yeah. I also think there's two discussions in parallel here:
+
+ 1) Being able to allocate protected buffers from the driver
+ 2) Exposing an interface to allocate those to userspace
+
+I'm not really convinced we need 2, but 1 is obviously needed from what
+you're saying.
+
+Maxime
+
+--htbc2pgomj3vttd2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ6tUzwAKCRAnX84Zoj2+
+dgyXAX9Mpc+TjVfAcyCQN/n7q9zZ5lmbptADZW4LEBnXwTWDkkiDiB1S1nzvFyd0
+xywePzABgNQe/OpXr+aMBUmIbrbXc0/Yc/5KJdkXmAf8AsGGC198Qo6AbnZL4M8x
+oYxodaBcBA==
+=GufS
+-----END PGP SIGNATURE-----
+
+--htbc2pgomj3vttd2--
