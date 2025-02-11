@@ -1,201 +1,379 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0532D1E9B24;
-	Tue, 11 Feb 2025 07:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739257825; cv=fail; b=jtlvQcRrw26ys13jzr8QdpKVhDVH2h3/CaKZiWqRln2SzPlDluK/68wOj6ADkMHVL0U0iw/yfKxZWKQsrC4ojkENO1jUwt3ooNkBhZYJrY+ROW7wTohhB3dHBQSuq63w1hOAB0afjYg0Pa50ylAp8FH2YIoqmlzbZ9lkYuDG9P8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739257825; c=relaxed/simple;
-	bh=F9iZ/hg5V9xXtSF6Ml/G7w4ioLmk3Il++H00jxFw/Z0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=SW6tgcbbI7Fg4Hwfj2Hb43Tn9ne8UQ3YQ465p1uUlHwmhMREU5Ov0eNQPKeFdGD1R4n6EIE+iIDozQ/d0kDyk/3fh3Hv2qn9745sU4GRYB+FP1gwMxLGuLe/pMpdXaAh6yJ1AbASUmJ6pTEdlrNWJWos/BotSuOKf5mt2ggl34c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fht0C3j8; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5633726BDB6;
+	Tue, 11 Feb 2025 07:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739257865; cv=none; b=cctuK8qpiE+fkW7Ehcg1tZNmH4L9h3Xk0NSElEV4ltqihz2UhqCr8FiZPP/GpkNgKQSj+66q4lEDS8LPxphR2VPxnxQZwi8fKXxjq/7H6l037vk2ZfsPtmQ/BFzo0DjZDD88mUPkfrWxZQVaK5kia2qlvY52MPeMrHrFl6Szrk4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739257865; c=relaxed/simple;
+	bh=+j03FWY7yQm+Yif8GM04TVLM//R9bsc2EP03dfu5lSo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U7sV9E/3VfmrP5TwrowDbi3Ze8wwTPbvmF002AL0D70nWFfNAAUQemsVgb3JXRKfL/pdakY66osA8lTTLvVjZIEnTUQcNp5Tmq/6psWpKiE6UcprqWuZzekeSAfERAmyuS8zKb5CIS7UyBtnB3jgUr5lqhr+ClFG3PpRPlPT88A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=SPCboFdW; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fht0C3j8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739257824; x=1770793824;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=F9iZ/hg5V9xXtSF6Ml/G7w4ioLmk3Il++H00jxFw/Z0=;
-  b=Fht0C3j88OOGqmDCS6513yIexmlWUa83RIraki4Zu674+P5qMfVRNv43
-   l2XgN2hJfoVvpvzunRaRZPDjR9hOqG8FPzb4tRIBynbuXXbYdSDMCXT7q
-   ff1hzuZbZLKjt/iB9798SyJYgk2sD+zvLClbkQBUAxh5z76mpGy+8xoVS
-   5h/03EXKH7+2toa3i8fa90fc3+vNq2PA5s26ZXLNXtm7Hyc4H+WvujLEI
-   cYBK5i+90A6pbgw0Km8B93ho87KS3N7DIQIUxIattJgyrhVE6WLz07bOt
-   tRH4bUuz8uS3bYFDlAViyyGaTecM8AsWwc+qDKjQB6+kzRd9j0EtfyESi
-   A==;
-X-CSE-ConnectionGUID: +BVO9H0aSJqqUyIZTD/OPg==
-X-CSE-MsgGUID: FGOwO0t3RtqxF0SU235qyA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="39559304"
-X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
-   d="scan'208";a="39559304"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 23:10:24 -0800
-X-CSE-ConnectionGUID: +obAw/VARxS+DTyd+CrIzQ==
-X-CSE-MsgGUID: GPYjW6MWQxSK82zpT4EdRQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
-   d="scan'208";a="113061557"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Feb 2025 23:10:23 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 10 Feb 2025 23:10:22 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Mon, 10 Feb 2025 23:10:22 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.176)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 10 Feb 2025 23:10:20 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AseqUd+X6L7XukPuKuMpPztZGPuJVJV/2SeTkEqyMomgaL5LpsljH/uLPDVTJ3ET/oWzYHdR8VMjl9ZM2BadAdG7Rro9gQq24fpVbSEr0Hh3OQXIrjBy6kmHxAV7T2eDEuZCheFyH3Y2LMZtGIwgGQH7PQQgqwO/HT4ITy0JV6+RByciA2JgMFgHrgSOH/JBzdO2Qiujzv8Cgnot0tzooe7eOJPXppt1hbOCo9EoFlU1aIMc0iDQ1dobmfPLWUPFRI6FNPAxAmGCrsc4lqXoY3lyl6511Sp2EVNK/Q8xMj3Ljayv58dTnOPeCHt4a1TZdZZkZG9vJiXRjqmsI3z8PQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Sq073i/AMe1xwrxj7709cla9vUih+rAtpG9mptBMAuc=;
- b=rZwdcBO+6WTZexL9WSDaA8kropoTf8pl3b3gcNJZeGbi0ZIZSx84iFiIsdxBLWvp6++bgISJ+8RnPUKqX6IJtoHQHEQLXV+YokDhZXCHuN15wEGnBWLaGjUpA5hoNH3GMwAnki7/3fNXTgqLTUvAxNtDYqjgswYFOlfD9Mj0+t7O2hbD29TvhMT1aRfT00cvvnWoe1uV0p/J+BHML+5YEDEAmxgNogyAXwGCBPyP+i/48q62WFfd/UxOcUDgCg9EfMyx6WyGs9flFlJSes3F7bUgufSbYndo+JMhALIMQsJjDT/dGo7SncDQiAmygBvnZEvXA8QjfVmOa7lzMqbmlg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from CY8PR11MB7134.namprd11.prod.outlook.com (2603:10b6:930:62::17)
- by PH0PR11MB4872.namprd11.prod.outlook.com (2603:10b6:510:32::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Tue, 11 Feb
- 2025 07:10:03 +0000
-Received: from CY8PR11MB7134.namprd11.prod.outlook.com
- ([fe80::cd87:9086:122c:be3d]) by CY8PR11MB7134.namprd11.prod.outlook.com
- ([fe80::cd87:9086:122c:be3d%4]) with mapi id 15.20.8422.012; Tue, 11 Feb 2025
- 07:10:03 +0000
-From: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
-To: Nikolay Borisov <nik.borisov@suse.com>, "linux-edac@vger.kernel.org"
-	<linux-edac@vger.kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>, "Luck, Tony" <tony.luck@intel.com>
-Subject: RE: [PATCH v2 2/3] x86/mce: Move message printing from mce_notify_irq
- to mce_early_notifier()
-Thread-Topic: [PATCH v2 2/3] x86/mce: Move message printing from
- mce_notify_irq to mce_early_notifier()
-Thread-Index: AQHbe9MauI8OAmfWK0iY8h18pWsqXLNBrsnw
-Date: Tue, 11 Feb 2025 07:10:03 +0000
-Message-ID: <CY8PR11MB7134DFC46AD440D42C5DB90489FD2@CY8PR11MB7134.namprd11.prod.outlook.com>
-References: <20250210154707.114219-1-nik.borisov@suse.com>
- <20250210154707.114219-3-nik.borisov@suse.com>
-In-Reply-To: <20250210154707.114219-3-nik.borisov@suse.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CY8PR11MB7134:EE_|PH0PR11MB4872:EE_
-x-ms-office365-filtering-correlation-id: af812930-fea2-42d8-c292-08dd4a6b1b4f
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?u9Mw2/eQF7KtIcHA132hP2kVGhSwzVWytoDUg8vw5Do2n2VxyxWKvrTw+Fyj?=
- =?us-ascii?Q?TsVoObpEb7LxoYTA7MFMESzrlaYoqCFDGadGL/VroV4nsUMHHYOR07i+U9sl?=
- =?us-ascii?Q?aEGA4H/CM+wXoqGQjIvK3udguGEkRA9veUl4XURKx1oyEdcQ8g8E9RYmLhbq?=
- =?us-ascii?Q?XZvfk+5jkrVBkeM1feiBNV+/s0ykpwsD5m0cXKE3e8jalFjvlcDGdVxrMTmd?=
- =?us-ascii?Q?pbT7bSeAWj4OIK8Oim3zUcwciDx+fMizjtNAaiNakIXhOE+Ru8+4WZW7mxlN?=
- =?us-ascii?Q?5WnJyp8yOm6DadDvsTF9SZYHlA/q+UKq5Krdg6tArg8CikhBlhQXBvwOSOEM?=
- =?us-ascii?Q?KbkhjX4GMJmjwfM4npWOZAG8/N27huluCAkeJ6Jcd/f5g/qarv13Op4p0Xkd?=
- =?us-ascii?Q?ppONv2tac1GjuU8htO2HiHJBSFhnFBh/s5mHCFPxDAqpEwrcptY0Waa2+AuH?=
- =?us-ascii?Q?XRZloQDRdTherO2oYH9rzCbBOLkuMK/GghgxnCoHzOhzfeFGg9t7t9XbMqAZ?=
- =?us-ascii?Q?/o8pEe4BGyYzXAc4gmggjnoFkkuG4qBgiq/rDczMa9lXNN/lUTwNiAN6guOh?=
- =?us-ascii?Q?iJSrgd3Ia7CrwkWJK/EYsuj66gCn9ZKXAZ37Fivhl3hs0kOuprNkI0gTGsU9?=
- =?us-ascii?Q?JFbkhnMHJZoV3OMYWgQ9igWXdAIU0iQHlvJI+W6W4glyEyyNlyDD6vKqnBKv?=
- =?us-ascii?Q?yREw8FJ+XeGCMDbpQcHZtwnRX6XMN/TT1iQ/sIYSHQzcCFCO8xiZGC22DP7v?=
- =?us-ascii?Q?7iUha9LLYi5T1R88E+oRQBOp1r9n8J9D/HqZct1AsEp353tt/eZ5O0D11YJC?=
- =?us-ascii?Q?eTcYbwI5DUsBpxbpnXjaw0nZcBAGjLR0Zr8JANMSDr2t8ypw0sA/gVuXpjEo?=
- =?us-ascii?Q?fpeBbHf1Fztcz3M5qno1z0lhFWrIuGfyiq+wQ2bSlgLjtDDiZxDnAWXvOxTo?=
- =?us-ascii?Q?tsBNX3fGghscc0GO4UBnfFbctTnToxzGK7pTDi0gCVL0W6kvjfL49JGyLgdw?=
- =?us-ascii?Q?AxxGi9ixxqAw/cid7aMo1Nbmto91+JnlImh2S6HaJbqzeFa1Dco15xggD0fc?=
- =?us-ascii?Q?iHOOg+ZT7s3OYfhVFnzBVvB8Twg6q/gKiOPF24Z9UiVz2D924Bo43OTVQ5+V?=
- =?us-ascii?Q?dXpGrTEv9DJ+BIomJihxwcM9dl72CJpXW2j6AlP6ifxzRQBeJ4E+KK7hpFQh?=
- =?us-ascii?Q?aHAnZNQvFiNA2mYfHafhNSY2/FWFKbqGL0qkkM45Ii6pZpC8GA3i+CWHJSo8?=
- =?us-ascii?Q?tYzNJBehVuEtHD9aepmuXO54OpGBbcfXVdsJ4mTSd93FRIr05HODkTt+so+i?=
- =?us-ascii?Q?uoERoqeMgysdlkcIEbDrI7RCTLNbpr6t5BiuvQA476srvyZlNkH66u8VaGRD?=
- =?us-ascii?Q?HvylwdIOhu/tLerW4sZ1RgGFBDhL?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR11MB7134.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?JWOaSO8cxReskEFF/SrZXf6xSvSWP36VMhgGZqyVLhdtPO9jkU8QB/ulT4Zs?=
- =?us-ascii?Q?bLpqApOewJ9UkaiW4jiKvK0y3zcBru5EAEIpnzy+0pcNs9pM/XV9Zb99dZMT?=
- =?us-ascii?Q?5bwRZVolfHtBhsvmpdkfxMT1+dAvxQyjxCL0G3Ilnp4kZ63/2enh9VZQCDUr?=
- =?us-ascii?Q?7u87z2qyXlDA/viQKPl22Kd7d0NAQCyEr5sxzDjSs2lcWYhZguONS2aaX7LR?=
- =?us-ascii?Q?xgRnBtn8NaPM3emyylfkqugOJ3s47VjJmnYU4cJ6h5IEAk1fhAcdrUkX7o1g?=
- =?us-ascii?Q?Ded1Lvm6xdbFW+mvhjMtQuY83MZRKgI1FQwkCUnHs7QQcZZKg5aEZJfzVtI6?=
- =?us-ascii?Q?lruZirokMFt0EETkwk+a+NEl6g282aJ0CclRSVnqz7Fg5MK7oilTzOS3Cy3m?=
- =?us-ascii?Q?MxpClN4V5sOli3m+PQv6eAjYj9B4mf0dVOx+cNsEg75klmOmM/o8f1hefzo3?=
- =?us-ascii?Q?aduVx7mhlz8Sn8Hq7ylaPDGpU24JcNi4RyqJ43ukjRFEjC3GcwvnXmSBY80j?=
- =?us-ascii?Q?ohTKfylXAIqY4Vw09r4ReEZ7l0Qy6tTLyxQnLTlS7qYKaLDLGH80/jvQCKmg?=
- =?us-ascii?Q?KgHa2OLbqagkocXY7UTfsFvZk8KUEruLVwHTiJvayS+8pQPD7ONVU4hahE61?=
- =?us-ascii?Q?Wu3/tL+l8/uZnPTCOJz8vF/WsOw9PZKnROzqBAWINSZsCsOy/bHF8OTnd4d6?=
- =?us-ascii?Q?ql2eFaIUcWRYeNMjC24MTOLpWdz/iwUkTkUyE06RMUAJjd0Y4rHAKxQw2B+7?=
- =?us-ascii?Q?fOSAInQ1breL685AOrbumI6vy4kOfsasuvjLREwP7mtsCRLA2KhLCNPNgLib?=
- =?us-ascii?Q?2/4nGHoxyMKmKSMwtwWW33PMcW+gGAhhKFu8dzLa/thuTK0O2j3e9tDQm22L?=
- =?us-ascii?Q?djlcGi8C0dfIpu0WT1mnvDO2wg7dywGFH4cRcn+6yywrHtoHh2c8KDkqmpq5?=
- =?us-ascii?Q?Xs1g0mkgWUrpq/xycKJ/7fVJG/0OBJ1M3pHzxQZLZvZXo2iUEf+WMCeqxj3U?=
- =?us-ascii?Q?p4ihN7NDW1O52XWEDPxcTehB0n97Dc+txVXnXwMs2Oyemrm9aLWia/p+DzIN?=
- =?us-ascii?Q?rwN/q0mO40lydoILNCY44uCTNut/RRMQeNG++yvHFnPm7xPTT+tFGACOT1gr?=
- =?us-ascii?Q?FIx1ndLw0mvTWno1IWk8Ra236yhABPaj+jipg8l+NJHCjKend6wm5x4uL+6I?=
- =?us-ascii?Q?qGz0I0bKYFy/6w4xiAqimO6nf9LXHDyLGQneWgie/TMS/wkl+ai0ZZPj4XyQ?=
- =?us-ascii?Q?iSWffc3hcNu0Z8BUhl6o4Zor9CKsZkI+CfzO+e2wV+vBRDLyJ/KiXppU7Yd4?=
- =?us-ascii?Q?xT2Tjptx5xQ/eyDpLIrw1kNavFWsHZxDhRvC9OanQVvc7p48WAqvFMUKViMq?=
- =?us-ascii?Q?2VufXIIxO2MCIqTtmXoxfeLt0b+clLnMR7qhvDx6rSwsYJRm9myNSYT1rbE8?=
- =?us-ascii?Q?N6NoQ8KxaibqreEQcO0Y6d/cGMVzxzUskoeZeU5rmlhUmZgD/88KNaw6zwzV?=
- =?us-ascii?Q?UTZTF9YNZ8jJBJ7ju25nzDw6j0hxxjyjg2qit+QRPBCGa1PnGDHp5TdKtR5b?=
- =?us-ascii?Q?SYT56qhEaDFbcJupMUR9U5j5BaeqbV3GSuBto26i?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SPCboFdW"
+Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:30ee:391a:e4dd:1a49:e64:7c19])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 54B0322E;
+	Tue, 11 Feb 2025 08:09:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1739257783;
+	bh=+j03FWY7yQm+Yif8GM04TVLM//R9bsc2EP03dfu5lSo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SPCboFdWQIEmg86bTocoVw0fONJhd5A3QMXjpOBPEL6xLN0hmNMv95HbMJKVeUp3q
+	 CZnTuFTpJcAxpihD7Sadj19TQagQ16YkoLolt6dGANWV11EYGoSoYcfc3NyM3natLK
+	 x68//ozcnnJ8J3OHCNtrD10HbFF/x26h1vXo0vOA=
+Date: Tue, 11 Feb 2025 12:40:48 +0530
+From: Jai Luthra <jai.luthra@ideasonboard.com>
+To: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Naushir Patuck <naush@raspberrypi.com>, 
+	Vinay Varma <varmavinaym@gmail.com>
+Subject: Re: [PATCH v6 5/5] media: i2c: imx219: Scale the pixel rate for
+ analog binning
+Message-ID: <skh5wuyyy7fl7ni7ep34pcssrhz3ww2bi2jrmscpj34bitntcq@57zyehidlqr7>
+X-PGP-Key: http://jailuthra.in/files/public-key.asc
+References: <20250204-imx219_fixes-v6-0-84ffa5030972@ideasonboard.com>
+ <20250204-imx219_fixes-v6-5-84ffa5030972@ideasonboard.com>
+ <ubuuob7mb3o5bxoumrxv4rufutgk3lvdmdery6d3bfc6rytfti@tcchhlechzzp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY8PR11MB7134.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: af812930-fea2-42d8-c292-08dd4a6b1b4f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2025 07:10:03.6023
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gU4LgWBJW08y7C3I6sCFP5tzuQVzSH8dBBuMau8/TrwwHbZw3ANveZyl9W5ARRNpzvVOEF2Q/Jx2wL+TQ2MqGQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4872
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ubuuob7mb3o5bxoumrxv4rufutgk3lvdmdery6d3bfc6rytfti@tcchhlechzzp>
 
-> From: Nikolay Borisov <nik.borisov@suse.com>
-> [...]
-> Subject: [PATCH v2 2/3] x86/mce: Move message printing from mce_notify_ir=
-q
-> to mce_early_notifier()
->=20
-> Informing the user that an MCE has been logged from mce_notify_irq() is
-> somewhat misleading because whether the MCE has been logged actually
-> depends on whether CONFIG_X86_MCELOG_LEGACY is turned on or not.
->=20
-> Furthermore it was reported that actually having a message triggered when
-> an MCE is generated can be helpful in certain scenarios. Improve the situ=
-ation
-> by lifting the printing to the generic
-> mce_early_notifier() as it's executed always and is independent of any
-> compile-time option.
->=20
-> Link:
-> https://lore.kernel.org/all/CY8PR11MB7134D97F82DC001AE009637889E32@
-> CY8PR11MB7134.namprd11.prod.outlook.com/
-> Signed-off-by: Nikolay Borisov <nik.borisov@suse.com>
+Hi Jacopo,
 
-LGTM. Thanks!
+On Feb 07, 2025 at 17:49:19 +0100, Jacopo Mondi wrote:
+> Hi Jai
+> 
+> On Tue, Feb 04, 2025 at 12:34:40PM +0530, Jai Luthra wrote:
+> > When the analog binning mode is used for high framerate operation, the
+> > pixel rate is effectively doubled. Account for this when setting up the
+> > pixel clock rate, and applying the vblank and exposure controls.
+> >
+> > The previous logic only used analog binning for RAW8, but normal binning
+> > limits the framerate on RAW10 480p [1]. So with this patch we switch to
+> > using special binning (with 2x pixel rate) wherever possible.
+> >
+> > [1]: https://github.com/raspberrypi/linux/issues/5493
+> >
+> > Co-developed-by: Naushir Patuck <naush@raspberrypi.com>
+> > Signed-off-by: Naushir Patuck <naush@raspberrypi.com>
+> > Co-developed-by: Vinay Varma <varmavinaym@gmail.com>
+> > Signed-off-by: Vinay Varma <varmavinaym@gmail.com>
+> > Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
+> > ---
+> >  drivers/media/i2c/imx219.c | 126 +++++++++++++++++++++++++++++----------------
+> >  1 file changed, 81 insertions(+), 45 deletions(-)
+> >
+> > diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
+> > index e4aa6e66b673bb7a8942bf8daf27267c2884ec95..c445987de2c3e933ea9c49ba3e00a15663ef5f2e 100644
+> > --- a/drivers/media/i2c/imx219.c
+> > +++ b/drivers/media/i2c/imx219.c
+> > @@ -144,6 +144,12 @@
+> >  #define IMX219_PIXEL_ARRAY_WIDTH	3280U
+> >  #define IMX219_PIXEL_ARRAY_HEIGHT	2464U
+> >
+> > +enum binning_mode {
+> > +	BINNING_NONE = IMX219_BINNING_NONE,
+> > +	BINNING_X2 = IMX219_BINNING_X2,
+> > +	BINNING_ANALOG_X2 = IMX219_BINNING_X2_ANALOG,
+> > +};
+> > +
+> >  /* Mode : resolution and related config&values */
+> >  struct imx219_mode {
+> >  	/* Frame width */
+> > @@ -295,13 +301,13 @@ static const struct imx219_mode supported_modes[] = {
+> >  		.fll_def = 1707,
+> >  	},
+> >  	{
+> > -		/* 2x2 binned 30fps mode */
+> > +		/* 2x2 binned 60fps mode */
+> >  		.width = 1640,
+> >  		.height = 1232,
+> >  		.fll_def = 1707,
+> >  	},
+> >  	{
+> > -		/* 640x480 30fps mode */
+> > +		/* 640x480 60fps mode */
+> >  		.width = 640,
+> >  		.height = 480,
+> >  		.fll_def = 1707,
+> > @@ -356,6 +362,59 @@ static u32 imx219_get_format_code(struct imx219 *imx219, u32 code)
+> >  	return imx219_mbus_formats[i];
+> >  }
+> >
+> > +static u32 imx219_get_format_bpp(const struct v4l2_mbus_framefmt *format)
+> > +{
+> > +	switch (format->code) {
+> > +	case MEDIA_BUS_FMT_SRGGB8_1X8:
+> > +	case MEDIA_BUS_FMT_SGRBG8_1X8:
+> > +	case MEDIA_BUS_FMT_SGBRG8_1X8:
+> > +	case MEDIA_BUS_FMT_SBGGR8_1X8:
+> > +		return 8;
+> > +
+> > +	case MEDIA_BUS_FMT_SRGGB10_1X10:
+> > +	case MEDIA_BUS_FMT_SGRBG10_1X10:
+> > +	case MEDIA_BUS_FMT_SGBRG10_1X10:
+> > +	case MEDIA_BUS_FMT_SBGGR10_1X10:
+> > +	default:
+> > +		return 10;
+> > +	}
+> > +}
+> 
+> Is this change related ?
+> 
 
-    Reviewed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Ah I think I split it out as a separate function during a previous 
+iteration, but it is not really needed anymore.
+
+> > +
+> > +static enum binning_mode imx219_get_binning(struct imx219 *imx219, u8 *bin_h,
+> > +					    u8 *bin_v)
+> > +{
+> > +	struct v4l2_subdev_state *state =
+> > +		v4l2_subdev_get_locked_active_state(&imx219->sd);
+> > +	const struct v4l2_mbus_framefmt *format =
+> > +		v4l2_subdev_state_get_format(state, 0);
+> > +	const struct v4l2_rect *crop = v4l2_subdev_state_get_crop(state, 0);
+> > +
+> > +	*bin_h = crop->width / format->width;
+> > +	*bin_v = crop->height / format->height;
+> > +
+> > +	if (*bin_h == 2 && *bin_v == 2)
+> > +		return BINNING_ANALOG_X2;
+> > +	else if (*bin_h == 2 || *bin_v == 2)
+> > +		/*
+> > +		 * Don't use analog binning if only one dimension
+> > +		 * is binned, as it crops the other dimension
+> > +		 */
+> > +		return BINNING_X2;
+> > +	else
+> > +		return BINNING_NONE;
+> 
+> This function is used in two places, for two different reasons:
+> 
+> 1) in imx219_get_rate_factor() to know if ANALOG is used
+> 2) in imx219_set_framefmt() to calculate what value to write to the
+> horizontal/vertical registers
+> 
+> We now know that ANALOG binning is either applied to both horizontal
+> and vertical directions or it is not activated at all.
+> 
+> I wonder if you should do here
+> 
+>         u32 hbin = crop->width / format->width;
+>         u32 vbin = crop->height / format->height;
+> 
+>         *h_bin = IMX219_BINNING_NONE;
+>         *v_bin = IMX219_BINNING_NONE;
+> 
+>         /*
+>          * Use analog binning if only both dimensions are binned, as the
+>          * other dimension is cropped.
+>          */
+>         if (hbin == 2 && vbin == 2) {
+>                 *h_bin = IMX219_BINNING_X2_ANALOG;
+>                 *v_bin = IMX219_BINNING_X2_ANALOG;
+> 
+>                 return;
+>         }
+> 
+>         if (hbin == 2)
+>                 *h_bin = IMX219_BINNING_X2;
+>         if (vbin == 2)
+>                 *v_bin = IMX219_BINNING_X2;
+> 
+>         return;
+> 
+> And make the two callers
+> 
+> imx219_set_framefmt()
+> 	imx219_get_binning(imx219, &bin_h, &bin_v);
+> 	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_H, bin_h, &ret)
+> 	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_V, bin_v, &ret);
+> 
+> imx219_get_rate_factor()
+> 	imx219_get_binning(imx219, &bin_h, &bin_v);
+> 
+>         return (bin_h & bin_v) == IMX219_BINNING_X2_ANALOG ? 2 : 1;
+> 
+
+Looking at it from scratch, that does look much cleaner way to handle 
+it. Will do in next revision.
+
+Thanks for the review.
+
+> 
+> You could probably get rid of the enum in this way.
+> 
+> Just a small suggestion
+> 
+> 
+> > +}
+> > +
+> > +static inline u32 imx219_get_rate_factor(struct imx219 *imx219)
+> > +{
+> > +	u8 bin_h, bin_v;
+> > +	enum binning_mode binning = imx219_get_binning(imx219, &bin_h, &bin_v);
+> > +
+> > +	if (binning == BINNING_ANALOG_X2)
+> > +		return 2;
+> > +
+> > +	return 1;
+> > +}
+> > +
+> >  /* -----------------------------------------------------------------------------
+> >   * Controls
+> >   */
+> > @@ -367,10 +426,12 @@ static int imx219_set_ctrl(struct v4l2_ctrl *ctrl)
+> >  	struct i2c_client *client = v4l2_get_subdevdata(&imx219->sd);
+> >  	const struct v4l2_mbus_framefmt *format;
+> >  	struct v4l2_subdev_state *state;
+> > +	u32 rate_factor;
+> >  	int ret = 0;
+> >
+> >  	state = v4l2_subdev_get_locked_active_state(&imx219->sd);
+> >  	format = v4l2_subdev_state_get_format(state, 0);
+> > +	rate_factor = imx219_get_rate_factor(imx219);
+> >
+> >  	if (ctrl->id == V4L2_CID_VBLANK) {
+> >  		int exposure_max, exposure_def;
+> > @@ -399,7 +460,7 @@ static int imx219_set_ctrl(struct v4l2_ctrl *ctrl)
+> >  		break;
+> >  	case V4L2_CID_EXPOSURE:
+> >  		cci_write(imx219->regmap, IMX219_REG_EXPOSURE,
+> > -			  ctrl->val, &ret);
+> > +			  ctrl->val / rate_factor, &ret);
+> >  		break;
+> >  	case V4L2_CID_DIGITAL_GAIN:
+> >  		cci_write(imx219->regmap, IMX219_REG_DIGITAL_GAIN,
+> > @@ -416,7 +477,7 @@ static int imx219_set_ctrl(struct v4l2_ctrl *ctrl)
+> >  		break;
+> >  	case V4L2_CID_VBLANK:
+> >  		cci_write(imx219->regmap, IMX219_REG_FRM_LENGTH_A,
+> > -			  format->height + ctrl->val, &ret);
+> > +			  (format->height + ctrl->val) / rate_factor, &ret);
+> 
+> 
+> Isn't this (and exposure) compensatd by the doubled pixel rate ?
+> 
+> Applications use the pixel rate to compute the line duration and from
+> there transform the frame duration and the exposure in lines, don't
+> they ?
+> 
+> Overall, very nice to be able to double the achievable frame rate
+> without any artifacts! Good job!
+> 
+> Thanks
+>   j
+> 
+> >  		break;
+> >  	case V4L2_CID_HBLANK:
+> >  		cci_write(imx219->regmap, IMX219_REG_LINE_LENGTH_A,
+> > @@ -587,29 +648,14 @@ static int imx219_set_framefmt(struct imx219 *imx219,
+> >  {
+> >  	const struct v4l2_mbus_framefmt *format;
+> >  	const struct v4l2_rect *crop;
+> > -	unsigned int bpp;
+> > -	u64 bin_h, bin_v;
+> > +	enum binning_mode binning;
+> > +	u8 bin_h, bin_v;
+> > +	u32 bpp;
+> >  	int ret = 0;
+> >
+> >  	format = v4l2_subdev_state_get_format(state, 0);
+> >  	crop = v4l2_subdev_state_get_crop(state, 0);
+> > -
+> > -	switch (format->code) {
+> > -	case MEDIA_BUS_FMT_SRGGB8_1X8:
+> > -	case MEDIA_BUS_FMT_SGRBG8_1X8:
+> > -	case MEDIA_BUS_FMT_SGBRG8_1X8:
+> > -	case MEDIA_BUS_FMT_SBGGR8_1X8:
+> > -		bpp = 8;
+> > -		break;
+> > -
+> > -	case MEDIA_BUS_FMT_SRGGB10_1X10:
+> > -	case MEDIA_BUS_FMT_SGRBG10_1X10:
+> > -	case MEDIA_BUS_FMT_SGBRG10_1X10:
+> > -	case MEDIA_BUS_FMT_SBGGR10_1X10:
+> > -	default:
+> > -		bpp = 10;
+> > -		break;
+> > -	}
+> > +	bpp = imx219_get_format_bpp(format);
+> >
+> >  	cci_write(imx219->regmap, IMX219_REG_X_ADD_STA_A,
+> >  		  crop->left - IMX219_PIXEL_ARRAY_LEFT, &ret);
+> > @@ -620,28 +666,11 @@ static int imx219_set_framefmt(struct imx219 *imx219,
+> >  	cci_write(imx219->regmap, IMX219_REG_Y_ADD_END_A,
+> >  		  crop->top - IMX219_PIXEL_ARRAY_TOP + crop->height - 1, &ret);
+> >
+> > -	switch (crop->width / format->width) {
+> > -	case 1:
+> > -	default:
+> > -		bin_h = IMX219_BINNING_NONE;
+> > -		break;
+> > -	case 2:
+> > -		bin_h = bpp == 8 ? IMX219_BINNING_X2_ANALOG : IMX219_BINNING_X2;
+> > -		break;
+> > -	}
+> > -
+> > -	switch (crop->height / format->height) {
+> > -	case 1:
+> > -	default:
+> > -		bin_v = IMX219_BINNING_NONE;
+> > -		break;
+> > -	case 2:
+> > -		bin_v = bpp == 8 ? IMX219_BINNING_X2_ANALOG : IMX219_BINNING_X2;
+> > -		break;
+> > -	}
+> > -
+> > -	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_H, bin_h, &ret);
+> > -	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_V, bin_v, &ret);
+> > +	binning = imx219_get_binning(imx219, &bin_h, &bin_v);
+> > +	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_H,
+> > +		  (bin_h == 2) ? binning : BINNING_NONE, &ret);
+> > +	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_V,
+> > +		  (bin_v == 2) ? binning : BINNING_NONE, &ret);
+> >
+> >  	cci_write(imx219->regmap, IMX219_REG_X_OUTPUT_SIZE,
+> >  		  format->width, &ret);
+> > @@ -846,6 +875,7 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
+> >  		int exposure_max;
+> >  		int exposure_def;
+> >  		int hblank;
+> > +		int pixel_rate;
+> >
+> >  		/* Update limits and set FPS to default */
+> >  		__v4l2_ctrl_modify_range(imx219->vblank, IMX219_VBLANK_MIN,
+> > @@ -874,6 +904,12 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
+> >  					 IMX219_LLP_MAX - mode->width, 1,
+> >  					 IMX219_LLP_MIN - mode->width);
+> >  		__v4l2_ctrl_s_ctrl(imx219->hblank, hblank);
+> > +
+> > +		/* Scale the pixel rate based on the mode specific factor */
+> > +		pixel_rate = imx219_get_pixel_rate(imx219) *
+> > +			     imx219_get_rate_factor(imx219);
+> > +		__v4l2_ctrl_modify_range(imx219->pixel_rate, pixel_rate,
+> > +					 pixel_rate, 1, pixel_rate);
+> >  	}
+> >
+> >  	return 0;
+> >
+> > --
+> > 2.48.1
+> >
+
+--
+Jai
