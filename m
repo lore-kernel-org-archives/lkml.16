@@ -1,158 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187E924C694;
-	Tue, 11 Feb 2025 14:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34112505B3
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:36:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739284543; cv=none; b=D55pr56u9b6oYN48uWqR8TKldUIUnVh0rNwmufRCyY4iW8/+RF2nflfmKuPPVQPSLnjckIwuKH2GMtvn+a4cB3AI0SX6wBYwPAYo5E6v1q0ANx437PNU9OLXhENlb7SNepo3Wz0ea0Rgww92qnAaTR4ShI+WGfk65sGiWvJJgx4=
+	t=1739284593; cv=none; b=TjHQpLof4bYT6Fy2WSOE8owu0afT8EvHGJaogxQfaChzPtYlnAfdUheZjIB601+mQUvAkvYcs5sH5y3AHdvWRql4GUmWUdn4/WGttqOeCLM+IAsgCCOeA5PEMr2VvKgQsivg3khx5kIvYdNksipv0Es7sHRt1+A0kzGnguCglb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739284543; c=relaxed/simple;
-	bh=be5IPlcg0yWtYg4BxPhA+ASzqCK0AMCZ+Lgk+HS3Ib8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dgteu+IlhHKw8RHv5O7Wv3XiUz19SNOpq07M4Ai35CP+6pJOzQr3a2cY2jkyfZAViB044EYvUKL/7VJs+yDg8O2r4EJCLZ/WuD8mwdKs16pAtB6WN8172pogKsy9QOc4IJYD5PJaWIy2QR5ceAUmeB/Ay1ou/DcSa2kWNl9GUJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YpE1hIUx; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739284593; c=relaxed/simple;
+	bh=7Ii4oZkOZGYKE3BZdy/K87x7eC+Q8/Yg8xmakzI1XRA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JWNngVprisnAwnu+ntAIU1akkMBivZYsprW4RQwLhA6bgV+Ta929Kj7lx/iYqbSy32XkiOYdehAG7dhaWRy8x6E2fcpW6BixQXE2/1WKW2ZaY5sd7qtEgG31fKXYBxGPY1oEvV64SaXxdcRS6oXqfaMi+OsbXAywtMxra+HPVqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HBMzsjW1; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YpE1hIUx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739284542; x=1770820542;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=be5IPlcg0yWtYg4BxPhA+ASzqCK0AMCZ+Lgk+HS3Ib8=;
-  b=YpE1hIUxoHVqBabrVMJBCjDt+Qe9GNM3fD9LACYI0YfXgD3jPFO64EDf
-   RH4JPk+k7i2OD5Nl4OT4N1fLUJiUloRFlzfb7cQFKFXj+LpgMPMeiCgiA
-   MIBTT35H9ywYZvWChf8W2i4Evs0di17HQsFWVAeYfAL4Rek9csrLLgCoh
-   737J0Q0jp1Pf1ev8pa/5GXIXLk+pGU8Sjss/rrcu6GZdjTOppNQ3pwo7r
-   HA7l4vlCexzN1CWjcT3IXtTASuMK+UwBUG1UHVCIBqeijFs94wTR9trHC
-   ul1fXQpgOibGCUfMV+88xzVJYIrmXLxj0/D6nML5SPe7Gkd/cyth++shr
-   Q==;
-X-CSE-ConnectionGUID: 6z3d6f5KRJ62lqdqhIGl7Q==
-X-CSE-MsgGUID: lsFTbF4XRDONnEns0VGWrw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="65260307"
-X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="65260307"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 06:35:41 -0800
-X-CSE-ConnectionGUID: sldVeuXkQfGDCtT2EtCQig==
-X-CSE-MsgGUID: GSE/MADUQhK9nwiEDeAZNw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113012472"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 06:35:38 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1thrMM-0000000AWv7-1eJ9;
-	Tue, 11 Feb 2025 16:35:34 +0200
-Date: Tue, 11 Feb 2025 16:35:34 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>,
-	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	David Jander <david@protonic.nl>,
-	Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v8 01/17] spi: add basic support for SPI offloading
-Message-ID: <Z6tgNjH6Qq5pe9Gt@smile.fi.intel.com>
-References: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
- <20250207-dlech-mainline-spi-engine-offload-2-v8-1-e48a489be48c@baylibre.com>
- <Z6otFlsmEikIbI__@black.fi.intel.com>
- <27d2a88c-b44a-4712-b066-b999e41774f0@baylibre.com>
- <b1dcbb19-190a-45e7-8e94-cb5ef65f1f1b@sirena.org.uk>
- <Z6pim_nLct33LzfN@smile.fi.intel.com>
- <b000d3fd-754a-43e8-ab10-82677eeee1d2@sirena.org.uk>
- <Z6tcwg7QgQwytoSb@smile.fi.intel.com>
- <Z6tezVXVxVCwXuds@smile.fi.intel.com>
- <Z6tfUfHilO2KLmxv@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HBMzsjW1"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51B8wcKW008240
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:36:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	D1WudjrHqQFLXTx6wDZ/8frFhEy4z+ON8ytd3oA/31g=; b=HBMzsjW13/L3niYb
+	J/VObtlRmyL4aGLwfXV0eupMOupUvNloVngCbuuuB/c6Irsv4cHefNX/PURZgfWR
+	8FnfAiAP1no2lFdB3EcEHOkeyJt4s9TVztSeY43PkuWanNGguzrqIsDE+lNPvpzp
+	m6lKjM2JUetNKwCdLZ5ma7okY22rdbWd8zjQ4i1pKxun5hqobdJG6eHYtDHfIVGM
+	oNINsP3V9lxnrrrkSsXmIzdWXOui6Wkh6s8DNr/4qRHp65L/vCrFEljxYp/zLQEY
+	CbjFwuraDCG6sENmaMTZxyY/TCK910MOqwqoEpm9p4keuRq/Bs8CzyP+lDGx1dF2
+	lhvE/w==
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qewh4cdg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:36:30 +0000 (GMT)
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-471ad2e69d6so236571cf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 06:36:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739284589; x=1739889389;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=D1WudjrHqQFLXTx6wDZ/8frFhEy4z+ON8ytd3oA/31g=;
+        b=DfiQ0UUZuPzy4PRfsP29tx6MxFyzjJj+aB7Zyv4f0UYJYVpGP8ZwxuoqCfAvM9tSxQ
+         sRds4YBWCe/A/mX0OHOyMPjmwZlbc5IELWEV6x/vwuPHUoMFKYQKMqFR0JTWcrzHaVD8
+         dKv+Xn9qnedp0laQJda23dOdQQmkFW4QmZkJ051GfAiaigvVX+cba1X28CCXxWReYMlJ
+         sKMK0C7JTmkLbdZuoHOSo0hYQJsM8o3s3BxU0XW7UiRPkWvnk1JvLB21CyIukDwInlXX
+         UttW1ZZHM5xXkeaIDzP3nI3Qq//+dyAxx4yOfdKusQYZyqH5ApkqrLOL/zoIYtXIsO9y
+         8VGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXClyGvD8/ijy6Yn9La8pAWF1uXRYRFw3FnnaDHqbzE6NudKHnL1nOwyyVGan8hFyLqww5TwjB7gV28sDk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyo4fj1iNV7ZrFrb2iyFq8LQT5atU5Xqto84Qr4PJ+sciPNn9PB
+	5DcAEJcibbflFrgc11Ad7Y/OXzVa6sLD1Ie7UFwZJbVeYlQ9e0MD9HBh1Cw7PwnZH1tPE62SiLr
+	L+MbV/OzNJFxRonas+MGurS62stdpDAqxGpUlK0S1aS2PZt7hMH5gktQzJK4+LFc=
+X-Gm-Gg: ASbGncsjWsnmmodJpwA16EC+6dNUw3lNBzs/ifigdNTwqXtG2Q8BiUMe+6H8T4uxxOj
+	9CBqaMQt243HJaLUzkS5JYqQo1GB6O12YMt/TEgumFspry6opjMFt2WK7Bd4htDRwjI6n16GY6y
+	CheNOFjtURaHvRS0C6OkSMBIqzMSVvPq6eDaglybGu+cb3kaEkwbPHmV8PMTqqbO96+8v7oyEqV
+	lvJcE3Qm8ca9Y7U6LFUniZ0R9BS2OfZIwX+tYvda6T+jtzBUttIBMuTnd9WirYbDkTQk+jYR6Ro
+	G2qb1qUarcsxH31edO2XPZEU53X/fo0NrzfrLZxkyCQad00Ouzew060ucEc=
+X-Received: by 2002:ac8:58c6:0:b0:462:b46b:8bf8 with SMTP id d75a77b69052e-471a3e28ffbmr13331761cf.14.1739284589369;
+        Tue, 11 Feb 2025 06:36:29 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHBtd/o9zaPUcZSBSJqeNb6V6jDhonTEpK4kvS0kO6RILTzAgiYeOe5mvtHYLZNwbNqBaucQQ==
+X-Received: by 2002:ac8:58c6:0:b0:462:b46b:8bf8 with SMTP id d75a77b69052e-471a3e28ffbmr13331531cf.14.1739284588932;
+        Tue, 11 Feb 2025 06:36:28 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7b4e96185sm521953466b.86.2025.02.11.06.36.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 06:36:28 -0800 (PST)
+Message-ID: <13f7d30e-9237-4a3e-b9a7-0c667b3e77a8@oss.qualcomm.com>
+Date: Tue, 11 Feb 2025 15:36:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6tfUfHilO2KLmxv@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V8 6/7] arm64: dts: qcom: sa8775p: add EPSS l3
+ interconnect provider
+To: Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>,
+        Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: Odelu Kukatla <quic_okukatla@quicinc.com>,
+        Mike Tipton <quic_mdtipton@quicinc.com>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>,
+        Andrew Halaney <ahalaney@redhat.com>,
+        Sibi Sankar <quic_sibis@quicinc.com>, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250205182743.915-1-quic_rlaggysh@quicinc.com>
+ <20250205182743.915-7-quic_rlaggysh@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250205182743.915-7-quic_rlaggysh@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: Wlq7EdzsL_I7DhuwgZ1yMVQAVjPc8SEI
+X-Proofpoint-GUID: Wlq7EdzsL_I7DhuwgZ1yMVQAVjPc8SEI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_06,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ impostorscore=0 mlxlogscore=999 phishscore=0 clxscore=1015 adultscore=0
+ lowpriorityscore=0 malwarescore=0 bulkscore=0 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502110097
 
-On Tue, Feb 11, 2025 at 04:31:45PM +0200, Andy Shevchenko wrote:
-> On Tue, Feb 11, 2025 at 04:29:33PM +0200, Andy Shevchenko wrote:
-> > On Tue, Feb 11, 2025 at 04:20:50PM +0200, Andy Shevchenko wrote:
-> > > On Tue, Feb 11, 2025 at 01:00:08PM +0000, Mark Brown wrote:
-> > > > On Mon, Feb 10, 2025 at 10:33:31PM +0200, Andy Shevchenko wrote:
-> > > > > On Mon, Feb 10, 2025 at 05:48:00PM +0000, Mark Brown wrote:
-> > > > > > On Mon, Feb 10, 2025 at 11:11:23AM -0600, David Lechner wrote:
-> > > > 
-> > > > > > > In this case, we specifically split up the headers so that the only time you
-> > > > > > > would ever include this header is if you need to call functions in this
-> > > > > > > namespace (i.e. struct definitions are in linux/spi/offload/types.h which
-> > > > > > > doesn't import the namespace). So this doesn't actually seem like a problem
-> > > > > > > to me.
-> > > > 
-> > > > > > Indeed - I can't see any case where a user would need the header without
-> > > > > > needing the namespace.
-> > > > 
-> > > > > You are looking from the other end. What I'm telling is that anyone who adds
-> > > > > a header, automatically gets a namespace. What's the point to have namespace
-> > > > > if it won't easily prevent from (ab)using it in the code. I consider putting
-> > > > > MODULE_IMPORT_NS() in the headers a bit weird.
-> > > > 
-> > > > Sure, but there's no case where anyone should ever be adding the header
-> > > > without adding the namespace which does rather sound like the sort of
-> > > > thing where you should just move the namespace addition to the header.
-> > > 
-> > > $ git grep -lw MODULE_IMPORT_NS | wc -l
-> > > 651
-> > > 
-> > > $ git grep -lw MODULE_IMPORT_NS | grep '\.h$'
-> > > 
-> > > drivers/base/firmware_loader/sysfs.h
-> > > drivers/iio/adc/ltc2497.h
-> > > drivers/pwm/pwm-dwc.h
-> > > ^^^ These ones are probably fine as they are not in include/
-> > > 
-> > > include/kunit/visibility.h
-> > > include/linux/module.h
-> > > include/linux/pwm.h
-> > > 
-> > > I believe these three are misuses of MODULE_IMPORT_NS(). Because one may add
-> > 
-> > _Two_, of course, module.h provides the macro :-)
+On 5.02.2025 7:27 PM, Raviteja Laggyshetty wrote:
+> Add Epoch Subsystem (EPSS) L3 interconnect provider node on SA8775P
+> SoCs. L3 instances on this SoC are same as SM8250 and SC7280 SoCs.
+> These SoCs use EPSS_L3_PERF register instead of REG_L3_VOTE register for
+> programming the perf level. This is taken care in the data associated
+> with the target specific compatible. Since, the HW is same in the all
+> SoCs with EPSS support, using the same generic compatible for all.
 > 
-> And after looking into include/kunit/visibility.h it becomes only a single one.
-> So, PWM is abuser of MODULE_IMPORT_NS() and this series added one more.
+> Signed-off-by: Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>
+> ---
 
-> > > a header just as a "proxy" one (copy'n'paste, for example) and we know that is
-> > > real as we saw a lot of code that has semi-random header inclusion blocks.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-And thinking of more realistic example when we want header and do *not* want a
-namespace is the simple use of the macro / or data type from it without
-actually relying on the APIs.
-
-So, in case of the header structure like
-
-foo_constants.h
-foo_types.h
-foo_api.h
-foo_uplevel_something.h
-
-The MODULE_IMPORT_NS() would make sense only to foo_api.h. And I still would
-question that. As I explained that header may simply become a stale one or
-being used by a mistake.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Konrad
