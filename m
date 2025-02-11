@@ -1,162 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D6126156C;
-	Tue, 11 Feb 2025 19:17:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C09262D14
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 19:17:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739301445; cv=none; b=hnEh6S77Uvv0sfgpSLJPi1FdKhVC+33jUJaOkpmPQZIzJz/bnBkYpWhdudDNOCcj64cDgB+M/OFtAAHHkHA1gKcWLWfkjN7bdGZ37OdYiuISdkx7KyZlsI9r8G8/BGrHVcBM3CsAobYPTfF5W3ipGr8Nnbv7QZ9L/CKn//lCAsw=
+	t=1739301455; cv=none; b=BKcHtb0CWnqU3T8T0YrC1m17ssTYbJah6Z3HQDkOeYu/eL5R/D8b6BaXf8+maCY7bjuWk2OrntQoLqosdvN6axDxK2fXjcdUx1yx5BKaRQYJqoC9/fFE/ILPM9yLzU/+1g3E5sv7zdF2yN3oOV9maDwIINBCA1sm48rwCzKHWiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739301445; c=relaxed/simple;
-	bh=12w062tpfDRKW1JwdoBmtHTuoGJx2tIAPRufd2zsBPY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uvOuOmrkZF2dsOoiI8rkUKpGpTc1UrBtNYVEYbsZxFLfDQknvYVMrsJ77r6UWfHR7rUWwav+is1QfRhMhVGBjhuYINK/AI5T+DDgGMLTqd30/G8gZ3pAYZ6xRTkxWzyr3U7EuVWD44LHZrr9hXYA5TcD5qeNh9vVdhp0cXiitWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rjICzJks; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739301455; c=relaxed/simple;
+	bh=R4IoKkTFSP3XaWfh6jn42r1rdQmKvj5dPYpfCDY1QgI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L1X2Doatz3JocgxIem5FMeNW+C0rLl8jiolKDPb2Lgplo47lb2ok6ukavXqv/OvZwkgvwxP+KGN+2Ur9M0RvcNopamiD+o0bmiwHsUAcAHGPoN46ffA9Sjs8qj9OPempcHOQ1YkslJuLNRWE92V02NDSD0gPHXuTJoqc2WvLWrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PEC4ajmT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rjICzJks"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F020BC4CEDD;
-	Tue, 11 Feb 2025 19:17:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PEC4ajmT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F854C4CEDD;
+	Tue, 11 Feb 2025 19:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739301444;
-	bh=12w062tpfDRKW1JwdoBmtHTuoGJx2tIAPRufd2zsBPY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rjICzJks/D9d/j5EPSm2GKAZfp24kPfkvvynB8AD0TbYETvk5zWjG0tC96cL2uu72
-	 6+Br2JVNsj34pH4NY3AEbYt3fI1Fb2BwXnDlYeMTanv4jvuROpRDplA6bLbWGXvBNl
-	 HEP8W3X+U6J4tQqp5IdqeUdyBr+2ay4LcwaMbZzYm/TQz6sIcxeM8uJbfOjR1dGIpY
-	 E+6QEgZ+ko+/JaE/DW0icGR0y2NaFj3Es0ohamkMQDnTzAxUviwmv1JVsjhFT422Ay
-	 rPn7MjWPQdIKsCkvu78c1Dzsf7Uxj9/5FusRs7w9j8gn6zW/LJWDiMh8tNIKEp++9o
-	 U6dFLmmaTHL6A==
-Message-ID: <2877ad66-0148-483e-83b3-fab5da5dbe1f@kernel.org>
-Date: Tue, 11 Feb 2025 13:17:23 -0600
+	s=k20201202; t=1739301454;
+	bh=R4IoKkTFSP3XaWfh6jn42r1rdQmKvj5dPYpfCDY1QgI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PEC4ajmTyDJ6LQVKhdqnZrwKnqyVDmmKEXPjw7hY0grfjfaT87+DPETKLsr5DFP3b
+	 Q8EM8iisc27AcyrCg6D0BkkV8KyYIElrhROsj2XUqPGju2J/ri6XDg6HhpFbwfQz/C
+	 R7Lrx4WCQNbY/64YRzQAuFXjJDQ/U66N49tMzAMZhWz+sa7AtoeNb9bS8Lq7zumtEh
+	 YoqzhHVeaTx+XUUu72+nW3s+5y18goja7Chl73juF5Q7rRmLWYu3m9smZHHZzyPj7w
+	 nTR+KRZe5ngLkKZLjQ1l+SwumCW+hYFbWQPjExieEHYlqY55imp5+EFgOF9LpcRvp8
+	 /Czzuzgv1fW0g==
+Date: Tue, 11 Feb 2025 11:17:32 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: "Kaplan, David" <David.Kaplan@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 05/35] x86/bugs: Restructure taa mitigation
+Message-ID: <20250211191732.7bnnn3zbbnrxvwhn@jpoimboe>
+References: <20250108202515.385902-1-david.kaplan@amd.com>
+ <20250108202515.385902-6-david.kaplan@amd.com>
+ <20250210225016.cosuartrzzuaftqf@jpoimboe>
+ <LV3PR12MB9265E7765694B3755E924F8494FD2@LV3PR12MB9265.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 12/14] cpufreq/amd-pstate: Cache a pointer to policy in
- cpudata
-To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
- "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
- Perry Yuan <perry.yuan@amd.com>
-Cc: "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
- <linux-kernel@vger.kernel.org>,
- "open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250206215659.3350066-1-superm1@kernel.org>
- <20250206215659.3350066-13-superm1@kernel.org>
- <a3d10f58-3d69-40e8-b0ea-53f4ed9ce31a@amd.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <a3d10f58-3d69-40e8-b0ea-53f4ed9ce31a@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <LV3PR12MB9265E7765694B3755E924F8494FD2@LV3PR12MB9265.namprd12.prod.outlook.com>
 
-On 2/11/2025 07:13, Dhananjay Ugwekar wrote:
-> On 2/7/2025 3:26 AM, Mario Limonciello wrote:
->> From: Mario Limonciello <mario.limonciello@amd.com>
->>
->> In order to access the policy from a notification block it will
->> need to be stored in cpudata.
+On Tue, Feb 11, 2025 at 05:17:15PM +0000, Kaplan, David wrote:
+> > On Wed, Jan 08, 2025 at 02:24:45PM -0600, David Kaplan wrote:
+> > > @@ -400,48 +402,71 @@ static void __init taa_select_mitigation(void)
+> > >               return;
+> > >       }
+> > >
+> > > -     if (cpu_mitigations_off()) {
+> > > +     if (cpu_mitigations_off())
+> > >               taa_mitigation = TAA_MITIGATION_OFF;
+> > > -             return;
+> > > -     }
+> > >
+> > >       /*
+> > >        * TAA mitigation via VERW is turned off if both
+> > >        * tsx_async_abort=off and mds=off are specified.
+> > > +      *
+> > > +      * MDS mitigation will be checked in taa_update_mitigation().
+> > >        */
+> > > -     if (taa_mitigation == TAA_MITIGATION_OFF &&
+> > > -         mds_mitigation == MDS_MITIGATION_OFF)
+> > > +     if (taa_mitigation == TAA_MITIGATION_OFF)
+> > >               return;
+> >
+> > This check seems rather pointless, the only thing after this is the
+> > TAA_MITIGATION_AUTO check.
 > 
-> This might break the cpufreq_policy ref counting right?, if we cache the pointer
-> and use it independent of the ref counting framework.
+> True, and it can be removed.  But in patch 4 in the mds logic you did suggest having an explicit return to make it clear that none of the later conditions applied.  I'm not sure I feel strongly either way, but I'd like to be consistent.
 
-Would it be reasonable to bump the ref count when we take the pointer?
+Let me try to clarify:
 
-I'm not sure if this will work properly.
+  - If it's already doing the conditional for another reason, then
+    adding in the return makes sense:
 
-> 
->>
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->>   drivers/cpufreq/amd-pstate.c | 13 +++++++------
->>   drivers/cpufreq/amd-pstate.h |  3 ++-
->>   2 files changed, 9 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
->> index 689de385d06da..5945b6c7f7e56 100644
->> --- a/drivers/cpufreq/amd-pstate.c
->> +++ b/drivers/cpufreq/amd-pstate.c
->> @@ -388,7 +388,7 @@ static int amd_pstate_set_energy_pref_index(struct cpufreq_policy *policy,
->>   	else
->>   		epp = epp_values[pref_index];
->>   
->> -	if (epp > 0 && cpudata->policy == CPUFREQ_POLICY_PERFORMANCE) {
->> +	if (epp > 0 && policy->policy == CPUFREQ_POLICY_PERFORMANCE) {
->>   		pr_debug("EPP cannot be set under performance policy\n");
->>   		return -EBUSY;
->>   	}
->> @@ -689,7 +689,7 @@ static void amd_pstate_update_min_max_limit(struct cpufreq_policy *policy)
->>   	perf.max_limit_perf = freq_to_perf(perf, cpudata->nominal_freq, policy->max);
->>   	perf.min_limit_perf = freq_to_perf(perf, cpudata->nominal_freq, policy->min);
->>   
->> -	if (cpudata->policy == CPUFREQ_POLICY_PERFORMANCE)
->> +	if (policy->policy == CPUFREQ_POLICY_PERFORMANCE)
->>   		perf.min_limit_perf = min(perf.nominal_perf, perf.max_limit_perf);
->>   
->>   	WRITE_ONCE(cpudata->perf, perf);
->> @@ -1042,6 +1042,7 @@ static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
->>   		return -ENOMEM;
->>   
->>   	cpudata->cpu = policy->cpu;
->> +	cpudata->policy = policy;
->>   
->>   	mutex_init(&cpudata->lock);
->>   	guard(mutex)(&cpudata->lock);
->> @@ -1224,9 +1225,8 @@ static ssize_t show_energy_performance_available_preferences(
->>   {
->>   	int i = 0;
->>   	int offset = 0;
->> -	struct amd_cpudata *cpudata = policy->driver_data;
->>   
->> -	if (cpudata->policy == CPUFREQ_POLICY_PERFORMANCE)
->> +	if (policy->policy == CPUFREQ_POLICY_PERFORMANCE)
->>   		return sysfs_emit_at(buf, offset, "%s\n",
->>   				energy_perf_strings[EPP_INDEX_PERFORMANCE]);
->>   
->> @@ -1543,6 +1543,7 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
->>   		return -ENOMEM;
->>   
->>   	cpudata->cpu = policy->cpu;
->> +	cpudata->policy = policy;
->>   
->>   	mutex_init(&cpudata->lock);
->>   	guard(mutex)(&cpudata->lock);
->> @@ -1632,7 +1633,7 @@ static int amd_pstate_epp_update_limit(struct cpufreq_policy *policy)
->>   
->>   	amd_pstate_update_min_max_limit(policy);
->>   
->> -	if (cpudata->policy == CPUFREQ_POLICY_PERFORMANCE)
->> +	if (policy->policy == CPUFREQ_POLICY_PERFORMANCE)
->>   		epp = 0;
->>   	else
->>   		epp = READ_ONCE(cpudata->epp_cached);
->> @@ -1651,7 +1652,7 @@ static int amd_pstate_epp_set_policy(struct cpufreq_policy *policy)
->>   	if (!policy->cpuinfo.max_freq)
->>   		return -ENODEV;
->>   
->> -	cpudata->policy = policy->policy;
->> +	cpudata->policy = policy;
->>   
->>   	ret = amd_pstate_epp_update_limit(policy);
->>   	if (ret)
->> diff --git a/drivers/cpufreq/amd-pstate.h b/drivers/cpufreq/amd-pstate.h
->> index 7501d30db9953..16ce631a6c3d5 100644
->> --- a/drivers/cpufreq/amd-pstate.h
->> +++ b/drivers/cpufreq/amd-pstate.h
->> @@ -97,9 +97,10 @@ struct amd_cpudata {
->>   
->>   	struct mutex	lock;
->>   
->> +	struct cpufreq_policy *policy;
->> +
->>   	/* EPP feature related attributes*/
->>   	u8	epp_cached;
->> -	u32	policy;
->>   	bool	suspended;
->>   	u8	epp_default;
->>   };
-> 
+	if (condition) {
+	    	do_something;
+		/* all actions related to condition are done */
+		return;
+	}
 
+  - Or, if it's adding a condition+return to avoid having to explicitly
+    check for !condition later, that also makes sense.
+
+    	if (condition)
+    		return;
+
+    	/* assume !condition */
+    	...
+
+  - But adding condition+return, when there's only one condition
+    remaining in the function, which already implicitly excludes the
+    original condition, that just adds code for no reason.
+
+	/* this has no purpose */
+	if (condition)
+		return;
+
+	if (!condition && condition2)
+		do_something;
+    	
+    return;
+
+-- 
+Josh
