@@ -1,105 +1,121 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0511E5018
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 18:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B5F26158B;
+	Tue, 11 Feb 2025 18:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739299462; cv=none; b=IPDVuKCCNbvm7LkbC2eowlQrLuiEdmINzqtUe9WMRTd4+HaHRLFKee8gtsaVa1hjAs84GmAcE4vzAYQqUsIFOG+W5P3rEtHWQY9c4nCnqvURNufQVtC+k5GixQ+JmCOtet69w1UbgErR+txhv4FVYynqjHBeSAi3X3LqrDgfsbA=
+	t=1739299491; cv=none; b=rgVq4wB53HwIMFAueZCE3J0rWpE8tXhHYpmY8tQfu0goxDamrde2p2K4l1B8f3/A79p39v5FJ6NUOiFQqcHpaYq7z065QK/bscEkZkFghzVugZy51NCg5FFahVO/CnaOE3Sg5YFJDLrCBc2ksUM4ZsVEVTyvq18MuveyN91K1Cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739299462; c=relaxed/simple;
-	bh=aNBVYs6gWcIWcEXKD9wTdtnkHQES7h/5kg6EHssraeA=;
+	s=arc-20240116; t=1739299491; c=relaxed/simple;
+	bh=ghRP+gbuDImmJVKfK6iB47GOeRo/vdl5Vcb10WIKFQo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gCBplITFswUc66jgAqKoo9zMokhdFB6L58f6/VVppPsASnwIJJDGZlRW2y9hfpyTR4/BjuWaEE2o0sXAWvqb2JnZ2Eu4ymgUpsOQiVwIHoaGacCmxOsP9gsPeuSjsQuRXKZSbPTyTrociS3hbPspSleNWSMTSRVb8w4Iqn7Gc/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VHc2af37; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z5qg1kPLXi40MF37vmtyg34itDDVSllnIVkLua1MBCJOFxaUKvf+++jQHDCftObYuvWdJgIja+PSamT3fa+LU3pTB3icE0ZSUQVHFNSZ06ok4lJ4OyKvds6wh5RhUal0navaNjcbv7Ro08/IlsP7A/JWyYjv7UGVUDiAkK6ml24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z38cMeTI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VHc2af37"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6f74b78df93so53199017b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:44:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739299460; x=1739904260; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MkyLFsydGPzhoytbDgApYNBvCgBU06CVs2EpR9pi1xU=;
-        b=VHc2af37FerMU/jHNb0LFHnFbnlDydIGluX1i8RR/NEjWs4k4xLevJEbYOpzMBfMqh
-         IfY8fQPhtzADC3arJHpFDZB9+r69GFZ83WmC5o4xXVFMNKN9RQvCpHaYJxh9L/7vg9LI
-         Amxe+c0gsYEzIl9QfvNAtc7saFsof/p6Tf/mttIj5cs8qBFCK7ZgK+fwtTzSCRcsa+Xj
-         qCWRTLgHyCz7fZlljZQDdMGoA+8/XlZLjsbKRCzU8VP4kVopUuqeuei1AlcpEvqaq/kC
-         lXU0MRSE2SevIDaGy67U4M3FprjDKRVtf3N42NtTYliFuG44iT2k8CuZTvxyoMNb1ccd
-         m9GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739299460; x=1739904260;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MkyLFsydGPzhoytbDgApYNBvCgBU06CVs2EpR9pi1xU=;
-        b=n57bp27kxK3x3eF8rhHNEk01Heaewy+cIl/AiJFMZpz9sr5HRH8937lBdIsflKJac1
-         ovOLZF9OiE2R40f85ms9lW7zBFy1IlAOVRJ/X2DGZDyotYGEppSYrzVX/EGHhgrlRhCX
-         XOMVpLx5t/KhZU5m5g5wWIa4fccqH2xnNo6v0WtD+AyWmblV6sxCVO4pm0DHYnEYP1la
-         09Ei4LKG1ErKA7b19NaKJyqWFxAvYcQw26/iNd3YI898S6eBx3T+aUXnxCLshVtsd8T3
-         tT+BR1Z4ek++C5mRGtSIA6L/8LxhiNrUHw6iECXPY94L20ZcmVVoKZPRfERl0YjpOUxA
-         1FcA==
-X-Forwarded-Encrypted: i=1; AJvYcCWtR8DWVhZZ0r0FLG3f7eE1DcozdIPPFHTbRD5us+HdnLdRJW0bUNP9sYBd/M2Mu7/1iCzz4NtESoYOG/A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwILfX2CtElwHY86+ZkGvVhVftodd9gmO3MBg4Q8EhoDwfB4xPa
-	QMIcCqspaEJnZWmb8ijh+tZWxLpt2i28kjqb7h243PtpZf1B8TiK
-X-Gm-Gg: ASbGncstyXTFHYBfu6y/XYZdz6jqZZIbAemIUFYK1Jva7Z8196hMIbiQ5iccxSBuUkD
-	vgr9AK5Yt3SdLoqhhWoXZTqo7Gsr1rJ8kGeKT3L61cuAfQ5lX8KzHupAeubS8nNkzf1DmhhJicC
-	tqjuzZ/jqPSFLNusfFEhOEm4zu0NgUHriJuzTEvzCEJRfIcNt3kMFPN0Fx/B391dG19bqhWVJqD
-	sjs8q9svTW+6fUNbbWF74A7y3e0BFQYrImhn1x1NHfyHrQ1BxdYU8z2CMeB89sDBLT+tnl5WFhS
-	Z8fMmrjf5h7wsrw6Udka4p59qxT6bPjdA8x1ETK9zSU+LuakKt8=
-X-Google-Smtp-Source: AGHT+IEFtEXAc6LSBdY3GgxlLMCxQLTUaYICE+X/hnCjyOtzv4sOS75nucxqB8UvDT5qPB8FoMXg0g==
-X-Received: by 2002:a05:690c:4513:b0:6ef:e390:1d4a with SMTP id 00721157ae682-6fb1f1a9e9amr10548037b3.11.1739299460034;
-        Tue, 11 Feb 2025 10:44:20 -0800 (PST)
-Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99fd1d5d8sm22523017b3.39.2025.02.11.10.44.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 10:44:19 -0800 (PST)
-Date: Tue, 11 Feb 2025 13:44:18 -0500
-From: Yury Norov <yury.norov@gmail.com>
-To: I Hsin Cheng <richard120310@gmail.com>
-Cc: anshuman.khandual@arm.com, arnd@arndb.de, linux-kernel@vger.kernel.org,
-	jserv@ccns.ncku.edu.tw, skhan@linuxfoundation.org
-Subject: Re: [PATCH 1/2] uapi: Refactor __GENMASK() for speed-up
-Message-ID: <Z6uaW9XzaKjSrWYC@thinkpad>
-References: <20250211162412.477655-1-richard120310@gmail.com>
- <20250211162412.477655-2-richard120310@gmail.com>
- <Z6uZZPpQ9YYfrL-I@thinkpad>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z38cMeTI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32128C4CEDD;
+	Tue, 11 Feb 2025 18:44:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739299490;
+	bh=ghRP+gbuDImmJVKfK6iB47GOeRo/vdl5Vcb10WIKFQo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z38cMeTIrsRh5tu+xqU2wkig5A7UiGan1ekOmWhmPUsiFDONHpIrL8wkko8rcztF/
+	 qLkFw5NqoH4FfQvINlZc7mF6MUx4PyVLsrRrzGnziSglK9FRgqW2iav61WHcGdqETF
+	 McEYisAtrC9xaGTRYAG0Htt6JPP9D7ZDwhV0zlGEOK/qYz/9JhT40FEtu31Ghfl8Se
+	 HSTaJzIgoh8758KSVNgX0Nuc1xqxbkarsUzS1RRASPDXjOrFlUpZERpwZmCl2FHjYt
+	 fVXA+uxCfgTLTGb3AZhcEaUFhsOn+FfikIYWSuERqCd29EFZzqZMDbPjQQeiLSL1+l
+	 48f1mnJiAl2Xg==
+Date: Tue, 11 Feb 2025 18:44:46 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Hermes Zhang <chenhuiz@axis.com>
+Cc: Hermes Zhang <Hermes.Zhang@axis.com>, jic23@kernel.org, robh@kernel.org,
+	lars@metafoo.de, krzk+dt@kernel.org,
+	Conor Dooley <conor+dt@kernel.org>, kernel@axis.com,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: iio: chemical: sensirion,senxx: Add
+ yaml description
+Message-ID: <20250211-whiff-handsfree-a21486cf67c7@spud>
+References: <20250206061521.2546108-1-Hermes.Zhang@axis.com>
+ <20250206061521.2546108-3-Hermes.Zhang@axis.com>
+ <20250206-italics-reproduce-35d554c38751@spud>
+ <21dd4902-7d24-6d1a-1144-2dfd7cabe9e2@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="phNxZwqCbmj0chLs"
+Content-Disposition: inline
+In-Reply-To: <21dd4902-7d24-6d1a-1144-2dfd7cabe9e2@axis.com>
+
+
+--phNxZwqCbmj0chLs
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z6uZZPpQ9YYfrL-I@thinkpad>
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 11, 2025 at 01:39:34PM -0500, Yury Norov wrote:
-> On Wed, Feb 12, 2025 at 12:24:11AM +0800, I Hsin Cheng wrote:
-> > The calculation of "((~_UL(0)) - (_UL(1) << (l)) + 1)" is to generate a
-> > bitmask with "l" trailing zeroes, which is equivalent to
-> > "(~_UL(0) << (l))".
-> 
-> I used to think that GENMASK() is a compile-time macro. __GENMASK() is
-> not, but it has very limited usage through the kernel, all in the uapi.
->  
-> > Refactor the calculation so the number of arithmetic instruction will be
-> > reduced from 3 to 1.
-> 
-> I'd like to look at it! Please share disassembly.
-> 
-> > Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
-> > ---
-> > Test is done to show the speed-up we can get from reducing the number of
-> > instruction. The test machine runs with 6.9.0-0-generic kernel on x86_64
-> > architecture with processor AMD Ryzen 7 5700X3D 8-Core Processor.
-> 
-> So you CC arm maintainers and provide tests against x86_64. Are your
-> improvements consistent for arm, power and other arches?
-> 
-> Can you run bloat-o-meter against your change?
+On Sat, Feb 08, 2025 at 03:07:08PM +0800, Hermes Zhang wrote:
+> Hi,
+>=20
+> On 2025/2/7 2:20, Conor Dooley wrote:
+> > diff --git a/Documentation/devicetree/bindings/iio/chemical/sensirion,s=
+enxx.yaml b/Documentation/devicetree/bindings/iio/chemical/sensirion,senxx.=
+yaml
+> > new file mode 100644
+> > index 000000000000..4d998eabe441
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/chemical/sensirion,senxx.ya=
+ml
+> > filename matching a compatible please.
+> So sensirion,sen66.yaml?
+> > +  https://sensirion.com/media/documents/6791EFA0/62A1F68F/Sensirion_Da=
+tasheet_Environmental_Node_SEN5x.pdf
+> > +  https://sensirion.com/media/documents/FAFC548D/6731FFFA/Sensirion_Da=
+tasheet_SEN6x.pdf
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - sensirion,sen50
+> > +      - sensirion,sen54
+> > +      - sensirion,sen55
+> > +      - sensirion,sen60
+> > +      - sensirion,sen65
+> > +      - sensirion,sen66
+> > I'd like a note in the commit message as to how all of these devices are
+> > different please.
+> Sure, will fix in v2.
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > No supplies needed for this device? Seems like you would need at least
+> > one, no?
+>=20
+> You mean the vdd-supply? The chip require a e.g. 3.3v VDD, but in our HW,=
+ we
+> have no gpio/regulator to control it, connect directly by the HW, should I
+> still need to have one vdd-supply here?
 
-Ah, sorry, overlooked you bloat-o-meter results in cover letter.
-Anyways, can you provide it for each patch individually?
+Might not be controllable in your case, but if the device needs power
+=66rom somewhere it should have one in the binding.
+
+--phNxZwqCbmj0chLs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6uangAKCRB4tDGHoIJi
+0v+LAQDUHgR6IiHcxmIJj3tANEKTn/Kdnt0M3QU7xolt80zJ0AEA8P4k1xW4qYIm
+1PfYq9yqfP2LSUqg4Q2S4XiTG8/klQ8=
+=FNxR
+-----END PGP SIGNATURE-----
+
+--phNxZwqCbmj0chLs--
