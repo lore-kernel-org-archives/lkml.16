@@ -1,203 +1,204 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2078.outbound.protection.outlook.com [40.107.237.78])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317BF2505C3;
-	Tue, 11 Feb 2025 14:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739284458; cv=fail; b=T1pzlpmys1Amlwao+xN1oqRj8boTkLIrsLT63/iw12kRjhKidSxXMkw3rG+RkR4751nNiE5sb5fskpZvAW9EcDCMa8mqmKISAs9B9Y31/znJnX+rVYZ8nLGq/CTkJY1SAqJ0fhRhZkxkvA/r1cBB/CGVUwgbgdJ8cglf6LemjHE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739284458; c=relaxed/simple;
-	bh=T8U3B/ejAKb9UrfUM2X6/LlRSm7GrK+9HYPBiGg5v40=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=X8mweNQONhleUaettY/mx9XGk63l1pSxeFsqLIMksc8a5Q+izyVZxLyLOVE/uQj1bW1uOEwZlgX6UNdSZcEevLuMriwkz+kKF/qvQqVkCvb1iJnL7ljF1nQFVrQs47eARCoFHg1ZUiZ49nSnaIRe0/9FN3K04HBXvbaEK+aL7wY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=EcFFnKJM; arc=fail smtp.client-ip=40.107.237.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B1C214A92
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739284480; cv=none; b=ezVnn1hkKs8mN4P0Kbvzu1gtMWK9pX++TRv8xZKFmqfqbShO5kziDLCe12SH2hLdlfnZ2iJMOpC8Rd/h+6dNH9MN4d+HQim8Jf82tG76rvPXR1+pIF/3ZWg/vzX+ym1X9Vr2XnnINbN2sEp/qocwcCukN/ncg6rFZ7dsGWqIBQU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739284480; c=relaxed/simple;
+	bh=fWyMQLn4yLP4Imj5JVok+6j6i+bMIv2+UnKhp6NUsFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oJaEpwYBOxv1oWnb4TGjO8m3JS/HEFiT5GNN5vGm+5HiQCyRtZncdBBbBrGogG5mnoxgEOBuKUTloGs6trEbjB2DJuJYt+mWRSY105BYbQJbin3nTFwFNuFKIZoDMasUbjkTigG/kYmf1arbfR2qjZFF5QKdrt8vh/5ah+YNHqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OhIq4x4m; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="EcFFnKJM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vg+I0e9fI1C5MYrX0PLygJ3PjS//ocfT7pQ4syVBrT1q1II4LKkqlTLmNJKFEjkHdu1S1LfciJ1nMOjv5mdf6yDX5rNUMl55eHZjSYQkFAJOK+ogdl1FY9LfKx65aa0+G/9keuZDnsV/HP7si8NNljOCOu3DH2rH9MEGJVPWS3BTLfSq/ASmxh9YXsuVIQ5AGckq8X0gPU1VvpJV+a8dJe1SHWcQIowMcx7L+gUQu8PllUMxuzM2VbP9rHi4xRUzZQ6X902QbVEj2t9WyzCRlDgC6gvRS24JAJAtel8jS/Ep0eQwfMTb1NA5OtP/EJyKVM7bbLcNi2k7hxHps+8L6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kQ/5Uj0WK2keHFDCm4YG2J+mU5hQsrpJE3UnoeMc1jM=;
- b=uNeeZ4beM6ARSnTvkbNlbMoLJdnSrh9IBi1mO+haIdjmXk9s6CLQy5ttbiERH/kbf90qBgF6u2l5YyBr/3OZT5HPbV27mpTwjaguhTwZG963iAauYVimHd2LSxO7So9p5J7rthlbpPWxA1JGyWo8uqPFjUc7XombyoK2peP+T7LTuYID0ZUyASqszog8JwCM6105kqtLxTTBZSH/hlppsSpVUybT4JVHqn5+HLe8X8i3bQNMjWG8vALIDFrQzCMAPoLJUsVWwjYymYXXlXn3DPyNaSCwfGkNEiuTWyitnePI/pg9pMEGTL/1CQ3j0cM/FnVZSJ3ESwvt9L5i8Lb47Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kQ/5Uj0WK2keHFDCm4YG2J+mU5hQsrpJE3UnoeMc1jM=;
- b=EcFFnKJMQdatcvq0tfYJuLyDfdRYpd3z/JzcrF2hp+qKOYhE4RC/vcxvuN45jfsu4BWj8jbIk87OdgTotgi5YmzJnpBqgJfLyvhHTOACqbyhxQg/FGtjLcBBBNFR9QgWNkM8cDbSgYYA8464U/MzUSurwAAyZIzOYi1ro049wlTdLpDl1Zf7ngHg64Vpn6jtFpOnfMFsvuqdyszbC6Rxm6jjnhTNHc7XTDoF8exZF1WjQOcn39b7cwC3NDX422NWq9PMC6CPgmL4HZvEIk3l+Ja0dNJky6KD8txTRET2v761f3V7KUFgC0NV8XSyd7FHb40d7LJw9XpwBoYaAFs7pA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
- by MW4PR12MB6950.namprd12.prod.outlook.com (2603:10b6:303:207::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.11; Tue, 11 Feb
- 2025 14:34:11 +0000
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5%7]) with mapi id 15.20.8422.015; Tue, 11 Feb 2025
- 14:34:11 +0000
-Date: Tue, 11 Feb 2025 15:34:05 +0100
-From: Andrea Righi <arighi@nvidia.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
-	Changwoo Min <changwoo@igalia.com>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OhIq4x4m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739284477;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4Z4v0Gu1VZ5S/3jICytTcnROn9VRGURI+wKWgp6ANjQ=;
+	b=OhIq4x4m/R6FGKAQwgMrGNIn3upOs+VzuGV4mOySsxpYM63OmvxdlDWSqjSmh825PnYDU3
+	blZGmhNTsk/B4XvChDpnYbjQBttRg79OcWyBzbDo7k1rzccBVnmnJmgh5q6IEYHJgTU7wb
+	PUFJM9EBLj6nYXY8DX/6qJ8DYKk2+14=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-651-qYkoHTQ8OMilXTwvVLY07w-1; Tue,
+ 11 Feb 2025 09:34:32 -0500
+X-MC-Unique: qYkoHTQ8OMilXTwvVLY07w-1
+X-Mimecast-MFC-AGG-ID: qYkoHTQ8OMilXTwvVLY07w
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A5DB81800879;
+	Tue, 11 Feb 2025 14:34:28 +0000 (UTC)
+Received: from localhost (unknown [10.22.80.65])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6433C18004A7;
+	Tue, 11 Feb 2025 14:34:27 +0000 (UTC)
+Date: Tue, 11 Feb 2025 11:34:26 -0300
+From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rt-devel@lists.linux.dev,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>, Ian May <ianm@nvidia.com>,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] sched_ext: idle: Per-node idle cpumasks
-Message-ID: <Z6tf3Rn0pamy3g1_@gpd3>
-References: <20250207211104.30009-1-arighi@nvidia.com>
- <20250207211104.30009-6-arighi@nvidia.com>
- <Z6ju7vFK5TpJamn5@thinkpad>
- <Z6owBvYiArjXvIGC@thinkpad>
- <Z6r9H6JukZi19dQP@gpd3>
- <Z6r_NZui9GibrQHY@gpd3>
- <Z6sddk2otmAVrfcb@gpd3>
- <Z6tciKa58iqWZ3eM@thinkpad>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6tciKa58iqWZ3eM@thinkpad>
-X-ClientProxiedBy: FR4P281CA0122.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:b9::6) To CY5PR12MB6405.namprd12.prod.outlook.com
- (2603:10b6:930:3e::17)
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Mark Brown <broonie@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Joey Gouly <joey.gouly@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: BUG: debug_exception_enter() disables preemption and may call
+ sleeping functions on aarch64 with RT
+Message-ID: <Z6tf8iDhNriSGjeC@uudg.org>
+References: <Z6YW_Kx4S2tmj2BP@uudg.org>
+ <Z6n16cK85JMyowDq@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|MW4PR12MB6950:EE_
-X-MS-Office365-Filtering-Correlation-Id: ba6dc7c8-9496-47b3-6e66-08dd4aa92609
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?zi1Drcc9FibBJrsGnVyiW7rQMWI33GO2BOKx8gm15bqIS2XyLqRUN2yIFwB1?=
- =?us-ascii?Q?FVb5oRMsegcMYd9ZGj3ogbeQbXIjrey7LgkbMaL7BIwRaKmB7vkgg/lqwAwV?=
- =?us-ascii?Q?gbs/Ifc8f56VlhaHAFbxAeJBm7FHbd6FxWs3kXHUSe4R6QVFOeIYHQxsQFmt?=
- =?us-ascii?Q?XkJ1bT1+ZVeRQjsKfON1Vtmsog+V1RZwxW5sxIBhGG4gvFYUYuLFRgIK9Anj?=
- =?us-ascii?Q?7S5YpTMy3w29A2ejsZ18ptCOGYyJYluZUpcMKoOqZzFqEkabN+VCQ/pOodMt?=
- =?us-ascii?Q?+0396w+/OwrdOSzwPmnXZRjXN7yKygW+H9UnmZ9YNvQ8pQ55CZ3hjrLUU2V5?=
- =?us-ascii?Q?+b0TMUB+BmRbPreb/HGEDV85OZ+a89U/ybyqBsjD3LMWxW1547frPZbR7EsN?=
- =?us-ascii?Q?9bQyroEPM/otkRDecv3P+La0olxyNithDymLcI+pBlpICECkULdXHTOtie8G?=
- =?us-ascii?Q?7/FDEA1D3sgCyaONwOd07K+YuP/B15GgA4+QyhJMgdJ+iNEryhule6yeDA8q?=
- =?us-ascii?Q?K/zQ7SQwKutGQoP0xASR9t4Id9rV+JeWEps9ymmP7HlwVp8S2Fst2F17pQ/H?=
- =?us-ascii?Q?4W4l0VzBlpkLWiE6bdnxDmeSbVBO6A8lsgalZJiIwQ1fb+2/Y4T7TBuCmxlA?=
- =?us-ascii?Q?DDM2tCDSSB2OjLIoL5kvzgeBAvLcCdtnvGTSsuddDmcqmbY5nxuul6cE3aI/?=
- =?us-ascii?Q?3gpTz9SyRcahGL8yHN6qbqlsE1sQP7roZMc3pT+BNQC90FgW521K23rMzE4o?=
- =?us-ascii?Q?GFNUq+liI5b4H+7I2zOJrEGqudyERZw/S3Rw/C3jFMj36BvHnlnwgeUKlcAs?=
- =?us-ascii?Q?T8l1+rXDZ3MG76Aao/mp2cLk+Ikk9a9d0tePeQEImbsNiiz0T/Jr7VX2Nw7V?=
- =?us-ascii?Q?mN5yWnFYJdF/B97F3OO9q4MWShfA4dWxwY50GdSh8GLHTK7MA9AHEqMJr+TB?=
- =?us-ascii?Q?zOySOToj8aw+DBDEIUaQvbz+FpOElNfK/lc22sGIpSloExcyLMnqZ762Fsma?=
- =?us-ascii?Q?aZJr17KSGcRX15njDlIk6qZrBhxv1BYaPqdwcpSuD9ub7sh0UV/gdDQqUiZu?=
- =?us-ascii?Q?O+SdavKnjGPDc/Bz7DlmLQE/zGsbwYoRe+76s1VXI+vUVuNwbPfDAJyFhfvM?=
- =?us-ascii?Q?l9tpXxNV57EYupOAT0amHzkwnWv+0EzJgn/MDHq08yG07hBejaCEAD+3sk+Y?=
- =?us-ascii?Q?/wd7krMkU45O/nA/NbFJOY2o5FNK1Dc39jZMLPuK5eR60riTIJo0JAE0w5gy?=
- =?us-ascii?Q?87lAK6P15ICH8XWsLgGT/1jP77C7pia4zbPYj6cw89TnBqofwE77wC8QFvZ6?=
- =?us-ascii?Q?V5wMQnaD41yaUBZqgxxLu5F1nikru8in7UxJoMeZIGqlWha2h343bvHZlPxF?=
- =?us-ascii?Q?wrqQ80Y4Pl/phq5fsOCM2IsCYOnP?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?7pu7gEa9cWctPxakRJb1Jqb4gEhId0nCPACu8OvcmeT0w5a+txc+RiAOHx3O?=
- =?us-ascii?Q?foFs+NOwBRUaJOaDiQtYZpQJ/xmjBaq/J3J6FDXZoKo3MI10aek2xloelcBi?=
- =?us-ascii?Q?rLOPubTu48kGXpPPnsYyoCACrcNrOTvXAOY73uCGe84you3ojnQEEmzMzPyx?=
- =?us-ascii?Q?+uyjh8l6EOsc+GmmayoD1k4/hT1Z/86f+SePXaYMKpX1eKgkJBOzyuOHo+NS?=
- =?us-ascii?Q?Qxcn28hAzE3lxDnstalF8fbcDvC7P9Kq8CSdsrCWscgTwdOy4v2Qn3DffA+n?=
- =?us-ascii?Q?elEIYPZ9BKgt3qvDVX2/F38+cmrd69uppjbs4DKGTf9A/hXlkOMWtPYvxwMO?=
- =?us-ascii?Q?X+9KAmoE07Zy9cgbV6HJulJxRfNcg6QZAlWsGBddyF+k6yoJDUQFG14wc5XM?=
- =?us-ascii?Q?5zHpr9USZdSg9bQ4I8iAKx467ZrJhU7U6KmYylTlD8MTt5jarAXBF+huwjSo?=
- =?us-ascii?Q?KGnWeb0xBoSxh2Ng2nKAHFA2H6UQCwQSbTEh8pG7lcRb7++BR4+g+GtAJR7U?=
- =?us-ascii?Q?y1kLVOKJW1Mlb2zB+iAwING4Oux45p9ViH3iIjVXcJjQ/WgjX9hJHYD2JD8R?=
- =?us-ascii?Q?K9dInmLAriG6oY1pFsiuYJUDBYwGg2ayocPDyx6weUBIk525Fhau3f+f88F7?=
- =?us-ascii?Q?AMcq7bcDqNT0VDv944lVgWJlB0e93I+x69rk+RwDav1sCjrc4a3r2sD3a3HV?=
- =?us-ascii?Q?ngbnIwRO0MYdW8f01n977aBjxZG3+8n6y7x167/gh8NzYOIhxS5cW9YSk7r8?=
- =?us-ascii?Q?H0htn98yytIyCjBNiFik2mBKk7tnRNfKyt/QVGAxt9vphF1BpDwrb69q4+bd?=
- =?us-ascii?Q?4/LjnZrk9kELcirDwVyLv6f1c2YQNOaxlLEmpG61IJq3w4VJXmO5Rx96/X1i?=
- =?us-ascii?Q?4sqgRFr62PIzZ5+zx9hD6n/9RHBouVQj6E50W9a24KboVbi8eaZFW7g0fRKZ?=
- =?us-ascii?Q?FEd69+7DHZkBmzqC5olEhfPR9Eu1j5xt1CY00F6KRQVxrXp1g7a8jx2+8wNq?=
- =?us-ascii?Q?DfZy+qi5gabqVygt23B57VQ4a0uGh5Q+EmyWBrpEmF+ydJb5trJgdC0Ugqyp?=
- =?us-ascii?Q?VfS1LxvhALySQtIW/JbnJs3jd+1mdcoYMqpyK3saIRGgFKGzGhm3riQevBeI?=
- =?us-ascii?Q?hCE+b/XAhd/QZgl0DKqec6j1iFXmzfl+DttTY0wUHrxIQeedIoYtrStGTbDt?=
- =?us-ascii?Q?QqSxpekWxy7ymECA9Wo8UbML8QKKXmRU2mETHAGuCYLWCysIT5rFYvQ043XU?=
- =?us-ascii?Q?TK4jffWmnY10lyOB1v6Sab9icxi9zeIu/J8SX5Y/nJILTXhgLJtKSNwY/xRa?=
- =?us-ascii?Q?BYqjsgaC6l4xNJGwZwLsYGSKM2MNaalTGUslXnX5+CFscMjchiWk1h6Dc7AC?=
- =?us-ascii?Q?Fo7mtSQ/og7cwmkizrVnhMYPXgk2b0UMqjutq992KqMaU7Wbs7/FHIiE358C?=
- =?us-ascii?Q?pVlzIIJfp2OmZfeHe3h1PaaV3mVbyEgCj5MGkBnz+x0UNuXU//dt6xic5DY8?=
- =?us-ascii?Q?NtJkLbJ9+VI2jkAk+VmTX+tPu9lgvaPLDXve0O3+3sYL25q//RKA3Mw/T1od?=
- =?us-ascii?Q?Di+/VtiwBQ3MN/LX/3Xb9GKWT2yyMcIwimq+qUeV?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba6dc7c8-9496-47b3-6e66-08dd4aa92609
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 14:34:11.0970
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +EYMZ4B1aoCkvAn6BLQ5tC7D/Ih3EqSDpst4ZFjFQZu/sziz5ijs/cw3mxIec6O4BwACG/qzxYm5vyS7RAMlTg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6950
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6n16cK85JMyowDq@J2N7QTR9R3>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Tue, Feb 11, 2025 at 09:19:52AM -0500, Yury Norov wrote:
-> On Tue, Feb 11, 2025 at 10:50:46AM +0100, Andrea Righi wrote:
-> > On Tue, Feb 11, 2025 at 08:41:45AM +0100, Andrea Righi wrote:
-> > > On Tue, Feb 11, 2025 at 08:32:51AM +0100, Andrea Righi wrote:
-> > > > On Mon, Feb 10, 2025 at 11:57:42AM -0500, Yury Norov wrote:
-> > > > ...
-> > > > > > > +/*
-> > > > > > > + * Find the best idle CPU in the system, relative to @node.
-> > > > > > > + */
-> > > > > > > +s32 scx_pick_idle_cpu(const struct cpumask *cpus_allowed, int node, u64 flags)
-> > > > > > > +{
-> > > > > > > +	nodemask_t unvisited = NODE_MASK_ALL;
-> > > > > 
-> > > > > This should be a NODEMASK_ALLOC(). We don't want to eat up too much of the
-> > > > > stack, right?
-> > > > 
-> > > > Ok, and if I want to initialize unvisited to all online nodes, is there a
-> > > > better than doing:
-> > > > 
-> > > >   nodemask_clear(*unvisited);
-> > > >   nodemask_or(*unvisited, *unvisited, node_states[N_ONLINE]);
-> > > > 
-> > > > We don't have nodemask_copy() right?
-> > > 
-> > > Sorry, and with that I mean nodes_clear() / nodes_or() / nodes_copy().
-> > 
-> > Also, it might be problematic to use NODEMASK_ALLOC() here, since we're
-> > potentially holding raw spinlocks. Maybe we could use per-cpu nodemask_t,
-> > but then we need to preempt_disable() the entire loop, since
-> > scx_pick_idle_cpu() can be be called potentially from any context.
-> > 
-> > Considering that the maximum value for NODE_SHIFT is 10 with CONFIG_MAXSMP,
-> > nodemask_t should be 128 bytes at most, that doesn't seem too bad... Maybe
-> > we can accept to have it on the stack in this case?
+On Mon, Feb 10, 2025 at 12:49:45PM +0000, Mark Rutland wrote:
+> On Fri, Feb 07, 2025 at 11:22:57AM -0300, Luis Claudio R. Goncalves wrote:
+> > Hello!
 > 
-> If you expect calling this in strict SMP lock-held or IRQ contexts, You
-> need to be careful about stack overflow even mode. We've got GFP_ATOMIC
-> for that:
->      non sleeping allocation with an expensive fallback so it can access
->      some portion of memory reserves. Usually used from interrupt/bottom-half
->      context with an expensive slow path fallback.
+> Hi,
 > 
-> Check Documentation/core-api/memory-allocation.rst for other options.
-> You may be interested in __GFP_NORETRY as well.
+> > While running ssdd[1] from rt-tests on an aarch64 kernel with PREEMPT_RT and
+> > debug features enabled, this bug was triggered on every single run:
+> > 
+> > [1] https://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git/tree/src/ssdd/ssdd.c
+> > 
+> > # ssdd
+> > 
+> > [  273.115597] BUG: sleeping function called from invalid context at kernel/locking/spinlock_rt.c:48
+> > [  273.115607] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 6077, name: ssdd
+> > [  273.115611] preempt_count: 1, expected: 0
+> > [  273.115614] RCU nest depth: 0, expected: 0
+> > [  273.115617] 1 lock held by ssdd/6077:
+> > [  273.115620]  #0: ffff07ffd77893e0 (&sighand->siglock){+.+.}-{3:3}, at: force_sig_info_to_task+0x58/0x200
+> > [  273.115642] Preemption disabled at:
+> > [  273.115644] [<ffffad24518bd1f4>] debug_exception_enter+0x1c/0x80
+> > [  273.115653] CPU: 47 UID: 0 PID: 6077 Comm: ssdd Not tainted 6.13.0-rt3 #1 PREEMPT_RT
+> > [  273.115659] Hardware name: GIGABYTE R152-P31-00/MP32-AR1-00, BIOS F31n (SCP: 2.10.20220810) 09/30/2022
+> > [  273.115662] Call trace:
+> > [  273.115664]  show_stack+0x34/0x98 (C)
+> > [  273.115670]  dump_stack_lvl+0xa8/0xe8
+> > [  273.115675]  dump_stack+0x1c/0x38
+> > [  273.115680]  __might_resched+0x254/0x330
+> > [  273.115686]  rt_spin_lock+0xcc/0x220
+> > [  273.115692]  force_sig_info_to_task+0x58/0x200
+> > [  273.115697]  force_sig_fault+0xd0/0x120
+> > [  273.115702]  arm64_force_sig_fault+0x48/0x80
+> > [  273.115707]  send_user_sigtrap+0x88/0xe8
+> > [  273.115712]  single_step_handler+0x100/0x160
+> > [  273.115717]  do_debug_exception+0x94/0x160
+> > [  273.115722]  el0_dbg+0x54/0x150
+> > [  273.115727]  el0t_64_sync_handler+0x134/0x138
+> > [  273.115732]  el0t_64_sync+0x1ac/0x1b0
+> > 
+> > The ptrace usage in ssdd eventually exercises the code path that starts on
+> > el0t_64_sync_handler() and may end up calling do_debug_exception(), which
+> > calls debug_exception_enter() that disables preemption.
+> > 
+> > Looking at the backtrace, later in the call chain force_sig_info_to_task()
+> > tries to take a spinlock, which on PREEMPT_RT becomes a rtmutex and could
+> > sleep in case of contention. That triggers the "BUG: sleeping function
+> > called from invalid context" warning.
+> > 
+> > It is also possible to reproduce the problem in an aarch64 kernel with
+> > PREEMPT_RT enabled, no extra debug features, by running ssdd in a loop.
+> > With that we can see not only the backtrace reported above but also other
+> > instances where the process is scheduled out while preemption is disabled:
+> > 
+> > # while :; do ssdd; done
+> > 
+> > [  754.673678] BUG: scheduling while atomic: ssdd/7340/0x00000002
+> > [  754.673682] Modules linked in: qrtr rfkill sunrpc vfat fat acpi_ipmi ipmi_ssif arm_spe_pmu igb ipmi_devintf ipmi_msghandler arm_dmc620_pmu arm_cmn cppc_cpufreq arm_dsu_pmu loop dm_multipath nfnetlink xfs nvme ghash_ce sha2_ce sha256_arm64 nvme_core sha1_ce nvme_auth sbsa_gwdt ast i2c_algo_bit i2c_designware_platform xgene_hwmon i2c_designware_core dm_mirror dm_region_hash dm_log dm_mod fuse
+> > [  754.673703] Preemption disabled at:
+> > [  754.673703] [<ffffa87a17ca470c>] do_debug_exception+0x54/0x100
+> > [  754.673710] CPU: 102 UID: 0 PID: 7340 Comm: ssdd Kdump: loaded Not tainted 6.14.0-rc1 #1
+> > [  754.673712] Hardware name: GIGABYTE R152-P31-00/MP32-AR1-00, BIOS F31n (SCP: 2.10.20220810) 09/30/2022
+> > [  754.673713] Call trace:
+> > [  754.673714]  show_stack+0x34/0x98 (C)
+> > [  754.673718]  dump_stack_lvl+0x80/0xa8
+> > [  754.673721]  dump_stack+0x18/0x2c
+> > [  754.673722]  __schedule_bug+0x90/0xc0
+> > [  754.673726]  schedule_debug.isra.0+0x128/0x158
+> > [  754.673728]  __schedule+0x68/0x690
+> > [  754.673731]  schedule_rtlock+0x24/0x50
+> > [  754.673733]  rtlock_slowlock_locked+0x1c0/0x350
+> > [  754.673735]  rt_spin_lock+0xcc/0x130
+> > [  754.673737]  obj_cgroup_charge+0x54/0x138
+> > [  754.673740]  __memcg_slab_post_alloc_hook+0xcc/0x300
+> > [  754.673743]  kmem_cache_alloc_noprof+0x304/0x338
+> > [  754.673745]  __send_signal_locked+0x90/0x428
+> > [  754.673748]  send_signal_locked+0xe4/0x140
+> > [  754.673750]  force_sig_info_to_task+0xd0/0x160
+> > [  754.673753]  force_sig_fault+0x6c/0xa8
+> > [  754.673755]  arm64_force_sig_fault+0x48/0x80
+> > [  754.673757]  send_user_sigtrap+0x54/0xd0
+> > [  754.673759]  single_step_handler+0xc4/0xe0
+> > [  754.673761]  do_debug_exception+0x7c/0x100
+> > [  754.673762]  el0_dbg+0x40/0x158
+> > [  754.673766]  el0t_64_sync_handler+0x134/0x138
+> > [  754.673768]  el0t_64_sync+0x1ac/0x1b0
+> > 
+> > In this case one of the local_lock_* calls in (the functions called by)
+> > obj_cgroup_charge() seems to hit contention and, as it is dealing with
+> > rtmutexes, be effectively scheduled out to sleep.
+> > 
+> > The scary comment on top of debug_exception_enter() provides a reason for
+> > preemption being disabled at that point, but it seems to open a can of worms
+> > for PREEMPT_RT usage:
+> > 
+> >     /*
+> >      * In debug exception context, we explicitly disable preemption despite
+> >      * having interrupts disabled.
+> >      * This serves two purposes: it makes it much less likely that we would
+> >      * accidentally schedule in exception context and it will force a warning
+> >      * if we somehow manage to schedule by accident.
+> >      */
+> >
+> > This is the data I gathered so far, using both v6.13.0-rt3 and 6.14.0-rc1
+> > for testing. But due to my ignorance wrt the debug exception treatment in
+> > aarch64 I can't devise a solution for the observed behavior.
+> > 
+> > Any suggestions or comments?
+> 
+> I don't have an immediate suggestion; I'll need to go think about this
+> for a bit. Unfortunatealy, there are several nested cans of worms here.
+> :/
+> 
+> In theory, we can go split out the EL0 "debug exceptions" into separate
+> handlers, and wouldn't generally need to disable preemption for things
+> like BRK or single-step.
 
-I know about GFP_ATOMIC, but even with that I'm hitting some bugs.
-Will try with __GFP_NORETRY.
+If this is an acceptable workaround, until we have the real solution,
+I can work on that :)
 
-Thanks,
--Andrea
+Luis
+
+> However, it's not immediately clear to me how we could handle
+> watchpoints or breakpoints, since for those preemption/interruption
+> could change the HW state under our feet, and we rely on single-step to
+> skip past the watchpoint/breakpoint after it is handled.
+> 
+> That, and last I looked reworking this we'd need to do a larger rework
+> to split out those "debug exceptions" because of that way that currently
+> bounces through the fault handling ligic in arch/arm64/mm/.
+> 
+> Mark.
+> 
+---end quoted text---
+
