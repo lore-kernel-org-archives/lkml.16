@@ -1,236 +1,368 @@
-Received: from AUS01-SY4-obe.outbound.protection.outlook.com (mail-sy4aus01olkn2040.outbound.protection.outlook.com [40.92.62.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f196.google.com (mail-yw1-f196.google.com [209.85.128.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92701FA165;
-	Tue, 11 Feb 2025 12:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.62.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739275485; cv=fail; b=onmV/OHlYn6RSeDTyJvNzSuULJQ06VybqRyKGK8LDKjsDqXghgnr5UEZ/KdqrHYOkTjiztciBkQHGMFS5Ak2uPqDTA6zMolhJz1hbvUQ76fD0LmCYeLSW/knLKgjT4TvaOH35K0AXFQKwAYkEAEt6oZXU500xwLH8NHQeXIC3y0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739275485; c=relaxed/simple;
-	bh=wUIinRgUjSTbL3FrovJlpEMJ4QusJwtPAW5L9oXyhKs=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=IdL4eJcaIFnQZLUqd3vJzHbBD81sSu9WPWx5/oCDRcFlIUbhYXRjMhBFbaQmlDQWGcSfCjqV+xLRol+M6PPnkv4vklRkGQfOdvoXORnpXfohEJTdMJeFOzHFWY25AqJe29D2Q80ABN/TPoSY2wl0BG0FeiGJ+R3NlhkoHKzb1Pg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=owgJosIC; arc=fail smtp.client-ip=40.92.62.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2671FCFFE;
+	Tue, 11 Feb 2025 12:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.196
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739275491; cv=none; b=kMYKfkJMNXfmx1a9wwWE1gLq23n+t//+WvHnccA4p5nV7UoYIQdvsBb+lUHoMarf7Ho5nscV/HBXst8oaTDvvnCjkg0+RAc2u9PrYsPmTS2W5XRlMlnYOZ0qDYmc/IR32cB6xwhtoVltQlZ4Eqs4qkQJGgI8bfVnF8M38wdGiK0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739275491; c=relaxed/simple;
+	bh=6Wt4nC7Btuucsbn3pfSL7zYf9Rhv/+wfTFRIBzdDFb0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rKw7pKok26F8Hbwr1RB0/L8ADHTMJImU8whwuqbfF0baOrO0KF9oiERkxU9H826A7oKExj7ovzJaAT9LfvyP20vLtAIUFWYvxhTt0fb8Q1B0viaj1BKRGb7SQua2aZLDSsiTHbDbZmeC37OCDVWD1SutdhhI+a61nD2X5GzBsZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kZ1u2tNT; arc=none smtp.client-ip=209.85.128.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="owgJosIC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hC1zT6I7LTYahTXS6U6BVNnlDrM/tUUC8mvat6ugj0DRjMK9Y70okjJ9vffWvNJAIn/2802BJnwY0nsrEoqtnlEQ8HrfoQQ2TIoumqePvg8QmHKFguKpE3HSZNnCt1p9ShFORx4dxTrRBguffktJmBshVfsAIS+X1PVJUUiCF7XgVEvAIpY6Ti87TfhRM+cGZ8PzoynocpD8h8Gbf3XdIv7yXK4LfBWXMGikTn6aB8M398MFCDFv3J9q0AReHB9WbsltlHDHobk/195MRJ0TuB7XxyM86umbgvXhi5n1bqjq8tsFSSVRst/F+c9JigU+LeJq3KQCL7ft00Qlrd+82Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wUIinRgUjSTbL3FrovJlpEMJ4QusJwtPAW5L9oXyhKs=;
- b=srZWoIcFzwHqlF1aRpbtYK3LzqrvGg/vY8FYUzMgr55FD7cLR9aIGWzosd7cL23en3oHjPJTpRP046m2lrdzwnqNeFvN/Fg8ngNGdyqVJODK7r0J9O5fHwUQmi7iaXswSUKXx9pfjzQpU7dXjHNAICuEUo7I+e1ecuRhAqUDVmMBWGFZa6B5cbTTKF1W9ha4RmeYILMG60KvzOesZGspbtigEgRY7QCjqX7lehWV5u7PH5xpZavKGaVN5Q4RE1Yravs37nhjDR7WLXV934lwDhIspldS2yW0+ramjy6d0YkZ3aTB9u2c4BKy66+OWL+qDUBHTJOyFRSreDIeUF836g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wUIinRgUjSTbL3FrovJlpEMJ4QusJwtPAW5L9oXyhKs=;
- b=owgJosICEJ0+8e4idnaMSDfCJAaJa2ui99bsxMkrH7aFOCfSSHBjuPmWUSo68wpmItay6xlgMAfCMkNkWftrVmuqZX8RUgEU2im/hLJSWEg7Ahn5/49khyTf2ti+Le497OgV3SOPPP6Pku9YaaPyaLv6Km0U/glrcLBAWp/nxc621DhAd5Ff8OzszA8Bf8BOnuIzRo6OIkBdkpmCZJqwDgkdVNgcx1Kg8+5C7aVtzALT5Mvmy0va05B+sOeuUrEO0TkE6L1FBAz5SDYI3oTN5TUPSP1CS1hIHs6w8ZyUHacA4qCoS5VG5rURLpqZj/0vP7HrpQ2qbBhmvPAnDBMZSg==
-Received: from SY8P300MB0421.AUSP300.PROD.OUTLOOK.COM (2603:10c6:10:293::17)
- by SY7P300MB0082.AUSP300.PROD.OUTLOOK.COM (2603:10c6:10:235::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.12; Tue, 11 Feb
- 2025 12:04:39 +0000
-Received: from SY8P300MB0421.AUSP300.PROD.OUTLOOK.COM
- ([fe80::c7a9:a687:779f:a9cc]) by SY8P300MB0421.AUSP300.PROD.OUTLOOK.COM
- ([fe80::c7a9:a687:779f:a9cc%5]) with mapi id 15.20.8422.015; Tue, 11 Feb 2025
- 12:04:39 +0000
-From: YAN KANG <kangyan91@outlook.com>
-To: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-CC: "syzkaller@googlegroups.com" <syzkaller@googlegroups.com>
-Subject: BUG: corrupted list in nsim_fib6_rt_destroy 
-Thread-Topic: BUG: corrupted list in nsim_fib6_rt_destroy 
-Thread-Index: AQHbfHrdylM4SOk1skCPmn4ZvjefYg==
-Date: Tue, 11 Feb 2025 12:04:39 +0000
-Message-ID:
- <SY8P300MB0421A0CA0D6C69A8BE4767A7A1FD2@SY8P300MB0421.AUSP300.PROD.OUTLOOK.COM>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SY8P300MB0421:EE_|SY7P300MB0082:EE_
-x-ms-office365-filtering-correlation-id: 720f59f8-e9e7-4c06-4a8e-08dd4a9442eb
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199028|8060799006|8062599003|7092599003|15080799006|13031999003|19110799003|15030799003|102099032|3412199025|440099028|12091999003;
-x-microsoft-antispam-message-info:
- =?gb2312?B?VGQ4MnlhQlkrZzNkWFVTUUkydFN1MStlS0E0dkRJNGVSd0t3S0lzekQ1MTBi?=
- =?gb2312?B?ejVqRGRSQVJTME9Xbk9uTlZFU2pkQ08vMWszWTgrbGtpV0UxcGtPeTVUeFhW?=
- =?gb2312?B?L1poWmtLK0JlZmZCd2Y1UXdMK1UvTVpBUHI2anJLa3U0eDBBdVVxK29DczZ6?=
- =?gb2312?B?eUlEVUt5WjFiY3kwbmsybkQySkRBaTJ6UVdTSHBaOEc0OHk3ZHJGZG9oNXRj?=
- =?gb2312?B?d0laZFZMLzJNVXRGTStjWVZZWnFyLzcreElGeG1obks1bzBaV1o1QkVwaGtk?=
- =?gb2312?B?VDRPVVowb0hBZzVjUHVWWnUxR09lamlONlpQVnVvV3lsdHdBQ2ZGR05LUWZS?=
- =?gb2312?B?K0FVaEh5V0F3L1ljSHh0Q1EvTkt4NVJ6Rk9nUWdjU2VkbWd3bzVTNCs5VDhX?=
- =?gb2312?B?N0tnWDlJWnR2VzlLcUxxQm9aVmVhUmQzRmwxTzRUZzR1TlNockdhSXMxckJP?=
- =?gb2312?B?ODIrM3ovM1RxbVRrdkRPdFRuV1JoWSs3SXlGVnVJSDdhL2ppdzdYbTFuUXRC?=
- =?gb2312?B?a0hGeXFnbVFidG5aRUJuSzFTaHlVZjJUb3lVUENsRjJWYTRUZStBV09lZW9t?=
- =?gb2312?B?T1VRVC9KNUxWaE9mYjd3U1hZY2NxVnJ2V2VudVF0aHpGZW9lUEdRN2tvd1ZR?=
- =?gb2312?B?WENWR0FNb3JwMkZSd1R2SWIzWC81aS9mVlFsMmo1dzBROThLUDVwcXNZM1Bn?=
- =?gb2312?B?eVdXbkQ5SWx5OG9uSFlUYU5OSUVWVlJYL3l3SWVCZ1BHbEp6eGlCZXoxUkF6?=
- =?gb2312?B?bU5nVXA5SEsrVmYxV0txUlN6WW1HTkNqaDZ6Q0o4Rm1yZ2NKK0ROeFNoejNH?=
- =?gb2312?B?a096OE1POEVhWjdaWWtMNkdlcU5Ya0xLT2x2dUY2VW5CV3JQbkc4MVByNHEz?=
- =?gb2312?B?Q05PRGVaL1dmZWtRcUpUSE5kOWExVmUvSFJoS0h1Y2ZrRjQzaktaVC9CU3NY?=
- =?gb2312?B?MHV4ekl3Zmw0bkhvc00wWExtb1h4eHlsK3JBWkxXekQyc3FrL0QvTEFraThy?=
- =?gb2312?B?N0FRU2hKRlhabnhhY3liZEFNS295UzhlMUpMM3JxZFg1RTdOUWVVTGpYT1NQ?=
- =?gb2312?B?SHgzOHJ4UEJqL01LLzdRNFlnTS9ybWlpWE1RYi9VNXJXTC9qR2c3RDFOOXlt?=
- =?gb2312?B?aFNJSU15N1FuazlNZmhZcjNpTTBEV2xKd3YrMXBhZVgrekZaQ0FsRFBpK1lE?=
- =?gb2312?B?VWJVU05wbUorSzdodW5VS2pLOUl6UlNPZVpXZisyK2hHOFVubEVUSlI1MHVm?=
- =?gb2312?B?VklqL0o3QWVtMHdzbXR5Y2pIZlBEZUlTYWM5cmNwbnA3SlF5bENTNGFTUFF1?=
- =?gb2312?B?MWdGdVdNTU5CRjc2SzZYS3B6emtKRm5SV05SNm9ISlZRRC9Va2p6Zyt0YWtF?=
- =?gb2312?B?ZjdOWGZvOUlWMGtaeUhraDI2VDAxNm1TdCsreHdGekhGZFpYUFQrS3VyVGpt?=
- =?gb2312?B?TXdOOWVvK3JGNWJYZnMwNmhFT0EwbTlKTGdtSzVXaGpwaHl2WkJKY3hZV3Nm?=
- =?gb2312?B?bk55cU1qQkp1VktZVXVNdDBxZ3JHS1BCaTNuR1QzbDFYbDdaVXdmOHJhdUk3?=
- =?gb2312?Q?pjJAu8RDUuBCcdOEvSuGEIX8Y=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?gb2312?B?aDd0TzJoaUxNUVB6RDJldEFiVWJkdTlYMUNpM2g4elM2cVZNT1VNRzAwT3N0?=
- =?gb2312?B?U2FoNWE3RUZMaGY4MDNaejRxQlBOMTZ4RlFPcllETlFqQ0MvVW9RZktQc3dV?=
- =?gb2312?B?ZHNYdFc3cDZDcThtb3RrL3ZHeWp5R0ZtOWsxb29pLzFGTEIxbTBMcld1L3hJ?=
- =?gb2312?B?Wnc3dzRTT3dFYWU5YnlVMG8zVnozZ2VXalVaZmh6cGVJWVRKb3BnYUN2M0Zj?=
- =?gb2312?B?OEppQ1ZiaEpubG10LzEvN1hRaEJEcVU1dndmdXJSd2hGKzVrWWt0dHlnYXc3?=
- =?gb2312?B?SkJQQTdSakdHZTlZeGREbEt2OEtOeXhJUGRHVElVYitXNkZHU0lDM1RFS2RU?=
- =?gb2312?B?VE05NmFZWUZNOTVZQXpNR01RK1VYRTBCWUF4MVlKaHBsdi9nRnh4QVhFdWZV?=
- =?gb2312?B?Mm1aNUZZdWZFYk81TlBHQmcyblpoRWNNVWN3R3E1WTJRK0NGNjhncThxcGxP?=
- =?gb2312?B?ekptZlk5a21mVG4zbXBHOHVlaHgremtsTU5DYUJ2aHVXRzJ5SkZSaHJZU0JB?=
- =?gb2312?B?OVZKZ29YS2ZPWnNIMUpsR3N2ZXJSVjM2QjcyTkZtMERVa01rTjY0VG1ZdTNi?=
- =?gb2312?B?eXNDQmdwUTFJOFFCaHhpTWp0RmxNekFXR0JvOGhYSS9JVW5iak43ZTl4eHFM?=
- =?gb2312?B?QWN4U2JBdE8valFaTnNXNzUvb3VuVkx1elBNNzVaVXcwZHBFVVZXQzNiN201?=
- =?gb2312?B?cE1BUnhXYzNPTnVzSlhoNmRLMXBIaFl5bDNMQjRTb0l6LzJiM3JXZGlLVlVo?=
- =?gb2312?B?b09OaTdWb1hFN3FobmgxTnNIVW0wYmZRSUVsenFHQmhLSkNxMUpycFhPWDdp?=
- =?gb2312?B?d3B4V3RoVjA3VTdLTmZ0RjhCd1kzQ0xKYkxKUXFRRFl1RllWL0pXc3RIS0pn?=
- =?gb2312?B?dnVqdEpIWVp2alV1cFJTRDBvWUwrUXlWMSs3cmRETG1Hcjkyb1JkQngyT2xO?=
- =?gb2312?B?d0tzQW1mSU9RdzRwMWU5dW9oRlJ3dld4bko2UTFVcHljTWRYT3BQRlQ0ekFu?=
- =?gb2312?B?Nkkzd3pnWngrb2ZRQndPakdJV3FRZmhyOG11eDc1bkFuejNGRnJLVXVsNjZ3?=
- =?gb2312?B?KzZ4eGg4aWZ4d1MzWHlyQzJQczF2SmlLc3YrL05pcXRTZDNvb3d1WmN6RTRK?=
- =?gb2312?B?MTVpM1JOWkdHM1ZaVzVlSDFBd2lnaGFEVXlpWjFIdmI0SUtkWjBqYS8rQmFm?=
- =?gb2312?B?RGV4YnlidzJCOWNONmg1YTZVOGpDbnRjSlZza2xHZlBsUGExVG1uWE1wVkVZ?=
- =?gb2312?B?WUZnUWMzcFNqdmlnMi96UVV4TXpZdFQxK0h4WXUxMlV4STkxZFUzYlpiWmQr?=
- =?gb2312?B?TzNVclJ4V2tLUjB0VUcya2VRc2twV29FNlpBTDR1OUFhbG5wVG1wNkxPWXB3?=
- =?gb2312?B?KzJpUHdZdlN1QlQrb0tiV1Z5dmF6a1VNcFVwWlVsWm1tY1FDd1FQMHVjaGxO?=
- =?gb2312?B?K1h0azhyNUgwYlE4UVRrYlRlUXZnSEgyNHNSOHVHVlpRZm1KNHlqL1RlYXBJ?=
- =?gb2312?B?WW1WL0VEeGdWSUgxNnVWdWRCc2tsTktzTlg5Y1laZXdlQ3o0ZVc2VDlUT2t4?=
- =?gb2312?B?T1NveWJzZC85Y2NDajFDbHhnUHQ2Z0t0bElvZmZCTHkvWitzQm5NWG56NWkr?=
- =?gb2312?B?cVNLaHkzK0ZYeERzRGtTeFN4aGZWVE5wM1JRQk55NnhvQXZkRG5vcmtOdFVP?=
- =?gb2312?B?bml3MDY5Q2NaaDJaTzh5cmpkMEVJUXF3bU1mNVlOb0x4ZmsvaVYyMTRCNHZD?=
- =?gb2312?Q?aE33QXtA+Nxworrxu8=3D?=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZ1u2tNT"
+Received: by mail-yw1-f196.google.com with SMTP id 00721157ae682-6ef7c9e9592so42989267b3.1;
+        Tue, 11 Feb 2025 04:04:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739275488; x=1739880288; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HO8SnT16ipU2VJWLGEvtBFy/dT+aFWYknBux6Pff2Wk=;
+        b=kZ1u2tNTGuH4uAS0+aNlPgtSIL86suACIR+ZCIpriC6TpLQ3ewzUdWsmib9QyFWQ1I
+         k0LbYCp9qCyzM57HAO4cM7ReqQTZPTf6aveLW1P28bJJ0s/vZBu3HAsjbAljDhE4IjoW
+         tGZd1jMMgTD/JaBfVEnrldtTyyd+1sPdUMesrAL2nsSmqnc2+rgVAi4EQTD6D/CnUQJL
+         93GVlBv+t6FHT20gB93oADTAmrCJg/IFonj3gMxzgYOrJlJOKD1dgI4UaTwvaX8hvQoA
+         6fSjzRnT5GjtJrsMZkBWSCQLltlIPSloGf+YOLPMRwZ/br8nJwhf4SOLxL3bHcRWI59y
+         9F9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739275488; x=1739880288;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HO8SnT16ipU2VJWLGEvtBFy/dT+aFWYknBux6Pff2Wk=;
+        b=Mg7il+UUM2wZ51HBK6zUgUo0RDZoy8R+QYCgMen5LWlN07zj9ipQaCVefpdw7KyGqV
+         HhTNUpH1ikLPlpj/eD0kLfsiEGYGrf44m7vZFZiwpwMtbgYuj+x0GQyi0Q4hyopLgG91
+         EV3Zg8l+eXbcoIYt9tUmrrzzf5H9xRhD8/BsQVzXwSnf9AMOu70eM7QyN1JCeD6IrY+X
+         PNCRd7WrINI2A/i+ajHP9o8w7T1TOfFlGMYhveNTVttlsqhTNyYfy+RLcgUxLH7x+r5T
+         7iMbWzxQfhmJCUjzXlCyQnjxOL3dCisDqzN4K6w0H9LpPjuQV8yKLeuT5FjYhBl/pBl0
+         dPag==
+X-Forwarded-Encrypted: i=1; AJvYcCWse4bZRFvPMwNKl5FGzV9zqfJF+we3KaVZgXGFGMUdJSG5kxqn1XeYxa9PrbAcC6AUWRUzC7QK0g8Tm5aC@vger.kernel.org, AJvYcCXAmcWH3rAx8WfUCDMciTxUBhhyo8D0WkuFjnQewloaTWXBFJXI1KOPoxiVWhMJQzd5OWltrr9DXEQsnyi2XRPWbCaE@vger.kernel.org, AJvYcCXHpJLD7LdZl5WfHdeBlay4WXIdXdaziv10hUf/BkJTJlxbLpU4HyqAZLa85b0esE58O0c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDQs3c1DSMMUk0a/VmXDr6rHBb+NdY5wAkoEKYfRez/XICIuQc
+	NnOzwV4Y80xAu2zmnxUxg8ImrDeXySs7MH5gxz0bd5f4c6EbMhidyq8bY9hA5ZDtnOb8S9B4zW8
+	LmY6bwLm/0LCQC5ygOXpAqvSQzvc=
+X-Gm-Gg: ASbGncuRV0pWRvClUPJc3khijpCCXLIW9/F/l+FGADXFoeoX20dC1v3mwzIa5fSIi21
+	tva8WOKJW6d4LebX4g1n2vfAl3hxIEJd9BZ75pKXcMllBwb8q2YJe/a1kn3kshIiuuZsFULbw
+X-Google-Smtp-Source: AGHT+IHtSdXC7ZtV2Ed6hUfajj0EnxP7utuSYP2YFYYwL2uyHELEZFAoSHY4VCaPSEKoOxnqq1AdvlcHGZElCXVW2kU=
+X-Received: by 2002:a05:690c:7090:b0:6f9:a75f:f24c with SMTP id
+ 00721157ae682-6f9b292290bmr166160997b3.29.1739275487875; Tue, 11 Feb 2025
+ 04:04:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SY8P300MB0421.AUSP300.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 720f59f8-e9e7-4c06-4a8e-08dd4a9442eb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2025 12:04:39.4712
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SY7P300MB0082
+References: <20250210104034.146273-1-dongml2@chinatelecom.cn> <20250210180528.01118537@gandalf.local.home>
+In-Reply-To: <20250210180528.01118537@gandalf.local.home>
+From: Menglong Dong <menglong8.dong@gmail.com>
+Date: Tue, 11 Feb 2025 20:03:38 +0800
+X-Gm-Features: AWEUYZmnELjF1StF4AcDURsFuI1lRxT_YhnfHUB1G1q0zztCipvIP3UCAsWKhu8
+Message-ID: <CADxym3YzTc8wyAndNP4OpK8JSLWkpCAMgJox49ioUBXrov1h=w@mail.gmail.com>
+Subject: Re: [RFC PATCH] x86: add function metadata support
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: alexei.starovoitov@gmail.com, x86@kernel.org, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, dongml2@chinatelecom.cn, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-RGVhciBtYWludGFpbmVycywKCkkgZm91bmQgYSBrZXJuZWwgIGJ1ZyB0aXRpbGVkICJCVUc6IGNv
-cnJ1cHRlZCBsaXN0IGluIG5zaW1fZmliNl9ydF9kZXN0cm95ICIgd2hpbGUgdXNpbmcgbW9kaWZp
-ZWQgc3l6a2FsbGVyIGZ1enppbmcgdG9vbC4gSSBJdGVzdGVkIGl0IG9uIHRoZSBsYXRlc3QgTGlu
-dXggdXBzdHJlYW0gdmVyc2lvbiAoNi4xMy4wLXJjNykgLiAKCgpBZnRlciBwcmVsaW1pbmFyeSBh
-bmFseXNpcywgdGhlIGJ1ZyBpcyB0cmlnZ2VyZCBpbiAgbnNpbV9maWI2X3J0X2Rlc3Ryb3kgZnVu
-Y3Rpb24gIGRyaXZlcnMvbmV0L25ldGRldnNpbS9maWIuYwp3aGVuIGtlcm5lbCB0cnkgdG8gZGVs
-ZXRlIG5vZGUgZnJvbSBsaXN0IDogIGxpc3RfZGVsKCZmaWJfcnQtPmxpc3QpOwp0aGUgbm9kZSBo
-YXMgYWxyZWFkeSB1bmxpbmsgZnJvbSB0aGUgbGlzdC4KCgpJZiB5b3UgZml4IHRoaXMgaXNzdWUs
-IHBsZWFzZSBhZGQgdGhlIGZvbGxvd2luZyB0YWcgdG8gdGhlIGNvbW1pdDoKUmVwb3J0ZWQtYnk6
-IHlhbiBrYW5nIDxrYW5neWFuOTFAb3V0bG9vay5jb20+ClJlcG9ydGVkLWJ5OiB5dWUgc3VuIDxz
-YW1zdW4xMDA2MjE5QGdtYWlsLmNvbQoKCkkgaG9wZSBpdCBoZWxwcy4KQmVzdCByZWdhcmRzCnlh
-biBrYW5nCgpLZXJuZWwgY3Jhc2ggbG9nICBhbmQgcmVwcm9kdWNlciBhcmUgbGlzdGVkIGJlbG93
-LgoKPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09ClN5emthbGxlciBoaXQgJ0JVRzogY29ycnVwdGVkIGxpc3QgaW4gbnNpbV9m
-aWI2X3J0X2Rlc3Ryb3knIGJ1Zy4KCm5ldGRldnNpbSBuZXRkZXZzaW0wIG5ldGRldnNpbTAgKHVu
-cmVnaXN0ZXJpbmcpOiB1bnNldCBbMSwgMF0gdHlwZSAyIGZhbWlseSAwIHBvcnQgNjA4MSAtIDAK
-bGlzdF9kZWwgY29ycnVwdGlvbi4gcHJldi0+bmV4dCBzaG91bGQgYmUgZmZmZjg4ODExMmIxNmYy
-OCwgYnV0IHdhcyAwMDAwMDAwMDAwMDAwMDAwLiAocHJldj1mZmZmODg4MTA4MzE4NGE4KQotLS0t
-LS0tLS0tLS1bIGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0Ka2VybmVsIEJVRyBhdCBsaWIvbGlzdF9k
-ZWJ1Zy5jOjYyIQpPb3BzOiBpbnZhbGlkIG9wY29kZTogMDAwMCBbIzFdIFBSRUVNUFQgU01QIEtB
-U0FOIFBUSQpDUFU6IDAgVUlEOiAwIFBJRDogOTkxMSBDb21tOiBrd29ya2VyL3U4OjQgTm90IHRh
-aW50ZWQgNi4xMy4wLXJjMSAjNQpIYXJkd2FyZSBuYW1lOiBRRU1VIFN0YW5kYXJkIFBDIChpNDQw
-RlggKyBQSUlYLCAxOTk2KSwgQklPUyAxLjE2LjItZGViaWFuLTEuMTYuMi0xIDA0LzAxLzIwMTQK
-V29ya3F1ZXVlOiBuZXRucyBjbGVhbnVwX25ldApSSVA6IDAwMTA6X19saXN0X2RlbF9lbnRyeV92
-YWxpZF9vcl9yZXBvcnQrMHgxMmMvMHgxYzAgbGliL2xpc3RfZGVidWcuYzo2MgpDb2RlOiBlOCA2
-OSBlMiBkNyBmYyA5MCAwZiAwYiA0OCA4OSBjYSA0OCBjNyBjNyBlMCBiOCBkMSA4YiBlOCA1NyBl
-MiBkNyBmYyA5MCAwZiAwYiA0OCA4OSBjMiA0OCBjNyBjNyA0MCBiOSBkMSA4YiBlOCA0NSBlMiBk
-NyBmYyA5MCA8MGY+IDBiIDQ4IDg5IGQxIDQ4IGM3IGM3IGMwIGI5IGQxIDhiIDQ4IDg5IGMyIGU4
-IDMwIGUyIGQ3IGZjIDkwIDBmClJTUDogMDAxODpmZmZmYzkwMDExYWVmODIwIEVGTEFHUzogMDAw
-MTAyODYKUkFYOiAwMDAwMDAwMDAwMDAwMDZkIFJCWDogZmZmZjg4ODExMmIxNmYzOCBSQ1g6IGZm
-ZmZmZmZmODE3OGI5ZjkKUkRYOiAwMDAwMDAwMDAwMDAwMDAwIFJTSTogZmZmZmZmZmY4MTc5NjJm
-NiBSREk6IDAwMDAwMDAwMDAwMDAwMDUKUkJQOiBmZmZmODg4MTEyYjE2ZjI4IFIwODogMDAwMDAw
-MDAwMDAwMDAwNSBSMDk6IDAwMDAwMDAwMDAwMDAwMDAKUjEwOiAwMDAwMDAwMDgwMDAwMDAwIFIx
-MTogMDAwMDAwMDAwMDAwMDAwMSBSMTI6IGZmZmY4ODgxMTJiMTZmMDAKUjEzOiBmZmZmODg4MTEy
-YjE2ZjMwIFIxNDogZmZmZjg4ODExMmIxNmYzOCBSMTU6IGZmZmY4ODgxMTJiMTZmMzgKRlM6ICAw
-MDAwMDAwMDAwMDAwMDAwKDAwMDApIEdTOmZmZmY4ODgwNjI4MDAwMDAoMDAwMCkga25sR1M6MDAw
-MDAwMDAwMDAwMDAwMApDUzogIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgw
-MDUwMDMzCkNSMjogMDAwMDdmZWUzNGZkZTgyOCBDUjM6IDAwMDAwMDAxMGQ5ODIwMDAgQ1I0OiAw
-MDAwMDAwMDAwNzUyZWYwCkRSMDogMDAwMDAwMDAwMDAwMDAwMCBEUjE6IDAwMDAwMDAwMDAwMDAw
-MDAgRFIyOiAwMDAwMDAwMDAwMDAwMDAwCkRSMzogMDAwMDAwMDAwMDAwMDAwMCBEUjY6IDAwMDAw
-MDAwZmZmZTBmZjAgRFI3OiAwMDAwMDAwMDAwMDAwNDAwClBLUlU6IDU1NTU1NTU0CkNhbGwgVHJh
-Y2U6CiA8VEFTSz4KIF9fbGlzdF9kZWxfZW50cnlfdmFsaWQgaW5jbHVkZS9saW51eC9saXN0Lmg6
-MTI0IFtpbmxpbmVdCiBfX2xpc3RfZGVsX2VudHJ5IGluY2x1ZGUvbGludXgvbGlzdC5oOjIxNSBb
-aW5saW5lXQogbGlzdF9kZWwgaW5jbHVkZS9saW51eC9saXN0Lmg6MjI5IFtpbmxpbmVdCiBuc2lt
-X2ZpYl9ydF9maW5pIGRyaXZlcnMvbmV0L25ldGRldnNpbS9maWIuYzoyNTUgW2lubGluZV0KIG5z
-aW1fZmliNl9ydF9kZXN0cm95KzB4ZGUvMHgyNzAgZHJpdmVycy9uZXQvbmV0ZGV2c2ltL2ZpYi5j
-OjU4NQogbnNpbV9maWI2X3J0X2ZyZWUgZHJpdmVycy9uZXQvbmV0ZGV2c2ltL2ZpYi5jOjEwNjkg
-W2lubGluZV0KIG5zaW1fZmliX3J0X2ZyZWUrMHgxZTYvMHgzZTAgZHJpdmVycy9uZXQvbmV0ZGV2
-c2ltL2ZpYi5jOjEwODIKIHJoYXNodGFibGVfZnJlZV9vbmUgbGliL3JoYXNodGFibGUuYzoxMTEz
-IFtpbmxpbmVdCiByaGFzaHRhYmxlX2ZyZWVfYW5kX2Rlc3Ryb3krMHg2MTMvMHg5OTAgbGliL3Jo
-YXNodGFibGUuYzoxMTY0CiBuc2ltX2ZpYl9kZXN0cm95KzB4YWUvMHgxYjAgZHJpdmVycy9uZXQv
-bmV0ZGV2c2ltL2ZpYi5jOjE2NjAKIG5zaW1fZGV2X3JlbG9hZF9kZXN0cm95KzB4MTZlLzB4NGQw
-IGRyaXZlcnMvbmV0L25ldGRldnNpbS9kZXYuYzoxNjY1CiBuc2ltX2Rldl9yZWxvYWRfZG93bisw
-eDZlLzB4ZDAgZHJpdmVycy9uZXQvbmV0ZGV2c2ltL2Rldi5jOjk2OAogZGV2bGlua19yZWxvYWQr
-MHgxN2YvMHg3YTAgbmV0L2RldmxpbmsvZGV2LmM6NDYxCiBkZXZsaW5rX3Blcm5ldF9wcmVfZXhp
-dCsweDE5NC8weDJhMCBuZXQvZGV2bGluay9jb3JlLmM6NTA5CiBvcHNfcHJlX2V4aXRfbGlzdCBu
-ZXQvY29yZS9uZXRfbmFtZXNwYWNlLmM6MTYyIFtpbmxpbmVdCiBjbGVhbnVwX25ldCsweDQ4OC8w
-eGI0MCBuZXQvY29yZS9uZXRfbmFtZXNwYWNlLmM6NjEyCiBwcm9jZXNzX29uZV93b3JrKzB4OWM1
-LzB4MWJhMCBrZXJuZWwvd29ya3F1ZXVlLmM6MzIyOQogcHJvY2Vzc19zY2hlZHVsZWRfd29ya3Mg
-a2VybmVsL3dvcmtxdWV1ZS5jOjMzMTAgW2lubGluZV0KIHdvcmtlcl90aHJlYWQrMHg2YzgvMHhm
-MDAga2VybmVsL3dvcmtxdWV1ZS5jOjMzOTEKIGt0aHJlYWQrMHgyYzEvMHgzYTAga2VybmVsL2t0
-aHJlYWQuYzozODkKIHJldF9mcm9tX2ZvcmsrMHg0NS8weDgwIGFyY2gveDg2L2tlcm5lbC9wcm9j
-ZXNzLmM6MTQ3CiByZXRfZnJvbV9mb3JrX2FzbSsweDFhLzB4MzAgYXJjaC94ODYvZW50cnkvZW50
-cnlfNjQuUzoyNDQKIDwvVEFTSz4KTW9kdWxlcyBsaW5rZWQgaW46Ci0tLVsgZW5kIHRyYWNlIDAw
-MDAwMDAwMDAwMDAwMDAgXS0tLQpSSVA6IDAwMTA6X19saXN0X2RlbF9lbnRyeV92YWxpZF9vcl9y
-ZXBvcnQrMHgxMmMvMHgxYzAgbGliL2xpc3RfZGVidWcuYzo2MgpDb2RlOiBlOCA2OSBlMiBkNyBm
-YyA5MCAwZiAwYiA0OCA4OSBjYSA0OCBjNyBjNyBlMCBiOCBkMSA4YiBlOCA1NyBlMiBkNyBmYyA5
-MCAwZiAwYiA0OCA4OSBjMiA0OCBjNyBjNyA0MCBiOSBkMSA4YiBlOCA0NSBlMiBkNyBmYyA5MCA8
-MGY+IDBiIDQ4IDg5IGQxIDQ4IGM3IGM3IGMwIGI5IGQxIDhiIDQ4IDg5IGMyIGU4IDMwIGUyIGQ3
-IGZjIDkwIDBmClJTUDogMDAxODpmZmZmYzkwMDExYWVmODIwIEVGTEFHUzogMDAwMTAyODYKUkFY
-OiAwMDAwMDAwMDAwMDAwMDZkIFJCWDogZmZmZjg4ODExMmIxNmYzOCBSQ1g6IGZmZmZmZmZmODE3
-OGI5ZjkKUkRYOiAwMDAwMDAwMDAwMDAwMDAwIFJTSTogZmZmZmZmZmY4MTc5NjJmNiBSREk6IDAw
-MDAwMDAwMDAwMDAwMDUKUkJQOiBmZmZmODg4MTEyYjE2ZjI4IFIwODogMDAwMDAwMDAwMDAwMDAw
-NSBSMDk6IDAwMDAwMDAwMDAwMDAwMDAKUjEwOiAwMDAwMDAwMDgwMDAwMDAwIFIxMTogMDAwMDAw
-MDAwMDAwMDAwMSBSMTI6IGZmZmY4ODgxMTJiMTZmMDAKUjEzOiBmZmZmODg4MTEyYjE2ZjMwIFIx
-NDogZmZmZjg4ODExMmIxNmYzOCBSMTU6IGZmZmY4ODgxMTJiMTZmMzgKRlM6ICAwMDAwMDAwMDAw
-MDAwMDAwKDAwMDApIEdTOmZmZmY4ODgwNjI4MDAwMDAoMDAwMCkga25sR1M6MDAwMDAwMDAwMDAw
-MDAwMApDUzogIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMzCkNS
-MjogMDAwMDdmYmYyODA0ODE4OCBDUjM6IDAwMDAwMDAwMjJlNzQwMDAgQ1I0OiAwMDAwMDAwMDAw
-NzUyZWYwCkRSMDogMDAwMDAwMDAwMDAwMDAwMCBEUjE6IDAwMDAwMDAwMDAwMDAwMDAgRFIyOiAw
-MDAwMDAwMDAwMDAwMDAwCkRSMzogMDAwMDAwMDAwMDAwMDAwMCBEUjY6IDAwMDAwMDAwZmZmZTBm
-ZjAgRFI3OiAwMDAwMDAwMDAwMDAwNDAwClBLUlU6IDU1NTU1NTU0CgoKU3l6a2FsbGVyIHJlcHJv
-ZHVjZXI6CiMge1RocmVhZGVkOnRydWUgUmVwZWF0OnRydWUgUmVwZWF0VGltZXM6MCBQcm9jczo0
-IFNsb3dkb3duOjEgU2FuZGJveDpub25lIFNhbmRib3hBcmc6MCBMZWFrOmZhbHNlIE5ldEluamVj
-dGlvbjp0cnVlIE5ldERldmljZXM6dHJ1ZSBOZXRSZXNldDp0cnVlIENncm91cHM6dHJ1ZSBCaW5m
-bXRNaXNjOnRydWUgQ2xvc2VGRHM6dHJ1ZSBLQ1NBTjpmYWxzZSBEZXZsaW5rUENJOmZhbHNlIE5p
-Y1ZGOmZhbHNlIFVTQjp0cnVlIFZoY2lJbmplY3Rpb246dHJ1ZSBXaWZpOnRydWUgSUVFRTgwMjE1
-NDp0cnVlIFN5c2N0bDp0cnVlIFN3YXA6dHJ1ZSBVc2VUbXBEaXI6dHJ1ZSBIYW5kbGVTZWd2OnRy
-dWUgVHJhY2U6ZmFsc2UgTGVnYWN5T3B0aW9uczp7Q29sbGlkZTpmYWxzZSBGYXVsdDpmYWxzZSBG
-YXVsdENhbGw6MCBGYXVsdE50aDowfX0KcjAgPSBzeXpfb3Blbl9kZXYkc2coJigweDdmMDAwMDAw
-MDA4MCksIDB4MCwgMHg4MjAwKQppb2N0bCRTQ1NJX0lPQ1RMX1NFTkRfQ09NTUFORChyMCwgMHgx
-LCAmKDB4N2YwMDAwMDAwMGMwKT1BTlk9W0BBTllCTE9CPSIwMDAwMDAwMDA4MDAwMDAwODUwYjE5
-IiwgQEFOWVJFU09DVD1yMF0p
+On Tue, Feb 11, 2025 at 7:05=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Mon, 10 Feb 2025 18:40:34 +0800
+> Menglong Dong <menglong8.dong@gmail.com> wrote:
+>
+> > With CONFIG_CALL_PADDING enabled, there will be 16-bytes(or more) paddi=
+ng
+> > space before all the kernel functions. And some kernel features can use
+> > it, such as MITIGATION_CALL_DEPTH_TRACKING, CFI_CLANG, FINEIBT, etc.
+>
+> Please start your change log off with why you are doing this. Then you ca=
+n
+> go into the details of what you are doing.
+>
+> Explain what and how kernel features can use this.
+
+Yeah, you are right, and I'll add the following messages to the
+starting of the log:
+
+For now, there isn't a way to set and get per-function metadata with
+a low overhead, which is not convenient for some situations. Take
+BPF trampoline for example, we need to create a trampoline for each
+kernel function, as we have to store the information about the function,
+such as BPF progs, function arg count, etc, to the trampoline. The
+performance cost and memory consumption can be higher to create
+these trampolines. With per-function metadata storage support, we
+can store the BPF progs, function arg count, etc, to the metadata, and
+create a global BPF trampoline for all the kernel functions. In the global
+trampoline, we can get the information that we need from the function
+metadata through the ip (function address) with almost no overhead.
+
+Another beneficiary can be ftrace. For now, all the kernel functions that
+are enabled by dynamic ftrace will be added to a filter hash. And hash
+lookup will happen when then traced functions are called, which has an
+impact on the performance, see
+__ftrace_ops_list_func() -> ftrace_ops_test(). With the per-function metada=
+ta
+support, we can store the information that if the ftrace ops is enabled on =
+the
+kernel function to the metadata.
+
+>
+> >
+> > In this commit, we add supporting to store per-function metadata in the
+>
+> Don't ever say "In this commit" in a change long. We know this is a commi=
+t.
+> The above can be written like:
+>
+> "Support per-function metadata storage.." Although that should be after y=
+ou
+> explain why this is being submitted.
+
+Okay, looks much better!
+
+>
+> > function padding, and previous discussion can be found in [1]. Generall=
+y
+> > speaking, we have two way to implement this feature:
+> >
+> > 1. create a function metadata array, and prepend a 5-bytes insn
+> > "mov %eax, 0x12345678", and store the insn to the function padding.
+> > And 0x12345678 means the index of the function metadata in the array.
+> > By this way, 5-bytes will be consumed in the function padding.
+> >
+> > 2. prepend a 10-bytes insn "mov %rax, 0x12345678aabbccdd" and store
+> > the insn to the function padding, and 0x12345678aabbccdd means the addr=
+ess
+> > of the function metadata.
+> >
+> > Compared with way 2, way 1 consume less space, but we need to do more w=
+ork
+> > on the global function metadata array. And in this commit, we implement=
+ed
+> > the way 1.
+> >
+> > In my research, MITIGATION_CALL_DEPTH_TRACKING will consume the tail
+> > 9-bytes in the function padding, and FINEIBT+CFI_CLANG will consume
+> > the head 7-bytes. So there will be no space for us if
+> > MITIGATION_CALL_DEPTH_TRACKING and CFI_CLANG are both enabled. So I hav=
+e
+> > following logic:
+> > 1. use the head 5-bytes if CFI_CLANG is not enabled
+> > 2. use the tail 5-bytes if MITIGATION_CALL_DEPTH_TRACKING is not enable=
+d
+> > 3. compile the kernel with extra 5-bytes padding if
+> >    MITIGATION_CALL_DEPTH_TRACKING and CFI_CLANG are both enabled.
+> >
+> > In the third case, we compile the kernel with a function padding of
+> > 21-bytes, which means the real function is not 16-bytes aligned any mor=
+e.
+> > And in [2], I tested the performance of the kernel with different paddi=
+ng,
+> > and it seems that extra 5-bytes don't have impact on the performance.
+> > However, it's a huge change to make the kernel function unaligned in
+> > 16-bytes, and I'm sure if there are any other influence. So another cho=
+ice
+> > is to compile the kernel with 32-bytes aligned if there is no space
+> > available for us in the function padding. But this will increase the te=
+xt
+> > size ~5%. (And I'm not sure with method to use.)
+> >
+> > The beneficiaries of this feature can be BPF and ftrace. For BPF, we ca=
+n
+> > implement a "dynamic trampoline" and add tracing multi-link supporting
+> > base on this feature. And for ftrace, we can optimize its performance
+> > base on this feature.
+> >
+> > This commit is not complete, as the synchronous of func_metas is not
+> > considered :/
+> >
+> > Link: https://lore.kernel.org/bpf/CADxym3anLzM6cAkn_z71GDd_VeKiqqk1ts=
+=3DxuiP7pr4PO6USPA@mail.gmail.com/ [1]
+> > Link: https://lore.kernel.org/bpf/CADxym3af+CU5Mx8myB8UowdXSc3wJOqWyH4o=
+yq+eXKahXBTXyg@mail.gmail.com/ [2]
+> > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+> > ---
+> >  arch/x86/Kconfig          |  15 ++++
+> >  arch/x86/Makefile         |  17 ++--
+> >  include/linux/func_meta.h |  17 ++++
+> >  kernel/trace/Makefile     |   1 +
+> >  kernel/trace/func_meta.c  | 184 ++++++++++++++++++++++++++++++++++++++
+> >  5 files changed, 228 insertions(+), 6 deletions(-)
+> >  create mode 100644 include/linux/func_meta.h
+> >  create mode 100644 kernel/trace/func_meta.c
+> >
+> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > index 6df7779ed6da..0ff3cb74cfc0 100644
+> > --- a/arch/x86/Kconfig
+> > +++ b/arch/x86/Kconfig
+> > @@ -2510,6 +2510,21 @@ config PREFIX_SYMBOLS
+> >       def_bool y
+> >       depends on CALL_PADDING && !CFI_CLANG
+> >
+> > +config FUNCTION_METADATA
+> > +     bool "Enable function metadata support"
+> > +     select CALL_PADDING
+> > +     default y
+> > +     help
+> > +       This feature allow us to set metadata for kernel functions, and
+>
+> Who's "us"?
+
+The user of this feature? Maybe change it to:
+
+Support per-function metadata storage......
+
+Just like what you suggest above :/
+
+>
+> > +       get the metadata of the function by its address without any
+> > +       costing.
+> > +
+> > +       The index of the metadata will be stored in the function paddin=
+g,
+> > +       which will consume 5-bytes. The spare space of the padding
+> > +       is enough for us with CALL_PADDING and FUNCTION_ALIGNMENT_16B i=
+f
+> > +       CALL_THUNKS or CFI_CLANG not enabled. Or, we need extra 5-bytes
+> > +       in the function padding, which will increases text ~1%.
+> > +
+> >  menuconfig CPU_MITIGATIONS
+> >       bool "Mitigations for CPU vulnerabilities"
+> >       default y
+> > diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+> > index 5b773b34768d..05689c9a8942 100644
+> > --- a/arch/x86/Makefile
+> > +++ b/arch/x86/Makefile
+> > @@ -240,13 +240,18 @@ ifdef CONFIG_MITIGATION_SLS
+> >  endif
+> >
+> >  ifdef CONFIG_CALL_PADDING
+> > -PADDING_CFLAGS :=3D -fpatchable-function-entry=3D$(CONFIG_FUNCTION_PAD=
+DING_BYTES),$(CONFIG_FUNCTION_PADDING_BYTES)
+> > -KBUILD_CFLAGS +=3D $(PADDING_CFLAGS)
+> > -export PADDING_CFLAGS
+> > +  __padding_bytes :=3D $(CONFIG_FUNCTION_PADDING_BYTES)
+> > +  ifneq ($(and $(CONFIG_FUNCTION_METADATA),$(CONFIG_CALL_THUNKS),$(CON=
+FIG_CFI_CLANG)),)
+> > +    __padding_bytes :=3D $(shell echo $(__padding_bytes) + 5 | bc)
+> > +  endif
+> > +
+> > +  PADDING_CFLAGS :=3D -fpatchable-function-entry=3D$(__padding_bytes),=
+$(__padding_bytes)
+> > +  KBUILD_CFLAGS +=3D $(PADDING_CFLAGS)
+> > +  export PADDING_CFLAGS
+>
+> Arm64 and other archs add meta data before the functions too. Can we have
+> an effort to perhaps share these methods?
+
+I have not done research on arm64 yet. AFAIK, arm64 insn is 16-bytes aligne=
+d,
+so the way we process can be a little different here, as making kernel func=
+tion
+non 16-bytes aligned can have a huge influence.
+
+And I'm hesitant about 2 points, as I described in the commit log:
+1. prepend 5-bytes insn or 10-bytes? 10-bytes will be much simpler
+    in coding, but consume more padding space.
+2. add extra 5/10 bytes padding, or select FUNCTION_ALIGNMENT_32B?
+   The latter can make the text size bigger, but less influential.
+
+Does anyone have any idea about the choice above? I would
+appreciate hearing some advice here :/
+
+And yes, when the final solution is determined, the other arch
+(at least arm64) can support this feature too.
+
+>
+> >
+> > -PADDING_RUSTFLAGS :=3D -Zpatchable-function-entry=3D$(CONFIG_FUNCTION_=
+PADDING_BYTES),$(CONFIG_FUNCTION_PADDING_BYTES)
+> > -KBUILD_RUSTFLAGS +=3D $(PADDING_RUSTFLAGS)
+> > -export PADDING_RUSTFLAGS
+> > +  PADDING_RUSTFLAGS :=3D -Zpatchable-function-entry=3D$(__padding_byte=
+s),$(__padding_bytes)
+> > +  KBUILD_RUSTFLAGS +=3D $(PADDING_RUSTFLAGS)
+> > +  export PADDING_RUSTFLAGS
+> >  endif
+> >
+> >  KBUILD_LDFLAGS +=3D -m elf_$(UTS_MACHINE)
+> > diff --git a/include/linux/func_meta.h b/include/linux/func_meta.h
+> > new file mode 100644
+> > index 000000000000..840cbd858c47
+> > --- /dev/null
+> > +++ b/include/linux/func_meta.h
+>
+> If this is x86 only, why is this in generic code?
+>
+> > @@ -0,0 +1,17 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef _LINUX_FUNC_META_H
+> > +#define _LINUX_FUNC_META_H
+> > +
+> > +#include <linux/kernel.h>
+> > +
+> > +struct func_meta {
+> > +     int users;
+> > +     void *func;
+> > +};
+> > +
+> > +extern struct func_meta *func_metas;
+> > +
+> > +struct func_meta *func_meta_get(void *ip);
+> > +void func_meta_put(void *ip, struct func_meta *meta);
+> > +
+> > +#endif
+> > diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> > index 057cd975d014..4042c168dcfc 100644
+> > --- a/kernel/trace/Makefile
+> > +++ b/kernel/trace/Makefile
+>
+> Same here.
+>
+> > @@ -106,6 +106,7 @@ obj-$(CONFIG_FTRACE_RECORD_RECURSION) +=3D trace_re=
+cursion_record.o
+> >  obj-$(CONFIG_FPROBE) +=3D fprobe.o
+> >  obj-$(CONFIG_RETHOOK) +=3D rethook.o
+> >  obj-$(CONFIG_FPROBE_EVENTS) +=3D trace_fprobe.o
+> > +obj-$(CONFIG_FUNCTION_METADATA) +=3D func_meta.o
+> >
+> >  obj-$(CONFIG_TRACEPOINT_BENCHMARK) +=3D trace_benchmark.o
+> >  obj-$(CONFIG_RV) +=3D rv/
+> > diff --git a/kernel/trace/func_meta.c b/kernel/trace/func_meta.c
+> > new file mode 100644
+> > index 000000000000..9ce77da81e71
+> > --- /dev/null
+> > +++ b/kernel/trace/func_meta.c
+>
+> Unless this file will support arm64 meta data and other architectures
+> besides x86, then it should not be in the kernel/trace directory.
+
+Yeah, I am planning to support arm64 metadata (maybe in
+the next commit?). Some code in this file is x86 related, and
+I should move them to the arch/x86 directory :/
+
+Thanks!
+Menglong Dong
+
+>
+> -- Steve
+>
+>
+> > @@ -0,0 +1,184 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +#include <linux/slab.h>
+> > +#include <linux/memory.h>
+> > +#include <linux/func_meta.h>
+> > +#include <linux/text-patching.h>
+> > +
