@@ -1,125 +1,181 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2651F9F7A
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9530B1F8AC0;
+	Tue, 11 Feb 2025 11:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739272252; cv=none; b=NYvPz5TooEffMkugwxBGdh4hrZyHznaYSWaYfKOtfbnM5Ta1R5LFDAQTVcD6WETQN+axPjXHcj6R7sdmnlB4wtL5HUaL3a4ZZQIE5/RcotRmJcV/bm5D4nlZBkISKLF+bmLqR+I7oWs0aigoTlNnmL8NFNF4I5XAFQjseQI/y9A=
+	t=1739272252; cv=none; b=tEca2Kt0umgO9k68QKiX6KeaEuJeZlrqkfXR0599M8QoQ/5tQAECiRO0vN39PZVp1bxj+X9Ddm8RsMCZo5FqfY/0RP4/E5VAvYc86JW1UmZMSk120CPgK4RMsmB3oPuifNBwY9fKyKqTiq2nLb+3JVX2RPX4IgkhhEj9pa8pH0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739272252; c=relaxed/simple;
-	bh=WPb2ORZc/9ZZ6+gHNdJlvp8bilbLUMvl7JnfNtvGfEQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G1xvD29p26DcE0j/hG54lggr9tmuW/AHk5BlugpUulhtd4LJXzF5XEp7ShmU3WIWH4w3dlxvrzOOYPa+jWXGpevVKhVSoVlRY6twJrXtA0NWj5SPj2+jIEl24JNJH70YYD5L0gcMkNC0CeMGmA/ZIahbBK/6JnbwNzO+KYx/ybE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=umich.edu; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=I47V+x4+; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=umich.edu
+	bh=i5sODxIgvXqnCqYayWXfbHvRXo3GQ98uAjuEhD+ByYQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bssnJT/NAEL65LrEOCFigYPYzJ9YloM8lU0uXdx5puUkpvPM9EyjtwAGDGsJueFzTvUcVslQYou+mcIo8QvoYbg9m/DPf44ULV+TOTRHgycJtr6WrbAlaOG8S9o6Y+yDW/dxaMX3kuYjjKbjyiR8XA8SJYwsw2mY5C92ow6UEMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jm+RNu06; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="I47V+x4+"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e549b0f8d57so4654403276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 03:10:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1739272249; x=1739877049; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fPNCIgpBAFQQZU10UukFXE6nijs336odSMhelfSJ0j4=;
-        b=I47V+x4+oJekKAnoV39TFWOLke41Iij7hbPNnF6m1ImZmHZQpjfTfTdUiKccLXdO4r
-         HKBTmy/gKEJdXY8PmjMFvMIh3hUANv16jj3PeEPiLek2mYRBlwVoVet9w7AKXPANGdT0
-         1HqFt52fDYGoKvr1Ne7FqMQ0e/YhWOaYiVZu/40T9iQHkdJXhQduxY0ZcPbSdRxDxt2h
-         T1IEairzYZDfLzFvIpOktsrYM0vMxp5B6Uzl5qh71InvAcbeCfC0/uPnMta2aDZ2ikDN
-         6sh/fgPieq50tIF0pbslmOJ8fEfIZe9QuqXA/FmkVf712Wk9g7C6xQnwOApsKGtIOCnw
-         Qhvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739272249; x=1739877049;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fPNCIgpBAFQQZU10UukFXE6nijs336odSMhelfSJ0j4=;
-        b=ro/biju/sbBtcX3g9DaAW+GQZL64YbwoSgE4wGX3T/aUoWVluz5WCfLcL4rIaTM097
-         PZ56ZGAzp9iRavrWyy/BjXT1AWBJ2eGlPeV0zW6Jt6pP5mRlwTlrVHraRs4/mr9TPXDh
-         p3e2Mg0H7DrcsYslq09Yi5ZkxvOewxm7xqLNoXf1enSodhyCVzynecGiSvzR4plW0n/7
-         VR+6oqHW8Yi/PhsICJEm8Emf5aHjlacjDc6zZWysRNAHEjxnEt/NOSfoX66yKrcBTbYY
-         j6zkH79uFy/m4Gb7r9SAH+hApzb1sKaq9+zzevL5eup6aOI5oILl99hW3zUgW5mP6rSa
-         q7RQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX+UEIewXXCzAyzGRu1j4ehPcqHqid6VaNyc2fs06UxeSijIxfmEXIONNQAFQGe8ulD4Zt2fHW2HJ/1VbA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+U2q1ZEmly/p0VmaMGGOI+NipGR8Mn3oMjhIwrfPKPkMm42yk
-	g4KeSEwwD9TiXfpRo42Spc6O7w9XfVmhfY+IDOEf/8KiyixeH5wrMgvKueuxO/kku+F3O06uCYm
-	29x+LiZOh7iCRpaY8hngT5HRzsv1ZWGI4rlzL8Q==
-X-Gm-Gg: ASbGncuOwboRoIxSvE9hRacJivjsnpIdi+FOrRZaIbL49RO6fy8hj2Cg0pGSvyhpl2U
-	sjfbRvDZqoAOkFxc/5iDU/pF7iA5mX0o1P30DGX3UEUhCh/eAhbcdj9KlOF7NpAa2qtaPgGQ/
-X-Google-Smtp-Source: AGHT+IGwcyBsYc46RWArEeADU77H8bXfVzk3irEgxqL38ZDIwj53ttNaZ+UD3iPTNd+DjLbLMEDFzT6kErsvcr/dhMw=
-X-Received: by 2002:a05:6902:27c8:b0:e58:7aa:7de4 with SMTP id
- 3f1490d57ef6-e5b462c2b38mr14587566276.45.1739272249457; Tue, 11 Feb 2025
- 03:10:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jm+RNu06"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C6E7C4CEDD;
+	Tue, 11 Feb 2025 11:10:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739272252;
+	bh=i5sODxIgvXqnCqYayWXfbHvRXo3GQ98uAjuEhD+ByYQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jm+RNu06F4e4vKW1xlr6oSOIR/bIHS0LXBFRre9vVLu/nBIk8TI6crnLtQ9v/vPgf
+	 FkP0Ea3/OsTvA/HL2Zlo1KWQWYLhm3u13CfMu2mELW50n0QKC9Csf8YRKOVcinndez
+	 E0RdpsDxZ5hmUUK2yK+0vh1Pt3W6WuGIIiK4Fdda4ivnGG6IwfhS0q2TLbJM/XxRL7
+	 Uu6eTnXauZpeo4zFrVybYhjJYUhQZDVpEhGsrddVeWKVnz6a4OcxuMQuia9Hx25RaU
+	 Vy/BQb3CWrCfdii16hq9xR1JCmAMmsR1apH/8fo8RWWondjzso7FzGNAQSTIlmSfO7
+	 CCgtU2WwRrZPQ==
+Date: Tue, 11 Feb 2025 11:10:46 +0000
+From: Will Deacon <will@kernel.org>
+To: syzbot <syzbot+e13e654d315d4da1277c@syzkaller.appspotmail.com>
+Cc: catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+	maz@kernel.org, mark.rutland@arm.com, richard.xnu.clark@gmail.com,
+	jiangshanlai@gmail.com, tj@kernel.org, marcel@holtmann.org,
+	johan.hedberg@gmail.com, luiz.dentz@gmail.com,
+	linux-bluetooth@vger.kernel.org
+Subject: Re: [syzbot] [arm?] WARNING in delayed_work_timer_fn
+Message-ID: <20250211111045.GA8885@willie-the-truck>
+References: <00000000000046efb605fec3def0@google.com>
+ <675c28e0.050a0220.17d782.000d.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210163732.281786-1-ojeda@kernel.org>
-In-Reply-To: <20250210163732.281786-1-ojeda@kernel.org>
-From: Trevor Gross <tmgross@umich.edu>
-Date: Tue, 11 Feb 2025 05:10:38 -0600
-X-Gm-Features: AWEUYZn351_k4v10MDh5azMViiAdx98NkshCWwsinZSeHh9hCB6x5oVItn12a_Q
-Message-ID: <CALNs47uBcyTmBdTBAPXiBcAkE0-4tih9j=VAv1rRcTcf_c2yTg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: rust: clean Rust 1.85.0 warning using softfloat target
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, 
-	moderated for non-subscribers <linux-arm-kernel@lists.infradead.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev, stable@vger.kernel.org, 
-	Matthew Maurer <mmaurer@google.com>, Ralf Jung <post@ralfj.de>, 
-	Jubilee Young <workingjubilee@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <675c28e0.050a0220.17d782.000d.GAE@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, Feb 10, 2025 at 10:38=E2=80=AFAM Miguel Ojeda <ojeda@kernel.org> wr=
-ote:
->
-> Starting with Rust 1.85.0 (to be released 2025-02-20), `rustc` warns
-> [1] about disabling neon in the aarch64 hardfloat target:
->
->     warning: target feature `neon` cannot be toggled with
->              `-Ctarget-feature`: unsound on hard-float targets
->              because it changes float ABI
->       |
->       =3D note: this was previously accepted by the compiler but
->               is being phased out; it will become a hard error
->               in a future release!
->       =3D note: for more information, see issue #116344
->               <https://github.com/rust-lang/rust/issues/116344>
->
-> Thus, instead, use the softfloat target instead.
->
-> While trying it out, I found that the kernel sanitizers were not enabled
-> for that built-in target [2]. Upstream Rust agreed to backport
-> the enablement for the current beta so that it is ready for
-> the 1.85.0 release [3] -- thanks!
->
-> However, that still means that before Rust 1.85.0, we cannot switch
-> since sanitizers could be in use. Thus conditionally do so.
->
-> Cc: <stable@vger.kernel.org> # Needed in 6.12.y and 6.13.y only (Rust is =
-pinned in older LTSs).
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Matthew Maurer <mmaurer@google.com>
-> Cc: Alice Ryhl <aliceryhl@google.com>
-> Cc: Ralf Jung <post@ralfj.de>
-> Cc: Jubilee Young <workingjubilee@gmail.com>
-> Link: https://github.com/rust-lang/rust/pull/133417 [1]
-> Link: https://rust-lang.zulipchat.com/#narrow/channel/131828-t-compiler/t=
-opic/arm64.20neon.20.60-Ctarget-feature.60.20warning/near/495358442 [2]
-> Link: https://github.com/rust-lang/rust/pull/135905 [3]
-> Link: https://github.com/rust-lang/rust/issues/116344
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+[+ some other folks]
 
-This is consistent with what has been discussed for a while on the Rust sid=
-e.
+On Fri, Dec 13, 2024 at 04:30:24AM -0800, syzbot wrote:
+> syzbot has found a reproducer for the following issue on:
+> 
+> HEAD commit:    2e7aff49b5da Merge branches 'for-next/core' and 'for-next/..
+> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11ed5be8580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=696fb014d05da3a3
+> dashboard link: https://syzkaller.appspot.com/bug?extid=e13e654d315d4da1277c
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> userspace arch: arm64
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10192d44580000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/ef408f67fde3/disk-2e7aff49.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/414ac17a20dc/vmlinux-2e7aff49.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/a93415d2a7e7/Image-2e7aff49.gz.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+e13e654d315d4da1277c@syzkaller.appspotmail.com
 
-Reviewed-by: Trevor Gross <tmgross@umich.edu>
+I spent a bit of time looking at the reports in the "dashboard link"
+above. There are quite a few in there and I ended up suspecting the
+bluetooth subsystem and drivers using hci_register_dev(). Specifically,
+it looks like one of the workqueues is serviced in softirq context after
+its corresponding device has been destroyed.
+
+I wasn't able to reproduce it locally (I don't have a setup for running
+the 'syz' reproducers), but the program is pretty small (see the "syz repro"
+link above).
+
+Given that this seems to explode a few times a month, I wonder if it's
+worth adding some instrumentation to e.g. dump the name of the workqueue?
+
+Will
+
+--->8
+
+(mammoth backtrace below)
+
+> ------------[ cut here ]------------
+> WARNING: CPU: 1 PID: 6023 at kernel/workqueue.c:2257 current_wq_worker kernel/workqueue_internal.h:69 [inline]
+> WARNING: CPU: 1 PID: 6023 at kernel/workqueue.c:2257 is_chained_work kernel/workqueue.c:2199 [inline]
+> WARNING: CPU: 1 PID: 6023 at kernel/workqueue.c:2257 __queue_work+0xe50/0x1308 kernel/workqueue.c:2256
+> Modules linked in:
+> CPU: 1 UID: 0 PID: 6023 Comm: klogd Not tainted 6.13.0-rc2-syzkaller-g2e7aff49b5da #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
+> pstate: 404000c5 (nZcv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> pc : __queue_work+0xe50/0x1308 kernel/workqueue_internal.h:69
+> lr : current_wq_worker kernel/workqueue_internal.h:69 [inline]
+> lr : is_chained_work kernel/workqueue.c:2199 [inline]
+> lr : __queue_work+0xe50/0x1308 kernel/workqueue.c:2256
+> sp : ffff800080017b40
+> x29: ffff800080017b90 x28: dfff800000000000 x27: ffff700010002f88
+> x26: dfff800000000000 x25: ffff0000d1c63800 x24: 0000000000000008
+> x23: 1fffe0001b14d791 x22: ffff0000d1c639c0 x21: 0000000000000100
+> x20: ffff0000d8a6bc80 x19: ffff0000da2f0930 x18: 1fffe000366c5e7e
+> x17: ffff800123d64000 x16: ffff80008326d65c x15: 0000000000000002
+> x14: 1ffff00011f300ca x13: dfff800000000000 x12: 00000000b1aebe1c
+> x11: 00000000beaa9035 x10: 0000000000ff0100 x9 : 0000000000000000
+> x8 : ffff0000d8a6bc80 x7 : ffff8000805819c0 x6 : 0000000000000000
+> x5 : 0000000000000001 x4 : 0000000000000001 x3 : ffff80008df6a320
+> x2 : ffff0000da2f0930 x1 : 0000000000000100 x0 : 0000000000000000
+> Call trace:
+>  current_wq_worker kernel/workqueue_internal.h:69 [inline] (P)
+>  is_chained_work kernel/workqueue.c:2199 [inline] (P)
+>  __queue_work+0xe50/0x1308 kernel/workqueue.c:2256 (P)
+>  current_wq_worker kernel/workqueue_internal.h:69 [inline] (L)
+>  is_chained_work kernel/workqueue.c:2199 [inline] (L)
+>  __queue_work+0xe50/0x1308 kernel/workqueue.c:2256 (L)
+>  delayed_work_timer_fn+0x74/0x90 kernel/workqueue.c:2485
+>  call_timer_fn+0x1b4/0x8b8 kernel/time/timer.c:1793
+>  expire_timers kernel/time/timer.c:1839 [inline]
+>  __run_timers kernel/time/timer.c:2418 [inline]
+>  __run_timer_base+0x59c/0x7b4 kernel/time/timer.c:2430
+>  run_timer_base kernel/time/timer.c:2439 [inline]
+>  run_timer_softirq+0xcc/0x194 kernel/time/timer.c:2449
+>  handle_softirqs+0x320/0xd34 kernel/softirq.c:554
+>  __do_softirq+0x14/0x20 kernel/softirq.c:588
+>  ____do_softirq+0x14/0x20 arch/arm64/kernel/irq.c:81
+>  call_on_irq_stack+0x24/0x4c arch/arm64/kernel/entry.S:891
+>  do_softirq_own_stack+0x20/0x2c arch/arm64/kernel/irq.c:86
+>  invoke_softirq kernel/softirq.c:435 [inline]
+>  __irq_exit_rcu+0x1d8/0x544 kernel/softirq.c:655
+>  irq_exit_rcu+0x14/0x84 kernel/softirq.c:671
+>  __el1_irq arch/arm64/kernel/entry-common.c:561 [inline]
+>  el1_interrupt+0x38/0x68 arch/arm64/kernel/entry-common.c:575
+>  el1h_64_irq_handler+0x18/0x24 arch/arm64/kernel/entry-common.c:580
+>  el1h_64_irq+0x6c/0x70 arch/arm64/kernel/entry.S:596
+>  __daif_local_irq_enable arch/arm64/include/asm/irqflags.h:26 [inline] (P)
+>  arch_local_irq_enable arch/arm64/include/asm/irqflags.h:48 [inline] (P)
+>  raw_spin_rq_unlock_irq kernel/sched/sched.h:1526 [inline] (P)
+>  finish_lock_switch+0xc0/0x1e4 kernel/sched/core.c:5123 (P)
+>  raw_spin_rq_unlock_irq kernel/sched/sched.h:1526 [inline] (L)
+>  finish_lock_switch+0xbc/0x1e4 kernel/sched/core.c:5123 (L)
+>  finish_task_switch+0x120/0x608 kernel/sched/core.c:5241
+>  context_switch kernel/sched/core.c:5372 [inline]
+>  __schedule+0x1748/0x27f0 kernel/sched/core.c:6756
+>  preempt_schedule_irq+0x80/0x188 kernel/sched/core.c:7078
+>  arm64_preempt_schedule_irq arch/arm64/kernel/entry-common.c:301 [inline]
+>  __el1_irq arch/arm64/kernel/entry-common.c:563 [inline]
+>  el1_interrupt+0x4c/0x68 arch/arm64/kernel/entry-common.c:575
+>  el1h_64_irq_handler+0x18/0x24 arch/arm64/kernel/entry-common.c:580
+>  el1h_64_irq+0x6c/0x70 arch/arm64/kernel/entry.S:596
+>  __daif_local_irq_enable arch/arm64/include/asm/irqflags.h:26 [inline] (P)
+>  arch_local_irq_enable arch/arm64/include/asm/irqflags.h:48 [inline] (P)
+>  do_notify_resume+0x5c/0x1f4 arch/arm64/kernel/entry-common.c:133 (P)
+>  do_notify_resume+0x58/0x1f4 arch/arm64/kernel/entry-common.c:133 (L)
+>  exit_to_user_mode_prepare arch/arm64/kernel/entry-common.c:169 [inline]
+>  exit_to_user_mode arch/arm64/kernel/entry-common.c:178 [inline]
+>  el0_interrupt+0xc8/0x248 arch/arm64/kernel/entry-common.c:832
+>  __el0_irq_handler_common+0x18/0x24 arch/arm64/kernel/entry-common.c:837
+>  el0t_64_irq_handler+0x10/0x1c arch/arm64/kernel/entry-common.c:842
+>  el0t_64_irq+0x198/0x19c arch/arm64/kernel/entry.S:601
+> irq event stamp: 35689
+> hardirqs last  enabled at (35688): [<ffff80008b687f2c>] __exit_to_kernel_mode arch/arm64/kernel/entry-common.c:85 [inline]
+> hardirqs last  enabled at (35688): [<ffff80008b687f2c>] exit_to_kernel_mode+0xdc/0x10c arch/arm64/kernel/entry-common.c:95
+> hardirqs last disabled at (35689): [<ffff80008b6a9b44>] __raw_spin_lock_irq include/linux/spinlock_api_smp.h:117 [inline]
+> hardirqs last disabled at (35689): [<ffff80008b6a9b44>] _raw_spin_lock_irq+0x28/0x70 kernel/locking/spinlock.c:170
+> softirqs last  enabled at (34558): [<ffff800080129934>] local_bh_enable+0x10/0x34 include/linux/bottom_half.h:32
+> softirqs last disabled at (35685): [<ffff800080020db4>] __do_softirq+0x14/0x20 kernel/softirq.c:588
+> ---[ end trace 0000000000000000 ]---
+> 
+> 
+> ---
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
