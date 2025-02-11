@@ -1,388 +1,179 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244E025D552
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:15:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA1726BDAB;
+	Tue, 11 Feb 2025 16:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739290530; cv=none; b=OrmHuFVeDiDFpQXnXlCzuy0pTO7XhaS6A0IdRQEe3dWvbCrYg4rQvhFu0dUNMwX4TI2v3HsGKF6ESMVyUwVIWjYADoMNnalx2lXTdhacz2uLtmWNbRLXvy/8lN/NcXpMI8wVQWqj9evxJODegQrRGIXWisVe6z04J60oRArxdL8=
+	t=1739290587; cv=none; b=qX8hkekmJCGZN4d8FLax2fkhvjwifHhD7g4Kx2yyatSbVBNElfcoIKa0rkDAKgSf7RNNcGl6A0pZyxzfWMA6jKefyIyHhVVjkZ7zsbX8BD20bvuo+QSKs69/aoAPaK33hox3wbqrOC32XP7bsCBY98Z1thUt6PRKioxdI6yR6rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739290530; c=relaxed/simple;
-	bh=Lf6tJvunGF1phP/55iMwP/PReYiaodS840ZI+SMpAVc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nm0/dBR/Gmx9R4l7wkf76VPO+7irT5l4AVCcTYYUjcuXfJJoMB08sXedVH/AKPBVott/4Bv8ocieJlZbHvoGmiqfnxTbpCqw2q4raZuSbxxI4dqX5wDlX9AU+LYvSzue64R2C646eGLieXmaQywgD+uIErrwrcnFiXzsASmqytU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WEGfXe/R; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1739290587; c=relaxed/simple;
+	bh=//cJhE+O0+VrZAKb9m1IxqZPBCUXNhLVk6/ZmK0d5wk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YWNT4Uppq7XSn4/f6dqCqQAc27i0ZmucRkPvfrQ+Se9DqyXMOVG99tC4MWUxJNSQiR0+hO7N1RpxpqPGqujlBIA7Sau4ZRQs19u3Ug45IsmatfFZRDN/y34tM7RKDR+mzBNfN90K6XDkn8lpQy1sEvjuqUEDPK/VDxUa/C666eE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AillAHVK; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WEGfXe/R"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BFdlL6020922;
-	Tue, 11 Feb 2025 16:15:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=orGoSo6n4n0YOyMRU
-	Sl/HRUPiNiDZ7IGMHDhm3e5E1E=; b=WEGfXe/RtDUQ9mB/y9+1XV/V3WMwvUMUV
-	zraNDtOiyZ5NwJQgUMG8+h1eYNCf/CxkN/Eupw0K8GjOnA5pmaDnYvMWslKAkkHC
-	M/Spzw2/ubTEYPouSh7MX5L+c7wrnFaDdEWnsMlzq44yyN/HyPdXRuvNP/F1ORHu
-	dZR8Eup6H71aMP91aSTomo1JrHjBcn0ojTY+sxP91rbGZQhRmPENHvQJO5f7aTjT
-	bptRRU/nkO1iswTT/o6M/4dEU9LgJiL3qiqH6S6r5HUDDoYrue/1jTDFVVVkgLCO
-	c5IQ/vjmpsLy1w5qirn5kpmwplK0SSRTNWK90vI07gIkvONx3YXhw==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44r9cu85r4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 16:15:11 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51BDObmO016712;
-	Tue, 11 Feb 2025 16:15:11 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44pk3k41cj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 16:15:10 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51BGF8jC49873348
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 11 Feb 2025 16:15:09 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CACC120049;
-	Tue, 11 Feb 2025 16:15:08 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D9CC52004B;
-	Tue, 11 Feb 2025 16:15:07 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.63.197.14])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 11 Feb 2025 16:15:07 +0000 (GMT)
-Received: from jarvis.ozlabs.ibm.com.com (unknown [9.150.7.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ozlabs.au.ibm.com (Postfix) with ESMTPSA id F2511600D4;
-	Wed, 12 Feb 2025 03:15:02 +1100 (AEDT)
-From: Andrew Donnellan <ajd@linux.ibm.com>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: x86@kernel.org, linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        pasha.tatashin@soleen.com, sweettea-kernel@dorminy.me,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v13 11/11] powerpc: mm: Support page table check
-Date: Wed, 12 Feb 2025 03:14:04 +1100
-Message-ID: <20250211161404.850215-12-ajd@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250211161404.850215-1-ajd@linux.ibm.com>
-References: <20250211161404.850215-1-ajd@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AillAHVK"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21f7f03d856so53172525ad.1;
+        Tue, 11 Feb 2025 08:16:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739290584; x=1739895384; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B6NtcHO/GCHrAKEKneWNcs/P7+2+54GmkdtMXWshNCQ=;
+        b=AillAHVKZXclNS4/GIngZ9YJfFwdMUzFMepTjD1J7s92bN61LdIARoX8ZTWvD1VecJ
+         CUCxxxulGOYpz36kaz5COfqilAGMCRoGaEeu1dOX7E5hp0qwEVGxjoNe0slQw9lrwfJV
+         JtOkaPkbTOmVjAlkuZAhUUSnIJcpm8D6YEiqUEzWldfdOFRvIw+A6yzeKjU1htPFQsxf
+         8D/0EpNX8klXCX37c9VqluFrUxv0a3Dw61fdvDnAv/dhRKIIgHuNaB2Hc3e/2kGzxpuh
+         J7mwYl/Hr5QP7P6yGmJw3A1QFKoDMfRE4SyWJHcqNN657KRwpqaRi9NoycIjrebB/by+
+         nJMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739290584; x=1739895384;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B6NtcHO/GCHrAKEKneWNcs/P7+2+54GmkdtMXWshNCQ=;
+        b=uKqc2/OcAlCHsQhzRii+sUpxNTXKernIqL0XIVm0G3/NpF7FIzCH/EaFTpr9FR1rz6
+         kBoZs0ZPLKDmOVHdYL4brkE1s25mlBUBUWE6C10nk5MWUqErmF00+bdZ0/pFquJUB9XF
+         WTUZBBSJC1kjuWWqvsxwgvyKdLSA/vlyUrXgwX18syRR8AF9NZk8EWOnX6x0PIXznuC1
+         l2WzDzqp159t/kKZLjAZUY97C0nAI2pel0P8jIZoiRLW57kFfnCgO5HQlMo/QaeX9YTb
+         s9s174/gbNeJ1cc6PvLRJGCB/VHDrfLc/fv54+7HkIB/lxs5useAEnaEUdpmdOoLOnaZ
+         1sSA==
+X-Forwarded-Encrypted: i=1; AJvYcCVLFBr2mbXcaEKjwo1DRAxQdlfUqUpf0iy6pucmlges6+y5ERJZhrmLL3sS37k+NiYIYbq/N9NJLJLta7g=@vger.kernel.org, AJvYcCXhS6fGg5O7/+Mq3dM8DIOKYuXDYCXPKXEY9kddznPYdGmnH7ayPe6jjmiQNB0Xb1tvp87Xrkux1kh9lyeCWfU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyN8iH4hQfQh7xiEdkjgYX6rOcwkLcne+xQf72SK3AQr1s1Pp+4
+	2luzpufvrbrPDMV7/1vztCdf7dd9I6jf0bwFerNvLgnD8JOCUL7s
+X-Gm-Gg: ASbGncv2LQl0tv6rz2LII3TyoKsqOJpNAYln7yN7jz/KF3MyGE79y8zhuzAZR30YUh1
+	X5eP4oOpZAFXCy5c+KWlrJq5xvUyYzDKoOr5JiesoUhSm4JOsRkthXPmkuZ8J/nRlqTqnIo1Fgp
+	KJ1x7PGFxRdwiIUpBqT+4LgPqkj1lRNFwHcp1+KzwWhxP3EJELJhc48WUvtoIEUJQKK4m01DJt8
+	rKCFlDtPsDyseD5ktsQHKGBA/m521AF2O6FxBTNTcgk/JO9FGYmkTrJ99B+YfAXwS7WQyhX+Dmk
+	IPcKivbi8JwArXoAARlpeJHWSI5q
+X-Google-Smtp-Source: AGHT+IEDZUvlbfAF77TKsx3UZFWFWMiWRuU/S3EmcSxFxIjzpmOfQbRctCxc8o2e+P083H+VxXedXA==
+X-Received: by 2002:a17:902:ce06:b0:20c:6399:d637 with SMTP id d9443c01a7336-21f4e78de85mr361209085ad.40.1739290584543;
+        Tue, 11 Feb 2025 08:16:24 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3687e675sm98109695ad.179.2025.02.11.08.16.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 08:16:23 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Tue, 11 Feb 2025 08:16:22 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v2 23/31] watchdog: Switch to use hrtimer_setup()
+Message-ID: <882031d8-5b8b-455c-9f5e-90090408304e@roeck-us.net>
+References: <cover.1738746821.git.namcao@linutronix.de>
+ <a5c62f2b5e1ea1cf4d32f37bc2d21a8eeab2f875.1738746821.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: oBGEa0RlBjsu6MhC2TPUaDn8eND483Vf
-X-Proofpoint-GUID: oBGEa0RlBjsu6MhC2TPUaDn8eND483Vf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_07,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 suspectscore=0 adultscore=0 impostorscore=0 phishscore=0
- bulkscore=0 mlxlogscore=756 mlxscore=0 clxscore=1011 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502110106
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a5c62f2b5e1ea1cf4d32f37bc2d21a8eeab2f875.1738746821.git.namcao@linutronix.de>
 
-From: Rohan McLure <rmclure@linux.ibm.com>
+On Wed, Feb 05, 2025 at 11:39:07AM +0100, Nam Cao wrote:
+> hrtimer_setup() takes the callback function pointer as argument and
+> initializes the timer completely.
+> 
+> Replace hrtimer_init() and the open coded initialization of
+> hrtimer::function with the new setup mechanism.
+> 
+> Patch was created by using Coccinelle.
+> 
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
+> Cc: linux-watchdog@vger.kernel.org
+> ---
 
-On creation and clearing of a page table mapping, instrument such calls
-by invoking page_table_check_pte_set and page_table_check_pte_clear
-respectively. These calls serve as a sanity check against illegal
-mappings.
+Change log missing. I am also personally not a friend of changing
+multiple drivers in a single patch for changes like this. That makes
+it all but impossible to revert one of the driver changes if it was
+wrong without reverting everything.
 
-Enable ARCH_SUPPORTS_PAGE_TABLE_CHECK for all platforms.
+Guenter
 
-See also:
-
-riscv support in commit 3fee229a8eb9 ("riscv/mm: enable
-ARCH_SUPPORTS_PAGE_TABLE_CHECK")
-arm64 in commit 42b2547137f5 ("arm64/mm: enable
-ARCH_SUPPORTS_PAGE_TABLE_CHECK")
-x86_64 in commit d283d422c6c4 ("x86: mm: add x86_64 support for page table
-check")
-
-Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Signed-off-by: Rohan McLure <rmclure@linux.ibm.com>
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-[ajd: rebase]
-Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
----
- arch/powerpc/Kconfig                         |  1 +
- arch/powerpc/include/asm/book3s/32/pgtable.h |  7 ++-
- arch/powerpc/include/asm/book3s/64/pgtable.h | 45 +++++++++++++++-----
- arch/powerpc/include/asm/nohash/pgtable.h    |  8 +++-
- arch/powerpc/mm/book3s64/hash_pgtable.c      |  4 ++
- arch/powerpc/mm/book3s64/pgtable.c           | 11 +++--
- arch/powerpc/mm/book3s64/radix_pgtable.c     |  3 ++
- arch/powerpc/mm/pgtable.c                    |  4 ++
- 8 files changed, 68 insertions(+), 15 deletions(-)
-
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 424f188e62d9..a990af9c17aa 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -171,6 +171,7 @@ config PPC
- 	select ARCH_STACKWALK
- 	select ARCH_SUPPORTS_ATOMIC_RMW
- 	select ARCH_SUPPORTS_DEBUG_PAGEALLOC	if PPC_BOOK3S || PPC_8xx
-+	select ARCH_SUPPORTS_PAGE_TABLE_CHECK
- 	select ARCH_USE_BUILTIN_BSWAP
- 	select ARCH_USE_CMPXCHG_LOCKREF		if PPC64
- 	select ARCH_USE_MEMTEST
-diff --git a/arch/powerpc/include/asm/book3s/32/pgtable.h b/arch/powerpc/include/asm/book3s/32/pgtable.h
-index a2305d850fc9..ad7febf75471 100644
---- a/arch/powerpc/include/asm/book3s/32/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/32/pgtable.h
-@@ -202,6 +202,7 @@ void unmap_kernel_page(unsigned long va);
- #ifndef __ASSEMBLY__
- #include <linux/sched.h>
- #include <linux/threads.h>
-+#include <linux/page_table_check.h>
- 
- /* Bits to mask out from a PGD to get to the PUD page */
- #define PGD_MASKED_BITS		0
-@@ -315,7 +316,11 @@ static inline int __ptep_test_and_clear_young(struct mm_struct *mm,
- static inline pte_t ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
- 				       pte_t *ptep)
- {
--	return __pte(pte_update(mm, addr, ptep, ~_PAGE_HASHPTE, 0, 0));
-+	pte_t old_pte = __pte(pte_update(mm, addr, ptep, ~_PAGE_HASHPTE, 0, 0));
-+
-+	page_table_check_pte_clear(mm, addr, old_pte);
-+
-+	return old_pte;
- }
- 
- #define __HAVE_ARCH_PTEP_SET_WRPROTECT
-diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-index 754d4d525f0e..da07d604c275 100644
---- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-@@ -145,6 +145,8 @@
- #define PAGE_KERNEL_ROX	__pgprot(_PAGE_BASE | _PAGE_KERNEL_ROX)
- 
- #ifndef __ASSEMBLY__
-+#include <linux/page_table_check.h>
-+
- /*
-  * page table defines
-  */
-@@ -417,8 +419,11 @@ static inline void huge_ptep_set_wrprotect(struct mm_struct *mm,
- static inline pte_t ptep_get_and_clear(struct mm_struct *mm,
- 				       unsigned long addr, pte_t *ptep)
- {
--	unsigned long old = pte_update(mm, addr, ptep, ~0UL, 0, 0);
--	return __pte(old);
-+	pte_t old_pte = __pte(pte_update(mm, addr, ptep, ~0UL, 0, 0));
-+
-+	page_table_check_pte_clear(mm, addr, old_pte);
-+
-+	return old_pte;
- }
- 
- #define __HAVE_ARCH_PTEP_GET_AND_CLEAR_FULL
-@@ -427,11 +432,16 @@ static inline pte_t ptep_get_and_clear_full(struct mm_struct *mm,
- 					    pte_t *ptep, int full)
- {
- 	if (full && radix_enabled()) {
-+		pte_t old_pte;
-+
- 		/*
- 		 * We know that this is a full mm pte clear and
- 		 * hence can be sure there is no parallel set_pte.
- 		 */
--		return radix__ptep_get_and_clear_full(mm, addr, ptep, full);
-+		old_pte = radix__ptep_get_and_clear_full(mm, addr, ptep, full);
-+		page_table_check_pte_clear(mm, addr, old_pte);
-+
-+		return old_pte;
- 	}
- 	return ptep_get_and_clear(mm, addr, ptep);
- }
-@@ -1309,19 +1319,34 @@ extern int pudp_test_and_clear_young(struct vm_area_struct *vma,
- static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
- 					    unsigned long addr, pmd_t *pmdp)
- {
--	if (radix_enabled())
--		return radix__pmdp_huge_get_and_clear(mm, addr, pmdp);
--	return hash__pmdp_huge_get_and_clear(mm, addr, pmdp);
-+	pmd_t old_pmd;
-+
-+	if (radix_enabled()) {
-+		old_pmd = radix__pmdp_huge_get_and_clear(mm, addr, pmdp);
-+	} else {
-+		old_pmd = hash__pmdp_huge_get_and_clear(mm, addr, pmdp);
-+	}
-+
-+	page_table_check_pmd_clear(mm, addr, old_pmd);
-+
-+	return old_pmd;
- }
- 
- #define __HAVE_ARCH_PUDP_HUGE_GET_AND_CLEAR
- static inline pud_t pudp_huge_get_and_clear(struct mm_struct *mm,
- 					    unsigned long addr, pud_t *pudp)
- {
--	if (radix_enabled())
--		return radix__pudp_huge_get_and_clear(mm, addr, pudp);
--	BUG();
--	return *pudp;
-+	pud_t old_pud;
-+
-+	if (radix_enabled()) {
-+		old_pud = radix__pudp_huge_get_and_clear(mm, addr, pudp);
-+	} else {
-+		BUG();
-+	}
-+
-+	page_table_check_pud_clear(mm, addr, old_pud);
-+
-+	return old_pud;
- }
- 
- static inline pmd_t pmdp_collapse_flush(struct vm_area_struct *vma,
-diff --git a/arch/powerpc/include/asm/nohash/pgtable.h b/arch/powerpc/include/asm/nohash/pgtable.h
-index 1c3dfe2d6cc1..36c79f39f47d 100644
---- a/arch/powerpc/include/asm/nohash/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/pgtable.h
-@@ -29,6 +29,8 @@ static inline pte_basic_t pte_update(struct mm_struct *mm, unsigned long addr, p
- 
- #ifndef __ASSEMBLY__
- 
-+#include <linux/page_table_check.h>
-+
- extern int icache_44x_need_flush;
- 
- #ifndef pte_huge_size
-@@ -122,7 +124,11 @@ static inline void ptep_set_wrprotect(struct mm_struct *mm, unsigned long addr,
- static inline pte_t ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
- 				       pte_t *ptep)
- {
--	return __pte(pte_update(mm, addr, ptep, ~0UL, 0, 0));
-+	pte_t old_pte = __pte(pte_update(mm, addr, ptep, ~0UL, 0, 0));
-+
-+	page_table_check_pte_clear(mm, addr, old_pte);
-+
-+	return old_pte;
- }
- #define __HAVE_ARCH_PTEP_GET_AND_CLEAR
- 
-diff --git a/arch/powerpc/mm/book3s64/hash_pgtable.c b/arch/powerpc/mm/book3s64/hash_pgtable.c
-index 988948d69bc1..c1c25d46dd16 100644
---- a/arch/powerpc/mm/book3s64/hash_pgtable.c
-+++ b/arch/powerpc/mm/book3s64/hash_pgtable.c
-@@ -8,6 +8,7 @@
- #include <linux/sched.h>
- #include <linux/mm_types.h>
- #include <linux/mm.h>
-+#include <linux/page_table_check.h>
- #include <linux/stop_machine.h>
- 
- #include <asm/sections.h>
-@@ -231,6 +232,9 @@ pmd_t hash__pmdp_collapse_flush(struct vm_area_struct *vma, unsigned long addres
- 
- 	pmd = *pmdp;
- 	pmd_clear(pmdp);
-+
-+	page_table_check_pmd_clear(vma->vm_mm, address, pmd);
-+
- 	/*
- 	 * Wait for all pending hash_page to finish. This is needed
- 	 * in case of subpage collapse. When we collapse normal pages
-diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3s64/pgtable.c
-index b4708b2cabba..3702d5bc7a5a 100644
---- a/arch/powerpc/mm/book3s64/pgtable.c
-+++ b/arch/powerpc/mm/book3s64/pgtable.c
-@@ -10,6 +10,7 @@
- #include <linux/pkeys.h>
- #include <linux/debugfs.h>
- #include <linux/proc_fs.h>
-+#include <linux/page_table_check.h>
- #include <misc/cxl-base.h>
- 
- #include <asm/pgalloc.h>
-@@ -129,6 +130,7 @@ void set_pmd_at(struct mm_struct *mm, unsigned long addr,
- 	WARN_ON(!(pmd_leaf(pmd)));
- #endif
- 	trace_hugepage_set_pmd(addr, pmd_val(pmd));
-+	page_table_check_pmd_set(mm, addr, pmdp, pmd);
- 	return set_pte_at_unchecked(mm, addr, pmdp_ptep(pmdp), pmd_pte(pmd));
- }
- 
-@@ -146,6 +148,7 @@ void set_pud_at(struct mm_struct *mm, unsigned long addr,
- 	WARN_ON(!(pud_leaf(pud)));
- #endif
- 	trace_hugepage_set_pud(addr, pud_val(pud));
-+	page_table_check_pud_set(mm, addr, pudp, pud);
- 	return set_pte_at_unchecked(mm, addr, pudp_ptep(pudp), pud_pte(pud));
- }
- 
-@@ -181,12 +184,14 @@ void serialize_against_pte_lookup(struct mm_struct *mm)
- pmd_t pmdp_invalidate(struct vm_area_struct *vma, unsigned long address,
- 		     pmd_t *pmdp)
- {
--	unsigned long old_pmd;
-+	pmd_t old_pmd;
- 
- 	VM_WARN_ON_ONCE(!pmd_present(*pmdp));
--	old_pmd = pmd_hugepage_update(vma->vm_mm, address, pmdp, _PAGE_PRESENT, _PAGE_INVALID);
-+	old_pmd = __pmd(pmd_hugepage_update(vma->vm_mm, address, pmdp, _PAGE_PRESENT, _PAGE_INVALID));
- 	flush_pmd_tlb_range(vma, address, address + HPAGE_PMD_SIZE);
--	return __pmd(old_pmd);
-+	page_table_check_pmd_clear(vma->vm_mm, address, old_pmd);
-+
-+	return old_pmd;
- }
- 
- pud_t pudp_invalidate(struct vm_area_struct *vma, unsigned long address,
-diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
-index 1704381f5c3c..cc0dda11a640 100644
---- a/arch/powerpc/mm/book3s64/radix_pgtable.c
-+++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
-@@ -14,6 +14,7 @@
- #include <linux/of.h>
- #include <linux/of_fdt.h>
- #include <linux/mm.h>
-+#include <linux/page_table_check.h>
- #include <linux/hugetlb.h>
- #include <linux/string_helpers.h>
- #include <linux/memory.h>
-@@ -1454,6 +1455,8 @@ pmd_t radix__pmdp_collapse_flush(struct vm_area_struct *vma, unsigned long addre
- 	pmd = *pmdp;
- 	pmd_clear(pmdp);
- 
-+	page_table_check_pmd_clear(vma->vm_mm, address, pmd);
-+
- 	radix__flush_tlb_collapsed_pmd(vma->vm_mm, address);
- 
- 	return pmd;
-diff --git a/arch/powerpc/mm/pgtable.c b/arch/powerpc/mm/pgtable.c
-index 4cc9af7961ca..ed46151ae1d9 100644
---- a/arch/powerpc/mm/pgtable.c
-+++ b/arch/powerpc/mm/pgtable.c
-@@ -22,6 +22,7 @@
- #include <linux/mm.h>
- #include <linux/percpu.h>
- #include <linux/hardirq.h>
-+#include <linux/page_table_check.h>
- #include <linux/hugetlb.h>
- #include <asm/tlbflush.h>
- #include <asm/tlb.h>
-@@ -206,6 +207,9 @@ void set_ptes(struct mm_struct *mm, unsigned long addr, pte_t *ptep,
- 	 * and not hw_valid ptes. Hence there is no translation cache flush
- 	 * involved that need to be batched.
- 	 */
-+
-+	page_table_check_ptes_set(mm, addr, ptep, pte, nr);
-+
- 	for (;;) {
- 
- 		/*
--- 
-2.48.1
-
+>  drivers/watchdog/softdog.c                     | 8 +++-----
+>  drivers/watchdog/watchdog_dev.c                | 4 ++--
+>  drivers/watchdog/watchdog_hrtimer_pretimeout.c | 4 ++--
+>  kernel/watchdog.c                              | 3 +--
+>  4 files changed, 8 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/watchdog/softdog.c b/drivers/watchdog/softdog.c
+> index 7a1096265f18..0820e35ad2e3 100644
+> --- a/drivers/watchdog/softdog.c
+> +++ b/drivers/watchdog/softdog.c
+> @@ -187,14 +187,12 @@ static int __init softdog_init(void)
+>  	watchdog_set_nowayout(&softdog_dev, nowayout);
+>  	watchdog_stop_on_reboot(&softdog_dev);
+>  
+> -	hrtimer_init(&softdog_ticktock, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+> -	softdog_ticktock.function = softdog_fire;
+> +	hrtimer_setup(&softdog_ticktock, softdog_fire, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+>  
+>  	if (IS_ENABLED(CONFIG_SOFT_WATCHDOG_PRETIMEOUT)) {
+>  		softdog_info.options |= WDIOF_PRETIMEOUT;
+> -		hrtimer_init(&softdog_preticktock, CLOCK_MONOTONIC,
+> -			     HRTIMER_MODE_REL);
+> -		softdog_preticktock.function = softdog_pretimeout;
+> +		hrtimer_setup(&softdog_preticktock, softdog_pretimeout, CLOCK_MONOTONIC,
+> +			      HRTIMER_MODE_REL);
+>  	}
+>  
+>  	if (soft_active_on_boot)
+> diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+> index 19698d87dc57..8369fd94fc1a 100644
+> --- a/drivers/watchdog/watchdog_dev.c
+> +++ b/drivers/watchdog/watchdog_dev.c
+> @@ -1051,8 +1051,8 @@ static int watchdog_cdev_register(struct watchdog_device *wdd)
+>  	}
+>  
+>  	kthread_init_work(&wd_data->work, watchdog_ping_work);
+> -	hrtimer_init(&wd_data->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
+> -	wd_data->timer.function = watchdog_timer_expired;
+> +	hrtimer_setup(&wd_data->timer, watchdog_timer_expired, CLOCK_MONOTONIC,
+> +		      HRTIMER_MODE_REL_HARD);
+>  	watchdog_hrtimer_pretimeout_init(wdd);
+>  
+>  	if (wdd->id == 0) {
+> diff --git a/drivers/watchdog/watchdog_hrtimer_pretimeout.c b/drivers/watchdog/watchdog_hrtimer_pretimeout.c
+> index 940b53718a91..fbc7eecd8b20 100644
+> --- a/drivers/watchdog/watchdog_hrtimer_pretimeout.c
+> +++ b/drivers/watchdog/watchdog_hrtimer_pretimeout.c
+> @@ -23,8 +23,8 @@ void watchdog_hrtimer_pretimeout_init(struct watchdog_device *wdd)
+>  {
+>  	struct watchdog_core_data *wd_data = wdd->wd_data;
+>  
+> -	hrtimer_init(&wd_data->pretimeout_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+> -	wd_data->pretimeout_timer.function = watchdog_hrtimer_pretimeout;
+> +	hrtimer_setup(&wd_data->pretimeout_timer, watchdog_hrtimer_pretimeout, CLOCK_MONOTONIC,
+> +		      HRTIMER_MODE_REL);
+>  }
+>  
+>  void watchdog_hrtimer_pretimeout_start(struct watchdog_device *wdd)
+> diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+> index b2da7de39d06..6a98dbc931ac 100644
+> --- a/kernel/watchdog.c
+> +++ b/kernel/watchdog.c
+> @@ -797,8 +797,7 @@ static void watchdog_enable(unsigned int cpu)
+>  	 * Start the timer first to prevent the hardlockup watchdog triggering
+>  	 * before the timer has a chance to fire.
+>  	 */
+> -	hrtimer_init(hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
+> -	hrtimer->function = watchdog_timer_fn;
+> +	hrtimer_setup(hrtimer, watchdog_timer_fn, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
+>  	hrtimer_start(hrtimer, ns_to_ktime(sample_period),
+>  		      HRTIMER_MODE_REL_PINNED_HARD);
+>  
+> -- 
+> 2.39.5
+> 
+> 
