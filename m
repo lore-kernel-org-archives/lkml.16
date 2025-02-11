@@ -1,182 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AA62566C9
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:36:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C270254B11
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739291819; cv=none; b=t3VuDQWDF6CFxG/nzZoZsA6WBZB6dODOqj1Wc3Jms2Yv4FJQWlB1qeBcda0k9UZVAeF7nNKdbELOvI1bJDeFb4yEwHHW/Bj8dRrf4b7oxtPxHcHw7e/e97lPDaGJx8f5Fin2Vpu4X9Xilu6tpARQTfppaoWvMoCSv40xsqXlkGM=
+	t=1739291842; cv=none; b=W1cgwtpU2LHW0a9VPrniUjPDcQwQGPN6+HoX8ZjYrTJ5kPzz35uHwz2QuPC6Dms3NkDw37xeAt43+2m4bJly696nV7XqP7hHa8zZOOuq5zN/YIMmlJtylivHxIvmlv5eHC3ps8ZFqPlKEfhS6I+P+DiU+2sS0ZPdCd9gJMMt7JU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739291819; c=relaxed/simple;
-	bh=+HW24izCZDjaUaZUO8o/SCJ3eyQma72sjafBY/n5uz8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q9GIhGlb1i1NLJQ2hacSUXAhL7CaNUJ0wKikt6evhkWPDAlWwAiilEI5BSiRB1u15Hk1FEo+GIAJupCCnPPfD8ah2MXWLqyJXWU+cYjYvVr5tavBYXanAKJ1buiGLldPfJkMRJGWBwJWyCgvVHPNtaFuJK8Sl52CHaDRQ++nyH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hQs07nC9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739291842; c=relaxed/simple;
+	bh=jn5aVdVpmULQpMPMJm09Nw0JRtsT7JhnTjDn122jAM0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=pg7tVdu4iAJLn5dJy9+mDLqDv35EjMnQrE2S7g4Ms9a5GscLEQkWPogQ73RrBcDmeuZXDst0hXSZdlRBBOszbWiUDR5FSZtjwCwQ1xZqpFS3KAo3wdzU1yqm9qjE7uV+H14/QR0yq42/djW3XCZM8dIDyEYZn9S1GKbf+luEZMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S/k6rGQv; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hQs07nC9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14218C4CEE9;
-	Tue, 11 Feb 2025 16:36:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739291819;
-	bh=+HW24izCZDjaUaZUO8o/SCJ3eyQma72sjafBY/n5uz8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hQs07nC9tCFo22fAQGh78psDMhxtQEFnZ+c3V505nCsC+59OCPrgvGBeJRXmo8F6M
-	 xPS+D0EQQlSy13MBMubgkUAJ54DUcnzcOAQW4v+mwtFG1/BPo103Fw3bfiFZAePGeO
-	 VFq9KZPagGlIwCzMlIBLPjdpyPDhRk5vQ1m0oYOu+HSveONpD2EBCMokVU05zhNLDQ
-	 w64eymohMePG45yl4a1y3FZFVnCfE0qrB9HY6bqmpx7TtUyVeWgyhl6pyYyB+9yb7M
-	 Lv4COJg8LuwlM/XykkyPNZRT6oed5nft+SKh73RGkUw0MK2fLHd8tqSvdPlOQqRuc7
-	 m2b+V0KMgfGFw==
-From: Borislav Petkov <bp@kernel.org>
-To: X86 ML <x86@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>
-Subject: [PATCH 5/5] x86/microcode/AMD: Add get_patch_level()
-Date: Tue, 11 Feb 2025 17:36:48 +0100
-Message-ID: <20250211163648.30531-6-bp@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250211163648.30531-1-bp@kernel.org>
-References: <20250211163648.30531-1-bp@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S/k6rGQv"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fa3fd30d61so7759695a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:37:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739291839; x=1739896639; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JLItSN1MoQyG8GNmr/coUh7HtvBOUtOuKm2mJhYmGOU=;
+        b=S/k6rGQv2sd09wvQWu4CxrWaNq+dXZl1NBmEc0P6Y5TdvtC145mHjV5e1H5GHSudxh
+         cpcYur9fqAazdsQpsukNTH3471ZAVfnlJmwXBAJz0KldubUsuRvGrcFbZwsv7vResNwe
+         o3mY1Uu60B1jV4lJv5nClmxtaptgkuYHO1WNiWZ0GUd+as724vldsDysA7z22SOzqWiC
+         oAiBLWA5YlMAWBj9EDTayTwBt/piZeYs1DPg/YHhoSa6bA/3ZWXixw0jQkQchi/gno43
+         yRgyYPyCx6RtMMBznvNYh30CP9RHpRrxQHBVnGMtCfi3BPP1knd0yrax7elTg3J0BrPi
+         bd/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739291839; x=1739896639;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JLItSN1MoQyG8GNmr/coUh7HtvBOUtOuKm2mJhYmGOU=;
+        b=TAn+YT2Ag2jDOm/xx4zbWBGIgmm1T1O+zCiuQSbt29JTB2qtP5N71s3vhcClaeIG/m
+         8ldZ2bl04vUZRVOJSUarUWUFXwaA/JZJOFO3xXXqlYJachZH6kRWmJ/eoZlOpML+Lhtx
+         b4Arg13uc+l+ZFRJ/EFxURZNaHgBL5Tp8eRZnUvBvZe69DBsV8GDFXevgL5fSoB81GHV
+         /zOfL1A/Nqqo/S325zo1J0ZJwlkztzS36M7WlDMBBx+Ga8GcY4hlSjGE1tN1F14+NADL
+         sU4eP+1Xle3VarTThwt1R75+mKXEq+4whZsFX8/PHP79TDbXrXmEKGrrQ+XzPmzw5GTe
+         E1VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX7mVO/3lkotMxbo/QOHDHFPlgEvjBrKiQzVYXugM9eifMRl3aqL/0luYV0/jUZNtwxOayAAwtjpVkxAh4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKXXK72Y4aIrb6iJujCPRR21nBjredz4jNhPWNfjv+0aJlBU7o
+	kD7/PMSVbEkYEWw6AA5cIvo5aAtkkC6psqswl5/obQbaV17cEDGr6NqxuVkBhCSd9zFWVOKXTAz
+	BLg==
+X-Google-Smtp-Source: AGHT+IFqd6KdRVdCmUO59/npCeKNaG1EJTFDEmz3/mg0SIO6eDFXmBhqZXAxfPMIgJm2ELHJVsiQJ5v9nxc=
+X-Received: from pfih20.prod.google.com ([2002:a05:6a00:2194:b0:730:7485:6b59])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:4f84:b0:730:9446:4d75
+ with SMTP id d2e1a72fcca58-73217f5695emr4992739b3a.17.1739291838539; Tue, 11
+ Feb 2025 08:37:18 -0800 (PST)
+Date: Tue, 11 Feb 2025 08:37:17 -0800
+In-Reply-To: <yrxhngndj37edud6tj5y3vunaf7nirwor4n63yf4275wdocnd3@c77ujgialc6r>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <cover.1738595289.git.naveen@kernel.org> <405a98c2f21b9fe73eddbc35c80b60d6523db70c.1738595289.git.naveen@kernel.org>
+ <Z6EOxxZA9XLdXvrA@google.com> <60cef3e4-8e94-4cf1-92ae-34089e78a82d@redhat.com>
+ <Z6FVaLOsPqmAPNWu@google.com> <0e4bd3004d97b145037c36c785c19e97b6995d42.camel@redhat.com>
+ <Z6JoInXNntIoHLQ8@google.com> <604c0d57-ed91-44d2-80d7-4d3710b04142@redhat.com>
+ <yrxhngndj37edud6tj5y3vunaf7nirwor4n63yf4275wdocnd3@c77ujgialc6r>
+Message-ID: <Z6t8vRgQLiuMnAA9@google.com>
+Subject: Re: [PATCH 3/3] KVM: x86: Decouple APICv activation state from apicv_inhibit_reasons
+From: Sean Christopherson <seanjc@google.com>
+To: Naveen N Rao <naveen@kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 
-From: "Borislav Petkov (AMD)" <bp@alien8.de>
+On Tue, Feb 11, 2025, Naveen N Rao wrote:
+> On Wed, Feb 05, 2025 at 12:36:21PM +0100, Paolo Bonzini wrote:
+> I haven't analyzed this yet, but moving apicv_irq_window into a separate 
+> cacheline is improving the performance in my tests by ~7 to 8%:
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 9e3465e70a0a..d8a40ac49226 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1355,6 +1355,9 @@ struct kvm_arch {
+>         struct kvm_ioapic *vioapic;
+>         struct kvm_pit *vpit;
+>         atomic_t vapics_in_nmi_mode;
+> +
+> +       atomic_t apicv_irq_window;
+> +
+>         struct mutex apic_map_lock;
+>         struct kvm_apic_map __rcu *apic_map;
+>         atomic_t apic_map_dirty;
+> @@ -1365,7 +1368,6 @@ struct kvm_arch {
+>         /* Protects apicv_inhibit_reasons */
+>         struct rw_semaphore apicv_update_lock;
+>         unsigned long apicv_inhibit_reasons;
+> -       atomic_t apicv_irq_window;
+> 
+>         gpa_t wall_clock;
+> 
+> 
+> I chose that spot before apic_map_lock simply because there was a 4 byte 
+> hole there. This happens to also help performance in the AVIC disabled 
+> case by a few percentage points (rather, restores the performance in the 
+> AVIC disabled case).
+> 
+> Before this change, I was trying to see if we could entirely elide the 
+> rwsem read lock in the specific scenario we are seeing the bottleneck.  
+> That is, instead of checking for any other inhibit being set, can we 
+> specifically test for PIT_REINJ while setting the IRQWIN inhibit? Then, 
+> update the inhibit change logic if PIT_REINJ is cleared to re-check the 
+> irq window count.
+> 
+> There's probably a race here somewhere, but FWIW, along with the above 
+> change to 'struct kvm_arch', this helps improve performance by a few 
+> more percentage points helping close the gap to within 2% of the AVIC 
+> disabled case.
 
-Put the MSR_AMD64_PATCH_LEVEL reading of the current microcode revision
-the hw has, into a separate function.
+I suspect the issue is that apicv_inhibit_reasons is in the same cache line.  That
+field is read on at least every entry
 
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
----
- arch/x86/kernel/cpu/microcode/amd.c | 46 +++++++++++++++--------------
- 1 file changed, 24 insertions(+), 22 deletions(-)
+		/*
+		 * Assert that vCPU vs. VM APICv state is consistent.  An APICv
+		 * update must kick and wait for all vCPUs before toggling the
+		 * per-VM state, and responding vCPUs must wait for the update
+		 * to complete before servicing KVM_REQ_APICV_UPDATE.
+		 */
+		WARN_ON_ONCE((kvm_vcpu_apicv_activated(vcpu) != kvm_vcpu_apicv_active(vcpu)) &&
+			     (kvm_get_apic_mode(vcpu) != LAPIC_MODE_DISABLED));
 
-diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
-index adfea4d0d129..31f90e129b08 100644
---- a/arch/x86/kernel/cpu/microcode/amd.c
-+++ b/arch/x86/kernel/cpu/microcode/amd.c
-@@ -145,6 +145,15 @@ ucode_path[] __maybe_unused = "kernel/x86/microcode/AuthenticAMD.bin";
-  */
- static u32 bsp_cpuid_1_eax __ro_after_init;
- 
-+static u32 get_patch_level(void)
-+{
-+	u32 rev, dummy __always_unused;
-+
-+	native_rdmsr(MSR_AMD64_PATCH_LEVEL, rev, dummy);
-+
-+	return rev;
-+}
-+
- static union cpuid_1_eax ucode_rev_to_cpuid(unsigned int val)
- {
- 	union zen_patch_rev p;
-@@ -483,10 +492,10 @@ static void scan_containers(u8 *ucode, size_t size, struct cont_desc *desc)
- 	}
- }
- 
--static bool __apply_microcode_amd(struct microcode_amd *mc, unsigned int psize)
-+static bool __apply_microcode_amd(struct microcode_amd *mc, u32 *cur_rev,
-+				  unsigned int psize)
- {
- 	unsigned long p_addr = (unsigned long)&mc->hdr.data_code;
--	u32 rev, dummy;
- 
- 	native_wrmsrl(MSR_AMD64_PATCH_LOADER, p_addr);
- 
-@@ -504,9 +513,8 @@ static bool __apply_microcode_amd(struct microcode_amd *mc, unsigned int psize)
- 	}
- 
- 	/* verify patch application was successful */
--	native_rdmsr(MSR_AMD64_PATCH_LEVEL, rev, dummy);
--
--	if (rev != mc->hdr.patch_id)
-+	*cur_rev = get_patch_level();
-+	if (*cur_rev != mc->hdr.patch_id)
- 		return false;
- 
- 	return true;
-@@ -563,11 +571,12 @@ void __init load_ucode_amd_bsp(struct early_load_data *ed, unsigned int cpuid_1_
- 	struct cont_desc desc = { };
- 	struct microcode_amd *mc;
- 	struct cpio_data cp = { };
--	u32 dummy;
-+	u32 rev;
- 
- 	bsp_cpuid_1_eax = cpuid_1_eax;
- 
--	native_rdmsr(MSR_AMD64_PATCH_LEVEL, ed->old_rev, dummy);
-+	rev = get_patch_level();
-+	ed->old_rev = rev;
- 
- 	/* Needed in load_microcode_amd() */
- 	ucode_cpu_info[0].cpu_sig.sig = cpuid_1_eax;
-@@ -589,8 +598,8 @@ void __init load_ucode_amd_bsp(struct early_load_data *ed, unsigned int cpuid_1_
- 	if (ed->old_rev > mc->hdr.patch_id)
- 		return;
- 
--	if (__apply_microcode_amd(mc, desc.psize))
--		native_rdmsr(MSR_AMD64_PATCH_LEVEL, ed->new_rev, dummy);
-+	if (__apply_microcode_amd(mc, &rev, desc.psize))
-+		ed->new_rev = rev;
- }
- 
- static inline bool patch_cpus_equivalent(struct ucode_patch *p,
-@@ -692,14 +701,9 @@ static void free_cache(void)
- static struct ucode_patch *find_patch(unsigned int cpu)
- {
- 	struct ucode_cpu_info *uci = ucode_cpu_info + cpu;
--	u32 rev, dummy __always_unused;
- 	u16 equiv_id = 0;
- 
--	/* fetch rev if not populated yet: */
--	if (!uci->cpu_sig.rev) {
--		rdmsr(MSR_AMD64_PATCH_LEVEL, rev, dummy);
--		uci->cpu_sig.rev = rev;
--	}
-+	uci->cpu_sig.rev = get_patch_level();
- 
- 	if (x86_family(bsp_cpuid_1_eax) < 0x17) {
- 		equiv_id = find_equiv_id(&equiv_table, uci->cpu_sig.sig);
-@@ -722,22 +726,20 @@ void reload_ucode_amd(unsigned int cpu)
- 
- 	mc = p->data;
- 
--	rdmsr(MSR_AMD64_PATCH_LEVEL, rev, dummy);
--
-+	rev = get_patch_level();
- 	if (rev < mc->hdr.patch_id) {
--		if (__apply_microcode_amd(mc, p->size))
--			pr_info_once("reload revision: 0x%08x\n", mc->hdr.patch_id);
-+		if (__apply_microcode_amd(mc, &rev, p->size))
-+			pr_info_once("reload revision: 0x%08x\n", rev);
- 	}
- }
- 
- static int collect_cpu_info_amd(int cpu, struct cpu_signature *csig)
- {
--	struct cpuinfo_x86 *c = &cpu_data(cpu);
- 	struct ucode_cpu_info *uci = ucode_cpu_info + cpu;
- 	struct ucode_patch *p;
- 
- 	csig->sig = cpuid_eax(0x00000001);
--	csig->rev = c->microcode;
-+	csig->rev = get_patch_level();
- 
- 	/*
- 	 * a patch could have been loaded early, set uci->mc so that
-@@ -778,7 +780,7 @@ static enum ucode_state apply_microcode_amd(int cpu)
- 		goto out;
- 	}
- 
--	if (!__apply_microcode_amd(mc_amd, p->size)) {
-+	if (!__apply_microcode_amd(mc_amd, &rev, p->size)) {
- 		pr_err("CPU%d: update failed for patch_level=0x%08x\n",
- 			cpu, mc_amd->hdr.patch_id);
- 		return UCODE_ERROR;
--- 
-2.43.0
+and when opening an IRQ window in svm_set_vintr()
 
+	WARN_ON(kvm_vcpu_apicv_activated(&svm->vcpu));
+
+and when handling emulated APIC MMIO in kvm_mmu_faultin_pfn():
+
+		/*
+		 * If the APIC access page exists but is disabled, go directly
+		 * to emulation without caching the MMIO access or creating a
+		 * MMIO SPTE.  That way the cache doesn't need to be purged
+		 * when the AVIC is re-enabled.
+		 */
+		if (!kvm_apicv_activated(vcpu->kvm))
+			return RET_PF_EMULATE;
+
+Hmm, now that I think about it, lack of emulated MMIO caching that might explain
+the 2% gap.  Do you see the same gap if the guest is using x2APIC?
