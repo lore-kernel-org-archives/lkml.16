@@ -1,104 +1,71 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377A21EE031;
-	Tue, 11 Feb 2025 08:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739261745; cv=pass; b=cJ5om75DlAaGENb7phIcfEMCaBEKgOqacF7LDznf5Ny+CfeM4vo6oNsO3nWzb/Zfkx81Ie/6YHpP9BOCCxalv7OdEb+gQLjeLAAzsDucOFTd5HwesjFE0ZqVczTNLWrMwUeZVgOgHcHDtP8VdOlFCRPNkxSS3KcfN4J92Fq3ef8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739261745; c=relaxed/simple;
-	bh=ml9HCLFnHj3okZfENU5PWNu76H5yibO9VbLtc/Rw0KE=;
-	h=Message-ID:Date:MIME-Version:Cc:From:Subject:To:Content-Type; b=sOwr8ROwmwcWGhqD6wzFIxnhtwd2ZCujXDhjeDHTwoUQEFReJn/qYxXYTcv9bDAruGrPkTWiJNUNW1h8PW9nerVXhsbZe4FRIgF2Jf3anIw3gV3y5ncaOudiEJ12VpZ6feesCPwxR2DSMXXu0qlVao7MbMz7uphPnJuWl99XNgA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b=HvnVlaZa; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1BC1B6CE5;
+	Tue, 11 Feb 2025 08:16:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739261795; cv=none; b=WkOmjy9cC79wdV6yWTWBqWQ3AggLqEkzt6YXO6mMuDliDhUXJb24Yto1yN5fiBQBnkbZQbByu9iKFKI/iX3nf4eGDJ3HwKFw56sEVG7ir5QIAypZI8ofiypaVBlAC4HCWvw4+vqfeO6WAVf4NYwgz6q/reKtjWOwzL/G9K9qPTA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739261795; c=relaxed/simple;
+	bh=+u+5GUAVu2gY43K/hasdrUu8RXdP+Ha6+AiaUUtPgl0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RTHeDCSk9HL08zGr/2Q28ieTPs9x2AetrsXS5+45bcF9spaJCVDCJlvboaqBxoVHew2ZPxQCmxlUf9QQyWTzce8q5llKZv9e/5drrDjh8YjWclAmUDUslIUfx0AJFq2TENRfKYC4CMrlkc/LDjlpvQ4S6/rjoC0uF7gyeqy/6IE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TinWPZjg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b="HvnVlaZa"
-ARC-Seal: i=1; a=rsa-sha256; t=1739261723; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=UGPx6GsCZ4qC2x55GioKK9jhZ4XcOAQhBYpk1HPuJcKFfIoQ+CusgVxAZc/n4Ajcr03BfWVFPIBpyEx5OhBzPZbyMsMab/FyMbonI4E/ZiYYnrglITikLTy4/fraTretrYrFQedBKJzJe7LralxjDapL4HPU9mEjor8bb5hOxhE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739261723; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Jm2+B3dC9Go2CBCBCYErvWv91+CAUXIZB+j0be0w8Fc=; 
-	b=GHJIVZsZ7anm0JxHe69Z9GlJJBFfIpDJd24M3kZWYYjdowqg9UMcWn03BqYHtHTFMPHlhZo8XiMOt7S47cRcO0TO68yL9DObmLBhm1pZsb1/Pf0DKSkTPVqQNPWYIU2VxD3Pe7TefJd5DCryl+l1PL4sH3SE7PG1sGcVyikoJeI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=Usama.Anjum@collabora.com;
-	dmarc=pass header.from=<Usama.Anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739261723;
-	s=zohomail; d=collabora.com; i=Usama.Anjum@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:From:From:Subject:Subject:To:To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=Jm2+B3dC9Go2CBCBCYErvWv91+CAUXIZB+j0be0w8Fc=;
-	b=HvnVlaZaABEpZRMUDfS656mZSHd3yqfW/qACeoH9MdwFui+vy9u3FasRnBzOqame
-	JE1eP+c1fEdG7RFH3o4ztcm5UpTN9QT2adnfp+SRmGMC8qmyxwwol+/5+PBgzCw89Bb
-	lr6rmaS/v+7lAcb2wBG19dn54pNQeGXwa6a+zvFg=
-Received: by mx.zohomail.com with SMTPS id 1739261719547543.4080545437324;
-	Tue, 11 Feb 2025 00:15:19 -0800 (PST)
-Message-ID: <59c036b6-a3d6-403b-8bb0-566a17f72abc@collabora.com>
-Date: Tue, 11 Feb 2025 13:15:55 +0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TinWPZjg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE823C4CEDD;
+	Tue, 11 Feb 2025 08:16:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739261794;
+	bh=+u+5GUAVu2gY43K/hasdrUu8RXdP+Ha6+AiaUUtPgl0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TinWPZjgpSeo38CN9Be9w4b0lLOtgzlBPWr47JtzIpP4gvZ16FxD96VxkGp0krQFh
+	 4bMeOpIaaUdPaVFTAVkNRTMLLYmQbIb5pMxTObMWrBcRe2bkU8eH/9SX0bOfOJ6S0P
+	 ejFiT9S9zg0tf/M7UELbCGqT+F6Szf+MrE0Y8P33zgMB/fKfgcS3xRBvDX605FyFGx
+	 ZvquVVzXXGf110FQPuabOC9JryVhUc1sYMI3kQuaWINwMFLts15mLabaogNdB1GOQW
+	 tQiuNs7fl19NUHDS9273aNxNRxtodIRNlK3CbhFrXcJF7w+1fret4n+4GqyzYrtiO8
+	 1znYlrYbPN99Q==
+Date: Tue, 11 Feb 2025 09:16:31 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Antoniu Miclaus <antoniu.miclaus@analog.com>, robh@kernel.org, 
+	conor+dt@kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v12 5/9] dt-bindings: iio: adc: add ad485x axi variant
+Message-ID: <20250211-industrious-rugged-gecko-9b5c02@krzk-bin>
+References: <20250207140918.7814-1-antoniu.miclaus@analog.com>
+ <20250207140918.7814-6-antoniu.miclaus@analog.com>
+ <20250208162058.3b50ae20@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Usama.Anjum@collabora.com, linux-arm-msm@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
- kernel@collabora.com
-Content-Language: en-US
-From: Muhammad Usama Anjum <Usama.Anjum@collabora.com>
-Subject: [BUG REPORT] MHI's resume from hibernate is broken
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Johan Hovold <johan@kernel.org>, Loic Poulain <loic.poulain@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250208162058.3b50ae20@jic23-huawei>
 
-Hi,
+On Sat, Feb 08, 2025 at 04:20:58PM +0000, Jonathan Cameron wrote:
+> On Fri, 7 Feb 2025 16:09:14 +0200
+> Antoniu Miclaus <antoniu.miclaus@analog.com> wrote:
+> 
+> > Add a new compatible and related bindings for the fpga-based
+> > AD485x AXI IP core, a variant of the generic AXI ADC IP.
+> > 
+> > The AXI AD485x IP is a very similar HDL (fpga) variant of the
+> > generic AXI ADC IP, intended to control ad485x familiy.
+> 
+> Hmm. Should we name this after a specific part? Very unlikely
+> the wildcard will go wrong here because of how specific this
+> binding is anyway but we should perhaps stick to normal rules
+> of no wild cards.
 
-I've been digging in the MHI code to find the reason behind broken
-resume from hibernation for MHI. The same resume function is used
-for both resume from suspend and resume from hibernation. The resume
-from suspend works fine because at resume time the state of MHI is 
-MHI_STATE_M3. On the other hand, the state is MHI_STATE_RESET when
-we resume from hibernation.
+I am pretty sure we had this discussion about this or other block
+already and we reached some sort of concensus... which is undocumented
+in commit msg, so we are doomed to repeat the discussion.
 
-It seems resume from MHI_STATE_RESET state isn't correctly supported.
-The channel state is MHI_CH_STATE_ENABLED at this point. We get error
-while switching channel state from MHI_CH_STATE_ENABLE to
-MHI_CH_STATE_RUNNING. Hence, channel state change fails and later mhi
-resume fails as well. 
-
-I've put some debug prints to understand the issue. These may be
-helpful:
-
-[  669.032683] mhi_update_channel_state: switch to MHI_CH_STATE_TYPE_START[2] channel state not possible cuzof channel current state[1]. mhi state: [0] Return -EINVAL
-[  669.032685] mhi_prepare_channel: mhi_update_channel_state to MHI_CH_STATE_TYPE_START[2] returned -22
-[  669.032693] qcom_mhi_qrtr mhi0_IPCR: failed to prepare for autoqueue transfer -22
-
-This same error has been reported on some fix patches [1] [2]. Are there
-any patches which I should test? 
-
-Is officially hibernation use case supported at all?
-
-In my view, this path may not have gotten tested and can be fixed easily
-as we need to perform, more or less the same steps which were performed
-at init time. But I've not found much documentation around MHI protocol
-and its state machine, how is mhi state related to mhi channels support.
-
-PS: Just some information, my device has QCNFA765 endpoint and ath11k_pci
-is being used. It doesn't seem like the problem is in the driver. The
-problem is on the host side which isn't able to communicate correctly with
-the endpoint. The resume from hibernation would be broken on all wifi
-chips using mhi.
-
-[1] https://lore.kernel.org/all/Z5EKrbXMTK9WBsbq@hovoldconsulting.com 
-[2] https://lore.kernel.org/all/Z5ENq9EMPlNvxNOF@hovoldconsulting.com 
--- 
-BR,
-Muhammad Usama Anjum
+Best regards,
+Krzysztof
 
