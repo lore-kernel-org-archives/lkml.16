@@ -1,71 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E0D22F19;
-	Tue, 11 Feb 2025 00:35:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A28A524F;
+	Tue, 11 Feb 2025 00:37:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739234130; cv=none; b=IOMVPYMA+dgLJyfLvSUFAwi6Ur3ZL3DCUt6lo5e3HxbUtnH0/EGSwXa5OWvlLnnTsC6XA2f0kdEK3WfEq1PpLUvATtDlYTof3DuJ8AxURACjfpb06ouMNRHcNw/KwQWXu2bZnH2WVsCivSAmezgOHPrcUJBF69ddfad0JFBNrj4=
+	t=1739234241; cv=none; b=bNYaovbDMbsBZo1mCmO/N2S5oUtYDPofai3+j/CYSOu4VfY1mj7gurRuZXKarbPptgriOcK1uoBESYON0MQCRwYIhJiABd0dF0DsFZfHBeDZbQggqqRt3xVj8po4p2BqdCB8KTIvXqDf1vmbNJ52WhFcAfxjdIRmWUDCaih0gzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739234130; c=relaxed/simple;
-	bh=RJLOvptniuLFOM2SuVPHG71XSa6FSB90+DGF7eT1cng=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aFEKNC7J+E1+u7cw+OnqFEs3kiY4yq8g3Bo+0SJdftksp2pCaxmcRLLxmMsUEThVh+OG1/ROlDnfdyAP6/AyysZ51kp63SSfWWKbnV9ViYSD2iF72hsA/T/WGwUYWc4P2YbWzpQfn/LNGAp81WgF8jB5cAZcsJKWWBSxVYAXrS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uODfralo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739234241; c=relaxed/simple;
+	bh=GLt6m4//6evuO9TSKo2CUYJ3XYl/r9lCtLhgW1+PV8o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SzyJQU68+TMzwcNfAtkKRDWpZJE0w7LQBelH9vdjdB0yNEVr+cLzQX5U/kXfNwMfBOqQr22S9DA9AEGiQKcMxDWduIEVOwimuyefvTUt/n4oWUYQ5EcNMuVcHDr8chkpNLaQtvA49lLgBT3gScQo+49NxTV4vtF52DSZlPDbt9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BSKCYcv8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uODfralo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F91FC4CED1;
-	Tue, 11 Feb 2025 00:35:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BSKCYcv8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2757C4CED1;
+	Tue, 11 Feb 2025 00:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739234130;
-	bh=RJLOvptniuLFOM2SuVPHG71XSa6FSB90+DGF7eT1cng=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uODfralo8jAlCffLiLEwgPlpFGB059bewe3/CMUqh1MVUJaxc5kywILk0ox9buY2Y
-	 wvJmVhIhYPbAN9Cme4H+zXP1+ckpgJfqboggN1lpyibvJwl9Tt7T9cbCmIiE9MrCyb
-	 9ynjzLlgcBxRv+sFPmq83E56cn8jUFlC+zU13AGqp56Id6GmX3y9V7fqcUiXakfNlK
-	 BVB6/qpHcXoCL3Psp8cDGsM9SwXZ1FfqlJvIn1MTvRrMSXMBBLAI9L2iWfGNF3mzft
-	 uLImlNR0qxUJ6h60x0TyG+fALgIpIaBMDpYQKgVbqj2jSrwv4HBXEWuJGTW4zDcK75
-	 3PK2Lp+GWYUzQ==
-Date: Mon, 10 Feb 2025 16:35:29 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: Eric Dumazet <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Daniel Xu <dxu@dxuuu.xyz>, Alexei
- Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, John Fastabend
- <john.fastabend@gmail.com>, Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?=
- <toke@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>, Martin KaFai
- Lau <martin.lau@linux.dev>, <netdev@vger.kernel.org>,
- <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v4 0/8] bpf: cpumap: enable GRO for XDP_PASS
- frames
-Message-ID: <20250210163529.1ba7360a@kernel.org>
-In-Reply-To: <7003bc18-bbff-4edd-9db5-dd1c17a88cc0@intel.com>
-References: <20250205163609.3208829-1-aleksander.lobakin@intel.com>
-	<79d05c4b-bcfb-4dd3-84d9-b44e64eb4e66@intel.com>
-	<CANn89iLpDW5GK5WJcKezFY17hENaC2EeUW7BkkbJZuzJc5r5bw@mail.gmail.com>
-	<7003bc18-bbff-4edd-9db5-dd1c17a88cc0@intel.com>
+	s=k20201202; t=1739234240;
+	bh=GLt6m4//6evuO9TSKo2CUYJ3XYl/r9lCtLhgW1+PV8o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BSKCYcv8vMXUWPUAsmtR03X0ABIaj2EBDdZSriZXFIfQEsu2nklZJHlnJIq28JiLb
+	 cjywcf2f2Je5NW7LeCvEH/qW72SPPQAz6X68FOo15zzPVhzVak265p1M0Ob1SKBXlg
+	 NDT8kc1w6YTxrKaQODI0y6/GDiNwILeoxET0a6AhhHGJ8JT9ZwWjf28KhJmlZ3bvyB
+	 KFgJgIfBj06XPk4jozO+goFqgMmcOeYWImAToHwvh48buT0k31FsamKN0e2+nHgNjj
+	 6uTLf7gwFD3nb1q3pISGM4rHD7Us9FLABO+LS+EzXbzKB4ZIjMx7ZQMfnkc1DfHk2K
+	 C26AgPrfVN1gQ==
+Date: Mon, 10 Feb 2025 16:37:20 -0800
+From: Kees Cook <kees@kernel.org>
+To: "Ricardo B. Marliere" <ricardo@marliere.net>
+Cc: Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Ricardo B. Marliere" <rbm@suse.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Subject: Re: [PATCH 1/2] yama: Make sysctl table const
+Message-ID: <202502101636.C8D3F04@keescook>
+References: <20250123-sysctl-kees-v1-0-533359e74d66@suse.com>
+ <20250123-sysctl-kees-v1-1-533359e74d66@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250123-sysctl-kees-v1-1-533359e74d66@suse.com>
 
-On Mon, 10 Feb 2025 16:31:52 +0100 Alexander Lobakin wrote:
-> This was rejected by Kuba in v2.
-> He didn't like to have napi_id two times within napi_struct (one inside
-> gro_node, one outside).
+On Thu, Jan 23, 2025 at 04:33:34PM -0300, Ricardo B. Marliere wrote:
+> Since commit 7abc9b53bd51 ("sysctl: allow registration of const struct
+> ctl_table"), the sysctl registration API allows for struct ctl_table to be
+> in read-only memory. Move yama_sysctl_table to be declared at build time,
+> instead of having to be dynamically allocated at boot time.
+> 
+> Cc: Thomas Weiﬂschuh <linux@weissschuh.net>
+> Suggested-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+> Signed-off-by: Ricardo B. Marliere <rbm@suse.com>
+> ---
+>  security/yama/yama_lsm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/security/yama/yama_lsm.c b/security/yama/yama_lsm.c
+> index e1a5e13ea269d4917fe2c78cb79f1d44881653c2..54bd5f535ac1fef9409ea96ad60825f565318daf 100644
+> --- a/security/yama/yama_lsm.c
+> +++ b/security/yama/yama_lsm.c
+> @@ -454,7 +454,7 @@ static int yama_dointvec_minmax(const struct ctl_table *table, int write,
+>  
+>  static int max_scope = YAMA_SCOPE_NO_ATTACH;
+>  
+> -static struct ctl_table yama_sysctl_table[] = {
+> +static const struct ctl_table yama_sysctl_table[] = {
 
-Do you mean:
+This was done via commit 1751f872cc97 ("treewide: const qualify
+ctl_tables where applicable").
 
-  the napi_id in gro sticks out..
-
-https://lore.kernel.org/netdev/20250113130104.5c2c02e0@kernel.org/ ?
-
-That's more of a nudge to try harder than a "no". We explored 
-the alternatives, there's no perfect way to layer this. I think 
-Eric's suggestion is probably as clean as we can get.
+-- 
+Kees Cook
