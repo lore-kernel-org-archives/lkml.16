@@ -1,118 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8FE31FCCE9;
-	Tue, 11 Feb 2025 17:04:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1869C254B05;
+	Tue, 11 Feb 2025 17:05:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739293497; cv=none; b=DpVQz0MG1YryMayu6943DVxUN3sTiFwicFNopNlmbIH0DkIbZP3hSW7fCD+PiLNkfgRG9FAY0wmkg/s1lJDdGUtW2SGrXaABcLKvZ4F3SrcGjKM6jn6kL1dbBM2KT5LwF/bUNHyGxHtcFjnulim3vIpeaHFAuBcIy7zGcc8XCq8=
+	t=1739293517; cv=none; b=he7W9LTJ2YBiSXTs2/360m5a0ZXu1XWwP7CaUP3v+b16qDClMmMOrtmexb8RsCJWwVTlIK/D4HTsEcndGEyhUzeh/LkVtGMb5hXILKSItkRqpksDKb7UnI9Yn25uYW6wyrkoDLBSm6hlOK/tOjCRQMvkyEuZQvvxhugGdc4CHWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739293497; c=relaxed/simple;
-	bh=XsNH6eH8ybVKvCt7G6pYO+W7xKqMPqW7ljf0EDTS4F4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XvnTAaKVD8Cq7tkYCQ+ZXoNFakxG3vhlOhP5lfxzNxSyNUKM4xmpF23dV1qMCTb5rSFYOgGhfVAXpOBdu3K0jw/w6sijhlpgEJpyj9PxniaDY3S+Y3kt0Gepj4vLNEzUQyKaUaPv4I6BStZQc1FXCaYkDJq4IOEcOMZeTfnoiHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96ED6C4CEDD;
-	Tue, 11 Feb 2025 17:04:55 +0000 (UTC)
-Date: Tue, 11 Feb 2025 12:05:00 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Eric Dumazet <edumazet@google.com>
-Cc: Breno Leitao <leitao@debian.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon
- Horman <horms@kernel.org>, Neal Cardwell <ncardwell@google.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH net-next] trace: tcp: Add tracepoint for
- tcp_cwnd_reduction()
-Message-ID: <20250211120500.0b1e571c@gandalf.local.home>
-In-Reply-To: <CANn89iLMK5B-9LQtga2HEnEs3rS=ta6eOcxxXB2gCkYYApLM4w@mail.gmail.com>
-References: <20250207-cwnd_tracepoint-v1-1-13650f3ca96d@debian.org>
-	<CANn89iLMK5B-9LQtga2HEnEs3rS=ta6eOcxxXB2gCkYYApLM4w@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1739293517; c=relaxed/simple;
+	bh=4SlwwWxS+SQPd/d/oR8xE4I/YSQQ0zoz8M3b8E1zjEw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NoaIPNUyjAAsx+/WftDs9YFWlDoWKgPLPvHPwNWdLg55Cm4t8MEy8v6uWZDuot9eDLwL+0Ng4N81M4+yvbSEBp4vC4GmfDmjAvEmPudGppXmhEE6JpEKIFIWU9QXhz2hCAHvKkCQDYZA8B5AhWoNp8u4FIfoMshEAz2sAEgjVcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mBdf+Ih1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mBdf+Ih1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E328CC4CEDD;
+	Tue, 11 Feb 2025 17:05:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739293515;
+	bh=4SlwwWxS+SQPd/d/oR8xE4I/YSQQ0zoz8M3b8E1zjEw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mBdf+Ih1kmF4vUqTTwGdNBZW1z5ZtYlGN9Kh6h5Gk5GhSITdAVnJPI6X6ephobZNV
+	 hos0cutdV7vSuPGGlstWzPG9Kvn7ZIMgJil6bGWg0cUUmp07Wce1WBsK3AUpU+WxeY
+	 iMHkw7qzR78mKym7mwM9oukCpMwUmAdw9jASVA3ZjiHEw/cahlZPna0Fpm4sZfmuid
+	 fSPRg7tcveI4gATGV9y28wo++LFYoqM7al68GG2FaQel8Sh2S2edpAubVwe7D9JE1D
+	 tiHk93fnPPxWR2j0nC8rEU72HvMlGhSFP/eFEn3MdibI33N4fEbj5/BW+Ir+9x+HjN
+	 PBwHo/3BR1nwA==
+Date: Tue, 11 Feb 2025 09:05:13 -0800
+From: Eric Biggers <ebiggers@kernel.org>
+To: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, hannes@cmpxchg.org,
+	yosry.ahmed@linux.dev, nphamcs@gmail.com, chengming.zhou@linux.dev,
+	usamaarif642@gmail.com, ryan.roberts@arm.com, 21cnbao@gmail.com,
+	akpm@linux-foundation.org, linux-crypto@vger.kernel.org,
+	herbert@gondor.apana.org.au, davem@davemloft.net,
+	clabbe@baylibre.com, ardb@kernel.org, surenb@google.com,
+	kristen.c.accardi@intel.com, wajdi.k.feghali@intel.com,
+	vinodh.gopal@intel.com
+Subject: Re: [PATCH v6 00/16] zswap IAA compress batching
+Message-ID: <20250211170513.GB1227@sol.localdomain>
+References: <20250206072102.29045-1-kanchana.p.sridhar@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206072102.29045-1-kanchana.p.sridhar@intel.com>
 
-On Tue, 11 Feb 2025 16:19:54 +0100
-Eric Dumazet <edumazet@google.com> wrote:
+On Wed, Feb 05, 2025 at 11:20:46PM -0800, Kanchana P Sridhar wrote:
+> IAA Compression Batching:
+> =========================
+> 
+> This patch-series introduces the use of the Intel Analytics Accelerator
+> (IAA) for parallel batch compression of pages in large folios to improve
+> zswap swapout latency.
 
-> I can give my +2 on this patch, although I have no way of testing it.
+So, zswap is passed a large folio to swap out, and it divides it into 4K pages
+and compresses each independently.  The performance improvement in this patchset
+comes entirely from compressing the folio's pages in parallel, synchronously,
+using IAA.
 
-If you want to test this, apply the below patch, enable
-CONFIG_SAMPLE_TRACE_CUSTOM_EVENTS, and after you boot up, do the following:
+Before even considering IAA and going through all the pain of supporting
+batching with an off-CPU offload, wouldn't it make a lot more sense to try just
+compressing each folio in software as a single unit?  Compared to the existing
+approach of compressing the folio in 4K chunks, that should be much faster and
+produce a much better compression ratio.  Compression algorithms are very much
+designed for larger amounts of data, so that they can find more matches.
 
- # modprobe trace_custom_sched
- # cd /sys/kernel/tracing
- # echo 1 > events/custom/tcp_cwnd_reduction_tp/enable
+It looks like the mm subsystem used to always break up folios when swapping them
+out, but that is now been fixed.  It looks like zswap just hasn't been updated
+to do otherwise yet?
 
-[ do something to trigger it ]
+FWIW, here are some speed and compression ratio results I collected in a
+compression benchmark module that tests feeding vmlinux (uncompressed_size:
+26624 KiB) though zstd in 4 KiB page or 2 MiB folio-sized chunks:
 
- # cat trace
+zstd level 3, 4K chunks: 86 ms; compressed_size 9429 KiB
+zstd level 3, 2M chunks: 57 ms; compressed_size 8251 KiB
+zstd level 1, 4K chunks: 65 ms; compressed_size 9806 KiB
+zstd level 1, 2M chunks: 34 ms; compressed_size 8878 KiB
 
--- Steve
+The current zswap parameterization is "zstd level 3, 4K chunks".  I would
+recommend "zstd level 1, 2M chunks", which would be 2.5 times as fast and give a
+6% better compression ratio.
 
-diff --git a/samples/trace_events/trace_custom_sched.c b/samples/trace_events/trace_custom_sched.c
-index dd409b704b35..35b3cfa6e91d 100644
---- a/samples/trace_events/trace_custom_sched.c
-+++ b/samples/trace_events/trace_custom_sched.c
-@@ -16,6 +16,7 @@
-  * from the C file, and not in the custom header file.
-  */
- #include <trace/events/sched.h>
-+#include <trace/events/tcp.h>
- 
- /* Declare CREATE_CUSTOM_TRACE_EVENTS before including custom header */
- #define CREATE_CUSTOM_TRACE_EVENTS
-@@ -37,6 +38,7 @@
-  */
- static void fct(struct tracepoint *tp, void *priv)
- {
-+	trace_custom_event_tcp_cwnd_reduction_tp_update(tp);
- 	trace_custom_event_sched_switch_update(tp);
- 	trace_custom_event_sched_waking_update(tp);
- }
-diff --git a/samples/trace_events/trace_custom_sched.h b/samples/trace_events/trace_custom_sched.h
-index 951388334a3f..339957d692c0 100644
---- a/samples/trace_events/trace_custom_sched.h
-+++ b/samples/trace_events/trace_custom_sched.h
-@@ -74,6 +74,33 @@ TRACE_CUSTOM_EVENT(sched_waking,
- 
- 	TP_printk("pid=%d prio=%d", __entry->pid, __entry->prio)
- )
-+
-+struct sock;
-+
-+TRACE_CUSTOM_EVENT(tcp_cwnd_reduction_tp,
-+
-+	TP_PROTO(const struct sock *sk, int newly_acked_sacked,
-+                int newly_lost, int flag),
-+
-+	TP_ARGS(sk, newly_acked_sacked, newly_lost, flag),
-+
-+	TP_STRUCT__entry(
-+		__field(	unsigned long,		sk	)
-+		__field(	int,			ack	)
-+		__field(	int,			lost	)
-+		__field(	int,			flag	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->sk	= (unsigned long)sk;
-+		__entry->ack	= newly_acked_sacked;
-+		__entry->lost	= newly_lost;
-+		__entry->flag	= flag;
-+	),
-+
-+	TP_printk("sk=%lx ack=%d lost=%d flag=%d", __entry->sk,
-+		__entry->ack, __entry->lost, __entry->flag)
-+)
- #endif
- /*
-  * Just like the headers that create TRACE_EVENTs, the below must
+What is preventing zswap from compressing whole folios?
+
+- Eric
