@@ -1,91 +1,106 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2AA1CB51B;
-	Tue, 11 Feb 2025 07:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739260676; cv=pass; b=dVuxSw/T5rnR5HuCqpqK2f8iEXlfAEY32gefTo10eEGrNAFqxd2xjZEj+WG3xMEPCt9or78i2yvXROH+Ex2roM5sji+dpWYKRF9eSz3f5h2H5RilF9i6AzC3tDtduelHhOaCWbVn+cd3jih5UuF/XTZWZT7rzG8hi7SQUmbuXPI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739260676; c=relaxed/simple;
-	bh=EkXyonoyXlxTxbDDka2sbe2pzNYd9avLkgJX04haqYE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=t96YNtRX1recCrkbsU+i0mrfrMAWFEHYGGnVfLdnIOu0ZmNhWZ+FoyfwyvMsd9RI7f3ZZQDfrEznQ8dtou20EnPNg+ZvuYG0cL4cyJSmiFqdU8a4hnFcXaATbb8Q27wHuXRDuEL1IV8lp57WGhsEK52NbgkKaTCZ/9tfT88nUCc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=J9OfNxcc; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBDC1D5178
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739260678; cv=none; b=gGYMzDexlrhDdwAcGqngduZOzTH18yOWfKn2eqH6XnjficoprTdjg8qSJGJLTonVxN05ny5GXMxesk/yh6RJvaWpa0CqSJ3xN6rZHSulWYmgBaNadnJXEuR4fd11hVU+4lUwAzNYB9UlXuygbyFnC2An9deg6nPnnyGJ/hBYfmY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739260678; c=relaxed/simple;
+	bh=Lcml8aJDBTGKpyIaX4HKBifxt+OxHZQ7x1WL3jIsN4I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P8YMag4Ko2TTKlU2p8p6xB4Es+qjdyIPIZ/j8n61oJHcyCuPKyF+ihPtjonFZ1SPK46wqlIbPDBFAhqoWu8tLUpSsFq082KnxaDy3Jm9Ak+BEegso9cKzQieHthN+xhVfxhCrolIAc90y+yrbSqLm6dThQ3HfRz2epKCincfQHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T5Uf6EcT; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="J9OfNxcc"
-ARC-Seal: i=1; a=rsa-sha256; t=1739260661; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Iu5o4OhpjZhY8Ow79gN0JHjyJw5rea/2ALE9NeXX2v6jOCcJMev/n2CmFQJmrd5M2mfhs15xytuKurWqQqaqZuhZqpvScs/Bff6+3CSU5Xs3Vd7Bizv+qyuYij3hTWvUHEcsPB7lk1hW8Q2eAioxtcnOFWCtqaMRr3Ntj+01jQQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739260661; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=aJYugM60n93ioiD/yFHZ0ukaareKO/ZhIAhoTxBvDPQ=; 
-	b=g9Pg3br2WHiDGRYlXerK7i8uIAOBqhqs6QzJ8ONDGOotsLPWvtQGrGnXDIuH38QLNKwIQ5R/yF9235uJ4+6dM1ZvQHCi5cTH/X4UV79ytYoRvCeInKhoNSODPNEUuvh0Ta/ozu0nmTr29jVu/nJPkR1SxQ4yGhBlEKBV2nlighc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739260661;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=aJYugM60n93ioiD/yFHZ0ukaareKO/ZhIAhoTxBvDPQ=;
-	b=J9OfNxccFFUvtXN+dAh5nrLbrX1MWDh/KeO+l35EY3fZvkoJSNOPL1P4/KZk7rwN
-	LsByghmzgV+uDCv7RinQEb5t6g6EgAx1zzbOusmpM9us3JTgSmWuQTrPFujld17Uy+q
-	LPQA9NvFNKezyJnfAnICUljYgbK5HoMZ2q4qdWvY=
-Received: by mx.zohomail.com with SMTPS id 1739260658164746.6572688940518;
-	Mon, 10 Feb 2025 23:57:38 -0800 (PST)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH v1 0/7] Use guard() instead of rwsem locking
-Date: Tue, 11 Feb 2025 15:57:20 +0800
-Message-Id: <20250211075727.351895-1-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T5Uf6EcT"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-38a25d4b9d4so2713673f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:57:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739260675; x=1739865475; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=42HWzkx6qBwnjJ3MIpdxDc5gSzsxvujl0Un+nlip12k=;
+        b=T5Uf6EcT1TJT4QXndH8AMbWxcmsnJtj6VbZvlpdrVjl0dmRYiA8zZQo84XbxrH5Qzz
+         M28nK9mnMCmS1LFMsbGkILIwPPDM+kJM4c9umzZDENBzZ995R/S6sFSgWbCocAFWquGs
+         /Z1it5qfvRUspfp621pWyByFvzNu4b0OJTD4o0pyqdfylFQLfjOPDUGhJk0x8WdsPYXE
+         SVv3X1/Kes1JDlWIgQHA7BZOVBUZxA28ViljpbpOyd//RY8VtJrybP3ORJY1RdkByVOL
+         vHcU4EyzQ9nkq36RXeUo9AUi/eAf7bQHeYt/NO2Ra7+Nfj9N120B7C/0wUB3hGD9ycez
+         kwvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739260675; x=1739865475;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=42HWzkx6qBwnjJ3MIpdxDc5gSzsxvujl0Un+nlip12k=;
+        b=HNV2xhTXEy/Kf1icNZQR7CCvC3tr8S2AunjSY8jXOQqmBfwgfqW7rjwYYJ8Y3kGAVv
+         tZ5UXaIWBUvxDNEKnfxe2gtGUnFNK/9q6s6L1ABWVx4EW8140OOhSsma9LhSs5UWK0uu
+         qHMwy5D/Z5oy23LrtXDAHbTbq+SxpncTUjcxnzzsfUQmA6UzUWycqjpP9nO5n4I8xg1P
+         D5mufgQv5sbw1hWKMtG6Ax/QZQYMSzYKRbcGbaVe4hz7xpsd0hz4D0PaMp37b1ycCd9z
+         JtBh3SPShkGLMOjE17QFz9zYm57cF5XJSstKF3OhXQVXBzSSkuq6dhdogV3ZftZL0CJ+
+         Tyuw==
+X-Forwarded-Encrypted: i=1; AJvYcCVRBgZJF5CKMTqZmkS0nx8+WGxVJqlgjQDbI2z5Ev+jASS9MLuyMA11Gn3ISMQH5rYB0KvDBdxh8/XHlvU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUgylTOdXiuMJUbVhapusQ/NrphzTdmo2SqgsG3+QiD2t6Vplu
+	7hX03zPzZKqqR+0FhyjxRtrylKyCM6FpzoTvQrAM//kNKuYPoKN5PbVsANMoouo=
+X-Gm-Gg: ASbGncsPaXO0n9w9iKjx1RemOesdt4eVmND2fIsD6n/RnkbFzT2sorEZ60yMlKhJDPU
+	AgHFIRebfINU7SuC7P1lXn+b4PhhXIqMYGKNzZBxsmAucbblR3bAJtb0apz+XMeb2K6b3e54xPO
+	OXylASAGXtRoAv3FjZiEPGzEWTBbMYboln+tRc7zsxoMu0vvpyH2vDiEFIlIRXFRBgCQeSKktu8
+	8v9cpm3j1pciiw83vA5gmTnPX84RyxLAmvQKN428Lu7XR53gUNxD/sOmq/486IawdRyS/CHEiWY
+	43EiRVbDhjS2z8gvQCGWql+vxdZa9kLIlmWYN3Q9HEupqYhTKLif0zM=
+X-Google-Smtp-Source: AGHT+IGi7+qfoBcLxF8pRER6rZ/Hk6AG5kphY1zYe0BKOmClMdXm6jxLj1GKveMoCx+zBMawGOCnIQ==
+X-Received: by 2002:a5d:5f86:0:b0:38d:d43c:31ab with SMTP id ffacd0b85a97d-38dd43c33f9mr8339431f8f.7.1739260675170;
+        Mon, 10 Feb 2025 23:57:55 -0800 (PST)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4394127afcbsm65781475e9.23.2025.02.10.23.57.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 23:57:54 -0800 (PST)
+Message-ID: <5dc4bbb7-71b5-4389-9e99-099e1c93d1c9@linaro.org>
+Date: Tue, 11 Feb 2025 08:57:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 0/6] Add TSENS support for IPQ5332, IPQ5424
+To: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>, amitk@kernel.org,
+ thara.gopinath@gmail.com, rafael@kernel.org, rui.zhang@intel.com,
+ lukasz.luba@arm.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: quic_srichara@quicinc.com, quic_varada@quicinc.com
+References: <20250210120436.821684-1-quic_mmanikan@quicinc.com>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <20250210120436.821684-1-quic_mmanikan@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr08011227697a47ad496bfedf41ffec840000e16ec349b7a5ef7307093606e9313b20b659af9c738441d42f:zu08011227424f64415c2e61a70b4a02be00007c5d89c04393e58da93543626a27d42225e5b47246624933af:rf0801122d30a9f785deb526d2e4ee69db00002ea7e2a7eae156bba825b5829b419127b1c3197a7cb16dfcc9829094af26cd:ZohoMail
-X-ZohoMailClient: External
 
-Use scoped resource management to replace open-coded locking operation
-is recommended. CXL subsystem still remains some down_read()/up_read()
-and down_write()/up_write() which can be replaced by guard() simply.
+On 10/02/2025 13:04, Manikanta Mylavarapu wrote:
+> IPQ5332 uses tsens v2.3.3 IP with combined interrupt for
+> upper/lower and critical. IPQ5332 does not have RPM and
+> kernel has to take care of TSENS enablement and calibration.
+> 
+> IPQ5424 also uses same tsens v2.3.3 IP and it's similar to IPQ5332
+> (no RPM) hence add IPQ5424 support in this series itself.
+> 
+> This patch series adds the temperature sensor enablement,
+> calibration support for IPQ5332 and IPQ5424.
 
-This patchset includes simply using guard() instead of some
-down_read()/up_read() and down_write()/up_write() cases. Besides, it
-also includes some function code cleanup after using guard().
+Applied patch 1 & 2
 
-base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3 (tag: v6.14-rc2)
+Thanks
 
-Li Ming (7):
-  cxl/core: Use guard() to replace open-coded down_read/write()
-  cxl/core: cxl_mem_sanitize() cleanup
-  cxl/memdev: cxl_memdev_ioctl() cleanup
-  cxl/core: Use guard() to drop the goto pattern of cxl_dpa_free()
-  cxl/core: Use guard() to drop goto pattern of cxl_dpa_alloc()
-  cxl/region: Drop goto pattern in cxl_dax_region_alloc()
-  cxl/region: Drop goto pattern of construct_region()
-
- drivers/cxl/core/hdm.c    | 62 +++++++++++----------------
- drivers/cxl/core/mbox.c   | 10 ++---
- drivers/cxl/core/memdev.c | 17 +++-----
- drivers/cxl/core/port.c   |  8 +---
- drivers/cxl/core/region.c | 90 +++++++++++++++++++--------------------
- 5 files changed, 81 insertions(+), 106 deletions(-)
+   -- D.
 
 -- 
-2.34.1
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
