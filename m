@@ -1,128 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72AF71E9B3B;
-	Tue, 11 Feb 2025 06:23:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8156E1D54C2;
+	Tue, 11 Feb 2025 06:28:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739254995; cv=none; b=F09eimW5aUdrTktMAJRw5u+jSWkVptZkAhv+Z6r8PpLLvSu4oYR39QdwWo+2GibE7r7pqMOrhYOozhfSJtjQWDgzPbm+Mv5Vgvo+pV+5XWEdC9bHOu+Fxwjv57xOVM5gQJsmWx5Kzc35p8K6KtGXVSyp6uE/IRAiBwkxhX7kij4=
+	t=1739255314; cv=none; b=a+dxJPtIfgJhbvyIsNSSLbKLYgwQb1UTO5s2NndtznqTJUq3IxECLa4BP7kkL+69jYS+MHiYNu+Huk5XVB6PHna9ZSId8UtZo+epXKcbe/FIcuPtiFvBMXjytHEihFQ+uSAl1VsJes5qMw3jVkkj5QSMoxHW+TS1yRHzTbAvPWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739254995; c=relaxed/simple;
-	bh=xJJNTHLm28pOieLtRLXBCsjINp9HkQQLtgWkMVSB5X4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NuQUwBMXN3stOUtWtChM2aequpRtN4UDRyB+Wjfbiaa+axjsmomOMv1BSFsefuuDNYoR07KIwjQQN+nJ2vmW5y9x4LNvMxfO/rhNEI7+XbskD0cakZyur0VmoTQHngVcJrdgf0/oL8V+HWt0l+1repUeCHrL6QDJoolT0gHHQU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FL55aSTe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739255314; c=relaxed/simple;
+	bh=Vi3lGBXEhmoQzEyU+5dzG33UvVcHa1ftzEK7IGthpzo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VwBJ366vHTfZaCDUXDnGEw7SlO/hC/3POhw9lujV0c16ANExLDO5d361lVHptS6+r6QF4i+SecvhpdDJR4wtkxOA+WwLNuXYlPqASGtZGd/mFAVOFsmOy7CUuSa57EYTldXolwLPUX2f4inKjMeqXG7slvA0+ZoSk/x9IxhOdbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1Z2ikvrw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FL55aSTe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B26AFC4CEF0;
-	Tue, 11 Feb 2025 06:23:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739254994;
-	bh=xJJNTHLm28pOieLtRLXBCsjINp9HkQQLtgWkMVSB5X4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FL55aSTeN5bnsbco4QM1TbvJO0WsQw3bepNk4uiUiEDE7xGFPjsbuhAaxJyMfHr5g
-	 cJEIIhiWg3EK8fDk2j53hmb0wArtgfRD9tr4j3Xm37/g3DINHkvRxrOf9tZcZwaghc
-	 MQ0l36Dl4srDoPB70+Zvm8OTSQySnwc5KSoGVKMmZxnrila95sOxN59sBtNLf9xPB3
-	 59kMltV7jnLlSNbG94xQEf5Xr+CjzJugeAv/tcqFWz5RuB7nNEH2QAAxbhmQSmBQcI
-	 cFHJ7ys5/wASU9F59vhxInMY6/eg8CQCOAjoUy1FApWId/AjpwmCmQGABEx+5wgUWC
-	 8aGJt2FDTm1Ew==
-Received: from mchehab by mail.kernel.org with local (Exim 4.98)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1thjfs-00000008YBn-40dj;
-	Tue, 11 Feb 2025 07:23:12 +0100
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	Alex Shi <mchehab+huawei@kernel.org>,
-	Avadhut Naik <avadhut.naik@amd.com>,
-	Carlos Bilbao <mchehab+huawei@kernel.org>,
-	Federico Vaga <federico.vaga@vaga.pv.it>,
-	Hu Haowen <2023002089@link.tyut.edu.cn>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Remington Brasga <rbrasga@uci.edu>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 9/9] docs: translations: Allow creating cross-references for ABI README
-Date: Tue, 11 Feb 2025 07:23:03 +0100
-Message-ID: <685461ca5834c0cd4f7830f354d7ee123afb3716.1739254867.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1739254867.git.mchehab+huawei@kernel.org>
-References: <cover.1739254867.git.mchehab+huawei@kernel.org>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1Z2ikvrw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79BE4C4CEDD;
+	Tue, 11 Feb 2025 06:28:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739255314;
+	bh=Vi3lGBXEhmoQzEyU+5dzG33UvVcHa1ftzEK7IGthpzo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=1Z2ikvrw7YUYBNUkp4Lj4Q9etGh7f/7BSJDQUzNnYKlE8chnhTl6L1WeaTambTQlk
+	 QVY73jj7nHzMtTXRgWJDqvRoEmPUvHuJtT83cFHHPzAvXgM8BxknQ8V4DAPROARruA
+	 hr9Jicn/LIPPM3SajdgcEDHVeZ73L5/6nymSXZfk=
+Date: Tue, 11 Feb 2025 07:27:31 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Kees Cook <kees@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	patches@lists.linux.dev, stable@vger.kernel.org,
+	John Rowley <lkml@johnrowley.me>
+Subject: Re: [PATCH v3] ACPI: platform-profile: Fix CFI violation when
+ accessing sysfs files
+Message-ID: <2025021105-simply-stubbed-1744@gregkh>
+References: <20250210-acpi-platform_profile-fix-cfi-violation-v3-1-ed9e9901c33a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210-acpi-platform_profile-fix-cfi-violation-v3-1-ed9e9901c33a@kernel.org>
 
-Update translations to also generate cross references for the ABI
-readme file.
+On Mon, Feb 10, 2025 at 09:28:25PM -0500, Nathan Chancellor wrote:
+> When an attribute group is created with sysfs_create_group(), the
+> ->sysfs_ops() callback is set to kobj_sysfs_ops, which sets the ->show()
+> and ->store() callbacks to kobj_attr_show() and kobj_attr_store()
+> respectively. These functions use container_of() to get the respective
+> callback from the passed attribute, meaning that these callbacks need to
+> be the same type as the callbacks in 'struct kobj_attribute'.
+> 
+> However, the platform_profile sysfs functions have the type of the
+> ->show() and ->store() callbacks in 'struct device_attribute', which
+> results a CFI violation when accessing platform_profile or
+> platform_profile_choices under /sys/firmware/acpi because the types do
+> not match:
+> 
+>   CFI failure at kobj_attr_show+0x19/0x30 (target: platform_profile_choices_show+0x0/0x140; expected type: 0x7a69590c)
+> 
+> There is no functional issue from the type mismatch because the layout
+> of 'struct kobj_attribute' and 'struct device_attribute' are the same,
+> so the container_of() cast does not break anything aside from CFI.
+> 
+> Change the type of platform_profile_choices_show() and
+> platform_profile_{show,store}() to match the callbacks in
+> 'struct kobj_attribute' and update the attribute variables to match,
+> which resolves the CFI violation.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/translations/it_IT/process/submit-checklist.rst | 2 +-
- Documentation/translations/sp_SP/process/submit-checklist.rst | 2 +-
- Documentation/translations/zh_CN/process/submit-checklist.rst | 2 +-
- Documentation/translations/zh_TW/process/submit-checklist.rst | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+Nice catch.
 
-diff --git a/Documentation/translations/it_IT/process/submit-checklist.rst b/Documentation/translations/it_IT/process/submit-checklist.rst
-index 692be4af9c9b..3308c3084c60 100644
---- a/Documentation/translations/it_IT/process/submit-checklist.rst
-+++ b/Documentation/translations/it_IT/process/submit-checklist.rst
-@@ -58,7 +58,7 @@ Fornite documentazione
- 4) Tutti i nuovi parametri dei moduli sono documentati con ``MODULE_PARM_DESC()``.
- 
- 5) Tutte le nuove interfacce verso lo spazio utente sono documentate in
--    ``Documentation/ABI/``.  Leggete ``Documentation/ABI/README`` per maggiori
-+    ``Documentation/ABI/``.  Leggete Documentation/ABI/README per maggiori
-     informazioni.  Le patch che modificano le interfacce utente dovrebbero
-     essere inviate in copia anche a linux-api@vger.kernel.org.
- 
-diff --git a/Documentation/translations/sp_SP/process/submit-checklist.rst b/Documentation/translations/sp_SP/process/submit-checklist.rst
-index 0d6651f9d871..3087ba80e818 100644
---- a/Documentation/translations/sp_SP/process/submit-checklist.rst
-+++ b/Documentation/translations/sp_SP/process/submit-checklist.rst
-@@ -97,7 +97,7 @@ y en otros lugares con respecto al envío de parches del kernel de Linux.
-     ``MODULE_PARM_DESC()``.
- 
- 18) Todas las nuevas interfaces de espacio de usuario están documentadas
--    en ``Documentation/ABI/``. Consulte ``Documentation/ABI/README`` para
-+    en ``Documentation/ABI/``. Consulte Documentation/ABI/README para
-     obtener más información. Los parches que cambian las interfaces del
-     espacio de usuario deben ser CCed a linux-api@vger.kernel.org.
- 
-diff --git a/Documentation/translations/zh_CN/process/submit-checklist.rst b/Documentation/translations/zh_CN/process/submit-checklist.rst
-index 10536b74aeec..5c20a7f0936b 100644
---- a/Documentation/translations/zh_CN/process/submit-checklist.rst
-+++ b/Documentation/translations/zh_CN/process/submit-checklist.rst
-@@ -82,7 +82,7 @@ Linux内核补丁提交检查单
- 17) 所有新的模块参数都记录在 ``MODULE_PARM_DESC()``
- 
- 18) 所有新的用户空间接口都记录在 ``Documentation/ABI/`` 中。有关详细信息，
--    请参阅 ``Documentation/ABI/README`` 。更改用户空间接口的补丁应该抄送
-+    请参阅 Documentation/ABI/README 。更改用户空间接口的补丁应该抄送
-     linux-api@vger.kernel.org。
- 
- 19) 已通过至少注入slab和page分配失败进行检查。请参阅 ``Documentation/fault-injection/`` 。
-diff --git a/Documentation/translations/zh_TW/process/submit-checklist.rst b/Documentation/translations/zh_TW/process/submit-checklist.rst
-index 0ecb187753e4..b09d29b0cc1b 100644
---- a/Documentation/translations/zh_TW/process/submit-checklist.rst
-+++ b/Documentation/translations/zh_TW/process/submit-checklist.rst
-@@ -85,7 +85,7 @@ Linux內核補丁提交檢查單
- 17) 所有新的模塊參數都記錄在 ``MODULE_PARM_DESC()``
- 
- 18) 所有新的用戶空間接口都記錄在 ``Documentation/ABI/`` 中。有關詳細信息，
--    請參閱 ``Documentation/ABI/README`` 。更改用戶空間接口的補丁應該抄送
-+    請參閱 Documentation/ABI/README 。更改用戶空間接口的補丁應該抄送
-     linux-api@vger.kernel.org。
- 
- 19) 已通過至少注入slab和page分配失敗進行檢查。請參閱 ``Documentation/fault-injection/`` 。
--- 
-2.48.1
+> Cc: stable@vger.kernel.org
+> Fixes: a2ff95e018f1 ("ACPI: platform: Add platform profile support")
+> Reported-by: John Rowley <lkml@johnrowley.me>
+> Closes: https://github.com/ClangBuiltLinux/linux/issues/2047
+> Tested-by: John Rowley <lkml@johnrowley.me>
+> Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> ---
+> Changes in v3:
+> - Rebase on 6.14-rc1, which includes updates to the driver to address
+>   Greg's previous concerns but this change is still needed for the
+>   legacy sysfs interface. v2 can be used for the stable backport.
+> - Link to v2: https://lore.kernel.org/r/20241118-acpi-platform_profile-fix-cfi-violation-v2-1-62ff952804de@kernel.org
 
+I'll never find that, so be prepared for a "FAILED" email when this hits
+Linus's tree :)
+
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
