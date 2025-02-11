@@ -1,119 +1,200 @@
-Received: from smtp-bc0d.mail.infomaniak.ch (smtp-bc0d.mail.infomaniak.ch [45.157.188.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9743D250BEC
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:03:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.13
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61E9D250C0F;
+	Tue, 11 Feb 2025 14:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739282605; cv=none; b=SsDt/adXty1yqRHVGqOh7bBUQupJjLel+sUVK3ol16Vlh/MvRkcUriWqlSjXPo16+8Kq48AP95d+ifuCgYOVCu9yUCGp6HfKuT9J79Xln86qml1XH0AtUYVjLr1+TzzESS0Q8my3jk3E0Suhg9NjBuiO64z+qtpfqGAKOL4BLz8=
+	t=1739282605; cv=none; b=UkOtO5xnRDIwZuj5nQ3OS1o77SzyNj0zRIZzl3i0v/5KFfsr3zPgSnMhoGnM/eh4R0BgsuSjZCHtjw52zeCs5jFfJO5OReH0ta3A7NBZQ5Iqe8bd4lNsTmHAsF/1UpgltjIezEOmsaizWQHjv8noqrTUnGaQN4Z28M8jcQvOoWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739282605; c=relaxed/simple;
-	bh=rYh4Dnb62unhJiOrcDe5+tZ7K91W5DKSNixfUcOvxAk=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=lYb0yRlkEsQZ6tAJZ3mEwgkXbwapYDqiyTbxXKaDpKuovFuvlnHl+VW6/jtXly2IvYeB4h2X60ymx16EaTqR2oNz2P0mLer7pahpRP++bUNxEaTfUG/HpdD+RgxlzOsLO/6rjmld8Skq87hWL8DV6CNphGlY4wr9ARIWBfkR8y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=45.157.188.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
-Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:1])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4YsjpB5R7vzCW2;
-	Tue, 11 Feb 2025 15:03:14 +0100 (CET)
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Ysjp64YmmzTBS;
-	Tue, 11 Feb 2025 15:03:10 +0100 (CET)
-From: Quentin Schulz <foss+kernel@0leil.net>
-Subject: [PATCH v6 0/4] arm64: dts: rockchip: minimal support for Pre-ICT
- tester adapter for RK3588 Jaguar + add overlay tests
-Date: Tue, 11 Feb 2025 15:02:49 +0100
-Message-Id: <20250211-pre-ict-jaguar-v6-0-4484b0f88cfc@cherry.de>
+	bh=VBp6SRsPHyX31Y9rJF7ZNdaO7nnLMhnjuXNzJcp3Acc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qhy6wU13/zz8y0Cez5o9FvfNV5XVsNeN73tIVsI56PvZh33uJk4lxPSBnRvlN060mPcYWX7WvEClxTFp1fHJxt+l9YOE+RkinI4pu3VxBum9immXBVlk/AXeFVIjONNJXh+aohlYNjUHcWftSmDHTKDWLOVy0wdcpBK/soViXNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D37F113D5;
+	Tue, 11 Feb 2025 06:03:43 -0800 (PST)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE72E3F6A8;
+	Tue, 11 Feb 2025 06:03:10 -0800 (PST)
+Date: Tue, 11 Feb 2025 14:03:08 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, virtualization@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+	xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
+	linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+	bcm-kernel-feedback-list@broadcom.com,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Jason Baron <jbaron@akamai.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Rong Xu <xur@google.com>,
+	Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Jinghao Jia <jinghao7@illinois.edu>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
+ flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
+Message-ID: <Z6tYnOEBkOlT_ehp@J2N7QTR9R3>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-30-vschneid@redhat.com>
+ <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
+ <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
+ <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
+ <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAIlYq2cC/3XMTW7DIBCG4atErEs1M4CBrnqPqAt+hpgukgqnV
- qLIdy+JVNWK1eU3o+e9iYlb5Um87W6i8Vynejr2MbzsRBrD8cCy5r4FAWkkGORX66d0lp/h8B2
- ajB5KKMwuZic66u9SL4/g/qPvsU7nU7s++jPer/+mZpQobRkGiFlHC+k9jdza9TWzuKdm+uUGE
- LecJEg0Niv0ALpsuFpxchuuOreRqYDPykN45nrFFW647jx5i0zOELv8zM0fJ7AbbjoPFhx6DjB
- 4WvNlWX4A4S1TXKgBAAA=
-X-Change-ID: 20241206-pre-ict-jaguar-b90fafee8bd8
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Jagan Teki <jagan@edgeble.ai>, Niklas Cassel <cassel@kernel.org>, 
- Michael Riesch <michael.riesch@wolfvision.net>
-Cc: Jonas Karlman <jonas@kwiboo.se>, Dragan Simic <dsimic@manjaro.org>, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Quentin Schulz <quentin.schulz@cherry.de>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 
-This adds minimal support for the Pre-ICT tester adapter for RK3588
-Jaguar.
-GPIO3A3, GPIO3A4, GPIO3B2 and GPIO3D2 to GPIO3D5 are all routed to power
-rails and can only be used as input and their bias are important to be
-able to properly detect soldering issues.
+On Tue, Feb 11, 2025 at 02:33:51PM +0100, Valentin Schneider wrote:
+> On 10/02/25 23:08, Jann Horn wrote:
+> > On Mon, Feb 10, 2025 at 7:36 PM Valentin Schneider <vschneid@redhat.com> wrote:
+> >> What if isolated CPUs unconditionally did a TLBi as late as possible in
+> >> the stack right before returning to userspace? This would mean that upon
+> >> re-entering the kernel, an isolated CPU's TLB wouldn't contain any kernel
+> >> range translation - with the exception of whatever lies between the
+> >> last-minute flush and the actual userspace entry, which should be feasible
+> >> to vet? Then AFAICT there wouldn't be any work/flush to defer, the IPI
+> >> could be entirely silenced if it targets an isolated CPU.
+> >
+> > Two issues with that:
+> 
+> Firstly, thank you for entertaining the idea :-)
+> 
+> > 1. I think the "Common not Private" feature Will Deacon referred to is
+> > incompatible with this idea:
+> > <https://developer.arm.com/documentation/101811/0104/Address-spaces/Common-not-Private>
+> > says "When the CnP bit is set, the software promises to use the ASIDs
+> > and VMIDs in the same way on all processors, which allows the TLB
+> > entries that are created by one processor to be used by another"
+> 
+> Sorry for being obtuse - I can understand inconsistent TLB states (old vs
+> new translations being present in separate TLBs) due to not sending the
+> flush IPI causing an issue with that, but not "flushing early". Even if TLB
+> entries can be shared/accessed between CPUs, a CPU should be allowed not to
+> have a shared entry in its TLB - what am I missing?
+> 
+> > 2. It's wrong to assume that TLB entries are only populated for
+> > addresses you access - thanks to speculative execution, you have to
+> > assume that the CPU might be populating random TLB entries all over
+> > the place.
+> 
+> Gotta love speculation. Now it is supposed to be limited to genuinely
+> accessible data & code, right? Say theoretically we have a full TLBi as
+> literally the last thing before doing the return-to-userspace, speculation
+> should be limited to executing maybe bits of the return-from-userspace
+> code?
 
-Additionally, this adds build-time overlay application tests for all
-Rockchip overlays to try to avoid future regressions.
+I think it's easier to ignore speculation entirely, and just assume that
+the MMU can arbitrarily fill TLB entries from any page table entries
+which are valid/accessible in the active page tables. Hardware
+prefetchers can do that regardless of the specific path of speculative
+execution.
 
-Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
----
-Changes in v6:
-- added overlay test for neu6a-wifi on top of neu6b-io,
-- reworded instructions in comment to not use en/em-dashes,
-- renamed placeholder from <name of overlay application test> to
-  <overlay-application-test>
-- added Rb from Dragan,
-- Link to v5: https://lore.kernel.org/r/20250207-pre-ict-jaguar-v5-0-a70819ea0692@cherry.de
+Thus TLB fills are not limited to VAs which would be used on that
+return-to-userspace path.
 
-Changes in v5:
-- re-add dtb-$(CONFIG_ARCH_ROCKCHIP) += *.dtbo so that an explicit rule
-  exists and we don't rely on the overlay tests to generate the dtbo,
-- reword comment on overlay tests by making it explicit that we require
-  both an overlay test and an explicit build target for the dtbo,
-- Link to v4: https://lore.kernel.org/r/20250131-pre-ict-jaguar-v4-0-c971e2852e8d@cherry.de
+> Furthermore, I would hope that once a CPU is executing in userspace, it's
+> not going to populate the TLB with kernel address translations - AIUI the
+> whole vulnerability mitigation debacle was about preventing this sort of
+> thing.
 
-Changes in v4:
-- fix typos in WolfVision patch,
-- added Rb on WolfVision patch,
-- Link to v3: https://lore.kernel.org/r/20250128-pre-ict-jaguar-v3-0-7be2f09d390a@cherry.de
+The CPU can definitely do that; the vulnerability mitigations are all
+about what userspace can observe rather than what the CPU can do in the
+background. Additionally, there are features like SPE and TRBE that use
+kernel addresses while the CPU is executing userspace instructions.
 
-Changes in v3:
-- removed Fixes tag and intent to send to stable as this patch almost
-  doubles the size of the main DTB. Let's not potentially break users of
-  stable releases,
-- added Wolfvision PF5 overlay tests, thanks Michael,
-- added comment on how to add new overlays (via tests), and the side
-  effects,
-- grouped the overlay application test target with the definition of its
-  dependencies (DTB + DTBO(s)),
-- added trailers,
-- Link to v2: https://lore.kernel.org/r/20250116-pre-ict-jaguar-v2-0-157d319004fc@cherry.de
+The latest ARM Architecture Reference Manual (ARM DDI 0487 L.a) is fairly clear
+about that in section D8.16 "Translation Lookaside Buff", where it says
+(among other things):
 
-Changes in v2:
-- add overlay application tests for Edgeble NCM6A WiFi and Rock 5B PCIe
-  Endpoint+SNRS
-- add overlay application test for RK3588 Jaguar + Pre-ICT tester
-  adapter,
-- Link to v1: https://lore.kernel.org/r/20241206-pre-ict-jaguar-v1-1-7f660bd4b70c@cherry.de
+  When address translation is enabled, if a translation table entry
+  meets all of the following requirements, then that translation table
+  entry is permitted to be cached in a TLB or intermediate TLB caching
+  structure at any time:
+  • The translation table entry itself does not generate a Translation
+    fault, an Address size fault, or an Access flag fault.
+  • The translation table entry is not from a translation regime
+    configured by an Exception level that is lower than the current
+    Exception level.
 
----
-Quentin Schulz (4):
-      arm64: dts: rockchip: add overlay test for WolfVision PF5
-      arm64: dts: rockchip: add overlay test for Edgeble NCM6A/NCM6B
-      arm64: dts: rockchip: add overlay tests for Rock 5B PCIe overlays
-      arm64: dts: rockchip: minimal support for Pre-ICT tester adapter for RK3588 Jaguar
+Here "permitted to be cached in a TLB" also implies that the HW is
+allowed to fetch the translation tabl entry (which is what ARM call page
+table entries).
 
- arch/arm64/boot/dts/rockchip/Makefile              |  43 ++++++
- .../dts/rockchip/rk3588-jaguar-pre-ict-tester.dtso | 171 +++++++++++++++++++++
- 2 files changed, 214 insertions(+)
----
-base-commit: febbc555cf0fff895546ddb8ba2c9a523692fb55
-change-id: 20241206-pre-ict-jaguar-b90fafee8bd8
+The PDF can be found at:
 
-Best regards,
--- 
-Quentin Schulz <quentin.schulz@cherry.de>
+  https://developer.arm.com/documentation/ddi0487/la/?lang=en
 
+Mark.
