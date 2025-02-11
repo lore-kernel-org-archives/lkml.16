@@ -1,98 +1,91 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6245B1EE034;
-	Tue, 11 Feb 2025 07:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739260624; cv=none; b=Nc5ldcN5muYo8wD3TxwEHiRgF//5ukYlG3bHg9GfvR1u+jlP2ydedtiLzCn5WJBBPYHXEvGhCEabqEbnsXH1wocYi7JhlzjHM6q+7sAOO5Qtp6nXSpWkt1aKFHeNUBJ0Pr7PybUx03UgNL/YP5jTv90P4AUY7zB88P/WkVkzsj8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739260624; c=relaxed/simple;
-	bh=IEmUAN2REYIGOmF/Qcd2V37ijy2+yalXDI9v36yAONs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gezyoQfl528klCXnTrsajK9fJT8YAGCep7s/PrleYkbJ5XNOeMKM9QBIAHvlHpOsV3G9At0QT7htsEHmtUC197aFxfhKHNKUf1mfgcFi93wu/7X7yOV8y1+GjKemcVQrqSulSRGoYk7ccaC3VvavB+VJsogpO/rxk0NPqZiPtAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IABUBRnd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rxJqixZq; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2AA1CB51B;
+	Tue, 11 Feb 2025 07:57:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739260676; cv=pass; b=dVuxSw/T5rnR5HuCqpqK2f8iEXlfAEY32gefTo10eEGrNAFqxd2xjZEj+WG3xMEPCt9or78i2yvXROH+Ex2roM5sji+dpWYKRF9eSz3f5h2H5RilF9i6AzC3tDtduelHhOaCWbVn+cd3jih5UuF/XTZWZT7rzG8hi7SQUmbuXPI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739260676; c=relaxed/simple;
+	bh=EkXyonoyXlxTxbDDka2sbe2pzNYd9avLkgJX04haqYE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=t96YNtRX1recCrkbsU+i0mrfrMAWFEHYGGnVfLdnIOu0ZmNhWZ+FoyfwyvMsd9RI7f3ZZQDfrEznQ8dtou20EnPNg+ZvuYG0cL4cyJSmiFqdU8a4hnFcXaATbb8Q27wHuXRDuEL1IV8lp57WGhsEK52NbgkKaTCZ/9tfT88nUCc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=J9OfNxcc; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IABUBRnd";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rxJqixZq"
-Date: Tue, 11 Feb 2025 08:56:59 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739260621;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XbggBS30HzStlwARtU+mSUGuU8Rb52teg6Heb0c5gFU=;
-	b=IABUBRndOMOeEdwt3mrQwfnYUQTo8+H5JH2+kDzliQ7le2FLyiaZ3ldQh0EOrADdE3cbAw
-	hHdim8SW64+nHLCZTStUKoiYLMUe4xiZs6EhKJxiTS7MYbGolInr1RiRJ91khg1/XcYe+5
-	Psm+7K4JkXFJ1oN9mF3pkLYkv0x0M29nJ6KCrNjjlEjKEGe8JXPRX1D++Z06gLXJqPHo/K
-	bqk0fuEIAr7B2V0VKEIcvoecRNQiMTn58LhcF5DEIKhu+zU+d6kmi082jgqgao22hDprnz
-	sdI5JOvxqR75KNzA2FwUQ9PT3Q14VQcodvkqdjVhZShsDz6OWaeXRw0yxGt5Lw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739260621;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XbggBS30HzStlwARtU+mSUGuU8Rb52teg6Heb0c5gFU=;
-	b=rxJqixZqX9nHMFYk21/KatyWkffrPpHEuHfzA+kq/HJe/0rz+VL834OEfkbitKCVsNVsrE
-	tMIXSEem8yqq/EBw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Yonghong Song <yonghong.song@linux.dev>
-Cc: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Hillf Danton <hdanton@sina.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Marco Elver <elver@google.com>, Tejun Heo <tj@kernel.org>,
-	tglx@linutronix.de, Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>, bpf@vger.kernel.org
-Subject: Re: [PATCH v7 5/6] kernfs: Use RCU to access kernfs_node::parent.
-Message-ID: <20250211075659.aRpNJSdP@linutronix.de>
-References: <20250203135023.416828-1-bigeasy@linutronix.de>
- <20250203135023.416828-6-bigeasy@linutronix.de>
- <20250210084331.IJB3qKdl@linutronix.de>
- <cab1d59c-4dac-4a5b-8dfa-43c2ac03b675@linux.dev>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="J9OfNxcc"
+ARC-Seal: i=1; a=rsa-sha256; t=1739260661; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Iu5o4OhpjZhY8Ow79gN0JHjyJw5rea/2ALE9NeXX2v6jOCcJMev/n2CmFQJmrd5M2mfhs15xytuKurWqQqaqZuhZqpvScs/Bff6+3CSU5Xs3Vd7Bizv+qyuYij3hTWvUHEcsPB7lk1hW8Q2eAioxtcnOFWCtqaMRr3Ntj+01jQQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1739260661; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=aJYugM60n93ioiD/yFHZ0ukaareKO/ZhIAhoTxBvDPQ=; 
+	b=g9Pg3br2WHiDGRYlXerK7i8uIAOBqhqs6QzJ8ONDGOotsLPWvtQGrGnXDIuH38QLNKwIQ5R/yF9235uJ4+6dM1ZvQHCi5cTH/X4UV79ytYoRvCeInKhoNSODPNEUuvh0Ta/ozu0nmTr29jVu/nJPkR1SxQ4yGhBlEKBV2nlighc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739260661;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
+	bh=aJYugM60n93ioiD/yFHZ0ukaareKO/ZhIAhoTxBvDPQ=;
+	b=J9OfNxccFFUvtXN+dAh5nrLbrX1MWDh/KeO+l35EY3fZvkoJSNOPL1P4/KZk7rwN
+	LsByghmzgV+uDCv7RinQEb5t6g6EgAx1zzbOusmpM9us3JTgSmWuQTrPFujld17Uy+q
+	LPQA9NvFNKezyJnfAnICUljYgbK5HoMZ2q4qdWvY=
+Received: by mx.zohomail.com with SMTPS id 1739260658164746.6572688940518;
+	Mon, 10 Feb 2025 23:57:38 -0800 (PST)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH v1 0/7] Use guard() instead of rwsem locking
+Date: Tue, 11 Feb 2025 15:57:20 +0800
+Message-Id: <20250211075727.351895-1-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cab1d59c-4dac-4a5b-8dfa-43c2ac03b675@linux.dev>
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr08011227697a47ad496bfedf41ffec840000e16ec349b7a5ef7307093606e9313b20b659af9c738441d42f:zu08011227424f64415c2e61a70b4a02be00007c5d89c04393e58da93543626a27d42225e5b47246624933af:rf0801122d30a9f785deb526d2e4ee69db00002ea7e2a7eae156bba825b5829b419127b1c3197a7cb16dfcc9829094af26cd:ZohoMail
+X-ZohoMailClient: External
 
-On 2025-02-10 08:41:00 [-0800], Yonghong Song wrote:
-> > diff --git a/tools/testing/selftests/bpf/progs/profiler.inc.h b/tools/testing/selftests/bpf/progs/profiler.inc.h
-> > index 8bd1ebd7d6afd..a4f518ee5f4de 100644
-> > --- a/tools/testing/selftests/bpf/progs/profiler.inc.h
-> > +++ b/tools/testing/selftests/bpf/progs/profiler.inc.h
-> > @@ -223,7 +223,7 @@ static INLINE void* read_full_cgroup_path(struct kernfs_node* cgroup_node,
-> >   		if (bpf_cmp_likely(filepart_length, <=, MAX_PATH)) {
-> >   			payload += filepart_length;
-> >   		}
-> > -		cgroup_node = BPF_CORE_READ(cgroup_node, parent);
-> > +		cgroup_node = BPF_CORE_READ(cgroup_node, __parent);
-> >   	}
-> >   	return payload;
-> >   }
-> > @@ -323,6 +324,7 @@ static INLINE void* populate_cgroup_info(struct cgroup_data_t* cgroup_data,
-> >   		cgroup_data->cgroup_full_length = payload_end_pos - payload;
-> >   		payload = payload_end_pos;
-> >   	}
-> > +	bpf_rcu_read_unlock();
-> 
-> All programs calling this function populate_cgroup_info() is not sleepable program
-> so the whole prog is protected by rcu and there is no need for above
-> bpf_rcu_read_{lock,unlock}().
+Use scoped resource management to replace open-coded locking operation
+is recommended. CXL subsystem still remains some down_read()/up_read()
+and down_write()/up_write() which can be replaced by guard() simply.
 
-Understood. So just the rename then.
+This patchset includes simply using guard() instead of some
+down_read()/up_read() and down_write()/up_write() cases. Besides, it
+also includes some function code cleanup after using guard().
 
-> >   	return (void*)payload;
-> >   }
+base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3 (tag: v6.14-rc2)
 
-Sebastian
+Li Ming (7):
+  cxl/core: Use guard() to replace open-coded down_read/write()
+  cxl/core: cxl_mem_sanitize() cleanup
+  cxl/memdev: cxl_memdev_ioctl() cleanup
+  cxl/core: Use guard() to drop the goto pattern of cxl_dpa_free()
+  cxl/core: Use guard() to drop goto pattern of cxl_dpa_alloc()
+  cxl/region: Drop goto pattern in cxl_dax_region_alloc()
+  cxl/region: Drop goto pattern of construct_region()
+
+ drivers/cxl/core/hdm.c    | 62 +++++++++++----------------
+ drivers/cxl/core/mbox.c   | 10 ++---
+ drivers/cxl/core/memdev.c | 17 +++-----
+ drivers/cxl/core/port.c   |  8 +---
+ drivers/cxl/core/region.c | 90 +++++++++++++++++++--------------------
+ 5 files changed, 81 insertions(+), 106 deletions(-)
+
+-- 
+2.34.1
+
