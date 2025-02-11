@@ -1,258 +1,128 @@
-Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C52026BD9C;
-	Tue, 11 Feb 2025 15:05:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671EC250C15
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 15:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739286343; cv=none; b=tsSXe57qEnOfGHKymShnDhAJGndZ+vNEnFwuwF7/8/BzbIMS4k9CA6bPe4vQFIULQYeaq9dnXRS8yKgXTXEQ4T3YJHwlgHKHCGHgS7PlM12+HCINhMQQHGClxaCUcwqdsV5qlKj2N7hlkFxBBHuTRMhowgvcr6tkVHmdBP4cJwQ=
+	t=1739286349; cv=none; b=KD3qvwOlyJKGUsfchu8BvKLrQqR401oXI/xr7K3f5uHCJ4QjtZ4ynY2kUHdOyuMu7zsrn+3Cc7Aq46U4f4xzIi9sdWYzz73tFbewp5MWNX3C1MqE3agGla4oQrQlTuEeULD95ckpcguZpgkC/GGhp49ByPPWguMPGUGAUqTStQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739286343; c=relaxed/simple;
-	bh=pK7wwx9SVBb/t9cDWPPmU/QNvvDUShUMo8z50n5diB0=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=IlwB/mJV1alAkDnjK/BztqTaQUT8DuP/p2W2TW4+7j/FKAobuuOVmYuvHquXUuiWNHIEYGZz8n5vMK/xLBZbhFglxDZgqOdIYN1/QGaS629t22wZh90PKCYrGil2K715bDPg9z3rGwUe7gP9UDcjvaUKWCC8Z3leYeG9+HJe1P8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=UZXfgyE/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DXx9IwbI; arc=none smtp.client-ip=202.12.124.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1739286349; c=relaxed/simple;
+	bh=gILxc1vlFfC7Cd9Gfzulte7qbvFGDw5/GEDFFZYIvxc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NAUkBZhY+qxswmekQjO8GEUjfD3Ih9VxmtLDrzFwAYo7p/BA5wTDmg61r2dlzzJVQokX7FrsWHPbcpWH3wxGEaN0caUIZbGUipJ14x92va9DFX2nO10t9DzDw6mLdehGDHU6lyHCTNjMIFngdblUh8v3VlDecghd1Qg/TnlCZy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=da6tO3St; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="UZXfgyE/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DXx9IwbI"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfout.stl.internal (Postfix) with ESMTP id 53CFB1140123;
-	Tue, 11 Feb 2025 10:05:39 -0500 (EST)
-Received: from phl-imap-10 ([10.202.2.85])
-  by phl-compute-02.internal (MEProxy); Tue, 11 Feb 2025 10:05:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1739286339;
-	 x=1739372739; bh=/N1ern3xpY1CU833/SifUcUn0BSm+HC+YjRriOA6Ues=; b=
-	UZXfgyE/b53ktvnjWEHDqkkw1zLCJem+7GweMm7e3FJR+8/SjRC/wrZGMgP8M8RA
-	OpuGgZbuCn9Yb28i04Deu5/ptmcOm2saFlWbz419t7+/Ml2ZfD5phIYGRgfb2EAX
-	Ct3vvxYPiUfxu2gYWs0AT3f8EVqWuv/3WOrn2bTy28ufGI/xcDKS6s92oxJEglSV
-	sm3z53k2gxbaryclP4y13PqWHpGCNMYPCtMJQtw9PcStL7QQHiznaZW3qvFrV89q
-	1lsiDnmaEocuQYydHqaxO57Ca8NLPj0R+SDsVkQ9PWiILvNx9rYNhcXGkJ/cjebS
-	pquAFf3aSm9tD8fMxoTMyg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739286339; x=
-	1739372739; bh=/N1ern3xpY1CU833/SifUcUn0BSm+HC+YjRriOA6Ues=; b=D
-	Xx9IwbIfcAE+PEez40DVt9OBrR1sIh35PUVkv/gP3hlxPrsI5Zvy41zpT0WA4qlv
-	h9xebjZ9dvqhjmTemSxvdles5Koi96sNFjHDI1YJjgjokK7vjyLDIefJ1LXPqKC8
-	82oaKXCDbJJPJvjmLx92PcOYWgGyt65ogybrPIqubZD30xsa6cF5zWBJUNvc0AL/
-	6aWfnyBE0yedI3TWM4YquuAqehZ3SOWpuO1iMSB1CjPtd65Nw9hqsjM1tQeUORt5
-	P+yMcx+pOXyXGFbqGDPOrLHP79gZdaKq3g6jH19yk277NtV7UsKPzxojmt9DRkX0
-	F98w5ocMAqb9Ci7cI4T9w==
-X-ME-Sender: <xms:QmerZz8VhyhyZs0O1TuJfffSfk-LsreYXnTRgTGMWZosIBsuaUNgKg>
-    <xme:QmerZ_vBpB4Z00NkBWTP52p58NmHB_qzDlVnqYhgt8ZaJcNsPL07XGlCjGYPO1rwD
-    K-AwfeiE5B3qg9Vfb8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegudefudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
-    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhepleevvdeihfffgeel
-    ieeugedtiefggeelledtheektdduudeggeefheeuleduvdehnecuffhomhgrihhnpehgih
-    hthhhusgdrtghomhdpkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquh
-    gvsggsrdgtrgdpnhgspghrtghpthhtohepudefpdhmohguvgepshhmthhpohhuthdprhgt
-    phhtthhopehmrghrihhordhlihhmohhntghivghllhhosegrmhgurdgtohhmpdhrtghpth
-    htohepshgrmhhithholhhvrghnvghnsehgohhoghhlvgdrtghomhdprhgtphhtthhopehl
-    khhmlhesjhhohhhnrhhofihlvgihrdhmvgdprhgtphhtthhopehkvggvsheskhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtoheplhgvnhgssehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehnrghthhgrnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehllhhvmheslhhishhtshdrlhhinhhugidruggv
-    vhdprhgtphhtthhopehprghttghhvghssehlihhsthhsrdhlihhnuhigrdguvghv
-X-ME-Proxy: <xmx:QmerZxByMocufgxC9mxPdt4-2R6pJI7B9xNKg-z7QEQKMq-X3BOwTg>
-    <xmx:QmerZ_dcmC4GS78T0KJfXIX-Mu08pnVv8m809fRH7p52A_cUenoikw>
-    <xmx:QmerZ4NDXdxsfQGWmXFluPguDiq7P_QyItILiD1THkrLlGeIEA7LZQ>
-    <xmx:QmerZxkNCPbV7l0wWEV3zp943RmBecRqGWAfVs7XgsdW1khtUFyJ2w>
-    <xmx:Q2erZ0m8IDWnvUs4Mpbnfjqjbxj2k-cyaAX1aMlnslynh1WhkD418kf8>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id BF18A3C0069; Tue, 11 Feb 2025 10:05:38 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="da6tO3St"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=wMch1HIVZL0GsRqZJwBamjdSUtwIeuUTfLpGso7d8Mc=; b=da6tO3St4QZjVO9rW5F4uw5AHD
+	FKKdPane4YRfDJt9BuaW78I6ABcPLDGY9pB2W9mebXiwCvIrkcJ6MYsl0ck6XjJrA7Hvq3F8D8/Gk
+	2p6aS/oHO5W3vxSwSZO8d52Tceo0y+QVrfstynyfMd3Fer0pexVHmRnB/JeC1cKR5u8CaPaxt6tmG
+	RMGSjhW7oY6BSTKK/Etjg1oitWjybsNRHf7qNvvhZqiz10sGQM/PSsA7T3LFQInUbUHUgQGxG7xh/
+	FPxwbYS7OUqo53l7IkdQne4GIwwQSli6lFvWL+cK1InoT2pakLgxpGldWVToqhIde+fAAtJSZqURN
+	KvoCpPWg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51408)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1thrpV-0002fz-25;
+	Tue, 11 Feb 2025 15:05:41 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1thrpS-0000AA-0g;
+	Tue, 11 Feb 2025 15:05:38 +0000
+Date: Tue, 11 Feb 2025 15:05:38 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Ben Segall <bsegall@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 3/9] arm: Rely on generic printing of preemption model.
+Message-ID: <Z6tnQvIBlGnoGRN_@shell.armlinux.org.uk>
+References: <20250203141632.440554-1-bigeasy@linutronix.de>
+ <20250203141632.440554-4-bigeasy@linutronix.de>
+ <20250210120429.iFfBClW1@linutronix.de>
+ <Z6oYO5uKlEJ8C8Ne@shell.armlinux.org.uk>
+ <20250210153902.06VTSS6d@linutronix.de>
+ <Z6oo0MExaEy5J55_@shell.armlinux.org.uk>
+ <20250211145249.StI6tEZv@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 11 Feb 2025 10:05:18 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Nathan Chancellor" <nathan@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Len Brown" <lenb@kernel.org>
-Cc: "Hans de Goede" <hdegoede@redhat.com>,
- "Limonciello, Mario" <mario.limonciello@amd.com>,
- "Kees Cook" <kees@kernel.org>, "Sami Tolvanen" <samitolvanen@google.com>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev, patches@lists.linux.dev,
- stable@vger.kernel.org, "John Rowley" <lkml@johnrowley.me>
-Message-Id: <52c49252-7a81-4d27-a8a9-b2f1e5f837df@app.fastmail.com>
-In-Reply-To: 
- <20250210-acpi-platform_profile-fix-cfi-violation-v3-1-ed9e9901c33a@kernel.org>
-References: 
- <20250210-acpi-platform_profile-fix-cfi-violation-v3-1-ed9e9901c33a@kernel.org>
-Subject: Re: [PATCH v3] ACPI: platform-profile: Fix CFI violation when accessing sysfs
- files
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211145249.StI6tEZv@linutronix.de>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Hi Nathan
-
-On Mon, Feb 10, 2025, at 9:28 PM, Nathan Chancellor wrote:
-> When an attribute group is created with sysfs_create_group(), the
-> ->sysfs_ops() callback is set to kobj_sysfs_ops, which sets the ->show()
-> and ->store() callbacks to kobj_attr_show() and kobj_attr_store()
-> respectively. These functions use container_of() to get the respective
-> callback from the passed attribute, meaning that these callbacks need to
-> be the same type as the callbacks in 'struct kobj_attribute'.
->
-> However, the platform_profile sysfs functions have the type of the
-> ->show() and ->store() callbacks in 'struct device_attribute', which
-> results a CFI violation when accessing platform_profile or
-> platform_profile_choices under /sys/firmware/acpi because the types do
-> not match:
->
->   CFI failure at kobj_attr_show+0x19/0x30 (target: 
-> platform_profile_choices_show+0x0/0x140; expected type: 0x7a69590c)
->
-> There is no functional issue from the type mismatch because the layout
-> of 'struct kobj_attribute' and 'struct device_attribute' are the same,
-> so the container_of() cast does not break anything aside from CFI.
->
-> Change the type of platform_profile_choices_show() and
-> platform_profile_{show,store}() to match the callbacks in
-> 'struct kobj_attribute' and update the attribute variables to match,
-> which resolves the CFI violation.
->
-> Cc: stable@vger.kernel.org
-> Fixes: a2ff95e018f1 ("ACPI: platform: Add platform profile support")
-> Reported-by: John Rowley <lkml@johnrowley.me>
-> Closes: https://github.com/ClangBuiltLinux/linux/issues/2047
-> Tested-by: John Rowley <lkml@johnrowley.me>
-> Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-> ---
-> Changes in v3:
-> - Rebase on 6.14-rc1, which includes updates to the driver to address
->   Greg's previous concerns but this change is still needed for the
->   legacy sysfs interface. v2 can be used for the stable backport.
-> - Link to v2: 
-> https://lore.kernel.org/r/20241118-acpi-platform_profile-fix-cfi-violation-v2-1-62ff952804de@kernel.org
->
-> Changes in v2:
-> - Rebase on linux-pm/acpi
-> - Pick up Sami's reviewed-by tag
-> - Adjust wording around why there is no functional issue from the
->   mismatched types
-> - Link to v1: 
-> https://lore.kernel.org/r/20240819-acpi-platform_profile-fix-cfi-violation-v1-1-479365d848f6@kernel.org
-> ---
->  drivers/acpi/platform_profile.c | 26 +++++++++++++-------------
->  1 file changed, 13 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/acpi/platform_profile.c 
-> b/drivers/acpi/platform_profile.c
-> index fc92e43d0fe9..1b6317f759f9 100644
-> --- a/drivers/acpi/platform_profile.c
-> +++ b/drivers/acpi/platform_profile.c
-> @@ -260,14 +260,14 @@ static int _aggregate_choices(struct device *dev, 
-> void *data)
+On Tue, Feb 11, 2025 at 03:52:49PM +0100, Sebastian Andrzej Siewior wrote:
+> On 2025-02-10 16:26:56 [+0000], Russell King (Oracle) wrote:
+> > > This this applied, die("test") on ARM ends as:
+> > > 
+> > > [    1.595106] Kernel panic - not syncing: test
+> > > [    1.596044] CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W 6.14.0-rc2-00009-gb80a798df08c-dirty #13 PREEMPT
+> > > [    1.596768] Tainted: [W]=WARN
+> > > [    1.596946] Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 02/02/2022
+> > 
+> > Hmm. I've no idea what you're testing, what you've quoted makes zero
+> > sense to me.
+> > 
+> > First...
+> > 
+> > void die(const char *str, struct pt_regs *regs, int err)
+> > 
+> > is the die function prototype, so it takes a bit more than what you've
+> > indicated.
+> > 
+> > Second, "Kernel panic" suggests that panic() has been called. However,
+> > this only happens when die() is called (or more specifically
+> > oops_end()) from either interrupt context (in which case we get
+> > "Kernel panic - Fatal exception in interrupt") or if panic_on_oops
+> > is set ("Kernel panic - Fatal exception").
+> > 
+> > I don't see a path which would result in
+> > "Kernel panic - not syncing: test" to be printed from this path.
+> > 
+> > Since __die() does not call dump_stack(), we're not going to call
+> > dump_stack_print_info() from __die(), so I don't think it's appropriate
+> > to remove this information.
 > 
->  /**
->   * platform_profile_choices_show - Show the available profile choices 
-> for legacy sysfs interface
-> - * @dev: The device
-> + * @kobj: The kobject
->   * @attr: The attribute
->   * @buf: The buffer to write to
->   *
->   * Return: The number of bytes written
->   */
-> -static ssize_t platform_profile_choices_show(struct device *dev,
-> -					     struct device_attribute *attr,
-> +static ssize_t platform_profile_choices_show(struct kobject *kobj,
-> +					     struct kobj_attribute *attr,
->  					     char *buf)
->  {
->  	unsigned long aggregate[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
-> @@ -333,14 +333,14 @@ static int _store_and_notify(struct device *dev, 
-> void *data)
+> Okay. Let me try again with a stack overflow during boot. With the
+> series:
 > 
->  /**
->   * platform_profile_show - Show the current profile for legacy sysfs interface
-> - * @dev: The device
-> + * @kobj: The kobject
->   * @attr: The attribute
->   * @buf: The buffer to write to
->   *
->   * Return: The number of bytes written
->   */
-> -static ssize_t platform_profile_show(struct device *dev,
-> -				     struct device_attribute *attr,
-> +static ssize_t platform_profile_show(struct kobject *kobj,
-> +				     struct kobj_attribute *attr,
->  				     char *buf)
->  {
->  	enum platform_profile_option profile = PLATFORM_PROFILE_LAST;
-> @@ -362,15 +362,15 @@ static ssize_t platform_profile_show(struct device *dev,
-> 
->  /**
->   * platform_profile_store - Set the profile for legacy sysfs interface
-> - * @dev: The device
-> + * @kobj: The kobject
->   * @attr: The attribute
->   * @buf: The buffer to read from
->   * @count: The number of bytes to read
->   *
->   * Return: The number of bytes read
->   */
-> -static ssize_t platform_profile_store(struct device *dev,
-> -				      struct device_attribute *attr,
-> +static ssize_t platform_profile_store(struct kobject *kobj,
-> +				      struct kobj_attribute *attr,
->  				      const char *buf, size_t count)
->  {
->  	unsigned long choices[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
-> @@ -401,12 +401,12 @@ static ssize_t platform_profile_store(struct device *dev,
->  	return count;
->  }
-> 
-> -static DEVICE_ATTR_RO(platform_profile_choices);
-> -static DEVICE_ATTR_RW(platform_profile);
-> +static struct kobj_attribute attr_platform_profile_choices = 
-> __ATTR_RO(platform_profile_choices);
-> +static struct kobj_attribute attr_platform_profile = 
-> __ATTR_RW(platform_profile);
-> 
->  static struct attribute *platform_profile_attrs[] = {
-> -	&dev_attr_platform_profile_choices.attr,
-> -	&dev_attr_platform_profile.attr,
-> +	&attr_platform_profile_choices.attr,
-> +	&attr_platform_profile.attr,
->  	NULL
->  };
-> 
->
-> ---
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> change-id: 20240819-acpi-platform_profile-fix-cfi-violation-de278753bd5f
->
-> Best regards,
-> -- 
-> Nathan Chancellor <nathan@kernel.org>
+> | Freeing unused kernel image (initmem) memory: 2048K
+> | 8<--- cut here ---
+> | Unable to handle kernel paging request at virtual address df82a000 when write
+> | [df82a000] *pgd=80000040007003, *pmd=41487003, *pte=00000000
+> | Internal error: Oops: a07 [#1] SMP ARM
+> | Modules linked in:
+> | CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W          6.14.0-rc2-00009-gdca8d546a8a3-dirty #16 PREEMPT
 
-Just a note to say thank you for noticing my email address change - the old lenovo one was awful to use so I dropped it a while back, but it meant I missed your first two patches (my mail filters for the list should have caught it and I'll have to figure out why not...)
+Got it. Printed from __die() -> __show_regs() -> show_regs_print_info()
+-> dump_stack_print_info().
 
-From the V1 patch there was a question about why it was done this way: I believe I just copied how it seems to be done everywhere else in the kernel. I can't remember what I used as a reference exactly, but I went and checked a few random drivers and it seems to be everywhere.
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 
-Patch looks fine (I'd like to try it out on my system - will aim to do that today). I didn't know what CFI was (and have lightly educated myself now). 
-Is there a better way to fix this so it's common across all drivers somehow? Updating every individual instance is going to be a lot.
+Thanks!
 
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-
-Mark
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
