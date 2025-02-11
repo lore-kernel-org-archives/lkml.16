@@ -1,206 +1,216 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758DB26158B
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 18:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739299177; cv=none; b=bq+FDmwjmrrAfntNfRRrYrVt1EwuHAyGGrOX5qPSv9O6si6UzgbiVyf0FZiUWjWFiHrSYhhDWIn2hMNtoj0EN93vNBW7B7g5XdL00C/1+RxkZNsagh8MVDuoA/E4FDJ2V61TfR5B9B3lre7MS7xJXOmHF69lAtEcty9NN7jEm2E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739299177; c=relaxed/simple;
-	bh=BPbNAs4KfqcOEuk525T6R4Bh9dgRqj5V+Ix3I3yyues=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XDZl3HniNbs9xqhM4+Rj06NykmHltrMVRTnpba4IM6ZqJ+B6yeVjZIOoiabXzgT5PjmfADUf8MgxtxAOhiNrfggj6O/sbU9FlrH+Jz7IZSlmbhwQ7+bc3AJwkZnUWmq2qbol1tfmwkkZsWhpwBEKOM7C7wQGloO0CT3L0H49nTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GGmgSB5C; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B53253B43;
+	Tue, 11 Feb 2025 18:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.143.124
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739299179; cv=fail; b=oEeOufX0fwaDp2VMiO1wntSp3HcWW+0u2k8Sr6GG4s8YqtUjaD8weLXbKCnpEKAC+AuzhD6Ed1SQgaxVc08FCIucypF+3qlbSZh2optKH19jjyqieIFfZF6k5/tQ2pnMxTgtGVb5H3oI8vrh/izir5OoHZbKKVxMZwR89H5uWtg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739299179; c=relaxed/simple;
+	bh=KpC//iipbEDiJ7D31bmCd4Edl6ZCIuDcYPPr+syqGDc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=d0oijvcOh8N3BnEskkeXyNIhXOBqVrrMfzaehb3FchF6RYi65egLU0Z3bcxhvXGR+lN+B2BhJCBR3ULuzPKLqbbvaghEAUXQBRpJYBrZB4n8dwS4IiPxUbXdqhYILdqQwS3i5C1gacdZXKKlJMdWHnxsUQanFCb1nnfS0oCOpeg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sandisk.com; spf=pass smtp.mailfrom=sandisk.com; dkim=pass (2048-bit key) header.d=sandisk.com header.i=@sandisk.com header.b=pcVv4zlM; arc=fail smtp.client-ip=68.232.143.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sandisk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sandisk.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GGmgSB5C"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6f8c58229f1so510167b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:39:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739299174; x=1739903974; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FA/FuSfqdPppR8QhYqza1bx1UGNIteApVr7uq242neM=;
-        b=GGmgSB5CJyraoCL+gffJcWu+/GZI4k56E0lhLHViOI9sNKOlJDHJJA1eRtIHqgGhCd
-         YxUfTRHvIEjqWE0HUYTczS+o7MZ9vwvkxlx2QvjdHbGl0geg/JyMpHMSYiJbYVVsi+0x
-         UjSzKIaUmmVx3eXY7zlKPJTbzjfzSD/3gC2SRSBMtMCOj2Cg5A+Tbz6ek234d9onBQtI
-         1jlgxNa7cGVP7XAgZM4o8heX47HlVLTfno4adxe1QipHRh1zSnh1EISFgbkKQUypsr6q
-         HFm+DXnqjtTs4UpW0jhl42swA8Cc0d5HeAf7sQ83djGnfUTDOyA1QEeP5JNu3LUJXAhQ
-         YX8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739299174; x=1739903974;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FA/FuSfqdPppR8QhYqza1bx1UGNIteApVr7uq242neM=;
-        b=tPVjZE/8XoM/MwsHCzqnRCNlbvJhOwkjdoRK9IQ5/ol69FMHjRMeIrFQF9D7S4Yc+T
-         RQ2qlfQjzEKZQXLuragWlfjJZvDKIlpNp6hYsi99JExEtaE3jlp1DWO5AGPQkwxOIdkN
-         kuRoeJmfd0BUGZ8HDHw32sY05EAKrVflbWM0hf1yya8plaMpegRcd0Df6BxnyPnvrzIa
-         XwrfEpntfAXzvFyg+BUpbI2hHMYIBFP1bnPp8a+M7FcA46sxyr9NSzugOQf81exG817/
-         lx21yhQVWtWT49O81qBx4qv6IEWb6ibn9aeAm2aTpUwHvM5E0BivjLt+0JfaXGXsn6R5
-         RNGg==
-X-Forwarded-Encrypted: i=1; AJvYcCWJQmI0pGE7th06N7LoLy31tN4VO4lTX33jN2IIdKc/W4DP62WszWhEtg8sgR/W9Mf0HLymLE06yd2DoQw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5Tkw5NL9Nx01sIzadGzfzkXcUN1YEmNSLG6NvQIWxYxd8v8Tp
-	RuAWc2ByB1V4Y4W3Eu7+qE35F4MRhIPLZWqy2sW5aZ1ZAbVEFLef
-X-Gm-Gg: ASbGncvTUW67L+mEFjoh9oP4WVA2uvsP7QjQCxS1+zHR6TiD9WlfH/7YVnur+/HvBac
-	VK6c9DjLJriVpWTapNxBDVeHqCWPRXIOM/L2DC83pjBwDUy4HFMU8MfKGgwiDUQsrWGf09xxw+X
-	xBCuLP04n/EnAl4dkhaCQ5DUAMUISWhZpLtIPbccFwoD17Q6TaYvdh+GB96Sn6hKh5uz21E5ygf
-	QrtlFekEkp6cJAL4H5PDb8ROGB5qsK8ARLc4Jp8RNGWSA9be5toe6VWUInO7ThfwwN3gHwL3Cgp
-	NtFEss2i2FHpZA645ZDY+18ZXr2nRzgcXehlIUlCecBVqtmmPtI=
-X-Google-Smtp-Source: AGHT+IHpdWSxYkszc1afJjN8Fxnyn3DMjzNSfRjlz2Qsyy+VLzn+ldnO7xL41LVca0BpC4fmAGfJFw==
-X-Received: by 2002:a05:690c:2902:b0:6f9:c6e2:89a8 with SMTP id 00721157ae682-6fb0c461c73mr43661037b3.6.1739299174201;
-        Tue, 11 Feb 2025 10:39:34 -0800 (PST)
-Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99ff6a8d8sm22443777b3.79.2025.02.11.10.39.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 10:39:33 -0800 (PST)
-Date: Tue, 11 Feb 2025 13:39:32 -0500
-From: Yury Norov <yury.norov@gmail.com>
-To: I Hsin Cheng <richard120310@gmail.com>
-Cc: anshuman.khandual@arm.com, arnd@arndb.de, linux-kernel@vger.kernel.org,
-	jserv@ccns.ncku.edu.tw, skhan@linuxfoundation.org
-Subject: Re: [PATCH 1/2] uapi: Refactor __GENMASK() for speed-up
-Message-ID: <Z6uZZPpQ9YYfrL-I@thinkpad>
-References: <20250211162412.477655-1-richard120310@gmail.com>
- <20250211162412.477655-2-richard120310@gmail.com>
+	dkim=pass (2048-bit key) header.d=sandisk.com header.i=@sandisk.com header.b="pcVv4zlM"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=sandisk.com; i=@sandisk.com; q=dns/txt;
+  s=dkim.sandisk.com; t=1739299177; x=1770835177;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=KpC//iipbEDiJ7D31bmCd4Edl6ZCIuDcYPPr+syqGDc=;
+  b=pcVv4zlMVAPI1cOzNkvA/KWw8+YHQNhkAfAvAWDp8OlwHMtPKtfqd/ch
+   7d55B6l1KNkIUQCFEKXE1i0/9uZv6zSTZNA3kalgxdYDV3KbZPQjiNAIv
+   slWWS+RIX8h8fT9uYmuQuWAejIUS3dtRcBLbSMqkTQxnOYbVxuxhjAbYV
+   giaCsjUl0u3Fx8xWrkKLUhWDpvnuDOKvQ6QOIRGGkyBiyYYabIbv5lFA/
+   JGsYH6frXm+gK5y5T8fUeOmllX5MzdfNvyQVzimOFedq3tPPTfCZY178E
+   NZz2/9Sp1JGEp2S7XGyjQj7vDdt9MBJJviQ9cYVZU+W2cDO0/R/NtammP
+   A==;
+X-CSE-ConnectionGUID: gxnjPJIzTz6U0gHhNeaWWA==
+X-CSE-MsgGUID: LpmNg2ZuS/+3raQAtFgp0w==
+X-IronPort-AV: E=Sophos;i="6.13,278,1732550400"; 
+   d="scan'208";a="38781570"
+Received: from mail-mw2nam12lp2042.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.42])
+  by ob1.hgst.iphmx.com with ESMTP; 12 Feb 2025 02:39:28 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=koQ3CuEUyrRlojbULmBN5mbx7DjyFZ0U6lRycZO2QTAx72DTsolqtIug4cdJOAqNO3KT9wC5K51jppvk0hRIW9O1MOEEs8P2qEXBooC4K9Co76uMX96etFSvSILwtyg0SJM9OsjgEl9JT+DFfezM85VmiKVW73H8JbU15JMdwnjFQw2mY0ShVtAc1GOT9QEGB09HWkRthLFCKw5PyiGrk/BMFHcclKlhFZUpYEQ/0c4CUUEVEQMFWP4VjVMjInb/YMF0QjS89r6M7nXKwFQZg2ZqibH3cjPzYIm8/Tk3hhvZ7uRX4xoT+z+pbfu9V42A93KkgTa/bm1ZEnBzE6KBPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KpC//iipbEDiJ7D31bmCd4Edl6ZCIuDcYPPr+syqGDc=;
+ b=iMve9dW1nVAFWv3tV6kqhMysrRxWLvow0sNPT4k8Rk4A96+c1fRObpUCnzmDIFflo7S2hChQIoAVGfEK1miNtoZFZqf6RO8OxshNvA/stdyCAhSMDqTki9AvtRCjUmUo6dMjLzLg+BnAXWCkBmgNYpT9myBXPYRf/bNLeJ3Etua47OQGB1WAspK9WMWq02ytL3w1nXrNuHVwAV9oGrNEkcdRvbW4W/pNAIPVmM4SnTBneauXDcVdpZuZxhHuFQkYwZT5VKZxjJD93yHfhc001DXWzU7C/MkCMYHo7CiBvtr89jMyRETk/EUOSEZTjBo1Zo0BamHw4ijJ18y6FRXMPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sandisk.com; dmarc=pass action=none header.from=sandisk.com;
+ dkim=pass header.d=sandisk.com; arc=none
+Received: from PH7PR16MB6196.namprd16.prod.outlook.com (2603:10b6:510:312::5)
+ by SA1PR16MB6058.namprd16.prod.outlook.com (2603:10b6:806:3ae::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.11; Tue, 11 Feb
+ 2025 18:39:26 +0000
+Received: from PH7PR16MB6196.namprd16.prod.outlook.com
+ ([fe80::e087:8329:baea:5808]) by PH7PR16MB6196.namprd16.prod.outlook.com
+ ([fe80::e087:8329:baea:5808%7]) with mapi id 15.20.8422.015; Tue, 11 Feb 2025
+ 18:39:25 +0000
+From: Avri Altman <Avri.Altman@sandisk.com>
+To: Florian Fainelli <florian.fainelli@broadcom.com>, Ulf Hansson
+	<ulf.hansson@linaro.org>, Kamal Dasu <kamal.dasu@broadcom.com>, Jens
+ Wiklander <jens.wiklander@linaro.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "adrian.hunter@intel.com"
+	<adrian.hunter@intel.com>, "linux-mmc@vger.kernel.org"
+	<linux-mmc@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "wsa+renesas@sang-engineering.com"
+	<wsa+renesas@sang-engineering.com>, "f.fainelli@gmail.com"
+	<f.fainelli@gmail.com>, "bcm-kernel-feedback-list@broadcom.com"
+	<bcm-kernel-feedback-list@broadcom.com>
+Subject: RE: [PATCH RFC 0/3] mmc: sdhci-brcmstb: Add rpmb sharing support
+Thread-Topic: [PATCH RFC 0/3] mmc: sdhci-brcmstb: Add rpmb sharing support
+Thread-Index: AQHbe96hg6lVP+XIuES1HZwNeWffYLNBwQAwgACUioCAABrWQA==
+Date: Tue, 11 Feb 2025 18:39:25 +0000
+Message-ID:
+ <PH7PR16MB6196A1AB0472684F9A234C55E5FD2@PH7PR16MB6196.namprd16.prod.outlook.com>
+References: <20250206220940.10553-1-kamal.dasu@broadcom.com>
+ <CAPDyKFq1ZbP4c9ECfM1SY+MEopf+dC19w9PkqXaUjevf=bPjcw@mail.gmail.com>
+ <115a59e1-75b2-4d09-bbf9-50dfcd2b62dd@broadcom.com>
+ <PH7PR16MB61967C18645C64E582B222B6E5FD2@PH7PR16MB6196.namprd16.prod.outlook.com>
+ <d51a9d7a-b942-4c3b-93d2-65b1bb04c8da@broadcom.com>
+In-Reply-To: <d51a9d7a-b942-4c3b-93d2-65b1bb04c8da@broadcom.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=sandisk.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH7PR16MB6196:EE_|SA1PR16MB6058:EE_
+x-ms-office365-filtering-correlation-id: 6232cd79-789c-430e-40c3-08dd4acb690f
+wdcipoutbound: EOP-TRUE
+wdcip_bypass_spam_filter_specific_domain_inbound: TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016|10070799003|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?R2l1S0JQejdDd25uUHhhMm8yYVp3UDdxdUFCVTlQdGJBUmNwdWRUOE04YW1S?=
+ =?utf-8?B?enJjMDZOa0pKdTlPa2hoQnpQR1NoVUM4NzRBZmtkbHRhMDFVMUFXemFvbDdm?=
+ =?utf-8?B?MHFLbUZ2SktmTkZCMk1SUmk2cHBHYSsrQ3JzeGVBNkZEWnVUOWIyL3puMFVi?=
+ =?utf-8?B?NWl0R3RMRHdCNVRZYzUvZDB3cmtNOHBVYjBEbGFBbXhOaW44NXJtbVoyWkYw?=
+ =?utf-8?B?SkRDQk1wbm83UmsxY3NONW92R3k5Y0pwSVNQUlRaN2RUUjY1eDNOMER4ZlVY?=
+ =?utf-8?B?dmkvNEZwemQvaUxqL3o4SnFKZ21MSzJuSlQ5VHJueUxtSzZFOHBXdThMRFh5?=
+ =?utf-8?B?QnpzTkNUdjFCd2FpeXNkbjhmbitEbUVDOHhhMytYRUw5dFpPdmx5SitYd21a?=
+ =?utf-8?B?RlE5bmRXV1M1bXZ4bkMwOVQ5UnZmVEV6eWVCMXFZVnpYdnlmRGd5eU1WNlVH?=
+ =?utf-8?B?LzhBUjVJSkJGb1dLMHNUd00rbEJJR2JPSUg3bncvQUdTREY1d2locFNETm5Q?=
+ =?utf-8?B?ZTFkaUhhZkt2TVVqVFVKSXBGcW5ocENNN1NFZUIxSEk0Z1Y5MWQ0cG9yTTMv?=
+ =?utf-8?B?NmRHdis3anRsMytPODdnTnpoU1R5Qm9aNG5DR3BiMjVjUWttc1lQcjIxeVB3?=
+ =?utf-8?B?aUVCcitPNEpDRzE5U0FiUDZEaHdUS083ZXRudXZ2OHlUMUJTaVMxM05PWmdO?=
+ =?utf-8?B?UytKOVZ2bzR5WDMyVTZmNmJEUG9zaGZwaW9GaFEyazA0RE8xTmx1OTBxN1Rx?=
+ =?utf-8?B?Ump1bkJsaGtiTFNHQStXVkppbDBnc3NxNW5Vb1hJWE1LVzNFenRjb2pPdzlZ?=
+ =?utf-8?B?R3ZGL1Q2QVFQMFg3bXJXSDB2ZTkrMXU2RjhRN2hJb1JKckQ1RVVrZEZub1Qy?=
+ =?utf-8?B?TWh3SFNoamxSL0VzeUJMWjY1VVRnaHRXeEJjZThKczVHcVlHQWFQZTdwb1RT?=
+ =?utf-8?B?anhwM0N0K1phQTVSOW1BbzlLOVo5SVdJWnpBV0Z3UjZvZjZtL01Kc05GRVk0?=
+ =?utf-8?B?alBrcFA4SkYwYjdHYjZ5dHBZU0tVdWZRdVJ5djJZRDFrT0Rxdi8vUkVKZWNm?=
+ =?utf-8?B?VURveFJnMHFpS09ndzRidFNlN1cxbk9FdWZ3VmxnRGNHQmxMSmJORnNPelZo?=
+ =?utf-8?B?UTlpc2ZvQkxOY1JwWXU0QUd2QnNlUnBJSVJ4Z3ZKa3BDUzZzZlgxMDA3ZU9q?=
+ =?utf-8?B?ME9zSlY4ZW5aSG5FVlNwN1RRM0hiL0l3TW9rL1VrUWwrdEtKMEE2dVNDSmc5?=
+ =?utf-8?B?VlhJa3k3L3o2N3dscnA4M1l4OXpkSktXNUNIUlVoVy84M00wM0RiWG1tU2hv?=
+ =?utf-8?B?Z1hhZUFqclBjQllGVFdDVkFYN0hGd3I5bWNVc3o5ZVdGYmEyRVd4aVkzU2tO?=
+ =?utf-8?B?OFEwMGQwS1B3QkxONjVxQk13b1M0UThTQWFJNmxqNCthajEyNWJQdnhDcnND?=
+ =?utf-8?B?VkFETXFnMnFWMmtVR0d0V1FlRndRWjNOTWtwbzJhRzZUUWg2OWoyakRVSHRa?=
+ =?utf-8?B?OGNqdncxS2QrMHlzd0hWbkhTNmFuMkJEUEhEUzBON1NRWENGMGNrbnl4OWQ3?=
+ =?utf-8?B?TGFndjFyMkJiTUJhWDlna1VaN2FLNHFUVyt4KzlSTFUvMnlkR2dERWRqS0dG?=
+ =?utf-8?B?UThIcGhJb3F3MjN2NVdZc2R1VHZPbXZBNkhZaitNTXdWRXhoQ3hBbzlWNGhP?=
+ =?utf-8?B?QmtBbUk2NkhLNUlqNU5zNFNwUGxBeTU1RWp1bThUbjRLeHNMZDNxb0ZvQ0o1?=
+ =?utf-8?B?OXBnWHNMck9MZEhqZDdMOHN6ZkRYT1ZrYzlFNjBZQUxEVXlZaGlYei9uOFFU?=
+ =?utf-8?B?c09XOUdVNXRVeGtCenJNZVVKY0JrbUl1blF3SmxSYWVvbFpkd3V4ZUQ1cGlP?=
+ =?utf-8?B?R1hrS05ka01MWVd6TkVUUXc5NjBBVk1OSEM4R3N5YzdUajY4aU1KS2k4cXZ4?=
+ =?utf-8?Q?58wzec33ijXTWpmBheBqvbvY5Tp9o37o?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR16MB6196.namprd16.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(10070799003)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?NFJ1bERLQUc5UUtSYXNFMDhhRzFHMWozY29pdVpxSnVMTnREZ2ZBS1ZpbVFC?=
+ =?utf-8?B?eGJCMjVFaTBUeFRsc2ZPT240clN5NDhTQXc3blI0bElidGhkYTVSbmV3dERw?=
+ =?utf-8?B?QTRrd0hqS0ZBdmN3TS93OUZiVlNXU21YZ2xyTWtZQkxrRnlvTFJNREQ1ZlQx?=
+ =?utf-8?B?bUpVNzM3RHMxZDBzL3ZVR2ozd3dXMGN4U1NaN2psMmphaStZYkVFZGlLVUpM?=
+ =?utf-8?B?MVJjMmRxa0hhVXZkS3k5bVhGalNJWGk5MCtlOVRrMy95eU1NM3NwUWNhbW1E?=
+ =?utf-8?B?UG1pcnJIRXJ0WWhrMmNNb2N0aHdpVXlBODBqWW4vV1ZFamd3MWVackNONDY1?=
+ =?utf-8?B?cjZyQVB2TEU2T000UFY2T25UaVdKNXFqamN6b1FReFRWRDdwTUpsRExnS2dm?=
+ =?utf-8?B?YTVhOTdTallaOXRwekhKSmV3bkRtSUppK0RLZjAxMHNOWmtDSFg0T1hOb1Nq?=
+ =?utf-8?B?ZDJZVlUvaXZ6Q2dITmRQK0Y2cVlnTTNvYlpoNFFTMEViVVpMektVeVhOemI5?=
+ =?utf-8?B?dXhKbWhzZjNKaThpMzIyOUhxalBBZThFMlZlSWlhS0h6OFlLN2FONG5TVGRr?=
+ =?utf-8?B?NGJ4Ulh2dUtPcVVqVzltcTB0WmdITHhXemJ6Tnd1T0hxa1Z2N2hBWE8vYTFy?=
+ =?utf-8?B?QlF0Y1dmSms2SFRMZkpNNlJXZ3hxT3FZQmhoZVZ2YlhwUnVTeGoxTmdSaUlq?=
+ =?utf-8?B?T0NZUUNScU9QWlNaOGZTWlloUEpDWEpUL3YvZFVCaWxtUHpLWTJSRWVWelhj?=
+ =?utf-8?B?TnlSWHFKS09UTjQrTm9XbzVKV0UxVldNRkl2bUZ6bkUwV0hBRU9rT25YMjRG?=
+ =?utf-8?B?TDJkbGZXazhyTDNhYlVvZ2F2RUZ0cUhtVWFtMFhOODYxTms3NTYyMUwyWSt4?=
+ =?utf-8?B?dmJZTG16UmtNSDcwR011NjdzQmNNK0dYeG5jMkR2eFRrc25CVWpscXJxWk5k?=
+ =?utf-8?B?S3crV3ZsV2FIMHBjMjZGcnY0R0NXLytTTXQzZllIdzFvb05zczEwd2FkTnVE?=
+ =?utf-8?B?a2VaaUNIRkZjV1Yrdk9Eakl6UG1BOTkxTzkwUU5QN1hnZ0RIcG9uM2RDVVZy?=
+ =?utf-8?B?ZFpGN0hMdzd2elVvM09OeGxXdXVmSE1qUzdTOW5nd1lRcjlOeTJsSzJVMUxn?=
+ =?utf-8?B?dndGVEM3VkszTjJZUnN6TWxyUk9XbjFQVXgvdDFoWnRkQWlzaUtNb1hmbVI5?=
+ =?utf-8?B?THNHQU1aLy8wSEhmS21xdUtkeFFZa01lcEFZcUNrVGhtdGlNb0dMMDV0eGI3?=
+ =?utf-8?B?U2RvMWtmRW9WNnIzaFNQeHRpR3ZHVzBtNFI4SUFXQ0hWdXhxaVVkRFFPL1I4?=
+ =?utf-8?B?L2FVVkMzaFpLZ0xlamdJZ3h6MUlwZ2VPN3l6TFFjUVRRL3dyRXRadGJyTHRZ?=
+ =?utf-8?B?NGNlaFg1M1hMRlBRQlZUMGdseFdUR0loSkphVW5MQTZSZ09POUpPdnRnU2JG?=
+ =?utf-8?B?LzRLTm9jYjJuQjBCSGdwRWJnUHI1dk5oSWxJTnBFL1BlZUNQUENWWUhKMU9R?=
+ =?utf-8?B?MGlNYkhqOGVyaElpUzlpVi9FNFhNOFdiYkMwemVYRXZRdkh6RytOOFM5dXRi?=
+ =?utf-8?B?L2tNaVBGYkpZdmFKdG93Z21FelJtT3R2ZXJ3WjR1blArb1doL3RJVmxCN0Rh?=
+ =?utf-8?B?V0x1NjdOcVlpWDMrUWtFTldoUmNzVUl0WmxmWFRhQXBkSEtuY2drNGRUQTJy?=
+ =?utf-8?B?aGhMOXRTemJXZ1JUamx6cHVFRlppVFJkYStVbVpDYVdLQkRBVTlRUGJrV21B?=
+ =?utf-8?B?RzNBRXZtN2RuejhhY1REZ0pRZ1ZsZURhRHZFbjZWclhtNXlNT2RDWm85ZEZI?=
+ =?utf-8?B?Q0ZYcHpHd1grV0xTSWZQRFVNOHh1dWNpNEttSHZoRGdsMS9TeTZGQ0dMK2RD?=
+ =?utf-8?B?bmZDa2VwblpUcERLSjV6eTM1NTFaMmllUldQR1cyVmZSWDlISzJBTVU4ejlS?=
+ =?utf-8?B?M2ZqemhEU0J0b29wcmRRYTJHQ0I2RjBGTmlyVlRFMVdLWFVsU2tiS1ZiZXM1?=
+ =?utf-8?B?ekNnNVNqS2tSVnpzdDRWZ1JIVjE4N1gxZCs3NXFyTXJtU0EyaXdoZkNMcldo?=
+ =?utf-8?B?bGVib1NEaE1IT2NuU2doSUtHZ3lybGRrTFA4MDJwUDRWZ2gzWUVKT09EL0lo?=
+ =?utf-8?B?d25NMWdSOGpHL00ra2pvekh2L0F3aHdUdzM5eW4rdlFvVXdHcnU2Y1pBTysv?=
+ =?utf-8?Q?mdWIEFsp9uzvMTEhABSbDClRWvs85nFHbwI547H7MDes?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250211162412.477655-2-richard120310@gmail.com>
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	Bh832YMkaHzrhQ15YsCsWgNElOp66Mq1xiYDXGZhkvjQFi4jYAbx8zX7+yb87YGYGDm/cHq1NbNd9yHeiX5P/CBXLJeScWGQLpZjVK8rix0sblsySSlvF7Pg82m/5RBZA0PLRBg7CDwEjbZjmuzUZtFg2m3TuY5luVt6eAjs1k1DoYQvRWM/aLu2s8rd98X01tb1dnDYWdAq0Hefx0/KLQzCHnX2P4rVhN8JXTXSGZIh23ZWM05ZImn3aSP4seZGLN8mS/evXFk3xw6//Y9z50ra/Mu61oHnz7IqeOvZjscDBmn3SA+bwOIlvrBe4b3/9ZB7wjTk5OWfS7ARx7BvdFh6sfK70U/Jb0rKq75tac21EHczCn8LKBIio4DUFqLIDb3zzFvyBwTVfj4wYGe7ggR7mp9YbKPTgzp+SYGTFMwbu3wcLicCaWyTR1jm5pkyQY58VRnK0M5uanw+pBkCnUxy79Nd4T2QaD60/PtiSOZdTj6DJld+5uDApkZE84X20/4lf0qldpcqdaNxF4j6FLBkDw9qZiy7tBdPSE/0VZR54dEk9z1NRKqVlLX9yMS6/GjbRoGk+9zxWJALFbq9vZrm0JjaPN+5W2bgZCaK3wh3p28ikmT9Rp/CCl5/KZtnDNdvUeP89VBTf3uMlw0hLA==
+X-OriginatorOrg: sandisk.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR16MB6196.namprd16.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6232cd79-789c-430e-40c3-08dd4acb690f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2025 18:39:25.7546
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 7ffe0ff2-35d0-407e-a107-79fc32e84ec4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rsrwxG/5iu7+9jjR+1hq7cOwFGX1eQxC21aq1hCkYd8A2qZeeh2oQhsMu/XW9iPwhiILdd1Bk9xAzKuKLWSfQQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR16MB6058
 
-On Wed, Feb 12, 2025 at 12:24:11AM +0800, I Hsin Cheng wrote:
-> The calculation of "((~_UL(0)) - (_UL(1) << (l)) + 1)" is to generate a
-> bitmask with "l" trailing zeroes, which is equivalent to
-> "(~_UL(0) << (l))".
-
-I used to think that GENMASK() is a compile-time macro. __GENMASK() is
-not, but it has very limited usage through the kernel, all in the uapi.
- 
-> Refactor the calculation so the number of arithmetic instruction will be
-> reduced from 3 to 1.
-
-I'd like to look at it! Please share disassembly.
-
-> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
-> ---
-> Test is done to show the speed-up we can get from reducing the number of
-> instruction. The test machine runs with 6.9.0-0-generic kernel on x86_64
-> architecture with processor AMD Ryzen 7 5700X3D 8-Core Processor.
-
-So you CC arm maintainers and provide tests against x86_64. Are your
-improvements consistent for arm, power and other arches?
-
-Can you run bloat-o-meter against your change?
-
-> The test executes in the form of kernel module.
-> 
-> Test result:
-> [451675.644026] new __GENMASK() : 5985416
-> [451675.644030] old __GENMASK() : 6006406
-
-The difference is 0.35%? That's impressive!
-
-Can you please run your test multiple times and print those numbers
-together with confidence interval?
- 
-> Test script snippet:
-> /* switch to __BITS_PER_LONG_LONG when testing __GENMASK_ULL() */
-> \#define __GENMASK_NEW(h, l) \
->         ((~_UL(0) << (l)) & \
->          (~_UL(0) >> (__BITS_PER_LONG - 1 - (h))))
->
-> int init_module(void)
-> {
->     ktime_t start, end, total1 = 0, total2 = 0;
->     for (int k = 0; k < 100; k++) {
->         for (int i = 0; i < __BITS_PER_LONG; i++) {
->             for (int j = 0; j <= i; j++) {
->                 unsigned result1, result2;
-> 
->                 start = ktime_get();
->                 result1 = __GENMASK_NEW(i, j);
->                 end = ktime_get();
->                 total1 += (end - start);
-
-Nah, this is wrong. I feel like you measure performance of
-ktime_get() rather than GENMASK().
-
-Do it this way:
-
-        start = ktime_get();
-        for (...) {
-                __always_used result = GENMASK();
-        }
-        time = ktime_get() - start;
-
-
-> 
->                 start = ktime_get();
->                 result2 = __GENMASK(i, j);
-
-Please test GENMASK(), not __GENMASK().
-
->                 end = ktime_get();
->                 total2 += (end - start);
-> 
->                 if (result1 != result2) {
->                     pr_info("Wrong calculation of GENMASK_NEW()\n");
->                     return 0;
->                 }
-
-For functional testing we have lib/test_bits.c, lib/test_bitmap.c and
-others. I expect you'll run them all to check correctness. Once you do
-that, you don't need to test correctness here.
-
->             }
->         }
->     }
-> 
->     pr_info("new __GENMASK() : %lld\n", total1);
->     pr_info("old __GENMASK() : %lld\n", total2);
-> 
->     return 0;
-> }
-
-Please incorporate this in one of existing tests and prepend the
-series with it. That way you'll let the others to run before/after for
-your series.
-
-> ---
->  include/uapi/linux/bits.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/linux/bits.h b/include/uapi/linux/bits.h
-> index 5ee30f882736..8fc7fea65288 100644
-> --- a/include/uapi/linux/bits.h
-> +++ b/include/uapi/linux/bits.h
-> @@ -5,7 +5,7 @@
->  #define _UAPI_LINUX_BITS_H
->  
->  #define __GENMASK(h, l) \
-> -        (((~_UL(0)) - (_UL(1) << (l)) + 1) & \
-> +	((~_UL(0) << (l)) & \
->           (~_UL(0) >> (__BITS_PER_LONG - 1 - (h))))
-
-Now it would fit a single line, right?
-
-If it works, this is a nice simplification, even though it's only a
-compile time thing.
-
-Please address all the comments above and run low-level tests I
-mentioned above, so that we'll make sure it has no side effects.
-
-Thanks,
-Yury
-
->  
->  #define __GENMASK_ULL(h, l) \
-> -- 
-> 2.43.0
+PiBPbiAyLzExLzI1IDAwOjEzLCBBdnJpIEFsdG1hbiB3cm90ZToNCj4gPj4+PiBUaGlzIHBhdGNo
+IHNldCBhZGRzIHN1cHBvcnQgZm9yIEJyb2FkY29tIFRaT1MgdG8gcmVhZCBhbmQgd3JpdGUgdG8N
+Cj4gPj4+PiBSUE1CIHBhcnRpdGlvbiB1c2luZyBzeW5jaHJvbml6ZWQgYWNjZXNzIHRvIHRoZSBj
+b250cm9sbGVyIGhhcmR3YXJlLg0KPiA+IFByYWN0aWNhbGx5IGl0IGVzdGFibGlzaGVzIGEgY29t
+bXVuaWNhdGlvbiBjaGFubmVsIGJldHdlZW4gdGhlIHRydXN0IHpvbmUgYW5kDQo+IHRoZSBob3N0
+IGNvbnRyb2xsZXIgcmVnYXJkbGVzcyBvZiB0aGUgcnBtYiBwcm90b2NvbC4NCj4gPiBPciBkaWQg
+SSBnZXQgaXQgd3Jvbmc/DQo+IA0KPiBSYXRoZXIgdGhhbiBjb21tdW5pY2F0aW9uIGNoYW5uZWws
+IEkgd291bGQgZGVzY3JpYmUgaXQgYXMgYW4gYXJiaXRyYXRpb24gc2NoZW1lDQo+IGJldHdlZW4g
+TiBwYXJ0aWNpcGFudHMsIHdpdGggZ3VhcmFudGVlZCBmb3J3YXJkIHByb2dyZXNzIGFuZCBmYWly
+bmVzcyBiZXR3ZWVuDQo+IGFsbCBwYXJ0aWNpcGFudHMuDQo+IA0KPiBUaGUgaW50ZXJlc3QgaGVy
+ZSBpcyBmb3Igb25lIG9mIHRob3NlIHBhcnRpY2lwYW50cyB0byBvd24gdGhlIGVNTUMgY29udHJv
+bGxlciBmb3INCj4gYSBjZXJ0YWluIGFtb3VudCBvZiB0aW1lIGFuZCBpbmRpY2F0ZSB3aGVuIGl0
+IGlzIGRvbmUgd2l0aCBpdC4gVGhpcyBpcyBub3Qgc3BlY2lmaWMNCj4gdG8gZU1NQyBhcyB0aGlz
+IGNvdWxkIHNjYWxlIHRvIHZpcnR1YWxseSBhbnkgcGllY2Ugb2YgSFcgdGhhdCBpcyBkcml2ZW4g
+YnkNCj4gdHJhbnNhY3Rpb25zIGZyb20gYSBDUFUsIGJ1dCB0aGUgbWFpbiBhcHBsaWNhdGlvbiBp
+cyBmb3IgYWxsb3dpbmcgdGhlIFRydXN0ZWQgT1MgdG8NCj4gb3duIHRoZSBlTU1DIGNvbnRyb2xs
+ZXIgZm9yIGEgc2hvcnQgcGVyaW9kIG9mIHRpbWUgaW4gb3JkZXIgdG8gZG8gaXRzIFJQTUINCj4g
+YWNjZXNzLCBhbmQgdGhlbiBnaXZlIGl0IGJhY2sgaW4gdGhlIHNhbWUgc3RhdGUgaXQgZm91bmQg
+aXQgdG8gdGhlIG5leHQgcGFydGljaXBhbnQuDQpUaGVuIG1heWJlIGVkaXQgdGhlIHN1YmplY3Qg
+YWNjb3JkaW5nbHkgYW5kIGVuY2xvc2UgdGhpcyBleGNlbGxlbnQgZXhwbGFuYXRpb24gaW4gdGhl
+IGNvdmVyIGxldHRlci4NCiANClRoYW5rcywNCkF2cmkNCg0KPiAtLQ0KPiBGbG9yaWFuDQo=
