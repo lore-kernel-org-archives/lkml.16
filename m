@@ -1,114 +1,106 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B991CB51B
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB9A1EE00B
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739260592; cv=none; b=gWTHO/A5/0BBuLWwxMLlbwkxIgw0DaaJZjUx6wJdZKoUr+CYj4jylvTLxgKl1p4P792P15ZYKCK53X4ZZ2efRpcVuSqvT997Pplen3auLMIlDYBueeoKT+0ZI7tqgdo/GfETiBvVq0q3v3uTBpQXVLPggNYc1kuW6tCF9N+Qs3Y=
+	t=1739260623; cv=none; b=Y+85a5JAuyvNIgy9lDFL5BzBvHBibKn8UovzyhYlcb4RDcuMzOOY4sjhLCNUX+wQahgQ2GzmIoXIMnMXz1xNUdd0NFBaNxK6m9D/7ICva3X7j+wHRrIvz1Nj3lWK5RIn0rhGUkeGB54CAVAj3qwTqsUYWOSm+oKR4IKadPjqanc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739260592; c=relaxed/simple;
-	bh=UzwistTOiGxOKlMk6jUmAHmPTkXoKbfEXKNs9GNBgVU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KkIIKFRXeNhQzeAcT2N9ZusKILYydStX0I1/pUv6NeST6LduUSPloMZwPNESnqF+miXKwvs89p+0Y8AKDVaoCeRgaSmoGJyWEh7d0Vhu9Rku3pZZkfay7u36J7NPmPuONsnk2om3DwabTgbzRjC5HBh1jwP593G+6BYLNefN590=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=R2NSUzlO; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1739260623; c=relaxed/simple;
+	bh=LPHXYTKv2FXtI9uRbobiagdTnkUoyv995uInBQLR3VM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dlFOc2ztGynRjPhzcr9YeEwQGY2wY4lqr5WDDe0I59uZ2r3mXjpvwqOpKvWbwZJsSkL1e6nlzipX5D8WhBom8B7Y9UeHW20m8oOnaZ0a9oy7gn8DBxrie0hUbFLjcLf1nS82OQFLCYr/hdeesPULHOUjG7275bNOtKs8gFX3Lck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tG22peeL; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="R2NSUzlO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1739260557; x=1739865357; i=markus.elfring@web.de;
-	bh=b8cDJ4lSmHlxSHHsrsR6Ku6y7KJbcpSf5mf6dGPdv9A=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=R2NSUzlOENGGd9tSVqZOlw+RF+S1ervuJIcdhRRkzK0Dd1dX9iIMYaeu6AzTtT2e
-	 NSQBJqdyukDNTUwO3xXLCCoDI6IeGRjQ4cFkQDKJSXcObw0MuGD9K4IZWCpFd5peh
-	 13Q8F1oBNRrfyQJE2O8wZRVmVXnOB6FtNK2RhJDK7Z3AC6HYKc1pgPO5Kt8bWNW/R
-	 rrEhF4NXWp0NPEqk0rHiXvYt9xfsMMpbYapvZ9wsMH/r17rs73Tg3AF9nEoBA/iPe
-	 xYcnAy+nmtG5Iuj3pDd2RJrB/lhBQ2p8Z96drI3F3YLZjOJLVfRuKGX3A5Eo4G5uJ
-	 JZDN5C62ZuoCmlmAaA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.9]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MFrxr-1tbUw639Xr-004dft; Tue, 11
- Feb 2025 08:55:57 +0100
-Message-ID: <03681acf-9524-4fd1-b40d-a7cafe1c5572@web.de>
-Date: Tue, 11 Feb 2025 08:55:46 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tG22peeL"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21f6f18b474so38577085ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:57:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739260621; x=1739865421; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hknP+sL6YosA4WrUY/AIGIujFV5L86o/UxguNR/EyII=;
+        b=tG22peeLslb5C+ZUHD+oNov/fTowuslGGYDtdgpWRqs8k53ARe1H5wAZxC+6L+hipt
+         v++KGJRateeXdS+GCaBnwVVM48+NDvoPhRYgEuNfFwYTfh4DxdX65w8ZISbDy+RwPqrQ
+         oafiOFB3V6pqQ9RFv/EfYHfrg1LN3AcefVM/N0jApLzV1BFgV5/DynSWdIoNvL0IX+x0
+         9JBWlNWBJdFled4TRyDMNEbmvanz2hqER5Ndx2oFncK7I8KxKVxPdN7WdpEsTeC9bq+T
+         wPdPmu+k7kWO0LA+kUfJnZa2HqPVsCMWMc1D190Hl+yqB/2nWV18QZiIayCVbsrGWbFP
+         GGzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739260621; x=1739865421;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hknP+sL6YosA4WrUY/AIGIujFV5L86o/UxguNR/EyII=;
+        b=NZ8dzkiBU1MGKLzOKQyMgUlCC+RoqAJqEkdfX2wCFE3Q2nTeXypD7EFq9Wl/v9E44I
+         tqDLrl3OGQs5RzpUGUDyT1VeXZA17Gx7TKCH7OgERwnqG3ez4TCwDioM+ckPAAlR8Ti5
+         OPEdRWzMpjf0BaC8kNonrA2z1BPKh5G7Yj21tNjBAxq4FXKDvGN/98Sv9SxDtrxWJWm7
+         WuQGMV0GEOrRXYYsdrpGBqB6GRSIgebvgU5h1w4tUVDjk1tasnHBQ9UW7stIrjvk33IP
+         oTSFHJJTAgij0aI2Z9th0kF77pwgjTSl0Vpcj8pnRJABF31VG896CGQgc3OnD+BSyc8f
+         xrMA==
+X-Forwarded-Encrypted: i=1; AJvYcCVYrPyuPYEgt+YE4DZW0qyVlsDP27KdpuME5zp6rXGvsAGNLscw4kQ30NhBn40QrkRQBJyXdlpJrAOlcQI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2dx2t5vmgffqC5hQgPNyfmgxIOQ5n02qnDPSatx5xL2yZtawE
+	WFgc68IFF4LxMTs+2NGEVJH5VPB00LfujDYkC8r0t3yM7L9d2R0ZqbgomwYxuQ==
+X-Gm-Gg: ASbGncv52HkcdEFL2fo/WJCaK8Xz2kchoys4rZYQrdADPgwqTYWm0+B6UK8nD6g4utZ
+	UuLH4cNPw6ArpbEkQIIfdFXFLPuI2HgphdVJUZtlk1FyS6OiK+vCr5AUkV9KNfiZ5kyD5ZLanIR
+	FqKPJwSh8T7zDzGmOQLJtfdhWsdm3QoQZurPWYdln4yd4CDIMns//x00994ekPEPkEr8SoiPrW9
+	xIG1juj8SadQPu2JxOyGzouazxjsF7/+9yUJoYKwvF+J5XNRze+dLnu1QhGnQdntZPNboS/mxyJ
+	oa26d0Su2VVNWDaO115XxGqOHA==
+X-Google-Smtp-Source: AGHT+IFK60fImKcu8KHWFzd+l5HoW1YkVhklIWoQZG/RRiDeEw4PlbcJBO+x2yxfQTu3F6kyiZedkQ==
+X-Received: by 2002:a05:6a00:21cb:b0:732:2269:a15c with SMTP id d2e1a72fcca58-7322269a4c7mr922940b3a.20.1739260620917;
+        Mon, 10 Feb 2025 23:57:00 -0800 (PST)
+Received: from thinkpad ([36.255.17.115])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048bf19f6sm8594074b3a.110.2025.02.10.23.56.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 23:57:00 -0800 (PST)
+Date: Tue, 11 Feb 2025 13:26:54 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Tsai Sung-Fu <danielsftsai@google.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Brian Norris <briannorris@google.com>,
+	Andrew Chant <achant@google.com>, Sajid Dalvi <sdalvi@google.com>
+Subject: Re: [PATCH] PCI: dwc: Separate MSI out to different controller
+Message-ID: <20250211075654.zxjownqe5guwzdlf@thinkpad>
+References: <20250115083215.2781310-1-danielsftsai@google.com>
+ <20250127100740.fqvg2bflu4fpqbr5@thinkpad>
+ <CAK7fddC6eivmD0-CbK5bbwCUGUKv2m9a75=iL3db=CRZy+A5sg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v2] drm: xlnx: zynqmp_dpsub: Add NULL checks in
- zynqmp_audio_init()
-To: Charles Han <hanchunchao@inspur.com>, dri-devel@lists.freedesktop.org,
- linux-arm-kernel@lists.infradead.org
-Cc: LKML <linux-kernel@vger.kernel.org>, David Airlie <airlied@gmail.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Michal Simek <michal.simek@amd.com>,
- Simona Vetter <simona@ffwll.ch>, Thomas Zimmermann <tzimmermann@suse.de>,
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Vishal Sagar <vishal.sagar@amd.com>
-References: <20250211032830.2400-1-hanchunchao@inspur.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250211032830.2400-1-hanchunchao@inspur.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:USnYnQXWxocGuM37zSToa8h9T0sJugExpCOPAS5wXImCLuqUR6f
- kLJhstS1kXuTCHVqA3fJIsdplst6DMALOOKqjeFeId2Q7VTrWPzFqE++bKGc5BqxsbyXXIq
- B1aXysi6VQyK5yFFob6D7zUp2GpHjotI5kYKrDsDYg8HHYcbhfk3KO31letLzoYY7gTVrQ5
- cFeUQobbXq0eaMDYDXPig==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:xKVS0rHKMsY=;RT9f9ib+CuKUU0bTTT0xk/moXNt
- XuBhhKM25BotD4SkvCeaUmZHS5aCNq5p1PkdeiODx3Ivn4/5zxoWqlfIdG3sZy7B91X9u9uOe
- Pj4hBfDuG0krWTSgrmkkJSo9faHdtSSSYWZRbTbnhz0QmXHty+Aa6uhR1Te1mFYhnA4hsYdyw
- PHbkjIV5kUElluQjhwismap1f1XTNdx8CPMqLl+OGfjSD3GpeLQ+i1Sw3bfSK/F7qRcYS67ym
- AnmPrHy+Z4F1I3jkpJrcW3lh2+wLzAO8qDm4Onx/3X0TyiGNB+oougeItKB9qEbh0R7yf/YD7
- +PK5PjAHcvRsjtGEOAB355UnxxguF9sXY4WH8mF1Dt4qkLJ8I1UHWDlCXjAp0lmQQL4U+2h15
- K2sPhCogeDxM66Dghq4Uyft8qES9SOdTVotzqdXAdsIf+yKg2U8PEiobSzlAEgJQt9L00giJC
- s9UgJVO+VVrmioKbYMKlUMUwRGhrVuHlWlT5F/WUnSnqDVSemETdIuDI5Czo01CXEpVyzRUCy
- DEMipsp1zpiextHARBaxkEGmtxgjB61+CEtA/GBGavFGvHmr5xetaU9mApP2TMBcLPSzIU+Zn
- 1DyzGEzy5cyY4FPB3Q0q69PnFyGIbh1bD0kkc09cDec9pzijTBtMBNJFNxYxITRxei+l9DPKd
- 3AWteFMwnUZk3kQwSTuKEFjiSH5iAxRGB3nQ0a41ZbVvnrWKF65lJ68IR5oS7npJp+SEsO5Zn
- RKBXXexZqIlKnB1o7xAoJU0G/khcYwxSc3+7RBH/5mTkOrby1lf8AXuBUB1ho4xXMR/SrhLjb
- 8sIS1mWxWvOp8TJ+vpUMJT9QoH9T7g+I23RVInMVJSUCICkYoK5i2yURnyCFg6HuVwqvhdLfv
- si4bbTHj4UHRQDurNA8co72WIWy1CRVzUfuTuKwtdyMf68dHlxnfJDNP9PQO1L+fnM13wq14W
- ovOAanmQZ9NsfezU9MQ6kbMkXiX6EgQa8PcBqTAg7TQJKJ4AUD3D4ueJHwSBgfzDpxVlpCwN1
- NJNBi69Tt4PaHGfSS9GzmpGJ8HeNpJ9mr/TSlGsVxh6ZJlccHVzUu33bqIvrYN6kCbO297E9t
- jnAXTUPXyPEYfxml2XcQd5Wow93ivStQaqlnTdN00mNh3kAVjcerOTSa1/n3+eXzfbIYaa/gl
- SVSmfMWPZnzVgh2TEtiBFSLdfF150CiGIsD6U6pMK1+KysxHQ1Wo/b8Kmp9bvuZbN4AXQnHOl
- jQAL/vFL1wjQTW4KFDlNnARwMGduVJZ51zFzCaWMr4FqatRs5ojVxDt3iN/HulA3MQJ8ARKAg
- OMQWlPSRhuRAk888eCnIETknM/lbg7U62jgptRoYDicRd0ZmnWWDrZnhcILbk5FX+7xROyBf6
- G7WdxvdCPpFD7bW9SjDIu0LNocvVxpPlqs084XR1cUcA0uqD1cAoI6FCP5BeftxbOvb6v8CJf
- 2jn9rug==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK7fddC6eivmD0-CbK5bbwCUGUKv2m9a75=iL3db=CRZy+A5sg@mail.gmail.com>
 
-=E2=80=A6
-> Add NULL check in zynqmp_audio_init(), to handle kernel NULL
-> pointer dereference error.
+On Tue, Feb 11, 2025 at 03:16:11PM +0800, Tsai Sung-Fu wrote:
+> Hi Mani and Bjorn,
+> 
+> Sorry for the late reply, we just found out some problems in the patch
+> we are trying to upstream here, and figuring out it might not be a
+> good idea to keep this process going, so I would drop this patch
+> submission, and come back once we figure it out a better way.
+> 
+> BTW, May I ask why upstream chose to flag this driver with
+> MSI_FLAG_NO_AFFINITY and remove the function dw_pci_msi_set_affinity
+> implementation ?
+> 
 
-* Can it be more desirable to prevent such issues?
+Because you cannot set affinity for chained MSIs as these MSIs are muxed to
+another parent interrupt. Since the IRQ affinity is all about changing which CPU
+gets the IRQ, affinity setting is only possible for the MSI parent.
 
-* Would the message subject have been nicer with a key word like =E2=80=9C=
-PATCH=E2=80=9D
-  (besides other refinements)?
+- Mani
 
-
-=E2=80=A6
-> ---
->  drivers/gpu/drm/xlnx/zynqmp_dp_audio.c | 4 ++++
-=E2=80=A6
-
-Will you become more familiar with patch version descriptions?
-https://lore.kernel.org/all/?q=3D%22This+looks+like+a+new+version+of+a+pre=
-viously+submitted+patch%22
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.14-rc2#n310
-
-Regards,
-Markus
+-- 
+மணிவண்ணன் சதாசிவம்
