@@ -1,268 +1,197 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419621EE01F;
-	Tue, 11 Feb 2025 08:08:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8CB11EE01A;
+	Tue, 11 Feb 2025 08:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739261292; cv=none; b=qTKVDW0O0Ts9Dt+idDnWz7FUYRmmqKyIKE8006/LnrHdXQcpwlSvJM1NSmy1uBd8idLpjx3fFy71FbOXR6sLyC4J979fMhjp4Ah3O+BXrj1bO9b+2IQaJHhdwPReX+UrxhUx6pqyNKklxLWju//6bvj2JwWCOdEvJPQqxnm0oVU=
+	t=1739261364; cv=none; b=uvSDw51D6fHCj+9SlcVGgx4wSZj8pDq4xMalb8QBaNpveN2Ws4HnmGI5qOmHPI3Vhac7AIhO/GpxYy8roBZXvcQ5NLy0lHsmGuwInU9sQ6rSFdRF5TYvlKJU2NVN3nNWhLwtycQyZvI83aOv2m9+71vf72W3p0S3wwn0GkDnxOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739261292; c=relaxed/simple;
-	bh=P2QcCz2MyiShDR3PPQl5bATRivNL71mOkc+PGXa+8OI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aCmXNEVBOfVxjn18W4c5tHS12W8hNH6rKvJZyMkV115OxUd1RNEkNz/2pZg39Hh8CeHX5HxNlCgK6FxJTxf75P4hfQBjeFT6UJkJFyZcyUFegeYkO9cjvSC7ujMDDiVPXsi0m2MC+rYRTWctp2Wc3b6fKMU0gcl+F/5lcb0qe90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UAMZjGX6; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739261364; c=relaxed/simple;
+	bh=8zbYpb03k265T2/tmJHBW9ZDLDeyG/KjxMcK0OIakq8=;
+	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=ZIiKg/pFl9aqTP/8Yx9hytZnhvOzcIwtGktSMX8lda9b+MC1lxvfPDR5unrTtAmf8eSU2ZOsytjrKszsM1OBGOYJivnplnWXXentSnph2BC1eCt5KVUIDM/ueZPWLCMRZZl96ZJJikRS9AuEplNbf/oq2QNoVg/RnWw7yy7a5nM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=JU9ZdgJE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Y/qcIq11; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UAMZjGX6"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2fa1a3c88c5so6730658a91.3;
-        Tue, 11 Feb 2025 00:08:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739261290; x=1739866090; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KA4jpQ5V3ysCO6YGflqBLf2hPOtMTXa2birIlOr0EAw=;
-        b=UAMZjGX6PIMWzS3aj/1+dekOpBSOHM6XC9QV8jdQt82XnPZHWpKEkfx2vQP1C9urWu
-         a8hSccGK3TTqbBEmJliPaH8w+uLsRbACra0vJ9qIWqdWsB7h7Xf6K2zJJzOjbkicWWW4
-         2xVUMkfdEVrNBW8H8RM9GOHns+eboJ03WEnpEi0Ph4VIkwwzvVRLDS+GsTNpIQfQPwlx
-         3hKY8PcRsAcHa1PqK+KyBXOmcevSEQljlgCAX0ZtL4atIpMwrDRbME2AB9/AGIC6xNPC
-         NIVsvZt3HQVtHqbu73aCMePxr847rAqQxueoiaRI2s7UOWZAnzqfeHGz+Cjw1GXcpUyQ
-         f9aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739261290; x=1739866090;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KA4jpQ5V3ysCO6YGflqBLf2hPOtMTXa2birIlOr0EAw=;
-        b=K1gN1RRYZnMfbHEQfkn2bzvUT+9AaGcIspnF4+ONEEX4k5NEHrDGPJKRQx1SjMJ1s+
-         g3G2zW/f/OE6yLXvzYaCvu8id4TBG8hGDgBUPZGbaLpjR3ZULENusgubbIIIJmPIuVsU
-         UhFKYg9bk/4XZaWMPBVgL8JNfZ5mhCj+zh8DcTS8ASLMaobTRASuhvqfdDcGfoTLrymW
-         omuEFyzQglKYrBfxcYONj78eEcFqRSI1/FGxqMEWAN9wkeFdWgUakNJwNvS2IxMoN5Ah
-         f8tNmsGQPzjB8kvw1qD2o121WO0B2JsUreHz1dbBpNknJgdBU2Xdd3vzKyHMtmxl+Txm
-         riCw==
-X-Forwarded-Encrypted: i=1; AJvYcCX6v0jVPtTvUigRjh2n+9fqtuCqoR8CzHjPgJsCC/A5JYvbGF15edOb3U0v87bpdHTHGK84tss4xeA6C4E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6p/PF3v5QeRIl2liMtjyd1URobdz2drsd40zdVk2171fvxJic
-	ncxm/EEm+m3LpM1fZgOGfxED3nKprxeGuPEkD0Whefnp5VA56BuL
-X-Gm-Gg: ASbGncspQTyqHYtyrwEEKr3N1mJwT9QbfIdIHFxgtkk+68iQC7WxT9qVVRZHZeuGlLW
-	bajpogCDxVmm2O0kEi1C5QDf+xaDa2xNKwuOUePydebkLx+17WmANwSSVLfAJPamn6+KEQ+qtgP
-	uOsdsa4BRpC8WfYjFjR36va6Kw7VO/5rckQbg7euhRsAtoB6ijaZmWvQDHCv0VmsHQQ4bwUt+z8
-	Anebn1XxGOvNMniqHwgzqcT1uFo9dvcD2RUVlkcMTNr9MCXkOfsW43eKNU3QTzoybUlYkd6HbmS
-	VWnpmAue66rqWZI4KvzoX647RCqHqNhAtmdTYZP3Frs8Hs7YEaPJ6FahkU2etw==
-X-Google-Smtp-Source: AGHT+IE5uSVRXFS1dB2KUSrGTxStqiYVu8rwl/uUt4ZvP6YcriprR65a1RWTFCq4qlSgVSruBDbWag==
-X-Received: by 2002:a17:90b:2703:b0:2f7:7680:51a6 with SMTP id 98e67ed59e1d1-2fa9ed5d432mr3284958a91.6.1739261290205;
-        Tue, 11 Feb 2025 00:08:10 -0800 (PST)
-Received: from stone-arch-VM.localdomain ([103.233.162.226])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa274407f5sm8122188a91.15.2025.02.11.00.08.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 00:08:09 -0800 (PST)
-From: Zhihang Shao <zhihang.shao.iscas@gmail.com>
-To: ebiggers@kernel.org
-Cc: linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	ardb@kernel.org,
-	Zhihang Shao <zhihang.shao.iscas@gmail.com>,
-	Chunyan Zhang <zhangchunyan@iscas.ac.cn>
-Subject: [PATCH v4 RESEND] riscv: Optimize crct10dif with zbc extension
-Date: Tue, 11 Feb 2025 16:07:29 +0800
-Message-ID: <20250211080729.205872-1-zhihang.shao.iscas@gmail.com>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="JU9ZdgJE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Y/qcIq11"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfout.phl.internal (Postfix) with ESMTP id DEC151380188;
+	Tue, 11 Feb 2025 03:09:21 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Tue, 11 Feb 2025 03:09:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:content-transfer-encoding:content-type:content-type:date:date
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1739261361;
+	 x=1739347761; bh=slWw1TiRIa+fnLGWH63JJF/dAx3EWeR1a3tRrHk8+u8=; b=
+	JU9ZdgJE5Tf33djcc75aebLdMNBe8w47L+vuLeLb/AOYoZos8niDLnLZvnGlwalK
+	iYKxL53dmvMiJUFHPtBuHqWiHWxbWmPd2btMeRgMrdLHEfmg3Ve/tZQlW8Fj38Ka
+	phWf+YPSO7iZwTttd0gVP006zPfSQNAfklGZgjGAdmRC7RDDtigLlkbjGyt9f0+4
+	5tF/KbVxl11Y5GefKt4XX3QO2ecovLZwUYeE0kOt4WsIMVaMez9Ft+zSRWiMnfXZ
+	qEqgAS11b3rToDh4XPqx7qrqOMwNH3h7SgOET17njLz8sW96ZE7ca4vUkfBTD0jF
+	XCVhwHmgenRUwofwb3eiXA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-transfer-encoding:content-type
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm3; t=1739261361; x=1739347761; bh=s
+	lWw1TiRIa+fnLGWH63JJF/dAx3EWeR1a3tRrHk8+u8=; b=Y/qcIq11BcnE0QQAy
+	URxL+it+DGPHmzD7SxsY0zqubOCab/kOAhNrAzwI0xZhD42O17aOzTWq29aX1tfu
+	aildwrM8zBsfR1fmUkZAtFpZd2nsZar/uznPC6s31yrISYsLs2jC4SDrK+ykmnNq
+	eWnbN+rt1OdBfvrobmmUZ1iF9vzE9EF9IKwwPqmZm6Yrb+ztogBUrRWqZfQfamdu
+	kRKbPc5XY+LgJ9KYIdUFNBdYBOEoujjti2rbhQcWSq/kb3POnr5LfDgexwpvx5NY
+	ZHSqohe0kVBQacsNbHYpP7TqGymU6X/O1GjdM7Ze6cMkhCFN38iXpb6pDouEJvTP
+	nsFJw==
+X-ME-Sender: <xms:rwWrZ7NrJjhqwazfmoyzQtVyBjqV9iRQwxY4o-dh_ZLO4sOhq_-Q7w>
+    <xme:rwWrZ1_JGDjp4PMLSfSUvNvNXobU9RQHG3IVgTLjF_b-PwbGKAulOazDx2OfSrtqe
+    YRlFJJROZIVSmnMHpQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegtdegjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
+    guvgeqnecuggftrfgrthhtvghrnhephfekledtffefhffghfetteehuefhgfetgefhtdeu
+    feduueeltefghedtjeeifffhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepfedu
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrg
+    hssegrrhhmrdgtohhmpdhrtghpthhtohepmhgrrhhkrdhruhhtlhgrnhgusegrrhhmrdgt
+    ohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoh
+    eprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopehhohifrghr
+    uggthhhuleehsehgmhgrihhlrdgtohhmpdhrtghpthhtohepihhrohhgvghrshesghhooh
+    hglhgvrdgtohhmpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhg
+    pdhrtghpthhtoheprggurhhirghnrdhhuhhnthgvrhesihhnthgvlhdrtghomhdprhgtph
+    htthhopegrtghmvgeskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:rwWrZ6RvbSTCiJfZhcc1wviX371cOxFdxpy1jgK3YWb8t3Ly9O97fg>
+    <xmx:rwWrZ_tM-TyjUy98K7B6J9NsnL96ZP9LPTCHE9Cgaqe3-9tFrg1diQ>
+    <xmx:rwWrZzcN985Xxl6Id4XCdL8uVRy3FAYMAvVIspf2ggoy2F44d2KQBw>
+    <xmx:rwWrZ72mqnYlgFqEb-_n2xkmTnUMexXg2qVZ1hfH-r7-3zCk_FHi5Q>
+    <xmx:sQWrZ_oxO7aagZ_10p5YRjluCqaet_alPpnufAcGM4EYfH3nvoSxklK2>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 371CA2220072; Tue, 11 Feb 2025 03:09:19 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Tue, 11 Feb 2025 09:08:58 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Ian Rogers" <irogers@google.com>,
+ "Peter Zijlstra" <peterz@infradead.org>,
+ "Ingo Molnar" <mingo@redhat.com>,
+ "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+ "Namhyung Kim" <namhyung@kernel.org>,
+ "Mark Rutland" <mark.rutland@arm.com>,
+ "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+ "Jiri Olsa" <jolsa@kernel.org>,
+ "Adrian Hunter" <adrian.hunter@intel.com>,
+ "Kan Liang" <kan.liang@linux.intel.com>,
+ "John Garry" <john.g.garry@oracle.com>, "Will Deacon" <will@kernel.org>,
+ "James Clark" <james.clark@linaro.org>,
+ "Mike Leach" <mike.leach@linaro.org>, "Leo Yan" <leo.yan@linux.dev>,
+ guoren <guoren@kernel.org>, "Paul Walmsley" <paul.walmsley@sifive.com>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>,
+ "Albert Ou" <aou@eecs.berkeley.edu>,
+ "Charlie Jenkins" <charlie@rivosinc.com>,
+ "Bibo Mao" <maobibo@loongson.cn>, "Huacai Chen" <chenhuacai@kernel.org>,
+ "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Jiri Slaby" <jirislaby@kernel.org>,
+ =?UTF-8?Q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@rivosinc.com>,
+ "Howard Chu" <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+ linux-riscv@lists.infradead.org
+Message-Id: <d47c35dd-9c52-48e7-a00d-135572f11fbb@app.fastmail.com>
+In-Reply-To: <20250210165108.95894-6-irogers@google.com>
+References: <20250210165108.95894-1-irogers@google.com>
+ <20250210165108.95894-6-irogers@google.com>
+Subject: Re: [PATCH v2 5/7] perf trace beauty: Add syscalltbl.sh generating all system
+ call tables
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-The current CRC-T10DIF algorithm on RISC-V platform is based on
-table-lookup optimization.
-Given the previous work on optimizing crc32 calculations with zbc
-extension, it is believed that this will be equally effective for
-accelerating crc-t10dif.
+On Mon, Feb 10, 2025, at 17:51, Ian Rogers wrote:
 
-Therefore this patch offers an implementation of crc-t10dif using zbc
-extension. This can detect whether the current runtime environment
-supports zbc feature and, if so, uses it to accelerate crc-t10dif
-calculations.
+> +# Each line of the syscall table should have the following format:
+> +#
+> +# NR ABI NAME [NATIVE] [COMPAT]
+> +#
+> +# NR       syscall number
+> +# ABI      ABI name
+> +# NAME     syscall name
+> +# NATIVE   native entry point (optional)
+> +# COMPAT   compat entry point (optional)
 
-This patch is updated due to the patchset of updating kernel's
-CRC-T10DIF library in 6.14, which is finished by Eric Biggers.
-Also, I used crc_kunit.c to test the performance of crc-t10dif 
-optimized by crc extension.
+On x86, there is now a sixth optional field.
 
-Acked-by: Eric Biggers <ebiggers@kernel.org>
-Tested-by: Eric Biggers <ebiggers@kernel.org>
-Reviewed-by: Chunyan Zhang <zhangchunyan@iscas.ac.cn>
-Signed-off-by: Zhihang Shao <zhihang.shao.iscas@gmail.com>
----
-v4:
-- Use proper data types and remove #defines according
-to Eric's comments. (Eric)
----
-v3:
-- Rebase for Eric's crc tree. (Eric)
----
-v2:
-- Use crypto self-tests instead. (Eric)
-- Fix some format errors in arch/riscv/crypto/Kconfig. (Chunyan)
----
- arch/riscv/Kconfig                |   1 +
- arch/riscv/lib/Makefile           |   1 +
- arch/riscv/lib/crc-t10dif-riscv.c | 120 ++++++++++++++++++++++++++++++
- 3 files changed, 122 insertions(+)
- create mode 100644 arch/riscv/lib/crc-t10dif-riscv.c
+> +#if defined(ALL_SYSCALLTBL) || defined(__arm__) || defined(__aarch64__)
+> +EOF
+> +build_tables "$tools_dir/perf/arch/arm/entry/syscalls/syscall.tbl" 
+> "$outfile" common,32,oabi EM_ARM
+> +build_tables 
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 7612c52e9b1e..db1cf9666dfd 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -25,6 +25,7 @@ config RISCV
- 	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
- 	select ARCH_HAS_BINFMT_FLAT
- 	select ARCH_HAS_CRC32 if RISCV_ISA_ZBC
-+	select ARCH_HAS_CRC_T10DIF if RISCV_ISA_ZBC
- 	select ARCH_HAS_CURRENT_STACK_POINTER
- 	select ARCH_HAS_DEBUG_VIRTUAL if MMU
- 	select ARCH_HAS_DEBUG_VM_PGTABLE
-diff --git a/arch/riscv/lib/Makefile b/arch/riscv/lib/Makefile
-index 79368a895fee..689895b271bd 100644
---- a/arch/riscv/lib/Makefile
-+++ b/arch/riscv/lib/Makefile
-@@ -16,6 +16,7 @@ lib-$(CONFIG_MMU)	+= uaccess.o
- lib-$(CONFIG_64BIT)	+= tishift.o
- lib-$(CONFIG_RISCV_ISA_ZICBOZ)	+= clear_page.o
- obj-$(CONFIG_CRC32_ARCH)	+= crc32-riscv.o
-+obj-$(CONFIG_CRC_T10DIF_ARCH) += crc-t10dif-riscv.o
- obj-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
- lib-$(CONFIG_RISCV_ISA_V)	+= xor.o
- lib-$(CONFIG_RISCV_ISA_V)	+= riscv_v_helpers.o
-diff --git a/arch/riscv/lib/crc-t10dif-riscv.c b/arch/riscv/lib/crc-t10dif-riscv.c
-new file mode 100644
-index 000000000000..da90e2900ca7
---- /dev/null
-+++ b/arch/riscv/lib/crc-t10dif-riscv.c
-@@ -0,0 +1,120 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Accelerated CRC-T10DIF implementation with RISC-V Zbc extension.
-+ *
-+ * Copyright (C) 2024 Institute of Software, CAS.
-+ */
-+
-+#include <asm/alternative-macros.h>
-+#include <asm/byteorder.h>
-+#include <asm/hwcap.h>
-+
-+#include <linux/byteorder/generic.h>
-+#include <linux/crc-t10dif.h>
-+#include <linux/minmax.h>
-+#include <linux/module.h>
-+#include <linux/types.h>
-+
-+#define CRCT10DIF_POLY 0x8bb7
-+
-+#if __riscv_xlen == 64
-+#define CRCT10DIF_POLY_QT_BE 0xf65a57f81d33a48a
-+
-+static inline u64 crct10dif_prep(u16 crc, const __be64 *ptr)
-+{
-+	return ((u64)crc << 48) ^ __be64_to_cpu(*ptr);
-+}
-+
-+#elif __riscv_xlen == 32
-+#define CRCT10DIF_POLY_QT_BE 0xf65a57f8
-+
-+static inline u32 crct10dif_prep(u16 crc, const __be32 *ptr)
-+{
-+	return ((u32)crc << 16) ^ __be32_to_cpu(*ptr);
-+}
-+
-+#else
-+#error "Unexpected __riscv_xlen"
-+#endif
-+
-+static inline u16 crct10dif_zbc(unsigned long s)
-+{
-+	u16 crc;
-+
-+	asm volatile   (".option push\n"
-+			".option arch,+zbc\n"
-+			"clmulh %0, %1, %2\n"
-+			"xor    %0, %0, %1\n"
-+			"clmul  %0, %0, %3\n"
-+			".option pop\n"
-+			: "=&r" (crc)
-+			: "r"(s),
-+			  "r"(CRCT10DIF_POLY_QT_BE),
-+			  "r"(CRCT10DIF_POLY)
-+			:);
-+
-+	return crc;
-+}
-+
-+static inline u16 crct10dif_unaligned(u16 crc, const u8 *p, size_t len)
-+{
-+	size_t bits = len * 8;
-+	unsigned long s = 0;
-+	u16 crc_low = 0;
-+
-+	for (int i = 0; i < len; i++)
-+		s = *p++ | (s << 8);
-+
-+	if (len < sizeof(u16)) {
-+		s ^= crc >> (16 - bits);
-+		crc_low = crc << bits;
-+	} else {
-+		s ^= (unsigned long)crc << (bits - 16);
-+	}
-+
-+	crc = crct10dif_zbc(s);
-+	crc ^= crc_low;
-+
-+	return crc;
-+}
-+
-+u16 crc_t10dif_arch(u16 crc, const u8 *p, size_t len)
-+{
-+	size_t offset, head_len, tail_len;
-+	const __be64 *p_ul;
-+	unsigned long s;
-+
-+	asm goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
-+			     RISCV_ISA_EXT_ZBC, 1)
-+		 : : : : legacy);
-+
-+	offset = (unsigned long)p & (sizeof(unsigned long) - 1);
-+	if (offset && len) {
-+		head_len = min(sizeof(unsigned long) - offset, len);
-+		crc = crct10dif_unaligned(crc, p, head_len);
-+		p += head_len;
-+		len -= head_len;
-+	}
-+
-+	tail_len = len & (sizeof(unsigned long) - 1);
-+	len = len >> ilog2(sizeof(unsigned long));
-+	p_ul = (const __be64 *)p;
-+
-+	for (int i = 0; i < len; i++) {
-+		s = crct10dif_prep(crc, p_ul);
-+		crc = crct10dif_zbc(s);
-+		p_ul++;
-+	}
-+
-+	p = (const u8 *)p_ul;
-+	if (tail_len)
-+		crc = crct10dif_unaligned(crc, p, tail_len);
-+
-+	return crc;
-+legacy:
-+	return crc_t10dif_generic(crc, p, len);
-+}
-+EXPORT_SYMBOL(crc_t10dif_arch);
-+
-+MODULE_DESCRIPTION("CRC-T10DIF using RISC-V ZBC Extension");
-+MODULE_LICENSE("GPL");
--- 
-2.47.0
+The oabi syscalls probably shouldn't be part of the default set here.
+Technically these are two separate ABIs, though EABI is a subset of
+OABI for the most most part. Some of the calling conventions are
+also different.
 
+> "$tools_dir/perf/arch/arm64/entry/syscalls/syscall_64.tbl" "$outfile" 
+> common,64,renameat,rlimit,memfd_secret EM_AARCH64
+> +cat >> "$outfile" <<EOF
+> +#endif // defined(ALL_SYSCALLTBL) || defined(__arm__) || 
+> defined(__aarch64__)
+
+Hardcoding the set of ABIs in the middle of the script seems
+too fragile to me, I'm worried that these get out of sync quickly.
+
+> +#if defined(ALL_SYSCALLTBL) || defined(__mips__)
+> +EOF
+> +build_tables 
+> "$tools_dir/perf/arch/mips/entry/syscalls/syscall_n64.tbl" "$outfile" 
+> common,64,n64 EM_MIPS
+> +cat >> "$outfile" <<EOF
+> +#endif // defined(ALL_SYSCALLTBL) || defined(__mips__)
+
+What about n32/o32? The syscall tables are completely different here.
+
+> +#if defined(ALL_SYSCALLTBL) || defined(__powerpc__) || 
+> defined(__powerpc64__)
+> +EOF
+> +build_tables "$tools_dir/perf/arch/powerpc/entry/syscalls/syscall.tbl" 
+> "$outfile" common,32,nospu EM_PPC
+> +build_tables "$tools_dir/perf/arch/powerpc/entry/syscalls/syscall.tbl" 
+> "$outfile" common,64,nospu EM_PPC64
+> +cat >> "$outfile" <<EOF
+> +#endif // defined(ALL_SYSCALLTBL) || defined(__powerpc__) || 
+> defined(__powerpc64__)
+
+This skips the SPU table, but I think that's fine.
+
+> +EOF
+> +build_tables "$tools_dir/perf/arch/s390/entry/syscalls/syscall.tbl" 
+> "$outfile" common,64,renameat,rlimit,memfd_secret EM_S390
+> +cat >> "$outfile" <<EOF
+> +#endif // defined(ALL_SYSCALLTBL) || defined(__s390x__)
+
+This skips the 32-bit table, though I think that one is already
+planned to be discontinued in the future.
+
+> +#if defined(ALL_SYSCALLTBL) || defined(__i386__) || defined(__x86_64__)
+> +EOF
+> +build_tables "$tools_dir/perf/arch/x86/entry/syscalls/syscall_32.tbl" 
+> "$outfile" common,32,i386 EM_386
+> +build_tables "$tools_dir/perf/arch/x86/entry/syscalls/syscall_64.tbl" 
+> "$outfile" common,64 EM_X86_64
+> +cat >> "$outfile" <<EOF
+> +#endif // defined(ALL_SYSCALLTBL) || defined(__i386__) || 
+> defined(__x86_64__)
+
+This misses the x32 table.
+
+   Arnd
