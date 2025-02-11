@@ -1,81 +1,204 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1FA6FB9;
-	Tue, 11 Feb 2025 14:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EEF4250C1D;
+	Tue, 11 Feb 2025 15:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739285973; cv=none; b=HN/0R2FxMYKIki9tSGufOQF3EMFZXp91Vu9CezWi8c/dIkhp9H657AUN/6aJpyMvDs1ScJu2IbSoFgC4UIyuYBLeP0crl8OqfU+F73ns+Ur5K0ePcBqSQk8iUu0tTuf4uk0fcEoJaKMm1tX9qSj5ayd7BSozQs2O1g8Oid1XMV0=
+	t=1739286015; cv=none; b=D2S4I1bqMilvUiRa8FfU7uWd/1nNVrQ+187LMaoWGeJdJllI0IFnSYMkTtKQ0VHcIA4iuBTWu1VSgBgqRyoh04BHSifzjYsyvEW7CdskjoDjtmlZBGa3jOzDg8WJRs1OubYHRJpY3UBAglhONkNriMkuyTDTeDgye/sAfNRS9SI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739285973; c=relaxed/simple;
-	bh=4zC6x+CpQqoCmxAQhffvrEuh7sa+yX3iLGjXNbfq5/8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d/ab2e+VJTFzwFyh/Vnk4Ca8qrE51rIqp7n7UtfdD525mvpwlJachwhd3l27ZQEAGcbMpA4KZJEheB7pmtIgYe1vl0kpSzMY/3hGq57VAMOoR3s668r8/Y1IGKxiFB68o3UJDHTnSNq/Ej8XbCQLtEE68kCt/V6m77aRt4DK8iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=GnC2E3e5; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1739286015; c=relaxed/simple;
+	bh=X7gsBc4YvTswGAe3ipvZe8BWphWuMO5WFT/+YrV/kNg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TQNgcKtP6n4jtcH7KqPscnqXmGdY0aF4xtg1vmJEMaU4FeN3zw2pZ/5MpQlp4Av3g8TVnYWYdeKi/YplNyWYeynZJbkcV9iEOBGX+A4kPe+Z3zv7iQBDC4yOYzvsY4SmNdthKNDNtc8M1zsTBqRypyxNOSKLmkf1pUXBsK1gf8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tJKYtolD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DZL1p6f9; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="GnC2E3e5"
-Received: from ldvnode.intra.ispras.ru (unknown [10.10.2.153])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 571E342248AA;
-	Tue, 11 Feb 2025 14:53:31 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 571E342248AA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1739285611;
-	bh=T7kxGTwqhclUsLySrCW/c9t4qOJGEDofM0UqKWyJ5DU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=GnC2E3e58pI9t2oOvNJQYaoalrCjj+s6IkqYywzR0grchaJP461pOUcNuX4aYPYSW
-	 2lk3pyoNWJEo99B0XzpymJANCWHpOHOEtJhdt/urjU0iqEZ8b92zc3GelLn8Ib61f2
-	 YOFLCITdZnNnNKxvbAHYZQlw1lVvKObsDklPXKrM=
-From: Vitalii Mordan <mordan@ispras.ru>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: Vitalii Mordan <mordan@ispras.ru>,
-	Russell King <rmk@dyn-67.arm.linux.org.uk>,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Fedor Pchelkin <pchelkin@ispras.ru>,
-	Alexey Khoroshilov <khoroshilov@ispras.ru>,
-	Vadim Mutilin <mutilin@ispras.ru>,
-	lvc-project@linuxtesting.org
-Subject: [PATCH] i2c: pxa: fix call balance of i2c->clk handling routines
-Date: Tue, 11 Feb 2025 17:53:21 +0300
-Message-Id: <20250211145321.1137001-1-mordan@ispras.ru>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tJKYtolD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DZL1p6f9"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739286011;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MBBgFwIPM9ArG/++02kDCovbUubj1A6raG2FsdxYOuE=;
+	b=tJKYtolDpLQQMdRIym5NWiwB2mwjLhhs1BcvWJujfPWs2ZDZ7GNif057a10MPMBZr2amVA
+	iOFG0QiQLoeQ6jjjJWpD5g52c47SKFPqgVNwVfJ6kAP59QmKIfOS85vhsOQnpoUdjAT92z
+	v6CAHQclY4VhWcc78w0P1TI0xMYXDBy02wOpMqtbbi0x/dquAXd0cI0cDcawgGG34d/77d
+	nyiiKOG0TrkZF8hdVYhQqPj8DWzgnr32mmiKtp92bDyic0wfDSPoF6zDlJ5MrRqvZ7n+QT
+	iGg561ts50rFsrcVUHwVl+Ca96kIFsNiU1ZJGPlt/qxsszLGPgaL9JBVKA2FZA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739286011;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MBBgFwIPM9ArG/++02kDCovbUubj1A6raG2FsdxYOuE=;
+	b=DZL1p6f91Nar035wPIk9SrnGEGIQeCzI5Yd7bVZXkOzMcIDljzGZeflfMwxDm8LlDDdH/Z
+	7v7ZQ2jvy1ITpUBw==
+Date: Tue, 11 Feb 2025 16:00:02 +0100
+Subject: [PATCH] firmware: cs_dsp: test_control_parse: null-terminate test
+ strings
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20250211-cs_dsp-kunit-strings-v1-1-d9bc2035d154@linutronix.de>
+X-B4-Tracking: v=1; b=H4sIAPFlq2cC/x3M0QpAQBBA0V/RPJvaHUR+RZLsYFJLO0ht/t3m8
+ TzcG0E5CCu0WYTAt6jsPsHmGUzr6BdGcclAhipD1uKkg9MDt8vLiXoG8YviXBZMtakbdgQpPQL
+ P8vzbrn/fD8LuW6RmAAAA
+X-Change-ID: 20250211-cs_dsp-kunit-strings-f43e27078ed2
+To: Simon Trimmer <simont@opensource.cirrus.com>, 
+ Charles Keepax <ckeepax@opensource.cirrus.com>, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>, 
+ Mark Brown <broonie@kernel.org>
+Cc: patches@opensource.cirrus.com, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+ stable@vger.kernel.org
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739286007; l=5499;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=X7gsBc4YvTswGAe3ipvZe8BWphWuMO5WFT/+YrV/kNg=;
+ b=hxNYiKtuDcPhzRD4UnAaXybfto5jOrZDWGSbfJG3+XB4mIo0DR98Go1CKKjogVG1Pohs2lUcE
+ NWJw+nD5ao+CdFkioBDNxtmRBW1y65nd9FOAqRAXWrUwUlG824KbkrH
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-If the clock i2c->clk was not enabled in i2c_pxa_probe(), it should not be
-disabled in any path.
+The char pointers in 'struct cs_dsp_mock_coeff_def' are expected to
+point to C strings. They need to be terminated by a null byte.
+However the code does not allocate that trailing null byte and only
+works if by chance the allocation is followed by such a null byte.
 
-Found by Linux Verification Center (linuxtesting.org) with Klever.
+Refactor the repeated string allocation logic into a new helper which
+makes sure the terminating null is always present.
+It also makes the code more readable.
 
-Fixes: c3cef3f3c07b ("[ARM] pxa: update pxa i2c driver to use clk support")
-Signed-off-by: Vitalii Mordan <mordan@ispras.ru>
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Fixes: 83baecd92e7c ("firmware: cs_dsp: Add KUnit testing of control parsing")
+Cc: stable@vger.kernel.org
 ---
- drivers/i2c/busses/i2c-pxa.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ .../cirrus/test/cs_dsp_test_control_parse.c        | 51 ++++++++--------------
+ 1 file changed, 19 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index cb6988482673..4144b0ae195e 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -1503,7 +1503,11 @@ static int i2c_pxa_probe(struct platform_device *dev)
- 				i2c->adap.name);
- 	}
+diff --git a/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c b/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c
+index cb90964740ea351113dac274f0366de7cedfd3d1..942ba1af5e7c1e47e8a2fbe548a7993b94f96515 100644
+--- a/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c
++++ b/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c
+@@ -73,6 +73,18 @@ static const struct cs_dsp_mock_coeff_def mock_coeff_template = {
+ 	.length_bytes = 4,
+ };
  
--	clk_prepare_enable(i2c->clk);
-+	ret = clk_prepare_enable(i2c->clk);
-+	if (ret) {
-+		dev_err(&dev->dev, "failed to enable clock\n");
-+		return ret;
-+	}
++static char *cs_dsp_ctl_alloc_test_string(struct kunit *test, char c, size_t len)
++{
++	char *str;
++
++	str = kunit_kmalloc(test, len + 1, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, str);
++	memset(str, c, len);
++	str[len] = '\0';
++
++	return str;
++}
++
+ /* Algorithm info block without controls should load */
+ static void cs_dsp_ctl_parse_no_coeffs(struct kunit *test)
+ {
+@@ -160,12 +172,8 @@ static void cs_dsp_ctl_parse_max_v1_name(struct kunit *test)
+ 	struct cs_dsp_mock_coeff_def def = mock_coeff_template;
+ 	struct cs_dsp_coeff_ctl *ctl;
+ 	struct firmware *wmfw;
+-	char *name;
  
- 	if (i2c->use_pio) {
- 		i2c->adap.algo = &i2c_pxa_pio_algorithm;
+-	name = kunit_kzalloc(test, 256, GFP_KERNEL);
+-	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, name);
+-	memset(name, 'A', 255);
+-	def.fullname = name;
++	def.fullname = cs_dsp_ctl_alloc_test_string(test, 'A', 255);
+ 
+ 	cs_dsp_mock_wmfw_start_alg_info_block(local->wmfw_builder,
+ 					      cs_dsp_ctl_parse_test_algs[0].id,
+@@ -252,14 +260,9 @@ static void cs_dsp_ctl_parse_max_short_name(struct kunit *test)
+ 	struct cs_dsp_test_local *local = priv->local;
+ 	struct cs_dsp_mock_coeff_def def = mock_coeff_template;
+ 	struct cs_dsp_coeff_ctl *ctl;
+-	char *name;
+ 	struct firmware *wmfw;
+ 
+-	name = kunit_kmalloc(test, 255, GFP_KERNEL);
+-	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, name);
+-	memset(name, 'A', 255);
+-
+-	def.shortname = name;
++	def.shortname = cs_dsp_ctl_alloc_test_string(test, 'A', 255);
+ 
+ 	cs_dsp_mock_wmfw_start_alg_info_block(local->wmfw_builder,
+ 					      cs_dsp_ctl_parse_test_algs[0].id,
+@@ -273,7 +276,7 @@ static void cs_dsp_ctl_parse_max_short_name(struct kunit *test)
+ 	ctl = list_first_entry_or_null(&priv->dsp->ctl_list, struct cs_dsp_coeff_ctl, list);
+ 	KUNIT_ASSERT_NOT_NULL(test, ctl);
+ 	KUNIT_EXPECT_EQ(test, ctl->subname_len, 255);
+-	KUNIT_EXPECT_MEMEQ(test, ctl->subname, name, ctl->subname_len);
++	KUNIT_EXPECT_MEMEQ(test, ctl->subname, def.shortname, ctl->subname_len);
+ 	KUNIT_EXPECT_EQ(test, ctl->flags, def.flags);
+ 	KUNIT_EXPECT_EQ(test, ctl->type, def.type);
+ 	KUNIT_EXPECT_EQ(test, ctl->len, def.length_bytes);
+@@ -323,12 +326,8 @@ static void cs_dsp_ctl_parse_with_max_fullname(struct kunit *test)
+ 	struct cs_dsp_mock_coeff_def def = mock_coeff_template;
+ 	struct cs_dsp_coeff_ctl *ctl;
+ 	struct firmware *wmfw;
+-	char *fullname;
+ 
+-	fullname = kunit_kmalloc(test, 255, GFP_KERNEL);
+-	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, fullname);
+-	memset(fullname, 'A', 255);
+-	def.fullname = fullname;
++	def.fullname = cs_dsp_ctl_alloc_test_string(test, 'A', 255);
+ 
+ 	cs_dsp_mock_wmfw_start_alg_info_block(local->wmfw_builder,
+ 					      cs_dsp_ctl_parse_test_algs[0].id,
+@@ -392,12 +391,8 @@ static void cs_dsp_ctl_parse_with_max_description(struct kunit *test)
+ 	struct cs_dsp_mock_coeff_def def = mock_coeff_template;
+ 	struct cs_dsp_coeff_ctl *ctl;
+ 	struct firmware *wmfw;
+-	char *description;
+ 
+-	description = kunit_kmalloc(test, 65535, GFP_KERNEL);
+-	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, description);
+-	memset(description, 'A', 65535);
+-	def.description = description;
++	def.description = cs_dsp_ctl_alloc_test_string(test, 'A', 65535);
+ 
+ 	cs_dsp_mock_wmfw_start_alg_info_block(local->wmfw_builder,
+ 					      cs_dsp_ctl_parse_test_algs[0].id,
+@@ -429,17 +424,9 @@ static void cs_dsp_ctl_parse_with_max_fullname_and_description(struct kunit *tes
+ 	struct cs_dsp_mock_coeff_def def = mock_coeff_template;
+ 	struct cs_dsp_coeff_ctl *ctl;
+ 	struct firmware *wmfw;
+-	char *fullname, *description;
+-
+-	fullname = kunit_kmalloc(test, 255, GFP_KERNEL);
+-	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, fullname);
+-	memset(fullname, 'A', 255);
+-	def.fullname = fullname;
+ 
+-	description = kunit_kmalloc(test, 65535, GFP_KERNEL);
+-	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, description);
+-	memset(description, 'A', 65535);
+-	def.description = description;
++	def.fullname = cs_dsp_ctl_alloc_test_string(test, 'A', 255);
++	def.description = cs_dsp_ctl_alloc_test_string(test, 'A', 65535);
+ 
+ 	cs_dsp_mock_wmfw_start_alg_info_block(local->wmfw_builder,
+ 					      cs_dsp_ctl_parse_test_algs[0].id,
+
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250211-cs_dsp-kunit-strings-f43e27078ed2
+
+Best regards,
 -- 
-2.25.1
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
