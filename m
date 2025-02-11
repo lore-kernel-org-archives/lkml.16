@@ -1,114 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from pv50p00im-zteg10021401.me.com (pv50p00im-zteg10021401.me.com [17.58.6.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568C61F7060
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D655E250C12
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739285848; cv=none; b=rf0j7DqgaX6t7YYZLyLRjecHr+SG1CafLKqj1gPWGSi1inufLKivAD9zoJzKMADe+UL0zXmRq86KjUJV3pa+fi2jNWdMfDNeAYBGvooqivXcM67UifSN1nzNKFicvCaPcKUTkMcDQLILnPN057EqagLPP8bF9w2mDFD9fzEGITk=
+	t=1739285876; cv=none; b=W3S964mmOLSDIFYQLeYaBCOcjgI+ZuL/t6TJ82BZWMaih+jMgdXiNUIcdA1w8lYrSRIm29qxcwmDEzRTOpyGZrMfEQMVoTp/fJcrgQ3atvhcbTpjNBxZrFobn+bOntJqNWuJ7pZNViqfiqoEYWwmtDjbkkwqClqw7aLSQh5YLdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739285848; c=relaxed/simple;
-	bh=1Za0Dc2wPfHEPu0+2ss5VpvWqBA/O+UGmGxOvF1hwwk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uIE3flgoPgZAWC5w7OPtbLR7fzj0fmFfrYen90d9Fu9kKnKlnjKOSWGNIDWGnwPOf+XdV7ETy3swqqUU3NEatxP9u9I0ZaGb3NuKsOhqgJVZv4kf7Q7sXQ5I8Qps4x6KE35w0YtitHd0C9Ijx8+j5DEBZamQVpPq4EDunhnoV4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IvqXzJJr; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739285876; c=relaxed/simple;
+	bh=jJhDdi5vyJ+dttGz+jZyFiklBfZmzXnJOFb3d6Dslv8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dZ622h0AVvrwbjzBTJnmBy7JBffTii7hpSUndsJ+iInWOff4G/UCn+QCJCiadL9wxexQjqnyh/viuwSsQ2ExOvhb28NUfBayw7l2P4MEVqSEowGVDXO/H5AcMIQDWeJG1xupw2/yPqvtKIh/ZE0hZiD8TomgE6/qIGpGvoty2F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=HSkMhZ5U; arc=none smtp.client-ip=17.58.6.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IvqXzJJr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739285847; x=1770821847;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=1Za0Dc2wPfHEPu0+2ss5VpvWqBA/O+UGmGxOvF1hwwk=;
-  b=IvqXzJJr4BtDXQsJ2Hblj3rT7Anj0mZDKNKXsZfoii414IeDB2rifyca
-   JhiKEdVwojbBoaQapWIxJBRod9fAezKbyqq+0Eywq9vxyQMeMl4AMrPOO
-   VuFcdIY7nXhnYugmhxweEhGZbqnlLZsbMzs7rGr1rpyCvJwRZRx/wrG5s
-   D+gEf+4297OJ4sPLiU29b+dzatYtZD7VErHi+8aPbztZvwV4KG5TRJNK2
-   9a6d5UL/Gn/3VNkVMTxKSxiR4nu7lw3duLi6PG7j6ixKHOZ/BTCCN4p66
-   Wcm9opjPj5+tSAS+jV1j5D6DmljyXsWO30uzQoWMyA+hIp2IB6yHSaVqH
-   A==;
-X-CSE-ConnectionGUID: HuAG0VfRTlK1guIxQ8UfyQ==
-X-CSE-MsgGUID: wKoyqYajTNWbzYPoIf/OHw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="62376406"
-X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="62376406"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 06:57:27 -0800
-X-CSE-ConnectionGUID: XFXVXSAHSReKXuy5+41t7g==
-X-CSE-MsgGUID: 9RHXEF7DRLOURLhHV++MnA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="112504925"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa007.fm.intel.com with ESMTP; 11 Feb 2025 06:57:23 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 0374911E; Tue, 11 Feb 2025 16:57:21 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Cc: Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] x86/pat: Guard within_inclusive() with ifdeffery
-Date: Tue, 11 Feb 2025 16:57:21 +0200
-Message-ID: <20250211145721.1620552-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="HSkMhZ5U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=s/1ZG6K3ujgwawbT+0LJKPg8veE+ifA+dNUdHk5f8qQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
+	b=HSkMhZ5U08B1Q9zdlsoy9tJA4eEeB7cTbXrTpN0Qe/CFNbOznJM+tw6N+vm63L78w
+	 CNug0iBSXdrdrqJ49ce2CeUtaYqH01Bgkf0uvtFcu9fTARtVdV8qqzgHFd92z1sapf
+	 vzCsDP/9FLHWkNMkLzztyLuJXMlrK3vl+wDZiES1o+RJtpjK5haRKk889sR8Jp9qb8
+	 /CgGMGg9f9kyqDmV5RWXYtJ+9F6WUtizbKp7PE3ghbRQu6MCfnuWWpl5d4xq956+CU
+	 pIBAqhi35pkvUozY59Mn1UfeLJYrv88q+CcU0wqt1cU+MyUFEIQALz+LWh3qwi0swC
+	 4MSeEF/DHvFPg==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-zteg10021401.me.com (Postfix) with ESMTPSA id 176518E0648;
+	Tue, 11 Feb 2025 14:57:47 +0000 (UTC)
+Message-ID: <82cdb70d-475f-440e-8550-3c52b4e000fa@icloud.com>
+Date: Tue, 11 Feb 2025 22:57:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] of: property: Increase NR_FWNODE_REFERENCE_ARGS
+To: Rob Herring <robh@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Saravana Kannan <saravanak@google.com>, Len Brown <lenb@kernel.org>,
+ Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, linux-acpi@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20250210-fix_arg_count-v3-1-a084a5013008@quicinc.com>
+ <Z6oclML_DC1Vnf6z@smile.fi.intel.com>
+ <73eb84f3-8b9d-41f4-9b59-d059111a3d03@icloud.com>
+ <Z6tBlfmTFu9916LA@smile.fi.intel.com>
+ <a682824a-1b65-4b05-9e42-3edc167600a8@icloud.com>
+ <CAL_JsqJ6wg3Q9FxKOzrnRo_s1ZznLurfsDuWJ+XVQzA5YS6Rsw@mail.gmail.com>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <CAL_JsqJ6wg3Q9FxKOzrnRo_s1ZznLurfsDuWJ+XVQzA5YS6Rsw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: cv_QiGh7JK4nazlJgp9KcnmxzBxWSmb4
+X-Proofpoint-ORIG-GUID: cv_QiGh7JK4nazlJgp9KcnmxzBxWSmb4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_06,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ clxscore=1015 spamscore=0 adultscore=0 suspectscore=0 mlxscore=0
+ bulkscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2502110100
 
-The within_inclusive() in some cases, when CONFIG_X86_64=n, may be not used.
-This, in particular, prevents kernel builds with clang, `make W=1`
-and CONFIG_WERROR=y:
+On 2025/2/11 22:22, Rob Herring wrote:
+>> i have confirmed that:
+>>
+>> of.h includes fwnode.h indirectly
+>> fwnode.h does not include of.h directly or indirectly
+> Only for struct fwnode_handle. I don't think we want to add to that.
+> For the most part, fwnode is a layer above DT and the DT code should
+> know nothing about fwnode.
 
-arch/x86/mm/pat/set_memory.c:215:1: error: unused function 'within_inclusive' [-Werror,-Wunused-function]
+DT, as a type of firmware node, needs to implement firmware node
+interfaces 'struct fwnode_operations' defined in fwnode.h.
 
-Fix this by guarding the definitions with the respective ifdeffery.
+so it includes fwnode.h and knows everything of fwnode.h
 
-See also commit 6863f5643dd7 ("kbuild: allow Clang to find unused static
-inline functions for W=1 build").
+A)
+diff --git a/include/linux/of.h b/include/linux/of.h
+#define MAX_PHANDLE_ARGS 16
+ struct of_phandle_args {
+        struct device_node *np;
+        int args_count;
+        uint32_t args[MAX_PHANDLE_ARGS];
+ };
++static_assert(NR_FWNODE_REFERENCE_ARGS == MAX_PHANDLE_ARGS);
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- arch/x86/mm/pat/set_memory.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+B)
+diff --git a/include/linux/of.h b/include/linux/of.h
+-#define MAX_PHANDLE_ARGS 16
++#define MAX_PHANDLE_ARGS NR_FWNODE_REFERENCE_ARGS
 
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index ef4514d64c05..89c297b68c84 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -211,14 +211,14 @@ within(unsigned long addr, unsigned long start, unsigned long end)
- 	return addr >= start && addr < end;
- }
- 
-+#ifdef CONFIG_X86_64
-+
- static inline int
- within_inclusive(unsigned long addr, unsigned long start, unsigned long end)
- {
- 	return addr >= start && addr <= end;
- }
- 
--#ifdef CONFIG_X86_64
--
- /*
-  * The kernel image is mapped into two places in the virtual address space
-  * (addresses without KASLR, of course):
--- 
-2.45.1.3035.g276e886db78b
-
+you like solution A), right ?
