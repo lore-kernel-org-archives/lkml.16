@@ -1,268 +1,307 @@
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012068.outbound.protection.outlook.com [52.101.71.68])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE63B254AE7;
-	Tue, 11 Feb 2025 16:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739292835; cv=fail; b=Qf71E5SFBd4hjYDnfo4xb3r658GP0xVg6oN0fI2pgvSFqOveEBisne7CA9Ss/IK1tFK9Bu0/6wqVgUN+TZCQRBxYbxYe/7r5+uMLAbM5Zvqho+JQZ0dUDW/9OdDL2yYhuFHKk6o+k9KqCAHYtiMNDaTSlcgjJbDTePEmgJMyrLE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739292835; c=relaxed/simple;
-	bh=3tTCAsnQzYuEYGEFlm2oEMssti0s2bH9Jotqu3CM5pk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ZrL0SNkU3BVFD37QfmiCDFARgMtb2XVaQfdIUyySQKg0Ym0+XHQT9xX2SVwjWhGeZ5oqq2tNElqrRSCj/Zsq+cqKd9+Ora/XAz/eDpCE+0h1G/XSP4rXSQ5S88ye3V6+nvydluIibaOHAKaIQ+ttU5oFObGtp/YYHTgFB7k08t8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=IHnqzz/+; arc=fail smtp.client-ip=52.101.71.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="IHnqzz/+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=g6MURnvSxfRnnmq4ZuFGW9iMVxaBZTG8cccdJ0emqaXzZl9um6QKYLcAL62rRzavB62Gud7JbareQS/AvPmTYpOHTZJjQv0mqCM1x6HrHTFO6Emai2/z905OetMZOAJ1hEISfmULsXoi0KcPFYi4cFgHA7I52XQhDqPX344foenINTzoHWPaprtF4cdi1WbGPJR8xBn9skjNICn2J4a3YAHC6YLTNotruKq8xhOIiWVkK/sn67O1KdJqLo24vfp7JooWBSMX5slgRL0IBODaByccNtwPpdVku+0nR0a1/R3n5jAyarkT6V01EiKCehCG0/cfK2+GS86JpymL39WQTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8kJs0GWcupCwhbYNcmSyBjqGs/8gSSvwbOyU7KXFq6s=;
- b=KcmcbdpWfvoEtfVpbGe9qweLG06SG3WIh6qaktDGfk4SGCk3tJxCHDmlIN5WfoyTmZVdBvOvxlLGs2rELsC/Nl9Wra2z5jdAF41b6oOcvFZHvWKJZMP7vG/Qy58ofW0sZSrIc05FcWCPuYknTRiCX/MlewTAt39qqn+A2xuhvJukAXHVWBA/mUIamGA/Jb4ahQ8dWCdry4PDH+0trOxqvdMCsIgF9reiEU+vv9sTrG6tYiB72xXRrozX4/Xgo+lS7swbLxeBxbYSUb0MEi0ngEqBtMiMTlCtWqavfzwvCuVbJMAiYs74Zml53mmLGeg9huKpnur7JomGYfZw+Oahhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8kJs0GWcupCwhbYNcmSyBjqGs/8gSSvwbOyU7KXFq6s=;
- b=IHnqzz/+VjO/8o+hXnD00d/3inyUUXb/zOw5gGjihQJTWeqaxY5iOAkxfHuWlG3iduSt3EzVVRP61YKADrOWPdaBZfJ6xfXHjJ/7FpthfbbdM0r5l9nPK4F4NJutfM2S4/FIhV72FVQvWCB4IKBsksIjn+V1AztmpdQ3ta2uiNXb5M03BMY2gzEcwkm9Z0+wmWvRD1B2cSXLxYADQJiZgftp+6hn2HU078XR5JMTu3O82sDLSVQpN5VBPnDRbnNEUpmoq23gnCOO/uv+HgCvfkx7OAJm/m65TU5gzfEdyiOYb/bk7sz7EsNxCypUkRuuQMEr1/eSi1mzgnMsgaO10A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS8PR04MB7991.eurprd04.prod.outlook.com (2603:10a6:20b:289::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Tue, 11 Feb
- 2025 16:53:51 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8422.012; Tue, 11 Feb 2025
- 16:53:50 +0000
-Date: Tue, 11 Feb 2025 11:53:41 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: display: bridge: ldb: Implement simple
- Freescale i.MX91/93 DPI bridge
-Message-ID: <Z6uAlTsWTKsC4oYI@lizhi-Precision-Tower-5810>
-References: <20250211084119.849324-1-alexander.stein@ew.tq-group.com>
- <20250211084119.849324-2-alexander.stein@ew.tq-group.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250211084119.849324-2-alexander.stein@ew.tq-group.com>
-X-ClientProxiedBy: BY5PR20CA0035.namprd20.prod.outlook.com
- (2603:10b6:a03:1f4::48) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87D325291B;
+	Tue, 11 Feb 2025 16:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739292961; cv=none; b=OmA9L7b6gaWNrjm3XZFw/32vGSfEXqEg+mKkKGSNmoWh0j+2GM3xtXIjIL2qj8y8BDCX1sNkYURTDOP3kPQhAp5BOTKIhztScDZzBd85o/YU/iMkMXQdk2m2sPjscDJxcBMRrD5F0+Rc7v1vnEuoUGlJux1U/HUyzyA/cs5MpGk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739292961; c=relaxed/simple;
+	bh=yyn719VaAyIMcUMTWTNmPXbCFPVkN+95ZQVcRv+ZUfM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=j1CWIq4qXKtn1ymwPwlteaP7qWgoPfAIo88iDn/16ZP8Qzi1fJx5AULQ+athkONRBtJgEnZpeGZU1SNoBPxJbuUiYxNeMakieXo7ZzDecd9T1NmZ5krhuRlwAScMyZ6L+yvc0vK/9F7K72nY2/rqUO5JWfB0cd1+RMYSkcdaK74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YsnYw2HZNz6L54D;
+	Wed, 12 Feb 2025 00:52:52 +0800 (CST)
+Received: from frapeml100006.china.huawei.com (unknown [7.182.85.201])
+	by mail.maildlp.com (Postfix) with ESMTPS id BB3081400DD;
+	Wed, 12 Feb 2025 00:55:49 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml100006.china.huawei.com (7.182.85.201) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 11 Feb 2025 17:55:49 +0100
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Tue, 11 Feb 2025 17:55:49 +0100
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Fan Ni <nifan.cxl@gmail.com>
+CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
+	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
+ Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
+	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>, "a.manzanares@samsung.com"
+	<a.manzanares@samsung.com>, "nmtadam.samsung@gmail.com"
+	<nmtadam.samsung@gmail.com>, "anisa.su887@gmail.com" <anisa.su887@gmail.com>
+Subject: RE: [PATCH v19 00/15] EDAC: Scrub: introduce generic EDAC RAS control
+ feature driver + CXL/ACPI-RAS2 drivers
+Thread-Topic: [PATCH v19 00/15] EDAC: Scrub: introduce generic EDAC RAS
+ control feature driver + CXL/ACPI-RAS2 drivers
+Thread-Index: AQHbeW7q+yAlb0l8b0m3xpFA4TlX9rNAxY6AgAF8IfA=
+Date: Tue, 11 Feb 2025 16:55:49 +0000
+Message-ID: <c2fe65c81ab4484f977f5938a3278036@huawei.com>
+References: <20250207144445.1879-1-shiju.jose@huawei.com>
+ <Z6o87wa-tabDy34V@fan>
+In-Reply-To: <Z6o87wa-tabDy34V@fan>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB7991:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1eee9535-26a6-48f1-6243-08dd4abca902
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|376014|1800799024|7416014|366016|52116014|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
- =?us-ascii?Q?hVDbhcsi2peAX/ju3zvuVf9A8ZNzfoqd47KlT+w+Jbl+JmjDHDPPq8jlFZP7?=
- =?us-ascii?Q?MeOWUHqrvxVDeo50UIoRa3dpnGDs4MHFLgXtfUO1Z+iJecSlZhuRITWEx73r?=
- =?us-ascii?Q?0V9IGdlGSkJFQYqTwjP/A8a2EGTAAMHPO4rFY8lzYhaOsGwXtcQCdm7y1ATX?=
- =?us-ascii?Q?jz72Ob5IhoUecgB2Bgfc6CM+XEXHRf07r8QsUOpnTPJLdRWrVtL3sqrzP2BF?=
- =?us-ascii?Q?utAThxt3jmKYN8JfFOS5Rqe5/VqiDf6KIF7fRXb7mM/lsnNF3pVu9U0jCcrs?=
- =?us-ascii?Q?43g8li8c8HzvlylYdp1qkgCO/v23Kv3xzXR7Z8omzrYpo7AoCb9BDydZUzqJ?=
- =?us-ascii?Q?0IF0BMlCstihNJib7nEm34CyIOjGtiddbTXZbMnxKKqt2zeOpeNBGMDa7XVt?=
- =?us-ascii?Q?WlQKV1LreO419F9smRx7H1RuFnqqmv5d9wKRsRasTCa12tzuugszvCxyO/6P?=
- =?us-ascii?Q?xXKBGX8PHqAvIk8HTh8cr+uKpWG+sHQX6evP6NpeKre/LnryLEnfoUYL4pFJ?=
- =?us-ascii?Q?5MHaunjbhLUCkpaTx4a9l9f7v3nRcVaI6JGfrcqIrupHMMbUxkS5SqvO6ruO?=
- =?us-ascii?Q?tKlSYdqLTAdECalnDr55h0JHY6GdXYsiGJrk7Ky6OWyBelWbLF1dFmetx2x2?=
- =?us-ascii?Q?YKJmU24IgotMtz9shr+pV4ogul/QUjE9AlSm4URoNgemJLpovhOx0/YKsIp+?=
- =?us-ascii?Q?NGFTg56WqxMROzD5TvIKhbOE/BBBe0uokQXknSk/m/95CtmPyO04qSIOs737?=
- =?us-ascii?Q?5slqSNppcrG8gZbHZA+9b+shjbphbcoLem2qje5DSU89z9Y1GRrE5gVJOtjb?=
- =?us-ascii?Q?BiZ51x3t5/TvREsZs6OVDYDjMvC7jZilxdi2zyKvXTPqKiQozQkw23y2dAAT?=
- =?us-ascii?Q?aRRbqo/Lxly45Fxor9vieZmc9/BY2ywiKl7CICc54b14UAAldTANpx9ReKUh?=
- =?us-ascii?Q?3BZZVz2lnzHiuH8NchgMXjs54Q5ARE520gQ7RdCpJsiyg3Gdi02V9VvGN9WG?=
- =?us-ascii?Q?AW/w/DK4DM+RwTvNQJSOr57IqpQYE3UsxWiPi0hUxI0EKiLA8oQbGcJixo+o?=
- =?us-ascii?Q?hZrE2Mnr6IEG+h3HfFbkvOJ4v661QHh/S9B1hHXWV6fv5uUGJ2I0Po4016bS?=
- =?us-ascii?Q?QtswiUrewqIbM1sAq5VMzK2c1oOLrPfwmboUbsOsBXaaWsjcPjSqp9xu3Sof?=
- =?us-ascii?Q?LV5yy4ABkDkjmnUusKV85wQxWXu/fadPUlOSDAm9e7UidseB+Wd9nDMCkcCF?=
- =?us-ascii?Q?iDlSjGtEkF5fmbMMt5Sx7SLyyJIJtZ/pvw3/GMDh4y80/4iDqINwOoSGkcgD?=
- =?us-ascii?Q?pJBCmsTSO+5vGWj3RAWAB17YSVbAONhJiY1icAyngo3bJOz091KtqorN/x97?=
- =?us-ascii?Q?VJsjndSimvaPkMDXdnVaTvmWN3KN?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(52116014)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?us-ascii?Q?K5x2uhbqtr2wrfqBdi6pajlymCqujj7yvIWTWviOGKshz7/yveqVRYWsLUWu?=
- =?us-ascii?Q?BshmT4vo4GR6rZ1a9LvofumDDAT3LD8Ht6zd9kS4Qd5X9Bnca9+sRXhPyowq?=
- =?us-ascii?Q?HZzKymxD/gYL257lum3LLT50ozP1ic2Uy6veA6gy9+AqKJ3pyerq1UxBjdIl?=
- =?us-ascii?Q?oFTRiJyAlb5bd5rbBwVMDpQxF6Xeqs0uuKcJdYILs5bQsH6DMZfrBWEeRKkf?=
- =?us-ascii?Q?ekqeXv0V7Iup+RK6hbXOlYJfekrNJVWidHewKqO45GLbOeC3N8p+AffYWdZ3?=
- =?us-ascii?Q?OtsuDiZEIiFNeeTfq8EjEPNqJhSz1jvQ+y25O18lnrUqwYwwvCCtV+8y1QPN?=
- =?us-ascii?Q?PGw8D4WA+cRfO7R4XGvsqkjx8A2ISMecQTDad4Bh2eRf9JeuDjisbpzm8TJR?=
- =?us-ascii?Q?J9Ww7+qNm8xxVhmhJckBWutF1qdt7c1n55/Grq80o2zywS7sjpObr3IeFZQj?=
- =?us-ascii?Q?ctWgHUooctOHFjv5UBZnn8ZZPJdOsnFkFmTy0MjGUSY+f+KgDmyR7VEOFkbZ?=
- =?us-ascii?Q?hAcQChph5c6wyPvqOXxdaVn6b2S4D6W5/tdYYJNq5NpOskD0gva7cKXh2yAt?=
- =?us-ascii?Q?xt+z38uPWRasxKI74i9m3xpBoVQODcfUQLwolklmbQ73OfJ6bxsINHVKro3c?=
- =?us-ascii?Q?y1dyBGGIh4bUx18dtzWVM6r1A32KfASLbgkQq6hE/Dhi5gqXZXiRYlO7aWXs?=
- =?us-ascii?Q?kq0yV+4HEiD52WbjkDyVL+sc9To4jChnJo47H35IhjsclNw8U7zqTFA11dyp?=
- =?us-ascii?Q?+GC1nR3/oOuF7iygNrA5bhENuJvPXsERjiuxIBZ+4lBci/7MaFeFLkXI56ky?=
- =?us-ascii?Q?yfoxWiEgYnouFxJ8tiISeePvWkyfA+3DzpUai9AqOTa2K3WE/O0b6Jh8Y598?=
- =?us-ascii?Q?ZaCwdpjsJ9lVJW3BC11nwhWy7lcol31ljf++qzUoYmxh8wy3ZFGUWRF0LBFO?=
- =?us-ascii?Q?8YhnDcTDjFeHi4dCtXZg5g0nvRyBt1ZKjtm+kt94rZlnlhvBAT4nv7iYofoQ?=
- =?us-ascii?Q?VEjuCGaDkPRShw3l3iqyTpvPoJtSlRa39r4UDhNkEv8tqEJoiODThG1QGu9k?=
- =?us-ascii?Q?Eel+P4gVhssaggxDBk8HU8x2xy4lx5SoCkXg1uQIv3X9Q2yDIssVSJSGe40N?=
- =?us-ascii?Q?+B+B4uDp8PNXtCoPanO+qdCxyYIjUYkLXp284XcIf4FNrcyW3bX8wml/wSmi?=
- =?us-ascii?Q?uvfG2CQ3ZZ6yFIjbvqdPkk11f/cAV5XYdM+C65KVa5X7jX3QSVBl6ZCdrcl0?=
- =?us-ascii?Q?+JRuaM9NDfRIl6o3by7mz4C2wQXi2h9tM/oVUb7RumPraagB8XrSNfg/9xTS?=
- =?us-ascii?Q?H70ZGSkQnxKHmBEbWXnWOV6q+/UgWFu+X0ls8/iFtL7moQyUTUEBtrgItQu/?=
- =?us-ascii?Q?cVlzVDDxlSD+fSyi7V8jRsWn6jJwX6m/OjBQKfq11tLwNXrU6GZ6bycmZ8RA?=
- =?us-ascii?Q?NjXRp9EvvLQC3TImfRpdCN2ucTbMNGFomtLIiQFALfAiq21Dmab+xQ4/nR6G?=
- =?us-ascii?Q?LyZQyoQ+TCvTZQ8UW9SeQ/MSth2x3NVpveP7sVhg0Z5oo9Fxs1OWleq7HbrR?=
- =?us-ascii?Q?Mk60PWPur+p9SmaxY27TyIg67u1fs6RwPXmje/3L?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1eee9535-26a6-48f1-6243-08dd4abca902
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 16:53:50.8946
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Qfhou+CSh67XW4ogSrN1sxf4JUiHrMEZlJikjenlCXfhS86UH7uSvGNA3zY8PwDvhOY2tfbyVIYfUeNcopISJA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7991
 
-On Tue, Feb 11, 2025 at 09:41:18AM +0100, Alexander Stein wrote:
-> The i.MX91/93 contains a single syscon registers which is responsible
-> for configuring DPI output format. Add DT binding which represents
-> this configuration as a bridge.
+>-----Original Message-----
+>From: Fan Ni <nifan.cxl@gmail.com>
+>Sent: 10 February 2025 17:53
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: linux-edac@vger.kernel.org; linux-cxl@vger.kernel.org; linux-
+>acpi@vger.kernel.org; linux-mm@kvack.org; linux-kernel@vger.kernel.org;
+>linux-doc@vger.kernel.org; bp@alien8.de; tony.luck@intel.com;
+>rafael@kernel.org; lenb@kernel.org; mchehab@kernel.org;
+>dan.j.williams@intel.com; dave@stgolabs.net; Jonathan Cameron
+><jonathan.cameron@huawei.com>; dave.jiang@intel.com;
+>alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
+>david@redhat.com; Vilas.Sridharan@amd.com; leo.duran@amd.com;
+>Yazen.Ghannam@amd.com; rientjes@google.com; jiaqiyan@google.com;
+>Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
+>naoya.horiguchi@nec.com; james.morse@arm.com; jthoughton@google.com;
+>somasundaram.a@hpe.com; erdemaktas@google.com; pgonda@google.com;
+>duenwen@google.com; gthelen@google.com;
+>wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
+>wbs@os.amperecomputing.com; nifan.cxl@gmail.com; tanxiaofei
+><tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; Roberto
+>Sassu <roberto.sassu@huawei.com>; kangkang.shen@futurewei.com;
+>wanghuiqiang <wanghuiqiang@huawei.com>; Linuxarm
+><linuxarm@huawei.com>; a.manzanares@samsung.com;
+>nmtadam.samsung@gmail.com; anisa.su887@gmail.com
+>Subject: Re: [PATCH v19 00/15] EDAC: Scrub: introduce generic EDAC RAS
+>control feature driver + CXL/ACPI-RAS2 drivers
 >
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> ---
->  .../bridge/fsl,imx9-parallel-disp-fmt.yaml    | 78 +++++++++++++++++++
->  1 file changed, 78 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/fsl,imx9-parallel-disp-fmt.yaml
+>On Fri, Feb 07, 2025 at 02:44:29PM +0000, shiju.jose@huawei.com wrote:
+>> From: Shiju Jose <shiju.jose@huawei.com>
+>>
+>> The CXL patches of this series has dependency on Dave's CXL fwctl
+>> series [1].
+>>
+>> The code is based on v3 of CXL fwctl series [1] posted by Dave and
+>> v3 of FWCTL series [2] posted by Jason and rebased on top of
+>> v6.14-rc1.
+>>
+>> [1]:
+>> https://lore.kernel.org/linux-cxl/20250204220430.4146187-1-dave.jiang@
+>> intel.com/
+>> [2]:
+>> https://lore.kernel.org/linux-cxl/0-v3-960f17f90f17+516-fwctl_jgg@nvid
+>> ia.com/#r
+>>
+>>
+>> Userspace code for CXL memory repair features [3] and sample
+>> boot-script for CXL memory repair [4].
+>>
+>> [3]:
+>> https://lore.kernel.org/lkml/20250207143028.1865-1-shiju.jose@huawei.c
+>> om/
+>> [4]:
+>> https://lore.kernel.org/lkml/20250207143028.1865-5-shiju.jose@huawei.c
+>> om/
+>>
 >
-> diff --git a/Documentation/devicetree/bindings/display/bridge/fsl,imx9-parallel-disp-fmt.yaml b/Documentation/devicetree/bindings/display/bridge/fsl,imx9-parallel-disp-fmt.yaml
-> new file mode 100644
-> index 0000000000000..54cb73b59b1eb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/fsl,imx9-parallel-disp-fmt.yaml
-> @@ -0,0 +1,78 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/fsl,imx9-parallel-disp-fmt.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale i.MX91/93 DPI bridge
-> +
-> +maintainers:
-> +  - Alexander Stein <alexander.stein@ew.tq-group.com>
-> +
-> +description: |
-
-Needn't |
-
-> +  The i.MX91/93 mediamix contains a single register which is responsible
-> +  for configuring the parallel display output format. This describes
-> +  this registers as bridge within the DT.
-> +
-> +properties:
-> +  compatible:
-> +    const: fsl,imx9-parallel-display-format
-
-
-look like it should belong a property in fsl,imx8mm-disp-blk-ctrl.yaml.
-
-Rob provide similar suggestion at
-https://lore.kernel.org/imx/20250203220655.GA123074-robh@kernel.org/
-
-Or at least, uplayer mfd yaml should link to this file.
-
-Frank
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  ports:
-> +    $ref: /schemas/graph.yaml#/properties/ports
-> +
-> +    properties:
-> +      port@0:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: Video port for DPI input.
-> +
-> +      port@1:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: Video port for DPI output (panel or bridge).
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    blk-ctrl {
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +
-> +        bridge@60 {
-> +            compatible = "fsl,imx9-parallel-display-format";
-> +            reg = <0x60 0x4>;
-> +            status = "disabled";
-> +
-> +            ports {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                port@0 {
-> +                    reg = <0>;
-> +
-> +                    dpi_from_lcdif: endpoint {
-> +                        remote-endpoint = <&lcdif_to_dpi>;
-> +                    };
-> +                };
-> +
-> +                port@1 {
-> +                    reg = <1>;
-> +
-> +                    dpi_out: endpoint {
-> +                    };
-> +                };
-> +            };
-> +        };
-> +    };
-> --
-> 2.34.1
+>Hi Shiju,
+>Is this series the same as in branch
+>https://github.com/shijujose4/linux/tree/edac-enhancement-ras-features_v19=
+?
 >
+>I hit some compile errors wen trying to test with the above branch directl=
+y.
+>
+>Here are two cases where I found the code cannot compile. Please check if =
+it is a
+>false alarm.
+>
+>Case 1: CONFIG_CXL_RAS_FEATURES=3Dm
+>
+>fan:~/cxl/linux-edac$ cat .config | egrep -i "edac|cxl|ras" | grep -v "^#"
+>CONFIG_ACPI_RAS2=3Dy
+>CONFIG_ACPI_APEI_EINJ_CXL=3Dy
+>CONFIG_PCIEAER_CXL=3Dy
+>CONFIG_CXL_BUS=3Dy
+>CONFIG_CXL_PCI=3Dy
+>CONFIG_CXL_MEM_RAW_COMMANDS=3Dy
+>CONFIG_CXL_ACPI=3Dy
+>CONFIG_CXL_PMEM=3Dy
+>CONFIG_CXL_MEM=3Dy
+>CONFIG_CXL_FWCTL=3Dy
+>CONFIG_CXL_PORT=3Dy
+>CONFIG_CXL_SUSPEND=3Dy
+>CONFIG_CXL_REGION=3Dy
+>CONFIG_CXL_REGION_INVALIDATION_TEST=3Dy
+>CONFIG_CXL_RAS_FEATURES=3Dm
+>CONFIG_MMC_SDHCI_OF_ARASAN=3Dy
+>CONFIG_EDAC_ATOMIC_SCRUB=3Dy
+>CONFIG_EDAC_SUPPORT=3Dy
+>CONFIG_EDAC=3Dy
+>CONFIG_EDAC_LEGACY_SYSFS=3Dy
+>CONFIG_EDAC_DEBUG=3Dy
+>CONFIG_EDAC_DECODE_MCE=3Dm
+>CONFIG_EDAC_GHES=3Dm
+>CONFIG_EDAC_SCRUB=3Dy
+>CONFIG_EDAC_ECS=3Dy
+>CONFIG_EDAC_MEM_REPAIR=3Dy
+>CONFIG_EDAC_IGEN6=3Dm
+>CONFIG_RAS=3Dy
+>CONFIG_MEM_ACPI_RAS2=3Dy
+>CONFIG_DEV_DAX_CXL=3Dm
+>fan:~/cxl/linux-edac$
+>
+>
+>fan:~/cxl/linux-edac$ make -j16
+>mkdir -p /home/fan/cxl/linux-edac/tools/objtool && make
+>O=3D/home/fan/cxl/linux-edac subdir=3Dtools/objtool --no-print-directory -=
+C objtool
+>  CALL    scripts/checksyscalls.sh
+>  INSTALL libsubcmd_headers
+>  UPD     include/generated/utsversion.h
+>  CC      init/version-timestamp.o
+>  KSYMS   .tmp_vmlinux0.kallsyms.S
+>  AS      .tmp_vmlinux0.kallsyms.o
+>  LD      .tmp_vmlinux1
+>ld: vmlinux.o: in function `cxl_region_probe':
+>/home/fan/cxl/linux-edac/drivers/cxl/core/region.c:3456:(.text+0x7b296f):
+>undefined reference to `devm_cxl_region_edac_register'
+>ld: vmlinux.o: in function `cxl_mem_probe':
+>/home/fan/cxl/linux-edac/drivers/cxl/mem.c:188:(.text+0x7b8ad1): undefined
+>reference to `devm_cxl_memdev_edac_register'
+>make[2]: *** [scripts/Makefile.vmlinux:77: vmlinux] Error 1
+>make[1]: *** [/home/fan/cxl/linux-edac/Makefile:1226: vmlinux] Error 2
+>make: *** [Makefile:251: __sub-make] Error 2
+>
+>When compile with CONFIG_CXL_RAS_FEATURES=3Dy,  it can compile.
+>
+Hi Fan,
+
+Thanks for checking this and reporting.
+
+This error is with CONFIG_CXL_RAS_FEATURES=3Dm and CONFIG_CXL_BUS=3Dy and C=
+ONFIG_CXL_MEM=3Dy.
+Now changed  CONFIG_CXL_RAS_FEATURES  for tristate -> boolean as this imple=
+mented only interface functions
+for the CXL RAS features.
+>
+>CASE 2: CONFIG_EDAC=3Dm
+>
+>fan:~/cxl/linux-edac$ cat .config | egrep -i "edac|cxl|ras" | grep -v "^#"
+>CONFIG_CRASH_RESERVE=3Dy
+>CONFIG_CRASH_DUMP=3Dy
+>CONFIG_CRASH_HOTPLUG=3Dy
+>CONFIG_CRASH_MAX_MEMORY_RANGES=3D8192
+>CONFIG_ARCH_SUPPORTS_CRASH_DUMP=3Dy
+>CONFIG_ARCH_DEFAULT_CRASH_DUMP=3Dy
+>CONFIG_ARCH_SUPPORTS_CRASH_HOTPLUG=3Dy
+>CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION=3Dy
+>CONFIG_ACPI_RAS2=3Dy
+>CONFIG_ACPI_APEI_EINJ_CXL=3Dy
+>CONFIG_PCIEAER_CXL=3Dy
+>CONFIG_CXL_BUS=3Dy
+>CONFIG_CXL_PCI=3Dy
+>CONFIG_CXL_MEM_RAW_COMMANDS=3Dy
+>CONFIG_CXL_ACPI=3Dy
+>CONFIG_CXL_PMEM=3Dy
+>CONFIG_CXL_MEM=3Dy
+>CONFIG_CXL_FWCTL=3Dy
+>CONFIG_CXL_PORT=3Dy
+>CONFIG_CXL_SUSPEND=3Dy
+>CONFIG_CXL_REGION=3Dy
+>CONFIG_CXL_REGION_INVALIDATION_TEST=3Dy
+>CONFIG_CXL_RAS_FEATURES=3Dy
+>CONFIG_MMC_SDHCI_OF_ARASAN=3Dy
+>CONFIG_EDAC_ATOMIC_SCRUB=3Dy
+>CONFIG_EDAC_SUPPORT=3Dy
+>CONFIG_EDAC=3Dm
+>CONFIG_EDAC_LEGACY_SYSFS=3Dy
+>CONFIG_EDAC_DEBUG=3Dy
+>CONFIG_EDAC_DECODE_MCE=3Dm
+>CONFIG_EDAC_GHES=3Dm
+>CONFIG_EDAC_SCRUB=3Dy
+>CONFIG_EDAC_ECS=3Dy
+>CONFIG_EDAC_MEM_REPAIR=3Dy
+>CONFIG_EDAC_IGEN6=3Dm
+>CONFIG_RAS=3Dy
+>CONFIG_MEM_ACPI_RAS2=3Dy
+>CONFIG_DEV_DAX_CXL=3Dm
+>fan:~/cxl/linux-edac$
+>
+>fan:~/cxl/linux-edac$ make -j16
+>mkdir -p /home/fan/cxl/linux-edac/tools/objtool && make
+>O=3D/home/fan/cxl/linux-edac subdir=3Dtools/objtool --no-print-directory -=
+C objtool
+>  CALL    scripts/checksyscalls.sh
+>  INSTALL libsubcmd_headers
+>  UPD     include/generated/utsversion.h
+>  CC      init/version-timestamp.o
+>  KSYMS   .tmp_vmlinux0.kallsyms.S
+>  AS      .tmp_vmlinux0.kallsyms.o
+>  LD      .tmp_vmlinux1
+>ld: vmlinux.o: in function `devm_cxl_region_edac_register':
+>/home/fan/cxl/linux-
+>edac/drivers/cxl/core/memfeature.c:1720:(.text+0x7b665d): undefined
+>reference to `edac_dev_register'
+>ld: vmlinux.o: in function `devm_cxl_memdev_edac_register':
+>/home/fan/cxl/linux-
+>edac/drivers/cxl/core/memfeature.c:1697:(.text+0x7b7241): undefined
+>reference to `edac_dev_register'
+>ld: vmlinux.o: in function `ras2_probe':
+>/home/fan/cxl/linux-edac/drivers/ras/acpi_ras2.c:363:(.text+0xb0ecc8):
+>undefined reference to `edac_dev_register'
+>make[2]: *** [scripts/Makefile.vmlinux:77: vmlinux] Error 1
+>make[1]: *** [/home/fan/cxl/linux-edac/Makefile:1226: vmlinux] Error 2
+>make: *** [Makefile:251: __sub-make] Error 2
+>
+
+Here the symbol 'edac_dev_register' can't find with CONFIG_CXL_BUS=3Dy  CON=
+FIG_CXL_RAS_FEATURES=3Dy and=20
+CONFIG_EDAC=3Dm.
+Modified CXL_RAS_FEATURES depends on EDAC=3Dy || (CXL_BUS=3Dm && EDAC=3Dm)
+to fix this.
+>
+>
+>Fan
+>
+>
+Thanks,
+Shiju
