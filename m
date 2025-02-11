@@ -1,180 +1,116 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CFF265602
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 19:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EB7265601;
+	Tue, 11 Feb 2025 19:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739303853; cv=none; b=mko1VAxULRmJE4OgRTNlsMlZwon1WYlvaHDVMaQ9u0Yn8TW0M9PMMMxUk/7B5VwL0LriEjcgFritK3oQekDulUEVi+SoHNHcWGRFcCG9x1r5wzyZxOQnicnjc6qnmIrytdLFEGdfl48zSXDomjT3N0nSnJusHdq6ZFnlydfuUzQ=
+	t=1739303935; cv=none; b=RDaB6buaheSFC309z+MUVOFlxli6P/6wRtJpvsAoQaWbGxpzKGmHChjCYlBiZRhbHEgwsAhdKgyMy7PAO1wqG12t2ALKCOhjsTwvx6vU6aFYqochsgyHOgc0zbBmsEanSRN1NFqtbkzIiX440my8KyTpg8ICszozcwlr21ofj0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739303853; c=relaxed/simple;
-	bh=4L1l3nbsQwxG4dhopMpRTZTo6TywqvNfWe0By30mxKA=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IwGui/mIQfgtnvMuJ6sfId49tMq7k3X8e1DZay/4rmuQZysG1FBA0D9W6POV1zShMvP/gZlOujd7CW8IJ0MkCqPrSZVNg4+SEQLbMpK73OOf6jB1iBd19wD2mYkDXXUaaw94/BcYzFw2Q9z6dwe9IgIJiOjLun9l8rgzWjkSKPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=wYsvPKyB; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1739303935; c=relaxed/simple;
+	bh=dXrQKTowhcH6aYf16tasRNrt4H28GYsSCzuKO49/K4A=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BLSbU2ese2KAtbgqK9lAHDA2qJkzCxWqx6JY6GcPRXe1t8dyrIGha9YtU4vVj3B5Zm5R59DiPdguN6uPxuU/b9muze3YD39PMPUauNUugVvHbtWKHr8+axRhHWfrcOrxVk7srQnCky4uLg6G/S/e2tFVJPmIqJ18uJVhFXDEbf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=JbJdRzQ+; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="wYsvPKyB"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21f4500a5c3so119987655ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:57:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1739303851; x=1739908651; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=LZz21PoK7ESpRyCP00gJn2627gqZOHRBJZHWL/EIwBo=;
-        b=wYsvPKyBkoDXAYAkV39HQmlK8TOoSuLUE6ER8pM+sKGn78lxAmujZPT9cYAIlhtZDo
-         o1z8M1XBvBIrRDEmndONT4C68fO8Xyl0V4BjRVs3xfyI0eLoxQfVNJX1yfmfNi8uzNMB
-         Z7MptZhHeLUgnv0bJeXlV0/5rhe6vHGoFdBYQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739303851; x=1739908651;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LZz21PoK7ESpRyCP00gJn2627gqZOHRBJZHWL/EIwBo=;
-        b=A7zah97afTNRoVsUX/kQgE2gZzqRK2QTaSYVbrLsfnuTibGtHZ3S9FYBopmyigNjYX
-         MMntMYHW55+ABDFY7G+lIkDSh8qflKncLu1CNxpbxJ/bBXHhN6oiYTt+5fv6jUJSxQRU
-         T6jFoZz4aTj+mpFyjeB95uqXNa0VhuIEpTsgtzbpY0+i9zESKw3yKzvTxsB//XO/xUK0
-         JbQN4grF7PrxD+exs375onwKenDlTktfoRApc6rJiYrnr1v8KdVwwldENOED9Vhybbkz
-         g5O5ueBQqGmdCI+cLvpde8QiZ1xsAUyKbM7ptKadUJRUENdiF880iico5qGUS1fd7mZ6
-         NRWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVnoPAEtDbIEgB4oqfw32cYk720Jr2TiOMPAr2gFR8+hz+ZjK3NSu1ZWlDOv2QjPRdCiM9h/AJe14hpYZU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySLkUVcpZ0nFI1+88JrucxKa3qyQ6IO8PwHqlUDEK8d7QJ8Udx
-	L+sy86nDwJzxXknaTo7AsbKVLdNsgno/zQqBJ6yM9BoGcSOge12GEpf38j3bEYw=
-X-Gm-Gg: ASbGncu/qBK4SjIQ1ZeWDEGIWb0DoX5gh/7kukwUQvSJl5cAb1bk5D0REbUBJrpDKJx
-	Np7pgDuiVEpdcRijIffsLRK6o9RsLVIqxGSPwjtYfU2dUbr63TUqrSnIXj58H3rZd92c9DImuhs
-	pAl0pkcI++s3a7Kqu9DZ6KAfPvu1/BYSxtraxkIE9jy8kv38syt5uVwR+/r1V69WgtAF7eawzg5
-	17OixwQxrBnQs5ftaRsNKO1PET2B0VxX4cTRRkpIkicSfltLKG4W1F4vNCw2dmBUJsJ91vixKn3
-	CuFCWuMN5iZE/kvAaTYEESIUf+ua/D3xOjkLz+tuAZzK7/PZCwze1GXoPw==
-X-Google-Smtp-Source: AGHT+IHGm6N7udAh5kUmRKYI+y4WUkbVC6Seg2Hl1n1knL0KkTOJXLUEmjJNH2ogtVLi5OCw8cUlqg==
-X-Received: by 2002:a05:6a21:7001:b0:1ed:534e:38b1 with SMTP id adf61e73a8af0-1ee5c85fa2cmr1060630637.41.1739303850821;
-        Tue, 11 Feb 2025 11:57:30 -0800 (PST)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad53f481ec4sm5371235a12.9.2025.02.11.11.57.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 11:57:30 -0800 (PST)
-Date: Tue, 11 Feb 2025 11:57:27 -0800
-From: Joe Damato <jdamato@fastly.com>
-To: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-	stfomichev@gmail.com, horms@kernel.org, kuba@kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Shuah Khan <shuah@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
-	"open list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)" <bpf@vger.kernel.org>
-Subject: Re: [PATCH net-next v6 3/3] selftests: drv-net: Test queue xsk
- attribute
-Message-ID: <Z6urp3d41nvBoSbG@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-	stfomichev@gmail.com, horms@kernel.org, kuba@kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Shuah Khan <shuah@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
-	"open list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)" <bpf@vger.kernel.org>
-References: <20250210193903.16235-1-jdamato@fastly.com>
- <20250210193903.16235-4-jdamato@fastly.com>
- <13afab27-2066-4912-b8f6-15ee4846e802@redhat.com>
- <Z6uM1IDP9JgvGvev@LQ3V64L9R2>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="JbJdRzQ+"
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BJAG2R002756;
+	Tue, 11 Feb 2025 14:58:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
+	content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=tWWyMB1CD2IcO9XjxWYtDk7+nQm
+	rfd/CSOL888tfyBc=; b=JbJdRzQ+/aNBRIdFZ2ofQRX4wKvIgYpSF3GMrc6oePZ
+	RTm2DBmCFImchT3I08WZa2ztXnJG2CcypVqeEcxaLzZLc2SSd/aZvICwI4YyME7G
+	5A5q23kpz3V3vF4zIav9EFc5jr5Q9zhP/QXhdEAtPKs5K3QPKEwV+ygELspRYwGJ
+	WqfVuVqqDyaUPgO/Xbdzkws6KTnthTcpIUvwLweJ6NsFMtLmr3RHeCirEt8HOmiF
+	I1SuOvQrtkoOHAdUc8+r3II0Ep7cgP36lN9kOBN7WtNSzaGPvAhY7FbOPmEOfYHj
+	IHFMUjffmIbpodZQ3759GIp8zea9Ol+MY7wclMu12kw==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 44r857hd0a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 14:58:27 -0500 (EST)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 51BJwQ2D048362
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 11 Feb 2025 14:58:26 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Tue, 11 Feb
+ 2025 14:58:26 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Tue, 11 Feb 2025 14:58:26 -0500
+Received: from desktop-robi.ad.analog.com ([10.48.65.85])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 51BJwFR9031076;
+	Tue, 11 Feb 2025 14:58:17 -0500
+From: Robert Budai <robert.budai@analog.com>
+To: Nuno Sa <nuno.sa@analog.com>,
+        Ramona Gradinariu
+	<ramona.gradinariu@analog.com>,
+        Antoniu Miclaus <antoniu.miclaus@analog.com>,
+        Robert Budai <robert.budai@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron
+	<jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet
+	<corbet@lwn.net>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>
+Subject: [PATCH v7 0/6] Add support for ADIS16550
+Date: Tue, 11 Feb 2025 19:56:57 +0200
+Message-ID: <20250211175706.276987-1-robert.budai@analog.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6uM1IDP9JgvGvev@LQ3V64L9R2>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: sCDfWyAc1bk1s3CE3GIFn4oVyrd_G9BR
+X-Proofpoint-ORIG-GUID: sCDfWyAc1bk1s3CE3GIFn4oVyrd_G9BR
+X-Authority-Analysis: v=2.4 cv=U5VoDfru c=1 sm=1 tr=0 ts=67ababe3 cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=f1vxr5TaGUlwJKkhg4gA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_08,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 clxscore=1015 mlxlogscore=999 lowpriorityscore=0
+ priorityscore=1501 malwarescore=0 phishscore=0 adultscore=0 bulkscore=0
+ spamscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502110129
 
-On Tue, Feb 11, 2025 at 09:45:56AM -0800, Joe Damato wrote:
-> On Tue, Feb 11, 2025 at 12:09:50PM +0100, Paolo Abeni wrote:
-> > On 2/10/25 8:38 PM, Joe Damato wrote:
-> > > +def check_xdp(cfg, nl, xdp_queue_id=0) -> None:
-> > > +    test_dir = os.path.dirname(os.path.realpath(__file__))
-> > > +    xdp = subprocess.Popen([f"{test_dir}/xdp_helper", f"{cfg.ifindex}", f"{xdp_queue_id}"],
-> > > +                           stdin=subprocess.PIPE, stdout=subprocess.PIPE, bufsize=1,
-> > > +                           text=True)
-> > > +    defer(xdp.kill)
-> > > +
-> > > +    stdout, stderr = xdp.communicate(timeout=10)
-> > > +    rx = tx = False
-> > > +
-> > > +    queues = nl.queue_get({'ifindex': cfg.ifindex}, dump=True)
-> > > +    if not queues:
-> > > +        raise KsftSkipEx("Netlink reports no queues")
-> > > +
-> > > +    for q in queues:
-> > > +        if q['id'] == 0:
-> > > +            if q['type'] == 'rx':
-> > > +                rx = True
-> > > +            if q['type'] == 'tx':
-> > > +                tx = True
-> > > +
-> > > +            ksft_eq(q['xsk'], {})
-> > > +        else:
-> > > +            if 'xsk' in q:
-> > > +                _fail("Check failed: xsk attribute set.")
-> > > +
-> > > +    ksft_eq(rx, True)
-> > > +    ksft_eq(tx, True)
-> > 
-> > This causes self-test failures:
-> > 
-> > https://netdev-3.bots.linux.dev/vmksft-net-drv/results/987742/4-queues-py/stdout
-> > 
-> > but I really haven't done any real investigation here.
-> 
-> I think it's because the test kernel in this case has
-> CONFIG_XDP_SOCKETS undefined [1].
-> 
-> The error printed in the link you mentioned:
-> 
->   socket creation failed: Address family not supported by protocol
-> 
-> is coming from the C program, which fails to create the AF_XDP
-> socket.
-> 
-> I think the immediate reaction is to add more error checking to the
-> python to make sure that the subprocess succeeded and if it failed,
-> skip.
-> 
-> But, we may want it to fail for other error states instead of
-> skipping? Not sure if there's general guidance on this, but my plan
-> was to have the AF_XDP socket creation failure return a different
-> error code (I dunno maybe -1?) and only skip the test in that case.
-> 
-> Will that work or is there a better way? I only want to skip if
-> AF_XDP doesn't exist in the test kernel.
-> 
-> [1]: https://netdev-3.bots.linux.dev/vmksft-net-drv/results/987742/config
+*** BLURB HERE ***
 
-I'll give it a few more hours incase anyone has comments before I
-resend, but I got something working (tested on kernels with and
-without XDP sockets).
+Robert Budai (6):
+  iio: imu: adis: Add custom ops struct
+  iio: imu: adis: Add reset to custom ops
+  iio: imu: adis: Add DIAG_STAT register
+  dt-bindings: iio: Add adis16550 bindings
+  iio: imu: adis16550: add adis16550 support
+  docs: iio: add documentation for adis16550 driver
 
-xdp_helper returns -1 if (errno == EAFNOSUPPORT). All other error
-cases return 1.
+ .../bindings/iio/imu/adi,adis16550.yaml       |   73 ++
+ Documentation/iio/adis16550.rst               |  376 ++++++
+ Documentation/iio/index.rst                   |    1 +
+ MAINTAINERS                                   |   10 +
+ drivers/iio/imu/Kconfig                       |   13 +
+ drivers/iio/imu/Makefile                      |    1 +
+ drivers/iio/imu/adis.c                        |   36 +-
+ drivers/iio/imu/adis16550.c                   | 1151 +++++++++++++++++
+ include/linux/iio/imu/adis.h                  |   34 +-
+ 9 files changed, 1682 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis16550.yaml
+ create mode 100644 Documentation/iio/adis16550.rst
+ create mode 100644 drivers/iio/imu/adis16550.c
 
-Updated the python to do this:
+-- 
+2.34.1
 
-  if xdp.returncode == 255:
-      raise KsftSkipEx('AF_XDP unsupported')
-  elif xdp.returncode > 0:
-      raise KsftFailEx('unable to create AF_XDP socket')
-
-Which seems to work on both types of kernels?
-
-Happy to take feedback; will hold off on respinning for a bit just
-incase there's a better way I don't know about.
