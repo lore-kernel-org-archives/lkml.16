@@ -1,95 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6FB025A2DB
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 18:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2FFA25A2DB
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 18:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739300043; cv=none; b=ujaYkatEJj/gGomj6NOzns8ntsRlID3w+478OaBGboCd203lwqXoeXtn4lFXM1H3rl0btasuP/SH6x/7vh/DoeB9QWQy6wEKO32hziaio4MpQfIkQuVt9wcxN1r6evCBhY9lYR6/wFb2P9+3Wyk/va8FfiP0uSl5rVRBF4I79aE=
+	t=1739300111; cv=none; b=EHBib31TCujiecVfXk+luwfEJ80+L/1zizJ69OY8ZMphooiDOiAVEkm16oJyR95AbGkunqRG+t0SzMtwwk+/wTu3tXksckwj92kPrIksuNRAJQJhP6Yjn/n6KApbWJNI9HkJhKCIC1XTcCIV1c5wk+cGeIv4k1+MS5lbgUBYhSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739300043; c=relaxed/simple;
-	bh=DKFr30ogLvo+/4sc/Ag2WKsX3/YgZYqejQoExYWh7gk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JahV/3SCI3t4d8gsdmOt/N1PlgDk7RmfWQz+WCDrvCLgTqKj00RdAgUoBsF0IFFv5vuojiXKW94pv8ZKHUgPmxS7lhCUVADEv96FT9Mw6WtEcZ0U0P4BZH6PKQx0gvn+Kp7J/vFKv1B6V+prm2v6w4/HcIS1UTOrv1Rpr6lJSKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a2JVMRqy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739300111; c=relaxed/simple;
+	bh=2NFgTKZpUWVZdAUiFKPyuSsYRytI7F1lf/BkXz3fClY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=twFapwopsNrdTlO3rzQ8CVgNI5ov4XLp3z999oRAwSvrsdh6FoXCk2zMhi3tFJwX+d7yccvE9L13GCfgn8UzDq7QAu6astaV++kReVKclwKC0W6caZzy/lFhxERr/IMZCs8oe2k40ulmvQNXiDk0F/7Qd4FayYjEKJefQimp4vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WYOu5hLC; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a2JVMRqy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60D6DC4CEDD;
-	Tue, 11 Feb 2025 18:54:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739300042;
-	bh=DKFr30ogLvo+/4sc/Ag2WKsX3/YgZYqejQoExYWh7gk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a2JVMRqytl1IHJ9/UlyTgqK1siq7Fm1dAFEkmpIYf5c5SNrOvOE1Iw0eyx3XzIYAl
-	 Q5jwiCorHQJZ1lHxbyLcHl5A/KzhI1fZufb4N4eXsYMhFHwf51gnoKalIa3LHI9CP8
-	 vp+llYbKhipIxslNG9sZuvNtF1PMGUS2wJq+dCLO0i9kxejNAARNOgaQ5f2iSBmvq0
-	 RiGh+MVxpI8mRmpMlnTjpvwHv++HHfiVedtVWhzADCpZRgPfE79jKL+yP6F+pxi4nj
-	 0D2tj4FzRscGXBG5kfA3qOUbihWn57abdmDZKzrXPliJrdJr9ohJQERUVsgduDfpEv
-	 u0ebc9vsWzs0Q==
-Date: Tue, 11 Feb 2025 10:54:00 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: David Kaplan <david.kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 21/35] x86/bugs: Determine relevant vulnerabilities
- based on attack vector controls.
-Message-ID: <20250211185400.vwu3tkqr4gc2r5tu@jpoimboe>
-References: <20250108202515.385902-1-david.kaplan@amd.com>
- <20250108202515.385902-22-david.kaplan@amd.com>
- <20250211184130.2fl4jvdwd4e5y32a@jpoimboe>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WYOu5hLC"
+Message-ID: <a97bf84a-21e8-41ce-8679-332630136ec5@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739300097;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rYTA8Yg9YQQb28J/lnoc+xxJ4BC+fKNM3Ta76gIp5j4=;
+	b=WYOu5hLCkrrt4uzQ3yU43CXEEAHmWLvmQTb1EmVfay/eIQdb88ImxkP7CrO0urIhlt6WYQ
+	eh/ShQLv8OVTiBynTSOLY45HHI+eomYCxPeAvfiBU2PJQBOKGjXusTrDomit8CgCDAvbe/
+	MIuIyYDUDdBxyNeIVvjYtkt9qu5bWZo=
+Date: Tue, 11 Feb 2025 12:54:52 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250211184130.2fl4jvdwd4e5y32a@jpoimboe>
+Subject: Re: [PATCH] ASoC: Intel: sof_sdw: initialize ret in
+ asoc_sdw_rt_amp_spk_rtd_init()
+To: Mark Brown <broonie@kernel.org>,
+ Ethan Carter Edwards <ethan@ethancedwards.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ Bard Liao <yung-chuan.liao@linux.intel.com>, shumingf@realtek.com
+References: <20250210-soc_sdw_rt_amp-v1-1-1ee1afcd8941@ethancedwards.com>
+ <ad5eb513-d3ef-42b8-b4a7-88a6ecf08804@sirena.org.uk>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
+In-Reply-To: <ad5eb513-d3ef-42b8-b4a7-88a6ecf08804@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Feb 11, 2025 at 10:41:33AM -0800, Josh Poimboeuf wrote:
-> I'm confused by CPU_MITIGATE_CROSS_THREAD here, as the GDS mitigation
-> doesn't seem to disable SMT?
+On 2/11/25 07:13, Mark Brown wrote:
+> On Mon, Feb 10, 2025 at 11:08:27PM -0500, Ethan Carter Edwards wrote:
+>> There is a possibility for an uninitialized *ret* variable to be
+>> returned in some code paths.
+>>
+>> Setting to 0 prevents a random value from being returned.
 > 
-> Am I just completely misunderstanding the meaning of
-> CPU_MITIGATE_CROSS_THREAD?
-> 
-> I assumed it's not a vector per se, but rather it means to force nosmt
-> if one of the other enabled mitigations requires doing so for its "full"
-> mitigation.  But the implementation doesn't seem to match that.
-> 
-> On the other hand if it really is considered to be its own vector, that
-> doesn't make sense either, as "cross-thread attack" is really a subset
-> of each of the other vectors.  For example, a user->kernel attack can
-> often be done either via syscall/irq or via cross-thread.
-> 
-> So I'm really confused.  Am I missing something?
+> That'll shut up the warning but is the warning trying to tell us that
+> there's a logic bug somewhere in the function and we're for example
+> forgetting to look at a return value in some path in the function?
 
-So I looked at the next patch and now I see what I was missing: the
-individual mitigations are checking
-cpu_mitigate_attack_vector(CPU_MITIGATE_CROSS_THREAD) before deciding
-whether to disable SMT.  So the implementation mostly makes sense now.
+The problematic code is this:
 
-should_mitigate_vuln() should have a comment at the top explaining that
-it doesn't check CPU_MITIGATE_CROSS_THREAD (since it's not actually a
-standalone vector but rather dependent on the others) and that each
-individual mitigation should check CPU_MITIGATE_CROSS_THREAD when
-deciding whether to disable SMT.
+for_each_rtd_codec_dais(rtd, i, codec_dai) {
+	if (strstr(codec_dai->component->name_prefix, "-1"))
+		ret = snd_soc_dapm_add_routes(&card->dapm, rt_amp_map, 2);
+	else if (strstr(codec_dai->component->name_prefix, "-2"))
+		ret = snd_soc_dapm_add_routes(&card->dapm, rt_amp_map + 2, 2);
+}
 
-Also, checking CPU_MITIGATE_CROSS_THREAD for GDS doesn't make sense
-because as I mentioned above, "cross-thread" is really a subset of the
-other vectors.  If the user isn't concerned about any of the other
-attack vectors, mitigate_cross_thread=on should just be ignored.
+return ret;
 
-I'm also thinking that "mitigate_cross_thread" isn't quite the right
-name for it, as it really only relates to disabling SMT rather than
-other cross-thread mitigations like STIBP.
+I am not sure if it's possible that either the for_each does nothing or that the two branches are skipped, but certainly initializing the 'ret' value makes sense to me.
 
-So "mitigate_disable_smt" or "mitigate_nosmt"?
+Bard, Shuming, what do you think?
 
--- 
-Josh
+
+
