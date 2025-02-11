@@ -1,154 +1,135 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5108C261594
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 19:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45E9261594;
+	Tue, 11 Feb 2025 19:10:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739301001; cv=none; b=F+dVO5UN6fDKnke07t+UFNLgagavYlpT1gr0pNsmmps++lVLS9WEYyTVk4yWfzRbunhaNa9mHSpPqoysLKVGjWxwmItid2nDuqgcN5Kh3g0nGJ6Raifl4GYAFUbqWqV6T1eqEF3OoYyAx497nll/ZQ8F+CIql1h++RinA4cPmKE=
+	t=1739301035; cv=none; b=l6mYJeijR/H1O25AkLPtcVEfCXum1pQ04Kgf0w1IUAvghsDAuyrtxcYPI6jWazNzkz+FBqZcv3oQUeMcEvvx3XEB/tyTcWchDOQ8+9bBvaxBtquNiWa3HbvB1yn7X4ssUoouteZ34cD2QYZ60deGFDBfNH89oi14CCMvSg8LhKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739301001; c=relaxed/simple;
-	bh=erd1zJ+R61wo92ELNXvB28d/bNlj/qYeYQ+CjpxPXjE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hHB7xC8zahD+23V3+A+8gBmbBGRoZPehwXazqdJMsp+GqjBFI3z3S3nmM905st+NGq7rv4W8VA3PBSsBtEtCG9fDVt2aOB8TbbQoquaTRLcow+DYNGiUhJLwIg8E8HwknhQhFVvCKlmSRdbPYfC1tBzZHCp4+MT3U+2hhR08F6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QT3kKEyh; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739301035; c=relaxed/simple;
+	bh=iqjbkB0UJnMpdI19H+Eiv1Wx7DSAC8Vkj2FgGAvH/04=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LrVrteprAg3kXTzUlM2e9EmE4wim9rq9rTAf/tpmO9jE1Xzo1Z65G/+l6R/C6BFwJf8U5PMz4sdj4ipUL0ePVDqL+oY+C8wZBs/P01cIdP2I/VVSY9RK0enIW9YyJ9QNJYrTnEWtdTkD5JU6uZ8fywnKXzkhSMmGf2A5ap64Ypg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DekO0SRW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QT3kKEyh"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21f8c280472so17245ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:09:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739300998; x=1739905798; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zsRY8DxU5oOqkirUpQpSEfLhJyGlqAVxdTEVQkM3WMs=;
-        b=QT3kKEyhDou+T1BPQcCXL0UTuC0/xSUaFKjA7gaKXvEX9zYhY7jroy93AXMV5xcWMD
-         MymXYsfePsBXd0xsDxKiMW5lvXzW4KbXvL5e3QvgRQNHFe6sd3qFN40TYcmFi2GU62J5
-         aGT9X3GqHC0sVFFPFdyc36lIFvoLQ39TRjA9tP/35kYRHXpz/8FdgwI+WwplCUI9cl+q
-         NZ0LkvlFOMe7uiv0j3KQRv3ScWpUq7tp4WsNhKxnceQZqc0IPqUds2zKz/X+Ef5s1rz0
-         XF/64pRa+qULVUfEB5d2RGd4b+sFnxcnnL3Hd1pxX4tnDeHbgOZQInL+53J2jbVTiTGE
-         U/UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739300998; x=1739905798;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zsRY8DxU5oOqkirUpQpSEfLhJyGlqAVxdTEVQkM3WMs=;
-        b=jfu6orPE0/2Eem2cgbjR1va5e1++sbYG7CICYeh7CljCCcb9NWox5KOaEzq6XRt5cG
-         96U+NnvSQbhT8b32MhNBHasBt7NwHpZmPIrE7mlO4HBqitYZKv8mPmt/EleJqNQ5jz52
-         76R52NwaidA51tMWV0UG9q7M5ecz5I3QCw3InJurowrG/OxCD0a6ENDUmn4OaG4khFjq
-         Wqgvz6Fq4vc1nrMYMMw6lNXYtwGFyk2hKqcDVlTBdTNIdhCsB5MC2oEq4g2oOpbdN68N
-         0emao1zPCPRDA8nsQZtxiKmSHIkq7o5TZb0vf/+d0Fgoxw5PEgdsAdx0gKJuPgSI2DKr
-         HWUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVYo94ZL54iv+ZlGWywH2nuNHzaG+x0oS1SiHdllO4Ebh5pHyLfFUBOy7F1fSRdFEFy7+p4RYdYAOXCs7w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLVp+aSpkNFBPWucVv2tR38he6P1y4zOgE/n3QgWADXmF5MfIR
-	FMFRzjmHC/9y9hpw09NRCFX+Ma/WvgU1ZCnqX8KflH/Q2aaecinCzCdFy9AkyA==
-X-Gm-Gg: ASbGncu84Ys4a9gX0JTqwXzC8Ap+4u21Om0OkTzQY8I5EQsK3i0trX6NHdagmnw2aYM
-	CZdlKjZxgAlqgWPksSnPdmdPgiOWdmtEmEFizUQPD9dZfcLjopHvd6di9mmi29avQxqccyvK8X8
-	wdzoBbzQnXDGJRzyX9iPdPv3gXrsGXPc4tlv9zcmTLk9rfY0xISU8KCG5DoR/qmd0cxUacovQM0
-	t5ly3OIppUeKmGOS+dusd6cOX5QcpJXInhZL731kiVZhxXCbSJe3gAfzXZ/Ip0LqgDvI3fweDYW
-	PN6K8YxQ2Ue49Ncgf1hWV9MK0DfjB3IivZKi0Zw4n3j5Xnv/bxi0tw==
-X-Google-Smtp-Source: AGHT+IHrWBPLYi6iTGNBgCMLpCFlEfO8bMl8chkgcZ2hAPZ3SiDkxvI4vmDKroixqqmvdANTGecJ4w==
-X-Received: by 2002:a17:903:13ce:b0:215:9ab0:402 with SMTP id d9443c01a7336-220bca6d869mr92705ad.18.1739300998169;
-        Tue, 11 Feb 2025 11:09:58 -0800 (PST)
-Received: from google.com (147.141.16.34.bc.googleusercontent.com. [34.16.141.147])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad548cc25d0sm5126832a12.5.2025.02.11.11.09.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 11:09:57 -0800 (PST)
-Date: Tue, 11 Feb 2025 19:09:52 +0000
-From: Peilin Ye <yepeilin@google.com>
-To: Eduard Zingerman <eddyz87@gmail.com>
-Cc: bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bpf@ietf.org,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	David Vernet <void@manifault.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Quentin Monnet <qmo@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	Yingchi Long <longyingchi24s@ict.ac.cn>,
-	Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>,
-	Neel Natu <neelnatu@google.com>,
-	Benjamin Segall <bsegall@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v2 8/9] selftests/bpf: Add selftests for
- load-acquire and store-release instructions
-Message-ID: <Z6ugQ1bd0opoGRYg@google.com>
-References: <cover.1738888641.git.yepeilin@google.com>
- <3ac854ac5cc62e78fadd2a7f1af9087ec3fc7a9c.1738888641.git.yepeilin@google.com>
- <6976077bc2d417169a437bc582a72defd1dec3d4.camel@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DekO0SRW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95CF1C4CEDD;
+	Tue, 11 Feb 2025 19:10:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739301035;
+	bh=iqjbkB0UJnMpdI19H+Eiv1Wx7DSAC8Vkj2FgGAvH/04=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DekO0SRWn7UDJlf/VuCR7Z5GjYSFtcInyCdXCo3qB0jdxbL5NgIDjJ1My5i8P/ECP
+	 TpKO6LrdpgXeVOOyXajkGWpNE5QukU5YVmHCKxlU5vdDoTYBucn5tpHly0Lbtjl6nW
+	 z4RS4l2uG320y7mshku7LCyFEZIwvbyhHup42+JGi7eeMql9x12VcAJ+uGDBmFATiV
+	 yJdzMDKLOUVvvppljJo47xWwWhdJiETODfyPyo68Lwh8nqlSbR5gYWo886dUeLtAlc
+	 uzOtvjIxThcuCHGBBlMz5d3KutNJsa5SOopg5PfTrK+mF7jgQOSnIc/huNnX5mNejC
+	 ZqO6uO2YSVmcQ==
+Message-ID: <de7fb605-527e-4c62-9b5d-947a1636c54b@kernel.org>
+Date: Tue, 11 Feb 2025 20:10:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6976077bc2d417169a437bc582a72defd1dec3d4.camel@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: leds: Allow differently named multicolor
+ leds
+To: =?UTF-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
+ Lee Jones <lee@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
+ linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250209-multi-led-v1-1-5aebccbd2db7@posteo.net>
+ <20250211144300.GW1868108@google.com> <Z6ucAFNauWkhfYZr@probook>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <Z6ucAFNauWkhfYZr@probook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 10, 2025 at 04:08:44PM -0800, Eduard Zingerman wrote:
-> > +++ b/tools/testing/selftests/bpf/progs/verifier_load_acquire.c
-> > @@ -0,0 +1,190 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +#include <linux/bpf.h>
-> > +#include <bpf/bpf_helpers.h>
-> > +#include "../../../include/linux/filter.h"
-> > +#include "bpf_misc.h"
-> > +
-> > +#if defined(ENABLE_ATOMICS_TESTS) && defined(__TARGET_ARCH_arm64)
+On 11/02/2025 19:50, J. Neuschäfer wrote:
+> On Tue, Feb 11, 2025 at 02:43:00PM +0000, Lee Jones wrote:
+>> On Sun, 09 Feb 2025, J. Neuschäfer via B4 Relay wrote:
+>>
+>>> From: "J. Neuschäfer" <j.ne@posteo.net>
+>>>
+>>> In some cases, a board may have multiple multi-leds, which can't be
+>>> distinguished by unit address. In such cases it should be possible to
+>>> name them differently, for example multi-led-a and multi-led-b.
+>>> This patch adds another node name pattern to leds-class-multicolor.yaml
+>>> to allow such names.
+>>
+>> Which H/W needs this?  Is it upstream?  Where is the doc / usage?
 > 
-> [...]
+> I encountered this situation while upstreaming the LANCOM NWAPP2 board,
+> which has multiple LED-group-based multicolor LEDs:
 > 
-> > +#else
-> > +
-> > +SEC("socket")
-> > +__description("load-acquire is not supported by compiler or jit, use a dummy test")
-> > +__success
-> > +int dummy_test(void)
-> > +{
-> > +	return 0;
-> > +}
+>   https://lore.kernel.org/lkml/20250102-mpc83xx-v1-16-86f78ba2a7af@posteo.net/
+
+Which LEDs are these? I don't see multi-led there node name at all.
+
+This patch must come with user. It's fine to send the user separately,
+but please provide lore link to exact user.
+
+Otherwise what certainty we have that this change is needed in the first
+place?
+
 > 
-> Nit: why is dummy_test() necessary?
+> Since they are based on leds-group-multicolor, they don't have a unit
+> address, but there is more than one on the same level (as direct
+> sub-nodes of the DT root node).
 
-It's just to make it clear when these tests are (effectively) skipped.
-Otherwise, e.g. -cpuv4 runner with LLVM-18 on x86-64 would give:
+Which binding is this?
 
-  #518     verifier_load_acquire:OK
 
-With dummy_test(), we would see:
 
-(FWIW, for v3 I'm planning to change __description() to the following,
-since new tests no longer depend on __BPF_FEATURE_LOAD_ACQ_STORE_REL.)
-
-  #518/1   verifier_load_acquire/Clang version < 18, or JIT does not support load-acquire; use a dummy test:OK
-  #518     verifier_load_acquire:OK
-
-Commit 147c8f4470ee ("selftests/bpf: Add unit tests for new
-sign-extension load insns") did similar thing in verifier_ldsx.c.
-
-> > +
-> > +#endif
-> > +
-> > +char _license[] SEC("license") = "GPL";
-> 
-> [...]
-
-Thanks,
-Peilin Ye
-
+Best regards,
+Krzysztof
