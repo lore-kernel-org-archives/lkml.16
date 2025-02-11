@@ -1,188 +1,115 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FBE1F12FC;
-	Tue, 11 Feb 2025 14:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB6E2512E1;
+	Tue, 11 Feb 2025 14:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739285008; cv=none; b=kBxYonr1SW/STYKHzmznQBQJi6iZEJTibk72gLtPqD5r0mRV7J3kH/DCSo3u2dwB1AB93VjpnN8F0Wdav3VpsqFyP23d9l84t3XRT2ThyJP4nlx+K6dC+SJRgPQjffWPJWjOAI5llN+7J8aT+GmKPPrWXLg8KzK2SKQCfXqH29M=
+	t=1739285013; cv=none; b=LN1c2GJeUhskCbX2MJ3Lvfcmi4/XyXlrRLnZR0lWW57YDVKUyfEeMz3hvJND7/mHo+v60TPWmS7Ufv0PixZUtH/dvnFEF1irRxkotojK22kJYh8BTrB8fxSeqW+x2vOyD+oFmelh1znxuT3uHyd2CG387mIWvUQ7z5q5stqEL9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739285008; c=relaxed/simple;
-	bh=tQt2YViAGNRUcLLNMB6hphKc7NudM5eIWN91tXZ0fI0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CvNXrN/3IImDxpKcf/tR3thHFVKyQ2XBTUb686JUY8Xc7iP6xF0JvOLyyKkYKQTZDWifFRvV0hiMqHJaplyiQtcIg0iWRvfb6NDMRhklq2Q7XUU6PL4PtAOacS5Ciec+LBl8chdAA3DvovTdJRvOZ1bA9oFGfxgChH0Kf0J0/Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RViKGNih; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RViKGNih"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ab7d451f7c4so205379066b.0;
-        Tue, 11 Feb 2025 06:43:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739285004; x=1739889804; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V+syQltWy2iShpV3VhhxV37TML7DelsfUgKCvN307fw=;
-        b=RViKGNihGemvHScsUoIWlqB4F8Y+Vv1Ll+mXlyZmMio0D1p2u4j4Q2xTSPKRBpXnfP
-         A5EDvKo5ZhN244bGIi6l89/8c46bPMELWHZu2xcVOZTQH1SzDmVKu1JPw7zy+zoJ9Qos
-         HBDA5Zfb/2DWN8OCmJmA3SqfqmvbdGcUECyWrXGgRUxbwCXdliAkDKUgaX0hK9mAMZAg
-         PlWokNyUcQO8A4HStBpJ9eV5mAMkbC7CB23HQ1DnpDNTFIgYh8DtDyaRmHK6N1LvE6MD
-         KpEoH6fK6nD4HdYSo8Szb7AAQvfWGfKRrPrIj5KQRrrS/EQ6aB/RWRGFiHdTIH5JkEZM
-         NnzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739285004; x=1739889804;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V+syQltWy2iShpV3VhhxV37TML7DelsfUgKCvN307fw=;
-        b=Hbcv90ga96aZV5Rh+BBNZ1vy5QYmFqTpktipJ/OYpSkPYDIiRlGo3AkMTqVSP8jagN
-         Kjf4CR2TQAU9T8JYV4efFpUhQeowxJ6It3q4Hlu96Q6d92McziQidFTl7O2vU1GGPEe9
-         6yJ0sBZjVTVXtmKo6J4584YcISViEYi/88YGaHN1uakJo4yNG4jVzKh6JUJTxoN/METZ
-         HLzaa1Gg/VAbv/LL7TwOyG9EW9xPXucbUsByHPBV+LCTdKvpyH73y2N6Qs4nEU8fPZD9
-         MyqT8Zwym3jezxLi6orv9aMd7uWsyp2HseSJTvRUVhEn3rEFCg8fWG0zaGUHkNaWgQy1
-         WLxA==
-X-Forwarded-Encrypted: i=1; AJvYcCUt3228LRqTXUjeXbD3y8GtkNsdvgIWtalqpoUACcYm1iS9uWrm08Zv7vks9nT6MDTf2PgJt/6XLTjXVz7wObsT@vger.kernel.org, AJvYcCWhPgsQTAFYsuX0K2PyetOI187egoCP/iCzkPSgL6hGEfLCKCsVQTsRjrEYT7yXZJReUyj6gNSo@vger.kernel.org, AJvYcCWkp10P11GKEs+Rafc+8FNnjja7eEj3FnQH2zsZ31cx8wZGqjf34ihUND6sit8o6ztNCMyMxvn95Ufdot0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHMt5CXxJG33mqMJGn0EAAu/En6SphaPnDIPErmDfmk1Tz202f
-	VLuwrzkktNkLb5dpDN1dwe099DDLAucNQ4ycHKayMTMGkGKEzW4h
-X-Gm-Gg: ASbGnctVkzHakti597bAJmfiWF8EuPlmHBQeyI10jIzKMJxH58rN0L5SZ0GWicGxF+N
-	oa7rJVcTMfnll52RbKYmvLfdkvI5XQJwSBQhuMub4ENs+WQvpLZQEijuR9Pj0npAZo4+ffJ4IUt
-	c7/VgQvy8VypMCSgIza8JFH+AmBy/c9ZFZt90eIFyWRUGKe2CsQqy5uGqG+hrmuINOx094vVkTs
-	amFtMnSboaFbPAE0BoqEFs+8QgK5YTtlhr/FdNtiqCPUkdCq3Zh8nUAKu3mkmgkvMEIet0zRi2D
-	xW7FHjAc6MemYY2MXSz9RHIJNWZ7X+zMapjb6SlJVr767XgO3nrTPWVeU0TrMPbJHzUKnPSasKA
-	wwWCYnaIhvz5ywo0WO1ryU0oDUwCq0CnYhsJ1SyKyAzyRXie74AuHLxca9w3AsHDDPA==
-X-Google-Smtp-Source: AGHT+IF9jmcJFJFbEK49xdcz+FAYc5JFQf9JpzthNkFP4VwxwCFQdCkq660UzRh31VnMKEshFSn0QQ==
-X-Received: by 2002:a17:907:6e86:b0:aa6:9eac:4b8e with SMTP id a640c23a62f3a-ab789bfc7d9mr2013030966b.41.1739285004009;
-        Tue, 11 Feb 2025 06:43:24 -0800 (PST)
-Received: from ?IPV6:2001:1c00:20d:1300:1b1c:4449:176a:89ea? (2001-1c00-020d-1300-1b1c-4449-176a-89ea.cable.dynamic.v6.ziggo.nl. [2001:1c00:20d:1300:1b1c:4449:176a:89ea])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7c4a50e73sm394025366b.36.2025.02.11.06.43.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 06:43:23 -0800 (PST)
-Message-ID: <9ae3548a-844e-4449-9c00-5dd79e804922@gmail.com>
-Date: Tue, 11 Feb 2025 15:43:22 +0100
+	s=arc-20240116; t=1739285013; c=relaxed/simple;
+	bh=WYmAOvqRIYf82ypdSCw/uxoeQOIr/XjKVn6Y0BmmznI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YyUgiietS/ZCOyIajNIpPvw7Xl9pD8Pjzb6vFZB3lv1d5ElYw4oD4Yt+muFxw9QmXteaEIRqrMIP6S3iE9tXQFojB2cS/Z5+rqXeuAOgzIY0NUmnZ4RxKB+Hqj10dMqFpA2UncGqIY40uGbblGZiGZR4pe+6qu/rS2g0yIsIJ2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowAB3f6MEYqtnXm84DA--.38982S2;
+	Tue, 11 Feb 2025 22:43:17 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com
+Cc: linux-gpio@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH] gpio: stmpe: Check return value of stmpe_reg_read in stmpe_gpio_irq_sync_unlock
+Date: Tue, 11 Feb 2025 22:43:00 +0800
+Message-ID: <20250211144300.964-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 net-next 05/14] bridge: Add filling forward path from
- port to port
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Pablo Neira Ayuso
- <pablo@netfilter.org>, Jozsef Kadlecsik <kadlec@netfilter.org>,
- Jiri Pirko <jiri@resnulli.us>, Ivan Vecera <ivecera@redhat.com>,
- Roopa Prabhu <roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Kuniyuki Iwashima <kuniyu@amazon.com>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Joe Damato <jdamato@fastly.com>,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- Frank Wunderlich <frank-w@public-files.de>,
- Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, bridge@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20250209111034.241571-1-ericwouds@gmail.com>
- <20250209111034.241571-6-ericwouds@gmail.com>
- <20250211132832.aiy6ocvqppoqkd65@skbuf>
-Content-Language: en-US
-From: Eric Woudstra <ericwouds@gmail.com>
-In-Reply-To: <20250211132832.aiy6ocvqppoqkd65@skbuf>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAB3f6MEYqtnXm84DA--.38982S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7AFy3tF17Aw4rCF4UWF48WFg_yoW8AFyrpF
+	Wqqr98CrWDJa18ZryYyF4rZrnakay8KFW7C3s7Wrs3Wr1Fvr9rGFW8XFyaqF98trWkWw47
+	ZF1UtF95tF1kZF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r1q
+	6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUb8hL5UUUU
+	U==
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBg0KA2erVk4dfQAAs2
 
+The stmpe_reg_read function can fail, but its return value is not checked
+in stmpe_gpio_irq_sync_unlock. This can lead to silent failures and
+incorrect behavior if the hardware access fails.
 
+This patch adds checks for the return value of stmpe_reg_read. If the
+function fails, an error message is logged and the function returns
+early to avoid further issues.
 
-On 2/11/25 2:28 PM, Vladimir Oltean wrote:
-> On Sun, Feb 09, 2025 at 12:10:25PM +0100, Eric Woudstra wrote:
->> @@ -1453,7 +1454,10 @@ void br_vlan_fill_forward_path_pvid(struct net_bridge *br,
->>  	if (!br_opt_get(br, BROPT_VLAN_ENABLED))
->>  		return;
->>  
->> -	vg = br_vlan_group(br);
->> +	if (p)
->> +		vg = nbp_vlan_group(p);
->> +	else
->> +		vg = br_vlan_group(br);
->>  
->>  	if (idx >= 0 &&
->>  	    ctx->vlan[idx].proto == br->vlan_proto) {
-> 
-> I think the original usage of br_vlan_group() here was incorrect, and so
-> is the new usage of nbp_vlan_group(). They should be br_vlan_group_rcu()
-> and nbp_vlan_group_rcu().
-> 
-> The lockdep annotation is important, otherwise I get this with CONFIG_PROVE_LOCKING=y:
-> [ 1140.931869] =============================
-> [ 1140.935996] WARNING: suspicious RCU usage
-> [ 1140.940094] 6.14.0-rc1-00224-gda8926a49ba1-dirty #2666 Not tainted
-> [ 1140.946371] -----------------------------
-> [ 1140.950520] net/bridge/br_private.h:1604 suspicious rcu_dereference_protected() usage!
-> [ 1140.958622]
-> [ 1140.958622] other info that might help us debug this:
-> [ 1140.958622]
-> [ 1140.966752]
-> [ 1140.966752] rcu_scheduler_active = 2, debug_locks = 1
-> [ 1140.973435] 2 locks held by swapper/0/0:
-> [ 1140.977521]  #0: ffffd9f646c333b0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire+0x4/0x40
-> [ 1140.986404]  #1: ffffd9f646c333b0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire+0x4/0x48
-> [ 1140.995170]
-> [ 1140.995170] stack backtrace:
-> [ 1140.999636] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.14.0-rc1-00224-gda8926a49ba1-dirty #2666
-> [ 1140.999650] Hardware name: LS1028A RDB Board (DT)
-> [ 1140.999656] Call trace:
-> [ 1140.999660]  show_stack+0x24/0x38 (C)
-> [ 1140.999683]  dump_stack_lvl+0x40/0xa0
-> [ 1140.999698]  dump_stack+0x18/0x24
-> [ 1140.999711]  lockdep_rcu_suspicious+0x174/0x218
-> [ 1140.999723]  br_vlan_fill_forward_path_pvid+0x90/0x150
-> [ 1140.999735]  br_fill_forward_path+0x54/0x1b0
-> [ 1140.999751]  dev_fill_bridge_path+0x9c/0x188
-> [ 1140.999766]  nft_dev_fill_bridge_path+0x2ac/0x418
-> [ 1140.999785]  nft_flow_offload_bridge_init+0x188/0x1c8
-> [ 1140.999801]  nft_flow_offload_eval+0x18c/0x300
-> [ 1140.999816]  nft_do_chain+0x1c8/0x538
-> [ 1140.999831]  nft_do_chain_bridge+0x15c/0x210
-> [ 1140.999846]  nf_hook_slow+0x80/0x130
-> [ 1140.999862]  NF_HOOK+0xd8/0x1d0
-> [ 1140.999871]  __br_forward+0x138/0x1a0
-> [ 1140.999880]  br_forward+0xd8/0x160
-> [ 1140.999889]  br_handle_frame_finish+0x3bc/0x5a8
-> [ 1140.999900]  br_nf_pre_routing_finish+0x538/0x608
-> [ 1140.999917]  NF_HOOK+0x254/0x298
-> [ 1140.999933]  br_nf_pre_routing+0x3e8/0x428
-> [ 1140.999949]  br_handle_frame+0x264/0x490
-> [ 1140.999959]  __netif_receive_skb_core+0x13c/0x1128
-> [ 1140.999975]  __netif_receive_skb_list_core+0xd4/0x1e8
-> [ 1140.999989]  netif_receive_skb_list_internal+0x224/0x338
-> [ 1141.000000]  napi_complete_done+0xb4/0x1d8
-> [ 1141.000012]  gro_cell_poll+0x94/0xb8
-> [ 1141.000025]  __napi_poll+0x58/0x258
-> [ 1141.000040]  net_rx_action+0x1f4/0x3e0
-> [ 1141.000055]  handle_softirqs+0x184/0x458
-> [ 1141.000070]  __do_softirq+0x20/0x2c
-> [ 1141.000079]  ____do_softirq+0x1c/0x30
-> [ 1141.000095]  call_on_irq_stack+0x24/0x58
-> [ 1141.000111]  do_softirq_own_stack+0x28/0x40
-> [ 1141.000127]  __irq_exit_rcu+0xd4/0x1a0
-> [ 1141.000139]  irq_exit_rcu+0x1c/0x40
-> [ 1141.000152]  el1_interrupt+0x8c/0xc0
-> [ 1141.000170]  el1h_64_irq_handler+0x18/0x28
-> [ 1141.000186]  el1h_64_irq+0x6c/0x70
-> [ 1141.000195]  arch_local_irq_enable+0x8/0x10 (P)
-> [ 1141.000213]  cpuidle_enter+0x44/0x68
-> [ 1141.000228]  do_idle+0x1e8/0x280
-> [ 1141.000238]  cpu_startup_entry+0x40/0x50
-> [ 1141.000248]  rest_init+0x1c4/0x1d0
-> [ 1141.000260]  start_kernel+0x324/0x3e8
-> [ 1141.000272]  __primary_switched+0x88/0x98
-> [ 1141.197568] ------------[ cut here ]------------
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/gpio/gpio-stmpe.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-Thanks. I will correct both in v7.
+diff --git a/drivers/gpio/gpio-stmpe.c b/drivers/gpio/gpio-stmpe.c
+index 75a3633ceddb..9c3bd5c98ec2 100644
+--- a/drivers/gpio/gpio-stmpe.c
++++ b/drivers/gpio/gpio-stmpe.c
+@@ -191,7 +191,7 @@ static void stmpe_gpio_irq_sync_unlock(struct irq_data *d)
+ 		[REG_IE][CSB] = STMPE_IDX_IEGPIOR_CSB,
+ 		[REG_IE][MSB] = STMPE_IDX_IEGPIOR_MSB,
+ 	};
+-	int i, j;
++	int ret, i, j;
+ 
+ 	/*
+ 	 * STMPE1600: to be able to get IRQ from pins,
+@@ -199,8 +199,17 @@ static void stmpe_gpio_irq_sync_unlock(struct irq_data *d)
+ 	 * GPSR or GPCR registers
+ 	 */
+ 	if (stmpe->partnum == STMPE1600) {
+-		stmpe_reg_read(stmpe, stmpe->regs[STMPE_IDX_GPMR_LSB]);
+-		stmpe_reg_read(stmpe, stmpe->regs[STMPE_IDX_GPMR_CSB]);
++		ret = stmpe_reg_read(stmpe, stmpe->regs[STMPE_IDX_GPMR_LSB]);
++		if (ret < 0) {
++			dev_err(stmpe->dev, "Failed to read GPMR_LSB: %d\n", ret);
++			goto err;
++		}
++
++		ret = stmpe_reg_read(stmpe, stmpe->regs[STMPE_IDX_GPMR_CSB]);
++		if (ret < 0) {
++			dev_err(stmpe->dev, "Failed to read GPMR_CSB: %d\n", ret);
++			goto err;
++		}
+ 	}
+ 
+ 	for (i = 0; i < CACHE_NR_REGS; i++) {
+@@ -222,6 +231,7 @@ static void stmpe_gpio_irq_sync_unlock(struct irq_data *d)
+ 		}
+ 	}
+ 
++err:
+ 	mutex_unlock(&stmpe_gpio->irq_lock);
+ }
+ 
+-- 
+2.42.0.windows.2
 
