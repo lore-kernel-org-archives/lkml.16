@@ -1,94 +1,71 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2EBD1F03E6;
-	Tue, 11 Feb 2025 09:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EAA91F1315
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739266174; cv=none; b=YiefJp1dWb52qhrvnHKJcuTiiG8bfe9JULH+YvCx2tFVV2OPXcoWu4i/NQalRdgjUes9GfdZZ2z1GWde71cUd+W3AJIjtE7EnCF/4POYxx2qgV7e2l8okSDvmUluU31cDnrle9AyyTSLzSlYj21R2lIHlIAKHIuLq+FjbtoLYmc=
+	t=1739266180; cv=none; b=SbZHp9bfRgqHRyDuUlXsGHfu/ukrlERYgThazjusnrfy1C9oPSN055K7svGCJMBofy7ZhekqDiF4pYTzxMhMPCN3iyABnbV9ola3UK6/6aAGxM5oirOHvGYsB+xqE0zt/dFslF1rapqkQjAud5sHYcKlnGZPES++y0jKo+AWJxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739266174; c=relaxed/simple;
-	bh=JZPLb4A3nkXiV6t/2IIP7XFbjxtiycoxSDUHf93QE7A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bhSlyjNg3g40dgBIMz/pj+DHpE8ULmqiTtNhGR7TxBri5SL+LNeewWMZ41vhu+K2Uz9MpeNV8XFQyZqiWvK1lA2xaWJxkd26Qj5W0XDbsuj2VQAQB7eOCYoCGe6r23JZDyTWkYAz/MGfVyGJZrnVHPA0rv7kTOQ6b19IYMxcRWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=khD+fbl6; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1739266180; c=relaxed/simple;
+	bh=TWcdXF5YdzjrUVf4d+A72F9BIg5KeFUnRBaLRGzLEvE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XlDRzHnA0zyfstN4vcYxbPV83WVL82vqVgd1J3zNGabRJs7WPBe4uefcd765n7XOBlJ6fpT4mGJYXcrG5npmYBRSCZVwTy7n7scYuXv0zGRtaSBjuWIsQ2nhbcZ52Pj5iOA2YaAZ7D7I4p4kVLXDzq43jjDfKGfHcIdn+Sr/Xig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kbvqiR9N; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="khD+fbl6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=mKxU1H0bH4jOjCpR1iDA2kn4hJyozUlGpPk9T5FA/N4=; b=khD+fbl6rFjDcBbbVPzRaalweS
-	coRFMUULM4kw5PMl6IonM8XSYGxIZX5by/0liY/PQq2/ngdVU43/BHV8aJMZ2gP6Yp+BgLXdB+lt9
-	/dDS8qOgHNbsINo5D3WlB6+WkryLtDwItBu9HEJWBDRqRGdRsNBKmPN5d9zz662XOybMSSb4CfwuH
-	BhfYvNtIYJllmFhPM7XJjWnh12RQHn25081YBx0ZJfOTZBEDS4VB0coFZiptRtN7mZdUuxmH9/P9B
-	dG/dk5YnHdUuov+4K+qn6oLrTBCFR5Vzop17VOJAUF8MUwUz8cHTyVMpJNd2J1nrW1zx7cU8iEo4h
-	ysGtCfhQ==;
-Received: from i53875bc0.versanet.de ([83.135.91.192] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1thmZj-0005mx-GW; Tue, 11 Feb 2025 10:29:03 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: Sandy Huang <hjc@rock-chips.com>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	Alexandre ARNOUD <aarnoud@me.com>,
-	kernel@collabora.com,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: (subset) [PATCH v2 0/4] Add support for HDMI1 output on RK3588 SoC
-Date: Tue, 11 Feb 2025 10:28:51 +0100
-Message-ID: <173926612575.1219038.14455377173250297870.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20241211-rk3588-hdmi1-v2-0-02cdca22ff68@collabora.com>
-References: <20241211-rk3588-hdmi1-v2-0-02cdca22ff68@collabora.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kbvqiR9N"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 41C54431FA;
+	Tue, 11 Feb 2025 09:29:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739266171;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TWcdXF5YdzjrUVf4d+A72F9BIg5KeFUnRBaLRGzLEvE=;
+	b=kbvqiR9NHyaSynuagwnGsZGAtY4oAkbATISIs/vzcsLNNrRBRdMGi16PSk6LZwa92D4Xvx
+	sAxdHTWK0bAGaLHLTXdiAl9Y466lYPUTcJGn0cENdKhkPvvfkQYLfskZAToNAN+7L12O+q
+	/1+86W/qsBqxHiEPpfTkNjt3ISJI7pmZmG2knSKA1iREVNRC/21bmSCEgJbzhrlSFrxnb9
+	ph6yM89y2FrbwZ5Y9yJ4Lcc3oQMTRjAGZSdTCeNnK4G/HTaoR6mVdyMKbjQ8f680cLkTNR
+	cq4IGALfGX/5vqiRLJcUKpfnQSl0a7RDGn+vLhjlqm0Ey/2FbuFPB013/Zkn7A==
+Message-ID: <ce717364-5255-44bd-95a1-aacf76a2c79c@bootlin.com>
+Date: Tue, 11 Feb 2025 10:29:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] mux: mmio: Add suspend and resume support
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, gregory.clement@bootlin.com,
+ thomas.petazzoni@bootlin.com, richard.genoud@bootlin.com, u-kumar1@ti.com,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Davis <afd@ti.com>
+References: <20250203-mux-mmio-resume-support-v3-1-a2f813c0d227@bootlin.com>
+Content-Language: en-US
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <20250203-mux-mmio-resume-support-v3-1-a2f813c0d227@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegtdeigecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpefvhhhomhgrshcutfhitghhrghrugcuoehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeetkeefveduuddvudevheegjeeugfeiiedtuedvkefgvdeghfejtdffudefgeehnecukfhppedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiiedphhgvlhhopeglkffrggeimedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiiegnpdhmrghilhhfrhhomhepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeekpdhrtghpthhtohepphgvuggrsegrgigvnhhtihgrrdhsvgdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtp
+ hhtthhopehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprhhitghhrghrugdrghgvnhhouhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuhdqkhhumhgrrhdusehtihdrtghomhdprhgtphhtthhopegrfhgusehtihdrtghomhdprhgtphhtthhopehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomh
+X-GND-Sasl: thomas.richard@bootlin.com
 
+On 2/3/25 11:02, Thomas Richard wrote:
+> The status of each mux is read during suspend and stored in the private
+> memory of the mux_chip.
+> Then the state is restored during the resume.
 
-On Wed, 11 Dec 2024 01:06:13 +0200, Cristian Ciocaltea wrote:
-> The patches provide the basic support to handle the second HDMI output
-> port found on Rockchip RK3588 SoC.
-> 
-> For now I enabled it on Radxa ROCK 5B only, the board I've been using to
-> validate this.
-> 
-> ** IMPORTANT **
-> 
-> [...]
+Hello Peter,
 
-Applied, thanks!
+Is there any chance to get this patch merged ?
+Or maybe you have some comments to do.
 
-[2/4] arm64: dts: rockchip: Add PHY node for HDMI1 TX port on RK3588
-      commit: ea97212a0f66b7bd71c23c12f781f1770dd6fcff
-[3/4] arm64: dts: rockchip: Add HDMI1 node on RK3588
-      commit: bed6964e779b5853de042da14320edf9f79506fe
-[4/4] arm64: dts: rockchip: Enable HDMI1 on rock-5b
-      commit: 77cea7ca13680e14119a3b9635c7ef16cd7ee44e
+Regards,
 
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+Thomas
