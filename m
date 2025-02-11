@@ -1,135 +1,95 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp-42af.mail.infomaniak.ch (smtp-42af.mail.infomaniak.ch [84.16.66.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53AA71F891F;
-	Tue, 11 Feb 2025 14:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC8624C671
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739282569; cv=none; b=VxEScjwyNF3y/srtqF+nhfzvnB0N+4U3FPERdbnoP/fYXTylKPQqm0Srh3SlC70Chyav5YEM+uq/6dzYoosL+IsQPXcMpJhZg4fMIRdZqMMmqUPw7pHgBu5XFw/6ddUrMbFex7qQJHES0Yfj62NdoMDU77spX91/JyFGs1LexxA=
+	t=1739282600; cv=none; b=VObsldXyNoKqnRBDIJAdZjeiiQK3uu2R4g50VfRcWmuLwdxV0h82KPKO1s8hOsCkbtTvIgn87n04wUMrS/6Yf/Y0yS33sH6IkBTMgbkpjRiTXbrO0PhjQgteOo+oe56OGMIfh/tXbyAZJb4ip8x5I77idBhIgUF0/m74C4Yn6G8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739282569; c=relaxed/simple;
-	bh=7jlfU3ip+GMUxJ36MXpx96ZSflQHiVP/ve9BKsz1H3g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=PuXeVH/7THtc3jYH81Pf5JlyN0BJD6TE4378a30VtJSkrCEyTnFz6VZmHL8Jx2HJV07tfxsEsRoAOl+UHwSS/j+bh/E45dMgqmaMdK1fpZyKCcoAciHL4XVE5w+Bg88e8zN2vr9yedeROasHx1Bj4ULRVTYin2B8y3ZRfPbXZMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fV7q/2hr; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fV7q/2hr"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51BBHxQH026628;
-	Tue, 11 Feb 2025 14:02:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	AUBY0PBT5tLd/VwJCOYY9xpuE/V5lD5RoJMSdRYbAAI=; b=fV7q/2hrxTQixCzw
-	qMNYpCeMWNWekSO+uUa0y1sfeqbagJZhSsrWnzYxJmbUFtx1+sDnMFAsXjqHxRve
-	sMzb891Hs9zKJVbWaAtaSr0H6mXcH7AKAqnsw+BuGJf23oMSgJWuZfbZxc1VmaMY
-	EKxFqmhxQf0Q2M4/h9rHK6OjHfuKgYlCkvNYy6oq7vq0ar8Vu/17r4rAFmMDb4q+
-	8YnuaVtdeWE9lKaA+8935X8+F9JciCk61l8C/aqW/DBv45fJKPN7I0IXvijYuYOB
-	vxoDPjyCVv45RFTnT5fm28hwQfjsFRuQWAyyK/8U9y4h7ElBa5kyoezwAjxvzoPP
-	UdQyhA==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44r5j58h55-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 14:02:32 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51BE2VTW025918
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 14:02:31 GMT
-Received: from [10.253.10.118] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Feb
- 2025 06:02:25 -0800
-Message-ID: <67a85d26-fc4a-4203-91e3-bf57a8f3a23e@quicinc.com>
-Date: Tue, 11 Feb 2025 22:02:23 +0800
+	s=arc-20240116; t=1739282600; c=relaxed/simple;
+	bh=cj93YJcehxCrIk/VMANrSZnFRFIooTlrM0Ptrbg8l6Y=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=fqCsYh6n0WU/VuysZzdpbzjDLKrsRrQaHkh7mLVa+Rw2WHv5RSjO+Hn1K95ZBbnrcC2wubNKscgRTNZIWPuX0Dd2oCHrEku908D93o3RI3/W9n0emhcqfvly8tls2lOIQ5+EhUeGrgkbiVl5Uvk0JuLl04JmMnnG7sQ3W1eMiro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=84.16.66.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
+Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:1])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4YsjpD0Z3VzD0X;
+	Tue, 11 Feb 2025 15:03:16 +0100 (CET)
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4YsjpB6m75zSln;
+	Tue, 11 Feb 2025 15:03:14 +0100 (CET)
+From: Quentin Schulz <foss+kernel@0leil.net>
+Date: Tue, 11 Feb 2025 15:02:50 +0100
+Subject: [PATCH v6 1/4] arm64: dts: rockchip: add overlay test for
+ WolfVision PF5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3 01/14] dt-bindings: net: Add PPE for Qualcomm
- IPQ9574 SoC
-To: Jie Gan <jie.gan@oss.qualcomm.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, "Rob
- Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Conor
- Dooley" <conor+dt@kernel.org>,
-        Lei Wei <quic_leiwei@quicinc.com>,
-        "Suruchi
- Agarwal" <quic_suruchia@quicinc.com>,
-        Pavithra R <quic_pavir@quicinc.com>, Simon Horman <horms@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, Kees Cook
-	<kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "Philipp
- Zabel" <p.zabel@pengutronix.de>
-CC: <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <quic_kkumarcs@quicinc.com>, <quic_linchen@quicinc.com>,
-        <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>,
-        <john@phrozen.org>
-References: <20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com>
- <20250209-qcom_ipq_ppe-v3-1-453ea18d3271@quicinc.com>
- <383599d8-d124-4c5a-8253-43502702e748@oss.qualcomm.com>
-Content-Language: en-US
-From: Jie Luo <quic_luoj@quicinc.com>
-In-Reply-To: <383599d8-d124-4c5a-8253-43502702e748@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: hx7mFNYuU1xdrnEYVqd15h-2egBCuk59
-X-Proofpoint-GUID: hx7mFNYuU1xdrnEYVqd15h-2egBCuk59
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_06,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 mlxscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- phishscore=0 adultscore=0 spamscore=0 clxscore=1015 impostorscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502110094
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250211-pre-ict-jaguar-v6-1-4484b0f88cfc@cherry.de>
+References: <20250211-pre-ict-jaguar-v6-0-4484b0f88cfc@cherry.de>
+In-Reply-To: <20250211-pre-ict-jaguar-v6-0-4484b0f88cfc@cherry.de>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Jagan Teki <jagan@edgeble.ai>, Niklas Cassel <cassel@kernel.org>, 
+ Michael Riesch <michael.riesch@wolfvision.net>
+Cc: Jonas Karlman <jonas@kwiboo.se>, Dragan Simic <dsimic@manjaro.org>, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Quentin Schulz <quentin.schulz@cherry.de>
+X-Mailer: b4 0.14.2
+X-Infomaniak-Routing: alpha
 
+From: Quentin Schulz <quentin.schulz@cherry.de>
 
+The WolfVision PF5 can have a PF5 Visualizer display and PF5 IO Expander
+board connected to it. Therefore, let's generate an overlay test so the
+application of the two overlays are validated against the base DTB.
 
-On 2/10/2025 10:47 AM, Jie Gan wrote:
->> diff --git a/Documentation/devicetree/bindings/net/qcom,ipq9574- 
->> ppe.yaml b/Documentation/devicetree/bindings/net/qcom,ipq9574-ppe.yaml
->> new file mode 100644
->> index 000000000000..be6f9311eebb
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/qcom,ipq9574-ppe.yaml
->> @@ -0,0 +1,406 @@
->> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/net/qcom,ipq9574-ppe.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm IPQ packet process engine (PPE)
->> +
->> +maintainers:
->> +  - Luo Jie <quic_luoj@quicinc.com>
->> +  - Lei Wei <quic_leiwei@quicinc.com>
->> +  - Suruchi Agarwal <quic_suruchia@quicinc.com>
->> +  - Pavithra R <quic_pavir@quicinc.com>>
->> +
->> +description:
-> You have multiple paragrahs here.
-> description: -> description: |
-> 
+Suggested-by: Michael Riesch <michael.riesch@wolfvision.net>
+Reviewed-by: Michael Riesch <michael.riesch@wolfvision.net>
+Reviewed-by: Dragan Simic <dsimic@manjaro.org>
+Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+---
+ arch/arm64/boot/dts/rockchip/Makefile | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-We do not need '|', as this literal description does not need to
-preserve formatting.
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index def1222c1907eb16b23cff6d540174a4e897abc9..55fe706612d3ec07c2d9df9e4cd1e4cc54cc1c44 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -170,3 +170,25 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-orangepi-5.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-orangepi-5b.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-rock-5a.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-rock-5c.dtb
++
++# Overlay application tests
++#
++# A .dtbo must have its own
++#
++#  dtb-$(CONFIG_ARCH_ROCKCHIP) += <overlay>.dtbo
++#
++# entry, and at least one overlay application test reflecting a possible
++# hardware combination in real life:
++#
++#  dtb-$(CONFIG_ARCH_ROCKCHIP) += <overlay-application-test>.dtb
++#  <overlay-application-test>-dtbs := <base>.dtb <overlay-1>.dtbo [<overlay-2>.dtbo ...]
++#
++# This will make the <base>.dtb have symbols (like when DTC_FLAGS has -@ passed)
++# and generate a new DTB (<overlay-application-test>.dtb) which is the
++# result of the application of <overlay-1>.dtbo and other listed overlays on top
++# of <base>.dtb.
++
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-wolfvision-pf5-vz-2-uhd.dtb
++rk3568-wolfvision-pf5-vz-2-uhd-dtbs := rk3568-wolfvision-pf5.dtb \
++	rk3568-wolfvision-pf5-display-vz.dtbo \
++	rk3568-wolfvision-pf5-io-expander.dtbo
 
-> Thanks,
-> Jie
+-- 
+2.48.1
 
