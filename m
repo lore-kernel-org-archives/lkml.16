@@ -1,160 +1,117 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2085.outbound.protection.outlook.com [40.107.94.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133851EEA46;
-	Tue, 11 Feb 2025 08:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739261858; cv=fail; b=tMfDg8w7Po79b7m4hqmIiMCtYETBsoA4HMMg+dholyT5DoTuFcR5/aZTFhXRdkSGYiK34BxDSfhTgUHBNl7S33rsQ5aRrcTtB+xZmvALl12bWWwaEMH0KWoiMetZ/XUJjURImg+YcvvAvtWv4WA4xfHrqMH575Pap5ZF8qvqAQk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739261858; c=relaxed/simple;
-	bh=ieO1+El8FqQTv99HTQhxHunxwwJohy0A2ZnhoVVRFf4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YdYatg1N8xRVxuZpQmepunjdb4wSRrxV42PCRPEWMXAccVFBqS9dH6u/OhYQ7+wo5gyz1/oZWkByDfNMYe7P48mzMqAML9OTIBVBvzAatUc9V+RuWgLTvH2YCFSFbmn/P/F4YDB1Nb8spVP3xDcA1i/ISzqfAT+1YE1J6zuAik4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QrIs2NnT; arc=fail smtp.client-ip=40.107.94.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B1FF1EE031
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:17:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739261864; cv=none; b=eeuUcqXw80ta0g1P4pK1NfNci66VaFOJyj1hF5qW5Mi8dUYV6Ciqy1iS38oM7KXDPkPyVMkuTJ5UXwnBmtH6mvVJzihxcKvhgOsMGh68DgXRkr3a8xyqbozWz59pE7WgPT5H9iL958p74EKYSVN3eLjGOKexhQGORhl4SJqRrvA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739261864; c=relaxed/simple;
+	bh=Q0zCvI1z0jvCd3KJkPG9TzympkIumm2MHUng9J0pb+U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QfaxsysYHSuuKN2zGvAd9orxnk2Iwt1h4CYNo/OojQGRmlctMemvnhnyolBQIv5RC/bJk1cvVGOi1taaV/tkbC/KtuvOvMo+3umjZuY1gH6x/TXWfWlkZdmPeS+Fpn5bJaZIqG3rz4d3DRSjXz61bdzAfbu0mmwzU5G8aDlQLTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RIIjb2bX; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QrIs2NnT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OYQm0ztOlqaEt0yUsnShSgz4QbhxtnV4q0hKClrCm8IR88ZKbRN059oQpm9++3gKhtgQ7Kyy5PwcsteXHwRLzInhUt/5PUsygu6Pr+Beu/LXvOD3XkQtNv60FRh7a1d7LNlCHI4YyiBhHT1Pdxiq0aJ59fzmQhAzMqdIMK+1o1KHyxos9ICSZGBPhsdY+Fhnr/k/s3d0KK4iGx9l0qp57EV9R1l+qfLCjQDHkHrUbxBEZZfTBKpeAW1OkrYB1f98jtZhaO1A0rjYN4M1BSO7tDfwaDEhZwbBINmOuQ/zSgd5rip4APXVxfnyR+XXDEk+3GS8NO37T54iCb5z8oKkHA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fLnOfWh5KOVmXiplmruPnhvebJXrJaZq4rwWqOFkJ+Y=;
- b=Z44DpLyxe/z5oOMxtfEMYiuRgmMud9oZJfZZHxzhecAS/kE31Utc7irdO1MbZ1b4Z2ZU+l1SeZPb3+dYruZBHbdczyF94zfA5JP5j45i+G7HZ2k5+zn3KtZnU3566wbGZkMtuoBc14MHpE2dw1ARCMWjy+Q01F/pe9StDAopl94JYWqcFHZrtXCVDuR2Z5Sifpz2ABhtHRaD1u6wCt/ZSHXyIKJFqK1Y2iYVBuGimGpXUf+kYlLKMANTH7lwcpQmybvtdNCoDd2DFwXkB4suK08aW9dtv09vej7yZyCMWYtg2dJW7hJPYsRhkuEp2+OawftxrQlz8x4K93sxMrbnVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fLnOfWh5KOVmXiplmruPnhvebJXrJaZq4rwWqOFkJ+Y=;
- b=QrIs2NnT55PsJEEL2KjCek0nr/Qg/Bo1AhDPF+dADQm6mQhpKPTtbLCL8DExsCm4uY4Xm5n5qkHYqmEb4ZTUoX315eswu6QNH2uErbmYBr5167rH/VaowMr68dEUGu4Zs/U7zxsq2i7Tn9Y4r/Xbm6YQmnEbjFKQmEtWplPYBV4=
-Received: from MN2PR11CA0008.namprd11.prod.outlook.com (2603:10b6:208:23b::13)
- by PH7PR12MB6859.namprd12.prod.outlook.com (2603:10b6:510:1b5::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.12; Tue, 11 Feb
- 2025 08:17:34 +0000
-Received: from BL6PEPF00020E61.namprd04.prod.outlook.com
- (2603:10b6:208:23b:cafe::66) by MN2PR11CA0008.outlook.office365.com
- (2603:10b6:208:23b::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.31 via Frontend Transport; Tue,
- 11 Feb 2025 08:17:33 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- BL6PEPF00020E61.mail.protection.outlook.com (10.167.249.22) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8445.10 via Frontend Transport; Tue, 11 Feb 2025 08:17:33 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 11 Feb
- 2025 02:17:33 -0600
-Received: from xhdthippesw40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Tue, 11 Feb 2025 02:17:30 -0600
-From: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-	<manivannan.sadhasivam@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
-	<bharat.kumar.gogada@amd.com>, Thippeswamy Havalige
-	<thippeswamy.havalige@amd.com>
-Subject: [PATCH 1/2] dt-bindings: PCI: xilinx-cpm: Add compatible string for CPM5NC Versal Net host
-Date: Tue, 11 Feb 2025 13:47:23 +0530
-Message-ID: <20250211081724.320279-2-thippeswamy.havalige@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250211081724.320279-1-thippeswamy.havalige@amd.com>
-References: <20250211081724.320279-1-thippeswamy.havalige@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RIIjb2bX"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2fa1e25e337so6537981a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:17:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739261862; x=1739866662; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HdSSN9QdNBs8eEdHrDTlxqtSDnLAK0QjbdfY2BqTAsQ=;
+        b=RIIjb2bXeCNGSNwcy0xho1c2uRhVDW0bERWje8jYcfffeKhqkdWeSWt8Uyb//DeuEb
+         098vSRnpgSS3DDu2qeN50xF436YnKJKWeXX/K4aoltAUlQ6prp3vlv6MAYdOEVqGuyxv
+         971btETlJro4LzMn3xNsmzC54H8FfSlfB1KLHrgD1w6wlM8g8305g5eAKSBqdNVaa6gl
+         4661bIrBFs5/bZWihPtEl3LeELr43Pzc+av0fGDeCXEdbPoHsQ0plVX40SPZ+C9w9eKC
+         VIgzMLm/g1XSiFCEFZPOCL/xyxObmHSBoeMgJ9aALSvQ+OXm85Dcf7Gl5PLQCgurd4aC
+         vFWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739261862; x=1739866662;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HdSSN9QdNBs8eEdHrDTlxqtSDnLAK0QjbdfY2BqTAsQ=;
+        b=fM205YX5HFsYwpKqI9sI5cLRZjRs6rmcrfp8WvnEebJhcULvA/5m5IHgaiHDmbdXTC
+         fbCwII+E1I6BvcsQOmertebRKiPKox2KykqzO6aKotXYAej1eNlIJUgfxdP3PbW+9rsH
+         xvwrpqQCy8kT6+8lrBOtYcesyTa3zet+iiRAXIsY8p+OZLq2EeemJS+GzvEMcR82jRr5
+         EJmiTDW/Dygv+6WKWaAPaPL9No/vjGbP6tqxSq0pnx7FRcVzFd7HPUXv5TD+aF3WfmRc
+         noQxVcFqiOWCTN1G4LthdOpOAgCes6fQaQGrnInlW9ATHzVNn5FrM4phf2kR/7XAPeYn
+         F6bg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8+skYP+KnsnxbQJmgCF+iKMshUtKDwlg/jlpBBz8qseqmCam5uuIdz0wNwBioNRPgYeswHuN0GcV+k3s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0Con1asyNjAHgSBARKWNf3VFUcqnPcBFtxed+jtZ/8V7oZHZq
+	fvgLNPTpfKF0wu9ogC4zEIGsNlih+cKUnwzn40m+sLwaQoHyERg6DxT2PJDbRi/lnlah6V7LBCy
+	BupMvDQh+x2nL9KBMltpOf1yMsOs=
+X-Gm-Gg: ASbGncvvd6a/hhbBkYsqme0h50HNb/R465hUZi9Cc3hO8/QnQ7ugBTIiAN6yPzB6zAb
+	kb8Q4pD2dhK448uYWYJNvS1ksVq2YrHfUmeL/MAxza8Jz92Ixen3Vmv+XOpGYiqX8eDGVuhni
+X-Google-Smtp-Source: AGHT+IHB7b6T1cEPsukDgawzfpT3y4WANIOfYvlFKXg8jqnneqHuIIRpHG6i6Ao4zutuAREPOypukRqUnjaQG9qIQsU=
+X-Received: by 2002:a17:90b:38d2:b0:2ee:48bf:7dc3 with SMTP id
+ 98e67ed59e1d1-2fa241646afmr26941864a91.15.1739261862206; Tue, 11 Feb 2025
+ 00:17:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB03.amd.com: thippeswamy.havalige@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF00020E61:EE_|PH7PR12MB6859:EE_
-X-MS-Office365-Filtering-Correlation-Id: 989a1ac2-8268-4f00-8588-08dd4a74896e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|82310400026|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?jTReF3fYqT4mFEUpP9BBBH2gSkQXeYUXcd6tMBlgIqk+gIBt70iKT1fkvel7?=
- =?us-ascii?Q?guiJFKF3w6hCcyiVJ+hkUimv+TBEzS97yO+tecoRiWG5a7F3JdfaAGBQZifn?=
- =?us-ascii?Q?ROMG2F7TeojvMSuvYgBCmYMZGz6sUanNUjM0FMRrCVsYxrjG/Dd+TOXJvWJA?=
- =?us-ascii?Q?d5G/XJmI2P3h6SeuC2361q0UTnOPOnKzmEB3IyELMO5jYUGAc47nqyonUVGe?=
- =?us-ascii?Q?0PqjjJoK7T7IxLUjbL0Delf5ub4DezIBeJAmV/gS6fH7jH1dcLrOQVdvlmL4?=
- =?us-ascii?Q?qgS+I3HvKygTdWgtXNy9L604zvacoO8SVep0AhYEk06Et/tvvA1vd7R28nz4?=
- =?us-ascii?Q?aexzGdceE9j3HiKc+7MWLrsaESAcp1kOOCH9Ky3B68yhT2eIjgxJRHWwMhg4?=
- =?us-ascii?Q?rrp996NZd7giz3CKDkeIEBlD77x3japu5XfGKDoDC6JFKnzA1gIC44Uq9k9J?=
- =?us-ascii?Q?VD9sgY8nkdU89PNBGOg55DBU9JesLaoPxbHnLQLg526zrMSGI0WT6ojdaYn4?=
- =?us-ascii?Q?QI89GaVTsdeRLkQnb4jJmeOCABCJbc29zyHaKxGJJVpY8EOPpqW23riL/6jO?=
- =?us-ascii?Q?ItfutMHD5APtO7lqj8hTbJ74rd3duB46w7Da0z51l8dN2gR6LGqau8RSPj7K?=
- =?us-ascii?Q?CKgPEPOwWy1TqUau32WLYcsEeFeO0D+x40jcPpwUckrVUtudifbjIaZUTxak?=
- =?us-ascii?Q?KWCGpUI/p3UTbcD030Wn6+Z63tsmUifUBTNzvoUcGdEQGmOwKtUxOTtuyenE?=
- =?us-ascii?Q?rJ4SdI8JnwHoVEjR2xJGrUysBfo+aFiV2Md2SoGVJtGzVbLXfxb81DOj5mU6?=
- =?us-ascii?Q?UQ5L0//X1xm0E/dN/jiFfL4wlv4l/eQndqgnGlVDofjZPov2RHzUdWAX/Fi3?=
- =?us-ascii?Q?/PM2xoXM/6zmpx3tdlOh1C1ftbk1imXgYI+8hV4bYMI8jjd6SFcNcCGo9AJE?=
- =?us-ascii?Q?nxlIlKV3/FMlsnIWUwrC11PxCu++z/MsaPeq3igrS37i5FDWdvjh0ayKQMbL?=
- =?us-ascii?Q?rwRZliKBtQ8W6pS6YigC3ubCDiRmGbAbbGBjP8RiJuKz1BW9jatuDZNXgEY5?=
- =?us-ascii?Q?dsZjeHNtg9KdCCldnfbICrspR0gIFsNmM6atCkT4ONF0NCsCjHJWqaQw1M3f?=
- =?us-ascii?Q?kq62JlhxegNkTIb0LVwonaPWjILtUggZs03z1cFU8lbF8ZD1Mv/8/0ktpRG1?=
- =?us-ascii?Q?kytXtVjZ8I+LIJh3gxfmnIe0EQAhWMC92N4HjWM7eU7OkIpDs2lPvEBp2De6?=
- =?us-ascii?Q?cpp4dTM9zHV5lbOHlNXH1CdtsIGvtBGpvtu7HxNtt1MoSrBzLHjXrVHm7csU?=
- =?us-ascii?Q?+q7wgklZMHzXPxk2pD+DBlsd+gM3wfgwsFPf6fPLj4b8NQfiNcSB8OVwmimH?=
- =?us-ascii?Q?3vfOE93eq59lVVBul0viO0QKUXlEwRbj3YYmhtu9AfVs9f0mJbB29FSvYzx3?=
- =?us-ascii?Q?WY6K7hp5tdcsiYdoLxI2TojlOhhHeXBqptppDameJCX5uMYfQ+QwIxs5NQF2?=
- =?us-ascii?Q?6D6Ax+Q6+TieNXE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 08:17:33.8080
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 989a1ac2-8268-4f00-8588-08dd4a74896e
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF00020E61.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6859
+References: <20250122065605.285145-1-linchengming884@gmail.com>
+ <20250122065605.285145-2-linchengming884@gmail.com> <878qqj3sju.fsf@bootlin.com>
+ <CAAyq3SZF9eGKfLLcC3zFHq85-AEb9B=Grjqfap8QqCUKLdLSVw@mail.gmail.com> <87frkmt8nu.fsf@bootlin.com>
+In-Reply-To: <87frkmt8nu.fsf@bootlin.com>
+From: Cheng Ming Lin <linchengming884@gmail.com>
+Date: Tue, 11 Feb 2025 16:13:32 +0800
+X-Gm-Features: AWEUYZnQPGM-zFSvmWzAgGExzap-pa5ZcJ795qZ6jg4sRRk3MfEEdZQSlSWjS1E
+Message-ID: <CAAyq3Sa9+FZGiGnBV=KbwVnQhWX-vc21CK75OXSnDDsE89mx1Q@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] mtd: spi-nand: Add read retry support
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: vigneshr@ti.com, linux-mtd@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, richard@nod.at, alvinzhou@mxic.com.tw, 
+	leoyu@mxic.com.tw, Cheng Ming Lin <chengminglin@mxic.com.tw>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The Xilinx Versal Net series has Coherency and PCIe Gen5 Module
-Next-Generation compact (CPM5NC) block which supports Root Port
-controller functionality at Gen5 speed.
+Hi Miquel,
 
-Error interrupts are handled CPM5NC specific interrupt line and
-legacy interrupt is not support.
+Miquel Raynal <miquel.raynal@bootlin.com> =E6=96=BC 2025=E5=B9=B42=E6=9C=88=
+10=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=886:07=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+>
+> Hello,
+>
+> >> > +                             ret =3D spinand->set_read_retry(spinan=
+d, retry_mode);
+> >> > +                             if (ret < 0) {
+> >> > +                                     ecc_failed =3D true;
+> >> > +                                     return ret;
+> >>
+> >> Shall we try to set the read_retry level to 0 upon:
+> >>
+> >>       if (ret < 0 && retry_mode > 1)
+> >>
+> >> ?
+> >
+> > If we set the read_retry level to 0 upon, and set_read_retry fails
+> > when retry_mode equals to 1, it won't return an error. This could
+> > potentially mask an underlying issue.
+>
+> Don't save the return value in this case? But otherwise you would leave
+> the chip in a retry state, no?
 
-Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
----
- Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml | 1 +
- 1 file changed, 1 insertion(+)
+However, if we set the read_retry level to 0 upon, the chip would still
+remain in the retry state if set_read_retry fails.
 
-diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-index b63a759ec2d7..d674a24c8ccc 100644
---- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-+++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-@@ -18,6 +18,7 @@ properties:
-       - xlnx,versal-cpm-host-1.00
-       - xlnx,versal-cpm5-host
-       - xlnx,versal-cpm5-host1
-+      - xlnx,versal-cpm5nc-host
- 
-   reg:
-     items:
--- 
-2.43.0
+I come up with a solution: setting the read_retry level to 0 right before
+the read_retry label. This ensures that subsequent reads always start
+from level 0, and it eliminates the need to reset the read_retry level at
+the end.
 
+>
+> Thanks,
+> Miqu=C3=A8l
+
+Thanks,
+Cheng Ming Lin
