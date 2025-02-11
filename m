@@ -1,161 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5001DDC14;
-	Tue, 11 Feb 2025 19:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBBD263889;
+	Tue, 11 Feb 2025 19:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739301710; cv=none; b=J++FFalIpu2czSXzVYCstRvpmNLJnQA3RowqXWNL1zU7h9HJzWsXFXaOucJNOgQqOCX0qcpAGYXK4+ycsJHDgOMQG3YSDEN9hJqVH3ny9NajVt5hAzkQbOyTgeg4f1wW45FfoymRD1eyWVFmbz7f2sbSkPV7Q6AKKnCAqXMgpyo=
+	t=1739301715; cv=none; b=kQWK469qomm8io4EDwKBY1CD8radQGIik0mk4aCB+3kxsY2iVJcXTgFbSoMsSdhzTRV7EcLBiyUbsR9nkGYmdCWrge+IWo55ZNQGsKht1a5onfxRoCqyz1Nl+0oxVM3E+B8pJL7lWNp+Kc+2m/gyVYuErBaKa+hmeYMwULzTUzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739301710; c=relaxed/simple;
-	bh=029kYh0sxoljCJSf8XQnMO3yhFLYENu21fgjjNO4zf0=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j6s+jOaw5FL0d7j47d9IUAZD8h4p51uhXqGWsZ8PQmwdsJ7PXXdUvytqZ7SUI8mDYFh1OLq53xHoiZbbJHIsJaMrqdHrR5xvW/aW2eeS6+jH7cGDn1cv1PZkrO8VxmOPKwN6KLv5inP+oaIm0tdy3nAO2UkjvT9SVskBNAaaiLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IE4TZFG8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739301715; c=relaxed/simple;
+	bh=tgtV+Wa7SeGMVxezIYOVlCAkbZVBWE2HOEvollOng80=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KTdcwFi1UdbFnAQki9hIJHoclOddHWF4QbLz8Yt/syiOE12nT1Aq84GZazmhvD9AbhIeXwvy3ptu9xD3crju72eEpfGcrY0SOiW7Mw1N732w5bRRaf5EGWbTmiggVK7G0UXhtgYpnIogNKnH8sAi7Bou9JE/xx9lADmz44RzlCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=INB9sV5I; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IE4TZFG8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54DD2C4CEDD;
-	Tue, 11 Feb 2025 19:21:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739301709;
-	bh=029kYh0sxoljCJSf8XQnMO3yhFLYENu21fgjjNO4zf0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=IE4TZFG8VCwqTprVR79rBXrlMEuWQojFSus87EDhrToPQka/oDW5ezwxFLFYgkFG7
-	 qypTFgYStG0DzenivTrY07/k6FYqA0DI5N6PZHBedQENPdL7F8OCP1rgwRogrU6t42
-	 sGpjLZc9Wyh0IzXokBlMJ/WXNNxWvh9oKUrxgO330taUJrh8BgBIkzPscybK/27nYY
-	 aWjfQeNOtxBhVnCDA7+2pHvsEzZpdLIIk8PtZ4VSLZMcIlbEXpF0i8OL8weLGOQAYI
-	 7mLrtIaxG2uC0iAg3uOgy9sMzVOB7nj//LYRrmLOTnU86kDaNXWLMV+KZASjI+vLM5
-	 7/RmD+PGbbV/w==
-Received: from [82.132.185.192] (helo=wait-a-minute.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1thvpK-0036zW-8k;
-	Tue, 11 Feb 2025 19:21:46 +0000
-Date: Tue, 11 Feb 2025 19:20:08 +0000
-Message-ID: <87r0441e6v.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Eric Auger <eauger@redhat.com>
-Cc: Oliver Upton <oliver.upton@linux.dev>,
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
-	kvmarm <kvmarm@lists.linux.dev>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	christoffer.dall@arm.com,
-	suzuki.poulose@arm.com,
-	will@kernel.org,
-	catalin.marinas@arm.com,
-	coltonlewis@google.com,
-	joey.gouly@arm.com,
-	yuzenghui@huawei.com,
-	darren@os.amperecomputing.com,
-	vishnu@os.amperecomputing.com
-Subject: Re: [PATCH] KVM: arm64: nv: Set ISTATUS for emulated timers, If timer expired
-In-Reply-To: <8da22249-eedb-477b-98d8-f50dee56f1f7@redhat.com>
-References: <bcb4289b-507c-4ea1-afc7-6febd34d88db@redhat.com>
-	<86y10osr19.wl-maz@kernel.org>
-	<4d443db1-85b1-4071-acd5-3187deb9cb17@redhat.com>
-	<2f6b2cb1-3d32-480a-9801-9b993ae74e2d@os.amperecomputing.com>
-	<152d262e-641d-4bb1-9656-a13e049d62c4@redhat.com>
-	<86h661wje4.wl-maz@kernel.org>
-	<4a9fbdd9-ad23-44bc-8ba5-399f08068db4@redhat.com>
-	<86cygpwfy0.wl-maz@kernel.org>
-	<b22d5916-8b55-43bc-a256-2136d66ad25f@redhat.com>
-	<86frkptzr6.wl-maz@kernel.org>
-	<Z6ZMdv8jJUvYwQzT@linux.dev>
-	<86bjvdtxb5.wl-maz@kernel.org>
-	<8da22249-eedb-477b-98d8-f50dee56f1f7@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INB9sV5I"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-308f4436cb1so739381fa.1;
+        Tue, 11 Feb 2025 11:21:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739301712; x=1739906512; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tgtV+Wa7SeGMVxezIYOVlCAkbZVBWE2HOEvollOng80=;
+        b=INB9sV5IxCGqMUFCo7LUffCLD/uiC0SxLJOqQGKq0s4tDb4IOBv5z0QMfTKHO5FT0i
+         6EbAWHIUEb7CSjTSVzDCLwyQeVx1pj7o4sOPNjlDuBYynDECCaB9A0/VZ08fTONSBomG
+         ignQzsGl0t6kT8FpSL4B+A0xtKy5QblOl7094vuIc5VjdPk6xXCYWPb6yQcHfAvdUzLN
+         v7SAPxx4z76FIOWYLFn4fln9l2KJjxbNVRMQ1Q8DPUMGE8nTAL2zAqJkBW0pLO9bT3A3
+         Ig5qGRZ9YG06st193W3IDiTqqvy+yb97CjnOpXuduCtjU/IdH+5LBOIRqCzLfFGG2Vzg
+         jtIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739301712; x=1739906512;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tgtV+Wa7SeGMVxezIYOVlCAkbZVBWE2HOEvollOng80=;
+        b=ULu/0jPfOQoMsG2+BG4NPqOAoLJL28C6ZGaVzZsHpRFtjI6lwV9NOo2ri3SHA1jBnK
+         NkbjKIaFL60s+t901q+NkaVZn077LQhAyZi7t466nKyav8u3kEsZSOHQXZaqMVbADwyr
+         Lxw7HrQJO387hL7hH/TYiizp4Z6DENQxjiHGCHOB/j0+G3QWwx2Nc5gUH5JBkztcoCfV
+         v8TgUA0x5CjhhlSDZyBEuqGNLtr5hSvIqNyNn7jzWPDKcnKBlPlxuHppwax8Pdt117UZ
+         3ig5RjeHwuFgqeL5YSNkAM3pYly/spvCkWigEGswPL4/4evffPCIMvJVROfd9e3YlrDq
+         eEFw==
+X-Forwarded-Encrypted: i=1; AJvYcCXMKfENN2NYy3uFL1MsBcN1lMQItSCLHk+jrqwKTSjWjsduQzvclWH8dwPxEMOJqIzEkzTK0xT0WSq/a9U=@vger.kernel.org, AJvYcCXQfUstx1sJpqSsSgtr7HuPpinsXJt2DjTNApVD3mUPZi9IzdOr0lE4cuYMROdh9kxKXxhIOAEs2RYyqVb1korg@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoFZ7iI484rL3jFezwIthZnuRX2P7yifHD9+lqWPScpQMeBxaQ
+	BItWjxdegq173g9mo5cwEFeT+6hZq9LYMQPffsa/qlC9PGpdWhKfKp0fS2F6t9zU+whq9p4bevx
+	QE1KE4UtbEqS9XkK/LkK/0tnnmCY=
+X-Gm-Gg: ASbGncs1FCXRJ+lBERSyz23PbqStJxLewLFYSa0wGfw3JGAaq1Ng7dfCi9H4iSx6is3
+	RuPXgXUrE6QJuAT6vtlh/D72Kv2jfWr600H77Kwe9wYUHfqCTu0YhDxuxEYjMm+miFy18xTzmmu
+	YNwxd/EAVat1ZO
+X-Google-Smtp-Source: AGHT+IEKJAzutbQRM+DNEY/sK2iNGzebZM0+/CFesmtvWA5xbvrBToJwne6Nsp1ZZPn1QsgYCsv7TokRO6AuAuLytUw=
+X-Received: by 2002:a2e:a78a:0:b0:302:49b6:dfaf with SMTP id
+ 38308e7fff4ca-30904632510mr659631fa.20.1739301711976; Tue, 11 Feb 2025
+ 11:21:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 82.132.185.192
-X-SA-Exim-Rcpt-To: eauger@redhat.com, oliver.upton@linux.dev, gankulkarni@os.amperecomputing.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, christoffer.dall@arm.com, suzuki.poulose@arm.com, will@kernel.org, catalin.marinas@arm.com, coltonlewis@google.com, joey.gouly@arm.com, yuzenghui@huawei.com, darren@os.amperecomputing.com, vishnu@os.amperecomputing.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+References: <20250204-printf-kunit-convert-v1-0-ecf1b846a4de@gmail.com>
+ <CAKwiHFi6SUCT7UjUTdKmLJ8kiAEqVg=d6ND60R05MJB85Eoj9w@mail.gmail.com>
+ <CAJ-ks9kLmArqqPati8n0dwzhjccLmTuTHtkaSyf_F_1QXzCoRw@mail.gmail.com>
+ <87bjvers3u.fsf@prevas.dk> <CAJ-ks9=0+fk22Dx-65a+CSYhy0dnjTJuot9PtgOCi5Th1_wARA@mail.gmail.com>
+ <87y0yeqafu.fsf@prevas.dk> <CABVgOS=dfuX+X8=EVHcrCZnbOZj3T+wGD922eoeHb-dcOmmzXw@mail.gmail.com>
+ <87h650ri08.fsf@prevas.dk> <CAJ-ks9mKZVSZzgaPbJ3t3qcx0bMc1LUH+GueOtVX4UAWbntdvg@mail.gmail.com>
+In-Reply-To: <CAJ-ks9mKZVSZzgaPbJ3t3qcx0bMc1LUH+GueOtVX4UAWbntdvg@mail.gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Tue, 11 Feb 2025 14:21:15 -0500
+X-Gm-Features: AWEUYZn-IDVzrPa3u-avQrQtvmNmvj-VcisIqvcjJqs5Hdu21kJ1zWqRiaBmgMQ
+Message-ID: <CAJ-ks9kMoWiWACGWWAL7TJkf9MU2k4afPBikz2hxRibzA2hHZA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] printf: convert self-test to KUnit
+To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 10 Feb 2025 18:26:48 +0000,
-Eric Auger <eauger@redhat.com> wrote:
-> 
-> Hi Marc,
-> 
-> On 2/7/25 7:38 PM, Marc Zyngier wrote:
-> > On Fri, 07 Feb 2025 18:09:58 +0000,
-> > Oliver Upton <oliver.upton@linux.dev> wrote:
-> >>
-> >> Hey,
-> >>
-> >> On Fri, Feb 07, 2025 at 05:45:33PM +0000, Marc Zyngier wrote:
-> >>> I found at least one issue that could fail the migration. Before the
-> >>> VM starts running, we limit the feature set to the subset we actually
-> >>> support with NV.
-> >>>
-> >>> By doing this, we also change the value of IDreg fields that are not
-> >>> writable, because they describe features that we don't support.
-> >>> Obviously, that fails on restore.
-> >>>
-> >>> I need to have a think...
-> >>
-> >> We spoke about this a while ago (and I forgot til now), but I was
-> >> wondering if we could use vCPU feature flags to describe NV, including
-> >> the selection between FEAT_E2H0 and FEAT_VHE.
-> >>
-> >> I think this might match userspace expectations a bit more closely where
-> >> the state of the ID registers after init gives the actual feature set
-> >> supported by the VM.
-> > 
-> > I'm not sure that's enough. Let me give you an example:
-> > 
-> > My host has FEAT_XNX, described in ID_AA64MMFR1_EL1.XNX. For whatever
-> > reason, we don't allow this field to be written to, even out of NV
-> > context. This is odd, because for an EL1 VM, this field means nothing
-> > at all.
-> So the curprit fields for me look like
-> 
-> - ID_AA64MMFR1_EL1.XNX
-> - ID_AA64DFR0_EL1.DoubleLock
-> - ID_AA64PFR0_EL1.RAS
+On Tue, Feb 11, 2025 at 6:34=E2=80=AFAM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
+>
+> https://lore.kernel.org/all/20250210-printf-kunit-convert-v3-1-ee6ac5500f=
+5e@gmail.com/
+>
+> Weirdly the cover letter seems to be missing on lore, should I resend?
 
-Right, that more or less matches what I see locally.
-
-I adopted the following scheme:
-
-- On top of the existing KVM_ARM_VCPU_HAS_EL2, we have a new
-  KVM_ARM_VCPU_HAS_EL2_E2H0, which is only valid when the former is
-  also set, and force the whole VM in E2H==0 mode (that's Oliver's
-  idea above)
-
-- The NV view of the ID registers is enforced at the point where we
-  compute the limit values via the ID reg reset helper, instead of the
-  post-init repainting
-
-- Neither of ID_AA64MMFR1_EL1.VH or ID_AA64MMFR4_EL1.E2H0 are writable
-  at all
-
-- Only ID_AA64MMFR4_EL1.NV_frac is writable
-
-The result is fairly small, but is of course quite an ABI breakage,
-and I'm more than happy not to have merged it sooner. Maybe I should
-wait another couple of years! ;-)
-
-> This is still based on your nv-next branch from Jan 9
-> https://github.com/eauger/linux/tree/nv_next_jan9_2025
-
-Yeah, that's getting old now, specially given the nature of the bug
-fixes that have been added.
-
-I'll try to rebase everything on -rc2 with the latest fixes and the
-new ABI by the end of the week, and we will take it from there.
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+It's there now.
+https://lore.kernel.org/all/20250210-printf-kunit-convert-v3-0-ee6ac5500f5e=
+@gmail.com/
