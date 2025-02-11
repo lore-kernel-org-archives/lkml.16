@@ -1,233 +1,246 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA37261567;
-	Tue, 11 Feb 2025 18:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739297182; cv=fail; b=jMFOfrih6F0VZ/ttyOb14VdZQcdRNhg1B7Si6LgISdxCzZU1f5jfI88V9edKAExKshg4KKhSNWdOlVZXe60opHNMOFWbfQVZw4LED5yAt2qkqexB7lo7KKsFA/o6MgzPyV6+f6INgE4dvnkFVl/F4IGg6t2l5Pxfuydf0fZQ9is=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739297182; c=relaxed/simple;
-	bh=apNEduZoILJdLdtq7XZyKL63Ju0QnvmMYXX4py0rixs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=dIPZ1LXIo2vbLlhrvQ0SMDHl2MHPC1PMqIygEMBbyDkTAEGxMRM5Jkj10JUcpKMX0U7gPBtT4c61CHPASIPs+yVX8R4E3lhH5gW3d39Ll0H90uHdYymzgW6Owlucp/3HgUAStd+kjOgL9YNXMV+Gg/HExcxgLkgXmw6iQrO/NYw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mG7XknV6; arc=fail smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EC91E04A9
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 18:06:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739297209; cv=none; b=uY1POkx+CS9WcIVt8cVllZjtJ4C8OdxDWc6RuFIZlpDvTT2UDCvb3PTjtbLVgtGAOSlQzXrtd9POOhOGoRb9/QSSawCC/0YyPQIvNB3EC7kHD8EqMW+/gRgrURIZ0cgkRzE9EzcgRHHt2PZWnDOG/5HnrmZNp54OV0S8gDOmo6M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739297209; c=relaxed/simple;
+	bh=OytRgNPeKUnAoy0Vyg9o3zSBRo9UIoE+Y1y8QfRSSgA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JWABojZg6EVO+S+Cyyb7oAzVnKmsKeNZDhS0Kp53h+gBP4E0n1ezZExxGxy9LdWItCPLa+EFjsCoqJg1KapoSwV1+6FQxOwHKf4Mh3foeJyYw97AyojV7R67cEdMP1VnLI4xwCD+2Igtmt98DxTTMHVrYW4JlifxjWTVvSZJs4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nT38f6NI; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mG7XknV6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739297180; x=1770833180;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=apNEduZoILJdLdtq7XZyKL63Ju0QnvmMYXX4py0rixs=;
-  b=mG7XknV6IHbiFwA9AibPjArL/8000az4eMvdcRyxPlFL7T5Fvv3IBqK3
-   UKT/upO79bIMIrAlOPrbBeU2CzUq2D9cfRUuLN9ZK03i8fcXTAaX0p/eN
-   bkaZ5yfuJR/g7bbb1gKDB8DBfE/OIFTrY8NIeEDxSuUjpqPKmn1fqA2C/
-   5/sWsa1IrkMttgf0KpWjMFphKnznn7YuNtwRIN2y0BlX2jqNVqiyOP5+e
-   WQ7Mj5Fl5FInAoZecHuEe+7nHQzPxZXlYQS0iP68HEyNju4Cvom1yXQcD
-   JDy/SihyVFaX4dYoThdNs/ZyvEct/SWqX2dfz4jkniJVbm+Z/f9dl9Nof
-   Q==;
-X-CSE-ConnectionGUID: ph/QE0SoTp6Hh/sE6EoEnw==
-X-CSE-MsgGUID: x2hirPVAQiiccNev3YVaSg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="39166461"
-X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
-   d="scan'208";a="39166461"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 10:06:20 -0800
-X-CSE-ConnectionGUID: iEt1BRMlRwWHNGpS+cAKgA==
-X-CSE-MsgGUID: d82+Pk9lTYSMrr/+d5Ls3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
-   d="scan'208";a="113225415"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Feb 2025 10:06:19 -0800
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 11 Feb 2025 10:06:18 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Tue, 11 Feb 2025 10:06:18 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.45) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 11 Feb 2025 10:06:16 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yyV5nmsoxPx+fCnN3l2nXNoPoH9/7NW4kRjdM1aklM1tNwd/naGkGFFO8A4UgfbjcjcP4xK1k9+dAdscezq67kKz9BlW1uFMp1VnONARSx4oA83d5Zcvv1EpMrs7wGvLZ+CAP1zNWBtHt4EJ8keLLoUd/uxFdgTaXz7OLXF7r7pbpu/IZvhLGw9kN1ag1sreN/VBQ1uQyee4s8+KyJehJCTZyjmUPabFNarZa91edk28Cd2aNa4GSRd8bIicbYqt87K5wpysgKmMKg1LHJdZ2W+4P0Cqkcw5GRc2muPPzcQkfoxLMXPjMb06PjbzZQMAda5O/jiGyKe8pIa96ieUag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=apNEduZoILJdLdtq7XZyKL63Ju0QnvmMYXX4py0rixs=;
- b=KhAiIQhC2KnaREtihRAYGbBwrPCO+y0eVJfuQLGdVEAP9dRdStfzcPoFl3SlWYu4YnmptVs9YvBhBrnJ0jHraAE854eDBUQDxMMrRgaasC5J5+J7IKDeB2IltYVlc88k7cwDcaILcnRPOtZcq/cIWSv0gyo6r6Zs8v/nYnty1wF4NR/tD0eEXRnsp166hhH22UNK4o23hI7xeTwx1Z+m8fpOza1fedmsWkTpVu+kn+OMvU8kx/9J1tttvCbuq6ndALDdxng6waE9vg+z3odNAMJv+v47AKgD044jC4BmpJwSlkeNbe6uOjcZWCYbGvsmZQysGW0FcWj8n8wB60165w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SJ1PR11MB6083.namprd11.prod.outlook.com (2603:10b6:a03:48a::9)
- by SN7PR11MB7565.namprd11.prod.outlook.com (2603:10b6:806:344::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.16; Tue, 11 Feb
- 2025 18:05:46 +0000
-Received: from SJ1PR11MB6083.namprd11.prod.outlook.com
- ([fe80::acfd:b7e:b73b:9361]) by SJ1PR11MB6083.namprd11.prod.outlook.com
- ([fe80::acfd:b7e:b73b:9361%7]) with mapi id 15.20.8422.015; Tue, 11 Feb 2025
- 18:05:46 +0000
-From: "Luck, Tony" <tony.luck@intel.com>
-To: David Hildenbrand <david@redhat.com>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>
-CC: "Moore, Robert" <robert.moore@intel.com>, "Wysocki, Rafael J"
-	<rafael.j.wysocki@intel.com>, Len Brown <lenb@kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"acpica-devel@lists.linux.dev" <acpica-devel@lists.linux.dev>, "Thomas
- Gleixner" <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "Borislav
- Petkov" <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "Oscar
- Salvador" <osalvador@suse.de>, Danilo Krummrich <dakr@kernel.org>, "Andrew
- Morton" <akpm@linux-foundation.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 3/4] ACPI/MRRM: Add "node" symlink to
- /sys/devices/system/memory/rangeX
-Thread-Topic: [PATCH 3/4] ACPI/MRRM: Add "node" symlink to
- /sys/devices/system/memory/rangeX
-Thread-Index: AQHbfACE0Yu2SiLzv0qtSfoPrdz0Y7NBqsKAgABurYCAAEh1IA==
-Date: Tue, 11 Feb 2025 18:05:46 +0000
-Message-ID: <SJ1PR11MB6083929661A91F9F60F7C8CBFCFD2@SJ1PR11MB6083.namprd11.prod.outlook.com>
-References: <20250210211223.6139-1-tony.luck@intel.com>
- <20250210211223.6139-4-tony.luck@intel.com>
- <2025021111-deepen-landing-4252@gregkh>
- <d19e60d7-8abb-4e46-8935-bc989b1d5d68@redhat.com>
-In-Reply-To: <d19e60d7-8abb-4e46-8935-bc989b1d5d68@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SJ1PR11MB6083:EE_|SN7PR11MB7565:EE_
-x-ms-office365-filtering-correlation-id: eaa80fe2-b743-4452-69bd-08dd4ac6b56b
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?ZTJ4bUFGM1pmSkRLWmpya2IzUVgwb0xQWVRGaE9YaERkamZOcGc2WGdkS3dy?=
- =?utf-8?B?VlB6ZVZ6VWdsYjlpcXlsaGhFWS9Fbk5SY2VMYkVvanlxUGxWZnB3Q0VkUGFx?=
- =?utf-8?B?QlEzT3IzSElpVUtmK3oyNEVIa3JxZXZOTUU5S0tibnNmdmpTSnN6clRLZHUw?=
- =?utf-8?B?TnQ2VXNibGNSa29jTkgzd3lIMWptUVpueFd4Q1RkUEhjZ3F1YUlUc25nc08v?=
- =?utf-8?B?T05pSklsM24wWkJGbDdHV29wK0RYNVpDNzdLOFE3Y096T3ZxN1k2MTJXNkl3?=
- =?utf-8?B?Wnl5UDF4b0Q4L3ozT2tJZjB0TGVpb0pObnh4NXR4Ti9uUVRhN1JOU1NROWhy?=
- =?utf-8?B?VTYxa21hNFltNGlYUDhiVDBHcGRWcWJ6WUpKRkRWQndUWndVOVI4Nk80T0Qw?=
- =?utf-8?B?ZUF6MEpveG5POS9uKzIwMmorMVRYRGJ6T0ZLcFo4SFJ4ZUF3MithaUh4VDlD?=
- =?utf-8?B?Ymh6YURQWDBXajVIeXg1OFdPSk5uaXBlN1RxclE2b0lFUWt3UEg2dkhlY3lI?=
- =?utf-8?B?SHZxRTNjQjQ5Tk1oaHJmTjNGSDdGK2xJWVlLY3FRWkhPN2c4VnhtODV6NVcz?=
- =?utf-8?B?WGpSdXo1aXEzajYvdXFoNDFod1hzS21WTnJMQXRMSlg4Vk9yYVpoc29DdzZW?=
- =?utf-8?B?K2g4VGJOMytsN09PSEpEaGNpS3UvNTRQSzFwa0kvUjNkSkZhQ1NPZGY3Y0dM?=
- =?utf-8?B?WGoxdHJqdGlzdHVGbEZoTG1ZazlnVlhlZ0VOcHpaN2JQaEpEL2tFTE9DWGda?=
- =?utf-8?B?Y0R0Z1RvM3BCdmlXSE5RNFhxUmVhbUU5elNUQnFDeVNidUtIalBVS2tSSXNG?=
- =?utf-8?B?MWRoTHZPWWIwT0l1Z1NCTldZZ25zd2JTUWx5U2VXTzFiV2JTTU5hRC9GSVFw?=
- =?utf-8?B?THpFdVZsOWU1ejUvcXF3ZENSa3ZWZW55WFlYaGExQkZzZUdKWVZIajU5My9p?=
- =?utf-8?B?SzhOMVpQb1NHRG8wbTNjWTZya0FQM3hNNzFobFRNYU1mTkZpRzhkVnZtOHlt?=
- =?utf-8?B?Q2NnTkFBVXphNTJBWVA4Z0c5dXZJTDFsZVhUZ2VuZjY2Ymkyam5FbkhxWTdO?=
- =?utf-8?B?Z0Jwb0ZHNlM5VmMvZVc1ZTJhSnlzTjg2ZDhyVURYMUFrdlVkRHBpTDV4WXhN?=
- =?utf-8?B?Rndzb3EwK1l0UFJWY0tDeWdFZWVDSkF4NjJ0Zi8yKytaeWxDUUFZdzVHeVhu?=
- =?utf-8?B?UjBzVVVSSGllcWs1QXEvV3IrcVlqOWFBdXVBaWdUczVQOW45OWNURHFveCtT?=
- =?utf-8?B?RmUyd1lUV1lsMGFlUHZkaGVheGo3QzF3ZVhLQlUyemloa241dElKMjlmcCsx?=
- =?utf-8?B?ZTFSZjlWdGYwZStsL3p6NGZGeXIrUUNxK1hFdGFndXZtdGdEWWlRY2tCdU1q?=
- =?utf-8?B?a09tTWdqZVk0ZGViMGM3ZWpaMUJsaEtvOXpsdkNUd2Y2R0ZXOHEzSFdZRHRq?=
- =?utf-8?B?VG5WTEZMZUJxenltdExOMnl1dG1iVXE3MTliSkVOcnJjL3g2VThFN0VlK05G?=
- =?utf-8?B?YlI0WHdlMmh4UFNON3lDVi82UWxSSmFoM1BSR0xCSldVTVBUcXJpTUlVZ1Zu?=
- =?utf-8?B?RkQ2dmFPTGVBTWRyTWxZdUExUHpJTzZPS2daOXdlZVZmcmpITGgzTmk2SDFU?=
- =?utf-8?B?Q2VZT3MzUTcxV1FtdHl2K0dQMWhkQ1BucjVuTXZ3UDd3VmJzWW9YbEJYMnZC?=
- =?utf-8?B?WkVzeitmODlOZXBnSkZNbVdJdEMybGFKSXZERndXTkU4SHBzREVnQ0RRTFZ2?=
- =?utf-8?B?eHRhSXBFRnV5Rnhuc1NwQVdJN0xxNWtWR2VueXBhMWZHRmhmdlZEaGlUU2wy?=
- =?utf-8?B?YmZIQXNZRVVXbFdsSkh6Slo5RWFZeGxZSytBVVI2R0drNkFpQ0JCQW9MRGli?=
- =?utf-8?B?azJXN0UwLytJOVZyU3VReFVycXV5TTZhN0czQzB4UXJHUTVDcVJDbGY5ZmVE?=
- =?utf-8?Q?i/0Vy2TLuDruN9cEPN4mRA+jvUFmQW71?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6083.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?bFNtbDBxUlhxZkpvY0dvYldGVHpuSzN6aEhxSXVLWUs0Y2dTb2RaVFV1L24z?=
- =?utf-8?B?a3N5TU9lVHc0ZDdTbWsvU1JvWGRpYUxMRFZMWVhja0pRN1A4VkcrZ3JHRUhq?=
- =?utf-8?B?Zk5EbmRjYk9WbzJka3dyOVZxSzhlQVBTU25aTHZzQmFVeXA2di9hSnVKNnl0?=
- =?utf-8?B?b2FscW5kQ2VnNGdjUlZWa2x1RjlyUU9FMG1KMDMzbUZST2ZhWU5tRGlTRnMv?=
- =?utf-8?B?Z0xyLzkvSVhnbjJQMlA4SlhTZmxVWTVNNGpmcGI0dkZKWHhMMW5LNDdkaFda?=
- =?utf-8?B?T0NidmpCZXpMalZwWm44R2tpSUdWQTZ0TURLTi9OanVyV3BqaWl5ZlE3N0hm?=
- =?utf-8?B?bG15UWVIUXFpbTNZNVIvMm1JakFNa1JwdWM2c0oyT1FxT3pubHBlalZvZVlj?=
- =?utf-8?B?RUxxMEY5cTNEZTFsMEpaRVRTV0VWaXRNWmFpYWlSbmFOS1pST2dOb2ozRWlU?=
- =?utf-8?B?d3RjMWRYNmNuMitDbHB3Z2pnTjZOOWVmUW5wR3kwMWxYNU52Q0Q3cTF3S25T?=
- =?utf-8?B?NWRNc0RvamNNU0ZFcXFKRHNubUtaeE5LNzY5ZlpZUzEwUW02SjdCUE50U3pm?=
- =?utf-8?B?MXdHTlVRckdnc3c2ODRjQ2d4cWZJbTlhVk01MHBOeURPeGdCbHNNR0hKRVNi?=
- =?utf-8?B?Q2lWNUVEYWcveEZSMldVVnlTeGxwZ0dWZ0MrZldNVm9hdHNhd1JLNUVFWks1?=
- =?utf-8?B?bkhpazM1eUFJanJxck5TOW8vdWNmS3Y1NXcyTnlBQzFqY3lYakJ5Y1ZOYXFO?=
- =?utf-8?B?K0pZbnNaWis5WXdtT1BWS0JTQ2tuWExuQ1B5VWg1T0YvSC9YcmxvZnNNMVg0?=
- =?utf-8?B?Y3dudVdCMXQ1MUNMSWNjTHhIL2g3dUk3WXZRY1NFbmk5ZFpjQXR5aHU5QU9p?=
- =?utf-8?B?R0tZei9iS0F5NURSU2krQXpLY1ZCZm03NExqcW9CVElIL1hkWGVvU0NCZThh?=
- =?utf-8?B?NDJkaFplY1crV0Q5OFNnNGFMYUY4NVpUQXd1eFI5Z3pzaTg1WXc1S1h0M1Iw?=
- =?utf-8?B?K1ExUVFTa29Ca2hxaWxiU0YxV2h3cVBNTnZLTU1zTi8vYThaa0xQMUhYT2xL?=
- =?utf-8?B?OVowRVNSdDVIMVZ1dGdaWUFPVGl6b2dITEZQeC81bXY1ZmN0VjUrVzdoRlA0?=
- =?utf-8?B?MXh1bnBMdEZZaExxMmJ0T091V25GWmNueUhkUldvckFidW1iKzlRd3Y5RG9s?=
- =?utf-8?B?Wm5jV1F2bldLbU5xNFliMHVPZ0N3ak93QWliTDh6MHpsYTZmbm5hamsrOS9L?=
- =?utf-8?B?R3ZlNmxDRGo0blRrazJ0djlQYXhSMDlMbHNaR0p3eUtxUlVzdXZZL0N6RHJr?=
- =?utf-8?B?MFo1R2cvVlhleitCRmdhamU0a0dpSmN4RkoxK3JGN29GNU9zbUhSdE1lZXJ3?=
- =?utf-8?B?d2NMWGJGRmRhNHRIY0I3YmljYmEwM0FOQlJRL2xCM1o4VWkrbWszTUZhWEM2?=
- =?utf-8?B?UjRlVXBhWm9udGdHR3poWEFwMXRWa0RkRnZmTU1RM0hNbjhaUEVxVXF6dFF0?=
- =?utf-8?B?VDNHRGQ5M2VGVHV4OXhnOVlUY3lGalRXanNsampkOWFZMWx3eHRmTDJyM2gw?=
- =?utf-8?B?ajhIRjlvOUdFQzVzdXhxbkRmT3hlNGlKU29VWEszVUZqOHB2V3VjVXVpN2RK?=
- =?utf-8?B?NFE5L0pnR016akNzN1IySFZ1SlRPbzVCbGo5REtPQkpRSzdGanZOUEsxeHN5?=
- =?utf-8?B?MTFKRTF1djJzd0dJQ0ZxTVVzYzBoS09tSkd2ekoxcnB2VTEyLy9DVkpqQWZU?=
- =?utf-8?B?Z0JQQTREMUxPS3hOV1NQNmE1OEsrOGpwSnBrZnI1Z0JpUjFIb2phOUNQWEJo?=
- =?utf-8?B?M1lVUHNDOWVBZmJNMTl5a3JDZ1phUjVkRWJiOW8xM3BrNVNBTzlNemxjU0wx?=
- =?utf-8?B?Q2t6UWJVdUNxM3FKaXY2Y2VUdkZNVElNdUg2SUwyWDJRRm9PRXU0eHB2Vnhj?=
- =?utf-8?B?d0lEL2hiQWFmdUo3bXlCd2NweGJ5U0VNT2Fvc0cxSkkyWmc1andwUGVpS05n?=
- =?utf-8?B?NXZpRmk5MkR4Y3hKNGpjdTNQRFM3QVhNK1B5NXR0b1g4UjZyUkdwYXFEVVc2?=
- =?utf-8?B?MW5Fd2grblFNUTVHL3FNcWVqejdzMjJSeExpeHpmMDdsY0pUaEpPWVdKdkRY?=
- =?utf-8?Q?V9pvGKC//0sDUTvCmtTFeLJMY?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nT38f6NI"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3d147331fb5so7955ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:06:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739297207; x=1739902007; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VzmurR78eCF1q/Efiyb54t1laawyXxvxmHWsMizBvSU=;
+        b=nT38f6NIak60qeeMUOQmonvFk4zcLNSSnZyJy8F4Bd3LURhSj6oedqTCIGEyz0/MQn
+         tRmpGFxydwfIBx+hN9kBPeWcZmnbdr0quGk5TnA+R7waZSfXCBpoTg7uwbG3YL86wxZ7
+         +9UK2yv5w7/BYV/Pey475NU0OW72aLA4SJGRolWSxDeCXv0Uj8W1GJstcEFMxfQWfpQA
+         QSGZZqST/achqRdP+rteQQRJSTQQDj3PuQBd8dWpaNo0cvSajmnZ0JoTKSkhjw58CUCk
+         YlCYN1/7ayzhozETtbnvdifvNFoYkXuobB5kTtfWj9lm3ox6YVclhLJvVoCRhKX2UDla
+         S/yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739297207; x=1739902007;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VzmurR78eCF1q/Efiyb54t1laawyXxvxmHWsMizBvSU=;
+        b=pYwXabnBA7WCA2krJiz2S6xHmo+AFlI1YXXOKkHhOsnIApL7pe+uSZAczsqD1TUwp+
+         TswZQCRkvkswRWs8UrSrQQs8DmI4gp55sVvfNirb8GNEzs8UJBTLlsQhY/YANqet3GoZ
+         9gMSreOdRccCU2YN4qBpW/hxTyXGljQzHZpi8S+AUKMaPcKv4VqEqnpUstg+s8EBXBQg
+         oo1II7iuDVbBwXpwFmR8Nk9qx7M7knSCYYpqsblgdRdyqha+Hi7CxPnbvrwIDNpqEENU
+         UwjcOPU79lwlj39KaL/fkwAXZQnyAnTeGx0+ivYxBDxpILgq2IMeDy94jz3b4AuhMONg
+         Te+A==
+X-Forwarded-Encrypted: i=1; AJvYcCXExPoswPK0Q9oTi2skeFGN/NOdOCsh3g2TCOyijKqxlXx7Pymtapeonohtf3O8FVECjko4IO74Pfa+rso=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx551E8NLOUIP5S+Yd01iXm7roK9TpjBC/ct1MDkEJKNTp4PMzq
+	TY/P5dC7tjMz638CmITQjHCOJ5/9CN2DvNFSiU87vADsaD1n5jwSgbt3hSI4GDVjSf+rFAV4Z3K
+	qQyWBYXG+4MSrsSJRpLfL+Am/shv6+y8EMtIZ
+X-Gm-Gg: ASbGncv6+8bFh383yqRDD3xdah0WIvatyZPemwW4CwXMbxsajlM4JIrQGD5Vv5b0iZb
+	P5tlVEyfzNYccV1bPEfkefGuXFtleLhTRZQcfdqmLbAsMrYZEM9EyOjrO3vdYXbKf5CpQR0liUW
+	piT2cWRTyiUH54jXDWs0AC5RyQ
+X-Google-Smtp-Source: AGHT+IEsfTzjtvmm1nvcqDS/HnNLh1LVTBfXEq3QQADjhxHZSSpHGhozWCxwrIVerIJHiJBKFpGrUB9GeZzRRQn90JM=
+X-Received: by 2002:a05:6e02:1387:b0:3cf:c88f:2ce with SMTP id
+ e9e14a558f8ab-3d16feee9dcmr4447465ab.18.1739297207049; Tue, 11 Feb 2025
+ 10:06:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6083.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eaa80fe2-b743-4452-69bd-08dd4ac6b56b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2025 18:05:46.3880
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wvrRCW9ejjgaa+sX0CNlwUgKI75N2hBJqW7I/hsZaXMsuMLBEl9+SbC6mcIuYIVPatkVqm3BmwBEKJrrm8DkDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7565
-X-OriginatorOrg: intel.com
+References: <20250111190143.1029906-1-irogers@google.com> <Z6panMzNSm1op8Di@google.com>
+ <CAP-5=fUY83gifsMZA0Q45kiQQbAKp2uJxkuwrwGtHK2hiUFRDA@mail.gmail.com>
+ <Z6rAHhAIdlkAryGJ@google.com> <CAP-5=fXjmJ+Rr7ejL6fCMeu6PZSit7n84hQkjh=0jQhkr1on3Q@mail.gmail.com>
+ <Z6uOGNO6p7i9Fese@google.com>
+In-Reply-To: <Z6uOGNO6p7i9Fese@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 11 Feb 2025 10:06:34 -0800
+X-Gm-Features: AWEUYZmkVoJa2KPOMj-kmrmsbLrNeuqFcPJxDJvle8dXEF_SwyY8bzGrcS0rWdQ
+Message-ID: <CAP-5=fVxFe4nMS_dHmO=6-ddA40XbVdvouPLuOxj5cenjUr8ng@mail.gmail.com>
+Subject: Re: [PATCH v1 00/10] Move uid filtering to BPF filters
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Hao Ge <gehao@kylinos.cn>, James Clark <james.clark@linaro.org>, 
+	Howard Chu <howardchu95@gmail.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Levi Yun <yeoreum.yun@arm.com>, Xu Yang <xu.yang_2@nxp.com>, 
+	Tengda Wu <wutengda@huaweicloud.com>, Yang Jihong <yangjihong1@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-PiA+IFdoYXQgaXMgZ29pbmcgdG8gcmVtb3ZlIHRoaXMgc3ltbGluayBpZiB0aGUgbWVtb3J5IGdv
-ZXMgYXdheT8gIE9yIGRvDQo+ID4gdGhlc2UgbmV2ZXIgZ2V0IHJlbW92ZWQ/DQo+ID4NCj4gPiBz
-eW1saW5rcyBpbiBzeXNmcyBjcmVhdGVkIGxpa2UgdGhpcyBhbHdheXMgd29ycnkgbWUuICBXaGF0
-IGlzIGdvaW5nIHRvDQo+ID4gdXNlIGl0Pw0KPg0KPiBPbiB0b3Agb2YgdGhhdCwgd2Ugc2VlbSB0
-byBiZSBidWlsZGluZyBhIHNlcGFyYXRlIGhpZXJhcmNoeSBoZXJlLg0KPg0KPiAvc3lzL2Rldmlj
-ZXMvc3lzdGVtL21lbW9yeS8gb3BlcmF0ZXMgaW4gbWVtb3J5IGJsb2NrIGdyYW51bGFyaXR5Lg0K
-DQpXaGF0IGRlZmluZXMgdGhlIG1lbW9yeSBibG9ja3M/IEknZCBpbml0aWFsbHkgYXNzdW1lZCBz
-b21lIGNvbm5lY3Rpb24NCnRvIHRoZSBBQ1BJIFNSQVQgdGFibGUuIEJ1dCBvbiBteSB0ZXN0IHN5
-c3RlbSB0aGVyZSBhcmUgb25seSB0aHJlZQ0KZW50cmllcyBpbiBTUkFUIHRoYXQgZGVmaW5lIG5v
-bi16ZXJvIHNpemVkIG1lbW9yeSBibG9ja3MgKHR3byBvbg0Kc29ja2V0L25vZGUgMCBhbmQgb25l
-IG9uIHNvY2tldC9ub2RlIDEpLCB5ZXQgdGhlcmUgYXJlOg0KICAgIG1lbW9yeTAgLi4gbWVtb3J5
-MzIgZGlyZWN0b3JpZXMNCmluIC9zeXMvZGV2aWNlcy9zeXN0ZW0vbWVtb3J5Lg0KDQpUaGUgcGh5
-c19kZXZpY2UgYW5kIHBoeXNfaW5kZXggZmlsZXMgYXJlbid0IGhlbHBpbmcgbWUgZmlndXJlIG91
-dA0Kd2hhdCBlYWNoIG9mIHRoZW0gbWVhbi4NCg0KPiAvc3lzL2RldmljZXMvc3lzdGVtL25vZGUv
-bm9kZVgvIGxpbmtzIHRvIG1lbW9yeSBibG9ja3MgdGhhdCBiZWxvbmcgdG8gaXQuDQo+DQo+IFdo
-eSBpcyB0aGUgbWVtb3J5LWJsb2NrIGdyYW51bGFyaXR5IGluc3VmZmljaWVudCwgYW5kIHdoeSBk
-byB3ZSBoYXZlIHRvDQo+IHNxdWVlemUgaW4gYW5vdGhlciByYW5nZSBBUEkgaGVyZT8NCg0KSWYg
-YW4gTVJSTSByYW5nZSBjb25zaXN0cyBvZiBzb21lIHNldCBvZiBtZW1vcnkgYmxvY2tzIChtYWtp
-bmcNCnN1cmUgdGhhdCBubyBtZW1vcnkgYmxvY2sgc3BhbnMgYWNyb3NzIE1SUk0gcmFuZ2UgYm91
-bmRhcmllcywNCnRoZW4gSSBjb3VsZCBhZGQgdGhlIHtsb2NhbCxyZW1vdGV9X3JlZ2lvbl9pZCBm
-aWxlcyBpbnRvIHRoZSBtZW1vcnkNCmJsb2NrIGRpcmVjdG9yaWVzLg0KDQpUaGlzIGNvdWxkIHdv
-cmsgbm93IHdoaWxlIHRoZSByZWdpb24gYXNzaWdubWVudHMgYXJlIGRvbmUgYnkgdGhlDQpCSU9T
-LiBCdXQgaW4gdGhlIGZ1dHVyZSB3aGVuIE9TIGdldHMgdGhlIG9wcG9ydHVuaXR5IHRvIGNoYW5n
-ZSB0aGVtDQppdCBtaWdodCBiZSB3ZWlyZCBpZiBhbiBNUlJNIHJhbmdlIGNvbnNpc3RzIG9mIG11
-bHRpcGxlIG1lbW9yeQ0KYmxvY2sgcmFuZ2UsIHNpbmNlIHRoZSByZWdpb25faWRzIGluIGVhY2gg
-YWxsIHVwZGF0ZSB0b2dldGhlci4NCg0KL3N5cy9kZXZpY2VzL3N5c3RlbS9tZW1vcnkgc2VlbWVk
-IGxpa2UgYSBsb2dpY2FsIHBsYWNlIGZvcg0KbWVtb3J5IHJhbmdlcy4gQnV0IHNob3VsZCBJIGp1
-bXAgdXAgYSBsZXZlbCBhbmQgbWFrZSBhIG5ldw0KL3N5cy9kZXZpY2VzL3N5c3RlbS9tZW1vcnlf
-cmVnaW9ucyBkaXJlY3RvcnkgdG8gZXhwb3NlIHRoZXNlDQpyYW5nZXM/DQoNCi1Ub255DQo=
+On Tue, Feb 11, 2025 at 9:51=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Mon, Feb 10, 2025 at 08:40:01PM -0800, Ian Rogers wrote:
+> > On Mon, Feb 10, 2025 at 7:12=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > >
+> > > On Mon, Feb 10, 2025 at 02:06:18PM -0800, Ian Rogers wrote:
+> > > > On Mon, Feb 10, 2025 at 11:59=E2=80=AFAM Namhyung Kim <namhyung@ker=
+nel.org> wrote:
+> > > > >
+> > > > > On Sat, Jan 11, 2025 at 11:01:33AM -0800, Ian Rogers wrote:
+> > > > > > Rather than scanning /proc and skipping PIDs based on their UID=
+s, use
+> > > > > > BPF filters for uid filtering. The /proc scanning in thread_map=
+ is
+> > > > > > racy as the PID may exit before the perf_event_open causing per=
+f to
+> > > > > > abort. BPF UID filters are more robust as they avoid the race. =
+Add a
+> > > > > > helper for commands that support UID filtering and wire up. Rem=
+ove the
+> > > > > > non-BPF UID filtering support.
+> > > > >
+> > > > > Hmm.. then non-BPF build cannot use the UID filtering anymore, ri=
+ght?
+> > > > > Also non-root users will be limited unless it pinned the BPF prog=
+ram in
+> > > > > advance.
+> > > > >
+> > > > > I think you can keep the original behavior and convert to BPF onl=
+y when
+> > > > > it's available.
+> > > >
+> > > > Using BPF when available would be limited progress. The issues I ha=
+ve
+> > > > with not removing the existing approach are:
+> > > >
+> > > > 1) It is broken
+> > > > Scanning /proc for pids and then doing perf_event_open means that a=
+ny
+> > > > time a process exits the perf_event_open fails.
+> > > > Steps to reproduce:
+> > > > This bug reproduces easily but if your machine is lightly loaded in
+> > > > one terminal run `perf test`, in another terminal run `sudo perf to=
+p
+> > > > -u $(id -u)` the perf top command will exit with:
+> > > > ```
+> > > > Error:
+> > > > The sys_perf_event_open() syscall returned with 3 (No such process)
+> > > > for event (cycles:P).
+> > > > /bin/dmesg | grep -i perf may provide additional information.
+> > > > ```
+> > > >
+> > > > 2) It is a work in progress that isn't progressing. Scanning /proc
+> > > > will only tell you about started processes; it won't tell you about
+> > > > processes that start during the profiling run, whether it be perf t=
+op
+> > > > or perf record. Extra work would be necessary to make this most bas=
+ic
+> > > > of use-cases work, perhaps you could use tracepoints to capture
+> > > > starting processes and then enable user profiling on those processe=
+s.
+> > > > It would be horribly complicated, suffer from delays between observ=
+ing
+> > > > things happen and doing the perf_event_open, biases in the samples,
+> > > > etc. I don't expect anyone to do it, especially when BPF filtering
+> > > > already solves the problem better. There have been 13 years that
+> > > > someone could have fixed it.
+> > > >
+> > > > 3) it adds significant useless complexity to the code base. Having
+> > > > 'user' in the target makes it look like perf_event_open can work on=
+ a
+> > > > pid, system wide or user basis. The user basis doesn't exist so the
+> > > > majority of the code base is just ignoring it - search for users of
+> > > > uid_str on target. Those that do run into problems (1) and (2).
+> > > >
+> > > > 4) It is redundant and leads to confusion with BPF filtering. Havin=
+g
+> > > > the BPF filter on evsels is non-zero cost in terms of the code base
+> > > > complexity, but it is something broadly useful. As user filtering h=
+as
+> > > > never worked (see above) it isn't broadly used but is adding
+> > > > complexity. If both approaches were wanted then it is unclear what =
+the
+> > > > code should be doing, presumably the mish-mash of BPF filtering and
+> > > > /proc scanning that happens today and will be broken due to (1) and
+> > > > (2). Putting everything into the BPF filter makes sense as you can
+> > > > combine a BPF filter with an additional BPF filter on user.
+> > > >
+> > > > 5) It is untested and adding a test leads to an always broken test =
+due
+> > > > to testing being an example of where things break, see point 1 and =
+its
+> > > > example.
+> > > >
+> > > > 6) Nobody wants the non-BPF approach. As it was broken nobody used =
+the
+> > > > previous feature, maintaining it for no users is overhead. Let me k=
+now
+> > > > if someone is using this option (I doubt it given points 1 and 2) a=
+nd
+> > > > they wouldn't be better served by BPF. People building perf today h=
+ave
+> > > > to explicitly opt-out of wanting BPF in their tooling. I posted thi=
+s
+> > > > change a month ago and nobody has jumped up saying please don't rem=
+ove
+> > > > the old approach.
+> > > >
+> > > > 7) The interaction with this feature and changes in behavior, say
+> > > > ignoring events that fail to open, is non-obvious and not testable =
+as
+> > > > testing would be broken as the functionality itself is broken. Havi=
+ng
+> > > > the broken feature hanging around and being untestable means that w=
+e
+> > > > slow progress on new features, testing and other improvements.
+> > > >
+> > > > Yes, we could try to fix all of that but why? Nobody has cared or
+> > > > tried in 13 years and I would like the tech debt off our plate with=
+ a
+> > > > better approach in its place.
+> > >
+> > > Thanks for writing this up.  I agree BPF approach is better but it ha=
+s
+> > > its own limitation - basically it requires root.  And I know a few of
+> > > people who don't use BPF. :)  And maybe we need to check if user pass=
+es
+> > > filters to the event already.
+> >
+> > I thought you were working on making the BPF filters pin-able? So root
+> > could enable the filter but then users have access to it.
+>
+> Right, 'perf record --setup-filter pin' would do the job.  But it has to
+> be run in advance.
+>
+> > You have to be root to be looking at other users in any case.
+>
+> That's true.  But at least you can profile your processes. :)
+>
+> >
+> > > Also, I admit that I don't know who actually uses this.  But I can sa=
+y
+> > > sometimes people uses tools in a creative way.  Anyway, I can imagine
+> > > an use case that system is in a steady state and each user has dedica=
+ted
+> > > jobs.  Then scanning /proc would work well.
+> >
+> > Another one for Google's tree then.
+>
+> Any chance you update the patchset to retain the old behavior and use
+> BPF only if available?
+
+The point of the series is:
+1) get rid of unnecessary notions of target, the uid_str, it is extra
+complexity and doesn't make sense;
+2) switch the two users of if to BPF.
+You are focussing on the thing that isn't the main point of the series.
+
+Thanks,
+Ian
