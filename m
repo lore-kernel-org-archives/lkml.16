@@ -1,127 +1,117 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19AA3EA76
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A039626BDB5;
+	Tue, 11 Feb 2025 02:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739239308; cv=none; b=jCNJh2UvzX2hoQU0iMhjzfNE7omqmxRRLiwAKRYYEu3E/tnhXS8OHWGeZExPU91V/F7bsczqkXyK9E/wbxJEuu0V2f4DeLs99E7nN2OJUOYG4uOk9/K1oz+QnJ8xu3QJDQw/WxCyqwGxjbmPB8Xt4riFVsFZXYx3fzqM4f8swsw=
+	t=1739239333; cv=none; b=J108fu1rbIG8ufy1uIkwjLgS3ZXfB/0Rq+bQT5saEfs7a3Yp0V1iqa0lY1Xlbiujr0DbsG+I9P0gxEetuYt99YgpHreJUn3HYflXW4EJZnIbbWRYyyCGFNCKw0KkyKORhyAxqfbD+E8dmThlGQsiVxtJMaUFghdD4/4hJve0AHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739239308; c=relaxed/simple;
-	bh=BWZcR6xncAXhNatZF73iqd2VwOt7UMWFCk3fGt5qHYg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=p90EZWX5AVVTwJ84xm0TR3coSKptTk0gTvwX6pvNh8Q769ktMe8NmKvOxYH/GcpGHGNJiiG/aEXQqjq+kg3HQeLwsL0SDf3C29/RrsMtK+RXuK7jPE1OFOyj3qUe8YuZPozp7dX1/AORV3v5zX860nHT3koERXeDgJX3laj/pk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1thfaK-000000000T0-0OkG;
-	Mon, 10 Feb 2025 21:01:12 -0500
-Message-ID: <24daac05a52fbd62a98eaad2ff689a89615a8287.camel@surriel.com>
-Subject: Re: [PATCH v9 06/12] x86/mm: use INVLPGB for kernel TLB flushes
-From: Rik van Riel <riel@surriel.com>
-To: Brendan Jackman <jackmanb@google.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de, 
-	peterz@infradead.org, dave.hansen@linux.intel.com,
- zhengqi.arch@bytedance.com, 	nadav.amit@gmail.com, thomas.lendacky@amd.com,
- kernel-team@meta.com, 	linux-mm@kvack.org, akpm@linux-foundation.org,
- jannh@google.com, 	mhklinux@outlook.com, andrew.cooper3@citrix.com, Manali
- Shukla	 <Manali.Shukla@amd.com>
-Date: Mon, 10 Feb 2025 21:01:12 -0500
-In-Reply-To: <CA+i-1C3LDJTf26WdBo7MvCdTs-dybqsUp3Ze7NowcOUHPWMXrg@mail.gmail.com>
-References: <20250206044346.3810242-1-riel@surriel.com>
-	 <20250206044346.3810242-7-riel@surriel.com>
-	 <CA+i-1C3LDJTf26WdBo7MvCdTs-dybqsUp3Ze7NowcOUHPWMXrg@mail.gmail.com>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.1 (3.54.1-1.fc41) 
+	s=arc-20240116; t=1739239333; c=relaxed/simple;
+	bh=D3OGM4UhBN/WzDEUIA+L0a9jqUc5uoHq56NnZLNLkXg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tTVPuMa3kpqKSoPHXY/sMUgr/OWbc5i467ZSDU6IHN8Fd6rcZSy/wwu8/7CixavpeV/7K3IT/vSGkqwbfDsG8bPASRIw2hD4dilExsbm8chFupta5iv5EQRGDwdQmyq8gGAwZCsIUlXkGK+ooV2Vj7XeBcyJDU2HkOfxFY10KVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=Edf9dKnB; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="Edf9dKnB"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4YsPp52LyNz9sWw;
+	Tue, 11 Feb 2025 03:02:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
+	s=MBO0001; t=1739239325;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=eF2KGHCmSxMH1iF70b3XEqji+dT9Ps/Q4stmh8K5rBY=;
+	b=Edf9dKnB0qyuXYETn7uiD/W8cSjPVwAd4UCMIv5ilvQVztGrHgsvKJdk0Szf+e1e3JgufX
+	9VvWwo+6qXh+wa0eIkV25rZ8P2UflB1jB8GuCRLmHyBKNTAcprS5YtR6oxUKpMQ6pPtEY2
+	Hco13ZcuvdQGcsiuTto7C1vgm3S+Eex3y6Maf3o8ZLGyVHv3jWQxBddSRcsdScgaeLypuk
+	KDnlzzic1DA4+1erDM7TKHJqa9a5PCnS7pkUWhbx0JqA7bpynOp2P3PUmYiRUlNxsj+8jB
+	V1JSPq7NgcIUiO8xXEDl7pE0aSYeb1a8WyNO1MNf8fwgIFuawyWED1gItrppWg==
+From: Ethan Carter Edwards <ethan@ethancedwards.com>
+Date: Mon, 10 Feb 2025 21:01:52 -0500
+Subject: [PATCH] octeontx2-af: Fix uninitialized scalar variable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: riel@surriel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250210-otx2_common-v1-1-954570a3666d@ethancedwards.com>
+X-B4-Tracking: v=1; b=H4sIAI+vqmcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDI0MD3fySCqP45Pzc3Pw8XRNTY0Njo8REg0QjEyWgjoKi1LTMCrBp0bG
+ 1tQA0wu2uXQAAAA==
+X-Change-ID: 20250210-otx2_common-453132aa0a24
+To: hariprasad <hkelam@marvell.com>
+Cc: Sunil Goutham <sgoutham@marvell.com>, 
+ Geetha sowjanya <gakula@marvell.com>, 
+ Subbaraya Sundeep <sbhatta@marvell.com>, 
+ Bharat Bhushan <bbhushan2@marvell.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, 
+ Ethan Carter Edwards <ethan@ethancedwards.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1666;
+ i=ethan@ethancedwards.com; h=from:subject:message-id;
+ bh=D3OGM4UhBN/WzDEUIA+L0a9jqUc5uoHq56NnZLNLkXg=;
+ b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgprQTBEQUFvVzJEM0ZOM09UeCtZQnl5WmlBR
+ 2VxcjVpZ05MSnVib0J0dzdzM05WODEyMklBYkZxeDNEc205OGlyCjlvek5MVksvYkloMUJBQVdD
+ Z0FkRmlFRS8yd2padUVwbUNDNS9VU0MyRDNGTjNPVHgrWUZBbWVxcjVnQUNna1EKMkQzRk4zT1R
+ 4K2FoekFEL1Y1aVg1VDJ6aTZVc2Q2ZkFPSWhSNWRwck0vTGQxSmpjcE9XdEdEUUpFQU1BL1J6TA
+ owbEN5RVN3My9XM2xTbGIrV2J4N0Q0S211VlgxNHplTXY4ZTBKdjBQCj05NnZZCi0tLS0tRU5EI
+ FBHUCBNRVNTQUdFLS0tLS0K
+X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
+ fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
 
-On Fri, 2025-02-07 at 17:03 +0100, Brendan Jackman wrote:
-> On Thu, 6 Feb 2025 at 05:45, Rik van Riel <riel@surriel.com> wrote:
-> > diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-> > index 36939b104561..227e972b6fbc 100644
-> > --- a/arch/x86/mm/tlb.c
-> > +++ b/arch/x86/mm/tlb.c
-> > @@ -1086,6 +1086,30 @@ void flush_tlb_all(void)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 on_each_cpu(do_flush_tlb_all=
-, NULL, 1);
-> > =C2=A0}
-> >=20
-> > +static bool broadcast_kernel_range_flush(struct flush_tlb_info
-> > *info)
-> > +{
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long addr;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long nr;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!IS_ENABLED(CONFIG_X86_BROADC=
-AST_TLB_FLUSH))
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return false;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!cpu_feature_enabled(X86_FEAT=
-URE_INVLPGB))
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return false;
->=20
-> I think that first conditional can be shunted off into the header
->=20
-> diff --git a/arch/x86/include/asm/disabled-features.h
-> b/arch/x86/include/asm/disabled-features.h
-> index c492bdc97b05..61376b4e4fa7 100644
-> --- a/arch/x86/include/asm/disabled-features.h
-> +++ b/arch/x86/include/asm/disabled-features.h
-> @@ -129,6 +129,12 @@
-> =C2=A0#define DISABLE_SEV_SNP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (1 << (X86_FEATURE_SEV_SNP=
- &
-> 31))
-> =C2=A0#endif
->=20
-> +#ifdef CONFIG_X86_BROADCAST_TLB_FLUSH
-> +#define DISABLE_INVLPGB=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0
-> +#else
-> +#define DISABLE_INVLPGB=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (1 << =
-(X86_FEATURE_INVLPGB & 31))
-> +#endif
-> +
+The variable *max_mtu* is uninitialized in the function
+otx2_get_max_mtu. It is only assigned in the if-statement, leaving the
+possibility of returning an uninitialized value.
 
-I'm adding this for v10, with the disabled-features.h
-stuff in patch 5, and removing the no longer needed
-tests from each subsequent patch.
+1500 is the industry standard networking mtu and therefore should be the
+default. If the function detects that the hardware custom sets the mtu,
+then it will use it instead.
 
---=20
-All Rights Reversed.
+Addresses-Coverity-ID: 1636407 ("Uninitialized scalar variable")
+Fixes: ab58a416c93f ("octeontx2-pf: cn10k: Get max mtu supported from admin function")
+Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+---
+ drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+index 2b49bfec78692cf1f63c793ec49511607cda7c3e..6c1b03690a9c24c5232ff9f07befb1cc553490f7 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+@@ -1909,7 +1909,7 @@ u16 otx2_get_max_mtu(struct otx2_nic *pfvf)
+ {
+ 	struct nix_hw_info *rsp;
+ 	struct msg_req *req;
+-	u16 max_mtu;
++	u16 max_mtu = 1500;
+ 	int rc;
+ 
+ 	mutex_lock(&pfvf->mbox.lock);
+@@ -1948,7 +1948,6 @@ u16 otx2_get_max_mtu(struct otx2_nic *pfvf)
+ 	if (rc) {
+ 		dev_warn(pfvf->dev,
+ 			 "Failed to get MTU from hardware setting default value(1500)\n");
+-		max_mtu = 1500;
+ 	}
+ 	return max_mtu;
+ }
+
+---
+base-commit: febbc555cf0fff895546ddb8ba2c9a523692fb55
+change-id: 20250210-otx2_common-453132aa0a24
+
+Best regards,
+-- 
+Ethan Carter Edwards <ethan@ethancedwards.com>
+
