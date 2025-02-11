@@ -1,78 +1,79 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1CF1EB191;
-	Tue, 11 Feb 2025 06:34:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A571E9B12
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 06:34:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739255662; cv=none; b=OeHSfHbSFWR4QMaT0qKe+fh6BLjeO2W+L5FW9LfCfN4LVCIjQWujABj7PI56ALUo7Mbj3/J3bYlP88XRqvX/1v6sv4uCguoUAm2cgPAjsPeNhKeaf0GZybcG4bOCfqkToD07gfM0uNQ7iqYXo0H+DB1ljkgn6GFaKt0Y6XESEDk=
+	t=1739255686; cv=none; b=pCC5k6kAeWYC3j+KQwbN8+iEnFo5PT/jsw9MejJZ5oVWRZmxcLM7lMM3BMG5TT4z0UZco7zeCb1m/q2xQGs3yHhvHrpcDYMTPH7iVB4AeTSmPjY5Jp0Of4rrbFXhs6deWXEvLPk8E0ztmrRIO+nOeoxgBWVlecus4UghV0KZhY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739255662; c=relaxed/simple;
-	bh=aGRpizyASsNtyzOjMY+S0nZ8gaZ1dDZJgRIHfkoSPxg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WfS/o59qnWvLXlpGQdxkuYqBAVNjgQOcNtU6pqhTAij+PLjNfxTLHu2N6mmkIEwcT9ebA0VEJ+5rp5VxlMLoFsq+Kb3mLTAKn0e/TYqX4k317KXzxHbU/twFQ2PKWpHFUK26DL8pUaWfwPaVObKTYSB/0qQYgogmi6tFKlN9Mus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OSSqoje9; arc=none smtp.client-ip=209.85.208.54
+	s=arc-20240116; t=1739255686; c=relaxed/simple;
+	bh=DUZ0Ag5R+ipE/i7O6Td15Gg6pzWpbSDbJF47KID46KI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GH/OQCeMc5hBK36gyIhTMe5OIGRCNkUlr5YbSuR6HLB07UFqh0z1p4e5fg19I1VujSTzB94tyhzrASm6yE8JOLQhnylokySrB/dSpqNXs1T5rHO4YOcSIDEKtsX+gYPzA+NSNPUxO0QOmKlU6E3y9be6TgPf5OgPb7PGaLWeeyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d5da52yR; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OSSqoje9"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5dcdb56c9d3so8340546a12.0;
-        Mon, 10 Feb 2025 22:34:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d5da52yR"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21f7f1e1194so58504275ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 22:34:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739255658; x=1739860458; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oQlwrL1wOOlUYQ3HVkX2Tc4R5TyGKexreWomFPK3P/Y=;
-        b=OSSqoje9IjTnj0KYcrgVozI+bBBxuN7LD/MUV5TNEPUW4P+wrLCXq/WrYz1uMAyOr2
-         lGMk8V8JZS8SzxYTfR/cWK13AwBKD4a9jlajnU+rGh15SxRjYb+uiXFRjv2OCkAvK0+Z
-         2g812NvlU27cHASenGQ4R6HdxO8dUFl3IB0kWQjgVl9ZdkHwXgkOJROoy7Qp5TM0o6yu
-         6Lu5VVeeZVIsJyazkS3TZ/hioF9v6Ixe7uXEQY8/RFipN0tK9F6heF8RYS6kmNf+/C35
-         PewgjPGNGuAMPuuhnpQf/4fkjQvxlSr634MO9+K4ZlI296dDEcyA2h/iKEWZ0y8/iE8O
-         JbmQ==
+        d=gmail.com; s=20230601; t=1739255683; x=1739860483; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XIGioHqjxPLbfQpIas3VjDLrxJe4mEXBZafVCBMRGrM=;
+        b=d5da52yROId0DVOF/xAXaj3r3JJ6w8HTajVE3zyxhK2xAh0HXd5NXse+w+5EEP1kQP
+         msr7iffVwwEyh8FZgxveIpbtku/ZHiVhYjnW8Cv8KjVjNRhP4+37M+FXHvh3IauAiPqS
+         V9ZzBe2mv8OJK7kY4vPYs42nBbp0wwd2TNTlasevqiZ8s02WxY+JZ8/USI5WkfvqzvP2
+         xmE8Y0isV5C4iGWNAK186LkPE/9JEihjrce4Bci7cAUP+Tidw1i3gIpl9Lt0BocjyhZl
+         7ZrEyIfbcWFvBvW8zKsSZTR00ijNQ276oHJYL936Mbff54MlGGDFKN/0a5dknNfl0Kg1
+         QJSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739255658; x=1739860458;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oQlwrL1wOOlUYQ3HVkX2Tc4R5TyGKexreWomFPK3P/Y=;
-        b=UR0a4ILa61Q4xXAzPSBMYdtdUgdgE+ga+YoYJTibRluPtXTU70Pr0MYeKB6WQxWb2Q
-         5oAmi1ILHsSqcvwcNIROQjz9qzEDc47LlNzUjG/dcldThUev4hdyr/H4n9HMHK/Jck0s
-         GPejKQJLIrjab4QwLFKeq6khRXdAjlMu4gPYRAaAMzOOJLkcLm2liIk6RI0lQ2sibrDH
-         DMuF2MGU0MCaxe7rKsJzi5Z4OYUy9BtcksprsKbtmg/pTApBMkD4ukW8f0v2hpIUqo9G
-         Cml0ZQzOZgTmM3/C6VxehC9MkNDcU2Go7yC13ENH1Pq9vvpL3A2HMQF1LYZA3KvgO04B
-         g25g==
-X-Forwarded-Encrypted: i=1; AJvYcCWuNWOuRQryAOqqOeRDoNfshiYAWGRyh31lxKFYcEZhtcgTfbhyOv0CRPWIlKyZ551gB389/DY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznsQzqjIXnf04lHXBsTvPzrDMfpN+9prx15cahAx8eK38AMeyX
-	QMXvAWtpO5FJMDAxTeW1C+/AAaceTg58yQvIlRPw0n50eaeb3r4zEU0yW0hE1hPRHw==
-X-Gm-Gg: ASbGncvzguQStWd+U6i5HDK/EhyM4v51h8yYuEDu7pKBSD2Sexzr6jILeReBwGyWdk7
-	qmdOMKe25gIh6MoioaPgVaOa4v4JtOciovFtuTEVWjKdGHaJp+CPeVxYzpGsn4j1iLXn9DQLNQk
-	y7eg03L7uJkYkz0XpDg6Z78F3VpplhtFmKRo8rcg7WnnDaN1sWCgWkhe3C2O/uDcHJhQXU6r12i
-	w1HpuGd9r5qKmWYoqavURMLTw4VEYQW5wX1vEWz0bKe0JF8prMcFj+kKknQZ+Yr7ug2GZOqV9lZ
-	xp6mNk3vY72tgqfgjgCpTtMPEoF+tftskwETwhqpozuBURDTSgjvYnWw9vYHIaeefo/SiWt4EVN
-	h/emPqGiJaRU5BG0=
-X-Google-Smtp-Source: AGHT+IFSPB5VMDpn4O68C4Tn6MoteErC5LVqv/fR36wtc5VsAKcH0UgEvTej9OJbBiYLW9OPxxMEdw==
-X-Received: by 2002:a05:6402:a00e:b0:5de:39fd:b309 with SMTP id 4fb4d7f45d1cf-5de44fe9488mr41766347a12.4.1739255658307;
-        Mon, 10 Feb 2025 22:34:18 -0800 (PST)
-Received: from legolas.fritz.box (p200300d0af0cd200603313d7beea72d6.dip0.t-ipconnect.de. [2003:d0:af0c:d200:6033:13d7:beea:72d6])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7c62c464dsm300440466b.28.2025.02.10.22.34.16
+        d=1e100.net; s=20230601; t=1739255683; x=1739860483;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XIGioHqjxPLbfQpIas3VjDLrxJe4mEXBZafVCBMRGrM=;
+        b=qRnfv3iTMBsRUvDLa6O7dF+XEyFtv/XmHUBlhIfxHkZUI8l1aZduATdVrHcnhenqii
+         j+MGp8Z8kXzBmYz0oC77TvKpN12Uv75yvblr4UVCyAx6/L/8aWKc3wlSooBiVC0SYAdU
+         Nv9T36hQYM3z3krZCBoi5kaovZlOPWViG5/Xcol8rjM+P9VaYWYOOap89J4e/LO4X5lB
+         a8pC2KszJTWpVshzp52e0B8k0DnkWRsiYzOz0jPM3aTyXECpQWEdtfr1LLhQ5V7ASslC
+         /poHn0O1trXxzkYhNkO7cT3n/YeIaPe7g4UPk1YT4x5fzLFIAllt1E7raHJ5HY8/OtUq
+         J4Rg==
+X-Forwarded-Encrypted: i=1; AJvYcCXQVwZ4MUfcy6zk/Q6NqFdOgyjweWgS+Kera7m+28k8JBmxgEQgqRk47Vj6/rRwlzYnBl5GaIl1sgxOxlE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YziMHXVccX34lg/5YCi2di/QLLFg9YSvL29E4RR54oe2tcU9ZZu
+	HdCchsBPRrQ7UrNjGb/jgsQ8CcM7HlbLHchiluSxS+VleT5xY/IU
+X-Gm-Gg: ASbGncsRFgRxP40Yx47l/11nBIVaHXSEoDMfluTghCXDXkL/2Y8oqnqOhpnmlqCc2OM
+	TT8jgCuRN0RSe+ZIeOqDaOhZW83gi+ZXoDf9XzFaLBobEz6bKgdEjUjuH9bc+/V0QnVHnXBeQ1U
+	FRWqL4igHDuFyF5tJhpaNlzv8yviaWu+7JJ3GFX7Rso/b60eZy3S08bKs0fh0tHtRMeY1eWcOlA
+	GIVWRkO9bmkaLQdjTS9sW1KRaV+NlPo887pVXhtPx+o2G9obZi6xtbBJWtRv/27KeUlV0tjlGFm
+	bkDhxRPUlZTZVq/AsgPlMMVakz+8ndmwAvwq6PY=
+X-Google-Smtp-Source: AGHT+IGhfPVRD1oybOavBoo0+ctgSXR//pe6eww4PZDoI4CrcFrWhXb7gEHYI+WFNgVRGuwAYIQknQ==
+X-Received: by 2002:a17:902:e846:b0:21f:f02:413c with SMTP id d9443c01a7336-21f4e73efc7mr246438085ad.42.1739255683020;
+        Mon, 10 Feb 2025 22:34:43 -0800 (PST)
+Received: from twhmp6px (mxsmtp211.mxic.com.tw. [211.75.127.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f4cf07b85sm74268405ad.137.2025.02.10.22.34.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 22:34:17 -0800 (PST)
-From: Markus Theil <theil.markus@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	andi.shyti@linux.intel.com
-Cc: intel-gfx@lists.freedesktop.org,
-	netdev@vger.kernel.org,
-	Jason@zx2c4.com,
-	tytso@mit.edu,
-	Markus Theil <theil.markus@gmail.com>
-Subject: [PATCH v2 3/3] prandom: remove next_pseudo_random32
-Date: Tue, 11 Feb 2025 07:33:32 +0100
-Message-ID: <20250211063332.16542-4-theil.markus@gmail.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250211063332.16542-1-theil.markus@gmail.com>
-References: <CAHmME9oqvWp_Nd1Gwgyw52qy8wxztMyCpNsjByH=VnRaXqczww@mail.gmail.com>
- <20250211063332.16542-1-theil.markus@gmail.com>
+        Mon, 10 Feb 2025 22:34:42 -0800 (PST)
+Received: from hqs-appsw-a2o.mp600.macronix.com (linux-patcher [172.17.236.67])
+	by twhmp6px (Postfix) with ESMTPS id 03F088039C;
+	Tue, 11 Feb 2025 14:45:12 +0800 (CST)
+From: Cheng Ming Lin <linchengming884@gmail.com>
+To: tudor.ambarus@linaro.org,
+	pratyush@kernel.org,
+	mwalle@kernel.org,
+	miquel.raynal@bootlin.com,
+	richard@nod.at,
+	vigneshr@ti.com,
+	linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: alvinzhou@mxic.com.tw,
+	leoyu@mxic.com.tw,
+	Cheng Ming Lin <chengminglin@mxic.com.tw>
+Subject: [PATCH v2 0/2] Add support for Quad Input Page Program
+Date: Tue, 11 Feb 2025 14:30:26 +0800
+Message-Id: <20250211063028.382169-1-linchengming884@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,34 +82,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-next_pseudo_random32 implements a LCG with known bad statistical
-properties and was only used in two pieces of testing code.
+From: Cheng Ming Lin <chengminglin@mxic.com.tw>
 
-After the users are converted to prandom as part of this series,
-remove the LCG here.
+Support for the Quad Input Page Program feature.
 
-This removes another option of using an insecure PRNG.
+Some Macronix NOR flash support the Quad Input Page Program feature, but
+the 4-Byte Address Instruction Table definition in the SFDP is incorrect.
+To properly enable this feature, a post_sfdp fixups implementation is
+introduced.
 
-Signed-off-by: Markus Theil <theil.markus@gmail.com>
----
- include/linux/prandom.h | 6 ------
- 1 file changed, 6 deletions(-)
+v2:
+* Add a partname comment to easily identify flash entries
 
-diff --git a/include/linux/prandom.h b/include/linux/prandom.h
-index f2ed5b72b3d6..ff7dcc3fa105 100644
---- a/include/linux/prandom.h
-+++ b/include/linux/prandom.h
-@@ -47,10 +47,4 @@ static inline void prandom_seed_state(struct rnd_state *state, u64 seed)
- 	state->s4 = __seed(i, 128U);
- }
- 
--/* Pseudo random number generator from numerical recipes. */
--static inline u32 next_pseudo_random32(u32 seed)
--{
--	return seed * 1664525 + 1013904223;
--}
--
- #endif
+Cheng Ming Lin (2):
+  mtd: spi-nor: macronix: Add post_sfdp fixups for Quad Input Page
+    Program
+  mtd: spi-nor: macronix: Add support for Macronix NOR Flash
+
+ drivers/mtd/spi-nor/macronix.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+
 -- 
-2.47.2
+2.25.1
 
