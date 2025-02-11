@@ -1,63 +1,63 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C688E1F3FC1
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA7A1F03D9
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739269108; cv=none; b=PxJYD5n37sDNAZd9EPco0gM8d6b7Yj3WcKYF/Y4tpWcUZYiFonjB2S7O++FPqvyiYtsEePmakv8AvUBv8QODOZgixPnxlBZsKQYA7bRfFPN0PSqsaA2BvapaxDdUt/72/DG0xNiojimNl6/CRLPUR/mM5wQXFTztKtP/htewn0Y=
+	t=1739269155; cv=none; b=IYlcn1sfll+em4h+89AB5zV12dbUZyoLHGkWwD6CYo5zMxJ8yELdCl6tCDLO0z/OJsYCSyGEeQHnIeSVPiBNKooOEilakT51XPnkbPTjJ2ikcdd31CSD8h+LLaZZ8G0cDIql+CNG5cTPdRLJhGBbTAuvaa+yN6uIGA/9kylRQkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739269108; c=relaxed/simple;
-	bh=JAG8xLYcf6Mkmrkf1uBI9ulyETgFc0Gljwk5hR/ZLFw=;
+	s=arc-20240116; t=1739269155; c=relaxed/simple;
+	bh=mmYq0ka1rA31PoqSV1w1EnHuELlMe9cDQhIVsboEH4k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J6/vfWofgXdmZm/ESePYT+slbJt5bZZXM2RWmZfzCNU5imk8hCLHEMM7xX6nJch44aZl7ifBW+putWBZ6esFfFSIm0+do+5sLXPJ5qf3QHGt0BhBOBnQb+H4nwBkMBuQEsUZYx+XDCCFD2cPGzdxsFeYyr/I1IPN6It2cNaK09E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bPUdK06M; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 In-Reply-To:Content-Type; b=n5dITzbiz11+1d/9p11QyPKUWJNvAPpGGftcSQGBWhlID54qKokP7s1bk67NA5QHQnaYapOXQkOQRENQiPyT/Zf+fsBYb8QJWni4L9yL944VwzihDZtrpeGeskUJXnUXuqDxFTI43XFpuvCIfp2xmfXSoU8JRkUemo7kQApHn5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FbIZsUL0; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bPUdK06M"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-438a39e659cso36834315e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:18:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FbIZsUL0"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38dc5764fc0so4001245f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:19:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1739269105; x=1739873905; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1739269152; x=1739873952; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6wetbcIgbwPG6/Nth4UHPYE+ij7ipQx9r0HJcOKtumA=;
-        b=bPUdK06MXchMw3HFvW6z1wtp4eYd+dB6yUL0ETyObeHjJn/fr0/idilZ4FQa0QGzK/
-         FjmhsVshYchxSd83lUEqfGHZy4+aMjFIMOpAXdUhqOwm64Q+1kVHIPtu3a/5VXERNi3U
-         WpKxb62l8GLuydJXBpXQfhanena139ll0gH+OmJNtPtSvMYhWRUMHikndPYdXhpguIe5
-         J7MewISi3V/yE+T18OBT/m82R8TKVqfqBl1Cub6J2vIkj4gUHgX+VvRKyMgDvwnmn1oG
-         xEV9rNLgQChBtIits4pWPFZDpIFyZ+RqdY13mOO1rNdzu+Wb771vLFkub8PK23EpRcbA
-         Av+Q==
+        bh=d1+7CYo2GEpNNd6dJTgksWpYBgWB3H8P41Hw271gq6M=;
+        b=FbIZsUL0E8B1mxv3MhwM5VVhhb8aivonj/oWvHc7eWMXRS6cREBKaKwbLbsVBJ3rCN
+         FN5D3/qGfyyyFBjiSkmObVbzwdaritTR8bpi16EVsMeXVIYvftwGO3XaOkBuGfREzlv6
+         6f+pAyEkTxy4bY1H9BZUpxWeU3pXXvfdn8PMVbbPvG7gtV8rwLf5wZUjMLZZiIf3wjX6
+         Zzd0ZVw+5Mjvrm9DsiZKiOVeCDma7WY+mxOPQsuJso2xqZF3qgmrM2uuebEMe6VOkDBF
+         SlCM4vzxY7gUARIUqlMJli7b9jynxtuxy5kU4OBgB4PVLgwBqjlrNVVWFMgylzsvN/Nx
+         KlBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739269105; x=1739873905;
+        d=1e100.net; s=20230601; t=1739269152; x=1739873952;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6wetbcIgbwPG6/Nth4UHPYE+ij7ipQx9r0HJcOKtumA=;
-        b=RXcPfW5m4HI4PXO7CRqSa6wJHP9PNwAGHwaoFmHacuFBPs+e53/qSpbwFhPMpXzl0D
-         z9QlXmNGSbt/dlOQMSTPi6vC4zFA/+tcsDFzUl0nw+pTUyT7vO0Wv1ge/1MV1gnQq3jE
-         xqODu2RucOH5/plSrgysOl+GSBoajz1IO3L9WIoXvKU7ZdX4bIDqwygIOfzHnMM2Hm97
-         lAEYO6zWNJlDzlbJPWA8bih0DdaRovTIOrkZiOK66y+uqiGr2Qq+q4SqOO9G5ivv2UnV
-         S8dyaza9dIMy28MbRvGQhfyjwTC+hzFNUMhL5lGplkWObaINWApI9TVAYlIY1hF0VylA
-         orlg==
-X-Gm-Message-State: AOJu0YwZkvYf7Ikw9rwOkfmU4MJ4SIJ/gI8ln9cha/MPqiKIcGdvJAal
-	VXBJHup4jA0EV0pHZsFBRJLYthV6xeHA9reUu72GEKCmSgpMbPwNLtoujY5SCpo=
-X-Gm-Gg: ASbGncswYpblZYOGX+SriByZZnO+mAUgTklAzEUrle/h9Z1YgWtd9san3qJIXutR/S4
-	Gnw6V49IKBehGwAIRqg/FPf5R4hY2Uxm9kzAma3+vSgOBl8qfR7yyZeQG7fXHwUmTncC9jq0rp3
-	uX18/hZbaNl6SeqgbW5WBOWFR1m5ZCTrvQwAWR5uhIJLfhxQHvAJM4vlHraE6xJQo04ATGVhy0x
-	PHHURXer5EoLJnMy1R5xUfUDTcDfZqh5eouQdwisrsCQ5s8Gp/lN5FKdH2yADyPIywj6NXhEPlb
-	pIJXONEgfepeFbJ53Ud6iedaehfe2+GTcX7PrAFSz9E=
-X-Google-Smtp-Source: AGHT+IGTs1BGzVlw1sdsC2fgJYj9i9D6VhMvXGmg91hnlwvVYbUVMj6Ri+So6IC2qiYFDhjG5Gj+1Q==
-X-Received: by 2002:a05:600c:a0d:b0:439:4355:2f69 with SMTP id 5b1f17b1804b1-4394355322dmr73914595e9.6.1739269104966;
-        Tue, 11 Feb 2025 02:18:24 -0800 (PST)
-Received: from [192.168.0.20] (nborisov.ddns.nbis.net. [109.121.142.137])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4392fc7ceacsm106334345e9.20.2025.02.11.02.18.24
+        bh=d1+7CYo2GEpNNd6dJTgksWpYBgWB3H8P41Hw271gq6M=;
+        b=NlIJSBXSUHPmM9ufexp387knPhIh0yFxrdL8HY5vnba6xka174rHtKaOdA8LZ2TuEn
+         PXlEJEWWDwNUx3QlAQXTLaGbUK/P45EeDIolIzx1KIE7mIMLyszg90tpfBFl3WHPQCph
+         3mELMmu4MuqCahhKHb72Mf8fjwebcvo+N+wQXnLP1cZDcIx62ngLNNbXXSeCdci4ftbV
+         M+vvPZJBXWPrNBZBBozPMl1I1oMHaUWXG6CUbnhCg3R7DocOtkINnZz46ZTwKmFXkZER
+         7j7bYuFBXHdHkGlG3iRO8usm/TdynOY5aStmHqXowRLodmuXuzbd2RTUprEqIk3Fau99
+         n36g==
+X-Gm-Message-State: AOJu0YyXR156pfXku20SKd/G25JyLlO1aeIW8wJvXsQs08FT7nWkVRBJ
+	ZvZIn4//19HKZ2NpCP5l9/bMwbVLiOS9FiLMgZ2AA4cOTX3N3PFj0EKDUn2tdg0=
+X-Gm-Gg: ASbGnctJ9LrsVh3kgUIRlxN2+QhiDs4THjZs2Cekxa0QvSVINEIkkSyUE2jMLbVMEAz
+	YjHCmz/Q2dJbB2nQbApABXLQqGnmt+wPrnYzbbWDTX+d9TIiCJqeXCw8HrhC4WItdic9+CjttAJ
+	+gpc7aasx9ZEIvjys7wL4FCiaK+mzQSNSpuJ7uRIw31jwRL+cylyGJs4xFRHjFf51sjphqyNyKb
+	VfBEBPbx6VFLWcey0+XBMHqMTDgZYEXXLvlzOdADxe8ffrpYgOGJj0sqFcGVfkKKOBFfdW2XYUd
+	xxS3M1VG8NAJJqod58GXAZlYhb2xJ0P4bSzws4IyMtC56zJE9jiG3N/N+Q==
+X-Google-Smtp-Source: AGHT+IHh4hDVGqmsMf5rJQ27Gh0Zf6r2TAYfUuWPHNsKZyYXSF39sDKmhxO9TOc6pLn17KWtWMv46Q==
+X-Received: by 2002:a5d:6d87:0:b0:38d:d69e:1326 with SMTP id ffacd0b85a97d-38dd69e1b18mr7568941f8f.9.1739269152351;
+        Tue, 11 Feb 2025 02:19:12 -0800 (PST)
+Received: from [192.168.0.156] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd3dcca71sm9090007f8f.76.2025.02.11.02.19.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 02:18:24 -0800 (PST)
-Message-ID: <9c44d283-60d1-4bc9-bfa3-425a8155cca9@suse.com>
-Date: Tue, 11 Feb 2025 12:18:23 +0200
+        Tue, 11 Feb 2025 02:19:12 -0800 (PST)
+Message-ID: <012b0381-a5d1-49bc-aa59-aae0d35aa034@linaro.org>
+Date: Tue, 11 Feb 2025 10:19:12 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,66 +65,71 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] x86/mce: Make mce_notify_irq() depend on
- CONFIG_X86_MCELOG_LEGACY
-To: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
- "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>, "Luck, Tony" <tony.luck@intel.com>
-References: <20250210154707.114219-1-nik.borisov@suse.com>
- <20250210154707.114219-4-nik.borisov@suse.com>
- <CY8PR11MB7134CA4E20537911F5E8B11489FD2@CY8PR11MB7134.namprd11.prod.outlook.com>
+Subject: Re: [PATCH 0/3] media: qcom: camss: Add sa8775p camss TPG support
+To: Wenmeng Liu <quic_wenmliu@quicinc.com>, Robert Foss <rfoss@kernel.org>,
+ Todor Tomov <todor.too@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org
+References: <20250211-sa8775p_tpg-v1-0-3f76c5f8431f@quicinc.com>
 Content-Language: en-US
-From: Nikolay Borisov <nik.borisov@suse.com>
-In-Reply-To: <CY8PR11MB7134CA4E20537911F5E8B11489FD2@CY8PR11MB7134.namprd11.prod.outlook.com>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250211-sa8775p_tpg-v1-0-3f76c5f8431f@quicinc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-
-
-On 11.02.25 г. 9:20 ч., Zhuo, Qiuxu wrote:
->> From: Nikolay Borisov <nik.borisov@suse.com>
->> [...]
->> Subject: [PATCH v2 3/3] x86/mce: Make mce_notify_irq() depend on
->> CONFIG_X86_MCELOG_LEGACY
->>
->> mce_notify_irq() really depends on the legacy mcelog being enabled as
->> otherwise mce_work_trigger() will never schedule the trigger work as
->> mce_helper can't be set unless CONFIG_X86_MCELOG_LEGACY is defined.
->>
->> Signed-off-by: Nikolay Borisov <nik.borisov@suse.com>
->> ---
->>   arch/x86/kernel/cpu/mce/core.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
->> index d55b1903fde6..8b8553e144ce 100644
->> --- a/arch/x86/kernel/cpu/mce/core.c
->> +++ b/arch/x86/kernel/cpu/mce/core.c
->> @@ -591,11 +591,13 @@ EXPORT_SYMBOL_GPL(mce_is_correctable);
->>    */
->>   static int mce_notify_irq(void)
->>   {
->> +#ifdef CONFIG_X86_MCELOG_LEGACY
->> +
->>   	if (test_and_clear_bit(0, &mce_need_notify)) {
->>   		mce_work_trigger();
->>   		return 1;
->>   	}
->> -
->> +#endif
->>   	return 0;
->>   }
+On 11/02/2025 10:07, Wenmeng Liu wrote:
+> SA8775P is a Qualcomm SoC. This series adds driver changes to
+> bring up the TPG interfaces in SA8775P.
 > 
-> The empty stub function below can also be removed from the file: arch/x86/kernel/cpu/mce/internal.h
+> We have tested this on qcs9100-ride board with 'Test Pattern Generator'.
+> Unlike CSID TPG, this TPG can be seen as a combination of CSIPHY and sensor.
 > 
->           static inline void mce_work_trigger(void)       { }
+> Tested with following commands:
+> - media-ctl --reset
+> - v4l2-ctl -d /dev/v4l-subdev0 -c test_pattern=0
+> - media-ctl -V '"msm_tpg0":0[fmt:SRGGB10/4608x2592 field:none]'
+> - media-ctl -V '"msm_csid0":0[fmt:SRGGB10/4608x2592 field:none]'
+> - media-ctl -V '"msm_vfe0_rdi0":0[fmt:SRGGB10/4608x2592 field:none]'
+> - media-ctl -l '"msm_tpg0":1->"msm_csid0":0[1]'
+> - media-ctl -l '"msm_csid0":1->"msm_vfe0_rdi0":0[1]'
+> - v4l2-ctl -d /dev/v4l-subdev0 -c test_pattern=9
+> - yavta -B capture-mplane -n 5 -f SRGGB10P -s 4608x2592 /dev/video0
+>    --capture=7
+> 
+> Used following tools for the sanity check of these changes.
+> 
+> - make -j32 W=1
+> - ./scripts/checkpatch.pl
+> 
+> ---
+> This patch series depends on patch series:
+> https://lore.kernel.org/linux-media/20250210162843.609337-1-quic_vikramsa@quicinc.com/
+> ---
+> 
+> ---
+> Wenmeng Liu (3):
+>        media: qcom: camss: Add support for TPG common
+>        media: qcom: camss: Add link support for TPG common
+>        media: qcom: camss: tpg: Add TPG support for SA8775P
+> 
+>   drivers/media/platform/qcom/camss/Makefile         |   2 +
+>   drivers/media/platform/qcom/camss/camss-csid-690.c |  15 +
+>   drivers/media/platform/qcom/camss/camss-csid.c     |  44 +-
+>   drivers/media/platform/qcom/camss/camss-tpg-gen1.c | 245 +++++++
+>   drivers/media/platform/qcom/camss/camss-tpg.c      | 737 +++++++++++++++++++++
+>   drivers/media/platform/qcom/camss/camss-tpg.h      | 130 ++++
+>   drivers/media/platform/qcom/camss/camss.c          | 113 ++++
+>   drivers/media/platform/qcom/camss/camss.h          |   5 +
+>   8 files changed, 1282 insertions(+), 9 deletions(-)
+> ---
+> base-commit: c1696380f08cf7cc68560a11f2e8c51cb24aa7ba
+> change-id: 20250211-sa8775p_tpg-7de227a82eb4
+> 
+> Best regards,
 
+Great to see this work.
 
-Actually I think this patch is better off being dropped. With it 
-mce_notify_irq will always return false, causing mce_timer_fn() to 
-always increase the polling interval until it stabilizes at around 
-check_interval.
+I think the TPG should be another type of PHY.
 
-I will wait a bit for some more feedback and will repost v3 which will 
-consist of only patches 1 and 2.
+---
+bod
