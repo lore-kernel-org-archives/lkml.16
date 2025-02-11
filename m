@@ -1,137 +1,139 @@
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C4017C91;
-	Tue, 11 Feb 2025 17:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49396262154;
+	Tue, 11 Feb 2025 17:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739294100; cv=none; b=e3pOAtyrSHDpqX4Tju52h4Bp1aKEIqTuaVKyO8s+KBfwjpWZFiPsgAtwKNqu3SzjlYY93MOAecD+Secwkft78jMu2jXSVuqgLwe/da+8RTApMhlAMprhfTI19f7jcd3ErmkCxgTtwwF+q5CEmZNGTIK7hqHzZ0zFaLZXFJed9aM=
+	t=1739294111; cv=none; b=GNCOcajtbfgv2fkp1FNt/WrH9deGhdL8Bi/elUylHpg1J2zPlZrQrvBdc9Vup7RidvyEjeOOpyNPRb56bZ77t+aDM26Z5C5GSa8ZkLO6CkD567vsQQFarh24vT53jbctgNiHnwn8t1+1n5gXLz6M9S7QOv+i7AMm2Ps9zu53vas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739294100; c=relaxed/simple;
-	bh=t66d/4AH1fgVYpjkiv6cVclNRKcllufAF+iU4xKquLM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cYZX6WmDLgZInf8AyroMBEPvfZor1paxYJudP9tWJQ2G3Iyun+fhKk3tnBNsxYyOHmAQSWEkpQD3Ltx4wDsrw01Kp9ta8fFWGPGpbc+L9qqy63c5Op+WID//LfpgKbfPKajCMqPoMelXMICom5/QgsyJK39/ixoV9eV3dSICGD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=DwIB3aVu; arc=none smtp.client-ip=128.199.32.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
+	s=arc-20240116; t=1739294111; c=relaxed/simple;
+	bh=mc25zAjsGl/MLP9YvKWqg7YDGswdp1sX6dk4qdXE2dk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i2Ymd7xU/uTfQ33Z1Rvo8Hj5jCJfQT26r9OQIDCIusPjUdtWnpRU2VqC1CecesVFvhKTYm7MOSlu35QPyTSTGhg3AXZLFodHRGYo/IVNW+qxOezS2F75T5UwUNSPMP+z1iSZ3/aB/f6k6tVlReyK+04Jh/1HHXOLrHRN3hoPqr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XaeX91BL; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="DwIB3aVu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1739294090; bh=t66d/4AH1fgVYpjkiv6cVclNRKcllufAF+iU4xKquLM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=DwIB3aVuQIyquiaqd/suVGZYHsw4zDypWZsBvl0VHqeEQqHQNIfZrvYwqW1vzjujr
-	 ZwBFItpsWDKwdbY2ptfB6mlP/eDkDgtwcNX6jrDpzvETBYpzDGBnuEwk5A8eXts2n4
-	 t4DvgA+aX+ipNWe85je37fRSSpKLxPnXrnpqiYHo=
-From: Luca Weiss <luca@lucaweiss.eu>
-To: Danila Tikhonov <danila@jiaxyga.com>, neil.armstrong@linaro.org,
- quic_jesszhan@quicinc.com, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- andersson@kernel.org, konradybcio@kernel.org, robdclark@gmail.com,
- quic_abhinavk@quicinc.com, dmitry.baryshkov@linaro.org, sean@poorly.run,
- marijn.suijten@somainline.org, jonathan@marek.ca, jun.nie@linaro.org,
- fekz115@gmail.com, ~postmarketos/upstreaming@lists.sr.ht
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- freedreno@lists.freedesktop.org, linux@mainlining.org,
- ~postmarketos/upstreaming@lists.sr.ht,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject:
- Re: [PATCH 4/4] arm64: dts: qcom: sm7325-nothing-spacewar: Enable panel and
- GPU
-Date: Tue, 11 Feb 2025 18:14:37 +0100
-Message-ID: <12605108.O9o76ZdvQC@lucaweiss.eu>
-In-Reply-To: <4a232b8e-f63e-4f89-aa4e-257165150549@oss.qualcomm.com>
-References:
- <20250203181436.87785-1-danila@jiaxyga.com>
- <20250203181436.87785-5-danila@jiaxyga.com>
- <4a232b8e-f63e-4f89-aa4e-257165150549@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XaeX91BL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739294109; x=1770830109;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=mc25zAjsGl/MLP9YvKWqg7YDGswdp1sX6dk4qdXE2dk=;
+  b=XaeX91BLqAQgzqtxkI9vgVMkwXixTOU4B9eoMhvLHQSETjFRNE7f8euR
+   r+L4dljxNX5LE9FhPCz3Q9sR5mu/Z6/3qmKZymEzS9qwNVYFtiEBttMfl
+   1g61CKqJ3NXvDlKWdHrtCTXBF1nweZkf23mmgCmKdlQSBsr4bNR/R02V5
+   DGadjEMsTZFfVxLDvLh3d8fZFIiTnkPu+3d5ReTm+cJFuujxZzQXxJ2oC
+   2YGzds+kOkiLwHyhyQDg8vhX1oLyoQeb2zkMBxS4W0i4p9HjK4sWoVWdA
+   Nnl9fcnWRnUqRNF4XTZwJDeAbqvf7CFjbQnU3MwtaYqJuwOSlU2QeqhkI
+   g==;
+X-CSE-ConnectionGUID: ZLcod/ahQ/2G52dzAgZDUw==
+X-CSE-MsgGUID: zN0446JfQ6iQqGM+JHxy6g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="39838503"
+X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
+   d="scan'208";a="39838503"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 09:15:08 -0800
+X-CSE-ConnectionGUID: cu4IeDMmTkGPGtxGZfXMCA==
+X-CSE-MsgGUID: B/A1HWjMTfqSBo+IwgZKQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
+   d="scan'208";a="112404173"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 09:15:05 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1thtqg-0000000AZr4-2IgI;
+	Tue, 11 Feb 2025 19:15:02 +0200
+Date: Tue, 11 Feb 2025 19:15:02 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v7 1/3] scanf: remove redundant debug logs
+Message-ID: <Z6uFlh6TgXTnwHI-@smile.fi.intel.com>
+References: <20250211-scanf-kunit-convert-v7-0-c057f0a3d9d8@gmail.com>
+ <20250211-scanf-kunit-convert-v7-1-c057f0a3d9d8@gmail.com>
+ <Z6tvzhZIMVKWH8kK@smile.fi.intel.com>
+ <CAJ-ks9=Bf42eojROr1X+BnmeQLa=zF7EAr4Y3n2exwZXum+rbQ@mail.gmail.com>
+ <Z6tzkY375ffTVEXQ@smile.fi.intel.com>
+ <CAJ-ks9=xqXsEp1_PP82qr_WDm_OF_uW2eKQfqC5+aDapWdoJ2w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJ-ks9=xqXsEp1_PP82qr_WDm_OF_uW2eKQfqC5+aDapWdoJ2w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On dinsdag 11 februari 2025 14:31:14 Midden-Europese standaardtijd Konrad Dybcio wrote:
-> On 3.02.2025 7:14 PM, Danila Tikhonov wrote:
-> > From: Eugene Lepshy <fekz115@gmail.com>
-> > 
-> > Enable the Adreno GPU and configure the Visionox RM692E5 panel.
-> > 
-> > Signed-off-by: Eugene Lepshy <fekz115@gmail.com>
-> > Co-developed-by: Danila Tikhonov <danila@jiaxyga.com>
-> > Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
-> > ---
-> > Note:
-> > Depends on https://lore.kernel.org/linux-arm-msm/20250122-dpu-111-topology-v2-1-505e95964af9@somainline.org/
-> > ---
-> >  .../boot/dts/qcom/sm7325-nothing-spacewar.dts | 53 ++++++++++++++++++-
-> >  1 file changed, 51 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/sm7325-nothing-spacewar.dts b/arch/arm64/boot/dts/qcom/sm7325-nothing-spacewar.dts
-> > index a5cda478bd78..cda317b49d5c 100644
-> > --- a/arch/arm64/boot/dts/qcom/sm7325-nothing-spacewar.dts
-> > +++ b/arch/arm64/boot/dts/qcom/sm7325-nothing-spacewar.dts
-> > @@ -52,6 +52,8 @@ framebuffer0: framebuffer@e1000000 {
-> >  			stride = <(1080 * 4)>;
-> >  			format = "a8r8g8b8";
-> >  
-> > +			display = <&panel0>;
-> 
-> This is allowed by bindings but doesn't seem to do anything
+On Tue, Feb 11, 2025 at 11:02:59AM -0500, Tamir Duberstein wrote:
+> On Tue, Feb 11, 2025 at 10:58 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Tue, Feb 11, 2025 at 10:50:33AM -0500, Tamir Duberstein wrote:
+> > > On Tue, Feb 11, 2025 at 10:42 AM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Tue, Feb 11, 2025 at 10:13:37AM -0500, Tamir Duberstein wrote:
+> > > > > The test already prints the same information on failure; remove
+> > > > > redundant pr_debug() logs.
 
-I believe this exposes display dimensions to user space also via simpledrm.
+...
 
-At least I was using something like this before panel support to get phosh
-to scale properly on postmarketOS.
+> > > > > -     pr_debug("\"%s\", \"%s\" ->\n", str, fmt);                              \
+> > > >
+> > > > What *if* the n_args == 0 here?
+> > >
+> > > Then there's no assertion in this block, so the test cannot possibly fail here.
+> >
+> > Correct, but I'm talking about this in a scope of the removed debug print.
+> > I.o.w. how would we even know that this was the case?
+> >
+> > (I'm not objecting removal, what I want from you is to have a descriptive and
+> >  explanatory commit message that's answers to "why is this needed?" and "why is
+> >  it safe to do?")
+> 
+> The true answer to "why is this needed" is Petr requested it in
+> https://lore.kernel.org/all/Z6s2eqh0jkYHntUL@pathway.suse.cz/ (again,
+> lore is having issues):
+> 
+> On Tue, Feb 11, 2025 at 6:37 AM Petr Mladek <pmladek@suse.com> wrote:
 
-Regards
-Luca
+[...]
 
+> > But when thinking more about it. I think that even pr_debug() is not
+> > the right solution.
+> >
+> > IMHO, we really want to print these details only when the test fails.
+> >
+> > Best Regards,
+> > Petr
 > 
-> > +
-> >  			clocks = <&gcc GCC_DISP_HF_AXI_CLK>,
-> >  				 <&dispcc DISP_CC_MDSS_MDP_CLK>,
-> >  				 <&dispcc DISP_CC_MDSS_BYTE0_CLK>,
-> > @@ -757,6 +759,10 @@ &gpi_dma1 {
-> >  	status = "okay";
-> >  };
-> >  
-> > +&gpu {
-> > +	status = "okay";
-> > +};
-> > +
-> >  &gpu_zap_shader {
-> >  	firmware-name = "qcom/sm7325/nothing/spacewar/a660_zap.mbn";
-> >  };
-> > @@ -823,15 +829,44 @@ &ipa {
-> >  	status = "okay";
-> >  };
-> >  
-> > -/* MDSS remains disabled until the panel driver is present. */
-> > +&mdss {
-> > +	status = "okay";
-> > +};
-> > +
-> >  &mdss_dsi {
-> >  	vdda-supply = <&vdd_a_dsi_0_1p2>;
-> > +	status = "okay";
-> >  
-> > -	/* Visionox RM692E5 panel */
-> > +	panel0: panel@0 {
-> 
-> Is there going to be a panel1, too? ;)
-> 
-> Please drop the 0
-> 
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> 
-> Konrad
-> 
+> The commit message already answers "why is it safe to do":
 
+Not really. It answers that "why is it safe to do when test case fails?".
 
+> > The test already prints the same information on failure; remove
+> > redundant pr_debug() logs.
+> 
+> Perhaps what you're asking for is an assertion to be added if n_args
+> == 0? I think that would make sense. Does it belong in this series?
+
+I don't know if it's possible case. I don't know if we need an assertion.
+Please, research.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
