@@ -1,197 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473A1130E58;
-	Tue, 11 Feb 2025 04:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096A23BB54
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 04:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739247289; cv=none; b=NqyeAOWoPEC3mdPx30jpWumkeI8A0qQwBNI+K3VuHOZcAprEgAdI5fDsqFhkSQ4TXiquF8fjcEFrCJzuItshfxNOxjSWiuFbgxI9IhtDNfDFuSlos+bis/R8MbdTaSjz/9BzSv48vjsr+t/ywoVf3pTtpYSHNd7ZigwxdiBsW9Q=
+	t=1739247803; cv=none; b=S4DRQrr9ne1jAfhzGRuuO8nYRlK5qWyOcbTwSYcipsI+KkNxEcqhosdt65VDg3DmA9M7XUIA0g7HYlBpm6i6VaimGyY1y/BoiIfI7uuR/jCtl4vhXySB6ac1qmkvISjGrvtw5KCOwdik5b6kYWyk2cIijnnNp+FPlz1VBdgNvHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739247289; c=relaxed/simple;
-	bh=NtDUaUsfl54+dbDGWlga94lii7paIJ7KzGnRR+Yq4AA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lp0IZoPCbkFag30grq3d2GBW27T1Vv6TNfYruAO5b/5zNOGpXwYfMVs1viesyIJ2x6j/Z7JKv5ig9WqCMbHon/3vn8BnAoMjwXlR4KZrV1GUnUFjoiDtcAX/+fNaqnSMbmBod5spBALiOHyih+DCowXk2bq6SJo+ZuNxkKZeaDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rrUYz0bm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739247803; c=relaxed/simple;
+	bh=R0t/C1XKlZv20LTZa+7WfqHAu50Wp/qHlyPWRmFj1rg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bZxBKHKVQm7JsFGek/N4OeYM78M0aBuHJl8sulL9EpFGsgke8cmaqZE+4myZqW5KaDXYWC//iji/aEffPTmkJtb8kT267rr8Hw7oLNHY8dRuJA3u9zilM00VIluxH9I4Tzvh8vCnH7Xja/itJtxsrH1hz0/TYL/kVD8TJndhY5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZnfzKnst; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rrUYz0bm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D310AC4CEDD;
-	Tue, 11 Feb 2025 04:14:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739247288;
-	bh=NtDUaUsfl54+dbDGWlga94lii7paIJ7KzGnRR+Yq4AA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rrUYz0bm4N71XREia3KCnsrLVcd/RLld6I+QTWb8jnaaySC4yumwWh7ik2RDOkTSa
-	 SI2a2Hh+syp1YuhwRT1hP36vej7w7YetvKiEfsGZ/AYow5SDDvvcTSq9iZveDXs0Ke
-	 dJ/T0DQP0YQ0AMv8DF15NnzYzG473XE8RzM6GkqWskJYbPG+eCY2QtKnvzxMUFruUp
-	 21ZuBQwSLvWwBZo6T3CKdRZTtpI9ecsuA3Uwf/L3lWhMc3j7HGPMQtNGmT4JRBKOXP
-	 x1I9WiN026qSbjTaAjoLj1TWU7iNU3h/pR5TwGgt1MoRXEjKcWWQSxg9DdDisBlomB
-	 /33AqwMbTGMww==
-Message-ID: <32563a12-eba0-44b4-ad53-e69c6a4962cb@kernel.org>
-Date: Mon, 10 Feb 2025 22:14:44 -0600
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZnfzKnst"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6f4bc408e49so41150587b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:23:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739247801; x=1739852601; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l72HB9rJKeYDJipFoW423nUmM/ApGr/EuReUdhuYps8=;
+        b=ZnfzKnstmcW8Z3UuRjRSU+Pjv/cdOqG3KOUcaw1LK7g4IGHKx+YzJURGxwS90NCxOJ
+         Y2vzAbXYrn+LfMgzs7TAKF2Yr6ycH0dTaVOWJUuX9eYLkk6KjRP5aH5FiklMRyYohTaf
+         2+NMAAKNQjtMw2WZ56UGp3RUCGFv5RjnqXCDzy0bbXkQhC5oiMu9nZ3QP/I/Z5Xihkyf
+         JNyC5i8QxmkzNImnm2OFUEaX+kCGix1W920Ga/pEcygiLdknMjLc3bFvt5QqUVWWFB1v
+         cx9axX1gIcR2SwwRD8LPi05SIe/AtyOqfNn1HxTc4MDeGbpbm3SeZnG2J+CHLPrzD0wf
+         b7XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739247801; x=1739852601;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l72HB9rJKeYDJipFoW423nUmM/ApGr/EuReUdhuYps8=;
+        b=SUb0KUODqzvLVVdwl2R/vgwX4DolPFaY9iwTxtNKQ2wAB61QHg7QbyPMbiysX82GQq
+         Pa2yXuPLv5xTlo+UiNCxWOPM+I/cE7MsMe1yGK0ICHJg/50NZhL0Zn2NQY8FV73g2P7J
+         XB34IJWcbuwnIR1G/t9BbFh6PUKyfVXj+3L1JbYDyC9vfoKE2W3RQzWO2tMmwIdu7/ps
+         sSUA01Wj/TISv+wn2SO9t1iZpsN0daxEIpURRCli0RWc6cJGPKwuL5an8+ofVlwwWfDV
+         C8sfWCMeditUsDTg6JgMBmwRcj5ytj9Pbkmmmuu4O5e3PuNp1T4QsaOHdOaRMhmq0+Hh
+         gH8A==
+X-Forwarded-Encrypted: i=1; AJvYcCW7JHkC0WLK0SFU323I7MRbtjMe6uYgxtUSiRWI+oWr0iytchbHlb9V+VnLQ/NNCjE6Npc24lgaf6HXKoU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yznx/lqpCS+Uz9MXIYVMV6IY18X2cTHuKU7FvUIdazGgXVdbXfk
+	v0aGhsxovPZxUsRTEUmtyX45cuqSBu1Ey4EGGMVleTFqAfnuBL6teY6xheyQQ0s5WOggKCE2qAx
+	sUrmhDvWsYZByQ4kfdAVOhRgVtC7ot2wazDPDU/k0VF/IArrdzUZ2
+X-Gm-Gg: ASbGnct0crSicsfpFq4V5hbzQE9oYSfAVZCA93jwjGBnDk0JL6l+udHnk7XayXiKbcg
+	KeKYdJkmcjnJggNkixdfDSaGNyDa8RKoygWMlN4n1S36Vz9XYRluR/o8VuNw7NfT1O+7bFwkULA
+	==
+X-Google-Smtp-Source: AGHT+IEaHSJgcTwNMe8gtMuNNKBGW5+JvqlPIxfElKzdLCmXoQQG9xeg40ledl/Pm2YjwEfekIy/qPMn28eoO8+uYLE=
+X-Received: by 2002:a05:690c:4513:b0:6ef:7fc0:a378 with SMTP id
+ 00721157ae682-6f9b2873da5mr146546727b3.9.1739247800730; Mon, 10 Feb 2025
+ 20:23:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ARM: dts: socfpga: remove syscon compatible string for
- sysmgr node
-To: "Rabara, Niravkumar L" <niravkumar.l.rabara@intel.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: lkp <lkp@intel.com>
-References: <20250117154244.4079614-1-niravkumar.l.rabara@intel.com>
- <45276881-11de-47c9-aa9c-488df537a596@kernel.org>
- <d78ae428-6139-426b-bde9-e3ce5a4008ac@kernel.org>
- <BL3PR11MB65325F279FEA579D19EFCF7AA2FD2@BL3PR11MB6532.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Dinh Nguyen <dinguyen@kernel.org>
-In-Reply-To: <BL3PR11MB65325F279FEA579D19EFCF7AA2FD2@BL3PR11MB6532.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250210183224.v3.1.If6f14aa2512336173a53fc3552756cd8a332b0a3@changeid>
+ <20250210103244.646150-1-chharry@google.com> <CABBYNZJ1LbN_3H1pJsZ6mH1nY7ijb9nbuPSJJwqyvJnC0=U6PQ@mail.gmail.com>
+In-Reply-To: <CABBYNZJ1LbN_3H1pJsZ6mH1nY7ijb9nbuPSJJwqyvJnC0=U6PQ@mail.gmail.com>
+From: Hsin-chen Chuang <chharry@google.com>
+Date: Tue, 11 Feb 2025 12:22:53 +0800
+X-Gm-Features: AWEUYZlMsFS0a8TBCzZxdEjcC3RUJx4_kVp2AhxUPsPyauDsGgauUhDUrF1occM
+Message-ID: <CADg1FFe1DeDFmudxWZp3_thvTnm1N=ZOjXts0sJ7mxaUsFxE5Q@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] Bluetooth: Add ABI doc for sysfs isoc_alt
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: linux-bluetooth@vger.kernel.org, 
+	chromeos-bluetooth-upstreaming@chromium.org, 
+	Hsin-chen Chuang <chharry@chromium.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
+	Marcel Holtmann <marcel@holtmann.org>, linux-kernel@vger.kernel.org, 
+	Ying Hsu <yinghsu@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/10/25 21:18, Rabara, Niravkumar L wrote:
-> Hi Dinh
-> 
->> -----Original Message-----
->> From: Dinh Nguyen <dinguyen@kernel.org>
->> Sent: Tuesday, 11 February, 2025 8:07 AM
->> To: Rabara, Niravkumar L <niravkumar.l.rabara@intel.com>; Rob Herring
->> <robh@kernel.org>; Krzysztof Kozlowski <krzk+dt@kernel.org>; Conor Dooley
->> <conor+dt@kernel.org>; devicetree@vger.kernel.org; linux-
->> kernel@vger.kernel.org
->> Cc: lkp <lkp@intel.com>
->> Subject: Re: [PATCH] ARM: dts: socfpga: remove syscon compatible string for
->> sysmgr node
->>
->> On 2/10/25 16:29, Dinh Nguyen wrote:
->>> On 1/17/25 09:42, niravkumar.l.rabara@intel.com wrote:
->>>> From: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
->>>>
->>>> The SoCFPGA System Manager(sysmgr) dt bindings do not use the syscon
->>>> compitible, nor does the Linux system manager driver rely on it.
->>>> Remove "syscon" for Arria5, Arria10 and Cyclon5 sysmgr node and fixed
->>>> dtbs_check warnings like:
->>>>
->>>> socfpga_arria5_socdk.dtb: sysmgr@ffd08000: compatible: 'oneOf'
->>>> conditional failed, one must be fixed:
->>>>      ['altr,sys-mgr', 'syscon'] is too long
->>>>      'altr,sys-mgr-s10' was expected
->>>>      'altr,sys-mgr' was expected
->>>>      from schema $id:
->>>> http://devicetree.org/schemas/soc/altera/altr,sys-mgr.yaml#
->>>>
->>>> Reported-by: kernel test robot <lkp@intel.com>
->>>> Closes:
->>>> https://lore.kernel.org/oe-kbuild-all/202501102323.Xnte2yhi-lkp@intel
->>>> .com/
->>>> Signed-off-by: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
->>>> ---
->>>>    arch/arm/boot/dts/intel/socfpga/socfpga.dtsi         | 2 +-
->>>>    arch/arm/boot/dts/intel/socfpga/socfpga_arria10.dtsi | 2 +-
->>>>    2 files changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/intel/socfpga/socfpga.dtsi
->>>> b/arch/arm/boot/dts/intel/socfpga/socfpga.dtsi
->>>> index 35be14150f41..f124fb72e260 100644
->>>> --- a/arch/arm/boot/dts/intel/socfpga/socfpga.dtsi
->>>> +++ b/arch/arm/boot/dts/intel/socfpga/socfpga.dtsi
->>>> @@ -853,7 +853,7 @@ spi1: spi@fff01000 {
->>>>            };
->>>>            sysmgr: sysmgr@ffd08000 {
->>>> -            compatible = "altr,sys-mgr", "syscon";
->>>> +            compatible = "altr,sys-mgr";
->>>>                reg = <0xffd08000 0x4000>;
->>>>            };
->>>> diff --git a/arch/arm/boot/dts/intel/socfpga/socfpga_arria10.dtsi
->>>> b/arch/arm/boot/dts/intel/socfpga/socfpga_arria10.dtsi
->>>> index 6b6e77596ffa..015120fb4b02 100644
->>>> --- a/arch/arm/boot/dts/intel/socfpga/socfpga_arria10.dtsi
->>>> +++ b/arch/arm/boot/dts/intel/socfpga/socfpga_arria10.dtsi
->>>> @@ -792,7 +792,7 @@ scu: snoop-control-unit@ffffc000 {
->>>>            };
->>>>            sysmgr: sysmgr@ffd06000 {
->>>> -            compatible = "altr,sys-mgr", "syscon";
->>>> +            compatible = "altr,sys-mgr";
->>>>                reg = <0xffd06000 0x300>;
->>>>                cpu1-start-addr = <0xffd06230>;
->>>>            };
->>>
->>> Did you test this patch on actual hardware? Unless something has
->>> changed in the system manager driver, this will probably cause the system
->> hang.
->>>
->>
->> Actually, it will not fail to boot, but you will see SD/MMC fail if the bootloader did
->> not set the clk-phase correctly, or you booted from another source not SD/MMC.
->> The SD/MMC driver uses syscon to get access to the system manager to set it's
->> clk-phase.
->>
-> 
-> Yes, I have tested this using NFS boot, however I didn't observe any issue with SD/MMC
-> driver.
-> 
-> => fdt print /soc/mmc@ff808000
-> mmc@ff808000 {
-> 	#address-cells = <0x00000001>;
-> 	#size-cells = <0x00000000>;
-> 	compatible = "altr,socfpga-dw-mshc";
-> 	reg = <0xff808000 0x00001000>;
-> 	interrupts = <0x00000000 0x00000062 0x00000004>;
-> 	fifo-depth = <0x00000400>;
-> 	clocks = <0x0000001a 0x00000024>;
-> 	clock-names = "biu", "ciu";
-> 	resets = <0x00000006 0x00000027>;
-> 	altr,sysmgr-syscon = <0x0000001c 0x00000028 0x00000004>;
-> 	status = "okay";
-> 	cap-sd-highspeed;
-> 	cap-mmc-highspeed;
-> 	broken-cd;
-> 	bus-width = <0x00000004>;
-> 	clk-phase-sd-hs = <0x00000000 0x00000087>;
-> 	phandle = <0x00000029>;
-> };
-> => fdt print /soc/sysmgr@ffd06000
-> sysmgr@ffd06000 {
-> 	compatible = "altr,sys-mgr";
-> 	reg = <0xffd06000 0x00000300>;
-> 	cpu1-start-addr = <0xffd06230>;
-> 	phandle = <0x0000001c>;
-> };
-> 
-> .
-> 
-> [    1.095784] mmc_host mmc0: Bus speed (slot 0) = 50000000Hz (slot req 50000000Hz, actual 50000000HZ div = 0)
-> [    1.105692] mmc0: new high speed SDHC card at address 0001
-> [    1.108238] at24 0-0051: supply vcc not found, using dummy regulator
-> [    1.111817] mmcblk0: mmc0:0001 SD32G 29.1 GiB
-> [    1.118872] at24 0-0051: 4096 byte 24c32 EEPROM, writable, 32 bytes/write
-> [    1.129186]  mmcblk0: p1 p2 p3
-> 
-> .
-> 
-> root@arria10:~# ls /dev/mmcblk0*
-> /dev/mmcblk0    /dev/mmcblk0p1  /dev/mmcblk0p2  /dev/mmcblk0p3
-> root@arria10:~# mount /dev/mmcblk0p1 /tmp/
-> root@arria10:~# ls /tmp/
-> extlinux                         socfpga_arria10_socdk_sdmmc.dtb  zImage
-> fit_spl_fpga.itb                 u-boot.img
-> 
-> 
+Hi Luiz,
 
-You didn't really test anything. There's a register in the System 
-Manager that has set the SD/MMC clk-phase in U-Boot. So you won't see 
-the failure unless you explicitly change the value in that register and 
-then boot Linux, then you will see the failure. If you look at 
-drivers/mmc/host/dw_mmc-pltfm.c and look at the function 
-dw_mci_socfpga_priv_init(), you can see that work in action. If you 
-remove the syscon property, then that portion of the driver will fail. 
-Also the ethernet driver is using the system manager's to set the 
-correct PHY mode through syscon. I think you need to test this patch 
-more thoroughly.
+Thanks for the feedback.
 
-DInh
+On Tue, Feb 11, 2025 at 2:17=E2=80=AFAM Luiz Augusto von Dentz
+<luiz.dentz@gmail.com> wrote:
+>
+> Hi Hsin-chen,
+>
+> On Mon, Feb 10, 2025 at 5:32=E2=80=AFAM Hsin-chen Chuang <chharry@google.=
+com> wrote:
+> >
+> > From: Hsin-chen Chuang <chharry@chromium.org>
+> >
+> > The functionality was completed in commit 5e5c3898ef49 ("Bluetooth: Fix
+> > possible race with userspace of sysfs isoc_alt")
+> >
+> > Fixes: 5e5c3898ef49 ("Bluetooth: Fix possible race with userspace of sy=
+sfs isoc_alt")
+> > Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
+> > ---
+> >
+> > (no changes since v1)
+> >
+> >  Documentation/ABI/stable/sysfs-class-bluetooth | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> >
+> > diff --git a/Documentation/ABI/stable/sysfs-class-bluetooth b/Documenta=
+tion/ABI/stable/sysfs-class-bluetooth
+> > index 36be02471174..1168e0318e35 100644
+> > --- a/Documentation/ABI/stable/sysfs-class-bluetooth
+> > +++ b/Documentation/ABI/stable/sysfs-class-bluetooth
+> > @@ -7,3 +7,15 @@ Description:   This write-only attribute allows users =
+to trigger the vendor reset
+> >                 The reset may or may not be done through the device tra=
+nsport
+> >                 (e.g., UART/USB), and can also be done through an out-o=
+f-band
+> >                 approach such as GPIO.
+> > +
+> > +What:          /sys/class/bluetooth/hci<index>/isoc_alt
+> > +Date:          10-Feb-2025
+> > +KernelVersion: 6.13
+> > +Contact:       linux-bluetooth@vger.kernel.org
+> > +Description:   This attribute allows users to configure the USB Altern=
+ate setting
+> > +               for the specific HCI device. Reading this attribute ret=
+urns the
+> > +               current setting, and writing any supported numbers woul=
+d change
+> > +               the setting. See the USB Alternate setting definition i=
+n Bluetooth
+> > +               core spec 5, vol 4, part B, table 2.1.
+> > +               If the data is not a valid number, the write fails with=
+ -EINVAL.
+> > +               The other failures are vendor specific.
+>
+> Still not really convinced this is the right way to expose it, it is
+> not an HCI attribute to begin with, not sure if we couldn't perhaps
 
+Could you tell more about why this is not an HCI attr to begin with?
+The alt setting is bonded to the USB device which is now under btusb's
+control, and btusb creates a sysfs node for this. This attr location
+decision seems natural to me.
+
+> add another node to control it or add via USB device?
+
+I feel allowing this in the USB sysfs API might be an overkill as that
+makes all USB devices' alt settings be controllable from the user
+space. Limiting this usage in the scope of BT makes more sense to me.
+
+>
+> --
+> Luiz Augusto von Dentz
+
+--=20
+Best Regards,
+Hsin-chen
