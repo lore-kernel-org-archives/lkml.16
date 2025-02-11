@@ -1,385 +1,182 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D58F1FBC9C
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 15:25:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC6C253341
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 15:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739287528; cv=none; b=s9ZX9V/mktaehxJt/vBce5dWxenIZ0zxs7j7ez4Lq+jStWLsCMPhS5M+USHhitswY0uQB6vIbOEYXqP0ar7FubbpizeSpKrWCN8eDlje012nudNzoZnK6F5MAdQgBbcLO2LJynYYUpcB/egsi9MUY13/KOFpw/YLI3iydcbqRlQ=
+	t=1739287533; cv=none; b=SVnfYEp9gQurxX1FDDM9cbk0AHeuMSkno+mynGoIduzZucsmP2cKIPpfAZ0oqvE1kB02J7xW8PUOdQY5U2RR1c8J/BDaK2UG/aV6l3H+UCgCWcWqK7D6nun7a4/hrLbPfEyzqcl/500FEXrRv4ZoCe38pS6WQUom50T28LVZjsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739287528; c=relaxed/simple;
-	bh=1r6/ff2BnZEC2dHTV91S6QSEwAKkbJoNvRcUTFrd0AE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DkxzrpzppGciI+TyiNJNQoUuYkMS2MhlK8IqSSjP9eB2/h0e224UpmcfjeUYchu8oi9yh4YqQIz9UUEI6tRB+Qbg+JnnYshQ8PbOtIV0SXnbBeT9JVVKKBVDHRpz5Ag1zrdgl4tzA5UJRn+npe4Usj2tOKa7p5C2Lt/be/0bvUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h36W9d9u; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739287533; c=relaxed/simple;
+	bh=8q89y8G7WBLY8y6QY0gDAqk5nmkC11+b3ZyOX7ul1kY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KiGmDQEDo/Vkmo5HqKmE9jR4hSp34JM9qE6t/SmAF387kEa9JUdUyey7VJyQzCja6uGEjQ7uASJQQOBZYW3FBYap0JLvJ/acG329eMsQanAodJZBjKcgqBmG88lyZeogQeOj2aq9GdxtCcLXNYKr53P1Y5AlTJQSFULWTONFcXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=f1ygNHlE; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=f1ygNHlE; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h36W9d9u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739287525;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="f1ygNHlE";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="f1ygNHlE"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 93FCA37363;
+	Tue, 11 Feb 2025 12:04:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1739275481; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=GSesOkdL5QsCdaxIx1+Y96CVYiQSc0zcD5FyngU75P0=;
-	b=h36W9d9uqO3a/Z4E7ZZ4nZfjBV/iC0Yg58IGbvve/BUAWKXxE+QzHt0SLbPsn3LPCUIjrV
-	0yjKbKEuq/HGwU+e+9BtgXjBsab3TCSe5JnTQ02bIXvQD4LSaj+bDEi1w0RqpbNVUcDX/6
-	xGkow+I2NoxSPmiB20oqY3LtfSmyF4A=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-590-RRFHIdGqNi27SZN0CuX3nw-1; Tue, 11 Feb 2025 10:25:21 -0500
-X-MC-Unique: RRFHIdGqNi27SZN0CuX3nw-1
-X-Mimecast-MFC-AGG-ID: RRFHIdGqNi27SZN0CuX3nw
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43943bd1409so16341835e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:25:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739287520; x=1739892320;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=GSesOkdL5QsCdaxIx1+Y96CVYiQSc0zcD5FyngU75P0=;
-        b=YjU00NOHtrtq6NmC4O+h366PAGgJpljTk0cK3HuLQDWe26DjdY8Qn7qTn9wnwrL7O5
-         uPqz6B2WaE33lr9ixmjLsplJVZZfnuNv9jBw0W4SKpfZvkbbvxmFFyg8KI34JvufncwW
-         KfuM2xsPR/4TtIl7FPo3OJww3l3GsEULhFPN+v4whHJTnhwl/BgKsIaInAn9AHNoKKQF
-         KZJ2lcN8Htu8LBYr7fG+uSU6ZT1OkjE188a7lKzAwFeFwjuL+D42UWa/O6D7ZaM1AjcX
-         uG0e5sImdomJTnCsKSt4+vj7e32iuayTdi8qZkBpuV/GZ6l1ReS2nTSTS568PoX7gqRP
-         PzQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVCIUOjQKDVFVt163n5fB5kj2etyKDnVz+KZQQhx3USKt9pF0m4Yna/okzccwiHhYHYQyUZpfgD1QeoSWw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIBSgo9MZ0zuBq5zCMJmP3V57TLP4HmTnNocXRR9iUWGtgQM67
-	Ui6xkX12LjBs93QmULqz7+F4cnZx1UGceS+ls7oyPHvx1rozYBrbEULxBII+PSoxB7XvAfoAcfC
-	Y+rhrI2+bWEm5YKCu8kX35q1ryHPli+ENztxHRjYx6m3edy9PHF4y4WB3dCm0cQ==
-X-Gm-Gg: ASbGncur70hxQwBRrlcvDIQMMlaPzXHiY2qQH1+CYNbRBS3OZvqUNvxFPr9XCy6m/kx
-	bdi0zQRHp5dC6K89XDzs2lJ1O+dKWcQ69HKVs8svYmwqIuTFO78OuCjmWnUtNJxbAcV+bMnvCuA
-	hPammnSN7KUG53MbCH33YouPNly/hIZo0zIkDoPP4ZI0jmUAfHtqVN0DTGRF+85PFuJ1HDy/cKf
-	jtBbLvTPrrQIXV8zDdcaUB+Xn0P+SUe70ZcfgVINyd5815NLbZispw6kzrB8aB7/Rz8fheavINJ
-	vt35uPJukUHK6l0Fk+NBhLXHSMM24gc3ZCdzV8fIWQ36vQ==
-X-Received: by 2002:a5d:5846:0:b0:38d:e3a9:d652 with SMTP id ffacd0b85a97d-38de3a9d7d7mr4405773f8f.18.1739287520288;
-        Tue, 11 Feb 2025 07:25:20 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGQRfPQGnapB/aSMSS/BRqzopIgis/KzJRJEU/g8PdB694ngR9gdDv9WaDY/NZ2lZeu16oiaA==
-X-Received: by 2002:a5d:5846:0:b0:38d:e3a9:d652 with SMTP id ffacd0b85a97d-38de3a9d7d7mr4405746f8f.18.1739287519870;
-        Tue, 11 Feb 2025 07:25:19 -0800 (PST)
-Received: from ?IPV6:2a01:599:929:885b:12c0:a824:1abd:41c4? ([2a01:599:929:885b:12c0:a824:1abd:41c4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc6b89ef5sm13324732f8f.31.2025.02.11.07.25.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 07:25:18 -0800 (PST)
-Message-ID: <192c5383-2be5-48da-b0f5-eda602505b70@redhat.com>
-Date: Tue, 11 Feb 2025 16:25:15 +0100
+	 in-reply-to:in-reply-to:references:references;
+	bh=7+JonyeTS6PhmJUJZ7cwFOpKA9QAKAShpmEQryox7lg=;
+	b=f1ygNHlEKOh+wqzr5Bw8tgj1xvQeSPm0CX93J6GGbGyWsio/hs85hO7PYIhiK977tm6t8F
+	2E7TbMOFvyFWF0MKDWeFPcG2nCkH3JdwQMmabolIhf+HnOHKL1ZyED/NwEhn4gApyiHLIu
+	1fkS/q8EFadYRtjyu3cSGL3TSp5O49g=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=f1ygNHlE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1739275481; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7+JonyeTS6PhmJUJZ7cwFOpKA9QAKAShpmEQryox7lg=;
+	b=f1ygNHlEKOh+wqzr5Bw8tgj1xvQeSPm0CX93J6GGbGyWsio/hs85hO7PYIhiK977tm6t8F
+	2E7TbMOFvyFWF0MKDWeFPcG2nCkH3JdwQMmabolIhf+HnOHKL1ZyED/NwEhn4gApyiHLIu
+	1fkS/q8EFadYRtjyu3cSGL3TSp5O49g=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5851313782;
+	Tue, 11 Feb 2025 12:04:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id A7geFNk8q2e3GgAAD6G6ig
+	(envelope-from <jgross@suse.com>); Tue, 11 Feb 2025 12:04:41 +0000
+From: Juergen Gross <jgross@suse.com>
+To: linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev
+Cc: Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	xen-devel@lists.xenproject.org,
+	Jan Vejvalka <jan.vejvalka@lfmotol.cuni.cz>
+Subject: [PATCH 1/2] xen/swiotlb: relax alignment requirements
+Date: Tue, 11 Feb 2025 13:04:31 +0100
+Message-ID: <20250211120432.29493-2-jgross@suse.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250211120432.29493-1-jgross@suse.com>
+References: <20250211120432.29493-1-jgross@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 1/4] mm: page_ext: add an iteration API for page extensions
-To: Luiz Capitulino <luizcap@redhat.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, yuzhao@google.com
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, muchun.song@linux.dev,
- lcapitulino@gmail.com
-References: <cover.1737754625.git.luizcap@redhat.com>
- <70bc5513e599d3386533fcc25dfe33685d2ca1bb.1737754625.git.luizcap@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <70bc5513e599d3386533fcc25dfe33685d2ca1bb.1737754625.git.luizcap@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 93FCA37363
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:mid,suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 24.01.25 22:37, Luiz Capitulino wrote:
-> The page extension implementation assumes that all page extensions of a
-> given page order are stored in the same memory section. The function
-> page_ext_next() relies on this assumption by adding an offset to the
-> current object to return the next adjacent page extension.
-> 
-> This behavior works as expected for flatmem but fails for sparsemem when
-> using 1G pages. Commit e98337d11bbd ("mm/contig_alloc: support
-> __GFP_COMP") exposes this issue, making it possible for a crash when
-> using page_owner or page_table_check page extensions.
-> 
-> The problem is that for 1G pages, the page extensions may span memory
-> section boundaries and be stored in different memory sections. This issue
-> was not visible before commit e98337d11bbd ("mm/contig_alloc: support
-> __GFP_COMP") because alloc_contig_pages() never passed more than
-> MAX_PAGE_ORDER to post_alloc_hook(). However, the mentioned commit
-> changed this behavior allowing the full 1G page order to be passed.
-> 
-> Reproducer:
-> 
->   1. Build the kernel with CONFIG_SPARSEMEM=y and the table extensions
->   2. Pass 'default_hugepagesz=1 page_owner=on' in the kernel command-line
->   3. Reserve one 1G page at run-time, this should crash (backtrace below)
-> 
-> To address this issue, this commit introduces a new API for iterating
-> through page extensions. In page_ext_iter_next(), we always go through
-> page_ext_get() to guarantee that we do a new memory section lookup for
-> the next page extension. In the future, this API could be used as a basis
-> to implement for_each_page_ext() type of macro.
-> 
-> Thanks to David Hildenbrand for helping identify the root cause and
-> providing suggestions on how to fix it (final implementation and bugs are
-> all mine though).
-> 
-> Here's the backtrace, without kasan you can get random crashes:
-> 
-> [   76.052526] BUG: KASAN: slab-out-of-bounds in __update_page_owner_handle+0x238/0x298
-> [   76.060283] Write of size 4 at addr ffff07ff96240038 by task tee/3598
-> [   76.066714]
-> [   76.068203] CPU: 88 UID: 0 PID: 3598 Comm: tee Kdump: loaded Not tainted 6.13.0-rep1 #3
-> [   76.076202] Hardware name: WIWYNN Mt.Jade Server System B81.030Z1.0007/Mt.Jade Motherboard, BIOS 2.10.20220810 (SCP: 2.10.20220810) 2022/08/10
-> [   76.088972] Call trace:
-> [   76.091411]  show_stack+0x20/0x38 (C)
-> [   76.095073]  dump_stack_lvl+0x80/0xf8
-> [   76.098733]  print_address_description.constprop.0+0x88/0x398
-> [   76.104476]  print_report+0xa8/0x278
-> [   76.108041]  kasan_report+0xa8/0xf8
-> [   76.111520]  __asan_report_store4_noabort+0x20/0x30
-> [   76.116391]  __update_page_owner_handle+0x238/0x298
-> [   76.121259]  __set_page_owner+0xdc/0x140
-> [   76.125173]  post_alloc_hook+0x190/0x1d8
-> [   76.129090]  alloc_contig_range_noprof+0x54c/0x890
-> [   76.133874]  alloc_contig_pages_noprof+0x35c/0x4a8
-> [   76.138656]  alloc_gigantic_folio.isra.0+0x2c0/0x368
-> [   76.143616]  only_alloc_fresh_hugetlb_folio.isra.0+0x24/0x150
-> [   76.149353]  alloc_pool_huge_folio+0x11c/0x1f8
-> [   76.153787]  set_max_huge_pages+0x364/0xca8
-> [   76.157961]  __nr_hugepages_store_common+0xb0/0x1a0
-> [   76.162829]  nr_hugepages_store+0x108/0x118
-> [   76.167003]  kobj_attr_store+0x3c/0x70
-> [   76.170745]  sysfs_kf_write+0xfc/0x188
-> [   76.174492]  kernfs_fop_write_iter+0x274/0x3e0
-> [   76.178927]  vfs_write+0x64c/0x8e0
-> [   76.182323]  ksys_write+0xf8/0x1f0
-> [   76.185716]  __arm64_sys_write+0x74/0xb0
-> [   76.189630]  invoke_syscall.constprop.0+0xd8/0x1e0
-> [   76.194412]  do_el0_svc+0x164/0x1e0
-> [   76.197891]  el0_svc+0x40/0xe0
-> [   76.200939]  el0t_64_sync_handler+0x144/0x168
-> [   76.205287]  el0t_64_sync+0x1ac/0x1b0
-> 
-> Fixes: e98337d11bbd ("mm/contig_alloc: support __GFP_COMP")
-> Signed-off-by: Luiz Capitulino <luizcap@redhat.com>
-> ---
->   include/linux/page_ext.h | 10 ++++++++
->   mm/page_ext.c            | 55 ++++++++++++++++++++++++++++++++++++++++
->   2 files changed, 65 insertions(+)
-> 
-> diff --git a/include/linux/page_ext.h b/include/linux/page_ext.h
-> index e4b48a0dda244..df904544d3fac 100644
-> --- a/include/linux/page_ext.h
-> +++ b/include/linux/page_ext.h
-> @@ -93,6 +93,16 @@ static inline struct page_ext *page_ext_next(struct page_ext *curr)
->   	return next;
->   }
->   
-> +struct page_ext_iter {
-> +	unsigned long pfn;
-> +	struct page_ext *page_ext;
-> +};
-> +
-> +struct page_ext *page_ext_iter_begin(struct page_ext_iter *iter, struct page *page);
-> +struct page_ext *page_ext_iter_get(const struct page_ext_iter *iter);
-> +struct page_ext *page_ext_iter_next(struct page_ext_iter *iter);
-> +void page_ext_iter_end(struct page_ext_iter *iter);
-> +
->   #else /* !CONFIG_PAGE_EXTENSION */
->   struct page_ext;
->   
-> diff --git a/mm/page_ext.c b/mm/page_ext.c
-> index 641d93f6af4c1..0b6eb5524cb2c 100644
-> --- a/mm/page_ext.c
-> +++ b/mm/page_ext.c
-> @@ -549,3 +549,58 @@ void page_ext_put(struct page_ext *page_ext)
->   
->   	rcu_read_unlock();
->   }
-> +
-> +/**
-> + * page_ext_iter_begin() - Prepare for iterating through page extensions.
-> + * @iter: page extension iterator.
-> + * @page: The page we're interested in.
-> + *
-> + * Return: NULL if no page_ext exists for this page.
-> + */
-> +struct page_ext *page_ext_iter_begin(struct page_ext_iter *iter, struct page *page)
-> +{
-> +	iter->pfn = page_to_pfn(page);
-> +	iter->page_ext = page_ext_get(page);
-> +
-> +	return iter->page_ext;
-> +}
-> +
-> +/**
-> + * page_ext_iter_get() - Get current page extension
-> + * @iter: page extension iterator.
-> + *
-> + * Return: NULL if no page_ext exists for this iterator.
-> + */
-> +struct page_ext *page_ext_iter_get(const struct page_ext_iter *iter)
-> +{
-> +	return iter->page_ext;
-> +}
-> +
-> +/**
-> + * page_ext_iter_next() - Get next page extension
-> + * @iter: page extension iterator.
-> + *
-> + * Return: NULL if no next page_ext exists.
-> + */
-> +struct page_ext *page_ext_iter_next(struct page_ext_iter *iter)
-> +{
-> +	if (!iter->page_ext)
-> +		return NULL;
-> +
-> +	page_ext_put(iter->page_ext);
-> +
-> +	iter->pfn++;
-> +	iter->page_ext = page_ext_get(pfn_to_page(iter->pfn));
-> +
-> +	return iter->page_ext;
-> +}
-> +
-> +/**
-> + * page_ext_iter_end() - End iteration through page extensions.
-> + * @iter: page extension iterator.
-> + */
-> +void page_ext_iter_end(struct page_ext_iter *iter)
-> +{
-> +	page_ext_put(iter->page_ext);
-> +	iter->page_ext = NULL;
-> +}
+When mapping a buffer for DMA via .map_page or .map_sg DMA operations,
+there is no need to check the machine frames to be aligned according
+to the mapped areas size. All what is needed in these cases is that the
+buffer is contiguous at machine level.
 
-We should likely move all these to the header file, and implement
-page_ext_iter_next() without dropping the RCU lock. Further, we should add
-the optimization where possible right away.
+So carve out the alignment check from range_straddles_page_boundary()
+and move it to a helper called by xen_swiotlb_alloc_coherent() and
+xen_swiotlb_free_coherent() directly.
 
+Fixes: 9f40ec84a797 ("xen/swiotlb: add alignment check for dma buffers")
+Reported-by: Jan Vejvalka <jan.vejvalka@lfmotol.cuni.cz>
+Tested-by: Jan Vejvalka <jan.vejvalka@lfmotol.cuni.cz>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+---
+ drivers/xen/swiotlb-xen.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-Maybe something like this might work:
-
-
-diff --git a/include/linux/page_ext.h b/include/linux/page_ext.h
-index df904544d3fac..4a79820cfe63e 100644
---- a/include/linux/page_ext.h
-+++ b/include/linux/page_ext.h
-@@ -69,12 +69,24 @@ extern void page_ext_init(void);
-  static inline void page_ext_init_flatmem_late(void)
-  {
-  }
-+static inline bool page_ext_next_possible(unsigned long next_pfn)
+diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+index a337edcf8faf..26c62e0d34e9 100644
+--- a/drivers/xen/swiotlb-xen.c
++++ b/drivers/xen/swiotlb-xen.c
+@@ -74,19 +74,21 @@ static inline phys_addr_t xen_dma_to_phys(struct device *dev,
+ 	return xen_bus_to_phys(dev, dma_to_phys(dev, dma_addr));
+ }
+ 
++static inline bool range_requires_alignment(phys_addr_t p, size_t size)
 +{
-+       /*
-+        * page_ext is allocated per memory section. Once we cross a
-+        * memory section, we have to fetch the new pointer.
-+        */
-+       return next_pfn % PAGES_PER_SECTION;
-+}
-  #else
-  extern void page_ext_init_flatmem(void);
-  extern void page_ext_init_flatmem_late(void);
-  static inline void page_ext_init(void)
-  {
-  }
-+static inline bool page_ext_next_possible(unsigned long pfn)
-+{
-+       return true;
-+}
-  #endif
-  
-  extern struct page_ext *page_ext_get(const struct page *page);
-@@ -100,9 +112,32 @@ struct page_ext_iter {
-  
-  struct page_ext *page_ext_iter_begin(struct page_ext_iter *iter, struct page *page);
-  struct page_ext *page_ext_iter_get(const struct page_ext_iter *iter);
--struct page_ext *page_ext_iter_next(struct page_ext_iter *iter);
-  void page_ext_iter_end(struct page_ext_iter *iter);
-  
-+/**
-+ * page_ext_iter_next() - Get next page extension
-+ * @iter: page extension iterator.
-+ *
-+ * Return: NULL if no next page_ext exists.
-+ */
-+struct page_ext *__page_ext_iter_next(struct page_ext_iter *iter)
-+{
-+       if (WARN_ON_ONCE(!iter->page_ext))
-+               return NULL;
++	phys_addr_t algn = 1ULL << (get_order(size) + PAGE_SHIFT);
++	phys_addr_t bus_addr = pfn_to_bfn(XEN_PFN_DOWN(p)) << XEN_PAGE_SHIFT;
 +
-+       iter->pfn++;
-+       if (page_exit_iter_next_fast_possible(iter)) {
-+               iter->page_ext = page_ext_next(iter->page_ext);
-+       } else {
-+               /*
-+		 * Grabbing the new one before putting the old one makes sure
-+                * that we won't be dropping the RCU read lock.
-+                */
-+               iter->page_ext = page_ext_get(pfn_to_page(iter->pfn));
-+               page_ext_put(iter->page_ext);
-+       }
-+	WARN_ON_ONCE(!iter->page_ext)
-+       return iter->page_ext;
++	return IS_ALIGNED(p, algn) && !IS_ALIGNED(bus_addr, algn);
 +}
 +
-  #else /* !CONFIG_PAGE_EXTENSION */
-
-
-We should just assume that if the first page_ext exists, then the
-other ones must exist as well (thus the WARN_ON_ONCE()).
-
-If the page_ext_get+page_ext_put thingy regarding RCU does not work,
-we should have a new function that looks up the page_ext, assuming
-we already hold the rcu lock. (but I think this should work)
-
-
-In general, I think this iterator API will be a lot cleaner to use.
-
+ static inline int range_straddles_page_boundary(phys_addr_t p, size_t size)
+ {
+ 	unsigned long next_bfn, xen_pfn = XEN_PFN_DOWN(p);
+ 	unsigned int i, nr_pages = XEN_PFN_UP(xen_offset_in_page(p) + size);
+-	phys_addr_t algn = 1ULL << (get_order(size) + PAGE_SHIFT);
+ 
+ 	next_bfn = pfn_to_bfn(xen_pfn);
+ 
+-	/* If buffer is physically aligned, ensure DMA alignment. */
+-	if (IS_ALIGNED(p, algn) &&
+-	    !IS_ALIGNED((phys_addr_t)next_bfn << XEN_PAGE_SHIFT, algn))
+-		return 1;
+-
+ 	for (i = 1; i < nr_pages; i++)
+ 		if (pfn_to_bfn(++xen_pfn) != ++next_bfn)
+ 			return 1;
+@@ -156,7 +158,8 @@ xen_swiotlb_alloc_coherent(struct device *dev, size_t size,
+ 
+ 	*dma_handle = xen_phys_to_dma(dev, phys);
+ 	if (*dma_handle + size - 1 > dma_mask ||
+-	    range_straddles_page_boundary(phys, size)) {
++	    range_straddles_page_boundary(phys, size) ||
++	    range_requires_alignment(phys, size)) {
+ 		if (xen_create_contiguous_region(phys, order, fls64(dma_mask),
+ 				dma_handle) != 0)
+ 			goto out_free_pages;
+@@ -182,7 +185,8 @@ xen_swiotlb_free_coherent(struct device *dev, size_t size, void *vaddr,
+ 	size = ALIGN(size, XEN_PAGE_SIZE);
+ 
+ 	if (WARN_ON_ONCE(dma_handle + size - 1 > dev->coherent_dma_mask) ||
+-	    WARN_ON_ONCE(range_straddles_page_boundary(phys, size)))
++	    WARN_ON_ONCE(range_straddles_page_boundary(phys, size) ||
++			 range_requires_alignment(phys, size)))
+ 	    	return;
+ 
+ 	if (TestClearPageXenRemapped(virt_to_page(vaddr)))
 -- 
-Cheers,
-
-David / dhildenb
+2.43.0
 
