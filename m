@@ -1,177 +1,117 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC9B1F03D3
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46F41F03D1
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739263261; cv=none; b=klXxpQ0qM+zKcfRO78g++/LMcYuVjClklDMX+RnN0Q4J18eHn/D8G6g+uV9Lt+6f7+yqWjXwvsZKt6gcrhq3SV86u33rM2YT/J5h3N65DiXCG5alCFjRP9UAulcRjqbWwpSwscD+HAguclRyHxPJNDt4VkISqSWaMPf4I0UlfZQ=
+	t=1739263298; cv=none; b=i1mnV8Ba8WtQawnQDnHyuv/3qNSL6flGJ2xs+fltiqw+gdG2HbVZC7ugqI4j5gg6IzvWYAGb+XdHazS9JvFMv9U3BB/aFm67cNNd6DhbpXk/BvNwu/2NAuOmWh53QBvLM/uWZoDTUdTAqQiMNCJL8UiNUAtcqMcIn6l8WbFzKt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739263261; c=relaxed/simple;
-	bh=yTNF8m8nxCuxx0EDRShPHz3vJ87Lnbule4bfgDMTId0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=JoRnqGUULC6Jl5vEY6+cgnkLtFwcbu7sFl44e9bI94dpyebC10bBA2btdFVLraes+HFQp4heBcTMW8/IrxSrgeBEH04DF6DpyZrduFyA1qxB6nKtSyLzdJvmlBFywRcUelv+txkB0MINCxo1AH0/NcKStt/H8LMWSRm6qpp7RpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk; spf=pass smtp.mailfrom=rasmusvillemoes.dk; dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b=Ha2SiXrw; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rasmusvillemoes.dk
+	s=arc-20240116; t=1739263298; c=relaxed/simple;
+	bh=pcZrX+J37mEd/JG2HKfBGz4YgsAx+tMGKxw2mQHHV/c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ekfMrS8guYeMFO+KyE63vWYMzEr1/+wxfwJa/l6zoWmFo8MKA2ZBFRDS92qH+Gqjyfz2vEgF3z7FcPQ9HCe0l51+vYtFg4UeE8kIKYv9pIIJcvnrmRl+q6kQl+3eDu0Yy05sAtRZmtIJ1NzIxYW/upHA/ginCMIZ6lSLMcRSB14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=deOZDTR1; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Ha2SiXrw"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-308f71d5efcso11249131fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:40:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="deOZDTR1"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-438a39e659cso36026265e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:41:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google; t=1739263258; x=1739868058; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:user-agent:message-id:date
-         :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739263295; x=1739868095; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yTNF8m8nxCuxx0EDRShPHz3vJ87Lnbule4bfgDMTId0=;
-        b=Ha2SiXrwCKdP9UpWEjOfHcWOjFhy2mbiNqjjBRH1srQUQahhdPi8EMPrg2bMHXs72q
-         2srxHPYV0/26AWbs0028Kb7R4w142UIFGYbBpdGF2FEt+VJ3E6Ng594IsDJRvopOm5Ai
-         tnEHlDb0duUtjeXyFseaMg6+aAOzOdFjmc+ds=
+        bh=aqT3P+FafKsTve9iwlQFfzcqESHrnY+X7Hzoqpf6cy0=;
+        b=deOZDTR1akEYZAngizMvGEGdIitxRbrg3VAGN2He9JSwz8PGZYGIbPfziPbRU8PpZr
+         9CqkxvrmyEF9zzhm7JhA2kCR+L3OlzKhXLcYlwFViolegwaWB7hq0VK73MeQiDuPpRQm
+         nxUTrS2vAKU4p1HrjEjd/imIe+k9Y9daF7ddTFbmTb52LisvXFqnamywLJjNK6C62p6m
+         zVmEXaqicgeJfRhfe63dxrVVXTNZtZ2MJHh1kcuJBx2JqHU/SQANfO15V/+q1BSHguHj
+         pvV3uiS+xR34Nxi/xNnmkKo2NS2To6/V13AF13hEswBDALS+vDs316ybqoTEjizRIcjj
+         USvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739263258; x=1739868058;
-        h=content-transfer-encoding:mime-version:user-agent:message-id:date
-         :references:in-reply-to:subject:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=yTNF8m8nxCuxx0EDRShPHz3vJ87Lnbule4bfgDMTId0=;
-        b=jLN6C0dmcmIqYxVkUftxpbm591LtQobifNn8/2CiTj/ZUcVVbOwZI8KDBqnaOS2nBW
-         JG/GnhzY8KevG1ZJP0hi2RqX4owJc5gQg/WtLtL1nHPAImYSUAcAVOAGxU2Ct51Casqn
-         Z8fTrMUde+exzDcddr2ZT4W+qJuHjHX2uWlti+8M7G9MVyWweWyIsp3ZYc/MYklJ921o
-         pZCBD8GpGlOAM++mk5ijScG7PsNM2/EGmmvgcw03vgPvlwXlLbkPqTglT1EZXmShZWcW
-         UiTe1oGix6BzSXKd6Hsc9xYWavHuavM9+3PWz7ErbVlinezcgCbdCBmDrQS/IpzTKQXu
-         ZxCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXV3O433rWhHuEhWxjcnhlMofGDWuc+Tlza4BGHp56y0t95ZMLjD1a7R4pLe9orKUuD5pOcSA5TPCaG5Ng=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeN32lZORbj+Lvyls7G506afi4D6uoO+01vSs1C8wZQLNKg18H
-	A1DwDHdUpwVHLNIrBW7CHwoaJyWDR0BhPdseQq8wlCpHqwSsPKW8caJukI310gM=
-X-Gm-Gg: ASbGncvBuuiqwh0QGvOtX2kjDfj+vdlM4f4vwai8BYzV7+DkhuM8vOT64BiEVxdm0V9
-	bFSEb5PM3I47YUccun2XT1JZHOZ3f4mgOf6/GZrv2VHvLghESm4aXYT4bEggJbQAkbu/qd/+3HZ
-	+Gyh9fKBauVEs2m99Tdmge6bNUlUOe5Nz/zlQTtC6LXR3YDVRzhecMi1ULJr2MeMa8BMsiY/IcY
-	V2hrG3YCc+8rouKVJOMfSqNY6NsIutq0lzHBLdmAEnOkaBpqSSHOv5itug0KnVyuT8miJ2XQTpo
-	zo7KXKFUdkpfAdv1
-X-Google-Smtp-Source: AGHT+IFyuHwShqGtWI3e6boWfgOJuS5V2vIC04DXs22kugVv1qWaggSk2GonF+yQmxK+lPWqPHvn5Q==
-X-Received: by 2002:a05:651c:220a:b0:308:f455:1f93 with SMTP id 38308e7fff4ca-308f455212amr16700741fa.27.1739263257028;
-        Tue, 11 Feb 2025 00:40:57 -0800 (PST)
-Received: from localhost ([81.216.59.226])
-        by smtp.gmail.com with UTF8SMTPSA id 38308e7fff4ca-308f84c278fsm2009051fa.23.2025.02.11.00.40.56
+        d=1e100.net; s=20230601; t=1739263295; x=1739868095;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aqT3P+FafKsTve9iwlQFfzcqESHrnY+X7Hzoqpf6cy0=;
+        b=NG38UYq6BvAguudYjWHOxXxY0JGMH9ObLODLDZqq2i8Lw1bAxsMvEgUbojHu1sAxDv
+         t2f0mEGQQq47msjc1rWcmAebeaoSKbsdJ2DRYUbVZMlfZ2Bf4GYrF+5PPacQ2tM89FNb
+         JVTMY2GiTeQEz1lpGXP66PlX0XYca6hnM38lzFmvsV2Bm8nRKzPvQnEL+hdCShFTYiCo
+         8Evd2nEwqM6dpyXCD5eD36eBG6HspGfRF1dbXdAaq2A0gjd+3P2q3L7jneQ0OXI/vTGk
+         k6j+ZpDL1hLN36dFb1M4DwUcyWAfgyyH8PtNFRm3X7NJCnIhZyejfu7pzF8yU1Vu49xq
+         cC1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVeDLtNu6yAtLOm5kgPhDoohZibxx8JFBbFdDQRwDo5OYu+A/7Vx+29e1owQYO5jpwOD70rEaL1s0Xzg+w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2jBlU6OriE8FwsEsSE11FiQUeaXCU6PW211ftVsHPZfl0Bv6X
+	i+MPKLGQ5S2ieA6mF+Oh9BBhQw+n9+MEt2eVHOT3w9DxmXH1OJtjJP87KOMe3zc=
+X-Gm-Gg: ASbGncuXwOuWcF7yy/ahMVHdSbi+AngkJXhP4mWb1Xs6/L3rmMGTwuJqk6QXNH8v06y
+	XVtBgorEbk7D75ZRwpLvehxqUyjKmldCDKnVWfjbfMnaEUShg6HUaBfBsjxmNkfqxdc0hCwW/uP
+	XYJG2YNhV+IhVqkbkYLbi1L2XCDi4Qb6bI1TIfKUNSJR3jQKu3d18F25AU/Gt2DoyTOA+IiNTM8
+	wYHvS03JGuwgNawc6Iv4k5SRtqenP2lZZswapaPHEYrjTipWncaT5iL/WhdG6albA77VDalSlhn
+	AT0DZZeGAZDyKw==
+X-Google-Smtp-Source: AGHT+IGPEm991NB1BbIvptry/MmFm+kPJii/eBe5ogouwGf1sSmq4KA2slfZ+QecZeKet1nHZpZAYg==
+X-Received: by 2002:a05:600c:468e:b0:439:47dc:e383 with SMTP id 5b1f17b1804b1-43947dce501mr55579065e9.12.1739263294987;
+        Tue, 11 Feb 2025 00:41:34 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:561:8978:1d41:636a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dca34a8sm168723615e9.16.2025.02.11.00.41.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 00:40:56 -0800 (PST)
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To: David Gow <davidgow@google.com>
-Cc: Tamir Duberstein <tamird@gmail.com>,  Petr Mladek <pmladek@suse.com>,
-  Steven Rostedt <rostedt@goodmis.org>,  Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>,  Sergey Senozhatsky
- <senozhatsky@chromium.org>,  Andrew Morton <akpm@linux-foundation.org>,
-  Shuah Khan <shuah@kernel.org>,  linux-kernel@vger.kernel.org,
-  linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 0/2] printf: convert self-test to KUnit
-In-Reply-To: <CABVgOS=dfuX+X8=EVHcrCZnbOZj3T+wGD922eoeHb-dcOmmzXw@mail.gmail.com>
-	(David Gow's message of "Tue, 11 Feb 2025 15:15:34 +0800")
-References: <20250204-printf-kunit-convert-v1-0-ecf1b846a4de@gmail.com>
-	<CAKwiHFi6SUCT7UjUTdKmLJ8kiAEqVg=d6ND60R05MJB85Eoj9w@mail.gmail.com>
-	<CAJ-ks9kLmArqqPati8n0dwzhjccLmTuTHtkaSyf_F_1QXzCoRw@mail.gmail.com>
-	<87bjvers3u.fsf@prevas.dk>
-	<CAJ-ks9=0+fk22Dx-65a+CSYhy0dnjTJuot9PtgOCi5Th1_wARA@mail.gmail.com>
-	<87y0yeqafu.fsf@prevas.dk>
-	<CABVgOS=dfuX+X8=EVHcrCZnbOZj3T+wGD922eoeHb-dcOmmzXw@mail.gmail.com>
-Date: Tue, 11 Feb 2025 09:40:55 +0100
-Message-ID: <87h650ri08.fsf@prevas.dk>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+        Tue, 11 Feb 2025 00:41:34 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v2 0/7] gpio: 74x164: Refactor and clean up the driver
+Date: Tue, 11 Feb 2025 09:41:32 +0100
+Message-ID: <173926329086.23265.1166908966030656021.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250207151825.2122419-1-andriy.shevchenko@linux.intel.com>
+References: <20250207151825.2122419-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 11 2025, David Gow <davidgow@google.com> wrote:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> On Mon, 10 Feb 2025 at 19:57, Rasmus Villemoes <linux@rasmusvillemoes.dk>=
- wrote:
->>
->> On Fri, Feb 07 2025, Tamir Duberstein <tamird@gmail.com> wrote:
->>
->> > On Fri, Feb 7, 2025 at 5:01=E2=80=AFAM Rasmus Villemoes
->> > <linux@rasmusvillemoes.dk> wrote:
->> >>
->> >> On Thu, Feb 06 2025, Tamir Duberstein <tamird@gmail.com> wrote:
->> >>
->> >>
->> >> I'll have to see the actual code, of course. In general, I find readi=
-ng
->> >> code using those KUNIT macros quite hard, because I'm not familiar wi=
-th
->> >> those macros and when I try to look up what they do they turn out to =
-be
->> >> defined in terms of other KUNIT macros 10 levels deep.
->> >>
->> >> But that still leaves a few points. First, I really like that "388 te=
-st
->> >> cases passed" tally or some other free-form summary (so that I can see
->> >> that I properly hooked up, compiled, and ran a new testcase inside
->> >> test_number(), so any kind of aggregation on those top-level test_* is
->> >> too coarse).
->> >
->> > This one I'm not sure how to address. What you're calling test cases
->> > here would typically be referred to as assertions, and I'm not aware
->> > of a way to report a count of assertions.
->> >
->>
->> I'm not sure that's accurate.
->>
->> The thing is, each of the current test() instances results in four
->> different tests being done, which is roughly why we end up at the 4*97
->> =3D=3D 388, but each of those tests has several assertions being done -
->> depending on which variant of the test we're doing (i.e. the buffer
->> length used or if we're passing it through kasprintf), we may do only
->> some of those assertions, and we do an early return in case one of those
->> assertions fail (because it wouldn't be safe to do the following
->> assertions, and the test as such has failed already). So there are far
->> more assertions than those 388.
->>
->> OTOH, that the number reported is 388 is more a consequence of the
->> implementation than anything explicitly designed. I can certainly live
->> with 388 being replaced by 97, i.e. that each current test() invocation
->> would count as one KUNIT case, as that would still allow me to detect a
->> PEBKAC when I've added a new test() instance and failed to actually run
->> that.
->
-> It'd be possible to split things up further into tests, at the cost of
-> it being a more extensive refactoring, if having the more granular
-> count tracked by KUnit were desired.
 
-I think the problem is that kunit is simply not a good framework to do
-these kinds of tests in, and certainly it's very hard to retrofit kunit
-after the fact.
+On Fri, 07 Feb 2025 17:17:07 +0200, Andy Shevchenko wrote:
+> Seems like I have had a cleanup series for 74x164, but forgot to send it
+> last year, here it is.
+> 
+> Changelog v2:
+> - remove ->remove() leftover (Bart)
+> - collected tags (Geert, Gustavo)
+> 
+> [...]
 
-It'd also be possible to make
-> these more explicitly data driven via a parameterised test (so each
-> input/output pair is listed in an array, and automatically gets
-> converted to a KUnit subtest).
+Applied, thanks!
 
-So that "array of input/output" very much doesn't work for these
-specific tests: We really want the format string/varargs to be checked
-by the compiler, and besides, there's no way to store the necessary
-varargs and generate a call from those in an array. Moreover, we verify a
-lot more than just that the correct string is produced; it's also a
-matter of the right return value regardless of the passed buffer size, etc.
+[1/7] gpio: 74x164: Remove unneeded dependency to OF_GPIO
+      commit: cd323c6e62dd98035c141b6f751e5b2b7d490b2e
+[2/7] gpio: 74x164: Simplify code with cleanup helpers
+      commit: bdd603acf6a2b5056dc174e52bc8b285da529dc4
+[3/7] gpio: 74x164: Annotate buffer with __counted_by()
+      commit: d746cc6e64027e331769f871a595a3dd2c6b30ff
+[4/7] gpio: 74x164: Make use of the macros from bits.h
+      commit: e742e6b02d858ff9f6a7b43d0b1b5aae9c7e5cf5
+[5/7] gpio: 74x164: Fully convert to use managed resources
+      commit: abe3817fa1dcae480ec7b71ec1608454cb65d0b8
+[6/7] gpio: 74x164: Switch to use dev_err_probe()
+      commit: 9bd2dbe4066b3821b68f3e18ba91a3a1cd6354df
+[7/7] gpio: 74x164: Utilise temporary variable for struct device
+      commit: 5892cfc7db9814a71c991da7024fa03384e48924
 
-That's also why is nigh impossible to simply change __test() into
-(another) macro that expands to something that defines an individual
-struct kunit_case, because the framework is really built around the
-notion that each case can be represented by a void function call and the
-name of the test is the stringification of the function name.=20
-
-So I don't mind the conversion to kunit if that really helps other
-people, as long as the basic functionality is still present and doesn't
-impede future extensions - and certainly I don't want to end up in a
-situation where somebody adds a new %p extension but cannot really add a
-test for it because kunit makes that hard.
-
-But I hope you all agree that it doesn't make much _sense_ to consider
-test_number() and test_string() and so on individual "test cases"; the
-atomic units of test being done in the printf suite is each invocation
-of the __test() function, with one specific format string/varargs
-combination.
-
-Rasmus
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
