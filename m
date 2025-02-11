@@ -1,131 +1,119 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E09F262803;
-	Tue, 11 Feb 2025 21:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94463266598;
+	Tue, 11 Feb 2025 21:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739309157; cv=none; b=i7bxUBpIhjHwTRGn2fsnBUc9i7/9XnRW2s9S0fQqjmiXjVO5uJSbmRTRakwWtU+g36SV8St2SRPMayQcggCwSF50t4DUb2wCYQ54tUaL3juqHPjx1w7ec8yt8mo6D+mhtYE8gSH/w1PTE7Tja1Bi8AJwGHpRFUarIhCzAf5X4dA=
+	t=1739309370; cv=none; b=q7tnp+UENJE+u2NoLuAhyMh+XFlDP5yqoMVhG91FQaZy9vwkvrP8BDZjEPC/h6iDEb3SHbock7bmhdnCCcU+4Uu38u0H8SP0M/S6IOnqWOLYrAO7J1Qw4qLPpjrU7U3IYkKFUaIwzlBKG6f14lBKRlEML78trW0CxeA1aPlzMgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739309157; c=relaxed/simple;
-	bh=IZxrj6Gu0pIXpywIgOSybDUHKnFS0Y4eMhTg3+5V+js=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=D1XZ9NEPr2rJ1wQR31naftQwtm4pRw9TxVKGmVklylyEJeuuxhY7WWIWtlYPpezshhvWWwHSsvkFLyBDxpwMbxfG7CwAaKLX8x0YHq5pbRqcBqA7GHuZqgUOZ8apSHY6XtI+nRKHSinfO90bnuQk/8D1jNEtjMFFiNfDQ58kMgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=c/sF42oi; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1739309370; c=relaxed/simple;
+	bh=NaUS/xid8E3zDqwf+U421yyey7c36cXUSga07rj7yNc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=phAAejf5kI/wlQ3uqrGIF9Vyq2/iSwPuGrcJdIdxHbjQtqv1tL8vR4T0pTiU1TQSWmp2xJJrwyRO6xMcMfm8ZgA9ud02B1OtMdCSK4Ek75y2gesgZbdao8V28PGelr/pjfaa7/s0xMONjS9cJO+1SyZG/ZCpvNf3gWRbNDsh4Xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5o8gSPf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="c/sF42oi"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.1)
- id cbb5aeea9cca1d0b; Tue, 11 Feb 2025 22:25:53 +0100
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id F20D3770175;
-	Tue, 11 Feb 2025 22:25:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1739309153;
-	bh=IZxrj6Gu0pIXpywIgOSybDUHKnFS0Y4eMhTg3+5V+js=;
-	h=From:Subject:Date;
-	b=c/sF42oid7G9JckXojZiUZzCaI7i9gYL/7L3Mjd3eQP45ZHvToVrSoLuNuHgw41n2
-	 mxoajGMy/X5Rcq0mYGryz6Qna/dgG0Bt8T9NjlrBfGBBWNGwnmrULbOj5ONhRMBwX4
-	 s288plxfAwTYj0CSZb+3v+FCdy3Gn19gW5o37Tp1Hmi8r7p4K+bhA7Gu3hKyTPzMFy
-	 vFIqzK1c8IumlcnEEwz6IJkn+sYzmD3jjf8yUPHYyElOEL0/aBgj/uw3E2KYzfCrt7
-	 wjNAzqeAD+7GQXkrBiudtf18bKPvFdF0xxSyJzx1rDbIkgStCGHDYUoX4425hWKG2x
-	 hvo6GAyaTUMkw==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>,
- Johan Hovold <johan@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Jon Hunter <jonathanh@nvidia.com>
-Subject:
- [PATCH v1 00/10] PM: Make the core and pm_runtime_force_suspend/resume()
- agree more
-Date: Tue, 11 Feb 2025 22:01:24 +0100
-Message-ID: <2314745.iZASKD2KPV@rjwysocki.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k5o8gSPf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA14BC4CEDD;
+	Tue, 11 Feb 2025 21:29:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739309370;
+	bh=NaUS/xid8E3zDqwf+U421yyey7c36cXUSga07rj7yNc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k5o8gSPfQq4IgyVNNnH17NgMRkO8e4gyfCOrL/4gYWEoThBhBYQyKJ5EyvYgel9BD
+	 eZziKOsCNPSFb5c6YPFys+0z1OyUjJzXIlJDNDgzLCViFLQX+qJCO4hhOLEJbdiEAl
+	 svknN0H4vkcntQ+K3SdJAqFt+4kK7tdAa/06eexV98C1mLaqfvEcjQTZKLYCZct0Sk
+	 fy8sFJK71nx5PS4aKFrVhxWIvVTPQE6FeMMioDRtIT0jAoDHJ2JG+snexxBQkVDU+o
+	 AiowVHT7aemYqByHqTwCPBozswKNo0Wpjf2rAWfO4RobedKU/ihnaCr9GUYWlne8V7
+	 w2S/dWjbgKOIg==
+Date: Tue, 11 Feb 2025 15:29:28 -0600
+From: Rob Herring <robh@kernel.org>
+To: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
+Cc: miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+	krzk+dt@kernel.org, conor+dt@kernel.org,
+	linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, git@amd.com, amitrkcian2002@gmail.com
+Subject: Re: [PATCH v12 1/3] dt-bindings: mtd: Describe MTD partitions
+ concatenation
+Message-ID: <20250211212928.GA1188800-robh@kernel.org>
+References: <20250205133730.273985-1-amit.kumar-mahapatra@amd.com>
+ <20250205133730.273985-2-amit.kumar-mahapatra@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegvddtjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeegfffhudejlefhtdegffekteduhfethffhieettefhkeevgfdvgfefieekiefgheenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepjedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehsthgvrhhnsehrohiflhgrnhgurdhhrghrvhgrrhgurdgvughupdhrtghpthhtohepuhhlfhdrhhgrnhhsshhonheslhhinhgrrhhordhorhhgpdhrtghpthhtohepjhhohhg
-X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250205133730.273985-2-amit.kumar-mahapatra@amd.com>
 
-Hi Everyone,
+On Wed, Feb 05, 2025 at 07:07:28PM +0530, Amit Kumar Mahapatra wrote:
+> The AMD QSPI controller supports an advanced connection modes called
+> Stacked mode which allow the controller to treat two different flashes
+> as one storage.
+> 
+> In Stacked connection mode flashes share the same SPI bus, but different CS
+> line, controller driver asserts the CS of the flash to which it needs to
+> communicate. Stacked mode is a software abstraction rather than a
+> controller feature or capability. At any given time, the controller
+> communicates with one of the two connected flash devices, as determined by
+> the requested address and data length. If an operation starts on one flash
+> and ends on the other, the mtd layer needs to split it into two separate
+> operations and adjust the data length accordingly. For more information on
+> the modes please feel free to go through the controller flash interface
+> below [1].
+> 
+> Introduce new DT property to specify which partitions are concatenated to
+> each other.
+> 
+>     flash@0 {
+>             reg = <0>;
+>             partitions {
+>                     compatible = "fixed-partitions";
+>                     part-concat = <&flash0_part1>, <&flash1_part0>;
+> 
+>                     flash0_part0: part0@0 {
+>                             label = "part0_0";
+>                             reg = <0x0 0x800000>;
+>                     };
+> 
+>                     flash0_part1: part1@800000 {
+>                             label = "part0_1";
+>                             reg = <0x800000 0x800000>;
+>                     };
+>             };
+>     };
+> 
+>     flash@1 {
+>             reg = <1>;
+>             partitions {
+>                     compatible = "fixed-partitions";
+> 
+>                     flash1_part0: part1@0 {
+>                             label = "part1_0";
+>                             reg = <0x0 0x800000>;
+>                     };
+> 
+>                     flash1_part1: part1@800000 {
+>                             label = "part1_1";
+>                             reg = <0x800000 0x800000>;
+>                     };
+>             };
+>     };
+> 
+> The partitions that gets created are
+> part0_0
+> part1_1
+> part0_1-part1_0-concat
 
-This series is a result of the discussion on a recently reported issue
-with device runtime PM status propagation during system resume and
-the resulting patches:
+'part-concat' doesn't work if you have multiple sets of partitions you 
+want to concatenate.
 
-https://lore.kernel.org/linux-pm/12619233.O9o76ZdvQC@rjwysocki.net/
-https://lore.kernel.org/linux-pm/6137505.lOV4Wx5bFT@rjwysocki.net/
+I think you need something like 'prev-partition' or 'next-partition' in 
+the partition nodes to create a linked list of partitions. Hopefully, 
+you don't need both properties, but you do have to scan everything to 
+figure out which ones are concatenated or not. For example, no property 
+can mean not concatenated or last partition if you use 'next-partition'. 
 
-Overall, due to restrictions related to pm_runtime_force_suspend() and
-pm_runtime_force_resume(), it was necessary to limit the RPM_ACTIVE
-setting propagation to the parent of the first device in a dependency
-chain that turned out to have to be resumed during system resume even
-though it was runtime-suspended before system suspend.
-
-Those restrictions are that (1) pm_runtime_force_suspend() attempts to
-suspend devices that have never had runtime PM enabled if their runtime
-PM status is currently RPM_ACTIVE and (2) pm_runtime_force_resume()
-will skip device whose runtime PM status is currently RPM_ACTIVE.
-
-The purpose of this series is to eliminate the above restrictions and
-get pm_runtime_force_suspend() and pm_runtime_force_resume() to agree
-more with what the core does.
-
-First off, it turns out that detecting devices that have never had
-runtime PM enabled is not really hard - it is sufficient to check
-their power.last_status data when runtime PM is disabled.  If
-power.last_status is RPM_INVALID at that point, runtime PM has never
-been enabled for the given device, so patch [01/10] adds a helper
-function for checking that.
-
-Patch [02/10] makes the PM core use the new function to avoid setting
-power.set_active for devices with no runtime PM support which really
-is a fixup on top of
-
-https://lore.kernel.org/linux-pm/6137505.lOV4Wx5bFT@rjwysocki.net/
-
-Patch [03/10] modifies pm_runtime_force_suspend() to skip devices
-with no runtime PM support with the help of the new function.
-
-Next, patch [04/10] uses the observation that the runtime PM status
-check in pm_runtime_force_resume() is redundant and drops that check.
-
-Patch [05/10] removes the wakeirq enabling from the pm_runtime_force_resume()
-error path because it is not really a good idea to enable wakeirqs during
-system resume.
-
-Patch [06/10] makes the PM core somewhat more consistent with
-pm_runtime_force_suspend() and patch [07/10] prepares it for the subsequent
-changes.
-
-Patch [08/10] changes pm_runtime_force_resume() to handle the case in
-which the runtime PM status of the device has been updated by the core to
-RPM_ACTIVE after pm_runtime_force_suspend() left it in RPM_SUSPENDED.
-
-Patch [09/10] restores the RPM_ACTIVE setting propagation to parents
-and suppliers, but it takes exceptions into account (for example, devices
-with no runtime PM support).
-
-Finally, patch [10/10] adds a mechanism to discover cases in which runtime PM
-is disabled for a device permanently even though it has been enabled for that
-device at one point.
-
-Please have a look and let me know if you see any problems.
-
-Thanks!
-
-
-
+Rob
