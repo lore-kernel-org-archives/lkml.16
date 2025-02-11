@@ -1,105 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2253F25744C;
-	Tue, 11 Feb 2025 15:59:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632E3253F0F
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739289558; cv=none; b=C3uqsBItli3dcuNgeG8AG+oeEt0TgIh53WOaNmvGegCrVQ4HcZYECJZ5xUq8Ejghyvs716DCDGGVFk6lZgD+AKiUXsCoXp++1BW2g2rB9VgNiXIilm1ubh3Kk0Ospwfni9gvD3dsdbJI5uj9LdZCP+0unAyahX5X9OiZhmsUjJs=
+	t=1739289612; cv=none; b=X7VUHJweLUBCTnd78CIpfa+SqCkrWldMlHtWYewJi84CVDGLObkYAOAETyBTSpa1vQadxiiFGAevoSpxrUxGrKee3ECpPepOgBtIUIp2F3BF49+EkGDwYgz7rhCir7MIP3ArJQau1YZ2dYhUQuyDDZ4S8xt3VFZBLs/RA7rmDtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739289558; c=relaxed/simple;
-	bh=lS6k9hPNj5ZHeaqOmPt5Xc0PPaJv+8aNNMGM3N8QSTo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=I3zOm2Tmoi8ecCJ3LVGorqEEeDySSCnATV1wH19k2d19ItLsBG//dax/UVP0qUpMIGW1edcBdesTaliJr75PJxOeTI4aB5tH0CrYgeKTWCDe0Z3r1+ThYNeRzZL0vXuHaXmudQLCvhixa/mYVcWzfiCZ2v9mEa7TNvnZ54s2Sm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KNcOrv+t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739289612; c=relaxed/simple;
+	bh=367tBOVSTQNE68f9evXGvkRc2n1V8n4iAsIeEbOEs7M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jNj7o4NsOtjjOgSeKg/G4D9bvsnFahz7BGFU1KJbh+WLVNLrl/ASpuXbOSytwxX6g04Myef4Q/OeAeIEEGz1TEnrWVDip+e1Ihb088cjGBWNilTcbOBD+8RupntIJp0RmveiapJMS3lvxNwtj//SQQi433OGYo/74AxUTGJkIz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=PAfX6H3I; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KNcOrv+t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 780D0C4CEE7;
-	Tue, 11 Feb 2025 15:59:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739289557;
-	bh=lS6k9hPNj5ZHeaqOmPt5Xc0PPaJv+8aNNMGM3N8QSTo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=KNcOrv+t6uuIaD/2Twk9XMX21QMfyf3fQMETL+fuBn/uDQCteiYPxigJGilXDQ/41
-	 +r1+sKQ4utNXBauhcRBu7O/6jJbmxNEubafSOKE3JWjrIgsPB8lru6hOZwqHNaIh3y
-	 hfj0+D56drj7a8jumnkemX7R8+a68M0OgXNK4S12PWE5CDcFpgNT80H9ekmu8FCHHj
-	 Go3OX2AIco6RPXdOHAA8MEdCzXfBx0M0g1JWQNkhwfEjbKE1CIIaPxwjzppe0i0KCS
-	 4SJ7rRkkSayBXSSdzq8E5gufZ4LOkfYN4cVgnvdbw6APo+VxN4yn5Jb0V27X1Q4EEO
-	 I8LQwg7wDFqzw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Tue, 11 Feb 2025 16:57:35 +0100
-Subject: [PATCH v6 1/6] rust: str: implement `PartialEq` for `BStr`
+	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="PAfX6H3I"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aaecf50578eso1133951866b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:00:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1739289608; x=1739894408; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hI/ECcJmQ5+lRsmCQ33ubWCT5i7ZlE5HoQwEXVHTSj0=;
+        b=PAfX6H3IXurM2KFL7dkio3W4u4fg1aQj/lhZQ0vzFZXxrBvHGkIEh5qa1rdCway+/0
+         oKU9dphjhzdnk9b/Vdn3cFy0qIxAVL8Vdc/x/urq9wmws4i8F50armq4fo/oP5G43Ps/
+         JRjQF+k8b3tnmeRk7LH/6J0rp4rKDfde94w4Gf0w3ukOagclMo/j7K/PqugVoKKeUVkg
+         tgJdAeZgni5ws6DBcbEVyuDfVf76I6U2sKDImzZgDTab+WXprsnOfpprkb9dvh7DdVvn
+         Tc5/hVoUwcRWWv5Kt7HD++LimcvKsC/D5oeS8EumXW2ont/827c8Km0ITIYELVsVRYaj
+         1i8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739289608; x=1739894408;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hI/ECcJmQ5+lRsmCQ33ubWCT5i7ZlE5HoQwEXVHTSj0=;
+        b=VwXh7PVdnGTATZPVD9TSyFbY8S+eb3VhrKhpQV68qx2NCfPkFhdOYNhyO4M2kpiHXW
+         rrXETFAlwmjPdDYpXy/omMFGe6PuLfRDkpAitLJeT6+xStZ27vUdYwT1W74d4Xo2reJm
+         O8uVAVdT0K7G4C4Mm1eC2P6/LhK5ls/dG9jOVnwLz8qF8uZ/AX5DWzFhJo94uf9BJ02l
+         cWVJ19C7303iisbvjN3EDA+wQ4+5BcSDHThEFWe0pTJMn6i1VWtBqHZMH70Ex0SQNmON
+         afe7jyVR5KFUvoE21TCt5YzdLp4wy2KOq8A41riAgGQOaajNVW1lZLXBPmYgIEAlXx5P
+         RLqA==
+X-Forwarded-Encrypted: i=1; AJvYcCXd8B/BHbA2Gf40uwGZNzs18yJuxWUQrThwr1ZsM279PiH8ZOMVVA1JWPNsDotDCkEOV/MprOO7c7znT8g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxz46SNAp+NCNVdve6sq+6JLGOb5bYgwr9a62XelwzR77yX7t6y
+	ICldv3Hrw7FSfXELB/PJUTa0OmTnZnRwVZqCeo94yzuXiVg9v2bZOQz1lmzlN0o=
+X-Gm-Gg: ASbGnctH7xHSt0YVXsemHZ0HuGi/a8mfxSnxWqcn0q8Acn3vKXBV2WEHPz2xGOyMrnQ
+	kfMt+9pr+ll658zJvAWHMLku6E8OGoAbqCZz2Be2zlR5sJnfW8AIbDed8WSNzsfPm1OmLim2y0S
+	YV0+oPKAGu26sK8f10YXiEWXH8lTrdW8k98tm7CVo1KCyJDMuVseMcMfTq0/mTxphwr1Nrj0+l6
+	Zqvk94qXt0E5P7snkwh49knm2qx79OAh1E73CwzvbrKSFJdeSm3qpxC142qHLgKAGhYvFkPCxK3
+	E0FDE4PVPescsqiZ0waHcjXVX6Rk29Wa50bB7K/JYd3VP10=
+X-Google-Smtp-Source: AGHT+IE7ksSku6fs3EFiOJ7qMjT+Xj86y9WzUfaIKnMbJB/roCniH1bXiqumQdCG0sjm3B/UGhh56Q==
+X-Received: by 2002:a17:907:2d24:b0:ab2:ea29:b6 with SMTP id a640c23a62f3a-ab7f01cc9bemr17039766b.35.1739289608146;
+        Tue, 11 Feb 2025 08:00:08 -0800 (PST)
+Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7ce2e91e9sm307325466b.117.2025.02.11.08.00.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 08:00:07 -0800 (PST)
+Message-ID: <91d709aa-2414-4fb4-b3e1-94e0e330d33c@blackwall.org>
+Date: Tue, 11 Feb 2025 18:00:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 net-next 05/14] bridge: Add filling forward path from
+ port to port
+To: Vladimir Oltean <olteanv@gmail.com>, Eric Woudstra <ericwouds@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Pablo Neira Ayuso
+ <pablo@netfilter.org>, Jozsef Kadlecsik <kadlec@netfilter.org>,
+ Jiri Pirko <jiri@resnulli.us>, Ivan Vecera <ivecera@redhat.com>,
+ Roopa Prabhu <roopa@nvidia.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Kuniyuki Iwashima <kuniyu@amazon.com>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Lorenzo Bianconi <lorenzo@kernel.org>, Joe Damato <jdamato@fastly.com>,
+ Alexander Lobakin <aleksander.lobakin@intel.com>,
+ Frank Wunderlich <frank-w@public-files.de>,
+ Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
+ coreteam@netfilter.org, bridge@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+References: <20250209111034.241571-1-ericwouds@gmail.com>
+ <20250209111034.241571-6-ericwouds@gmail.com>
+ <20250211132832.aiy6ocvqppoqkd65@skbuf>
+Content-Language: en-US
+From: Nikolay Aleksandrov <razor@blackwall.org>
+In-Reply-To: <20250211132832.aiy6ocvqppoqkd65@skbuf>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250211-module-params-v3-v6-1-24b297ddc43d@kernel.org>
-References: <20250211-module-params-v3-v6-0-24b297ddc43d@kernel.org>
-In-Reply-To: <20250211-module-params-v3-v6-0-24b297ddc43d@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
- Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
- Luis Chamberlain <mcgrof@kernel.org>
-Cc: Trevor Gross <tmgross@umich.edu>, 
- Adam Bratschi-Kaye <ark.email@gmail.com>, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
- Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
- Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
- Greg KH <gregkh@linuxfoundation.org>, linux-modules@vger.kernel.org, 
- Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=795; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=lS6k9hPNj5ZHeaqOmPt5Xc0PPaJv+8aNNMGM3N8QSTo=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBnq3NxpEdKrw7VKvsqeaNLYuaq6LndyZHC8+5+n
- pRRlmpKaz2JAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ6tzcQAKCRDhuBo+eShj
- dw+pEAC6/QVtAg4A3oBQ7z4Ku8vzlRNdoim0qKw//6tc+D8C3OBz2nSKfW0Il//zkukqBz91Z5I
- q7+qAwa2b4fFpuYZ88s0rfucUNmRNE+R2XxEv9r8wGF+aI1cUusSVNy3Ax40lhyWigYKJEC2lwu
- SDA0bBbHDiOIsLQV4EaRrCp5XlSHkjrlnHi7bxDhWOHm4WfywC/C+EOE4ktjrHqMKXohqA5g70I
- FipxpmuB2DDiY52b6D+es0f95S5n9PWcRxx4PGlEfvU3mex+QSNMCZ/lIDTzGyrCIOz2b9Ws7nh
- 39fi4Xre1Qq4vZHQdT+r6RksFygoYovNpPqL9oI6CUheGrPi+a0rWwSSEClivOw76AVxZSfFwL+
- HhDDHJUDHSA53NM2nls9Xy0K98Rzerr7hL6gQMt1271aQO5VAOT/AV+gvi4wzBBRfY+h32TO0F4
- qO8DRRd5ks58PIgl7XNVWKWXY46zpvSGofVvqwOxg7oLRc/jnd6UaCQbnth1k2tkndk1vZ9Kdk9
- en6/m6iwuCdt+S0awo0F7xG6dTfAUQhQK7l0FB/hWeUJDMs8frlVJB1KBgISs+663aJvlDLH0Fc
- 6kVaL/iD78+pIZe/UQXOq320KB10GW2yGxK81KEd4Y+1oKwQyBdRb0xP4v0qXJw/kGEZrTyij6p
- YzM4u95IGZs3H3A==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-Implement `PartialEq` for `BStr` by comparing underlying byte slices.
+On 2/11/25 15:28, Vladimir Oltean wrote:
+> On Sun, Feb 09, 2025 at 12:10:25PM +0100, Eric Woudstra wrote:
+>> @@ -1453,7 +1454,10 @@ void br_vlan_fill_forward_path_pvid(struct net_bridge *br,
+>>  	if (!br_opt_get(br, BROPT_VLAN_ENABLED))
+>>  		return;
+>>  
+>> -	vg = br_vlan_group(br);
+>> +	if (p)
+>> +		vg = nbp_vlan_group(p);
+>> +	else
+>> +		vg = br_vlan_group(br);
+>>  
+>>  	if (idx >= 0 &&
+>>  	    ctx->vlan[idx].proto == br->vlan_proto) {
+> 
+> I think the original usage of br_vlan_group() here was incorrect, and so
+> is the new usage of nbp_vlan_group(). They should be br_vlan_group_rcu()
+> and nbp_vlan_group_rcu().
+> 
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Reviewed-by: Gary Guo <gary@garyguo.net>
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
----
- rust/kernel/str.rs | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index 28e2201604d67..002dcddf7c768 100644
---- a/rust/kernel/str.rs
-+++ b/rust/kernel/str.rs
-@@ -108,6 +108,12 @@ fn deref(&self) -> &Self::Target {
-     }
- }
- 
-+impl PartialEq for BStr {
-+    fn eq(&self, other: &Self) -> bool {
-+        self.deref().eq(other.deref())
-+    }
-+}
-+
- /// Creates a new [`BStr`] from a string literal.
- ///
- /// `b_str!` converts the supplied string literal to byte string, so non-ASCII
-
--- 
-2.47.0
-
+Oops, right. Nice catch!
 
