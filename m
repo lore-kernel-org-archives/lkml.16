@@ -1,335 +1,398 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1261F193C
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739271133; cv=fail; b=fuBBdAw7/aPIProF5ygkrufX3UrHim3yAAxrNsb+7SpMur5lDclFsXB9Y3g/YQfFU+nvnbz8irEN7H4IaSSD1gzPn9Ce8K2Cjt1GjwD7XiXFBd4vUHCMpN0sQtR62pnPW534pfHWouxcFTtf+Rnc5Dum5SsC/gH/vTN/aQCItrA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739271133; c=relaxed/simple;
-	bh=/hDPbx0aZFA3L3Tq+9Uqvfu9QUyFqash+0l7tuuGurs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=jJzN/K0V91ycwMS0NLEu02jUG8fQMJBY8MKy9gnDTs07swzmkJ+mFtzHK6OQjBY1iEbPhA6pCG9/VcG/VOH1TdITMiWOUtdqguPmwi0Pj90a2f9Ke6P6TWTOZnsNQUwK3BK0njudJsl38vr7H/ETNbkTkB8wTSEc6ZgWbFEqbt0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fx68++Nr; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=FjFYUDsC; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4810B1C3308
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739271206; cv=none; b=U/x2jQHdVgxTbm6K/zHANFeElNnkvEPzgSS+RqOhpCTRW9as0143Z+F3p+oB04N6xWDoafxoPK3GscTPhHYB4C+r/ewW86o+BodejoOgA3SgqHwbMW2sAnmhrEwaHWf+zLF6S8lpmtpQ1YYFrYA90Y5+dEUOgLLiHpa/nl6kprc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739271206; c=relaxed/simple;
+	bh=+9ihujGb5O78n4K42LCbT8oRrAiInrc6JHMi60TPOWU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=aYs2xH1cGA/JL2crbUPdtuxpoFYN+1pCUPxIU1WmrUQz4G9WRmivm8a6tfZzZYXF522BNvp3r5LY+GdHRVrrrDd/FRxwTleVYmzaL+zZjxx9Tle7QMV+NWE+BPk4ryOisuMWAkifXTNpQaymAA5Mj2RiBNKR8hyVCkyyzWIDzr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A6dXvT6u; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fx68++Nr";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="FjFYUDsC"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51B7tigN005918;
-	Tue, 11 Feb 2025 10:51:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=3UIh1dHUODxsRe1v+1
-	nA14Wv4MRTyTzkcY+CZsr8YGc=; b=fx68++Nr5jBK+06kkq8cIgi5bA90iOpkcz
-	tlOqiQh/+qHUq5nlVes4ShBKZP5ifxYg3kdSYPGkAvdXR/ZWJsnBrSoc4TomVLU8
-	fk6w/rck5wMHeoCRQGtsffs7za8lHTkYf48uFYn+04gC2Aszh+pjjgNEn0dYTWqx
-	zmDqZyEdGCXqsxdMIR/12wtwEk52jVT21PTSrALoiWWgUgW/+Gpj7fnvWcRDvSKE
-	dYLyECe8O5+8ly5TbLI0f08yimVgNTm0mY8/B92DX6sc/Ue6dFltY4KuUlu9GeZM
-	ZTNib+JNEzGjjj48gfS1P8OF5R8Dgp32KyY9gcuS+b5Rvdc7AwqQ==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44p0q2cvrt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 11 Feb 2025 10:51:50 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51B9kg7W026920;
-	Tue, 11 Feb 2025 10:51:50 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2175.outbound.protection.outlook.com [104.47.57.175])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44nwq8ks3b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 11 Feb 2025 10:51:50 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UxKNX0rNC41ecKvPqTEAmCZYqD2WZU+x7z9jW9OMR1iMJA7SiMq3eTqQWLgxolnu1WwOyREFx/HUf4rmQve91E1oLkhCp2ZCrhvvguysRLm4e7h4+4jQRXHu1jpCMHpB0YZO8cyBLk7gMR3a89lEkZ2uQKxCF0QVwCAmWiz7kG3KxrmPdCGITal4XpfyHNFsgf8T0gJJOsMQK1bZmt0GyKuDFqj4EL0HRrB/NYVZSTqiXjhCGxmCZANAXZriZrxWdMxG2ss5NxbtdhepAaQvNK7XqyekUKxO4lrWsyJ0qhE7KQbpA50n5c6m1BHM+/FGTNm9Nh0nue4LfW6ORLxNEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3UIh1dHUODxsRe1v+1nA14Wv4MRTyTzkcY+CZsr8YGc=;
- b=sFIb6hI7LnBPSnhkW3VTx+1LOjwQGHKO/Bn/uG2p18C4rM5riNTr7XzSuHydbUzmhX0pMvZ4J8gjr5g95UgChoG0SULYwb+IINrBjd9iLQmzAVXcx1WIwUs2WMn3OrEBKMUqCAX8tS6Fg4Jj5KSN1julJHCOcvuuKYw7ugDU3w6XB73+mSFVyIXca3wqrub6MLOeAjiEetrOwKl6qmSBpUYKauYaY+dGh1Y+ZehwPLsVc2v3/FRD2ZwZlZ2XsS+rC6hsBg+RYTUmZwDXsYBBbhRVyJHDgd/iwZmV1Yssvw68m3Ht5cyYO7kjcWP99cxDudjdxsgOnP2AGxQKFD79sw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3UIh1dHUODxsRe1v+1nA14Wv4MRTyTzkcY+CZsr8YGc=;
- b=FjFYUDsCnbnvw2lIcXKVgOiaM3+hVbEaDZ9ayvhfcks7PdTZWDBxsdOTTAIsZo87fV3F58k9sFoiAjJMQVWxcoGVNYGUOHM9p5yK5wsCw9dKoYt7Ueo4wWR6vrSgicKn+1tIy/f4biO6joxzLmSJqH9Fc8a2+BcTLt3muTzhqts=
-Received: from BYAPR10MB3366.namprd10.prod.outlook.com (2603:10b6:a03:14f::25)
- by CY8PR10MB6538.namprd10.prod.outlook.com (2603:10b6:930:5a::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Tue, 11 Feb
- 2025 10:51:48 +0000
-Received: from BYAPR10MB3366.namprd10.prod.outlook.com
- ([fe80::baf2:dff1:d471:1c9]) by BYAPR10MB3366.namprd10.prod.outlook.com
- ([fe80::baf2:dff1:d471:1c9%4]) with mapi id 15.20.8398.025; Tue, 11 Feb 2025
- 10:51:48 +0000
-Date: Tue, 11 Feb 2025 10:51:41 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: SeongJae Park <sj@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        "Liam R. Howlett" <howlett@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Shakeel Butt <shakeel.butt@linux.dev>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, "Lai, Yi" <yi1.lai@linux.intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH mm-unstable] mm/madvise: handle
- MADV_{HWPOISON,SOFT_OFFLINE} from madvise_unlock()
-Message-ID: <2f448f7b-1da7-4099-aa9e-0179d47fde40@lucifer.local>
-References: <20250211063201.5106-1-sj@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250211063201.5106-1-sj@kernel.org>
-X-ClientProxiedBy: LO6P123CA0016.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:313::6) To BYAPR10MB3366.namprd10.prod.outlook.com
- (2603:10b6:a03:14f::25)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A6dXvT6u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739271203;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OCfA/JLLSoLn8ch9J9sitGb6Pc3wFs67ivzmN1gGOgI=;
+	b=A6dXvT6u1opH/aPN2L2iYHzkBEAyUtivEo8fHlAXTvh61bb2AQggmEDYc3MVYWhul0p7pu
+	m79g7fkcucepXP1/xKYjWPkSptGQsXwbbut8EEsK8d9w9DqL+HN99wrx9gyqgv6KCavyXH
+	i2crAz5zPqs1+IBDfBvRIfuZs/viqvw=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-488-PAZ6e9EZNZ2pXKEa8QsgIQ-1; Tue, 11 Feb 2025 05:53:21 -0500
+X-MC-Unique: PAZ6e9EZNZ2pXKEa8QsgIQ-1
+X-Mimecast-MFC-AGG-ID: PAZ6e9EZNZ2pXKEa8QsgIQ
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4393e8738b3so16218845e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:53:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739271200; x=1739876000;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OCfA/JLLSoLn8ch9J9sitGb6Pc3wFs67ivzmN1gGOgI=;
+        b=PCxV4Fy8TnuvxFPK5N5c7VcJu0nIyk60PHeJP759v7ZsUeBi3gnp1KA1RXId7hiBeu
+         qEpjbYsIsz86xg9ni4jXCGjhd9QztX4qIzOf4cEl24GY6uRPk2ClKKOInbR4eRGbhLbX
+         bkSA8FHk3hC26MB2eiiKhBYJR3EG4bEHhECUXRKjchhp1072uB2x3MH0fVVsgSNgKe8M
+         MENGuNIxoGCHi7sur9cmHKNUdLCVcPB3JuJOdDvCirVX3WJ7TQxmYbiuvcFy3qfqFYq+
+         6mYGyl6kkN550F1xny2CNbbbMB2nBdbXBKnvQJDby7GrzHRegY2MOkkeS4KiAdX8A0fb
+         nDyg==
+X-Forwarded-Encrypted: i=1; AJvYcCV1FtNuKxzX127AEr8Y3WILnoFoQq31ZU5EI3Z5mTQ71Jvdyoa0fVFwVL8OPKk4jrJHcVwtm4wSczDiYZE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8fnEIURHh7pOcBrlJGu0YtOdVJM5n438NG4rO2QnacganuJHL
+	Q5xIKyKtnpl6ydP/MfP3easm4Uw4OjnZ4IWsul+BFLYjSGod9EdS8r+3smHKDbvoo0whigjuxp4
+	h7AcOt+f0V/3lk6r5prkqvQMNe3OhSbiCkohbfSSFSEzNeEST10R2ejE+P6SxJ9QzIDv+lA==
+X-Gm-Gg: ASbGncvg+Ha184/hJo1c55LV76HPSO3H46JATIvo4gje1+nZ3np8QF+H3K+a4VdypPW
+	mXRN3btMRAt76laj2cEaPYoaDD8BSd5BOuhJQkjxwTe8/YFG4yLqfP/44MWs/x2ty3YyArLzNxB
+	5bRCLqYJd6gZ7Pxr8h72rq+relt/4RRtNCF6778N3mx1ZeygvEKwuDGwJEKzFRVQhui7ANKO/vT
+	qnuF5MB1I3OWZZ3fAl+YLndY4oSh6XhDH8sNQTjFw0qa3eLYNY/VrYakWdrEqhQP42BADADUy6X
+	qjZUrD4czb9ugPctbacK+0zWZ45oUSLGjHOgAG3DgKN6
+X-Received: by 2002:a05:600c:8410:b0:439:5511:c01 with SMTP id 5b1f17b1804b1-43955110dc0mr14757385e9.10.1739271200148;
+        Tue, 11 Feb 2025 02:53:20 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGfXJQtt2mlSJu7QX/cjHKviF7AtHF5wgARCvfhZgvtBWe8KZLJyrEPiUoWJ4aqX5S50nFHjQ==
+X-Received: by 2002:a05:600c:8410:b0:439:5511:c01 with SMTP id 5b1f17b1804b1-43955110dc0mr14757165e9.10.1739271199710;
+        Tue, 11 Feb 2025 02:53:19 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:c:37e0:ced3:55bd:f454:e722? ([2a01:e0a:c:37e0:ced3:55bd:f454:e722])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcb88d5e6sm11358390f8f.1.2025.02.11.02.53.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 02:53:19 -0800 (PST)
+Message-ID: <253e7ad8-7ca9-4375-805b-4311896a8f05@redhat.com>
+Date: Tue, 11 Feb 2025 11:53:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR10MB3366:EE_|CY8PR10MB6538:EE_
-X-MS-Office365-Filtering-Correlation-Id: 75e350bd-675e-4617-c1f0-08dd4a8a1539
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?OXtFvUtn7NRjAOkUJ1ra4zoPJWW2qKP1zudzelcKYc2TUDvf2UamEIU7GxNC?=
- =?us-ascii?Q?wKWBC0VECcsMdqEegyniD0oyXS2NKRnAla1P1shDA047qRnMG3AZ/ZcuVb6e?=
- =?us-ascii?Q?AAyay3LylQg4scNtUuJL7Qw8sKm13bDCukgP7ekQsI1x53akU4Lfl+VSS0ym?=
- =?us-ascii?Q?rtWyaUwl1kn96bWLc9JrhF0z009qStX3vXQ3FuJtwPtfaDMfQhwt019vquyO?=
- =?us-ascii?Q?uLCezYlbWl4SCes63RZed7PDygu8g03aluq09TnzVa3LtRsQZu79V65JRtVy?=
- =?us-ascii?Q?j47nB+eB40TULwN2v6qFLec3EDXFcPgMWL8XyjmqXfg5MIoGpT8AUn/Qc+oW?=
- =?us-ascii?Q?VWCbJ8JB9l8UZ9+3UwD7apAZxqgQQU9nAKr4UPv/s+kxe4hnUXm1zciQsFAZ?=
- =?us-ascii?Q?4DnUeZ7fd3ISAc9UUqqZPFvIPlcJZSehXx0nk17pRcePSh340dXBcQPQL5IU?=
- =?us-ascii?Q?ioW7OBUznMWI1VccPFIDzohwjaZJGBZ40sOkuBLOJQDiNhMcZaNHC4dyTyE4?=
- =?us-ascii?Q?C59EKcf5n0dxFE3KMmLe2x3WDySO+ME8UGIII/M2ru/HOA47JltQ43O4Or3V?=
- =?us-ascii?Q?3cRQZmlVzYVdSyinlzzBRM5SReAFnoOQgtZCgySqOuHErPB25iPHSbC+YjnW?=
- =?us-ascii?Q?vM2fuKbUO8b7D/T+uhY8r8b9SZYvsQBo4LwwzVNeYWdawvDY5+Tigju6lzfn?=
- =?us-ascii?Q?cjYvxRKLtvOoKKGBYjdYmz2+EnQmvyHjsg7gaP1fvDta/LBklJeZuzPhAT8N?=
- =?us-ascii?Q?I7NZM15QXSuMQ3Sk101N3nQd/DpPisHAfLoAmwnPEVshcqUPS+CcrKVdjUCg?=
- =?us-ascii?Q?ZkT9oFDCYgrUw+jNv7saDzPJBAVWeJDvGlU7j9mVBtf8z2RrTZZ97injkFBJ?=
- =?us-ascii?Q?Oz/v0G/jq+MNIy5yi3fbKCYFW1cJU9ANPQl1iJM7ao6C0ndlCRMqMAmOhmX+?=
- =?us-ascii?Q?bQWSmurVydjdJ6ikZ0y8orUOPGesWorc2QxR2+VvE7ZaqrZHMqiYSUchIW0u?=
- =?us-ascii?Q?fLCm7fERXGWqWo5Fwk2JR31bB2hkGr/Ibh35QHEdA10F94sfl1yy+1YLdYg8?=
- =?us-ascii?Q?f/OEIWho/m6OiKfXDwcwtSCSrCyV4I/9vLQ/qB1/eIpuuEv1yKWqn4DQtHqO?=
- =?us-ascii?Q?ZvAtqUUHrA7agE0wuDaMiIGUA9cRjLAE7coCOeDU6yFDzC3JMc8kpLvLjek6?=
- =?us-ascii?Q?BT7/Zbi/Qt7JJGaToZ5vNROmJZSAiUzTTZuLoZJNhKzVFuKuy4B2Hc/OY8Vn?=
- =?us-ascii?Q?YqSRscempI5Ul0FWC0cTf/DF3enyUyE9QN8Sd9OdwaTmneb3NiKQp3+aRQ5J?=
- =?us-ascii?Q?NyjH/TCKMcK7yse778hHLkTJxVajTOSPc27jihCJlMRdHw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB3366.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?lNa8LMk5EwqPPeb1TS7kzWjQd/tvDGPUSvm5OecuYxIQgkrCBLIE5LRmuVBi?=
- =?us-ascii?Q?hR7h5Rg7iM2GfcgNatx+o8nktH7GPX6tQY0cYtUAcOgAg1jFhUKxVmsUbCcR?=
- =?us-ascii?Q?ykh0OVIOZCXI2DAxQ292B9leXO60wrAyAF3UpMsCb/xdtBt2UcnZqrBCLeOC?=
- =?us-ascii?Q?1h780lsKkAjz3FMamLXgWzgmhWq6OLvJHcvIP3Nr6dG0wPFzfkp7lkihJenE?=
- =?us-ascii?Q?pOMW3FnKH9NSxe/ShxSVlZtq8MuBFzy4Y6av3Wg5OA13cDJ6wDNYSsDU4xnN?=
- =?us-ascii?Q?NTX7o9qglMdlDhtJY5iskriNM2idC++q6xSmZ0sTEMyj5bE0umHAcZPLD07f?=
- =?us-ascii?Q?47OKpJa0Y6Ht/lyIdSff60U83CJSPffVrTEuydXdYX++Lb5l+vsYM6IlLi9o?=
- =?us-ascii?Q?th5sdHdXD7QjIFI9hp9sS2A2hA/ZbaWyf9IoYS8axVMX4kncEumzTNRDIQ+d?=
- =?us-ascii?Q?9A/mztqBTe1Ig2IFaSTwpoigcU9Qwa6paoxTXpWDgs3EZ3vahUdjP+ZHAf7l?=
- =?us-ascii?Q?KC1cwuTuVQjXpCkXl6ofL+4uX+tySKIKnvy65BXtictl/TpcRYFHQ7iuKCYQ?=
- =?us-ascii?Q?YjedBM4mJGVFQ1koSHjlA5hBN3UEhPOILiV2uRCjMtF+5+jEwrnVaCWKJKGo?=
- =?us-ascii?Q?FIp6s6PFW0qBd/ndVAb1bJldxzjeoiKtrMs5EAxyMOpe2SyIXnwXDJ96wW2t?=
- =?us-ascii?Q?u1dDz+s2GLDcitzP2fPfI5Eh4IPkArf0znkMUiulIhJHuVURa4YosDVjY0mx?=
- =?us-ascii?Q?lSnOCI7rWjhkdcki569oBW/r4/KCUU1uwws/Wzv3l382QOHrR6RzngN5Usg9?=
- =?us-ascii?Q?VE1svquFZHuSS5XHo2pj/4dZa5LWf+3pFCJ0OpmJZXYF4CIi/NNEq+Mns7Wq?=
- =?us-ascii?Q?J0rB5ThFlSPgoskauNZ0dBGUHkHOX/rLWSBy6zPcr2RAB7JdrVUvAywo9LFw?=
- =?us-ascii?Q?Uge6A7mecNxj0cIeIYDAaqS2d3Q/NqOvKJpxZNEOBoBnulP9iEcPWMY/+Y9Y?=
- =?us-ascii?Q?fGFg7aR1jHL19roj4JhnqSZqHNPK4FH5uGfOalCiC40bgROsuGqlu39SpOdp?=
- =?us-ascii?Q?nCf258sKI6ClcYLS0Yjr+p7lDxUCzbJGB34R5nnWndk9UvEz0fO+o/AJZdzA?=
- =?us-ascii?Q?yjETzR2yUWsCR2wVDotbaoYruIHISPclRO1W++n4TQVanlYGxrdV5TpzBadP?=
- =?us-ascii?Q?4owx2xImWCNJjABXXtys6QANBru7gfvNckp1JVHXbu59cqvLamLtwyKgZaem?=
- =?us-ascii?Q?7bH3tfLhZzzEkQPLEHlWGK4NNm8wpRC+qbBCVFYq8FglbXJsxQBT6aowwgFE?=
- =?us-ascii?Q?UXovjjeTidVJUu8CO/xQ1gWobyI9L3P/QFTQiqKkYv4fgVfvP2apVLRoWjm2?=
- =?us-ascii?Q?zVl2JjKdng069AQ+0iIrzgMIt+Euyc3gdBp8f8thsacUwDFL+3heZiec9Fvm?=
- =?us-ascii?Q?Q6QKUe+oCANryahsjnzqaElSqUzFqk9Bx31Wt5qNw6DL1ysLCJhCUVsqYEUJ?=
- =?us-ascii?Q?+ibao3yPRQNXThoQ6qEfG9j1GE1Jc95GSnEyIWGwb/UO0gJL6voWXEaWLQZE?=
- =?us-ascii?Q?HyeA1RsBgVTsMH5VXgLHs199KxgH225dWfArOR+2YTblq27foJftEfS7UqZG?=
- =?us-ascii?Q?CA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	UK/51zvKMlJnihh2jo1B54cBr9+HO0/LBuPKE8OTyvg7ogi4DB7Dbhp8cPWVkq04LEKVgQ2a45S5Vhv11kTQg1EBOTlAnKGrAqSm8fBlCxcf+QoCCxXCknAf5nCqr5l1KHx+USjTPSMCAZLHDcC5DFr3mTDIfY4Kc990XayV5idCrc9ePPTeVeOxcfNDSIXudvUBRzk213HNffjuFvi0diKP65Fk9umWd6fRK19t7GjE0dtEz/swI5xZYTZGkPH8hVxIrCYxMGfisyQvHptosriCdXRG5eBbX0Ao2cDXBWLKV4wSc3Z2P5mF5X8NXVhc+ZgyBFDkcOuC9UGF1/kqpulYUf1Lkt3ulAwjT4QeSysTib4jd35jZqxRRnvetnZfTu/pKnpYIzvyQ3SIOmTKvNMzxs+GGaVL3MTZ05h+zm1O3gqEFrJEvfRxIEgbdFHx51WQAoofHe/2p85LXZRs5jI9Ob9spq7lfSDRoT5OBhMe3UGoqnFU8s8tai1eXajI3HT8l+JMyj+DqYkDTKSv8ETZgHIPDVyARswYGiJDai5DefqblooiJxv6HS8umqDs6yg8WFJkXwJe1+VejpVNI6p4VD4D/0yV5/gazLab5Mk=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75e350bd-675e-4617-c1f0-08dd4a8a1539
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB3366.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 10:51:47.9744
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: y1ObMoNWA2U2vlfzx3wJzP9Ezq4l4qS+NpXVjHDtZdj+moFYA9DJEJrsphin9dAzrvjhel3oVXn34rlUhJ2xXJKqRKKEa0kLB813HMwZ3Xk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB6538
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_04,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- adultscore=0 mlxscore=0 phishscore=0 suspectscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2501170000 definitions=main-2502110068
-X-Proofpoint-GUID: vYnGyT7_mlNVpZrqIvNYXgSb5EcMvSWU
-X-Proofpoint-ORIG-GUID: vYnGyT7_mlNVpZrqIvNYXgSb5EcMvSWU
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/mgag200: Added support for the new device G200eH5
+To: Gwenael Georgeault <ggeorgea@matrox.com>, Dave Airlie
+ <airlied@redhat.com>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, mgi_lnx@matrox.com
+References: <alpine.LFD.2.00.2502071401180.14188@pluton.matrox.com>
+Content-Language: en-US, fr
+From: Jocelyn Falempe <jfalempe@redhat.com>
+In-Reply-To: <alpine.LFD.2.00.2502071401180.14188@pluton.matrox.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-+cc Naresh, Arnd for another reports/discussion of the same issue [0] while
-lore/lei is broken.
+On 07/02/2025 20:04, Gwenael Georgeault wrote:
+> - Added the new device ID
+> - Added new pll algorithm
 
-Hi,
+I pushed it to drm-misc/drm-misc-next.
 
-Lore breaking means I missed this :) thankfully you cc'd me (_this_ is why I am
-so adament about people following get_maintainer.pl procedure btw) so I was able
-to now notice + reply :)
+Thanks
 
-This is totally my bad for missing this on review, so mea culpa.
+-- 
 
-[0]:https://lwn.net/ml/linux-mm/CA+G9fYt5QwJ4_F8fJj7jx9_0Le9kOVSeG38ox9qnKqwsrDdvHQ@mail.gmail.com/
-
-On Mon, Feb 10, 2025 at 10:32:01PM -0800, SeongJae Park wrote:
-> madvise_lock() does nothing for MADV_HWPOSION and MADV_SOFT_OFFLINE
-> behavior, but madvise_unlock() does mmap_lock unlocking regardless of
-> the behavior.  Commit 948a0a9ea070 ("mm/madvise: split out mmap locking
-> operations for madvise()") in mm-unstable, which introduced the wrong
-> function didn't cause a real problem because do_madvise() was not
-> calling madvise_unlock() for the behavior.
->
-> Later, commit f19c9d7b57cf ("mm/madvise: split out madvise() behavior
-> execution") in mm-unstable made do_madvise() to call madvise_unlock()
-> even for the two behaviors.  As a result, the kernel tries to unlock
-> unlocked mmap_lock.
->
-> Fix the issue by handling the two behaviors in madvise_unlock().  For
-> the two behaviors, do nothing but just return.  Also remove an
-> unnecessary blank line in madvise_lock().
->
-> Technically speaking this patch fixes commit f19c9d7b57cf ("mm/madvise:
-> split out madvise() behavior execution").  But since the broken commit
-> is not in the mainline yet, squashing this fix into commit 948a0a9ea070
-> ("mm/madvise: split out mmap locking operations for madvise()") would
-> make more sense, so adding Fixes: tag with it.
->
-> Fixes: 948a0a9ea070 ("mm/madvise: split out mmap locking operations for madvise()") # mm-unstable
-> Reported-by: "Lai, Yi" <yi1.lai@linux.intel.com>
-> Closes: https://lore.kernel.org/Z6rgiVp7221r4JZ5@ly-workstation
-> Signed-off-by: SeongJae Park <sj@kernel.org>
+Jocelyn
+> 
+> Signed-off-by: Gwenael Georgeault <ggeorgea@matrox.com>
+> Co-authored-by: Mamadou Insa Diop <mdiop@matrox.com>
 > ---
->  mm/madvise.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index b5ef8e03d8b0..b8969457f3ef 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -1577,7 +1577,6 @@ int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
->
->  static int madvise_lock(struct mm_struct *mm, int behavior)
->  {
-> -
->  #ifdef CONFIG_MEMORY_FAILURE
->  	if (behavior == MADV_HWPOISON || behavior == MADV_SOFT_OFFLINE)
->  		return 0;
-> @@ -1595,6 +1594,11 @@ static int madvise_lock(struct mm_struct *mm, int behavior)
->
->  static void madvise_unlock(struct mm_struct *mm, int behavior)
->  {
-> +#ifdef CONFIG_MEMORY_FAILURE
-> +	if (behavior == MADV_HWPOISON || behavior == MADV_SOFT_OFFLINE)
-> +		return;
-> +#endif
-
-I agree this fixes the issue but this is horrible. let's abstract this please
-rather than doing the same crap that already existed, only now twice.
-
+>   drivers/gpu/drm/mgag200/Makefile          |   1 +
+>   drivers/gpu/drm/mgag200/mgag200_drv.c     |   4 +
+>   drivers/gpu/drm/mgag200/mgag200_drv.h     |   3 +
+>   drivers/gpu/drm/mgag200/mgag200_g200eh5.c | 205 ++++++++++++++++++++++
+>   4 files changed, 213 insertions(+)
+>   create mode 100644 drivers/gpu/drm/mgag200/mgag200_g200eh5.c
+> 
+> diff --git a/drivers/gpu/drm/mgag200/Makefile b/drivers/gpu/drm/mgag200/ 
+> Makefile
+> index 5a02203fad12..94f063c8722a 100644
+> --- a/drivers/gpu/drm/mgag200/Makefile
+> +++ b/drivers/gpu/drm/mgag200/Makefile
+> @@ -6,6 +6,7 @@ mgag200-y := \
+>       mgag200_g200.o \
+>       mgag200_g200eh.o \
+>       mgag200_g200eh3.o \
+> +    mgag200_g200eh5.o \
+>       mgag200_g200er.o \
+>       mgag200_g200ev.o \
+>       mgag200_g200ew3.o \
+> diff --git a/drivers/gpu/drm/mgag200/mgag200_drv.c b/drivers/gpu/drm/ 
+> mgag200/mgag200_drv.c
+> index 069fdd2dc8f6..32cd8ac018c0 100644
+> --- a/drivers/gpu/drm/mgag200/mgag200_drv.c
+> +++ b/drivers/gpu/drm/mgag200/mgag200_drv.c
+> @@ -214,6 +214,7 @@ static const struct pci_device_id 
+> mgag200_pciidlist[] = {
+>       { PCI_VENDOR_ID_MATROX, 0x534, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 
+> G200_ER },
+>       { PCI_VENDOR_ID_MATROX, 0x536, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 
+> G200_EW3 },
+>       { PCI_VENDOR_ID_MATROX, 0x538, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 
+> G200_EH3 },
+> +    { PCI_VENDOR_ID_MATROX, 0x53a, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 
+> G200_EH5 },
+>       {0,}
+>   };
+> 
+> @@ -256,6 +257,9 @@ mgag200_pci_probe(struct pci_dev *pdev, const struct 
+> pci_device_id *ent)
+>       case G200_EH3:
+>           mdev = mgag200_g200eh3_device_create(pdev, &mgag200_driver);
+>           break;
+> +    case G200_EH5:
+> +        mdev = mgag200_g200eh5_device_create(pdev, &mgag200_driver);
+> +        break;
+>       case G200_ER:
+>           mdev = mgag200_g200er_device_create(pdev, &mgag200_driver);
+>           break;
+> diff --git a/drivers/gpu/drm/mgag200/mgag200_drv.h b/drivers/gpu/drm/ 
+> mgag200/mgag200_drv.h
+> index 0608fc63e588..819a7e9381e3 100644
+> --- a/drivers/gpu/drm/mgag200/mgag200_drv.h
+> +++ b/drivers/gpu/drm/mgag200/mgag200_drv.h
+> @@ -196,6 +196,7 @@ enum mga_type {
+>       G200_EV,
+>       G200_EH,
+>       G200_EH3,
+> +    G200_EH5,
+>       G200_ER,
+>       G200_EW3,
+>   };
+> @@ -334,6 +335,8 @@ struct mga_device 
+> *mgag200_g200eh_device_create(struct pci_dev *pdev,
+>                           const struct drm_driver *drv);
+>   struct mga_device *mgag200_g200eh3_device_create(struct pci_dev *pdev,
+>                            const struct drm_driver *drv);
+> +struct mga_device *mgag200_g200eh5_device_create(struct pci_dev *pdev,
+> +                         const struct drm_driver *drv);
+>   struct mga_device *mgag200_g200er_device_create(struct pci_dev *pdev,
+>                           const struct drm_driver *drv);
+>   struct mga_device *mgag200_g200ew3_device_create(struct pci_dev *pdev,
+> diff --git a/drivers/gpu/drm/mgag200/mgag200_g200eh5.c b/drivers/gpu/ 
+> drm/mgag200/mgag200_g200eh5.c
+> new file mode 100644
+> index 000000000000..2c4265293504
+> --- /dev/null
+> +++ b/drivers/gpu/drm/mgag200/mgag200_g200eh5.c
+> @@ -0,0 +1,204 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
 > +
->  	if (madvise_need_mmap_write(behavior))
->  		mmap_write_unlock(mm);
->  	else
->
-> base-commit: 8bf30f9d23eb5040d37e6e712789cee8e71e1577
-> --
-> 2.39.5
+> +#include <linux/limits.h>
+> +#include <linux/pci.h>
+> +#include <linux/units.h>
+> +
+> +#include <drm/drm_atomic.h>
+> +#include <drm/drm_atomic_helper.h>
+> +#include <drm/drm_drv.h>
+> +#include <drm/drm_gem_atomic_helper.h>
+> +#include <drm/drm_probe_helper.h>
+> +
+> +#include "mgag200_drv.h"
+> +
+> +/*
+> + * PIXPLLC
+> + */
+> +
+> +static int mgag200_g200eh5_pixpllc_atomic_check(struct drm_crtc *crtc,
+> +                        struct drm_atomic_state *new_state)
+> +{
+> +    const unsigned long long VCO_MAX = 10 * GIGA; // Hz
+> +    const unsigned long long VCO_MIN = 2500 * MEGA; // Hz
+> +    const unsigned long long PLL_FREQ_REF = 25 * MEGA; // Hz
+> +
+> +    struct drm_crtc_state *new_crtc_state = 
+> drm_atomic_get_new_crtc_state(new_state, crtc);
+> +    struct mgag200_crtc_state *new_mgag200_crtc_state = 
+> to_mgag200_crtc_state(new_crtc_state);
+> +    long clock = new_crtc_state->mode.clock;
+> +    struct mgag200_pll_values *pixpllc = &new_mgag200_crtc_state->pixpllc;
+> +
+> +    unsigned long long fdelta = ULLONG_MAX;
+> +
+> +    u16 mult_max = (u16)(VCO_MAX / PLL_FREQ_REF); // 400 (0x190)
+> +    u16 mult_min = (u16)(VCO_MIN / PLL_FREQ_REF); // 100 (0x64)
+> +
+> +    u64 ftmp_delta;
+> +    u64 computed_fo;
+> +
+> +    u16 test_m;
+> +    u8 test_div_a;
+> +    u8 test_div_b;
+> +    u64 fo_hz;
+> +
+> +    u8 uc_m = 0;
+> +    u8 uc_n = 0;
+> +    u8 uc_p = 0;
+> +
+> +    fo_hz = (u64)clock * HZ_PER_KHZ;
+> +
+> +    for (test_m = mult_min; test_m <= mult_max; test_m++) { // This 
+> gives 100 <= M <= 400
+> +        for (test_div_a = 8; test_div_a > 0; test_div_a--) { // This 
+> gives 1 <= A <= 8
+> +            for (test_div_b = 1; test_div_b <= test_div_a; test_div_b++) {
+> +                // This gives 1 <= B <= A
+> +                computed_fo = (PLL_FREQ_REF * test_m) /
+> +                    (4 * test_div_a * test_div_b);
+> +
+> +                if (computed_fo > fo_hz)
+> +                    ftmp_delta = computed_fo - fo_hz;
+> +                else
+> +                    ftmp_delta = fo_hz - computed_fo;
+> +
+> +                if (ftmp_delta < fdelta) {
+> +                    fdelta = ftmp_delta;
+> +                    uc_m = (u8)(0xFF & test_m);
+> +                    uc_n = (u8)((0x7 & (test_div_a - 1))
+> +                        | (0x70 & (0x7 & (test_div_b - 1)) << 4));
+> +                    uc_p = (u8)(1 & (test_m >> 8));
+> +                }
+> +                if (fdelta == 0)
+> +                    break;
+> +            }
+> +            if (fdelta == 0)
+> +                break;
+> +        }
+> +        if (fdelta == 0)
+> +            break;
+> +    }
+> +
+> +    pixpllc->m = uc_m + 1;
+> +    pixpllc->n = uc_n + 1;
+> +    pixpllc->p = uc_p + 1;
+> +    pixpllc->s = 0;
+> +
+> +    return 0;
+> +    }
+> +
+> +/*
+> + * Mode-setting pipeline
+> + */
+> +
+> +static const struct drm_plane_helper_funcs 
+> mgag200_g200eh5_primary_plane_helper_funcs = {
+> +    MGAG200_PRIMARY_PLANE_HELPER_FUNCS,
+> +};
+> +
+> +static const struct drm_plane_funcs mgag200_g200eh5_primary_plane_funcs 
+> = {
+> +    MGAG200_PRIMARY_PLANE_FUNCS,
+> +};
+> +
+> +static const struct drm_crtc_helper_funcs 
+> mgag200_g200eh5_crtc_helper_funcs = {
+> +    MGAG200_CRTC_HELPER_FUNCS,
+> +};
+> +
+> +static const struct drm_crtc_funcs mgag200_g200eh5_crtc_funcs = {
+> +    MGAG200_CRTC_FUNCS,
+> +};
+> +
+> +static int mgag200_g200eh5_pipeline_init(struct mga_device *mdev)
+> +{
+> +    struct drm_device *dev = &mdev->base;
+> +    struct drm_plane *primary_plane = &mdev->primary_plane;
+> +    struct drm_crtc *crtc = &mdev->crtc;
+> +    int ret;
+> +
+> +    ret = drm_universal_plane_init(dev, primary_plane, 0,
+> +                       &mgag200_g200eh5_primary_plane_funcs,
+> +                       mgag200_primary_plane_formats,
+> +                       mgag200_primary_plane_formats_size,
+> +                       mgag200_primary_plane_fmtmods,
+> +                       DRM_PLANE_TYPE_PRIMARY, NULL);
+> +    if (ret) {
+> +        drm_err(dev, "drm_universal_plane_init() failed: %d\n", ret);
+> +        return ret;
+> +    }
+> +    drm_plane_helper_add(primary_plane, 
+> &mgag200_g200eh5_primary_plane_helper_funcs);
+> +    drm_plane_enable_fb_damage_clips(primary_plane);
+> +
+> +    ret = drm_crtc_init_with_planes(dev, crtc, primary_plane, NULL,
+> +                    &mgag200_g200eh5_crtc_funcs, NULL);
+> +    if (ret) {
+> +        drm_err(dev, "drm_crtc_init_with_planes() failed: %d\n", ret);
+> +        return ret;
+> +    }
+> +
+> +    drm_crtc_helper_add(crtc, &mgag200_g200eh5_crtc_helper_funcs);
+> +
+> +    /* FIXME: legacy gamma tables, but atomic gamma doesn't work 
+> without */
+> +    drm_mode_crtc_set_gamma_size(crtc, MGAG200_LUT_SIZE);
+> +    drm_crtc_enable_color_mgmt(crtc, 0, false, MGAG200_LUT_SIZE);
+> +    ret = mgag200_vga_bmc_output_init(mdev);
+> +
+> +    if (ret)
+> +        return ret;
+> +
+> +    return 0;
+> +}
+> +
+> +/*
+> + * DRM device
+> + */
+> +
+> +static const struct mgag200_device_info mgag200_g200eh5_device_info =
+> +    MGAG200_DEVICE_INFO_INIT(2048, 2048, 0, false, 1, 0, false);
+> +
+> +static const struct mgag200_device_funcs mgag200_g200eh5_device_funcs = {
+> +    .pixpllc_atomic_check = mgag200_g200eh5_pixpllc_atomic_check,
+> +    .pixpllc_atomic_update = mgag200_g200eh_pixpllc_atomic_update, // 
+> same as G200EH
+> +};
+> +
+> +struct mga_device *mgag200_g200eh5_device_create(struct pci_dev *pdev,
+> +                         const struct drm_driver *drv)
+> +{
+> +    struct mga_device *mdev;
+> +    struct drm_device *dev;
+> +    resource_size_t vram_available;
+> +    int ret;
+> +
+> +    mdev = devm_drm_dev_alloc(&pdev->dev, drv, struct mga_device, base);
+> +
+> +    if (IS_ERR(mdev))
+> +        return mdev;
+> +    dev = &mdev->base;
+> +
+> +    pci_set_drvdata(pdev, dev);
+> +
+> +    ret = mgag200_init_pci_options(pdev, 0x00000120, 0x0000b000);
+> +    if (ret)
+> +        return ERR_PTR(ret);
+> +
+> +    ret = mgag200_device_preinit(mdev);
+> +    if (ret)
+> +        return ERR_PTR(ret);
+> +
+> +    ret = mgag200_device_init(mdev, &mgag200_g200eh5_device_info,
+> +                  &mgag200_g200eh5_device_funcs);
+> +
+> +    if (ret)
+> +        return ERR_PTR(ret);
+> +
+> +    mgag200_g200eh_init_registers(mdev); // same as G200EH
+> +    vram_available = mgag200_device_probe_vram(mdev);
+> +
+> +    ret = mgag200_mode_config_init(mdev, vram_available);
+> +    if (ret)
+> +        return ERR_PTR(ret);
+> +
+> +    ret = mgag200_g200eh5_pipeline_init(mdev);
+> +    if (ret)
+> +        return ERR_PTR(ret);
+> +
+> +    drm_mode_config_reset(dev);
+> +    drm_kms_helper_poll_init(dev);
+> +
+> +    return mdev;
+> +}
 
-I attach a fix-patch concept for something I think that'd be nicer, do with
-it what thy wilt! :P sorry I don't mean to be 'one of those' maintainers
-who copy/pastes code + demands somebody do it (by no means do I do so), but
-since this is so small I feel it's kind of quicker for me to do it this
-way.
-
-Obviously take it or leave it/adapt it/etc. This is compile-tested only...
-
-----8<----
-From 9fce3e47bf0fff2a2291be66002af346cdbca665 Mon Sep 17 00:00:00 2001
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Date: Tue, 11 Feb 2025 10:44:26 +0000
-Subject: [PATCH] mm/madvise: fix madvise_[un]lock() issue
-
-We are asymmetric in our locking/unlocking in the case of memory failure
-madvise() behaviour options, correct this and abstract the memory failure
-check.
-
-Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
----
- mm/madvise.c | 29 +++++++++++++++++++++++------
- 1 file changed, 23 insertions(+), 6 deletions(-)
-
-diff --git a/mm/madvise.c b/mm/madvise.c
-index b5ef8e03d8b0..1a7af59c3aa9 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -1575,14 +1575,29 @@ int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
- }
- #endif /* CONFIG_ANON_VMA_NAME */
-
--static int madvise_lock(struct mm_struct *mm, int behavior)
--{
--
- #ifdef CONFIG_MEMORY_FAILURE
--	if (behavior == MADV_HWPOISON || behavior == MADV_SOFT_OFFLINE)
--		return 0;
-+static bool is_memory_failure(int behavior)
-+{
-+	switch (behavior) {
-+	case MADV_HWPOISON:
-+	case MADV_SOFT_OFFLINE:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+#else
-+static bool is_memory_failure(int behavior)
-+{
-+	return false;
-+}
- #endif
-
-+static int madvise_lock(struct mm_struct *mm, int behavior)
-+{
-+	if (is_memory_failure(behavior))
-+	    return 0;
-+
- 	if (madvise_need_mmap_write(behavior)) {
- 		if (mmap_write_lock_killable(mm))
- 			return -EINTR;
-@@ -1590,11 +1605,13 @@ static int madvise_lock(struct mm_struct *mm, int behavior)
- 		mmap_read_lock(mm);
- 	}
- 	return 0;
--
- }
-
- static void madvise_unlock(struct mm_struct *mm, int behavior)
- {
-+	if (is_memory_failure(behavior))
-+	    return;
-+
- 	if (madvise_need_mmap_write(behavior))
- 		mmap_write_unlock(mm);
- 	else
---
-2.48.1
