@@ -1,125 +1,129 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3E3230D0E
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 13:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CA323099C;
+	Tue, 11 Feb 2025 13:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739282235; cv=none; b=I4jv9ZSlgkuwYkEiEGpRlR8cBEacKyIaR5E97PpjNUQo1hyfRa2NWmNDZdUayPlGPCZ9Vg31D1whLQ6EEYEN4dvJeQppoNx/YFQSDEH3UbCcrdDp4zdztQB6rtPxWzq+Z4yFR/p53ut3XWroQda+BD/himwkOATyKNg92EPTPS4=
+	t=1739282260; cv=none; b=BK7OH9cKR3u3gKMgiT0OvxlPSssI3uBRl0Wg/6u3zE7jExBxLPqxHDv+BACj7o9LC2uae/BmdTH/fBe+AsaKIPVE37FqtFk+ef7lHMbnXW4PuQRTBRPFHrlcgt6xdUWigpWogDXoh/olfhqyKbTD9sYX0h3TLYtob05fA6bN7SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739282235; c=relaxed/simple;
-	bh=42SkK/uGcPe3+X1XXQFJq5L9WLaDP9DsrXhpMr8UjQs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BXghYM5dFskCa/tYgXUBrnbsLJ6KEO6sW5APDDSzoL4ZRS1WR0DiQjv/NjLdwNzRJIlhh+QMuIbvUloI9d0l874RPKaxf8xtwfSpDRTnyPVoB0oGLUKgz+hws1ktlfJM6xZbosLfcKjC2eeb3KNjHXKp5s8ys2oMU1+JLjXPEM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WzvSrZNn; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1739282260; c=relaxed/simple;
+	bh=XnACgguGEi7l2F/dWtns8iHU9CdKd5Rbri/Os+TWzuE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rmALtIR0MWRns5Z4uYfHXBSln7C7dgIgPXblW+T90O4QrEd0MH7RxYsarfM6VJgnucCAdPdZtFPYZySpafQx02lcEU1GztQy6y/wo57Z1Ux0GWUUUYDYGV/DSFMgw6EkJTHXHaVYbAUnUBq9ohiVM46dMAeKzGJQsLEWaZghT+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=WtM57xM+; arc=none smtp.client-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WzvSrZNn"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5dea50ee572so850908a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 05:57:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1739282231; x=1739887031; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nc2Fbe5I0sSQTKOy2ZPiGOXHCFIjUyJawnB44aSJiHk=;
-        b=WzvSrZNn1GiR5/VEcF2TfggW/UApynWXIGK+sMv+D7KY79IhJqcH9XFgDJC41CHk4B
-         R/eoF3Oz0MStjrRPbi0yBVrlMuSfLJ09C5N3gY0TxtMaetUB7rOZ3/wRIYrvDQ7GxrXA
-         /icrdFLtEVDqpBqKlRxhl+7vrmYLh40eU7tXUn6N9yjwkEmtJxm8tlcepbaIWzeSAzdn
-         WU7uPn0eSuM8HB7GJTUL5IHPY5uHds1a/Qs6EiHup3dR9En2XsI8V+S807MpEuWmCV+Q
-         zwqYAsPY77GWnWRl/+uFdEJguzuGR+9nZ/emqDJz5ChP2qwgJWhi0vWXM624WjE25T6m
-         2RWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739282231; x=1739887031;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nc2Fbe5I0sSQTKOy2ZPiGOXHCFIjUyJawnB44aSJiHk=;
-        b=Ks8e2nEjzzygQ4l95zof3eV1b+UL5h/X0mgbX70B02Iy5xRCl5HdapggsMEGnsev7Z
-         7EgYo2OhWr9saO4lGz+lv3JUijVgVEBEGTQqIsxZF/IA/fOOiZYlUcABKDBKNDQt5PxE
-         89IORkk4v6512N1cjwWJo4e8G3Rqeu80nP1phcL/upcqkpOyFxsOfjePrPHW1vnrHRnP
-         gaUC00sxenUB8H6GkFrB61Ztbt9HcOh3sVKaggLTqtShlh3FiSL/5R6VKSj1y3qgk6ot
-         tCPgYmT2Hn4pv9IM+mTR+wvWye4RQ3/a6XsqVG2TZP8TyH3yVmHBD6HLynxSNLdS7bB3
-         5h8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWK95FAiTFRx8b+aqSgvqhH9gMsuiBbD7LwOr8BgGkJUzpyQn1TTLEKTLeyW0gUPST8jhHVktQtet9FCcs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7CJbRat8N6pj5EayGHNmMKp3iyTwL2xT5VVgGz0JMCkFd8kRK
-	uRZ/CkJWgaq4DQCBIF548mbRC60sm1WhQFHvoc9gv0BC5ZCzzuaMLDwuGoxOdiU=
-X-Gm-Gg: ASbGncvaFmS/BAUQCyH/7wuUmVw/64ztIn6h+thH3glFUUwSwv4IwtEhZTtr05nfIqf
-	dXnZmYoTeGfTreWcoOCWtM1CFuILbb/kt9tSONZgp8HHzdU8tm/2rapu8s5xIuH9FXvVu00Flom
-	PNmDJn8GpMi/uskQmiLkiidq4ulIeiXA5S4N0q0RnWG2bXZfJulNZxw0iAMUloAwz3A1cz1pCZ4
-	QD9+3NFeSmM7OMEYf4fR1t44Smu9puwiNqgOO9ffdvBvnTfACIePkXRqghvzhAAq6Z6gmi+pt2L
-	hMD+vAcucVXGZkbraA==
-X-Google-Smtp-Source: AGHT+IHOOumXj+rsEvDgGNfsD2H40sBsAx3FPNbbQOsVuk+Cv32qwjEvbWYK7p7fjHfp7cQhzJxRyw==
-X-Received: by 2002:a05:6402:321d:b0:5dc:1ec6:12bc with SMTP id 4fb4d7f45d1cf-5de45087800mr21024023a12.28.1739282231515;
-        Tue, 11 Feb 2025 05:57:11 -0800 (PST)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de5941e014sm7157341a12.50.2025.02.11.05.57.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 05:57:11 -0800 (PST)
-Date: Tue, 11 Feb 2025 14:57:09 +0100
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Chen Linxuan <chenlinxuan@uniontech.com>
-Cc: Tejun Heo <tj@kernel.org>, Josef Bacik <josef@toxicpanda.com>, 
-	Jens Axboe <axboe@kernel.dk>, Wen Tao <wentao@uniontech.com>, cgroups@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] blk-cgroup: validate alloc/free function pairs at the
- start of blkcg_policy_register()
-Message-ID: <i6owvzwb4pjg27tex5utdzcoyeeawqejegvc2byz6tnfn2flmh@2ggun5qyokvs>
-References: <EE1CE61DFCF2C98F+20250210031827.25557-1-chenlinxuan@uniontech.com>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="WtM57xM+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1739282194;
+	bh=MOQCraMni4cLE1auXuOnn748f2GO/MU4imVh9/6YM1A=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=WtM57xM+S873o5QSDorJ4alNrM8tMSW1tFzPZSyVQuFYzWYIarJX+a5nN6VpnrBDo
+	 dkAbwjk+sycF2N4Id5aKIHbnMomtVsAgUfY66IgiirlL+BLjq5QJ8DGaYqbw2LfBr5
+	 iUqQPeyrQtM4lamEXm2YBSa4Njk+qFkPgFjzSMS8=
+X-QQ-mid: bizesmtpip2t1739282184t243xhs
+X-QQ-Originating-IP: npKmLwuEa8p5dg5WWLccJs9AiidgISrmzEcpd0HuIow=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 11 Feb 2025 21:56:22 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 15678477366880975103
+From: WangYuli <wangyuli@uniontech.com>
+To: tsbogend@alpha.franken.de
+Cc: linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	macro@orcam.me.uk,
+	masahiroy@kernel.org,
+	jiaxun.yang@flygoat.com,
+	zhanjun@uniontech.com,
+	guanwentao@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>
+Subject: [PATCH 0/2] MIPS: Explicitly check KBUILD_SYM32=n
+Date: Tue, 11 Feb 2025 21:56:16 +0800
+Message-ID: <41107E6D3A125047+20250211135616.1807966-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="dllvaf3vwm2keh2z"
-Content-Disposition: inline
-In-Reply-To: <EE1CE61DFCF2C98F+20250210031827.25557-1-chenlinxuan@uniontech.com>
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MABkn+BX1UZ4G3K0qeU6agR7N6YNCQFxFCQmfLXDozDQwWlVwnZBXNre
+	brH5Z3/Gxmkxz7d5sUMfOHtYSR/XRv7oT85z0CtDfUUJ8PFshzkh36MfCYHuV9rLRiNNXCI
+	GWDhgemMqTzbGq0hW69qZQkpZtBoOqVkzlpKZECOsjXJhDRI7K2tQQVcRKv3YKC80kv+grh
+	X3TlUXG/pgMBJp4b0NGbrO6QyfvYAsjZs4+hxmohTNdzv6EnMAH89881PQjOrpuwB8Juqr7
+	Nxf0Mp48oWzrNjOoBGc8BCTSpAgImzSEZulMBIZ7LC4B61FrPYz1c9/DK0MObhpNSIAVp9B
+	miotA3ZNnusRWLoYWU0zslW/pjWvKfEr/TEHy41Kcx+UBibATpSCfH0bcRwGxs9FxeNRAdb
+	Misti0kkLEUj4Esl4dN+OXpUXjcOgXyHGcdm91mTbYYo6hTwWM5EZplsZbFIeGAvt6C0o35
+	IGC6+mhnWDYwGeFrqiksIL1IQpeMZu5Ey3lOAQdEnp/IBAXGY17yVNUpUZbJ+s67uuFFKUd
+	g1mWDWQeXSOiGmMYobo/x1oBrHd2NQhy761ufPD778OkqeCx+yvqmazGxhQ0gCUgkKNZaTn
+	f8OsXC7CFgX3DZZC3REXZ2gChKQGg/Ka68yjPKeyasytlthh06p+kjbCnoLBFHXaQjA5zNY
+	W2GnoCl29jFEUb8DCd8XD3zwbsGnJmrgGJO3/SiWylLBHO5bdeEaiu5XEXnqLG57sfL+YVb
+	qr9hJy//+y3OuaT8crTjclc6/upPzSnOiEJbEDP38AVRIRg7Dk4HYH2NSM186Et5iPbGPD0
+	VmMjLM9j3HfpacOYWdbKXhJ6A+rqEXaOIKRKeFkK0idtFjGT+0ZZWhNztdSIJQVhvoDQw2X
+	ADYTNU7vCTqHmO2caPvDYZt4JOW8Rid9K69DlnNHFWSv8ht/wYy/jFt6dykZNA9p7ORtnSL
+	GfkzDLSlDVIjFjO6v1JPi9Q4nyVmJMXuS5qvmFaOjXX+jfnXSEgTGMFHC
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+X-QQ-RECHKSPAM: 0
+
+During make module_install, the need_compiler variable becomes 0,
+so Makefile.compiler isn't included.
+    
+This results in call cc-option-yn returning nothing.
+    
+Add a check for KBUILD_SYM32=n to avoid the
+"CONFIG_CPU_DADDI_WORKAROUNDS unsupported without -msym32" error
+when KBUILD_SYM32 is unset (meaning it's not 'y' or 'n').
+
+Moreover, I also identified an unnecessary check for KBUILD_SYM32
+in this Makefile section. Eliminate it for code simplification.
 
 
---dllvaf3vwm2keh2z
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] blk-cgroup: validate alloc/free function pairs at the
- start of blkcg_policy_register()
-MIME-Version: 1.0
 
-Hello Linxuan.
+NOTE:
 
-On Mon, Feb 10, 2025 at 11:18:27AM +0800, Chen Linxuan <chenlinxuan@unionte=
-ch.com> wrote:
-> Move the validation check for cpd/pd_alloc_fn and cpd/pd_free_fn function
-> pairs to the start of blkcg_policy_register(). This ensures we immediately
-> return -EINVAL if the function pairs are not correctly provided, rather
-> than returning -ENOSPC after locking and unlocking mutexes unnecessarily.
->=20
-> Co-authored-by: Wen Tao <wentao@uniontech.com>
-> Signed-off-by: Wen Tao <wentao@uniontech.com>
-> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+It is particularly important to note that this code fix does not
+imply that we have resolved the problem entirely.
 
-If you consider those locks contention a problem (policy registrations
-are "only" boot time, possibly module load time), then it's good to refer
+In fact, the entire application of cc-option and its auxiliary
+commands within the kernel codebase currently carries significant
+risk.
 
-Fixes: e84010732225c ("blkcg: add sanity check for blkcg policy operations")
+When we execute make modules_install, the Makefile for the
+corresponding architecture under arch/subarches/Makefile is
+invariably included. Within these files, there are numerous
+usages of cc-option and its auxiliary commands, all of which will
+return empty strings. The reason other architectures can
+successfully complete compilation under these circumstances is
+purely because they do not, unlike MIPS, check the return values
+of cc-option and its auxiliary commands within their Makefiles
+and halt the compilation process when the expected results are
+not received.
 
-> ---
->  block/blk-cgroup.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
+A feasible approach to remediation might be to encapsulate all
+usages of cc-option and its auxiliary commands within conditional
+statements across all architecture Makefiles, preventing their
+execution entirely during make modules_install.
 
-But it's correct,
-Reviewed-by: Michal Koutn=FD <mkoutny@suse.com>
+However, this would lead to a massive number of inelegant
+modifications, and these broader implications may require
+deliberation by Masahiro Yamada.
 
---dllvaf3vwm2keh2z
-Content-Type: application/pgp-signature; name="signature.asc"
+Regardless, this does not preclude us from addressing the
+issue on MIPS first.
 
------BEGIN PGP SIGNATURE-----
+WangYuli (2):
+  MIPS: Eliminate Redundant KBUILD_SYM32 Checks
+  MIPS: Explicitly check KBUILD_SYM32=n
 
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ6tXMwAKCRAt3Wney77B
-Sc0OAPsFfyTtfA9SZMEqJj2m4PnsUJUwkX/Vql/KV067dSlbYAEA/XZ7eLxelz4n
-RI4kpp42WYSfhwBMT9/50Ya9coA9eQQ=
-=IM8w
------END PGP SIGNATURE-----
+ arch/mips/Makefile | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---dllvaf3vwm2keh2z--
+-- 
+2.47.2
+
