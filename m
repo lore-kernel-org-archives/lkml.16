@@ -1,123 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CFCD22066
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8352505B8;
+	Tue, 11 Feb 2025 14:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739284441; cv=none; b=I6qPzCDGgmN/rlWN+dAYPWfaV7yG6VQo/76+gxXgukEOvfUBpPkmFLWSLzSraUQdNdGHcZjKFg2bjORXQ+H3f39m+VOJxcVqO/HGBuCQu9nDps7HglDhNub/vzm9ZOMdVYYteKEkKIp89e2FYMFIEdmku7nSkhV3COzOwQXyKH8=
+	t=1739284444; cv=none; b=ZTdNGR4cPcZG4eve4b9azoX5qvQ7h2aITBL8llV/C2WFLb68onn4hSPWK8gqJV7R2krgmR2tEaoi6Rvs/UVlcGjN74YZiLM/Xo9OgFwZkg0SPDuf2emKWC5qs0BeDu0AMnvHvnAG1sp82l6BNmOomKfVhAMoIw2AGJ5EfPYefX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739284441; c=relaxed/simple;
-	bh=+Xvc4q5W1nscYEGrfBD6bl7hrDJvjlsORL+X+YUEzB8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q7NQYPiWN2kWLqBUpb/orahn/3DABM32ZqSbYDGCEAIRocXiNuUEBRIScpP2qIVwV+VNLmWuPh5TuKcdSV9hnerRViVpO21tuZLXRxCkR9XbMNk6RxhCioIGzJLnORFJbqmMHzilU9endhHTLhgbns9ybwPpfNHAahkec3+vNoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=El4u34Su; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739284444; c=relaxed/simple;
+	bh=ju8fNtGm/9M0KfuQYUcyEL4d/QiET4gCUmWGNpIcfPE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=h+XOJ71pNwb7FnevNUkUf5t+YpNPcxj/3FKDvNF/0uBfsgsa9kn3iHcl4ZYtyLrdXHmbQBRdOEAcFRd5ZqRFjvCwAP0rDg3KrqdNs1OPs1CUxjfkgJ+mJWD+BcOCLacmxmGPBc9r93Z6/0H/WyN47VCu33wRd1wVr6q36npR6sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=A/1bo5oE; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="El4u34Su"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FCFFC4CEE5;
-	Tue, 11 Feb 2025 14:34:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739284441;
-	bh=+Xvc4q5W1nscYEGrfBD6bl7hrDJvjlsORL+X+YUEzB8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=El4u34SuyR7NUtS7W3tKXegG1bVy9I3PrYZnCJhz6+voeGTD/QizADjr5UUAAbcmr
-	 2w78/sTkKGgrz8fog72euYcwdo8v4mzgaw6rkJ8lgEWYZ98j6f74X3WA3b4gu8TY+n
-	 oRCzB254B14ER/EkMk+vNQIrxj9yQlX9bL2wrsDXJzQ4YVARHpziaRNPcYYQXKrgi1
-	 D6sOKHZf2HIpfvcWwSWiBjDwvfQFA9RpgIK0xWDdmByd/6cRk/8ERdVe8Pl7BK2BR1
-	 TjmBuJveh96TbLy8pXKDQcuyx2HiBvYCNYGS7pEsLuYtEC28qiUrkBWTvd6FumEgYU
-	 KRFRifS5TVtOA==
-Date: Tue, 11 Feb 2025 15:33:58 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 34/35] drm/bridge: tc358768: Convert to atomic helpers
-Message-ID: <20250211-solemn-meticulous-angelfish-85d1ce@houat>
-References: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
- <20250204-bridge-connector-v2-34-35dd6c834e08@kernel.org>
- <nbghrrl74xsuzomp7d6qjfosxfiooezipppjhxkx2ibnlpi6rj@b6ovgosmpuhl>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="A/1bo5oE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1739284442; x=1770820442;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ju8fNtGm/9M0KfuQYUcyEL4d/QiET4gCUmWGNpIcfPE=;
+  b=A/1bo5oEkXELi8eeJPgJ0ZLCSObepzGyc4Hv2caI4Qj8ff2nQFfnhjtQ
+   MUYAZvrzQ9JVrJMm4pnZXH8Tfd4r4U6wRVYG5c/yCHPZRkMmLpamIGXuv
+   YUvbZIaMf08i1MNxP4J9Vmxob5m7kqhLmTt1AD6EVKpEdu9RrVpz93eKD
+   H9Gvt2lXMaiRYzaANHwMjKNHhuokAOIXwgMc0r+J1VYPV1okCBGlXLjge
+   knPXJegXZU9mxEPGkw7poEo51YIoBG8enPOk7HxrG5irzouK/FNOZ7wU5
+   B/Ulgw0Z2NKjMcDsiwAAitDOeBVhIxyzZvRJT7Q+qY4OKX037hd90B6Sh
+   w==;
+X-CSE-ConnectionGUID: 35UA5pLrQAmrHtJwTcQ8OA==
+X-CSE-MsgGUID: t5KqAL4RToiGYpnbPSX4+g==
+X-IronPort-AV: E=Sophos;i="6.13,277,1732604400"; 
+   d="scan'208";a="37535217"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Feb 2025 07:33:55 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 11 Feb 2025 07:33:25 -0700
+Received: from archlinux.mchp-main.com (10.10.85.11) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Tue, 11 Feb 2025 07:33:23 -0700
+From: Mihai Sain <mihai.sain@microchip.com>
+To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<claudiu.beznea@tuxon.dev>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: Mihai Sain <mihai.sain@microchip.com>
+Subject: [PATCH 0/2] Add power monitor support on sama7d65-curiosity board
+Date: Tue, 11 Feb 2025 16:33:00 +0200
+Message-ID: <20250211143302.4102-1-mihai.sain@microchip.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="auslch53w3r7wyf5"
-Content-Disposition: inline
-In-Reply-To: <nbghrrl74xsuzomp7d6qjfosxfiooezipppjhxkx2ibnlpi6rj@b6ovgosmpuhl>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+
+This patch series adds power monitor support on Microchip SAMA7D65 Curiosity board.
+
+[root@SAMA7D65 ~]$ lsiio
+Device 001: pac1934
+Device 000: e1000000.adc
+
+[root@SAMA7D65 ~]$ awk -f pac1934.awk
+VDD3V3   current: 146.173 mA, voltage: 3302.73 mV
+VDDIODDR current: 62.1356 mA, voltage: 1353.96 mV
+VDDCORE  current: 242.248 mA, voltage: 1204.36 mV
+VDDCPU   current: 213.565 mA, voltage: 1303.05 mV
+
+Mihai Sain (2):
+  ARM: dts: microchip: sama7d65: Add flexcom 10 node
+  ARM: dts: microchip: sama7d65_curiosity: Add power monitor support
+
+ .../dts/microchip/at91-sama7d65_curiosity.dts | 52 +++++++++++++++++++
+ arch/arm/boot/dts/microchip/sama7d65.dtsi     | 21 ++++++++
+ 2 files changed, 73 insertions(+)
 
 
---auslch53w3r7wyf5
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 34/35] drm/bridge: tc358768: Convert to atomic helpers
-MIME-Version: 1.0
-
-On Sun, Feb 09, 2025 at 09:13:36AM +0200, Dmitry Baryshkov wrote:
-> On Tue, Feb 04, 2025 at 03:58:02PM +0100, Maxime Ripard wrote:
-> > The tc358768 driver follows the drm_encoder->crtc pointer that is
-> > deprecated and shouldn't be used by atomic drivers.
-> >=20
-> > This was due to the fact that we did't have any other alternative to
-> > retrieve the CRTC pointer. Fortunately, the crtc pointer is now provided
-> > in the bridge state, so we can move to atomic callbacks and drop that
-> > deprecated pointer usage.
-> >=20
-> > Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> > ---
-> >  drivers/gpu/drm/bridge/tc358768.c | 30 +++++++++++++++++++++++-------
-> >  1 file changed, 23 insertions(+), 7 deletions(-)
-> >=20
-> > diff --git a/drivers/gpu/drm/bridge/tc358768.c b/drivers/gpu/drm/bridge=
-/tc358768.c
-> > index 6db18d1e8824dd7d387211d6d1e668645cf88bbe..6ff6b29e8075d7c6fa0b74b=
-4fec83c5230512d96 100644
-> > --- a/drivers/gpu/drm/bridge/tc358768.c
-> > +++ b/drivers/gpu/drm/bridge/tc358768.c
-> > @@ -601,17 +601,29 @@ static void tc358768_bridge_disable(struct drm_br=
-idge *bridge)
-> >  	ret =3D tc358768_clear_error(priv);
-> >  	if (ret)
-> >  		dev_warn(priv->dev, "Software disable failed: %d\n", ret);
-> >  }
-> > =20
-> > +static void tc358768_bridge_atomic_disable(struct drm_bridge *bridge,
-> > +					   struct drm_atomic_state *state)
-> > +{
-> > +	tc358768_bridge_disable(bridge);
-> > +}
-> > +
->=20
-> Please change corresponding functions into atomic_disable() and
-> atomic_post_disable(). Calling sites have access to the atomic state, so
-> there is no need to have yet another wrapper.
-
-It's pretty hard to do (at least without the hardware), both
-tc358768_bridge_disable() and tc358768_bridge_post_disable() have
-multiple call sites in the driver, and passing a state enabling the
-bridge doesn't make sense for those.
-
-I guess I can still drop that patch.
-
-Maxime
-
---auslch53w3r7wyf5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ6tf1gAKCRAnX84Zoj2+
-dmpdAYDqA4YrlLcb3EyXi/l21syAmf4+bTONXVK75+H36XZfA17WUJyteK04OzSA
-d5lceosBfRXiMtZpz+H56wLndIQiQuGVTOGJYRSwkZDkxxqs0VIUD52GWPIXX9Yw
-l4MHHK8rvw==
-=b5F7
------END PGP SIGNATURE-----
-
---auslch53w3r7wyf5--
+base-commit: febbc555cf0fff895546ddb8ba2c9a523692fb55
+-- 
+2.48.1
