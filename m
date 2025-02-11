@@ -1,45 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF941E990D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7811E990A;
 	Tue, 11 Feb 2025 06:23:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739254995; cv=none; b=Br15EXORL8urjL77XRY6vDADUh+k1PjLOps89rBrSddUSbEFlTHSIuSwTGANMWobuPFLQrPWCUNYRKUpr2uJntwoBxmRjHgL0e3/7czJROal/MK063Dkcj8bYU0o63iFelnQ9zGJ8ps4zNaZIM7tTB0cytv+1sd72WNxNLDO0R0=
+	t=1739254995; cv=none; b=F7BYt4fEsMAKm6eNYP9jPrZdPOagTXcy/QJF65XISqrfKlIUZ2PSwCs1Db14e0Hkyp/zbAguNp9UJEBOjN6dlaK0S/NQYrSgP6zku4+4yGX9TWNWBkfGuCOZWj3qlBursp9SPJGdDj6IrsuirQT32VpCkiMC+pXq98vdRbtmFfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739254995; c=relaxed/simple;
-	bh=PV0mWqmAdYMvl5Hv3e7UkT26+zH8oclaLfygrOMSOZ0=;
+	bh=mcoeXqisQ9cCp+d9XJhL6+xR7Bjlo3DbBhHTGHu6E1M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DT91AZAhRdocJ29pqICmpMo3QQNHB2Y94Qx7bW9E4oRC2uUNbPazeauI9vyI1Ojr1BFwJa3SKA02OjYXbb+5K0jQXvdz+S0eJND1vewaPzBjCYRAX6J2+Q5UF9D43ME6pUc1nghUonrhlp/e2yc53Lsd620lGUuiiKwGGhea9kU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P4bmxKBN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nNLE44K8NbCdjcdNnLt9h15Bz4A1eQ4sKTBxfZRuoYiqHs/nmDFVFNAuFdksYIowhIxiIy6Yu5Z+Uj9g8VNqSlOPEfdTxMBwuG0/qB4Mr7TQTukL/EZfioqkd7TnrsvjoyGH5KuuU64KIBPMc654MJgCh9wEZSXCD9y1gyWtMPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sVN5nM0t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P4bmxKBN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A83E1C4CEED;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sVN5nM0t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7668C4CEEC;
 	Tue, 11 Feb 2025 06:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1739254994;
-	bh=PV0mWqmAdYMvl5Hv3e7UkT26+zH8oclaLfygrOMSOZ0=;
+	bh=mcoeXqisQ9cCp+d9XJhL6+xR7Bjlo3DbBhHTGHu6E1M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=P4bmxKBN1vTjyVRt/N5Uo0Yjtg8QrDXmWSiGFhUKn2cumXe1O5K82V9rbBNUbEIFY
-	 nS7E9fRwKgg9FeGgTGBiZTZI3QDTWr9vVasF9aymyxBiipBbuj18dT6OF9Mq4J+uaR
-	 eg61ThuqSXLx13D5svElPqISs/NcLz1FGE2UPtIEMn1s+Tqbg4Phjm1EQPKrwhiICB
-	 7w+CMg3oFeFK3nNO3eUa2L54c3myxiRmqW80VcMcw8ib/us63l7TIGTB8TClLWXWPg
-	 Fl9iXiDmgv4d/V9fQ83eVzG/BqpPht9DA0fVP3KKv2UyfnPbLZ7UCkQwRAZ2Vq2o5f
-	 ALe/PSGDWIOQg==
+	b=sVN5nM0tdhhy/eqByyC8XuNz3jFo4Gp+LWSGqFAzvzn93ltbUAis/axNGLDYhLCLP
+	 Nx7PcgBa7tXmIS4bC7MZp+jyAzj79R33cbLDxxsRxQ3KWuN5to3sU8dIuZWajsxuQa
+	 pbUfRU1uSbr3tN6Ozl7U8glhoKpLHOKJlCBek50XSwrqR9kB9J9CW4HOEdBAnwgYBX
+	 b1CBjgywTTR9/QQC5jzmgyEsksAz6Cs+8sv+My6iwWqUoHxq7/Brd4IH1CE7U52xrx
+	 0ggOHmJcmidyCfbWDACfeFpIaCS/DTxEWXjSJhoFIpTa9SgUG1gvEaYrahmrQ5yH2J
+	 /8oJzsOXNQaWQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1thjfs-00000008YBj-3t4i;
+	id 1thjfs-00000008YBf-3lxF;
 	Tue, 11 Feb 2025 07:23:12 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <mchehab+huawei@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <mchehab+huawei@kernel.org>,
 	linux-kernel@vger.kernel.org,
-	workflows@vger.kernel.org
-Subject: [PATCH 8/9] docs: submit-checklist: Allow creating cross-references for ABI README
-Date: Tue, 11 Feb 2025 07:23:02 +0100
-Message-ID: <76e60ee8717551f3d15d7c92b9c93bbf2ca8cff3.1739254867.git.mchehab+huawei@kernel.org>
+	netdev@vger.kernel.org
+Subject: [PATCH 7/9] docs: networking: Allow creating cross-references statistics ABI
+Date: Tue, 11 Feb 2025 07:23:01 +0100
+Message-ID: <a34ab9bef8f4e6b89dcb15098557fd3a7a9aa353.1739254867.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1739254867.git.mchehab+huawei@kernel.org>
 References: <cover.1739254867.git.mchehab+huawei@kernel.org>
@@ -53,26 +58,26 @@ Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
 Now that Documentation/ABI is processed by automarkup, let it
-generate cross-references for the ABI README file.
+generate cross-references for the corresponding ABI file.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/process/submit-checklist.rst | 2 +-
+ Documentation/networking/statistics.rst | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/process/submit-checklist.rst b/Documentation/process/submit-checklist.rst
-index 88b6358258d7..2abf8831cf74 100644
---- a/Documentation/process/submit-checklist.rst
-+++ b/Documentation/process/submit-checklist.rst
-@@ -52,7 +52,7 @@ Provide documentation
- 4) All new module parameters are documented with ``MODULE_PARM_DESC()``
+diff --git a/Documentation/networking/statistics.rst b/Documentation/networking/statistics.rst
+index 75e017dfa825..518284e287b0 100644
+--- a/Documentation/networking/statistics.rst
++++ b/Documentation/networking/statistics.rst
+@@ -143,7 +143,7 @@ reading multiple stats as it internally performs a full dump of
+ and reports only the stat corresponding to the accessed file.
  
- 5) All new userspace interfaces are documented in ``Documentation/ABI/``.
--   See ``Documentation/ABI/README`` for more information.
-+   See Documentation/ABI/README for more information.
-    Patches that change userspace interfaces should be CCed to
-    linux-api@vger.kernel.org.
+ Sysfs files are documented in
+-`Documentation/ABI/testing/sysfs-class-net-statistics`.
++Documentation/ABI/testing/sysfs-class-net-statistics.
  
+ 
+ netlink
 -- 
 2.48.1
 
