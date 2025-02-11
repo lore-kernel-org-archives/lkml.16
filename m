@@ -1,166 +1,129 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBFD135A53
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 04:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6842154BE0
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 04:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739246778; cv=none; b=GfVFpoF/C7awjfhnotavIiV8WNbB2FN6xKfidmM5oMCGdYyP8ZDx9XDxiN5xjOHYfpxLEaFAeVrcZRC+P001FMSJbWByu9gQxSnnkTYx5XmoHyHXDeMGxE//qrrQZA+MongrePAS4FQWUmz59adwrZgnGMURIzpvbKBsqrt/3c0=
+	t=1739246888; cv=none; b=thWMPYNPPOVlVkWgIfiIkDS/lkHLRh11DHj2Czgm0dtGtLAslnE4YNtkd/ovfW/yWEg5ARHqjulOCdbIVTbvoSnWPa4+ytmlayk5kHQGXRu+j5QbXR04XxIhvJ3SFI9RR7rDeGrtwlprGOTVpC4Ns3WZTqkBihw8R3QmkmoNYwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739246778; c=relaxed/simple;
-	bh=Y8Fb7c3oMJFhdqlpFFInDUQpR9IOTEPfZpM3xko40Ck=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I+C2S9eMTBR/6PYqEKrZ+pfX0NJqaJ+RoJ1wEX0PnrMxHxofGE+Fs++2b70HhiCChu/1Ks3uClDxOZsK7ZhzfVVtl74695Y6cTF0z/mJAnvQvnJ70+uuW/n2XvfSvgBgtA+KMEDyASid9AwTZ7i9Z+/Hnu6LKDIfKDSyY5ARmL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=zVZ+f+bC; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1739246888; c=relaxed/simple;
+	bh=b6XY/v5c1IShWi7Mnzp3g3rBRfTPLqoqs/fcWxDfeEk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TqlIZrUo/NUik7QPiv4GUZUm0hqe7g7tiBCgDRoKSwPsR4Y6qmFTSaWJZtm7FfAmphUY8DwALJdL0nP3vBmUE+73YFynET5tL3u3+LvtQbu8vAMtFB5z0qYW1VRahHZ9puV3sPTGVcb8lUSdV80JLKqKnU6zFe6UdD5/r6csygM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=b2Pwc+jJ; arc=none smtp.client-ip=209.85.210.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="zVZ+f+bC"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21f6022c2c3so47442795ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:06:16 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="b2Pwc+jJ"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-726e5aba2d8so463940a34.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 20:08:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739246776; x=1739851576; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zyKn8f6FlNrtiJWD+T1fk3XzsKPAFPZ0BSNq2D6GOdI=;
-        b=zVZ+f+bCNBJ8qKlfMcYNOmMk/9ffVieJwJSW8z31ufAqZdoHUEnVzz9Afcm8HQg2iJ
-         6s2FsqllFrWnxyxj60/30SiHaxFnKACuo7jkaxCCFkaH+oeu8+yDRl/Ss96A4A8ZEEHW
-         ygtWO62NzHAiFvHrY4+Em2DwLZtoXmfM/LMlPqxt3iyw1l4UtkvUcj/dfETUk+yIMbq0
-         yPG1F3h4DqN4EQ1a7eyL7FyAYlRhSYRtZ3xHLv6T4O25WjmC67BnT3mNZyrPGG34QjXG
-         BoqWfliw32xZ4S2zZmyOIOc0UURQOHshI4xi1nrZ4p5Qlpcz5xYirSFbp0bPrWgCYnLe
-         zEtA==
+        d=broadcom.com; s=google; t=1739246886; x=1739851686; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=t8eYWsGO5bR6d/A4TPLNpDeU5HcoQR1tHKfNDbSFT88=;
+        b=b2Pwc+jJ4jVFOaDwaDWWBD4g1f3mOtu5WE0oXVLvwulvsu6BXTJz7LRn88fibO6Y0C
+         KN3MT79GAbDfPYUZvDzwgZ4o6/Kk2+h8eyut371dXb3KZ6BUjFxTbKNFW1PjmiDPE6OJ
+         AHRhN5hTLmCbFU1TBDemGknqhnsfF4VliHBto=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739246776; x=1739851576;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zyKn8f6FlNrtiJWD+T1fk3XzsKPAFPZ0BSNq2D6GOdI=;
-        b=w3xUdXpI0z+tzPlWZvnLfmi77ftL8/A9qcu5ZY7V64k5byiwrZOJeT80QKwLPPY82/
-         GBIZJJ7gZ/dOwMqMS72s7ou9u40pc24NxWPj3LsPUzZsj3BNrLCiHnaPJUZ9AHOCPfYw
-         6izaoN8sZN4YZzClEmYkb9vHEppJP/RWADLfWc3fpPxvDMm2ki0fYa7HCLfy8Tv/C0t4
-         /qIBTjR5BhC6fXuXEWunP/PJDmuEwjvjLa5YjAA3fUdVk2f5Ibe0okUG/1Ah01pD8aXC
-         2hDhdSYocySAOv5q8HnRRIH3BR5Iumq5dGBmEsHjIxlCtsMtCo85hB0zSCGVVoOFF6GJ
-         pnZw==
-X-Forwarded-Encrypted: i=1; AJvYcCXGQ7pqQmeKi7xJBvqILT+Af3Y6Yde1VZfcBrwofGCo1rwilZwNpRqULqOWNyST3/laeHjCtNIy0xhjPzE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMqdDSEQxOHKNVFCF6+UOVIq6Z1LMbtalLvv9H4FiKXipPDQRi
-	oNpjekADm3PhA5Q36uMW8BkyPl29hKtaD6Jg1U+Mwwyhqxk2EIwSyRfnr/IC2hM=
-X-Gm-Gg: ASbGnctrEIJrlZpE36cBhsWnkukh+PCOcuEBwHW8sxhsAza0a7Xcwc5VSIc5UbLUBO4
-	/OCRljxGeNhHk1DYjNX0FwdsFFtne32qmvPWlBaQgYgGw0PMhn1FEOgXQDZ10w8EG6CdR7Z/G+Y
-	Bp0kn08vWMpa3Oanht8PFGN5yWgBnE5QqKXvNlnzYfW3jEscrs1uWWA3h3ciBiKDCsOpVZ7l/f3
-	N84b1/nE3CLuj/WgX206u5ZWH0oKetDRtq0a+VjftRhTvTRgoLNPhMH/UqFMhT3f8eiMM9iGA1D
-	0bi0HaPlILWA8jabllqQ6e1SoQ==
-X-Google-Smtp-Source: AGHT+IGlh9j8ErK64T4ScD+I1yhp+hSLhhu8tQ8C1OBgFV46tBgTiWjpNTOBq5c7bhEw0dyoInj7tg==
-X-Received: by 2002:a05:6a20:1591:b0:1ed:a4b1:9124 with SMTP id adf61e73a8af0-1ee4b5bfde2mr2966111637.8.1739246775980;
-        Mon, 10 Feb 2025 20:06:15 -0800 (PST)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73085c8360asm3653872b3a.132.2025.02.10.20.06.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 20:06:15 -0800 (PST)
-Date: Mon, 10 Feb 2025 20:06:12 -0800
-From: Deepak Gupta <debug@rivosinc.com>
-To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
-	linux-kselftest@vger.kernel.org,
-	Samuel Holland <samuel.holland@sifive.com>
-Subject: Re: [PATCH v2 01/15] riscv: add Firmware Feature (FWFT) SBI
- extensions definitions
-Message-ID: <Z6rMtBud/hsKYYIw@debug.ba.rivosinc.com>
-References: <20250210213549.1867704-1-cleger@rivosinc.com>
- <20250210213549.1867704-2-cleger@rivosinc.com>
+        d=1e100.net; s=20230601; t=1739246886; x=1739851686;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t8eYWsGO5bR6d/A4TPLNpDeU5HcoQR1tHKfNDbSFT88=;
+        b=Vwz/JCRsY9zYEwm75AXd9q/nd/fFgTodCWGUhGa0n4DOslRILORG4Ct9+xwhNftjja
+         UPNZhSTW905Qyc0+9pqW16tVqmRMJ/XzyQtbhkZ/6hkbb96/eeRtMzDZkdTnEtEV5d5u
+         2OniOtCD4kcZMeO5pzWDJOrxXs2UCsxkW1Prh+lPslXxj4soSD0Qq7nxHp8MdFy2/1Hk
+         OFi3rjwthzfqaoP6N26Bc6yjQU+9mIUHmGe4F/gON1PTANYKiIcC6QbIVruzlpXrFxsO
+         FuegX+YV4h/vwxK2WDi8FRmXblEZI4zomaV3RNK+adstAi1KRo4OEXHyDuL47Vml6aqi
+         nEmw==
+X-Forwarded-Encrypted: i=1; AJvYcCWFUanOKsBsT472Sz3nMbyAOwa4sMr3NHmj13zfLWyCO+tfDDJAE3ozzWYSig0fy+T8qMQbK5PR8FYjGX0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmWMaafEnqRC3Irc068ZKnM6P6SOpM1q82BtZyPMrWNvaIKQx/
+	oWb1m4FxbrhV6bOCTmnDQfqjQiUiq7ih0uZZrVPgvAb82DPCtil1uBoG9PDaow==
+X-Gm-Gg: ASbGncvgJZUOfQBbLOrO90TSYDshqYV/9FhWzoVsR0BI2KEwwqzxO7Tg0Ur514cEgci
+	04VvBM5nK+ujfdSwyt7FyPXGrbhvjQGxnUEoHwX671NH5CMkVCJqQfuKtYwrStxzZrv2h9Anzx8
+	DxtScjcJ1bjsrbRwJAM1hyKiwVmtEcFitP9WZ3cRUX8SIqqy+PtYsINu84AMMbNebhIBFOEQ+sQ
+	PdY5HC4IL+s9dpXnHbNBXEb/wLMcL9yxqdePo8IjbGgskAmba8KiPQKKNu4rKms4KHfOGkWdSTM
+	D0T/vBnDQb1kUJR/TrZCxHDBkkMJOs0ybwgqnjHaOBdkQKprhjctX7EBxYGNmijTEA==
+X-Google-Smtp-Source: AGHT+IFapi4wMv31NrAKWbcvGGOIg6pfCWW86OI3QXYEtKOl36IiOEMw2fKlDSL1dacmx7ZY5EhBlg==
+X-Received: by 2002:a05:6830:6d11:b0:726:ea48:5993 with SMTP id 46e09a7af769-726ea485bb5mr589459a34.2.1739246885929;
+        Mon, 10 Feb 2025 20:08:05 -0800 (PST)
+Received: from [192.168.1.3] (ip68-4-215-93.oc.oc.cox.net. [68.4.215.93])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726e93d873csm380757a34.47.2025.02.10.20.08.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 20:08:04 -0800 (PST)
+Message-ID: <d6f3bedd-11b9-4eaf-a8a2-a6da460fc7b3@broadcom.com>
+Date: Mon, 10 Feb 2025 20:08:01 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250210213549.1867704-2-cleger@rivosinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] clk: bcm: rpi: Fix potential NULL pointer dereference
+To: Chenyuan Yang <chenyuan0y@gmail.com>, mturquette@baylibre.com,
+ sboyd@kernel.org
+Cc: bcm-kernel-feedback-list@broadcom.com, richardcochran@gmail.com,
+ dave.stevenson@raspberrypi.com, popcornmix@gmail.com, mripard@kernel.org,
+ u.kleine-koenig@baylibre.com, nathan@kernel.org, linux-clk@vger.kernel.org,
+ linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, zzjas98@gmail.com
+References: <20250211000917.1739835-1-chenyuan0y@gmail.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250211000917.1739835-1-chenyuan0y@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 10, 2025 at 10:35:34PM +0100, Clément Léger wrote:
->The Firmware Features extension (FWFT) was added as part of the SBI 3.0
->specification. Add SBI definitions to use this extension.
->
->Signed-off-by: Clément Léger <cleger@rivosinc.com>
->Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
->Tested-by: Samuel Holland <samuel.holland@sifive.com>
->---
-> arch/riscv/include/asm/sbi.h | 33 +++++++++++++++++++++++++++++++++
-> 1 file changed, 33 insertions(+)
->
->diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
->index 3d250824178b..d373b5c08039 100644
->--- a/arch/riscv/include/asm/sbi.h
->+++ b/arch/riscv/include/asm/sbi.h
->@@ -35,6 +35,7 @@ enum sbi_ext_id {
-> 	SBI_EXT_DBCN = 0x4442434E,
-> 	SBI_EXT_STA = 0x535441,
-> 	SBI_EXT_NACL = 0x4E41434C,
->+	SBI_EXT_FWFT = 0x46574654,
->
-> 	/* Experimentals extensions must lie within this range */
-> 	SBI_EXT_EXPERIMENTAL_START = 0x08000000,
->@@ -402,6 +403,33 @@ enum sbi_ext_nacl_feature {
-> #define SBI_NACL_SHMEM_SRET_X(__i)		((__riscv_xlen / 8) * (__i))
-> #define SBI_NACL_SHMEM_SRET_X_LAST		31
->
->+/* SBI function IDs for FW feature extension */
->+#define SBI_EXT_FWFT_SET		0x0
->+#define SBI_EXT_FWFT_GET		0x1
->+
->+enum sbi_fwft_feature_t {
->+	SBI_FWFT_MISALIGNED_EXC_DELEG		= 0x0,
->+	SBI_FWFT_LANDING_PAD			= 0x1,
->+	SBI_FWFT_SHADOW_STACK			= 0x2,
->+	SBI_FWFT_DOUBLE_TRAP			= 0x3,
->+	SBI_FWFT_PTE_AD_HW_UPDATING		= 0x4,
->+	SBI_FWFT_POINTER_MASKING_PMLEN		= 0x5,
->+	SBI_FWFT_LOCAL_RESERVED_START		= 0x6,
->+	SBI_FWFT_LOCAL_RESERVED_END		= 0x3fffffff,
->+	SBI_FWFT_LOCAL_PLATFORM_START		= 0x40000000,
->+	SBI_FWFT_LOCAL_PLATFORM_END		= 0x7fffffff,
->+
->+	SBI_FWFT_GLOBAL_RESERVED_START		= 0x80000000,
->+	SBI_FWFT_GLOBAL_RESERVED_END		= 0xbfffffff,
->+	SBI_FWFT_GLOBAL_PLATFORM_START		= 0xc0000000,
->+	SBI_FWFT_GLOBAL_PLATFORM_END		= 0xffffffff,
->+};
->+
->+#define SBI_FWFT_PLATFORM_FEATURE_BIT		(1 << 30)
->+#define SBI_FWFT_GLOBAL_FEATURE_BIT		(1 << 31)
->+
->+#define SBI_FWFT_SET_FLAG_LOCK			(1 << 0)
->+
-> /* SBI spec version fields */
-> #define SBI_SPEC_VERSION_DEFAULT	0x1
-> #define SBI_SPEC_VERSION_MAJOR_SHIFT	24
->@@ -419,6 +447,11 @@ enum sbi_ext_nacl_feature {
-> #define SBI_ERR_ALREADY_STARTED -7
-> #define SBI_ERR_ALREADY_STOPPED -8
-> #define SBI_ERR_NO_SHMEM	-9
->+#define SBI_ERR_INVALID_STATE	-10
->+#define SBI_ERR_BAD_RANGE	-11
->+#define SBI_ERR_TIMEOUT		-12
 
-nit: Space mis-aligned(^)	^
 
-otherwise
-Reviewed-by: Deepak Gupta <debug@rivosinc.com>
+On 2/10/2025 4:09 PM, Chenyuan Yang wrote:
+> The `init.name` could be NULL. Add missing check in the
+> raspberrypi_clk_register().
+> This is similar to commit 3027e7b15b02
+> ("ice: Fix some null pointer dereference issues in ice_ptp.c").
+> Besides, bcm2835_register_pll_divider() under the same directory also
+> has a very similar check.
+> 
+> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
 
->+#define SBI_ERR_IO		-13
->+#define SBI_ERR_DENIED_LOCKED	-14
->
-> extern unsigned long sbi_spec_version;
-> struct sbiret {
->-- 
->2.47.2
->
->
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
+
