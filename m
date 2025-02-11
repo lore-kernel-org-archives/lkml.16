@@ -1,28 +1,80 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F6C1EF088;
-	Tue, 11 Feb 2025 16:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9DB2505C8
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739290413; cv=none; b=Kdf2QNYY/jOT7Ob0EXVQLI5iZQo00vlJw0S6rvP2kG+hLUqm5hwogNQv0CEpLFQiY4C9fhAH/32O5U+jZn6RWsFpFiurT0WcUEnQM9RerKL3QlFTA3oszsprLJnOaywsbn2A6IRCOYTx2F6jg4tVcUg0EELZZLVWkEjcduoIW94=
+	t=1739290441; cv=none; b=T8pWTFKPA1ZWKsnAfDuzPZiMyW0UI0q9vUI1W61KHX0N8w929jsZgYGhzTGI36Jlh8RhcaQ098pTUVlIlyIHV8f6kp/r/GYHvUwkZr0wFbI6E6tmzvqSrWbGsnGlzvB8buZ0d9eOUydktye4UTMtRttQ4FxDfQIazMbQtpxjRY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739290413; c=relaxed/simple;
-	bh=T15Mx9ZuiwR6vVMrQDZVNExHxsiOFJWhmUatt2oISjQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=mABWLAX1zZNBsc9RBUL2/O0a9h8rqTyPevU5xgHayeletvTz/XUv/Lj1Pt6oup6zJF84FnBT+J5n5Xm9J71AUdlXAZWbMaD9nt8Humaw/s332Nlj5wX3GSEysqE48b6co+K0cGvn8IYWfAKRpDUB4CFrX/7r+uEgeLDHv+bQ74I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	s=arc-20240116; t=1739290441; c=relaxed/simple;
+	bh=fBXYzcqvIbd45QOCvQrKCQ9uKzMybGKj5Y3ci1KNHZg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bLr6oo5NjkNhRMgt0YrALX4hzRC4h2ozQh9npmWreSQ4c7Hhfm/tzQViayuZYx7OPpRAwNpTiJMG2KvdS4f0apT7v/npMa7fm8ptBNck5vEXaIBT2Aiy0F7vDrNfwS8Oambmch/q02GUCmSe1NCDjPxLMQa6svQifLiyQLlxago=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LsPOHtxD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=zqQ5h6Se; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LsPOHtxD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=zqQ5h6Se; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LsPOHtxD";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="zqQ5h6Se";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LsPOHtxD";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="zqQ5h6Se"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id AC8D461E64870;
-	Tue, 11 Feb 2025 17:12:47 +0100 (CET)
-Message-ID: <3ded4075-e2f9-4231-9c3f-49a14fbbde1e@molgen.mpg.de>
-Date: Tue, 11 Feb 2025 17:12:47 +0100
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 18882340B9;
+	Tue, 11 Feb 2025 14:33:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739284436; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wP4TiwjPCAJH4FpvrSugoXVfViPrtoVII+IT/shhIyA=;
+	b=LsPOHtxDyXmjO7R5FP4U3CHNFHEuIJ8z5Rav6kW8+hmDdu4vu94LHQF7p4qp78e+nrcna3
+	CC77R91ptd6o0H+00HdAfapC2/L9ngL1Y6ujuwPW33mvnF3E46rj54MyO51LHYB0/bJbTy
+	/NX/fO6/w3+6CI3JPBPhtKgVVZyw9Pk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739284436;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wP4TiwjPCAJH4FpvrSugoXVfViPrtoVII+IT/shhIyA=;
+	b=zqQ5h6SeLM3p46dSgh7OSMqmCIhwpsQSPOrMs8N4DHLTVcANt70307YKiESEnLgz7NSvET
+	Q01DIafhRuSrqsDw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739284436; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wP4TiwjPCAJH4FpvrSugoXVfViPrtoVII+IT/shhIyA=;
+	b=LsPOHtxDyXmjO7R5FP4U3CHNFHEuIJ8z5Rav6kW8+hmDdu4vu94LHQF7p4qp78e+nrcna3
+	CC77R91ptd6o0H+00HdAfapC2/L9ngL1Y6ujuwPW33mvnF3E46rj54MyO51LHYB0/bJbTy
+	/NX/fO6/w3+6CI3JPBPhtKgVVZyw9Pk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739284436;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wP4TiwjPCAJH4FpvrSugoXVfViPrtoVII+IT/shhIyA=;
+	b=zqQ5h6SeLM3p46dSgh7OSMqmCIhwpsQSPOrMs8N4DHLTVcANt70307YKiESEnLgz7NSvET
+	Q01DIafhRuSrqsDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BA1D213782;
+	Tue, 11 Feb 2025 14:33:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id CnwFLNNfq2cLUQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 11 Feb 2025 14:33:55 +0000
+Message-ID: <428f88f2-1f30-4018-8113-1c4716288789@suse.de>
+Date: Tue, 11 Feb 2025 15:33:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,139 +82,145 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Warnings `Could not retrieve perf counters (-19)` and
- `amd_pstate: the _CPC object is not present in SBIOS or ACPI disabled` (Dell
- PowerEdge R7625, AMD EPYC 9174F)
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-To: Gautham Ranjal Shenoy <gautham.shenoy@amd.com>,
- Mario Limonciello <Mario.Limonciello@amd.com>, Ray Huang
- <Ray.Huang@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
-Cc: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <2b811df7-5278-4cfc-b8a0-7d6d72d3358d@molgen.mpg.de>
- <5dff1719-c4e9-4ebf-ae0b-73b9de98df05@amd.com>
- <DS7PR12MB82528A694056F1FBA20CE01E96EF2@DS7PR12MB8252.namprd12.prod.outlook.com>
- <d09f52d8-e084-4875-9608-5b3db2554f3d@molgen.mpg.de>
- <e26bc00f-1675-4aac-bd02-60774ff5901a@molgen.mpg.de>
+Subject: Re: [PATCH v2 01/15] drm/vkms: Fix use after free and double free on
+ init error
+To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
+ louis.chauvet@bootlin.com
+Cc: hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, airlied@gmail.com,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250211110912.15409-1-jose.exposito89@gmail.com>
+ <20250211110912.15409-2-jose.exposito89@gmail.com>
 Content-Language: en-US
-In-Reply-To: <e26bc00f-1675-4aac-bd02-60774ff5901a@molgen.mpg.de>
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250211110912.15409-2-jose.exposito89@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TAGGED_RCPT(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,bootlin.com];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,ffwll.ch,linux.intel.com,kernel.org,lists.freedesktop.org,vger.kernel.org];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -2.80
+X-Spam-Flag: NO
 
-Dear Linux folks,
+Hi
 
+Am 11.02.25 um 12:08 schrieb José Expósito:
+> If the driver initialization fails, the vkms_exit() function might
+> access an uninitialized or freed default_config pointer and it might
+> double free it.
+>
+> Fix both possible errors by initializing default_config only when the
+> driver initialization succeeded.
 
-Am 28.01.25 um 16:08 schrieb Paul Menzel:
-> [Cc: +x86 maintainers and ACPI list]
+Could you send this patch separately, so that it can go into 
+drm-misc-fixes quickly?
 
-> Am 28.01.25 um 11:49 schrieb Paul Menzel:
-> 
->> Thank you for your quick replies. Gautham, messages with HTML are 
->> rejected by Linux kernel lists.
->>
->>
->> Am 28.01.25 um 04:51 schrieb Shenoy, Gautham Ranjal:
->>
->>> As Mario mentioned, you need to enable the CPPC option. Looking for 
->>> some of the Dell PowerEdge documentation, there is an option called 
->>> "Collaborative CPU Performance Control" (https://www.dell.com/ 
->>> support/manuals/en-in/poweredge-r730/r730_ompublication/system- 
->>> profile-settings-details?guid=guid-2e9b46a1-71e3-4072-9d86- 
->>> db648757f0e6&lang=en-us).
->>>
->>> [cid:fe57df8f-3d99-4ea0-8f6e-b0daae49bb0e]
->>> Can you please try enabling it ?
->>
->> You quoted the Dell PowerEdge R730. I couldn’t find it in the *Dell 
->> PowerEdge R7625 Installation and Service Manual* [1], and also it’s 
->> not listed in the iDRAC9 Web site (attached with added `.txt` 
->> extension to trick the Linux list).
-> 
-> The amd_pstate warning seems to be related to the perf counters warning 
-> Linux prints earlier:
-> 
->      $ dmesg --level alert,crit,err,warn
->      [    2.666393] Spectre V2 : WARNING: Unprivileged eBPF is enabled with eIBRS on, data leaks possible via Spectre v2 BHB attacks!
->      [    8.109446] Could not retrieve perf counters (-19)
->      [    9.386551] scsi 0:0:4:0: set ignore_delay_remove for handle(0x0012)
->      [    9.487804] amd_pstate: the _CPC object is not present in SBIOS or ACPI disabled
->      [   14.726193] wmi_bus wmi_bus-PNP0C14:00: [Firmware Bug]: WQBC data block query control method not found
-> 
-> x86 maintainers, the original report with the Linux logs attached is in 
-> the archive [3].
-> 
-> It looks like, there is something missing in the Dell firmware to enable 
-> the feature.
-> 
-> The perf counters warning is from `amd_set_max_freq_ratio()` in `arch/ 
-> x86/kernel/acpi/cppc.c`:
-> 
-> ```
-> static void amd_set_max_freq_ratio(void)
-> {
->          struct cppc_perf_caps perf_caps;
->          u64 numerator, nominal_perf;
->          u64 perf_ratio;
->          int rc;
-> 
->          rc = cppc_get_perf_caps(0, &perf_caps);
->          if (rc) {
->                  pr_warn("Could not retrieve perf counters (%d)\n", rc);
->                  return;
->          }
->          […]
-> }
-> ```
-> 
-> With
-> 
->      include/uapi/asm-generic/errno-base.h:#define    ENODEV        19    /* No such device */
-> 
-> this is returned by in `drivers/acpi/cppc_acpi.c`:
-> 
-> ```
-> /**
->   * cppc_get_perf_caps - Get a CPU's performance capabilities.
->   * @cpunum: CPU from which to get capabilities info.
->   * @perf_caps: ptr to cppc_perf_caps. See cppc_acpi.h
->   *
->   * Return: 0 for success with perf_caps populated else -ERRNO.
->   */
-> int cppc_get_perf_caps(int cpunum, struct cppc_perf_caps *perf_caps)
-> {
->          struct cpc_desc *cpc_desc = per_cpu(cpc_desc_ptr, cpunum);
->          […]
->          if (!cpc_desc) {
->                  pr_debug("No CPC descriptor for CPU:%d\n", cpunum);
->                  return -ENODEV;
->          }
->          […]
-> }
-> ```
+Best regards
+Thomas
 
-@AMD folks, just for clarity. Did Dell something with their firmware? If 
-so, are you going to work with Dell on a solution, or do I need to 
-report the issue to them?
+>
+> Reported-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> Link: https://lore.kernel.org/all/Z5uDHcCmAwiTsGte@louis-chauvet-laptop/
+> Fixes: 2df7af93fdad ("drm/vkms: Add vkms_config type")
+> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+> ---
+>   drivers/gpu/drm/vkms/vkms_drv.c | 15 +++++++++------
+>   1 file changed, 9 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
+> index 7c142bfc3bd9..b6de91134a22 100644
+> --- a/drivers/gpu/drm/vkms/vkms_drv.c
+> +++ b/drivers/gpu/drm/vkms/vkms_drv.c
+> @@ -235,17 +235,19 @@ static int __init vkms_init(void)
+>   	if (!config)
+>   		return -ENOMEM;
+>   
+> -	default_config = config;
+> -
+>   	config->cursor = enable_cursor;
+>   	config->writeback = enable_writeback;
+>   	config->overlay = enable_overlay;
+>   
+>   	ret = vkms_create(config);
+> -	if (ret)
+> +	if (ret) {
+>   		kfree(config);
+> +		return ret;
+> +	}
+>   
+> -	return ret;
+> +	default_config = config;
+> +
+> +	return 0;
+>   }
+>   
+>   static void vkms_destroy(struct vkms_config *config)
+> @@ -269,9 +271,10 @@ static void vkms_destroy(struct vkms_config *config)
+>   
+>   static void __exit vkms_exit(void)
+>   {
+> -	if (default_config->dev)
+> -		vkms_destroy(default_config);
+> +	if (!default_config)
+> +		return;
+>   
+> +	vkms_destroy(default_config);
+>   	kfree(default_config);
+>   }
+>   
 
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
-Kind regards,
-
-Paul
-
-
->> PS:
->>
->>> -- 
->>>
->>> Thanks and Regards
->>>
->>> Gautham.
->>
->> Only if you care: Your signature delimiter misses a space at the end [2].
->>
->>
->> [1]: https://www.dell.com/support/manuals/de-de/poweredge-r7625/per7625_ism_pub/system-profile-settings?guid=guid-9f6b6652-4079-45e7-90f5-1c8feee08ec0&lang=en-us
->> [2]: https://en.wikipedia.org/wiki/Signature_block#Standard_delimiter
-> [3]: https://lore.kernel.org/linux-pm/d09f52d8-e084-4875-9608-5b3db2554f3d@molgen.mpg.de/T/#t
