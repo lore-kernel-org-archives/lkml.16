@@ -1,122 +1,136 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8A521CFF7;
-	Tue, 11 Feb 2025 14:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B298326BD81;
+	Tue, 11 Feb 2025 14:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739283452; cv=none; b=bKiRfl/dL2cyhS7u/fjdx6q30RCo7oii3tpRpKxCn/Qb8a76/B2xzmqEtoGA6uv5M/RDpuneUPMOX+Nn6Sr8/UzZYDXmAlZ16+JgWkEjibffKDCTxrf/uSu6CK2dma+nr3siz/4RTbQ8VrfAiV2bkoSdLRbNjGZxWCx8ENXYhQc=
+	t=1739283597; cv=none; b=ge3BJM61YhmoyjY6Fg3OwGZSv9CAasjZzwk8AM/o8Vdv6lGn7+wF+tpEnBEKqi+reLlxOcDaBq+xd3yUXyZCgZAFobmlYlI7usZEdd2buOpQ+Oy8pehloSqQvRJfBs54Y2br8X/zbmPQ/x/oMJukqLSmXTZmFBptVndcFdudMOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739283452; c=relaxed/simple;
-	bh=SmwVOJacQQIK0j96xWuWDgRYwecrtkIrxPxHtNzHsyY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YRPnFWQNQnn4vDdDqc0NS1OeFz7wTS1iRpdfd2Cwl2zRam6W691nwJyqxj9YEkpwb9nPiHcX/S6VFBlV796l3DznUM55nrHDxiztyIfrDSl8qNYN7Eqh528cQ/kdpPdISl3IIdWWFuupvizUj44cI6dSA8hvcN+NRJG7DMIgKng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XoZpnJdO; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1739283597; c=relaxed/simple;
+	bh=9MU8B4Zf/sssug2V4L9tuSKzfCjLkDsIxE5odcilTvA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kO7GDJrTUUM1//hGEH70gpXlnZyYAw+lybbReU98iheRPdAB/JlYjc2D9SUL/iK+tW6Li57+0XOPtQ4SLZn9vFZTkkXSe833ho7l29MDZQ57yHypHvlzyJEZGIC5ouQ9WTRuc/FmJ2dHoTrYejbKRF7LBjlAkhQPAWsh6Tfd24Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TMiBQlsq; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XoZpnJdO"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 905ED442DD;
-	Tue, 11 Feb 2025 14:17:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739283448;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U3cEbMgdG/cSxsTwGIcw+aHcYtjO45AnThYLCWBr9Ns=;
-	b=XoZpnJdO7lsGL2P7mxYF0Ti8Rm8DTDdofRUkWH2Us/cNi+tQS5ZzA+7McFDisNb5hzLthn
-	wqnDYt2Qknn18l8DHvezjeshVUY3CXY67Ih3TCJ/GJz059KBTHEZzsDkiyqKikCvto87fk
-	6p+vtyeajKRhneYboAvf/wzuVe2ZR8RmoyKfIXI2mVbugt36sqnzBTP+m7UgowoJL/FGZl
-	IC8fmP58UwVuEoyBqIRinlb55pYW0ZSmeNbHYVwBJI126Hb3diE7uJOdAddzwV4v8d36vm
-	zYfp4NG8AWH2UBwM+mqmrmoj2HGe3UObW9+F7mBQJiuMKuv7gPnU99vcbzKvlg==
-Date: Tue, 11 Feb 2025 15:17:23 +0100
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Kory Maincent <kory.maincent@bootlin.com>, davem@davemloft.net,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, thomas.petazzoni@bootlin.com, Jakub Kicinski
- <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
- linux-arm-kernel@lists.infradead.org, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
- Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit
- <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>, Marek
- =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Oleksij Rempel
- <o.rempel@pengutronix.de>, =?UTF-8?B?Tmljb2zDsg==?= Veronese
- <nicveronese@gmail.com>, Simon Horman <horms@kernel.org>,
- mwojtas@chromium.org, Antoine Tenart <atenart@kernel.org>,
- devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, Romain
- Gantois <romain.gantois@bootlin.com>
-Subject: Re: [PATCH net-next 03/13] net: phy: Introduce PHY ports
- representation
-Message-ID: <20250211151723.22a922b0@fedora.home>
-In-Reply-To: <0ae41811-e16b-4e64-9fc4-9cb4ea1da697@lunn.ch>
-References: <20250207223634.600218-1-maxime.chevallier@bootlin.com>
-	<20250207223634.600218-4-maxime.chevallier@bootlin.com>
-	<20250211143209.74f84a10@kmaincent-XPS-13-7390>
-	<0ae41811-e16b-4e64-9fc4-9cb4ea1da697@lunn.ch>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TMiBQlsq"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21f53ad05a0so68991165ad.3;
+        Tue, 11 Feb 2025 06:19:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739283595; x=1739888395; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1agFsb596cmb7w+8srnvvBsWS62p0CbY0pcV23aPyFs=;
+        b=TMiBQlsqpKFjt5e7LNyoR2sjqt+AmxWb3fPLX7P+/Z9K9RdqBTU8SLDIHHs1caEXgs
+         B2IdyKPZAjuGYxSbbcNU5PoIobIfm+8Sx22tSGpJlZFVpZ2bOg/53rBHeOJvsnk+c8PY
+         IrGnhYiB2+3+NIyVmQ1BT1MyIPoY9t60HBi6NKSMi5ezB1SMSu5OAG/gMSKbTNCu7ziV
+         QWAUBob91zVuDp1p+cVXORddJPPizTac84hmErlbFGtFE3zy/yS8PcZK13b41fS7+dZV
+         6oG4DiIpNNdCYmPKTdLm/zak+22IbrukByoM9O4GiRryJhj+bIzMffNLIT0o6dZ81en7
+         28Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739283595; x=1739888395;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1agFsb596cmb7w+8srnvvBsWS62p0CbY0pcV23aPyFs=;
+        b=tGCYP1o6GVEP4i91A5HMW2S00hqcKNXYAXeUgdkmjJyPbyN3xqk1uB4uOsbvUeQ8HR
+         7GSpXE1kZCj+BbuDW6iuq57N9QWHdeyzWVmGEnldpbhXYstT11T1YdafcnTmWtcr0YCv
+         w72xaiaCBN6NWNPMPomCTyUsSuc2giHOv3k062mkjyeUGGOgQf9thlG3VW1ci0W4fctr
+         1hZCtxJCR82QmKLYn4F2Alz21KH3KS8Jiz3gMCicaZK/D1WAGpolwIcfdUezHbzc0nvP
+         6r776XnanA6Fhi7ZUjA1I++WBKjJ2zetqyA6xwzUcA76ChTnOf80cF0dgMma7FHU1xPF
+         i0Zg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNAhj0wdd400aQtGMl5VxaeWiOXisdDjIQ+ZYMRijSszWN0cibIhCI7TKa9pQrJ0a2fDs=@vger.kernel.org, AJvYcCX5gbGcfPGKclONBHW5TKXWSm3N55AYjAVBD6iUpvdU+VOr3ZzlhFjXe9xTX+tPjsXJfC1tdsmY6pqmodZw@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlG1SdFWmQxiad8mmpRCBOayiKCh36mrnVaFtdNWr4aGstxACV
+	ezWbrMBNMY1SFMhWl7+DxYZxYh3U//YtCTO5UbLhq1rUw+jqomkG
+X-Gm-Gg: ASbGncuP/D0NEhlM3krmtokntNWkaNVAe4qighn6pjHBM6BYsZtIY+mj6GJwGM6mg4k
+	xFfcnCmXJEDFi+nrt57GjerY7a/FiyPxOOPv0Qk9c1EHGDF46Fo+TqMD4Nqzjj7JPp1s9mWxkVF
+	vFAV8Hxo9NjK9C0dYfZiATFvSS9bE7TPAt5luZgm4Re+k66YyfRKdy/sY3vPcu+O84CoTgh3gMb
+	1qjNm09ZzQq5yWup+VDo3vbez8IKUFVXdm65E5Hxwidwbi16UdnXJCTSyVPWaB+kGxp2Tl2ZbYJ
+	o1yO56AMN3dXPWg=
+X-Google-Smtp-Source: AGHT+IE48JuX3nPPLzhsj9EAcEo6AShv7US7cecHIDUEyOdtEqptcml0fXqMZO/fDCCntN8pDpyWrw==
+X-Received: by 2002:a17:902:ecc1:b0:216:4c88:d939 with SMTP id d9443c01a7336-21fb64a81a8mr58785785ad.38.1739283594851;
+        Tue, 11 Feb 2025 06:19:54 -0800 (PST)
+Received: from localhost ([216.228.125.130])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3653babfsm96602005ad.68.2025.02.11.06.19.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 06:19:54 -0800 (PST)
+Date: Tue, 11 Feb 2025 09:19:52 -0500
+From: Yury Norov <yury.norov@gmail.com>
+To: Andrea Righi <arighi@nvidia.com>
+Cc: Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
+	Changwoo Min <changwoo@igalia.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>, Ian May <ianm@nvidia.com>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] sched_ext: idle: Per-node idle cpumasks
+Message-ID: <Z6tciKa58iqWZ3eM@thinkpad>
+References: <20250207211104.30009-1-arighi@nvidia.com>
+ <20250207211104.30009-6-arighi@nvidia.com>
+ <Z6ju7vFK5TpJamn5@thinkpad>
+ <Z6owBvYiArjXvIGC@thinkpad>
+ <Z6r9H6JukZi19dQP@gpd3>
+ <Z6r_NZui9GibrQHY@gpd3>
+ <Z6sddk2otmAVrfcb@gpd3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeguddvvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegveeltddvveeuhefhvefhlefhkeevfedtgfeiudefffeiledttdfgfeeuhfeukeenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvkedprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdpr
- hgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhmshhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6sddk2otmAVrfcb@gpd3>
 
-On Tue, 11 Feb 2025 15:04:27 +0100
-Andrew Lunn <andrew@lunn.ch> wrote:
-
-> > With net drivers having PHY managed by the firmware or DSA, there is no linux
-> > description of their PHYs.  
+On Tue, Feb 11, 2025 at 10:50:46AM +0100, Andrea Righi wrote:
+> On Tue, Feb 11, 2025 at 08:41:45AM +0100, Andrea Righi wrote:
+> > On Tue, Feb 11, 2025 at 08:32:51AM +0100, Andrea Righi wrote:
+> > > On Mon, Feb 10, 2025 at 11:57:42AM -0500, Yury Norov wrote:
+> > > ...
+> > > > > > +/*
+> > > > > > + * Find the best idle CPU in the system, relative to @node.
+> > > > > > + */
+> > > > > > +s32 scx_pick_idle_cpu(const struct cpumask *cpus_allowed, int node, u64 flags)
+> > > > > > +{
+> > > > > > +	nodemask_t unvisited = NODE_MASK_ALL;
+> > > > 
+> > > > This should be a NODEMASK_ALLOC(). We don't want to eat up too much of the
+> > > > stack, right?
+> > > 
+> > > Ok, and if I want to initialize unvisited to all online nodes, is there a
+> > > better than doing:
+> > > 
+> > >   nodemask_clear(*unvisited);
+> > >   nodemask_or(*unvisited, *unvisited, node_states[N_ONLINE]);
+> > > 
+> > > We don't have nodemask_copy() right?
+> > 
+> > Sorry, and with that I mean nodes_clear() / nodes_or() / nodes_copy().
 > 
-> DSA should not be special, Linux is driving the PHY so it has to exist
-> as a linux device.
+> Also, it might be problematic to use NODEMASK_ALLOC() here, since we're
+> potentially holding raw spinlocks. Maybe we could use per-cpu nodemask_t,
+> but then we need to preempt_disable() the entire loop, since
+> scx_pick_idle_cpu() can be be called potentially from any context.
 > 
-> Firmware is a different case. If the firmware has decided to hide the
-> PHY, the MAC driver is using a higher level API, generally just
-> ksetting_set etc. It would be up to the MAC driver to export its PHY
-> topology and provide whatever other firmware calls are needed. We
-> should keep this in mind when designing the kAPI, but don't need to
-> actually implement it. The kAPI should not directly reference a
-> phydev/phylink instance, but an abstract object which represents a
-> PHY.
+> Considering that the maximum value for NODE_SHIFT is 10 with CONFIG_MAXSMP,
+> nodemask_t should be 128 bytes at most, that doesn't seem too bad... Maybe
+> we can accept to have it on the stack in this case?
 
-That's fine by me for the port representation, and I'm on the same page
-here. In the end, the ways for a NIC to register its interfaces would
-be :
+If you expect calling this in strict SMP lock-held or IRQ contexts, You
+need to be careful about stack overflow even mode. We've got GFP_ATOMIC
+for that:
+     non sleeping allocation with an expensive fallback so it can access
+     some portion of memory reserves. Usually used from interrupt/bottom-half
+     context with an expensive slow path fallback.
 
- - phylib, as done in this series. The port is controlled by the PHY,
-the phy_port_ops are implemented in the PHY driver + phylib, we
-discover the ports based on what the PHY reports, the new port binding
-and the presence of an SFP phandle under the PHY.
-
- - phylink, and what I mean by phylink is actually SFP (phylink is the
-SFP upstream in PHY-less SFP setups, so it would create the phy_port,
-nothing more). what we cover here are MACs that are connected directly
-to an SFP cage. This is simply because phylink parses the sfp phandle,
-so it's an easy spot to make sure we create the NIC's port without
-rewriting all drivers.
-
- - NIC drivers themselves, for drivers that don't use phylink/phylib.
-
-For now this series only has the "phy_add_port" kAPI, which only really
-covers case 1. But netdev_add_port() can clearly be implemented as well.
-
-I'm having a hard time splitting that work in digestable chunks :(
-I've focused on PHY as a reference use for ports, but the end-goal
-clearly is a generic way to expose what interfaces a netdev has, either
-through PHY, SFP or firmware.
+Check Documentation/core-api/memory-allocation.rst for other options.
+You may be interested in __GFP_NORETRY as well.
 
 Thanks,
-
-Maxime
+Yury
