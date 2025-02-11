@@ -1,107 +1,97 @@
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322271C5D40;
-	Tue, 11 Feb 2025 15:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD9F1C5D40;
+	Tue, 11 Feb 2025 15:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739288926; cv=none; b=o1eQZv6ITow8IHDVWIUGu61rCe9lDTetX50UavTooi8nw93Oo5MyBcoyhSROBJnPQTKLo+jjzAnXJqxLNUUTVzTWTFjX6k/ZjpMw5vsK0DfPTDdBV7xLd7ZWKg9hPbRFnh1q6r7qiRwonWz/+YPWbJVdf3E9cjHBqLAE6cC/uME=
+	t=1739288948; cv=none; b=NUxGo/q/4NYdK8erDOGujZ+HYdHMWeWpUyyiFuESXu0P2Fdh8cIQ4p7hJjG9UoKkI3qf3oedIlXnd9KD88UmCjejIMXw5Ah8xSs9L2NEQxBDSgoPzqHQNtwawN6vhmie0btC/O7LLFt3FuflJEPdDBWZC5T7mSIJieucV3YNZoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739288926; c=relaxed/simple;
-	bh=/aF/rqtzU2Jnz0v2tKa8+Wn02XYCmXDxt34zx65zn78=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=edIeyaQASa5IZrH2TwhdPbwOZTWG4bP9aRCHBUSGXJQ/4wLChYoLiF8sLt1kzhKMiLsl7S7j8DpjPV9vsrYWN/hCSQw15YYgyOcJJF0V9XyZUA0AOf0+2ccMuC1qFLkiLZGy++LmZGlgzW6UipDTWRk6mRJ6Rpd5GDPoPk3vXTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-8622c3be2f4so1344593241.1;
-        Tue, 11 Feb 2025 07:48:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739288922; x=1739893722;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dFgNZgQPq5ypCObRC544dtvCqvHAh+EVgE8j6iOHSiI=;
-        b=H8F9xDEcVjJC2DeZ66SUs6O8/TiqMfjhMB3x8CyxsZCR6kfyyNTXP/bOWdyV/YmARK
-         LOZS4svmL/J6khpmJJe9sk3mujXVqvGFZTRgmb6n7+bYnMKxNoWEwtKDkFkK730gjQlB
-         YhnpsqV3JQ4tONpKEvK52mZeLE3iyfRNJWfFvQsN20U1v3Kdo5B9axToiafrMscn3rgO
-         MajiyTwrYDdf6aDSfNEIfMtVAEBlTO4F7wOCfvr6AVsB6NiOo6eoio2GPf5xRdjqynqb
-         mjhPqhlF6svqwIUbnhaGjxdL2zm7ML014Sa7UVDZ9JX8A61qizaV9Ukfd1M9WLmy+wDf
-         XbwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJJGNqASFfp2qgUGmwCdiUybAAAocQP3MXQnaZVxerB8srL+LnCgfjG6UGcT4KzqHd0CTnsympaU5UhBM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYjYOjGNlxm62+X+lbVzc7TJVB8xA4FBQwq7sn0Cvh61cKkxZ7
-	V0X+PiJplBbm9WYZm03wKFxe+sifOcK80LyPd077D785P+kJNkQPIeV+If7DVQE=
-X-Gm-Gg: ASbGncvtvDDtn3WZ9i5Aa9GhozDerTNYt4NhU1glb6TRHiYl9opMH7Of/mChtcjIyIJ
-	3caIbSJz8UX8T4eimUFlqscu2NLq8tWGl+/V3XvjS2ViYX0JkrzqmwOk1VQzjHb6QMroonODzub
-	+5qEw9sGxiQMRz0jmfKCfM+jutCQ8bloRCf1KWyWKyiad5xky9tjvgdL0V7g/A5b2QcWdyXG33J
-	UO2B7DLlPWQX8B4LJwYb95u8FQIkI4FRf0tdjadYEVzWseuzPORByUq50sKDZvHE2TWlraRFuiv
-	9hOgFho5MtVuxeDqA1OMwGYANM7t7/Ifhz9HF2XUm3KJ8fQknLU+8A==
-X-Google-Smtp-Source: AGHT+IElup7qwEe0SCDldS0VCYnHYTDZBnuv2yIlOaS/cRk8D1jShvydqVl0fCAkbpIwHZ9m3UIrdA==
-X-Received: by 2002:a05:6122:459e:b0:518:791a:3462 with SMTP id 71dfb90a1353d-52057221381mr2866308e0c.9.1739288921850;
-        Tue, 11 Feb 2025 07:48:41 -0800 (PST)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51f2290d18dsm1666176e0c.34.2025.02.11.07.48.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 07:48:41 -0800 (PST)
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4ba722d3916so1327618137.2;
-        Tue, 11 Feb 2025 07:48:41 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWiyZe5as1ktGtcQVbmS66664/F2YzOmB40mveXBZ/IgboeBSHgaw+HXfk+bffKf8jHXtTIkiwEpIPyU7g=@vger.kernel.org
-X-Received: by 2002:a05:6102:15a9:b0:4bb:bf49:9088 with SMTP id
- ada2fe7eead31-4bbe0522487mr3145922137.16.1739288921268; Tue, 11 Feb 2025
- 07:48:41 -0800 (PST)
+	s=arc-20240116; t=1739288948; c=relaxed/simple;
+	bh=3EQeArKVuSS2xUvVQrhKQvF/b394Kw09lDcZ77uB2EY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QON5skalfc3AmhIAkPsaRoDgMF9MpLxlKmFu5ts5rBVMb72Kcld7lhRW61epe+8sj8d5fhs9CY1kluH7B9Bd5YD1hV+dkhLGbEzeIIyjxQi0M5F8h7e9Hn1s0v88FG/fJZj/Wtp84s7NjEzgNSJHFL5MwH/F2qTeNj0qw8IIW7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=POAgMeYq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="POAgMeYq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75F99C4CEDD;
+	Tue, 11 Feb 2025 15:49:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739288947;
+	bh=3EQeArKVuSS2xUvVQrhKQvF/b394Kw09lDcZ77uB2EY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=POAgMeYqZKWpC21kkbADYp6yy9VPCNzvsL/N+XIWW6qGhM8fVGJvDIm4DEY/TM7Dg
+	 UI+b7KkYka4n6KKfqNIklAWkCue7bFxSvBgEPSQi7St6A9xmC+TF21WzcZbyz10dkb
+	 FvI3EKSCikQUTgKIBB3CQmQzK58J739b5Ra6uFzbqU5E+Y6GhSzUCkoFI2awQWx52R
+	 nRpWHmELEyoTMcWmHwHxqANgPx2Z9/2eP8eh7PNM6hGzVouGcQ/eLeZINOhjEYii7n
+	 OWyK8a1Ulyp2yzWHLNIl8nPgnXL64LzJBXfjkgwKdLTXaAULv+Hg47W1EHIB2kyl2v
+	 Vp4bjdrG7IM5g==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1thsVe-000000002eT-3j27;
+	Tue, 11 Feb 2025 16:49:14 +0100
+Date: Tue, 11 Feb 2025 16:49:14 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2] arm64: dts: qcom: x1e80100-qcp: Add WiFi/BT pwrseq
+Message-ID: <Z6txevdftVNww0wD@hovoldconsulting.com>
+References: <20250211-x1e80100-pwrseq-qcp-v2-1-c4349ca974ab@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203031213.399914-1-koichiro.den@canonical.com> <20250203031213.399914-2-koichiro.den@canonical.com>
-In-Reply-To: <20250203031213.399914-2-koichiro.den@canonical.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 11 Feb 2025 16:48:29 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVdJcu0Vj9myYSan2vVEatF-dRJ_XEA34kfgaWaK8uTRg@mail.gmail.com>
-X-Gm-Features: AWEUYZkoC6kw9m0D0ZgQGB0mQpfFZsXOwzg5Uce68qZaCGGM5ArDlgKlFlTu1To
-Message-ID: <CAMuHMdVdJcu0Vj9myYSan2vVEatF-dRJ_XEA34kfgaWaK8uTRg@mail.gmail.com>
-Subject: Re: [PATCH v2 01/10] gpio: aggregator: reorder functions to prepare
- for configfs introduction
-To: Koichiro Den <koichiro.den@canonical.com>
-Cc: linux-gpio@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org, 
-	maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211-x1e80100-pwrseq-qcp-v2-1-c4349ca974ab@linaro.org>
 
-On Mon, 3 Feb 2025 at 04:12, Koichiro Den <koichiro.den@canonical.com> wrote:
-> Reorder functions in drivers/gpio/gpio-aggregator.c to prepare for the
-> configfs-based interface additions in subsequent commits. Arrange the
-> code so that the configfs implementations will appear above the existing
-> sysfs-specific code, since the latter will partly depend on the configfs
-> interface implementations when it starts to expose the settings to
-> configfs.
+On Tue, Feb 11, 2025 at 04:01:56PM +0100, Stephan Gerhold wrote:
+> Add the WiFi/BT nodes for QCP and describe the regulators for the WCN7850
+> combo chip using the new power sequencing bindings. All voltages are
+> derived from chained fixed regulators controlled using a single GPIO.
+> 
+> The same setup also works for CRD (and likely most of the other X1E80100
+> laptops). However, unlike the QCP they use soldered or removable M.2 cards
+> supplied by a single 3.3V fixed regulator. The other necessary voltages are
+> then derived inside the M.2 card. Describing this properly requires
+> new bindings, so this commit only adds QCP for now.
+> 
+> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+> ---
+> Changes in v2:
+> - Rebase on qcom for-next, patch 1-2 were applied already
+> - Mention dummy regulator warning
+> - Link to v1: https://lore.kernel.org/r/20241007-x1e80100-pwrseq-qcp-v1-0-f7166510ab17@linaro.org
+> ---
+> The Linux driver currently warns about a missing regulator supply:
+> 
+>   pwrseq-qcom_wcn wcn7850-pmu: supply vddio1p2 not found, using dummy regulator
 >
-> The order in drivers/gpio/gpio-aggregator.c will be as follows:
->
-> * Basic gpio_aggregator/gpio_aggregator_line representations
-> * Common utility functions
-> * GPIO Forwarder implementations
-> * Configfs interface implementations
-> * Sysfs interface implementations
-> * Platform device implementations
-> * Module init/exit implementations
->
-> This separate commit ensures a clean diff for the subsequent commits.
->
-> No functional change.
->
-> Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
+> This supply exists on the WCN7850 chip, but nothing is connected there on
+> the QCP. Discussion is still open how to hide this warning in the driver,
+> but since the DT is correct and the same setup is already used on SM8550
+> upstream, this shouldn't block this patch.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+I thought Bartosz was gonna fix his driver...
 
-Gr{oetje,eeting}s,
+> @@ -337,6 +338,101 @@ usb_1_ss2_sbu_mux: endpoint {
+>  			};
+>  		};
+>  	};
+> +
+> +	vreg_wcn_3p3: regulator-wcn-3p3 {
 
-                        Geert
+Please keep the nodes sorted by name. These should all go above the usb
+muxes.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Johan
