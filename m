@@ -1,151 +1,146 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E4D026BD92;
-	Tue, 11 Feb 2025 02:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.8
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1201B6CE9;
+	Tue, 11 Feb 2025 02:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739241601; cv=none; b=fokJnVjIY2xUSSXovJsRc2z7+dggdR/QJoBKjJ67pIAdMPLUwpIrCUv9qZk7y3LBcNbJomfv/S4wn6h9F0dnuqIjA07L94ZIMAqJF9+C6Y8CF5hUYO4wXhywJWkiiPNct535yBC9X8bE4bsvCPpBE08L8h1Tkvkw5u6p2Rd3KBE=
+	t=1739241614; cv=none; b=XLwpPpVpDoWauTa95Gv8CVtC3AQtd48/NX1VrN9DE+DBaRujznKr9oLqboeLN+rVWcenHevkQtl6OBJTQItlwR5gQL5SaTmOAB7xMtzXrYB26/jY+VoYtubZ6diy0xTDr8L2ZdUMW5xvP8EpboPwpUVRROy/zLpcObsLUcFG43I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739241601; c=relaxed/simple;
-	bh=y+ztxwhEcdpLaeJJ6Prmki4HGBmqn+jbQWGvXTY0ARA=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=p0cf0wLEud+WKhaxddERnGIOtgGgNVnc936GsV8JVeCR1xqb+Z1LsTBM0RpE3n3OFNzGzl5dqqJDsTVMKOgdc9pggjj0/Dqhywm3ATDXsxXDOlB51TMEeezLQgWGSGNkO56i0YxSnOvIARXOSi7wk+YyHGUOAdGMil71aHSjwyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=EAAe0Ss3; arc=none smtp.client-ip=220.197.31.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1739241614; c=relaxed/simple;
+	bh=n2oinbXtGGE6y9EV6Pn/imw8Ob/8ITCtlHNl/OvbJDc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SFULUEGCvyWbXaW6S9xwJDJN7hjAAG1xhWXjxuN48RkrFPeZOrL9Jk8JS/wkgaN9ir+qREq9uoPwOrDzwxc3saVAstfmbX2+5L2grLj3l1IyHyXXuuFFgq0ITLlJ1OdLPTEtDpYYpczJeKclHPWoxtICQTLXcmwUeiMk3I9DdbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eVDa9OLN; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="EAAe0Ss3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=0iKDFXKmakrxlwTvyT
-	XBK7m38OSdvEOg0wa8XmraGSo=; b=EAAe0Ss3Y/wFBXuLqiGmhnzPM8PhjKBNiB
-	Tj88sHLJXFydVLhshTomuq3ZrZliUO9hKjp2LFlgxODmbr9Z7Ao1wb4S6PRze2/7
-	feZK1eGyZM8Ma4mZmX8CyBzhEVeGzdehK3D45YgQAoUaKG508gMyCMUphnHKp0QN
-	U00/Kr20U=
-Received: from hg-OptiPlex-7040.hygon.cn (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wDn77rRt6pnZ85rAw--.31934S2;
-	Tue, 11 Feb 2025 10:37:05 +0800 (CST)
-From: yangge1116@126.com
-To: pbonzini@redhat.com
-Cc: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	seanjc@google.com,
-	21cnbao@gmail.com,
-	david@redhat.com,
-	baolin.wang@linux.alibaba.com,
-	thomas.lendacky@amd.com,
-	liuzixing@hygon.cn,
-	Ge Yang <yangge1116@126.com>
-Subject: [PATCH V4] KVM: SEV: fix wrong pinning of pages
-Date: Tue, 11 Feb 2025 10:37:03 +0800
-Message-Id: <1739241423-14326-1-git-send-email-yangge1116@126.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID:_____wDn77rRt6pnZ85rAw--.31934S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxur4UCrWrJFWUAw4xZr1UZFb_yoWrGF15pF
-	4rGws0yr13KrZFvryIqrWkursrZ3y8Kw4jkryIywn5uFnxtry0vr4Iqr17try5A3y8WF98
-	tF4DGw4rZw4DZa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRoGQDUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbifh3wG2eqsNCEaAAAsJ
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eVDa9OLN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739241612; x=1770777612;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=n2oinbXtGGE6y9EV6Pn/imw8Ob/8ITCtlHNl/OvbJDc=;
+  b=eVDa9OLNX8svr/8CEDFqaDruQ7HGVqQHlZPVIt2jY96fVcPgHPmK1m+2
+   Q3o2WbDSdxZ2uS0t9O38hCYH6Rrkq8IqbRD9NIcMHd/EnqrU6T1iWOGXl
+   e5l5SKULteLU0wuwE2mlCkvON7ddpHhUOTLkenx+JQwwrUYx0542i1nwZ
+   /r+EF9bIaA8/ca/l5kCrHpM7SHF8xWvcSRSuACveXN7TqfRS/ThCZXcp8
+   P8x2p2Y5u3u6j4mmn3sqL+fCtCKkqurXKYEQ6TTB9L82qGhkFo7TxzT2g
+   5TA/UeN9HihS//QXY4ahEGNHxKen2DHMIZkuPs+MubhGXXIiekbHofJe2
+   Q==;
+X-CSE-ConnectionGUID: aA/TviufSaCV/CfUnhaR6g==
+X-CSE-MsgGUID: e7PIi1/1QBGV7aGDdFiz6w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="43775072"
+X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
+   d="scan'208";a="43775072"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 18:40:11 -0800
+X-CSE-ConnectionGUID: QNak6SWmRKSj3idvZIkL7w==
+X-CSE-MsgGUID: zv89mSVRRJq8wFJvqtbxwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
+   d="scan'208";a="143229130"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.111.192]) ([10.125.111.192])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 18:39:52 -0800
+Message-ID: <99a80c40-4c1d-4dc6-8b44-397f49460501@intel.com>
+Date: Mon, 10 Feb 2025 19:39:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 07/15] cxl: Add helper function to retrieve a feature
+ entry
+To: shiju.jose@huawei.com, linux-edac@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, bp@alien8.de, tony.luck@intel.com,
+ rafael@kernel.org, lenb@kernel.org, mchehab@kernel.org,
+ dan.j.williams@intel.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ david@redhat.com, Vilas.Sridharan@amd.com, leo.duran@amd.com,
+ Yazen.Ghannam@amd.com, rientjes@google.com, jiaqiyan@google.com,
+ Jon.Grimm@amd.com, dave.hansen@linux.intel.com, naoya.horiguchi@nec.com,
+ james.morse@arm.com, jthoughton@google.com, somasundaram.a@hpe.com,
+ erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
+ gthelen@google.com, wschwartz@amperecomputing.com,
+ dferguson@amperecomputing.com, wbs@os.amperecomputing.com,
+ nifan.cxl@gmail.com, tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
+ roberto.sassu@huawei.com, kangkang.shen@futurewei.com,
+ wanghuiqiang@huawei.com, linuxarm@huawei.com
+References: <20250207144445.1879-1-shiju.jose@huawei.com>
+ <20250207144445.1879-8-shiju.jose@huawei.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250207144445.1879-8-shiju.jose@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Ge Yang <yangge1116@126.com>
 
-In the sev_mem_enc_register_region() function, we need to call
-sev_pin_memory() to pin memory for the long term. However, when
-calling sev_pin_memory(), the FOLL_LONGTERM flag is not passed, causing
-the allocated pages not to be migrated out of MIGRATE_CMA/ZONE_MOVABLE,
-violating these mechanisms to avoid fragmentation with unmovable pages,
-for example making CMA allocations fail.
 
-To address the aforementioned problem, we should add the FOLL_LONGTERM
-flag when calling sev_pin_memory() within the sev_mem_enc_register_region()
-function.
+On 2/7/25 7:44 AM, shiju.jose@huawei.com wrote:
+> From: Shiju Jose <shiju.jose@huawei.com>
+> 
+> Add helper function to retrieve a feature entry from the supported
+> features list, if supported.
+> 
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> ---
+>  drivers/cxl/core/features.c | 21 +++++++++++++++++++++
+>  include/cxl/features.h      |  2 ++
+>  2 files changed, 23 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+> index 5f64185a5c7a..bf175e69cda1 100644
+> --- a/drivers/cxl/core/features.c
+> +++ b/drivers/cxl/core/features.c
+> @@ -43,6 +43,27 @@ bool is_cxl_feature_exclusive(struct cxl_feat_entry *entry)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(is_cxl_feature_exclusive, "CXL");
+>  
+> +struct cxl_feat_entry *cxl_get_feature_entry(struct cxl_memdev *cxlmd,
+> +					     const uuid_t *feat_uuid)
+> +{
+> +	struct cxl_features_state *cxlfs = cxlmd->cxlfs;
+> +	struct cxl_feat_entry *feat_entry;
+> +	int count;
+> +
+> +	/*
+> +	 * Retrieve the feature entry from the supported features list,
+> +	 * if the feature is supported.
+> +	 */
+> +	feat_entry = cxlfs->entries;
+> +	for (count = 0; count < cxlfs->num_features; count++, feat_entry++) {
+> +		if (uuid_equal(&feat_entry->uuid, feat_uuid))
+> +			return feat_entry;
+> +	}
+> +
+> +	return ERR_PTR(-ENOENT);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_get_feature_entry, "CXL");
 
-Signed-off-by: Ge Yang <yangge1116@126.com>
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
----
+You probably don't need this if the memfeature code are in CXL core. 
 
-V4:
-- adjust the code format suggested by Tom
+DJ
 
-V3:
-- the fix only needed for sev_mem_enc_register_region()
-
-V2:
-- update code and commit message suggested by David
-
- arch/x86/kvm/svm/sev.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index a2a794c..90ad846 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -622,7 +622,7 @@ static int sev_launch_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
- 
- static struct page **sev_pin_memory(struct kvm *kvm, unsigned long uaddr,
- 				    unsigned long ulen, unsigned long *n,
--				    int write)
-+				    int flags)
- {
- 	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
- 	unsigned long npages, size;
-@@ -663,7 +663,7 @@ static struct page **sev_pin_memory(struct kvm *kvm, unsigned long uaddr,
- 		return ERR_PTR(-ENOMEM);
- 
- 	/* Pin the user virtual address. */
--	npinned = pin_user_pages_fast(uaddr, npages, write ? FOLL_WRITE : 0, pages);
-+	npinned = pin_user_pages_fast(uaddr, npages, flags, pages);
- 	if (npinned != npages) {
- 		pr_err("SEV: Failure locking %lu pages.\n", npages);
- 		ret = -ENOMEM;
-@@ -751,7 +751,7 @@ static int sev_launch_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
- 	vaddr_end = vaddr + size;
- 
- 	/* Lock the user memory. */
--	inpages = sev_pin_memory(kvm, vaddr, size, &npages, 1);
-+	inpages = sev_pin_memory(kvm, vaddr, size, &npages, FOLL_WRITE);
- 	if (IS_ERR(inpages))
- 		return PTR_ERR(inpages);
- 
-@@ -1250,7 +1250,7 @@ static int sev_dbg_crypt(struct kvm *kvm, struct kvm_sev_cmd *argp, bool dec)
- 		if (IS_ERR(src_p))
- 			return PTR_ERR(src_p);
- 
--		dst_p = sev_pin_memory(kvm, dst_vaddr & PAGE_MASK, PAGE_SIZE, &n, 1);
-+		dst_p = sev_pin_memory(kvm, dst_vaddr & PAGE_MASK, PAGE_SIZE, &n, FOLL_WRITE);
- 		if (IS_ERR(dst_p)) {
- 			sev_unpin_memory(kvm, src_p, n);
- 			return PTR_ERR(dst_p);
-@@ -1316,7 +1316,7 @@ static int sev_launch_secret(struct kvm *kvm, struct kvm_sev_cmd *argp)
- 	if (copy_from_user(&params, u64_to_user_ptr(argp->data), sizeof(params)))
- 		return -EFAULT;
- 
--	pages = sev_pin_memory(kvm, params.guest_uaddr, params.guest_len, &n, 1);
-+	pages = sev_pin_memory(kvm, params.guest_uaddr, params.guest_len, &n, FOLL_WRITE);
- 	if (IS_ERR(pages))
- 		return PTR_ERR(pages);
- 
-@@ -1798,7 +1798,7 @@ static int sev_receive_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
- 
- 	/* Pin guest memory */
- 	guest_page = sev_pin_memory(kvm, params.guest_uaddr & PAGE_MASK,
--				    PAGE_SIZE, &n, 1);
-+				    PAGE_SIZE, &n, FOLL_WRITE);
- 	if (IS_ERR(guest_page)) {
- 		ret = PTR_ERR(guest_page);
- 		goto e_free_trans;
-@@ -2696,7 +2696,8 @@ int sev_mem_enc_register_region(struct kvm *kvm,
- 		return -ENOMEM;
- 
- 	mutex_lock(&kvm->lock);
--	region->pages = sev_pin_memory(kvm, range->addr, range->size, &region->npages, 1);
-+	region->pages = sev_pin_memory(kvm, range->addr, range->size, &region->npages,
-+				       FOLL_WRITE | FOLL_LONGTERM);
- 	if (IS_ERR(region->pages)) {
- 		ret = PTR_ERR(region->pages);
- 		mutex_unlock(&kvm->lock);
--- 
-2.7.4
+> +
+>  size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+>  		       enum cxl_get_feat_selection selection,
+>  		       void *feat_out, size_t feat_out_size, u16 offset,
+> diff --git a/include/cxl/features.h b/include/cxl/features.h
+> index e52d0573f504..563d966beee5 100644
+> --- a/include/cxl/features.h
+> +++ b/include/cxl/features.h
+> @@ -68,6 +68,8 @@ struct cxl_features_state {
+>  };
+>  
+>  struct cxl_mailbox;
+> +struct cxl_feat_entry *cxl_get_feature_entry(struct cxl_memdev *cxlmd,
+> +					     const uuid_t *feat_uuid);
+>  size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+>  		       enum cxl_get_feat_selection selection,
+>  		       void *feat_out, size_t feat_out_size, u16 offset,
 
