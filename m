@@ -1,125 +1,131 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF081F4720;
-	Tue, 11 Feb 2025 10:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309411F1523
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739270400; cv=none; b=vAHup7pzEIemTvc3CFxm19liAX3BtxLFCcDFZhNAkuZWAZ7+pCxwy+wbxsJB8yLC+wL9+UOc+FkEhupas8xd4yNPfPQXBZWyNw7kRds7ZkAr6zPoFEND4Ud/Dz4LJehO7EmW7zURh0uyNuCxVEEJcB2i38NyDvRX8ZOjll0yxiU=
+	t=1739270431; cv=none; b=jBtEMBPHNS2Y//41CV2CXCAjL3Mpz+fE1pJLQ9YIb4Yfijp1mNgjh6HgCvnWd+NJzU7Er1kb3POqnN0+hxezcVl/YPinfAK7DXXr+J0OyvmvGEX43kqkcUQ07yzeAVdsIRkDdPIT7R+5LQBHpeTo+iZmb17BeEHdcmkIpx0zeRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739270400; c=relaxed/simple;
-	bh=t3SGcUgUn3/fIExKnXCklakPIAZR+0Rk4JPEh8gbtcA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=A2H18rYT6rmChMLi0Zw+7Z+f55MCl8JklWVyUC/GHggEB8g2iWsmCn8O2+86C4ZdkxReCcI+pp7DW+2ito1lRokOajaD28eZW3FP2Rxz+5FO8eFw/+BPBowM9pp5AyfWcWCGdHvTsAUrLHz/Yb0okViRwZbwErD1uCgDVanM30c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=V/gXoQMx; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739270431; c=relaxed/simple;
+	bh=OBPEOTjpU/SX7eCLQOaMK8EKlSkDkTGr2nRL2sJYH48=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tj2n/ts66bmylmfqyObRKQ9/E1niB3cAUPqJiPJfKf5jDJscR9akLFTKcMFuOS4e4XFb/HAuS2hdYju9V2iv93wOjlxzcpE3Z0dGcXwgIgopO5h4rssP0SXfDllzm2snh6U7/FXYeuv6laeqgiOLHdg+uw5/DKsRkNpdCx5RfsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PRVUQcv2; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="V/gXoQMx"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51B7U3od001431;
-	Tue, 11 Feb 2025 10:39:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=AsbYPY6w2GX2BNFqz/5nbs
-	5EuGdQJnJQ1j0OQUY2bv4=; b=V/gXoQMxAsUkIQa4sbet/wyPzu/m+uHD33ZYIH
-	DmOM9QvCeMvVc8+l5kWhAFU+jXzbETQEpqpwob/uQmaouLzHL+Hk3i2Hh5hC8+jx
-	4Va2o7DCNJnjJ7nx/mJOUYwa7LZs1mhQz6uPLBrnI0CEdiYxQyJSLbKIJnWsjTsm
-	3dXDdVZ3QkLVw5WKS9RaFMlJwIWjbzGv9S/d3qlzGlu5lU22Fo2cDh3mF0zK3jGp
-	GWNc846RHd0R/plp5FPp5QC4SXoxqvqaWJvl9suvypipri18XhR6S513Dh+14pF4
-	TRKvM34CQNvNTq1jZCZErYpRVkuVwPL95thPKD+y2tI1SiXg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qepxkmra-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 10:39:51 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51BAdocW013041
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 10:39:50 GMT
-Received: from cse-cd01-lnx.ap.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 11 Feb 2025 02:39:46 -0800
-From: Yongxing Mou <quic_yongmou@quicinc.com>
-Date: Tue, 11 Feb 2025 18:37:43 +0800
-Subject: [PATCH] drm/msm/dpu: Allocate the number of LMs based on
- max_mixer_width to support 4 streams MST case
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PRVUQcv2"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-38dcb33cba1so1994150f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:40:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739270427; x=1739875227; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VrQhaC3gKZKDAc8Ce+Rq4JirL36T9Iu7HnsPcFoyuXk=;
+        b=PRVUQcv28eUowqqoOjN+pyzvjYzTp2BhMlhB+H12SK7Tn0i7dVhUVI9jYQeKvOje79
+         NzPrUtO04EYHutpnzhdeOuvqnY1UwDUKJVCIK0kveJAEy3Pa8n7NbEgpmsind+Otmlv3
+         +VKSvptptO01CtNJv9fTuVmFrg2z3bD9zINw3fis+ZIZEHAR7oVgb58q2Xnh+PH6pEDt
+         UEiEjaxL5i5coyvU394h+grbeY30xnf29RbP+Ux0CssWyTNUosVzbY6dZ2nSNj+ABXrn
+         rtNSk3EPOWAqvsg/etqmKag1pY+ZaK/KfefEY2Y0w2wQIGcBuyjd1YwNLA0GDDDgtga3
+         DFiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739270427; x=1739875227;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VrQhaC3gKZKDAc8Ce+Rq4JirL36T9Iu7HnsPcFoyuXk=;
+        b=WtJ3rbpuu+dUp3rpycEp9ivXtndS08GHFtrWWLRBeSTtZbK3UcbmPgOBqankT6iruj
+         tRKRUMTBdcXVLReHvCmthmvkjFWLGEsSgPUyt3TFaqZuogi9+FNavUr08T8civ3yS6zB
+         fvjw6E0cqExrKxWukMnXcDK1BLL5O0F/cWTVjWDt9ArnXcxpqd04f/kZYdiLUwHlFZXi
+         Ax+rUlNuLmyfxOdAeQPJNpHpGS14CjjxgLq5wCk9i6t/NGarjyQ8rI6EE4Q3YdHPc7GQ
+         2L4p4IBdJG1zSsev9eMyl5fXSK+Ixy4ME1EkGGD6n1XzoMjHTpaTdyncmNZjxaIvpHMn
+         z4FQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWKb/3nc9QQkLUvwplN7m1zV69uX6R3M7fYRM7gI3vnbuDRFcc8EyteW24OU4gaRVeMy3Cl5GhMo74WivE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPDCr9K8fYAPvP0p3Bl5nBRkIlWZYXZJ50Yx3kfCFp1ylMepx6
+	++m+250w9Owfb8CQN2aXxC48QcMfa0udqOLNaKMOLAZbFpB4oDP2OotZ+WCRACc=
+X-Gm-Gg: ASbGncv9p9O8NGHLIUmEnB2jDiOn3OnWVtO0rY8r2CFW791lV40gqjMl2YRC8ErinxU
+	EBSgnfAnQY4myh7wE/5TxCzIAjU6hAJKu2gG4pTArVLFVhUT/tzy72VT2lvWlInw5z/7xB9Y6nE
+	LNsSl63xDu3bXTudRnO31CRb9LM9O/jjHtxi71i2XvMLT9j2Fk3hK0q8osxzzi9+hjzH8uNXc8e
+	sfWW0A+0n9Scv27CWeGtSSNK4EoSpH1I90UobNM6SkETfA3JZUFVuTKgZypBqj5ogOXBk0x6jaB
+	2Zmx6kyyokW3
+X-Google-Smtp-Source: AGHT+IG4gEm4nSnw8t/iNqVVtVQKgUFA9cxJ4G6BsHMjOTxtxqqAhDt1o8nYwzMfYgssh++RTKqiSA==
+X-Received: by 2002:a05:6000:402b:b0:386:3328:6106 with SMTP id ffacd0b85a97d-38dc9374026mr13853655f8f.35.1739270427442;
+        Tue, 11 Feb 2025 02:40:27 -0800 (PST)
+Received: from pop-os.. ([145.224.65.3])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd02e2a90sm10456047f8f.98.2025.02.11.02.40.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 02:40:27 -0800 (PST)
+From: James Clark <james.clark@linaro.org>
+To: lcherian@marvell.com,
+	coresight@lists.linaro.org
+Cc: James Clark <james.clark@linaro.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH 0/7] coresight: Clear self hosted claim tag on probe
+Date: Tue, 11 Feb 2025 10:39:36 +0000
+Message-Id: <20250211103945.967495-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250211-dp_lm-v1-1-deeca9ac9bd9@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAIAoq2cC/yXM4QqDIBSG4VuJ83uCWketWxkxTI+bMKtpG4Po3
- ifr5/Px8e5QKEcqMDQ7ZPrEEpe5QlwacA8734lFXw2SS+RSCObX2zMxEwwFgQF7RKjfNVOI33/
- nOp7O9HrX3HaOMNlCzC0pxW1ofECvhOFC9Za4spKsQ01tO3GtrVdBSZRdx2E8jh+RbzvzowAAA
- A==
-X-Change-ID: 20250211-dp_lm-8f8ef15f5955
-To: Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        "Yongxing
- Mou" <quic_yongmou@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739270386; l=1224;
- i=quic_yongmou@quicinc.com; s=20241121; h=from:subject:message-id;
- bh=t3SGcUgUn3/fIExKnXCklakPIAZR+0Rk4JPEh8gbtcA=;
- b=+m+TG7JMCHW09MiRsbSbDZVRrQF0fqBdyFDG244X/i0Sy2fiEei/E7x09Ykd04nDmNdeF2sVx
- 3rfKTGF4mFoDKy2nOyo3uJ46ByPUoAjvoNnu7j4Qzoi4srSDMzx6zDp
-X-Developer-Key: i=quic_yongmou@quicinc.com; a=ed25519;
- pk=zeCnFRUqtOQMeFvdwex2M5o0Yf67UHYfwCyBRQ3kFbU=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: nPDHW2kq_5vEdyldeyTO6Pz7eGkOGPK-
-X-Proofpoint-ORIG-GUID: nPDHW2kq_5vEdyldeyTO6Pz7eGkOGPK-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_04,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
- phishscore=0 priorityscore=1501 mlxscore=0 suspectscore=0 impostorscore=0
- mlxlogscore=872 clxscore=1015 lowpriorityscore=0 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502110067
+Content-Transfer-Encoding: 8bit
 
-In 2x2 mst case, each 2k monitor will use 2 lms, but dpu_8_4 only have
-6 lms, so let 2k only use one lm to support such case.
+I've gotten stuck a few times with unusable Coresight after a warm boot
+due to lingering claim tags, especially when testing the Coresight
+panic patchsets.
 
-Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This change does some tidy ups, adds some debug messages and clears the
+self hosted claim tag on probe. The last two commits are unrelated
+tidyups but they touch some of the same functions so to avoid extra
+conflicts I'm including them here.
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 5172ab4dea995a154cd88d05c3842d7425fc34ce..e8846bf8edc5f9b2b3b7f093e4d5aad75de53da1 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -677,7 +677,8 @@ static struct msm_display_topology dpu_encoder_get_topology(
- 	else if (!dpu_kms->catalog->caps->has_3d_merge)
- 		topology.num_lm = 1;
- 	else
--		topology.num_lm = (mode->hdisplay > MAX_HDISPLAY_SPLIT) ? 2 : 1;
-+		topology.num_lm = (mode->hdisplay > dpu_kms->catalog->caps->max_mixer_width) ?
-+				   2 : 1;
- 
- 	if (crtc_state->ctm)
- 		topology.num_dspp = topology.num_lm;
+This gets as far as fixing the claim tag issue, but there is some other
+state not being cleared on probe that results in the following error.
+This can be fixed up as a later change:
 
----
-base-commit: df5d6180169ae06a2eac57e33b077ad6f6252440
-change-id: 20250211-dp_lm-8f8ef15f5955
+  coresight tmc_etf0: timeout while waiting for TMC to be Ready
+  coresight tmc_etf0: Failed to enable : TMC is not ready
 
-Best regards,
+James Clark (7):
+  coresight: Rename coresight_{set,clear}_claim_tags()
+  coresight: Convert disclaim functions to take a struct cs_access
+  coresight: Only check bottom two claim bits
+  coresight: Add claim tag warnings and debug messages
+  coresight: Clear self hosted claim tag on probe
+  coresight: Remove inlines from static function definitions
+  coresight: Remove extern from function declarations
+
+ drivers/hwtracing/coresight/coresight-catu.c  |  14 +-
+ drivers/hwtracing/coresight/coresight-core.c  | 132 +++++++++++-------
+ .../hwtracing/coresight/coresight-cti-core.c  |   8 +-
+ drivers/hwtracing/coresight/coresight-etb10.c |   6 +-
+ drivers/hwtracing/coresight/coresight-etm.h   |   6 +-
+ .../coresight/coresight-etm3x-core.c          |  32 ++---
+ .../coresight/coresight-etm3x-sysfs.c         |   8 +-
+ .../coresight/coresight-etm4x-core.c          |  12 +-
+ .../coresight/coresight-etm4x-sysfs.c         |   4 +-
+ .../hwtracing/coresight/coresight-funnel.c    |   4 +-
+ .../hwtracing/coresight/coresight-platform.c  |  26 ++--
+ drivers/hwtracing/coresight/coresight-priv.h  |  20 +--
+ .../coresight/coresight-replicator.c          |   7 +-
+ drivers/hwtracing/coresight/coresight-stm.c   |   6 +-
+ .../coresight/coresight-syscfg-configfs.c     |   2 +-
+ .../hwtracing/coresight/coresight-tmc-core.c  |   9 +-
+ .../hwtracing/coresight/coresight-tmc-etf.c   |   8 +-
+ .../hwtracing/coresight/coresight-tmc-etr.c   |  20 ++-
+ drivers/hwtracing/coresight/coresight-trbe.c  |  18 +--
+ include/linux/coresight.h                     |  32 ++---
+ 20 files changed, 209 insertions(+), 165 deletions(-)
+
 -- 
-Yongxing Mou <quic_yongmou@quicinc.com>
+2.34.1
 
