@@ -1,124 +1,242 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6125126BDB3;
-	Tue, 11 Feb 2025 02:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F4F26BDB3;
+	Tue, 11 Feb 2025 02:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739242374; cv=none; b=BAzk+yDj5Tj6dBvg4W401ulPoHjP6iujFvanz9dk/m5cFvWRvUiZJmE+hEeFLcRqaTsMuiQ6QQxibTyayhH2pPHIaJTywxhc83odT+y+kF1ke3Ex+zI+TFYBEpldcnPNGoxl4TtxuCpH8HXWUUZXzg5zzhga3Xc3ugxPSpEoj7A=
+	t=1739242387; cv=none; b=mXzO5AxVrQlqQvRrFCN22/AsCdjNFt0GynOFXG9bNFhgmuG8MQ5f7KTSW5c/mti0QUYW4iM3kiYd5Y3aWzujC774SaT/0UhwD8E4eej51ZNxOTJvo6GzetLNvT7L2Wsg2Hd+iiQyfwS9WUwxkkac7hvnV5RSWaAoq41Nur6Ckxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739242374; c=relaxed/simple;
-	bh=zQw2a+CpxvAFUw4sXsEA97Fgbn2DgsUG3ckUtxNNYdw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RBj8NNNyANlZoryc18XRv+thmJc7Qp89TJxJaEeNVPfrKRuS9Oh1S5vLtne8AWTQIyadqOvsUM22I0/mk/fq3oyi59ygNO8NnzfZaRoCT8xs1io5m8YN+9mqtKExa7im5Oky0m8GV04Whdgvl3X6ZZQBYl2hyHlUB+wPUqlTkr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ch2/J/Vo; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739242387; c=relaxed/simple;
+	bh=2SebiFEbnENaz2k05BNHEb4S8UUpgFqWp3K6SdhX0Qo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fHxZZnJPtiwIwDwN38UsmlOOzziO1CGESKMC9Y0x5fLGdJYSBEmV1kjHdDoCUENmtWjgvIhUjgqG+6xNo5LPkapY00BuxUB5YFjPZ3tUCS7cG0hj6yplB0gPagxAOlMGAdSdZZtcVgzGE1VcmzJH8mTCrIcDZWWUa5F5qEVK+sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A73IPHMZ; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ch2/J/Vo"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-308f04beb24so12222711fa.2;
-        Mon, 10 Feb 2025 18:52:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739242370; x=1739847170; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C7zoGSKaCzaFrCZcucDgRUUxiAaI1ZXSr2r+w8mi1+Y=;
-        b=Ch2/J/VoXKAt9mbFAX8x2Oc9LcIQD4gIpm+tuDLHBTFeS7GZwOC0sjS9FyEU+sn1DE
-         ttetgm3Mkuc9GacjGiagcUQxlVm0wcm8BOLgz0xS2EaxZLvGHeVftv+kVX6QqJaPASPc
-         MKvjIpNZmwsf7X2dG0DPO8gRXYXnz/6PiFFIDOicAxl+4ikOxrIH6FH9DDliwxOo9cR8
-         NmnR2KJXwVOC6XV442twojq7XiABe+lj+D2Oh08Fqv0pTLiNpTxyiVsbIfW1kuviLJ3t
-         /S8V3jcv7MtgcJeI4bS61lljwUQ+1eTUKyeK8kMNJSj0SyC8vvcFdIVtfl4lBZPoH5DC
-         63uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739242370; x=1739847170;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C7zoGSKaCzaFrCZcucDgRUUxiAaI1ZXSr2r+w8mi1+Y=;
-        b=d6PMFMliIZt9dYq54Og3mSuIIsRetK6BHZZza6Wt6LBKVyBDcyO234gmWWb8NodhYG
-         I4UGSIdIkk4KLy3gr3h10a0rI3u0NVhPfqOXXxNiHC8J8A8hUFVP+MQ5//qDHkvphZXP
-         NV/vTNFmbqIVbHW1bvWUzokrWZlyjbJOSKhEu62qg1zdlY3LRf3mU21d2el+IOxpYbfa
-         Z++JcvDvUuXJI2nFfAb2mdV1ogyR/95yplZz89UZetEFS805osEamuEBVW9idkfE+iwM
-         /xejM4AntcIJKGjEGQpP0b4Tj1AHRvLE+PHm8I6CYOPUlghoZ2E/Gp6s3Sr0MEpMWGoS
-         E+Hg==
-X-Forwarded-Encrypted: i=1; AJvYcCUieuDIsk9By/+hGSkDBNeuCL3KybxoV6G05v3eTQqdS4le2BYfN3Zj2KbKS2dJbBDPD2gAw7ZPbJbzGiY=@vger.kernel.org, AJvYcCUkTg0Ouu0/SMDbekrnagn30KmjHwjFVQOQP3zSbDDv5FxCoVXslDDKRZ9TRf3ypm9GnXSYjwwAeroq5ZwYbBKI@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcfU4cslI/+mzudjbxhnKtnfMErxwy2ONtTEBmpGPQmjmXiKYm
-	NZJdkqnfJBwgWP4E9NFnLFyhwoBeIfMiX2As/j5SLaJLDBJ5mDojR7W5tQI80hixUxPDukovRQT
-	dNuuaVmEnkIIh4a4jJ/TZbh0Rywo=
-X-Gm-Gg: ASbGncswa6+j/LRB7SNRBZlub2BiBcEQIicl8NahYVTwm+Cf1mlcW+gRN+z3FqhVknZ
-	PQOMShxRHwrghgaAo1C7rUfs5FU8xE4d8DaaOtPG2nzTpSL4jJ4mf5vKK+MK+o4HnEZJmX8d4l+
-	iDEDa76hhWY3Gh3GLrZsfod1daTSRq
-X-Google-Smtp-Source: AGHT+IHZF8Pt1ouhTRhWC5nSvn5LiA7JiRKpNhRHquI/TMMTbGiFuAXQE9EO3401ZKj4Dc2d1xl9wZk8fB7hYd0o4rY=
-X-Received: by 2002:a05:651c:b29:b0:308:f479:5686 with SMTP id
- 38308e7fff4ca-308f479594bmr12679821fa.0.1739242370155; Mon, 10 Feb 2025
- 18:52:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A73IPHMZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739242386; x=1770778386;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2SebiFEbnENaz2k05BNHEb4S8UUpgFqWp3K6SdhX0Qo=;
+  b=A73IPHMZZdgBGKJk+IYgPWYtmAYJRZjZ6zkPABzn7geXvR+ccVe/ofNM
+   SPUyX92KK4BclrF4/r2EZqGNcHu4BcmheslrzUeLjQf9AuTi+4XHtlObz
+   asuCQFtP2BY3lvJja2mjN5W7Se0q9+wsbsfNdfeER+KIOtOHxUu8gvkeZ
+   1qJcxMh+Pvm4nsYvqWLx8CMtZwpNXv8cu4eTxM1y+nTa3pNAhdZNuErnu
+   ZLmXKhN29EK3wMxH1QSPCtgyGiUQIxwG303veDOh5qcvxoYP4C4bgttXP
+   mbUs1keR5cxZwVhIIanfD8DPSpPjHVkeTXSYmsI0OTZ7GZT/9dGdG2Rhm
+   g==;
+X-CSE-ConnectionGUID: hTD7Y1U1R0CHfPbmXq4syA==
+X-CSE-MsgGUID: pLvSBbTNTS2mmR22kOOPyw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="43506582"
+X-IronPort-AV: E=Sophos;i="6.13,276,1732608000"; 
+   d="scan'208";a="43506582"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 18:53:06 -0800
+X-CSE-ConnectionGUID: Rq20ttWbQSydYuxflqOajw==
+X-CSE-MsgGUID: T7q24sn1RRiw5kva2ViF/g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="112236396"
+Received: from litbin-desktop.sh.intel.com ([10.239.156.93])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 18:53:01 -0800
+From: Binbin Wu <binbin.wu@linux.intel.com>
+To: pbonzini@redhat.com,
+	seanjc@google.com,
+	kvm@vger.kernel.org
+Cc: rick.p.edgecombe@intel.com,
+	kai.huang@intel.com,
+	adrian.hunter@intel.com,
+	reinette.chatre@intel.com,
+	xiaoyao.li@intel.com,
+	tony.lindgren@intel.com,
+	isaku.yamahata@intel.com,
+	yan.y.zhao@intel.com,
+	chao.gao@intel.com,
+	linux-kernel@vger.kernel.org,
+	binbin.wu@linux.intel.com
+Subject: [PATCH v2 0/8] KVM: TDX: TDX hypercalls may exit to userspace
+Date: Tue, 11 Feb 2025 10:54:34 +0800
+Message-ID: <20250211025442.3071607-1-binbin.wu@linux.intel.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250208-prime_numbers-kunit-convert-v5-0-b0cb82ae7c7d@gmail.com>
- <20250208-prime_numbers-kunit-convert-v5-2-b0cb82ae7c7d@gmail.com>
- <202502101836.2B3E7BC4@keescook> <CAJ-ks9=pU6FsOfMk+fSwG2oLG95L2C-jwBDNad1FTGzQ5seiuw@mail.gmail.com>
-In-Reply-To: <CAJ-ks9=pU6FsOfMk+fSwG2oLG95L2C-jwBDNad1FTGzQ5seiuw@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 10 Feb 2025 21:52:14 -0500
-X-Gm-Features: AWEUYZnq2E-MPFeEevhTJkReUu_OvCFyN77M215DtLw-KJEuWzZCIAW1L8rsJaQ
-Message-ID: <CAJ-ks9nDH9Zk9vaiBP599LN-Jx3aN+JyxFXP16ikV0cayc01SQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] lib/prime_numbers: convert self-test to KUnit
-To: Kees Cook <kees@kernel.org>
-Cc: David Gow <davidgow@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Luis Felipe Hernandez <luis.hernandez093@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Ah, I see https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/co=
-mmit/?h=3Dfor-next/move-kunit-tests&id=3D3e50ba8fc834cadead733e4feeb969fce2=
-f3b6e1
-now.
+Hi,
 
-On Mon, Feb 10, 2025 at 9:47=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> On Mon, Feb 10, 2025 at 9:37=E2=80=AFPM Kees Cook <kees@kernel.org> wrote=
-:
-> >
-> > On Sat, Feb 08, 2025 at 09:44:39PM -0500, Tamir Duberstein wrote:
-> > > Extract a private header and convert the prime_numbers self-test to a
-> > > KUnit test. I considered parameterizing the test using
-> > > `KUNIT_CASE_PARAM` but didn't see how it was possible since the test
-> > > logic is entangled with the test parameter generation logic.
-> > >
-> > > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > > ---
-> > >  lib/Kconfig.debug                            | 14 +++++
-> > >  lib/math/prime_numbers.c                     | 87 +++++-------------=
-----------
-> > >  lib/math/prime_numbers_private.h             | 17 ++++++
-> > >  lib/math/tests/Makefile                      |  1 +
-> > >  lib/math/tests/prime_numbers_kunit.c         | 59 ++++++++++++++++++=
-+
-> > >  tools/testing/selftests/lib/config           |  1 -
-> > >  tools/testing/selftests/lib/prime_numbers.sh |  4 --
-> > >  7 files changed, 106 insertions(+), 77 deletions(-)
-> >
-> > Thanks! I've applied this and rebased it onto:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=
-=3Dfor-next/move-kunit-tests
-> >
-> > --
-> > Kees Cook
->
-> Thanks! Could you also take the first patch in the series[0]? The new
-> test won't build without it because lib/math/tests/Makefile is dead
-> code.
->
-> [0] https://lore.kernel.org/all/20250208-prime_numbers-kunit-convert-v5-1=
--b0cb82ae7c7d@gmail.com/
->
-> Cheers.
-> Tamir
+When executing in the TD, TDX can exit to the host VMM (KVM) for many
+reasons. These reasons are analogous to the exit reasons for VMX. Some of
+the exits will be handled within KVM in later changes. This series handles
+just the TDX exits that may be passed to userspace to handle, which are all
+via the TDCALL exit code. Although, these userspace exits have the same TDX
+exit code, they result in several different types of exits to userspace.
+
+This patch set is one of several patch sets that are all needed to provide
+the ability to run a functioning TD VM.  With v2, we have addressed the
+structural changes suggested by Sean [1] to make TDX exit handling more VMX
+like. With the size of the change, it probably needs another round of
+review before being ready for kvm-coco-queue.
+
+Base of this series
+===================
+This series is based on kvm-coco-queue up to the end of MMU part 2, plus
+one later section. Stack is:
+  - '55f78d925e07 ("KVM: TDX: Return -EBUSY when tdh_mem_page_add()
+    encounters TDX_OPERAND_BUSY")'.
+  - v2 "KVM: TDX: TD vcpu enter/exit" (There is one small log difference
+    between the v2 patches and the commits in kvm-coco-queue. No code
+    differences). 
+
+
+Notable changes since v1 [2]
+============================
+Record vmx exit reason and exit_qualification in struct vcpu_vt for TDX,
+so that TDX/VMX can use the same helpers to get exit reason and exit
+qualification.
+
+Get/set tdvmcall inputs/outputs from/to vp_enter_args directly in struct
+vcpu_tdx. Drop helpers for read/write a0~a3.
+
+Skip setting of return code when the value is TDVMCALL_STATUS_SUCCESS
+because r10 is always 0 for standard TDVMCALL exit.
+
+Morph the guest requested exit reason (via TDVMCALL) to KVM's tracked exit
+reason when it could, i.e. when the TDVMCALL leaf number is less than
+0x10000.
+- Morph the TDG.VP.VMCALL with KVM hypercall to EXIT_REASON_VMCALL.
+- Morph PV port I/O hypercall to EXIT_REASON_IO_INSTRUCTION.
+- Morph PV MMIO hypercall to EXIT_REASON_EPT_MISCONFIG.
+
+TDX marshalls registers of TDVMCALL ABI into KVM's x86 registers to match
+the definition of KVM hypercall ABI _before_ ____kvm_emulate_hypercall()
+gets called. Also, "KVM: x86: Have ____kvm_emulate_hypercall() read the
+GPRs" is added as a preparation patch for the change.
+
+Zero run->hypercall.ret in __tdx_map_gpa() following the pattern of Paolo's
+patch [3], the feedback of adding a helper is still pending.
+
+Combine TDX_OPERAND_BUSY for TDX_OPERAND_ID_TD_EPOCH and
+TDX_OPERAND_ID_SEPT.  Use EXIT_FASTPATH_EXIT_HANDLED instead of
+EXIT_FASTPATH_REENTER_GUEST for TDX_OPERAND_BUSY because when KVM requests
+KVM_REQ_OUTSIDE_GUEST_MODE, which has both KVM_REQUEST_WAIT and
+KVM_REQUEST_NO_ACTION set, it requires target vCPUs leaving fastpath so
+that interrupt can be enabled to ensure the IPIs can be delivered. Return
+EXIT_FASTPATH_EXIT_HANDLED instead of EXIT_FASTPATH_REENTER_GUEST to exit
+fastpath, otherwise, the requester may be blocked endlessly.
+
+Remove the code for reading/writing APIC mmio, since TDX guest supports
+x2APIC only.
+
+
+TDX hypercalls
+==============
+The TDX module specification defines TDG.VP.VMCALL API (TDVMCALL) for the
+guest TDs to make hypercall to VMM.  When a guest TD issues a TDVMCALL, it
+exits to VMM with a new exit reason.  The arguments from the guest TD and
+return values from the VMM are passed through the guest registers.  The
+ABI details for the guest TD hypercalls are specified in the TDX Guest-Host
+Communication Interface (GHCI) specification [4].
+
+There are two types of hypercalls defined in the GHCI specification:
+- Standard TDVMCALLs: When input of R10 from guest TD is set to 0, it
+  indicates that the TDVMCALL sub-function used in R11 is defined in GHCI
+  specification.
+- Vendor-Specific TDVMCALLs: When input of R10 from guest TD is non-zero,
+  it indicates a vendor-specific TDVMCALL. For KVM hypercalls from guest
+  TDs, KVM uses R10 as KVM hypercall number and R11-R14 as 4 arguments,
+  with the error code returned in R10.
+
+KVM hypercalls
+--------------
+This series supports KVM hypercalls from guest TDs following the 
+vendor-specific interface described above.  The KVM_HC_MAP_GPA_RANGE
+hypercall will need to exit to userspace for handling.
+
+Standard TDVMCALLs exiting to userspace
+---------------------------------------
+To support basic functionality of TDX,  this series includes the following
+standard TDVMCALL sub-functions, which reuse exist exit reasons when they
+need to exit to userspace for handling:
+- TDG.VP.VMCALL<MapGPA> reuses exit reason KVM_EXIT_HYPERCALL with the
+  hypercall number KVM_HC_MAP_GPA_RANGE.
+- TDG.VP.VMCALL<ReportFatalError> reuses exit reason KVM_EXIT_SYSTEM_EVENT
+  with a new event type KVM_SYSTEM_EVENT_TDX_FATAL.
+- TDG.VP.VMCALL<Instruction.IO> reuses exit reason KVM_EXIT_IO.
+- TDG.VP.VMCALL<#VE.RequestMMIO> reuses exit reason KVM_EXIT_MMIO.
+
+Support for TD attestation is currently excluded from the TDX basic
+enabling, so handling for TDG.VP.VMCALL<SetupEventNotifyInterrupt> and
+TDG.VP.VMCALL<GetQuote> is not included in this patch series.
+
+
+Repos
+=====
+Due to "KVM: VMX: Move common fields of struct" in "TDX vcpu enter/exit" v2
+[5], subsequent patches require changes to use new struct vcpu_vt, refer to
+the full KVM branch below.
+
+It requires TDX module 1.5.06.00.0744 [6], or later as mentioned in [5].
+A working edk2 commit is 95d8a1c ("UnitTestFrameworkPkg: Use TianoCore
+mirror of subhook submodule").
+
+The full KVM branch is here:
+https://github.com/intel/tdx/tree/tdx_kvm_dev-2025-02-10
+
+A matching QEMU is here:
+https://github.com/intel-staging/qemu-tdx/tree/tdx-qemu-upstream-v7
+
+
+Testing 
+=======
+It has been tested as part of the development branch for the TDX base
+series. The testing consisted of TDX kvm-unit-tests and booting a Linux
+TD, and TDX enhanced KVM selftests.
+
+[1] https://lore.kernel.org/kvm/Z1suNzg2Or743a7e@google.com
+[2] https://lore.kernel.org/kvm/20241201035358.2193078-1-binbin.wu@linux.intel.com
+[3] https://lore.kernel.org/kvm/20241213194137.315304-1-pbonzini@redhat.com
+[4] https://cdrdv2.intel.com/v1/dl/getContent/726792
+[5] https://lore.kernel.org/kvm/20250129095902.16391-1-adrian.hunter@intel.com
+[6] https://github.com/intel/tdx-module/releases/tag/TDX_1.5.06
+
+
+Binbin Wu (3):
+  KVM: x86: Have ____kvm_emulate_hypercall() read the GPRs
+  KVM: TDX: Handle TDG.VP.VMCALL<MapGPA>
+  KVM: TDX: Handle TDG.VP.VMCALL<ReportFatalError>
+
+Isaku Yamahata (4):
+  KVM: TDX: Add a place holder to handle TDX VM exit
+  KVM: TDX: Add a place holder for handler of TDX hypercalls
+    (TDG.VP.VMCALL)
+  KVM: TDX: Handle KVM hypercall with TDG.VP.VMCALL
+  KVM: TDX: Handle TDX PV port I/O hypercall
+
+Sean Christopherson (1):
+  KVM: TDX: Handle TDX PV MMIO hypercall
+
+ Documentation/virt/kvm/api.rst    |   9 +
+ arch/x86/include/asm/shared/tdx.h |   1 +
+ arch/x86/include/asm/tdx.h        |   1 +
+ arch/x86/include/uapi/asm/vmx.h   |   4 +-
+ arch/x86/kvm/vmx/main.c           |  38 ++-
+ arch/x86/kvm/vmx/tdx.c            | 532 +++++++++++++++++++++++++++++-
+ arch/x86/kvm/vmx/tdx.h            |   5 +
+ arch/x86/kvm/vmx/tdx_errno.h      |   3 +
+ arch/x86/kvm/vmx/x86_ops.h        |   8 +
+ arch/x86/kvm/x86.c                |  16 +-
+ arch/x86/kvm/x86.h                |  26 +-
+ include/uapi/linux/kvm.h          |   1 +
+ virt/kvm/kvm_main.c               |   1 +
+ 13 files changed, 616 insertions(+), 29 deletions(-)
+
+-- 
+2.46.0
+
