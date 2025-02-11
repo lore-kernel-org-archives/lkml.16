@@ -1,95 +1,144 @@
-Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE871F754A;
-	Tue, 11 Feb 2025 11:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F3E1F0E2C;
+	Tue, 11 Feb 2025 11:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739274567; cv=none; b=oJkfZCQsEXNj8sn0+b/OT10ABkf3o8nu+x+iZN9P+bI8s/NQFuBhwjzQxxF4/6rjLw/GKjZq8kW+IwucIcVvD9Q4T87FIv666umY7OIjOhKCv4hhA4RxWg13VWV0m0RglUXawBZ97T56QwmVXvLIqkmAFYHqc4veDRq/I3EhapU=
+	t=1739274623; cv=none; b=iA8CedXiiIcuA3q2I0fH7A0K7YwZoeeAk4hqOE+Q6EJcEJLlz76x+H01PiNQQ1uu406+uflTrN+HmmvrAoVkJmLdphYikwwhutNxX4TpHFg5Fe1ykoyTLLkxz1JJXkH+RibxCTw3mLSXqLwKR7YkpiyX/RqQZtW60m+UAcUimS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739274567; c=relaxed/simple;
-	bh=RSrR31etPfWErYWuQDOoH5CdG8ajOEflXt5lHMpkXhI=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=BuEIp/1mlr4+uzmBFjSrvD6YYFCkjiH4us6nrPFcKV3JjkC/5y0CW1gFHZlE996ZGW3DhR4/izlluPboP8KuLQyhoFtLnfzgJ0L+OdAL4/ePK3lSbFa9MXabx77w2z6wwN61C2g2k6lu5n9fjbjw89HBiv+1SC9wwomVe+t6UEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.jp; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.co.jp header.i=@amazon.co.jp header.b=I0uQU/F2; arc=none smtp.client-ip=52.95.48.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1739274623; c=relaxed/simple;
+	bh=z7ig8G4ja3AfMZ4xQnC35j6cgjQp78dfBzJxrAhKF54=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=MuL14YYbfE+29zwl6b5e6466c1Gd1IW2RQSiZRGPli9AyxkzrXViSb0NhpQ+1oUZG2q53SnAP8POljAUEWqSJOmOhLoALuiWT6b8Pif34mNkZ8GR1jRti85kcTCglIOBbBnMcVV+nS+ouDfRoYVKOKqeYWYaUaHtX8ypr4sEeCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n31hD8Ni; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.co.jp header.i=@amazon.co.jp header.b="I0uQU/F2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.jp; i=@amazon.co.jp; q=dns/txt;
-  s=amazon201209; t=1739274566; x=1770810566;
-  h=from:to:cc:subject:date:message-id:content-id:
-   content-transfer-encoding:mime-version;
-  bh=RSrR31etPfWErYWuQDOoH5CdG8ajOEflXt5lHMpkXhI=;
-  b=I0uQU/F2yTvmAtnd2DrEOjBWSOFKtXtN0qsH++nvUL1yFe1eByiKtjeO
-   gb3J2XVUXSz2ALEGODKygE37T4TLp1ME7vHv6ZBBhcmEEu1PzkG/nM5lQ
-   kChX1Fz4dyAyPW5H+4aMt/RUzaXHKfrWF6Xk06VF9ZXdU2VNbVKOAtcZz
-   s=;
-X-IronPort-AV: E=Sophos;i="6.13,277,1732579200"; 
-   d="scan'208";a="461536813"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 11:49:18 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.7.35:24326]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.2.31:2525] with esmtp (Farcaster)
- id 5ec35c9f-088f-4516-adef-c68c778defd9; Tue, 11 Feb 2025 11:49:16 +0000 (UTC)
-X-Farcaster-Flow-ID: 5ec35c9f-088f-4516-adef-c68c778defd9
-Received: from EX19D004ANA004.ant.amazon.com (10.37.240.146) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
- Tue, 11 Feb 2025 11:49:16 +0000
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19D004ANA004.ant.amazon.com (10.37.240.146) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 11 Feb 2025 11:49:14 +0000
-Received: from EX19D004ANA001.ant.amazon.com ([fe80::f099:cbca:cc6b:91ec]) by
- EX19D004ANA001.ant.amazon.com ([fe80::f099:cbca:cc6b:91ec%5]) with mapi id
- 15.02.1544.014; Tue, 11 Feb 2025 11:49:14 +0000
-From: "Iwashima, Kuniyuki" <kuniyu@amazon.co.jp>
-To: Breno Leitao <leitao@debian.org>, Uday Shankar <ushankar@purestorage.com>
-CC: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Andrew Lunn
-	<andrew+netdev@lunn.ch>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "kernel-team@meta.com" <kernel-team@meta.com>
-Subject: Re: [PATCH net-next v2 2/2] net: Add dev_getbyhwaddr_rtnl() helper
-Thread-Topic: [PATCH net-next v2 2/2] net: Add dev_getbyhwaddr_rtnl() helper
-Thread-Index: AQHbfHr5TbFo5KdF2Umd+m4rD5vlBA==
-Date: Tue, 11 Feb 2025 11:49:14 +0000
-Message-ID: <9B3D8CD0-65DE-43FE-88BA-55902DE96496@amazon.co.jp>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <629AC6E3330F8B459433207CFDFB63DF@amazon.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n31hD8Ni"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26BB9C4CEDD;
+	Tue, 11 Feb 2025 11:50:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739274622;
+	bh=z7ig8G4ja3AfMZ4xQnC35j6cgjQp78dfBzJxrAhKF54=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=n31hD8Ni6DJMrh3nvJ1L2L0R95t7dSJ06VWF5Fr+txvM/0hrpfR9el8L6QX1nzn/G
+	 9SlcGjMifj8ijihhSKnWYo0jvfz69UDyGACNXOPxr4XagmbkhA1W6rkJmjGJKDco3p
+	 QgsVihqJXeT5o0tTeTUYbI+N8gcM8FMV9q4FnnZw0+upNI5hTd7oDpPj0ZNvr/oQ+E
+	 DkoBtMtihVvUpXOiQXLqQpuHaeYP03vveVJaypBhtgpzuvwZNA950w8CYLfSNMZEt1
+	 FNNKwxhoXwCShlUwjzJZ3VwkvyjTiXiMkGJnBvniZxBtHUvhnnsmL6t9vLHKjzcIXn
+	 IzstWRa2ang3w==
+Message-ID: <c85903c6-6a89-4382-bfa2-2fed95f0cbc0@kernel.org>
+Date: Tue, 11 Feb 2025 12:50:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v2 1/5] dt-bindings: thermal: Add MBG thermal monitor
+ support
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>,
+ Stephen Boyd <sboyd@kernel.org>, Amit Kucheria <amitk@kernel.org>,
+ Thara Gopinath <thara.gopinath@gmail.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Ajit Pandey
+ <quic_ajipan@quicinc.com>, Imran Shaik <quic_imrashai@quicinc.com>,
+ Taniya Das <quic_tdas@quicinc.com>, Jagadeesh Kona <quic_jkona@quicinc.com>,
+ quic_kamalw@quicinc.com, quic_jprakash@quicinc.com,
+ linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org
+References: <20241212-mbg-v2-support-v2-0-3249a4339b6e@quicinc.com>
+ <20241212-mbg-v2-support-v2-1-3249a4339b6e@quicinc.com>
+ <ojukpywkhu72cimujmijzidf26654g5vkjaj477imcf4suz2o6@cmow62jcqsfz>
+ <7a5db383-914c-4c1e-846e-5d68cc6a7765@quicinc.com>
+ <fcd718be-fe8a-466f-bd2b-7b75d5f8dd6c@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <fcd718be-fe8a-466f-bd2b-7b75d5f8dd6c@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-RnJvbTogQnJlbm8gTGVpdGFvIDxsZWl0YW9AZGViaWFuLm9yZz4NCkRhdGU6IFR1ZSwgMTEgRmVi
-IDIwMjUgMDM6MzY6NDMgLTA4MDANCj4gPiA+ICtzdHJ1Y3QgbmV0X2RldmljZSAqZGV2X2dldGJ5
-aHdhZGRyKHN0cnVjdCBuZXQgKm5ldCwgdW5zaWduZWQgc2hvcnQgdHlwZSwNCj4gPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBjb25zdCBjaGFyICpoYSkNCj4gPiA+ICt7DQo+ID4g
-PiArICAgc3RydWN0IG5ldF9kZXZpY2UgKmRldjsNCj4gPiA+ICsNCj4gPiA+ICsgICBBU1NFUlRf
-UlROTCgpOw0KPiA+ID4gKyAgIGZvcl9lYWNoX25ldGRldihuZXQsIGRldikNCj4gPiA+ICsgICAg
-ICAgICAgIGlmIChkZXZfY29tcF9hZGRyKGRldiwgdHlwZSwgaGEpKQ0KPiA+ID4gKyAgICAgICAg
-ICAgICAgICAgICByZXR1cm4gZGV2Ow0KPiA+ID4gKw0KPiA+ID4gKyAgIHJldHVybiBOVUxMOw0K
-PiA+ID4gK30NCj4gPiA+ICtFWFBPUlRfU1lNQk9MKGRldl9nZXRieWh3YWRkcik7DQo+ID4NCj4g
-PiBDb21taXQgdGl0bGUgc2hvdWxkIGNoYW5nZSB0byByZWZsZWN0IHRoZSBuZXcgZnVuY3Rpb24g
-bmFtZSBpbiB2Mi4NCj4gPg0KPiA+IFNlcGFyYXRlbHkgLSBob3cgc2hvdWxkIEkgY29tYmluZSB0
-aGlzIHdpdGgNCj4gPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9uZXRkZXYvMjAyNTAyMDUtbmV0
-Y29uc29sZS12My0wLTEzMmEzMWYxNzE5OUBwdXJlc3RvcmFnZS5jb20vPw0KPiA+IEkgc2VlIHRo
-cmVlIG9wdGlvbnM6DQo+ID4gLSBjb21iaW5lIHRoZSB0d28gc2VyaWVzIGludG8gb25lDQo+IA0K
-PiBJIHdvdWxkIHN1Z2dlc3QgeW91IGNvbWJpbmUgdGhlIHR3byBzZXJpZXMgaW50byBvbmUuDQo+
-IA0KPiBJIHdpbGwgc2VuZCBhIHYzIHRvZGF5IGFkanVzdGluZyB0aGUgY29tbWVudHMsIGFuZCB5
-b3UgY2FuIGludGVncmF0ZWQNCj4gdGhlbSBpbnRvIHlvdXIgcGF0Y2hzZXQuDQoNCkkgc3VnZ2Vz
-dCBCcmVubyBwb3N0IHYzIGZvciBuZXQuZ2l0IHdpdGggYXJwIGZpeCBhbmQgdGhlbiBuZXQuZ2l0
-DQp3aWxsIGJlIG1lcmdlZCB0byBuZXQtbmV4dCBvbiBUaHVyc2RheSwgdGhlbiBVZGF5IGNhbiBy
-ZXNwaW4uDQoNCklmIHRoaXMgaXMgcG9zdGVkIHRvIG5ldC1uZXh0LmdpdCwgdGhlIGZvbGxvd2lu
-ZyBhcnAgZml4IG5lZWRzIHRvDQp3YWl0IGZvciB0aGUgbmV4dCBjeWNsZSBzbyB0aGF0IG5ldC1u
-ZXh0LmdpdCB3aWxsIGJlIG1lcmdlZCB0bw0KbmV0LmdpdC4NCg0K
+On 11/02/2025 12:46, Krzysztof Kozlowski wrote:
+> On 11/02/2025 12:15, Satya Priya Kakitapalli wrote:
+>>
+>> On 12/13/2024 2:08 PM, Krzysztof Kozlowski wrote:
+>>> On Thu, Dec 12, 2024 at 09:41:20PM +0530, Satya Priya Kakitapalli wrote:
+>>>> +
+>>>> +required:
+>>>> +  - compatible
+>>>> +  - reg
+>>>> +  - interrupts
+>>>> +  - io-channels
+>>>> +  - io-channel-names
+>>> Binding looks ok, but this wasn't tested due to unneeded dependency.
+>>> Please decouple from dependency, so automation can properly test it.
+>>
+>>
+>> The dependency is needed because this mbg peripheral is present on only 
+>> targets which have GEN3 ADC5, for which the bindings support is added in 
+>> the series [1]
+>>
+>>
+>> [1] 
+>> https://lore.kernel.org/linux-arm-msm/c4ca0a4c-e421-4cf6-b073-8e9019400f4c@quicinc.com/
+> 
+> Sure. Then this cannot be merged due to resulting test failure.
+> 
+> Please don't post new versions before this can be actually tested and
+> applied.
+
+Heh, you responded *after two months*, to an old email so even previous
+discussion is gone from my inbox.
+
+Best regards,
+Krzysztof
