@@ -1,139 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from forwardcorp1a.mail.yandex.net (forwardcorp1a.mail.yandex.net [178.154.239.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B071F8BBF;
-	Tue, 11 Feb 2025 11:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 422DB1FBCB6;
+	Tue, 11 Feb 2025 11:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739274430; cv=none; b=q/zfDBmpm9r0hPo3tWxLYnldmdSVdSXlTkdIt2w76MTim/+vGTWuYUUTRTyTAaMGjyiUk5WMQUualuZvIT6GbBNWNYNWyPtFpSwly6D/JRF901h4KDv8JbV828l5WsXAdcBgFVtQeH/3NRglcQ32Bg0ZS3v/PqXwV6XINAWevFA=
+	t=1739274436; cv=none; b=IfXCe6FMR8Xo3o8sUj9+tdGP4w2jy1Efi101ywm/4z1HhUeNLUJqU17x8jBFLEH9WhP+znS8eonmsVbJAAnacYjlHJxtKtCg4P1x+E08ZP9ps+OnVAH/YmcKXIFYma9dSUSIpSCUuWwrx2b/kqra5lph0F/Y8ImTUv2KsteLajY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739274430; c=relaxed/simple;
-	bh=9P8Tde5jB2r72hlwt6Vi7jp/JBFV2fMps/hiNYBEKog=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HuwIxWfr3ujG0PYtxYBMD2BNzMgrPoXHPLhLE23wPC/RftZQ8/+xm7JB3/IuwC0LLvwANewvxsJ/p3DV5d8A0yiVlmb0Vissx7N2vWN2XOHIFDpEf8UUnCTGtL05TocmYWwacoKW9D9Yr9VfgxFEyToxOnq9vD/MIIZ2dZ3zeL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LrAPiguR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739274436; c=relaxed/simple;
+	bh=Y0fh7AWxUG/Btsyl6afxXwMV1HfS5uyYkfO9R1i/q0c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mAqSgxCWghrngbyz0SScHwJx/YPp6foQIUjEqts/fmSM8bLfUvhi5n/hRT1WAGW2p9jP4i7ozLvAB39QBd57iQbTfH2PCvpQyxkJw24QC1bZGwUfRz/Wq48ywhpMHKBjxDQLpOkE4hmVEYnzyiiPmcncHm7Iow0ewA7THol83uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.com; spf=pass smtp.mailfrom=yandex-team.com; dkim=pass (1024-bit key) header.d=yandex-team.com header.i=@yandex-team.com header.b=LJ5WKFHm; arc=none smtp.client-ip=178.154.239.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LrAPiguR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A87F1C4CEDD;
-	Tue, 11 Feb 2025 11:46:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739274430;
-	bh=9P8Tde5jB2r72hlwt6Vi7jp/JBFV2fMps/hiNYBEKog=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LrAPiguRFji4Iub4YvaRSXBQ/ylWezYiMsifYZ6WcRRo5KbmsJHJQOCsT5GXkhKxS
-	 6I+/9/KRfTtuMMegsTn9ICnMviNmjkqUqCcMMz+Rbr4RHooWeR+yG8AqbOFt0mKWwk
-	 pHWMPewICo4ATe5+RQ1MB1jVAO7GJvRjBNEa/HE2MkOOdTbDxA4qZQMklP93uYrInn
-	 /ETx9QK+iDDhNL4o7z2X8yiaNMxqTiZTyYNyDB7Zk1DRUj6uZXToxv2hl5+BmiVsmW
-	 dpwinirrsHRMa3NZUn2zObL7EhNkC1MBrpgndPljOUbsu//fbg4PPsth0bqnh26kjc
-	 ksOdkJflgeGpQ==
-Message-ID: <fcd718be-fe8a-466f-bd2b-7b75d5f8dd6c@kernel.org>
-Date: Tue, 11 Feb 2025 12:46:57 +0100
+	dkim=pass (1024-bit key) header.d=yandex-team.com header.i=@yandex-team.com header.b="LJ5WKFHm"
+Received: from mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net [IPv6:2a02:6b8:c0f:1286:0:640:6f2b:0])
+	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id A65BE614BD;
+	Tue, 11 Feb 2025 14:46:00 +0300 (MSK)
+Received: from dellarbn.yandex.net (unknown [10.214.35.248])
+	by mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id njMaW61IYa60-0cIaOumc;
+	Tue, 11 Feb 2025 14:45:59 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.com;
+	s=default; t=1739274360;
+	bh=y1+8TKaZyt8/6ij0O/nQoH47E1MV/9ZBI4/TT9VKt0Q=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=LJ5WKFHmyCrCn1KYL3qcylN81InuVfSerkMsn+VBoeKh8/wdxrbUdzZdQ+PpMKMyh
+	 oGWt9zOHcNbRA3SiMQ2rM6FIaaD8FM4h8AwmMdD3qpAfcSUkrKnO1pBCwXvTw8TKGl
+	 FAEAxOhG/j/IwM2mkQ+KPz4ubeN23snm5HpH+GaQ=
+Authentication-Results: mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net; dkim=pass header.i=@yandex-team.com
+From: Andrey Ryabinin <arbn@yandex-team.com>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Zhenyu Wang <zhenyuw@linux.intel.com>,
+	Zhi Wang <zhi.wang.linux@gmail.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Matthew Rosato <mjrosato@linux.ibm.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Yi Liu <yi.l.liu@intel.com>,
+	intel-gvt-dev@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	Andrey Ryabinin <arbn@yandex-team.com>,
+	stable@vger.kernel.org
+Subject: [PATCH 1/2] drm/i915/gvt: Store ->kvm reference in intel_vgpu struct.
+Date: Tue, 11 Feb 2025 12:45:43 +0100
+Message-ID: <20250211114544.17845-1-arbn@yandex-team.com>
+X-Mailer: git-send-email 2.45.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v2 1/5] dt-bindings: thermal: Add MBG thermal monitor
- support
-To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>,
- Stephen Boyd <sboyd@kernel.org>, Amit Kucheria <amitk@kernel.org>,
- Thara Gopinath <thara.gopinath@gmail.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Ajit Pandey
- <quic_ajipan@quicinc.com>, Imran Shaik <quic_imrashai@quicinc.com>,
- Taniya Das <quic_tdas@quicinc.com>, Jagadeesh Kona <quic_jkona@quicinc.com>,
- quic_kamalw@quicinc.com, quic_jprakash@quicinc.com,
- linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org
-References: <20241212-mbg-v2-support-v2-0-3249a4339b6e@quicinc.com>
- <20241212-mbg-v2-support-v2-1-3249a4339b6e@quicinc.com>
- <ojukpywkhu72cimujmijzidf26654g5vkjaj477imcf4suz2o6@cmow62jcqsfz>
- <7a5db383-914c-4c1e-846e-5d68cc6a7765@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <7a5db383-914c-4c1e-846e-5d68cc6a7765@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 11/02/2025 12:15, Satya Priya Kakitapalli wrote:
-> 
-> On 12/13/2024 2:08 PM, Krzysztof Kozlowski wrote:
->> On Thu, Dec 12, 2024 at 09:41:20PM +0530, Satya Priya Kakitapalli wrote:
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +  - interrupts
->>> +  - io-channels
->>> +  - io-channel-names
->> Binding looks ok, but this wasn't tested due to unneeded dependency.
->> Please decouple from dependency, so automation can properly test it.
-> 
-> 
-> The dependency is needed because this mbg peripheral is present on only 
-> targets which have GEN3 ADC5, for which the bindings support is added in 
-> the series [1]
-> 
-> 
-> [1] 
-> https://lore.kernel.org/linux-arm-msm/c4ca0a4c-e421-4cf6-b073-8e9019400f4c@quicinc.com/
+'vfio_device' keeps the ->kvm pointer with elevated counter from the first
+open of the device up until the last close(). So the kvm struct and its
+dependencies (kvm kthreads, cgroups ...) kept alive even for VFIO device
+that don't need ->kvm.
 
-Sure. Then this cannot be merged due to resulting test failure.
+Copy ->kvm pointer from the vfio_device struct and store it in the
+'intel_vgpu'. Note that kvm_page_track_[un]register_notifier() already
+does get/put calls, keeping the kvm struct alive.
 
-Please don't post new versions before this can be actually tested and
-applied.
+This will allow to release ->kvm from the vfio_device righ after the
+first open call, so that devices not using kvm not keeping it alive.
 
-Best regards,
-Krzysztof
+Devices that are using kvm (like intel_vgpu) will be expected to mange
+the lifetime of the kvm struct by themselves.
+
+Fixes: 2b48f52f2bff ("vfio: fix deadlock between group lock and kvm lock")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrey Ryabinin <arbn@yandex-team.com>
+---
+ drivers/gpu/drm/i915/gvt/gvt.h   |  1 +
+ drivers/gpu/drm/i915/gvt/kvmgt.c | 14 +++++++-------
+ 2 files changed, 8 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/gvt/gvt.h b/drivers/gpu/drm/i915/gvt/gvt.h
+index 2c95aeef4e41..6c62467df22c 100644
+--- a/drivers/gpu/drm/i915/gvt/gvt.h
++++ b/drivers/gpu/drm/i915/gvt/gvt.h
+@@ -232,6 +232,7 @@ struct intel_vgpu {
+ 	unsigned long nr_cache_entries;
+ 	struct mutex cache_lock;
+ 
++	struct kvm *kvm;
+ 	struct kvm_page_track_notifier_node track_node;
+ #define NR_BKT (1 << 18)
+ 	struct hlist_head ptable[NR_BKT];
+diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
+index b27ff77bfb50..cf418e2c560d 100644
+--- a/drivers/gpu/drm/i915/gvt/kvmgt.c
++++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
+@@ -36,6 +36,7 @@
+ #include <linux/init.h>
+ #include <linux/mm.h>
+ #include <linux/kthread.h>
++#include <linux/kvm_host.h>
+ #include <linux/sched/mm.h>
+ #include <linux/types.h>
+ #include <linux/list.h>
+@@ -649,7 +650,7 @@ static bool __kvmgt_vgpu_exist(struct intel_vgpu *vgpu)
+ 		if (!test_bit(INTEL_VGPU_STATUS_ATTACHED, itr->status))
+ 			continue;
+ 
+-		if (vgpu->vfio_device.kvm == itr->vfio_device.kvm) {
++		if (vgpu->kvm == itr->kvm) {
+ 			ret = true;
+ 			goto out;
+ 		}
+@@ -664,13 +665,13 @@ static int intel_vgpu_open_device(struct vfio_device *vfio_dev)
+ 	struct intel_vgpu *vgpu = vfio_dev_to_vgpu(vfio_dev);
+ 	int ret;
+ 
++	vgpu->kvm = vgpu->vfio_device.kvm;
+ 	if (__kvmgt_vgpu_exist(vgpu))
+ 		return -EEXIST;
+ 
+ 	vgpu->track_node.track_write = kvmgt_page_track_write;
+ 	vgpu->track_node.track_remove_region = kvmgt_page_track_remove_region;
+-	ret = kvm_page_track_register_notifier(vgpu->vfio_device.kvm,
+-					       &vgpu->track_node);
++	ret = kvm_page_track_register_notifier(vgpu->kvm, &vgpu->track_node);
+ 	if (ret) {
+ 		gvt_vgpu_err("KVM is required to use Intel vGPU\n");
+ 		return ret;
+@@ -707,8 +708,7 @@ static void intel_vgpu_close_device(struct vfio_device *vfio_dev)
+ 
+ 	debugfs_lookup_and_remove(KVMGT_DEBUGFS_FILENAME, vgpu->debugfs);
+ 
+-	kvm_page_track_unregister_notifier(vgpu->vfio_device.kvm,
+-					   &vgpu->track_node);
++	kvm_page_track_unregister_notifier(vgpu->kvm, &vgpu->track_node);
+ 
+ 	kvmgt_protect_table_destroy(vgpu);
+ 	gvt_cache_destroy(vgpu);
+@@ -1560,7 +1560,7 @@ int intel_gvt_page_track_add(struct intel_vgpu *info, u64 gfn)
+ 	if (kvmgt_gfn_is_write_protected(info, gfn))
+ 		return 0;
+ 
+-	r = kvm_write_track_add_gfn(info->vfio_device.kvm, gfn);
++	r = kvm_write_track_add_gfn(info->kvm, gfn);
+ 	if (r)
+ 		return r;
+ 
+@@ -1578,7 +1578,7 @@ int intel_gvt_page_track_remove(struct intel_vgpu *info, u64 gfn)
+ 	if (!kvmgt_gfn_is_write_protected(info, gfn))
+ 		return 0;
+ 
+-	r = kvm_write_track_remove_gfn(info->vfio_device.kvm, gfn);
++	r = kvm_write_track_remove_gfn(info->kvm, gfn);
+ 	if (r)
+ 		return r;
+ 
+-- 
+2.45.3
+
