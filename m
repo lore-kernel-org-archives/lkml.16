@@ -1,277 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5A3230D0E;
-	Tue, 11 Feb 2025 15:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FACA230D0E;
+	Tue, 11 Feb 2025 15:57:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739289465; cv=none; b=NXL9PpGJ/IvJycfW2Y++CYvsh14N93SdmFVi44+uZm7r3bH+LU5HPLs+gpsCBVdtPa80O339Nxad5CjTS+QFqAh8IGPNcKQQLNEZ/LM4WzNmmW7jVe0iOPoqjh12nZ4HwUNn9xynLNAaSOYKwl8ESn8JmL9Ukx6lyxTicT8HL/w=
+	t=1739289472; cv=none; b=GxgNfXlGvth5LUDZLc5WXWWjoGktHdJ/kkhMZONYA1iHYyP1iIz9t1Vwk5h+lzuBvkACKArtJ6UeR6Noo4RZYDifn/kWnNEXgAiipBVGqinM8+2+WcBPD60zLrUynz8aeM4ZnkMXs+YH8u32NLE/eJqIooaLho+9YBY3YMUtI1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739289465; c=relaxed/simple;
-	bh=uIApT9eZfOkjxW+tghEwB5jzwb0KkhHL4LwhuptkIlE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ohVSKgHCnXdY/wTzziDC0WgvBRJzxCUfdamVJfGC0qC/fa04C/m7JMG0R1V3dHqJcfimduGK7zpg7opcJkoaIPT5HiuO9r95eoY3OHJdyvAoOhS+2M08z58FP01U0PdLOSMbyu/sNDKeAlkz/ETFSgo22nCDbvR8e19nvmuWnIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t6kUUSbY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739289472; c=relaxed/simple;
+	bh=igUfBnW0H/ZVwHw5B0VCNQjBq/WY6prMD9Yy2g+H1Qk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t3aKfDHmAu6NEeLBbh5aNtuWJpfYaiJD79vOaIQjt3aFS64Wr6/+/DCtu3XGeUOxUdM3shjbEBrLvUpi53B4KJm995l9PgLO5Si1HK/QKbuY2ufVCiF5yJoihWX8BMcmb9EPrJaRBHNmj+F7mvHAGLmHYHHJ1SLcLPruHZ0oMe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WTIrM3b8; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t6kUUSbY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AA9FC4CEDD;
-	Tue, 11 Feb 2025 15:57:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739289465;
-	bh=uIApT9eZfOkjxW+tghEwB5jzwb0KkhHL4LwhuptkIlE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t6kUUSbY89Kvrb40wajktPBL05ZzvUvJZLV7qFJ+OtsEteDSCcMgLeDavagEfDQyF
-	 rlwQsbbNWHW2JBmxh1e3L91SiMWTqKKevlyu5izk7cBzutktT4jA1NDS2CK7cqHbCe
-	 nBaYQwQBj18NoG1oOHvvkn/eMzOka4Z1iDyIzjU/n79BWITFki3b9ygIx9johilaL8
-	 lcZKJwM+tcHsjhiLn/NbPWDUCQPR1rYK2AvNyowN0RwR9DkZws/Nykc+TnypdWk366
-	 ic7JQFV6TqKNx9mWOTKcr48uSSFJKKy2r08pWCVTE1/C4x82xHjMYoUFKX1TGYFexu
-	 4cotrWL7YEGKg==
-Date: Tue, 11 Feb 2025 21:27:14 +0530
-From: Naveen N Rao <naveen@kernel.org>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Sean Christopherson <seanjc@google.com>, 
-	Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH 3/3] KVM: x86: Decouple APICv activation state from
- apicv_inhibit_reasons
-Message-ID: <yrxhngndj37edud6tj5y3vunaf7nirwor4n63yf4275wdocnd3@c77ujgialc6r>
-References: <cover.1738595289.git.naveen@kernel.org>
- <405a98c2f21b9fe73eddbc35c80b60d6523db70c.1738595289.git.naveen@kernel.org>
- <Z6EOxxZA9XLdXvrA@google.com>
- <60cef3e4-8e94-4cf1-92ae-34089e78a82d@redhat.com>
- <Z6FVaLOsPqmAPNWu@google.com>
- <0e4bd3004d97b145037c36c785c19e97b6995d42.camel@redhat.com>
- <Z6JoInXNntIoHLQ8@google.com>
- <604c0d57-ed91-44d2-80d7-4d3710b04142@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WTIrM3b8"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-3072f8dc069so59953881fa.3;
+        Tue, 11 Feb 2025 07:57:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739289469; x=1739894269; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kdNtGAmQ1++8CfeOM4m4R0aD5lviL2ojURbZJ38nqN8=;
+        b=WTIrM3b8VhL3XWDVrhdpvpBP8fa5vsYGpOhPUhIcrBtVNz6o2TaV/J/Q50dexss1Ug
+         G3U8XBrQDnQRniZAdWrQ8+ZzhS2GDNc5oNSoyk1wRTBuNbvOayOi5OyvTJPQ+77KUaNy
+         zX7c8flXFpiPzs7EewwhUbrWs4EkmdG/1Ate840UxOMhbn7qaHtyLWWNTl9Dq5mxJJ8f
+         mKqk4YTveLiPHOaFHO3BxjZ841Lspxi82eC8cRXnOIe7ssEzxZVIpGP2Xdf7Y+h5Fo2+
+         mX5l9B7mcURUWWxYHujkK3sZhEvlA9CGZKAYeF9fxkZM+T5vufgG3skPe8bPWTvYa2lb
+         QEhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739289469; x=1739894269;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kdNtGAmQ1++8CfeOM4m4R0aD5lviL2ojURbZJ38nqN8=;
+        b=vPSx96DLka9SkFt+sev/UBa+g5gN1TEla6rE8lqWstm1nxStNuJhtxTtSJDjyXxbX5
+         DHNq5UGipLFBa0wAmVtGtHbmJHBf9aBq7axknGWruk7ANwBFwPNKIwSrD2sm8pp0LGQe
+         Mo6rVf2Ga5ioB8qFCfRE2ItT3F5Gw3TBUVyKX60s0X2kbCBR31nDWdNUbPVEAc7JVc7h
+         W5jiZ7IWFZj6cv5gtFuMrqRC7/gp4qs5CVW8IpXZIZANXL2txfG1UR5kFmQ+mcDTzojr
+         A5yFLpL0JlC90oFY7FSeHh3bBuPRCcqHswyrbUea7/EW+M5j0jrjEK30OMh8zPzaXB17
+         8dNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1XfAhXPaglFR4KwEXkCxWnDvFn5P9MymM6r+qwOyymcAmZtOQYvTz1Kb6HzNWQu/vaz9Psl+khhJO+0o=@vger.kernel.org, AJvYcCVkWILthBVPU+uMec62z2v2AQw5XWf1QSqWWk9kE+rr1uNpq/yM/85rNlx/cM/W0nQ1rtd1YF9QjnkUVNM8oqyC@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPbVIePqx5GyOcc6ZyHgqKS2kKoWQ4SxIjZGw4fS45UvBlb8r9
+	wHWpjm6Ha4AkoDHqFq42n3mxnQtKwzvd1wnMZVva6ogmA1/hpkRC9N/xU5VWEdz5SpT1VhH/5xB
+	XKFQhRpVz83VP0E2nyZmMKQ/zN20=
+X-Gm-Gg: ASbGncsbqkQJZ/TwT5b1sIRpZTYkXYxE7ZZksK0yBJvr8UcUtvrejycJx+jlRvPvxVt
+	Br+z3o0/Q/kc5LPU6vZWSPHOGT1GYNOM2hdeU5bHxZhacuWkH/X5MEWNuZ/lgiwaqBi6JrVcO5x
+	9tybNMTRyzan98
+X-Google-Smtp-Source: AGHT+IH5Lz0xVbHy2p7Zzd4KjMIBOwTnYpwQCbbBgzjrW4cXXKUYmm+YalGaUZeuwCE6afHPMv8niA/jCbhVDmiEtDs=
+X-Received: by 2002:a05:651c:1a0c:b0:309:2ed:72df with SMTP id
+ 38308e7fff4ca-309036dbf68mr31481fa.24.1739289468908; Tue, 11 Feb 2025
+ 07:57:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <604c0d57-ed91-44d2-80d7-4d3710b04142@redhat.com>
+References: <20250211-scanf-kunit-convert-v7-0-c057f0a3d9d8@gmail.com>
+ <Z6tvciJpQgTwYpGx@smile.fi.intel.com> <CAJ-ks9mcxW7zY33FPB+mZ75dQ2Xqo-viM9CpbL=0i0WXUPJRhw@mail.gmail.com>
+ <Z6tytjvT1A-5TOrq@smile.fi.intel.com>
+In-Reply-To: <Z6tytjvT1A-5TOrq@smile.fi.intel.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Tue, 11 Feb 2025 10:57:11 -0500
+X-Gm-Features: AWEUYZkWuX3dcPWDfQFbMW4zVQMNolJOxu8giTzDL1QisWsULtS548fQuUplDvs
+Message-ID: <CAJ-ks9kSBMh0=dgPC-NiOhibnK_LhBjBdZ_AQ91h-DBZfYR1sw@mail.gmail.com>
+Subject: Re: [PATCH v7 0/3] scanf: convert self-test to KUnit
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Shuah Khan <shuah@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 05, 2025 at 12:36:21PM +0100, Paolo Bonzini wrote:
-> On 2/4/25 20:18, Sean Christopherson wrote:
-> > On Mon, Feb 03, 2025, Maxim Levitsky wrote:
-> > > On Mon, 2025-02-03 at 15:46 -0800, Sean Christopherson wrote:
-> > > > On Mon, Feb 03, 2025, Paolo Bonzini wrote:
-> > > > > On 2/3/25 19:45, Sean Christopherson wrote:
+On Tue, Feb 11, 2025 at 10:54=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Feb 11, 2025 at 10:47:03AM -0500, Tamir Duberstein wrote:
+> > On Tue, Feb 11, 2025 at 10:40=E2=80=AFAM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Tue, Feb 11, 2025 at 10:13:36AM -0500, Tamir Duberstein wrote:
+>
+> ...
+>
+> > > > - Use original test assertions as KUNIT_*_EQ_MSG produces hard-to-p=
+arse
+> > > >   messages. The new failure output is:
+> > >
+> > > It would be good if you put into cover letter, or even in the respect=
+ful patch
+> > > the example of the error report for the old code and new code that it=
+ will be
+> > > clear how it changes.
+> > >
+> > > >     vsscanf("0 1e 3e43 31f0 0 0 5797 9c70", "%1hx %2hx %4hx %4hx %1=
+hx %1hx %4hx %4hx", ...) expected 837828163 got 1044578334
+> > > >             not ok 1 " "
+> > > >         # numbers_list_field_width_val_width: ASSERTION FAILED at l=
+ib/scanf_kunit.c:92
+> > > >     vsscanf("dc2:1c:0:3531:2621:5172:1:7", "%3hx:%2hx:%1hx:%4hx:%4h=
+x:%4hx:%1hx:%1hx", ...) expected 892403712 got 28
+> > > >             not ok 2 ":"
+> > > >         # numbers_list_field_width_val_width: ASSERTION FAILED at l=
+ib/scanf_kunit.c:92
+> > > >     vsscanf("e083,8f6e,b,70ca,1,1,aab1,10e4", "%4hx,%4hx,%1hx,%4hx,=
+%1hx,%1hx,%4hx,%4hx", ...) expected 1892286475 got 757614
+> > > >             not ok 3 ","
+> > > >         # numbers_list_field_width_val_width: ASSERTION FAILED at l=
+ib/scanf_kunit.c:92
+> > > >     vsscanf("2e72-8435-1-2fc-7cbd-c2f1-7158-2b41", "%4hx-%4hx-%1hx-=
+%3hx-%4hx-%4hx-%4hx-%4hx", ...) expected 50069505 got 99381
+> > > >             not ok 4 "-"
+> > > >         # numbers_list_field_width_val_width: ASSERTION FAILED at l=
+ib/scanf_kunit.c:92
+> > > >     vsscanf("403/0/17/1/11e7/1/1fe8/34ba", "%3hx/%1hx/%2hx/%1hx/%4h=
+x/%1hx/%4hx/%4hx", ...) expected 65559 got 1507328
+> > > >             not ok 5 "/"
+> > > >         # numbers_list_field_width_val_width: pass:0 fail:5 skip:0 =
+total:5
+> > > >         not ok 4 numbers_list_field_width_val_width
+> > > >         # numbers_slice: ASSERTION FAILED at lib/scanf_kunit.c:92
+> > > >     vsscanf("3c87eac0f4afa1f9231da52", "%1hx%4hx%4hx%4hx%1hx%4hx%4h=
+x%1hx", ...) expected 1257942031 got 2886715518
+> >
+> > Makes sense. As you can see the error report for the new code is
+> > included here. I'll add the old code's error report if I have to
+> > respin v8.
+>
+> At a bare minimum. can you add in the reply to this email?
 
-<snip>
+Oh, sure:
 
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index b2d9a16fd4d3..7388f4cfe468 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -10604,7 +10604,11 @@ void __kvm_set_or_clear_apicv_inhibit(struct kvm *kvm,
-> >   	old = new = kvm->arch.apicv_inhibit_reasons;
-> > -	set_or_clear_apicv_inhibit(&new, reason, set);
-> > +	if (reason != APICV_INHIBIT_REASON_IRQWIN)
-> > +		set_or_clear_apicv_inhibit(&new, reason, set);
-> > +
-> > +	set_or_clear_apicv_inhibit(&new, APICV_INHIBIT_REASON_IRQWIN,
-> > +				   atomic_read(&kvm->arch.apicv_irq_window));
-> >   	if (!!old != !!new) {
-> >   		/*
-> > @@ -10645,6 +10649,36 @@ void kvm_set_or_clear_apicv_inhibit(struct kvm *kvm,
-> >   }
-> >   EXPORT_SYMBOL_GPL(kvm_set_or_clear_apicv_inhibit);
-> > +void kvm_inc_or_dec_irq_window_inhibit(struct kvm *kvm, bool inc)
-> > +{
-> > +	bool toggle;
-> > +
-> > +	/*
-> > +	 * The IRQ window inhibit has a cyclical dependency of sorts, as KVM
-> > +	 * needs to manually inject IRQs and thus detect interrupt windows if
-> > +	 * APICv is disabled/inhibitied.  To avoid thrashing if the IRQ window
-> > +	 * is being requested because APICv is already inhibited, toggle the
-> > +	 * actual inhibit (and take the lock for write) if and only if there's
-> > +	 * no other inhibit.  KVM evaluates the IRQ window count when _any_
-> > +	 * inhibit changes, i.e. the IRQ window inhibit can be lazily updated
-> > +	 * on the next inhibit change (if one ever occurs).
-> > +	 */
-> > +	down_read(&kvm->arch.apicv_update_lock);
-> > +
-> > +	if (inc)
-> > +		toggle = atomic_inc_return(&kvm->arch.apicv_irq_window) == 1;
-> > +	else
-> > +		toggle = atomic_dec_return(&kvm->arch.apicv_irq_window) == 0;
-> > +
-> > +	toggle = toggle && !(kvm->arch.apicv_inhibit_reasons & ~BIT(APICV_INHIBIT_REASON_IRQWIN));
-> > +
-> > +	up_read(&kvm->arch.apicv_update_lock);
-> > +
-> > +	if (toggle)
-> > +		kvm_set_or_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_IRQWIN, inc);
-> 
-> I'm not super confident in breaking the critical section...  Another possibility:
-> 
-> void kvm_inc_or_dec_irq_window_inhibit(struct kvm *kvm, bool inc)
-> {
->         int add = inc ? 1 : -1;
-> 
-> 	if (!enable_apicv)
-> 		return;
-> 
->         /*
->         * IRQ windows happen either because of ExtINT injections, or because
-> 	* APICv is already disabled/inhibited for another reason.  While ExtINT
-> 	* injections are rare and should not happen while the vCPU is running
-> 	* its actual workload, it's worth avoiding thrashing if the IRQ window
->         * is being requested because APICv is already inhibited.  So, toggle the
->         * the actual inhibit (which requires taking the lock forwrite) if and
-> 	* only if there's no other inhibit.  kvm_set_or_clear_apicv_inhibit()
->         * always evaluates the IRQ window count; thus the IRQ window inhibit
->         * call _will_ be lazily updated on the next call, if it ever happens.
->         */
->         if (READ_ONCE(kvm->arch.apicv_inhibit_reasons) & ~BIT(APICV_INHIBIT_REASON_IRQWIN)) {
->                 guard(rwsem_read)(&kvm->arch.apicv_update_lock);
->                 if (READ_ONCE(kvm->arch.apicv_inhibit_reasons) & ~BIT(APICV_INHIBIT_REASON_IRQWIN)) {
->                         atomic_add(add, &kvm->arch.apicv_irq_window);
->                         return;
->                 }
->         }
-> 
-> 	/*
-> 	 * Strictly speaking the lock is only needed if going 0->1 or 1->0,
-> 	 * a la atomic_dec_and_mutex_lock.  However, ExtINTs are rare and
-> 	 * only target a single CPU, so that is the common case; do not
-> 	 * bother eliding the down_write()/up_write() pair.
-> 	 */
->         guard(rwsem_write)(&kvm->arch.apicv_update_lock);
->         if (atomic_add_return(add, &kvm->arch.apicv_irq_window) == inc)
->                 __kvm_set_or_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_IRQWIN, inc);
-> }
-> EXPORT_SYMBOL_GPL(kvm_inc_or_dec_irq_window_inhibit);
+On Tue, Feb 11, 2025 at 6:54=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrot=
+e:
+>
+> [...]
+>
+> [  383.100048] test_scanf: vsscanf("1574 9 64ca 935b 7 142d ff58 0", "%4h=
+x %1hx %4hx %4hx %1hx %4hx %4hx %1hx", ...) expected 2472240330 got 1690959=
+881
+> [  383.102843] test_scanf: vsscanf("f12:2:d:2:c166:1:36b:1906", "%3hx:%1h=
+x:%1hx:%1hx:%4hx:%1hx:%3hx:%4hx", ...) expected 131085 got 851970
+> [  383.105376] test_scanf: vsscanf("4,b2fe,3,593,6,0,3bde,0", "%1hx,%4hx,=
+%1hx,%3hx,%1hx,%1hx,%4hx,%1hx", ...) expected 93519875 got 242430
+> [  383.105659] test_scanf: vsscanf("6-1-2-1-d9e6-f-93e-e567", "%1hx-%1hx-=
+%1hx-%1hx-%4hx-%1hx-%3hx-%4hx", ...) expected 65538 got 131073
+> [  383.106127] test_scanf: vsscanf("72d6/35/e88d/1/0/6c8c/7/1", "%4hx/%2h=
+x/%4hx/%1hx/%1hx/%4hx/%1hx/%1hx", ...) expected 125069 got 3901554741
+> [  383.106235] test_scanf: vsscanf("c9bea1b8122113e9a168df573", "%4hx%4hx=
+%1hx%4hx%4hx%1hx%4hx%3hx", ...) expected 571539457 got 106936
+> [  383.106398] test_scanf: failed 6 out of 2545 tests
 
-I haven't analyzed this yet, but moving apicv_irq_window into a separate 
-cacheline is improving the performance in my tests by ~7 to 8%:
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 9e3465e70a0a..d8a40ac49226 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1355,6 +1355,9 @@ struct kvm_arch {
-        struct kvm_ioapic *vioapic;
-        struct kvm_pit *vpit;
-        atomic_t vapics_in_nmi_mode;
-+
-+       atomic_t apicv_irq_window;
-+
-        struct mutex apic_map_lock;
-        struct kvm_apic_map __rcu *apic_map;
-        atomic_t apic_map_dirty;
-@@ -1365,7 +1368,6 @@ struct kvm_arch {
-        /* Protects apicv_inhibit_reasons */
-        struct rw_semaphore apicv_update_lock;
-        unsigned long apicv_inhibit_reasons;
--       atomic_t apicv_irq_window;
-
-        gpa_t wall_clock;
-
-
-I chose that spot before apic_map_lock simply because there was a 4 byte 
-hole there. This happens to also help performance in the AVIC disabled 
-case by a few percentage points (rather, restores the performance in the 
-AVIC disabled case).
-
-Before this change, I was trying to see if we could entirely elide the 
-rwsem read lock in the specific scenario we are seeing the bottleneck.  
-That is, instead of checking for any other inhibit being set, can we 
-specifically test for PIT_REINJ while setting the IRQWIN inhibit? Then, 
-update the inhibit change logic if PIT_REINJ is cleared to re-check the 
-irq window count.
-
-There's probably a race here somewhere, but FWIW, along with the above 
-change to 'struct kvm_arch', this helps improve performance by a few 
-more percentage points helping close the gap to within 2% of the AVIC 
-disabled case.
-
-
-- Naveen
-
-
-
-
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 274eb99aa97b..bd861342b949 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -10596,6 +10596,7 @@ void __kvm_set_or_clear_apicv_inhibit(struct kvm *kvm,
-                                      enum kvm_apicv_inhibit reason, bool set)
- {
-        unsigned long old, new;
-+       bool retried = false;
- 
-        lockdep_assert_held_write(&kvm->arch.apicv_update_lock);
- 
-@@ -10607,6 +10608,7 @@ void __kvm_set_or_clear_apicv_inhibit(struct kvm *kvm,
-        if (reason != APICV_INHIBIT_REASON_IRQWIN)
-                set_or_clear_apicv_inhibit(&new, reason, set);
- 
-+again:
-        set_or_clear_apicv_inhibit(&new, APICV_INHIBIT_REASON_IRQWIN,
-                                   atomic_read(&kvm->arch.apicv_irq_window));
- 
-@@ -10635,6 +10637,14 @@ void __kvm_set_or_clear_apicv_inhibit(struct kvm *kvm,
-        } else {
-                kvm->arch.apicv_inhibit_reasons = new;
-        }
-+
-+       /* If PIT_REINJ inhibit is being cleared, ensure we have updated copy of apicv_irq_window */
-+       if (reason == APICV_INHIBIT_REASON_PIT_REINJ && !set && !retried) {
-+               smp_mb();
-+               retried = true;
-+               old = new = kvm->arch.apicv_inhibit_reasons;
-+               goto again;
-+       }
- }
- 
- void kvm_set_or_clear_apicv_inhibit(struct kvm *kvm,
-@@ -10656,34 +10666,10 @@ void kvm_inc_or_dec_irq_window_inhibit(struct kvm *kvm, bool inc)
-        if (!enable_apicv)
-                return;
- 
--       /*
--        * IRQ windows happen either because of ExtINT injections, or because
--        * APICv is already disabled/inhibited for another reason.  While ExtINT
--        * injections are rare and should not happen while the vCPU is running
--        * its actual workload, it's worth avoiding thrashing if the IRQ window
--        * is being requested because APICv is already inhibited.  So, toggle the
--        * the actual inhibit (which requires taking the lock forwrite) if and
--        * only if there's no other inhibit.  kvm_set_or_clear_apicv_inhibit()
--        * always evaluates the IRQ window count; thus the IRQ window inhibit
--        * call _will_ be lazily updated on the next call, if it ever happens.
--        */
--       if (READ_ONCE(kvm->arch.apicv_inhibit_reasons) & ~BIT(APICV_INHIBIT_REASON_IRQWIN)) {
--               guard(rwsem_read)(&kvm->arch.apicv_update_lock);
--               if (READ_ONCE(kvm->arch.apicv_inhibit_reasons) & ~BIT(APICV_INHIBIT_REASON_IRQWIN)) {
--                       atomic_add(add, &kvm->arch.apicv_irq_window);
--                       return;
--               }
--       }
--
--       /*
--        * Strictly speaking the lock is only needed if going 0->1 or 1->0,
--        * a la atomic_dec_and_mutex_lock.  However, ExtINTs are rare and
--        * only target a single CPU, so that is the common case; do not
--        * bother eliding the down_write()/up_write() pair.
--        */
--       guard(rwsem_write)(&kvm->arch.apicv_update_lock);
--       if (atomic_add_return(add, &kvm->arch.apicv_irq_window) == inc)
--               __kvm_set_or_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_IRQWIN, inc);
-+       atomic_add(add, &kvm->arch.apicv_irq_window);
-+       smp_mb();
-+       if (!(READ_ONCE(kvm->arch.apicv_inhibit_reasons) & BIT(APICV_INHIBIT_REASON_PIT_REINJ)))
-+               kvm_set_or_clear_apicv_inhibit(kvm, APICV_INHIBIT_REASON_IRQWIN, inc);
- }
- EXPORT_SYMBOL_GPL(kvm_inc_or_dec_irq_window_inhibit);
-
-
-
-
-
+This is from https://lore.kernel.org/all/Z6s6WsIw3VCGys6K@pathway.suse.cz/
+(doesn't load for me, seems lore is having problems).
