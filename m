@@ -1,194 +1,95 @@
-Received: from forwardcorp1a.mail.yandex.net (forwardcorp1a.mail.yandex.net [178.154.239.72])
+Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423911FBE8D;
-	Tue, 11 Feb 2025 11:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE871F754A;
+	Tue, 11 Feb 2025 11:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739274437; cv=none; b=gOBo8Spe94AzjDt5LxXm3x2RCSGpTGqRDbMvKT8HmI3voh6qXXZ9jRNyvM/gSqdbDyslm0aUkoRC7HKE5RSXJmDDvOuykrTe4yAn9zqjcVLiBEA8+BDYX6vGv86S653buten466qKII5M0+LrvcJq3zIDPqRS7pMF/K7uMQszSQ=
+	t=1739274567; cv=none; b=oJkfZCQsEXNj8sn0+b/OT10ABkf3o8nu+x+iZN9P+bI8s/NQFuBhwjzQxxF4/6rjLw/GKjZq8kW+IwucIcVvD9Q4T87FIv666umY7OIjOhKCv4hhA4RxWg13VWV0m0RglUXawBZ97T56QwmVXvLIqkmAFYHqc4veDRq/I3EhapU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739274437; c=relaxed/simple;
-	bh=SROuA7Ts6Pt/QgjFlVQnZ/dl8jmv1HSWGopcH/p/NDw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XH61+bVUM33HM8Nf4P7+BSvu6fP4+98r0eh9R5jPREda2GPL3gpo3zwF+6o4ONZgnzOWAql1zwgnI9Y6KATTKvGZ/R1xv/sM5617zzski8cyt5Gxuv6SGWRLkGylx2Yp2livI0VjV7kYAgfMfVgb/09g1Od6TTFXpn6joaTgV7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.com; spf=pass smtp.mailfrom=yandex-team.com; dkim=pass (1024-bit key) header.d=yandex-team.com header.i=@yandex-team.com header.b=doARputU; arc=none smtp.client-ip=178.154.239.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.com
+	s=arc-20240116; t=1739274567; c=relaxed/simple;
+	bh=RSrR31etPfWErYWuQDOoH5CdG8ajOEflXt5lHMpkXhI=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=BuEIp/1mlr4+uzmBFjSrvD6YYFCkjiH4us6nrPFcKV3JjkC/5y0CW1gFHZlE996ZGW3DhR4/izlluPboP8KuLQyhoFtLnfzgJ0L+OdAL4/ePK3lSbFa9MXabx77w2z6wwN61C2g2k6lu5n9fjbjw89HBiv+1SC9wwomVe+t6UEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.jp; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.co.jp header.i=@amazon.co.jp header.b=I0uQU/F2; arc=none smtp.client-ip=52.95.48.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.com header.i=@yandex-team.com header.b="doARputU"
-Received: from mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net [IPv6:2a02:6b8:c0f:1286:0:640:6f2b:0])
-	by forwardcorp1a.mail.yandex.net (Yandex) with ESMTPS id BB47F60CBC;
-	Tue, 11 Feb 2025 14:46:02 +0300 (MSK)
-Received: from dellarbn.yandex.net (unknown [10.214.35.248])
-	by mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id njMaW61IYa60-f300HgHw;
-	Tue, 11 Feb 2025 14:46:02 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.com;
-	s=default; t=1739274362;
-	bh=N/f4M/1YdrDaXLy1gcP2Kg22i5sVeuoh7Qx0Xv+wu0U=;
-	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=doARputUw27HsyLKkbE04O5ibJYLITuopDPsmuZ9aczHNvBTKndE0yZghx202ewCN
-	 R0AlGAPmGGvsezMwhUJQ/uepQErBEbYbxzVqcsT+vv5AwhPpqZC4vKmvEML7VbEde/
-	 eXAmQ0zBtCojSSOabGstArsm3ER7ferxhDM5F2Bk=
-Authentication-Results: mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net; dkim=pass header.i=@yandex-team.com
-From: Andrey Ryabinin <arbn@yandex-team.com>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: Zhenyu Wang <zhenyuw@linux.intel.com>,
-	Zhi Wang <zhi.wang.linux@gmail.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Matthew Rosato <mjrosato@linux.ibm.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Yi Liu <yi.l.liu@intel.com>,
-	intel-gvt-dev@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Andrey Ryabinin <arbn@yandex-team.com>,
-	stable@vger.kernel.org
-Subject: [PATCH 2/2] vfio: Release KVM pointer after the first device open.
-Date: Tue, 11 Feb 2025 12:45:44 +0100
-Message-ID: <20250211114544.17845-2-arbn@yandex-team.com>
-X-Mailer: git-send-email 2.45.3
-In-Reply-To: <20250211114544.17845-1-arbn@yandex-team.com>
-References: <20250211114544.17845-1-arbn@yandex-team.com>
+	dkim=pass (1024-bit key) header.d=amazon.co.jp header.i=@amazon.co.jp header.b="I0uQU/F2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.co.jp; i=@amazon.co.jp; q=dns/txt;
+  s=amazon201209; t=1739274566; x=1770810566;
+  h=from:to:cc:subject:date:message-id:content-id:
+   content-transfer-encoding:mime-version;
+  bh=RSrR31etPfWErYWuQDOoH5CdG8ajOEflXt5lHMpkXhI=;
+  b=I0uQU/F2yTvmAtnd2DrEOjBWSOFKtXtN0qsH++nvUL1yFe1eByiKtjeO
+   gb3J2XVUXSz2ALEGODKygE37T4TLp1ME7vHv6ZBBhcmEEu1PzkG/nM5lQ
+   kChX1Fz4dyAyPW5H+4aMt/RUzaXHKfrWF6Xk06VF9ZXdU2VNbVKOAtcZz
+   s=;
+X-IronPort-AV: E=Sophos;i="6.13,277,1732579200"; 
+   d="scan'208";a="461536813"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 11:49:18 +0000
+Received: from EX19MTAUWB001.ant.amazon.com [10.0.7.35:24326]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.2.31:2525] with esmtp (Farcaster)
+ id 5ec35c9f-088f-4516-adef-c68c778defd9; Tue, 11 Feb 2025 11:49:16 +0000 (UTC)
+X-Farcaster-Flow-ID: 5ec35c9f-088f-4516-adef-c68c778defd9
+Received: from EX19D004ANA004.ant.amazon.com (10.37.240.146) by
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
+ Tue, 11 Feb 2025 11:49:16 +0000
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19D004ANA004.ant.amazon.com (10.37.240.146) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 11 Feb 2025 11:49:14 +0000
+Received: from EX19D004ANA001.ant.amazon.com ([fe80::f099:cbca:cc6b:91ec]) by
+ EX19D004ANA001.ant.amazon.com ([fe80::f099:cbca:cc6b:91ec%5]) with mapi id
+ 15.02.1544.014; Tue, 11 Feb 2025 11:49:14 +0000
+From: "Iwashima, Kuniyuki" <kuniyu@amazon.co.jp>
+To: Breno Leitao <leitao@debian.org>, Uday Shankar <ushankar@purestorage.com>
+CC: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Andrew Lunn
+	<andrew+netdev@lunn.ch>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "kernel-team@meta.com" <kernel-team@meta.com>
+Subject: Re: [PATCH net-next v2 2/2] net: Add dev_getbyhwaddr_rtnl() helper
+Thread-Topic: [PATCH net-next v2 2/2] net: Add dev_getbyhwaddr_rtnl() helper
+Thread-Index: AQHbfHr5TbFo5KdF2Umd+m4rD5vlBA==
+Date: Tue, 11 Feb 2025 11:49:14 +0000
+Message-ID: <9B3D8CD0-65DE-43FE-88BA-55902DE96496@amazon.co.jp>
+Accept-Language: ja-JP, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <629AC6E3330F8B459433207CFDFB63DF@amazon.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Commit 2b48f52f2bff ("vfio: fix deadlock between group lock and kvm lock")
-made vfio_device to hold KVM struct up until device's close() call.
-
-This lead to a unrleased KVM struct which holds KVM kthreads and related
-cgroups after VM with VFIO device migrates to from one KVM instance to
-another on the same host.
-
-Since all drivers, that require 'kvm' (vfio-ap/intel_vgp/vfio-pci zdev)
-already handle 'kvm' pointer by themselves we can just drop 'kvm' reference
-right after first vfio_df_open() call. This will release 'kvm' struct
-and dependent resources for drivers that don't require it after KVM
-detached from a device (KVM_DEV_VFIO_FILE_DEL).
-
-Fixes: 2b48f52f2bff ("vfio: fix deadlock between group lock and kvm lock")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrey Ryabinin <arbn@yandex-team.com>
----
- drivers/vfio/device_cdev.c | 11 ++++++-----
- drivers/vfio/group.c       | 31 ++++++++++++++-----------------
- 2 files changed, 20 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/vfio/device_cdev.c b/drivers/vfio/device_cdev.c
-index bb1817bd4ff3..339b69c43300 100644
---- a/drivers/vfio/device_cdev.c
-+++ b/drivers/vfio/device_cdev.c
-@@ -103,14 +103,16 @@ long vfio_df_ioctl_bind_iommufd(struct vfio_device_file *df,
- 	/*
- 	 * Before the device open, get the KVM pointer currently
- 	 * associated with the device file (if there is) and obtain
--	 * a reference.  This reference is held until device closed.
-+	 * a reference and release it right after vfio_df_open() bellow.
-+	 * The device driver wishes to use KVM must obtain a reference and
-+	 * release it on close.
- 	 * Save the pointer in the device for use by drivers.
- 	 */
- 	vfio_df_get_kvm_safe(df);
--
- 	ret = vfio_df_open(df);
-+	vfio_device_put_kvm(device);
- 	if (ret)
--		goto out_put_kvm;
-+		goto out_put_iommufd;
- 
- 	ret = copy_to_user(&arg->out_devid, &df->devid,
- 			   sizeof(df->devid)) ? -EFAULT : 0;
-@@ -128,8 +130,7 @@ long vfio_df_ioctl_bind_iommufd(struct vfio_device_file *df,
- 
- out_close_device:
- 	vfio_df_close(df);
--out_put_kvm:
--	vfio_device_put_kvm(device);
-+out_put_iommufd:
- 	iommufd_ctx_put(df->iommufd);
- 	df->iommufd = NULL;
- out_unlock:
-diff --git a/drivers/vfio/group.c b/drivers/vfio/group.c
-index 49559605177e..872cfd795f99 100644
---- a/drivers/vfio/group.c
-+++ b/drivers/vfio/group.c
-@@ -175,15 +175,6 @@ static int vfio_df_group_open(struct vfio_device_file *df)
- 
- 	mutex_lock(&device->dev_set->lock);
- 
--	/*
--	 * Before the first device open, get the KVM pointer currently
--	 * associated with the group (if there is one) and obtain a reference
--	 * now that will be held until the open_count reaches 0 again.  Save
--	 * the pointer in the device for use by drivers.
--	 */
--	if (device->open_count == 0)
--		vfio_device_group_get_kvm_safe(device);
--
- 	df->iommufd = device->group->iommufd;
- 	if (df->iommufd && vfio_device_is_noiommu(device) && device->open_count == 0) {
- 		/*
-@@ -196,12 +187,23 @@ static int vfio_df_group_open(struct vfio_device_file *df)
- 			ret = -EPERM;
- 		else
- 			ret = 0;
--		goto out_put_kvm;
-+		goto out_iommufd;
- 	}
- 
-+	/*
-+	 * Before the first device open, get the KVM pointer currently
-+	 * associated with the group (if there is one) and obtain a reference
-+	 * now that will be released right after vfio_df_open() bellow.
-+	 * The device driver wishes to use KVM must obtain a reference and
-+	 * release it on close.
-+	 */
-+	if (device->open_count == 0)
-+		vfio_device_group_get_kvm_safe(device);
-+
- 	ret = vfio_df_open(df);
-+	vfio_device_put_kvm(device);
- 	if (ret)
--		goto out_put_kvm;
-+		goto out_iommufd;
- 
- 	if (df->iommufd && device->open_count == 1) {
- 		ret = vfio_iommufd_compat_attach_ioas(device, df->iommufd);
-@@ -221,10 +223,8 @@ static int vfio_df_group_open(struct vfio_device_file *df)
- 
- out_close_device:
- 	vfio_df_close(df);
--out_put_kvm:
-+out_iommufd:
- 	df->iommufd = NULL;
--	if (device->open_count == 0)
--		vfio_device_put_kvm(device);
- 	mutex_unlock(&device->dev_set->lock);
- out_unlock:
- 	mutex_unlock(&device->group->group_lock);
-@@ -241,9 +241,6 @@ void vfio_df_group_close(struct vfio_device_file *df)
- 	vfio_df_close(df);
- 	df->iommufd = NULL;
- 
--	if (device->open_count == 0)
--		vfio_device_put_kvm(device);
--
- 	mutex_unlock(&device->dev_set->lock);
- 	mutex_unlock(&device->group->group_lock);
- }
--- 
-2.45.3
-
+RnJvbTogQnJlbm8gTGVpdGFvIDxsZWl0YW9AZGViaWFuLm9yZz4NCkRhdGU6IFR1ZSwgMTEgRmVi
+IDIwMjUgMDM6MzY6NDMgLTA4MDANCj4gPiA+ICtzdHJ1Y3QgbmV0X2RldmljZSAqZGV2X2dldGJ5
+aHdhZGRyKHN0cnVjdCBuZXQgKm5ldCwgdW5zaWduZWQgc2hvcnQgdHlwZSwNCj4gPiA+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBjb25zdCBjaGFyICpoYSkNCj4gPiA+ICt7DQo+ID4g
+PiArICAgc3RydWN0IG5ldF9kZXZpY2UgKmRldjsNCj4gPiA+ICsNCj4gPiA+ICsgICBBU1NFUlRf
+UlROTCgpOw0KPiA+ID4gKyAgIGZvcl9lYWNoX25ldGRldihuZXQsIGRldikNCj4gPiA+ICsgICAg
+ICAgICAgIGlmIChkZXZfY29tcF9hZGRyKGRldiwgdHlwZSwgaGEpKQ0KPiA+ID4gKyAgICAgICAg
+ICAgICAgICAgICByZXR1cm4gZGV2Ow0KPiA+ID4gKw0KPiA+ID4gKyAgIHJldHVybiBOVUxMOw0K
+PiA+ID4gK30NCj4gPiA+ICtFWFBPUlRfU1lNQk9MKGRldl9nZXRieWh3YWRkcik7DQo+ID4NCj4g
+PiBDb21taXQgdGl0bGUgc2hvdWxkIGNoYW5nZSB0byByZWZsZWN0IHRoZSBuZXcgZnVuY3Rpb24g
+bmFtZSBpbiB2Mi4NCj4gPg0KPiA+IFNlcGFyYXRlbHkgLSBob3cgc2hvdWxkIEkgY29tYmluZSB0
+aGlzIHdpdGgNCj4gPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9uZXRkZXYvMjAyNTAyMDUtbmV0
+Y29uc29sZS12My0wLTEzMmEzMWYxNzE5OUBwdXJlc3RvcmFnZS5jb20vPw0KPiA+IEkgc2VlIHRo
+cmVlIG9wdGlvbnM6DQo+ID4gLSBjb21iaW5lIHRoZSB0d28gc2VyaWVzIGludG8gb25lDQo+IA0K
+PiBJIHdvdWxkIHN1Z2dlc3QgeW91IGNvbWJpbmUgdGhlIHR3byBzZXJpZXMgaW50byBvbmUuDQo+
+IA0KPiBJIHdpbGwgc2VuZCBhIHYzIHRvZGF5IGFkanVzdGluZyB0aGUgY29tbWVudHMsIGFuZCB5
+b3UgY2FuIGludGVncmF0ZWQNCj4gdGhlbSBpbnRvIHlvdXIgcGF0Y2hzZXQuDQoNCkkgc3VnZ2Vz
+dCBCcmVubyBwb3N0IHYzIGZvciBuZXQuZ2l0IHdpdGggYXJwIGZpeCBhbmQgdGhlbiBuZXQuZ2l0
+DQp3aWxsIGJlIG1lcmdlZCB0byBuZXQtbmV4dCBvbiBUaHVyc2RheSwgdGhlbiBVZGF5IGNhbiBy
+ZXNwaW4uDQoNCklmIHRoaXMgaXMgcG9zdGVkIHRvIG5ldC1uZXh0LmdpdCwgdGhlIGZvbGxvd2lu
+ZyBhcnAgZml4IG5lZWRzIHRvDQp3YWl0IGZvciB0aGUgbmV4dCBjeWNsZSBzbyB0aGF0IG5ldC1u
+ZXh0LmdpdCB3aWxsIGJlIG1lcmdlZCB0bw0KbmV0LmdpdC4NCg0K
