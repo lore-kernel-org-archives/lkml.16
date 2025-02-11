@@ -1,85 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9E81F192E;
-	Tue, 11 Feb 2025 13:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C409A243965;
+	Tue, 11 Feb 2025 13:40:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739281200; cv=none; b=baHEvTsKlafnHEe1v8j0KLxtHEHEO3RZy9CocpxQWL14pFtUgXi6Xr4JG7faG7XertQ8QfGQLa5GgAuUYeZhGBaBZfA87jBAE+7Y8qnXLKrv8DuyiJECPd4xW/7kzhAYdAzekKX8zkjteuTB17cQzc3FJxhGwF1ekuA3E7GuPSI=
+	t=1739281205; cv=none; b=XnqtXH/ItwTkC5T97fa5aArsncCNIgJzv96HHualADEQsPQHCTw60lcNmJu2XQSeaKyAatQg0fFYnA3RNLKim2e3vxliFNI7GUkZPDrHz0kZJJ00xig2H0/1dJ2DOirBG1yb/ElFbiVyhE2f+lA9ifyaJAzYS2d7CRufjgada34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739281200; c=relaxed/simple;
-	bh=X/z5RLepAXNmUbTyzCdnYvNom6vcH+olkPKA1YQBd6o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D+ZTTYCn76Glv1NlnrHENx+LQ5LURC0VusTIxR+FAvgl1M1NmrrJHMmV6k5jAW//5SoCRaUXte3C4zAgO4zcx8FQmvWsN+irlfn5NNOI2cn9azeACd0wlJ3TMuCh+9pTY6Qjzfk79aj7H2yrGwdoNpmkKomh5S974aJzLuvo8ZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gi7flhMZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739281205; c=relaxed/simple;
+	bh=xWgNXPNKZM03oUis7O6rUJXGQZfLIM7VkOP+M2x6oOk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RYoOtO34iZ0dwdlnfiFyI37fCiLHDT2QuOyRguriKC5LkzHfcUC8clAvc83v3En0hldVph409ju98aDnD3pThRSxmajIkbLeJw4VNGyAEILCbJziZ0jfEdgG1qFVXbt6WJXlIE9IQLxd5q7Z5pWH1x9JIXkDSyEroL1CPd1UyhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=cQ9tbpEo; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gi7flhMZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57321C4CEDD;
-	Tue, 11 Feb 2025 13:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739281200;
-	bh=X/z5RLepAXNmUbTyzCdnYvNom6vcH+olkPKA1YQBd6o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gi7flhMZcezO26pgkPU7P3MQXiUzFVUKKni0EjG+hA6whzNDwmNDDIiRU5njEyBfE
-	 sJ/AoUcchyziuDrdMRWznfZGnA5X+QGc3Ts2dgbyt+CHxtqEWbF0UjyEOqu8ASGm5F
-	 ShAUHFGfTmS2y5pRsVSyRXJwETVB5ix1duQKQD4vaD02SOm74lsJgEe3JWUavgjE82
-	 BgVOnE5veQ6F2JdnoO52Wz9xbJtIi2OwcFpCIe9zfxOXCDRq5jDTdmb7bou+99HO3m
-	 gNjYuIDZIGNfwfQKpu0c86mi3dZRpD1tj8f6kInMZ4HynGBzx+CX8hBKoyoF2AvMIJ
-	 q/ikq9ZcycIag==
-Date: Tue, 11 Feb 2025 13:39:55 +0000
-From: Lee Jones <lee@kernel.org>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
-	Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	blake.vermeer@keysight.com, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] mfd: cgbc: add a hwmon cell
-Message-ID: <20250211133955.GR1868108@google.com>
-References: <20250203-congatec-board-controller-hwmon-v4-0-ff6c76a4662c@bootlin.com>
- <20250203-congatec-board-controller-hwmon-v4-2-ff6c76a4662c@bootlin.com>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="cQ9tbpEo"
+Received: from wse-pc.fritz.box (pd9e59260.dip0.t-ipconnect.de [217.229.146.96])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 5E76B2FC0050;
+	Tue, 11 Feb 2025 14:39:54 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1739281194;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4XL4YdXnK949uXLMtLZEecfF+8yrfks6KMpFtdAL3gA=;
+	b=cQ9tbpEonawPU8Y7E9jssi4XMybXyt6ioGDvAgYc3DtzzU5wgEvbVOrESam/7uZoNbvWar
+	rIKnLxrCE6rhUxLqK4dghZoPTjDWw9tN0x318qFcKs0BW3TQGJ2O8mgPS/nG0iPKSFxdIv
+	R9GXRAgpjGt5JE0X5fbxsACfstKx1x0=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+From: Werner Sembach <wse@tuxedocomputers.com>
+To: Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>
+Cc: Werner Sembach <wse@tuxedocomputers.com>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] Disable touchpad on firmware level while not in use
+Date: Tue, 11 Feb 2025 14:39:06 +0100
+Message-ID: <20250211133950.422232-2-wse@tuxedocomputers.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250211133950.422232-1-wse@tuxedocomputers.com>
+References: <20250211133950.422232-1-wse@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250203-congatec-board-controller-hwmon-v4-2-ff6c76a4662c@bootlin.com>
 
-If you resubmit this set, please capitalise the first char in the
-subject line after the driver identifiers.
+Using the new on_hid_hw_open and on_hid_hw_close functions to disable the
+touchpad on firmware level while not being in use.
 
-> The Board Controller has some internal sensors.
-> Add a hwmon cell for the cgbc-hwmon driver which adds support for
-> temperature, voltage, current and fan sensors.
+This safes some battery and triggers touchpad-disabled-leds hardwired to
+the touchpads firmware, that exist for example on some TongFang barebones.
 
-Generally fine.
+For a lengthy discussion with all the details see
+https://gitlab.freedesktop.org/libinput/libinput/-/issues/558
 
-Line-breaking just for a new sentence is an odd choice though.
+Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+---
+ drivers/hid/hid-multitouch.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
-> ---
->  drivers/mfd/cgbc-core.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/mfd/cgbc-core.c b/drivers/mfd/cgbc-core.c
-> index 85283c8dde25..0460e4e3f3c5 100644
-> --- a/drivers/mfd/cgbc-core.c
-> +++ b/drivers/mfd/cgbc-core.c
-> @@ -236,6 +236,7 @@ static struct mfd_cell cgbc_devs[] = {
->  	{ .name = "cgbc-gpio"	},
->  	{ .name = "cgbc-i2c", .id = 1 },
->  	{ .name = "cgbc-i2c", .id = 2 },
-> +	{ .name = "cgbc-hwmon"	},
->  };
->  
->  static int cgbc_map(struct cgbc_device_data *cgbc)
-> 
-> -- 
-> 2.39.5
-> 
-
+diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+index 82900857bfd87..7289c04f47f17 100644
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -1884,6 +1884,16 @@ static void mt_remove(struct hid_device *hdev)
+ 	hid_hw_stop(hdev);
+ }
+ 
++static void mt_on_hid_hw_open(struct hid_device *hdev)
++{
++	mt_set_modes(hdev, HID_LATENCY_NORMAL, TOUCHPAD_REPORT_ALL);
++}
++
++static void mt_on_hid_hw_close(struct hid_device *hdev)
++{
++	mt_set_modes(hdev, HID_LATENCY_HIGH, TOUCHPAD_REPORT_NONE);
++}
++
+ /*
+  * This list contains only:
+  * - VID/PID of products not working with the default multitouch handling
+@@ -2351,5 +2361,7 @@ static struct hid_driver mt_driver = {
+ 	.suspend = pm_ptr(mt_suspend),
+ 	.reset_resume = pm_ptr(mt_reset_resume),
+ 	.resume = pm_ptr(mt_resume),
++	.on_hid_hw_open = mt_on_hid_hw_open,
++	.on_hid_hw_close = mt_on_hid_hw_close,
+ };
+ module_hid_driver(mt_driver);
 -- 
-Lee Jones [李琼斯]
+2.43.0
+
