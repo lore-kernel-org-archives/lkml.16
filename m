@@ -1,127 +1,482 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f194.google.com (mail-yw1-f194.google.com [209.85.128.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB99801;
-	Tue, 11 Feb 2025 00:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8985014A82
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739233064; cv=none; b=o3UCeL6T9fK3nf16vmHHHoZxy+zaIUE9r5sKn95a+xuprtPAPMbKAy+5TuS4q3ewJG0nKl7baLJy4++ac2Au5aGNt+mAL+g4B9NCQ8k4+4b5nwZWwBZWlEyAR62HHRVWj7R1DSzxoU9faCz9FIcgj5w7byw5Rb/je78h3aK5dWs=
+	t=1739233084; cv=none; b=g+MuSwjvhGuKbvQqsj+snBagU8DuoZzqOtdq7ivWRmeA1FOUA2I8HVtOc2Qoi4b25Va6N5VXlEHc3eVGbezFftYjv9jc9sepH//TzA+h/PgGSqdG1LTAZymiaN7UN+21WTjHQUegXNsvg4mMUrOrzhZNhhYx1E98VZ7N1l62M/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739233064; c=relaxed/simple;
-	bh=JGsSogXLmPqgVPrNJ4sogLYXwU0yOw3MgKlrk8D8D7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=I4pum0itAoFhh9F0TOy0OJumYS/1GXeurVnM3s3v7wdYMePhLDs0D9+nQ89fQi9LO0PSMDeW0lDGS9L2XFERlCAQslqwEge6nQT3AnDjYI4b0B6AIpKMmNE6MhuATeoMxrZroyMtLU44rs8fzPRRweggQwOcSH3QTrsnwT5ekcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=DxfVDDOG; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739233084; c=relaxed/simple;
+	bh=eVsrryGE5O/cI9ESRsbCfp4i10FBMQzjwRYBogDynB8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zn0zEMkNLD3ErtmU8X8LQPZ7oGLSnObXnYQRZrH54D69LO6pS2RMifAOoVf+a5YDDfFKFxmHdx8ePyEnLwLodvRZvqc7mqHzhpl6ZpUxG5qxwDXlBBvrwDIvZcGs8SsdHZPENjvqr3DJRLordT6sxLQ3lFpqSMn/A1o2Ld7oBWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Mq7IgsEu; arc=none smtp.client-ip=209.85.128.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="DxfVDDOG"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51ABgO10000355;
-	Tue, 11 Feb 2025 00:17:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	JXLA7xIkHuZLbkBc9dKJ7utAYTqNsvjNQLuR8ehqS94=; b=DxfVDDOG9LyRuEFM
-	/Fo1qQiwfpMCAI/UEcMJbFiPn4Wd9FPHoO/M6Yq8DhnFaX9pA9I7XeffBGkZZw/k
-	rvLmg/8ALSyfdEqWJ4iE2QIwFr5n963fICEJCzgdiaS3DakgTsqOcMoKGvD7eN36
-	WfUhL5kBIdyG+YZCvWLiDQNbn+m5z+/On2+Vnh0mvdhU9YCFFagho5KJQKOPwRVb
-	nN+tIV+dUEcMCP76DiFkeken5RWH36mn5eMcX/a7i0CTBQ/S/8HSYMExUp2pQEW/
-	e4vnsInfAMX6d5vir/QCg1hDVj9VS23KRZPPum1Gqva6zafv6/cDj6t2Biq28FoR
-	fr3QTg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qgtk1tbj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 00:17:27 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51B0HRH5026820
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 00:17:27 GMT
-Received: from [10.71.110.136] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Feb
- 2025 16:17:26 -0800
-Message-ID: <4eb08a1a-b862-4295-98d9-005f12015527@quicinc.com>
-Date: Mon, 10 Feb 2025 16:17:25 -0800
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Mq7IgsEu"
+Received: by mail-yw1-f194.google.com with SMTP id 00721157ae682-6f6ca1a8aa6so28089977b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:18:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739233080; x=1739837880; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ISAQBQ0fr+yj+zIbyh7W8nrLRTzv2QG8A8GpANmjBC4=;
+        b=Mq7IgsEuk6cwOqr5SoPldHD1UZknyX8nKmDPMnsQiVeZ8gCqfP/g8F1GUGK2ReCuYC
+         a3m4sIn7tfo9rRor85QG8jemD7yS6ht/4hI0WchyJ5k4TYWv0GeiDkvKiBWVgHAR5EzF
+         NIW5ZsANgsJbjeEDGYk63FhFwLuhwE81SHQ/y+FF/Coyf4Zf8tcCj+NGtliRpFyaWM6H
+         uA6/ZaTXaqTfW2z9cIahqDm89ODH0pdth1aO/mGtDhIzKVtl12nfLKPPZ6j1vP0LMKI0
+         xjy44OWl2Ev/ZlauLk3/w26GM3IQJAakZnw7DXt09j/kUqWTi6edVA7ZD19BREFp2oAJ
+         K6PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739233080; x=1739837880;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ISAQBQ0fr+yj+zIbyh7W8nrLRTzv2QG8A8GpANmjBC4=;
+        b=iCKtj+XtB1e/sbefEy3T0SYEuGgQH8ptEVArzdPbYPf1TvVG+y2/uDXYpnUTNBkGBm
+         2AyGT1QuE1HuvL+BAyjVt38mg/lSYsgLRopR2KN0kdiP5RKOtfuBaJjqiOhN7BKNzTJL
+         FHovx6dZ3ir2aqowAi4H3/Y9IS4Y4cAa6bnKhenj6O8S+84xaPkNffa0KuWaNPOdEL1X
+         CCJ8LkNHwjuNSczp/mAfKbt5Em4k6vz7dEav20lnfQP+1EaOHK4sUGIf1H/3mle5IQY3
+         F1gsf6hnn4S1ET1mMUs0OdIA0R8Jw+ZY5uQuMTVRYF7qx6I33IEMS3Qj180/MU7xns4T
+         o9jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWJR7+N9QogJlBk10zrr3yep4ORsuhMLqQ08QaSvU3f/x1n11AIzBf6O1h9aTnRLvmFiwd7myB6Rbi5NnM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXpOjtlclE3COK/O2veFz1Fym8QtLL7qU2VY24cHx3syOepLud
+	Yfz4r5LMrOtFLQKF/r3Xc9/1cc3zQjLP/78CMKoR16ZPpvCvEEjFqpmSxpZ35ew=
+X-Gm-Gg: ASbGnctRlGcBTBaorVawzUcrWTUt8SSvb1xeTpfr6DuwfgloiSjpzO13F63ldc5uAE6
+	AWujZRrHnVU+pqN5dlJfsRPSRt2WxVdwZu03bLbCOpKgnzndQIt8WxBr1w1d7xl7frUteM0aDIp
+	R+D8AOvLum9EH3xt8EgQ7ZKBQ+4CTHdduzFVwxFW6BeOfFKfQ6+Nd+CMdxZT5P1j+JpN3Tt5esm
+	wh/4lJxVZEP80fCGamxw5rTe8Y7WgE0ZSBZMPXOfVHmc4Byjaj4d1OF3w9HdBRhHALwul9R/utM
+	Ijo=
+X-Google-Smtp-Source: AGHT+IG2lYjSA9U8mtH8kqy2zToEQOfHxV7dx2DoND3Wn8X6MxCq6iEaLq5Q27PfBoeN7LzH0kZjXg==
+X-Received: by 2002:a05:690c:4d44:b0:6ef:8177:c322 with SMTP id 00721157ae682-6f9b28783cbmr160095467b3.13.1739233080336;
+        Mon, 10 Feb 2025 16:18:00 -0800 (PST)
+Received: from ghost ([50.146.0.9])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99ffc3501sm18888087b3.116.2025.02.10.16.17.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 16:17:59 -0800 (PST)
+Date: Mon, 10 Feb 2025 16:17:57 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Guo Ren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Bibo Mao <maobibo@loongson.cn>,
+	Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 2/7] perf trace: Reorganize syscalls
+Message-ID: <Z6qXNcjQE2RaoDUZ@ghost>
+References: <20250210165108.95894-1-irogers@google.com>
+ <20250210165108.95894-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/msm/dpu: Don't leak bits_per_component into random
- DSC_ENC fields
-To: Marijn Suijten <marijn.suijten@somainline.org>,
-        Rob Clark
-	<robdclark@gmail.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        "Sean
- Paul" <sean@poorly.run>, David Airlie <airlied@gmail.com>,
-        Simona Vetter
-	<simona@ffwll.ch>, Vinod Koul <vkoul@kernel.org>
-CC: <~postmarketos/upstreaming@lists.sr.ht>,
-        AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>,
-        Konrad Dybcio
-	<konrad.dybcio@oss.qualcomm.com>,
-        Martin Botka <martin.botka@somainline.org>,
-        Jami Kettunen <jami.kettunen@somainline.org>,
-        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20250211-dsc-10-bit-v1-1-1c85a9430d9a@somainline.org>
-Content-Language: en-US
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <20250211-dsc-10-bit-v1-1-1c85a9430d9a@somainline.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Yu7-Uzeq8W7oQjVQLunZwf53yOzqwdPJ
-X-Proofpoint-ORIG-GUID: Yu7-Uzeq8W7oQjVQLunZwf53yOzqwdPJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_12,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 suspectscore=0 phishscore=0 impostorscore=0
- adultscore=0 clxscore=1015 mlxscore=0 malwarescore=0 bulkscore=0
- lowpriorityscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502100180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210165108.95894-3-irogers@google.com>
 
+On Mon, Feb 10, 2025 at 08:51:03AM -0800, Ian Rogers wrote:
+> Identify struct syscall information in the syscalls table by a machine
+> type and syscall number, not just system call number. Having the
+> machine type means that 32-bit system calls can be differentiated from
+> 64-bit ones on a machine capable of both. Having a table for all
+> machine types and all system call numbers would be too large, so
+> maintain a sorted array of system calls as they are encountered.
 
+Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+Tested-by: Charlie Jenkins <charlie@rivosinc.com>
 
-On 2/10/2025 3:19 PM, Marijn Suijten wrote:
-> What used to be the input_10_bits boolean - feeding into the lowest
-> bit of DSC_ENC - on MSM downstream turned into an accidental OR with
-> the full bits_per_component number when it was ported to the upstream
-> kernel.
 > 
-> On typical bpc=8 setups we don't notice this because line_buf_depth is
-> always an odd value (it contains bpc+1) and will also set the 4th bit
-> after left-shifting by 3 (hence this |= bits_per_component is a no-op).
-> 
-> Now that guards are being removed to allow more bits_per_component
-> values besides 8 (possible since commit 49fd30a7153b ("drm/msm/dsi: use
-> DRM DSC helpers for DSC setup")), a bpc of 10 will instead clash with
-> the 5th bit which is convert_rgb.  This is "fortunately" also always set
-> to true by MSM's dsi_populate_dsc_params() already, but once a bpc of 12
-> starts being used it'll write into simple_422 which is normally false.
-> 
-> To solve all these overlaps, simply replicate downstream code and only
-> set this lowest bit if bits_per_component is equal to 10.  It is unclear
-> why DSC requires this only for bpc=10 but not bpc=12, and also notice
-> that this lowest bit wasn't set previously despite having a panel and
-> patch on the list using it without any mentioned issues.
-> 
-> Fixes: c110cfd1753e ("drm/msm/disp/dpu1: Add support for DSC")
-> Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: Howard Chu <howardchu95@gmail.com>
 > ---
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+>  tools/perf/builtin-trace.c | 178 +++++++++++++++++++++++++------------
+>  1 file changed, 119 insertions(+), 59 deletions(-)
 > 
-
-Good catch !
-
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 06356217adeb..916a51df236b 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -66,6 +66,7 @@
+>  #include "rb_resort.h"
+>  #include "../perf.h"
+>  #include "trace_augment.h"
+> +#include "dwarf-regs.h"
+>  
+>  #include <errno.h>
+>  #include <inttypes.h>
+> @@ -86,6 +87,7 @@
+>  
+>  #include <linux/ctype.h>
+>  #include <perf/mmap.h>
+> +#include <tools/libc_compat.h>
+>  
+>  #ifdef HAVE_LIBTRACEEVENT
+>  #include <event-parse.h>
+> @@ -143,7 +145,10 @@ struct trace {
+>  	struct perf_tool	tool;
+>  	struct syscalltbl	*sctbl;
+>  	struct {
+> +		/** Sorted sycall numbers used by the trace. */
+>  		struct syscall  *table;
+> +		/** Size of table. */
+> +		size_t		table_size;
+>  		struct {
+>  			struct evsel *sys_enter,
+>  				*sys_exit,
+> @@ -1445,22 +1450,37 @@ static const struct syscall_fmt *syscall_fmt__find_by_alias(const char *alias)
+>  	return __syscall_fmt__find_by_alias(syscall_fmts, nmemb, alias);
+>  }
+>  
+> -/*
+> - * is_exit: is this "exit" or "exit_group"?
+> - * is_open: is this "open" or "openat"? To associate the fd returned in sys_exit with the pathname in sys_enter.
+> - * args_size: sum of the sizes of the syscall arguments, anything after that is augmented stuff: pathname for openat, etc.
+> - * nonexistent: Just a hole in the syscall table, syscall id not allocated
+> +/**
+> + * struct syscall
+>   */
+>  struct syscall {
+> +	/** @e_machine: The ELF machine associated with the entry. */
+> +	int e_machine;
+> +	/** @id: id value from the tracepoint, the system call number. */
+> +	int id;
+>  	struct tep_event    *tp_format;
+>  	int		    nr_args;
+> +	/**
+> +	 * @args_size: sum of the sizes of the syscall arguments, anything
+> +	 * after that is augmented stuff: pathname for openat, etc.
+> +	 */
+> +
+>  	int		    args_size;
+>  	struct {
+>  		struct bpf_program *sys_enter,
+>  				   *sys_exit;
+>  	}		    bpf_prog;
+> +	/** @is_exit: is this "exit" or "exit_group"? */
+>  	bool		    is_exit;
+> +	/**
+> +	 * @is_open: is this "open" or "openat"? To associate the fd returned in
+> +	 * sys_exit with the pathname in sys_enter.
+> +	 */
+>  	bool		    is_open;
+> +	/**
+> +	 * @nonexistent: Name lookup failed. Just a hole in the syscall table,
+> +	 * syscall id not allocated.
+> +	 */
+>  	bool		    nonexistent;
+>  	bool		    use_btf;
+>  	struct tep_format_field *args;
+> @@ -2066,22 +2086,21 @@ static int syscall__set_arg_fmts(struct syscall *sc)
+>  	return 0;
+>  }
+>  
+> -static int trace__read_syscall_info(struct trace *trace, int id)
+> +static int syscall__read_info(struct syscall *sc, struct trace *trace)
+>  {
+>  	char tp_name[128];
+> -	struct syscall *sc;
+> -	const char *name = syscalltbl__name(trace->sctbl, id);
+> +	const char *name;
+>  	int err;
+>  
+> -	if (trace->syscalls.table == NULL) {
+> -		trace->syscalls.table = calloc(trace->sctbl->syscalls.max_id + 1, sizeof(*sc));
+> -		if (trace->syscalls.table == NULL)
+> -			return -ENOMEM;
+> -	}
+> -	sc = trace->syscalls.table + id;
+>  	if (sc->nonexistent)
+>  		return -EEXIST;
+>  
+> +	if (sc->name) {
+> +		/* Info already read. */
+> +		return 0;
+> +	}
+> +
+> +	name = syscalltbl__name(trace->sctbl, sc->id);
+>  	if (name == NULL) {
+>  		sc->nonexistent = true;
+>  		return -EEXIST;
+> @@ -2104,15 +2123,16 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+>  	 */
+>  	if (IS_ERR(sc->tp_format)) {
+>  		sc->nonexistent = true;
+> -		return PTR_ERR(sc->tp_format);
+> +		err = PTR_ERR(sc->tp_format);
+> +		sc->tp_format = NULL;
+> +		return err;
+>  	}
+>  
+>  	/*
+>  	 * The tracepoint format contains __syscall_nr field, so it's one more
+>  	 * than the actual number of syscall arguments.
+>  	 */
+> -	if (syscall__alloc_arg_fmts(sc, IS_ERR(sc->tp_format) ?
+> -					RAW_SYSCALL_ARGS_NUM : sc->tp_format->format.nr_fields - 1))
+> +	if (syscall__alloc_arg_fmts(sc, sc->tp_format->format.nr_fields - 1))
+>  		return -ENOMEM;
+>  
+>  	sc->args = sc->tp_format->format.fields;
+> @@ -2401,13 +2421,67 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+>  	return printed;
+>  }
+>  
+> +static void syscall__init(struct syscall *sc, int e_machine, int id)
+> +{
+> +	memset(sc, 0, sizeof(*sc));
+> +	sc->e_machine = e_machine;
+> +	sc->id = id;
+> +}
+> +
+> +static void syscall__exit(struct syscall *sc)
+> +{
+> +	if (!sc)
+> +		return;
+> +
+> +	zfree(&sc->arg_fmt);
+> +}
+> +
+> +static int syscall__cmp(const void *va, const void *vb)
+> +{
+> +	const struct syscall *a = va, *b = vb;
+> +
+> +	if (a->e_machine != b->e_machine)
+> +		return a->e_machine - b->e_machine;
+> +
+> +	return a->id - b->id;
+> +}
+> +
+> +static struct syscall *trace__find_syscall(struct trace *trace, int e_machine, int id)
+> +{
+> +	struct syscall key = {
+> +		.e_machine = e_machine,
+> +		.id = id,
+> +	};
+> +	struct syscall *sc, *tmp;
+> +
+> +	sc = bsearch(&key, trace->syscalls.table, trace->syscalls.table_size,
+> +		     sizeof(struct syscall), syscall__cmp);
+> +	if (sc)
+> +		return sc;
+> +
+> +	tmp = reallocarray(trace->syscalls.table, trace->syscalls.table_size + 1,
+> +			   sizeof(struct syscall));
+> +	if (!tmp)
+> +		return NULL;
+> +
+> +	trace->syscalls.table = tmp;
+> +	sc = &trace->syscalls.table[trace->syscalls.table_size++];
+> +	syscall__init(sc, e_machine, id);
+> +	qsort(trace->syscalls.table, trace->syscalls.table_size, sizeof(struct syscall),
+> +	      syscall__cmp);
+> +	sc = bsearch(&key, trace->syscalls.table, trace->syscalls.table_size,
+> +		     sizeof(struct syscall), syscall__cmp);
+> +	return sc;
+> +}
+> +
+>  typedef int (*tracepoint_handler)(struct trace *trace, struct evsel *evsel,
+>  				  union perf_event *event,
+>  				  struct perf_sample *sample);
+>  
+> -static struct syscall *trace__syscall_info(struct trace *trace,
+> -					   struct evsel *evsel, int id)
+> +static struct syscall *trace__syscall_info(struct trace *trace, struct evsel *evsel,
+> +					   int e_machine, int id)
+>  {
+> +	struct syscall *sc;
+>  	int err = 0;
+>  
+>  	if (id < 0) {
+> @@ -2432,28 +2506,20 @@ static struct syscall *trace__syscall_info(struct trace *trace,
+>  
+>  	err = -EINVAL;
+>  
+> -	if (id > trace->sctbl->syscalls.max_id) {
+> -		goto out_cant_read;
+> -	}
+> -
+> -	if ((trace->syscalls.table == NULL || trace->syscalls.table[id].name == NULL) &&
+> -	    (err = trace__read_syscall_info(trace, id)) != 0)
+> -		goto out_cant_read;
+> +	sc = trace__find_syscall(trace, e_machine, id);
+> +	if (sc)
+> +		err = syscall__read_info(sc, trace);
+>  
+> -	if (trace->syscalls.table && trace->syscalls.table[id].nonexistent)
+> -		goto out_cant_read;
+> -
+> -	return &trace->syscalls.table[id];
+> -
+> -out_cant_read:
+> -	if (verbose > 0) {
+> +	if (err && verbose > 0) {
+>  		char sbuf[STRERR_BUFSIZE];
+> -		fprintf(trace->output, "Problems reading syscall %d: %d (%s)", id, -err, str_error_r(-err, sbuf, sizeof(sbuf)));
+> -		if (id <= trace->sctbl->syscalls.max_id && trace->syscalls.table[id].name != NULL)
+> -			fprintf(trace->output, "(%s)", trace->syscalls.table[id].name);
+> +
+> +		fprintf(trace->output, "Problems reading syscall %d: %d (%s)", id, -err,
+> +			str_error_r(-err, sbuf, sizeof(sbuf)));
+> +		if (sc && sc->name)
+> +			fprintf(trace->output, "(%s)", sc->name);
+>  		fputs(" information\n", trace->output);
+>  	}
+> -	return NULL;
+> +	return err ? NULL : sc;
+>  }
+>  
+>  struct syscall_stats {
+> @@ -2600,14 +2666,6 @@ static void *syscall__augmented_args(struct syscall *sc, struct perf_sample *sam
+>  	return NULL;
+>  }
+>  
+> -static void syscall__exit(struct syscall *sc)
+> -{
+> -	if (!sc)
+> -		return;
+> -
+> -	zfree(&sc->arg_fmt);
+> -}
+> -
+>  static int trace__sys_enter(struct trace *trace, struct evsel *evsel,
+>  			    union perf_event *event __maybe_unused,
+>  			    struct perf_sample *sample)
+> @@ -2619,7 +2677,7 @@ static int trace__sys_enter(struct trace *trace, struct evsel *evsel,
+>  	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1;
+>  	int augmented_args_size = 0;
+>  	void *augmented_args = NULL;
+> -	struct syscall *sc = trace__syscall_info(trace, evsel, id);
+> +	struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
+>  	struct thread_trace *ttrace;
+>  
+>  	if (sc == NULL)
+> @@ -2693,7 +2751,7 @@ static int trace__fprintf_sys_enter(struct trace *trace, struct evsel *evsel,
+>  	struct thread_trace *ttrace;
+>  	struct thread *thread;
+>  	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1;
+> -	struct syscall *sc = trace__syscall_info(trace, evsel, id);
+> +	struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
+>  	char msg[1024];
+>  	void *args, *augmented_args = NULL;
+>  	int augmented_args_size;
+> @@ -2768,7 +2826,7 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
+>  	struct thread *thread;
+>  	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1, callchain_ret = 0, printed = 0;
+>  	int alignment = trace->args_alignment;
+> -	struct syscall *sc = trace__syscall_info(trace, evsel, id);
+> +	struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
+>  	struct thread_trace *ttrace;
+>  
+>  	if (sc == NULL)
+> @@ -3121,7 +3179,7 @@ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
+>  
+>  	if (evsel == trace->syscalls.events.bpf_output) {
+>  		int id = perf_evsel__sc_tp_uint(evsel, id, sample);
+> -		struct syscall *sc = trace__syscall_info(trace, evsel, id);
+> +		struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
+>  
+>  		if (sc) {
+>  			fprintf(trace->output, "%s(", sc->name);
+> @@ -3626,7 +3684,7 @@ static struct bpf_program *trace__find_syscall_bpf_prog(struct trace *trace, str
+>  
+>  static void trace__init_syscall_bpf_progs(struct trace *trace, int id)
+>  {
+> -	struct syscall *sc = trace__syscall_info(trace, NULL, id);
+> +	struct syscall *sc = trace__syscall_info(trace, NULL, EM_HOST, id);
+>  
+>  	if (sc == NULL)
+>  		return;
+> @@ -3637,20 +3695,20 @@ static void trace__init_syscall_bpf_progs(struct trace *trace, int id)
+>  
+>  static int trace__bpf_prog_sys_enter_fd(struct trace *trace, int id)
+>  {
+> -	struct syscall *sc = trace__syscall_info(trace, NULL, id);
+> +	struct syscall *sc = trace__syscall_info(trace, NULL, EM_HOST, id);
+>  	return sc ? bpf_program__fd(sc->bpf_prog.sys_enter) : bpf_program__fd(trace->skel->progs.syscall_unaugmented);
+>  }
+>  
+>  static int trace__bpf_prog_sys_exit_fd(struct trace *trace, int id)
+>  {
+> -	struct syscall *sc = trace__syscall_info(trace, NULL, id);
+> +	struct syscall *sc = trace__syscall_info(trace, NULL, EM_HOST, id);
+>  	return sc ? bpf_program__fd(sc->bpf_prog.sys_exit) : bpf_program__fd(trace->skel->progs.syscall_unaugmented);
+>  }
+>  
+>  static int trace__bpf_sys_enter_beauty_map(struct trace *trace, int key, unsigned int *beauty_array)
+>  {
+>  	struct tep_format_field *field;
+> -	struct syscall *sc = trace__syscall_info(trace, NULL, key);
+> +	struct syscall *sc = trace__syscall_info(trace, NULL, EM_HOST, key);
+>  	const struct btf_type *bt;
+>  	char *struct_offset, *tmp, name[32];
+>  	bool can_augment = false;
+> @@ -3748,7 +3806,7 @@ static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace
+>  try_to_find_pair:
+>  	for (int i = 0; i < trace->sctbl->syscalls.nr_entries; ++i) {
+>  		int id = syscalltbl__id_at_idx(trace->sctbl, i);
+> -		struct syscall *pair = trace__syscall_info(trace, NULL, id);
+> +		struct syscall *pair = trace__syscall_info(trace, NULL, EM_HOST, id);
+>  		struct bpf_program *pair_prog;
+>  		bool is_candidate = false;
+>  
+> @@ -3898,7 +3956,7 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace)
+>  	 */
+>  	for (int i = 0; i < trace->sctbl->syscalls.nr_entries; ++i) {
+>  		int key = syscalltbl__id_at_idx(trace->sctbl, i);
+> -		struct syscall *sc = trace__syscall_info(trace, NULL, key);
+> +		struct syscall *sc = trace__syscall_info(trace, NULL, EM_HOST, key);
+>  		struct bpf_program *pair_prog;
+>  		int prog_fd;
+>  
+> @@ -4663,7 +4721,11 @@ static size_t thread__dump_stats(struct thread_trace *ttrace,
+>  			pct = avg ? 100.0 * stddev_stats(&stats->stats) / avg : 0.0;
+>  			avg /= NSEC_PER_MSEC;
+>  
+> -			sc = &trace->syscalls.table[syscall_stats_entry->syscall];
+> +			sc = trace__syscall_info(trace, /*evsel=*/NULL, EM_HOST,
+> +						 syscall_stats_entry->syscall);
+> +			if (!sc)
+> +				continue;
+> +
+>  			printed += fprintf(fp, "   %-15s", sc->name);
+>  			printed += fprintf(fp, " %8" PRIu64 " %6" PRIu64 " %9.3f %9.3f %9.3f",
+>  					   n, stats->nr_failures, syscall_stats_entry->msecs, min, avg);
+> @@ -5071,12 +5133,10 @@ static int trace__config(const char *var, const char *value, void *arg)
+>  
+>  static void trace__exit(struct trace *trace)
+>  {
+> -	int i;
+> -
+>  	strlist__delete(trace->ev_qualifier);
+>  	zfree(&trace->ev_qualifier_ids.entries);
+>  	if (trace->syscalls.table) {
+> -		for (i = 0; i <= trace->sctbl->syscalls.max_id; i++)
+> +		for (size_t i = 0; i < trace->syscalls.table_size; i++)
+>  			syscall__exit(&trace->syscalls.table[i]);
+>  		zfree(&trace->syscalls.table);
+>  	}
+> -- 
+> 2.48.1.502.g6dc24dfdaf-goog
+> 
