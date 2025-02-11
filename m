@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 445EE1FCF7C
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:15:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7532B1F8ADF
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:15:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739272538; cv=none; b=Mg3UlaJNb144W7tLV7ATha495KzewQx/1+/F5AHV0f+O5YWXB1zgGO0yfy4pxl/x0S9zIKaZki+LetYAeKll1roTIUeiB4b/5R9qkx/8J8I2Cv8g2y0EH9yQSY3Luwz6N+R3GOyIt6XDMTrHZFZt4KTdKUphucGcGFRqVTgKVBw=
+	t=1739272548; cv=none; b=CmJerQXu2Clpq7lcTHygcXIq69jWXwqtNv+RrRbocRWBLA6sUdvlnDF00vW/YyA+LIJPl+b9NZ0Rer0kHLAAMVTcBvm6NZ+n9YbrJSD8Tkhigy11njkBVvD9iAvM7tnKxyV5YKwMOLFz/1RxbPtVgMmuQVE40UMg/5AvlDy9HEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739272538; c=relaxed/simple;
-	bh=iFV0hhjYpSnTo4OcMNtFrIBSyTfyrCAVrzjqHeN3Gxo=;
+	s=arc-20240116; t=1739272548; c=relaxed/simple;
+	bh=4xjvZqeLUawAyQidCrnqVChWR4w8AB2ikrgHA+33gAQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KbvUZq4gR74xz98Zz7mAHovrLKsnVUTTsO4qgNchj4+ntjJJywy2ff2sFY6QTBe8H8tvTgbeJzGVFAcfcIa421oreT1LatJX2setY9z7YlmGxAAe1rJG8OnrDamUbhK7WXo9EeIslSg+FE4T0NJwVNaUkvfSth3a0MyBaziP61A=
+	 MIME-Version; b=AKn3jPbXWhQrTfchXFu4nJB9o84+c8iXmhMs5+FdCDu3qvuAmX+0naFQeIEELTYMF/sGJ5fSERhdW5gdj7n6amxTdW2VU7Tz8fcXeXD8ZJYR5bPthmvRc+WGbQdWB4b5cVMhhcELTb8Zoq+DllZ+RhCOSxW+b8u0ur8KkhB3y2k=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 03FCF13D5;
-	Tue, 11 Feb 2025 03:15:58 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 87B9413D5;
+	Tue, 11 Feb 2025 03:16:07 -0800 (PST)
 Received: from K4MQJ0H1H2.emea.arm.com (K4MQJ0H1H2.blr.arm.com [10.162.40.80])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3600B3F5A1;
-	Tue, 11 Feb 2025 03:15:25 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1289E3F5A1;
+	Tue, 11 Feb 2025 03:15:36 -0800 (PST)
 From: Dev Jain <dev.jain@arm.com>
 To: akpm@linux-foundation.org,
 	david@redhat.com,
@@ -54,9 +54,9 @@ Cc: npache@redhat.com,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH v2 11/17] khugepaged: Enable sysfs to control order of collapse
-Date: Tue, 11 Feb 2025 16:43:20 +0530
-Message-Id: <20250211111326.14295-12-dev.jain@arm.com>
+Subject: [PATCH v2 12/17] khugepaged: Enable variable-sized VMA collapse
+Date: Tue, 11 Feb 2025 16:43:21 +0530
+Message-Id: <20250211111326.14295-13-dev.jain@arm.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 In-Reply-To: <20250211111326.14295-1-dev.jain@arm.com>
 References: <20250211111326.14295-1-dev.jain@arm.com>
@@ -68,127 +68,163 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Activate khugepaged for anonymous collapse even if a single order is activated.
-This condition will be updated upon by subsequent patches.
+Applications in general may have a lot of VMAs less than PMD-size. Therefore
+it is essential that khugepaged is able to collapse these VMAs.
 
 Signed-off-by: Dev Jain <dev.jain@arm.com>
 ---
- mm/khugepaged.c | 36 ++++++++++++++++++------------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+ mm/khugepaged.c | 68 +++++++++++++++++++++++++++++--------------------
+ 1 file changed, 41 insertions(+), 27 deletions(-)
 
 diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index baa5b44968ac..37cfa7beba3d 100644
+index 37cfa7beba3d..048f990d8507 100644
 --- a/mm/khugepaged.c
 +++ b/mm/khugepaged.c
-@@ -415,24 +415,20 @@ static inline int hpage_collapse_test_exit_or_disable(struct mm_struct *mm)
- 	       test_bit(MMF_DISABLE_THP, &mm->flags);
- }
+@@ -1413,7 +1413,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+ static int hpage_collapse_scan_pmd(struct mm_struct *mm,
+ 				   struct vm_area_struct *vma,
+ 				   unsigned long address, bool *mmap_locked,
+-				   struct collapse_control *cc)
++				   unsigned long orders, struct collapse_control *cc)
+ {
+ 	pmd_t *pmd;
+ 	pte_t *pte, *_pte;
+@@ -1425,22 +1425,14 @@ static int hpage_collapse_scan_pmd(struct mm_struct *mm,
+ 	unsigned long _address, orig_address = address;
+ 	int node = NUMA_NO_NODE;
+ 	bool writable = false;
+-	unsigned long orders, orig_orders;
++	unsigned long orig_orders;
+ 	int order, prev_order;
+ 	bool all_pfns_present, all_pfns_contig, first_pfn_aligned;
+ 	pte_t prev_pteval;
  
--static bool hugepage_pmd_enabled(void)
-+static bool thp_enabled(void)
- {
- 	/*
- 	 * We cover the anon, shmem and the file-backed case here; file-backed
- 	 * hugepages, when configured in, are determined by the global control.
--	 * Anon pmd-sized hugepages are determined by the pmd-size control.
-+	 * Anon mTHPs are determined by the per-size control.
- 	 * Shmem pmd-sized hugepages are also determined by its pmd-size control,
- 	 * except when the global shmem_huge is set to SHMEM_HUGE_DENY.
- 	 */
- 	if (IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS) &&
- 	    hugepage_global_enabled())
- 		return true;
--	if (test_bit(PMD_ORDER, &huge_anon_orders_always))
--		return true;
--	if (test_bit(PMD_ORDER, &huge_anon_orders_madvise))
--		return true;
--	if (test_bit(PMD_ORDER, &huge_anon_orders_inherit) &&
--	    hugepage_global_enabled())
-+	if (huge_anon_orders_always || huge_anon_orders_madvise ||
-+	    (huge_anon_orders_inherit && hugepage_global_enabled()))
- 		return true;
- 	if (IS_ENABLED(CONFIG_SHMEM) && shmem_hpage_pmd_enabled())
- 		return true;
-@@ -475,9 +471,9 @@ void khugepaged_enter_vma(struct vm_area_struct *vma,
- 			  unsigned long vm_flags)
- {
- 	if (!test_bit(MMF_VM_HUGEPAGE, &vma->vm_mm->flags) &&
--	    hugepage_pmd_enabled()) {
--		if (thp_vma_allowable_order(vma, vm_flags, TVA_ENFORCE_SYSFS,
--					    PMD_ORDER))
-+	    thp_enabled()) {
-+		if (thp_vma_allowable_orders(vma, vm_flags, TVA_ENFORCE_SYSFS,
-+					     THP_ORDERS_ALL_ANON))
- 			__khugepaged_enter(vma->vm_mm);
- 	}
- }
-@@ -2679,8 +2675,8 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
+-	VM_BUG_ON(address & ~HPAGE_PMD_MASK);
+-
+-	orders = thp_vma_allowable_orders(vma, vma->vm_flags,
+-			TVA_IN_PF | TVA_ENFORCE_SYSFS, THP_ORDERS_ALL_ANON);
+-	orders = thp_vma_suitable_orders(vma, address, orders);
+ 	orig_orders = orders;
+ 	order = highest_order(orders);
+-
+-	/* MADV_COLLAPSE needs to work irrespective of sysfs setting */
+-	if (!cc->is_khugepaged)
+-		order = HPAGE_PMD_ORDER;
++	VM_BUG_ON(address & ((PAGE_SIZE << order) - 1));
+ 
+ scan_pte_range:
+ 
+@@ -1667,7 +1659,7 @@ static int hpage_collapse_scan_pmd(struct mm_struct *mm,
+ 
+ decide_order:
+ 		/* Immediately exit on exhaustion of range */
+-		if (_address == orig_address + (PAGE_SIZE << HPAGE_PMD_ORDER))
++		if (_address == orig_address + (PAGE_SIZE << (highest_order(orig_orders))))
+ 			goto out;
+ 
+ 		/* Get highest order possible starting from address */
+@@ -2636,6 +2628,9 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
+ 	struct mm_struct *mm;
+ 	struct vm_area_struct *vma;
+ 	int progress = 0;
++	unsigned long orders;
++	int order;
++	bool is_file_vma;
+ 
+ 	VM_BUG_ON(!pages);
+ 	lockdep_assert_held(&khugepaged_mm_lock);
+@@ -2675,19 +2670,40 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
  			progress++;
  			break;
  		}
--		if (!thp_vma_allowable_order(vma, vma->vm_flags,
--					TVA_ENFORCE_SYSFS, PMD_ORDER)) {
-+		if (!thp_vma_allowable_orders(vma, vma->vm_flags,
-+					TVA_ENFORCE_SYSFS, THP_ORDERS_ALL_ANON)) {
+-		if (!thp_vma_allowable_orders(vma, vma->vm_flags,
+-					TVA_ENFORCE_SYSFS, THP_ORDERS_ALL_ANON)) {
++		orders = thp_vma_allowable_orders(vma, vma->vm_flags,
++					TVA_ENFORCE_SYSFS, THP_ORDERS_ALL_ANON);
++		if (!orders) {
  skip:
  			progress++;
  			continue;
-@@ -2704,6 +2700,10 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
- 				  khugepaged_scan.address + HPAGE_PMD_SIZE >
- 				  hend);
- 			if (IS_ENABLED(CONFIG_SHMEM) && !vma_is_anonymous(vma)) {
-+				if (!thp_vma_allowable_order(vma, vma->vm_flags,
-+				    TVA_ENFORCE_SYSFS, PMD_ORDER))
-+					break;
+ 		}
+-		hstart = round_up(vma->vm_start, HPAGE_PMD_SIZE);
+-		hend = round_down(vma->vm_end, HPAGE_PMD_SIZE);
 +
++		/* We can collapse anonymous VMAs less than PMD_SIZE */
++		is_file_vma = IS_ENABLED(CONFIG_SHMEM) && !vma_is_anonymous(vma);
++		if (is_file_vma) {
++			order = HPAGE_PMD_ORDER;
++			if (!(orders & (1UL << order)))
++				goto skip;
++			hend = round_down(vma->vm_end, PAGE_SIZE << order);
++		}
++		else {
++			/* select the highest possible order for the VMA */
++			order = highest_order(orders);
++			while (orders) {
++				hend = round_down(vma->vm_end, PAGE_SIZE << order);
++				if (khugepaged_scan.address <= hend)
++					break;
++				order = next_order(&orders, order);
++			}
++		}
++		if (!orders)
++			goto skip;
+ 		if (khugepaged_scan.address > hend)
+ 			goto skip;
++		hstart = round_up(vma->vm_start, PAGE_SIZE << order);
+ 		if (khugepaged_scan.address < hstart)
+ 			khugepaged_scan.address = hstart;
+-		VM_BUG_ON(khugepaged_scan.address & ~HPAGE_PMD_MASK);
++		VM_BUG_ON(khugepaged_scan.address & ((PAGE_SIZE << order) - 1));
+ 
+ 		while (khugepaged_scan.address < hend) {
+ 			bool mmap_locked = true;
+@@ -2697,13 +2713,9 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
+ 				goto breakouterloop;
+ 
+ 			VM_BUG_ON(khugepaged_scan.address < hstart ||
+-				  khugepaged_scan.address + HPAGE_PMD_SIZE >
++				  khugepaged_scan.address + (PAGE_SIZE << order) >
+ 				  hend);
+-			if (IS_ENABLED(CONFIG_SHMEM) && !vma_is_anonymous(vma)) {
+-				if (!thp_vma_allowable_order(vma, vma->vm_flags,
+-				    TVA_ENFORCE_SYSFS, PMD_ORDER))
+-					break;
+-
++			if (is_file_vma) {
  				struct file *file = get_file(vma->vm_file);
  				pgoff_t pgoff = linear_page_index(vma,
  						khugepaged_scan.address);
-@@ -2782,7 +2782,7 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
+@@ -2725,15 +2737,15 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
+ 				}
+ 			} else {
+ 				*result = hpage_collapse_scan_pmd(mm, vma,
+-					khugepaged_scan.address, &mmap_locked, cc);
++					khugepaged_scan.address, &mmap_locked, orders, cc);
+ 			}
  
- static int khugepaged_has_work(void)
- {
--	return !list_empty(&khugepaged_scan.mm_head) && hugepage_pmd_enabled();
-+	return !list_empty(&khugepaged_scan.mm_head) && thp_enabled();
- }
+ 			if (*result == SCAN_SUCCEED)
+ 				++khugepaged_pages_collapsed;
  
- static int khugepaged_wait_event(void)
-@@ -2855,7 +2855,7 @@ static void khugepaged_wait_work(void)
- 		return;
- 	}
- 
--	if (hugepage_pmd_enabled())
-+	if (thp_enabled())
- 		wait_event_freezable(khugepaged_wait, khugepaged_wait_event());
- }
- 
-@@ -2886,7 +2886,7 @@ static void set_recommended_min_free_kbytes(void)
- 	int nr_zones = 0;
- 	unsigned long recommended_min;
- 
--	if (!hugepage_pmd_enabled()) {
-+	if (!thp_enabled()) {
- 		calculate_min_free_kbytes();
- 		goto update_wmarks;
- 	}
-@@ -2936,7 +2936,7 @@ int start_stop_khugepaged(void)
- 	int err = 0;
- 
- 	mutex_lock(&khugepaged_mutex);
--	if (hugepage_pmd_enabled()) {
-+	if (thp_enabled()) {
- 		if (!khugepaged_thread)
- 			khugepaged_thread = kthread_run(khugepaged, NULL,
- 							"khugepaged");
-@@ -2962,7 +2962,7 @@ int start_stop_khugepaged(void)
- void khugepaged_min_free_kbytes_update(void)
- {
- 	mutex_lock(&khugepaged_mutex);
--	if (hugepage_pmd_enabled() && khugepaged_thread)
-+	if (thp_enabled() && khugepaged_thread)
- 		set_recommended_min_free_kbytes();
- 	mutex_unlock(&khugepaged_mutex);
- }
+ 			/* move to next address */
+-			khugepaged_scan.address += HPAGE_PMD_SIZE;
+-			progress += HPAGE_PMD_NR;
++			khugepaged_scan.address += (PAGE_SIZE << order);
++			progress += (1UL << order);
+ 			if (!mmap_locked)
+ 				/*
+ 				 * We released mmap_lock so break loop.  Note
+@@ -3060,7 +3072,9 @@ int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
+ 			fput(file);
+ 		} else {
+ 			result = hpage_collapse_scan_pmd(mm, vma, addr,
+-							 &mmap_locked, cc);
++							 &mmap_locked,
++							 BIT(HPAGE_PMD_ORDER),
++							 cc);
+ 		}
+ 		if (!mmap_locked)
+ 			*prev = NULL;  /* Tell caller we dropped mmap_lock */
 -- 
 2.30.2
 
