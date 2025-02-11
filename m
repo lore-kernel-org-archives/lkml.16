@@ -1,65 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8703C26BD98;
-	Tue, 11 Feb 2025 06:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4360E26BD98;
+	Tue, 11 Feb 2025 06:02:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739253630; cv=none; b=BSKrUwhSHXZwnK97HxGkYu/1L6g9fKXbmOlC5jPsGdBSpIqOfwNkwM9S6utba+XCfayEkZZOEjyQ0esDtvcSjEn2J1DLAoaY9HD4zXxeuBkVgPO2a2khieS7gCOtcBaR1IVMM6oMgpx0g7/upqYP8i4Cd2JXxs5cEboE0/Fl+jA=
+	t=1739253731; cv=none; b=lMMS4+Ja9GPeICUsMOh90UrYdAGKlhHxcONwBd/ZSwU9b1T77oVArf9/nOvsu3R3WuCCdS3VP1bWiXZ5SKoDXTn3SptCR+N7adz1dksfexvWKOKLqT8izs1MQaf/PwUPcEOq25LUNND+UKlKqnfbysSLVKNQ3kNX91AFpPrFBDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739253630; c=relaxed/simple;
-	bh=JdWtLw17C1nfm7u7ea4jJC5huVL703xGqMB9SVBoneg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fdwNrVCi4+VMUwAdDXkvYAY4bcXrChZWCEzbwLVvZTezedfEUCqcVtYvY9s9BbDCBj8aQuDV15Dy+oCnLMjHcJu1IaRhCXFXwAzkV0Tnjh2qRdL9rU9Zg6J6lY+fCXvNF+j6xnj0JPCEhAR0bOwlWYSxwXKBJu0PgqPMEBf8snc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=K/Or0PwF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739253731; c=relaxed/simple;
+	bh=9TlBQFKfgo8qm9vvVdscR3v2j2Y9oifJALzQb7jwKBM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GhYvSUDc7nD6sfKivz4yF+rg2vrSIDE9yUB03Ty1+UDOMXLS3f/GV/XzJ0GIpEKXH3fr9l0jPA7qUjne1M9wWefWG+zTAaX/skOuUngQ+Lg2fIgYioUVBbla1lX5M/MRGJlMlbSDxxoq4C9OW2xPw5l1pXQmhzaqJz0roWyLA90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=sPAB7Qcp; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="K/Or0PwF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DF91C4CEDD;
-	Tue, 11 Feb 2025 06:00:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1739253630;
-	bh=JdWtLw17C1nfm7u7ea4jJC5huVL703xGqMB9SVBoneg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K/Or0PwFSgLjja7MNpaGtl8IpC58RRoEAU+vqeZbQqHflZo7dtiNMpY7nNT3RrmCE
-	 66ILcpcQ30QE7KcZB3IH1Beiw40OLVrDJqOi1B+G6XTeE0pVQSfgqjN7SJ2CEtfDqj
-	 fxOf0v/HxaL5uYEtZ9O2pEWQJg478BY0JTTRT2ZU=
-Date: Tue, 11 Feb 2025 06:59:26 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Jillian Donahue <jilliandonahue58@gmail.com>
-Cc: kernel test robot <lkp@intel.com>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [PATCH v3] f_midi_complete to call tasklet_hi_schedule
-Message-ID: <2025021148-expectant-rendering-1019@gregkh>
-References: <20250207203441.945196-1-jilliandonahue58@gmail.com>
- <202502082022.ILQXjseT-lkp@intel.com>
- <CAArt=LhOBqH-qZVkdBsh13Csvv1GrDBqakfPGjpFt0TF8KBYsg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="sPAB7Qcp"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1739253726; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=tlo8q8j4Pp6YSO9Kcn8UqITwpqL/bxjMQZvrf+MMEtk=;
+	b=sPAB7QcpRbwxVaM08+jD4tRIeDfIyOhBCHLXsmCt4x9+58IR5Gb4iEUWOmjlJ6RM1HhRrZ0P7p5QoiUaFqELWljdnO6ISDJGYB4V28EH85rBz+iRVFDdTyB6SUsWOP2yf9mQpz+Oz5w2YTWyUstXmTrVENpZhRAoL4MEfWO1qXI=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPFiSI3_1739253723 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 11 Feb 2025 14:02:04 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: tony.luck@intel.com,
+	bp@alien8.de,
+	nao.horiguchi@gmail.com
+Cc: tglx@linutronix.de,
+	mingo@redhat.com,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	linmiaohe@huawei.com,
+	akpm@linux-foundation.org,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	baolin.wang@linux.alibaba.com,
+	tianruidong@linux.alibaba.com
+Subject: [PATCH v1 2/4] x86/mce: dump error msg from severities
+Date: Tue, 11 Feb 2025 14:01:58 +0800
+Message-ID: <20250211060200.33845-3-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20250211060200.33845-1-xueshuai@linux.alibaba.com>
+References: <20250211060200.33845-1-xueshuai@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAArt=LhOBqH-qZVkdBsh13Csvv1GrDBqakfPGjpFt0TF8KBYsg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 10, 2025 at 10:18:13AM -0700, Jillian Donahue wrote:
-> Ah yea, this error happens because in this commit:
-> https://github.com/torvalds/linux/commit/8653d71ce3763aedcf3d2331f59beda3fecd79e4
-> the tasklets are replaced with works. Should I request the patch to be
-> in v5.10 or should I update the fix to use
-> queue_work(system_highpri_wq, &midi->work) ?
-> 
-> > >> drivers/usb/gadget/function/f_midi.c:286:31: error: no member named 'tasklet' in 'struct f_midi'
-> >      286 |                         tasklet_hi_schedule(&midi->tasklet);
-> >          |                                              ~~~~  ^
-> >    1 error generated.
+The message in severities is useful for identifying the type of MCE that
+has occurred; dump it if it is valid.
 
-Always submit your changes based on the latest kernel tree (ideally the
-latest development tree).  Any older kernel backports can happen after
-they end up in a release.
+Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+---
+ arch/x86/kernel/cpu/mce/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-thanks,
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 2919a077cd66..c1319db45b0a 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1456,6 +1456,8 @@ static void queue_task_work(struct mce_hw_err *err, char *msg, void (*func)(stru
+ 	if (count > 1)
+ 		return;
+ 
++	if (msg)
++		pr_err("%s\n", msg);
+ 	task_work_add(current, &current->mce_kill_me, TWA_RESUME);
+ }
+ 
+-- 
+2.39.3
 
-greg k-h
