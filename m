@@ -1,105 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0613E1E9B05;
-	Tue, 11 Feb 2025 06:52:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739256755; cv=none; b=ECUDRxWQjAq/ECAljgWTuzu4fBmeVVVQ2mZjUGVMlf5p7ab7dvKHUvoFmE7T84LDGxX+a1tXoxvcvWQPWtJ5gYFS1hMZhutoaespnxkzUGF5kMf9c/I4b2OcLIxsmS6eN+Wghv9zwm5nmVww7vkbRoPuPTP57QpBAL6tr3/lsgw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739256755; c=relaxed/simple;
-	bh=GiDwWjf5cGNnmpmDE4al1V0wscsdaD7v2C2004KRKQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hOmW1jujmUqHFBxSXgIdMzA+5DUJQcGAFTdMmbGGV8L3IzOb6wYmimk0UerjRWCh/JsSwktXDy5vXo3+AqyHt1GUXr246Ax3+9Nx7FC3q7AdDTN02pw6cNNGkON2f+bK/NYu686d94sbVOAL2xXQfYPBR1gtAmrbG8tUh0oF8nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=uzQtafYl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="uzQtafYl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4E73C4CEDD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB8E1E883E;
 	Tue, 11 Feb 2025 06:52:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1739256754;
-	bh=GiDwWjf5cGNnmpmDE4al1V0wscsdaD7v2C2004KRKQk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uzQtafYl+CZXSR+mSvlr7Ps4jdheLjp51HyGx8GB4vIdyp8moQ0oPWLyxLH7Vsmk6
-	 CZtWUjYBeV62q9CJRvycFvhtw/D22EtwLAAmwBPFz70TxSm98aK0gwYoAhJOo4d98S
-	 8cOm4BasXBz0tO4Rgm3ilRQagZHjfd8774L+eLWk=
-Date: Tue, 11 Feb 2025 07:51:31 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Tony Luck <tony.luck@intel.com>
-Cc: Robert Moore <robert.moore@intel.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-	acpica-devel@lists.linux.dev, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	David Hildenbrand <david@redhat.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] ACPI/MRRM: Add "node" symlink to
- /sys/devices/system/memory/rangeX
-Message-ID: <2025021111-deepen-landing-4252@gregkh>
-References: <20250210211223.6139-1-tony.luck@intel.com>
- <20250210211223.6139-4-tony.luck@intel.com>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739256756; cv=none; b=jwGPGjifj711Uc5MFVSYvGJUM24Dz60Ajpn2v4f9oc4/dgUmQ2xmhARqMJ7CdgIFx4nXhkPjnAvFgNZK6CQVZ36zVxjk/GbE4r/6UYakM+HakxPs3jHo3TxNG0acy2rkK/ID8L5n6foxkjbquHQ/jVbU165tYDJh/k0uAdlRwQo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739256756; c=relaxed/simple;
+	bh=6Nnpo/wyqDm7AnIKoOm4JPNVZ5n7R6N3ycKxmow5nJs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=qnXYYvoW/ZsV/e4lLTwenIp1NdY8tv2/zfxomr+rb+Tdl8yt99XGZw7v/U/iUp7P99NfFkIHh259UeLVMqrVBtN9qGtk0n2tbE5Gkbpz7Yy/v+2VjCGR4ZQCbZbY/KG28y8OeYdSy+7PZ+tmuFuecxjByeZSXoOsgMLrWkijaac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=VmQ9o9xY; arc=none smtp.client-ip=217.92.40.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="VmQ9o9xY"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 60BFD1487190;
+	Tue, 11 Feb 2025 07:52:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
+	t=1739256751;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mJiswliuC8yJUwUEEk+zWNkofLRfEQuTytGzzJetlvI=;
+	b=VmQ9o9xYAgNrT+nU8eBegHtGR8nBQlz3zDcxlT7SvS+Q1fNzgj+bt7raCaHVaG6fH3/47f
+	lDGAAnSm9LiotxkTQfrEt5sx6wh2aVYFuOZT43NdGjW2bnGWrnUPVcmdfZLlRI0aPnap7m
+	REPJqrhwawW67j+lfDn0Q6keJ889Wv1C+r2HGne/vQA3YMKaF4RCvbofyFKnXyrq54MIh8
+	Eau6kAidC43rG4o0GoDR/hql3mSwPTRq+RcHe9WjXAGZk23Zb1mUGX8u45SFextzXNBbVH
+	ETEyYnlIx61LMyv/MFA7v3ED9uPfdNX3vXtLwTX+yZUitF5d3+7NCLqlNRozMw==
+From: Alexander Dahl <ada@thorsis.com>
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Ryan Wanner <ryan.wanner@microchip.com>,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Subject: [PATCH v2 12/16] ARM: dts: microchip: sama7g5: Add OTPC clocks
+Date: Tue, 11 Feb 2025 07:52:23 +0100
+Message-Id: <20250211065223.4831-3-ada@thorsis.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250211065223.4831-1-ada@thorsis.com>
+References: <20250210164506.495747-1-ada@thorsis.com>
+ <20250211065223.4831-1-ada@thorsis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210211223.6139-4-tony.luck@intel.com>
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Mon, Feb 10, 2025 at 01:12:22PM -0800, Tony Luck wrote:
-> Users will likely want to know which node owns each memory range
-> and which CPUs are local to the range.
-> 
-> Add a symlink to the node directory to provide both pieces of information.
-> 
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> ---
->  drivers/acpi/acpi_mrrm.c | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> diff --git a/drivers/acpi/acpi_mrrm.c b/drivers/acpi/acpi_mrrm.c
-> index 51ed9064e025..28b484943bbd 100644
-> --- a/drivers/acpi/acpi_mrrm.c
-> +++ b/drivers/acpi/acpi_mrrm.c
-> @@ -119,6 +119,31 @@ static struct attribute *memory_range_attrs[] = {
->  
->  ATTRIBUTE_GROUPS(memory_range);
->  
-> +static __init int add_node_link(struct mrrm_mem_range_entry *entry)
-> +{
-> +	struct node *node = NULL;
-> +	int ret = 0;
-> +	int nid;
-> +
-> +	for_each_online_node(nid) {
-> +		for (int z = 0; z < MAX_NR_ZONES; z++) {
-> +			struct zone *zone = NODE_DATA(nid)->node_zones + z;
-> +
-> +			if (!populated_zone(zone))
-> +				continue;
-> +			if (zone_intersects(zone, PHYS_PFN(entry->base), PHYS_PFN(entry->length))) {
-> +				node = node_devices[zone->node];
-> +				goto found;
-> +			}
-> +		}
-> +	}
-> +found:
-> +	if (node)
-> +		ret = sysfs_create_link(&entry->dev.kobj, &node->dev.kobj, "node");
+These clocks should be enabled, datasheet says:
 
-What is going to remove this symlink if the memory goes away?  Or do
-these never get removed?
+> The OTPC is clocked through the Power Management Controller (PMC).
+> The user must power on the main RC oscillator and enable the
+> peripheral clock of the OTPC prior to reading or writing the OTP
+> memory.
 
-symlinks in sysfs created like this always worry me.  What is going to
-use it?
+Earlier discussions suggest, MCK0 must be enabled, too.  MCK0 is parent
+of peripheral otpc_clk, so this is done implicitly.
 
-thanks,
+Link: https://lore.kernel.org/linux-clk/ec34efc2-2051-4b8a-b5d8-6e2fd5e08c28@microchip.com/T/#u
+Signed-off-by: Alexander Dahl <ada@thorsis.com>
+---
 
-greg k-h
+Notes:
+    v2:
+    - new patch, not present in v1
+
+ arch/arm/boot/dts/microchip/sama7g5.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/boot/dts/microchip/sama7g5.dtsi b/arch/arm/boot/dts/microchip/sama7g5.dtsi
+index f68c2eb8edd54..b33204688b90c 100644
+--- a/arch/arm/boot/dts/microchip/sama7g5.dtsi
++++ b/arch/arm/boot/dts/microchip/sama7g5.dtsi
+@@ -1023,6 +1023,8 @@ otpc: efuse@e8c00000 {
+ 			reg = <0xe8c00000 0x100>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
++			clocks = <&pmc PMC_TYPE_CORE SAMA7G5_PMC_MAIN_RC>, <&pmc PMC_TYPE_PERIPHERAL 67>;
++			clock-names = "main_rc_osc", "otpc_clk";
+ 
+ 			temperature_calib: calib@1 {
+ 				reg = <OTP_PKT(1) 76>;
+-- 
+2.39.5
+
