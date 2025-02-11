@@ -1,198 +1,152 @@
-Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CBCB26BDB6;
-	Tue, 11 Feb 2025 07:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375BE1E9B17
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739257525; cv=none; b=qSdtV67m9iD1MyOm+a92giFmk8d9N1lyA6DfhAtypGmaRVw49AMr5pxfgoXR3Si9+hGsWpPrsQzx9PcGCvOpGW3ODW8p2Z6CHylAumedIAWPZBcHknC+pppUDJpk1jyz5gyH4TLmB6fOV/oqzNHg0mdHN71XYUymcYj7SuBMVxo=
+	t=1739257532; cv=none; b=GBrv0xYupnjkA6jApxGxxMX3GQpSD83WMUktOQbKImbwoZcwJfCrLgWVfAc6BxGBprh8ZcW7MZ954Rz1bnKZ0EAe6i7GSXyJQXqojojxrm8HxuLBkG8e6PfznwdIs6C9ntG7jtDpxY9sts8DsNHFmt9y09o0STxsz+zrk6GUphc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739257525; c=relaxed/simple;
-	bh=mwmPV6GcjGF953IW1HDwL4a6zb02eH1Tc0c3yrbIinQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mjt8OAwajiL3D8HVX7PtQh0vgwO9dVmVtQoJ6GGX3bIwy+FtXdhNT70HotBJYdFt0tJDj7GbKqIhv+3ILrN8yrY8kUCmqzybzqnPukG4/YH93ZUkdgb6awvMjG4ehA8a9cYq/yDabznQ4lk3WacREcTrX3yfYC+4rtGBO8fTyaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=fZ3S4PNW; arc=none smtp.client-ip=217.92.40.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="fZ3S4PNW"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 395C81480388;
-	Tue, 11 Feb 2025 08:05:19 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
-	t=1739257520;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zhmjHnHw3vjWo+tkwmIIDKtbQQYkCfKwRVCsE4/6FJ0=;
-	b=fZ3S4PNWa3z+AJjC0z2Rbjb5irYPnhzFSGve2WHv/xVHrClSkkw1Oes9qbeC/rN/TQZh5m
-	KrVmjp6tTe3JZa0PMnQEZFj+kESGp912bmTFau0QfHIltHr4fb0isN2eAYvm8uSYjR0TZg
-	NpUqCvPoVIOFWaolUjEMi4nruboGJWZco7zOLxrjNKaYfJcOOChhvyNaNs26HVnmAvR6Tg
-	XyS9tX9ilujx0t0bxAxs45yYEXWzCm4SG8fhljKGhNvao+jh7Z+VK9r33o2Ov7q5sIsCU8
-	Pll5wN5r0QX6RRXhKR/8Jrazpa5tfCXRic9raMqghv/C5Bk0FPfe1Gl2Mh5RhQ==
-Date: Tue, 11 Feb 2025 08:05:14 +0100
-From: Alexander Dahl <ada@thorsis.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Alexander Dahl <ada@thorsis.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Ryan Wanner <ryan.wanner@microchip.com>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Subject: Re: [PATCH v2 08/16] dt-bindings: nvmem: microchip-otpc: Add
- required clocks
-Message-ID: <20250211-primer-epic-d07bc3752569@thorsis.com>
-Mail-Followup-To: Krzysztof Kozlowski <krzk@kernel.org>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Ryan Wanner <ryan.wanner@microchip.com>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-References: <20250210164506.495747-1-ada@thorsis.com>
- <20250210164506.495747-9-ada@thorsis.com>
- <8e9562c8-5c01-4b5c-b2b0-4dad3d16e7a8@kernel.org>
+	s=arc-20240116; t=1739257532; c=relaxed/simple;
+	bh=oaAaNX/QxmUMbeZs9fPg2tPMIurhFhVqYkQIbFmbTRM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=O7ctSaR//ckNufphWKfVHSEGuxc6AurKv0zlgEy0HwAik2KfRgHzdq0YfRlBUALwvDqXmtEwUKRbwFeRYiX+WJwGyEqmp92Pn/nmFS01xjxKZzchdblE58DLIE4v8dq4aOLmOOyDJL1c5CSq1XMnTtqKL9DHq9PVrpvyo2CrR0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d162c02150so13502855ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 23:05:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739257529; x=1739862329;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AUX72q2tBzhNGgAjcGhqVuvMWdHoUisryHtNBvrmTx0=;
+        b=L28NBeRkO5MQyT+XNk7nNHw99D8VaZh8ZJ0sjKh4bAch+FvgL4x5nG9LImATvpL4T+
+         lF8FwkL3Io8hxLuoNnhXpZ+Z9o4YF0FiJ47IpfrF4GVcfOiS4i7mRSiWrIq6gs0gKoVl
+         rAtAk2G5HhI62tFWEQQ6AtHVRX87qy+uj4iNqKZ8Ri4FttjdZURUfgJy5Mil2xM+rEoS
+         b2NmBmumDBDO5fAQyKamYnlDXWNnvq55hIQIZPSpaUcHlI9RDKM05yWxFH9ai8d6H5aT
+         NWHtAMt65Ve6OZkSsEG5vLY0sCJgMdnRsLGyFTzETKSWfo5M0uValq15onqs/70nHxaO
+         ahmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWXbb3g7TfktOh3WtfppalY2a9Kq37jelpoNXXMyWfQ1kVl0EQYnfbcgWxWjRpe/vNMnXsNvQvemoGz44E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIh6hWrxBB+S3FxXKXoNwrAr1bY7RoXCKbjoMb7vDJnvCOwekb
+	1T0LMCJr2dtOYNoCMxNrcmuG1QTlT4eL5t2QR59N1ANVDB2v+NCUrj/pKfu9vfZJxU5CsHUXIhI
+	/9qDWjIcfDoFhqnA0feU68wK0U8OjgmzXhJ3DQMJneoGj4A2obYha53Y=
+X-Google-Smtp-Source: AGHT+IGnQ5EmH4VvTsLPowsxr/DMZLw5btUfg0zpp1vsVeoLP0DzSeWvURLXfamuZ4ai9GB/4nwE1VH6qOwAUya5WfXWIhXPOFXH
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8e9562c8-5c01-4b5c-b2b0-4dad3d16e7a8@kernel.org>
-User-Agent: Mutt/2.2.12 (2023-09-09)
-X-Last-TLS-Session-Version: TLSv1.3
+X-Received: by 2002:a05:6e02:1846:b0:3d1:5037:c97a with SMTP id
+ e9e14a558f8ab-3d16f405ca1mr17852615ab.3.1739257529333; Mon, 10 Feb 2025
+ 23:05:29 -0800 (PST)
+Date: Mon, 10 Feb 2025 23:05:29 -0800
+In-Reply-To: <67a8cd8f.050a0220.3d72c.003f.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67aaf6b9.050a0220.3d72c.005d.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] general protection fault in h5_recv
+From: syzbot <syzbot+b5691bb559396b262064@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hello Krzysztof,
+syzbot has found a reproducer for the following issue on:
 
-Am Mon, Feb 10, 2025 at 05:59:52PM +0100 schrieb Krzysztof Kozlowski:
-> On 10/02/2025 17:44, Alexander Dahl wrote:
-> > The OTPC requires both the peripheral clock through PMC and the main RC
-> > oscillator.  Seemed to work without explicitly enabling those clocks on
-> > sama7g5 before, but did not on sam9x60.
-> > 
-> > Older datasheets were not clear and explicit about this, but recent are,
-> > e.g. SAMA7G5 series datasheet (DS60001765B),
-> > section 30.4.1 Power Management:
-> > 
-> >> The OTPC is clocked through the Power Management Controller (PMC).
-> >> The user must power on the main RC oscillator and enable the
-> >> peripheral clock of the OTPC prior to reading or writing the OTP
-> >> memory.
-> > 
-> > Link: https://lore.kernel.org/linux-clk/ec34efc2-2051-4b8a-b5d8-6e2fd5e08c28@microchip.com/T/#u
-> > Signed-off-by: Alexander Dahl <ada@thorsis.com>
-> > ---
-> > 
-> > Notes:
-> >     v2:
-> >     - new patch, not present in v1
-> > 
-> >  .../nvmem/microchip,sama7g5-otpc.yaml         | 28 +++++++++++++++++++
-> >  1 file changed, 28 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml b/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml
-> > index 9a7aaf64eef32..1fa40610888f3 100644
-> > --- a/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml
-> > +++ b/Documentation/devicetree/bindings/nvmem/microchip,sama7g5-otpc.yaml
-> > @@ -29,6 +29,16 @@ properties:
-> >    reg:
-> >      maxItems: 1
-> >  
-> > +  clocks:
-> > +    items:
-> > +      - description: main rc oscillator
-> > +      - description: otpc peripheral clock
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: main_rc_osc
-> 
-> osc
+HEAD commit:    df5d6180169a Add linux-next specific files for 20250210
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=14a9c3f8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2cd616b6e736ca7
+dashboard link: https://syzkaller.appspot.com/bug?extid=b5691bb559396b262064
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=149c78e4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=129c78e4580000
 
-On at91 SoCs main oscillator and main RC oscillator are two different
-things, and those are different clocks in Linux as well.  This clock
-is named "main_rc_osc" in the clock driver.  In
-drivers/clk/at91/sam9x60.c this clock is added like this:
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/92495cf20271/disk-df5d6180.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/4b3656161842/vmlinux-df5d6180.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/7fbc4e7a0f5d/bzImage-df5d6180.xz
 
-    hw = at91_clk_register_main_rc_osc(regmap, "main_rc_osc", 12000000, 50000000);
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+b5691bb559396b262064@syzkaller.appspotmail.com
 
-The datasheet makes it explicit, it's exactly the main rc oscillator
-clock required for the OTPC to work, no other clock.
+Oops: general protection fault, probably for non-canonical address 0xdffffc000000005f: 0000 [#1] PREEMPT SMP KASAN PTI
+KASAN: null-ptr-deref in range [0x00000000000002f8-0x00000000000002ff]
+CPU: 1 UID: 0 PID: 5834 Comm: syz-executor200 Not tainted 6.14.0-rc2-next-20250210-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+RIP: 0010:h5_recv+0x153/0x940 drivers/bluetooth/hci_h5.c:572
+Code: 08 01 44 8b 64 24 04 48 8b 5c 24 08 4c 8b 74 24 18 49 ff c7 41 ff cc 45 85 e4 0f 8e 55 06 00 00 e8 a2 58 f5 f8 48 8b 44 24 30 <42> 80 3c 28 00 74 08 48 89 df e8 ce 53 5c f9 48 8b 1b 31 ff 48 89
+RSP: 0018:ffffc90003e8fc60 EFLAGS: 00010202
+RAX: 000000000000005f RBX: 00000000000002f8 RCX: 0000000000000061
+RDX: ffff8880350dda00 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: ffffc90003e8fd70 R08: ffffffff88ca308e R09: 1ffff110062cdb03
+R10: dffffc0000000000 R11: ffffffff88ca2fd0 R12: 0000000000000001
+R13: dffffc0000000000 R14: ffff88803166d800 R15: ffffc90003e8fe00
+FS:  00007f38f1dd06c0(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f38f1d8ed58 CR3: 000000007b704000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ hci_uart_tty_receive+0x141/0x1c0 drivers/bluetooth/hci_ldisc.c:622
+ tiocsti+0x24d/0x300 drivers/tty/tty_io.c:2299
+ tty_ioctl+0x518/0xdc0 drivers/tty/tty_io.c:2716
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f38f1e183d9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 51 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f38f1dd0218 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f38f1e9f328 RCX: 00007f38f1e183d9
+RDX: 0000400000000040 RSI: 0000000000005412 RDI: 0000000000000006
+RBP: 00007f38f1e9f320 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f38f1e6c074
+R13: 0000400000000300 R14: 00004000000000c0 R15: 0000400000000040
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:h5_recv+0x153/0x940 drivers/bluetooth/hci_h5.c:572
+Code: 08 01 44 8b 64 24 04 48 8b 5c 24 08 4c 8b 74 24 18 49 ff c7 41 ff cc 45 85 e4 0f 8e 55 06 00 00 e8 a2 58 f5 f8 48 8b 44 24 30 <42> 80 3c 28 00 74 08 48 89 df e8 ce 53 5c f9 48 8b 1b 31 ff 48 89
+RSP: 0018:ffffc90003e8fc60 EFLAGS: 00010202
+RAX: 000000000000005f RBX: 00000000000002f8 RCX: 0000000000000061
+RDX: ffff8880350dda00 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: ffffc90003e8fd70 R08: ffffffff88ca308e R09: 1ffff110062cdb03
+R10: dffffc0000000000 R11: ffffffff88ca2fd0 R12: 0000000000000001
+R13: dffffc0000000000 R14: ffff88803166d800 R15: ffffc90003e8fe00
+FS:  00007f38f1dd06c0(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000040000000f000 CR3: 000000007b704000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	08 01                	or     %al,(%rcx)
+   2:	44 8b 64 24 04       	mov    0x4(%rsp),%r12d
+   7:	48 8b 5c 24 08       	mov    0x8(%rsp),%rbx
+   c:	4c 8b 74 24 18       	mov    0x18(%rsp),%r14
+  11:	49 ff c7             	inc    %r15
+  14:	41 ff cc             	dec    %r12d
+  17:	45 85 e4             	test   %r12d,%r12d
+  1a:	0f 8e 55 06 00 00    	jle    0x675
+  20:	e8 a2 58 f5 f8       	call   0xf8f558c7
+  25:	48 8b 44 24 30       	mov    0x30(%rsp),%rax
+* 2a:	42 80 3c 28 00       	cmpb   $0x0,(%rax,%r13,1) <-- trapping instruction
+  2f:	74 08                	je     0x39
+  31:	48 89 df             	mov    %rbx,%rdi
+  34:	e8 ce 53 5c f9       	call   0xf95c5407
+  39:	48 8b 1b             	mov    (%rbx),%rbx
+  3c:	31 ff                	xor    %edi,%edi
+  3e:	48                   	rex.W
+  3f:	89                   	.byte 0x89
 
-So why name this "osc" only then?  This is confusing at best.
 
-> 
-> > +      - const: otpc_clk
-> 
-> otpc or bus or whatever logically this is
-
-Okay the "_clk" suffix is redundant.  Since the peripheral clock for
-the OTPC is required here, I would go with "otpc" only then.
-
-> 
-> > +
-> >  required:
-> >    - compatible
-> >    - reg
-> > @@ -37,6 +47,8 @@ unevaluatedProperties: false
-> >  
-> >  examples:
-> >    - |
-> > +    #include <dt-bindings/clock/at91.h>
-> > +    #include <dt-bindings/clock/microchip,sama7g5-pmc.h>
-> >      #include <dt-bindings/nvmem/microchip,sama7g5-otpc.h>
-> >  
-> >      otpc: efuse@e8c00000 {
-> > @@ -44,10 +56,26 @@ examples:
-> >          reg = <0xe8c00000 0xec>;
-> >          #address-cells = <1>;
-> >          #size-cells = <1>;
-> > +        clocks = <&pmc PMC_TYPE_CORE SAMA7G5_PMC_MAIN_RC>, <&pmc PMC_TYPE_PERIPHERAL 67>;
-> > +        clock-names = "main_rc_osc", "otpc_clk";
-> >  
-> >          temperature_calib: calib@1 {
-> >              reg = <OTP_PKT(1) 76>;
-> >          };
-> >      };
-> >  
-> > +  - |
-> > +    #include <dt-bindings/clock/at91.h>
-> > +    #include <dt-bindings/clock/microchip,sam9x60-pmc.h>
-> > +    #include <dt-bindings/nvmem/microchip,sama7g5-otpc.h>
-> > +
-> > +    efuse@eff00000 {
-> > +        compatible = "microchip,sam9x60-otpc", "syscon";
-> > +        reg = <0xeff00000 0xec>;
-> 
-> No need for new example with difference in what exactly? Even compatible
-> was not added here...
-
-Different compatible, different clocks, no sub nodes, different
-peripheral clock id …  From a human doc readers I'd like another
-example, but fine, we can drop it if it adds too much redundancy.
-
-Greets
-Alex
-
-> 
-> > +        #address-cells = <1>;
-> > +        #size-cells = <1>;
-> > +        clocks = <&pmc PMC_TYPE_CORE SAM9X60_PMC_MAIN_RC>, <&pmc PMC_TYPE_PERIPHERAL 46>;
-> > +        clock-names = "main_rc_osc", "otpc_clk";
-> > +    };
-> > +
-> >  ...
-> 
-> 
-> Best regards,
-> Krzysztof
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
