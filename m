@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 085051F8BCB
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:16:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11F411F9F73
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:16:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739272569; cv=none; b=PU4MrO+1AZbg8TGRcD5p0ryRU25h4u+KnOMFh0TEDz+d4b4aDiUc3/OF7iJsiqv9oGl6YyB/G9y7PmjD+kMKdGYWOsfxv2xrvtLCeSsmFmbE5tTOtw2yuc99ftQOwIVKCJJ1nfphQhabihX5Cr6MehLym83NynElIsIQXdUxv3A=
+	t=1739272579; cv=none; b=fEFGZN7Hy+3D/ZTyDIgeGnmHtvZa/VEaNZhYytjAF4SVjBGGtKjj3cm2gWUXpQdPSFWhLygc+8N4p/7z5ol9kX359G8QzHYjzMQsIe9SKfdgdeXvXIfuQUyMqVcUYJy6fZECeeO2IcxlVUzMKzoc6H1cGRTET6zjg8wxnpjV7Bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739272569; c=relaxed/simple;
-	bh=xgo4K45Jo2UB7khUhz9mvLV3I1JSmJcGoo1j8w1znQs=;
+	s=arc-20240116; t=1739272579; c=relaxed/simple;
+	bh=DxNCc6LhIHFxgx9mBBmND+ZonOy/FONexwys4x2dLX0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=F0GXYLiML5D73WHCbrsI3ELiJtxLIVysWY5/z/xq+ijrxiRQrmc+/BPBQA8xh5bPzJ3jD6c//rjhVEtkEyNW/33lh4ynZ+coRva5x/Vy29HkYBTiXotgiYOKl9BAZmqKh+2n6136hPnxinrVFAw6ePC24ZKjXj8YNjKES9PyHk8=
+	 MIME-Version; b=GtTznFIgt72HrO2+ysvOyhKxRtSAEpNu1TRO7IjopCrmi/O46YbHEhY8izvqqF/UA4hSqk4Lqi20x1Eaxdn9HfoOTcmubxSMYoCX6pyxXZ9++xEbWTID8uT8z91V74aL5AHsNpFpL6iKkM2QJIrlB5ZB5tJxFVH1mDC7IpBzvkk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF1AD13D5;
-	Tue, 11 Feb 2025 03:16:28 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C80F513D5;
+	Tue, 11 Feb 2025 03:16:38 -0800 (PST)
 Received: from K4MQJ0H1H2.emea.arm.com (K4MQJ0H1H2.blr.arm.com [10.162.40.80])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7B34A3F5A1;
-	Tue, 11 Feb 2025 03:15:57 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CB9143F5A1;
+	Tue, 11 Feb 2025 03:16:07 -0800 (PST)
 From: Dev Jain <dev.jain@arm.com>
 To: akpm@linux-foundation.org,
 	david@redhat.com,
@@ -54,9 +54,9 @@ Cc: npache@redhat.com,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH v2 14/17] khugepaged: Reset scan address to correct alignment
-Date: Tue, 11 Feb 2025 16:43:23 +0530
-Message-Id: <20250211111326.14295-15-dev.jain@arm.com>
+Subject: [PATCH v2 15/17] khugepaged: Delay cond_resched()
+Date: Tue, 11 Feb 2025 16:43:24 +0530
+Message-Id: <20250211111326.14295-16-dev.jain@arm.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 In-Reply-To: <20250211111326.14295-1-dev.jain@arm.com>
 References: <20250211111326.14295-1-dev.jain@arm.com>
@@ -68,35 +68,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There are two situations:
-1) After retaking the mmap lock, the next VMA expands downwards.
-2) After khugepaged sleeps and starts again, it will pick up the starting address
-   from the global struct khugepaged_scan, and hence will pick up the same VMA as
-   in the previous cycle.
-
-In both cases, khugepaged_scan.address > hstart. Therefore, explicitly align the
-address to the order we are scanning for. Previously this was not a problem since
-the alignment was to be always PMD-aligned.
+Post scanning VMAs less than PMD-size, cond_resched() may get called at
+a frequency of 1 << order worth of pte scan. Earlier, this was at a
+PMD-worth scan. Therefore, manually enforce the previous behaviour; not
+doing this causes the khugepaged selftest to timeout.
 
 Signed-off-by: Dev Jain <dev.jain@arm.com>
 ---
- mm/khugepaged.c | 3 +++
- 1 file changed, 3 insertions(+)
+ mm/khugepaged.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index e1c2c5b89f6d..7c9a758f6817 100644
+index 7c9a758f6817..d2bb008b95e7 100644
 --- a/mm/khugepaged.c
 +++ b/mm/khugepaged.c
-@@ -2722,6 +2722,9 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
- 		hstart = round_up(vma->vm_start, PAGE_SIZE << order);
- 		if (khugepaged_scan.address < hstart)
- 			khugepaged_scan.address = hstart;
-+		else
-+			khugepaged_scan.address = round_down(khugepaged_scan.address, PAGE_SIZE << order);
-+
- 		VM_BUG_ON(khugepaged_scan.address & ((PAGE_SIZE << order) - 1));
+@@ -2650,6 +2650,7 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
+ 	unsigned long orders;
+ 	int order;
+ 	bool is_file_vma;
++	int prev_progress = 0;
  
+ 	VM_BUG_ON(!pages);
+ 	lockdep_assert_held(&khugepaged_mm_lock);
+@@ -2730,7 +2731,10 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
  		while (khugepaged_scan.address < hend) {
+ 			bool mmap_locked = true;
+ 
+-			cond_resched();
++			if (progress - prev_progress >= HPAGE_PMD_NR) {
++				cond_resched();
++				prev_progress = progress;
++			}
+ 			if (unlikely(hpage_collapse_test_exit_or_disable(mm)))
+ 				goto breakouterloop;
+ 
 -- 
 2.30.2
 
