@@ -1,137 +1,113 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B15226BD92
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3AF26BD95;
+	Tue, 11 Feb 2025 02:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739241661; cv=none; b=d7Pnq/37u2b86jMBJMlaMbCC92X5xSP8FEYwlVS6Lb/hi62FITDgqP6B4POIMWRP5EQb123D9z3K56IMmC3rh7GKnsEwx9tzlET4loriRw3PxjGvdJOTY5Z8npgcM2a/2fGHNhOKYgoFlOfy9UR/t2MXPP928YbkNqyTBw8lyOU=
+	t=1739242084; cv=none; b=CbdBa8fLYStPP6cd6Yo0BfKUCfXbgNBkgkoCtjSAaxntzhRwldKNpLqyjHxYcEcArUaX6YPjKRhmiiDHgcUzJ2+Qz03Qqk+EF/SejyYLNFIvy/Xg7PNKe64o1NENCYtyz/2LYzuluUtgDdj2yZfiIGE+IkGtJUtMfG4fzUUcXVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739241661; c=relaxed/simple;
-	bh=iP2ZFd9mmNM0UOkLQXqsOjEl6+6YiCtrboCdTCrEnOI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U+mn1sCppNGiuJwrmq8uCHGJnrEVZjNuugpL6zT0KjHB24lVC2eOXDVXyDsT30VWtYVWRgoQLq4dgKD/nfpm86ZOafxSQiJT/oeX8kXFgK+qBetAwrh6auBbt4pKicgeoCUttjzZ0H09e0tw3/jQGt3AqDS96buAo/C/52eZHl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bfDz4OQU; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1739242084; c=relaxed/simple;
+	bh=5OOL+q7crj6C+Y5aqDrG5n7Z52CJTo/s0a5E+RhLox8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IIBUeNqBNtBKAieHT4kmpe8b9sW+w7Vmr067Ql2DdaUBAIhhzMVZtiNJjZTtNgbXuPupxk9zO9iJx8qq9bbT7b2Ds6wcK5+c4kya5wSCrjrE6iZ3xVXOy9/vTV1kkzZtIatmllbl/q0d+CIsalnn00NDfprd8Lu7axOov5k4eoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E5ohvPSt; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bfDz4OQU"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51AMrYSi011756
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:40:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	s5WY8N5ks8GYUyNu1nsdKVcNatvt1ZRhBofnP73+/Cc=; b=bfDz4OQURTIWt6vQ
-	wuUL9s1UUob+eLYOJ9ktApZV/AK4m3q6MPe5KKDL8OUhn7ShzF3YpuaF9vBvBTHa
-	qacOs0HFSpqJB0EXkJ66XQQhXsgEubPApLF+jEUyr36LsqM7s/WAICDUIK7evo1D
-	8CeJU9ABjGvFPOkWbWZ8MJUN5PFu3rdalVRHqb4XBnEm/8NTaCUMWNdk86tuyUUP
-	r3fXPvavzKcXmkTN1/FMC0JWQXItKgqYrfqWfCvJRyZcyHT9IDrpo2lyW1TkKbV8
-	O0+QRZHA9g7S7cPJ3NSYb/7LkiHxbCgvUW6usKflmqzaGuHs0olhOyFoJ7DCrzRM
-	gQR0vA==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44q8kybfwn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:40:58 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e4287d04e4so14193346d6.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:40:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E5ohvPSt"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-308f71d5efcso9296031fa.3;
+        Mon, 10 Feb 2025 18:48:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739242080; x=1739846880; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Zn3t1X0OMk9xhbwKXgSgdmPnjMJbdOEb2KTYQMy3qXc=;
+        b=E5ohvPSt7qrhkNJQ2dZRI1piOllhxqjcwXZy/8pJ5PvkKeOK0BgPetja98eUkgGW9w
+         gbESV+IHFbUO3y0B5fb5xoqzqSt2QnQKTISYmQ22552SvYu22/yfV4qApfBIS5NC5xv+
+         7Xe2esmQFrjMRyElaF1ojsT7h/el+LgZHr0CG5l1Gh9orQ01YFk7kNIDacIInVEwwFCB
+         G+y7EJwLR19upiEE6GKrTO20iTW8bfL+qkygrUASXid8B/g0AANPaE2IsvqL65lqpF6q
+         VJXaok5+pIQKHU87AE0VRCGaetabf37sslw8WYwgZZLoK7cxGzUIGu3bRy8a10Jm8Cny
+         S5NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739241657; x=1739846457;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s5WY8N5ks8GYUyNu1nsdKVcNatvt1ZRhBofnP73+/Cc=;
-        b=cJtpM0NzT0zyo/xHpVVb/oGqz8nC3NDldyTeT2dqNb8/l2xK2phfQsfiC2SGLxQvVg
-         OWlvXT7F0HGhEAE3OB6kkRtcbhaT5j7lHkPdESZuYdplpXSp4d/0framDtVC/UEla0DR
-         nUGnzahpgUs46QMCG+tv4bg/JAsfVecwMLZblsBnDZ8Xes3M15Vh/cVldLVQs/01O9Xp
-         KdjWg/OP+eaaYi7LE09DV9Q8ArwQXEpVm3G9+IvwWQBSe0Ky0Fl+oJ69kqTcMLh4tL+g
-         oUnGinXLGz4qZKSXltTmiRh0rKR5VGOrh43eCW3RdvzumiMKZpox6PTIS++gD3C42AxT
-         Xg/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWbpNn0WTiElpP2IIjBonNvdnlmRk/pKhy3Z6W6+yevdpajmTR+z1aR+w9yQh4z4zH1YtSbbuhGVTgs7VI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpfSEMUDNbaSW2SQLRLWT40zIys+UlvhxTiHPUXMYhW/kIoQPc
-	W1h8imK398UfHiPyynimTQ7ui+cHIZD53/nUbOTMwEdzROl7RsKq8R3pDcIRP918W/iW9LBVPdp
-	GR+piEOeqEaUe2EsfKgM9nx4gJM/2ZQyplFBqqzpfxeudlzlcXGMs6BL3eZkfNg0=
-X-Gm-Gg: ASbGnctthSSyNj4lvn5LMcNq58kFJomZGoJ7g4aamiNL2lM3w5pNGqLIOyTdRyu9NWj
-	kjLgiM83XaZ1hlnJMd2lDip/wm5RvJlr+FJ7JP3/FlwQe4chCEz2rn0rISZRXi1n2ysk9P56h7Q
-	CkLCQ0usu/8nK/saNohz/3MM0s7pXNYjUYT515QQhOHLeNx6WRz9FfG7lN447ECyhPbocN/pHtG
-	GTe49qwwHAfTelRNQQGsm+tpUJ95pQxRNBA3s/+sdjwknu0LdHrOLtsTJihs1WUL49yn8qY7fZ7
-	QmEMnDaskOiASf6o0ipcVFB7iW1op6812CTjorjbHiZnpwZubO9pK2JbYes=
-X-Received: by 2002:a05:620a:24ce:b0:7b6:dc5c:de2 with SMTP id af79cd13be357-7c047c582c6mr862203685a.13.1739241657145;
-        Mon, 10 Feb 2025 18:40:57 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFXTZRkXlf6H0uaJ0li29IfhwzaEgg+uIjLZ5thLqRq3AgGpVeEiHBLdGiJWI4c0EUhvnEVXg==
-X-Received: by 2002:a05:620a:24ce:b0:7b6:dc5c:de2 with SMTP id af79cd13be357-7c047c582c6mr862202685a.13.1739241656794;
-        Mon, 10 Feb 2025 18:40:56 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de61830117sm5320653a12.6.2025.02.10.18.40.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2025 18:40:55 -0800 (PST)
-Message-ID: <03df88a6-91d0-4504-b14a-223e55208162@oss.qualcomm.com>
-Date: Tue, 11 Feb 2025 03:40:52 +0100
+        d=1e100.net; s=20230601; t=1739242080; x=1739846880;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Zn3t1X0OMk9xhbwKXgSgdmPnjMJbdOEb2KTYQMy3qXc=;
+        b=ZNTiQ+TWAbBdej3V/NzOiPTz4eTmGcels8ysj2sBPAPG3FBX0Ctj9/5bHfy+z4e6D9
+         GDbrnt2TOirz2VfwwlL9/YUCPlc9Okchjvhz/XpN3TP2H7/kcS2ZdTPOmdGTT32QEdc+
+         mCXjDEvysV5441uMg830freIEWYSlHKcafs1PpNh/RhGShd/8KHYTflqyfO+hNhtbz2g
+         aB3j8pN2SfWAlAMcOS82rgmssDEZWyz66zAgtDtNjxV8SI/y3eZBbf/LYmD3Ulruupy6
+         1kocvSG+xgxtwkxtkBL/+j7pej1SWl7S+b7nvuA2pQwW5I2Nru88Zkklj8e9nnmzeX0T
+         0bmA==
+X-Forwarded-Encrypted: i=1; AJvYcCVoHGNEQIPYSBLNuUmWjTgHQ7y3chYOYbWW/OpKxP8anWc8tbIfAJ11NPDfFQz9rOzdpwoNZfjgOzLicMk=@vger.kernel.org, AJvYcCVzKAAGr8nPNQ+RTntsiS4VGcDd1Mtv+xtid/WrdIV0gaI5AZa+DC8U/gTfzVHn2wSosDKku8RhRgljh5lwRwD5@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJyO50UEI9u/e4wL7AT5fbPQRYPfXUOOUb2Wh6VGpZzu9m9aG/
+	uzs8B3XEJBX2MphBYl2rNMFZFfytl6dvTiUkO8tSecmNEMcmY8lo7YX+q/vuFrnLa8uXSE9yVqB
+	xFGfq1qR8pGxyNOq1fJUyBsNXUck=
+X-Gm-Gg: ASbGncsHOllvNrx7/RLf2LcvhJw8CFXUwHCOuG+V/hGBfy4x5Z6hIEOEUtiQEoxP4Fm
+	gt9hdPa+AdzVfyZjHlN4liA0Y6WR4hPzcadb4wrMlCRCPQWD+yA+xp5HxnwSkphBjXkJcBz0Zvl
+	YXOaiCjtFzzvkLbWlSYeW+B1ppGCh3
+X-Google-Smtp-Source: AGHT+IFZIkGWLA2ZKDKUhI5865q128jmDXUjWOI34Qtb9k+aP8l3IrsXJBCyVRjwY34me4r64bJw1Q9gAQHDEga7bm4=
+X-Received: by 2002:a05:651c:1994:b0:308:f75f:446 with SMTP id
+ 38308e7fff4ca-308f75f07a4mr11013791fa.31.1739242079858; Mon, 10 Feb 2025
+ 18:47:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/msm/dpu: Don't leak bits_per_component into random
- DSC_ENC fields
-To: Marijn Suijten <marijn.suijten@somainline.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>,
-        Simona Vetter <simona@ffwll.ch>, Vinod Koul <vkoul@kernel.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht,
-        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-        Martin Botka <martin.botka@somainline.org>,
-        Jami Kettunen <jami.kettunen@somainline.org>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250211-dsc-10-bit-v1-1-1c85a9430d9a@somainline.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250211-dsc-10-bit-v1-1-1c85a9430d9a@somainline.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: lydWFmKm-taY_D52hcVZu78HoFIAP4Rv
-X-Proofpoint-ORIG-GUID: lydWFmKm-taY_D52hcVZu78HoFIAP4Rv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_01,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- phishscore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
- mlxlogscore=999 spamscore=0 malwarescore=0 impostorscore=0 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502110014
+References: <20250208-prime_numbers-kunit-convert-v5-0-b0cb82ae7c7d@gmail.com>
+ <20250208-prime_numbers-kunit-convert-v5-2-b0cb82ae7c7d@gmail.com> <202502101836.2B3E7BC4@keescook>
+In-Reply-To: <202502101836.2B3E7BC4@keescook>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Mon, 10 Feb 2025 21:47:23 -0500
+X-Gm-Features: AWEUYZmiPJFFPicq2ZL6yV-FXokW2c26z9jhFLITBm6JYY_fKXQ2--JRmflbSOA
+Message-ID: <CAJ-ks9=pU6FsOfMk+fSwG2oLG95L2C-jwBDNad1FTGzQ5seiuw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] lib/prime_numbers: convert self-test to KUnit
+To: Kees Cook <kees@kernel.org>
+Cc: David Gow <davidgow@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Luis Felipe Hernandez <luis.hernandez093@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 11.02.2025 12:19 AM, Marijn Suijten wrote:
-> What used to be the input_10_bits boolean - feeding into the lowest
-> bit of DSC_ENC - on MSM downstream turned into an accidental OR with
-> the full bits_per_component number when it was ported to the upstream
-> kernel.
-> 
-> On typical bpc=8 setups we don't notice this because line_buf_depth is
-> always an odd value (it contains bpc+1) and will also set the 4th bit
-> after left-shifting by 3 (hence this |= bits_per_component is a no-op).
-> 
-> Now that guards are being removed to allow more bits_per_component
-> values besides 8 (possible since commit 49fd30a7153b ("drm/msm/dsi: use
-> DRM DSC helpers for DSC setup")), a bpc of 10 will instead clash with
-> the 5th bit which is convert_rgb.  This is "fortunately" also always set
-> to true by MSM's dsi_populate_dsc_params() already, but once a bpc of 12
-> starts being used it'll write into simple_422 which is normally false.
-> 
-> To solve all these overlaps, simply replicate downstream code and only
-> set this lowest bit if bits_per_component is equal to 10.  It is unclear
-> why DSC requires this only for bpc=10 but not bpc=12, and also notice
-> that this lowest bit wasn't set previously despite having a panel and
-> patch on the list using it without any mentioned issues.
-> 
-> Fixes: c110cfd1753e ("drm/msm/disp/dpu1: Add support for DSC")
-> Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
-> ---
+On Mon, Feb 10, 2025 at 9:37=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> On Sat, Feb 08, 2025 at 09:44:39PM -0500, Tamir Duberstein wrote:
+> > Extract a private header and convert the prime_numbers self-test to a
+> > KUnit test. I considered parameterizing the test using
+> > `KUNIT_CASE_PARAM` but didn't see how it was possible since the test
+> > logic is entangled with the test parameter generation logic.
+> >
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> > ---
+> >  lib/Kconfig.debug                            | 14 +++++
+> >  lib/math/prime_numbers.c                     | 87 +++++---------------=
+--------
+> >  lib/math/prime_numbers_private.h             | 17 ++++++
+> >  lib/math/tests/Makefile                      |  1 +
+> >  lib/math/tests/prime_numbers_kunit.c         | 59 +++++++++++++++++++
+> >  tools/testing/selftests/lib/config           |  1 -
+> >  tools/testing/selftests/lib/prime_numbers.sh |  4 --
+> >  7 files changed, 106 insertions(+), 77 deletions(-)
+>
+> Thanks! I've applied this and rebased it onto:
+> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=3Df=
+or-next/move-kunit-tests
+>
+> --
+> Kees Cook
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Thanks! Could you also take the first patch in the series[0]? The new
+test won't build without it because lib/math/tests/Makefile is dead
+code.
 
-Konrad
+[0] https://lore.kernel.org/all/20250208-prime_numbers-kunit-convert-v5-1-b=
+0cb82ae7c7d@gmail.com/
+
+Cheers.
+Tamir
