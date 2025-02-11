@@ -1,61 +1,64 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6B422331E
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 17:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B386B25A321
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 17:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739293315; cv=none; b=tDt+k/VXjYldAnUNA+1oJDIX06gM+I7Z5uk1Dy84sjyfsjiJrpf4OVSKmfhHHJgtW+9SL/egKUeRDTaHvTi17MRLgPTu/VnZdGVJsZuAZJVtUwOkwi6efQIaYc7YYCxycM8R4oG8HfrO6PU8ccgJLnLwfZ+1q6OjNaIM9ZwTS4s=
+	t=1739293372; cv=none; b=n6GenVuOE6jgU7ygK0QpUS6UNTFrGIQyDrZESo4E8uaKpS0kk8NFNDVgz2ClmhyGLZlv52WJj7Mvx24MlNjfBNPw12syHUIWLzirGK1u/Ag9toC/nEclHE+NW+vVzLih0ljV5ljPlwgdbuAsW8foEA/7CGGYMDAt1Sxe/8LSZDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739293315; c=relaxed/simple;
-	bh=FaMMiq33KOR87qeW3SCsjRwxO/aIZ6NrsgAW5KRtCHY=;
+	s=arc-20240116; t=1739293372; c=relaxed/simple;
+	bh=cl5VRTIaQVhnhX7Mp5CHjRfQCdJZoCwXZgpTFNL919I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mj5qblZrzXLjdnR//cC+4Xv06LOEWKHkIkUEnLMnkklrBvVBPW9n3NaZXOjFGbkH+571YP3rR+v2VIfghudHB5fQaBy0KRpCK9Usct4dglWjMXXmQVcb7XFq38IAqkXV9RIf7SJ64L9H4gt3A5FwGT42C1E+mbqYUalWzmI3lB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=b30W2HGG; arc=none smtp.client-ip=209.85.210.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	 In-Reply-To:Content-Type; b=CBQHXtcdwagdSRKQrJxqYNT3IZPbWB/i0p7YqUiAn5eM7pFSsnu1N6C2beuq96kH6kJxUwiSU4AWjonv7Z/1UQUXaTmLjmU7Kxtwzm+7bPLlsUWoKq/eaxPr0/MqlwxHNGY+7usyM+2v2/jHS6tSNjp4+jJg49Uel6EsOUuXiC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=OjLotQ+E; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="b30W2HGG"
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-726e744c798so758945a34.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:01:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="OjLotQ+E"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab771575040so1118276066b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:02:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1739293313; x=1739898113; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=w0W62oH9ZYC+ChuytZaOkEvSh/GddcFQV97qyWKWaew=;
-        b=b30W2HGG0qs0xb0m7heI8K+Evc1vBiT1E7SopfxtdraNBIzgPfAueLZ/WQDIZX4vX8
-         sJoxNzEQqGhzadYjFFuUhxoK/0prZyBgImc2M3onm5Uir7E6DSgELTAQUVSjbImCoRaQ
-         cu0CLYlPgLc6nnTxyPfNKP7SByyfe4GGUc+p4=
+        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1739293369; x=1739898169; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=b/56BFQCA/x0+5Zxz4AvQg+9pW1+xObkEyrqUGNwQiI=;
+        b=OjLotQ+EkgIV5vISUancQJtc0eeKOZMXVXSwgZe1m02PQqh3xxy0+mjYejvNijgYIV
+         HXVtilq0D0SNYs8MA+VdjeVP1kmJ7sbs2MMPHKGHTwvrLKPnQXdAujeq1TBvdzIMzXLT
+         W39uk+w4ZO8v5FCohIufqK28hcPTo3akvGGxH4c+39LgmS6HAMvJ5Rve8ep9cmIdjfVJ
+         Zui4M562F11y15q9kICaksgfb6p+Br1A1Ue0kyW37GS8ZTkTdeTHmQjGs/mKTM8reVUY
+         GWFxw+Jvw4ae1cS8RUVunFgMHKQvuBZv8n8AMfMMBY3MR8YR1nGIBRWbB+NYognomjUa
+         JYyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739293313; x=1739898113;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w0W62oH9ZYC+ChuytZaOkEvSh/GddcFQV97qyWKWaew=;
-        b=KkSeR16fn3PuGR642IXbfj4B3EyE39nqMG55bkNEXQ8vKFQn9agdk02vdohApdtMJs
-         XG8+dk0IuLJiL1uj5SqWEi3Qir5VbH/ipdlFFrf4PYuHClzqYJo+HMpzAY1bYpgpNI9g
-         DykBXrNHjUUmmJB1XYbg6/yczY5uDoZnPqsXV8ouAA935vbcEwLYxjO019OCB6p9YXAn
-         Vq04pNq9q782ikh/mCES8mE6MFNQUTzO//Tb9hObwzSs/pyXazRK4qQ5fixOj4rCCdnA
-         IjOrHaYSb9E8Z721BD9Tc/rTL74Lc6gR1xMAyczaQugWuIWqXFibG8hwptpP8tdN7bHs
-         L0xw==
-X-Gm-Message-State: AOJu0Yxl19p4MjsoD78prubbUSH6wBflcNWvB8Q0E2+9DLsDm1bAFX9g
-	Dm20yXIM21lC0DDnHxlG1vyzdh6Cj1HG5rexHgiinKJ7GT/d8aqrJjdBzSOKkQ==
-X-Gm-Gg: ASbGncvpjv4mM/mGAOaFGrCyo+7iUK5MtyM5oQhycOsBey1IBOkydCzpymMiToBR5ag
-	I5+4pm+1G92O6SlrorQWelk24oVBtYw6/SSRVYRNHXswW/OuVEZ9s7EBkDpHwx0WaCKQLtkMa8E
-	b+b0306OeuvgViDHMadpcPD79SwplBJdkHjG+6EmHsJiVSvIqyj6UYb3F21kbd07K56ZBP1sXKn
-	hnAxObsgYZ9aL8jvyo+rHZSflo8lr95P16kds37+3GywCuk8xpcKWhYrsKNszGQ6YrCbzeVp2sh
-	qjgl1XG4YRVd8wbu8DyfoS1J1jxmhALk5ep2uskwYhqZQ2DX7d72+10=
-X-Google-Smtp-Source: AGHT+IFLUtEuCEYnU4d6LJDB60jbPIoB9QcAeA9sHYAh0/XpHftNJgrbC98faKY5+xCzyk8GsJguEQ==
-X-Received: by 2002:a05:6871:687:b0:29e:4985:fef with SMTP id 586e51a60fabf-2b8d644c7e4mr108219fac.3.1739293312808;
-        Tue, 11 Feb 2025 09:01:52 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b82626f8b6sm3642741fac.38.2025.02.11.09.01.50
+        d=1e100.net; s=20230601; t=1739293369; x=1739898169;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=b/56BFQCA/x0+5Zxz4AvQg+9pW1+xObkEyrqUGNwQiI=;
+        b=ve2yombbt2fe3hWiU/QxWUUO3FTEaaGPIBJHZKEHMxfCjnQAAW+AksvVRA4nnsf6L3
+         dbHvNvk0DDbqAIFR2uScyyYv36mnQ8T5+IpJPMVUk5TUa98UKyV4XvAt8EN9Qup8TLbr
+         MgMVnYhfrr3EUkVwVbxz9lfMYvT53Nzt+c1CpMcsBPn6pT8PkBeZZ9vbOFTAjyNp6p4n
+         pGn+S3bRaJzNsC4JNos+RKrbNmls92FRo8it3nTxrDXnQYU9jQKHiCUjbxaMmmyJd0kR
+         7l2lZN1oBplejGgMF4JuI5+f9ReuvhSRnPpu2yGDfc6pkBhextQ0/VlQ0wfYPaOlQrW+
+         DEGA==
+X-Forwarded-Encrypted: i=1; AJvYcCWa4mvOkZZexZFs8e4GyhzI0mkbWKD9O9Add/46tCcHEc/eRZZABR0MjXTXRM54jVkRCvLXWrqTFNuvYN0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2Q4/eRMa00XrC5FGlLoCENirP3taQx1K4zBzkeNN9tt6W/MYa
+	FIXlgJuAKo4hjK7AnvoeQVNnq26+JEx1R2xrHNJRiHLMIEnnfQYk3c1T+74R9Zk=
+X-Gm-Gg: ASbGncutUtaQbVd6VWrmFaeIUKJB5uQThYBOcPysnPvMwhapEjKxVrmVoXjcR89XL2s
+	UgyvfaybfiRhEn52MIoEnOoyq2z+lZnyOTrx8nvz5CJlHCnItU5/Vbl4REWEvm4dvuXIHRmn/oz
+	vusBgn1qqmCllWIK2QfYlZQS7o3LsPxBsnwWRdytZsBtJ+3kkwkF4Qq1Gb/KBR0pk7R2H+CJn3t
+	rv0cs9TQa6XHMyfq0bYbFhpsokPdbYLnz3t2Tg8NG0EqsmEnYQ8Nla5U33F4DY+c3/bqBZysuAN
+	GZyIUxNJ5U3c9GKWr3qi0XzfhZpKltzxnspmGlUW/yn/JMI=
+X-Google-Smtp-Source: AGHT+IGAPbzjetBMyKn9xpkEx6mNiLaz6Iu+7FJStrC2CQYkHtGpuLCTUuKU+eMJA/ubyZG+xRvimw==
+X-Received: by 2002:a17:907:7fac:b0:ab7:cd14:2472 with SMTP id a640c23a62f3a-ab7dafca27emr340636066b.23.1739293367291;
+        Tue, 11 Feb 2025 09:02:47 -0800 (PST)
+Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7b4e96185sm543848166b.86.2025.02.11.09.02.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 09:01:51 -0800 (PST)
-Message-ID: <d51a9d7a-b942-4c3b-93d2-65b1bb04c8da@broadcom.com>
-Date: Tue, 11 Feb 2025 09:01:49 -0800
+        Tue, 11 Feb 2025 09:02:46 -0800 (PST)
+Message-ID: <2609939e-fce9-42ff-93ee-890598437f25@blackwall.org>
+Date: Tue, 11 Feb 2025 19:02:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,79 +66,68 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 0/3] mmc: sdhci-brcmstb: Add rpmb sharing support
-To: Avri Altman <Avri.Altman@sandisk.com>,
- Ulf Hansson <ulf.hansson@linaro.org>, Kamal Dasu <kamal.dasu@broadcom.com>,
- Jens Wiklander <jens.wiklander@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
- "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
- "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
- "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
- "bcm-kernel-feedback-list@broadcom.com"
- <bcm-kernel-feedback-list@broadcom.com>
-References: <20250206220940.10553-1-kamal.dasu@broadcom.com>
- <CAPDyKFq1ZbP4c9ECfM1SY+MEopf+dC19w9PkqXaUjevf=bPjcw@mail.gmail.com>
- <115a59e1-75b2-4d09-bbf9-50dfcd2b62dd@broadcom.com>
- <PH7PR16MB61967C18645C64E582B222B6E5FD2@PH7PR16MB6196.namprd16.prod.outlook.com>
+Subject: Re: [PATCH v6 net-next 05/14] bridge: Add filling forward path from
+ port to port
+To: Eric Woudstra <ericwouds@gmail.com>, Vladimir Oltean <olteanv@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Pablo Neira Ayuso
+ <pablo@netfilter.org>, Jozsef Kadlecsik <kadlec@netfilter.org>,
+ Jiri Pirko <jiri@resnulli.us>, Ivan Vecera <ivecera@redhat.com>,
+ Roopa Prabhu <roopa@nvidia.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Kuniyuki Iwashima <kuniyu@amazon.com>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Lorenzo Bianconi <lorenzo@kernel.org>, Joe Damato <jdamato@fastly.com>,
+ Alexander Lobakin <aleksander.lobakin@intel.com>,
+ Frank Wunderlich <frank-w@public-files.de>,
+ Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
+ coreteam@netfilter.org, bridge@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+References: <20250209111034.241571-1-ericwouds@gmail.com>
+ <20250209111034.241571-6-ericwouds@gmail.com>
+ <20250211132832.aiy6ocvqppoqkd65@skbuf>
+ <91d709aa-2414-4fb4-b3e1-94e0e330d33c@blackwall.org>
+ <1aa60578-ba4c-458b-b020-cff59b119bdc@gmail.com>
 Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <PH7PR16MB61967C18645C64E582B222B6E5FD2@PH7PR16MB6196.namprd16.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Nikolay Aleksandrov <razor@blackwall.org>
+In-Reply-To: <1aa60578-ba4c-458b-b020-cff59b119bdc@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2/11/25 00:13, Avri Altman wrote:
->>>> This patch set adds support for Broadcom TZOS to read and write to
->>>> RPMB partition using synchronized access to the controller hardware.
-> Practically it establishes a communication channel between the trust zone and the host controller regardless of the rpmb protocol.
-> Or did I get it wrong?
+On 2/11/25 18:35, Eric Woudstra wrote:
+> 
+> 
+> On 2/11/25 5:00 PM, Nikolay Aleksandrov wrote:
+>> On 2/11/25 15:28, Vladimir Oltean wrote:
+>>> On Sun, Feb 09, 2025 at 12:10:25PM +0100, Eric Woudstra wrote:
+>>>> @@ -1453,7 +1454,10 @@ void br_vlan_fill_forward_path_pvid(struct net_bridge *br,
+>>>>  	if (!br_opt_get(br, BROPT_VLAN_ENABLED))
+>>>>  		return;
+>>>>  
+>>>> -	vg = br_vlan_group(br);
+>>>> +	if (p)
+>>>> +		vg = nbp_vlan_group(p);
+>>>> +	else
+>>>> +		vg = br_vlan_group(br);
+>>>>  
+>>>>  	if (idx >= 0 &&
+>>>>  	    ctx->vlan[idx].proto == br->vlan_proto) {
+>>>
+>>> I think the original usage of br_vlan_group() here was incorrect, and so
+>>> is the new usage of nbp_vlan_group(). They should be br_vlan_group_rcu()
+>>> and nbp_vlan_group_rcu().
+>>>
+>>
+>> Oops, right. Nice catch!
+>>
+> 
+> Hi Nikolay,
+> 
+> I gather that I can include your Acked-by also in the corrected patch.
+> 
 
-Rather than communication channel, I would describe it as an arbitration 
-scheme between N participants, with guaranteed forward progress and 
-fairness between all participants.
+Yes, thanks.
 
-The interest here is for one of those participants to own the eMMC 
-controller for a certain amount of time and indicate when it is done 
-with it. This is not specific to eMMC as this could scale to virtually 
-any piece of HW that is driven by transactions from a CPU, but the main 
-application is for allowing the Trusted OS to own the eMMC controller 
-for a short period of time in order to do its RPMB access, and then give 
-it back in the same state it found it to the next participant.
--- 
-Florian
