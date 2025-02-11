@@ -1,161 +1,195 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20CD91E2838;
-	Tue, 11 Feb 2025 17:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291C81E04BD;
+	Tue, 11 Feb 2025 17:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739296323; cv=none; b=NVx1CIhQQsvY9HJNn6TPVY25Y6/3i2Ni4vP7pvvmiYmKUj2rgu2yBhHu6CiYIYyFnEaKj12QGlhlN2+FbaIxr4gbMnfmp6mkevmEacDH/Dp+YGberKqBx3Jg0JErSwp54CzpkwN06INskUVmbDrdB+X2cE6lPgApLvYO2CxXMng=
+	t=1739296327; cv=none; b=id8UV2A2iHjVRAz43qLsjl+vCklukxN4CyqVNNnFfntQTe1Pm978iNaQNAkiuDquNUwlEYKvaA0ypFvz7eR8lsbZ8rzDTHdZMgd+ue+e55EneJUgP0eWVKPO7VxXwLXPNZUgyznyAin3kmD17BuTGhyqp5ctwjTiyQj4vO6BfFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739296323; c=relaxed/simple;
-	bh=LIkAy4ET0bdltWGfkdDtlEuheEJbDlRUHW/Bb2K4/wI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=ux8lLyuHd9XtTut6MDzYbEf6VldFOazE+a3ASdj6MhuTn7+tcd3dSuMUdrzVlrJRXG3fsNF/gAVKEoHtEI7tCJu6SteQfcyL6Xcaf1iSMTSX2iDli85vQQmkC3FXy01SZZZHvOPRBuCCFQNdBuSLrpg55Fy4dQRPJetEmAUCbg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MRkNlHxE; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MRkNlHxE"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6f8c58229f1so54327b3.0;
-        Tue, 11 Feb 2025 09:52:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739296321; x=1739901121; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5qwXQA675KH9nLYOUbW2kE+0rvscD1TwrOIlUfISHVo=;
-        b=MRkNlHxEWsjn4uFhhxNEiwBffZfqy/eAeugxt1fA/jU3WPIssmM5QrzTa3vqfi8BfZ
-         PU8lQ/rcLxPzD89n1zRbYxzoKPHL5xYWMkfS+Gt8E6UpV9Uz7bwlUe2GmcXqyFN78J+p
-         aeCjxEmKSnLvmW/vCl35+LEt6VfhAo/fUQIkKuHFitbMian6rb3KIFu3X3m2cxqbRPPo
-         S4a+O+yriNZIfAVprcRDI8XgtwW54nQIEiIf0LFmIQysFuad69z2CJsefFb8+1zJwHNe
-         c53R3MRMYEWLjerCOvYqwo55hpgMaYgD9uHahl4GIwJSHiK8SyiIsqthLsUx/5UEPD3k
-         bz2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739296321; x=1739901121;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=5qwXQA675KH9nLYOUbW2kE+0rvscD1TwrOIlUfISHVo=;
-        b=qKsKupd4GqZbvw8z7ilvGe+Y9ePZwH0M3uu4OYPme5i8itctAPAjNywmlPZrXi8O1V
-         wiyKXwy3UYFTyKkIy2VMtPqPovHY5vm8lGQ8/0q9dqmGbE92jr9i0pqBiFq2kRlj75+J
-         A7RVvWiasGE8yryPse5Aa80cn2APC9H83gjh8wSBXLoya+W5SaVtc0WpJzSW+QA/l1U4
-         YvfX9zgF8vNcbxFXt6RL0So9i2oEYqsu/NwZVbgyJogFTH078tK8pRu2/gf/1NHkwAZj
-         04OXuQNTm5B9rGMF06y3KGwl6EjPNR7sxdY6oQwc1eTUsVqMwpJpg/Qn+00Mj922L5sF
-         ct1g==
-X-Forwarded-Encrypted: i=1; AJvYcCVvHJeB1VhSYMPpNcN4wcH7ncNC73sOFjSzJz7xZjAACM8Az/95KjkzxVjgMY7Gs/LuW3yn5HqIctn50xs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWxWBceQk460T/VWiDEo1GeQLMD21TDL31f4uQh3tS7Uqhe0vQ
-	2YmsAQPouaBoVnu3pcbZ1rMwzvPmRRa+Axk+cZO/yrT+lwCXCBtI
-X-Gm-Gg: ASbGncurAAcOOWb2+AniyauOe2itLADQPVPInvYzxJzmuyAPlix+Vs/MhMZl4/8+A88
-	U5aGtSourVYoK4alLzx7TEcp4dXJ0jX3EnZNRTHnAXQEDrDdYrGoggS5HnAzis7Ew9nCaLWp4Mi
-	fQvID4goizYQpXWpsYTq4HVuOnpQULmOUsKuRhQP16urqH4uOyIf1ay2cqrQWal6fhDYrjiaELK
-	Lfek77ZOkxTUI5ktJ5UOJQHnkbqPw6WaZBX6QWgGYU1OPw5QK9h7UHID0+cdi1zlLy+eooFe+D1
-	bA0ejyxC
-X-Google-Smtp-Source: AGHT+IEGB4LloUYbMjYTmnK3fbUs2QwDyFmUwfUIA/kw8Ul8N8ZJt9fz+hiyupyhTwnSgFgGRPgcQQ==
-X-Received: by 2002:a05:690c:6887:b0:6f7:9f95:d916 with SMTP id 00721157ae682-6fb0c53aca2mr55400847b3.16.1739296321007;
-        Tue, 11 Feb 2025 09:52:01 -0800 (PST)
-Received: from localhost ([2800:bf0:61:1288:72d5:e7e1:d832:2e3d])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99ffc0aeasm22128447b3.96.2025.02.11.09.51.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 09:52:00 -0800 (PST)
+	s=arc-20240116; t=1739296327; c=relaxed/simple;
+	bh=YTafCKEppYoNXzJ95myX+YS+ooOT1zO9b534PHZVm64=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eac3whq6rq8kNYnKORyvvUEoSWoWvqsWV242SfeB9ddx5PBQnM6x3O8Q3Rmt4gf+9IOOqIOyld8NrDk9Qks7CuZqt3xNI3E6PBbzYmsd4B1r6y063juQCsBB/Nc98xYSXrbH3QhjnYVbuVbJjM5NOjm35qXzTbj7E+3E4eLTN1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52E29C4CEDD;
+	Tue, 11 Feb 2025 17:52:06 +0000 (UTC)
+Date: Tue, 11 Feb 2025 12:52:11 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 1/2] mm/memblock: Add reserved memory release
+ function
+Message-ID: <20250211125211.1ce892a5@gandalf.local.home>
+In-Reply-To: <173928522350.906035.5626965043208329135.stgit@devnote2>
+References: <173928521419.906035.17750338150436695675.stgit@devnote2>
+	<173928522350.906035.5626965043208329135.stgit@devnote2>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 11 Feb 2025 12:51:59 -0500
-Message-Id: <D7PT36DCB1P5.2YE8H1MHFAE15@gmail.com>
-Cc: <platform-driver-x86@vger.kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, "Armin Wolf" <W_Armin@gmx.de>, "Mario
- Limonciello" <mario.limonciello@amd.com>, "Hans de Goede"
- <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10 05/14] platform/x86: alienware-wmi: Refactor hdmi,
- amplifier, deepslp methods
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250207154610.13675-1-kuurtb@gmail.com>
- <20250207154610.13675-6-kuurtb@gmail.com>
- <Z6t8y7VvZL6UDEck@black.fi.intel.com>
-In-Reply-To: <Z6t8y7VvZL6UDEck@black.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue Feb 11, 2025 at 11:37 AM -05, Andy Shevchenko wrote:
-> On Fri, Feb 07, 2025 at 10:46:01AM -0500, Kurt Borja wrote:
->> Refactor show/store methods for hdmi, amplifier, deepslp sysfs groups to
->> use alienware_wmi_command() instead of alienware_wmax_command() which
->> uses deprecated WMI methods.
->
-> ...
->
->> +	pr_err("alienware-wmi: unknown HDMI cable status: %d\n", ret);
->
-> Rather introduce pr_fmt() and drop all these prefixes.
+On Tue, 11 Feb 2025 23:47:03 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-This was not introduced by me so it probably requires a different patch.
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Add reserve_mem_release_by_name() to release a reserved memory region
+> with a given name. This allows us to release reserved memory which is
+> defined by kernel cmdline, after boot.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Mike Rapoport <rppt@kernel.org>
+> Cc: linux-mm@kvack.org
 
->
->> +	if (!ret) {
->
-> Traditional patter is to check for errors:
+Hi, can we get one of the Memory Management maintainers to ack this patch?
 
-I wanted to change as little as possible the original function, as in my
-opinion this would require a different patch.
+We will be having devices going out with the reserve_mem option to perform
+tracing in the field. But that only happens if the user grants permission
+to do so. But the kernel command line does not change between users that
+granted permission and those that do not. We would like to free up the
+memory for those devices where the users did not grant permission to trace,
+as then the memory is just wasted.
 
->
-> 	if (ret) {
-> 		...do error handling...
-> 	}
->
->>  		if (out_data =3D=3D 1)
->>  			return sysfs_emit(buf, "[input] gpu unknown\n");
->
->>  		else if (out_data =3D=3D 2)
->
-> Redundant 'else'.
->
->>  			return sysfs_emit(buf, "input [gpu] unknown\n");
->>  	}
->> -	pr_err("alienware-wmi: unknown HDMI source status: %u\n", status);
->> +
->> +	pr_err("alienware-wmi: unknown HDMI source status: %u\n", ret);
->>  	return sysfs_emit(buf, "input gpu [unknown]\n");
->
->
-> ...
->
->>  	if (strcmp(buf, "gpu\n") =3D=3D 0)
->
-> Wow! This should be fixed to use sysfs_streq()
->
-> ...
->
->> +		pr_err("alienware-wmi: HDMI toggle failed: results: %u\n", ret);
->
-> pr_fmt()
->
-> ...
->
->> +	pr_err("alienware-wmi: unknown amplifier cable status: %d\n", ret);
->
-> Ditto.
->
-> Also note, if you have a struct device available, use the respective dev_=
-*()
-> macros instead.
+Thanks!
 
-Same as above, this was not my line to begin with so I left it as is.
+-- Steve
 
->
-> ...
->
->>  	if (strcmp(buf, "disabled\n") =3D=3D 0)
->
-> sysfs_streq() / sysfs_match_string() =E2=80=94 whatever suits better.
 
-I can send fixes for these tho. IMO this requiere different patches.
+> ---
+>  Changes in v2:
+>   - Rename reserved_mem_* to reserve_mem_*.
+> ---
+>  include/linux/mm.h |    1 +
+>  mm/memblock.c      |   72 +++++++++++++++++++++++++++++++++++++++++++---------
+>  2 files changed, 61 insertions(+), 12 deletions(-)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index f02925447e59..fe5f7711df04 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -4197,6 +4197,7 @@ void vma_pgtable_walk_begin(struct vm_area_struct *vma);
+>  void vma_pgtable_walk_end(struct vm_area_struct *vma);
+>  
+>  int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *size);
+> +int reserve_mem_release_by_name(const char *name);
+>  
+>  #ifdef CONFIG_64BIT
+>  int do_mseal(unsigned long start, size_t len_in, unsigned long flags);
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index 095c18b5c430..c8d207ebb93c 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/kmemleak.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/memblock.h>
+> +#include <linux/mutex.h>
+>  
+>  #include <asm/sections.h>
+>  #include <linux/io.h>
+> @@ -2263,6 +2264,7 @@ struct reserve_mem_table {
+>  };
+>  static struct reserve_mem_table reserved_mem_table[RESERVE_MEM_MAX_ENTRIES];
+>  static int reserved_mem_count;
+> +static DEFINE_MUTEX(reserve_mem_lock);
+>  
+>  /* Add wildcard region with a lookup name */
+>  static void __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
+> @@ -2276,6 +2278,21 @@ static void __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
+>  	strscpy(map->name, name);
+>  }
+>  
+> +static struct reserve_mem_table *reserve_mem_find_by_name_nolock(const char *name)
+> +{
+> +	struct reserve_mem_table *map;
+> +	int i;
+> +
+> +	for (i = 0; i < reserved_mem_count; i++) {
+> +		map = &reserved_mem_table[i];
+> +		if (!map->size)
+> +			continue;
+> +		if (strcmp(name, map->name) == 0)
+> +			return map;
+> +	}
+> +	return NULL;
+> +}
+> +
+>  /**
+>   * reserve_mem_find_by_name - Find reserved memory region with a given name
+>   * @name: The name that is attached to a reserved memory region
+> @@ -2289,22 +2306,53 @@ static void __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
+>  int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *size)
+>  {
+>  	struct reserve_mem_table *map;
+> -	int i;
+>  
+> -	for (i = 0; i < reserved_mem_count; i++) {
+> -		map = &reserved_mem_table[i];
+> -		if (!map->size)
+> -			continue;
+> -		if (strcmp(name, map->name) == 0) {
+> -			*start = map->start;
+> -			*size = map->size;
+> -			return 1;
+> -		}
+> -	}
+> -	return 0;
+> +	guard(mutex)(&reserve_mem_lock);
+> +	map = reserve_mem_find_by_name_nolock(name);
+> +	if (!map)
+> +		return 0;
+> +
+> +	*start = map->start;
+> +	*size = map->size;
+> +	return 1;
+>  }
+>  EXPORT_SYMBOL_GPL(reserve_mem_find_by_name);
+>  
+> +/**
+> + * reserve_mem_release_by_name - Release reserved memory region with a given name
+> + * @name: The name that is attatched to a reserved memory region
+> + *
+> + * Forcibly release the pages in the reserved memory region so that those memory
+> + * can be used as free memory. After released the reserved region size becomes 0.
+> + *
+> + * Returns: 1 if released or 0 if not found.
+> + */
+> +int reserve_mem_release_by_name(const char *name)
+> +{
+> +	struct reserve_mem_table *map;
+> +	unsigned int page_count;
+> +	phys_addr_t start;
+> +
+> +	guard(mutex)(&reserve_mem_lock);
+> +	map = reserve_mem_find_by_name_nolock(name);
+> +	if (!map)
+> +		return 0;
+> +
+> +	start = map->start;
+> +	page_count = DIV_ROUND_UP(map->size, PAGE_SIZE);
+> +
+> +	for (int i = 0; i < page_count; i++) {
+> +		phys_addr_t addr = start + i * PAGE_SIZE;
+> +		struct page *page = pfn_to_page(addr >> PAGE_SHIFT);
+> +
+> +		page->flags &= ~BIT(PG_reserved);
+> +		__free_page(page);
+> +	}
+> +	map->size = 0;
+> +
+> +	return 1;
+> +}
+> +
+>  /*
+>   * Parse reserve_mem=nn:align:name
+>   */
 
---=20
- ~ Kurt
