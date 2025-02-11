@@ -1,208 +1,136 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 338911E4106;
-	Tue, 11 Feb 2025 09:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD601F12F7;
+	Tue, 11 Feb 2025 09:27:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739265973; cv=none; b=mJW4w6Xx3Ka4rzbdBQdLUG37OAYNBJyiGgjmoSJsEMI5pW4aMAp40fyEve4OaqZzITRQCgjpA2bUMusH9e/ndh3EYURLvsLYd1wlNL18ciG1J1zoEzZf2pktDNvSS93UzSUOQsTlAnOsMyw462S3xHxIYkfVh4x7CNaPjwBA5Zg=
+	t=1739266050; cv=none; b=BwL5Mof2LGYiwarK61fFKyzbd5XePE6bNCOqYJr2oiA146e56Y6JeBPQ8NNAIxI5mZh+qp5gMbAzFVA6kZ4KewZ0bnpIW5Na6bH2dNsp27irWy16OZB86+Ky4poJP9ykPvxYgG3ioEXkEJyK2IMKBiLU8EvnBNNLziuRTbf3PcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739265973; c=relaxed/simple;
-	bh=0/6SlMvqxzhB7Qlw/3nmpge/TZTMVnJdiiMq8WXc0i8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EC5EA0YiGghmUNeY0UHQOrHHK4BXI4kCUeAFRvH1qPV2d8UjtPy0g18OsqWMqEOZXuol936JGwIzKj1fJefUI61BmLypjz3GQ/0YRotOeQd782GlhyYVeGMU8iwfJPt685PCwVVwiZ5hQuoWuE3SpLOjYtjGMbr0cAVU8mLpNxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=sxQ81AtR; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1739266050; c=relaxed/simple;
+	bh=yjRL57La7+E9GoG6/dJBw79jGho0USNqZcA1Gd268Bg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ayfg3dMfjaxlDKlc/4y8leu/kLsNFGcs2RGrcQww7jU+Z5q8i575hbu+ZwoZIQ8Bgld/uY6gWpRC74TMLkcL1bmhiYcwiRhYKt+zLdcRAnfSIQi6f6JSJ0Yxo2ixlVqC/4pV8Y13zmnLMZ4lDSzO1LAMNPtfIwfaDkgu1KpSKv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XpMx7IkH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="sxQ81AtR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
-	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=OEfvOJJA+O1fPUax0iJ9whI9+BMjOivJ72Lg/TWzn/c=; b=sxQ81AtRIcHkT5S5isVmbl9i1l
-	4ACoSmRN5Oz/c4UHiaRF87Fc+eBzKGLsLThI5d8CkCQtPw8fl8pI6nNZEAygpHZa2rhdEwRRBp6RV
-	UJXwY9E1At0p3CKxM3m7K1fcYuaAkTJGMi2Ckh5kuXrntl/Ne4bcJTKW2mSbKtfcPT5F3iifUkzXC
-	dib8gh3SEVkbL4llbbd7TwiudA6yRhcbeXAnHIWLnofntoVkFSwILF/XIC1/JFmCWKfGcHSMpyfZM
-	poO/CwB4UCEtFXb90HUMpJAJdAZMIT/X93GyRtm0OdOy2H9Ts3S2TIdORqLGR53nuIhaBlgUlXK7P
-	gaC3O9sw==;
-Received: from bl23-10-177.dsl.telepac.pt ([144.64.10.177] helo=localhost)
-	by fanzine2.igalia.com with utf8esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1thmWm-007fB4-3W; Tue, 11 Feb 2025 10:26:05 +0100
-From: Luis Henriques <luis@igalia.com>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Matt Harvey <mharvey@jumptrading.com>,
-	Bernd Schubert <bschubert@ddn.com>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	Luis Henriques <luis@igalia.com>
-Subject: [PATCH v4] fuse: add new function to invalidate cache for all inodes
-Date: Tue, 11 Feb 2025 09:26:04 +0000
-Message-ID: <20250211092604.15160-1-luis@igalia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XpMx7IkH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C247CC4CEE7;
+	Tue, 11 Feb 2025 09:27:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739266049;
+	bh=yjRL57La7+E9GoG6/dJBw79jGho0USNqZcA1Gd268Bg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XpMx7IkHqM1cBAKfHgpQ3xSHDnUhcpy7MicnaBcgAyfYfv/ixX0OICm+3HucZGKBZ
+	 8QwbhRKl0ogJBeKtViVddlIsUAI4ONXj6DZLdPAc7SGz20pASEUnBQlsZtnOzBZcAa
+	 0PSCp3ldJHJD3AYokk+L4CAoY5/Dfs6TC7M+kSIeNSTIqBLWcZl7VLUOamYgZoAP0l
+	 d5CRsFkRV9RLLqHzWlSmGBbw12Swbi67dhNve5Xk/OTQe/E+81JvHD5m1BHpyKqLWo
+	 U6imMe/v6FRUuABVROyKOkYgHIYWkMW8Qo2mRIhE1x+qjiHl7PRVqTXnq9N7qt3Z7I
+	 mjxMY96YDG3Rg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1thmYK-000000007DE-1Rsl;
+	Tue, 11 Feb 2025 10:27:37 +0100
+Date: Tue, 11 Feb 2025 10:27:36 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Tony Chung <tony467913@gmail.com>
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] drivers: usb: serial: mos7840: Fix Block comments
+ coding style warnings
+Message-ID: <Z6sYCJEsTDth_Nld@hovoldconsulting.com>
+References: <202410250141.AEkzzW60-lkp@intel.com>
+ <20241025061711.198933-3-tony467913@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241025061711.198933-3-tony467913@gmail.com>
 
-Currently userspace is able to notify the kernel to invalidate the cache
-for an inode.  This means that, if all the inodes in a filesystem need to
-be invalidated, then userspace needs to iterate through all of them and do
-this kernel notification separately.
+On Fri, Oct 25, 2024 at 02:17:10PM +0800, Tony Chung wrote:
+> fix block comments coding style warnings.
+> 1. Block comments use * on subsequent lines
+> 2. Block comments use a trailing */ on a separate line
 
-This patch adds a new option that allows userspace to invalidate all the
-inodes with a single notification operation.  In addition to invalidate
-all the inodes, it also shrinks the sb dcache.
+Just say something like:
 
-Signed-off-by: Luis Henriques <luis@igalia.com>
----
-* Changes since v3
-- Added comments to clarify semantic changes in fuse_reverse_inval_inode()
-  when called with FUSE_INVAL_ALL_INODES (suggested by Bernd).
-- Added comments to inodes iteration loop to clarify __iget/iput usage
-  (suggested by Joanne)
-- Dropped get_fuse_mount() call -- fuse_mount can be obtained from
-  fuse_ilookup() directly (suggested by Joanne)
+	Clean up the style of the block comments.
 
-(Also dropped the RFC from the subject.)
+or similar.
 
-* Changes since v2
-- Use the new helper from fuse_reverse_inval_inode(), as suggested by Bernd.
-- Also updated patch description as per checkpatch.pl suggestion.
+> Signed-off-by: Tony Chung <tony467913@gmail.com>
+> ---
+>  drivers/usb/serial/mos7840.c | 20 +++++++++++++-------
+>  1 file changed, 13 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/usb/serial/mos7840.c b/drivers/usb/serial/mos7840.c
+> index dcaed0f26..b1a794f99 100644
+> --- a/drivers/usb/serial/mos7840.c
+> +++ b/drivers/usb/serial/mos7840.c
+> @@ -282,7 +282,8 @@ static int mos7840_set_uart_reg(struct usb_serial_port *port, __u16 reg,
+>  	struct usb_device *dev = port->serial->dev;
+>  	val = val & 0x00ff;
+>  	/* For the UART control registers, the application number need
+> -	   to be Or'ed */
+> +	 * to be Or'ed
+> +	 */
+>  	if (port->serial->num_ports == 2 && port->port_number != 0)
+>  		val |= ((__u16)port->port_number + 2) << 8;
+>  	else
+> @@ -1539,8 +1540,9 @@ static int mos7840_port_probe(struct usb_serial_port *port)
+>  	int pnum;
+>  	__u16 Data;
+>  
+> -	/* we set up the pointers to the endpoints in the mos7840_open *
+> -	 * function, as the structures aren't created yet.             */
+> +	/* we set up the pointers to the endpoints in the mos7840_open
 
-* Changes since v1
-As suggested by Bernd, this patch v2 simply adds an helper function that
-will make it easier to replace most of it's code by a call to function
-super_iter_inodes() when Dave Chinner's patch[1] eventually gets merged.
+This style is only valid in networking code; the format for block
+comments should generally be:
 
-[1] https://lore.kernel.org/r/20241002014017.3801899-3-david@fromorbit.com
+	/*
+	 * ...
+	 */
+	 
+> +	 * function, as the structures aren't created yet.
+> +	 */
+>  
+>  	pnum = port->port_number;
+>  
+> @@ -1551,14 +1553,16 @@ static int mos7840_port_probe(struct usb_serial_port *port)
+>  
+>  	/* Initialize all port interrupt end point to port 0 int
+>  	 * endpoint. Our device has only one interrupt end point
+> -	 * common to all port */
+> +	 * common to all port
+> +	 */
+>  
+>  	mos7840_port->port = port;
+>  	spin_lock_init(&mos7840_port->pool_lock);
+>  
+>  	/* minor is not initialised until later by
+>  	 * usb-serial.c:get_free_serial() and cannot therefore be used
+> -	 * to index device instances */
+> +	 * to index device instances
+> +	 */
+>  	mos7840_port->port_num = pnum + 1;
+>  	dev_dbg(&port->dev, "port->minor = %d\n", port->minor);
+>  	dev_dbg(&port->dev, "mos7840_port->port_num = %d\n", mos7840_port->port_num);
+> @@ -1591,7 +1595,8 @@ static int mos7840_port_probe(struct usb_serial_port *port)
+>  		dev_dbg(&port->dev, "ControlReg Reading success val is %x, status%d\n", Data, status);
+>  	Data |= 0x08;	/* setting driver done bit */
+>  	Data |= 0x04;	/* sp1_bit to have cts change reflect in
+> -			   modem status reg */
+> +			 * modem status reg
+> +			 */
 
- fs/fuse/inode.c           | 83 +++++++++++++++++++++++++++++++++++----
- include/uapi/linux/fuse.h |  3 ++
- 2 files changed, 79 insertions(+), 7 deletions(-)
+Just drop the new line, this can be an exception to the 80 char rule if
+you can't find a good way to rephrase this.
 
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index e9db2cb8c150..5aa49856731a 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -547,25 +547,94 @@ struct inode *fuse_ilookup(struct fuse_conn *fc, u64 nodeid,
- 	return NULL;
- }
- 
-+static void inval_single_inode(struct inode *inode, struct fuse_conn *fc)
-+{
-+	struct fuse_inode *fi;
-+
-+	fi = get_fuse_inode(inode);
-+	spin_lock(&fi->lock);
-+	fi->attr_version = atomic64_inc_return(&fc->attr_version);
-+	spin_unlock(&fi->lock);
-+	fuse_invalidate_attr(inode);
-+	forget_all_cached_acls(inode);
-+}
-+
-+static int fuse_reverse_inval_all(struct fuse_conn *fc)
-+{
-+	struct fuse_mount *fm;
-+	struct super_block *sb;
-+	struct inode *inode, *old_inode = NULL;
-+
-+	inode = fuse_ilookup(fc, FUSE_ROOT_ID, &fm);
-+	if (!inode || !fm)
-+		return -ENOENT;
-+
-+	iput(inode);
-+	sb = fm->sb;
-+
-+	spin_lock(&sb->s_inode_list_lock);
-+	list_for_each_entry(inode, &sb->s_inodes, i_sb_list) {
-+		spin_lock(&inode->i_lock);
-+		if ((inode->i_state & (I_FREEING|I_WILL_FREE|I_NEW)) ||
-+		    !atomic_read(&inode->i_count)) {
-+			spin_unlock(&inode->i_lock);
-+			continue;
-+		}
-+
-+		/*
-+		 * This __iget()/iput() dance is required so that we can release
-+		 * the sb lock and continue the iteration on the previous
-+		 * inode.  If we don't keep a ref to the old inode it could have
-+		 * disappear.  This way we can safely call cond_resched() when
-+		 * there's a huge amount of inodes to iterate.
-+		 */
-+		__iget(inode);
-+		spin_unlock(&inode->i_lock);
-+		spin_unlock(&sb->s_inode_list_lock);
-+		iput(old_inode);
-+
-+		inval_single_inode(inode, fc);
-+
-+		old_inode = inode;
-+		cond_resched();
-+		spin_lock(&sb->s_inode_list_lock);
-+	}
-+	spin_unlock(&sb->s_inode_list_lock);
-+	iput(old_inode);
-+
-+	shrink_dcache_sb(sb);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Notify to invalidate inodes cache.  It can be called with @nodeid set to
-+ * either:
-+ *
-+ * - An inode number - Any pending writebacks within the rage [@offset @len]
-+ *   will be triggered and the inode will be validated.  To invalidate the whole
-+ *   cache @offset has to be set to '0' and @len needs to be <= '0'; if @offset
-+ *   is negative, only the inode attributes are invalidated.
-+ *
-+ * - FUSE_INVAL_ALL_INODES - All the inodes in the superblock are invalidated
-+ *   and the whole dcache is shrinked.
-+ */
- int fuse_reverse_inval_inode(struct fuse_conn *fc, u64 nodeid,
- 			     loff_t offset, loff_t len)
- {
--	struct fuse_inode *fi;
- 	struct inode *inode;
- 	pgoff_t pg_start;
- 	pgoff_t pg_end;
- 
-+	if (nodeid == FUSE_INVAL_ALL_INODES)
-+		return fuse_reverse_inval_all(fc);
-+
- 	inode = fuse_ilookup(fc, nodeid, NULL);
- 	if (!inode)
- 		return -ENOENT;
- 
--	fi = get_fuse_inode(inode);
--	spin_lock(&fi->lock);
--	fi->attr_version = atomic64_inc_return(&fc->attr_version);
--	spin_unlock(&fi->lock);
-+	inval_single_inode(inode, fc);
- 
--	fuse_invalidate_attr(inode);
--	forget_all_cached_acls(inode);
- 	if (offset >= 0) {
- 		pg_start = offset >> PAGE_SHIFT;
- 		if (len <= 0)
-diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-index 5e0eb41d967e..e5852b63f99f 100644
---- a/include/uapi/linux/fuse.h
-+++ b/include/uapi/linux/fuse.h
-@@ -669,6 +669,9 @@ enum fuse_notify_code {
- 	FUSE_NOTIFY_CODE_MAX,
- };
- 
-+/* The nodeid to request to invalidate all inodes */
-+#define FUSE_INVAL_ALL_INODES 0
-+
- /* The read buffer is required to be at least 8k, but may be much larger */
- #define FUSE_MIN_READ_BUFFER 8192
- 
+>  	/* Data |= 0x20; //rx_disable bit */
+>  	status = mos7840_set_reg_sync(port,
+
+Johan
