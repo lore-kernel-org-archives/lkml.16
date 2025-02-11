@@ -1,335 +1,209 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AC717BD9
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739233248; cv=none; b=FHGadGAvpYP7+OSaEFwddPDY+bEP5GaxMMaP6VKgaZ048SKLY8e1quL3MBHiGoYZGsDjzYT+7onbrwoVOGhw7HnNNnfNYm2WpHBKxy6Ty8IVDAFGcIWvCpWgiqyFkITpqOVgJkuytFUlLgMp8MM0UeR48eT8NzJeZ/a8CEm126M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739233248; c=relaxed/simple;
-	bh=H5s8ed743Lq1jnZYiz0/r1hLxGNbg0PpJq8avqGb9d4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UuasUpJgWiXaPh4zFzQF/JBT8Y5/hEW3FAb6zcgk6rkce9f4TeG7v3JokCSkVFJ0C0/9cJDLteaJPleCduAVc91RqygaR5CvanEoGYhHJ2get9hyqP7xOtOwY7BVTryL8Qc0DLiFA+TmPxOeyOstGIpsEGgClC6fIiigXZ9jxFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=x3Mz5dfc; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95EB079C4;
+	Tue, 11 Feb 2025 00:21:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739233290; cv=fail; b=deC6YtiiPHPKSs5YYBThHs7nG6W5CZaZOT77IPf/6j/6cB1P3FMeHzZ9+PDPJe0jAm847dGBg6TdgSCQH2Td4zl3xLd1sOZVzmVNS7TdttzzE6n4UTRcbQJbOYx+kHpQ8pLxSnWSFwZlGPDfItLIylOZuS9vEyE7ZxzM0pzk4bw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739233290; c=relaxed/simple;
+	bh=i1+X1RLbvHjkXwN0jLeQ+tg8pqCsM+OYf34reWHk0CU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=LRMMQ98HZwyM/4GcbzTfW+nlJs4QYnjjrfdfRm+UUR9KCB3o4TPGN+jG7xNeJsuB7w1rBi0d/MYJGMXaSGpM2Zcqt3hCIaLvwoBqMQbL8aNfEFHXdG2eWoJribJq0DwAD0eacDGiLK0mzejD8SeaZLXePtb1RGFqPh2yYyn6OmI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aql4CV1Y; arc=fail smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="x3Mz5dfc"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e545c1e8a15so4428104276.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 16:20:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739233246; x=1739838046; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=f6fO6ENk+/6RJwbHFhohh2LYSGPeGtLq21Tc4JEEd0s=;
-        b=x3Mz5dfcnfe2STx8LGmFTQz88g/w/zNB+BYfRckph8O26CbSSVGlXgk8+ZbkewPIXw
-         uNK6Ybi/UxHHRqrcvZFGjJCBHxeD10GxaSGRs/EaSkJDkJZw+4oLmIH0hbL9e9wDU5yZ
-         nTSfR+8uP1WTgaqg/DFlRZ1ioRxeLEyJEWjDvkcmAAU0aq6UwXmp9w6BExBc3NJ9qDUN
-         ue4xsX3BeEgV6a1/vLeZIW6DYoCF1qWu6u02UN6j8ai10NTlLp+RJM025UFZh711Fa5U
-         yV1VnrJCaE71ljhFZZMp8w59fh3PUoALLLcYI//rYTEFTGctbP3udgP1Z/eBSeTOrGfi
-         pwSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739233246; x=1739838046;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f6fO6ENk+/6RJwbHFhohh2LYSGPeGtLq21Tc4JEEd0s=;
-        b=glk4OhM4UNJTq3BvstiHnND5o50bXcdsuOc2nlFRQ8cvrTwypCh2WPTpBBM5lAsqeW
-         Q4/UYYB6Z4r5duBYbnCZztDWSbjA5rVJCHlIXGLAeTcTD3tQm5GKfbq52M3yMYXcwuJq
-         SSaByedPmKTxR+OzNrP+FZIJ/9VTK1ZOtQ1IoWG4bNv++9YC8mBiwo3oN4Gm/Ksq0e63
-         ljWPXSSIwpLVL6BQ0zZcBuqhQjICZ7zD1nd4SGT8R7CxU2tq7ehfuS/3uetyWilDx07Z
-         BtW2N+GMrDWlUMFr1WX45OLLl+JTPMgfisznxunMQ8EVngpUcmoS3swA3obIx+NJsF0a
-         zy0g==
-X-Forwarded-Encrypted: i=1; AJvYcCXidoknba9lbdpY1UthFiDTVyZwzAOohpgQVUPCg6c8NPnIdEslrqghTd5FCz2YpGkG/9UrN0R/GRbHKUw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdzUYHYBknKGAtTa8pYus9K/FnIEto2t5ooerp3F1zGh3hF4LL
-	HeBeZ3tuevUjFuqVXcIHW/0wEiHluiIv3dPo7G5uE4p3UJfLcoJgjEVMsdVPpM8=
-X-Gm-Gg: ASbGncvVg4DIyFQAwfyp8e27ZMUK9QGzP6cbWjphx0InE4K7CcqfdZ5oVKyhUbcqPZ1
-	MxAx6WHdWX6jg+hG8hWH3JXYUPheyJ4+wHbqw1GRD4jQJbDREQ48q6Du3fAfg4Wum3kb5F9sKeC
-	5LuH4VAFHMgcujv+9j7Sz40PSG36jXDVAsliP+78HC9VGzWnx5GH8K3AJ3XiFj1edId3h6v0JMM
-	p7NzSoyt9BFratELyAqAAe9Wjk5ZPFUUwoxfBFJKkP++08wnBXXSBWEZw8ehNBoVPHYz9ebebLm
-	9tY=
-X-Google-Smtp-Source: AGHT+IEgCF8HyG8asrx19RO4/BfI2121j03BDe3RR1UsBBXC3q3qfBJKowis2DMzSxDhdyfGfdvrSA==
-X-Received: by 2002:a05:690c:4b8f:b0:6f9:4f93:c805 with SMTP id 00721157ae682-6f9b287bafamr146119417b3.21.1739233245476;
-        Mon, 10 Feb 2025 16:20:45 -0800 (PST)
-Received: from ghost ([50.146.0.9])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99ff6a903sm18915387b3.84.2025.02.10.16.20.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 16:20:44 -0800 (PST)
-Date: Mon, 10 Feb 2025 16:20:42 -0800
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Guo Ren <guoren@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Bibo Mao <maobibo@loongson.cn>,
-	Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 4/7] perf thread: Add support for reading the
- e_machine type for a thread
-Message-ID: <Z6qX2gUQpdSkG253@ghost>
-References: <20250210165108.95894-1-irogers@google.com>
- <20250210165108.95894-5-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aql4CV1Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739233288; x=1770769288;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=i1+X1RLbvHjkXwN0jLeQ+tg8pqCsM+OYf34reWHk0CU=;
+  b=aql4CV1Yb7/Pix10KEIzkdN7WFgUx9/ljsMNe92YEDgHs/2C3WkNTWlj
+   DXLcj/eWzXc8Xq3iWHnPpTkCDnJdJGfBcP4Y6MV0KBtnKq8SizlSOsCHC
+   NQLIBHw7ybaKpHhRp9oVpadmEjF3Gd6TvPjYiNeEYhEnxoVYn0H5YhzGL
+   ItX38Y/NJtAeJbFni3Au1K2jU0Fo6tYG2Zc+6QDA8sYWgXPpIkULfs7G2
+   NAvsOlgQHX/Q3IX6a1/L0gUXyCQAPTjyZ1NkGVoR0nZTjzcvl9xn9ABQ+
+   9xhWFQFyaoLdLkbNGvAW6C3L3H+ZQ9HhYXviKleP8wrHBD3lOjDvflCNQ
+   g==;
+X-CSE-ConnectionGUID: tGAc6Qw6TpqA67G1XpauwA==
+X-CSE-MsgGUID: ctbDy0WXQqebBeTXk76I0A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="39955555"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="39955555"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2025 16:21:28 -0800
+X-CSE-ConnectionGUID: HHhuxzi4TmiGEMbIar/5Jw==
+X-CSE-MsgGUID: uhJuks0RSsCRS4SjftreCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,275,1732608000"; 
+   d="scan'208";a="117377498"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Feb 2025 16:21:28 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Mon, 10 Feb 2025 16:21:27 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Mon, 10 Feb 2025 16:21:27 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.174)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Mon, 10 Feb 2025 16:21:26 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=B3dn1oLZBb8mKdv+ZxcZqpNxgGZ+RbZaA631iHMPSbtHpyuHC+tRQ8HrnqdAwkBS0b9/MrXq1vDskm38pLKoqLzyP4nr2/bF5X+v/G61HOwlL5F7Trb4gfQEl4zb+f9K//tMj0cKm/9uR2Mn+Fg1VHrIHXB8lo0CdKnY+Zj/PfW7XBPgaBwvIQMG+ObxdGC1ITortsnt3AhWtEZ31jBCPGNfGGXIpWzG2gV0u0VblH54S90Ogs1VWuMkOyrg50N0MiOAh/4kCwUnm1YrgBVpi9+Tg+uKfWLKxvUcT2aanjltR9L3JGJS0sNYG1U/Vnvdate8ClsntitKAEc3xWBejg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+aUTeqryfP1eusLZ1vu5vZUnTpuOnWXa4kUPhXv8SoI=;
+ b=WMLFtiX+IGbCkhgMCq8VeyDNygMB0fQpDK7jbLKf7P/C3gfgLj02IewFrRmHmG3x9HjHnVrW9/W09wvCnNDQG1+otZ0Q67BCwhXOmHSegzHjNWMnT+lH7A6cZc3AqrEpIrYs22PJqKQygd4UGxfDikZ9BZWBt6JQUUSK/7vC2SEaVAfuJ2gjS8DvPLvHO8qpt2bVqon5CTyOxf3Gk7+FgBWm32gxq2BTAuBMFA8OpFBfyk7TacOCcRakt9kuJONq/Aj8ySjscxxa2skg6FaxLOTDSD0++JyiQ8TaYGPi5Wo5hgLx8PtTGvPX1vnynRhp9ZhuwY7JVT8OOj+uGEpF1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SJ1PR11MB6083.namprd11.prod.outlook.com (2603:10b6:a03:48a::9)
+ by DM6PR11MB4529.namprd11.prod.outlook.com (2603:10b6:5:2ae::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Tue, 11 Feb
+ 2025 00:21:24 +0000
+Received: from SJ1PR11MB6083.namprd11.prod.outlook.com
+ ([fe80::acfd:b7e:b73b:9361]) by SJ1PR11MB6083.namprd11.prod.outlook.com
+ ([fe80::acfd:b7e:b73b:9361%7]) with mapi id 15.20.8422.015; Tue, 11 Feb 2025
+ 00:21:24 +0000
+From: "Luck, Tony" <tony.luck@intel.com>
+To: "Moore, Robert" <robert.moore@intel.com>, "Wysocki, Rafael J"
+	<rafael.j.wysocki@intel.com>, Len Brown <lenb@kernel.org>
+CC: "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"acpica-devel@lists.linux.dev" <acpica-devel@lists.linux.dev>, "Thomas
+ Gleixner" <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "Borislav
+ Petkov" <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "David
+ Hildenbrand" <david@redhat.com>, Oscar Salvador <osalvador@suse.de>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, Danilo Krummrich
+	<dakr@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/4] ACPI/MRRM: Create /sys/devices/system/memory/rangeX
+ ABI
+Thread-Topic: [PATCH 2/4] ACPI/MRRM: Create /sys/devices/system/memory/rangeX
+ ABI
+Thread-Index: AQHbfACBkCVzY5mAIk6HkDaNGr4TMbNBPRXQ
+Date: Tue, 11 Feb 2025 00:21:24 +0000
+Message-ID: <SJ1PR11MB6083FF509571697CE3DB280AFCFD2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+References: <20250210211223.6139-1-tony.luck@intel.com>
+ <20250210211223.6139-3-tony.luck@intel.com>
+In-Reply-To: <20250210211223.6139-3-tony.luck@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ1PR11MB6083:EE_|DM6PR11MB4529:EE_
+x-ms-office365-filtering-correlation-id: d0a76927-a6e3-4c60-d7f2-08dd4a320483
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|7416014|1800799024|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?T3oerO8V3s+bLonqhNoSZbX+Z5QqymvFPJeAK09bUjmEHtgf0vxDX6LKMsWa?=
+ =?us-ascii?Q?NRThX8VaR/+78BHzRk3ESxGwtFv/QQFd4LfWeSd7lMztDqhfYEIbXIo++zyT?=
+ =?us-ascii?Q?+H0TATsrwMEsgZAAYDVgg8ejqqglkanT/4ipqlTJkVJEtxb76XVQxI22qOmr?=
+ =?us-ascii?Q?P4wTuC4a7K+GDVjszd7VteVqrbiZjwYNfWmfsG1D+e4wzktLngKxR/oto5iu?=
+ =?us-ascii?Q?3yVPRt+dQ/7AZLALOmQKGFjodSuZT6MSdFWLE9KPEXClU8FYrpZjZv1rnrYy?=
+ =?us-ascii?Q?bqoJfb05Hc0MGzpbiVhUGCb01EVTrfNeESNcr8V4kP9NOQDi2C1P73bfPH9Y?=
+ =?us-ascii?Q?5JAOcAHP0LGNavRk2Nl0TVe69KfWaT9pKreB8WoySpfc5VoKxKXQLcq7uC2Y?=
+ =?us-ascii?Q?tU5r/jFlY69FdlC6jLferhyw+TNuK/8ujLhz6LD69MXcmN4gmbQvWc6AMBZU?=
+ =?us-ascii?Q?of+WqnZLwX+En3j0TmL0gw/LIrO+NkXhhbBhCwRjamgCYmmAjFRFfDlKlvjy?=
+ =?us-ascii?Q?BCPCsmM8kgh8WrOK4B8nKsEBimxu5DvTSNQ+HuHG3uN5y0ybhzpf+lWOXgMF?=
+ =?us-ascii?Q?hcpM4SvOi7SUysUNxZIPQvtCwfnlcX9Q1hCGYTSbQZtwO7mkF1pdb6pbUYh8?=
+ =?us-ascii?Q?1AI+xMvkES2WOP36PYhl34EXL5Z7RmQJY6cplrumdar2uMAHAfabmyJuxI0u?=
+ =?us-ascii?Q?DxKxqdD8ZB+MjuVmY0J915fyoqMndEjxQs3bHGWc6CfbuNifDkj/1tCVwdlY?=
+ =?us-ascii?Q?bbhm0qk2En91rGVrOVVXKRfQC3qmMG6wV6Aw5Xe55l8LgMB6eX8UadcrjbdD?=
+ =?us-ascii?Q?oEaQoBYZr/4gxvjeEEXXMIrcYn7Lo4g9ExOmRB48Wg2Vr0FAatPw4NKVRRZN?=
+ =?us-ascii?Q?AioOh2FBkV3nWnxr6WqSsVaN7olWvPeeemd+zHEXQalEQQIGLPXvDgNgpeCK?=
+ =?us-ascii?Q?QBQcmERT0B7Nb+ffmJzbwKZo9PfldnBQvlviKItqaOqzN1khfwKZ9KRvk6MM?=
+ =?us-ascii?Q?sqUajqayEWEkifsrgLrOehCCSgsT671uswYjqarw/cRUV1dyH8002yIkMvYQ?=
+ =?us-ascii?Q?5CiqRQ5IA/ADP+A8O2LIUe/U2x83huqdTFCxl2h41aZPstgmUn2iCmSiqxdK?=
+ =?us-ascii?Q?DExotqyyjzyzANVIQHAZLnEWQzpjsdhlgeCKwu/Tm6tfZ58F7XMCCtmu2iEA?=
+ =?us-ascii?Q?XxswB2/MqNZacQA500Hlx9JEdEvCDUbYwPJe5Lud1VDMhM3nAuwmjcx2YnSH?=
+ =?us-ascii?Q?SIPyD6wd+EMRjH9Boytukj2faL8FLXREcWPttOds9B2cTI3imf31LFWE7BJO?=
+ =?us-ascii?Q?ze5YI8HDhl743DpSsN1R0FouTrtik8ynMyJA+PAVeGbxQJKGWuvZc2VuCj9P?=
+ =?us-ascii?Q?iYJz0aPhl3Ho9Pn5tV7ONcw0LTPHS47Lrz3ff0LJ5tWkzrLBa4qs+VPKSS/M?=
+ =?us-ascii?Q?t+TAC7Pd+rx6WA8zGLWMwug6zalSHYLI?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6083.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?pFM6h8hHmU66OJAfn9DxrpJpi6sPEwbCzhLyiNeFg622UBUcQ26jXUotXTsS?=
+ =?us-ascii?Q?TKrc/TAF8ph735p6HPyn6uMSak+my7Ehmfxd/Uuw3o0rgdEoHA5pAcv9jAim?=
+ =?us-ascii?Q?lZpjraUvrXk+ge723Sn68aATIoyX7hewOGDmX1h5qwx1svSDkSaerbog4IdQ?=
+ =?us-ascii?Q?hJqQxETCp99totfHjeyCkKV1NeitbpIDthtum+pAy3mI7+Lhi5jSt48aYr/A?=
+ =?us-ascii?Q?ZGV8nJsaqtDL3ZOoEjkrrn8V84e87knJpAUsuEkHu7DDa7AXqsa07K5/eh+P?=
+ =?us-ascii?Q?tGMM7aT9jkwXSTVWB7flS/Xnd3dbKcnENTPqM3djSm4TI3yldxUCqJlAhzQ/?=
+ =?us-ascii?Q?3LXOwkRrzYszeYtb5PPGAXD1uFJHayT8Xd5935jpAe/8YL6l8XkXCsOr51fF?=
+ =?us-ascii?Q?U9QKttYigg3TpeBOrQRZxRfLQKj3GPKKPgnvTKETr7sZK2S4pCs0yqU59mdh?=
+ =?us-ascii?Q?dxS1jjccfyvlipHRdS0t5PGZCfuc4ggOVzvJqQ8giSjIN88+yvIwhWdbbBq5?=
+ =?us-ascii?Q?EYTQZ0/doQNmShuvSc4WJoKMjnfyFd3IZclNsALWZzwidxW1E//pjrZfT5lN?=
+ =?us-ascii?Q?Uz70QWDjN1274SwbF9gaB/T5GMwbsypBTyHiy0gFX7u5yxHUoK+RD0YQlbQQ?=
+ =?us-ascii?Q?g2O5miRj1cmVR5xUPYJVEtdUzWFXbiBXBIXj5F8NJzhhIB7cyIAKdjSgp6V+?=
+ =?us-ascii?Q?t2om+OgM9obVld76uxfUAg4gBhgtwwQ6+fkUlDKskys6OaY7VYIqLZDCDVxs?=
+ =?us-ascii?Q?L2Or+dRk9mTwzdFreebKxuLSQw++qt7sYNdRn9DInqOzuRMN0LXB9FG7lWvQ?=
+ =?us-ascii?Q?zoTe0EX7jzuqItg77ONzs6icFvhE0GTY2X1JHISH4mzWAFJ/sxOUc/hnCxKq?=
+ =?us-ascii?Q?/A1xteyWYCJ6t4/1sd+wtaWEazFz0eoTS/sHWFum8fCJ1AhzR+cXnYbKXSlM?=
+ =?us-ascii?Q?yZeziYeBHl6rsG7OMKvMJRvKlfE9fra9ezsSKZwRvlVtqvt1VUNmnPyZ9HMF?=
+ =?us-ascii?Q?KG0FGspJAyneQ4/Fh9eyzUE6JvlEL58TWoTrBSL/9A/u/Cmbf2XlFeBdjjDc?=
+ =?us-ascii?Q?bhXu/ndD9hWITil6PCuCcjN3mIAWwc8TByJClKAk8iizV4dhSC3WjrgdsgWi?=
+ =?us-ascii?Q?bazu+ovyAqSu+bFMjrpryEP+HjFrSNIqQlhcwdPCjx7aCTzBf/xX6WTmRSYw?=
+ =?us-ascii?Q?ubVEGwHQzGJH6OQSKWcxfzi4iN1P27W8SaninbLUGBCwLRaao0JIdcDDojY4?=
+ =?us-ascii?Q?BJ/tKoSswT+w0lVujor7a7yWGH1sBg1Wz7dr5eC9Uan13X+PvolXQcFIl24f?=
+ =?us-ascii?Q?Y9zg4K+TNMUu82s0Q/Sq78da0hgz13lUfhoi+OnC98Hmdm14hUwZqlp4kGhR?=
+ =?us-ascii?Q?MtqFR31okh7wU+n1OWKSpxc8vZjORD0TFlXhURxq11jJ1wkirKAS1zkrbwJC?=
+ =?us-ascii?Q?r0GDA4peacG6peKcY8SnE0HHTuRkCT0YdWasJ4cnJZTu04XrCQAHCCFMlpMe?=
+ =?us-ascii?Q?uKCktkk94zJPzX3wdb8CSTIcAgZI3zk3sxzXJt0cY9P+7YM0BuQRrk+suiZO?=
+ =?us-ascii?Q?9s9AY4kJobXRjImDevJ6DvuF6fqoHFFSXD86Slqz?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210165108.95894-5-irogers@google.com>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6083.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0a76927-a6e3-4c60-d7f2-08dd4a320483
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2025 00:21:24.0549
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gONPiT4Q5BZSw9yOZUgVU96h8x+Vz8LeqZgPWBlg4JXEl8IemxHZPhY1GkPXktcn16CfJ7SroEtbJCMxNUcVKA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4529
+X-OriginatorOrg: intel.com
 
-On Mon, Feb 10, 2025 at 08:51:05AM -0800, Ian Rogers wrote:
-> Use the executable from /proc/pid/exe and read the e_machine from the
-> ELF header. On failure use EM_HOST. Change builtin-trace syscall
-> functions to pass e_machine from the thread rather than EM_HOST, so
-> that in later patches when syscalltbl can use the e_machine the system
-> calls are specific to the architecture.
+> diff --git a/include/linux/memory.h b/include/linux/memory.h
+> index c0afee5d126e..0a21943ce44d 100644
+> --- a/include/linux/memory.h
+> +++ b/include/linux/memory.h
+> @@ -189,4 +189,13 @@ void memory_block_add_nid(struct memory_block *mem, =
+int nid,
+>   */
+>  extern struct mutex text_mutex;
+>
+> +#ifdef CONFIG_ACPI_MRRM
+> +int mrrm_max_mem_region(void);
+> +int memory_subsys_device_register(struct device *dev);
+> +#else
+> +static inline int mrrm_max_mem_region(void) { return -EONENT; }
 
-Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
-Tested-by: Charlie Jenkins <charlie@rivosinc.com>
+The lkp robot just pointed out my spelling error. Should be ENOENT.
 
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> Reviewed-by: Howard Chu <howardchu95@gmail.com>
-> ---
->  tools/perf/builtin-trace.c | 41 ++++++++++++++++---------------
->  tools/perf/util/thread.c   | 50 ++++++++++++++++++++++++++++++++++++++
->  tools/perf/util/thread.h   | 14 ++++++++++-
->  3 files changed, 85 insertions(+), 20 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 4b77c2ab3dba..1ae609555018 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -2678,16 +2678,17 @@ static int trace__sys_enter(struct trace *trace, struct evsel *evsel,
->  	int printed = 0;
->  	struct thread *thread;
->  	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1;
-> -	int augmented_args_size = 0;
-> +	int augmented_args_size = 0, e_machine;
->  	void *augmented_args = NULL;
->  	/* TODO: get e_machine from thread. */
-> -	struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
-> +	struct syscall *sc;
->  	struct thread_trace *ttrace;
->  
-> -	if (sc == NULL)
-> -		return -1;
-> -
->  	thread = machine__findnew_thread(trace->host, sample->pid, sample->tid);
-> +	e_machine = thread__e_machine(thread, trace->host);
-> +	sc = trace__syscall_info(trace, evsel, e_machine, id);
-> +	if (sc == NULL)
-> +		goto out_put;
->  	ttrace = thread__trace(thread, trace->output);
->  	if (ttrace == NULL)
->  		goto out_put;
-> @@ -2756,16 +2757,18 @@ static int trace__fprintf_sys_enter(struct trace *trace, struct evsel *evsel,
->  	struct thread *thread;
->  	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1;
->  	/* TODO: get e_machine from thread. */
-> -	struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
-> +	struct syscall *sc;
->  	char msg[1024];
->  	void *args, *augmented_args = NULL;
-> -	int augmented_args_size;
-> +	int augmented_args_size, e_machine;
->  	size_t printed = 0;
->  
-> -	if (sc == NULL)
-> -		return -1;
->  
->  	thread = machine__findnew_thread(trace->host, sample->pid, sample->tid);
-> +	e_machine = thread__e_machine(thread, trace->host);
-> +	sc = trace__syscall_info(trace, evsel, e_machine, id);
-> +	if (sc == NULL)
-> +		return -1;
->  	ttrace = thread__trace(thread, trace->output);
->  	/*
->  	 * We need to get ttrace just to make sure it is there when syscall__scnprintf_args()
-> @@ -2830,15 +2833,15 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
->  	bool duration_calculated = false;
->  	struct thread *thread;
->  	int id = perf_evsel__sc_tp_uint(evsel, id, sample), err = -1, callchain_ret = 0, printed = 0;
-> -	int alignment = trace->args_alignment;
-> -	/* TODO: get e_machine from thread. */
-> -	struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
-> +	int alignment = trace->args_alignment, e_machine;
-> +	struct syscall *sc;
->  	struct thread_trace *ttrace;
->  
-> -	if (sc == NULL)
-> -		return -1;
-> -
->  	thread = machine__findnew_thread(trace->host, sample->pid, sample->tid);
-> +	e_machine = thread__e_machine(thread, trace->host);
-> +	sc = trace__syscall_info(trace, evsel, e_machine, id);
-> +	if (sc == NULL)
-> +		goto out_put;
->  	ttrace = thread__trace(thread, trace->output);
->  	if (ttrace == NULL)
->  		goto out_put;
-> @@ -3185,8 +3188,8 @@ static int trace__event_handler(struct trace *trace, struct evsel *evsel,
->  
->  	if (evsel == trace->syscalls.events.bpf_output) {
->  		int id = perf_evsel__sc_tp_uint(evsel, id, sample);
-> -		/* TODO: get e_machine from thread. */
-> -		struct syscall *sc = trace__syscall_info(trace, evsel, EM_HOST, id);
-> +		int e_machine = thread ? thread__e_machine(thread, trace->host) : EM_HOST;
-> +		struct syscall *sc = trace__syscall_info(trace, evsel, e_machine, id);
->  
->  		if (sc) {
->  			fprintf(trace->output, "%s(", sc->name);
-> @@ -4764,6 +4767,7 @@ static size_t trace__fprintf_thread(FILE *fp, struct thread *thread, struct trac
->  {
->  	size_t printed = 0;
->  	struct thread_trace *ttrace = thread__priv(thread);
-> +	int e_machine = thread__e_machine(thread, trace->host);
->  	double ratio;
->  
->  	if (ttrace == NULL)
-> @@ -4783,8 +4787,7 @@ static size_t trace__fprintf_thread(FILE *fp, struct thread *thread, struct trac
->  	else if (fputc('\n', fp) != EOF)
->  		++printed;
->  
-> -	/* TODO: get e_machine from thread. */
-> -	printed += thread__dump_stats(ttrace, trace, EM_HOST, fp);
-> +	printed += thread__dump_stats(ttrace, trace, e_machine, fp);
->  
->  	return printed;
->  }
-> diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-> index 0ffdd52d86d7..a07446a280ed 100644
-> --- a/tools/perf/util/thread.c
-> +++ b/tools/perf/util/thread.c
-> @@ -1,5 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
-> +#include <elf.h>
->  #include <errno.h>
-> +#include <fcntl.h>
->  #include <stdlib.h>
->  #include <stdio.h>
->  #include <string.h>
-> @@ -16,6 +18,7 @@
->  #include "symbol.h"
->  #include "unwind.h"
->  #include "callchain.h"
-> +#include "dwarf-regs.h"
->  
->  #include <api/fs/fs.h>
->  
-> @@ -51,6 +54,7 @@ struct thread *thread__new(pid_t pid, pid_t tid)
->  		thread__set_ppid(thread, -1);
->  		thread__set_cpu(thread, -1);
->  		thread__set_guest_cpu(thread, -1);
-> +		thread__set_e_machine(thread, EM_NONE);
->  		thread__set_lbr_stitch_enable(thread, false);
->  		INIT_LIST_HEAD(thread__namespaces_list(thread));
->  		INIT_LIST_HEAD(thread__comm_list(thread));
-> @@ -423,6 +427,52 @@ void thread__find_cpumode_addr_location(struct thread *thread, u64 addr,
->  	}
->  }
->  
-> +static uint16_t read_proc_e_machine_for_pid(pid_t pid)
-> +{
-> +	char path[6 /* "/proc/" */ + 11 /* max length of pid */ + 5 /* "/exe\0" */];
-> +	int fd;
-> +	uint16_t e_machine = EM_NONE;
+> +static inline int memory_subsys_device_register(struct device *dev) { re=
+turn -EINVAL; }
+> +#define memory_subsys_device_register memory_subsys_device_register
+> +#endif
 > +
-> +	snprintf(path, sizeof(path), "/proc/%d/exe", pid);
-> +	fd = open(path, O_RDONLY);
-> +	if (fd >= 0) {
-> +		_Static_assert(offsetof(Elf32_Ehdr, e_machine) == 18, "Unexpected offset");
-> +		_Static_assert(offsetof(Elf64_Ehdr, e_machine) == 18, "Unexpected offset");
-> +		if (pread(fd, &e_machine, sizeof(e_machine), 18) != sizeof(e_machine))
-> +			e_machine = EM_NONE;
-> +		close(fd);
-> +	}
-> +	return e_machine;
-> +}
-> +
-> +uint16_t thread__e_machine(struct thread *thread, struct machine *machine)
-> +{
-> +	pid_t tid, pid;
-> +	uint16_t e_machine = RC_CHK_ACCESS(thread)->e_machine;
-> +
-> +	if (e_machine != EM_NONE)
-> +		return e_machine;
-> +
-> +	tid = thread__tid(thread);
-> +	pid = thread__pid(thread);
-> +	if (pid != tid) {
-> +		struct thread *parent = machine__findnew_thread(machine, pid, pid);
-> +
-> +		if (parent) {
-> +			e_machine = thread__e_machine(parent, machine);
-> +			thread__set_e_machine(thread, e_machine);
-> +			return e_machine;
-> +		}
-> +		/* Something went wrong, fallback. */
-> +	}
-> +	e_machine = read_proc_e_machine_for_pid(pid);
-> +	if (e_machine != EM_NONE)
-> +		thread__set_e_machine(thread, e_machine);
-> +	else
-> +		e_machine = EM_HOST;
-> +	return e_machine;
-> +}
-> +
->  struct thread *thread__main_thread(struct machine *machine, struct thread *thread)
->  {
->  	if (thread__pid(thread) == thread__tid(thread))
-> diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-> index 6cbf6eb2812e..cd574a896418 100644
-> --- a/tools/perf/util/thread.h
-> +++ b/tools/perf/util/thread.h
-> @@ -60,7 +60,11 @@ DECLARE_RC_STRUCT(thread) {
->  	struct srccode_state	srccode_state;
->  	bool			filter;
->  	int			filter_entry_depth;
-> -
-> +	/**
-> +	 * @e_machine: The ELF EM_* associated with the thread. EM_NONE if not
-> +	 * computed.
-> +	 */
-> +	uint16_t		e_machine;
->  	/* LBR call stack stitch */
->  	bool			lbr_stitch_enable;
->  	struct lbr_stitch	*lbr_stitch;
-> @@ -302,6 +306,14 @@ static inline void thread__set_filter_entry_depth(struct thread *thread, int dep
->  	RC_CHK_ACCESS(thread)->filter_entry_depth = depth;
->  }
->  
-> +uint16_t thread__e_machine(struct thread *thread, struct machine *machine);
-> +
-> +static inline void thread__set_e_machine(struct thread *thread, uint16_t e_machine)
-> +{
-> +	RC_CHK_ACCESS(thread)->e_machine = e_machine;
-> +}
-> +
-> +
->  static inline bool thread__lbr_stitch_enable(const struct thread *thread)
->  {
->  	return RC_CHK_ACCESS(thread)->lbr_stitch_enable;
-> -- 
-> 2.48.1.502.g6dc24dfdaf-goog
-> 
+>  #endif /* _LINUX_MEMORY_H_ */
+
+-Tony
