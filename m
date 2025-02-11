@@ -1,82 +1,80 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A525F260A38
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 19:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B812505DF
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 19:21:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739301579; cv=none; b=nZbwOtPnVjAC4pnp8dxDayfwasCM9AZCKsqC8HSa9942qhZyLIhzXUw/QmA6R1+mSijnDUfoMZ0BXWD8GGefo41Hv9DL61jEUogcUy28Isa0S3LMFXh8REjJmSRAdcjDjHOz5+y8GAm+vqIJmjDS/v1ebssgpguiIz0t9ShXbDw=
+	t=1739301674; cv=none; b=lDUSZ3oqxtMEdQ2dxb7rivXZ1N5HwwYiIgUXJptN4R1lWu+DOOQpsRo+010Q/fgE5yHyr5Ap+Kdx4rjQTUm26okzQY+8Hyelf7AdLE4r/dqg1NgOMG33ebJVC5OU0uSN0MshQK4FTHUkvzEspwRJJIF4L9xFf/GEx+MZpy3m9CE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739301579; c=relaxed/simple;
-	bh=BQVcd0E8qDJAu1XKqZpGV5YtYxLDN/fH/h90PM2zqLA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FWtG4Uh2UfcJd+7FYxW0myo3ERksvuxlZGgpguzxB3SNl5pZe8K7TvDKr5sfS+LymKW3A2bLv39QmoyFmXZGXD+uX1BXVgvoQClkRIjCzyeEvEV28dAfVrPNn638AfZgLcnXVksAtsyV+WlZO3BQQZDswUlQDYHzCPJ08vfa+uY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RWO3qkJq; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739301674; c=relaxed/simple;
+	bh=9f8NwOeHOHhxcpJKA8SlKQgQxAg5JH1bD2pn51uqAzo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fqYFpmFYWJgl20tGyTkSXxdLyjAWYW88ZaIQQ6Ys7qqjQNRD02CL7GE6BxEA/5FL3+dJmToT2+XDr8L6lEZ6pj0qDhwTsabt91sx3f7DLS+Om7ZN1dwY9Npq0lKxnLnPZA3bn07EbYOHNTdOkLOZrMPu/ftSzhA6k5w6gxbAuZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=NIg+s4yJ; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RWO3qkJq"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3d13fe99d03so15175ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:19:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739301577; x=1739906377; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BQVcd0E8qDJAu1XKqZpGV5YtYxLDN/fH/h90PM2zqLA=;
-        b=RWO3qkJqcZKs02dZSpmua4GAx1rEzeTwL4aQemj1cODa5yLsBN+Xc1C7nru8ciO/Qk
-         sgSMfHlLNUSXDBWEPGKmQ2hy8HU5Q6xK6Ep0MrFh6ySeqMq6EUCryG3bep/ibwmGF3Bt
-         EAZx6irqkbTVwP7dfYa0buYj8wG9Pad8QahQ/DLkaxSlgrTUL4tX7poD57GFvlpdeVi4
-         n5a8rtBBTXCs1/NeO9Y6RKO/iFEX3VOifTL3QOIM23YyZs/PzJ2rbEKA6KcGa8CkrDiN
-         VDSWbFBm/ukI7uyCaJd2DeUlfKV9eMO7Z+NmGom7Z/qJTOklSqLqQygU6BPWXuiIXuDz
-         Xl0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739301577; x=1739906377;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BQVcd0E8qDJAu1XKqZpGV5YtYxLDN/fH/h90PM2zqLA=;
-        b=oz8INEoHhOZZd+vTHcQOSjAZAHHab9QzIdFDw81Yydg+Dir4BhKBCgkh0SEo1rpim0
-         BKGSfk4ZEPj7ho+YfCS8Koi7ST+ZCfMQSH80Tzpiwg2HL3qSbAt9MVrITtK1zvP52Pi0
-         Dy5RrR6sLy+6TuAlFj0kZTnVmnrRr1FmjPQEi2Od7iBTFi8BsvlQoOj0jDBgWQex5Qsi
-         kv8F7d1OBcGI4NTigST8V5uVlE+WKezGti+xqiLo17Eb8jFVpLuAQsuu9HzCg8zG//ig
-         xPCdbJD5iYJ8EWN2JKhtzGUiB+wNKYlQzaKzt50uiiHdCIeSxzyhG4n1WG/cje6P//Ib
-         Dyng==
-X-Forwarded-Encrypted: i=1; AJvYcCWh/MCW4yi+M6YPWki6EGlkpEdacav/w7lLcWox6LMydgR36a4ph0e5wr4FkPHT9bnAGl2w+gRCz3P0FZg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyKMLC75Y4FDjxrMM5E5DZvqLeBb4W+L2PgpZGynkfFacVldFz
-	sPG16namPNypvM9VNCWZAUFN91gzmi6SIvudP0NnUFcWYBI5vUhwR+fqG6ypvgvRHQvX09pvUSo
-	XIjIfhpeyqUfzo3AdJ8bdEb/PPmBnNWn+UMUr
-X-Gm-Gg: ASbGnct8zcBGqF8We6cF1SVE00TFpasoDt9/q7LXCJt16oamhHTbtYPNt3Q/xhd3Wyk
-	RJta0/iYC57jV8d6rxv2YtwG0yMSWoQTmrM8NatREUZV509AzPX0hpddVa0Q8loWL2CEk+wCu
-X-Google-Smtp-Source: AGHT+IHZcYXITrrwGicv+DWrhwM/y10QdY1SKlNBDZiGq/499Tf3TOztiUIlbS98GdpyOeZkICE0kLwCQR4n01pCcfs=
-X-Received: by 2002:a05:6e02:de9:b0:3d0:62be:12c3 with SMTP id
- e9e14a558f8ab-3d17ce89803mr152295ab.1.1739301576593; Tue, 11 Feb 2025
- 11:19:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="NIg+s4yJ"
+Date: Tue, 11 Feb 2025 14:20:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
+	s=key1; t=1739301658;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8mNRV1XLqXF4FA7V0dC+d4pFd/k0iKqQgScUbDF9pVA=;
+	b=NIg+s4yJTADX9Ou20CmtLuX/odZ6Ag8iohjaieOJUj6ZkCBp3PFYrg+T2VljxOmdMHRaY7
+	6eEciAukGKMdz1PnOgkbW07M8pDAOUQjkihPCUqm8GO2/VLUgXCfv8wAg0RSBHMmH1kVDW
+	ft4zRgQCEr5BI5npQfzpyFnJAmGKqUYoCH1C9UCAwGVd3+8xU8qVEPOKK2UGN10WKogzd7
+	w5iuP37wgfaOr9FaRNcWUYblzMMiaLP8nfH5HyBktcwNa5HFjrRY26x6GjaxHD4B3Wz2gL
+	gXtyBUw0LO6jqOppiMSlbm4/yeXYv2hzARkPnFRWag6uuwQtb1nqzLvmk6LOCg==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] iommu/dart: Assert !locked when configuring
+Message-ID: <Z6ujFKvD7hCYzymO@blossom>
+References: <20250210-locked-dart-v1-0-5d97fe247f35@rosenzweig.io>
+ <20250210-locked-dart-v1-5-5d97fe247f35@rosenzweig.io>
+ <756ba6d7-b18e-4139-851b-496b1820117a@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z35_34GTLUHJTfVQ@google.com> <20250108154901.GFZ36ebXAZMFZJ7D8t@fat_crate.local>
- <Z36zWVBOiBF4g-mW@google.com> <20250108181434.GGZ37AiioQkcYbqugO@fat_crate.local>
- <20250111125215.GAZ4Jpf6tbcoS7jCzz@fat_crate.local> <Z4qnzwNYGubresFS@google.com>
- <20250118152655.GBZ4vIP44MivU2Bv0i@fat_crate.local> <Z5JtbZ-UIBJy2aYE@google.com>
- <20250123170149.GCZ5J1_WovzHQzo0cW@fat_crate.local> <Z5KEoepANyswViO_@google.com>
- <20250124125843.GBZ5OOg3rWBd9pY3Bx@fat_crate.local>
-In-Reply-To: <20250124125843.GBZ5OOg3rWBd9pY3Bx@fat_crate.local>
-From: Jim Mattson <jmattson@google.com>
-Date: Tue, 11 Feb 2025 11:19:25 -0800
-X-Gm-Features: AWEUYZnCHcmRz4QFrDZ8KpRGdwEuBBU2P5nHjVBGhJsHbEaqxo2hitC1xktH8hg
-Message-ID: <CALMp9eQarOhpNkw6WCWOvh_fcHg9846sEo7fAOEoAtKRDA7kSQ@mail.gmail.com>
-Subject: Re: [PATCH] x86/bugs: KVM: Add support for SRSO_MSR_FIX
-To: Borislav Petkov <bp@alien8.de>
-Cc: Sean Christopherson <seanjc@google.com>, Borislav Petkov <bp@kernel.org>, X86 ML <x86@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Josh Poimboeuf <jpoimboe@redhat.com>, 
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, KVM <kvm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Yosry Ahmed <yosryahmed@google.com>, 
-	Brendan Jackman <jackmanb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <756ba6d7-b18e-4139-851b-496b1820117a@arm.com>
+X-Migadu-Flow: FLOW_OUT
 
-Borislav,
+> > Configuration is only possible and needed for non-locked DARTs and will
+> > fail for locked DARTs. We cannot try -- assert that we do not.
+> 
+> Except now we absolutely will - if a locked DART and its client device are
+> advertised to Linux, instead of gracefully refusing to touch it, we'll now
+> attach the client to a DMA domain, firing a barrage of multiple WARNs in the
+> process, and give it DMA ops which still cannot work. I'm not really
+> convinced this series on its own leaves us in a better position than we're
+> already in now... :/
 
-What is the performance impact of BpSpecReduce on Turin?
+Fair point, thanks for raising that. "Fortunately" the upstream DTs
+don't describe any locked DARTs yet.
+
+> How hideous is the rest of what's required to actually make this usable?
+
+It isn't... pretty, and it's going to be ugly no matter how we slice it.
+Unfortunately the display controller DARTs really are locked so our
+hands are tied here.
+
+When I originally wrote these patches I had some hideous hack in the
+shared page table code. I'm thrilled to see that Janne rewrote that code
+to be local to apple-dart.c, at least:
+https://github.com/AsahiLinux/linux/commit/d90cc3590ea460e1c574b4b7c47fdafb2794af6a
+
+I'll include that patch with v2, which makes the locked DARTs actually
+usable, and restructure the series so we only probe after that commit is
+there.
