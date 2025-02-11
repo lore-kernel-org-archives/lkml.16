@@ -1,511 +1,83 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0907A26BD9A
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 11:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884281EB9E3;
+	Tue, 11 Feb 2025 11:28:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739273280; cv=none; b=Hax1x66WLR+IWXBWdUUWkL4NZ4vg1cUFqVtJvm11B59e3nqwm6+tm0AqksoB2Hgzgkjri4FG9pGVG+mwv4kg4PEoVsIN7867fTyzdcy6E0Fr3BGczb6A0AIVUnHFQkHgEniZ+dzk9LXMX2afVE8OlUNSx66xQk1RsQBviMyCVCM=
+	t=1739273288; cv=none; b=bgM2ImBoOnpXS/JueLJ6t4OeJYuY3zyqLS2GCXmApguK1hGAyQHYDDVsKdCUPJ/Dr8b29WpHLgTtT+TKANsKmaYXGe7M4SigfKHhEId/7M8mx8pBgulj480JZPxfJViTvFamQ8wcE9nI1o8l90UfbGuqLSyJ7byX//29nko6BB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739273280; c=relaxed/simple;
-	bh=423CukSvkQYX3IoVxPUXCJumcPwAPkrAIyjWXWnw8jU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gSTWuHOyTGbhYMM3aoO/flbRByIPGyPM06cSFU87mTxlJlKUjU6dZA6tBmCfA/C2FAZy8jmHTdP9DdX1ZBnonIXk2oNlYipFn7zMo1NQgGoDLiJDdpwN6f7+HYDT8u4SLUT7xNz+Ol9Wq8A0Pf7NSTPzpXSK0Dv/MaSZALeHlnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IzzvTuVd; arc=none smtp.client-ip=209.85.208.50
+	s=arc-20240116; t=1739273288; c=relaxed/simple;
+	bh=VYTh2Dd5YpFdfEp44t+vH0d7Jh/+1s7ZwElHdQz8p/U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZX5WZgQXsriypiEDR85+x61USGJQAJbYxdr7ezzNQ8TWpIF9sn1wJfM7akbX8JookpclhA/9pw9KUPcRwBtqUuqTGtPQa1y236vU0gwj3Oe76FuPNcZ6iAVyk0TkeyElmQOMxqmYjtdtcNY7G+BSShJ2WHiC3OR581YuTtOITfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PDDdP85a; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IzzvTuVd"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5de77a5d2a2so3797684a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 03:27:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PDDdP85a"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4394a823036so13826395e9.0;
+        Tue, 11 Feb 2025 03:28:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739273276; x=1739878076; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G0yMHczjz8M9kD6dwWyu3+PHY3YM20OwKcyo4SL8AFQ=;
-        b=IzzvTuVdQ1Vi6fG27OqQuzTjf6YyZFfahogbZYdA60tjnfKKrpgBV7IgyCtR8ZoPJG
-         Z0KbYq0t3Tn/ixpBt99+HcMGAVvC2HrYI2pJHUGEXV+1ucCeyMeitCSYOYwCrZhznIdg
-         rRv4fOu1F5uVJ713/qdbEkN+K5QTMyyvRxlBQp5rx5QtOxKuz9xXwDCdwet/5iN4rkg1
-         2/96MdnM20JYQ+GPXk62qvgDFAcBWnsenIhxdauzQBtJwCt0ajTAybuxPU+kwkrRJAnL
-         BoeiPbOf7nL7Df/UDdfPwQvrDssNa72vkRAkS2U1/g1QMH87MFsW1ZVOFNhQ4EhJFAjc
-         im3A==
+        d=gmail.com; s=20230601; t=1739273285; x=1739878085; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VYTh2Dd5YpFdfEp44t+vH0d7Jh/+1s7ZwElHdQz8p/U=;
+        b=PDDdP85a/7Tr0AGRjLPWj3iKVAMeK4PfKP1mBAnlKBAaKUUYYwiCbPpsrslGIAAUUS
+         b3xqNRgsDnXTtQ1YeCQYAhrN/Ye5X0kdDRz8Xxb0rU0sKsUQT162ivfcWxE9p+TLpMJj
+         Kf9m1TxaOCYwd6CZoF4v5gcYuRFVmXS2bcKZAXHXDyzDnfLcn4iitv8Rkm85/XsXOYqs
+         kdxwLxLRRK+fL/QhyhECoHdh2H+KLe5oTzfRCNsSgiDDTS2z+WlRxF7W+1noOcBdgpNr
+         Q87fPYf2Ap5kFPwOar45rmmAIuPHXZsJTqeabgk/t65nDysXx7GW1sagcuDyjQRCrcI2
+         lj0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739273276; x=1739878076;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G0yMHczjz8M9kD6dwWyu3+PHY3YM20OwKcyo4SL8AFQ=;
-        b=f5xzCjLNxUno959zd6r9WV/VJgbAHXT5o5vTjcz1qurgpRNpgwypaYasmtQKc6/Qpe
-         ILASSRDZc04Bd59fheqkGMJRw22fIALXbfG9WB1vVqFkejkuALyZhz+DqGpoXvF4DUm3
-         +TQ+D0Y/v+6y0BFAhMbkPCKtyOiJLZrv+X0dL+H692OHYX1O9V7R1xCfTfEFp/NdQCo/
-         sBPlt/R/2ArVgV+sDtmHwtJUXpcT+HI2CJ9/jMdneEz5EgbtmcMGEhUthKM7ytQsN51M
-         DrIc2wXu/Fmbxzgu1F2EjaFNUJqdcjFl4aqpxBnAP01ZcYfVKA54HEqFdMw/GLiozOUd
-         IJAA==
-X-Forwarded-Encrypted: i=1; AJvYcCUvtJnn4/W6RNxGYsR2rrqwl7uMNl6Dk+tb0PEWsJbW5jmYKZOLjRXdZSqCUXYXSUu0d6TlgwbHfo/hBNg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxu9EfeNSDW31nU4n5QttY6Flo9OFjCM8KQGNNmsa1KMdSxWJ3f
-	MAAsS7HQibPq5YTwGWvqHowngUOGmtV7qz9F3i0B0ok6PpuegeYm9ZdvONZyhG0dhsiWcZCYbWY
-	orsHjVQ6UaY9YsvwkadtAQQFS+rs=
-X-Gm-Gg: ASbGncs2bWi1R0qJHUIDXw8C1i+onkqF6qIFOgSLCeUCjt+H6X9pMxvbXHf0js+Ktvy
-	OHLpRnn3yfnn+OF17b5etXxoJnpKwu32kshxKiJbZd6lkj8GbIKJG4x2B30+ivWNDlc9n7TN5pA
-	A=
-X-Google-Smtp-Source: AGHT+IF/SQVLZlgYt2+kB9r9R4LA1zqr/LChdnFtMSz0wxkL0L5rvVMAk3aiu3/dSl4kO9IZg3mx5jZig4rDe7Du2GU=
-X-Received: by 2002:a05:6402:26cf:b0:5dc:7f96:6244 with SMTP id
- 4fb4d7f45d1cf-5de45089cddmr17334738a12.23.1739273275913; Tue, 11 Feb 2025
- 03:27:55 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739273285; x=1739878085;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VYTh2Dd5YpFdfEp44t+vH0d7Jh/+1s7ZwElHdQz8p/U=;
+        b=EeAso59pstjuBsctr0I5aDkXwtaLZotPn4hwvvdPHlhN7ycQRSdU5qJji4/b5Q3Bnw
+         Qa9zHRJ3tqQbsjRGNVNmFLQnm6ZMV7MQcIsjitcrzyILie2M3RZ6mm5BMyT+9PVRoJkU
+         FrDHNfxtEQd7D+bWA6eibJL1yWs64PXOlzJvw9N6Xs9Q9N9ntGi9YZvfbXvpYZwT9nCN
+         Hp5mGJAFD10tm+6y0u9c4JKAa2vvY8l7bNZHhoSK1hHXzI711GgLIAZBrrTQJ5GxjBTH
+         REI/IX/cy4/LVw55Bwb/h0cpNG3F3DRjpiMYgNCRIw/KB6Puo+RPk9KQejhFI4O2K8gG
+         fNYA==
+X-Forwarded-Encrypted: i=1; AJvYcCUitlaPRD7LBfs4fC9mO0vJjiU1y2wXKLUNBcEYYmjZ73bP+MPxdVWcIqRrSRECnrR7fIdmqeJtzVR3yHVS@vger.kernel.org, AJvYcCWpxZXpis/p+mGAcXIJn0vEbj/l6vO8P7lJEnifn0ySenHWqjTMXm9Xe59IAi0Kh7jw1YVuPEZpkC8Ft3Lk+PI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx89sJ52pAecmXDc1DWuI7/Fv5L+lJJYtiSb7fnYsj/81RwRd6j
+	Q/h8R6uQdrTgxdnB+Tljn7PEejfIYB+Vs4xdzhr9qhVXwUiPoLXE
+X-Gm-Gg: ASbGncsN56EbRfaYSCjJaYy9rTsOGOTermKBFnCpzfVZXh6u8nlv+3nst0H6YtBVuyZ
+	r50j8QbJgP34In85ogkxhWuU4UbxPeFFuJ/0pfhv4RzhEckOhyJQ/2scNmH4Xv67KVYhROKTRhs
+	Hyd3V0aMwE+Wfa2QMdO1/ERs6UZ5pQQylXs2CyqWPja3c8mBtHMuQWSwmtJYf6LGzpWInVY8xjv
+	s1oOY+FTZ9UBWStcLOCiOzbA0n7amR8gKCMLi8VgAOUrIpjffUAFwSOxCnZnoLIk5WeY0M7nY2m
+	HPOC5BMzPqc=
+X-Google-Smtp-Source: AGHT+IFjtzrrOH6AEcWqOF7uAUp5Krt174vzd2ADL15QEq43Z93qXvsdyAqa4jtx3B2VMmowJ/TvPA==
+X-Received: by 2002:a05:600c:34ce:b0:439:3254:4bf1 with SMTP id 5b1f17b1804b1-43932544f7cmr96377755e9.8.1739273284557;
+        Tue, 11 Feb 2025 03:28:04 -0800 (PST)
+Received: from void.void ([31.210.181.104])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4394127afcbsm71091105e9.23.2025.02.11.03.28.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 03:28:04 -0800 (PST)
+Date: Tue, 11 Feb 2025 13:28:01 +0200
+From: Andrew Kreimer <algonell@gmail.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Dave Penkler <dpenkler@gmail.com>, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v2] staging: gpib: Remove unnecessary TTY_LOG expansion
+Message-ID: <Z6s0QYoEZf9gJqAv@void.void>
+References: <20250210121552.33455-1-algonell@gmail.com>
+ <20250211093051.15993-1-algonell@gmail.com>
+ <2025021119-unsalted-shrink-1211@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1735550269.git.zhoubinbin@loongson.cn> <b0ac8b81fbb8955ed8ada27aba423cff45aad9f6.1735550269.git.zhoubinbin@loongson.cn>
- <f365c722-c294-4834-8c84-fd6dcd4a9ee9@suse.de>
-In-Reply-To: <f365c722-c294-4834-8c84-fd6dcd4a9ee9@suse.de>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Tue, 11 Feb 2025 17:27:40 +0600
-X-Gm-Features: AWEUYZnb3dscGNJT9s6G1vg-Vy1f7oqZw8j1Zx2LxLMDaKaNlEv-csOyPVmBwJ8
-Message-ID: <CAMpQs4JXKu4GDD79Mdkq9vASSDE_5SQsjsg4htfaZ5yGm3=k5g@mail.gmail.com>
-Subject: Re: [PATCH v1 4/4] drm/ls2kbmc: Add Loongson-2K BMC reset function support
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Lee Jones <lee@kernel.org>, Corey Minyard <minyard@acm.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Huacai Chen <chenhuacai@kernel.org>, 
-	linux-kernel@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
-	dri-devel@lists.freedesktop.org, Xuerui Wang <kernel@xen0n.name>, 
-	loongarch@lists.linux.dev, Chong Qiao <qiaochong@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025021119-unsalted-shrink-1211@gregkh>
 
-Hi Thomas:
+> What is the interdiff at the bottom here for?
 
-Sorry for my late reply and thanks for your advice.
+Indeed, it is pointless here.
 
-On Wed, Jan 15, 2025 at 2:57=E2=80=AFPM Thomas Zimmermann <tzimmermann@suse=
-.de> wrote:
->
-> Hi
->
->
-> Am 30.12.24 um 10:31 schrieb Binbin Zhou:
-> > Since the display is a sub-function of the Loongson-2K BMC, when the
-> > BMC reset, the entire BMC PCIe is disconnected, including the display
-> > which is interrupted.
->
-> To me, that's a strong indicator to set up the entire thing from scratch.
->
-> >
-> > Not only do you need to save/restore the relevant PCIe registers
-> > throughout the reset process, but you also need to re-push the display
-> > to the monitor at the end.
-> >
-> > Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
-> > Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >   drivers/gpu/drm/tiny/ls2kbmc.c | 284 ++++++++++++++++++++++++++++++++=
--
-> >   1 file changed, 283 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/tiny/ls2kbmc.c b/drivers/gpu/drm/tiny/ls2k=
-bmc.c
-> > index 909d6c687193..4b440f20cb4d 100644
-> > --- a/drivers/gpu/drm/tiny/ls2kbmc.c
-> > +++ b/drivers/gpu/drm/tiny/ls2kbmc.c
->
-> Move all the reset detection into the BMC core driver. When you see a
-> reset, remove the display's platform device via
-> platform_device_unregister(). This will release the device  and the DRM
-> driver on top. We do this for simpledrm/efifb/etc. Hence user-space code
-> is able to deal with it. Then set up a new platform device when the new
-> framebuffer is available. Your DRM driver will bind to it and user-space
-> code will continue with the new DRM device.
-
-I tried to refactor the bmc restart part according to your scheme. I'm
-not quite sure if the experimental results are exactly right.
-
-Key part:
-
-New solution:
-1. platform_device_unregister(simpledrm)
-2. wait and detect if the BMC reboot is complete;
-3. platform_device_register_resndata(simpledrm)
-
-Original solution:
-1. wait and detect if the BMC reboot is complete;
-2. ls2kbmc_push_drm_mode() pushes display data such as crtc.
-
-When the BMC reboot is completed, the display in the new solution will
-lose all the information of the previous desktop and redisplay the
-system login interface, while the original solution will keep the
-desktop information.
-
-Is this normal for our new solution, or is there something wrong with
-my implementation?
-
->
-> Best regards
-> Thomas
->
-> > @@ -8,10 +8,12 @@
-> >    */
-> >
-> >   #include <linux/aperture.h>
-> > +#include <linux/delay.h>
-> >   #include <linux/minmax.h>
-> >   #include <linux/pci.h>
-> >   #include <linux/platform_data/simplefb.h>
-> >   #include <linux/platform_device.h>
-> > +#include <linux/stop_machine.h>
-> >
-> >   #include <drm/drm_atomic.h>
-> >   #include <drm/drm_atomic_state_helper.h>
-> > @@ -32,9 +34,27 @@
-> >   #include <drm/drm_panic.h>
-> >   #include <drm/drm_probe_helper.h>
-> >
-> > +#define BMC_RESET_DELAY      (60 * HZ)
-> > +#define BMC_RESET_WAIT       10000
-> > +
-> > +static const u32 index[] =3D { 0x4, 0x10, 0x14, 0x18, 0x1c, 0x20, 0x24=
-,
-> > +                          0x30, 0x3c, 0x54, 0x58, 0x78, 0x7c, 0x80 };
-> > +static const u32 cindex[] =3D { 0x4, 0x10, 0x3c };
-> > +
-> > +struct ls2kbmc_pci_data {
-> > +     u32 d80c;
-> > +     u32 d71c;
-> > +     u32 data[14];
-> > +     u32 cdata[3];
-> > +};
-> > +
-> >   struct ls2kbmc_pdata {
-> >       struct pci_dev *pdev;
-> > +     struct drm_device *ddev;
-> > +     struct work_struct bmc_work;
-> > +     unsigned long reset_time;
-> >       struct simplefb_platform_data pd;
-> > +     struct ls2kbmc_pci_data pci_data;
-> >   };
-> >
-> >   /*
-> > @@ -583,6 +603,265 @@ static struct ls2kbmc_device *ls2kbmc_device_crea=
-te(struct drm_driver *drv,
-> >       return sdev;
-> >   }
-> >
-> > +static bool ls2kbmc_bar0_addr_is_set(struct pci_dev *ppdev)
-> > +{
-> > +     u32 addr;
-> > +
-> > +     pci_read_config_dword(ppdev, PCI_BASE_ADDRESS_0, &addr);
-> > +     addr &=3D PCI_BASE_ADDRESS_MEM_MASK;
-> > +
-> > +     return addr ? true : false;
-> > +}
-> > +
-> > +static void ls2kbmc_save_pci_data(struct ls2kbmc_pdata *priv)
-> > +{
-> > +     struct pci_dev *pdev =3D priv->pdev;
-> > +     struct pci_dev *parent =3D pdev->bus->self;
-> > +     int i;
-> > +
-> > +     for (i =3D 0; i < ARRAY_SIZE(index); i++)
-> > +             pci_read_config_dword(parent, index[i], &priv->pci_data.d=
-ata[i]);
-> > +
-> > +     for (i =3D 0; i < ARRAY_SIZE(cindex); i++)
-> > +             pci_read_config_dword(pdev, cindex[i], &priv->pci_data.cd=
-ata[i]);
-> > +
-> > +     pci_read_config_dword(parent, 0x80c, &priv->pci_data.d80c);
-> > +     priv->pci_data.d80c =3D (priv->pci_data.d80c & ~(3 << 17)) | (1 <=
-< 17);
-> > +
-> > +     pci_read_config_dword(parent, 0x71c, &priv->pci_data.d71c);
-> > +     priv->pci_data.d71c |=3D 1 << 26;
-> > +}
-> > +
-> > +static bool ls2kbmc_check_pcie_connected(struct pci_dev *parent, struc=
-t drm_device *dev)
-> > +{
-> > +     void __iomem *mmio;
-> > +     int sts, timeout =3D 10000;
-> > +
-> > +     mmio =3D pci_iomap(parent, 0, 0x100);
-> > +     if (!mmio)
-> > +             return false;
-> > +
-> > +     writel(readl(mmio) | 0x8, mmio);
-> > +     while (timeout) {
-> > +             sts =3D readl(mmio + 0xc);
-> > +             if ((sts & 0x11) =3D=3D 0x11)
-> > +                     break;
-> > +             mdelay(1);
-> > +             timeout--;
-> > +     }
-> > +
-> > +     pci_iounmap(parent, mmio);
-> > +
-> > +     if (!timeout) {
-> > +             drm_err(dev, "pcie train failed status=3D0x%x\n", sts);
-> > +             return false;
-> > +     }
-> > +
-> > +     return true;
-> > +}
-> > +
-> > +static int ls2kbmc_recove_pci_data(void *data)
-> > +{
-> > +     struct ls2kbmc_pdata *priv =3D data;
-> > +     struct pci_dev *pdev =3D priv->pdev;
-> > +     struct drm_device *dev =3D priv->ddev;
-> > +     struct pci_dev *parent =3D pdev->bus->self;
-> > +     u32 i, timeout, retry =3D 0;
-> > +     bool ready;
-> > +
-> > +     pci_write_config_dword(parent, PCI_BASE_ADDRESS_2, 0);
-> > +     pci_write_config_dword(parent, PCI_BASE_ADDRESS_3, 0);
-> > +     pci_write_config_dword(parent, PCI_BASE_ADDRESS_4, 0);
-> > +
-> > +     timeout =3D 10000;
-> > +     while (timeout) {
-> > +             ready =3D ls2kbmc_bar0_addr_is_set(parent);
-> > +             if (!ready)
-> > +                     break;
-> > +             mdelay(1);
-> > +             timeout--;
-> > +     };
-> > +
-> > +     if (!timeout)
-> > +             drm_warn(dev, "bar not clear 0\n");
-> > +
-> > +retrain:
-> > +     for (i =3D 0; i < ARRAY_SIZE(index); i++)
-> > +             pci_write_config_dword(parent, index[i], priv->pci_data.d=
-ata[i]);
-> > +
-> > +     pci_write_config_dword(parent, 0x80c, priv->pci_data.d80c);
-> > +     pci_write_config_dword(parent, 0x71c, priv->pci_data.d71c);
-> > +
-> > +     /* Check if the pcie is connected */
-> > +     ready =3D ls2kbmc_check_pcie_connected(parent, dev);
-> > +     if (!ready)
-> > +             return ready;
-> > +
-> > +     for (i =3D 0; i < ARRAY_SIZE(cindex); i++)
-> > +             pci_write_config_dword(pdev, cindex[i], priv->pci_data.cd=
-ata[i]);
-> > +
-> > +     drm_info(dev, "pcie recovered done\n");
-> > +
-> > +     if (!retry) {
-> > +             /*wait u-boot ddr config */
-> > +             mdelay(BMC_RESET_WAIT);
-> > +             ready =3D ls2kbmc_bar0_addr_is_set(parent);
-> > +             if (!ready) {
-> > +                     retry =3D 1;
-> > +                     goto retrain;
-> > +             }
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int ls2kbmc_push_drm_mode(struct drm_device *dev)
-> > +{
-> > +     struct ls2kbmc_device *sdev =3D ls2kbmc_device_of_dev(dev);
-> > +     struct drm_crtc *crtc =3D &sdev->crtc;
-> > +     struct drm_plane *plane =3D crtc->primary;
-> > +     struct drm_connector *connector =3D &sdev->connector;
-> > +     struct drm_framebuffer *fb =3D NULL;
-> > +     struct drm_mode_set set;
-> > +     struct drm_modeset_acquire_ctx ctx;
-> > +     int ret;
-> > +
-> > +     mutex_lock(&dev->mode_config.mutex);
-> > +     connector->funcs->fill_modes(connector, 4096, 4096);
-> > +     mutex_unlock(&dev->mode_config.mutex);
-> > +
-> > +     DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx,
-> > +                                DRM_MODESET_ACQUIRE_INTERRUPTIBLE, ret=
-);
-> > +
-> > +     if (plane->state)
-> > +             fb =3D plane->state->fb;
-> > +     else
-> > +             fb =3D plane->fb;
-> > +
-> > +     if (!fb) {
-> > +             drm_dbg(dev, "CRTC doesn't have current FB\n");
-> > +             ret =3D -EINVAL;
-> > +             goto out;
-> > +     }
-> > +
-> > +     drm_framebuffer_get(fb);
-> > +
-> > +     set.crtc =3D crtc;
-> > +     set.x =3D 0;
-> > +     set.y =3D 0;
-> > +     set.mode =3D &sdev->mode;
-> > +     set.connectors =3D &connector;
-> > +     set.num_connectors =3D 1;
-> > +     set.fb =3D fb;
-> > +
-> > +     ret =3D crtc->funcs->set_config(&set, &ctx);
-> > +
-> > +out:
-> > +     DRM_MODESET_LOCK_ALL_END(dev, ctx, ret);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static void ls2kbmc_events_fn(struct work_struct *work)
-> > +{
-> > +     struct ls2kbmc_pdata *priv =3D container_of(work, struct ls2kbmc_=
-pdata, bmc_work);
-> > +
-> > +     /*
-> > +      * The pcie is lost when the BMC resets,
-> > +      * at which point access to the pcie from other CPUs
-> > +      * is suspended to prevent a crash.
-> > +      */
-> > +     stop_machine(ls2kbmc_recove_pci_data, priv, NULL);
-> > +
-> > +     drm_info(priv->ddev, "redraw console\n");
-> > +
-> > +     /* We need to re-push the display due to previous pcie loss. */
-> > +     ls2kbmc_push_drm_mode(priv->ddev);
-> > +}
-> > +
-> > +static irqreturn_t ls2kbmc_interrupt(int irq, void *arg)
-> > +{
-> > +     struct ls2kbmc_pdata *priv =3D arg;
-> > +
-> > +     if (system_state !=3D SYSTEM_RUNNING)
-> > +             return IRQ_HANDLED;
-> > +
-> > +     /* skip interrupt in BMC_RESET_DELAY */
-> > +     if (time_after(jiffies, priv->reset_time + BMC_RESET_DELAY))
-> > +             schedule_work(&priv->bmc_work);
-> > +
-> > +     priv->reset_time =3D jiffies;
-> > +
-> > +     return IRQ_HANDLED;
-> > +}
-> > +
-> > +#define BMC_RESET_GPIO                       14
-> > +#define LOONGSON_GPIO_REG_BASE               0x1fe00500
-> > +#define LOONGSON_GPIO_REG_SIZE               0x18
-> > +#define LOONGSON_GPIO_OEN            0x0
-> > +#define LOONGSON_GPIO_FUNC           0x4
-> > +#define LOONGSON_GPIO_INTPOL         0x10
-> > +#define LOONGSON_GPIO_INTEN          0x14
-> > +
-> > +/* The gpio interrupt is a watchdog interrupt that is triggered when t=
-he BMC resets. */
-> > +static int ls2kbmc_gpio_reset_handler(struct ls2kbmc_pdata *priv)
-> > +{
-> > +     int irq, ret =3D 0;
-> > +     int gsi =3D 16 + (BMC_RESET_GPIO & 7);
-> > +     void __iomem *gpio_base;
-> > +
-> > +     /* Since Loongson-3A hardware does not support GPIO interrupt cas=
-cade,
-> > +      * chip->gpio_to_irq() cannot be implemented,
-> > +      * here acpi_register_gsi() is used to get gpio irq.
-> > +      */
-> > +     irq =3D acpi_register_gsi(NULL, gsi, ACPI_EDGE_SENSITIVE, ACPI_AC=
-TIVE_LOW);
-> > +     if (irq < 0)
-> > +             return irq;
-> > +
-> > +     gpio_base =3D ioremap(LOONGSON_GPIO_REG_BASE, LOONGSON_GPIO_REG_S=
-IZE);
-> > +     if (!gpio_base) {
-> > +             acpi_unregister_gsi(gsi);
-> > +             return PTR_ERR(gpio_base);
-> > +     }
-> > +
-> > +     writel(readl(gpio_base + LOONGSON_GPIO_OEN) | BIT(BMC_RESET_GPIO)=
-,
-> > +            gpio_base + LOONGSON_GPIO_OEN);
-> > +     writel(readl(gpio_base + LOONGSON_GPIO_FUNC) & ~BIT(BMC_RESET_GPI=
-O),
-> > +            gpio_base + LOONGSON_GPIO_FUNC);
-> > +     writel(readl(gpio_base + LOONGSON_GPIO_INTPOL) & ~BIT(BMC_RESET_G=
-PIO),
-> > +            gpio_base + LOONGSON_GPIO_INTPOL);
-> > +     writel(readl(gpio_base + LOONGSON_GPIO_INTEN) | BIT(BMC_RESET_GPI=
-O),
-> > +            gpio_base + LOONGSON_GPIO_INTEN);
-> > +
-> > +     ret =3D request_irq(irq, ls2kbmc_interrupt, IRQF_SHARED | IRQF_TR=
-IGGER_FALLING,
-> > +                       "ls2kbmc gpio", priv);
-> > +
-> > +     acpi_unregister_gsi(gsi);
-> > +     iounmap(gpio_base);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static int ls2kbmc_pdata_initial(struct platform_device *pdev, struct =
-ls2kbmc_pdata *priv)
-> > +{
-> > +     int ret;
-> > +
-> > +     priv->pdev =3D *(struct pci_dev **)dev_get_platdata(&pdev->dev);
-> > +
-> > +     ls2kbmc_save_pci_data(priv);
-> > +
-> > +     INIT_WORK(&priv->bmc_work, ls2kbmc_events_fn);
-> > +
-> > +     ret =3D request_irq(priv->pdev->irq, ls2kbmc_interrupt,
-> > +                       IRQF_SHARED | IRQF_TRIGGER_RISING, "ls2kbmc pci=
-e", priv);
-> > +     if (ret) {
-> > +             pr_err("request_irq(%d) failed\n", priv->pdev->irq);
-> > +             return ret;
-> > +     }
-> > +
-> > +     return ls2kbmc_gpio_reset_handler(priv);
-> > +}
-> > +
-> >   /*
-> >    * Platform driver
-> >    */
-> > @@ -598,12 +877,15 @@ static int ls2kbmc_probe(struct platform_device *=
-pdev)
-> >       if (IS_ERR(priv))
-> >               return -ENOMEM;
-> >
-> > -     priv->pdev =3D *(struct pci_dev **)dev_get_platdata(&pdev->dev);
-> > +     ret =3D ls2kbmc_pdata_initial(pdev, priv);
-> > +     if (ret)
-> > +             return ret;
-> >
-> >       sdev =3D ls2kbmc_device_create(&ls2kbmc_driver, pdev, priv);
-> >       if (IS_ERR(sdev))
-> >               return PTR_ERR(sdev);
-> >       dev =3D &sdev->dev;
-> > +     priv->ddev =3D &sdev->dev;
-> >
-> >       ret =3D drm_dev_register(dev, 0);
-> >       if (ret)
->
-> --
-> --
-> Thomas Zimmermann
-> Graphics Driver Developer
-> SUSE Software Solutions Germany GmbH
-> Frankenstrasse 146, 90461 Nuernberg, Germany
-> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-> HRB 36809 (AG Nuernberg)
->
-
-
---
-Thanks.
-Binbin
+Should have sent as a separate patch as well.
