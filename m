@@ -1,113 +1,184 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2071.outbound.protection.outlook.com [40.107.244.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB90026BD90
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:37:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739270279; cv=none; b=Nen6ho8HsNFJaF0x9i5Y4xXMx486TfplYTeUFryq+iiIkItOt/zV0EStKRIiAjOYmUGxgfaSdHX5NUno3/47+WuZn/OTXrS0FCB2nQ5ISAKNQJc6gnNSEzyepI6VqtsEhzYnR1oisA55HMxto/YzOhoB9AD6PG+RKaVPr5MYa8M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739270279; c=relaxed/simple;
-	bh=228N+TTbA+zIcna5fmkdxbamDR8vWO3y3IGeKqwyG28=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qjxHZ/r1B+E0f5nk3mVkG+B8ZkK49IcH2D9HEjqpbS8ydI8TcLplUXh5koiQ5YUrTb/NvSD6IF0PUyi2Tb5xuicA39J86CwBJjv81fULLFcWdQwOc2zfC5uUsHTRLTVH4DeAhPDgXpdTbOi6XXBqFN8dCSEALlGuotqlrQAfwzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bMVHxUbM; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7931F472E;
+	Tue, 11 Feb 2025 10:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739270282; cv=fail; b=D/IsFsLgEZ3V9w2kEMpgK7fmIVIUIYJcQXRpwQJMg4Dxl3jqs9y4a1xR3PQjtzaP55XYeJxCnDt6sjngZdK9bu4kIOz0fIw5SLIueIaeagtL4u/SLDVXw0G1AT6g4DbQMKAz8p6EBdOfzCzbmC/XDB8Bfkk4AzncnG0MaoWkkog=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739270282; c=relaxed/simple;
+	bh=JMKUGND2G9+aIWKhij1ebLrQNVm6bI9EPlqQp6l85ck=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SD1Ex3+lhZCir8pNmOiVulFgVQSXLU3trQdh1W2R9G5Qkl9p9Gu3XoyKwGXdRQCRgI0Fr9HZh0Dp7GLv2QYrW0v19TH/qDojS426mc8gsQcwUSDQo/Xow1J8U1sONvCwrTbbsiJYGgMv3SpC8kbodc20o4LFCYhvMYMI4kO9UGE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=e+TWzU1F; arc=fail smtp.client-ip=40.107.244.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bMVHxUbM"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-439473da55aso11583115e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 02:37:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739270276; x=1739875076; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=uPih6RmxhXX44zZpcRb42vvRRosF1lmIcSHcvUi6Vl8=;
-        b=bMVHxUbMd26KWMMabAJZ3JLLo3vFTbv8klnk8j9upQITiBprcqGJxvLiJ1yT5sZiZw
-         cc2LwDh5ztMVygEFIXmtGbYcJm+HnNCeHAKY2IZSuKvHcC/8TH25YYek3yKeRv1Y5mhF
-         mf4Wgt1Gtpz5Hf7eC/Gzr5NobxcfUn5zfFVFeotFj2pCioKfGsKkLcrz29bJ79Zsu7ly
-         uKRI6wj9jrHGz66j6KGq5MCMTLdxMsKC5S3GpTGY/CDnR5dsQKGep2cwzANPJ92ub3fp
-         9wpfzaIWheDnWYVOPd3Afxr9AAnfuBpCqRIn/eXPfmxG+fyObooL07WLDjaFum3UXc9n
-         T3bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739270276; x=1739875076;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uPih6RmxhXX44zZpcRb42vvRRosF1lmIcSHcvUi6Vl8=;
-        b=CsKySF7AlfdwhvEU4Fy8LmJAEOVPnWdRz8nb1b1MFaPqOFg7iI5AXPeafgud3W/+gj
-         64CgXqpbSceT3KVsj8HYN5ydeEcVn5IFYctB+EOQo9NvbcgjQPR4/sVOyqxI8QDS2kK6
-         YyNdrDeWDjsKjSl15GJtH5ru4k4mPYPpjpVjDDKk8v95NFj40ztq9FfWyhKZCg9Y0RiV
-         ngapcigV/TRiV2zxHSBgsx9w1RG3juYQ30acYXzcNGMbbVkCqKOmaGeGnEEE2pOdoTgR
-         2wuKJNqgce3cOGJcaaUUB2VcHoj/gE92Xzdfuzc1MhLCzfKW8NZ5LiDhh+PWhQsHCQn8
-         sIoA==
-X-Forwarded-Encrypted: i=1; AJvYcCWuGd4F/7ErRlnaUHQFkUwl45mGGnAHt0raVtt5UxRNqVZgP//bhASPk027KC8/azkWUQVDZJQtpRH0aUk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAiLz274U9mY2d4iHMlpZSLsZMBpUne1TeM0qGib6NWtUwXjks
-	+8URItMREXgz0RChtLxSC+n/VdgBZRgwcWtHZ+skdhFuDER3lBkT
-X-Gm-Gg: ASbGncsc0GBE1pdGVg9qffS+PqUginFq96CZk9Y5PfcjStjsp6OqXLcqTRHEm7Cy9hz
-	eUqe/t6rC012yI5PuXzfnxTZsm2mMZXimK3dGnHwkBsAuBKk6S5fCY0YLacf3z6A67Y5j2l9arM
-	Jd6VXSrixNoFV/hzcf8v2m32MFaQZd63P6oxaEQ/nMpwBTPQReU+BIO2oqjiiInzlRvOh5GpbqY
-	DrkHP2qWxDe7k0qVMwo4A6QdGQssxfFnMtiI9fmexHlqRVZHbsDvuZ/YmpHG2TpEzH7+BxyWknL
-	+dc/JCxaqC4q7g==
-X-Google-Smtp-Source: AGHT+IHUAG1gQUToW8Ldg3EJ+gI5dVHjjkhF63AvJE2KskYLs9RhNP26TOiIKV8k+wycWw6OVBDjoA==
-X-Received: by 2002:a05:600c:a45:b0:434:a923:9310 with SMTP id 5b1f17b1804b1-439249913a5mr150762675e9.15.1739270275823;
-        Tue, 11 Feb 2025 02:37:55 -0800 (PST)
-Received: from fedora ([94.73.37.161])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc9ce31e8sm11826410f8f.5.2025.02.11.02.37.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 02:37:55 -0800 (PST)
-Date: Tue, 11 Feb 2025 11:37:53 +0100
-From: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
-To: Louis Chauvet <louis.chauvet@bootlin.com>
-Cc: hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/13] drm/vkms: Extract vkms_connector header
-Message-ID: <Z6sogfnUBv0dVln3@fedora>
-References: <20250129110059.12199-1-jose.exposito89@gmail.com>
- <20250129110059.12199-2-jose.exposito89@gmail.com>
- <Z5uDGhcvNIGDwEr-@louis-chauvet-laptop>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="e+TWzU1F"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vTO03n5MOskUwHVaNyQr+f687oErZ8dnjQWIQK3PU7kLJeyqLMhFYMzhS8liP3aTU5yvdjcDv/Q0/1GXkMYq+ucUDxXi6x4sqweiebSMze1CiJZg9+zGUUlU1E0IjEKcm1QuwaPnzZf4eVoMN7LWnjS/tjL502iGHEMTy2IR8HIte2+7yvWS3hI0TNKU3kg93N9pXNwvH/xXee91xcLVw13RMoTnwmwvUmeJLkLcmdRhx0XYWmsdKF3c3GEaermFAJjGV79jR+c9v/k/er+kmzQLt/wRrkXHnWwbJrF8ZW4j+1YcwXlbEOyBKO7aydH1SXag/5kUNmNjSU3xTB4gpw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MkCzXgmSOByJKTfbgb4kkpX+TXMqWPEGhnFIJU/Ma4g=;
+ b=kpTp3sa+t2+pQVDwlKj99Z7K/G2mZ9SHCcHVeZ2z8PHNfnEKzhGBlnwhapnY+ZiS4lT9WinhBvcY4eY2/sujxp9PBVz30LRBC5FSgKMWDY3lS+lPUx2snzRYQJbjjtHBKvSz5L2BEAisnNUBkwspzQbAuS2BANtLmySUfp5vtd+Ug1z4RPghYJ5l7RNxChz9u9F2vJ47DdWiCPEfkzxC0cMNglPp9+ri0lAvcCtGRN1Xgz+UlfK0Ii2mZj2NR/ff/0fJaMB2YcOoGomY2H87XWOGuzjnQwYtWXskSCZSoNgOR2yXDsRtCmg4aeWf4lrVPWbiIGd2PyBSQoEfQ9vTOA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MkCzXgmSOByJKTfbgb4kkpX+TXMqWPEGhnFIJU/Ma4g=;
+ b=e+TWzU1FeySl2FvCkbGBPMmVF8/apG5f+BX42o4k6yo77ibnA2pcgRfg7n4aBseyw9qlJnJv684EGais1YzSYoTqATLsoIFEoVgTWRL8wyDXhRK9/esRFDVgdF9y2te5STyZf7ynFrNDDkwENDo8nhjGXUOnc/JiINY4US/GtnQym5El6FU3Xpb+nh9b+6e58oSvHgVRydaBeuUYtEqQvl/yCMkr3QkN4Jd3yArdwo7QJj7XR08g2lq7kmpcB5R03jg9c0FUjzpqM1Htiq8eqiquA2T78YMU7TUfdePtOBZu6M2w/E6HZBQHfZWEzb59dDVWLiXa5FB0poHb3UHYTg==
+Received: from SA0PR11CA0023.namprd11.prod.outlook.com (2603:10b6:806:d3::28)
+ by SN7PR12MB7936.namprd12.prod.outlook.com (2603:10b6:806:347::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Tue, 11 Feb
+ 2025 10:37:57 +0000
+Received: from SA2PEPF00001507.namprd04.prod.outlook.com
+ (2603:10b6:806:d3:cafe::38) by SA0PR11CA0023.outlook.office365.com
+ (2603:10b6:806:d3::28) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.31 via Frontend Transport; Tue,
+ 11 Feb 2025 10:37:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SA2PEPF00001507.mail.protection.outlook.com (10.167.242.39) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8445.10 via Frontend Transport; Tue, 11 Feb 2025 10:37:57 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 11 Feb
+ 2025 02:37:46 -0800
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 11 Feb
+ 2025 02:37:45 -0800
+Received: from sumitg-l4t.nvidia.com (10.127.8.10) by mail.nvidia.com
+ (10.129.68.9) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Tue, 11 Feb 2025 02:37:40 -0800
+From: Sumit Gupta <sumitg@nvidia.com>
+To: <rafael@kernel.org>, <viresh.kumar@linaro.org>, <lenb@kernel.org>,
+	<robert.moore@intel.com>, <corbet@lwn.net>, <linux-pm@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<acpica-devel@lists.linux.dev>, <linux-kernel@vger.kernel.org>
+CC: <linux-tegra@vger.kernel.org>, <treding@nvidia.com>,
+	<jonathanh@nvidia.com>, <sashal@nvidia.com>, <vsethi@nvidia.com>,
+	<ksitaraman@nvidia.com>, <sanjayc@nvidia.com>, <bbasu@nvidia.com>,
+	<sumitg@nvidia.com>
+Subject: [Patch 0/5] Support Autonomous Selection mode in cppc_cpufreq
+Date: Tue, 11 Feb 2025 16:07:32 +0530
+Message-ID: <20250211103737.447704-1-sumitg@nvidia.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+X-NVConfidentiality: public
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z5uDGhcvNIGDwEr-@louis-chauvet-laptop>
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF00001507:EE_|SN7PR12MB7936:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1e113579-c2fe-45d7-27e7-08dd4a882686
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|7416014|1800799024|82310400026|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?7EGtXIzDU9gwXaKy5jtRP/tb+JOVjRmz6swR/0PORREe7o2GZUlbShJibDf3?=
+ =?us-ascii?Q?fjPU5ZcMpDBI1LoPDIllsjAKJR+26YnV+V7mvUUb6JQDPQM9UbIhVhEQ26sM?=
+ =?us-ascii?Q?6wY9azsLJgefdEZ4QeShD1wuYlc2SHIwH3jzJdbBbJ05LTBaMlD68xmCkPHP?=
+ =?us-ascii?Q?NFFVoeKpN1uQHuD/0Obf5KvfnG9EakntFCiCPJZW5gQ47ENBWHjT9UoPBmYG?=
+ =?us-ascii?Q?Ot8xjNgItFGpPWFYLgneGcgELkMFuL+juiH8bLfYZIInBcrc1OOy4Ibe3WU8?=
+ =?us-ascii?Q?LNrarW+LJa6CjqrUjFW3RFey+3PNRI1CtQi87gtgxKd9yyaDlRzO3T/MY8Fd?=
+ =?us-ascii?Q?3UGsqVn2O02lvz0dX++iEmDQnKSebEPsHbwm9o7aebvP9n9TJUzDMdE6RHdA?=
+ =?us-ascii?Q?/U6M+KZCM0xNQn1u/nR7zhpf+I0gsikJee1jRqxWtyokW6Es1iGV7CTGjeNW?=
+ =?us-ascii?Q?SnGhOUDDjuC8Wap/AHWJiKREVzdMALTM0PYfKI+OPyQQxAkb9Ihdw33Mj5As?=
+ =?us-ascii?Q?Y9evGlOyK3l92cLBcHo3ZczGbvx285YzWlOehMkILz9ig8WC/hAeYMqXVaYF?=
+ =?us-ascii?Q?Lw8SgLeyz1T2s9JGKtX5qKrMC//zgm2zk8J0cVSVbD9tqC1PAoVgHFk8RxkD?=
+ =?us-ascii?Q?6oj7iomIE+Jas8nj1ZZnvwLGPZkqr64q6xlJJURRF4EmR6FWvAKwcfbR1W/q?=
+ =?us-ascii?Q?aoZcXRojeob9Zz9OuGDqxneIEf3RIA3Pr34pAEhXt1YL+omaWz6uRvNMkfHo?=
+ =?us-ascii?Q?9QueOL7dsSLvNzAzBZ4M0/BHxcMhlTXpicq4tTpsSC2qP05+Dq5TGNYsDhfA?=
+ =?us-ascii?Q?YjuDonw+2ElDZGEB/pB1GbrBuh+fYL8MEc8VoxHlJKM1KV3KRS8nPbMJ4rLx?=
+ =?us-ascii?Q?+htrEIT/Lj9h/MyPUheMuw1zSQ7bg+wyPe2iZz/Cv1Yw2kRiJ5GvWu3QHAX2?=
+ =?us-ascii?Q?3kydaxkChRCjesHt512YV9zMRk8GtVfkPM7i1riLApSSTODi+0PLBIPPXnKc?=
+ =?us-ascii?Q?uzFSztCI3UiGKB/66v8kmHs/DVFq9ksx0psDdtuK7BQvLW1jVrSFS46Au4/R?=
+ =?us-ascii?Q?5ojUU/bo0uu1KZ3GqYFiUVn9hMq5aiLQdpywMv75ObmPNi5k1LAbr5/AqVhs?=
+ =?us-ascii?Q?XfLWqfocFXBqD8KJB3KhImwtabKX5I2d0KTzFJgJsmQH0ywvw4yn2aXKwEc0?=
+ =?us-ascii?Q?rs3e0S7/AiUNk2fnRLeDnfYhuwD+5Ycb4lyod9Ah5D0+BYG1c7XWdLUNnaU5?=
+ =?us-ascii?Q?WxCPxAOgWAksGWCCxhN9vWNc42a8hHMLXFFm7W6W9WRcf6JWsrTYUa1+r8IL?=
+ =?us-ascii?Q?Px8JLjHvCrbU+l/EZ3tZNxx0zI8uU4bdr7m2DGdi2q5iOEeIr//GhDcidl9M?=
+ =?us-ascii?Q?0/2gaXXZo3gExIuIMFdtuk+P59umnhZfyiGgYUdrHMdiJFstN59+9V1azLP+?=
+ =?us-ascii?Q?4+o4/JIjTBjX026XIb7Hrvh8LNHWkA73rSzjkvIAXs29OOZPwmQrnYXxNbSj?=
+ =?us-ascii?Q?g+C+je3O/SwVFpYbL8INy4MBzAYjACK8JUO8?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(376014)(7416014)(1800799024)(82310400026)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 10:37:57.7249
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e113579-c2fe-45d7-27e7-08dd4a882686
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF00001507.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7936
 
-Hi Louis,
+This patchset supports the Autonomous Performance Level Selection mode
+in the cppc_cpufreq driver. The feature is part of the existing CPPC
+specification and already present in Intel and AMD specific pstate
+cpufreq drivers. The patchset adds the support in generic acpi cppc
+cpufreq driver.
 
-First of all, thanks a lot for the review.
+It adds a new 'cppc_cpufreq_epp' instance of the 'cppc_cpufreq' driver
+for supporting the Autonomous Performance Level Selection and Energy
+Performance Preference (EPP).
+Autonomous selection will get enabled during boot if 'cppc_auto_sel'
+boot argument is passed or the 'Autonomous Selection Enable' register
+is already set before kernel boot. When enabled, the hardware is
+allowed to autonomously select the CPU frequency within the min and
+max perf boundaries using the Engergy Performance Preference hints.
+The EPP values range from '0x0'(performance preference) to '0xFF'
+(energy efficiency preference).
 
-I applied all changes you suggested and, especially thanks to the
-iterators you suggested, the code is way cleaner and simpler now.
+It also exposes the acpi_cppc sysfs nodes to update the epp, auto_sel
+and {min|max_perf} registers for changing the hints to hardware for
+Autonomous selection.
 
-I'll send v2 in a bit, but first I'll comment on some of your
-reviews to clarify some porints:
+In a followup patch, plan to add support to dynamically switch the
+cpufreq driver instance from 'cppc_cpufreq_epp' to 'cppc_cpufreq' and
+vice-versa without reboot.
 
-On Thu, Jan 30, 2025 at 02:48:10PM +0100, Louis Chauvet wrote:
-> On 29/01/25 - 12:00, José Expósito wrote:
-> > Up until now, the logic to manage connectors was in vkms_output.c.
-> > 
-> > Since more options will be added to connectors in the future, extract
-> > the code to its own file.
-> > 
-> > Refactor, no functional changes.
-> > 
-> > Signed-off-by: José Expósito <jose.exposito89@gmail.com>
-> 
-> Non blocking issue: Do you think it is possible to split this in two 
-> different commits: one to create vkms_connector.h/c and one to create 
-> struct vkms_connector?
+The patches are divided into below groups:
+- Patch [1-2]: Improvements. Can be applied independently.
+- Patch [3-4]: sysfs store nodes for Auto mode. Depend on Patch [1-2].
+- Patch [5]: Support for 'cppc_cpufreq_epp'. Uses a macro from [3].
 
-Done, I split this patch in 2 in v2.
+Sumit Gupta (5):
+  ACPI: CPPC: add read perf ctrls api and rename few existing
+  ACPI: CPPC: expand macro to create store acpi_cppc sysfs node
+  ACPI: CPPC: support updating epp, auto_sel and {min|max_perf} from
+    sysfs
+  Documentation: ACPI: add autonomous mode ctrls info in cppc_sysfs.txt
+  cpufreq: CPPC: Add cppc_cpufreq_epp instance for Autonomous mode
 
-> 
-> Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
-> 
-> [...]
+ Documentation/admin-guide/acpi/cppc_sysfs.rst |  28 ++
+ .../admin-guide/kernel-parameters.txt         |  11 +
+ drivers/acpi/cppc_acpi.c                      | 311 ++++++++++++++++--
+ drivers/cpufreq/cppc_cpufreq.c                | 260 ++++++++++++++-
+ include/acpi/cppc_acpi.h                      |  19 +-
+ 5 files changed, 572 insertions(+), 57 deletions(-)
+
+-- 
+2.25.1
+
