@@ -1,175 +1,124 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FBD26A0CD;
-	Tue, 11 Feb 2025 22:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3A1272917
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 22:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739313528; cv=none; b=a0F3J/lD1bnBUFX69opfMSr99PBDnHVAe07mTYh3o09HGRlWY/+TnNEYKuDXEwskBb2IwbE98hejfhMBv9hYUnVJuf8lnumKNiH5zGJOPfCfBeOjagEeKEJoTJrG6qalYfjBLGZIxZoSC+Vro9baQGpytbexSgDa9ijAaWSOChQ=
+	t=1739313559; cv=none; b=FkanZ5CGGOxBymY7xSlR/LT0TRO5rsaM5sUsLCTnAuga3vF4sy3k91H7S+73fuYrNUF26GUiY8EoDjmiUrF2H+NmTttQONRgiY45dx/idcnlWXjjs6jhOdfbCFre1SuBhbSb0fev66RJG/sfjERk+O3KnvCO/THuAO9kJDmdbHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739313528; c=relaxed/simple;
-	bh=rB7BxSHW6EtSoabTXOHtfnbpaHJ0cVwUdAN/POuDev0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XYRVZd8kp6XIYi++l56sC53zebUU5EkYcr1eV6o65THYGVrwlFp3ggEMJhytr8uSbu1lcpI50zQPtFC0LcNKXlKnj/i2DOAkGtiLLEyDl8YXKoqd98hfEU/RKQLMfioTPtEas9tL44SE22Mt5h1WMAvKnv/TNF+hv/fyMAf4pR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EnLAzDRc; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739313559; c=relaxed/simple;
+	bh=+rxztfAaepIvxroPWZrjETMbmBSAZmiGeMmEEmwWnq0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GTm2vitOoas3omtVtFdl4EeNg8v8Mt0hy7gPh7ehtABTkT00hHPwQbqoQIpWtoP+6tEq4tNydrUOIa43yJMP2kUJ7OJrXdwThjDDHnmdiy+7uInGBmFk9pQqD+WI167TKTZ1Qp1s+10vopIW91vd+qV0+6aFx9YK69IxaMEowLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=oZcJ7Pk+; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EnLAzDRc"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-46fa734a0b8so54883131cf.1;
-        Tue, 11 Feb 2025 14:38:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739313526; x=1739918326; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YmBWEKaqUFBzqHGnnve5ouXXEJaAw0Livsmfx5tApoU=;
-        b=EnLAzDRcdIxrLVXkxOphkNCvJNc3RSIqgPL6ec5UFUHTECZE2h+ctWDjSNxlMTka5F
-         NwxhUImVY83+lm0VZgxyQ/rLty7OVUhpxBfvVL2bhGC3wenzRl6Nm0ts+3BZTNSSre2M
-         y9du3GFZNd3oniIfRxaBZcyLkZfeWPO7+yXbZqG8mebmJbbi/hK1vEXVhArBllsNZUUT
-         8Z0fhvMVKkul85L/2xFK4zZbIq7nRK8ZT9dtZCj47URAJNHQzTrw7mEHM53orvD5AG+l
-         v2zYytdihxPUj0XJ6bXW+WOx849MpNaSIM46eebAD7kyfg74881FjSKvrGPzKXa44GLU
-         PD8A==
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="oZcJ7Pk+"
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com [209.85.208.71])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id A59DB3FE77
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 22:39:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1739313547;
+	bh=gkMw6duxxbJfB77Dmk59/srgHXi1HXapVPCmFg+N4GY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=oZcJ7Pk+ZMqegGRCPOfrL9c/VbO3dNr/A0n2rBIZUjHg0Ay7GeFpx5d6Vcst/5ikj
+	 4dlLK70BayjYA7WsTmN6aJ1Tf7Z5CXqspc4QbcS4yYrvKDuLWB8CLoXZnI383QYbGM
+	 pmOVg6EQW7/Qr5wStDSVAwM2gvhnd1TBid8cphlUIXqAKmp8jC/2d9wIYSsYtFC8j9
+	 S/MZWZypZsSDYjkwMo5w0JQP3iL9ZmeLhWpp55ZrRVYYD6XnmBsSbn8xOH1ZqPDdjy
+	 Am98zHuD/AXIv3CX7WKAB4+nB5+eKDgVw05U+949+TlnQOaKeRKDPRlHt/YSR/s0pu
+	 z9dpH1c2qLtUA==
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5da14484978so6651101a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 14:39:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739313526; x=1739918326;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739313547; x=1739918347;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YmBWEKaqUFBzqHGnnve5ouXXEJaAw0Livsmfx5tApoU=;
-        b=Wnh0TTQZ6sm+Pd0flz8gjQKH090IVPimIjp9H1Zxl4Hs2RwAsFEjXX1fGKFffpW6BN
-         YMjU15E+JH+cfrU2GG5AdBdBvfkbdEZ4n33BNWgYuVMGD/uYWPEFrZQJYNrKkMIWjt4D
-         g7k3Z8YN+KOXMK7wWQQvMXLXKhUPBrmwx8CT95GcmwQNchhZPwYGiEZltwGgL5dGi8cG
-         egKH+eq9qv9+j/f778835QCxE4856Lp9By8zU32bRagHTuUbGbapJjRqlLaeFu4GR7AV
-         cG1KgtRpnOldRYowm8mxRFpPfKIA3FvOfmdh71XkdFRtLQUeiZCYLjONCV6ZXua9Q1Tf
-         bD3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWP9JzD88YRVI1IrXDYfYnP/sGmByoWBk7UJRBrxuxWThqw79rjeS/0PAfyTOMXyQUlJB6OLw6ZCGtxQ2fkzJ6t@vger.kernel.org, AJvYcCXRFk9yCg3S6og4oeUD6CFMRrINctT/4wiKszkfPMluXZ5q96j8QL9DGvmEuBbJRxPMvocGfkBItvrc7Qo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAi/H8h9SWMiAev9T8dLu1J1wQ0NPqJCcmk3hC4TFToXHnNiMW
-	eKgiCCzSzwohMVHnT0FpYwTTKl0YtQ6TIEkyRAmw0/jt1wBR2ZLk
-X-Gm-Gg: ASbGncsjIZQZmDRAjKzZ/wEbOGq2cAm8BEMJWVKHs6EhGkl5gwvFCvrvK0d+bI1qHQ5
-	CKC6x/tyPulpeioYxk9e2HdHpGGUp8Up0GS5IU6HDe5bJNM6T/px/C5PDv9b/Gzk7NsTQRZICMZ
-	7gkQwQLuKVnt3bKgiAwgEBa4+4Y3qQuOzgVAvUMVBF32z3ldqO2sz/B37Jz4Cq3P8lfKzKLVFlD
-	TQ0gXTJyodFtGSlwaS57WyQ6yf24hl7OetONdmu6xem/e5XcpTa2tre98el/iB+MVrMEz91/W6T
-	Y69fl4eAgNrmYUrerADlXjFce62lLT9ue+d3hh82KJopibUwW/Z6+p+5eGTComO5rYXzfaOEq3y
-	lUmdCJw==
-X-Google-Smtp-Source: AGHT+IEO9AyXzekNhsd8EdtjWApnNbjJdg5zmAFdkNj4BVJjZli/lTN21xPpUXmaP+8WJPWp5aYc3Q==
-X-Received: by 2002:a05:622a:5c7:b0:467:8217:aae3 with SMTP id d75a77b69052e-471b070d34emr8123011cf.47.1739313526095;
-        Tue, 11 Feb 2025 14:38:46 -0800 (PST)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e44e550783sm51208976d6.86.2025.02.11.14.38.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Feb 2025 14:38:45 -0800 (PST)
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 24AC1120006A;
-	Tue, 11 Feb 2025 17:38:45 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Tue, 11 Feb 2025 17:38:45 -0500
-X-ME-Sender: <xms:ddGrZ-7nz1pK_q1szOpi7W3KVQfGB-XsCxtvYKKHSFCUYYnRHFOyAQ>
-    <xme:ddGrZ36wQ_AtIwyIEnrzPz9MTqCxGb1HYPIQBXW-9CQ0-HeLOyWL3Jr0oYh4_Wk8-
-    KKepFtQkcS5Nh2ELg>
-X-ME-Received: <xmr:ddGrZ9ex6wzy9h4GEuXb4Ji6kfd6in0yO8ApFAYVyRCsSp9VB3QMJ5oYwzg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegvddvfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
-    drtghomheqnecuggftrfgrthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleel
-    ieevtdeguefhgeeuveeiudffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghl
-    ihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepgh
-    hmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeduiedpmhho
-    uggvpehsmhhtphhouhhtpdhrtghpthhtohepthgrmhhirhgusehgmhgrihhlrdgtohhmpd
-    hrtghpthhtohepuggrvhhiughgohifsehgohhoghhlvgdrtghomhdprhgtphhtthhopehp
-    vghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehmihhnghhosehrvg
-    guhhgrthdrtghomhdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtoheplhhonhhgmhgrnhesrhgvughhrghtrdgtohhmpdhrtghpthhtoheprghkphhmse
-    hlihhnuhigqdhfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehshhhurghhsehk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehnrghthhgrnheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:ddGrZ7JOOesaVFaui5eNoxq2f3auchwWtsWyE8m66QHx71LpWfYXuQ>
-    <xmx:ddGrZyIydsiH7cRzEnKiS0iDVYY7mNhrlOBMcYSFPj6QZ8Nb625riA>
-    <xmx:ddGrZ8yAnL9Y1Zxsi6NCcrSk0iHRiQjGbpNH7bQ-TWVsFvnmqdzh7w>
-    <xmx:ddGrZ2KwB0gJlijq0EF6JOpuOYid2afthp6lzK_V_SKL7O9MEprt6w>
-    <xmx:ddGrZ5byxjJ6W8bf1lypP9hPFBx7z2Cn6VnXABb2jNt_YIezVqI3F1g5>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 11 Feb 2025 17:38:44 -0500 (EST)
-Date: Tue, 11 Feb 2025 14:37:21 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: David Gow <davidgow@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH] ww_mutex: convert self-test to KUnit
-Message-ID: <Z6vRIZk7DsSNooFZ@boqun-archlinux>
-References: <20250210-ww_mutex-kunit-convert-v1-1-972f0201f71e@gmail.com>
+        bh=gkMw6duxxbJfB77Dmk59/srgHXi1HXapVPCmFg+N4GY=;
+        b=P6C/vNqj/dAg8SWZkbyYunjIXC+xu4XTemW/YXc9pH3N2pBoMb+f3uOuzMDTiOIVj7
+         s1dL4kspm0nUc/FhGbP5NiqzHqbSqollcPa8bfBr21g/svJ7Dnf2oBrQVquocKxf1MhG
+         CRM4u8CDXTwNiy8jGKWF5U2gCKSJnLJNEy8IGQ7xO1dKC17mGcqTint9BfhtkdI8PzVq
+         Rb9e1xXIHSZBhnmnoBDce/rN2J42AIT9F9u3RpaNigY7BZY/Jhfxg1cOIs2p09oW03n8
+         MQLPM2pwhl4h47ghH8Z4wDcDhQDFjkO2TgurIr4pOzeueKmJ4QjWfS4cGdd62Y8YTLEk
+         Q3wg==
+X-Forwarded-Encrypted: i=1; AJvYcCWdQ+vL6D+zsRjrC2bwDqR7z6qQBtiwsuv62qsmZkAFU6g2CIoNXtYn4EdRVEmw/aalqMChgtSx70oa+C4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVyqbK3I0vRZ0GX8QYRGsanIpnEEPmfR9ct4UJKawA/NtghhoK
+	4Ylciz+67JHWWR94wV0G6hIMDDvaMhlTPG5/E5hp/Mwau4kGxS1D2u5DKISdFnDu5W2fakeEI6r
+	Iw3ijsrnfmtD6jbyANpYF73NKyP9ePH5ZnXkx6BKHHDYggzhcQMju3kF8QWGujA/t0cgv61k466
+	TEB/1PHbystvnMxtaeYhniu2oNEQkhTz7WluwqxmESSEcWcklSj5yq
+X-Gm-Gg: ASbGncvD4Y7CMyUMx/6j+efztRSNmCjrXDHweZva7II5J4oCAbSn4WA1i9qgoL8uL7g
+	JlLwVf/BZ3S0ootgvw8UA8a34DW+eAQzda0qXfgoWX/T0AcM+qDUZnyHfa3Lr
+X-Received: by 2002:a05:6402:51d2:b0:5de:5025:2bd9 with SMTP id 4fb4d7f45d1cf-5deadd936f0mr915533a12.11.1739313547020;
+        Tue, 11 Feb 2025 14:39:07 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEeXeNOatBL8lSa8MFqwcK0SmN6a59+iekzjKdNDyEiFXRd165z7bm7gHTT7X9urmoNWySmmNrC1TNzRw3pWYM=
+X-Received: by 2002:a05:6402:51d2:b0:5de:5025:2bd9 with SMTP id
+ 4fb4d7f45d1cf-5deadd936f0mr915515a12.11.1739313546627; Tue, 11 Feb 2025
+ 14:39:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250210-ww_mutex-kunit-convert-v1-1-972f0201f71e@gmail.com>
+References: <20250210210109.3673582-1-alex.williamson@redhat.com>
+ <20250210220010.GM32480@redhat.com> <20250211100502.GA9174@redhat.com>
+In-Reply-To: <20250211100502.GA9174@redhat.com>
+From: Mitchell Augustin <mitchell.augustin@canonical.com>
+Date: Tue, 11 Feb 2025 16:38:55 -0600
+X-Gm-Features: AWEUYZlnKNzZTDbCsc8502Eq31gjprPZsr33NdR0NJiES3nE_UoqvPy1bRypWdw
+Message-ID: <CAHTA-uZ5dxh81D090YFVWbeJuko-+ACPbNFVQ8_++j_8sBjaAg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Fix BUILD_BUG_ON usage for old gcc
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>, bhelgaas@google.com, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ilpo.jarvinen@linux.intel.com, David Laight <david.laight.linux@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Tamir,
+On Ubuntu's (modern) GCC 13.3.0-6ubuntu2~24.04, both proposed options
+also build as expected for me when howmany is set correctly, and fail
+as expected when I force howmany =3D 7.
 
-On Mon, Feb 10, 2025 at 10:59:12AM -0500, Tamir Duberstein wrote:
-> Convert this unit test to a KUnit test.
-> 
+Tested-by: Mitchell Augustin <mitchell.augustin@canonical.com>
 
-I would like to know the pros and cons between kunit tests and
-kselftests, maybe someone Cced can answer that? It'll be good to put
-these in the commit log as well.
+On Tue, Feb 11, 2025 at 4:05=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
+>
+> On 02/10, Oleg Nesterov wrote:
+> >
+> > On 02/10, Alex Williamson wrote:
+> > >
+> > > @@ -345,7 +345,8 @@ static void pci_read_bases(struct pci_dev *dev, u=
+nsigned int howmany, int rom)
+> > >     unsigned int pos, reg;
+> > >     u16 orig_cmd;
+> > >
+> > > -   BUILD_BUG_ON(howmany > PCI_STD_NUM_BARS);
+> > > +   BUILD_BUG_ON(__builtin_constant_p(howmany) &&
+> > > +                howmany > PCI_STD_NUM_BARS);
+> >
+> > Thanks!
+> >
+> > Tested-by: Oleg Nesterov <oleg@redhat.com>
+>
+> Just in case... I agree with David, statically_true() looks a bit
+> better and
+>
+>         BUILD_BUG_ON(statically_true(howmany > PCI_STD_NUM_BARS));
+>
+> also works for me, so if you decide to update this patch feel free
+> to keep my Tested-by.
+>
+> Oleg.
+>
 
-Regards,
-Boqun
 
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
-> I tested this using:
-> $ tools/testing/kunit/kunit.py run --arch arm64 --make_options LLVM=1 ww_mutex
-> 
-> On success:
-> ; [12:48:16] ================== ww_mutex (5 subtests) ===================
-> ; [12:48:16] ======================= test_mutex  ========================
-> ; [12:48:16] [PASSED] flags=0
-> ; [12:48:16] [PASSED] flags=1
-> ; [12:48:16] [PASSED] flags=2
-> ; [12:48:16] [PASSED] flags=3
-> ; [12:48:16] [PASSED] flags=4
-> ; [12:48:17] [PASSED] flags=5
-> ; [12:48:17] [PASSED] flags=6
-> ; [12:48:17] [PASSED] flags=7
-> ; [12:48:17] =================== [PASSED] test_mutex ====================
-> ; [12:48:17] ========================= test_aa  =========================
-> ; [12:48:17] [PASSED] lock
-> ; [12:48:17] [PASSED] trylock
-> ; [12:48:17] ===================== [PASSED] test_aa =====================
-> ; [12:48:17] ======================== test_abba  ========================
-> ; [12:48:17] [PASSED] trylock=0,resolve=0
-> ; [12:48:17] [PASSED] trylock=1,resolve=1
-> ; [12:48:17] [PASSED] trylock=0,resolve=0
-> ; [12:48:17] [PASSED] trylock=1,resolve=1
-> ; [12:48:17] ==================== [PASSED] test_abba ====================
-> ; [12:48:17] ======================= test_cycle  ========================
-> ; [12:48:17] [PASSED] nthreads=2
-> ; [12:48:17] =================== [PASSED] test_cycle ====================
-> ; [12:48:21] ========================= stress  ==========================
-> ; [12:48:21] [PASSED] nlocks=16,nthreads_per_cpu=2,flags=1
-> ; [12:48:23] [PASSED] nlocks=16,nthreads_per_cpu=2,flags=2
-> ; [12:48:23] [PASSED] nlocks=2046,nthreads_per_cpu=3,flags=7
-> ; [12:48:23] ===================== [PASSED] stress ======================
-> ; [12:48:23] ==================== [PASSED] ww_mutex =====================
-> ; [12:48:23] ============================================================
-> ; [12:48:23] Testing complete. Ran 18 tests: passed: 18
-> 
-> On failure:
-> ---
-[...]
+--=20
+Mitchell Augustin
+Software Engineer - Ubuntu Partner Engineering
