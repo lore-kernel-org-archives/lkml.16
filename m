@@ -1,40 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3340126563F;
-	Tue, 11 Feb 2025 21:02:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848802641E8;
+	Tue, 11 Feb 2025 21:02:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739307757; cv=none; b=sHmva/tH/xVZnAAlTL8PfT2fKm1grSE0eNAEbRVE6cbxT2/yzZS5RgDdrgd+0G22anMMe6NbIS39srzA1zqtXdok040DPOyp/O8uI5tlja01fwqUfEu8gIYj49KuMVskofMKOO9KHgjCZhqE78vMmS0WffJIXxBHcrD+75IEbjo=
+	t=1739307776; cv=none; b=fCb2T2Uh7nFtG+j+1p+TSLTBlF6YjZRiSgtCHEhnix8a18zfZK8qiJNvmV1udoD0TW1QKLSQO3rxIY7jEka6e/nnAZ/xuHSVWlxzheEdEyOUGLYU+ZLjzH3nf3kpOKcsbhS309vWsFROwRcfWZdfFM8Rxtas39CFIgosp4LNMY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739307757; c=relaxed/simple;
-	bh=/QztJwiK+yK+pqByLvZV4c6ax5WGvDEiytfyf5ixKJk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=HL6bNbA4OFyctZCO4uJsn610zw6ZnvJXDrX38317uxg6GhBSZZ2P4QVgzJEGKvfLECedPE+gSr3AadRGcmUQrqR8Ged4AtljCrv0lNTNCJ6720oOBM0wZREIq9eyCxaL0t0FdqJFPHEUeDgIk5SNNJz8amR6eCSwcGJb5VVvH+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nr1nbdha; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739307776; c=relaxed/simple;
+	bh=mPDIGAOPfFORI7LS1qh2u5u7JxUaNOD3vSVK0HFG47E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GH3kIVVArVRcY6T0ZjTZH8ZeQfEXZ/mzUXZcgRSKYU3pw9NQ7uYQqKdyuCPZHkt/291/AuGuj1mszI44/csV+Cehiup5V7q9NgrJ0q48fv/YcxHWKPDZ833DQ/ghLkXiAWvaPqFdzIPQOi0IVlbueMQmHKjjEJvGXobFPuwll08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DXFA0YVr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nr1nbdha"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5E8FC4CEDD;
-	Tue, 11 Feb 2025 21:02:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DXFA0YVr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 260A5C4CEDD;
+	Tue, 11 Feb 2025 21:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739307757;
-	bh=/QztJwiK+yK+pqByLvZV4c6ax5WGvDEiytfyf5ixKJk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Nr1nbdhaaE4ygZdMUNvwf9SjBcZYtEivnfWwTpLiVWLY6WuH+frMKoWh/wVxk3U1c
-	 L4YvTPGPMrUsWM4SpkmfKH3utwpqy3sgw7oZexYf6UFkxyQqjrpsOtZjk3EZQTZeD1
-	 uMfPGmOCb7vmFzgkiI/FSkSvfkYxQs+5o8tlVG4xgekivx/MhJqI7H1KEcC1RTe+Ac
-	 QVfFp95Tr5NmSDDQ7flOqyKFKHLFPQQm8Afo2xUnNHtjb8heMqfOMyhs/1vFL7fjPJ
-	 loxoZ06hLAdlxr60oh0wcW76RHzuoQlxU5/ZFLJ82TNvdGPe8z2A6AiCAB8YaLJBYU
-	 HWblBGwUdmJ/Q==
-Date: Tue, 11 Feb 2025 15:02:35 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Purva Yeshi <purvayeshi550@gmail.com>, bhelgaas@google.com,
-	skhan@linuxfoundation.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [PATCH] drivers: pci: Fix flexible array usage
-Message-ID: <20250211210235.GA54524@bhelgaas>
+	s=k20201202; t=1739307776;
+	bh=mPDIGAOPfFORI7LS1qh2u5u7JxUaNOD3vSVK0HFG47E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DXFA0YVrKBjSTeI63HmZL4q9NOLOskpQ7vqBrMooWe36Cuqzu/Fe+33bDLUiC0BPb
+	 qRXHUIYzAKySmdpEp5p3VRGbv8rVJxclJX/lJy3H62dMSLu/jlYLyTnXYPlmlFeH0K
+	 A+c6wJAWZfp/vyBSdxOLe47iUdwd38VA6RYMiGUP3M07qJt6oRx0nTTPdTM5AnbJ+7
+	 NjteYhk+aYmcokeq2hOdPfyjux6obELcimRdEmdMbtDclA/kIyiBMt5VnMh126I822
+	 dgS/KwesBkGVd+nNWIGcBNLIzn10nzeiUk0i/vlx7Gs3f0GXYZuBuXtQ3ZkpAHnBYq
+	 9KQOD3olOP/hA==
+Date: Tue, 11 Feb 2025 15:02:55 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Andras Szemzo <szemzo.andras@gmail.com>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-phy@lists.infradead.org, linux-pm@vger.kernel.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	linux-arm-kernel@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>, linux-clk@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	linux-sunxi@lists.linux.dev, Albert Ou <aou@eecs.berkeley.edu>,
+	devicetree@vger.kernel.org,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-riscv@lists.infradead.org,
+	Ulf Hansson <ulf.hansson@linaro.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 05/10] dt-bindings: power: add V853 ppu bindings
+Message-ID: <173930777478.1171902.17591605192329357737.robh@kernel.org>
+References: <20250205125225.1152849-1-szemzo.andras@gmail.com>
+ <20250205125225.1152849-6-szemzo.andras@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,56 +60,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z6qFvrf1gsZGSIGo@kbusch-mbp>
+In-Reply-To: <20250205125225.1152849-6-szemzo.andras@gmail.com>
 
-On Mon, Feb 10, 2025 at 04:03:26PM -0700, Keith Busch wrote:
-> On Mon, Feb 10, 2025 at 06:57:40PM +0530, Purva Yeshi wrote:
-> > Fix warning detected by smatch tool:
-> > Array of flexible structure occurs in 'pci_saved_state' struct
-> > 
-> > The warning occurs because struct pci_saved_state contains struct
-> > pci_cap_saved_data cap[], where cap[] has a flexible array member (data[]).
-> > Arrays of structures with flexible members are not allowed, leading to this
-> > warning.
-> > 
-> > Replaced cap[] with a pointer (*cap), allowing dynamic memory allocation
-> > instead of embedding an invalid array of flexible structures.
-> > 
-> > Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
-> > ---
-> >  drivers/pci/pci.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 869d204a7..648a080ef 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -1929,7 +1929,7 @@ EXPORT_SYMBOL(pci_restore_state);
-> >  
-> >  struct pci_saved_state {
-> >  	u32 config_space[16];
-> > -	struct pci_cap_saved_data cap[];
-> > +	struct pci_cap_saved_data *cap;
-> >  };
+
+On Wed, 05 Feb 2025 13:52:20 +0100, Andras Szemzo wrote:
+> Document V853 PPU compatible.
 > 
-> I don't think this is right. Previously the space for "cap" was
-> allocated at the end of the pci_saved_state, but now it's just an
-> uninitialized pointer.
+> Signed-off-by: Andras Szemzo <szemzo.andras@gmail.com>
+> ---
+>  .../bindings/power/allwinner,sun20i-d1-ppu.yaml        |  1 +
+>  include/dt-bindings/power/allwinner,sun8i-v853-ppu.h   | 10 ++++++++++
+>  2 files changed, 11 insertions(+)
+>  create mode 100644 include/dt-bindings/power/allwinner,sun8i-v853-ppu.h
+> 
 
-Thanks, I think you're right.  Dropped pending fix or better
-explanation.
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-This is kind of a complicated data structure.  IIUC, a struct
-pci_saved_state is allocated only in pci_store_saved_state(), where
-the size is determined by the sum of the sizes of all the entries in
-the dev->saved_cap_space list.
-
-The pci_saved_state is filled by copying from entries in the
-dev->saved_cap_space list.  The entries need not be all the same size
-because we copy each entry manually based on its size.
-
-So cap[] is really just the base of this buffer of variable-sized
-entries.  Maybe "struct pci_cap_saved_data cap[]" is not the best
-representation of this, but *cap (a pointer) doesn't seem better.
-
-Bjorn
