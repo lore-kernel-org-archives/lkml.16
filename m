@@ -1,272 +1,299 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055751F1530;
-	Tue, 11 Feb 2025 09:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CDB1F191B
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739266984; cv=none; b=VwDZXGgA2SPkbzSRAZv/dw/Bubt0333gSvg108QhEr6UXQzW3i+T2+cHPPH4Jt++eLVtvBjj1eG3ipiOYvetDhgTGBp8kGYalPVRw+T+OF5orC3jJhsbtycBmuSXGz3Zmt+b6EZ32icIIc08fIfpx2kUCYVRNG8BKKRlmL71xOU=
+	t=1739266998; cv=none; b=FppR6OI/Pqi35xbqr3Es8zjZ/+xYOTHYqeBFg7baDRVOKQConJdrX6FPHeon/nUDzexrVT5idcORjFJaOWa1nqLSfEkWYBiXho0kfnqA9+L4P8lToceSarLWnPN0L8fqiZsvKyXCAmzntA3zUrHLQUiXw+pI1RXERB6oVlp81W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739266984; c=relaxed/simple;
-	bh=UDUBWOYE0MJmtSRQUpSl2kGFJ6PkBRXwv4eRQHw4x5w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SYQjsg7vfiaij4b5SLwy1B/NFxjNRNDZqhvTgheWfOh08BIETR3+Ijefo1bnpFybqDZ2jzMNsEyiu0E11JMpjTakAgcpVAABnGtOgsbFiLd1yQPSECgnN0a7WR/XHQL0X+VZqEfKB2+CVo4a0T8w9ogDXqqd5zSt/VzNcbts9iE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pZaquEQq; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1739266998; c=relaxed/simple;
+	bh=+xcKKENAQPRW/KrRt7+N0bNlvJs+HGH5eeB5JwLpBI0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FcztFrI3k8Rcj8I5Wmly7fCc8ue7Y1/x59YgOCSLNamFeLjUEQGo6nL249KvIOMBu1Ul8QsB+Q5u3yi1j3B8ctBM+bRfuX9g4++3jOj/I+TRLdops6HPzRgDUfl94gG4jI1sXyIi/Gke66IeiXYINUbHfpDt0N7VJYckQ48IY4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=FyUMf+Kq; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pZaquEQq"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51B0SXSH000369;
-	Tue, 11 Feb 2025 09:42:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=ddm6e6oeL1J
-	8QGmqUUhqwVMx8Y75jlwFElDicUEe0NA=; b=pZaquEQqu+iBnWS4WF7h6/hrj67
-	+iX/poUWaGMlvNOBodDhwH0wMlSe/olmfakx7P6I3WVRFWTZ/405n0xRmXadDFBA
-	XbZCfknlAs8RclZOP31zgiW9K1Cr0OCF6k7abF0BdVm2Z9l+wt3DGrYixuJltQNR
-	jWzwScql9Pq2DOUQvdy0E33EQT1EStCDsnJmF8sz9qctNzAlcDi5+FWjSjjk5jet
-	px8n2j6hTofCBqdmDtYs3QIEgJK6e41oot2nVJbWcYaXLKDSPTBx9d30JfWgm1cD
-	qfLF4BvoaDcrr4HnLm3UOQpHqIlOD2NeJwBfp2XgkCAtC1tV+VbBh/OgGSw==
-Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44qgtk33kc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 09:42:47 +0000 (GMT)
-Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 51B9gjMH012321;
-	Tue, 11 Feb 2025 09:42:45 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 44p0bkpchb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 09:42:45 +0000
-Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 51B9gje6012313;
-	Tue, 11 Feb 2025 09:42:45 GMT
-Received: from cbsp-sh-gv.ap.qualcomm.com (CBSP-SH-gv.ap.qualcomm.com [10.231.249.68])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 51B9gjrL012306
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Feb 2025 09:42:45 +0000
-Received: by cbsp-sh-gv.ap.qualcomm.com (Postfix, from userid 4635958)
-	id 1CAD340BEB; Tue, 11 Feb 2025 17:42:44 +0800 (CST)
-From: Wenbin Yao <quic_wenbyao@quicinc.com>
-To: vkoul@kernel.org, kishon@kernel.org, p.zabel@pengutronix.de,
-        dmitry.baryshkov@linaro.org, abel.vesa@linaro.org,
-        quic_qianyu@quicinc.com, neil.armstrong@linaro.org,
-        manivannan.sadhasivam@linaro.org, quic_devipriy@quicinc.com,
-        konrad.dybcio@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: quic_wenbyao@quicinc.com
-Subject: [PATCH v2 2/2] phy: qcom: qmp-pcie: Add PHY register retention support
-Date: Tue, 11 Feb 2025 17:42:31 +0800
-Message-Id: <20250211094231.1813558-3-quic_wenbyao@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250211094231.1813558-1-quic_wenbyao@quicinc.com>
-References: <20250211094231.1813558-1-quic_wenbyao@quicinc.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="FyUMf+Kq"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21f40deb941so112289895ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:43:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1739266995; x=1739871795; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Vr9sqfyFIOUURX1EuDQ0UB7aKZBVOm3DmIxM7ELCYpI=;
+        b=FyUMf+KquRocFvLWPcVxJ87UqE2N7d9kGo6n5JIZCPNDgnWpAtWYRzkvlN8R5j0sOT
+         v1K+HPr1RIB8JGDdhO1pnjcSvhnQq0BO3Q4NvrXRppKJqGPuBmIjevm2GeUVmB8QEtgg
+         U01OnaNuYc/GSBRRpCFvmyiwv231XtsqsRTQpJSIXrJ93aqECyxhUrbdLAcwVq7FJueI
+         T0ePhCL3WOzMkmCW8d6fldwrWkbMoYt9XpQpswzjvTJe+RLDhF9xOsErMdOoQsJ2fhoy
+         J3znILHUm+x/4Ro9u0wqWA7sn+KhItRp3/dwi/ErEW1dGnVhxWYsK8dxwRthOovV/Eyf
+         kOEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739266995; x=1739871795;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vr9sqfyFIOUURX1EuDQ0UB7aKZBVOm3DmIxM7ELCYpI=;
+        b=LcfTdRLvwR3iU5csTI8ENW2wo3m/Bas6txMYLLiqXWVJygUqth1haYEwSXgheE+jsv
+         UcCdCZlYqMVcyl5czC49C1+qD3IQUaNFglU/HmF4iIcfEWjcc3wCUv2vGK3Aaz6/uO3f
+         6ed/+tmXgXuCM93Y5YysKIN4ZE8tSr3JPEsLJzep6Xg6ssJ5bacwk/VytYUeqv6CyGJA
+         obC2cIjrL/mjJFz+IB6JI0ESoT9TaLRLk7h5sPtitddkAT8u+fdTVhMmhmz+qyAry8/T
+         yVebRgYTKphnm9xWUvXW5xiGZySFBwXNgs2/q+6oUqSmDF+NF0iP3mOSU/yPY9qjw/q8
+         0MZA==
+X-Forwarded-Encrypted: i=1; AJvYcCU9UlG0J6ahWWOm6NBGnquF1DfMVO4RKAG+h0q3/asUtMKLVqVE782KMcjw6tgH/s7chRoaiORlQZjM7jw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTSGJlx4wq4yaH3DJUNKvWygxawGt87/5OTouSBWybGe/nr+tl
+	wDjVbqYDxnbcwPM83QLw7kR5aPK8xoPOXSTH5NltGx7OX9Awh0TEMY0E1FlHOCI=
+X-Gm-Gg: ASbGncvJ9JaEntln3s4jyTmtiXdsxMohsRLz6O4t3FJ8UHe6jCzFKYiiNPXVeWD4hOs
+	docIym38OZC4CiWRorKXCXz3VphG/LP/vvUSbBc4xRBMQ/GXbOk9VWuDMxiS0PWWJn4SkHb3ca8
+	OqYPhc0X0f6YxCVzeVeW9tPR9zan73gXPPl9ZT8yIUl+In/ynT2paiRp28w51t6Dh7jTdwBcnEu
+	SVRkh5JiUyt5nx2obcJImy58cztuB3YQ64znmKkMrlGXyHYHONOqcPOVGTqeVGUuYuHRkYOiPL7
+	rxX8CdxFVqXSmEQBzWt7aFF625syNyKll9Q7/w+dvg==
+X-Google-Smtp-Source: AGHT+IFfrAytYWDrtqmvvt0vj9r6BCWYzM3f2Zy62k1Yw1acXBgtzij9wDi4ObcP0N5l9sE5XD+k0A==
+X-Received: by 2002:a17:903:22ce:b0:21f:805c:fd98 with SMTP id d9443c01a7336-21f805cfe1fmr153489455ad.21.1739266995450;
+        Tue, 11 Feb 2025 01:43:15 -0800 (PST)
+Received: from [10.84.150.121] ([203.208.167.153])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f36561397sm92761155ad.89.2025.02.11.01.43.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 01:43:15 -0800 (PST)
+Message-ID: <4e298f68-36ff-496a-81d2-7124f792180d@bytedance.com>
+Date: Tue, 11 Feb 2025 17:43:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] NULL pointer dereference on ARM (AT91SAM9G25) during
+ compaction
+Content-Language: en-US
+To: David Hildenbrand <david@redhat.com>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
+ Ezra Buehler <ezra@easyb.ch>, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>, Vlastimil Babka <vbabka@suse.cz>,
+ Ryan Roberts <ryan.roberts@arm.com>,
+ "Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+ Hugh Dickins <hughd@google.com>, Matthew Wilcox <willy@infradead.org>,
+ Peter Xu <peterx@redhat.com>, Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ open list <linux-kernel@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org
+References: <CAM1KZSmZ2T_riHvay+7cKEFxoPgeVpHkVFTzVVEQ1BO0cLkHEQ@mail.gmail.com>
+ <Z6oxUdrVBPd5ZTEu@shell.armlinux.org.uk>
+ <5d50d714-197f-44c0-94e0-ff70ee51e866@bytedance.com>
+ <34bcf011-b4ac-479c-92ce-852623e73039@redhat.com>
+ <3f7babee-b232-4e6b-a896-947150dcd1ef@bytedance.com>
+ <2b0bb476-5bd6-489a-9b9e-7aa20964abfa@redhat.com>
+From: Qi Zheng <zhengqi.arch@bytedance.com>
+In-Reply-To: <2b0bb476-5bd6-489a-9b9e-7aa20964abfa@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: T1oMJVH0OPOia2dDFcxamurKuAGYqhGR
-X-Proofpoint-ORIG-GUID: T1oMJVH0OPOia2dDFcxamurKuAGYqhGR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-11_04,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 suspectscore=0 phishscore=0 impostorscore=0
- adultscore=0 clxscore=1015 mlxscore=0 malwarescore=0 bulkscore=0
- lowpriorityscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502110060
 
-From: Qiang Yu <quic_qianyu@quicinc.com>
 
-Some QCOM PCIe PHYs support no_csr reset. Unlike BCR reset which resets the
-whole PHY (hardware and register), no_csr reset only resets PHY hardware
-but retains register values, which means PHY setting can be skipped during
-PHY init if PCIe link is enabled in booltloader and only no_csr is toggled
-after that.
 
-Hence, determine whether the PHY has been enabled in bootloader by
-verifying QPHY_START_CTRL register. If it's programmed and no_csr reset is
-available, skip BCR reset and PHY register setting to establish the PCIe
-link with bootloader - programmed PHY settings.
+On 2025/2/11 17:37, David Hildenbrand wrote:
+> On 11.02.25 10:29, Qi Zheng wrote:
+>>
+>>
+>> On 2025/2/11 17:14, David Hildenbrand wrote:
+>>> On 11.02.25 04:45, Qi Zheng wrote:
+>>>> Hi Russell,
+>>>>
+>>>> On 2025/2/11 01:03, Russell King (Oracle) wrote:
+>>>>> On Mon, Feb 10, 2025 at 05:49:38PM +0100, Ezra Buehler wrote:
+>>>>>> When running vanilla Linux 6.13 or newer (6.14-rc2) on the
+>>>>>> AT91SAM9G25-based GARDENA smart Gateway, we are seeing a NULL pointer
+>>>>>> dereference resulting in a kernel panic. The culprit seems to be 
+>>>>>> commit
+>>>>>> fc9c45b71f43 ("arm: adjust_pte() usepte_offset_map_rw_nolock()").
+>>>>>> Reverting the commit apparently fixes the issue.
+>>>>>
+>>>>> The blamed commit is buggy:
+>>>>>
+>>>>> arch/arm/include/asm/tlbflush.h:
+>>>>> #define update_mmu_cache(vma, addr, ptep) \
+>>>>>            update_mmu_cache_range(NULL, vma, addr, ptep, 1)
+>>>>>
+>>>>> So vmf can be NULL. This didn't used to matter before this commit,
+>>>>> because vmf was not used by ARM's update_mmu_cache_range(). However,
+>>>>> the commit introduced a dereference of it, which now causes a NULL
+>>>>> point dereference.
+>>>>>
+>>>>> Not sure what the correct solution is, but at a guess, both:
+>>>>>
+>>>>>      if (ptl != vmf->ptl)
+>>>>>
+>>>>> need to become:
+>>>>>
+>>>>>      if (!vmf || ptl != vmf->ptl)
+>>>>
+>>>> No, we can't do that, because without using split PTE locks, we would
+>>>> use shared mm->page_table_lock, which would create a deadlock.
+>>>
+>>> Maybe we can simply special-case on CONFIG_SPLIT_PTE_PTLOCKS ?
+>>>
+>>> if (IS_ENABLED(CONFIG_SPLIT_PTE_PTLOCKS)) {
+>>
+>> In this case, if two vmas map the same PTE page, then the same PTE lock
+>> will be held repeatedly. Right?
+> 
+> Hmm, the comment says:
+> 
+>          /*
+>           * This is called while another page table is mapped, so we
+>           * must use the nested version.  This also means we need to
+>           * open-code the spin-locking.
+>           */
+> 
+> "another page table" implies that it cannot be the same. But maybe that 
+> comment was also wrong?
 
-Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
-Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
----
- drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 91 +++++++++++++++---------
- 1 file changed, 58 insertions(+), 33 deletions(-)
+I don't see make_coherent() ensuring this when traversing vma. I
+therefore propose the following changes:
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-index ac42e4b01065..7f0802d09812 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-@@ -2805,6 +2805,7 @@ struct qmp_pcie {
- 
- 	const struct qmp_phy_cfg *cfg;
- 	bool tcsr_4ln_config;
-+	bool phy_initialized;
- 
- 	void __iomem *serdes;
- 	void __iomem *pcs;
-@@ -3976,6 +3977,7 @@ static int qmp_pcie_init(struct phy *phy)
- {
- 	struct qmp_pcie *qmp = phy_get_drvdata(phy);
- 	const struct qmp_phy_cfg *cfg = qmp->cfg;
-+	void __iomem *pcs = qmp->pcs;
- 	int ret;
- 
- 	ret = regulator_bulk_enable(cfg->num_vregs, qmp->vregs);
-@@ -3984,10 +3986,17 @@ static int qmp_pcie_init(struct phy *phy)
- 		return ret;
- 	}
- 
--	ret = reset_control_bulk_assert(cfg->num_resets, qmp->resets);
--	if (ret) {
--		dev_err(qmp->dev, "reset assert failed\n");
--		goto err_disable_regulators;
-+	qmp->phy_initialized = !!(readl(pcs + cfg->regs[QPHY_START_CTRL]));
-+	/*
-+	 * Toggle BCR reset for phy that doesn't support no_csr
-+	 * reset or has not been initialized
-+	 */
-+	if (!qmp->nocsr_reset || !qmp->phy_initialized) {
-+		ret = reset_control_bulk_assert(cfg->num_resets, qmp->resets);
-+		if (ret) {
-+			dev_err(qmp->dev, "reset assert failed\n");
-+			goto err_disable_regulators;
-+		}
- 	}
- 
- 	ret = reset_control_assert(qmp->nocsr_reset);
-@@ -3998,10 +4007,12 @@ static int qmp_pcie_init(struct phy *phy)
- 
- 	usleep_range(200, 300);
- 
--	ret = reset_control_bulk_deassert(cfg->num_resets, qmp->resets);
--	if (ret) {
--		dev_err(qmp->dev, "reset deassert failed\n");
--		goto err_assert_reset;
-+	if (!qmp->nocsr_reset || !qmp->phy_initialized) {
-+		ret = reset_control_bulk_deassert(cfg->num_resets, qmp->resets);
-+		if (ret) {
-+			dev_err(qmp->dev, "reset deassert failed\n");
-+			goto err_assert_reset;
-+		}
- 	}
- 
- 	ret = clk_bulk_prepare_enable(ARRAY_SIZE(qmp_pciephy_clk_l), qmp->clks);
-@@ -4011,7 +4022,8 @@ static int qmp_pcie_init(struct phy *phy)
- 	return 0;
- 
- err_assert_reset:
--	reset_control_bulk_assert(cfg->num_resets, qmp->resets);
-+	if (!qmp->nocsr_reset || !qmp->phy_initialized)
-+		reset_control_bulk_assert(cfg->num_resets, qmp->resets);
- err_disable_regulators:
- 	regulator_bulk_disable(cfg->num_vregs, qmp->vregs);
- 
-@@ -4023,7 +4035,10 @@ static int qmp_pcie_exit(struct phy *phy)
- 	struct qmp_pcie *qmp = phy_get_drvdata(phy);
- 	const struct qmp_phy_cfg *cfg = qmp->cfg;
- 
--	reset_control_bulk_assert(cfg->num_resets, qmp->resets);
-+	if (!qmp->nocsr_reset)
-+		reset_control_bulk_assert(cfg->num_resets, qmp->resets);
-+	else
-+		reset_control_assert(qmp->nocsr_reset);
- 
- 	clk_bulk_disable_unprepare(ARRAY_SIZE(qmp_pciephy_clk_l), qmp->clks);
- 
-@@ -4042,16 +4057,22 @@ static int qmp_pcie_power_on(struct phy *phy)
- 	unsigned int mask, val;
- 	int ret;
- 
--	qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
--			cfg->pwrdn_ctrl);
-+	/*
-+	 * Write CSR register for phy that doesn't support no_csr
-+	 * reset or has not been initialized
-+	 */
-+	if (!qmp->nocsr_reset || !qmp->phy_initialized) {
-+		qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
-+				cfg->pwrdn_ctrl);
- 
--	if (qmp->mode == PHY_MODE_PCIE_RC)
--		mode_tbls = cfg->tbls_rc;
--	else
--		mode_tbls = cfg->tbls_ep;
-+		if (qmp->mode == PHY_MODE_PCIE_RC)
-+			mode_tbls = cfg->tbls_rc;
-+		else
-+			mode_tbls = cfg->tbls_ep;
- 
--	qmp_pcie_init_registers(qmp, &cfg->tbls);
--	qmp_pcie_init_registers(qmp, mode_tbls);
-+		qmp_pcie_init_registers(qmp, &cfg->tbls);
-+		qmp_pcie_init_registers(qmp, mode_tbls);
-+	}
- 
- 	ret = clk_bulk_prepare_enable(qmp->num_pipe_clks, qmp->pipe_clks);
- 	if (ret)
-@@ -4063,15 +4084,16 @@ static int qmp_pcie_power_on(struct phy *phy)
- 		goto err_disable_pipe_clk;
- 	}
- 
--	/* Pull PHY out of reset state */
--	qphy_clrbits(pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
-+	if (!qmp->nocsr_reset || !qmp->phy_initialized) {
-+		/* Pull PHY out of reset state */
-+		qphy_clrbits(pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
- 
--	/* start SerDes and Phy-Coding-Sublayer */
--	qphy_setbits(pcs, cfg->regs[QPHY_START_CTRL], SERDES_START | PCS_START);
--
--	if (!cfg->skip_start_delay)
--		usleep_range(1000, 1200);
-+		/* start SerDes and Phy-Coding-Sublayer */
-+		qphy_setbits(pcs, cfg->regs[QPHY_START_CTRL], SERDES_START | PCS_START);
- 
-+		if (!cfg->skip_start_delay)
-+			usleep_range(1000, 1200);
-+	}
- 	status = pcs + cfg->regs[QPHY_PCS_STATUS];
- 	mask = cfg->phy_status;
- 	ret = readl_poll_timeout(status, val, !(val & mask), 200,
-@@ -4096,16 +4118,19 @@ static int qmp_pcie_power_off(struct phy *phy)
- 
- 	clk_bulk_disable_unprepare(qmp->num_pipe_clks, qmp->pipe_clks);
- 
--	/* PHY reset */
--	qphy_setbits(qmp->pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
- 
--	/* stop SerDes and Phy-Coding-Sublayer */
--	qphy_clrbits(qmp->pcs, cfg->regs[QPHY_START_CTRL],
--			SERDES_START | PCS_START);
-+	if (!qmp->nocsr_reset) {
-+		/* PHY reset */
-+		qphy_setbits(qmp->pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
- 
--	/* Put PHY into POWER DOWN state: active low */
--	qphy_clrbits(qmp->pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
--			cfg->pwrdn_ctrl);
-+		/* stop SerDes and Phy-Coding-Sublayer */
-+		qphy_clrbits(qmp->pcs, cfg->regs[QPHY_START_CTRL],
-+				SERDES_START | PCS_START);
+diff --git a/arch/arm/mm/fault-armv.c b/arch/arm/mm/fault-armv.c
+index 2bec87c3327d2..dddbca9a2597e 100644
+--- a/arch/arm/mm/fault-armv.c
++++ b/arch/arm/mm/fault-armv.c
+@@ -61,8 +61,41 @@ static int do_adjust_pte(struct vm_area_struct *vma, 
+unsigned long address,
+         return ret;
+  }
+
++#if defined(CONFIG_SPLIT_PTE_PTLOCKS)
++/*
++ * If we are using split PTE locks, then we need to take the pte
++ * lock here.  Otherwise we are using shared mm->page_table_lock
++ * which is already locked, thus cannot take it.
++ */
++static inline bool do_pte_lock(spinlock_t *ptl, pmd_t pmdval, pmd_t *pmd)
++{
++       /*
++        * Use nested version here to indicate that we are already
++        * holding one similar spinlock.
++        */
++       spin_lock_nested(ptl, SINGLE_DEPTH_NESTING);
++       if (unlikely(!pmd_same(pmdval, pmdp_get_lockless(pmd)))) {
++               spin_unlock(ptl);
++               return false;
++       }
 +
-+		/* Put PHY into POWER DOWN state: active low */
-+		qphy_clrbits(qmp->pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
-+				cfg->pwrdn_ctrl);
-+	}
- 
- 	return 0;
- }
--- 
-2.34.1
++       return true;
++}
++
++static inline void do_pte_unlock(spinlock_t *ptl)
++{
++       spin_unlock(ptl);
++}
++#else /* !defined(CONFIG_SPLIT_PTE_PTLOCKS) */
++static inline bool do_pte_lock(spinlock_t *ptl)
++{
++       return true;
++}
++static inline void do_pte_unlock(spinlock_t *ptl) {}
++#endif /* defined(CONFIG_SPLIT_PTE_PTLOCKS) */
++
+  static int adjust_pte(struct vm_area_struct *vma, unsigned long address,
+-                     unsigned long pfn, struct vm_fault *vmf)
++                     unsigned long pfn)
+  {
+         spinlock_t *ptl;
+         pgd_t *pgd;
+@@ -99,23 +132,14 @@ static int adjust_pte(struct vm_area_struct *vma, 
+unsigned long address,
+         if (!pte)
+                 return 0;
 
+-       /*
+-        * If we are using split PTE locks, then we need to take the page
+-        * lock here.  Otherwise we are using shared mm->page_table_lock
+-        * which is already locked, thus cannot take it.
+-        */
+-       if (ptl != vmf->ptl) {
+-               spin_lock_nested(ptl, SINGLE_DEPTH_NESTING);
+-               if (unlikely(!pmd_same(pmdval, pmdp_get_lockless(pmd)))) {
+-                       pte_unmap_unlock(pte, ptl);
+-                       goto again;
+-               }
++       if (!do_pte_lock(ptl, pmdval, pmd)) {
++               pte_unmap(pte);
++               goto again;
+         }
+
+         ret = do_adjust_pte(vma, address, pfn, pte);
+
+-       if (ptl != vmf->ptl)
+-               spin_unlock(ptl);
++       do_pte_unlock(ptl);
+         pte_unmap(pte);
+
+         return ret;
+@@ -123,16 +147,17 @@ static int adjust_pte(struct vm_area_struct *vma, 
+unsigned long address,
+
+  static void
+  make_coherent(struct address_space *mapping, struct vm_area_struct *vma,
+-             unsigned long addr, pte_t *ptep, unsigned long pfn,
+-             struct vm_fault *vmf)
++             unsigned long addr, pte_t *ptep, unsigned long pfn)
+  {
+         struct mm_struct *mm = vma->vm_mm;
+         struct vm_area_struct *mpnt;
+         unsigned long offset;
++       unsigned long start;
+         pgoff_t pgoff;
+         int aliases = 0;
+
+         pgoff = vma->vm_pgoff + ((addr - vma->vm_start) >> PAGE_SHIFT);
++       start = ALIGN_DOWN(addr, PMD_SIZE);
+
+         /*
+          * If we have any shared mappings that are in the same mm
+@@ -141,6 +166,8 @@ make_coherent(struct address_space *mapping, struct 
+vm_area_struct *vma,
+          */
+         flush_dcache_mmap_lock(mapping);
+         vma_interval_tree_foreach(mpnt, &mapping->i_mmap, pgoff, pgoff) {
++               unsigned long mpnt_addr;
++
+                 /*
+                  * If this VMA is not in our MM, we can ignore it.
+                  * Note that we intentionally mask out the VMA
+@@ -151,7 +178,14 @@ make_coherent(struct address_space *mapping, struct 
+vm_area_struct *vma,
+                 if (!(mpnt->vm_flags & VM_MAYSHARE))
+                         continue;
+                 offset = (pgoff - mpnt->vm_pgoff) << PAGE_SHIFT;
+-               aliases += adjust_pte(mpnt, mpnt->vm_start + offset, 
+pfn, vmf);
++               mpnt_addr = mpnt->vm_start + offset;
++               /*
++                * If mpnt_addr and addr are mapped to the same PTE page,
++                * also skip this vma.
++                */
++               if (mpnt_addr >= start && mpnt_addr - start < PMD_SIZE)
++                       continue;
++               aliases += adjust_pte(mpnt, mpnt_addr, pfn);
+         }
+         flush_dcache_mmap_unlock(mapping);
+         if (aliases)
+@@ -194,7 +228,7 @@ void update_mmu_cache_range(struct vm_fault *vmf, 
+struct vm_area_struct *vma,
+                 __flush_dcache_folio(mapping, folio);
+         if (mapping) {
+                 if (cache_is_vivt())
+-                       make_coherent(mapping, vma, addr, ptep, pfn, vmf);
++                       make_coherent(mapping, vma, addr, ptep, pfn);
+                 else if (vma->vm_flags & VM_EXEC)
+                         __flush_icache_all();
+         }
+
+Make sense?
+
+> 
+> 
