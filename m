@@ -1,102 +1,123 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E1A1F3FE7
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416C61F03D9;
+	Tue, 11 Feb 2025 10:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739268907; cv=none; b=TuwZZJ+j/caGr2h9frgIrd1Yow67t7oPN5z2IN28oNewo5Gw7SE1fCHxyvquW79rxgxJvxXtdd83iIYOtgoUjR3ziGyQtO6s5w3kW1p77b+P0SGLu+19MTQzmEe2K+rnqpVxFfO5iyOwslNZJounVUa+pmSv/3XWfqvPBdVnyT8=
+	t=1739268928; cv=none; b=UsmIFE0tdWi+BOsrkowjCvgPR/TcWZeFdOUBZySKfP/UuhAw0jrBSxLyWtItOwE/FNG05O3P11sS03szcGFSQlAlGcdKAebVL4m3nkKOq78M+CeQCbsVrpldKjw5YeC7NsfG4SqmhPS7GYCMUHg2G4oSF66vghM7A6icQYX3sVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739268907; c=relaxed/simple;
-	bh=+C96UP0QRfYDESgtwQi/x7lVhO/8MtE4PRXHDqVSHDs=;
-	h=Mime-Version:Subject:From:To:CC:Message-ID:Date:Content-Type:
-	 References; b=WJjCJavRbWaMqesq8gCR1niiB0V+dezmN0oww9fSKEARZnUl0VaD19Zjck9gHT0U2FM9NzQfuWIWdGU7R5+9qqsosfn0qCIb9hp1QZTQDLg+HxtjhYXrpMfAnS/VzG79Ufy/qGiOCTH3J0SvPN/qIPZ9jUG7gI0+3L1+ROrdJys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=JteXxFBf; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1739268928; c=relaxed/simple;
+	bh=FCdEnDf9oipcxKTdnA7WndtjMuMXT6dVmy4L1o/HFbU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IWR56Ajtr/Mrv/ezQTHGESnCcT3YYFuAgt5uM6pzXCEy2VXmE79JuBN9Lod7/zLai3CAq1SRhz1QCEzPP4oTVTKEj+/nwf0Nwu9UZidiVnFYZHtTNl3RRRlYGQlqAk7bVyCGU1ovpt74O/HgPcjlFTDF/C89gXLZSklcElhkOaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NRUwt8CO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JteXxFBf"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250211101503epoutp03ce9fe862a3f8c3dc312e69471f8b59a8~jH9oz5uWf0872508725epoutp034
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:15:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250211101503epoutp03ce9fe862a3f8c3dc312e69471f8b59a8~jH9oz5uWf0872508725epoutp034
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1739268903;
-	bh=+C96UP0QRfYDESgtwQi/x7lVhO/8MtE4PRXHDqVSHDs=;
-	h=Subject:Reply-To:From:To:CC:Date:References:From;
-	b=JteXxFBflGsKYe384luaIDCQoV6M/BC4DO34hxQECn4fqU40qdeHyUAqfQcwxqebM
-	 xUqDwKA0+k++EzMKZ/q2eZ6/EsIW+t7f+f+K9h/OrhI1Gioq6YuwLkVa2lVLdt/FOX
-	 z4yla37sMai6Mve4cKVyoW1d0YqJoWnTwSE/g47M=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20250211101502epcas5p4d71ddd73c52f1bc78fe7e3c9d534d650~jH9oUHowL2637626376epcas5p4z;
-	Tue, 11 Feb 2025 10:15:02 +0000 (GMT)
-Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4Ysckt3zLCz4x9Q3; Tue, 11 Feb
-	2025 10:15:02 +0000 (GMT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NRUwt8CO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E73EC4CEDD;
+	Tue, 11 Feb 2025 10:15:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739268927;
+	bh=FCdEnDf9oipcxKTdnA7WndtjMuMXT6dVmy4L1o/HFbU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NRUwt8CORW4roJdPPnanaDYNQtqwz1PeyjcZ7QqpS4r95x8XvXuEO+oTC0LQ4sgqX
+	 awUB1f05Bi3IP7A+3RuWXxj1KawkeVXSySAEI/XD027i/zhHJh2abm+EvUN9FD8Qph
+	 QkhN0O+HP9+p/r3zADAfvkOk40t+fvhSARZCgkDXMjFDhmOm5wcQ0dLHezv+9SlfvU
+	 mhyRww6nnS19qPS8DP9rkczS+C3yuaxqVe2BmINwCEXsQ8xfyMzeoE62aACHKcSDG+
+	 D2BQgprunMo6M9jLhrcW3hVUcktDQLDEBcpF7nrAJ6+oop4PGhgA0EIchDtFv94yDs
+	 wmqVlOEHh40cA==
+Date: Tue, 11 Feb 2025 10:15:22 +0000
+From: Lee Jones <lee@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>
+Subject: Re: (subset) [PATCH v11 3/3] leds: Add LED1202 I2C driver
+Message-ID: <20250211101522.GL1868108@google.com>
+References: <20241218183401.41687-1-vicentiu.galanopulo@remote-tech.co.uk>
+ <20241218183401.41687-4-vicentiu.galanopulo@remote-tech.co.uk>
+ <173641864745.2570436.6359371577917683428.b4-ty@kernel.org>
+ <CAMuHMdXNOEXuEADeSGGHw88Tse+QjSkknKYGH-kk02jSpiuNiQ@mail.gmail.com>
+ <20250210165923.GC1868108@google.com>
+ <20250210170136.GD1868108@google.com>
+ <CAMuHMdXtDd-KSeX_8nhj_J0X33WRT47_v3m01qdBN01-p4xVjA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: Re: [PATCH] usb: xhci: Initialize unassigned variables to fix
- possible errors
-Reply-To: selvarasu.g@samsung.com
-Sender: Selvarasu G <selvarasu.g@samsung.com>
-From: Selvarasu G <selvarasu.g@samsung.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-CC: "mathias.nyman@intel.com" <mathias.nyman@intel.com>,
-	"WeitaoWang-oc@zhaoxin.com" <WeitaoWang-oc@zhaoxin.com>,
-	"Thinh.Nguyen@synopsys.com" <Thinh.Nguyen@synopsys.com>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, JaeHun Jung
-	<jh0801.jung@samsung.com>, JUNG Daehwan <dh10.jung@samsung.com>, NAUSHAD
-	KOLLIKKARA <naushad@samsung.com>, Akash M <akash.m5@samsung.com>, Hyunsoon
-	Kim <h10.kim@samsung.com>, OH Eomji <eomji.oh@samsung.com>, ALIM AKHTAR
-	<alim.akhtar@samsung.com>, Thiagu Ramalingam <thiagu.r@samsung.com>,
-	Muhammed Ali K P <muhammed.ali@samsung.com>, Pritam Manohar Sutar
-	<pritam.sutar@samsung.com>, CPGS <cpgs@samsung.com>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <1296674576.21739268902551.JavaMail.epsvc@epcpadp1new>
-Date: Tue, 11 Feb 2025 17:37:13 +0900
-X-CMS-MailID: 20250211083713epcms5p719a589a7a973e0c81fca9c9c506f9d85
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20250210131144epcas5p4a0599050f5973b495db0371021c21e27
-References: <CGME20250210131144epcas5p4a0599050f5973b495db0371021c21e27@epcms5p7>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdXtDd-KSeX_8nhj_J0X33WRT47_v3m01qdBN01-p4xVjA@mail.gmail.com>
 
-On 2/11/2025 11:28 AM, Greg KH wrote:
-> On Mon, Feb 10, 2025 at 06:41:23PM +0530, Selvarasu Ganesan wrote:
->> Fix the following smatch errors:
->>
->> drivers/usb/host/xhci-mem.c:2060 xhci_add_in_port() error: unassigned variable 'tmp_minor_revision'
->> drivers/usb/host/xhci-hub.c:71 xhci_create_usb3x_bos_desc() error: unassigned variable 'bcdUSB'
->>
->> Fixes: d9b0328d0b8b ("xhci: Show ZHAOXIN xHCI root hub speed correctly")
->> Fixes: eb02aaf21f29 ("usb: xhci: Rewrite xhci_create_usb3_bos_desc()")
-> This should be two different changes, right?
->
-> Please break it up and send as a patch series.
->
-> thanks,
->
-> greg k-h
+On Tue, 11 Feb 2025, Geert Uytterhoeven wrote:
 
+> Hi Lee,
+> 
+> On Mon, 10 Feb 2025 at 18:01, Lee Jones <lee@kernel.org> wrote:
+> > On Mon, 10 Feb 2025, Lee Jones wrote:
+> > > On Tue, 21 Jan 2025, Geert Uytterhoeven wrote:
+> > >
+> > > > Hi Lee,
+> > > >
+> > > > On Thu, Jan 9, 2025 at 11:31 AM Lee Jones <lee@kernel.org> wrote:
+> > > > > On Wed, 18 Dec 2024 18:33:59 +0000, Vicentiu Galanopulo wrote:
+> > > > > > The output current can be adjusted separately for each channel by 8-bit
+> > > > > > analog (current sink input) and 12-bit digital (PWM) dimming control. The
+> > > > > > LED1202 implements 12 low-side current generators with independent dimming
+> > > > > > control.
+> > > > > > Internal volatile memory allows the user to store up to 8 different patterns,
+> > > > > > each pattern is a particular output configuration in terms of PWM
+> > > > > > duty-cycle (on 4096 steps). Analog dimming (on 256 steps) is per channel but
+> > > > > > common to all patterns. Each device tree LED node will have a corresponding
+> > > > > > entry in /sys/class/leds with the label name. The brightness property
+> > > > > > corresponds to the per channel analog dimming, while the patterns[1-8] to the
+> > > > > > PWM dimming control.
+> > > > > >
+> > > > > > [...]
+> > > > >
+> > > > > Applied, thanks!
+> > > > >
+> > > > > [3/3] leds: Add LED1202 I2C driver
+> > > > >       commit: 939757aafeb9c266dda37657ee5f7a73ffd35ae2
+> > > >
+> > > > You also have commit 259230378c65ebb6 ("leds: Add LED1202 I2C driver")
+> > > > in mfd/for-mfd-next, which dropped the change to drivers/leds/Makefile,
+> > > > and changed the Link:-tag to point to the older version v10?
+> > >
+> > > Interesting.  Not sure I noticed and if I did, I must have fixed it.
+> > >
+> > > This is the commit that made it in:
+> > >
+> > >   939757aafeb9 ("leds: Add LED1202 I2C driver")
+> >
+> > Scratch that - looks like:
+> >
+> >   259230378c65 ("leds: Add LED1202 I2C driver")
+> >
+> > ... also made it in.  However the Makefile line survived:
+> >
+> >   drivers/leds/Makefile:obj-$(CONFIG_LEDS_ST1202)         += leds-st1202.o
+> >
+> > Did anything break or is all as expected?
+> 
+> The end result is fine.  History might confuse people (the (un)happy
+> few who care about history ;-), as "git log -p v6.14-rc1 --
+> drivers/leds/Makefile" shows 939757aafeb9, while "git log -p v6.14-rc1
+> -- drivers/leds/leds-st1202.c" shows 259230378c65, linking to the
+> older version.
 
-Hi Greg,
+Sorry about that.  I am one who cares a great deal about history.
 
-Thanks for your comments. Sure i will send as a patch series.
+One of the pitfalls of maintaining multiple repos I guess.
 
-Thanks,
-Selva
+#humanafterall :)
+
+-- 
+Lee Jones [李琼斯]
