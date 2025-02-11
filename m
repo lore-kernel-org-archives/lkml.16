@@ -1,136 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD171F236B;
-	Tue, 11 Feb 2025 10:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E02061F236B
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 10:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739269232; cv=none; b=jUu3BmbxWo1NhzlfFmVZfKN7Oc3/OqgFqJKhRwrc6Z+1VUzR2Bm7GwGQ7Vhnu+X+hXBiFcH8moDwTFt2tICeiRinHaeFP6l3eND+CF2+QVDv/2xwKl4HCLY304GAnCuit/k7VNY3phH0bYgg2eHgmO5EGXBITV9HORZEy6W3AY4=
+	t=1739269266; cv=none; b=uGZX7IZQQSnmgetouKcWJIH8t+CdMKs4JQR9eFNAy8uPcTjxhME8uxYaZ6rjaJB953Yk97XO/HjVpLUZbxPo5hErXaWQBIpF7FVBUTCqtF2vs3qIzQxl0XLNAoEqVVQIzuE838jGT5CqiLc4V42FdRFUUOo+Bx9bbgKNSEKsRPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739269232; c=relaxed/simple;
-	bh=9lfDDB4rPknt5HbAKTNtzSaIA0xDJDNjOynJmOPHlww=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FyPgCwpDljrAgSwc15L91jS4F2R1dlexHuEcIbGlncNipA22r4L7EUAMVWKrxqDYZcnEjxw6OEFMIXLKrKbUoQNi8H+boha3BhQdXfIqx+JQdSLk+JjvKr6HIGlOLIYPlhezf9tyYZW22qwjGdWh1wk+1rG4thge/97OPOsOm3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wq/SldKK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wq/SldKK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D36F6C4CEE4;
-	Tue, 11 Feb 2025 10:20:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739269232;
-	bh=9lfDDB4rPknt5HbAKTNtzSaIA0xDJDNjOynJmOPHlww=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Wq/SldKKohls9L9zYrH4MQRYuMqwGfi2zjJVZwBuaNe/hJgqgOBAxn86Np0sygFlr
-	 VjM6FNh9QxQnmC0fRI5cDzFZqEewMdcfiOA3t+Bb22o+I3NsMgQwOGlMLLv1XOE8kl
-	 2MFWWG0RE8gxSVHERYQDqwXmoPJVsgRPS+4dkn9GHo1qxt7tUvDaFHRETowVa7zSp4
-	 p8IiwNiTfpfDMuftOrfBXNzq4tFM4IyBtqWxECmbecIrV3FoNJ6S+5CVLRFP0cSUxh
-	 CwyPLqIhzB1izTsBM/bzyvD4+HvcLEpgjn1mFqj8vfNL0ZfsX/uZDoGVBCHjTZ/emU
-	 Aa87q2ahTP8kA==
-Message-ID: <3da61b9b-fa44-4a45-bccb-40a23ef997ce@kernel.org>
-Date: Tue, 11 Feb 2025 10:20:27 +0000
+	s=arc-20240116; t=1739269266; c=relaxed/simple;
+	bh=yFXCWSX98zgTjp1qYAJTz0Wcpe7ySE4lWwS7pAo3Rcw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uS/vpQ8XRdFSZiVTAokhpZm1rrGUOl7MtDfuB1Wne6+zcToiFPf5XICf9dA75MN7gcpZz3dAsd8dTHWV98ZTgXVBF0KwXQ3ZnX2i2B1yjNx4fqLLvwWaTKxgenXJHoBddUP+abmkXEqyrkRzzqmH3B2VjySE/2DReYr0lvN3z8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from unicom145.biz-email.net
+        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id JEG00053;
+        Tue, 11 Feb 2025 18:20:53 +0800
+Received: from locahost.localdomain (10.94.13.218) by
+ jtjnmail201601.home.langchao.com (10.100.2.1) with Microsoft SMTP Server id
+ 15.1.2507.39; Tue, 11 Feb 2025 18:20:52 +0800
+From: Charles Han <hanchunchao@inspur.com>
+To: <laurent.pinchart@ideasonboard.com>, <Markus.Elfring@web.de>,
+	<tomi.valkeinen@ideasonboard.com>, <maarten.lankhorst@linux.intel.com>,
+	<mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
+	<simona@ffwll.ch>, <michal.simek@amd.com>, <vishal.sagar@amd.com>
+CC: <dri-devel@lists.freedesktop.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, Charles Han <hanchunchao@inspur.com>
+Subject: [PATCH V3] drm: xlnx: zynqmp_dpsub: Add NULL check in zynqmp_audio_init
+Date: Tue, 11 Feb 2025 18:20:49 +0800
+Message-ID: <20250211102049.6468-1-hanchunchao@inspur.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next] bpftool: Check map name length when map create
-To: Rong Tao <rtoax@foxmail.com>, ast@kernel.org, daniel@iogearbox.net
-Cc: rongtao@cestc.cn, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>,
- "open list:BPF [TOOLING] (bpftool)" <bpf@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <tencent_1C4444032C2188ACD04B4995B0D78F510607@qq.com>
-From: Quentin Monnet <qmo@kernel.org>
-Content-Language: en-GB
-In-Reply-To: <tencent_1C4444032C2188ACD04B4995B0D78F510607@qq.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+tUid: 20252111820535fc6f945271858da8867862091790480
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-2025-02-11 16:45 UTC+0800 ~ Rong Tao <rtoax@foxmail.com>
-> From: Rong Tao <rongtao@cestc.cn>
-> 
-> The size of struct bpf_map::name is BPF_OBJ_NAME_LEN (16).
-> 
-> bpf(2) {
->   map_create() {
->     bpf_obj_name_cpy(map->name, attr->map_name, sizeof(attr->map_name));
->   }
-> }
-> 
-> When specifying a map name using bpftool map create name, no error is
-> reported if the name length is greater than 15.
-> 
->     $ sudo bpftool map create /sys/fs/bpf/12345678901234567890 \
->         type array key 4 value 4 entries 5 name 12345678901234567890
-> 
-> Users will think that 12345678901234567890 is legal, but this name cannot
-> be used to index a map.
-> 
->     $ sudo bpftool map show name 12345678901234567890
->     Error: can't parse name
-> 
->     $ sudo bpftool map show
->     ...
->     1249: array  name 123456789012345  flags 0x0
->     	key 4B  value 4B  max_entries 5  memlock 304B
-> 
->     $ sudo bpftool map show name 123456789012345
->     1249: array  name 123456789012345  flags 0x0
->     	key 4B  value 4B  max_entries 5  memlock 304B
-> 
-> The map name provided in the command line is truncated, but no error is
-> reported. This submission checks the length of the map name.
-> 
-> Signed-off-by: Rong Tao <rongtao@cestc.cn>
-> ---
->  tools/bpf/bpftool/map.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
-> index ed4a9bd82931..fa00f7865065 100644
-> --- a/tools/bpf/bpftool/map.c
-> +++ b/tools/bpf/bpftool/map.c
-> @@ -1330,6 +1330,12 @@ static int do_create(int argc, char **argv)
->  		goto exit;
->  	}
->  
-> +	if (strlen(map_name) > BPF_OBJ_NAME_LEN - 1) {
-> +		p_err("The map name is too long, should be less than %d\n",
+devm_kasprintf() calls can return null pointers on failure.
+But some return values were not checked in zynqmp_audio_init().
 
+Add NULL check in zynqmp_audio_init(), avoid referencing null
+pointers in the subsequent code.
 
-Nit: I'd drop "The" (and the capital letter) for consistency with other
-messages in bpftool; and I'd replace "less than ..." with "no longer
-than %d characters\n" to make it explicit and avoid confusion between
-"strictly less" and "less or equal".
+Signed-off-by: Charles Han <hanchunchao@inspur.com>
+---
+ drivers/gpu/drm/xlnx/zynqmp_dp_audio.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c b/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c
+index fa5f0ace6084..f07ff4eb3a6d 100644
+--- a/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c
++++ b/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c
+@@ -323,12 +323,16 @@ int zynqmp_audio_init(struct zynqmp_dpsub *dpsub)
+ 
+ 	audio->dai_name = devm_kasprintf(dev, GFP_KERNEL,
+ 					 "%s-dai", dev_name(dev));
++	if (!audio->dai_name)
++		return -ENOMEM;
+ 
+ 	for (unsigned int i = 0; i < ZYNQMP_NUM_PCMS; ++i) {
+ 		audio->link_names[i] = devm_kasprintf(dev, GFP_KERNEL,
+ 						      "%s-dp-%u", dev_name(dev), i);
+ 		audio->pcm_names[i] = devm_kasprintf(dev, GFP_KERNEL,
+ 						     "%s-pcm-%u", dev_name(dev), i);
++		if (!audio->link_names[i] || !audio->pcm_names[i])
++			return -ENOMEM;
+ 	}
+ 
+ 	audio->base = devm_platform_ioremap_resource_byname(pdev, "aud");
+-- 
+2.43.0
 
-> +		      BPF_OBJ_NAME_LEN - 1);
-> +		goto exit;
-> +	}
-> +
->  	set_max_rlimit();
->  
->  	fd = bpf_map_create(map_type, map_name, key_size, value_size, max_entries, &attr);
-
-
-There's no need to defer the check until after we've parsed all
-arguments. Can you move it to the location where we retrieve the name,
-please?:
-
-		[...]
-		} else if (is_prefix(*argv, "name")) {
-			NEXT_ARG();
-			map_name = GET_ARG();
-		} else ...
-
-pw-bot: cr
-
-Apart from these, it's a good idea to fix it, thank you!
-Quentin
