@@ -1,33 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D582190486;
-	Tue, 11 Feb 2025 08:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865E11EBA14
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739260916; cv=none; b=rt4arUAbWveZDUAx+8PlNzP8SsL5ez+X8FGJuQxJauNhZNzqPoanWm3se/U9hDph9w6hcU5T7JJBFSNM8R/NUC1yzMKas/PJthU2QIETizp0lpLF53hdTuloehT0Ykhatx9CwWW/KTIAMtk0/RHWY5s2yJpJVVug9PtsrotBGNk=
+	t=1739260918; cv=none; b=QQMenvkA6Qt6ebqL5iP+ES6NiX/mNohsmb1pwtxPXJ7taAGd+w8kBYwcWus6u6D14pJZvSbq6NrE5uhSSAf+zxfB/AJ1JrSxh5cXC1edgkt58VW8yru8U2Rxc2InsBmP9jPscg9PRufQgGtrfFodRHO96UpCdyskhLqZiR/YqI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739260916; c=relaxed/simple;
-	bh=9bEXdxYB2C9XASX0APAaNux1TnoL9FXfmnFhFF334pQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Zm5viP+WZmY1Au4cKArpg03HU/sVyT9ASvUVepzeEVzzLHrw0jhGgizePAJxGtlB8IRq0TvSQCuGup/SX8iU685aKb1eMHMwUpA6AVtBbP2npndKYQlFkJKnkbIwFVtNRRR1BZmP6/WRWZpvVyF5Nsx+HErVzRNJeJY4GrzorBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sIVrXrLJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739260918; c=relaxed/simple;
+	bh=Sw0h0ERtzCmxJJ3TxQyw6/L/aOVV1cHpVOm3kFwUlRQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=br6D0/UjXOVWVs4mcFqj7NZ0mBfwFpmRXhuR9gicAGlcxuok4yPyhERQlyCFbinao4kHGWhMV5+2CcE6e28XI8YQbKvKkNmrP25J3dc+shLRsxXHrdFwq9Mn7WGMPXuPF02QOozP/wsawmyEQxv1sYuOAO7LvtjgFMc7Rr6he8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rybCBnv2; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sIVrXrLJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CC1CC4CEDD;
-	Tue, 11 Feb 2025 08:01:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739260915;
-	bh=9bEXdxYB2C9XASX0APAaNux1TnoL9FXfmnFhFF334pQ=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=sIVrXrLJMyjKOfNIUsmIqRbfYw9FsIoNLdKxCBPf2TK/lRFnL1gldbGNzqFq3GH8t
-	 r4zLsXkb2TPtTNIzYp8OIwupCNgduA5bXZNCmIUYeKBkZ9MEb2qBdPezXXsd7iILZV
-	 1lsNQKQZdT0VjM/bvZzuEAT5fPyc0Q2T12x9aUBF8vfbVrWBeW9uO6D853mmSc/LPE
-	 3w26EH0QUiI38AwcSUEctcecy7e9Bsz67E9A+f1W73vLo/19Tc97jXbNUbtopMQVX4
-	 UHYuZz/WiWxyhSfgGpp7KUFiiuNvE6PjSdL4/Db35I4DeGUYToZI/OEZaMItrFExUg
-	 PqH69oO5cH4gg==
-Message-ID: <71910842-6310-4e1f-81a1-3b218e1ee69a@kernel.org>
-Date: Tue, 11 Feb 2025 09:01:49 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rybCBnv2"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-38dcb33cba1so1909267f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:01:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739260915; x=1739865715; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=I1ZHsSsY3ITF+AirWxhJUBVeYzgF2p0gvSmDICW/VDI=;
+        b=rybCBnv2pu7ItiVUbpaW1Bdnl/fgigd0fsqN3H9CXS1VMU2J6YNoNTAdeD/2rQwXp7
+         XTFGS+ewWQ5t1ZVLqsaPpXAwwmk6HKMcg6O7aP2xINvTc9ioVoX97skkJ6Hi+W8bY9LU
+         QkF5jQySeBD4xLfCKwoCIRjRpaDMHC1j/h/YUTUsUwY1l7gdUaTng4SGquaguD/6J/q6
+         Zu002iZ6MBfGjkJ/ZepibixQ3OSZGEYV9hDucKk5XZ+5tLGoFDs2SenG6C6qYOSmA7Rr
+         R4CVczXTBfS4/+NBwlIebRGti04X953fdd+NRqeKEstbxjJpvvG0yuiBunRe4uZhgx8U
+         3Agg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739260915; x=1739865715;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=I1ZHsSsY3ITF+AirWxhJUBVeYzgF2p0gvSmDICW/VDI=;
+        b=jXgUoWpRiIagxbw4/3WR8jH8ItBD1BimFdtaf3/teCzKXtW246W9vf8k4JCQaGLZjv
+         8LER0OV7eOLzY5Jeu+ok6jRtTECgv5hsoGNMTAa6rLprBR/hhFMP4nHtEN4uWTd1XLD4
+         /HXt1hj7pJNH+IkpOoDrNItfR6JNpUmQDCQAY/xz94zjf64ZDY/80wm3mphh9XGTtUip
+         qLs7n67vOOIxKIPJ+nuyfDBnIdLvnWdNNnE0KQ/8SCapscbWcgPOl701K/q4bxiZMWB7
+         0IhXItxw7sycwb6zHbPQpTcoCkfCP8ltRTFE/eRo6RlA1Ky+kjxIyYNdVV+NfHk1K89M
+         zY6A==
+X-Gm-Message-State: AOJu0YxY4aAuka/rRvlAtD5zeqr8Gx+7E7R+cwIzU3fNmDWmYJxqCtMl
+	vXX0Sp8S9he5MOSyaoW4rdZdw5yZ8CuT5gLS/V32gYWAT35ZfMAX+FiLNn7JdVM=
+X-Gm-Gg: ASbGncuanAghsseZpYbHDZ+PgesjFtpKq4GnkS8q7cYOr/IyHFMPK6S+5ksxv7gqmAc
+	BaXcTanwqtaQQyhu4jFIBnIOGH2k2b9THfh8IjfUrU8EGrnn2EbF1y5IzVVnXUfNErmuaQ1mbOf
+	F0A4Dy/aJaGKdS4HwOOUpepeBJKpjis/QS09rdTZR1hoRWPKrzvDnxxcKRKcNog8g2VjCS/Fu3A
+	NplYKb7ApSeGECLu3OqSpF9VnGOGkZPKWXo3rLx+dABETe+QJNBQe29Bj+CaH/07EshsBDX03GT
+	lKX+oR19E04KwF6JuTMFn3d1j8Z3X/bnsY0IK4bMUOjOysf6OzvZ4f0=
+X-Google-Smtp-Source: AGHT+IG9fJqG7RvHCIV9bGkDY2+Kx+4Q02p4YuSEX8d5F3gH89SWSF5+LvjbXgxGduKOkfBEcOeJPw==
+X-Received: by 2002:a05:6000:1846:b0:38d:e411:98c2 with SMTP id ffacd0b85a97d-38de41198dfmr2152183f8f.32.1739260914725;
+        Tue, 11 Feb 2025 00:01:54 -0800 (PST)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-38dd49d2cafsm8698353f8f.16.2025.02.11.00.01.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 00:01:54 -0800 (PST)
+Message-ID: <15de0ea2-eae6-4f23-9ca1-15836ec95cca@linaro.org>
+Date: Tue, 11 Feb 2025 09:01:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,132 +65,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 04/16] dt-bindings: clock: at91: Allow referencing main
- rc oscillator in DT
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Ryan Wanner <ryan.wanner@microchip.com>,
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-References: <20250210164506.495747-1-ada@thorsis.com>
- <20250210164506.495747-5-ada@thorsis.com>
- <89d51ac4-0690-42a7-b5fb-2887363e8a8b@kernel.org>
- <20250211-deprive-relocate-353ad26f46b7@thorsis.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] thermal/netlink: Prevent Userspace Segmentation Fault by
+ Adjusting UAPI Header
+To: Zhang Rui <rui.zhang@intel.com>, rafael.j.wysocki@intel.com
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ lukasz.luba@arm.com, srinivas.pandruvada@intel.com
+References: <20250208074907.5679-1-rui.zhang@intel.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250211-deprive-relocate-353ad26f46b7@thorsis.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <20250208074907.5679-1-rui.zhang@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 11/02/2025 08:26, Alexander Dahl wrote:
-> Hello Krzysztof,
+On 08/02/2025 08:49, Zhang Rui wrote:
+> The intel-lpmd tool [1], which uses the THERMAL_GENL_ATTR_CPU_CAPABILITY
+> attribute to receive HFI events from kernel space, encounters a
+> segmentation fault after commit 1773572863c4 ("thermal: netlink: Add the
+> commands and the events for the thresholds").
 > 
-> Am Mon, Feb 10, 2025 at 06:07:10PM +0100 schrieb Krzysztof Kozlowski:
->> On 10/02/2025 17:44, Alexander Dahl wrote:
->>> The main rc oscillator will be needed for the OTPC to work properly.
->>>
->>> The new index introduced here was not used on the four affected SoC
->>> clock drivers before, but for sama5d2 only (PMC_I2S1_MUX).
->>>
->>> Link: https://lore.kernel.org/linux-devicetree/20250207-jailbird-circus-bcc04ee90e05@thorsis.com/T/#u
->>> Signed-off-by: Alexander Dahl <ada@thorsis.com>
->>> ---
->>>
->>> Notes:
->>>     v2:
->>>     - new patch, not present in v1
->>>
->>>  include/dt-bindings/clock/microchip,sam9x60-pmc.h  | 3 +++
->>>  include/dt-bindings/clock/microchip,sam9x7-pmc.h   | 3 +++
->>>  include/dt-bindings/clock/microchip,sama7d65-pmc.h | 3 +++
->>>  include/dt-bindings/clock/microchip,sama7g5-pmc.h  | 3 +++
->>>  4 files changed, 12 insertions(+)
->>>
->>> diff --git a/include/dt-bindings/clock/microchip,sam9x60-pmc.h b/include/dt-bindings/clock/microchip,sam9x60-pmc.h
->>> index e01e867e8c4da..dcd3c74f75b54 100644
->>> --- a/include/dt-bindings/clock/microchip,sam9x60-pmc.h
->>> +++ b/include/dt-bindings/clock/microchip,sam9x60-pmc.h
->>> @@ -16,4 +16,7 @@
->>>  
->>>  #define SAM9X60_PMC_PLLACK	PMC_PLLACK	/* 7 */
->>>  
->>> +/* new from after bindings splitup */
->>> +#define SAM9X60_PMC_MAIN_RC	6
->>
->> This is confusing me, because:
->> 1. You still have holes in IDs
+> The issue arises because the THERMAL_GENL_ATTR_CPU_CAPABILITY raw value
+> was changed while intel_lpmd still uses the old value.
 > 
-> Yes, I was told to maintain the old values for interface stability in
-> series v1 feedback.
+> Although intel_lpmd can be updated to check the THERMAL_GENL_VERSION and
+> use the appropriate THERMAL_GENL_ATTR_CPU_CAPABILITY value, the commit
+> itself is questionable. The commit introduced a new element in the
+> middle of enum thermal_genl_attr, which affects many existing attributes
+> and introduces potential risks and unnecessary maintenance burdens for
+> userspace thermal netlink event users.
 > 
->> 2. This should be placed in proper order by ID
+> Solve the issue by moving the newly introduced
+> THERMAL_GENL_ATTR_TZ_PREV_TEMP attribute to the end of the
+> enum thermal_genl_attr. This ensures that all existing thermal generic
+> netlink attributes remain unaffected.
 > 
-> Okay, no problem.
-> 
->> 3. Why not using 4 - the next available empty ID?
-> 
-> The MAIN_RC clock is used on four out of thirteen (?) SoC variants
-> which all used the same IDs before.  6 is the first ID which is free
-> on all of sam9x60, sam9x7, sama7g5, and sama7d65.  The last two
-> already use 4 for a different clock.
+> Link: https://github.com/intel/intel-lpmd [1]
+> Fixes: 1773572863c4 ("thermal: netlink: Add the commands and the events for the thresholds")
+> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+> ---
 
-So driver for this device already uses something for 4?
+Right, thanks for the fix
 
-> 
-> The whole splitup is to avoid even more and/or bigger holes, but is it
-> important where the existent holes are filled?
-> 
-> Technically if the next available empty ID should be used it would be
-> 4 for sam9x60 and sam9x7, 2 for sama7d65, and 6 for sama7g5.  I
-> thought it would be nice to use the same value instead to make
-> somewhat compatible to the old approach.
+Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
 
-Best regards,
-Krzysztof
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
