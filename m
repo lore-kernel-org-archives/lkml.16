@@ -1,186 +1,209 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9E31C1F02;
-	Tue, 11 Feb 2025 09:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15671BD9D2
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739266604; cv=none; b=m8tj2osP/nXE9meQ5Bs7JC0rhwSFGjWdcuLs+z4G9aj8Y/d0f7t5YArwem6pSrT+aDn5KEkrnuXrRMqFiyBD1g0ypsdfUhyPwViI9LktEKv0uSoPXzbVZ3FcWDZNiIVo1sZp78j6qzptt4j/j2MVjWDmi0LjqsIXHpJFV4zr68g=
+	t=1739266683; cv=none; b=llMJolQiLuWXwEZml/VunND8Qyxgb7PJ8o6x3oOdWhqZj7eez4WXNAtTnQEyqBBQtG/iRs+Xm2LVqmwypxPVMulxk11JeJnK8uVN3E7e3jSmpzPYmKvqQBD2ESP5a6Buw/bf/xkYhNW3GiHPjjXz62KbEkWckYa6clf4U9iuoKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739266604; c=relaxed/simple;
-	bh=r0t/C/JtKU2oJus6ciVO1PV/Kw3upXfkSpsHfmJsvBY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gh1YEPs8JlzP99pJrcJ59rNe0wCkCdEbomV3H/1ebV4p7S8Ln3Uw5qszt/yF9mSKgIRstHbds8kEJKHbkqNrt2rDX9kkwtJBflwV9k6GGu9xtOB91XfXetc7r26P0qu1DhDlfvgE5nT81ugNVKSZi+mGoaDMFcB5ks86nosMD80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b=duPBoovO; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1739266683; c=relaxed/simple;
+	bh=LeW9h4eftPtTjZannHyTsTHVG90avQJV9ka2KtU2Y+M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FzQ9tPvWS9aTlQvkRE39huCK6XTaKUmb9jktX00GBdXfCe7Nvgm44jGJQjpyvnUCT4EXyp2VyFSrIGMD69UYR/m8Q8VjVS5+2qpZqL4B3kiozqECqjPQHnvr5/jsWL1OjIaYnrOGvasf4CyRgF833lLiYqfLjVeIbEYtwgZf28I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C9D2RLZ5; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b="duPBoovO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1739266599; x=1739871399; i=ps.report@gmx.net;
-	bh=xlQvqMlLEpURsovZTD7C/j2+VnCZle44LOF8c3QimJE=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
-	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=duPBoovOiuxmoDZAW4/mJtbxo7poIoUEtNT2QpHLGDfJgO0HKUprMIpwPS8DQttz
-	 2fdb+5LhRDlUDFruRAlKDYO+7ktb+9wN8nT7ELLLSld8MtU1A+6ZxwpLoAPFMw2hQ
-	 R3vYhvfc9je71OBfkqLU+X8XmkdNbKaZiKc1MGll2qoibvoZz7jU/AGYkA03O1r2t
-	 R3KxSLV14n+L7yl5xNITK8m7xFJqal141p7IL6gvJ4vpG5lXcRXdRrJbNfeL8Wexc
-	 G8hgyTBRVkvF5lnfpOzNfKte8Zcd+uZDH7Hw7+yS8juZFubcRvSKs3ZcNTZuZ1pPd
-	 7bUusGJ6YINqL3rC1w==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost ([82.135.81.30]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MY68d-1ttgwE2xdl-00SRi0; Tue, 11
- Feb 2025 10:36:39 +0100
-Date: Tue, 11 Feb 2025 10:36:39 +0100
-From: Peter Seiderer <ps.report@gmx.net>
-To: Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH net-next v4 00/17] Some pktgen fixes/improvments
-Message-ID: <20250211103639.531a2baa@gmx.net>
-In-Reply-To: <20250206135154.GB641369@kernel.org>
-References: <20250205131153.476278-1-ps.report@gmx.net>
-	<20250206135154.GB641369@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-suse-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C9D2RLZ5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739266680;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=rqWE4p6XLBT63qofoUaEI9KGmwZZNE/fsrMteRuGGoE=;
+	b=C9D2RLZ5H0joF9u+atD1h+KRwx7X7hUqTnU1O6rqa2tJ0b8qv+/rkXxPoSHmL5ETkKip05
+	I5Q/6ZTUj1G8QD+U6hMO9gM/tREQmNBoWZBLtKtCxufg4ftd7RD4HgcKJ/S8PIgWZhSsrZ
+	CwbyZ5oocy71mUkRldLFVV4gcIZa5IY=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-191-LR6Wf6V_OTmtkyNV7By4fw-1; Tue, 11 Feb 2025 04:37:59 -0500
+X-MC-Unique: LR6Wf6V_OTmtkyNV7By4fw-1
+X-Mimecast-MFC-AGG-ID: LR6Wf6V_OTmtkyNV7By4fw
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43933bdcce0so19973935e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:37:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739266678; x=1739871478;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rqWE4p6XLBT63qofoUaEI9KGmwZZNE/fsrMteRuGGoE=;
+        b=LpnXPaKIKSoT9HDFwYYz7PtEIx8JRZjlIESX3zkFTJjo6BOLTihBRkKBbeGQjTn40c
+         GABRc17LCBvFLJyNXfMoV24rlzVU6iHpyPVrkJ1HET+Yy3t9y4WxN06tmOCSgde5uGvl
+         +w76Wb5CRsdfu6F6tRbUcFQe4dtjy4bb9N7dwCLibo7OLTRv471Y/B+G43+eWmW3LHS1
+         MeZtNUdquCV9uknmf1JzpWh4rMNU6fp0yLtDjHYlfA1k6dfb2I5CtkQURy/w/7ln7AnT
+         vDa/ZbjJjliMf1hKdFRuqqDwwZ4KfxVTwUyPdQSD3xUc9RmFVovmA36X6iLJwdDIo4DO
+         lEjg==
+X-Forwarded-Encrypted: i=1; AJvYcCUTzrEen3+4nLtrVeSdsXO/iFEnG9cpm5Sq+tiuOqTc2aVI6/2a2Bb2GeR5Pu3w5y2cvl8U4EosBOT0cVo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5OUHLW5FhUEYuiIytK8dxWRY9P0CG3zB8s4DJDjzDGGptT0tl
+	GpDRm5bQ6uNpmuRTxyjpvAdB8heQ8Yx+EmSfEAM7O90fMprgbDwxlHpZ62wlA+Xp3Tsolkj9c7i
+	rAeHfKwdvyjMwghZN8UYS955HrHn0PObPTu/1Fl0UcZBer3fvmAOIifWILHjQDA==
+X-Gm-Gg: ASbGnctev27NUbPcqkUWwBMsL+P1e1HhUxD7PKnP4S5K0yOmReC+YLocoBrUwGpdxFa
+	jHuHNO8F44lVvS6cXMOPy6LrZJW4Ri/+7xrXH0L4nGXcmT69VgiRAf/ZGaURRvu7zTRvWoY9xw5
+	TmKWoTJClcsNqk3Xg1Y6zrasyb4dTXh3RNLECSJp7nIMU8veTbrATeWqdHsyRWmzDFnzg8yBF70
+	Z1vgBm86VOdeGlf9tVhH2JyzddOWwRdva6XMQ2BoRv/1AR5YEq8aHVf1NpBta2yCks7dIqGV7XQ
+	BXDw2otIeqqOprNhh0Op0lOAJFPmwbvurolfOD8=
+X-Received: by 2002:a05:600c:4c1a:b0:439:331b:e34f with SMTP id 5b1f17b1804b1-439331be65amr99775315e9.17.1739266677996;
+        Tue, 11 Feb 2025 01:37:57 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFdMJ3Lbn+4zbv9eh9uw+CnLa7ynQQjEkdGPE5ELAKNvD2Zn/ydAg6zsMZGerEubApHp0jBOQ==
+X-Received: by 2002:a05:600c:4c1a:b0:439:331b:e34f with SMTP id 5b1f17b1804b1-439331be65amr99774975e9.17.1739266677617;
+        Tue, 11 Feb 2025 01:37:57 -0800 (PST)
+Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd8dee385sm7263297f8f.61.2025.02.11.01.37.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Feb 2025 01:37:56 -0800 (PST)
+Message-ID: <2b0bb476-5bd6-489a-9b9e-7aa20964abfa@redhat.com>
+Date: Tue, 11 Feb 2025 10:37:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:l5LxLtIQPMMSImztDiDIFP6uroR6HuR/ZlyTZHQCIF+Q3o2qbC+
- ruwC2AL/oxaQi38o5N4HS7P6lhRTAEevw1rgISozxqlFXhsFOQjDc07PDYcc6Q0E0mCuKKc
- 2oBZ5rs2zNOT5reATE8O6f5cU24eq9ci8C1/sw2X+q6PN4U9Q6Z2IxV5BLrdvh467cgijcL
- FmBJUmvhk0PQHmoyOeB2w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:FxWfTdx8fhM=;hGa3vGXg8c4iVmcNLq1pnJrcxa1
- bFre4qds7Yht4y0xV5IqFJ49CfC8k/VrP1NoGD22oLax/yPKnLZxhPKAfMzg9uMsctpZexHHg
- N3SDGEdBPctl9KdmPZBrAMKYa4fLAUZkAHSTgIWMJNiOCPQamsktpmixtruAt7l7nGHKZR2tV
- 5nZd8/CpHA/djmh1ZRHflXdgLEWy73dlPuOwhvqz+3+K2yL3HtTpd35mUvGKcMHX1RX5yxoFy
- UyRRYJD8li4cLbdfiXVPHsHwgcyeQjh4lCVRWBVsH02yNGvdvJ93lxUqoBMxxZLzpCo8D/JCa
- mQk/mfCbTNySaLxXgTCTxVpj2L4gSgggAsGJAserfhDx3jmRuDxvDI167IlDqZU1D1TQJsvw9
- 7KkhQYLLeHiKV+GWVsIweMvE6iVn5j+Ye3tV4K8sHBTV3WxRMPq/KCEM6LTdejAoqltV8Vur7
- DiIY3MvROqU0TIwQvASqJQyIHkjCtX2bb75AduX/BRL3VnTgdmzSbsgN6zd9MpD8Kyfu99Ktn
- +61gfGP/EbK4DqS2RAYL0hg2ktBF+7Tp6UBMquldBr5UFLhjN5dj2+49Mm0GnbK4Vhf4sBHfM
- Bscc33DNNvWOVrUUPrMOqsDJcDTuAYDzBWh7CnIbSRmEnjkStdRWYy1Yfi7W1pcp6sHqJC4st
- 2fuw31KoKOJC0PPcYkHiX+adagTwIydHYX7+Fg6d6feLmj8o5i6XBDnknrKIWNOvekf7kuRAR
- GhyNuMEpkhXNBPNPmvIoGjTrNh2aVbIwNwxEBWOeqnP/177n+wfG6sj+2tuubxIokblDWj0th
- d/9j8oVrOCx8/O3biRJEGYbU4XReSsa5YUOsABRPK/ZiSpCFCyddYBlOSkJELCX9nzoc5LVW9
- 3rFVe3pp+nFSQJZr+ZpbLCOUYY6PZEWgDUExq01b3LzS2vIzvEVGEilsInojvx3Q9ZWEJYqab
- 2AeN97VDSUp5CjECTKRbifkX8V/O8FtdGksyV8vlEaLCh/y4M8bxVfjKFfi1CiH1QODymcNPm
- pQm6GVD0xGoxKuZgozkYj8QTdyjGg3tSWrZB3yCVNOfwBilQgyNkFd75nDfVLpBAZChfCF6pZ
- DPdQpv1g76fhApBDEdSVZVcdtFp6sMqjIcFDM8Mao6cTbAF6abIVY2EIiIiy5AyJ46Iyd+xRH
- dv9gWjsz2pu9qHz9nVAxJt2HJK2iAWPUoF/2PJ+R69+GIlpOw//kStBr2poUt9eUWxgmyzdyZ
- 3HgIBaHsn9TJV855+LhzVqOmLSNPIHteEtB9oOQXYh4VYxk7dL9sY+OsH0P2kfFa387kRGegQ
- P7f+KrEiZF8EVt7GGM98bCmAyft+dB1u1uWbKW1bPoIkxPjSvyIjFlYBrtp+546F6aGKi080O
- B+aqV1U21VpY08uHwt0xU2LY+swjR/mxnrHg9UAFzdZ1YsO0TdEAmDK0xQ
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] NULL pointer dereference on ARM (AT91SAM9G25) during
+ compaction
+To: Qi Zheng <zhengqi.arch@bytedance.com>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
+ Ezra Buehler <ezra@easyb.ch>, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>, Vlastimil Babka <vbabka@suse.cz>,
+ Ryan Roberts <ryan.roberts@arm.com>,
+ "Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+ Hugh Dickins <hughd@google.com>, Matthew Wilcox <willy@infradead.org>,
+ Peter Xu <peterx@redhat.com>, Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ open list <linux-kernel@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org
+References: <CAM1KZSmZ2T_riHvay+7cKEFxoPgeVpHkVFTzVVEQ1BO0cLkHEQ@mail.gmail.com>
+ <Z6oxUdrVBPd5ZTEu@shell.armlinux.org.uk>
+ <5d50d714-197f-44c0-94e0-ff70ee51e866@bytedance.com>
+ <34bcf011-b4ac-479c-92ce-852623e73039@redhat.com>
+ <3f7babee-b232-4e6b-a896-947150dcd1ef@bytedance.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <3f7babee-b232-4e6b-a896-947150dcd1ef@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hello Simon,
+On 11.02.25 10:29, Qi Zheng wrote:
+> 
+> 
+> On 2025/2/11 17:14, David Hildenbrand wrote:
+>> On 11.02.25 04:45, Qi Zheng wrote:
+>>> Hi Russell,
+>>>
+>>> On 2025/2/11 01:03, Russell King (Oracle) wrote:
+>>>> On Mon, Feb 10, 2025 at 05:49:38PM +0100, Ezra Buehler wrote:
+>>>>> When running vanilla Linux 6.13 or newer (6.14-rc2) on the
+>>>>> AT91SAM9G25-based GARDENA smart Gateway, we are seeing a NULL pointer
+>>>>> dereference resulting in a kernel panic. The culprit seems to be commit
+>>>>> fc9c45b71f43 ("arm: adjust_pte() usepte_offset_map_rw_nolock()").
+>>>>> Reverting the commit apparently fixes the issue.
+>>>>
+>>>> The blamed commit is buggy:
+>>>>
+>>>> arch/arm/include/asm/tlbflush.h:
+>>>> #define update_mmu_cache(vma, addr, ptep) \
+>>>>            update_mmu_cache_range(NULL, vma, addr, ptep, 1)
+>>>>
+>>>> So vmf can be NULL. This didn't used to matter before this commit,
+>>>> because vmf was not used by ARM's update_mmu_cache_range(). However,
+>>>> the commit introduced a dereference of it, which now causes a NULL
+>>>> point dereference.
+>>>>
+>>>> Not sure what the correct solution is, but at a guess, both:
+>>>>
+>>>>      if (ptl != vmf->ptl)
+>>>>
+>>>> need to become:
+>>>>
+>>>>      if (!vmf || ptl != vmf->ptl)
+>>>
+>>> No, we can't do that, because without using split PTE locks, we would
+>>> use shared mm->page_table_lock, which would create a deadlock.
+>>
+>> Maybe we can simply special-case on CONFIG_SPLIT_PTE_PTLOCKS ?
+>>
+>> if (IS_ENABLED(CONFIG_SPLIT_PTE_PTLOCKS)) {
+> 
+> In this case, if two vmas map the same PTE page, then the same PTE lock
+> will be held repeatedly. Right?
 
-On Thu, 6 Feb 2025 13:51:54 +0000, Simon Horman <horms@kernel.org> wrote:
+Hmm, the comment says:
 
-> On Wed, Feb 05, 2025 at 02:11:36PM +0100, Peter Seiderer wrote:
-> > hile taking a look at '[PATCH net] pktgen: Avoid out-of-range in
-> > get_imix_entries' ([1]) and '[PATCH net v2] pktgen: Avoid out-of-bound=
-s access
-> > in get_imix_entries' ([2], [3]) and doing some tests and code review I
-> > detected that the /proc/net/pktgen/... parsing logic does not honour t=
-he
-> > user given buffer bounds (resulting in out-of-bounds access).
-> >
-> > This can be observed e.g. by the following simple test (sometimes the
-> > old/'longer' previous value is re-read from the buffer):
-> >
-> >         $ echo add_device lo@0 > /proc/net/pktgen/kpktgend_0
-> >
-> >         $ echo "min_pkt_size 12345" > /proc/net/pktgen/lo\@0 && grep m=
-in_pkt_size /proc/net/pktgen/lo\@0
-> > Params: count 1000  min_pkt_size: 12345  max_pkt_size: 0
-> > Result: OK: min_pkt_size=3D12345
-> >
-> >         $ echo -n "min_pkt_size 123" > /proc/net/pktgen/lo\@0 && grep =
-min_pkt_size /proc/net/pktgen/lo\@0
-> > Params: count 1000  min_pkt_size: 12345  max_pkt_size: 0
-> > Result: OK: min_pkt_size=3D12345
-> >
-> >         $ echo "min_pkt_size 123" > /proc/net/pktgen/lo\@0 && grep min=
-_pkt_size /proc/net/pktgen/lo\@0
-> > Params: count 1000  min_pkt_size: 123  max_pkt_size: 0
-> > Result: OK: min_pkt_size=3D123
-> >
-> > So fix the out-of-bounds access (and some minor findings) and add a si=
-mple
-> > proc_net_pktgen selftest...
-> >
-> > Regards,
-> > Peter
-> >
-> > Changes v3 -> v4:
-> >  - add rev-by Simon Horman
-> >  - new patch 'net: pktgen: use defines for the various dec/hex number =
-parsing
-> >    digits lengths' (suggested by Simon Horman)
-> >  - replace C99 comment (suggested by Paolo Abeni)
-> >  - drop available characters check in strn_len() (suggested by Paolo A=
-beni)
-> >  - factored out patch 'net: pktgen: align some variable declarations t=
-o the
-> >    most common pattern' (suggested by Paolo Abeni)
-> >  - factored out patch 'net: pktgen: remove extra tmp variable (re-use =
-len
-> >    instead)' (suggested by Paolo Abeni)
-> >  - factored out patch 'net: pktgen: remove some superfluous variable
-> >    initializing' (suggested by Paolo Abeni)
-> >  - factored out patch 'net: pktgen: fix mpls maximum labels list parsi=
-ng'
-> >    (suggested by Paolo Abeni)
-> >  - factored out 'net: pktgen: hex32_arg/num_arg error out in case no
-> >    characters are available' (suggested by Paolo Abeni)
-> >  - factored out 'net: pktgen: num_arg error out in case no valid chara=
-cter
-> >    is parsed' (suggested by Paolo Abeni)
->
-> Hi Peter,
->
-> Thanks for splitting up the patchset some more, I for one find it much
-> easier to review them in this form.
+         /*
+          * This is called while another page table is mapped, so we
+          * must use the nested version.  This also means we need to
+          * open-code the spin-locking.
+          */
 
-Definitely!
+"another page table" implies that it cannot be the same. But maybe that 
+comment was also wrong?
 
->
-> That said, we are now over the preferred maximum of 15 patches in a seri=
-es.
-> Perhaps the maintainers are ok with that, but I'd like to suggest breaki=
-ng
-> the series in two: The first 7 patches seem to be somewhat stable, from =
-a
-> review perspective, and could be posted as "part i"; And then the remain=
-ing
-> patches could be posted as "part ii" once "part i" has been accepted.
 
-Yes, the patch set evolved a little bit over the 'just fix some little str=
-ange
-behavior'..., splitting it up will work for me for sure..., will do on nex=
-t
-patch set iteration...
+-- 
+Cheers,
 
-Regards,
-Peter
-
->
-> As for the selftests (the last patch of the series). A version,
-> trimmed down as appropriate, could be included in "part i", with a
-> follow-up in "part ii". Or the cover note for "part i" could state that =
-the
-> selftests have been deferred to "part ii".
->
-> Perhaps the maintainers have other ideas, if so hopefully they will comm=
-ent
-> here.
+David / dhildenb
 
