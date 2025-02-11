@@ -1,40 +1,40 @@
 Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C52266589;
-	Tue, 11 Feb 2025 21:25:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6EFB26280E;
+	Tue, 11 Feb 2025 21:25:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739309158; cv=none; b=Ok/lmXSOtAO0WkoG019PL9RRP93ME8/2k+zb/jJS6VeQMzCU2D2mwjK1F3bLr9UjJ6Shgu8MpRiHJDrRSX/ZurF0jUBMmGRKZmFTI+IyCKTAUNTXWwbUSOsAROzB2X/9bu3X33Za3DLbGejL3F7Ym0TJeyLZiRW8smiO44G5BaA=
+	t=1739309157; cv=none; b=NiKOTCSFutzEsMKH4JwcFgjhcTPX6sjea5jvP7q87ehAIeQYfRAA+Jpvo5NczPcgK7F6KmjLjoCOF7ZNgu2BOQzU4sYp1phbrxkwBme+RSeuj+s3a2kFk9XKZbFqRbuhb5UO4KfFL3J5h7GyQVlCVCWWmBx+UNmNHh0X6Z9XjBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739309158; c=relaxed/simple;
-	bh=zVHK9tKkrrsUglkhVCFQZZeMj/6ZCvBq1S2weRFFqdk=;
+	s=arc-20240116; t=1739309157; c=relaxed/simple;
+	bh=CVXpmJor++qVMVrNa2Vtw7b1Gj23SWNCnYY/5A5S8YU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F/snKhzUDj7AWNrxUZL2lxtkhPc+XdH1r2EVUKju+rddeOFQ8wws/tuWtzSdswgRWkBxHc69JdNhm6GTeel8utYixQf8lKpSBTvxg3Nzs6QROB6cD2pA6C1wdl3urk1p7CrFuRXf/YVTLXaNamrjYoW4FczHvoWmEUf4kBt/OQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=CHPt/RUh; arc=none smtp.client-ip=79.96.170.134
+	 MIME-Version:Content-Type; b=iCb93y1RIjMN8/4CBTK5YUFc42LGvco43mwola5zLxeppzv6iOWd2eabS4cEqdc7JYf3w+wQAww0O401QwCNWy7mH49//aOI8//rQEi+1S1RiJXW7O2shtw64lMIdjlCrLH958OVjbf/CAtYG/XRyz64srZSMubvrxUULK1AkII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=lYHSmmnL; arc=none smtp.client-ip=79.96.170.134
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="CHPt/RUh"
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="lYHSmmnL"
 Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
  by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.1)
- id e027a457252b6505; Tue, 11 Feb 2025 22:25:49 +0100
+ id 043443d38ece3eef; Tue, 11 Feb 2025 22:25:47 +0100
 Received: from kreacher.localnet (unknown [195.136.19.94])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 100E6770175;
-	Tue, 11 Feb 2025 22:25:49 +0100 (CET)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 2F9FE770175;
+	Tue, 11 Feb 2025 22:25:47 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1739309149;
-	bh=zVHK9tKkrrsUglkhVCFQZZeMj/6ZCvBq1S2weRFFqdk=;
+	s=dkim; t=1739309147;
+	bh=CVXpmJor++qVMVrNa2Vtw7b1Gj23SWNCnYY/5A5S8YU=;
 	h=From:Subject:Date;
-	b=CHPt/RUhm3cXLGMvxhiWdSgoVaBFqdO6LPDszthIOUdPfj8qeIHopckJZqaySZqpD
-	 xqdg57J/xp/fjdJqc7bCR5z8kfjPUyo8VV1bwFrqQCaCvtmwPWQPRErx4KDyl3RUCQ
-	 k6V1BTZ5Pxoy9mjSMMNFT4G8dTMs7/Mlv2bKKUF4l/yOXx5nsqD9fO6Cz30DHfmI1+
-	 XcU8JpkGoBdtgy4K1vz2DzKxvDWs3udxxtxD655gZeturWF2v7gA4Xl0XlqiSlJTQf
-	 rVKbZr+oiv8dZzOjynYjGdW2z0+eBhr8TpXLVrL5Q2LqeBQdyKY9h/VOAnspbBwWdT
-	 JM4fkG0AZ/zOg==
+	b=lYHSmmnLa/p1gEwWiGE/rEnPKxHM2jU+pPnMB2xwW/gnrDp3S7pXUF6zzkS2KTfaE
+	 CQvgkcy5kn0ubzhy9X5nGiEsryZXL84SoV+5SSMwqf1gHNnmM/migPdbvCcjVZr7N9
+	 xSTt/uB5uRsdnR1g08vYNPzSvn01+mfxyjyCKp2liEIOaqDqQL3FkA4Jggx9mQimhe
+	 76Ixfa7781xtHiZyHULzr4cLbLBBD1zzP62oXF+xqdRhgNu1zF7DMD+vib7KNWLbQF
+	 Otk1oYvV4HQNb/kFLmElIrUwhuwNh7x4yIHWbAd3zyqE5kkbqroCk7Q3sbdUI+vsB3
+	 cF5eg2RSvQZYQ==
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To: Linux PM <linux-pm@vger.kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>,
@@ -43,10 +43,9 @@ Cc: LKML <linux-kernel@vger.kernel.org>,
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
  Jon Hunter <jonathanh@nvidia.com>
 Subject:
- [PATCH v1 04/10] PM: runtime: Drop status check from
- pm_runtime_force_resume()
-Date: Tue, 11 Feb 2025 22:07:52 +0100
-Message-ID: <6038511.MhkbZ0Pkbq@rjwysocki.net>
+ [PATCH v1 06/10] PM: sleep: Adjust check before setting power.must_resume
+Date: Tue, 11 Feb 2025 22:10:39 +0100
+Message-ID: <3548152.QJadu78ljV@rjwysocki.net>
 In-Reply-To: <2314745.iZASKD2KPV@rjwysocki.net>
 References: <2314745.iZASKD2KPV@rjwysocki.net>
 Precedence: bulk
@@ -65,36 +64,69 @@ X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Since pm_runtime_force_resume() requires pm_runtime_force_suspend() to
-be called before it on the same device, the runtime PM status of that
-device is RPM_SUSPENDED when it is called unless the device's runtime
-PM status is changed somewhere else in the meantime.
-
-However, even if that happens, the power.needs_force_resume
-check is still required to pass and that flag is only set by
-pm_runtime_force_suspend() and it is cleared at the end of
-pm_runtime_force_resume(), so it cannot be taken into account
-twice in a row.
-
-Accordingly, the pm_runtime_status_suspended(dev) check in
-pm_runtime_force_resume() is redundant, so drop it.
+Use pm_runtime_need_not_resume() in the check deciding whether or not
+the device's power.must_resume flag needs to be set, so it covers the
+device's active children counter in addition to its runtime PM usage
+counter, rearrange that check and adjust the comment next to it.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
+ drivers/base/power/main.c    |   12 +++++-------
  drivers/base/power/runtime.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/pm_runtime.h   |    2 ++
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
---- a/drivers/base/power/runtime.c
-+++ b/drivers/base/power/runtime.c
-@@ -1963,7 +1963,7 @@
- 	int (*callback)(struct device *);
- 	int ret = 0;
- 
--	if (!pm_runtime_status_suspended(dev) || !dev->power.needs_force_resume)
-+	if (!dev->power.needs_force_resume)
- 		goto out;
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -1268,14 +1268,12 @@
+ 	dev->power.is_noirq_suspended = true;
  
  	/*
+-	 * Skipping the resume of devices that were in use right before the
+-	 * system suspend (as indicated by their PM-runtime usage counters)
+-	 * would be suboptimal.  Also resume them if doing that is not allowed
+-	 * to be skipped.
++	 * If it is not allowed to skip the resume of the device or it was in
++	 * use before the system suspend has started (in which case it needs to
++	 * be resumed for consistency), set the "must resume" flag for it.
+ 	 */
+-	if (atomic_read(&dev->power.usage_count) > 1 ||
+-	    !(dev_pm_test_driver_flags(dev, DPM_FLAG_MAY_SKIP_RESUME) &&
+-	      dev->power.may_skip_resume))
++	if (!(dev_pm_test_driver_flags(dev, DPM_FLAG_MAY_SKIP_RESUME) &&
++	      dev->power.may_skip_resume) || !pm_runtime_need_not_resume(dev))
+ 		dev->power.must_resume = true;
+ 
+ 	if (dev->power.must_resume) {
+--- a/drivers/base/power/runtime.c
++++ b/drivers/base/power/runtime.c
+@@ -1874,7 +1874,7 @@
+ 	pm_request_idle(link->supplier);
+ }
+ 
+-static bool pm_runtime_need_not_resume(struct device *dev)
++bool pm_runtime_need_not_resume(struct device *dev)
+ {
+ 	return atomic_read(&dev->power.usage_count) <= 1 &&
+ 		(atomic_read(&dev->power.child_count) == 0 ||
+--- a/include/linux/pm_runtime.h
++++ b/include/linux/pm_runtime.h
+@@ -66,6 +66,7 @@
+ 
+ extern int pm_generic_runtime_suspend(struct device *dev);
+ extern int pm_generic_runtime_resume(struct device *dev);
++extern bool pm_runtime_need_not_resume(struct device *dev);
+ extern int pm_runtime_force_suspend(struct device *dev);
+ extern int pm_runtime_force_resume(struct device *dev);
+ 
+@@ -254,6 +255,7 @@
+ 
+ static inline int pm_generic_runtime_suspend(struct device *dev) { return 0; }
+ static inline int pm_generic_runtime_resume(struct device *dev) { return 0; }
++static inline bool pm_runtime_need_not_resume(struct device *dev) {return true; }
+ static inline int pm_runtime_force_suspend(struct device *dev) { return 0; }
+ static inline int pm_runtime_force_resume(struct device *dev) { return 0; }
+ 
 
 
 
