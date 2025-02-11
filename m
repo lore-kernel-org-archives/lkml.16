@@ -1,111 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19AC253B6E
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 17:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A9A156C69;
+	Tue, 11 Feb 2025 17:45:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739295903; cv=none; b=BBcpBcJmb4Xy6AMJ/Ymf3tW9ZpdW/22jFz97QklZuZCO/c7p156/gH0LbZ2FiGvAzH+TJ09RCAzJYfa15xxnWXg7fZymGpmuKEsQtso1s3cGKEuj4H89aAnkwmTXC8EBS3EqiRBE9eBiXtHRehJ5gFiHkt2cooa5a/Fd6y7ngxs=
+	t=1739295929; cv=none; b=aqof9ZibqftIp2TG+xPgiZBZz2CUHqnJKMcSwC8UBP1UVvnUoKvCqbcux5oZ17UvHBOqgJszYIpanSe3bhhIp49SOyhEPB5dbEAid0pa0pfJTX4LBHWtGTx+UTJsMEKMfhXG5owF0XwbCZSzgu6qtMrbyiM7d6gNs/QyN8g8Osc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739295903; c=relaxed/simple;
-	bh=IYEdhM4+0ThJA5HBQ6fog3jXewUj4csh1viDFDkpai0=;
+	s=arc-20240116; t=1739295929; c=relaxed/simple;
+	bh=Cyr8xNX4CD2amZmI5NG6bxTs4j3Nl6bQnMObGiScGQY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qPVc+gMyjIjuICYp0pjyOAh5anqqUB41LC0YgAugbpA9gxkRLx8474gImgQ+AoW7l6nyXqDNzM83OsjlYoAuL1iwgvGKVS3wKB+9PlJShctTkSKQJ9J8xRd2WyH01Js6lhh9nCjrxx6zEKVvehGXNKOw9CZ+eR7wccp6B4IjhwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E9k3qkjg; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rp79P5ZoSHhxmYsCp8NPL5o/AbC2yeKDjwUlskCBycknZf72zKXo0ROxkAU8x5PmPYI7ygj2QKS7zWz8wQIqk94S0YwyJuv8zL7hwiBjz3S6tJ0B0tGbHP3oFjJiY0m1exZdny290neoN+HV6eGvksGqjiaf33gh2GXQu4VP1pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=LujDI75O; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=yPqDjUvv; arc=none smtp.client-ip=202.12.124.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E9k3qkjg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03AA6C4CEDD;
-	Tue, 11 Feb 2025 17:44:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739295902;
-	bh=IYEdhM4+0ThJA5HBQ6fog3jXewUj4csh1viDFDkpai0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E9k3qkjgL6pH80ogRArHzdsx5uXVtG3u0YUqpr9Ctdj8+/NLeRJVtC5aWh0pv7SvB
-	 APDjgEdJa1asJr+n64E1KRS82QrLsBOg7I7gWcqBKST5xUPZTywIQWHpEazNJP+rXP
-	 SKyFInhbhBCQAv0NGotAeReU9GsYfF8ehoC7j7gh6mJ9RIfaMJ6qWR0aXnrQUo3VRX
-	 OP2yNSSM575zXmwMDf7zWU9HICS1E8X2R1bNrXMiAPrIiyguUQZ1p4Djdojc1Bljwp
-	 qvfECtxwWS2LzSLesxKSpzS/kunHUNnQ2trVkqP7xU6ByRY95YsKOT9yGqfvCwCmaD
-	 kBDXUVqY2dOlg==
-Date: Tue, 11 Feb 2025 17:44:56 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Sunny Shen <sunny.shen@mediatek.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Fei Shao <fshao@chromium.org>, Pin-yen Lin <treapking@chromium.org>,
-	"Jason-JH . Lin" <jason-jh.lin@mediatek.com>,
-	Nancy Lin <nancy.lin@mediatek.com>,
-	Singo Chang <singo.chang@mediatek.com>,
-	"Paul Chen --cc=devicetree @ vger . kernel . org" <paul-pl.chen@mediatek.com>,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	Project_Global_Chrome_Upstream_Group@mediatek.com
-Subject: Re: [PATCH 2/5] dt-bindings: display: mediatek: postmask: Modify
- rules for MT8196
-Message-ID: <20250211-darkened-justify-f559a0bf2a81@spud>
-References: <20250211025317.399534-1-sunny.shen@mediatek.com>
- <20250211025317.399534-3-sunny.shen@mediatek.com>
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="LujDI75O";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yPqDjUvv"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfout.stl.internal (Postfix) with ESMTP id 271D3114012F;
+	Tue, 11 Feb 2025 12:45:26 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-12.internal (MEProxy); Tue, 11 Feb 2025 12:45:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1739295926; x=1739382326; bh=TfcLRWsOlI
+	eIaKdeFDqkhNFH2enF1gy8hw8yD6zvWOY=; b=LujDI75Oe869hpGwb7PsRhdVN6
+	IVZ+NX7yd/e1q7IiG3t77U39aRufSlnd5h7kz6WgMBf0dIrXX+Izo6IEALVxrNcn
+	R54BsfdAlq4UM4n46mg2sWjoGm8lg0GBnPsJfJ0fa3iwxnrMprmD9CVtpABo+J2l
+	RmP+8bRE13OSU2OPYxLNjNKCv0cC55hb0GDQeKqnAxFv1yHcnJbE2RLg4tghxL18
+	P81FFM9ZIN+FimEsoMVubT8i/7mXksEeMdn+QLj55mnP5mOKztXtlvegNNqIi8xD
+	Kscjndv0fOrWx44TFawsGxEG78ts1YiseUn6cio2OLhQu0nj5ac9UeCZ8gig==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1739295926; x=1739382326; bh=TfcLRWsOlIeIaKdeFDqkhNFH2enF1gy8hw8
+	yD6zvWOY=; b=yPqDjUvvuEz6SxsQ3qtSUctSU3vrMFrc0yI56GqfrOifN3Ffrwg
+	r8JoSxuTj/Tc7hLdJaAnaCNzc5VxgEa+Zdfjnv9fLhSt0eYDYkHL5k22D8eIjCNx
+	gAzwVa7azCKZVPsD/vvR3TONxdy77Y9F8qw+izJBbQAcsD6pjeV2KlaNF3o8FrFW
+	KUhKGIdDuE5BirLXJquYbiDVzFkbhNTZjBl9i/qPG7Nal0GUtogzNvO2K/uAV0vd
+	KSfdw5XUocNjzsYcz4+VWKtvmeFg7HVgjBc4JYs+utWjlE87sO3U2wij4IZ8pAbi
+	x7qqe0JPJaS5NVuTwxnfNSd7muyDTbgNMCA==
+X-ME-Sender: <xms:tYyrZ6RvoyBV4PKemeOuhaxXhrEwaM2FfacHDC2Ikq6MOwXo-WkZ4A>
+    <xme:tYyrZ_z8CSdDZsTJon_ChSazZGkHi9FCQTzKSVxmFOr_zUWoDuqR-B5_UglJ57L2Z
+    E_Au0L-vs-YJNmMSg>
+X-ME-Received: <xmr:tYyrZ313O1DyBNymkY_GaG2rKJUjVeNZzU9YN-h5N1UrLovvk0nmU0WWmuOwFuNJYeQmWdr6S8p-ZsUPC1AvtIq96Nkg7EfUzswPJvphYrrGvg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegudeifecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenfghrlhcuvffnffculdefhedmnecujfgurhepfffhvfevuffk
+    fhggtggujgesthdtsfdttddtvdenucfhrhhomhepffgrnhhivghlucgiuhcuoegugihuse
+    gugihuuhhurdighiiiqeenucggtffrrghtthgvrhhnpeefhfffhfehgfefgfevvdeiheev
+    gfetudeifeetueehudefledutdekveekgeffgfenucffohhmrghinhepghhnuhdrohhrgh
+    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegugihu
+    segugihuuhhurdighiiipdhnsggprhgtphhtthhopedutddpmhhouggvpehsmhhtphhouh
+    htpdhrtghpthhtohepmhgrshgrhhhirhhohieskhgvrhhnvghlrdhorhhgpdhrtghpthht
+    ohepfhhrrghnkhdrsghinhhnshesihhmghhtvggtrdgtohhmpdhrtghpthhtohepmhgrth
+    htrdgtohhsthgvrhesihhmghhtvggtrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgv
+    rhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprggtmhgvsehrvg
+    guhhgrthdrtghomhdprhgtphhtthhopegsphesshhushgvrdguvgdprhgtphhtthhopehn
+    rghthhgrnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhhitgholhgrshesfhhjrg
+    hslhgvrdgvuhdprhgtphhtthhopegsphhfsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:tYyrZ2Cay2gQABQWSPPkNM8HOnaiu4jrL4Wc6YDukFMEPz2-bExCjw>
+    <xmx:tYyrZzi_Jli-GvmMwwxEQP1VXLkWjBeQVSQvHT2tbOhUG_9a_biOmw>
+    <xmx:tYyrZypX0rB0KnglFWN-7h_u8JQAZDB56FJuKy74YZDZjr7CdNgNOw>
+    <xmx:tYyrZ2hqNH0_nk9MJqhATXC_xYKMTu1MA0wXny75iueEUlrsr1_NXg>
+    <xmx:tYyrZ4aPG-UJeDmEUJgduFymhbFcnXzDrazHS7R3l8_2GxZoI5OE7hdG>
+Feedback-ID: i6a694271:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 11 Feb 2025 12:45:23 -0500 (EST)
+Date: Tue, 11 Feb 2025 10:45:22 -0700
+From: Daniel Xu <dxu@dxuuu.xyz>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Frank Binns <frank.binns@imgtec.com>, 
+	Matt Coster <matt.coster@imgtec.com>, linux-kernel@vger.kernel.org, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>, Borislav Petkov <bp@suse.de>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, bpf@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH] tools: fix annoying "mkdir -p ..." logs when building
+ tools in parallel
+Message-ID: <6bwwjyvhajytkvwumbjbj5glk27w3cqf4ylobfyhhclioypsfs@hen3m6i2cdga>
+References: <20250211002930.1865689-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="AN5oWCXPj8Gvwucf"
-Content-Disposition: inline
-In-Reply-To: <20250211025317.399534-3-sunny.shen@mediatek.com>
-
-
---AN5oWCXPj8Gvwucf
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250211002930.1865689-1-masahiroy@kernel.org>
 
-On Tue, Feb 11, 2025 at 10:52:51AM +0800, Sunny Shen wrote:
-> Add a compatible string for MediaTek MT8196 SoC
+Hi Masahiro,
 
-$subject and $body don't match here.
+Thanks for looking into this! Much better than my attempt :P
 
->=20
-> Signed-off-by: Sunny Shen <sunny.shen@mediatek.com>
-> ---
->  .../devicetree/bindings/display/mediatek/mediatek,postmask.yaml  | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
-postmask.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek=
-,postmask.yaml
-> index fb6fe4742624..29624ac191e1 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,postmas=
-k.yaml
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,postmas=
-k.yaml
-> @@ -27,6 +27,7 @@ properties:
->            - enum:
->                - mediatek,mt8186-disp-postmask
->                - mediatek,mt8188-disp-postmask
-> +              - mediatek,mt8196-disp-postmask
->            - const: mediatek,mt8192-disp-postmask
-> =20
->    reg:
-> --=20
-> 2.34.1
->=20
+On Tue, Feb 11, 2025 at 09:29:06AM +0900, Masahiro Yamada wrote:
+> When CONFIG_OBJTOOL=y or CONFIG_DEBUG_INFO_BTF=y, parallel builds
+> show awkward "mkdir -p ..." logs.
+> 
+>   $ make -j16
+>     [ snip ]
+>   mkdir -p /home/masahiro/ref/linux/tools/objtool && make O=/home/masahiro/ref/linux subdir=tools/objtool --no-print-directory -C objtool
+>   mkdir -p /home/masahiro/ref/linux/tools/bpf/resolve_btfids && make O=/home/masahiro/ref/linux subdir=tools/bpf/resolve_btfids --no-print-directory -C bpf/resolve_btfids
+> 
+> Defining MAKEFLAGS=<value> on the command line wipes out command line
+> switches from the resultant MAKEFLAGS definition, even though the command
+> line switches are active. [1]
+> 
+> The first word of $(MAKEFLAGS) is a possibly empty group of characters
+> representing single-letter options that take no argument. However, this
+> breaks if MAKEFLAGS=<value> is given on the command line.
+> 
+> The tools/ and tools/% targets set MAKEFLAGS=<value> on the command
+> line, which breaks the following code in tools/scripts/Makefile.include:
+> 
+>     short-opts := $(firstword -$(MAKEFLAGS))
+> 
+> If MAKEFLAGS really needs modification, it should be done through the
+> environment variable, as follows:
+> 
+>     MAKEFLAGS=<value> $(MAKE) ...
+> 
+> That said, I question whether modifying MAKEFLAGS is necessary here.
+> The only flag we might want to exclude is --no-print-directory, as the
+> tools build system changes the working directory. However, people might
+> find the "Entering/Leaving directory" logs annoying.
+> 
+> I simply removed the offending MAKEFLAGS=.
+> 
+> [1]: https://savannah.gnu.org/bugs/?62469
+> 
+> Fixes: a50e43332756 ("perf tools: Honor parallel jobs")
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
---AN5oWCXPj8Gvwucf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6uMmAAKCRB4tDGHoIJi
-0q/GAQCeCuVWfWkn+7Uog5I98DkIcobNbcbPvlOVI5tiUcEtDAD6Amsq2F0zICow
-GXQ53Xxni3csTCSSopUVF4waDJeG3QA=
-=UYkB
------END PGP SIGNATURE-----
-
---AN5oWCXPj8Gvwucf--
+Tested-by: Daniel Xu <dxu@dxuuu.xyz>
