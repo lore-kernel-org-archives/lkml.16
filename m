@@ -1,181 +1,158 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B931EE00B
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A64E1EBA14;
+	Tue, 11 Feb 2025 08:02:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739260959; cv=none; b=jRTqpqjTn7NIy0PLCzbxWr6DYJgn4qG+S0xJZ3h5YmUolPaPm/v0kdQq6LZEO7ZUdtsmHNDuOsGO1Ypb4VZsGTN51mb9jejPtG0PoX8te0ZRxJpRvCdfZhdg28mbxKTwROMRMnqpQpQwtGimSlbCS55NvqGjN8uX9x69Yr3oRNk=
+	t=1739260976; cv=none; b=I/1gCfc6cFyI1b5hKU3NtUAr8CyIi+BWngCNNC3iUmnPX+wp9VIwOXUAg73pXVD7xv1tbQ5NoSweTlv6cTOXZGlLkhTyD4f7ugn8paHmY1BWt4iNzLb0OVAZTwlqowJh1cuaR1Vg3TeIk9xdFtvETqQedwBhPxGkJ7Ua7rTpl6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739260959; c=relaxed/simple;
-	bh=G2Tj9U2QiygRFzai8G0V4PjrO9yxyYWRAy6UkUB0z3c=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=haVDdsdLqks4ORv/wz9CcnUHnG9PmuiiqQW/5aUTIsoc6w8Zz9RrAQTHFCg9BfOLyyVFq33oBwHnFQ0SvGVNSjYGU7M7/KXnrwgKj11WTtYtrbfNVAyDmbefL91ut0HDA2J7addX7APpXT10vdoH/eP6sI5RCVTgklDtD+KBT78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Wlbj+/SH; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wlbj+/SH"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43932b9b09aso29227545e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:02:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739260955; x=1739865755; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=c/81V9ZSf9NBLsXDXid4XV/IytyYCIsEGvu0bzqqXvI=;
-        b=Wlbj+/SHFjOcNUi2nHgIwgZsJdEhWKe2/+nAHTLG4zbGkC5/2L+2dSJo0cA6YP5oqS
-         Wsd3z6Y9YOLtRQb5aU1vx/UsvyKfTDfGQCsIv+eGkfWJ3esjTK4BPpAp+uKsAlNFTaCI
-         ZaCrcDVFZEI8c1ZzELE72eb/OL6OjPC/q2rSp0OILFoS6QHwn3HZbWBKjI/8R1tCVoFM
-         zdYIXgM68R+8iaZJdM/7tAoNkdZfM0AZADTlOk2EE9jkkk8Ptl3JbJYpCZ6sRzDVZ2v9
-         gY8UWlQMci/XEfcaL5bwexYQ135/hgl7GExrOlRa/c7E4BTxnQ4JlFqxT7GHgoInas6T
-         s+iw==
+	s=arc-20240116; t=1739260976; c=relaxed/simple;
+	bh=Kh9Ogk7+x0yP4Ukzvfr+odHFDe4F2iECj/j/BUEk5eU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pY6GYRD3CXJ6Pq5av06eoRylAnnoMNNxmtOkXCo2HjQDxBWA+zm2cxd4KgxwB6cuwp6svRWpxK9TNApV/x7nqMevc3tRbxp8s2+753nxxI//E/dcHy7lzKlyGFB5C2oXNF6OOlFF5Xr55I21+BYXbgg9sAB2rBvkBDt3ISEUvZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5de63846e56so5247125a12.1;
+        Tue, 11 Feb 2025 00:02:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739260955; x=1739865755;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=c/81V9ZSf9NBLsXDXid4XV/IytyYCIsEGvu0bzqqXvI=;
-        b=JHFgCCeJZdI6UR8bjgdUfXHdWGSgNzwjKx3dAQPxrWpMF9O0wWHdmIcjblY2SHMwJi
-         KnUi4ROEmIb0VbSiwpvCiSli3lhJdIJSgzbKSCoak4vNCjQO0B4J6gd8fQwAC/09ZBfb
-         jbhiUqP6u9LNBH0AldyB4p8OIOdFrIeyDwRSVhjFU5lA4IUOgz1bw32qwqyVgBfqt8cq
-         91/FpI2wcZvzTuHd683GUOt0OfHCQVDLO3iBfhL4BIdLaVxxDndkdAnuJBn546NOHumN
-         ALS2G8lbbNx+Hq5ETKZ1tSdIqJAvr/2bdaCKhdO/NebL3uteS1/GAluA4Efd2rfg5qNe
-         gb3w==
-X-Forwarded-Encrypted: i=1; AJvYcCW9MrFEQRzfl66qWzNo1bLRsV1sfquC/6bqAP0+SMeZdB6UGU5A8aLL5APN1q4Gw52NpVDNpyAoX0v9NpU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yydlrs+c6kDBTKy20vDhenG/n2vM77KlVBkhLzEO6q1FnBG6DBF
-	Im7bzisv4uqrkzyvEtN0mDwDTldvvgX86wuwDMEibvuMAB+wJ1JqVXhSPe7zd2g=
-X-Gm-Gg: ASbGncsF2zWHnOJeQFwvV+ZeKwyrQrY8Ye1mfs2lX2IGaMkTEha9rIm/CpLcKOODJHf
-	eS8+B5BrxppBqcskf3JII+h1DYneFYzh9Tcfos8GuAVXFzOKUKdDKY+kcJxh3RVJJxajXPKINXj
-	Kqjji9lZG/i8LQgjWNGK59KMIsC3xKLf3kmTrmCvMKp9pQya/eGQN6nX+wUoYtV1vpfqLAeBwZ+
-	nA75cM2rfXD0pyDAokrAOv4vDxv5tg9drUNQ59IQ8yk1fI155hLUorX8IjFtPQXn+kEbm+JJOMl
-	Mh65BvfnHBA5fdlryKXzcV0PoFmg1OneYCEZArdri0COFUL0MZYnYoPuHomtiPst7vi+
-X-Google-Smtp-Source: AGHT+IE80X4KXV0Nc5thndKYShw6pJWnP0kJtdeefzpyYP2qRDRRq+UXoGPKVEz1U/KhRoWLReibgQ==
-X-Received: by 2002:a05:6000:1f84:b0:38d:af14:cb1 with SMTP id ffacd0b85a97d-38dc93548f2mr14711590f8f.54.1739260955171;
-        Tue, 11 Feb 2025 00:02:35 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:5b96:57e9:d7dc:bc01? ([2a01:e0a:982:cbb0:5b96:57e9:d7dc:bc01])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd6548b25sm8158077f8f.32.2025.02.11.00.02.34
+        d=1e100.net; s=20230601; t=1739260971; x=1739865771;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kOS/9voZO7vapVv46CaqegmZFfcgz3O52bGNQXQxQY0=;
+        b=GRFpQqe5V6HIxmOvzgbseJyIJShWE/ZLf8YD3w/OYFoh49MhjrAcrAbfoKLm0cDWaA
+         lNcHLVFJiuopbl4X1i6IencjIvb6y90Ovi49Auz4+9ls6xN/qUwQSkwbMSo5owh8PLm6
+         Jw8YobXoSWTp3B2yGwG31yKbmFXmxl9hsZJA8dA2gOAbOdALPAj3ftcmTBDgGGeUT29u
+         tJelRUGBPY0KElwhsomw8UQTNkOIE2hF3tqOAXR95ZynrxVON7LkWWmb0394L9P9Vkws
+         z2lASMvauCT8QA8EHp5HB58p2QaKh4sPKagN4ALKXJx3cZmqU+ysuwT81LpipgQDqIop
+         RrIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8JpY9y4Sk2IraOXKlRSbNobTGTmYhtnFPe9WEjkzMYsVXJ/FTzkkOraei8IXBRmf5JpEdA5ym8/8T@vger.kernel.org, AJvYcCVo8pEDjbOop8xS37obh73bdw7uZoVJVaPPUL4ynCbW/iqtiIkpkt1grn18tBbmhvYT81qUim6wilBS@vger.kernel.org, AJvYcCWcd/oYy3DIQDVquYxhs+sUB/HZZZK7vxWXGoI2COwbueQNeaDJz/N9lkiwnT6vnvMrglyd1Uqpz0eaHA==@vger.kernel.org, AJvYcCX3KnmpyGCjGqbh/JCkfnJ7JW776K9DbKOrH2G0z9vvlaGH1XkySfIFYkS4GduQJy4IWDv87jr9TxQTZLYv@vger.kernel.org
+X-Gm-Message-State: AOJu0YxD40NeCTph+F1U8RI73+RO1oIVjB+I5MsIPpimlF40GcFVYV6U
+	co8bmHGJagNBVSJCwiKXyWRjNEyGUWpR7ij4onmqP1NSPNDkOMBwYCmSdvl45+U=
+X-Gm-Gg: ASbGncsxmqB2zHz4J8nIo/0c/p1dfmqNO2NfHR+RetjQs937uahLpPRMb83rg17nYs/
+	umMUQimSShEJsE1Dmndzp0HxtxTcWJV5vDhhS++sFXeLkfmAlQlZjVT7Hfm0Gq6EproSVaAc7m6
+	EHFmv9fHGDwItmk480fiIHJ2vyebEH8vBN7/QKntMRyUZlQ2s4yIm994bj8rgGFbd8o07EawEyf
+	JR/7R5zAn2OgKqOzLbxiC01bsb9VoeFhBHpPoqNfuH4r1/2DxGwAqgdho+RejOzFaiB8UUjPw7i
+	/0Au6iUqiOSGN7bW3brvwVz4jqBfpZrS5gYO89Zj6lrummqB6GY3BQ==
+X-Google-Smtp-Source: AGHT+IFRG5cIyHTv3cauXEI/Kd8qR+4CxBI786yt8N+Ncxe7HAhstmZ+lX6C8DOVTLDH5iKCHgdCtA==
+X-Received: by 2002:aa7:dbd4:0:b0:5de:4add:d52f with SMTP id 4fb4d7f45d1cf-5de9a4c860fmr1898377a12.32.1739260970380;
+        Tue, 11 Feb 2025 00:02:50 -0800 (PST)
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de51587da6sm7206462a12.64.2025.02.11.00.02.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Feb 2025 00:02:34 -0800 (PST)
-Message-ID: <36ba4696-1af2-49e7-90bf-f6f559b76fb7@linaro.org>
-Date: Tue, 11 Feb 2025 09:02:33 +0100
+        Tue, 11 Feb 2025 00:02:49 -0800 (PST)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5de63846e56so5247040a12.1;
+        Tue, 11 Feb 2025 00:02:49 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU/w0nkz9IrREk8CtPoj/2A7yBdu69Ohb2uPBdXRBve9OcHrdkCcPjOH8ROkKy8MJSXelob3P7WxxVE@vger.kernel.org, AJvYcCUShqoiq0iGwZXjTB0R3Ax0aQHIMxu80bnhK6m2ZEdDB6nBth/n6FxI4JqXbFqcAHjapZQyjpedwF9kJA==@vger.kernel.org, AJvYcCUhOXrq19R+OCgjFDcqqQ1k+QC9ipv6CMRWcgsvLwqfFQs1TmjIwojrjA6B7OWAEbeTe1AzcYGgwnws+PEJ@vger.kernel.org, AJvYcCVXAGJp3lDDs6hb5a5IIQ0VjHxF8g/NPivZ6C0SsSdv+rCp3y+4LrygaCgCq+yxNJ/twPFbkXLdVRJG@vger.kernel.org
+X-Received: by 2002:a05:6402:3485:b0:5d0:ed71:3ce4 with SMTP id
+ 4fb4d7f45d1cf-5de9a394509mr2832636a12.6.1739260969034; Tue, 11 Feb 2025
+ 00:02:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sm8650: add PPI interrupt
- partitions for the ARM PMUs
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250207-topic-sm8650-pmu-ppi-partition-v1-0-dd3ba17b3eea@linaro.org>
- <20250207-topic-sm8650-pmu-ppi-partition-v1-2-dd3ba17b3eea@linaro.org>
- <ba546075-cfc0-4b17-9129-f99054e2e1ae@oss.qualcomm.com>
- <6aa71142-3b1d-476f-9c78-1207fbbed3f5@linaro.org>
- <bbbd36a1-d67c-404c-b749-eefcf493ed7f@oss.qualcomm.com>
- <a2fbae9e-d1cc-44a7-86b7-9e15aa0490b1@linaro.org>
- <21f7eb11-bb0d-4e4d-a4b1-780c03fb86d9@oss.qualcomm.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <21f7eb11-bb0d-4e4d-a4b1-780c03fb86d9@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20241218183401.41687-1-vicentiu.galanopulo@remote-tech.co.uk>
+ <20241218183401.41687-4-vicentiu.galanopulo@remote-tech.co.uk>
+ <173641864745.2570436.6359371577917683428.b4-ty@kernel.org>
+ <CAMuHMdXNOEXuEADeSGGHw88Tse+QjSkknKYGH-kk02jSpiuNiQ@mail.gmail.com>
+ <20250210165923.GC1868108@google.com> <20250210170136.GD1868108@google.com>
+In-Reply-To: <20250210170136.GD1868108@google.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 11 Feb 2025 09:02:34 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXtDd-KSeX_8nhj_J0X33WRT47_v3m01qdBN01-p4xVjA@mail.gmail.com>
+X-Gm-Features: AWEUYZkd6jwi31R-cWUTztcZCNox7Hslq-Hkz90mfjEROmdjN3FG73ZPmUY9Y1I
+Message-ID: <CAMuHMdXtDd-KSeX_8nhj_J0X33WRT47_v3m01qdBN01-p4xVjA@mail.gmail.com>
+Subject: Re: (subset) [PATCH v11 3/3] leds: Add LED1202 I2C driver
+To: Lee Jones <lee@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/02/2025 19:29, Konrad Dybcio wrote:
-> On 10.02.2025 4:30 PM, neil.armstrong@linaro.org wrote:
->> On 10/02/2025 16:23, Konrad Dybcio wrote:
->>> On 9.02.2025 3:44 PM, Neil Armstrong wrote:
->>>> On 07/02/2025 21:30, Konrad Dybcio wrote:
->>>>> On 7.02.2025 11:31 AM, Neil Armstrong wrote:
->>>>>> The PMUs shares the same per-cpu (PPI) interrupt, so declare the proper
->>>>>> interrupt partition maps and use the 4th interrupt cell to pass the
->>>>>> partition phandle for each ARM PMU node.
->>>>>>
->>>>>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
->>>>>> ---
->>>>>
->>>>>> @@ -5309,6 +5309,20 @@ intc: interrupt-controller@17100000 {
->>>>>>                 #size-cells = <2>;
->>>>>>                 ranges;
->>>>>>     +            ppi-partitions {
->>>>>> +                ppi_cluster0: interrupt-partition-0 {
->>>>>> +                    affinity = <&cpu0 &cpu1>;
->>>>>> +                };
->>>>>> +
->>>>>> +                ppi_cluster1: interrupt-partition-1 {
->>>>>> +                    affinity = <&cpu2 &cpu3 &cpu4 &cpu5 &cpu6>;
->>>>>> +                };
->>>>>> +
->>>>>> +                ppi_cluster2: interrupt-partition-2 {
->>>>>> +                    affinity = <&cpu7>;
->>>>>> +                };
->>>>>
->>>>> I'm not sure this is accurate.
->>>>>
->>>>> I *think* it's cores 0-1 and 2-7, but I can't find a concrete answer
->>>>
->>>> Core 7 is a Cortex-X4, and has a dedicated PMU node, look at the cpu compatibles.
->>>
->>> Look at what these compatibles do in code. Nothing special for the X.
->>
->> So you suggest to revert Rob's change ?
->>
->> https://lore.kernel.org/all/20240417204247.3216703-1-robh@kernel.org/
->>
->> So what I understood is that yes the code is the same, but the perf
->> attributes are not necessarily the same between heterogeneous cores,
->> so each instance here would load the attributes for each core type
->> correctly instead of only using the ones from the first core
->>
->> Again, other SoCs uses this same scheme so I wonder what's the issue here ?
-> 
-> So I'm a little confused here. Is this partitioning scheme only describing
-> a set of same-kind cores to Linux so that the PMU interrupts only arrive at
-> one PMU device? Or does it reflect some actual physical topology of clusters
-> and how they're connected to the GIC?
-> 
-> If the former, I have no issues with this version of the patch.
+Hi Lee,
 
-The former, we simply partition the PPI interrupt for each device node, it
-has obviously something to do with the topology, but the goal is not to describe
-the topology.
+On Mon, 10 Feb 2025 at 18:01, Lee Jones <lee@kernel.org> wrote:
+> On Mon, 10 Feb 2025, Lee Jones wrote:
+> > On Tue, 21 Jan 2025, Geert Uytterhoeven wrote:
+> >
+> > > Hi Lee,
+> > >
+> > > On Thu, Jan 9, 2025 at 11:31=E2=80=AFAM Lee Jones <lee@kernel.org> wr=
+ote:
+> > > > On Wed, 18 Dec 2024 18:33:59 +0000, Vicentiu Galanopulo wrote:
+> > > > > The output current can be adjusted separately for each channel by=
+ 8-bit
+> > > > > analog (current sink input) and 12-bit digital (PWM) dimming cont=
+rol. The
+> > > > > LED1202 implements 12 low-side current generators with independen=
+t dimming
+> > > > > control.
+> > > > > Internal volatile memory allows the user to store up to 8 differe=
+nt patterns,
+> > > > > each pattern is a particular output configuration in terms of PWM
+> > > > > duty-cycle (on 4096 steps). Analog dimming (on 256 steps) is per =
+channel but
+> > > > > common to all patterns. Each device tree LED node will have a cor=
+responding
+> > > > > entry in /sys/class/leds with the label name. The brightness prop=
+erty
+> > > > > corresponds to the per channel analog dimming, while the patterns=
+[1-8] to the
+> > > > > PWM dimming control.
+> > > > >
+> > > > > [...]
+> > > >
+> > > > Applied, thanks!
+> > > >
+> > > > [3/3] leds: Add LED1202 I2C driver
+> > > >       commit: 939757aafeb9c266dda37657ee5f7a73ffd35ae2
+> > >
+> > > You also have commit 259230378c65ebb6 ("leds: Add LED1202 I2C driver"=
+)
+> > > in mfd/for-mfd-next, which dropped the change to drivers/leds/Makefil=
+e,
+> > > and changed the Link:-tag to point to the older version v10?
+> >
+> > Interesting.  Not sure I noticed and if I did, I must have fixed it.
+> >
+> > This is the commit that made it in:
+> >
+> >   939757aafeb9 ("leds: Add LED1202 I2C driver")
+>
+> Scratch that - looks like:
+>
+>   259230378c65 ("leds: Add LED1202 I2C driver")
+>
+> ... also made it in.  However the Makefile line survived:
+>
+>   drivers/leds/Makefile:obj-$(CONFIG_LEDS_ST1202)         +=3D leds-st120=
+2.o
+>
+> Did anything break or is all as expected?
 
-Neil
+The end result is fine.  History might confuse people (the (un)happy
+few who care about history ;-), as "git log -p v6.14-rc1 --
+drivers/leds/Makefile" shows 939757aafeb9, while "git log -p v6.14-rc1
+-- drivers/leds/leds-st1202.c" shows 259230378c65, linking to the
+older version.
 
-> 
-> Konrad
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
