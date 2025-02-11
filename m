@@ -1,136 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076251F417C;
-	Tue, 11 Feb 2025 12:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E8D1F12FC;
+	Tue, 11 Feb 2025 12:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739275609; cv=none; b=U8F6oYArTglD6H35frqzu4jQHuPv6nvsToGk/isM9EGo8/iYYsXiSRov1rdnYtIrxeR1JB3Z50lmq0kk9kIEosvAnjgZ/8vf6WD8fGq/eUjYZUhRjLfLsAtz7+mYh+L9s6hkmm1Lf7wE31hE50yFLQkYKU3Whc3Hc1qCPvvBCmE=
+	t=1739275719; cv=none; b=ZFzzrOF7FOBXPZ8C3zoOPM4KkVMe2dKPbK+OqUr8Fpdohp1bg0bzLhs9rHnSdRVBZQOUY37/MDCWKK4T9iZKkP/sEYSOfk8kDx2bdiNku1jF4VCgV0BBb3ae1C+YSQQgvkwEuNRmf3TxgnsZKXFPCNFZMcY2k8hjgsUE1K2Y6b4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739275609; c=relaxed/simple;
-	bh=i7+ekkT9TnIZYnI8SWpO1ROV9Pa3oWltrv4zlRMPpAQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hi5R4lVoBFL0breH9+/aU5eJA01sKdIv0LY4S+rwNE4jHd2uNS9KMlRRnybP/K0hQaAsw1addZ4YG/PAvpO9D/8eloRxrycfvREhrmoNBLw+hoMGyBJ2i/oCq/cpa+oGxsvoujOaGawCqz5W4/0Qq5ghdmoJtemneP3HMsRVgcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pkQW98gJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739275719; c=relaxed/simple;
+	bh=iaxaLe63jvfdcGs98she5ZOmX8j+McmROb7osfhGF1Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=vDtskwGI9aUHrAJ441xv9SPLRVRY86u7G9NK/5Y7uNOF4wzo4dToN77i4dLLKhXJIfeyv82mFdaD7V9PIJ/jeysV0ImSTSDEEiwuE6EOKCjDscTtKuEgjZ57dZB5CaRMkLNw0BTX/DCagISucJQjVPGlcDrvqe18BvUE4P0NixI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VtAkFhbA; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pkQW98gJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41443C4CEDD;
-	Tue, 11 Feb 2025 12:06:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739275608;
-	bh=i7+ekkT9TnIZYnI8SWpO1ROV9Pa3oWltrv4zlRMPpAQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pkQW98gJjoQ4CF6Mxndd5RcnONq0pHOBrXhErcD8ckKyL41UVwmMF4zoqAnd1bisB
-	 QM16aFq+WbqQaEflbrxARxJFBYNVcZ7iOK/FEcpYwurGNY1qhzaD+mGzn3eD8ox9am
-	 oR3VjwsIwwHUIEC+TfUYEBP52aVyEn4fb1EHt3mhxSFAXLagSYZs9tCbbapBWNUCxq
-	 +NrzGJOWkX818kGoY+q+s3SNMbwRD86jRY8EaMRdUlR3l340W0LiUt+/1OPtCudC1/
-	 263EPNtkhfUnR6Y/hKaa8qeUZaUnMUYbCoLps9Lig0M/ydlU6bsSBkG+ehfJkz8byu
-	 n9wq4xHTZMFww==
-Date: Tue, 11 Feb 2025 12:06:44 +0000
-From: Conor Dooley <conor@kernel.org>
-To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Eric Biggers <ebiggers@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Andy Chiu <andybnac@gmail.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/6] RISC-V: add f & d extension validation checks
-Message-ID: <20250211-phobia-spiritism-3c0ffba5315d@spud>
-References: <20250205-cobbler-unpadded-5580c1f5d946@spud>
- <20250205-stifle-remake-4e497e96fd66@spud>
- <cfd0a7d1-464f-468d-9302-46d6b28efe5f@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VtAkFhbA"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6626844206;
+	Tue, 11 Feb 2025 12:08:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739275714;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VjM6wR9lV3rjjatXl5KU7qPYxVjUzsxsOmxpjHWtsxE=;
+	b=VtAkFhbAS3bE2SKQENlezoNTiJPUHb07Kf/zDfc78REU3jItmxKRYLPJXAWRl0MAWXM5Tz
+	1jjoLHWM7IG3BzdF0j123Sd1yOWtYhtkcMuI+UfkXSukxFEuSvm5RYxA9glWHiaqVtgW7G
+	u9GmyyhmyZbKpcJeO4FPAs04Un2a1ostkVoNzl7nH96RcHRBQsmPDhFmSwmmCh7iU8k2eH
+	9kcKRXACG7Tr/uuw+gmeobox7XiENpzstu6KHVfN6YcUCRmrf/h1cIkwqXnQLs2aAy91x6
+	7Pi6tZorp7z5MpMK+TRD+yZS4jZOOrQduOywVRol1FFn/uYHWG77M9Zx7IyViw==
+Date: Tue, 11 Feb 2025 13:08:30 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: davem@davemloft.net, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
+ linux-arm-kernel@lists.infradead.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>, Marek
+ =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Oleksij Rempel
+ <o.rempel@pengutronix.de>, =?UTF-8?B?Tmljb2zDsg==?= Veronese
+ <nicveronese@gmail.com>, Simon Horman <horms@kernel.org>,
+ mwojtas@chromium.org, Antoine Tenart <atenart@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>
+Subject: Re: [PATCH net-next RFC v2 2/6] net: ethtool: Introduce
+ ETHTOOL_LINK_MEDIUM_* values
+Message-ID: <20250211130830.25dbafb3@fedora.home>
+In-Reply-To: <20250123103534.1ca273af@kmaincent-XPS-13-7390>
+References: <20250122174252.82730-1-maxime.chevallier@bootlin.com>
+	<20250122174252.82730-3-maxime.chevallier@bootlin.com>
+	<20250123103534.1ca273af@kmaincent-XPS-13-7390>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="YYCpN0mPd1hMFh+l"
-Content-Disposition: inline
-In-Reply-To: <cfd0a7d1-464f-468d-9302-46d6b28efe5f@rivosinc.com>
-
-
---YYCpN0mPd1hMFh+l
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegtdeliecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeuhfefgffgtdfhgffhvdfhhffhteeutdektefghfetveehheejjefgudeiudehudenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedviedprhgtphhtthhopehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrn
+ hgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Tue, Feb 11, 2025 at 11:22:13AM +0100, Cl=E9ment L=E9ger wrote:
+Hi K=C3=B6ry,
+
+On Thu, 23 Jan 2025 10:35:34 +0100
+Kory Maincent <kory.maincent@bootlin.com> wrote:
+
+> On Wed, 22 Jan 2025 18:42:47 +0100
+> Maxime Chevallier <maxime.chevallier@bootlin.com> wrote:
+>=20
+> > In an effort to have a better representation of Ethernet ports,
+> > introduce enumeration values representing the various ethernet Mediums.
+> >=20
+> > This is part of the 802.3 naming convention, for example :
+> >=20
+> > 1000 Base T 4
+> >  |    |   | |
+> >  |    |   | \_ lanes (4)
+> >  |    |   \___ Medium (T =3D=3D Twisted Copper Pairs)
+> >  |    \_______ Baseband transmission
+> >  \____________ Speed
+> >=20
+> >  Other example :
+> >=20
+> > 10000 Base K X 4
+> >            | | \_ lanes (4)
+> >            | \___ encoding (BaseX is 8b/10b while BaseR is 66b/64b)
+> >            \_____ Medium (K is backplane ethernet)
+> >=20
+> > In the case of representing a physical port, only the medium and number
+> > of lanes should be relevant. One exception would be 1000BaseX, which is
+> > currently also used as a medium in what appears to be any of
+> > 1000BaseSX, 1000BaseFX, 1000BaseCX and 1000BaseLX. =20
 >=20
 >=20
-> On 05/02/2025 17:05, Conor Dooley wrote:
-> > From: Conor Dooley <conor.dooley@microchip.com>
-> >=20
-> > Using Clement's new validation callbacks, support checking that
-> > dependencies have been satisfied for the floating point extensions.
-> >=20
-> > The check for "d" might be slightly confusingly shorter than that of "f=
-",
-> > despite "d" depending on "f". This is because the requirement that a
-> > hart supporting double precision must also support single precision,
-> > should be validated by dt-bindings etc, not the kernel but lack of
-> > support for single precision only is a limitation of the kernel.
-> >=20
-> > Since vector will now be disabled proactively, there's no need to clear
-> > the bit in elf_hwcap in riscv_fill_hwcap() any longer.
-> >=20
-> > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> > ---
-> >  arch/riscv/kernel/cpufeature.c | 27 +++++++++++++++++++++++++--
-> >  1 file changed, 25 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeat=
-ure.c
-> > index 1c148ecea612..ad4fbaa4ff0d 100644
-> > --- a/arch/riscv/kernel/cpufeature.c
-> > +++ b/arch/riscv/kernel/cpufeature.c
-> > @@ -109,6 +109,29 @@ static int riscv_ext_zicboz_validate(const struct =
-riscv_isa_ext_data *data,
-> >  	return 0;
-> >  }
-> > =20
-> > +static int riscv_ext_f_validate(const struct riscv_isa_ext_data *data,
-> > +				const unsigned long *isa_bitmap)
-> > +{
-> > +	if (!__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_d)) {
-> > +		pr_warn_once("This kernel does not support systems with F but not D\=
-n");
-> > +		return -EINVAL;
-> > +	}
 >=20
-> While I tested to remove the RISCV_ISA_EXT_d from the input isa bitmap
-> and it worked, I didn't realized that it was due to the probe order of
-> single letter extensions. D is probed before F so that works as
-> expected. But returning -EPROBEDEFER would not allow to display the
-> warn_once or wrongly display it if D was not yet probed. So I'm inclined
-> to keep it as is and rely on probe order (a bit fragile but for single
-> letter extensions, that seems acceptable).
-
-I guess it's worth adding a comment to that effect.
-
-> > +
-> > +	if (!IS_ENABLED(CONFIG_FPU))
-> > +		return -EINVAL;
+> > -	__DEFINE_LINK_MODE_PARAMS(100, T, Half),
+> > -	__DEFINE_LINK_MODE_PARAMS(100, T, Full),
+> > -	__DEFINE_LINK_MODE_PARAMS(1000, T, Half),
+> > -	__DEFINE_LINK_MODE_PARAMS(1000, T, Full),
+> > +	__DEFINE_LINK_MODE_PARAMS_LANES(10, T, 2, 4, Half, T),
+> > +	__DEFINE_LINK_MODE_PARAMS_LANES(10, T, 2, 4, Full, T),
+> > +	__DEFINE_LINK_MODE_PARAMS_LANES(100, T, 2, 4, Half, T),
+> > +	__DEFINE_LINK_MODE_PARAMS_LANES(100, T, 2, 4, Full, T), =20
 >=20
-> I would have actually move that chunk before the
-> __riscv_isa_extension_available() check so that the whole function body
-> is elided if FPU is disabled.
+>=20
+> > -	__DEFINE_LINK_MODE_PARAMS(1000, KX, Full),
+> > -	__DEFINE_LINK_MODE_PARAMS(10000, KX4, Full),
+> > -	__DEFINE_LINK_MODE_PARAMS(10000, KR, Full),
+> > +	__DEFINE_LINK_MODE_PARAMS(1000, KX, Full, K),
+> > +	__DEFINE_LINK_MODE_PARAMS(10000, KX4, Full, K),
+> > +	__DEFINE_LINK_MODE_PARAMS(10000, KR, Full, K), =20
+>=20
+> The medium information is used twice.
+> Maybe we could redefine the __DEFINE_LINK_MODE_PARAMS like this to avoid
+> redundant information:
+> #define __DEFINE_LINK_MODE_PARAMS(_speed, _medium, _encoding, _lanes, _du=
+plex)
+>=20
+> And something like this when the lanes are not a fix number:
+> #define __DEFINE_LINK_MODE_PARAMS_LANES_RANGE(_speed, _medium, _encoding,
+> _min_lanes, _max_lanes, _duplex)
+>=20
+> Then we can remove all the __LINK_MODE_LANES_XX defines which may be
+> wrong as you have spotted in patch 1.
 
-I think you're right, but for another reason too - warning when someone
-has turned off CONIFG_FPU doesn't make sense.
+My apologies, I missed your review and didn't address it in the new
+iteration :(
 
---YYCpN0mPd1hMFh+l
-Content-Type: application/pgp-signature; name="signature.asc"
+I will give this a try, see hw this looks, so that we can separate the
+encoding info from the medium info.
 
------BEGIN PGP SIGNATURE-----
+Thanks !
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6s9UwAKCRB4tDGHoIJi
-0mlpAPsHpRmdh/Bp/K38cfzgKnrQzJ05SFAo2DNse6NjPs0maQD/eLtlJ7siAn9q
-UQsqvwfZVOoiVkZ2sFfrw2hiMSUT/QA=
-=BtAZ
------END PGP SIGNATURE-----
+Maxime
 
---YYCpN0mPd1hMFh+l--
+> Regards,
+
