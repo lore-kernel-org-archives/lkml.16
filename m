@@ -1,204 +1,133 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EEF4250C1D;
-	Tue, 11 Feb 2025 15:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7F317C91;
+	Tue, 11 Feb 2025 15:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739286015; cv=none; b=D2S4I1bqMilvUiRa8FfU7uWd/1nNVrQ+187LMaoWGeJdJllI0IFnSYMkTtKQ0VHcIA4iuBTWu1VSgBgqRyoh04BHSifzjYsyvEW7CdskjoDjtmlZBGa3jOzDg8WJRs1OubYHRJpY3UBAglhONkNriMkuyTDTeDgye/sAfNRS9SI=
+	t=1739286118; cv=none; b=CysB/bdwJXAKFjjQn5D8+akHhRmchkYTuQs7bLJrcbYBlkSP9wrm0tXTYYVWmxlzhDXBTlSxNZhdS4JD3SV/D3SFNLJ5X+uuvA0bvKqtEAmef14MpTbJovzy6PI3EoezaA1JQH2IO6efngGXkg1dRk+0M7u9HBrYf1AFZC1RYLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739286015; c=relaxed/simple;
-	bh=X7gsBc4YvTswGAe3ipvZe8BWphWuMO5WFT/+YrV/kNg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TQNgcKtP6n4jtcH7KqPscnqXmGdY0aF4xtg1vmJEMaU4FeN3zw2pZ/5MpQlp4Av3g8TVnYWYdeKi/YplNyWYeynZJbkcV9iEOBGX+A4kPe+Z3zv7iQBDC4yOYzvsY4SmNdthKNDNtc8M1zsTBqRypyxNOSKLmkf1pUXBsK1gf8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tJKYtolD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DZL1p6f9; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1739286118; c=relaxed/simple;
+	bh=NT4LdFuNL1mVF0er7FdAvKA0qLNJnpbCilHR7tk3ZCw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rbgyUNnlwET04hmjhlk6deMH0D2a5kTQWsaZdRtUilvnT9WycPLRPYW5dkpBlEo72ESoWrbz6n8FC2xcC1nHyjtDu3VpU7SDxr8lyAMKrU4TIhBb8ACeyMVft+Rk5pktGczHm3wmBw7oeNsuRBLVm4hhPIyrb7b3zM6pOikt/vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DpBI7Aqt; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tJKYtolD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DZL1p6f9"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739286011;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=MBBgFwIPM9ArG/++02kDCovbUubj1A6raG2FsdxYOuE=;
-	b=tJKYtolDpLQQMdRIym5NWiwB2mwjLhhs1BcvWJujfPWs2ZDZ7GNif057a10MPMBZr2amVA
-	iOFG0QiQLoeQ6jjjJWpD5g52c47SKFPqgVNwVfJ6kAP59QmKIfOS85vhsOQnpoUdjAT92z
-	v6CAHQclY4VhWcc78w0P1TI0xMYXDBy02wOpMqtbbi0x/dquAXd0cI0cDcawgGG34d/77d
-	nyiiKOG0TrkZF8hdVYhQqPj8DWzgnr32mmiKtp92bDyic0wfDSPoF6zDlJ5MrRqvZ7n+QT
-	iGg561ts50rFsrcVUHwVl+Ca96kIFsNiU1ZJGPlt/qxsszLGPgaL9JBVKA2FZA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739286011;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=MBBgFwIPM9ArG/++02kDCovbUubj1A6raG2FsdxYOuE=;
-	b=DZL1p6f91Nar035wPIk9SrnGEGIQeCzI5Yd7bVZXkOzMcIDljzGZeflfMwxDm8LlDDdH/Z
-	7v7ZQ2jvy1ITpUBw==
-Date: Tue, 11 Feb 2025 16:00:02 +0100
-Subject: [PATCH] firmware: cs_dsp: test_control_parse: null-terminate test
- strings
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DpBI7Aqt"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C079340E0220;
+	Tue, 11 Feb 2025 15:01:53 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id vcaTo4I3qsTZ; Tue, 11 Feb 2025 15:01:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1739286109; bh=4lwHEX7loO/SRy+ZxkW2JvVT9zUzrCSHPE5+qCPs4Vc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DpBI7Aqt8XOmID6XpqbDT6/JpWJ5yVuWy4TG2lI1I2RyyHucsQiPgTTbMFr+3APKE
+	 vaRUG4GIlOzxTU7YUIqQaaJU7BZE3orP1yegfSTUKgT1lxeqrQgWZfKA3x6KXW4Qvh
+	 Fmod4YL2KZ9eM8+nBAFJX18wZO8dX+OVtTHO+ERgfD/COIHzZak/rQkWDrzM8OUJzt
+	 yDnh8pqfBZwKx5Pztz5ocTaM9hKiTWmb3XDQ+JYa8ptGy8Z9mlwqlbt5/zxlqajcrS
+	 nCDSCzOfOH8dW+quN4fuLfRtCcjkuB2YKjhDgIuGlwXcyxgxsv2xNu6BIHkfCIu57T
+	 dI3o6w7SJEYUnM3DccFMM2p7429H/Dbgolh0WNYMxImLZV9p3qVx1UCoLr1HOD5zEb
+	 XeYWpWM5TAizW4An75m3IzKvBguY8O+HEf2DgqgFMy6/UrWgRx9lnzMyfgmtZsybpk
+	 ewR38IijGkYWVNMTLoBdPuqnO+h1+ruRV3z2Cy2UoZdbRq67StoxJzL0dsuX5eyi4B
+	 KNjYQlmCCsqqCRM0TsE9OAC4ybr5CUT3UCUPvIcSwoYDHPKGVAFK3OhGZ8h6ekN5DA
+	 v+aqAFlzwhlYaJFyH+6bEW/HlTfbiwxSaatnuKXcl8tPmhFzoDDkuSgRm1lFyK7vYt
+	 mfLheS+6IIG/fb5cqt1E39HQ=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7F6A240E01AE;
+	Tue, 11 Feb 2025 15:01:23 +0000 (UTC)
+Date: Tue, 11 Feb 2025 16:01:14 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Juergen Gross <jgross@suse.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+	linux-coco@lists.linux.dev, virtualization@lists.linux.dev,
+	linux-hyperv@vger.kernel.org, jailhouse-dev@googlegroups.com,
+	kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
+	Nikunj A Dadhania <nikunj@amd.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH 01/16] x86/tsc: Add a standalone helpers for getting TSC
+ info from CPUID.0x15
+Message-ID: <20250211150114.GCZ6tmOqV4rI04HVuY@fat_crate.local>
+References: <20250201021718.699411-1-seanjc@google.com>
+ <20250201021718.699411-2-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250211-cs_dsp-kunit-strings-v1-1-d9bc2035d154@linutronix.de>
-X-B4-Tracking: v=1; b=H4sIAPFlq2cC/x3M0QpAQBBA0V/RPJvaHUR+RZLsYFJLO0ht/t3m8
- TzcG0E5CCu0WYTAt6jsPsHmGUzr6BdGcclAhipD1uKkg9MDt8vLiXoG8YviXBZMtakbdgQpPQL
- P8vzbrn/fD8LuW6RmAAAA
-X-Change-ID: 20250211-cs_dsp-kunit-strings-f43e27078ed2
-To: Simon Trimmer <simont@opensource.cirrus.com>, 
- Charles Keepax <ckeepax@opensource.cirrus.com>, 
- Richard Fitzgerald <rf@opensource.cirrus.com>, 
- Mark Brown <broonie@kernel.org>
-Cc: patches@opensource.cirrus.com, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
- stable@vger.kernel.org
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739286007; l=5499;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=X7gsBc4YvTswGAe3ipvZe8BWphWuMO5WFT/+YrV/kNg=;
- b=hxNYiKtuDcPhzRD4UnAaXybfto5jOrZDWGSbfJG3+XB4mIo0DR98Go1CKKjogVG1Pohs2lUcE
- NWJw+nD5ao+CdFkioBDNxtmRBW1y65nd9FOAqRAXWrUwUlG824KbkrH
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250201021718.699411-2-seanjc@google.com>
 
-The char pointers in 'struct cs_dsp_mock_coeff_def' are expected to
-point to C strings. They need to be terminated by a null byte.
-However the code does not allocate that trailing null byte and only
-works if by chance the allocation is followed by such a null byte.
+On Fri, Jan 31, 2025 at 06:17:03PM -0800, Sean Christopherson wrote:
+> Extract retrieval of TSC frequency information from CPUID into standalone
+> helpers so that TDX guest support and kvmlock can reuse the logic.  Provide
+> a version that includes the multiplier math as TDX in particular does NOT
+> want to use native_calibrate_tsc()'s fallback logic that derives the TSC
+> frequency based on CPUID.0x16 when the core crystal frequency isn't known.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/x86/include/asm/tsc.h | 41 ++++++++++++++++++++++++++++++++++++++
+>  arch/x86/kernel/tsc.c      | 14 ++-----------
+>  2 files changed, 43 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/tsc.h b/arch/x86/include/asm/tsc.h
+> index 94408a784c8e..14a81a66b37c 100644
+> --- a/arch/x86/include/asm/tsc.h
+> +++ b/arch/x86/include/asm/tsc.h
 
-Refactor the repeated string allocation logic into a new helper which
-makes sure the terminating null is always present.
-It also makes the code more readable.
+Bah, why in the header as inlines? Just leave them in tsc.c and call them...
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Fixes: 83baecd92e7c ("firmware: cs_dsp: Add KUnit testing of control parsing")
-Cc: stable@vger.kernel.org
----
- .../cirrus/test/cs_dsp_test_control_parse.c        | 51 ++++++++--------------
- 1 file changed, 19 insertions(+), 32 deletions(-)
+> @@ -28,6 +28,47 @@ static inline cycles_t get_cycles(void)
+>  }
+>  #define get_cycles get_cycles
+>  
+> +static inline int cpuid_get_tsc_info(unsigned int *crystal_khz,
+> +				     unsigned int *denominator,
+> +				     unsigned int *numerator)
 
-diff --git a/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c b/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c
-index cb90964740ea351113dac274f0366de7cedfd3d1..942ba1af5e7c1e47e8a2fbe548a7993b94f96515 100644
---- a/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c
-+++ b/drivers/firmware/cirrus/test/cs_dsp_test_control_parse.c
-@@ -73,6 +73,18 @@ static const struct cs_dsp_mock_coeff_def mock_coeff_template = {
- 	.length_bytes = 4,
- };
- 
-+static char *cs_dsp_ctl_alloc_test_string(struct kunit *test, char c, size_t len)
-+{
-+	char *str;
-+
-+	str = kunit_kmalloc(test, len + 1, GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, str);
-+	memset(str, c, len);
-+	str[len] = '\0';
-+
-+	return str;
-+}
-+
- /* Algorithm info block without controls should load */
- static void cs_dsp_ctl_parse_no_coeffs(struct kunit *test)
- {
-@@ -160,12 +172,8 @@ static void cs_dsp_ctl_parse_max_v1_name(struct kunit *test)
- 	struct cs_dsp_mock_coeff_def def = mock_coeff_template;
- 	struct cs_dsp_coeff_ctl *ctl;
- 	struct firmware *wmfw;
--	char *name;
- 
--	name = kunit_kzalloc(test, 256, GFP_KERNEL);
--	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, name);
--	memset(name, 'A', 255);
--	def.fullname = name;
-+	def.fullname = cs_dsp_ctl_alloc_test_string(test, 'A', 255);
- 
- 	cs_dsp_mock_wmfw_start_alg_info_block(local->wmfw_builder,
- 					      cs_dsp_ctl_parse_test_algs[0].id,
-@@ -252,14 +260,9 @@ static void cs_dsp_ctl_parse_max_short_name(struct kunit *test)
- 	struct cs_dsp_test_local *local = priv->local;
- 	struct cs_dsp_mock_coeff_def def = mock_coeff_template;
- 	struct cs_dsp_coeff_ctl *ctl;
--	char *name;
- 	struct firmware *wmfw;
- 
--	name = kunit_kmalloc(test, 255, GFP_KERNEL);
--	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, name);
--	memset(name, 'A', 255);
--
--	def.shortname = name;
-+	def.shortname = cs_dsp_ctl_alloc_test_string(test, 'A', 255);
- 
- 	cs_dsp_mock_wmfw_start_alg_info_block(local->wmfw_builder,
- 					      cs_dsp_ctl_parse_test_algs[0].id,
-@@ -273,7 +276,7 @@ static void cs_dsp_ctl_parse_max_short_name(struct kunit *test)
- 	ctl = list_first_entry_or_null(&priv->dsp->ctl_list, struct cs_dsp_coeff_ctl, list);
- 	KUNIT_ASSERT_NOT_NULL(test, ctl);
- 	KUNIT_EXPECT_EQ(test, ctl->subname_len, 255);
--	KUNIT_EXPECT_MEMEQ(test, ctl->subname, name, ctl->subname_len);
-+	KUNIT_EXPECT_MEMEQ(test, ctl->subname, def.shortname, ctl->subname_len);
- 	KUNIT_EXPECT_EQ(test, ctl->flags, def.flags);
- 	KUNIT_EXPECT_EQ(test, ctl->type, def.type);
- 	KUNIT_EXPECT_EQ(test, ctl->len, def.length_bytes);
-@@ -323,12 +326,8 @@ static void cs_dsp_ctl_parse_with_max_fullname(struct kunit *test)
- 	struct cs_dsp_mock_coeff_def def = mock_coeff_template;
- 	struct cs_dsp_coeff_ctl *ctl;
- 	struct firmware *wmfw;
--	char *fullname;
- 
--	fullname = kunit_kmalloc(test, 255, GFP_KERNEL);
--	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, fullname);
--	memset(fullname, 'A', 255);
--	def.fullname = fullname;
-+	def.fullname = cs_dsp_ctl_alloc_test_string(test, 'A', 255);
- 
- 	cs_dsp_mock_wmfw_start_alg_info_block(local->wmfw_builder,
- 					      cs_dsp_ctl_parse_test_algs[0].id,
-@@ -392,12 +391,8 @@ static void cs_dsp_ctl_parse_with_max_description(struct kunit *test)
- 	struct cs_dsp_mock_coeff_def def = mock_coeff_template;
- 	struct cs_dsp_coeff_ctl *ctl;
- 	struct firmware *wmfw;
--	char *description;
- 
--	description = kunit_kmalloc(test, 65535, GFP_KERNEL);
--	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, description);
--	memset(description, 'A', 65535);
--	def.description = description;
-+	def.description = cs_dsp_ctl_alloc_test_string(test, 'A', 65535);
- 
- 	cs_dsp_mock_wmfw_start_alg_info_block(local->wmfw_builder,
- 					      cs_dsp_ctl_parse_test_algs[0].id,
-@@ -429,17 +424,9 @@ static void cs_dsp_ctl_parse_with_max_fullname_and_description(struct kunit *tes
- 	struct cs_dsp_mock_coeff_def def = mock_coeff_template;
- 	struct cs_dsp_coeff_ctl *ctl;
- 	struct firmware *wmfw;
--	char *fullname, *description;
--
--	fullname = kunit_kmalloc(test, 255, GFP_KERNEL);
--	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, fullname);
--	memset(fullname, 'A', 255);
--	def.fullname = fullname;
- 
--	description = kunit_kmalloc(test, 65535, GFP_KERNEL);
--	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, description);
--	memset(description, 'A', 65535);
--	def.description = description;
-+	def.fullname = cs_dsp_ctl_alloc_test_string(test, 'A', 255);
-+	def.description = cs_dsp_ctl_alloc_test_string(test, 'A', 65535);
- 
- 	cs_dsp_mock_wmfw_start_alg_info_block(local->wmfw_builder,
- 					      cs_dsp_ctl_parse_test_algs[0].id,
+Can we pls do a
 
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250211-cs_dsp-kunit-strings-f43e27078ed2
+struct cpuid_tsc_info {
+	unsigned int denominator;
+	unsigned int numerator;
+	unsigned int crystal_khz;
+	unsigned int tsc_khz;
+}
 
-Best regards,
+and hand that around instead of those I/O pointers?
+
+It would make the code a bit saner to stare at and follow.
+
+Thx.
+
 -- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
