@@ -1,379 +1,265 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5633726BDB6;
-	Tue, 11 Feb 2025 07:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB5E26BDB6;
+	Tue, 11 Feb 2025 07:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739257865; cv=none; b=cctuK8qpiE+fkW7Ehcg1tZNmH4L9h3Xk0NSElEV4ltqihz2UhqCr8FiZPP/GpkNgKQSj+66q4lEDS8LPxphR2VPxnxQZwi8fKXxjq/7H6l037vk2ZfsPtmQ/BFzo0DjZDD88mUPkfrWxZQVaK5kia2qlvY52MPeMrHrFl6Szrk4=
+	t=1739257872; cv=none; b=I+Rv+TQjzq2XDyVL9zynaoHEPyGD6PEZTHAq2xOM4w4arXAykhe52OHvLYq1GyEZ2G/ZQJllgGJnirqPDYueEyqxVcycU/dGcCx8G7x/OweN7jywK/Z8nX4IrGAxbIsKSUEeVQa4r7AIcXFkSIPrsvI4MYnNpV52cptrmx4ai5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739257865; c=relaxed/simple;
-	bh=+j03FWY7yQm+Yif8GM04TVLM//R9bsc2EP03dfu5lSo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U7sV9E/3VfmrP5TwrowDbi3Ze8wwTPbvmF002AL0D70nWFfNAAUQemsVgb3JXRKfL/pdakY66osA8lTTLvVjZIEnTUQcNp5Tmq/6psWpKiE6UcprqWuZzekeSAfERAmyuS8zKb5CIS7UyBtnB3jgUr5lqhr+ClFG3PpRPlPT88A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=SPCboFdW; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1739257872; c=relaxed/simple;
+	bh=dpoWblb82toSXucNRm95Epw6peSpv8AO6eqefwprsKk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OASDs1aVaqR/Y4iFZ9SS8zacEzlypLUS5bqMpLqfdYceo2rVkQBpanIbNo8vk2AwPtoGqt+HFPWvwd1V0fBQYVpGlFdjGRSyxhpvOKmQnRCpKAcGrT0199ICMnWGsXCL3XZzNgwMskQPymf7dXsn0wRptX3OnvSEJOSgWPm67mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X396/K/i; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SPCboFdW"
-Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:30ee:391a:e4dd:1a49:e64:7c19])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 54B0322E;
-	Tue, 11 Feb 2025 08:09:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1739257783;
-	bh=+j03FWY7yQm+Yif8GM04TVLM//R9bsc2EP03dfu5lSo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SPCboFdWQIEmg86bTocoVw0fONJhd5A3QMXjpOBPEL6xLN0hmNMv95HbMJKVeUp3q
-	 CZnTuFTpJcAxpihD7Sadj19TQagQ16YkoLolt6dGANWV11EYGoSoYcfc3NyM3natLK
-	 x68//ozcnnJ8J3OHCNtrD10HbFF/x26h1vXo0vOA=
-Date: Tue, 11 Feb 2025 12:40:48 +0530
-From: Jai Luthra <jai.luthra@ideasonboard.com>
-To: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Naushir Patuck <naush@raspberrypi.com>, 
-	Vinay Varma <varmavinaym@gmail.com>
-Subject: Re: [PATCH v6 5/5] media: i2c: imx219: Scale the pixel rate for
- analog binning
-Message-ID: <skh5wuyyy7fl7ni7ep34pcssrhz3ww2bi2jrmscpj34bitntcq@57zyehidlqr7>
-X-PGP-Key: http://jailuthra.in/files/public-key.asc
-References: <20250204-imx219_fixes-v6-0-84ffa5030972@ideasonboard.com>
- <20250204-imx219_fixes-v6-5-84ffa5030972@ideasonboard.com>
- <ubuuob7mb3o5bxoumrxv4rufutgk3lvdmdery6d3bfc6rytfti@tcchhlechzzp>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X396/K/i"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21f49bd087cso68876835ad.0;
+        Mon, 10 Feb 2025 23:11:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739257870; x=1739862670; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dy+jKC2tlxNEcxoYxjCRSJtpvH8bNZPV6Hp8xEJuD6U=;
+        b=X396/K/idnTE/03RpflMqUYuSp0aJAlMRtR0yU1RxgVzMM1uZy8wP91vaPvffqrWQw
+         j+B300ltQqUavQMlPRgrf/ZXf+NNCAZjewfWgz8vXNLl100MSn3XsQevbDUU/Me+26mN
+         BQVON72MG0+96zP8HNz19YwQZdGG4Yd7A59nSaeqXz6/AIQG5ky9uqOxZzEOgAEeJxwN
+         YLKPL4g3lD9p83DaeJXFWNRKDT5bbofdF4Tk3xY/io1hJIv2cu7bZfDfX3aYWnUspk7e
+         cEbotvtVIKid5Cd1qkbMG2SK0rQl5zAhUcp3oAViWYJvdF0WdA2ukC7BR6L2E9mHgqG/
+         v+eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739257870; x=1739862670;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Dy+jKC2tlxNEcxoYxjCRSJtpvH8bNZPV6Hp8xEJuD6U=;
+        b=Y1fCw2hzPxZAljLC26bSYpW08N84sVbu5kzgY9aDhPsbS2HI7SeEe+6VxbOCaorERr
+         sklsZaQucpebwmi47d/QYA/vcOSLrD2zcYGutrVs6Vdj9Csk1QOwVIthbZRm/Qomr7fX
+         xE2BShcSC+Il+2sms2u+CRDIcZ1TIdWjCcgzEkQFyQjYgTrRaxhmVToEBH4kxsjsdc5w
+         ss5ONUbX3NMIYA0NdqB4wJsMiX+vlpGl9/y7LZrffmxIaSwj7IYGsSNnIsQeZ+kyGw/V
+         PdJ8CeQVB/abkz1xfktQ0zFnlO9fnPWkG8wcJlUMolcOVLZcmP++92MzDIiR1/g/c/5f
+         M50Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVIZ05hXhzoq7zx68euj5U8hwres/whEhfDxKRWODfIjWKHtGxq+WY6fQqwKf52v1lgK4/A7Z9I5frQvuM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/SoYJDYpADujl9tHa/UwIVSdCPuJF1IW7SOSdwG0LRXoc0kP9
+	tocWzaM0TOYnANvhNKMCm3oWouUtOLbvfXG0/7TrpvlpJsDKUit9SyKU2D8O
+X-Gm-Gg: ASbGncvf+jyD8bFohU0Gv2YdpbV2W0jXB4QQdoSgC3yF8O3+rIllQnEhLdj062j80l6
+	UGXP4W8O7O7iP/yDrYHISx8rDYcaqB9SslPSBXduZziSuazsehDcAwWnUB1HM5TiNsOF561aiUv
+	8cqyK2g1cqBQ8ph50nu4NqXkKLZtD5dG/wolk0GdnFGV7iwTdvHcYF1ArPVAD6YT7wijmjDk9FJ
+	+QR4k/ur5M97bs3ktDL2prlutni8mwxu5hySaXq4Imxq675crFLjSnjJUsKFaLx4zdqDM7HIsk9
+	CI0bIxR4dFpag+5mWO7pcwyC8L3j4kZBhZRVdVAPcPgYsmQtT54JIer9VvurLA==
+X-Google-Smtp-Source: AGHT+IEgrVFOdypoOBVAMxwlOnLPkbYHeoHYasqV83pZ+UnCn0yDJEUQeCHcUM3a8aVsJoIDGwdHoA==
+X-Received: by 2002:a17:903:22c9:b0:215:9bc2:42ec with SMTP id d9443c01a7336-21f4e763b64mr259520485ad.47.1739257870313;
+        Mon, 10 Feb 2025 23:11:10 -0800 (PST)
+Received: from stone-arch-VM.localdomain ([103.233.162.226])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f368cee57sm88429055ad.245.2025.02.10.23.11.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 23:11:09 -0800 (PST)
+From: Zhihang Shao <zhihang.shao.iscas@gmail.com>
+To: ebiggers@kernel.org
+Cc: linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	ardb@kernel.org,
+	Zhihang Shao <zhihang.shao.iscas@gmail.com>
+Subject: [PATCH v4] riscv: Optimize crct10dif with zbc extension
+Date: Tue, 11 Feb 2025 15:11:01 +0800
+Message-ID: <20250211071101.181652-1-zhihang.shao.iscas@gmail.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ubuuob7mb3o5bxoumrxv4rufutgk3lvdmdery6d3bfc6rytfti@tcchhlechzzp>
+Content-Transfer-Encoding: 8bit
 
-Hi Jacopo,
+The current CRC-T10DIF algorithm on RISC-V platform is based on
+table-lookup optimization.
+Given the previous work on optimizing crc32 calculations with zbc
+extension, it is believed that this will be equally effective for
+accelerating crc-t10dif.
 
-On Feb 07, 2025 at 17:49:19 +0100, Jacopo Mondi wrote:
-> Hi Jai
-> 
-> On Tue, Feb 04, 2025 at 12:34:40PM +0530, Jai Luthra wrote:
-> > When the analog binning mode is used for high framerate operation, the
-> > pixel rate is effectively doubled. Account for this when setting up the
-> > pixel clock rate, and applying the vblank and exposure controls.
-> >
-> > The previous logic only used analog binning for RAW8, but normal binning
-> > limits the framerate on RAW10 480p [1]. So with this patch we switch to
-> > using special binning (with 2x pixel rate) wherever possible.
-> >
-> > [1]: https://github.com/raspberrypi/linux/issues/5493
-> >
-> > Co-developed-by: Naushir Patuck <naush@raspberrypi.com>
-> > Signed-off-by: Naushir Patuck <naush@raspberrypi.com>
-> > Co-developed-by: Vinay Varma <varmavinaym@gmail.com>
-> > Signed-off-by: Vinay Varma <varmavinaym@gmail.com>
-> > Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
-> > ---
-> >  drivers/media/i2c/imx219.c | 126 +++++++++++++++++++++++++++++----------------
-> >  1 file changed, 81 insertions(+), 45 deletions(-)
-> >
-> > diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-> > index e4aa6e66b673bb7a8942bf8daf27267c2884ec95..c445987de2c3e933ea9c49ba3e00a15663ef5f2e 100644
-> > --- a/drivers/media/i2c/imx219.c
-> > +++ b/drivers/media/i2c/imx219.c
-> > @@ -144,6 +144,12 @@
-> >  #define IMX219_PIXEL_ARRAY_WIDTH	3280U
-> >  #define IMX219_PIXEL_ARRAY_HEIGHT	2464U
-> >
-> > +enum binning_mode {
-> > +	BINNING_NONE = IMX219_BINNING_NONE,
-> > +	BINNING_X2 = IMX219_BINNING_X2,
-> > +	BINNING_ANALOG_X2 = IMX219_BINNING_X2_ANALOG,
-> > +};
-> > +
-> >  /* Mode : resolution and related config&values */
-> >  struct imx219_mode {
-> >  	/* Frame width */
-> > @@ -295,13 +301,13 @@ static const struct imx219_mode supported_modes[] = {
-> >  		.fll_def = 1707,
-> >  	},
-> >  	{
-> > -		/* 2x2 binned 30fps mode */
-> > +		/* 2x2 binned 60fps mode */
-> >  		.width = 1640,
-> >  		.height = 1232,
-> >  		.fll_def = 1707,
-> >  	},
-> >  	{
-> > -		/* 640x480 30fps mode */
-> > +		/* 640x480 60fps mode */
-> >  		.width = 640,
-> >  		.height = 480,
-> >  		.fll_def = 1707,
-> > @@ -356,6 +362,59 @@ static u32 imx219_get_format_code(struct imx219 *imx219, u32 code)
-> >  	return imx219_mbus_formats[i];
-> >  }
-> >
-> > +static u32 imx219_get_format_bpp(const struct v4l2_mbus_framefmt *format)
-> > +{
-> > +	switch (format->code) {
-> > +	case MEDIA_BUS_FMT_SRGGB8_1X8:
-> > +	case MEDIA_BUS_FMT_SGRBG8_1X8:
-> > +	case MEDIA_BUS_FMT_SGBRG8_1X8:
-> > +	case MEDIA_BUS_FMT_SBGGR8_1X8:
-> > +		return 8;
-> > +
-> > +	case MEDIA_BUS_FMT_SRGGB10_1X10:
-> > +	case MEDIA_BUS_FMT_SGRBG10_1X10:
-> > +	case MEDIA_BUS_FMT_SGBRG10_1X10:
-> > +	case MEDIA_BUS_FMT_SBGGR10_1X10:
-> > +	default:
-> > +		return 10;
-> > +	}
-> > +}
-> 
-> Is this change related ?
-> 
+Therefore this patch offers an implementation of crc-t10dif using zbc
+extension. This can detect whether the current runtime environment
+supports zbc feature and, if so, uses it to accelerate crc-t10dif
+calculations.
 
-Ah I think I split it out as a separate function during a previous 
-iteration, but it is not really needed anymore.
+This patch is updated due to the patchset of updating kernel's
+CRC-T10DIF library in 6.14, which is finished by Eric Biggers.
+Also, I used crc_kunit.c to test the performance of crc-t10dif 
+optimized by crc extension.
 
-> > +
-> > +static enum binning_mode imx219_get_binning(struct imx219 *imx219, u8 *bin_h,
-> > +					    u8 *bin_v)
-> > +{
-> > +	struct v4l2_subdev_state *state =
-> > +		v4l2_subdev_get_locked_active_state(&imx219->sd);
-> > +	const struct v4l2_mbus_framefmt *format =
-> > +		v4l2_subdev_state_get_format(state, 0);
-> > +	const struct v4l2_rect *crop = v4l2_subdev_state_get_crop(state, 0);
-> > +
-> > +	*bin_h = crop->width / format->width;
-> > +	*bin_v = crop->height / format->height;
-> > +
-> > +	if (*bin_h == 2 && *bin_v == 2)
-> > +		return BINNING_ANALOG_X2;
-> > +	else if (*bin_h == 2 || *bin_v == 2)
-> > +		/*
-> > +		 * Don't use analog binning if only one dimension
-> > +		 * is binned, as it crops the other dimension
-> > +		 */
-> > +		return BINNING_X2;
-> > +	else
-> > +		return BINNING_NONE;
-> 
-> This function is used in two places, for two different reasons:
-> 
-> 1) in imx219_get_rate_factor() to know if ANALOG is used
-> 2) in imx219_set_framefmt() to calculate what value to write to the
-> horizontal/vertical registers
-> 
-> We now know that ANALOG binning is either applied to both horizontal
-> and vertical directions or it is not activated at all.
-> 
-> I wonder if you should do here
-> 
->         u32 hbin = crop->width / format->width;
->         u32 vbin = crop->height / format->height;
-> 
->         *h_bin = IMX219_BINNING_NONE;
->         *v_bin = IMX219_BINNING_NONE;
-> 
->         /*
->          * Use analog binning if only both dimensions are binned, as the
->          * other dimension is cropped.
->          */
->         if (hbin == 2 && vbin == 2) {
->                 *h_bin = IMX219_BINNING_X2_ANALOG;
->                 *v_bin = IMX219_BINNING_X2_ANALOG;
-> 
->                 return;
->         }
-> 
->         if (hbin == 2)
->                 *h_bin = IMX219_BINNING_X2;
->         if (vbin == 2)
->                 *v_bin = IMX219_BINNING_X2;
-> 
->         return;
-> 
-> And make the two callers
-> 
-> imx219_set_framefmt()
-> 	imx219_get_binning(imx219, &bin_h, &bin_v);
-> 	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_H, bin_h, &ret)
-> 	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_V, bin_v, &ret);
-> 
-> imx219_get_rate_factor()
-> 	imx219_get_binning(imx219, &bin_h, &bin_v);
-> 
->         return (bin_h & bin_v) == IMX219_BINNING_X2_ANALOG ? 2 : 1;
-> 
+Signed-off-by: Zhihang Shao <zhihang.shao.iscas@gmail.com>
 
-Looking at it from scratch, that does look much cleaner way to handle 
-it. Will do in next revision.
+---
+v4:
+- Use proper data types and remove #defines according
+to Eric's comments. (Eric)
+---
+v3:
+- Rebase for Eric's crc tree. (Eric)
+---
+v2:
+- Use crypto self-tests instead. (Eric)
+- Fix some format errors in arch/riscv/crypto/Kconfig. (Chunyan)
+---
+ arch/riscv/Kconfig                |   1 +
+ arch/riscv/lib/Makefile           |   1 +
+ arch/riscv/lib/crc-t10dif-riscv.c | 120 ++++++++++++++++++++++++++++++
+ 3 files changed, 122 insertions(+)
+ create mode 100644 arch/riscv/lib/crc-t10dif-riscv.c
 
-Thanks for the review.
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 7612c52e9b1e..db1cf9666dfd 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -25,6 +25,7 @@ config RISCV
+ 	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
+ 	select ARCH_HAS_BINFMT_FLAT
+ 	select ARCH_HAS_CRC32 if RISCV_ISA_ZBC
++	select ARCH_HAS_CRC_T10DIF if RISCV_ISA_ZBC
+ 	select ARCH_HAS_CURRENT_STACK_POINTER
+ 	select ARCH_HAS_DEBUG_VIRTUAL if MMU
+ 	select ARCH_HAS_DEBUG_VM_PGTABLE
+diff --git a/arch/riscv/lib/Makefile b/arch/riscv/lib/Makefile
+index 79368a895fee..689895b271bd 100644
+--- a/arch/riscv/lib/Makefile
++++ b/arch/riscv/lib/Makefile
+@@ -16,6 +16,7 @@ lib-$(CONFIG_MMU)	+= uaccess.o
+ lib-$(CONFIG_64BIT)	+= tishift.o
+ lib-$(CONFIG_RISCV_ISA_ZICBOZ)	+= clear_page.o
+ obj-$(CONFIG_CRC32_ARCH)	+= crc32-riscv.o
++obj-$(CONFIG_CRC_T10DIF_ARCH) += crc-t10dif-riscv.o
+ obj-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
+ lib-$(CONFIG_RISCV_ISA_V)	+= xor.o
+ lib-$(CONFIG_RISCV_ISA_V)	+= riscv_v_helpers.o
+diff --git a/arch/riscv/lib/crc-t10dif-riscv.c b/arch/riscv/lib/crc-t10dif-riscv.c
+new file mode 100644
+index 000000000000..da90e2900ca7
+--- /dev/null
++++ b/arch/riscv/lib/crc-t10dif-riscv.c
+@@ -0,0 +1,120 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Accelerated CRC-T10DIF implementation with RISC-V Zbc extension.
++ *
++ * Copyright (C) 2024 Institute of Software, CAS.
++ */
++
++#include <asm/alternative-macros.h>
++#include <asm/byteorder.h>
++#include <asm/hwcap.h>
++
++#include <linux/byteorder/generic.h>
++#include <linux/crc-t10dif.h>
++#include <linux/minmax.h>
++#include <linux/module.h>
++#include <linux/types.h>
++
++#define CRCT10DIF_POLY 0x8bb7
++
++#if __riscv_xlen == 64
++#define CRCT10DIF_POLY_QT_BE 0xf65a57f81d33a48a
++
++static inline u64 crct10dif_prep(u16 crc, const __be64 *ptr)
++{
++	return ((u64)crc << 48) ^ __be64_to_cpu(*ptr);
++}
++
++#elif __riscv_xlen == 32
++#define CRCT10DIF_POLY_QT_BE 0xf65a57f8
++
++static inline u32 crct10dif_prep(u16 crc, const __be32 *ptr)
++{
++	return ((u32)crc << 16) ^ __be32_to_cpu(*ptr);
++}
++
++#else
++#error "Unexpected __riscv_xlen"
++#endif
++
++static inline u16 crct10dif_zbc(unsigned long s)
++{
++	u16 crc;
++
++	asm volatile   (".option push\n"
++			".option arch,+zbc\n"
++			"clmulh %0, %1, %2\n"
++			"xor    %0, %0, %1\n"
++			"clmul  %0, %0, %3\n"
++			".option pop\n"
++			: "=&r" (crc)
++			: "r"(s),
++			  "r"(CRCT10DIF_POLY_QT_BE),
++			  "r"(CRCT10DIF_POLY)
++			:);
++
++	return crc;
++}
++
++static inline u16 crct10dif_unaligned(u16 crc, const u8 *p, size_t len)
++{
++	size_t bits = len * 8;
++	unsigned long s = 0;
++	u16 crc_low = 0;
++
++	for (int i = 0; i < len; i++)
++		s = *p++ | (s << 8);
++
++	if (len < sizeof(u16)) {
++		s ^= crc >> (16 - bits);
++		crc_low = crc << bits;
++	} else {
++		s ^= (unsigned long)crc << (bits - 16);
++	}
++
++	crc = crct10dif_zbc(s);
++	crc ^= crc_low;
++
++	return crc;
++}
++
++u16 crc_t10dif_arch(u16 crc, const u8 *p, size_t len)
++{
++	size_t offset, head_len, tail_len;
++	const __be64 *p_ul;
++	unsigned long s;
++
++	asm goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
++			     RISCV_ISA_EXT_ZBC, 1)
++		 : : : : legacy);
++
++	offset = (unsigned long)p & (sizeof(unsigned long) - 1);
++	if (offset && len) {
++		head_len = min(sizeof(unsigned long) - offset, len);
++		crc = crct10dif_unaligned(crc, p, head_len);
++		p += head_len;
++		len -= head_len;
++	}
++
++	tail_len = len & (sizeof(unsigned long) - 1);
++	len = len >> ilog2(sizeof(unsigned long));
++	p_ul = (const __be64 *)p;
++
++	for (int i = 0; i < len; i++) {
++		s = crct10dif_prep(crc, p_ul);
++		crc = crct10dif_zbc(s);
++		p_ul++;
++	}
++
++	p = (const u8 *)p_ul;
++	if (tail_len)
++		crc = crct10dif_unaligned(crc, p, tail_len);
++
++	return crc;
++legacy:
++	return crc_t10dif_generic(crc, p, len);
++}
++EXPORT_SYMBOL(crc_t10dif_arch);
++
++MODULE_DESCRIPTION("CRC-T10DIF using RISC-V ZBC Extension");
++MODULE_LICENSE("GPL");
+-- 
+2.47.0
 
-> 
-> You could probably get rid of the enum in this way.
-> 
-> Just a small suggestion
-> 
-> 
-> > +}
-> > +
-> > +static inline u32 imx219_get_rate_factor(struct imx219 *imx219)
-> > +{
-> > +	u8 bin_h, bin_v;
-> > +	enum binning_mode binning = imx219_get_binning(imx219, &bin_h, &bin_v);
-> > +
-> > +	if (binning == BINNING_ANALOG_X2)
-> > +		return 2;
-> > +
-> > +	return 1;
-> > +}
-> > +
-> >  /* -----------------------------------------------------------------------------
-> >   * Controls
-> >   */
-> > @@ -367,10 +426,12 @@ static int imx219_set_ctrl(struct v4l2_ctrl *ctrl)
-> >  	struct i2c_client *client = v4l2_get_subdevdata(&imx219->sd);
-> >  	const struct v4l2_mbus_framefmt *format;
-> >  	struct v4l2_subdev_state *state;
-> > +	u32 rate_factor;
-> >  	int ret = 0;
-> >
-> >  	state = v4l2_subdev_get_locked_active_state(&imx219->sd);
-> >  	format = v4l2_subdev_state_get_format(state, 0);
-> > +	rate_factor = imx219_get_rate_factor(imx219);
-> >
-> >  	if (ctrl->id == V4L2_CID_VBLANK) {
-> >  		int exposure_max, exposure_def;
-> > @@ -399,7 +460,7 @@ static int imx219_set_ctrl(struct v4l2_ctrl *ctrl)
-> >  		break;
-> >  	case V4L2_CID_EXPOSURE:
-> >  		cci_write(imx219->regmap, IMX219_REG_EXPOSURE,
-> > -			  ctrl->val, &ret);
-> > +			  ctrl->val / rate_factor, &ret);
-> >  		break;
-> >  	case V4L2_CID_DIGITAL_GAIN:
-> >  		cci_write(imx219->regmap, IMX219_REG_DIGITAL_GAIN,
-> > @@ -416,7 +477,7 @@ static int imx219_set_ctrl(struct v4l2_ctrl *ctrl)
-> >  		break;
-> >  	case V4L2_CID_VBLANK:
-> >  		cci_write(imx219->regmap, IMX219_REG_FRM_LENGTH_A,
-> > -			  format->height + ctrl->val, &ret);
-> > +			  (format->height + ctrl->val) / rate_factor, &ret);
-> 
-> 
-> Isn't this (and exposure) compensatd by the doubled pixel rate ?
-> 
-> Applications use the pixel rate to compute the line duration and from
-> there transform the frame duration and the exposure in lines, don't
-> they ?
-> 
-> Overall, very nice to be able to double the achievable frame rate
-> without any artifacts! Good job!
-> 
-> Thanks
->   j
-> 
-> >  		break;
-> >  	case V4L2_CID_HBLANK:
-> >  		cci_write(imx219->regmap, IMX219_REG_LINE_LENGTH_A,
-> > @@ -587,29 +648,14 @@ static int imx219_set_framefmt(struct imx219 *imx219,
-> >  {
-> >  	const struct v4l2_mbus_framefmt *format;
-> >  	const struct v4l2_rect *crop;
-> > -	unsigned int bpp;
-> > -	u64 bin_h, bin_v;
-> > +	enum binning_mode binning;
-> > +	u8 bin_h, bin_v;
-> > +	u32 bpp;
-> >  	int ret = 0;
-> >
-> >  	format = v4l2_subdev_state_get_format(state, 0);
-> >  	crop = v4l2_subdev_state_get_crop(state, 0);
-> > -
-> > -	switch (format->code) {
-> > -	case MEDIA_BUS_FMT_SRGGB8_1X8:
-> > -	case MEDIA_BUS_FMT_SGRBG8_1X8:
-> > -	case MEDIA_BUS_FMT_SGBRG8_1X8:
-> > -	case MEDIA_BUS_FMT_SBGGR8_1X8:
-> > -		bpp = 8;
-> > -		break;
-> > -
-> > -	case MEDIA_BUS_FMT_SRGGB10_1X10:
-> > -	case MEDIA_BUS_FMT_SGRBG10_1X10:
-> > -	case MEDIA_BUS_FMT_SGBRG10_1X10:
-> > -	case MEDIA_BUS_FMT_SBGGR10_1X10:
-> > -	default:
-> > -		bpp = 10;
-> > -		break;
-> > -	}
-> > +	bpp = imx219_get_format_bpp(format);
-> >
-> >  	cci_write(imx219->regmap, IMX219_REG_X_ADD_STA_A,
-> >  		  crop->left - IMX219_PIXEL_ARRAY_LEFT, &ret);
-> > @@ -620,28 +666,11 @@ static int imx219_set_framefmt(struct imx219 *imx219,
-> >  	cci_write(imx219->regmap, IMX219_REG_Y_ADD_END_A,
-> >  		  crop->top - IMX219_PIXEL_ARRAY_TOP + crop->height - 1, &ret);
-> >
-> > -	switch (crop->width / format->width) {
-> > -	case 1:
-> > -	default:
-> > -		bin_h = IMX219_BINNING_NONE;
-> > -		break;
-> > -	case 2:
-> > -		bin_h = bpp == 8 ? IMX219_BINNING_X2_ANALOG : IMX219_BINNING_X2;
-> > -		break;
-> > -	}
-> > -
-> > -	switch (crop->height / format->height) {
-> > -	case 1:
-> > -	default:
-> > -		bin_v = IMX219_BINNING_NONE;
-> > -		break;
-> > -	case 2:
-> > -		bin_v = bpp == 8 ? IMX219_BINNING_X2_ANALOG : IMX219_BINNING_X2;
-> > -		break;
-> > -	}
-> > -
-> > -	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_H, bin_h, &ret);
-> > -	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_V, bin_v, &ret);
-> > +	binning = imx219_get_binning(imx219, &bin_h, &bin_v);
-> > +	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_H,
-> > +		  (bin_h == 2) ? binning : BINNING_NONE, &ret);
-> > +	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_V,
-> > +		  (bin_v == 2) ? binning : BINNING_NONE, &ret);
-> >
-> >  	cci_write(imx219->regmap, IMX219_REG_X_OUTPUT_SIZE,
-> >  		  format->width, &ret);
-> > @@ -846,6 +875,7 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
-> >  		int exposure_max;
-> >  		int exposure_def;
-> >  		int hblank;
-> > +		int pixel_rate;
-> >
-> >  		/* Update limits and set FPS to default */
-> >  		__v4l2_ctrl_modify_range(imx219->vblank, IMX219_VBLANK_MIN,
-> > @@ -874,6 +904,12 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
-> >  					 IMX219_LLP_MAX - mode->width, 1,
-> >  					 IMX219_LLP_MIN - mode->width);
-> >  		__v4l2_ctrl_s_ctrl(imx219->hblank, hblank);
-> > +
-> > +		/* Scale the pixel rate based on the mode specific factor */
-> > +		pixel_rate = imx219_get_pixel_rate(imx219) *
-> > +			     imx219_get_rate_factor(imx219);
-> > +		__v4l2_ctrl_modify_range(imx219->pixel_rate, pixel_rate,
-> > +					 pixel_rate, 1, pixel_rate);
-> >  	}
-> >
-> >  	return 0;
-> >
-> > --
-> > 2.48.1
-> >
-
---
-Jai
