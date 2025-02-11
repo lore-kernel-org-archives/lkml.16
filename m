@@ -1,78 +1,118 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDAD01DF75D
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19833EA76;
+	Tue, 11 Feb 2025 01:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739237407; cv=none; b=QixsOGN3fJO4WpVEoaPk3zzhuZyCj0rOVFIrTmMXTYyXxVZjwOu57pmZMBH4VNlbUjmaMVpvdGsk7Ox1P4omiDYuvU931GzCO/sI8ONAxlMTmTuEaBP7MuIXHLbxiH5CrA+13BPux8EXzzSguZPgZj/nJll1PMUHNgJECEKI8Rw=
+	t=1739237407; cv=none; b=kap2lVyOptb4FsXRpGjdJpWYr6eHfnO9he/Tx2hNzYsgEPAcu25uBr6yWYAAQaKPFtmi6Zhy24bV9jW8kV6Rwn1pzURCRAPB5W9WUArgAWT6cD0fjymyhxQGZg+iU0i9TqstHNY+z+i5TaIv7R5Bt8InvhrHW+8B/yqqFYVcLhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739237407; c=relaxed/simple;
-	bh=v/Nh6V3Squ6zTlqOd8JqUTRgJWgw0anyNQlDu2hHeM8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=IfNsx1ji0zBUxyjYF6UQHRAb2dBVvuafUdmnAFZ+RK/QkeyJfSo+i2pCtgpG12cQe06cqoeciBqyCUvk5mWnb8Xx10vVNMioOYoLizZT+kgXx+zdJmFsGUNSp2Xl/3t0aYTylOoV1LFzZlDTwrAy7v8tRDxda36QK0WaHTJu11Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d13e6da07fso68641705ab.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2025 17:30:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739237405; x=1739842205;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t6+FBchsBBeiNSoV+eW+VD+Rx2zp2Kr3ieu0cpfLjMM=;
-        b=lGlgKiFO5fOtujw2IaYdoWOb6fj+inubdocutxCdBQrCKgmNm1xkKj/FX51XucoOye
-         kcbZ2u/DmbMtMQL6T9YxCyDaU1mXL1JAnFBiR0aeaT4Du5oLcPbHim8/g5ove6N35dZN
-         41ACfeIy7ZvR5iawI608hI2Wt1yePMRXWhfBg1Np6o35r13RRysbRr7PKILnZmRzmXg5
-         3Cio8lw31BPdSRf0EzLWGHo/xz9Wlsxo9TMTNKyzUYOU93HTiGETSoVMWYvjzeecXxVZ
-         MNLd0RQ4SthnhbqhK/Q8OQWXMlebMVhjITE6gdHMRqJ+5LEUS2/nn6pM9FqoWegKr737
-         ylUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVGkoK4mNW6OWXIpPmN33KZNQrk5n3S5y/mnOHqSaLKOMSTJmzp06AP14eBw62mEyVbrhQZBe/t55k4z/0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywl0W8SxpCLRMOOA6tTwqEzXhhi+Rg6ASUN7wqok7P7YKn81+KO
-	RiIq8qpVQq2kfaRIzj5OybB0Lljjr8iJdhmc7FLzqB4GP9y+Eqtqptz7kKTY/3JikP3zNjUKaNN
-	Cs6/nm/2bx6JY8TpVI/nOdVhPV5nJoLdSrdjfiTIRyITYDAfMMwQMCa0=
-X-Google-Smtp-Source: AGHT+IG7+XNeWPwTQyEuOSiBbyR17tnLyzZGxNLcT/H3Nag+ebW/Zo92Lj1QdCiNeeqakv6HPCbyQQayKdDo1wilBgT9j1TpzxFv
+	bh=O0uRPqFkoL/37XU7UWWZV0ARYrC8R2rnUfUL+3Jfoig=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=TgFxKgD1laARS55ZF0lkhk7bcVSX+TsGX0+w2rJUPaiVxHVK23nxUlwA1ombs2jDrOvNfA7ZiLaCV7m6CrSWIJ8AfZjjiWxYBUSCzJLD6zTtJ7J+M7pgFagJAqPy8NEcypPN/8/Vfg4XQkJ2NIpDNbeMdtZI0zhXQOer569aGvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XfObNTjq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XfObNTjq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A653C4AF09;
+	Tue, 11 Feb 2025 01:30:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739237406;
+	bh=O0uRPqFkoL/37XU7UWWZV0ARYrC8R2rnUfUL+3Jfoig=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=XfObNTjq5brsNiDHvtd5SxkxhFCwqrY200exrZ1lN/eulkwG63sJMAlWP/LjITiFq
+	 MHOIroSOBLNmxey3MB57vZr635kTVVca5IuwLB6FM671PuMkhmLWM+GjxwYglZD0n+
+	 i9nLL6mEymTdUZKwxYgFjFevNDXv1Zelz6DrJFs5PRJ/90xZmxO4gNg733EECEobFF
+	 4oMmfA6TMmwCzX1hWGlfxRtfxo4yjKZxyeykSCh9w7KyM1c0hy/y81AeKh5BityGDw
+	 ySdlf76h4l0RiyK+BLcUb5KaokWsvDL3GotwQLUEFBzkK5P75zAhaC8AaeifhOK077
+	 0pkLJChfSgQHg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Xu Lu <luxu.kernel@bytedance.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sasha Levin <sashal@kernel.org>,
+	anup@brainfault.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.13 07/21] irqchip/riscv: Ensure ordering of memory writes and IPI writes
+Date: Mon, 10 Feb 2025 20:29:40 -0500
+Message-Id: <20250211012954.4096433-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250211012954.4096433-1-sashal@kernel.org>
+References: <20250211012954.4096433-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c546:0:b0:3cf:ce7c:b8b1 with SMTP id
- e9e14a558f8ab-3d13df2c784mr118031675ab.18.1739237404979; Mon, 10 Feb 2025
- 17:30:04 -0800 (PST)
-Date: Mon, 10 Feb 2025 17:30:04 -0800
-In-Reply-To: <67867937.050a0220.216c54.007c.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67aaa81c.050a0220.3d72c.0059.GAE@google.com>
-Subject: Re: [syzbot] [net?] [virt?] general protection fault in vsock_stream_has_data
-From: syzbot <syzbot+71613b464c8ef17ab718@syzkaller.appspotmail.com>
-To: bobby.eshleman@bytedance.com, davem@davemloft.net, edumazet@google.com, 
-	horms@kernel.org, kuba@kernel.org, leonardi@redhat.com, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	sgarzare@redhat.com, syzkaller-bugs@googlegroups.com, v4bel@theori.io, 
-	virtualization@lists.linux-foundation.org, virtualization@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13.2
+Content-Transfer-Encoding: 8bit
 
-syzbot suspects this issue was fixed by commit:
+From: Xu Lu <luxu.kernel@bytedance.com>
 
-commit df137da9d6d166e87e40980e36eb8e0bc90483ef
-Author: Stefano Garzarella <sgarzare@redhat.com>
-Date:   Fri Jan 10 08:35:09 2025 +0000
+[ Upstream commit 825c78e6a60c309a59d18d5ac5968aa79cef0bd6 ]
 
-    vsock/virtio: cancel close work in the destructor
+RISC-V distinguishes between memory accesses and device I/O and uses FENCE
+instruction to order them as viewed by other RISC-V harts and external
+devices or coprocessors. The FENCE instruction can order any combination of
+device input(I), device output(O), memory reads(R) and memory
+writes(W). For example, 'fence w, o' is used to ensure all memory writes
+from instructions preceding the FENCE instruction appear earlier in the
+global memory order than device output writes from instructions after the
+FENCE instruction.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12bb31b0580000
-start commit:   25cc469d6d34 net: phy: micrel: use helper phy_disable_eee
-git tree:       net-next
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d50f1d63eac02308
-dashboard link: https://syzkaller.appspot.com/bug?extid=71613b464c8ef17ab718
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=125a3218580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=147f11df980000
+RISC-V issues IPIs by writing to the IMSIC/ACLINT MMIO registers, which is
+regarded as device output operation. However, the existing implementation
+of the IMSIC/ACLINT drivers issue the IPI via writel_relaxed(), which does
+not guarantee the order of device output operation and preceding memory
+writes. As a consequence the hart receiving the IPI might not observe the
+IPI related data.
 
-If the result looks correct, please mark the issue as fixed by replying with:
+Fix this by replacing writel_relaxed() with writel() when issuing IPIs,
+which uses 'fence w, o' to ensure all previous writes made by the current
+hart are visible to other harts before they receive the IPI.
 
-#syz fix: vsock/virtio: cancel close work in the destructor
+Signed-off-by: Xu Lu <luxu.kernel@bytedance.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250127093846.98625-1-luxu.kernel@bytedance.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/irqchip/irq-riscv-imsic-early.c      | 2 +-
+ drivers/irqchip/irq-thead-c900-aclint-sswi.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+diff --git a/drivers/irqchip/irq-riscv-imsic-early.c b/drivers/irqchip/irq-riscv-imsic-early.c
+index c5c2e6929a2f5..275df50057057 100644
+--- a/drivers/irqchip/irq-riscv-imsic-early.c
++++ b/drivers/irqchip/irq-riscv-imsic-early.c
+@@ -27,7 +27,7 @@ static void imsic_ipi_send(unsigned int cpu)
+ {
+ 	struct imsic_local_config *local = per_cpu_ptr(imsic->global.local, cpu);
+ 
+-	writel_relaxed(IMSIC_IPI_ID, local->msi_va);
++	writel(IMSIC_IPI_ID, local->msi_va);
+ }
+ 
+ static void imsic_ipi_starting_cpu(void)
+diff --git a/drivers/irqchip/irq-thead-c900-aclint-sswi.c b/drivers/irqchip/irq-thead-c900-aclint-sswi.c
+index b0e366ade4271..8ff6e7a1363bd 100644
+--- a/drivers/irqchip/irq-thead-c900-aclint-sswi.c
++++ b/drivers/irqchip/irq-thead-c900-aclint-sswi.c
+@@ -31,7 +31,7 @@ static DEFINE_PER_CPU(void __iomem *, sswi_cpu_regs);
+ 
+ static void thead_aclint_sswi_ipi_send(unsigned int cpu)
+ {
+-	writel_relaxed(0x1, per_cpu(sswi_cpu_regs, cpu));
++	writel(0x1, per_cpu(sswi_cpu_regs, cpu));
+ }
+ 
+ static void thead_aclint_sswi_ipi_clear(void)
+-- 
+2.39.5
+
