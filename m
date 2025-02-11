@@ -1,92 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9CF487A5;
-	Tue, 11 Feb 2025 16:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6994487A5;
+	Tue, 11 Feb 2025 16:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739291506; cv=none; b=lkwQB2CxgyCxLbnMdTPwDIFjx+33Sre20mXXSTy1QYCC8jcxCubpfY+l4ttlSx0jyy5XWcFADVtCAG5R6cUH+JqWzk5f2boOubpG91k5p2OtvpnZoqUDs7jEpKr7+cqpwmf9OyTmnq7jQgVuX1MFSc6Rzj0ZrYMxcvnbj/hkq70=
+	t=1739291513; cv=none; b=eJOMueWdfte0A6/vrw4cEf0WA/t2KFTL4mHfUrRahkAf+mwwfr+18d8BluuYakVYM85QpBN4/emTbznmlQc9voi/1ZnFhGUpQ3NQqeqaF0RmmKG6V60peZk9txQEvEGQoIrEOctZHWNsGkHYoQtP8OuznjWMurktPO8lICTxZv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739291506; c=relaxed/simple;
-	bh=WHbx8D8WKN6+hpRNEmiKZwqpTFCaWvjmIP7bdWyOoLk=;
+	s=arc-20240116; t=1739291513; c=relaxed/simple;
+	bh=pehVcrgW3SFfnn6VXusU1IW7wP1uKwpQyMQ/ubP88ks=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LqdclYBWXqQO+sEtcAG38UnPUEwqQjdEJfQFyxykrSFJJexgm4z6EpgfzULyTlWYRa/qOcBtgQvhnNPSixEl1RK58DWwfbomcfLVsZeVYns3KNuZHiD/HWm+CCpUHr8tslrAojfx4rs6bSPQsSXMYyiOmC2DpUh8EXbU2pQYDFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eu+SaWGt; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=f6VgVrlXpCHHEwCPUdk31Xo4gjS31l7sr9UweVIpQL7Bv6+wG6klH6uM+W6qJLiItaSYHhYyQ4QfbLsUmNvgSGh80Kf3MseOsF+z9P4ugEJ4xxVUImLI3Nl9MLz9H7W6Ldzo8ZcEvy3p8AVl/CMjBfd4MJO1k3H5M9pRguXX5Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=UwyAKUUt; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eu+SaWGt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8C19C4CEE6;
-	Tue, 11 Feb 2025 16:31:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739291506;
-	bh=WHbx8D8WKN6+hpRNEmiKZwqpTFCaWvjmIP7bdWyOoLk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eu+SaWGtRx2DxB5TRikQIrRVEXZdtbv2SAdm+F7jzHTlPPFUw6eIa6qAab/DcbVh0
-	 5y4R/ZqyyauUi5Yn6dlugqGJIFIIqfeAIOVylT0UUL9y9cBO/dxOPe5KW7bd2CJDiB
-	 s+F6ti0cYo+quULaBGjEHbPRcN2vbH20R2retDttaaZb3B2S4XnXzmPq5ztWmkpiqi
-	 kfKu9c9WlICgSEABeRo8IxZDS9Jq7WmKV2MBVDM53eMeMuvXyTyPNd03ZgfmynHHun
-	 Of6jP+D8O2nWAkHK99qYzsIFxP+I9HsMmmji/XshKPXdCBoHw7aC6J0Z/UsxQffB9X
-	 jJVTGBlbvFWqQ==
-Date: Tue, 11 Feb 2025 16:31:40 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Steven Price <steven.price@arm.com>, kernel@collabora.com,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v4 1/3] dt-bindings: gpu: mali-bifrost: Add compatible
- for MT8370 SoC
-Message-ID: <20250211-sculpture-kindly-f609a5bfdbd9@spud>
-References: <20250211-mt8370-enable-gpu-v4-0-77deb7a75c23@collabora.com>
- <20250211-mt8370-enable-gpu-v4-1-77deb7a75c23@collabora.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="UwyAKUUt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=Kze9YHynH4qYxAJtq69RRqc96/Z65kKEF5K1+McSQLc=; b=UwyAKUUtTUXKhqfY1X8elku9Vv
+	02RwzlqYcuQXHrn7NDqU+oj+cAqkGNZFrO6Id6se5h8JKKXKOwR1rqmP7H3XccoJeOS6Y+BmsNAFQ
+	Wc9MiB8gDDB6htFT1+AiaK50aUHCYIJjMx4UhP1K1HH5hGz2xWROimjb2nPcW8diiuWM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1thtAQ-00D7IH-B4; Tue, 11 Feb 2025 17:31:22 +0100
+Date: Tue, 11 Feb 2025 17:31:22 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	michal.swiatkowski@linux.intel.com, mlevitsk@redhat.com,
+	yury.norov@gmail.com, shradhagupta@linux.microsoft.com,
+	kotaranov@microsoft.com, peterz@infradead.org,
+	brett.creeley@amd.com, mhklinux@outlook.com,
+	schakrabarti@linux.microsoft.com, kent.overstreet@linux.dev,
+	longli@microsoft.com, leon@kernel.org, erick.archer@outlook.com,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: mana: Add debug logs in MANA network driver
+Message-ID: <ab47dc52-3bb3-4b69-b202-b59fe4cb0727@lunn.ch>
+References: <1739267515-31187-1-git-send-email-ernis@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="NPhV4nCHfXvnVdVx"
-Content-Disposition: inline
-In-Reply-To: <20250211-mt8370-enable-gpu-v4-1-77deb7a75c23@collabora.com>
-
-
---NPhV4nCHfXvnVdVx
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1739267515-31187-1-git-send-email-ernis@linux.microsoft.com>
 
-On Tue, Feb 11, 2025 at 03:13:08PM +0100, Louis-Alexis Eyraud wrote:
-> Add a compatible for the MediaTek MT8370 SoC, with an
-> integrated ARM Mali G57 MC2 GPU (Valhall-JM, dual core).
-> None of the already existing SoC specific compatibles is usable as
-> fallback, as those either do not match the number of cores (and number
-> of power domains), or are for a different GPU architecture.
->=20
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
-ora.com>
-> Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+On Tue, Feb 11, 2025 at 01:51:55AM -0800, Erni Sri Satya Vennela wrote:
+> Add debug statements to assist in debugging and monitoring
+> driver behaviour, making it easier to identify potential
+> issues  during development and testing.
+> 
+> Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+> ---
+>  .../net/ethernet/microsoft/mana/gdma_main.c   | 52 +++++++++++++----
+>  .../net/ethernet/microsoft/mana/hw_channel.c  |  6 +-
+>  drivers/net/ethernet/microsoft/mana/mana_en.c | 58 +++++++++++++++----
+>  3 files changed, 94 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> index be95336ce089..f9839938f0ab 100644
+> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> @@ -666,8 +666,11 @@ int mana_gd_create_hwc_queue(struct gdma_dev *gd,
+>  
+>  	gmi = &queue->mem_info;
+>  	err = mana_gd_alloc_memory(gc, spec->queue_size, gmi);
+> -	if (err)
+> +	if (err) {
+> +		dev_err(gc->dev, "GDMA queue type: %d, size: %u, gdma memory allocation err: %d\n",
+> +			spec->type, spec->queue_size, err);
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+I would expect a debug statement to use dev_dbg(). Please update your
+commit message.
 
---NPhV4nCHfXvnVdVx
-Content-Type: application/pgp-signature; name="signature.asc"
+>  		goto free_q;
+> +	}
+>  
+>  	queue->head = 0;
+>  	queue->tail = 0;
+> @@ -688,6 +691,8 @@ int mana_gd_create_hwc_queue(struct gdma_dev *gd,
+>  	*queue_ptr = queue;
+>  	return 0;
+>  out:
+> +	dev_err(gc->dev, "Failed to create queue type %d of size %u, err: %d\n",
+> +		spec->type, spec->queue_size, err);
+>  	mana_gd_free_memory(gmi);
+>  free_q:
+>  	kfree(queue);
+> @@ -763,14 +768,18 @@ static int mana_gd_create_dma_region(struct gdma_dev *gd,
+>  
+>  	if (resp.hdr.status ||
+>  	    resp.dma_region_handle == GDMA_INVALID_DMA_REGION) {
+> -		dev_err(gc->dev, "Failed to create DMA region: 0x%x\n",
+> -			resp.hdr.status);
+>  		err = -EPROTO;
+>  		goto out;
+>  	}
+>  
+>  	gmi->dma_region_handle = resp.dma_region_handle;
+> +	dev_dbg(gc->dev, "Created DMA region handle 0x%llx\n",
+> +		gmi->dma_region_handle);
 
------BEGIN PGP SIGNATURE-----
+Given all the dev_err() you have added, do this add any value? Is
+there a way out of this function which is not a success and does not
+print an error?
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6t7bAAKCRB4tDGHoIJi
-0i+cAQDYKv1HrAj7IGdLB1J2AnBE7+u3Pb19+VvVkXzP4xD9MQD9ECsECRTHxV1D
-II/TJXxFDRi2ikkrxmF2acujkXxITgg=
-=KP0z
------END PGP SIGNATURE-----
+    Andrew
 
---NPhV4nCHfXvnVdVx--
+---
+pw-bot: cr
