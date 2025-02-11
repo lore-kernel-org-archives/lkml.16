@@ -1,193 +1,159 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F12D261562;
-	Tue, 11 Feb 2025 17:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E06E261566;
+	Tue, 11 Feb 2025 17:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739295372; cv=none; b=MDiLrckPkvyovm+8RvyqAardXuk/2rWUnRt34bm/0By4y7adc4zUPjLqjukG41G51O31wXZg76XicDOr/pUH0w661bDAkFFliKrmva1c4qUm+CTdiinmfVXROY1t/2AWGerzQIO2dTltyBOz9VyBcKjK8zYoQKvS+9aZDKVf1I0=
+	t=1739295409; cv=none; b=uwI/gVlwb39EPKEwcqK9Xz9z2umMlJxJNiig7PHHUQjVRGlBfFlD38DmzRLoP2uoDZ2KHp55CA5qI2HvZB8/fFfYavXOaJTbltA6l087mTkF/+qZxrHMlpHRO02RiGYo7brNB+t9IKMABlxhR9qS4xQ0cuc86bO3LyiYX/yzees=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739295372; c=relaxed/simple;
-	bh=pA2c/4v4jIsjXDTHK2U3nVkLaip9cFt3LkM0qkCtz5U=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SAJMW+8JgclemYdLs52XuQTaA1k6pepke9NOPef9EPxqrqJ/PRXgrjDUrWrxKkBkMzIkh0JE3L6nPQatiP4VArHkthaWsWy5bK3vOMRUwJAGGRDvEs975w9F/l/Ld7RBFCf2zB5CUl6p+a6MMIUw7iYagynGWQG5h3Sb88HJubg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YspVQ5Xkdz6K5p3;
-	Wed, 12 Feb 2025 01:34:54 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2A5A61402A4;
-	Wed, 12 Feb 2025 01:36:08 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 11 Feb
- 2025 18:36:07 +0100
-Date: Tue, 11 Feb 2025 17:36:06 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Li Ming <ming.li@zohomail.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 7/7] cxl/region: Drop goto pattern of
- construct_region()
-Message-ID: <20250211173606.00004d33@huawei.com>
-In-Reply-To: <20250211075727.351895-8-ming.li@zohomail.com>
-References: <20250211075727.351895-1-ming.li@zohomail.com>
-	<20250211075727.351895-8-ming.li@zohomail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1739295409; c=relaxed/simple;
+	bh=Q+o9UEHeaB8+cC0+nfgSzElbIUarzOd3c0yXomcrR2k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CSeJjJGW2CrqM5x8+gnCLrqikR1f9HedvhYjHwBvBLIOKGeLRaImPshpngij51Nop1C1yaTD/1rSrNGIEjZnWANeTtop54ZDsQyGxRmNqUC+aKMRGDJqUhlWwl8/0IxlkJ2jWXZY5T3wVBgVZ8Hb8XnayuKaRxdCXrSLQbez6Ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=G0Q52Vmw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=xdKjl0Xc; arc=none smtp.client-ip=202.12.124.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="G0Q52Vmw";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xdKjl0Xc"
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 8763F2540112;
+	Tue, 11 Feb 2025 12:36:46 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Tue, 11 Feb 2025 12:36:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1739295406; x=
+	1739381806; bh=bvTPhYpj3B0ty9Qiucjj7tduhj6D3KOcTl7Np8tHN3k=; b=G
+	0Q52Vmw0vTkK7ptj7H/kRDgN+OiqR616Ko9RS/XUEf/us8DL9H9ewNT3EvwJcTuv
+	7mMI7dJ1p8qAG0nGar6l85lODSW12S7rMVaZna8IGiRVQSddWQ/SRqDh3piYtcDV
+	PH2AwLeXMN32S9Tml1XekhgkoRgZTLsWDdokmNXCXgBh/VUDIUrU18qETj9LgJB4
+	GvsQLK6fz5T50uerc5tFQ7iGQ3E4utfztYe602uomvBCbYccxYBvpEBwFr202djr
+	meIyIzRxabCjs9KhAIDdA9Z9du7nRYu6ImsFFxSx4bkUJbTF9aCO03jfHvfUd4hV
+	ZlofK6xZhuMXNLukZu0kw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm3; t=1739295406; x=1739381806; bh=b
+	vTPhYpj3B0ty9Qiucjj7tduhj6D3KOcTl7Np8tHN3k=; b=xdKjl0XcAN+wLtnsb
+	+JNGbNqqei5ewBTXL7hPhEyxZDhwpdmaLWrXgfZj1szNeoCd3bBcgy5GlmuJQCXn
+	WMrwa7nw3+Ub5ajejGzbzKgxjfJyF70pdcgZXxL99B/+fIiHxgmi+h31lwCJDfm9
+	/siJgOlWyZXu9jjkdOc5kFDjddNHjwXn+0lRw4zpCOW8lSQuj/Z6yx7Jzy6x26fC
+	YC4VaElOitiBGUGhb3xUbohATvE2pDYS0HhdPs5+NaC3UmLztP9rzQDTCV2rR+2y
+	UOrOvDOFzK0/20xg8cjpaqyeNzcx4Wou62tTlBvz4sFIe0LrCUcMt9XUWhBYqdwV
+	c4F7w==
+X-ME-Sender: <xms:roqrZ1UJQjWPNAXQmHEkyG6I475L27VfQBRnBNQQLQoaArr433c7Cw>
+    <xme:roqrZ1lz0plc_TV_lBVbaxLfyZRdRhLyws0CtCjZWiUHUNgaSauua44BxUtI3BJBn
+    Z1-zfyvujhGtMqxCzw>
+X-ME-Received: <xmr:roqrZxZrqQ2WJ2sXGxdp0lzZVieVOMg-ScWHpMT4ia8QAMJv2ElLK0j4UQYjQpgzN2ir6zHHLS4x0cYHJ9Hgk-GgnIq2rJjEt9VKeK91lPsdwrF9>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegudeivdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecuogetfedtuddqtdduuc
+    dludehmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhm
+    peforghrkhcurfgvrghrshhonhcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvg
+    gssgdrtggrqeenucggtffrrghtthgvrhhnpeeftddvjeefleffvefhgfejjeehudetteei
+    geeugfekhffhgeejudeuteehgfdvffenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdr
+    tggrpdhnsggprhgtphhtthhopeeipdhmohguvgepshhmthhpohhuthdprhgtphhtthhope
+    hmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhrtghpthhtohephhgu
+    vghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvih
+    hnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepkhhuuhhrthgssehg
+    mhgrihhlrdgtohhmpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekie
+    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgv
+    lhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:roqrZ4XIgxhHwlIOwV0uisfoLZXhAErAA7VuK9LYPScVZ0_Ag8S2HA>
+    <xmx:roqrZ_miI0Oj5DnG5EOf1VQwqlIHTJBzvMIUQB9uqTii8ysrPqFetg>
+    <xmx:roqrZ1e2Cke9FsOU1SuuUHJVJ-Dl3zKSD6M-cRuq0rVfWlmDc0zO5w>
+    <xmx:roqrZ5FeM9zRVGUjF1lYNdV8oi4-Z7vOpds1BJWMHRajLNEd737T4g>
+    <xmx:roqrZ9ZtyM_TSy8MNHEpSKPMNzff8srInnNidy6swt4QYHwnn3nkMazz>
+Feedback-ID: ibe194615:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 11 Feb 2025 12:36:45 -0500 (EST)
+From: Mark Pearson <mpearson-lenovo@squebb.ca>
+To: mpearson-lenovo@squebb.ca
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	kuurtb@gmail.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] platform/x86: thinkpad_acpi: Fix registration of tpacpi platform driver
+Date: Tue, 11 Feb 2025 12:36:11 -0500
+Message-ID: <20250211173620.16522-1-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-On Tue, 11 Feb 2025 15:57:27 +0800
-Li Ming <ming.li@zohomail.com> wrote:
+When reviewing and testing the recent platform profile changes I had
+missed that they prevent the tpacpi platform driver from registering.
+This error is seen in the kernel logs, and the various tpacpi entries
+are not created:
+[ 7550.642171] platform thinkpad_acpi: Resources present before probing
 
-> Some operations need to be procted by the cxl_region_rwsem in construct
-> region(). Currently, construct_region() uses down_write() and up_write()
-> for the cxl_region_rwsem, so there is a goto pattern after down_write()
-> invoked to release cxl_region_rwsem.
-> 
-> construct region() can be optimized to remove the goto pattern. The
-> changes are creating a new function called __construct_region() which
-> will include all checking and operations protected by the
-> cxl_region_rwsem, and using guard(rwsem_write) to replace down_write()
-> and up_write() in __construct_region().
-> 
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
-> ---
->  drivers/cxl/core/region.c | 71 +++++++++++++++++++++------------------
->  1 file changed, 39 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 36f3771818d3..170278bdcedc 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3217,49 +3217,31 @@ static int match_region_by_range(struct device *dev, const void *data)
->  	return rc;
->  }
->  
-> -/* Establish an empty region covering the given HPA range */
-> -static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
-> -					   struct cxl_endpoint_decoder *cxled)
-> +static int __construct_region(struct cxl_region *cxlr,
+This happens because devm_platform_profile_register() is called before
+tpacpi_pdev probes (thanks to Kurt Borja for identifying root cause)
 
-This is only factoring out part, so I'm not sure the naming makes sense.
-I don't have a better name however as this is doing various different things...
-setup_region() doesn't feel right either...
+For now revert back to the old platform_profile_register to fix the
+issue. Will work on re-implementing this later as more testing is needed
+for full solution.
 
+Tested on X1 Carbon G12.
 
-> +			      struct cxl_root_decoder *cxlrd,
-> +			      struct cxl_endpoint_decoder *cxled)
->  {
->  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> -	struct cxl_port *port = cxlrd_to_port(cxlrd);
->  	struct range *hpa = &cxled->cxld.hpa_range;
->  	struct cxl_region_params *p;
-> -	struct cxl_region *cxlr;
->  	struct resource *res;
->  	int rc;
->  
-> -	do {
-> -		cxlr = __create_region(cxlrd, cxled->mode,
-> -				       atomic_read(&cxlrd->region_id));
-> -	} while (IS_ERR(cxlr) && PTR_ERR(cxlr) == -EBUSY);
-> -
-> -	if (IS_ERR(cxlr)) {
-> -		dev_err(cxlmd->dev.parent,
-> -			"%s:%s: %s failed assign region: %ld\n",
-> -			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
-> -			__func__, PTR_ERR(cxlr));
-> -		return cxlr;
-> -	}
-> -
-> -	down_write(&cxl_region_rwsem);
-> +	guard(rwsem_write)(&cxl_region_rwsem);
->  	p = &cxlr->params;
->  	if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE) {
->  		dev_err(cxlmd->dev.parent,
->  			"%s:%s: %s autodiscovery interrupted\n",
->  			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
->  			__func__);
-> -		rc = -EBUSY;
-> -		goto err;
-> +		return -EBUSY;
->  	}
->  
->  	set_bit(CXL_REGION_F_AUTO, &cxlr->flags);
->  
->  	res = kmalloc(sizeof(*res), GFP_KERNEL);
-> -	if (!res) {
-> -		rc = -ENOMEM;
-> -		goto err;
-> -	}
-> +	if (!res)
-> +		return -ENOMEM;
->  
->  	*res = DEFINE_RES_MEM_NAMED(hpa->start, range_len(hpa),
->  				    dev_name(&cxlr->dev));
-> @@ -3282,7 +3264,7 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  
->  	rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_target_group());
->  	if (rc)
-> -		goto err;
-> +		return rc;
->  
->  	dev_dbg(cxlmd->dev.parent, "%s:%s: %s %s res: %pr iw: %d ig: %d\n",
->  		dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev), __func__,
-> @@ -3291,14 +3273,39 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  
->  	/* ...to match put_device() in cxl_add_to_region() */
->  	get_device(&cxlr->dev);
-> -	up_write(&cxl_region_rwsem);
->  
-> -	return cxlr;
-> +	return 0;
-> +}
->  
-> -err:
-> -	up_write(&cxl_region_rwsem);
-> -	devm_release_action(port->uport_dev, unregister_region, cxlr);
-> -	return ERR_PTR(rc);
-> +/* Establish an empty region covering the given HPA range */
-> +static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
-> +					   struct cxl_endpoint_decoder *cxled)
-> +{
-> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> +	struct cxl_port *port = cxlrd_to_port(cxlrd);
-> +	struct cxl_region *cxlr;
-> +	int rc;
-> +
-> +	do {
-> +		cxlr = __create_region(cxlrd, cxled->mode,
-> +				       atomic_read(&cxlrd->region_id));
-> +	} while (IS_ERR(cxlr) && PTR_ERR(cxlr) == -EBUSY);
-> +
-> +	if (IS_ERR(cxlr)) {
-> +		dev_err(cxlmd->dev.parent,
-> +			"%s:%s: %s failed assign region: %ld\n",
-> +			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
-> +			__func__, PTR_ERR(cxlr));
-> +		return cxlr;
-> +	}
-> +
-> +	rc = __construct_region(cxlr, cxlrd, cxled);
-> +	if (rc) {
-> +		devm_release_action(port->uport_dev, unregister_region, cxlr);
-> +		return ERR_PTR(rc);
-> +	}
-> +
-> +	return cxlr;
->  }
->  
->  int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
+Fixes: 31658c916fa6 ("platform/x86: thinkpad_acpi: Use devm_platform_profile_register()")
+
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+---
+Changes in v2:
+Modified approach to instead revert to old platform_profile_register
+method. Will revisit using devm_ version in the future as more testing
+needed.
+Changes in v3:
+Add check if tpacpi_pprof is valid before releasing.
+
+ drivers/platform/x86/thinkpad_acpi.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 1fcb0f99695a..9f6d7e26e700 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -10646,8 +10646,8 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+ 			"DYTC version %d: thermal mode available\n", dytc_version);
+ 
+ 	/* Create platform_profile structure and register */
+-	tpacpi_pprof = devm_platform_profile_register(&tpacpi_pdev->dev, "thinkpad-acpi",
+-						      NULL, &dytc_profile_ops);
++	tpacpi_pprof = platform_profile_register(&tpacpi_pdev->dev, "thinkpad-acpi-profile",
++						 NULL, &dytc_profile_ops);
+ 	/*
+ 	 * If for some reason platform_profiles aren't enabled
+ 	 * don't quit terminally.
+@@ -10665,8 +10665,15 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+ 	return 0;
+ }
+ 
++static void dytc_profile_exit(void)
++{
++	if (!IS_ERR_OR_NULL(tpacpi_pprof))
++		platform_profile_remove(tpacpi_pprof);
++}
++
+ static struct ibm_struct  dytc_profile_driver_data = {
+ 	.name = "dytc-profile",
++	.exit = dytc_profile_exit,
+ };
+ 
+ /*************************************************************************
+-- 
+2.48.1
 
