@@ -1,41 +1,42 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB1D1F1908;
-	Tue, 11 Feb 2025 14:14:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1F424CEDA;
+	Tue, 11 Feb 2025 14:14:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739283266; cv=none; b=FjhiuzTpVOnrtORDYBATBQ+lSn4X92a5Xy1erGAu/zEc8zCshJSMbtD9/LIG78H7Q2NVXyqqbV3WBPPXQus8GB0BONiQSidysKbhl814Wowcr9RNqnC/J5epgKqUV8UkNybnnr/DGx+Mt1YyV3QF+pcgHATDzS1nmbAdv1JauUI=
+	t=1739283267; cv=none; b=Vx8eYJ2h3nvbuh9MxtV6Je2gE9tDaO0gySTQWMmN/cZRpJK/8MksvyMG+JRoJdMFZKs89UUdMf8LWk97ZFg/I1FW4x6XMIH87KiwD8xvGfn+K0yELJYqot33o132yRlLlrAdZj7mQSVBWUoEhlSY6ZJZluOVesRHy1IVbgCaH5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739283266; c=relaxed/simple;
-	bh=1/ws8Ki6NG7C14KSm+ch5kNrGgb87tdV3KuV8rop8R4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=laB8kvjfdD8mTQUoNXKabGqNMfpBRCwSVg6kb3pZdu01pBFmCSYrZplBkURxXz8wHjABDLs2GqdJYAxtfkZyzK+5tW9Rb0CBB6gGSpGxh5H2Yygi/L6p1Z8J8Eww3Ij2puh/oAExJysZfv7vcrxIpy5XXbeuMTETUtXbUYTxi3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=dRRGBCsf; arc=none smtp.client-ip=148.251.105.195
+	s=arc-20240116; t=1739283267; c=relaxed/simple;
+	bh=fHNL+i5IN49689K3usVegBesx2Ci11QI7egIM6OnVk8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Nut7jfWO2W8fK+56hirWDsgrs94Rf7HWfM3bo8XbbOkT0tx0UEMwEO9PbCfDTyCgqxaODsyC9yibRG53AA/BhNzg8f1nr3PoPBNL8iuh85m3YID/X9MjjGzTHX3UPCZ3MNvHeYyGoSXGTvyAYCC3bbbS+LCM4SKIcv5Yk67jMgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=C5REkrEZ; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="dRRGBCsf"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="C5REkrEZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1739283262;
-	bh=1/ws8Ki6NG7C14KSm+ch5kNrGgb87tdV3KuV8rop8R4=;
-	h=From:Subject:Date:To:Cc:From;
-	b=dRRGBCsfCfungegBbvb/QdKKTbpVYpHAf1LLbUuN1+w4janWZxOa1n8O//jP2zOzH
-	 6ppaQ+Gl81LAqTtvhY93YVTFXOriBezIBP9Zbzz894DfjePJyDqxoRqy3h2bwoimWv
-	 2bgniwdsQ8GJ75ZmQ/gt7SO4AXV7Oi+5Fw2GLssmoP+Vsd3GIRLr/Ie5sJGNphDNx2
-	 hpkRrL9wtUeJNgQx5nBrEWz+b17xRQLWi2+WOcAEKj7nI7DZxBiqdh959XbuTrL1tk
-	 PHxGFy4cBjgXmeHXCEyAr33JGMazC0BT8/mgxyCxQIXuSu2jKzaXdOTJ6pQo8GeBky
-	 NhiW3EfX3fGkw==
+	s=mail; t=1739283263;
+	bh=fHNL+i5IN49689K3usVegBesx2Ci11QI7egIM6OnVk8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=C5REkrEZaeE/KtzzJi9v3a9UoIoDZCfT8+b9xZ3zqvADiUYXhSuec/KoqC+IA2u3m
+	 fUq9Mhf/SCz6RQJhxBfI+H7Ow5aJWEuuDbbXkI9AkyQ8/dXdM7kyPa0xXx1BuqB9fu
+	 VBKWZvheY/woGdRvBkICPwOXDEL1zTzTMrKzNlsShhWQvR6BQYTg9oYiiNCUAUgz3B
+	 2BHn9qRAe5WLiPi5FiSghpSX/rcAvZH1RIVG09HBJScV8Ry/IQcaYajjDTMg11CYwV
+	 I3inRn/FxgKMlbQ9xpOJz0crkloCfEGvBMWZGP3lp2RzynP9qwvhL32UTp88A/bzWq
+	 V6FN3MhgIx/xw==
 Received: from yukiji.home (lfbn-tou-1-1147-231.w90-76.abo.wanadoo.fr [90.76.208.231])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: laeyraud)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 7CA3D17E0EB8;
-	Tue, 11 Feb 2025 15:14:21 +0100 (CET)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id AFAC717E10B5;
+	Tue, 11 Feb 2025 15:14:22 +0100 (CET)
 From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-Subject: [PATCH v4 0/3] Add Mali GPU support for Mediatek MT8370 SoC
-Date: Tue, 11 Feb 2025 15:13:07 +0100
-Message-Id: <20250211-mt8370-enable-gpu-v4-0-77deb7a75c23@collabora.com>
+Date: Tue, 11 Feb 2025 15:13:08 +0100
+Subject: [PATCH v4 1/3] dt-bindings: gpu: mali-bifrost: Add compatible for
+ MT8370 SoC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,12 +45,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPNaq2cC/23Oy2rDMBAF0F8xWldFD48eWfU/Shd6jBKBbaWyY
- 1qC/72qU2gp3s0dmDP3TmasGWdy6u6k4prnXKYW+qeOhIubzkhzbJkIJoBxDnRcjNSM4uT8gPR
- 8vVHpVQILySkZSbu7Vkz5Yzdf3x654vut0ctjSbybkYYyjnk5dRjBRM4kqug4uL4XKRkNShtrt
- DIxSKdUG8m3dcnzUurnXnflO/bTTB00WzlllDnltUErIJiXUIbB+VLdc3u/i6v4o0h2pIimBA5
- 9ZIZD9HCkyF9FMH2kyKZoQOstE8kG/l/Ztu0LeLh9Ao4BAAA=
-X-Change-ID: 20250115-mt8370-enable-gpu-3b6f595fa63d
+Message-Id: <20250211-mt8370-enable-gpu-v4-1-77deb7a75c23@collabora.com>
+References: <20250211-mt8370-enable-gpu-v4-0-77deb7a75c23@collabora.com>
+In-Reply-To: <20250211-mt8370-enable-gpu-v4-0-77deb7a75c23@collabora.com>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
  Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
  David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
@@ -62,77 +60,52 @@ To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org, 
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739283261; l=2673;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739283261; l=1546;
  i=louisalexis.eyraud@collabora.com; s=20250113; h=from:subject:message-id;
- bh=1/ws8Ki6NG7C14KSm+ch5kNrGgb87tdV3KuV8rop8R4=;
- b=l1gLMSzjHXCVSRBr92COcRy+kiCGv7Kl0gIzGok5LHsCKjfHRZngn+hJp6eC0Y2Go+86iLx4L
- 5oocFMwDJ0kCQXELbaTcT3SodmZNUjl/o7MHsMGpqEuoZRzf8Z3WKow
+ bh=fHNL+i5IN49689K3usVegBesx2Ci11QI7egIM6OnVk8=;
+ b=Y5aeVFIo0/yC8zzUr7gx+tl3oSd4oJTOFIz6oj/dw7plgBuwQzrIMr/ZguTeio/M3RN1hg/lV
+ v3ZLBWGYG7wAYXFpEfjwFn0JoXf/W742Eg4mbrOTo1oGrYHcvQqIs+8
 X-Developer-Key: i=louisalexis.eyraud@collabora.com; a=ed25519;
  pk=CHFBDB2Kqh4EHc6JIqFn69GhxJJAzc0Zr4e8QxtumuM=
 
-This patchset adds the support of the ARM Mali G57 MC2 GPU (Valhall-JM,
-dual core), integrated in the Mediatek MT8370 SoC, to the panfrost driver
-and to the mt8370.dtsi include file.
+Add a compatible for the MediaTek MT8370 SoC, with an
+integrated ARM Mali G57 MC2 GPU (Valhall-JM, dual core).
+None of the already existing SoC specific compatibles is usable as
+fallback, as those either do not match the number of cores (and number
+of power domains), or are for a different GPU architecture.
 
-I've tested this patchset on a Mediatek Genio 510 EVK board,
-with a kernel based on linux-next (tag: next-20250207) plus [1] patch
-(not needed for building, only for testing to avoid boot issues on this
-board).
-
-The panfrost driver probed with the following messages:
-```
-panfrost 13000000.gpu: clock rate = 390000000
-panfrost 13000000.gpu: mali-g57 id 0x9093 major 0x0 minor 0x0 status 0x0
-panfrost 13000000.gpu: features: 00000000,000019f7, issues: 00000003,
-  80000400
-panfrost 13000000.gpu: Features: L2:0x08130206 Shader:0x00000000
-  Tiler:0x00000809 Mem:0x1 MMU:0x00002830 AS:0xff JS:0x7
-panfrost 13000000.gpu: shader_present=0x5 l2_present=0x1
-[drm] Initialized panfrost 1.3.0 for 13000000.gpu on minor 0
-```
-
-[1] https://lore.kernel.org/all/20250124191644.2309790-1-robh@kernel.org/
-
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
 ---
-Changes in v4:
-- Add warning comment in mt8370.dtsi about GPU node override
-- Reword "dt-bindings: gpu: mali-bifrost: Add compatible for MT8370 
-  SoC" commit message
-- Add code-review trailers
-- Link to v3: https://lore.kernel.org/r/20250207-mt8370-enable-gpu-v3-0-75e9b902f9c1@collabora.com
+ Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Changes in v3:
-- Rebased on linux-next (tag: next-20250207)
-- Remove prerequisite change/patch ids
-- Reword commit messages to better explicit compatible needs 
-- Link to v2: https://lore.kernel.org/r/20250130-mt8370-enable-gpu-v2-0-c154d0815db5@collabora.com
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+index 735c7f06c24e632ab738d062f15378f754c8adaf..6f6211950bb495fa6bfcdfe8d1e27e5ce7aeeae0 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+@@ -37,6 +37,7 @@ properties:
+           - enum:
+               - mediatek,mt8188-mali
+               - mediatek,mt8192-mali
++              - mediatek,mt8370-mali
+           - const: arm,mali-valhall-jm # Mali Valhall GPU model/revision is fully discoverable
+ 
+   reg:
+@@ -217,7 +218,9 @@ allOf:
+       properties:
+         compatible:
+           contains:
+-            const: mediatek,mt8186-mali
++            enum:
++              - mediatek,mt8186-mali
++              - mediatek,mt8370-mali
+     then:
+       properties:
+         power-domains:
 
-Changes in v2:
-- Rework "drm/panfrost: Add support for Mali on the MT8370 SoC" to avoid
-  data structure duplication, as requested by Krzysztof Kozlowski
-- Reword commit messages to use imperative mood and make new compatible
-  need more explicit
-- Link to v1: https://lore.kernel.org/r/20250116-mt8370-enable-gpu-v1-0-0a6b78e925c8@collabora.com
-
----
-Louis-Alexis Eyraud (3):
-      dt-bindings: gpu: mali-bifrost: Add compatible for MT8370 SoC
-      drm/panfrost: Add support for Mali on the MT8370 SoC
-      arm64: dts: mediatek: mt8370: Enable gpu support
-
- .../devicetree/bindings/gpu/arm,mali-bifrost.yaml        |  5 ++++-
- arch/arm64/boot/dts/mediatek/mt8370.dtsi                 | 16 ++++++++++++++++
- drivers/gpu/drm/panfrost/panfrost_drv.c                  |  1 +
- 3 files changed, 21 insertions(+), 1 deletion(-)
----
-base-commit: ed58d103e6da15a442ff87567898768dc3a66987
-change-id: 20250115-mt8370-enable-gpu-3b6f595fa63d
-
-Best regards,
 -- 
-Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+2.48.1
 
