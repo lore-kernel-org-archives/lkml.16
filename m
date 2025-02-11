@@ -1,102 +1,95 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C009541C7F
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C708264615;
+	Tue, 11 Feb 2025 00:59:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739235447; cv=none; b=ExbjGchykXXUjSqw0Ng4CGGwLumDNGDs7C/hkcWUJYwTShF6u0xbLURje1VHzcVsxxAfwykIYk9zycpnlxdVyjYcYE2NiDPBnBVkRN8isONEUdhHr17/t+twwDKPacpriMWLDwk88pljMAQhIwJMOCmc/5clqg8LBJj+oKN77E4=
+	t=1739235585; cv=none; b=Z3jXixbGjaVnFx3vCMDCWG9Tg5kKK0DV1CSRwyXeYF+wnl8UWltWHS4i96qMi51KLq0y10G72m8K24GKMaQtiH/5HC73VjYPV4zdnCSF9KSLT7PHyAtV+1rYT5L8i09HoZrOj+daXcFDzPkHmyhlYJndHe4bDRt+ywV6i2rzr6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739235447; c=relaxed/simple;
-	bh=veOa1e1fqXZolRHTxUcJhvc7wIWeVNZRLTZpkPpIRfI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VfmiymsB+WEU0p09iDIdo47mJUuQcQRc5XGW2Cs0qBISGOadT59ZsjSeojwO/IKywctzFCQ3B/f6YoPqZ09YFJoIKtncsjXlkDIKqZkaTLu4MOPuvmvs0C5hKfycJS9ZLXH+9cgmYbZSuPQAJMhQcesEOB8q6/dBFsHEdZESbb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=MoRl5CFt; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1739235585; c=relaxed/simple;
+	bh=KclDnq0yGU1M84esdrfIpWZm2KXaxbIJOJXRdNM4TVg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P70KjpbM9vCrbsoXi22e5pk0Yau+5JnrGILDjRqzxkfijCbhl618VgZ4tGad59GC0LhAyOZb3d86JpnBozZmM/OmTzW3oO1VLR3vp0XpUkQ+KNFwd512gVKE5aj5S5SOZuyUNYVvYI+eyZJIYfmebUIQZ/wbx8uvceOEFm2bcmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=baX/QCOx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="MoRl5CFt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=3RHzaXPvSSsD3tcvq+PDetqc0A0Fsw+o/kApTBGNk3M=; b=MoRl5CFtqHV4jUa8hjd3chY/xp
-	Jfx9tMuScPCD9alrsCUCLsTkq9dWCA+7wr3i2EbIOurqXHNDiqmWXdFZ6MRskgGQ3YT513Qh6fCww
-	TKSCtkmAuhngf77R3fQMZlvRG/jI+OFlZe2NQbXqGvnObnIFC4OldnMRqnqHD+9w4BpL/TlQdvkP8
-	9SJs/rs1lhjbBqoySkMScQxlsIXQgGg9qGBt/khXCceSw+2kl8kZ9N/QBoFij6mh85ulhlmLamBqv
-	QwqUtOlK1ZV+qn9XXM7DtqjevdEr+EaoXZ0MzsSNoLozk7VgvoL3Q2JbbCiKIKBcw2HKrlyfiFazh
-	Q3uUYOrA==;
-Received: from [58.29.143.236] (helo=[192.168.1.6])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1theaJ-007VYY-Ql; Tue, 11 Feb 2025 01:57:13 +0100
-Message-ID: <8ce4d887-464c-4d4d-825d-0d01dcafe400@igalia.com>
-Date: Tue, 11 Feb 2025 09:57:08 +0900
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="baX/QCOx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68860C4CED1;
+	Tue, 11 Feb 2025 00:59:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739235584;
+	bh=KclDnq0yGU1M84esdrfIpWZm2KXaxbIJOJXRdNM4TVg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=baX/QCOxqatyQmLiiwJbPKnXXqi17ksm24/KMF3E42PVYgHxp8UHyslMOHx/CleeI
+	 +v8nfmXKDSFs5N/ZCQBxCGPe8GPQI+2dtJFBbvdN/txmjsnDEQ9v5e58ycEj+jULpA
+	 tdXj9fX98XgZJpClPK3FcnfvIbruA7A8T6iv6Uqsac+/geicTGhqDS1Is3qnBTVHAs
+	 gb/LHHm4EJjJ2y1osY7JMfGsufc+JLt6kaDcGFobRkKdawyQ5La6PEScQS3kdmUWfi
+	 t8HRJPLYf6g0KI+jxc4cV9D+sj7EgQkzPmvzwfBDMshVoxQaK2deyXR+4TNxgWxz66
+	 cOiutKCeDYFIg==
+From: Kees Cook <kees@kernel.org>
+To: Eric Biederman <ebiederm@xmission.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Mark Brown <broonie@kernel.org>,
+	Dave Martin <Dave.Martin@arm.com>,
+	Baoquan He <bhe@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	LEROY Christophe <christophe.leroy2@cs-soprasteria.com>,
+	Akihiko Odaki <akihiko.odaki@daynix.com>
+Cc: Kees Cook <kees@kernel.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org,
+	kexec@lists.infradead.org,
+	binutils@sourceware.org,
+	devel@daynix.com,
+	Heiko Carstens <hca@linux.ibm.com>
+Subject: Re: [PATCH v5 0/6] elf: Define note name macros
+Date: Mon, 10 Feb 2025 16:58:30 -0800
+Message-Id: <173923550723.2947986.17868728802985188618.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250115-elf-v5-0-0f9e55bbb2fc@daynix.com>
+References: <20250115-elf-v5-0-0f9e55bbb2fc@daynix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched_ext: Provides a sysfs 'events' to expose core event
- counters
-To: Tejun Heo <tj@kernel.org>
-Cc: void@manifault.com, arighi@nvidia.com, kernel-dev@igalia.com,
- linux-kernel@vger.kernel.org
-References: <20250210143643.220994-1-changwoo@igalia.com>
- <Z6o3WOGS5Pulha36@slm.duckdns.org>
-From: Changwoo Min <changwoo@igalia.com>
-Content-Language: en-US, ko-KR, en-US-large, ko
-In-Reply-To: <Z6o3WOGS5Pulha36@slm.duckdns.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
-
-Thank you for the review!
-
-On 25. 2. 11. 02:28, Tejun Heo wrote:
-> Hello,
+On Wed, 15 Jan 2025 14:47:57 +0900, Akihiko Odaki wrote:
+> elf.h had a comment saying:
+> > Notes used in ET_CORE. Architectures export some of the arch register
+> > sets using the corresponding note types via the PTRACE_GETREGSET and
+> > PTRACE_SETREGSET requests.
+> > The note name for these types is "LINUX", except NT_PRFPREG that is
+> > named "CORE".
 > 
-> On Mon, Feb 10, 2025 at 11:36:43PM +0900, Changwoo Min wrote:
-> ...
->> +#define scx_attr_event_show(buf, at, events, kind) ({				\
->> +	sysfs_emit_at(buf, at, "%40s: %16llu\n", #kind, (events)->kind);	\
->> +})
-> 
-> It's nice to format things in tabular forms but things under /sys lean more
-> towards simpler formatting, so maybe just do "%s %16llu\n"?
+> [...]
 
-Sure, I will change it to the simplest form, "%s %llu\n".
+I rebased this for changes introduced by commit
+680e029fd62f ("proc/kcore: don't walk list on every read")
 
-> 
->>   static struct attribute *scx_global_attrs[] = {
->>   	&scx_attr_state.attr,
->>   	&scx_attr_switch_all.attr,
->>   	&scx_attr_nr_rejected.attr,
->>   	&scx_attr_hotplug_seq.attr,
->>   	&scx_attr_enable_seq.attr,
->> +	&scx_attr_events.attr,
-> 
-> This probably should belong to the root/ subdir as we'd probably want to
-> keep the event counter separate per scheduler instance in the
-> multi-scheduler future.
+Applied to for-next/execve, thanks!
 
-I feel this is a bit contradictory to the need to access the core
-event counters even after an scx scheduler is unloaded. In the
-current implementation, root/ subdir appears and disappears when
-an scx scheduler is loaded and unloaded.
+[1/6] elf: Define note name macros
+      https://git.kernel.org/kees/c/7da8e4ad4df0
+[2/6] binfmt_elf: Use note name macros
+      https://git.kernel.org/kees/c/2fc4947bbd91
+[3/6] powerpc: Use note name macros
+      https://git.kernel.org/kees/c/609c8b309156
+[4/6] crash: Use note name macros
+      https://git.kernel.org/kees/c/0de47f28ec84
+[5/6] s390/crash: Use note name macros
+      https://git.kernel.org/kees/c/d4a760fb77fd
+[6/6] crash: Remove KEXEC_CORE_NOTE_NAME
+      https://git.kernel.org/kees/c/7e620b56d958
 
-We may change the scx_ktype to something similar to
-scx_global_attr_group in order to keep root/ subdir. We then show
-an empty file for root/ops when no scx scheduler is loaded while
-keep the root/events file intact. I am not sure if this is what
-we want.
+Take care,
 
-What do you think?
+-- 
+Kees Cook
 
-Regards,
-Changwoo Min
