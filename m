@@ -1,63 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78342262D11
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 19:14:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C238B262D13;
+	Tue, 11 Feb 2025 19:14:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739301273; cv=none; b=gUbYcFc+mFjd9LdLn2PbYwjU0v+NNXyjigV6SojsVXBTVSmzSiyMMq0RryB04M3lt6lQa1Bg1XAdxyct6O1R0FtzVyS6rB64KHAzhnuiYPG82Gv3T0HwuNOrwQvVDoMn3jxP56AWUdmjdNkwPw10vg5rqiUzP+WBenn3UHlKDg4=
+	t=1739301289; cv=none; b=bhFl9sbkDxoSxMavs0OCExwnvtOhppjUEuCpivwhEp8IfM5yqex4TcXuTWv6Ak4YMmw4QS0qr/sSiM3Qd8sitP9qrBXVvzQbLLr1xdw9f4zdUIGyNm1xHjfvdTxe+HXg0O45Enqd9kJxAcCybatW8R+0LnyJrK82LwVNEtHoxyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739301273; c=relaxed/simple;
-	bh=vyTBcmYfrrYkIm6Dk87/cDEK50YxjOkKi6v4tKwOVls=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=SqrzwOli5U5DyQmipu1f0ykhIVGBoDk5jFLqmGx+/IBhJlBgnFzjBPPNJuG2ozdYiv7+8QX5tmyRootOHvIPwQwI3pD/jgsCifxzPGcFJiVez3PAYjCfLOSqhlz+baLmNCqw+EeQ/OBSWEPP7SX0CPF9SbciNbeAu1SV7DDnYAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LNz6GzbV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739301289; c=relaxed/simple;
+	bh=CuIz18Kc4OMzTX7Xzc1YuhzCxGOGLDt4H5wPO2SiwAk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IJZsnN0kGTvttSP2bBD/UVQY6aefRB/lXn+2u5JFaFcK6xuvs10h2FxM8uw4RjSl15xrFRJrCdpxgUa1P3QbGXlnGsVEKSDOcHAzWhbp/r0+tYjXxkZbJROWvWzcwIMtxV2SP7deDcjnkdbmRL92nTlE6x2kKps4wCCWatlOdCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EdnKsHTz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LNz6GzbV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED768C4CEDD;
-	Tue, 11 Feb 2025 19:14:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EdnKsHTz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21136C4CEDD;
+	Tue, 11 Feb 2025 19:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739301273;
-	bh=vyTBcmYfrrYkIm6Dk87/cDEK50YxjOkKi6v4tKwOVls=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=LNz6GzbVbFiG059p/Q3KT6t4TxwSUidZ6ujksEnB1BtAxAIcwlUVj0Q+dY9LoMXvN
-	 1CrfSu4fpGwKuoK4YUtb+8FQFnBI8M/gTbaQPOHFYE8veVw3/KVZ5SAzuYo6ZPBymn
-	 Xc1YSW6CYhlOl3pF8HR183opjf4fsiUsg/zMRzdxxvbqDGJvDHkVIdSNA9N7Tvaxqj
-	 MPlaHMb8ihzBSXwaYFtzoDaeraEVwQupWyPQuBAJdLW6Kg0Nz0hXkxgdr22El/2oJQ
-	 uDyOhgn+9OqbI4VVqU0NQfXY0paIOOFwiZ7EgW/gN+KVFTGGG/XEQt61pLF7QS7PlL
-	 0Wx8iuKZ5SwJg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB21B380AA7A;
-	Tue, 11 Feb 2025 19:15:02 +0000 (UTC)
-Subject: Re: [GIT PULL] tomoyo update for v6.14-rc3
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <48a5c8af-c447-496c-a4cd-85a5698e5a1a@I-love.SAKURA.ne.jp>
-References: <48a5c8af-c447-496c-a4cd-85a5698e5a1a@I-love.SAKURA.ne.jp>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <48a5c8af-c447-496c-a4cd-85a5698e5a1a@I-love.SAKURA.ne.jp>
-X-PR-Tracked-Remote: git://git.code.sf.net/p/tomoyo/tomoyo.git tags/tomoyo-pr-20250211
-X-PR-Tracked-Commit-Id: bdc35f164b0f60480b2f5e098bb8f3c0cea05cd2
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 09fbf3d502050282bf47ab3babe1d4ed54dd1fd8
-Message-Id: <173930130149.4156803.9340963539697647565.pr-tracker-bot@kernel.org>
-Date: Tue, 11 Feb 2025 19:15:01 +0000
-To: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>
+	s=k20201202; t=1739301289;
+	bh=CuIz18Kc4OMzTX7Xzc1YuhzCxGOGLDt4H5wPO2SiwAk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EdnKsHTzm1ssaC6cv91W9ukkpVsdInstTsFEnoTx+I9UrTd+5EgUGxOK2WR/tErJy
+	 qhNzfGO6NUap9JQmm+3b5u6EQO7YYJBlArl//LD10Kg7OVfepluVgn1YyTWCsrkkJp
+	 5qTg+aawSRoYrY8/4MpWR2FWxEXCL3vwJBmISinWxBy9d7bOp5l6VBFOhYadIy+Htd
+	 nnc1ORve5GmLpSIsKrpfNW3+M7alDc1Zl3cKuSo9VOlRUA3+vCa+1NQggDltuRmXQ8
+	 GFVk1XqPfhhvVlwPvjpsh2fyZm5ucx69AK5g0HIH8tgnHNUXY5viS3Knyk8XdaS0xz
+	 0vHOgoTnSPfDA==
+Date: Tue, 11 Feb 2025 14:14:44 -0500
+From: Nathan Chancellor <nathan@kernel.org>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	"Limonciello, Mario" <mario.limonciello@amd.com>,
+	Kees Cook <kees@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	patches@lists.linux.dev, stable@vger.kernel.org,
+	John Rowley <lkml@johnrowley.me>
+Subject: Re: [PATCH v3] ACPI: platform-profile: Fix CFI violation when
+ accessing sysfs files
+Message-ID: <20250211191444.GC2995885@ax162>
+References: <20250210-acpi-platform_profile-fix-cfi-violation-v3-1-ed9e9901c33a@kernel.org>
+ <52c49252-7a81-4d27-a8a9-b2f1e5f837df@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <52c49252-7a81-4d27-a8a9-b2f1e5f837df@app.fastmail.com>
 
-The pull request you sent on Tue, 11 Feb 2025 22:01:28 +0900:
+Hi Mark,
 
-> git://git.code.sf.net/p/tomoyo/tomoyo.git tags/tomoyo-pr-20250211
+On Tue, Feb 11, 2025 at 10:05:18AM -0500, Mark Pearson wrote:
+> Just a note to say thank you for noticing my email address change -
+> the old lenovo one was awful to use so I dropped it a while back, but
+> it meant I missed your first two patches (my mail filters for the list
+> should have caught it and I'll have to figure out why not...)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/09fbf3d502050282bf47ab3babe1d4ed54dd1fd8
+No worries, I totally get that. It may be good to update the few places
+in the kernel that still use your Lenovo address but I understand if
+there are other reasons to keep it around. .mailmap could also help too.
 
-Thank you!
+> Patch looks fine (I'd like to try it out on my system - will aim to do
+> that today). I didn't know what CFI was (and have lightly educated
+> myself now).  Is there a better way to fix this so it's common across
+> all drivers somehow? Updating every individual instance is going to be
+> a lot.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+This does not happen all too often as far as I can tell. I have only
+sent a handful of these patches over the past couple of years since CFI
+was officially merged. Due to the way these sysfs interfaces work, I am
+not sure this can really be fixed at a grand scale.
+
+Cheers,
+Nathan
