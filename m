@@ -1,140 +1,209 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C77253F07
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9AC254B15
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 16:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739290486; cv=none; b=HwkOhb9PKaNmYSdGXg1y4RSQMBDDGHbXfJw1neyGjrKF579Kk1BqjiDdb18gRgoNF9Fh7JDJ1Wr/cs6cM6NzmaxYxFsVqz61cS44JiWwDZl9K5MdduBhckjjMwIX2x10Ak2KFrowsEW1Bv6+V8Fh+q03ND8/pjzylGKT+plSLtw=
+	t=1739290490; cv=none; b=u9Y/QPy2MyAaYn92l+M5mIdl71MKsKTcO6xdg9deW7Kdw4zr4UCEFRzvx5AfUhPFPSohLqGwZtlrDzTEJM7aFXFITiVakhlp7zyjByRGlfw9SjUyAuv+/j2X9QsMcq3HblY4nDDf4heeQBt0tvzQGQ4qwjty9HdOA26XMQNs3lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739290486; c=relaxed/simple;
-	bh=0ZjWyRdQG+9H46Kso5hG0mLJW41kpxg0H0tqPAoUZ34=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CI+3iidPoPe4E1+iS+fnz89WgwsQd8n4RejLB5rXiKqL8H34tV5Vm8ChSzfnh9dPIp2rwthOCk+FTXvmUk5FsQNk4BBHXJLFXRgXfR0uZx8vB334zJpYRABgN4uP/zVdbWm0AoGY/wWdi0fn3s8qKAgg0hGjQ1qIEp/jWCQzwbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=qT4H+Yp7; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1739290490; c=relaxed/simple;
+	bh=zjR3xhs+/9RS/lICR5OSNeDAjl8pmk2Y3uqTcJwVd2Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=M7zQEvhVrt9nL4YfeYjS3bBByyGqSfqLVAi6BJsRi5p3qIjE7X+03h0g31Ha3zpCmfEJHBU+eI0GXLJdDx8Yzu63EXDyWQ8gTJOAhvaFKb+tPotfaKGQGl35dUfNJgIdhgujtzacEiChg4U82lhvNI/Z4ap59bl4zKFUyodGxoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mr2lydJA; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="qT4H+Yp7"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-47197412ccbso30791341cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 08:14:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1739290483; x=1739895283; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f00g8h93qQX8OTMUbXqv3cBNa5BjAh6ZTXb5qUHVm6k=;
-        b=qT4H+Yp7f/Eo2FIggH3X8Ta/uV5EuyiPrixzrsHS3YwAr3zWE6dQfdYn5rLUeHJ9U3
-         kJXtTw8/vMEFJViZZOgWGjBm01ZuVnE2iClUzZYTV9RWv+r7B5nBW8tvOEDWPkULPMcI
-         QztiGhjyv8mDft6hHgikXc6jrLs18HnxN49H0rqR6hJ2QAb8uBJdDOwDzhGTNZnA+Rvu
-         gliEML/kE31LeX73TLGoTLljg7mAy8BYj8oJqUbCy0Ym2Ts0PcI4rioC7a6nlJYPCgpH
-         /PGsAeacB2SEFxHKE0N5l7p2h+41Ok6WcBpd7Ggp+vGfK3Fi2GdeRUjE9khYwiYsIkzX
-         ouJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739290483; x=1739895283;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f00g8h93qQX8OTMUbXqv3cBNa5BjAh6ZTXb5qUHVm6k=;
-        b=gbrUCXplR2+QpHDroaAcHXhvosUz6DKbVYtPGLMtvAzaCaw6ATtgKUyqK5YIKNvhVP
-         uWkW1JGDXw/Pl6QElZk3WnkfCMXK7tFRsmKCaGWj/W5rkHDdmfODt7APN4XqIeeTC3R7
-         r7XVU62ToMRQ1gBVoJcPQIWoWuQYLqkeZDbezUA9wWRbC4PEY5swD3UzQ9DbBUsnyvay
-         lzuwst21gwlhLlL81OqNQ781VbJ7jtTOx/cL8Gfc7XfOIj+RALdS8quz/n9k1A5M/jRD
-         hgy+8eFFSF02f+325vGoqCbK9DZ0ciafWoHh8BBA/FSAhBLCkVNfKEp96fBJThvdrR5v
-         zSyw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKpcJpcVgEEG7e1ImVgs6oRXLejTf5l1lbc0enGb8BkCHBcv3VfZrVJtC6prWOjZIRR6rSNnf3G+NUnJM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzbe+Xso39hXqoGetWo3o8cCR7Nl9JJcGEHf5+30G1OrS1J9Spx
-	2wNfq942BJE0SLYYXa7OmOFzkPHUC1S5CqO1K9U8b9hHW8FBXwop+3cQUx3oddu402gNYxaPiRn
-	n92eTYiLMDDWsGly3hjgy44x8uMLBWRMwLIU3Dg==
-X-Gm-Gg: ASbGncvMujWd4AorWVDwPOW16YpxNKGtIkTHsFE0xfZmCpsw4Z1ohlCz6MJ5oTdq13m
-	pdEshMD4KTe4JxnqNcU0E39hdLTl8bMuzJ9MKzQK7/fUMBO7NZHwcY1ysfSv9ot3hkGQDFw==
-X-Google-Smtp-Source: AGHT+IFV/2SwK8xAi9MTHEKrLCagsybkvEOxgGEB7IziCVbPaPZ5quI5gxUrWQ8mdomSEUM9RDcaJ8/FU9MUgrz9PW4=
-X-Received: by 2002:ac8:7d86:0:b0:462:c14f:d13f with SMTP id
- d75a77b69052e-47167ae2791mr311026341cf.41.1739290483262; Tue, 11 Feb 2025
- 08:14:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mr2lydJA"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51B5OSTX027206;
+	Tue, 11 Feb 2025 16:14:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=uZG7yaQ4bZBn0z1b8
+	C7/uIuy1qMqjNuKx2nlIDWDzI4=; b=mr2lydJAqkve28q4/0oCboUp/WD8Ywl1W
+	ZceOxD0kFJJDvXos/977TT9JWmJzl2DVYZQFQrZ0Bbha6uyXD18tCTI7L4QdwETZ
+	aOUYrP9uOy/ND/jZ+XUm0JgG2+GGNkWxga8MTZ1PQQ8D64DrNk6kFfMgeFMkPDb9
+	CrvfcgfSMCbcp4WdWGHfiXgzkr/C4qbFBbLYd7Uh0g26qqGpuB/Pfbm9haAuOgrY
+	CDdIq4wcDBCd9mW22BMyOM1qGL8MxYLnD4XKUnR0sbmK5NpQkh+XHe1wkDfyhIeU
+	KUp5pn6QBUxmAHBCCJLbhq5PTK7zhtf8LF+UYoy4IHi26wmb8g2tg==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44r0c9aw17-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 16:14:36 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51BCsjnj000914;
+	Tue, 11 Feb 2025 16:14:35 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44pjkn43gg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Feb 2025 16:14:35 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51BGEXgw58327362
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 11 Feb 2025 16:14:33 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4C3B82004B;
+	Tue, 11 Feb 2025 16:14:33 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 73A9C20043;
+	Tue, 11 Feb 2025 16:14:32 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.63.197.14])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 11 Feb 2025 16:14:32 +0000 (GMT)
+Received: from jarvis.ozlabs.ibm.com.com (unknown [9.150.7.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 2BA686013D;
+	Wed, 12 Feb 2025 03:14:27 +1100 (AEDT)
+From: Andrew Donnellan <ajd@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: x86@kernel.org, linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        pasha.tatashin@soleen.com, sweettea-kernel@dorminy.me
+Subject: [PATCH v13 01/11] mm/page_table_check: Reinstate address parameter in [__]page_table_check_pud_set()
+Date: Wed, 12 Feb 2025 03:13:54 +1100
+Message-ID: <20250211161404.850215-2-ajd@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250211161404.850215-1-ajd@linux.ibm.com>
+References: <20250211161404.850215-1-ajd@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206132754.2596694-1-rppt@kernel.org> <20250206132754.2596694-6-rppt@kernel.org>
- <20250210202220.GC3765641@nvidia.com> <CA+CK2bBBX+HgD0HLj-AyTScM59F2wXq11BEPgejPMHoEwqj+_Q@mail.gmail.com>
- <20250211124943.GC3754072@nvidia.com>
-In-Reply-To: <20250211124943.GC3754072@nvidia.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Tue, 11 Feb 2025 11:14:06 -0500
-X-Gm-Features: AWEUYZnZrdGQlINhll4ZCmxy4_MiFjWVL9mBm_3F0LCmRscyspW8dY4HAyEeygc
-Message-ID: <CA+CK2bAEnaPUJmd3LxFwCRa9xWrSJ478c4xisvD4pwvNMiTCgA@mail.gmail.com>
-Subject: Re: [PATCH v4 05/14] kexec: Add Kexec HandOver (KHO) generation helpers
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org, 
-	Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Andy Lutomirski <luto@kernel.org>, Anthony Yznaga <anthony.yznaga@oracle.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>, 
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>, Borislav Petkov <bp@alien8.de>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	David Woodhouse <dwmw2@infradead.org>, Eric Biederman <ebiederm@xmission.com>, 
-	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Pratyush Yadav <ptyadav@amazon.de>, 
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, 
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Usama Arif <usama.arif@bytedance.com>, Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Td-AQtqu0Ne9Ra4i8CxIxImgWQGK1w1V
+X-Proofpoint-GUID: Td-AQtqu0Ne9Ra4i8CxIxImgWQGK1w1V
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-11_07,2025-02-11_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
+ impostorscore=0 lowpriorityscore=0 suspectscore=0 mlxlogscore=955
+ spamscore=0 mlxscore=0 phishscore=0 priorityscore=1501 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502110106
 
-On Tue, Feb 11, 2025 at 7:49=E2=80=AFAM Jason Gunthorpe <jgg@nvidia.com> wr=
-ote:
->
-> On Mon, Feb 10, 2025 at 03:58:00PM -0500, Pasha Tatashin wrote:
-> > >
-> > > > +What:                /sys/kernel/kho/dt_max
-> > > > +Date:                December 2023
-> > > > +Contact:     Alexander Graf <graf@amazon.com>
-> > > > +Description:
-> > > > +             KHO needs to allocate a buffer for the DT that gets
-> > > > +             generated before it knows the final size. By default,=
- it
-> > > > +             will allocate 10 MiB for it. You can write to this fi=
-le
-> > > > +             to modify the size of that allocation.
-> > >
-> > > Seems gross, why can't it use a non-contiguous page list to generate
-> > > the FDT? :\
-> >
-> > We will consider some of these ideas in the future version. I like the
-> > idea of using preserved memory to carry sparse KHO tree: i.e FDT over
-> > sparse memory, maybe use the anchor page to describe how it should be
-> > vmapped into a virtually contiguous tree in the next kernel?
->
-> Yeah, but this is now permanent uAPI that has to be kept forever. I
+From: Rohan McLure <rmclure@linux.ibm.com>
 
-Agree, what I meant in the future patch version is before it gets
-merged. I should have been more clear.
+This reverts commit 6d144436d954 ("mm/page_table_check: remove unused
+parameter in [__]page_table_check_pud_set").
 
-> think you should not add this when there are enough ideas on how to
-> completely avoid it.
+Reinstate previously unused parameters for the purpose of supporting
+powerpc platforms, as many do not encode user/kernel ownership of the
+page in the pte, but instead in the address of the access.
 
-Thinking about it some more, I'm actually leaning towards keeping
-things as they are, instead of going with a sparse FDT. With a sparse
-KHO-tree, we'd be kinda trying to fix something that should be handled
-higher up. All userspace preservable memory (like emulated pmem with
-devdax/fsdax and also pstore for logging) can already survive cold
-reboots with modified firmware Google and Microsoft do this.
-Similarly, the firmware could give the kernel the KHO-tree (generated
-by firmware or from the previous kernel) to keep stuff like telemetry,
-oops messages, time stamps etc. KHO should not be considered
-explicitly as a mechanism to carry device serialization data, the KHO
-should be a standard and simple way to pass kernel data between
-reboots. The more complex state can be built on top of it, for example
-guestmemfs, could preserve terabytes of data and have only one node in
-the KHO tree.
+Signed-off-by: Rohan McLure <rmclure@linux.ibm.com>
+Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+[ajd: rebase on riscv changes, remove riscv commit message comment]
+Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
+---
+v13: remove inaccurate comment on riscv in the commit message
+---
+ arch/arm64/include/asm/pgtable.h |  2 +-
+ arch/riscv/include/asm/pgtable.h |  2 +-
+ arch/x86/include/asm/pgtable.h   |  2 +-
+ include/linux/page_table_check.h | 11 +++++++----
+ mm/page_table_check.c            |  3 ++-
+ 5 files changed, 12 insertions(+), 8 deletions(-)
 
->
-> Jason
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index 0b2a2ad1b9e8..f77bbaf3cf7c 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -661,7 +661,7 @@ static inline void set_pmd_at(struct mm_struct *mm, unsigned long addr,
+ static inline void set_pud_at(struct mm_struct *mm, unsigned long addr,
+ 			      pud_t *pudp, pud_t pud)
+ {
+-	page_table_check_pud_set(mm, pudp, pud);
++	page_table_check_pud_set(mm, addr, pudp, pud);
+ 	return __set_pte_at(mm, addr, (pte_t *)pudp, pud_pte(pud),
+ 						PUD_SIZE >> PAGE_SHIFT);
+ }
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 050fdc49b5ad..1a9f1091bd5c 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -778,7 +778,7 @@ static inline void set_pmd_at(struct mm_struct *mm, unsigned long addr,
+ static inline void set_pud_at(struct mm_struct *mm, unsigned long addr,
+ 				pud_t *pudp, pud_t pud)
+ {
+-	page_table_check_pud_set(mm, pudp, pud);
++	page_table_check_pud_set(mm, addr, pudp, pud);
+ 	return __set_pte_at(mm, (pte_t *)pudp, pud_pte(pud));
+ }
+ 
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 593f10aabd45..e53674bb3814 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -1287,7 +1287,7 @@ static inline void set_pmd_at(struct mm_struct *mm, unsigned long addr,
+ static inline void set_pud_at(struct mm_struct *mm, unsigned long addr,
+ 			      pud_t *pudp, pud_t pud)
+ {
+-	page_table_check_pud_set(mm, pudp, pud);
++	page_table_check_pud_set(mm, addr, pudp, pud);
+ 	native_set_pud(pudp, pud);
+ }
+ 
+diff --git a/include/linux/page_table_check.h b/include/linux/page_table_check.h
+index 6722941c7cb8..d188428512f5 100644
+--- a/include/linux/page_table_check.h
++++ b/include/linux/page_table_check.h
+@@ -20,7 +20,8 @@ void __page_table_check_pud_clear(struct mm_struct *mm, pud_t pud);
+ void __page_table_check_ptes_set(struct mm_struct *mm, pte_t *ptep, pte_t pte,
+ 		unsigned int nr);
+ void __page_table_check_pmd_set(struct mm_struct *mm, pmd_t *pmdp, pmd_t pmd);
+-void __page_table_check_pud_set(struct mm_struct *mm, pud_t *pudp, pud_t pud);
++void __page_table_check_pud_set(struct mm_struct *mm, unsigned long addr,
++				pud_t *pudp, pud_t pud);
+ void __page_table_check_pte_clear_range(struct mm_struct *mm,
+ 					unsigned long addr,
+ 					pmd_t pmd);
+@@ -83,13 +84,14 @@ static inline void page_table_check_pmd_set(struct mm_struct *mm, pmd_t *pmdp,
+ 	__page_table_check_pmd_set(mm, pmdp, pmd);
+ }
+ 
+-static inline void page_table_check_pud_set(struct mm_struct *mm, pud_t *pudp,
++static inline void page_table_check_pud_set(struct mm_struct *mm,
++					    unsigned long addr, pud_t *pudp,
+ 					    pud_t pud)
+ {
+ 	if (static_branch_likely(&page_table_check_disabled))
+ 		return;
+ 
+-	__page_table_check_pud_set(mm, pudp, pud);
++	__page_table_check_pud_set(mm, addr, pudp, pud);
+ }
+ 
+ static inline void page_table_check_pte_clear_range(struct mm_struct *mm,
+@@ -134,7 +136,8 @@ static inline void page_table_check_pmd_set(struct mm_struct *mm, pmd_t *pmdp,
+ {
+ }
+ 
+-static inline void page_table_check_pud_set(struct mm_struct *mm, pud_t *pudp,
++static inline void page_table_check_pud_set(struct mm_struct *mm,
++					    unsigned long addr, pud_t *pudp,
+ 					    pud_t pud)
+ {
+ }
+diff --git a/mm/page_table_check.c b/mm/page_table_check.c
+index 509c6ef8de40..f14fef81c61d 100644
+--- a/mm/page_table_check.c
++++ b/mm/page_table_check.c
+@@ -249,7 +249,8 @@ void __page_table_check_pmd_set(struct mm_struct *mm, pmd_t *pmdp, pmd_t pmd)
+ }
+ EXPORT_SYMBOL(__page_table_check_pmd_set);
+ 
+-void __page_table_check_pud_set(struct mm_struct *mm, pud_t *pudp, pud_t pud)
++void __page_table_check_pud_set(struct mm_struct *mm, unsigned long addr,
++				pud_t *pudp, pud_t pud)
+ {
+ 	if (&init_mm == mm)
+ 		return;
+-- 
+2.48.1
+
