@@ -1,110 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD159250C16
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 15:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC4E3C3C;
+	Tue, 11 Feb 2025 15:08:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739286378; cv=none; b=qt3gl0M5IgnkwvfdjYc/UtYLQigbwA5fdljHmohQW4EeY0WXkZFNbz1h4znAyE28hmJnMZn/d6NoeC2jJKV+8VgS1q2m6Lx/a14NGEDepGxMSj5Mr/hmQO1FyYU3njw0SnK26zUmvnVd6kqhuMcAZW2u+GwUZaf2ZHY9gu6i77I=
+	t=1739286481; cv=none; b=M5k2ckxjSqPqkhNQX7ZgsYJq7ZM8hpnpqZUX8lc4h+ytW0ygSvB9pIBlisLZjlOyUIQhx5NzM7M6nXMy4VO1GkrYExeFPMWZ7w1AxIYDSYqxu6/2+5nfkw5T3fJbk5vN5LSTmGBE6WkUMf7i7WsYh9Z2W2cw8LXJo7bYieehi1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739286378; c=relaxed/simple;
-	bh=eQUBMAs0EV6tlo6I+OyUdUQv/tsj6z3YQwVOgFcZyGA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CgjYlbM8WJisSAyn+IiZ6mYx6iHgXM0SGVPsAYMV/r3Sc7tkaihgDRPiyx5Jk2ofJd3MgTh/fvccIL9AglaG3ayUogq05/prp4vQB0eDQbDH2wcGLLHPMNVhpnjKpq3t3KwDyi3T7OXK1YbDbZUxO9XnEjksN9ynlD6Z74InDK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B8lTvnpr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739286481; c=relaxed/simple;
+	bh=lNPUaE77q0AFctgL6amVVXO/TUfnN9RH4g0Cnckt/s0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=BaaGRKFXv4N8cct8H52/lMF7AE5d5Rah16XKjba6UtdU/OpwYnz6BfzobO4Qj6eLvoqfZtyGWa9VnhDka59gPIdktR1GyPAKExd8tJ2rssAVEzi/Ojlr+XvCmBGJ8u5cyU7w6T42O9VT++1dbA6LXktH4QkpxgtiA7sphTw9pfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bQGRmWCX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8lTvnpr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40449C4CEDD;
-	Tue, 11 Feb 2025 15:06:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bQGRmWCX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D314C4CEDD;
+	Tue, 11 Feb 2025 15:07:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739286378;
-	bh=eQUBMAs0EV6tlo6I+OyUdUQv/tsj6z3YQwVOgFcZyGA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B8lTvnprJygSeeHpSnEmNI8TnDchVje/h6GK+3kZZYiP/E+R0l9Sopp6QH5t1jXTa
-	 zLJirTetGiSftwsKigsvZAg6lk+EkTKFvmr6NQR6yQSKLP27G8Ro/xXGgJ7u85Q16U
-	 p9jCAJdSdXak5L8jJxo7GnaqNgcO2musmJiPbgPc+yJI1hfsDhTFh893HA/X7iCrri
-	 U4fxMOBfRTkvYDwWSp5Gx7hlOpQOHn/TuT1DwcGASSCctbzLCc4wgykIDNOYduq5RE
-	 aCAftCRnQ6/O4Wyb+fPlBkV41RH/u8CysFKe5CmQxfwzxsgeJWZyCNfTUH01sxCXjP
-	 gbfJ5aom1rfpA==
-Date: Tue, 11 Feb 2025 15:06:14 +0000
+	s=k20201202; t=1739286480;
+	bh=lNPUaE77q0AFctgL6amVVXO/TUfnN9RH4g0Cnckt/s0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=bQGRmWCXqvhbdz66JOSQ6E9JHNzpA2U3GGuSVVQ0KERNCdSV3theFvI6QoYRMKlvz
+	 7ZhLbISnpWL9/YtSnCRW+vb6FubqpNY9vb05tThmmhE2pyFJjEbcYlTAGhTEAJovoy
+	 Yoj9MyVb8AWinPKBJaW7tub/lFUcawT8vs8W4q4s4VlPeRx634YCJPjEUH3RpO39Io
+	 nqmfLVbIGpXCc3ZQhk/uiSi/E7kDWz+cypeIRNhMEHdEQBTA0gLyme1zCpU3GxOsb/
+	 agjnHt+nhNFsZB7T4LDEW5B4hCTUZwJ1TPaft3NvoUm0q7ivbcesw4fHkK1kCZmgy+
+	 rATZ0cTZMxnQg==
 From: Lee Jones <lee@kernel.org>
-To: Chenyuan Yang <chenyuan0y@gmail.com>
-Cc: lkundrak@v3.sk, linux-kernel@vger.kernel.org, zijie98@gmail.com
-Subject: Re: [PATCH] mfd: ene-kb3930: Fix potential NULL pointer dereference
-Message-ID: <20250211150614.GX1868108@google.com>
-References: <20250120190720.322926-1-chenyuan0y@gmail.com>
- <20250210173358.GI1868108@google.com>
- <CALGdzuqnAtyWSfgqpFbw-fVGvYnYHRGbSH2v8BUSJnpYPXR5Sw@mail.gmail.com>
+To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
+ linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
+Cc: imx@lists.linux.dev
+In-Reply-To: <20250107161628.121685-1-Frank.Li@nxp.com>
+References: <20250107161628.121685-1-Frank.Li@nxp.com>
+Subject: Re: (subset) [PATCH v2 1/1] dt-bindings: leds: Convert
+ leds-tlc591xx.txt to yaml format
+Message-Id: <173928647810.2237766.13705317280883831005.b4-ty@kernel.org>
+Date: Tue, 11 Feb 2025 15:07:58 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALGdzuqnAtyWSfgqpFbw-fVGvYnYHRGbSH2v8BUSJnpYPXR5Sw@mail.gmail.com>
+X-Mailer: b4 0.13.0
 
-On Mon, 10 Feb 2025, Chenyuan Yang wrote:
-
-> On Mon, Feb 10, 2025 at 11:34 AM Lee Jones <lee@kernel.org> wrote:
-> >
-> > On Mon, 20 Jan 2025, Chenyuan Yang wrote:
-> >
-> > > The off_gpios could be NULL. Add missing check in the kb3930_probe().
-> > > This is similar to the issue fixed in commit
-> > > https://patchwork.kernel.org/project/linux-fbdev/patch/20240114143921.550736-1-andriy.shevchenko@linux.intel.com/> >
-> > > Fixes: ede6b2d1dfc0 ("mfd: ene-kb3930: Add driver for ENE KB3930 Embedded Controller")
-> > > Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
-> > > ---
-> > >  drivers/mfd/ene-kb3930.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/drivers/mfd/ene-kb3930.c b/drivers/mfd/ene-kb3930.c
-> > > index fa0ad2f14a39..60824d847bf0 100644
-> > > --- a/drivers/mfd/ene-kb3930.c
-> > > +++ b/drivers/mfd/ene-kb3930.c
-> > > @@ -162,6 +162,8 @@ static int kb3930_probe(struct i2c_client *client)
-> > >                       devm_gpiod_get_array_optional(dev, "off", GPIOD_IN);
-> > >               if (IS_ERR(ddata->off_gpios))
-> > >                       return PTR_ERR(ddata->off_gpios);
-> > > +             if (!ddata->off_gpios)
-> > > +                     return -ENOMEM;
-> >
-> > I don't see many other call sites checking for NULL - why is this
-> > different?
+On Tue, 07 Jan 2025 11:16:26 -0500, Frank Li wrote:
+> Convert binding doc leds-tlc591xx.txt to yaml format to fix below DTB_CHECK
+> warning.
 > 
-> It looks like other places using devm_gpiod_get_array_optional do
-> check for a NULL return value, such as in
-> drivers/iio/resolver/ad2s1210.c, drivers/mtd/maps/physmap-core.c, and
-> this patch commit:
-> https://patchwork.kernel.org/project/linux-fbdev/patch/20240114143921.550736-1-andriy.shevchenko@linux.intel.com/.
+> arch/arm64/boot/dts/freescale/imx8mp-aristainetos3-proton2s.dtb:
+>   /soc@0/bus@30800000/i2c@30a30000/tlc59108@40: failed to match any schema with compatible: ['ti,tlc59108']
 > 
-> > What about IS_ERR_OR_NULL() instead?
+> Additional change:
+> - ref to common.yaml for child nodes.
+> - limit child's reg to 0 - 7 for ti,tlc59108.
+> - fix typo 'linux,default_trigger' in example.
+> - change child node name's prefix to led-.
+> - change nodename to led-controller.
+> - fix properties order in example.
 > 
-> Yes, that sounds good. However, I have a question—what error number
-> should be returned in this case?
+> [...]
 
-I just took a closer look and don't thing returning on NULL is correct.
+Applied, thanks!
 
-The call is *_optional() meaning that NULL is an acceptable value.
+[1/1] dt-bindings: leds: Convert leds-tlc591xx.txt to yaml format
+      commit: 346e704278151149e9b4c6807686ee667b911e77
 
-I believe that this is the correct solution:
-
-diff --git a/drivers/mfd/ene-kb3930.c b/drivers/mfd/ene-kb3930.c
-index fa0ad2f14a39..9460a67acb0b 100644
---- a/drivers/mfd/ene-kb3930.c
-+++ b/drivers/mfd/ene-kb3930.c
-@@ -162,7 +162,7 @@ static int kb3930_probe(struct i2c_client *client)
-                        devm_gpiod_get_array_optional(dev, "off", GPIOD_IN);
-                if (IS_ERR(ddata->off_gpios))
-                        return PTR_ERR(ddata->off_gpios);
--               if (ddata->off_gpios->ndescs < 2) {
-+               if (ddata->off_gpios && ddata->off_gpios->ndescs < 2) {
-                        dev_err(dev, "invalid off-gpios property\n");
-                        return -EINVAL;
-                }
-
--- 
+--
 Lee Jones [李琼斯]
+
