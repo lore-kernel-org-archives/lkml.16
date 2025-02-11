@@ -1,115 +1,122 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13DF1361;
-	Tue, 11 Feb 2025 00:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5285AA29
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:09:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739232564; cv=none; b=lUeN08mDWAvNNPnTT4vqDY7TitriNXSz05TPSGtyc6g907czj/BMpMygykPd1u3g1tbgLZCiFwKG+9rtwH5rnSVtz2+0hJU0S+op626QD1mtb9GWYWG13h64lft5dZqelkxw8WWm7G1V05L7p8GVuDAuv3si+KaYPKmc4z1c8+c=
+	t=1739232577; cv=none; b=gxAS3fW+sY/l2dQbormG5T0HLZuNkKzVfFRzyxj8St/haeMXUWe42AUfIyUAHfgUJtToP5CTO7AtHyTvcLLX3oo1Tp5xWsB8CiqU5DgmISc3FmDHql57K2V3aMWbCBL3XbsqYKYBlbfj9OEf5rWATqsQUW2Xund2e/zw+/N+2xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739232564; c=relaxed/simple;
-	bh=01uiTrRRxKutdrpyTfLES+sUzCNND8v4qkEDza+0xVk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JXawYtviyWMtupCpvVdrNXuWj9RyW9Z48nflFqP1semNQlpVwptAuJKcfrtQybJGvjFk6dpzFEKo+fYX9QyfPccdzLQbTuhXC0tzMOTUuvzq/JNEuqTUatVpgsNMnhSeAzdh0Ywag5YNUyW31ZO6TbG9+mcMgJZK5lZCmjgEZ3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DyUbyw+l; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739232577; c=relaxed/simple;
+	bh=kbNjG86W9AzGPqRCEhKG6CUtamg2Jt2c0Ij/m45WACk=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=WBQYFpjfTvjxQUPT20o7a5wLADw/BKFffGbL3NyxDfXB0Tt+p4Was5h4X++iNzm3ROBnSPt3bhQmgA1sSKYfz47cdHzgWi/NQcOXT56RIDq0FGlMBt+aK1xesRkfeq3DR6vKZRiCscz3LQedRkIQeFpr/thaS2JjsscfqWXC7S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JMh6lL+g; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DyUbyw+l"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c05cce598dso33064585a.3;
-        Mon, 10 Feb 2025 16:09:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739232561; x=1739837361; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Ah4k5+xQ1fRNUu+6C0S6nP1nA7x+T5drbERSfhVVRE=;
-        b=DyUbyw+llULRR/gNW25wUNQcCiJsgDvNGPfbMGDyh7KRrLzCDrojJYPulljVI7ynQg
-         mZRYOP5bUJYH/RuXgGdZtgQhFNAVENsY4PgHPiCqP0Ns0eju4LTKYSiC4rJrNP6tI+7B
-         CDIIYdeI49RnAu4KnytGElwqMCraivxGssRXrPe4TTeYWNFiHmOccThNnLaMeIm0Nm2X
-         VOKsi8YZyqIDIrwcHjPXQqJGE1v14jNavWiC2nnf5CNELOR+1GJZER1srMrU0Xe12UFE
-         l4lIjy7GL7a0jENZoNmjSxz7I5HKVxk+8pSL/JjIHlw8Ct7xSmnZTl1rpAzsp0KV2Zi/
-         8fXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739232561; x=1739837361;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4Ah4k5+xQ1fRNUu+6C0S6nP1nA7x+T5drbERSfhVVRE=;
-        b=lAOMqGN3BW3W11egb7opNrhRv6EGKc5jGxgCw700D+GwvVxGoQ9CvSWa6VmLDiaT8p
-         kiHfIw0gjEWSBkcFwD15/Iq0iHAkoQDRJQi/POd2DGDofdakeg0OEMo18MDGDGaOTM3a
-         gSfwrvWrhaZgnbPX8je/eR1qLFO24ufAq0UO7FvClKModiIgCENeNbuHr5a7OdJW2Q+U
-         Nvkbn6ETzIbpkwYg4V2JPWMKZaYYBM4mRKJaAaiHCJocsSAUfpVSBTRiz3akaUBpx2oU
-         2GVUNIAa2Drnz0WGh9SHFgn9zG9ZnEGOd8yZ00zAQJRLt5OEYtpWJekTfkKV4wY4Xrcm
-         kQvA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBqCMZ6WD+S6kOTAuoFYjIXy0VblKAZcURC2/NoK0dxTXE6yESsDKRiRVRtFJGrVKVdhAJYVhY@vger.kernel.org, AJvYcCVqBqKMvmSq9yPFJYaTXU+rYs7tj7HzabQlBcmgm8MA7tgieomDNi6e+OmZJaDSs0O9KLDrUN0PKjk=@vger.kernel.org, AJvYcCVrv+yMU29QWLVSSpRe488j7z9+r6Rmd6N7Gal02fqNyGIfTdYr6q/PToeaa6hZZ83inwdnGMj09T6aPzDR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8IA8JTPMr4Q1uFyI0fS9AacoEZdV7QV3g3Km1sOsykQ/NHFFb
-	9ThlLArkGj/U8cEs1NWgXWNARuVI6qwKJNxChC8FZM8XcowF0/U=
-X-Gm-Gg: ASbGncsnXUzZToqlqeoC715swCdh/FjjyPTJkDfYoJlMzCJVc2nf7IVKxa43fADO/Or
-	qW9oeMb2DQwrnr1wI8zUDLxmTlEzYLZu74kEcAKggbObwuXJhvoYjjM1ggBmY1fM+BHF99Az/IY
-	sHcbNSiyUIW+8GcUjp4BngJYnp4akPtAEC9c3kLjU5ATiW8vKtu9ume9AXDvFDa6WxwM87jgzTm
-	u0wR7JEsFH6rJOZajm8c2gjV64O4NmaevL8cnjZzyEUh8wDIPt5U+LWyapigSRVlETR9ABD2mvv
-	6F2CyR+wjErb
-X-Google-Smtp-Source: AGHT+IEBNymajCc+NwMXIImuo+y111CUAjewA7syDuazHuJdvT8SyYtv2TQjZ/rPxap9qo/cAU2erw==
-X-Received: by 2002:a05:620a:4150:b0:7b6:dc5c:de5 with SMTP id af79cd13be357-7c069ce9f4emr42655285a.1.1739232561394;
-        Mon, 10 Feb 2025 16:09:21 -0800 (PST)
-Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c0603216c4sm173032885a.97.2025.02.10.16.09.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 16:09:20 -0800 (PST)
-From: Chenyuan Yang <chenyuan0y@gmail.com>
-To: mturquette@baylibre.com,
-	sboyd@kernel.org,
-	florian.fainelli@broadcom.com
-Cc: bcm-kernel-feedback-list@broadcom.com,
-	richardcochran@gmail.com,
-	dave.stevenson@raspberrypi.com,
-	popcornmix@gmail.com,
-	mripard@kernel.org,
-	u.kleine-koenig@baylibre.com,
-	nathan@kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JMh6lL+g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739232574;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jAgG5PbVpxfjPiUq1P9KoLaJMoVyaxTfP/N5PAh92BE=;
+	b=JMh6lL+gYrPwsKYXQ3HZVXYLy83GCs8e67GV/j30/B7GNgoIu9ChS6XDqY874Ty167FvAs
+	bZz0CYnnSBrnqgfyqnmWiR/pcW2i6yRduobKm5G17PBAxxRTTcft8wEdy3Ra5GwJbCAUYy
+	GoOr+XYCHDgntyK5cMAeSEkfy8dcfZI=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-450-4NLqzznmNha3XRZVRKy4uw-1; Mon,
+ 10 Feb 2025 19:09:30 -0500
+X-MC-Unique: 4NLqzznmNha3XRZVRKy4uw-1
+X-Mimecast-MFC-AGG-ID: 4NLqzznmNha3XRZVRKy4uw
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BCD7B1956086;
+	Tue, 11 Feb 2025 00:09:25 +0000 (UTC)
+Received: from starship.lan (unknown [10.22.65.174])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6AAFB19560A3;
+	Tue, 11 Feb 2025 00:09:18 +0000 (UTC)
+From: Maxim Levitsky <mlevitsk@redhat.com>
+To: kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+	Jing Zhang <jingzhangos@google.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
 	linux-arm-kernel@lists.infradead.org,
+	Marc Zyngier <maz@kernel.org>,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	zzjas98@gmail.com,
-	Chenyuan Yang <chenyuan0y@gmail.com>
-Subject: [PATCH] clk: bcm: rpi: Fix potential NULL pointer dereference
-Date: Mon, 10 Feb 2025 18:09:17 -0600
-Message-Id: <20250211000917.1739835-1-chenyuan0y@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	Randy Dunlap <rdunlap@infradead.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	kvm-riscv@lists.infradead.org,
+	Ingo Molnar <mingo@redhat.com>,
+	linux-riscv@lists.infradead.org,
+	Joey Gouly <joey.gouly@arm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	kvmarm@lists.linux.dev,
+	Alexander Potapenko <glider@google.com>,
+	x86@kernel.org,
+	Sean Christopherson <seanjc@google.com>,
+	Anup Patel <anup@brainfault.org>,
+	Kunkun Jiang <jiangkunkun@huawei.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH 0/3] KVM: extract lock_all_vcpus/unlock_all_vcpus
+Date: Mon, 10 Feb 2025 19:09:14 -0500
+Message-Id: <20250211000917.166856-1-mlevitsk@redhat.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-The `init.name` could be NULL. Add missing check in the
-raspberrypi_clk_register().
-This is similar to commit 3027e7b15b02
-("ice: Fix some null pointer dereference issues in ice_ptp.c").
-Besides, bcm2835_register_pll_divider() under the same directory also
-has a very similar check.
-
-Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
----
- drivers/clk/bcm/clk-raspberrypi.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-raspberrypi.c
-index 0e1fe3759530..720acc10f8aa 100644
---- a/drivers/clk/bcm/clk-raspberrypi.c
-+++ b/drivers/clk/bcm/clk-raspberrypi.c
-@@ -286,6 +286,8 @@ static struct clk_hw *raspberrypi_clk_register(struct raspberrypi_clk *rpi,
- 	init.name = devm_kasprintf(rpi->dev, GFP_KERNEL,
- 				   "fw-clk-%s",
- 				   rpi_firmware_clk_names[id]);
-+	if (!init.name)
-+		return ERR_PTR(-ENOMEM);
- 	init.ops = &raspberrypi_firmware_clk_ops;
- 	init.flags = CLK_GET_RATE_NOCACHE;
- 
--- 
-2.34.1
+Implement Paolo's suggestion of reusing=0D
+sev_lock/unlock_vcpus_for_migration in arm and riscv code=0D
+for the purpose of taking vcpu->mutex of all vcpus of a VM.=0D
+=0D
+Because sev_lock/unlock_vcpus_for_migration already have a workaround=0D
+for lockdep max lock depth, this fixes the lockdep warnings on arm=0D
+which were the inspiration for this refactoring.=0D
+=0D
+This patch series was only compile tested on all 3 architectures.=0D
+=0D
+Best regards,=0D
+	Maxim Levitsky=0D
+=0D
+Maxim Levitsky (3):=0D
+  KVM: x86: move sev_lock/unlock_vcpus_for_migration to kvm_main.c=0D
+  KVM: arm64: switch to using kvm_lock/unlock_all_vcpus=0D
+  RISC-V: KVM: switch to kvm_lock/unlock_all_vcpus=0D
+=0D
+ arch/arm64/include/asm/kvm_host.h     |  3 --=0D
+ arch/arm64/kvm/arch_timer.c           |  8 ++--=0D
+ arch/arm64/kvm/arm.c                  | 32 -------------=0D
+ arch/arm64/kvm/vgic/vgic-init.c       | 11 +++--=0D
+ arch/arm64/kvm/vgic/vgic-its.c        | 18 +++----=0D
+ arch/arm64/kvm/vgic/vgic-kvm-device.c | 21 ++++----=0D
+ arch/riscv/kvm/aia_device.c           | 36 ++------------=0D
+ arch/x86/kvm/svm/sev.c                | 65 ++-----------------------=0D
+ include/linux/kvm_host.h              |  6 +++=0D
+ virt/kvm/kvm_main.c                   | 69 +++++++++++++++++++++++++++=0D
+ 10 files changed, 115 insertions(+), 154 deletions(-)=0D
+=0D
+-- =0D
+2.26.3=0D
+=0D
 
